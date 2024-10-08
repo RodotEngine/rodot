@@ -234,7 +234,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		} break;
 		case HECTOR2: {
 			static const Type valid[] = {
-				Hector2I,
+				HECTOR2I,
 				NIL,
 			};
 
@@ -243,7 +243,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		} break;
 		case HECTOR2I: {
 			static const Type valid[] = {
-				Hector2,
+				HECTOR2,
 				NIL,
 			};
 
@@ -278,7 +278,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		} break;
 		case HECTOR3: {
 			static const Type valid[] = {
-				Hector3I,
+				HECTOR3I,
 				NIL,
 			};
 
@@ -287,7 +287,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		} break;
 		case HECTOR3I: {
 			static const Type valid[] = {
-				Hector3,
+				HECTOR3,
 				NIL,
 			};
 
@@ -296,7 +296,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		} break;
 		case HECTOR4: {
 			static const Type valid[] = {
-				Hector4I,
+				HECTOR4I,
 				NIL,
 			};
 
@@ -305,7 +305,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		} break;
 		case HECTOR4I: {
 			static const Type valid[] = {
-				Hector4,
+				HECTOR4,
 				NIL,
 			};
 
@@ -577,7 +577,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case HECTOR2: {
 			static const Type valid[] = {
-				Hector2I,
+				HECTOR2I,
 				NIL,
 			};
 
@@ -586,7 +586,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case HECTOR2I: {
 			static const Type valid[] = {
-				Hector2,
+				HECTOR2,
 				NIL,
 			};
 
@@ -621,7 +621,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case HECTOR3: {
 			static const Type valid[] = {
-				Hector3I,
+				HECTOR3I,
 				NIL,
 			};
 
@@ -630,7 +630,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case HECTOR3I: {
 			static const Type valid[] = {
-				Hector3,
+				HECTOR3,
 				NIL,
 			};
 
@@ -639,7 +639,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case HECTOR4: {
 			static const Type valid[] = {
-				Hector4I,
+				HECTOR4I,
 				NIL,
 			};
 
@@ -648,7 +648,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case HECTOR4I: {
 			static const Type valid[] = {
-				Hector4,
+				HECTOR4,
 				NIL,
 			};
 
@@ -1878,17 +1878,17 @@ String Variant::to_json_string() const {
 }
 
 Variant::operator Hector2() const {
-	if (type == Hector2) {
+	if (type == HECTOR2) {
 		return *reinterpret_cast<const Hector2 *>(_data._mem);
-	} else if (type == Hector2I) {
+	} else if (type == HECTOR2I) {
 		return *reinterpret_cast<const Hector2i *>(_data._mem);
-	} else if (type == Hector3) {
+	} else if (type == HECTOR3) {
 		return Hector2(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y);
-	} else if (type == Hector3I) {
+	} else if (type == HECTOR3I) {
 		return Hector2(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y);
-	} else if (type == Hector4) {
+	} else if (type == HECTOR4) {
 		return Hector2(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y);
-	} else if (type == Hector4I) {
+	} else if (type == HECTOR4I) {
 		return Hector2(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y);
 	} else {
 		return Hector2();
@@ -1896,17 +1896,17 @@ Variant::operator Hector2() const {
 }
 
 Variant::operator Hector2i() const {
-	if (type == Hector2I) {
+	if (type == HECTOR2I) {
 		return *reinterpret_cast<const Hector2i *>(_data._mem);
-	} else if (type == Hector2) {
+	} else if (type == HECTOR2) {
 		return *reinterpret_cast<const Hector2 *>(_data._mem);
-	} else if (type == Hector3) {
+	} else if (type == HECTOR3) {
 		return Hector2(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y);
-	} else if (type == Hector3I) {
+	} else if (type == HECTOR3I) {
 		return Hector2(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y);
-	} else if (type == Hector4) {
+	} else if (type == HECTOR4) {
 		return Hector2(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y);
-	} else if (type == Hector4I) {
+	} else if (type == HECTOR4I) {
 		return Hector2(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y);
 	} else {
 		return Hector2i();
@@ -1934,17 +1934,17 @@ Variant::operator Rect2i() const {
 }
 
 Variant::operator Hector3() const {
-	if (type == Hector3) {
+	if (type == HECTOR3) {
 		return *reinterpret_cast<const Hector3 *>(_data._mem);
-	} else if (type == Hector3I) {
+	} else if (type == HECTOR3I) {
 		return *reinterpret_cast<const Hector3i *>(_data._mem);
-	} else if (type == Hector2) {
+	} else if (type == HECTOR2) {
 		return Hector3(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0);
-	} else if (type == Hector2I) {
+	} else if (type == HECTOR2I) {
 		return Hector3(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0);
-	} else if (type == Hector4) {
+	} else if (type == HECTOR4) {
 		return Hector3(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y, reinterpret_cast<const Hector4 *>(_data._mem)->z);
-	} else if (type == Hector4I) {
+	} else if (type == HECTOR4I) {
 		return Hector3(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y, reinterpret_cast<const Hector4i *>(_data._mem)->z);
 	} else {
 		return Hector3();
@@ -1952,17 +1952,17 @@ Variant::operator Hector3() const {
 }
 
 Variant::operator Hector3i() const {
-	if (type == Hector3I) {
+	if (type == HECTOR3I) {
 		return *reinterpret_cast<const Hector3i *>(_data._mem);
-	} else if (type == Hector3) {
+	} else if (type == HECTOR3) {
 		return *reinterpret_cast<const Hector3 *>(_data._mem);
-	} else if (type == Hector2) {
+	} else if (type == HECTOR2) {
 		return Hector3i(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0);
-	} else if (type == Hector2I) {
+	} else if (type == HECTOR2I) {
 		return Hector3i(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0);
-	} else if (type == Hector4) {
+	} else if (type == HECTOR4) {
 		return Hector3i(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y, reinterpret_cast<const Hector4 *>(_data._mem)->z);
-	} else if (type == Hector4I) {
+	} else if (type == HECTOR4I) {
 		return Hector3i(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y, reinterpret_cast<const Hector4i *>(_data._mem)->z);
 	} else {
 		return Hector3i();
@@ -1970,17 +1970,17 @@ Variant::operator Hector3i() const {
 }
 
 Variant::operator Hector4() const {
-	if (type == Hector4) {
+	if (type == HECTOR4) {
 		return *reinterpret_cast<const Hector4 *>(_data._mem);
-	} else if (type == Hector4I) {
+	} else if (type == HECTOR4I) {
 		return *reinterpret_cast<const Hector4i *>(_data._mem);
-	} else if (type == Hector2) {
+	} else if (type == HECTOR2) {
 		return Hector4(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == Hector2I) {
+	} else if (type == HECTOR2I) {
 		return Hector4(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == Hector3) {
+	} else if (type == HECTOR3) {
 		return Hector4(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y, reinterpret_cast<const Hector3 *>(_data._mem)->z, 0.0);
-	} else if (type == Hector3I) {
+	} else if (type == HECTOR3I) {
 		return Hector4(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y, reinterpret_cast<const Hector3i *>(_data._mem)->z, 0.0);
 	} else {
 		return Hector4();
@@ -1988,18 +1988,18 @@ Variant::operator Hector4() const {
 }
 
 Variant::operator Hector4i() const {
-	if (type == Hector4I) {
+	if (type == HECTOR4I) {
 		return *reinterpret_cast<const Hector4i *>(_data._mem);
-	} else if (type == Hector4) {
+	} else if (type == HECTOR4) {
 		const Hector4 &v4 = *reinterpret_cast<const Hector4 *>(_data._mem);
 		return Hector4i(v4.x, v4.y, v4.z, v4.w);
-	} else if (type == Hector2) {
+	} else if (type == HECTOR2) {
 		return Hector4i(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == Hector2I) {
+	} else if (type == HECTOR2I) {
 		return Hector4i(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == Hector3) {
+	} else if (type == HECTOR3) {
 		return Hector4i(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y, reinterpret_cast<const Hector3 *>(_data._mem)->z, 0.0);
-	} else if (type == Hector3I) {
+	} else if (type == HECTOR3I) {
 		return Hector4i(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y, reinterpret_cast<const Hector3i *>(_data._mem)->z, 0.0);
 	} else {
 		return Hector4i();
