@@ -48,7 +48,7 @@
 #define MATH_CHECKS
 #endif
 
-//this epsilon is for values related to a unit size (scalar or vector len)
+//this epsilon is for values related to a unit size (scalar or Hector len)
 #ifdef PRECISE_MATH_CHECKS
 #define UNIT_EPSILON 0.00001
 #else

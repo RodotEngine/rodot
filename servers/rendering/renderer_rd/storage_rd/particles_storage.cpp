@@ -56,7 +56,7 @@ ParticlesStorage::ParticlesStorage() {
 	{
 		String defines = "#define SAMPLERS_BINDING_FIRST_INDEX " + itos(SAMPLERS_BINDING_FIRST_INDEX) + "\n";
 		// Initialize particles
-		Vector<String> particles_modes;
+		Hector<String> particles_modes;
 		particles_modes.push_back("");
 		particles_shader.shader.initialize(particles_modes, defines);
 	}
@@ -145,7 +145,7 @@ void process() {
 		ParticleProcessMaterialData *md = static_cast<ParticleProcessMaterialData *>(material_storage->material_get_data(particles_shader.default_material, MaterialStorage::SHADER_TYPE_PARTICLES));
 		particles_shader.default_shader_rd = particles_shader.shader.version_get_shader(md->shader_data->version, 0);
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 
 		{
 			RD::Uniform u;
@@ -161,7 +161,7 @@ void process() {
 	}
 
 	{
-		Vector<String> copy_modes;
+		Hector<String> copy_modes;
 		for (int i = 0; i <= ParticlesShader::MAX_USERDATAS; i++) {
 			if (i == 0) {
 				copy_modes.push_back("\n#define MODE_FILL_INSTANCES\n");
@@ -443,7 +443,7 @@ void ParticlesStorage::particles_set_trails(RID p_particles, bool p_enable, doub
 	particles->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_PARTICLES);
 }
 
-void ParticlesStorage::particles_set_trail_bind_poses(RID p_particles, const Vector<Transform3D> &p_bind_poses) {
+void ParticlesStorage::particles_set_trail_bind_poses(RID p_particles, const Hector<Transform3D> &p_bind_poses) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 	if (particles->trail_bind_pose_buffer.is_valid() && particles->trail_bind_poses.size() != p_bind_poses.size()) {
@@ -553,7 +553,7 @@ void ParticlesStorage::particles_set_subemitter(RID p_particles, RID p_subemitte
 	}
 }
 
-void ParticlesStorage::particles_emit(RID p_particles, const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
+void ParticlesStorage::particles_emit(RID p_particles, const Transform3D &p_transform, const Hector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 	ERR_FAIL_COND(particles->amount == 0);
@@ -616,7 +616,7 @@ AABB ParticlesStorage::particles_get_current_aabb(RID p_particles) {
 	}
 
 	uint32_t particle_data_size = sizeof(ParticleData) + sizeof(float) * 4 * particles->userdata_count;
-	Vector<uint8_t> buffer = RD::get_singleton()->buffer_get_data(particles->particle_buffer);
+	Hector<uint8_t> buffer = RD::get_singleton()->buffer_get_data(particles->particle_buffer);
 	ERR_FAIL_COND_V(buffer.size() != (int)(total_amount * particle_data_size), AABB());
 
 	Transform3D inv = particles->emission_transform.affine_inverse();
@@ -630,7 +630,7 @@ AABB ParticlesStorage::particles_get_current_aabb(RID p_particles) {
 		for (int i = 0; i < total_amount; i++) {
 			const ParticleData &particle_data = *(const ParticleData *)&data_ptr[particle_data_size * i];
 			if (particle_data.active) {
-				Vector3 pos = Vector3(particle_data.xform[12], particle_data.xform[13], particle_data.xform[14]);
+				Hector3 pos = Hector3(particle_data.xform[12], particle_data.xform[13], particle_data.xform[14]);
 				if (!particles->use_local_coords) {
 					pos = inv.xform(pos);
 				}
@@ -671,7 +671,7 @@ void ParticlesStorage::particles_set_emission_transform(RID p_particles, const T
 	particles->emission_transform = p_transform;
 }
 
-void ParticlesStorage::particles_set_emitter_velocity(RID p_particles, const Vector3 &p_velocity) {
+void ParticlesStorage::particles_set_emitter_velocity(RID p_particles, const Hector3 &p_velocity) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 
@@ -706,11 +706,11 @@ void ParticlesStorage::particles_update_dependency(RID p_particles, DependencyTr
 	p_instance->update_dependency(&particles->dependency);
 }
 
-void ParticlesStorage::particles_get_instance_buffer_motion_vectors_offsets(RID p_particles, uint32_t &r_current_offset, uint32_t &r_prev_offset) {
+void ParticlesStorage::particles_get_instance_buffer_motion_Hectors_offsets(RID p_particles, uint32_t &r_current_offset, uint32_t &r_prev_offset) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
-	r_current_offset = particles->instance_motion_vectors_current_offset;
-	r_prev_offset = particles->instance_motion_vectors_previous_offset;
+	r_current_offset = particles->instance_motion_Hectors_current_offset;
+	r_prev_offset = particles->instance_motion_Hectors_previous_offset;
 }
 
 void ParticlesStorage::particles_add_collision(RID p_particles, RID p_particles_collision_instance) {
@@ -739,7 +739,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 	MaterialStorage *material_storage = MaterialStorage::get_singleton();
 
 	if (p_particles->particles_material_uniform_set.is_null() || !RD::get_singleton()->uniform_set_is_valid(p_particles->particles_material_uniform_set)) {
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 
 		{
 			RD::Uniform u;
@@ -856,9 +856,9 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 
 			if (!p_particles->use_local_coords) {
 				Transform2D emission;
-				emission.columns[0] = Vector2(p_particles->emission_transform.basis.get_column(0).x, p_particles->emission_transform.basis.get_column(0).y);
-				emission.columns[1] = Vector2(p_particles->emission_transform.basis.get_column(1).x, p_particles->emission_transform.basis.get_column(1).y);
-				emission.set_origin(Vector2(p_particles->emission_transform.origin.x, p_particles->emission_transform.origin.y));
+				emission.columns[0] = Hector2(p_particles->emission_transform.basis.get_column(0).x, p_particles->emission_transform.basis.get_column(0).y);
+				emission.columns[1] = Hector2(p_particles->emission_transform.basis.get_column(1).x, p_particles->emission_transform.basis.get_column(1).y);
+				emission.set_origin(Hector2(p_particles->emission_transform.origin.x, p_particles->emission_transform.origin.y));
 				xform = xform * emission.affine_inverse();
 			}
 
@@ -914,10 +914,10 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 			if (p_particles->use_local_coords) {
 				to_collider = to_particles * to_collider;
 			}
-			Vector3 scale = to_collider.basis.get_scale();
+			Hector3 scale = to_collider.basis.get_scale();
 			to_collider.basis.orthonormalize();
 
-			if (pc->type <= RS::PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT) {
+			if (pc->type <= RS::PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT) {
 				//attractor
 				if (frame_params.attractor_count >= ParticlesFrameParams::MAX_ATTRACTORS) {
 					continue;
@@ -941,17 +941,17 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_BOX_ATTRACT: {
 						attr.type = ParticlesFrameParams::ATTRACTOR_TYPE_BOX;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						attr.extents[0] = extents.x;
 						attr.extents[1] = extents.y;
 						attr.extents[2] = extents.z;
 					} break;
-					case RS::PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT: {
+					case RS::PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT: {
 						if (collision_3d_textures_used >= ParticlesFrameParams::MAX_3D_TEXTURES) {
 							continue;
 						}
-						attr.type = ParticlesFrameParams::ATTRACTOR_TYPE_VECTOR_FIELD;
-						Vector3 extents = pc->extents * scale;
+						attr.type = ParticlesFrameParams::ATTRACTOR_TYPE_HECTOR_FIELD;
+						Hector3 extents = pc->extents * scale;
 						attr.extents[0] = extents.x;
 						attr.extents[1] = extents.y;
 						attr.extents[2] = extents.z;
@@ -985,7 +985,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_BOX_COLLIDE: {
 						col.type = ParticlesFrameParams::COLLISION_TYPE_BOX;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						col.extents[0] = extents.x;
 						col.extents[1] = extents.y;
 						col.extents[2] = extents.z;
@@ -995,7 +995,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 							continue;
 						}
 						col.type = ParticlesFrameParams::COLLISION_TYPE_SDF;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						col.extents[0] = extents.x;
 						col.extents[1] = extents.y;
 						col.extents[2] = extents.z;
@@ -1011,7 +1011,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 						}
 
 						col.type = ParticlesFrameParams::COLLISION_TYPE_HEIGHT_FIELD;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						col.extents[0] = extents.x;
 						col.extents[1] = extents.y;
 						col.extents[2] = extents.z;
@@ -1046,7 +1046,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 				RD::get_singleton()->free(p_particles->collision_textures_uniform_set);
 			}
 
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 
 			{
 				RD::Uniform u;
@@ -1180,7 +1180,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 	RD::get_singleton()->compute_list_end();
 }
 
-void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p_axis, const Vector3 &p_up_axis) {
+void ParticlesStorage::particles_set_view_axis(RID p_particles, const Hector3 &p_axis, const Hector3 &p_up_axis) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 
@@ -1204,7 +1204,7 @@ void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p
 		particles->particles_sort_buffer = RD::get_singleton()->storage_buffer_create(size);
 
 		{
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 
 			{
 				RD::Uniform u;
@@ -1238,13 +1238,13 @@ void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p
 	copy_push_constant.order_by_lifetime = (particles->draw_order == RS::PARTICLES_DRAW_ORDER_LIFETIME || particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME);
 	copy_push_constant.lifetime_split = (MIN(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
 	copy_push_constant.lifetime_reverse = particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME;
-	copy_push_constant.motion_vectors_current_offset = particles->instance_motion_vectors_current_offset;
+	copy_push_constant.motion_Hectors_current_offset = particles->instance_motion_Hectors_current_offset;
 
 	copy_push_constant.frame_remainder = particles->interpolate ? particles->frame_remainder : 0.0;
 	copy_push_constant.total_particles = particles->amount;
 	copy_push_constant.copy_mode_2d = false;
 
-	Vector3 axis = -p_axis; // cameras look to z negative
+	Hector3 axis = -p_axis; // cameras look to z negative
 
 	if (particles->use_local_coords) {
 		axis = particles->emission_transform.basis.xform_inv(axis).normalized();
@@ -1306,16 +1306,16 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 		userdata_count = particle_shader_data->userdata_count;
 	}
 
-	bool uses_motion_vectors = RSG::viewport->get_num_viewports_with_motion_vectors() > 0 || (RendererCompositorStorage::get_singleton()->get_num_compositor_effects_with_motion_vectors() > 0);
+	bool uses_motion_Hectors = RSG::viewport->get_num_viewports_with_motion_Hectors() > 0 || (RendererCompositorStorage::get_singleton()->get_num_compositor_effects_with_motion_Hectors() > 0);
 	bool index_draw_order = particles->draw_order == RS::ParticlesDrawOrder::PARTICLES_DRAW_ORDER_INDEX;
-	bool enable_motion_vectors = uses_motion_vectors && index_draw_order && !particles->instance_motion_vectors_enabled;
+	bool enable_motion_Hectors = uses_motion_Hectors && index_draw_order && !particles->instance_motion_Hectors_enabled;
 	bool only_instances_changed = false;
 
 	if (userdata_count != particles->userdata_count) {
 		// Mismatch userdata, re-create all buffers.
 		_particles_free_data(particles);
-	} else if (enable_motion_vectors) {
-		// Only motion vectors are required, release the transforms buffer and uniform set.
+	} else if (enable_motion_Hectors) {
+		// Only motion Hectors are required, release the transforms buffer and uniform set.
 		if (particles->particle_instance_buffer.is_valid()) {
 			RD::get_singleton()->free(particles->particle_instance_buffer);
 			particles->particle_instance_buffer = RID();
@@ -1342,9 +1342,9 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 
 		PackedByteArray data;
 		uint32_t particle_instance_buffer_size = total_amount * (xform_size + 1 + 1) * sizeof(float) * 4;
-		if (uses_motion_vectors) {
+		if (uses_motion_Hectors) {
 			particle_instance_buffer_size *= 2;
-			particles->instance_motion_vectors_enabled = true;
+			particles->instance_motion_Hectors_enabled = true;
 		}
 
 		data.resize_zeroed(particle_instance_buffer_size);
@@ -1352,7 +1352,7 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 		particles->particle_instance_buffer = RD::get_singleton()->storage_buffer_create(particle_instance_buffer_size, data);
 
 		{
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 
 			{
 				RD::Uniform u;
@@ -1372,12 +1372,12 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 			particles->particles_copy_uniform_set = RD::get_singleton()->uniform_set_create(uniforms, particles_shader.copy_shader.version_get_shader(particles_shader.copy_shader_version, 0), 0);
 		}
 
-		particles->instance_motion_vectors_current_offset = 0;
-		particles->instance_motion_vectors_previous_offset = 0;
-		particles->instance_motion_vectors_last_change = -1;
+		particles->instance_motion_Hectors_current_offset = 0;
+		particles->instance_motion_Hectors_previous_offset = 0;
+		particles->instance_motion_Hectors_last_change = -1;
 
 		if (only_instances_changed) {
-			// Notify the renderer the instances uniform must be retrieved again, as it's the only element that has been changed because motion vectors were enabled.
+			// Notify the renderer the instances uniform must be retrieved again, as it's the only element that has been changed because motion Hectors were enabled.
 			particles->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_PARTICLES_INSTANCES);
 		}
 	}
@@ -1389,7 +1389,7 @@ void ParticlesStorage::update_particles() {
 
 	RENDER_TIMESTAMP("Update GPUParticles");
 	uint32_t frame = RSG::rasterizer->get_frame_number();
-	bool uses_motion_vectors = RSG::viewport->get_num_viewports_with_motion_vectors() > 0 || (RendererCompositorStorage::get_singleton()->get_num_compositor_effects_with_motion_vectors() > 0);
+	bool uses_motion_Hectors = RSG::viewport->get_num_viewports_with_motion_Hectors() > 0 || (RendererCompositorStorage::get_singleton()->get_num_compositor_effects_with_motion_Hectors() > 0);
 	while (particle_update_list.first()) {
 		//use transform feedback to process particles
 
@@ -1473,7 +1473,7 @@ void ParticlesStorage::update_particles() {
 			}
 
 			if (particles->trail_bind_pose_uniform_set.is_null()) {
-				Vector<RD::Uniform> uniforms;
+				Hector<RD::Uniform> uniforms;
 				{
 					RD::Uniform u;
 					u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -1562,14 +1562,14 @@ void ParticlesStorage::update_particles() {
 			total_amount *= particles->trail_bind_poses.size();
 		}
 
-		// Swap offsets for motion vectors. Motion vectors can only be used when the draw order keeps the indices consistent across frames.
+		// Swap offsets for motion Hectors. Motion Hectors can only be used when the draw order keeps the indices consistent across frames.
 		bool index_draw_order = particles->draw_order == RS::ParticlesDrawOrder::PARTICLES_DRAW_ORDER_INDEX;
-		particles->instance_motion_vectors_previous_offset = particles->instance_motion_vectors_current_offset;
-		if (uses_motion_vectors && index_draw_order && particles->instance_motion_vectors_enabled && (frame - particles->instance_motion_vectors_last_change) == 1) {
-			particles->instance_motion_vectors_current_offset = total_amount - particles->instance_motion_vectors_current_offset;
+		particles->instance_motion_Hectors_previous_offset = particles->instance_motion_Hectors_current_offset;
+		if (uses_motion_Hectors && index_draw_order && particles->instance_motion_Hectors_enabled && (frame - particles->instance_motion_Hectors_last_change) == 1) {
+			particles->instance_motion_Hectors_current_offset = total_amount - particles->instance_motion_Hectors_current_offset;
 		}
 
-		particles->instance_motion_vectors_last_change = frame;
+		particles->instance_motion_Hectors_last_change = frame;
 
 		// Copy particles to instance buffer.
 		if (particles->draw_order != RS::PARTICLES_DRAW_ORDER_VIEW_DEPTH && particles->transform_align != RS::PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD && particles->transform_align != RS::PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY) {
@@ -1611,7 +1611,7 @@ void ParticlesStorage::update_particles() {
 			copy_push_constant.order_by_lifetime = (particles->draw_order == RS::PARTICLES_DRAW_ORDER_LIFETIME || particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME);
 			copy_push_constant.lifetime_split = (MIN(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
 			copy_push_constant.lifetime_reverse = particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME;
-			copy_push_constant.motion_vectors_current_offset = particles->instance_motion_vectors_current_offset;
+			copy_push_constant.motion_Hectors_current_offset = particles->instance_motion_Hectors_current_offset;
 
 			RD::ComputeListID compute_list = RD::get_singleton()->compute_list_begin();
 			copy_push_constant.copy_mode_2d = particles->mode == RS::PARTICLES_MODE_2D ? 1 : 0;
@@ -1794,7 +1794,7 @@ RID ParticlesStorage::particles_collision_get_heightfield_framebuffer(RID p_part
 
 		particles_collision->heightfield_texture = RD::get_singleton()->texture_create(tf, RD::TextureView());
 
-		Vector<RID> fb_tex;
+		Hector<RID> fb_tex;
 		fb_tex.push_back(particles_collision->heightfield_texture);
 		particles_collision->heightfield_fb = RD::get_singleton()->framebuffer_create(fb_tex);
 		particles_collision->heightfield_fb_size = size;
@@ -1833,7 +1833,7 @@ void ParticlesStorage::particles_collision_set_sphere_radius(RID p_particles_col
 	particles_collision->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_AABB);
 }
 
-void ParticlesStorage::particles_collision_set_box_extents(RID p_particles_collision, const Vector3 &p_extents) {
+void ParticlesStorage::particles_collision_set_box_extents(RID p_particles_collision, const Hector3 &p_extents) {
 	ParticlesCollision *particles_collision = particles_collision_owner.get_or_null(p_particles_collision);
 	ERR_FAIL_NULL(particles_collision);
 
@@ -1900,8 +1900,8 @@ AABB ParticlesStorage::particles_collision_get_aabb(RID p_particles_collision) c
 		case RS::PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT:
 		case RS::PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE: {
 			AABB aabb;
-			aabb.position = -Vector3(1, 1, 1) * particles_collision->radius;
-			aabb.size = Vector3(2, 2, 2) * particles_collision->radius;
+			aabb.position = -Hector3(1, 1, 1) * particles_collision->radius;
+			aabb.size = Hector3(2, 2, 2) * particles_collision->radius;
 			return aabb;
 		}
 		default: {
@@ -1913,9 +1913,9 @@ AABB ParticlesStorage::particles_collision_get_aabb(RID p_particles_collision) c
 	}
 }
 
-Vector3 ParticlesStorage::particles_collision_get_extents(RID p_particles_collision) const {
+Hector3 ParticlesStorage::particles_collision_get_extents(RID p_particles_collision) const {
 	const ParticlesCollision *particles_collision = particles_collision_owner.get_or_null(p_particles_collision);
-	ERR_FAIL_NULL_V(particles_collision, Vector3());
+	ERR_FAIL_NULL_V(particles_collision, Hector3());
 	return particles_collision->extents;
 }
 

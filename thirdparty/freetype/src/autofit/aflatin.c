@@ -424,7 +424,7 @@
         FT_ULong    glyph_index;
         FT_Long     y_offset;
         FT_Int      best_point, best_contour_first, best_contour_last;
-        FT_Vector*  points;
+        FT_Hector*  points;
 
         FT_Pos   best_y_extremum;                      /* same as points.y */
         FT_Bool  best_round = 0;

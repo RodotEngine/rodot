@@ -40,16 +40,16 @@ using namespace CFF;
 
 struct remap_sid_t
 {
-  unsigned get_population () const { return vector.length; }
+  unsigned get_population () const { return Hector.length; }
 
   void alloc (unsigned size)
   {
     map.alloc (size);
-    vector.alloc (size, true);
+    Hector.alloc (size, true);
   }
 
   bool in_error () const
-  { return map.in_error () || vector.in_error (); }
+  { return map.in_error () || Hector.in_error (); }
 
   unsigned int add (unsigned int sid)
   {
@@ -60,7 +60,7 @@ struct remap_sid_t
     unsigned v = next;
     if (map.set (sid, v, false))
     {
-      vector.push (sid);
+      Hector.push (sid);
       next++;
     }
     else
@@ -84,7 +84,7 @@ struct remap_sid_t
   unsigned next = 0;
 
   hb_map_t map;
-  hb_vector_t<unsigned> vector;
+  hb_Hector_t<unsigned> Hector;
 };
 
 struct cff1_sub_table_info_t : cff_sub_table_info_t
@@ -289,7 +289,7 @@ struct cff1_cs_opset_flatten_t : cff1_cs_opset_t<cff1_cs_opset_flatten_t, flatte
   typedef cff1_cs_opset_t<cff1_cs_opset_flatten_t, flatten_param_t> SUPER;
 };
 
-struct range_list_t : hb_vector_t<code_pair_t>
+struct range_list_t : hb_Hector_t<code_pair_t>
 {
   /* replace the first glyph ID in the "glyph" field each range with a nLeft value */
   bool complete (unsigned int last_glyph)
@@ -429,7 +429,7 @@ struct cff1_subset_plan
     const Encoding *encoding = acc.encoding;
     unsigned int  size0, size1;
     unsigned code, last_code = CFF_UNDEF_CODE - 1;
-    hb_vector_t<hb_codepoint_t> supp_codes;
+    hb_Hector_t<hb_codepoint_t> supp_codes;
 
     if (unlikely (!subset_enc_code_ranges.resize (0)))
     {
@@ -756,7 +756,7 @@ struct cff1_subset_plan
   unsigned int    orig_fdcount = 0;
   unsigned int    subset_fdcount = 1;
   unsigned int    subset_fdselect_format = 0;
-  hb_vector_t<code_pair_t>   subset_fdselect_ranges;
+  hb_Hector_t<code_pair_t>   subset_fdselect_ranges;
 
   /* font dict index remap table from fullset FDArray to subset FDArray.
    * set to CFF_UNDEF_CODE if excluded from subset */
@@ -764,8 +764,8 @@ struct cff1_subset_plan
 
   str_buff_vec_t		subset_charstrings;
   str_buff_vec_t		subset_globalsubrs;
-  hb_vector_t<str_buff_vec_t>	subset_localsubrs;
-  hb_vector_t<cff1_font_dict_values_mod_t>  fontdicts_mod;
+  hb_Hector_t<str_buff_vec_t>	subset_localsubrs;
+  hb_Hector_t<cff1_font_dict_values_mod_t>  fontdicts_mod;
 
   bool		drop_hints = false;
 
@@ -774,7 +774,7 @@ struct cff1_subset_plan
   uint8_t	subset_enc_format;
   unsigned int	subset_enc_num_codes;
   range_list_t	subset_enc_code_ranges;
-  hb_vector_t<code_pair_t>  subset_enc_supp_codes;
+  hb_Hector_t<code_pair_t>  subset_enc_supp_codes;
 
   uint8_t	subset_charset_format;
   range_list_t	subset_charset_ranges;
@@ -938,7 +938,7 @@ OT::cff1::accelerator_subset_t::serialize (hb_serialize_context_t *c,
   {
     auto *dest = c->push<CFF1StringIndex> ();
     if (likely (!plan.sidmap.in_error () &&
-		dest->serialize (c, *stringIndex, plan.sidmap.vector)))
+		dest->serialize (c, *stringIndex, plan.sidmap.Hector)))
       c->pop_pack ();
     else
     {

@@ -86,15 +86,15 @@ public:
 		ERR_FAIL_NULL(t);
 		t->image = p_image->duplicate();
 	};
-	virtual void texture_2d_layered_initialize(RID p_texture, const Vector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) override {}
-	virtual void texture_3d_initialize(RID p_texture, Image::Format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) override {}
+	virtual void texture_2d_layered_initialize(RID p_texture, const Hector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) override {}
+	virtual void texture_3d_initialize(RID p_texture, Image::Format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data) override {}
 	virtual void texture_external_initialize(RID p_texture, int p_width, int p_height, uint64_t p_external_buffer) override {}
 	virtual void texture_proxy_initialize(RID p_texture, RID p_base) override {} //all slices, then all the mipmaps, must be coherent
 
 	virtual RID texture_create_from_native_handle(RS::TextureType p_type, Image::Format p_format, uint64_t p_native_handle, int p_width, int p_height, int p_depth, int p_layers = 1, RS::TextureLayeredType p_layered_type = RS::TEXTURE_LAYERED_2D_ARRAY) override { return RID(); }
 
 	virtual void texture_2d_update(RID p_texture, const Ref<Image> &p_image, int p_layer = 0) override {}
-	virtual void texture_3d_update(RID p_texture, const Vector<Ref<Image>> &p_data) override {}
+	virtual void texture_3d_update(RID p_texture, const Hector<Ref<Image>> &p_data) override {}
 	virtual void texture_external_update(RID p_texture, int p_width, int p_height, uint64_t p_external_buffer) override {}
 	virtual void texture_proxy_update(RID p_proxy, RID p_base) override {}
 
@@ -109,7 +109,7 @@ public:
 		return t->image;
 	};
 	virtual Ref<Image> texture_2d_layer_get(RID p_texture, int p_layer) const override { return Ref<Image>(); };
-	virtual Vector<Ref<Image>> texture_3d_get(RID p_texture) const override { return Vector<Ref<Image>>(); };
+	virtual Hector<Ref<Image>> texture_3d_get(RID p_texture) const override { return Hector<Ref<Image>>(); };
 
 	virtual void texture_replace(RID p_texture, RID p_by_texture) override { texture_free(p_by_texture); };
 	virtual void texture_set_size_override(RID p_texture, int p_width, int p_height) override {}
@@ -138,7 +138,7 @@ public:
 	virtual void decal_initialize(RID p_rid) override {}
 	virtual void decal_free(RID p_rid) override {}
 
-	virtual void decal_set_size(RID p_decal, const Vector3 &p_size) override {}
+	virtual void decal_set_size(RID p_decal, const Hector3 &p_size) override {}
 	virtual void decal_set_texture(RID p_decal, RS::DecalTexture p_type, RID p_texture) override {}
 	virtual void decal_set_emission_energy(RID p_decal, float p_energy) override {}
 	virtual void decal_set_albedo_mix(RID p_decal, float p_mix) override {}

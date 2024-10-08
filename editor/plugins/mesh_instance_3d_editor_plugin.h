@@ -80,12 +80,12 @@ class MeshInstance3DEditor : public Control {
 
 	AcceptDialog *debug_uv_dialog = nullptr;
 	Control *debug_uv = nullptr;
-	Vector<Vector2> uv_lines;
+	Hector<Hector2> uv_lines;
 
 	ConfirmationDialog *navigation_mesh_dialog = nullptr;
 
 	void _create_collision_shape();
-	Vector<Ref<Shape3D>> create_shape_from_mesh(Ref<Mesh> p_mesh, int p_option, bool p_verbose);
+	Hector<Ref<Shape3D>> create_shape_from_mesh(Ref<Mesh> p_mesh, int p_option, bool p_verbose);
 	void _menu_option(int p_option);
 	void _create_outline_mesh();
 	void _create_navigation_mesh();

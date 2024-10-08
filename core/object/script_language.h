@@ -66,7 +66,7 @@ class ScriptServer {
 	};
 
 	static HashMap<StringName, GlobalScriptClass> global_classes;
-	static HashMap<StringName, Vector<StringName>> inheriters_cache;
+	static HashMap<StringName, Hector<StringName>> inheriters_cache;
 	static bool inheriters_cache_dirty;
 
 public:
@@ -150,7 +150,7 @@ public:
 	virtual Error reload(bool p_keep_state = false) = 0;
 
 #ifdef TOOLS_ENABLED
-	virtual Vector<DocData::ClassDoc> get_documentation() const = 0;
+	virtual Hector<DocData::ClassDoc> get_documentation() const = 0;
 	virtual String get_class_icon_path() const = 0;
 	virtual PropertyInfo get_class_category() const;
 #endif // TOOLS_ENABLED
@@ -265,7 +265,7 @@ public:
 	virtual void get_doc_comment_delimiters(List<String> *p_delimiters) const = 0;
 	virtual void get_string_delimiters(List<String> *p_delimiters) const = 0;
 	virtual Ref<Script> make_template(const String &p_template, const String &p_class_name, const String &p_base_class_name) const { return Ref<Script>(); }
-	virtual Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) { return Vector<ScriptTemplate>(); }
+	virtual Hector<ScriptTemplate> get_built_in_templates(const StringName &p_object) { return Hector<ScriptTemplate>(); }
 	virtual bool is_using_templates() { return false; }
 	virtual bool validate(const String &p_script, const String &p_path = "", List<String> *r_functions = nullptr, List<ScriptError> *r_errors = nullptr, List<Warning> *r_warnings = nullptr, HashSet<int> *r_safe_lines = nullptr) const = 0;
 	virtual String validate_path(const String &p_path) const { return ""; }
@@ -314,8 +314,8 @@ public:
 		Color font_color;
 		Ref<Resource> icon;
 		Variant default_value;
-		Vector<Pair<int, int>> matches;
-		Vector<Pair<int, int>> last_matches = { { -1, -1 } }; // This value correspond to an impossible match
+		Hector<Pair<int, int>> matches;
+		Hector<Pair<int, int>> last_matches = { { -1, -1 } }; // This value correspond to an impossible match
 		int location = LOCATION_OTHER;
 		String theme_color_name;
 
@@ -392,7 +392,7 @@ public:
 	virtual void debug_get_globals(List<String> *p_globals, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) = 0;
 	virtual String debug_parse_stack_level_expression(int p_level, const String &p_expression, int p_max_subitems = -1, int p_max_depth = -1) = 0;
 
-	virtual Vector<StackInfo> debug_get_current_stack_info() { return Vector<StackInfo>(); }
+	virtual Hector<StackInfo> debug_get_current_stack_info() { return Hector<StackInfo>(); }
 
 	virtual void reload_all_scripts() = 0;
 	virtual void reload_scripts(const Array &p_scripts, bool p_soft_reload) = 0;

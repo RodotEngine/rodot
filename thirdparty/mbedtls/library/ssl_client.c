@@ -552,7 +552,7 @@ static int ssl_write_client_hello_body(mbedtls_ssl_context *ssl,
     /* Write legacy_compression_methods (TLS 1.3) or
      * compression_methods (TLS 1.2)
      *
-     * For every TLS 1.3 ClientHello, this vector MUST contain exactly
+     * For every TLS 1.3 ClientHello, this Hector MUST contain exactly
      * one byte set to zero, which corresponds to the 'null' compression
      * method in prior versions of TLS.
      *
@@ -858,7 +858,7 @@ static int ssl_prepare_client_hello(mbedtls_ssl_context *ssl)
          * session MUST generate a new 32-byte value. This value need not be
          * random but SHOULD be unpredictable to avoid implementations fixating
          * on a specific value (also known as ossification). Otherwise, it MUST
-         * be set as a zero-length vector ( i.e., a zero-valued single byte
+         * be set as a zero-length Hector ( i.e., a zero-valued single byte
          * length field ).
          */
         session_id_len = 32;

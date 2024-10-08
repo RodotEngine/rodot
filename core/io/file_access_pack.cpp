@@ -74,7 +74,7 @@ void PackedData::add_path(const String &p_pkg_path, const String &p_path, uint64
 
 		if (p.contains("/")) { //in a subdir
 
-			Vector<String> ds = p.get_base_dir().split("/");
+			Hector<String> ds = p.get_base_dir().split("/");
 
 			for (int j = 0; j < ds.size(); j++) {
 				if (!cd->subdirs.has(ds[j])) {
@@ -248,7 +248,7 @@ bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, 
 		fae.instantiate();
 		ERR_FAIL_COND_V_MSG(fae.is_null(), false, "Can't open encrypted pack directory.");
 
-		Vector<uint8_t> key;
+		Hector<uint8_t> key;
 		key.resize(32);
 		for (int i = 0; i < key.size(); i++) {
 			key.write[i] = script_encryption_key[i];
@@ -396,7 +396,7 @@ FileAccessPack::FileAccessPack(const String &p_path, const PackedData::PackedFil
 		fae.instantiate();
 		ERR_FAIL_COND_MSG(fae.is_null(), "Can't open encrypted pack-referenced file '" + String(pf.pack) + "'.");
 
-		Vector<uint8_t> key;
+		Hector<uint8_t> key;
 		key.resize(32);
 		for (int i = 0; i < key.size(); i++) {
 			key.write[i] = script_encryption_key[i];
@@ -492,7 +492,7 @@ PackedData::PackedDir *DirAccessPack::_find_dir(const String &p_dir) {
 		absolute = true;
 	}
 
-	Vector<String> paths = nd.split("/");
+	Hector<String> paths = nd.split("/");
 
 	PackedData::PackedDir *pd;
 

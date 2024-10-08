@@ -114,17 +114,17 @@ namespace basisu
 		uint64_vec m_blocks;
 	};
 
-	typedef basisu::vector<gpu_image> gpu_image_vec;
+	typedef basisu::Hector<gpu_image> gpu_image_vec;
 
 	// KTX file writing
 
-	bool create_ktx_texture_file(uint8_vec &ktx_data, const basisu::vector<gpu_image_vec>& gpu_images, bool cubemap_flag);
+	bool create_ktx_texture_file(uint8_vec &ktx_data, const basisu::Hector<gpu_image_vec>& gpu_images, bool cubemap_flag);
 		
-	bool write_compressed_texture_file(const char *pFilename, const basisu::vector<gpu_image_vec>& g, bool cubemap_flag);
+	bool write_compressed_texture_file(const char *pFilename, const basisu::Hector<gpu_image_vec>& g, bool cubemap_flag);
 	
 	inline bool write_compressed_texture_file(const char *pFilename, const gpu_image_vec &g)
 	{
-		basisu::vector<gpu_image_vec> a;
+		basisu::Hector<gpu_image_vec> a;
 		a.push_back(g);
 		return write_compressed_texture_file(pFilename, a, false);
 	}

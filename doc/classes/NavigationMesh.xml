@@ -59,9 +59,9 @@
 			</description>
 		</method>
 		<method name="get_vertices" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
-				Returns a [PackedVector3Array] containing all the vertices being used to create the polygons.
+				Returns a [PackedHector3Array] containing all the vertices being used to create the polygons.
 			</description>
 		</method>
 		<method name="set_collision_mask_value">
@@ -74,7 +74,7 @@
 		</method>
 		<method name="set_vertices">
 			<return type="void" />
-			<param index="0" name="vertices" type="PackedVector3Array" />
+			<param index="0" name="vertices" type="PackedHector3Array" />
 			<description>
 				Sets the vertices that can be then indexed to create polygons with the [method add_polygon] method.
 			</description>
@@ -123,7 +123,7 @@
 		<member name="filter_baking_aabb" type="AABB" setter="set_filter_baking_aabb" getter="get_filter_baking_aabb" default="AABB(0, 0, 0, 0, 0, 0)">
 			If the baking [AABB] has a volume the navigation mesh baking will be restricted to its enclosing area.
 		</member>
-		<member name="filter_baking_aabb_offset" type="Vector3" setter="set_filter_baking_aabb_offset" getter="get_filter_baking_aabb_offset" default="Vector3(0, 0, 0)">
+		<member name="filter_baking_aabb_offset" type="Hector3" setter="set_filter_baking_aabb_offset" getter="get_filter_baking_aabb_offset" default="Hector3(0, 0, 0)">
 			The position offset applied to the [member filter_baking_aabb] [AABB].
 		</member>
 		<member name="filter_ledge_spans" type="bool" setter="set_filter_ledge_spans" getter="get_filter_ledge_spans" default="false">

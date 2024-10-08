@@ -1103,7 +1103,7 @@
                       CF2_HintMask          hintMask,
                       CF2_Fixed             hintOriginY,
                       const CF2_Blues       blues,
-                      const FT_Vector*      fractionalTranslation )
+                      const FT_Hector*      fractionalTranslation )
   {
     FT_ZERO( glyphpath );
 
@@ -1179,11 +1179,11 @@
   static void
   cf2_glyphpath_hintPoint( CF2_GlyphPath  glyphpath,
                            CF2_HintMap    hintmap,
-                           FT_Vector*     ppt,
+                           FT_Hector*     ppt,
                            CF2_Fixed      x,
                            CF2_Fixed      y )
   {
-    FT_Vector  pt;   /* hinted point in upright DS */
+    FT_Hector  pt;   /* hinted point in upright DS */
 
 
     pt.x = ADD_INT32( FT_MulFix( glyphpath->scaleX, x ),
@@ -1212,16 +1212,16 @@
    */
   static FT_Bool
   cf2_glyphpath_computeIntersection( CF2_GlyphPath     glyphpath,
-                                     const FT_Vector*  u1,
-                                     const FT_Vector*  u2,
-                                     const FT_Vector*  v1,
-                                     const FT_Vector*  v2,
-                                     FT_Vector*        intersection )
+                                     const FT_Hector*  u1,
+                                     const FT_Hector*  u2,
+                                     const FT_Hector*  v1,
+                                     const FT_Hector*  v2,
+                                     FT_Hector*        intersection )
   {
     /*
-     * Let `u' be a zero-based vector from the first segment, `v' from the
+     * Let `u' be a zero-based Hector from the first segment, `v' from the
      * second segment.
-     * Let `w 'be the zero-based vector from `u1' to `v1'.
+     * Let `w 'be the zero-based Hector from `u1' to `v1'.
      * `perp' is the `perpendicular dot product'; see
      * https://mathworld.wolfram.com/PerpDotProduct.html.
      * `s' is the parameter for the parametric line for the first segment
@@ -1230,7 +1230,7 @@
      * See notation in
      * http://geomalgorithms.com/a05-_intersect-1.html.
      * Calculations are done in 16.16, but must handle the squaring of
-     * line lengths in character space.  We scale all vectors by 1/32 to
+     * line lengths in character space.  We scale all Hectors by 1/32 to
      * avoid overflow.  This allows values up to 4095 to be squared.  The
      * scale factor cancels in the divide.
      *
@@ -1245,7 +1245,7 @@
 #define CF2_CS_SCALE( x )         \
           ( ( (x) + 0x10 ) >> 5 )
 
-    FT_Vector  u, v, w;      /* scaled vectors */
+    FT_Hector  u, v, w;      /* scaled Hectors */
     CF2_Fixed  denominator, s;
 
 
@@ -1333,16 +1333,16 @@
   static void
   cf2_glyphpath_pushPrevElem( CF2_GlyphPath  glyphpath,
                               CF2_HintMap    hintmap,
-                              FT_Vector*     nextP0,
-                              FT_Vector      nextP1,
+                              FT_Hector*     nextP0,
+                              FT_Hector      nextP1,
                               FT_Bool        close )
   {
     CF2_CallbackParamsRec  params;
 
-    FT_Vector*  prevP0;
-    FT_Vector*  prevP1;
+    FT_Hector*  prevP0;
+    FT_Hector*  prevP1;
 
-    FT_Vector  intersection    = { 0, 0 };
+    FT_Hector  intersection    = { 0, 0 };
     FT_Bool    useIntersection = FALSE;
 
 
@@ -1496,7 +1496,7 @@
   /* element                                                            */
   static void
   cf2_glyphpath_pushMove( CF2_GlyphPath  glyphpath,
-                          FT_Vector      start )
+                          FT_Hector      start )
   {
     CF2_CallbackParamsRec  params;
 
@@ -1532,7 +1532,7 @@
   /*
    * All coordinates are in character space.
    * On input, (x1, y1) and (x2, y2) give line segment.
-   * On output, (x, y) give offset vector.
+   * On output, (x, y) give offset Hector.
    * We use a piecewise approximation to trig functions.
    *
    * TODO: Offset true perpendicular and proper length
@@ -1726,7 +1726,7 @@
                         CF2_Fixed      y )
   {
     CF2_Fixed  xOffset, yOffset;
-    FT_Vector  P0, P1;
+    FT_Hector  P0, P1;
     FT_Bool    newHintMap;
 
     /*
@@ -1836,7 +1836,7 @@
                          CF2_Fixed      y3 )
   {
     CF2_Fixed  xOffset1, yOffset1, xOffset3, yOffset3;
-    FT_Vector  P0, P1, P2, P3;
+    FT_Hector  P0, P1, P2, P3;
 
 
     /* TODO: ignore zero length portions of curve?? */

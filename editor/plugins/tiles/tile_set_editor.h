@@ -68,7 +68,7 @@ private:
 
 	void _drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from);
 	bool _can_drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from) const;
-	void _load_texture_files(const Vector<String> &p_paths);
+	void _load_texture_files(const Hector<String> &p_paths);
 
 	void _update_sources_list(int force_selected_id = -1);
 
@@ -103,7 +103,7 @@ private:
 	PanelContainer *expanded_area = nullptr;
 	Control *expanded_editor = nullptr;
 	ObjectID expanded_editor_parent;
-	LocalVector<SplitContainer *> disable_on_expand;
+	LocalHector<SplitContainer *> disable_on_expand;
 
 	void _tile_set_changed();
 	void _tab_changed(int p_tab_changed);

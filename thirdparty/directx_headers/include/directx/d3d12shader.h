@@ -99,7 +99,7 @@ typedef struct _D3D12_SHADER_TYPE_DESC
     D3D_SHADER_VARIABLE_CLASS   Class;          // Variable class (e.g. object, matrix, etc.)
     D3D_SHADER_VARIABLE_TYPE    Type;           // Variable type (e.g. float, sampler, etc.)
     UINT                        Rows;           // Number of rows (for matrices, 1 for other numeric, 0 if not applicable)
-    UINT                        Columns;        // Number of columns (for vectors & matrices, 1 for other numeric, 0 if not applicable)
+    UINT                        Columns;        // Number of columns (for Hectors & matrices, 1 for other numeric, 0 if not applicable)
     UINT                        Elements;       // Number of elements (0 if not an array)
     UINT                        Members;        // Number of members (0 if not a structure)
     UINT                        Offset;         // Offset from the start of structure (0 if not a structure member)
@@ -257,7 +257,7 @@ typedef struct _D3D12_PARAMETER_DESC
     LPCSTR                      Name;               // Parameter name.
     LPCSTR                      SemanticName;       // Parameter semantic name (+index).
     D3D_SHADER_VARIABLE_TYPE    Type;               // Element type.
-    D3D_SHADER_VARIABLE_CLASS   Class;              // Scalar/Vector/Matrix.
+    D3D_SHADER_VARIABLE_CLASS   Class;              // Scalar/Hector/Matrix.
     UINT                        Rows;               // Rows are for matrix parameters.
     UINT                        Columns;            // Components or Columns in matrix.
     D3D_INTERPOLATION_MODE      InterpolationMode;  // Interpolation mode.

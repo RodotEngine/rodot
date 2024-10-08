@@ -69,8 +69,8 @@ uint32_t RenderSceneDataExtension::get_view_count() const {
 	return ret;
 }
 
-Vector3 RenderSceneDataExtension::get_view_eye_offset(uint32_t p_view) const {
-	Vector3 ret;
+Hector3 RenderSceneDataExtension::get_view_eye_offset(uint32_t p_view) const {
+	Hector3 ret;
 	GDVIRTUAL_CALL(_get_view_eye_offset, p_view, ret);
 	return ret;
 }

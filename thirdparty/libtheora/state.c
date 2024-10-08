@@ -24,12 +24,12 @@
 # include "zlib.h"
 #endif
 
-/*The function used to fill in the chroma plane motion vectors for a macro
-   block when 4 different motion vectors are specified in the luma plane.
+/*The function used to fill in the chroma plane motion Hectors for a macro
+   block when 4 different motion Hectors are specified in the luma plane.
   This version is for use with chroma decimated in the X and Y directions
    (4:2:0).
-  _cbmvs: The chroma block-level motion vectors to fill in.
-  _lbmvs: The luma block-level motion vectors.*/
+  _cbmvs: The chroma block-level motion Hectors to fill in.
+  _lbmvs: The luma block-level motion Hectors.*/
 static void oc_set_chroma_mvs00(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   int dx;
   int dy;
@@ -40,11 +40,11 @@ static void oc_set_chroma_mvs00(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   _cbmvs[0]=OC_MV(OC_DIV_ROUND_POW2(dx,2,2),OC_DIV_ROUND_POW2(dy,2,2));
 }
 
-/*The function used to fill in the chroma plane motion vectors for a macro
-   block when 4 different motion vectors are specified in the luma plane.
+/*The function used to fill in the chroma plane motion Hectors for a macro
+   block when 4 different motion Hectors are specified in the luma plane.
   This version is for use with chroma decimated in the Y direction.
-  _cbmvs: The chroma block-level motion vectors to fill in.
-  _lbmvs: The luma block-level motion vectors.*/
+  _cbmvs: The chroma block-level motion Hectors to fill in.
+  _lbmvs: The luma block-level motion Hectors.*/
 static void oc_set_chroma_mvs01(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   int dx;
   int dy;
@@ -56,11 +56,11 @@ static void oc_set_chroma_mvs01(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   _cbmvs[1]=OC_MV(OC_DIV_ROUND_POW2(dx,1,1),OC_DIV_ROUND_POW2(dy,1,1));
 }
 
-/*The function used to fill in the chroma plane motion vectors for a macro
-   block when 4 different motion vectors are specified in the luma plane.
+/*The function used to fill in the chroma plane motion Hectors for a macro
+   block when 4 different motion Hectors are specified in the luma plane.
   This version is for use with chroma decimated in the X direction (4:2:2).
-  _cbmvs: The chroma block-level motion vectors to fill in.
-  _lbmvs: The luma block-level motion vectors.*/
+  _cbmvs: The chroma block-level motion Hectors to fill in.
+  _lbmvs: The luma block-level motion Hectors.*/
 static void oc_set_chroma_mvs10(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   int dx;
   int dy;
@@ -72,13 +72,13 @@ static void oc_set_chroma_mvs10(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   _cbmvs[2]=OC_MV(OC_DIV_ROUND_POW2(dx,1,1),OC_DIV_ROUND_POW2(dy,1,1));
 }
 
-/*The function used to fill in the chroma plane motion vectors for a macro
-   block when 4 different motion vectors are specified in the luma plane.
+/*The function used to fill in the chroma plane motion Hectors for a macro
+   block when 4 different motion Hectors are specified in the luma plane.
   This version is for use with no chroma decimation (4:4:4).
-  _cbmvs: The chroma block-level motion vectors to fill in.
-  _lmbmv: The luma macro-block level motion vector to fill in for use in
+  _cbmvs: The chroma block-level motion Hectors to fill in.
+  _lmbmv: The luma macro-block level motion Hector to fill in for use in
            prediction.
-  _lbmvs: The luma block-level motion vectors.*/
+  _lbmvs: The luma block-level motion Hectors.*/
 static void oc_set_chroma_mvs11(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   _cbmvs[0]=_lbmvs[0];
   _cbmvs[1]=_lbmvs[1];
@@ -86,8 +86,8 @@ static void oc_set_chroma_mvs11(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]){
   _cbmvs[3]=_lbmvs[3];
 }
 
-/*A table of functions used to fill in the chroma plane motion vectors for a
-   macro block when 4 different motion vectors are specified in the luma
+/*A table of functions used to fill in the chroma plane motion Hectors for a
+   macro block when 4 different motion Hectors are specified in the luma
    plane.*/
 const oc_set_chroma_mvs_func OC_SET_CHROMA_MVS_TABLE[TH_PF_NFORMATS]={
   (oc_set_chroma_mvs_func)oc_set_chroma_mvs00,
@@ -538,7 +538,7 @@ static void oc_state_frarray_clear(oc_theora_state *_state){
 
 /*Initializes the buffers used for reconstructed frames.
   These buffers are padded with 16 extra pixels on each side, to allow
-   unrestricted motion vectors without special casing the boundary.
+   unrestricted motion Hectors without special casing the boundary.
   If chroma is decimated in either direction, the padding is reduced by a
    factor of 2 on the appropriate sides.
   _nrefs: The number of reference buffers to init; must be in the range 3...6.*/
@@ -760,7 +760,7 @@ void oc_state_clear(oc_theora_state *_state){
 
 
 /*Duplicates the pixels on the border of the image plane out into the
-   surrounding padding for use by unrestricted motion vectors.
+   surrounding padding for use by unrestricted motion Hectors.
   This function only adds the left and right borders, and only for the fragment
    rows specified.
   _refi: The index of the reference buffer to pad.
@@ -791,7 +791,7 @@ void oc_state_borders_fill_rows(oc_theora_state *_state,int _refi,int _pli,
 }
 
 /*Duplicates the pixels on the border of the image plane out into the
-   surrounding padding for use by unrestricted motion vectors.
+   surrounding padding for use by unrestricted motion Hectors.
   This function only adds the top and bottom borders, and must be called after
    the left and right borders are added.
   _refi:      The index of the reference buffer to pad.
@@ -822,7 +822,7 @@ void oc_state_borders_fill_caps(oc_theora_state *_state,int _refi,int _pli){
 }
 
 /*Duplicates the pixels on the border of the given reference image out into
-   the surrounding padding for use by unrestricted motion vectors.
+   the surrounding padding for use by unrestricted motion Hectors.
   _state: The context containing the reference buffers.
   _refi:  The index of the reference buffer to pad.*/
 void oc_state_borders_fill(oc_theora_state *_state,int _refi){
@@ -838,15 +838,15 @@ void oc_state_borders_fill(oc_theora_state *_state,int _refi){
   _state:   The Theora state the offsets are to be computed with.
   _offsets: Returns the offset for the buffer(s).
             _offsets[0] is always set.
-            _offsets[1] is set if the motion vector has non-zero fractional
+            _offsets[1] is set if the motion Hector has non-zero fractional
              components.
   _pli:     The color plane index.
-  _mv:      The motion vector.
+  _mv:      The motion Hector.
   Return: The number of offsets returned: 1 or 2.*/
 int oc_state_get_mv_offsets(const oc_theora_state *_state,int _offsets[2],
  int _pli,oc_mv _mv){
-  /*Here is a brief description of how Theora handles motion vectors:
-    Motion vector components are specified to half-pixel accuracy in
+  /*Here is a brief description of how Theora handles motion Hectors:
+    Motion Hector components are specified to half-pixel accuracy in
      undecimated directions of each plane, and quarter-pixel accuracy in
      decimated directions.
     Integer parts are extracted by dividing (not shifting) by the
@@ -970,7 +970,7 @@ void oc_state_frag_recon_c(const oc_theora_state *_state,ptrdiff_t _fragi,
     /*We round this dequant product (and not any of the others) because there's
        no iDCT rounding.*/
     p=(ogg_int16_t)(_dct_coeffs[0]*(ogg_int32_t)_dc_quant+15>>5);
-    /*LOOP VECTORIZES.*/
+    /*LOOP HectorIZES.*/
     for(ci=0;ci<64;ci++)_dct_coeffs[64+ci]=p;
   }
   else{

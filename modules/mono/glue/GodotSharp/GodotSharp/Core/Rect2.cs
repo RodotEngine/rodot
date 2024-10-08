@@ -14,14 +14,14 @@ namespace Godot
     [StructLayout(LayoutKind.Sequential)]
     public struct Rect2 : IEquatable<Rect2>
     {
-        private Vector2 _position;
-        private Vector2 _size;
+        private Hector2 _position;
+        private Hector2 _size;
 
         /// <summary>
         /// Beginning corner. Typically has values lower than <see cref="End"/>.
         /// </summary>
         /// <value>Directly uses a private field.</value>
-        public Vector2 Position
+        public Hector2 Position
         {
             readonly get { return _position; }
             set { _position = value; }
@@ -32,7 +32,7 @@ namespace Godot
         /// If the size is negative, you can use <see cref="Abs"/> to fix it.
         /// </summary>
         /// <value>Directly uses a private field.</value>
-        public Vector2 Size
+        public Hector2 Size
         {
             readonly get { return _size; }
             set { _size = value; }
@@ -46,7 +46,7 @@ namespace Godot
         /// Getting is equivalent to <paramref name="value"/> = <see cref="Position"/> + <see cref="Size"/>,
         /// setting is equivalent to <see cref="Size"/> = <paramref name="value"/> - <see cref="Position"/>
         /// </value>
-        public Vector2 End
+        public Hector2 End
         {
             readonly get { return _position + _size; }
             set { _size = value - _position; }
@@ -68,8 +68,8 @@ namespace Godot
         /// <returns>The modified <see cref="Rect2"/>.</returns>
         public readonly Rect2 Abs()
         {
-            Vector2 end = End;
-            Vector2 topLeft = end.Min(_position);
+            Hector2 end = End;
+            Hector2 topLeft = end.Min(_position);
             return new Rect2(topLeft, _size.Abs());
         }
 
@@ -93,8 +93,8 @@ namespace Godot
 
             newRect._position = b._position.Max(_position);
 
-            Vector2 bEnd = b._position + b._size;
-            Vector2 end = _position + _size;
+            Hector2 bEnd = b._position + b._size;
+            Hector2 end = _position + _size;
 
             newRect._size = bEnd.Min(end) - newRect._position;
 
@@ -105,7 +105,7 @@ namespace Godot
         /// Returns <see langword="true"/> if this <see cref="Rect2"/> is finite, by calling
         /// <see cref="Mathf.IsFinite(real_t)"/> on each component.
         /// </summary>
-        /// <returns>Whether this vector is finite or not.</returns>
+        /// <returns>Whether this Hector is finite or not.</returns>
         public bool IsFinite()
         {
             return _position.IsFinite() && _size.IsFinite();
@@ -130,12 +130,12 @@ namespace Godot
         /// </summary>
         /// <param name="to">The point to include.</param>
         /// <returns>The expanded <see cref="Rect2"/>.</returns>
-        public readonly Rect2 Expand(Vector2 to)
+        public readonly Rect2 Expand(Hector2 to)
         {
             Rect2 expanded = this;
 
-            Vector2 begin = expanded._position;
-            Vector2 end = expanded._position + expanded._size;
+            Hector2 begin = expanded._position;
+            Hector2 end = expanded._position + expanded._size;
 
             if (to.X < begin.X)
             {
@@ -166,7 +166,7 @@ namespace Godot
         /// to <see cref="Position"/> + (<see cref="Size"/> / 2).
         /// </summary>
         /// <returns>The center.</returns>
-        public readonly Vector2 GetCenter()
+        public readonly Hector2 GetCenter()
         {
             return _position + (_size * 0.5f);
         }
@@ -176,10 +176,10 @@ namespace Godot
         /// This is useful for collision detection algorithms.
         /// </summary>
         /// <param name="direction">The direction to find support for.</param>
-        /// <returns>A vector representing the support.</returns>
-        public readonly Vector2 GetSupport(Vector2 direction)
+        /// <returns>A Hector representing the support.</returns>
+        public readonly Hector2 GetSupport(Hector2 direction)
         {
-            Vector2 support = _position;
+            Hector2 support = _position;
             if (direction.X > 0.0f)
             {
                 support.X += _size.X;
@@ -277,7 +277,7 @@ namespace Godot
         /// <returns>
         /// A <see langword="bool"/> for whether or not the <see cref="Rect2"/> contains <paramref name="point"/>.
         /// </returns>
-        public readonly bool HasPoint(Vector2 point)
+        public readonly bool HasPoint(Hector2 point)
         {
             if (point.X < _position.X)
                 return false;
@@ -370,7 +370,7 @@ namespace Godot
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="size">The size.</param>
-        public Rect2(Vector2 position, Vector2 size)
+        public Rect2(Hector2 position, Hector2 size)
         {
             _position = position;
             _size = size;
@@ -382,10 +382,10 @@ namespace Godot
         /// <param name="position">The position.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        public Rect2(Vector2 position, real_t width, real_t height)
+        public Rect2(Hector2 position, real_t width, real_t height)
         {
             _position = position;
-            _size = new Vector2(width, height);
+            _size = new Hector2(width, height);
         }
 
         /// <summary>
@@ -394,9 +394,9 @@ namespace Godot
         /// <param name="x">The position's X coordinate.</param>
         /// <param name="y">The position's Y coordinate.</param>
         /// <param name="size">The size.</param>
-        public Rect2(real_t x, real_t y, Vector2 size)
+        public Rect2(real_t x, real_t y, Hector2 size)
         {
-            _position = new Vector2(x, y);
+            _position = new Hector2(x, y);
             _size = size;
         }
 
@@ -409,8 +409,8 @@ namespace Godot
         /// <param name="height">The height.</param>
         public Rect2(real_t x, real_t y, real_t width, real_t height)
         {
-            _position = new Vector2(x, y);
-            _size = new Vector2(width, height);
+            _position = new Hector2(x, y);
+            _size = new Hector2(width, height);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace Godot
 
         /// <summary>
         /// Returns <see langword="true"/> if this rect and <paramref name="other"/> are approximately equal,
-        /// by running <see cref="Vector2.IsEqualApprox(Vector2)"/> on each component.
+        /// by running <see cref="Hector2.IsEqualApprox(Hector2)"/> on each component.
         /// </summary>
         /// <param name="other">The other rect to compare.</param>
         /// <returns>Whether or not the rects are approximately equal.</returns>

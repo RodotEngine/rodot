@@ -52,12 +52,12 @@
    * Simple glyph flags.
    */
 #define ON_CURVE_POINT  0x01  /* same value as FT_CURVE_TAG_ON            */
-#define X_SHORT_VECTOR  0x02
-#define Y_SHORT_VECTOR  0x04
+#define X_SHORT_Hector  0x02
+#define Y_SHORT_Hector  0x04
 #define REPEAT_FLAG     0x08
-#define X_POSITIVE      0x10  /* two meanings depending on X_SHORT_VECTOR */
+#define X_POSITIVE      0x10  /* two meanings depending on X_SHORT_Hector */
 #define SAME_X          0x10
-#define Y_POSITIVE      0x20  /* two meanings depending on Y_SHORT_VECTOR */
+#define Y_POSITIVE      0x20  /* two meanings depending on Y_SHORT_Hector */
 #define SAME_Y          0x20
 #define OVERLAP_SIMPLE  0x40  /* retained as FT_OUTLINE_OVERLAP           */
 
@@ -351,7 +351,7 @@
 
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
-    FT_Vector       *vec, *vec_limit;
+    FT_Hector       *vec, *vec_limit;
     FT_Pos          x, y;
     FT_Short        *cont, *cont_limit, last;
 
@@ -474,7 +474,7 @@
       FT_Byte  f     = *flag;
 
 
-      if ( f & X_SHORT_VECTOR )
+      if ( f & X_SHORT_Hector )
       {
         if ( p + 1 > limit )
           goto Invalid_Outline;
@@ -508,7 +508,7 @@
       FT_Byte  f     = *flag;
 
 
-      if ( f & Y_SHORT_VECTOR )
+      if ( f & Y_SHORT_Hector )
       {
         if ( p + 1 > limit )
           goto Invalid_Outline;
@@ -891,7 +891,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_Memory   memory    = loader->face->root.memory;
-    FT_Vector*  unrounded = NULL;
+    FT_Hector*  unrounded = NULL;
 #endif
 
 
@@ -929,8 +929,8 @@
     }
 
     {
-      FT_Vector*  vec   = outline->points;
-      FT_Vector*  limit = outline->points + n_points;
+      FT_Hector*  vec   = outline->points;
+      FT_Hector*  limit = outline->points + n_points;
 
       FT_Fixed  x_scale = 0; /* pacify compiler */
       FT_Fixed  y_scale = 0;
@@ -954,7 +954,7 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
         if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
         {
-          FT_Vector*  u = unrounded;
+          FT_Hector*  u = unrounded;
 
 
           for ( ; vec < limit; vec++, u++ )
@@ -1062,8 +1062,8 @@
       FT_UInt     num_points = (FT_UInt)gloader->base.outline.n_points;
       FT_UInt     k = (FT_UInt)subglyph->arg1;
       FT_UInt     l = (FT_UInt)subglyph->arg2;
-      FT_Vector*  p1;
-      FT_Vector*  p2;
+      FT_Hector*  p1;
+      FT_Hector*  p2;
 
 
       /* match l-th point of the newly loaded component to the k-th point */
@@ -1584,11 +1584,11 @@
       {
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
-        FT_Vector   points[4];
+        FT_Hector   points[4];
         FT_Outline  outline;
 
         /* unrounded values */
-        FT_Vector  unrounded[4] = { {0, 0}, {0, 0}, {0, 0}, {0, 0} };
+        FT_Hector  unrounded[4] = { {0, 0}, {0, 0}, {0, 0}, {0, 0} };
 
 
         points[0] = loader->pp1;
@@ -1745,7 +1745,7 @@
         FT_SubGlyph  subglyph;
 
         FT_Outline  outline = { 0, 0, NULL, NULL, NULL, 0 };
-        FT_Vector*  unrounded = NULL;
+        FT_Hector*  unrounded = NULL;
 
 
         limit = (short)gloader->current.num_subglyphs;
@@ -1854,7 +1854,7 @@
         /* read each subglyph independently */
         for ( n = 0; n < num_subglyphs; n++ )
         {
-          FT_Vector  pp[4];
+          FT_Hector  pp[4];
 
           FT_Int  linear_hadvance;
           FT_Int  linear_vadvance;

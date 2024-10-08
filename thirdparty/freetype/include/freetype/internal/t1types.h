@@ -120,7 +120,7 @@ FT_BEGIN_HEADER
     FT_Byte          paint_type;
     FT_Byte          font_type;
     FT_Matrix        font_matrix;
-    FT_Vector        font_offset;
+    FT_Hector        font_offset;
     FT_BBox          font_bbox;
     FT_Long          font_id;
 
@@ -213,7 +213,7 @@ FT_BEGIN_HEADER
     PS_Blend       blend;
 
     /* undocumented, optional: indices of subroutines that express      */
-    /* the NormalizeDesignVector and the ConvertDesignVector procedure, */
+    /* the NormalizeDesignHector and the ConvertDesignHector procedure, */
     /* respectively, as Type 2 charstrings; -1 if keywords not present  */
     FT_Int         ndv_idx;
     FT_Int         cdv_idx;

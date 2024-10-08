@@ -8,13 +8,13 @@
 */
 
 //
-//  UVector32 is a class implementing a vector of 32 bit integers.
-//            It is similar to UVector, but holds int32_t values rather than pointers.
-//            Most of the code is unchanged from UVector.
+//  UHector32 is a class implementing a Hector of 32 bit integers.
+//            It is similar to UHector, but holds int32_t values rather than pointers.
+//            Most of the code is unchanged from UHector.
 //
 
-#ifndef UVECTOR32_H
-#define UVECTOR32_H
+#ifndef UHector32_H
+#define UHector32_H
 
 #include "unicode/utypes.h"
 #include "unicode/uobject.h"
@@ -26,14 +26,14 @@ U_NAMESPACE_BEGIN
 
 
 /**
- * <p>Ultralightweight C++ implementation of a <tt>void*</tt> vector
- * that is (mostly) compatible with java.util.Vector.
+ * <p>Ultralightweight C++ implementation of a <tt>void*</tt> Hector
+ * that is (mostly) compatible with java.util.Hector.
  *
  * <p>This is a very simple implementation, written to satisfy an
  * immediate porting need.  As such, it is not completely fleshed out,
  * and it aims for simplicity and conformity.  Nonetheless, it serves
- * its purpose (porting code from java that uses java.util.Vector)
- * well, and it could be easily made into a more robust vector class.
+ * its purpose (porting code from java that uses java.util.Hector)
+ * well, and it could be easily made into a more robust Hector class.
  *
  * <p><b>Design notes</b>
  *
@@ -45,10 +45,10 @@ U_NAMESPACE_BEGIN
  * coarse-grained -- similar to UnicodeString's protocol, but even
  * coarser.  The class contains <em>one static flag</em> that is set
  * when any call to <tt>new</tt> returns zero.  This allows the caller
- * to use several vectors and make just one check at the end to see if
+ * to use several Hectors and make just one check at the end to see if
  * a memory failure occurred.  This is more efficient than making a
- * check after each call on each vector when doing many operations on
- * multiple vectors.  The single static flag works best when memory
+ * check after each call on each Hector when doing many operations on
+ * multiple Hectors.  The single static flag works best when memory
  * failures are infrequent, and when recovery options are limited or
  * nonexistent.
  *
@@ -58,7 +58,7 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
+class U_COMMON_API UHector32 : public UObject {
 private:
     int32_t   count;
 
@@ -69,32 +69,32 @@ private:
     int32_t*  elements;
 
 public:
-    UVector32(UErrorCode &status);
+    UHector32(UErrorCode &status);
 
-    UVector32(int32_t initialCapacity, UErrorCode &status);
+    UHector32(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector32();
+    virtual ~UHector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    void assign(const UHector32& other, UErrorCode &ec);
 
     /**
-     * Compare this vector with another.  They will be considered
+     * Compare this Hector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool operator==(const UHector32& other) const;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    inline bool operator!=(const UHector32& other) const;
 
     //------------------------------------------------------------
-    // java.util.Vector API
+    // java.util.Hector API
     //------------------------------------------------------------
 
     inline void addElement(int32_t elem, UErrorCode &status);
@@ -105,7 +105,7 @@ public:
     
     inline int32_t elementAti(int32_t index) const;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(const UHector32 &other) const;
 
     inline int32_t lastElementi() const;
 
@@ -113,11 +113,11 @@ public:
 
     inline UBool contains(int32_t elem) const;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool containsAll(const UHector32& other) const;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(const UHector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(const UHector32& other);
 
     void removeElementAt(int32_t index);
 
@@ -134,7 +134,7 @@ public:
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     /**
-     * Change the size of this vector as follows: If newSize is
+     * Change the size of this Hector as follows: If newSize is
      * smaller, then truncate the array, possibly deleting held
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
@@ -146,30 +146,30 @@ public:
     //------------------------------------------------------------
 
     /**
-     * Returns true if this vector contains none of the elements
-     * of the given vector.
-     * @param other vector to be checked for containment
+     * Returns true if this Hector contains none of the elements
+     * of the given Hector.
+     * @param other Hector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool containsNone(const UHector32& other) const;
 
 
     /**
-     * Insert the given integer into this vector at its sorted position.
+     * Insert the given integer into this Hector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
     void sortedInsert(int32_t elem, UErrorCode& ec);
 
     /**
-     * Returns a pointer to the internal array holding the vector.
+     * Returns a pointer to the internal array holding the Hector.
      */
     inline int32_t *getBuffer() const;
 
     /**
-     * Set the maximum allowed buffer capacity for this vector/stack.
+     * Set the maximum allowed buffer capacity for this Hector/stack.
      * Default with no limit set is unlimited, go until malloc() fails.
      * A Limit of zero means unlimited capacity.
-     * Units are vector elements (32 bits each), not bytes.
+     * Units are Hector elements (32 bits each), not bytes.
      */
     void setMaxCapacity(int32_t limit);
 
@@ -187,15 +187,15 @@ private:
     void _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector32(const UVector32&) = delete;
+    UHector32(const UHector32&) = delete;
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UHector32& operator=(const UHector32&) = delete;
 
 
     //  API Functions for Stack operations.
-    //  In the original UVector, these were in a separate derived class, UStack.
-    //  Here in UVector32, they are all together.
+    //  In the original UHector, these were in a separate derived class, UStack.
+    //  Here in UHector32, they are all together.
 public:
     inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
 
@@ -210,9 +210,9 @@ public:
 };
 
 
-// UVector32 inlines
+// UHector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+inline UBool UHector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
     if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
         return true;
     } else {
@@ -220,19 +220,19 @@ inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &stat
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
+inline int32_t UHector32::elementAti(int32_t index) const {
     return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
+inline void UHector32::addElement(int32_t elem, UErrorCode &status) {
     if (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
         count++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
+inline int32_t *UHector32::reserveBlock(int32_t size, UErrorCode &status) {
     if (ensureCapacity(count+size, status) == false) {
         return nullptr;
     }
@@ -241,7 +241,7 @@ inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
     return rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
+inline int32_t *UHector32::popFrame(int32_t size) {
     U_ASSERT(count >= size);
     count -= size;
     if (count < 0) {
@@ -252,47 +252,47 @@ inline int32_t *UVector32::popFrame(int32_t size) {
 
 
 
-inline int32_t UVector32::size() const {
+inline int32_t UHector32::size() const {
     return count;
 }
 
-inline UBool UVector32::isEmpty() const {
+inline UBool UHector32::isEmpty() const {
     return count == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
+inline UBool UHector32::contains(int32_t obj) const {
     return indexOf(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
+inline int32_t UHector32::lastElementi() const {
     return elementAti(count-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
+inline bool UHector32::operator!=(const UHector32& other) const {
     return !operator==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
+inline int32_t *UHector32::getBuffer() const {
     return elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
+inline UBool UHector32::empty() const {
     return isEmpty();
 }
 
-inline int32_t UVector32::peeki() const {
+inline int32_t UHector32::peeki() const {
     return lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+inline int32_t UHector32::push(int32_t i, UErrorCode &status) {
     addElement(i, status);
     return i;
 }
 
-inline int32_t UVector32::popi() {
+inline int32_t UHector32::popi() {
     int32_t result = 0;
     if (count > 0) {
         count--;

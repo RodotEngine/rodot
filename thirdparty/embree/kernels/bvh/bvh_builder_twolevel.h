@@ -135,7 +135,7 @@ namespace embree
           size_t meshSize = mesh->size();
           assert(isSmallGeometry(mesh));
           
-          mvector<PrimRef> prefs(topBuilder->scene->device, meshSize);
+          mHector<PrimRef> prefs(topBuilder->scene->device, meshSize);
           auto pinfo = createPrimRefArray(mesh,objectID_,meshSize,prefs,topBuilder->bvh->scene->progressInterface);
 
           size_t begin=0;
@@ -251,8 +251,8 @@ namespace embree
       BuilderList         builders;
       BVH*                bvh;
       Scene*              scene;      
-      mvector<BuildRef>   refs;
-      mvector<PrimRef>    prims;
+      mHector<BuildRef>   refs;
+      mHector<PrimRef>    prims;
       std::atomic<int>    nextRef;
       const size_t        singleThreadThreshold;
       Geometry::GTypeMask gtype;

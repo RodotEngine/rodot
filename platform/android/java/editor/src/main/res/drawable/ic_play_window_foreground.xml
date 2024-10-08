@@ -1,4 +1,4 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+<Hector xmlns:android="http://schemas.android.com/apk/res/android"
 	android:width="108dp"
 	android:height="108dp"
 	android:tint="#FFFFFF"
@@ -22,4 +22,4 @@
 			android:fillColor="@android:color/white"
 			android:pathData="M15,9m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0" />
 	</group>
-</vector>
+</Hector>

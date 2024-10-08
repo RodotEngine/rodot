@@ -42,7 +42,7 @@
 
 void ParticleProcessMaterialMinMaxPropertyEditor::_update_sizing() {
 	edit_size = range_edit_widget->get_size();
-	margin = Vector2(range_slider_left_icon->get_width(), (edit_size.y - range_slider_left_icon->get_height()) * 0.5);
+	margin = Hector2(range_slider_left_icon->get_width(), (edit_size.y - range_slider_left_icon->get_height()) * 0.5);
 	usable_area = edit_size - margin * 2;
 }
 
@@ -54,7 +54,7 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_draw() {
 	bool widget_active = mouse_inside || drag != Drag::NONE;
 
 	// FIXME: Need to offset by 1 due to some outline bug.
-	range_edit_widget->draw_rect(Rect2(margin + Vector2(1, 1), usable_area - Vector2(1, 1)), widget_active ? background_color.lerp(normal_color, 0.3) : background_color, false, 1.0);
+	range_edit_widget->draw_rect(Rect2(margin + Hector2(1, 1), usable_area - Hector2(1, 1)), widget_active ? background_color.lerp(normal_color, 0.3) : background_color, false, 1.0);
 
 	Color draw_color;
 
@@ -68,7 +68,7 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_draw() {
 		} else {
 			draw_color = normal_color;
 		}
-		range_edit_widget->draw_texture(range_slider_left_icon, Vector2(icon_offset, margin.y), draw_color);
+		range_edit_widget->draw_texture(range_slider_left_icon, Hector2(icon_offset, margin.y), draw_color);
 
 		icon_offset = _get_right_offset();
 
@@ -79,7 +79,7 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_draw() {
 		} else {
 			draw_color = normal_color;
 		}
-		range_edit_widget->draw_texture(range_slider_right_icon, Vector2(icon_offset, margin.y), draw_color);
+		range_edit_widget->draw_texture(range_slider_right_icon, Hector2(icon_offset, margin.y), draw_color);
 	}
 
 	if (drag == Drag::MIDDLE || drag == Drag::SCALE) {
@@ -91,8 +91,8 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_draw() {
 	}
 	range_edit_widget->draw_rect(_get_middle_rect(), draw_color);
 
-	Rect2 midpoint_rect(Vector2(margin.x + usable_area.x * (_get_min_ratio() + _get_max_ratio()) * 0.5 - 1, margin.y + 2),
-			Vector2(2, usable_area.y - 4));
+	Rect2 midpoint_rect(Hector2(margin.x + usable_area.x * (_get_min_ratio() + _get_max_ratio()) * 0.5 - 1, margin.y + 2),
+			Hector2(2, usable_area.y - 4));
 
 	range_edit_widget->draw_rect(midpoint_rect, midpoint_color);
 }
@@ -145,9 +145,9 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_gui_input(const Re
 				const Hover prev_hover = hover;
 				float left_icon_offset = _get_left_offset() - range_slider_left_icon->get_width() - 1;
 
-				if (Rect2(Vector2(left_icon_offset, 0), range_slider_left_icon->get_size()).has_point(mm->get_position())) {
+				if (Rect2(Hector2(left_icon_offset, 0), range_slider_left_icon->get_size()).has_point(mm->get_position())) {
 					hover = Hover::LEFT;
-				} else if (Rect2(Vector2(_get_right_offset(), 0), range_slider_right_icon->get_size()).has_point(mm->get_position())) {
+				} else if (Rect2(Hector2(_get_right_offset(), 0), range_slider_right_icon->get_size()).has_point(mm->get_position())) {
 					hover = Hover::RIGHT;
 				} else if (_get_middle_rect().has_point(mm->get_position())) {
 					hover = Hover::MIDDLE;
@@ -217,8 +217,8 @@ Rect2 ParticleProcessMaterialMinMaxPropertyEditor::_get_middle_rect() const {
 	}
 
 	return Rect2(
-			Vector2(_get_left_offset() - 1, margin.y),
-			Vector2(usable_area.x * (_get_max_ratio() - _get_min_ratio()) + 1, usable_area.y));
+			Hector2(_get_left_offset() - 1, margin.y),
+			Hector2(usable_area.x * (_get_max_ratio() - _get_min_ratio()) + 1, usable_area.y));
 }
 
 void ParticleProcessMaterialMinMaxPropertyEditor::_set_clamped_values(float p_min, float p_max) {
@@ -230,7 +230,7 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_set_clamped_values(float p_mi
 }
 
 void ParticleProcessMaterialMinMaxPropertyEditor::_sync_property() {
-	const Vector2 value = Vector2(min_range->get_value(), max_range->get_value());
+	const Hector2 value = Hector2(min_range->get_value(), max_range->get_value());
 	emit_changed(get_edited_property(), value, "", true);
 	range_edit_widget->queue_redraw();
 }
@@ -361,16 +361,16 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_notification(int p_what) {
 			drag_color = hovered_color.lerp(accent_color, 0.8);
 			midpoint_color = dark_theme ? Color(1, 1, 1) : Color(0, 0, 0);
 
-			range_edit_widget->set_custom_minimum_size(Vector2(0, range_slider_left_icon->get_height() + 8));
+			range_edit_widget->set_custom_minimum_size(Hector2(0, range_slider_left_icon->get_height() + 8));
 		} break;
 	}
 }
 
 void ParticleProcessMaterialMinMaxPropertyEditor::setup(float p_min, float p_max, float p_step, bool p_allow_less, bool p_allow_greater, bool p_degrees) {
-	property_range = Vector2(p_min, p_max);
+	property_range = Hector2(p_min, p_max);
 
 	// Initially all Ranges share properties.
-	for (Range *range : Vector<Range *>{ min_range, min_edit, max_range, max_edit }) {
+	for (Range *range : Hector<Range *>{ min_range, min_edit, max_range, max_edit }) {
 		range->set_min(p_min);
 		range->set_max(p_max);
 		range->set_step(p_step);
@@ -386,7 +386,7 @@ void ParticleProcessMaterialMinMaxPropertyEditor::setup(float p_min, float p_max
 }
 
 void ParticleProcessMaterialMinMaxPropertyEditor::update_property() {
-	const Vector2 value = get_edited_property_value();
+	const Hector2 value = get_edited_property_value();
 	min_range->set_value(value.x);
 	max_range->set_value(value.y);
 	_update_slider_values();

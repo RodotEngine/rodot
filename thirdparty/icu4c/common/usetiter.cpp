@@ -9,7 +9,7 @@
 #include "unicode/usetiter.h"
 #include "unicode/uniset.h"
 #include "unicode/unistr.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 

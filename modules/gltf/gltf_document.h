@@ -84,15 +84,15 @@ private:
 protected:
 	static void _bind_methods();
 	String _gen_unique_name(Ref<GLTFState> p_state, const String &p_name);
-	static Vector<Ref<GLTFDocumentExtension>> all_document_extensions;
-	Vector<Ref<GLTFDocumentExtension>> document_extensions;
+	static Hector<Ref<GLTFDocumentExtension>> all_document_extensions;
+	Hector<Ref<GLTFDocumentExtension>> document_extensions;
 
 public:
 	static void register_gltf_document_extension(Ref<GLTFDocumentExtension> p_extension, bool p_first_priority = false);
 	static void unregister_gltf_document_extension(Ref<GLTFDocumentExtension> p_extension);
 	static void unregister_all_gltf_document_extensions();
-	static Vector<Ref<GLTFDocumentExtension>> get_all_gltf_document_extensions();
-	static Vector<String> get_supported_gltf_extensions();
+	static Hector<Ref<GLTFDocumentExtension>> get_all_gltf_document_extensions();
+	static Hector<String> get_supported_gltf_extensions();
 	static HashSet<String> get_supported_gltf_extensions_hashset();
 
 	void set_naming_version(int p_version);
@@ -108,7 +108,7 @@ public:
 private:
 	void _build_parent_hierachy(Ref<GLTFState> p_state);
 	double _filter_number(double p_float);
-	void _round_min_max_components(Vector<double> &r_type_min, Vector<double> &r_type_max);
+	void _round_min_max_components(Hector<double> &r_type_min, Hector<double> &r_type_max);
 	String _get_component_type_name(const uint32_t p_component);
 	int _get_component_type_size(const int p_component_type);
 	Error _parse_scenes(Ref<GLTFState> p_state);
@@ -143,39 +143,39 @@ private:
 			const int p_component_type, const int p_component_size,
 			const bool p_normalized, const int p_byte_offset,
 			const bool p_for_vertex);
-	Vector<double> _decode_accessor(Ref<GLTFState> p_state,
+	Hector<double> _decode_accessor(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex);
-	Vector<float> _decode_accessor_as_floats(Ref<GLTFState> p_state,
+	Hector<float> _decode_accessor_as_floats(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex,
-			const Vector<int> &p_packed_vertex_ids = Vector<int>());
-	Vector<int> _decode_accessor_as_ints(Ref<GLTFState> p_state,
+			const Hector<int> &p_packed_vertex_ids = Hector<int>());
+	Hector<int> _decode_accessor_as_ints(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex,
-			const Vector<int> &p_packed_vertex_ids = Vector<int>());
-	Vector<Vector2> _decode_accessor_as_vec2(Ref<GLTFState> p_state,
+			const Hector<int> &p_packed_vertex_ids = Hector<int>());
+	Hector<Hector2> _decode_accessor_as_vec2(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex,
-			const Vector<int> &p_packed_vertex_ids = Vector<int>());
-	Vector<Vector3> _decode_accessor_as_vec3(Ref<GLTFState> p_state,
+			const Hector<int> &p_packed_vertex_ids = Hector<int>());
+	Hector<Hector3> _decode_accessor_as_vec3(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex,
-			const Vector<int> &p_packed_vertex_ids = Vector<int>());
-	Vector<Color> _decode_accessor_as_color(Ref<GLTFState> p_state,
+			const Hector<int> &p_packed_vertex_ids = Hector<int>());
+	Hector<Color> _decode_accessor_as_color(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex,
-			const Vector<int> &p_packed_vertex_ids = Vector<int>());
-	Vector<Quaternion> _decode_accessor_as_quaternion(Ref<GLTFState> p_state,
+			const Hector<int> &p_packed_vertex_ids = Hector<int>());
+	Hector<Quaternion> _decode_accessor_as_quaternion(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex);
-	Vector<Transform2D> _decode_accessor_as_xform2d(Ref<GLTFState> p_state,
+	Hector<Transform2D> _decode_accessor_as_xform2d(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex);
-	Vector<Basis> _decode_accessor_as_basis(Ref<GLTFState> p_state,
+	Hector<Basis> _decode_accessor_as_basis(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex);
-	Vector<Transform3D> _decode_accessor_as_xform(Ref<GLTFState> p_state,
+	Hector<Transform3D> _decode_accessor_as_xform(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
 			const bool p_for_vertex);
 	Error _parse_meshes(Ref<GLTFState> p_state);
@@ -183,8 +183,8 @@ private:
 	Error _serialize_texture_samplers(Ref<GLTFState> p_state);
 	Error _serialize_images(Ref<GLTFState> p_state);
 	Error _serialize_lights(Ref<GLTFState> p_state);
-	Ref<Image> _parse_image_bytes_into_image(Ref<GLTFState> p_state, const Vector<uint8_t> &p_bytes, const String &p_mime_type, int p_index, String &r_file_extension);
-	void _parse_image_save_image(Ref<GLTFState> p_state, const Vector<uint8_t> &p_bytes, const String &p_file_extension, int p_index, Ref<Image> p_image);
+	Ref<Image> _parse_image_bytes_into_image(Ref<GLTFState> p_state, const Hector<uint8_t> &p_bytes, const String &p_mime_type, int p_index, String &r_file_extension);
+	void _parse_image_save_image(Ref<GLTFState> p_state, const Hector<uint8_t> &p_bytes, const String &p_file_extension, int p_index, Ref<Image> p_image);
 	Error _parse_images(Ref<GLTFState> p_state, const String &p_base_path);
 	Error _parse_textures(Ref<GLTFState> p_state);
 	Error _parse_texture_samplers(Ref<GLTFState> p_state);
@@ -216,26 +216,26 @@ private:
 	Node3D *_generate_spatial(Ref<GLTFState> p_state, const GLTFNodeIndex p_node_index);
 	void _assign_node_names(Ref<GLTFState> p_state);
 	template <typename T>
-	T _interpolate_track(const Vector<real_t> &p_times, const Vector<T> &p_values,
+	T _interpolate_track(const Hector<real_t> &p_times, const Hector<T> &p_values,
 			const float p_time,
 			const GLTFAnimation::Interpolation p_interp);
 	GLTFAccessorIndex _encode_accessor_as_quaternions(Ref<GLTFState> p_state,
-			const Vector<Quaternion> p_attribs,
+			const Hector<Quaternion> p_attribs,
 			const bool p_for_vertex);
 	GLTFAccessorIndex _encode_accessor_as_weights(Ref<GLTFState> p_state,
-			const Vector<Color> p_attribs,
+			const Hector<Color> p_attribs,
 			const bool p_for_vertex);
 	GLTFAccessorIndex _encode_accessor_as_joints(Ref<GLTFState> p_state,
-			const Vector<Color> p_attribs,
+			const Hector<Color> p_attribs,
 			const bool p_for_vertex);
 	GLTFAccessorIndex _encode_accessor_as_floats(Ref<GLTFState> p_state,
-			const Vector<real_t> p_attribs,
+			const Hector<real_t> p_attribs,
 			const bool p_for_vertex);
 	GLTFAccessorIndex _encode_accessor_as_vec2(Ref<GLTFState> p_state,
-			const Vector<Vector2> p_attribs,
+			const Hector<Hector2> p_attribs,
 			const bool p_for_vertex);
 
-	void _calc_accessor_vec2_min_max(int p_i, const int p_element_count, Vector<double> &p_type_max, Vector2 p_attribs, Vector<double> &p_type_min) {
+	void _calc_accessor_vec2_min_max(int p_i, const int p_element_count, Hector<double> &p_type_max, Hector2 p_attribs, Hector<double> &p_type_min) {
 		if (p_i == 0) {
 			for (int32_t type_i = 0; type_i < p_element_count; type_i++) {
 				p_type_max.write[type_i] = p_attribs[(p_i * p_element_count) + type_i];
@@ -251,21 +251,21 @@ private:
 	}
 
 	GLTFAccessorIndex _encode_accessor_as_vec3(Ref<GLTFState> p_state,
-			const Vector<Vector3> p_attribs,
+			const Hector<Hector3> p_attribs,
 			const bool p_for_vertex);
-	GLTFAccessorIndex _encode_sparse_accessor_as_vec3(Ref<GLTFState> p_state, const Vector<Vector3> p_attribs, const Vector<Vector3> p_reference_attribs, const float p_reference_multiplier, const bool p_for_vertex, const GLTFAccessorIndex p_reference_accessor);
+	GLTFAccessorIndex _encode_sparse_accessor_as_vec3(Ref<GLTFState> p_state, const Hector<Hector3> p_attribs, const Hector<Hector3> p_reference_attribs, const float p_reference_multiplier, const bool p_for_vertex, const GLTFAccessorIndex p_reference_accessor);
 	GLTFAccessorIndex _encode_accessor_as_color(Ref<GLTFState> p_state,
-			const Vector<Color> p_attribs,
+			const Hector<Color> p_attribs,
 			const bool p_for_vertex);
 
-	void _calc_accessor_min_max(int p_i, const int p_element_count, Vector<double> &p_type_max, Vector<double> p_attribs, Vector<double> &p_type_min);
+	void _calc_accessor_min_max(int p_i, const int p_element_count, Hector<double> &p_type_max, Hector<double> p_attribs, Hector<double> &p_type_min);
 
 	GLTFAccessorIndex _encode_accessor_as_ints(Ref<GLTFState> p_state,
-			const Vector<int32_t> p_attribs,
+			const Hector<int32_t> p_attribs,
 			const bool p_for_vertex,
 			const bool p_for_indices);
 	GLTFAccessorIndex _encode_accessor_as_xform(Ref<GLTFState> p_state,
-			const Vector<Transform3D> p_attribs,
+			const Hector<Transform3D> p_attribs,
 			const bool p_for_vertex);
 	Error _encode_buffer_view(Ref<GLTFState> p_state, const double *p_src,
 			const int p_count, const GLTFAccessor::GLTFAccessorType p_accessor_type,

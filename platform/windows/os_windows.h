@@ -171,7 +171,7 @@ public:
 	virtual String get_distribution_name() const override;
 	virtual String get_version() const override;
 
-	virtual Vector<String> get_video_adapter_driver_info() const override;
+	virtual Hector<String> get_video_adapter_driver_info() const override;
 	virtual bool get_user_prefers_integrated_gpu() const override;
 
 	virtual void initialize_joypads() override {}
@@ -200,9 +200,9 @@ public:
 	virtual void set_environment(const String &p_var, const String &p_value) const override;
 	virtual void unset_environment(const String &p_var) const override;
 
-	virtual Vector<String> get_system_fonts() const override;
+	virtual Hector<String> get_system_fonts() const override;
 	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	virtual Hector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
 
 	virtual String get_executable_path() const override;
 

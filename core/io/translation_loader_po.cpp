@@ -63,7 +63,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 
 			// Read id strings and context.
 			{
-				Vector<uint8_t> data;
+				Hector<uint8_t> data;
 				f->seek(id_table_offset + i * 8);
 				uint32_t str_start = 0;
 				uint32_t str_len = f->get_32();
@@ -94,7 +94,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 
 			// Read translated strings.
 			{
-				Vector<uint8_t> data;
+				Hector<uint8_t> data;
 				f->seek(trans_table_offset + i * 8);
 				uint32_t str_len = f->get_32();
 				uint32_t str_offset = f->get_32();
@@ -114,7 +114,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 					}
 				} else {
 					uint32_t str_start = 0;
-					Vector<String> plural_msg;
+					Hector<String> plural_msg;
 					for (uint32_t j = 0; j < str_len + 1; j++) {
 						if (data[j] == 0x00) {
 							if (msg_id_plural.is_empty()) {
@@ -149,7 +149,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 		String msg_id;
 		String msg_str;
 		String msg_context;
-		Vector<String> msgs_plural;
+		Hector<String> msgs_plural;
 
 		if (r_error) {
 			*r_error = ERR_FILE_CORRUPT;
@@ -246,7 +246,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 
 			if (l.begins_with("msgstr[")) {
 				ERR_FAIL_COND_V_MSG(status != STATUS_READING_PLURAL, Ref<Resource>(), "Unexpected 'msgstr[]', was expecting 'msgid_plural' before 'msgstr[]' while parsing: " + path + ":" + itos(line));
-				plural_index++; // Increment to add to the next slot in vector msgs_plural.
+				plural_index++; // Increment to add to the next slot in Hector msgs_plural.
 				l = l.substr(9, l.length()).strip_edges();
 			} else if (l.begins_with("msgstr")) {
 				ERR_FAIL_COND_V_MSG(status != STATUS_READING_ID, Ref<Resource>(), "Unexpected 'msgstr', was expecting 'msgid' before 'msgstr' while parsing: " + path + ":" + itos(line));
@@ -322,7 +322,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 
 	ERR_FAIL_COND_V_MSG(config.is_empty(), Ref<Resource>(), "No config found in file: " + path + ".");
 
-	Vector<String> configs = config.split("\n");
+	Hector<String> configs = config.split("\n");
 	for (int i = 0; i < configs.size(); i++) {
 		String c = configs[i].strip_edges();
 		int p = c.find(":");

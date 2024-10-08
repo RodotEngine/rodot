@@ -88,7 +88,7 @@ void XRVRS::set_vrs_strength(float p_vrs_strength) {
 	}
 }
 
-RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array &p_eye_foci) {
+RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedHector2Array &p_eye_foci) {
 	ERR_FAIL_COND_V(p_eye_foci.is_empty(), RID());
 
 	int32_t texel_width = RD::get_singleton()->limit_get(RD::LIMIT_VRS_TEXEL_WIDTH);
@@ -119,7 +119,7 @@ RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array
 		}
 
 		// In with the new.
-		Vector<Ref<Image>> images;
+		Hector<Ref<Image>> images;
 		target_size = vrs_sizei;
 		eye_foci = p_eye_foci;
 
@@ -128,14 +128,14 @@ RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array
 			data.resize(vrs_sizei.x * vrs_sizei.y * 2);
 			uint8_t *data_ptr = data.ptrw();
 
-			Vector2i view_center;
+			Hector2i view_center;
 			view_center.x = int(vrs_size.x * (eye_foci[i].x + 1.0) * 0.5);
 			view_center.y = int(vrs_size.y * (eye_foci[i].y + 1.0) * 0.5);
 
 			int d = 0;
 			for (int y = 0; y < vrs_sizei.y; y++) {
 				for (int x = 0; x < vrs_sizei.x; x++) {
-					Vector2 offset = Vector2(x - view_center.x, y - view_center.y);
+					Hector2 offset = Hector2(x - view_center.x, y - view_center.y);
 					real_t density = 255.0 * MAX(0.0, (Math::abs(offset.x) - min_radius) / outer_radius);
 					data_ptr[d++] = MIN(255, density);
 					density = 255.0 * MAX(0.0, (Math::abs(offset.y) - min_radius) / outer_radius);

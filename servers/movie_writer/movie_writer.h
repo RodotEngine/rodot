@@ -31,7 +31,7 @@
 #ifndef MOVIE_WRITER_H
 #define MOVIE_WRITER_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/audio/audio_driver_dummy.h"
 #include "servers/audio_server.h"
 
@@ -47,7 +47,7 @@ class MovieWriter : public Object {
 
 	String project_name;
 
-	LocalVector<int32_t> audio_mix_buffer;
+	LocalHector<int32_t> audio_mix_buffer;
 
 	enum {
 		MAX_WRITERS = 8
@@ -67,7 +67,7 @@ protected:
 	GDVIRTUAL0RC_REQUIRED(AudioServer::SpeakerMode, _get_audio_speaker_mode)
 
 	GDVIRTUAL1RC_REQUIRED(bool, _handles_file, const String &)
-	GDVIRTUAL0RC_REQUIRED(Vector<String>, _get_supported_extensions)
+	GDVIRTUAL0RC_REQUIRED(Hector<String>, _get_supported_extensions)
 
 	GDVIRTUAL3R_REQUIRED(Error, _write_begin, const Size2i &, uint32_t, const String &)
 	GDVIRTUAL2R_REQUIRED(Error, _write_frame, const Ref<Image> &, GDExtensionConstPtr<int32_t>)

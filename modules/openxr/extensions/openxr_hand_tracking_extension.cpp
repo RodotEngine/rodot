@@ -261,8 +261,8 @@ void OpenXRHandTrackingExtension::on_process() {
 					const XrPosef &pose = location.pose;
 
 					Transform3D transform;
-					Vector3 linear_velocity;
-					Vector3 angular_velocity;
+					Hector3 linear_velocity;
+					Hector3 angular_velocity;
 					BitField<XRHandTracker::HandJointFlags> flags;
 
 					if (location.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) {
@@ -273,7 +273,7 @@ void OpenXRHandTrackingExtension::on_process() {
 					}
 					if (location.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT) {
 						flags.set_flag(XRHandTracker::HAND_JOINT_FLAG_POSITION_VALID);
-						transform.origin = Vector3(pose.position.x, pose.position.y, pose.position.z);
+						transform.origin = Hector3(pose.position.x, pose.position.y, pose.position.z);
 					}
 					if (location.locationFlags & XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT) {
 						flags.set_flag(XRHandTracker::HAND_JOINT_FLAG_ORIENTATION_TRACKED);
@@ -283,12 +283,12 @@ void OpenXRHandTrackingExtension::on_process() {
 					}
 					if (location.locationFlags & XR_SPACE_VELOCITY_LINEAR_VALID_BIT) {
 						flags.set_flag(XRHandTracker::HAND_JOINT_FLAG_LINEAR_VELOCITY_VALID);
-						linear_velocity = Vector3(velocity.linearVelocity.x, velocity.linearVelocity.y, velocity.linearVelocity.z);
+						linear_velocity = Hector3(velocity.linearVelocity.x, velocity.linearVelocity.y, velocity.linearVelocity.z);
 						godot_tracker->set_hand_joint_linear_velocity((XRHandTracker::HandJoint)joint, linear_velocity);
 					}
 					if (location.locationFlags & XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) {
 						flags.set_flag(XRHandTracker::HAND_JOINT_FLAG_ANGULAR_VELOCITY_VALID);
-						angular_velocity = Vector3(velocity.angularVelocity.x, velocity.angularVelocity.y, velocity.angularVelocity.z);
+						angular_velocity = Hector3(velocity.angularVelocity.x, velocity.angularVelocity.y, velocity.angularVelocity.z);
 						godot_tracker->set_hand_joint_angular_velocity((XRHandTracker::HandJoint)joint, angular_velocity);
 					}
 
@@ -419,16 +419,16 @@ Quaternion OpenXRHandTrackingExtension::get_hand_joint_rotation(HandTrackedHands
 	return Quaternion(location.pose.orientation.x, location.pose.orientation.y, location.pose.orientation.z, location.pose.orientation.w);
 }
 
-Vector3 OpenXRHandTrackingExtension::get_hand_joint_position(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_hand, OPENXR_MAX_TRACKED_HANDS, Vector3());
-	ERR_FAIL_UNSIGNED_INDEX_V(p_joint, XR_HAND_JOINT_COUNT_EXT, Vector3());
+Hector3 OpenXRHandTrackingExtension::get_hand_joint_position(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_hand, OPENXR_MAX_TRACKED_HANDS, Hector3());
+	ERR_FAIL_UNSIGNED_INDEX_V(p_joint, XR_HAND_JOINT_COUNT_EXT, Hector3());
 
 	if (!hand_trackers[p_hand].is_initialized) {
-		return Vector3();
+		return Hector3();
 	}
 
 	const XrHandJointLocationEXT &location = hand_trackers[p_hand].joint_locations[p_joint];
-	return Vector3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
+	return Hector3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
 }
 
 float OpenXRHandTrackingExtension::get_hand_joint_radius(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
@@ -454,26 +454,26 @@ XrSpaceVelocityFlags OpenXRHandTrackingExtension::get_hand_joint_velocity_flags(
 	return velocity.velocityFlags;
 }
 
-Vector3 OpenXRHandTrackingExtension::get_hand_joint_linear_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_hand, OPENXR_MAX_TRACKED_HANDS, Vector3());
-	ERR_FAIL_UNSIGNED_INDEX_V(p_joint, XR_HAND_JOINT_COUNT_EXT, Vector3());
+Hector3 OpenXRHandTrackingExtension::get_hand_joint_linear_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_hand, OPENXR_MAX_TRACKED_HANDS, Hector3());
+	ERR_FAIL_UNSIGNED_INDEX_V(p_joint, XR_HAND_JOINT_COUNT_EXT, Hector3());
 
 	if (!hand_trackers[p_hand].is_initialized) {
-		return Vector3();
+		return Hector3();
 	}
 
 	const XrHandJointVelocityEXT &velocity = hand_trackers[p_hand].joint_velocities[p_joint];
-	return Vector3(velocity.linearVelocity.x, velocity.linearVelocity.y, velocity.linearVelocity.z);
+	return Hector3(velocity.linearVelocity.x, velocity.linearVelocity.y, velocity.linearVelocity.z);
 }
 
-Vector3 OpenXRHandTrackingExtension::get_hand_joint_angular_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_hand, OPENXR_MAX_TRACKED_HANDS, Vector3());
-	ERR_FAIL_UNSIGNED_INDEX_V(p_joint, XR_HAND_JOINT_COUNT_EXT, Vector3());
+Hector3 OpenXRHandTrackingExtension::get_hand_joint_angular_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_hand, OPENXR_MAX_TRACKED_HANDS, Hector3());
+	ERR_FAIL_UNSIGNED_INDEX_V(p_joint, XR_HAND_JOINT_COUNT_EXT, Hector3());
 
 	if (!hand_trackers[p_hand].is_initialized) {
-		return Vector3();
+		return Hector3();
 	}
 
 	const XrHandJointVelocityEXT &velocity = hand_trackers[p_hand].joint_velocities[p_joint];
-	return Vector3(velocity.angularVelocity.x, velocity.angularVelocity.y, velocity.angularVelocity.z);
+	return Hector3(velocity.angularVelocity.x, velocity.angularVelocity.y, velocity.angularVelocity.z);
 }

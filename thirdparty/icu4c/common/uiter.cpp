@@ -232,7 +232,7 @@ uiter_setString(UCharIterator *iter, const char16_t *s, int32_t length) {
 
 /*
  * This is an implementation of a code unit (char16_t) iterator
- * for UTF-16BE strings, i.e., strings in byte-vectors where
+ * for UTF-16BE strings, i.e., strings in byte-Hectors where
  * each char16_t is stored as a big-endian pair of bytes.
  *
  * The UCharIterator.context field holds a pointer to the string.

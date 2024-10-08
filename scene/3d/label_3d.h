@@ -70,11 +70,11 @@ private:
 	mutable Ref<TriangleMesh> triangle_mesh;
 	RID mesh;
 	struct SurfaceData {
-		PackedVector3Array mesh_vertices;
-		PackedVector3Array mesh_normals;
+		PackedHector3Array mesh_vertices;
+		PackedHector3Array mesh_normals;
 		PackedFloat32Array mesh_tangents;
 		PackedColorArray mesh_colors;
-		PackedVector2Array mesh_uvs;
+		PackedHector2Array mesh_uvs;
 		PackedInt32Array indices;
 		int offset = 0;
 		float z_shift = 0.0;
@@ -134,7 +134,7 @@ private:
 	Array st_args;
 
 	RID text_rid;
-	Vector<RID> lines_rid;
+	Hector<RID> lines_rid;
 
 	RID base_material;
 	StandardMaterial3D::BillboardMode billboard_mode = StandardMaterial3D::BILLBOARD_DISABLED;
@@ -146,10 +146,10 @@ private:
 	bool dirty_font = true;
 	bool dirty_text = true;
 
-	void _generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, const Color &p_modulate, int p_priority = 0, int p_outline_size = 0);
+	void _generate_glyph_surfaces(const Glyph &p_glyph, Hector2 &r_offset, const Color &p_modulate, int p_priority = 0, int p_outline_size = 0);
 
 protected:
-	GDVIRTUAL2RC(TypedArray<Vector3i>, _structured_text_parser, Array, String)
+	GDVIRTUAL2RC(TypedArray<Hector3i>, _structured_text_parser, Array, String)
 
 	void _notification(int p_what);
 

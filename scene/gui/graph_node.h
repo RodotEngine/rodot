@@ -55,7 +55,7 @@ class GraphNode : public GraphElement {
 	};
 
 	struct PortCache {
-		Vector2 pos;
+		Hector2 pos;
 		int slot_index;
 		int type = 0;
 		Color color;
@@ -72,11 +72,11 @@ class GraphNode : public GraphElement {
 
 	String title;
 
-	Vector<PortCache> left_port_cache;
-	Vector<PortCache> right_port_cache;
+	Hector<PortCache> left_port_cache;
+	Hector<PortCache> right_port_cache;
 
 	HashMap<int, Slot> slot_table;
-	Vector<int> slot_y_cache;
+	Hector<int> slot_y_cache;
 
 	struct ThemeCache {
 		Ref<StyleBox> panel;
@@ -153,13 +153,13 @@ public:
 	bool is_ignoring_valid_connection_type() const;
 
 	int get_input_port_count();
-	Vector2 get_input_port_position(int p_port_idx);
+	Hector2 get_input_port_position(int p_port_idx);
 	int get_input_port_type(int p_port_idx);
 	Color get_input_port_color(int p_port_idx);
 	int get_input_port_slot(int p_port_idx);
 
 	int get_output_port_count();
-	Vector2 get_output_port_position(int p_port_idx);
+	Hector2 get_output_port_position(int p_port_idx);
 	int get_output_port_type(int p_port_idx);
 	Color get_output_port_color(int p_port_idx);
 	int get_output_port_slot(int p_port_idx);
@@ -168,8 +168,8 @@ public:
 
 	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	virtual Hector<int> get_allowed_size_flags_horizontal() const override;
+	virtual Hector<int> get_allowed_size_flags_vertical() const override;
 
 	GraphNode();
 };

@@ -8,10 +8,10 @@
 		The most basic example is the creation of a single triangle:
 		[codeblocks]
 		[gdscript]
-		var vertices = PackedVector3Array()
-		vertices.push_back(Vector3(0, 1, 0))
-		vertices.push_back(Vector3(1, 0, 0))
-		vertices.push_back(Vector3(0, 0, 1))
+		var vertices = PackedHector3Array()
+		vertices.push_back(Hector3(0, 1, 0))
+		vertices.push_back(Hector3(1, 0, 0))
+		vertices.push_back(Hector3(0, 0, 1))
 
 		# Initialize the ArrayMesh.
 		var arr_mesh = ArrayMesh.new()
@@ -25,11 +25,11 @@
 		m.mesh = arr_mesh
 		[/gdscript]
 		[csharp]
-		var vertices = new Vector3[]
+		var vertices = new Hector3[]
 		{
-		    new Vector3(0, 1, 0),
-		    new Vector3(1, 0, 0),
-		    new Vector3(0, 0, 1),
+		    new Hector3(0, 1, 0),
+		    new Hector3(1, 0, 0),
+		    new Hector3(0, 0, 1),
 		};
 
 		// Initialize the ArrayMesh.

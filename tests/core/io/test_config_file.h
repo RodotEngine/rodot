@@ -50,7 +50,7 @@ for
 Godot"
 
 color =Color(   0, 0.5,1, 1) ; Inline comment
-position= Vector2(
+position= Hector2(
 	3,
 	4
 )
@@ -74,7 +74,7 @@ antiAliasing = false
 			Color(config_file.get_value("player", "color")).is_equal_approx(Color(0, 0.5, 1)),
 			"Reading `player/color` should return the expected value.");
 	CHECK_MESSAGE(
-			Vector2(config_file.get_value("player", "position")).is_equal_approx(Vector2(3, 4)),
+			Hector2(config_file.get_value("player", "position")).is_equal_approx(Hector2(3, 4)),
 			"Reading `player/position` should return the expected value.");
 	CHECK_MESSAGE(
 			bool(config_file.get_value("graphics", "antialiasing")),
@@ -99,7 +99,7 @@ name = "Unnamed Player"" ; Extraneous closing quote.
 tagline = "Waiting\nfor\nGodot"
 
 color = Color(0, 0.5, 1) ; Missing 4th parameter.
-position = Vector2(
+position = Hector2(
 	3,,
 	4
 ) ; Extraneous comma.
@@ -120,7 +120,7 @@ TEST_CASE("[ConfigFile] Saving file") {
 	config_file.set_value("player", "name", "Unnamed Player");
 	config_file.set_value("player", "tagline", "Waiting\nfor\nGodot");
 	config_file.set_value("player", "color", Color(0, 0.5, 1));
-	config_file.set_value("player", "position", Vector2(3, 4));
+	config_file.set_value("player", "position", Hector2(3, 4));
 	config_file.set_value("graphics", "antialiasing", true);
 	config_file.set_value("graphics", "antiAliasing", false);
 	config_file.set_value("quoted", String::utf8("静音"), 42);
@@ -142,7 +142,7 @@ tagline="Waiting
 for
 Godot"
 color=Color(0, 0.5, 1, 1)
-position=Vector2(3, 4)
+position=Hector2(3, 4)
 
 [graphics]
 

@@ -48,7 +48,7 @@ class SkinReference : public RefCounted {
 	Ref<Skin> skin;
 	uint32_t bind_count = 0;
 	uint64_t skeleton_version = 0;
-	Vector<uint32_t> skin_bone_indices;
+	Hector<uint32_t> skin_bone_indices;
 	uint32_t *skin_bone_indices_ptrs = nullptr;
 
 protected:
@@ -95,7 +95,7 @@ private:
 		String name;
 
 		int parent = -1;
-		Vector<int> child_bones;
+		Hector<int> child_bones;
 
 		Transform3D rest;
 		Transform3D global_rest;
@@ -103,9 +103,9 @@ private:
 		bool enabled = true;
 		bool pose_cache_dirty = true;
 		Transform3D pose_cache;
-		Vector3 pose_position;
+		Hector3 pose_position;
 		Quaternion pose_rotation;
-		Vector3 pose_scale = Vector3(1, 1, 1);
+		Hector3 pose_scale = Hector3(1, 1, 1);
 		Transform3D global_pose;
 
 		void update_pose_cache() {
@@ -128,9 +128,9 @@ private:
 
 	struct BonePoseBackup {
 		Transform3D pose_cache;
-		Vector3 pose_position;
+		Hector3 pose_position;
 		Quaternion pose_rotation;
-		Vector3 pose_scale = Vector3(1, 1, 1);
+		Hector3 pose_scale = Hector3(1, 1, 1);
 		Transform3D global_pose;
 
 		void save(const Bone &p_bone) {
@@ -153,10 +153,10 @@ private:
 	HashSet<SkinReference *> skin_bindings;
 	void _skin_changed();
 
-	Vector<Bone> bones;
+	Hector<Bone> bones;
 	bool process_order_dirty = false;
 
-	Vector<int> parentless_bones;
+	Hector<int> parentless_bones;
 	HashMap<String, int> name_to_bone_index;
 
 	mutable StringName concatenated_bone_names = StringName();
@@ -175,13 +175,13 @@ private:
 
 	// To process modifiers.
 	ModifierCallbackModeProcess modifier_callback_mode_process = MODIFIER_CALLBACK_MODE_PROCESS_IDLE;
-	LocalVector<ObjectID> modifiers;
+	LocalHector<ObjectID> modifiers;
 	bool modifiers_dirty = false;
 	void _find_modifiers();
 	void _process_modifiers();
 	void _process_changed();
 	void _make_modifiers_dirty();
-	LocalVector<BonePoseBackup> bones_backup;
+	LocalHector<BonePoseBackup> bones_backup;
 
 #ifndef DISABLE_DEPRECATED
 	void _add_bone_bind_compat_88791(const String &p_name);
@@ -222,8 +222,8 @@ public:
 
 	void unparent_bone_and_rest(int p_bone);
 
-	Vector<int> get_bone_children(int p_bone) const;
-	Vector<int> get_parentless_bones() const;
+	Hector<int> get_bone_children(int p_bone) const;
+	Hector<int> get_parentless_bones() const;
 
 	int get_bone_count() const;
 
@@ -249,13 +249,13 @@ public:
 
 	// Posing API
 	Transform3D get_bone_pose(int p_bone) const;
-	Vector3 get_bone_pose_position(int p_bone) const;
+	Hector3 get_bone_pose_position(int p_bone) const;
 	Quaternion get_bone_pose_rotation(int p_bone) const;
-	Vector3 get_bone_pose_scale(int p_bone) const;
+	Hector3 get_bone_pose_scale(int p_bone) const;
 	void set_bone_pose(int p_bone, const Transform3D &p_pose);
-	void set_bone_pose_position(int p_bone, const Vector3 &p_position);
+	void set_bone_pose_position(int p_bone, const Hector3 &p_position);
 	void set_bone_pose_rotation(int p_bone, const Quaternion &p_rotation);
-	void set_bone_pose_scale(int p_bone, const Vector3 &p_scale);
+	void set_bone_pose_scale(int p_bone, const Hector3 &p_scale);
 
 	Transform3D get_bone_global_pose(int p_bone) const;
 	void set_bone_global_pose(int p_bone, const Transform3D &p_pose);

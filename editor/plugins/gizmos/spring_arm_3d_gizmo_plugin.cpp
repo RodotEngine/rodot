@@ -40,9 +40,9 @@ void SpringArm3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> lines = {
-		Vector3(),
-		Vector3(0, 0, 1.0) * spring_arm->get_length()
+	Hector<Hector3> lines = {
+		Hector3(),
+		Hector3(0, 0, 1.0) * spring_arm->get_length()
 	};
 
 	Ref<StandardMaterial3D> material = get_material("shape_material", p_gizmo);

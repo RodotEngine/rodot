@@ -64,10 +64,10 @@ void GLTFPhysicsBody::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "body_type"), "set_body_type", "get_body_type");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "mass"), "set_mass", "get_mass");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "linear_velocity"), "set_linear_velocity", "get_linear_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "angular_velocity"), "set_angular_velocity", "get_angular_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "center_of_mass"), "set_center_of_mass", "get_center_of_mass");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "inertia_diagonal"), "set_inertia_diagonal", "get_inertia_diagonal");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "linear_velocity"), "set_linear_velocity", "get_linear_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "angular_velocity"), "set_angular_velocity", "get_angular_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "center_of_mass"), "set_center_of_mass", "get_center_of_mass");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "inertia_diagonal"), "set_inertia_diagonal", "get_inertia_diagonal");
 	ADD_PROPERTY(PropertyInfo(Variant::QUATERNION, "inertia_orientation"), "set_inertia_orientation", "get_inertia_orientation");
 #ifndef DISABLE_DEPRECATED
 	ADD_PROPERTY(PropertyInfo(Variant::BASIS, "inertia_tensor"), "set_inertia_tensor", "get_inertia_tensor");
@@ -128,35 +128,35 @@ void GLTFPhysicsBody::set_mass(real_t p_mass) {
 	mass = p_mass;
 }
 
-Vector3 GLTFPhysicsBody::get_linear_velocity() const {
+Hector3 GLTFPhysicsBody::get_linear_velocity() const {
 	return linear_velocity;
 }
 
-void GLTFPhysicsBody::set_linear_velocity(Vector3 p_linear_velocity) {
+void GLTFPhysicsBody::set_linear_velocity(Hector3 p_linear_velocity) {
 	linear_velocity = p_linear_velocity;
 }
 
-Vector3 GLTFPhysicsBody::get_angular_velocity() const {
+Hector3 GLTFPhysicsBody::get_angular_velocity() const {
 	return angular_velocity;
 }
 
-void GLTFPhysicsBody::set_angular_velocity(Vector3 p_angular_velocity) {
+void GLTFPhysicsBody::set_angular_velocity(Hector3 p_angular_velocity) {
 	angular_velocity = p_angular_velocity;
 }
 
-Vector3 GLTFPhysicsBody::get_center_of_mass() const {
+Hector3 GLTFPhysicsBody::get_center_of_mass() const {
 	return center_of_mass;
 }
 
-void GLTFPhysicsBody::set_center_of_mass(const Vector3 &p_center_of_mass) {
+void GLTFPhysicsBody::set_center_of_mass(const Hector3 &p_center_of_mass) {
 	center_of_mass = p_center_of_mass;
 }
 
-Vector3 GLTFPhysicsBody::get_inertia_diagonal() const {
+Hector3 GLTFPhysicsBody::get_inertia_diagonal() const {
 	return inertia_diagonal;
 }
 
-void GLTFPhysicsBody::set_inertia_diagonal(const Vector3 &p_inertia_diagonal) {
+void GLTFPhysicsBody::set_inertia_diagonal(const Hector3 &p_inertia_diagonal) {
 	inertia_diagonal = p_inertia_diagonal;
 }
 
@@ -193,7 +193,7 @@ Ref<GLTFPhysicsBody> GLTFPhysicsBody::from_node(const CollisionObject3D *p_body_
 		physics_body->angular_velocity = body->get_angular_velocity();
 		physics_body->center_of_mass = body->get_center_of_mass();
 		physics_body->inertia_diagonal = body->get_inertia();
-		if (body->get_center_of_mass() != Vector3()) {
+		if (body->get_center_of_mass() != Hector3()) {
 			WARN_PRINT("GLTFPhysicsBody: This rigid body has a center of mass offset from the origin, which will be ignored when exporting to glTF.");
 		}
 		if (cast_to<VehicleBody3D>(p_body_node)) {
@@ -298,33 +298,33 @@ Ref<GLTFPhysicsBody> GLTFPhysicsBody::from_dictionary(const Dictionary p_diction
 	if (motion.has("linearVelocity")) {
 		const Array &arr = motion["linearVelocity"];
 		if (arr.size() == 3) {
-			physics_body->set_linear_velocity(Vector3(arr[0], arr[1], arr[2]));
+			physics_body->set_linear_velocity(Hector3(arr[0], arr[1], arr[2]));
 		} else {
-			ERR_PRINT("Error parsing glTF physics body: The linear velocity vector must have exactly 3 numbers.");
+			ERR_PRINT("Error parsing glTF physics body: The linear velocity Hector must have exactly 3 numbers.");
 		}
 	}
 	if (motion.has("angularVelocity")) {
 		const Array &arr = motion["angularVelocity"];
 		if (arr.size() == 3) {
-			physics_body->set_angular_velocity(Vector3(arr[0], arr[1], arr[2]));
+			physics_body->set_angular_velocity(Hector3(arr[0], arr[1], arr[2]));
 		} else {
-			ERR_PRINT("Error parsing glTF physics body: The angular velocity vector must have exactly 3 numbers.");
+			ERR_PRINT("Error parsing glTF physics body: The angular velocity Hector must have exactly 3 numbers.");
 		}
 	}
 	if (motion.has("centerOfMass")) {
 		const Array &arr = motion["centerOfMass"];
 		if (arr.size() == 3) {
-			physics_body->set_center_of_mass(Vector3(arr[0], arr[1], arr[2]));
+			physics_body->set_center_of_mass(Hector3(arr[0], arr[1], arr[2]));
 		} else {
-			ERR_PRINT("Error parsing glTF physics body: The center of mass vector must have exactly 3 numbers.");
+			ERR_PRINT("Error parsing glTF physics body: The center of mass Hector must have exactly 3 numbers.");
 		}
 	}
 	if (motion.has("inertiaDiagonal")) {
 		const Array &arr = motion["inertiaDiagonal"];
 		if (arr.size() == 3) {
-			physics_body->set_inertia_diagonal(Vector3(arr[0], arr[1], arr[2]));
+			physics_body->set_inertia_diagonal(Hector3(arr[0], arr[1], arr[2]));
 		} else {
-			ERR_PRINT("Error parsing glTF physics body: The inertia diagonal vector must have exactly 3 numbers.");
+			ERR_PRINT("Error parsing glTF physics body: The inertia diagonal Hector must have exactly 3 numbers.");
 		}
 	}
 	if (motion.has("inertiaOrientation")) {
@@ -362,7 +362,7 @@ Dictionary GLTFPhysicsBody::to_dictionary() const {
 	if (mass != 1.0) {
 		motion["mass"] = mass;
 	}
-	if (linear_velocity != Vector3()) {
+	if (linear_velocity != Hector3()) {
 		Array velocity_array;
 		velocity_array.resize(3);
 		velocity_array[0] = linear_velocity.x;
@@ -370,7 +370,7 @@ Dictionary GLTFPhysicsBody::to_dictionary() const {
 		velocity_array[2] = linear_velocity.z;
 		motion["linearVelocity"] = velocity_array;
 	}
-	if (angular_velocity != Vector3()) {
+	if (angular_velocity != Hector3()) {
 		Array velocity_array;
 		velocity_array.resize(3);
 		velocity_array[0] = angular_velocity.x;
@@ -378,7 +378,7 @@ Dictionary GLTFPhysicsBody::to_dictionary() const {
 		velocity_array[2] = angular_velocity.z;
 		motion["angularVelocity"] = velocity_array;
 	}
-	if (center_of_mass != Vector3()) {
+	if (center_of_mass != Hector3()) {
 		Array center_of_mass_array;
 		center_of_mass_array.resize(3);
 		center_of_mass_array[0] = center_of_mass.x;
@@ -386,7 +386,7 @@ Dictionary GLTFPhysicsBody::to_dictionary() const {
 		center_of_mass_array[2] = center_of_mass.z;
 		motion["centerOfMass"] = center_of_mass_array;
 	}
-	if (inertia_diagonal != Vector3()) {
+	if (inertia_diagonal != Hector3()) {
 		Array inertia_array;
 		inertia_array.resize(3);
 		inertia_array[0] = inertia_diagonal[0];

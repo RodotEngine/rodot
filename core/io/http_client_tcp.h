@@ -53,10 +53,10 @@ private:
 	bool head_request = false;
 	Ref<TLSOptions> tls_options;
 
-	Vector<uint8_t> response_str;
+	Hector<uint8_t> response_str;
 
 	bool chunked = false;
-	Vector<uint8_t> chunk;
+	Hector<uint8_t> chunk;
 	int chunk_left = 0;
 	bool chunk_trailer_part = false;
 	int64_t body_size = -1;
@@ -69,7 +69,7 @@ private:
 	Ref<HTTPClientTCP> proxy_client; // Negotiate with proxy server.
 
 	int response_num = 0;
-	Vector<String> response_headers;
+	Hector<String> response_headers;
 	// 64 KiB by default (favors fast download speeds at the cost of memory usage).
 	int read_chunk_size = 65536;
 
@@ -78,7 +78,7 @@ private:
 public:
 	static HTTPClient *_create_func(bool p_notify_postinitialize);
 
-	Error request(Method p_method, const String &p_url, const Vector<String> &p_headers, const uint8_t *p_body, int p_body_size) override;
+	Error request(Method p_method, const String &p_url, const Hector<String> &p_headers, const uint8_t *p_body, int p_body_size) override;
 
 	Error connect_to_host(const String &p_host, int p_port = -1, Ref<TLSOptions> p_tls_options = Ref<TLSOptions>()) override;
 	void set_connection(const Ref<StreamPeer> &p_connection) override;

@@ -101,7 +101,7 @@ OS_IOS::OS_IOS() {
 
 	main_loop = nullptr;
 
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(IOSTerminalLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 
@@ -361,7 +361,7 @@ String OS_IOS::get_processor_name() const {
 	ERR_FAIL_V_MSG("", String("Couldn't get the CPU model name. Returning an empty string."));
 }
 
-Vector<String> OS_IOS::get_system_fonts() const {
+Hector<String> OS_IOS::get_system_fonts() const {
 	HashSet<String> font_names;
 	CFArrayRef fonts = CTFontManagerCopyAvailableFontFamilyNames();
 	if (fonts) {
@@ -375,7 +375,7 @@ Vector<String> OS_IOS::get_system_fonts() const {
 		CFRelease(fonts);
 	}
 
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const String &E : font_names) {
 		ret.push_back(E);
 	}
@@ -444,8 +444,8 @@ CGFloat OS_IOS::_stretch_to_ct(int p_stretch) const {
 	}
 }
 
-Vector<String> OS_IOS::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
-	Vector<String> ret;
+Hector<String> OS_IOS::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
+	Hector<String> ret;
 	String font_name = _get_default_fontname(p_font_name);
 
 	CFStringRef name = CFStringCreateWithCString(kCFAllocatorDefault, font_name.utf8().get_data(), kCFStringEncodingUTF8);

@@ -19,9 +19,9 @@ struct ItemPairs {
 
 	BOUNDS expanded_aabb;
 
-	// maybe we can just use the number in the vector TODO
+	// maybe we can just use the number in the Hector TODO
 	int32_t num_pairs;
-	LocalVector<Link> extended_pairs;
+	LocalHector<Link> extended_pairs;
 
 	void add_pair_to(BVHHandle h, void *p_userdata) {
 		Link temp;

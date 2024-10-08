@@ -11,7 +11,7 @@
 		<link title="Occlusion culling">$DOCS_URL/tutorials/3d/occlusion_culling.html</link>
 	</tutorials>
 	<members>
-		<member name="polygon" type="PackedVector2Array" setter="set_polygon" getter="get_polygon" default="PackedVector2Array()">
+		<member name="polygon" type="PackedHector2Array" setter="set_polygon" getter="get_polygon" default="PackedHector2Array()">
 			The polygon to use for occlusion culling. The polygon can be convex or concave, but it should have as few points as possible to maximize performance.
 			The polygon must [i]not[/i] have intersecting lines. Otherwise, triangulation will fail (with an error message printed).
 		</member>

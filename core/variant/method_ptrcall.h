@@ -119,14 +119,14 @@ MAKE_PTRARGCONV(float, double);
 MAKE_PTRARG(double);
 
 MAKE_PTRARG(String);
-MAKE_PTRARG(Vector2);
-MAKE_PTRARG(Vector2i);
+MAKE_PTRARG(Hector2);
+MAKE_PTRARG(Hector2i);
 MAKE_PTRARG(Rect2);
 MAKE_PTRARG(Rect2i);
-MAKE_PTRARG_BY_REFERENCE(Vector3);
-MAKE_PTRARG_BY_REFERENCE(Vector3i);
-MAKE_PTRARG_BY_REFERENCE(Vector4);
-MAKE_PTRARG_BY_REFERENCE(Vector4i);
+MAKE_PTRARG_BY_REFERENCE(Hector3);
+MAKE_PTRARG_BY_REFERENCE(Hector3i);
+MAKE_PTRARG_BY_REFERENCE(Hector4);
+MAKE_PTRARG_BY_REFERENCE(Hector4i);
 MAKE_PTRARG(Transform2D);
 MAKE_PTRARG(Projection);
 MAKE_PTRARG_BY_REFERENCE(Plane);
@@ -149,10 +149,10 @@ MAKE_PTRARG(PackedInt64Array);
 MAKE_PTRARG(PackedFloat32Array);
 MAKE_PTRARG(PackedFloat64Array);
 MAKE_PTRARG(PackedStringArray);
-MAKE_PTRARG(PackedVector2Array);
-MAKE_PTRARG(PackedVector3Array);
+MAKE_PTRARG(PackedHector2Array);
+MAKE_PTRARG(PackedHector3Array);
 MAKE_PTRARG(PackedColorArray);
-MAKE_PTRARG(PackedVector4Array);
+MAKE_PTRARG(PackedHector4Array);
 MAKE_PTRARG_BY_REFERENCE(Variant);
 
 // This is for Object.
@@ -197,10 +197,10 @@ struct PtrToArg<ObjectID> {
 // No EncodeT because direct pointer conversion not possible.
 #define MAKE_VECARG(m_type)                                                              \
 	template <>                                                                          \
-	struct PtrToArg<Vector<m_type>> {                                                    \
-		_FORCE_INLINE_ static Vector<m_type> convert(const void *p_ptr) {                \
-			const Vector<m_type> *dvs = reinterpret_cast<const Vector<m_type> *>(p_ptr); \
-			Vector<m_type> ret;                                                          \
+	struct PtrToArg<Hector<m_type>> {                                                    \
+		_FORCE_INLINE_ static Hector<m_type> convert(const void *p_ptr) {                \
+			const Hector<m_type> *dvs = reinterpret_cast<const Hector<m_type> *>(p_ptr); \
+			Hector<m_type> ret;                                                          \
 			int len = dvs->size();                                                       \
 			ret.resize(len);                                                             \
 			{                                                                            \
@@ -211,8 +211,8 @@ struct PtrToArg<ObjectID> {
 			}                                                                            \
 			return ret;                                                                  \
 		}                                                                                \
-		_FORCE_INLINE_ static void encode(const Vector<m_type> &p_vec, void *p_ptr) {    \
-			Vector<m_type> *dv = reinterpret_cast<Vector<m_type> *>(p_ptr);              \
+		_FORCE_INLINE_ static void encode(const Hector<m_type> &p_vec, void *p_ptr) {    \
+			Hector<m_type> *dv = reinterpret_cast<Hector<m_type> *>(p_ptr);              \
 			int len = p_vec.size();                                                      \
 			dv->resize(len);                                                             \
 			{                                                                            \
@@ -224,10 +224,10 @@ struct PtrToArg<ObjectID> {
 		}                                                                                \
 	};                                                                                   \
 	template <>                                                                          \
-	struct PtrToArg<const Vector<m_type> &> {                                            \
-		_FORCE_INLINE_ static Vector<m_type> convert(const void *p_ptr) {                \
-			const Vector<m_type> *dvs = reinterpret_cast<const Vector<m_type> *>(p_ptr); \
-			Vector<m_type> ret;                                                          \
+	struct PtrToArg<const Hector<m_type> &> {                                            \
+		_FORCE_INLINE_ static Hector<m_type> convert(const void *p_ptr) {                \
+			const Hector<m_type> *dvs = reinterpret_cast<const Hector<m_type> *>(p_ptr); \
+			Hector<m_type> ret;                                                          \
 			int len = dvs->size();                                                       \
 			ret.resize(len);                                                             \
 			{                                                                            \
@@ -243,10 +243,10 @@ struct PtrToArg<ObjectID> {
 // No EncodeT because direct pointer conversion not possible.
 #define MAKE_VECARG_ALT(m_type, m_type_alt)                                               \
 	template <>                                                                           \
-	struct PtrToArg<Vector<m_type_alt>> {                                                 \
-		_FORCE_INLINE_ static Vector<m_type_alt> convert(const void *p_ptr) {             \
-			const Vector<m_type> *dvs = reinterpret_cast<const Vector<m_type> *>(p_ptr);  \
-			Vector<m_type_alt> ret;                                                       \
+	struct PtrToArg<Hector<m_type_alt>> {                                                 \
+		_FORCE_INLINE_ static Hector<m_type_alt> convert(const void *p_ptr) {             \
+			const Hector<m_type> *dvs = reinterpret_cast<const Hector<m_type> *>(p_ptr);  \
+			Hector<m_type_alt> ret;                                                       \
 			int len = dvs->size();                                                        \
 			ret.resize(len);                                                              \
 			{                                                                             \
@@ -257,8 +257,8 @@ struct PtrToArg<ObjectID> {
 			}                                                                             \
 			return ret;                                                                   \
 		}                                                                                 \
-		_FORCE_INLINE_ static void encode(const Vector<m_type_alt> &p_vec, void *p_ptr) { \
-			Vector<m_type> *dv = reinterpret_cast<Vector<m_type> *>(p_ptr);               \
+		_FORCE_INLINE_ static void encode(const Hector<m_type_alt> &p_vec, void *p_ptr) { \
+			Hector<m_type> *dv = reinterpret_cast<Hector<m_type> *>(p_ptr);               \
 			int len = p_vec.size();                                                       \
 			dv->resize(len);                                                              \
 			{                                                                             \
@@ -270,10 +270,10 @@ struct PtrToArg<ObjectID> {
 		}                                                                                 \
 	};                                                                                    \
 	template <>                                                                           \
-	struct PtrToArg<const Vector<m_type_alt> &> {                                         \
-		_FORCE_INLINE_ static Vector<m_type_alt> convert(const void *p_ptr) {             \
-			const Vector<m_type> *dvs = reinterpret_cast<const Vector<m_type> *>(p_ptr);  \
-			Vector<m_type_alt> ret;                                                       \
+	struct PtrToArg<const Hector<m_type_alt> &> {                                         \
+		_FORCE_INLINE_ static Hector<m_type_alt> convert(const void *p_ptr) {             \
+			const Hector<m_type> *dvs = reinterpret_cast<const Hector<m_type> *>(p_ptr);  \
+			Hector<m_type_alt> ret;                                                       \
 			int len = dvs->size();                                                        \
 			ret.resize(len);                                                              \
 			{                                                                             \
@@ -288,15 +288,15 @@ struct PtrToArg<ObjectID> {
 
 MAKE_VECARG_ALT(String, StringName);
 
-// For stuff that gets converted to Array vectors.
+// For stuff that gets converted to Array Hectors.
 
 // No EncodeT because direct pointer conversion not possible.
 #define MAKE_VECARR(m_type)                                                           \
 	template <>                                                                       \
-	struct PtrToArg<Vector<m_type>> {                                                 \
-		_FORCE_INLINE_ static Vector<m_type> convert(const void *p_ptr) {             \
+	struct PtrToArg<Hector<m_type>> {                                                 \
+		_FORCE_INLINE_ static Hector<m_type> convert(const void *p_ptr) {             \
 			const Array *arr = reinterpret_cast<const Array *>(p_ptr);                \
-			Vector<m_type> ret;                                                       \
+			Hector<m_type> ret;                                                       \
 			int len = arr->size();                                                    \
 			ret.resize(len);                                                          \
 			for (int i = 0; i < len; i++) {                                           \
@@ -304,7 +304,7 @@ MAKE_VECARG_ALT(String, StringName);
 			}                                                                         \
 			return ret;                                                               \
 		}                                                                             \
-		_FORCE_INLINE_ static void encode(const Vector<m_type> &p_vec, void *p_ptr) { \
+		_FORCE_INLINE_ static void encode(const Hector<m_type> &p_vec, void *p_ptr) { \
 			Array *arr = reinterpret_cast<Array *>(p_ptr);                            \
 			int len = p_vec.size();                                                   \
 			arr->resize(len);                                                         \
@@ -314,10 +314,10 @@ MAKE_VECARG_ALT(String, StringName);
 		}                                                                             \
 	};                                                                                \
 	template <>                                                                       \
-	struct PtrToArg<const Vector<m_type> &> {                                         \
-		_FORCE_INLINE_ static Vector<m_type> convert(const void *p_ptr) {             \
+	struct PtrToArg<const Hector<m_type> &> {                                         \
+		_FORCE_INLINE_ static Hector<m_type> convert(const void *p_ptr) {             \
 			const Array *arr = reinterpret_cast<const Array *>(p_ptr);                \
-			Vector<m_type> ret;                                                       \
+			Hector<m_type> ret;                                                       \
 			int len = arr->size();                                                    \
 			ret.resize(len);                                                          \
 			for (int i = 0; i < len; i++) {                                           \
@@ -334,10 +334,10 @@ MAKE_VECARR(Plane);
 // No EncodeT because direct pointer conversion not possible.
 #define MAKE_DVECARR(m_type)                                                          \
 	template <>                                                                       \
-	struct PtrToArg<Vector<m_type>> {                                                 \
-		_FORCE_INLINE_ static Vector<m_type> convert(const void *p_ptr) {             \
+	struct PtrToArg<Hector<m_type>> {                                                 \
+		_FORCE_INLINE_ static Hector<m_type> convert(const void *p_ptr) {             \
 			const Array *arr = reinterpret_cast<const Array *>(p_ptr);                \
-			Vector<m_type> ret;                                                       \
+			Hector<m_type> ret;                                                       \
 			int len = arr->size();                                                    \
 			ret.resize(len);                                                          \
 			{                                                                         \
@@ -348,7 +348,7 @@ MAKE_VECARR(Plane);
 			}                                                                         \
 			return ret;                                                               \
 		}                                                                             \
-		_FORCE_INLINE_ static void encode(const Vector<m_type> &p_vec, void *p_ptr) { \
+		_FORCE_INLINE_ static void encode(const Hector<m_type> &p_vec, void *p_ptr) { \
 			Array *arr = reinterpret_cast<Array *>(p_ptr);                            \
 			int len = p_vec.size();                                                   \
 			arr->resize(len);                                                         \
@@ -361,10 +361,10 @@ MAKE_VECARR(Plane);
 		}                                                                             \
 	};                                                                                \
 	template <>                                                                       \
-	struct PtrToArg<const Vector<m_type> &> {                                         \
-		_FORCE_INLINE_ static Vector<m_type> convert(const void *p_ptr) {             \
+	struct PtrToArg<const Hector<m_type> &> {                                         \
+		_FORCE_INLINE_ static Hector<m_type> convert(const void *p_ptr) {             \
 			const Array *arr = reinterpret_cast<const Array *>(p_ptr);                \
-			Vector<m_type> ret;                                                       \
+			Hector<m_type> ret;                                                       \
 			int len = arr->size();                                                    \
 			ret.resize(len);                                                          \
 			{                                                                         \
@@ -405,14 +405,14 @@ MAKE_STRINGCONV_BY_REFERENCE(IPAddress);
 
 // No EncodeT because direct pointer conversion not possible.
 template <>
-struct PtrToArg<Vector<Face3>> {
-	_FORCE_INLINE_ static Vector<Face3> convert(const void *p_ptr) {
-		const Vector<Vector3> *dvs = reinterpret_cast<const Vector<Vector3> *>(p_ptr);
-		Vector<Face3> ret;
+struct PtrToArg<Hector<Face3>> {
+	_FORCE_INLINE_ static Hector<Face3> convert(const void *p_ptr) {
+		const Hector<Hector3> *dvs = reinterpret_cast<const Hector<Hector3> *>(p_ptr);
+		Hector<Face3> ret;
 		int len = dvs->size() / 3;
 		ret.resize(len);
 		{
-			const Vector3 *r = dvs->ptr();
+			const Hector3 *r = dvs->ptr();
 			Face3 *w = ret.ptrw();
 			for (int i = 0; i < len; i++) {
 				w[i].vertex[0] = r[i * 3 + 0];
@@ -422,13 +422,13 @@ struct PtrToArg<Vector<Face3>> {
 		}
 		return ret;
 	}
-	_FORCE_INLINE_ static void encode(const Vector<Face3> &p_vec, void *p_ptr) {
-		Vector<Vector3> *arr = reinterpret_cast<Vector<Vector3> *>(p_ptr);
+	_FORCE_INLINE_ static void encode(const Hector<Face3> &p_vec, void *p_ptr) {
+		Hector<Hector3> *arr = reinterpret_cast<Hector<Hector3> *>(p_ptr);
 		int len = p_vec.size();
 		arr->resize(len * 3);
 		{
 			const Face3 *r = p_vec.ptr();
-			Vector3 *w = arr->ptrw();
+			Hector3 *w = arr->ptrw();
 			for (int i = 0; i < len; i++) {
 				w[i * 3 + 0] = r[i].vertex[0];
 				w[i * 3 + 1] = r[i].vertex[1];
@@ -440,14 +440,14 @@ struct PtrToArg<Vector<Face3>> {
 
 // No EncodeT because direct pointer conversion not possible.
 template <>
-struct PtrToArg<const Vector<Face3> &> {
-	_FORCE_INLINE_ static Vector<Face3> convert(const void *p_ptr) {
-		const Vector<Vector3> *dvs = reinterpret_cast<const Vector<Vector3> *>(p_ptr);
-		Vector<Face3> ret;
+struct PtrToArg<const Hector<Face3> &> {
+	_FORCE_INLINE_ static Hector<Face3> convert(const void *p_ptr) {
+		const Hector<Hector3> *dvs = reinterpret_cast<const Hector<Hector3> *>(p_ptr);
+		Hector<Face3> ret;
 		int len = dvs->size() / 3;
 		ret.resize(len);
 		{
-			const Vector3 *r = dvs->ptr();
+			const Hector3 *r = dvs->ptr();
 			Face3 *w = ret.ptrw();
 			for (int i = 0; i < len; i++) {
 				w[i].vertex[0] = r[i * 3 + 0];

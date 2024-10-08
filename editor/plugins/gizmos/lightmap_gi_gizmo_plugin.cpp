@@ -82,24 +82,24 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	Ref<Material> material_lines = get_material("lightmap_lines", p_gizmo);
 	Ref<Material> material_probes = get_material("lightmap_probe_material", p_gizmo);
 
-	Vector<Vector3> lines;
-	HashSet<Vector2i> lines_found;
+	Hector<Hector3> lines;
+	HashSet<Hector2i> lines_found;
 
-	Vector<Vector3> points = data->get_capture_points();
+	Hector<Hector3> points = data->get_capture_points();
 	if (points.size() == 0) {
 		return;
 	}
-	Vector<Color> sh = data->get_capture_sh();
+	Hector<Color> sh = data->get_capture_sh();
 	if (sh.size() != points.size() * 9) {
 		return;
 	}
 
-	Vector<int> tetrahedrons = data->get_capture_tetrahedra();
+	Hector<int> tetrahedrons = data->get_capture_tetrahedra();
 
 	for (int i = 0; i < tetrahedrons.size(); i += 4) {
 		for (int j = 0; j < 4; j++) {
 			for (int k = j + 1; k < 4; k++) {
-				Vector2i pair;
+				Hector2i pair;
 				pair.x = tetrahedrons[i + j];
 				pair.y = tetrahedrons[i + k];
 
@@ -124,14 +124,14 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	float sector_step = (Math_PI * 2.0) / sector_count;
 	float stack_step = Math_PI / stack_count;
 
-	Vector<Vector3> vertices;
-	Vector<Color> colors;
-	Vector<int> indices;
+	Hector<Hector3> vertices;
+	Hector<Color> colors;
+	Hector<int> indices;
 	float radius = 0.3;
 
 	for (int p = 0; p < points.size(); p++) {
 		int vertex_base = vertices.size();
-		Vector3 sh_col[9];
+		Hector3 sh_col[9];
 		for (int i = 0; i < 9; i++) {
 			sh_col[i].x = sh[p * 9 + i].r;
 			sh_col[i].y = sh[p * 9 + i].g;
@@ -152,7 +152,7 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 				float x = xy * Math::cos(sector_angle); // r * cos(u) * cos(v)
 				float y = xy * Math::sin(sector_angle); // r * cos(u) * sin(v)
 
-				Vector3 n = Vector3(x, z, y);
+				Hector3 n = Hector3(x, z, y);
 				vertices.push_back(points[p] + n);
 				n.normalize();
 
@@ -161,7 +161,7 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 				const float c3 = 0.743125;
 				const float c4 = 0.886227;
 				const float c5 = 0.247708;
-				Vector3 light = (c1 * sh_col[8] * (n.x * n.x - n.y * n.y) +
+				Hector3 light = (c1 * sh_col[8] * (n.x * n.x - n.y * n.y) +
 						c3 * sh_col[6] * n.z * n.z +
 						c4 * sh_col[0] -
 						c5 * sh_col[6] +

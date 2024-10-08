@@ -77,14 +77,14 @@
 		</method>
 		<method name="get_button_id_at_position" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<description>
 				Returns the button ID at [param position], or -1 if no button is there.
 			</description>
 		</method>
 		<method name="get_column_at_position" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<description>
 				Returns the column index at [param position], or -1 if no item is there.
 			</description>
@@ -139,7 +139,7 @@
 		</method>
 		<method name="get_drop_section_at_position" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<description>
 				Returns the drop section at [param position], or -100 if no item is there.
 				Values -1, 0, or 1 will be returned for the "above item", "on item", and "below item" drop sections, respectively. See [enum DropModeFlags] for a description of each drop section.
@@ -189,7 +189,7 @@
 		</method>
 		<method name="get_item_at_position" qualifiers="const">
 			<return type="TreeItem" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<description>
 				Returns the tree item at the specified position (relative to the tree origin position).
 			</description>
@@ -215,7 +215,7 @@
 			</description>
 		</method>
 		<method name="get_scroll" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the current scrolling position.
 			</description>
@@ -414,7 +414,7 @@
 			</description>
 		</signal>
 		<signal name="empty_clicked">
-			<param index="0" name="click_position" type="Vector2" />
+			<param index="0" name="click_position" type="Hector2" />
 			<param index="1" name="mouse_button_index" type="int" />
 			<description>
 				Emitted when a mouse button is clicked in the empty space of the tree.
@@ -442,7 +442,7 @@
 			</description>
 		</signal>
 		<signal name="item_mouse_selected">
-			<param index="0" name="mouse_position" type="Vector2" />
+			<param index="0" name="mouse_position" type="Hector2" />
 			<param index="1" name="mouse_button_index" type="int" />
 			<description>
 				Emitted when an item is selected with a mouse button.

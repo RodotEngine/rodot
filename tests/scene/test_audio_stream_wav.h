@@ -59,8 +59,8 @@ float gen_wav(float frequency, float wav_rate, int wav_number) {
  * and a 261.63Hz wave in channel 1 (right stereo channel).
  * These waves correspond to the music notes A4 and C4 respectively.
  */
-Vector<uint8_t> gen_pcm8_test(float wav_rate, int wav_count, bool stereo) {
-	Vector<uint8_t> buffer;
+Hector<uint8_t> gen_pcm8_test(float wav_rate, int wav_count, bool stereo) {
+	Hector<uint8_t> buffer;
 	buffer.resize(stereo ? wav_count * 2 : wav_count);
 
 	uint8_t *write_ptr = buffer.ptrw();
@@ -87,8 +87,8 @@ Vector<uint8_t> gen_pcm8_test(float wav_rate, int wav_count, bool stereo) {
 }
 
 // Same as gen_pcm8_test but with 16-bit wavs.
-Vector<uint8_t> gen_pcm16_test(float wav_rate, int wav_count, bool stereo) {
-	Vector<uint8_t> buffer;
+Hector<uint8_t> gen_pcm16_test(float wav_rate, int wav_count, bool stereo) {
+	Hector<uint8_t> buffer;
 	buffer.resize(stereo ? wav_count * 4 : wav_count * 2);
 
 	uint8_t *write_ptr = buffer.ptrw();
@@ -117,7 +117,7 @@ Vector<uint8_t> gen_pcm16_test(float wav_rate, int wav_count, bool stereo) {
 void run_test(String file_name, AudioStreamWAV::Format data_format, bool stereo, float wav_rate, float wav_count) {
 	String save_path = TestUtils::get_temp_path(file_name);
 
-	Vector<uint8_t> test_data;
+	Hector<uint8_t> test_data;
 	if (data_format == AudioStreamWAV::FORMAT_8_BITS) {
 		test_data = gen_pcm8_test(wav_rate, wav_count, stereo);
 	} else {
@@ -203,7 +203,7 @@ TEST_CASE("[Audio][AudioStreamWAV] Alternate mix rate") {
 
 TEST_CASE("[Audio][AudioStreamWAV] save_to_wav() adds '.wav' file extension automatically") {
 	String save_path = TestUtils::get_temp_path("test_wav_extension");
-	Vector<uint8_t> test_data = gen_pcm8_test(WAV_RATE, WAV_COUNT, false);
+	Hector<uint8_t> test_data = gen_pcm8_test(WAV_RATE, WAV_COUNT, false);
 	Ref<AudioStreamWAV> stream = memnew(AudioStreamWAV);
 	stream->set_data(test_data);
 
@@ -223,7 +223,7 @@ TEST_CASE("[Audio][AudioStreamWAV] Default values") {
 	CHECK(stream->is_stereo() == false);
 	CHECK(stream->get_length() == 0);
 	CHECK(stream->is_monophonic() == false);
-	CHECK(stream->get_data() == Vector<uint8_t>{});
+	CHECK(stream->get_data() == Hector<uint8_t>{});
 	CHECK(stream->get_stream_name() == "");
 }
 

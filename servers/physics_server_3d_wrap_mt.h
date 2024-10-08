@@ -97,7 +97,7 @@ public:
 	FUNC1RC(real_t, shape_get_custom_solver_bias, RID);
 #if 0
 	//these work well, but should be used from the main thread only
-	bool shape_collide(RID p_shape_A, const Transform &p_xform_A, const Vector3 &p_motion_A, RID p_shape_B, const Transform &p_xform_B, const Vector3 &p_motion_B, Vector3 *r_results, int p_result_max, int &r_result_count) {
+	bool shape_collide(RID p_shape_A, const Transform &p_xform_A, const Hector3 &p_motion_A, RID p_shape_B, const Transform &p_xform_B, const Hector3 &p_motion_B, Hector3 *r_results, int p_result_max, int &r_result_count) {
 		ERR_FAIL_COND_V(!Thread::is_main_thread(), false);
 		return physics_server_3d->shape_collide(p_shape_A, p_xform_A, p_motion_A, p_shape_B, p_xform_B, p_motion_B, r_results, p_result_max, r_result_count);
 	}
@@ -118,8 +118,8 @@ public:
 	}
 
 	FUNC2(space_set_debug_contacts, RID, int);
-	virtual Vector<Vector3> space_get_contacts(RID p_space) const override {
-		ERR_FAIL_COND_V(!Thread::is_main_thread(), Vector<Vector3>());
+	virtual Hector<Hector3> space_get_contacts(RID p_space) const override {
+		ERR_FAIL_COND_V(!Thread::is_main_thread(), Hector<Hector3>());
 		return physics_server_3d->space_get_contacts(p_space);
 	}
 
@@ -218,25 +218,25 @@ public:
 	FUNC3(body_set_state, RID, BodyState, const Variant &);
 	FUNC2RC(Variant, body_get_state, RID, BodyState);
 
-	FUNC2(body_apply_torque_impulse, RID, const Vector3 &);
-	FUNC2(body_apply_central_impulse, RID, const Vector3 &);
-	FUNC3(body_apply_impulse, RID, const Vector3 &, const Vector3 &);
+	FUNC2(body_apply_torque_impulse, RID, const Hector3 &);
+	FUNC2(body_apply_central_impulse, RID, const Hector3 &);
+	FUNC3(body_apply_impulse, RID, const Hector3 &, const Hector3 &);
 
-	FUNC2(body_apply_central_force, RID, const Vector3 &);
-	FUNC3(body_apply_force, RID, const Vector3 &, const Vector3 &);
-	FUNC2(body_apply_torque, RID, const Vector3 &);
+	FUNC2(body_apply_central_force, RID, const Hector3 &);
+	FUNC3(body_apply_force, RID, const Hector3 &, const Hector3 &);
+	FUNC2(body_apply_torque, RID, const Hector3 &);
 
-	FUNC2(body_add_constant_central_force, RID, const Vector3 &);
-	FUNC3(body_add_constant_force, RID, const Vector3 &, const Vector3 &);
-	FUNC2(body_add_constant_torque, RID, const Vector3 &);
+	FUNC2(body_add_constant_central_force, RID, const Hector3 &);
+	FUNC3(body_add_constant_force, RID, const Hector3 &, const Hector3 &);
+	FUNC2(body_add_constant_torque, RID, const Hector3 &);
 
-	FUNC2(body_set_constant_force, RID, const Vector3 &);
-	FUNC1RC(Vector3, body_get_constant_force, RID);
+	FUNC2(body_set_constant_force, RID, const Hector3 &);
+	FUNC1RC(Hector3, body_get_constant_force, RID);
 
-	FUNC2(body_set_constant_torque, RID, const Vector3 &);
-	FUNC1RC(Vector3, body_get_constant_torque, RID);
+	FUNC2(body_set_constant_torque, RID, const Hector3 &);
+	FUNC1RC(Hector3, body_get_constant_torque, RID);
 
-	FUNC2(body_set_axis_velocity, RID, const Vector3 &);
+	FUNC2(body_set_axis_velocity, RID, const Hector3 &);
 
 	FUNC3(body_set_axis_lock, RID, BodyAxis, bool);
 	FUNC2RC(bool, body_is_axis_locked, RID, BodyAxis);
@@ -318,8 +318,8 @@ public:
 
 	FUNC1RC(AABB, soft_body_get_bounds, RID);
 
-	FUNC3(soft_body_move_point, RID, int, const Vector3 &);
-	FUNC2RC(Vector3, soft_body_get_point_global_position, RID, int);
+	FUNC3(soft_body_move_point, RID, int, const Hector3 &);
+	FUNC2RC(Hector3, soft_body_get_point_global_position, RID, int);
 
 	FUNC1(soft_body_remove_all_pinned_points, RID);
 	FUNC3(soft_body_pin_point, RID, int, bool);
@@ -331,19 +331,19 @@ public:
 
 	FUNC1(joint_clear, RID)
 
-	FUNC5(joint_make_pin, RID, RID, const Vector3 &, RID, const Vector3 &)
+	FUNC5(joint_make_pin, RID, RID, const Hector3 &, RID, const Hector3 &)
 
 	FUNC3(pin_joint_set_param, RID, PinJointParam, real_t)
 	FUNC2RC(real_t, pin_joint_get_param, RID, PinJointParam)
 
-	FUNC2(pin_joint_set_local_a, RID, const Vector3 &)
-	FUNC1RC(Vector3, pin_joint_get_local_a, RID)
+	FUNC2(pin_joint_set_local_a, RID, const Hector3 &)
+	FUNC1RC(Hector3, pin_joint_get_local_a, RID)
 
-	FUNC2(pin_joint_set_local_b, RID, const Vector3 &)
-	FUNC1RC(Vector3, pin_joint_get_local_b, RID)
+	FUNC2(pin_joint_set_local_b, RID, const Hector3 &)
+	FUNC1RC(Hector3, pin_joint_get_local_b, RID)
 
 	FUNC5(joint_make_hinge, RID, RID, const Transform3D &, RID, const Transform3D &)
-	FUNC7(joint_make_hinge_simple, RID, RID, const Vector3 &, const Vector3 &, RID, const Vector3 &, const Vector3 &)
+	FUNC7(joint_make_hinge_simple, RID, RID, const Hector3 &, const Hector3 &, RID, const Hector3 &, const Hector3 &)
 
 	FUNC3(hinge_joint_set_param, RID, HingeJointParam, real_t)
 	FUNC2RC(real_t, hinge_joint_get_param, RID, HingeJointParam)
@@ -363,11 +363,11 @@ public:
 
 	FUNC5(joint_make_generic_6dof, RID, RID, const Transform3D &, RID, const Transform3D &)
 
-	FUNC4(generic_6dof_joint_set_param, RID, Vector3::Axis, G6DOFJointAxisParam, real_t)
-	FUNC3RC(real_t, generic_6dof_joint_get_param, RID, Vector3::Axis, G6DOFJointAxisParam)
+	FUNC4(generic_6dof_joint_set_param, RID, Hector3::Axis, G6DOFJointAxisParam, real_t)
+	FUNC3RC(real_t, generic_6dof_joint_get_param, RID, Hector3::Axis, G6DOFJointAxisParam)
 
-	FUNC4(generic_6dof_joint_set_flag, RID, Vector3::Axis, G6DOFJointAxisFlag, bool)
-	FUNC3RC(bool, generic_6dof_joint_get_flag, RID, Vector3::Axis, G6DOFJointAxisFlag)
+	FUNC4(generic_6dof_joint_set_flag, RID, Hector3::Axis, G6DOFJointAxisFlag, bool)
+	FUNC3RC(bool, generic_6dof_joint_get_flag, RID, Hector3::Axis, G6DOFJointAxisFlag)
 
 	FUNC1RC(JointType, joint_get_type, RID);
 

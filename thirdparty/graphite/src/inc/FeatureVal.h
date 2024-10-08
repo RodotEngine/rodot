@@ -12,14 +12,14 @@ namespace graphite2 {
 class FeatureRef;
 class FeatureMap;
 
-class FeatureVal : public Vector<uint32>
+class FeatureVal : public Hector<uint32>
 {
 public:
     FeatureVal() : m_pMap(0) { }
-    FeatureVal(int num, const FeatureMap & pMap) : Vector<uint32>(num), m_pMap(&pMap) {}
-    FeatureVal(const FeatureVal & rhs) : Vector<uint32>(rhs), m_pMap(rhs.m_pMap) {}
+    FeatureVal(int num, const FeatureMap & pMap) : Hector<uint32>(num), m_pMap(&pMap) {}
+    FeatureVal(const FeatureVal & rhs) : Hector<uint32>(rhs), m_pMap(rhs.m_pMap) {}
 
-    FeatureVal & operator = (const FeatureVal & rhs) { Vector<uint32>::operator = (rhs); m_pMap = rhs.m_pMap; return *this; }
+    FeatureVal & operator = (const FeatureVal & rhs) { Hector<uint32>::operator = (rhs); m_pMap = rhs.m_pMap; return *this; }
 
     bool operator ==(const FeatureVal & b) const
     {

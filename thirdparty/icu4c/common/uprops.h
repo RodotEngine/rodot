@@ -34,8 +34,8 @@ enum {
     UPROPS_EXCEPTIONS_TOP_INDEX,
 
     UPROPS_ADDITIONAL_TRIE_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_INDEX,
-    UPROPS_ADDITIONAL_VECTORS_COLUMNS_INDEX,
+    UPROPS_ADDITIONAL_HectorS_INDEX,
+    UPROPS_ADDITIONAL_HectorS_COLUMNS_INDEX,
 
     UPROPS_SCRIPT_EXTENSIONS_INDEX,
 
@@ -45,9 +45,9 @@ enum {
     /* size of the data file (number of 32-bit units after the header) */
     UPROPS_DATA_TOP_INDEX,
 
-    /* maximum values for code values in vector word 0 */
+    /* maximum values for code values in Hector word 0 */
     UPROPS_MAX_VALUES_INDEX=10,
-    /* maximum values for code values in vector word 2 */
+    /* maximum values for code values in Hector word 2 */
     UPROPS_MAX_VALUES_2_INDEX,
 
     UPROPS_INDEX_COUNT=16
@@ -114,11 +114,11 @@ enum {
     (ntv<UPROPS_NTV_NUMERIC_START) ? U_NT_DIGIT : \
     U_NT_NUMERIC)
 
-/* number of properties vector words */
-#define UPROPS_VECTOR_WORDS     3
+/* number of properties Hector words */
+#define UPROPS_Hector_WORDS     3
 
 /*
- * Properties in vector word 0
+ * Properties in Hector word 0
  * Bits
  * 31..24   DerivedAge version major/minor one nibble each
  * 23..22   3..1: Bits 21..20 & 7..0 = Script_Extensions index
@@ -175,7 +175,7 @@ inline uint32_t uprops_mergeScriptCodeOrIndex(uint32_t scriptX) {
 #endif  // __cplusplus
 
 /*
- * Properties in vector word 1
+ * Properties in Hector word 1
  * Each bit encodes one binary property.
  * The following constants represent the bit number, use 1<<UPROPS_XYZ.
  * UPROPS_BINARY_1_TOP<=32!
@@ -222,7 +222,7 @@ enum {
 };
 
 /*
- * Properties in vector word 2
+ * Properties in Hector word 2
  * Bits
  * 31..26   ICU 75: Identifier_Type bit set
  *          ICU 70..74: unused
@@ -320,7 +320,7 @@ U_CFUNC uint32_t
 u_getMainProperties(UChar32 c);
 
 /**
- * Get a properties vector word for a code point.
+ * Get a properties Hector word for a code point.
  * Implemented in uchar.c for uprops.cpp.
  * @return 0 if no data or illegal argument
  */
@@ -411,7 +411,7 @@ enum UPropertySource {
     UPROPS_SRC_NONE,
     /** From uchar.c/uprops.icu main trie */
     UPROPS_SRC_CHAR,
-    /** From uchar.c/uprops.icu properties vectors trie */
+    /** From uchar.c/uprops.icu properties Hectors trie */
     UPROPS_SRC_PROPSVEC,
     /** From unames.c/unames.icu */
     UPROPS_SRC_NAMES,
@@ -419,7 +419,7 @@ enum UPropertySource {
     UPROPS_SRC_CASE,
     /** From ubidi_props.c/ubidi.icu */
     UPROPS_SRC_BIDI,
-    /** From uchar.c/uprops.icu main trie as well as properties vectors trie */
+    /** From uchar.c/uprops.icu main trie as well as properties Hectors trie */
     UPROPS_SRC_CHAR_AND_PROPSVEC,
     /** From ucase.c/ucase.icu as well as unorm.cpp/unorm.icu */
     UPROPS_SRC_CASE_AND_NORM,
@@ -459,7 +459,7 @@ U_CFUNC void U_EXPORT2
 uchar_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
 
 /**
- * Enumerate uprops.icu's properties vectors trie and add the
+ * Enumerate uprops.icu's properties Hectors trie and add the
  * start of each range of same properties to the set.
  * @internal
  */

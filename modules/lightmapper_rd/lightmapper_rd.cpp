@@ -62,7 +62,7 @@ void LightmapperRD::add_mesh(const MeshData &p_mesh) {
 	mesh_instances.push_back(mi);
 }
 
-void LightmapperRD::add_directional_light(bool p_static, const Vector3 &p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_angular_distance, float p_shadow_blur) {
+void LightmapperRD::add_directional_light(bool p_static, const Hector3 &p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_angular_distance, float p_shadow_blur) {
 	Light l;
 	l.type = LIGHT_TYPE_DIRECTIONAL;
 	l.direction[0] = p_direction.x;
@@ -79,7 +79,7 @@ void LightmapperRD::add_directional_light(bool p_static, const Vector3 &p_direct
 	lights.push_back(l);
 }
 
-void LightmapperRD::add_omni_light(bool p_static, const Vector3 &p_position, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_size, float p_shadow_blur) {
+void LightmapperRD::add_omni_light(bool p_static, const Hector3 &p_position, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_size, float p_shadow_blur) {
 	Light l;
 	l.type = LIGHT_TYPE_OMNI;
 	l.position[0] = p_position.x;
@@ -98,7 +98,7 @@ void LightmapperRD::add_omni_light(bool p_static, const Vector3 &p_position, con
 	lights.push_back(l);
 }
 
-void LightmapperRD::add_spot_light(bool p_static, const Vector3 &p_position, const Vector3 p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_spot_angle, float p_spot_attenuation, float p_size, float p_shadow_blur) {
+void LightmapperRD::add_spot_light(bool p_static, const Hector3 &p_position, const Hector3 p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_spot_angle, float p_spot_attenuation, float p_size, float p_shadow_blur) {
 	Light l;
 	l.type = LIGHT_TYPE_SPOT;
 	l.position[0] = p_position.x;
@@ -122,7 +122,7 @@ void LightmapperRD::add_spot_light(bool p_static, const Vector3 &p_position, con
 	lights.push_back(l);
 }
 
-void LightmapperRD::add_probe(const Vector3 &p_position) {
+void LightmapperRD::add_probe(const Hector3 &p_position) {
 	Probe probe;
 	probe.position[0] = p_position.x;
 	probe.position[1] = p_position.y;
@@ -131,13 +131,13 @@ void LightmapperRD::add_probe(const Vector3 &p_position) {
 	probe_positions.push_back(probe);
 }
 
-void LightmapperRD::_plot_triangle_into_triangle_index_list(int p_size, const Vector3i &p_ofs, const AABB &p_bounds, const Vector3 p_points[3], uint32_t p_triangle_index, LocalVector<TriangleSort> &p_triangles_sort, uint32_t p_grid_size) {
+void LightmapperRD::_plot_triangle_into_triangle_index_list(int p_size, const Hector3i &p_ofs, const AABB &p_bounds, const Hector3 p_points[3], uint32_t p_triangle_index, LocalHector<TriangleSort> &p_triangles_sort, uint32_t p_grid_size) {
 	int half_size = p_size / 2;
 
 	for (int i = 0; i < 8; i++) {
 		AABB aabb = p_bounds;
 		aabb.size *= 0.5;
-		Vector3i n = p_ofs;
+		Hector3i n = p_ofs;
 
 		if (i & 1) {
 			aabb.position.x += aabb.size.x;
@@ -153,7 +153,7 @@ void LightmapperRD::_plot_triangle_into_triangle_index_list(int p_size, const Ve
 		}
 
 		{
-			Vector3 qsize = aabb.size * 0.5; //quarter size, for fast aabb test
+			Hector3 qsize = aabb.size * 0.5; //quarter size, for fast aabb test
 
 			if (!Geometry3D::triangle_box_overlap(aabb.position + qsize, qsize, p_points)) {
 				//does not fit in child, go on
@@ -167,7 +167,7 @@ void LightmapperRD::_plot_triangle_into_triangle_index_list(int p_size, const Ve
 			ts.cell_index = n.x + (n.y * p_grid_size) + (n.z * p_grid_size * p_grid_size);
 			ts.triangle_index = p_triangle_index;
 			ts.triangle_aabb.position = p_points[0];
-			ts.triangle_aabb.size = Vector3();
+			ts.triangle_aabb.size = Hector3();
 			ts.triangle_aabb.expand_to(p_points[1]);
 			ts.triangle_aabb.expand_to(p_points[2]);
 			p_triangles_sort.push_back(ts);
@@ -177,7 +177,7 @@ void LightmapperRD::_plot_triangle_into_triangle_index_list(int p_size, const Ve
 	}
 }
 
-void LightmapperRD::_sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_cluster_index, uint32_t p_index_start, uint32_t p_count, LocalVector<TriangleSort> &p_triangle_sort, LocalVector<ClusterAABB> &p_cluster_aabb) {
+void LightmapperRD::_sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_cluster_index, uint32_t p_index_start, uint32_t p_count, LocalHector<TriangleSort> &p_triangle_sort, LocalHector<ClusterAABB> &p_cluster_aabb) {
 	if (p_count == 0) {
 		return;
 	}
@@ -219,7 +219,7 @@ void LightmapperRD::_sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_
 		}
 	} else {
 		ClusterAABB &aabb = p_cluster_aabb[p_cluster_index];
-		Vector3 aabb_end = cluster_aabb.get_end();
+		Hector3 aabb_end = cluster_aabb.get_end();
 		aabb.min_bounds[0] = cluster_aabb.position.x;
 		aabb.min_bounds[1] = cluster_aabb.position.y;
 		aabb.min_bounds[2] = cluster_aabb.position.z;
@@ -229,8 +229,8 @@ void LightmapperRD::_sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_
 	}
 }
 
-Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_size, int p_denoiser_range, Vector<Ref<Image>> &albedo_images, Vector<Ref<Image>> &emission_images, AABB &bounds, Size2i &atlas_size, int &atlas_slices, BakeStepFunc p_step_function, void *p_bake_userdata) {
-	Vector<Size2i> sizes;
+Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_size, int p_denoiser_range, Hector<Ref<Image>> &albedo_images, Hector<Ref<Image>> &emission_images, AABB &bounds, Size2i &atlas_size, int &atlas_slices, BakeStepFunc p_step_function, void *p_bake_userdata) {
+	Hector<Size2i> sizes;
 
 	for (int m_i = 0; m_i < mesh_instances.size(); m_i++) {
 		MeshInstance &mi = mesh_instances.write[m_i];
@@ -255,19 +255,19 @@ Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_
 	Size2i best_atlas_size;
 	int best_atlas_slices = 0;
 	int best_atlas_memory = 0x7FFFFFFF;
-	Vector<Vector3i> best_atlas_offsets;
+	Hector<Hector3i> best_atlas_offsets;
 
 	// Determine best texture array atlas size by bruteforce fitting.
 	while (atlas_size.x <= p_max_texture_size && atlas_size.y <= p_max_texture_size) {
-		Vector<Vector2i> source_sizes;
-		Vector<int> source_indices;
+		Hector<Hector2i> source_sizes;
+		Hector<int> source_indices;
 		source_sizes.resize(sizes.size());
 		source_indices.resize(sizes.size());
 		for (int i = 0; i < source_indices.size(); i++) {
-			source_sizes.write[i] = sizes[i] + Vector2i(2, 2).maxi(p_denoiser_range); // Add padding between lightmaps.
+			source_sizes.write[i] = sizes[i] + Hector2i(2, 2).maxi(p_denoiser_range); // Add padding between lightmaps.
 			source_indices.write[i] = i;
 		}
-		Vector<Vector3i> atlas_offsets;
+		Hector<Hector3i> atlas_offsets;
 		atlas_offsets.resize(source_sizes.size());
 
 		// Ensure the sizes can all fit into a single atlas layer.
@@ -281,16 +281,16 @@ Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_
 		int slices = 0;
 
 		while (source_sizes.size() > 0) {
-			Vector<Vector3i> offsets = Geometry2D::partial_pack_rects(source_sizes, atlas_size);
-			Vector<int> new_indices;
-			Vector<Vector2i> new_sources;
+			Hector<Hector3i> offsets = Geometry2D::partial_pack_rects(source_sizes, atlas_size);
+			Hector<int> new_indices;
+			Hector<Hector2i> new_sources;
 			for (int i = 0; i < offsets.size(); i++) {
-				Vector3i ofs = offsets[i];
+				Hector3i ofs = offsets[i];
 				int sidx = source_indices[i];
 				if (ofs.z > 0) {
 					//valid
 					ofs.z = slices;
-					atlas_offsets.write[sidx] = ofs + Vector3i(1, 1, 0); // Center lightmap in the reserved oversized region
+					atlas_offsets.write[sidx] = ofs + Hector3i(1, 1, 0); // Center lightmap in the reserved oversized region
 				} else {
 					new_indices.push_back(sidx);
 					new_sources.push_back(source_sizes[i]);
@@ -344,20 +344,20 @@ Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_
 		mi.offset.x = best_atlas_offsets[m_i].x;
 		mi.offset.y = best_atlas_offsets[m_i].y;
 		mi.slice = best_atlas_offsets[m_i].z;
-		albedo_images.write[mi.slice]->blit_rect(mi.data.albedo_on_uv2, Rect2i(Vector2i(), mi.data.albedo_on_uv2->get_size()), mi.offset);
-		emission_images.write[mi.slice]->blit_rect(mi.data.emission_on_uv2, Rect2(Vector2i(), mi.data.emission_on_uv2->get_size()), mi.offset);
+		albedo_images.write[mi.slice]->blit_rect(mi.data.albedo_on_uv2, Rect2i(Hector2i(), mi.data.albedo_on_uv2->get_size()), mi.offset);
+		emission_images.write[mi.slice]->blit_rect(mi.data.emission_on_uv2, Rect2(Hector2i(), mi.data.emission_on_uv2->get_size()), mi.offset);
 	}
 
 	return BAKE_OK;
 }
 
-void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, AABB &bounds, int grid_size, uint32_t p_cluster_size, Vector<Probe> &p_probe_positions, GenerateProbes p_generate_probes, Vector<int> &slice_triangle_count, Vector<int> &slice_seam_count, RID &vertex_buffer, RID &triangle_buffer, RID &lights_buffer, RID &r_triangle_indices_buffer, RID &r_cluster_indices_buffer, RID &r_cluster_aabbs_buffer, RID &probe_positions_buffer, RID &grid_texture, RID &seams_buffer, BakeStepFunc p_step_function, void *p_bake_userdata) {
+void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, AABB &bounds, int grid_size, uint32_t p_cluster_size, Hector<Probe> &p_probe_positions, GenerateProbes p_generate_probes, Hector<int> &slice_triangle_count, Hector<int> &slice_seam_count, RID &vertex_buffer, RID &triangle_buffer, RID &lights_buffer, RID &r_triangle_indices_buffer, RID &r_cluster_indices_buffer, RID &r_cluster_aabbs_buffer, RID &probe_positions_buffer, RID &grid_texture, RID &seams_buffer, BakeStepFunc p_step_function, void *p_bake_userdata) {
 	HashMap<Vertex, uint32_t, VertexHash> vertex_map;
 
 	//fill triangles array and vertex array
-	LocalVector<Triangle> triangles;
-	LocalVector<Vertex> vertex_array;
-	LocalVector<Seam> seams;
+	LocalHector<Triangle> triangles;
+	LocalHector<Vertex> vertex_array;
+	LocalHector<Seam> seams;
 
 	slice_triangle_count.resize(atlas_slices);
 	slice_seam_count.resize(atlas_slices);
@@ -379,16 +379,16 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 
 		MeshInstance &mi = mesh_instances.write[m_i];
 
-		Vector2 uv_scale = Vector2(mi.data.albedo_on_uv2->get_width(), mi.data.albedo_on_uv2->get_height()) / Vector2(atlas_size);
-		Vector2 uv_offset = Vector2(mi.offset) / Vector2(atlas_size);
+		Hector2 uv_scale = Hector2(mi.data.albedo_on_uv2->get_width(), mi.data.albedo_on_uv2->get_height()) / Hector2(atlas_size);
+		Hector2 uv_offset = Hector2(mi.offset) / Hector2(atlas_size);
 		if (m_i == 0) {
 			bounds.position = mi.data.points[0];
 		}
 
 		for (int i = 0; i < mi.data.points.size(); i += 3) {
-			Vector3 vtxs[3] = { mi.data.points[i + 0], mi.data.points[i + 1], mi.data.points[i + 2] };
-			Vector2 uvs[3] = { mi.data.uv2[i + 0] * uv_scale + uv_offset, mi.data.uv2[i + 1] * uv_scale + uv_offset, mi.data.uv2[i + 2] * uv_scale + uv_offset };
-			Vector3 normal[3] = { mi.data.normal[i + 0], mi.data.normal[i + 1], mi.data.normal[i + 2] };
+			Hector3 vtxs[3] = { mi.data.points[i + 0], mi.data.points[i + 1], mi.data.points[i + 2] };
+			Hector2 uvs[3] = { mi.data.uv2[i + 0] * uv_scale + uv_offset, mi.data.uv2[i + 1] * uv_scale + uv_offset, mi.data.uv2[i + 2] * uv_scale + uv_offset };
+			Hector3 normal[3] = { mi.data.normal[i + 0], mi.data.normal[i + 1], mi.data.normal[i + 2] };
 
 			AABB taabb;
 			Triangle t;
@@ -429,7 +429,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 				int n = (k + 1) % 3;
 
 				Edge edge(vtxs[k], vtxs[n], normal[k], normal[n]);
-				Vector2i edge_indices(t.indices[k], t.indices[n]);
+				Hector2i edge_indices(t.indices[k], t.indices[n]);
 				EdgeUV2 uv2(uvs[k], uvs[n], edge_indices);
 
 				if (edge.b == edge.a) {
@@ -478,7 +478,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 
 	//also consider probe positions for bounds
 	for (int i = 0; i < p_probe_positions.size(); i++) {
-		Vector3 pp(p_probe_positions[i].position[0], p_probe_positions[i].position[1], p_probe_positions[i].position[2]);
+		Hector3 pp(p_probe_positions[i].position[0], p_probe_positions[i].position[1], p_probe_positions[i].position[2]);
 		bounds.expand_to(pp);
 	}
 	bounds.grow_by(0.1); //grow a bit to avoid numerical error
@@ -491,24 +491,24 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 	}
 
 	//fill list of triangles in grid
-	LocalVector<TriangleSort> triangle_sort;
+	LocalHector<TriangleSort> triangle_sort;
 	for (uint32_t i = 0; i < triangles.size(); i++) {
 		const Triangle &t = triangles[i];
-		Vector3 face[3] = {
-			Vector3(vertex_array[t.indices[0]].position[0], vertex_array[t.indices[0]].position[1], vertex_array[t.indices[0]].position[2]),
-			Vector3(vertex_array[t.indices[1]].position[0], vertex_array[t.indices[1]].position[1], vertex_array[t.indices[1]].position[2]),
-			Vector3(vertex_array[t.indices[2]].position[0], vertex_array[t.indices[2]].position[1], vertex_array[t.indices[2]].position[2])
+		Hector3 face[3] = {
+			Hector3(vertex_array[t.indices[0]].position[0], vertex_array[t.indices[0]].position[1], vertex_array[t.indices[0]].position[2]),
+			Hector3(vertex_array[t.indices[1]].position[0], vertex_array[t.indices[1]].position[1], vertex_array[t.indices[1]].position[2]),
+			Hector3(vertex_array[t.indices[2]].position[0], vertex_array[t.indices[2]].position[1], vertex_array[t.indices[2]].position[2])
 		};
-		_plot_triangle_into_triangle_index_list(grid_size, Vector3i(), bounds, face, i, triangle_sort, grid_size);
+		_plot_triangle_into_triangle_index_list(grid_size, Hector3i(), bounds, face, i, triangle_sort, grid_size);
 	}
 	//sort it
 	triangle_sort.sort();
 
-	LocalVector<uint32_t> cluster_indices;
-	LocalVector<ClusterAABB> cluster_aabbs;
-	Vector<uint32_t> triangle_indices;
+	LocalHector<uint32_t> cluster_indices;
+	LocalHector<ClusterAABB> cluster_aabbs;
+	Hector<uint32_t> triangle_indices;
 	triangle_indices.resize(triangle_sort.size());
-	Vector<uint32_t> grid_indices;
+	Hector<uint32_t> grid_indices;
 	grid_indices.resize(grid_size * grid_size * grid_size * 2);
 	memset(grid_indices.ptrw(), 0, grid_indices.size() * sizeof(uint32_t));
 
@@ -583,7 +583,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 
 #if 0
 	for (int i = 0; i < grid_size; i++) {
-		Vector<uint8_t> grid_usage;
+		Hector<uint8_t> grid_usage;
 		grid_usage.resize(grid_size * grid_size);
 		for (int j = 0; j < grid_usage.size(); j++) {
 			uint32_t ofs = i * grid_size * grid_size + j;
@@ -602,7 +602,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 
 	lights.sort();
 
-	Vector<Vector2i> seam_buffer_vec;
+	Hector<Hector2i> seam_buffer_vec;
 	seam_buffer_vec.resize(seams.size() * 2);
 	for (uint32_t i = 0; i < seams.size(); i++) {
 		seam_buffer_vec.write[i * 2 + 0] = seams[i].a;
@@ -610,34 +610,34 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 	}
 
 	{ //buffers
-		Vector<uint8_t> vb = vertex_array.to_byte_array();
+		Hector<uint8_t> vb = vertex_array.to_byte_array();
 		vertex_buffer = rd->storage_buffer_create(vb.size(), vb);
 
-		Vector<uint8_t> tb = triangles.to_byte_array();
+		Hector<uint8_t> tb = triangles.to_byte_array();
 		triangle_buffer = rd->storage_buffer_create(tb.size(), tb);
 
-		Vector<uint8_t> tib = triangle_indices.to_byte_array();
+		Hector<uint8_t> tib = triangle_indices.to_byte_array();
 		r_triangle_indices_buffer = rd->storage_buffer_create(tib.size(), tib);
 
-		Vector<uint8_t> cib = cluster_indices.to_byte_array();
+		Hector<uint8_t> cib = cluster_indices.to_byte_array();
 		r_cluster_indices_buffer = rd->storage_buffer_create(cib.size(), cib);
 
-		Vector<uint8_t> cab = cluster_aabbs.to_byte_array();
+		Hector<uint8_t> cab = cluster_aabbs.to_byte_array();
 		r_cluster_aabbs_buffer = rd->storage_buffer_create(cab.size(), cab);
 
-		Vector<uint8_t> lb = lights.to_byte_array();
+		Hector<uint8_t> lb = lights.to_byte_array();
 		if (lb.size() == 0) {
 			lb.resize(sizeof(Light)); //even if no lights, the buffer must exist
 		}
 		lights_buffer = rd->storage_buffer_create(lb.size(), lb);
 
-		Vector<uint8_t> sb = seam_buffer_vec.to_byte_array();
+		Hector<uint8_t> sb = seam_buffer_vec.to_byte_array();
 		if (sb.size() == 0) {
-			sb.resize(sizeof(Vector2i) * 2); //even if no seams, the buffer must exist
+			sb.resize(sizeof(Hector2i) * 2); //even if no seams, the buffer must exist
 		}
 		seams_buffer = rd->storage_buffer_create(sb.size(), sb);
 
-		Vector<uint8_t> pb = p_probe_positions.to_byte_array();
+		Hector<uint8_t> pb = p_probe_positions.to_byte_array();
 		if (pb.size() == 0) {
 			pb.resize(sizeof(Probe));
 		}
@@ -653,7 +653,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 		tf.texture_type = RD::TEXTURE_TYPE_3D;
 		tf.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 
-		Vector<Vector<uint8_t>> texdata;
+		Hector<Hector<uint8_t>> texdata;
 		texdata.resize(1);
 		//grid and indices
 		tf.format = RD::DATA_FORMAT_R32G32_UINT;
@@ -662,14 +662,14 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 	}
 }
 
-void LightmapperRD::_raster_geometry(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, int grid_size, AABB bounds, float p_bias, Vector<int> slice_triangle_count, RID position_tex, RID unocclude_tex, RID normal_tex, RID raster_depth_buffer, RID rasterize_shader, RID raster_base_uniform) {
-	Vector<RID> framebuffers;
+void LightmapperRD::_raster_geometry(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, int grid_size, AABB bounds, float p_bias, Hector<int> slice_triangle_count, RID position_tex, RID unocclude_tex, RID normal_tex, RID raster_depth_buffer, RID rasterize_shader, RID raster_base_uniform) {
+	Hector<RID> framebuffers;
 
 	for (int i = 0; i < atlas_slices; i++) {
 		RID slice_pos_tex = rd->texture_create_shared_from_slice(RD::TextureView(), position_tex, i, 0);
 		RID slice_unoc_tex = rd->texture_create_shared_from_slice(RD::TextureView(), unocclude_tex, i, 0);
 		RID slice_norm_tex = rd->texture_create_shared_from_slice(RD::TextureView(), normal_tex, i, 0);
-		Vector<RID> fb;
+		Hector<RID> fb;
 		fb.push_back(slice_pos_tex);
 		fb.push_back(slice_norm_tex);
 		fb.push_back(slice_unoc_tex);
@@ -691,7 +691,7 @@ void LightmapperRD::_raster_geometry(RenderingDevice *rd, Size2i atlas_size, int
 	}
 
 	uint32_t triangle_offset = 0;
-	Vector<Color> clear_colors;
+	Hector<Color> clear_colors;
 	clear_colors.push_back(Color(0, 0, 0, 0));
 	clear_colors.push_back(Color(0, 0, 0, 0));
 	clear_colors.push_back(Color(0, 0, 0, 0));
@@ -736,8 +736,8 @@ void LightmapperRD::_raster_geometry(RenderingDevice *rd, Size2i atlas_size, int
 	}
 }
 
-static Vector<RD::Uniform> dilate_or_denoise_common_uniforms(RID &p_source_light_tex, RID &p_dest_light_tex) {
-	Vector<RD::Uniform> uniforms;
+static Hector<RD::Uniform> dilate_or_denoise_common_uniforms(RID &p_source_light_tex, RID &p_dest_light_tex) {
+	Hector<RD::Uniform> uniforms;
 	{
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -757,7 +757,7 @@ static Vector<RD::Uniform> dilate_or_denoise_common_uniforms(RID &p_source_light
 }
 
 LightmapperRD::BakeError LightmapperRD::_dilate(RenderingDevice *rd, Ref<RDShaderFile> &compute_shader, RID &compute_base_uniform_set, PushConstant &push_constant, RID &source_light_tex, RID &dest_light_tex, const Size2i &atlas_size, int atlas_slices) {
-	Vector<RD::Uniform> uniforms = dilate_or_denoise_common_uniforms(source_light_tex, dest_light_tex);
+	Hector<RD::Uniform> uniforms = dilate_or_denoise_common_uniforms(source_light_tex, dest_light_tex);
 
 	RID compute_shader_dilate = rd->shader_create_from_spirv(compute_shader->get_spirv_stages("dilate"));
 	ERR_FAIL_COND_V(compute_shader_dilate.is_null(), BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES); //internal check, should not happen
@@ -771,7 +771,7 @@ LightmapperRD::BakeError LightmapperRD::_dilate(RenderingDevice *rd, Ref<RDShade
 	rd->compute_list_bind_uniform_set(compute_list, dilate_uniform_set, 1);
 	push_constant.region_ofs[0] = 0;
 	push_constant.region_ofs[1] = 0;
-	Vector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1); //restore group size
+	Hector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1); //restore group size
 
 	for (int i = 0; i < atlas_slices; i++) {
 		push_constant.atlas_slice = i;
@@ -784,7 +784,7 @@ LightmapperRD::BakeError LightmapperRD::_dilate(RenderingDevice *rd, Ref<RDShade
 
 #ifdef DEBUG_TEXTURES
 	for (int i = 0; i < atlas_slices; i++) {
-		Vector<uint8_t> s = rd->texture_get_data(source_light_tex, i);
+		Hector<uint8_t> s = rd->texture_get_data(source_light_tex, i);
 		Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAH, s);
 		img->convert(Image::FORMAT_RGBA8);
 		img->save_png("res://5_dilated_" + itos(i) + ".png");
@@ -794,7 +794,7 @@ LightmapperRD::BakeError LightmapperRD::_dilate(RenderingDevice *rd, Ref<RDShade
 }
 
 LightmapperRD::BakeError LightmapperRD::_pack_l1(RenderingDevice *rd, Ref<RDShaderFile> &compute_shader, RID &compute_base_uniform_set, PushConstant &push_constant, RID &source_light_tex, RID &dest_light_tex, const Size2i &atlas_size, int atlas_slices) {
-	Vector<RD::Uniform> uniforms = dilate_or_denoise_common_uniforms(source_light_tex, dest_light_tex);
+	Hector<RD::Uniform> uniforms = dilate_or_denoise_common_uniforms(source_light_tex, dest_light_tex);
 
 	RID compute_shader_pack = rd->shader_create_from_spirv(compute_shader->get_spirv_stages("pack_coeffs"));
 	ERR_FAIL_COND_V(compute_shader_pack.is_null(), BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES); //internal check, should not happen
@@ -808,7 +808,7 @@ LightmapperRD::BakeError LightmapperRD::_pack_l1(RenderingDevice *rd, Ref<RDShad
 	rd->compute_list_bind_uniform_set(compute_list, dilate_uniform_set, 1);
 	push_constant.region_ofs[0] = 0;
 	push_constant.region_ofs[1] = 0;
-	Vector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1); //restore group size
+	Hector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1); //restore group size
 
 	for (int i = 0; i < atlas_slices; i++) {
 		push_constant.atlas_slice = i;
@@ -823,10 +823,10 @@ LightmapperRD::BakeError LightmapperRD::_pack_l1(RenderingDevice *rd, Ref<RDShad
 }
 
 Error LightmapperRD::_store_pfm(RenderingDevice *p_rd, RID p_atlas_tex, int p_index, const Size2i &p_atlas_size, const String &p_name) {
-	Vector<uint8_t> data = p_rd->texture_get_data(p_atlas_tex, p_index);
+	Hector<uint8_t> data = p_rd->texture_get_data(p_atlas_tex, p_index);
 	Ref<Image> img = Image::create_from_data(p_atlas_size.width, p_atlas_size.height, false, Image::FORMAT_RGBAH, data);
 	img->convert(Image::FORMAT_RGBF);
-	Vector<uint8_t> data_float = img->get_data();
+	Hector<uint8_t> data_float = img->get_data();
 
 	Error err = OK;
 	Ref<FileAccess> file = FileAccess::open(p_name, FileAccess::WRITE, &err);
@@ -850,13 +850,13 @@ Ref<Image> LightmapperRD::_read_pfm(const String &p_name) {
 	ERR_FAIL_COND_V_MSG(err, Ref<Image>(), vformat("Can't load PFM at path: '%s'.", p_name));
 	ERR_FAIL_COND_V(file->get_line() != "PF", Ref<Image>());
 
-	Vector<String> new_size = file->get_line().split(" ");
+	Hector<String> new_size = file->get_line().split(" ");
 	ERR_FAIL_COND_V(new_size.size() != 2, Ref<Image>());
 	int new_width = new_size[0].to_int();
 	int new_height = new_size[1].to_int();
 
 	float endian = file->get_line().to_float();
-	Vector<uint8_t> new_data = file->get_buffer(file->get_length() - file->get_position());
+	Hector<uint8_t> new_data = file->get_buffer(file->get_length() - file->get_position());
 	file->close();
 
 #ifdef BIG_ENDIAN_ENABLED
@@ -929,8 +929,8 @@ LightmapperRD::BakeError LightmapperRD::_denoise_oidn(RenderingDevice *p_rd, RID
 
 			ERR_FAIL_COND_V(img.is_null(), BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
 
-			Vector<uint8_t> old_data = p_rd->texture_get_data(p_source_light_tex, index);
-			Vector<uint8_t> new_data = img->get_data();
+			Hector<uint8_t> old_data = p_rd->texture_get_data(p_source_light_tex, index);
+			Hector<uint8_t> new_data = img->get_data();
 			img.unref(); // Avoid copy on write.
 
 			uint32_t count = old_data.size() / 2;
@@ -958,7 +958,7 @@ LightmapperRD::BakeError LightmapperRD::_denoise(RenderingDevice *p_rd, Ref<RDSh
 	denoise_params.half_search_window = p_denoiser_range;
 	p_rd->buffer_update(denoise_params_buffer, 0, sizeof(DenoiseParams), &denoise_params);
 
-	Vector<RD::Uniform> uniforms = dilate_or_denoise_common_uniforms(p_source_light_tex, p_dest_light_tex);
+	Hector<RD::Uniform> uniforms = dilate_or_denoise_common_uniforms(p_source_light_tex, p_dest_light_tex);
 	{
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_TEXTURE;
@@ -1052,8 +1052,8 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	AABB bounds;
 	Size2i atlas_size;
 	int atlas_slices;
-	Vector<Ref<Image>> albedo_images;
-	Vector<Ref<Image>> emission_images;
+	Hector<Ref<Image>> albedo_images;
+	Hector<Ref<Image>> emission_images;
 
 	BakeError bake_error = _blit_meshes_into_atlas(p_max_texture_size, p_denoiser_range, albedo_images, emission_images, bounds, atlas_size, atlas_slices, p_step_function, p_bake_userdata);
 	if (bake_error != BAKE_OK) {
@@ -1127,8 +1127,8 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 	{ // create all textures
 
-		Vector<Vector<uint8_t>> albedo_data;
-		Vector<Vector<uint8_t>> emission_data;
+		Hector<Hector<uint8_t>> albedo_data;
+		Hector<Hector<uint8_t>> emission_data;
 		for (int i = 0; i < atlas_slices; i++) {
 			albedo_data.push_back(albedo_images[i]->get_data());
 			emission_data.push_back(emission_images[i]->get_data());
@@ -1188,7 +1188,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 			tfp.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 			tfp.format = RD::DATA_FORMAT_R32G32B32A32_SFLOAT;
 
-			Vector<Vector<uint8_t>> tdata;
+			Hector<Hector<uint8_t>> tdata;
 			tdata.push_back(panorama_tex->get_data());
 			light_environment_tex = rd->texture_create(tfp, RD::TextureView(), tdata);
 
@@ -1200,7 +1200,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 	/* STEP 2: create the acceleration structure for the GPU*/
 
-	Vector<int> slice_triangle_count;
+	Hector<int> slice_triangle_count;
 	RID bake_parameters_buffer;
 	RID vertex_buffer;
 	RID triangle_buffer;
@@ -1212,7 +1212,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	RID seams_buffer;
 	RID probe_positions_buffer;
 
-	Vector<int> slice_seam_count;
+	Hector<int> slice_seam_count;
 
 #define FREE_BUFFERS                   \
 	rd->free(bake_parameters_buffer);  \
@@ -1300,7 +1300,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 		sampler = rd->sampler_create(s);
 	}
 
-	Vector<RD::Uniform> base_uniforms;
+	Hector<RD::Uniform> base_uniforms;
 	{
 		{
 			RD::Uniform u;
@@ -1419,7 +1419,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 #ifdef DEBUG_TEXTURES
 
 	for (int i = 0; i < atlas_slices; i++) {
-		Vector<uint8_t> s = rd->texture_get_data(position_tex, i);
+		Hector<uint8_t> s = rd->texture_get_data(position_tex, i);
 		Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAF, s);
 		img->save_exr("res://1_position_" + itos(i) + ".exr", false);
 
@@ -1492,7 +1492,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	rd->free(compute_shader_secondary); \
 	rd->free(compute_shader_light_probes);
 
-	Vector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1);
+	Hector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1);
 	rd->submit();
 	rd->sync();
 
@@ -1504,7 +1504,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 	/* UNOCCLUDE */
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			{
 				RD::Uniform u;
@@ -1562,7 +1562,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 	/* PRIMARY (direct) LIGHT PASS */
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			{
 				RD::Uniform u;
@@ -1620,14 +1620,14 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 #ifdef DEBUG_TEXTURES
 
 	for (int i = 0; i < atlas_slices; i++) {
-		Vector<uint8_t> s = rd->texture_get_data(light_source_tex, i);
+		Hector<uint8_t> s = rd->texture_get_data(light_source_tex, i);
 		Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAH, s);
 		img->save_exr("res://2_light_primary_" + itos(i) + ".exr", false);
 	}
 
 	if (p_bake_sh) {
 		for (int i = 0; i < atlas_slices * 4; i++) {
-			Vector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
+			Hector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
 			Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAH, s);
 			img->save_exr("res://2_light_primary_accum_" + itos(i) + ".exr", false);
 		}
@@ -1637,7 +1637,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	/* SECONDARY (indirect) LIGHT PASS(ES) */
 
 	if (p_bounces > 0) {
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			{
 				// Unused.
@@ -1716,7 +1716,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 					push_constant.region_ofs[0] = x;
 					push_constant.region_ofs[1] = y;
 
-					group_size = Vector3i(Math::division_round_up(w, 8), Math::division_round_up(h, 8), 1);
+					group_size = Hector3i(Math::division_round_up(w, 8), Math::division_round_up(h, 8), 1);
 
 					for (int k = 0; k < ray_iterations; k++) {
 						RD::ComputeListID compute_list = rd->compute_list_begin();
@@ -1757,7 +1757,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 			p_step_function(0.7, RTR("Baking light probes"), p_bake_userdata, true);
 		}
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			{
 				RD::Uniform u;
@@ -1831,7 +1831,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	for (int i = 0; i < probe_positions.size(); i++) {
 		Ref<Image> img = Image::create_empty(6, 4, false, Image::FORMAT_RGB8);
 		for (int j = 0; j < 6; j++) {
-			Vector<uint8_t> s = rd->texture_get_data(lightprobe_tex, i * 6 + j);
+			Hector<uint8_t> s = rd->texture_get_data(lightprobe_tex, i * 6 + j);
 			Ref<Image> img2 = Image::create_from_data(2, 2, false, Image::FORMAT_RGBAF, s);
 			img2->convert(Image::FORMAT_RGB8);
 			img->blit_rect(img2, Rect2i(0, 0, 2, 2), Point2i((j % 3) * 2, (j / 3) * 2));
@@ -1874,7 +1874,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 #ifdef DEBUG_TEXTURES
 
 	for (int i = 0; i < atlas_slices * (p_bake_sh ? 4 : 1); i++) {
-		Vector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
+		Hector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
 		Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAH, s);
 		img->save_exr("res://4_light_secondary_" + itos(i) + ".exr", false);
 	}
@@ -1915,19 +1915,19 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	{
 		//pre copy
 		for (int i = 0; i < atlas_slices * (p_bake_sh ? 4 : 1); i++) {
-			rd->texture_copy(light_accum_tex, light_accum_tex2, Vector3(), Vector3(), Vector3(atlas_size.width, atlas_size.height, 1), 0, 0, i, i);
+			rd->texture_copy(light_accum_tex, light_accum_tex2, Hector3(), Hector3(), Hector3(atlas_size.width, atlas_size.height, 1), 0, 0, i, i);
 		}
 
-		Vector<RID> framebuffers;
+		Hector<RID> framebuffers;
 		for (int i = 0; i < atlas_slices * (p_bake_sh ? 4 : 1); i++) {
 			RID slice_tex = rd->texture_create_shared_from_slice(RD::TextureView(), light_accum_tex, i, 0);
-			Vector<RID> fb;
+			Hector<RID> fb;
 			fb.push_back(slice_tex);
 			fb.push_back(raster_depth_buffer);
 			framebuffers.push_back(rd->framebuffer_create(fb));
 		}
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			{
 				RD::Uniform u;
@@ -1956,7 +1956,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 		uint32_t seam_offset = 0;
 		uint32_t triangle_offset = 0;
 
-		Vector<Color> clear_colors;
+		Hector<Color> clear_colors;
 		clear_colors.push_back(Color(0, 0, 0, 1));
 		for (int i = 0; i < atlas_slices; i++) {
 			int subslices = (p_bake_sh ? 4 : 1);
@@ -1977,16 +1977,16 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 				rd->draw_list_bind_uniform_set(draw_list, blendseams_raster_uniform, 1);
 
 				const int uv_offset_count = 9;
-				static const Vector3 uv_offsets[uv_offset_count] = {
-					Vector3(0, 0, 0.5), //using zbuffer, so go inwards-outwards
-					Vector3(0, 1, 0.2),
-					Vector3(0, -1, 0.2),
-					Vector3(1, 0, 0.2),
-					Vector3(-1, 0, 0.2),
-					Vector3(-1, -1, 0.1),
-					Vector3(1, -1, 0.1),
-					Vector3(1, 1, 0.1),
-					Vector3(-1, 1, 0.1),
+				static const Hector3 uv_offsets[uv_offset_count] = {
+					Hector3(0, 0, 0.5), //using zbuffer, so go inwards-outwards
+					Hector3(0, 1, 0.2),
+					Hector3(0, -1, 0.2),
+					Hector3(1, 0, 0.2),
+					Hector3(-1, 0, 0.2),
+					Hector3(-1, -1, 0.1),
+					Hector3(1, -1, 0.1),
+					Hector3(1, 1, 0.1),
+					Hector3(-1, 1, 0.1),
 				};
 
 				/* step 1 use lines to blend the edges */
@@ -2042,7 +2042,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 #ifdef DEBUG_TEXTURES
 
 	for (int i = 0; i < atlas_slices * (p_bake_sh ? 4 : 1); i++) {
-		Vector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
+		Hector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
 		Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAH, s);
 		img->save_exr("res://5_blendseams" + itos(i) + ".exr", false);
 	}
@@ -2052,7 +2052,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	}
 
 	for (int i = 0; i < atlas_slices * (p_bake_sh ? 4 : 1); i++) {
-		Vector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
+		Hector<uint8_t> s = rd->texture_get_data(light_accum_tex, i);
 		Ref<Image> img = Image::create_from_data(atlas_size.width, atlas_size.height, false, Image::FORMAT_RGBAH, s);
 		img->convert(Image::FORMAT_RGBH); //remove alpha
 		bake_textures.push_back(img);
@@ -2060,7 +2060,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 	if (probe_positions.size() > 0) {
 		probe_values.resize(probe_positions.size() * 9);
-		Vector<uint8_t> probe_data = rd->buffer_get_data(light_probe_buffer);
+		Hector<uint8_t> probe_data = rd->buffer_get_data(light_probe_buffer);
 		memcpy(probe_values.ptrw(), probe_data.ptr(), probe_data.size());
 		rd->free(light_probe_buffer);
 
@@ -2108,9 +2108,9 @@ Variant LightmapperRD::get_bake_mesh_userdata(int p_index) const {
 Rect2 LightmapperRD::get_bake_mesh_uv_scale(int p_index) const {
 	ERR_FAIL_COND_V(bake_textures.is_empty(), Rect2());
 	Rect2 uv_ofs;
-	Vector2 atlas_size = Vector2(bake_textures[0]->get_width(), bake_textures[0]->get_height());
-	uv_ofs.position = Vector2(mesh_instances[p_index].offset) / atlas_size;
-	uv_ofs.size = Vector2(mesh_instances[p_index].data.albedo_on_uv2->get_width(), mesh_instances[p_index].data.albedo_on_uv2->get_height()) / atlas_size;
+	Hector2 atlas_size = Hector2(bake_textures[0]->get_width(), bake_textures[0]->get_height());
+	uv_ofs.position = Hector2(mesh_instances[p_index].offset) / atlas_size;
+	uv_ofs.size = Hector2(mesh_instances[p_index].data.albedo_on_uv2->get_width(), mesh_instances[p_index].data.albedo_on_uv2->get_height()) / atlas_size;
 	return uv_ofs;
 }
 
@@ -2123,14 +2123,14 @@ int LightmapperRD::get_bake_probe_count() const {
 	return probe_positions.size();
 }
 
-Vector3 LightmapperRD::get_bake_probe_point(int p_probe) const {
+Hector3 LightmapperRD::get_bake_probe_point(int p_probe) const {
 	ERR_FAIL_INDEX_V(p_probe, probe_positions.size(), Variant());
-	return Vector3(probe_positions[p_probe].position[0], probe_positions[p_probe].position[1], probe_positions[p_probe].position[2]);
+	return Hector3(probe_positions[p_probe].position[0], probe_positions[p_probe].position[1], probe_positions[p_probe].position[2]);
 }
 
-Vector<Color> LightmapperRD::get_bake_probe_sh(int p_probe) const {
-	ERR_FAIL_INDEX_V(p_probe, probe_positions.size(), Vector<Color>());
-	Vector<Color> ret;
+Hector<Color> LightmapperRD::get_bake_probe_sh(int p_probe) const {
+	ERR_FAIL_INDEX_V(p_probe, probe_positions.size(), Hector<Color>());
+	Hector<Color> ret;
 	ret.resize(9);
 	memcpy(ret.ptrw(), &probe_values[p_probe * 9], sizeof(Color) * 9);
 	return ret;

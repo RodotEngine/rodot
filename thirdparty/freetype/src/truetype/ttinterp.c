@@ -439,11 +439,11 @@
     exec->GS.gep1 = 1;
     exec->GS.gep2 = 1;
 
-    exec->GS.projVector.x = 0x4000;
-    exec->GS.projVector.y = 0x0000;
+    exec->GS.projHector.x = 0x4000;
+    exec->GS.projHector.y = 0x0000;
 
-    exec->GS.freeVector = exec->GS.projVector;
-    exec->GS.dualVector = exec->GS.projVector;
+    exec->GS.freeHector = exec->GS.projHector;
+    exec->GS.dualHector = exec->GS.projHector;
 
     exec->GS.round_state = 1;
     exec->GS.loop        = 1;
@@ -1387,7 +1387,7 @@
    *
    * @Description:
    *   Returns the current aspect ratio scaling factor depending on the
-   *   projection vector's state and device resolutions.
+   *   projection Hector's state and device resolutions.
    *
    * @Return:
    *   The aspect ratio in 16.16 format, always <= 1.0 .
@@ -1397,10 +1397,10 @@
   {
     if ( !exc->tt_metrics.ratio )
     {
-      if ( exc->GS.projVector.y == 0 )
+      if ( exc->GS.projHector.y == 0 )
         exc->tt_metrics.ratio = exc->tt_metrics.x_ratio;
 
-      else if ( exc->GS.projVector.x == 0 )
+      else if ( exc->GS.projHector.x == 0 )
         exc->tt_metrics.ratio = exc->tt_metrics.y_ratio;
 
       else
@@ -1409,9 +1409,9 @@
 
 
         x = TT_MulFix14( exc->tt_metrics.x_ratio,
-                         exc->GS.projVector.x );
+                         exc->GS.projHector.x );
         y = TT_MulFix14( exc->tt_metrics.y_ratio,
-                         exc->GS.projVector.y );
+                         exc->GS.projHector.y );
         exc->tt_metrics.ratio = FT_Hypot( x, y );
       }
     }
@@ -1647,7 +1647,7 @@
    *   Direct_Move
    *
    * @Description:
-   *   Moves a point by a given distance along the freedom vector.  The
+   *   Moves a point by a given distance along the freedom Hector.  The
    *   point will be `touched'.
    *
    * @Input:
@@ -1674,7 +1674,7 @@
     FT_F26Dot6  v;
 
 
-    v = exc->GS.freeVector.x;
+    v = exc->GS.freeHector.x;
 
     if ( v != 0 )
     {
@@ -1699,7 +1699,7 @@
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
 
-    v = exc->GS.freeVector.y;
+    v = exc->GS.freeHector.y;
 
     if ( v != 0 )
     {
@@ -1726,7 +1726,7 @@
    *
    * @Description:
    *   Moves the *original* position of a point by a given distance along
-   *   the freedom vector.  Obviously, the point will not be `touched'.
+   *   the freedom Hector.  Obviously, the point will not be `touched'.
    *
    * @Input:
    *   point ::
@@ -1748,7 +1748,7 @@
     FT_F26Dot6  v;
 
 
-    v = exc->GS.freeVector.x;
+    v = exc->GS.freeHector.x;
 
     if ( v != 0 )
       zone->org[point].x = ADD_LONG( zone->org[point].x,
@@ -1756,7 +1756,7 @@
                                                 v,
                                                 exc->F_dot_P ) );
 
-    v = exc->GS.freeVector.y;
+    v = exc->GS.freeHector.y;
 
     if ( v != 0 )
       zone->org[point].y = ADD_LONG( zone->org[point].y,
@@ -1770,8 +1770,8 @@
    *
    * Special versions of Direct_Move()
    *
-   *   The following versions are used whenever both vectors are both
-   *   along one of the coordinate unit vectors, i.e. in 90% of the cases.
+   *   The following versions are used whenever both Hectors are both
+   *   along one of the coordinate unit Hectors, i.e. in 90% of the cases.
    *   See `ttinterp.h' for details on backward compatibility mode.
    *
    */
@@ -1819,8 +1819,8 @@
    *
    * Special versions of Direct_Move_Orig()
    *
-   *   The following versions are used whenever both vectors are both
-   *   along one of the coordinate unit vectors, i.e. in 90% of the cases.
+   *   The following versions are used whenever both Hectors are both
+   *   along one of the coordinate unit Hectors, i.e. in 90% of the cases.
    *
    */
 
@@ -2357,14 +2357,14 @@
    *   Project
    *
    * @Description:
-   *   Computes the projection of vector given by (v2-v1) along the
-   *   current projection vector.
+   *   Computes the projection of Hector given by (v2-v1) along the
+   *   current projection Hector.
    *
    * @Input:
    *   v1 ::
-   *     First input vector.
+   *     First input Hector.
    *   v2 ::
-   *     Second input vector.
+   *     Second input Hector.
    *
    * @Return:
    *   The distance in F26dot6 format.
@@ -2375,8 +2375,8 @@
            FT_Pos          dy )
   {
     return TT_DotFix14( dx, dy,
-                        exc->GS.projVector.x,
-                        exc->GS.projVector.y );
+                        exc->GS.projHector.x,
+                        exc->GS.projHector.y );
   }
 
 
@@ -2386,14 +2386,14 @@
    *   Dual_Project
    *
    * @Description:
-   *   Computes the projection of the vector given by (v2-v1) along the
-   *   current dual vector.
+   *   Computes the projection of the Hector given by (v2-v1) along the
+   *   current dual Hector.
    *
    * @Input:
    *   v1 ::
-   *     First input vector.
+   *     First input Hector.
    *   v2 ::
-   *     Second input vector.
+   *     Second input Hector.
    *
    * @Return:
    *   The distance in F26dot6 format.
@@ -2404,8 +2404,8 @@
                 FT_Pos          dy )
   {
     return TT_DotFix14( dx, dy,
-                        exc->GS.dualVector.x,
-                        exc->GS.dualVector.y );
+                        exc->GS.dualHector.x,
+                        exc->GS.dualHector.y );
   }
 
 
@@ -2415,14 +2415,14 @@
    *   Project_x
    *
    * @Description:
-   *   Computes the projection of the vector given by (v2-v1) along the
+   *   Computes the projection of the Hector given by (v2-v1) along the
    *   horizontal axis.
    *
    * @Input:
    *   v1 ::
-   *     First input vector.
+   *     First input Hector.
    *   v2 ::
-   *     Second input vector.
+   *     Second input Hector.
    *
    * @Return:
    *   The distance in F26dot6 format.
@@ -2445,14 +2445,14 @@
    *   Project_y
    *
    * @Description:
-   *   Computes the projection of the vector given by (v2-v1) along the
+   *   Computes the projection of the Hector given by (v2-v1) along the
    *   vertical axis.
    *
    * @Input:
    *   v1 ::
-   *     First input vector.
+   *     First input Hector.
    *   v2 ::
-   *     Second input vector.
+   *     Second input Hector.
    *
    * @Return:
    *   The distance in F26dot6 format.
@@ -2481,25 +2481,25 @@
   static void
   Compute_Funcs( TT_ExecContext  exc )
   {
-    if ( exc->GS.freeVector.x == 0x4000 )
-      exc->F_dot_P = exc->GS.projVector.x;
-    else if ( exc->GS.freeVector.y == 0x4000 )
-      exc->F_dot_P = exc->GS.projVector.y;
+    if ( exc->GS.freeHector.x == 0x4000 )
+      exc->F_dot_P = exc->GS.projHector.x;
+    else if ( exc->GS.freeHector.y == 0x4000 )
+      exc->F_dot_P = exc->GS.projHector.y;
     else
       exc->F_dot_P =
-        ( (FT_Long)exc->GS.projVector.x * exc->GS.freeVector.x +
-          (FT_Long)exc->GS.projVector.y * exc->GS.freeVector.y ) >> 14;
+        ( (FT_Long)exc->GS.projHector.x * exc->GS.freeHector.x +
+          (FT_Long)exc->GS.projHector.y * exc->GS.freeHector.y ) >> 14;
 
-    if ( exc->GS.projVector.x == 0x4000 )
+    if ( exc->GS.projHector.x == 0x4000 )
       exc->func_project = (TT_Project_Func)Project_x;
-    else if ( exc->GS.projVector.y == 0x4000 )
+    else if ( exc->GS.projHector.y == 0x4000 )
       exc->func_project = (TT_Project_Func)Project_y;
     else
       exc->func_project = (TT_Project_Func)Project;
 
-    if ( exc->GS.dualVector.x == 0x4000 )
+    if ( exc->GS.dualHector.x == 0x4000 )
       exc->func_dualproj = (TT_Project_Func)Project_x;
-    else if ( exc->GS.dualVector.y == 0x4000 )
+    else if ( exc->GS.dualHector.y == 0x4000 )
       exc->func_dualproj = (TT_Project_Func)Project_y;
     else
       exc->func_dualproj = (TT_Project_Func)Dual_Project;
@@ -2509,12 +2509,12 @@
 
     if ( exc->F_dot_P == 0x4000L )
     {
-      if ( exc->GS.freeVector.x == 0x4000 )
+      if ( exc->GS.freeHector.x == 0x4000 )
       {
         exc->func_move      = (TT_Move_Func)Direct_Move_X;
         exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig_X;
       }
-      else if ( exc->GS.freeVector.y == 0x4000 )
+      else if ( exc->GS.freeHector.y == 0x4000 )
       {
         exc->func_move      = (TT_Move_Func)Direct_Move_Y;
         exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig_Y;
@@ -2538,20 +2538,20 @@
    *   Normalize
    *
    * @Description:
-   *   Norms a vector.
+   *   Norms a Hector.
    *
    * @Input:
    *   Vx ::
-   *     The horizontal input vector coordinate.
+   *     The horizontal input Hector coordinate.
    *   Vy ::
-   *     The vertical input vector coordinate.
+   *     The vertical input Hector coordinate.
    *
    * @Output:
    *   R ::
-   *     The normed unit vector.
+   *     The normed unit Hector.
    *
    * @Return:
-   *   Returns FAILURE if a vector parameter is zero.
+   *   Returns FAILURE if a Hector parameter is zero.
    *
    * @Note:
    *   In case Vx and Vy are both zero, `Normalize' returns SUCCESS, and
@@ -2560,22 +2560,22 @@
   static FT_Bool
   Normalize( FT_F26Dot6      Vx,
              FT_F26Dot6      Vy,
-             FT_UnitVector*  R )
+             FT_UnitHector*  R )
   {
-    FT_Vector V;
+    FT_Hector V;
 
 
     if ( Vx == 0 && Vy == 0 )
     {
       /* XXX: UNDOCUMENTED! It seems that it is possible to try   */
-      /*      to normalize the vector (0,0).  Return immediately. */
+      /*      to normalize the Hector (0,0).  Return immediately. */
       return SUCCESS;
     }
 
     V.x = Vx;
     V.y = Vy;
 
-    FT_Vector_NormLen( &V );
+    FT_Hector_NormLen( &V );
 
     R->x = (FT_F2Dot14)( V.x / 4 );
     R->y = (FT_F2Dot14)( V.y / 4 );
@@ -3986,11 +3986,11 @@
   Ins_SxVTL( TT_ExecContext  exc,
              FT_UShort       aIdx1,
              FT_UShort       aIdx2,
-             FT_UnitVector*  Vec )
+             FT_UnitHector*  Vec )
   {
     FT_Long     A, B, C;
-    FT_Vector*  p1;
-    FT_Vector*  p2;
+    FT_Hector*  p1;
+    FT_Hector*  p2;
 
     FT_Byte  opcode = exc->opcode;
 
@@ -4035,15 +4035,15 @@
 
   /**************************************************************************
    *
-   * SVTCA[a]:     Set (F and P) Vectors to Coordinate Axis
+   * SVTCA[a]:     Set (F and P) Hectors to Coordinate Axis
    * Opcode range: 0x00-0x01
    * Stack:        -->
    *
-   * SPvTCA[a]:    Set PVector to Coordinate Axis
+   * SPvTCA[a]:    Set PHector to Coordinate Axis
    * Opcode range: 0x02-0x03
    * Stack:        -->
    *
-   * SFvTCA[a]:    Set FVector to Coordinate Axis
+   * SFvTCA[a]:    Set FHector to Coordinate Axis
    * Opcode range: 0x04-0x05
    * Stack:        -->
    */
@@ -4060,17 +4060,17 @@
 
     if ( opcode < 4 )
     {
-      exc->GS.projVector.x = AA;
-      exc->GS.projVector.y = BB;
+      exc->GS.projHector.x = AA;
+      exc->GS.projHector.y = BB;
 
-      exc->GS.dualVector.x = AA;
-      exc->GS.dualVector.y = BB;
+      exc->GS.dualHector.x = AA;
+      exc->GS.dualHector.y = BB;
     }
 
     if ( ( opcode & 2 ) == 0 )
     {
-      exc->GS.freeVector.x = AA;
-      exc->GS.freeVector.y = BB;
+      exc->GS.freeHector.x = AA;
+      exc->GS.freeHector.y = BB;
     }
 
     Compute_Funcs( exc );
@@ -4079,7 +4079,7 @@
 
   /**************************************************************************
    *
-   * SPvTL[a]:     Set PVector To Line
+   * SPvTL[a]:     Set PHector To Line
    * Opcode range: 0x06-0x07
    * Stack:        uint32 uint32 -->
    */
@@ -4090,9 +4090,9 @@
     if ( Ins_SxVTL( exc,
                     (FT_UShort)args[1],
                     (FT_UShort)args[0],
-                    &exc->GS.projVector ) == SUCCESS )
+                    &exc->GS.projHector ) == SUCCESS )
     {
-      exc->GS.dualVector = exc->GS.projVector;
+      exc->GS.dualHector = exc->GS.projHector;
       Compute_Funcs( exc );
     }
   }
@@ -4100,7 +4100,7 @@
 
   /**************************************************************************
    *
-   * SFvTL[a]:     Set FVector To Line
+   * SFvTL[a]:     Set FHector To Line
    * Opcode range: 0x08-0x09
    * Stack:        uint32 uint32 -->
    */
@@ -4111,7 +4111,7 @@
     if ( Ins_SxVTL( exc,
                     (FT_UShort)args[1],
                     (FT_UShort)args[0],
-                    &exc->GS.freeVector ) == SUCCESS )
+                    &exc->GS.freeHector ) == SUCCESS )
     {
       Compute_Funcs( exc );
     }
@@ -4120,21 +4120,21 @@
 
   /**************************************************************************
    *
-   * SFvTPv[]:     Set FVector To PVector
+   * SFvTPv[]:     Set FHector To PHector
    * Opcode range: 0x0E
    * Stack:        -->
    */
   static void
   Ins_SFVTPV( TT_ExecContext  exc )
   {
-    exc->GS.freeVector = exc->GS.projVector;
+    exc->GS.freeHector = exc->GS.projHector;
     Compute_Funcs( exc );
   }
 
 
   /**************************************************************************
    *
-   * SPvFS[]:      Set PVector From Stack
+   * SPvFS[]:      Set PHector From Stack
    * Opcode range: 0x0A
    * Stack:        f2.14 f2.14 -->
    */
@@ -4152,16 +4152,16 @@
     S = (FT_Short)args[0];
     X = (FT_Long)S;
 
-    Normalize( X, Y, &exc->GS.projVector );
+    Normalize( X, Y, &exc->GS.projHector );
 
-    exc->GS.dualVector = exc->GS.projVector;
+    exc->GS.dualHector = exc->GS.projHector;
     Compute_Funcs( exc );
   }
 
 
   /**************************************************************************
    *
-   * SFvFS[]:      Set FVector From Stack
+   * SFvFS[]:      Set FHector From Stack
    * Opcode range: 0x0B
    * Stack:        f2.14 f2.14 -->
    */
@@ -4179,14 +4179,14 @@
     S = (FT_Short)args[0];
     X = S;
 
-    Normalize( X, Y, &exc->GS.freeVector );
+    Normalize( X, Y, &exc->GS.freeHector );
     Compute_Funcs( exc );
   }
 
 
   /**************************************************************************
    *
-   * GPv[]:        Get Projection Vector
+   * GPv[]:        Get Projection Hector
    * Opcode range: 0x0C
    * Stack:        ef2.14 --> ef2.14
    */
@@ -4194,14 +4194,14 @@
   Ins_GPV( TT_ExecContext  exc,
            FT_Long*        args )
   {
-    args[0] = exc->GS.projVector.x;
-    args[1] = exc->GS.projVector.y;
+    args[0] = exc->GS.projHector.x;
+    args[1] = exc->GS.projHector.y;
   }
 
 
   /**************************************************************************
    *
-   * GFv[]:        Get Freedom Vector
+   * GFv[]:        Get Freedom Hector
    * Opcode range: 0x0D
    * Stack:        ef2.14 --> ef2.14
    */
@@ -4209,8 +4209,8 @@
   Ins_GFV( TT_ExecContext  exc,
            FT_Long*        args )
   {
-    args[0] = exc->GS.freeVector.x;
-    args[1] = exc->GS.freeVector.y;
+    args[0] = exc->GS.freeHector.x;
+    args[1] = exc->GS.freeHector.y;
   }
 
 
@@ -4506,7 +4506,7 @@
    * Stack:        uint32 --> f26.6
    *
    * XXX: UNDOCUMENTED: Measures from the original glyph must be taken
-   *      along the dual projection vector!
+   *      along the dual projection Hector!
    */
   static void
   Ins_GC( TT_ExecContext  exc,
@@ -4581,7 +4581,7 @@
    * Stack:        uint32 uint32 --> f26.6
    *
    * XXX: UNDOCUMENTED: Measure taken in the original glyph must be along
-   *                    the dual projection vector.
+   *                    the dual projection Hector.
    *
    * XXX: UNDOCUMENTED: Flag attributes are inverted!
    *                      0 => measure distance in original outline
@@ -4617,16 +4617,16 @@
 
         if ( exc->GS.gep0 == 0 || exc->GS.gep1 == 0 )
         {
-          FT_Vector*  vec1 = exc->zp0.org + L;
-          FT_Vector*  vec2 = exc->zp1.org + K;
+          FT_Hector*  vec1 = exc->zp0.org + L;
+          FT_Hector*  vec2 = exc->zp1.org + K;
 
 
           D = DUALPROJ( vec1, vec2 );
         }
         else
         {
-          FT_Vector*  vec1 = exc->zp0.orus + L;
-          FT_Vector*  vec2 = exc->zp1.orus + K;
+          FT_Hector*  vec1 = exc->zp0.orus + L;
+          FT_Hector*  vec2 = exc->zp1.orus + K;
 
 
           if ( exc->metrics.x_scale == exc->metrics.y_scale )
@@ -4637,7 +4637,7 @@
           }
           else
           {
-            FT_Vector  vec;
+            FT_Hector  vec;
 
 
             vec.x = FT_MulFix( vec1->x - vec2->x, exc->metrics.x_scale );
@@ -4655,7 +4655,7 @@
 
   /**************************************************************************
    *
-   * SDPvTL[a]:    Set Dual PVector to Line
+   * SDPvTL[a]:    Set Dual PHector to Line
    * Opcode range: 0x86-0x87
    * Stack:        uint32 uint32 -->
    */
@@ -4681,8 +4681,8 @@
     }
 
     {
-      FT_Vector*  v1 = exc->zp1.org + p2;
-      FT_Vector*  v2 = exc->zp2.org + p1;
+      FT_Hector*  v1 = exc->zp1.org + p2;
+      FT_Hector*  v2 = exc->zp2.org + p1;
 
 
       A = SUB_LONG( v1->x, v2->x );
@@ -4707,11 +4707,11 @@
       A = NEG_LONG( C );
     }
 
-    Normalize( A, B, &exc->GS.dualVector );
+    Normalize( A, B, &exc->GS.dualHector );
 
     {
-      FT_Vector*  v1 = exc->zp1.cur + p2;
-      FT_Vector*  v2 = exc->zp2.cur + p1;
+      FT_Hector*  v1 = exc->zp1.cur + p2;
+      FT_Hector*  v2 = exc->zp2.cur + p1;
 
 
       A = SUB_LONG( v1->x, v2->x );
@@ -4731,7 +4731,7 @@
       A = NEG_LONG( C );
     }
 
-    Normalize( A, B, &exc->GS.projVector );
+    Normalize( A, B, &exc->GS.projHector );
     Compute_Funcs( exc );
   }
 
@@ -5158,8 +5158,8 @@
 
     d = PROJECT( zp.cur + p, zp.org + p );
 
-    *x = FT_MulDiv( d, (FT_Long)exc->GS.freeVector.x, exc->F_dot_P );
-    *y = FT_MulDiv( d, (FT_Long)exc->GS.freeVector.y, exc->F_dot_P );
+    *x = FT_MulDiv( d, (FT_Long)exc->GS.freeHector.x, exc->F_dot_P );
+    *y = FT_MulDiv( d, (FT_Long)exc->GS.freeHector.y, exc->F_dot_P );
 
     return SUCCESS;
   }
@@ -5173,7 +5173,7 @@
                   FT_F26Dot6      dy,
                   FT_Bool         touch )
   {
-    if ( exc->GS.freeVector.x != 0 )
+    if ( exc->GS.freeHector.x != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       if ( !( SUBPIXEL_HINTING_MINIMAL    &&
@@ -5185,7 +5185,7 @@
         exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
 
-    if ( exc->GS.freeVector.y != 0 )
+    if ( exc->GS.freeHector.y != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       if ( !( SUBPIXEL_HINTING_MINIMAL    &&
@@ -5383,8 +5383,8 @@
       goto Fail;
     }
 
-    dx = TT_MulFix14( args[0], exc->GS.freeVector.x );
-    dy = TT_MulFix14( args[0], exc->GS.freeVector.y );
+    dx = TT_MulFix14( args[0], exc->GS.freeHector.x );
+    dy = TT_MulFix14( args[0], exc->GS.freeHector.y );
 
     while ( exc->GS.loop > 0 )
     {
@@ -5412,7 +5412,7 @@
         /* blocked SHPIX.                                                  */
         if ( in_twilight                                                ||
              ( !( exc->iupx_called && exc->iupy_called )              &&
-               ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||
+               ( ( exc->is_composite && exc->GS.freeHector.y != 0 ) ||
                  ( exc->zp2.tags[point] & FT_CURVE_TAG_TOUCH_Y )    ) ) )
           Move_Zp2_Point( exc, point, 0, dy, TRUE );
       }
@@ -5568,9 +5568,9 @@
     if ( exc->GS.gep0 == 0 )   /* If in twilight zone */
     {
       exc->zp0.org[point].x = TT_MulFix14( distance,
-                                             exc->GS.freeVector.x );
+                                             exc->GS.freeHector.x );
       exc->zp0.org[point].y = TT_MulFix14( distance,
-                                           exc->GS.freeVector.y );
+                                           exc->GS.freeHector.y );
       exc->zp0.cur[point]   = exc->zp0.org[point];
     }
 
@@ -5631,16 +5631,16 @@
 
     if ( exc->GS.gep0 == 0 || exc->GS.gep1 == 0 )
     {
-      FT_Vector*  vec1 = &exc->zp1.org[point];
-      FT_Vector*  vec2 = &exc->zp0.org[exc->GS.rp0];
+      FT_Hector*  vec1 = &exc->zp1.org[point];
+      FT_Hector*  vec2 = &exc->zp0.org[exc->GS.rp0];
 
 
       org_dist = DUALPROJ( vec1, vec2 );
     }
     else
     {
-      FT_Vector*  vec1 = &exc->zp1.orus[point];
-      FT_Vector*  vec2 = &exc->zp0.orus[exc->GS.rp0];
+      FT_Hector*  vec1 = &exc->zp1.orus[point];
+      FT_Hector*  vec2 = &exc->zp0.orus[exc->GS.rp0];
 
 
       if ( exc->metrics.x_scale == exc->metrics.y_scale )
@@ -5651,7 +5651,7 @@
       }
       else
       {
-        FT_Vector  vec;
+        FT_Hector  vec;
 
 
         vec.x = FT_MulFix( SUB_LONG( vec1->x, vec2->x ),
@@ -5782,11 +5782,11 @@
       exc->zp1.org[point].x = ADD_LONG(
                                 exc->zp0.org[exc->GS.rp0].x,
                                 TT_MulFix14( cvt_dist,
-                                             exc->GS.freeVector.x ) );
+                                             exc->GS.freeHector.x ) );
       exc->zp1.org[point].y = ADD_LONG(
                                 exc->zp0.org[exc->GS.rp0].y,
                                 TT_MulFix14( cvt_dist,
-                                             exc->GS.freeVector.y ) );
+                                             exc->GS.freeHector.y ) );
       exc->zp1.cur[point]   = exc->zp1.org[point];
     }
 
@@ -5946,7 +5946,7 @@
 
     FT_F26Dot6  val;
 
-    FT_Vector   R;
+    FT_Hector   R;
 
 
     point = (FT_UShort)args[0];
@@ -5983,9 +5983,9 @@
     dotproduct   = ADD_LONG( FT_MulDiv( dax, dbx, 0x40 ),
                              FT_MulDiv( day, dby, 0x40 ) );
 
-    /* The discriminant above is actually a cross product of vectors     */
+    /* The discriminant above is actually a cross product of Hectors     */
     /* da and db. Together with the dot product, they can be used as     */
-    /* surrogates for sine and cosine of the angle between the vectors.  */
+    /* surrogates for sine and cosine of the angle between the Hectors.  */
     /* Indeed,                                                           */
     /*       dotproduct   = |da||db|cos(angle)                           */
     /*       discriminant = |da||db|sin(angle)     .                     */
@@ -6065,8 +6065,8 @@
   Ins_IP( TT_ExecContext  exc )
   {
     FT_F26Dot6  old_range, cur_range;
-    FT_Vector*  orus_base;
-    FT_Vector*  cur_base;
+    FT_Hector*  orus_base;
+    FT_Hector*  cur_base;
     FT_Int      twilight;
 
 
@@ -6118,7 +6118,7 @@
         old_range = DUALPROJ( &exc->zp1.orus[exc->GS.rp2], orus_base );
       else
       {
-        FT_Vector  vec;
+        FT_Hector  vec;
 
 
         vec.x = FT_MulFix( SUB_LONG( exc->zp1.orus[exc->GS.rp2].x,
@@ -6157,7 +6157,7 @@
         org_dist = DUALPROJ( &exc->zp2.orus[point], orus_base );
       else
       {
-        FT_Vector  vec;
+        FT_Hector  vec;
 
 
         vec.x = FT_MulFix( SUB_LONG( exc->zp2.orus[point].x,
@@ -6237,10 +6237,10 @@
 
     mask = 0xFF;
 
-    if ( exc->GS.freeVector.x != 0 )
+    if ( exc->GS.freeHector.x != 0 )
       mask &= ~FT_CURVE_TAG_TOUCH_X;
 
-    if ( exc->GS.freeVector.y != 0 )
+    if ( exc->GS.freeHector.y != 0 )
       mask &= ~FT_CURVE_TAG_TOUCH_Y;
 
     exc->zp0.tags[point] &= mask;
@@ -6250,9 +6250,9 @@
   /* Local variables for Ins_IUP: */
   typedef struct  IUP_WorkerRec_
   {
-    FT_Vector*  orgs;   /* original and current coordinate */
-    FT_Vector*  curs;   /* arrays                          */
-    FT_Vector*  orus;
+    FT_Hector*  orgs;   /* original and current coordinate */
+    FT_Hector*  curs;   /* arrays                          */
+    FT_Hector*  orus;
     FT_UInt     max_points;
 
   } IUP_WorkerRec, *IUP_Worker;
@@ -6434,9 +6434,9 @@
     else
     {
       mask   = FT_CURVE_TAG_TOUCH_Y;
-      V.orgs = (FT_Vector*)( (FT_Pos*)exc->pts.org + 1 );
-      V.curs = (FT_Vector*)( (FT_Pos*)exc->pts.cur + 1 );
-      V.orus = (FT_Vector*)( (FT_Pos*)exc->pts.orus + 1 );
+      V.orgs = (FT_Hector*)( (FT_Pos*)exc->pts.org + 1 );
+      V.curs = (FT_Hector*)( (FT_Pos*)exc->pts.cur + 1 );
+      V.orus = (FT_Hector*)( (FT_Pos*)exc->pts.orus + 1 );
     }
     V.max_points = exc->pts.n_points;
 
@@ -6575,7 +6575,7 @@
                exc->backward_compatibility )
           {
             if ( !( exc->iupx_called && exc->iupy_called )              &&
-                 ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||
+                 ( ( exc->is_composite && exc->GS.freeHector.y != 0 ) ||
                    ( exc->zp0.tags[A] & FT_CURVE_TAG_TOUCH_Y )        ) )
               exc->func_move( exc, &exc->zp0, A, B );
           }

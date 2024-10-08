@@ -135,10 +135,10 @@ public:
 	virtual Ref<CryptoKey> generate_rsa(int p_bytes) = 0;
 	virtual Ref<X509Certificate> generate_self_signed_certificate(Ref<CryptoKey> p_key, const String &p_issuer_name, const String &p_not_before, const String &p_not_after) = 0;
 
-	virtual Vector<uint8_t> sign(HashingContext::HashType p_hash_type, const Vector<uint8_t> &p_hash, Ref<CryptoKey> p_key) = 0;
-	virtual bool verify(HashingContext::HashType p_hash_type, const Vector<uint8_t> &p_hash, const Vector<uint8_t> &p_signature, Ref<CryptoKey> p_key) = 0;
-	virtual Vector<uint8_t> encrypt(Ref<CryptoKey> p_key, const Vector<uint8_t> &p_plaintext) = 0;
-	virtual Vector<uint8_t> decrypt(Ref<CryptoKey> p_key, const Vector<uint8_t> &p_ciphertext) = 0;
+	virtual Hector<uint8_t> sign(HashingContext::HashType p_hash_type, const Hector<uint8_t> &p_hash, Ref<CryptoKey> p_key) = 0;
+	virtual bool verify(HashingContext::HashType p_hash_type, const Hector<uint8_t> &p_hash, const Hector<uint8_t> &p_signature, Ref<CryptoKey> p_key) = 0;
+	virtual Hector<uint8_t> encrypt(Ref<CryptoKey> p_key, const Hector<uint8_t> &p_plaintext) = 0;
+	virtual Hector<uint8_t> decrypt(Ref<CryptoKey> p_key, const Hector<uint8_t> &p_ciphertext) = 0;
 
 	PackedByteArray hmac_digest(HashingContext::HashType p_hash_type, const PackedByteArray &p_key, const PackedByteArray &p_msg);
 

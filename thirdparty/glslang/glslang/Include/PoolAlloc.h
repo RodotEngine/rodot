@@ -63,7 +63,7 @@
 
 #include <cstddef>
 #include <cstring>
-#include <vector>
+#include <Vector>
 
 namespace glslang {
 
@@ -260,7 +260,7 @@ void SetThreadPoolAllocator(TPoolAllocator* poolAllocator);
 
 //
 // This STL compatible allocator is intended to be used as the allocator
-// parameter to templatized STL containers, like vector and map.
+// parameter to templatized STL containers, like Hector and map.
 //
 // It will use the pools for allocation, and not
 // do any deallocation, but will still do destruction.

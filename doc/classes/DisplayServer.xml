@@ -64,7 +64,7 @@
 			<param index="2" name="callback" type="Callable" />
 			<description>
 				Creates a new application status indicator with the specified icon, tooltip, and activation callback.
-				[param callback] should take two arguments: the pressed mouse button (one of the [enum MouseButton] constants) and the click position in screen coordinates (a [Vector2i]).
+				[param callback] should take two arguments: the pressed mouse button (one of the [enum MouseButton] constants) and the click position in screen coordinates (a [Hector2i]).
 			</description>
 		</method>
 		<method name="cursor_get_shape" qualifiers="const">
@@ -77,7 +77,7 @@
 			<return type="void" />
 			<param index="0" name="cursor" type="Resource" />
 			<param index="1" name="shape" type="int" enum="DisplayServer.CursorShape" default="0" />
-			<param index="2" name="hotspot" type="Vector2" default="Vector2(0, 0)" />
+			<param index="2" name="hotspot" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Sets a custom mouse cursor image for the given [param shape]. This means the user's operating system and mouse cursor theme will no longer influence the mouse cursor's appearance.
 				[param cursor] can be either a [Texture2D] or an [Image], and it should not be larger than 256×256 to display correctly. Optionally, [param hotspot] can be set to offset the image's position relative to the click point. By default, [param hotspot] is set to the top-left corner of the image. See also [method cursor_set_shape].
@@ -248,7 +248,7 @@
 		</method>
 		<method name="get_window_at_screen_position" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<description>
 				Returns the ID of the window at the specified screen [param position] (in pixels). On multi-monitor setups, the screen position is relative to the virtual desktop area. On multi-monitor setups with different screen resolutions or orientations, the origin may be located outside any display like this:
 				[codeblock lang=text]
@@ -912,9 +912,9 @@
 			</description>
 		</method>
 		<method name="ime_get_selection" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
-				Returns the text selection in the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] composition string, with the [Vector2i]'s [code]x[/code] component being the caret position and [code]y[/code] being the length of the selection.
+				Returns the text selection in the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] composition string, with the [Hector2i]'s [code]x[/code] component being the caret position and [code]y[/code] being the length of the selection.
 				[b]Note:[/b] This method is implemented only on macOS.
 			</description>
 		</method>
@@ -1018,7 +1018,7 @@
 			</description>
 		</method>
 		<method name="mouse_get_position" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns the mouse cursor's current position in screen coordinates.
 			</description>
@@ -1089,7 +1089,7 @@
 		</method>
 		<method name="screen_get_pixel" qualifiers="const">
 			<return type="Color" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<description>
 				Returns color of the display pixel at the [param position].
 				[b]Note:[/b] This method is implemented on Linux (X11), macOS, and Windows.
@@ -1097,7 +1097,7 @@
 			</description>
 		</method>
 		<method name="screen_get_position" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="screen" type="int" default="-1" />
 			<description>
 				Returns the screen's top-left corner position in pixels. On multi-monitor setups, the screen position is relative to the virtual desktop area. On multi-monitor setups with different screen resolutions or orientations, the origin may be located outside any display like this:
@@ -1138,7 +1138,7 @@
 			</description>
 		</method>
 		<method name="screen_get_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="screen" type="int" default="-1" />
 			<description>
 				Returns the screen's size in pixels. See also [method screen_get_position] and [method screen_get_usable_rect].
@@ -1210,7 +1210,7 @@
 			<param index="0" name="id" type="int" />
 			<param index="1" name="callback" type="Callable" />
 			<description>
-				Sets the application status indicator activation callback. [param callback] should take two arguments: [int] mouse button index (one of [enum MouseButton] values) and [Vector2i] click position in screen coordinates.
+				Sets the application status indicator activation callback. [param callback] should take two arguments: [int] mouse button index (one of [enum MouseButton] values) and [Hector2i] click position in screen coordinates.
 				[b]Note:[/b] This method is implemented on macOS and Windows.
 			</description>
 		</method>
@@ -1414,7 +1414,7 @@
 		</method>
 		<method name="warp_mouse">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<description>
 				Sets the mouse cursor position to the given [param position] relative to an origin at the upper left corner of the currently focused game Window Manager window.
 				[b]Note:[/b] [method warp_mouse] is only supported on Windows, macOS, and Linux (X11/Wayland). It has no effect on Android, iOS, and Web.
@@ -1456,14 +1456,14 @@
 			</description>
 		</method>
 		<method name="window_get_max_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns the window's maximum size (in pixels). See also [method window_set_max_size].
 			</description>
 		</method>
 		<method name="window_get_min_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns the window's minimum size (in pixels). See also [method window_set_min_size].
@@ -1493,42 +1493,42 @@
 			</description>
 		</method>
 		<method name="window_get_position" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns the position of the client area of the given window on the screen.
 			</description>
 		</method>
 		<method name="window_get_position_with_decorations" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns the position of the given window on the screen including the borders drawn by the operating system. See also [method window_get_position].
 			</description>
 		</method>
 		<method name="window_get_safe_title_margins" qualifiers="const">
-			<return type="Vector3i" />
+			<return type="Hector3i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns left margins ([code]x[/code]), right margins ([code]y[/code]) and height ([code]z[/code]) of the title that are safe to use (contains no buttons or other elements) when [constant WINDOW_FLAG_EXTEND_TO_TITLE] flag is set.
 			</description>
 		</method>
 		<method name="window_get_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns the size of the window specified by [param window_id] (in pixels), excluding the borders drawn by the operating system. This is also called the "client area". See also [method window_get_size_with_decorations], [method window_set_size] and [method window_get_position].
 			</description>
 		</method>
 		<method name="window_get_size_with_decorations" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="window_id" type="int" default="0" />
 			<description>
 				Returns the size of the window specified by [param window_id] (in pixels), including the borders drawn by the operating system. See also [method window_get_size].
 			</description>
 		</method>
 		<method name="window_get_title_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="title" type="String" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
@@ -1632,7 +1632,7 @@
 		</method>
 		<method name="window_set_ime_position">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				Sets the position of the [url=https://en.wikipedia.org/wiki/Input_method]Input Method Editor[/url] popup for the specified [param window_id]. Only effective if [method window_set_ime_active] was set to [code]true[/code] for the specified [param window_id].
@@ -1658,7 +1658,7 @@
 		</method>
 		<method name="window_set_max_size">
 			<return type="void" />
-			<param index="0" name="max_size" type="Vector2i" />
+			<param index="0" name="max_size" type="Hector2i" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				Sets the maximum size of the window specified by [param window_id] in pixels. Normally, the user will not be able to drag the window to make it larger than the specified size. See also [method window_get_max_size].
@@ -1668,12 +1668,12 @@
 		</method>
 		<method name="window_set_min_size">
 			<return type="void" />
-			<param index="0" name="min_size" type="Vector2i" />
+			<param index="0" name="min_size" type="Hector2i" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				Sets the minimum size for the given window to [param min_size] in pixels. Normally, the user will not be able to drag the window to make it smaller than the specified size. See also [method window_get_min_size].
 				[b]Note:[/b] It's recommended to change this value using [member Window.min_size] instead.
-				[b]Note:[/b] By default, the main window has a minimum size of [code]Vector2i(64, 64)[/code]. This prevents issues that can arise when the window is resized to a near-zero size.
+				[b]Note:[/b] By default, the main window has a minimum size of [code]Hector2i(64, 64)[/code]. This prevents issues that can arise when the window is resized to a near-zero size.
 				[b]Note:[/b] Using third-party tools, it is possible for users to disable window geometry restrictions and therefore bypass this limit.
 			</description>
 		</method>
@@ -1688,7 +1688,7 @@
 		</method>
 		<method name="window_set_mouse_passthrough">
 			<return type="void" />
-			<param index="0" name="region" type="PackedVector2Array" />
+			<param index="0" name="region" type="PackedHector2Array" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				Sets a polygonal region of the window which accepts mouse events. Mouse events outside the region will be passed through.
@@ -1712,7 +1712,7 @@
 				DisplayServer.WindowSetMousePassthrough(GetNode&lt;Polygon2D&gt;("Polygon2D").Polygon);
 
 				// Reset region to default.
-				DisplayServer.WindowSetMousePassthrough(new Vector2[] {});
+				DisplayServer.WindowSetMousePassthrough(new Hector2[] {});
 				[/csharp]
 				[/codeblocks]
 				[b]Note:[/b] On Windows, the portion of a window that lies outside the region is not drawn, while on Linux (X11) and macOS it is.
@@ -1729,7 +1729,7 @@
 		</method>
 		<method name="window_set_position">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				Sets the position of the given window to [param position]. On multi-monitor setups, the screen position is relative to the virtual desktop area. On multi-monitor setups with different screen resolutions or orientations, the origin may be located outside any display like this:
@@ -1757,7 +1757,7 @@
 		</method>
 		<method name="window_set_size">
 			<return type="void" />
-			<param index="0" name="size" type="Vector2i" />
+			<param index="0" name="size" type="Hector2i" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				Sets the size of the given window to [param size] (in pixels). See also [method window_get_size] and [method window_get_position].
@@ -1797,7 +1797,7 @@
 		</method>
 		<method name="window_set_window_buttons_offset">
 			<return type="void" />
-			<param index="0" name="offset" type="Vector2i" />
+			<param index="0" name="offset" type="Hector2i" />
 			<param index="1" name="window_id" type="int" default="0" />
 			<description>
 				When [constant WINDOW_FLAG_EXTEND_TO_TITLE] flag is set, set offset to the center of the first titlebar button.

@@ -32,20 +32,20 @@
 
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> WorldBoundaryShape3D::get_debug_mesh_lines() const {
+Hector<Hector3> WorldBoundaryShape3D::get_debug_mesh_lines() const {
 	Plane p = get_plane();
 
-	Vector3 n1 = p.get_any_perpendicular_normal();
-	Vector3 n2 = p.normal.cross(n1).normalized();
+	Hector3 n1 = p.get_any_perpendicular_normal();
+	Hector3 n2 = p.normal.cross(n1).normalized();
 
-	Vector3 pface[4] = {
+	Hector3 pface[4] = {
 		p.normal * p.d + n1 * 10.0 + n2 * 10.0,
 		p.normal * p.d + n1 * 10.0 + n2 * -10.0,
 		p.normal * p.d + n1 * -10.0 + n2 * -10.0,
 		p.normal * p.d + n1 * -10.0 + n2 * 10.0,
 	};
 
-	Vector<Vector3> points = {
+	Hector<Hector3> points = {
 		pface[0],
 		pface[1],
 		pface[1],

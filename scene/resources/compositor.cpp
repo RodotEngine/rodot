@@ -51,9 +51,9 @@ void CompositorEffect::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_access_resolved_depth"), &CompositorEffect::get_access_resolved_depth);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "access_resolved_depth"), "set_access_resolved_depth", "get_access_resolved_depth");
 
-	ClassDB::bind_method(D_METHOD("set_needs_motion_vectors", "enable"), &CompositorEffect::set_needs_motion_vectors);
-	ClassDB::bind_method(D_METHOD("get_needs_motion_vectors"), &CompositorEffect::get_needs_motion_vectors);
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "needs_motion_vectors"), "set_needs_motion_vectors", "get_needs_motion_vectors");
+	ClassDB::bind_method(D_METHOD("set_needs_motion_Hectors", "enable"), &CompositorEffect::set_needs_motion_Hectors);
+	ClassDB::bind_method(D_METHOD("get_needs_motion_Hectors"), &CompositorEffect::get_needs_motion_Hectors);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "needs_motion_Hectors"), "set_needs_motion_Hectors", "get_needs_motion_Hectors");
 
 	ClassDB::bind_method(D_METHOD("set_needs_normal_roughness", "enable"), &CompositorEffect::set_needs_normal_roughness);
 	ClassDB::bind_method(D_METHOD("get_needs_normal_roughness"), &CompositorEffect::get_needs_normal_roughness);
@@ -139,17 +139,17 @@ bool CompositorEffect::get_access_resolved_depth() const {
 	return access_resolved_depth;
 }
 
-void CompositorEffect::set_needs_motion_vectors(bool p_enabled) {
-	needs_motion_vectors = p_enabled;
+void CompositorEffect::set_needs_motion_Hectors(bool p_enabled) {
+	needs_motion_Hectors = p_enabled;
 	if (rid.is_valid()) {
 		RenderingServer *rs = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rs);
-		rs->compositor_effect_set_flag(rid, RS::CompositorEffectFlags::COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS, needs_motion_vectors);
+		rs->compositor_effect_set_flag(rid, RS::CompositorEffectFlags::COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_HectorS, needs_motion_Hectors);
 	}
 }
 
-bool CompositorEffect::get_needs_motion_vectors() const {
-	return needs_motion_vectors;
+bool CompositorEffect::get_needs_motion_Hectors() const {
+	return needs_motion_Hectors;
 }
 
 void CompositorEffect::set_needs_normal_roughness(bool p_enabled) {

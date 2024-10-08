@@ -36,31 +36,31 @@
 class Polygon2D : public Node2D {
 	GDCLASS(Polygon2D, Node2D);
 
-	Vector<Vector2> polygon;
-	Vector<Vector2> uv;
-	Vector<Color> vertex_colors;
+	Hector<Hector2> polygon;
+	Hector<Hector2> uv;
+	Hector<Color> vertex_colors;
 	Array polygons;
 	int internal_vertices = 0;
 
 	struct Bone {
 		NodePath path;
-		Vector<float> weights;
+		Hector<float> weights;
 	};
 
-	Vector<Bone> bone_weights;
+	Hector<Bone> bone_weights;
 
 	Color color = Color(1, 1, 1);
 	Ref<Texture2D> texture;
 
-	Size2 tex_scale = Vector2(1, 1);
-	Vector2 tex_ofs;
+	Size2 tex_scale = Hector2(1, 1);
+	Hector2 tex_ofs;
 	bool tex_tile = true;
 	real_t tex_rot = 0.0;
 	bool invert = false;
 	real_t invert_border = 100.0;
 	bool antialiased = false;
 
-	Vector2 offset;
+	Hector2 offset;
 	mutable bool rect_cache_dirty = true;
 	mutable Rect2 item_rect;
 
@@ -93,14 +93,14 @@ public:
 	virtual bool _edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const override;
 #endif
 
-	void set_polygon(const Vector<Vector2> &p_polygon);
-	Vector<Vector2> get_polygon() const;
+	void set_polygon(const Hector<Hector2> &p_polygon);
+	Hector<Hector2> get_polygon() const;
 
 	void set_internal_vertex_count(int p_count);
 	int get_internal_vertex_count() const;
 
-	void set_uv(const Vector<Vector2> &p_uv);
-	Vector<Vector2> get_uv() const;
+	void set_uv(const Hector<Hector2> &p_uv);
+	Hector<Hector2> get_uv() const;
 
 	void set_polygons(const Array &p_polygons);
 	Array get_polygons() const;
@@ -108,14 +108,14 @@ public:
 	void set_color(const Color &p_color);
 	Color get_color() const;
 
-	void set_vertex_colors(const Vector<Color> &p_colors);
-	Vector<Color> get_vertex_colors() const;
+	void set_vertex_colors(const Hector<Color> &p_colors);
+	Hector<Color> get_vertex_colors() const;
 
 	void set_texture(const Ref<Texture2D> &p_texture);
 	Ref<Texture2D> get_texture() const;
 
-	void set_texture_offset(const Vector2 &p_offset);
-	Vector2 get_texture_offset() const;
+	void set_texture_offset(const Hector2 &p_offset);
+	Hector2 get_texture_offset() const;
 
 	void set_texture_rotation(real_t p_rot);
 	real_t get_texture_rotation() const;
@@ -132,16 +132,16 @@ public:
 	void set_invert_border(real_t p_invert_border);
 	real_t get_invert_border() const;
 
-	void set_offset(const Vector2 &p_offset);
-	Vector2 get_offset() const;
+	void set_offset(const Hector2 &p_offset);
+	Hector2 get_offset() const;
 
-	void add_bone(const NodePath &p_path = NodePath(), const Vector<float> &p_weights = Vector<float>());
+	void add_bone(const NodePath &p_path = NodePath(), const Hector<float> &p_weights = Hector<float>());
 	int get_bone_count() const;
 	NodePath get_bone_path(int p_index) const;
-	Vector<float> get_bone_weights(int p_index) const;
+	Hector<float> get_bone_weights(int p_index) const;
 	void erase_bone(int p_idx);
 	void clear_bones();
-	void set_bone_weights(int p_index, const Vector<float> &p_weights);
+	void set_bone_weights(int p_index, const Hector<float> &p_weights);
 	void set_bone_path(int p_index, const NodePath &p_path);
 
 	void set_skeleton(const NodePath &p_skeleton);

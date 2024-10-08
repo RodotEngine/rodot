@@ -53,9 +53,9 @@ namespace RVO2D {
 
 		bool isConvex_;
 		Obstacle2D *nextObstacle_;
-		Vector2 point_;
+		Hector2 point_;
 		Obstacle2D *prevObstacle_;
-		Vector2 unitDir_;
+		Hector2 unitDir_;
 
 		float height_ = 1.0;
 		float elevation_ = 0.0;

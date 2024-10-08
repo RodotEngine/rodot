@@ -331,8 +331,8 @@ typedef sljit_uw facility_bit;
 #define MISCELLANEOUS_INSTRUCTION_EXTENSIONS_1_FACILITY 49
 #define LOAD_STORE_ON_CONDITION_2_FACILITY 53
 #define MISCELLANEOUS_INSTRUCTION_EXTENSIONS_2_FACILITY 58
-#define VECTOR_FACILITY 129
-#define VECTOR_ENHANCEMENTS_1_FACILITY 135
+#define Hector_FACILITY 129
+#define Hector_ENHANCEMENTS_1_FACILITY 135
 
 /* Report whether a facility is known to be present due to the compiler
    settings. This function should always be compiled to a constant
@@ -353,10 +353,10 @@ static SLJIT_INLINE int have_facility_static(facility_bit x)
 	case MISCELLANEOUS_INSTRUCTION_EXTENSIONS_1_FACILITY:
 		return (__ARCH__ >= 10 /* zEC12 */);
 	case LOAD_STORE_ON_CONDITION_2_FACILITY:
-	case VECTOR_FACILITY:
+	case Hector_FACILITY:
 		return (__ARCH__ >= 11 /* z13 */);
 	case MISCELLANEOUS_INSTRUCTION_EXTENSIONS_2_FACILITY:
-	case VECTOR_ENHANCEMENTS_1_FACILITY:
+	case Hector_ENHANCEMENTS_1_FACILITY:
 		return (__ARCH__ >= 12 /* z14 */);
 	default:
 		SLJIT_UNREACHABLE();

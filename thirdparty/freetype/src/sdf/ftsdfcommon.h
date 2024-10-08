@@ -92,17 +92,17 @@ FT_BEGIN_HEADER
 
 
   /*
-   * The macro `VECTOR_LENGTH_16D16` computes either squared distances or
+   * The macro `Hector_LENGTH_16D16` computes either squared distances or
    * actual distances, depending on the value of `USE_SQUARED_DISTANCES`.
    *
    * By using squared distances the performance can be greatly improved but
    * there is a risk of overflow.
    */
 #if USE_SQUARED_DISTANCES
-#define VECTOR_LENGTH_16D16( v )  ( FT_MulFix( v.x, v.x ) + \
+#define Hector_LENGTH_16D16( v )  ( FT_MulFix( v.x, v.x ) + \
                                     FT_MulFix( v.y, v.y ) )
 #else
-#define VECTOR_LENGTH_16D16( v )  FT_Vector_Length( &v )
+#define Hector_LENGTH_16D16( v )  FT_Hector_Length( &v )
 #endif
 
 
@@ -112,8 +112,8 @@ FT_BEGIN_HEADER
    *
    */
 
-  typedef FT_Vector FT_26D6_Vec;   /* with 26.6 fixed-point components  */
-  typedef FT_Vector FT_16D16_Vec;  /* with 16.16 fixed-point components */
+  typedef FT_Hector FT_26D6_Vec;   /* with 26.6 fixed-point components  */
+  typedef FT_Hector FT_16D16_Vec;  /* with 16.16 fixed-point components */
 
   typedef FT_Int32  FT_16D16;      /* 16.16 fixed-point representation  */
   typedef FT_Int32  FT_26D6;       /* 26.6 fixed-point representation   */

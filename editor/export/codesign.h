@@ -94,11 +94,11 @@ private:
 		}
 	};
 
-	Vector<CRRule> rules1;
-	Vector<CRRule> rules2;
+	Hector<CRRule> rules1;
+	Hector<CRRule> rules2;
 
-	Vector<CRFile> files1;
-	Vector<CRFile> files2;
+	Hector<CRFile> files1;
+	Hector<CRFile> files2;
 
 	String hash_sha1_base64(const String &p_path);
 	String hash_sha256_base64(const String &p_path);
@@ -159,7 +159,7 @@ public:
 	CodeSignRequirements();
 	CodeSignRequirements(const PackedByteArray &p_data);
 
-	Vector<String> parse_requirements() const;
+	Hector<String> parse_requirements() const;
 
 	virtual PackedByteArray get_hash_sha1() const override;
 	virtual PackedByteArray get_hash_sha256() const override;
@@ -278,7 +278,7 @@ private:
 		uint8_t page_size; // Page size, power of two, 2^12 (4096).
 		uint32_t spare2; // Not used.
 		// Version 0x20100
-		uint32_t scatter_vector_offset; // Set to 0 and ignore.
+		uint32_t scatter_Hector_offset; // Set to 0 and ignore.
 		// Version 0x20200
 		uint32_t team_offset; // Team id string offset.
 		// Version 0x20300
@@ -340,7 +340,7 @@ public:
 /*************************************************************************/
 
 class CodeSignSuperBlob {
-	Vector<Ref<CodeSignBlob>> blobs;
+	Hector<Ref<CodeSignBlob>> blobs;
 
 public:
 	bool add_blob(const Ref<CodeSignBlob> &p_blob);

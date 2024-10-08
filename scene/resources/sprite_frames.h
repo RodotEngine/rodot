@@ -46,7 +46,7 @@ class SpriteFrames : public Resource {
 	struct Anim {
 		double speed = 5.0;
 		bool loop = true;
-		Vector<Frame> frames;
+		Hector<Frame> frames;
 	};
 
 	HashMap<StringName, Anim> animations;
@@ -65,7 +65,7 @@ public:
 	void rename_animation(const StringName &p_prev, const StringName &p_next);
 
 	void get_animation_list(List<StringName> *r_animations) const;
-	Vector<String> get_animation_names() const;
+	Hector<String> get_animation_names() const;
 
 	void set_animation_speed(const StringName &p_anim, double p_fps);
 	double get_animation_speed(const StringName &p_anim) const;

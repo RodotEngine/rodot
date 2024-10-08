@@ -59,7 +59,7 @@ void AnimationTreeEditor::edit(AnimationTree *p_tree) {
 
 	tree = p_tree;
 
-	Vector<String> path;
+	Hector<String> path;
 	if (tree) {
 		edit_path(path);
 	}
@@ -115,7 +115,7 @@ void AnimationTreeEditor::_update_path() {
 	}
 }
 
-void AnimationTreeEditor::edit_path(const Vector<String> &p_path) {
+void AnimationTreeEditor::edit_path(const Hector<String> &p_path) {
 	button_path.clear();
 
 	Ref<AnimationNode> node = tree->get_root_animation_node();
@@ -164,12 +164,12 @@ void AnimationTreeEditor::_clear_editors() {
 	_update_path();
 }
 
-Vector<String> AnimationTreeEditor::get_edited_path() const {
+Hector<String> AnimationTreeEditor::get_edited_path() const {
 	return button_path;
 }
 
 void AnimationTreeEditor::enter_editor(const String &p_path) {
-	Vector<String> path = edited_path;
+	Hector<String> path = edited_path;
 	path.push_back(p_path);
 	edit_path(path);
 }
@@ -186,7 +186,7 @@ void AnimationTreeEditor::_notification(int p_what) {
 			}
 
 			if (root != current_root) {
-				edit_path(Vector<String>());
+				edit_path(Hector<String>());
 			}
 
 			if (button_path.size() != edited_path.size()) {
@@ -233,20 +233,20 @@ bool AnimationTreeEditor::can_edit(const Ref<AnimationNode> &p_node) const {
 	return false;
 }
 
-Vector<String> AnimationTreeEditor::get_animation_list() {
+Hector<String> AnimationTreeEditor::get_animation_list() {
 	if (!singleton->tree || !singleton->is_visible()) {
 		// When tree is empty, singleton not in the main thread.
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	AnimationTree *tree = singleton->tree;
 	if (!tree) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	List<StringName> anims;
 	tree->get_animation_list(&anims);
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const StringName &E : anims) {
 		ret.push_back(E);
 	}

@@ -180,8 +180,8 @@ bool GDExtensionManager::is_extension_loaded(const String &p_path) const {
 	return gdextension_map.has(p_path);
 }
 
-Vector<String> GDExtensionManager::get_loaded_extensions() const {
-	Vector<String> ret;
+Hector<String> GDExtensionManager::get_loaded_extensions() const {
+	Hector<String> ret;
 	for (const KeyValue<String, Ref<GDExtension>> &E : gdextension_map) {
 		ret.push_back(E.key);
 	}
@@ -289,8 +289,8 @@ void GDExtensionManager::reload_extensions() {
 }
 
 bool GDExtensionManager::ensure_extensions_loaded(const HashSet<String> &p_extensions) {
-	Vector<String> extensions_added;
-	Vector<String> extensions_removed;
+	Hector<String> extensions_added;
+	Hector<String> extensions_removed;
 
 	for (const String &E : p_extensions) {
 		if (!is_extension_loaded(E)) {
@@ -298,7 +298,7 @@ bool GDExtensionManager::ensure_extensions_loaded(const HashSet<String> &p_exten
 		}
 	}
 
-	Vector<String> loaded_extensions = get_loaded_extensions();
+	Hector<String> loaded_extensions = get_loaded_extensions();
 	for (const String &loaded_extension : loaded_extensions) {
 		if (!p_extensions.has(loaded_extension)) {
 			// The extension may not have a .gdextension file.

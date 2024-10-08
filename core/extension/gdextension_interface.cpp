@@ -539,24 +539,24 @@ static GDExtensionVariantFromTypeConstructorFunc gdextension_get_variant_from_ty
 			return VariantTypeConstructor<double>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_STRING:
 			return VariantTypeConstructor<String>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR2:
-			return VariantTypeConstructor<Vector2>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR2I:
-			return VariantTypeConstructor<Vector2i>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR2:
+			return VariantTypeConstructor<Hector2>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR2I:
+			return VariantTypeConstructor<Hector2i>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_RECT2:
 			return VariantTypeConstructor<Rect2>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_RECT2I:
 			return VariantTypeConstructor<Rect2i>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR3:
-			return VariantTypeConstructor<Vector3>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR3I:
-			return VariantTypeConstructor<Vector3i>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR3:
+			return VariantTypeConstructor<Hector3>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR3I:
+			return VariantTypeConstructor<Hector3i>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_TRANSFORM2D:
 			return VariantTypeConstructor<Transform2D>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR4:
-			return VariantTypeConstructor<Vector4>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR4I:
-			return VariantTypeConstructor<Vector4i>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR4:
+			return VariantTypeConstructor<Hector4>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR4I:
+			return VariantTypeConstructor<Hector4i>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_PLANE:
 			return VariantTypeConstructor<Plane>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_QUATERNION:
@@ -599,12 +599,12 @@ static GDExtensionVariantFromTypeConstructorFunc gdextension_get_variant_from_ty
 			return VariantTypeConstructor<PackedFloat64Array>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY:
 			return VariantTypeConstructor<PackedStringArray>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
-			return VariantTypeConstructor<PackedVector2Array>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
-			return VariantTypeConstructor<PackedVector3Array>::variant_from_type;
-		case GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
-			return VariantTypeConstructor<PackedVector4Array>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_PACKED_Hector2_ARRAY:
+			return VariantTypeConstructor<PackedHector2Array>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_PACKED_Hector3_ARRAY:
+			return VariantTypeConstructor<PackedHector3Array>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_PACKED_Hector4_ARRAY:
+			return VariantTypeConstructor<PackedHector4Array>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_PACKED_COLOR_ARRAY:
 			return VariantTypeConstructor<PackedColorArray>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_NIL:
@@ -624,24 +624,24 @@ static GDExtensionTypeFromVariantConstructorFunc gdextension_get_variant_to_type
 			return VariantTypeConstructor<double>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_STRING:
 			return VariantTypeConstructor<String>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR2:
-			return VariantTypeConstructor<Vector2>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR2I:
-			return VariantTypeConstructor<Vector2i>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR2:
+			return VariantTypeConstructor<Hector2>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR2I:
+			return VariantTypeConstructor<Hector2i>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_RECT2:
 			return VariantTypeConstructor<Rect2>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_RECT2I:
 			return VariantTypeConstructor<Rect2i>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR3:
-			return VariantTypeConstructor<Vector3>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR3I:
-			return VariantTypeConstructor<Vector3i>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR3:
+			return VariantTypeConstructor<Hector3>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR3I:
+			return VariantTypeConstructor<Hector3i>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_TRANSFORM2D:
 			return VariantTypeConstructor<Transform2D>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR4:
-			return VariantTypeConstructor<Vector4>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_VECTOR4I:
-			return VariantTypeConstructor<Vector4i>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR4:
+			return VariantTypeConstructor<Hector4>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_HECTOR4I:
+			return VariantTypeConstructor<Hector4i>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_PLANE:
 			return VariantTypeConstructor<Plane>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_QUATERNION:
@@ -684,12 +684,12 @@ static GDExtensionTypeFromVariantConstructorFunc gdextension_get_variant_to_type
 			return VariantTypeConstructor<PackedFloat64Array>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY:
 			return VariantTypeConstructor<PackedStringArray>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
-			return VariantTypeConstructor<PackedVector2Array>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
-			return VariantTypeConstructor<PackedVector3Array>::type_from_variant;
-		case GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
-			return VariantTypeConstructor<PackedVector4Array>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_PACKED_Hector2_ARRAY:
+			return VariantTypeConstructor<PackedHector2Array>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_PACKED_Hector3_ARRAY:
+			return VariantTypeConstructor<PackedHector3Array>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_PACKED_Hector4_ARRAY:
+			return VariantTypeConstructor<PackedHector4Array>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_PACKED_COLOR_ARRAY:
 			return VariantTypeConstructor<PackedColorArray>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_NIL:
@@ -1118,48 +1118,48 @@ static GDExtensionStringPtr gdextension_packed_string_array_operator_index_const
 	return (GDExtensionStringPtr)&self->ptr()[p_index];
 }
 
-static GDExtensionTypePtr gdextension_packed_vector2_array_operator_index(GDExtensionTypePtr p_self, GDExtensionInt p_index) {
-	PackedVector2Array *self = (PackedVector2Array *)p_self;
+static GDExtensionTypePtr gdextension_packed_Hector2_array_operator_index(GDExtensionTypePtr p_self, GDExtensionInt p_index) {
+	PackedHector2Array *self = (PackedHector2Array *)p_self;
 	if (unlikely(p_index < 0 || p_index >= self->size())) {
 		return nullptr;
 	}
 	return (GDExtensionTypePtr)&self->ptrw()[p_index];
 }
 
-static GDExtensionTypePtr gdextension_packed_vector2_array_operator_index_const(GDExtensionConstTypePtr p_self, GDExtensionInt p_index) {
-	const PackedVector2Array *self = (const PackedVector2Array *)p_self;
+static GDExtensionTypePtr gdextension_packed_Hector2_array_operator_index_const(GDExtensionConstTypePtr p_self, GDExtensionInt p_index) {
+	const PackedHector2Array *self = (const PackedHector2Array *)p_self;
 	if (unlikely(p_index < 0 || p_index >= self->size())) {
 		return nullptr;
 	}
 	return (GDExtensionTypePtr)&self->ptr()[p_index];
 }
 
-static GDExtensionTypePtr gdextension_packed_vector3_array_operator_index(GDExtensionTypePtr p_self, GDExtensionInt p_index) {
-	PackedVector3Array *self = (PackedVector3Array *)p_self;
+static GDExtensionTypePtr gdextension_packed_Hector3_array_operator_index(GDExtensionTypePtr p_self, GDExtensionInt p_index) {
+	PackedHector3Array *self = (PackedHector3Array *)p_self;
 	if (unlikely(p_index < 0 || p_index >= self->size())) {
 		return nullptr;
 	}
 	return (GDExtensionTypePtr)&self->ptrw()[p_index];
 }
 
-static GDExtensionTypePtr gdextension_packed_vector3_array_operator_index_const(GDExtensionConstTypePtr p_self, GDExtensionInt p_index) {
-	const PackedVector3Array *self = (const PackedVector3Array *)p_self;
+static GDExtensionTypePtr gdextension_packed_Hector3_array_operator_index_const(GDExtensionConstTypePtr p_self, GDExtensionInt p_index) {
+	const PackedHector3Array *self = (const PackedHector3Array *)p_self;
 	if (unlikely(p_index < 0 || p_index >= self->size())) {
 		return nullptr;
 	}
 	return (GDExtensionTypePtr)&self->ptr()[p_index];
 }
 
-static GDExtensionTypePtr gdextension_packed_vector4_array_operator_index(GDExtensionTypePtr p_self, GDExtensionInt p_index) {
-	PackedVector4Array *self = (PackedVector4Array *)p_self;
+static GDExtensionTypePtr gdextension_packed_Hector4_array_operator_index(GDExtensionTypePtr p_self, GDExtensionInt p_index) {
+	PackedHector4Array *self = (PackedHector4Array *)p_self;
 	if (unlikely(p_index < 0 || p_index >= self->size())) {
 		return nullptr;
 	}
 	return (GDExtensionTypePtr)&self->ptrw()[p_index];
 }
 
-static GDExtensionTypePtr gdextension_packed_vector4_array_operator_index_const(GDExtensionConstTypePtr p_self, GDExtensionInt p_index) {
-	const PackedVector4Array *self = (const PackedVector4Array *)p_self;
+static GDExtensionTypePtr gdextension_packed_Hector4_array_operator_index_const(GDExtensionConstTypePtr p_self, GDExtensionInt p_index) {
+	const PackedHector4Array *self = (const PackedHector4Array *)p_self;
 	if (unlikely(p_index < 0 || p_index >= self->size())) {
 		return nullptr;
 	}
@@ -1685,12 +1685,12 @@ void gdextension_setup_interface() {
 	REGISTER_INTERFACE_FUNC(packed_int64_array_operator_index_const);
 	REGISTER_INTERFACE_FUNC(packed_string_array_operator_index);
 	REGISTER_INTERFACE_FUNC(packed_string_array_operator_index_const);
-	REGISTER_INTERFACE_FUNC(packed_vector2_array_operator_index);
-	REGISTER_INTERFACE_FUNC(packed_vector2_array_operator_index_const);
-	REGISTER_INTERFACE_FUNC(packed_vector3_array_operator_index);
-	REGISTER_INTERFACE_FUNC(packed_vector3_array_operator_index_const);
-	REGISTER_INTERFACE_FUNC(packed_vector4_array_operator_index);
-	REGISTER_INTERFACE_FUNC(packed_vector4_array_operator_index_const);
+	REGISTER_INTERFACE_FUNC(packed_Hector2_array_operator_index);
+	REGISTER_INTERFACE_FUNC(packed_Hector2_array_operator_index_const);
+	REGISTER_INTERFACE_FUNC(packed_Hector3_array_operator_index);
+	REGISTER_INTERFACE_FUNC(packed_Hector3_array_operator_index_const);
+	REGISTER_INTERFACE_FUNC(packed_Hector4_array_operator_index);
+	REGISTER_INTERFACE_FUNC(packed_Hector4_array_operator_index_const);
 	REGISTER_INTERFACE_FUNC(array_operator_index);
 	REGISTER_INTERFACE_FUNC(array_operator_index_const);
 	REGISTER_INTERFACE_FUNC(array_ref);

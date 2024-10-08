@@ -606,7 +606,7 @@ void EditorDebuggerNode::reload_all_scripts() {
 	});
 }
 
-void EditorDebuggerNode::reload_scripts(const Vector<String> &p_script_paths) {
+void EditorDebuggerNode::reload_scripts(const Hector<String> &p_script_paths) {
 	_for_all(tabs, [&](ScriptEditorDebugger *dbg) {
 		dbg->reload_scripts(p_script_paths);
 	});

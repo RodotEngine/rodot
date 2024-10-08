@@ -328,7 +328,7 @@
   T1_Get_Kerning( AFM_FontInfo  fi,
                   FT_UInt       glyph1,
                   FT_UInt       glyph2,
-                  FT_Vector*    kerning )
+                  FT_Hector*    kerning )
   {
     AFM_KernPair  min, mid, max;
     FT_ULong      idx = KERN_INDEX( glyph1, glyph2 );

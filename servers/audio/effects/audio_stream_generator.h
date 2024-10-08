@@ -83,9 +83,9 @@ public:
 	virtual double get_playback_position() const override;
 	virtual void seek(double p_time) override;
 
-	bool push_frame(const Vector2 &p_frame);
+	bool push_frame(const Hector2 &p_frame);
 	bool can_push_buffer(int p_frames) const;
-	bool push_buffer(const PackedVector2Array &p_frames);
+	bool push_buffer(const PackedHector2Array &p_frames);
 	int get_frames_available() const;
 	int get_skips() const;
 

@@ -112,7 +112,7 @@ class GroupsEditor : public VBoxContainer {
 	void _confirm_delete();
 
 	void _item_edited();
-	void _item_mouse_selected(const Vector2 &p_pos, MouseButton p_mouse_button);
+	void _item_mouse_selected(const Hector2 &p_pos, MouseButton p_mouse_button);
 	void _modify_group(Object *p_item, int p_column, int p_id, MouseButton p_mouse_button);
 	void _menu_id_pressed(int p_id);
 

@@ -52,8 +52,8 @@ void DampedSpringJoint2D::_notification(int p_what) {
 
 void DampedSpringJoint2D::_configure_joint(RID p_joint, PhysicsBody2D *body_a, PhysicsBody2D *body_b) {
 	Transform2D gt = get_global_transform();
-	Vector2 anchor_A = gt.get_origin();
-	Vector2 anchor_B = gt.xform(Vector2(0, length));
+	Hector2 anchor_A = gt.get_origin();
+	Hector2 anchor_B = gt.xform(Hector2(0, length));
 
 	PhysicsServer2D::get_singleton()->joint_make_damped_spring(p_joint, anchor_A, anchor_B, body_a->get_rid(), body_b->get_rid());
 	if (rest_length) {

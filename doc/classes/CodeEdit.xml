@@ -245,11 +245,11 @@
 			</description>
 		</method>
 		<method name="get_delimiter_end_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="line" type="int" />
 			<param index="1" name="column" type="int" />
 			<description>
-				If [param line] [param column] is in a string or comment, returns the end position of the region. If not or no end could be found, both [Vector2] values will be [code]-1[/code].
+				If [param line] [param column] is in a string or comment, returns the end position of the region. If not or no end could be found, both [Hector2] values will be [code]-1[/code].
 			</description>
 		</method>
 		<method name="get_delimiter_start_key" qualifiers="const">
@@ -260,11 +260,11 @@
 			</description>
 		</method>
 		<method name="get_delimiter_start_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="line" type="int" />
 			<param index="1" name="column" type="int" />
 			<description>
-				If [param line] [param column] is in a string or comment, returns the start position of the region. If not or no start could be found, both [Vector2] values will be [code]-1[/code].
+				If [param line] [param column] is in a string or comment, returns the start position of the region. If not or no start could be found, both [Hector2] values will be [code]-1[/code].
 			</description>
 		</method>
 		<method name="get_executing_lines" qualifiers="const">

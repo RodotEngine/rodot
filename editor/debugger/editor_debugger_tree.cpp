@@ -109,7 +109,7 @@ void EditorDebuggerTree::_scene_tree_folded(Object *p_obj) {
 	}
 }
 
-void EditorDebuggerTree::_scene_tree_rmb_selected(const Vector2 &p_position, MouseButton p_button) {
+void EditorDebuggerTree::_scene_tree_rmb_selected(const Hector2 &p_position, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}

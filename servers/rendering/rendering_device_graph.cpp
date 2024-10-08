@@ -564,13 +564,13 @@ void RenderingDeviceGraph::_add_command_to_graph(ResourceTracker **p_resource_tr
 	}
 }
 
-void RenderingDeviceGraph::_add_texture_barrier_to_command(RDD::TextureID p_texture_id, BitField<RDD::BarrierAccessBits> p_src_access, BitField<RDD::BarrierAccessBits> p_dst_access, ResourceUsage p_prev_usage, ResourceUsage p_next_usage, RDD::TextureSubresourceRange p_subresources, LocalVector<RDD::TextureBarrier> &r_barrier_vector, int32_t &r_barrier_index, int32_t &r_barrier_count) {
+void RenderingDeviceGraph::_add_texture_barrier_to_command(RDD::TextureID p_texture_id, BitField<RDD::BarrierAccessBits> p_src_access, BitField<RDD::BarrierAccessBits> p_dst_access, ResourceUsage p_prev_usage, ResourceUsage p_next_usage, RDD::TextureSubresourceRange p_subresources, LocalHector<RDD::TextureBarrier> &r_barrier_Hector, int32_t &r_barrier_index, int32_t &r_barrier_count) {
 	if (!driver_honors_barriers) {
 		return;
 	}
 
 	if (r_barrier_index < 0) {
-		r_barrier_index = r_barrier_vector.size();
+		r_barrier_index = r_barrier_Hector.size();
 	}
 
 	RDD::TextureBarrier texture_barrier;
@@ -580,7 +580,7 @@ void RenderingDeviceGraph::_add_texture_barrier_to_command(RDD::TextureID p_text
 	texture_barrier.prev_layout = _usage_to_image_layout(p_prev_usage);
 	texture_barrier.next_layout = _usage_to_image_layout(p_next_usage);
 	texture_barrier.subresources = p_subresources;
-	r_barrier_vector.push_back(texture_barrier);
+	r_barrier_Hector.push_back(texture_barrier);
 	r_barrier_count++;
 }
 
@@ -634,7 +634,7 @@ void RenderingDeviceGraph::_run_compute_list_command(RDD::CommandBufferID p_comm
 			} break;
 			case ComputeListInstruction::TYPE_SET_PUSH_CONSTANT: {
 				const ComputeListSetPushConstantInstruction *set_push_constant_instruction = reinterpret_cast<const ComputeListSetPushConstantInstruction *>(instruction);
-				const VectorView push_constant_data_view(reinterpret_cast<const uint32_t *>(set_push_constant_instruction->data()), set_push_constant_instruction->size / sizeof(uint32_t));
+				const HectorView push_constant_data_view(reinterpret_cast<const uint32_t *>(set_push_constant_instruction->data()), set_push_constant_instruction->size / sizeof(uint32_t));
 				driver->command_bind_push_constants(p_command_buffer, set_push_constant_instruction->shader, 0, push_constant_data_view);
 				instruction_data_cursor += sizeof(ComputeListSetPushConstantInstruction);
 				instruction_data_cursor += set_push_constant_instruction->size;
@@ -682,8 +682,8 @@ void RenderingDeviceGraph::_run_draw_list_command(RDD::CommandBufferID p_command
 			} break;
 			case DrawListInstruction::TYPE_CLEAR_ATTACHMENTS: {
 				const DrawListClearAttachmentsInstruction *clear_attachments_instruction = reinterpret_cast<const DrawListClearAttachmentsInstruction *>(instruction);
-				const VectorView attachments_clear_view(clear_attachments_instruction->attachments_clear(), clear_attachments_instruction->attachments_clear_count);
-				const VectorView attachments_clear_rect_view(clear_attachments_instruction->attachments_clear_rect(), clear_attachments_instruction->attachments_clear_rect_count);
+				const HectorView attachments_clear_view(clear_attachments_instruction->attachments_clear(), clear_attachments_instruction->attachments_clear_count);
+				const HectorView attachments_clear_rect_view(clear_attachments_instruction->attachments_clear_rect(), clear_attachments_instruction->attachments_clear_rect_count);
 				driver->command_render_clear_attachments(p_command_buffer, attachments_clear_view, attachments_clear_rect_view);
 				instruction_data_cursor += sizeof(DrawListClearAttachmentsInstruction);
 				instruction_data_cursor += sizeof(RDD::AttachmentClear) * clear_attachments_instruction->attachments_clear_count;
@@ -721,7 +721,7 @@ void RenderingDeviceGraph::_run_draw_list_command(RDD::CommandBufferID p_command
 			} break;
 			case DrawListInstruction::TYPE_SET_PUSH_CONSTANT: {
 				const DrawListSetPushConstantInstruction *set_push_constant_instruction = reinterpret_cast<const DrawListSetPushConstantInstruction *>(instruction);
-				const VectorView push_constant_data_view(reinterpret_cast<const uint32_t *>(set_push_constant_instruction->data()), set_push_constant_instruction->size / sizeof(uint32_t));
+				const HectorView push_constant_data_view(reinterpret_cast<const uint32_t *>(set_push_constant_instruction->data()), set_push_constant_instruction->size / sizeof(uint32_t));
 				driver->command_bind_push_constants(p_command_buffer, set_push_constant_instruction->shader, 0, push_constant_data_view);
 				instruction_data_cursor += sizeof(DrawListSetPushConstantInstruction);
 				instruction_data_cursor += set_push_constant_instruction->size;
@@ -822,7 +822,7 @@ void RenderingDeviceGraph::_run_render_commands(int32_t p_level, const RecordedC
 				}
 
 				const RecordedDrawListCommand *draw_list_command = reinterpret_cast<const RecordedDrawListCommand *>(command);
-				const VectorView clear_values(draw_list_command->clear_values(), draw_list_command->clear_values_count);
+				const HectorView clear_values(draw_list_command->clear_values(), draw_list_command->clear_values_count);
 #if defined(DEBUG_ENABLED) || defined(DEV_ENABLED)
 				driver->command_insert_breadcrumb(r_command_buffer, draw_list_command->breadcrumb);
 #endif
@@ -836,12 +836,12 @@ void RenderingDeviceGraph::_run_render_commands(int32_t p_level, const RecordedC
 			} break;
 			case RecordedCommand::TYPE_TEXTURE_COPY: {
 				const RecordedTextureCopyCommand *texture_copy_command = reinterpret_cast<const RecordedTextureCopyCommand *>(command);
-				const VectorView<RDD::TextureCopyRegion> command_texture_copy_regions_view(texture_copy_command->texture_copy_regions(), texture_copy_command->texture_copy_regions_count);
+				const HectorView<RDD::TextureCopyRegion> command_texture_copy_regions_view(texture_copy_command->texture_copy_regions(), texture_copy_command->texture_copy_regions_count);
 				driver->command_copy_texture(r_command_buffer, texture_copy_command->from_texture, RDD::TEXTURE_LAYOUT_COPY_SRC_OPTIMAL, texture_copy_command->to_texture, RDD::TEXTURE_LAYOUT_COPY_DST_OPTIMAL, command_texture_copy_regions_view);
 			} break;
 			case RecordedCommand::TYPE_TEXTURE_GET_DATA: {
 				const RecordedTextureGetDataCommand *texture_get_data_command = reinterpret_cast<const RecordedTextureGetDataCommand *>(command);
-				const VectorView<RDD::BufferTextureCopyRegion> command_buffer_texture_copy_regions_view(texture_get_data_command->buffer_texture_copy_regions(), texture_get_data_command->buffer_texture_copy_regions_count);
+				const HectorView<RDD::BufferTextureCopyRegion> command_buffer_texture_copy_regions_view(texture_get_data_command->buffer_texture_copy_regions(), texture_get_data_command->buffer_texture_copy_regions_count);
 				driver->command_copy_texture_to_buffer(r_command_buffer, texture_get_data_command->from_texture, RDD::TEXTURE_LAYOUT_COPY_SRC_OPTIMAL, texture_get_data_command->to_buffer, command_buffer_texture_copy_regions_view);
 			} break;
 			case RecordedCommand::TYPE_TEXTURE_RESOLVE: {
@@ -1055,19 +1055,19 @@ void RenderingDeviceGraph::_group_barriers_for_render_commands(RDD::CommandBuffe
 		return;
 	}
 
-	const VectorView<RDD::MemoryBarrier> memory_barriers = !is_memory_barrier_empty ? barrier_group.memory_barrier : VectorView<RDD::MemoryBarrier>();
-	const VectorView<RDD::TextureBarrier> texture_barriers = barrier_group.normalization_barriers.is_empty() ? barrier_group.transition_barriers : barrier_group.normalization_barriers;
+	const HectorView<RDD::MemoryBarrier> memory_barriers = !is_memory_barrier_empty ? barrier_group.memory_barrier : HectorView<RDD::MemoryBarrier>();
+	const HectorView<RDD::TextureBarrier> texture_barriers = barrier_group.normalization_barriers.is_empty() ? barrier_group.transition_barriers : barrier_group.normalization_barriers;
 #if USE_BUFFER_BARRIERS
-	const VectorView<RDD::BufferBarrier> buffer_barriers = !are_buffer_barriers_empty ? barrier_group.buffer_barriers : VectorView<RDD::BufferBarrier>();
+	const HectorView<RDD::BufferBarrier> buffer_barriers = !are_buffer_barriers_empty ? barrier_group.buffer_barriers : HectorView<RDD::BufferBarrier>();
 #else
-	const VectorView<RDD::BufferBarrier> buffer_barriers = VectorView<RDD::BufferBarrier>();
+	const HectorView<RDD::BufferBarrier> buffer_barriers = HectorView<RDD::BufferBarrier>();
 #endif
 
 	driver->command_pipeline_barrier(p_command_buffer, barrier_group.src_stages, barrier_group.dst_stages, memory_barriers, buffer_barriers, texture_barriers);
 
 	bool separate_texture_barriers = !barrier_group.normalization_barriers.is_empty() && !barrier_group.transition_barriers.is_empty();
 	if (separate_texture_barriers) {
-		driver->command_pipeline_barrier(p_command_buffer, barrier_group.src_stages, barrier_group.dst_stages, VectorView<RDD::MemoryBarrier>(), VectorView<RDD::BufferBarrier>(), barrier_group.transition_barriers);
+		driver->command_pipeline_barrier(p_command_buffer, barrier_group.src_stages, barrier_group.dst_stages, HectorView<RDD::MemoryBarrier>(), HectorView<RDD::BufferBarrier>(), barrier_group.transition_barriers);
 	}
 }
 
@@ -1381,7 +1381,7 @@ void RenderingDeviceGraph::add_buffer_get_data(RDD::BufferID p_src, ResourceTrac
 	}
 }
 
-void RenderingDeviceGraph::add_buffer_update(RDD::BufferID p_dst, ResourceTracker *p_dst_tracker, VectorView<RecordedBufferCopy> p_buffer_copies) {
+void RenderingDeviceGraph::add_buffer_update(RDD::BufferID p_dst, ResourceTracker *p_dst_tracker, HectorView<RecordedBufferCopy> p_buffer_copies) {
 	DEV_ASSERT(p_dst_tracker != nullptr);
 
 	size_t buffer_copies_size = p_buffer_copies.size() * sizeof(RecordedBufferCopy);
@@ -1474,7 +1474,7 @@ void RenderingDeviceGraph::add_compute_list_usage(ResourceTracker *p_tracker, Re
 #endif
 }
 
-void RenderingDeviceGraph::add_compute_list_usages(VectorView<ResourceTracker *> p_trackers, VectorView<ResourceUsage> p_usages) {
+void RenderingDeviceGraph::add_compute_list_usages(HectorView<ResourceTracker *> p_trackers, HectorView<ResourceUsage> p_usages) {
 	DEV_ASSERT(p_trackers.size() == p_usages.size());
 
 	for (uint32_t i = 0; i < p_trackers.size(); i++) {
@@ -1494,7 +1494,7 @@ void RenderingDeviceGraph::add_compute_list_end() {
 	_add_command_to_graph(compute_instruction_list.command_trackers.ptr(), compute_instruction_list.command_tracker_usages.ptr(), compute_instruction_list.command_trackers.size(), command_index, command);
 }
 
-void RenderingDeviceGraph::add_draw_list_begin(RDD::RenderPassID p_render_pass, RDD::FramebufferID p_framebuffer, Rect2i p_region, VectorView<RDD::RenderPassClearValue> p_clear_values, bool p_uses_color, bool p_uses_depth, uint32_t p_breadcrumb) {
+void RenderingDeviceGraph::add_draw_list_begin(RDD::RenderPassID p_render_pass, RDD::FramebufferID p_framebuffer, Rect2i p_region, HectorView<RDD::RenderPassClearValue> p_clear_values, bool p_uses_color, bool p_uses_depth, uint32_t p_breadcrumb) {
 	draw_instruction_list.clear();
 	draw_instruction_list.index++;
 	draw_instruction_list.render_pass = p_render_pass;
@@ -1543,7 +1543,7 @@ void RenderingDeviceGraph::add_draw_list_bind_uniform_set(RDD::ShaderID p_shader
 	instruction->set_index = set_index;
 }
 
-void RenderingDeviceGraph::add_draw_list_bind_vertex_buffers(VectorView<RDD::BufferID> p_vertex_buffers, VectorView<uint64_t> p_vertex_buffer_offsets) {
+void RenderingDeviceGraph::add_draw_list_bind_vertex_buffers(HectorView<RDD::BufferID> p_vertex_buffers, HectorView<uint64_t> p_vertex_buffer_offsets) {
 	DEV_ASSERT(p_vertex_buffers.size() == p_vertex_buffer_offsets.size());
 
 	uint32_t instruction_size = sizeof(DrawListBindVertexBuffersInstruction) + sizeof(RDD::BufferID) * p_vertex_buffers.size() + sizeof(uint64_t) * p_vertex_buffer_offsets.size();
@@ -1563,7 +1563,7 @@ void RenderingDeviceGraph::add_draw_list_bind_vertex_buffers(VectorView<RDD::Buf
 	}
 }
 
-void RenderingDeviceGraph::add_draw_list_clear_attachments(VectorView<RDD::AttachmentClear> p_attachments_clear, VectorView<Rect2i> p_attachments_clear_rect) {
+void RenderingDeviceGraph::add_draw_list_clear_attachments(HectorView<RDD::AttachmentClear> p_attachments_clear, HectorView<Rect2i> p_attachments_clear_rect) {
 	uint32_t instruction_size = sizeof(DrawListClearAttachmentsInstruction) + sizeof(RDD::AttachmentClear) * p_attachments_clear.size() + sizeof(Rect2i) * p_attachments_clear_rect.size();
 	DrawListClearAttachmentsInstruction *instruction = reinterpret_cast<DrawListClearAttachmentsInstruction *>(_allocate_draw_list_instruction(instruction_size));
 	instruction->type = DrawListInstruction::TYPE_CLEAR_ATTACHMENTS;
@@ -1665,7 +1665,7 @@ void RenderingDeviceGraph::add_draw_list_usage(ResourceTracker *p_tracker, Resou
 #endif
 }
 
-void RenderingDeviceGraph::add_draw_list_usages(VectorView<ResourceTracker *> p_trackers, VectorView<ResourceUsage> p_usages) {
+void RenderingDeviceGraph::add_draw_list_usages(HectorView<ResourceTracker *> p_trackers, HectorView<ResourceUsage> p_usages) {
 	DEV_ASSERT(p_trackers.size() == p_usages.size());
 
 	for (uint32_t i = 0; i < p_trackers.size(); i++) {
@@ -1752,7 +1752,7 @@ void RenderingDeviceGraph::add_texture_clear(RDD::TextureID p_dst, ResourceTrack
 	_add_command_to_graph(&p_dst_tracker, &usage, 1, command_index, command);
 }
 
-void RenderingDeviceGraph::add_texture_copy(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, VectorView<RDD::TextureCopyRegion> p_texture_copy_regions) {
+void RenderingDeviceGraph::add_texture_copy(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, HectorView<RDD::TextureCopyRegion> p_texture_copy_regions) {
 	DEV_ASSERT(p_src_tracker != nullptr);
 	DEV_ASSERT(p_dst_tracker != nullptr);
 
@@ -1775,7 +1775,7 @@ void RenderingDeviceGraph::add_texture_copy(RDD::TextureID p_src, ResourceTracke
 	_add_command_to_graph(trackers, usages, 2, command_index, command);
 }
 
-void RenderingDeviceGraph::add_texture_get_data(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::BufferID p_dst, VectorView<RDD::BufferTextureCopyRegion> p_buffer_texture_copy_regions, ResourceTracker *p_dst_tracker) {
+void RenderingDeviceGraph::add_texture_get_data(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::BufferID p_dst, HectorView<RDD::BufferTextureCopyRegion> p_buffer_texture_copy_regions, ResourceTracker *p_dst_tracker) {
 	DEV_ASSERT(p_src_tracker != nullptr);
 
 	int32_t command_index;
@@ -1823,7 +1823,7 @@ void RenderingDeviceGraph::add_texture_resolve(RDD::TextureID p_src, ResourceTra
 	_add_command_to_graph(trackers, usages, 2, command_index, command);
 }
 
-void RenderingDeviceGraph::add_texture_update(RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, VectorView<RecordedBufferToTextureCopy> p_buffer_copies, VectorView<ResourceTracker *> p_buffer_trackers) {
+void RenderingDeviceGraph::add_texture_update(RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, HectorView<RecordedBufferToTextureCopy> p_buffer_copies, HectorView<ResourceTracker *> p_buffer_trackers) {
 	DEV_ASSERT(p_dst_tracker != nullptr);
 
 	int32_t command_index;
@@ -1841,8 +1841,8 @@ void RenderingDeviceGraph::add_texture_update(RDD::TextureID p_dst, ResourceTrac
 
 	if (p_buffer_trackers.size() > 0) {
 		// Add the optional buffer trackers if they were provided.
-		thread_local LocalVector<ResourceTracker *> trackers;
-		thread_local LocalVector<ResourceUsage> usages;
+		thread_local LocalHector<ResourceTracker *> trackers;
+		thread_local LocalHector<ResourceUsage> usages;
 		trackers.clear();
 		usages.clear();
 		for (uint32_t i = 0; i < p_buffer_trackers.size(); i++) {
@@ -1900,11 +1900,11 @@ void RenderingDeviceGraph::end(bool p_reorder_commands, bool p_full_barriers, RD
 		return;
 	}
 
-	thread_local LocalVector<RecordedCommandSort> commands_sorted;
+	thread_local LocalHector<RecordedCommandSort> commands_sorted;
 	if (p_reorder_commands) {
-		thread_local LocalVector<int64_t> command_stack;
-		thread_local LocalVector<int32_t> sorted_command_indices;
-		thread_local LocalVector<uint32_t> command_degrees;
+		thread_local LocalHector<int64_t> command_stack;
+		thread_local LocalHector<int32_t> sorted_command_indices;
+		thread_local LocalHector<uint32_t> command_degrees;
 		int32_t adjacency_list_index = 0;
 		int32_t command_index;
 

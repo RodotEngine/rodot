@@ -11,7 +11,7 @@
 		<link title="Using InputEvent">$DOCS_URL/tutorials/inputs/inputevent.html</link>
 	</tutorials>
 	<members>
-		<member name="delta" type="Vector2" setter="set_delta" getter="get_delta" default="Vector2(0, 0)">
+		<member name="delta" type="Hector2" setter="set_delta" getter="get_delta" default="Hector2(0, 0)">
 			Panning amount since last pan event.
 		</member>
 	</members>

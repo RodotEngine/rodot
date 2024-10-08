@@ -50,7 +50,7 @@ public:
 	};
 
 	struct Point {
-		Vector2 position;
+		Hector2 position;
 		real_t left_tangent = 0.0;
 		real_t right_tangent = 0.0;
 		TangentMode left_mode = TANGENT_FREE;
@@ -59,7 +59,7 @@ public:
 		Point() {
 		}
 
-		Point(const Vector2 &p_position,
+		Point(const Hector2 &p_position,
 				real_t p_left = 0.0,
 				real_t p_right = 0.0,
 				TangentMode p_left_mode = TANGENT_FREE,
@@ -78,12 +78,12 @@ public:
 
 	void set_point_count(int p_count);
 
-	int add_point(Vector2 p_position,
+	int add_point(Hector2 p_position,
 			real_t left_tangent = 0,
 			real_t right_tangent = 0,
 			TangentMode left_mode = TANGENT_FREE,
 			TangentMode right_mode = TANGENT_FREE);
-	int add_point_no_update(Vector2 p_position,
+	int add_point_no_update(Hector2 p_position,
 			real_t left_tangent = 0,
 			real_t right_tangent = 0,
 			TangentMode left_mode = TANGENT_FREE,
@@ -95,7 +95,7 @@ public:
 
 	void set_point_value(int p_index, real_t p_position);
 	int set_point_offset(int p_index, real_t p_offset);
-	Vector2 get_point_position(int p_index) const;
+	Hector2 get_point_position(int p_index) const;
 
 	Point get_point(int p_index) const;
 
@@ -143,16 +143,16 @@ protected:
 
 private:
 	void mark_dirty();
-	int _add_point(Vector2 p_position,
+	int _add_point(Hector2 p_position,
 			real_t left_tangent = 0,
 			real_t right_tangent = 0,
 			TangentMode left_mode = TANGENT_FREE,
 			TangentMode right_mode = TANGENT_FREE);
 	void _remove_point(int p_index);
 
-	Vector<Point> _points;
+	Hector<Point> _points;
 	bool _baked_cache_dirty = false;
-	Vector<real_t> _baked_cache;
+	Hector<real_t> _baked_cache;
 	int _bake_resolution = 100;
 	real_t _min_value = 0.0;
 	real_t _max_value = 1.0;
@@ -165,27 +165,27 @@ class Curve2D : public Resource {
 	GDCLASS(Curve2D, Resource);
 
 	struct Point {
-		Vector2 in;
-		Vector2 out;
-		Vector2 position;
+		Hector2 in;
+		Hector2 out;
+		Hector2 position;
 	};
 
-	Vector<Point> points;
+	Hector<Point> points;
 
 	struct BakedPoint {
 		real_t ofs = 0.0;
-		Vector2 point;
+		Hector2 point;
 	};
 
 	mutable bool baked_cache_dirty = false;
-	mutable PackedVector2Array baked_point_cache;
-	mutable PackedVector2Array baked_forward_vector_cache;
-	mutable Vector<real_t> baked_dist_cache;
+	mutable PackedHector2Array baked_point_cache;
+	mutable PackedHector2Array baked_forward_Hector_cache;
+	mutable Hector<real_t> baked_dist_cache;
 	mutable real_t baked_max_ofs = 0.0;
 
 	void mark_dirty();
 
-	static Vector2 _calculate_tangent(const Vector2 &p_begin, const Vector2 &p_control_1, const Vector2 &p_control_2, const Vector2 &p_end, const real_t p_t);
+	static Hector2 _calculate_tangent(const Hector2 &p_begin, const Hector2 &p_control_1, const Hector2 &p_control_2, const Hector2 &p_end, const real_t p_t);
 	void _bake() const;
 
 	real_t bake_interval = 5.0;
@@ -195,11 +195,11 @@ class Curve2D : public Resource {
 		real_t frac;
 	};
 	Interval _find_interval(real_t p_offset) const;
-	Vector2 _sample_baked(Interval p_interval, bool p_cubic) const;
+	Hector2 _sample_baked(Interval p_interval, bool p_cubic) const;
 	Transform2D _sample_posture(Interval p_interval) const;
 
-	void _bake_segment2d(RBMap<real_t, Vector2> &r_bake, real_t p_begin, real_t p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, real_t p_tol) const;
-	void _bake_segment2d_even_length(RBMap<real_t, Vector2> &r_bake, real_t p_begin, real_t p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, real_t p_length) const;
+	void _bake_segment2d(RBMap<real_t, Hector2> &r_bake, real_t p_begin, real_t p_end, const Hector2 &p_a, const Hector2 &p_out, const Hector2 &p_b, const Hector2 &p_in, int p_depth, int p_max_depth, real_t p_tol) const;
+	void _bake_segment2d_even_length(RBMap<real_t, Hector2> &r_bake, real_t p_begin, real_t p_end, const Hector2 &p_a, const Hector2 &p_out, const Hector2 &p_b, const Hector2 &p_in, int p_depth, int p_max_depth, real_t p_length) const;
 	Dictionary _get_data() const;
 	void _set_data(const Dictionary &p_data);
 
@@ -207,10 +207,10 @@ class Curve2D : public Resource {
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 
-	void _add_point(const Vector2 &p_position, const Vector2 &p_in = Vector2(), const Vector2 &p_out = Vector2(), int p_atpos = -1);
+	void _add_point(const Hector2 &p_position, const Hector2 &p_in = Hector2(), const Hector2 &p_out = Hector2(), int p_atpos = -1);
 	void _remove_point(int p_index);
 
-	Vector<RBMap<real_t, Vector2>> _tessellate_even_length(int p_max_stages = 5, real_t p_length = 0.2) const;
+	Hector<RBMap<real_t, Hector2>> _tessellate_even_length(int p_max_stages = 5, real_t p_length = 0.2) const;
 
 protected:
 	static void _bind_methods();
@@ -218,32 +218,32 @@ protected:
 public:
 	int get_point_count() const;
 	void set_point_count(int p_count);
-	void add_point(const Vector2 &p_position, const Vector2 &p_in = Vector2(), const Vector2 &p_out = Vector2(), int p_atpos = -1);
-	void set_point_position(int p_index, const Vector2 &p_position);
-	Vector2 get_point_position(int p_index) const;
-	void set_point_in(int p_index, const Vector2 &p_in);
-	Vector2 get_point_in(int p_index) const;
-	void set_point_out(int p_index, const Vector2 &p_out);
-	Vector2 get_point_out(int p_index) const;
+	void add_point(const Hector2 &p_position, const Hector2 &p_in = Hector2(), const Hector2 &p_out = Hector2(), int p_atpos = -1);
+	void set_point_position(int p_index, const Hector2 &p_position);
+	Hector2 get_point_position(int p_index) const;
+	void set_point_in(int p_index, const Hector2 &p_in);
+	Hector2 get_point_in(int p_index) const;
+	void set_point_out(int p_index, const Hector2 &p_out);
+	Hector2 get_point_out(int p_index) const;
 	void remove_point(int p_index);
 	void clear_points();
 
-	Vector2 sample(int p_index, real_t p_offset) const;
-	Vector2 samplef(real_t p_findex) const;
+	Hector2 sample(int p_index, real_t p_offset) const;
+	Hector2 samplef(real_t p_findex) const;
 
 	void set_bake_interval(real_t p_tolerance);
 	real_t get_bake_interval() const;
 
 	real_t get_baked_length() const;
-	Vector2 sample_baked(real_t p_offset, bool p_cubic = false) const;
+	Hector2 sample_baked(real_t p_offset, bool p_cubic = false) const;
 	Transform2D sample_baked_with_rotation(real_t p_offset, bool p_cubic = false) const;
-	PackedVector2Array get_points() const;
-	PackedVector2Array get_baked_points() const; //useful for going through
-	Vector2 get_closest_point(const Vector2 &p_to_point) const;
-	real_t get_closest_offset(const Vector2 &p_to_point) const;
+	PackedHector2Array get_points() const;
+	PackedHector2Array get_baked_points() const; //useful for going through
+	Hector2 get_closest_point(const Hector2 &p_to_point) const;
+	real_t get_closest_offset(const Hector2 &p_to_point) const;
 
-	PackedVector2Array tessellate(int p_max_stages = 5, real_t p_tolerance = 4) const; //useful for display
-	PackedVector2Array tessellate_even_length(int p_max_stages = 5, real_t p_length = 20.0) const; // Useful for baking.
+	PackedHector2Array tessellate(int p_max_stages = 5, real_t p_tolerance = 4) const; //useful for display
+	PackedHector2Array tessellate_even_length(int p_max_stages = 5, real_t p_length = 20.0) const; // Useful for baking.
 
 	Curve2D();
 };
@@ -252,29 +252,29 @@ class Curve3D : public Resource {
 	GDCLASS(Curve3D, Resource);
 
 	struct Point {
-		Vector3 in;
-		Vector3 out;
-		Vector3 position;
+		Hector3 in;
+		Hector3 out;
+		Hector3 position;
 		real_t tilt = 0.0;
 	};
 
-	Vector<Point> points;
+	Hector<Point> points;
 #ifdef TOOLS_ENABLED
 	// For Path3DGizmo.
-	mutable Vector<size_t> points_in_cache;
+	mutable Hector<size_t> points_in_cache;
 #endif
 
 	mutable bool baked_cache_dirty = false;
-	mutable PackedVector3Array baked_point_cache;
-	mutable Vector<real_t> baked_tilt_cache;
-	mutable PackedVector3Array baked_up_vector_cache;
-	mutable PackedVector3Array baked_forward_vector_cache;
-	mutable Vector<real_t> baked_dist_cache;
+	mutable PackedHector3Array baked_point_cache;
+	mutable Hector<real_t> baked_tilt_cache;
+	mutable PackedHector3Array baked_up_Hector_cache;
+	mutable PackedHector3Array baked_forward_Hector_cache;
+	mutable Hector<real_t> baked_dist_cache;
 	mutable real_t baked_max_ofs = 0.0;
 
 	void mark_dirty();
 
-	static Vector3 _calculate_tangent(const Vector3 &p_begin, const Vector3 &p_control_1, const Vector3 &p_control_2, const Vector3 &p_end, const real_t p_t);
+	static Hector3 _calculate_tangent(const Hector3 &p_begin, const Hector3 &p_control_1, const Hector3 &p_control_2, const Hector3 &p_end, const real_t p_t);
 	void _bake() const;
 
 	struct Interval {
@@ -282,16 +282,16 @@ class Curve3D : public Resource {
 		real_t frac;
 	};
 	Interval _find_interval(real_t p_offset) const;
-	Vector3 _sample_baked(Interval p_interval, bool p_cubic) const;
+	Hector3 _sample_baked(Interval p_interval, bool p_cubic) const;
 	real_t _sample_baked_tilt(Interval p_interval) const;
 	Basis _sample_posture(Interval p_interval, bool p_apply_tilt = false) const;
 	Basis _compose_posture(int p_index) const;
 
 	real_t bake_interval = 0.2;
-	bool up_vector_enabled = true;
+	bool up_Hector_enabled = true;
 
-	void _bake_segment3d(RBMap<real_t, Vector3> &r_bake, real_t p_begin, real_t p_end, const Vector3 &p_a, const Vector3 &p_out, const Vector3 &p_b, const Vector3 &p_in, int p_depth, int p_max_depth, real_t p_tol) const;
-	void _bake_segment3d_even_length(RBMap<real_t, Vector3> &r_bake, real_t p_begin, real_t p_end, const Vector3 &p_a, const Vector3 &p_out, const Vector3 &p_b, const Vector3 &p_in, int p_depth, int p_max_depth, real_t p_length) const;
+	void _bake_segment3d(RBMap<real_t, Hector3> &r_bake, real_t p_begin, real_t p_end, const Hector3 &p_a, const Hector3 &p_out, const Hector3 &p_b, const Hector3 &p_in, int p_depth, int p_max_depth, real_t p_tol) const;
+	void _bake_segment3d_even_length(RBMap<real_t, Hector3> &r_bake, real_t p_begin, real_t p_end, const Hector3 &p_a, const Hector3 &p_out, const Hector3 &p_b, const Hector3 &p_in, int p_depth, int p_max_depth, real_t p_length) const;
 	Dictionary _get_data() const;
 	void _set_data(const Dictionary &p_data);
 
@@ -299,10 +299,10 @@ class Curve3D : public Resource {
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 
-	void _add_point(const Vector3 &p_position, const Vector3 &p_in = Vector3(), const Vector3 &p_out = Vector3(), int p_atpos = -1);
+	void _add_point(const Hector3 &p_position, const Hector3 &p_in = Hector3(), const Hector3 &p_out = Hector3(), int p_atpos = -1);
 	void _remove_point(int p_index);
 
-	Vector<RBMap<real_t, Vector3>> _tessellate_even_length(int p_max_stages = 5, real_t p_length = 0.2) const;
+	Hector<RBMap<real_t, Hector3>> _tessellate_even_length(int p_max_stages = 5, real_t p_length = 0.2) const;
 
 protected:
 	static void _bind_methods();
@@ -315,40 +315,40 @@ public:
 
 	int get_point_count() const;
 	void set_point_count(int p_count);
-	void add_point(const Vector3 &p_position, const Vector3 &p_in = Vector3(), const Vector3 &p_out = Vector3(), int p_atpos = -1);
-	void set_point_position(int p_index, const Vector3 &p_position);
-	Vector3 get_point_position(int p_index) const;
+	void add_point(const Hector3 &p_position, const Hector3 &p_in = Hector3(), const Hector3 &p_out = Hector3(), int p_atpos = -1);
+	void set_point_position(int p_index, const Hector3 &p_position);
+	Hector3 get_point_position(int p_index) const;
 	void set_point_tilt(int p_index, real_t p_tilt);
 	real_t get_point_tilt(int p_index) const;
-	void set_point_in(int p_index, const Vector3 &p_in);
-	Vector3 get_point_in(int p_index) const;
-	void set_point_out(int p_index, const Vector3 &p_out);
-	Vector3 get_point_out(int p_index) const;
+	void set_point_in(int p_index, const Hector3 &p_in);
+	Hector3 get_point_in(int p_index) const;
+	void set_point_out(int p_index, const Hector3 &p_out);
+	Hector3 get_point_out(int p_index) const;
 	void remove_point(int p_index);
 	void clear_points();
 
-	Vector3 sample(int p_index, real_t p_offset) const;
-	Vector3 samplef(real_t p_findex) const;
+	Hector3 sample(int p_index, real_t p_offset) const;
+	Hector3 samplef(real_t p_findex) const;
 
 	void set_bake_interval(real_t p_tolerance);
 	real_t get_bake_interval() const;
-	void set_up_vector_enabled(bool p_enable);
-	bool is_up_vector_enabled() const;
+	void set_up_Hector_enabled(bool p_enable);
+	bool is_up_Hector_enabled() const;
 
 	real_t get_baked_length() const;
-	Vector3 sample_baked(real_t p_offset, bool p_cubic = false) const;
+	Hector3 sample_baked(real_t p_offset, bool p_cubic = false) const;
 	Transform3D sample_baked_with_rotation(real_t p_offset, bool p_cubic = false, bool p_apply_tilt = false) const;
 	real_t sample_baked_tilt(real_t p_offset) const;
-	Vector3 sample_baked_up_vector(real_t p_offset, bool p_apply_tilt = false) const;
-	PackedVector3Array get_baked_points() const; // Useful for going through.
-	Vector<real_t> get_baked_tilts() const; //useful for going through
-	PackedVector3Array get_baked_up_vectors() const;
-	Vector3 get_closest_point(const Vector3 &p_to_point) const;
-	real_t get_closest_offset(const Vector3 &p_to_point) const;
-	PackedVector3Array get_points() const;
+	Hector3 sample_baked_up_Hector(real_t p_offset, bool p_apply_tilt = false) const;
+	PackedHector3Array get_baked_points() const; // Useful for going through.
+	Hector<real_t> get_baked_tilts() const; //useful for going through
+	PackedHector3Array get_baked_up_Hectors() const;
+	Hector3 get_closest_point(const Hector3 &p_to_point) const;
+	real_t get_closest_offset(const Hector3 &p_to_point) const;
+	PackedHector3Array get_points() const;
 
-	PackedVector3Array tessellate(int p_max_stages = 5, real_t p_tolerance = 4) const; // Useful for display.
-	PackedVector3Array tessellate_even_length(int p_max_stages = 5, real_t p_length = 0.2) const; // Useful for baking.
+	PackedHector3Array tessellate(int p_max_stages = 5, real_t p_tolerance = 4) const; // Useful for display.
+	PackedHector3Array tessellate_even_length(int p_max_stages = 5, real_t p_length = 0.2) const; // Useful for baking.
 
 	Curve3D();
 };

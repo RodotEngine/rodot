@@ -82,15 +82,15 @@ void SoftBodyRenderingServerHandler::commit_changes() {
 	RS::get_singleton()->mesh_surface_update_vertex_region(mesh, surface, 0, buffer);
 }
 
-void SoftBodyRenderingServerHandler::set_vertex(int p_vertex_id, const Vector3 &p_vertex) {
+void SoftBodyRenderingServerHandler::set_vertex(int p_vertex_id, const Hector3 &p_vertex) {
 	float *vertex_buffer = reinterpret_cast<float *>(write_buffer + p_vertex_id * stride + offset_vertices);
 	*vertex_buffer++ = (float)p_vertex.x;
 	*vertex_buffer++ = (float)p_vertex.y;
 	*vertex_buffer++ = (float)p_vertex.z;
 }
 
-void SoftBodyRenderingServerHandler::set_normal(int p_vertex_id, const Vector3 &p_normal) {
-	Vector2 res = p_normal.octahedron_encode();
+void SoftBodyRenderingServerHandler::set_normal(int p_vertex_id, const Hector3 &p_normal) {
+	Hector2 res = p_normal.octahedron_encode();
 	uint32_t value = 0;
 	value |= (uint16_t)CLAMP(res.x * 65535, 0, 65535);
 	value |= (uint16_t)CLAMP(res.y * 65535, 0, 65535) << 16;
@@ -179,7 +179,7 @@ void SoftBody3D::_get_property_list(List<PropertyInfo> *p_list) const {
 		const String prefix = vformat("%s/%d/", PNAME("attachments"), i);
 		p_list->push_back(PropertyInfo(Variant::INT, prefix + PNAME("point_index")));
 		p_list->push_back(PropertyInfo(Variant::NODE_PATH, prefix + PNAME("spatial_attachment_path")));
-		p_list->push_back(PropertyInfo(Variant::VECTOR3, prefix + PNAME("offset")));
+		p_list->push_back(PropertyInfo(Variant::HECTOR3, prefix + PNAME("offset")));
 	}
 }
 
@@ -475,7 +475,7 @@ void SoftBody3D::_prepare_physics_server() {
 }
 
 void SoftBody3D::_become_mesh_owner() {
-	Vector<Ref<Material>> copy_materials;
+	Hector<Ref<Material>> copy_materials;
 	copy_materials.append_array(surface_override_materials);
 
 	ERR_FAIL_COND(!mesh->get_surface_count());
@@ -581,14 +581,14 @@ const NodePath &SoftBody3D::get_parent_collision_ignore() const {
 	return parent_collision_ignore;
 }
 
-void SoftBody3D::set_pinned_points_indices(Vector<SoftBody3D::PinnedPoint> p_pinned_points_indices) {
+void SoftBody3D::set_pinned_points_indices(Hector<SoftBody3D::PinnedPoint> p_pinned_points_indices) {
 	pinned_points = p_pinned_points_indices;
 	for (int i = pinned_points.size() - 1; 0 <= i; --i) {
 		pin_point(p_pinned_points_indices[i].point_index, true);
 	}
 }
 
-Vector<SoftBody3D::PinnedPoint> SoftBody3D::get_pinned_points_indices() {
+Hector<SoftBody3D::PinnedPoint> SoftBody3D::get_pinned_points_indices() {
 	return pinned_points;
 }
 
@@ -667,7 +667,7 @@ void SoftBody3D::set_drag_coefficient(real_t p_drag_coefficient) {
 	PhysicsServer3D::get_singleton()->soft_body_set_drag_coefficient(physics_rid, p_drag_coefficient);
 }
 
-Vector3 SoftBody3D::get_point_transform(int p_point_index) {
+Hector3 SoftBody3D::get_point_transform(int p_point_index) {
 	return PhysicsServer3D::get_singleton()->soft_body_get_point_global_position(physics_rid, p_point_index);
 }
 

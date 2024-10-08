@@ -48,8 +48,8 @@ private:
 	friend class AudioEffectSpectrumAnalyzer;
 	Ref<AudioEffectSpectrumAnalyzer> base;
 
-	Vector<Vector<AudioFrame>> fft_history;
-	Vector<float> temporal_fft;
+	Hector<Hector<AudioFrame>> fft_history;
+	Hector<float> temporal_fft;
 	int temporal_fft_pos;
 	int fft_size;
 	int fft_count;
@@ -62,7 +62,7 @@ protected:
 
 public:
 	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
-	Vector2 get_magnitude_for_frequency_range(float p_begin, float p_end, MagnitudeMode p_mode = MAGNITUDE_MAX) const;
+	Hector2 get_magnitude_for_frequency_range(float p_begin, float p_end, MagnitudeMode p_mode = MAGNITUDE_MAX) const;
 };
 
 VARIANT_ENUM_CAST(AudioEffectSpectrumAnalyzerInstance::MagnitudeMode)

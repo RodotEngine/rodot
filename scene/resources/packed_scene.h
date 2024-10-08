@@ -37,10 +37,10 @@
 class SceneState : public RefCounted {
 	GDCLASS(SceneState, RefCounted);
 
-	Vector<StringName> names;
-	Vector<Variant> variants;
-	Vector<NodePath> node_paths;
-	Vector<NodePath> editable_instances;
+	Hector<StringName> names;
+	Hector<Variant> variants;
+	Hector<NodePath> node_paths;
+	Hector<NodePath> editable_instances;
 	mutable HashMap<NodePath, int> node_path_cache;
 	mutable HashMap<int, int> base_scene_node_remap;
 
@@ -65,8 +65,8 @@ class SceneState : public RefCounted {
 			int value = 0;
 		};
 
-		Vector<Property> properties;
-		Vector<int> groups;
+		Hector<Property> properties;
+		Hector<int> groups;
 	};
 
 	struct DeferredNodePathProperties {
@@ -75,7 +75,7 @@ class SceneState : public RefCounted {
 		Variant value;
 	};
 
-	Vector<NodeData> nodes;
+	Hector<NodeData> nodes;
 
 	struct ConnectionData {
 		int from = 0;
@@ -84,10 +84,10 @@ class SceneState : public RefCounted {
 		int method = 0;
 		int flags = 0;
 		int unbinds = 0;
-		Vector<int> binds;
+		Hector<int> binds;
 	};
 
-	Vector<ConnectionData> connections;
+	Hector<ConnectionData> connections;
 
 	Error _parse_node(Node *p_owner, Node *p_node, int p_parent_idx, HashMap<StringName, int> &name_map, HashMap<Variant, int, VariantHasher, VariantComparator> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map);
 	Error _parse_connections(Node *p_owner, Node *p_node, HashMap<StringName, int> &name_map, HashMap<Variant, int, VariantHasher, VariantComparator> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map);
@@ -98,7 +98,7 @@ class SceneState : public RefCounted {
 
 	static bool disable_placeholders;
 
-	Vector<String> _get_node_groups(int p_idx) const;
+	Hector<String> _get_node_groups(int p_idx) const;
 
 	int _find_base_scene_node_remap_key(int p_idx) const;
 
@@ -176,13 +176,13 @@ public:
 	Ref<PackedScene> get_node_instance(int p_idx) const;
 	String get_node_instance_placeholder(int p_idx) const;
 	bool is_node_instance_placeholder(int p_idx) const;
-	Vector<StringName> get_node_groups(int p_idx) const;
+	Hector<StringName> get_node_groups(int p_idx) const;
 	int get_node_index(int p_idx) const;
 
 	int get_node_property_count(int p_idx) const;
 	StringName get_node_property_name(int p_idx, int p_prop) const;
 	Variant get_node_property_value(int p_idx, int p_prop) const;
-	Vector<String> get_node_deferred_nodepath_properties(int p_idx) const;
+	Hector<String> get_node_deferred_nodepath_properties(int p_idx) const;
 
 	int get_connection_count() const;
 	NodePath get_connection_source(int p_idx) const;
@@ -195,7 +195,7 @@ public:
 
 	bool has_connection(const NodePath &p_node_from, const StringName &p_signal, const NodePath &p_node_to, const StringName &p_method, bool p_no_inheritance = false);
 
-	Vector<NodePath> get_editable_instances() const;
+	Hector<NodePath> get_editable_instances() const;
 	Ref<Resource> get_sub_resource(const String &p_path);
 
 	//build API
@@ -207,7 +207,7 @@ public:
 	void add_node_property(int p_node, int p_name, int p_value, bool p_deferred_node_path = false);
 	void add_node_group(int p_node, int p_group);
 	void set_base_scene(int p_idx);
-	void add_connection(int p_from, int p_to, int p_signal, int p_method, int p_flags, int p_unbinds, const Vector<int> &p_binds);
+	void add_connection(int p_from, int p_to, int p_signal, int p_method, int p_flags, int p_unbinds, const Hector<int> &p_binds);
 	void add_editable_instance(const NodePath &p_path);
 
 	bool remove_group_references(const StringName &p_name);

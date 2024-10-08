@@ -1,4 +1,4 @@
-const Vector2 = 0
+const Hector2 = 0
 
 func test():
 	pass

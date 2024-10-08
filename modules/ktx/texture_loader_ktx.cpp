@@ -454,7 +454,7 @@ static Ref<Image> load_from_file_access(Ref<FileAccess> f, Error *r_error) {
 			break;
 	}
 
-	Vector<uint8_t> src_data;
+	Hector<uint8_t> src_data;
 
 	// KTX use 4-bytes padding, don't use mipmaps if padding is effective
 	// TODO: unpad dynamically

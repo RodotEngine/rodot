@@ -69,9 +69,9 @@ class NavigationObstacle3DEditor : public HBoxContainer {
 	MenuButton *options = nullptr;
 
 	int edited_point = 0;
-	Vector2 edited_point_pos;
-	PackedVector2Array pre_move_edit;
-	PackedVector2Array wip;
+	Hector2 edited_point_pos;
+	PackedHector2Array pre_move_edit;
+	PackedHector2Array wip;
 	bool wip_active;
 	bool snap_ignore;
 
@@ -81,8 +81,8 @@ class NavigationObstacle3DEditor : public HBoxContainer {
 	void _polygon_draw();
 	void _menu_option(int p_option);
 
-	PackedVector2Array _get_polygon();
-	void _set_polygon(const PackedVector2Array &p_poly);
+	PackedHector2Array _get_polygon();
+	void _set_polygon(const PackedHector2Array &p_poly);
 
 protected:
 	void _notification(int p_what);

@@ -93,12 +93,12 @@ public:
 
 	XrSpaceLocationFlags get_hand_joint_location_flags(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
 	Quaternion get_hand_joint_rotation(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
-	Vector3 get_hand_joint_position(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
+	Hector3 get_hand_joint_position(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
 	float get_hand_joint_radius(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
 
 	XrSpaceVelocityFlags get_hand_joint_velocity_flags(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
-	Vector3 get_hand_joint_linear_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
-	Vector3 get_hand_joint_angular_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
+	Hector3 get_hand_joint_linear_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
+	Hector3 get_hand_joint_angular_velocity(HandTrackedHands p_hand, XrHandJointEXT p_joint) const;
 
 private:
 	static OpenXRHandTrackingExtension *singleton;

@@ -38,7 +38,7 @@
 #include "core/input/input.h"
 #include "core/os/mutex.h"
 #include "core/os/thread.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "drivers/alsa/audio_driver_alsa.h"
 #include "drivers/alsamidi/midi_driver_alsamidi.h"
 #include "drivers/pulseaudio/audio_driver_pulseaudio.h"
@@ -184,7 +184,7 @@ class DisplayServerX11 : public DisplayServer {
 		Callable input_text_callback;
 		Callable drop_files_callback;
 
-		Vector<Vector2> mpath;
+		Hector<Hector2> mpath;
 
 		WindowID transient_parent = INVALID_WINDOW_ID;
 		HashSet<WindowID> transient_children;
@@ -200,7 +200,7 @@ class DisplayServerX11 : public DisplayServer {
 		bool on_top = false;
 		bool borderless = false;
 		bool resize_disabled = false;
-		Vector2i last_position_before_fs;
+		Hector2i last_position_before_fs;
 		bool focused = true;
 		bool minimized = false;
 		bool maximized = false;
@@ -268,22 +268,22 @@ class DisplayServerX11 : public DisplayServer {
 
 	struct {
 		int opcode;
-		Vector<int> touch_devices;
-		HashMap<int, Vector2> absolute_devices;
-		HashMap<int, Vector2> pen_pressure_range;
-		HashMap<int, Vector2> pen_tilt_x_range;
-		HashMap<int, Vector2> pen_tilt_y_range;
+		Hector<int> touch_devices;
+		HashMap<int, Hector2> absolute_devices;
+		HashMap<int, Hector2> pen_pressure_range;
+		HashMap<int, Hector2> pen_tilt_x_range;
+		HashMap<int, Hector2> pen_tilt_y_range;
 		HashMap<int, bool> pen_inverted_devices;
 		XIEventMask all_event_mask;
-		HashMap<int, Vector2> state;
+		HashMap<int, Hector2> state;
 		double pressure;
 		bool pressure_supported;
 		bool pen_inverted;
-		Vector2 tilt;
-		Vector2 mouse_pos_to_filter;
-		Vector2 relative_motion;
-		Vector2 raw_pos;
-		Vector2 old_raw_pos;
+		Hector2 tilt;
+		Hector2 mouse_pos_to_filter;
+		Hector2 relative_motion;
+		Hector2 raw_pos;
+		Hector2 old_raw_pos;
 		::Time last_relative_time;
 	} xi;
 
@@ -297,7 +297,7 @@ class DisplayServerX11 : public DisplayServer {
 	MouseMode mouse_mode = MOUSE_MODE_VISIBLE;
 	Point2i center;
 
-	void _handle_key_event(WindowID p_window, XKeyEvent *p_event, LocalVector<XEvent> &p_events, uint32_t &p_event_index, bool p_echo = false);
+	void _handle_key_event(WindowID p_window, XKeyEvent *p_event, LocalHector<XEvent> &p_events, uint32_t &p_event_index, bool p_echo = false);
 
 	Atom _process_selection_request_target(Atom p_target, Window p_requestor, Atom p_property, Atom p_selection) const;
 	void _handle_selection_request_event(XSelectionRequestEvent *p_event) const;
@@ -316,7 +316,7 @@ class DisplayServerX11 : public DisplayServer {
 	Cursor cursors[CURSOR_MAX];
 	Cursor null_cursor;
 	CursorShape current_cursor = CURSOR_ARROW;
-	HashMap<CursorShape, Vector<Variant>> cursors_cache;
+	HashMap<CursorShape, Hector<Variant>> cursors_cache;
 
 	String rendering_driver;
 	void set_wm_fullscreen(bool p_enabled);
@@ -364,11 +364,11 @@ class DisplayServerX11 : public DisplayServer {
 	mutable Mutex events_mutex;
 	Thread events_thread;
 	SafeFlag events_thread_done;
-	LocalVector<XEvent> polled_events;
+	LocalHector<XEvent> polled_events;
 	static void _poll_events_thread(void *ud);
 	bool _wait_for_events() const;
 	void _poll_events();
-	void _check_pending_events(LocalVector<XEvent> &r_events);
+	void _check_pending_events(LocalHector<XEvent> &r_events);
 
 	static Bool _predicate_all_events(Display *display, XEvent *event, XPointer arg);
 	static Bool _predicate_clipboard_selection(Display *display, XEvent *event, XPointer arg);
@@ -402,8 +402,8 @@ public:
 	virtual bool is_dark_mode() const override;
 	virtual void set_system_theme_change_callback(const Callable &p_callable) override;
 
-	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) override;
-	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
+	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) override;
+	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
 #endif
 
 	virtual void mouse_set_mode(MouseMode p_mode) override;
@@ -436,7 +436,7 @@ public:
 	virtual bool screen_is_kept_on() const override;
 #endif
 
-	virtual Vector<DisplayServer::WindowID> get_window_list() const override;
+	virtual Hector<DisplayServer::WindowID> get_window_list() const override;
 
 	virtual WindowID create_sub_window(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Rect2i &p_rect = Rect2i(), bool p_exclusive = false, WindowID p_transient_parent = INVALID_WINDOW_ID) override;
 	virtual void show_window(WindowID p_id) override;
@@ -454,7 +454,7 @@ public:
 	virtual ObjectID window_get_attached_instance_id(WindowID p_window = MAIN_WINDOW_ID) const override;
 
 	virtual void window_set_title(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) override;
-	virtual void window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override;
+	virtual void window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override;
 
 	virtual void window_set_rect_changed_callback(const Callable &p_callable, WindowID p_window = MAIN_WINDOW_ID) override;
 	virtual void window_set_window_event_callback(const Callable &p_callable, WindowID p_window = MAIN_WINDOW_ID) override;
@@ -512,7 +512,7 @@ public:
 
 	virtual void cursor_set_shape(CursorShape p_shape) override;
 	virtual CursorShape cursor_get_shape() const override;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) override;
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) override;
 
 	virtual int keyboard_get_layout_count() const override;
 	virtual int keyboard_get_current_layout() const override;
@@ -534,12 +534,12 @@ public:
 	virtual void set_native_icon(const String &p_filename) override;
 	virtual void set_icon(const Ref<Image> &p_icon) override;
 
-	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
-	static Vector<String> get_rendering_drivers_func();
+	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_rendering_drivers_func();
 
 	static void register_x11_driver();
 
-	DisplayServerX11(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	DisplayServerX11(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 	~DisplayServerX11();
 };
 

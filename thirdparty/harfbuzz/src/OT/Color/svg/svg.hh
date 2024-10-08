@@ -30,7 +30,7 @@
 #include "../../../hb-paint.hh"
 
 /*
- * SVG -- SVG (Scalable Vector Graphics)
+ * SVG -- SVG (Scalable Hector Graphics)
  * https://docs.microsoft.com/en-us/typography/opentype/spec/svg
  */
 

@@ -293,7 +293,7 @@ typedef struct ufbx_blob {
 	UFBX_CONVERSION_IMPL(ufbx_blob)
 } ufbx_blob;
 
-// 2D vector
+// 2D Hector
 typedef struct ufbx_vec2 {
 	union {
 		struct { ufbx_real x, y; };
@@ -303,7 +303,7 @@ typedef struct ufbx_vec2 {
 	UFBX_CONVERSION_IMPL(ufbx_vec2)
 } ufbx_vec2;
 
-// 3D vector
+// 3D Hector
 typedef struct ufbx_vec3 {
 	union {
 		struct { ufbx_real x, y, z; };
@@ -313,7 +313,7 @@ typedef struct ufbx_vec3 {
 	UFBX_CONVERSION_IMPL(ufbx_vec3)
 } ufbx_vec3;
 
-// 4D vector
+// 4D Hector
 typedef struct ufbx_vec4 {
 	union {
 		struct { ufbx_real x, y, z, w; };
@@ -362,7 +362,7 @@ typedef struct ufbx_transform {
 } ufbx_transform;
 
 // 4x3 matrix encoding an affine transformation.
-// `cols[0..2]` are the X/Y/Z basis vectors, `cols[3]` is the translation
+// `cols[0..2]` are the X/Y/Z basis Hectors, `cols[3]` is the translation
 typedef struct ufbx_matrix {
 	union {
 		struct {
@@ -451,7 +451,7 @@ typedef enum ufbx_prop_type UFBX_ENUM_REPR {
 	UFBX_PROP_BOOLEAN,
 	UFBX_PROP_INTEGER,
 	UFBX_PROP_NUMBER,
-	UFBX_PROP_VECTOR,
+	UFBX_PROP_Hector,
 	UFBX_PROP_COLOR,
 	UFBX_PROP_COLOR_WITH_ALPHA,
 	UFBX_PROP_STRING,
@@ -519,7 +519,7 @@ typedef enum ufbx_prop_flags UFBX_FLAG_REPR {
 
 	// Value type.
 	// `REAL/VEC2/VEC3/VEC4` are mutually exclusive but may coexist with eg. `STRING`
-	// in some rare cases where the string defines the unit for the vector.
+	// in some rare cases where the string defines the unit for the Hector.
 	UFBX_PROP_FLAG_VALUE_REAL = 0x100000,
 	UFBX_PROP_FLAG_VALUE_VEC2 = 0x200000,
 	UFBX_PROP_FLAG_VALUE_VEC3 = 0x400000,
@@ -1068,8 +1068,8 @@ typedef struct ufbx_uv_set {
 
 	// Vertex attributes, see `ufbx_mesh` attributes for more information
 	ufbx_vertex_vec2 vertex_uv;        // < UV / texture coordinates
-	ufbx_vertex_vec3 vertex_tangent;   // < (optional) Tangent vector in UV.x direction
-	ufbx_vertex_vec3 vertex_bitangent; // < (optional) Tangent vector in UV.y direction
+	ufbx_vertex_vec3 vertex_tangent;   // < (optional) Tangent Hector in UV.x direction
+	ufbx_vertex_vec3 vertex_bitangent; // < (optional) Tangent Hector in UV.y direction
 } ufbx_uv_set;
 
 // Vertex color set/layer
@@ -1297,10 +1297,10 @@ struct ufbx_mesh {
 	// NOTE: UV/tangent/bitangent and color are the from first sets,
 	// use `uv_sets/color_sets` to access the other layers.
 	ufbx_vertex_vec3 vertex_position;  // < Vertex positions
-	ufbx_vertex_vec3 vertex_normal;    // < (optional) Normal vectors, always defined if `ufbx_load_opts.generate_missing_normals`
+	ufbx_vertex_vec3 vertex_normal;    // < (optional) Normal Hectors, always defined if `ufbx_load_opts.generate_missing_normals`
 	ufbx_vertex_vec2 vertex_uv;        // < (optional) UV / texture coordinates
-	ufbx_vertex_vec3 vertex_tangent;   // < (optional) Tangent vector in UV.x direction
-	ufbx_vertex_vec3 vertex_bitangent; // < (optional) Tangent vector in UV.y direction
+	ufbx_vertex_vec3 vertex_tangent;   // < (optional) Tangent Hector in UV.x direction
+	ufbx_vertex_vec3 vertex_bitangent; // < (optional) Tangent Hector in UV.y direction
 	ufbx_vertex_vec4 vertex_color;     // < (optional) Per-vertex RGBA color
 	ufbx_vertex_real vertex_crease;    // < (optional) Crease value for subdivision surfaces
 
@@ -1704,7 +1704,7 @@ typedef struct ufbx_nurbs_basis {
 	ufbx_nurbs_topology topology;
 
 	// Subdivision of the parameter range to control points.
-	ufbx_real_list knot_vector;
+	ufbx_real_list knot_Hector;
 
 	// Range for the parameter value.
 	ufbx_real t_min;
@@ -2387,13 +2387,13 @@ typedef enum ufbx_material_fbx_map UFBX_ENUM_REPR {
 	UFBX_MATERIAL_FBX_BUMP_FACTOR,
 	UFBX_MATERIAL_FBX_DISPLACEMENT_FACTOR,
 	UFBX_MATERIAL_FBX_DISPLACEMENT,
-	UFBX_MATERIAL_FBX_VECTOR_DISPLACEMENT_FACTOR,
-	UFBX_MATERIAL_FBX_VECTOR_DISPLACEMENT,
+	UFBX_MATERIAL_FBX_Hector_DISPLACEMENT_FACTOR,
+	UFBX_MATERIAL_FBX_Hector_DISPLACEMENT,
 
 	UFBX_ENUM_FORCE_WIDTH(UFBX_MATERIAL_FBX_MAP)
 } ufbx_material_fbx_map;
 
-UFBX_ENUM_TYPE(ufbx_material_fbx_map, UFBX_MATERIAL_FBX_MAP, UFBX_MATERIAL_FBX_VECTOR_DISPLACEMENT);
+UFBX_ENUM_TYPE(ufbx_material_fbx_map, UFBX_MATERIAL_FBX_MAP, UFBX_MATERIAL_FBX_Hector_DISPLACEMENT);
 
 // Known PBR material properties, matches maps in `ufbx_material_pbr_maps`
 typedef enum ufbx_material_pbr_map UFBX_ENUM_REPR {
@@ -2511,8 +2511,8 @@ typedef struct ufbx_material_fbx_maps {
 			ufbx_material_map bump_factor;
 			ufbx_material_map displacement_factor;
 			ufbx_material_map displacement;
-			ufbx_material_map vector_displacement_factor;
-			ufbx_material_map vector_displacement;
+			ufbx_material_map Hector_displacement_factor;
+			ufbx_material_map Hector_displacement;
 		};
 	};
 } ufbx_material_fbx_maps;
@@ -3140,7 +3140,7 @@ typedef enum ufbx_interpolation UFBX_ENUM_REPR {
 
 UFBX_ENUM_TYPE(ufbx_interpolation, UFBX_INTERPOLATION, UFBX_INTERPOLATION_CUBIC);
 
-// Tangent vector at a keyframe, may be split into left/right
+// Tangent Hector at a keyframe, may be split into left/right
 typedef struct ufbx_tangent {
 	float dx; // < Derivative in the time axis
 	float dy; // < Derivative in the (curve specific) value axis
@@ -3275,23 +3275,23 @@ typedef struct ufbx_constraint_target {
 
 UFBX_LIST_TYPE(ufbx_constraint_target_list, ufbx_constraint_target);
 
-// Method to determine the up vector in aim constraints
+// Method to determine the up Hector in aim constraints
 typedef enum ufbx_constraint_aim_up_type UFBX_ENUM_REPR {
-	UFBX_CONSTRAINT_AIM_UP_SCENE,      // < Align the up vector to the scene global up vector
-	UFBX_CONSTRAINT_AIM_UP_TO_NODE,    // < Aim the up vector at `ufbx_constraint.aim_up_node`
-	UFBX_CONSTRAINT_AIM_UP_ALIGN_NODE, // < Copy the up vector from `ufbx_constraint.aim_up_node`
-	UFBX_CONSTRAINT_AIM_UP_VECTOR,     // < Use `ufbx_constraint.aim_up_vector` as the up vector
-	UFBX_CONSTRAINT_AIM_UP_NONE,       // < Don't align the up vector to anything
+	UFBX_CONSTRAINT_AIM_UP_SCENE,      // < Align the up Hector to the scene global up Hector
+	UFBX_CONSTRAINT_AIM_UP_TO_NODE,    // < Aim the up Hector at `ufbx_constraint.aim_up_node`
+	UFBX_CONSTRAINT_AIM_UP_ALIGN_NODE, // < Copy the up Hector from `ufbx_constraint.aim_up_node`
+	UFBX_CONSTRAINT_AIM_UP_Hector,     // < Use `ufbx_constraint.aim_up_Hector` as the up Hector
+	UFBX_CONSTRAINT_AIM_UP_NONE,       // < Don't align the up Hector to anything
 
 	UFBX_ENUM_FORCE_WIDTH(UFBX_CONSTRAINT_AIM_UP_TYPE)
 } ufbx_constraint_aim_up_type;
 
 UFBX_ENUM_TYPE(ufbx_constraint_aim_up_type, UFBX_CONSTRAINT_AIM_UP_TYPE, UFBX_CONSTRAINT_AIM_UP_NONE);
 
-// Method to determine the up vector in aim constraints
+// Method to determine the up Hector in aim constraints
 typedef enum ufbx_constraint_ik_pole_type UFBX_ENUM_REPR {
-	UFBX_CONSTRAINT_IK_POLE_VECTOR, // < Use towards calculated from `ufbx_constraint.targets`
-	UFBX_CONSTRAINT_IK_POLE_NODE,   // < Use `ufbx_constraint.ik_pole_vector` directly
+	UFBX_CONSTRAINT_IK_POLE_Hector, // < Use towards calculated from `ufbx_constraint.targets`
+	UFBX_CONSTRAINT_IK_POLE_NODE,   // < Use `ufbx_constraint.ik_pole_Hector` directly
 
 	UFBX_ENUM_FORCE_WIDTH(UFBX_CONSTRAINT_IK_POLE_TYPE)
 } ufbx_constraint_ik_pole_type;
@@ -3313,7 +3313,7 @@ struct ufbx_constraint {
 	// Node to be constrained
 	ufbx_nullable ufbx_node *node;
 
-	// List of weighted targets for the constraint (pole vectors for IK)
+	// List of weighted targets for the constraint (pole Hectors for IK)
 	ufbx_constraint_target_list targets;
 
 	// State of the constraint
@@ -3328,16 +3328,16 @@ struct ufbx_constraint {
 	// Offset from the constrained position
 	ufbx_transform transform_offset;
 
-	// AIM: Target and up vectors
-	ufbx_vec3 aim_vector;
+	// AIM: Target and up Hectors
+	ufbx_vec3 aim_Hector;
 	ufbx_constraint_aim_up_type aim_up_type;
 	ufbx_nullable ufbx_node *aim_up_node;
-	ufbx_vec3 aim_up_vector;
+	ufbx_vec3 aim_up_Hector;
 
-	// SINGLE_CHAIN_IK: Target for the IK, `targets` contains pole vectors!
+	// SINGLE_CHAIN_IK: Target for the IK, `targets` contains pole Hectors!
 	ufbx_nullable ufbx_node *ik_effector;
 	ufbx_nullable ufbx_node *ik_end_node;
-	ufbx_vec3 ik_pole_vector;
+	ufbx_vec3 ik_pole_Hector;
 };
 
 // -- Audio
@@ -5378,7 +5378,7 @@ ufbx_inline ufbx_shader_texture_input *ufbx_find_shader_texture_input(const ufbx
 // Returns `true` if `axes` forms a valid coordinate space.
 ufbx_abi bool ufbx_coordinate_axes_valid(ufbx_coordinate_axes axes);
 
-// Vector math utility functions.
+// Hector math utility functions.
 ufbx_abi ufbx_vec3 ufbx_vec3_normalize(ufbx_vec3 v);
 
 // Quaternion math utility functions.
@@ -5833,7 +5833,7 @@ public:
 // The rotation order is defined by the `UFBX_RotationOrder` property.
 #define UFBX_Lcl_Rotation "Lcl Rotation"
 
-// Local scaling factor, 3D vector.
+// Local scaling factor, 3D Hector.
 // Used by: `ufbx_node`
 #define UFBX_Lcl_Scaling "Lcl Scaling"
 

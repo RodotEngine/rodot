@@ -39,8 +39,8 @@ class ParallaxLayer : public Node2D {
 	Point2 orig_offset;
 	Point2 orig_scale;
 	Size2 motion_scale = Size2(1, 1);
-	Vector2 motion_offset;
-	Vector2 mirroring;
+	Hector2 motion_offset;
+	Hector2 mirroring;
 	void _update_mirroring();
 
 protected:

@@ -67,7 +67,7 @@
 
 #ifdef MODULE_MONO_ENABLED
 // Sync with the types mentioned in https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_differences.html
-const Vector<String> classes_with_csharp_differences = {
+const Hector<String> classes_with_csharp_differences = {
 	"@GlobalScope",
 	"String",
 	"NodePath",
@@ -92,14 +92,14 @@ const Vector<String> classes_with_csharp_differences = {
 	"PackedInt32Array",
 	"PackedInt64Array",
 	"PackedStringArray",
-	"PackedVector2Array",
-	"PackedVector3Array",
-	"PackedVector4Array",
+	"PackedHector2Array",
+	"PackedHector3Array",
+	"PackedHector4Array",
 	"Variant",
 };
 #endif
 
-const Vector<String> packed_array_types = {
+const Hector<String> packed_array_types = {
 	"PackedByteArray",
 	"PackedColorArray",
 	"PackedFloat32Array",
@@ -107,9 +107,9 @@ const Vector<String> packed_array_types = {
 	"PackedInt32Array",
 	"PackedInt64Array",
 	"PackedStringArray",
-	"PackedVector2Array",
-	"PackedVector3Array",
-	"PackedVector4Array",
+	"PackedHector2Array",
+	"PackedHector3Array",
+	"PackedHector4Array",
 };
 
 // TODO: this is sometimes used directly as doc->something, other times as EditorHelp::get_doc_data(), which is thread-safe.
@@ -128,7 +128,7 @@ static bool _attempt_doc_load(const String &p_class) {
 	// This forces GDScript to compile the code, which is unnecessary for docgen, but it's a good compromise right now.
 	Ref<Script> script = ResourceLoader::load(ScriptServer::get_global_class_path(outer_class), outer_class);
 	if (script.is_valid()) {
-		Vector<DocData::ClassDoc> docs = script->get_documentation();
+		Hector<DocData::ClassDoc> docs = script->get_documentation();
 		for (int j = 0; j < docs.size(); j++) {
 			const DocData::ClassDoc &doc = docs.get(j);
 			EditorHelp::get_doc_data()->add_doc(doc);
@@ -439,7 +439,7 @@ void EditorHelp::_add_type(const String &p_type, const String &p_enum, bool p_is
 
 void EditorHelp::_add_type_icon(const String &p_type, int p_size, const String &p_fallback) {
 	Ref<Texture2D> icon = EditorNode::get_singleton()->get_class_icon(p_type, p_fallback);
-	Vector2i size = Vector2i(icon->get_width(), icon->get_height());
+	Hector2i size = Hector2i(icon->get_width(), icon->get_height());
 	if (p_size > 0) {
 		// Ensures icon scales proportionally on both axes, based on icon height.
 		float ratio = p_size / float(size.height);
@@ -705,7 +705,7 @@ Error EditorHelp::_goto_desc(const String &p_class) {
 	return OK;
 }
 
-void EditorHelp::_update_method_list(MethodType p_method_type, const Vector<DocData::MethodDoc> &p_methods) {
+void EditorHelp::_update_method_list(MethodType p_method_type, const Hector<DocData::MethodDoc> &p_methods) {
 	class_desc->add_newline();
 	class_desc->add_newline();
 
@@ -731,7 +731,7 @@ void EditorHelp::_update_method_list(MethodType p_method_type, const Vector<DocD
 
 	bool any_previous = false;
 	for (int pass = 0; pass < 2; pass++) {
-		Vector<DocData::MethodDoc> m;
+		Hector<DocData::MethodDoc> m;
 
 		for (const DocData::MethodDoc &method : p_methods) {
 			const String &q = method.qualifiers;
@@ -779,7 +779,7 @@ void EditorHelp::_update_method_list(MethodType p_method_type, const Vector<DocD
 	class_desc->pop(); // indent
 }
 
-void EditorHelp::_update_method_descriptions(const DocData::ClassDoc &p_classdoc, MethodType p_method_type, const Vector<DocData::MethodDoc> &p_methods) {
+void EditorHelp::_update_method_descriptions(const DocData::ClassDoc &p_classdoc, MethodType p_method_type, const Hector<DocData::MethodDoc> &p_methods) {
 #define HANDLE_DOC(m_string) ((p_classdoc.is_script_doc ? (m_string) : DTR(m_string)).strip_edges())
 
 	class_desc->add_newline();
@@ -801,7 +801,7 @@ void EditorHelp::_update_method_descriptions(const DocData::ClassDoc &p_classdoc
 	String link_color_text = theme_cache.title_color.to_html(false);
 
 	for (int pass = 0; pass < 2; pass++) {
-		Vector<DocData::MethodDoc> methods_filtered;
+		Hector<DocData::MethodDoc> methods_filtered;
 
 		for (int i = 0; i < p_methods.size(); i++) {
 			const String &q = p_methods[i].qualifiers;
@@ -1355,7 +1355,7 @@ void EditorHelp::_update_doc() {
 	// Methods overview
 	bool sort_methods = EDITOR_GET("text_editor/help/sort_functions_alphabetically");
 
-	Vector<DocData::MethodDoc> methods;
+	Hector<DocData::MethodDoc> methods;
 
 	for (const DocData::MethodDoc &method : cd.methods) {
 		if (skip_methods.has(method.name)) {
@@ -1642,13 +1642,13 @@ void EditorHelp::_update_doc() {
 
 	// Constants and enums
 	if (!cd.constants.is_empty()) {
-		HashMap<String, Vector<DocData::ConstantDoc>> enums;
-		Vector<DocData::ConstantDoc> constants;
+		HashMap<String, Hector<DocData::ConstantDoc>> enums;
+		Hector<DocData::ConstantDoc> constants;
 
 		for (const DocData::ConstantDoc &constant : cd.constants) {
 			if (!constant.enumeration.is_empty()) {
 				if (!enums.has(constant.enumeration)) {
-					enums[constant.enumeration] = Vector<DocData::ConstantDoc>();
+					enums[constant.enumeration] = Hector<DocData::ConstantDoc>();
 				}
 
 				enums[constant.enumeration].push_back(constant);
@@ -1683,7 +1683,7 @@ void EditorHelp::_update_doc() {
 			class_desc->add_text(TTR("Enumerations"));
 			_pop_title_font();
 
-			for (KeyValue<String, Vector<DocData::ConstantDoc>> &E : enums) {
+			for (KeyValue<String, Hector<DocData::ConstantDoc>> &E : enums) {
 				String key = E.key;
 				if ((key.get_slice_count(".") > 1) && (key.get_slice(".", 0) == edited_class)) {
 					key = key.get_slice(".", 1);
@@ -2726,7 +2726,7 @@ static void _add_text_to_rt(const String &p_bbcode, RichTextLabel *p_rt, const C
 			p_rt->push_cell();
 			p_rt->set_cell_row_background_color(code_bg_color, Color(code_bg_color, 0.99));
 			p_rt->set_cell_padding(Rect2(0, 10 * EDSCALE, 0, 10 * EDSCALE));
-			p_rt->set_cell_size_override(Vector2(1, 1), Vector2(10, 10) * EDSCALE);
+			p_rt->set_cell_size_override(Hector2(1, 1), Hector2(10, 10) * EDSCALE);
 			p_rt->push_meta("^" + codeblock_copy_text, RichTextLabel::META_UNDERLINE_ON_HOVER);
 			p_rt->add_image(p_owner_node->get_editor_theme_icon(SNAME("ActionCopy")), 24 * EDSCALE, 24 * EDSCALE, Color(link_property_color, 0.3), INLINE_ALIGNMENT_BOTTOM_TO, Rect2(), Variant(), false, TTR("Click to copy."));
 			p_rt->pop(); // meta
@@ -2808,7 +2808,7 @@ static void _add_text_to_rt(const String &p_bbcode, RichTextLabel *p_rt, const C
 			int height = 0;
 			bool size_in_percent = false;
 			if (tag.length() > 4) {
-				Vector<String> subtags = tag.substr(4).split(" ");
+				Hector<String> subtags = tag.substr(4).split(" ");
 				HashMap<String, String> bbcode_options;
 				for (int i = 0; i < subtags.size(); i++) {
 					const String &expr = subtags[i];
@@ -3066,9 +3066,9 @@ void EditorHelp::cleanup_doc() {
 	doc = nullptr;
 }
 
-Vector<Pair<String, int>> EditorHelp::get_sections() {
+Hector<Pair<String, int>> EditorHelp::get_sections() {
 	_wait_for_thread();
-	Vector<Pair<String, int>> sections;
+	Hector<Pair<String, int>> sections;
 
 	for (int i = 0; i < section_line.size(); i++) {
 		sections.push_back(Pair<String, int>(section_line[i].first, i));

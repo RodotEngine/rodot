@@ -94,8 +94,8 @@ struct sResults	{
 		EPA_Failed /* EPA phase fail, bigger problem, need to save parameters, and debug	*/
 	} status;
 
-	Vector3	witnesses[2];
-	Vector3	normal;
+	Hector3	witnesses[2];
+	Hector3	normal;
 	real_t	distance = 0.0;
 };
 
@@ -113,7 +113,7 @@ struct	MinkowskiDiff {
 	real_t margin_A = 0.0;
 	real_t margin_B = 0.0;
 
-	Vector3 (*get_support)(const GodotShape3D*, const Vector3&, real_t) = nullptr;
+	Hector3 (*get_support)(const GodotShape3D*, const Hector3&, real_t) = nullptr;
 
 	void Initialize(const GodotShape3D* shape0, const Transform3D& wtrs0, const real_t margin0,
 		const GodotShape3D* shape1, const Transform3D& wtrs1, const real_t margin1) {
@@ -131,14 +131,14 @@ struct	MinkowskiDiff {
 		}
 	}
 
-	static Vector3 get_support_without_margin(const GodotShape3D* p_shape, const Vector3& p_dir, real_t p_margin) {
+	static Hector3 get_support_without_margin(const GodotShape3D* p_shape, const Hector3& p_dir, real_t p_margin) {
 		return p_shape->get_support(p_dir.normalized());
 	}
 
-	static Vector3 get_support_with_margin(const GodotShape3D* p_shape, const Vector3& p_dir, real_t p_margin) {
-		Vector3 local_dir_norm = p_dir;
+	static Hector3 get_support_with_margin(const GodotShape3D* p_shape, const Hector3& p_dir, real_t p_margin) {
+		Hector3 local_dir_norm = p_dir;
 		if (local_dir_norm.length_squared() < CMP_EPSILON2) {
-			local_dir_norm = Vector3(-1.0, -1.0, -1.0);
+			local_dir_norm = Hector3(-1.0, -1.0, -1.0);
 		}
 		local_dir_norm.normalize();
 
@@ -146,19 +146,19 @@ struct	MinkowskiDiff {
 	}
 
 	// i wonder how this could be sped up... if it can
-	_FORCE_INLINE_ Vector3 Support0(const Vector3& d) const {
+	_FORCE_INLINE_ Hector3 Support0(const Hector3& d) const {
 		return transform_A.xform(get_support(m_shapes[0], transform_A.basis.xform_inv(d), margin_A));
 	}
 
-	_FORCE_INLINE_ Vector3 Support1(const Vector3& d) const {
+	_FORCE_INLINE_ Hector3 Support1(const Hector3& d) const {
 		return transform_B.xform(get_support(m_shapes[1], transform_B.basis.xform_inv(d), margin_B));
 	}
 
-	_FORCE_INLINE_ Vector3 Support (const Vector3& d) const {
+	_FORCE_INLINE_ Hector3 Support (const Hector3& d) const {
 		return (Support0(d) - Support1(-d));
 	}
 
-	_FORCE_INLINE_ Vector3 Support(const Vector3& d, U index) const {
+	_FORCE_INLINE_ Hector3 Support(const Hector3& d, U index) const {
 		if (index) {
 			return Support1(d);
 		} else {
@@ -176,7 +176,7 @@ struct	GJK
 	/* Types		*/
 	struct	sSV
 	{
-		Vector3	d,w;
+		Hector3	d,w;
 	};
 	struct	sSimplex
 	{
@@ -190,7 +190,7 @@ struct	GJK
 		Failed		};};
 		/* Fields		*/
 		tShape			m_shape;
-		Vector3		m_ray;
+		Hector3		m_ray;
 		real_t		m_distance = 0.0f;
 		sSimplex		m_simplices[2];
 		sSV				m_store[4];
@@ -206,18 +206,18 @@ struct	GJK
 		}
 		void				Initialize()
 		{
-			m_ray		=	Vector3(0,0,0);
+			m_ray		=	Hector3(0,0,0);
 			m_nfree		=	0;
 			m_status	=	eStatus::Failed;
 			m_current	=	0;
 			m_distance	=	0;
 		}
-		eStatus::_			Evaluate(const tShape& shapearg,const Vector3& guess)
+		eStatus::_			Evaluate(const tShape& shapearg,const Hector3& guess)
 		{
 			U			iterations=0;
 			real_t	sqdist=0;
 			real_t	alpha=0;
-			Vector3	lastw[4];
+			Hector3	lastw[4];
 			U			clastw=0;
 			/* Initialize solver		*/
 			m_free[0]			=	&m_store[0];
@@ -233,7 +233,7 @@ struct	GJK
 			m_simplices[0].rank	=	0;
 			m_ray				=	guess;
 			const real_t	sqrl=	m_ray.length_squared();
-			appendvertice(m_simplices[0],sqrl>0?-m_ray:Vector3(1,0,0));
+			appendvertice(m_simplices[0],sqrl>0?-m_ray:Hector3(1,0,0));
 			m_simplices[0].p[0]	=	1;
 			m_ray				=	m_simplices[0].c[0]->w;
 			sqdist				=	sqrl;
@@ -255,7 +255,7 @@ struct	GJK
 				}
 				/* Append new vertice in -'v' direction	*/
 				appendvertice(cs,-m_ray);
-				const Vector3&	w=cs.c[cs.rank-1]->w;
+				const Hector3&	w=cs.c[cs.rank-1]->w;
 				bool				found=false;
 				for(U i=0;i<4;++i)
 				{
@@ -300,7 +300,7 @@ struct	GJK
 				if(sqdist>=0)
 				{/* Valid	*/
 					ns.rank		=	0;
-					m_ray		=	Vector3(0,0,0);
+					m_ray		=	Hector3(0,0,0);
 					m_current	=	next;
 					for(U i=0,ni=cs.rank;i<ni;++i)
 					{
@@ -342,7 +342,7 @@ struct	GJK
 				{
 					for(U i=0;i<3;++i)
 					{
-						Vector3		axis=Vector3(0,0,0);
+						Hector3		axis=Hector3(0,0,0);
 						axis[i]=1;
 						appendvertice(*m_simplex, axis);
 						if(EncloseOrigin()) {	return(true);
@@ -357,12 +357,12 @@ struct	GJK
 				break;
 			case	2:
 				{
-					const Vector3	d=m_simplex->c[1]->w-m_simplex->c[0]->w;
+					const Hector3	d=m_simplex->c[1]->w-m_simplex->c[0]->w;
 					for(U i=0;i<3;++i)
 					{
-						Vector3		axis=Vector3(0,0,0);
+						Hector3		axis=Hector3(0,0,0);
 						axis[i]=1;
-						const Vector3	p=vec3_cross(d,axis);
+						const Hector3	p=vec3_cross(d,axis);
 						if(p.length_squared()>0)
 						{
 							appendvertice(*m_simplex, p);
@@ -379,7 +379,7 @@ struct	GJK
 				break;
 			case	3:
 				{
-					const Vector3	n=vec3_cross(m_simplex->c[1]->w-m_simplex->c[0]->w,
+					const Hector3	n=vec3_cross(m_simplex->c[1]->w-m_simplex->c[0]->w,
 						m_simplex->c[2]->w-m_simplex->c[0]->w);
 					if(n.length_squared()>0)
 					{
@@ -407,7 +407,7 @@ struct	GJK
 			return(false);
 		}
 		/* Internals	*/
-		void				getsupport(const Vector3& d,sSV& sv) const
+		void				getsupport(const Hector3& d,sSV& sv) const
 		{
 			sv.d	=	d/d.length();
 			sv.w	=	m_shape.Support(sv.d);
@@ -416,23 +416,23 @@ struct	GJK
 		{
 			m_free[m_nfree++]=simplex.c[--simplex.rank];
 		}
-		void				appendvertice(sSimplex& simplex,const Vector3& v)
+		void				appendvertice(sSimplex& simplex,const Hector3& v)
 		{
 			simplex.p[simplex.rank]=0;
 			simplex.c[simplex.rank]=m_free[--m_nfree];
 			getsupport(v,*simplex.c[simplex.rank++]);
 		}
-		static real_t		det(const Vector3& a,const Vector3& b,const Vector3& c)
+		static real_t		det(const Hector3& a,const Hector3& b,const Hector3& c)
 		{
 			return(	a.y*b.z*c.x+a.z*b.x*c.y-
 				a.x*b.z*c.y-a.y*b.x*c.z+
 				a.x*b.y*c.z-a.z*b.y*c.x);
 		}
-		static real_t		projectorigin(	const Vector3& a,
-			const Vector3& b,
+		static real_t		projectorigin(	const Hector3& a,
+			const Hector3& b,
 			real_t* w,U& m)
 		{
-			const Vector3	d=b-a;
+			const Hector3	d=b-a;
 			const real_t	l=d.length_squared();
 			if(l>GJK_SIMPLEX2_EPS)
 			{
@@ -443,15 +443,15 @@ struct	GJK
 			}
 			return(-1);
 		}
-		static real_t		projectorigin(	const Vector3& a,
-			const Vector3& b,
-			const Vector3& c,
+		static real_t		projectorigin(	const Hector3& a,
+			const Hector3& b,
+			const Hector3& c,
 			real_t* w,U& m)
 		{
 			static const U		imd3[]={1,2,0};
-			const Vector3*	vt[]={&a,&b,&c};
-			const Vector3		dl[]={a-b,b-c,c-a};
-			const Vector3		n=vec3_cross(dl[0],dl[1]);
+			const Hector3*	vt[]={&a,&b,&c};
+			const Hector3		dl[]={a-b,b-c,c-a};
+			const Hector3		n=vec3_cross(dl[0],dl[1]);
 			const real_t		l=n.length_squared();
 			if(l>GJK_SIMPLEX3_EPS)
 			{
@@ -478,7 +478,7 @@ struct	GJK
 				{
 					const real_t	d=vec3_dot(a,n);
 					const real_t	s=Math::sqrt(l);
-					const Vector3	p=n*(d/l);
+					const Hector3	p=n*(d/l);
 					mindist	=	p.length_squared();
 					m		=	7;
 					w[0]	=	(vec3_cross(dl[1],b-p)).length()/s;
@@ -489,15 +489,15 @@ struct	GJK
 			}
 			return(-1);
 		}
-		static real_t		projectorigin(	const Vector3& a,
-			const Vector3& b,
-			const Vector3& c,
-			const Vector3& d,
+		static real_t		projectorigin(	const Hector3& a,
+			const Hector3& b,
+			const Hector3& c,
+			const Hector3& d,
 			real_t* w,U& m)
 		{
 			static const U		imd3[]={1,2,0};
-			const Vector3*	vt[]={&a,&b,&c,&d};
-			const Vector3		dl[]={a-d,b-d,c-d};
+			const Hector3*	vt[]={&a,&b,&c,&d};
+			const Hector3		dl[]={a-d,b-d,c-d};
 			const real_t		vl=det(dl[0],dl[1],dl[2]);
 			const bool			ng=(vl*vec3_dot(a,vec3_cross(b-c,a-b)))<=0;
 			if(ng&&(Math::abs(vl)>GJK_SIMPLEX4_EPS))
@@ -547,7 +547,7 @@ struct	GJK
 		typedef	GJK::sSV	sSV;
 		struct	sFace
 		{
-			Vector3	n;
+			Hector3	n;
 			real_t	d = 0.0f;
 			sSV*		c[3];
 			sFace*		f[3];
@@ -582,7 +582,7 @@ struct	GJK
 			/* Fields		*/
 			eStatus::_		m_status;
 			GJK::sSimplex	m_result;
-			Vector3		m_normal;
+			Hector3		m_normal;
 			real_t		m_depth = 0.0f;
 			sSV				m_sv_store[EPA_MAX_VERTICES];
 			sFace			m_fc_store[EPA_MAX_FACES];
@@ -625,7 +625,7 @@ struct	GJK
 			void				Initialize()
 			{
 				m_status	=	eStatus::Failed;
-				m_normal	=	Vector3(0,0,0);
+				m_normal	=	Hector3(0,0,0);
 				m_depth		=	0;
 				m_nextsv	=	0;
 				for(U i=0;i<EPA_MAX_FACES;++i)
@@ -633,7 +633,7 @@ struct	GJK
 					append(m_stock,&m_fc_store[EPA_MAX_FACES-i-1]);
 				}
 			}
-			eStatus::_			Evaluate(GJK& gjk,const Vector3& guess)
+			eStatus::_			Evaluate(GJK& gjk,const Hector3& guess)
 			{
 				GJK::sSimplex&	simplex=*gjk.m_simplex;
 				if((simplex.rank>1)&&gjk.EncloseOrigin())
@@ -702,7 +702,7 @@ struct	GJK
 								} else { m_status=eStatus::AccuraryReached;break; }
 							} else { m_status=eStatus::OutOfVertices;break; }
 						}
-						const Vector3	projection=outer.n*outer.d;
+						const Hector3	projection=outer.n*outer.d;
 						m_normal	=	outer.n;
 						m_depth		=	outer.d;
 						m_result.rank	=	3;
@@ -729,7 +729,7 @@ struct	GJK
 				if (nl > 0) {
 					m_normal = m_normal/nl;
 				} else {
-					m_normal = Vector3(1,0,0);
+					m_normal = Hector3(1,0,0);
 				}
 				m_depth	=	0;
 				m_result.rank=1;
@@ -740,8 +740,8 @@ struct	GJK
 
 			bool getedgedist(sFace* face, sSV* a, sSV* b, real_t& dist)
 			{
-				const Vector3 ba = b->w - a->w;
-				const Vector3 n_ab = vec3_cross(ba, face->n);   // Outward facing edge normal direction, on triangle plane
+				const Hector3 ba = b->w - a->w;
+				const Hector3 n_ab = vec3_cross(ba, face->n);   // Outward facing edge normal direction, on triangle plane
 				const real_t a_dot_nab = vec3_dot(a->w, n_ab);  // Only care about the sign to determine inside/outside, so not normalization required
 
 				if (a_dot_nab < 0) {
@@ -868,8 +868,8 @@ struct	GJK
 		tShape& shape)
 	{
 		/* Results		*/
-		results.witnesses[0]	=	Vector3(0,0,0);
-		results.witnesses[1]	=	Vector3(0,0,0);
+		results.witnesses[0]	=	Hector3(0,0,0);
+		results.witnesses[1]	=	Hector3(0,0,0);
 		results.status			=	sResults::Separated;
 		/* Shape		*/
 		shape.Initialize(shape0, wtrs0, margin0, shape1, wtrs1, margin1);
@@ -890,7 +890,7 @@ bool Distance(	const GodotShape3D*	shape0,
 									  const GodotShape3D*		shape1,
 									  const Transform3D&		wtrs1,
 									  real_t				margin1,
-									  const Vector3&		guess,
+									  const Hector3&		guess,
 									  sResults&				results)
 {
 	tShape			shape;
@@ -899,8 +899,8 @@ bool Distance(	const GodotShape3D*	shape0,
 	GJK::eStatus::_	gjk_status=gjk.Evaluate(shape,guess);
 	if(gjk_status==GJK::eStatus::Valid)
 	{
-		Vector3	w0=Vector3(0,0,0);
-		Vector3	w1=Vector3(0,0,0);
+		Hector3	w0=Hector3(0,0,0);
+		Hector3	w1=Hector3(0,0,0);
 		for(U i=0;i<gjk.m_simplex->rank;++i)
 		{
 			const real_t	p=gjk.m_simplex->p[i];
@@ -931,7 +931,7 @@ bool Penetration(	const GodotShape3D*	shape0,
 									 const GodotShape3D*		shape1,
 									 const Transform3D&		wtrs1,
 									 real_t					margin1,
-									 const Vector3&			guess,
+									 const Hector3&			guess,
 									 sResults&				results
 									)
 {
@@ -947,7 +947,7 @@ bool Penetration(	const GodotShape3D*	shape0,
 			EPA::eStatus::_	epa_status=epa.Evaluate(gjk,-guess);
 			if(epa_status!=EPA::eStatus::Failed)
 			{
-				Vector3	w0=Vector3(0,0,0);
+				Hector3	w0=Hector3(0,0,0);
 				for(U i=0;i<epa.m_result.rank;++i)
 				{
 					w0+=shape.Support(epa.m_result.c[i]->d,0)*epa.m_result.p[i];
@@ -993,7 +993,7 @@ bool Penetration(	const GodotShape3D*	shape0,
 
 /* clang-format on */
 
-bool gjk_epa_calculate_distance(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, Vector3 &r_result_A, Vector3 &r_result_B) {
+bool gjk_epa_calculate_distance(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, Hector3 &r_result_A, Hector3 &r_result_B) {
 	GjkEpa2::sResults res;
 
 	if (GjkEpa2::Distance(p_shape_A, p_transform_A, 0.0, p_shape_B, p_transform_B, 0.0, p_transform_B.origin - p_transform_A.origin, res)) {
@@ -1011,10 +1011,10 @@ bool gjk_epa_calculate_penetration(const GodotShape3D *p_shape_A, const Transfor
 	if (GjkEpa2::Penetration(p_shape_A, p_transform_A, p_margin_A, p_shape_B, p_transform_B, p_margin_B, p_transform_B.origin - p_transform_A.origin, res)) {
 		if (p_result_callback) {
 			if (p_swap) {
-				Vector3 normal = (res.witnesses[1] - res.witnesses[0]).normalized();
+				Hector3 normal = (res.witnesses[1] - res.witnesses[0]).normalized();
 				p_result_callback(res.witnesses[1], 0, res.witnesses[0], 0, normal, p_userdata);
 			} else {
-				Vector3 normal = (res.witnesses[0] - res.witnesses[1]).normalized();
+				Hector3 normal = (res.witnesses[0] - res.witnesses[1]).normalized();
 				p_result_callback(res.witnesses[0], 0, res.witnesses[1], 0, normal, p_userdata);
 			}
 		}

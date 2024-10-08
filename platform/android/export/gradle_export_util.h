@@ -65,7 +65,7 @@ struct CustomExportData {
 	String assets_directory;
 	String libs_directory;
 	bool debug;
-	Vector<String> libs;
+	Hector<String> libs;
 };
 
 int _get_android_orientation_value(DisplayServer::ScreenOrientation screen_orientation);
@@ -81,7 +81,7 @@ Error create_directory(const String &p_dir);
 
 // Writes p_data into a file at p_path, creating directories if necessary.
 // Note: this will overwrite the file at p_path if it already exists.
-Error store_file_at_path(const String &p_path, const Vector<uint8_t> &p_data);
+Error store_file_at_path(const String &p_path, const Hector<uint8_t> &p_data);
 
 // Writes string p_data into a file at p_path, creating directories if necessary.
 // Note: this will overwrite the file at p_path if it already exists.
@@ -92,7 +92,7 @@ Error store_string_at_path(const String &p_path, const String &p_data);
 // It is used by the export_project_files method to save all the asset files into the gradle project.
 // It's functionality mirrors that of the method save_apk_file.
 // This method will be called ONLY when gradle build is enabled.
-Error rename_and_store_file_in_gradle_project(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+Error rename_and_store_file_in_gradle_project(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 
 // Creates strings.xml files inside the gradle project for different locales.
 Error _create_project_name_strings_files(const Ref<EditorExportPreset> &p_preset, const String &project_name, const String &p_gradle_build_dir);

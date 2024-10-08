@@ -62,7 +62,7 @@ extern "C" {
 #define IEC958_AES1_PRO_MODE_SINGLE	(4<<0)	/**< single channel */
 #define IEC958_AES1_PRO_MODE_TWO	(8<<0)	/**< two channels */
 #define IEC958_AES1_PRO_MODE_PRIMARY	(12<<0)	/**< primary/secondary */
-#define IEC958_AES1_PRO_MODE_BYTE3	(15<<0)	/**< vector to byte 3 */
+#define IEC958_AES1_PRO_MODE_BYTE3	(15<<0)	/**< Hector to byte 3 */
 #define IEC958_AES1_PRO_USERBITS	(15<<4)	/**< mask - user bits */
 #define IEC958_AES1_PRO_USERBITS_NOTID	(0<<4)	/**< user bits not indicated */
 #define IEC958_AES1_PRO_USERBITS_192	(8<<4)	/**< 192-bit structure */

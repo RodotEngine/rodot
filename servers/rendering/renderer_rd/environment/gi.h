@@ -31,7 +31,7 @@
 #ifndef GI_RD_H
 #define GI_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/environment/renderer_gi.h"
 #include "servers/rendering/renderer_compositor.h"
@@ -73,13 +73,13 @@ public:
 		uint32_t octree_buffer_size = 0;
 		uint32_t data_buffer_size = 0;
 
-		Vector<int> level_counts;
+		Hector<int> level_counts;
 
 		int cell_count = 0;
 
 		Transform3D to_cell_xform;
 		AABB bounds;
-		Vector3i octree_size;
+		Hector3i octree_size;
 
 		float dynamic_range = 2.0;
 		float energy = 1.0;
@@ -117,7 +117,7 @@ public:
 			uint32_t cell_offset;
 			uint32_t cell_count;
 		};
-		Vector<Mipmap> mipmaps;
+		Hector<Mipmap> mipmaps;
 
 		struct DynamicMap {
 			RID texture; //color normally, or emission on first pass
@@ -132,7 +132,7 @@ public:
 			int mipmap; // mipmap to write to, -1 if no mipmap assigned
 		};
 
-		Vector<DynamicMap> dynamic_maps;
+		Hector<DynamicMap> dynamic_maps;
 
 		int slot = -1;
 		uint32_t last_probe_version = 0;
@@ -145,7 +145,7 @@ public:
 
 		Transform3D transform;
 
-		void update(bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects);
+		void update(bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects);
 		void debug(RD::DrawListID p_draw_list, RID p_framebuffer, const Projection &p_camera_with_transform, bool p_lighting, bool p_emission, float p_alpha);
 		void free_resources();
 	};
@@ -473,15 +473,15 @@ public:
 	virtual void voxel_gi_free(RID p_voxel_gi) override;
 	virtual void voxel_gi_initialize(RID p_voxel_gi) override;
 
-	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) override;
+	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3i &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts) override;
 
 	virtual AABB voxel_gi_get_bounds(RID p_voxel_gi) const override;
-	virtual Vector3i voxel_gi_get_octree_size(RID p_voxel_gi) const override;
-	virtual Vector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const override;
-	virtual Vector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const override;
-	virtual Vector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const override;
+	virtual Hector3i voxel_gi_get_octree_size(RID p_voxel_gi) const override;
+	virtual Hector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const override;
+	virtual Hector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const override;
+	virtual Hector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const override;
 
-	virtual Vector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const override;
+	virtual Hector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const override;
 	virtual Transform3D voxel_gi_get_to_cell_xform(RID p_voxel_gi) const override;
 
 	virtual void voxel_gi_set_dynamic_range(RID p_voxel_gi, float p_range) override;
@@ -593,10 +593,10 @@ public:
 			RID lightprobe_average_tex;
 
 			float cell_size;
-			Vector3i position;
+			Hector3i position;
 
-			static const Vector3i DIRTY_ALL;
-			Vector3i dirty_regions; //(0,0,0 is not dirty, negative is refresh from the end, DIRTY_ALL is refresh all.
+			static const Hector3i DIRTY_ALL;
+			Hector3i dirty_regions; //(0,0,0 is not dirty, negative is refresh from the end, DIRTY_ALL is refresh all.
 
 			RID sdf_store_uniform_set;
 			RID sdf_direct_light_static_uniform_set;
@@ -635,7 +635,7 @@ public:
 
 		uint32_t cascade_size = 128;
 
-		LocalVector<Cascade> cascades;
+		LocalHector<Cascade> cascades;
 
 		RID lightprobe_texture;
 		RID lightprobe_data;
@@ -679,15 +679,15 @@ public:
 		virtual void free_data() override;
 		~SDFGI();
 
-		void create(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size, GI *p_gi);
-		void update(RID p_env, const Vector3 &p_world_position);
+		void create(RID p_env, const Hector3 &p_world_position, uint32_t p_requested_history_size, GI *p_gi);
+		void update(RID p_env, const Hector3 &p_world_position);
 		void update_light();
 		void update_probes(RID p_env, RendererRD::SkyRD::Sky *p_sky);
 		void store_probes();
-		int get_pending_region_data(int p_region, Vector3i &r_local_offset, Vector3i &r_local_size, AABB &r_bounds) const;
+		int get_pending_region_data(int p_region, Hector3i &r_local_offset, Hector3i &r_local_size, AABB &r_bounds) const;
 		void update_cascades();
 
-		void debug_draw(uint32_t p_view_count, const Projection *p_projections, const Transform3D &p_transform, int p_width, int p_height, RID p_render_target, RID p_texture, const Vector<RID> &p_texture_views);
+		void debug_draw(uint32_t p_view_count, const Projection *p_projections, const Transform3D &p_transform, int p_width, int p_height, RID p_render_target, RID p_texture, const Hector<RID> &p_texture_views);
 		void debug_probes(RID p_framebuffer, const uint32_t p_view_count, const Projection *p_camera_with_transforms);
 
 		void pre_process_gi(const Transform3D &p_transform, RenderDataRD *p_render_data);
@@ -700,10 +700,10 @@ public:
 	RS::EnvironmentSDFGIFramesToUpdateLight sdfgi_frames_to_update_light = RS::ENV_SDFGI_UPDATE_LIGHT_IN_4_FRAMES;
 
 	float sdfgi_solid_cell_ratio = 0.25;
-	Vector3 sdfgi_debug_probe_pos;
-	Vector3 sdfgi_debug_probe_dir;
+	Hector3 sdfgi_debug_probe_pos;
+	Hector3 sdfgi_debug_probe_dir;
 	bool sdfgi_debug_probe_enabled = false;
-	Vector3i sdfgi_debug_probe_index;
+	Hector3i sdfgi_debug_probe_index;
 	uint32_t sdfgi_current_version = 0;
 
 	/* SDFGI UPDATE */
@@ -816,15 +816,15 @@ public:
 	void init(RendererRD::SkyRD *p_sky);
 	void free();
 
-	Ref<SDFGI> create_sdfgi(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size);
+	Ref<SDFGI> create_sdfgi(RID p_env, const Hector3 &p_world_position, uint32_t p_requested_history_size);
 
 	void setup_voxel_gi_instances(RenderDataRD *p_render_data, Ref<RenderSceneBuffersRD> p_render_buffers, const Transform3D &p_transform, const PagedArray<RID> &p_voxel_gi_instances, uint32_t &r_voxel_gi_instances_used);
-	void process_gi(Ref<RenderSceneBuffersRD> p_render_buffers, const RID *p_normal_roughness_slices, RID p_voxel_gi_buffer, RID p_environment, uint32_t p_view_count, const Projection *p_projections, const Vector3 *p_eye_offsets, const Transform3D &p_cam_transform, const PagedArray<RID> &p_voxel_gi_instances);
+	void process_gi(Ref<RenderSceneBuffersRD> p_render_buffers, const RID *p_normal_roughness_slices, RID p_voxel_gi_buffer, RID p_environment, uint32_t p_view_count, const Projection *p_projections, const Hector3 *p_eye_offsets, const Transform3D &p_cam_transform, const PagedArray<RID> &p_voxel_gi_instances);
 
 	RID voxel_gi_instance_create(RID p_base);
 	void voxel_gi_instance_set_transform_to_data(RID p_probe, const Transform3D &p_xform);
 	bool voxel_gi_needs_update(RID p_probe) const;
-	void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects);
+	void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects);
 	void debug_voxel_gi(RID p_voxel_gi, RD::DrawListID p_draw_list, RID p_framebuffer, const Projection &p_camera_with_transform, bool p_lighting, bool p_emission, float p_alpha);
 };
 

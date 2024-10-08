@@ -245,8 +245,8 @@ static void kmeans_update(
 /**
  * @brief Compute bit-mismatch for partitioning in 2-partition mode.
  *
- * @param a   The texel assignment bitvector for the block.
- * @param b   The texel assignment bitvector for the partition table.
+ * @param a   The texel assignment bitHector for the block.
+ * @param b   The texel assignment bitHector for the partition table.
  *
  * @return    The number of bit mismatches.
  */
@@ -265,8 +265,8 @@ static inline uint8_t partition_mismatch2(
 /**
  * @brief Compute bit-mismatch for partitioning in 3-partition mode.
  *
- * @param a   The texel assignment bitvector for the block.
- * @param b   The texel assignment bitvector for the partition table.
+ * @param a   The texel assignment bitHector for the block.
+ * @param b   The texel assignment bitHector for the partition table.
  *
  * @return    The number of bit mismatches.
  */
@@ -306,8 +306,8 @@ static inline uint8_t partition_mismatch3(
 /**
  * @brief Compute bit-mismatch for partitioning in 4-partition mode.
  *
- * @param a   The texel assignment bitvector for the block.
- * @param b   The texel assignment bitvector for the partition table.
+ * @param a   The texel assignment bitHector for the block.
+ * @param b   The texel assignment bitHector for the partition table.
  *
  * @return    The number of bit mismatches.
  */
@@ -649,12 +649,12 @@ unsigned int find_best_partition_candidates(
 
 			// Compute an estimate of error introduced by weight quantization imprecision.
 			// This error is computed as follows, for each partition
-			//     1: compute the principal-axis vector (full length) in error-space
-			//     2: convert the principal-axis vector to regular RGB-space
-			//     3: scale the vector by a constant that estimates average quantization error
-			//     4: for each texel, square the vector, then do a dot-product with the texel's
+			//     1: compute the principal-axis Hector (full length) in error-space
+			//     2: convert the principal-axis Hector to regular RGB-space
+			//     3: scale the Hector by a constant that estimates average quantization error
+			//     4: for each texel, square the Hector, then do a dot-product with the texel's
 			//        error weight; sum up the results across all texels.
-			//     4(optimized): square the vector once, then do a dot-product with the average
+			//     4(optimized): square the Hector once, then do a dot-product with the average
 			//        texel error, then multiply by the number of texels.
 
 			for (unsigned int j = 0; j < partition_count; j++)
@@ -662,11 +662,11 @@ unsigned int find_best_partition_candidates(
 				float tpp = static_cast<float>(pi.partition_texel_count[j]);
 				vfloat4 error_weights(tpp * weight_imprecision_estim);
 
-				vfloat4 uncor_vector = uncor_lines[j].b * line_lengths[j];
-				vfloat4 samec_vector = samec_lines[j].b * line_lengths[j];
+				vfloat4 uncor_Hector = uncor_lines[j].b * line_lengths[j];
+				vfloat4 samec_Hector = samec_lines[j].b * line_lengths[j];
 
-				uncor_error += dot_s(uncor_vector * uncor_vector, error_weights);
-				samec_error += dot_s(samec_vector * samec_vector, error_weights);
+				uncor_error += dot_s(uncor_Hector * uncor_Hector, error_weights);
+				samec_error += dot_s(samec_Hector * samec_Hector, error_weights);
 			}
 
 			insert_result(requested_candidates, uncor_error, partition, uncor_best_errors, uncor_best_partitions);
@@ -715,12 +715,12 @@ unsigned int find_best_partition_candidates(
 
 			// Compute an estimate of error introduced by weight quantization imprecision.
 			// This error is computed as follows, for each partition
-			//     1: compute the principal-axis vector (full length) in error-space
-			//     2: convert the principal-axis vector to regular RGB-space
-			//     3: scale the vector by a constant that estimates average quantization error
-			//     4: for each texel, square the vector, then do a dot-product with the texel's
+			//     1: compute the principal-axis Hector (full length) in error-space
+			//     2: convert the principal-axis Hector to regular RGB-space
+			//     3: scale the Hector by a constant that estimates average quantization error
+			//     4: for each texel, square the Hector, then do a dot-product with the texel's
 			//        error weight; sum up the results across all texels.
-			//     4(optimized): square the vector once, then do a dot-product with the average
+			//     4(optimized): square the Hector once, then do a dot-product with the average
 			//        texel error, then multiply by the number of texels.
 
 			for (unsigned int j = 0; j < partition_count; j++)
@@ -730,11 +730,11 @@ unsigned int find_best_partition_candidates(
 				float tpp = static_cast<float>(pi.partition_texel_count[j]);
 				vfloat4 error_weights(tpp * weight_imprecision_estim);
 
-				vfloat4 uncor_vector = pl.uncor_line.b * pl.line_length;
-				vfloat4 samec_vector = pl.samec_line.b * pl.line_length;
+				vfloat4 uncor_Hector = pl.uncor_line.b * pl.line_length;
+				vfloat4 samec_Hector = pl.samec_line.b * pl.line_length;
 
-				uncor_error += dot3_s(uncor_vector * uncor_vector, error_weights);
-				samec_error += dot3_s(samec_vector * samec_vector, error_weights);
+				uncor_error += dot3_s(uncor_Hector * uncor_Hector, error_weights);
+				samec_error += dot3_s(samec_Hector * samec_Hector, error_weights);
 			}
 
 			insert_result(requested_candidates, uncor_error, partition, uncor_best_errors, uncor_best_partitions);

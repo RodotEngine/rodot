@@ -32,7 +32,7 @@
 
 #include "core/io/resource.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 void UndoRedo::Operation::delete_reference() {
 	if (type != Operation::TYPE_REFERENCE) {
@@ -97,7 +97,7 @@ void UndoRedo::create_action(const String &p_name, MergeMode p_mode, bool p_back
 
 			if (p_mode == MERGE_ENDS) {
 				// Clear all do ops from last action if they are not forced kept
-				LocalVector<List<Operation>::Element *> to_remove;
+				LocalHector<List<Operation>::Element *> to_remove;
 				for (List<Operation>::Element *E = actions.write[current_action + 1].do_ops.front(); E; E = E->next()) {
 					if (!E->get().force_keep_in_merge_ends) {
 						to_remove.push_back(E);
@@ -346,7 +346,7 @@ void UndoRedo::commit_action(bool p_execute) {
 void UndoRedo::_process_operation_list(List<Operation>::Element *E, bool p_execute) {
 	const int PREALLOCATE_ARGS_COUNT = 16;
 
-	LocalVector<const Variant *> args;
+	LocalHector<const Variant *> args;
 	args.reserve(PREALLOCATE_ARGS_COUNT);
 
 	for (; E; E = E->next()) {
@@ -375,7 +375,7 @@ void UndoRedo::_process_operation_list(List<Operation>::Element *E, bool p_execu
 				}
 
 				if (method_callback) {
-					Vector<Variant> binds;
+					Hector<Variant> binds;
 					if (op.callable.is_custom()) {
 						CallableCustomBind *ccb = dynamic_cast<CallableCustomBind *>(op.callable.get_custom());
 						if (ccb) {

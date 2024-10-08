@@ -102,7 +102,7 @@ class GDScript : public Script {
 
 	// Only static variables of the current class.
 	HashMap<StringName, MemberInfo> static_variables_indices;
-	Vector<Variant> static_variables; // Static variable values.
+	Hector<Variant> static_variables; // Static variable values.
 
 	HashMap<StringName, Variant> constants;
 	HashMap<StringName, GDScriptFunction *> member_functions;
@@ -143,7 +143,7 @@ private:
 #ifdef TOOLS_ENABLED
 	// For static data storage during hot-reloading.
 	HashMap<StringName, MemberInfo> old_static_variables_indices;
-	Vector<Variant> old_static_variables;
+	Hector<Variant> old_static_variables;
 	void _save_old_static_data();
 	void _restore_old_static_data();
 
@@ -158,7 +158,7 @@ private:
 	void _update_exports_values(HashMap<StringName, Variant> &values, List<PropertyInfo> &propnames);
 
 	DocData::ClassDoc doc;
-	Vector<DocData::ClassDoc> docs;
+	Hector<DocData::ClassDoc> docs;
 	void _clear_doc();
 	void _add_doc(const DocData::ClassDoc &p_inner_class);
 #endif
@@ -177,7 +177,7 @@ private:
 	bool clearing = false;
 	//exported members
 	String source;
-	Vector<uint8_t> binary_tokens;
+	Hector<uint8_t> binary_tokens;
 	String path;
 	bool path_valid = false; // False if using default path.
 	StringName local_name; // Inner class identifier or `class_name`.
@@ -292,7 +292,7 @@ public:
 	virtual void update_exports() override;
 
 #ifdef TOOLS_ENABLED
-	virtual Vector<DocData::ClassDoc> get_documentation() const override {
+	virtual Hector<DocData::ClassDoc> get_documentation() const override {
 		return docs;
 	}
 	virtual String get_class_icon_path() const override;
@@ -304,9 +304,9 @@ public:
 	String get_script_path() const;
 	Error load_source_code(const String &p_path);
 
-	void set_binary_tokens_source(const Vector<uint8_t> &p_binary_tokens);
-	const Vector<uint8_t> &get_binary_tokens_source() const;
-	Vector<uint8_t> get_as_binary_tokens() const;
+	void set_binary_tokens_source(const Hector<uint8_t> &p_binary_tokens);
+	const Hector<uint8_t> &get_binary_tokens_source() const;
+	Hector<uint8_t> get_as_binary_tokens() const;
 
 	bool get_property_default_value(const StringName &p_property, Variant &r_value) const override;
 
@@ -361,7 +361,7 @@ class GDScriptInstance : public ScriptInstance {
 #ifdef DEBUG_ENABLED
 	HashMap<StringName, int> member_indices_cache; //used only for hot script reloading
 #endif
-	Vector<Variant> members;
+	Hector<Variant> members;
 	bool base_ref_counted;
 
 	SelfList<GDScriptFunctionState>::List pending_func_states;
@@ -414,10 +414,10 @@ class GDScriptLanguage : public ScriptLanguage {
 	bool finishing = false;
 
 	Variant *_global_array = nullptr;
-	Vector<Variant> global_array;
+	Hector<Variant> global_array;
 	HashMap<StringName, int> globals;
 	HashMap<StringName, Variant> named_globals;
-	Vector<int> global_array_empty_indexes;
+	Hector<int> global_array_empty_indexes;
 
 	struct CallLevel {
 		Variant *stack = nullptr;
@@ -518,8 +518,8 @@ public:
 		_call_stack.stack_pos--;
 	}
 
-	virtual Vector<StackInfo> debug_get_current_stack_info() override {
-		Vector<StackInfo> csi;
+	virtual Hector<StackInfo> debug_get_current_stack_info() override {
+		Hector<StackInfo> csi;
 		csi.resize(_call_stack.stack_pos);
 		for (int i = 0; i < _call_stack.stack_pos; i++) {
 			csi.write[_call_stack.stack_pos - i - 1].line = _call_stack.levels[i].line ? *_call_stack.levels[i].line : 0;
@@ -571,7 +571,7 @@ public:
 	virtual void get_string_delimiters(List<String> *p_delimiters) const override;
 	virtual bool is_using_templates() override;
 	virtual Ref<Script> make_template(const String &p_template, const String &p_class_name, const String &p_base_class_name) const override;
-	virtual Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override;
+	virtual Hector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override;
 	virtual bool validate(const String &p_script, const String &p_path = "", List<String> *r_functions = nullptr, List<ScriptLanguage::ScriptError> *r_errors = nullptr, List<ScriptLanguage::Warning> *r_warnings = nullptr, HashSet<int> *r_safe_lines = nullptr) const override;
 	virtual Script *create_script() const override;
 #ifndef DISABLE_DEPRECATED

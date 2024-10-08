@@ -553,9 +553,9 @@ typedef enum SpvDecoration_ {
   SpvDecorationReferencedIndirectlyINTEL = 5602,
   SpvDecorationClobberINTEL = 5607,
   SpvDecorationSideEffectsINTEL = 5608,
-  SpvDecorationVectorComputeVariableINTEL = 5624,
+  SpvDecorationHectorComputeVariableINTEL = 5624,
   SpvDecorationFuncParamIOKindINTEL = 5625,
-  SpvDecorationVectorComputeFunctionINTEL = 5626,
+  SpvDecorationHectorComputeFunctionINTEL = 5626,
   SpvDecorationStackCallINTEL = 5627,
   SpvDecorationGlobalVariableOffsetINTEL = 5628,
   SpvDecorationCounterBuffer = 5634,
@@ -592,8 +592,8 @@ typedef enum SpvDecoration_ {
   SpvDecorationBufferLocationINTEL = 5921,
   SpvDecorationIOPipeStorageINTEL = 5944,
   SpvDecorationFunctionFloatingPointModeINTEL = 6080,
-  SpvDecorationSingleElementVectorINTEL = 6085,
-  SpvDecorationVectorComputeCallableFunctionINTEL = 6087,
+  SpvDecorationSingleElementHectorINTEL = 6085,
+  SpvDecorationHectorComputeCallableFunctionINTEL = 6087,
   SpvDecorationMediaBlockIOINTEL = 6140,
   SpvDecorationLatencyControlLabelINTEL = 6172,
   SpvDecorationLatencyControlConstraintINTEL = 6173,
@@ -941,7 +941,7 @@ typedef enum SpvCapability_ {
   SpvCapabilityAddresses = 4,
   SpvCapabilityLinkage = 5,
   SpvCapabilityKernel = 6,
-  SpvCapabilityVector16 = 7,
+  SpvCapabilityHector16 = 7,
   SpvCapabilityFloat16Buffer = 8,
   SpvCapabilityFloat16 = 9,
   SpvCapabilityFloat64 = 10,
@@ -1125,8 +1125,8 @@ typedef enum SpvCapability_ {
   SpvCapabilityAtomicFloat32MinMaxEXT = 5612,
   SpvCapabilityAtomicFloat64MinMaxEXT = 5613,
   SpvCapabilityAtomicFloat16MinMaxEXT = 5616,
-  SpvCapabilityVectorComputeINTEL = 5617,
-  SpvCapabilityVectorAnyINTEL = 5619,
+  SpvCapabilityHectorComputeINTEL = 5617,
+  SpvCapabilityHectorAnyINTEL = 5619,
   SpvCapabilityExpectAssumeKHR = 5629,
   SpvCapabilitySubgroupAvcMotionEstimationINTEL = 5696,
   SpvCapabilitySubgroupAvcMotionEstimationIntraINTEL = 5697,
@@ -1281,11 +1281,11 @@ typedef enum SpvOverflowModes_ {
   SpvOverflowModesMax = 0x7fffffff,
 } SpvOverflowModes;
 
-typedef enum SpvPackedVectorFormat_ {
-  SpvPackedVectorFormatPackedVectorFormat4x8Bit = 0,
-  SpvPackedVectorFormatPackedVectorFormat4x8BitKHR = 0,
-  SpvPackedVectorFormatMax = 0x7fffffff,
-} SpvPackedVectorFormat;
+typedef enum SpvPackedHectorFormat_ {
+  SpvPackedHectorFormatPackedHectorFormat4x8Bit = 0,
+  SpvPackedHectorFormatPackedHectorFormat4x8BitKHR = 0,
+  SpvPackedHectorFormatMax = 0x7fffffff,
+} SpvPackedHectorFormat;
 
 typedef enum SpvCooperativeMatrixOperandsShift_ {
   SpvCooperativeMatrixOperandsMatrixASignedComponentsShift = 0,
@@ -1339,7 +1339,7 @@ typedef enum SpvOp_ {
   SpvOpTypeBool = 20,
   SpvOpTypeInt = 21,
   SpvOpTypeFloat = 22,
-  SpvOpTypeVector = 23,
+  SpvOpTypeHector = 23,
   SpvOpTypeMatrix = 24,
   SpvOpTypeImage = 25,
   SpvOpTypeSampler = 26,
@@ -1388,9 +1388,9 @@ typedef enum SpvOp_ {
   SpvOpDecorationGroup = 73,
   SpvOpGroupDecorate = 74,
   SpvOpGroupMemberDecorate = 75,
-  SpvOpVectorExtractDynamic = 77,
-  SpvOpVectorInsertDynamic = 78,
-  SpvOpVectorShuffle = 79,
+  SpvOpHectorExtractDynamic = 77,
+  SpvOpHectorInsertDynamic = 78,
+  SpvOpHectorShuffle = 79,
   SpvOpCompositeConstruct = 80,
   SpvOpCompositeExtract = 81,
   SpvOpCompositeInsert = 82,
@@ -1450,10 +1450,10 @@ typedef enum SpvOp_ {
   SpvOpSMod = 139,
   SpvOpFRem = 140,
   SpvOpFMod = 141,
-  SpvOpVectorTimesScalar = 142,
+  SpvOpHectorTimesScalar = 142,
   SpvOpMatrixTimesScalar = 143,
-  SpvOpVectorTimesMatrix = 144,
-  SpvOpMatrixTimesVector = 145,
+  SpvOpHectorTimesMatrix = 144,
+  SpvOpMatrixTimesHector = 145,
   SpvOpMatrixTimesMatrix = 146,
   SpvOpOuterProduct = 147,
   SpvOpDot = 148,
@@ -1842,11 +1842,11 @@ typedef enum SpvOp_ {
   SpvOpSubgroupAvcMceGetDefaultInterDirectionPenaltyINTEL = 5717,
   SpvOpSubgroupAvcMceSetInterDirectionPenaltyINTEL = 5718,
   SpvOpSubgroupAvcMceGetDefaultIntraLumaShapePenaltyINTEL = 5719,
-  SpvOpSubgroupAvcMceGetDefaultInterMotionVectorCostTableINTEL = 5720,
+  SpvOpSubgroupAvcMceGetDefaultInterMotionHectorCostTableINTEL = 5720,
   SpvOpSubgroupAvcMceGetDefaultHighPenaltyCostTableINTEL = 5721,
   SpvOpSubgroupAvcMceGetDefaultMediumPenaltyCostTableINTEL = 5722,
   SpvOpSubgroupAvcMceGetDefaultLowPenaltyCostTableINTEL = 5723,
-  SpvOpSubgroupAvcMceSetMotionVectorCostFunctionINTEL = 5724,
+  SpvOpSubgroupAvcMceSetMotionHectorCostFunctionINTEL = 5724,
   SpvOpSubgroupAvcMceGetDefaultIntraLumaModePenaltyINTEL = 5725,
   SpvOpSubgroupAvcMceGetDefaultNonDcLumaIntraPenaltyINTEL = 5726,
   SpvOpSubgroupAvcMceGetDefaultIntraChromaModeBasePenaltyINTEL = 5727,
@@ -1860,13 +1860,13 @@ typedef enum SpvOp_ {
   SpvOpSubgroupAvcMceConvertToRefResultINTEL = 5735,
   SpvOpSubgroupAvcMceConvertToSicPayloadINTEL = 5736,
   SpvOpSubgroupAvcMceConvertToSicResultINTEL = 5737,
-  SpvOpSubgroupAvcMceGetMotionVectorsINTEL = 5738,
+  SpvOpSubgroupAvcMceGetMotionHectorsINTEL = 5738,
   SpvOpSubgroupAvcMceGetInterDistortionsINTEL = 5739,
   SpvOpSubgroupAvcMceGetBestInterDistortionsINTEL = 5740,
   SpvOpSubgroupAvcMceGetInterMajorShapeINTEL = 5741,
   SpvOpSubgroupAvcMceGetInterMinorShapeINTEL = 5742,
   SpvOpSubgroupAvcMceGetInterDirectionsINTEL = 5743,
-  SpvOpSubgroupAvcMceGetInterMotionVectorCountINTEL = 5744,
+  SpvOpSubgroupAvcMceGetInterMotionHectorCountINTEL = 5744,
   SpvOpSubgroupAvcMceGetInterReferenceIdsINTEL = 5745,
   SpvOpSubgroupAvcMceGetInterReferenceInterlacedFieldPolaritiesINTEL = 5746,
   SpvOpSubgroupAvcImeInitializeINTEL = 5747,
@@ -1875,7 +1875,7 @@ typedef enum SpvOp_ {
   SpvOpSubgroupAvcImeRefWindowSizeINTEL = 5750,
   SpvOpSubgroupAvcImeAdjustRefOffsetINTEL = 5751,
   SpvOpSubgroupAvcImeConvertToMcePayloadINTEL = 5752,
-  SpvOpSubgroupAvcImeSetMaxMotionVectorCountINTEL = 5753,
+  SpvOpSubgroupAvcImeSetMaxMotionHectorCountINTEL = 5753,
   SpvOpSubgroupAvcImeSetUnidirectionalMixDisableINTEL = 5754,
   SpvOpSubgroupAvcImeSetEarlySearchTerminationThresholdINTEL = 5755,
   SpvOpSubgroupAvcImeSetWeightedSadINTEL = 5756,
@@ -1892,13 +1892,13 @@ typedef enum SpvOp_ {
   SpvOpSubgroupAvcImeGetDualReferenceStreaminINTEL = 5767,
   SpvOpSubgroupAvcImeStripSingleReferenceStreamoutINTEL = 5768,
   SpvOpSubgroupAvcImeStripDualReferenceStreamoutINTEL = 5769,
-  SpvOpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionVectorsINTEL =
+  SpvOpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionHectorsINTEL =
       5770,
   SpvOpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeDistortionsINTEL =
       5771,
   SpvOpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeReferenceIdsINTEL =
       5772,
-  SpvOpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionVectorsINTEL =
+  SpvOpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionHectorsINTEL =
       5773,
   SpvOpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeDistortionsINTEL = 5774,
   SpvOpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeReferenceIdsINTEL =
@@ -1906,7 +1906,7 @@ typedef enum SpvOp_ {
   SpvOpSubgroupAvcImeGetBorderReachedINTEL = 5776,
   SpvOpSubgroupAvcImeGetTruncatedSearchIndicationINTEL = 5777,
   SpvOpSubgroupAvcImeGetUnidirectionalEarlySearchTerminationINTEL = 5778,
-  SpvOpSubgroupAvcImeGetWeightingPatternMinimumMotionVectorINTEL = 5779,
+  SpvOpSubgroupAvcImeGetWeightingPatternMinimumMotionHectorINTEL = 5779,
   SpvOpSubgroupAvcImeGetWeightingPatternMinimumDistortionINTEL = 5780,
   SpvOpSubgroupAvcFmeInitializeINTEL = 5781,
   SpvOpSubgroupAvcBmeInitializeINTEL = 5782,
@@ -1922,7 +1922,7 @@ typedef enum SpvOp_ {
   SpvOpSubgroupAvcSicConfigureSkcINTEL = 5792,
   SpvOpSubgroupAvcSicConfigureIpeLumaINTEL = 5793,
   SpvOpSubgroupAvcSicConfigureIpeLumaChromaINTEL = 5794,
-  SpvOpSubgroupAvcSicGetMotionVectorMaskINTEL = 5795,
+  SpvOpSubgroupAvcSicGetMotionHectorMaskINTEL = 5795,
   SpvOpSubgroupAvcSicConvertToMcePayloadINTEL = 5796,
   SpvOpSubgroupAvcSicSetIntraLumaShapePenaltyINTEL = 5797,
   SpvOpSubgroupAvcSicSetIntraLumaModeCostFunctionINTEL = 5798,
@@ -2135,7 +2135,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = false;
       break;
-    case SpvOpTypeVector:
+    case SpvOpTypeHector:
       *hasResult = true;
       *hasResultType = false;
       break;
@@ -2331,15 +2331,15 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = false;
       *hasResultType = false;
       break;
-    case SpvOpVectorExtractDynamic:
+    case SpvOpHectorExtractDynamic:
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpVectorInsertDynamic:
+    case SpvOpHectorInsertDynamic:
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpVectorShuffle:
+    case SpvOpHectorShuffle:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -2579,7 +2579,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpVectorTimesScalar:
+    case SpvOpHectorTimesScalar:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -2587,11 +2587,11 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpVectorTimesMatrix:
+    case SpvOpHectorTimesMatrix:
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpMatrixTimesVector:
+    case SpvOpMatrixTimesHector:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4103,7 +4103,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcMceGetDefaultInterMotionVectorCostTableINTEL:
+    case SpvOpSubgroupAvcMceGetDefaultInterMotionHectorCostTableINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4119,7 +4119,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcMceSetMotionVectorCostFunctionINTEL:
+    case SpvOpSubgroupAvcMceSetMotionHectorCostFunctionINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4175,7 +4175,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcMceGetMotionVectorsINTEL:
+    case SpvOpSubgroupAvcMceGetMotionHectorsINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4199,7 +4199,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcMceGetInterMotionVectorCountINTEL:
+    case SpvOpSubgroupAvcMceGetInterMotionHectorCountINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4235,7 +4235,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcImeSetMaxMotionVectorCountINTEL:
+    case SpvOpSubgroupAvcImeSetMaxMotionHectorCountINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4303,7 +4303,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionVectorsINTEL:
+    case SpvOpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionHectorsINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4315,7 +4315,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionVectorsINTEL:
+    case SpvOpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionHectorsINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4339,7 +4339,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcImeGetWeightingPatternMinimumMotionVectorINTEL:
+    case SpvOpSubgroupAvcImeGetWeightingPatternMinimumMotionHectorINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;
@@ -4403,7 +4403,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool* hasResult,
       *hasResult = true;
       *hasResultType = true;
       break;
-    case SpvOpSubgroupAvcSicGetMotionVectorMaskINTEL:
+    case SpvOpSubgroupAvcSicGetMotionHectorMaskINTEL:
       *hasResult = true;
       *hasResultType = true;
       break;

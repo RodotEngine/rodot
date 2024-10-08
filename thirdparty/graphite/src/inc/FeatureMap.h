@@ -66,7 +66,7 @@ private:
 
     const Face     * m_face;
     FeatureSetting * m_nameValues; // array of name table ids for feature values
-    chunk_t m_mask,             // bit mask to get the value from the vector
+    chunk_t m_mask,             // bit mask to get the value from the Hector
             m_max;              // max value the value can take
     uint32  m_id;               // feature identifier/name
     uint16  m_nameid,           // Name table id for feature name

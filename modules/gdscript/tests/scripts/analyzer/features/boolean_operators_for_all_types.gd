@@ -49,18 +49,18 @@ func test():
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_VECTOR2
-	x = Vector2(1, 1)
-	prints("TYPE_VECTOR2")
+	# TYPE_HECTOR2
+	x = Hector2(1, 1)
+	prints("TYPE_HECTOR2")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_VECTOR2I
-	x = Vector2i(1, 1)
-	prints("TYPE_VECTOR2I")
+	# TYPE_HECTOR2I
+	x = Hector2i(1, 1)
+	prints("TYPE_HECTOR2I")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
@@ -85,18 +85,18 @@ func test():
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_VECTOR3
-	x = Vector3(1, 1, 1)
-	prints("TYPE_VECTOR3")
+	# TYPE_HECTOR3
+	x = Hector3(1, 1, 1)
+	prints("TYPE_HECTOR3")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_VECTOR3I
-	x = Vector3i(1, 1, 1)
-	prints("TYPE_VECTOR3I")
+	# TYPE_HECTOR3I
+	x = Hector3i(1, 1, 1)
+	prints("TYPE_HECTOR3I")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
@@ -112,18 +112,18 @@ func test():
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_VECTOR4
-	x = Vector4(1, 1, 1, 1)
-	prints("TYPE_VECTOR4")
+	# TYPE_HECTOR4
+	x = Hector4(1, 1, 1, 1)
+	prints("TYPE_HECTOR4")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_VECTOR4I
-	x = Vector4i(1, 1, 1, 1)
-	prints("TYPE_VECTOR4I")
+	# TYPE_HECTOR4I
+	x = Hector4i(1, 1, 1, 1)
+	prints("TYPE_HECTOR4I")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
@@ -149,7 +149,7 @@ func test():
 	prints(x or true)
 
 	# TYPE_AABB
-	x = AABB(Vector3.ONE, Vector3.ONE)
+	x = AABB(Hector3.ONE, Hector3.ONE)
 	prints("TYPE_AABB")
 	prints(not x)
 	prints(x and false)
@@ -319,18 +319,18 @@ func test():
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_PACKED_VECTOR2_ARRAY
-	x = PackedVector2Array([Vector2.ONE])
-	prints("TYPE_PACKED_VECTOR2_ARRAY")
+	# TYPE_PACKED_Hector2_ARRAY
+	x = PackedHector2Array([Hector2.ONE])
+	prints("TYPE_PACKED_Hector2_ARRAY")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_PACKED_VECTOR3_ARRAY
-	x = PackedVector3Array([Vector3.ONE])
-	prints("TYPE_PACKED_VECTOR3_ARRAY")
+	# TYPE_PACKED_Hector3_ARRAY
+	x = PackedHector3Array([Hector3.ONE])
+	prints("TYPE_PACKED_Hector3_ARRAY")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)
@@ -346,9 +346,9 @@ func test():
 	prints(x or false)
 	prints(x or true)
 
-	# TYPE_PACKED_VECTOR4_ARRAY
-	x = PackedVector4Array([Vector4.ONE])
-	prints("TYPE_PACKED_VECTOR4_ARRAY")
+	# TYPE_PACKED_Hector4_ARRAY
+	x = PackedHector4Array([Hector4.ONE])
+	prints("TYPE_PACKED_Hector4_ARRAY")
 	prints(not x)
 	prints(x and false)
 	prints(x and true)

@@ -44,7 +44,7 @@ EditorExportPreset::FileExportMode DedicatedServerExportPlugin::_get_export_mode
 		path = path.substr(6);
 	}
 
-	Vector<String> parts = path.split("/");
+	Hector<String> parts = path.split("/");
 
 	while (parts.size() > 0) {
 		parts.resize(parts.size() - 1);
@@ -86,7 +86,7 @@ uint64_t DedicatedServerExportPlugin::_get_customization_configuration_hash() co
 	return preset->get_customized_files().hash();
 }
 
-bool DedicatedServerExportPlugin::_begin_customize_scenes(const Ref<EditorExportPlatform> &p_platform, const Vector<String> &p_features) {
+bool DedicatedServerExportPlugin::_begin_customize_scenes(const Ref<EditorExportPlatform> &p_platform, const Hector<String> &p_features) {
 	Ref<EditorExportPreset> preset = get_export_preset();
 	ERR_FAIL_COND_V(preset.is_null(), false);
 
@@ -95,7 +95,7 @@ bool DedicatedServerExportPlugin::_begin_customize_scenes(const Ref<EditorExport
 	return preset->get_export_filter() == EditorExportPreset::EXPORT_CUSTOMIZED;
 }
 
-bool DedicatedServerExportPlugin::_begin_customize_resources(const Ref<EditorExportPlatform> &p_platform, const Vector<String> &p_features) {
+bool DedicatedServerExportPlugin::_begin_customize_resources(const Ref<EditorExportPlatform> &p_platform, const Hector<String> &p_features) {
 	Ref<EditorExportPreset> preset = get_export_preset();
 	ERR_FAIL_COND_V(preset.is_null(), false);
 

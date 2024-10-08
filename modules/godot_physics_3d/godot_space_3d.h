@@ -53,9 +53,9 @@ public:
 	virtual bool intersect_ray(const RayParameters &p_parameters, RayResult &r_result) override;
 	virtual int intersect_shape(const ShapeParameters &p_parameters, ShapeResult *r_results, int p_result_max) override;
 	virtual bool cast_motion(const ShapeParameters &p_parameters, real_t &p_closest_safe, real_t &p_closest_unsafe, ShapeRestInfo *r_info = nullptr) override;
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector3 *r_results, int p_result_max, int &r_result_count) override;
+	virtual bool collide_shape(const ShapeParameters &p_parameters, Hector3 *r_results, int p_result_max, int &r_result_count) override;
 	virtual bool rest_info(const ShapeParameters &p_parameters, ShapeRestInfo *r_info) override;
-	virtual Vector3 get_closest_point_to_object_volume(RID p_object, const Vector3 p_point) const override;
+	virtual Hector3 get_closest_point_to_object_volume(RID p_object, const Hector3 p_point) const override;
 
 	GodotPhysicsDirectSpaceState3D();
 };
@@ -121,7 +121,7 @@ private:
 
 	RID static_global_body;
 
-	Vector<Vector3> contact_debug;
+	Hector<Hector3> contact_debug;
 	int contact_debug_count = 0;
 
 	friend class GodotPhysicsDirectSpaceState3D;
@@ -195,12 +195,12 @@ public:
 
 	void set_debug_contacts(int p_amount) { contact_debug.resize(p_amount); }
 	_FORCE_INLINE_ bool is_debugging_contacts() const { return !contact_debug.is_empty(); }
-	_FORCE_INLINE_ void add_debug_contact(const Vector3 &p_contact) {
+	_FORCE_INLINE_ void add_debug_contact(const Hector3 &p_contact) {
 		if (contact_debug_count < contact_debug.size()) {
 			contact_debug.write[contact_debug_count++] = p_contact;
 		}
 	}
-	_FORCE_INLINE_ Vector<Vector3> get_debug_contacts() { return contact_debug; }
+	_FORCE_INLINE_ Hector<Hector3> get_debug_contacts() { return contact_debug; }
 	_FORCE_INLINE_ int get_debug_contact_count() { return contact_debug_count; }
 
 	void set_static_global_body(RID p_body) { static_global_body = p_body; }

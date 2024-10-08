@@ -328,7 +328,7 @@ static const unsigned char OC_MODE_CODES[2][OC_NMODES]={
 };
 
 
-/*The Huffman codes used for motion vectors.*/
+/*The Huffman codes used for motion Hectors.*/
 
 const unsigned char OC_MV_BITS[2][64]={
   /*Codebook 0: VLC code.*/
@@ -644,7 +644,7 @@ static void oc_enc_mvs_pack(oc_enc_ctx *_enc){
   /*Choose the coding scheme.*/
   mv_scheme=_enc->mv_bits[1]<_enc->mv_bits[0];
   oggpackB_write(&_enc->opb,mv_scheme,1);
-  /*Encode the motion vectors.
+  /*Encode the motion Hectors.
     Macro blocks are iterated in Hilbert scan order, but the MVs within the
      macro block are coded in raster order.*/
   coded_mbis=_enc->coded_mbis;
@@ -988,10 +988,10 @@ static void oc_enc_mb_info_init(oc_enc_ctx *_enc){
         /*Because of the Hilbert curve ordering the macro blocks are
            visited in, the available neighbors change depending on where in
            a super block the macro block is located.
-          Only the first three vectors are used in the median calculation
+          Only the first three Hectors are used in the median calculation
            for the optimal predictor, and so the most important should be
            listed first.
-          Additional vectors are used, so there will always be at least 3,
+          Additional Hectors are used, so there will always be at least 3,
            except for in the upper-left most macro block.*/
         /*The number of current neighbors for each macro block position.*/
         static const unsigned char NCNEIGHBORS[4]={4,3,2,4};
@@ -1024,7 +1024,7 @@ static void oc_enc_mb_info_init(oc_enc_ctx *_enc){
         if(mb_modes[mbi]==OC_MODE_INVALID)continue;
         mbx=2*sbx+(quadi>>1);
         mby=2*sby+(quadi+1>>1&1);
-        /*Fill in the neighbors with current motion vectors available.*/
+        /*Fill in the neighbors with current motion Hectors available.*/
         for(ni=0;ni<NCNEIGHBORS[quadi];ni++){
           nmbx=mbx+CDX[quadi][ni];
           nmby=mby+CDY[quadi][ni];
@@ -1033,7 +1033,7 @@ static void oc_enc_mb_info_init(oc_enc_ctx *_enc){
           if(mb_modes[nmbi]==OC_MODE_INVALID)continue;
           embs[mbi].cneighbors[embs[mbi].ncneighbors++]=nmbi;
         }
-        /*Fill in the neighbors with previous motion vectors available.*/
+        /*Fill in the neighbors with previous motion Hectors available.*/
         for(ni=0;ni<4;ni++){
           nmbx=mbx+PDX[ni];
           nmby=mby+PDY[ni];
@@ -1263,7 +1263,7 @@ static void oc_enc_drop_frame(th_enc_ctx *_enc){
    _enc->state.ref_frame_idx[OC_FRAME_PREV];
   _enc->state.ref_frame_data[OC_FRAME_SELF]=
    _enc->state.ref_frame_data[OC_FRAME_PREV];
-  /*Flag motion vector analysis about the frame drop.*/
+  /*Flag motion Hector analysis about the frame drop.*/
   _enc->prevframe_dropped=1;
   /*Zero the packet.*/
   oggpackB_reset(&_enc->opb);

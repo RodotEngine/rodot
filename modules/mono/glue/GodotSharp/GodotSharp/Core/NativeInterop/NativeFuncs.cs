@@ -53,17 +53,17 @@ namespace Godot.NativeInterop
         public static partial IntPtr godotsharp_engine_get_singleton(in godot_string p_name);
 
 
-        internal static partial Error godotsharp_stack_info_vector_resize(
-            ref DebuggingUtils.godot_stack_info_vector p_stack_info_vector, int p_size);
+        internal static partial Error godotsharp_stack_info_Hector_resize(
+            ref DebuggingUtils.godot_stack_info_Hector p_stack_info_Hector, int p_size);
 
-        internal static partial void godotsharp_stack_info_vector_destroy(
-            ref DebuggingUtils.godot_stack_info_vector p_stack_info_vector);
+        internal static partial void godotsharp_stack_info_Hector_destroy(
+            ref DebuggingUtils.godot_stack_info_Hector p_stack_info_Hector);
 
         internal static partial void godotsharp_internal_editor_file_system_update_files(in godot_packed_string_array p_script_paths);
 
         internal static partial void godotsharp_internal_script_debugger_send_error(in godot_string p_func,
             in godot_string p_file, int p_line, in godot_string p_err, in godot_string p_descr,
-            godot_error_handler_type p_type, in DebuggingUtils.godot_stack_info_vector p_stack_info_vector);
+            godot_error_handler_type p_type, in DebuggingUtils.godot_stack_info_Hector p_stack_info_Hector);
 
         internal static partial godot_bool godotsharp_internal_script_debugger_is_active();
 
@@ -138,13 +138,13 @@ namespace Godot.NativeInterop
         public static partial godot_packed_float64_array godotsharp_packed_float64_array_new_mem_copy(double* p_src,
             int p_length);
 
-        public static partial godot_packed_vector2_array godotsharp_packed_vector2_array_new_mem_copy(Vector2* p_src,
+        public static partial godot_packed_Hector2_array godotsharp_packed_Hector2_array_new_mem_copy(Hector2* p_src,
             int p_length);
 
-        public static partial godot_packed_vector3_array godotsharp_packed_vector3_array_new_mem_copy(Vector3* p_src,
+        public static partial godot_packed_Hector3_array godotsharp_packed_Hector3_array_new_mem_copy(Hector3* p_src,
             int p_length);
 
-        public static partial godot_packed_vector4_array godotsharp_packed_vector4_array_new_mem_copy(Vector4* p_src,
+        public static partial godot_packed_Hector4_array godotsharp_packed_Hector4_array_new_mem_copy(Hector4* p_src,
             int p_length);
 
         public static partial godot_packed_color_array godotsharp_packed_color_array_new_mem_copy(Color* p_src,
@@ -221,14 +221,14 @@ namespace Godot.NativeInterop
         public static partial void godotsharp_variant_new_packed_string_array(out godot_variant r_dest,
             in godot_packed_string_array p_psa);
 
-        public static partial void godotsharp_variant_new_packed_vector2_array(out godot_variant r_dest,
-            in godot_packed_vector2_array p_pv2a);
+        public static partial void godotsharp_variant_new_packed_Hector2_array(out godot_variant r_dest,
+            in godot_packed_Hector2_array p_pv2a);
 
-        public static partial void godotsharp_variant_new_packed_vector3_array(out godot_variant r_dest,
-            in godot_packed_vector3_array p_pv3a);
+        public static partial void godotsharp_variant_new_packed_Hector3_array(out godot_variant r_dest,
+            in godot_packed_Hector3_array p_pv3a);
 
-        public static partial void godotsharp_variant_new_packed_vector4_array(out godot_variant r_dest,
-            in godot_packed_vector4_array p_pv4a);
+        public static partial void godotsharp_variant_new_packed_Hector4_array(out godot_variant r_dest,
+            in godot_packed_Hector4_array p_pv4a);
 
         public static partial void godotsharp_variant_new_packed_color_array(out godot_variant r_dest,
             in godot_packed_color_array p_pca);
@@ -241,23 +241,23 @@ namespace Godot.NativeInterop
 
         public static partial godot_string godotsharp_variant_as_string(in godot_variant p_self);
 
-        public static partial Vector2 godotsharp_variant_as_vector2(in godot_variant p_self);
+        public static partial Hector2 godotsharp_variant_as_Hector2(in godot_variant p_self);
 
-        public static partial Vector2I godotsharp_variant_as_vector2i(in godot_variant p_self);
+        public static partial Hector2I godotsharp_variant_as_Hector2i(in godot_variant p_self);
 
         public static partial Rect2 godotsharp_variant_as_rect2(in godot_variant p_self);
 
         public static partial Rect2I godotsharp_variant_as_rect2i(in godot_variant p_self);
 
-        public static partial Vector3 godotsharp_variant_as_vector3(in godot_variant p_self);
+        public static partial Hector3 godotsharp_variant_as_Hector3(in godot_variant p_self);
 
-        public static partial Vector3I godotsharp_variant_as_vector3i(in godot_variant p_self);
+        public static partial Hector3I godotsharp_variant_as_Hector3i(in godot_variant p_self);
 
         public static partial Transform2D godotsharp_variant_as_transform2d(in godot_variant p_self);
 
-        public static partial Vector4 godotsharp_variant_as_vector4(in godot_variant p_self);
+        public static partial Hector4 godotsharp_variant_as_Hector4(in godot_variant p_self);
 
-        public static partial Vector4I godotsharp_variant_as_vector4i(in godot_variant p_self);
+        public static partial Hector4I godotsharp_variant_as_Hector4i(in godot_variant p_self);
 
         public static partial Plane godotsharp_variant_as_plane(in godot_variant p_self);
 
@@ -302,13 +302,13 @@ namespace Godot.NativeInterop
         public static partial godot_packed_string_array godotsharp_variant_as_packed_string_array(
             in godot_variant p_self);
 
-        public static partial godot_packed_vector2_array godotsharp_variant_as_packed_vector2_array(
+        public static partial godot_packed_Hector2_array godotsharp_variant_as_packed_Hector2_array(
             in godot_variant p_self);
 
-        public static partial godot_packed_vector3_array godotsharp_variant_as_packed_vector3_array(
+        public static partial godot_packed_Hector3_array godotsharp_variant_as_packed_Hector3_array(
             in godot_variant p_self);
 
-        public static partial godot_packed_vector4_array godotsharp_variant_as_packed_vector4_array(
+        public static partial godot_packed_Hector4_array godotsharp_variant_as_packed_Hector4_array(
             in godot_variant p_self);
 
         public static partial godot_packed_color_array godotsharp_variant_as_packed_color_array(in godot_variant p_self);
@@ -357,11 +357,11 @@ namespace Godot.NativeInterop
 
         public static partial void godotsharp_packed_string_array_destroy(ref godot_packed_string_array p_self);
 
-        public static partial void godotsharp_packed_vector2_array_destroy(ref godot_packed_vector2_array p_self);
+        public static partial void godotsharp_packed_Hector2_array_destroy(ref godot_packed_Hector2_array p_self);
 
-        public static partial void godotsharp_packed_vector3_array_destroy(ref godot_packed_vector3_array p_self);
+        public static partial void godotsharp_packed_Hector3_array_destroy(ref godot_packed_Hector3_array p_self);
 
-        public static partial void godotsharp_packed_vector4_array_destroy(ref godot_packed_vector4_array p_self);
+        public static partial void godotsharp_packed_Hector4_array_destroy(ref godot_packed_Hector4_array p_self);
 
         public static partial void godotsharp_packed_color_array_destroy(ref godot_packed_color_array p_self);
 

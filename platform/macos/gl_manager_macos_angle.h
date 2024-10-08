@@ -35,7 +35,7 @@
 
 #include "core/error/error_list.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "drivers/egl/egl_manager.h"
 #include "servers/display_server.h"
 
@@ -48,8 +48,8 @@ private:
 	virtual const char *_get_platform_extension_name() const override;
 	virtual EGLenum _get_platform_extension_enum() const override;
 	virtual EGLenum _get_platform_api_enum() const override;
-	virtual Vector<EGLAttrib> _get_platform_display_attributes() const override;
-	virtual Vector<EGLint> _get_platform_context_attribs() const override;
+	virtual Hector<EGLAttrib> _get_platform_display_attributes() const override;
+	virtual Hector<EGLint> _get_platform_context_attribs() const override;
 
 public:
 	void window_resize(DisplayServer::WindowID p_window_id, int p_width, int p_height) {}

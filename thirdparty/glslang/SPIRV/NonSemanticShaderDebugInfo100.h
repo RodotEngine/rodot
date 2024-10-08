@@ -45,7 +45,7 @@ enum NonSemanticShaderDebugInfo100Instructions {
     NonSemanticShaderDebugInfo100DebugTypePointer = 3,
     NonSemanticShaderDebugInfo100DebugTypeQualifier = 4,
     NonSemanticShaderDebugInfo100DebugTypeArray = 5,
-    NonSemanticShaderDebugInfo100DebugTypeVector = 6,
+    NonSemanticShaderDebugInfo100DebugTypeHector = 6,
     NonSemanticShaderDebugInfo100DebugTypedef = 7,
     NonSemanticShaderDebugInfo100DebugTypeFunction = 8,
     NonSemanticShaderDebugInfo100DebugTypeEnum = 9,

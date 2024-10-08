@@ -172,7 +172,7 @@ class EditorBuildProfileManager : public AcceptDialog {
 	struct DetectedFile {
 		uint32_t timestamp = 0;
 		String md5;
-		Vector<String> classes;
+		Hector<String> classes;
 	};
 
 	void _find_files(EditorFileSystemDirectory *p_dir, const HashMap<String, DetectedFile> &p_cache, HashMap<String, DetectedFile> &r_detected);

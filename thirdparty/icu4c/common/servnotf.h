@@ -29,7 +29,7 @@ U_NAMESPACE_END
 #include "unicode/unistr.h"
 
 #include "mutex.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -72,7 +72,7 @@ public:
  */
 
 class U_COMMON_API ICUNotifier : public UMemory  {
-private: UVector* listeners;
+private: UHector* listeners;
          
 public: 
     ICUNotifier();

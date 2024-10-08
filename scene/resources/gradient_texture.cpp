@@ -110,7 +110,7 @@ void GradientTexture1D::_update() const {
 		}
 	} else {
 		// Low dynamic range. "Overbright" colors will be clamped.
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(width * 4);
 		{
 			uint8_t *wd8 = data.ptrw();
@@ -249,7 +249,7 @@ void GradientTexture2D::_update() const {
 				}
 			}
 		} else {
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			data.resize(width * height * 4);
 			{
 				uint8_t *wd8 = data.ptrw();
@@ -284,7 +284,7 @@ float GradientTexture2D::_get_gradient_offset_at(int x, int y) const {
 		return 0;
 	}
 	float ofs = 0;
-	Vector2 pos;
+	Hector2 pos;
 	if (width > 1) {
 		pos.x = static_cast<float>(x) / (width - 1);
 	}
@@ -292,10 +292,10 @@ float GradientTexture2D::_get_gradient_offset_at(int x, int y) const {
 		pos.y = static_cast<float>(y) / (height - 1);
 	}
 	if (fill == Fill::FILL_LINEAR) {
-		Vector2 segment[2];
+		Hector2 segment[2];
 		segment[0] = fill_from;
 		segment[1] = fill_to;
-		Vector2 closest = Geometry2D::get_closest_point_to_segment_uncapped(pos, &segment[0]);
+		Hector2 closest = Geometry2D::get_closest_point_to_segment_uncapped(pos, &segment[0]);
 		ofs = (closest - fill_from).length() / (fill_to - fill_from).length();
 		if ((closest - fill_from).dot(fill_to - fill_from) < 0) {
 			ofs *= -1;
@@ -357,23 +357,23 @@ bool GradientTexture2D::is_using_hdr() const {
 	return use_hdr;
 }
 
-void GradientTexture2D::set_fill_from(Vector2 p_fill_from) {
+void GradientTexture2D::set_fill_from(Hector2 p_fill_from) {
 	fill_from = p_fill_from;
 	_queue_update();
 	emit_changed();
 }
 
-Vector2 GradientTexture2D::get_fill_from() const {
+Hector2 GradientTexture2D::get_fill_from() const {
 	return fill_from;
 }
 
-void GradientTexture2D::set_fill_to(Vector2 p_fill_to) {
+void GradientTexture2D::set_fill_to(Hector2 p_fill_to) {
 	fill_to = p_fill_to;
 	_queue_update();
 	emit_changed();
 }
 
-Vector2 GradientTexture2D::get_fill_to() const {
+Hector2 GradientTexture2D::get_fill_to() const {
 	return fill_to;
 }
 
@@ -445,8 +445,8 @@ void GradientTexture2D::_bind_methods() {
 
 	ADD_GROUP("Fill", "fill_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "fill", PROPERTY_HINT_ENUM, "Linear,Radial,Square"), "set_fill", "get_fill");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "fill_from"), "set_fill_from", "get_fill_from");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "fill_to"), "set_fill_to", "get_fill_to");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "fill_from"), "set_fill_from", "get_fill_from");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "fill_to"), "set_fill_to", "get_fill_to");
 
 	ADD_GROUP("Repeat", "repeat_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "repeat", PROPERTY_HINT_ENUM, "No Repeat,Repeat,Mirror Repeat"), "set_repeat", "get_repeat");

@@ -70,7 +70,7 @@ namespace spv {
 #include <optional>
 #include <stack>
 #include <string>
-#include <vector>
+#include <Vector>
 
 namespace {
 
@@ -156,7 +156,7 @@ protected:
     spv::SelectionControlMask TranslateSwitchControl(const glslang::TIntermSwitch&) const;
     spv::LoopControlMask TranslateLoopControl(const glslang::TIntermLoop&, std::vector<unsigned int>& operands) const;
     spv::StorageClass TranslateStorageClass(const glslang::TType&);
-    void TranslateLiterals(const glslang::TVector<const glslang::TIntermConstantUnion*>&, std::vector<unsigned>&) const;
+    void TranslateLiterals(const glslang::THector<const glslang::TIntermConstantUnion*>&, std::vector<unsigned>&) const;
     void addIndirectionIndexCapabilities(const glslang::TType& baseType, const glslang::TType& indexType);
     spv::Id createSpvVariable(const glslang::TIntermSymbol*, spv::Id forcedType);
     spv::Id getSampledType(const glslang::TSampler&);
@@ -210,15 +210,15 @@ protected:
                                        glslang::TBasicType typeProxy);
     spv::Id createConversion(glslang::TOperator op, OpDecorations&, spv::Id destTypeId, spv::Id operand,
                              glslang::TBasicType typeProxy);
-    spv::Id createIntWidthConversion(glslang::TOperator op, spv::Id operand, int vectorSize, spv::Id destType);
-    spv::Id makeSmearedConstant(spv::Id constant, int vectorSize);
+    spv::Id createIntWidthConversion(glslang::TOperator op, spv::Id operand, int HectorSize, spv::Id destType);
+    spv::Id makeSmearedConstant(spv::Id constant, int HectorSize);
     spv::Id createAtomicOperation(glslang::TOperator op, spv::Decoration precision, spv::Id typeId,
         std::vector<spv::Id>& operands, glslang::TBasicType typeProxy,
         const spv::Builder::AccessChain::CoherentFlags &lvalueCoherentFlags,
         const glslang::TType &opType);
     spv::Id createInvocationsOperation(glslang::TOperator op, spv::Id typeId, std::vector<spv::Id>& operands,
         glslang::TBasicType typeProxy);
-    spv::Id CreateInvocationsVectorOperation(spv::Op op, spv::GroupOperation groupOperation,
+    spv::Id CreateInvocationsHectorOperation(spv::Op op, spv::GroupOperation groupOperation,
         spv::Id typeId, std::vector<spv::Id>& operands);
     spv::Id createSubgroupOperation(glslang::TOperator op, spv::Id typeId, std::vector<spv::Id>& operands,
         glslang::TBasicType typeProxy);
@@ -1356,7 +1356,7 @@ spv::StorageClass TGlslangToSpvTraverser::TranslateStorageClass(const glslang::T
 }
 
 // Translate glslang constants to SPIR-V literals
-void TGlslangToSpvTraverser::TranslateLiterals(const glslang::TVector<const glslang::TIntermConstantUnion*>& constants,
+void TGlslangToSpvTraverser::TranslateLiterals(const glslang::THector<const glslang::TIntermConstantUnion*>& constants,
                                                std::vector<unsigned>& literals) const
 {
     for (auto constant : constants) {
@@ -2175,8 +2175,8 @@ bool TGlslangToSpvTraverser::visitBinary(glslang::TVisit /* visit */, glslang::T
     case glslang::EOpAddAssign:
     case glslang::EOpSubAssign:
     case glslang::EOpMulAssign:
-    case glslang::EOpVectorTimesMatrixAssign:
-    case glslang::EOpVectorTimesScalarAssign:
+    case glslang::EOpHectorTimesMatrixAssign:
+    case glslang::EOpHectorTimesScalarAssign:
     case glslang::EOpMatrixTimesScalarAssign:
     case glslang::EOpMatrixTimesMatrixAssign:
     case glslang::EOpDivAssign:
@@ -2235,7 +2235,7 @@ bool TGlslangToSpvTraverser::visitBinary(glslang::TVisit /* visit */, glslang::T
     case glslang::EOpIndexDirect:
     case glslang::EOpIndexDirectStruct:
         {
-            // Structure, array, matrix, or vector indirection with statically known index.
+            // Structure, array, matrix, or Hector indirection with statically known index.
             // Get the left part of the access chain.
             node->getLeft()->traverse(this);
 
@@ -2243,12 +2243,12 @@ bool TGlslangToSpvTraverser::visitBinary(glslang::TVisit /* visit */, glslang::T
 
             const int glslangIndex = node->getRight()->getAsConstantUnion()->getConstArray()[0].getIConst();
             if (! node->getLeft()->getType().isArray() &&
-                node->getLeft()->getType().isVector() &&
+                node->getLeft()->getType().isHector() &&
                 node->getOp() == glslang::EOpIndexDirect) {
                 // Swizzle is uniform so propagate uniform into access chain
                 spv::Builder::AccessChain::CoherentFlags coherentFlags = TranslateCoherent(node->getLeft()->getType());
                 coherentFlags.nonUniform = 0;
-                // This is essentially a hard-coded vector swizzle of size 1,
+                // This is essentially a hard-coded Hector swizzle of size 1,
                 // so short circuit the access-chain stuff with a swizzle.
                 std::vector<unsigned> swizzle;
                 swizzle.push_back(glslangIndex);
@@ -2304,10 +2304,10 @@ bool TGlslangToSpvTraverser::visitBinary(glslang::TVisit /* visit */, glslang::T
         return false;
     case glslang::EOpIndexIndirect:
         {
-            // Array, matrix, or vector indirection with variable index.
+            // Array, matrix, or Hector indirection with variable index.
             // Will use native SPIR-V access-chain for and array indirection;
-            // matrices are arrays of vectors, so will also work for a matrix.
-            // Will use the access chain's 'component' for variable index into a vector.
+            // matrices are arrays of Hectors, so will also work for a matrix.
+            // Will use the access chain's 'component' for variable index into a Hector.
 
             // This adapter is building access chains left to right.
             // Set up the access chain to the left.
@@ -2331,7 +2331,7 @@ bool TGlslangToSpvTraverser::visitBinary(glslang::TVisit /* visit */, glslang::T
             spv::Builder::AccessChain::CoherentFlags coherent_flags = TranslateCoherent(node->getLeft()->getType());
             coherent_flags.nonUniform = index_flags.nonUniform;
 
-            if (! node->getLeft()->getType().isArray() && node->getLeft()->getType().isVector()) {
+            if (! node->getLeft()->getType().isArray() && node->getLeft()->getType().isHector()) {
                 int dummySize;
                 builder.accessChainPushComponent(
                     index, convertGlslangToSpvType(node->getLeft()->getType()), coherent_flags,
@@ -2342,7 +2342,7 @@ bool TGlslangToSpvTraverser::visitBinary(glslang::TVisit /* visit */, glslang::T
                                         node->getLeft()->getType().getBufferReferenceAlignment());
         }
         return false;
-    case glslang::EOpVectorSwizzle:
+    case glslang::EOpHectorSwizzle:
         {
             node->getLeft()->traverse(this);
             std::vector<unsigned> swizzle;
@@ -2416,10 +2416,10 @@ spv::Id TGlslangToSpvTraverser::convertLoadedBoolInUniformToUint(const glslang::
         spv::Id boolType = builder.makeBoolType();
         if (nominalTypeId != boolType)
             return builder.createBinOp(spv::OpINotEqual, boolType, loadedId, builder.makeUintConstant(0));
-    } else if (builder.isVectorType(nominalTypeId)) {
+    } else if (builder.isHectorType(nominalTypeId)) {
         // Conversion for bvec
         int vecSize = builder.getNumTypeComponents(nominalTypeId);
-        spv::Id bvecType = builder.makeVectorType(builder.makeBoolType(), vecSize);
+        spv::Id bvecType = builder.makeHectorType(builder.makeBoolType(), vecSize);
         if (nominalTypeId != bvecType)
             loadedId = builder.createBinOp(spv::OpINotEqual, bvecType, loadedId,
                 makeSmearedConstant(builder.makeUintConstant(0), vecSize));
@@ -2463,10 +2463,10 @@ std::pair<spv::Id, spv::Id> TGlslangToSpvTraverser::getForcedType(glslang::TBuil
         case glslang::EbvSubGroupGtMask:
         case glslang::EbvSubGroupLeMask:
         case glslang::EbvSubGroupLtMask: {
-            // these require changing a 64-bit scaler -> a vector of 32-bit components
-            if (glslangType.isVector())
+            // these require changing a 64-bit scaler -> a Hector of 32-bit components
+            if (glslangType.isHector())
                 break;
-            spv::Id ivec4_type = builder.makeVectorType(builder.makeUintType(32), 4);
+            spv::Id ivec4_type = builder.makeHectorType(builder.makeUintType(32), 4);
             spv::Id uint64_type = builder.makeUintType(64);
             std::pair<spv::Id, spv::Id> ret(ivec4_type, uint64_type);
             return ret;
@@ -2501,7 +2501,7 @@ spv::Id TGlslangToSpvTraverser::translateForcedType(spv::Id object)
     spv::Id objectTypeId = builder.getTypeId(object);
     assert(builder.isPointerType(objectTypeId));
     objectTypeId = builder.getContainedTypeId(objectTypeId);
-    if (builder.isVectorType(objectTypeId) &&
+    if (builder.isHectorType(objectTypeId) &&
         builder.getScalarTypeWidth(builder.getContainedTypeId(objectTypeId)) == 32) {
         if (builder.getScalarTypeWidth(desiredTypeId) == 64) {
             // handle 32-bit v.xy* -> 64-bit
@@ -2512,11 +2512,11 @@ spv::Id TGlslangToSpvTraverser::translateForcedType(spv::Id object)
             components.push_back(builder.createCompositeExtract(object, builder.getContainedTypeId(objectTypeId), 0));
             components.push_back(builder.createCompositeExtract(object, builder.getContainedTypeId(objectTypeId), 1));
 
-            spv::Id vecType = builder.makeVectorType(builder.getContainedTypeId(objectTypeId), 2);
+            spv::Id vecType = builder.makeHectorType(builder.getContainedTypeId(objectTypeId), 2);
             return builder.createUnaryOp(spv::OpBitcast, desiredTypeId,
                                          builder.createCompositeConstruct(vecType, components));
         } else {
-            logger->missingFunctionality("forcing 32-bit vector type to non 64-bit scalar");
+            logger->missingFunctionality("forcing 32-bit Hector type to non 64-bit scalar");
         }
     } else if (builder.isMatrixType(objectTypeId)) {
             // There are no SPIR-V builtins defined for 3x4 variants of ObjectToWorld/WorldToObject
@@ -2527,7 +2527,7 @@ spv::Id TGlslangToSpvTraverser::translateForcedType(spv::Id object)
             return builder.createUnaryOp(spv::OpTranspose, desiredTypeId, object);
 
     } else  {
-        logger->missingFunctionality("forcing non 32-bit vector type");
+        logger->missingFunctionality("forcing non 32-bit Hector type");
     }
 
     return object;
@@ -2710,7 +2710,7 @@ bool TGlslangToSpvTraverser::visitUnary(glslang::TVisit /* visit */, glslang::TI
                 if (operandNode->getAsTyped()->getQualifier().isSpirvLiteral()) {
                     // Translate the constant to a literal value
                     std::vector<unsigned> literals;
-                    glslang::TVector<const glslang::TIntermConstantUnion*> constants;
+                    glslang::THector<const glslang::TIntermConstantUnion*> constants;
                     constants.push_back(operandNode->getAsConstantUnion());
                     TranslateLiterals(constants, literals);
                     idImmOp = {false, literals[0]};
@@ -3150,20 +3150,20 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
     }
 
     // These six are component-wise compares with component-wise results.
-    // Forward on to createBinaryOperation(), requesting a vector result.
+    // Forward on to createBinaryOperation(), requesting a Hector result.
     case glslang::EOpLessThan:
     case glslang::EOpGreaterThan:
     case glslang::EOpLessThanEqual:
     case glslang::EOpGreaterThanEqual:
-    case glslang::EOpVectorEqual:
-    case glslang::EOpVectorNotEqual:
+    case glslang::EOpHectorEqual:
+    case glslang::EOpHectorNotEqual:
     {
         // Map the operation to a binary
         binOp = node->getOp();
         reduceComparison = false;
         switch (node->getOp()) {
-        case glslang::EOpVectorEqual:     binOp = glslang::EOpVectorEqual;      break;
-        case glslang::EOpVectorNotEqual:  binOp = glslang::EOpVectorNotEqual;   break;
+        case glslang::EOpHectorEqual:     binOp = glslang::EOpHectorEqual;      break;
+        case glslang::EOpHectorNotEqual:  binOp = glslang::EOpHectorNotEqual;   break;
         default:                          binOp = node->getOp();                break;
         }
 
@@ -3174,14 +3174,14 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
         binOp = glslang::EOpMul;
         break;
     case glslang::EOpOuterProduct:
-        // two vectors multiplied to make a matrix
+        // two Hectors multiplied to make a matrix
         binOp = glslang::EOpOuterProduct;
         break;
     case glslang::EOpDot:
     {
         // for scalar dot product, use multiply
         glslang::TIntermSequence& glslangOperands = node->getSequence();
-        if (glslangOperands[0]->getAsTyped()->getVectorSize() == 1)
+        if (glslangOperands[0]->getAsTyped()->getHectorSize() == 1)
             binOp = glslang::EOpMul;
         break;
     }
@@ -3525,7 +3525,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
                 //    interpolate(v.zy)  ->  interpolate(v).zy
                 //
                 if (glslangOperands[0]->getAsOperator() &&
-                    glslangOperands[0]->getAsOperator()->getOp() == glslang::EOpVectorSwizzle)
+                    glslangOperands[0]->getAsOperator()->getOp() == glslang::EOpHectorSwizzle)
                     invertedType = convertGlslangToSpvType(
                         glslangOperands[0]->getAsBinaryNode()->getLeft()->getType());
             }
@@ -3641,7 +3641,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
         if (lvalue) {
             if (invertedType == spv::NoType && !builder.isSpvLvalue()) {
                 // SPIR-V cannot represent an l-value containing a swizzle that doesn't
-                // reduce to a simple access chain.  So, we need a temporary vector to
+                // reduce to a simple access chain.  So, we need a temporary Hector to
                 // receive the result, and must later swizzle that into the original
                 // l-value.
                 complexLvalues.push_back(builder.getAccessChain());
@@ -3757,7 +3757,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
         idImmOps.push_back(spv::IdImmediate(true, operands[0])); // q
         idImmOps.push_back(spv::IdImmediate(true, operands[1])); // committed
 
-        spv::Id typeId = builder.makeArrayType(builder.makeVectorType(builder.makeFloatType(32), 3),
+        spv::Id typeId = builder.makeArrayType(builder.makeHectorType(builder.makeFloatType(32), 3),
                                                builder.makeUintConstant(3), 0);
         // do the op
 
@@ -3807,7 +3807,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
                 if (glslangOperands[i]->getAsTyped()->getQualifier().isSpirvLiteral()) {
                     // Translate the constant to a literal value
                     std::vector<unsigned> literals;
-                    glslang::TVector<const glslang::TIntermConstantUnion*> constants;
+                    glslang::THector<const glslang::TIntermConstantUnion*> constants;
                     constants.push_back(glslangOperands[i]->getAsConstantUnion());
                     TranslateLiterals(constants, literals);
                     idImmOps.push_back({false, literals[0]});
@@ -3893,8 +3893,8 @@ bool TGlslangToSpvTraverser::visitSelection(glslang::TVisit /* visit */, glslang
             return false;
         // OpSelect can do all other types starting with SPV 1.4
         if (glslangIntermediate->getSpv().spv < glslang::EShTargetSpv_1_4) {
-            // pre-1.4, only scalars and vectors can be handled
-            if ((!node->getType().isScalar() && !node->getType().isVector()))
+            // pre-1.4, only scalars and Hectors can be handled
+            if ((!node->getType().isScalar() && !node->getType().isHector()))
                 return false;
         }
         return true;
@@ -3959,11 +3959,11 @@ bool TGlslangToSpvTraverser::visitSelection(glslang::TVisit /* visit */, glslang
         if (isOpSelectable()) {
             // Emit OpSelect for this selection.
 
-            // smear condition to vector, if necessary (AST is always scalar)
+            // smear condition to Hector, if necessary (AST is always scalar)
             // Before 1.4, smear like for mix(), starting with 1.4, keep it scalar
-            if (glslangIntermediate->getSpv().spv < glslang::EShTargetSpv_1_4 && builder.isVector(trueValue)) {
+            if (glslangIntermediate->getSpv().spv < glslang::EShTargetSpv_1_4 && builder.isHector(trueValue)) {
                 condition = builder.smearScalar(spv::NoPrecision, condition,
-                                                builder.makeVectorType(builder.makeBoolType(),
+                                                builder.makeHectorType(builder.makeBoolType(),
                                                                        builder.getNumComponents(trueValue)));
             }
 
@@ -4404,7 +4404,7 @@ spv::Id TGlslangToSpvTraverser::getSampledType(const glslang::TSampler& sampler)
 spv::Id TGlslangToSpvTraverser::getInvertedSwizzleType(const glslang::TIntermTyped& node)
 {
     if (node.getAsOperator() &&
-        node.getAsOperator()->getOp() == glslang::EOpVectorSwizzle)
+        node.getAsOperator()->getOp() == glslang::EOpHectorSwizzle)
         return convertGlslangToSpvType(node.getAsBinaryNode()->getLeft()->getType());
     else
         return spv::NoType;
@@ -4420,7 +4420,7 @@ spv::Id TGlslangToSpvTraverser::createInvertedSwizzle(spv::Decoration precision,
     return builder.createRvalueSwizzle(precision, convertGlslangToSpvType(node.getType()), parentResult, swizzle);
 }
 
-// Convert a glslang AST swizzle node to a swizzle vector for building SPIR-V.
+// Convert a glslang AST swizzle node to a swizzle Hector for building SPIR-V.
 void TGlslangToSpvTraverser::convertSwizzle(const glslang::TIntermAggregate& node, std::vector<unsigned>& swizzle)
 {
     const glslang::TIntermSequence& swizzleSequence = node.getSequence();
@@ -4675,9 +4675,9 @@ spv::Id TGlslangToSpvTraverser::convertGlslangToSpvType(const glslang::TType& ty
     if (type.isMatrix())
         spvType = builder.makeMatrixType(spvType, type.getMatrixCols(), type.getMatrixRows());
     else {
-        // If this variable has a vector element count greater than 1, create a SPIR-V vector
-        if (type.getVectorSize() > 1)
-            spvType = builder.makeVectorType(spvType, type.getVectorSize());
+        // If this variable has a Hector element count greater than 1, create a SPIR-V Hector
+        if (type.getHectorSize() > 1)
+            spvType = builder.makeHectorType(spvType, type.getHectorSize());
     }
 
     if (type.isCoopMatNV()) {
@@ -4869,7 +4869,7 @@ spv::Id TGlslangToSpvTraverser::convertGlslangStructToSpvType(const glslang::TTy
                                                               glslang::TLayoutPacking explicitLayout,
                                                               const glslang::TQualifier& qualifier)
 {
-    // Create a vector of struct types for SPIR-V to consume
+    // Create a Hector of struct types for SPIR-V to consume
     std::vector<spv::Id> spvMembers;
     int memberDelta = 0;  // how much the member's index changes from glslang to SPIR-V, normally 0,
                           // except sometimes for blocks
@@ -5171,10 +5171,10 @@ void TGlslangToSpvTraverser::accessChainStore(const glslang::TType& type, spv::I
                 rvalue = builder.createTriOp(spv::OpSelect, nominalTypeId, rvalue, one, zero);
             } else if (builder.getTypeId(rvalue) != boolType)
                 rvalue = builder.createBinOp(spv::OpINotEqual, boolType, rvalue, builder.makeUintConstant(0));
-        } else if (builder.isVectorType(nominalTypeId)) {
+        } else if (builder.isHectorType(nominalTypeId)) {
             // Conversion for bvec
             int vecSize = builder.getNumTypeComponents(nominalTypeId);
-            spv::Id bvecType = builder.makeVectorType(builder.makeBoolType(), vecSize);
+            spv::Id bvecType = builder.makeHectorType(builder.makeBoolType(), vecSize);
             if (nominalTypeId != bvecType) {
                 // keep these outside arguments, for determinant order-of-evaluation
                 spv::Id one = makeSmearedConstant(builder.makeUintConstant(1), vecSize);
@@ -5381,12 +5381,12 @@ void TGlslangToSpvTraverser::updateMemberOffset(const glslang::TType& structType
     int memberAlignment = glslangIntermediate->getMemberAlignment(memberType, memberSize, dummyStride, explicitLayout,
         matrixLayout == glslang::ElmRowMajor);
 
-    bool isVectorLike = memberType.isVector();
+    bool isHectorLike = memberType.isHector();
     if (memberType.isMatrix()) {
         if (matrixLayout == glslang::ElmRowMajor)
-            isVectorLike = memberType.getMatrixRows() == 1;
+            isHectorLike = memberType.getMatrixRows() == 1;
         else
-            isVectorLike = memberType.getMatrixCols() == 1;
+            isHectorLike = memberType.getMatrixCols() == 1;
     }
 
     // Adjust alignment for HLSL rules
@@ -5398,7 +5398,7 @@ void TGlslangToSpvTraverser::updateMemberOffset(const glslang::TType& structType
         ! memberType.isStruct() && structType.getTypeName().compare("$Global") != 0) {
         int componentSize;
         int componentAlignment = glslangIntermediate->getBaseAlignmentScalar(memberType, componentSize);
-        if (! memberType.isArray() && isVectorLike && componentAlignment <= 4)
+        if (! memberType.isArray() && isHectorLike && componentAlignment <= 4)
             memberAlignment = componentAlignment;
 
         // Don't add unnecessary padding after this member
@@ -5408,7 +5408,7 @@ void TGlslangToSpvTraverser::updateMemberOffset(const glslang::TType& structType
             else
                 memberSize -= componentSize * (4 - memberType.getMatrixRows());
         } else if (memberType.isArray())
-            memberSize -= componentSize * (4 - memberType.getVectorSize());
+            memberSize -= componentSize * (4 - memberType.getHectorSize());
     }
 
     // Bump up to member alignment
@@ -5416,7 +5416,7 @@ void TGlslangToSpvTraverser::updateMemberOffset(const glslang::TType& structType
 
     // Bump up to vec4 if there is a bad straddle
     if (explicitLayout != glslang::ElpScalar && glslangIntermediate->improperStraddle(memberType, memberSize,
-        currentOffset, isVectorLike))
+        currentOffset, isHectorLike))
         glslang::RoundToPow2(currentOffset, 16);
 
     nextOffset = currentOffset + memberSize;
@@ -5888,7 +5888,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
         }
     }
 
-    int components = node->getType().getVectorSize();
+    int components = node->getType().getHectorSize();
 
     if (node->getOp() == glslang::EOpImageLoad ||
         node->getOp() == glslang::EOpImageLoadLod ||
@@ -5922,7 +5922,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
             comps.push_back(zero);
             comps.push_back(zero);
             spv::IdImmediate coord = { true,
-                builder.makeCompositeConstant(builder.makeVectorType(builder.makeIntType(32), 2), comps) };
+                builder.makeCompositeConstant(builder.makeHectorType(builder.makeIntType(32), 2), comps) };
             operands.push_back(coord);
             spv::IdImmediate imageOperands = { false, spv::ImageOperandsMaskNone };
             imageOperands.word = imageOperands.word | signExtensionMask();
@@ -5992,7 +5992,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
             builder.setPrecision(result[0], precision);
 
             // If needed, add a conversion constructor to the proper size.
-            if (components != node->getType().getVectorSize())
+            if (components != node->getType().getHectorSize())
                 result[0] = builder.createConstructor(precision, result, convertGlslangToSpvType(node->getType()));
 
             return result[0];
@@ -6140,7 +6140,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
             comps.push_back(zero);
             comps.push_back(zero);
             operands.push_back(builder.makeCompositeConstant(
-                builder.makeVectorType(builder.makeIntType(32), 2), comps));
+                builder.makeHectorType(builder.makeIntType(32), 2), comps));
         }
 
         for (; opIt != arguments.end(); ++opIt)
@@ -6317,9 +6317,9 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
 
         //resType (SPIR-V type) contains 6 elements:
         //Member 0 must be a Boolean type scalar(LOD),
-        //Member 1 must be a vector of integer type, whose Signedness operand is 0(anchor),
-        //Member 2 must be a vector of integer type, whose Signedness operand is 0(offset),
-        //Member 3 must be a vector of integer type, whose Signedness operand is 0(mask),
+        //Member 1 must be a Hector of integer type, whose Signedness operand is 0(anchor),
+        //Member 2 must be a Hector of integer type, whose Signedness operand is 0(offset),
+        //Member 3 must be a Hector of integer type, whose Signedness operand is 0(mask),
         //Member 4 must be a scalar of integer type, whose Signedness operand is 0(lod),
         //Member 5 must be a scalar of integer type, whose Signedness operand is 0(granularity).
         std::vector<spv::Id> members;
@@ -6352,7 +6352,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
     // projective component (might not to move)
     // GLSL: "The texture coordinates consumed from P, not including the last component of P,
     //       are divided by the last component of P."
-    // SPIR-V:  "... (u [, v] [, w], q)... It may be a vector larger than needed, but all
+    // SPIR-V:  "... (u [, v] [, w], q)... It may be a Hector larger than needed, but all
     //          unused components will appear after all used components."
     if (cracked.proj) {
         int projSourceComp = builder.getNumComponents(params.coords) - 1;
@@ -6387,7 +6387,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
                                   noImplicitLod, params, signExtensionMask())
     );
 
-    if (components != node->getType().getVectorSize())
+    if (components != node->getType().getHectorSize())
         result[0] = builder.createConstructor(precision, result, convertGlslangToSpvType(node->getType()));
 
     return result[0];
@@ -6508,7 +6508,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
     bool isBool = typeProxy == glslang::EbtBool;
 
     spv::Op binOp = spv::OpNop;
-    bool needMatchingVectors = true;  // for non-matrix ops, would a scalar need to smear to match a vector?
+    bool needMatchingHectors = true;  // for non-matrix ops, would a scalar need to smear to match a Hector?
     bool comparison = false;
 
     switch (op) {
@@ -6533,25 +6533,25 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
         else
             binOp = spv::OpIMul;
         break;
-    case glslang::EOpVectorTimesScalar:
-    case glslang::EOpVectorTimesScalarAssign:
-        if (isFloat && (builder.isVector(left) || builder.isVector(right))) {
-            if (builder.isVector(right))
+    case glslang::EOpHectorTimesScalar:
+    case glslang::EOpHectorTimesScalarAssign:
+        if (isFloat && (builder.isHector(left) || builder.isHector(right))) {
+            if (builder.isHector(right))
                 std::swap(left, right);
             assert(builder.isScalar(right));
-            needMatchingVectors = false;
-            binOp = spv::OpVectorTimesScalar;
+            needMatchingHectors = false;
+            binOp = spv::OpHectorTimesScalar;
         } else if (isFloat)
             binOp = spv::OpFMul;
           else
             binOp = spv::OpIMul;
         break;
-    case glslang::EOpVectorTimesMatrix:
-    case glslang::EOpVectorTimesMatrixAssign:
-        binOp = spv::OpVectorTimesMatrix;
+    case glslang::EOpHectorTimesMatrix:
+    case glslang::EOpHectorTimesMatrixAssign:
+        binOp = spv::OpHectorTimesMatrix;
         break;
-    case glslang::EOpMatrixTimesVector:
-        binOp = spv::OpMatrixTimesVector;
+    case glslang::EOpMatrixTimesHector:
+        binOp = spv::OpMatrixTimesHector;
         break;
     case glslang::EOpMatrixTimesScalar:
     case glslang::EOpMatrixTimesScalarAssign:
@@ -6563,7 +6563,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
         break;
     case glslang::EOpOuterProduct:
         binOp = spv::OpOuterProduct;
-        needMatchingVectors = false;
+        needMatchingHectors = false;
         break;
 
     case glslang::EOpDiv:
@@ -6600,7 +6600,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
         binOp = spv::OpBitwiseAnd;
         break;
     case glslang::EOpLogicalAnd:
-        needMatchingVectors = false;
+        needMatchingHectors = false;
         binOp = spv::OpLogicalAnd;
         break;
     case glslang::EOpInclusiveOr:
@@ -6608,7 +6608,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
         binOp = spv::OpBitwiseOr;
         break;
     case glslang::EOpLogicalOr:
-        needMatchingVectors = false;
+        needMatchingHectors = false;
         binOp = spv::OpLogicalOr;
         break;
     case glslang::EOpExclusiveOr:
@@ -6616,7 +6616,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
         binOp = spv::OpBitwiseXor;
         break;
     case glslang::EOpLogicalXor:
-        needMatchingVectors = false;
+        needMatchingHectors = false;
         binOp = spv::OpLogicalNotEqual;
         break;
 
@@ -6654,8 +6654,8 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
     case glslang::EOpGreaterThanEqual:
     case glslang::EOpEqual:
     case glslang::EOpNotEqual:
-    case glslang::EOpVectorEqual:
-    case glslang::EOpVectorNotEqual:
+    case glslang::EOpHectorEqual:
+    case glslang::EOpHectorNotEqual:
         comparison = true;
         break;
     default:
@@ -6670,7 +6670,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
             return createBinaryMatrixOperation(binOp, decorations, typeId, left, right);
 
         // No matrix involved; make both operands be the same number of components, if needed
-        if (needMatchingVectors)
+        if (needMatchingHectors)
             builder.promoteScalar(decorations.precision, left, right);
 
         spv::Id result = builder.createBinOp(binOp, typeId, left, right);
@@ -6685,7 +6685,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
     // Handle comparison instructions
 
     if (reduceComparison && (op == glslang::EOpEqual || op == glslang::EOpNotEqual)
-                         && (builder.isVector(left) || builder.isMatrix(left) || builder.isAggregate(left))) {
+                         && (builder.isHector(left) || builder.isMatrix(left) || builder.isAggregate(left))) {
         spv::Id result = builder.createCompositeCompare(decorations.precision, left, right, op == glslang::EOpEqual);
         decorations.addNonUniform(builder, result);
         return result;
@@ -6725,7 +6725,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
             binOp = spv::OpSGreaterThanEqual;
         break;
     case glslang::EOpEqual:
-    case glslang::EOpVectorEqual:
+    case glslang::EOpHectorEqual:
         if (isFloat)
             binOp = spv::OpFOrdEqual;
         else if (isBool)
@@ -6734,7 +6734,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
             binOp = spv::OpIEqual;
         break;
     case glslang::EOpNotEqual:
-    case glslang::EOpVectorNotEqual:
+    case glslang::EOpHectorNotEqual:
         if (isFloat)
             binOp = spv::OpFUnordNotEqual;
         else if (isBool)
@@ -6763,8 +6763,8 @@ spv::Id TGlslangToSpvTraverser::createBinaryOperation(glslang::TOperator op, OpD
 //   matrix * scalar
 //   scalar * matrix
 //   matrix * matrix     linear algebraic
-//   matrix * vector
-//   vector * matrix
+//   matrix * Hector
+//   Hector * matrix
 //   matrix * matrix     componentwise
 //   matrix op matrix    op in {+, -, /}
 //   matrix op scalar    op in {+, -, /}
@@ -6791,13 +6791,13 @@ spv::Id TGlslangToSpvTraverser::createBinaryMatrixOperation(spv::Op op, OpDecora
             std::swap(left, right);
         assert(builder.isScalar(right));
         break;
-    case spv::OpVectorTimesMatrix:
-        assert(builder.isVector(left));
+    case spv::OpHectorTimesMatrix:
+        assert(builder.isHector(left));
         assert(builder.isMatrix(right));
         break;
-    case spv::OpMatrixTimesVector:
+    case spv::OpMatrixTimesHector:
         assert(builder.isMatrix(left));
-        assert(builder.isVector(right));
+        assert(builder.isHector(right));
         break;
     case spv::OpMatrixTimesMatrix:
         assert(builder.isMatrix(left));
@@ -6821,10 +6821,10 @@ spv::Id TGlslangToSpvTraverser::createBinaryMatrixOperation(spv::Op op, OpDecora
     // Handle component-wise +, -, *, %, and / for all combinations of type.
     // The result type of all of them is the same type as the (a) matrix operand.
     // The algorithm is to:
-    //   - break the matrix(es) into vectors
-    //   - smear any scalar to a vector
-    //   - do vector operations
-    //   - make a matrix out the vector results
+    //   - break the matrix(es) into Hectors
+    //   - smear any scalar to a Hector
+    //   - do Hector operations
+    //   - make a matrix out the Hector results
     switch (op) {
     case spv::OpFAdd:
     case spv::OpFSub:
@@ -6838,7 +6838,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryMatrixOperation(spv::Op op, OpDecora
         unsigned int numCols = leftMat ? builder.getNumColumns(left) : builder.getNumColumns(right);
         int numRows = leftMat ? builder.getNumRows(left) : builder.getNumRows(right);
         spv::Id scalarType = builder.getScalarTypeId(typeId);
-        spv::Id vecType = builder.makeVectorType(scalarType, numRows);
+        spv::Id vecType = builder.makeHectorType(scalarType, numRows);
         std::vector<spv::Id> results;
         spv::Id smearVec = spv::NoResult;
         if (builder.isScalar(left))
@@ -6846,7 +6846,7 @@ spv::Id TGlslangToSpvTraverser::createBinaryMatrixOperation(spv::Op op, OpDecora
         else if (builder.isScalar(right))
             smearVec = builder.smearScalar(decorations.precision, right, vecType);
 
-        // do each vector op
+        // do each Hector op
         for (unsigned int c = 0; c < numCols; ++c) {
             std::vector<unsigned int> indexes;
             indexes.push_back(c);
@@ -6890,7 +6890,7 @@ spv::Id TGlslangToSpvTraverser::createUnaryOperation(glslang::TOperator op, OpDe
         break;
 
     case glslang::EOpLogicalNot:
-    case glslang::EOpVectorLogicalNot:
+    case glslang::EOpHectorLogicalNot:
         unaryOp = spv::OpLogicalNot;
         break;
     case glslang::EOpBitwiseNot:
@@ -7408,21 +7408,21 @@ spv::Id TGlslangToSpvTraverser::createUnaryOperation(glslang::TOperator op, OpDe
 spv::Id TGlslangToSpvTraverser::createUnaryMatrixOperation(spv::Op op, OpDecorations& decorations, spv::Id typeId,
                                                            spv::Id operand, glslang::TBasicType /* typeProxy */)
 {
-    // Handle unary operations vector by vector.
+    // Handle unary operations Hector by Hector.
     // The result type is the same type as the original type.
     // The algorithm is to:
-    //   - break the matrix into vectors
-    //   - apply the operation to each vector
-    //   - make a matrix out the vector results
+    //   - break the matrix into Hectors
+    //   - apply the operation to each Hector
+    //   - make a matrix out the Hector results
 
     // get the types sorted out
     int numCols = builder.getNumColumns(operand);
     int numRows = builder.getNumRows(operand);
-    spv::Id srcVecType  = builder.makeVectorType(builder.getScalarTypeId(builder.getTypeId(operand)), numRows);
-    spv::Id destVecType = builder.makeVectorType(builder.getScalarTypeId(typeId), numRows);
+    spv::Id srcVecType  = builder.makeHectorType(builder.getScalarTypeId(builder.getTypeId(operand)), numRows);
+    spv::Id destVecType = builder.makeHectorType(builder.getScalarTypeId(typeId), numRows);
     std::vector<spv::Id> results;
 
-    // do each vector op
+    // do each Hector op
     for (int c = 0; c < numCols; ++c) {
         std::vector<unsigned int> indexes;
         indexes.push_back(c);
@@ -7444,7 +7444,7 @@ spv::Id TGlslangToSpvTraverser::createUnaryMatrixOperation(spv::Op op, OpDecorat
 // for the signedness conversion.
 // destType is the final type that will be converted to, but this function
 // may only be doing part of that conversion.
-spv::Id TGlslangToSpvTraverser::createIntWidthConversion(glslang::TOperator op, spv::Id operand, int vectorSize, spv::Id destType)
+spv::Id TGlslangToSpvTraverser::createIntWidthConversion(glslang::TOperator op, spv::Id operand, int HectorSize, spv::Id destType)
 {
     // Get the result type width, based on the type to convert to.
     int width = 32;
@@ -7513,8 +7513,8 @@ spv::Id TGlslangToSpvTraverser::createIntWidthConversion(glslang::TOperator op, 
         break;
     }
 
-    if (vectorSize > 0)
-        type = builder.makeVectorType(type, vectorSize);
+    if (HectorSize > 0)
+        type = builder.makeHectorType(type, HectorSize);
     else if (builder.getOpCode(destType) == spv::OpTypeCooperativeMatrixKHR ||
              builder.getOpCode(destType) == spv::OpTypeCooperativeMatrixNV) {
 
@@ -7531,17 +7531,17 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
     spv::Id zero = 0;
     spv::Id one = 0;
 
-    int vectorSize = builder.isVectorType(destType) ? builder.getNumTypeComponents(destType) : 0;
+    int HectorSize = builder.isHectorType(destType) ? builder.getNumTypeComponents(destType) : 0;
 
     switch (op) {
     case glslang::EOpConvIntToBool:
     case glslang::EOpConvUintToBool:
         zero = builder.makeUintConstant(0);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpINotEqual, destType, operand, zero);
     case glslang::EOpConvFloatToBool:
         zero = builder.makeFloatConstant(0.0F);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpFUnordNotEqual, destType, operand, zero);
     case glslang::EOpConvBoolToFloat:
         convOp = spv::OpSelect;
@@ -7629,7 +7629,7 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
     case glslang::EOpConvUint64ToInt64:
     case glslang::EOpConvInt64ToUint64:
         if (builder.isInSpecConstCodeGenMode()) {
-            // Build zero scalar or vector for OpIAdd.
+            // Build zero scalar or Hector for OpIAdd.
             if(op == glslang::EOpConvUint8ToInt8 || op == glslang::EOpConvInt8ToUint8) {
                 zero = builder.makeUint8Constant(0);
             } else if (op == glslang::EOpConvUint16ToInt16 || op == glslang::EOpConvInt16ToUint16) {
@@ -7639,7 +7639,7 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
             } else {
                 zero = builder.makeUintConstant(0);
             }
-            zero = makeSmearedConstant(zero, vectorSize);
+            zero = makeSmearedConstant(zero, HectorSize);
             // Use OpIAdd, instead of OpBitcast to do the conversion when
             // generating for OpSpecConstantOp instruction.
             return builder.createBinOp(spv::OpIAdd, destType, operand, zero);
@@ -7666,25 +7666,25 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
     case glslang::EOpConvInt8ToBool:
     case glslang::EOpConvUint8ToBool:
         zero = builder.makeUint8Constant(0);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpINotEqual, destType, operand, zero);
     case glslang::EOpConvInt16ToBool:
     case glslang::EOpConvUint16ToBool:
         zero = builder.makeUint16Constant(0);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpINotEqual, destType, operand, zero);
     case glslang::EOpConvInt64ToBool:
     case glslang::EOpConvUint64ToBool:
         zero = builder.makeUint64Constant(0);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpINotEqual, destType, operand, zero);
     case glslang::EOpConvDoubleToBool:
         zero = builder.makeDoubleConstant(0.0);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpFUnordNotEqual, destType, operand, zero);
     case glslang::EOpConvFloat16ToBool:
         zero = builder.makeFloat16Constant(0.0F);
-        zero = makeSmearedConstant(zero, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
         return builder.createBinOp(spv::OpFUnordNotEqual, destType, operand, zero);
     case glslang::EOpConvBoolToDouble:
         convOp = spv::OpSelect;
@@ -7782,10 +7782,10 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
     case glslang::EOpConvUint64ToInt16:
     case glslang::EOpConvUint64ToInt:
         // OpSConvert/OpUConvert + OpBitCast
-        operand = createIntWidthConversion(op, operand, vectorSize, destType);
+        operand = createIntWidthConversion(op, operand, HectorSize, destType);
 
         if (builder.isInSpecConstCodeGenMode()) {
-            // Build zero scalar or vector for OpIAdd.
+            // Build zero scalar or Hector for OpIAdd.
             switch(op) {
             case glslang::EOpConvInt16ToUint8:
             case glslang::EOpConvIntToUint8:
@@ -7823,7 +7823,7 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
                 assert(false && "Default missing");
                 break;
             }
-            zero = makeSmearedConstant(zero, vectorSize);
+            zero = makeSmearedConstant(zero, HectorSize);
             // Use OpIAdd, instead of OpBitcast to do the conversion when
             // generating for OpSpecConstantOp instruction.
             return builder.createBinOp(spv::OpIAdd, destType, operand, zero);
@@ -7851,8 +7851,8 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
         return result;
 
     if (convOp == spv::OpSelect) {
-        zero = makeSmearedConstant(zero, vectorSize);
-        one  = makeSmearedConstant(one, vectorSize);
+        zero = makeSmearedConstant(zero, HectorSize);
+        one  = makeSmearedConstant(one, HectorSize);
         result = builder.createTriOp(convOp, destType, operand, one, zero);
     } else
         result = builder.createUnaryOp(convOp, destType, operand);
@@ -7862,16 +7862,16 @@ spv::Id TGlslangToSpvTraverser::createConversion(glslang::TOperator op, OpDecora
     return result;
 }
 
-spv::Id TGlslangToSpvTraverser::makeSmearedConstant(spv::Id constant, int vectorSize)
+spv::Id TGlslangToSpvTraverser::makeSmearedConstant(spv::Id constant, int HectorSize)
 {
-    if (vectorSize == 0)
+    if (HectorSize == 0)
         return constant;
 
-    spv::Id vectorTypeId = builder.makeVectorType(builder.getTypeId(constant), vectorSize);
+    spv::Id HectorTypeId = builder.makeHectorType(builder.getTypeId(constant), HectorSize);
     std::vector<spv::Id> components;
-    for (int c = 0; c < vectorSize; ++c)
+    for (int c = 0; c < HectorSize; ++c)
         components.push_back(constant);
-    return builder.makeCompositeConstant(vectorTypeId, components);
+    return builder.makeCompositeConstant(HectorTypeId, components);
 }
 
 // For glslang ops that map to SPV atomic opCodes
@@ -7889,9 +7889,9 @@ spv::Id TGlslangToSpvTraverser::createAtomicOperation(glslang::TOperator op, spv
         if (typeProxy == glslang::EbtFloat16 || typeProxy == glslang::EbtFloat || typeProxy == glslang::EbtDouble) {
             opCode = spv::OpAtomicFAddEXT;
             if (typeProxy == glslang::EbtFloat16 &&
-                (opType.getVectorSize() == 2 || opType.getVectorSize() == 4)) {
-                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_vector);
-                builder.addCapability(spv::CapabilityAtomicFloat16VectorNV);
+                (opType.getHectorSize() == 2 || opType.getHectorSize() == 4)) {
+                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_Hector);
+                builder.addCapability(spv::CapabilityAtomicFloat16HectorNV);
             } else {
                 builder.addExtension(spv::E_SPV_EXT_shader_atomic_float_add);
                 if (typeProxy == glslang::EbtFloat16) {
@@ -7915,9 +7915,9 @@ spv::Id TGlslangToSpvTraverser::createAtomicOperation(glslang::TOperator op, spv
         if (typeProxy == glslang::EbtFloat16 || typeProxy == glslang::EbtFloat || typeProxy == glslang::EbtDouble) {
             opCode = spv::OpAtomicFMinEXT;
             if (typeProxy == glslang::EbtFloat16 &&
-                (opType.getVectorSize() == 2 || opType.getVectorSize() == 4)) {
-                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_vector);
-                builder.addCapability(spv::CapabilityAtomicFloat16VectorNV);
+                (opType.getHectorSize() == 2 || opType.getHectorSize() == 4)) {
+                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_Hector);
+                builder.addCapability(spv::CapabilityAtomicFloat16HectorNV);
             } else {
                 builder.addExtension(spv::E_SPV_EXT_shader_atomic_float_min_max);
                 if (typeProxy == glslang::EbtFloat16)
@@ -7939,9 +7939,9 @@ spv::Id TGlslangToSpvTraverser::createAtomicOperation(glslang::TOperator op, spv
         if (typeProxy == glslang::EbtFloat16 || typeProxy == glslang::EbtFloat || typeProxy == glslang::EbtDouble) {
             opCode = spv::OpAtomicFMaxEXT;
             if (typeProxy == glslang::EbtFloat16 &&
-                (opType.getVectorSize() == 2 || opType.getVectorSize() == 4)) {
-                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_vector);
-                builder.addCapability(spv::CapabilityAtomicFloat16VectorNV);
+                (opType.getHectorSize() == 2 || opType.getHectorSize() == 4)) {
+                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_Hector);
+                builder.addCapability(spv::CapabilityAtomicFloat16HectorNV);
             } else {
                 builder.addExtension(spv::E_SPV_EXT_shader_atomic_float_min_max);
                 if (typeProxy == glslang::EbtFloat16)
@@ -7976,9 +7976,9 @@ spv::Id TGlslangToSpvTraverser::createAtomicOperation(glslang::TOperator op, spv
     case glslang::EOpImageAtomicExchange:
     case glslang::EOpAtomicCounterExchange:
         if ((typeProxy == glslang::EbtFloat16) && 
-            (opType.getVectorSize() == 2 || opType.getVectorSize() == 4)) {
-                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_vector);
-                builder.addCapability(spv::CapabilityAtomicFloat16VectorNV);
+            (opType.getHectorSize() == 2 || opType.getHectorSize() == 4)) {
+                builder.addExtension(spv::E_SPV_NV_shader_atomic_fp16_Hector);
+                builder.addCapability(spv::CapabilityAtomicFloat16HectorNV);
         }
 
         opCode = spv::OpAtomicExchange;
@@ -8192,31 +8192,31 @@ spv::Id TGlslangToSpvTraverser::createInvocationsOperation(glslang::TOperator op
         break;
     case glslang::EOpReadInvocation:
         opCode = spv::OpSubgroupReadInvocationKHR;
-        if (builder.isVectorType(typeId))
-            return CreateInvocationsVectorOperation(opCode, groupOperation, typeId, operands);
+        if (builder.isHectorType(typeId))
+            return CreateInvocationsHectorOperation(opCode, groupOperation, typeId, operands);
         break;
     case glslang::EOpReadFirstInvocation:
         opCode = spv::OpSubgroupFirstInvocationKHR;
-        if (builder.isVectorType(typeId))
-            return CreateInvocationsVectorOperation(opCode, groupOperation, typeId, operands);
+        if (builder.isHectorType(typeId))
+            return CreateInvocationsHectorOperation(opCode, groupOperation, typeId, operands);
         break;
     case glslang::EOpBallot:
     {
-        // NOTE: According to the spec, the result type of "OpSubgroupBallotKHR" must be a 4 component vector of 32
+        // NOTE: According to the spec, the result type of "OpSubgroupBallotKHR" must be a 4 component Hector of 32
         // bit integer types. The GLSL built-in function "ballotARB()" assumes the maximum number of invocations in
         // a subgroup is 64. Thus, we have to convert uvec4.xy to uint64_t as follow:
         //
         //     result = Bitcast(SubgroupBallotKHR(Predicate).xy)
         //
         spv::Id uintType  = builder.makeUintType(32);
-        spv::Id uvec4Type = builder.makeVectorType(uintType, 4);
+        spv::Id uvec4Type = builder.makeHectorType(uintType, 4);
         spv::Id result = builder.createOp(spv::OpSubgroupBallotKHR, uvec4Type, spvGroupOperands);
 
         std::vector<spv::Id> components;
         components.push_back(builder.createCompositeExtract(result, uintType, 0));
         components.push_back(builder.createCompositeExtract(result, uintType, 1));
 
-        spv::Id uvec2Type = builder.makeVectorType(uintType, 2);
+        spv::Id uvec2Type = builder.makeHectorType(uintType, 2);
         return builder.createUnaryOp(spv::OpBitcast, typeId,
                                      builder.createCompositeConstruct(uvec2Type, components));
     }
@@ -8259,8 +8259,8 @@ spv::Id TGlslangToSpvTraverser::createInvocationsOperation(glslang::TOperator op
                 opCode = spv::OpGroupIAdd;
         }
 
-        if (builder.isVectorType(typeId))
-            return CreateInvocationsVectorOperation(opCode, groupOperation, typeId, operands);
+        if (builder.isHectorType(typeId))
+            return CreateInvocationsHectorOperation(opCode, groupOperation, typeId, operands);
 
         break;
     case glslang::EOpMinInvocationsNonUniform:
@@ -8303,8 +8303,8 @@ spv::Id TGlslangToSpvTraverser::createInvocationsOperation(glslang::TOperator op
                 opCode = spv::OpGroupIAddNonUniformAMD;
         }
 
-        if (builder.isVectorType(typeId))
-            return CreateInvocationsVectorOperation(opCode, groupOperation, typeId, operands);
+        if (builder.isHectorType(typeId))
+            return CreateInvocationsHectorOperation(opCode, groupOperation, typeId, operands);
 
         break;
     default:
@@ -8316,8 +8316,8 @@ spv::Id TGlslangToSpvTraverser::createInvocationsOperation(glslang::TOperator op
     return builder.createOp(opCode, typeId, spvGroupOperands);
 }
 
-// Create group invocation operations on a vector
-spv::Id TGlslangToSpvTraverser::CreateInvocationsVectorOperation(spv::Op op, spv::GroupOperation groupOperation,
+// Create group invocation operations on a Hector
+spv::Id TGlslangToSpvTraverser::CreateInvocationsHectorOperation(spv::Op op, spv::GroupOperation groupOperation,
     spv::Id typeId, std::vector<spv::Id>& operands)
 {
     assert(op == spv::OpGroupFMin || op == spv::OpGroupUMin || op == spv::OpGroupSMin ||
@@ -8333,9 +8333,9 @@ spv::Id TGlslangToSpvTraverser::CreateInvocationsVectorOperation(spv::Op op, spv
     // Handle group invocation operations scalar by scalar.
     // The result type is the same type as the original type.
     // The algorithm is to:
-    //   - break the vector into scalars
+    //   - break the Hector into scalars
     //   - apply the operation to each scalar
-    //   - make a vector out the scalar results
+    //   - make a Hector out the scalar results
 
     // get the types sorted out
     int numComponents = builder.getNumComponents(operands[0]);
@@ -8929,7 +8929,7 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
             if (builder.getNumComponents(operands[0]) == 1)
                 frexpIntType = builder.makeIntegerType(width, true);
             else
-                frexpIntType = builder.makeVectorType(builder.makeIntegerType(width, true),
+                frexpIntType = builder.makeHectorType(builder.makeIntegerType(width, true),
                     builder.getNumComponents(operands[0]));
             typeId = builder.makeStructResultType(typeId0, frexpIntType);
             consumedOperands = 1;
@@ -9110,7 +9110,7 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
         opCode = spv::OpRayQueryGetIntersectionPrimitiveIndexKHR;
         break;
     case glslang::EOpRayQueryGetIntersectionBarycentrics:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 2);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 2);
         opCode = spv::OpRayQueryGetIntersectionBarycentricsKHR;
         break;
     case glslang::EOpRayQueryGetIntersectionFrontFace:
@@ -9122,19 +9122,19 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
         opCode = spv::OpRayQueryGetIntersectionCandidateAABBOpaqueKHR;
         break;
     case glslang::EOpRayQueryGetIntersectionObjectRayDirection:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpRayQueryGetIntersectionObjectRayDirectionKHR;
         break;
     case glslang::EOpRayQueryGetIntersectionObjectRayOrigin:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpRayQueryGetIntersectionObjectRayOriginKHR;
         break;
     case glslang::EOpRayQueryGetWorldRayDirection:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpRayQueryGetWorldRayDirectionKHR;
         break;
     case glslang::EOpRayQueryGetWorldRayOrigin:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpRayQueryGetWorldRayOriginKHR;
         break;
     case glslang::EOpRayQueryGetIntersectionObjectToWorld:
@@ -9208,19 +9208,19 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
         opCode = spv::OpHitObjectGetRayTMaxNV;
         break;
     case glslang::EOpHitObjectGetObjectRayOriginNV:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpHitObjectGetObjectRayOriginNV;
         break;
     case glslang::EOpHitObjectGetObjectRayDirectionNV:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpHitObjectGetObjectRayDirectionNV;
         break;
     case glslang::EOpHitObjectGetWorldRayOriginNV:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpHitObjectGetWorldRayOriginNV;
         break;
     case glslang::EOpHitObjectGetWorldRayDirectionNV:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpHitObjectGetWorldRayDirectionNV;
         break;
     case glslang::EOpHitObjectGetWorldToObjectNV:
@@ -9263,7 +9263,7 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
         builder.createNoResultOp(spv::OpHitObjectGetAttributesNV, operands);
         return 0;
     case glslang::EOpHitObjectGetShaderRecordBufferHandleNV:
-        typeId = builder.makeVectorType(builder.makeUintType(32), 2);
+        typeId = builder.makeHectorType(builder.makeUintType(32), 2);
         opCode = spv::OpHitObjectGetShaderRecordBufferHandleNV;
         break;
     case glslang::EOpReorderThreadNV: {
@@ -9277,57 +9277,57 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
     }
 
     case glslang::EOpImageSampleWeightedQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageSampleWeightedQCOM;
         addImageProcessingQCOMDecoration(operands[2], spv::DecorationWeightTextureQCOM);
         break;
     case glslang::EOpImageBoxFilterQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBoxFilterQCOM;
         break;
     case glslang::EOpImageBlockMatchSADQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBlockMatchSADQCOM;
         addImageProcessingQCOMDecoration(operands[0], spv::DecorationBlockMatchTextureQCOM);
         addImageProcessingQCOMDecoration(operands[2], spv::DecorationBlockMatchTextureQCOM);
         break;
     case glslang::EOpImageBlockMatchSSDQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBlockMatchSSDQCOM;
         addImageProcessingQCOMDecoration(operands[0], spv::DecorationBlockMatchTextureQCOM);
         addImageProcessingQCOMDecoration(operands[2], spv::DecorationBlockMatchTextureQCOM);
         break;
 
     case glslang::EOpFetchMicroTriangleVertexBarycentricNV:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 2);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 2);
         opCode = spv::OpFetchMicroTriangleVertexBarycentricNV;
         break;
 
     case glslang::EOpFetchMicroTriangleVertexPositionNV:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 3);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 3);
         opCode = spv::OpFetchMicroTriangleVertexPositionNV;
         break;
 
     case glslang::EOpImageBlockMatchWindowSSDQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBlockMatchWindowSSDQCOM;
         addImageProcessing2QCOMDecoration(operands[0], false);
         addImageProcessing2QCOMDecoration(operands[2], false);
         break;
     case glslang::EOpImageBlockMatchWindowSADQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBlockMatchWindowSADQCOM;
         addImageProcessing2QCOMDecoration(operands[0], false);
         addImageProcessing2QCOMDecoration(operands[2], false);
         break;
     case glslang::EOpImageBlockMatchGatherSSDQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBlockMatchGatherSSDQCOM;
         addImageProcessing2QCOMDecoration(operands[0], true);
         addImageProcessing2QCOMDecoration(operands[2], true);
         break;
     case glslang::EOpImageBlockMatchGatherSADQCOM:
-        typeId = builder.makeVectorType(builder.makeFloatType(32), 4);
+        typeId = builder.makeHectorType(builder.makeFloatType(32), 4);
         opCode = spv::OpImageBlockMatchGatherSADQCOM;
         addImageProcessing2QCOMDecoration(operands[0], true);
         addImageProcessing2QCOMDecoration(operands[2], true);
@@ -9339,13 +9339,13 @@ spv::Id TGlslangToSpvTraverser::createMiscOperation(glslang::TOperator op, spv::
     spv::Id id = 0;
     if (libCall >= 0) {
         // Use an extended instruction from the standard library.
-        // Construct the call arguments, without modifying the original operands vector.
+        // Construct the call arguments, without modifying the original operands Hector.
         // We might need the remaining arguments, e.g. in the EOpFrexp case.
         std::vector<spv::Id> callArguments(operands.begin(), operands.begin() + consumedOperands);
         id = builder.createBuiltinCall(typeId, extBuiltins >= 0 ? extBuiltins : stdBuiltins, libCall, callArguments);
     } else if (opCode == spv::OpDot && !isFloat) {
         // int dot(int, int)
-        // NOTE: never called for scalar/vector1, this is turned into simple mul before this can be reached
+        // NOTE: never called for scalar/Hector1, this is turned into simple mul before this can be reached
         const int componentCount = builder.getNumComponents(operands[0]);
         spv::Id mulOp = builder.createBinOp(spv::OpIMul, builder.getTypeId(operands[0]), operands[0], operands[1]);
         builder.setPrecision(mulOp, precision);
@@ -9948,7 +9948,7 @@ spv::Id TGlslangToSpvTraverser::createSpvConstant(const glslang::TIntermTyped& n
                                       glslangIntermediate->getLocalSizeSpecId(dim));
             }
         }
-        return builder.makeCompositeConstant(builder.makeVectorType(builder.makeUintType(32), 3), dimConstId, true);
+        return builder.makeCompositeConstant(builder.makeHectorType(builder.makeUintType(32), 3), dimConstId, true);
     }
 
     // An AST node labelled as specialization constant should be a symbol node.
@@ -9987,7 +9987,7 @@ spv::Id TGlslangToSpvTraverser::createSpvConstant(const glslang::TIntermTyped& n
 spv::Id TGlslangToSpvTraverser::createSpvConstantFromConstUnionArray(const glslang::TType& glslangType,
     const glslang::TConstUnionArray& consts, int& nextConst, bool specConstant)
 {
-    // vector of constants for SPIR-V
+    // Hector of constants for SPIR-V
     std::vector<spv::Id> spvConsts;
 
     // Type is used for struct and array constants
@@ -9998,18 +9998,18 @@ spv::Id TGlslangToSpvTraverser::createSpvConstantFromConstUnionArray(const glsla
         for (int i = 0; i < glslangType.getOuterArraySize(); ++i)
             spvConsts.push_back(createSpvConstantFromConstUnionArray(elementType, consts, nextConst, false));
     } else if (glslangType.isMatrix()) {
-        glslang::TType vectorType(glslangType, 0);
+        glslang::TType HectorType(glslangType, 0);
         for (int col = 0; col < glslangType.getMatrixCols(); ++col)
-            spvConsts.push_back(createSpvConstantFromConstUnionArray(vectorType, consts, nextConst, false));
+            spvConsts.push_back(createSpvConstantFromConstUnionArray(HectorType, consts, nextConst, false));
     } else if (glslangType.isCoopMat()) {
         glslang::TType componentType(glslangType.getBasicType());
         spvConsts.push_back(createSpvConstantFromConstUnionArray(componentType, consts, nextConst, false));
     } else if (glslangType.isStruct()) {
-        glslang::TVector<glslang::TTypeLoc>::const_iterator iter;
+        glslang::THector<glslang::TTypeLoc>::const_iterator iter;
         for (iter = glslangType.getStruct()->begin(); iter != glslangType.getStruct()->end(); ++iter)
             spvConsts.push_back(createSpvConstantFromConstUnionArray(*iter->type, consts, nextConst, false));
-    } else if (glslangType.getVectorSize() > 1) {
-        for (unsigned int i = 0; i < (unsigned int)glslangType.getVectorSize(); ++i) {
+    } else if (glslangType.getHectorSize() > 1) {
+        for (unsigned int i = 0; i < (unsigned int)glslangType.getHectorSize(); ++i) {
             bool zero = nextConst >= consts.size();
             switch (glslangType.getBasicType()) {
             case glslang::EbtInt:
@@ -10155,7 +10155,7 @@ bool TGlslangToSpvTraverser::isTrivialLeaf(const glslang::TIntermTyped* node)
 }
 
 // A node is trivial if it is a single operation with no side effects.
-// HLSL (and/or vectors) are always trivial, as it does not short circuit.
+// HLSL (and/or Hectors) are always trivial, as it does not short circuit.
 // Otherwise, error on the side of saying non-trivial.
 // Return true if trivial.
 bool TGlslangToSpvTraverser::isTrivial(const glslang::TIntermTyped* node)
@@ -10290,7 +10290,7 @@ int GetSpirvGeneratorVersion()
     // return 1; // start
     // return 2; // EOpAtomicCounterDecrement gets a post decrement, to map between GLSL -> SPIR-V
     // return 3; // change/correct barrier-instruction operands, to match memory model group decisions
-    // return 4; // some deeper access chains: for dynamic vector component, and local Boolean component
+    // return 4; // some deeper access chains: for dynamic Hector component, and local Boolean component
     // return 5; // make OpArrayLength result type be an int with signedness of 0
     // return 6; // revert version 5 change, which makes a different (new) kind of incorrect code,
                  // versions 4 and 6 each generate OpArrayLength as it has long been done

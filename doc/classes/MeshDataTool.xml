@@ -32,7 +32,7 @@
 		mdt.CreateFromSurface(mesh, 0);
 		for (var i = 0; i &lt; mdt.GetVertexCount(); i++)
 		{
-		    Vector3 vertex = mdt.GetVertex(i);
+		    Hector3 vertex = mdt.GetVertex(i);
 		    // In this example we extend the mesh by one unit, which results in separated faces as it is flat shaded.
 		    vertex += mdt.GetVertexNormal(i);
 		    // Save your change.
@@ -127,7 +127,7 @@
 			</description>
 		</method>
 		<method name="get_face_normal" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Calculates and returns the face normal of the given face.
@@ -148,8 +148,8 @@
 				[/gdscript]
 				[csharp]
 				int index = meshDataTool.GetFaceVertex(0, 1); // Gets the index of the second vertex of the first face.
-				Vector3 position = meshDataTool.GetVertex(index);
-				Vector3 normal = meshDataTool.GetVertexNormal(index);
+				Hector3 position = meshDataTool.GetVertex(index);
+				Hector3 normal = meshDataTool.GetVertexNormal(index);
 				[/csharp]
 				[/codeblocks]
 			</description>
@@ -167,7 +167,7 @@
 			</description>
 		</method>
 		<method name="get_vertex" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the given vertex.
@@ -215,7 +215,7 @@
 			</description>
 		</method>
 		<method name="get_vertex_normal" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the normal of the given vertex.
@@ -229,14 +229,14 @@
 			</description>
 		</method>
 		<method name="get_vertex_uv" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the UV of the given vertex.
 			</description>
 		</method>
 		<method name="get_vertex_uv2" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the UV2 of the given vertex.
@@ -275,7 +275,7 @@
 		<method name="set_vertex">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="vertex" type="Vector3" />
+			<param index="1" name="vertex" type="Hector3" />
 			<description>
 				Sets the position of the given vertex.
 			</description>
@@ -307,7 +307,7 @@
 		<method name="set_vertex_normal">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="normal" type="Vector3" />
+			<param index="1" name="normal" type="Hector3" />
 			<description>
 				Sets the normal of the given vertex.
 			</description>
@@ -323,7 +323,7 @@
 		<method name="set_vertex_uv">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="uv" type="Vector2" />
+			<param index="1" name="uv" type="Hector2" />
 			<description>
 				Sets the UV of the given vertex.
 			</description>
@@ -331,7 +331,7 @@
 		<method name="set_vertex_uv2">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="uv2" type="Vector2" />
+			<param index="1" name="uv2" type="Hector2" />
 			<description>
 				Sets the UV2 of the given vertex.
 			</description>

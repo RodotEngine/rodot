@@ -1022,7 +1022,7 @@ namespace embree
     template<int N, bool robust>
       __forceinline size_t intersectNode(const typename BVHN<N>::OBBNode* node, const TravRay<N,robust>& ray, vfloat<N>& dist)
     {
-      const Vec3vf<N> dir = xfmVector(node->naabb,ray.dir);
+      const Vec3vf<N> dir = xfmHector(node->naabb,ray.dir);
       //const Vec3vf<N> nrdir = Vec3vf<N>(vfloat<N>(-1.0f))/dir;
       const Vec3vf<N> nrdir = Vec3vf<N>(vfloat<N>(-1.0f))*rcp_safe(dir);
       const Vec3vf<N> org = xfmPoint(node->naabb,ray.org);
@@ -1060,7 +1060,7 @@ namespace embree
       const Vec3vf<N> upper = lerp(b0_upper,node->b1.upper,vfloat<N>(time));
 
       const BBox3vf<N> bounds(lower,upper);
-      const Vec3vf<N> dir = xfmVector(xfm,ray.dir);
+      const Vec3vf<N> dir = xfmHector(xfm,ray.dir);
       const Vec3vf<N> rdir = rcp_safe(dir);
       const Vec3vf<N> org = xfmPoint(xfm,ray.org);
 

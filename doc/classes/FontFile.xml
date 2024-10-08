@@ -40,7 +40,7 @@
 		<method name="clear_glyphs">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				Removes all rendered glyph information from the cache entry.
 				[b]Note:[/b] This function will not remove textures associated with the glyphs, use [method remove_texture] to remove them manually.
@@ -64,7 +64,7 @@
 		<method name="clear_textures">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				Removes all textures from font cache entry.
 				[b]Note:[/b] This function will not remove glyphs associated with the texture, use [method remove_glyph] to remove them manually.
@@ -154,7 +154,7 @@
 			</description>
 		</method>
 		<method name="get_glyph_advance" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="cache_index" type="int" />
 			<param index="1" name="size" type="int" />
 			<param index="2" name="glyph" type="int" />
@@ -175,24 +175,24 @@
 		<method name="get_glyph_list" qualifiers="const">
 			<return type="PackedInt32Array" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				Returns list of rendered glyphs in the cache entry.
 			</description>
 		</method>
 		<method name="get_glyph_offset" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				Returns glyph offset from the baseline.
 			</description>
 		</method>
 		<method name="get_glyph_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				Returns glyph size.
@@ -201,7 +201,7 @@
 		<method name="get_glyph_texture_idx" qualifiers="const">
 			<return type="int" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				Returns index of the cache texture containing the glyph.
@@ -210,23 +210,23 @@
 		<method name="get_glyph_uv_rect" qualifiers="const">
 			<return type="Rect2" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				Returns rectangle in the cache texture containing the glyph.
 			</description>
 		</method>
 		<method name="get_kerning" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="cache_index" type="int" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="glyph_pair" type="Vector2i" />
+			<param index="2" name="glyph_pair" type="Hector2i" />
 			<description>
 				Returns kerning for the pair of glyphs.
 			</description>
 		</method>
 		<method name="get_kerning_list" qualifiers="const">
-			<return type="Vector2i[]" />
+			<return type="Hector2i[]" />
 			<param index="0" name="cache_index" type="int" />
 			<param index="1" name="size" type="int" />
 			<description>
@@ -260,16 +260,16 @@
 			</description>
 		</method>
 		<method name="get_size_cache_list" qualifiers="const">
-			<return type="Vector2i[]" />
+			<return type="Hector2i[]" />
 			<param index="0" name="cache_index" type="int" />
 			<description>
-				Returns list of the font sizes in the cache. Each size is [Vector2i] with font size and outline size.
+				Returns list of the font sizes in the cache. Each size is [Hector2i] with font size and outline size.
 			</description>
 		</method>
 		<method name="get_texture_count" qualifiers="const">
 			<return type="int" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				Returns number of textures used by font cache entry.
 			</description>
@@ -277,7 +277,7 @@
 		<method name="get_texture_image" qualifiers="const">
 			<return type="Image" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<description>
 				Returns a copy of the font cache texture image.
@@ -286,7 +286,7 @@
 		<method name="get_texture_offsets" qualifiers="const">
 			<return type="PackedInt32Array" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<description>
 				Returns a copy of the array containing glyph packing data.
@@ -332,7 +332,7 @@
 		<method name="remove_glyph">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				Removes specified rendered glyph information from the cache entry.
@@ -343,7 +343,7 @@
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="glyph_pair" type="Vector2i" />
+			<param index="2" name="glyph_pair" type="Hector2i" />
 			<description>
 				Removes kerning override for the pair of glyphs.
 			</description>
@@ -365,7 +365,7 @@
 		<method name="remove_size_cache">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				Removes specified font size from the cache entry.
 			</description>
@@ -373,7 +373,7 @@
 		<method name="remove_texture">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<description>
 				Removes specified texture from the cache entry.
@@ -383,7 +383,7 @@
 		<method name="render_glyph">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="index" type="int" />
 			<description>
 				Renders specified glyph to the font cache texture.
@@ -392,7 +392,7 @@
 		<method name="render_range">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="start" type="int" />
 			<param index="3" name="end" type="int" />
 			<description>
@@ -482,7 +482,7 @@
 			<param index="0" name="cache_index" type="int" />
 			<param index="1" name="size" type="int" />
 			<param index="2" name="glyph" type="int" />
-			<param index="3" name="advance" type="Vector2" />
+			<param index="3" name="advance" type="Hector2" />
 			<description>
 				Sets glyph advance (offset of the next glyph).
 				[b]Note:[/b] Advance for glyphs outlines is the same as the base glyph advance and is not saved.
@@ -491,9 +491,9 @@
 		<method name="set_glyph_offset">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
-			<param index="3" name="offset" type="Vector2" />
+			<param index="3" name="offset" type="Hector2" />
 			<description>
 				Sets glyph offset from the baseline.
 			</description>
@@ -501,9 +501,9 @@
 		<method name="set_glyph_size">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
-			<param index="3" name="gl_size" type="Vector2" />
+			<param index="3" name="gl_size" type="Hector2" />
 			<description>
 				Sets glyph size.
 			</description>
@@ -511,7 +511,7 @@
 		<method name="set_glyph_texture_idx">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<param index="3" name="texture_idx" type="int" />
 			<description>
@@ -521,7 +521,7 @@
 		<method name="set_glyph_uv_rect">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<param index="3" name="uv_rect" type="Rect2" />
 			<description>
@@ -532,8 +532,8 @@
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="glyph_pair" type="Vector2i" />
-			<param index="3" name="kerning" type="Vector2" />
+			<param index="2" name="glyph_pair" type="Hector2i" />
+			<param index="3" name="kerning" type="Hector2" />
 			<description>
 				Sets kerning for the pair of glyphs.
 			</description>
@@ -557,7 +557,7 @@
 		<method name="set_texture_image">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<param index="3" name="image" type="Image" />
 			<description>
@@ -567,7 +567,7 @@
 		<method name="set_texture_offsets">
 			<return type="void" />
 			<param index="0" name="cache_index" type="int" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<param index="3" name="offset" type="PackedInt32Array" />
 			<description>
@@ -638,7 +638,7 @@
 			Source font size used to generate MSDF textures. Higher values allow for more precision, but are slower to render and require more memory. Only increase this value if you notice a visible lack of precision in glyph rendering.
 		</member>
 		<member name="multichannel_signed_distance_field" type="bool" setter="set_multichannel_signed_distance_field" getter="is_multichannel_signed_distance_field" default="false">
-			If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field (MSDF) generated from the dynamic font vector data. Since this approach does not rely on rasterizing the font every time its size changes, this allows for resizing the font in real-time without any performance penalty. Text will also not look grainy for [Control]s that are scaled down (or for [Label3D]s viewed from a long distance). As a downside, font hinting is not available with MSDF. The lack of font hinting may result in less crisp and less readable fonts at small sizes.
+			If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field (MSDF) generated from the dynamic font Hector data. Since this approach does not rely on rasterizing the font every time its size changes, this allows for resizing the font in real-time without any performance penalty. Text will also not look grainy for [Control]s that are scaled down (or for [Label3D]s viewed from a long distance). As a downside, font hinting is not available with MSDF. The lack of font hinting may result in less crisp and less readable fonts at small sizes.
 			[b]Note:[/b] If using font outlines, [member msdf_pixel_range] must be set to at least [i]twice[/i] the size of the largest font outline.
 			[b]Note:[/b] MSDF font rendering does not render glyphs with overlapping shapes correctly. Overlapping shapes are not valid per the OpenType standard, but are still commonly found in many font files, especially those converted by Google Fonts. To avoid issues with overlapping glyphs, consider downloading the font file directly from the type foundry instead of relying on Google Fonts.
 		</member>

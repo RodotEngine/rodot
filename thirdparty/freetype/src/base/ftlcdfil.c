@@ -357,7 +357,7 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdGeometry( FT_Library  library,
-                             FT_Vector   sub[3] )
+                             FT_Hector   sub[3] )
   {
     FT_UNUSED( library );
     FT_UNUSED( sub );
@@ -373,7 +373,7 @@
                   FT_GlyphSlot    slot,
                   FT_Render_Mode  mode )
   {
-    FT_Vector*  sub = slot->library->lcd_geometry;
+    FT_Hector*  sub = slot->library->lcd_geometry;
 
     if ( mode == FT_RENDER_MODE_LCD )
     {
@@ -418,7 +418,7 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdGeometry( FT_Library  library,
-                             FT_Vector   sub[3] )
+                             FT_Hector   sub[3] )
   {
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
@@ -426,7 +426,7 @@
     if ( !sub )
       return FT_THROW( Invalid_Argument );
 
-    ft_memcpy( library->lcd_geometry, sub, 3 * sizeof( FT_Vector ) );
+    ft_memcpy( library->lcd_geometry, sub, 3 * sizeof( FT_Hector ) );
 
     return FT_Err_Ok;
   }

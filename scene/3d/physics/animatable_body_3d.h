@@ -37,8 +37,8 @@ class AnimatableBody3D : public StaticBody3D {
 	GDCLASS(AnimatableBody3D, StaticBody3D);
 
 private:
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
 
 	bool sync_to_physics = true;
 
@@ -52,8 +52,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Vector3 get_linear_velocity() const override;
-	virtual Vector3 get_angular_velocity() const override;
+	virtual Hector3 get_linear_velocity() const override;
+	virtual Hector3 get_angular_velocity() const override;
 
 	AnimatableBody3D();
 

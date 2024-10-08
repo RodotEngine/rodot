@@ -78,15 +78,15 @@ Plane Projection::xform4(const Plane &p_vec4) const {
 	return ret;
 }
 
-Vector4 Projection::xform(const Vector4 &p_vec4) const {
-	return Vector4(
+Hector4 Projection::xform(const Hector4 &p_vec4) const {
+	return Hector4(
 			columns[0][0] * p_vec4.x + columns[1][0] * p_vec4.y + columns[2][0] * p_vec4.z + columns[3][0] * p_vec4.w,
 			columns[0][1] * p_vec4.x + columns[1][1] * p_vec4.y + columns[2][1] * p_vec4.z + columns[3][1] * p_vec4.w,
 			columns[0][2] * p_vec4.x + columns[1][2] * p_vec4.y + columns[2][2] * p_vec4.z + columns[3][2] * p_vec4.w,
 			columns[0][3] * p_vec4.x + columns[1][3] * p_vec4.y + columns[2][3] * p_vec4.z + columns[3][3] * p_vec4.w);
 }
-Vector4 Projection::xform_inv(const Vector4 &p_vec4) const {
-	return Vector4(
+Hector4 Projection::xform_inv(const Hector4 &p_vec4) const {
+	return Hector4(
 			columns[0][0] * p_vec4.x + columns[0][1] * p_vec4.y + columns[0][2] * p_vec4.z + columns[0][3] * p_vec4.w,
 			columns[1][0] * p_vec4.x + columns[1][1] * p_vec4.y + columns[1][2] * p_vec4.z + columns[1][3] * p_vec4.w,
 			columns[2][0] * p_vec4.x + columns[2][1] * p_vec4.y + columns[2][2] * p_vec4.z + columns[2][3] * p_vec4.w,
@@ -150,7 +150,7 @@ Projection Projection::create_frustum(real_t p_left, real_t p_right, real_t p_bo
 	return proj;
 }
 
-Projection Projection::create_frustum_aspect(real_t p_size, real_t p_aspect, Vector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov) {
+Projection Projection::create_frustum_aspect(real_t p_size, real_t p_aspect, Hector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov) {
 	Projection proj;
 	proj.set_frustum(p_size, p_aspect, p_offset, p_near, p_far, p_flip_fov);
 	return proj;
@@ -243,7 +243,7 @@ Projection Projection::flipped_y() const {
 	return proj;
 }
 
-Projection Projection ::jitter_offseted(const Vector2 &p_offset) const {
+Projection Projection ::jitter_offseted(const Hector2 &p_offset) const {
 	Projection proj = *this;
 	proj.add_jitter_offset(p_offset);
 	return proj;
@@ -393,7 +393,7 @@ void Projection::set_frustum(real_t p_left, real_t p_right, real_t p_bottom, rea
 	te[15] = 0;
 }
 
-void Projection::set_frustum(real_t p_size, real_t p_aspect, Vector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov) {
+void Projection::set_frustum(real_t p_size, real_t p_aspect, Hector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov) {
 	if (!p_flip_fov) {
 		p_size *= p_aspect;
 	}
@@ -424,7 +424,7 @@ real_t Projection::get_z_near() const {
 	return new_plane.d;
 }
 
-Vector2 Projection::get_viewport_half_extents() const {
+Hector2 Projection::get_viewport_half_extents() const {
 	const real_t *matrix = (const real_t *)columns;
 	///////--- Near Plane ---///////
 	Plane near_plane = Plane(matrix[3] + matrix[2],
@@ -446,13 +446,13 @@ Vector2 Projection::get_viewport_half_extents() const {
 			-matrix[15] + matrix[13]);
 	top_plane.normalize();
 
-	Vector3 res;
+	Hector3 res;
 	near_plane.intersect_3(right_plane, top_plane, &res);
 
-	return Vector2(res.x, res.y);
+	return Hector2(res.x, res.y);
 }
 
-Vector2 Projection::get_far_plane_half_extents() const {
+Hector2 Projection::get_far_plane_half_extents() const {
 	const real_t *matrix = (const real_t *)columns;
 	///////--- Far Plane ---///////
 	Plane far_plane = Plane(matrix[3] - matrix[2],
@@ -474,14 +474,14 @@ Vector2 Projection::get_far_plane_half_extents() const {
 			-matrix[15] + matrix[13]);
 	top_plane.normalize();
 
-	Vector3 res;
+	Hector3 res;
 	far_plane.intersect_3(right_plane, top_plane, &res);
 
-	return Vector2(res.x, res.y);
+	return Hector2(res.x, res.y);
 }
 
-bool Projection::get_endpoints(const Transform3D &p_transform, Vector3 *p_8points) const {
-	Vector<Plane> planes = get_projection_planes(Transform3D());
+bool Projection::get_endpoints(const Transform3D &p_transform, Hector3 *p_8points) const {
+	Hector<Plane> planes = get_projection_planes(Transform3D());
 	const Planes intersections[8][3] = {
 		{ PLANE_FAR, PLANE_LEFT, PLANE_TOP },
 		{ PLANE_FAR, PLANE_LEFT, PLANE_BOTTOM },
@@ -494,7 +494,7 @@ bool Projection::get_endpoints(const Transform3D &p_transform, Vector3 *p_8point
 	};
 
 	for (int i = 0; i < 8; i++) {
-		Vector3 point;
+		Hector3 point;
 		Plane a = planes[intersections[i][0]];
 		Plane b = planes[intersections[i][1]];
 		Plane c = planes[intersections[i][2]];
@@ -506,14 +506,14 @@ bool Projection::get_endpoints(const Transform3D &p_transform, Vector3 *p_8point
 	return true;
 }
 
-Vector<Plane> Projection::get_projection_planes(const Transform3D &p_transform) const {
+Hector<Plane> Projection::get_projection_planes(const Transform3D &p_transform) const {
 	/** Fast Plane Extraction from combined modelview/projection matrices.
 	 * References:
 	 * https://web.archive.org/web/20011221205252/https://www.markmorley.com/opengl/frustumculling.html
 	 * https://web.archive.org/web/20061020020112/https://www2.ravensoft.com/users/ggribb/plane%20extraction.pdf
 	 */
 
-	Vector<Plane> planes;
+	Hector<Plane> planes;
 	planes.resize(6);
 
 	const real_t *matrix = (const real_t *)columns;
@@ -795,12 +795,12 @@ Projection::operator String() const {
 }
 
 real_t Projection::get_aspect() const {
-	Vector2 vp_he = get_viewport_half_extents();
+	Hector2 vp_he = get_viewport_half_extents();
 	return vp_he.x / vp_he.y;
 }
 
 int Projection::get_pixels_per_meter(int p_for_pixel_width) const {
-	Vector3 result = xform(Vector3(1, 0, -1));
+	Hector3 result = xform(Hector3(1, 0, -1));
 
 	return int((result.x * 0.5 + 0.5) * p_for_pixel_width);
 }
@@ -844,7 +844,7 @@ real_t Projection::get_lod_multiplier() const {
 	// Usage is lod_size / (lod_distance * multiplier) < threshold
 }
 
-void Projection::make_scale(const Vector3 &p_scale) {
+void Projection::make_scale(const Hector3 &p_scale) {
 	set_identity();
 	columns[0][0] = p_scale.x;
 	columns[1][1] = p_scale.y;
@@ -852,8 +852,8 @@ void Projection::make_scale(const Vector3 &p_scale) {
 }
 
 void Projection::scale_translate_to_fit(const AABB &p_aabb) {
-	Vector3 min = p_aabb.position;
-	Vector3 max = p_aabb.position + p_aabb.size;
+	Hector3 min = p_aabb.position;
+	Hector3 max = p_aabb.position + p_aabb.size;
 
 	columns[0][0] = 2 / (max.x - min.x);
 	columns[1][0] = 0;
@@ -876,7 +876,7 @@ void Projection::scale_translate_to_fit(const AABB &p_aabb) {
 	columns[3][3] = 1;
 }
 
-void Projection::add_jitter_offset(const Vector2 &p_offset) {
+void Projection::add_jitter_offset(const Hector2 &p_offset) {
 	columns[3][0] += p_offset.x;
 	columns[3][1] += p_offset.y;
 }
@@ -904,7 +904,7 @@ Projection::operator Transform3D() const {
 	return tr;
 }
 
-Projection::Projection(const Vector4 &p_x, const Vector4 &p_y, const Vector4 &p_z, const Vector4 &p_w) {
+Projection::Projection(const Hector4 &p_x, const Hector4 &p_y, const Hector4 &p_z, const Hector4 &p_w) {
 	columns[0] = p_x;
 	columns[1] = p_y;
 	columns[2] = p_z;

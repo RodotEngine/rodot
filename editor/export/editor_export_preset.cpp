@@ -118,7 +118,7 @@ String EditorExportPreset::_get_property_warning(const StringName &p_name) const
 	}
 
 	// Get property warning from editor export plugins.
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
 		if (!export_plugins[i]->supports_platform(platform)) {
 			continue;
@@ -143,7 +143,7 @@ void EditorExportPreset::_get_property_list(List<PropertyInfo> *p_list) const {
 			}
 
 			// Get option visibility from editor export plugins.
-			Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+			Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 			for (int i = 0; i < export_plugins.size(); i++) {
 				if (!export_plugins[i]->supports_platform(platform)) {
 					continue;
@@ -169,7 +169,7 @@ Ref<EditorExportPlatform> EditorExportPreset::get_platform() const {
 
 void EditorExportPreset::update_files() {
 	{
-		Vector<String> to_remove;
+		Hector<String> to_remove;
 		for (const String &E : selected_files) {
 			if (!FileAccess::exists(E)) {
 				to_remove.push_back(E);
@@ -181,7 +181,7 @@ void EditorExportPreset::update_files() {
 	}
 
 	{
-		Vector<String> to_remove;
+		Hector<String> to_remove;
 		for (const KeyValue<String, FileExportMode> &E : customized_files) {
 			if (!FileAccess::exists(E.key) && !DirAccess::exists(E.key)) {
 				to_remove.push_back(E.key);
@@ -194,7 +194,7 @@ void EditorExportPreset::update_files() {
 }
 
 void EditorExportPreset::update_value_overrides() {
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	HashMap<StringName, Variant> new_value_overrides;
 
 	value_overrides.clear();
@@ -224,8 +224,8 @@ void EditorExportPreset::update_value_overrides() {
 	notify_property_list_changed();
 }
 
-Vector<String> EditorExportPreset::get_files_to_export() const {
-	Vector<String> files;
+Hector<String> EditorExportPreset::get_files_to_export() const {
+	Hector<String> files;
 	for (const String &E : selected_files) {
 		files.push_back(E);
 	}
@@ -416,11 +416,11 @@ void EditorExportPreset::remove_patch(int p_index) {
 	EditorExport::singleton->save_presets();
 }
 
-void EditorExportPreset::set_patches(const Vector<String> &p_patches) {
+void EditorExportPreset::set_patches(const Hector<String> &p_patches) {
 	patches = p_patches;
 }
 
-Vector<String> EditorExportPreset::get_patches() const {
+Hector<String> EditorExportPreset::get_patches() const {
 	return patches;
 }
 

@@ -126,7 +126,7 @@ private:
 
 	struct State {
 		Ref<AnimationRootNode> node;
-		Vector2 position;
+		Hector2 position;
 	};
 
 	HashMap<StringName, State> states;
@@ -139,12 +139,12 @@ private:
 		Ref<AnimationNodeStateMachineTransition> transition;
 	};
 
-	Vector<Transition> transitions;
+	Hector<Transition> transitions;
 
 	StringName playback = "playback";
 	bool updating_transitions = false;
 
-	Vector2 graph_offset;
+	Hector2 graph_offset;
 
 	void _remove_transition(const Ref<AnimationNodeStateMachineTransition> p_transition);
 	void _rename_transitions(const StringName &p_name, const StringName &p_new_name);
@@ -171,7 +171,7 @@ public:
 	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
 	virtual bool is_parameter_read_only(const StringName &p_parameter) const override;
 
-	void add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Vector2 &p_position = Vector2());
+	void add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Hector2 &p_position = Hector2());
 	void replace_node(const StringName &p_name, Ref<AnimationNode> p_node);
 	Ref<AnimationNode> get_node(const StringName &p_name) const;
 	void remove_node(const StringName &p_name);
@@ -180,8 +180,8 @@ public:
 	StringName get_node_name(const Ref<AnimationNode> &p_node) const;
 	void get_node_list(List<StringName> *r_nodes) const;
 
-	void set_node_position(const StringName &p_name, const Vector2 &p_position);
-	Vector2 get_node_position(const StringName &p_name) const;
+	void set_node_position(const StringName &p_name, const Hector2 &p_position);
+	Hector2 get_node_position(const StringName &p_name) const;
 
 	virtual void get_child_nodes(List<ChildNode> *r_child_nodes) override;
 
@@ -189,8 +189,8 @@ public:
 	bool has_transition_from(const StringName &p_from) const;
 	bool has_transition_to(const StringName &p_to) const;
 	int find_transition(const StringName &p_from, const StringName &p_to) const;
-	Vector<int> find_transition_from(const StringName &p_from) const;
-	Vector<int> find_transition_to(const StringName &p_to) const;
+	Hector<int> find_transition_from(const StringName &p_from) const;
+	Hector<int> find_transition_to(const StringName &p_to) const;
 	void add_transition(const StringName &p_from, const StringName &p_to, const Ref<AnimationNodeStateMachineTransition> &p_transition);
 	Ref<AnimationNodeStateMachineTransition> get_transition(int p_transition) const;
 	StringName get_transition_from(int p_transition) const;
@@ -211,8 +211,8 @@ public:
 
 	bool can_edit_node(const StringName &p_name) const;
 
-	void set_graph_offset(const Vector2 &p_offset);
-	Vector2 get_graph_offset() const;
+	void set_graph_offset(const Hector2 &p_offset);
+	Hector2 get_graph_offset() const;
 
 	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 	virtual String get_caption() const override;
@@ -255,7 +255,7 @@ class AnimationNodeStateMachinePlayback : public Resource {
 
 	struct ChildStateMachineInfo {
 		Ref<AnimationNodeStateMachinePlayback> playback;
-		Vector<StringName> path;
+		Hector<StringName> path;
 		bool is_reset = false;
 	};
 
@@ -274,7 +274,7 @@ class AnimationNodeStateMachinePlayback : public Resource {
 	float fading_time = 0.0;
 	float fading_pos = 0.0;
 
-	Vector<StringName> path;
+	Hector<StringName> path;
 	bool playing = false;
 
 	StringName start_request;
@@ -293,7 +293,7 @@ class AnimationNodeStateMachinePlayback : public Resource {
 	void _next_main();
 	void _stop_main();
 
-	bool _make_travel_path(AnimationTree *p_tree, AnimationNodeStateMachine *p_state_machine, bool p_is_allow_transition_to_self, Vector<StringName> &r_path, bool p_test_only);
+	bool _make_travel_path(AnimationTree *p_tree, AnimationNodeStateMachine *p_state_machine, bool p_is_allow_transition_to_self, Hector<StringName> &r_path, bool p_test_only);
 	String _validate_path(AnimationNodeStateMachine *p_state_machine, const String &p_path);
 	bool _travel(AnimationTree *p_tree, AnimationNodeStateMachine *p_state_machine, bool p_is_allow_transition_to_self, bool p_test_only);
 	void _start(AnimationNodeStateMachine *p_state_machine);
@@ -333,7 +333,7 @@ public:
 	bool is_end() const;
 	StringName get_current_node() const;
 	StringName get_fading_from_node() const;
-	Vector<StringName> get_travel_path() const;
+	Hector<StringName> get_travel_path() const;
 	float get_current_play_pos() const;
 	float get_current_length() const;
 

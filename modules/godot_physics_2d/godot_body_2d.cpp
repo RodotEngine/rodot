@@ -55,7 +55,7 @@ void GodotBody2D::update_mass_properties() {
 
 			if (calculate_center_of_mass) {
 				// We have to recompute the center of mass.
-				center_of_mass_local = Vector2();
+				center_of_mass_local = Hector2();
 
 				if (total_area != 0.0) {
 					for (int i = 0; i < get_shape_count(); i++) {
@@ -93,8 +93,8 @@ void GodotBody2D::update_mass_properties() {
 					real_t mass_new = area * mass / total_area;
 
 					Transform2D mtx = get_shape_transform(i);
-					Vector2 scale = mtx.get_scale();
-					Vector2 shape_origin = mtx.get_origin() - center_of_mass_local;
+					Hector2 scale = mtx.get_scale();
+					Hector2 shape_origin = mtx.get_origin() - center_of_mass_local;
 					inertia += shape->get_moment_of_inertia(mass_new, scale) + mass_new * shape_origin.length_squared();
 				}
 			}
@@ -261,7 +261,7 @@ void GodotBody2D::set_mode(PhysicsServer2D::BodyMode p_mode) {
 			_inv_inertia = 0;
 			_set_static(p_mode == PhysicsServer2D::BODY_MODE_STATIC);
 			set_active(p_mode == PhysicsServer2D::BODY_MODE_KINEMATIC && contacts.size());
-			linear_velocity = Vector2();
+			linear_velocity = Hector2();
 			angular_velocity = 0;
 			if (mode == PhysicsServer2D::BODY_MODE_KINEMATIC && prev != mode) {
 				first_time_kinematic = true;
@@ -345,10 +345,10 @@ void GodotBody2D::set_state(PhysicsServer2D::BodyState p_state, const Variant &p
 			}
 			bool do_sleep = p_variant;
 			if (do_sleep) {
-				linear_velocity = Vector2();
-				//biased_linear_velocity=Vector3();
+				linear_velocity = Hector2();
+				//biased_linear_velocity=Hector3();
 				angular_velocity = 0;
-				//biased_angular_velocity=Vector3();
+				//biased_angular_velocity=Hector3();
 				set_active(false);
 			} else {
 				if (mode != PhysicsServer2D::BODY_MODE_STATIC) {
@@ -433,7 +433,7 @@ void GodotBody2D::integrate_forces(real_t p_step) {
 
 	bool stopped = false;
 
-	gravity = Vector2(0, 0);
+	gravity = Hector2(0, 0);
 
 	total_linear_damp = 0.0;
 	total_angular_damp = 0.0;
@@ -446,7 +446,7 @@ void GodotBody2D::integrate_forces(real_t p_step) {
 			if (!gravity_done) {
 				PhysicsServer2D::AreaSpaceOverrideMode area_gravity_mode = (PhysicsServer2D::AreaSpaceOverrideMode)(int)aa[i].area->get_param(PhysicsServer2D::AREA_PARAM_GRAVITY_OVERRIDE_MODE);
 				if (area_gravity_mode != PhysicsServer2D::AREA_SPACE_OVERRIDE_DISABLED) {
-					Vector2 area_gravity;
+					Hector2 area_gravity;
 					aa[i].area->compute_gravity(get_transform().get_origin(), area_gravity);
 					switch (area_gravity_mode) {
 						case PhysicsServer2D::AREA_SPACE_OVERRIDE_COMBINE:
@@ -514,7 +514,7 @@ void GodotBody2D::integrate_forces(real_t p_step) {
 		ERR_FAIL_NULL(default_area);
 
 		if (!gravity_done) {
-			Vector2 default_gravity;
+			Hector2 default_gravity;
 			default_area->compute_gravity(get_transform().get_origin(), default_gravity);
 			gravity += default_gravity;
 		}
@@ -553,7 +553,7 @@ void GodotBody2D::integrate_forces(real_t p_step) {
 	prev_linear_velocity = linear_velocity;
 	prev_angular_velocity = angular_velocity;
 
-	Vector2 motion;
+	Hector2 motion;
 	bool do_motion = false;
 
 	if (mode == PhysicsServer2D::BODY_MODE_KINEMATIC) {
@@ -570,7 +570,7 @@ void GodotBody2D::integrate_forces(real_t p_step) {
 		if (!omit_force_integration) {
 			//overridden by direct state query
 
-			Vector2 force = gravity * mass + applied_force + constant_force;
+			Hector2 force = gravity * mass + applied_force + constant_force;
 			real_t torque = applied_torque + constant_torque;
 
 			real_t damp = 1.0 - p_step * total_linear_damp;
@@ -598,11 +598,11 @@ void GodotBody2D::integrate_forces(real_t p_step) {
 		}
 	}
 
-	applied_force = Vector2();
+	applied_force = Hector2();
 	applied_torque = 0.0;
 
 	biased_angular_velocity = 0.0;
-	biased_linear_velocity = Vector2();
+	biased_linear_velocity = Hector2();
 
 	if (do_motion) { //shapes temporarily extend for raycast
 		_update_shapes_with_motion(motion);
@@ -625,18 +625,18 @@ void GodotBody2D::integrate_velocities(real_t p_step) {
 	if (mode == PhysicsServer2D::BODY_MODE_KINEMATIC) {
 		_set_transform(new_transform, false);
 		_set_inv_transform(new_transform.affine_inverse());
-		if (contacts.size() == 0 && linear_velocity == Vector2() && angular_velocity == 0) {
+		if (contacts.size() == 0 && linear_velocity == Hector2() && angular_velocity == 0) {
 			set_active(false); //stopped moving, deactivate
 		}
 		return;
 	}
 
 	real_t total_angular_velocity = angular_velocity + biased_angular_velocity;
-	Vector2 total_linear_velocity = linear_velocity + biased_linear_velocity;
+	Hector2 total_linear_velocity = linear_velocity + biased_linear_velocity;
 
 	real_t angle_delta = total_angular_velocity * p_step;
 	real_t angle = get_transform().get_rotation() + angle_delta;
-	Vector2 pos = get_transform().get_origin() + total_linear_velocity * p_step;
+	Hector2 pos = get_transform().get_origin() + total_linear_velocity * p_step;
 
 	if (center_of_mass.length_squared() > CMP_EPSILON2) {
 		// Calculate displacement due to center of mass offset.

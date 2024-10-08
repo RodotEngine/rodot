@@ -540,7 +540,7 @@ void LocalizationEditor::update_translations() {
 		Dictionary remaps = GLOBAL_GET("internationalization/locale/translation_remaps");
 		List<Variant> rk;
 		remaps.get_key_list(&rk);
-		Vector<String> keys;
+		Hector<String> keys;
 		for (const Variant &E : rk) {
 			keys.push_back(E);
 		}

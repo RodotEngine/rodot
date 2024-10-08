@@ -555,7 +555,7 @@ TEST_CASE("[SceneTree][TabContainer] layout and offset") {
 
 	TabBar *tab_bar = tab_container->get_tab_bar();
 
-	Vector<Rect2> tab_rects = {
+	Hector<Rect2> tab_rects = {
 		tab_bar->get_tab_rect(0),
 		tab_bar->get_tab_rect(1),
 		tab_bar->get_tab_rect(2)

@@ -100,7 +100,7 @@ protected:
 			return;
 		}
 
-		Vector<uint8_t> file = FileAccess::get_file_as_bytes(p_path);
+		Hector<uint8_t> file = FileAccess::get_file_as_bytes(p_path);
 		if (file.is_empty()) {
 			return;
 		}

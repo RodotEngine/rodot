@@ -59,8 +59,8 @@ void MeshInstance3DEditor::edit(MeshInstance3D *p_mesh) {
 	node = p_mesh;
 }
 
-Vector<Ref<Shape3D>> MeshInstance3DEditor::create_shape_from_mesh(Ref<Mesh> p_mesh, int p_option, bool p_verbose) {
-	Vector<Ref<Shape3D>> shapes;
+Hector<Ref<Shape3D>> MeshInstance3DEditor::create_shape_from_mesh(Ref<Mesh> p_mesh, int p_option, bool p_verbose) {
+	Hector<Ref<Shape3D>> shapes;
 	switch (p_option) {
 		case SHAPE_TYPE_TRIMESH: {
 			shapes.push_back(p_mesh->create_trimesh_shape());
@@ -160,7 +160,7 @@ void MeshInstance3DEditor::_create_collision_shape() {
 			continue;
 		}
 
-		Vector<Ref<Shape3D>> shapes = create_shape_from_mesh(m, shape_type_option, verbose);
+		Hector<Ref<Shape3D>> shapes = create_shape_from_mesh(m, shape_type_option, verbose);
 		if (shapes.is_empty()) {
 			return;
 		}
@@ -214,11 +214,11 @@ void MeshInstance3DEditor::_menu_option(int p_option) {
 		} break;
 
 		case MENU_OPTION_CREATE_NAVMESH: {
-			navigation_mesh_dialog->popup_centered(Vector2(200, 90));
+			navigation_mesh_dialog->popup_centered(Hector2(200, 90));
 		} break;
 
 		case MENU_OPTION_CREATE_OUTLINE_MESH: {
-			outline_dialog->popup_centered(Vector2(200, 90));
+			outline_dialog->popup_centered(Hector2(200, 90));
 		} break;
 		case MENU_OPTION_CREATE_DEBUG_TANGENTS: {
 			EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
@@ -357,8 +357,8 @@ void MeshInstance3DEditor::_menu_option(int p_option) {
 }
 
 struct MeshInstance3DEditorEdgeSort {
-	Vector2 a;
-	Vector2 b;
+	Hector2 a;
+	Hector2 b;
 
 	static uint32_t hash(const MeshInstance3DEditorEdgeSort &p_edge) {
 		uint32_t h = hash_murmur3_one_32(HashMapHasherDefault::hash(p_edge.a));
@@ -370,7 +370,7 @@ struct MeshInstance3DEditorEdgeSort {
 	}
 
 	MeshInstance3DEditorEdgeSort() {}
-	MeshInstance3DEditorEdgeSort(const Vector2 &p_a, const Vector2 &p_b) {
+	MeshInstance3DEditorEdgeSort(const Hector2 &p_a, const Hector2 &p_b) {
 		if (p_a < p_b) {
 			a = p_a;
 			b = p_b;
@@ -393,16 +393,16 @@ void MeshInstance3DEditor::_create_uv_lines(int p_layer) {
 		}
 		Array a = mesh->surface_get_arrays(i);
 
-		Vector<Vector2> uv = a[p_layer == 0 ? Mesh::ARRAY_TEX_UV : Mesh::ARRAY_TEX_UV2];
+		Hector<Hector2> uv = a[p_layer == 0 ? Mesh::ARRAY_TEX_UV : Mesh::ARRAY_TEX_UV2];
 		if (uv.size() == 0) {
 			err_dialog->set_text(vformat(TTR("Mesh has no UV in layer %d."), p_layer + 1));
 			err_dialog->popup_centered();
 			return;
 		}
 
-		const Vector2 *r = uv.ptr();
+		const Hector2 *r = uv.ptr();
 
-		Vector<int> indices = a[Mesh::ARRAY_INDEX];
+		Hector<int> indices = a[Mesh::ARRAY_INDEX];
 		const int *ri = nullptr;
 
 		int ic;
@@ -445,8 +445,8 @@ void MeshInstance3DEditor::_debug_uv_draw() {
 	}
 
 	debug_uv->set_clip_contents(true);
-	debug_uv->draw_rect(Rect2(Vector2(), debug_uv->get_size()), get_theme_color(SNAME("dark_color_3"), EditorStringName(Editor)));
-	debug_uv->draw_set_transform(Vector2(), 0, debug_uv->get_size());
+	debug_uv->draw_rect(Rect2(Hector2(), debug_uv->get_size()), get_theme_color(SNAME("dark_color_3"), EditorStringName(Editor)));
+	debug_uv->draw_set_transform(Hector2(), 0, debug_uv->get_size());
 	// Use a translucent color to allow overlapping triangles to be visible.
 	debug_uv->draw_multiline(uv_lines, get_theme_color(SNAME("mono_color"), EditorStringName(Editor)) * Color(1, 1, 1, 0.5));
 }

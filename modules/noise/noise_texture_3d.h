@@ -107,7 +107,7 @@ public:
 
 	virtual RID get_rid() const override;
 
-	virtual Vector<Ref<Image>> get_data() const override;
+	virtual Hector<Ref<Image>> get_data() const override;
 	virtual Image::Format get_format() const override;
 
 	NoiseTexture3D();

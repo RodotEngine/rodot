@@ -8,7 +8,7 @@ namespace cvtt
 {
     namespace Internal
     {
-        template<int TVectorSize>
+        template<int THectorSize>
         class AggregatedError
         {
         public:
@@ -18,7 +18,7 @@ namespace cvtt
 
             AggregatedError()
             {
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_errorUnweighted[ch] = ParallelMath::MakeUInt31(0);
             }
 
@@ -27,26 +27,26 @@ namespace cvtt
                 m_errorUnweighted[ch] = m_errorUnweighted[ch] + ParallelMath::ToUInt31(channelErrorUnweighted);
             }
 
-            MFloat Finalize(uint32_t flags, const float channelWeightsSq[TVectorSize]) const
+            MFloat Finalize(uint32_t flags, const float channelWeightsSq[THectorSize]) const
             {
                 if (flags & cvtt::Flags::Uniform)
                 {
                     MUInt31 total = m_errorUnweighted[0];
-                    for (int ch = 1; ch < TVectorSize; ch++)
+                    for (int ch = 1; ch < THectorSize; ch++)
                         total = total + m_errorUnweighted[ch];
                     return ParallelMath::ToFloat(total);
                 }
                 else
                 {
                     MFloat total = ParallelMath::ToFloat(m_errorUnweighted[0]) * channelWeightsSq[0];
-                    for (int ch = 1; ch < TVectorSize; ch++)
+                    for (int ch = 1; ch < THectorSize; ch++)
                         total = total + ParallelMath::ToFloat(m_errorUnweighted[ch]) * channelWeightsSq[ch];
                     return total;
                 }
             }
 
         private:
-            MUInt31 m_errorUnweighted[TVectorSize];
+            MUInt31 m_errorUnweighted[THectorSize];
         };
     }
 }

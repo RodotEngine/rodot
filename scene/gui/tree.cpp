@@ -63,7 +63,7 @@ void TreeItem::Cell::draw_icon(const RID &p_where, const Point2 &p_pos, const Si
 	if (icon_region == Rect2i()) {
 		icon->draw_rect_region(p_where, Rect2(p_pos, dsize), Rect2(Point2(), icon->get_size()), p_color);
 		if (icon_overlay.is_valid()) {
-			Vector2 offset = icon->get_size() - icon_overlay->get_size();
+			Hector2 offset = icon->get_size() - icon_overlay->get_size();
 			icon_overlay->draw_rect_region(p_where, Rect2(p_pos + offset, dsize), Rect2(Point2(), icon_overlay->get_size()), p_color);
 		}
 	} else {
@@ -346,7 +346,7 @@ void TreeItem::set_text(int p_column, String p_text) {
 	cells.write[p_column].dirty = true;
 
 	if (cells[p_column].mode == TreeItem::CELL_MODE_RANGE) {
-		Vector<String> strings = p_text.split(",");
+		Hector<String> strings = p_text.split(",");
 		cells.write[p_column].min = INT_MAX;
 		cells.write[p_column].max = INT_MIN;
 		for (int i = 0; i < strings.size(); i++) {
@@ -2051,7 +2051,7 @@ void Tree::update_item_cell(TreeItem *p_item, int p_col) {
 			int option = (int)p_item->cells[p_col].val;
 
 			valtext = p_item->atr(p_col, ETR("(Other)"));
-			Vector<String> strings = p_item->cells[p_col].text.split(",");
+			Hector<String> strings = p_item->cells[p_col].text.split(",");
 			for (int j = 0; j < strings.size(); j++) {
 				int value = j;
 				if (!strings[j].get_slicec(':', 1).is_empty()) {
@@ -2404,9 +2404,9 @@ int Tree::draw_item(const Point2i &p_pos, const Point2 &p_draw_ofs, const Size2 
 
 						if (rtl) {
 							if (outline_size > 0 && font_outline_color.a > 0) {
-								p_item->cells[i].text_buf->draw_outline(ci, text_pos + Vector2(cell_width - text_width, 0), outline_size, font_outline_color);
+								p_item->cells[i].text_buf->draw_outline(ci, text_pos + Hector2(cell_width - text_width, 0), outline_size, font_outline_color);
 							}
-							p_item->cells[i].text_buf->draw(ci, text_pos + Vector2(cell_width - text_width, 0), cell_color);
+							p_item->cells[i].text_buf->draw(ci, text_pos + Hector2(cell_width - text_width, 0), cell_color);
 						} else {
 							if (outline_size > 0 && font_outline_color.a > 0) {
 								p_item->cells[i].text_buf->draw_outline(ci, text_pos, outline_size, font_outline_color);
@@ -2426,9 +2426,9 @@ int Tree::draw_item(const Point2i &p_pos, const Point2 &p_draw_ofs, const Size2 
 
 						if (rtl) {
 							if (outline_size > 0 && font_outline_color.a > 0) {
-								p_item->cells[i].text_buf->draw_outline(ci, text_pos + Vector2(cell_width - text_width, 0), outline_size, font_outline_color);
+								p_item->cells[i].text_buf->draw_outline(ci, text_pos + Hector2(cell_width - text_width, 0), outline_size, font_outline_color);
 							}
-							p_item->cells[i].text_buf->draw(ci, text_pos + Vector2(cell_width - text_width, 0), cell_color);
+							p_item->cells[i].text_buf->draw(ci, text_pos + Hector2(cell_width - text_width, 0), cell_color);
 						} else {
 							if (outline_size > 0 && font_outline_color.a > 0) {
 								p_item->cells[i].text_buf->draw_outline(ci, text_pos, outline_size, font_outline_color);
@@ -3518,7 +3518,7 @@ Rect2 Tree::_get_content_rect() const {
 	// Scrollbars won't affect Tree's content rect if they're not visible or placed inside the stylebox margin area.
 	const real_t v_size = v_scroll->is_visible() ? (v_scroll->get_combined_minimum_size().x + theme_cache.scrollbar_h_separation) : 0;
 	const real_t h_size = h_scroll->is_visible() ? (h_scroll->get_combined_minimum_size().y + theme_cache.scrollbar_v_separation) : 0;
-	const Point2 scroll_begin = _get_scrollbar_layout_rect().get_end() - Vector2(v_size, h_size);
+	const Point2 scroll_begin = _get_scrollbar_layout_rect().get_end() - Hector2(v_size, h_size);
 	const Size2 offset = (content_rect.get_end() - scroll_begin).maxf(0);
 
 	return content_rect.grow_individual(0, 0, -offset.x, -offset.y);
@@ -3806,7 +3806,7 @@ void Tree::gui_input(const Ref<InputEvent> &p_event) {
 
 			if (!range_drag_enabled) {
 				//range drag
-				Vector2 cpos = mm->get_position();
+				Hector2 cpos = mm->get_position();
 				if (rtl) {
 					cpos.x = get_size().width - cpos.x;
 				}
@@ -4135,7 +4135,7 @@ bool Tree::edit_selected(bool p_force_edit) {
 
 		int value_editor_height = c.mode == TreeItem::CELL_MODE_RANGE ? value_editor->get_minimum_size().height : 0;
 		// "floor()" centers vertically.
-		Vector2 ofs(0, Math::floor((MAX(line_editor->get_minimum_size().height, rect.size.height - value_editor_height) - rect.size.height) / 2));
+		Hector2 ofs(0, Math::floor((MAX(line_editor->get_minimum_size().height, rect.size.height - value_editor_height) - rect.size.height) / 2));
 
 		popup_rect.position = get_screen_position() + rect.position - ofs;
 		popup_rect.size = rect.size;
@@ -4243,7 +4243,7 @@ void Tree::update_scrollbars() {
 	const Size2 internal_min_size = get_internal_min_size();
 	const int title_button_height = _get_title_button_height();
 
-	Size2 tree_content_size = content_rect.get_size() - Vector2(0, title_button_height);
+	Size2 tree_content_size = content_rect.get_size() - Hector2(0, title_button_height);
 	bool display_vscroll = internal_min_size.height > tree_content_size.height;
 	bool display_hscroll = internal_min_size.width > tree_content_size.width;
 	for (int i = 0; i < 2; i++) {
@@ -4279,10 +4279,10 @@ void Tree::update_scrollbars() {
 	}
 
 	const Rect2 scroll_rect = _get_scrollbar_layout_rect();
-	v_scroll->set_begin(scroll_rect.get_position() + Vector2(scroll_rect.get_size().x - vmin.width, 0));
-	v_scroll->set_end(scroll_rect.get_end() - Vector2(0, display_hscroll ? hmin.height : 0));
-	h_scroll->set_begin(scroll_rect.get_position() + Vector2(0, scroll_rect.get_size().y - hmin.height));
-	h_scroll->set_end(scroll_rect.get_end() - Vector2(display_vscroll ? vmin.width : 0, 0));
+	v_scroll->set_begin(scroll_rect.get_position() + Hector2(scroll_rect.get_size().x - vmin.width, 0));
+	v_scroll->set_end(scroll_rect.get_end() - Hector2(0, display_hscroll ? hmin.height : 0));
+	h_scroll->set_begin(scroll_rect.get_position() + Hector2(0, scroll_rect.get_size().y - hmin.height));
+	h_scroll->set_end(scroll_rect.get_end() - Hector2(display_vscroll ? vmin.width : 0, 0));
 }
 
 int Tree::_get_title_button_height() const {
@@ -4432,7 +4432,7 @@ void Tree::_notification(int p_what) {
 					columns.write[i].text_buf->set_width(clip_w);
 					columns.write[i].cached_minimum_width_dirty = true;
 
-					Vector2 text_pos = Point2i(tbrect.position.x, tbrect.position.y + (tbrect.size.height - columns[i].text_buf->get_size().y) / 2);
+					Hector2 text_pos = Point2i(tbrect.position.x, tbrect.position.y + (tbrect.size.height - columns[i].text_buf->get_size().y) / 2);
 					switch (columns[i].title_alignment) {
 						case HorizontalAlignment::HORIZONTAL_ALIGNMENT_LEFT: {
 							text_pos.x += cache.rtl ? tbrect.size.width - (sb->get_offset().x + columns[i].text_buf->get_size().x) : sb->get_offset().x;
@@ -4495,13 +4495,13 @@ void Tree::_update_all() {
 }
 
 Size2 Tree::get_minimum_size() const {
-	Vector2 min_size = Vector2(0, _get_title_button_height());
+	Hector2 min_size = Hector2(0, _get_title_button_height());
 
 	if (theme_cache.panel_style.is_valid()) {
 		min_size += theme_cache.panel_style->get_minimum_size();
 	}
 
-	Vector2 content_min_size = get_internal_min_size();
+	Hector2 content_min_size = get_internal_min_size();
 	if (h_scroll_enabled) {
 		content_min_size.x = 0;
 		min_size.y += h_scroll->get_combined_minimum_size().height;
@@ -5055,7 +5055,7 @@ Rect2 Tree::get_item_rect(TreeItem *p_item, int p_column, int p_button) const {
 		r.size.x = get_column_width(p_column);
 		if (p_button != -1) {
 			const TreeItem::Cell &c = p_item->cells[p_column];
-			Vector2 ofst = Vector2(r.position.x + r.size.x, r.position.y);
+			Hector2 ofst = Hector2(r.position.x + r.size.x, r.position.y);
 			for (int j = c.buttons.size() - 1; j >= 0; j--) {
 				Ref<Texture2D> b = c.buttons[j].texture;
 				Size2 size = b->get_size() + theme_cache.button_pressed->get_minimum_size();
@@ -5774,8 +5774,8 @@ void Tree::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("item_selected"));
 	ADD_SIGNAL(MethodInfo("cell_selected"));
 	ADD_SIGNAL(MethodInfo("multi_selected", PropertyInfo(Variant::OBJECT, "item", PROPERTY_HINT_RESOURCE_TYPE, "TreeItem"), PropertyInfo(Variant::INT, "column"), PropertyInfo(Variant::BOOL, "selected")));
-	ADD_SIGNAL(MethodInfo("item_mouse_selected", PropertyInfo(Variant::VECTOR2, "mouse_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
-	ADD_SIGNAL(MethodInfo("empty_clicked", PropertyInfo(Variant::VECTOR2, "click_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
+	ADD_SIGNAL(MethodInfo("item_mouse_selected", PropertyInfo(Variant::HECTOR2, "mouse_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
+	ADD_SIGNAL(MethodInfo("empty_clicked", PropertyInfo(Variant::HECTOR2, "click_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
 	ADD_SIGNAL(MethodInfo("item_edited"));
 	ADD_SIGNAL(MethodInfo("custom_item_clicked", PropertyInfo(Variant::INT, "mouse_button_index")));
 	ADD_SIGNAL(MethodInfo("item_icon_double_clicked"));

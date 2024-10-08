@@ -168,7 +168,7 @@
     if ( parser->num_dict < cidface->cid.num_dicts )
     {
       FT_Matrix*  matrix;
-      FT_Vector*  offset;
+      FT_Hector*  offset;
       FT_Int      result;
 
 

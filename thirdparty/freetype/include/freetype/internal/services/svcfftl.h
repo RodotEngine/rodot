@@ -43,13 +43,13 @@ FT_BEGIN_HEADER
                             FT_UInt       glyph_index );
 
   typedef FT_Bool
-  (*FT_Blend_Check_Vector_Func)( CFF_Blend  blend,
+  (*FT_Blend_Check_Hector_Func)( CFF_Blend  blend,
                                  FT_UInt    vsindex,
                                  FT_UInt    lenNDV,
                                  FT_Fixed*  NDV );
 
   typedef FT_Error
-  (*FT_Blend_Build_Vector_Func)( CFF_Blend  blend,
+  (*FT_Blend_Build_Hector_Func)( CFF_Blend  blend,
                                  FT_UInt    vsindex,
                                  FT_UInt    lenNDV,
                                  FT_Fixed*  NDV );
@@ -60,8 +60,8 @@ FT_BEGIN_HEADER
     FT_Get_Standard_Encoding_Func  get_standard_encoding;
     FT_Load_Private_Dict_Func      load_private_dict;
     FT_FD_Select_Get_Func          fd_select_get;
-    FT_Blend_Check_Vector_Func     blend_check_vector;
-    FT_Blend_Build_Vector_Func     blend_build_vector;
+    FT_Blend_Check_Hector_Func     blend_check_Hector;
+    FT_Blend_Build_Hector_Func     blend_build_Hector;
   };
 
 
@@ -69,15 +69,15 @@ FT_BEGIN_HEADER
                                       get_standard_encoding_,  \
                                       load_private_dict_,      \
                                       fd_select_get_,          \
-                                      blend_check_vector_,     \
-                                      blend_build_vector_ )    \
+                                      blend_check_Hector_,     \
+                                      blend_build_Hector_ )    \
   static const FT_Service_CFFLoadRec  class_ =                 \
   {                                                            \
     get_standard_encoding_,                                    \
     load_private_dict_,                                        \
     fd_select_get_,                                            \
-    blend_check_vector_,                                       \
-    blend_build_vector_                                        \
+    blend_check_Hector_,                                       \
+    blend_build_Hector_                                        \
   };
 
 

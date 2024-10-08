@@ -76,7 +76,7 @@ class EditorExportPlatformAndroid : public EditorExportPlatform {
 	};
 
 #ifndef DISABLE_DEPRECATED
-	mutable Vector<PluginConfigAndroid> android_plugins;
+	mutable Hector<PluginConfigAndroid> android_plugins;
 	mutable SafeFlag android_plugins_changed;
 	Mutex android_plugins_lock;
 #endif // DISABLE_DEPRECATED
@@ -84,7 +84,7 @@ class EditorExportPlatformAndroid : public EditorExportPlatform {
 	uint64_t last_gradle_build_time = 0;
 	String last_gradle_build_dir;
 
-	Vector<Device> devices;
+	Hector<Device> devices;
 	SafeFlag devices_changed;
 	Mutex device_lock;
 #ifndef ANDROID_ENABLED
@@ -107,7 +107,7 @@ class EditorExportPlatformAndroid : public EditorExportPlatform {
 	bool is_package_name_valid(const String &p_package, String *r_error = nullptr) const;
 	bool is_project_name_valid() const;
 
-	static bool _should_compress_asset(const String &p_path, const Vector<uint8_t> &p_data);
+	static bool _should_compress_asset(const String &p_path, const Hector<uint8_t> &p_data);
 
 	static zip_fileinfo get_zip_fileinfo();
 
@@ -126,46 +126,46 @@ class EditorExportPlatformAndroid : public EditorExportPlatform {
 		ABI() {}
 	};
 
-	static Vector<ABI> get_abis();
+	static Hector<ABI> get_abis();
 
 #ifndef DISABLE_DEPRECATED
 	/// List the gdap files in the directory specified by the p_path parameter.
-	static Vector<String> list_gdap_files(const String &p_path);
+	static Hector<String> list_gdap_files(const String &p_path);
 
-	static Vector<PluginConfigAndroid> get_plugins();
+	static Hector<PluginConfigAndroid> get_plugins();
 
-	static Vector<PluginConfigAndroid> get_enabled_plugins(const Ref<EditorExportPreset> &p_presets);
+	static Hector<PluginConfigAndroid> get_enabled_plugins(const Ref<EditorExportPreset> &p_presets);
 #endif // DISABLE_DEPRECATED
 
-	static Error store_in_apk(APKExportData *ed, const String &p_path, const Vector<uint8_t> &p_data, int compression_method = Z_DEFLATED);
+	static Error store_in_apk(APKExportData *ed, const String &p_path, const Hector<uint8_t> &p_data, int compression_method = Z_DEFLATED);
 
 	static Error save_apk_so(void *p_userdata, const SharedObject &p_so);
 
-	static Error save_apk_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	static Error save_apk_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 
-	static Error ignore_apk_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	static Error ignore_apk_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 
 	static Error copy_gradle_so(void *p_userdata, const SharedObject &p_so);
 
-	bool _has_read_write_storage_permission(const Vector<String> &p_permissions);
+	bool _has_read_write_storage_permission(const Hector<String> &p_permissions);
 
-	bool _has_manage_external_storage_permission(const Vector<String> &p_permissions);
+	bool _has_manage_external_storage_permission(const Hector<String> &p_permissions);
 
-	void _get_permissions(const Ref<EditorExportPreset> &p_preset, bool p_give_internet, Vector<String> &r_permissions);
+	void _get_permissions(const Ref<EditorExportPreset> &p_preset, bool p_give_internet, Hector<String> &r_permissions);
 
 	void _write_tmp_manifest(const Ref<EditorExportPreset> &p_preset, bool p_give_internet, bool p_debug);
 
-	void _fix_manifest(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &p_manifest, bool p_give_internet);
+	void _fix_manifest(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &p_manifest, bool p_give_internet);
 
 	static String _get_keystore_path(const Ref<EditorExportPreset> &p_preset, bool p_debug);
 
 	static String _parse_string(const uint8_t *p_bytes, bool p_utf8);
 
-	void _fix_resources(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &r_manifest);
+	void _fix_resources(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &r_manifest);
 
-	void _load_image_data(const Ref<Image> &p_splash_image, Vector<uint8_t> &p_data);
+	void _load_image_data(const Ref<Image> &p_splash_image, Hector<uint8_t> &p_data);
 
-	void _process_launcher_icons(const String &p_file_name, const Ref<Image> &p_source_image, int dimension, Vector<uint8_t> &p_data);
+	void _process_launcher_icons(const String &p_file_name, const Ref<Image> &p_source_image, int dimension, Hector<uint8_t> &p_data);
 
 	void load_icon_refs(const Ref<EditorExportPreset> &p_preset, Ref<Image> &icon, Ref<Image> &foreground, Ref<Image> &background, Ref<Image> &monochrome);
 
@@ -177,7 +177,7 @@ class EditorExportPlatformAndroid : public EditorExportPlatform {
 
 	static void _create_editor_debug_keystore_if_needed();
 
-	static Vector<ABI> get_enabled_abis(const Ref<EditorExportPreset> &p_preset);
+	static Hector<ABI> get_enabled_abis(const Ref<EditorExportPreset> &p_preset);
 
 	static bool _uses_vulkan();
 
@@ -185,7 +185,7 @@ protected:
 	void _notification(int p_what);
 
 public:
-	typedef Error (*EditorExportSaveFunction)(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	typedef Error (*EditorExportSaveFunction)(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 
 	virtual void get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const override;
 
@@ -243,7 +243,7 @@ public:
 
 	Error save_apk_expansion_file(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path);
 
-	void get_command_line_flags(const Ref<EditorExportPreset> &p_preset, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags, Vector<uint8_t> &r_command_line_flags);
+	void get_command_line_flags(const Ref<EditorExportPreset> &p_preset, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags, Hector<uint8_t> &r_command_line_flags);
 
 	Error sign_apk(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &export_path, EditorProgress &ep);
 
@@ -252,7 +252,7 @@ public:
 	void _remove_copied_libs(String p_gdextension_libs_path);
 
 	static String join_list(const List<String> &p_parts, const String &p_separator);
-	static String join_abis(const Vector<ABI> &p_parts, const String &p_separator, bool p_use_arch);
+	static String join_abis(const Hector<ABI> &p_parts, const String &p_separator, bool p_use_arch);
 
 	virtual Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
 

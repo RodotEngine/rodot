@@ -34,7 +34,7 @@
 #include "core/math/dynamic_bvh.h"
 #include "core/math/transform_interpolator.h"
 #include "core/templates/bin_sorted_array.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_allocator.h"
 #include "core/templates/paged_array.h"
 #include "core/templates/pass_func.h"
@@ -84,7 +84,7 @@ public:
 		float fov;
 		float znear, zfar;
 		float size;
-		Vector2 offset;
+		Hector2 offset;
 		uint32_t visible_layers;
 		bool vaspect;
 		RID env;
@@ -100,7 +100,7 @@ public:
 			znear = 0.05;
 			zfar = 4000;
 			size = 1.0;
-			offset = Vector2();
+			offset = Hector2();
 			vaspect = false;
 		}
 	};
@@ -112,7 +112,7 @@ public:
 
 	virtual void camera_set_perspective(RID p_camera, float p_fovy_degrees, float p_z_near, float p_z_far);
 	virtual void camera_set_orthogonal(RID p_camera, float p_size, float p_z_near, float p_z_far);
-	virtual void camera_set_frustum(RID p_camera, float p_size, Vector2 p_offset, float p_z_near, float p_z_far);
+	virtual void camera_set_frustum(RID p_camera, float p_size, Hector2 p_offset, float p_z_near, float p_z_far);
 	virtual void camera_set_transform(RID p_camera, const Transform3D &p_transform);
 	virtual void camera_set_cull_mask(RID p_camera, uint32_t p_layers);
 	virtual void camera_set_environment(RID p_camera, RID p_env);
@@ -125,7 +125,7 @@ public:
 
 	virtual RID occluder_allocate();
 	virtual void occluder_initialize(RID p_occluder);
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices);
+	virtual void occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices);
 
 	/* VISIBILITY NOTIFIER API */
 
@@ -159,8 +159,8 @@ public:
 	};
 
 	struct Frustum {
-		Vector<Plane> planes;
-		Vector<PlaneSign> plane_signs;
+		Hector<Plane> planes;
+		Hector<PlaneSign> plane_signs;
 		const Plane *planes_ptr;
 		const PlaneSign *plane_signs_ptr;
 		uint32_t plane_count;
@@ -182,7 +182,7 @@ public:
 			plane_signs_ptr = plane_signs.ptr();
 			plane_count = p_frustum.plane_count;
 		}
-		_ALWAYS_INLINE_ Frustum(const Vector<Plane> &p_planes) {
+		_ALWAYS_INLINE_ Frustum(const Hector<Plane> &p_planes) {
 			planes = p_planes;
 			planes_ptr = planes.ptrw();
 			plane_count = planes.size();
@@ -216,7 +216,7 @@ public:
 			// but the tradeoff vs performance is still very good.
 
 			for (uint32_t i = 0; i < p_frustum.plane_count; i++) {
-				Vector3 min(
+				Hector3 min(
 						bounds[p_frustum.plane_signs_ptr[i].signs[0]],
 						bounds[p_frustum.plane_signs_ptr[i].signs[1]],
 						bounds[p_frustum.plane_signs_ptr[i].signs[2]]);
@@ -229,7 +229,7 @@ public:
 			return true;
 		}
 		_ALWAYS_INLINE_ bool in_aabb(const AABB &p_aabb) const {
-			Vector3 end = p_aabb.position + p_aabb.size;
+			Hector3 end = p_aabb.position + p_aabb.size;
 
 			if (bounds[0] >= end.x) {
 				return false;
@@ -305,7 +305,7 @@ public:
 		uint64_t viewport_state = 0;
 		int32_t array_index = -1;
 		RS::VisibilityRangeFadeMode fade_mode = RS::VISIBILITY_RANGE_FADE_DISABLED;
-		Vector3 position;
+		Hector3 position;
 		Instance *instance = nullptr;
 		float range_begin = 0.0f;
 		float range_end = 0.0f;
@@ -350,7 +350,7 @@ public:
 
 		SelfList<Instance>::List instances;
 
-		LocalVector<RID> dynamic_lights;
+		LocalHector<RID> dynamic_lights;
 
 		PagedArray<InstanceBounds> instance_aabbs;
 		PagedArray<InstanceData> instance_data;
@@ -427,7 +427,7 @@ public:
 		bool ignore_occlusion_culling;
 		bool ignore_all_culling;
 
-		Vector<RID> materials;
+		Hector<RID> materials;
 
 		RS::ShadowCastingSetting cast_shadows;
 
@@ -454,7 +454,7 @@ public:
 		Rect2 lightmap_uv_scale;
 		int lightmap_slice_index;
 		uint32_t lightmap_cull_index;
-		Vector<Color> lightmap_sh; //spherical harmonic
+		Hector<Color> lightmap_sh; //spherical harmonic
 
 		AABB aabb;
 		AABB transformed_aabb;
@@ -504,7 +504,7 @@ public:
 		float sorting_offset = 0.0;
 		bool use_aabb_center = true;
 
-		Vector<Color> lightmap_target_sh; //target is used for incrementally changing the SH over time, this avoids pops in some corner cases and when going interior <-> exterior
+		Hector<Color> lightmap_target_sh; //target is used for incrementally changing the SH over time, this avoids pops in some corner cases and when going interior <-> exterior
 
 		uint64_t last_frame_pass;
 
@@ -816,8 +816,8 @@ public:
 			RS::LightDirectionalSkyMode sky_mode;
 		};
 
-		Vector<LightCache> light_cache;
-		Vector<RID> light_instances;
+		Hector<LightCache> light_cache;
+		Hector<RID> light_instances;
 
 		RID probe_instance;
 
@@ -1034,7 +1034,7 @@ public:
 	};
 
 	InstanceCullResult scene_cull_result;
-	LocalVector<InstanceCullResult> scene_cull_result_threads;
+	LocalHector<InstanceCullResult> scene_cull_result_threads;
 
 	RendererSceneRender::RenderShadowData render_shadow_data[MAX_UPDATE_SHADOWS];
 	uint32_t max_shadows_used = 0;
@@ -1048,7 +1048,7 @@ public:
 
 	uint32_t geometry_instance_pair_mask = 0; // used in traditional forward, unnecessary on clustered
 
-	LocalVector<Vector2> camera_jitter_array;
+	LocalHector<Hector2> camera_jitter_array;
 	RenderingLightCuller *light_culler = nullptr;
 
 	virtual RID instance_allocate();
@@ -1081,9 +1081,9 @@ public:
 	void _update_instance_visibility_dependencies(Instance *p_instance);
 
 	// don't use these in a game!
-	virtual Vector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const;
-	virtual Vector<ObjectID> instances_cull_ray(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario = RID()) const;
-	virtual Vector<ObjectID> instances_cull_convex(const Vector<Plane> &p_convex, RID p_scenario = RID()) const;
+	virtual Hector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const;
+	virtual Hector<ObjectID> instances_cull_ray(const Hector3 &p_from, const Hector3 &p_to, RID p_scenario = RID()) const;
+	virtual Hector<ObjectID> instances_cull_convex(const Hector<Plane> &p_convex, RID p_scenario = RID()) const;
 
 	virtual void instance_geometry_set_flag(RID p_instance, RS::InstanceFlags p_flags, bool p_enabled);
 	virtual void instance_geometry_set_cast_shadows_setting(RID p_instance, RS::ShadowCastingSetting p_shadow_casting_setting);
@@ -1131,7 +1131,7 @@ public:
 				real_t shadow_texel_size;
 				real_t bias_scale;
 				real_t range_begin;
-				Vector2 uv_scale;
+				Hector2 uv_scale;
 
 			} cascades[RendererSceneRender::MAX_DIRECTIONAL_LIGHT_CASCADES]; //max 4 cascades
 			uint32_t cascade_count;
@@ -1159,7 +1159,7 @@ public:
 	struct VisibilityCullData {
 		uint64_t viewport_mask;
 		Scenario *scenario = nullptr;
-		Vector3 camera_position;
+		Hector3 camera_position;
 		uint32_t cull_offset;
 		uint32_t cull_count;
 	};
@@ -1167,7 +1167,7 @@ public:
 	void _visibility_cull_threaded(uint32_t p_thread, VisibilityCullData *cull_data);
 	void _visibility_cull(const VisibilityCullData &cull_data, uint64_t p_from, uint64_t p_to);
 	template <bool p_fade_check>
-	_FORCE_INLINE_ int _visibility_range_check(InstanceVisibilityData &r_vis_data, const Vector3 &p_camera_pos, uint64_t p_viewport_mask);
+	_FORCE_INLINE_ int _visibility_range_check(InstanceVisibilityData &r_vis_data, const Hector3 &p_camera_pos, uint64_t p_viewport_mask);
 
 	struct CullData {
 		Cull *cull = nullptr;
@@ -1317,10 +1317,10 @@ public:
 	PASS1RC(float, environment_get_volumetric_fog_ambient_inject, RID)
 
 	// Glow
-	PASS13(environment_set_glow, RID, bool, Vector<float>, float, float, float, float, RS::EnvironmentGlowBlendMode, float, float, float, float, RID)
+	PASS13(environment_set_glow, RID, bool, Hector<float>, float, float, float, float, RS::EnvironmentGlowBlendMode, float, float, float, float, RID)
 
 	PASS1RC(bool, environment_get_glow_enabled, RID)
-	PASS1RC(Vector<float>, environment_get_glow_levels, RID)
+	PASS1RC(Hector<float>, environment_get_glow_levels, RID)
 	PASS1RC(float, environment_get_glow_intensity, RID)
 	PASS1RC(float, environment_get_glow_strength, RID)
 	PASS1RC(float, environment_get_glow_bloom, RID)
@@ -1409,7 +1409,7 @@ public:
 	PASS1(positional_soft_shadow_filter_set_quality, RS::ShadowQuality)
 	PASS1(directional_soft_shadow_filter_set_quality, RS::ShadowQuality)
 
-	PASS2(sdfgi_set_debug_probe_select, const Vector3 &, const Vector3 &)
+	PASS2(sdfgi_set_debug_probe_select, const Hector3 &, const Hector3 &)
 
 	/* Render Buffers */
 
@@ -1439,10 +1439,10 @@ public:
 
 	struct InterpolationData {
 		void notify_free_instance(RID p_rid, Instance &r_instance);
-		LocalVector<RID> instance_interpolate_update_list;
-		LocalVector<RID> instance_transform_update_lists[2];
-		LocalVector<RID> *instance_transform_update_list_curr = &instance_transform_update_lists[0];
-		LocalVector<RID> *instance_transform_update_list_prev = &instance_transform_update_lists[1];
+		LocalHector<RID> instance_interpolate_update_list;
+		LocalHector<RID> instance_transform_update_lists[2];
+		LocalHector<RID> *instance_transform_update_list_curr = &instance_transform_update_lists[0];
+		LocalHector<RID> *instance_transform_update_list_prev = &instance_transform_update_lists[1];
 
 		bool interpolation_enabled = false;
 	} _interpolation_data;

@@ -30,11 +30,11 @@
 
 #ifndef DISABLE_DEPRECATED
 
-Vector<int64_t> AStar3D::_get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
+Hector<int64_t> AStar3D::_get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
 	return get_id_path(p_from_id, p_to_id, false);
 }
 
-Vector<Vector3> AStar3D::_get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
+Hector<Hector3> AStar3D::_get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
 	return get_point_path(p_from_id, p_to_id, false);
 }
 
@@ -43,11 +43,11 @@ void AStar3D::_bind_compatibility_methods() {
 	ClassDB::bind_compatibility_method(D_METHOD("get_point_path", "from_id", "to_id"), &AStar3D::_get_point_path_bind_compat_88047);
 }
 
-Vector<int64_t> AStar2D::_get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
+Hector<int64_t> AStar2D::_get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
 	return get_id_path(p_from_id, p_to_id, false);
 }
 
-Vector<Vector2> AStar2D::_get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
+Hector<Hector2> AStar2D::_get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id) {
 	return get_point_path(p_from_id, p_to_id, false);
 }
 

@@ -81,7 +81,7 @@ private:
 		String end_key;
 		bool line_only = false;
 	};
-	Vector<ColorRegion> color_regions;
+	Hector<ColorRegion> color_regions;
 	HashMap<int, int> color_region_cache;
 
 	Dictionary keywords;

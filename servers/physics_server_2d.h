@@ -46,17 +46,17 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Vector2 get_total_gravity() const = 0; // get gravity vector working on this body space/area
+	virtual Hector2 get_total_gravity() const = 0; // get gravity Hector working on this body space/area
 	virtual real_t get_total_linear_damp() const = 0; // get density of this body space/area
 	virtual real_t get_total_angular_damp() const = 0; // get density of this body space/area
 
-	virtual Vector2 get_center_of_mass() const = 0;
-	virtual Vector2 get_center_of_mass_local() const = 0;
+	virtual Hector2 get_center_of_mass() const = 0;
+	virtual Hector2 get_center_of_mass_local() const = 0;
 	virtual real_t get_inverse_mass() const = 0; // get the mass
 	virtual real_t get_inverse_inertia() const = 0; // get density of this body space
 
-	virtual void set_linear_velocity(const Vector2 &p_velocity) = 0;
-	virtual Vector2 get_linear_velocity() const = 0;
+	virtual void set_linear_velocity(const Hector2 &p_velocity) = 0;
+	virtual Hector2 get_linear_velocity() const = 0;
 
 	virtual void set_angular_velocity(real_t p_velocity) = 0;
 	virtual real_t get_angular_velocity() const = 0;
@@ -64,22 +64,22 @@ public:
 	virtual void set_transform(const Transform2D &p_transform) = 0;
 	virtual Transform2D get_transform() const = 0;
 
-	virtual Vector2 get_velocity_at_local_position(const Vector2 &p_position) const = 0;
+	virtual Hector2 get_velocity_at_local_position(const Hector2 &p_position) const = 0;
 
-	virtual void apply_central_impulse(const Vector2 &p_impulse) = 0;
+	virtual void apply_central_impulse(const Hector2 &p_impulse) = 0;
 	virtual void apply_torque_impulse(real_t p_torque) = 0;
-	virtual void apply_impulse(const Vector2 &p_impulse, const Vector2 &p_position = Vector2()) = 0;
+	virtual void apply_impulse(const Hector2 &p_impulse, const Hector2 &p_position = Hector2()) = 0;
 
-	virtual void apply_central_force(const Vector2 &p_force) = 0;
-	virtual void apply_force(const Vector2 &p_force, const Vector2 &p_position = Vector2()) = 0;
+	virtual void apply_central_force(const Hector2 &p_force) = 0;
+	virtual void apply_force(const Hector2 &p_force, const Hector2 &p_position = Hector2()) = 0;
 	virtual void apply_torque(real_t p_torque) = 0;
 
-	virtual void add_constant_central_force(const Vector2 &p_force) = 0;
-	virtual void add_constant_force(const Vector2 &p_force, const Vector2 &p_position = Vector2()) = 0;
+	virtual void add_constant_central_force(const Hector2 &p_force) = 0;
+	virtual void add_constant_force(const Hector2 &p_force, const Hector2 &p_position = Hector2()) = 0;
 	virtual void add_constant_torque(real_t p_torque) = 0;
 
-	virtual void set_constant_force(const Vector2 &p_force) = 0;
-	virtual Vector2 get_constant_force() const = 0;
+	virtual void set_constant_force(const Hector2 &p_force) = 0;
+	virtual Hector2 get_constant_force() const = 0;
 
 	virtual void set_constant_torque(real_t p_torque) = 0;
 	virtual real_t get_constant_torque() const = 0;
@@ -89,18 +89,18 @@ public:
 
 	virtual int get_contact_count() const = 0;
 
-	virtual Vector2 get_contact_local_position(int p_contact_idx) const = 0;
-	virtual Vector2 get_contact_local_normal(int p_contact_idx) const = 0;
+	virtual Hector2 get_contact_local_position(int p_contact_idx) const = 0;
+	virtual Hector2 get_contact_local_normal(int p_contact_idx) const = 0;
 	virtual int get_contact_local_shape(int p_contact_idx) const = 0;
-	virtual Vector2 get_contact_local_velocity_at_position(int p_contact_idx) const = 0;
+	virtual Hector2 get_contact_local_velocity_at_position(int p_contact_idx) const = 0;
 
 	virtual RID get_contact_collider(int p_contact_idx) const = 0;
-	virtual Vector2 get_contact_collider_position(int p_contact_idx) const = 0;
+	virtual Hector2 get_contact_collider_position(int p_contact_idx) const = 0;
 	virtual ObjectID get_contact_collider_id(int p_contact_idx) const = 0;
 	virtual Object *get_contact_collider_object(int p_contact_idx) const;
 	virtual int get_contact_collider_shape(int p_contact_idx) const = 0;
-	virtual Vector2 get_contact_collider_velocity_at_position(int p_contact_idx) const = 0;
-	virtual Vector2 get_contact_impulse(int p_contact_idx) const = 0;
+	virtual Hector2 get_contact_collider_velocity_at_position(int p_contact_idx) const = 0;
+	virtual Hector2 get_contact_impulse(int p_contact_idx) const = 0;
 
 	virtual real_t get_step() const = 0;
 	virtual void integrate_forces();
@@ -120,8 +120,8 @@ class PhysicsDirectSpaceState2D : public Object {
 	Dictionary _intersect_ray(const Ref<PhysicsRayQueryParameters2D> &p_ray_query);
 	TypedArray<Dictionary> _intersect_point(const Ref<PhysicsPointQueryParameters2D> &p_point_query, int p_max_results = 32);
 	TypedArray<Dictionary> _intersect_shape(const Ref<PhysicsShapeQueryParameters2D> &p_shape_query, int p_max_results = 32);
-	Vector<real_t> _cast_motion(const Ref<PhysicsShapeQueryParameters2D> &p_shape_query);
-	TypedArray<Vector2> _collide_shape(const Ref<PhysicsShapeQueryParameters2D> &p_shape_query, int p_max_results = 32);
+	Hector<real_t> _cast_motion(const Ref<PhysicsShapeQueryParameters2D> &p_shape_query);
+	TypedArray<Hector2> _collide_shape(const Ref<PhysicsShapeQueryParameters2D> &p_shape_query, int p_max_results = 32);
 	Dictionary _get_rest_info(const Ref<PhysicsShapeQueryParameters2D> &p_shape_query);
 
 protected:
@@ -129,8 +129,8 @@ protected:
 
 public:
 	struct RayParameters {
-		Vector2 from;
-		Vector2 to;
+		Hector2 from;
+		Hector2 to;
 		HashSet<RID> exclude;
 		uint32_t collision_mask = UINT32_MAX;
 
@@ -141,8 +141,8 @@ public:
 	};
 
 	struct RayResult {
-		Vector2 position;
-		Vector2 normal;
+		Hector2 position;
+		Hector2 normal;
 		RID rid;
 		ObjectID collider_id;
 		Object *collider = nullptr;
@@ -159,7 +159,7 @@ public:
 	};
 
 	struct PointParameters {
-		Vector2 position;
+		Hector2 position;
 		ObjectID canvas_instance_id;
 		HashSet<RID> exclude;
 		uint32_t collision_mask = UINT32_MAX;
@@ -175,7 +175,7 @@ public:
 	struct ShapeParameters {
 		RID shape_rid;
 		Transform2D transform;
-		Vector2 motion;
+		Hector2 motion;
 		real_t margin = 0.0;
 		HashSet<RID> exclude;
 		uint32_t collision_mask = UINT32_MAX;
@@ -185,17 +185,17 @@ public:
 	};
 
 	struct ShapeRestInfo {
-		Vector2 point;
-		Vector2 normal;
+		Hector2 point;
+		Hector2 normal;
 		RID rid;
 		ObjectID collider_id;
 		int shape = 0;
-		Vector2 linear_velocity; // Velocity at contact point.
+		Hector2 linear_velocity; // Velocity at contact point.
 	};
 
 	virtual int intersect_shape(const ShapeParameters &p_parameters, ShapeResult *r_results, int p_result_max) = 0;
 	virtual bool cast_motion(const ShapeParameters &p_parameters, real_t &p_closest_safe, real_t &p_closest_unsafe) = 0;
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector2 *r_results, int p_result_max, int &r_result_count) = 0;
+	virtual bool collide_shape(const ShapeParameters &p_parameters, Hector2 *r_results, int p_result_max, int &r_result_count) = 0;
 	virtual bool rest_info(const ShapeParameters &p_parameters, ShapeRestInfo *r_info) = 0;
 
 	PhysicsDirectSpaceState2D();
@@ -225,7 +225,7 @@ public:
 		SHAPE_RECTANGLE, ///< vec3:"extents"
 		SHAPE_CAPSULE,
 		SHAPE_CONVEX_POLYGON, ///< array of planes:"planes"
-		SHAPE_CONCAVE_POLYGON, ///< Vector2 array:"triangles" , or Dictionary with "indices" (int array) and "triangles" (Vector2 array)
+		SHAPE_CONCAVE_POLYGON, ///< Hector2 array:"triangles" , or Dictionary with "indices" (int array) and "triangles" (Hector2 array)
 		SHAPE_CUSTOM, ///< Server-Implementation based custom shape, calling shape_create() with this value will result in an error
 	};
 
@@ -246,7 +246,7 @@ public:
 	virtual real_t shape_get_custom_solver_bias(RID p_shape) const = 0;
 
 	//these work well, but should be used from the main thread only
-	virtual bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Vector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Vector2 &p_motion_B, Vector2 *r_results, int p_result_max, int &r_result_count) = 0;
+	virtual bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Hector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Hector2 &p_motion_B, Hector2 *r_results, int p_result_max, int &r_result_count) = 0;
 
 	/* SPACE API */
 
@@ -273,7 +273,7 @@ public:
 	virtual PhysicsDirectSpaceState2D *space_get_direct_state(RID p_space) = 0;
 
 	virtual void space_set_debug_contacts(RID p_space, int p_max_contacts) = 0;
-	virtual Vector<Vector2> space_get_contacts(RID p_space) const = 0;
+	virtual Hector<Hector2> space_get_contacts(RID p_space) const = 0;
 	virtual int space_get_contact_count(RID p_space) const = 0;
 
 	//missing space parameters
@@ -285,7 +285,7 @@ public:
 	enum AreaParameter {
 		AREA_PARAM_GRAVITY_OVERRIDE_MODE,
 		AREA_PARAM_GRAVITY,
-		AREA_PARAM_GRAVITY_VECTOR,
+		AREA_PARAM_GRAVITY_Hector,
 		AREA_PARAM_GRAVITY_IS_POINT,
 		AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE,
 		AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE,
@@ -439,25 +439,25 @@ public:
 	virtual void body_set_state(RID p_body, BodyState p_state, const Variant &p_variant) = 0;
 	virtual Variant body_get_state(RID p_body, BodyState p_state) const = 0;
 
-	virtual void body_apply_central_impulse(RID p_body, const Vector2 &p_impulse) = 0;
+	virtual void body_apply_central_impulse(RID p_body, const Hector2 &p_impulse) = 0;
 	virtual void body_apply_torque_impulse(RID p_body, real_t p_torque) = 0;
-	virtual void body_apply_impulse(RID p_body, const Vector2 &p_impulse, const Vector2 &p_position = Vector2()) = 0;
+	virtual void body_apply_impulse(RID p_body, const Hector2 &p_impulse, const Hector2 &p_position = Hector2()) = 0;
 
-	virtual void body_apply_central_force(RID p_body, const Vector2 &p_force) = 0;
-	virtual void body_apply_force(RID p_body, const Vector2 &p_force, const Vector2 &p_position = Vector2()) = 0;
+	virtual void body_apply_central_force(RID p_body, const Hector2 &p_force) = 0;
+	virtual void body_apply_force(RID p_body, const Hector2 &p_force, const Hector2 &p_position = Hector2()) = 0;
 	virtual void body_apply_torque(RID p_body, real_t p_torque) = 0;
 
-	virtual void body_add_constant_central_force(RID p_body, const Vector2 &p_force) = 0;
-	virtual void body_add_constant_force(RID p_body, const Vector2 &p_force, const Vector2 &p_position = Vector2()) = 0;
+	virtual void body_add_constant_central_force(RID p_body, const Hector2 &p_force) = 0;
+	virtual void body_add_constant_force(RID p_body, const Hector2 &p_force, const Hector2 &p_position = Hector2()) = 0;
 	virtual void body_add_constant_torque(RID p_body, real_t p_torque) = 0;
 
-	virtual void body_set_constant_force(RID p_body, const Vector2 &p_force) = 0;
-	virtual Vector2 body_get_constant_force(RID p_body) const = 0;
+	virtual void body_set_constant_force(RID p_body, const Hector2 &p_force) = 0;
+	virtual Hector2 body_get_constant_force(RID p_body) const = 0;
 
 	virtual void body_set_constant_torque(RID p_body, real_t p_torque) = 0;
 	virtual real_t body_get_constant_torque(RID p_body) const = 0;
 
-	virtual void body_set_axis_velocity(RID p_body, const Vector2 &p_axis_velocity) = 0;
+	virtual void body_set_axis_velocity(RID p_body, const Hector2 &p_axis_velocity) = 0;
 
 	//fix
 	virtual void body_add_collision_exception(RID p_body, RID p_body_b) = 0;
@@ -477,7 +477,7 @@ public:
 	virtual void body_set_state_sync_callback(RID p_body, const Callable &p_callable) = 0;
 	virtual void body_set_force_integration_callback(RID p_body, const Callable &p_callable, const Variant &p_udata = Variant()) = 0;
 
-	virtual bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Vector2 &p_motion, Vector2 *r_results, int p_result_max, int &r_result_count) = 0;
+	virtual bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Hector2 &p_motion, Hector2 *r_results, int p_result_max, int &r_result_count) = 0;
 
 	virtual void body_set_pickable(RID p_body, bool p_pickable) = 0;
 
@@ -486,7 +486,7 @@ public:
 
 	struct MotionParameters {
 		Transform2D from;
-		Vector2 motion;
+		Hector2 motion;
 		real_t margin = 0.08;
 		bool collide_separation_ray = false;
 		HashSet<RID> exclude_bodies;
@@ -495,19 +495,19 @@ public:
 
 		MotionParameters() {}
 
-		MotionParameters(const Transform2D &p_from, const Vector2 &p_motion, real_t p_margin = 0.08) :
+		MotionParameters(const Transform2D &p_from, const Hector2 &p_motion, real_t p_margin = 0.08) :
 				from(p_from),
 				motion(p_motion),
 				margin(p_margin) {}
 	};
 
 	struct MotionResult {
-		Vector2 travel;
-		Vector2 remainder;
+		Hector2 travel;
+		Hector2 remainder;
 
-		Vector2 collision_point;
-		Vector2 collision_normal;
-		Vector2 collider_velocity;
+		Hector2 collision_point;
+		Hector2 collision_normal;
+		Hector2 collider_velocity;
 		real_t collision_depth = 0.0;
 		real_t collision_safe_fraction = 0.0;
 		real_t collision_unsafe_fraction = 0.0;
@@ -516,7 +516,7 @@ public:
 		RID collider;
 		int collider_shape = 0;
 
-		real_t get_angle(Vector2 p_up_direction) const {
+		real_t get_angle(Hector2 p_up_direction) const {
 			return Math::acos(collision_normal.dot(p_up_direction));
 		}
 	};
@@ -548,9 +548,9 @@ public:
 	virtual void joint_disable_collisions_between_bodies(RID p_joint, const bool p_disable) = 0;
 	virtual bool joint_is_disabled_collisions_between_bodies(RID p_joint) const = 0;
 
-	virtual void joint_make_pin(RID p_joint, const Vector2 &p_anchor, RID p_body_a, RID p_body_b = RID()) = 0;
-	virtual void joint_make_groove(RID p_joint, const Vector2 &p_a_groove1, const Vector2 &p_a_groove2, const Vector2 &p_b_anchor, RID p_body_a, RID p_body_b) = 0;
-	virtual void joint_make_damped_spring(RID p_joint, const Vector2 &p_anchor_a, const Vector2 &p_anchor_b, RID p_body_a, RID p_body_b = RID()) = 0;
+	virtual void joint_make_pin(RID p_joint, const Hector2 &p_anchor, RID p_body_a, RID p_body_b = RID()) = 0;
+	virtual void joint_make_groove(RID p_joint, const Hector2 &p_a_groove1, const Hector2 &p_a_groove2, const Hector2 &p_b_anchor, RID p_body_a, RID p_body_b) = 0;
+	virtual void joint_make_damped_spring(RID p_joint, const Hector2 &p_anchor_a, const Hector2 &p_anchor_b, RID p_body_a, RID p_body_b = RID()) = 0;
 
 	enum PinJointParam {
 		PIN_JOINT_SOFTNESS,
@@ -622,14 +622,14 @@ protected:
 	static void _bind_methods();
 
 public:
-	static Ref<PhysicsRayQueryParameters2D> create(Vector2 p_from, Vector2 p_to, uint32_t p_mask, const TypedArray<RID> &p_exclude);
+	static Ref<PhysicsRayQueryParameters2D> create(Hector2 p_from, Hector2 p_to, uint32_t p_mask, const TypedArray<RID> &p_exclude);
 	const PhysicsDirectSpaceState2D::RayParameters &get_parameters() const { return parameters; }
 
-	void set_from(const Vector2 &p_from) { parameters.from = p_from; }
-	const Vector2 &get_from() const { return parameters.from; }
+	void set_from(const Hector2 &p_from) { parameters.from = p_from; }
+	const Hector2 &get_from() const { return parameters.from; }
 
-	void set_to(const Vector2 &p_to) { parameters.to = p_to; }
-	const Vector2 &get_to() const { return parameters.to; }
+	void set_to(const Hector2 &p_to) { parameters.to = p_to; }
+	const Hector2 &get_to() const { return parameters.to; }
 
 	void set_collision_mask(uint32_t p_mask) { parameters.collision_mask = p_mask; }
 	uint32_t get_collision_mask() const { return parameters.collision_mask; }
@@ -658,8 +658,8 @@ protected:
 public:
 	const PhysicsDirectSpaceState2D::PointParameters &get_parameters() const { return parameters; }
 
-	void set_position(const Vector2 &p_position) { parameters.position = p_position; }
-	const Vector2 &get_position() const { return parameters.position; }
+	void set_position(const Hector2 &p_position) { parameters.position = p_position; }
+	const Hector2 &get_position() const { return parameters.position; }
 
 	void set_canvas_instance_id(ObjectID p_canvas_instance_id) { parameters.canvas_instance_id = p_canvas_instance_id; }
 	ObjectID get_canvas_instance_id() const { return parameters.canvas_instance_id; }
@@ -699,8 +699,8 @@ public:
 	void set_transform(const Transform2D &p_transform) { parameters.transform = p_transform; }
 	const Transform2D &get_transform() const { return parameters.transform; }
 
-	void set_motion(const Vector2 &p_motion) { parameters.motion = p_motion; }
-	const Vector2 &get_motion() const { return parameters.motion; }
+	void set_motion(const Hector2 &p_motion) { parameters.motion = p_motion; }
+	const Hector2 &get_motion() const { return parameters.motion; }
 
 	void set_margin(real_t p_margin) { parameters.margin = p_margin; }
 	real_t get_margin() const { return parameters.margin; }
@@ -732,8 +732,8 @@ public:
 	const Transform2D &get_from() const { return parameters.from; }
 	void set_from(const Transform2D &p_from) { parameters.from = p_from; }
 
-	const Vector2 &get_motion() const { return parameters.motion; }
-	void set_motion(const Vector2 &p_motion) { parameters.motion = p_motion; }
+	const Hector2 &get_motion() const { return parameters.motion; }
+	void set_motion(const Hector2 &p_motion) { parameters.motion = p_motion; }
 
 	real_t get_margin() const { return parameters.margin; }
 	void set_margin(real_t p_margin) { parameters.margin = p_margin; }
@@ -762,12 +762,12 @@ protected:
 public:
 	PhysicsServer2D::MotionResult *get_result_ptr() const { return const_cast<PhysicsServer2D::MotionResult *>(&result); }
 
-	Vector2 get_travel() const;
-	Vector2 get_remainder() const;
+	Hector2 get_travel() const;
+	Hector2 get_remainder() const;
 
-	Vector2 get_collision_point() const;
-	Vector2 get_collision_normal() const;
-	Vector2 get_collider_velocity() const;
+	Hector2 get_collision_point() const;
+	Hector2 get_collision_normal() const;
+	Hector2 get_collider_velocity() const;
 	ObjectID get_collider_id() const;
 	RID get_collider_rid() const;
 	Object *get_collider() const;
@@ -803,7 +803,7 @@ class PhysicsServer2DManager : public Object {
 		}
 	};
 
-	Vector<ClassInfo> physics_2d_servers;
+	Hector<ClassInfo> physics_2d_servers;
 	int default_server_id = -1;
 	int default_server_priority = -1;
 

@@ -1719,7 +1719,7 @@ struct TupleValues
 
   template <typename T>
   static bool decompile (const HBUINT8 *&p /* IN/OUT */,
-			 hb_vector_t<T> &values /* IN/OUT */,
+			 hb_Hector_t<T> &values /* IN/OUT */,
 			 const HBUINT8 *end,
 			 bool consume_all = false)
   {

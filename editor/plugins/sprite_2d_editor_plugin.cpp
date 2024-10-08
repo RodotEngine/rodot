@@ -61,9 +61,9 @@ void Sprite2DEditor::edit(Sprite2D *p_sprite) {
 	node = p_sprite;
 }
 
-Vector<Vector2> expand(const Vector<Vector2> &points, const Rect2i &rect, float epsilon = 2.0) {
+Hector<Hector2> expand(const Hector<Hector2> &points, const Rect2i &rect, float epsilon = 2.0) {
 	int size = points.size();
-	ERR_FAIL_COND_V(size < 2, Vector<Vector2>());
+	ERR_FAIL_COND_V(size < 2, Hector<Hector2>());
 
 	Clipper2Lib::PathD subj(points.size());
 	for (int i = 0; i < points.size(); i++) {
@@ -88,12 +88,12 @@ Vector<Vector2> expand(const Vector<Vector2> &points, const Rect2i &rect, float 
 
 	const Clipper2Lib::PathD &p2 = out[0];
 
-	Vector<Vector2> outPoints;
+	Hector<Hector2> outPoints;
 
 	int lasti = p2.size() - 1;
-	Vector2 prev = Vector2(p2[lasti].x, p2[lasti].y);
+	Hector2 prev = Hector2(p2[lasti].x, p2[lasti].y);
 	for (uint64_t i = 0; i < p2.size(); i++) {
-		Vector2 cur = Vector2(p2[i].x, p2[i].y);
+		Hector2 cur = Hector2(p2[i].x, p2[i].y);
 		if (cur.distance_to(prev) > 0.5) {
 			outPoints.push_back(cur);
 			prev = cur;
@@ -172,7 +172,7 @@ void Sprite2DEditor::_update_mesh_data() {
 	}
 
 	Rect2 rect = node->is_region_enabled() ? node->get_region_rect() : Rect2(Point2(), image->get_size());
-	rect.size /= Vector2(node->get_hframes(), node->get_vframes());
+	rect.size /= Hector2(node->get_hframes(), node->get_vframes());
 	rect.position += node->get_frame_coords() * rect.size;
 
 	Ref<BitMap> bm;
@@ -191,7 +191,7 @@ void Sprite2DEditor::_update_mesh_data() {
 
 	float epsilon = simplification->get_value();
 
-	Vector<Vector<Vector2>> lines = bm->clip_opaque_to_polygons(rect, epsilon);
+	Hector<Hector<Hector2>> lines = bm->clip_opaque_to_polygons(rect, epsilon);
 
 	uv_lines.clear();
 
@@ -209,7 +209,7 @@ void Sprite2DEditor::_update_mesh_data() {
 			int index_ofs = computed_vertices.size();
 
 			for (int i = 0; i < lines[j].size(); i++) {
-				Vector2 vtx = lines[j][i];
+				Hector2 vtx = lines[j][i];
 				computed_uv.push_back((vtx + rect.position) / img_size);
 
 				if (node->is_flipped_h()) {
@@ -226,7 +226,7 @@ void Sprite2DEditor::_update_mesh_data() {
 				computed_vertices.push_back(vtx);
 			}
 
-			Vector<int> poly = Geometry2D::triangulate_polygon(lines[j]);
+			Hector<int> poly = Geometry2D::triangulate_polygon(lines[j]);
 
 			for (int i = 0; i < poly.size(); i += 3) {
 				for (int k = 0; k < 3; k++) {
@@ -248,14 +248,14 @@ void Sprite2DEditor::_update_mesh_data() {
 		outline_lines.resize(lines.size());
 		computed_outline_lines.resize(lines.size());
 		for (int pi = 0; pi < lines.size(); pi++) {
-			Vector<Vector2> ol;
-			Vector<Vector2> col;
+			Hector<Hector2> ol;
+			Hector<Hector2> col;
 
 			ol.resize(lines[pi].size());
 			col.resize(lines[pi].size());
 
 			for (int i = 0; i < lines[pi].size(); i++) {
-				Vector2 vtx = lines[pi][i];
+				Hector2 vtx = lines[pi][i];
 				ol.write[i] = vtx + rect.position;
 
 				if (node->is_flipped_h()) {
@@ -341,13 +341,13 @@ void Sprite2DEditor::_convert_to_polygon_2d_node() {
 		total_point_count += computed_outline_lines[i].size();
 	}
 
-	PackedVector2Array polygon;
+	PackedHector2Array polygon;
 	polygon.resize(total_point_count);
-	Vector2 *polygon_write = polygon.ptrw();
+	Hector2 *polygon_write = polygon.ptrw();
 
-	PackedVector2Array uvs;
+	PackedHector2Array uvs;
 	uvs.resize(total_point_count);
-	Vector2 *uvs_write = uvs.ptrw();
+	Hector2 *uvs_write = uvs.ptrw();
 
 	int current_point_index = 0;
 
@@ -355,8 +355,8 @@ void Sprite2DEditor::_convert_to_polygon_2d_node() {
 	polys.resize(computed_outline_lines.size());
 
 	for (int i = 0; i < computed_outline_lines.size(); i++) {
-		Vector<Vector2> outline = computed_outline_lines[i];
-		Vector<Vector2> uv_outline = outline_lines[i];
+		Hector<Hector2> outline = computed_outline_lines[i];
+		Hector<Hector2> uv_outline = outline_lines[i];
 
 		PackedInt32Array pia;
 		pia.resize(outline.size());
@@ -390,7 +390,7 @@ void Sprite2DEditor::_create_collision_polygon_2d_node() {
 	}
 
 	for (int i = 0; i < computed_outline_lines.size(); i++) {
-		Vector<Vector2> outline = computed_outline_lines[i];
+		Hector<Hector2> outline = computed_outline_lines[i];
 
 		CollisionPolygon2D *collision_polygon_2d_instance = memnew(CollisionPolygon2D);
 		collision_polygon_2d_instance->set_polygon(outline);
@@ -412,14 +412,14 @@ void Sprite2DEditor::_create_light_occluder_2d_node() {
 	}
 
 	for (int i = 0; i < computed_outline_lines.size(); i++) {
-		Vector<Vector2> outline = computed_outline_lines[i];
+		Hector<Hector2> outline = computed_outline_lines[i];
 
 		Ref<OccluderPolygon2D> polygon;
 		polygon.instantiate();
 
-		PackedVector2Array a;
+		PackedHector2Array a;
 		a.resize(outline.size());
-		Vector2 *aw = a.ptrw();
+		Hector2 *aw = a.ptrw();
 		for (int io = 0; io < outline.size(); io++) {
 			aw[io] = outline[io];
 		}
@@ -456,7 +456,7 @@ void Sprite2DEditor::_debug_uv_input(const Ref<InputEvent> &p_input) {
 }
 
 void Sprite2DEditor::_debug_uv_draw() {
-	debug_uv->draw_set_transform(-draw_offset * draw_zoom, 0, Vector2(draw_zoom, draw_zoom));
+	debug_uv->draw_set_transform(-draw_offset * draw_zoom, 0, Hector2(draw_zoom, draw_zoom));
 
 	Ref<Texture2D> tex = node->get_texture();
 	ERR_FAIL_COND(!tex.is_valid());
@@ -470,7 +470,7 @@ void Sprite2DEditor::_debug_uv_draw() {
 
 	} else if ((selected_menu_item == MENU_OPTION_CONVERT_TO_POLYGON_2D || selected_menu_item == MENU_OPTION_CREATE_COLLISION_POLY_2D || selected_menu_item == MENU_OPTION_CREATE_LIGHT_OCCLUDER_2D) && outline_lines.size() > 0) {
 		for (int i = 0; i < outline_lines.size(); i++) {
-			Vector<Vector2> outline = outline_lines[i];
+			Hector<Hector2> outline = outline_lines[i];
 
 			debug_uv->draw_polyline(outline, color);
 			debug_uv->draw_line(outline[0], outline[outline.size() - 1], color);
@@ -481,24 +481,24 @@ void Sprite2DEditor::_debug_uv_draw() {
 void Sprite2DEditor::_center_view() {
 	Ref<Texture2D> tex = node->get_texture();
 	ERR_FAIL_COND(!tex.is_valid());
-	Vector2 zoom_factor = (debug_uv->get_size() - Vector2(1, 1) * 50 * EDSCALE) / tex->get_size();
+	Hector2 zoom_factor = (debug_uv->get_size() - Hector2(1, 1) * 50 * EDSCALE) / tex->get_size();
 	zoom_widget->set_zoom(MIN(zoom_factor.x, zoom_factor.y));
 	// Recalculate scroll limits.
 	_update_zoom_and_pan(false);
 
-	Vector2 offset = (tex->get_size() - debug_uv->get_size() / zoom_widget->get_zoom()) / 2;
+	Hector2 offset = (tex->get_size() - debug_uv->get_size() / zoom_widget->get_zoom()) / 2;
 	h_scroll->set_value_no_signal(offset.x);
 	v_scroll->set_value_no_signal(offset.y);
 	_update_zoom_and_pan(false);
 }
 
-void Sprite2DEditor::_pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event) {
+void Sprite2DEditor::_pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event) {
 	h_scroll->set_value_no_signal(h_scroll->get_value() - p_scroll_vec.x / draw_zoom);
 	v_scroll->set_value_no_signal(v_scroll->get_value() - p_scroll_vec.y / draw_zoom);
 	_update_zoom_and_pan(false);
 }
 
-void Sprite2DEditor::_zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event) {
+void Sprite2DEditor::_zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event) {
 	const real_t prev_zoom = draw_zoom;
 	zoom_widget->set_zoom(draw_zoom * p_zoom_factor);
 	draw_offset += p_origin / prev_zoom - p_origin / zoom_widget->get_zoom();
@@ -510,9 +510,9 @@ void Sprite2DEditor::_zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<I
 void Sprite2DEditor::_update_zoom_and_pan(bool p_zoom_at_center) {
 	real_t previous_zoom = draw_zoom;
 	draw_zoom = zoom_widget->get_zoom();
-	draw_offset = Vector2(h_scroll->get_value(), v_scroll->get_value());
+	draw_offset = Hector2(h_scroll->get_value(), v_scroll->get_value());
 	if (p_zoom_at_center) {
-		Vector2 center = debug_uv->get_size() / 2;
+		Hector2 center = debug_uv->get_size() / 2;
 		draw_offset += center / previous_zoom - center / draw_zoom;
 	}
 
@@ -522,7 +522,7 @@ void Sprite2DEditor::_update_zoom_and_pan(bool p_zoom_at_center) {
 	Point2 min_corner;
 	Point2 max_corner = tex->get_size();
 	Size2 page_size = debug_uv->get_size() / draw_zoom;
-	Vector2 margin = Vector2(50, 50) * EDSCALE / draw_zoom;
+	Hector2 margin = Hector2(50, 50) * EDSCALE / draw_zoom;
 	min_corner -= page_size - margin;
 	max_corner += page_size - margin;
 

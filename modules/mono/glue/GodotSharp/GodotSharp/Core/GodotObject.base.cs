@@ -25,23 +25,23 @@ namespace Godot
         {
             unsafe
             {
-                ConstructAndInitialize(NativeCtor, NativeName, _cachedType, refCounted: false);
+                ConstructAndInitialize(NatiHector, NativeName, _cachedType, refCounted: false);
             }
         }
 
         internal GodotObject(IntPtr nativePtr) : this(false)
         {
-            // NativePtr must be non-zero before calling ConstructAndInitialize to avoid invoking the constructor NativeCtor.
+            // NativePtr must be non-zero before calling ConstructAndInitialize to avoid invoking the constructor NatiHector.
             // We don't want to invoke the constructor, because we already have a constructed instance in nativePtr.
             NativePtr = nativePtr;
             unsafe
             {
-                ConstructAndInitialize(NativeCtor, NativeName, _cachedType, refCounted: false);
+                ConstructAndInitialize(NatiHector, NativeName, _cachedType, refCounted: false);
             }
         }
 
         internal unsafe void ConstructAndInitialize(
-            delegate* unmanaged<godot_bool, IntPtr> nativeCtor,
+            delegate* unmanaged<godot_bool, IntPtr> natiHector,
             StringName nativeName,
             Type cachedType,
             bool refCounted
@@ -49,10 +49,10 @@ namespace Godot
         {
             if (NativePtr == IntPtr.Zero)
             {
-                Debug.Assert(nativeCtor != null);
+                Debug.Assert(natiHector != null);
 
                 // Need postinitialization.
-                NativePtr = nativeCtor(godot_bool.True);
+                NativePtr = natiHector(godot_bool.True);
 
                 InteropUtils.TieManagedToUnmanaged(this, NativePtr,
                     nativeName, refCounted, GetType(), cachedType);

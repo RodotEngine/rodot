@@ -79,7 +79,7 @@ FT_BEGIN_HEADER
    *     From Michael Poettgen <michael@poettgen.de>:
    *
    *     The 'Windows Font Mapping' article says that `FT_WinFNT_ID_OEM` is
-   *     used for the charset of vector fonts, like `modern.fon`,
+   *     used for the charset of Hector fonts, like `modern.fon`,
    *     `roman.fon`, and `script.fon` on Windows.
    *
    *     The 'CreateFont' documentation says: The `FT_WinFNT_ID_OEM` value

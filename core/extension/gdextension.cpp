@@ -224,7 +224,7 @@ public:
 #endif
 		set_argument_count(p_method_info->argument_count);
 
-		Vector<Variant> defargs;
+		Hector<Variant> defargs;
 		defargs.resize(p_method_info->default_argument_count);
 		for (uint32_t i = 0; i < p_method_info->default_argument_count; i++) {
 			defargs.write[i] = *static_cast<Variant *>(p_method_info->default_arguments[i]);
@@ -929,14 +929,14 @@ void GDExtension::finish_reload() {
 	is_reloading = false;
 
 	// Clean up any classes or methods that didn't get re-added.
-	Vector<StringName> classes_to_remove;
+	Hector<StringName> classes_to_remove;
 	for (KeyValue<StringName, Extension> &E : extension_classes) {
 		if (E.value.is_reloading) {
 			E.value.is_reloading = false;
 			classes_to_remove.push_back(E.key);
 		}
 
-		Vector<StringName> methods_to_remove;
+		Hector<StringName> methods_to_remove;
 		for (KeyValue<StringName, GDExtensionMethodBind *> &M : E.value.methods) {
 			if (M.value->is_reloading) {
 				M.value->valid = false;
@@ -1016,7 +1016,7 @@ void GDExtension::_untrack_instance(void *p_user_data, void *p_instance) {
 	extension->instances.erase(obj->get_instance_id());
 }
 
-Vector<StringName> GDExtensionEditorPlugins::extension_classes;
+Hector<StringName> GDExtensionEditorPlugins::extension_classes;
 GDExtensionEditorPlugins::EditorPluginRegisterFunc GDExtensionEditorPlugins::editor_node_add_plugin = nullptr;
 GDExtensionEditorPlugins::EditorPluginRegisterFunc GDExtensionEditorPlugins::editor_node_remove_plugin = nullptr;
 

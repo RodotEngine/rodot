@@ -157,11 +157,11 @@ public:
 	void set_fallback_stylebox(const Ref<StyleBox> &p_stylebox);
 	Ref<StyleBox> get_fallback_stylebox();
 
-	void get_native_type_dependencies(const StringName &p_base_type, Vector<StringName> &r_result);
+	void get_native_type_dependencies(const StringName &p_base_type, Hector<StringName> &r_result);
 
 	// Global theme contexts.
 
-	ThemeContext *create_theme_context(Node *p_node, Vector<Ref<Theme>> &p_themes);
+	ThemeContext *create_theme_context(Node *p_node, Hector<Ref<Theme>> &p_themes);
 	void destroy_theme_context(Node *p_node);
 
 	ThemeContext *get_theme_context(Node *p_node) const;
@@ -194,7 +194,7 @@ class ThemeContext : public Object {
 	// Themes are stacked in the order of relevance, for easy iteration.
 	// This means that the first theme is the one you should check first,
 	// and the last theme is the fallback theme where every lookup ends.
-	Vector<Ref<Theme>> themes;
+	Hector<Ref<Theme>> themes;
 
 	void _emit_changed();
 
@@ -202,8 +202,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	void set_themes(Vector<Ref<Theme>> &p_themes);
-	const Vector<Ref<Theme>> get_themes() const;
+	void set_themes(Hector<Ref<Theme>> &p_themes);
+	const Hector<Ref<Theme>> get_themes() const;
 	Ref<Theme> get_fallback_theme() const;
 };
 

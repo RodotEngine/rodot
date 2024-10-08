@@ -145,10 +145,10 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 	};
 
 	struct CanvasShaderData : public RendererRD::MaterialStorage::ShaderData {
-		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+		Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 		int blend_mode = 0;
 
-		Vector<uint32_t> ubo_offsets;
+		Hector<uint32_t> ubo_offsets;
 		uint32_t ubo_size = 0;
 
 		String code;
@@ -427,7 +427,7 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 		TextureState state;
 		uint32_t specular_shininess = 0;
 		uint32_t flags = 0;
-		Vector2 texpixel_size;
+		Hector2 texpixel_size;
 
 		RID diffuse;
 		RID normal;
@@ -467,7 +467,7 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 	};
 
 	struct DataBuffer {
-		LocalVector<RID> instance_buffers;
+		LocalHector<RID> instance_buffers;
 	};
 
 	struct State {
@@ -492,8 +492,8 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 			uint32_t pad2;
 		};
 
-		LocalVector<DataBuffer> canvas_instance_data_buffers;
-		LocalVector<Batch> canvas_instance_batches;
+		LocalHector<DataBuffer> canvas_instance_data_buffers;
+		LocalHector<Batch> canvas_instance_batches;
 		uint32_t current_data_buffer_index = 0;
 		uint32_t current_instance_buffer_index = 0;
 		uint32_t current_batch_index = 0;
@@ -572,7 +572,7 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 	void _update_shadow_atlas();
 
 public:
-	PolygonID request_polygon(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>()) override;
+	PolygonID request_polygon(const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), const Hector<int> &p_bones = Hector<int>(), const Hector<float> &p_weights = Hector<float>()) override;
 	void free_polygon(PolygonID p_polygon) override;
 
 	RID light_create() override;
@@ -584,7 +584,7 @@ public:
 	virtual void render_sdf(RID p_render_target, LightOccluderInstance *p_occluders) override;
 
 	RID occluder_polygon_create() override;
-	void occluder_polygon_set_shape(RID p_occluder, const Vector<Vector2> &p_points, bool p_closed) override;
+	void occluder_polygon_set_shape(RID p_occluder, const Hector<Hector2> &p_points, bool p_closed) override;
 	void occluder_polygon_set_cull_mode(RID p_occluder, RS::CanvasOccluderPolygonCullMode p_mode) override;
 
 	void canvas_render_items(RID p_to_render_target, Item *p_item_list, const Color &p_modulate, Light *p_light_list, Light *p_directional_light_list, const Transform2D &p_canvas_transform, RS::CanvasItemTextureFilter p_default_filter, RS::CanvasItemTextureRepeat p_default_repeat, bool p_snap_2d_vertices_to_pixel, bool &r_sdf_used, RenderingMethod::RenderInfo *r_render_info = nullptr) override;

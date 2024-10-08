@@ -220,7 +220,7 @@ void MDCommandBuffer::render_bind_uniform_set(RDD::UniformSetID p_uniform_set, R
 	}
 }
 
-void MDCommandBuffer::render_clear_attachments(VectorView<RDD::AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) {
+void MDCommandBuffer::render_clear_attachments(HectorView<RDD::AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) {
 	DEV_ASSERT(type == MDCommandBufferStateType::Render);
 
 	uint32_t vertex_count = p_rects.size() * 6;
@@ -350,7 +350,7 @@ void MDCommandBuffer::_render_set_dirty_state() {
 	render.dirty.clear();
 }
 
-void MDCommandBuffer::render_set_viewport(VectorView<Rect2i> p_viewports) {
+void MDCommandBuffer::render_set_viewport(HectorView<Rect2i> p_viewports) {
 	render.viewports.resize(p_viewports.size());
 	for (uint32_t i = 0; i < p_viewports.size(); i += 1) {
 		Rect2i const &vp = p_viewports[i];
@@ -367,7 +367,7 @@ void MDCommandBuffer::render_set_viewport(VectorView<Rect2i> p_viewports) {
 	render.dirty.set_flag(RenderState::DIRTY_VIEWPORT);
 }
 
-void MDCommandBuffer::render_set_scissor(VectorView<Rect2i> p_scissors) {
+void MDCommandBuffer::render_set_scissor(HectorView<Rect2i> p_scissors) {
 	render.scissors.resize(p_scissors.size());
 	for (uint32_t i = 0; i < p_scissors.size(); i += 1) {
 		Rect2i const &vp = p_scissors[i];
@@ -445,7 +445,7 @@ void MDCommandBuffer::_render_bind_uniform_sets() {
 	}
 }
 
-void MDCommandBuffer::_populate_vertices(simd::float4 *p_vertices, Size2i p_fb_size, VectorView<Rect2i> p_rects) {
+void MDCommandBuffer::_populate_vertices(simd::float4 *p_vertices, Size2i p_fb_size, HectorView<Rect2i> p_rects) {
 	uint32_t idx = 0;
 	for (uint32_t i = 0; i < p_rects.size(); i++) {
 		Rect2i const &rect = p_rects[i];
@@ -504,7 +504,7 @@ uint32_t MDCommandBuffer::_populate_vertices(simd::float4 *p_vertices, uint32_t 
 	return idx;
 }
 
-void MDCommandBuffer::render_begin_pass(RDD::RenderPassID p_render_pass, RDD::FramebufferID p_frameBuffer, RDD::CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RDD::RenderPassClearValue> p_clear_values) {
+void MDCommandBuffer::render_begin_pass(RDD::RenderPassID p_render_pass, RDD::FramebufferID p_frameBuffer, RDD::CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RDD::RenderPassClearValue> p_clear_values) {
 	DEV_ASSERT(commandBuffer != nil);
 	end();
 
@@ -554,7 +554,7 @@ void MDCommandBuffer::_render_clear_render_area() {
 	MDSubpass const &subpass = pass.subpasses[render.current_subpass];
 
 	// First determine attachments that should be cleared.
-	LocalVector<RDD::AttachmentClear> clears;
+	LocalHector<RDD::AttachmentClear> clears;
 	clears.reserve(subpass.color_references.size() + /* possible depth stencil clear */ 1);
 
 	for (uint32_t i = 0; i < subpass.color_references.size(); i++) {
@@ -861,11 +861,11 @@ void MDCommandBuffer::_end_blit() {
 	type = MDCommandBufferStateType::None;
 }
 
-MDComputeShader::MDComputeShader(CharString p_name, Vector<UniformSet> p_sets, MDLibrary *p_kernel) :
+MDComputeShader::MDComputeShader(CharString p_name, Hector<UniformSet> p_sets, MDLibrary *p_kernel) :
 		MDShader(p_name, p_sets), kernel(p_kernel) {
 }
 
-void MDComputeShader::encode_push_constant_data(VectorView<uint32_t> p_data, MDCommandBuffer *p_cb) {
+void MDComputeShader::encode_push_constant_data(HectorView<uint32_t> p_data, MDCommandBuffer *p_cb) {
 	DEV_ASSERT(p_cb->type == MDCommandBufferStateType::Compute);
 	if (push_constants.binding == (uint32_t)-1) {
 		return;
@@ -879,11 +879,11 @@ void MDComputeShader::encode_push_constant_data(VectorView<uint32_t> p_data, MDC
 	[enc setBytes:ptr length:length atIndex:push_constants.binding];
 }
 
-MDRenderShader::MDRenderShader(CharString p_name, Vector<UniformSet> p_sets, MDLibrary *_Nonnull p_vert, MDLibrary *_Nonnull p_frag) :
+MDRenderShader::MDRenderShader(CharString p_name, Hector<UniformSet> p_sets, MDLibrary *_Nonnull p_vert, MDLibrary *_Nonnull p_frag) :
 		MDShader(p_name, p_sets), vert(p_vert), frag(p_frag) {
 }
 
-void MDRenderShader::encode_push_constant_data(VectorView<uint32_t> p_data, MDCommandBuffer *p_cb) {
+void MDRenderShader::encode_push_constant_data(HectorView<uint32_t> p_data, MDCommandBuffer *p_cb) {
 	DEV_ASSERT(p_cb->type == MDCommandBufferStateType::Render);
 	id<MTLRenderCommandEncoder> enc = p_cb->render.encoder;
 
@@ -1160,7 +1160,7 @@ bool MDAttachment::shouldClear(const MDSubpass &p_subpass, bool p_is_stencil) co
 	return (p_is_stencil ? stencilLoadAction : loadAction) == MTLLoadActionClear;
 }
 
-MDRenderPass::MDRenderPass(Vector<MDAttachment> &p_attachments, Vector<MDSubpass> &p_subpasses) :
+MDRenderPass::MDRenderPass(Hector<MDAttachment> &p_attachments, Hector<MDSubpass> &p_subpasses) :
 		attachments(p_attachments), subpasses(p_subpasses) {
 	for (MDAttachment &att : attachments) {
 		att.linkToSubpass(*this);

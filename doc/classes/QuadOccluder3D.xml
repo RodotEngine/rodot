@@ -11,7 +11,7 @@
 		<link title="Occlusion culling">$DOCS_URL/tutorials/3d/occlusion_culling.html</link>
 	</tutorials>
 	<members>
-		<member name="size" type="Vector2" setter="set_size" getter="get_size" default="Vector2(1, 1)">
+		<member name="size" type="Hector2" setter="set_size" getter="get_size" default="Hector2(1, 1)">
 			The quad's size in 3D units.
 		</member>
 	</members>

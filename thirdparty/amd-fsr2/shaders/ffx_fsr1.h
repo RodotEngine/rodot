@@ -679,7 +679,7 @@ void FsrEasuH(
  FfxFloat32x4 FsrRcasLoadF(FfxInt32x2 p);
  void FsrRcasInputF(inout FfxFloat32 r,inout FfxFloat32 g,inout FfxFloat32 b);
 //------------------------------------------------------------------------------------------------------------------------------
- void FsrRcasF(out FfxFloat32 pixR,  // Output values, non-vector so port between RcasFilter() and RcasFilterH() is easy.
+ void FsrRcasF(out FfxFloat32 pixR,  // Output values, non-Hector so port between RcasFilter() and RcasFilterH() is easy.
                out FfxFloat32 pixG,
                out FfxFloat32 pixB,
 #ifdef FSR_RCAS_PASSTHROUGH_ALPHA
@@ -781,7 +781,7 @@ void FsrEasuH(
  void FsrRcasInputH(inout FfxFloat16 r,inout FfxFloat16 g,inout FfxFloat16 b);
 //------------------------------------------------------------------------------------------------------------------------------
  void FsrRcasH(
- out FfxFloat16 pixR, // Output values, non-vector so port between RcasFilter() and RcasFilterH() is easy.
+ out FfxFloat16 pixR, // Output values, non-Hector so port between RcasFilter() and RcasFilterH() is easy.
  out FfxFloat16 pixG,
  out FfxFloat16 pixB,
  #ifdef FSR_RCAS_PASSTHROUGH_ALPHA

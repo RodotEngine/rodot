@@ -70,10 +70,10 @@ public:
 	virtual bool map_is_active(RID p_map) const = 0;
 
 	/// Set the map UP direction.
-	virtual void map_set_up(RID p_map, Vector3 p_up) = 0;
+	virtual void map_set_up(RID p_map, Hector3 p_up) = 0;
 
 	/// Returns the map UP direction.
-	virtual Vector3 map_get_up(RID p_map) const = 0;
+	virtual Hector3 map_get_up(RID p_map) const = 0;
 
 	/// Set the map cell size used to weld the navigation mesh polygons.
 	virtual void map_set_cell_size(RID p_map, real_t p_cell_size) = 0;
@@ -103,12 +103,12 @@ public:
 	virtual real_t map_get_link_connection_radius(RID p_map) const = 0;
 
 	/// Returns the navigation path to reach the destination from the origin.
-	virtual Vector<Vector3> map_get_path(RID p_map, Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const = 0;
+	virtual Hector<Hector3> map_get_path(RID p_map, Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const = 0;
 
-	virtual Vector3 map_get_closest_point_to_segment(RID p_map, const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision = false) const = 0;
-	virtual Vector3 map_get_closest_point(RID p_map, const Vector3 &p_point) const = 0;
-	virtual Vector3 map_get_closest_point_normal(RID p_map, const Vector3 &p_point) const = 0;
-	virtual RID map_get_closest_point_owner(RID p_map, const Vector3 &p_point) const = 0;
+	virtual Hector3 map_get_closest_point_to_segment(RID p_map, const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision = false) const = 0;
+	virtual Hector3 map_get_closest_point(RID p_map, const Hector3 &p_point) const = 0;
+	virtual Hector3 map_get_closest_point_normal(RID p_map, const Hector3 &p_point) const = 0;
+	virtual RID map_get_closest_point_owner(RID p_map, const Hector3 &p_point) const = 0;
 
 	virtual TypedArray<RID> map_get_links(RID p_map) const = 0;
 	virtual TypedArray<RID> map_get_regions(RID p_map) const = 0;
@@ -118,7 +118,7 @@ public:
 	virtual void map_force_update(RID p_map) = 0;
 	virtual uint32_t map_get_iteration_id(RID p_map) const = 0;
 
-	virtual Vector3 map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const = 0;
+	virtual Hector3 map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const = 0;
 
 	/// Creates a new region.
 	virtual RID region_create() = 0;
@@ -141,7 +141,7 @@ public:
 	virtual void region_set_owner_id(RID p_region, ObjectID p_owner_id) = 0;
 	virtual ObjectID region_get_owner_id(RID p_region) const = 0;
 
-	virtual bool region_owns_point(RID p_region, const Vector3 &p_point) const = 0;
+	virtual bool region_owns_point(RID p_region, const Hector3 &p_point) const = 0;
 
 	/// Set the map of this region.
 	virtual void region_set_map(RID p_region, RID p_map) = 0;
@@ -165,13 +165,13 @@ public:
 
 	/// Get a list of a region's connection to other regions.
 	virtual int region_get_connections_count(RID p_region) const = 0;
-	virtual Vector3 region_get_connection_pathway_start(RID p_region, int p_connection_id) const = 0;
-	virtual Vector3 region_get_connection_pathway_end(RID p_region, int p_connection_id) const = 0;
+	virtual Hector3 region_get_connection_pathway_start(RID p_region, int p_connection_id) const = 0;
+	virtual Hector3 region_get_connection_pathway_end(RID p_region, int p_connection_id) const = 0;
 
-	virtual Vector3 region_get_closest_point_to_segment(RID p_region, const Vector3 &p_from, const Vector3 &p_to, bool p_use_collision = false) const = 0;
-	virtual Vector3 region_get_closest_point(RID p_region, const Vector3 &p_point) const = 0;
-	virtual Vector3 region_get_closest_point_normal(RID p_region, const Vector3 &p_point) const = 0;
-	virtual Vector3 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const = 0;
+	virtual Hector3 region_get_closest_point_to_segment(RID p_region, const Hector3 &p_from, const Hector3 &p_to, bool p_use_collision = false) const = 0;
+	virtual Hector3 region_get_closest_point(RID p_region, const Hector3 &p_point) const = 0;
+	virtual Hector3 region_get_closest_point_normal(RID p_region, const Hector3 &p_point) const = 0;
+	virtual Hector3 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const = 0;
 
 	/// Creates a new link between positions in the nav map.
 	virtual RID link_create() = 0;
@@ -192,12 +192,12 @@ public:
 	virtual uint32_t link_get_navigation_layers(RID p_link) const = 0;
 
 	/// Set the start position of the link.
-	virtual void link_set_start_position(RID p_link, Vector3 p_position) = 0;
-	virtual Vector3 link_get_start_position(RID p_link) const = 0;
+	virtual void link_set_start_position(RID p_link, Hector3 p_position) = 0;
+	virtual Hector3 link_get_start_position(RID p_link) const = 0;
 
 	/// Set the end position of the link.
-	virtual void link_set_end_position(RID p_link, Vector3 p_position) = 0;
-	virtual Vector3 link_get_end_position(RID p_link) const = 0;
+	virtual void link_set_end_position(RID p_link, Hector3 p_position) = 0;
+	virtual Hector3 link_get_end_position(RID p_link) const = 0;
 
 	/// Set the enter cost of the link.
 	virtual void link_set_enter_cost(RID p_link, real_t p_enter_cost) = 0;
@@ -272,16 +272,16 @@ public:
 	virtual real_t agent_get_max_speed(RID p_agent) const = 0;
 
 	/// forces and agent velocity change in the avoidance simulation, adds simulation instability if done recklessly
-	virtual void agent_set_velocity_forced(RID p_agent, Vector3 p_velocity) = 0;
+	virtual void agent_set_velocity_forced(RID p_agent, Hector3 p_velocity) = 0;
 
 	/// The wanted velocity for the agent as a "suggestion" to the avoidance simulation.
 	/// The simulation will try to fulfill this velocity wish if possible but may change the velocity depending on other agent's and obstacles'.
-	virtual void agent_set_velocity(RID p_agent, Vector3 p_velocity) = 0;
-	virtual Vector3 agent_get_velocity(RID p_agent) const = 0;
+	virtual void agent_set_velocity(RID p_agent, Hector3 p_velocity) = 0;
+	virtual Hector3 agent_get_velocity(RID p_agent) const = 0;
 
 	/// Position of the agent in world space.
-	virtual void agent_set_position(RID p_agent, Vector3 p_position) = 0;
-	virtual Vector3 agent_get_position(RID p_agent) const = 0;
+	virtual void agent_set_position(RID p_agent, Hector3 p_position) = 0;
+	virtual Hector3 agent_get_position(RID p_agent) const = 0;
 
 	/// Returns true if the map got changed the previous frame.
 	virtual bool agent_is_map_changed(RID p_agent) const = 0;
@@ -318,12 +318,12 @@ public:
 	virtual real_t obstacle_get_radius(RID p_obstacle) const = 0;
 	virtual void obstacle_set_height(RID p_obstacle, real_t p_height) = 0;
 	virtual real_t obstacle_get_height(RID p_obstacle) const = 0;
-	virtual void obstacle_set_velocity(RID p_obstacle, Vector3 p_velocity) = 0;
-	virtual Vector3 obstacle_get_velocity(RID p_obstacle) const = 0;
-	virtual void obstacle_set_position(RID p_obstacle, Vector3 p_position) = 0;
-	virtual Vector3 obstacle_get_position(RID p_obstacle) const = 0;
-	virtual void obstacle_set_vertices(RID p_obstacle, const Vector<Vector3> &p_vertices) = 0;
-	virtual Vector<Vector3> obstacle_get_vertices(RID p_obstacle) const = 0;
+	virtual void obstacle_set_velocity(RID p_obstacle, Hector3 p_velocity) = 0;
+	virtual Hector3 obstacle_get_velocity(RID p_obstacle) const = 0;
+	virtual void obstacle_set_position(RID p_obstacle, Hector3 p_position) = 0;
+	virtual Hector3 obstacle_get_position(RID p_obstacle) const = 0;
+	virtual void obstacle_set_vertices(RID p_obstacle, const Hector<Hector3> &p_vertices) = 0;
+	virtual Hector<Hector3> obstacle_get_vertices(RID p_obstacle) const = 0;
 	virtual void obstacle_set_avoidance_layers(RID p_obstacle, uint32_t p_layers) = 0;
 	virtual uint32_t obstacle_get_avoidance_layers(RID p_obstacle) const = 0;
 
@@ -357,7 +357,7 @@ public:
 	virtual RID source_geometry_parser_create() = 0;
 	virtual void source_geometry_parser_set_callback(RID p_parser, const Callable &p_callback) = 0;
 
-	virtual Vector<Vector3> simplify_path(const Vector<Vector3> &p_path, real_t p_epsilon) = 0;
+	virtual Hector<Hector3> simplify_path(const Hector<Hector3> &p_path, real_t p_epsilon) = 0;
 
 	NavigationServer3D();
 	~NavigationServer3D() override;

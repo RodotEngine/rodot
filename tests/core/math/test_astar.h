@@ -47,10 +47,10 @@ public:
 	};
 
 	ABCX() {
-		add_point(A, Vector3(0, 0, 0));
-		add_point(B, Vector3(1, 0, 0));
-		add_point(C, Vector3(0, 1, 0));
-		add_point(X, Vector3(0, 0, 1));
+		add_point(A, Hector3(0, 0, 0));
+		add_point(B, Hector3(1, 0, 0));
+		add_point(C, Hector3(0, 1, 0));
+		add_point(X, Hector3(0, 0, 1));
 		connect_points(A, B);
 		connect_points(A, C);
 		connect_points(B, C);
@@ -68,7 +68,7 @@ public:
 
 TEST_CASE("[AStar3D] ABC path") {
 	ABCX abcx;
-	Vector<int64_t> path = abcx.get_id_path(ABCX::A, ABCX::C);
+	Hector<int64_t> path = abcx.get_id_path(ABCX::A, ABCX::C);
 	REQUIRE(path.size() == 3);
 	CHECK(path[0] == ABCX::A);
 	CHECK(path[1] == ABCX::B);
@@ -77,7 +77,7 @@ TEST_CASE("[AStar3D] ABC path") {
 
 TEST_CASE("[AStar3D] ABCX path") {
 	ABCX abcx;
-	Vector<int64_t> path = abcx.get_id_path(ABCX::X, ABCX::C);
+	Hector<int64_t> path = abcx.get_id_path(ABCX::X, ABCX::C);
 	REQUIRE(path.size() == 4);
 	CHECK(path[0] == ABCX::X);
 	CHECK(path[1] == ABCX::A);
@@ -89,10 +89,10 @@ TEST_CASE("[AStar3D] Add/Remove") {
 	AStar3D a;
 
 	// Manual tests.
-	a.add_point(1, Vector3(0, 0, 0));
-	a.add_point(2, Vector3(0, 1, 0));
-	a.add_point(3, Vector3(1, 1, 0));
-	a.add_point(4, Vector3(2, 0, 0));
+	a.add_point(1, Hector3(0, 0, 0));
+	a.add_point(2, Hector3(0, 1, 0));
+	a.add_point(3, Hector3(1, 1, 0));
+	a.add_point(4, Hector3(2, 0, 0));
 	a.connect_points(1, 2, true);
 	a.connect_points(1, 3, true);
 	a.connect_points(1, 4, false);
@@ -139,8 +139,8 @@ TEST_CASE("[AStar3D] Add/Remove") {
 	CHECK(a.get_point_connections(2).size() == 0);
 	CHECK(a.get_point_connections(4).size() == 0);
 
-	a.add_point(0, Vector3(0, -1, 0));
-	a.add_point(3, Vector3(2, 1, 0));
+	a.add_point(0, Hector3(0, -1, 0));
+	a.add_point(3, Hector3(2, 1, 0));
 	// 0: (0, -1)
 	// 1: (0, 0)
 	// 2: (0, 1)
@@ -149,7 +149,7 @@ TEST_CASE("[AStar3D] Add/Remove") {
 
 	// Tests for get_closest_position_in_segment.
 	a.connect_points(2, 3);
-	CHECK(a.get_closest_position_in_segment(Vector3(0.5, 0.5, 0)) == Vector3(0.5, 1, 0));
+	CHECK(a.get_closest_position_in_segment(Hector3(0.5, 0.5, 0)) == Hector3(0.5, 1, 0));
 
 	a.connect_points(3, 4);
 	a.connect_points(0, 3);
@@ -158,9 +158,9 @@ TEST_CASE("[AStar3D] Add/Remove") {
 	a.disconnect_points(4, 3, false);
 	a.disconnect_points(3, 4, false);
 	// Remaining edges: <2, 3>, <0, 3>, <1, 4> (directed).
-	CHECK(a.get_closest_position_in_segment(Vector3(2, 0.5, 0)) == Vector3(1.75, 0.75, 0));
-	CHECK(a.get_closest_position_in_segment(Vector3(-1, 0.2, 0)) == Vector3(0, 0, 0));
-	CHECK(a.get_closest_position_in_segment(Vector3(3, 2, 0)) == Vector3(2, 1, 0));
+	CHECK(a.get_closest_position_in_segment(Hector3(2, 0.5, 0)) == Hector3(1.75, 0.75, 0));
+	CHECK(a.get_closest_position_in_segment(Hector3(-1, 0.2, 0)) == Hector3(0, 0, 0));
+	CHECK(a.get_closest_position_in_segment(Hector3(3, 2, 0)) == Hector3(2, 1, 0));
 
 	Math::seed(0);
 
@@ -186,7 +186,7 @@ TEST_CASE("[AStar3D] Add/Remove") {
 	for (int i = 0; i < 20000; i++) {
 		a.clear();
 		for (int j = 0; j < 5; j++) {
-			a.add_point(j, Vector3(0, 0, 0));
+			a.add_point(j, Hector3(0, 0, 0));
 		}
 
 		// Add or remove random edges.
@@ -220,7 +220,7 @@ TEST_CASE("[Stress][AStar3D] Find paths") {
 
 	for (int test = 0; test < 1000; test++) {
 		AStar3D a;
-		Vector3 p[N];
+		Hector3 p[N];
 		bool adj[N][N] = { { false } };
 
 		// Assign initial coordinates.
@@ -318,7 +318,7 @@ TEST_CASE("[Stress][AStar3D] Find paths") {
 		for (int u = 0; u < N; u++) {
 			for (int v = 0; v < N; v++) {
 				if (u != v) {
-					Vector<int64_t> route = a.get_id_path(u, v);
+					Hector<int64_t> route = a.get_id_path(u, v);
 					if (!Math::is_inf(d[u][v])) {
 						// Reachable.
 						if (route.size() == 0) {

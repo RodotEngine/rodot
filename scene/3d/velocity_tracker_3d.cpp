@@ -38,7 +38,7 @@ bool VelocityTracker3D::is_tracking_physics_step() const {
 	return physics_step;
 }
 
-void VelocityTracker3D::update_position(const Vector3 &p_position) {
+void VelocityTracker3D::update_position(const Hector3 &p_position) {
 	PositionHistory ph;
 	ph.position = p_position;
 	if (physics_step) {
@@ -57,12 +57,12 @@ void VelocityTracker3D::update_position(const Vector3 &p_position) {
 	position_history.write[0] = ph;
 }
 
-Vector3 VelocityTracker3D::get_tracked_linear_velocity() const {
-	Vector3 linear_velocity;
+Hector3 VelocityTracker3D::get_tracked_linear_velocity() const {
+	Hector3 linear_velocity;
 
 	double max_time = 1 / 5.0; //maximum time to interpolate a velocity
 
-	Vector3 distance_accum;
+	Hector3 distance_accum;
 	double time_accum = 0.0;
 	double base_time = 0.0;
 
@@ -79,7 +79,7 @@ Vector3 VelocityTracker3D::get_tracked_linear_velocity() const {
 	for (int i = 0; i < position_history_len - 1; i++) {
 		double delta = 0.0;
 		uint64_t diff = position_history[i].frame - position_history[i + 1].frame;
-		Vector3 distance = position_history[i].position - position_history[i + 1].position;
+		Hector3 distance = position_history[i].position - position_history[i + 1].position;
 
 		if (physics_step) {
 			delta = double(diff) / Engine::get_singleton()->get_physics_ticks_per_second();
@@ -102,7 +102,7 @@ Vector3 VelocityTracker3D::get_tracked_linear_velocity() const {
 	return linear_velocity;
 }
 
-void VelocityTracker3D::reset(const Vector3 &p_new_pos) {
+void VelocityTracker3D::reset(const Hector3 &p_new_pos) {
 	PositionHistory ph;
 	ph.position = p_new_pos;
 	if (physics_step) {

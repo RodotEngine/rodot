@@ -92,8 +92,8 @@ class Polygon2DEditor : public AbstractPolygon2DEditor {
 	MenuButton *uv_menu = nullptr;
 
 	Ref<ViewPanner> uv_panner;
-	void _uv_pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _uv_zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _uv_pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _uv_zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
 	VBoxContainer *bone_scroll_main_vb = nullptr;
 	ScrollContainer *bone_scroll = nullptr;
@@ -104,30 +104,30 @@ class Polygon2DEditor : public AbstractPolygon2DEditor {
 	Label *bone_paint_radius_label = nullptr;
 	bool bone_painting;
 	int bone_painting_bone = 0;
-	Vector<float> prev_weights;
-	Vector2 bone_paint_pos;
+	Hector<float> prev_weights;
+	Hector2 bone_paint_pos;
 	AcceptDialog *grid_settings = nullptr;
 
 	void _sync_bones();
 	void _update_bone_list();
 
-	Vector2 uv_draw_ofs;
+	Hector2 uv_draw_ofs;
 	real_t uv_draw_zoom;
-	Vector<Vector2> points_prev;
-	Vector<Vector2> uv_create_uv_prev;
-	Vector<Vector2> uv_create_poly_prev;
-	Vector<Color> uv_create_colors_prev;
+	Hector<Hector2> points_prev;
+	Hector<Hector2> uv_create_uv_prev;
+	Hector<Hector2> uv_create_poly_prev;
+	Hector<Color> uv_create_colors_prev;
 	int uv_create_prev_internal_vertices = 0;
 	Array uv_create_bones_prev;
 	Array polygons_prev;
 
-	Vector2 uv_create_to;
+	Hector2 uv_create_to;
 	int point_drag_index;
 	bool uv_drag;
 	bool uv_create;
-	Vector<int> polygon_create;
+	Hector<int> polygon_create;
 	UVMode uv_move_current;
-	Vector2 uv_drag_from;
+	Hector2 uv_drag_from;
 
 	AcceptDialog *error = nullptr;
 
@@ -135,8 +135,8 @@ class Polygon2DEditor : public AbstractPolygon2DEditor {
 
 	bool use_snap;
 	bool snap_show_grid;
-	Vector2 snap_offset;
-	Vector2 snap_step;
+	Hector2 snap_offset;
+	Hector2 snap_step;
 
 	virtual void _menu_option(int p_option) override;
 
@@ -166,7 +166,7 @@ protected:
 	virtual Node2D *_get_node() const override;
 	virtual void _set_node(Node *p_polygon) override;
 
-	virtual Vector2 _get_offset(int p_idx) const override;
+	virtual Hector2 _get_offset(int p_idx) const override;
 
 	virtual bool _has_uv() const override { return true; };
 	virtual void _commit_action() override;
@@ -174,7 +174,7 @@ protected:
 	void _notification(int p_what);
 	static void _bind_methods();
 
-	Vector2 snap_point(Vector2 p_target) const;
+	Hector2 snap_point(Hector2 p_target) const;
 
 public:
 	Polygon2DEditor();

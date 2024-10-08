@@ -60,7 +60,7 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 		size_t bits_per_pixel = (size_t)p_header.bmp_info_header.bmp_bit_count;
 
 		// Image data (might be indexed)
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		int data_len = 0;
 
 		if (bits_per_pixel <= 8) { // indexed
@@ -167,7 +167,7 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 		} else { // data is in indexed format, extend it
 
 			// Palette data
-			Vector<uint8_t> palette_data;
+			Hector<uint8_t> palette_data;
 			palette_data.resize(color_table_size * 4);
 
 			uint8_t *palette_data_w = palette_data.ptrw();
@@ -184,7 +184,7 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 				cb += 4;
 			}
 			// Extend palette to image
-			Vector<uint8_t> extended_data;
+			Hector<uint8_t> extended_data;
 			extended_data.resize(data.size() * 4);
 
 			uint8_t *ex_w = extended_data.ptrw();
@@ -285,7 +285,7 @@ Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 						vformat("Couldn't parse the BMP color table: %s", f->get_path()));
 			}
 
-			Vector<uint8_t> bmp_color_table;
+			Hector<uint8_t> bmp_color_table;
 			// Color table is usually 4 bytes per color -> [B][G][R][0]
 			bmp_color_table.resize(color_table_size * 4);
 			uint8_t *bmp_color_table_w = bmp_color_table.ptrw();
@@ -295,7 +295,7 @@ Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 
 			uint32_t bmp_buffer_size = (bmp_header.bmp_file_header.bmp_file_size - bmp_header.bmp_file_header.bmp_file_offset);
 
-			Vector<uint8_t> bmp_buffer;
+			Hector<uint8_t> bmp_buffer;
 			err = bmp_buffer.resize(bmp_buffer_size);
 			if (err == OK) {
 				uint8_t *bmp_buffer_w = bmp_buffer.ptrw();

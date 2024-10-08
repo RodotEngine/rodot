@@ -97,8 +97,8 @@ void MaterialEditor::_notification(int p_what) {
 
 void MaterialEditor::_update_rotation() {
 	Transform3D t;
-	t.basis.rotate(Vector3(0, 1, 0), -rot.y);
-	t.basis.rotate(Vector3(1, 0, 0), -rot.x);
+	t.basis.rotate(Hector3(0, 1, 0), -rot.y);
+	t.basis.rotate(Hector3(1, 0, 0), -rot.x);
 	rotation->set_transform(t);
 }
 
@@ -220,7 +220,7 @@ MaterialEditor::MaterialEditor() {
 	viewport->set_msaa_3d(Viewport::MSAA_4X);
 
 	camera = memnew(Camera3D);
-	camera->set_transform(Transform3D(Basis(), Vector3(0, 0, 1.1)));
+	camera->set_transform(Transform3D(Basis(), Hector3(0, 0, 1.1)));
 	// Use low field of view so the sphere/box is fully encompassed within the preview,
 	// without much distortion.
 	camera->set_perspective(20, 0.1, 10);
@@ -232,11 +232,11 @@ MaterialEditor::MaterialEditor() {
 	viewport->add_child(camera);
 
 	light1 = memnew(DirectionalLight3D);
-	light1->set_transform(Transform3D().looking_at(Vector3(-1, -1, -1), Vector3(0, 1, 0)));
+	light1->set_transform(Transform3D().looking_at(Hector3(-1, -1, -1), Hector3(0, 1, 0)));
 	viewport->add_child(light1);
 
 	light2 = memnew(DirectionalLight3D);
-	light2->set_transform(Transform3D().looking_at(Vector3(0, 1, 0), Vector3(0, 0, 1)));
+	light2->set_transform(Transform3D().looking_at(Hector3(0, 1, 0), Hector3(0, 0, 1)));
 	light2->set_color(Color(0.7, 0.7, 0.7));
 	viewport->add_child(light2);
 

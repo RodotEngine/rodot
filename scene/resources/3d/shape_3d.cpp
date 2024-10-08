@@ -35,13 +35,13 @@
 #include "scene/resources/mesh.h"
 #include "servers/physics_server_3d.h"
 
-void Shape3D::add_vertices_to_array(Vector<Vector3> &array, const Transform3D &p_xform) {
-	Vector<Vector3> toadd = get_debug_mesh_lines();
+void Shape3D::add_vertices_to_array(Hector<Hector3> &array, const Transform3D &p_xform) {
+	Hector<Hector3> toadd = get_debug_mesh_lines();
 
 	if (toadd.size()) {
 		int base = array.size();
 		array.resize(base + toadd.size());
-		Vector3 *w = array.ptrw();
+		Hector3 *w = array.ptrw();
 		for (int i = 0; i < toadd.size(); i++) {
 			w[i + base] = p_xform.xform(toadd[i]);
 		}
@@ -71,16 +71,16 @@ Ref<ArrayMesh> Shape3D::get_debug_mesh() {
 		return debug_mesh_cache;
 	}
 
-	Vector<Vector3> lines = get_debug_mesh_lines();
+	Hector<Hector3> lines = get_debug_mesh_lines();
 
 	debug_mesh_cache = Ref<ArrayMesh>(memnew(ArrayMesh));
 
 	if (!lines.is_empty()) {
 		//make mesh
-		Vector<Vector3> array;
+		Hector<Hector3> array;
 		array.resize(lines.size());
 		{
-			Vector3 *w = array.ptrw();
+			Hector3 *w = array.ptrw();
 			for (int i = 0; i < lines.size(); i++) {
 				w[i] = lines[i];
 			}

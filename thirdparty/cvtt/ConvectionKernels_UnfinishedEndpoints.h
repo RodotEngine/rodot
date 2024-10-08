@@ -6,7 +6,7 @@ namespace cvtt
 {
     namespace Internal
     {
-        template<int TVectorSize>
+        template<int THectorSize>
         class UnfinishedEndpoints
         {
         public:
@@ -22,17 +22,17 @@ namespace cvtt
 
             UnfinishedEndpoints(const MFloat *base, const MFloat *offset)
             {
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_base[ch] = base[ch];
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_offset[ch] = offset[ch];
             }
 
             UnfinishedEndpoints(const UnfinishedEndpoints& other)
             {
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_base[ch] = other.m_base[ch];
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_offset[ch] = other.m_offset[ch];
             }
 
@@ -41,7 +41,7 @@ namespace cvtt
                 float tweakFactors[2];
                 Util::ComputeTweakFactors(tweak, range, tweakFactors);
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MUInt15 channelEPs[2];
                     for (int epi = 0; epi < 2; epi++)
@@ -60,7 +60,7 @@ namespace cvtt
                 float tweakFactors[2];
                 Util::ComputeTweakFactors(tweak, range, tweakFactors);
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MSInt16 channelEPs[2];
                     for (int epi = 0; epi < 2; epi++)
@@ -81,7 +81,7 @@ namespace cvtt
                 float tweakFactors[2];
                 Util::ComputeTweakFactors(tweak, range, tweakFactors);
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MFloat ep0f = ParallelMath::Clamp(m_base[ch] + m_offset[ch] * tweakFactors[0], 0.0f, 255.0f);
                     MFloat ep1f = ParallelMath::Clamp(m_base[ch] + m_offset[ch] * tweakFactors[1], 0.0f, 255.0f);
@@ -90,13 +90,13 @@ namespace cvtt
                 }
             }
 
-            template<int TNewVectorSize>
-            UnfinishedEndpoints<TNewVectorSize> ExpandTo(float filler)
+            template<int TNewHectorSize>
+            UnfinishedEndpoints<TNewHectorSize> ExpandTo(float filler)
             {
-                MFloat newBase[TNewVectorSize];
-                MFloat newOffset[TNewVectorSize];
+                MFloat newBase[TNewHectorSize];
+                MFloat newOffset[TNewHectorSize];
 
-                for (int ch = 0; ch < TNewVectorSize && ch < TVectorSize; ch++)
+                for (int ch = 0; ch < TNewHectorSize && ch < THectorSize; ch++)
                 {
                     newBase[ch] = m_base[ch];
                     newOffset[ch] = m_offset[ch];
@@ -104,18 +104,18 @@ namespace cvtt
 
                 MFloat fillerV = ParallelMath::MakeFloat(filler);
 
-                for (int ch = TVectorSize; ch < TNewVectorSize; ch++)
+                for (int ch = THectorSize; ch < TNewHectorSize; ch++)
                 {
                     newBase[ch] = fillerV;
                     newOffset[ch] = ParallelMath::MakeFloatZero();
                 }
 
-                return UnfinishedEndpoints<TNewVectorSize>(newBase, newOffset);
+                return UnfinishedEndpoints<TNewHectorSize>(newBase, newOffset);
             }
 
         private:
-            MFloat m_base[TVectorSize];
-            MFloat m_offset[TVectorSize];
+            MFloat m_base[THectorSize];
+            MFloat m_offset[THectorSize];
         };
     }
 }

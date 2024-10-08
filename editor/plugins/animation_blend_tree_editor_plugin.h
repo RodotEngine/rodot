@@ -60,7 +60,7 @@ class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
 
 	GraphEdit *graph = nullptr;
 	MenuButton *add_node = nullptr;
-	Vector2 position_from_popup_menu;
+	Hector2 position_from_popup_menu;
 	bool use_position_from_popup_menu;
 
 	PanelContainer *error_panel = nullptr;
@@ -74,7 +74,7 @@ class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
 	Button *filter_clear_selection = nullptr;
 
 	HashMap<StringName, ProgressBar *> animations;
-	Vector<EditorProperty *> visible_properties;
+	Hector<EditorProperty *> visible_properties;
 
 	String to_node = "";
 	int to_slot = -1;
@@ -92,14 +92,14 @@ class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
 		}
 	};
 
-	Vector<AddOption> add_options;
+	Hector<AddOption> add_options;
 
 	void _add_node(int p_idx);
 	void _update_options_menu(bool p_has_input_ports = false);
 
 	static AnimationNodeBlendTreeEditor *singleton;
 
-	void _node_dragged(const Vector2 &p_from, const Vector2 &p_to, const StringName &p_which);
+	void _node_dragged(const Hector2 &p_from, const Hector2 &p_to, const StringName &p_which);
 	void _node_renamed(const String &p_text, Ref<AnimationNode> p_node);
 	void _node_renamed_focus_out(Ref<AnimationNode> p_node);
 	void _node_rename_lineedit_changed(const String &p_text);
@@ -111,7 +111,7 @@ class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
 	void _connection_request(const String &p_from, int p_from_index, const String &p_to, int p_to_index);
 	void _disconnection_request(const String &p_from, int p_from_index, const String &p_to, int p_to_index);
 
-	void _scroll_changed(const Vector2 &p_scroll);
+	void _scroll_changed(const Hector2 &p_scroll);
 	void _node_selected(Object *p_node);
 	void _open_in_editor(const String &p_which);
 	void _anim_selected(int p_index, const Array &p_options, const String &p_node);
@@ -130,10 +130,10 @@ class AnimationNodeBlendTreeEditor : public AnimationTreeNodeEditorPlugin {
 	void _filter_clear_selection_recursive(EditorUndoRedoManager *p_undo_redo, TreeItem *p_item);
 	Ref<AnimationNode> _filter_edit;
 
-	void _popup(bool p_has_input_ports, const Vector2 &p_node_position);
-	void _popup_request(const Vector2 &p_position);
-	void _connection_to_empty(const String &p_from, int p_from_slot, const Vector2 &p_release_position);
-	void _connection_from_empty(const String &p_to, int p_to_slot, const Vector2 &p_release_position);
+	void _popup(bool p_has_input_ports, const Hector2 &p_node_position);
+	void _popup_request(const Hector2 &p_position);
+	void _connection_to_empty(const String &p_from, int p_from_slot, const Hector2 &p_release_position);
+	void _connection_from_empty(const String &p_to, int p_to_slot, const Hector2 &p_release_position);
 	void _popup_hide();
 
 	void _property_changed(const StringName &p_property, const Variant &p_value, const String &p_field, bool p_changing);

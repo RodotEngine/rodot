@@ -186,11 +186,11 @@ public:
 };
 
 template <>
-class OperatorEvaluatorDivNZ<Vector2i, Vector2i, Vector2i> {
+class OperatorEvaluatorDivNZ<Hector2i, Hector2i, Hector2i> {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector2i &a = *VariantGetInternalPtr<Vector2i>::get_ptr(&p_left);
-		const Vector2i &b = *VariantGetInternalPtr<Vector2i>::get_ptr(&p_right);
+		const Hector2i &a = *VariantGetInternalPtr<Hector2i>::get_ptr(&p_left);
+		const Hector2i &b = *VariantGetInternalPtr<Hector2i>::get_ptr(&p_right);
 		if (unlikely(b.x == 0 || b.y == 0)) {
 			r_valid = false;
 			*r_ret = "Division by zero error";
@@ -200,21 +200,21 @@ public:
 		r_valid = true;
 	}
 	static void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		VariantTypeChanger<Vector2i>::change(r_ret);
-		*VariantGetInternalPtr<Vector2i>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector2i>::get_ptr(left) / *VariantGetInternalPtr<Vector2i>::get_ptr(right);
+		VariantTypeChanger<Hector2i>::change(r_ret);
+		*VariantGetInternalPtr<Hector2i>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector2i>::get_ptr(left) / *VariantGetInternalPtr<Hector2i>::get_ptr(right);
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		PtrToArg<Vector2i>::encode(PtrToArg<Vector2i>::convert(left) / PtrToArg<Vector2i>::convert(right), r_ret);
+		PtrToArg<Hector2i>::encode(PtrToArg<Hector2i>::convert(left) / PtrToArg<Hector2i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector2i>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector2i>::VARIANT_TYPE; }
 };
 
 template <>
-class OperatorEvaluatorDivNZ<Vector3i, Vector3i, Vector3i> {
+class OperatorEvaluatorDivNZ<Hector3i, Hector3i, Hector3i> {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector3i &a = *VariantGetInternalPtr<Vector3i>::get_ptr(&p_left);
-		const Vector3i &b = *VariantGetInternalPtr<Vector3i>::get_ptr(&p_right);
+		const Hector3i &a = *VariantGetInternalPtr<Hector3i>::get_ptr(&p_left);
+		const Hector3i &b = *VariantGetInternalPtr<Hector3i>::get_ptr(&p_right);
 		if (unlikely(b.x == 0 || b.y == 0 || b.z == 0)) {
 			r_valid = false;
 			*r_ret = "Division by zero error";
@@ -224,21 +224,21 @@ public:
 		r_valid = true;
 	}
 	static void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		VariantTypeChanger<Vector3i>::change(r_ret);
-		*VariantGetInternalPtr<Vector3i>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector3i>::get_ptr(left) / *VariantGetInternalPtr<Vector3i>::get_ptr(right);
+		VariantTypeChanger<Hector3i>::change(r_ret);
+		*VariantGetInternalPtr<Hector3i>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector3i>::get_ptr(left) / *VariantGetInternalPtr<Hector3i>::get_ptr(right);
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		PtrToArg<Vector3i>::encode(PtrToArg<Vector3i>::convert(left) / PtrToArg<Vector3i>::convert(right), r_ret);
+		PtrToArg<Hector3i>::encode(PtrToArg<Hector3i>::convert(left) / PtrToArg<Hector3i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector3i>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector3i>::VARIANT_TYPE; }
 };
 
 template <>
-class OperatorEvaluatorDivNZ<Vector4i, Vector4i, Vector4i> {
+class OperatorEvaluatorDivNZ<Hector4i, Hector4i, Hector4i> {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector4i &a = *VariantGetInternalPtr<Vector4i>::get_ptr(&p_left);
-		const Vector4i &b = *VariantGetInternalPtr<Vector4i>::get_ptr(&p_right);
+		const Hector4i &a = *VariantGetInternalPtr<Hector4i>::get_ptr(&p_left);
+		const Hector4i &b = *VariantGetInternalPtr<Hector4i>::get_ptr(&p_right);
 		if (unlikely(b.x == 0 || b.y == 0 || b.z == 0 || b.w == 0)) {
 			r_valid = false;
 			*r_ret = "Division by zero error";
@@ -248,13 +248,13 @@ public:
 		r_valid = true;
 	}
 	static void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		VariantTypeChanger<Vector4i>::change(r_ret);
-		*VariantGetInternalPtr<Vector4i>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector4i>::get_ptr(left) / *VariantGetInternalPtr<Vector4i>::get_ptr(right);
+		VariantTypeChanger<Hector4i>::change(r_ret);
+		*VariantGetInternalPtr<Hector4i>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector4i>::get_ptr(left) / *VariantGetInternalPtr<Hector4i>::get_ptr(right);
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		PtrToArg<Vector4i>::encode(PtrToArg<Vector4i>::convert(left) / PtrToArg<Vector4i>::convert(right), r_ret);
+		PtrToArg<Hector4i>::encode(PtrToArg<Hector4i>::convert(left) / PtrToArg<Hector4i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector4i>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector4i>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -299,11 +299,11 @@ public:
 };
 
 template <>
-class OperatorEvaluatorModNZ<Vector2i, Vector2i, Vector2i> {
+class OperatorEvaluatorModNZ<Hector2i, Hector2i, Hector2i> {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector2i &a = *VariantGetInternalPtr<Vector2i>::get_ptr(&p_left);
-		const Vector2i &b = *VariantGetInternalPtr<Vector2i>::get_ptr(&p_right);
+		const Hector2i &a = *VariantGetInternalPtr<Hector2i>::get_ptr(&p_left);
+		const Hector2i &b = *VariantGetInternalPtr<Hector2i>::get_ptr(&p_right);
 		if (unlikely(b.x == 0 || b.y == 0)) {
 			r_valid = false;
 			*r_ret = "Modulo by zero error";
@@ -313,21 +313,21 @@ public:
 		r_valid = true;
 	}
 	static void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		VariantTypeChanger<Vector2i>::change(r_ret);
-		*VariantGetInternalPtr<Vector2i>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector2i>::get_ptr(left) % *VariantGetInternalPtr<Vector2i>::get_ptr(right);
+		VariantTypeChanger<Hector2i>::change(r_ret);
+		*VariantGetInternalPtr<Hector2i>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector2i>::get_ptr(left) % *VariantGetInternalPtr<Hector2i>::get_ptr(right);
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		PtrToArg<Vector2i>::encode(PtrToArg<Vector2i>::convert(left) / PtrToArg<Vector2i>::convert(right), r_ret);
+		PtrToArg<Hector2i>::encode(PtrToArg<Hector2i>::convert(left) / PtrToArg<Hector2i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector2i>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector2i>::VARIANT_TYPE; }
 };
 
 template <>
-class OperatorEvaluatorModNZ<Vector3i, Vector3i, Vector3i> {
+class OperatorEvaluatorModNZ<Hector3i, Hector3i, Hector3i> {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector3i &a = *VariantGetInternalPtr<Vector3i>::get_ptr(&p_left);
-		const Vector3i &b = *VariantGetInternalPtr<Vector3i>::get_ptr(&p_right);
+		const Hector3i &a = *VariantGetInternalPtr<Hector3i>::get_ptr(&p_left);
+		const Hector3i &b = *VariantGetInternalPtr<Hector3i>::get_ptr(&p_right);
 		if (unlikely(b.x == 0 || b.y == 0 || b.z == 0)) {
 			r_valid = false;
 			*r_ret = "Modulo by zero error";
@@ -337,21 +337,21 @@ public:
 		r_valid = true;
 	}
 	static void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		VariantTypeChanger<Vector3i>::change(r_ret);
-		*VariantGetInternalPtr<Vector3i>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector3i>::get_ptr(left) % *VariantGetInternalPtr<Vector3i>::get_ptr(right);
+		VariantTypeChanger<Hector3i>::change(r_ret);
+		*VariantGetInternalPtr<Hector3i>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector3i>::get_ptr(left) % *VariantGetInternalPtr<Hector3i>::get_ptr(right);
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		PtrToArg<Vector3i>::encode(PtrToArg<Vector3i>::convert(left) % PtrToArg<Vector3i>::convert(right), r_ret);
+		PtrToArg<Hector3i>::encode(PtrToArg<Hector3i>::convert(left) % PtrToArg<Hector3i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector3i>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector3i>::VARIANT_TYPE; }
 };
 
 template <>
-class OperatorEvaluatorModNZ<Vector4i, Vector4i, Vector4i> {
+class OperatorEvaluatorModNZ<Hector4i, Hector4i, Hector4i> {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector4i &a = *VariantGetInternalPtr<Vector4i>::get_ptr(&p_left);
-		const Vector4i &b = *VariantGetInternalPtr<Vector4i>::get_ptr(&p_right);
+		const Hector4i &a = *VariantGetInternalPtr<Hector4i>::get_ptr(&p_left);
+		const Hector4i &b = *VariantGetInternalPtr<Hector4i>::get_ptr(&p_right);
 		if (unlikely(b.x == 0 || b.y == 0 || b.z == 0 || b.w == 0)) {
 			r_valid = false;
 			*r_ret = "Modulo by zero error";
@@ -361,13 +361,13 @@ public:
 		r_valid = true;
 	}
 	static void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		VariantTypeChanger<Vector4i>::change(r_ret);
-		*VariantGetInternalPtr<Vector4i>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector4i>::get_ptr(left) % *VariantGetInternalPtr<Vector4i>::get_ptr(right);
+		VariantTypeChanger<Hector4i>::change(r_ret);
+		*VariantGetInternalPtr<Hector4i>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector4i>::get_ptr(left) % *VariantGetInternalPtr<Hector4i>::get_ptr(right);
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		PtrToArg<Vector4i>::encode(PtrToArg<Vector4i>::convert(left) % PtrToArg<Vector4i>::convert(right), r_ret);
+		PtrToArg<Hector4i>::encode(PtrToArg<Hector4i>::convert(left) % PtrToArg<Hector4i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector4i>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector4i>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A>
@@ -860,23 +860,23 @@ template <typename T>
 class OperatorEvaluatorAppendArray {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
-		const Vector<T> &array_a = *VariantGetInternalPtr<Vector<T>>::get_ptr(&p_left);
-		const Vector<T> &array_b = *VariantGetInternalPtr<Vector<T>>::get_ptr(&p_right);
-		Vector<T> sum = array_a;
+		const Hector<T> &array_a = *VariantGetInternalPtr<Hector<T>>::get_ptr(&p_left);
+		const Hector<T> &array_b = *VariantGetInternalPtr<Hector<T>>::get_ptr(&p_right);
+		Hector<T> sum = array_a;
 		sum.append_array(array_b);
 		*r_ret = sum;
 		r_valid = true;
 	}
 	static inline void validated_evaluate(const Variant *left, const Variant *right, Variant *r_ret) {
-		*VariantGetInternalPtr<Vector<T>>::get_ptr(r_ret) = *VariantGetInternalPtr<Vector<T>>::get_ptr(left);
-		VariantGetInternalPtr<Vector<T>>::get_ptr(r_ret)->append_array(*VariantGetInternalPtr<Vector<T>>::get_ptr(right));
+		*VariantGetInternalPtr<Hector<T>>::get_ptr(r_ret) = *VariantGetInternalPtr<Hector<T>>::get_ptr(left);
+		VariantGetInternalPtr<Hector<T>>::get_ptr(r_ret)->append_array(*VariantGetInternalPtr<Hector<T>>::get_ptr(right));
 	}
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
-		Vector<T> sum = PtrToArg<Vector<T>>::convert(left);
-		sum.append_array(PtrToArg<Vector<T>>::convert(right));
-		PtrToArg<Vector<T>>::encode(sum, r_ret);
+		Hector<T> sum = PtrToArg<Hector<T>>::convert(left);
+		sum.append_array(PtrToArg<Hector<T>>::convert(right));
+		PtrToArg<Hector<T>>::encode(sum, r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector<T>>::VARIANT_TYPE; }
+	static Variant::Type get_return_type() { return GetTypeInfo<Hector<T>>::VARIANT_TYPE; }
 };
 
 template <typename Left, typename Right>

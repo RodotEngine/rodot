@@ -36,7 +36,7 @@ layout(std140) uniform MaterialUniforms{ //ubo:2
 
 #define ATTRACTOR_TYPE_SPHERE uint(0)
 #define ATTRACTOR_TYPE_BOX uint(1)
-#define ATTRACTOR_TYPE_VECTOR_FIELD uint(2)
+#define ATTRACTOR_TYPE_HECTOR_FIELD uint(2)
 
 struct Attractor {
 	mat4 transform;
@@ -337,7 +337,7 @@ void main() {
 					continue;
 				}
 				amount = max(0.0, 1.0 - d);
-			} else if (attractors[i].type == ATTRACTOR_TYPE_VECTOR_FIELD) {
+			} else if (attractors[i].type == ATTRACTOR_TYPE_HECTOR_FIELD) {
 			}
 			mediump float attractor_attenuation = attractors[i].attenuation;
 			amount = pow(amount, attractor_attenuation);

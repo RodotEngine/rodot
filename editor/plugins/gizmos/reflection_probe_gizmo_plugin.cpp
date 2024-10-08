@@ -98,25 +98,25 @@ void ReflectionProbeGizmoPlugin::begin_handle_action(const EditorNode3DGizmo *p_
 void ReflectionProbeGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point) {
 	ReflectionProbe *probe = Object::cast_to<ReflectionProbe>(p_gizmo->get_node_3d());
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
 	if (p_id < 6) {
-		Vector3 size = probe->get_size();
-		Vector3 position;
+		Hector3 size = probe->get_size();
+		Hector3 position;
 		helper->box_set_handle(sg, p_id, size, position);
 		probe->set_size(size);
 		probe->set_global_position(position);
 	} else {
 		p_id -= 6;
 
-		Vector3 origin = probe->get_origin_offset();
+		Hector3 origin = probe->get_origin_offset();
 		origin[p_id] = 0;
 
-		Vector3 axis;
+		Hector3 axis;
 		axis[p_id] = 1.0;
 
-		Vector3 ra, rb;
+		Hector3 ra, rb;
 		Geometry3D::get_closest_points_between_segments(origin - axis * 16384, origin + axis * 16384, sg[0], sg[1], ra, rb);
 		// Adjust the actual position to account for the gizmo handle position
 		float d = ra[p_id] + 0.25;
@@ -157,31 +157,31 @@ void ReflectionProbeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	if (p_gizmo->is_selected()) {
 		ReflectionProbe *probe = Object::cast_to<ReflectionProbe>(p_gizmo->get_node_3d());
-		Vector<Vector3> lines;
-		Vector<Vector3> internal_lines;
-		Vector3 size = probe->get_size();
+		Hector<Hector3> lines;
+		Hector<Hector3> internal_lines;
+		Hector3 size = probe->get_size();
 
 		AABB aabb;
 		aabb.position = -size / 2;
 		aabb.size = size;
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			aabb.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
 		}
 
 		for (int i = 0; i < 8; i++) {
-			Vector3 ep = aabb.get_endpoint(i);
+			Hector3 ep = aabb.get_endpoint(i);
 			internal_lines.push_back(probe->get_origin_offset());
 			internal_lines.push_back(ep);
 		}
 
-		Vector<Vector3> handles = helper->box_get_handles(probe->get_size());
+		Hector<Hector3> handles = helper->box_get_handles(probe->get_size());
 
 		for (int i = 0; i < 3; i++) {
-			Vector3 orig_handle = probe->get_origin_offset();
+			Hector3 orig_handle = probe->get_origin_offset();
 			orig_handle[i] -= 0.25;
 			lines.push_back(orig_handle);
 			handles.push_back(orig_handle);

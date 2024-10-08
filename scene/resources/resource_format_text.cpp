@@ -220,7 +220,7 @@ Ref<PackedScene> ResourceLoaderText::_parse_node_tag(VariantParser::ResourcePars
 			HashSet<StringName> path_properties;
 
 			if (next_tag.fields.has("node_paths")) {
-				Vector<String> paths = next_tag.fields["node_paths"];
+				Hector<String> paths = next_tag.fields["node_paths"];
 				for (int i = 0; i < paths.size(); i++) {
 					path_properties.insert(paths[i]);
 				}
@@ -344,7 +344,7 @@ Ref<PackedScene> ResourceLoaderText::_parse_node_tag(VariantParser::ResourcePars
 				unbinds = next_tag.fields["unbinds"];
 			}
 
-			Vector<int> bind_ints;
+			Hector<int> bind_ints;
 			for (const Variant &bind : binds) {
 				bind_ints.push_back(packed_scene->get_state()->add_value(bind));
 			}
@@ -1686,7 +1686,7 @@ void ResourceFormatSaverTextInstance::_find_resources(const Variant &p_variant, 
 				use_compat = false;
 			}
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
+		case Variant::PACKED_Hector4_ARRAY: {
 			use_compat = false;
 		} break;
 		default: {
@@ -1817,7 +1817,7 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 	}
 #endif
 
-	Vector<ResourceSort> sorted_er;
+	Hector<ResourceSort> sorted_er;
 
 	for (const KeyValue<Ref<Resource>, String> &E : external_resources) {
 		ResourceSort rs;
@@ -1966,8 +1966,8 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 			NodePath owner = state->get_node_owner_path(i);
 			Ref<PackedScene> instance = state->get_node_instance(i);
 			String instance_placeholder = state->get_node_instance_placeholder(i);
-			Vector<StringName> groups = state->get_node_groups(i);
-			Vector<String> deferred_node_paths = state->get_node_deferred_nodepath_properties(i);
+			Hector<StringName> groups = state->get_node_groups(i);
+			Hector<String> deferred_node_paths = state->get_node_deferred_nodepath_properties(i);
 
 			String header = "[node";
 			header += " name=\"" + String(name).c_escape() + "\"";
@@ -2065,7 +2065,7 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 			f->store_line("]");
 		}
 
-		Vector<NodePath> editable_instances = state->get_editable_instances();
+		Hector<NodePath> editable_instances = state->get_editable_instances();
 		for (int i = 0; i < editable_instances.size(); i++) {
 			if (i == 0) {
 				f->store_line("");

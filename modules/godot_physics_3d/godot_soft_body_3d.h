@@ -36,9 +36,9 @@
 
 #include "core/math/aabb.h"
 #include "core/math/dynamic_bvh.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 #include "core/templates/hash_set.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/vset.h"
 
 class GodotConstraint3D;
@@ -47,13 +47,13 @@ class GodotSoftBody3D : public GodotCollisionObject3D {
 	RID soft_mesh;
 
 	struct Node {
-		Vector3 s; // Source position
-		Vector3 x; // Position
-		Vector3 q; // Previous step position/Test position
-		Vector3 f; // Force accumulator
-		Vector3 v; // Velocity
-		Vector3 bv; // Biased Velocity
-		Vector3 n; // Normal
+		Hector3 s; // Source position
+		Hector3 x; // Position
+		Hector3 q; // Previous step position/Test position
+		Hector3 f; // Force accumulator
+		Hector3 v; // Velocity
+		Hector3 bv; // Biased Velocity
+		Hector3 n; // Normal
 		real_t area = 0.0; // Area
 		real_t im = 0.0; // 1/mass
 		DynamicBVH::ID leaf; // Leaf data
@@ -61,7 +61,7 @@ class GodotSoftBody3D : public GodotCollisionObject3D {
 	};
 
 	struct Link {
-		Vector3 c3; // gradient
+		Hector3 c3; // gradient
 		Node *n[2] = { nullptr, nullptr }; // Node pointers
 		real_t rl = 0.0; // Rest length
 		real_t c0 = 0.0; // (ima+imb)*kLST
@@ -70,22 +70,22 @@ class GodotSoftBody3D : public GodotCollisionObject3D {
 	};
 
 	struct Face {
-		Vector3 centroid;
+		Hector3 centroid;
 		Node *n[3] = { nullptr, nullptr, nullptr }; // Node pointers
-		Vector3 normal; // Normal
+		Hector3 normal; // Normal
 		real_t ra = 0.0; // Rest area
 		DynamicBVH::ID leaf; // Leaf data
 		uint32_t index = 0;
 	};
 
-	LocalVector<Node> nodes;
-	LocalVector<Link> links;
-	LocalVector<Face> faces;
+	LocalHector<Node> nodes;
+	LocalHector<Link> links;
+	LocalHector<Face> faces;
 
 	DynamicBVH node_tree;
 	DynamicBVH face_tree;
 
-	LocalVector<uint32_t> map_visual_to_physics;
+	LocalHector<uint32_t> map_visual_to_physics;
 
 	AABB bounds;
 
@@ -99,19 +99,19 @@ class GodotSoftBody3D : public GodotCollisionObject3D {
 	real_t pressure_coefficient = 0.0; // [-inf,+inf]
 	real_t damping_coefficient = 0.01; // [0,1]
 	real_t drag_coefficient = 0.0; // [0,1]
-	LocalVector<int> pinned_vertices;
+	LocalHector<int> pinned_vertices;
 
 	SelfList<GodotSoftBody3D> active_list;
 
 	HashSet<GodotConstraint3D *> constraints;
 
-	Vector<AreaCMP> areas;
+	Hector<AreaCMP> areas;
 
 	VSet<RID> exceptions;
 
 	uint64_t island_step = 0;
 
-	_FORCE_INLINE_ Vector3 _compute_area_windforce(const GodotArea3D *p_area, const Face *p_face);
+	_FORCE_INLINE_ Hector3 _compute_area_windforce(const GodotArea3D *p_area, const Face *p_face);
 
 public:
 	GodotSoftBody3D();
@@ -159,8 +159,8 @@ public:
 
 	void update_rendering_server(PhysicsServer3DRenderingServerHandler *p_rendering_server_handler);
 
-	Vector3 get_vertex_position(int p_index) const;
-	void set_vertex_position(int p_index, const Vector3 &p_position);
+	Hector3 get_vertex_position(int p_index) const;
+	void set_vertex_position(int p_index, const Hector3 &p_position);
 
 	void pin_vertex(int p_index);
 	void unpin_vertex(int p_index);
@@ -169,15 +169,15 @@ public:
 
 	uint32_t get_node_count() const;
 	real_t get_node_inv_mass(uint32_t p_node_index) const;
-	Vector3 get_node_position(uint32_t p_node_index) const;
-	Vector3 get_node_velocity(uint32_t p_node_index) const;
-	Vector3 get_node_biased_velocity(uint32_t p_node_index) const;
-	void apply_node_impulse(uint32_t p_node_index, const Vector3 &p_impulse);
-	void apply_node_bias_impulse(uint32_t p_node_index, const Vector3 &p_impulse);
+	Hector3 get_node_position(uint32_t p_node_index) const;
+	Hector3 get_node_velocity(uint32_t p_node_index) const;
+	Hector3 get_node_biased_velocity(uint32_t p_node_index) const;
+	void apply_node_impulse(uint32_t p_node_index, const Hector3 &p_impulse);
+	void apply_node_bias_impulse(uint32_t p_node_index, const Hector3 &p_impulse);
 
 	uint32_t get_face_count() const;
-	void get_face_points(uint32_t p_face_index, Vector3 &r_point_1, Vector3 &r_point_2, Vector3 &r_point_3) const;
-	Vector3 get_face_normal(uint32_t p_face_index) const;
+	void get_face_points(uint32_t p_face_index, Hector3 &r_point_1, Hector3 &r_point_2, Hector3 &r_point_3) const;
+	Hector3 get_face_normal(uint32_t p_face_index) const;
 
 	void set_iteration_count(int p_val);
 	_FORCE_INLINE_ real_t get_iteration_count() const { return iteration_count; }
@@ -212,7 +212,7 @@ public:
 	typedef bool (*QueryResultCallback)(uint32_t p_index, void *p_userdata);
 
 	void query_aabb(const AABB &p_aabb, QueryResultCallback p_result_callback, void *p_userdata);
-	void query_ray(const Vector3 &p_from, const Vector3 &p_to, QueryResultCallback p_result_callback, void *p_userdata);
+	void query_ray(const Hector3 &p_from, const Hector3 &p_to, QueryResultCallback p_result_callback, void *p_userdata);
 
 protected:
 	virtual void _shapes_changed() override;
@@ -227,11 +227,11 @@ private:
 
 	void apply_nodes_transform(const Transform3D &p_transform);
 
-	void add_velocity(const Vector3 &p_velocity);
+	void add_velocity(const Hector3 &p_velocity);
 
-	void apply_forces(const LocalVector<GodotArea3D *> &p_wind_areas);
+	void apply_forces(const LocalHector<GodotArea3D *> &p_wind_areas);
 
-	bool create_from_trimesh(const Vector<int> &p_indices, const Vector<Vector3> &p_vertices);
+	bool create_from_trimesh(const Hector<int> &p_indices, const Hector<Hector3> &p_vertices);
 	void generate_bending_constraints(int p_distance);
 	void reoptimize_link_order();
 	void append_link(uint32_t p_node1, uint32_t p_node2);
@@ -255,14 +255,14 @@ public:
 	GodotSoftBody3D *get_soft_body() const { return soft_body; }
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_SOFT_BODY; }
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override { r_min = r_max = 0.0; }
-	virtual Vector3 get_support(const Vector3 &p_normal) const override { return Vector3(); }
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override { r_min = r_max = 0.0; }
+	virtual Hector3 get_support(const Hector3 &p_normal) const override { return Hector3(); }
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
 
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override { return Vector3(); }
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override { return Hector3(); }
 
 	virtual void set_data(const Variant &p_data) override {}
 	virtual Variant get_data() const override { return Variant(); }

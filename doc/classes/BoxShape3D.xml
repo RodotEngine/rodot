@@ -13,7 +13,7 @@
 		<link title="3D Platformer Demo">https://godotengine.org/asset-library/asset/2748</link>
 	</tutorials>
 	<members>
-		<member name="size" type="Vector3" setter="set_size" getter="get_size" default="Vector3(1, 1, 1)">
+		<member name="size" type="Hector3" setter="set_size" getter="get_size" default="Hector3(1, 1, 1)">
 			The box's width, height and depth.
 		</member>
 	</members>

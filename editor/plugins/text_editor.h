@@ -95,7 +95,7 @@ private:
 
 protected:
 	void _edit_option(int p_op);
-	void _make_context_menu(bool p_selection, bool p_can_fold, bool p_is_folded, Vector2 p_position);
+	void _make_context_menu(bool p_selection, bool p_can_fold, bool p_is_folded, Hector2 p_position);
 	void _text_edit_gui_input(const Ref<InputEvent> &ev);
 	void _prepare_edit_menu();
 
@@ -125,7 +125,7 @@ public:
 	virtual Variant get_edit_state() override;
 	virtual void set_edit_state(const Variant &p_state) override;
 	virtual Variant get_navigation_state() override;
-	virtual Vector<String> get_functions() override;
+	virtual Hector<String> get_functions() override;
 	virtual PackedInt32Array get_breakpoints() override;
 	virtual void set_breakpoint(int p_line, bool p_enabled) override {}
 	virtual void clear_breakpoints() override {}

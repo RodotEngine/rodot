@@ -112,14 +112,14 @@ MAKE_TYPE_INFO_WITH_META(float, Variant::FLOAT, GodotTypeInfo::METADATA_REAL_IS_
 MAKE_TYPE_INFO_WITH_META(double, Variant::FLOAT, GodotTypeInfo::METADATA_REAL_IS_DOUBLE)
 
 MAKE_TYPE_INFO(String, Variant::STRING)
-MAKE_TYPE_INFO(Vector2, Variant::VECTOR2)
+MAKE_TYPE_INFO(Hector2, Variant::HECTOR2)
 MAKE_TYPE_INFO(Rect2, Variant::RECT2)
-MAKE_TYPE_INFO(Vector3, Variant::VECTOR3)
-MAKE_TYPE_INFO(Vector2i, Variant::VECTOR2I)
+MAKE_TYPE_INFO(Hector3, Variant::HECTOR3)
+MAKE_TYPE_INFO(Hector2i, Variant::HECTOR2I)
 MAKE_TYPE_INFO(Rect2i, Variant::RECT2I)
-MAKE_TYPE_INFO(Vector3i, Variant::VECTOR3I)
-MAKE_TYPE_INFO(Vector4, Variant::VECTOR4)
-MAKE_TYPE_INFO(Vector4i, Variant::VECTOR4I)
+MAKE_TYPE_INFO(Hector3i, Variant::HECTOR3I)
+MAKE_TYPE_INFO(Hector4, Variant::HECTOR4)
+MAKE_TYPE_INFO(Hector4i, Variant::HECTOR4I)
 MAKE_TYPE_INFO(Transform2D, Variant::TRANSFORM2D)
 MAKE_TYPE_INFO(Plane, Variant::PLANE)
 MAKE_TYPE_INFO(Quaternion, Variant::QUATERNION)
@@ -141,10 +141,10 @@ MAKE_TYPE_INFO(PackedInt64Array, Variant::PACKED_INT64_ARRAY)
 MAKE_TYPE_INFO(PackedFloat32Array, Variant::PACKED_FLOAT32_ARRAY)
 MAKE_TYPE_INFO(PackedFloat64Array, Variant::PACKED_FLOAT64_ARRAY)
 MAKE_TYPE_INFO(PackedStringArray, Variant::PACKED_STRING_ARRAY)
-MAKE_TYPE_INFO(PackedVector2Array, Variant::PACKED_VECTOR2_ARRAY)
-MAKE_TYPE_INFO(PackedVector3Array, Variant::PACKED_VECTOR3_ARRAY)
+MAKE_TYPE_INFO(PackedHector2Array, Variant::PACKED_Hector2_ARRAY)
+MAKE_TYPE_INFO(PackedHector3Array, Variant::PACKED_Hector3_ARRAY)
 MAKE_TYPE_INFO(PackedColorArray, Variant::PACKED_COLOR_ARRAY)
-MAKE_TYPE_INFO(PackedVector4Array, Variant::PACKED_VECTOR4_ARRAY)
+MAKE_TYPE_INFO(PackedHector4Array, Variant::PACKED_Hector4_ARRAY)
 
 MAKE_TYPE_INFO(IPAddress, Variant::STRING)
 
@@ -195,11 +195,11 @@ struct GetTypeInfo<const Variant &> {
 		}                                                                             \
 	};
 
-MAKE_TEMPLATE_TYPE_INFO(Vector, Variant, Variant::ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, RID, Variant::ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, Plane, Variant::ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, Face3, Variant::PACKED_VECTOR3_ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, StringName, Variant::PACKED_STRING_ARRAY)
+MAKE_TEMPLATE_TYPE_INFO(Hector, Variant, Variant::ARRAY)
+MAKE_TEMPLATE_TYPE_INFO(Hector, RID, Variant::ARRAY)
+MAKE_TEMPLATE_TYPE_INFO(Hector, Plane, Variant::ARRAY)
+MAKE_TEMPLATE_TYPE_INFO(Hector, Face3, Variant::PACKED_Hector3_ARRAY)
+MAKE_TEMPLATE_TYPE_INFO(Hector, StringName, Variant::PACKED_STRING_ARRAY)
 
 template <typename T>
 struct GetTypeInfo<T *, std::enable_if_t<std::is_base_of_v<Object, T>>> {
@@ -213,7 +213,7 @@ struct GetTypeInfo<T *, std::enable_if_t<std::is_base_of_v<Object, T>>> {
 namespace godot {
 namespace details {
 inline String enum_qualified_name_to_class_info_name(const String &p_qualified_name) {
-	Vector<String> parts = p_qualified_name.split("::", false);
+	Hector<String> parts = p_qualified_name.split("::", false);
 	if (parts.size() <= 2) {
 		return String(".").join(parts);
 	}

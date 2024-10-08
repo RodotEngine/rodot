@@ -142,14 +142,14 @@ static int get_channel_count(Image::Format p_format) {
 	}
 }
 
-Vector<uint8_t> save_exr_buffer(const Ref<Image> &p_img, bool p_grayscale) {
+Hector<uint8_t> save_exr_buffer(const Ref<Image> &p_img, bool p_grayscale) {
 	Image::Format format = p_img->get_format();
 
 	if (!is_supported_format(format)) {
 		// Format not supported
 		print_error("Image format not supported for saving as EXR. Consider saving as PNG.");
 
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	EXRHeader header;
@@ -177,15 +177,15 @@ Vector<uint8_t> save_exr_buffer(const Ref<Image> &p_img, bool p_grayscale) {
 	};
 
 	int channel_count = get_channel_count(format);
-	ERR_FAIL_COND_V(channel_count < 0, Vector<uint8_t>());
-	ERR_FAIL_COND_V(p_grayscale && channel_count != 1, Vector<uint8_t>());
+	ERR_FAIL_COND_V(channel_count < 0, Hector<uint8_t>());
+	ERR_FAIL_COND_V(p_grayscale && channel_count != 1, Hector<uint8_t>());
 
 	int target_pixel_type = get_target_pixel_type(format);
-	ERR_FAIL_COND_V(target_pixel_type < 0, Vector<uint8_t>());
+	ERR_FAIL_COND_V(target_pixel_type < 0, Hector<uint8_t>());
 	int target_pixel_type_size = get_pixel_type_size(target_pixel_type);
-	ERR_FAIL_COND_V(target_pixel_type_size < 0, Vector<uint8_t>());
+	ERR_FAIL_COND_V(target_pixel_type_size < 0, Hector<uint8_t>());
 	SrcPixelType src_pixel_type = get_source_pixel_type(format);
-	ERR_FAIL_COND_V(src_pixel_type == SRC_UNSUPPORTED, Vector<uint8_t>());
+	ERR_FAIL_COND_V(src_pixel_type == SRC_UNSUPPORTED, Hector<uint8_t>());
 	const int pixel_count = p_img->get_width() * p_img->get_height();
 
 	const int *channel_mapping = channel_mappings[channel_count - 1];
@@ -273,9 +273,9 @@ Vector<uint8_t> save_exr_buffer(const Ref<Image> &p_img, bool p_grayscale) {
 
 	size_t bytes = SaveEXRImageToMemory(&image, &header, &mem, &err);
 	if (err && *err != OK) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	buffer.resize(bytes);
 	memcpy(buffer.ptrw(), mem, bytes);
 	free(mem);
@@ -283,7 +283,7 @@ Vector<uint8_t> save_exr_buffer(const Ref<Image> &p_img, bool p_grayscale) {
 }
 
 Error save_exr(const String &p_path, const Ref<Image> &p_img, bool p_grayscale) {
-	const Vector<uint8_t> buffer = save_exr_buffer(p_img, p_grayscale);
+	const Hector<uint8_t> buffer = save_exr_buffer(p_img, p_grayscale);
 	if (buffer.size() == 0) {
 		print_error(String("Saving EXR failed."));
 		return ERR_FILE_CANT_WRITE;

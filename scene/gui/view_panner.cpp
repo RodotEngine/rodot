@@ -37,10 +37,10 @@
 bool ViewPanner::gui_input(const Ref<InputEvent> &p_event, Rect2 p_canvas_rect) {
 	Ref<InputEventMouseButton> mb = p_event;
 	if (mb.is_valid()) {
-		Vector2 scroll_vec = Vector2((mb->get_button_index() == MouseButton::WHEEL_RIGHT) - (mb->get_button_index() == MouseButton::WHEEL_LEFT), (mb->get_button_index() == MouseButton::WHEEL_DOWN) - (mb->get_button_index() == MouseButton::WHEEL_UP));
+		Hector2 scroll_vec = Hector2((mb->get_button_index() == MouseButton::WHEEL_RIGHT) - (mb->get_button_index() == MouseButton::WHEEL_LEFT), (mb->get_button_index() == MouseButton::WHEEL_DOWN) - (mb->get_button_index() == MouseButton::WHEEL_UP));
 		// Moving the scroll wheel sends two events: one with pressed as true,
 		// and one with pressed as false. Make sure we only process one of them.
-		if (scroll_vec != Vector2() && mb->is_pressed()) {
+		if (scroll_vec != Hector2() && mb->is_pressed()) {
 			if (control_scheme == SCROLL_PANS) {
 				if (mb->is_ctrl_pressed()) {
 					if (scroll_vec.y != 0) {
@@ -52,26 +52,26 @@ bool ViewPanner::gui_input(const Ref<InputEvent> &p_event, Rect2 p_canvas_rect) 
 						return true;
 					}
 				} else {
-					Vector2 panning = scroll_vec * mb->get_factor();
+					Hector2 panning = scroll_vec * mb->get_factor();
 					if (pan_axis == PAN_AXIS_HORIZONTAL) {
-						panning = Vector2(panning.x + panning.y, 0);
+						panning = Hector2(panning.x + panning.y, 0);
 					} else if (pan_axis == PAN_AXIS_VERTICAL) {
-						panning = Vector2(0, panning.x + panning.y);
+						panning = Hector2(0, panning.x + panning.y);
 					} else if (mb->is_shift_pressed()) {
-						panning = Vector2(panning.y, panning.x);
+						panning = Hector2(panning.y, panning.x);
 					}
 					pan_callback.call(-panning * scroll_speed, p_event);
 					return true;
 				}
 			} else {
 				if (mb->is_ctrl_pressed()) {
-					Vector2 panning = scroll_vec * mb->get_factor();
+					Hector2 panning = scroll_vec * mb->get_factor();
 					if (pan_axis == PAN_AXIS_HORIZONTAL) {
-						panning = Vector2(panning.x + panning.y, 0);
+						panning = Hector2(panning.x + panning.y, 0);
 					} else if (pan_axis == PAN_AXIS_VERTICAL) {
-						panning = Vector2(0, panning.x + panning.y);
+						panning = Hector2(0, panning.x + panning.y);
 					} else if (mb->is_shift_pressed()) {
-						panning = Vector2(panning.y, panning.x);
+						panning = Hector2(panning.y, panning.x);
 					}
 					pan_callback.call(-panning * scroll_speed, p_event);
 					return true;

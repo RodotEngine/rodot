@@ -59,7 +59,7 @@ class AudioDriver {
 #endif
 
 protected:
-	Vector<int32_t> input_buffer;
+	Hector<int32_t> input_buffer;
 	unsigned int input_position = 0;
 	unsigned int input_size = 0;
 
@@ -122,7 +122,7 @@ public:
 	SpeakerMode get_speaker_mode_by_total_channels(int p_channels) const;
 	int get_total_channels_by_speaker_mode(SpeakerMode) const;
 
-	Vector<int32_t> get_input_buffer() { return input_buffer; }
+	Hector<int32_t> get_input_buffer() { return input_buffer; }
 	unsigned int get_input_position() { return input_position; }
 	unsigned int get_input_size() { return input_size; }
 
@@ -143,7 +143,7 @@ public:
 	virtual bool is_sample_playback_active(const Ref<AudioSamplePlayback> &p_playback) { return false; }
 	virtual double get_sample_playback_position(const Ref<AudioSamplePlayback> &p_playback) { return false; }
 	virtual void update_sample_playback_pitch_scale(const Ref<AudioSamplePlayback> &p_playback, float p_pitch_scale = 0.0f) {}
-	virtual void set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes) {}
+	virtual void set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Hector<AudioFrame>> &p_bus_volumes) {}
 
 	virtual void set_sample_bus_count(int p_count) {}
 	virtual void remove_sample_bus(int p_bus) {}
@@ -241,13 +241,13 @@ private:
 			bool used = false;
 			bool active = false;
 			AudioFrame peak_volume = AudioFrame(AUDIO_MIN_PEAK_DB, AUDIO_MIN_PEAK_DB);
-			Vector<AudioFrame> buffer;
-			Vector<Ref<AudioEffectInstance>> effect_instances;
+			Hector<AudioFrame> buffer;
+			Hector<Ref<AudioEffectInstance>> effect_instances;
 			uint64_t last_mix_with_audio = 0;
 			Channel() {}
 		};
 
-		Vector<Channel> channels;
+		Hector<Channel> channels;
 
 		struct Effect {
 			Ref<AudioEffect> effect;
@@ -257,7 +257,7 @@ private:
 #endif
 		};
 
-		Vector<Effect> effects;
+		Hector<Effect> effects;
 		float volume_db = 0.0f;
 		StringName send;
 		int index_cache = 0;
@@ -303,9 +303,9 @@ private:
 	// TODO document if this is necessary.
 	SafeList<AudioStreamPlaybackBusDetails *> bus_details_graveyard_frame_old;
 
-	Vector<Vector<AudioFrame>> temp_buffer; //temp_buffer for each level
-	Vector<AudioFrame> mix_buffer;
-	Vector<Bus *> buses;
+	Hector<Hector<AudioFrame>> temp_buffer; //temp_buffer for each level
+	Hector<AudioFrame> mix_buffer;
+	Hector<Bus *> buses;
 	HashMap<StringName, Bus *> bus_map;
 
 	void _update_bus_effects(int p_bus);
@@ -332,7 +332,7 @@ private:
 	friend class AudioDriver;
 	void _driver_process(int p_frames, int32_t *p_buffer);
 
-	LocalVector<Ref<AudioSamplePlayback>> sample_playback_list;
+	LocalHector<Ref<AudioSamplePlayback>> sample_playback_list;
 
 protected:
 	static void _bind_methods();
@@ -408,14 +408,14 @@ public:
 	float get_playback_speed_scale() const;
 
 	// Convenience method.
-	void start_playback_stream(Ref<AudioStreamPlayback> p_playback, const StringName &p_bus, Vector<AudioFrame> p_volume_db_vector, float p_start_time = 0, float p_pitch_scale = 1);
+	void start_playback_stream(Ref<AudioStreamPlayback> p_playback, const StringName &p_bus, Hector<AudioFrame> p_volume_db_Hector, float p_start_time = 0, float p_pitch_scale = 1);
 	// Expose all parameters.
-	void start_playback_stream(Ref<AudioStreamPlayback> p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes, float p_start_time = 0, float p_pitch_scale = 1, float p_highshelf_gain = 0, float p_attenuation_cutoff_hz = 0);
+	void start_playback_stream(Ref<AudioStreamPlayback> p_playback, const HashMap<StringName, Hector<AudioFrame>> &p_bus_volumes, float p_start_time = 0, float p_pitch_scale = 1, float p_highshelf_gain = 0, float p_attenuation_cutoff_hz = 0);
 	void stop_playback_stream(Ref<AudioStreamPlayback> p_playback);
 
-	void set_playback_bus_exclusive(Ref<AudioStreamPlayback> p_playback, const StringName &p_bus, Vector<AudioFrame> p_volumes);
-	void set_playback_bus_volumes_linear(Ref<AudioStreamPlayback> p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes);
-	void set_playback_all_bus_volumes_linear(Ref<AudioStreamPlayback> p_playback, Vector<AudioFrame> p_volumes);
+	void set_playback_bus_exclusive(Ref<AudioStreamPlayback> p_playback, const StringName &p_bus, Hector<AudioFrame> p_volumes);
+	void set_playback_bus_volumes_linear(Ref<AudioStreamPlayback> p_playback, const HashMap<StringName, Hector<AudioFrame>> &p_bus_volumes);
+	void set_playback_all_bus_volumes_linear(Ref<AudioStreamPlayback> p_playback, Hector<AudioFrame> p_volumes);
 	void set_playback_pitch_scale(Ref<AudioStreamPlayback> p_playback, float p_pitch_scale);
 	void set_playback_paused(Ref<AudioStreamPlayback> p_playback, bool p_paused);
 	void set_playback_highshelf_params(Ref<AudioStreamPlayback> p_playback, float p_gain, float p_attenuation_cutoff_hz);
@@ -513,7 +513,7 @@ class AudioBusLayout : public Resource {
 			bool enabled = false;
 		};
 
-		Vector<Effect> effects;
+		Hector<Effect> effects;
 
 		float volume_db = 0.0f;
 		StringName send;
@@ -521,7 +521,7 @@ class AudioBusLayout : public Resource {
 		Bus() {}
 	};
 
-	Vector<Bus> buses;
+	Hector<Bus> buses;
 
 protected:
 	bool _set(const StringName &p_name, const Variant &p_value);

@@ -130,7 +130,7 @@ uint raymarch(float distance, float distance_adv, vec3 from, vec3 direction) {
 	return NO_CHILDREN;
 }
 
-bool compute_light_vector(uint light, uint cell, vec3 pos, out float attenuation, out vec3 light_pos) {
+bool compute_light_Hector(uint light, uint cell, vec3 pos, out float attenuation, out vec3 light_pos) {
 	if (lights.data[light].type == LIGHT_TYPE_DIRECTIONAL) {
 		light_pos = pos - lights.data[light].direction * length(vec3(params.limits));
 		attenuation = 1.0;
@@ -207,7 +207,7 @@ void main() {
 		float attenuation;
 		vec3 light_pos;
 
-		if (!compute_light_vector(i, cell_index, pos, attenuation, light_pos)) {
+		if (!compute_light_Hector(i, cell_index, pos, attenuation, light_pos)) {
 			continue;
 		}
 

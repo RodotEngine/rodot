@@ -139,7 +139,7 @@ GDScriptParser::GDScriptParser() {
 
 #ifdef TOOLS_ENABLED
 	if (unlikely(theme_color_names.is_empty())) {
-		// Vectors.
+		// Hectors.
 		theme_color_names.insert("x", "axis_x_color");
 		theme_color_names.insert("y", "axis_y_color");
 		theme_color_names.insert("z", "axis_z_color");
@@ -185,7 +185,7 @@ void GDScriptParser::push_error(const String &p_message, const Node *p_origin) {
 }
 
 #ifdef DEBUG_ENABLED
-void GDScriptParser::push_warning(const Node *p_source, GDScriptWarning::Code p_code, const Vector<String> &p_symbols) {
+void GDScriptParser::push_warning(const Node *p_source, GDScriptWarning::Code p_code, const Hector<String> &p_symbols) {
 	ERR_FAIL_NULL(p_source);
 	ERR_FAIL_INDEX(p_code, GDScriptWarning::WARNING_MAX);
 
@@ -349,7 +349,7 @@ Error GDScriptParser::parse(const String &p_source_code, const String &p_script_
 
 	if (p_for_completion) {
 		// Remove cursor sentinel char.
-		const Vector<String> lines = p_source_code.split("\n");
+		const Hector<String> lines = p_source_code.split("\n");
 		cursor_line = 1;
 		cursor_column = 1;
 		for (int i = 0; i < lines.size(); i++) {
@@ -425,7 +425,7 @@ Error GDScriptParser::parse(const String &p_source_code, const String &p_script_
 	}
 }
 
-Error GDScriptParser::parse_binary(const Vector<uint8_t> &p_binary, const String &p_script_path) {
+Error GDScriptParser::parse_binary(const Hector<uint8_t> &p_binary, const String &p_script_path) {
 	GDScriptTokenizerBuffer *buffer_tokenizer = memnew(GDScriptTokenizerBuffer);
 	Error err = buffer_tokenizer->set_code_buffer(p_binary);
 
@@ -765,7 +765,7 @@ const HashMap<String, Ref<GDScriptParserRef>> &GDScriptParser::get_depended_pars
 GDScriptParser::ClassNode *GDScriptParser::find_class(const String &p_qualified_name) const {
 	String first = p_qualified_name.get_slice("::", 0);
 
-	Vector<String> class_names;
+	Hector<String> class_names;
 	GDScriptParser::ClassNode *result = nullptr;
 	// Empty initial name means start at the head.
 	if (first.is_empty() || (head->identifier && first == head->identifier->name)) {
@@ -1688,7 +1688,7 @@ void GDScriptParser::clear_unused_annotations() {
 	annotation_stack.clear();
 }
 
-bool GDScriptParser::register_annotation(const MethodInfo &p_info, uint32_t p_target_kinds, AnnotationAction p_apply, const Vector<Variant> &p_default_arguments, bool p_is_vararg) {
+bool GDScriptParser::register_annotation(const MethodInfo &p_info, uint32_t p_target_kinds, AnnotationAction p_apply, const Hector<Variant> &p_default_arguments, bool p_is_vararg) {
 	ERR_FAIL_COND_V_MSG(valid_annotations.has(p_info.name), false, vformat(R"(Annotation "%s" already registered.)", p_info.name));
 
 	AnnotationInfo new_annotation;
@@ -4178,8 +4178,8 @@ bool GDScriptParser::onready_annotation(AnnotationNode *p_annotation, Node *p_ta
 	return true;
 }
 
-static String _get_annotation_error_string(const StringName &p_annotation_name, const Vector<Variant::Type> &p_expected_types, const GDScriptParser::DataType &p_provided_type) {
-	Vector<String> types;
+static String _get_annotation_error_string(const StringName &p_annotation_name, const Hector<Variant::Type> &p_expected_types, const GDScriptParser::DataType &p_provided_type) {
+	Hector<String> types;
 	for (int i = 0; i < p_expected_types.size(); i++) {
 		const Variant::Type &type = p_expected_types[i];
 		types.push_back(Variant::get_type_name(type));
@@ -4197,17 +4197,17 @@ static String _get_annotation_error_string(const StringName &p_annotation_name, 
 			case Variant::STRING:
 				types.push_back("PackedStringArray");
 				break;
-			case Variant::VECTOR2:
-				types.push_back("PackedVector2Array");
+			case Variant::HECTOR2:
+				types.push_back("PackedHector2Array");
 				break;
-			case Variant::VECTOR3:
-				types.push_back("PackedVector3Array");
+			case Variant::HECTOR3:
+				types.push_back("PackedHector3Array");
 				break;
 			case Variant::COLOR:
 				types.push_back("PackedColorArray");
 				break;
-			case Variant::VECTOR4:
-				types.push_back("PackedVector4Array");
+			case Variant::HECTOR4:
+				types.push_back("PackedHector4Array");
 				break;
 			default:
 				break;
@@ -4326,7 +4326,7 @@ bool GDScriptParser::export_annotations(AnnotationNode *p_annotation, Node *p_ta
 		// WARNING: Do not merge with the previous `if` because there `!=`, not `==`!
 		if (p_annotation->name == SNAME("@export_flags")) {
 			const int64_t max_flags = 32;
-			Vector<String> t = arg_string.split(":", true, 1);
+			Hector<String> t = arg_string.split(":", true, 1);
 			if (t[0].is_empty()) {
 				push_error(vformat(R"(Invalid argument %d of annotation "@export_flags": Expected flag name.)", i + 1), p_annotation->arguments[i]);
 				return false;
@@ -4410,7 +4410,7 @@ bool GDScriptParser::export_annotations(AnnotationNode *p_annotation, Node *p_ta
 		use_default_variable_type_check = false;
 
 		if (export_type.builtin_type != Variant::STRING && export_type.builtin_type != Variant::DICTIONARY) {
-			Vector<Variant::Type> expected_types = { Variant::STRING, Variant::DICTIONARY };
+			Hector<Variant::Type> expected_types = { Variant::STRING, Variant::DICTIONARY };
 			push_error(_get_annotation_error_string(p_annotation->name, expected_types, variable->get_datatype()), p_annotation);
 			return false;
 		}
@@ -4589,7 +4589,7 @@ bool GDScriptParser::export_annotations(AnnotationNode *p_annotation, Node *p_ta
 		variable->export_info.type = enum_type;
 
 		if (!export_type.is_variant() && (export_type.kind != DataType::BUILTIN || export_type.builtin_type != enum_type)) {
-			Vector<Variant::Type> expected_types = { Variant::INT, Variant::STRING };
+			Hector<Variant::Type> expected_types = { Variant::INT, Variant::STRING };
 			push_error(_get_annotation_error_string(p_annotation->name, expected_types, variable->get_datatype()), p_annotation);
 			return false;
 		}
@@ -4600,7 +4600,7 @@ bool GDScriptParser::export_annotations(AnnotationNode *p_annotation, Node *p_ta
 		if (!export_type.is_variant() && (export_type.kind != DataType::BUILTIN || export_type.builtin_type != t_type)) {
 			// Allow float/int conversion.
 			if ((t_type != Variant::FLOAT || export_type.builtin_type != Variant::INT) && (t_type != Variant::INT || export_type.builtin_type != Variant::FLOAT)) {
-				Vector<Variant::Type> expected_types = { t_type };
+				Hector<Variant::Type> expected_types = { t_type };
 				push_error(_get_annotation_error_string(p_annotation->name, expected_types, variable->get_datatype()), p_annotation);
 				return false;
 			}
@@ -5160,14 +5160,14 @@ static Variant::Type _variant_type_to_typed_array_element_type(Variant::Type p_t
 			return Variant::FLOAT;
 		case Variant::PACKED_STRING_ARRAY:
 			return Variant::STRING;
-		case Variant::PACKED_VECTOR2_ARRAY:
-			return Variant::VECTOR2;
-		case Variant::PACKED_VECTOR3_ARRAY:
-			return Variant::VECTOR3;
+		case Variant::PACKED_Hector2_ARRAY:
+			return Variant::HECTOR2;
+		case Variant::PACKED_Hector3_ARRAY:
+			return Variant::HECTOR3;
 		case Variant::PACKED_COLOR_ARRAY:
 			return Variant::COLOR;
-		case Variant::PACKED_VECTOR4_ARRAY:
-			return Variant::VECTOR4;
+		case Variant::PACKED_Hector4_ARRAY:
+			return Variant::HECTOR4;
 		default:
 			return Variant::NIL;
 	}

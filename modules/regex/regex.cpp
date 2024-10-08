@@ -231,14 +231,14 @@ Ref<RegExMatch> RegEx::search(const String &p_subject, int p_offset, int p_end) 
 		return nullptr;
 	}
 
-	uint32_t size = pcre2_get_ovector_count_32(match);
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer_32(match);
+	uint32_t size = pcre2_get_oHector_count_32(match);
+	PCRE2_SIZE *oHector = pcre2_get_oHector_pointer_32(match);
 
 	result->data.resize(size);
 
 	for (uint32_t i = 0; i < size; i++) {
-		result->data.write[i].start = ovector[i * 2];
-		result->data.write[i].end = ovector[i * 2 + 1];
+		result->data.write[i].start = oHector[i * 2];
+		result->data.write[i].end = oHector[i * 2 + 1];
 	}
 
 	pcre2_match_data_free_32(match);
@@ -300,7 +300,7 @@ String RegEx::sub(const String &p_subject, const String &p_replacement, bool p_a
 	const int safety_zone = 1;
 
 	PCRE2_SIZE olength = p_subject.length() + 1; // space for output string and one terminating \0 character
-	Vector<char32_t> output;
+	Hector<char32_t> output;
 	output.resize(olength + safety_zone);
 
 	uint32_t flags = PCRE2_SUBSTITUTE_OVERFLOW_LENGTH;

@@ -45,7 +45,7 @@ static String _mkid(const String &p_id) {
 }
 
 void ShaderGLES3::_add_stage(const char *p_code, StageType p_stage_type) {
-	Vector<String> lines = String(p_code).split("\n");
+	Hector<String> lines = String(p_code).split("\n");
 
 	String text;
 
@@ -252,7 +252,7 @@ void ShaderGLES3::_build_variant_code(StringBuilder &builder, uint32_t p_variant
 
 static void _display_error_with_code(const String &p_error, const String &p_code) {
 	int line = 1;
-	Vector<String> lines = p_code.split("\n");
+	Hector<String> lines = p_code.split("\n");
 
 	for (int j = 0; j < lines.size(); j++) {
 		print_line(itos(line) + ": " + lines[j]);
@@ -292,7 +292,7 @@ void ShaderGLES3::_get_uniform_locations(Version::Specialization &spec, Version 
 	for (uint32_t i = 0; i < p_version->texture_uniforms.size(); i++) {
 		String native_uniform_name = _mkid(p_version->texture_uniforms[i].name);
 		GLint location = glGetUniformLocation(spec.id, (native_uniform_name).ascii().get_data());
-		Vector<int32_t> texture_uniform_bindings;
+		Hector<int32_t> texture_uniform_bindings;
 		int texture_count = p_version->texture_uniforms[i].array_size;
 		for (int j = 0; j < texture_count; j++) {
 			texture_uniform_bindings.append(texture_index + base_texture_index);
@@ -411,7 +411,7 @@ void ShaderGLES3::_compile_specialization(Version::Specialization &spec, uint32_
 	// If feedback exists, set it up.
 
 	if (feedback_count) {
-		Vector<const char *> feedback;
+		Hector<const char *> feedback;
 		for (int i = 0; i < feedback_count; i++) {
 			if (feedbacks[i].specialization == 0 || (feedbacks[i].specialization & p_specialization)) {
 				// Specialization for this feedback is enabled
@@ -516,7 +516,7 @@ String ShaderGLES3::_version_get_sha1(Version *p_version) const {
 	hash_build.append("[fragment_globals]");
 	hash_build.append(p_version->fragment_globals.get_data());
 
-	Vector<StringName> code_sections;
+	Hector<StringName> code_sections;
 	for (const KeyValue<StringName, CharString> &E : p_version->code_sections) {
 		code_sections.push_back(E.key);
 	}
@@ -573,7 +573,7 @@ bool ShaderGLES3::_load_from_cache(Version *p_version) {
 	int cache_variant_count = static_cast<int>(f->get_32());
 	ERR_FAIL_COND_V_MSG(cache_variant_count != variant_count, false, "shader cache variant count mismatch, expected " + itos(variant_count) + " got " + itos(cache_variant_count)); //should not happen but check
 
-	LocalVector<OAHashMap<uint64_t, Version::Specialization>> variants;
+	LocalHector<OAHashMap<uint64_t, Version::Specialization>> variants;
 	for (int i = 0; i < cache_variant_count; i++) {
 		uint32_t cache_specialization_count = f->get_32();
 		OAHashMap<uint64_t, Version::Specialization> variant;
@@ -584,7 +584,7 @@ bool ShaderGLES3::_load_from_cache(Version *p_version) {
 				continue;
 			}
 			uint32_t variant_format = f->get_32();
-			Vector<uint8_t> variant_bytes;
+			Hector<uint8_t> variant_bytes;
 			variant_bytes.resize(variant_size);
 
 			uint32_t br = f->get_buffer(variant_bytes.ptrw(), variant_size);
@@ -595,7 +595,7 @@ bool ShaderGLES3::_load_from_cache(Version *p_version) {
 
 			specialization.id = glCreateProgram();
 			if (feedback_count) {
-				Vector<const char *> feedback;
+				Hector<const char *> feedback;
 				for (int feedback_index = 0; feedback_index < feedback_count; feedback_index++) {
 					if (feedbacks[feedback_index].specialization == 0 || (feedbacks[feedback_index].specialization & specialization_key)) {
 						// Specialization for this feedback is enabled.
@@ -723,7 +723,7 @@ void ShaderGLES3::_initialize_version(Version *p_version) {
 	}
 }
 
-void ShaderGLES3::version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Vector<String> &p_custom_defines, const LocalVector<ShaderGLES3::TextureUniformData> &p_texture_uniforms, bool p_initialize) {
+void ShaderGLES3::version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Hector<String> &p_custom_defines, const LocalHector<ShaderGLES3::TextureUniformData> &p_texture_uniforms, bool p_initialize) {
 	Version *version = version_owner.get_or_null(p_version);
 	ERR_FAIL_NULL(version);
 

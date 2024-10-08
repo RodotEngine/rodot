@@ -385,7 +385,7 @@
       if ( pfrsize->metrics.y_ppem < 24 )
         outline->flags |= FT_OUTLINE_HIGH_PRECISION;
 
-      /* compute the advance vector */
+      /* compute the advance Hector */
       metrics->horiAdvance = 0;
       metrics->vertAdvance = 0;
 
@@ -434,7 +434,7 @@
         FT_Int      n;
         FT_Fixed    x_scale = pfrsize->metrics.x_scale;
         FT_Fixed    y_scale = pfrsize->metrics.y_scale;
-        FT_Vector*  vec     = outline->points;
+        FT_Hector*  vec     = outline->points;
 
 
         /* scale outline points */
@@ -475,7 +475,7 @@
   pfr_face_get_kerning( FT_Face     pfrface,        /* PFR_Face */
                         FT_UInt     glyph1,
                         FT_UInt     glyph2,
-                        FT_Vector*  kerning )
+                        FT_Hector*  kerning )
   {
     PFR_Face     face     = (PFR_Face)pfrface;
     FT_Error     error    = FT_Err_Ok;

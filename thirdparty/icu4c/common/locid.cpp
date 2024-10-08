@@ -55,7 +55,7 @@
 #include "umutex.h"
 #include "uniquecharstr.h"
 #include "ustr_imp.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -1081,7 +1081,7 @@ private:
     const char* script;
     const char* region;
     const char* extensions;
-    UVector variants;
+    UHector variants;
 
     const AliasData* data;
 
@@ -1134,16 +1134,16 @@ private:
                                   const char*& replaceRegion,
                                   const char*& replaceVariant,
                                   const char*& replaceExtensions,
-                                  UVector& toBeFreed,
+                                  UHector& toBeFreed,
                                   UErrorCode& status);
 
     // Replace by using languageAlias.
     bool replaceLanguage(bool checkLanguage, bool checkRegion,
-                         bool checkVariants, UVector& toBeFreed,
+                         bool checkVariants, UHector& toBeFreed,
                          UErrorCode& status);
 
     // Replace by using territoryAlias.
-    bool replaceTerritory(UVector& toBeFreed, UErrorCode& status);
+    bool replaceTerritory(UHector& toBeFreed, UErrorCode& status);
 
     // Replace by using scriptAlias.
     bool replaceScript(UErrorCode& status);
@@ -1186,7 +1186,7 @@ AliasReplacer::parseLanguageReplacement(
     const char*& replacedRegion,
     const char*& replacedVariant,
     const char*& replacedExtensions,
-    UVector& toBeFreed,
+    UHector& toBeFreed,
     UErrorCode& status)
 {
     if (U_FAILURE(status)) {
@@ -1265,7 +1265,7 @@ AliasReplacer::parseLanguageReplacement(
 bool
 AliasReplacer::replaceLanguage(
         bool checkLanguage, bool checkRegion,
-        bool checkVariants, UVector& toBeFreed, UErrorCode& status)
+        bool checkVariants, UHector& toBeFreed, UErrorCode& status)
 {
     if (U_FAILURE(status)) {
         return false;
@@ -1365,7 +1365,7 @@ AliasReplacer::replaceLanguage(
 }
 
 bool
-AliasReplacer::replaceTerritory(UVector& toBeFreed, UErrorCode& status)
+AliasReplacer::replaceTerritory(UHector& toBeFreed, UErrorCode& status)
 {
     if (U_FAILURE(status)) {
         return false;
@@ -1534,7 +1534,7 @@ AliasReplacer::replaceTransformedExtensions(
     }
     if (tkey != nullptr) {
         // We need to sort the tfields by tkey
-        UVector tfields(status);
+        UHector tfields(status);
         if (U_FAILURE(status)) {
             return false;
         }
@@ -1671,9 +1671,9 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
 
     // A changed count to assert when loop too many times.
     int changed = 0;
-    // A UVector to to hold CharString allocated by the replace* method
+    // A UHector to to hold CharString allocated by the replace* method
     // and freed when out of scope from his function.
-    UVector stringsToBeFreed([](void *obj){ delete ((CharString*) obj); },
+    UHector stringsToBeFreed([](void *obj){ delete ((CharString*) obj); },
                              nullptr, 10, status);
     while (U_SUCCESS(status)) {
         // Something wrong with the data cause looping here more than 10 times

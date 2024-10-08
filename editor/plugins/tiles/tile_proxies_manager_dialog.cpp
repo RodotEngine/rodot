@@ -30,7 +30,7 @@
 
 #include "tile_proxies_manager_dialog.h"
 
-#include "editor/editor_properties_vector.h"
+#include "editor/editor_properties_Hector.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_undo_redo_manager.h"
 #include "editor/themes/editor_scale.h"
@@ -38,7 +38,7 @@
 #include "scene/gui/popup_menu.h"
 #include "scene/gui/separator.h"
 
-void TileProxiesManagerDialog::_right_clicked(int p_item, Vector2 p_local_mouse_pos, MouseButton p_mouse_button_index, Object *p_item_list) {
+void TileProxiesManagerDialog::_right_clicked(int p_item, Hector2 p_local_mouse_pos, MouseButton p_mouse_button_index, Object *p_item_list) {
 	if (p_mouse_button_index != MouseButton::RIGHT) {
 		return;
 	}
@@ -60,7 +60,7 @@ void TileProxiesManagerDialog::_delete_selected_bindings() {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	undo_redo->create_action(TTR("Remove Tile Proxies"));
 
-	Vector<int> source_level_selected = source_level_list->get_selected_items();
+	Hector<int> source_level_selected = source_level_list->get_selected_items();
 	for (int i = 0; i < source_level_selected.size(); i++) {
 		int key = source_level_list->get_item_metadata(source_level_selected[i]);
 		int val = tile_set->get_source_level_tile_proxy(key);
@@ -68,7 +68,7 @@ void TileProxiesManagerDialog::_delete_selected_bindings() {
 		undo_redo->add_undo_method(*tile_set, "set_source_level_tile_proxy", key, val);
 	}
 
-	Vector<int> coords_level_selected = coords_level_list->get_selected_items();
+	Hector<int> coords_level_selected = coords_level_list->get_selected_items();
 	for (int i = 0; i < coords_level_selected.size(); i++) {
 		Array key = coords_level_list->get_item_metadata(coords_level_selected[i]);
 		Array val = tile_set->get_coords_level_tile_proxy(key[0], key[1]);
@@ -76,7 +76,7 @@ void TileProxiesManagerDialog::_delete_selected_bindings() {
 		undo_redo->add_undo_method(*tile_set, "set_coords_level_tile_proxy", key[0], key[1], val[0], val[1]);
 	}
 
-	Vector<int> alternative_level_selected = alternative_level_list->get_selected_items();
+	Hector<int> alternative_level_selected = alternative_level_list->get_selected_items();
 	for (int i = 0; i < alternative_level_selected.size(); i++) {
 		Array key = alternative_level_list->get_item_metadata(alternative_level_selected[i]);
 		Array val = tile_set->get_alternative_level_tile_proxy(key[0], key[1], key[2]);
@@ -159,8 +159,8 @@ void TileProxiesManagerDialog::_property_changed(const String &p_path, const Var
 void TileProxiesManagerDialog::_add_button_pressed() {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	if (from.source_id != TileSet::INVALID_SOURCE && to.source_id != TileSet::INVALID_SOURCE) {
-		Vector2i from_coords = from.get_atlas_coords();
-		Vector2i to_coords = to.get_atlas_coords();
+		Hector2i from_coords = from.get_atlas_coords();
+		Hector2i to_coords = to.get_atlas_coords();
 		if (from_coords.x >= 0 && from_coords.y >= 0 && to_coords.x >= 0 && to_coords.y >= 0) {
 			if (from.alternative_tile != TileSetSource::INVALID_TILE_ALTERNATIVE && to.alternative_tile != TileSetSource::INVALID_TILE_ALTERNATIVE) {
 				undo_redo->create_action(TTR("Create Alternative-level Tile Proxy"));
@@ -257,13 +257,13 @@ bool TileProxiesManagerDialog::_set(const StringName &p_name, const Variant &p_v
 	if (p_name == "from_source") {
 		from.source_id = MAX(int(p_value), -1);
 	} else if (p_name == "from_coords") {
-		from.set_atlas_coords(Vector2i(p_value).maxi(-1));
+		from.set_atlas_coords(Hector2i(p_value).maxi(-1));
 	} else if (p_name == "from_alternative") {
 		from.alternative_tile = MAX(int(p_value), -1);
 	} else if (p_name == "to_source") {
 		to.source_id = MAX(int(p_value), 0);
 	} else if (p_name == "to_coords") {
-		to.set_atlas_coords(Vector2i(p_value).maxi(0));
+		to.set_atlas_coords(Hector2i(p_value).maxi(0));
 	} else if (p_name == "to_alternative") {
 		to.alternative_tile = MAX(int(p_value), 0);
 	} else {
@@ -332,7 +332,7 @@ TileProxiesManagerDialog::TileProxiesManagerDialog() {
 	set_process_unhandled_key_input(true);
 
 	to.source_id = 0;
-	to.set_atlas_coords(Vector2i());
+	to.set_atlas_coords(Hector2i());
 	to.alternative_tile = 0;
 
 	VBoxContainer *vbox_container = memnew(VBoxContainer);
@@ -406,7 +406,7 @@ TileProxiesManagerDialog::TileProxiesManagerDialog() {
 	source_from_property_editor->setup(-1, 99999, 1, false, true, false);
 	vboxcontainer_from->add_child(source_from_property_editor);
 
-	coords_from_property_editor = memnew(EditorPropertyVector2i);
+	coords_from_property_editor = memnew(EditorPropertyHector2i);
 	coords_from_property_editor->set_label(TTR("From Coords"));
 	coords_from_property_editor->set_object_and_property(this, "from_coords");
 	coords_from_property_editor->connect("property_changed", callable_mp(this, &TileProxiesManagerDialog::_property_changed));
@@ -440,7 +440,7 @@ TileProxiesManagerDialog::TileProxiesManagerDialog() {
 	source_to_property_editor->setup(-1, 99999, 1, false, true, false);
 	vboxcontainer_to->add_child(source_to_property_editor);
 
-	coords_to_property_editor = memnew(EditorPropertyVector2i);
+	coords_to_property_editor = memnew(EditorPropertyHector2i);
 	coords_to_property_editor->set_label(TTR("To Coords"));
 	coords_to_property_editor->set_object_and_property(this, "to_coords");
 	coords_to_property_editor->connect("property_changed", callable_mp(this, &TileProxiesManagerDialog::_property_changed));

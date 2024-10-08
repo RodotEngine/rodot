@@ -70,7 +70,7 @@ struct MarkBasePosFormat1_2
     | hb_map (hb_second)
     ;
 
-    hb_sorted_vector_t<unsigned> base_indexes;
+    hb_sorted_Hector_t<unsigned> base_indexes;
     for (const unsigned row : base_iter)
     {
       + hb_range ((unsigned) classCount)
@@ -187,7 +187,7 @@ struct MarkBasePosFormat1_2
     | hb_filter (glyphset, hb_first)
     ;
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + mark_iter
     | hb_map (hb_first)
     | hb_map (glyph_map)
@@ -218,7 +218,7 @@ struct MarkBasePosFormat1_2
     if (!out->baseCoverage.serialize_serialize (c->serializer, new_coverage.iter ()))
       return_trace (false);
 
-    hb_sorted_vector_t<unsigned> base_indexes;
+    hb_sorted_Hector_t<unsigned> base_indexes;
     for (const unsigned row : + base_iter
                               | hb_map (hb_second))
     {

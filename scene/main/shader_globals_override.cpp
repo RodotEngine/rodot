@@ -91,7 +91,7 @@ bool ShaderGlobalsOverride::_get(const StringName &p_name, Variant &r_ret) const
 }
 
 void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const {
-	Vector<StringName> variables;
+	Hector<StringName> variables;
 	variables = RS::get_singleton()->global_shader_parameter_get_list();
 	for (int i = 0; i < variables.size(); i++) {
 		PropertyInfo pinfo;
@@ -121,13 +121,13 @@ void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const
 				pinfo.type = Variant::INT;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_IVEC2: {
-				pinfo.type = Variant::VECTOR2I;
+				pinfo.type = Variant::HECTOR2I;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_IVEC3: {
-				pinfo.type = Variant::VECTOR3I;
+				pinfo.type = Variant::HECTOR3I;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_IVEC4: {
-				pinfo.type = Variant::VECTOR4I;
+				pinfo.type = Variant::HECTOR4I;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_RECT2I: {
 				pinfo.type = Variant::RECT2I;
@@ -136,25 +136,25 @@ void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const
 				pinfo.type = Variant::INT;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_UVEC2: {
-				pinfo.type = Variant::VECTOR2I;
+				pinfo.type = Variant::HECTOR2I;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_UVEC3: {
-				pinfo.type = Variant::VECTOR3I;
+				pinfo.type = Variant::HECTOR3I;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_UVEC4: {
-				pinfo.type = Variant::VECTOR4I;
+				pinfo.type = Variant::HECTOR4I;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_FLOAT: {
 				pinfo.type = Variant::FLOAT;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_VEC2: {
-				pinfo.type = Variant::VECTOR2;
+				pinfo.type = Variant::HECTOR2;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_VEC3: {
-				pinfo.type = Variant::VECTOR3;
+				pinfo.type = Variant::HECTOR3;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_VEC4: {
-				pinfo.type = Variant::VECTOR4;
+				pinfo.type = Variant::HECTOR4;
 			} break;
 			case RS::GLOBAL_VAR_TYPE_RECT2: {
 				pinfo.type = Variant::RECT2;

@@ -43,11 +43,11 @@ protected:
 	bool draggable = true;
 	bool selectable = true;
 
-	Vector2 drag_from;
-	Vector2 resizing_from;
-	Vector2 resizing_from_size;
+	Hector2 drag_from;
+	Hector2 resizing_from;
+	Hector2 resizing_from_size;
 
-	Vector2 position_offset;
+	Hector2 position_offset;
 
 	struct ThemeCache {
 		Ref<Texture2D> resizer;
@@ -67,14 +67,14 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 
 public:
-	void set_position_offset(const Vector2 &p_offset);
-	Vector2 get_position_offset() const;
+	void set_position_offset(const Hector2 &p_offset);
+	Hector2 get_position_offset() const;
 
 	void set_selected(bool p_selected);
 	bool is_selected();
 
 	void set_drag(bool p_drag);
-	Vector2 get_drag_from();
+	Hector2 get_drag_from();
 
 	void set_resizable(bool p_enable);
 	bool is_resizable() const;

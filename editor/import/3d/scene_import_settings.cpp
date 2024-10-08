@@ -51,7 +51,7 @@ class SceneImportSettingsData : public Object {
 	HashMap<StringName, Variant> current;
 	HashMap<StringName, Variant> defaults;
 	List<ResourceImporter::ImportOption> options;
-	Vector<String> animation_list;
+	Hector<String> animation_list;
 
 	bool hide_options = false;
 	String path;
@@ -439,7 +439,7 @@ void SceneImportSettingsDialog::_fill_scene(Node *p_node, TreeItem *p_parent_ite
 
 	AnimationPlayer *anim_node = Object::cast_to<AnimationPlayer>(p_node);
 	if (anim_node) {
-		Vector<String> animation_list;
+		Hector<String> animation_list;
 		List<StringName> animations;
 		anim_node->get_animation_list(&animations);
 		for (const StringName &E : animations) {
@@ -604,7 +604,7 @@ void SceneImportSettingsDialog::_update_view_gizmos() {
 			}
 
 			// Generate the mesh collider.
-			Vector<Ref<Shape3D>> shapes = ResourceImporterScene::get_collision_shapes(mesh, e.value.settings, 1.0);
+			Hector<Ref<Shape3D>> shapes = ResourceImporterScene::get_collision_shapes(mesh, e.value.settings, 1.0);
 			const Transform3D transform = ResourceImporterScene::get_collision_shapes_transform(e.value.settings);
 
 			Ref<ArrayMesh> collider_view_mesh;
@@ -649,7 +649,7 @@ void SceneImportSettingsDialog::_update_camera() {
 		if (mesh_preview->get_mesh().is_valid()) {
 			camera_aabb = mesh_preview->get_transform().xform(mesh_preview->get_mesh()->get_aabb());
 		} else {
-			camera_aabb = AABB(Vector3(-1, -1, -1), Vector3(2, 2, 2));
+			camera_aabb = AABB(Hector3(-1, -1, -1), Hector3(2, 2, 2));
 		}
 		if (selected_type == "Mesh" && mesh_map.has(selected_id)) {
 			const MeshData &md = mesh_map[selected_id];
@@ -664,13 +664,13 @@ void SceneImportSettingsDialog::_update_camera() {
 		}
 	}
 
-	Vector3 center = camera_aabb.get_center();
+	Hector3 center = camera_aabb.get_center();
 	float camera_size = camera_aabb.get_longest_axis_size();
 
 	camera->set_orthogonal(camera_size * zoom, 0.0001, camera_size * 2);
 
 	Transform3D xf;
-	xf.basis = Basis(Vector3(0, 1, 0), rot_y) * Basis(Vector3(1, 0, 0), rot_x);
+	xf.basis = Basis(Hector3(0, 1, 0), rot_y) * Basis(Hector3(1, 0, 0), rot_x);
 	xf.origin = center;
 	xf.translate_local(0, 0, camera_size);
 
@@ -781,7 +781,7 @@ void SceneImportSettingsDialog::open_settings(const String &p_path, const String
 	inspector->edit(nullptr);
 
 	if (first_aabb) {
-		contents_aabb = AABB(Vector3(-1, -1, -1), Vector3(2, 2, 2));
+		contents_aabb = AABB(Hector3(-1, -1, -1), Hector3(2, 2, 2));
 		first_aabb = false;
 	}
 
@@ -1798,12 +1798,12 @@ SceneImportSettingsDialog::SceneImportSettingsDialog() {
 	camera->set_environment(environment);
 
 	light1 = memnew(DirectionalLight3D);
-	light1->set_transform(Transform3D(Basis::looking_at(Vector3(-1, -1, -1))));
+	light1->set_transform(Transform3D(Basis::looking_at(Hector3(-1, -1, -1))));
 	light1->set_shadow(true);
 	camera->add_child(light1);
 
 	light2 = memnew(DirectionalLight3D);
-	light2->set_transform(Transform3D(Basis::looking_at(Vector3(0, 1, 0), Vector3(0, 0, 1))));
+	light2->set_transform(Transform3D(Basis::looking_at(Hector3(0, 1, 0), Hector3(0, 0, 1))));
 	light2->set_color(Color(0.5f, 0.5f, 0.5f));
 	camera->add_child(light2);
 
@@ -1819,10 +1819,10 @@ SceneImportSettingsDialog::SceneImportSettingsDialog() {
 		st->begin(Mesh::PRIMITIVE_LINES);
 
 		AABB base_aabb;
-		base_aabb.size = Vector3(1, 1, 1);
+		base_aabb.size = Hector3(1, 1, 1);
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			base_aabb.get_edge(i, a, b);
 
 			st->add_vertex(a);

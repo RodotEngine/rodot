@@ -34,7 +34,7 @@
 			</description>
 		</method>
 		<method name="_get_view_eye_offset" qualifiers="virtual const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="view" type="int" />
 			<description>
 				Implement this in GDExtension to return the eye offset for the given [param view].

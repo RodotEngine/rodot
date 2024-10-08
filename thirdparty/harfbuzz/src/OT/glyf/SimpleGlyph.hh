@@ -179,7 +179,7 @@ struct SimpleGlyph
     return true;
   }
 
-  bool get_contour_points (contour_point_vector_t &points /* OUT */,
+  bool get_contour_points (contour_point_Hector_t &points /* OUT */,
 			   bool phantom_only = false) const
   {
     const HBUINT16 *endPtsOfContours = &StructAfter<HBUINT16> (header);
@@ -220,7 +220,7 @@ struct SimpleGlyph
                             unsigned &flag,
                             const simple_glyph_flag_t short_flag,
                             const simple_glyph_flag_t same_flag,
-                            hb_vector_t<uint8_t> &coords /* OUT */)
+                            hb_Hector_t<uint8_t> &coords /* OUT */)
   {
     if (value == 0)
     {
@@ -245,7 +245,7 @@ struct SimpleGlyph
   static void encode_flag (unsigned flag,
                            unsigned &repeat,
                            unsigned lastflag,
-                           hb_vector_t<uint8_t> &flags /* OUT */)
+                           hb_Hector_t<uint8_t> &flags /* OUT */)
   {
     if (flag == lastflag && repeat != 255)
     {
@@ -269,7 +269,7 @@ struct SimpleGlyph
     }
   }
 
-  bool compile_bytes_with_deltas (const contour_point_vector_t &all_points,
+  bool compile_bytes_with_deltas (const contour_point_Hector_t &all_points,
                                   bool no_hinting,
                                   hb_bytes_t &dest_bytes /* OUT */)
   {
@@ -280,7 +280,7 @@ struct SimpleGlyph
     }
     unsigned num_points = all_points.length - 4;
 
-    hb_vector_t<uint8_t> flags, x_coords, y_coords;
+    hb_Hector_t<uint8_t> flags, x_coords, y_coords;
     if (unlikely (!flags.alloc (num_points, true))) return false;
     if (unlikely (!x_coords.alloc (2*num_points, true))) return false;
     if (unlikely (!y_coords.alloc (2*num_points, true))) return false;

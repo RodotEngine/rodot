@@ -48,7 +48,7 @@ bool MeshLibrary::_set(const StringName &p_name, const Variant &p_value) {
 		} else if (what == "mesh_transform") {
 			set_item_mesh_transform(idx, p_value);
 		} else if (what == "shape") {
-			Vector<ShapeData> shapes;
+			Hector<ShapeData> shapes;
 			ShapeData sd;
 			sd.shape = p_value;
 			shapes.push_back(sd);
@@ -154,7 +154,7 @@ void MeshLibrary::set_item_mesh_transform(int p_item, const Transform3D &p_trans
 	emit_changed();
 }
 
-void MeshLibrary::set_item_shapes(int p_item, const Vector<ShapeData> &p_shapes) {
+void MeshLibrary::set_item_shapes(int p_item, const Hector<ShapeData> &p_shapes) {
 	ERR_FAIL_COND_MSG(!item_map.has(p_item), "Requested for nonexistent MeshLibrary item '" + itos(p_item) + "'.");
 	item_map[p_item].shapes = p_shapes;
 	emit_changed();
@@ -200,8 +200,8 @@ Transform3D MeshLibrary::get_item_mesh_transform(int p_item) const {
 	return item_map[p_item].mesh_transform;
 }
 
-Vector<MeshLibrary::ShapeData> MeshLibrary::get_item_shapes(int p_item) const {
-	ERR_FAIL_COND_V_MSG(!item_map.has(p_item), Vector<ShapeData>(), "Requested for nonexistent MeshLibrary item '" + itos(p_item) + "'.");
+Hector<MeshLibrary::ShapeData> MeshLibrary::get_item_shapes(int p_item) const {
+	ERR_FAIL_COND_V_MSG(!item_map.has(p_item), Hector<ShapeData>(), "Requested for nonexistent MeshLibrary item '" + itos(p_item) + "'.");
 	return item_map[p_item].shapes;
 }
 
@@ -242,8 +242,8 @@ void MeshLibrary::clear() {
 	emit_changed();
 }
 
-Vector<int> MeshLibrary::get_item_list() const {
-	Vector<int> ret;
+Hector<int> MeshLibrary::get_item_list() const {
+	Hector<int> ret;
 	ret.resize(item_map.size());
 	int idx = 0;
 	for (const KeyValue<int, Item> &E : item_map) {
@@ -295,7 +295,7 @@ void MeshLibrary::_set_item_shapes(int p_item, const Array &p_shapes) {
 		}
 	}
 
-	Vector<ShapeData> shapes;
+	Hector<ShapeData> shapes;
 	for (int i = 0; i < size; i += 2) {
 		ShapeData sd;
 		sd.shape = arr_shapes[i + 0];
@@ -310,7 +310,7 @@ void MeshLibrary::_set_item_shapes(int p_item, const Array &p_shapes) {
 }
 
 Array MeshLibrary::_get_item_shapes(int p_item) const {
-	Vector<ShapeData> shapes = get_item_shapes(p_item);
+	Hector<ShapeData> shapes = get_item_shapes(p_item);
 	Array ret;
 	for (int i = 0; i < shapes.size(); i++) {
 		ret.push_back(shapes[i].shape);

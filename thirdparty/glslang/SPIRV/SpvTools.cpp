@@ -198,7 +198,7 @@ void SpirvToolsTransform(const glslang::TIntermediate& intermediate, std::vector
     optimizer.RegisterPass(spvtools::CreateLocalSingleStoreElimPass());
     optimizer.RegisterPass(spvtools::CreateSimplificationPass());
     optimizer.RegisterPass(spvtools::CreateAggressiveDCEPass());
-    optimizer.RegisterPass(spvtools::CreateVectorDCEPass());
+    optimizer.RegisterPass(spvtools::CreateHectorDCEPass());
     optimizer.RegisterPass(spvtools::CreateDeadInsertElimPass());
     optimizer.RegisterPass(spvtools::CreateAggressiveDCEPass());
     optimizer.RegisterPass(spvtools::CreateDeadBranchElimPass());
@@ -207,7 +207,7 @@ void SpirvToolsTransform(const glslang::TIntermediate& intermediate, std::vector
     optimizer.RegisterPass(spvtools::CreateIfConversionPass());
     optimizer.RegisterPass(spvtools::CreateSimplificationPass());
     optimizer.RegisterPass(spvtools::CreateAggressiveDCEPass());
-    optimizer.RegisterPass(spvtools::CreateVectorDCEPass());
+    optimizer.RegisterPass(spvtools::CreateHectorDCEPass());
     optimizer.RegisterPass(spvtools::CreateDeadInsertElimPass());
     optimizer.RegisterPass(spvtools::CreateInterpolateFixupPass());
     if (options->optimizeSize) {

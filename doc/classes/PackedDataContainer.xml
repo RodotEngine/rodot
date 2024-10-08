@@ -7,7 +7,7 @@
 		[PackedDataContainer] can be used to efficiently store data from untyped containers. The data is packed into raw bytes and can be saved to file. Only [Array] and [Dictionary] can be stored this way.
 		You can retrieve the data by iterating on the container, which will work as if iterating on the packed data itself. If the packed container is a [Dictionary], the data can be retrieved by key names ([String]/[StringName] only).
 		[codeblock]
-		var data = { "key": "value", "another_key": 123, "lock": Vector2() }
+		var data = { "key": "value", "another_key": 123, "lock": Hector2() }
 		var packed = PackedDataContainer.new()
 		packed.pack(data)
 		ResourceSaver.save(packed, "packed_data.res")

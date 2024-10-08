@@ -920,7 +920,7 @@ msgstr "გარე პროგრამები"
 msgid "Raster Image Editor"
 msgstr "რასტრული გამოსახულების რედაქტორი"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "ვექტორული გამოსახულების რედაქტორი"
 
 msgid "Audio Editor"

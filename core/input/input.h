@@ -93,14 +93,14 @@ private:
 	RBMap<JoyAxis, float> _joy_axis;
 	//RBMap<StringName,int> custom_action_press;
 	bool gravity_enabled = false;
-	Vector3 gravity;
+	Hector3 gravity;
 	bool accelerometer_enabled = false;
-	Vector3 accelerometer;
+	Hector3 accelerometer;
 	bool magnetometer_enabled = false;
-	Vector3 magnetometer;
+	Hector3 magnetometer;
 	bool gyroscope_enabled = false;
-	Vector3 gyroscope;
-	Vector2 mouse_pos;
+	Hector3 gyroscope;
+	Hector2 mouse_pos;
 	int64_t mouse_window = 0;
 	bool legacy_just_pressed_behavior = false;
 
@@ -148,15 +148,15 @@ private:
 
 	struct VelocityTrack {
 		uint64_t last_tick = 0;
-		Vector2 velocity;
-		Vector2 screen_velocity;
-		Vector2 accum;
-		Vector2 screen_accum;
+		Hector2 velocity;
+		Hector2 screen_velocity;
+		Hector2 accum;
+		Hector2 screen_accum;
 		float accum_t = 0.0f;
 		float min_ref_frame;
 		float max_ref_frame;
 
-		void update(const Vector2 &p_delta_p, const Vector2 &p_screen_delta_p);
+		void update(const Hector2 &p_delta_p, const Hector2 &p_screen_delta_p);
 		void reset();
 		VelocityTrack();
 	};
@@ -235,10 +235,10 @@ private:
 	struct JoyDeviceMapping {
 		String uid;
 		String name;
-		Vector<JoyBinding> bindings;
+		Hector<JoyBinding> bindings;
 	};
 
-	Vector<JoyDeviceMapping> map_db;
+	Hector<JoyDeviceMapping> map_db;
 
 	JoyEvent _get_mapped_button_event(const JoyDeviceMapping &mapping, JoyButton p_button);
 	JoyEvent _get_mapped_axis_event(const JoyDeviceMapping &mapping, JoyAxis p_axis, float p_value, JoyAxisRange &r_range);
@@ -261,10 +261,10 @@ private:
 
 	static void (*set_mouse_mode_func)(MouseMode);
 	static MouseMode (*get_mouse_mode_func)();
-	static void (*warp_mouse_func)(const Vector2 &p_position);
+	static void (*warp_mouse_func)(const Hector2 &p_position);
 
 	static CursorShape (*get_current_cursor_shape_func)();
-	static void (*set_custom_mouse_cursor_func)(const Ref<Resource> &, CursorShape, const Vector2 &);
+	static void (*set_custom_mouse_cursor_func)(const Ref<Resource> &, CursorShape, const Hector2 &);
 
 	EventDispatchFunc event_dispatch_function = nullptr;
 
@@ -299,35 +299,35 @@ public:
 	float get_action_raw_strength(const StringName &p_action, bool p_exact = false) const;
 
 	float get_axis(const StringName &p_negative_action, const StringName &p_positive_action) const;
-	Vector2 get_vector(const StringName &p_negative_x, const StringName &p_positive_x, const StringName &p_negative_y, const StringName &p_positive_y, float p_deadzone = -1.0f) const;
+	Hector2 get_Hector(const StringName &p_negative_x, const StringName &p_positive_x, const StringName &p_negative_y, const StringName &p_positive_y, float p_deadzone = -1.0f) const;
 
 	float get_joy_axis(int p_device, JoyAxis p_axis) const;
 	String get_joy_name(int p_idx);
 	TypedArray<int> get_connected_joypads();
-	Vector2 get_joy_vibration_strength(int p_device);
+	Hector2 get_joy_vibration_strength(int p_device);
 	float get_joy_vibration_duration(int p_device);
 	uint64_t get_joy_vibration_timestamp(int p_device);
 	void joy_connection_changed(int p_idx, bool p_connected, const String &p_name, const String &p_guid = "", const Dictionary &p_joypad_info = Dictionary());
 
-	Vector3 get_gravity() const;
-	Vector3 get_accelerometer() const;
-	Vector3 get_magnetometer() const;
-	Vector3 get_gyroscope() const;
+	Hector3 get_gravity() const;
+	Hector3 get_accelerometer() const;
+	Hector3 get_magnetometer() const;
+	Hector3 get_gyroscope() const;
 
 	Point2 get_mouse_position() const;
-	Vector2 get_last_mouse_velocity();
-	Vector2 get_last_mouse_screen_velocity();
+	Hector2 get_last_mouse_velocity();
+	Hector2 get_last_mouse_screen_velocity();
 	BitField<MouseButtonMask> get_mouse_button_mask() const;
 
-	void warp_mouse(const Vector2 &p_position);
+	void warp_mouse(const Hector2 &p_position);
 	Point2 warp_mouse_motion(const Ref<InputEventMouseMotion> &p_motion, const Rect2 &p_rect);
 
 	void parse_input_event(const Ref<InputEvent> &p_event);
 
-	void set_gravity(const Vector3 &p_gravity);
-	void set_accelerometer(const Vector3 &p_accel);
-	void set_magnetometer(const Vector3 &p_magnetometer);
-	void set_gyroscope(const Vector3 &p_gyroscope);
+	void set_gravity(const Hector3 &p_gravity);
+	void set_accelerometer(const Hector3 &p_accel);
+	void set_magnetometer(const Hector3 &p_magnetometer);
+	void set_gyroscope(const Hector3 &p_gyroscope);
 	void set_joy_axis(int p_device, JoyAxis p_axis, float p_value);
 
 	void start_joy_vibration(int p_device, float p_weak_magnitude, float p_strong_magnitude, float p_duration = 0);
@@ -349,7 +349,7 @@ public:
 	CursorShape get_default_cursor_shape() const;
 	void set_default_cursor_shape(CursorShape p_shape);
 	CursorShape get_current_cursor_shape() const;
-	void set_custom_mouse_cursor(const Ref<Resource> &p_cursor, CursorShape p_shape = Input::CURSOR_ARROW, const Vector2 &p_hotspot = Vector2());
+	void set_custom_mouse_cursor(const Ref<Resource> &p_cursor, CursorShape p_shape = Input::CURSOR_ARROW, const Hector2 &p_hotspot = Hector2());
 
 	void parse_mapping(const String &p_mapping);
 	void joy_button(int p_device, JoyButton p_button, bool p_pressed);

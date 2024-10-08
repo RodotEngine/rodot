@@ -6,7 +6,7 @@
 	<description>
 		A 3D agent used to pathfind to a position while avoiding static and dynamic obstacles. The calculation can be used by the parent node to dynamically move it along the path. Requires navigation data to work correctly.
 		Dynamic obstacles are avoided using RVO collision avoidance. Avoidance is computed before physics, so the pathfinding information can be used safely in the physics step.
-		[b]Note:[/b] After setting the [member target_position] property, the [method get_next_path_position] method must be used once every physics frame to update the internal path logic of the navigation agent. The vector position it returns should be used as the next movement position for the agent's parent node.
+		[b]Note:[/b] After setting the [member target_position] property, the [method get_next_path_position] method must be used once every physics frame to update the internal path logic of the navigation agent. The Hector position it returns should be used as the next movement position for the agent's parent node.
 	</description>
 	<tutorials>
 		<link title="Using NavigationAgents">$DOCS_URL/tutorials/navigation/navigation_using_navigationagents.html</link>
@@ -33,7 +33,7 @@
 			</description>
 		</method>
 		<method name="get_current_navigation_path" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
 				Returns this agent's current path from start to finish in global coordinates. The path only updates when the target position is changed or the agent requires a repath. The path array is not intended to be used in direct path movement as the agent has its own internal path logic that would get corrupted by changing the path array manually. Use the intended [method get_next_path_position] once every physics frame to receive the next path point for the agents movement as this function also updates the internal path logic.
 			</description>
@@ -41,7 +41,7 @@
 		<method name="get_current_navigation_path_index" qualifiers="const">
 			<return type="int" />
 			<description>
-				Returns which index the agent is currently on in the navigation path's [PackedVector3Array].
+				Returns which index the agent is currently on in the navigation path's [PackedHector3Array].
 			</description>
 		</method>
 		<method name="get_current_navigation_result" qualifiers="const">
@@ -51,7 +51,7 @@
 			</description>
 		</method>
 		<method name="get_final_position">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the reachable final position of the current navigation path in global coordinates. This position can change if the agent needs to update the navigation path which makes the agent emit the [signal path_changed] signal.
 			</description>
@@ -70,7 +70,7 @@
 			</description>
 		</method>
 		<method name="get_next_path_position">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the next position in global coordinates that can be moved to, making sure that there are no static objects in the way. If the agent does not have a navigation path, it will return the position of the agent's parent. The use of this function once every physics frame is required to update the internal path logic of the NavigationAgent.
 			</description>
@@ -133,7 +133,7 @@
 		</method>
 		<method name="set_velocity_forced">
 			<return type="void" />
-			<param index="0" name="velocity" type="Vector3" />
+			<param index="0" name="velocity" type="Hector3" />
 			<description>
 				Replaces the internal velocity in the collision avoidance simulation with [param velocity]. When an agent is teleported to a new position this function should be used in the same frame. If called frequently this function can get agents stuck.
 			</description>
@@ -141,7 +141,7 @@
 	</methods>
 	<members>
 		<member name="avoidance_enabled" type="bool" setter="set_avoidance_enabled" getter="get_avoidance_enabled" default="false">
-			If [code]true[/code] the agent is registered for an RVO avoidance callback on the [NavigationServer3D]. When [member velocity] is set and the processing is completed a [code]safe_velocity[/code] Vector3 is received with a signal connection to [signal velocity_computed]. Avoidance processing with many registered agents has a significant performance cost and should only be enabled on agents that currently require it.
+			If [code]true[/code] the agent is registered for an RVO avoidance callback on the [NavigationServer3D]. When [member velocity] is set and the processing is completed a [code]safe_velocity[/code] Hector3 is received with a signal connection to [signal velocity_computed]. Avoidance processing with many registered agents has a significant performance cost and should only be enabled on agents that currently require it.
 		</member>
 		<member name="avoidance_layers" type="int" setter="set_avoidance_layers" getter="get_avoidance_layers" default="1">
 			A bitfield determining the avoidance layers for this NavigationAgent. Other agents with a matching bit on the [member avoidance_mask] will avoid this agent.
@@ -186,7 +186,7 @@
 			The distance threshold before a path point is considered to be reached. This allows agents to not have to hit a path point on the path exactly, but only to reach its general area. If this value is set too high, the NavigationAgent will skip points on the path, which can lead to it leaving the navigation mesh. If this value is set too low, the NavigationAgent will be stuck in a repath loop because it will constantly overshoot the distance to the next point on each physics frame update.
 		</member>
 		<member name="path_height_offset" type="float" setter="set_path_height_offset" getter="get_path_height_offset" default="0.0">
-			The height offset is subtracted from the y-axis value of any vector path position for this NavigationAgent. The NavigationAgent height offset does not change or influence the navigation mesh or pathfinding query result. Additional navigation maps that use regions with navigation meshes that the developer baked with appropriate agent radius or height values are required to support different-sized agents.
+			The height offset is subtracted from the y-axis value of any Hector path position for this NavigationAgent. The NavigationAgent height offset does not change or influence the navigation mesh or pathfinding query result. Additional navigation maps that use regions with navigation meshes that the developer baked with appropriate agent radius or height values are required to support different-sized agents.
 		</member>
 		<member name="path_max_distance" type="float" setter="set_path_max_distance" getter="get_path_max_distance" default="5.0">
 			The maximum distance the agent is allowed away from the ideal path to the final position. This can happen due to trying to avoid collisions. When the maximum distance is exceeded, it recalculates the ideal path.
@@ -216,7 +216,7 @@
 			You can make navigation end early by setting this property to a value greater than [member path_desired_distance] (navigation will end before reaching the last waypoint).
 			You can also make navigation end closer to the target than each individual path position by setting this property to a value lower than [member path_desired_distance] (navigation won't immediately end when reaching the last waypoint). However, if the value set is too low, the agent will be stuck in a repath loop because it will constantly overshoot the distance to the target on each physics frame update.
 		</member>
-		<member name="target_position" type="Vector3" setter="set_target_position" getter="get_target_position" default="Vector3(0, 0, 0)">
+		<member name="target_position" type="Hector3" setter="set_target_position" getter="get_target_position" default="Hector3(0, 0, 0)">
 			If set, a new navigation path from the current agent position to the [member target_position] is requested from the NavigationServer.
 		</member>
 		<member name="time_horizon_agents" type="float" setter="set_time_horizon_agents" getter="get_time_horizon_agents" default="1.0">
@@ -229,7 +229,7 @@
 			If [code]true[/code], the agent calculates avoidance velocities in 3D omnidirectionally, e.g. for games that take place in air, underwater or space. Agents using 3D avoidance only avoid other agents using 3D avoidance, and react to radius-based avoidance obstacles. They ignore any vertex-based obstacles.
 			If [code]false[/code], the agent calculates avoidance velocities in 2D along the x and z-axes, ignoring the y-axis. Agents using 2D avoidance only avoid other agents using 2D avoidance, and react to radius-based avoidance obstacles or vertex-based avoidance obstacles. Other agents using 2D avoidance that are below or above their current position including [member height] are ignored.
 		</member>
-		<member name="velocity" type="Vector3" setter="set_velocity" getter="get_velocity" default="Vector3(0, 0, 0)">
+		<member name="velocity" type="Hector3" setter="set_velocity" getter="get_velocity" default="Hector3(0, 0, 0)">
 			Sets the new wanted velocity for the agent. The avoidance simulation will try to fulfill this velocity if possible but will modify it to avoid collision with other agents and obstacles. When an agent is teleported to a new position, use [method set_velocity_forced] as well to reset the internal simulation velocity.
 		</member>
 	</members>
@@ -269,7 +269,7 @@
 			</description>
 		</signal>
 		<signal name="velocity_computed">
-			<param index="0" name="safe_velocity" type="Vector3" />
+			<param index="0" name="safe_velocity" type="Hector3" />
 			<description>
 				Notifies when the collision avoidance velocity is calculated. Emitted every update as long as [member avoidance_enabled] is [code]true[/code] and the agent has a navigation map.
 			</description>

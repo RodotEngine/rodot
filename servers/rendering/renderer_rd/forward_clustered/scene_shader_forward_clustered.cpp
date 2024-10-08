@@ -247,8 +247,8 @@ SceneShaderForwardClustered::ShaderVersion SceneShaderForwardClustered::ShaderDa
 				shader_flags |= SHADER_COLOR_PASS_FLAG_SEPARATE_SPECULAR;
 			}
 
-			if (p_color_pass_flags & PIPELINE_COLOR_PASS_FLAG_MOTION_VECTORS) {
-				shader_flags |= SHADER_COLOR_PASS_FLAG_MOTION_VECTORS;
+			if (p_color_pass_flags & PIPELINE_COLOR_PASS_FLAG_MOTION_HectorS) {
+				shader_flags |= SHADER_COLOR_PASS_FLAG_MOTION_HectorS;
 			}
 
 			if (p_color_pass_flags & PIPELINE_COLOR_PASS_FLAG_LIGHTMAP) {
@@ -283,7 +283,7 @@ void SceneShaderForwardClustered::ShaderData::_create_pipeline(PipelineKey p_pip
 			"WIREFRAME:", p_pipeline_key.wireframe);
 #endif
 
-	// Color pass -> attachment 0: Color/Diffuse, attachment 1: Separate Specular, attachment 2: Motion Vectors
+	// Color pass -> attachment 0: Color/Diffuse, attachment 1: Separate Specular, attachment 2: Motion Hectors
 	RD::PipelineColorBlendState::Attachment blend_attachment = blend_mode_to_blend_attachment(BlendMode(blend_mode));
 	RD::PipelineColorBlendState blend_state_color_blend;
 	blend_state_color_blend.attachments = { blend_attachment, RD::PipelineColorBlendState::Attachment(), RD::PipelineColorBlendState::Attachment() };
@@ -367,7 +367,7 @@ void SceneShaderForwardClustered::ShaderData::_create_pipeline(PipelineKey p_pip
 	}
 
 	// Convert the specialization from the key to pipeline specialization constants.
-	Vector<RD::PipelineSpecializationConstant> specialization_constants;
+	Hector<RD::PipelineSpecializationConstant> specialization_constants;
 	RD::PipelineSpecializationConstant sc;
 	sc.constant_id = 0;
 	sc.int_value = p_pipeline_key.shader_specialization.packed_0;
@@ -516,7 +516,7 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 
 	{
-		Vector<ShaderRD::VariantDefine> shader_versions;
+		Hector<ShaderRD::VariantDefine> shader_versions;
 		for (uint32_t ubershader = 0; ubershader < 2; ubershader++) {
 			const String base_define = ubershader ? "\n#define UBERSHADER\n" : "";
 			shader_versions.push_back(ShaderRD::VariantDefine(SHADER_GROUP_BASE, base_define + "\n#define MODE_RENDER_DEPTH\n", true)); // SHADER_VERSION_DEPTH_PASS
@@ -531,12 +531,12 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 		shader_versions.push_back(ShaderRD::VariantDefine(SHADER_GROUP_ADVANCED, "\n#define MODE_RENDER_DEPTH\n#define MODE_RENDER_MATERIAL\n", false)); // SHADER_VERSION_DEPTH_PASS_WITH_MATERIAL
 		shader_versions.push_back(ShaderRD::VariantDefine(SHADER_GROUP_ADVANCED, "\n#define MODE_RENDER_DEPTH\n#define MODE_RENDER_SDF\n", false)); // SHADER_VERSION_DEPTH_PASS_WITH_SDF
 
-		Vector<String> color_pass_flags = {
+		Hector<String> color_pass_flags = {
 			"\n#define UBERSHADER\n", // SHADER_COLOR_PASS_FLAG_UBERSHADER
 			"\n#define MODE_SEPARATE_SPECULAR\n", // SHADER_COLOR_PASS_FLAG_SEPARATE_SPECULAR
 			"\n#define USE_LIGHTMAP\n", // SHADER_COLOR_PASS_FLAG_LIGHTMAP
 			"\n#define USE_MULTIVIEW\n", // SHADER_COLOR_PASS_FLAG_MULTIVIEW
-			"\n#define MOTION_VECTORS\n", // SHADER_COLOR_PASS_FLAG_MOTION_VECTORS
+			"\n#define MOTION_HectorS\n", // SHADER_COLOR_PASS_FLAG_MOTION_HectorS
 		};
 
 		for (int i = 0; i < SHADER_COLOR_PASS_FLAG_COUNT; i++) {
@@ -549,7 +549,7 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 
 			// Assign a group based on what features this pass contains.
 			ShaderGroup group = SHADER_GROUP_BASE;
-			bool advanced_group = (i & SHADER_COLOR_PASS_FLAG_SEPARATE_SPECULAR) || (i & SHADER_COLOR_PASS_FLAG_LIGHTMAP) || (i & SHADER_COLOR_PASS_FLAG_MOTION_VECTORS);
+			bool advanced_group = (i & SHADER_COLOR_PASS_FLAG_SEPARATE_SPECULAR) || (i & SHADER_COLOR_PASS_FLAG_LIGHTMAP) || (i & SHADER_COLOR_PASS_FLAG_MOTION_HectorS);
 			bool multiview_group = i & SHADER_COLOR_PASS_FLAG_MULTIVIEW;
 			if (advanced_group && multiview_group) {
 				group = SHADER_GROUP_ADVANCED_MULTIVIEW;
@@ -850,7 +850,7 @@ void fragment() {
 
 	{
 		default_vec4_xform_buffer = RD::get_singleton()->storage_buffer_create(256);
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
 		u.append_id(default_vec4_xform_buffer);

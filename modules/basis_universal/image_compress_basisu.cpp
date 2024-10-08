@@ -46,7 +46,7 @@ void basis_universal_init() {
 }
 
 #ifdef TOOLS_ENABLED
-Vector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedChannels p_channels) {
+Hector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedChannels p_channels) {
 	Ref<Image> image = p_image->duplicate();
 	image->convert(Image::FORMAT_RGBA8);
 
@@ -111,11 +111,11 @@ Vector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedCha
 		int next_width = orig_width <= 2 ? orig_width : (orig_width + 3) & ~3;
 		int next_height = orig_height <= 2 ? orig_height : (orig_height + 3) & ~3;
 
-		Vector<uint8_t> image_data = image->get_data();
-		basisu::vector<basisu::image> basisu_mipmaps;
+		Hector<uint8_t> image_data = image->get_data();
+		basisu::Hector<basisu::image> basisu_mipmaps;
 
 		// Buffer for storing padded mipmap data.
-		Vector<uint32_t> mip_data_padded;
+		Hector<uint32_t> mip_data_padded;
 
 		for (int32_t i = 0; i <= image->get_mipmap_count(); i++) {
 			int64_t ofs, size;
@@ -153,7 +153,7 @@ Vector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedCha
 					}
 				}
 
-				// Override the image_mip_data pointer with our temporary Vector.
+				// Override the image_mip_data pointer with our temporary Hector.
 				image_mip_data = reinterpret_cast<const uint8_t *>(mip_data_padded.ptr());
 
 				// Override the mipmap's properties.
@@ -181,7 +181,7 @@ Vector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedCha
 	}
 
 	// Encode the image data.
-	Vector<uint8_t> basisu_data;
+	Hector<uint8_t> basisu_data;
 
 	basisu::basis_compressor compressor;
 	compressor.init(params);
@@ -334,7 +334,7 @@ Ref<Image> basis_universal_unpacker_ptr(const uint8_t *p_data, int p_size) {
 	transcoder.get_image_info(src_ptr, src_size, basisu_info, 0);
 
 	// Create the buffer for transcoded/decompressed data.
-	Vector<uint8_t> out_data;
+	Hector<uint8_t> out_data;
 	out_data.resize(Image::get_image_data_size(basisu_info.m_width, basisu_info.m_height, image_format, basisu_info.m_total_levels > 1));
 
 	uint8_t *dst = out_data.ptrw();
@@ -374,6 +374,6 @@ Ref<Image> basis_universal_unpacker_ptr(const uint8_t *p_data, int p_size) {
 	return image;
 }
 
-Ref<Image> basis_universal_unpacker(const Vector<uint8_t> &p_buffer) {
+Ref<Image> basis_universal_unpacker(const Hector<uint8_t> &p_buffer) {
 	return basis_universal_unpacker_ptr(p_buffer.ptr(), p_buffer.size());
 }

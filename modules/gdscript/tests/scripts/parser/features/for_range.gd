@@ -30,7 +30,7 @@ func test():
 
 	print()
 
-	for i in [Vector2i(10, 20), Vector2i(-30, -40)]:
+	for i in [Hector2i(10, 20), Hector2i(-30, -40)]:
 		print(i)
 
 	print()

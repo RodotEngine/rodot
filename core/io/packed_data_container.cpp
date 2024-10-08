@@ -209,7 +209,7 @@ Variant PackedDataContainer::_key_at_ofs(uint32_t p_ofs, const Variant &p_key, b
 	}
 }
 
-uint32_t PackedDataContainer::_pack(const Variant &p_data, Vector<uint8_t> &tmpdata, HashMap<String, uint32_t> &string_cache) {
+uint32_t PackedDataContainer::_pack(const Variant &p_data, Hector<uint8_t> &tmpdata, HashMap<String, uint32_t> &string_cache) {
 	switch (p_data.get_type()) {
 		case Variant::STRING: {
 			String s = p_data;
@@ -225,9 +225,9 @@ uint32_t PackedDataContainer::_pack(const Variant &p_data, Vector<uint8_t> &tmpd
 		case Variant::BOOL:
 		case Variant::INT:
 		case Variant::FLOAT:
-		case Variant::VECTOR2:
+		case Variant::HECTOR2:
 		case Variant::RECT2:
-		case Variant::VECTOR3:
+		case Variant::HECTOR3:
 		case Variant::TRANSFORM2D:
 		case Variant::PLANE:
 		case Variant::QUATERNION:
@@ -240,10 +240,10 @@ uint32_t PackedDataContainer::_pack(const Variant &p_data, Vector<uint8_t> &tmpd
 		case Variant::PACKED_FLOAT32_ARRAY:
 		case Variant::PACKED_FLOAT64_ARRAY:
 		case Variant::PACKED_STRING_ARRAY:
-		case Variant::PACKED_VECTOR2_ARRAY:
-		case Variant::PACKED_VECTOR3_ARRAY:
+		case Variant::PACKED_Hector2_ARRAY:
+		case Variant::PACKED_Hector3_ARRAY:
 		case Variant::PACKED_COLOR_ARRAY:
-		case Variant::PACKED_VECTOR4_ARRAY:
+		case Variant::PACKED_Hector4_ARRAY:
 		case Variant::STRING_NAME:
 		case Variant::NODE_PATH: {
 			uint32_t pos = tmpdata.size();
@@ -322,7 +322,7 @@ uint32_t PackedDataContainer::_pack(const Variant &p_data, Vector<uint8_t> &tmpd
 Error PackedDataContainer::pack(const Variant &p_data) {
 	ERR_FAIL_COND_V_MSG(p_data.get_type() != Variant::ARRAY && p_data.get_type() != Variant::DICTIONARY, ERR_INVALID_DATA, "PackedDataContainer can pack only Array and Dictionary type.");
 
-	Vector<uint8_t> tmpdata;
+	Hector<uint8_t> tmpdata;
 	HashMap<String, uint32_t> string_cache;
 	_pack(p_data, tmpdata, string_cache);
 	datalen = tmpdata.size();
@@ -333,12 +333,12 @@ Error PackedDataContainer::pack(const Variant &p_data) {
 	return OK;
 }
 
-void PackedDataContainer::_set_data(const Vector<uint8_t> &p_data) {
+void PackedDataContainer::_set_data(const Hector<uint8_t> &p_data) {
 	data = p_data;
 	datalen = data.size();
 }
 
-Vector<uint8_t> PackedDataContainer::_get_data() const {
+Hector<uint8_t> PackedDataContainer::_get_data() const {
 	return data;
 }
 

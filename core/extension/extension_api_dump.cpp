@@ -159,15 +159,15 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			{ Variant::INT, sizeof(int64_t), sizeof(int64_t), sizeof(int64_t), sizeof(int64_t) },
 			{ Variant::FLOAT, sizeof(double), sizeof(double), sizeof(double), sizeof(double) },
 			{ Variant::STRING, ptrsize_32, ptrsize_64, ptrsize_32, ptrsize_64 },
-			{ Variant::VECTOR2, 2 * sizeof(float), 2 * sizeof(float), 2 * sizeof(double), 2 * sizeof(double) },
-			{ Variant::VECTOR2I, 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int32_t) },
+			{ Variant::HECTOR2, 2 * sizeof(float), 2 * sizeof(float), 2 * sizeof(double), 2 * sizeof(double) },
+			{ Variant::HECTOR2I, 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int32_t) },
 			{ Variant::RECT2, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
 			{ Variant::RECT2I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t) },
-			{ Variant::VECTOR3, vec3_elems * sizeof(float), vec3_elems * sizeof(float), vec3_elems * sizeof(double), vec3_elems * sizeof(double) },
-			{ Variant::VECTOR3I, 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int32_t) },
+			{ Variant::HECTOR3, vec3_elems * sizeof(float), vec3_elems * sizeof(float), vec3_elems * sizeof(double), vec3_elems * sizeof(double) },
+			{ Variant::HECTOR3I, 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int32_t) },
 			{ Variant::TRANSFORM2D, 6 * sizeof(float), 6 * sizeof(float), 6 * sizeof(double), 6 * sizeof(double) },
-			{ Variant::VECTOR4, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
-			{ Variant::VECTOR4I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t) },
+			{ Variant::HECTOR4, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
+			{ Variant::HECTOR4I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t) },
 			{ Variant::PLANE, (vec3_elems + 1) * sizeof(float), (vec3_elems + 1) * sizeof(float), (vec3_elems + 1) * sizeof(double), (vec3_elems + 1) * sizeof(double) },
 			{ Variant::QUATERNION, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
 			{ Variant::AABB, (vec3_elems * 2) * sizeof(float), (vec3_elems * 2) * sizeof(float), (vec3_elems * 2) * sizeof(double), (vec3_elems * 2) * sizeof(double) },
@@ -189,10 +189,10 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			{ Variant::PACKED_FLOAT32_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::PACKED_FLOAT64_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::PACKED_STRING_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
-			{ Variant::PACKED_VECTOR2_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
-			{ Variant::PACKED_VECTOR3_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
+			{ Variant::PACKED_Hector2_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
+			{ Variant::PACKED_Hector3_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::PACKED_COLOR_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
-			{ Variant::PACKED_VECTOR4_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
+			{ Variant::PACKED_Hector4_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::VARIANT_MAX, sizeof(uint64_t) + sizeof(float) * 4, sizeof(uint64_t) + sizeof(float) * 4, sizeof(uint64_t) + sizeof(double) * 4, sizeof(uint64_t) + sizeof(double) * 4 },
 		};
 
@@ -201,15 +201,15 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 		static_assert(type_size_array[Variant::INT][sizeof(void *)] == sizeof(GDExtensionInt), "Size of int mismatch");
 		static_assert(type_size_array[Variant::FLOAT][sizeof(void *)] == sizeof(double), "Size of float mismatch");
 		static_assert(type_size_array[Variant::STRING][sizeof(void *)] == sizeof(String), "Size of String mismatch");
-		static_assert(type_size_array[Variant::VECTOR2][sizeof(void *)] == sizeof(Vector2), "Size of Vector2 mismatch");
-		static_assert(type_size_array[Variant::VECTOR2I][sizeof(void *)] == sizeof(Vector2i), "Size of Vector2i mismatch");
+		static_assert(type_size_array[Variant::HECTOR2][sizeof(void *)] == sizeof(Hector2), "Size of Hector2 mismatch");
+		static_assert(type_size_array[Variant::HECTOR2I][sizeof(void *)] == sizeof(Hector2i), "Size of Hector2i mismatch");
 		static_assert(type_size_array[Variant::RECT2][sizeof(void *)] == sizeof(Rect2), "Size of Rect2 mismatch");
 		static_assert(type_size_array[Variant::RECT2I][sizeof(void *)] == sizeof(Rect2i), "Size of Rect2i mismatch");
-		static_assert(type_size_array[Variant::VECTOR3][sizeof(void *)] == sizeof(Vector3), "Size of Vector3 mismatch");
-		static_assert(type_size_array[Variant::VECTOR3I][sizeof(void *)] == sizeof(Vector3i), "Size of Vector3i mismatch");
+		static_assert(type_size_array[Variant::HECTOR3][sizeof(void *)] == sizeof(Hector3), "Size of Hector3 mismatch");
+		static_assert(type_size_array[Variant::HECTOR3I][sizeof(void *)] == sizeof(Hector3i), "Size of Hector3i mismatch");
 		static_assert(type_size_array[Variant::TRANSFORM2D][sizeof(void *)] == sizeof(Transform2D), "Size of Transform2D mismatch");
-		static_assert(type_size_array[Variant::VECTOR4][sizeof(void *)] == sizeof(Vector4), "Size of Vector4 mismatch");
-		static_assert(type_size_array[Variant::VECTOR4I][sizeof(void *)] == sizeof(Vector4i), "Size of Vector4i mismatch");
+		static_assert(type_size_array[Variant::HECTOR4][sizeof(void *)] == sizeof(Hector4), "Size of Hector4 mismatch");
+		static_assert(type_size_array[Variant::HECTOR4I][sizeof(void *)] == sizeof(Hector4i), "Size of Hector4i mismatch");
 		static_assert(type_size_array[Variant::PLANE][sizeof(void *)] == sizeof(Plane), "Size of Plane mismatch");
 		static_assert(type_size_array[Variant::QUATERNION][sizeof(void *)] == sizeof(Quaternion), "Size of Quaternion mismatch");
 		static_assert(type_size_array[Variant::AABB][sizeof(void *)] == sizeof(AABB), "Size of AABB mismatch");
@@ -231,10 +231,10 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 		static_assert(type_size_array[Variant::PACKED_FLOAT32_ARRAY][sizeof(void *)] == sizeof(PackedFloat32Array), "Size of PackedFloat32Array mismatch");
 		static_assert(type_size_array[Variant::PACKED_FLOAT64_ARRAY][sizeof(void *)] == sizeof(PackedFloat64Array), "Size of PackedFloat64Array mismatch");
 		static_assert(type_size_array[Variant::PACKED_STRING_ARRAY][sizeof(void *)] == sizeof(PackedStringArray), "Size of PackedStringArray mismatch");
-		static_assert(type_size_array[Variant::PACKED_VECTOR2_ARRAY][sizeof(void *)] == sizeof(PackedVector2Array), "Size of PackedVector2Array mismatch");
-		static_assert(type_size_array[Variant::PACKED_VECTOR3_ARRAY][sizeof(void *)] == sizeof(PackedVector3Array), "Size of PackedVector3Array mismatch");
+		static_assert(type_size_array[Variant::PACKED_Hector2_ARRAY][sizeof(void *)] == sizeof(PackedHector2Array), "Size of PackedHector2Array mismatch");
+		static_assert(type_size_array[Variant::PACKED_Hector3_ARRAY][sizeof(void *)] == sizeof(PackedHector3Array), "Size of PackedHector3Array mismatch");
 		static_assert(type_size_array[Variant::PACKED_COLOR_ARRAY][sizeof(void *)] == sizeof(PackedColorArray), "Size of PackedColorArray mismatch");
-		static_assert(type_size_array[Variant::PACKED_VECTOR4_ARRAY][sizeof(void *)] == sizeof(PackedVector4Array), "Size of PackedVector4Array mismatch");
+		static_assert(type_size_array[Variant::PACKED_Hector4_ARRAY][sizeof(void *)] == sizeof(PackedHector4Array), "Size of PackedHector4Array mismatch");
 		static_assert(type_size_array[Variant::VARIANT_MAX][sizeof(void *)] == sizeof(Variant), "Size of Variant mismatch");
 
 		Array core_type_sizes;
@@ -343,42 +343,42 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			const char *member_meta_64_bits_real_double;
 			const uint32_t member_size_64_bits_real_double;
 		} member_offset_array[] = {
-			// Vector2
-			REAL_MEMBER_OFFSET(Variant::VECTOR2, "x"),
-			REAL_MEMBER_OFFSET(Variant::VECTOR2, "y"),
-			// Vector2i
-			INT32_MEMBER_OFFSET(Variant::VECTOR2I, "x"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR2I, "y"),
+			// Hector2
+			REAL_MEMBER_OFFSET(Variant::HECTOR2, "x"),
+			REAL_MEMBER_OFFSET(Variant::HECTOR2, "y"),
+			// Hector2i
+			INT32_MEMBER_OFFSET(Variant::HECTOR2I, "x"),
+			INT32_MEMBER_OFFSET(Variant::HECTOR2I, "y"),
 			// Rect2
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2, "position", "Vector2", 2),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2, "size", "Vector2", 2),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2, "position", "Hector2", 2),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2, "size", "Hector2", 2),
 			// Rect2i
-			INT32_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "position", "Vector2i", 2),
-			INT32_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "size", "Vector2i", 2),
-			// Vector3
-			REAL_MEMBER_OFFSET(Variant::VECTOR3, "x"),
-			REAL_MEMBER_OFFSET(Variant::VECTOR3, "y"),
-			REAL_MEMBER_OFFSET(Variant::VECTOR3, "z"),
-			// Vector3i
-			INT32_MEMBER_OFFSET(Variant::VECTOR3I, "x"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR3I, "y"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR3I, "z"),
+			INT32_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "position", "Hector2i", 2),
+			INT32_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "size", "Hector2i", 2),
+			// Hector3
+			REAL_MEMBER_OFFSET(Variant::HECTOR3, "x"),
+			REAL_MEMBER_OFFSET(Variant::HECTOR3, "y"),
+			REAL_MEMBER_OFFSET(Variant::HECTOR3, "z"),
+			// Hector3i
+			INT32_MEMBER_OFFSET(Variant::HECTOR3I, "x"),
+			INT32_MEMBER_OFFSET(Variant::HECTOR3I, "y"),
+			INT32_MEMBER_OFFSET(Variant::HECTOR3I, "z"),
 			// Transform2D
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "x", "Vector2", 2),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "y", "Vector2", 2),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "origin", "Vector2", 2),
-			// Vector4
-			REAL_MEMBER_OFFSET(Variant::VECTOR4, "x"),
-			REAL_MEMBER_OFFSET(Variant::VECTOR4, "y"),
-			REAL_MEMBER_OFFSET(Variant::VECTOR4, "z"),
-			REAL_MEMBER_OFFSET(Variant::VECTOR4, "w"),
-			// Vector4i
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "x"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "y"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "z"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "w"),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "x", "Hector2", 2),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "y", "Hector2", 2),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "origin", "Hector2", 2),
+			// Hector4
+			REAL_MEMBER_OFFSET(Variant::HECTOR4, "x"),
+			REAL_MEMBER_OFFSET(Variant::HECTOR4, "y"),
+			REAL_MEMBER_OFFSET(Variant::HECTOR4, "z"),
+			REAL_MEMBER_OFFSET(Variant::HECTOR4, "w"),
+			// Hector4i
+			INT32_MEMBER_OFFSET(Variant::HECTOR4I, "x"),
+			INT32_MEMBER_OFFSET(Variant::HECTOR4I, "y"),
+			INT32_MEMBER_OFFSET(Variant::HECTOR4I, "z"),
+			INT32_MEMBER_OFFSET(Variant::HECTOR4I, "w"),
 			// Plane
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PLANE, "normal", "Vector3", vec3_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PLANE, "normal", "Hector3", vec3_elems),
 			REAL_MEMBER_OFFSET(Variant::PLANE, "d"),
 			// Quaternion
 			REAL_MEMBER_OFFSET(Variant::QUATERNION, "x"),
@@ -386,20 +386,20 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			REAL_MEMBER_OFFSET(Variant::QUATERNION, "z"),
 			REAL_MEMBER_OFFSET(Variant::QUATERNION, "w"),
 			// AABB
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::AABB, "position", "Vector3", vec3_elems),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::AABB, "size", "Vector3", vec3_elems),
-			// Basis (remember that basis vectors are flipped!)
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::BASIS, "x", "Vector3", vec3_elems),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::BASIS, "y", "Vector3", vec3_elems),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::BASIS, "z", "Vector3", vec3_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::AABB, "position", "Hector3", vec3_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::AABB, "size", "Hector3", vec3_elems),
+			// Basis (remember that basis Hectors are flipped!)
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::BASIS, "x", "Hector3", vec3_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::BASIS, "y", "Hector3", vec3_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::BASIS, "z", "Hector3", vec3_elems),
 			// Transform3D
 			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM3D, "basis", "Basis", vec3_elems * 3),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM3D, "origin", "Vector3", vec3_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM3D, "origin", "Hector3", vec3_elems),
 			// Projection
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "x", "Vector4", vec4_elems),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "y", "Vector4", vec4_elems),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "z", "Vector4", vec4_elems),
-			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "w", "Vector4", vec4_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "x", "Hector4", vec4_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "y", "Hector4", vec4_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "z", "Hector4", vec4_elems),
+			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PROJECTION, "w", "Hector4", vec4_elems),
 			// Color (always composed of 4bytes floats)
 			{ Variant::COLOR, "r", "float", sizeof(float), "float", sizeof(float), "float", sizeof(float), "float", sizeof(float) },
 			{ Variant::COLOR, "g", "float", sizeof(float), "float", sizeof(float), "float", sizeof(float), "float", sizeof(float) },
@@ -792,7 +792,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 					d2["is_static"] = Variant::is_builtin_method_static(type, method_name);
 					d2["hash"] = Variant::get_builtin_method_hash(type, method_name);
 
-					Vector<Variant> default_args = Variant::get_builtin_method_default_arguments(type, method_name);
+					Hector<Variant> default_args = Variant::get_builtin_method_default_arguments(type, method_name);
 
 					Array arguments;
 					int argcount = Variant::get_builtin_method_argument_count(type, method_name);
@@ -1085,7 +1085,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 						d2["is_virtual"] = false;
 						d2["hash"] = method->get_hash();
 
-						Vector<uint32_t> compat_hashes = ClassDB::get_method_compatibility_hashes(class_name, method_name);
+						Hector<uint32_t> compat_hashes = ClassDB::get_method_compatibility_hashes(class_name, method_name);
 						Array compatibility;
 						if (compat_hashes.size()) {
 							for (int i = 0; i < compat_hashes.size(); i++) {
@@ -1101,7 +1101,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 							d2["hash_compatibility"] = compatibility;
 						}
 
-						Vector<Variant> default_args = method->get_default_arguments();
+						Hector<Variant> default_args = method->get_default_arguments();
 
 						Array arguments;
 						for (int i = (method->has_return() ? -1 : 0); i < method->get_argument_count(); i++) {
@@ -1357,7 +1357,7 @@ static bool compare_value(const String &p_path, const String &p_field, const Var
 	return !failed;
 }
 
-static bool compare_dict_array(const Dictionary &p_old_api, const Dictionary &p_new_api, const String &p_base_array, const String &p_name_field, const Vector<String> &p_fields_to_compare, bool p_compare_hashes, const String &p_outer_class = String(), bool p_compare_operators = false, bool p_compare_enum_value = false) {
+static bool compare_dict_array(const Dictionary &p_old_api, const Dictionary &p_new_api, const String &p_base_array, const String &p_name_field, const Hector<String> &p_fields_to_compare, bool p_compare_hashes, const String &p_outer_class = String(), bool p_compare_operators = false, bool p_compare_enum_value = false) {
 	String base_array = p_outer_class + p_base_array;
 	if (!p_old_api.has(p_base_array)) {
 		return true; // May just not have this array and its still good. Probably added recently.
@@ -1510,7 +1510,7 @@ static bool compare_dict_array(const Dictionary &p_old_api, const Dictionary &p_
 	return !failed;
 }
 
-static bool compare_sub_dict_array(HashSet<String> &r_removed_classes_registered, const String &p_outer, const String &p_outer_name, const Dictionary &p_old_api, const Dictionary &p_new_api, const String &p_base_array, const String &p_name_field, const Vector<String> &p_fields_to_compare, bool p_compare_hashes, bool p_compare_operators = false) {
+static bool compare_sub_dict_array(HashSet<String> &r_removed_classes_registered, const String &p_outer, const String &p_outer_name, const Dictionary &p_old_api, const Dictionary &p_new_api, const String &p_base_array, const String &p_name_field, const Hector<String> &p_fields_to_compare, bool p_compare_hashes, bool p_compare_operators = false) {
 	if (!p_old_api.has(p_outer)) {
 		return true; // May just not have this array and its still good. Probably added recently or optional.
 	}
@@ -1588,15 +1588,15 @@ Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 
 	HashSet<String> removed_classes_registered;
 
-	if (!compare_dict_array(old_api, new_api, "global_constants", "name", Vector<String>({ "value", "is_bitfield" }), false)) {
+	if (!compare_dict_array(old_api, new_api, "global_constants", "name", Hector<String>({ "value", "is_bitfield" }), false)) {
 		failed = true;
 	}
 
-	if (!compare_dict_array(old_api, new_api, "global_enums", "name", Vector<String>({ "$values", "is_bitfield" }), false)) {
+	if (!compare_dict_array(old_api, new_api, "global_enums", "name", Hector<String>({ "$values", "is_bitfield" }), false)) {
 		failed = true;
 	}
 
-	if (!compare_dict_array(old_api, new_api, "utility_functions", "name", Vector<String>({ "category", "is_vararg", "*return_type", "*@arguments" }), true)) {
+	if (!compare_dict_array(old_api, new_api, "utility_functions", "name", Hector<String>({ "category", "is_vararg", "*return_type", "*@arguments" }), true)) {
 		failed = true;
 	}
 
@@ -1640,11 +1640,11 @@ Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 		failed = true;
 	}
 
-	if (!compare_dict_array(old_api, new_api, "singletons", "name", Vector<String>({ "type" }), false)) {
+	if (!compare_dict_array(old_api, new_api, "singletons", "name", Hector<String>({ "type" }), false)) {
 		failed = true;
 	}
 
-	if (!compare_dict_array(old_api, new_api, "native_structures", "name", Vector<String>({ "format" }), false)) {
+	if (!compare_dict_array(old_api, new_api, "native_structures", "name", Hector<String>({ "format" }), false)) {
 		failed = true;
 	}
 

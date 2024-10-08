@@ -45,7 +45,7 @@ private:
 	int discover_local_port = 0;
 	bool discover_ipv6 = false;
 
-	Vector<Ref<UPNPDevice>> devices;
+	Hector<Ref<UPNPDevice>> devices;
 
 	bool is_common_device(const String &dev) const;
 	void add_device_to_list(UPNPDev *dev, UPNPDev *devlist);

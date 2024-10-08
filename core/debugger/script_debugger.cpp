@@ -35,7 +35,7 @@
 thread_local int ScriptDebugger::lines_left = -1;
 thread_local int ScriptDebugger::depth = -1;
 thread_local ScriptLanguage *ScriptDebugger::break_lang = nullptr;
-thread_local Vector<ScriptDebugger::StackInfo> ScriptDebugger::error_stack_info;
+thread_local Hector<ScriptDebugger::StackInfo> ScriptDebugger::error_stack_info;
 
 void ScriptDebugger::set_lines_left(int p_left) {
 	lines_left = p_left;
@@ -86,14 +86,14 @@ void ScriptDebugger::debug(ScriptLanguage *p_lang, bool p_can_continue, bool p_i
 	break_lang = prev;
 }
 
-void ScriptDebugger::send_error(const String &p_func, const String &p_file, int p_line, const String &p_err, const String &p_descr, bool p_editor_notify, ErrorHandlerType p_type, const Vector<StackInfo> &p_stack_info) {
+void ScriptDebugger::send_error(const String &p_func, const String &p_file, int p_line, const String &p_err, const String &p_descr, bool p_editor_notify, ErrorHandlerType p_type, const Hector<StackInfo> &p_stack_info) {
 	// Store stack info, this is ugly, but allows us to separate EngineDebugger and ScriptDebugger. There might be a better way.
 	error_stack_info.append_array(p_stack_info);
 	EngineDebugger::get_singleton()->send_error(p_func, p_file, p_line, p_err, p_descr, p_editor_notify, p_type);
 	error_stack_info.clear(); // Clear because this is thread local
 }
 
-Vector<ScriptLanguage::StackInfo> ScriptDebugger::get_error_stack_info() const {
+Hector<ScriptLanguage::StackInfo> ScriptDebugger::get_error_stack_info() const {
 	return error_stack_info;
 }
 

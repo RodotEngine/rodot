@@ -241,11 +241,11 @@ AudioStreamPlaybackPolyphonic::ID AudioStreamPlaybackPolyphonic::play_stream(con
 				sp.instantiate();
 				sp->stream = streams[i].stream;
 				sp->offset = p_from_offset;
-				sp->volume_vector.resize(4);
-				sp->volume_vector.write[0] = AudioFrame(linear_volume, linear_volume);
-				sp->volume_vector.write[1] = AudioFrame(linear_volume, /* LFE= */ 1.0f);
-				sp->volume_vector.write[2] = AudioFrame(linear_volume, linear_volume);
-				sp->volume_vector.write[3] = AudioFrame(linear_volume, linear_volume);
+				sp->volume_Hector.resize(4);
+				sp->volume_Hector.write[0] = AudioFrame(linear_volume, linear_volume);
+				sp->volume_Hector.write[1] = AudioFrame(linear_volume, /* LFE= */ 1.0f);
+				sp->volume_Hector.write[2] = AudioFrame(linear_volume, linear_volume);
+				sp->volume_Hector.write[3] = AudioFrame(linear_volume, linear_volume);
 				sp->bus = p_bus;
 
 				if (streams[i].stream_playback->get_sample_playback().is_valid()) {

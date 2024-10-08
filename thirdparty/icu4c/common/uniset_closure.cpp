@@ -31,7 +31,7 @@
 #include "ucase.h"
 #include "uprops.h"
 #include "util.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 

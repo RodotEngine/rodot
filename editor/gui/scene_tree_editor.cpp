@@ -1236,7 +1236,7 @@ void SceneTreeEditor::set_display_foreign_nodes(bool p_display) {
 	_update_tree();
 }
 
-void SceneTreeEditor::set_valid_types(const Vector<StringName> &p_valid) {
+void SceneTreeEditor::set_valid_types(const Hector<StringName> &p_valid) {
 	valid_types = p_valid;
 }
 
@@ -1327,8 +1327,8 @@ Variant SceneTreeEditor::get_drag_data_fw(const Point2 &p_point, Control *p_from
 		return Variant(); //dragging from button
 	}
 
-	Vector<Node *> selected_nodes;
-	Vector<Ref<Texture2D>> icons;
+	Hector<Node *> selected_nodes;
+	Hector<Ref<Texture2D>> icons;
 	TreeItem *next = tree->get_next_selected(nullptr);
 	while (next) {
 		NodePath np = next->get_metadata(0);
@@ -1407,7 +1407,7 @@ bool SceneTreeEditor::can_drop_data_fw(const Point2 &p_point, const Variant &p_d
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		if (files.size() == 0) {
 			return false; //weird
@@ -1508,7 +1508,7 @@ void SceneTreeEditor::drop_data_fw(const Point2 &p_point, const Variant &p_data,
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		String ftype = EditorFileSystem::get_singleton()->get_file_type(files[0]);
 		if (_is_script_type(ftype)) {
@@ -1529,14 +1529,14 @@ void SceneTreeEditor::drop_data_fw(const Point2 &p_point, const Variant &p_data,
 	}
 }
 
-void SceneTreeEditor::_empty_clicked(const Vector2 &p_pos, MouseButton p_button) {
+void SceneTreeEditor::_empty_clicked(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
 	_rmb_select(p_pos);
 }
 
-void SceneTreeEditor::_rmb_select(const Vector2 &p_pos, MouseButton p_button) {
+void SceneTreeEditor::_rmb_select(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
@@ -1582,7 +1582,7 @@ void SceneTreeEditor::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("nodes_rearranged", PropertyInfo(Variant::ARRAY, "paths"), PropertyInfo(Variant::NODE_PATH, "to_path"), PropertyInfo(Variant::INT, "type")));
 	ADD_SIGNAL(MethodInfo("files_dropped", PropertyInfo(Variant::PACKED_STRING_ARRAY, "files"), PropertyInfo(Variant::NODE_PATH, "to_path"), PropertyInfo(Variant::INT, "type")));
 	ADD_SIGNAL(MethodInfo("script_dropped", PropertyInfo(Variant::STRING, "file"), PropertyInfo(Variant::NODE_PATH, "to_path")));
-	ADD_SIGNAL(MethodInfo("rmb_pressed", PropertyInfo(Variant::VECTOR2, "position")));
+	ADD_SIGNAL(MethodInfo("rmb_pressed", PropertyInfo(Variant::HECTOR2, "position")));
 
 	ADD_SIGNAL(MethodInfo("open"));
 	ADD_SIGNAL(MethodInfo("open_script"));
@@ -1683,7 +1683,7 @@ void SceneTreeDialog::_show_all_nodes_changed(bool p_button_pressed) {
 	tree->set_show_all_nodes(p_button_pressed);
 }
 
-void SceneTreeDialog::set_valid_types(const Vector<StringName> &p_valid) {
+void SceneTreeDialog::set_valid_types(const Hector<StringName> &p_valid) {
 	if (p_valid.is_empty()) {
 		return;
 	}
@@ -1755,7 +1755,7 @@ void SceneTreeDialog::_notification(int p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
 			filter->set_right_icon(get_editor_theme_icon(SNAME("Search")));
 			for (TextureRect *trect : valid_type_icons) {
-				trect->set_custom_minimum_size(Vector2(get_theme_constant(SNAME("class_icon_size"), EditorStringName(Editor)), 0));
+				trect->set_custom_minimum_size(Hector2(get_theme_constant(SNAME("class_icon_size"), EditorStringName(Editor)), 0));
 				trect->set_texture(trect->get_meta("icon"));
 			}
 		} break;

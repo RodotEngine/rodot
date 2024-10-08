@@ -41,8 +41,8 @@ class NavigationLink3D : public Node3D {
 	RID map_override;
 	bool bidirectional = true;
 	uint32_t navigation_layers = 1;
-	Vector3 end_position;
-	Vector3 start_position;
+	Hector3 end_position;
+	Hector3 start_position;
 	real_t enter_cost = 0.0;
 	real_t travel_cost = 1.0;
 
@@ -85,17 +85,17 @@ public:
 	void set_navigation_layer_value(int p_layer_number, bool p_value);
 	bool get_navigation_layer_value(int p_layer_number) const;
 
-	void set_start_position(Vector3 p_position);
-	Vector3 get_start_position() const { return start_position; }
+	void set_start_position(Hector3 p_position);
+	Hector3 get_start_position() const { return start_position; }
 
-	void set_end_position(Vector3 p_position);
-	Vector3 get_end_position() const { return end_position; }
+	void set_end_position(Hector3 p_position);
+	Hector3 get_end_position() const { return end_position; }
 
-	void set_global_start_position(Vector3 p_position);
-	Vector3 get_global_start_position() const;
+	void set_global_start_position(Hector3 p_position);
+	Hector3 get_global_start_position() const;
 
-	void set_global_end_position(Vector3 p_position);
-	Vector3 get_global_end_position() const;
+	void set_global_end_position(Hector3 p_position);
+	Hector3 get_global_end_position() const;
 
 	void set_enter_cost(real_t p_enter_cost);
 	real_t get_enter_cost() const { return enter_cost; }

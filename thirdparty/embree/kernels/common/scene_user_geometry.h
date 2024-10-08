@@ -46,7 +46,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfo createPrimRefArrayMB(mvector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const
+      PrimInfo createPrimRefArrayMB(mHector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const
       {
         PrimInfo pinfo(empty);
         for (size_t j=r.begin(); j<r.end(); j++)
@@ -77,7 +77,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfoMB createPrimRefMBArray(mvector<PrimRefMB>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const
+      PrimInfoMB createPrimRefMBArray(mHector<PrimRefMB>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const
       {
         PrimInfoMB pinfo(empty);
         for (size_t j=r.begin(); j<r.end(); j++)

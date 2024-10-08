@@ -159,7 +159,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 		} else if (what == "keys" || what == "key_values") {
 			if (track_get_type(track) == TYPE_POSITION_3D) {
 				PositionTrack *tt = static_cast<PositionTrack *>(tracks[track]);
-				Vector<real_t> values = p_value;
+				Hector<real_t> values = p_value;
 				int vcount = values.size();
 				ERR_FAIL_COND_V(vcount % POSITION_TRACK_SIZE, false);
 
@@ -168,9 +168,9 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				int64_t count = vcount / POSITION_TRACK_SIZE;
 				tt->positions.resize(count);
 
-				TKey<Vector3> *tw = tt->positions.ptrw();
+				TKey<Hector3> *tw = tt->positions.ptrw();
 				for (int i = 0; i < count; i++) {
-					TKey<Vector3> &tk = tw[i];
+					TKey<Hector3> &tk = tw[i];
 					const real_t *ofs = &r[i * POSITION_TRACK_SIZE];
 					tk.time = ofs[0];
 					tk.transition = ofs[1];
@@ -181,7 +181,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				}
 			} else if (track_get_type(track) == TYPE_ROTATION_3D) {
 				RotationTrack *rt = static_cast<RotationTrack *>(tracks[track]);
-				Vector<real_t> values = p_value;
+				Hector<real_t> values = p_value;
 				int vcount = values.size();
 				ERR_FAIL_COND_V(vcount % ROTATION_TRACK_SIZE, false);
 
@@ -204,7 +204,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				}
 			} else if (track_get_type(track) == TYPE_SCALE_3D) {
 				ScaleTrack *st = static_cast<ScaleTrack *>(tracks[track]);
-				Vector<real_t> values = p_value;
+				Hector<real_t> values = p_value;
 				int vcount = values.size();
 				ERR_FAIL_COND_V(vcount % SCALE_TRACK_SIZE, false);
 
@@ -213,9 +213,9 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				int64_t count = vcount / SCALE_TRACK_SIZE;
 				st->scales.resize(count);
 
-				TKey<Vector3> *sw = st->scales.ptrw();
+				TKey<Hector3> *sw = st->scales.ptrw();
 				for (int i = 0; i < count; i++) {
-					TKey<Vector3> &sk = sw[i];
+					TKey<Hector3> &sk = sw[i];
 					const real_t *ofs = &r[i * SCALE_TRACK_SIZE];
 					sk.time = ofs[0];
 					sk.transition = ofs[1];
@@ -226,7 +226,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				}
 			} else if (track_get_type(track) == TYPE_BLEND_SHAPE) {
 				BlendShapeTrack *st = static_cast<BlendShapeTrack *>(tracks[track]);
-				Vector<real_t> values = p_value;
+				Hector<real_t> values = p_value;
 				int vcount = values.size();
 				ERR_FAIL_COND_V(vcount % BLEND_SHAPE_TRACK_SIZE, false);
 
@@ -265,7 +265,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				}
 				capture_included = capture_included || (vt->update_mode == UPDATE_CAPTURE);
 
-				Vector<real_t> times = d["times"];
+				Hector<real_t> times = d["times"];
 				Array values = d["values"];
 
 				ERR_FAIL_COND_V(times.size() != values.size(), false);
@@ -283,7 +283,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 					}
 
 					if (d.has("transitions")) {
-						Vector<real_t> transitions = d["transitions"];
+						Hector<real_t> transitions = d["transitions"];
 						ERR_FAIL_COND_V(transitions.size() != valcount, false);
 
 						const real_t *rtr = transitions.ptr();
@@ -305,7 +305,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				ERR_FAIL_COND_V(!d.has("times"), false);
 				ERR_FAIL_COND_V(!d.has("values"), false);
 
-				Vector<real_t> times = d["times"];
+				Hector<real_t> times = d["times"];
 				Array values = d["values"];
 
 				ERR_FAIL_COND_V(times.size() != values.size(), false);
@@ -320,7 +320,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 					}
 
 					if (d.has("transitions")) {
-						Vector<real_t> transitions = d["transitions"];
+						Hector<real_t> transitions = d["transitions"];
 						ERR_FAIL_COND_V(transitions.size() != valcount, false);
 
 						const real_t *rtr = transitions.ptr();
@@ -335,10 +335,10 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				Dictionary d = p_value;
 				ERR_FAIL_COND_V(!d.has("times"), false);
 				ERR_FAIL_COND_V(!d.has("points"), false);
-				Vector<real_t> times = d["times"];
-				Vector<real_t> values = d["points"];
+				Hector<real_t> times = d["times"];
+				Hector<real_t> values = d["points"];
 #ifdef TOOLS_ENABLED
-				Vector<int> handle_modes;
+				Hector<int> handle_modes;
 				if (d.has("handle_modes")) {
 					handle_modes = d["handle_modes"];
 				} else {
@@ -380,7 +380,7 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				ERR_FAIL_COND_V(!d.has("times"), false);
 				ERR_FAIL_COND_V(!d.has("clips"), false);
 
-				Vector<real_t> times = d["times"];
+				Hector<real_t> times = d["times"];
 				Array clips = d["clips"];
 
 				ERR_FAIL_COND_V(clips.size() != times.size(), false);
@@ -421,8 +421,8 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				ERR_FAIL_COND_V(!d.has("times"), false);
 				ERR_FAIL_COND_V(!d.has("clips"), false);
 
-				Vector<real_t> times = d["times"];
-				Vector<String> clips = d["clips"];
+				Hector<real_t> times = d["times"];
+				Hector<String> clips = d["clips"];
 
 				ERR_FAIL_COND_V(clips.size() != times.size(), false);
 
@@ -585,7 +585,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 			r_ret = track_is_enabled(track);
 		} else if (what == "keys") {
 			if (track_get_type(track) == TYPE_POSITION_3D) {
-				Vector<real_t> keys;
+				Hector<real_t> keys;
 				int kk = track_get_key_count(track);
 				keys.resize(kk * POSITION_TRACK_SIZE);
 
@@ -593,7 +593,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 				int idx = 0;
 				for (int i = 0; i < track_get_key_count(track); i++) {
-					Vector3 loc;
+					Hector3 loc;
 					position_track_get_key(track, i, &loc);
 
 					w[idx++] = track_get_key_time(track, i);
@@ -606,7 +606,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 				r_ret = keys;
 				return true;
 			} else if (track_get_type(track) == TYPE_ROTATION_3D) {
-				Vector<real_t> keys;
+				Hector<real_t> keys;
 				int kk = track_get_key_count(track);
 				keys.resize(kk * ROTATION_TRACK_SIZE);
 
@@ -629,7 +629,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 				return true;
 
 			} else if (track_get_type(track) == TYPE_SCALE_3D) {
-				Vector<real_t> keys;
+				Hector<real_t> keys;
 				int kk = track_get_key_count(track);
 				keys.resize(kk * SCALE_TRACK_SIZE);
 
@@ -637,7 +637,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 				int idx = 0;
 				for (int i = 0; i < track_get_key_count(track); i++) {
-					Vector3 scale;
+					Hector3 scale;
 					scale_track_get_key(track, i, &scale);
 
 					w[idx++] = track_get_key_time(track, i);
@@ -650,7 +650,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 				r_ret = keys;
 				return true;
 			} else if (track_get_type(track) == TYPE_BLEND_SHAPE) {
-				Vector<real_t> keys;
+				Hector<real_t> keys;
 				int kk = track_get_key_count(track);
 				keys.resize(kk * BLEND_SHAPE_TRACK_SIZE);
 
@@ -673,8 +673,8 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 				Dictionary d;
 
-				Vector<real_t> key_times;
-				Vector<real_t> key_transitions;
+				Hector<real_t> key_times;
+				Hector<real_t> key_transitions;
 				Array key_values;
 
 				int kk = vt->values.size();
@@ -711,8 +711,8 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 			} else if (track_get_type(track) == TYPE_METHOD) {
 				Dictionary d;
 
-				Vector<real_t> key_times;
-				Vector<real_t> key_transitions;
+				Hector<real_t> key_times;
+				Hector<real_t> key_transitions;
 				Array key_values;
 
 				int kk = track_get_key_count(track);
@@ -747,8 +747,8 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 				Dictionary d;
 
-				Vector<real_t> key_times;
-				Vector<real_t> key_points;
+				Hector<real_t> key_times;
+				Hector<real_t> key_points;
 
 				int kk = bt->values.size();
 
@@ -759,7 +759,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 				real_t *wpo = key_points.ptrw();
 
 #ifdef TOOLS_ENABLED
-				Vector<int> handle_modes;
+				Hector<int> handle_modes;
 				handle_modes.resize(kk);
 				int *whm = handle_modes.ptrw();
 #endif // TOOLS_ENABLED
@@ -795,7 +795,7 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 				Dictionary d;
 
-				Vector<real_t> key_times;
+				Hector<real_t> key_times;
 				Array clips;
 
 				int kk = ad->values.size();
@@ -829,8 +829,8 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 				Dictionary d;
 
-				Vector<real_t> key_times;
-				Vector<String> clips;
+				Hector<real_t> key_times;
+				Hector<String> clips;
 
 				int kk = an->values.size();
 
@@ -1117,7 +1117,7 @@ int Animation::_insert(double p_time, T &p_keys, const V &p_value) {
 	return -1;
 }
 
-int Animation::_marker_insert(double p_time, Vector<MarkerKey> &p_keys, const MarkerKey &p_value) {
+int Animation::_marker_insert(double p_time, Hector<MarkerKey> &p_keys, const MarkerKey &p_value) {
 	int idx = p_keys.size();
 
 	while (true) {
@@ -1145,7 +1145,7 @@ void Animation::_clear(T &p_keys) {
 
 ////
 
-int Animation::position_track_insert_key(int p_track, double p_time, const Vector3 &p_position) {
+int Animation::position_track_insert_key(int p_track, double p_time, const Hector3 &p_position) {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), -1);
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, -1);
@@ -1154,7 +1154,7 @@ int Animation::position_track_insert_key(int p_track, double p_time, const Vecto
 
 	ERR_FAIL_COND_V(tt->compressed_track >= 0, -1);
 
-	TKey<Vector3> tkey;
+	TKey<Hector3> tkey;
 	tkey.time = p_time;
 	tkey.value = p_position;
 
@@ -1163,7 +1163,7 @@ int Animation::position_track_insert_key(int p_track, double p_time, const Vecto
 	return ret;
 }
 
-Error Animation::position_track_get_key(int p_track, int p_key, Vector3 *r_position) const {
+Error Animation::position_track_get_key(int p_track, int p_key, Hector3 *r_position) const {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 
@@ -1171,7 +1171,7 @@ Error Animation::position_track_get_key(int p_track, int p_key, Vector3 *r_posit
 	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, ERR_INVALID_PARAMETER);
 
 	if (tt->compressed_track >= 0) {
-		Vector3i key;
+		Hector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<3>(tt->compressed_track, p_key, key, time);
 		if (!fetch_success) {
@@ -1189,7 +1189,7 @@ Error Animation::position_track_get_key(int p_track, int p_key, Vector3 *r_posit
 	return OK;
 }
 
-Error Animation::try_position_track_interpolate(int p_track, double p_time, Vector3 *r_interpolation, bool p_backward) const {
+Error Animation::try_position_track_interpolate(int p_track, double p_time, Hector3 *r_interpolation, bool p_backward) const {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, ERR_INVALID_PARAMETER);
@@ -1206,7 +1206,7 @@ Error Animation::try_position_track_interpolate(int p_track, double p_time, Vect
 
 	bool ok = false;
 
-	Vector3 tk = _interpolate(tt->positions, p_time, tt->interpolation, tt->loop_wrap, &ok, p_backward);
+	Hector3 tk = _interpolate(tt->positions, p_time, tt->interpolation, tt->loop_wrap, &ok, p_backward);
 
 	if (!ok) {
 		return ERR_UNAVAILABLE;
@@ -1215,8 +1215,8 @@ Error Animation::try_position_track_interpolate(int p_track, double p_time, Vect
 	return OK;
 }
 
-Vector3 Animation::position_track_interpolate(int p_track, double p_time, bool p_backward) const {
-	Vector3 ret = Vector3(0, 0, 0);
+Hector3 Animation::position_track_interpolate(int p_track, double p_time, bool p_backward) const {
+	Hector3 ret = Hector3(0, 0, 0);
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ret);
 	bool err = try_position_track_interpolate(p_track, p_time, &ret, p_backward);
 	ERR_FAIL_COND_V_MSG(err, ret, "3D Position Track: '" + tracks[p_track]->path + "' is unavailable.");
@@ -1251,7 +1251,7 @@ Error Animation::rotation_track_get_key(int p_track, int p_key, Quaternion *r_ro
 	ERR_FAIL_COND_V(t->type != TYPE_ROTATION_3D, ERR_INVALID_PARAMETER);
 
 	if (rt->compressed_track >= 0) {
-		Vector3i key;
+		Hector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<3>(rt->compressed_track, p_key, key, time);
 		if (!fetch_success) {
@@ -1305,7 +1305,7 @@ Quaternion Animation::rotation_track_interpolate(int p_track, double p_time, boo
 
 ////
 
-int Animation::scale_track_insert_key(int p_track, double p_time, const Vector3 &p_scale) {
+int Animation::scale_track_insert_key(int p_track, double p_time, const Hector3 &p_scale) {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), -1);
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, -1);
@@ -1314,7 +1314,7 @@ int Animation::scale_track_insert_key(int p_track, double p_time, const Vector3 
 
 	ERR_FAIL_COND_V(st->compressed_track >= 0, -1);
 
-	TKey<Vector3> tkey;
+	TKey<Hector3> tkey;
 	tkey.time = p_time;
 	tkey.value = p_scale;
 
@@ -1323,7 +1323,7 @@ int Animation::scale_track_insert_key(int p_track, double p_time, const Vector3 
 	return ret;
 }
 
-Error Animation::scale_track_get_key(int p_track, int p_key, Vector3 *r_scale) const {
+Error Animation::scale_track_get_key(int p_track, int p_key, Hector3 *r_scale) const {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 
@@ -1331,7 +1331,7 @@ Error Animation::scale_track_get_key(int p_track, int p_key, Vector3 *r_scale) c
 	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, ERR_INVALID_PARAMETER);
 
 	if (st->compressed_track >= 0) {
-		Vector3i key;
+		Hector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<3>(st->compressed_track, p_key, key, time);
 		if (!fetch_success) {
@@ -1349,7 +1349,7 @@ Error Animation::scale_track_get_key(int p_track, int p_key, Vector3 *r_scale) c
 	return OK;
 }
 
-Error Animation::try_scale_track_interpolate(int p_track, double p_time, Vector3 *r_interpolation, bool p_backward) const {
+Error Animation::try_scale_track_interpolate(int p_track, double p_time, Hector3 *r_interpolation, bool p_backward) const {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, ERR_INVALID_PARAMETER);
@@ -1366,7 +1366,7 @@ Error Animation::try_scale_track_interpolate(int p_track, double p_time, Vector3
 
 	bool ok = false;
 
-	Vector3 tk = _interpolate(st->scales, p_time, st->interpolation, st->loop_wrap, &ok, p_backward);
+	Hector3 tk = _interpolate(st->scales, p_time, st->interpolation, st->loop_wrap, &ok, p_backward);
 
 	if (!ok) {
 		return ERR_UNAVAILABLE;
@@ -1375,8 +1375,8 @@ Error Animation::try_scale_track_interpolate(int p_track, double p_time, Vector3
 	return OK;
 }
 
-Vector3 Animation::scale_track_interpolate(int p_track, double p_time, bool p_backward) const {
-	Vector3 ret = Vector3(1, 1, 1);
+Hector3 Animation::scale_track_interpolate(int p_track, double p_time, bool p_backward) const {
+	Hector3 ret = Hector3(1, 1, 1);
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ret);
 	bool err = try_scale_track_interpolate(p_track, p_time, &ret, p_backward);
 	ERR_FAIL_COND_V_MSG(err, ret, "3D Scale Track: '" + tracks[p_track]->path + "' is unavailable.");
@@ -1411,7 +1411,7 @@ Error Animation::blend_shape_track_get_key(int p_track, int p_key, float *r_blen
 	ERR_FAIL_COND_V(t->type != TYPE_BLEND_SHAPE, ERR_INVALID_PARAMETER);
 
 	if (bst->compressed_track >= 0) {
-		Vector3i key;
+		Hector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<1>(bst->compressed_track, p_key, key, time);
 		if (!fetch_success) {
@@ -1558,8 +1558,8 @@ int Animation::track_find_key(int p_track, double p_time, FindMode p_find_mode, 
 			if (tt->compressed_track >= 0) {
 				double time;
 				double time_next;
-				Vector3i key;
-				Vector3i key_next;
+				Hector3i key;
+				Hector3i key_next;
 				uint32_t key_index;
 				bool fetch_compressed_success = _fetch_compressed<3>(tt->compressed_track, p_time, key, time, key_next, time_next, &key_index);
 				ERR_FAIL_COND_V(!fetch_compressed_success, -1);
@@ -1585,8 +1585,8 @@ int Animation::track_find_key(int p_track, double p_time, FindMode p_find_mode, 
 			if (rt->compressed_track >= 0) {
 				double time;
 				double time_next;
-				Vector3i key;
-				Vector3i key_next;
+				Hector3i key;
+				Hector3i key_next;
 				uint32_t key_index;
 				bool fetch_compressed_success = _fetch_compressed<3>(rt->compressed_track, p_time, key, time, key_next, time_next, &key_index);
 				ERR_FAIL_COND_V(!fetch_compressed_success, -1);
@@ -1612,8 +1612,8 @@ int Animation::track_find_key(int p_track, double p_time, FindMode p_find_mode, 
 			if (st->compressed_track >= 0) {
 				double time;
 				double time_next;
-				Vector3i key;
-				Vector3i key_next;
+				Hector3i key;
+				Hector3i key_next;
 				uint32_t key_index;
 				bool fetch_compressed_success = _fetch_compressed<3>(st->compressed_track, p_time, key, time, key_next, time_next, &key_index);
 				ERR_FAIL_COND_V(!fetch_compressed_success, -1);
@@ -1639,8 +1639,8 @@ int Animation::track_find_key(int p_track, double p_time, FindMode p_find_mode, 
 			if (bst->compressed_track >= 0) {
 				double time;
 				double time_next;
-				Vector3i key;
-				Vector3i key_next;
+				Hector3i key;
+				Hector3i key_next;
 				uint32_t key_index;
 				bool fetch_compressed_success = _fetch_compressed<1>(bst->compressed_track, p_time, key, time, key_next, time_next, &key_index);
 				ERR_FAIL_COND_V(!fetch_compressed_success, -1);
@@ -1733,7 +1733,7 @@ int Animation::track_insert_key(int p_track, double p_time, const Variant &p_key
 
 	switch (t->type) {
 		case TYPE_POSITION_3D: {
-			ERR_FAIL_COND_V((p_key.get_type() != Variant::VECTOR3) && (p_key.get_type() != Variant::VECTOR3I), -1);
+			ERR_FAIL_COND_V((p_key.get_type() != Variant::HECTOR3) && (p_key.get_type() != Variant::HECTOR3I), -1);
 			ret = position_track_insert_key(p_track, p_time, p_key);
 			track_set_key_transition(p_track, ret, p_transition);
 
@@ -1745,7 +1745,7 @@ int Animation::track_insert_key(int p_track, double p_time, const Variant &p_key
 
 		} break;
 		case TYPE_SCALE_3D: {
-			ERR_FAIL_COND_V((p_key.get_type() != Variant::VECTOR3) && (p_key.get_type() != Variant::VECTOR3I), -1);
+			ERR_FAIL_COND_V((p_key.get_type() != Variant::HECTOR3) && (p_key.get_type() != Variant::HECTOR3I), -1);
 			ret = scale_track_insert_key(p_track, p_time, p_key);
 			track_set_key_transition(p_track, ret, p_transition);
 
@@ -1800,7 +1800,7 @@ int Animation::track_insert_key(int p_track, double p_time, const Variant &p_key
 			k.value.out_handle.y = arr[4];
 			ret = _insert(p_time, bt->values, k);
 
-			Vector<int> key_neighborhood;
+			Hector<int> key_neighborhood;
 			key_neighborhood.push_back(ret);
 			if (ret > 0) {
 				key_neighborhood.push_back(ret - 1);
@@ -1907,7 +1907,7 @@ Variant Animation::track_get_key_value(int p_track, int p_key_idx) const {
 
 	switch (t->type) {
 		case TYPE_POSITION_3D: {
-			Vector3 value;
+			Hector3 value;
 			position_track_get_key(p_track, p_key_idx, &value);
 			return value;
 		} break;
@@ -1917,7 +1917,7 @@ Variant Animation::track_get_key_value(int p_track, int p_key_idx) const {
 			return value;
 		} break;
 		case TYPE_SCALE_3D: {
-			Vector3 value;
+			Hector3 value;
 			scale_track_get_key(p_track, p_key_idx, &value);
 			return value;
 		} break;
@@ -1986,7 +1986,7 @@ double Animation::track_get_key_time(int p_track, int p_key_idx) const {
 		case TYPE_POSITION_3D: {
 			PositionTrack *tt = static_cast<PositionTrack *>(t);
 			if (tt->compressed_track >= 0) {
-				Vector3i value;
+				Hector3i value;
 				double time;
 				bool fetch_compressed_success = _fetch_compressed_by_index<3>(tt->compressed_track, p_key_idx, value, time);
 				ERR_FAIL_COND_V(!fetch_compressed_success, false);
@@ -1998,7 +1998,7 @@ double Animation::track_get_key_time(int p_track, int p_key_idx) const {
 		case TYPE_ROTATION_3D: {
 			RotationTrack *rt = static_cast<RotationTrack *>(t);
 			if (rt->compressed_track >= 0) {
-				Vector3i value;
+				Hector3i value;
 				double time;
 				bool fetch_compressed_success = _fetch_compressed_by_index<3>(rt->compressed_track, p_key_idx, value, time);
 				ERR_FAIL_COND_V(!fetch_compressed_success, false);
@@ -2010,7 +2010,7 @@ double Animation::track_get_key_time(int p_track, int p_key_idx) const {
 		case TYPE_SCALE_3D: {
 			ScaleTrack *st = static_cast<ScaleTrack *>(t);
 			if (st->compressed_track >= 0) {
-				Vector3i value;
+				Hector3i value;
 				double time;
 				bool fetch_compressed_success = _fetch_compressed_by_index<3>(st->compressed_track, p_key_idx, value, time);
 				ERR_FAIL_COND_V(!fetch_compressed_success, false);
@@ -2022,7 +2022,7 @@ double Animation::track_get_key_time(int p_track, int p_key_idx) const {
 		case TYPE_BLEND_SHAPE: {
 			BlendShapeTrack *bst = static_cast<BlendShapeTrack *>(t);
 			if (bst->compressed_track >= 0) {
-				Vector3i value;
+				Hector3i value;
 				double time;
 				bool fetch_compressed_success = _fetch_compressed_by_index<1>(bst->compressed_track, p_key_idx, value, time);
 				ERR_FAIL_COND_V(!fetch_compressed_success, false);
@@ -2075,7 +2075,7 @@ void Animation::track_set_key_time(int p_track, int p_key_idx, double p_time) {
 			PositionTrack *tt = static_cast<PositionTrack *>(t);
 			ERR_FAIL_COND(tt->compressed_track >= 0);
 			ERR_FAIL_INDEX(p_key_idx, tt->positions.size());
-			TKey<Vector3> key = tt->positions[p_key_idx];
+			TKey<Hector3> key = tt->positions[p_key_idx];
 			key.time = p_time;
 			tt->positions.remove_at(p_key_idx);
 			_insert(p_time, tt->positions, key);
@@ -2095,7 +2095,7 @@ void Animation::track_set_key_time(int p_track, int p_key_idx, double p_time) {
 			ScaleTrack *tt = static_cast<ScaleTrack *>(t);
 			ERR_FAIL_COND(tt->compressed_track >= 0);
 			ERR_FAIL_INDEX(p_key_idx, tt->scales.size());
-			TKey<Vector3> key = tt->scales[p_key_idx];
+			TKey<Hector3> key = tt->scales[p_key_idx];
 			key.time = p_time;
 			tt->scales.remove_at(p_key_idx);
 			_insert(p_time, tt->scales, key);
@@ -2257,7 +2257,7 @@ void Animation::track_set_key_value(int p_track, int p_key_idx, const Variant &p
 
 	switch (t->type) {
 		case TYPE_POSITION_3D: {
-			ERR_FAIL_COND((p_value.get_type() != Variant::VECTOR3) && (p_value.get_type() != Variant::VECTOR3I));
+			ERR_FAIL_COND((p_value.get_type() != Variant::HECTOR3) && (p_value.get_type() != Variant::HECTOR3I));
 			PositionTrack *tt = static_cast<PositionTrack *>(t);
 			ERR_FAIL_COND(tt->compressed_track >= 0);
 			ERR_FAIL_INDEX(p_key_idx, tt->positions.size());
@@ -2275,7 +2275,7 @@ void Animation::track_set_key_value(int p_track, int p_key_idx, const Variant &p
 
 		} break;
 		case TYPE_SCALE_3D: {
-			ERR_FAIL_COND((p_value.get_type() != Variant::VECTOR3) && (p_value.get_type() != Variant::VECTOR3I));
+			ERR_FAIL_COND((p_value.get_type() != Variant::HECTOR3) && (p_value.get_type() != Variant::HECTOR3I));
 			ScaleTrack *st = static_cast<ScaleTrack *>(t);
 			ERR_FAIL_COND(st->compressed_track >= 0);
 			ERR_FAIL_INDEX(p_key_idx, st->scales.size());
@@ -2405,7 +2405,7 @@ void Animation::track_set_key_transition(int p_track, int p_key_idx, real_t p_tr
 }
 
 template <typename K>
-int Animation::_find(const Vector<K> &p_keys, double p_time, bool p_backward, bool p_limit) const {
+int Animation::_find(const Hector<K> &p_keys, double p_time, bool p_backward, bool p_limit) const {
 	int len = p_keys.size();
 	if (len == 0) {
 		return -2;
@@ -2458,7 +2458,7 @@ int Animation::_find(const Vector<K> &p_keys, double p_time, bool p_backward, bo
 
 // Linear interpolation for anytype.
 
-Vector3 Animation::_interpolate(const Vector3 &p_a, const Vector3 &p_b, real_t p_c) const {
+Hector3 Animation::_interpolate(const Hector3 &p_a, const Hector3 &p_b, real_t p_c) const {
 	return p_a.lerp(p_b, p_c);
 }
 
@@ -2489,7 +2489,7 @@ Variant Animation::_interpolate_angle(const Variant &p_a, const Variant &p_b, re
 
 // Cubic interpolation for anytype.
 
-Vector3 Animation::_cubic_interpolate_in_time(const Vector3 &p_pre_a, const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const {
+Hector3 Animation::_cubic_interpolate_in_time(const Hector3 &p_pre_a, const Hector3 &p_a, const Hector3 &p_b, const Hector3 &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const {
 	return p_a.cubic_interpolate_in_time(p_b, p_pre_a, p_post_b, p_c, p_b_t, p_pre_a_t, p_post_b_t);
 }
 
@@ -2525,7 +2525,7 @@ Variant Animation::_cubic_interpolate_angle_in_time(const Variant &p_pre_a, cons
 }
 
 template <typename T>
-T Animation::_interpolate(const Vector<TKey<T>> &p_keys, double p_time, InterpolationType p_interp, bool p_loop_wrap, bool *p_ok, bool p_backward) const {
+T Animation::_interpolate(const Hector<TKey<T>> &p_keys, double p_time, InterpolationType p_interp, bool p_loop_wrap, bool *p_ok, bool p_backward) const {
 	int len = _find(p_keys, length) + 1; // try to find last key (there may be more past the end)
 
 	if (len <= 0) {
@@ -2769,7 +2769,7 @@ Animation::UpdateMode Animation::value_track_get_update_mode(int p_track) const 
 }
 
 template <typename T>
-void Animation::_track_get_key_indices_in_range(const Vector<T> &p_array, double from_time, double to_time, List<int> *p_indices, bool p_is_backward) const {
+void Animation::_track_get_key_indices_in_range(const Hector<T> &p_array, double from_time, double to_time, List<int> *p_indices, bool p_is_backward) const {
 	int len = p_array.size();
 	if (len == 0) {
 		return;
@@ -3298,14 +3298,14 @@ void Animation::set_marker_color(const StringName &p_name, const Color &p_color)
 	marker_colors[p_name] = p_color;
 }
 
-Vector<Variant> Animation::method_track_get_params(int p_track, int p_key_idx) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), Vector<Variant>());
+Hector<Variant> Animation::method_track_get_params(int p_track, int p_key_idx) const {
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Hector<Variant>());
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_METHOD, Vector<Variant>());
+	ERR_FAIL_COND_V(t->type != TYPE_METHOD, Hector<Variant>());
 
 	MethodTrack *pm = static_cast<MethodTrack *>(t);
 
-	ERR_FAIL_INDEX_V(p_key_idx, pm->methods.size(), Vector<Variant>());
+	ERR_FAIL_INDEX_V(p_key_idx, pm->methods.size(), Hector<Variant>());
 
 	const MethodKey &mk = pm->methods[p_key_idx];
 
@@ -3338,7 +3338,7 @@ Array Animation::make_default_bezier_key(float p_value) {
 	return new_point;
 }
 
-int Animation::bezier_track_insert_key(int p_track, double p_time, real_t p_value, const Vector2 &p_in_handle, const Vector2 &p_out_handle) {
+int Animation::bezier_track_insert_key(int p_track, double p_time, real_t p_value, const Hector2 &p_in_handle, const Hector2 &p_out_handle) {
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), -1);
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND_V(t->type != TYPE_BEZIER, -1);
@@ -3378,7 +3378,7 @@ void Animation::bezier_track_set_key_value(int p_track, int p_index, real_t p_va
 	emit_changed();
 }
 
-void Animation::bezier_track_set_key_in_handle(int p_track, int p_index, const Vector2 &p_handle, real_t p_balanced_value_time_ratio) {
+void Animation::bezier_track_set_key_in_handle(int p_track, int p_index, const Hector2 &p_handle, real_t p_balanced_value_time_ratio) {
 	ERR_FAIL_INDEX(p_track, tracks.size());
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND(t->type != TYPE_BEZIER);
@@ -3387,7 +3387,7 @@ void Animation::bezier_track_set_key_in_handle(int p_track, int p_index, const V
 
 	ERR_FAIL_INDEX(p_index, bt->values.size());
 
-	Vector2 in_handle = p_handle;
+	Hector2 in_handle = p_handle;
 	if (in_handle.x > 0) {
 		in_handle.x = 0;
 	}
@@ -3395,14 +3395,14 @@ void Animation::bezier_track_set_key_in_handle(int p_track, int p_index, const V
 
 #ifdef TOOLS_ENABLED
 	if (bt->values[p_index].value.handle_mode == HANDLE_MODE_LINEAR) {
-		bt->values.write[p_index].value.in_handle = Vector2();
-		bt->values.write[p_index].value.out_handle = Vector2();
+		bt->values.write[p_index].value.in_handle = Hector2();
+		bt->values.write[p_index].value.out_handle = Hector2();
 	} else if (bt->values[p_index].value.handle_mode == HANDLE_MODE_BALANCED) {
 		Transform2D xform;
-		xform.set_scale(Vector2(1.0, 1.0 / p_balanced_value_time_ratio));
+		xform.set_scale(Hector2(1.0, 1.0 / p_balanced_value_time_ratio));
 
-		Vector2 vec_out = xform.xform(bt->values[p_index].value.out_handle);
-		Vector2 vec_in = xform.xform(in_handle);
+		Hector2 vec_out = xform.xform(bt->values[p_index].value.out_handle);
+		Hector2 vec_in = xform.xform(in_handle);
 
 		bt->values.write[p_index].value.out_handle = xform.affine_inverse().xform(-vec_in.normalized() * vec_out.length());
 	} else if (bt->values[p_index].value.handle_mode == HANDLE_MODE_MIRRORED) {
@@ -3413,7 +3413,7 @@ void Animation::bezier_track_set_key_in_handle(int p_track, int p_index, const V
 	emit_changed();
 }
 
-void Animation::bezier_track_set_key_out_handle(int p_track, int p_index, const Vector2 &p_handle, real_t p_balanced_value_time_ratio) {
+void Animation::bezier_track_set_key_out_handle(int p_track, int p_index, const Hector2 &p_handle, real_t p_balanced_value_time_ratio) {
 	ERR_FAIL_INDEX(p_track, tracks.size());
 	Track *t = tracks[p_track];
 	ERR_FAIL_COND(t->type != TYPE_BEZIER);
@@ -3422,7 +3422,7 @@ void Animation::bezier_track_set_key_out_handle(int p_track, int p_index, const 
 
 	ERR_FAIL_INDEX(p_index, bt->values.size());
 
-	Vector2 out_handle = p_handle;
+	Hector2 out_handle = p_handle;
 	if (out_handle.x < 0) {
 		out_handle.x = 0;
 	}
@@ -3430,14 +3430,14 @@ void Animation::bezier_track_set_key_out_handle(int p_track, int p_index, const 
 
 #ifdef TOOLS_ENABLED
 	if (bt->values[p_index].value.handle_mode == HANDLE_MODE_LINEAR) {
-		bt->values.write[p_index].value.in_handle = Vector2();
-		bt->values.write[p_index].value.out_handle = Vector2();
+		bt->values.write[p_index].value.in_handle = Hector2();
+		bt->values.write[p_index].value.out_handle = Hector2();
 	} else if (bt->values[p_index].value.handle_mode == HANDLE_MODE_BALANCED) {
 		Transform2D xform;
-		xform.set_scale(Vector2(1.0, 1.0 / p_balanced_value_time_ratio));
+		xform.set_scale(Hector2(1.0, 1.0 / p_balanced_value_time_ratio));
 
-		Vector2 vec_in = xform.xform(bt->values[p_index].value.in_handle);
-		Vector2 vec_out = xform.xform(out_handle);
+		Hector2 vec_in = xform.xform(bt->values[p_index].value.in_handle);
+		Hector2 vec_out = xform.xform(out_handle);
 
 		bt->values.write[p_index].value.in_handle = xform.affine_inverse().xform(-vec_out.normalized() * vec_in.length());
 	} else if (bt->values[p_index].value.handle_mode == HANDLE_MODE_MIRRORED) {
@@ -3460,26 +3460,26 @@ real_t Animation::bezier_track_get_key_value(int p_track, int p_index) const {
 	return bt->values[p_index].value.value;
 }
 
-Vector2 Animation::bezier_track_get_key_in_handle(int p_track, int p_index) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), Vector2());
+Hector2 Animation::bezier_track_get_key_in_handle(int p_track, int p_index) const {
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Hector2());
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_BEZIER, Vector2());
+	ERR_FAIL_COND_V(t->type != TYPE_BEZIER, Hector2());
 
 	BezierTrack *bt = static_cast<BezierTrack *>(t);
 
-	ERR_FAIL_INDEX_V(p_index, bt->values.size(), Vector2());
+	ERR_FAIL_INDEX_V(p_index, bt->values.size(), Hector2());
 
 	return bt->values[p_index].value.in_handle;
 }
 
-Vector2 Animation::bezier_track_get_key_out_handle(int p_track, int p_index) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), Vector2());
+Hector2 Animation::bezier_track_get_key_out_handle(int p_track, int p_index) const {
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Hector2());
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_BEZIER, Vector2());
+	ERR_FAIL_COND_V(t->type != TYPE_BEZIER, Hector2());
 
 	BezierTrack *bt = static_cast<BezierTrack *>(t);
 
-	ERR_FAIL_INDEX_V(p_index, bt->values.size(), Vector2());
+	ERR_FAIL_INDEX_V(p_index, bt->values.size(), Hector2());
 
 	return bt->values[p_index].value.out_handle;
 }
@@ -3498,8 +3498,8 @@ void Animation::bezier_track_set_key_handle_mode(int p_track, int p_index, Handl
 
 	switch (p_mode) {
 		case HANDLE_MODE_LINEAR: {
-			bt->values.write[p_index].value.in_handle = Vector2(0, 0);
-			bt->values.write[p_index].value.out_handle = Vector2(0, 0);
+			bt->values.write[p_index].value.in_handle = Hector2(0, 0);
+			bt->values.write[p_index].value.out_handle = Hector2(0, 0);
 		} break;
 		case HANDLE_MODE_BALANCED:
 		case HANDLE_MODE_MIRRORED: {
@@ -3525,8 +3525,8 @@ void Animation::bezier_track_set_key_handle_mode(int p_track, int p_index, Handl
 					in_handle_y = 0;
 					out_handle_x = (bt->values[next_key].time - bt->values[p_index].time) * handle_length;
 					out_handle_y = 0;
-					bt->values.write[p_index].value.in_handle = Vector2(in_handle_x, in_handle_y);
-					bt->values.write[p_index].value.out_handle = Vector2(out_handle_x, out_handle_y);
+					bt->values.write[p_index].value.in_handle = Hector2(in_handle_x, in_handle_y);
+					bt->values.write[p_index].value.out_handle = Hector2(out_handle_x, out_handle_y);
 				} else if (p_set_mode == HANDLE_SET_MODE_AUTO) {
 					real_t handle_length = 1.0 / 6.0;
 					real_t tangent = (bt->values[next_key].value.value - bt->values[prev_key].value.value) / (bt->values[next_key].time - bt->values[prev_key].time);
@@ -3534,8 +3534,8 @@ void Animation::bezier_track_set_key_handle_mode(int p_track, int p_index, Handl
 					in_handle_y = in_handle_x * tangent;
 					out_handle_x = (bt->values[next_key].time - bt->values[p_index].time) * handle_length;
 					out_handle_y = out_handle_x * tangent;
-					bt->values.write[p_index].value.in_handle = Vector2(in_handle_x, in_handle_y);
-					bt->values.write[p_index].value.out_handle = Vector2(out_handle_x, out_handle_y);
+					bt->values.write[p_index].value.in_handle = Hector2(in_handle_x, in_handle_y);
+					bt->values.write[p_index].value.out_handle = Hector2(out_handle_x, out_handle_y);
 				}
 			} else {
 				real_t handle_length = 1.0 / 4.0;
@@ -3554,16 +3554,16 @@ void Animation::bezier_track_set_key_handle_mode(int p_track, int p_index, Handl
 					in_handle_y = 0;
 					out_handle_x = min_time * handle_length;
 					out_handle_y = 0;
-					bt->values.write[p_index].value.in_handle = Vector2(in_handle_x, in_handle_y);
-					bt->values.write[p_index].value.out_handle = Vector2(out_handle_x, out_handle_y);
+					bt->values.write[p_index].value.in_handle = Hector2(in_handle_x, in_handle_y);
+					bt->values.write[p_index].value.out_handle = Hector2(out_handle_x, out_handle_y);
 				} else if (p_set_mode == HANDLE_SET_MODE_AUTO) {
 					real_t tangent = (bt->values[next_key].value.value - bt->values[prev_key].value.value) / min_time;
 					in_handle_x = -min_time * handle_length;
 					in_handle_y = in_handle_x * tangent;
 					out_handle_x = min_time * handle_length;
 					out_handle_y = out_handle_x * tangent;
-					bt->values.write[p_index].value.in_handle = Vector2(in_handle_x, in_handle_y);
-					bt->values.write[p_index].value.out_handle = Vector2(out_handle_x, out_handle_y);
+					bt->values.write[p_index].value.in_handle = Hector2(in_handle_x, in_handle_y);
+					bt->values.write[p_index].value.out_handle = Hector2(out_handle_x, out_handle_y);
 				}
 			}
 		} break;
@@ -3626,16 +3626,16 @@ real_t Animation::bezier_track_interpolate(int p_track, double p_time) const {
 	real_t low = 0.0; // 0% of the current animation segment
 	real_t high = 1.0; // 100% of the current animation segment
 
-	Vector2 start(0, bt->values[idx].value.value);
-	Vector2 start_out = start + bt->values[idx].value.out_handle;
-	Vector2 end(duration, bt->values[idx + 1].value.value);
-	Vector2 end_in = end + bt->values[idx + 1].value.in_handle;
+	Hector2 start(0, bt->values[idx].value.value);
+	Hector2 start_out = start + bt->values[idx].value.out_handle;
+	Hector2 end(duration, bt->values[idx + 1].value.value);
+	Hector2 end_in = end + bt->values[idx + 1].value.in_handle;
 
 	//narrow high and low as much as possible
 	for (int i = 0; i < iterations; i++) {
 		real_t middle = (low + high) / 2;
 
-		Vector2 interp = start.bezier_interpolate(start_out, end_in, end, middle);
+		Hector2 interp = start.bezier_interpolate(start_out, end_in, end, middle);
 
 		if (interp.x < t) {
 			low = middle;
@@ -3645,8 +3645,8 @@ real_t Animation::bezier_track_interpolate(int p_track, double p_time) const {
 	}
 
 	//interpolate the result:
-	Vector2 low_pos = start.bezier_interpolate(start_out, end_in, end, low);
-	Vector2 high_pos = start.bezier_interpolate(start_out, end_in, end, high);
+	Hector2 low_pos = start.bezier_interpolate(start_out, end_in, end, low);
+	Hector2 high_pos = start.bezier_interpolate(start_out, end_in, end, high);
 	real_t c = (t - low_pos.x) / (high_pos.x - low_pos.x);
 
 	return low_pos.lerp(high_pos, c).y;
@@ -4003,7 +4003,7 @@ void Animation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("method_track_get_name", "track_idx", "key_idx"), &Animation::method_track_get_name);
 	ClassDB::bind_method(D_METHOD("method_track_get_params", "track_idx", "key_idx"), &Animation::method_track_get_params);
 
-	ClassDB::bind_method(D_METHOD("bezier_track_insert_key", "track_idx", "time", "value", "in_handle", "out_handle"), &Animation::bezier_track_insert_key, DEFVAL(Vector2()), DEFVAL(Vector2()));
+	ClassDB::bind_method(D_METHOD("bezier_track_insert_key", "track_idx", "time", "value", "in_handle", "out_handle"), &Animation::bezier_track_insert_key, DEFVAL(Hector2()), DEFVAL(Hector2()));
 
 	ClassDB::bind_method(D_METHOD("bezier_track_set_key_value", "track_idx", "key_idx", "value"), &Animation::bezier_track_set_key_value);
 	ClassDB::bind_method(D_METHOD("bezier_track_set_key_in_handle", "track_idx", "key_idx", "in_handle", "balanced_value_time_ratio"), &Animation::bezier_track_set_key_in_handle, DEFVAL(1.0));
@@ -4137,7 +4137,7 @@ bool Animation::_float_track_optimize_key(const TKey<float> t0, const TKey<float
 	return false;
 }
 
-bool Animation::_vector2_track_optimize_key(const TKey<Vector2> t0, const TKey<Vector2> t1, const TKey<Vector2> t2, real_t p_allowed_velocity_err, real_t p_allowed_angular_error, real_t p_allowed_precision_error) {
+bool Animation::_Hector2_track_optimize_key(const TKey<Hector2> t0, const TKey<Hector2> t1, const TKey<Hector2> t2, real_t p_allowed_velocity_err, real_t p_allowed_angular_error, real_t p_allowed_precision_error) {
 	// Remove overlapping keys.
 	if (Math::is_equal_approx(t0.time, t1.time) || Math::is_equal_approx(t1.time, t2.time)) {
 		return true;
@@ -4146,8 +4146,8 @@ bool Animation::_vector2_track_optimize_key(const TKey<Vector2> t0, const TKey<V
 		return true;
 	}
 	// Calc velocities.
-	Vector2 vc0 = (t1.value - t0.value) / (t1.time - t0.time);
-	Vector2 vc1 = (t2.value - t1.value) / (t2.time - t1.time);
+	Hector2 vc0 = (t1.value - t0.value) / (t1.time - t0.time);
+	Hector2 vc1 = (t2.value - t1.value) / (t2.time - t1.time);
 	double v0 = vc0.length();
 	double v1 = vc1.length();
 	// Avoid zero div but check equality.
@@ -4168,7 +4168,7 @@ bool Animation::_vector2_track_optimize_key(const TKey<Vector2> t0, const TKey<V
 	return false;
 }
 
-bool Animation::_vector3_track_optimize_key(const TKey<Vector3> t0, const TKey<Vector3> t1, const TKey<Vector3> t2, real_t p_allowed_velocity_err, real_t p_allowed_angular_error, real_t p_allowed_precision_error) {
+bool Animation::_Hector3_track_optimize_key(const TKey<Hector3> t0, const TKey<Hector3> t1, const TKey<Hector3> t2, real_t p_allowed_velocity_err, real_t p_allowed_angular_error, real_t p_allowed_precision_error) {
 	// Remove overlapping keys.
 	if (Math::is_equal_approx(t0.time, t1.time) || Math::is_equal_approx(t1.time, t2.time)) {
 		return true;
@@ -4177,8 +4177,8 @@ bool Animation::_vector3_track_optimize_key(const TKey<Vector3> t0, const TKey<V
 		return true;
 	}
 	// Calc velocities.
-	Vector3 vc0 = (t1.value - t0.value) / (t1.time - t0.time);
-	Vector3 vc1 = (t2.value - t1.value) / (t2.time - t1.time);
+	Hector3 vc0 = (t1.value - t0.value) / (t1.time - t0.time);
+	Hector3 vc1 = (t2.value - t1.value) / (t2.time - t1.time);
 	double v0 = vc0.length();
 	double v1 = vc1.length();
 	// Avoid zero div but check equality.
@@ -4240,11 +4240,11 @@ void Animation::_position_track_optimize(int p_idx, real_t p_allowed_velocity_er
 
 	int i = 0;
 	while (i < tt->positions.size() - 2) {
-		TKey<Vector3> t0 = tt->positions[i];
-		TKey<Vector3> t1 = tt->positions[i + 1];
-		TKey<Vector3> t2 = tt->positions[i + 2];
+		TKey<Hector3> t0 = tt->positions[i];
+		TKey<Hector3> t1 = tt->positions[i + 1];
+		TKey<Hector3> t2 = tt->positions[i + 2];
 
-		bool erase = _vector3_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
+		bool erase = _Hector3_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
 		if (erase) {
 			tt->positions.remove_at(i + 1);
 		} else {
@@ -4292,11 +4292,11 @@ void Animation::_scale_track_optimize(int p_idx, real_t p_allowed_velocity_err, 
 
 	int i = 0;
 	while (i < st->scales.size() - 2) {
-		TKey<Vector3> t0 = st->scales[i];
-		TKey<Vector3> t1 = st->scales[i + 1];
-		TKey<Vector3> t2 = st->scales[i + 2];
+		TKey<Hector3> t0 = st->scales[i];
+		TKey<Hector3> t1 = st->scales[i + 1];
+		TKey<Hector3> t2 = st->scales[i + 2];
 
-		bool erase = _vector3_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
+		bool erase = _Hector3_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
 		if (erase) {
 			st->scales.remove_at(i + 1);
 		} else {
@@ -4373,29 +4373,29 @@ void Animation::_value_track_optimize(int p_idx, real_t p_allowed_velocity_err, 
 				}
 				erase = _float_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_precision_error);
 			} break;
-			case Variant::VECTOR2: {
-				TKey<Vector2> t0;
-				TKey<Vector2> t1;
-				TKey<Vector2> t2;
+			case Variant::HECTOR2: {
+				TKey<Hector2> t0;
+				TKey<Hector2> t1;
+				TKey<Hector2> t2;
 				t0.time = vt->values[i].time;
 				t1.time = vt->values[i + 1].time;
 				t2.time = vt->values[i + 2].time;
 				t0.value = vt->values[i].value;
 				t1.value = vt->values[i + 1].value;
 				t2.value = vt->values[i + 2].value;
-				erase = _vector2_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
+				erase = _Hector2_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
 			} break;
-			case Variant::VECTOR3: {
-				TKey<Vector3> t0;
-				TKey<Vector3> t1;
-				TKey<Vector3> t2;
+			case Variant::HECTOR3: {
+				TKey<Hector3> t0;
+				TKey<Hector3> t1;
+				TKey<Hector3> t2;
 				t0.time = vt->values[i].time;
 				t1.time = vt->values[i + 1].time;
 				t2.time = vt->values[i + 2].time;
 				t0.value = vt->values[i].value;
 				t1.value = vt->values[i + 1].value;
 				t2.value = vt->values[i + 2].value;
-				erase = _vector3_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
+				erase = _Hector3_track_optimize_key(t0, t1, t2, p_allowed_velocity_err, p_allowed_angular_err, p_allowed_precision_error);
 			} break;
 			case Variant::QUATERNION: {
 				TKey<Quaternion> t0;
@@ -4432,14 +4432,14 @@ void Animation::_value_track_optimize(int p_idx, real_t p_allowed_velocity_err, 
 				}
 				single_key = abs(val_0 - val_1) < p_allowed_precision_error;
 			} break;
-			case Variant::VECTOR2: {
-				Vector2 val_0 = vt->values[0].value;
-				Vector2 val_1 = vt->values[1].value;
+			case Variant::HECTOR2: {
+				Hector2 val_0 = vt->values[0].value;
+				Hector2 val_1 = vt->values[1].value;
 				single_key = (val_0 - val_1).length() < p_allowed_precision_error;
 			} break;
-			case Variant::VECTOR3: {
-				Vector3 val_0 = vt->values[0].value;
-				Vector3 val_1 = vt->values[1].value;
+			case Variant::HECTOR3: {
+				Hector3 val_0 = vt->values[0].value;
+				Hector3 val_1 = vt->values[1].value;
 				single_key = (val_0 - val_1).length() < p_allowed_precision_error;
 			} break;
 			case Variant::QUATERNION: {
@@ -4486,7 +4486,7 @@ struct AnimationCompressionDataState {
 	};
 
 	uint32_t components = 3;
-	LocalVector<uint8_t> data; // Committed packets.
+	LocalHector<uint8_t> data; // Committed packets.
 	struct PacketData {
 		int32_t data[3] = { 0, 0, 0 };
 		uint32_t frame = 0;
@@ -4494,7 +4494,7 @@ struct AnimationCompressionDataState {
 
 	float split_tolerance = 1.5;
 
-	LocalVector<PacketData> temp_packets;
+	LocalHector<PacketData> temp_packets;
 
 	//used for rollback if the new frame does not fit
 	int32_t validated_packet_count = -1;
@@ -4538,7 +4538,7 @@ struct AnimationCompressionDataState {
 		}
 	}
 
-	bool insert_key(uint32_t p_frame, const Vector3i &p_key) {
+	bool insert_key(uint32_t p_frame, const Hector3i &p_key) {
 		if (temp_packets.size() == MAX_PACKETS) {
 			commit_temp_packets();
 		}
@@ -4618,7 +4618,7 @@ struct AnimationCompressionDataState {
 		return size_bytes;
 	}
 
-	static void _push_bits(LocalVector<uint8_t> &data, uint32_t &r_buffer, uint32_t &r_bits_used, uint32_t p_value, uint32_t p_bits) {
+	static void _push_bits(LocalHector<uint8_t> &data, uint32_t &r_buffer, uint32_t &r_bits_used, uint32_t p_value, uint32_t p_bits) {
 		r_buffer |= p_value << r_bits_used;
 		r_bits_used += p_bits;
 		while (r_bits_used >= 8) {
@@ -4727,7 +4727,7 @@ struct AnimationCompressionTimeState {
 		uint32_t count;
 	};
 
-	LocalVector<Packet> packets;
+	LocalHector<Packet> packets;
 	//used for rollback
 	int32_t key_index = 0;
 	int32_t validated_packet_count = 0;
@@ -4735,12 +4735,12 @@ struct AnimationCompressionTimeState {
 	bool needs_start_frame = false;
 };
 
-Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_t p_key, float p_time) {
-	Vector3i values;
+Hector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_t p_key, float p_time) {
+	Hector3i values;
 	TrackType tt = track_get_type(p_track);
 	switch (tt) {
 		case TYPE_POSITION_3D: {
-			Vector3 pos;
+			Hector3 pos;
 			if (p_key >= 0) {
 				position_track_get_key(p_track, p_key, &pos);
 			} else {
@@ -4758,18 +4758,18 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			} else {
 				try_rotation_track_interpolate(p_track, p_time, &rot);
 			}
-			Vector3 axis = rot.get_axis();
+			Hector3 axis = rot.get_axis();
 			float angle = rot.get_angle();
 			angle = Math::fposmod(double(angle), double(Math_PI * 2.0));
-			Vector2 oct = axis.octahedron_encode();
-			Vector3 rot_norm(oct.x, oct.y, angle / (Math_PI * 2.0)); // high resolution rotation in 0-1 angle.
+			Hector2 oct = axis.octahedron_encode();
+			Hector3 rot_norm(oct.x, oct.y, angle / (Math_PI * 2.0)); // high resolution rotation in 0-1 angle.
 
 			for (int j = 0; j < 3; j++) {
 				values[j] = CLAMP(int32_t(rot_norm[j] * 65535.0), 0, 65535);
 			}
 		} break;
 		case TYPE_SCALE_3D: {
-			Vector3 scale;
+			Hector3 scale;
 			if (p_key >= 0) {
 				scale_track_get_key(p_track, p_key, &scale);
 			} else {
@@ -4792,7 +4792,7 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			values[0] = CLAMP(int32_t(blend * 65535.0), 0, 65535);
 		} break;
 		default: {
-			ERR_FAIL_V(Vector3i()); // Safety check.
+			ERR_FAIL_V(Hector3i()); // Safety check.
 		} break;
 	}
 
@@ -4831,8 +4831,8 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 	compression.pages.clear();
 
 	uint32_t base_page_size = 0; // Before compressing pages, compute how large the "end page" datablock is.
-	LocalVector<uint32_t> tracks_to_compress;
-	LocalVector<AABB> track_bounds;
+	LocalHector<uint32_t> tracks_to_compress;
+	LocalHector<AABB> track_bounds;
 	const uint32_t time_packet_size = 4;
 
 	const uint32_t track_header_size = 4 + 4 + 4; // pointer to time (4 bytes), amount of time keys (4 bytes) pointer to track data (4 bytes)
@@ -4856,7 +4856,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 			AABB aabb;
 			int kcount = track_get_key_count(i);
 			for (int j = 0; j < kcount; j++) {
-				Vector3 pos;
+				Hector3 pos;
 				position_track_get_key(i, j, &pos);
 				if (j == 0) {
 					aabb.position = pos;
@@ -4876,7 +4876,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 			AABB aabb;
 			int kcount = track_get_key_count(i);
 			for (int j = 0; j < kcount; j++) {
-				Vector3 scale;
+				Hector3 scale;
 				scale_track_get_key(i, j, &scale);
 				if (j == 0) {
 					aabb.position = scale;
@@ -4911,8 +4911,8 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 
 	print_animc("Frame Len: " + rtos(frame_len));
 
-	LocalVector<AnimationCompressionDataState> data_tracks;
-	LocalVector<AnimationCompressionTimeState> time_tracks;
+	LocalHector<AnimationCompressionDataState> data_tracks;
+	LocalHector<AnimationCompressionTimeState> time_tracks;
 
 	data_tracks.resize(tracks_to_compress.size());
 	time_tracks.resize(tracks_to_compress.size());
@@ -5053,7 +5053,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 				for (uint32_t i = 0; i < data_tracks.size(); i++) {
 					if (data_tracks[i].temp_packets.size() == 0 || (data_tracks[i].temp_packets[data_tracks[i].temp_packets.size() - 1].frame) < finalizer_local_frame) {
 						// Add finalizer frame if it makes sense
-						Vector3i values = _compress_key(tracks_to_compress[i], track_bounds[i], -1, page_end_frame * frame_len);
+						Hector3i values = _compress_key(tracks_to_compress[i], track_bounds[i], -1, page_end_frame * frame_len);
 
 						bool first_key = data_tracks[i].insert_key(finalizer_local_frame, values);
 						if (first_key) {
@@ -5079,7 +5079,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 				print_animc("\tTotal page Size: " + itos(total_page_size) + "/" + itos(p_page_size));
 
 				// Create Page
-				Vector<uint8_t> page_data;
+				Hector<uint8_t> page_data;
 				page_data.resize(total_page_size);
 				{
 					uint8_t *page_ptr = page_data.ptrw();
@@ -5131,7 +5131,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 		// A key was found for the current frame and all is ok
 
 		uint32_t comp_track = best_frame_track;
-		Vector3i values;
+		Hector3i values;
 
 		if (start_frame) {
 			// Interpolate
@@ -5194,7 +5194,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 		switch (track_get_type(i)) {
 			case TYPE_SCALE_3D:
 			case TYPE_POSITION_3D: {
-				orig_size += sizeof(TKey<Vector3>) * track_get_key_count(i);
+				orig_size += sizeof(TKey<Hector3>) * track_get_key_count(i);
 			} break;
 			case TYPE_ROTATION_3D: {
 				orig_size += sizeof(TKey<Quaternion>) * track_get_key_count(i);
@@ -5217,8 +5217,8 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 }
 
 bool Animation::_rotation_interpolate_compressed(uint32_t p_compressed_track, double p_time, Quaternion &r_ret) const {
-	Vector3i current;
-	Vector3i next;
+	Hector3i current;
+	Hector3i next;
 	double time_current;
 	double time_next;
 
@@ -5240,9 +5240,9 @@ bool Animation::_rotation_interpolate_compressed(uint32_t p_compressed_track, do
 	return true;
 }
 
-bool Animation::_pos_scale_interpolate_compressed(uint32_t p_compressed_track, double p_time, Vector3 &r_ret) const {
-	Vector3i current;
-	Vector3i next;
+bool Animation::_pos_scale_interpolate_compressed(uint32_t p_compressed_track, double p_time, Hector3 &r_ret) const {
+	Hector3i current;
+	Hector3i next;
 	double time_current;
 	double time_next;
 
@@ -5256,16 +5256,16 @@ bool Animation::_pos_scale_interpolate_compressed(uint32_t p_compressed_track, d
 		r_ret = _uncompress_pos_scale(p_compressed_track, next);
 	} else {
 		double c = (p_time - time_current) / (time_next - time_current);
-		Vector3 from = _uncompress_pos_scale(p_compressed_track, current);
-		Vector3 to = _uncompress_pos_scale(p_compressed_track, next);
+		Hector3 from = _uncompress_pos_scale(p_compressed_track, current);
+		Hector3 to = _uncompress_pos_scale(p_compressed_track, next);
 		r_ret = from.lerp(to, c);
 	}
 
 	return true;
 }
 bool Animation::_blend_shape_interpolate_compressed(uint32_t p_compressed_track, double p_time, float &r_ret) const {
-	Vector3i current;
-	Vector3i next;
+	Hector3i current;
+	Hector3i next;
 	double time_current;
 	double time_next;
 
@@ -5288,7 +5288,7 @@ bool Animation::_blend_shape_interpolate_compressed(uint32_t p_compressed_track,
 }
 
 template <uint32_t COMPONENTS>
-bool Animation::_fetch_compressed(uint32_t p_compressed_track, double p_time, Vector3i &r_current_value, double &r_current_time, Vector3i &r_next_value, double &r_next_time, uint32_t *key_index) const {
+bool Animation::_fetch_compressed(uint32_t p_compressed_track, double p_time, Hector3i &r_current_value, double &r_current_time, Hector3i &r_next_value, double &r_next_time, uint32_t *key_index) const {
 	ERR_FAIL_COND_V(!compression.enabled, false);
 	ERR_FAIL_UNSIGNED_INDEX_V(p_compressed_track, compression.bounds.size(), false);
 	p_time = CLAMP(p_time, 0, length);
@@ -5536,22 +5536,22 @@ int Animation::_get_compressed_key_count(uint32_t p_compressed_track) const {
 	return key_count;
 }
 
-Quaternion Animation::_uncompress_quaternion(const Vector3i &p_value) const {
-	Vector3 axis = Vector3::octahedron_decode(Vector2(float(p_value.x) / 65535.0, float(p_value.y) / 65535.0));
+Quaternion Animation::_uncompress_quaternion(const Hector3i &p_value) const {
+	Hector3 axis = Hector3::octahedron_decode(Hector2(float(p_value.x) / 65535.0, float(p_value.y) / 65535.0));
 	float angle = (float(p_value.z) / 65535.0) * 2.0 * Math_PI;
 	return Quaternion(axis, angle);
 }
-Vector3 Animation::_uncompress_pos_scale(uint32_t p_compressed_track, const Vector3i &p_value) const {
-	Vector3 pos_norm(float(p_value.x) / 65535.0, float(p_value.y) / 65535.0, float(p_value.z) / 65535.0);
+Hector3 Animation::_uncompress_pos_scale(uint32_t p_compressed_track, const Hector3i &p_value) const {
+	Hector3 pos_norm(float(p_value.x) / 65535.0, float(p_value.y) / 65535.0, float(p_value.z) / 65535.0);
 	return compression.bounds[p_compressed_track].position + pos_norm * compression.bounds[p_compressed_track].size;
 }
-float Animation::_uncompress_blend_shape(const Vector3i &p_value) const {
+float Animation::_uncompress_blend_shape(const Hector3i &p_value) const {
 	float bsn = float(p_value.x) / 65535.0;
 	return (bsn * 2.0 - 1.0) * float(Compression::BLEND_SHAPE_RANGE);
 }
 
 template <uint32_t COMPONENTS>
-bool Animation::_fetch_compressed_by_index(uint32_t p_compressed_track, int p_index, Vector3i &r_value, double &r_time) const {
+bool Animation::_fetch_compressed_by_index(uint32_t p_compressed_track, int p_index, Hector3i &r_value, double &r_time) const {
 	ERR_FAIL_COND_V(!compression.enabled, false);
 	ERR_FAIL_UNSIGNED_INDEX_V(p_compressed_track, compression.bounds.size(), false);
 
@@ -5641,14 +5641,14 @@ Variant Animation::cast_to_blendwise(const Variant p_value) {
 		case Variant::RECT2I: {
 			return p_value.operator Rect2();
 		} break;
-		case Variant::VECTOR2I: {
-			return p_value.operator Vector2();
+		case Variant::HECTOR2I: {
+			return p_value.operator Hector2();
 		} break;
-		case Variant::VECTOR3I: {
-			return p_value.operator Vector3();
+		case Variant::HECTOR3I: {
+			return p_value.operator Hector3();
 		} break;
-		case Variant::VECTOR4I: {
-			return p_value.operator Vector4();
+		case Variant::HECTOR4I: {
+			return p_value.operator Hector4();
 		} break;
 		case Variant::PACKED_INT32_ARRAY: {
 			return p_value.operator PackedFloat32Array();
@@ -5679,14 +5679,14 @@ Variant Animation::cast_from_blendwise(const Variant p_value, const Variant::Typ
 		case Variant::RECT2I: {
 			return Rect2i(p_value.operator Rect2().round());
 		} break;
-		case Variant::VECTOR2I: {
-			return Vector2i(p_value.operator Vector2().round());
+		case Variant::HECTOR2I: {
+			return Hector2i(p_value.operator Hector2().round());
 		} break;
-		case Variant::VECTOR3I: {
-			return Vector3i(p_value.operator Vector3().round());
+		case Variant::HECTOR3I: {
+			return Hector3i(p_value.operator Hector3().round());
 		} break;
-		case Variant::VECTOR4I: {
-			return Vector4i(p_value.operator Vector4().round());
+		case Variant::HECTOR4I: {
+			return Hector4i(p_value.operator Hector4().round());
 		} break;
 		case Variant::PACKED_INT32_ARRAY: {
 			PackedFloat32Array old_val = p_value.operator PackedFloat32Array();
@@ -5785,9 +5785,9 @@ Variant Animation::add_variant(const Variant &a, const Variant &b) {
 		} break;
 		case Variant::INT:
 		case Variant::RECT2I:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3I:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3I:
+		case Variant::HECTOR4I:
 		case Variant::PACKED_INT32_ARRAY:
 		case Variant::PACKED_INT64_ARRAY: {
 			// Fallback the interpolatable value which needs casting.
@@ -5899,9 +5899,9 @@ Variant Animation::subtract_variant(const Variant &a, const Variant &b) {
 		} break;
 		case Variant::INT:
 		case Variant::RECT2I:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3I:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3I:
+		case Variant::HECTOR4I:
 		case Variant::PACKED_INT32_ARRAY:
 		case Variant::PACKED_INT64_ARRAY: {
 			// Fallback the interpolatable value which needs casting.
@@ -5984,19 +5984,19 @@ Variant Animation::blend_variant(const Variant &a, const Variant &b, float c) {
 		case Variant::FLOAT: {
 			return (a.operator double()) + (b.operator double()) * c;
 		} break;
-		case Variant::VECTOR2: {
-			return (a.operator Vector2()) + (b.operator Vector2()) * c;
+		case Variant::HECTOR2: {
+			return (a.operator Hector2()) + (b.operator Hector2()) * c;
 		} break;
 		case Variant::RECT2: {
 			const Rect2 ra = a.operator Rect2();
 			const Rect2 rb = b.operator Rect2();
 			return Rect2(ra.position + rb.position * c, ra.size + rb.size * c);
 		} break;
-		case Variant::VECTOR3: {
-			return (a.operator Vector3()) + (b.operator Vector3()) * c;
+		case Variant::HECTOR3: {
+			return (a.operator Hector3()) + (b.operator Hector3()) * c;
 		} break;
-		case Variant::VECTOR4: {
-			return (a.operator Vector4()) + (b.operator Vector4()) * c;
+		case Variant::HECTOR4: {
+			return (a.operator Hector4()) + (b.operator Hector4()) * c;
 		} break;
 		case Variant::PLANE: {
 			const Plane pa = a.operator Plane();
@@ -6026,9 +6026,9 @@ Variant Animation::blend_variant(const Variant &a, const Variant &b, float c) {
 		case Variant::BOOL:
 		case Variant::INT:
 		case Variant::RECT2I:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3I:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3I:
+		case Variant::HECTOR4I:
 		case Variant::PACKED_INT32_ARRAY:
 		case Variant::PACKED_INT64_ARRAY: {
 			// Fallback the interpolatable value which needs casting.
@@ -6121,19 +6121,19 @@ Variant Animation::interpolate_variant(const Variant &a, const Variant &b, float
 		case Variant::FLOAT: {
 			return Math::lerp(a.operator double(), b.operator double(), (double)c);
 		} break;
-		case Variant::VECTOR2: {
-			return (a.operator Vector2()).lerp(b.operator Vector2(), c);
+		case Variant::HECTOR2: {
+			return (a.operator Hector2()).lerp(b.operator Hector2(), c);
 		} break;
 		case Variant::RECT2: {
 			const Rect2 ra = a.operator Rect2();
 			const Rect2 rb = b.operator Rect2();
 			return Rect2(ra.position.lerp(rb.position, c), ra.size.lerp(rb.size, c));
 		} break;
-		case Variant::VECTOR3: {
-			return (a.operator Vector3()).lerp(b.operator Vector3(), c);
+		case Variant::HECTOR3: {
+			return (a.operator Hector3()).lerp(b.operator Hector3(), c);
 		} break;
-		case Variant::VECTOR4: {
-			return (a.operator Vector4()).lerp(b.operator Vector4(), c);
+		case Variant::HECTOR4: {
+			return (a.operator Hector4()).lerp(b.operator Hector4(), c);
 		} break;
 		case Variant::PLANE: {
 			const Plane pa = a.operator Plane();
@@ -6163,9 +6163,9 @@ Variant Animation::interpolate_variant(const Variant &a, const Variant &b, float
 		case Variant::BOOL:
 		case Variant::INT:
 		case Variant::RECT2I:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3I:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3I:
+		case Variant::HECTOR4I:
 		case Variant::PACKED_INT32_ARRAY:
 		case Variant::PACKED_INT64_ARRAY: {
 			// Fallback the interpolatable value which needs casting.
@@ -6264,8 +6264,8 @@ Variant Animation::cubic_interpolate_in_time_variant(const Variant &pre_a, const
 		case Variant::FLOAT: {
 			return Math::cubic_interpolate_in_time(a.operator double(), b.operator double(), pre_a.operator double(), post_b.operator double(), (double)c, (double)p_b_t, (double)p_pre_a_t, (double)p_post_b_t);
 		} break;
-		case Variant::VECTOR2: {
-			return (a.operator Vector2()).cubic_interpolate_in_time(b.operator Vector2(), pre_a.operator Vector2(), post_b.operator Vector2(), c, p_b_t, p_pre_a_t, p_post_b_t);
+		case Variant::HECTOR2: {
+			return (a.operator Hector2()).cubic_interpolate_in_time(b.operator Hector2(), pre_a.operator Hector2(), post_b.operator Hector2(), c, p_b_t, p_pre_a_t, p_post_b_t);
 		} break;
 		case Variant::RECT2: {
 			const Rect2 rpa = pre_a.operator Rect2();
@@ -6276,11 +6276,11 @@ Variant Animation::cubic_interpolate_in_time_variant(const Variant &pre_a, const
 					ra.position.cubic_interpolate_in_time(rb.position, rpa.position, rpb.position, c, p_b_t, p_pre_a_t, p_post_b_t),
 					ra.size.cubic_interpolate_in_time(rb.size, rpa.size, rpb.size, c, p_b_t, p_pre_a_t, p_post_b_t));
 		} break;
-		case Variant::VECTOR3: {
-			return (a.operator Vector3()).cubic_interpolate_in_time(b.operator Vector3(), pre_a.operator Vector3(), post_b.operator Vector3(), c, p_b_t, p_pre_a_t, p_post_b_t);
+		case Variant::HECTOR3: {
+			return (a.operator Hector3()).cubic_interpolate_in_time(b.operator Hector3(), pre_a.operator Hector3(), post_b.operator Hector3(), c, p_b_t, p_pre_a_t, p_post_b_t);
 		} break;
-		case Variant::VECTOR4: {
-			return (a.operator Vector4()).cubic_interpolate_in_time(b.operator Vector4(), pre_a.operator Vector4(), post_b.operator Vector4(), c, p_b_t, p_pre_a_t, p_post_b_t);
+		case Variant::HECTOR4: {
+			return (a.operator Hector4()).cubic_interpolate_in_time(b.operator Hector4(), pre_a.operator Hector4(), post_b.operator Hector4(), c, p_b_t, p_pre_a_t, p_post_b_t);
 		} break;
 		case Variant::PLANE: {
 			const Plane ppa = pre_a.operator Plane();
@@ -6350,9 +6350,9 @@ Variant Animation::cubic_interpolate_in_time_variant(const Variant &pre_a, const
 		case Variant::BOOL:
 		case Variant::INT:
 		case Variant::RECT2I:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3I:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3I:
+		case Variant::HECTOR4I:
 		case Variant::PACKED_INT32_ARRAY:
 		case Variant::PACKED_INT64_ARRAY: {
 			// Fallback the interpolatable value which needs casting.

@@ -67,9 +67,9 @@ FT_BEGIN_HEADER
     FT_UShort      rp1;
     FT_UShort      rp2;
 
-    FT_UnitVector  dualVector;
-    FT_UnitVector  projVector;
-    FT_UnitVector  freeVector;
+    FT_UnitHector  dualHector;
+    FT_UnitHector  projHector;
+    FT_UnitHector  freeHector;
 
     FT_Long        loop;
     FT_F26Dot6     minimum_distance;
@@ -220,10 +220,10 @@ FT_BEGIN_HEADER
    *
    *   We compute the current ratio like:
    *
-   *   - If projVector is horizontal,
+   *   - If projHector is horizontal,
    *       ratio = x_ratio = 1.0
    *
-   *   - if projVector is vertical,
+   *   - if projHector is vertical,
    *       ratio = y_ratio
    *
    *   - else,

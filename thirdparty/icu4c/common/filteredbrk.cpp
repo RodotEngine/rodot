@@ -18,7 +18,7 @@
 
 #include "uresimp.h" // ures_getByKeyWithFallback
 #include "ubrkimpl.h" // U_ICUDATA_BRKITR
-#include "uvector.h"
+#include "uHector.h"
 #include "cmemory.h"
 #include "umutex.h"
 
@@ -56,11 +56,11 @@ static int32_t U_CALLCONV compareUnicodeString(UElement t1, UElement t2) {
 }
 
 /**
- * A UVector which implements a set of strings.
+ * A UHector which implements a set of strings.
  */
-class UStringSet : public UVector {
+class UStringSet : public UHector {
  public:
-  UStringSet(UErrorCode &status) : UVector(uprv_deleteUObject,
+  UStringSet(UErrorCode &status) : UHector(uprv_deleteUObject,
                                            uhash_compareUnicodeString,
                                            1,
                                            status) {}
@@ -71,7 +71,7 @@ class UStringSet : public UVector {
   inline UBool contains(const UnicodeString& s) {
     return contains((void*) &s);
   }
-  using UVector::contains;
+  using UHector::contains;
   /**
    * Return the ith UnicodeString alias
    */

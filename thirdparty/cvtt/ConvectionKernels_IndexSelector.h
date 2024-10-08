@@ -10,7 +10,7 @@ namespace cvtt
     {
         extern const ParallelMath::UInt16 g_weightReciprocals[17];
 
-        template<int TVectorSize>
+        template<int THectorSize>
         class IndexSelector
         {
         public:
@@ -24,13 +24,13 @@ namespace cvtt
 
 
             template<class TInterpolationEPType, class TColorEPType>
-            void Init(const float *channelWeights, const TInterpolationEPType interpolationEndPoints[2][TVectorSize], const TColorEPType colorSpaceEndpoints[2][TVectorSize], int range)
+            void Init(const float *channelWeights, const TInterpolationEPType interpolationEndPoints[2][THectorSize], const TColorEPType colorSpaceEndpoints[2][THectorSize], int range)
             {
                 // In BC6H, the interpolation endpoints are higher-precision than the endpoints in color space.
                 // We need to select indexes using the color-space endpoints.
 
                 m_isUniform = true;
-                for (int ch = 1; ch < TVectorSize; ch++)
+                for (int ch = 1; ch < THectorSize; ch++)
                 {
                     if (channelWeights[ch] != channelWeights[0])
                         m_isUniform = false;
@@ -50,14 +50,14 @@ namespace cvtt
                 // index = dot(axis, pxDiff)
 
                 for (int ep = 0; ep < 2; ep++)
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         m_endPoint[ep][ch] = ParallelMath::LosslessCast<MAInt16>::Cast(interpolationEndPoints[ep][ch]);
 
                 m_range = range;
                 m_maxValue = static_cast<float>(range - 1);
 
-                MFloat epDiffWeighted[TVectorSize];
-                for (int ch = 0; ch < TVectorSize; ch++)
+                MFloat epDiffWeighted[THectorSize];
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     m_origin[ch] = ParallelMath::ToFloat(colorSpaceEndpoints[0][ch]);
                     MFloat opposingOriginCh = ParallelMath::ToFloat(colorSpaceEndpoints[1][ch]);
@@ -65,23 +65,23 @@ namespace cvtt
                 }
 
                 MFloat lenSquared = epDiffWeighted[0] * epDiffWeighted[0];
-                for (int ch = 1; ch < TVectorSize; ch++)
+                for (int ch = 1; ch < THectorSize; ch++)
                     lenSquared = lenSquared + epDiffWeighted[ch] * epDiffWeighted[ch];
 
                 ParallelMath::MakeSafeDenominator(lenSquared);
 
                 MFloat maxValueDividedByLengthSquared = ParallelMath::MakeFloat(m_maxValue) / lenSquared;
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_axis[ch] = epDiffWeighted[ch] * channelWeights[ch] * maxValueDividedByLengthSquared;
             }
 
             template<bool TSigned>
-            void Init(const float channelWeights[TVectorSize], const MUInt15 endPoints[2][TVectorSize], int range)
+            void Init(const float channelWeights[THectorSize], const MUInt15 endPoints[2][THectorSize], int range)
             {
-                MAInt16 converted[2][TVectorSize];
+                MAInt16 converted[2][THectorSize];
                 for (int epi = 0; epi < 2; epi++)
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         converted[epi][ch] = ParallelMath::LosslessCast<MAInt16>::Cast(endPoints[epi][ch]);
 
                 Init<MUInt15, MUInt15>(channelWeights, endPoints, endPoints, range);
@@ -113,29 +113,29 @@ namespace cvtt
 
             void ReconstructLDR_BC7(const MUInt15 &index, MUInt15* pixel)
             {
-                ReconstructLDR_BC7(index, pixel, TVectorSize);
+                ReconstructLDR_BC7(index, pixel, THectorSize);
             }
 
             void ReconstructLDRPrecise(const MUInt15 &index, MUInt15* pixel)
             {
-                ReconstructLDRPrecise(index, pixel, TVectorSize);
+                ReconstructLDRPrecise(index, pixel, THectorSize);
             }
 
             MUInt15 SelectIndexLDR(const MFloat* pixel, const ParallelMath::RoundTowardNearestForScope* rtn) const
             {
                 MFloat dist = (pixel[0] - m_origin[0]) * m_axis[0];
-                for (int ch = 1; ch < TVectorSize; ch++)
+                for (int ch = 1; ch < THectorSize; ch++)
                     dist = dist + (pixel[ch] - m_origin[ch]) * m_axis[ch];
 
                 return ParallelMath::RoundAndConvertToU15(ParallelMath::Clamp(dist, 0.0f, m_maxValue), rtn);
             }
 
         protected:
-            MAInt16 m_endPoint[2][TVectorSize];
+            MAInt16 m_endPoint[2][THectorSize];
 
         private:
-            MFloat m_origin[TVectorSize];
-            MFloat m_axis[TVectorSize];
+            MFloat m_origin[THectorSize];
+            MFloat m_axis[THectorSize];
             int m_range;
             float m_maxValue;
             bool m_isUniform;

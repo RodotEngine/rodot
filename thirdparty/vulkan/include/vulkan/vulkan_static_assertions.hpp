@@ -7483,15 +7483,15 @@ VULKAN_HPP_STATIC_ASSERT( std::is_standard_layout<VULKAN_HPP_NAMESPACE::Physical
 VULKAN_HPP_STATIC_ASSERT( std::is_nothrow_move_constructible<VULKAN_HPP_NAMESPACE::PhysicalDeviceRawAccessChainsFeaturesNV>::value,
                           "PhysicalDeviceRawAccessChainsFeaturesNV is not nothrow_move_constructible!" );
 
-//=== VK_NV_shader_atomic_float16_vector ===
+//=== VK_NV_shader_atomic_float16_Hector ===
 
-VULKAN_HPP_STATIC_ASSERT( sizeof( VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV ) ==
-                            sizeof( VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV ),
+VULKAN_HPP_STATIC_ASSERT( sizeof( VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV ) ==
+                            sizeof( VkPhysicalDeviceShaderAtomicFloat16HectorFeaturesNV ),
                           "struct and wrapper have different size!" );
-VULKAN_HPP_STATIC_ASSERT( std::is_standard_layout<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV>::value,
+VULKAN_HPP_STATIC_ASSERT( std::is_standard_layout<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV>::value,
                           "struct wrapper is not a standard layout!" );
-VULKAN_HPP_STATIC_ASSERT( std::is_nothrow_move_constructible<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV>::value,
-                          "PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV is not nothrow_move_constructible!" );
+VULKAN_HPP_STATIC_ASSERT( std::is_nothrow_move_constructible<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV>::value,
+                          "PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV is not nothrow_move_constructible!" );
 
 //=== VK_NV_ray_tracing_validation ===
 

@@ -33,7 +33,7 @@
 #include "core/math/math_funcs.h"
 #include "core/variant/variant.h"
 
-void Plane::set_normal(const Vector3 &p_normal) {
+void Plane::set_normal(const Hector3 &p_normal) {
 	normal = p_normal;
 }
 
@@ -53,10 +53,10 @@ Plane Plane::normalized() const {
 	return p;
 }
 
-Vector3 Plane::get_any_perpendicular_normal() const {
-	static const Vector3 p1 = Vector3(1, 0, 0);
-	static const Vector3 p2 = Vector3(0, 1, 0);
-	Vector3 p;
+Hector3 Plane::get_any_perpendicular_normal() const {
+	static const Hector3 p1 = Hector3(1, 0, 0);
+	static const Hector3 p2 = Hector3(0, 1, 0);
+	Hector3 p;
 
 	if (ABS(normal.dot(p1)) > 0.99f) { // if too similar to p1
 		p = p2; // use p2
@@ -72,11 +72,11 @@ Vector3 Plane::get_any_perpendicular_normal() const {
 
 /* intersections */
 
-bool Plane::intersect_3(const Plane &p_plane1, const Plane &p_plane2, Vector3 *r_result) const {
+bool Plane::intersect_3(const Plane &p_plane1, const Plane &p_plane2, Hector3 *r_result) const {
 	const Plane &p_plane0 = *this;
-	Vector3 normal0 = p_plane0.normal;
-	Vector3 normal1 = p_plane1.normal;
-	Vector3 normal2 = p_plane2.normal;
+	Hector3 normal0 = p_plane0.normal;
+	Hector3 normal1 = p_plane1.normal;
+	Hector3 normal2 = p_plane2.normal;
 
 	real_t denom = vec3_cross(normal0, normal1).dot(normal2);
 
@@ -94,8 +94,8 @@ bool Plane::intersect_3(const Plane &p_plane1, const Plane &p_plane2, Vector3 *r
 	return true;
 }
 
-bool Plane::intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *p_intersection) const {
-	Vector3 segment = p_dir;
+bool Plane::intersects_ray(const Hector3 &p_from, const Hector3 &p_dir, Hector3 *p_intersection) const {
+	Hector3 segment = p_dir;
 	real_t den = normal.dot(segment);
 
 	if (Math::is_zero_approx(den)) {
@@ -115,8 +115,8 @@ bool Plane::intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 
 	return true;
 }
 
-bool Plane::intersects_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 *p_intersection) const {
-	Vector3 segment = p_begin - p_end;
+bool Plane::intersects_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 *p_intersection) const {
+	Hector3 segment = p_begin - p_end;
 	real_t den = normal.dot(segment);
 
 	if (Math::is_zero_approx(den)) {
@@ -136,7 +136,7 @@ bool Plane::intersects_segment(const Vector3 &p_begin, const Vector3 &p_end, Vec
 }
 
 Variant Plane::intersect_3_bind(const Plane &p_plane1, const Plane &p_plane2) const {
-	Vector3 inters;
+	Hector3 inters;
 	if (intersect_3(p_plane1, p_plane2, &inters)) {
 		return inters;
 	} else {
@@ -144,8 +144,8 @@ Variant Plane::intersect_3_bind(const Plane &p_plane1, const Plane &p_plane2) co
 	}
 }
 
-Variant Plane::intersects_ray_bind(const Vector3 &p_from, const Vector3 &p_dir) const {
-	Vector3 inters;
+Variant Plane::intersects_ray_bind(const Hector3 &p_from, const Hector3 &p_dir) const {
+	Hector3 inters;
 	if (intersects_ray(p_from, p_dir, &inters)) {
 		return inters;
 	} else {
@@ -153,8 +153,8 @@ Variant Plane::intersects_ray_bind(const Vector3 &p_from, const Vector3 &p_dir) 
 	}
 }
 
-Variant Plane::intersects_segment_bind(const Vector3 &p_begin, const Vector3 &p_end) const {
-	Vector3 inters;
+Variant Plane::intersects_segment_bind(const Hector3 &p_begin, const Hector3 &p_end) const {
+	Hector3 inters;
 	if (intersects_segment(p_begin, p_end, &inters)) {
 		return inters;
 	} else {

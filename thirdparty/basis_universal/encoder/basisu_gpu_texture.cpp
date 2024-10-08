@@ -1308,7 +1308,7 @@ namespace basisu
 	};
 
 	// Input is a texture array of mipmapped gpu_image's: gpu_images[array_index][level_index]
-	bool create_ktx_texture_file(uint8_vec &ktx_data, const basisu::vector<gpu_image_vec>& gpu_images, bool cubemap_flag)
+	bool create_ktx_texture_file(uint8_vec &ktx_data, const basisu::Hector<gpu_image_vec>& gpu_images, bool cubemap_flag)
 	{
 		if (!gpu_images.size())
 		{
@@ -1517,7 +1517,7 @@ namespace basisu
 		header.m_numberOfMipmapLevels = total_levels;
 		header.m_numberOfFaces = cubemap_flag ? 6 : 1;
 
-		append_vector(ktx_data, (uint8_t *)&header, sizeof(header));
+		append_Hector(ktx_data, (uint8_t *)&header, sizeof(header));
 
 		for (uint32_t level_index = 0; level_index < total_levels; level_index++)
 		{
@@ -1531,7 +1531,7 @@ namespace basisu
 			assert(img_size && ((img_size & 3) == 0));
 
 			packed_uint<4> packed_img_size(img_size);
-			append_vector(ktx_data, (uint8_t *)&packed_img_size, sizeof(packed_img_size));
+			append_Hector(ktx_data, (uint8_t *)&packed_img_size, sizeof(packed_img_size));
 
 			uint32_t bytes_written = 0;
 
@@ -1541,7 +1541,7 @@ namespace basisu
 				{
 					const gpu_image& img = gpu_images[cubemap_flag ? (array_index * 6 + face_index) : array_index][level_index];
 
-					append_vector(ktx_data, (uint8_t *)img.get_ptr(), img.get_size_in_bytes());
+					append_Hector(ktx_data, (uint8_t *)img.get_ptr(), img.get_size_in_bytes());
 					
 					bytes_written += img.get_size_in_bytes();
 				}
@@ -1553,7 +1553,7 @@ namespace basisu
 		return true;
 	}
 
-	bool write_compressed_texture_file(const char* pFilename, const basisu::vector<gpu_image_vec>& g, bool cubemap_flag)
+	bool write_compressed_texture_file(const char* pFilename, const basisu::Hector<gpu_image_vec>& g, bool cubemap_flag)
 	{
 		std::string extension(string_tolower(string_get_extension(pFilename)));
 
@@ -1585,8 +1585,8 @@ namespace basisu
 
 	bool write_compressed_texture_file(const char* pFilename, const gpu_image& g)
 	{
-		basisu::vector<gpu_image_vec> v;
-		enlarge_vector(v, 1)->push_back(g);
+		basisu::Hector<gpu_image_vec> v;
+		enlarge_Hector(v, 1)->push_back(g);
 		return write_compressed_texture_file(pFilename, v, false);
 	}
 

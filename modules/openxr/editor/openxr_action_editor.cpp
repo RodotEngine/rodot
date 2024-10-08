@@ -147,7 +147,7 @@ OpenXRActionEditor::OpenXRActionEditor(Ref<OpenXRAction> p_action) {
 	action_type_button = memnew(OptionButton);
 	action_type_button->add_item("Bool", OpenXRAction::OPENXR_ACTION_BOOL);
 	action_type_button->add_item("Float", OpenXRAction::OPENXR_ACTION_FLOAT);
-	action_type_button->add_item("Vector2", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	action_type_button->add_item("Hector2", OpenXRAction::OPENXR_ACTION_Hector2);
 	action_type_button->add_item("Pose", OpenXRAction::OPENXR_ACTION_POSE);
 	action_type_button->add_item("Haptic", OpenXRAction::OPENXR_ACTION_HAPTIC);
 	action_type_button->select(int(action->get_action_type()));

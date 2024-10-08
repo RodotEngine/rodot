@@ -561,7 +561,7 @@ _hb_coretext_shape (hb_shape_plan_t    *shape_plan,
 	buffer->merge_clusters (i - 1, i + 1);
   }
 
-  hb_vector_t<range_record_t> range_records;
+  hb_Hector_t<range_record_t> range_records;
 
   /*
    * Set up features.
@@ -570,7 +570,7 @@ _hb_coretext_shape (hb_shape_plan_t    *shape_plan,
   if (num_features)
   {
     /* Sort features by start/end events. */
-    hb_vector_t<feature_event_t> feature_events;
+    hb_Hector_t<feature_event_t> feature_events;
     for (unsigned int i = 0; i < num_features; i++)
     {
       active_feature_t feature;
@@ -615,7 +615,7 @@ _hb_coretext_shape (hb_shape_plan_t    *shape_plan,
     }
 
     /* Scan events and save features for each range. */
-    hb_vector_t<active_feature_t> active_features;
+    hb_Hector_t<active_feature_t> active_features;
     unsigned int last_index = 0;
     for (unsigned int i = 0; i < feature_events.length; i++)
     {

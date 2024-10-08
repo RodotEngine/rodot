@@ -31,7 +31,7 @@
 #include "random_pcg.h"
 
 #include "core/os/os.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
 		pcg(),
@@ -43,7 +43,7 @@ void RandomPCG::randomize() {
 	seed(((uint64_t)OS::get_singleton()->get_unix_time() + OS::get_singleton()->get_ticks_usec()) * pcg.state + PCG_DEFAULT_INC_64);
 }
 
-int64_t RandomPCG::rand_weighted(const Vector<float> &p_weights) {
+int64_t RandomPCG::rand_weighted(const Hector<float> &p_weights) {
 	ERR_FAIL_COND_V_MSG(p_weights.is_empty(), -1, "Weights array is empty.");
 	int64_t weights_size = p_weights.size();
 	const float *weights = p_weights.ptr();

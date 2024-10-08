@@ -21,7 +21,7 @@
 #include "jpgd.h"
 #include "pvpngreader.h"
 #include "basisu_opencl.h"
-#include <vector>
+#include <Vector>
 
 #define MINIZ_HEADER_FILE_ONLY
 #define MINIZ_NO_ZLIB_COMPATIBLE_NAMES

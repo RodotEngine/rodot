@@ -1235,7 +1235,7 @@
           goto Exit;
 
         /* Note: just record values; consistency is checked later    */
-        /*       by cff_blend_build_vector when it consumes `vstore' */
+        /*       by cff_blend_build_Hector when it consumes `vstore' */
 
         if ( FT_READ_USHORT( data->regionIdxCount ) )
           goto Exit;
@@ -1393,12 +1393,12 @@
   }
 
 
-  /* Compute a blend vector from variation store index and normalized  */
-  /* vector based on pseudo-code in OpenType Font Variations Overview. */
+  /* Compute a blend Hector from variation store index and normalized  */
+  /* Hector based on pseudo-code in OpenType Font Variations Overview. */
   /*                                                                   */
-  /* Note: lenNDV == 0 produces a default blend vector, (1,0,0,...).   */
+  /* Note: lenNDV == 0 produces a default blend Hector, (1,0,0,...).   */
   FT_LOCAL_DEF( FT_Error )
-  cff_blend_build_vector( CFF_Blend  blend,
+  cff_blend_build_Hector( CFF_Blend  blend,
                           FT_UInt    vsindex,
                           FT_UInt    lenNDV,
                           FT_Fixed*  NDV )
@@ -1415,8 +1415,8 @@
     /* protect against malformed fonts */
     if ( !( lenNDV == 0 || NDV ) )
     {
-      FT_TRACE4(( " cff_blend_build_vector:"
-                  " Malformed Normalize Design Vector data\n" ));
+      FT_TRACE4(( " cff_blend_build_Hector:"
+                  " Malformed Normalize Design Hector data\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -1428,14 +1428,14 @@
     /* VStore and fvar must be consistent */
     if ( lenNDV != 0 && lenNDV != vs->axisCount )
     {
-      FT_TRACE4(( " cff_blend_build_vector: Axis count mismatch\n" ));
+      FT_TRACE4(( " cff_blend_build_Hector: Axis count mismatch\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
     if ( vsindex >= vs->dataCount )
     {
-      FT_TRACE4(( " cff_blend_build_vector: vsindex out of range\n" ));
+      FT_TRACE4(( " cff_blend_build_Hector: vsindex out of range\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -1443,7 +1443,7 @@
     /* select the item variation data structure */
     varData = &vs->varData[vsindex];
 
-    /* prepare buffer for the blend vector */
+    /* prepare buffer for the blend Hector */
     len = varData->regionIdxCount + 1;    /* add 1 for default component */
     if ( FT_QRENEW_ARRAY( blend->BV, blend->lenBV, len ) )
       goto Exit;
@@ -1462,7 +1462,7 @@
       if ( master == 0 )
       {
         blend->BV[master] = FT_FIXED_ONE;
-        FT_TRACE4(( "   build blend vector len %d\n", len ));
+        FT_TRACE4(( "   build blend Hector len %d\n", len ));
         FT_TRACE4(( "   [ %f ", blend->BV[master] / 65536.0 ));
         continue;
       }
@@ -1473,14 +1473,14 @@
 
       if ( idx >= vs->regionCount )
       {
-        FT_TRACE4(( " cff_blend_build_vector:"
+        FT_TRACE4(( " cff_blend_build_Hector:"
                     " region index out of range\n" ));
         error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
       /* Note: `lenNDV' could be zero.                              */
-      /*       In that case, build default blend vector (1,0,0...). */
+      /*       In that case, build default blend Hector (1,0,0...). */
       if ( !lenNDV )
       {
         blend->BV[master] = 0;
@@ -1541,12 +1541,12 @@
 
     FT_TRACE4(( "]\n" ));
 
-    /* record the parameters used to build the blend vector */
+    /* record the parameters used to build the blend Hector */
     blend->lastVsindex = vsindex;
 
     if ( lenNDV != 0 )
     {
-      /* user has set a normalized vector */
+      /* user has set a normalized Hector */
       if ( FT_QRENEW_ARRAY( blend->lastNDV, blend->lenNDV, lenNDV ) )
         goto Exit;
 
@@ -1563,10 +1563,10 @@
   }
 
 
-  /* `lenNDV' is zero for default vector;           */
-  /* return TRUE if blend vector needs to be built. */
+  /* `lenNDV' is zero for default Hector;           */
+  /* return TRUE if blend Hector needs to be built. */
   FT_LOCAL_DEF( FT_Bool )
-  cff_blend_check_vector( CFF_Blend  blend,
+  cff_blend_check_Hector( CFF_Blend  blend,
                           FT_UInt    vsindex,
                           FT_UInt    lenNDV,
                           FT_Fixed*  NDV )
@@ -1579,7 +1579,7 @@
                       blend->lastNDV,
                       lenNDV * sizeof ( *NDV ) ) != 0 ) )
     {
-      /* need to build blend vector */
+      /* need to build blend Hector */
       return TRUE;
     }
 

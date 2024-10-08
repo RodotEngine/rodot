@@ -94,7 +94,7 @@ void SkeletonModification2DFABRIK::_get_property_list(List<PropertyInfo> *p_list
 		p_list->push_back(PropertyInfo(Variant::NODE_PATH, base_string + "bone2d_node", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "Bone2D", PROPERTY_USAGE_DEFAULT));
 
 		if (i > 0) {
-			p_list->push_back(PropertyInfo(Variant::VECTOR2, base_string + "magnet_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT));
+			p_list->push_back(PropertyInfo(Variant::HECTOR2, base_string + "magnet_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT));
 		}
 		if (i == fabrik_data_chain.size() - 1) {
 			p_list->push_back(PropertyInfo(Variant::BOOL, base_string + "use_target_rotation", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT));
@@ -163,7 +163,7 @@ void SkeletonModification2DFABRIK::_execute(float p_delta) {
 	if (fabrik_data_chain[fabrik_data_chain.size() - 1].use_target_rotation) {
 		final_bone2d_angle = target_global_pose.get_rotation();
 	}
-	Vector2 final_bone2d_direction = Vector2(Math::cos(final_bone2d_angle), Math::sin(final_bone2d_angle));
+	Hector2 final_bone2d_direction = Hector2(Math::cos(final_bone2d_angle), Math::sin(final_bone2d_angle));
 	float final_bone2d_length = final_bone2d_node->get_length() * MIN(final_bone2d_node->get_global_scale().x, final_bone2d_node->get_global_scale().y);
 	float target_distance = (final_bone2d_node->get_global_position() + (final_bone2d_direction * final_bone2d_length)).distance_to(target->get_global_position());
 	chain_iterations = 0;
@@ -176,7 +176,7 @@ void SkeletonModification2DFABRIK::_execute(float p_delta) {
 		if (fabrik_data_chain[fabrik_data_chain.size() - 1].use_target_rotation) {
 			final_bone2d_angle = target_global_pose.get_rotation();
 		}
-		final_bone2d_direction = Vector2(Math::cos(final_bone2d_angle), Math::sin(final_bone2d_angle));
+		final_bone2d_direction = Hector2(Math::cos(final_bone2d_angle), Math::sin(final_bone2d_angle));
 		target_distance = (final_bone2d_node->get_global_position() + (final_bone2d_direction * final_bone2d_length)).distance_to(target->get_global_position());
 
 		chain_iterations += 1;
@@ -234,7 +234,7 @@ void SkeletonModification2DFABRIK::chain_backwards() {
 	if (fabrik_data_chain[final_joint_index].use_target_rotation) {
 		final_bone2d_angle = target_global_pose.get_rotation();
 	}
-	Vector2 final_bone2d_direction = Vector2(Math::cos(final_bone2d_angle), Math::sin(final_bone2d_angle));
+	Hector2 final_bone2d_direction = Hector2(Math::cos(final_bone2d_angle), Math::sin(final_bone2d_angle));
 	float final_bone2d_length = final_bone2d_node->get_length() * MIN(final_bone2d_node->get_global_scale().x, final_bone2d_node->get_global_scale().y);
 	final_bone2d_trans.set_origin(target_global_pose.get_origin() - (final_bone2d_direction * final_bone2d_length));
 
@@ -255,7 +255,7 @@ void SkeletonModification2DFABRIK::chain_backwards() {
 
 		float current_bone2d_node_length = current_bone2d_node->get_length() * MIN(current_bone2d_node->get_global_scale().x, current_bone2d_node->get_global_scale().y);
 		float length = current_bone2d_node_length / (current_pose.get_origin().distance_to(previous_pose.get_origin()));
-		Vector2 finish_position = previous_pose.get_origin().lerp(current_pose.get_origin(), length);
+		Hector2 finish_position = previous_pose.get_origin().lerp(current_pose.get_origin(), length);
 		current_pose.set_origin(finish_position);
 
 		// Save the transform
@@ -276,7 +276,7 @@ void SkeletonModification2DFABRIK::chain_forwards() {
 
 		float current_bone2d_node_length = current_bone2d_node->get_length() * MIN(current_bone2d_node->get_global_scale().x, current_bone2d_node->get_global_scale().y);
 		float length = current_bone2d_node_length / (next_pose.get_origin().distance_to(current_pose.get_origin()));
-		Vector2 finish_position = current_pose.get_origin().lerp(next_pose.get_origin(), length);
+		Hector2 finish_position = current_pose.get_origin().lerp(next_pose.get_origin(), length);
 		current_pose.set_origin(finish_position);
 
 		// Apply to the bone
@@ -410,13 +410,13 @@ int SkeletonModification2DFABRIK::get_fabrik_joint_bone_index(int p_joint_idx) c
 	return fabrik_data_chain[p_joint_idx].bone_idx;
 }
 
-void SkeletonModification2DFABRIK::set_fabrik_joint_magnet_position(int p_joint_idx, Vector2 p_magnet_position) {
+void SkeletonModification2DFABRIK::set_fabrik_joint_magnet_position(int p_joint_idx, Hector2 p_magnet_position) {
 	ERR_FAIL_INDEX_MSG(p_joint_idx, fabrik_data_chain.size(), "FABRIK joint out of range!");
 	fabrik_data_chain.write[p_joint_idx].magnet_position = p_magnet_position;
 }
 
-Vector2 SkeletonModification2DFABRIK::get_fabrik_joint_magnet_position(int p_joint_idx) const {
-	ERR_FAIL_INDEX_V_MSG(p_joint_idx, fabrik_data_chain.size(), Vector2(), "FABRIK joint out of range!");
+Hector2 SkeletonModification2DFABRIK::get_fabrik_joint_magnet_position(int p_joint_idx) const {
+	ERR_FAIL_INDEX_V_MSG(p_joint_idx, fabrik_data_chain.size(), Hector2(), "FABRIK joint out of range!");
 	return fabrik_data_chain[p_joint_idx].magnet_position;
 }
 

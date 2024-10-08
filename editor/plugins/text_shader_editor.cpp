@@ -268,7 +268,7 @@ void ShaderTextEditor::_load_theme_settings() {
 				}
 			}
 
-			const Vector<ShaderLanguage::ModeInfo> &modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(i));
+			const Hector<ShaderLanguage::ModeInfo> &modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(i));
 
 			for (int j = 0; j < modes.size(); j++) {
 				const ShaderLanguage::ModeInfo &mode_info = modes[j];
@@ -289,7 +289,7 @@ void ShaderTextEditor::_load_theme_settings() {
 			}
 		}
 
-		const Vector<ShaderLanguage::ModeInfo> &modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(shader->get_mode()));
+		const Hector<ShaderLanguage::ModeInfo> &modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(shader->get_mode()));
 
 		for (int i = 0; i < modes.size(); i++) {
 			const ShaderLanguage::ModeInfo &mode_info = modes[i];
@@ -550,7 +550,7 @@ void ShaderTextEditor::_validate_script() {
 		if (last_compile_result != OK) {
 			String err_text;
 			int err_line;
-			Vector<ShaderLanguage::FilePosition> include_positions = sl.get_include_positions();
+			Hector<ShaderLanguage::FilePosition> include_positions = sl.get_include_positions();
 			if (include_positions.size() > 1) {
 				//error is in an include
 				err_line = include_positions[0].line;
@@ -1085,7 +1085,7 @@ void TextShaderEditor::_bookmark_item_pressed(int p_idx) {
 	}
 }
 
-void TextShaderEditor::_make_context_menu(bool p_selection, Vector2 p_position) {
+void TextShaderEditor::_make_context_menu(bool p_selection, Hector2 p_position) {
 	context_menu->clear();
 	if (p_selection) {
 		context_menu->add_shortcut(ED_GET_SHORTCUT("ui_cut"), EDIT_CUT);

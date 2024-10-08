@@ -309,11 +309,11 @@ void EditorSpinSlider::_draw_spin_slider() {
 
 	RID ci = get_canvas_item();
 	bool rtl = is_layout_rtl();
-	Vector2 size = get_size();
+	Hector2 size = get_size();
 
 	Ref<StyleBox> sb = get_theme_stylebox(read_only ? SNAME("read_only") : CoreStringName(normal), SNAME("LineEdit"));
 	if (!flat) {
-		draw_style_box(sb, Rect2(Vector2(), size));
+		draw_style_box(sb, Rect2(Hector2(), size));
 	}
 	Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("LineEdit"));
 	int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("LineEdit"));
@@ -335,21 +335,21 @@ void EditorSpinSlider::_draw_spin_slider() {
 	if (flat && !label.is_empty()) {
 		Ref<StyleBox> label_bg = get_theme_stylebox(SNAME("label_bg"), SNAME("EditorSpinSlider"));
 		if (rtl) {
-			draw_style_box(label_bg, Rect2(Vector2(size.width - (sb->get_offset().x * 2 + label_width), 0), Vector2(sb->get_offset().x * 2 + label_width, size.height)));
+			draw_style_box(label_bg, Rect2(Hector2(size.width - (sb->get_offset().x * 2 + label_width), 0), Hector2(sb->get_offset().x * 2 + label_width, size.height)));
 		} else {
-			draw_style_box(label_bg, Rect2(Vector2(), Vector2(sb->get_offset().x * 2 + label_width, size.height)));
+			draw_style_box(label_bg, Rect2(Hector2(), Hector2(sb->get_offset().x * 2 + label_width, size.height)));
 		}
 	}
 
 	if (has_focus()) {
 		Ref<StyleBox> focus = get_theme_stylebox(SNAME("focus"), SNAME("LineEdit"));
-		draw_style_box(focus, Rect2(Vector2(), size));
+		draw_style_box(focus, Rect2(Hector2(), size));
 	}
 
 	if (rtl) {
-		draw_string(font, Vector2(Math::round(size.width - sb->get_offset().x - label_width), vofs), label, HORIZONTAL_ALIGNMENT_RIGHT, -1, font_size, lc * Color(1, 1, 1, 0.5));
+		draw_string(font, Hector2(Math::round(size.width - sb->get_offset().x - label_width), vofs), label, HORIZONTAL_ALIGNMENT_RIGHT, -1, font_size, lc * Color(1, 1, 1, 0.5));
 	} else {
-		draw_string(font, Vector2(Math::round(sb->get_offset().x), vofs), label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, lc * Color(1, 1, 1, 0.5));
+		draw_string(font, Hector2(Math::round(sb->get_offset().x), vofs), label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, lc * Color(1, 1, 1, 0.5));
 	}
 
 	int suffix_start = numstr.length();
@@ -357,7 +357,7 @@ void EditorSpinSlider::_draw_spin_slider() {
 	TS->shaped_text_add_string(num_rid, numstr + U"\u2009" + suffix, font->get_rids(), font_size, font->get_opentype_features());
 
 	float text_start = rtl ? Math::round(sb->get_offset().x) : Math::round(sb->get_offset().x + label_width + sep);
-	Vector2 text_ofs = rtl ? Vector2(text_start + (number_width - TS->shaped_text_get_width(num_rid)), vofs) : Vector2(text_start, vofs);
+	Hector2 text_ofs = rtl ? Hector2(text_start + (number_width - TS->shaped_text_get_width(num_rid)), vofs) : Hector2(text_start, vofs);
 	int v_size = TS->shaped_text_get_glyph_count(num_rid);
 	const Glyph *glyphs = TS->shaped_text_get_glyphs(num_rid);
 	for (int i = 0; i < v_size; i++) {
@@ -368,9 +368,9 @@ void EditorSpinSlider::_draw_spin_slider() {
 					color.a *= 0.4;
 				}
 				if (glyphs[i].font_rid != RID()) {
-					TS->font_draw_glyph(glyphs[i].font_rid, ci, glyphs[i].font_size, text_ofs + Vector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, color);
+					TS->font_draw_glyph(glyphs[i].font_rid, ci, glyphs[i].font_size, text_ofs + Hector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, color);
 				} else if ((glyphs[i].flags & TextServer::GRAPHEME_IS_VIRTUAL) != TextServer::GRAPHEME_IS_VIRTUAL) {
-					TS->draw_hex_code_box(ci, glyphs[i].font_size, text_ofs + Vector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, color);
+					TS->draw_hex_code_box(ci, glyphs[i].font_size, text_ofs + Hector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, color);
 				}
 			}
 			text_ofs.x += glyphs[i].advance;
@@ -391,7 +391,7 @@ void EditorSpinSlider::_draw_spin_slider() {
 			if (hover_updown) {
 				c *= Color(1.2, 1.2, 1.2);
 			}
-			draw_texture(updown2, Vector2(updown_offset, updown_vofs), c);
+			draw_texture(updown2, Hector2(updown_offset, updown_vofs), c);
 			if (rtl) {
 				updown_offset += updown2->get_width();
 			}
@@ -438,7 +438,7 @@ void EditorSpinSlider::_draw_spin_slider() {
 					grabber->set_texture(grabber_tex);
 				}
 
-				Vector2 scale = get_global_transform_with_canvas().get_scale();
+				Hector2 scale = get_global_transform_with_canvas().get_scale();
 				grabber->set_scale(scale);
 				grabber->reset_size();
 				grabber->set_position(get_global_position() + (grabber_rect.get_center() - grabber->get_size() * 0.5) * scale);

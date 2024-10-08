@@ -159,7 +159,7 @@ void MenuBar::shortcut_input(const Ref<InputEvent> &p_event) {
 			return;
 		}
 
-		Vector<PopupMenu *> popups = _get_popups();
+		Hector<PopupMenu *> popups = _get_popups();
 		for (int i = 0; i < popups.size(); i++) {
 			if (menu_cache[i].hidden || menu_cache[i].disabled) {
 				continue;
@@ -235,7 +235,7 @@ void MenuBar::bind_global_menu() {
 		global_start_idx = count;
 	}
 
-	Vector<PopupMenu *> popups = _get_popups();
+	Hector<PopupMenu *> popups = _get_popups();
 	for (int i = 0; i < menu_cache.size(); i++) {
 		RID submenu_rid = popups[i]->bind_global_menu();
 		if (!popups[i]->is_system_menu()) {
@@ -258,7 +258,7 @@ void MenuBar::unbind_global_menu() {
 	NativeMenu *nmenu = NativeMenu::get_singleton();
 	RID main_menu = nmenu->get_system_menu(NativeMenu::MAIN_MENU_ID);
 
-	Vector<PopupMenu *> popups = _get_popups();
+	Hector<PopupMenu *> popups = _get_popups();
 	for (int i = menu_cache.size() - 1; i >= 0; i--) {
 		if (!popups[i]->is_system_menu()) {
 			if (menu_cache[i].submenu_rid.is_valid()) {
@@ -337,7 +337,7 @@ void MenuBar::_notification(int p_what) {
 				// Handled by OS.
 				return;
 			}
-			Vector2 pos = get_local_mouse_position();
+			Hector2 pos = get_local_mouse_position();
 			if (pos == old_mouse_pos) {
 				return;
 			}
@@ -505,7 +505,7 @@ void MenuBar::_refresh_menu_names() {
 	bool is_global = !global_menu_tag.is_empty();
 	RID main_menu = is_global ? nmenu->get_system_menu(NativeMenu::MAIN_MENU_ID) : RID();
 
-	Vector<PopupMenu *> popups = _get_popups();
+	Hector<PopupMenu *> popups = _get_popups();
 	for (int i = 0; i < popups.size(); i++) {
 		if (!popups[i]->has_meta("_menu_name") && String(popups[i]->get_name()) != get_menu_title(i)) {
 			menu_cache.write[i].name = popups[i]->get_name();
@@ -520,8 +520,8 @@ void MenuBar::_refresh_menu_names() {
 	}
 }
 
-Vector<PopupMenu *> MenuBar::_get_popups() const {
-	Vector<PopupMenu *> popups;
+Hector<PopupMenu *> MenuBar::_get_popups() const {
+	Hector<PopupMenu *> popups;
 	for (int i = 0; i < get_child_count(); i++) {
 		PopupMenu *pm = Object::cast_to<PopupMenu>(get_child(i));
 		if (!pm) {
@@ -536,7 +536,7 @@ int MenuBar::get_menu_idx_from_control(PopupMenu *p_child) const {
 	ERR_FAIL_NULL_V(p_child, -1);
 	ERR_FAIL_COND_V(p_child->get_parent() != this, -1);
 
-	Vector<PopupMenu *> popups = _get_popups();
+	Hector<PopupMenu *> popups = _get_popups();
 	for (int i = 0; i < popups.size(); i++) {
 		if (popups[i] == p_child) {
 			return i;
@@ -804,7 +804,7 @@ Size2 MenuBar::get_minimum_size() const {
 
 	Ref<StyleBox> style = theme_cache.normal;
 
-	Vector2 size;
+	Hector2 size;
 	for (int i = 0; i < menu_cache.size(); i++) {
 		if (menu_cache[i].hidden) {
 			continue;
@@ -907,7 +907,7 @@ bool MenuBar::is_menu_hidden(int p_menu) const {
 }
 
 PopupMenu *MenuBar::get_menu_popup(int p_idx) const {
-	Vector<PopupMenu *> controls = _get_popups();
+	Hector<PopupMenu *> controls = _get_popups();
 	if (p_idx >= 0 && p_idx < controls.size()) {
 		return controls[p_idx];
 	} else {

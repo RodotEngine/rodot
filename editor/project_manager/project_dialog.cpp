@@ -537,7 +537,7 @@ void ProjectDialog::ok_pressed() {
 		initial_settings["application/config/name"] = project_name->get_text().strip_edges();
 		initial_settings["application/config/icon"] = "res://icon.svg";
 
-		Error err = ProjectSettings::get_singleton()->save_custom(path.path_join("project.godot"), initial_settings, Vector<String>(), false);
+		Error err = ProjectSettings::get_singleton()->save_custom(path.path_join("project.godot"), initial_settings, Hector<String>(), false);
 		if (err != OK) {
 			_set_message(TTR("Couldn't create project.godot in project path."), MESSAGE_ERROR);
 			return;
@@ -611,7 +611,7 @@ void ProjectDialog::ok_pressed() {
 
 			ret = unzGoToFirstFile(pkg);
 
-			Vector<String> failed_files;
+			Hector<String> failed_files;
 			while (ret == UNZ_OK) {
 				//get filename
 				unz_file_info info;
@@ -625,7 +625,7 @@ void ProjectDialog::ok_pressed() {
 					Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 					da->make_dir(path.path_join(rel_path));
 				} else { // File.
-					Vector<uint8_t> uncomp_data;
+					Hector<uint8_t> uncomp_data;
 					uncomp_data.resize(info.uncompressed_size);
 
 					unzOpenCurrentFile(pkg);

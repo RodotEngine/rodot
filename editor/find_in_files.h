@@ -80,8 +80,8 @@ private:
 	// State
 	bool _searching = false;
 	String _current_dir;
-	Vector<PackedStringArray> _folders_stack;
-	Vector<String> _files_to_scan;
+	Hector<PackedStringArray> _folders_stack;
+	Hector<String> _files_to_scan;
 	int _initial_files_count = 0;
 };
 
@@ -194,7 +194,7 @@ private:
 		int begin_trimmed = 0;
 	};
 
-	void apply_replaces_in_file(const String &fpath, const Vector<Result> &locations, const String &new_text);
+	void apply_replaces_in_file(const String &fpath, const Hector<Result> &locations, const String &new_text);
 	void update_replace_buttons();
 	String get_replace_text();
 

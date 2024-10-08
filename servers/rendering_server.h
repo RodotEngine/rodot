@@ -68,10 +68,10 @@ class RenderingServer : public Object {
 	int mm_policy = 0;
 	bool render_loop_enabled = true;
 
-	Array _get_array_from_surface(uint64_t p_format, Vector<uint8_t> p_vertex_data, Vector<uint8_t> p_attrib_data, Vector<uint8_t> p_skin_data, int p_vertex_len, Vector<uint8_t> p_index_data, int p_index_len, const AABB &p_aabb, const Vector4 &p_uv_scale) const;
+	Array _get_array_from_surface(uint64_t p_format, Hector<uint8_t> p_vertex_data, Hector<uint8_t> p_attrib_data, Hector<uint8_t> p_skin_data, int p_vertex_len, Hector<uint8_t> p_index_data, int p_index_len, const AABB &p_aabb, const Hector4 &p_uv_scale) const;
 
-	const Vector2 SMALL_VEC2 = Vector2(CMP_EPSILON, CMP_EPSILON);
-	const Vector3 SMALL_VEC3 = Vector3(CMP_EPSILON, CMP_EPSILON, CMP_EPSILON);
+	const Hector2 SMALL_VEC2 = Hector2(CMP_EPSILON, CMP_EPSILON);
+	const Hector3 SMALL_VEC3 = Hector3(CMP_EPSILON, CMP_EPSILON, CMP_EPSILON);
 
 	virtual TypedArray<StringName> _global_shader_parameter_get_list() const;
 
@@ -82,14 +82,14 @@ protected:
 	RID white_texture;
 	RID test_material;
 
-	Error _surface_set_data(Array p_arrays, uint64_t p_format, uint32_t *p_offsets, uint32_t p_vertex_stride, uint32_t p_normal_stride, uint32_t p_attrib_stride, uint32_t p_skin_stride, Vector<uint8_t> &r_vertex_array, Vector<uint8_t> &r_attrib_array, Vector<uint8_t> &r_skin_array, int p_vertex_array_len, Vector<uint8_t> &r_index_array, int p_index_array_len, AABB &r_aabb, Vector<AABB> &r_bone_aabb, Vector4 &r_uv_scale);
+	Error _surface_set_data(Array p_arrays, uint64_t p_format, uint32_t *p_offsets, uint32_t p_vertex_stride, uint32_t p_normal_stride, uint32_t p_attrib_stride, uint32_t p_skin_stride, Hector<uint8_t> &r_vertex_array, Hector<uint8_t> &r_attrib_array, Hector<uint8_t> &r_skin_array, int p_vertex_array_len, Hector<uint8_t> &r_index_array, int p_index_array_len, AABB &r_aabb, Hector<AABB> &r_bone_aabb, Hector4 &r_uv_scale);
 
 	static RenderingServer *(*create_func)();
 	static void _bind_methods();
 
 #ifndef DISABLE_DEPRECATED
 	void _environment_set_fog_bind_compat_84792(RID p_env, bool p_enable, const Color &p_light_color, float p_light_energy, float p_sun_scatter, float p_density, float p_height, float p_height_density, float p_aerial_perspective, float p_sky_affect);
-	void _canvas_item_add_multiline_bind_compat_84523(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width = -1.0);
+	void _canvas_item_add_multiline_bind_compat_84523(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width = -1.0);
 	void _canvas_item_add_rect_bind_compat_84523(RID p_item, const Rect2 &p_rect, const Color &p_color);
 	void _canvas_item_add_circle_bind_compat_84523(RID p_item, const Point2 &p_pos, float p_radius, const Color &p_color);
 
@@ -135,15 +135,15 @@ public:
 	};
 
 	virtual RID texture_2d_create(const Ref<Image> &p_image) = 0;
-	virtual RID texture_2d_layered_create(const Vector<Ref<Image>> &p_layers, TextureLayeredType p_layered_type) = 0;
-	virtual RID texture_3d_create(Image::Format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) = 0; //all slices, then all the mipmaps, must be coherent
+	virtual RID texture_2d_layered_create(const Hector<Ref<Image>> &p_layers, TextureLayeredType p_layered_type) = 0;
+	virtual RID texture_3d_create(Image::Format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data) = 0; //all slices, then all the mipmaps, must be coherent
 	virtual RID texture_external_create(int p_width, int p_height, uint64_t p_external_buffer = 0) = 0;
 	virtual RID texture_proxy_create(RID p_base) = 0;
 
 	virtual RID texture_create_from_native_handle(TextureType p_type, Image::Format p_format, uint64_t p_native_handle, int p_width, int p_height, int p_depth, int p_layers = 1, TextureLayeredType p_layered_type = TEXTURE_LAYERED_2D_ARRAY) = 0;
 
 	virtual void texture_2d_update(RID p_texture, const Ref<Image> &p_image, int p_layer = 0) = 0;
-	virtual void texture_3d_update(RID p_texture, const Vector<Ref<Image>> &p_data) = 0;
+	virtual void texture_3d_update(RID p_texture, const Hector<Ref<Image>> &p_data) = 0;
 	virtual void texture_external_update(RID p_texture, int p_width, int p_height, uint64_t p_external_buffer = 0) = 0;
 	virtual void texture_proxy_update(RID p_texture, RID p_proxy_to) = 0;
 
@@ -154,7 +154,7 @@ public:
 
 	virtual Ref<Image> texture_2d_get(RID p_texture) const = 0;
 	virtual Ref<Image> texture_2d_layer_get(RID p_texture, int p_layer) const = 0;
-	virtual Vector<Ref<Image>> texture_3d_get(RID p_texture) const = 0;
+	virtual Hector<Ref<Image>> texture_3d_get(RID p_texture) const = 0;
 
 	virtual void texture_replace(RID p_texture, RID p_by_texture) = 0;
 	virtual void texture_set_size_override(RID p_texture, int p_width, int p_height) = 0;
@@ -239,9 +239,9 @@ public:
 				String name;
 				String code;
 			};
-			Vector<Stage> stages;
+			Hector<Stage> stages;
 		};
-		Vector<Version> versions;
+		Hector<Version> versions;
 	};
 
 	virtual ShaderNativeSourceCode shader_get_native_source_code(RID p_shader) const = 0;
@@ -361,33 +361,33 @@ public:
 		PrimitiveType primitive = PRIMITIVE_MAX;
 
 		uint64_t format = ARRAY_FLAG_FORMAT_CURRENT_VERSION;
-		Vector<uint8_t> vertex_data; // Vertex, Normal, Tangent (change with skinning, blendshape).
-		Vector<uint8_t> attribute_data; // Color, UV, UV2, Custom0-3.
-		Vector<uint8_t> skin_data; // Bone index, Bone weight.
+		Hector<uint8_t> vertex_data; // Vertex, Normal, Tangent (change with skinning, blendshape).
+		Hector<uint8_t> attribute_data; // Color, UV, UV2, Custom0-3.
+		Hector<uint8_t> skin_data; // Bone index, Bone weight.
 		uint32_t vertex_count = 0;
-		Vector<uint8_t> index_data;
+		Hector<uint8_t> index_data;
 		uint32_t index_count = 0;
 
 		AABB aabb;
 		struct LOD {
 			float edge_length = 0.0f;
-			Vector<uint8_t> index_data;
+			Hector<uint8_t> index_data;
 		};
-		Vector<LOD> lods;
-		Vector<AABB> bone_aabbs;
+		Hector<LOD> lods;
+		Hector<AABB> bone_aabbs;
 
 		// Transforms used in runtime bone AABBs compute.
 		// Since bone AABBs is saved in Mesh space, but bones is in Skeleton space.
 		Transform3D mesh_to_skeleton_xform;
 
-		Vector<uint8_t> blend_shape_data;
+		Hector<uint8_t> blend_shape_data;
 
-		Vector4 uv_scale;
+		Hector4 uv_scale;
 
 		RID material;
 	};
 
-	virtual RID mesh_create_from_surfaces(const Vector<SurfaceData> &p_surfaces, int p_blend_shape_count = 0) = 0;
+	virtual RID mesh_create_from_surfaces(const Hector<SurfaceData> &p_surfaces, int p_blend_shape_count = 0) = 0;
 	virtual RID mesh_create() = 0;
 
 	virtual void mesh_set_blend_shape_count(RID p_mesh, int p_blend_shape_count) = 0;
@@ -419,9 +419,9 @@ public:
 	virtual void mesh_set_blend_shape_mode(RID p_mesh, BlendShapeMode p_mode) = 0;
 	virtual BlendShapeMode mesh_get_blend_shape_mode(RID p_mesh) const = 0;
 
-	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) = 0;
-	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) = 0;
-	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) = 0;
+	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) = 0;
+	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) = 0;
+	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) = 0;
 
 	virtual void mesh_surface_set_material(RID p_mesh, int p_surface, RID p_material) = 0;
 	virtual RID mesh_surface_get_material(RID p_mesh, int p_surface) const = 0;
@@ -474,11 +474,11 @@ public:
 	virtual Color multimesh_instance_get_color(RID p_multimesh, int p_index) const = 0;
 	virtual Color multimesh_instance_get_custom_data(RID p_multimesh, int p_index) const = 0;
 
-	virtual void multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) = 0;
-	virtual Vector<float> multimesh_get_buffer(RID p_multimesh) const = 0;
+	virtual void multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) = 0;
+	virtual Hector<float> multimesh_get_buffer(RID p_multimesh) const = 0;
 
 	// Interpolation.
-	virtual void multimesh_set_buffer_interpolated(RID p_multimesh, const Vector<float> &p_buffer_curr, const Vector<float> &p_buffer_prev) = 0;
+	virtual void multimesh_set_buffer_interpolated(RID p_multimesh, const Hector<float> &p_buffer_curr, const Hector<float> &p_buffer_prev) = 0;
 	virtual void multimesh_set_physics_interpolated(RID p_multimesh, bool p_interpolated) = 0;
 	virtual void multimesh_set_physics_interpolation_quality(RID p_multimesh, MultimeshPhysicsInterpolationQuality p_quality) = 0;
 	virtual void multimesh_instance_reset_physics_interpolation(RID p_multimesh, int p_index) = 0;
@@ -631,8 +631,8 @@ public:
 	virtual void reflection_probe_set_ambient_color(RID p_probe, const Color &p_color) = 0;
 	virtual void reflection_probe_set_ambient_energy(RID p_probe, float p_energy) = 0;
 	virtual void reflection_probe_set_max_distance(RID p_probe, float p_distance) = 0;
-	virtual void reflection_probe_set_size(RID p_probe, const Vector3 &p_size) = 0;
-	virtual void reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) = 0;
+	virtual void reflection_probe_set_size(RID p_probe, const Hector3 &p_size) = 0;
+	virtual void reflection_probe_set_origin_offset(RID p_probe, const Hector3 &p_offset) = 0;
 	virtual void reflection_probe_set_as_interior(RID p_probe, bool p_enable) = 0;
 	virtual void reflection_probe_set_enable_box_projection(RID p_probe, bool p_enable) = 0;
 	virtual void reflection_probe_set_enable_shadows(RID p_probe, bool p_enable) = 0;
@@ -652,7 +652,7 @@ public:
 	};
 
 	virtual RID decal_create() = 0;
-	virtual void decal_set_size(RID p_decal, const Vector3 &p_size) = 0;
+	virtual void decal_set_size(RID p_decal, const Hector3 &p_size) = 0;
 	virtual void decal_set_texture(RID p_decal, DecalTexture p_type, RID p_texture) = 0;
 	virtual void decal_set_emission_energy(RID p_decal, float p_energy) = 0;
 	virtual void decal_set_albedo_mix(RID p_decal, float p_mix) = 0;
@@ -677,14 +677,14 @@ public:
 
 	virtual RID voxel_gi_create() = 0;
 
-	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) = 0;
+	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3i &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts) = 0;
 
 	virtual AABB voxel_gi_get_bounds(RID p_voxel_gi) const = 0;
-	virtual Vector3i voxel_gi_get_octree_size(RID p_voxel_gi) const = 0;
-	virtual Vector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const = 0;
-	virtual Vector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const = 0;
-	virtual Vector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const = 0;
-	virtual Vector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const = 0;
+	virtual Hector3i voxel_gi_get_octree_size(RID p_voxel_gi) const = 0;
+	virtual Hector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const = 0;
+	virtual Hector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const = 0;
+	virtual Hector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const = 0;
+	virtual Hector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const = 0;
 	virtual Transform3D voxel_gi_get_to_cell_xform(RID p_voxel_gi) const = 0;
 
 	virtual void voxel_gi_set_dynamic_range(RID p_voxel_gi, float p_range) = 0;
@@ -712,9 +712,9 @@ public:
 	virtual void lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) = 0;
 	virtual void lightmap_set_probe_bounds(RID p_lightmap, const AABB &p_bounds) = 0;
 	virtual void lightmap_set_probe_interior(RID p_lightmap, bool p_interior) = 0;
-	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) = 0;
+	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) = 0;
 	virtual void lightmap_set_baked_exposure_normalization(RID p_lightmap, float p_exposure) = 0;
-	virtual PackedVector3Array lightmap_get_probe_capture_points(RID p_lightmap) const = 0;
+	virtual PackedHector3Array lightmap_get_probe_capture_points(RID p_lightmap) const = 0;
 	virtual PackedColorArray lightmap_get_probe_capture_sh(RID p_lightmap) const = 0;
 	virtual PackedInt32Array lightmap_get_probe_capture_tetrahedra(RID p_lightmap) const = 0;
 	virtual PackedInt32Array lightmap_get_probe_capture_bsp_tree(RID p_lightmap) const = 0;
@@ -761,7 +761,7 @@ public:
 	virtual void particles_set_transform_align(RID p_particles, ParticlesTransformAlign p_transform_align) = 0;
 
 	virtual void particles_set_trails(RID p_particles, bool p_enable, float p_length_sec) = 0;
-	virtual void particles_set_trail_bind_poses(RID p_particles, const Vector<Transform3D> &p_bind_poses) = 0;
+	virtual void particles_set_trail_bind_poses(RID p_particles, const Hector<Transform3D> &p_bind_poses) = 0;
 
 	virtual bool particles_is_inactive(RID p_particles) = 0;
 	virtual void particles_request_process(RID p_particles) = 0;
@@ -777,7 +777,7 @@ public:
 		PARTICLES_EMIT_FLAG_CUSTOM = 16
 	};
 
-	virtual void particles_emit(RID p_particles, const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) = 0;
+	virtual void particles_emit(RID p_particles, const Transform3D &p_transform, const Hector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) = 0;
 
 	enum ParticlesDrawOrder {
 		PARTICLES_DRAW_ORDER_INDEX,
@@ -794,7 +794,7 @@ public:
 	virtual AABB particles_get_current_aabb(RID p_particles) = 0;
 
 	virtual void particles_set_emission_transform(RID p_particles, const Transform3D &p_transform) = 0; // This is only used for 2D, in 3D it's automatic.
-	virtual void particles_set_emitter_velocity(RID p_particles, const Vector3 &p_velocity) = 0;
+	virtual void particles_set_emitter_velocity(RID p_particles, const Hector3 &p_velocity) = 0;
 	virtual void particles_set_interp_to_end(RID p_particles, float p_interp) = 0;
 
 	/* PARTICLES COLLISION API */
@@ -804,7 +804,7 @@ public:
 	enum ParticlesCollisionType {
 		PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT,
 		PARTICLES_COLLISION_TYPE_BOX_ATTRACT,
-		PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT,
+		PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT,
 		PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE,
 		PARTICLES_COLLISION_TYPE_BOX_COLLIDE,
 		PARTICLES_COLLISION_TYPE_SDF_COLLIDE,
@@ -814,13 +814,13 @@ public:
 	virtual void particles_collision_set_collision_type(RID p_particles_collision, ParticlesCollisionType p_type) = 0;
 	virtual void particles_collision_set_cull_mask(RID p_particles_collision, uint32_t p_cull_mask) = 0;
 	virtual void particles_collision_set_sphere_radius(RID p_particles_collision, real_t p_radius) = 0; // For spheres.
-	virtual void particles_collision_set_box_extents(RID p_particles_collision, const Vector3 &p_extents) = 0; // For non-spheres.
+	virtual void particles_collision_set_box_extents(RID p_particles_collision, const Hector3 &p_extents) = 0; // For non-spheres.
 	virtual void particles_collision_set_attractor_strength(RID p_particles_collision, real_t p_strength) = 0;
 	virtual void particles_collision_set_attractor_directionality(RID p_particles_collision, real_t p_directionality) = 0;
 	virtual void particles_collision_set_attractor_attenuation(RID p_particles_collision, real_t p_curve) = 0;
-	virtual void particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) = 0; // For SDF and vector field, heightfield is dynamic.
+	virtual void particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) = 0; // For SDF and Hector field, heightfield is dynamic.
 
-	virtual void particles_collision_height_field_update(RID p_particles_collision) = 0; // For SDF and vector field.
+	virtual void particles_collision_height_field_update(RID p_particles_collision) = 0; // For SDF and Hector field.
 
 	enum ParticlesCollisionHeightfieldResolution { // Longest axis resolution.
 		PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_256,
@@ -832,7 +832,7 @@ public:
 		PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_MAX,
 	};
 
-	virtual void particles_collision_set_height_field_resolution(RID p_particles_collision, ParticlesCollisionHeightfieldResolution p_resolution) = 0; // For SDF and vector field.
+	virtual void particles_collision_set_height_field_resolution(RID p_particles_collision, ParticlesCollisionHeightfieldResolution p_resolution) = 0; // For SDF and Hector field.
 
 	/* FOG VOLUME API */
 
@@ -848,7 +848,7 @@ public:
 	};
 
 	virtual void fog_volume_set_shape(RID p_fog_volume, FogVolumeShape p_shape) = 0;
-	virtual void fog_volume_set_size(RID p_fog_volume, const Vector3 &p_size) = 0;
+	virtual void fog_volume_set_size(RID p_fog_volume, const Hector3 &p_size) = 0;
 	virtual void fog_volume_set_material(RID p_fog_volume, RID p_material) = 0;
 
 	/* VISIBILITY NOTIFIER API */
@@ -860,14 +860,14 @@ public:
 	/* OCCLUDER API */
 
 	virtual RID occluder_create() = 0;
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) = 0;
+	virtual void occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) = 0;
 
 	/* CAMERA API */
 
 	virtual RID camera_create() = 0;
 	virtual void camera_set_perspective(RID p_camera, float p_fovy_degrees, float p_z_near, float p_z_far) = 0;
 	virtual void camera_set_orthogonal(RID p_camera, float p_size, float p_z_near, float p_z_far) = 0;
-	virtual void camera_set_frustum(RID p_camera, float p_size, Vector2 p_offset, float p_z_near, float p_z_far) = 0;
+	virtual void camera_set_frustum(RID p_camera, float p_size, Hector2 p_offset, float p_z_near, float p_z_far) = 0;
 	virtual void camera_set_transform(RID p_camera, const Transform3D &p_transform) = 0;
 	virtual void camera_set_cull_mask(RID p_camera, uint32_t p_layers) = 0;
 	virtual void camera_set_environment(RID p_camera, RID p_env) = 0;
@@ -1068,7 +1068,7 @@ public:
 		VIEWPORT_DEBUG_DRAW_CLUSTER_DECALS,
 		VIEWPORT_DEBUG_DRAW_CLUSTER_REFLECTION_PROBES,
 		VIEWPORT_DEBUG_DRAW_OCCLUDERS,
-		VIEWPORT_DEBUG_DRAW_MOTION_VECTORS,
+		VIEWPORT_DEBUG_DRAW_MOTION_HectorS,
 		VIEWPORT_DEBUG_DRAW_INTERNAL_BUFFER,
 	};
 
@@ -1118,7 +1118,7 @@ public:
 	enum CompositorEffectFlags {
 		COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_COLOR = 1,
 		COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_DEPTH = 2,
-		COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS = 4,
+		COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_HectorS = 4,
 		COMPOSITOR_EFFECT_FLAG_NEEDS_ROUGHNESS = 8,
 		COMPOSITOR_EFFECT_FLAG_NEEDS_SEPARATE_SPECULAR = 16,
 	};
@@ -1188,7 +1188,7 @@ public:
 		ENV_GLOW_BLEND_MODE_MIX,
 	};
 
-	virtual void environment_set_glow(RID p_env, bool p_enable, Vector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map) = 0;
+	virtual void environment_set_glow(RID p_env, bool p_enable, Hector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map) = 0;
 
 	virtual void environment_glow_set_use_bicubic_upscale(bool p_enable) = 0;
 
@@ -1388,12 +1388,12 @@ public:
 	virtual void instance_set_ignore_culling(RID p_instance, bool p_enabled) = 0;
 
 	// Don't use these in a game!
-	virtual Vector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const = 0;
-	virtual Vector<ObjectID> instances_cull_ray(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario = RID()) const = 0;
-	virtual Vector<ObjectID> instances_cull_convex(const Vector<Plane> &p_convex, RID p_scenario = RID()) const = 0;
+	virtual Hector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const = 0;
+	virtual Hector<ObjectID> instances_cull_ray(const Hector3 &p_from, const Hector3 &p_to, RID p_scenario = RID()) const = 0;
+	virtual Hector<ObjectID> instances_cull_convex(const Hector<Plane> &p_convex, RID p_scenario = RID()) const = 0;
 
 	PackedInt64Array _instances_cull_aabb_bind(const AABB &p_aabb, RID p_scenario = RID()) const;
-	PackedInt64Array _instances_cull_ray_bind(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario = RID()) const;
+	PackedInt64Array _instances_cull_ray_bind(const Hector3 &p_from, const Hector3 &p_to, RID p_scenario = RID()) const;
 	PackedInt64Array _instances_cull_convex_bind(const TypedArray<Plane> &p_convex, RID p_scenario = RID()) const;
 
 	enum InstanceFlags {
@@ -1497,18 +1497,18 @@ public:
 	};
 
 	virtual void canvas_item_add_line(RID p_item, const Point2 &p_from, const Point2 &p_to, const Color &p_color, float p_width = -1.0, bool p_antialiased = false) = 0;
-	virtual void canvas_item_add_polyline(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false) = 0;
-	virtual void canvas_item_add_multiline(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false) = 0;
+	virtual void canvas_item_add_polyline(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false) = 0;
+	virtual void canvas_item_add_multiline(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false) = 0;
 	virtual void canvas_item_add_rect(RID p_item, const Rect2 &p_rect, const Color &p_color, bool p_antialiased = false) = 0;
 	virtual void canvas_item_add_circle(RID p_item, const Point2 &p_pos, float p_radius, const Color &p_color, bool p_antialiased = false) = 0;
 	virtual void canvas_item_add_texture_rect(RID p_item, const Rect2 &p_rect, RID p_texture, bool p_tile = false, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) = 0;
 	virtual void canvas_item_add_texture_rect_region(RID p_item, const Rect2 &p_rect, RID p_texture, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false, bool p_clip_uv = false) = 0;
 	virtual void canvas_item_add_msdf_texture_rect_region(RID p_item, const Rect2 &p_rect, RID p_texture, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), int p_outline_size = 0, float p_px_range = 1.0, float p_scale = 1.0) = 0;
 	virtual void canvas_item_add_lcd_texture_rect_region(RID p_item, const Rect2 &p_rect, RID p_texture, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1)) = 0;
-	virtual void canvas_item_add_nine_patch(RID p_item, const Rect2 &p_rect, const Rect2 &p_source, RID p_texture, const Vector2 &p_topleft, const Vector2 &p_bottomright, NinePatchAxisMode p_x_axis_mode = NINE_PATCH_STRETCH, NinePatchAxisMode p_y_axis_mode = NINE_PATCH_STRETCH, bool p_draw_center = true, const Color &p_modulate = Color(1, 1, 1)) = 0;
-	virtual void canvas_item_add_primitive(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, RID p_texture) = 0;
-	virtual void canvas_item_add_polygon(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), RID p_texture = RID()) = 0;
-	virtual void canvas_item_add_triangle_array(RID p_item, const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>(), RID p_texture = RID(), int p_count = -1) = 0;
+	virtual void canvas_item_add_nine_patch(RID p_item, const Rect2 &p_rect, const Rect2 &p_source, RID p_texture, const Hector2 &p_topleft, const Hector2 &p_bottomright, NinePatchAxisMode p_x_axis_mode = NINE_PATCH_STRETCH, NinePatchAxisMode p_y_axis_mode = NINE_PATCH_STRETCH, bool p_draw_center = true, const Color &p_modulate = Color(1, 1, 1)) = 0;
+	virtual void canvas_item_add_primitive(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, RID p_texture) = 0;
+	virtual void canvas_item_add_polygon(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), RID p_texture = RID()) = 0;
+	virtual void canvas_item_add_triangle_array(RID p_item, const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), const Hector<int> &p_bones = Hector<int>(), const Hector<float> &p_weights = Hector<float>(), RID p_texture = RID(), int p_count = -1) = 0;
 	virtual void canvas_item_add_mesh(RID p_item, const RID &p_mesh, const Transform2D &p_transform = Transform2D(), const Color &p_modulate = Color(1, 1, 1), RID p_texture = RID()) = 0;
 	virtual void canvas_item_add_multimesh(RID p_item, RID p_mesh, RID p_texture = RID()) = 0;
 	virtual void canvas_item_add_particles(RID p_item, RID p_particles, RID p_texture) = 0;
@@ -1573,7 +1573,7 @@ public:
 
 	virtual void canvas_light_set_texture_scale(RID p_light, float p_scale) = 0;
 	virtual void canvas_light_set_texture(RID p_light, RID p_texture) = 0;
-	virtual void canvas_light_set_texture_offset(RID p_light, const Vector2 &p_offset) = 0;
+	virtual void canvas_light_set_texture_offset(RID p_light, const Hector2 &p_offset) = 0;
 
 	enum CanvasLightBlendMode {
 		CANVAS_LIGHT_BLEND_MODE_ADD,
@@ -1616,7 +1616,7 @@ public:
 	/* CANVAS LIGHT OCCLUDER POLYGON */
 
 	virtual RID canvas_occluder_polygon_create() = 0;
-	virtual void canvas_occluder_polygon_set_shape(RID p_occluder_polygon, const Vector<Vector2> &p_shape, bool p_closed) = 0;
+	virtual void canvas_occluder_polygon_set_shape(RID p_occluder_polygon, const Hector<Hector2> &p_shape, bool p_closed) = 0;
 
 	enum CanvasOccluderPolygonCullMode {
 		CANVAS_OCCLUDER_POLYGON_CULL_DISABLED,
@@ -1668,7 +1668,7 @@ public:
 
 	virtual void global_shader_parameter_add(const StringName &p_name, GlobalShaderParameterType p_type, const Variant &p_value) = 0;
 	virtual void global_shader_parameter_remove(const StringName &p_name) = 0;
-	virtual Vector<StringName> global_shader_parameter_get_list() const = 0;
+	virtual Hector<StringName> global_shader_parameter_get_list() const = 0;
 
 	virtual void global_shader_parameter_set(const StringName &p_name, const Variant &p_value) = 0;
 	virtual void global_shader_parameter_set_override(const StringName &p_name, const Variant &p_value) = 0;
@@ -1731,7 +1731,7 @@ public:
 	};
 
 	virtual void set_frame_profiling_enabled(bool p_enable) = 0;
-	virtual Vector<FrameProfileArea> get_frame_profile() = 0;
+	virtual Hector<FrameProfileArea> get_frame_profile() = 0;
 	virtual uint64_t get_frame_profile_frame() = 0;
 
 	virtual double get_frame_setup_time_cpu() const = 0;
@@ -1745,12 +1745,12 @@ public:
 	virtual RID get_test_texture();
 	virtual RID get_white_texture();
 
-	virtual void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) = 0;
+	virtual void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) = 0;
 
 	virtual RID make_sphere_mesh(int p_lats, int p_lons, real_t p_radius);
 
 	virtual void mesh_add_surface_from_mesh_data(RID p_mesh, const Geometry3D::MeshData &p_mesh_data);
-	virtual void mesh_add_surface_from_planes(RID p_mesh, const Vector<Plane> &p_planes);
+	virtual void mesh_add_surface_from_planes(RID p_mesh, const Hector<Plane> &p_planes);
 
 	virtual void set_boot_image(const Ref<Image> &p_image, const Color &p_color, bool p_scale, bool p_use_filter = true) = 0;
 	virtual Color get_default_clear_color() = 0;

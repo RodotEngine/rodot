@@ -90,15 +90,15 @@ namespace RVO2D {
 		size_t maxNeighbors_;
 		float maxSpeed_;
 		float neighborDist_;
-		Vector2 newVelocity_;
+		Hector2 newVelocity_;
 		std::vector<std::pair<float, const Obstacle2D *> > obstacleNeighbors_;
 		std::vector<Line> orcaLines_;
-		Vector2 position_;
-		Vector2 prefVelocity_;
+		Hector2 position_;
+		Hector2 prefVelocity_;
 		float radius_;
 		float timeHorizon_;
 		float timeHorizonObst_;
-		Vector2 velocity_;
+		Hector2 velocity_;
 		float height_ = 0.0;
 		float elevation_ = 0.0;
 		uint32_t avoidance_layers_ = 1;
@@ -125,8 +125,8 @@ namespace RVO2D {
 	 * \return     True if successful.
 	 */
 	bool linearProgram1(const std::vector<Line> &lines, size_t lineNo,
-						float radius, const Vector2 &optVelocity,
-						bool directionOpt, Vector2 &result);
+						float radius, const Hector2 &optVelocity,
+						bool directionOpt, Hector2 &result);
 
 	/**
 	 * \relates    Agent
@@ -140,8 +140,8 @@ namespace RVO2D {
 	 * \return     The number of the line it fails on, and the number of lines if successful.
 	 */
 	size_t linearProgram2(const std::vector<Line> &lines, float radius,
-						  const Vector2 &optVelocity, bool directionOpt,
-						  Vector2 &result);
+						  const Hector2 &optVelocity, bool directionOpt,
+						  Hector2 &result);
 
 	/**
 	 * \relates    Agent
@@ -154,7 +154,7 @@ namespace RVO2D {
 	 * \param      result        A reference to the result of the linear program.
 	 */
 	void linearProgram3(const std::vector<Line> &lines, size_t numObstLines, size_t beginLine,
-						float radius, Vector2 &result);
+						float radius, Hector2 &result);
 }
 
 #endif /* RVO2D_AGENT_H_ */

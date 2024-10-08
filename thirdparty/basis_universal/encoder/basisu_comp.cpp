@@ -374,7 +374,7 @@ namespace basisu
 		return cECSuccess;
 	}
 
-	bool basis_compressor::generate_mipmaps(const image &img, basisu::vector<image> &mips, bool has_alpha)
+	bool basis_compressor::generate_mipmaps(const image &img, basisu::Hector<image> &mips, bool has_alpha)
 	{
 		debug_printf("basis_compressor::generate_mipmaps\n");
 
@@ -409,7 +409,7 @@ namespace basisu
 			const uint32_t level_width = maximum<uint32_t>(1, img.get_width() >> level);
 			const uint32_t level_height = maximum<uint32_t>(1, img.get_height() >> level);
 
-			image &level_img = *enlarge_vector(mips, 1);
+			image &level_img = *enlarge_Hector(mips, 1);
 			level_img.resize(level_width, level_height);
 						
 			int result = stbir_resize_uint8_generic( 
@@ -434,7 +434,7 @@ namespace basisu
 			const uint32_t level_width = maximum<uint32_t>(1, img.get_width() >> level);
 			const uint32_t level_height = maximum<uint32_t>(1, img.get_height() >> level);
 
-			image& level_img = *enlarge_vector(mips, 1);
+			image& level_img = *enlarge_Hector(mips, 1);
 			level_img.resize(level_width, level_height);
 
 			const image* pSource_image = &img;
@@ -480,8 +480,8 @@ namespace basisu
 
 		m_any_source_image_has_alpha = false;
 
-		basisu::vector<image> source_images;
-		basisu::vector<std::string> source_filenames;
+		basisu::Hector<image> source_images;
+		basisu::Hector<std::string> source_filenames;
 		
 		// First load all source images, and determine if any have an alpha channel.
 		for (uint32_t source_file_index = 0; source_file_index < total_source_files; source_file_index++)
@@ -661,7 +661,7 @@ namespace basisu
 			const std::string &source_filename = source_filenames[source_file_index];
 
 			// Now, for each source image, create the slices corresponding to that image.
-			basisu::vector<image> slices;
+			basisu::Hector<image> slices;
 			
 			slices.reserve(32);
 						
@@ -713,7 +713,7 @@ namespace basisu
 			if ((m_any_source_image_has_alpha) && (!m_params.m_uastc))
 			{
 				// For ETC1S, if source has alpha, then even mips will have RGB, and odd mips will have alpha in RGB. 
-				basisu::vector<image> alpha_slices;
+				basisu::Hector<image> alpha_slices;
 				uint_vec new_mip_indices;
 
 				alpha_slices.reserve(slices.size() * 2);
@@ -776,9 +776,9 @@ namespace basisu
 
 				const uint32_t dest_image_index = m_slice_images.size();
 
-				enlarge_vector(m_stats, 1);
-				enlarge_vector(m_slice_images, 1);
-				enlarge_vector(m_slice_descs, 1);
+				enlarge_Hector(m_stats, 1);
+				enlarge_Hector(m_slice_images, 1);
+				enlarge_Hector(m_slice_descs, 1);
 								
 				m_stats[dest_image_index].m_filename = source_filename.c_str();
 				m_stats[dest_image_index].m_width = orig_width;
@@ -1711,7 +1711,7 @@ namespace basisu
 			}
 		}
 
-		basisu::vector<uint32_t> total_mips(total_layers);
+		basisu::Hector<uint32_t> total_mips(total_layers);
 		for (uint32_t i = 0; i < m_slice_descs.size(); i++)
 			total_mips[m_slice_descs[i].m_source_file_index] = maximum<uint32_t>(total_mips[m_slice_descs[i].m_source_file_index], m_slice_descs[i].m_mip_index + 1);
 
@@ -1877,8 +1877,8 @@ namespace basisu
 			}
 		}
 
-		basisu::vector<uint8_vec> level_data_bytes(total_levels);
-		basisu::vector<uint8_vec> compressed_level_data_bytes(total_levels);
+		basisu::Hector<uint8_vec> level_data_bytes(total_levels);
+		basisu::Hector<uint8_vec> compressed_level_data_bytes(total_levels);
 		uint_vec slice_level_offsets(m_slice_descs.size());
 
 		// This will append the texture data in the correct order (for each level: layer, then face).
@@ -1889,9 +1889,9 @@ namespace basisu
 			slice_level_offsets[slice_index] = level_data_bytes[slice_desc.m_mip_index].size();
 
 			if (m_params.m_uastc)
-				append_vector(level_data_bytes[slice_desc.m_mip_index], m_uastc_backend_output.m_slice_image_data[slice_index]);
+				append_Hector(level_data_bytes[slice_desc.m_mip_index], m_uastc_backend_output.m_slice_image_data[slice_index]);
 			else
-				append_vector(level_data_bytes[slice_desc.m_mip_index], backend_output.m_slice_image_data[slice_index]);
+				append_Hector(level_data_bytes[slice_desc.m_mip_index], backend_output.m_slice_image_data[slice_index]);
 		}
 
 		// UASTC supercompression
@@ -1937,7 +1937,7 @@ namespace basisu
 			etc1s_global_data_header.m_selectors_byte_length = backend_output.m_selector_palette.size();
 			etc1s_global_data_header.m_tables_byte_length = backend_output.m_slice_image_tables.size();
 
-			basisu::vector<basist::ktx2_etc1s_image_desc> etc1s_image_descs(total_levels * total_layers * total_faces);
+			basisu::Hector<basist::ktx2_etc1s_image_desc> etc1s_image_descs(total_levels * total_layers * total_faces);
 			memset(etc1s_image_descs.data(), 0, etc1s_image_descs.size_in_bytes());
 
 			for (uint32_t slice_index = 0; slice_index < m_slice_descs.size(); slice_index++)
@@ -1971,11 +1971,11 @@ namespace basisu
 				}
 			} // slice_index
 
-			append_vector(etc1s_global_data, (const uint8_t*)&etc1s_global_data_header, sizeof(etc1s_global_data_header));
-			append_vector(etc1s_global_data, (const uint8_t*)etc1s_image_descs.data(), etc1s_image_descs.size_in_bytes());
-			append_vector(etc1s_global_data, backend_output.m_endpoint_palette);
-			append_vector(etc1s_global_data, backend_output.m_selector_palette);
-			append_vector(etc1s_global_data, backend_output.m_slice_image_tables);
+			append_Hector(etc1s_global_data, (const uint8_t*)&etc1s_global_data_header, sizeof(etc1s_global_data_header));
+			append_Hector(etc1s_global_data, (const uint8_t*)etc1s_image_descs.data(), etc1s_image_descs.size_in_bytes());
+			append_Hector(etc1s_global_data, backend_output.m_endpoint_palette);
+			append_Hector(etc1s_global_data, backend_output.m_selector_palette);
+			append_Hector(etc1s_global_data, backend_output.m_slice_image_tables);
 			
 			header.m_supercompression_scheme = basist::KTX2_SS_BASISLZ;
 		}
@@ -2027,10 +2027,10 @@ namespace basisu
 					return false;
 
 				packed_uint<4> le_len((uint32_t)total_len);
-				append_vector(key_value_data, (const uint8_t*)&le_len, sizeof(le_len));
+				append_Hector(key_value_data, (const uint8_t*)&le_len, sizeof(le_len));
 
-				append_vector(key_value_data, key_values[i].m_key);
-				append_vector(key_value_data, key_values[i].m_value);
+				append_Hector(key_value_data, key_values[i].m_key);
+				append_Hector(key_value_data, key_values[i].m_value);
 
 				const uint32_t ofs = key_value_data.size() & 3;
 				const uint32_t padding = (4 - ofs) & 3;
@@ -2080,7 +2080,7 @@ namespace basisu
 			// Try again
 		}
 
-		basisu::vector<basist::ktx2_level_index> level_index_array(total_levels);
+		basisu::Hector<basist::ktx2_level_index> level_index_array(total_levels);
 		memset(level_index_array.data(), 0, level_index_array.size_in_bytes());
 				
 		m_output_ktx2_file.clear();
@@ -2090,7 +2090,7 @@ namespace basisu
 		m_output_ktx2_file.resize(sizeof(header));
 
 		// Level index array
-		append_vector(m_output_ktx2_file, (const uint8_t*)level_index_array.data(), level_index_array.size_in_bytes());
+		append_Hector(m_output_ktx2_file, (const uint8_t*)level_index_array.data(), level_index_array.size_in_bytes());
 				
 		// DFD
 		const uint8_t* pDFD = dfd.data();
@@ -2098,7 +2098,7 @@ namespace basisu
 
 		header.m_dfd_byte_offset = m_output_ktx2_file.size();
 		header.m_dfd_byte_length = dfd_len;
-		append_vector(m_output_ktx2_file, pDFD, dfd_len);
+		append_Hector(m_output_ktx2_file, pDFD, dfd_len);
 
 		// Key value data
 		if (key_value_data.size())
@@ -2107,7 +2107,7 @@ namespace basisu
 
 			header.m_kvd_byte_offset = m_output_ktx2_file.size();
 			header.m_kvd_byte_length = key_value_data.size();
-			append_vector(m_output_ktx2_file, key_value_data);
+			append_Hector(m_output_ktx2_file, key_value_data);
 		}
 
 		// Global Supercompressed Data
@@ -2121,7 +2121,7 @@ namespace basisu
 			header.m_sgd_byte_length = etc1s_global_data.size();
 			header.m_sgd_byte_offset = m_output_ktx2_file.size();
 
-			append_vector(m_output_ktx2_file, etc1s_global_data);
+			append_Hector(m_output_ktx2_file, etc1s_global_data);
 		}
 
 		// mipPadding
@@ -2149,7 +2149,7 @@ namespace basisu
 				level_index_array[level].m_uncompressed_byte_length = level_data_bytes[level].size();
 
 			level_index_array[level].m_byte_offset = m_output_ktx2_file.size();
-			append_vector(m_output_ktx2_file, compressed_level_data_bytes[level]);
+			append_Hector(m_output_ktx2_file, compressed_level_data_bytes[level]);
 		}
 		
 		// Write final header
@@ -2165,8 +2165,8 @@ namespace basisu
 
 	bool basis_parallel_compress(
 		uint32_t total_threads,
-		const basisu::vector<basis_compressor_params>& params_vec,
-		basisu::vector< parallel_results >& results_vec)
+		const basisu::Hector<basis_compressor_params>& params_vec,
+		basisu::Hector< parallel_results >& results_vec)
 	{
 		assert(g_library_initialized);
 		if (!g_library_initialized)
@@ -2259,7 +2259,7 @@ namespace basisu
 	}
 
 	void* basis_compress(
-		const basisu::vector<image>& source_images,
+		const basisu::Hector<image>& source_images,
 		uint32_t flags_and_quality, float uastc_rdo_quality,
 		size_t* pSize,
 		image_stats* pStats)
@@ -2405,7 +2405,7 @@ namespace basisu
 		}
 
 		// Copy the source image
-		basisu::vector<image> source_image(1);
+		basisu::Hector<image> source_image(1);
 		source_image[0].crop(width, height, width, g_black_color, false);
 		for (uint32_t y = 0; y < height; y++)
 			memcpy(source_image[0].get_ptr() + y * width, (const color_rgba*)pImageRGBA + y * pitch_in_pixels, width * sizeof(color_rgba));
@@ -2430,7 +2430,7 @@ namespace basisu
 		}
 
 		const uint32_t W = 1024, H = 1024;
-		basisu::vector<image> images;
+		basisu::Hector<image> images;
 		image& img = images.enlarge(1)->resize(W, H);
 		
 		const uint32_t NUM_RAND_LETTERS = 6000;// 40000;

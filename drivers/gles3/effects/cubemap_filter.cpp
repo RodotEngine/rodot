@@ -89,19 +89,19 @@ CubemapFilter::~CubemapFilter() {
 
 // Helper functions for IBL filtering
 
-Vector3 importance_sample_GGX(Vector2 xi, float roughness4) {
+Hector3 importance_sample_GGX(Hector2 xi, float roughness4) {
 	// Compute distribution direction
 	float phi = 2.0 * Math_PI * xi.x;
 	float cos_theta = sqrt((1.0 - xi.y) / (1.0 + (roughness4 - 1.0) * xi.y));
 	float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 
 	// Convert to spherical direction
-	Vector3 half_vector;
-	half_vector.x = sin_theta * cos(phi);
-	half_vector.y = sin_theta * sin(phi);
-	half_vector.z = cos_theta;
+	Hector3 half_Hector;
+	half_Hector.x = sin_theta * cos(phi);
+	half_Hector.y = sin_theta * sin(phi);
+	half_Hector.z = cos_theta;
 
-	return half_vector;
+	return half_Hector;
 }
 
 float distribution_GGX(float NdotH, float roughness4) {
@@ -122,8 +122,8 @@ float radical_inverse_vdC(uint32_t bits) {
 	return float(bits) * 2.3283064365386963e-10;
 }
 
-Vector2 hammersley(uint32_t i, uint32_t N) {
-	return Vector2(float(i) / float(N), radical_inverse_vdC(i));
+Hector2 hammersley(uint32_t i, uint32_t N) {
+	return Hector2(float(i) / float(N), radical_inverse_vdC(i));
 }
 
 void CubemapFilter::filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubemap, GLuint p_dest_framebuffer, int p_source_size, int p_mipmap_count, int p_layer) {
@@ -159,15 +159,15 @@ void CubemapFilter::filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubem
 
 		float solid_angle_texel = 4.0 * Math_PI / float(6 * size * size);
 
-		LocalVector<float> sample_directions;
+		LocalHector<float> sample_directions;
 		sample_directions.resize(4 * sample_count);
 
 		uint32_t index = 0;
 		float weight = 0.0;
 		for (uint32_t i = 0; i < sample_count; i++) {
-			Vector2 xi = hammersley(i, sample_count);
-			Vector3 dir = importance_sample_GGX(xi, roughness4);
-			Vector3 light_vec = (2.0 * dir.z * dir - Vector3(0.0, 0.0, 1.0));
+			Hector2 xi = hammersley(i, sample_count);
+			Hector3 dir = importance_sample_GGX(xi, roughness4);
+			Hector3 light_vec = (2.0 * dir.z * dir - Hector3(0.0, 0.0, 1.0));
 
 			if (light_vec.z <= 0.0) {
 				continue;

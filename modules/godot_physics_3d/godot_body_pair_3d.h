@@ -35,18 +35,18 @@
 #include "godot_constraint_3d.h"
 #include "godot_soft_body_3d.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class GodotBodyContact3D : public GodotConstraint3D {
 protected:
 	struct Contact {
-		Vector3 position;
-		Vector3 normal;
+		Hector3 position;
+		Hector3 normal;
 		int index_A = 0, index_B = 0;
-		Vector3 local_A, local_B;
-		Vector3 acc_impulse; // accumulated impulse - only one of the object's impulse is needed as impulse_a == -impulse_b
+		Hector3 local_A, local_B;
+		Hector3 acc_impulse; // accumulated impulse - only one of the object's impulse is needed as impulse_a == -impulse_b
 		real_t acc_normal_impulse = 0.0; // accumulated normal impulse (Pn)
-		Vector3 acc_tangent_impulse; // accumulated tangent impulse (Pt)
+		Hector3 acc_tangent_impulse; // accumulated tangent impulse (Pt)
 		real_t acc_bias_impulse = 0.0; // accumulated normal impulse for position bias (Pnb)
 		real_t acc_bias_impulse_center_of_mass = 0.0; // accumulated normal impulse for position bias applied to com
 		real_t mass_normal = 0.0;
@@ -56,10 +56,10 @@ protected:
 		real_t depth = 0.0;
 		bool active = false;
 		bool used = false;
-		Vector3 rA, rB; // Offset in world orientation with respect to center of mass
+		Hector3 rA, rB; // Offset in world orientation with respect to center of mass
 	};
 
-	Vector3 sep_axis;
+	Hector3 sep_axis;
 	bool collided = false;
 	bool check_ccd = false;
 
@@ -92,14 +92,14 @@ class GodotBodyPair3D : public GodotBodyContact3D {
 
 	bool report_contacts_only = false;
 
-	Vector3 offset_B; //use local A coordinates to avoid numerical issues on collision detection
+	Hector3 offset_B; //use local A coordinates to avoid numerical issues on collision detection
 
 	Contact contacts[MAX_CONTACTS];
 	int contact_count = 0;
 
-	static void _contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata);
+	static void _contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata);
 
-	void contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal);
+	void contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal);
 
 	void validate_contacts();
 	bool _test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, const Transform3D &p_xform_A, GodotBody3D *p_B, int p_shape_B, const Transform3D &p_xform_B);
@@ -124,11 +124,11 @@ class GodotBodySoftBodyPair3D : public GodotBodyContact3D {
 
 	bool report_contacts_only = false;
 
-	LocalVector<Contact> contacts;
+	LocalHector<Contact> contacts;
 
-	static void _contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata);
+	static void _contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata);
 
-	void contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal);
+	void contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal);
 
 	void validate_contacts();
 

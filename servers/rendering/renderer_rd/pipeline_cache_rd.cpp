@@ -41,7 +41,7 @@ RID PipelineCacheRD::_generate_version(RD::VertexFormatID p_vertex_format_id, RD
 	RD::PipelineRasterizationState raster_state_version = rasterization_state;
 	raster_state_version.wireframe = wireframe;
 
-	Vector<RD::PipelineSpecializationConstant> specialization_constants = base_specialization_constants;
+	Hector<RD::PipelineSpecializationConstant> specialization_constants = base_specialization_constants;
 
 	uint32_t bool_index = 0;
 	uint32_t bool_specializations = p_bool_specializations;
@@ -85,7 +85,7 @@ void PipelineCacheRD::_clear() {
 	}
 }
 
-void PipelineCacheRD::setup(RID p_shader, RD::RenderPrimitive p_primitive, const RD::PipelineRasterizationState &p_rasterization_state, RD::PipelineMultisampleState p_multisample, const RD::PipelineDepthStencilState &p_depth_stencil_state, const RD::PipelineColorBlendState &p_blend_state, int p_dynamic_state_flags, const Vector<RD::PipelineSpecializationConstant> &p_base_specialization_constants) {
+void PipelineCacheRD::setup(RID p_shader, RD::RenderPrimitive p_primitive, const RD::PipelineRasterizationState &p_rasterization_state, RD::PipelineMultisampleState p_multisample, const RD::PipelineDepthStencilState &p_depth_stencil_state, const RD::PipelineColorBlendState &p_blend_state, int p_dynamic_state_flags, const Hector<RD::PipelineSpecializationConstant> &p_base_specialization_constants) {
 	ERR_FAIL_COND(p_shader.is_null());
 	_clear();
 	shader = p_shader;
@@ -97,7 +97,7 @@ void PipelineCacheRD::setup(RID p_shader, RD::RenderPrimitive p_primitive, const
 	dynamic_state_flags = p_dynamic_state_flags;
 	base_specialization_constants = p_base_specialization_constants;
 }
-void PipelineCacheRD::update_specialization_constants(const Vector<RD::PipelineSpecializationConstant> &p_base_specialization_constants) {
+void PipelineCacheRD::update_specialization_constants(const Hector<RD::PipelineSpecializationConstant> &p_base_specialization_constants) {
 	base_specialization_constants = p_base_specialization_constants;
 	_clear();
 }

@@ -73,8 +73,8 @@ public:
 	void set_alignment_vertical(AlignmentMode p_alignment_vertical);
 	AlignmentMode get_alignment_vertical() const { return alignment_vertical; }
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	virtual Hector<int> get_allowed_size_flags_horizontal() const override;
+	virtual Hector<int> get_allowed_size_flags_vertical() const override;
 };
 
 VARIANT_ENUM_CAST(AspectRatioContainer::StretchMode);

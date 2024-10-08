@@ -1399,7 +1399,7 @@ static void ZSTD_assertValidSequence(
 
 
 FORCE_INLINE_TEMPLATE size_t
-DONT_VECTORIZE
+DONT_HectorIZE
 ZSTD_decompressSequences_bodySplitLitBuffer( ZSTD_DCtx* dctx,
                                void* dst, size_t maxDstSize,
                          const void* seqStart, size_t seqSize, int nbSeq,
@@ -1611,7 +1611,7 @@ ZSTD_decompressSequences_bodySplitLitBuffer( ZSTD_DCtx* dctx,
 }
 
 FORCE_INLINE_TEMPLATE size_t
-DONT_VECTORIZE
+DONT_HectorIZE
 ZSTD_decompressSequences_body(ZSTD_DCtx* dctx,
     void* dst, size_t maxDstSize,
     const void* seqStart, size_t seqSize, int nbSeq,
@@ -1903,7 +1903,7 @@ ZSTD_decompressSequencesLong_default(ZSTD_DCtx* dctx,
 
 #ifndef ZSTD_FORCE_DECOMPRESS_SEQUENCES_LONG
 static BMI2_TARGET_ATTRIBUTE size_t
-DONT_VECTORIZE
+DONT_HectorIZE
 ZSTD_decompressSequences_bmi2(ZSTD_DCtx* dctx,
                                  void* dst, size_t maxDstSize,
                            const void* seqStart, size_t seqSize, int nbSeq,
@@ -1912,7 +1912,7 @@ ZSTD_decompressSequences_bmi2(ZSTD_DCtx* dctx,
     return ZSTD_decompressSequences_body(dctx, dst, maxDstSize, seqStart, seqSize, nbSeq, isLongOffset);
 }
 static BMI2_TARGET_ATTRIBUTE size_t
-DONT_VECTORIZE
+DONT_HectorIZE
 ZSTD_decompressSequencesSplitLitBuffer_bmi2(ZSTD_DCtx* dctx,
                                  void* dst, size_t maxDstSize,
                            const void* seqStart, size_t seqSize, int nbSeq,

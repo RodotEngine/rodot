@@ -66,13 +66,13 @@ class MenuBar : public Control {
 			text_buf.instantiate();
 		}
 	};
-	Vector<Menu> menu_cache;
+	Hector<Menu> menu_cache;
 
 	int focused_menu = -1;
 	int selected_menu = -1;
 	int active_menu = -1;
 
-	Vector2i old_mouse_pos;
+	Hector2i old_mouse_pos;
 	ObjectID shortcut_context;
 
 	struct ThemeCache {
@@ -108,7 +108,7 @@ class MenuBar : public Control {
 
 	void shape(Menu &p_menu);
 	void _refresh_menu_names();
-	Vector<PopupMenu *> _get_popups() const;
+	Hector<PopupMenu *> _get_popups() const;
 	int get_menu_idx_from_control(PopupMenu *p_child) const;
 
 	void _open_popup(int p_index, bool p_focus_item = false);

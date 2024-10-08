@@ -87,7 +87,7 @@ protected:
 	virtual void _set_read_only(bool p_read_only) override;
 
 public:
-	void setup(const Vector<String> &p_options);
+	void setup(const Hector<String> &p_options);
 	virtual void update_property() override;
 	EditorPropertyAnchorsPreset();
 };
@@ -106,7 +106,7 @@ class EditorPropertySizeFlags : public EditorProperty {
 	OptionButton *flag_presets = nullptr;
 	CheckBox *flag_expand = nullptr;
 	VBoxContainer *flag_options = nullptr;
-	Vector<CheckBox *> flag_checks;
+	Hector<CheckBox *> flag_checks;
 
 	bool vertical = false;
 
@@ -120,7 +120,7 @@ protected:
 	virtual void _set_read_only(bool p_read_only) override;
 
 public:
-	void setup(const Vector<String> &p_options, bool p_vertical);
+	void setup(const Hector<String> &p_options, bool p_vertical);
 	virtual void update_property() override;
 	EditorPropertySizeFlags();
 };
@@ -204,7 +204,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void set_allowed_flags(Vector<SizeFlags> &p_flags);
+	void set_allowed_flags(Hector<SizeFlags> &p_flags);
 	void set_expand_flag(bool p_expand);
 
 	SizeFlagPresetPicker(bool p_vertical);
@@ -230,7 +230,7 @@ class ControlEditorToolbar : public HBoxContainer {
 	void _container_flags_selected(int p_flags, bool p_vertical);
 	void _expand_flag_toggled(bool p_expand, bool p_vertical);
 
-	Vector2 _position_to_anchor(const Control *p_control, Vector2 position);
+	Hector2 _position_to_anchor(const Control *p_control, Hector2 position);
 	bool _is_node_locked(const Node *p_node);
 	List<Control *> _get_edited_controls();
 	void _selection_changed();

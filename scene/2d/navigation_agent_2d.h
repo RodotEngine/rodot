@@ -66,24 +66,24 @@ class NavigationAgent2D : public Node {
 	bool simplify_path = false;
 	real_t simplify_epsilon = 0.0;
 
-	Vector2 target_position;
+	Hector2 target_position;
 
 	Ref<NavigationPathQueryParameters2D> navigation_query;
 	Ref<NavigationPathQueryResult2D> navigation_result;
 	int navigation_path_index = 0;
 
 	// the velocity result of the avoidance simulation step
-	Vector2 safe_velocity;
+	Hector2 safe_velocity;
 
 	/// The submitted target velocity, sets the "wanted" rvo agent velocity on the next update
 	// this velocity is not guaranteed, the simulation will try to fulfill it if possible
 	// if other agents or obstacles interfere it will be changed accordingly
-	Vector2 velocity;
+	Hector2 velocity;
 	bool velocity_submitted = false;
 
 	/// The submitted forced velocity, overrides the rvo agent velocity on the next update
 	// should only be used very intentionally and not every frame as it interferes with the simulation stability
-	Vector2 velocity_forced;
+	Hector2 velocity_forced;
 	bool velocity_forced_submitted = false;
 
 	bool target_position_submitted = false;
@@ -176,8 +176,8 @@ public:
 	void set_path_max_distance(real_t p_pmd);
 	real_t get_path_max_distance();
 
-	void set_target_position(Vector2 p_position);
-	Vector2 get_target_position() const;
+	void set_target_position(Hector2 p_position);
+	Hector2 get_target_position() const;
 
 	void set_simplify_path(bool p_enabled);
 	bool get_simplify_path() const;
@@ -185,11 +185,11 @@ public:
 	void set_simplify_epsilon(real_t p_epsilon);
 	real_t get_simplify_epsilon() const;
 
-	Vector2 get_next_path_position();
+	Hector2 get_next_path_position();
 
 	Ref<NavigationPathQueryResult2D> get_current_navigation_result() const { return navigation_result; }
 
-	const Vector<Vector2> &get_current_navigation_path() const { return navigation_result->get_path(); }
+	const Hector<Hector2> &get_current_navigation_path() const { return navigation_result->get_path(); }
 
 	int get_current_navigation_path_index() const { return navigation_path_index; }
 
@@ -197,14 +197,14 @@ public:
 	bool is_target_reached() const;
 	bool is_target_reachable();
 	bool is_navigation_finished();
-	Vector2 get_final_position();
+	Hector2 get_final_position();
 
-	void set_velocity(const Vector2 p_velocity);
-	Vector2 get_velocity() { return velocity; }
+	void set_velocity(const Hector2 p_velocity);
+	Hector2 get_velocity() { return velocity; }
 
-	void set_velocity_forced(const Vector2 p_velocity);
+	void set_velocity_forced(const Hector2 p_velocity);
 
-	void _avoidance_done(Vector3 p_new_velocity);
+	void _avoidance_done(Hector3 p_new_velocity);
 
 	PackedStringArray get_configuration_warnings() const override;
 
@@ -240,16 +240,16 @@ public:
 
 private:
 	bool _is_target_reachable() const;
-	Vector2 _get_final_position() const;
+	Hector2 _get_final_position() const;
 
 	void _update_navigation();
-	void _advance_waypoints(const Vector2 &p_origin);
+	void _advance_waypoints(const Hector2 &p_origin);
 	void _request_repath();
 
 	bool _is_last_waypoint() const;
 	void _move_to_next_waypoint();
-	bool _is_within_waypoint_distance(const Vector2 &p_origin) const;
-	bool _is_within_target_distance(const Vector2 &p_origin) const;
+	bool _is_within_waypoint_distance(const Hector2 &p_origin) const;
+	bool _is_within_target_distance(const Hector2 &p_origin) const;
 
 	void _trigger_waypoint_reached();
 	void _transition_to_navigation_finished();

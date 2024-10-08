@@ -4146,10 +4146,10 @@ msgstr "Logikai állandó."
 msgid "Input parameter."
 msgstr "Bemeneti paraméter."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "Vektorfüggvény."
 
-msgid "Vector operator."
+msgid "Hector operator."
 msgstr "Vektor operátor."
 
 msgid "New Project"

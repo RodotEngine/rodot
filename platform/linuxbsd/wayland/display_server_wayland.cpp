@@ -300,7 +300,7 @@ void DisplayServerWayland::set_system_theme_change_callback(const Callable &p_ca
 	portal_desktop->set_system_theme_change_callback(p_callable);
 }
 
-Error DisplayServerWayland::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) {
+Error DisplayServerWayland::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) {
 	WindowID window_id = MAIN_WINDOW_ID;
 	// TODO: Use window IDs for multiwindow support.
 
@@ -308,7 +308,7 @@ Error DisplayServerWayland::file_dialog_show(const String &p_title, const String
 	return portal_desktop->file_dialog_show(window_id, (ws ? ws->exported_handle : String()), p_title, p_current_directory, String(), p_filename, p_mode, p_filters, TypedArray<Dictionary>(), p_callback, false);
 }
 
-Error DisplayServerWayland::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
+Error DisplayServerWayland::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
 	WindowID window_id = MAIN_WINDOW_ID;
 	// TODO: Use window IDs for multiwindow support.
 
@@ -403,7 +403,7 @@ void DisplayServerWayland::clipboard_set(const String &p_text) {
 String DisplayServerWayland::clipboard_get() const {
 	MutexLock mutex_lock(wayland_thread.mutex);
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 
 	const String text_mimes[] = {
 		"text/plain;charset=utf-8",
@@ -462,7 +462,7 @@ void DisplayServerWayland::clipboard_set_primary(const String &p_text) {
 String DisplayServerWayland::clipboard_get_primary() const {
 	MutexLock mutex_lock(wayland_thread.mutex);
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 
 	const String text_mimes[] = {
 		"text/plain;charset=utf-8",
@@ -595,10 +595,10 @@ bool DisplayServerWayland::screen_is_kept_on() const {
 #endif
 }
 
-Vector<DisplayServer::WindowID> DisplayServerWayland::get_window_list() const {
+Hector<DisplayServer::WindowID> DisplayServerWayland::get_window_list() const {
 	MutexLock mutex_lock(wayland_thread.mutex);
 
-	Vector<int> ret;
+	Hector<int> ret;
 	ret.push_back(MAIN_WINDOW_ID);
 
 	return ret;
@@ -662,7 +662,7 @@ void DisplayServerWayland::window_set_title(const String &p_title, DisplayServer
 	wayland_thread.window_set_title(MAIN_WINDOW_ID, wd.title);
 }
 
-void DisplayServerWayland::window_set_mouse_passthrough(const Vector<Vector2> &p_region, DisplayServer::WindowID p_window_id) {
+void DisplayServerWayland::window_set_mouse_passthrough(const Hector<Hector2> &p_region, DisplayServer::WindowID p_window_id) {
 	// TODO
 	DEBUG_LOG_WAYLAND(vformat("wayland stub window_set_mouse_passthrough region %s", p_region));
 }
@@ -994,7 +994,7 @@ DisplayServerWayland::CursorShape DisplayServerWayland::cursor_get_shape() const
 	return cursor_shape;
 }
 
-void DisplayServerWayland::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServerWayland::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	MutexLock mutex_lock(wayland_thread.mutex);
 
 	if (p_cursor.is_valid()) {
@@ -1179,7 +1179,7 @@ void DisplayServerWayland::process_events() {
 				Input::get_singleton()->parse_input_event(ke);
 			}
 			ime_text = String();
-			ime_selection = Vector2i();
+			ime_selection = Hector2i();
 
 			OS::get_singleton()->get_main_loop()->notification(MainLoop::NOTIFICATION_OS_IME_UPDATE);
 		}
@@ -1271,8 +1271,8 @@ bool DisplayServerWayland::is_window_transparency_available() const {
 	return OS::get_singleton()->is_layered_allowed();
 }
 
-Vector<String> DisplayServerWayland::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerWayland::get_rendering_drivers_func() {
+	Hector<String> drivers;
 
 #ifdef VULKAN_ENABLED
 	drivers.push_back("vulkan");
@@ -1297,7 +1297,7 @@ DisplayServer *DisplayServerWayland::create_func(const String &p_rendering_drive
 	return ds;
 }
 
-DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i &p_resolution, Context p_context, Error &r_error) {
+DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i &p_resolution, Context p_context, Error &r_error) {
 #ifdef GLES3_ENABLED
 #ifdef SOWRAP_ENABLED
 #ifdef DEBUG_ENABLED
@@ -1400,7 +1400,7 @@ DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, Win
 			// runtime and includes system `/lib` and `/lib64`... so ignore Steam.
 			if (prime_idx == -1 && getenv("LD_LIBRARY_PATH") && !getenv("STEAM_RUNTIME_LIBRARY_PATH")) {
 				String ld_library_path(getenv("LD_LIBRARY_PATH"));
-				Vector<String> libraries = ld_library_path.split(":");
+				Hector<String> libraries = ld_library_path.split(":");
 
 				for (int i = 0; i < libraries.size(); ++i) {
 					if (FileAccess::exists(libraries[i] + "/libGL.so.1") ||

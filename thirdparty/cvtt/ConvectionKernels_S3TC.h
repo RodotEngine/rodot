@@ -8,7 +8,7 @@ namespace cvtt
 {
     namespace Internal
     {
-        template<int TVectorSize>
+        template<int THectorSize>
         class EndpointRefiner;
     }
 

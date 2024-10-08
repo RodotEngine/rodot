@@ -238,7 +238,7 @@ NavigationServer3D::NavigationServer3D() {
 
 	GLOBAL_DEF_BASIC(PropertyInfo(Variant::FLOAT, "navigation/3d/default_cell_size", PROPERTY_HINT_RANGE, NavigationDefaults3D::navmesh_cell_size_hint), NavigationDefaults3D::navmesh_cell_size);
 	GLOBAL_DEF_BASIC("navigation/3d/default_cell_height", NavigationDefaults3D::navmesh_cell_height);
-	GLOBAL_DEF("navigation/3d/default_up", Vector3(0, 1, 0));
+	GLOBAL_DEF("navigation/3d/default_up", Hector3(0, 1, 0));
 	GLOBAL_DEF(PropertyInfo(Variant::FLOAT, "navigation/3d/merge_rasterizer_cell_scale", PROPERTY_HINT_RANGE, "0.001,1,0.001,or_greater"), 1.0);
 	GLOBAL_DEF("navigation/3d/use_edge_connections", true);
 	GLOBAL_DEF_BASIC("navigation/3d/default_edge_connection_margin", NavigationDefaults3D::edge_connection_margin);

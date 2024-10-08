@@ -82,7 +82,7 @@ class Noise : public Resource {
 	};
 
 	template <typename T>
-	Vector<Ref<Image>> _generate_seamless_image(Vector<Ref<Image>> p_src, int p_width, int p_height, int p_depth, bool p_invert, real_t p_blend_skirt) const {
+	Hector<Ref<Image>> _generate_seamless_image(Hector<Ref<Image>> p_src, int p_width, int p_height, int p_depth, bool p_invert, real_t p_blend_skirt) const {
 		/*
 		To make a seamless image, we swap the quadrants so the edges are perfect matches.
 		We initially get a 10% larger image so we have an overlap we can use to blend over the seams.
@@ -102,7 +102,7 @@ class Noise : public Resource {
 		on Source it's translated to
 		corner of Q1/s3 unless the ALT_XY modulo moves it to Q4
 		*/
-		ERR_FAIL_COND_V(p_blend_skirt < 0, Vector<Ref<Image>>());
+		ERR_FAIL_COND_V(p_blend_skirt < 0, Hector<Ref<Image>>());
 
 		int skirt_width = MAX(1, p_width * p_blend_skirt);
 		int skirt_height = MAX(1, p_height * p_blend_skirt);
@@ -116,12 +116,12 @@ class Noise : public Resource {
 		Image::Format format = p_src[0]->get_format();
 		int pixel_size = Image::get_format_pixel_size(format);
 
-		Vector<Ref<Image>> images;
+		Hector<Ref<Image>> images;
 		images.resize(p_src.size());
 
 		// First blend across x and y for all slices.
 		for (int d = 0; d < images.size(); d++) {
-			Vector<uint8_t> dest;
+			Hector<uint8_t> dest;
 			dest.resize(p_width * p_height * pixel_size);
 
 			img_buff<T> rd_src = {
@@ -213,17 +213,17 @@ class Noise : public Resource {
 				images.write[i + half_depth] = img;
 			}
 
-			Vector<Ref<Image>> new_images = images;
+			Hector<Ref<Image>> new_images = images;
 			new_images.resize(p_depth);
 
 			// Scale seamless generation to third dimension.
 			for (int z = half_depth; z < skirt_edge_z; z++) {
 				int alpha = 255 * (1 - Math::smoothstep(0.1f, 0.9f, float(z - half_depth) / float(skirt_depth)));
 
-				Vector<uint8_t> img = images[z % p_depth]->get_data();
-				Vector<uint8_t> skirt = images[(z - half_depth) + p_depth]->get_data();
+				Hector<uint8_t> img = images[z % p_depth]->get_data();
+				Hector<uint8_t> skirt = images[(z - half_depth) + p_depth]->get_data();
 
-				Vector<uint8_t> dest;
+				Hector<uint8_t> dest;
 				dest.resize(images[0]->get_width() * images[0]->get_height() * Image::get_format_pixel_size(images[0]->get_format()));
 
 				for (int i = 0; i < img.size(); i++) {
@@ -284,17 +284,17 @@ public:
 
 	virtual real_t get_noise_1d(real_t p_x) const = 0;
 
-	virtual real_t get_noise_2dv(Vector2 p_v) const = 0;
+	virtual real_t get_noise_2dv(Hector2 p_v) const = 0;
 	virtual real_t get_noise_2d(real_t p_x, real_t p_y) const = 0;
 
-	virtual real_t get_noise_3dv(Vector3 p_v) const = 0;
+	virtual real_t get_noise_3dv(Hector3 p_v) const = 0;
 	virtual real_t get_noise_3d(real_t p_x, real_t p_y, real_t p_z) const = 0;
 
-	Vector<Ref<Image>> _get_image(int p_width, int p_height, int p_depth, bool p_invert = false, bool p_in_3d_space = false, bool p_normalize = true) const;
+	Hector<Ref<Image>> _get_image(int p_width, int p_height, int p_depth, bool p_invert = false, bool p_in_3d_space = false, bool p_normalize = true) const;
 	virtual Ref<Image> get_image(int p_width, int p_height, bool p_invert = false, bool p_in_3d_space = false, bool p_normalize = true) const;
 	virtual TypedArray<Image> get_image_3d(int p_width, int p_height, int p_depth, bool p_invert = false, bool p_normalize = true) const;
 
-	Vector<Ref<Image>> _get_seamless_image(int p_width, int p_height, int p_depth, bool p_invert = false, bool p_in_3d_space = false, real_t p_blend_skirt = 0.1, bool p_normalize = true) const;
+	Hector<Ref<Image>> _get_seamless_image(int p_width, int p_height, int p_depth, bool p_invert = false, bool p_in_3d_space = false, real_t p_blend_skirt = 0.1, bool p_normalize = true) const;
 	virtual Ref<Image> get_seamless_image(int p_width, int p_height, bool p_invert = false, bool p_in_3d_space = false, real_t p_blend_skirt = 0.1, bool p_normalize = true) const;
 	virtual TypedArray<Image> get_seamless_image_3d(int p_width, int p_height, int p_depth, bool p_invert = false, real_t p_blend_skirt = 0.1, bool p_normalize = true) const;
 };

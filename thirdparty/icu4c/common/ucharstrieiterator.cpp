@@ -35,9 +35,9 @@ UCharsTrie::Iterator::Iterator(ConstChar16Ptr trieUChars, int32_t maxStringLengt
     // a public API header for which we would want it to depend only on
     // other public headers.
     // Unlike UCharsTrie itself, its Iterator performs memory allocations anyway
-    // via the UnicodeString and UVector32 implementations, so this additional
+    // via the UnicodeString and UHector32 implementations, so this additional
     // cost is minimal.
-    stack_=new UVector32(errorCode);
+    stack_=new UHector32(errorCode);
     if(stack_==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
@@ -53,7 +53,7 @@ UCharsTrie::Iterator::Iterator(const UCharsTrie &trie, int32_t maxStringLength,
     if(U_FAILURE(errorCode)) {
         return;
     }
-    stack_=new UVector32(errorCode);
+    stack_=new UHector32(errorCode);
     if(U_FAILURE(errorCode)) {
         return;
     }

@@ -80,8 +80,8 @@ bool OS_MacOS::is_sandboxed() const {
 	return has_environment("APP_SANDBOX_CONTAINER_ID");
 }
 
-Vector<String> OS_MacOS::get_granted_permissions() const {
-	Vector<String> ret;
+Hector<String> OS_MacOS::get_granted_permissions() const {
+	Hector<String> ret;
 
 	if (is_sandboxed()) {
 		NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] arrayForKey:@"sec_bookmarks"];
@@ -375,7 +375,7 @@ String OS_MacOS::get_locale() const {
 	return String([locale_code UTF8String]).replace("-", "_");
 }
 
-Vector<String> OS_MacOS::get_system_fonts() const {
+Hector<String> OS_MacOS::get_system_fonts() const {
 	HashSet<String> font_names;
 	CFArrayRef fonts = CTFontManagerCopyAvailableFontFamilyNames();
 	if (fonts) {
@@ -389,7 +389,7 @@ Vector<String> OS_MacOS::get_system_fonts() const {
 		CFRelease(fonts);
 	}
 
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const String &E : font_names) {
 		ret.push_back(E);
 	}
@@ -458,8 +458,8 @@ CGFloat OS_MacOS::_stretch_to_ct(int p_stretch) const {
 	}
 }
 
-Vector<String> OS_MacOS::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
-	Vector<String> ret;
+Hector<String> OS_MacOS::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
+	Hector<String> ret;
 	String font_name = _get_default_fontname(p_font_name);
 
 	CFStringRef name = CFStringCreateWithCString(kCFAllocatorDefault, font_name.utf8().get_data(), kCFStringEncodingUTF8);
@@ -819,7 +819,7 @@ OS_MacOS::OS_MacOS() {
 
 	main_loop = nullptr;
 
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(MacOSTerminalLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 

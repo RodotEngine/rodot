@@ -65,7 +65,7 @@
 		</method>
 		<method name="get_item_at_position" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<param index="1" name="exact" type="bool" default="false" />
 			<description>
 				Returns the item index at the given [param position].
@@ -387,7 +387,7 @@
 			The width all columns will be adjusted to.
 			A value of zero disables the adjustment, each item will have a width equal to the width of its content and the columns will have an uneven width.
 		</member>
-		<member name="fixed_icon_size" type="Vector2i" setter="set_fixed_icon_size" getter="get_fixed_icon_size" default="Vector2i(0, 0)">
+		<member name="fixed_icon_size" type="Hector2i" setter="set_fixed_icon_size" getter="get_fixed_icon_size" default="Hector2i(0, 0)">
 			The size all icons will be adjusted to.
 			If either X or Y component is not greater than zero, icon size won't be affected.
 		</member>
@@ -423,7 +423,7 @@
 	</members>
 	<signals>
 		<signal name="empty_clicked">
-			<param index="0" name="at_position" type="Vector2" />
+			<param index="0" name="at_position" type="Hector2" />
 			<param index="1" name="mouse_button_index" type="int" />
 			<description>
 				Emitted when any mouse click is issued within the rect of the list but on empty space.
@@ -438,7 +438,7 @@
 		</signal>
 		<signal name="item_clicked">
 			<param index="0" name="index" type="int" />
-			<param index="1" name="at_position" type="Vector2" />
+			<param index="1" name="at_position" type="Hector2" />
 			<param index="2" name="mouse_button_index" type="int" />
 			<description>
 				Emitted when specified list item has been clicked with any mouse button.

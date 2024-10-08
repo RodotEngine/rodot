@@ -131,8 +131,8 @@ void SpriteFrames::get_animation_list(List<StringName> *r_animations) const {
 	}
 }
 
-Vector<String> SpriteFrames::get_animation_names() const {
-	Vector<String> names;
+Hector<String> SpriteFrames::get_animation_names() const {
+	Hector<String> names;
 	for (const KeyValue<StringName, Anim> &E : animations) {
 		names.push_back(E.key);
 	}

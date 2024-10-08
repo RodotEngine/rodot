@@ -108,30 +108,30 @@ void GLTFState::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "major_version"), "set_major_version", "get_major_version"); // int
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "minor_version"), "set_minor_version", "get_minor_version"); // int
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "copyright"), "set_copyright", "get_copyright"); // String
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_BYTE_ARRAY, "glb_data"), "set_glb_data", "get_glb_data"); // Vector<uint8_t>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_BYTE_ARRAY, "glb_data"), "set_glb_data", "get_glb_data"); // Hector<uint8_t>
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_named_skin_binds"), "set_use_named_skin_binds", "get_use_named_skin_binds"); // bool
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "nodes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_nodes", "get_nodes"); // Vector<Ref<GLTFNode>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "buffers"), "set_buffers", "get_buffers"); // Vector<Vector<uint8_t>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "buffer_views", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_buffer_views", "get_buffer_views"); // Vector<Ref<GLTFBufferView>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "accessors", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_accessors", "get_accessors"); // Vector<Ref<GLTFAccessor>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "meshes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_meshes", "get_meshes"); // Vector<Ref<GLTFMesh>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "materials", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_materials", "get_materials"); // Vector<Ref<Material>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "nodes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_nodes", "get_nodes"); // Hector<Ref<GLTFNode>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "buffers"), "set_buffers", "get_buffers"); // Hector<Hector<uint8_t>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "buffer_views", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_buffer_views", "get_buffer_views"); // Hector<Ref<GLTFBufferView>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "accessors", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_accessors", "get_accessors"); // Hector<Ref<GLTFAccessor>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "meshes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_meshes", "get_meshes"); // Hector<Ref<GLTFMesh>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "materials", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_materials", "get_materials"); // Hector<Ref<Material>
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "scene_name"), "set_scene_name", "get_scene_name"); // String
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "base_path"), "set_base_path", "get_base_path"); // String
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "filename"), "set_filename", "get_filename"); // String
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "root_nodes"), "set_root_nodes", "get_root_nodes"); // Vector<int>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "textures", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_textures", "get_textures"); // Vector<Ref<GLTFTexture>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "texture_samplers", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_texture_samplers", "get_texture_samplers"); //Vector<Ref<GLTFTextureSampler>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "images", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_images", "get_images"); // Vector<Ref<Texture>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "skins", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_skins", "get_skins"); // Vector<Ref<GLTFSkin>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cameras", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_cameras", "get_cameras"); // Vector<Ref<GLTFCamera>>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "lights", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_lights", "get_lights"); // Vector<Ref<GLTFLight>>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "root_nodes"), "set_root_nodes", "get_root_nodes"); // Hector<int>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "textures", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_textures", "get_textures"); // Hector<Ref<GLTFTexture>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "texture_samplers", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_texture_samplers", "get_texture_samplers"); //Hector<Ref<GLTFTextureSampler>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "images", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_images", "get_images"); // Hector<Ref<Texture>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "skins", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_skins", "get_skins"); // Hector<Ref<GLTFSkin>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cameras", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_cameras", "get_cameras"); // Hector<Ref<GLTFCamera>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "lights", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_lights", "get_lights"); // Hector<Ref<GLTFLight>>
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "unique_names", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_unique_names", "get_unique_names"); // Set<String>
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "unique_animation_names", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_unique_animation_names", "get_unique_animation_names"); // Set<String>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "skeletons", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_skeletons", "get_skeletons"); // Vector<Ref<GLTFSkeleton>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "skeletons", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_skeletons", "get_skeletons"); // Hector<Ref<GLTFSkeleton>>
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "create_animations"), "set_create_animations", "get_create_animations"); // bool
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "import_as_skeleton_bones"), "set_import_as_skeleton_bones", "get_import_as_skeleton_bones"); // bool
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "animations", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_animations", "get_animations"); // Vector<Ref<GLTFAnimation>>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "animations", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_animations", "get_animations"); // Hector<Ref<GLTFAnimation>>
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "handle_binary_image", PROPERTY_HINT_ENUM, "Discard All Textures,Extract Textures,Embed as Basis Universal,Embed as Uncompressed", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR), "set_handle_binary_image", "get_handle_binary_image"); // enum
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bake_fps"), "set_bake_fps", "get_bake_fps");
 
@@ -184,11 +184,11 @@ void GLTFState::set_copyright(const String &p_copyright) {
 	copyright = p_copyright;
 }
 
-Vector<uint8_t> GLTFState::get_glb_data() {
+Hector<uint8_t> GLTFState::get_glb_data() {
 	return glb_data;
 }
 
-void GLTFState::set_glb_data(Vector<uint8_t> p_glb_data) {
+void GLTFState::set_glb_data(Hector<uint8_t> p_glb_data) {
 	glb_data = p_glb_data;
 }
 
@@ -417,11 +417,11 @@ void GLTFState::set_additional_data(const StringName &p_extension_name, Variant 
 	additional_data[p_extension_name] = p_additional_data;
 }
 
-GLTFBufferViewIndex GLTFState::append_data_to_buffers(const Vector<uint8_t> &p_data, const bool p_deduplication = false) {
+GLTFBufferViewIndex GLTFState::append_data_to_buffers(const Hector<uint8_t> &p_data, const bool p_deduplication = false) {
 	if (p_deduplication) {
 		for (int i = 0; i < buffer_views.size(); i++) {
 			Ref<GLTFBufferView> buffer_view = buffer_views[i];
-			Vector<uint8_t> buffer_view_data = buffer_view->load_buffer_view_data(this);
+			Hector<uint8_t> buffer_view_data = buffer_view->load_buffer_view_data(this);
 			if (buffer_view_data == p_data) {
 				return i;
 			}
@@ -429,9 +429,9 @@ GLTFBufferViewIndex GLTFState::append_data_to_buffers(const Vector<uint8_t> &p_d
 	}
 	// Append the given data to a buffer and create a buffer view for it.
 	if (unlikely(buffers.is_empty())) {
-		buffers.push_back(Vector<uint8_t>());
+		buffers.push_back(Hector<uint8_t>());
 	}
-	Vector<uint8_t> &destination_buffer = buffers.write[0];
+	Hector<uint8_t> &destination_buffer = buffers.write[0];
 	Ref<GLTFBufferView> buffer_view;
 	buffer_view.instantiate();
 	buffer_view->set_buffer(0);

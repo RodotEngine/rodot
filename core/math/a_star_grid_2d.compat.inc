@@ -32,11 +32,11 @@
 
 #include "core/variant/typed_array.h"
 
-TypedArray<Vector2i> AStarGrid2D::_get_id_path_bind_compat_88047(const Vector2i &p_from_id, const Vector2i &p_to_id) {
+TypedArray<Hector2i> AStarGrid2D::_get_id_path_bind_compat_88047(const Hector2i &p_from_id, const Hector2i &p_to_id) {
 	return get_id_path(p_from_id, p_to_id, false);
 }
 
-Vector<Vector2> AStarGrid2D::_get_point_path_bind_compat_88047(const Vector2i &p_from_id, const Vector2i &p_to_id) {
+Hector<Hector2> AStarGrid2D::_get_point_path_bind_compat_88047(const Hector2i &p_from_id, const Hector2i &p_to_id) {
 	return get_point_path(p_from_id, p_to_id, false);
 }
 

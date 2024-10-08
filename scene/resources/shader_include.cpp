@@ -89,7 +89,7 @@ Ref<Resource> ResourceFormatLoaderShaderInclude::load(const String &p_path, cons
 	}
 
 	Error error = OK;
-	Vector<uint8_t> buffer = FileAccess::get_file_as_bytes(p_path, &error);
+	Hector<uint8_t> buffer = FileAccess::get_file_as_bytes(p_path, &error);
 	ERR_FAIL_COND_V_MSG(error, nullptr, "Cannot load shader include: " + p_path);
 
 	String str;

@@ -31,7 +31,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 // Global loader lock to:
 //   1. Ensure ActiveLoaderInstance get and set operations are done atomically.

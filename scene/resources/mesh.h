@@ -49,11 +49,11 @@ class Mesh : public Resource {
 	GDCLASS(Mesh, Resource);
 
 	mutable Ref<TriangleMesh> triangle_mesh; //cached
-	mutable Vector<Ref<TriangleMesh>> surface_triangle_meshes; //cached
-	mutable Vector<Vector3> debug_lines;
+	mutable Hector<Ref<TriangleMesh>> surface_triangle_meshes; //cached
+	mutable Hector<Hector3> debug_lines;
 	Size2i lightmap_size_hint;
 
-	Vector<Vector3> _get_faces() const;
+	Hector<Hector3> _get_faces() const;
 
 public:
 	enum PrimitiveType {
@@ -179,12 +179,12 @@ public:
 	virtual void set_blend_shape_name(int p_index, const StringName &p_name);
 	virtual AABB get_aabb() const;
 
-	Vector<Face3> get_faces() const;
-	Vector<Face3> get_surface_faces(int p_surface) const;
+	Hector<Face3> get_faces() const;
+	Hector<Face3> get_surface_faces(int p_surface) const;
 	Ref<TriangleMesh> generate_triangle_mesh() const;
 	Ref<TriangleMesh> generate_surface_triangle_mesh(int p_surface) const;
-	void generate_debug_mesh_lines(Vector<Vector3> &r_lines);
-	void generate_debug_mesh_indices(Vector<Vector3> &r_points);
+	void generate_debug_mesh_lines(Hector<Hector3> &r_lines);
+	void generate_debug_mesh_indices(Hector<Hector3> &r_points);
 
 	Ref<Mesh> create_outline(float p_margin) const;
 
@@ -192,12 +192,12 @@ public:
 	Size2i get_lightmap_size_hint() const;
 	void clear_cache() const;
 
-	typedef Vector<Vector<Vector3>> (*ConvexDecompositionFunc)(const real_t *p_vertices, int p_vertex_count, const uint32_t *p_triangles, int p_triangle_count, const Ref<MeshConvexDecompositionSettings> &p_settings, Vector<Vector<uint32_t>> *r_convex_indices);
+	typedef Hector<Hector<Hector3>> (*ConvexDecompositionFunc)(const real_t *p_vertices, int p_vertex_count, const uint32_t *p_triangles, int p_triangle_count, const Ref<MeshConvexDecompositionSettings> &p_settings, Hector<Hector<uint32_t>> *r_convex_indices);
 
 	static ConvexDecompositionFunc convex_decomposition_function;
 
 #ifndef _3D_DISABLED
-	Vector<Ref<Shape3D>> convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const;
+	Hector<Ref<Shape3D>> convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const;
 	Ref<ConvexPolygonShape3D> create_convex_shape(bool p_clean = true, bool p_simplify = false) const;
 	Ref<ConcavePolygonShape3D> create_trimesh_shape() const;
 #endif // _3D_DISABLED
@@ -316,11 +316,11 @@ private:
 		Ref<Material> material;
 		bool is_2d = false;
 	};
-	Vector<Surface> surfaces;
+	Hector<Surface> surfaces;
 	mutable RID mesh;
 	AABB aabb;
 	BlendShapeMode blend_shape_mode = BLEND_SHAPE_MODE_RELATIVE;
-	Vector<StringName> blend_shapes;
+	Hector<StringName> blend_shapes;
 	AABB custom_aabb;
 
 	_FORCE_INLINE_ void _create_if_empty() const;
@@ -341,7 +341,7 @@ protected:
 public:
 	void add_surface_from_arrays(PrimitiveType p_primitive, const Array &p_arrays, const TypedArray<Array> &p_blend_shapes = TypedArray<Array>(), const Dictionary &p_lods = Dictionary(), BitField<ArrayFormat> p_flags = 0);
 
-	void add_surface(BitField<ArrayFormat> p_format, PrimitiveType p_primitive, const Vector<uint8_t> &p_array, const Vector<uint8_t> &p_attribute_array, const Vector<uint8_t> &p_skin_array, int p_vertex_count, const Vector<uint8_t> &p_index_array, int p_index_count, const AABB &p_aabb, const Vector<uint8_t> &p_blend_shape_data = Vector<uint8_t>(), const Vector<AABB> &p_bone_aabbs = Vector<AABB>(), const Vector<RS::SurfaceData::LOD> &p_lods = Vector<RS::SurfaceData::LOD>(), const Vector4 p_uv_scale = Vector4());
+	void add_surface(BitField<ArrayFormat> p_format, PrimitiveType p_primitive, const Hector<uint8_t> &p_array, const Hector<uint8_t> &p_attribute_array, const Hector<uint8_t> &p_skin_array, int p_vertex_count, const Hector<uint8_t> &p_index_array, int p_index_count, const AABB &p_aabb, const Hector<uint8_t> &p_blend_shape_data = Hector<uint8_t>(), const Hector<AABB> &p_bone_aabbs = Hector<AABB>(), const Hector<RS::SurfaceData::LOD> &p_lods = Hector<RS::SurfaceData::LOD>(), const Hector4 p_uv_scale = Hector4());
 
 	Array surface_get_arrays(int p_surface) const override;
 	TypedArray<Array> surface_get_blend_shape_arrays(int p_surface) const override;
@@ -356,9 +356,9 @@ public:
 	void set_blend_shape_mode(BlendShapeMode p_mode);
 	BlendShapeMode get_blend_shape_mode() const;
 
-	void surface_update_vertex_region(int p_surface, int p_offset, const Vector<uint8_t> &p_data);
-	void surface_update_attribute_region(int p_surface, int p_offset, const Vector<uint8_t> &p_data);
-	void surface_update_skin_region(int p_surface, int p_offset, const Vector<uint8_t> &p_data);
+	void surface_update_vertex_region(int p_surface, int p_offset, const Hector<uint8_t> &p_data);
+	void surface_update_attribute_region(int p_surface, int p_offset, const Hector<uint8_t> &p_data);
+	void surface_update_skin_region(int p_surface, int p_offset, const Hector<uint8_t> &p_data);
 
 	int get_surface_count() const override;
 
@@ -387,7 +387,7 @@ public:
 	void regen_normal_maps();
 
 	Error lightmap_unwrap(const Transform3D &p_base_transform = Transform3D(), float p_texel_size = 0.05);
-	Error lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache, bool p_generate_cache = true);
+	Error lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Hector<uint8_t> &p_src_cache, Hector<uint8_t> &r_dst_cache, bool p_generate_cache = true);
 
 	virtual void reload_from_file() override;
 

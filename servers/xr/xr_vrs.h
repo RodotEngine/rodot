@@ -48,7 +48,7 @@ private:
 
 	RID vrs_texture;
 	Size2i target_size;
-	PackedVector2Array eye_foci;
+	PackedHector2Array eye_foci;
 
 protected:
 	static void _bind_methods();
@@ -61,7 +61,7 @@ public:
 	float get_vrs_strength() const;
 	void set_vrs_strength(float p_vrs_strength);
 
-	RID make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array &p_eye_foci);
+	RID make_vrs_texture(const Size2 &p_target_size, const PackedHector2Array &p_eye_foci);
 };
 
 #endif // XR_VRS_H

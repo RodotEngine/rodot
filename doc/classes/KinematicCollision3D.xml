@@ -13,9 +13,9 @@
 		<method name="get_angle" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="collision_index" type="int" default="0" />
-			<param index="1" name="up_direction" type="Vector3" default="Vector3(0, 1, 0)" />
+			<param index="1" name="up_direction" type="Hector3" default="Hector3(0, 1, 0)" />
 			<description>
-				Returns the collision angle according to [param up_direction], which is [constant Vector3.UP] by default. This value is always positive.
+				Returns the collision angle according to [param up_direction], which is [constant Hector3.UP] by default. This value is always positive.
 			</description>
 		</method>
 		<method name="get_collider" qualifiers="const">
@@ -54,7 +54,7 @@
 			</description>
 		</method>
 		<method name="get_collider_velocity" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="collision_index" type="int" default="0" />
 			<description>
 				Returns the colliding body's velocity given a collision index (the deepest collision by default).
@@ -80,27 +80,27 @@
 			</description>
 		</method>
 		<method name="get_normal" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="collision_index" type="int" default="0" />
 			<description>
 				Returns the colliding body's shape's normal at the point of collision given a collision index (the deepest collision by default).
 			</description>
 		</method>
 		<method name="get_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="collision_index" type="int" default="0" />
 			<description>
 				Returns the point of collision in global coordinates given a collision index (the deepest collision by default).
 			</description>
 		</method>
 		<method name="get_remainder" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
-				Returns the moving object's remaining movement vector.
+				Returns the moving object's remaining movement Hector.
 			</description>
 		</method>
 		<method name="get_travel" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the moving object's travel before collision.
 			</description>

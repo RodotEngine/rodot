@@ -174,7 +174,7 @@ void ImportDefaultsEditor::clear() {
 
 	List<Ref<ResourceImporter>> importer_list;
 	ResourceFormatImporter::get_singleton()->get_importers(&importer_list);
-	Vector<String> names;
+	Hector<String> names;
 	for (const Ref<ResourceImporter> &E : importer_list) {
 		String vn = E->get_visible_name();
 		names.push_back(vn);

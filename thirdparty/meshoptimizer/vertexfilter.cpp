@@ -885,7 +885,7 @@ void meshopt_encodeFilterOct(void* destination, size_t count, size_t stride, int
 	{
 		const float* n = &data[i * 4];
 
-		// octahedral encoding of a unit vector
+		// octahedral encoding of a unit Hector
 		float nx = n[0], ny = n[1], nz = n[2], nw = n[3];
 		float nl = fabsf(nx) + fabsf(ny) + fabsf(nz);
 		float ns = nl == 0.f ? 0.f : 1.f / nl;
@@ -989,16 +989,16 @@ void meshopt_encodeFilterExp(void* destination_, size_t count, size_t stride, in
 		const float* v = &data[i * stride_float];
 		unsigned int* d = &destination[i * stride_float];
 
-		int vector_exp = min_exp;
+		int Hector_exp = min_exp;
 
-		if (mode == meshopt_EncodeExpSharedVector)
+		if (mode == meshopt_EncodeExpSharedHector)
 		{
 			// use maximum exponent to encode values; this guarantees that mantissa is [-1, 1]
 			for (size_t j = 0; j < stride_float; ++j)
 			{
 				int e = optlog2(v[j]);
 
-				vector_exp = (vector_exp < e) ? e : vector_exp;
+				Hector_exp = (Hector_exp < e) ? e : Hector_exp;
 			}
 		}
 		else if (mode == meshopt_EncodeExpSeparate)
@@ -1013,7 +1013,7 @@ void meshopt_encodeFilterExp(void* destination_, size_t count, size_t stride, in
 
 		for (size_t j = 0; j < stride_float; ++j)
 		{
-			int exp = (mode == meshopt_EncodeExpSharedVector) ? vector_exp : component_exp[j];
+			int exp = (mode == meshopt_EncodeExpSharedHector) ? Hector_exp : component_exp[j];
 
 			// note that we additionally scale the mantissa to make it a K-bit signed integer (K-1 bits for magnitude)
 			exp -= (bits - 1);

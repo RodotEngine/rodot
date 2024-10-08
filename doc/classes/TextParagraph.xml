@@ -12,7 +12,7 @@
 		<method name="add_object">
 			<return type="bool" />
 			<param index="0" name="key" type="Variant" />
-			<param index="1" name="size" type="Vector2" />
+			<param index="1" name="size" type="Hector2" />
 			<param index="2" name="inline_align" type="int" enum="InlineAlignment" default="5" />
 			<param index="3" name="length" type="int" default="1" />
 			<param index="4" name="baseline" type="float" default="0.0" />
@@ -46,7 +46,7 @@
 		<method name="draw" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="color" type="Color" default="Color(1, 1, 1, 1)" />
 			<param index="3" name="dc_color" type="Color" default="Color(1, 1, 1, 1)" />
 			<description>
@@ -56,7 +56,7 @@
 		<method name="draw_dropcap" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="color" type="Color" default="Color(1, 1, 1, 1)" />
 			<description>
 				Draw drop cap into a canvas item at a given position, with [param color]. [param pos] specifies the top left corner of the bounding box.
@@ -65,7 +65,7 @@
 		<method name="draw_dropcap_outline" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="outline_size" type="int" default="1" />
 			<param index="3" name="color" type="Color" default="Color(1, 1, 1, 1)" />
 			<description>
@@ -75,7 +75,7 @@
 		<method name="draw_line" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="line" type="int" />
 			<param index="3" name="color" type="Color" default="Color(1, 1, 1, 1)" />
 			<description>
@@ -85,7 +85,7 @@
 		<method name="draw_line_outline" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="line" type="int" />
 			<param index="3" name="outline_size" type="int" default="1" />
 			<param index="4" name="color" type="Color" default="Color(1, 1, 1, 1)" />
@@ -96,7 +96,7 @@
 		<method name="draw_outline" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="outline_size" type="int" default="1" />
 			<param index="3" name="color" type="Color" default="Color(1, 1, 1, 1)" />
 			<param index="4" name="dc_color" type="Color" default="Color(1, 1, 1, 1)" />
@@ -117,7 +117,7 @@
 			</description>
 		</method>
 		<method name="get_dropcap_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns drop cap bounding box size.
 			</description>
@@ -158,7 +158,7 @@
 			</description>
 		</method>
 		<method name="get_line_range" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="line" type="int" />
 			<description>
 				Returns character range of the line.
@@ -172,7 +172,7 @@
 			</description>
 		</method>
 		<method name="get_line_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="line" type="int" />
 			<description>
 				Returns size of the bounding box of the line of text. Returned size is rounded up.
@@ -200,7 +200,7 @@
 			</description>
 		</method>
 		<method name="get_non_wrapped_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the size of the bounding box of the paragraph, without line breaks.
 			</description>
@@ -212,14 +212,14 @@
 			</description>
 		</method>
 		<method name="get_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the size of the bounding box of the paragraph.
 			</description>
 		</method>
 		<method name="hit_test" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="coords" type="Vector2" />
+			<param index="0" name="coords" type="Hector2" />
 			<description>
 				Returns caret character offset at the specified coordinates. This function always returns a valid position.
 			</description>
@@ -227,7 +227,7 @@
 		<method name="resize_object">
 			<return type="bool" />
 			<param index="0" name="key" type="Variant" />
-			<param index="1" name="size" type="Vector2" />
+			<param index="1" name="size" type="Hector2" />
 			<param index="2" name="inline_align" type="int" enum="InlineAlignment" default="5" />
 			<param index="3" name="baseline" type="float" default="0.0" />
 			<description>

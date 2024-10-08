@@ -53,8 +53,8 @@ class AudioDriverALSA : public AudioDriver {
 	String output_device_name = "Default";
 	String new_output_device = "Default";
 
-	Vector<int32_t> samples_in;
-	Vector<int16_t> samples_out;
+	Hector<int32_t> samples_in;
+	Hector<int16_t> samples_out;
 
 	Error init_output_device();
 	void finish_output_device();

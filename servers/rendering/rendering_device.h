@@ -35,7 +35,7 @@
 #include "core/object/worker_thread_pool.h"
 #include "core/os/condition_variable.h"
 #include "core/os/thread_safe.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/oa_hash_map.h"
 #include "core/templates/rid_owner.h"
 #include "core/variant/typed_array.h"
@@ -77,8 +77,8 @@ public:
 	typedef int64_t ComputeListID;
 
 	typedef String (*ShaderSPIRVGetCacheKeyFunction)(const RenderingDevice *p_render_device);
-	typedef Vector<uint8_t> (*ShaderCompileToSPIRVFunction)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language, String *r_error, const RenderingDevice *p_render_device);
-	typedef Vector<uint8_t> (*ShaderCacheFunction)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language);
+	typedef Hector<uint8_t> (*ShaderCompileToSPIRVFunction)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language, String *r_error, const RenderingDevice *p_render_device);
+	typedef Hector<uint8_t> (*ShaderCacheFunction)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language);
 
 	typedef void (*InvalidationCallback)(void *);
 
@@ -100,7 +100,7 @@ protected:
 	static void _bind_methods();
 
 #ifndef DISABLE_DEPRECATED
-	RID _shader_create_from_bytecode_bind_compat_79606(const Vector<uint8_t> &p_shader_binary);
+	RID _shader_create_from_bytecode_bind_compat_79606(const Hector<uint8_t> &p_shader_binary);
 	static void _bind_compatibility_methods();
 #endif
 
@@ -162,7 +162,7 @@ private:
 		uint32_t fill_amount = 0;
 	};
 
-	Vector<StagingBufferBlock> staging_buffer_blocks;
+	Hector<StagingBufferBlock> staging_buffer_blocks;
 	int staging_buffer_current = 0;
 	uint32_t staging_buffer_block_size = 0;
 	uint64_t staging_buffer_max_size = 0;
@@ -204,7 +204,7 @@ public:
 	Error buffer_copy(RID p_src_buffer, RID p_dst_buffer, uint32_t p_src_offset, uint32_t p_dst_offset, uint32_t p_size);
 	Error buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p_size, const void *p_data);
 	Error buffer_clear(RID p_buffer, uint32_t p_offset, uint32_t p_size);
-	Vector<uint8_t> buffer_get_data(RID p_buffer, uint32_t p_offset = 0, uint32_t p_size = 0); // This causes stall, only use to retrieve large buffers for saving.
+	Hector<uint8_t> buffer_get_data(RID p_buffer, uint32_t p_offset = 0, uint32_t p_size = 0); // This causes stall, only use to retrieve large buffers for saving.
 
 	/*****************/
 	/**** TEXTURE ****/
@@ -248,7 +248,7 @@ public:
 		uint32_t base_mipmap = 0;
 		uint32_t base_layer = 0;
 
-		Vector<DataFormat> allowed_shared_formats;
+		Hector<DataFormat> allowed_shared_formats;
 
 		bool is_resolve_buffer = false;
 		bool has_initial_data = false;
@@ -294,10 +294,10 @@ public:
 	RID_Owner<Texture, true> texture_owner;
 	uint32_t texture_upload_region_size_px = 0;
 
-	Vector<uint8_t> _texture_get_data(Texture *tex, uint32_t p_layer, bool p_2d = false);
+	Hector<uint8_t> _texture_get_data(Texture *tex, uint32_t p_layer, bool p_2d = false);
 	uint32_t _texture_layer_count(Texture *p_texture) const;
 	uint32_t _texture_alignment(Texture *p_texture) const;
-	Error _texture_initialize(RID p_texture, uint32_t p_layer, const Vector<uint8_t> &p_data);
+	Error _texture_initialize(RID p_texture, uint32_t p_layer, const Hector<uint8_t> &p_data);
 	void _texture_check_shared_fallback(Texture *p_texture);
 	void _texture_update_shared_fallback(RID p_texture_rid, Texture *p_texture, bool p_for_writing);
 	void _texture_free_shared_fallback(Texture *p_texture);
@@ -329,12 +329,12 @@ public:
 		}
 	};
 
-	RID texture_create(const TextureFormat &p_format, const TextureView &p_view, const Vector<Vector<uint8_t>> &p_data = Vector<Vector<uint8_t>>());
+	RID texture_create(const TextureFormat &p_format, const TextureView &p_view, const Hector<Hector<uint8_t>> &p_data = Hector<Hector<uint8_t>>());
 	RID texture_create_shared(const TextureView &p_view, RID p_with_texture);
 	RID texture_create_from_extension(TextureType p_type, DataFormat p_format, TextureSamples p_samples, BitField<RenderingDevice::TextureUsageBits> p_usage, uint64_t p_image, uint64_t p_width, uint64_t p_height, uint64_t p_depth, uint64_t p_layers);
 	RID texture_create_shared_from_slice(const TextureView &p_view, RID p_with_texture, uint32_t p_layer, uint32_t p_mipmap, uint32_t p_mipmaps = 1, TextureSliceType p_slice_type = TEXTURE_SLICE_2D, uint32_t p_layers = 0);
-	Error texture_update(RID p_texture, uint32_t p_layer, const Vector<uint8_t> &p_data);
-	Vector<uint8_t> texture_get_data(RID p_texture, uint32_t p_layer); // CPU textures will return immediately, while GPU textures will most likely force a flush
+	Error texture_update(RID p_texture, uint32_t p_layer, const Hector<uint8_t> &p_data);
+	Hector<uint8_t> texture_get_data(RID p_texture, uint32_t p_layer); // CPU textures will return immediately, while GPU textures will most likely force a flush
 
 	bool texture_is_format_supported_for_usage(DataFormat p_format, BitField<TextureUsageBits> p_usage) const;
 	bool texture_is_shared(RID p_texture);
@@ -345,7 +345,7 @@ public:
 	uint64_t texture_get_native_handle(RID p_texture);
 #endif
 
-	Error texture_copy(RID p_from_texture, RID p_to_texture, const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_size, uint32_t p_src_mipmap, uint32_t p_dst_mipmap, uint32_t p_src_layer, uint32_t p_dst_layer);
+	Error texture_copy(RID p_from_texture, RID p_to_texture, const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_size, uint32_t p_src_mipmap, uint32_t p_dst_mipmap, uint32_t p_src_layer, uint32_t p_dst_layer);
 	Error texture_clear(RID p_texture, const Color &p_color, uint32_t p_base_mipmap, uint32_t p_mipmaps, uint32_t p_base_layer, uint32_t p_layers);
 	Error texture_resolve_multisample(RID p_from_texture, RID p_to_texture);
 
@@ -402,10 +402,10 @@ public:
 	};
 
 	struct FramebufferPass {
-		Vector<int32_t> color_attachments;
-		Vector<int32_t> input_attachments;
-		Vector<int32_t> resolve_attachments;
-		Vector<int32_t> preserve_attachments;
+		Hector<int32_t> color_attachments;
+		Hector<int32_t> input_attachments;
+		Hector<int32_t> resolve_attachments;
+		Hector<int32_t> preserve_attachments;
 		int32_t depth_attachment = ATTACHMENT_UNUSED;
 		int32_t vrs_attachment = ATTACHMENT_UNUSED; // density map for VRS, only used if supported
 	};
@@ -414,8 +414,8 @@ public:
 
 private:
 	struct FramebufferFormatKey {
-		Vector<AttachmentFormat> attachments;
-		Vector<FramebufferPass> passes;
+		Hector<AttachmentFormat> attachments;
+		Hector<FramebufferPass> passes;
 		uint32_t view_count = 1;
 
 		bool operator<(const FramebufferFormatKey &p_key) const {
@@ -523,7 +523,7 @@ private:
 		}
 	};
 
-	RDD::RenderPassID _render_pass_create(const Vector<AttachmentFormat> &p_attachments, const Vector<FramebufferPass> &p_passes, InitialAction p_initial_action, FinalAction p_final_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, uint32_t p_view_count = 1, Vector<TextureSamples> *r_samples = nullptr);
+	RDD::RenderPassID _render_pass_create(const Hector<AttachmentFormat> &p_attachments, const Hector<FramebufferPass> &p_passes, InitialAction p_initial_action, FinalAction p_final_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, uint32_t p_view_count = 1, Hector<TextureSamples> *r_samples = nullptr);
 
 	// This is a cache and it's never freed, it ensures
 	// IDs for a given format are always unique.
@@ -531,7 +531,7 @@ private:
 	struct FramebufferFormat {
 		const RBMap<FramebufferFormatKey, FramebufferFormatID>::Element *E;
 		RDD::RenderPassID render_pass; // Here for constructing shaders, never used, see section (7.2. Render Pass Compatibility from Vulkan spec).
-		Vector<TextureSamples> pass_samples;
+		Hector<TextureSamples> pass_samples;
 		uint32_t view_count = 1; // Number of views.
 	};
 
@@ -568,7 +568,7 @@ private:
 		};
 
 		uint32_t storage_mask = 0;
-		Vector<RID> texture_ids;
+		Hector<RID> texture_ids;
 		InvalidationCallback invalidated_callback = nullptr;
 		void *invalidated_callback_userdata = nullptr;
 
@@ -587,13 +587,13 @@ private:
 
 public:
 	// This ID is warranted to be unique for the same formats, does not need to be freed
-	FramebufferFormatID framebuffer_format_create(const Vector<AttachmentFormat> &p_format, uint32_t p_view_count = 1);
-	FramebufferFormatID framebuffer_format_create_multipass(const Vector<AttachmentFormat> &p_attachments, const Vector<FramebufferPass> &p_passes, uint32_t p_view_count = 1);
+	FramebufferFormatID framebuffer_format_create(const Hector<AttachmentFormat> &p_format, uint32_t p_view_count = 1);
+	FramebufferFormatID framebuffer_format_create_multipass(const Hector<AttachmentFormat> &p_attachments, const Hector<FramebufferPass> &p_passes, uint32_t p_view_count = 1);
 	FramebufferFormatID framebuffer_format_create_empty(TextureSamples p_samples = TEXTURE_SAMPLES_1);
 	TextureSamples framebuffer_format_get_texture_samples(FramebufferFormatID p_format, uint32_t p_pass = 0);
 
-	RID framebuffer_create(const Vector<RID> &p_texture_attachments, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
-	RID framebuffer_create_multipass(const Vector<RID> &p_texture_attachments, const Vector<FramebufferPass> &p_passes, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
+	RID framebuffer_create(const Hector<RID> &p_texture_attachments, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
+	RID framebuffer_create_multipass(const Hector<RID> &p_texture_attachments, const Hector<FramebufferPass> &p_passes, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
 	RID framebuffer_create_empty(const Size2i &p_size, TextureSamples p_samples = TEXTURE_SAMPLES_1, FramebufferFormatID p_format_check = INVALID_ID);
 	bool framebuffer_is_valid(RID p_framebuffer) const;
 	void framebuffer_set_invalidation_callback(RID p_framebuffer, InvalidationCallback p_callback, void *p_userdata);
@@ -629,7 +629,7 @@ private:
 	RID_Owner<Buffer, true> vertex_buffer_owner;
 
 	struct VertexDescriptionKey {
-		Vector<VertexAttribute> vertex_formats;
+		Hector<VertexAttribute> vertex_formats;
 
 		bool operator==(const VertexDescriptionKey &p_key) const {
 			int vdc = vertex_formats.size();
@@ -691,7 +691,7 @@ private:
 	HashMap<VertexDescriptionKey, VertexFormatID, VertexDescriptionHash> vertex_format_cache;
 
 	struct VertexDescriptionCache {
-		Vector<VertexAttribute> vertex_formats;
+		Hector<VertexAttribute> vertex_formats;
 		RDD::VertexFormatID driver_id;
 	};
 
@@ -703,11 +703,11 @@ private:
 		int vertex_count = 0;
 		uint32_t max_instances_allowed = 0;
 
-		Vector<RDD::BufferID> buffers; // Not owned, just referenced.
-		Vector<RDG::ResourceTracker *> draw_trackers; // Not owned, just referenced.
-		Vector<uint64_t> offsets;
-		Vector<int32_t> transfer_worker_indices;
-		Vector<uint64_t> transfer_worker_operations;
+		Hector<RDD::BufferID> buffers; // Not owned, just referenced.
+		Hector<RDG::ResourceTracker *> draw_trackers; // Not owned, just referenced.
+		Hector<uint64_t> offsets;
+		Hector<int32_t> transfer_worker_indices;
+		Hector<uint64_t> transfer_worker_operations;
 		HashSet<RID> untracked_buffers;
 	};
 
@@ -737,13 +737,13 @@ private:
 	RID_Owner<IndexArray, true> index_array_owner;
 
 public:
-	RID vertex_buffer_create(uint32_t p_size_bytes, const Vector<uint8_t> &p_data = Vector<uint8_t>(), bool p_use_as_storage = false);
+	RID vertex_buffer_create(uint32_t p_size_bytes, const Hector<uint8_t> &p_data = Hector<uint8_t>(), bool p_use_as_storage = false);
 
 	// This ID is warranted to be unique for the same formats, does not need to be freed
-	VertexFormatID vertex_format_create(const Vector<VertexAttribute> &p_vertex_descriptions);
-	RID vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const Vector<RID> &p_src_buffers, const Vector<uint64_t> &p_offsets = Vector<uint64_t>());
+	VertexFormatID vertex_format_create(const Hector<VertexAttribute> &p_vertex_descriptions);
+	RID vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const Hector<RID> &p_src_buffers, const Hector<uint64_t> &p_offsets = Hector<uint64_t>());
 
-	RID index_buffer_create(uint32_t p_size_indices, IndexBufferFormat p_format, const Vector<uint8_t> &p_data = Vector<uint8_t>(), bool p_use_restart_indices = false);
+	RID index_buffer_create(uint32_t p_size_indices, IndexBufferFormat p_format, const Hector<uint8_t> &p_data = Hector<uint8_t>(), bool p_use_restart_indices = false);
 	RID index_array_create(RID p_index_buffer, uint32_t p_index_offset, uint32_t p_index_count);
 
 	/****************/
@@ -764,7 +764,7 @@ public:
 
 private:
 	struct UniformSetFormat {
-		Vector<ShaderUniform> uniforms;
+		Hector<ShaderUniform> uniforms;
 
 		_FORCE_INLINE_ bool operator<(const UniformSetFormat &p_other) const {
 			if (uniforms.size() != p_other.uniforms.size()) {
@@ -806,7 +806,7 @@ private:
 		RDD::ShaderID driver_id;
 		uint32_t layout_hash = 0;
 		BitField<RDD::PipelineStageBits> stage_bits;
-		Vector<uint32_t> set_formats;
+		Hector<uint32_t> set_formats;
 	};
 
 	String _shader_uniform_debug(RID p_shader, int p_set = -1);
@@ -829,10 +829,10 @@ public:
 	void barrier(BitField<BarrierMask> p_from = BARRIER_MASK_ALL_BARRIERS, BitField<BarrierMask> p_to = BARRIER_MASK_ALL_BARRIERS);
 	void full_barrier();
 	void draw_command_insert_label(String p_label_name, const Color &p_color = Color(1, 1, 1, 1));
-	Error draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, DrawListID *r_split_ids, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values = Vector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2(), const Vector<RID> &p_storage_textures = Vector<RID>());
+	Error draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, DrawListID *r_split_ids, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values = Hector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2(), const Hector<RID> &p_storage_textures = Hector<RID>());
 	Error draw_list_switch_to_next_pass_split(uint32_t p_splits, DrawListID *r_split_ids);
-	Vector<int64_t> _draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values = Vector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2(), const TypedArray<RID> &p_storage_textures = TypedArray<RID>());
-	Vector<int64_t> _draw_list_switch_to_next_pass_split(uint32_t p_splits);
+	Hector<int64_t> _draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values = Hector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2(), const TypedArray<RID> &p_storage_textures = TypedArray<RID>());
+	Hector<int64_t> _draw_list_switch_to_next_pass_split(uint32_t p_splits);
 
 private:
 	void _draw_list_end_bind_compat_81356(BitField<BarrierMask> p_post_barrier);
@@ -843,18 +843,18 @@ private:
 	void _compute_list_end_bind_compat_84976(BitField<BarrierMask> p_post_barrier);
 	InitialAction _convert_initial_action_84976(InitialAction p_old_initial_action);
 	FinalAction _convert_final_action_84976(FinalAction p_old_final_action);
-	DrawListID _draw_list_begin_bind_compat_84976(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const TypedArray<RID> &p_storage_textures);
+	DrawListID _draw_list_begin_bind_compat_84976(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const TypedArray<RID> &p_storage_textures);
 	ComputeListID _compute_list_begin_bind_compat_84976(bool p_allow_draw_overlap);
-	Error _buffer_update_bind_compat_84976(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Vector<uint8_t> &p_data, BitField<BarrierMask> p_post_barrier);
+	Error _buffer_update_bind_compat_84976(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Hector<uint8_t> &p_data, BitField<BarrierMask> p_post_barrier);
 	Error _buffer_clear_bind_compat_84976(RID p_buffer, uint32_t p_offset, uint32_t p_size, BitField<BarrierMask> p_post_barrier);
-	Error _texture_update_bind_compat_84976(RID p_texture, uint32_t p_layer, const Vector<uint8_t> &p_data, BitField<BarrierMask> p_post_barrier);
-	Error _texture_copy_bind_compat_84976(RID p_from_texture, RID p_to_texture, const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_size, uint32_t p_src_mipmap, uint32_t p_dst_mipmap, uint32_t p_src_layer, uint32_t p_dst_layer, BitField<BarrierMask> p_post_barrier);
+	Error _texture_update_bind_compat_84976(RID p_texture, uint32_t p_layer, const Hector<uint8_t> &p_data, BitField<BarrierMask> p_post_barrier);
+	Error _texture_copy_bind_compat_84976(RID p_from_texture, RID p_to_texture, const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_size, uint32_t p_src_mipmap, uint32_t p_dst_mipmap, uint32_t p_src_layer, uint32_t p_dst_layer, BitField<BarrierMask> p_post_barrier);
 	Error _texture_clear_bind_compat_84976(RID p_texture, const Color &p_color, uint32_t p_base_mipmap, uint32_t p_mipmaps, uint32_t p_base_layer, uint32_t p_layers, BitField<BarrierMask> p_post_barrier);
 	Error _texture_resolve_multisample_bind_compat_84976(RID p_from_texture, RID p_to_texture, BitField<BarrierMask> p_post_barrier);
 
 	FramebufferFormatID _screen_get_framebuffer_format_bind_compat_87340() const;
 
-	DrawListID _draw_list_begin_bind_compat_90993(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values = Vector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2());
+	DrawListID _draw_list_begin_bind_compat_90993(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values = Hector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2());
 #endif
 
 public:
@@ -864,7 +864,7 @@ public:
 
 	bool has_feature(const Features p_feature) const;
 
-	Vector<uint8_t> shader_compile_spirv_from_source(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language = SHADER_LANGUAGE_GLSL, String *r_error = nullptr, bool p_allow_cache = true);
+	Hector<uint8_t> shader_compile_spirv_from_source(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language = SHADER_LANGUAGE_GLSL, String *r_error = nullptr, bool p_allow_cache = true);
 	String shader_get_spirv_cache_key() const;
 
 	static void shader_set_compile_to_spirv_function(ShaderCompileToSPIRVFunction p_function);
@@ -872,10 +872,10 @@ public:
 	static void shader_set_get_cache_key_function(ShaderSPIRVGetCacheKeyFunction p_function);
 
 	String shader_get_binary_cache_key() const;
-	Vector<uint8_t> shader_compile_binary_from_spirv(const Vector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name = "");
+	Hector<uint8_t> shader_compile_binary_from_spirv(const Hector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name = "");
 
-	RID shader_create_from_spirv(const Vector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name = "");
-	RID shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, RID p_placeholder = RID());
+	RID shader_create_from_spirv(const Hector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name = "");
+	RID shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, RID p_placeholder = RID());
 	RID shader_create_placeholder();
 
 	uint64_t shader_get_vertex_input_attribute_mask(RID p_shader);
@@ -889,9 +889,9 @@ public:
 		STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT = 1,
 	};
 
-	RID uniform_buffer_create(uint32_t p_size_bytes, const Vector<uint8_t> &p_data = Vector<uint8_t>());
-	RID storage_buffer_create(uint32_t p_size, const Vector<uint8_t> &p_data = Vector<uint8_t>(), BitField<StorageBufferUsage> p_usage = 0);
-	RID texture_buffer_create(uint32_t p_size_elements, DataFormat p_format, const Vector<uint8_t> &p_data = Vector<uint8_t>());
+	RID uniform_buffer_create(uint32_t p_size_bytes, const Hector<uint8_t> &p_data = Hector<uint8_t>());
+	RID storage_buffer_create(uint32_t p_size, const Hector<uint8_t> &p_data = Hector<uint8_t>(), BitField<StorageBufferUsage> p_usage = 0);
+	RID texture_buffer_create(uint32_t p_size_elements, DataFormat p_format, const Hector<uint8_t> &p_data = Hector<uint8_t>());
 
 	struct Uniform {
 		UniformType uniform_type = UNIFORM_TYPE_IMAGE;
@@ -900,7 +900,7 @@ public:
 	private:
 		// In most cases only one ID is provided per binding, so avoid allocating memory unnecessarily for performance.
 		RID id; // If only one is provided, this is used.
-		Vector<RID> ids; // If multiple ones are provided, this is used instead.
+		Hector<RID> ids; // If multiple ones are provided, this is used instead.
 
 	public:
 		_FORCE_INLINE_ uint32_t get_id_count() const {
@@ -948,7 +948,7 @@ public:
 			binding = p_binding;
 			id = p_id;
 		}
-		_FORCE_INLINE_ Uniform(UniformType p_type, int p_binding, const Vector<RID> &p_ids) {
+		_FORCE_INLINE_ Uniform(UniformType p_type, int p_binding, const Hector<RID> &p_ids) {
 			uniform_type = p_type;
 			binding = p_binding;
 			ids = p_ids;
@@ -983,11 +983,11 @@ private:
 			RID texture;
 		};
 
-		LocalVector<AttachableTexture> attachable_textures; // Used for validation.
-		Vector<RDG::ResourceTracker *> draw_trackers;
-		Vector<RDG::ResourceUsage> draw_trackers_usage;
+		LocalHector<AttachableTexture> attachable_textures; // Used for validation.
+		Hector<RDG::ResourceTracker *> draw_trackers;
+		Hector<RDG::ResourceUsage> draw_trackers_usage;
 		HashMap<RID, RDG::ResourceUsage> untracked_usage;
-		LocalVector<SharedTexture> shared_textures_to_update;
+		LocalHector<SharedTexture> shared_textures_to_update;
 		InvalidationCallback invalidated_callback = nullptr;
 		void *invalidated_callback_userdata = nullptr;
 	};
@@ -997,7 +997,7 @@ private:
 	void _uniform_set_update_shared(UniformSet *p_uniform_set);
 
 public:
-	RID uniform_set_create(const Vector<Uniform> &p_uniforms, RID p_shader, uint32_t p_shader_set);
+	RID uniform_set_create(const Hector<Uniform> &p_uniforms, RID p_shader, uint32_t p_shader_set);
 	bool uniform_set_is_valid(RID p_uniform_set);
 	void uniform_set_set_invalidation_callback(RID p_uniform_set, InvalidationCallback p_callback, void *p_userdata);
 
@@ -1033,7 +1033,7 @@ private:
 		RID shader;
 		RDD::ShaderID shader_driver_id;
 		uint32_t shader_layout_hash = 0;
-		Vector<uint32_t> set_formats;
+		Hector<uint32_t> set_formats;
 		RDD::PipelineID driver_id;
 		BitField<RDD::PipelineStageBits> stage_bits;
 		uint32_t push_constant_size = 0;
@@ -1046,7 +1046,7 @@ private:
 	String pipeline_cache_file_path;
 	WorkerThreadPool::TaskID pipeline_cache_save_task = WorkerThreadPool::INVALID_TASK_ID;
 
-	Vector<uint8_t> _load_pipeline_cache();
+	Hector<uint8_t> _load_pipeline_cache();
 	void _update_pipeline_cache(bool p_closing = false);
 	static void _save_pipeline_cache(void *p_data);
 
@@ -1054,7 +1054,7 @@ private:
 		RID shader;
 		RDD::ShaderID shader_driver_id;
 		uint32_t shader_layout_hash = 0;
-		Vector<uint32_t> set_formats;
+		Hector<uint32_t> set_formats;
 		RDD::PipelineID driver_id;
 		uint32_t push_constant_size = 0;
 		uint32_t local_group_size[3] = { 0, 0, 0 };
@@ -1063,10 +1063,10 @@ private:
 	RID_Owner<ComputePipeline, true> compute_pipeline_owner;
 
 public:
-	RID render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const PipelineRasterizationState &p_rasterization_state, const PipelineMultisampleState &p_multisample_state, const PipelineDepthStencilState &p_depth_stencil_state, const PipelineColorBlendState &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags = 0, uint32_t p_for_render_pass = 0, const Vector<PipelineSpecializationConstant> &p_specialization_constants = Vector<PipelineSpecializationConstant>());
+	RID render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const PipelineRasterizationState &p_rasterization_state, const PipelineMultisampleState &p_multisample_state, const PipelineDepthStencilState &p_depth_stencil_state, const PipelineColorBlendState &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags = 0, uint32_t p_for_render_pass = 0, const Hector<PipelineSpecializationConstant> &p_specialization_constants = Hector<PipelineSpecializationConstant>());
 	bool render_pipeline_is_valid(RID p_pipeline);
 
-	RID compute_pipeline_create(RID p_shader, const Vector<PipelineSpecializationConstant> &p_specialization_constants = Vector<PipelineSpecializationConstant>());
+	RID compute_pipeline_create(RID p_shader, const Hector<PipelineSpecializationConstant> &p_specialization_constants = Hector<PipelineSpecializationConstant>());
 	bool compute_pipeline_is_valid(RID p_pipeline);
 
 private:
@@ -1133,9 +1133,9 @@ private:
 			bool index_buffer_uses_restart_indices = false;
 			uint32_t index_array_count = 0;
 			uint32_t index_array_max_index = 0;
-			Vector<uint32_t> set_formats;
-			Vector<bool> set_bound;
-			Vector<RID> set_rids;
+			Hector<uint32_t> set_formats;
+			Hector<bool> set_bound;
+			Hector<RID> set_rids;
 			// Last pipeline set values.
 			bool pipeline_active = false;
 			uint32_t pipeline_dynamic_state = 0;
@@ -1164,18 +1164,18 @@ private:
 #endif
 	uint32_t draw_list_current_subpass = 0;
 
-	Vector<RID> draw_list_bound_textures;
+	Hector<RID> draw_list_bound_textures;
 
-	void _draw_list_insert_clear_region(DrawList *p_draw_list, Framebuffer *p_framebuffer, Point2i p_viewport_offset, Point2i p_viewport_size, bool p_clear_color, const Vector<Color> &p_clear_colors, bool p_clear_depth, float p_depth, uint32_t p_stencil);
+	void _draw_list_insert_clear_region(DrawList *p_draw_list, Framebuffer *p_framebuffer, Point2i p_viewport_offset, Point2i p_viewport_size, bool p_clear_color, const Hector<Color> &p_clear_colors, bool p_clear_depth, float p_depth, uint32_t p_stencil);
 	Error _draw_list_setup_framebuffer(Framebuffer *p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, RDD::FramebufferID *r_framebuffer, RDD::RenderPassID *r_render_pass, uint32_t *r_subpass_count);
-	Error _draw_list_render_pass_begin(Framebuffer *p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_colors, float p_clear_depth, uint32_t p_clear_stencil, Point2i p_viewport_offset, Point2i p_viewport_size, RDD::FramebufferID p_framebuffer_driver_id, RDD::RenderPassID p_render_pass, uint32_t p_breadcrumb);
+	Error _draw_list_render_pass_begin(Framebuffer *p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_colors, float p_clear_depth, uint32_t p_clear_stencil, Point2i p_viewport_offset, Point2i p_viewport_size, RDD::FramebufferID p_framebuffer_driver_id, RDD::RenderPassID p_render_pass, uint32_t p_breadcrumb);
 	_FORCE_INLINE_ DrawList *_get_draw_list_ptr(DrawListID p_id);
 	Error _draw_list_allocate(const Rect2i &p_viewport, uint32_t p_subpass);
 	void _draw_list_free(Rect2i *r_last_viewport = nullptr);
 
 public:
 	DrawListID draw_list_begin_for_screen(DisplayServer::WindowID p_screen = 0, const Color &p_clear_color = Color());
-	DrawListID draw_list_begin(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values = Vector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2(), uint32_t p_breadcrumb = 0);
+	DrawListID draw_list_begin(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values = Hector<Color>(), float p_clear_depth = 1.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2(), uint32_t p_breadcrumb = 0);
 
 	void draw_list_set_blend_constants(DrawListID p_list, const Color &p_color);
 	void draw_list_bind_render_pipeline(DrawListID p_list, RID p_render_pipeline);
@@ -1225,9 +1225,9 @@ private:
 #ifdef DEBUG_ENABLED
 		struct Validation {
 			bool active = true; // Means command buffer was not closed, so you can keep adding things.
-			Vector<uint32_t> set_formats;
-			Vector<bool> set_bound;
-			Vector<RID> set_rids;
+			Hector<uint32_t> set_formats;
+			Hector<bool> set_bound;
+			Hector<RID> set_rids;
 			// Last pipeline set values.
 			bool pipeline_active = false;
 			RID pipeline_shader;
@@ -1277,10 +1277,10 @@ private:
 		BinaryMutex operations_mutex;
 	};
 
-	LocalVector<TransferWorker *> transfer_worker_pool;
+	LocalHector<TransferWorker *> transfer_worker_pool;
 	uint32_t transfer_worker_pool_max_size = 1;
-	LocalVector<uint64_t> transfer_worker_operation_used_by_draw;
-	LocalVector<uint32_t> transfer_worker_pool_available_list;
+	LocalHector<uint64_t> transfer_worker_operation_used_by_draw;
+	LocalHector<uint32_t> transfer_worker_pool_available_list;
 	BinaryMutex transfer_worker_pool_mutex;
 	ConditionVariable transfer_worker_pool_condition;
 
@@ -1367,10 +1367,10 @@ private:
 		bool fence_signaled = false;
 
 		// Semaphores the frame must wait on before executing the command buffer.
-		LocalVector<RDD::SemaphoreID> semaphores_to_wait_on;
+		LocalHector<RDD::SemaphoreID> semaphores_to_wait_on;
 
 		// Swap chains prepared for drawing during the frame that must be presented.
-		LocalVector<RDD::SwapChainID> swap_chains_to_present;
+		LocalHector<RDD::SwapChainID> swap_chains_to_present;
 
 		// Extra command buffer pool used for driver workarounds.
 		RDG::CommandBufferPool command_buffer_pool;
@@ -1382,12 +1382,12 @@ private:
 
 		RDD::QueryPoolID timestamp_pool;
 
-		TightLocalVector<String> timestamp_names;
-		TightLocalVector<uint64_t> timestamp_cpu_values;
+		TightLocalHector<String> timestamp_names;
+		TightLocalHector<uint64_t> timestamp_cpu_values;
 		uint32_t timestamp_count = 0;
-		TightLocalVector<String> timestamp_result_names;
-		TightLocalVector<uint64_t> timestamp_cpu_result_values;
-		TightLocalVector<uint64_t> timestamp_result_values;
+		TightLocalHector<String> timestamp_result_names;
+		TightLocalHector<uint64_t> timestamp_cpu_result_values;
+		TightLocalHector<uint64_t> timestamp_result_values;
 		uint32_t timestamp_result_count = 0;
 		uint64_t index = 0;
 	};
@@ -1395,7 +1395,7 @@ private:
 	uint32_t max_timestamp_query_elements = 0;
 
 	int frame = 0;
-	TightLocalVector<Frame> frames;
+	TightLocalHector<Frame> frames;
 	uint64_t frames_drawn = 0;
 
 	void _free_pending_resources(int p_frame);
@@ -1511,21 +1511,21 @@ private:
 	RID _sampler_create(const Ref<RDSamplerState> &p_state);
 
 	VertexFormatID _vertex_format_create(const TypedArray<RDVertexAttribute> &p_vertex_formats);
-	RID _vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const TypedArray<RID> &p_src_buffers, const Vector<int64_t> &p_offsets = Vector<int64_t>());
+	RID _vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const TypedArray<RID> &p_src_buffers, const Hector<int64_t> &p_offsets = Hector<int64_t>());
 
 	Ref<RDShaderSPIRV> _shader_compile_spirv_from_source(const Ref<RDShaderSource> &p_source, bool p_allow_cache = true);
-	Vector<uint8_t> _shader_compile_binary_from_spirv(const Ref<RDShaderSPIRV> &p_bytecode, const String &p_shader_name = "");
+	Hector<uint8_t> _shader_compile_binary_from_spirv(const Ref<RDShaderSPIRV> &p_bytecode, const String &p_shader_name = "");
 	RID _shader_create_from_spirv(const Ref<RDShaderSPIRV> &p_spirv, const String &p_shader_name = "");
 
 	RID _uniform_set_create(const TypedArray<RDUniform> &p_uniforms, RID p_shader, uint32_t p_shader_set);
 
-	Error _buffer_update_bind(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Vector<uint8_t> &p_data);
+	Error _buffer_update_bind(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Hector<uint8_t> &p_data);
 
 	RID _render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const Ref<RDPipelineRasterizationState> &p_rasterization_state, const Ref<RDPipelineMultisampleState> &p_multisample_state, const Ref<RDPipelineDepthStencilState> &p_depth_stencil_state, const Ref<RDPipelineColorBlendState> &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants);
 	RID _compute_pipeline_create(RID p_shader, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants);
 
-	void _draw_list_set_push_constant(DrawListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size);
-	void _compute_list_set_push_constant(ComputeListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size);
+	void _draw_list_set_push_constant(DrawListID p_list, const Hector<uint8_t> &p_data, uint32_t p_data_size);
+	void _compute_list_set_push_constant(ComputeListID p_list, const Hector<uint8_t> &p_data, uint32_t p_data_size);
 };
 
 VARIANT_ENUM_CAST(RenderingDevice::DeviceType)

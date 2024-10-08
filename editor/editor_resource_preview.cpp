@@ -196,9 +196,9 @@ void EditorResourcePreview::_generate_preview(Ref<ImageTexture> &r_texture, Ref<
 
 		Ref<Texture2D> generated;
 		if (p_item.resource.is_valid()) {
-			generated = preview_generators.write[i]->generate(p_item.resource, Vector2(thumbnail_size, thumbnail_size), p_metadata);
+			generated = preview_generators.write[i]->generate(p_item.resource, Hector2(thumbnail_size, thumbnail_size), p_metadata);
 		} else {
-			generated = preview_generators.write[i]->generate_from_path(p_item.path, Vector2(thumbnail_size, thumbnail_size), p_metadata);
+			generated = preview_generators.write[i]->generate_from_path(p_item.path, Hector2(thumbnail_size, thumbnail_size), p_metadata);
 		}
 		r_texture = generated;
 
@@ -206,9 +206,9 @@ void EditorResourcePreview::_generate_preview(Ref<ImageTexture> &r_texture, Ref<
 			Ref<Texture2D> generated_small;
 			Dictionary d;
 			if (p_item.resource.is_valid()) {
-				generated_small = preview_generators.write[i]->generate(p_item.resource, Vector2(small_thumbnail_size, small_thumbnail_size), d);
+				generated_small = preview_generators.write[i]->generate(p_item.resource, Hector2(small_thumbnail_size, small_thumbnail_size), d);
 			} else {
-				generated_small = preview_generators.write[i]->generate_from_path(p_item.path, Vector2(small_thumbnail_size, small_thumbnail_size), d);
+				generated_small = preview_generators.write[i]->generate_from_path(p_item.path, Hector2(small_thumbnail_size, small_thumbnail_size), d);
 			}
 			r_small_texture = generated_small;
 		}

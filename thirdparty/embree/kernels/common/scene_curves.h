@@ -401,12 +401,12 @@ namespace embree
     BufferView<Vec3fa> normals0;            //!< fast access to first normal buffer
     BufferView<Vec3ff> tangents0;           //!< fast access to first tangent buffer
     BufferView<Vec3fa> dnormals0;           //!< fast access to first normal derivative buffer
-    Device::vector<BufferView<Vec3ff>> vertices = device;    //!< vertex array for each timestep
-    Device::vector<BufferView<Vec3fa>> normals = device;     //!< normal array for each timestep
-    Device::vector<BufferView<Vec3ff>> tangents = device;    //!< tangent array for each timestep
-    Device::vector<BufferView<Vec3fa>> dnormals = device;    //!< normal derivative array for each timestep
+    Device::Hector<BufferView<Vec3ff>> vertices = device;    //!< vertex array for each timestep
+    Device::Hector<BufferView<Vec3fa>> normals = device;     //!< normal array for each timestep
+    Device::Hector<BufferView<Vec3ff>> tangents = device;    //!< tangent array for each timestep
+    Device::Hector<BufferView<Vec3fa>> dnormals = device;    //!< normal derivative array for each timestep
     BufferView<char> flags;                 //!< start, end flag per segment
-    Device::vector<BufferView<char>> vertexAttribs = device; //!< user buffers
+    Device::Hector<BufferView<char>> vertexAttribs = device; //!< user buffers
     int tessellationRate;                   //!< tessellation rate for flat curve
     float maxRadiusScale = 1.0;             //!< maximal min-width scaling of curve radii
   };
@@ -609,8 +609,8 @@ namespace embree
       const Vec3ff t1 = tangent(index+1,itime);
       const Vec3ff V0(xfmPoint(space,(Vec3fa)v0),maxRadiusScale*v0.w);
       const Vec3ff V1(xfmPoint(space,(Vec3fa)v1),maxRadiusScale*v1.w);
-      const Vec3ff T0(xfmVector(space,(Vec3fa)t0),maxRadiusScale*t0.w);
-      const Vec3ff T1(xfmVector(space,(Vec3fa)t1),maxRadiusScale*t1.w);
+      const Vec3ff T0(xfmHector(space,(Vec3fa)t0),maxRadiusScale*t0.w);
+      const Vec3ff T1(xfmHector(space,(Vec3fa)t1),maxRadiusScale*t1.w);
       return HermiteCurve3ff(V0,T0,V1,T1);
     }
     
@@ -624,8 +624,8 @@ namespace embree
       const Vec3ff t1 = tangent(index+1,itime);
       const Vec3ff V0(xfmPoint(space,(v0-ofs)*Vec3fa(scale)), maxRadiusScale*v0.w*r_scale);
       const Vec3ff V1(xfmPoint(space,(v1-ofs)*Vec3fa(scale)), maxRadiusScale*v1.w*r_scale);
-      const Vec3ff T0(xfmVector(space,t0*Vec3fa(scale)), maxRadiusScale*t0.w*r_scale);
-      const Vec3ff T1(xfmVector(space,t1*Vec3fa(scale)), maxRadiusScale*t1.w*r_scale);
+      const Vec3ff T0(xfmHector(space,t0*Vec3fa(scale)), maxRadiusScale*t0.w*r_scale);
+      const Vec3ff T1(xfmHector(space,t1*Vec3fa(scale)), maxRadiusScale*t1.w*r_scale);
       return HermiteCurve3ff(V0,T0,V1,T1);
     }
     

@@ -922,11 +922,11 @@ msgstr "停用折疊"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "自動展開場景"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "水平Vector2編輯"
+msgid "Horizontal Hector2 Editing"
+msgstr "水平Hector2編輯"
 
-msgid "Horizontal Vector Types Editing"
-msgstr "水平Vector類別編輯"
+msgid "Horizontal Hector Types Editing"
+msgstr "水平Hector類別編輯"
 
 msgid "Open Resources in Current Inspector"
 msgstr "在目前的屬性面板打開資源"
@@ -1024,7 +1024,7 @@ msgstr "外部程式"
 msgid "Raster Image Editor"
 msgstr "點陣圖編輯器"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "向量圖編輯器"
 
 msgid "Audio Editor"
@@ -7732,7 +7732,7 @@ msgstr "烘焙解析度"
 msgid "Bake Interval"
 msgstr "烘焙間隔"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "上向量"
 
 msgid "Curve X"
@@ -9535,7 +9535,7 @@ msgstr "恢復記為碰撞"
 msgid "Default Gravity"
 msgstr "預設重力"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "預設重力向量"
 
 msgid "Default Linear Damp"

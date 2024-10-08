@@ -375,7 +375,7 @@ real_t CameraAttributesPhysical::get_fov() const {
 
 void CameraAttributesPhysical::_update_frustum() {
 	//https://en.wikipedia.org/wiki/Circle_of_confusion#Circle_of_confusion_diameter_limit_based_on_d/1500
-	Vector2i sensor_size = Vector2i(36, 24); // Matches high-end DSLR, could be made variable if there is demand.
+	Hector2i sensor_size = Hector2i(36, 24); // Matches high-end DSLR, could be made variable if there is demand.
 	float CoC = sensor_size.length() / 1500.0;
 
 	frustum_fov = Math::rad_to_deg(2 * atan(sensor_size.height / (2 * frustum_focal_length)));

@@ -412,11 +412,11 @@ void Dictionary::assign(const Dictionary &p_dictionary) {
 	int size = p_dictionary._p->variant_map.size();
 	HashMap<Variant, Variant, VariantHasher, StringLikeVariantComparator> variant_map = HashMap<Variant, Variant, VariantHasher, StringLikeVariantComparator>(size);
 
-	Vector<Variant> key_array;
+	Hector<Variant> key_array;
 	key_array.resize(size);
 	Variant *key_data = key_array.ptrw();
 
-	Vector<Variant> value_array;
+	Hector<Variant> value_array;
 	value_array.resize(size);
 	Variant *value_data = value_array.ptrw();
 

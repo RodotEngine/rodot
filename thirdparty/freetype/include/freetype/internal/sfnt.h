@@ -603,7 +603,7 @@ FT_BEGIN_HEADER
    *   clip_box ::
    *     The clip box for the requested `base_glyph` if one is found.  The
    *     clip box is computed taking scale and transformations configured on
-   *     the @FT_Face into account.  @FT_ClipBox contains @FT_Vector values
+   *     the @FT_Face into account.  @FT_ClipBox contains @FT_Hector values
    *     in 26.6 format.
    *
    * @note:

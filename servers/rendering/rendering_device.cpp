@@ -201,15 +201,15 @@ void RenderingDevice::shader_set_get_cache_key_function(ShaderSPIRVGetCacheKeyFu
 	get_spirv_cache_key_function = p_function;
 }
 
-Vector<uint8_t> RenderingDevice::shader_compile_spirv_from_source(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language, String *r_error, bool p_allow_cache) {
+Hector<uint8_t> RenderingDevice::shader_compile_spirv_from_source(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language, String *r_error, bool p_allow_cache) {
 	if (p_allow_cache && cache_function) {
-		Vector<uint8_t> cache = cache_function(p_stage, p_source_code, p_language);
+		Hector<uint8_t> cache = cache_function(p_stage, p_source_code, p_language);
 		if (cache.size()) {
 			return cache;
 		}
 	}
 
-	ERR_FAIL_NULL_V(compile_to_spirv_function, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(compile_to_spirv_function, Hector<uint8_t>());
 
 	return compile_to_spirv_function(p_stage, p_source_code, p_language, r_error, this);
 }
@@ -221,8 +221,8 @@ String RenderingDevice::shader_get_spirv_cache_key() const {
 	return String();
 }
 
-RID RenderingDevice::shader_create_from_spirv(const Vector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name) {
-	Vector<uint8_t> bytecode = shader_compile_binary_from_spirv(p_spirv, p_shader_name);
+RID RenderingDevice::shader_create_from_spirv(const Hector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name) {
+	Hector<uint8_t> bytecode = shader_compile_binary_from_spirv(p_spirv, p_shader_name);
 	ERR_FAIL_COND_V(bytecode.is_empty(), RID());
 	return shader_create_from_bytecode(bytecode);
 }
@@ -488,8 +488,8 @@ Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p
 	size_t to_submit = p_size;
 	size_t submit_from = 0;
 
-	thread_local LocalVector<RDG::RecordedBufferCopy> command_buffer_copies_vector;
-	command_buffer_copies_vector.clear();
+	thread_local LocalHector<RDG::RecordedBufferCopy> command_buffer_copies_Hector;
+	command_buffer_copies_Hector.clear();
 
 	const uint8_t *src_data = reinterpret_cast<const uint8_t *>(p_data);
 	const uint32_t required_align = 32;
@@ -503,14 +503,14 @@ Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p
 			return err;
 		}
 
-		if (!command_buffer_copies_vector.is_empty() && required_action == STAGING_REQUIRED_ACTION_FLUSH_AND_STALL_ALL) {
+		if (!command_buffer_copies_Hector.is_empty() && required_action == STAGING_REQUIRED_ACTION_FLUSH_AND_STALL_ALL) {
 			if (_buffer_make_mutable(buffer, p_buffer)) {
 				// The buffer must be mutable to be used as a copy destination.
 				draw_graph.add_synchronization();
 			}
 
-			draw_graph.add_buffer_update(buffer->driver_id, buffer->draw_tracker, command_buffer_copies_vector);
-			command_buffer_copies_vector.clear();
+			draw_graph.add_buffer_update(buffer->driver_id, buffer->draw_tracker, command_buffer_copies_Hector);
+			command_buffer_copies_Hector.clear();
 		}
 
 		_staging_buffer_execute_required_action(required_action);
@@ -534,7 +534,7 @@ Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p
 		RDG::RecordedBufferCopy buffer_copy;
 		buffer_copy.source = staging_buffer_blocks[staging_buffer_current].driver_id;
 		buffer_copy.region = region;
-		command_buffer_copies_vector.push_back(buffer_copy);
+		command_buffer_copies_Hector.push_back(buffer_copy);
 
 		staging_buffer_blocks.write[staging_buffer_current].fill_amount = block_write_offset + block_write_amount;
 
@@ -542,13 +542,13 @@ Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p
 		submit_from += block_write_amount;
 	}
 
-	if (!command_buffer_copies_vector.is_empty()) {
+	if (!command_buffer_copies_Hector.is_empty()) {
 		if (_buffer_make_mutable(buffer, p_buffer)) {
 			// The buffer must be mutable to be used as a copy destination.
 			draw_graph.add_synchronization();
 		}
 
-		draw_graph.add_buffer_update(buffer->driver_id, buffer->draw_tracker, command_buffer_copies_vector);
+		draw_graph.add_buffer_update(buffer->driver_id, buffer->draw_tracker, command_buffer_copies_Hector);
 	}
 
 	gpu_copy_count++;
@@ -598,26 +598,26 @@ Error RenderingDevice::buffer_clear(RID p_buffer, uint32_t p_offset, uint32_t p_
 	return OK;
 }
 
-Vector<uint8_t> RenderingDevice::buffer_get_data(RID p_buffer, uint32_t p_offset, uint32_t p_size) {
-	ERR_RENDER_THREAD_GUARD_V(Vector<uint8_t>());
+Hector<uint8_t> RenderingDevice::buffer_get_data(RID p_buffer, uint32_t p_offset, uint32_t p_size) {
+	ERR_RENDER_THREAD_GUARD_V(Hector<uint8_t>());
 
 	Buffer *buffer = _get_buffer_from_owner(p_buffer);
 	if (!buffer) {
-		ERR_FAIL_V_MSG(Vector<uint8_t>(), "Buffer is either invalid or this type of buffer can't be retrieved. Only Index and Vertex buffers allow retrieving.");
+		ERR_FAIL_V_MSG(Hector<uint8_t>(), "Buffer is either invalid or this type of buffer can't be retrieved. Only Index and Vertex buffers allow retrieving.");
 	}
 
 	// Size of buffer to retrieve.
 	if (!p_size) {
 		p_size = buffer->size;
 	} else {
-		ERR_FAIL_COND_V_MSG(p_size + p_offset > buffer->size, Vector<uint8_t>(),
+		ERR_FAIL_COND_V_MSG(p_size + p_offset > buffer->size, Hector<uint8_t>(),
 				"Size is larger than the buffer.");
 	}
 
 	_check_transfer_worker_buffer(buffer);
 
 	RDD::BufferID tmp_buffer = driver->buffer_create(buffer->size, RDD::BUFFER_USAGE_TRANSFER_TO_BIT, RDD::MEMORY_ALLOCATION_TYPE_CPU);
-	ERR_FAIL_COND_V(!tmp_buffer, Vector<uint8_t>());
+	ERR_FAIL_COND_V(!tmp_buffer, Hector<uint8_t>());
 
 	RDD::BufferCopyRegion region;
 	region.src_offset = p_offset;
@@ -629,9 +629,9 @@ Vector<uint8_t> RenderingDevice::buffer_get_data(RID p_buffer, uint32_t p_offset
 	_flush_and_stall_for_all_frames();
 
 	uint8_t *buffer_mem = driver->buffer_map(tmp_buffer);
-	ERR_FAIL_NULL_V(buffer_mem, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(buffer_mem, Hector<uint8_t>());
 
-	Vector<uint8_t> buffer_data;
+	Hector<uint8_t> buffer_data;
 	{
 		buffer_data.resize(p_size);
 		uint8_t *w = buffer_data.ptrw();
@@ -645,7 +645,7 @@ Vector<uint8_t> RenderingDevice::buffer_get_data(RID p_buffer, uint32_t p_offset
 	return buffer_data;
 }
 
-RID RenderingDevice::storage_buffer_create(uint32_t p_size_bytes, const Vector<uint8_t> &p_data, BitField<StorageBufferUsage> p_usage) {
+RID RenderingDevice::storage_buffer_create(uint32_t p_size_bytes, const Hector<uint8_t> &p_data, BitField<StorageBufferUsage> p_usage) {
 	ERR_FAIL_COND_V(p_data.size() && (uint32_t)p_data.size() != p_size_bytes, RID());
 
 	Buffer buffer;
@@ -676,7 +676,7 @@ RID RenderingDevice::storage_buffer_create(uint32_t p_size_bytes, const Vector<u
 	return id;
 }
 
-RID RenderingDevice::texture_buffer_create(uint32_t p_size_elements, DataFormat p_format, const Vector<uint8_t> &p_data) {
+RID RenderingDevice::texture_buffer_create(uint32_t p_size_elements, DataFormat p_format, const Hector<uint8_t> &p_data) {
 	uint32_t element_size = get_format_vertex_size(p_format);
 	ERR_FAIL_COND_V_MSG(element_size == 0, RID(), "Format requested is not supported for texture buffers");
 	uint64_t size_bytes = uint64_t(element_size) * p_size_elements;
@@ -720,7 +720,7 @@ RID RenderingDevice::texture_buffer_create(uint32_t p_size_elements, DataFormat 
 /**** TEXTURE ****/
 /*****************/
 
-RID RenderingDevice::texture_create(const TextureFormat &p_format, const TextureView &p_view, const Vector<Vector<uint8_t>> &p_data) {
+RID RenderingDevice::texture_create(const TextureFormat &p_format, const TextureView &p_view, const Hector<Hector<uint8_t>> &p_data) {
 	// Some adjustments will happen.
 	TextureFormat format = p_format;
 
@@ -1209,7 +1209,7 @@ uint32_t RenderingDevice::_texture_alignment(Texture *p_texture) const {
 	return STEPIFY(alignment, driver->api_trait_get(RDD::API_TRAIT_TEXTURE_TRANSFER_ALIGNMENT));
 }
 
-Error RenderingDevice::_texture_initialize(RID p_texture, uint32_t p_layer, const Vector<uint8_t> &p_data) {
+Error RenderingDevice::_texture_initialize(RID p_texture, uint32_t p_layer, const Hector<uint8_t> &p_data) {
 	Texture *texture = texture_owner.get_or_null(p_texture);
 	ERR_FAIL_NULL_V(texture, ERR_INVALID_PARAMETER);
 
@@ -1311,8 +1311,8 @@ Error RenderingDevice::_texture_initialize(RID p_texture, uint32_t p_layer, cons
 					copy_region.texture_subresources.mipmap = mm_i;
 					copy_region.texture_subresources.base_layer = p_layer;
 					copy_region.texture_subresources.layer_count = 1;
-					copy_region.texture_offset = Vector3i(0, 0, z);
-					copy_region.texture_region_size = Vector3i(logic_width, logic_height, 1);
+					copy_region.texture_offset = Hector3i(0, 0, z);
+					copy_region.texture_region_size = Hector3i(logic_width, logic_height, 1);
 					driver->command_copy_buffer_to_texture(transfer_worker->command_buffer, transfer_worker->staging_buffer, texture->driver_id, RDD::TEXTURE_LAYOUT_COPY_DST_OPTIMAL, copy_region);
 				}
 
@@ -1349,7 +1349,7 @@ Error RenderingDevice::_texture_initialize(RID p_texture, uint32_t p_layer, cons
 	return OK;
 }
 
-Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vector<uint8_t> &p_data) {
+Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Hector<uint8_t> &p_data) {
 	ERR_RENDER_THREAD_GUARD_V(ERR_UNAVAILABLE);
 
 	ERR_FAIL_COND_V_MSG(draw_list || compute_list, ERR_INVALID_PARAMETER, "Updating textures is forbidden during creation of a draw or compute list");
@@ -1392,8 +1392,8 @@ Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vec
 
 	const uint8_t *read_ptr = p_data.ptr();
 
-	thread_local LocalVector<RDG::RecordedBufferToTextureCopy> command_buffer_to_texture_copies_vector;
-	command_buffer_to_texture_copies_vector.clear();
+	thread_local LocalHector<RDG::RecordedBufferToTextureCopy> command_buffer_to_texture_copies_Hector;
+	command_buffer_to_texture_copies_Hector.clear();
 
 	// Indicate the texture will get modified for the shared texture fallback.
 	_texture_update_shared_fallback(p_texture, texture, true);
@@ -1429,15 +1429,15 @@ Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vec
 					Error err = _staging_buffer_allocate(to_allocate, required_align, alloc_offset, alloc_size, required_action, false);
 					ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
 
-					if (!command_buffer_to_texture_copies_vector.is_empty() && required_action == STAGING_REQUIRED_ACTION_FLUSH_AND_STALL_ALL) {
+					if (!command_buffer_to_texture_copies_Hector.is_empty() && required_action == STAGING_REQUIRED_ACTION_FLUSH_AND_STALL_ALL) {
 						if (_texture_make_mutable(texture, p_texture)) {
 							// The texture must be mutable to be used as a copy destination.
 							draw_graph.add_synchronization();
 						}
 
-						// If the staging buffer requires flushing everything, we submit the command early and clear the current vector.
-						draw_graph.add_texture_update(texture->driver_id, texture->draw_tracker, command_buffer_to_texture_copies_vector);
-						command_buffer_to_texture_copies_vector.clear();
+						// If the staging buffer requires flushing everything, we submit the command early and clear the current Hector.
+						draw_graph.add_texture_update(texture->driver_id, texture->draw_tracker, command_buffer_to_texture_copies_Hector);
+						command_buffer_to_texture_copies_Hector.clear();
 					}
 
 					_staging_buffer_execute_required_action(required_action);
@@ -1466,13 +1466,13 @@ Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vec
 					copy_region.texture_subresources.mipmap = mm_i;
 					copy_region.texture_subresources.base_layer = p_layer;
 					copy_region.texture_subresources.layer_count = 1;
-					copy_region.texture_offset = Vector3i(x, y, z);
-					copy_region.texture_region_size = Vector3i(region_logic_w, region_logic_h, 1);
+					copy_region.texture_offset = Hector3i(x, y, z);
+					copy_region.texture_region_size = Hector3i(region_logic_w, region_logic_h, 1);
 
 					RDG::RecordedBufferToTextureCopy buffer_to_texture_copy;
 					buffer_to_texture_copy.from_buffer = staging_buffer_blocks[staging_buffer_current].driver_id;
 					buffer_to_texture_copy.region = copy_region;
-					command_buffer_to_texture_copies_vector.push_back(buffer_to_texture_copy);
+					command_buffer_to_texture_copies_Hector.push_back(buffer_to_texture_copy);
 
 					staging_buffer_blocks.write[staging_buffer_current].fill_amount = alloc_offset + alloc_size;
 				}
@@ -1489,7 +1489,7 @@ Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vec
 		draw_graph.add_synchronization();
 	}
 
-	draw_graph.add_texture_update(texture->driver_id, texture->draw_tracker, command_buffer_to_texture_copies_vector);
+	draw_graph.add_texture_update(texture->driver_id, texture->draw_tracker, command_buffer_to_texture_copies_Hector);
 
 	return OK;
 }
@@ -1599,10 +1599,10 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 		driver->texture_get_copyable_layout(p_dst_texture->shared_fallback->texture, texture_subresource, &first_copyable_layout);
 
 		// Copying each mipmap from main texture to a buffer and then to the slice texture.
-		thread_local LocalVector<RDD::BufferTextureCopyRegion> get_data_vector;
-		thread_local LocalVector<RDG::RecordedBufferToTextureCopy> update_vector;
-		get_data_vector.clear();
-		update_vector.clear();
+		thread_local LocalHector<RDD::BufferTextureCopyRegion> get_data_Hector;
+		thread_local LocalHector<RDG::RecordedBufferToTextureCopy> update_Hector;
+		get_data_Hector.clear();
+		update_Hector.clear();
 		for (uint32_t i = 0; i < p_dst_texture->mipmaps; i++) {
 			driver->texture_get_copyable_layout(p_dst_texture->shared_fallback->texture, texture_subresource, &copyable_layout);
 
@@ -1615,7 +1615,7 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 			get_data_region.texture_region_size.x = MAX(1U, p_src_texture->width >> mipmap);
 			get_data_region.texture_region_size.y = MAX(1U, p_src_texture->height >> mipmap);
 			get_data_region.texture_region_size.z = MAX(1U, p_src_texture->depth >> mipmap);
-			get_data_vector.push_back(get_data_region);
+			get_data_Hector.push_back(get_data_region);
 
 			update_copy.from_buffer = shared_buffer;
 			update_copy.region.buffer_offset = get_data_region.buffer_offset;
@@ -1626,13 +1626,13 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 			update_copy.region.texture_region_size.x = get_data_region.texture_region_size.x;
 			update_copy.region.texture_region_size.y = get_data_region.texture_region_size.y;
 			update_copy.region.texture_region_size.z = get_data_region.texture_region_size.z;
-			update_vector.push_back(update_copy);
+			update_Hector.push_back(update_copy);
 
 			texture_subresource.mipmap++;
 		}
 
-		draw_graph.add_texture_get_data(p_src_texture->driver_id, p_src_texture->draw_tracker, shared_buffer, get_data_vector, shared_buffer_tracker);
-		draw_graph.add_texture_update(p_dst_texture->shared_fallback->texture, p_dst_texture->shared_fallback->texture_tracker, update_vector, shared_buffer_tracker);
+		draw_graph.add_texture_get_data(p_src_texture->driver_id, p_src_texture->draw_tracker, shared_buffer, get_data_Hector, shared_buffer_tracker);
+		draw_graph.add_texture_update(p_dst_texture->shared_fallback->texture, p_dst_texture->shared_fallback->texture_tracker, update_Hector, shared_buffer_tracker);
 	} else {
 		// Raw reinterpretation is not required. Use a regular texture copy.
 		RDD::TextureCopyRegion copy_region;
@@ -1644,8 +1644,8 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 		copy_region.dst_subresources.layer_count = copy_region.src_subresources.layer_count;
 
 		// Copying each mipmap from main texture to to the slice texture.
-		thread_local LocalVector<RDD::TextureCopyRegion> region_vector;
-		region_vector.clear();
+		thread_local LocalHector<RDD::TextureCopyRegion> region_Hector;
+		region_Hector.clear();
 		for (uint32_t i = 0; i < p_dst_texture->mipmaps; i++) {
 			uint32_t mipmap = p_dst_texture->base_mipmap + i;
 			copy_region.src_subresources.mipmap = mipmap;
@@ -1653,10 +1653,10 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 			copy_region.size.x = MAX(1U, p_src_texture->width >> mipmap);
 			copy_region.size.y = MAX(1U, p_src_texture->height >> mipmap);
 			copy_region.size.z = MAX(1U, p_src_texture->depth >> mipmap);
-			region_vector.push_back(copy_region);
+			region_Hector.push_back(copy_region);
 		}
 
-		draw_graph.add_texture_copy(p_src_texture->driver_id, p_src_texture->draw_tracker, p_dst_texture->shared_fallback->texture, p_dst_texture->shared_fallback->texture_tracker, region_vector);
+		draw_graph.add_texture_copy(p_src_texture->driver_id, p_src_texture->draw_tracker, p_dst_texture->shared_fallback->texture, p_dst_texture->shared_fallback->texture_tracker, region_Hector);
 	}
 }
 
@@ -1674,11 +1674,11 @@ void RenderingDevice::_texture_create_reinterpret_buffer(Texture *p_texture) {
 	p_texture->shared_fallback->buffer_tracker = tracker;
 }
 
-Vector<uint8_t> RenderingDevice::_texture_get_data(Texture *tex, uint32_t p_layer, bool p_2d) {
+Hector<uint8_t> RenderingDevice::_texture_get_data(Texture *tex, uint32_t p_layer, bool p_2d) {
 	uint32_t width, height, depth;
 	uint32_t tight_mip_size = get_image_format_required_size(tex->format, tex->width, tex->height, p_2d ? 1 : tex->depth, tex->mipmaps, &width, &height, &depth);
 
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 	image_data.resize(tight_mip_size);
 
 	uint32_t blockw, blockh;
@@ -1704,7 +1704,7 @@ Vector<uint8_t> RenderingDevice::_texture_get_data(Texture *tex, uint32_t p_laye
 			driver->texture_get_copyable_layout(tex->driver_id, subres, &layout);
 
 			uint8_t *img_mem = driver->texture_map(tex->driver_id, subres);
-			ERR_FAIL_NULL_V(img_mem, Vector<uint8_t>());
+			ERR_FAIL_NULL_V(img_mem, Hector<uint8_t>());
 
 			for (uint32_t z = 0; z < depth; z++) {
 				uint8_t *write_ptr = write_ptr_mipmap + z * tight_mip_size / depth;
@@ -1739,18 +1739,18 @@ Vector<uint8_t> RenderingDevice::_texture_get_data(Texture *tex, uint32_t p_laye
 	return image_data;
 }
 
-Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_layer) {
-	ERR_RENDER_THREAD_GUARD_V(Vector<uint8_t>());
+Hector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_layer) {
+	ERR_RENDER_THREAD_GUARD_V(Hector<uint8_t>());
 
 	Texture *tex = texture_owner.get_or_null(p_texture);
-	ERR_FAIL_NULL_V(tex, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(tex, Hector<uint8_t>());
 
-	ERR_FAIL_COND_V_MSG(tex->bound, Vector<uint8_t>(),
+	ERR_FAIL_COND_V_MSG(tex->bound, Hector<uint8_t>(),
 			"Texture can't be retrieved while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to retrieve this texture.");
-	ERR_FAIL_COND_V_MSG(!(tex->usage_flags & TEXTURE_USAGE_CAN_COPY_FROM_BIT), Vector<uint8_t>(),
+	ERR_FAIL_COND_V_MSG(!(tex->usage_flags & TEXTURE_USAGE_CAN_COPY_FROM_BIT), Hector<uint8_t>(),
 			"Texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be set to be retrieved.");
 
-	ERR_FAIL_COND_V(p_layer >= tex->layers, Vector<uint8_t>());
+	ERR_FAIL_COND_V(p_layer >= tex->layers, Hector<uint8_t>());
 
 	_check_transfer_worker_texture(tex);
 
@@ -1758,7 +1758,7 @@ Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_laye
 		// Does not need anything fancy, map and read.
 		return _texture_get_data(tex, p_layer);
 	} else {
-		LocalVector<RDD::TextureCopyableLayout> mip_layouts;
+		LocalHector<RDD::TextureCopyableLayout> mip_layouts;
 		uint32_t work_mip_alignment = driver->api_trait_get(RDD::API_TRAIT_TEXTURE_TRANSFER_ALIGNMENT);
 		uint32_t work_buffer_size = 0;
 		mip_layouts.resize(tex->mipmaps);
@@ -1776,10 +1776,10 @@ Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_laye
 		}
 
 		RDD::BufferID tmp_buffer = driver->buffer_create(work_buffer_size, RDD::BUFFER_USAGE_TRANSFER_TO_BIT, RDD::MEMORY_ALLOCATION_TYPE_CPU);
-		ERR_FAIL_COND_V(!tmp_buffer, Vector<uint8_t>());
+		ERR_FAIL_COND_V(!tmp_buffer, Hector<uint8_t>());
 
-		thread_local LocalVector<RDD::BufferTextureCopyRegion> command_buffer_texture_copy_regions_vector;
-		command_buffer_texture_copy_regions_vector.clear();
+		thread_local LocalHector<RDD::BufferTextureCopyRegion> command_buffer_texture_copy_regions_Hector;
+		command_buffer_texture_copy_regions_Hector.clear();
 
 		uint32_t w = tex->width;
 		uint32_t h = tex->height;
@@ -1794,7 +1794,7 @@ Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_laye
 			copy_region.texture_region_size.x = w;
 			copy_region.texture_region_size.y = h;
 			copy_region.texture_region_size.z = d;
-			command_buffer_texture_copy_regions_vector.push_back(copy_region);
+			command_buffer_texture_copy_regions_Hector.push_back(copy_region);
 
 			w = MAX(1u, w >> 1);
 			h = MAX(1u, h >> 1);
@@ -1806,19 +1806,19 @@ Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_laye
 			draw_graph.add_synchronization();
 		}
 
-		draw_graph.add_texture_get_data(tex->driver_id, tex->draw_tracker, tmp_buffer, command_buffer_texture_copy_regions_vector);
+		draw_graph.add_texture_get_data(tex->driver_id, tex->draw_tracker, tmp_buffer, command_buffer_texture_copy_regions_Hector);
 
 		// Flush everything so memory can be safely mapped.
 		_flush_and_stall_for_all_frames();
 
 		const uint8_t *read_ptr = driver->buffer_map(tmp_buffer);
-		ERR_FAIL_NULL_V(read_ptr, Vector<uint8_t>());
+		ERR_FAIL_NULL_V(read_ptr, Hector<uint8_t>());
 
 		uint32_t block_w = 0;
 		uint32_t block_h = 0;
 		get_compressed_image_format_block_dimensions(tex->format, block_w, block_h);
 
-		Vector<uint8_t> buffer_data;
+		Hector<uint8_t> buffer_data;
 		uint32_t tight_buffer_size = get_image_format_required_size(tex->format, tex->width, tex->height, tex->depth, tex->mipmaps);
 		buffer_data.resize(tight_buffer_size);
 
@@ -1906,7 +1906,7 @@ uint64_t RenderingDevice::texture_get_native_handle(RID p_texture) {
 }
 #endif
 
-Error RenderingDevice::texture_copy(RID p_from_texture, RID p_to_texture, const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_size, uint32_t p_src_mipmap, uint32_t p_dst_mipmap, uint32_t p_src_layer, uint32_t p_dst_layer) {
+Error RenderingDevice::texture_copy(RID p_from_texture, RID p_to_texture, const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_size, uint32_t p_src_mipmap, uint32_t p_dst_mipmap, uint32_t p_src_layer, uint32_t p_dst_layer) {
 	ERR_RENDER_THREAD_GUARD_V(ERR_UNAVAILABLE);
 
 	Texture *src_tex = texture_owner.get_or_null(p_from_texture);
@@ -2105,13 +2105,13 @@ static RDD::AttachmentStoreOp final_action_to_store_op(RenderingDevice::FinalAct
 	}
 }
 
-RDD::RenderPassID RenderingDevice::_render_pass_create(const Vector<AttachmentFormat> &p_attachments, const Vector<FramebufferPass> &p_passes, InitialAction p_initial_action, FinalAction p_final_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, uint32_t p_view_count, Vector<TextureSamples> *r_samples) {
+RDD::RenderPassID RenderingDevice::_render_pass_create(const Hector<AttachmentFormat> &p_attachments, const Hector<FramebufferPass> &p_passes, InitialAction p_initial_action, FinalAction p_final_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, uint32_t p_view_count, Hector<TextureSamples> *r_samples) {
 	// NOTE:
 	// Before the refactor to RenderingDevice-RenderingDeviceDriver, there was commented out code to
 	// specify dependencies to external subpasses. Since it had been unused for a long timel it wasn't ported
 	// to the new architecture.
 
-	LocalVector<int32_t> attachment_last_pass;
+	LocalHector<int32_t> attachment_last_pass;
 	attachment_last_pass.resize(p_attachments.size());
 
 	if (p_view_count > 1) {
@@ -2124,8 +2124,8 @@ RDD::RenderPassID RenderingDevice::_render_pass_create(const Vector<AttachmentFo
 		ERR_FAIL_COND_V_MSG(p_view_count > capabilities.max_view_count, RDD::RenderPassID(), "Hardware does not support requested number of views for Multiview render pass");
 	}
 
-	LocalVector<RDD::Attachment> attachments;
-	LocalVector<int> attachment_remap;
+	LocalHector<RDD::Attachment> attachments;
+	LocalHector<int> attachment_remap;
 
 	for (int i = 0; i < p_attachments.size(); i++) {
 		if (p_attachments[i].usage_flags == AttachmentFormat::UNUSED_ATTACHMENT) {
@@ -2184,9 +2184,9 @@ RDD::RenderPassID RenderingDevice::_render_pass_create(const Vector<AttachmentFo
 		attachments.push_back(description);
 	}
 
-	LocalVector<RDD::Subpass> subpasses;
+	LocalHector<RDD::Subpass> subpasses;
 	subpasses.resize(p_passes.size());
-	LocalVector<RDD::SubpassDependency> subpass_dependencies;
+	LocalHector<RDD::SubpassDependency> subpass_dependencies;
 
 	for (int i = 0; i < p_passes.size(); i++) {
 		const FramebufferPass *pass = &p_passes[i];
@@ -2334,7 +2334,7 @@ RDD::RenderPassID RenderingDevice::_render_pass_create(const Vector<AttachmentFo
 	return render_pass;
 }
 
-RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create(const Vector<AttachmentFormat> &p_format, uint32_t p_view_count) {
+RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create(const Hector<AttachmentFormat> &p_format, uint32_t p_view_count) {
 	FramebufferPass pass;
 	for (int i = 0; i < p_format.size(); i++) {
 		if (p_format[i].usage_flags & TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
@@ -2344,11 +2344,11 @@ RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create(
 		}
 	}
 
-	Vector<FramebufferPass> passes;
+	Hector<FramebufferPass> passes;
 	passes.push_back(pass);
 	return framebuffer_format_create_multipass(p_format, passes, p_view_count);
 }
-RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create_multipass(const Vector<AttachmentFormat> &p_attachments, const Vector<FramebufferPass> &p_passes, uint32_t p_view_count) {
+RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create_multipass(const Hector<AttachmentFormat> &p_attachments, const Hector<FramebufferPass> &p_passes, uint32_t p_view_count) {
 	_THREAD_SAFE_METHOD_
 
 	FramebufferFormatKey key;
@@ -2362,7 +2362,7 @@ RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create_
 		return E->get();
 	}
 
-	Vector<TextureSamples> samples;
+	Hector<TextureSamples> samples;
 	RDD::RenderPassID render_pass = _render_pass_create(p_attachments, p_passes, INITIAL_ACTION_CLEAR, FINAL_ACTION_STORE, INITIAL_ACTION_CLEAR, FINAL_ACTION_STORE, p_view_count, &samples); // Actions don't matter for this use case.
 
 	if (!render_pass) { // Was likely invalid.
@@ -2400,7 +2400,7 @@ RenderingDevice::FramebufferFormatID RenderingDevice::framebuffer_format_create_
 		return E->get();
 	}
 
-	LocalVector<RDD::Subpass> subpass;
+	LocalHector<RDD::Subpass> subpass;
 	subpass.resize(1);
 
 	RDD::RenderPassID render_pass = driver->render_pass_create({}, subpass, {}, 1);
@@ -2449,7 +2449,7 @@ RID RenderingDevice::framebuffer_create_empty(const Size2i &p_size, TextureSampl
 	return id;
 }
 
-RID RenderingDevice::framebuffer_create(const Vector<RID> &p_texture_attachments, FramebufferFormatID p_format_check, uint32_t p_view_count) {
+RID RenderingDevice::framebuffer_create(const Hector<RID> &p_texture_attachments, FramebufferFormatID p_format_check, uint32_t p_view_count) {
 	_THREAD_SAFE_METHOD_
 
 	FramebufferPass pass;
@@ -2476,16 +2476,16 @@ RID RenderingDevice::framebuffer_create(const Vector<RID> &p_texture_attachments
 		}
 	}
 
-	Vector<FramebufferPass> passes;
+	Hector<FramebufferPass> passes;
 	passes.push_back(pass);
 
 	return framebuffer_create_multipass(p_texture_attachments, passes, p_format_check, p_view_count);
 }
 
-RID RenderingDevice::framebuffer_create_multipass(const Vector<RID> &p_texture_attachments, const Vector<FramebufferPass> &p_passes, FramebufferFormatID p_format_check, uint32_t p_view_count) {
+RID RenderingDevice::framebuffer_create_multipass(const Hector<RID> &p_texture_attachments, const Hector<FramebufferPass> &p_passes, FramebufferFormatID p_format_check, uint32_t p_view_count) {
 	_THREAD_SAFE_METHOD_
 
-	Vector<AttachmentFormat> attachments;
+	Hector<AttachmentFormat> attachments;
 	attachments.resize(p_texture_attachments.size());
 	Size2i size;
 	bool size_set = false;
@@ -2609,7 +2609,7 @@ bool RenderingDevice::sampler_is_format_supported_for_filter(DataFormat p_format
 /**** VERTEX BUFFER ****/
 /***********************/
 
-RID RenderingDevice::vertex_buffer_create(uint32_t p_size_bytes, const Vector<uint8_t> &p_data, bool p_use_as_storage) {
+RID RenderingDevice::vertex_buffer_create(uint32_t p_size_bytes, const Hector<uint8_t> &p_data, bool p_use_as_storage) {
 	ERR_FAIL_COND_V(p_data.size() && (uint32_t)p_data.size() != p_size_bytes, RID());
 
 	Buffer buffer;
@@ -2643,7 +2643,7 @@ RID RenderingDevice::vertex_buffer_create(uint32_t p_size_bytes, const Vector<ui
 }
 
 // Internally reference counted, this ID is warranted to be unique for the same description, but needs to be freed as many times as it was allocated.
-RenderingDevice::VertexFormatID RenderingDevice::vertex_format_create(const Vector<VertexAttribute> &p_vertex_descriptions) {
+RenderingDevice::VertexFormatID RenderingDevice::vertex_format_create(const Hector<VertexAttribute> &p_vertex_descriptions) {
 	_THREAD_SAFE_METHOD_
 
 	VertexDescriptionKey key;
@@ -2675,7 +2675,7 @@ RenderingDevice::VertexFormatID RenderingDevice::vertex_format_create(const Vect
 	return id;
 }
 
-RID RenderingDevice::vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const Vector<RID> &p_src_buffers, const Vector<uint64_t> &p_offsets) {
+RID RenderingDevice::vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const Hector<RID> &p_src_buffers, const Hector<uint64_t> &p_offsets) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND_V(!vertex_formats.has(p_vertex_format), RID());
@@ -2748,7 +2748,7 @@ RID RenderingDevice::vertex_array_create(uint32_t p_vertex_count, VertexFormatID
 	return id;
 }
 
-RID RenderingDevice::index_buffer_create(uint32_t p_index_count, IndexBufferFormat p_format, const Vector<uint8_t> &p_data, bool p_use_restart_indices) {
+RID RenderingDevice::index_buffer_create(uint32_t p_index_count, IndexBufferFormat p_format, const Hector<uint8_t> &p_data, bool p_use_restart_indices) {
 	ERR_FAIL_COND_V(p_index_count == 0, RID());
 
 	IndexBuffer index_buffer;
@@ -2868,11 +2868,11 @@ String RenderingDevice::shader_get_binary_cache_key() const {
 	return driver->shader_get_binary_cache_key();
 }
 
-Vector<uint8_t> RenderingDevice::shader_compile_binary_from_spirv(const Vector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name) {
+Hector<uint8_t> RenderingDevice::shader_compile_binary_from_spirv(const Hector<ShaderStageSPIRVData> &p_spirv, const String &p_shader_name) {
 	return driver->shader_compile_binary_from_spirv(p_spirv, p_shader_name);
 }
 
-RID RenderingDevice::shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, RID p_placeholder) {
+RID RenderingDevice::shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, RID p_placeholder) {
 	_THREAD_SAFE_METHOD_
 
 	ShaderDescription shader_desc;
@@ -2967,7 +2967,7 @@ uint64_t RenderingDevice::shader_get_vertex_input_attribute_mask(RID p_shader) {
 /**** UNIFORMS ****/
 /******************/
 
-RID RenderingDevice::uniform_buffer_create(uint32_t p_size_bytes, const Vector<uint8_t> &p_data) {
+RID RenderingDevice::uniform_buffer_create(uint32_t p_size_bytes, const Hector<uint8_t> &p_data) {
 	ERR_FAIL_COND_V(p_data.size() && (uint32_t)p_data.size() != p_size_bytes, RID());
 
 	Buffer buffer;
@@ -3005,7 +3005,7 @@ void RenderingDevice::_uniform_set_update_shared(UniformSet *p_uniform_set) {
 	}
 }
 
-RID RenderingDevice::uniform_set_create(const Vector<Uniform> &p_uniforms, RID p_shader, uint32_t p_shader_set) {
+RID RenderingDevice::uniform_set_create(const Hector<Uniform> &p_uniforms, RID p_shader, uint32_t p_shader_set) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND_V(p_uniforms.is_empty(), RID());
@@ -3017,7 +3017,7 @@ RID RenderingDevice::uniform_set_create(const Vector<Uniform> &p_uniforms, RID p
 			"Desired set (" + itos(p_shader_set) + ") not used by shader.");
 	// See that all sets in shader are satisfied.
 
-	const Vector<ShaderUniform> &set = shader->uniform_sets[p_shader_set];
+	const Hector<ShaderUniform> &set = shader->uniform_sets[p_shader_set];
 
 	uint32_t uniform_count = p_uniforms.size();
 	const Uniform *uniforms = p_uniforms.ptr();
@@ -3025,15 +3025,15 @@ RID RenderingDevice::uniform_set_create(const Vector<Uniform> &p_uniforms, RID p
 	uint32_t set_uniform_count = set.size();
 	const ShaderUniform *set_uniforms = set.ptr();
 
-	LocalVector<RDD::BoundUniform> driver_uniforms;
+	LocalHector<RDD::BoundUniform> driver_uniforms;
 	driver_uniforms.resize(set_uniform_count);
 
 	// Used for verification to make sure a uniform set does not use a framebuffer bound texture.
-	LocalVector<UniformSet::AttachableTexture> attachable_textures;
-	Vector<RDG::ResourceTracker *> draw_trackers;
-	Vector<RDG::ResourceUsage> draw_trackers_usage;
+	LocalHector<UniformSet::AttachableTexture> attachable_textures;
+	Hector<RDG::ResourceTracker *> draw_trackers;
+	Hector<RDG::ResourceUsage> draw_trackers_usage;
 	HashMap<RID, RDG::ResourceUsage> untracked_usage;
-	Vector<UniformSet::SharedTexture> shared_textures_to_update;
+	Hector<UniformSet::SharedTexture> shared_textures_to_update;
 
 	for (uint32_t i = 0; i < set_uniform_count; i++) {
 		const ShaderUniform &set_uniform = set_uniforms[i];
@@ -3421,7 +3421,7 @@ void RenderingDevice::uniform_set_set_invalidation_callback(RID p_uniform_set, I
 /**** PIPELINES ****/
 /*******************/
 
-RID RenderingDevice::render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const PipelineRasterizationState &p_rasterization_state, const PipelineMultisampleState &p_multisample_state, const PipelineDepthStencilState &p_depth_stencil_state, const PipelineColorBlendState &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const Vector<PipelineSpecializationConstant> &p_specialization_constants) {
+RID RenderingDevice::render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const PipelineRasterizationState &p_rasterization_state, const PipelineMultisampleState &p_multisample_state, const PipelineDepthStencilState &p_depth_stencil_state, const PipelineColorBlendState &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const Hector<PipelineSpecializationConstant> &p_specialization_constants) {
 	// Needs a shader.
 	Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL_V(shader, RID());
@@ -3433,7 +3433,7 @@ RID RenderingDevice::render_pipeline_create(RID p_shader, FramebufferFormatID p_
 
 		if (p_framebuffer_format == INVALID_ID) {
 			// If nothing provided, use an empty one (no attachments).
-			p_framebuffer_format = framebuffer_format_create(Vector<AttachmentFormat>());
+			p_framebuffer_format = framebuffer_format_create(Hector<AttachmentFormat>());
 		}
 		ERR_FAIL_COND_V(!framebuffer_formats.has(p_framebuffer_format), RID());
 		fb_format = framebuffer_formats[p_framebuffer_format];
@@ -3605,7 +3605,7 @@ bool RenderingDevice::render_pipeline_is_valid(RID p_pipeline) {
 	return render_pipeline_owner.owns(p_pipeline);
 }
 
-RID RenderingDevice::compute_pipeline_create(RID p_shader, const Vector<PipelineSpecializationConstant> &p_specialization_constants) {
+RID RenderingDevice::compute_pipeline_create(RID p_shader, const Hector<PipelineSpecializationConstant> &p_specialization_constants) {
 	Shader *shader;
 
 	{
@@ -3771,7 +3771,7 @@ RenderingDevice::FramebufferFormatID RenderingDevice::screen_get_framebuffer_for
 	attachment.format = format;
 	attachment.samples = TEXTURE_SAMPLES_1;
 	attachment.usage_flags = TEXTURE_USAGE_COLOR_ATTACHMENT_BIT;
-	Vector<AttachmentFormat> screen_attachment;
+	Hector<AttachmentFormat> screen_attachment;
 	screen_attachment.push_back(attachment);
 	return const_cast<RenderingDevice *>(this)->framebuffer_format_create(screen_attachment);
 }
@@ -3845,7 +3845,7 @@ Error RenderingDevice::_draw_list_setup_framebuffer(Framebuffer *p_framebuffer, 
 
 		version.render_pass = _render_pass_create(framebuffer_formats[p_framebuffer->format_id].E->key().attachments, framebuffer_formats[p_framebuffer->format_id].E->key().passes, p_initial_color_action, p_final_color_action, p_initial_depth_action, p_final_depth_action, p_framebuffer->view_count);
 
-		LocalVector<RDD::TextureID> attachments;
+		LocalHector<RDD::TextureID> attachments;
 		for (int i = 0; i < p_framebuffer->texture_ids.size(); i++) {
 			Texture *texture = texture_owner.get_or_null(p_framebuffer->texture_ids[i]);
 			if (texture) {
@@ -3872,10 +3872,10 @@ Error RenderingDevice::_draw_list_setup_framebuffer(Framebuffer *p_framebuffer, 
 	return OK;
 }
 
-Error RenderingDevice::_draw_list_render_pass_begin(Framebuffer *p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_colors, float p_clear_depth, uint32_t p_clear_stencil, Point2i p_viewport_offset, Point2i p_viewport_size, RDD::FramebufferID p_framebuffer_driver_id, RDD::RenderPassID p_render_pass, uint32_t p_breadcrumb) {
-	thread_local LocalVector<RDD::RenderPassClearValue> clear_values;
-	thread_local LocalVector<RDG::ResourceTracker *> resource_trackers;
-	thread_local LocalVector<RDG::ResourceUsage> resource_usages;
+Error RenderingDevice::_draw_list_render_pass_begin(Framebuffer *p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_colors, float p_clear_depth, uint32_t p_clear_stencil, Point2i p_viewport_offset, Point2i p_viewport_size, RDD::FramebufferID p_framebuffer_driver_id, RDD::RenderPassID p_render_pass, uint32_t p_breadcrumb) {
+	thread_local LocalHector<RDD::RenderPassClearValue> clear_values;
+	thread_local LocalHector<RDG::ResourceTracker *> resource_trackers;
+	thread_local LocalHector<RDG::ResourceUsage> resource_usages;
 	bool uses_color = false;
 	bool uses_depth = false;
 	clear_values.clear();
@@ -3938,8 +3938,8 @@ Error RenderingDevice::_draw_list_render_pass_begin(Framebuffer *p_framebuffer, 
 	return OK;
 }
 
-void RenderingDevice::_draw_list_insert_clear_region(DrawList *p_draw_list, Framebuffer *p_framebuffer, Point2i p_viewport_offset, Point2i p_viewport_size, bool p_clear_color, const Vector<Color> &p_clear_colors, bool p_clear_depth, float p_depth, uint32_t p_stencil) {
-	LocalVector<RDD::AttachmentClear> clear_attachments;
+void RenderingDevice::_draw_list_insert_clear_region(DrawList *p_draw_list, Framebuffer *p_framebuffer, Point2i p_viewport_offset, Point2i p_viewport_size, bool p_clear_color, const Hector<Color> &p_clear_colors, bool p_clear_depth, float p_depth, uint32_t p_stencil) {
+	LocalHector<RDD::AttachmentClear> clear_attachments;
 	int color_index = 0;
 	int texture_index = 0;
 	for (int i = 0; i < p_framebuffer->texture_ids.size(); i++) {
@@ -3974,7 +3974,7 @@ void RenderingDevice::_draw_list_insert_clear_region(DrawList *p_draw_list, Fram
 	draw_graph.add_draw_list_clear_attachments(clear_attachments, rect);
 }
 
-RenderingDevice::DrawListID RenderingDevice::draw_list_begin(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, uint32_t p_breadcrumb) {
+RenderingDevice::DrawListID RenderingDevice::draw_list_begin(RID p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, uint32_t p_breadcrumb) {
 	ERR_RENDER_THREAD_GUARD_V(INVALID_ID);
 
 	ERR_FAIL_COND_V_MSG(draw_list != nullptr, INVALID_ID, "Only one draw list can be active at the same time.");
@@ -3985,7 +3985,7 @@ RenderingDevice::DrawListID RenderingDevice::draw_list_begin(RID p_framebuffer, 
 	Point2i viewport_offset;
 	Point2i viewport_size = framebuffer->size;
 
-	if (p_region != Rect2() && p_region != Rect2(Vector2(), viewport_size)) { // Check custom region.
+	if (p_region != Rect2() && p_region != Rect2(Hector2(), viewport_size)) { // Check custom region.
 		Rect2i viewport(viewport_offset, viewport_size);
 		Rect2i regioni = p_region;
 		if (!((regioni.position.x >= viewport.position.x) && (regioni.position.y >= viewport.position.y) &&
@@ -4043,7 +4043,7 @@ RenderingDevice::DrawListID RenderingDevice::draw_list_begin(RID p_framebuffer, 
 }
 
 #ifndef DISABLE_DEPRECATED
-Error RenderingDevice::draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, DrawListID *r_split_ids, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const Vector<RID> &p_storage_textures) {
+Error RenderingDevice::draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, DrawListID *r_split_ids, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const Hector<RID> &p_storage_textures) {
 	ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "Deprecated. Split draw lists are used automatically by RenderingDevice.");
 }
 #endif
@@ -5129,7 +5129,7 @@ void RenderingDevice::_end_transfer_worker(TransferWorker *p_transfer_worker) {
 }
 
 void RenderingDevice::_submit_transfer_worker(TransferWorker *p_transfer_worker, bool p_signal_semaphore) {
-	const VectorView<RDD::SemaphoreID> execute_semaphore = p_signal_semaphore ? p_transfer_worker->command_semaphore : VectorView<RDD::SemaphoreID>();
+	const HectorView<RDD::SemaphoreID> execute_semaphore = p_signal_semaphore ? p_transfer_worker->command_semaphore : HectorView<RDD::SemaphoreID>();
 	driver->command_queue_execute_and_present(transfer_queue, {}, p_transfer_worker->command_buffer, execute_semaphore, p_transfer_worker->command_fence, {});
 	if (p_signal_semaphore) {
 		// Indicate the frame should wait on these semaphores before executing the main command buffer.
@@ -5820,7 +5820,7 @@ void RenderingDevice::_execute_frame(bool p_present) {
 	// Check whether this frame should present the swap chains and in which queue.
 	const bool frame_can_present = p_present && !frames[frame].swap_chains_to_present.is_empty();
 	const bool separate_present_queue = main_queue != present_queue;
-	thread_local LocalVector<RDD::SwapChainID> swap_chains;
+	thread_local LocalHector<RDD::SwapChainID> swap_chains;
 	swap_chains.clear();
 
 	// Execute command buffers and use semaphores to wait on the execution of the previous one. Normally there's only one command buffer,
@@ -5832,7 +5832,7 @@ void RenderingDevice::_execute_frame(bool p_present) {
 		buffer_pool.buffers_used = 0;
 	}
 
-	thread_local LocalVector<RDD::SemaphoreID> wait_semaphores;
+	thread_local LocalHector<RDD::SemaphoreID> wait_semaphores;
 	wait_semaphores = frames[frame].semaphores_to_wait_on;
 
 	for (uint32_t i = 0; i < command_buffer_count; i++) {
@@ -5865,7 +5865,7 @@ void RenderingDevice::_execute_frame(bool p_present) {
 			signal_semaphore_valid = true;
 		}
 
-		driver->command_queue_execute_and_present(main_queue, wait_semaphores, command_buffer, signal_semaphore_valid ? signal_semaphore : VectorView<RDD::SemaphoreID>(), signal_fence, swap_chains);
+		driver->command_queue_execute_and_present(main_queue, wait_semaphores, command_buffer, signal_semaphore_valid ? signal_semaphore : HectorView<RDD::SemaphoreID>(), signal_fence, swap_chains);
 
 		// Make the next command buffer wait on the semaphore signaled by this one.
 		wait_semaphores.resize(1);
@@ -6104,7 +6104,7 @@ Error RenderingDevice::initialize(RenderingContextDriver *p_context, DisplayServ
 		}
 		pipeline_cache_file_path += ".cache";
 
-		Vector<uint8_t> cache_data = _load_pipeline_cache();
+		Hector<uint8_t> cache_data = _load_pipeline_cache();
 		pipeline_cache_enabled = driver->pipeline_cache_create(cache_data);
 		if (pipeline_cache_enabled) {
 			pipeline_cache_size = driver->pipeline_cache_query_size();
@@ -6115,15 +6115,15 @@ Error RenderingDevice::initialize(RenderingContextDriver *p_context, DisplayServ
 	return OK;
 }
 
-Vector<uint8_t> RenderingDevice::_load_pipeline_cache() {
+Hector<uint8_t> RenderingDevice::_load_pipeline_cache() {
 	DirAccess::make_dir_recursive_absolute(pipeline_cache_file_path.get_base_dir());
 
 	if (FileAccess::exists(pipeline_cache_file_path)) {
 		Error file_error;
-		Vector<uint8_t> file_data = FileAccess::get_file_as_bytes(pipeline_cache_file_path, &file_error);
+		Hector<uint8_t> file_data = FileAccess::get_file_as_bytes(pipeline_cache_file_path, &file_error);
 		return file_data;
 	} else {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 }
 
@@ -6175,7 +6175,7 @@ void RenderingDevice::_save_pipeline_cache(void *p_data) {
 	RenderingDevice *self = static_cast<RenderingDevice *>(p_data);
 
 	self->_thread_safe_.lock();
-	Vector<uint8_t> cache_blob = self->driver->pipeline_cache_serialize();
+	Hector<uint8_t> cache_blob = self->driver->pipeline_cache_serialize();
 	self->_thread_safe_.unlock();
 
 	if (cache_blob.size() == 0) {
@@ -6564,11 +6564,11 @@ void RenderingDevice::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("sampler_create", "state"), &RenderingDevice::_sampler_create);
 	ClassDB::bind_method(D_METHOD("sampler_is_format_supported_for_filter", "format", "sampler_filter"), &RenderingDevice::sampler_is_format_supported_for_filter);
 
-	ClassDB::bind_method(D_METHOD("vertex_buffer_create", "size_bytes", "data", "use_as_storage"), &RenderingDevice::vertex_buffer_create, DEFVAL(Vector<uint8_t>()), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("vertex_buffer_create", "size_bytes", "data", "use_as_storage"), &RenderingDevice::vertex_buffer_create, DEFVAL(Hector<uint8_t>()), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("vertex_format_create", "vertex_descriptions"), &RenderingDevice::_vertex_format_create);
-	ClassDB::bind_method(D_METHOD("vertex_array_create", "vertex_count", "vertex_format", "src_buffers", "offsets"), &RenderingDevice::_vertex_array_create, DEFVAL(Vector<int64_t>()));
+	ClassDB::bind_method(D_METHOD("vertex_array_create", "vertex_count", "vertex_format", "src_buffers", "offsets"), &RenderingDevice::_vertex_array_create, DEFVAL(Hector<int64_t>()));
 
-	ClassDB::bind_method(D_METHOD("index_buffer_create", "size_indices", "format", "data", "use_restart_indices"), &RenderingDevice::index_buffer_create, DEFVAL(Vector<uint8_t>()), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("index_buffer_create", "size_indices", "format", "data", "use_restart_indices"), &RenderingDevice::index_buffer_create, DEFVAL(Hector<uint8_t>()), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("index_array_create", "index_buffer", "index_offset", "index_count"), &RenderingDevice::index_array_create);
 
 	ClassDB::bind_method(D_METHOD("shader_compile_spirv_from_source", "shader_source", "allow_cache"), &RenderingDevice::_shader_compile_spirv_from_source, DEFVAL(true));
@@ -6579,9 +6579,9 @@ void RenderingDevice::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("shader_get_vertex_input_attribute_mask", "shader"), &RenderingDevice::shader_get_vertex_input_attribute_mask);
 
-	ClassDB::bind_method(D_METHOD("uniform_buffer_create", "size_bytes", "data"), &RenderingDevice::uniform_buffer_create, DEFVAL(Vector<uint8_t>()));
-	ClassDB::bind_method(D_METHOD("storage_buffer_create", "size_bytes", "data", "usage"), &RenderingDevice::storage_buffer_create, DEFVAL(Vector<uint8_t>()), DEFVAL(0));
-	ClassDB::bind_method(D_METHOD("texture_buffer_create", "size_bytes", "format", "data"), &RenderingDevice::texture_buffer_create, DEFVAL(Vector<uint8_t>()));
+	ClassDB::bind_method(D_METHOD("uniform_buffer_create", "size_bytes", "data"), &RenderingDevice::uniform_buffer_create, DEFVAL(Hector<uint8_t>()));
+	ClassDB::bind_method(D_METHOD("storage_buffer_create", "size_bytes", "data", "usage"), &RenderingDevice::storage_buffer_create, DEFVAL(Hector<uint8_t>()), DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("texture_buffer_create", "size_bytes", "format", "data"), &RenderingDevice::texture_buffer_create, DEFVAL(Hector<uint8_t>()));
 
 	ClassDB::bind_method(D_METHOD("uniform_set_create", "uniforms", "shader", "shader_set"), &RenderingDevice::_uniform_set_create);
 	ClassDB::bind_method(D_METHOD("uniform_set_is_valid", "uniform_set"), &RenderingDevice::uniform_set_is_valid);
@@ -6603,9 +6603,9 @@ void RenderingDevice::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("draw_list_begin_for_screen", "screen", "clear_color"), &RenderingDevice::draw_list_begin_for_screen, DEFVAL(DisplayServer::MAIN_WINDOW_ID), DEFVAL(Color()));
 
-	ClassDB::bind_method(D_METHOD("draw_list_begin", "framebuffer", "initial_color_action", "final_color_action", "initial_depth_action", "final_depth_action", "clear_color_values", "clear_depth", "clear_stencil", "region", "breadcrumb"), &RenderingDevice::draw_list_begin, DEFVAL(Vector<Color>()), DEFVAL(1.0), DEFVAL(0), DEFVAL(Rect2()), DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("draw_list_begin", "framebuffer", "initial_color_action", "final_color_action", "initial_depth_action", "final_depth_action", "clear_color_values", "clear_depth", "clear_stencil", "region", "breadcrumb"), &RenderingDevice::draw_list_begin, DEFVAL(Hector<Color>()), DEFVAL(1.0), DEFVAL(0), DEFVAL(Rect2()), DEFVAL(0));
 #ifndef DISABLE_DEPRECATED
-	ClassDB::bind_method(D_METHOD("draw_list_begin_split", "framebuffer", "splits", "initial_color_action", "final_color_action", "initial_depth_action", "final_depth_action", "clear_color_values", "clear_depth", "clear_stencil", "region", "storage_textures"), &RenderingDevice::_draw_list_begin_split, DEFVAL(Vector<Color>()), DEFVAL(1.0), DEFVAL(0), DEFVAL(Rect2()), DEFVAL(TypedArray<RID>()));
+	ClassDB::bind_method(D_METHOD("draw_list_begin_split", "framebuffer", "splits", "initial_color_action", "final_color_action", "initial_depth_action", "final_depth_action", "clear_color_values", "clear_depth", "clear_stencil", "region", "storage_textures"), &RenderingDevice::_draw_list_begin_split, DEFVAL(Hector<Color>()), DEFVAL(1.0), DEFVAL(0), DEFVAL(Rect2()), DEFVAL(TypedArray<RID>()));
 #endif
 
 	ClassDB::bind_method(D_METHOD("draw_list_set_blend_constants", "draw_list", "color"), &RenderingDevice::draw_list_set_blend_constants);
@@ -7248,9 +7248,9 @@ RenderingDevice::RenderingDevice() {
 RID RenderingDevice::_texture_create(const Ref<RDTextureFormat> &p_format, const Ref<RDTextureView> &p_view, const TypedArray<PackedByteArray> &p_data) {
 	ERR_FAIL_COND_V(p_format.is_null(), RID());
 	ERR_FAIL_COND_V(p_view.is_null(), RID());
-	Vector<Vector<uint8_t>> data;
+	Hector<Hector<uint8_t>> data;
 	for (int i = 0; i < p_data.size(); i++) {
-		Vector<uint8_t> byte_slice = p_data[i];
+		Hector<uint8_t> byte_slice = p_data[i];
 		ERR_FAIL_COND_V(byte_slice.is_empty(), RID());
 		data.push_back(byte_slice);
 	}
@@ -7278,7 +7278,7 @@ Ref<RDTextureFormat> RenderingDevice::_texture_get_format(RID p_rd_texture) {
 }
 
 RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create(const TypedArray<RDAttachmentFormat> &p_attachments, uint32_t p_view_count) {
-	Vector<AttachmentFormat> attachments;
+	Hector<AttachmentFormat> attachments;
 	attachments.resize(p_attachments.size());
 
 	for (int i = 0; i < p_attachments.size(); i++) {
@@ -7290,7 +7290,7 @@ RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create
 }
 
 RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create_multipass(const TypedArray<RDAttachmentFormat> &p_attachments, const TypedArray<RDFramebufferPass> &p_passes, uint32_t p_view_count) {
-	Vector<AttachmentFormat> attachments;
+	Hector<AttachmentFormat> attachments;
 	attachments.resize(p_attachments.size());
 
 	for (int i = 0; i < p_attachments.size(); i++) {
@@ -7299,7 +7299,7 @@ RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create
 		attachments.write[i] = af->base;
 	}
 
-	Vector<FramebufferPass> passes;
+	Hector<FramebufferPass> passes;
 	for (int i = 0; i < p_passes.size(); i++) {
 		Ref<RDFramebufferPass> pass = p_passes[i];
 		ERR_CONTINUE(pass.is_null());
@@ -7310,13 +7310,13 @@ RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create
 }
 
 RID RenderingDevice::_framebuffer_create(const TypedArray<RID> &p_textures, FramebufferFormatID p_format_check, uint32_t p_view_count) {
-	Vector<RID> textures = Variant(p_textures);
+	Hector<RID> textures = Variant(p_textures);
 	return framebuffer_create(textures, p_format_check, p_view_count);
 }
 
 RID RenderingDevice::_framebuffer_create_multipass(const TypedArray<RID> &p_textures, const TypedArray<RDFramebufferPass> &p_passes, FramebufferFormatID p_format_check, uint32_t p_view_count) {
-	Vector<RID> textures = Variant(p_textures);
-	Vector<FramebufferPass> passes;
+	Hector<RID> textures = Variant(p_textures);
+	Hector<FramebufferPass> passes;
 	for (int i = 0; i < p_passes.size(); i++) {
 		Ref<RDFramebufferPass> pass = p_passes[i];
 		ERR_CONTINUE(pass.is_null());
@@ -7332,7 +7332,7 @@ RID RenderingDevice::_sampler_create(const Ref<RDSamplerState> &p_state) {
 }
 
 RenderingDevice::VertexFormatID RenderingDevice::_vertex_format_create(const TypedArray<RDVertexAttribute> &p_vertex_formats) {
-	Vector<VertexAttribute> descriptions;
+	Hector<VertexAttribute> descriptions;
 	descriptions.resize(p_vertex_formats.size());
 
 	for (int i = 0; i < p_vertex_formats.size(); i++) {
@@ -7343,10 +7343,10 @@ RenderingDevice::VertexFormatID RenderingDevice::_vertex_format_create(const Typ
 	return vertex_format_create(descriptions);
 }
 
-RID RenderingDevice::_vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const TypedArray<RID> &p_src_buffers, const Vector<int64_t> &p_offsets) {
-	Vector<RID> buffers = Variant(p_src_buffers);
+RID RenderingDevice::_vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const TypedArray<RID> &p_src_buffers, const Hector<int64_t> &p_offsets) {
+	Hector<RID> buffers = Variant(p_src_buffers);
 
-	Vector<uint64_t> offsets;
+	Hector<uint64_t> offsets;
 	offsets.resize(p_offsets.size());
 	for (int i = 0; i < p_offsets.size(); i++) {
 		offsets.write[i] = p_offsets[i];
@@ -7367,7 +7367,7 @@ Ref<RDShaderSPIRV> RenderingDevice::_shader_compile_spirv_from_source(const Ref<
 		String source = p_source->get_stage_source(stage);
 
 		if (!source.is_empty()) {
-			Vector<uint8_t> spirv = shader_compile_spirv_from_source(stage, source, p_source->get_language(), &error, p_allow_cache);
+			Hector<uint8_t> spirv = shader_compile_spirv_from_source(stage, source, p_source->get_language(), &error, p_allow_cache);
 			bytecode->set_stage_bytecode(stage, spirv);
 			bytecode->set_stage_compile_error(stage, error);
 		}
@@ -7375,16 +7375,16 @@ Ref<RDShaderSPIRV> RenderingDevice::_shader_compile_spirv_from_source(const Ref<
 	return bytecode;
 }
 
-Vector<uint8_t> RenderingDevice::_shader_compile_binary_from_spirv(const Ref<RDShaderSPIRV> &p_spirv, const String &p_shader_name) {
-	ERR_FAIL_COND_V(p_spirv.is_null(), Vector<uint8_t>());
+Hector<uint8_t> RenderingDevice::_shader_compile_binary_from_spirv(const Ref<RDShaderSPIRV> &p_spirv, const String &p_shader_name) {
+	ERR_FAIL_COND_V(p_spirv.is_null(), Hector<uint8_t>());
 
-	Vector<ShaderStageSPIRVData> stage_data;
+	Hector<ShaderStageSPIRVData> stage_data;
 	for (int i = 0; i < RD::SHADER_STAGE_MAX; i++) {
 		ShaderStage stage = ShaderStage(i);
 		ShaderStageSPIRVData sd;
 		sd.shader_stage = stage;
 		String error = p_spirv->get_stage_compile_error(stage);
-		ERR_FAIL_COND_V_MSG(!error.is_empty(), Vector<uint8_t>(), "Can't create a shader from an errored bytecode. Check errors in source bytecode.");
+		ERR_FAIL_COND_V_MSG(!error.is_empty(), Hector<uint8_t>(), "Can't create a shader from an errored bytecode. Check errors in source bytecode.");
 		sd.spirv = p_spirv->get_stage_bytecode(stage);
 		if (sd.spirv.is_empty()) {
 			continue;
@@ -7398,7 +7398,7 @@ Vector<uint8_t> RenderingDevice::_shader_compile_binary_from_spirv(const Ref<RDS
 RID RenderingDevice::_shader_create_from_spirv(const Ref<RDShaderSPIRV> &p_spirv, const String &p_shader_name) {
 	ERR_FAIL_COND_V(p_spirv.is_null(), RID());
 
-	Vector<ShaderStageSPIRVData> stage_data;
+	Hector<ShaderStageSPIRVData> stage_data;
 	for (int i = 0; i < RD::SHADER_STAGE_MAX; i++) {
 		ShaderStage stage = ShaderStage(i);
 		ShaderStageSPIRVData sd;
@@ -7415,7 +7415,7 @@ RID RenderingDevice::_shader_create_from_spirv(const Ref<RDShaderSPIRV> &p_spirv
 }
 
 RID RenderingDevice::_uniform_set_create(const TypedArray<RDUniform> &p_uniforms, RID p_shader, uint32_t p_shader_set) {
-	Vector<Uniform> uniforms;
+	Hector<Uniform> uniforms;
 	uniforms.resize(p_uniforms.size());
 	for (int i = 0; i < p_uniforms.size(); i++) {
 		Ref<RDUniform> uniform = p_uniforms[i];
@@ -7425,12 +7425,12 @@ RID RenderingDevice::_uniform_set_create(const TypedArray<RDUniform> &p_uniforms
 	return uniform_set_create(uniforms, p_shader, p_shader_set);
 }
 
-Error RenderingDevice::_buffer_update_bind(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Vector<uint8_t> &p_data) {
+Error RenderingDevice::_buffer_update_bind(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Hector<uint8_t> &p_data) {
 	return buffer_update(p_buffer, p_offset, p_size, p_data.ptr());
 }
 
-static Vector<RenderingDevice::PipelineSpecializationConstant> _get_spec_constants(const TypedArray<RDPipelineSpecializationConstant> &p_constants) {
-	Vector<RenderingDevice::PipelineSpecializationConstant> ret;
+static Hector<RenderingDevice::PipelineSpecializationConstant> _get_spec_constants(const TypedArray<RDPipelineSpecializationConstant> &p_constants) {
+	Hector<RenderingDevice::PipelineSpecializationConstant> ret;
 	ret.resize(p_constants.size());
 	for (int i = 0; i < p_constants.size(); i++) {
 		Ref<RDPipelineSpecializationConstant> c = p_constants[i];
@@ -7498,21 +7498,21 @@ RID RenderingDevice::_compute_pipeline_create(RID p_shader, const TypedArray<RDP
 }
 
 #ifndef DISABLE_DEPRECATED
-Vector<int64_t> RenderingDevice::_draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const TypedArray<RID> &p_storage_textures) {
-	ERR_FAIL_V_MSG(Vector<int64_t>(), "Deprecated. Split draw lists are used automatically by RenderingDevice.");
+Hector<int64_t> RenderingDevice::_draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const TypedArray<RID> &p_storage_textures) {
+	ERR_FAIL_V_MSG(Hector<int64_t>(), "Deprecated. Split draw lists are used automatically by RenderingDevice.");
 }
 
-Vector<int64_t> RenderingDevice::_draw_list_switch_to_next_pass_split(uint32_t p_splits) {
-	ERR_FAIL_V_MSG(Vector<int64_t>(), "Deprecated. Split draw lists are used automatically by RenderingDevice.");
+Hector<int64_t> RenderingDevice::_draw_list_switch_to_next_pass_split(uint32_t p_splits) {
+	ERR_FAIL_V_MSG(Hector<int64_t>(), "Deprecated. Split draw lists are used automatically by RenderingDevice.");
 }
 #endif
 
-void RenderingDevice::_draw_list_set_push_constant(DrawListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size) {
+void RenderingDevice::_draw_list_set_push_constant(DrawListID p_list, const Hector<uint8_t> &p_data, uint32_t p_data_size) {
 	ERR_FAIL_COND(p_data_size > (uint32_t)p_data.size());
 	draw_list_set_push_constant(p_list, p_data.ptr(), p_data_size);
 }
 
-void RenderingDevice::_compute_list_set_push_constant(ComputeListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size) {
+void RenderingDevice::_compute_list_set_push_constant(ComputeListID p_list, const Hector<uint8_t> &p_data, uint32_t p_data_size) {
 	ERR_FAIL_COND(p_data_size > (uint32_t)p_data.size());
 	compute_list_set_push_constant(p_list, p_data.ptr(), p_data_size);
 }

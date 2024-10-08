@@ -72,21 +72,21 @@ TEST_CASE("[HTTPClient] query_string_from_dict") {
 
 TEST_CASE("[HTTPClient] verify_headers") {
 	Ref<HTTPClient> client = HTTPClient::create();
-	Vector<String> headers = { "Accept: text/html", "Content-Type: application/json", "Authorization: Bearer abc123" };
+	Hector<String> headers = { "Accept: text/html", "Content-Type: application/json", "Authorization: Bearer abc123" };
 
 	Error err = client->verify_headers(headers);
 	CHECK_MESSAGE(err == OK, "Expected OK for valid headers");
 
 	ERR_PRINT_OFF;
-	Vector<String> empty_header = { "" };
+	Hector<String> empty_header = { "" };
 	err = client->verify_headers(empty_header);
 	CHECK_MESSAGE(err == ERR_INVALID_PARAMETER, "Expected ERR_INVALID_PARAMETER for empty header");
 
-	Vector<String> invalid_header = { "InvalidHeader", "Header: " };
+	Hector<String> invalid_header = { "InvalidHeader", "Header: " };
 	err = client->verify_headers(invalid_header);
 	CHECK_MESSAGE(err == ERR_INVALID_PARAMETER, "Expected ERR_INVALID_PARAMETER for header with no colon");
 
-	Vector<String> invalid_header_b = { ":", "Header: " };
+	Hector<String> invalid_header_b = { ":", "Header: " };
 	err = client->verify_headers(invalid_header_b);
 	CHECK_MESSAGE(err == ERR_INVALID_PARAMETER, "Expected ERR_INVALID_PARAMETER for header with colon in first position");
 	ERR_PRINT_ON;

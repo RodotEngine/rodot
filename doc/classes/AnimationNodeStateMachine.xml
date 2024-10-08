@@ -24,7 +24,7 @@
 			<return type="void" />
 			<param index="0" name="name" type="StringName" />
 			<param index="1" name="node" type="AnimationNode" />
-			<param index="2" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="2" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Adds a new animation node to the graph. The [param position] is used for display in the editor.
 			</description>
@@ -39,7 +39,7 @@
 			</description>
 		</method>
 		<method name="get_graph_offset" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the draw offset of the graph. Used for display in the editor.
 			</description>
@@ -59,7 +59,7 @@
 			</description>
 		</method>
 		<method name="get_node_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="name" type="StringName" />
 			<description>
 				Returns the given animation node's coordinates. Used for display in the editor.
@@ -147,7 +147,7 @@
 		</method>
 		<method name="set_graph_offset">
 			<return type="void" />
-			<param index="0" name="offset" type="Vector2" />
+			<param index="0" name="offset" type="Hector2" />
 			<description>
 				Sets the draw offset of the graph. Used for display in the editor.
 			</description>
@@ -155,7 +155,7 @@
 		<method name="set_node_position">
 			<return type="void" />
 			<param index="0" name="name" type="StringName" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Sets the animation node's coordinates. Used for display in the editor.
 			</description>

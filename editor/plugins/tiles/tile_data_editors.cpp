@@ -153,7 +153,7 @@ void GenericTilePolygonEditor::_base_control_draw() {
 
 	// Draw the focus rectangle.
 	if (base_control->has_focus()) {
-		base_control->draw_style_box(focus_stylebox, Rect2(Vector2(), base_control->get_size()));
+		base_control->draw_style_box(focus_stylebox, Rect2(Hector2(), base_control->get_size()));
 	}
 
 	// Draw tile-related things.
@@ -161,11 +161,11 @@ void GenericTilePolygonEditor::_base_control_draw() {
 
 	Transform2D xform;
 	xform.set_origin(base_control->get_size() / 2 + panning);
-	xform.set_scale(Vector2(editor_zoom_widget->get_zoom(), editor_zoom_widget->get_zoom()));
+	xform.set_scale(Hector2(editor_zoom_widget->get_zoom(), editor_zoom_widget->get_zoom()));
 	base_control->draw_set_transform_matrix(xform);
 
 	// Draw fill rect under texture region.
-	Rect2 texture_rect(Vector2(), background_region.size);
+	Rect2 texture_rect(Hector2(), background_region.size);
 	if (tile_data) {
 		texture_rect.position -= tile_data->get_texture_origin();
 		if (tile_data->get_transpose()) {
@@ -196,30 +196,30 @@ void GenericTilePolygonEditor::_base_control_draw() {
 
 	// Draw grid.
 	if (current_snap_option == SNAP_GRID) {
-		Vector2 spacing = base_tile_size / snap_subdivision->get_value();
-		Vector2 origin = -base_tile_size / 2;
+		Hector2 spacing = base_tile_size / snap_subdivision->get_value();
+		Hector2 origin = -base_tile_size / 2;
 		for (real_t y = origin.y; y < grid_area.get_end().y; y += spacing.y) {
-			base_control->draw_line(Vector2(grid_area.get_position().x, y), Vector2(grid_area.get_end().x, y), Color(1, 1, 1, 0.33));
+			base_control->draw_line(Hector2(grid_area.get_position().x, y), Hector2(grid_area.get_end().x, y), Color(1, 1, 1, 0.33));
 		}
 		for (real_t y = origin.y - spacing.y; y > grid_area.get_position().y; y -= spacing.y) {
-			base_control->draw_line(Vector2(grid_area.get_position().x, y), Vector2(grid_area.get_end().x, y), Color(1, 1, 1, 0.33));
+			base_control->draw_line(Hector2(grid_area.get_position().x, y), Hector2(grid_area.get_end().x, y), Color(1, 1, 1, 0.33));
 		}
 		for (real_t x = origin.x; x < grid_area.get_end().x; x += spacing.x) {
-			base_control->draw_line(Vector2(x, grid_area.get_position().y), Vector2(x, grid_area.get_end().y), Color(1, 1, 1, 0.33));
+			base_control->draw_line(Hector2(x, grid_area.get_position().y), Hector2(x, grid_area.get_end().y), Color(1, 1, 1, 0.33));
 		}
 		for (real_t x = origin.x - spacing.x; x > grid_area.get_position().x; x -= spacing.x) {
-			base_control->draw_line(Vector2(x, grid_area.get_position().y), Vector2(x, grid_area.get_end().y), Color(1, 1, 1, 0.33));
+			base_control->draw_line(Hector2(x, grid_area.get_position().y), Hector2(x, grid_area.get_end().y), Color(1, 1, 1, 0.33));
 		}
 	}
 
 	// Draw the polygons.
-	for (const Vector<Vector2> &polygon : polygons) {
+	for (const Hector<Hector2> &polygon : polygons) {
 		Color color = polygon_color;
 		if (!in_creation_polygon.is_empty()) {
 			color = color.darkened(0.3);
 		}
 		color.a = 0.5;
-		Vector<Color> v_color;
+		Hector<Color> v_color;
 		v_color.push_back(color);
 		base_control->draw_polygon(polygon, v_color);
 
@@ -263,7 +263,7 @@ void GenericTilePolygonEditor::_base_control_draw() {
 		}
 	} else {
 		for (int i = 0; i < (int)polygons.size(); i++) {
-			const Vector<Vector2> &polygon = polygons[i];
+			const Hector<Hector2> &polygon = polygons[i];
 			for (int j = 0; j < polygon.size(); j++) {
 				const Color poly_modulate = (tinted_polygon_index == i && tinted_point_index == j) ? Color(0.4, 1, 1) : Color(1, 1, 1);
 				base_control->draw_texture(handle, xform.xform(polygon[j]) - handle->get_size() / 2, poly_modulate);
@@ -298,7 +298,7 @@ void GenericTilePolygonEditor::_base_control_draw() {
 }
 
 void GenericTilePolygonEditor::_center_view() {
-	panning = Vector2();
+	panning = Hector2();
 	base_control->queue_redraw();
 	button_center_view->set_disabled(true);
 }
@@ -320,7 +320,7 @@ void GenericTilePolygonEditor::_advanced_menu_item_pressed(int p_item_pressed) {
 		case RESET_TO_DEFAULT_TILE: {
 			undo_redo->create_action(TTR("Reset Polygons"));
 			undo_redo->add_do_method(this, "clear_polygons");
-			Vector<Vector2> polygon = tile_set->get_tile_shape_polygon();
+			Hector<Hector2> polygon = tile_set->get_tile_shape_polygon();
 			for (int i = 0; i < polygon.size(); i++) {
 				polygon.write[i] = polygon[i] * tile_set->get_tile_size();
 			}
@@ -328,7 +328,7 @@ void GenericTilePolygonEditor::_advanced_menu_item_pressed(int p_item_pressed) {
 			undo_redo->add_do_method(base_control, "queue_redraw");
 			undo_redo->add_do_method(this, "emit_signal", "polygons_changed");
 			undo_redo->add_undo_method(this, "clear_polygons");
-			for (const PackedVector2Array &poly : polygons) {
+			for (const PackedHector2Array &poly : polygons) {
 				undo_redo->add_undo_method(this, "add_polygon", poly);
 			}
 			undo_redo->add_undo_method(base_control, "queue_redraw");
@@ -341,7 +341,7 @@ void GenericTilePolygonEditor::_advanced_menu_item_pressed(int p_item_pressed) {
 			undo_redo->add_do_method(base_control, "queue_redraw");
 			undo_redo->add_do_method(this, "emit_signal", "polygons_changed");
 			undo_redo->add_undo_method(this, "clear_polygons");
-			for (const PackedVector2Array &polygon : polygons) {
+			for (const PackedHector2Array &polygon : polygons) {
 				undo_redo->add_undo_method(this, "add_polygon", polygon);
 			}
 			undo_redo->add_undo_method(base_control, "queue_redraw");
@@ -369,21 +369,21 @@ void GenericTilePolygonEditor::_advanced_menu_item_pressed(int p_item_pressed) {
 					break;
 			}
 			for (unsigned int i = 0; i < polygons.size(); i++) {
-				Vector<Point2> new_polygon;
-				for (const Vector2 &vec : polygons[i]) {
-					Vector2 point = vec;
+				Hector<Point2> new_polygon;
+				for (const Hector2 &vec : polygons[i]) {
+					Hector2 point = vec;
 					switch (p_item_pressed) {
 						case ROTATE_RIGHT: {
-							point = Vector2(-point.y, point.x);
+							point = Hector2(-point.y, point.x);
 						} break;
 						case ROTATE_LEFT: {
-							point = Vector2(point.y, -point.x);
+							point = Hector2(point.y, -point.x);
 						} break;
 						case FLIP_HORIZONTALLY: {
-							point = Vector2(-point.x, point.y);
+							point = Hector2(-point.x, point.y);
 						} break;
 						case FLIP_VERTICALLY: {
-							point = Vector2(point.x, -point.y);
+							point = Hector2(point.x, -point.y);
 						} break;
 						default:
 							break;
@@ -410,13 +410,13 @@ void GenericTilePolygonEditor::_advanced_menu_item_pressed(int p_item_pressed) {
 	}
 }
 
-void GenericTilePolygonEditor::_grab_polygon_point(Vector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_point_index) {
+void GenericTilePolygonEditor::_grab_polygon_point(Hector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_point_index) {
 	const real_t grab_threshold = EDITOR_GET("editors/polygon_editor/point_grab_radius");
 	r_polygon_index = -1;
 	r_point_index = -1;
 	float closest_distance = grab_threshold + 1.0;
 	for (unsigned int i = 0; i < polygons.size(); i++) {
-		const Vector<Vector2> &polygon = polygons[i];
+		const Hector<Hector2> &polygon = polygons[i];
 		for (int j = 0; j < polygon.size(); j++) {
 			float distance = p_pos.distance_to(p_polygon_xform.xform(polygon[j]));
 			if (distance < grab_threshold && distance < closest_distance) {
@@ -428,7 +428,7 @@ void GenericTilePolygonEditor::_grab_polygon_point(Vector2 p_pos, const Transfor
 	}
 }
 
-void GenericTilePolygonEditor::_grab_polygon_segment_point(Vector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_segment_index, Vector2 &r_point) {
+void GenericTilePolygonEditor::_grab_polygon_segment_point(Hector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_segment_index, Hector2 &r_point) {
 	const real_t grab_threshold = EDITOR_GET("editors/polygon_editor/point_grab_radius");
 
 	Point2 point = p_polygon_xform.affine_inverse().xform(p_pos);
@@ -436,10 +436,10 @@ void GenericTilePolygonEditor::_grab_polygon_segment_point(Vector2 p_pos, const 
 	r_segment_index = -1;
 	float closest_distance = grab_threshold * 2.0;
 	for (unsigned int i = 0; i < polygons.size(); i++) {
-		const Vector<Vector2> &polygon = polygons[i];
+		const Hector<Hector2> &polygon = polygons[i];
 		for (int j = 0; j < polygon.size(); j++) {
-			Vector2 segment[2] = { polygon[j], polygon[(j + 1) % polygon.size()] };
-			Vector2 closest_point = Geometry2D::get_closest_point_to_segment(point, segment);
+			Hector2 segment[2] = { polygon[j], polygon[(j + 1) % polygon.size()] };
+			Hector2 closest_point = Geometry2D::get_closest_point_to_segment(point, segment);
 			float distance = closest_point.distance_to(point);
 			if (distance < grab_threshold / editor_zoom_widget->get_zoom() && distance < closest_distance) {
 				r_polygon_index = i;
@@ -454,7 +454,7 @@ void GenericTilePolygonEditor::_grab_polygon_segment_point(Vector2 p_pos, const 
 void GenericTilePolygonEditor::_snap_to_tile_shape(Point2 &r_point, float &r_current_snapped_dist, float p_snap_dist) {
 	ERR_FAIL_COND(!tile_set.is_valid());
 
-	Vector<Point2> polygon = tile_set->get_tile_shape_polygon();
+	Hector<Point2> polygon = tile_set->get_tile_shape_polygon();
 	for (int i = 0; i < polygon.size(); i++) {
 		polygon.write[i] = polygon[i] * tile_set->get_tile_size();
 	}
@@ -497,7 +497,7 @@ void GenericTilePolygonEditor::_snap_point(Point2 &r_point) {
 			break;
 
 		case SNAP_GRID: {
-			const Vector2 tile_size = tile_set->get_tile_size();
+			const Hector2 tile_size = tile_set->get_tile_size();
 			r_point = (r_point + tile_size / 2).snapped(tile_size / snap_subdivision->get_value()) - tile_size / 2;
 		} break;
 	}
@@ -517,16 +517,16 @@ void GenericTilePolygonEditor::_base_control_gui_input(Ref<InputEvent> p_event) 
 	hovered_polygon_index = -1;
 	hovered_point_index = -1;
 	hovered_segment_index = -1;
-	hovered_segment_point = Vector2();
+	hovered_segment_point = Hector2();
 
 	Transform2D xform;
 	xform.set_origin(base_control->get_size() / 2 + panning);
-	xform.set_scale(Vector2(editor_zoom_widget->get_zoom(), editor_zoom_widget->get_zoom()));
+	xform.set_scale(Hector2(editor_zoom_widget->get_zoom(), editor_zoom_widget->get_zoom()));
 
 	Ref<InputEventPanGesture> pan_gesture = p_event;
 	if (pan_gesture.is_valid()) {
 		panning += pan_gesture->get_delta() * 8;
-		drag_last_pos = Vector2();
+		drag_last_pos = Hector2();
 		button_center_view->set_disabled(panning.is_zero_approx());
 		accept_event();
 	}
@@ -615,7 +615,7 @@ void GenericTilePolygonEditor::_base_control_gui_input(Ref<InputEvent> p_event) 
 						drag_old_polygon = polygons[drag_polygon_index];
 					} else {
 						// Create a point.
-						Vector2 point_to_create;
+						Hector2 point_to_create;
 						_grab_polygon_segment_point(mb->get_position(), xform, closest_polygon, closest_point, point_to_create);
 						if (closest_polygon >= 0) {
 							polygons[closest_polygon].insert(closest_point + 1, point_to_create);
@@ -631,7 +631,7 @@ void GenericTilePolygonEditor::_base_control_gui_input(Ref<InputEvent> p_event) 
 					int closest_point;
 					_grab_polygon_point(mb->get_position(), xform, closest_polygon, closest_point);
 					if (closest_polygon >= 0) {
-						PackedVector2Array old_polygon = polygons[closest_polygon];
+						PackedHector2Array old_polygon = polygons[closest_polygon];
 						polygons[closest_polygon].remove_at(closest_point);
 						undo_redo->create_action(TTR("Edit Polygons"));
 						if (polygons[closest_polygon].size() < 3) {
@@ -676,7 +676,7 @@ void GenericTilePolygonEditor::_base_control_gui_input(Ref<InputEvent> p_event) 
 					int closest_point;
 					_grab_polygon_point(mb->get_position(), xform, closest_polygon, closest_point);
 					if (closest_polygon >= 0) {
-						PackedVector2Array old_polygon = polygons[closest_polygon];
+						PackedHector2Array old_polygon = polygons[closest_polygon];
 						polygons[closest_polygon].remove_at(closest_point);
 						undo_redo->create_action(TTR("Edit Polygons"));
 						if (polygons[closest_polygon].size() < 3) {
@@ -759,7 +759,7 @@ void GenericTilePolygonEditor::set_tile_set(Ref<TileSet> p_tile_set) {
 	// Set the default tile shape
 	clear_polygons();
 	if (p_tile_set.is_valid()) {
-		Vector<Vector2> polygon = p_tile_set->get_tile_shape_polygon();
+		Hector<Hector2> polygon = p_tile_set->get_tile_shape_polygon();
 		for (int i = 0; i < polygon.size(); i++) {
 			polygon.write[i] = polygon[i] * p_tile_set->get_tile_size();
 		}
@@ -780,7 +780,7 @@ void GenericTilePolygonEditor::set_tile_set(Ref<TileSet> p_tile_set) {
 
 	// Set the default zoom value.
 	int default_control_y_size = 200 * EDSCALE;
-	Vector2 zoomed_tile = editor_zoom_widget->get_zoom() * tile_set->get_tile_size();
+	Hector2 zoomed_tile = editor_zoom_widget->get_zoom() * tile_set->get_tile_size();
 	while (zoomed_tile.y < default_control_y_size) {
 		editor_zoom_widget->set_zoom_by_increments(6, false);
 		float current_zoom = editor_zoom_widget->get_zoom();
@@ -801,7 +801,7 @@ void GenericTilePolygonEditor::set_tile_set(Ref<TileSet> p_tile_set) {
 	_zoom_changed();
 }
 
-void GenericTilePolygonEditor::set_background_tile(const TileSetAtlasSource *p_atlas_source, const Vector2 &p_atlas_coords, int p_alternative_id) {
+void GenericTilePolygonEditor::set_background_tile(const TileSetAtlasSource *p_atlas_source, const Hector2 &p_atlas_coords, int p_alternative_id) {
 	ERR_FAIL_NULL(p_atlas_source);
 	background_atlas_source = p_atlas_source;
 	background_atlas_coords = p_atlas_coords;
@@ -813,7 +813,7 @@ int GenericTilePolygonEditor::get_polygon_count() {
 	return polygons.size();
 }
 
-int GenericTilePolygonEditor::add_polygon(const Vector<Point2> &p_polygon, int p_index) {
+int GenericTilePolygonEditor::add_polygon(const Hector<Point2> &p_polygon, int p_index) {
 	ERR_FAIL_COND_V(p_polygon.size() < 3, -1);
 	ERR_FAIL_COND_V(!multiple_polygon_mode && polygons.size() >= 1, -1);
 
@@ -845,7 +845,7 @@ void GenericTilePolygonEditor::clear_polygons() {
 	base_control->queue_redraw();
 }
 
-void GenericTilePolygonEditor::set_polygon(int p_polygon_index, const Vector<Point2> &p_polygon) {
+void GenericTilePolygonEditor::set_polygon(int p_polygon_index, const Hector<Point2> &p_polygon) {
 	ERR_FAIL_INDEX(p_polygon_index, (int)polygons.size());
 	ERR_FAIL_COND(p_polygon.size() < 3);
 	polygons[p_polygon_index] = p_polygon;
@@ -853,8 +853,8 @@ void GenericTilePolygonEditor::set_polygon(int p_polygon_index, const Vector<Poi
 	base_control->queue_redraw();
 }
 
-Vector<Point2> GenericTilePolygonEditor::get_polygon(int p_polygon_index) {
-	ERR_FAIL_INDEX_V(p_polygon_index, (int)polygons.size(), Vector<Point2>());
+Hector<Point2> GenericTilePolygonEditor::get_polygon(int p_polygon_index) {
+	ERR_FAIL_INDEX_V(p_polygon_index, (int)polygons.size(), Hector<Point2>());
 	return polygons[p_polygon_index];
 }
 
@@ -1006,7 +1006,7 @@ GenericTilePolygonEditor::GenericTilePolygonEditor() {
 
 	editor_zoom_widget = memnew(EditorZoomWidget);
 	editor_zoom_widget->setup_zoom_limits(0.125, 128.0);
-	editor_zoom_widget->set_position(Vector2(5, 5));
+	editor_zoom_widget->set_position(Hector2(5, 5));
 	editor_zoom_widget->connect("zoom_changed", callable_mp(this, &GenericTilePolygonEditor::_zoom_changed).unbind(1));
 	editor_zoom_widget->set_shortcut_context(this);
 	root->add_child(editor_zoom_widget);
@@ -1036,7 +1036,7 @@ Variant TileDataDefaultEditor::_get_painted_value() {
 	return dummy_object->get(property);
 }
 
-void TileDataDefaultEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+void TileDataDefaultEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 	Variant value = tile_data->get(property);
@@ -1046,13 +1046,13 @@ void TileDataDefaultEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_at
 	}
 }
 
-void TileDataDefaultEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) {
+void TileDataDefaultEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 	tile_data->set(property, p_value);
 }
 
-Variant TileDataDefaultEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+Variant TileDataDefaultEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL_V(tile_data, Variant());
 	return tile_data->get(property);
@@ -1061,7 +1061,7 @@ Variant TileDataDefaultEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_s
 void TileDataDefaultEditor::_setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value) {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	for (const KeyValue<TileMapCell, Variant> &E : p_previous_values) {
-		Vector2i coords = E.key.get_atlas_coords();
+		Hector2i coords = E.key.get_atlas_coords();
 		undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/%s", coords.x, coords.y, E.key.alternative_tile, property), E.value);
 		undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/%s", coords.x, coords.y, E.key.alternative_tile, property), p_new_value);
 	}
@@ -1082,7 +1082,7 @@ void TileDataDefaultEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas_
 		RBSet<TileMapCell> edited;
 		for (int x = rect.get_position().x; x <= rect.get_end().x; x++) {
 			for (int y = rect.get_position().y; y <= rect.get_end().y; y++) {
-				Vector2i coords = Vector2i(x, y);
+				Hector2i coords = Hector2i(x, y);
 				coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 				if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 					TileMapCell cell;
@@ -1095,7 +1095,7 @@ void TileDataDefaultEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas_
 		}
 
 		for (const TileMapCell &E : edited) {
-			Vector2i coords = E.get_atlas_coords();
+			Hector2i coords = E.get_atlas_coords();
 			p_canvas_item->draw_rect(p_tile_set_atlas_source->get_tile_texture_region(coords), selection_color, false);
 		}
 		p_canvas_item->draw_set_transform_matrix(Transform2D());
@@ -1110,9 +1110,9 @@ void TileDataDefaultEditor::forward_painting_atlas_gui_input(TileAtlasView *p_ti
 	Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
 		if (drag_type == DRAG_TYPE_PAINT) {
-			Vector<Vector2i> line = Geometry2D::bresenham_line(p_tile_atlas_view->get_atlas_tile_coords_at_pos(drag_last_pos, true), p_tile_atlas_view->get_atlas_tile_coords_at_pos(mm->get_position(), true));
+			Hector<Hector2i> line = Geometry2D::bresenham_line(p_tile_atlas_view->get_atlas_tile_coords_at_pos(drag_last_pos, true), p_tile_atlas_view->get_atlas_tile_coords_at_pos(mm->get_position(), true));
 			for (int i = 0; i < line.size(); i++) {
-				Vector2i coords = p_tile_set_atlas_source->get_tile_at_coords(line[i]);
+				Hector2i coords = p_tile_set_atlas_source->get_tile_at_coords(line[i]);
 				if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 					TileMapCell cell;
 					cell.source_id = 0;
@@ -1134,7 +1134,7 @@ void TileDataDefaultEditor::forward_painting_atlas_gui_input(TileAtlasView *p_ti
 		if (mb->get_button_index() == MouseButton::LEFT) {
 			if (mb->is_pressed()) {
 				if (picker_button->is_pressed() || (mb->is_command_or_control_pressed() && !mb->is_shift_pressed())) {
-					Vector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position(), true);
+					Hector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position(), true);
 					coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 						_set_painted_value(p_tile_set_atlas_source, coords, 0);
@@ -1149,7 +1149,7 @@ void TileDataDefaultEditor::forward_painting_atlas_gui_input(TileAtlasView *p_ti
 					drag_type = DRAG_TYPE_PAINT;
 					drag_modified.clear();
 					drag_painted_value = _get_painted_value();
-					Vector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position(), true);
+					Hector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position(), true);
 					coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 						TileMapCell cell;
@@ -1171,7 +1171,7 @@ void TileDataDefaultEditor::forward_painting_atlas_gui_input(TileAtlasView *p_ti
 					drag_modified.clear();
 					for (int x = rect.get_position().x; x <= rect.get_end().x; x++) {
 						for (int y = rect.get_position().y; y <= rect.get_end().y; y++) {
-							Vector2i coords = Vector2i(x, y);
+							Hector2i coords = Hector2i(x, y);
 							coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 							if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 								TileMapCell cell;
@@ -1201,8 +1201,8 @@ void TileDataDefaultEditor::forward_painting_alternatives_gui_input(TileAtlasVie
 	Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
 		if (drag_type == DRAG_TYPE_PAINT) {
-			Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mm->get_position());
-			Vector2i coords = Vector2i(tile.x, tile.y);
+			Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mm->get_position());
+			Hector2i coords = Hector2i(tile.x, tile.y);
 			int alternative_tile = tile.z;
 
 			if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
@@ -1225,8 +1225,8 @@ void TileDataDefaultEditor::forward_painting_alternatives_gui_input(TileAtlasVie
 		if (mb->get_button_index() == MouseButton::LEFT) {
 			if (mb->is_pressed()) {
 				if (picker_button->is_pressed()) {
-					Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
-					Vector2i coords = Vector2i(tile.x, tile.y);
+					Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
+					Hector2i coords = Hector2i(tile.x, tile.y);
 					int alternative_tile = tile.z;
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 						_set_painted_value(p_tile_set_atlas_source, coords, alternative_tile);
@@ -1237,8 +1237,8 @@ void TileDataDefaultEditor::forward_painting_alternatives_gui_input(TileAtlasVie
 					drag_modified.clear();
 					drag_painted_value = _get_painted_value();
 
-					Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
-					Vector2i coords = Vector2i(tile.x, tile.y);
+					Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
+					Hector2i coords = Hector2i(tile.x, tile.y);
 					int alternative_tile = tile.z;
 
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
@@ -1272,15 +1272,15 @@ void TileDataDefaultEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform2
 		return;
 	}
 
-	Vector2 texture_origin = tile_data->get_texture_origin();
+	Hector2 texture_origin = tile_data->get_texture_origin();
 	if (value.get_type() == Variant::BOOL) {
 		Ref<Texture2D> texture = (bool)value ? tile_bool_checked : tile_bool_unchecked;
 		int size = MIN(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 3;
-		Rect2 rect = p_transform.xform(Rect2(Vector2(-size / 2, -size / 2) - texture_origin, Vector2(size, size)));
+		Rect2 rect = p_transform.xform(Rect2(Hector2(-size / 2, -size / 2) - texture_origin, Hector2(size, size)));
 		p_canvas_item->draw_texture_rect(texture, rect);
 	} else if (value.get_type() == Variant::COLOR) {
 		int size = MIN(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 3;
-		Rect2 rect = p_transform.xform(Rect2(Vector2(-size / 2, -size / 2) - texture_origin, Vector2(size, size)));
+		Rect2 rect = p_transform.xform(Rect2(Hector2(-size / 2, -size / 2) - texture_origin, Hector2(size, size)));
 		p_canvas_item->draw_rect(rect, value);
 	} else {
 		Ref<Font> font = TileSetEditor::get_singleton()->get_theme_font(SNAME("bold"), EditorStringName(EditorFonts));
@@ -1291,9 +1291,9 @@ void TileDataDefaultEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform2
 			case Variant::FLOAT:
 				text = vformat("%.2f", value);
 				break;
-			case Variant::VECTOR2:
-			case Variant::VECTOR3:
-			case Variant::VECTOR4:
+			case Variant::HECTOR2:
+			case Variant::HECTOR3:
+			case Variant::HECTOR4:
 				text = vformat("%.2v", value);
 				break;
 			default:
@@ -1315,9 +1315,9 @@ void TileDataDefaultEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform2
 			}
 		}
 
-		Vector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-		p_canvas_item->draw_string_outline(font, p_transform.xform(-texture_origin) + Vector2i(-string_size.x / 2, string_size.y / 4), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 3, Color(0, 0, 0));
-		p_canvas_item->draw_string(font, p_transform.xform(-texture_origin) + Vector2i(-string_size.x / 2, string_size.y / 4), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
+		Hector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
+		p_canvas_item->draw_string_outline(font, p_transform.xform(-texture_origin) + Hector2i(-string_size.x / 2, string_size.y / 4), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 3, Color(0, 0, 0));
+		p_canvas_item->draw_string(font, p_transform.xform(-texture_origin) + Hector2i(-string_size.x / 2, string_size.y / 4), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
 	}
 }
 
@@ -1395,7 +1395,7 @@ void TileDataTextureOriginEditor::draw_over_tile(CanvasItem *p_canvas_item, Tran
 	TileData *tile_data = _get_tile_data(p_cell);
 	ERR_FAIL_NULL(tile_data);
 
-	Vector2i tile_set_tile_size = tile_set->get_tile_size();
+	Hector2i tile_set_tile_size = tile_set->get_tile_size();
 	Color color = Color(1.0, 1.0, 1.0);
 	if (p_selected) {
 		Color grid_color = EDITOR_GET("editors/tiles_editor/grid_color");
@@ -1405,21 +1405,21 @@ void TileDataTextureOriginEditor::draw_over_tile(CanvasItem *p_canvas_item, Tran
 
 	TileSetSource *source = *(tile_set->get_source(p_cell.source_id));
 	TileSetAtlasSource *atlas_source = Object::cast_to<TileSetAtlasSource>(source);
-	if (atlas_source->is_rect_in_tile_texture_region(p_cell.get_atlas_coords(), p_cell.alternative_tile, Rect2(Vector2(-tile_set_tile_size) / 2, tile_set_tile_size))) {
+	if (atlas_source->is_rect_in_tile_texture_region(p_cell.get_atlas_coords(), p_cell.alternative_tile, Rect2(Hector2(-tile_set_tile_size) / 2, tile_set_tile_size))) {
 		tile_set->draw_tile_shape(p_canvas_item, p_transform.scaled_local(tile_set_tile_size), color);
 	}
 
-	if (atlas_source->is_position_in_tile_texture_region(p_cell.get_atlas_coords(), p_cell.alternative_tile, Vector2())) {
+	if (atlas_source->is_position_in_tile_texture_region(p_cell.get_atlas_coords(), p_cell.alternative_tile, Hector2())) {
 		Ref<Texture2D> position_icon = TileSetEditor::get_singleton()->get_editor_theme_icon(SNAME("EditorPosition"));
-		p_canvas_item->draw_texture(position_icon, p_transform.xform(Vector2()) - (position_icon->get_size() / 2), color);
+		p_canvas_item->draw_texture(position_icon, p_transform.xform(Hector2()) - (position_icon->get_size() / 2), color);
 	} else {
 		Ref<Font> font = TileSetEditor::get_singleton()->get_theme_font(SNAME("bold"), EditorStringName(EditorFonts));
 		int font_size = TileSetEditor::get_singleton()->get_theme_font_size(SNAME("bold_size"), EditorStringName(EditorFonts));
-		Vector2 texture_origin = tile_data->get_texture_origin();
+		Hector2 texture_origin = tile_data->get_texture_origin();
 		String text = vformat("%s", texture_origin);
-		Vector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-		p_canvas_item->draw_string_outline(font, p_transform.xform(-texture_origin) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
-		p_canvas_item->draw_string(font, p_transform.xform(-texture_origin) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
+		Hector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
+		p_canvas_item->draw_string_outline(font, p_transform.xform(-texture_origin) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
+		p_canvas_item->draw_string(font, p_transform.xform(-texture_origin) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
 	}
 }
 
@@ -1432,7 +1432,7 @@ void TileDataPositionEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform
 	if (!valid) {
 		return;
 	}
-	ERR_FAIL_COND(value.get_type() != Variant::VECTOR2I && value.get_type() != Variant::VECTOR2);
+	ERR_FAIL_COND(value.get_type() != Variant::HECTOR2I && value.get_type() != Variant::HECTOR2);
 
 	Color color = Color(1.0, 1.0, 1.0);
 	if (p_selected) {
@@ -1441,7 +1441,7 @@ void TileDataPositionEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform
 		color = selection_color;
 	}
 	Ref<Texture2D> position_icon = TileSetEditor::get_singleton()->get_editor_theme_icon(SNAME("EditorPosition"));
-	p_canvas_item->draw_texture(position_icon, p_transform.xform(Vector2(value)) - position_icon->get_size() / 2, color);
+	p_canvas_item->draw_texture(position_icon, p_transform.xform(Hector2(value)) - position_icon->get_size() / 2, color);
 }
 
 void TileDataYSortEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform2D p_transform, TileMapCell p_cell, bool p_selected) {
@@ -1454,20 +1454,20 @@ void TileDataYSortEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform2D 
 		Color selection_color = Color().from_hsv(Math::fposmod(grid_color.get_h() + 0.5, 1.0), grid_color.get_s(), grid_color.get_v(), 1.0);
 		color = selection_color;
 	}
-	Vector2 texture_origin = tile_data->get_texture_origin();
+	Hector2 texture_origin = tile_data->get_texture_origin();
 	TileSetSource *source = *(tile_set->get_source(p_cell.source_id));
 	TileSetAtlasSource *atlas_source = Object::cast_to<TileSetAtlasSource>(source);
-	if (atlas_source->is_position_in_tile_texture_region(p_cell.get_atlas_coords(), p_cell.alternative_tile, Vector2(0, tile_data->get_y_sort_origin()))) {
+	if (atlas_source->is_position_in_tile_texture_region(p_cell.get_atlas_coords(), p_cell.alternative_tile, Hector2(0, tile_data->get_y_sort_origin()))) {
 		Ref<Texture2D> position_icon = TileSetEditor::get_singleton()->get_editor_theme_icon(SNAME("EditorPosition"));
-		p_canvas_item->draw_texture(position_icon, p_transform.xform(Vector2(0, tile_data->get_y_sort_origin())) - position_icon->get_size() / 2, color);
+		p_canvas_item->draw_texture(position_icon, p_transform.xform(Hector2(0, tile_data->get_y_sort_origin())) - position_icon->get_size() / 2, color);
 	} else {
 		Ref<Font> font = TileSetEditor::get_singleton()->get_theme_font(SNAME("bold"), EditorStringName(EditorFonts));
 		int font_size = TileSetEditor::get_singleton()->get_theme_font_size(SNAME("bold_size"), EditorStringName(EditorFonts));
 		String text = vformat("%s", tile_data->get_y_sort_origin());
 
-		Vector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-		p_canvas_item->draw_string_outline(font, p_transform.xform(-texture_origin) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
-		p_canvas_item->draw_string(font, p_transform.xform(-texture_origin) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
+		Hector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
+		p_canvas_item->draw_string_outline(font, p_transform.xform(-texture_origin) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
+		p_canvas_item->draw_string(font, p_transform.xform(-texture_origin) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
 	}
 }
 
@@ -1483,7 +1483,7 @@ void TileDataOcclusionShapeEditor::draw_over_tile(CanvasItem *p_canvas_item, Tra
 	}
 	color.a *= 0.5;
 
-	Vector<Color> debug_occlusion_color;
+	Hector<Color> debug_occlusion_color;
 	debug_occlusion_color.push_back(color);
 
 	RenderingServer::get_singleton()->canvas_item_add_set_transform(p_canvas_item->get_canvas_item(), p_transform);
@@ -1507,7 +1507,7 @@ Variant TileDataOcclusionShapeEditor::_get_painted_value() {
 	return polygons;
 }
 
-void TileDataOcclusionShapeEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+void TileDataOcclusionShapeEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 
@@ -1521,7 +1521,7 @@ void TileDataOcclusionShapeEditor::_set_painted_value(TileSetAtlasSource *p_tile
 	polygon_editor->set_background_tile(p_tile_set_atlas_source, p_coords, p_alternative_tile);
 }
 
-void TileDataOcclusionShapeEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) {
+void TileDataOcclusionShapeEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 
@@ -1535,7 +1535,7 @@ void TileDataOcclusionShapeEditor::_set_value(TileSetAtlasSource *p_tile_set_atl
 	polygon_editor->set_background_tile(p_tile_set_atlas_source, p_coords, p_alternative_tile);
 }
 
-Variant TileDataOcclusionShapeEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+Variant TileDataOcclusionShapeEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL_V(tile_data, Variant());
 	Array polygons;
@@ -1548,7 +1548,7 @@ Variant TileDataOcclusionShapeEditor::_get_value(TileSetAtlasSource *p_tile_set_
 void TileDataOcclusionShapeEditor::_setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value) {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	for (const KeyValue<TileMapCell, Variant> &E : p_previous_values) {
-		Vector2i coords = E.key.get_atlas_coords();
+		Hector2i coords = E.key.get_atlas_coords();
 		undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/occlusion_layer_%d/polygon", coords.x, coords.y, E.key.alternative_tile, occlusion_layer), E.value);
 		undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/occlusion_layer_%d/polygon", coords.x, coords.y, E.key.alternative_tile, occlusion_layer), p_new_value);
 	}
@@ -1661,13 +1661,13 @@ Variant TileDataCollisionEditor::_get_painted_value() {
 	return dict;
 }
 
-void TileDataCollisionEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+void TileDataCollisionEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 
 	polygon_editor->clear_polygons();
 	for (int i = 0; i < tile_data->get_collision_polygons_count(physics_layer); i++) {
-		Vector<Vector2> polygon = tile_data->get_collision_polygon_points(physics_layer, i);
+		Hector<Hector2> polygon = tile_data->get_collision_polygon_points(physics_layer, i);
 		if (polygon.size() >= 3) {
 			polygon_editor->add_polygon(polygon);
 		}
@@ -1687,7 +1687,7 @@ void TileDataCollisionEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_
 	polygon_editor->set_background_tile(p_tile_set_atlas_source, p_coords, p_alternative_tile);
 }
 
-void TileDataCollisionEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) {
+void TileDataCollisionEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 
@@ -1706,7 +1706,7 @@ void TileDataCollisionEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_so
 	polygon_editor->set_background_tile(p_tile_set_atlas_source, p_coords, p_alternative_tile);
 }
 
-Variant TileDataCollisionEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+Variant TileDataCollisionEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL_V(tile_data, Variant());
 
@@ -1729,7 +1729,7 @@ void TileDataCollisionEditor::_setup_undo_redo_action(TileSetAtlasSource *p_tile
 	Dictionary new_dict = p_new_value;
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	for (const KeyValue<TileMapCell, Variant> &E : p_previous_values) {
-		Vector2i coords = E.key.get_atlas_coords();
+		Hector2i coords = E.key.get_atlas_coords();
 
 		Dictionary old_dict = E.value;
 		undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/physics_layer_%d/linear_velocity", coords.x, coords.y, E.key.alternative_tile, physics_layer), old_dict["linear_velocity"]);
@@ -1776,11 +1776,11 @@ TileDataCollisionEditor::TileDataCollisionEditor() {
 	add_child(polygon_editor);
 
 	dummy_object->add_dummy_property("linear_velocity");
-	dummy_object->set("linear_velocity", Vector2());
+	dummy_object->set("linear_velocity", Hector2());
 	dummy_object->add_dummy_property("angular_velocity");
 	dummy_object->set("angular_velocity", 0.0);
 
-	EditorProperty *linear_velocity_editor = EditorInspectorDefaultPlugin::get_editor_for_property(dummy_object, Variant::VECTOR2, "linear_velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT);
+	EditorProperty *linear_velocity_editor = EditorInspectorDefaultPlugin::get_editor_for_property(dummy_object, Variant::HECTOR2, "linear_velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT);
 	linear_velocity_editor->set_object_and_property(dummy_object, "linear_velocity");
 	linear_velocity_editor->set_label("linear_velocity");
 	linear_velocity_editor->connect("property_changed", callable_mp(this, &TileDataCollisionEditor::_property_value_changed).unbind(1));
@@ -1812,7 +1812,7 @@ void TileDataCollisionEditor::draw_over_tile(CanvasItem *p_canvas_item, Transfor
 	ERR_FAIL_NULL(tile_data);
 
 	// Draw all shapes.
-	Vector<Color> color;
+	Hector<Color> color;
 	if (p_selected) {
 		Color grid_color = EDITOR_GET("editors/tiles_editor/grid_color");
 		Color selection_color = Color().from_hsv(Math::fposmod(grid_color.get_h() + 0.5, 1.0), grid_color.get_s(), grid_color.get_v(), 1.0);
@@ -1827,7 +1827,7 @@ void TileDataCollisionEditor::draw_over_tile(CanvasItem *p_canvas_item, Transfor
 
 	Ref<Texture2D> one_way_icon = get_editor_theme_icon(SNAME("OneWayTile"));
 	for (int i = 0; i < tile_data->get_collision_polygons_count(physics_layer); i++) {
-		Vector<Vector2> polygon = tile_data->get_collision_polygon_points(physics_layer, i);
+		Hector<Hector2> polygon = tile_data->get_collision_polygon_points(physics_layer, i);
 		if (polygon.size() < 3) {
 			continue;
 		}
@@ -1835,15 +1835,15 @@ void TileDataCollisionEditor::draw_over_tile(CanvasItem *p_canvas_item, Transfor
 		p_canvas_item->draw_polygon(polygon, color);
 
 		if (tile_data->is_collision_polygon_one_way(physics_layer, i)) {
-			PackedVector2Array uvs;
+			PackedHector2Array uvs;
 			uvs.resize(polygon.size());
-			Vector2 size_1 = Vector2(1, 1) / tile_set->get_tile_size();
+			Hector2 size_1 = Hector2(1, 1) / tile_set->get_tile_size();
 
 			for (int j = 0; j < polygon.size(); j++) {
-				uvs.write[j] = polygon[j] * size_1 + Vector2(0.5, 0.5);
+				uvs.write[j] = polygon[j] * size_1 + Hector2(0.5, 0.5);
 			}
 
-			Vector<Color> color2;
+			Hector<Color> color2;
 			color2.push_back(Color(1, 1, 1, 0.4));
 			p_canvas_item->draw_polygon(polygon, color2, uvs, one_way_icon);
 		}
@@ -1856,7 +1856,7 @@ void TileDataTerrainsEditor::_update_terrain_selector() {
 	ERR_FAIL_COND(!tile_set.is_valid());
 
 	// Update the terrain set selector.
-	Vector<String> options;
+	Hector<String> options;
 	options.push_back(String(TTR("No terrains")) + String(":-1"));
 	for (int i = 0; i < tile_set->get_terrain_sets_count(); i++) {
 		options.push_back(vformat("Terrain Set %d", i));
@@ -1870,7 +1870,7 @@ void TileDataTerrainsEditor::_update_terrain_selector() {
 		terrain_property_editor->hide();
 	} else {
 		options.clear();
-		Vector<Vector<Ref<Texture2D>>> icons = tile_set->generate_terrains_icons(Size2(16, 16) * EDSCALE);
+		Hector<Hector<Ref<Texture2D>>> icons = tile_set->generate_terrains_icons(Size2(16, 16) * EDSCALE);
 		options.push_back(String(TTR("No terrain")) + String(":-1"));
 		for (int i = 0; i < tile_set->get_terrains_count(terrain_set); i++) {
 			String name = tile_set->get_terrain_name(terrain_set, i);
@@ -1927,26 +1927,26 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 	ERR_FAIL_COND(!tile_set.is_valid());
 
 	// Draw the hovered terrain bit, or the whole tile if it has the wrong terrain set.
-	Vector2i hovered_coords = TileSetSource::INVALID_ATLAS_COORDS;
+	Hector2i hovered_coords = TileSetSource::INVALID_ATLAS_COORDS;
 	if (drag_type == DRAG_TYPE_NONE) {
-		Vector2i mouse_pos = p_transform.affine_inverse().xform(p_canvas_item->get_local_mouse_position());
+		Hector2i mouse_pos = p_transform.affine_inverse().xform(p_canvas_item->get_local_mouse_position());
 		hovered_coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mouse_pos);
 		hovered_coords = p_tile_set_atlas_source->get_tile_at_coords(hovered_coords);
 		if (hovered_coords != TileSetSource::INVALID_ATLAS_COORDS) {
 			TileData *tile_data = p_tile_set_atlas_source->get_tile_data(hovered_coords, 0);
 			int terrain_set = tile_data->get_terrain_set();
 			Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(hovered_coords);
-			Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+			Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
 			if (terrain_set >= 0 && terrain_set == int(dummy_object->get("terrain_set"))) {
 				// Draw hovered bit.
 				Transform2D xform;
 				xform.set_origin(position);
 
-				Vector<Color> color;
+				Hector<Color> color;
 				color.push_back(Color(1.0, 1.0, 1.0, 0.5));
 
-				Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+				Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 				if (Geometry2D::is_point_in_polygon(xform.affine_inverse().xform(mouse_pos), polygon)) {
 					p_canvas_item->draw_set_transform_matrix(p_transform * xform);
 					p_canvas_item->draw_polygon(polygon, color);
@@ -1975,7 +1975,7 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 	Ref<Font> font = TileSetEditor::get_singleton()->get_theme_font(SNAME("bold"), EditorStringName(EditorFonts));
 	int font_size = TileSetEditor::get_singleton()->get_theme_font_size(SNAME("bold_size"), EditorStringName(EditorFonts));
 	for (int i = 0; i < p_tile_set_atlas_source->get_tiles_count(); i++) {
-		Vector2i coords = p_tile_set_atlas_source->get_tile_id(i);
+		Hector2i coords = p_tile_set_atlas_source->get_tile_id(i);
 		if (coords != hovered_coords) {
 			TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, 0);
 			if (tile_data->get_terrain_set() != int(dummy_object->get("terrain_set"))) {
@@ -1987,7 +1987,7 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 				// Text
 				p_canvas_item->draw_set_transform_matrix(Transform2D());
 				Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(coords);
-				Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+				Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
 				Color color = Color(1, 1, 1);
 				String text;
@@ -1996,9 +1996,9 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 				} else {
 					text = "-";
 				}
-				Vector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-				p_canvas_item->draw_string_outline(font, p_transform.xform(position) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
-				p_canvas_item->draw_string(font, p_transform.xform(position) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
+				Hector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
+				p_canvas_item->draw_string_outline(font, p_transform.xform(position) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
+				p_canvas_item->draw_string(font, p_transform.xform(position) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
 			}
 		}
 	}
@@ -2019,7 +2019,7 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 		RBSet<TileMapCell> edited;
 		for (int x = rect.get_position().x; x <= rect.get_end().x; x++) {
 			for (int y = rect.get_position().y; y <= rect.get_end().y; y++) {
-				Vector2i coords = Vector2i(x, y);
+				Hector2i coords = Hector2i(x, y);
 				coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 				if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 					TileMapCell cell;
@@ -2032,7 +2032,7 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 		}
 
 		for (const TileMapCell &E : edited) {
-			Vector2i coords = E.get_atlas_coords();
+			Hector2i coords = E.get_atlas_coords();
 			p_canvas_item->draw_rect(p_tile_set_atlas_source->get_tile_texture_region(coords), selection_color, false);
 		}
 		p_canvas_item->draw_set_transform_matrix(Transform2D());
@@ -2049,7 +2049,7 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 		RBSet<TileMapCell> edited;
 		for (int x = rect.get_position().x; x <= rect.get_end().x; x++) {
 			for (int y = rect.get_position().y; y <= rect.get_end().y; y++) {
-				Vector2i coords = Vector2i(x, y);
+				Hector2i coords = Hector2i(x, y);
 				coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 				if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 					TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, 0);
@@ -2064,25 +2064,25 @@ void TileDataTerrainsEditor::forward_draw_over_atlas(TileAtlasView *p_tile_atlas
 			}
 		}
 
-		Vector2 end = p_transform.affine_inverse().xform(p_canvas_item->get_local_mouse_position());
-		Vector<Point2> mouse_pos_rect_polygon;
+		Hector2 end = p_transform.affine_inverse().xform(p_canvas_item->get_local_mouse_position());
+		Hector<Point2> mouse_pos_rect_polygon;
 		mouse_pos_rect_polygon.push_back(drag_start_pos);
-		mouse_pos_rect_polygon.push_back(Vector2(end.x, drag_start_pos.y));
+		mouse_pos_rect_polygon.push_back(Hector2(end.x, drag_start_pos.y));
 		mouse_pos_rect_polygon.push_back(end);
-		mouse_pos_rect_polygon.push_back(Vector2(drag_start_pos.x, end.y));
+		mouse_pos_rect_polygon.push_back(Hector2(drag_start_pos.x, end.y));
 
-		Vector<Color> color;
+		Hector<Color> color;
 		color.push_back(Color(1.0, 1.0, 1.0, 0.5));
 
 		p_canvas_item->draw_set_transform_matrix(p_transform);
 
 		for (const TileMapCell &E : edited) {
-			Vector2i coords = E.get_atlas_coords();
+			Hector2i coords = E.get_atlas_coords();
 
 			Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(coords);
-			Vector2i position = texture_region.get_center() + p_tile_set_atlas_source->get_tile_data(coords, 0)->get_texture_origin();
+			Hector2i position = texture_region.get_center() + p_tile_set_atlas_source->get_tile_data(coords, 0)->get_texture_origin();
 
-			Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+			Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 			for (int j = 0; j < polygon.size(); j++) {
 				polygon.write[j] += position;
 			}
@@ -2114,28 +2114,28 @@ void TileDataTerrainsEditor::forward_draw_over_alternatives(TileAtlasView *p_til
 	ERR_FAIL_COND(!tile_set.is_valid());
 
 	// Draw the hovered terrain bit, or the whole tile if it has the wrong terrain set.
-	Vector2i hovered_coords = TileSetSource::INVALID_ATLAS_COORDS;
+	Hector2i hovered_coords = TileSetSource::INVALID_ATLAS_COORDS;
 	int hovered_alternative = TileSetSource::INVALID_TILE_ALTERNATIVE;
 	if (drag_type == DRAG_TYPE_NONE) {
-		Vector2i mouse_pos = p_transform.affine_inverse().xform(p_canvas_item->get_local_mouse_position());
-		Vector3i hovered = p_tile_atlas_view->get_alternative_tile_at_pos(mouse_pos);
-		hovered_coords = Vector2i(hovered.x, hovered.y);
+		Hector2i mouse_pos = p_transform.affine_inverse().xform(p_canvas_item->get_local_mouse_position());
+		Hector3i hovered = p_tile_atlas_view->get_alternative_tile_at_pos(mouse_pos);
+		hovered_coords = Hector2i(hovered.x, hovered.y);
 		hovered_alternative = hovered.z;
 		if (hovered_coords != TileSetSource::INVALID_ATLAS_COORDS) {
 			TileData *tile_data = p_tile_set_atlas_source->get_tile_data(hovered_coords, hovered_alternative);
 			int terrain_set = tile_data->get_terrain_set();
 			Rect2i texture_region = p_tile_atlas_view->get_alternative_tile_rect(hovered_coords, hovered_alternative);
-			Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+			Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
 			if (terrain_set == int(dummy_object->get("terrain_set"))) {
 				// Draw hovered bit.
 				Transform2D xform;
 				xform.set_origin(position);
 
-				Vector<Color> color;
+				Hector<Color> color;
 				color.push_back(Color(1.0, 1.0, 1.0, 0.5));
 
-				Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+				Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 				if (Geometry2D::is_point_in_polygon(xform.affine_inverse().xform(mouse_pos), polygon)) {
 					p_canvas_item->draw_set_transform_matrix(p_transform * xform);
 					p_canvas_item->draw_polygon(polygon, color);
@@ -2165,7 +2165,7 @@ void TileDataTerrainsEditor::forward_draw_over_alternatives(TileAtlasView *p_til
 	Ref<Font> font = TileSetEditor::get_singleton()->get_theme_font(SNAME("bold"), EditorStringName(EditorFonts));
 	int font_size = TileSetEditor::get_singleton()->get_theme_font_size(SNAME("bold_size"), EditorStringName(EditorFonts));
 	for (int i = 0; i < p_tile_set_atlas_source->get_tiles_count(); i++) {
-		Vector2i coords = p_tile_set_atlas_source->get_tile_id(i);
+		Hector2i coords = p_tile_set_atlas_source->get_tile_id(i);
 		for (int j = 1; j < p_tile_set_atlas_source->get_alternative_tiles_count(coords); j++) {
 			int alternative_tile = p_tile_set_atlas_source->get_alternative_tile_id(coords, j);
 			if (coords != hovered_coords || alternative_tile != hovered_alternative) {
@@ -2179,7 +2179,7 @@ void TileDataTerrainsEditor::forward_draw_over_alternatives(TileAtlasView *p_til
 					// Text
 					p_canvas_item->draw_set_transform_matrix(Transform2D());
 					Rect2i texture_region = p_tile_atlas_view->get_alternative_tile_rect(coords, alternative_tile);
-					Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+					Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
 					Color color = Color(1, 1, 1);
 					String text;
@@ -2188,9 +2188,9 @@ void TileDataTerrainsEditor::forward_draw_over_alternatives(TileAtlasView *p_til
 					} else {
 						text = "-";
 					}
-					Vector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-					p_canvas_item->draw_string_outline(font, p_transform.xform(position) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
-					p_canvas_item->draw_string(font, p_transform.xform(position) + Vector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
+					Hector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
+					p_canvas_item->draw_string_outline(font, p_transform.xform(position) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, 1, Color(0, 0, 0, 1));
+					p_canvas_item->draw_string(font, p_transform.xform(position) + Hector2i(-string_size.x / 2, string_size.y / 2), text, HORIZONTAL_ALIGNMENT_CENTER, string_size.x, font_size, color);
 				}
 			}
 		}
@@ -2203,9 +2203,9 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 	Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
 		if (drag_type == DRAG_TYPE_PAINT_TERRAIN_SET) {
-			Vector<Vector2i> line = Geometry2D::bresenham_line(p_tile_atlas_view->get_atlas_tile_coords_at_pos(drag_last_pos, true), p_tile_atlas_view->get_atlas_tile_coords_at_pos(mm->get_position(), true));
+			Hector<Hector2i> line = Geometry2D::bresenham_line(p_tile_atlas_view->get_atlas_tile_coords_at_pos(drag_last_pos, true), p_tile_atlas_view->get_atlas_tile_coords_at_pos(mm->get_position(), true));
 			for (int i = 0; i < line.size(); i++) {
-				Vector2i coords = p_tile_set_atlas_source->get_tile_at_coords(line[i]);
+				Hector2i coords = p_tile_set_atlas_source->get_tile_at_coords(line[i]);
 				if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 					int terrain_set = drag_painted_value;
 					TileMapCell cell;
@@ -2237,9 +2237,9 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 		} else if (drag_type == DRAG_TYPE_PAINT_TERRAIN_BITS) {
 			int terrain_set = Dictionary(drag_painted_value)["terrain_set"];
 			int terrain = Dictionary(drag_painted_value)["terrain"];
-			Vector<Vector2i> line = Geometry2D::bresenham_line(p_tile_atlas_view->get_atlas_tile_coords_at_pos(drag_last_pos, true), p_tile_atlas_view->get_atlas_tile_coords_at_pos(mm->get_position(), true));
+			Hector<Hector2i> line = Geometry2D::bresenham_line(p_tile_atlas_view->get_atlas_tile_coords_at_pos(drag_last_pos, true), p_tile_atlas_view->get_atlas_tile_coords_at_pos(mm->get_position(), true));
 			for (int i = 0; i < line.size(); i++) {
-				Vector2i coords = p_tile_set_atlas_source->get_tile_at_coords(line[i]);
+				Hector2i coords = p_tile_set_atlas_source->get_tile_at_coords(line[i]);
 				if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 					TileMapCell cell;
 					cell.source_id = 0;
@@ -2264,9 +2264,9 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 
 						// Set the terrains bits.
 						Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(coords);
-						Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+						Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
-						Vector<Vector2> polygon = tile_set->get_terrain_polygon(tile_data->get_terrain_set());
+						Hector<Hector2> polygon = tile_set->get_terrain_polygon(tile_data->get_terrain_set());
 						if (Geometry2D::is_segment_intersecting_polygon(mm->get_position() - position, drag_last_pos - position, polygon)) {
 							tile_data->set_terrain(terrain);
 						}
@@ -2292,17 +2292,17 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 		if (mb->get_button_index() == MouseButton::LEFT || mb->get_button_index() == MouseButton::RIGHT) {
 			if (mb->is_pressed()) {
 				if (picker_button->is_pressed() || (mb->is_command_or_control_pressed() && !mb->is_shift_pressed())) {
-					Vector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position());
+					Hector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position());
 					coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 						TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, 0);
 						int terrain_set = tile_data->get_terrain_set();
 						Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(coords);
-						Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+						Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 						dummy_object->set("terrain_set", terrain_set);
 						dummy_object->set("terrain", -1);
 
-						Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+						Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 						if (Geometry2D::is_point_in_polygon(mb->get_position() - position, polygon)) {
 							dummy_object->set("terrain", tile_data->get_terrain());
 						}
@@ -2321,7 +2321,7 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 						accept_event();
 					}
 				} else {
-					Vector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position());
+					Hector2i coords = p_tile_atlas_view->get_atlas_tile_coords_at_pos(mb->get_position());
 					coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 					TileData *tile_data = nullptr;
 					if (coords != TileSetAtlasSource::INVALID_ATLAS_COORDS) {
@@ -2413,9 +2413,9 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 
 								// Set the terrain bit.
 								Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(coords);
-								Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+								Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
-								Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+								Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 								if (Geometry2D::is_point_in_polygon(mb->get_position() - position, polygon)) {
 									tile_data->set_terrain(terrain);
 								}
@@ -2445,7 +2445,7 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 					RBSet<TileMapCell> edited;
 					for (int x = rect.get_position().x; x <= rect.get_end().x; x++) {
 						for (int y = rect.get_position().y; y <= rect.get_end().y; y++) {
-							Vector2i coords = Vector2i(x, y);
+							Hector2i coords = Hector2i(x, y);
 							coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 							if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 								TileMapCell cell;
@@ -2458,7 +2458,7 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 					}
 					undo_redo->create_action(TTR("Painting Terrain Set"));
 					for (const TileMapCell &E : edited) {
-						Vector2i coords = E.get_atlas_coords();
+						Hector2i coords = E.get_atlas_coords();
 						TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, 0);
 						undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain_set", coords.x, coords.y, E.alternative_tile), drag_painted_value);
 						undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain_set", coords.x, coords.y, E.alternative_tile), tile_data->get_terrain_set());
@@ -2479,7 +2479,7 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 					undo_redo->create_action(TTR("Painting Terrain Set"));
 					for (KeyValue<TileMapCell, Variant> &E : drag_modified) {
 						Dictionary dict = E.value;
-						Vector2i coords = E.key.get_atlas_coords();
+						Hector2i coords = E.key.get_atlas_coords();
 						undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain_set", coords.x, coords.y, E.key.alternative_tile), drag_painted_value);
 						undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain_set", coords.x, coords.y, E.key.alternative_tile), dict["terrain_set"]);
 						if (int(dict["terrain_set"]) >= 0) {
@@ -2503,7 +2503,7 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 					undo_redo->create_action(TTR("Painting Terrain"));
 					for (KeyValue<TileMapCell, Variant> &E : drag_modified) {
 						Dictionary dict = E.value;
-						Vector2i coords = E.key.get_atlas_coords();
+						Hector2i coords = E.key.get_atlas_coords();
 						undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain", coords.x, coords.y, E.key.alternative_tile), terrain);
 						undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain", coords.x, coords.y, E.key.alternative_tile), dict["terrain"]);
 						Array array = dict["terrain_peering_bits"];
@@ -2533,7 +2533,7 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 					RBSet<TileMapCell> edited;
 					for (int x = rect.get_position().x; x <= rect.get_end().x; x++) {
 						for (int y = rect.get_position().y; y <= rect.get_end().y; y++) {
-							Vector2i coords = Vector2i(x, y);
+							Hector2i coords = Hector2i(x, y);
 							coords = p_tile_set_atlas_source->get_tile_at_coords(coords);
 							if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 								TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, 0);
@@ -2548,21 +2548,21 @@ void TileDataTerrainsEditor::forward_painting_atlas_gui_input(TileAtlasView *p_t
 						}
 					}
 
-					Vector<Point2> mouse_pos_rect_polygon;
+					Hector<Point2> mouse_pos_rect_polygon;
 					mouse_pos_rect_polygon.push_back(drag_start_pos);
-					mouse_pos_rect_polygon.push_back(Vector2(mb->get_position().x, drag_start_pos.y));
+					mouse_pos_rect_polygon.push_back(Hector2(mb->get_position().x, drag_start_pos.y));
 					mouse_pos_rect_polygon.push_back(mb->get_position());
-					mouse_pos_rect_polygon.push_back(Vector2(drag_start_pos.x, mb->get_position().y));
+					mouse_pos_rect_polygon.push_back(Hector2(drag_start_pos.x, mb->get_position().y));
 
 					undo_redo->create_action(TTR("Painting Terrain"));
 					for (const TileMapCell &E : edited) {
-						Vector2i coords = E.get_atlas_coords();
+						Hector2i coords = E.get_atlas_coords();
 						TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, 0);
 
 						Rect2i texture_region = p_tile_set_atlas_source->get_tile_texture_region(coords);
-						Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+						Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
-						Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+						Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 						for (int j = 0; j < polygon.size(); j++) {
 							polygon.write[j] += position;
 						}
@@ -2600,8 +2600,8 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 	Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
 		if (drag_type == DRAG_TYPE_PAINT_TERRAIN_SET) {
-			Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mm->get_position());
-			Vector2i coords = Vector2i(tile.x, tile.y);
+			Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mm->get_position());
+			Hector2i coords = Hector2i(tile.x, tile.y);
 			int alternative_tile = tile.z;
 
 			if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
@@ -2632,8 +2632,8 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 			int terrain_set = int(painted["terrain_set"]);
 			int terrain = int(painted["terrain"]);
 
-			Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mm->get_position());
-			Vector2i coords = Vector2i(tile.x, tile.y);
+			Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mm->get_position());
+			Hector2i coords = Hector2i(tile.x, tile.y);
 			int alternative_tile = tile.z;
 
 			if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
@@ -2660,9 +2660,9 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 
 					// Set the terrains bits.
 					Rect2i texture_region = p_tile_atlas_view->get_alternative_tile_rect(coords, alternative_tile);
-					Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+					Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
-					Vector<Vector2> polygon = tile_set->get_terrain_polygon(tile_data->get_terrain_set());
+					Hector<Hector2> polygon = tile_set->get_terrain_polygon(tile_data->get_terrain_set());
 					if (Geometry2D::is_segment_intersecting_polygon(mm->get_position() - position, drag_last_pos - position, polygon)) {
 						tile_data->set_terrain(terrain);
 					}
@@ -2688,19 +2688,19 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 		if (mb->get_button_index() == MouseButton::LEFT || mb->get_button_index() == MouseButton::RIGHT) {
 			if (mb->is_pressed()) {
 				if (mb->get_button_index() == MouseButton::LEFT && picker_button->is_pressed()) {
-					Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
-					Vector2i coords = Vector2i(tile.x, tile.y);
+					Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
+					Hector2i coords = Hector2i(tile.x, tile.y);
 					int alternative_tile = tile.z;
 
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
 						TileData *tile_data = p_tile_set_atlas_source->get_tile_data(coords, alternative_tile);
 						int terrain_set = tile_data->get_terrain_set();
 						Rect2i texture_region = p_tile_atlas_view->get_alternative_tile_rect(coords, alternative_tile);
-						Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+						Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 						dummy_object->set("terrain_set", terrain_set);
 						dummy_object->set("terrain", -1);
 
-						Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+						Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 						if (Geometry2D::is_point_in_polygon(mb->get_position() - position, polygon)) {
 							dummy_object->set("terrain", tile_data->get_terrain());
 						}
@@ -2723,8 +2723,8 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 					int terrain_set = int(dummy_object->get("terrain_set"));
 					int terrain = int(dummy_object->get("terrain"));
 
-					Vector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
-					Vector2i coords = Vector2i(tile.x, tile.y);
+					Hector3i tile = p_tile_atlas_view->get_alternative_tile_at_pos(mb->get_position());
+					Hector2i coords = Hector2i(tile.x, tile.y);
 					int alternative_tile = tile.z;
 
 					if (coords != TileSetSource::INVALID_ATLAS_COORDS) {
@@ -2786,9 +2786,9 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 
 								// Set the terrain bit.
 								Rect2i texture_region = p_tile_atlas_view->get_alternative_tile_rect(coords, alternative_tile);
-								Vector2i position = texture_region.get_center() + tile_data->get_texture_origin();
+								Hector2i position = texture_region.get_center() + tile_data->get_texture_origin();
 
-								Vector<Vector2> polygon = tile_set->get_terrain_polygon(terrain_set);
+								Hector<Hector2> polygon = tile_set->get_terrain_polygon(terrain_set);
 								if (Geometry2D::is_point_in_polygon(mb->get_position() - position, polygon)) {
 									tile_data->set_terrain(terrain);
 								}
@@ -2813,7 +2813,7 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 					undo_redo->create_action(TTR("Painting Tiles Property"));
 					for (KeyValue<TileMapCell, Variant> &E : drag_modified) {
 						Dictionary dict = E.value;
-						Vector2i coords = E.key.get_atlas_coords();
+						Hector2i coords = E.key.get_atlas_coords();
 						undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain_set", coords.x, coords.y, E.key.alternative_tile), drag_painted_value);
 						undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain_set", coords.x, coords.y, E.key.alternative_tile), dict["terrain_set"]);
 						if (int(dict["terrain_set"]) >= 0) {
@@ -2834,7 +2834,7 @@ void TileDataTerrainsEditor::forward_painting_alternatives_gui_input(TileAtlasVi
 					undo_redo->create_action(TTR("Painting Terrain"));
 					for (KeyValue<TileMapCell, Variant> &E : drag_modified) {
 						Dictionary dict = E.value;
-						Vector2i coords = E.key.get_atlas_coords();
+						Hector2i coords = E.key.get_atlas_coords();
 						undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain", coords.x, coords.y, E.key.alternative_tile), terrain);
 						undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/terrain", coords.x, coords.y, E.key.alternative_tile), dict["terrain"]);
 						Array array = dict["terrain_peering_bits"];
@@ -2920,7 +2920,7 @@ Variant TileDataNavigationEditor::_get_painted_value() {
 		Ref<NavigationMeshSourceGeometryData2D> source_geometry_data;
 		source_geometry_data.instantiate();
 		for (int i = 0; i < polygon_editor->get_polygon_count(); i++) {
-			Vector<Vector2> polygon = polygon_editor->get_polygon(i);
+			Hector<Hector2> polygon = polygon_editor->get_polygon(i);
 			nav_polygon->add_outline(polygon);
 			source_geometry_data->add_traversable_outline(polygon);
 		}
@@ -2933,7 +2933,7 @@ Variant TileDataNavigationEditor::_get_painted_value() {
 	return nav_polygon;
 }
 
-void TileDataNavigationEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+void TileDataNavigationEditor::_set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 
@@ -2947,7 +2947,7 @@ void TileDataNavigationEditor::_set_painted_value(TileSetAtlasSource *p_tile_set
 	polygon_editor->set_background_tile(p_tile_set_atlas_source, p_coords, p_alternative_tile);
 }
 
-void TileDataNavigationEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) {
+void TileDataNavigationEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL(tile_data);
 	Ref<NavigationPolygon> nav_polygon = p_value;
@@ -2956,7 +2956,7 @@ void TileDataNavigationEditor::_set_value(TileSetAtlasSource *p_tile_set_atlas_s
 	polygon_editor->set_background_tile(p_tile_set_atlas_source, p_coords, p_alternative_tile);
 }
 
-Variant TileDataNavigationEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) {
+Variant TileDataNavigationEditor::_get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) {
 	TileData *tile_data = p_tile_set_atlas_source->get_tile_data(p_coords, p_alternative_tile);
 	ERR_FAIL_NULL_V(tile_data, Variant());
 	return tile_data->get_navigation_polygon(navigation_layer);
@@ -2965,7 +2965,7 @@ Variant TileDataNavigationEditor::_get_value(TileSetAtlasSource *p_tile_set_atla
 void TileDataNavigationEditor::_setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value) {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	for (const KeyValue<TileMapCell, Variant> &E : p_previous_values) {
-		Vector2i coords = E.key.get_atlas_coords();
+		Hector2i coords = E.key.get_atlas_coords();
 		undo_redo->add_undo_property(p_tile_set_atlas_source, vformat("%d:%d/%d/navigation_layer_%d/polygon", coords.x, coords.y, E.key.alternative_tile, navigation_layer), E.value);
 		undo_redo->add_do_property(p_tile_set_atlas_source, vformat("%d:%d/%d/navigation_layer_%d/polygon", coords.x, coords.y, E.key.alternative_tile, navigation_layer), p_new_value);
 	}
@@ -3000,7 +3000,7 @@ void TileDataNavigationEditor::draw_over_tile(CanvasItem *p_canvas_item, Transfo
 
 	Ref<NavigationPolygon> nav_polygon = tile_data->get_navigation_polygon(navigation_layer);
 	if (nav_polygon.is_valid()) {
-		Vector<Vector2> verts = nav_polygon->get_vertices();
+		Hector<Hector2> verts = nav_polygon->get_vertices();
 		if (verts.size() < 3) {
 			return;
 		}
@@ -3019,8 +3019,8 @@ void TileDataNavigationEditor::draw_over_tile(CanvasItem *p_canvas_item, Transfo
 		RandomPCG rand;
 		for (int i = 0; i < nav_polygon->get_polygon_count(); i++) {
 			// An array of vertices for this polygon.
-			Vector<int> polygon = nav_polygon->get_polygon(i);
-			Vector<Vector2> vertices;
+			Hector<int> polygon = nav_polygon->get_polygon(i);
+			Hector<Hector2> vertices;
 			vertices.resize(polygon.size());
 			for (int j = 0; j < polygon.size(); j++) {
 				ERR_FAIL_INDEX(polygon[j], verts.size());
@@ -3031,7 +3031,7 @@ void TileDataNavigationEditor::draw_over_tile(CanvasItem *p_canvas_item, Transfo
 			Color random_variation_color;
 			random_variation_color.set_hsv(color.get_h() + rand.random(-1.0, 1.0) * 0.05, color.get_s(), color.get_v() + rand.random(-1.0, 1.0) * 0.1);
 			random_variation_color.a = color.a;
-			Vector<Color> colors;
+			Hector<Color> colors;
 			colors.push_back(random_variation_color);
 
 			RenderingServer::get_singleton()->canvas_item_add_polygon(p_canvas_item->get_canvas_item(), vertices, colors);

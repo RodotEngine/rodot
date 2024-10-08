@@ -416,7 +416,7 @@ void TabBar::_notification(int p_what) {
 
 		case NOTIFICATION_DRAW: {
 			bool rtl = is_layout_rtl();
-			Vector2 size = get_size();
+			Hector2 size = get_size();
 
 			if (tabs.is_empty()) {
 				// Draw the drop indicator where the first tab would be if there are no tabs.

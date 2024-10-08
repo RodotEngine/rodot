@@ -48,7 +48,7 @@ void RendererCompositorRD::blit_render_targets_to_screen(DisplayServer::WindowID
 		ERR_CONTINUE(rd_texture.is_null());
 
 		if (!render_target_descriptors.has(rd_texture) || !RD::get_singleton()->uniform_set_is_valid(render_target_descriptors[rd_texture])) {
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE;
 			u.binding = 0;
@@ -111,7 +111,7 @@ void RendererCompositorRD::end_frame(bool p_swap_buffers) {
 void RendererCompositorRD::initialize() {
 	{
 		// Initialize blit
-		Vector<String> blit_modes;
+		Hector<String> blit_modes;
 		blit_modes.push_back("\n");
 		blit_modes.push_back("\n#define USE_LAYER\n");
 		blit_modes.push_back("\n#define USE_LAYER\n#define APPLY_LENS_DISTORTION\n");
@@ -126,7 +126,7 @@ void RendererCompositorRD::initialize() {
 		}
 
 		//create index array for copy shader
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(6 * 2);
 		{
 			uint8_t *w = pv.ptrw();
@@ -187,7 +187,7 @@ void RendererCompositorRD::set_boot_image(const Ref<Image> &p_image, const Color
 
 	RID uset;
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE;
 		u.binding = 0;

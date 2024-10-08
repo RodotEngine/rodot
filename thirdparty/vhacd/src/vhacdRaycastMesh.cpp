@@ -6,7 +6,7 @@ namespace RAYCAST_MESH
 {
 
 /* a = b - c */
-#define vector(a,b,c) \
+#define Hector(a,b,c) \
 	(a)[0] = (b)[0] - (c)[0];	\
 	(a)[1] = (b)[1] - (c)[1];	\
 	(a)[2] = (b)[2] - (c)[2];
@@ -27,8 +27,8 @@ static inline bool rayIntersectsTriangle(const double *p,const double *d,const d
 	double e1[3],e2[3],h[3],s[3],q[3];
 	double a,f,u,v;
 
-	vector(e1,v1,v0);
-	vector(e2,v2,v0);
+	Hector(e1,v1,v0);
+	Hector(e2,v2,v0);
 	crossProduct(h,d,e2);
 	a = innerProduct(e1,h);
 
@@ -36,7 +36,7 @@ static inline bool rayIntersectsTriangle(const double *p,const double *d,const d
 		return(false);
 
 	f = 1/a;
-	vector(s,p,v0);
+	Hector(s,p,v0);
 	u = f * (innerProduct(s,h));
 
 	if (u < 0.0 || u > 1.0)

@@ -61,10 +61,10 @@ protected:
 private:
 	PhysicsBodyType body_type = PhysicsBodyType::RIGID;
 	real_t mass = 1.0;
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
-	Vector3 center_of_mass;
-	Vector3 inertia_diagonal;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
+	Hector3 center_of_mass;
+	Hector3 inertia_diagonal;
 	Quaternion inertia_orientation;
 
 public:
@@ -77,17 +77,17 @@ public:
 	real_t get_mass() const;
 	void set_mass(real_t p_mass);
 
-	Vector3 get_linear_velocity() const;
-	void set_linear_velocity(Vector3 p_linear_velocity);
+	Hector3 get_linear_velocity() const;
+	void set_linear_velocity(Hector3 p_linear_velocity);
 
-	Vector3 get_angular_velocity() const;
-	void set_angular_velocity(Vector3 p_angular_velocity);
+	Hector3 get_angular_velocity() const;
+	void set_angular_velocity(Hector3 p_angular_velocity);
 
-	Vector3 get_center_of_mass() const;
-	void set_center_of_mass(const Vector3 &p_center_of_mass);
+	Hector3 get_center_of_mass() const;
+	void set_center_of_mass(const Hector3 &p_center_of_mass);
 
-	Vector3 get_inertia_diagonal() const;
-	void set_inertia_diagonal(const Vector3 &p_inertia_diagonal);
+	Hector3 get_inertia_diagonal() const;
+	void set_inertia_diagonal(const Hector3 &p_inertia_diagonal);
 
 	Quaternion get_inertia_orientation() const;
 	void set_inertia_orientation(const Quaternion &p_inertia_orientation);

@@ -361,7 +361,7 @@ void PointLight2D::_edit_set_pivot(const Point2 &p_pivot) {
 }
 
 Point2 PointLight2D::_edit_get_pivot() const {
-	return Vector2();
+	return Hector2();
 }
 
 bool PointLight2D::_edit_use_pivot() const {
@@ -406,13 +406,13 @@ Ref<Texture2D> PointLight2D::get_texture() const {
 	return texture;
 }
 
-void PointLight2D::set_texture_offset(const Vector2 &p_offset) {
+void PointLight2D::set_texture_offset(const Hector2 &p_offset) {
 	texture_offset = p_offset;
 	RS::get_singleton()->canvas_light_set_texture_offset(_get_light(), texture_offset);
 	item_rect_changed();
 }
 
-Vector2 PointLight2D::get_texture_offset() const {
+Hector2 PointLight2D::get_texture_offset() const {
 	return texture_offset;
 }
 
@@ -462,7 +462,7 @@ void PointLight2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_texture_scale"), &PointLight2D::get_texture_scale);
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_offset", "get_texture_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_offset", "get_texture_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "texture_scale", PROPERTY_HINT_RANGE, "0.01,50,0.01"), "set_texture_scale", "get_texture_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PROPERTY_HINT_RANGE, "0,1024,1,or_greater,suffix:px"), "set_height", "get_height");
 }

@@ -276,9 +276,9 @@ namespace embree
 
   public:
     IDPool<unsigned,0xFFFFFFFE> id_pool;
-    Device::vector<Ref<Geometry>> geometries = device; //!< list of all user geometries
-    avector<unsigned int> geometryModCounters_;
-    Device::vector<float*> vertices = device;
+    Device::Hector<Ref<Geometry>> geometries = device; //!< list of all user geometries
+    aHector<unsigned int> geometryModCounters_;
+    Device::Hector<float*> vertices = device;
     
   public:
     /* these are to detect if we need to recreate the acceleration structures */

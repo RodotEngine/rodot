@@ -42,7 +42,7 @@ Ref<FontFile> load_external_font(const String &p_path, TextServer::Hinting p_hin
 	Ref<FontFile> font;
 	font.instantiate();
 
-	Vector<uint8_t> data = FileAccess::get_file_as_bytes(p_path);
+	Hector<uint8_t> data = FileAccess::get_file_as_bytes(p_path);
 
 	font->set_data(data);
 	font->set_multichannel_signed_distance_field(p_msdf);
@@ -347,10 +347,10 @@ void editor_register_fonts(const Ref<Theme> &p_theme) {
 			mono_fc->set_opentype_features(ftrs);
 		} break;
 		case 2: { // Custom.
-			Vector<String> subtag = String(EDITOR_GET("interface/editor/code_font_custom_opentype_features")).split(",");
+			Hector<String> subtag = String(EDITOR_GET("interface/editor/code_font_custom_opentype_features")).split(",");
 			Dictionary ftrs;
 			for (int i = 0; i < subtag.size(); i++) {
-				Vector<String> subtag_a = subtag[i].split("=");
+				Hector<String> subtag_a = subtag[i].split("=");
 				if (subtag_a.size() == 2) {
 					ftrs[TS->name_to_tag(subtag_a[0])] = subtag_a[1].to_int();
 				} else if (subtag_a.size() == 1) {

@@ -91,7 +91,7 @@ bool InputEvent::is_echo() const {
 	return false;
 }
 
-Ref<InputEvent> InputEvent::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
+Ref<InputEvent> InputEvent::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
 	return Ref<InputEvent>(const_cast<InputEvent *>(this));
 }
 
@@ -129,7 +129,7 @@ void InputEvent::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("accumulate", "with_event"), &InputEvent::accumulate);
 
-	ClassDB::bind_method(D_METHOD("xformed_by", "xform", "local_ofs"), &InputEvent::xformed_by, DEFVAL(Vector2()));
+	ClassDB::bind_method(D_METHOD("xformed_by", "xform", "local_ofs"), &InputEvent::xformed_by, DEFVAL(Hector2()));
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "device"), "set_device", "get_device");
 
@@ -254,7 +254,7 @@ BitField<KeyModifierMask> InputEventWithModifiers::get_modifiers_mask() const {
 }
 
 String InputEventWithModifiers::as_text() const {
-	Vector<String> mod_names;
+	Hector<String> mod_names;
 
 	if (is_ctrl_pressed()) {
 		mod_names.push_back(find_keycode_name(Key::CTRL));
@@ -667,19 +667,19 @@ BitField<MouseButtonMask> InputEventMouse::get_button_mask() const {
 	return button_mask;
 }
 
-void InputEventMouse::set_position(const Vector2 &p_pos) {
+void InputEventMouse::set_position(const Hector2 &p_pos) {
 	pos = p_pos;
 }
 
-Vector2 InputEventMouse::get_position() const {
+Hector2 InputEventMouse::get_position() const {
 	return pos;
 }
 
-void InputEventMouse::set_global_position(const Vector2 &p_global_pos) {
+void InputEventMouse::set_global_position(const Hector2 &p_global_pos) {
 	global_pos = p_global_pos;
 }
 
-Vector2 InputEventMouse::get_global_position() const {
+Hector2 InputEventMouse::get_global_position() const {
 	return global_pos;
 }
 
@@ -694,8 +694,8 @@ void InputEventMouse::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_global_position"), &InputEventMouse::get_global_position);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "button_mask"), "set_button_mask", "get_button_mask");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "global_position", PROPERTY_HINT_NONE, "suffix:px"), "set_global_position", "get_global_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "global_position", PROPERTY_HINT_NONE, "suffix:px"), "set_global_position", "get_global_position");
 }
 
 ///////////////////////////////////
@@ -733,9 +733,9 @@ bool InputEventMouseButton::is_double_click() const {
 	return double_click;
 }
 
-Ref<InputEvent> InputEventMouseButton::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
-	Vector2 g = get_global_position();
-	Vector2 l = p_xform.xform(get_position() + p_local_ofs);
+Ref<InputEvent> InputEventMouseButton::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
+	Hector2 g = get_global_position();
+	Hector2 l = p_xform.xform(get_position() + p_local_ofs);
 
 	Ref<InputEventMouseButton> mb;
 	mb.instantiate();
@@ -897,11 +897,11 @@ void InputEventMouseButton::_bind_methods() {
 
 ///////////////////////////////////
 
-void InputEventMouseMotion::set_tilt(const Vector2 &p_tilt) {
+void InputEventMouseMotion::set_tilt(const Hector2 &p_tilt) {
 	tilt = p_tilt;
 }
 
-Vector2 InputEventMouseMotion::get_tilt() const {
+Hector2 InputEventMouseMotion::get_tilt() const {
 	return tilt;
 }
 
@@ -921,39 +921,39 @@ bool InputEventMouseMotion::get_pen_inverted() const {
 	return pen_inverted;
 }
 
-void InputEventMouseMotion::set_relative(const Vector2 &p_relative) {
+void InputEventMouseMotion::set_relative(const Hector2 &p_relative) {
 	relative = p_relative;
 }
 
-Vector2 InputEventMouseMotion::get_relative() const {
+Hector2 InputEventMouseMotion::get_relative() const {
 	return relative;
 }
 
-void InputEventMouseMotion::set_relative_screen_position(const Vector2 &p_relative) {
+void InputEventMouseMotion::set_relative_screen_position(const Hector2 &p_relative) {
 	screen_relative = p_relative;
 }
 
-Vector2 InputEventMouseMotion::get_relative_screen_position() const {
+Hector2 InputEventMouseMotion::get_relative_screen_position() const {
 	return screen_relative;
 }
 
-void InputEventMouseMotion::set_velocity(const Vector2 &p_velocity) {
+void InputEventMouseMotion::set_velocity(const Hector2 &p_velocity) {
 	velocity = p_velocity;
 }
 
-Vector2 InputEventMouseMotion::get_velocity() const {
+Hector2 InputEventMouseMotion::get_velocity() const {
 	return velocity;
 }
 
-void InputEventMouseMotion::set_screen_velocity(const Vector2 &p_velocity) {
+void InputEventMouseMotion::set_screen_velocity(const Hector2 &p_velocity) {
 	screen_velocity = p_velocity;
 }
 
-Vector2 InputEventMouseMotion::get_screen_velocity() const {
+Hector2 InputEventMouseMotion::get_screen_velocity() const {
 	return screen_velocity;
 }
 
-Ref<InputEvent> InputEventMouseMotion::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
+Ref<InputEvent> InputEventMouseMotion::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
 	Ref<InputEventMouseMotion> mm;
 	mm.instantiate();
 
@@ -1076,13 +1076,13 @@ void InputEventMouseMotion::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_screen_velocity", "velocity"), &InputEventMouseMotion::set_screen_velocity);
 	ClassDB::bind_method(D_METHOD("get_screen_velocity"), &InputEventMouseMotion::get_screen_velocity);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "tilt"), "set_tilt", "get_tilt");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "tilt"), "set_tilt", "get_tilt");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "pressure"), "set_pressure", "get_pressure");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "pen_inverted"), "set_pen_inverted", "get_pen_inverted");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "relative", PROPERTY_HINT_NONE, "suffix:px"), "set_relative", "get_relative");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "screen_relative", PROPERTY_HINT_NONE, "suffix:px"), "set_screen_relative", "get_screen_relative");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_velocity", "get_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "screen_velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_screen_velocity", "get_screen_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "relative", PROPERTY_HINT_NONE, "suffix:px"), "set_relative", "get_relative");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "screen_relative", PROPERTY_HINT_NONE, "suffix:px"), "set_screen_relative", "get_screen_relative");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "screen_velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_screen_velocity", "get_screen_velocity");
 }
 
 ///////////////////////////////////
@@ -1332,11 +1332,11 @@ int InputEventScreenTouch::get_index() const {
 	return index;
 }
 
-void InputEventScreenTouch::set_position(const Vector2 &p_pos) {
+void InputEventScreenTouch::set_position(const Hector2 &p_pos) {
 	pos = p_pos;
 }
 
-Vector2 InputEventScreenTouch::get_position() const {
+Hector2 InputEventScreenTouch::get_position() const {
 	return pos;
 }
 
@@ -1355,7 +1355,7 @@ bool InputEventScreenTouch::is_double_tap() const {
 	return double_tap;
 }
 
-Ref<InputEvent> InputEventScreenTouch::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
+Ref<InputEvent> InputEventScreenTouch::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
 	Ref<InputEventScreenTouch> st;
 	st.instantiate();
 	st->set_device(get_device());
@@ -1396,7 +1396,7 @@ void InputEventScreenTouch::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_double_tap"), &InputEventScreenTouch::is_double_tap);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "index"), "set_index", "get_index");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "canceled"), "set_canceled", "is_canceled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "pressed"), "set_pressed", "is_pressed");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "double_tap"), "set_double_tap", "is_double_tap");
@@ -1412,11 +1412,11 @@ int InputEventScreenDrag::get_index() const {
 	return index;
 }
 
-void InputEventScreenDrag::set_tilt(const Vector2 &p_tilt) {
+void InputEventScreenDrag::set_tilt(const Hector2 &p_tilt) {
 	tilt = p_tilt;
 }
 
-Vector2 InputEventScreenDrag::get_tilt() const {
+Hector2 InputEventScreenDrag::get_tilt() const {
 	return tilt;
 }
 
@@ -1436,47 +1436,47 @@ bool InputEventScreenDrag::get_pen_inverted() const {
 	return pen_inverted;
 }
 
-void InputEventScreenDrag::set_position(const Vector2 &p_pos) {
+void InputEventScreenDrag::set_position(const Hector2 &p_pos) {
 	pos = p_pos;
 }
 
-Vector2 InputEventScreenDrag::get_position() const {
+Hector2 InputEventScreenDrag::get_position() const {
 	return pos;
 }
 
-void InputEventScreenDrag::set_relative(const Vector2 &p_relative) {
+void InputEventScreenDrag::set_relative(const Hector2 &p_relative) {
 	relative = p_relative;
 }
 
-Vector2 InputEventScreenDrag::get_relative() const {
+Hector2 InputEventScreenDrag::get_relative() const {
 	return relative;
 }
 
-void InputEventScreenDrag::set_relative_screen_position(const Vector2 &p_relative) {
+void InputEventScreenDrag::set_relative_screen_position(const Hector2 &p_relative) {
 	screen_relative = p_relative;
 }
 
-Vector2 InputEventScreenDrag::get_relative_screen_position() const {
+Hector2 InputEventScreenDrag::get_relative_screen_position() const {
 	return screen_relative;
 }
 
-void InputEventScreenDrag::set_velocity(const Vector2 &p_velocity) {
+void InputEventScreenDrag::set_velocity(const Hector2 &p_velocity) {
 	velocity = p_velocity;
 }
 
-Vector2 InputEventScreenDrag::get_velocity() const {
+Hector2 InputEventScreenDrag::get_velocity() const {
 	return velocity;
 }
 
-void InputEventScreenDrag::set_screen_velocity(const Vector2 &p_velocity) {
+void InputEventScreenDrag::set_screen_velocity(const Hector2 &p_velocity) {
 	screen_velocity = p_velocity;
 }
 
-Vector2 InputEventScreenDrag::get_screen_velocity() const {
+Hector2 InputEventScreenDrag::get_screen_velocity() const {
 	return screen_velocity;
 }
 
-Ref<InputEvent> InputEventScreenDrag::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
+Ref<InputEvent> InputEventScreenDrag::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
 	Ref<InputEventScreenDrag> sd;
 
 	sd.instantiate();
@@ -1553,14 +1553,14 @@ void InputEventScreenDrag::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_screen_velocity"), &InputEventScreenDrag::get_screen_velocity);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "index"), "set_index", "get_index");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "tilt"), "set_tilt", "get_tilt");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "tilt"), "set_tilt", "get_tilt");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "pressure"), "set_pressure", "get_pressure");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "pen_inverted"), "set_pen_inverted", "get_pen_inverted");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "relative", PROPERTY_HINT_NONE, "suffix:px"), "set_relative", "get_relative");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "screen_relative", PROPERTY_HINT_NONE, "suffix:px"), "set_screen_relative", "get_screen_relative");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_velocity", "get_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "screen_velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_screen_velocity", "get_screen_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "relative", PROPERTY_HINT_NONE, "suffix:px"), "set_relative", "get_relative");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "screen_relative", PROPERTY_HINT_NONE, "suffix:px"), "set_screen_relative", "get_screen_relative");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "screen_velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_screen_velocity", "get_screen_velocity");
 }
 
 ///////////////////////////////////
@@ -1668,7 +1668,7 @@ void InputEventAction::_bind_methods() {
 
 ///////////////////////////////////
 
-void InputEventGesture::set_position(const Vector2 &p_pos) {
+void InputEventGesture::set_position(const Hector2 &p_pos) {
 	pos = p_pos;
 }
 
@@ -1676,10 +1676,10 @@ void InputEventGesture::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_position", "position"), &InputEventGesture::set_position);
 	ClassDB::bind_method(D_METHOD("get_position"), &InputEventGesture::get_position);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
 }
 
-Vector2 InputEventGesture::get_position() const {
+Hector2 InputEventGesture::get_position() const {
 	return pos;
 }
 
@@ -1693,7 +1693,7 @@ real_t InputEventMagnifyGesture::get_factor() const {
 	return factor;
 }
 
-Ref<InputEvent> InputEventMagnifyGesture::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
+Ref<InputEvent> InputEventMagnifyGesture::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
 	Ref<InputEventMagnifyGesture> ev;
 	ev.instantiate();
 
@@ -1725,15 +1725,15 @@ void InputEventMagnifyGesture::_bind_methods() {
 
 ///////////////////////////////////
 
-void InputEventPanGesture::set_delta(const Vector2 &p_delta) {
+void InputEventPanGesture::set_delta(const Hector2 &p_delta) {
 	delta = p_delta;
 }
 
-Vector2 InputEventPanGesture::get_delta() const {
+Hector2 InputEventPanGesture::get_delta() const {
 	return delta;
 }
 
-Ref<InputEvent> InputEventPanGesture::xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs) const {
+Ref<InputEvent> InputEventPanGesture::xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs) const {
 	Ref<InputEventPanGesture> ev;
 	ev.instantiate();
 
@@ -1760,7 +1760,7 @@ void InputEventPanGesture::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_delta", "delta"), &InputEventPanGesture::set_delta);
 	ClassDB::bind_method(D_METHOD("get_delta"), &InputEventPanGesture::get_delta);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "delta"), "set_delta", "get_delta");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "delta"), "set_delta", "get_delta");
 }
 
 ///////////////////////////////////

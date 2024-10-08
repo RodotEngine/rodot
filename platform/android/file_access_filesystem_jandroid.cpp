@@ -33,7 +33,7 @@
 #include "thread_jandroid.h"
 
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 #include <unistd.h>
 
@@ -177,7 +177,7 @@ String FileAccessFilesystemJAndroid::get_line() const {
 	const uint64_t start_position = get_position();
 
 	String result;
-	LocalVector<uint8_t> line_buffer;
+	LocalHector<uint8_t> line_buffer;
 	size_t current_buffer_size = 0;
 	uint64_t line_buffer_position = 0;
 

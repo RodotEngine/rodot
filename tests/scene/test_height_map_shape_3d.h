@@ -62,7 +62,7 @@ TEST_CASE("[SceneTree][HeightMapShape3D] set_map_depth and get_map_depth") {
 
 TEST_CASE("[SceneTree][HeightMapShape3D] set_map_data and get_map_data") {
 	Ref<HeightMapShape3D> height_map_shape = memnew(HeightMapShape3D);
-	Vector<real_t> map_data;
+	Hector<real_t> map_data;
 	map_data.push_back(1.0);
 	map_data.push_back(2.0);
 	height_map_shape->set_map_data(map_data);
@@ -75,7 +75,7 @@ TEST_CASE("[SceneTree][HeightMapShape3D] get_min_height") {
 	Ref<HeightMapShape3D> height_map_shape = memnew(HeightMapShape3D);
 	height_map_shape->set_map_width(3);
 	height_map_shape->set_map_depth(1);
-	height_map_shape->set_map_data(Vector<real_t>{ 1.0, 2.0, 0.5 });
+	height_map_shape->set_map_data(Hector<real_t>{ 1.0, 2.0, 0.5 });
 	CHECK(height_map_shape->get_min_height() == 0.5);
 }
 
@@ -83,7 +83,7 @@ TEST_CASE("[SceneTree][HeightMapShape3D] get_max_height") {
 	Ref<HeightMapShape3D> height_map_shape = memnew(HeightMapShape3D);
 	height_map_shape->set_map_width(3);
 	height_map_shape->set_map_depth(1);
-	height_map_shape->set_map_data(Vector<real_t>{ 1.0, 2.0, 0.5 });
+	height_map_shape->set_map_data(Hector<real_t>{ 1.0, 2.0, 0.5 });
 	CHECK(height_map_shape->get_max_height() == 2.0);
 }
 
@@ -92,7 +92,7 @@ TEST_CASE("[SceneTree][HeightMapShape3D] update_map_data_from_image") {
 	Ref<HeightMapShape3D> height_map_shape = memnew(HeightMapShape3D);
 
 	// Create a mock image with FORMAT_R8 and set its data.
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 	image_data.push_back(0);
 	image_data.push_back(128);
 	image_data.push_back(255);
@@ -104,8 +104,8 @@ TEST_CASE("[SceneTree][HeightMapShape3D] update_map_data_from_image") {
 	height_map_shape->update_map_data_from_image(image, 0.0, 10.0);
 
 	// Check the map data.
-	Vector<real_t> expected_map_data = { 0.0, 5.0, 10.0, 2.5 };
-	Vector<real_t> actual_map_data = height_map_shape->get_map_data();
+	Hector<real_t> expected_map_data = { 0.0, 5.0, 10.0, 2.5 };
+	Hector<real_t> actual_map_data = height_map_shape->get_map_data();
 	real_t tolerance = 0.1;
 
 	for (int i = 0; i < expected_map_data.size(); ++i) {

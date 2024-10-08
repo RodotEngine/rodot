@@ -13,9 +13,9 @@
 	</tutorials>
 	<methods>
 		<method name="_get_connection_line" qualifiers="virtual const">
-			<return type="PackedVector2Array" />
-			<param index="0" name="from_position" type="Vector2" />
-			<param index="1" name="to_position" type="Vector2" />
+			<return type="PackedHector2Array" />
+			<param index="0" name="from_position" type="Hector2" />
+			<param index="1" name="to_position" type="Hector2" />
 			<description>
 				Virtual method which can be overridden to customize how connections are drawn.
 			</description>
@@ -24,15 +24,15 @@
 			<return type="bool" />
 			<param index="0" name="in_node" type="Object" />
 			<param index="1" name="in_port" type="int" />
-			<param index="2" name="mouse_position" type="Vector2" />
+			<param index="2" name="mouse_position" type="Hector2" />
 			<description>
 				Returns whether the [param mouse_position] is in the input hot zone.
 				By default, a hot zone is a [Rect2] positioned such that its center is at [param in_node].[method GraphNode.get_input_port_position]([param in_port]) (For output's case, call [method GraphNode.get_output_port_position] instead). The hot zone's width is twice the Theme Property [code]port_grab_distance_horizontal[/code], and its height is twice the [code]port_grab_distance_vertical[/code].
 				Below is a sample code to help get started:
 				[codeblock]
 				func _is_in_input_hotzone(in_node, in_port, mouse_position):
-				    var port_size: Vector2 = Vector2(get_theme_constant("port_grab_distance_horizontal"), get_theme_constant("port_grab_distance_vertical"))
-				    var port_pos: Vector2 = in_node.get_position() + in_node.get_input_port_position(in_port) - port_size / 2
+				    var port_size: Hector2 = Hector2(get_theme_constant("port_grab_distance_horizontal"), get_theme_constant("port_grab_distance_vertical"))
+				    var port_pos: Hector2 = in_node.get_position() + in_node.get_input_port_position(in_port) - port_size / 2
 				    var rect = Rect2(port_pos, port_size)
 
 				    return rect.has_point(mouse_position)
@@ -43,14 +43,14 @@
 			<return type="bool" />
 			<param index="0" name="in_node" type="Object" />
 			<param index="1" name="in_port" type="int" />
-			<param index="2" name="mouse_position" type="Vector2" />
+			<param index="2" name="mouse_position" type="Hector2" />
 			<description>
 				Returns whether the [param mouse_position] is in the output hot zone. For more information on hot zones, see [method _is_in_input_hotzone].
 				Below is a sample code to help get started:
 				[codeblock]
 				func _is_in_output_hotzone(in_node, in_port, mouse_position):
-				    var port_size: Vector2 = Vector2(get_theme_constant("port_grab_distance_horizontal"), get_theme_constant("port_grab_distance_vertical"))
-				    var port_pos: Vector2 = in_node.get_position() + in_node.get_output_port_position(in_port) - port_size / 2
+				    var port_size: Hector2 = Hector2(get_theme_constant("port_grab_distance_horizontal"), get_theme_constant("port_grab_distance_vertical"))
+				    var port_pos: Hector2 = in_node.get_position() + in_node.get_output_port_position(in_port) - port_size / 2
 				    var rect = Rect2(port_pos, port_size)
 
 				    return rect.has_point(mouse_position)
@@ -168,7 +168,7 @@
 		</method>
 		<method name="get_closest_connection_at_point" qualifiers="const">
 			<return type="Dictionary" />
-			<param index="0" name="point" type="Vector2" />
+			<param index="0" name="point" type="Hector2" />
 			<param index="1" name="max_distance" type="float" default="4.0" />
 			<description>
 				Returns the closest connection to the given point in screen space. If no connection is found within [param max_distance] pixels, an empty [Dictionary] is returned.
@@ -182,9 +182,9 @@
 			</description>
 		</method>
 		<method name="get_connection_line" qualifiers="const">
-			<return type="PackedVector2Array" />
-			<param index="0" name="from_node" type="Vector2" />
-			<param index="1" name="to_node" type="Vector2" />
+			<return type="PackedHector2Array" />
+			<param index="0" name="from_node" type="Hector2" />
+			<param index="1" name="to_node" type="Hector2" />
 			<description>
 				Returns the points which would make up a connection between [param from_node] and [param to_node].
 			</description>
@@ -298,7 +298,7 @@
 		<member name="minimap_opacity" type="float" setter="set_minimap_opacity" getter="get_minimap_opacity" default="0.65">
 			The opacity of the minimap rectangle.
 		</member>
-		<member name="minimap_size" type="Vector2" setter="set_minimap_size" getter="get_minimap_size" default="Vector2(240, 160)">
+		<member name="minimap_size" type="Hector2" setter="set_minimap_size" getter="get_minimap_size" default="Hector2(240, 160)">
 			The size of the minimap rectangle. The map itself is based on the size of the grid area and is scaled to fit this rectangle.
 		</member>
 		<member name="panning_scheme" type="int" setter="set_panning_scheme" getter="get_panning_scheme" enum="GraphEdit.PanningScheme" default="0">
@@ -307,7 +307,7 @@
 		<member name="right_disconnects" type="bool" setter="set_right_disconnects" getter="is_right_disconnects_enabled" default="false">
 			If [code]true[/code], enables disconnection of existing connections in the GraphEdit by dragging the right end.
 		</member>
-		<member name="scroll_offset" type="Vector2" setter="set_scroll_offset" getter="get_scroll_offset" default="Vector2(0, 0)">
+		<member name="scroll_offset" type="Hector2" setter="set_scroll_offset" getter="get_scroll_offset" default="Hector2(0, 0)">
 			The scroll offset.
 		</member>
 		<member name="show_arrange_button" type="bool" setter="set_show_arrange_button" getter="is_showing_arrange_button" default="true">
@@ -372,7 +372,7 @@
 		<signal name="connection_from_empty">
 			<param index="0" name="to_node" type="StringName" />
 			<param index="1" name="to_port" type="int" />
-			<param index="2" name="release_position" type="Vector2" />
+			<param index="2" name="release_position" type="Hector2" />
 			<description>
 				Emitted when user drags a connection from an input port into the empty space of the graph.
 			</description>
@@ -389,7 +389,7 @@
 		<signal name="connection_to_empty">
 			<param index="0" name="from_node" type="StringName" />
 			<param index="1" name="from_port" type="int" />
-			<param index="2" name="release_position" type="Vector2" />
+			<param index="2" name="release_position" type="Hector2" />
 			<description>
 				Emitted when user drags a connection from an output port into the empty space of the graph.
 			</description>
@@ -432,7 +432,7 @@
 		</signal>
 		<signal name="frame_rect_changed">
 			<param index="0" name="frame" type="GraphFrame" />
-			<param index="1" name="new_rect" type="Vector2" />
+			<param index="1" name="new_rect" type="Hector2" />
 			<description>
 				Emitted when the [GraphFrame] [param frame] is resized to [param new_rect].
 			</description>
@@ -463,13 +463,13 @@
 			</description>
 		</signal>
 		<signal name="popup_request">
-			<param index="0" name="at_position" type="Vector2" />
+			<param index="0" name="at_position" type="Hector2" />
 			<description>
 				Emitted when a popup is requested. Happens on right-clicking in the GraphEdit. [param at_position] is the position of the mouse pointer when the signal is sent.
 			</description>
 		</signal>
 		<signal name="scroll_offset_changed">
-			<param index="0" name="offset" type="Vector2" />
+			<param index="0" name="offset" type="Hector2" />
 			<description>
 				Emitted when the scroll offset is changed by the user. It will not be emitted when changed in code.
 			</description>

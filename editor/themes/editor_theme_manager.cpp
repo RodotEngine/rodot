@@ -585,7 +585,7 @@ void EditorThemeManager::_create_shared_styles(const Ref<EditorTheme> &p_theme, 
 
 		// Button styles.
 		{
-			p_config.widget_margin = Vector2(p_config.increased_margin + 2, p_config.increased_margin + 1) * EDSCALE;
+			p_config.widget_margin = Hector2(p_config.increased_margin + 2, p_config.increased_margin + 1) * EDSCALE;
 
 			p_config.button_style = p_config.base_style->duplicate();
 			p_config.button_style->set_content_margin_individual(p_config.widget_margin.x, p_config.widget_margin.y, p_config.widget_margin.x, p_config.widget_margin.y);
@@ -2673,9 +2673,9 @@ void EditorThemeManager::_populate_visual_shader_styles(const Ref<EditorTheme> &
 	if (visual_shader_color_theme == "Default") {
 		// Connection type colors
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/scalar_color", Color(0.55, 0.55, 0.55), true);
-		ed_settings->set_initial_value("editors/visual_editors/connection_colors/vector2_color", Color(0.44, 0.43, 0.64), true);
-		ed_settings->set_initial_value("editors/visual_editors/connection_colors/vector3_color", Color(0.337, 0.314, 0.71), true);
-		ed_settings->set_initial_value("editors/visual_editors/connection_colors/vector4_color", Color(0.7, 0.65, 0.147), true);
+		ed_settings->set_initial_value("editors/visual_editors/connection_colors/Hector2_color", Color(0.44, 0.43, 0.64), true);
+		ed_settings->set_initial_value("editors/visual_editors/connection_colors/Hector3_color", Color(0.337, 0.314, 0.71), true);
+		ed_settings->set_initial_value("editors/visual_editors/connection_colors/Hector4_color", Color(0.7, 0.65, 0.147), true);
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/boolean_color", Color(0.243, 0.612, 0.349), true);
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/transform_color", Color(0.71, 0.357, 0.64), true);
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/sampler_color", Color(0.659, 0.4, 0.137), true);
@@ -2689,16 +2689,16 @@ void EditorThemeManager::_populate_visual_shader_styles(const Ref<EditorTheme> &
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/textures_color", Color(0.5, 0.3, 0.1), true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/transform_color", Color(0.5, 0.3, 0.5), true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/utility_color", Color(0.2, 0.2, 0.2), true);
-		ed_settings->set_initial_value("editors/visual_editors/category_colors/vector_color", Color(0.2, 0.2, 0.5), true);
+		ed_settings->set_initial_value("editors/visual_editors/category_colors/Hector_color", Color(0.2, 0.2, 0.5), true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/special_color", Color(0.098, 0.361, 0.294), true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/particle_color", Color(0.12, 0.358, 0.8), true);
 
 	} else if (visual_shader_color_theme == "Legacy") {
 		// Connection type colors
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/scalar_color", Color(0.38, 0.85, 0.96), true);
-		ed_settings->set_initial_value("editors/visual_editors/connection_colors/vector2_color", Color(0.74, 0.57, 0.95), true);
-		ed_settings->set_initial_value("editors/visual_editors/connection_colors/vector3_color", Color(0.84, 0.49, 0.93), true);
-		ed_settings->set_initial_value("editors/visual_editors/connection_colors/vector4_color", Color(1.0, 0.125, 0.95), true);
+		ed_settings->set_initial_value("editors/visual_editors/connection_colors/Hector2_color", Color(0.74, 0.57, 0.95), true);
+		ed_settings->set_initial_value("editors/visual_editors/connection_colors/Hector3_color", Color(0.84, 0.49, 0.93), true);
+		ed_settings->set_initial_value("editors/visual_editors/connection_colors/Hector4_color", Color(1.0, 0.125, 0.95), true);
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/boolean_color", Color(0.55, 0.65, 0.94), true);
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/transform_color", Color(0.96, 0.66, 0.43), true);
 		ed_settings->set_initial_value("editors/visual_editors/connection_colors/sampler_color", Color(1.0, 1.0, 0.0), true);
@@ -2714,7 +2714,7 @@ void EditorThemeManager::_populate_visual_shader_styles(const Ref<EditorTheme> &
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/textures_color", gn_bg_color, true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/transform_color", gn_bg_color, true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/utility_color", gn_bg_color, true);
-		ed_settings->set_initial_value("editors/visual_editors/category_colors/vector_color", gn_bg_color, true);
+		ed_settings->set_initial_value("editors/visual_editors/category_colors/Hector_color", gn_bg_color, true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/special_color", gn_bg_color, true);
 		ed_settings->set_initial_value("editors/visual_editors/category_colors/particle_color", gn_bg_color, true);
 	}

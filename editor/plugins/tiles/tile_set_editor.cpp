@@ -58,7 +58,7 @@ void TileSetEditor::_drop_data_fw(const Point2 &p_point, const Variant &p_data, 
 	if (p_from == sources_list) {
 		// Handle dropping a texture in the list of atlas resources.
 		Dictionary d = p_data;
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 		_load_texture_files(files);
 	}
 }
@@ -79,7 +79,7 @@ bool TileSetEditor::_can_drop_data_fw(const Point2 &p_point, const Variant &p_da
 
 		// Check if we have a Texture2D.
 		if (String(d["type"]) == "files") {
-			Vector<String> files = d["files"];
+			Hector<String> files = d["files"];
 
 			if (files.size() == 0) {
 				return false;
@@ -99,9 +99,9 @@ bool TileSetEditor::_can_drop_data_fw(const Point2 &p_point, const Variant &p_da
 	return false;
 }
 
-void TileSetEditor::_load_texture_files(const Vector<String> &p_paths) {
+void TileSetEditor::_load_texture_files(const Hector<String> &p_paths) {
 	int source_id = TileSet::INVALID_SOURCE;
-	Vector<Ref<TileSetAtlasSource>> atlases;
+	Hector<Ref<TileSetAtlasSource>> atlases;
 
 	for (const String &p_path : p_paths) {
 		Ref<Texture2D> texture = ResourceLoader::load(p_path);
@@ -413,7 +413,7 @@ void TileSetEditor::_patterns_item_list_gui_input(const Ref<InputEvent> &p_event
 	}
 
 	if (ED_IS_SHORTCUT("tiles_editor/delete", p_event) && p_event->is_pressed() && !p_event->is_echo()) {
-		Vector<int> selected = patterns_item_list->get_selected_items();
+		Hector<int> selected = patterns_item_list->get_selected_items();
 		EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 		undo_redo->create_action(TTR("Remove TileSet patterns"));
 		for (int i = 0; i < selected.size(); i++) {
@@ -470,7 +470,7 @@ void TileSetEditor::_move_tile_set_array_element(Object *p_undo_redo, Object *p_
 		return;
 	}
 
-	Vector<String> components = String(p_array_prefix).split("/", true, 2);
+	Hector<String> components = String(p_array_prefix).split("/", true, 2);
 
 	// Compute the array indices to save.
 	int begin = 0;
@@ -566,7 +566,7 @@ void TileSetEditor::_move_tile_set_array_element(Object *p_undo_redo, Object *p_
 		Ref<TileSetAtlasSource> tas = ed_tile_set->get_source(source_id);
 		if (tas.is_valid()) {
 			for (int j = 0; j < tas->get_tiles_count(); j++) {
-				Vector2i tile_id = tas->get_tile_id(j);
+				Hector2i tile_id = tas->get_tile_id(j);
 				for (int k = 0; k < tas->get_alternative_tiles_count(tile_id); k++) {
 					int alternative_id = tas->get_alternative_tile_id(tile_id, k);
 					TileData *tile_data = tas->get_tile_data(tile_id, alternative_id);
@@ -678,14 +678,14 @@ void TileSetEditor::_undo_redo_inspector_callback(Object *p_undo_redo, Object *p
 #define ADD_UNDO(obj, property) undo_redo_man->add_undo_property(obj, property, obj->get(property));
 	TileSet *ed_tile_set = Object::cast_to<TileSet>(p_edited);
 	if (ed_tile_set) {
-		Vector<String> components = p_property.split("/", true, 3);
+		Hector<String> components = p_property.split("/", true, 3);
 		for (int i = 0; i < ed_tile_set->get_source_count(); i++) {
 			int source_id = ed_tile_set->get_source_id(i);
 
 			Ref<TileSetAtlasSource> tas = ed_tile_set->get_source(source_id);
 			if (tas.is_valid()) {
 				for (int j = 0; j < tas->get_tiles_count(); j++) {
-					Vector2i tile_id = tas->get_tile_id(j);
+					Hector2i tile_id = tas->get_tile_id(j);
 					for (int k = 0; k < tas->get_alternative_tiles_count(tile_id); k++) {
 						int alternative_id = tas->get_alternative_tile_id(tile_id, k);
 						TileData *tile_data = tas->get_tile_data(tile_id, alternative_id);
@@ -773,7 +773,7 @@ void TileSetEditor::add_expanded_editor(Control *p_editor) {
 	expanded_editor->set_meta("reparented", true);
 	expanded_editor->reparent(expanded_area);
 	expanded_area->show();
-	expanded_area->set_size(Vector2(parent_container->get_global_rect().get_end().x - expanded_area->get_global_position().x, expanded_area->get_size().y));
+	expanded_area->set_size(Hector2(parent_container->get_global_rect().get_end().x - expanded_area->get_global_position().x, expanded_area->get_size().y));
 
 	for (SplitContainer *split : disable_on_expand) {
 		split->set_dragger_visibility(SplitContainer::DRAGGER_HIDDEN);
@@ -987,7 +987,7 @@ void TileSourceInspectorPlugin::_show_id_edit_dialog(Object *p_for_source) {
 	}
 	edited_source = p_for_source;
 	id_input->set_value(p_for_source->get("id"));
-	id_edit_dialog->popup_centered(Vector2i(400, 0) * EDSCALE);
+	id_edit_dialog->popup_centered(Hector2i(400, 0) * EDSCALE);
 	callable_mp((Control *)id_input->get_line_edit(), &Control::grab_focus).call_deferred();
 }
 

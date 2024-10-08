@@ -224,7 +224,7 @@
   FT_CALLBACK_DEF( void )
   ft_outline_glyph_transform( FT_Glyph          outline_glyph,
                               const FT_Matrix*  matrix,
-                              const FT_Vector*  delta )
+                              const FT_Hector*  delta )
   {
     FT_OutlineGlyph  glyph = (FT_OutlineGlyph)outline_glyph;
 
@@ -411,14 +411,14 @@
   FT_CALLBACK_DEF( void )
   ft_svg_glyph_transform( FT_Glyph          svg_glyph,
                           const FT_Matrix*  _matrix,
-                          const FT_Vector*  _delta )
+                          const FT_Hector*  _delta )
   {
     FT_SvgGlyph  glyph  = (FT_SvgGlyph)svg_glyph;
     FT_Matrix*   matrix = (FT_Matrix*)_matrix;
-    FT_Vector*   delta  = (FT_Vector*)_delta;
+    FT_Hector*   delta  = (FT_Hector*)_delta;
 
     FT_Matrix  tmp_matrix;
-    FT_Vector  tmp_delta;
+    FT_Hector  tmp_delta;
 
     FT_Matrix  a, b;
     FT_Pos     x, y;
@@ -699,7 +699,7 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Glyph_Transform( FT_Glyph          glyph,
                       const FT_Matrix*  matrix,
-                      const FT_Vector*  delta )
+                      const FT_Hector*  delta )
   {
     FT_Error  error = FT_Err_Ok;
 
@@ -716,9 +716,9 @@
         /* transform glyph image */
         clazz->glyph_transform( glyph, matrix, delta );
 
-        /* transform advance vector */
+        /* transform advance Hector */
         if ( matrix )
-          FT_Vector_Transform( &glyph->advance, matrix );
+          FT_Hector_Transform( &glyph->advance, matrix );
       }
       else
         error = FT_THROW( Invalid_Glyph_Format );
@@ -779,7 +779,7 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Glyph_To_Bitmap( FT_Glyph*         the_glyph,
                       FT_Render_Mode    render_mode,
-                      const FT_Vector*  origin,
+                      const FT_Hector*  origin,
                       FT_Bool           destroy )
   {
     FT_GlyphSlotRec           dummy;
@@ -852,7 +852,7 @@
 #if 1
     if ( !destroy && origin )
     {
-      FT_Vector  v;
+      FT_Hector  v;
 
 
       v.x = -origin->x;

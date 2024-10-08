@@ -59,7 +59,7 @@ void EditorPluginSettings::update_plugins() {
 	updating = true;
 	TreeItem *root = plugin_list->create_item();
 
-	Vector<String> plugins = _get_plugins("res://addons");
+	Hector<String> plugins = _get_plugins("res://addons");
 	plugins.sort();
 
 	for (int i = 0; i < plugins.size(); i++) {
@@ -72,7 +72,7 @@ void EditorPluginSettings::update_plugins() {
 		if (err != OK) {
 			WARN_PRINT("Can't load plugin config at: " + path);
 		} else {
-			Vector<String> missing_keys;
+			Hector<String> missing_keys;
 			for (const String required_key : { "name", "author", "version", "description", "script" }) {
 				if (!cfg->has_section_key("plugin", required_key)) {
 					missing_keys.append("\"plugin/" + required_key + "\"");
@@ -172,14 +172,14 @@ void EditorPluginSettings::_cell_button_pressed(Object *p_item, int p_column, in
 	}
 }
 
-Vector<String> EditorPluginSettings::_get_plugins(const String &p_dir) {
+Hector<String> EditorPluginSettings::_get_plugins(const String &p_dir) {
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 	Error err = da->change_dir(p_dir);
 	if (err != OK) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
-	Vector<String> plugins;
+	Hector<String> plugins;
 	da->list_dir_begin();
 	for (String path = da->get_next(); !path.is_empty(); path = da->get_next()) {
 		if (path[0] == '.' || !da->current_is_dir()) {

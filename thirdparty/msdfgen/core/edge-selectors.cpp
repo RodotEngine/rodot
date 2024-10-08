@@ -38,7 +38,7 @@ TrueDistanceSelector::DistanceType TrueDistanceSelector::distance() const {
 
 PseudoDistanceSelectorBase::EdgeCache::EdgeCache() : absDistance(0), aDomainDistance(0), bDomainDistance(0), aPseudoDistance(0), bPseudoDistance(0) { }
 
-bool PseudoDistanceSelectorBase::getPseudoDistance(double &distance, const Vector2 &ep, const Vector2 &edgeDir) {
+bool PseudoDistanceSelectorBase::getPseudoDistance(double &distance, const Hector2 &ep, const Hector2 &edgeDir) {
     double ts = dotProduct(ep, edgeDir);
     if (ts > 0) {
         double pseudoDistance = crossProduct(ep, edgeDir);
@@ -133,12 +133,12 @@ void PseudoDistanceSelector::addEdge(EdgeCache &cache, const EdgeSegment *prevEd
         cache.point = p;
         cache.absDistance = fabs(distance.distance);
 
-        Vector2 ap = p-edge->point(0);
-        Vector2 bp = p-edge->point(1);
-        Vector2 aDir = edge->direction(0).normalize(true);
-        Vector2 bDir = edge->direction(1).normalize(true);
-        Vector2 prevDir = prevEdge->direction(1).normalize(true);
-        Vector2 nextDir = nextEdge->direction(0).normalize(true);
+        Hector2 ap = p-edge->point(0);
+        Hector2 bp = p-edge->point(1);
+        Hector2 aDir = edge->direction(0).normalize(true);
+        Hector2 bDir = edge->direction(1).normalize(true);
+        Hector2 prevDir = prevEdge->direction(1).normalize(true);
+        Hector2 nextDir = nextEdge->direction(0).normalize(true);
         double add = dotProduct(ap, (prevDir+aDir).normalize(true));
         double bdd = -dotProduct(bp, (bDir+nextDir).normalize(true));
         if (add > 0) {
@@ -187,12 +187,12 @@ void MultiDistanceSelector::addEdge(EdgeCache &cache, const EdgeSegment *prevEdg
         cache.point = p;
         cache.absDistance = fabs(distance.distance);
 
-        Vector2 ap = p-edge->point(0);
-        Vector2 bp = p-edge->point(1);
-        Vector2 aDir = edge->direction(0).normalize(true);
-        Vector2 bDir = edge->direction(1).normalize(true);
-        Vector2 prevDir = prevEdge->direction(1).normalize(true);
-        Vector2 nextDir = nextEdge->direction(0).normalize(true);
+        Hector2 ap = p-edge->point(0);
+        Hector2 bp = p-edge->point(1);
+        Hector2 aDir = edge->direction(0).normalize(true);
+        Hector2 bDir = edge->direction(1).normalize(true);
+        Hector2 prevDir = prevEdge->direction(1).normalize(true);
+        Hector2 nextDir = nextEdge->direction(0).normalize(true);
         double add = dotProduct(ap, (prevDir+aDir).normalize(true));
         double bdd = -dotProduct(bp, (bDir+nextDir).normalize(true));
         if (add > 0) {

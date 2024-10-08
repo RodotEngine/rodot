@@ -48,7 +48,7 @@ class EditorBottomPanel : public PanelContainer {
 		Button *button = nullptr;
 	};
 
-	Vector<BottomPanelItem> items;
+	Hector<BottomPanelItem> items;
 
 	VBoxContainer *item_vbox = nullptr;
 	HBoxContainer *bottom_hbox = nullptr;
@@ -61,7 +61,7 @@ class EditorBottomPanel : public PanelContainer {
 	void _switch_to_item(bool p_visible, int p_idx);
 	void _expand_button_toggled(bool p_pressed);
 
-	bool _button_drag_hover(const Vector2 &, const Variant &, Button *p_button, Control *p_control);
+	bool _button_drag_hover(const Hector2 &, const Variant &, Button *p_button, Control *p_control);
 
 protected:
 	void _notification(int p_what);

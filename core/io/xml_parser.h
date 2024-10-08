@@ -34,7 +34,7 @@
 #include "core/io/file_access.h"
 #include "core/object/ref_counted.h"
 #include "core/string/ustring.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 /*
   Based on irrXML (see their zlib license). Added mainly for compatibility with their Collada loader.
@@ -80,7 +80,7 @@ private:
 		String value;
 	};
 
-	Vector<Attribute> attributes;
+	Hector<Attribute> attributes;
 
 	bool _set_text(const char *start, const char *end);
 	void _parse_closing_xml_element();
@@ -118,7 +118,7 @@ public:
 	Error seek(uint64_t p_pos);
 
 	Error open(const String &p_path);
-	Error open_buffer(const Vector<uint8_t> &p_buffer);
+	Error open_buffer(const Hector<uint8_t> &p_buffer);
 	Error _open_buffer(const uint8_t *p_buffer, size_t p_size);
 
 	void close();

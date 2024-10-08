@@ -197,7 +197,7 @@ float get_omni_attenuation(float distance, float inv_range, float decay) {
 	return nd * pow(max(distance, 0.0001), -decay);
 }
 
-bool compute_light_vector(uint light, vec3 pos, out float attenuation, out vec3 light_pos) {
+bool compute_light_Hector(uint light, vec3 pos, out float attenuation, out vec3 light_pos) {
 	if (lights.data[light].type == LIGHT_TYPE_DIRECTIONAL) {
 		light_pos = pos - lights.data[light].direction * length(vec3(params.limits));
 		attenuation = 1.0;
@@ -272,7 +272,7 @@ bool compute_light_at_pos(uint index, vec3 pos, vec3 normal, inout vec3 light, i
 	float attenuation;
 	vec3 light_pos;
 
-	if (!compute_light_vector(index, pos, attenuation, light_pos)) {
+	if (!compute_light_Hector(index, pos, attenuation, light_pos)) {
 		return false;
 	}
 

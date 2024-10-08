@@ -140,8 +140,8 @@ void CPUParticles3DEditor::edit(CPUParticles3D *p_particles) {
 
 void CPUParticles3DEditor::_generate_emission_points() {
 	/// hacer codigo aca
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
 
 	if (!_generate(points, normals)) {
 		return;

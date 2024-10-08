@@ -93,7 +93,7 @@ Error ZIPPacker::start_file(const String &p_path) {
 	return err == ZIP_OK ? OK : FAILED;
 }
 
-Error ZIPPacker::write_file(const Vector<uint8_t> &p_data) {
+Error ZIPPacker::write_file(const Hector<uint8_t> &p_data) {
 	ERR_FAIL_COND_V_MSG(fa.is_null(), FAILED, "ZIPPacker must be opened before use.");
 
 	return zipWriteInFileInZip(zf, p_data.ptr(), p_data.size()) == ZIP_OK ? OK : FAILED;

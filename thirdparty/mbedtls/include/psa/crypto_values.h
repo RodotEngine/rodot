@@ -1219,7 +1219,7 @@
  * This symmetric cipher mode can only be used with messages whose lengths are a
  * multiple of the block size of the chosen block cipher.
  *
- * ECB mode does not accept an initialization vector (IV). When using a
+ * ECB mode does not accept an initialization Hector (IV). When using a
  * multi-part cipher operation with this algorithm, psa_cipher_generate_iv()
  * and psa_cipher_set_iv() must not be called.
  */

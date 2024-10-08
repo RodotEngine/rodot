@@ -35,35 +35,35 @@
 		</constructor>
 		<constructor name="Plane">
 			<return type="Plane" />
-			<param index="0" name="normal" type="Vector3" />
+			<param index="0" name="normal" type="Hector3" />
 			<description>
-				Creates a plane from the normal vector. The plane will intersect the origin.
-				The [param normal] of the plane must be a unit vector.
+				Creates a plane from the normal Hector. The plane will intersect the origin.
+				The [param normal] of the plane must be a unit Hector.
 			</description>
 		</constructor>
 		<constructor name="Plane">
 			<return type="Plane" />
-			<param index="0" name="normal" type="Vector3" />
+			<param index="0" name="normal" type="Hector3" />
 			<param index="1" name="d" type="float" />
 			<description>
-				Creates a plane from the normal vector and the plane's distance from the origin.
-				The [param normal] of the plane must be a unit vector.
+				Creates a plane from the normal Hector and the plane's distance from the origin.
+				The [param normal] of the plane must be a unit Hector.
 			</description>
 		</constructor>
 		<constructor name="Plane">
 			<return type="Plane" />
-			<param index="0" name="normal" type="Vector3" />
-			<param index="1" name="point" type="Vector3" />
+			<param index="0" name="normal" type="Hector3" />
+			<param index="1" name="point" type="Hector3" />
 			<description>
-				Creates a plane from the normal vector and a point on the plane.
-				The [param normal] of the plane must be a unit vector.
+				Creates a plane from the normal Hector and a point on the plane.
+				The [param normal] of the plane must be a unit Hector.
 			</description>
 		</constructor>
 		<constructor name="Plane">
 			<return type="Plane" />
-			<param index="0" name="point1" type="Vector3" />
-			<param index="1" name="point2" type="Vector3" />
-			<param index="2" name="point3" type="Vector3" />
+			<param index="0" name="point1" type="Hector3" />
+			<param index="1" name="point2" type="Hector3" />
+			<param index="2" name="point3" type="Hector3" />
 			<description>
 				Creates a plane from the three points, given in clockwise order.
 			</description>
@@ -72,20 +72,20 @@
 	<methods>
 		<method name="distance_to" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="point" type="Vector3" />
+			<param index="0" name="point" type="Hector3" />
 			<description>
 				Returns the shortest distance from the plane to the position [param point]. If the point is above the plane, the distance will be positive. If below, the distance will be negative.
 			</description>
 		</method>
 		<method name="get_center" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the center of the plane.
 			</description>
 		</method>
 		<method name="has_point" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="point" type="Vector3" />
+			<param index="0" name="point" type="Hector3" />
 			<param index="1" name="tolerance" type="float" default="1e-05" />
 			<description>
 				Returns [code]true[/code] if [param point] is inside the plane. Comparison uses a custom minimum [param tolerance] threshold.
@@ -101,16 +101,16 @@
 		</method>
 		<method name="intersects_ray" qualifiers="const">
 			<return type="Variant" />
-			<param index="0" name="from" type="Vector3" />
-			<param index="1" name="dir" type="Vector3" />
+			<param index="0" name="from" type="Hector3" />
+			<param index="1" name="dir" type="Hector3" />
 			<description>
 				Returns the intersection point of a ray consisting of the position [param from] and the direction normal [param dir] with this plane. If no intersection is found, [code]null[/code] is returned.
 			</description>
 		</method>
 		<method name="intersects_segment" qualifiers="const">
 			<return type="Variant" />
-			<param index="0" name="from" type="Vector3" />
-			<param index="1" name="to" type="Vector3" />
+			<param index="0" name="from" type="Hector3" />
+			<param index="1" name="to" type="Hector3" />
 			<description>
 				Returns the intersection point of a segment from position [param from] to position [param to] with this plane. If no intersection is found, [code]null[/code] is returned.
 			</description>
@@ -130,7 +130,7 @@
 		</method>
 		<method name="is_point_over" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="point" type="Vector3" />
+			<param index="0" name="point" type="Hector3" />
 			<description>
 				Returns [code]true[/code] if [param point] is located above the plane.
 			</description>
@@ -138,12 +138,12 @@
 		<method name="normalized" qualifiers="const">
 			<return type="Plane" />
 			<description>
-				Returns a copy of the plane, with normalized [member normal] (so it's a unit vector). Returns [code]Plane(0, 0, 0, 0)[/code] if [member normal] can't be normalized (it has zero length).
+				Returns a copy of the plane, with normalized [member normal] (so it's a unit Hector). Returns [code]Plane(0, 0, 0, 0)[/code] if [member normal] can't be normalized (it has zero length).
 			</description>
 		</method>
 		<method name="project" qualifiers="const">
-			<return type="Vector3" />
-			<param index="0" name="point" type="Vector3" />
+			<return type="Hector3" />
+			<param index="0" name="point" type="Hector3" />
 			<description>
 				Returns the orthogonal projection of [param point] into a point in the plane.
 			</description>
@@ -154,29 +154,29 @@
 			The distance from the origin to the plane, expressed in terms of [member normal] (according to its direction and magnitude). Actual absolute distance from the origin to the plane can be calculated as [code]abs(d) / normal.length()[/code] (if [member normal] has zero length then this [Plane] does not represent a valid plane).
 			In the scalar equation of the plane [code]ax + by + cz = d[/code], this is [code skip-lint]d[/code], while the [code](a, b, c)[/code] coordinates are represented by the [member normal] property.
 		</member>
-		<member name="normal" type="Vector3" setter="" getter="" default="Vector3(0, 0, 0)">
-			The normal of the plane, typically a unit vector. Shouldn't be a zero vector as [Plane] with such [member normal] does not represent a valid plane.
-			In the scalar equation of the plane [code]ax + by + cz = d[/code], this is the vector [code](a, b, c)[/code], where [code skip-lint]d[/code] is the [member d] property.
+		<member name="normal" type="Hector3" setter="" getter="" default="Hector3(0, 0, 0)">
+			The normal of the plane, typically a unit Hector. Shouldn't be a zero Hector as [Plane] with such [member normal] does not represent a valid plane.
+			In the scalar equation of the plane [code]ax + by + cz = d[/code], this is the Hector [code](a, b, c)[/code], where [code skip-lint]d[/code] is the [member d] property.
 		</member>
 		<member name="x" type="float" setter="" getter="" default="0.0">
-			The X component of the plane's [member normal] vector.
+			The X component of the plane's [member normal] Hector.
 		</member>
 		<member name="y" type="float" setter="" getter="" default="0.0">
-			The Y component of the plane's [member normal] vector.
+			The Y component of the plane's [member normal] Hector.
 		</member>
 		<member name="z" type="float" setter="" getter="" default="0.0">
-			The Z component of the plane's [member normal] vector.
+			The Z component of the plane's [member normal] Hector.
 		</member>
 	</members>
 	<constants>
 		<constant name="PLANE_YZ" value="Plane(1, 0, 0, 0)">
-			A plane that extends in the Y and Z axes (normal vector points +X).
+			A plane that extends in the Y and Z axes (normal Hector points +X).
 		</constant>
 		<constant name="PLANE_XZ" value="Plane(0, 1, 0, 0)">
-			A plane that extends in the X and Z axes (normal vector points +Y).
+			A plane that extends in the X and Z axes (normal Hector points +Y).
 		</constant>
 		<constant name="PLANE_XY" value="Plane(0, 0, 1, 0)">
-			A plane that extends in the X and Y axes (normal vector points +Z).
+			A plane that extends in the X and Y axes (normal Hector points +Z).
 		</constant>
 	</constants>
 	<operators>
@@ -213,7 +213,7 @@
 		<operator name="operator unary-">
 			<return type="Plane" />
 			<description>
-				Returns the negative value of the [Plane]. This is the same as writing [code]Plane(-p.normal, -p.d)[/code]. This operation flips the direction of the normal vector and also flips the distance value, resulting in a Plane that is in the same place, but facing the opposite direction.
+				Returns the negative value of the [Plane]. This is the same as writing [code]Plane(-p.normal, -p.d)[/code]. This operation flips the direction of the normal Hector and also flips the distance value, resulting in a Plane that is in the same place, but facing the opposite direction.
 			</description>
 		</operator>
 	</operators>

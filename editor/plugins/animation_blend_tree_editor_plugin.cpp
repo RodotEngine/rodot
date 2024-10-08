@@ -259,7 +259,7 @@ void AnimationNodeBlendTreeEditor::update_graph() {
 			}
 
 			pb->set_show_percentage(false);
-			pb->set_custom_minimum_size(Vector2(0, 14) * EDSCALE);
+			pb->set_custom_minimum_size(Hector2(0, 14) * EDSCALE);
 			animations[E] = pb;
 			node->add_child(pb);
 
@@ -389,7 +389,7 @@ void AnimationNodeBlendTreeEditor::_add_node(int p_idx) {
 	undo_redo->commit_action();
 }
 
-void AnimationNodeBlendTreeEditor::_popup(bool p_has_input_ports, const Vector2 &p_node_position) {
+void AnimationNodeBlendTreeEditor::_popup(bool p_has_input_ports, const Hector2 &p_node_position) {
 	_update_options_menu(p_has_input_ports);
 	use_position_from_popup_menu = true;
 	position_from_popup_menu = p_node_position;
@@ -398,7 +398,7 @@ void AnimationNodeBlendTreeEditor::_popup(bool p_has_input_ports, const Vector2 
 	add_node->get_popup()->popup();
 }
 
-void AnimationNodeBlendTreeEditor::_popup_request(const Vector2 &p_position) {
+void AnimationNodeBlendTreeEditor::_popup_request(const Hector2 &p_position) {
 	if (read_only) {
 		return;
 	}
@@ -406,7 +406,7 @@ void AnimationNodeBlendTreeEditor::_popup_request(const Vector2 &p_position) {
 	_popup(false, p_position);
 }
 
-void AnimationNodeBlendTreeEditor::_connection_to_empty(const String &p_from, int p_from_slot, const Vector2 &p_release_position) {
+void AnimationNodeBlendTreeEditor::_connection_to_empty(const String &p_from, int p_from_slot, const Hector2 &p_release_position) {
 	if (read_only) {
 		return;
 	}
@@ -418,7 +418,7 @@ void AnimationNodeBlendTreeEditor::_connection_to_empty(const String &p_from, in
 	}
 }
 
-void AnimationNodeBlendTreeEditor::_connection_from_empty(const String &p_to, int p_to_slot, const Vector2 &p_release_position) {
+void AnimationNodeBlendTreeEditor::_connection_from_empty(const String &p_to, int p_to_slot, const Hector2 &p_release_position) {
 	if (read_only) {
 		return;
 	}
@@ -436,7 +436,7 @@ void AnimationNodeBlendTreeEditor::_popup_hide() {
 	to_slot = -1;
 }
 
-void AnimationNodeBlendTreeEditor::_node_dragged(const Vector2 &p_from, const Vector2 &p_to, const StringName &p_which) {
+void AnimationNodeBlendTreeEditor::_node_dragged(const Hector2 &p_from, const Hector2 &p_to, const StringName &p_which) {
 	updating = true;
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	undo_redo->create_action(TTR("Node Moved"));
@@ -1013,7 +1013,7 @@ void AnimationNodeBlendTreeEditor::_notification(int p_what) {
 	}
 }
 
-void AnimationNodeBlendTreeEditor::_scroll_changed(const Vector2 &p_scroll) {
+void AnimationNodeBlendTreeEditor::_scroll_changed(const Hector2 &p_scroll) {
 	if (read_only) {
 		return;
 	}

@@ -39,10 +39,10 @@ class PackedSceneEditorTranslationParserPlugin : public EditorTranslationParserP
 	// Scene Node's properties that contain translation strings.
 	HashSet<String> lookup_properties;
 	// Properties from specific Nodes that should be ignored.
-	HashMap<String, Vector<String>> exception_list;
+	HashMap<String, Hector<String>> exception_list;
 
 public:
-	virtual Error parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) override;
+	virtual Error parse_file(const String &p_path, Hector<String> *r_ids, Hector<Hector<String>> *r_ids_ctx_plural) override;
 	bool match_property(const String &p_property_name, const String &p_node_type);
 	virtual void get_recognized_extensions(List<String> *r_extensions) const override;
 

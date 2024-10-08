@@ -213,12 +213,12 @@ public:
 	GDVIRTUAL2(_font_set_oversampling, RID, double);
 	GDVIRTUAL1RC(double, _font_get_oversampling, RID);
 
-	virtual TypedArray<Vector2i> font_get_size_cache_list(const RID &p_font_rid) const override;
+	virtual TypedArray<Hector2i> font_get_size_cache_list(const RID &p_font_rid) const override;
 	virtual void font_clear_size_cache(const RID &p_font_rid) override;
-	virtual void font_remove_size_cache(const RID &p_font_rid, const Vector2i &p_size) override;
-	GDVIRTUAL1RC_REQUIRED(TypedArray<Vector2i>, _font_get_size_cache_list, RID);
+	virtual void font_remove_size_cache(const RID &p_font_rid, const Hector2i &p_size) override;
+	GDVIRTUAL1RC_REQUIRED(TypedArray<Hector2i>, _font_get_size_cache_list, RID);
 	GDVIRTUAL1_REQUIRED(_font_clear_size_cache, RID);
-	GDVIRTUAL2_REQUIRED(_font_remove_size_cache, RID, const Vector2i &);
+	GDVIRTUAL2_REQUIRED(_font_remove_size_cache, RID, const Hector2i &);
 
 	virtual void font_set_ascent(const RID &p_font_rid, int64_t p_size, double p_ascent) override;
 	virtual double font_get_ascent(const RID &p_font_rid, int64_t p_size) const override;
@@ -245,75 +245,75 @@ public:
 	GDVIRTUAL3_REQUIRED(_font_set_scale, RID, int64_t, double);
 	GDVIRTUAL2RC_REQUIRED(double, _font_get_scale, RID, int64_t);
 
-	virtual int64_t font_get_texture_count(const RID &p_font_rid, const Vector2i &p_size) const override;
-	virtual void font_clear_textures(const RID &p_font_rid, const Vector2i &p_size) override;
-	virtual void font_remove_texture(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) override;
-	GDVIRTUAL2RC_REQUIRED(int64_t, _font_get_texture_count, RID, const Vector2i &);
-	GDVIRTUAL2_REQUIRED(_font_clear_textures, RID, const Vector2i &);
-	GDVIRTUAL3_REQUIRED(_font_remove_texture, RID, const Vector2i &, int64_t);
+	virtual int64_t font_get_texture_count(const RID &p_font_rid, const Hector2i &p_size) const override;
+	virtual void font_clear_textures(const RID &p_font_rid, const Hector2i &p_size) override;
+	virtual void font_remove_texture(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) override;
+	GDVIRTUAL2RC_REQUIRED(int64_t, _font_get_texture_count, RID, const Hector2i &);
+	GDVIRTUAL2_REQUIRED(_font_clear_textures, RID, const Hector2i &);
+	GDVIRTUAL3_REQUIRED(_font_remove_texture, RID, const Hector2i &, int64_t);
 
-	virtual void font_set_texture_image(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index, const Ref<Image> &p_image) override;
-	virtual Ref<Image> font_get_texture_image(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) const override;
-	GDVIRTUAL4_REQUIRED(_font_set_texture_image, RID, const Vector2i &, int64_t, const Ref<Image> &);
-	GDVIRTUAL3RC_REQUIRED(Ref<Image>, _font_get_texture_image, RID, const Vector2i &, int64_t);
+	virtual void font_set_texture_image(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index, const Ref<Image> &p_image) override;
+	virtual Ref<Image> font_get_texture_image(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) const override;
+	GDVIRTUAL4_REQUIRED(_font_set_texture_image, RID, const Hector2i &, int64_t, const Ref<Image> &);
+	GDVIRTUAL3RC_REQUIRED(Ref<Image>, _font_get_texture_image, RID, const Hector2i &, int64_t);
 
-	virtual void font_set_texture_offsets(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index, const PackedInt32Array &p_offset) override;
-	virtual PackedInt32Array font_get_texture_offsets(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) const override;
-	GDVIRTUAL4(_font_set_texture_offsets, RID, const Vector2i &, int64_t, const PackedInt32Array &);
-	GDVIRTUAL3RC(PackedInt32Array, _font_get_texture_offsets, RID, const Vector2i &, int64_t);
+	virtual void font_set_texture_offsets(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index, const PackedInt32Array &p_offset) override;
+	virtual PackedInt32Array font_get_texture_offsets(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) const override;
+	GDVIRTUAL4(_font_set_texture_offsets, RID, const Hector2i &, int64_t, const PackedInt32Array &);
+	GDVIRTUAL3RC(PackedInt32Array, _font_get_texture_offsets, RID, const Hector2i &, int64_t);
 
-	virtual PackedInt32Array font_get_glyph_list(const RID &p_font_rid, const Vector2i &p_size) const override;
-	virtual void font_clear_glyphs(const RID &p_font_rid, const Vector2i &p_size) override;
-	virtual void font_remove_glyph(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) override;
-	GDVIRTUAL2RC_REQUIRED(PackedInt32Array, _font_get_glyph_list, RID, const Vector2i &);
-	GDVIRTUAL2_REQUIRED(_font_clear_glyphs, RID, const Vector2i &);
-	GDVIRTUAL3_REQUIRED(_font_remove_glyph, RID, const Vector2i &, int64_t);
+	virtual PackedInt32Array font_get_glyph_list(const RID &p_font_rid, const Hector2i &p_size) const override;
+	virtual void font_clear_glyphs(const RID &p_font_rid, const Hector2i &p_size) override;
+	virtual void font_remove_glyph(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) override;
+	GDVIRTUAL2RC_REQUIRED(PackedInt32Array, _font_get_glyph_list, RID, const Hector2i &);
+	GDVIRTUAL2_REQUIRED(_font_clear_glyphs, RID, const Hector2i &);
+	GDVIRTUAL3_REQUIRED(_font_remove_glyph, RID, const Hector2i &, int64_t);
 
-	virtual Vector2 font_get_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph) const override;
-	virtual void font_set_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph, const Vector2 &p_advance) override;
-	GDVIRTUAL3RC_REQUIRED(Vector2, _font_get_glyph_advance, RID, int64_t, int64_t);
-	GDVIRTUAL4_REQUIRED(_font_set_glyph_advance, RID, int64_t, int64_t, const Vector2 &);
+	virtual Hector2 font_get_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph) const override;
+	virtual void font_set_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph, const Hector2 &p_advance) override;
+	GDVIRTUAL3RC_REQUIRED(Hector2, _font_get_glyph_advance, RID, int64_t, int64_t);
+	GDVIRTUAL4_REQUIRED(_font_set_glyph_advance, RID, int64_t, int64_t, const Hector2 &);
 
-	virtual Vector2 font_get_glyph_offset(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override;
-	virtual void font_set_glyph_offset(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Vector2 &p_offset) override;
-	GDVIRTUAL3RC_REQUIRED(Vector2, _font_get_glyph_offset, RID, const Vector2i &, int64_t);
-	GDVIRTUAL4_REQUIRED(_font_set_glyph_offset, RID, const Vector2i &, int64_t, const Vector2 &);
+	virtual Hector2 font_get_glyph_offset(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override;
+	virtual void font_set_glyph_offset(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Hector2 &p_offset) override;
+	GDVIRTUAL3RC_REQUIRED(Hector2, _font_get_glyph_offset, RID, const Hector2i &, int64_t);
+	GDVIRTUAL4_REQUIRED(_font_set_glyph_offset, RID, const Hector2i &, int64_t, const Hector2 &);
 
-	virtual Vector2 font_get_glyph_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override;
-	virtual void font_set_glyph_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Vector2 &p_gl_size) override;
-	GDVIRTUAL3RC_REQUIRED(Vector2, _font_get_glyph_size, RID, const Vector2i &, int64_t);
-	GDVIRTUAL4_REQUIRED(_font_set_glyph_size, RID, const Vector2i &, int64_t, const Vector2 &);
+	virtual Hector2 font_get_glyph_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override;
+	virtual void font_set_glyph_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Hector2 &p_gl_size) override;
+	GDVIRTUAL3RC_REQUIRED(Hector2, _font_get_glyph_size, RID, const Hector2i &, int64_t);
+	GDVIRTUAL4_REQUIRED(_font_set_glyph_size, RID, const Hector2i &, int64_t, const Hector2 &);
 
-	virtual Rect2 font_get_glyph_uv_rect(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override;
-	virtual void font_set_glyph_uv_rect(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Rect2 &p_uv_rect) override;
-	GDVIRTUAL3RC_REQUIRED(Rect2, _font_get_glyph_uv_rect, RID, const Vector2i &, int64_t);
-	GDVIRTUAL4_REQUIRED(_font_set_glyph_uv_rect, RID, const Vector2i &, int64_t, const Rect2 &);
+	virtual Rect2 font_get_glyph_uv_rect(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override;
+	virtual void font_set_glyph_uv_rect(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Rect2 &p_uv_rect) override;
+	GDVIRTUAL3RC_REQUIRED(Rect2, _font_get_glyph_uv_rect, RID, const Hector2i &, int64_t);
+	GDVIRTUAL4_REQUIRED(_font_set_glyph_uv_rect, RID, const Hector2i &, int64_t, const Rect2 &);
 
-	virtual int64_t font_get_glyph_texture_idx(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override;
-	virtual void font_set_glyph_texture_idx(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, int64_t p_texture_idx) override;
-	GDVIRTUAL3RC_REQUIRED(int64_t, _font_get_glyph_texture_idx, RID, const Vector2i &, int64_t);
-	GDVIRTUAL4_REQUIRED(_font_set_glyph_texture_idx, RID, const Vector2i &, int64_t, int64_t);
+	virtual int64_t font_get_glyph_texture_idx(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override;
+	virtual void font_set_glyph_texture_idx(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, int64_t p_texture_idx) override;
+	GDVIRTUAL3RC_REQUIRED(int64_t, _font_get_glyph_texture_idx, RID, const Hector2i &, int64_t);
+	GDVIRTUAL4_REQUIRED(_font_set_glyph_texture_idx, RID, const Hector2i &, int64_t, int64_t);
 
-	virtual RID font_get_glyph_texture_rid(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override;
-	GDVIRTUAL3RC_REQUIRED(RID, _font_get_glyph_texture_rid, RID, const Vector2i &, int64_t);
+	virtual RID font_get_glyph_texture_rid(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override;
+	GDVIRTUAL3RC_REQUIRED(RID, _font_get_glyph_texture_rid, RID, const Hector2i &, int64_t);
 
-	virtual Size2 font_get_glyph_texture_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override;
-	GDVIRTUAL3RC_REQUIRED(Size2, _font_get_glyph_texture_size, RID, const Vector2i &, int64_t);
+	virtual Size2 font_get_glyph_texture_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override;
+	GDVIRTUAL3RC_REQUIRED(Size2, _font_get_glyph_texture_size, RID, const Hector2i &, int64_t);
 
 	virtual Dictionary font_get_glyph_contours(const RID &p_font, int64_t p_size, int64_t p_index) const override;
 	GDVIRTUAL3RC(Dictionary, _font_get_glyph_contours, RID, int64_t, int64_t);
 
-	virtual TypedArray<Vector2i> font_get_kerning_list(const RID &p_font_rid, int64_t p_size) const override;
+	virtual TypedArray<Hector2i> font_get_kerning_list(const RID &p_font_rid, int64_t p_size) const override;
 	virtual void font_clear_kerning_map(const RID &p_font_rid, int64_t p_size) override;
-	virtual void font_remove_kerning(const RID &p_font_rid, int64_t p_size, const Vector2i &p_glyph_pair) override;
-	GDVIRTUAL2RC(TypedArray<Vector2i>, _font_get_kerning_list, RID, int64_t);
+	virtual void font_remove_kerning(const RID &p_font_rid, int64_t p_size, const Hector2i &p_glyph_pair) override;
+	GDVIRTUAL2RC(TypedArray<Hector2i>, _font_get_kerning_list, RID, int64_t);
 	GDVIRTUAL2(_font_clear_kerning_map, RID, int64_t);
-	GDVIRTUAL3(_font_remove_kerning, RID, int64_t, const Vector2i &);
+	GDVIRTUAL3(_font_remove_kerning, RID, int64_t, const Hector2i &);
 
-	virtual void font_set_kerning(const RID &p_font_rid, int64_t p_size, const Vector2i &p_glyph_pair, const Vector2 &p_kerning) override;
-	virtual Vector2 font_get_kerning(const RID &p_font_rid, int64_t p_size, const Vector2i &p_glyph_pair) const override;
-	GDVIRTUAL4(_font_set_kerning, RID, int64_t, const Vector2i &, const Vector2 &);
-	GDVIRTUAL3RC(Vector2, _font_get_kerning, RID, int64_t, const Vector2i &);
+	virtual void font_set_kerning(const RID &p_font_rid, int64_t p_size, const Hector2i &p_glyph_pair, const Hector2 &p_kerning) override;
+	virtual Hector2 font_get_kerning(const RID &p_font_rid, int64_t p_size, const Hector2i &p_glyph_pair) const override;
+	GDVIRTUAL4(_font_set_kerning, RID, int64_t, const Hector2i &, const Hector2 &);
+	GDVIRTUAL3RC(Hector2, _font_get_kerning, RID, int64_t, const Hector2i &);
 
 	virtual int64_t font_get_glyph_index(const RID &p_font_rid, int64_t p_size, int64_t p_char, int64_t p_variation_selector = 0) const override;
 	GDVIRTUAL4RC_REQUIRED(int64_t, _font_get_glyph_index, RID, int64_t, int64_t, int64_t);
@@ -328,15 +328,15 @@ public:
 	GDVIRTUAL1RC_REQUIRED(String, _font_get_supported_chars, RID);
 	GDVIRTUAL1RC_REQUIRED(PackedInt32Array, _font_get_supported_glyphs, RID);
 
-	virtual void font_render_range(const RID &p_font, const Vector2i &p_size, int64_t p_start, int64_t p_end) override;
-	virtual void font_render_glyph(const RID &p_font_rid, const Vector2i &p_size, int64_t p_index) override;
-	GDVIRTUAL4(_font_render_range, RID, const Vector2i &, int64_t, int64_t);
-	GDVIRTUAL3(_font_render_glyph, RID, const Vector2i &, int64_t);
+	virtual void font_render_range(const RID &p_font, const Hector2i &p_size, int64_t p_start, int64_t p_end) override;
+	virtual void font_render_glyph(const RID &p_font_rid, const Hector2i &p_size, int64_t p_index) override;
+	GDVIRTUAL4(_font_render_range, RID, const Hector2i &, int64_t, int64_t);
+	GDVIRTUAL3(_font_render_glyph, RID, const Hector2i &, int64_t);
 
-	virtual void font_draw_glyph(const RID &p_font, const RID &p_canvas, int64_t p_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color = Color(1, 1, 1)) const override;
-	virtual void font_draw_glyph_outline(const RID &p_font, const RID &p_canvas, int64_t p_size, int64_t p_outline_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color = Color(1, 1, 1)) const override;
-	GDVIRTUAL6C_REQUIRED(_font_draw_glyph, RID, RID, int64_t, const Vector2 &, int64_t, const Color &);
-	GDVIRTUAL7C_REQUIRED(_font_draw_glyph_outline, RID, RID, int64_t, int64_t, const Vector2 &, int64_t, const Color &);
+	virtual void font_draw_glyph(const RID &p_font, const RID &p_canvas, int64_t p_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color = Color(1, 1, 1)) const override;
+	virtual void font_draw_glyph_outline(const RID &p_font, const RID &p_canvas, int64_t p_size, int64_t p_outline_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color = Color(1, 1, 1)) const override;
+	GDVIRTUAL6C_REQUIRED(_font_draw_glyph, RID, RID, int64_t, const Hector2 &, int64_t, const Color &);
+	GDVIRTUAL7C_REQUIRED(_font_draw_glyph_outline, RID, RID, int64_t, int64_t, const Hector2 &, int64_t, const Color &);
 
 	virtual bool font_is_language_supported(const RID &p_font_rid, const String &p_language) const override;
 	virtual void font_set_language_support_override(const RID &p_font_rid, const String &p_language, bool p_supported) override;
@@ -375,10 +375,10 @@ public:
 	GDVIRTUAL0RC(double, _font_get_global_oversampling);
 	GDVIRTUAL1(_font_set_global_oversampling, double);
 
-	virtual Vector2 get_hex_code_box_size(int64_t p_size, int64_t p_index) const override;
-	virtual void draw_hex_code_box(const RID &p_canvas, int64_t p_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color) const override;
-	GDVIRTUAL2RC(Vector2, _get_hex_code_box_size, int64_t, int64_t);
-	GDVIRTUAL5C(_draw_hex_code_box, RID, int64_t, const Vector2 &, int64_t, const Color &);
+	virtual Hector2 get_hex_code_box_size(int64_t p_size, int64_t p_index) const override;
+	virtual void draw_hex_code_box(const RID &p_canvas, int64_t p_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color) const override;
+	GDVIRTUAL2RC(Hector2, _get_hex_code_box_size, int64_t, int64_t);
+	GDVIRTUAL5C(_draw_hex_code_box, RID, int64_t, const Hector2 &, int64_t, const Color &);
 
 	/* Shaped text buffer interface */
 
@@ -469,8 +469,8 @@ public:
 	GDVIRTUAL1R_REQUIRED(GDExtensionConstPtr<const Glyph>, _shaped_text_sort_logical, RID);
 	GDVIRTUAL1RC_REQUIRED(int64_t, _shaped_text_get_glyph_count, RID);
 
-	virtual Vector2i shaped_text_get_range(const RID &p_shaped) const override;
-	GDVIRTUAL1RC_REQUIRED(Vector2i, _shaped_text_get_range, RID);
+	virtual Hector2i shaped_text_get_range(const RID &p_shaped) const override;
+	GDVIRTUAL1RC_REQUIRED(Hector2i, _shaped_text_get_range, RID);
 
 	virtual PackedInt32Array shaped_text_get_line_breaks_adv(const RID &p_shaped, const PackedFloat32Array &p_width, int64_t p_start = 0, bool p_once = true, BitField<TextServer::LineBreakFlag> p_break_flags = BREAK_MANDATORY | BREAK_WORD_BOUND) const override;
 	virtual PackedInt32Array shaped_text_get_line_breaks(const RID &p_shaped, double p_width, int64_t p_start = 0, BitField<TextServer::LineBreakFlag> p_break_flags = BREAK_MANDATORY | BREAK_WORD_BOUND) const override;
@@ -493,11 +493,11 @@ public:
 
 	virtual Array shaped_text_get_objects(const RID &p_shaped) const override;
 	virtual Rect2 shaped_text_get_object_rect(const RID &p_shaped, const Variant &p_key) const override;
-	virtual Vector2i shaped_text_get_object_range(const RID &p_shaped, const Variant &p_key) const override;
+	virtual Hector2i shaped_text_get_object_range(const RID &p_shaped, const Variant &p_key) const override;
 	virtual int64_t shaped_text_get_object_glyph(const RID &p_shaped, const Variant &p_key) const override;
 	GDVIRTUAL1RC_REQUIRED(Array, _shaped_text_get_objects, RID);
 	GDVIRTUAL2RC_REQUIRED(Rect2, _shaped_text_get_object_rect, RID, const Variant &);
-	GDVIRTUAL2RC_REQUIRED(Vector2i, _shaped_text_get_object_range, RID, const Variant &);
+	GDVIRTUAL2RC_REQUIRED(Hector2i, _shaped_text_get_object_range, RID, const Variant &);
 	GDVIRTUAL2RC_REQUIRED(int64_t, _shaped_text_get_object_glyph, RID, const Variant &);
 
 	virtual Size2 shaped_text_get_size(const RID &p_shaped) const override;
@@ -517,24 +517,24 @@ public:
 	GDVIRTUAL3RC(int64_t, _shaped_text_get_dominant_direction_in_range, RID, int64_t, int64_t);
 
 	virtual CaretInfo shaped_text_get_carets(const RID &p_shaped, int64_t p_position) const override;
-	virtual Vector<Vector2> shaped_text_get_selection(const RID &p_shaped, int64_t p_start, int64_t p_end) const override;
+	virtual Hector<Hector2> shaped_text_get_selection(const RID &p_shaped, int64_t p_start, int64_t p_end) const override;
 	GDVIRTUAL3C(_shaped_text_get_carets, RID, int64_t, GDExtensionPtr<CaretInfo>);
-	GDVIRTUAL3RC(Vector<Vector2>, _shaped_text_get_selection, RID, int64_t, int64_t);
+	GDVIRTUAL3RC(Hector<Hector2>, _shaped_text_get_selection, RID, int64_t, int64_t);
 
 	virtual int64_t shaped_text_hit_test_grapheme(const RID &p_shaped, double p_coords) const override;
 	virtual int64_t shaped_text_hit_test_position(const RID &p_shaped, double p_coords) const override;
 	GDVIRTUAL2RC(int64_t, _shaped_text_hit_test_grapheme, RID, double);
 	GDVIRTUAL2RC(int64_t, _shaped_text_hit_test_position, RID, double);
 
-	virtual void shaped_text_draw(const RID &p_shaped, const RID &p_canvas, const Vector2 &p_pos, double p_clip_l = -1.0, double p_clip_r = -1.0, const Color &p_color = Color(1, 1, 1)) const override;
-	virtual void shaped_text_draw_outline(const RID &p_shaped, const RID &p_canvas, const Vector2 &p_pos, double p_clip_l = -1.0, double p_clip_r = -1.0, int64_t p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const override;
-	GDVIRTUAL6C(_shaped_text_draw, RID, RID, const Vector2 &, double, double, const Color &);
-	GDVIRTUAL7C(_shaped_text_draw_outline, RID, RID, const Vector2 &, double, double, int64_t, const Color &);
+	virtual void shaped_text_draw(const RID &p_shaped, const RID &p_canvas, const Hector2 &p_pos, double p_clip_l = -1.0, double p_clip_r = -1.0, const Color &p_color = Color(1, 1, 1)) const override;
+	virtual void shaped_text_draw_outline(const RID &p_shaped, const RID &p_canvas, const Hector2 &p_pos, double p_clip_l = -1.0, double p_clip_r = -1.0, int64_t p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const override;
+	GDVIRTUAL6C(_shaped_text_draw, RID, RID, const Hector2 &, double, double, const Color &);
+	GDVIRTUAL7C(_shaped_text_draw_outline, RID, RID, const Hector2 &, double, double, int64_t, const Color &);
 
-	virtual Vector2 shaped_text_get_grapheme_bounds(const RID &p_shaped, int64_t p_pos) const override;
+	virtual Hector2 shaped_text_get_grapheme_bounds(const RID &p_shaped, int64_t p_pos) const override;
 	virtual int64_t shaped_text_next_grapheme_pos(const RID &p_shaped, int64_t p_pos) const override;
 	virtual int64_t shaped_text_prev_grapheme_pos(const RID &p_shaped, int64_t p_pos) const override;
-	GDVIRTUAL2RC(Vector2, _shaped_text_get_grapheme_bounds, RID, int64_t);
+	GDVIRTUAL2RC(Hector2, _shaped_text_get_grapheme_bounds, RID, int64_t);
 	GDVIRTUAL2RC(int64_t, _shaped_text_next_grapheme_pos, RID, int64_t);
 	GDVIRTUAL2RC(int64_t, _shaped_text_prev_grapheme_pos, RID, int64_t);
 
@@ -575,8 +575,8 @@ public:
 	GDVIRTUAL2RC(String, _string_to_lower, const String &, const String &);
 	GDVIRTUAL2RC(String, _string_to_title, const String &, const String &);
 
-	TypedArray<Vector3i> parse_structured_text(StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const;
-	GDVIRTUAL3RC(TypedArray<Vector3i>, _parse_structured_text, StructuredTextParser, const Array &, const String &);
+	TypedArray<Hector3i> parse_structured_text(StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const;
+	GDVIRTUAL3RC(TypedArray<Hector3i>, _parse_structured_text, StructuredTextParser, const Array &, const String &);
 
 	virtual int64_t is_confusable(const String &p_string, const PackedStringArray &p_dict) const override;
 	virtual bool spoof_check(const String &p_string) const override;

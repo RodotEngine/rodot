@@ -18,7 +18,7 @@
  * minus all but radix 2/4 case.  In Vorbis we only need this
  * cut-down version.
  *
- * To do more than just power-of-two sized vectors, see the full
+ * To do more than just power-of-two sized Hectors, see the full
  * version I wrote for NetLib.
  *
  * Note that the packing is a little strange; rather than the FFT r/i

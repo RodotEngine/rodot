@@ -46,7 +46,7 @@
 void ConnectionInfoDialog::ok_pressed() {
 }
 
-void ConnectionInfoDialog::popup_connections(const String &p_method, const Vector<Node *> &p_nodes) {
+void ConnectionInfoDialog::popup_connections(const String &p_method, const Hector<Node *> &p_nodes) {
 	method->set_text(p_method);
 
 	tree->clear();
@@ -113,7 +113,7 @@ ConnectionInfoDialog::ConnectionInfoDialog() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Vector<String> ScriptTextEditor::get_functions() {
+Hector<String> ScriptTextEditor::get_functions() {
 	CodeEdit *te = code_editor->get_text_editor();
 	String text = te->get_text();
 	List<String> fnc;
@@ -766,8 +766,8 @@ void ScriptTextEditor::_bookmark_item_pressed(int p_idx) {
 	}
 }
 
-static Vector<Node *> _find_all_node_for_script(Node *p_base, Node *p_current, const Ref<Script> &p_script) {
-	Vector<Node *> nodes;
+static Hector<Node *> _find_all_node_for_script(Node *p_base, Node *p_current, const Ref<Script> &p_script) {
+	Hector<Node *> nodes;
 
 	if (p_current->get_owner() != p_base && p_base != p_current) {
 		return nodes;
@@ -779,7 +779,7 @@ static Vector<Node *> _find_all_node_for_script(Node *p_base, Node *p_current, c
 	}
 
 	for (int i = 0; i < p_current->get_child_count(); i++) {
-		Vector<Node *> found = _find_all_node_for_script(p_base, p_current->get_child(i), p_script);
+		Hector<Node *> found = _find_all_node_for_script(p_base, p_current->get_child(i), p_script);
 		nodes.append_array(found);
 	}
 
@@ -1131,7 +1131,7 @@ void ScriptTextEditor::_update_connected_methods() {
 	}
 
 	// Add connection icons to methods.
-	Vector<Node *> nodes = _find_all_node_for_script(base, base, script);
+	Hector<Node *> nodes = _find_all_node_for_script(base, base, script);
 	HashSet<StringName> methods_found;
 	for (int i = 0; i < nodes.size(); i++) {
 		List<Connection> signal_connections;
@@ -1300,7 +1300,7 @@ void ScriptTextEditor::_gutter_clicked(int p_line, int p_gutter) {
 			return;
 		}
 
-		Vector<Node *> nodes = _find_all_node_for_script(base, base, script);
+		Hector<Node *> nodes = _find_all_node_for_script(base, base, script);
 		connection_info_dialog->popup_connections(method, nodes);
 	} else if (type == "inherits") {
 		String base_class_raw = meta["base_class"];
@@ -1408,7 +1408,7 @@ void ScriptTextEditor::_edit_option(int p_op) {
 			int begin = tx->get_line_count() - 1, end = 0;
 			if (tx->has_selection()) {
 				// Auto indent all lines that have a caret or selection on it.
-				Vector<Point2i> line_ranges = tx->get_line_ranges_from_carets();
+				Hector<Point2i> line_ranges = tx->get_line_ranges_from_carets();
 				for (Point2i line_range : line_ranges) {
 					scr->get_language()->auto_indent_code(text, line_range.x, line_range.y);
 					if (line_range.x < begin) {
@@ -1426,7 +1426,7 @@ void ScriptTextEditor::_edit_option(int p_op) {
 			}
 
 			// Apply auto indented code.
-			Vector<String> lines = text.split("\n");
+			Hector<String> lines = text.split("\n");
 			for (int i = begin; i <= end; ++i) {
 				tx->set_line(i, lines[i]);
 			}
@@ -1464,7 +1464,7 @@ void ScriptTextEditor::_edit_option(int p_op) {
 			Expression expression;
 			tx->begin_complex_operation();
 			for (int caret_idx = 0; caret_idx < tx->get_caret_count(); caret_idx++) {
-				Vector<String> lines = tx->get_selected_text(caret_idx).split("\n");
+				Hector<String> lines = tx->get_selected_text(caret_idx).split("\n");
 				PackedStringArray results;
 
 				for (int i = 0; i < lines.size(); i++) {
@@ -1533,7 +1533,7 @@ void ScriptTextEditor::_edit_option(int p_op) {
 			code_editor->remove_all_bookmarks();
 		} break;
 		case DEBUG_TOGGLE_BREAKPOINT: {
-			Vector<int> sorted_carets = tx->get_sorted_carets();
+			Hector<int> sorted_carets = tx->get_sorted_carets();
 			int last_line = -1;
 			for (const int &c : sorted_carets) {
 				int from = tx->get_selection_from_line(c);
@@ -2171,7 +2171,7 @@ void ScriptTextEditor::_prepare_edit_menu() {
 	popup->set_item_disabled(popup->get_item_index(EDIT_REDO), !tx->has_redo());
 }
 
-void ScriptTextEditor::_make_context_menu(bool p_selection, bool p_color, bool p_foldable, bool p_open_docs, bool p_goto_definition, Vector2 p_pos) {
+void ScriptTextEditor::_make_context_menu(bool p_selection, bool p_color, bool p_foldable, bool p_open_docs, bool p_goto_definition, Hector2 p_pos) {
 	context_menu->clear();
 	context_menu->add_shortcut(ED_GET_SHORTCUT("ui_undo"), EDIT_UNDO);
 	context_menu->add_shortcut(ED_GET_SHORTCUT("ui_redo"), EDIT_REDO);

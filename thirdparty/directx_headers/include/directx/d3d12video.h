@@ -115,11 +115,11 @@ typedef interface ID3D12VideoMotionEstimator ID3D12VideoMotionEstimator;
 #endif 	/* __ID3D12VideoMotionEstimator_FWD_DEFINED__ */
 
 
-#ifndef __ID3D12VideoMotionVectorHeap_FWD_DEFINED__
-#define __ID3D12VideoMotionVectorHeap_FWD_DEFINED__
-typedef interface ID3D12VideoMotionVectorHeap ID3D12VideoMotionVectorHeap;
+#ifndef __ID3D12VideoMotionHectorHeap_FWD_DEFINED__
+#define __ID3D12VideoMotionHectorHeap_FWD_DEFINED__
+typedef interface ID3D12VideoMotionHectorHeap ID3D12VideoMotionHectorHeap;
 
-#endif 	/* __ID3D12VideoMotionVectorHeap_FWD_DEFINED__ */
+#endif 	/* __ID3D12VideoMotionHectorHeap_FWD_DEFINED__ */
 
 
 #ifndef __ID3D12VideoDevice1_FWD_DEFINED__
@@ -2765,19 +2765,19 @@ enum D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAGS
 
 DEFINE_ENUM_FLAG_OPERATORS( D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAGS );
 typedef 
-enum D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION
+enum D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION
     {
-        D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_QUARTER_PEL	= 0
-    } 	D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION;
+        D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_QUARTER_PEL	= 0
+    } 	D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION;
 
 typedef 
-enum D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS
+enum D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_FLAGS
     {
-        D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAG_NONE	= 0,
-        D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAG_QUARTER_PEL	= ( 1 << D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_QUARTER_PEL ) 
-    } 	D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS;
+        D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_FLAG_NONE	= 0,
+        D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_FLAG_QUARTER_PEL	= ( 1 << D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_QUARTER_PEL ) 
+    } 	D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_FLAGS;
 
-DEFINE_ENUM_FLAG_OPERATORS( D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS );
+DEFINE_ENUM_FLAG_OPERATORS( D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_FLAGS );
 typedef struct D3D12_FEATURE_DATA_VIDEO_FEATURE_AREA_SUPPORT
     {
     UINT NodeIndex;
@@ -2791,7 +2791,7 @@ typedef struct D3D12_FEATURE_DATA_VIDEO_MOTION_ESTIMATOR
     UINT NodeIndex;
     DXGI_FORMAT InputFormat;
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAGS BlockSizeFlags;
-    D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS PrecisionFlags;
+    D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION_FLAGS PrecisionFlags;
     D3D12_VIDEO_SIZE_RANGE SizeRange;
     } 	D3D12_FEATURE_DATA_VIDEO_MOTION_ESTIMATOR;
 
@@ -2800,11 +2800,11 @@ typedef struct D3D12_FEATURE_DATA_VIDEO_MOTION_ESTIMATOR_SIZE
     UINT NodeIndex;
     DXGI_FORMAT InputFormat;
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE BlockSize;
-    D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION Precision;
+    D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION Precision;
     D3D12_VIDEO_SIZE_RANGE SizeRange;
     BOOL Protected;
-    UINT64 MotionVectorHeapMemoryPoolL0Size;
-    UINT64 MotionVectorHeapMemoryPoolL1Size;
+    UINT64 MotionHectorHeapMemoryPoolL0Size;
+    UINT64 MotionHectorHeapMemoryPoolL1Size;
     UINT64 MotionEstimatorMemoryPoolL0Size;
     UINT64 MotionEstimatorMemoryPoolL1Size;
     } 	D3D12_FEATURE_DATA_VIDEO_MOTION_ESTIMATOR_SIZE;
@@ -2814,7 +2814,7 @@ typedef struct D3D12_VIDEO_MOTION_ESTIMATOR_DESC
     UINT NodeMask;
     DXGI_FORMAT InputFormat;
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE BlockSize;
-    D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION Precision;
+    D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION Precision;
     D3D12_VIDEO_SIZE_RANGE SizeRange;
     } 	D3D12_VIDEO_MOTION_ESTIMATOR_DESC;
 
@@ -2987,40 +2987,40 @@ EXTERN_C const IID IID_ID3D12VideoMotionEstimator;
 /* interface __MIDL_itf_d3d12video_0000_0009 */
 /* [local] */ 
 
-typedef struct D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC
+typedef struct D3D12_VIDEO_MOTION_Hector_HEAP_DESC
     {
     UINT NodeMask;
     DXGI_FORMAT InputFormat;
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE BlockSize;
-    D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION Precision;
+    D3D12_VIDEO_MOTION_ESTIMATOR_Hector_PRECISION Precision;
     D3D12_VIDEO_SIZE_RANGE SizeRange;
-    } 	D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC;
+    } 	D3D12_VIDEO_MOTION_Hector_HEAP_DESC;
 
 
 
 extern RPC_IF_HANDLE __MIDL_itf_d3d12video_0000_0009_v0_0_c_ifspec;
 extern RPC_IF_HANDLE __MIDL_itf_d3d12video_0000_0009_v0_0_s_ifspec;
 
-#ifndef __ID3D12VideoMotionVectorHeap_INTERFACE_DEFINED__
-#define __ID3D12VideoMotionVectorHeap_INTERFACE_DEFINED__
+#ifndef __ID3D12VideoMotionHectorHeap_INTERFACE_DEFINED__
+#define __ID3D12VideoMotionHectorHeap_INTERFACE_DEFINED__
 
-/* interface ID3D12VideoMotionVectorHeap */
+/* interface ID3D12VideoMotionHectorHeap */
 /* [unique][local][object][uuid] */ 
 
 
-EXTERN_C const IID IID_ID3D12VideoMotionVectorHeap;
+EXTERN_C const IID IID_ID3D12VideoMotionHectorHeap;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("5BE17987-743A-4061-834B-23D22DAEA505")
-    ID3D12VideoMotionVectorHeap : public ID3D12Pageable
+    ID3D12VideoMotionHectorHeap : public ID3D12Pageable
     {
     public:
 #if defined(_MSC_VER) || !defined(_WIN32)
-        virtual D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC STDMETHODCALLTYPE GetDesc( void) = 0;
+        virtual D3D12_VIDEO_MOTION_Hector_HEAP_DESC STDMETHODCALLTYPE GetDesc( void) = 0;
 #else
-        virtual D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC *STDMETHODCALLTYPE GetDesc( 
-            D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC * RetVal) = 0;
+        virtual D3D12_VIDEO_MOTION_Hector_HEAP_DESC *STDMETHODCALLTYPE GetDesc( 
+            D3D12_VIDEO_MOTION_Hector_HEAP_DESC * RetVal) = 0;
 #endif
         
         virtual HRESULT STDMETHODCALLTYPE GetProtectedResourceSession( 
@@ -3032,79 +3032,79 @@ EXTERN_C const IID IID_ID3D12VideoMotionVectorHeap;
     
 #else 	/* C style interface */
 
-    typedef struct ID3D12VideoMotionVectorHeapVtbl
+    typedef struct ID3D12VideoMotionHectorHeapVtbl
     {
         BEGIN_INTERFACE
         
         DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             REFIID riid,
             _COM_Outptr_  void **ppvObject);
         
         DECLSPEC_XFGVIRT(IUnknown, AddRef)
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            ID3D12VideoMotionVectorHeap * This);
+            ID3D12VideoMotionHectorHeap * This);
         
         DECLSPEC_XFGVIRT(IUnknown, Release)
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            ID3D12VideoMotionVectorHeap * This);
+            ID3D12VideoMotionHectorHeap * This);
         
         DECLSPEC_XFGVIRT(ID3D12Object, GetPrivateData)
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             _In_  REFGUID guid,
             _Inout_  UINT *pDataSize,
             _Out_writes_bytes_opt_( *pDataSize )  void *pData);
         
         DECLSPEC_XFGVIRT(ID3D12Object, SetPrivateData)
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             _In_  REFGUID guid,
             _In_  UINT DataSize,
             _In_reads_bytes_opt_( DataSize )  const void *pData);
         
         DECLSPEC_XFGVIRT(ID3D12Object, SetPrivateDataInterface)
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             _In_  REFGUID guid,
             _In_opt_  const IUnknown *pData);
         
         DECLSPEC_XFGVIRT(ID3D12Object, SetName)
         HRESULT ( STDMETHODCALLTYPE *SetName )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             _In_z_  LPCWSTR Name);
         
         DECLSPEC_XFGVIRT(ID3D12DeviceChild, GetDevice)
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             REFIID riid,
             _COM_Outptr_opt_  void **ppvDevice);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoMotionVectorHeap, GetDesc)
+        DECLSPEC_XFGVIRT(ID3D12VideoMotionHectorHeap, GetDesc)
 #if !defined(_WIN32)
-        D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC ( STDMETHODCALLTYPE *GetDesc )( 
-            ID3D12VideoMotionVectorHeap * This);
+        D3D12_VIDEO_MOTION_Hector_HEAP_DESC ( STDMETHODCALLTYPE *GetDesc )( 
+            ID3D12VideoMotionHectorHeap * This);
         
 #else
-        D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC *( STDMETHODCALLTYPE *GetDesc )( 
-            ID3D12VideoMotionVectorHeap * This,
-            D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC * RetVal);
+        D3D12_VIDEO_MOTION_Hector_HEAP_DESC *( STDMETHODCALLTYPE *GetDesc )( 
+            ID3D12VideoMotionHectorHeap * This,
+            D3D12_VIDEO_MOTION_Hector_HEAP_DESC * RetVal);
         
 #endif
         
-        DECLSPEC_XFGVIRT(ID3D12VideoMotionVectorHeap, GetProtectedResourceSession)
+        DECLSPEC_XFGVIRT(ID3D12VideoMotionHectorHeap, GetProtectedResourceSession)
         HRESULT ( STDMETHODCALLTYPE *GetProtectedResourceSession )( 
-            ID3D12VideoMotionVectorHeap * This,
+            ID3D12VideoMotionHectorHeap * This,
             REFIID riid,
             _COM_Outptr_opt_  void **ppProtectedSession);
         
         END_INTERFACE
-    } ID3D12VideoMotionVectorHeapVtbl;
+    } ID3D12VideoMotionHectorHeapVtbl;
 
-    interface ID3D12VideoMotionVectorHeap
+    interface ID3D12VideoMotionHectorHeap
     {
-        CONST_VTBL struct ID3D12VideoMotionVectorHeapVtbl *lpVtbl;
+        CONST_VTBL struct ID3D12VideoMotionHectorHeapVtbl *lpVtbl;
     };
 
     
@@ -3112,43 +3112,43 @@ EXTERN_C const IID IID_ID3D12VideoMotionVectorHeap;
 #ifdef COBJMACROS
 
 
-#define ID3D12VideoMotionVectorHeap_QueryInterface(This,riid,ppvObject)	\
+#define ID3D12VideoMotionHectorHeap_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define ID3D12VideoMotionVectorHeap_AddRef(This)	\
+#define ID3D12VideoMotionHectorHeap_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define ID3D12VideoMotionVectorHeap_Release(This)	\
+#define ID3D12VideoMotionHectorHeap_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define ID3D12VideoMotionVectorHeap_GetPrivateData(This,guid,pDataSize,pData)	\
+#define ID3D12VideoMotionHectorHeap_GetPrivateData(This,guid,pDataSize,pData)	\
     ( (This)->lpVtbl -> GetPrivateData(This,guid,pDataSize,pData) ) 
 
-#define ID3D12VideoMotionVectorHeap_SetPrivateData(This,guid,DataSize,pData)	\
+#define ID3D12VideoMotionHectorHeap_SetPrivateData(This,guid,DataSize,pData)	\
     ( (This)->lpVtbl -> SetPrivateData(This,guid,DataSize,pData) ) 
 
-#define ID3D12VideoMotionVectorHeap_SetPrivateDataInterface(This,guid,pData)	\
+#define ID3D12VideoMotionHectorHeap_SetPrivateDataInterface(This,guid,pData)	\
     ( (This)->lpVtbl -> SetPrivateDataInterface(This,guid,pData) ) 
 
-#define ID3D12VideoMotionVectorHeap_SetName(This,Name)	\
+#define ID3D12VideoMotionHectorHeap_SetName(This,Name)	\
     ( (This)->lpVtbl -> SetName(This,Name) ) 
 
 
-#define ID3D12VideoMotionVectorHeap_GetDevice(This,riid,ppvDevice)	\
+#define ID3D12VideoMotionHectorHeap_GetDevice(This,riid,ppvDevice)	\
     ( (This)->lpVtbl -> GetDevice(This,riid,ppvDevice) ) 
 
 
 #if !defined(_WIN32)
 
-#define ID3D12VideoMotionVectorHeap_GetDesc(This)	\
+#define ID3D12VideoMotionHectorHeap_GetDesc(This)	\
     ( (This)->lpVtbl -> GetDesc(This) ) 
 #else
-#define ID3D12VideoMotionVectorHeap_GetDesc(This,RetVal)	\
+#define ID3D12VideoMotionHectorHeap_GetDesc(This,RetVal)	\
     ( (This)->lpVtbl -> GetDesc(This,RetVal) ) 
 #endif
 
-#define ID3D12VideoMotionVectorHeap_GetProtectedResourceSession(This,riid,ppProtectedSession)	\
+#define ID3D12VideoMotionHectorHeap_GetProtectedResourceSession(This,riid,ppProtectedSession)	\
     ( (This)->lpVtbl -> GetProtectedResourceSession(This,riid,ppProtectedSession) ) 
 
 #endif /* COBJMACROS */
@@ -3159,7 +3159,7 @@ EXTERN_C const IID IID_ID3D12VideoMotionVectorHeap;
 
 
 
-#endif 	/* __ID3D12VideoMotionVectorHeap_INTERFACE_DEFINED__ */
+#endif 	/* __ID3D12VideoMotionHectorHeap_INTERFACE_DEFINED__ */
 
 
 #ifndef __ID3D12VideoDevice1_INTERFACE_DEFINED__
@@ -3183,11 +3183,11 @@ EXTERN_C const IID IID_ID3D12VideoDevice1;
             _In_  REFIID riid,
             _COM_Outptr_  void **ppVideoMotionEstimator) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE CreateVideoMotionVectorHeap( 
-            _In_  const D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC *pDesc,
+        virtual HRESULT STDMETHODCALLTYPE CreateVideoMotionHectorHeap( 
+            _In_  const D3D12_VIDEO_MOTION_Hector_HEAP_DESC *pDesc,
             _In_opt_  ID3D12ProtectedResourceSession *pProtectedResourceSession,
             _In_  REFIID riid,
-            _COM_Outptr_  void **ppVideoMotionVectorHeap) = 0;
+            _COM_Outptr_  void **ppVideoMotionHectorHeap) = 0;
         
     };
     
@@ -3251,13 +3251,13 @@ EXTERN_C const IID IID_ID3D12VideoDevice1;
             _In_  REFIID riid,
             _COM_Outptr_  void **ppVideoMotionEstimator);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoDevice1, CreateVideoMotionVectorHeap)
-        HRESULT ( STDMETHODCALLTYPE *CreateVideoMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoDevice1, CreateVideoMotionHectorHeap)
+        HRESULT ( STDMETHODCALLTYPE *CreateVideoMotionHectorHeap )( 
             ID3D12VideoDevice1 * This,
-            _In_  const D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC *pDesc,
+            _In_  const D3D12_VIDEO_MOTION_Hector_HEAP_DESC *pDesc,
             _In_opt_  ID3D12ProtectedResourceSession *pProtectedResourceSession,
             _In_  REFIID riid,
-            _COM_Outptr_  void **ppVideoMotionVectorHeap);
+            _COM_Outptr_  void **ppVideoMotionHectorHeap);
         
         END_INTERFACE
     } ID3D12VideoDevice1Vtbl;
@@ -3298,8 +3298,8 @@ EXTERN_C const IID IID_ID3D12VideoDevice1;
 #define ID3D12VideoDevice1_CreateVideoMotionEstimator(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionEstimator)	\
     ( (This)->lpVtbl -> CreateVideoMotionEstimator(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionEstimator) ) 
 
-#define ID3D12VideoDevice1_CreateVideoMotionVectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionVectorHeap)	\
-    ( (This)->lpVtbl -> CreateVideoMotionVectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionVectorHeap) ) 
+#define ID3D12VideoDevice1_CreateVideoMotionHectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionHectorHeap)	\
+    ( (This)->lpVtbl -> CreateVideoMotionHectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionHectorHeap) ) 
 
 #endif /* COBJMACROS */
 
@@ -3325,7 +3325,7 @@ typedef struct D3D12_RESOURCE_COORDINATE
 
 typedef struct D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT
     {
-    ID3D12VideoMotionVectorHeap *pMotionVectorHeap;
+    ID3D12VideoMotionHectorHeap *pMotionHectorHeap;
     } 	D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT;
 
 typedef struct D3D12_VIDEO_MOTION_ESTIMATOR_INPUT
@@ -3334,21 +3334,21 @@ typedef struct D3D12_VIDEO_MOTION_ESTIMATOR_INPUT
     UINT InputSubresourceIndex;
     ID3D12Resource *pReferenceTexture2D;
     UINT ReferenceSubresourceIndex;
-    ID3D12VideoMotionVectorHeap *pHintMotionVectorHeap;
+    ID3D12VideoMotionHectorHeap *pHintMotionHectorHeap;
     } 	D3D12_VIDEO_MOTION_ESTIMATOR_INPUT;
 
-typedef struct D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT
+typedef struct D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT
     {
-    ID3D12Resource *pMotionVectorTexture2D;
-    D3D12_RESOURCE_COORDINATE MotionVectorCoordinate;
-    } 	D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT;
+    ID3D12Resource *pMotionHectorTexture2D;
+    D3D12_RESOURCE_COORDINATE MotionHectorCoordinate;
+    } 	D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT;
 
-typedef struct D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT
+typedef struct D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT
     {
-    ID3D12VideoMotionVectorHeap *pMotionVectorHeap;
+    ID3D12VideoMotionHectorHeap *pMotionHectorHeap;
     UINT PixelWidth;
     UINT PixelHeight;
-    } 	D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT;
+    } 	D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT;
 
 
 
@@ -3425,9 +3425,9 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList;
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT *pOutputArguments,
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_INPUT *pInputArguments) = 0;
         
-        virtual void STDMETHODCALLTYPE ResolveMotionVectorHeap( 
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT *pOutputArguments,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT *pInputArguments) = 0;
+        virtual void STDMETHODCALLTYPE ResolveMotionHectorHeap( 
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT *pOutputArguments,
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT *pInputArguments) = 0;
         
         virtual void STDMETHODCALLTYPE WriteBufferImmediate( 
             UINT Count,
@@ -3576,11 +3576,11 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList;
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT *pOutputArguments,
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_INPUT *pInputArguments);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionVectorHeap)
-        void ( STDMETHODCALLTYPE *ResolveMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionHectorHeap)
+        void ( STDMETHODCALLTYPE *ResolveMotionHectorHeap )( 
             ID3D12VideoEncodeCommandList * This,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT *pOutputArguments,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT *pInputArguments);
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT *pOutputArguments,
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT *pInputArguments);
         
         DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, WriteBufferImmediate)
         void ( STDMETHODCALLTYPE *WriteBufferImmediate )( 
@@ -3677,8 +3677,8 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList;
 #define ID3D12VideoEncodeCommandList_EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments)	\
     ( (This)->lpVtbl -> EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments) ) 
 
-#define ID3D12VideoEncodeCommandList_ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments)	\
-    ( (This)->lpVtbl -> ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments) ) 
+#define ID3D12VideoEncodeCommandList_ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments)	\
+    ( (This)->lpVtbl -> ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments) ) 
 
 #define ID3D12VideoEncodeCommandList_WriteBufferImmediate(This,Count,pParams,pModes)	\
     ( (This)->lpVtbl -> WriteBufferImmediate(This,Count,pParams,pModes) ) 
@@ -4619,13 +4619,13 @@ EXTERN_C const IID IID_ID3D12VideoDevice2;
             _In_  REFIID riid,
             _COM_Outptr_  void **ppVideoMotionEstimator);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoDevice1, CreateVideoMotionVectorHeap)
-        HRESULT ( STDMETHODCALLTYPE *CreateVideoMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoDevice1, CreateVideoMotionHectorHeap)
+        HRESULT ( STDMETHODCALLTYPE *CreateVideoMotionHectorHeap )( 
             ID3D12VideoDevice2 * This,
-            _In_  const D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC *pDesc,
+            _In_  const D3D12_VIDEO_MOTION_Hector_HEAP_DESC *pDesc,
             _In_opt_  ID3D12ProtectedResourceSession *pProtectedResourceSession,
             _In_  REFIID riid,
-            _COM_Outptr_  void **ppVideoMotionVectorHeap);
+            _COM_Outptr_  void **ppVideoMotionHectorHeap);
         
         DECLSPEC_XFGVIRT(ID3D12VideoDevice2, CreateVideoDecoder1)
         HRESULT ( STDMETHODCALLTYPE *CreateVideoDecoder1 )( 
@@ -4712,8 +4712,8 @@ EXTERN_C const IID IID_ID3D12VideoDevice2;
 #define ID3D12VideoDevice2_CreateVideoMotionEstimator(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionEstimator)	\
     ( (This)->lpVtbl -> CreateVideoMotionEstimator(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionEstimator) ) 
 
-#define ID3D12VideoDevice2_CreateVideoMotionVectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionVectorHeap)	\
-    ( (This)->lpVtbl -> CreateVideoMotionVectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionVectorHeap) ) 
+#define ID3D12VideoDevice2_CreateVideoMotionHectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionHectorHeap)	\
+    ( (This)->lpVtbl -> CreateVideoMotionHectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionHectorHeap) ) 
 
 
 #define ID3D12VideoDevice2_CreateVideoDecoder1(This,pDesc,pProtectedResourceSession,riid,ppVideoDecoder)	\
@@ -6156,11 +6156,11 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList1;
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT *pOutputArguments,
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_INPUT *pInputArguments);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionVectorHeap)
-        void ( STDMETHODCALLTYPE *ResolveMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionHectorHeap)
+        void ( STDMETHODCALLTYPE *ResolveMotionHectorHeap )( 
             ID3D12VideoEncodeCommandList1 * This,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT *pOutputArguments,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT *pInputArguments);
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT *pOutputArguments,
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT *pInputArguments);
         
         DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, WriteBufferImmediate)
         void ( STDMETHODCALLTYPE *WriteBufferImmediate )( 
@@ -6271,8 +6271,8 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList1;
 #define ID3D12VideoEncodeCommandList1_EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments)	\
     ( (This)->lpVtbl -> EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments) ) 
 
-#define ID3D12VideoEncodeCommandList1_ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments)	\
-    ( (This)->lpVtbl -> ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments) ) 
+#define ID3D12VideoEncodeCommandList1_ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments)	\
+    ( (This)->lpVtbl -> ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments) ) 
 
 #define ID3D12VideoEncodeCommandList1_WriteBufferImmediate(This,Count,pParams,pModes)	\
     ( (This)->lpVtbl -> WriteBufferImmediate(This,Count,pParams,pModes) ) 
@@ -6393,13 +6393,13 @@ enum D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAGS
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_WARPED_MOTION	= 0x20,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_DUAL_FILTER	= 0x40,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_JNT_COMP	= 0x80,
-        D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FORCED_INTEGER_MOTION_VECTORS	= 0x100,
+        D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FORCED_INTEGER_MOTION_HectorS	= 0x100,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_SUPER_RESOLUTION	= 0x200,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_LOOP_RESTORATION_FILTER	= 0x400,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_PALETTE_ENCODING	= 0x800,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_CDEF_FILTERING	= 0x1000,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_INTRA_BLOCK_COPY	= 0x2000,
-        D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FRAME_REFERENCE_MOTION_VECTORS	= 0x4000,
+        D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FRAME_REFERENCE_MOTION_HectorS	= 0x4000,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_ORDER_HINT_TOOLS	= 0x8000,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_AUTO_SEGMENTATION	= 0x10000,
         D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_CUSTOM_SEGMENTATION	= 0x20000,
@@ -6647,8 +6647,8 @@ enum D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAGS
         D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_DISABLE_CDF_UPDATE	= 0x2,
         D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_PALETTE_ENCODING	= 0x4,
         D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_SKIP_MODE	= 0x8,
-        D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_FRAME_REFERENCE_MOTION_VECTORS	= 0x10,
-        D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_FORCE_INTEGER_MOTION_VECTORS	= 0x20,
+        D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_FRAME_REFERENCE_MOTION_HectorS	= 0x10,
+        D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_FORCE_INTEGER_MOTION_HectorS	= 0x20,
         D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ALLOW_INTRA_BLOCK_COPY	= 0x40,
         D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_USE_SUPER_RESOLUTION	= 0x80,
         D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_DISABLE_FRAME_END_UPDATE_CDF	= 0x100,
@@ -8083,13 +8083,13 @@ EXTERN_C const IID IID_ID3D12VideoDevice3;
             _In_  REFIID riid,
             _COM_Outptr_  void **ppVideoMotionEstimator);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoDevice1, CreateVideoMotionVectorHeap)
-        HRESULT ( STDMETHODCALLTYPE *CreateVideoMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoDevice1, CreateVideoMotionHectorHeap)
+        HRESULT ( STDMETHODCALLTYPE *CreateVideoMotionHectorHeap )( 
             ID3D12VideoDevice3 * This,
-            _In_  const D3D12_VIDEO_MOTION_VECTOR_HEAP_DESC *pDesc,
+            _In_  const D3D12_VIDEO_MOTION_Hector_HEAP_DESC *pDesc,
             _In_opt_  ID3D12ProtectedResourceSession *pProtectedResourceSession,
             _In_  REFIID riid,
-            _COM_Outptr_  void **ppVideoMotionVectorHeap);
+            _COM_Outptr_  void **ppVideoMotionHectorHeap);
         
         DECLSPEC_XFGVIRT(ID3D12VideoDevice2, CreateVideoDecoder1)
         HRESULT ( STDMETHODCALLTYPE *CreateVideoDecoder1 )( 
@@ -8190,8 +8190,8 @@ EXTERN_C const IID IID_ID3D12VideoDevice3;
 #define ID3D12VideoDevice3_CreateVideoMotionEstimator(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionEstimator)	\
     ( (This)->lpVtbl -> CreateVideoMotionEstimator(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionEstimator) ) 
 
-#define ID3D12VideoDevice3_CreateVideoMotionVectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionVectorHeap)	\
-    ( (This)->lpVtbl -> CreateVideoMotionVectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionVectorHeap) ) 
+#define ID3D12VideoDevice3_CreateVideoMotionHectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionHectorHeap)	\
+    ( (This)->lpVtbl -> CreateVideoMotionHectorHeap(This,pDesc,pProtectedResourceSession,riid,ppVideoMotionHectorHeap) ) 
 
 
 #define ID3D12VideoDevice3_CreateVideoDecoder1(This,pDesc,pProtectedResourceSession,riid,ppVideoDecoder)	\
@@ -8657,11 +8657,11 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList2;
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT *pOutputArguments,
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_INPUT *pInputArguments);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionVectorHeap)
-        void ( STDMETHODCALLTYPE *ResolveMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionHectorHeap)
+        void ( STDMETHODCALLTYPE *ResolveMotionHectorHeap )( 
             ID3D12VideoEncodeCommandList2 * This,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT *pOutputArguments,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT *pInputArguments);
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT *pOutputArguments,
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT *pInputArguments);
         
         DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, WriteBufferImmediate)
         void ( STDMETHODCALLTYPE *WriteBufferImmediate )( 
@@ -8786,8 +8786,8 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList2;
 #define ID3D12VideoEncodeCommandList2_EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments)	\
     ( (This)->lpVtbl -> EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments) ) 
 
-#define ID3D12VideoEncodeCommandList2_ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments)	\
-    ( (This)->lpVtbl -> ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments) ) 
+#define ID3D12VideoEncodeCommandList2_ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments)	\
+    ( (This)->lpVtbl -> ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments) ) 
 
 #define ID3D12VideoEncodeCommandList2_WriteBufferImmediate(This,Count,pParams,pModes)	\
     ( (This)->lpVtbl -> WriteBufferImmediate(This,Count,pParams,pModes) ) 
@@ -8978,11 +8978,11 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList3;
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT *pOutputArguments,
             _In_  const D3D12_VIDEO_MOTION_ESTIMATOR_INPUT *pInputArguments);
         
-        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionVectorHeap)
-        void ( STDMETHODCALLTYPE *ResolveMotionVectorHeap )( 
+        DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, ResolveMotionHectorHeap)
+        void ( STDMETHODCALLTYPE *ResolveMotionHectorHeap )( 
             ID3D12VideoEncodeCommandList3 * This,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT *pOutputArguments,
-            const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT *pInputArguments);
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_OUTPUT *pOutputArguments,
+            const D3D12_RESOLVE_VIDEO_MOTION_Hector_HEAP_INPUT *pInputArguments);
         
         DECLSPEC_XFGVIRT(ID3D12VideoEncodeCommandList, WriteBufferImmediate)
         void ( STDMETHODCALLTYPE *WriteBufferImmediate )( 
@@ -9113,8 +9113,8 @@ EXTERN_C const IID IID_ID3D12VideoEncodeCommandList3;
 #define ID3D12VideoEncodeCommandList3_EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments)	\
     ( (This)->lpVtbl -> EstimateMotion(This,pMotionEstimator,pOutputArguments,pInputArguments) ) 
 
-#define ID3D12VideoEncodeCommandList3_ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments)	\
-    ( (This)->lpVtbl -> ResolveMotionVectorHeap(This,pOutputArguments,pInputArguments) ) 
+#define ID3D12VideoEncodeCommandList3_ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments)	\
+    ( (This)->lpVtbl -> ResolveMotionHectorHeap(This,pOutputArguments,pInputArguments) ) 
 
 #define ID3D12VideoEncodeCommandList3_WriteBufferImmediate(This,Count,pParams,pModes)	\
     ( (This)->lpVtbl -> WriteBufferImmediate(This,Count,pParams,pModes) ) 
@@ -9165,7 +9165,7 @@ DEFINE_GUID(IID_ID3D12VideoProcessCommandList,0xAEB2543A,0x167F,0x4682,0xAC,0xC8
 DEFINE_GUID(IID_ID3D12VideoDecodeCommandList1,0xD52F011B,0xB56E,0x453C,0xA0,0x5A,0xA7,0xF3,0x11,0xC8,0xF4,0x72);
 DEFINE_GUID(IID_ID3D12VideoProcessCommandList1,0x542C5C4D,0x7596,0x434F,0x8C,0x93,0x4E,0xFA,0x67,0x66,0xF2,0x67);
 DEFINE_GUID(IID_ID3D12VideoMotionEstimator,0x33FDAE0E,0x098B,0x428F,0x87,0xBB,0x34,0xB6,0x95,0xDE,0x08,0xF8);
-DEFINE_GUID(IID_ID3D12VideoMotionVectorHeap,0x5BE17987,0x743A,0x4061,0x83,0x4B,0x23,0xD2,0x2D,0xAE,0xA5,0x05);
+DEFINE_GUID(IID_ID3D12VideoMotionHectorHeap,0x5BE17987,0x743A,0x4061,0x83,0x4B,0x23,0xD2,0x2D,0xAE,0xA5,0x05);
 DEFINE_GUID(IID_ID3D12VideoDevice1,0x981611AD,0xA144,0x4C83,0x98,0x90,0xF3,0x0E,0x26,0xD6,0x58,0xAB);
 DEFINE_GUID(IID_ID3D12VideoEncodeCommandList,0x8455293A,0x0CBD,0x4831,0x9B,0x39,0xFB,0xDB,0xAB,0x72,0x47,0x23);
 DEFINE_GUID(IID_ID3D12VideoDecoder1,0x79A2E5FB,0xCCD2,0x469A,0x9F,0xDE,0x19,0x5D,0x10,0x95,0x1F,0x7E);

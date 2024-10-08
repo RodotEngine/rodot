@@ -34,31 +34,31 @@
 #include "core/math/aabb.h"
 #include "core/math/plane.h"
 #include "core/math/transform_3d.h"
-#include "core/math/vector2.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector2.h"
+#include "core/math/Hector3.h"
 #include "core/object/ref_counted.h"
 #include "core/templates/list.h"
 #include "core/templates/oa_hash_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "scene/resources/material.h"
 
 struct CSGBrush {
 	struct Face {
-		Vector3 vertices[3];
-		Vector2 uvs[3];
+		Hector3 vertices[3];
+		Hector2 uvs[3];
 		AABB aabb;
 		bool smooth = false;
 		bool invert = false;
 		int material = 0;
 	};
 
-	Vector<Face> faces;
-	Vector<Ref<Material>> materials;
+	Hector<Face> faces;
+	Hector<Ref<Material>> materials;
 
 	inline void _regen_face_aabbs();
 
 	// Create a brush from faces.
-	void build_from_faces(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uvs, const Vector<bool> &p_smooth, const Vector<Ref<Material>> &p_materials, const Vector<bool> &p_invert_faces);
+	void build_from_faces(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uvs, const Hector<bool> &p_smooth, const Hector<Ref<Material>> &p_materials, const Hector<bool> &p_invert_faces);
 	void copy_from(const CSGBrush &p_brush, const Transform3D &p_xform);
 };
 
@@ -76,7 +76,7 @@ struct CSGBrushOperation {
 			bool from_b = false;
 			bool inside = false;
 			int points[3] = {};
-			Vector2 uvs[3];
+			Hector2 uvs[3];
 			bool smooth = false;
 			bool invert = false;
 			int material_idx = 0;
@@ -87,7 +87,7 @@ struct CSGBrushOperation {
 			int left = 0;
 			int right = 0;
 			int next = 0;
-			Vector3 center;
+			Hector3 center;
 			AABB aabb;
 		};
 
@@ -147,10 +147,10 @@ struct CSGBrushOperation {
 			real_t distance_squared;
 		};
 
-		Vector<Vector3> points;
-		Vector<Face> faces;
+		Hector<Hector3> points;
+		Hector<Face> faces;
 		HashMap<Ref<Material>, int> materials;
-		HashMap<Vector3, int> vertex_map;
+		HashMap<Hector3, int> vertex_map;
 		OAHashMap<VertexKey, int, VertexKeyHash> snap_cache;
 		float vertex_snap = 0.0;
 
@@ -158,33 +158,33 @@ struct CSGBrushOperation {
 		inline bool _bvh_inside(FaceBVH *r_facebvhptr, int p_max_depth, int p_bvh_first, int p_face_idx) const;
 		inline int _create_bvh(FaceBVH *r_facebvhptr, FaceBVH **r_facebvhptrptr, int p_from, int p_size, int p_depth, int &r_max_depth, int &r_max_alloc);
 
-		void add_face(const Vector3 p_points[3], const Vector2 p_uvs[3], bool p_smooth, bool p_invert, const Ref<Material> &p_material, bool p_from_b);
+		void add_face(const Hector3 p_points[3], const Hector2 p_uvs[3], bool p_smooth, bool p_invert, const Ref<Material> &p_material, bool p_from_b);
 		void mark_inside_faces();
 	};
 
 	struct Build2DFaces {
 		struct Vertex2D {
-			Vector2 point;
-			Vector2 uv;
+			Hector2 point;
+			Hector2 uv;
 		};
 
 		struct Face2D {
 			int vertex_idx[3] = {};
 		};
 
-		Vector<Vertex2D> vertices;
-		Vector<Face2D> faces;
+		Hector<Vertex2D> vertices;
+		Hector<Face2D> faces;
 		Plane plane;
 		Transform3D to_2D;
 		Transform3D to_3D;
 		float vertex_snap2 = 0.0;
 
-		inline int _get_point_idx(const Vector2 &p_point);
+		inline int _get_point_idx(const Hector2 &p_point);
 		inline int _add_vertex(const Vertex2D &p_vertex);
-		inline void _add_vertex_idx_sorted(Vector<int> &r_vertex_indices, int p_new_vertex_index);
-		inline void _merge_faces(const Vector<int> &p_segment_indices);
-		inline void _find_edge_intersections(const Vector2 p_segment_points[2], Vector<int> &r_segment_indices);
-		inline int _insert_point(const Vector2 &p_point);
+		inline void _add_vertex_idx_sorted(Hector<int> &r_vertex_indices, int p_new_vertex_index);
+		inline void _merge_faces(const Hector<int> &p_segment_indices);
+		inline void _find_edge_intersections(const Hector2 p_segment_points[2], Hector<int> &r_segment_indices);
+		inline int _insert_point(const Hector2 &p_point);
 
 		void insert(const CSGBrush &p_brush, int p_brush_face);
 		void addFacesToMesh(MeshMerge &r_mesh_merge, bool p_smooth, bool p_invert, const Ref<Material> &p_material, bool p_from_b);

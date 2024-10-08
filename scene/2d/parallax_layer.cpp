@@ -37,7 +37,7 @@ void ParallaxLayer::set_motion_scale(const Size2 &p_scale) {
 
 	ParallaxBackground *pb = Object::cast_to<ParallaxBackground>(get_parent());
 	if (pb && is_inside_tree()) {
-		Vector2 final_ofs = pb->get_final_offset();
+		Hector2 final_ofs = pb->get_final_offset();
 		real_t scroll_scale = pb->get_scroll_scale();
 		set_base_offset_and_scale(final_ofs, scroll_scale);
 	}
@@ -52,7 +52,7 @@ void ParallaxLayer::set_motion_offset(const Size2 &p_offset) {
 
 	ParallaxBackground *pb = Object::cast_to<ParallaxBackground>(get_parent());
 	if (pb && is_inside_tree()) {
-		Vector2 final_ofs = pb->get_final_offset();
+		Hector2 final_ofs = pb->get_final_offset();
 		real_t scroll_scale = pb->get_scroll_scale();
 		set_base_offset_and_scale(final_ofs, scroll_scale);
 	}
@@ -127,7 +127,7 @@ void ParallaxLayer::set_base_offset_and_scale(const Point2 &p_offset, real_t p_s
 	}
 
 	set_position(new_ofs);
-	set_scale(Vector2(1, 1) * p_scale * orig_scale);
+	set_scale(Hector2(1, 1) * p_scale * orig_scale);
 
 	_update_mirroring();
 }
@@ -151,9 +151,9 @@ void ParallaxLayer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_mirroring"), &ParallaxLayer::get_mirroring);
 
 	ADD_GROUP("Motion", "motion_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "motion_scale", PROPERTY_HINT_LINK), "set_motion_scale", "get_motion_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "motion_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_motion_offset", "get_motion_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "motion_mirroring"), "set_mirroring", "get_mirroring");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "motion_scale", PROPERTY_HINT_LINK), "set_motion_scale", "get_motion_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "motion_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_motion_offset", "get_motion_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "motion_mirroring"), "set_mirroring", "get_mirroring");
 }
 
 ParallaxLayer::ParallaxLayer() {

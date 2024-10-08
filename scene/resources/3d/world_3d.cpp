@@ -50,7 +50,7 @@ RID World3D::get_space() const {
 		space = PhysicsServer3D::get_singleton()->space_create();
 		PhysicsServer3D::get_singleton()->space_set_active(space, true);
 		PhysicsServer3D::get_singleton()->area_set_param(space, PhysicsServer3D::AREA_PARAM_GRAVITY, GLOBAL_GET("physics/3d/default_gravity"));
-		PhysicsServer3D::get_singleton()->area_set_param(space, PhysicsServer3D::AREA_PARAM_GRAVITY_VECTOR, GLOBAL_GET("physics/3d/default_gravity_vector"));
+		PhysicsServer3D::get_singleton()->area_set_param(space, PhysicsServer3D::AREA_PARAM_GRAVITY_Hector, GLOBAL_GET("physics/3d/default_gravity_Hector"));
 		PhysicsServer3D::get_singleton()->area_set_param(space, PhysicsServer3D::AREA_PARAM_LINEAR_DAMP, GLOBAL_GET("physics/3d/default_linear_damp"));
 		PhysicsServer3D::get_singleton()->area_set_param(space, PhysicsServer3D::AREA_PARAM_ANGULAR_DAMP, GLOBAL_GET("physics/3d/default_angular_damp"));
 	}

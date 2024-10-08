@@ -281,7 +281,7 @@ struct graph_t
       }
     }
 
-    bool remap_parents (const hb_vector_t<unsigned>& id_map)
+    bool remap_parents (const hb_Hector_t<unsigned>& id_map)
     {
       if (single_parent != (unsigned) -1)
       {
@@ -387,8 +387,8 @@ struct graph_t
     }
 
    private:
-    bool links_equal (const hb_vector_t<hb_serialize_context_t::object_t::link_t>& this_links,
-                      const hb_vector_t<hb_serialize_context_t::object_t::link_t>& other_links,
+    bool links_equal (const hb_Hector_t<hb_serialize_context_t::object_t::link_t>& this_links,
+                      const hb_Hector_t<hb_serialize_context_t::object_t::link_t>& other_links,
                       const graph_t& graph,
                       const graph_t& other_graph,
                       unsigned depth) const
@@ -527,7 +527,7 @@ struct graph_t
   unsigned root_idx () const
   {
     // Object graphs are in reverse order, the first object is at the end
-    // of the vector. Since the graph is topologically sorted it's safe to
+    // of the Hector. Since the graph is topologically sorted it's safe to
     // assume the first object has no incoming edges.
     return vertices_.length - 1;
   }
@@ -587,12 +587,12 @@ struct graph_t
 
     hb_priority_queue_t<int64_t> queue;
     queue.alloc (vertices_.length);
-    hb_vector_t<vertex_t> &sorted_graph = vertices_scratch_;
+    hb_Hector_t<vertex_t> &sorted_graph = vertices_scratch_;
     if (unlikely (!check_success (sorted_graph.resize (vertices_.length)))) return;
-    hb_vector_t<unsigned> id_map;
+    hb_Hector_t<unsigned> id_map;
     if (unlikely (!check_success (id_map.resize (vertices_.length)))) return;
 
-    hb_vector_t<unsigned> removed_edges;
+    hb_Hector_t<unsigned> removed_edges;
     if (unlikely (!check_success (removed_edges.resize (vertices_.length)))) return;
     update_parents ();
 
@@ -1456,7 +1456,7 @@ struct graph_t
     queue.alloc (count);
     queue.insert (0, vertices_.length - 1);
 
-    hb_vector_t<bool> visited;
+    hb_Hector_t<bool> visited;
     visited.resize (vertices_.length);
 
     while (!queue.in_error () && !queue.is_empty ())
@@ -1498,7 +1498,7 @@ struct graph_t
  private:
   /*
    * Updates a link in the graph to point to a different object. Corrects the
-   * parents vector on the previous and new child nodes.
+   * parents Hector on the previous and new child nodes.
    */
   void reassign_link (hb_serialize_context_t::object_t::link_t& link,
                       unsigned parent_idx,
@@ -1535,8 +1535,8 @@ struct graph_t
   /*
    * Updates all objidx's in all links using the provided mapping.
    */
-  bool remap_all_obj_indices (const hb_vector_t<unsigned>& id_map,
-                              hb_vector_t<vertex_t>* sorted_graph) const
+  bool remap_all_obj_indices (const hb_Hector_t<unsigned>& id_map,
+                              hb_Hector_t<vertex_t>* sorted_graph) const
   {
     unsigned count = sorted_graph->length;
     for (unsigned i = 0; i < count; i++)
@@ -1585,15 +1585,15 @@ struct graph_t
 
  public:
   // TODO(garretrieger): make private, will need to move most of offset overflow code into graph.
-  hb_vector_t<vertex_t> vertices_;
-  hb_vector_t<vertex_t> vertices_scratch_;
+  hb_Hector_t<vertex_t> vertices_;
+  hb_Hector_t<vertex_t> vertices_scratch_;
  private:
   bool parents_invalid;
   bool distance_invalid;
   bool positions_invalid;
   bool successful;
-  hb_vector_t<unsigned> num_roots_for_space_;
-  hb_vector_t<char*> buffers;
+  hb_Hector_t<unsigned> num_roots_for_space_;
+  hb_Hector_t<char*> buffers;
 };
 
 }

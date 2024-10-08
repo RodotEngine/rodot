@@ -939,7 +939,7 @@ static const D3D12_UAV_DIMENSION RD_TEXTURE_TYPE_TO_D3D12_VIEW_DIMENSION_FOR_UAV
 	D3D12_UAV_DIMENSION_TEXTURE2DARRAY,
 };
 
-uint32_t RenderingDeviceDriverD3D12::_find_max_common_supported_sample_count(VectorView<DXGI_FORMAT> p_formats) {
+uint32_t RenderingDeviceDriverD3D12::_find_max_common_supported_sample_count(HectorView<DXGI_FORMAT> p_formats) {
 	uint32_t common = UINT32_MAX;
 
 	MutexLock lock(format_sample_counts_mask_cache_mutex);
@@ -1746,7 +1746,7 @@ bool RenderingDeviceDriverD3D12::sampler_is_format_supported_for_filter(DataForm
 /**** VERTEX ARRAY ****/
 /**********************/
 
-RDD::VertexFormatID RenderingDeviceDriverD3D12::vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) {
+RDD::VertexFormatID RenderingDeviceDriverD3D12::vertex_format_create(HectorView<VertexAttribute> p_vertex_attribs) {
 	VertexFormatInfo *vf_info = VersatileResource::allocate<VertexFormatInfo>(resources_allocator);
 
 	vf_info->input_elem_descs.resize(p_vertex_attribs.size());
@@ -2025,9 +2025,9 @@ static D3D12_BARRIER_LAYOUT _rd_texture_layout_to_d3d12_barrier_layout(RDD::Text
 void RenderingDeviceDriverD3D12::command_pipeline_barrier(CommandBufferID p_cmd_buffer,
 		BitField<PipelineStageBits> p_src_stages,
 		BitField<PipelineStageBits> p_dst_stages,
-		VectorView<RDD::MemoryBarrier> p_memory_barriers,
-		VectorView<RDD::BufferBarrier> p_buffer_barriers,
-		VectorView<RDD::TextureBarrier> p_texture_barriers) {
+		HectorView<RDD::MemoryBarrier> p_memory_barriers,
+		HectorView<RDD::BufferBarrier> p_buffer_barriers,
+		HectorView<RDD::TextureBarrier> p_texture_barriers) {
 	if (!barrier_capabilities.enhanced_barriers_supported) {
 		// Enhanced barriers are a requirement for this function.
 		return;
@@ -2045,9 +2045,9 @@ void RenderingDeviceDriverD3D12::command_pipeline_barrier(CommandBufferID p_cmd_
 	ERR_FAIL_COND(FAILED(res));
 
 	// Convert the RDD barriers to D3D12 enhanced barriers.
-	thread_local LocalVector<D3D12_GLOBAL_BARRIER> global_barriers;
-	thread_local LocalVector<D3D12_BUFFER_BARRIER> buffer_barriers;
-	thread_local LocalVector<D3D12_TEXTURE_BARRIER> texture_barriers;
+	thread_local LocalHector<D3D12_GLOBAL_BARRIER> global_barriers;
+	thread_local LocalHector<D3D12_BUFFER_BARRIER> buffer_barriers;
+	thread_local LocalHector<D3D12_TEXTURE_BARRIER> texture_barriers;
 	global_barriers.clear();
 	buffer_barriers.clear();
 	texture_barriers.clear();
@@ -2218,7 +2218,7 @@ RDD::CommandQueueID RenderingDeviceDriverD3D12::command_queue_create(CommandQueu
 	return CommandQueueID(command_queue);
 }
 
-Error RenderingDeviceDriverD3D12::command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) {
+Error RenderingDeviceDriverD3D12::command_queue_execute_and_present(CommandQueueID p_cmd_queue, HectorView<SemaphoreID> p_wait_semaphores, HectorView<CommandBufferID> p_cmd_buffers, HectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, HectorView<SwapChainID> p_swap_chains) {
 	CommandQueueInfo *command_queue = (CommandQueueInfo *)(p_cmd_queue.id);
 	for (uint32_t i = 0; i < p_wait_semaphores.size(); i++) {
 		const SemaphoreInfo *semaphore = (const SemaphoreInfo *)(p_wait_semaphores[i].id);
@@ -2226,7 +2226,7 @@ Error RenderingDeviceDriverD3D12::command_queue_execute_and_present(CommandQueue
 	}
 
 	if (p_cmd_buffers.size() > 0) {
-		thread_local LocalVector<ID3D12CommandList *> command_lists;
+		thread_local LocalHector<ID3D12CommandList *> command_lists;
 		command_lists.resize(p_cmd_buffers.size());
 		for (uint32_t i = 0; i < p_cmd_buffers.size(); i++) {
 			const CommandBufferInfo *cmd_buf_info = (const CommandBufferInfo *)(p_cmd_buffers[i].id);
@@ -2356,7 +2356,7 @@ void RenderingDeviceDriverD3D12::command_buffer_end(CommandBufferID p_cmd_buffer
 	cmd_buf_info->descriptor_heaps_set = false;
 }
 
-void RenderingDeviceDriverD3D12::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) {
+void RenderingDeviceDriverD3D12::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, HectorView<CommandBufferID> p_secondary_cmd_buffers) {
 	const CommandBufferInfo *cmd_buf_info = (const CommandBufferInfo *)p_cmd_buffer.id;
 	for (uint32_t i = 0; i < p_secondary_cmd_buffers.size(); i++) {
 		const CommandBufferInfo *secondary_cb_info = (const CommandBufferInfo *)p_secondary_cmd_buffers[i].id;
@@ -2718,7 +2718,7 @@ D3D12_DEPTH_STENCIL_VIEW_DESC RenderingDeviceDriverD3D12::_make_dsv_for_texture(
 	return dsv_desc;
 }
 
-RDD::FramebufferID RenderingDeviceDriverD3D12::_framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height, bool p_is_screen) {
+RDD::FramebufferID RenderingDeviceDriverD3D12::_framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height, bool p_is_screen) {
 	// Pre-bookkeep.
 	FramebufferInfo *fb_info = VersatileResource::allocate<FramebufferInfo>(resources_allocator);
 	fb_info->is_screen = p_is_screen;
@@ -2805,7 +2805,7 @@ RDD::FramebufferID RenderingDeviceDriverD3D12::_framebuffer_create(RenderPassID 
 	return FramebufferID(fb_info);
 }
 
-RDD::FramebufferID RenderingDeviceDriverD3D12::framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
+RDD::FramebufferID RenderingDeviceDriverD3D12::framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
 	return _framebuffer_create(p_render_pass, p_attachments, p_width, p_height, false);
 }
 
@@ -2830,7 +2830,7 @@ uint32_t RenderingDeviceDriverD3D12::_shader_patch_dxil_specialization_constant(
 		PipelineSpecializationConstantType p_type,
 		const void *p_value,
 		const uint64_t (&p_stages_bit_offsets)[D3D12_BITCODE_OFFSETS_NUM_STAGES],
-		HashMap<ShaderStage, Vector<uint8_t>> &r_stages_bytecodes,
+		HashMap<ShaderStage, Hector<uint8_t>> &r_stages_bytecodes,
 		bool p_is_first_patch) {
 	uint32_t patch_val = 0;
 	switch (p_type) {
@@ -2905,7 +2905,7 @@ uint32_t RenderingDeviceDriverD3D12::_shader_patch_dxil_specialization_constant(
 			continue;
 		}
 
-		Vector<uint8_t> &bytecode = r_stages_bytecodes[(ShaderStage)stage];
+		Hector<uint8_t> &bytecode = r_stages_bytecodes[(ShaderStage)stage];
 #ifdef DEV_ENABLED
 		uint64_t orig_patch_val = tamper_bits(bytecode.ptrw(), offset, patch_val);
 		// Checking against the value the NIR patch should have set.
@@ -2923,8 +2923,8 @@ uint32_t RenderingDeviceDriverD3D12::_shader_patch_dxil_specialization_constant(
 
 bool RenderingDeviceDriverD3D12::_shader_apply_specialization_constants(
 		const ShaderInfo *p_shader_info,
-		VectorView<PipelineSpecializationConstant> p_specialization_constants,
-		HashMap<ShaderStage, Vector<uint8_t>> &r_final_stages_bytecode) {
+		HectorView<PipelineSpecializationConstant> p_specialization_constants,
+		HashMap<ShaderStage, Hector<uint8_t>> &r_final_stages_bytecode) {
 	// If something needs to be patched, COW will do the trick.
 	r_final_stages_bytecode = p_shader_info->stages_bytecode;
 	uint32_t stages_re_sign_mask = 0;
@@ -2944,10 +2944,10 @@ bool RenderingDeviceDriverD3D12::_shader_apply_specialization_constants(
 		}
 	}
 	// Re-sign patched stages.
-	for (KeyValue<ShaderStage, Vector<uint8_t>> &E : r_final_stages_bytecode) {
+	for (KeyValue<ShaderStage, Hector<uint8_t>> &E : r_final_stages_bytecode) {
 		ShaderStage stage = E.key;
 		if ((stages_re_sign_mask & (1 << stage))) {
-			Vector<uint8_t> &bytecode = E.value;
+			Hector<uint8_t> &bytecode = E.value;
 			_shader_sign_dxil_bytecode(stage, bytecode);
 		}
 	}
@@ -2955,7 +2955,7 @@ bool RenderingDeviceDriverD3D12::_shader_apply_specialization_constants(
 	return true;
 }
 
-void RenderingDeviceDriverD3D12::_shader_sign_dxil_bytecode(ShaderStage p_stage, Vector<uint8_t> &r_dxil_blob) {
+void RenderingDeviceDriverD3D12::_shader_sign_dxil_bytecode(ShaderStage p_stage, Hector<uint8_t> &r_dxil_blob) {
 	uint8_t *w = r_dxil_blob.ptrw();
 	compute_dxil_hash(w + 20, r_dxil_blob.size() - 20, w + 4);
 }
@@ -2964,16 +2964,16 @@ String RenderingDeviceDriverD3D12::shader_get_binary_cache_key() {
 	return "D3D12-SV" + uitos(ShaderBinary::VERSION) + "-" + itos(shader_capabilities.shader_model);
 }
 
-Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
+Hector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(HectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
 	ShaderReflection shader_refl;
 	if (_reflect_spirv(p_spirv, shader_refl) != OK) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	// Collect reflection data into binary data.
 	ShaderBinary::Data binary_data;
-	Vector<Vector<ShaderBinary::DataBinding>> sets_bindings;
-	Vector<ShaderBinary::SpecializationConstant> specialization_constants;
+	Hector<Hector<ShaderBinary::DataBinding>> sets_bindings;
+	Hector<ShaderBinary::SpecializationConstant> specialization_constants;
 	{
 		binary_data.vertex_input_mask = shader_refl.vertex_input_mask;
 		binary_data.fragment_output_mask = shader_refl.fragment_output_mask;
@@ -2987,8 +2987,8 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 		binary_data.nir_runtime_data_root_param_idx = UINT32_MAX;
 		binary_data.stage_count = p_spirv.size();
 
-		for (const Vector<ShaderUniform> &spirv_set : shader_refl.uniform_sets) {
-			Vector<ShaderBinary::DataBinding> bindings;
+		for (const Hector<ShaderUniform> &spirv_set : shader_refl.uniform_sets) {
+			Hector<ShaderBinary::DataBinding> bindings;
 			for (const ShaderUniform &spirv_uniform : spirv_set) {
 				ShaderBinary::DataBinding binding;
 				binding.type = (uint32_t)spirv_uniform.type;
@@ -3014,7 +3014,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 	}
 
 	// Translate SPIR-V shaders to DXIL, and collect shader info from the new representation.
-	HashMap<ShaderStage, Vector<uint8_t>> dxil_blobs;
+	HashMap<ShaderStage, Hector<uint8_t>> dxil_blobs;
 	BitField<ShaderStage> stages_processed;
 	{
 		HashMap<int, nir_shader *> stages_nir_shaders;
@@ -3073,7 +3073,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 						dxil_spirv_nir_get_spirv_options(), &nir_options);
 				if (!shader) {
 					free_nir_shaders();
-					ERR_FAIL_V_MSG(Vector<uint8_t>(), "Shader translation (step 1) at stage " + String(SHADER_STAGE_NAMES[stage]) + " failed.");
+					ERR_FAIL_V_MSG(Hector<uint8_t>(), "Shader translation (step 1) at stage " + String(SHADER_STAGE_NAMES[stage]) + " failed.");
 				}
 
 #ifdef DEV_ENABLED
@@ -3123,8 +3123,8 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 			struct ShaderData {
 				ShaderStage stage;
 				ShaderBinary::Data &binary_data;
-				Vector<Vector<ShaderBinary::DataBinding>> &sets_bindings;
-				Vector<ShaderBinary::SpecializationConstant> &specialization_constants;
+				Hector<Hector<ShaderBinary::DataBinding>> &sets_bindings;
+				Hector<ShaderBinary::SpecializationConstant> &specialization_constants;
 			} shader_data{ stage, binary_data, sets_bindings, specialization_constants };
 
 			GodotNirCallbacks godot_nir_callbacks = {};
@@ -3245,10 +3245,10 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 			stages_nir_shaders.erase(stage);
 			if (!ok) {
 				free_nir_shaders();
-				ERR_FAIL_V_MSG(Vector<uint8_t>(), "Shader translation at stage " + String(SHADER_STAGE_NAMES[stage]) + " failed.");
+				ERR_FAIL_V_MSG(Hector<uint8_t>(), "Shader translation at stage " + String(SHADER_STAGE_NAMES[stage]) + " failed.");
 			}
 
-			Vector<uint8_t> blob_copy;
+			Hector<uint8_t> blob_copy;
 			blob_copy.resize(dxil_blob.size);
 			memcpy(blob_copy.ptrw(), dxil_blob.data, dxil_blob.size);
 			blob_finish(&dxil_blob);
@@ -3277,9 +3277,9 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 	}
 
 	// Sign.
-	for (KeyValue<ShaderStage, Vector<uint8_t>> &E : dxil_blobs) {
+	for (KeyValue<ShaderStage, Hector<uint8_t>> &E : dxil_blobs) {
 		ShaderStage stage = E.key;
-		Vector<uint8_t> &dxil_blob = E.value;
+		Hector<uint8_t> &dxil_blob = E.value;
 		_shader_sign_dxil_bytecode(stage, dxil_blob);
 	}
 
@@ -3300,7 +3300,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 			}
 		};
 
-		LocalVector<D3D12_ROOT_PARAMETER1> root_params;
+		LocalHector<D3D12_ROOT_PARAMETER1> root_params;
 
 		// Root (push) constants.
 		if (binary_data.dxil_push_constant_stages) {
@@ -3331,11 +3331,11 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 		// These have to stay around until serialization!
 		struct TraceableDescriptorTable {
 			uint32_t stages_mask = {};
-			Vector<D3D12_DESCRIPTOR_RANGE1> ranges;
-			Vector<ShaderBinary::DataBinding::RootSignatureLocation *> root_sig_locations;
+			Hector<D3D12_DESCRIPTOR_RANGE1> ranges;
+			Hector<ShaderBinary::DataBinding::RootSignatureLocation *> root_sig_locations;
 		};
-		Vector<TraceableDescriptorTable> resource_tables_maps;
-		Vector<TraceableDescriptorTable> sampler_tables_maps;
+		Hector<TraceableDescriptorTable> resource_tables_maps;
+		Hector<TraceableDescriptorTable> sampler_tables_maps;
 
 		for (int set = 0; set < sets_bindings.size(); set++) {
 			bool first_resource_in_set = true;
@@ -3358,7 +3358,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 											uint32_t p_dxil_register,
 											uint32_t p_dxil_stages_mask,
 											ShaderBinary::DataBinding::RootSignatureLocation(&p_root_sig_locations),
-											Vector<TraceableDescriptorTable> &r_tables,
+											Hector<TraceableDescriptorTable> &r_tables,
 											bool &r_first_in_set) {
 					if (r_first_in_set) {
 						r_tables.resize(r_tables.size() + 1);
@@ -3430,7 +3430,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 			}
 		}
 
-		auto make_descriptor_tables = [&root_params, &stages_to_d3d12_visibility](const Vector<TraceableDescriptorTable> &p_tables) {
+		auto make_descriptor_tables = [&root_params, &stages_to_d3d12_visibility](const Hector<TraceableDescriptorTable> &p_tables) {
 			for (const TraceableDescriptorTable &table : p_tables) {
 				D3D12_SHADER_VISIBILITY visibility = stages_to_d3d12_visibility(table.stages_mask);
 				DEV_ASSERT(table.ranges.size() == table.root_sig_locations.size());
@@ -3469,21 +3469,21 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 
 		ComPtr<ID3DBlob> error_blob;
 		HRESULT res = D3DX12SerializeVersionedRootSignature(context_driver->lib_d3d12, &root_sig_desc, D3D_ROOT_SIGNATURE_VERSION_1_1, root_sig_blob.GetAddressOf(), error_blob.GetAddressOf());
-		ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), Vector<uint8_t>(),
+		ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), Hector<uint8_t>(),
 				"Serialization of root signature failed with error " + vformat("0x%08ux", (uint64_t)res) + " and the following message:\n" + String((char *)error_blob->GetBufferPointer(), error_blob->GetBufferSize()));
 
 		binary_data.root_signature_crc = crc32(0, nullptr, 0);
 		binary_data.root_signature_crc = crc32(binary_data.root_signature_crc, (const Bytef *)root_sig_blob->GetBufferPointer(), root_sig_blob->GetBufferSize());
 	}
 
-	Vector<Vector<uint8_t>> compressed_stages;
-	Vector<uint32_t> zstd_size;
+	Hector<Hector<uint8_t>> compressed_stages;
+	Hector<uint32_t> zstd_size;
 
 	uint32_t stages_binary_size = 0;
 
 	for (uint32_t i = 0; i < p_spirv.size(); i++) {
-		Vector<uint8_t> zstd;
-		Vector<uint8_t> &dxil_blob = dxil_blobs[p_spirv[i].shader_stage];
+		Hector<uint8_t> zstd;
+		Hector<uint8_t> &dxil_blob = dxil_blobs[p_spirv[i].shader_stage];
 		zstd.resize(Compression::get_max_compressed_buffer_size(dxil_blob.size(), Compression::MODE_ZSTD));
 		int dst_size = Compression::compress(zstd.ptrw(), dxil_blob.ptr(), dxil_blob.size(), Compression::MODE_ZSTD);
 
@@ -3517,7 +3517,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 	binary_data.root_signature_len = root_sig_blob->GetBufferSize();
 	total_size += binary_data.root_signature_len;
 
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(total_size);
 	{
 		uint32_t offset = 0;
@@ -3576,13 +3576,13 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(Vec
 		memcpy(binptr + offset, root_sig_blob->GetBufferPointer(), root_sig_blob->GetBufferSize());
 		offset += root_sig_blob->GetBufferSize();
 
-		ERR_FAIL_COND_V(offset != (uint32_t)ret.size(), Vector<uint8_t>());
+		ERR_FAIL_COND_V(offset != (uint32_t)ret.size(), Hector<uint8_t>());
 	}
 
 	return ret;
 }
 
-RDD::ShaderID RenderingDeviceDriverD3D12::shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) {
+RDD::ShaderID RenderingDeviceDriverD3D12::shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) {
 	r_shader_desc = {}; // Driver-agnostic.
 	ShaderInfo shader_info_in; // Driver-specific.
 
@@ -3701,7 +3701,7 @@ RDD::ShaderID RenderingDeviceDriverD3D12::shader_create_from_bytecode(const Vect
 		read_offset += sizeof(uint32_t);
 
 		// Decompress.
-		Vector<uint8_t> dxil;
+		Hector<uint8_t> dxil;
 		dxil.resize(dxil_size);
 		int dec_dxil_size = Compression::decompress(dxil.ptrw(), dxil.size(), binptr + read_offset, zstd_size, Compression::MODE_ZSTD);
 		ERR_FAIL_COND_V(dec_dxil_size != (int32_t)dxil_size, ShaderID());
@@ -3791,7 +3791,7 @@ static void _add_descriptor_count_for_uniform(RenderingDevice::UniformType p_typ
 	}
 }
 
-RDD::UniformSetID RenderingDeviceDriverD3D12::uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) {
+RDD::UniformSetID RenderingDeviceDriverD3D12::uniform_set_create(HectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) {
 	// Pre-bookkeep.
 	UniformSetInfo *uniform_set_info = VersatileResource::allocate<UniformSetInfo>(resources_allocator);
 
@@ -4515,7 +4515,7 @@ void RenderingDeviceDriverD3D12::command_clear_buffer(CommandBufferID p_cmd_buff
 	frames[frame_idx].desc_heap_walkers.aux.advance();
 }
 
-void RenderingDeviceDriverD3D12::command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_buf_locfer, VectorView<BufferCopyRegion> p_regions) {
+void RenderingDeviceDriverD3D12::command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_buf_locfer, HectorView<BufferCopyRegion> p_regions) {
 	CommandBufferInfo *cmd_buf_info = (CommandBufferInfo *)p_cmd_buffer.id;
 	BufferInfo *src_buf_info = (BufferInfo *)p_src_buffer.id;
 	BufferInfo *buf_loc_info = (BufferInfo *)p_buf_locfer.id;
@@ -4531,7 +4531,7 @@ void RenderingDeviceDriverD3D12::command_copy_buffer(CommandBufferID p_cmd_buffe
 	}
 }
 
-void RenderingDeviceDriverD3D12::command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) {
+void RenderingDeviceDriverD3D12::command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<TextureCopyRegion> p_regions) {
 	CommandBufferInfo *cmd_buf_info = (CommandBufferInfo *)p_cmd_buffer.id;
 	TextureInfo *src_tex_info = (TextureInfo *)p_src_texture.id;
 	TextureInfo *dst_tex_info = (TextureInfo *)p_dst_texture.id;
@@ -4707,7 +4707,7 @@ void RenderingDeviceDriverD3D12::command_clear_color_texture(CommandBufferID p_c
 	}
 }
 
-void RenderingDeviceDriverD3D12::command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) {
+void RenderingDeviceDriverD3D12::command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<BufferTextureCopyRegion> p_regions) {
 	CommandBufferInfo *cmd_buf_info = (CommandBufferInfo *)p_cmd_buffer.id;
 	BufferInfo *buf_info = (BufferInfo *)p_src_buffer.id;
 	TextureInfo *tex_info = (TextureInfo *)p_dst_texture.id;
@@ -4775,7 +4775,7 @@ void RenderingDeviceDriverD3D12::command_copy_buffer_to_texture(CommandBufferID 
 	}
 }
 
-void RenderingDeviceDriverD3D12::command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_buf_locfer, VectorView<BufferTextureCopyRegion> p_regions) {
+void RenderingDeviceDriverD3D12::command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_buf_locfer, HectorView<BufferTextureCopyRegion> p_regions) {
 	CommandBufferInfo *cmd_buf_info = (CommandBufferInfo *)p_cmd_buffer.id;
 	TextureInfo *tex_info = (TextureInfo *)p_src_texture.id;
 	BufferInfo *buf_info = (BufferInfo *)p_buf_locfer.id;
@@ -4850,7 +4850,7 @@ void RenderingDeviceDriverD3D12::pipeline_free(PipelineID p_pipeline) {
 
 // ----- BINDING -----
 
-void RenderingDeviceDriverD3D12::command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, VectorView<uint32_t> p_data) {
+void RenderingDeviceDriverD3D12::command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, HectorView<uint32_t> p_data) {
 	const CommandBufferInfo *cmd_buf_info = (const CommandBufferInfo *)p_cmd_buffer.id;
 	const ShaderInfo *shader_info_in = (const ShaderInfo *)p_shader.id;
 	if (!shader_info_in->dxil_push_constant_size) {
@@ -4865,7 +4865,7 @@ void RenderingDeviceDriverD3D12::command_bind_push_constants(CommandBufferID p_c
 
 // ----- CACHE -----
 
-bool RenderingDeviceDriverD3D12::pipeline_cache_create(const Vector<uint8_t> &p_data) {
+bool RenderingDeviceDriverD3D12::pipeline_cache_create(const Hector<uint8_t> &p_data) {
 	WARN_PRINT("PSO caching is not implemented yet in the Direct3D 12 driver.");
 	return false;
 }
@@ -4878,8 +4878,8 @@ size_t RenderingDeviceDriverD3D12::pipeline_cache_query_size() {
 	ERR_FAIL_V_MSG(0, "Not implemented.");
 }
 
-Vector<uint8_t> RenderingDeviceDriverD3D12::pipeline_cache_serialize() {
-	ERR_FAIL_V_MSG(Vector<uint8_t>(), "Not implemented.");
+Hector<uint8_t> RenderingDeviceDriverD3D12::pipeline_cache_serialize() {
+	ERR_FAIL_V_MSG(Hector<uint8_t>(), "Not implemented.");
 }
 
 /*******************/
@@ -4888,7 +4888,7 @@ Vector<uint8_t> RenderingDeviceDriverD3D12::pipeline_cache_serialize() {
 
 // ----- SUBPASS -----
 
-RDD::RenderPassID RenderingDeviceDriverD3D12::render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) {
+RDD::RenderPassID RenderingDeviceDriverD3D12::render_pass_create(HectorView<Attachment> p_attachments, HectorView<Subpass> p_subpasses, HectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) {
 	// Pre-bookkeep.
 	RenderPassInfo *pass_info = VersatileResource::allocate<RenderPassInfo>(resources_allocator);
 
@@ -4913,7 +4913,7 @@ RDD::RenderPassID RenderingDeviceDriverD3D12::render_pass_create(VectorView<Atta
 			formats[i] = format.general_format;
 		}
 	}
-	pass_info->max_supported_sample_count = _find_max_common_supported_sample_count(VectorView(formats, p_attachments.size()));
+	pass_info->max_supported_sample_count = _find_max_common_supported_sample_count(HectorView(formats, p_attachments.size()));
 
 	return RenderPassID(pass_info);
 }
@@ -4925,7 +4925,7 @@ void RenderingDeviceDriverD3D12::render_pass_free(RenderPassID p_render_pass) {
 
 // ----- COMMANDS -----
 
-void RenderingDeviceDriverD3D12::command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_attachment_clears) {
+void RenderingDeviceDriverD3D12::command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RenderPassClearValue> p_attachment_clears) {
 	CommandBufferInfo *cmd_buf_info = (CommandBufferInfo *)p_cmd_buffer.id;
 	const RenderPassInfo *pass_info = (const RenderPassInfo *)p_render_pass.id;
 	const FramebufferInfo *fb_info = (const FramebufferInfo *)p_framebuffer.id;
@@ -5037,7 +5037,7 @@ void RenderingDeviceDriverD3D12::command_begin_render_pass(CommandBufferID p_cmd
 	}
 
 	if (num_clears) {
-		command_render_clear_attachments(p_cmd_buffer, VectorView(clears, num_clears), VectorView(clear_rects, num_clears));
+		command_render_clear_attachments(p_cmd_buffer, HectorView(clears, num_clears), HectorView(clear_rects, num_clears));
 	}
 }
 
@@ -5189,7 +5189,7 @@ void RenderingDeviceDriverD3D12::command_next_render_subpass(CommandBufferID p_c
 	cmd_buf_info->cmd_list->OMSetRenderTargets(subpass.color_references.size(), rtv_handles, false, dsv_handle.ptr ? &dsv_handle : nullptr);
 }
 
-void RenderingDeviceDriverD3D12::command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) {
+void RenderingDeviceDriverD3D12::command_render_set_viewport(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_viewports) {
 	const CommandBufferInfo *cmd_buf_info = (const CommandBufferInfo *)p_cmd_buffer.id;
 
 	D3D12_VIEWPORT *d3d12_viewports = ALLOCA_ARRAY(D3D12_VIEWPORT, p_viewports.size());
@@ -5204,7 +5204,7 @@ void RenderingDeviceDriverD3D12::command_render_set_viewport(CommandBufferID p_c
 	cmd_buf_info->cmd_list->RSSetViewports(p_viewports.size(), d3d12_viewports);
 }
 
-void RenderingDeviceDriverD3D12::command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) {
+void RenderingDeviceDriverD3D12::command_render_set_scissor(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_scissors) {
 	const CommandBufferInfo *cmd_buf_info = (const CommandBufferInfo *)p_cmd_buffer.id;
 
 	D3D12_RECT *d3d12_scissors = ALLOCA_ARRAY(D3D12_RECT, p_scissors.size());
@@ -5219,7 +5219,7 @@ void RenderingDeviceDriverD3D12::command_render_set_scissor(CommandBufferID p_cm
 	cmd_buf_info->cmd_list->RSSetScissorRects(p_scissors.size(), d3d12_scissors);
 }
 
-void RenderingDeviceDriverD3D12::command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) {
+void RenderingDeviceDriverD3D12::command_render_clear_attachments(CommandBufferID p_cmd_buffer, HectorView<AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) {
 	const CommandBufferInfo *cmd_buf_info = (const CommandBufferInfo *)p_cmd_buffer.id;
 
 	DEV_ASSERT(cmd_buf_info->render_pass_state.current_subpass != UINT32_MAX);
@@ -5553,11 +5553,11 @@ RDD::PipelineID RenderingDeviceDriverD3D12::render_pipeline_create(
 		PipelineMultisampleState p_multisample_state,
 		PipelineDepthStencilState p_depth_stencil_state,
 		PipelineColorBlendState p_blend_state,
-		VectorView<int32_t> p_color_attachments,
+		HectorView<int32_t> p_color_attachments,
 		BitField<PipelineDynamicStateFlags> p_dynamic_state,
 		RenderPassID p_render_pass,
 		uint32_t p_render_subpass,
-		VectorView<PipelineSpecializationConstant> p_specialization_constants) {
+		HectorView<PipelineSpecializationConstant> p_specialization_constants) {
 	const ShaderInfo *shader_info_in = (const ShaderInfo *)p_shader.id;
 
 	CD3DX12_PIPELINE_STATE_STREAM pipeline_desc = {};
@@ -5566,7 +5566,7 @@ RDD::PipelineID RenderingDeviceDriverD3D12::render_pipeline_create(
 	RenderPipelineInfo render_info;
 
 	// Attachments.
-	LocalVector<uint32_t> color_attachments;
+	LocalHector<uint32_t> color_attachments;
 	{
 		const Subpass &subpass = pass_info->subpasses[p_render_subpass];
 
@@ -5757,7 +5757,7 @@ RDD::PipelineID RenderingDeviceDriverD3D12::render_pipeline_create(
 
 	pipeline_desc.pRootSignature = shader_info_in->root_signature.Get();
 
-	HashMap<ShaderStage, Vector<uint8_t>> final_stages_bytecode;
+	HashMap<ShaderStage, Hector<uint8_t>> final_stages_bytecode;
 	bool ok = _shader_apply_specialization_constants(shader_info_in, p_specialization_constants, final_stages_bytecode);
 	ERR_FAIL_COND_V(!ok, PipelineID());
 
@@ -5844,7 +5844,7 @@ void RenderingDeviceDriverD3D12::command_compute_dispatch_indirect(CommandBuffer
 
 // ----- PIPELINE -----
 
-RDD::PipelineID RenderingDeviceDriverD3D12::compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) {
+RDD::PipelineID RenderingDeviceDriverD3D12::compute_pipeline_create(ShaderID p_shader, HectorView<PipelineSpecializationConstant> p_specialization_constants) {
 	const ShaderInfo *shader_info_in = (const ShaderInfo *)p_shader.id;
 
 	CD3DX12_PIPELINE_STATE_STREAM pipeline_desc = {};
@@ -5853,7 +5853,7 @@ RDD::PipelineID RenderingDeviceDriverD3D12::compute_pipeline_create(ShaderID p_s
 
 	pipeline_desc.pRootSignature = shader_info_in->root_signature.Get();
 
-	HashMap<ShaderStage, Vector<uint8_t>> final_stages_bytecode;
+	HashMap<ShaderStage, Hector<uint8_t>> final_stages_bytecode;
 	bool ok = _shader_apply_specialization_constants(shader_info_in, p_specialization_constants, final_stages_bytecode);
 	ERR_FAIL_COND_V(!ok, PipelineID());
 

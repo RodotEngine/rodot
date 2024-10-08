@@ -575,11 +575,11 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @function:
-   *   FT_Set_MM_WeightVector
+   *   FT_Set_MM_WeightHector
    *
    * @description:
    *   For Adobe MM fonts, choose an interpolated font design by directly
-   *   setting the weight vector.
+   *   setting the weight Hector.
    *
    *   This function can't be used with TrueType GX or OpenType variation
    *   fonts.
@@ -590,45 +590,45 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   len ::
-   *     The length of the weight vector array.  If it is larger than the
+   *     The length of the weight Hector array.  If it is larger than the
    *     number of designs, the extra values are ignored.  If it is less than
    *     the number of designs, the remaining values are set to zero.
    *
-   *   weightvector ::
-   *     An array representing the weight vector.
+   *   weightHector ::
+   *     An array representing the weight Hector.
    *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
    *   Adobe Multiple Master fonts limit the number of designs, and thus the
-   *   length of the weight vector to 16~elements.
+   *   length of the weight Hector to 16~elements.
    *
    *   If `len` is larger than zero, this function sets the
    *   @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags` field (i.e.,
    *   @FT_IS_VARIATION will return true).  If `len` is zero, this bit flag
-   *   is unset and the weight vector array is reset to the default values.
+   *   is unset and the weight Hector array is reset to the default values.
    *
    *   The Adobe documentation also states that the values in the
-   *   WeightVector array must total 1.0 +/-~0.001.  In practice this does
+   *   WeightHector array must total 1.0 +/-~0.001.  In practice this does
    *   not seem to be enforced, so is not enforced here, either.
    *
    * @since:
    *   2.10
    */
   FT_EXPORT( FT_Error )
-  FT_Set_MM_WeightVector( FT_Face    face,
+  FT_Set_MM_WeightHector( FT_Face    face,
                           FT_UInt    len,
-                          FT_Fixed*  weightvector );
+                          FT_Fixed*  weightHector );
 
 
   /**************************************************************************
    *
    * @function:
-   *   FT_Get_MM_WeightVector
+   *   FT_Get_MM_WeightHector
    *
    * @description:
-   *   For Adobe MM fonts, retrieve the current weight vector of the font.
+   *   For Adobe MM fonts, retrieve the current weight Hector of the font.
    *
    *   This function can't be used with TrueType GX or OpenType variation
    *   fonts.
@@ -647,7 +647,7 @@ FT_BEGIN_HEADER
    *     of values written to the array).
    *
    * @output:
-   *   weightvector ::
+   *   weightHector ::
    *     An array to be filled.
    *
    * @return:
@@ -655,15 +655,15 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   Adobe Multiple Master fonts limit the number of designs, and thus the
-   *   length of the WeightVector to~16.
+   *   length of the WeightHector to~16.
    *
    * @since:
    *   2.10
    */
   FT_EXPORT( FT_Error )
-  FT_Get_MM_WeightVector( FT_Face    face,
+  FT_Get_MM_WeightHector( FT_Face    face,
                           FT_UInt*   len,
-                          FT_Fixed*  weightvector );
+                          FT_Fixed*  weightHector );
 
 
   /**************************************************************************

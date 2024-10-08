@@ -299,13 +299,13 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   max_points ::
-   *     The maximum number of points used to store the vectorial outline of
+   *     The maximum number of points used to store the Hectorial outline of
    *     any glyph in this face.  If this value cannot be known in advance,
    *     or if the face isn't scalable, this should be set to 0.  Only
    *     relevant for scalable formats.
    *
    *   max_contours ::
-   *     The maximum number of contours used to store the vectorial outline
+   *     The maximum number of contours used to store the Hectorial outline
    *     of any glyph in this face.  If this value cannot be known in
    *     advance, or if the face isn't scalable, this should be set to 0.
    *     Only relevant for scalable formats.
@@ -316,7 +316,7 @@ FT_BEGIN_HEADER
    *     functions.
    *
    *   transform_delta ::
-   *     A translation vector used to transform glyph outlines after they are
+   *     A translation Hector used to transform glyph outlines after they are
    *     loaded from the font.  Only used by the convenience functions.
    *
    *   transform_flags ::
@@ -357,7 +357,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_Face_InternalRec_
   {
     FT_Matrix  transform_matrix;
-    FT_Vector  transform_delta;
+    FT_Hector  transform_delta;
     FT_Int     transform_flags;
 
     FT_ServiceCacheRec  services;
@@ -407,7 +407,7 @@ FT_BEGIN_HEADER
    *     necessary.
    *
    *   glyph_delta ::
-   *     The 2d translation vector corresponding to the glyph transformation,
+   *     The 2d translation Hector corresponding to the glyph transformation,
    *     if necessary.
    *
    *   glyph_hints ::
@@ -427,7 +427,7 @@ FT_BEGIN_HEADER
     FT_UInt         flags;
     FT_Bool         glyph_transformed;
     FT_Matrix       glyph_matrix;
-    FT_Vector       glyph_delta;
+    FT_Hector       glyph_delta;
     void*           glyph_hints;
 
     FT_Int32        load_flags;
@@ -705,7 +705,7 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Bool )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
-                              const FT_Vector*  origin );
+                              const FT_Hector*  origin );
 
   /* Allocate a new bitmap buffer in a glyph slot. */
   FT_BASE( FT_Error )
@@ -912,7 +912,7 @@ FT_BEGIN_HEADER
     FT_LcdFiveTapFilter      lcd_weights;      /* filter weights, if any */
     FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
 #else
-    FT_Vector                lcd_geometry[3];  /* RGB subpixel positions */
+    FT_Hector                lcd_geometry[3];  /* RGB subpixel positions */
 #endif
 
     FT_Int             refcount;

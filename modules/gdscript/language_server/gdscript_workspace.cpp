@@ -340,7 +340,7 @@ Error GDScriptWorkspace::initialize() {
 			class_symbol.children.push_back(symbol);
 		}
 
-		Vector<DocData::MethodDoc> methods_signals;
+		Hector<DocData::MethodDoc> methods_signals;
 		methods_signals.append_array(class_data.constructors);
 		methods_signals.append_array(class_data.methods);
 		methods_signals.append_array(class_data.operators);
@@ -467,7 +467,7 @@ Dictionary GDScriptWorkspace::rename(const lsp::TextDocumentPositionParams &p_do
 
 	const lsp::DocumentSymbol *reference_symbol = resolve_symbol(p_doc_pos);
 	if (is_valid_rename_target(reference_symbol)) {
-		Vector<lsp::Location> usages = find_all_usages(*reference_symbol);
+		Hector<lsp::Location> usages = find_all_usages(*reference_symbol);
 		for (int i = 0; i < usages.size(); ++i) {
 			lsp::Location loc = usages[i];
 
@@ -494,8 +494,8 @@ bool GDScriptWorkspace::can_rename(const lsp::TextDocumentPositionParams &p_doc_
 	return false;
 }
 
-Vector<lsp::Location> GDScriptWorkspace::find_usages_in_file(const lsp::DocumentSymbol &p_symbol, const String &p_file_path) {
-	Vector<lsp::Location> usages;
+Hector<lsp::Location> GDScriptWorkspace::find_usages_in_file(const lsp::DocumentSymbol &p_symbol, const String &p_file_path) {
+	Hector<lsp::Location> usages;
 
 	String identifier = p_symbol.name;
 	if (const ExtendGDScriptParser *parser = get_parse_result(p_file_path)) {
@@ -533,7 +533,7 @@ Vector<lsp::Location> GDScriptWorkspace::find_usages_in_file(const lsp::Document
 	return usages;
 }
 
-Vector<lsp::Location> GDScriptWorkspace::find_all_usages(const lsp::DocumentSymbol &p_symbol) {
+Hector<lsp::Location> GDScriptWorkspace::find_all_usages(const lsp::DocumentSymbol &p_symbol) {
 	if (p_symbol.local) {
 		// Only search in current document.
 		return find_usages_in_file(p_symbol, p_symbol.script_path);
@@ -542,7 +542,7 @@ Vector<lsp::Location> GDScriptWorkspace::find_all_usages(const lsp::DocumentSymb
 	List<String> paths;
 	list_script_files("res://", paths);
 
-	Vector<lsp::Location> usages;
+	Hector<lsp::Location> usages;
 	for (List<String>::Element *PE = paths.front(); PE; PE = PE->next()) {
 		usages.append_array(find_usages_in_file(p_symbol, PE->get()));
 	}
@@ -576,7 +576,7 @@ void GDScriptWorkspace::publish_diagnostics(const String &p_path) {
 	Array errors;
 	HashMap<String, ExtendGDScriptParser *>::ConstIterator ele = parse_results.find(p_path);
 	if (ele) {
-		const Vector<lsp::Diagnostic> &list = ele->value->get_diagnostics();
+		const Hector<lsp::Diagnostic> &list = ele->value->get_diagnostics();
 		errors.resize(list.size());
 		for (int i = 0; i < list.size(); ++i) {
 			errors[i] = list[i].to_json();
@@ -597,7 +597,7 @@ void GDScriptWorkspace::_get_owners(EditorFileSystemDirectory *efsd, String p_pa
 	}
 
 	for (int i = 0; i < efsd->get_file_count(); i++) {
-		Vector<String> deps = efsd->get_file_deps(i);
+		Hector<String> deps = efsd->get_file_deps(i);
 		bool found = false;
 		for (int j = 0; j < deps.size(); j++) {
 			if (deps[j] == p_path) {
@@ -676,7 +676,7 @@ const lsp::DocumentSymbol *GDScriptWorkspace::resolve_symbol(const lsp::TextDocu
 	String path = get_file_path(p_doc_pos.textDocument.uri);
 	if (const ExtendGDScriptParser *parser = get_parse_result(path)) {
 		String symbol_identifier = p_symbol_name;
-		Vector<String> identifier_parts = symbol_identifier.split("(");
+		Hector<String> identifier_parts = symbol_identifier.split("(");
 		if (identifier_parts.size()) {
 			symbol_identifier = identifier_parts[0];
 		}

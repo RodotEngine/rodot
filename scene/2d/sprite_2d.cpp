@@ -50,7 +50,7 @@ void Sprite2D::_edit_set_pivot(const Point2 &p_pivot) {
 }
 
 Point2 Sprite2D::_edit_get_pivot() const {
-	return Vector2();
+	return Hector2();
 }
 
 bool Sprite2D::_edit_use_pivot() const {
@@ -266,15 +266,15 @@ int Sprite2D::get_frame() const {
 	return frame;
 }
 
-void Sprite2D::set_frame_coords(const Vector2i &p_coord) {
+void Sprite2D::set_frame_coords(const Hector2i &p_coord) {
 	ERR_FAIL_INDEX(p_coord.x, hframes);
 	ERR_FAIL_INDEX(p_coord.y, vframes);
 
 	set_frame(p_coord.y * hframes + p_coord.x);
 }
 
-Vector2i Sprite2D::get_frame_coords() const {
-	return Vector2i(frame % hframes, frame / hframes);
+Hector2i Sprite2D::get_frame_coords() const {
+	return Hector2i(frame % hframes, frame / hframes);
 }
 
 void Sprite2D::set_vframes(int p_amount) {
@@ -346,7 +346,7 @@ bool Sprite2D::is_pixel_opaque(const Point2 &p_point) const {
 		return false;
 	}
 
-	Vector2 q = (p_point - dst_rect.position) / dst_rect.size;
+	Hector2 q = (p_point - dst_rect.position) / dst_rect.size;
 	if (hflip) {
 		q.x = 1.0f - q.x;
 	}
@@ -373,7 +373,7 @@ bool Sprite2D::is_pixel_opaque(const Point2 &p_point) const {
 			q.y = texture->get_size().height - q.y - 1;
 		}
 	} else {
-		q = q.min(texture->get_size() - Vector2(1, 1));
+		q = q.min(texture->get_size() - Hector2(1, 1));
 	}
 
 	return texture->is_pixel_opaque((int)q.x, (int)q.y);
@@ -481,14 +481,14 @@ void Sprite2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
 	ADD_GROUP("Offset", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "centered"), "set_centered", "is_centered");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_h"), "set_flip_h", "is_flipped_h");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_v"), "set_flip_v", "is_flipped_v");
 	ADD_GROUP("Animation", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "hframes", PROPERTY_HINT_RANGE, "1,16384,1"), "set_hframes", "get_hframes");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "vframes", PROPERTY_HINT_RANGE, "1,16384,1"), "set_vframes", "get_vframes");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "frame"), "set_frame", "get_frame");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "frame_coords", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_frame_coords", "get_frame_coords");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "frame_coords", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_frame_coords", "get_frame_coords");
 
 	ADD_GROUP("Region", "region_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "region_enabled"), "set_region_enabled", "is_region_enabled");

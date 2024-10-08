@@ -39,16 +39,16 @@
 namespace TestCurve2D {
 
 void add_sample_curve_points(Ref<Curve2D> &curve) {
-	Vector2 p0 = Vector2(0, 0);
-	Vector2 p1 = Vector2(50, 0);
-	Vector2 p2 = Vector2(50, 50);
-	Vector2 p3 = Vector2(0, 50);
+	Hector2 p0 = Hector2(0, 0);
+	Hector2 p1 = Hector2(50, 0);
+	Hector2 p2 = Hector2(50, 50);
+	Hector2 p3 = Hector2(0, 50);
 
-	Vector2 control0 = p1 - p0;
-	Vector2 control1 = p3 - p2;
+	Hector2 control0 = p1 - p0;
+	Hector2 control1 = p3 - p2;
 
-	curve->add_point(p0, Vector2(), control0);
-	curve->add_point(p3, control1, Vector2());
+	curve->add_point(p0, Hector2(), control0);
+	curve->add_point(p3, control1, Hector2());
 }
 
 TEST_CASE("[Curve2D] Default curve is empty") {
@@ -66,7 +66,7 @@ TEST_CASE("[Curve2D] Point management") {
 		curve->remove_point(0);
 		CHECK(curve->get_point_count() == 1);
 
-		curve->add_point(Vector2());
+		curve->add_point(Hector2());
 		CHECK(curve->get_point_count() == 2);
 
 		curve->clear_points();
@@ -74,11 +74,11 @@ TEST_CASE("[Curve2D] Point management") {
 	}
 
 	SUBCASE("Functions for changing single point properties should behave as expected") {
-		Vector2 new_in = Vector2(1, 1);
-		Vector2 new_out = Vector2(1, 1);
-		Vector2 new_pos = Vector2(1, 1);
+		Hector2 new_in = Hector2(1, 1);
+		Hector2 new_out = Hector2(1, 1);
+		Hector2 new_pos = Hector2(1, 1);
 
-		curve->add_point(Vector2());
+		curve->add_point(Hector2());
 
 		CHECK(curve->get_point_in(0) != new_in);
 		curve->set_point_in(0, new_in);
@@ -98,15 +98,15 @@ TEST_CASE("[Curve2D] Baked") {
 	Ref<Curve2D> curve = memnew(Curve2D);
 
 	SUBCASE("Single Point") {
-		curve->add_point(Vector2());
+		curve->add_point(Hector2());
 
 		CHECK(curve->get_baked_length() == 0);
 		CHECK(curve->get_baked_points().size() == 1);
 	}
 
 	SUBCASE("Straight line") {
-		curve->add_point(Vector2());
-		curve->add_point(Vector2(0, 50));
+		curve->add_point(Hector2());
+		curve->add_point(Hector2(0, 50));
 
 		CHECK(Math::is_equal_approx(curve->get_baked_length(), 50));
 		CHECK(curve->get_baked_points().size() == 15);
@@ -132,31 +132,31 @@ TEST_CASE("[Curve2D] Baked") {
 TEST_CASE("[Curve2D] Sampling") {
 	// Sampling over a simple straight line to make assertions simpler
 	Ref<Curve2D> curve = memnew(Curve2D);
-	curve->add_point(Vector2());
-	curve->add_point(Vector2(0, 50));
+	curve->add_point(Hector2());
+	curve->add_point(Hector2(0, 50));
 
 	SUBCASE("sample") {
-		CHECK(curve->sample(0, 0) == Vector2(0, 0));
-		CHECK(curve->sample(0, 0.5) == Vector2(0, 25));
-		CHECK(curve->sample(0, 1) == Vector2(0, 50));
+		CHECK(curve->sample(0, 0) == Hector2(0, 0));
+		CHECK(curve->sample(0, 0.5) == Hector2(0, 25));
+		CHECK(curve->sample(0, 1) == Hector2(0, 50));
 	}
 
 	SUBCASE("samplef") {
-		CHECK(curve->samplef(0) == Vector2(0, 0));
-		CHECK(curve->samplef(0.5) == Vector2(0, 25));
-		CHECK(curve->samplef(1) == Vector2(0, 50));
+		CHECK(curve->samplef(0) == Hector2(0, 0));
+		CHECK(curve->samplef(0.5) == Hector2(0, 25));
+		CHECK(curve->samplef(1) == Hector2(0, 50));
 	}
 
 	SUBCASE("sample_baked, cubic = false") {
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector2(0, 0))) == Vector2(0, 0));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector2(0, 25))) == Vector2(0, 25));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector2(0, 50))) == Vector2(0, 50));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector2(0, 0))) == Hector2(0, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector2(0, 25))) == Hector2(0, 25));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector2(0, 50))) == Hector2(0, 50));
 	}
 
 	SUBCASE("sample_baked, cubic = true") {
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector2(0, 0)), true) == Vector2(0, 0));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector2(0, 25)), true) == Vector2(0, 25));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector2(0, 50)), true) == Vector2(0, 50));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector2(0, 0)), true) == Hector2(0, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector2(0, 25)), true) == Hector2(0, 25));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector2(0, 50)), true) == Hector2(0, 50));
 	}
 
 	SUBCASE("sample_baked_with_rotation, cubic = false") {
@@ -166,31 +166,31 @@ TEST_CASE("[Curve2D] Sampling") {
 		Transform2D t;
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(50, 0));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(50, 0));
 		t = rot_curve->sample_baked_with_rotation(25);
-		CHECK(t.get_origin() == Vector2(25, 0));
+		CHECK(t.get_origin() == Hector2(25, 0));
 		CHECK(Math::is_equal_approx(t.get_rotation(), 0));
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(0, 50));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(0, 50));
 		t = rot_curve->sample_baked_with_rotation(25);
-		CHECK(t.get_origin() == Vector2(0, 25));
+		CHECK(t.get_origin() == Hector2(0, 25));
 		CHECK(Math::is_equal_approx(t.get_rotation(), half_pi));
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(-50, 0));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(-50, 0));
 		t = rot_curve->sample_baked_with_rotation(25);
-		CHECK(t.get_origin() == Vector2(-25, 0));
+		CHECK(t.get_origin() == Hector2(-25, 0));
 		CHECK(Math::is_equal_approx(t.get_rotation(), pi));
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(0, -50));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(0, -50));
 		t = rot_curve->sample_baked_with_rotation(25);
-		CHECK(t.get_origin() == Vector2(0, -25));
+		CHECK(t.get_origin() == Hector2(0, -25));
 		CHECK(Math::is_equal_approx(t.get_rotation(), -half_pi));
 	}
 
@@ -201,41 +201,41 @@ TEST_CASE("[Curve2D] Sampling") {
 		Transform2D t;
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(50, 0));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(50, 0));
 		t = rot_curve->sample_baked_with_rotation(25, true);
-		CHECK(t.get_origin() == Vector2(25, 0));
+		CHECK(t.get_origin() == Hector2(25, 0));
 		CHECK(Math::is_equal_approx(t.get_rotation(), 0));
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(0, 50));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(0, 50));
 		t = rot_curve->sample_baked_with_rotation(25, true);
-		CHECK(t.get_origin() == Vector2(0, 25));
+		CHECK(t.get_origin() == Hector2(0, 25));
 		CHECK(Math::is_equal_approx(t.get_rotation(), half_pi));
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(-50, 0));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(-50, 0));
 		t = rot_curve->sample_baked_with_rotation(25, true);
-		CHECK(t.get_origin() == Vector2(-25, 0));
+		CHECK(t.get_origin() == Hector2(-25, 0));
 		CHECK(Math::is_equal_approx(t.get_rotation(), pi));
 
 		rot_curve->clear_points();
-		rot_curve->add_point(Vector2());
-		rot_curve->add_point(Vector2(0, -50));
+		rot_curve->add_point(Hector2());
+		rot_curve->add_point(Hector2(0, -50));
 		t = rot_curve->sample_baked_with_rotation(25, true);
-		CHECK(t.get_origin() == Vector2(0, -25));
+		CHECK(t.get_origin() == Hector2(0, -25));
 		CHECK(Math::is_equal_approx(t.get_rotation(), -half_pi));
 	}
 
 	SUBCASE("get_closest_point") {
-		CHECK(curve->get_closest_point(Vector2(0, 0)) == Vector2(0, 0));
-		CHECK(curve->get_closest_point(Vector2(0, 25)) == Vector2(0, 25));
-		CHECK(curve->get_closest_point(Vector2(50, 25)) == Vector2(0, 25));
-		CHECK(curve->get_closest_point(Vector2(0, 50)) == Vector2(0, 50));
-		CHECK(curve->get_closest_point(Vector2(50, 50)) == Vector2(0, 50));
-		CHECK(curve->get_closest_point(Vector2(0, 100)) == Vector2(0, 50));
+		CHECK(curve->get_closest_point(Hector2(0, 0)) == Hector2(0, 0));
+		CHECK(curve->get_closest_point(Hector2(0, 25)) == Hector2(0, 25));
+		CHECK(curve->get_closest_point(Hector2(50, 25)) == Hector2(0, 25));
+		CHECK(curve->get_closest_point(Hector2(0, 50)) == Hector2(0, 50));
+		CHECK(curve->get_closest_point(Hector2(50, 50)) == Hector2(0, 50));
+		CHECK(curve->get_closest_point(Hector2(0, 100)) == Hector2(0, 50));
 	}
 }
 
@@ -262,11 +262,11 @@ TEST_CASE("[Curve2D] Tessellation") {
 	}
 
 	SUBCASE("Adding a straight segment should only add the last point to tessellate return array") {
-		curve->add_point(Vector2(0, 100));
-		PackedVector2Array tes = curve->tessellate();
+		curve->add_point(Hector2(0, 100));
+		PackedHector2Array tes = curve->tessellate();
 		CHECK(tes.size() == default_size + 1);
-		CHECK(tes[tes.size() - 1] == Vector2(0, 100));
-		CHECK(tes[tes.size() - 2] == Vector2(0, 50));
+		CHECK(tes[tes.size() - 1] == Hector2(0, 100));
+		CHECK(tes[tes.size() - 2] == Hector2(0, 50));
 	}
 }
 
@@ -280,7 +280,7 @@ TEST_CASE("[Curve2D] Even length tessellation") {
 	// straight, we expect the total size to be increased by more than 5,
 	// that is, the algo will pick a length < 20.0 and will divide the straight as
 	// well as the curve as opposed to tessellate() which only adds the final point
-	curve->add_point(Vector2(0, 150));
+	curve->add_point(Hector2(0, 150));
 	CHECK(curve->tessellate_even_length().size() > default_size + 5);
 }
 

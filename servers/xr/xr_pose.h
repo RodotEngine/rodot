@@ -48,8 +48,8 @@ private:
 	bool has_tracking_data = false;
 	StringName name;
 	Transform3D transform;
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
 	TrackingConfidence tracking_confidence = XR_TRACKING_CONFIDENCE_NONE;
 
 protected:
@@ -66,11 +66,11 @@ public:
 	Transform3D get_transform() const;
 	Transform3D get_adjusted_transform() const;
 
-	void set_linear_velocity(const Vector3 p_velocity);
-	Vector3 get_linear_velocity() const;
+	void set_linear_velocity(const Hector3 p_velocity);
+	Hector3 get_linear_velocity() const;
 
-	void set_angular_velocity(const Vector3 p_velocity);
-	Vector3 get_angular_velocity() const;
+	void set_angular_velocity(const Hector3 p_velocity);
+	Hector3 get_angular_velocity() const;
 
 	void set_tracking_confidence(const TrackingConfidence p_tracking_confidence);
 	TrackingConfidence get_tracking_confidence() const;

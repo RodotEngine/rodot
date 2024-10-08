@@ -472,12 +472,12 @@
 
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-  /* Get normalized design vector for current render request; */
+  /* Get normalized design Hector for current render request; */
   /* return pointer and length.                               */
   /*                                                          */
-  /* Note: Uses FT_Fixed not CF2_Fixed for the vector.        */
+  /* Note: Uses FT_Fixed not CF2_Fixed for the Hector.        */
   FT_LOCAL_DEF( FT_Error )
-  cf2_getNormalizedVector( PS_Decoder*  decoder,
+  cf2_getNormalizedHector( PS_Decoder*  decoder,
                            CF2_UInt     *len,
                            FT_Fixed*    *vec )
   {

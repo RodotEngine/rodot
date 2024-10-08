@@ -86,7 +86,7 @@ struct TSampler {   // misnomer now; includes images, textures without sampler, 
     bool   combined : 1;  // true means texture is combined with a sampler, false means texture with no sampler
     bool    sampler : 1;  // true means a pure sampler, other fields should be clear()
 
-    unsigned int vectorSize : 3;  // vector return type size.
+    unsigned int HectorSize : 3;  // Hector return type size.
     // Some languages support structures as sample results.  Storing the whole structure in the
     // TSampler is too large, so there is an index to a separate table.
     static const unsigned structReturnIndexBits = 4;                        // number of index bits to use.
@@ -99,7 +99,7 @@ struct TSampler {   // misnomer now; includes images, textures without sampler, 
     bool        yuv : 1;  // GL_EXT_YUV_target
 
 #ifdef ENABLE_HLSL
-    unsigned int getVectorSize() const { return vectorSize; }
+    unsigned int getHectorSize() const { return HectorSize; }
     void clearReturnStruct() { structReturnIndex = noReturnStruct; }
     bool hasReturnStruct() const { return structReturnIndex != noReturnStruct; }
     unsigned getStructReturnIndex() const { return structReturnIndex; }
@@ -143,7 +143,7 @@ struct TSampler {   // misnomer now; includes images, textures without sampler, 
 #ifdef ENABLE_HLSL
         clearReturnStruct();
         // by default, returns a single vec4;
-        vectorSize = 4;
+        HectorSize = 4;
 #endif
     }
 
@@ -222,7 +222,7 @@ struct TSampler {   // misnomer now; includes images, textures without sampler, 
             isExternal() == right.isExternal() &&
                  isYuv() == right.isYuv()
 #ifdef ENABLE_HLSL
-      && getVectorSize() == right.getVectorSize() &&
+      && getHectorSize() == right.getHectorSize() &&
   getStructReturnIndex() == right.getStructReturnIndex()
 #endif
         ;
@@ -303,9 +303,9 @@ struct TTypeLoc {
     TType* type;
     TSourceLoc loc;
 };
-typedef TVector<TTypeLoc> TTypeList;
+typedef THector<TTypeLoc> TTypeList;
 
-typedef TVector<TString*> TIdentifierList;
+typedef THector<TString*> TIdentifierList;
 
 //
 // Following are a series of helper enums for managing layouts and qualifiers,
@@ -1470,7 +1470,7 @@ public:
     TSampler sampler;
     TQualifier qualifier;
     TShaderQualifiers shaderQualifiers;
-    uint32_t vectorSize  : 4;
+    uint32_t HectorSize  : 4;
     uint32_t matrixCols  : 4;
     uint32_t matrixRows  : 4;
     bool coopmatNV  : 1;
@@ -1489,7 +1489,7 @@ public:
     void initType(const TSourceLoc& l)
     {
         basicType = EbtVoid;
-        vectorSize = 1u;
+        HectorSize = 1u;
         matrixRows = 0;
         matrixCols = 0;
         arraySizes = nullptr;
@@ -1516,12 +1516,12 @@ public:
         shaderQualifiers.init();
     }
 
-    void setVector(int s)
+    void setHector(int s)
     {
         matrixRows = 0;
         matrixCols = 0;
         assert(s >= 0);
-        vectorSize = static_cast<uint32_t>(s) & 0b1111;
+        HectorSize = static_cast<uint32_t>(s) & 0b1111;
     }
 
     void setMatrix(int c, int r)
@@ -1530,12 +1530,12 @@ public:
         matrixRows = static_cast<uint32_t>(r) & 0b1111;
         assert(c >= 0);
         matrixCols = static_cast<uint32_t>(c) & 0b1111;
-        vectorSize = 0;
+        HectorSize = 0;
     }
 
     bool isScalar() const
     {
-        return matrixCols == 0u && vectorSize == 1u && arraySizes == nullptr && userDef == nullptr;
+        return matrixCols == 0u && HectorSize == 1u && arraySizes == nullptr && userDef == nullptr;
     }
 
     // GL_EXT_spirv_intrinsics
@@ -1554,10 +1554,10 @@ class TType {
 public:
     POOL_ALLOCATOR_NEW_DELETE(GetThreadPoolAllocator())
 
-    // for "empty" type (no args) or simple scalar/vector/matrix
+    // for "empty" type (no args) or simple scalar/Hector/matrix
     explicit TType(TBasicType t = EbtVoid, TStorageQualifier q = EvqTemporary, int vs = 1, int mc = 0, int mr = 0,
-                   bool isVector = false) :
-                            basicType(t), vectorSize(static_cast<uint32_t>(vs) & 0b1111), matrixCols(static_cast<uint32_t>(mc) & 0b1111), matrixRows(static_cast<uint32_t>(mr) & 0b1111), vector1(isVector && vs == 1), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
+                   bool isHector = false) :
+                            basicType(t), HectorSize(static_cast<uint32_t>(vs) & 0b1111), matrixCols(static_cast<uint32_t>(mc) & 0b1111), matrixRows(static_cast<uint32_t>(mr) & 0b1111), Hector1(isHector && vs == 1), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
                             arraySizes(nullptr), structure(nullptr), fieldName(nullptr), typeName(nullptr), typeParameters(nullptr),
                             spirvType(nullptr)
                             {
@@ -1568,12 +1568,12 @@ public:
                                 sampler.clear();
                                 qualifier.clear();
                                 qualifier.storage = q;
-                                assert(!(isMatrix() && vectorSize != 0));  // prevent vectorSize != 0 on matrices
+                                assert(!(isMatrix() && HectorSize != 0));  // prevent HectorSize != 0 on matrices
                             }
     // for explicit precision qualifier
     TType(TBasicType t, TStorageQualifier q, TPrecisionQualifier p, int vs = 1, int mc = 0, int mr = 0,
-          bool isVector = false) :
-                            basicType(t), vectorSize(static_cast<uint32_t>(vs) & 0b1111), matrixCols(static_cast<uint32_t>(mc) & 0b1111), matrixRows(static_cast<uint32_t>(mr) & 0b1111), vector1(isVector && vs == 1), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
+          bool isHector = false) :
+                            basicType(t), HectorSize(static_cast<uint32_t>(vs) & 0b1111), matrixCols(static_cast<uint32_t>(mc) & 0b1111), matrixRows(static_cast<uint32_t>(mr) & 0b1111), Hector1(isHector && vs == 1), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
                             arraySizes(nullptr), structure(nullptr), fieldName(nullptr), typeName(nullptr), typeParameters(nullptr),
                             spirvType(nullptr)
                             {
@@ -1586,12 +1586,12 @@ public:
                                 qualifier.storage = q;
                                 qualifier.precision = p;
                                 assert(p >= EpqNone && p <= EpqHigh);
-                                assert(!(isMatrix() && vectorSize != 0));  // prevent vectorSize != 0 on matrices
+                                assert(!(isMatrix() && HectorSize != 0));  // prevent HectorSize != 0 on matrices
                             }
     // for turning a TPublicType into a TType, using a shallow copy
     explicit TType(const TPublicType& p) :
                             basicType(p.basicType),
-                            vectorSize(p.vectorSize), matrixCols(p.matrixCols), matrixRows(p.matrixRows), vector1(false), coopmatNV(p.coopmatNV), coopmatKHR(p.coopmatKHR), coopmatKHRuse(0), coopmatKHRUseValid(false),
+                            HectorSize(p.HectorSize), matrixCols(p.matrixCols), matrixRows(p.matrixRows), Hector1(false), coopmatNV(p.coopmatNV), coopmatKHR(p.coopmatKHR), coopmatKHRuse(0), coopmatKHRUseValid(false),
                             arraySizes(p.arraySizes), structure(nullptr), fieldName(nullptr), typeName(nullptr), typeParameters(p.typeParameters),
                             spirvType(p.spirvType)
                             {
@@ -1646,7 +1646,7 @@ public:
                             }
     // for construction of sampler types
     TType(const TSampler& sampler, TStorageQualifier q = EvqUniform, TArraySizes* as = nullptr) :
-        basicType(EbtSampler), vectorSize(1u), matrixCols(0u), matrixRows(0u), vector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
+        basicType(EbtSampler), HectorSize(1u), matrixCols(0u), matrixRows(0u), Hector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
         arraySizes(as), structure(nullptr), fieldName(nullptr), typeName(nullptr),
         sampler(sampler), typeParameters(nullptr), spirvType(nullptr)
     {
@@ -1673,22 +1673,22 @@ public:
                                     shallowCopy(*memberList[derefIndex].type);
                                     return;
                                 } else {
-                                    // do a vector/matrix dereference
+                                    // do a Hector/matrix dereference
                                     shallowCopy(type);
                                     if (matrixCols > 0) {
-                                        // dereference from matrix to vector
+                                        // dereference from matrix to Hector
                                         if (rowMajor)
-                                            vectorSize = matrixCols;
+                                            HectorSize = matrixCols;
                                         else
-                                            vectorSize = matrixRows;
+                                            HectorSize = matrixRows;
                                         matrixCols = 0;
                                         matrixRows = 0;
-                                        if (vectorSize == 1)
-                                            vector1 = true;
-                                    } else if (isVector()) {
-                                        // dereference from vector to scalar
-                                        vectorSize = 1;
-                                        vector1 = false;
+                                        if (HectorSize == 1)
+                                            Hector1 = true;
+                                    } else if (isHector()) {
+                                        // dereference from Hector to scalar
+                                        HectorSize = 1;
+                                        Hector1 = false;
                                     } else if (isCoopMat()) {
                                         coopmatNV = false;
                                         coopmatKHR = false;
@@ -1700,7 +1700,7 @@ public:
                             }
     // for making structures, ...
     TType(TTypeList* userDef, const TString& n) :
-                            basicType(EbtStruct), vectorSize(1), matrixCols(0), matrixRows(0), vector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
+                            basicType(EbtStruct), HectorSize(1), matrixCols(0), matrixRows(0), Hector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
                             arraySizes(nullptr), structure(userDef), fieldName(nullptr), typeParameters(nullptr),
                             spirvType(nullptr)
                             {
@@ -1710,7 +1710,7 @@ public:
                             }
     // For interface blocks
     TType(TTypeList* userDef, const TString& n, const TQualifier& q) :
-                            basicType(EbtBlock), vectorSize(1), matrixCols(0), matrixRows(0), vector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
+                            basicType(EbtBlock), HectorSize(1), matrixCols(0), matrixRows(0), Hector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
                             qualifier(q), arraySizes(nullptr), structure(userDef), fieldName(nullptr), typeParameters(nullptr),
                             spirvType(nullptr)
                             {
@@ -1719,7 +1719,7 @@ public:
                             }
     // for block reference (first parameter must be EbtReference)
     explicit TType(TBasicType t, const TType &p, const TString& n) :
-                            basicType(t), vectorSize(1), matrixCols(0), matrixRows(0), vector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
+                            basicType(t), HectorSize(1), matrixCols(0), matrixRows(0), Hector1(false), coopmatNV(false), coopmatKHR(false), coopmatKHRuse(0), coopmatKHRUseValid(false),
                             arraySizes(nullptr), structure(nullptr), fieldName(nullptr), typeName(nullptr), typeParameters(nullptr),
                             spirvType(nullptr)
                             {
@@ -1740,10 +1740,10 @@ public:
         basicType = copyOf.basicType;
         sampler = copyOf.sampler;
         qualifier = copyOf.qualifier;
-        vectorSize = copyOf.vectorSize;
+        HectorSize = copyOf.HectorSize;
         matrixCols = copyOf.matrixCols;
         matrixRows = copyOf.matrixRows;
-        vector1 = copyOf.vector1;
+        Hector1 = copyOf.Hector1;
         arraySizes = copyOf.arraySizes;  // copying the pointer only, not the contents
         fieldName = copyOf.fieldName;
         typeName = copyOf.typeName;
@@ -1785,9 +1785,9 @@ public:
         return newType;
     }
 
-    void makeVector() { vector1 = true; }
+    void makeHector() { Hector1 = true; }
 
-    virtual void hideMember() { basicType = EbtVoid; vectorSize = 1u; }
+    virtual void hideMember() { basicType = EbtVoid; HectorSize = 1u; }
     virtual bool hiddenMember() const { return basicType == EbtVoid; }
 
     virtual void setFieldName(const TString& n) { fieldName = NewPoolTString(n.c_str()); }
@@ -1827,7 +1827,7 @@ public:
     virtual       TQualifier& getQualifier()       { return qualifier; }
     virtual const TQualifier& getQualifier() const { return qualifier; }
 
-    virtual int getVectorSize() const { return static_cast<int>(vectorSize); }  // returns 1 for either scalar or vector of size 1, valid for both
+    virtual int getHectorSize() const { return static_cast<int>(HectorSize); }  // returns 1 for either scalar or Hector of size 1, valid for both
     virtual int getMatrixCols() const { return static_cast<int>(matrixCols); }
     virtual int getMatrixRows() const { return static_cast<int>(matrixRows); }
     virtual int getOuterArraySize()  const { return arraySizes->getOuterSize(); }
@@ -1841,10 +1841,10 @@ public:
     virtual const TTypeParameters* getTypeParameters() const { return typeParameters; }
     virtual       TTypeParameters* getTypeParameters()       { return typeParameters; }
 
-    virtual bool isScalar() const { return ! isVector() && ! isMatrix() && ! isStruct() && ! isArray(); }
-    virtual bool isScalarOrVec1() const { return isScalar() || vector1; }
-    virtual bool isScalarOrVector() const { return !isMatrix() && !isStruct() && !isArray(); }
-    virtual bool isVector() const { return vectorSize > 1u || vector1; }
+    virtual bool isScalar() const { return ! isHector() && ! isMatrix() && ! isStruct() && ! isArray(); }
+    virtual bool isScalarOrVec1() const { return isScalar() || Hector1; }
+    virtual bool isScalarOrHector() const { return !isMatrix() && !isStruct() && !isArray(); }
+    virtual bool isHector() const { return HectorSize > 1u || Hector1; }
     virtual bool isMatrix() const { return matrixCols ? true : false; }
     virtual bool isArray()  const { return arraySizes != nullptr; }
     virtual bool isSizedArray() const { return isArray() && arraySizes->isSized(); }
@@ -2314,7 +2314,7 @@ public:
               appendStr(" ");
               appendStr(getPrecisionQualifierString());
             }
-            if (isVector() || isMatrix()) {
+            if (isHector() || isMatrix()) {
               appendStr(" ");
               switch (basicType) {
               case EbtDouble:
@@ -2333,9 +2333,9 @@ public:
               default:
                 break;
               }
-              if (isVector()) {
+              if (isHector()) {
                 appendStr("vec");
-                appendInt(vectorSize);
+                appendInt(HectorSize);
               } else {
                 appendStr("mat");
                 appendInt(matrixCols);
@@ -2455,10 +2455,10 @@ public:
               appendInt(matrixRows);
               appendStr(" matrix of");
             }
-            else if (isVector()) {
+            else if (isHector()) {
               appendStr(" ");
-              appendInt(vectorSize);
-              appendStr("-component vector of");
+              appendInt(HectorSize);
+              appendStr("-component Hector of");
             }
 
             appendStr(" ");
@@ -2507,9 +2507,9 @@ public:
     void setStruct(TTypeList* s) { assert(isStruct()); structure = s; }
     TTypeList* getWritableStruct() const { assert(isStruct()); return structure; }  // This should only be used when known to not be sharing with other threads
     void setBasicType(const TBasicType& t) { basicType = t; }
-    void setVectorSize(int s) {
+    void setHectorSize(int s) {
         assert(s >= 0);
-        vectorSize = static_cast<uint32_t>(s) & 0b1111;
+        HectorSize = static_cast<uint32_t>(s) & 0b1111;
     }
 
     int computeNumComponents() const
@@ -2522,7 +2522,7 @@ public:
         } else if (matrixCols)
             components = matrixCols * matrixRows;
         else
-            components = vectorSize;
+            components = HectorSize;
 
         if (arraySizes != nullptr) {
             components *= arraySizes->getCumulativeSize();
@@ -2714,10 +2714,10 @@ public:
             *rpidx = -1;
         }
         return ((basicType != EbtSampler && right.basicType != EbtSampler) || sampler == right.sampler) &&
-               vectorSize == right.vectorSize &&
+               HectorSize == right.HectorSize &&
                matrixCols == right.matrixCols &&
                matrixRows == right.matrixRows &&
-                  vector1 == right.vector1    &&
+                  Hector1 == right.Hector1    &&
               isCoopMatNV() == right.isCoopMatNV() &&
               isCoopMatKHR() == right.isCoopMatKHR() &&
                sameStructType(right, lpidx, rpidx) &&
@@ -2873,13 +2873,13 @@ protected:
     void buildMangledName(TString&) const;
 
     TBasicType basicType : 8;
-    uint32_t vectorSize       : 4;  // 1 means either scalar or 1-component vector; see vector1 to disambiguate.
+    uint32_t HectorSize       : 4;  // 1 means either scalar or 1-component Hector; see Hector1 to disambiguate.
     uint32_t matrixCols       : 4;
     uint32_t matrixRows       : 4;
-    bool vector1         : 1;  // Backward-compatible tracking of a 1-component vector distinguished from a scalar.
-                               // GLSL 4.5 never has a 1-component vector; so this will always be false until such
+    bool Hector1         : 1;  // Backward-compatible tracking of a 1-component Hector distinguished from a scalar.
+                               // GLSL 4.5 never has a 1-component Hector; so this will always be false until such
                                // functionality is added.
-                               // HLSL does have a 1-component vectors, so this will be true to disambiguate
+                               // HLSL does have a 1-component Hectors, so this will be true to disambiguate
                                // from a scalar.
     bool coopmatNV       : 1;
     bool coopmatKHR      : 1;

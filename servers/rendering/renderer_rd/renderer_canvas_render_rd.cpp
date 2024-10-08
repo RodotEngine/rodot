@@ -100,7 +100,7 @@ void RendererCanvasRenderRD::_update_transform_to_mat4(const Transform3D &p_tran
 	p_mat4[15] = 1;
 }
 
-RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, const Vector<int> &p_bones, const Vector<float> &p_weights) {
+RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, const Hector<int> &p_bones, const Hector<float> &p_weights) {
 	// Care must be taken to generate array formats
 	// in ways where they could be reused, so we will
 	// put single-occuring elements first, and repeated
@@ -125,11 +125,11 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 
 	uint32_t buffer_size = stride * p_points.size();
 
-	Vector<uint8_t> polygon_buffer;
+	Hector<uint8_t> polygon_buffer;
 	polygon_buffer.resize(buffer_size * sizeof(float));
-	Vector<RD::VertexAttribute> descriptions;
+	Hector<RD::VertexAttribute> descriptions;
 	descriptions.resize(5);
-	Vector<RID> buffers;
+	Hector<RID> buffers;
 	buffers.resize(5);
 
 	{
@@ -146,7 +146,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 
 			descriptions.write[0] = vd;
 
-			const Vector2 *points_ptr = p_points.ptr();
+			const Hector2 *points_ptr = p_points.ptr();
 
 			for (uint32_t i = 0; i < vertex_count; i++) {
 				fptr[base_offset + i * stride + 0] = points_ptr[i].x;
@@ -206,7 +206,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 
 			descriptions.write[2] = vd;
 
-			const Vector2 *uv_ptr = p_uvs.ptr();
+			const Hector2 *uv_ptr = p_uvs.ptr();
 
 			for (uint32_t i = 0; i < vertex_count; i++) {
 				fptr[base_offset + i * stride + 0] = uv_ptr[i].x;
@@ -310,7 +310,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 
 	if (p_indices.size()) {
 		//create indices, as indices were requested
-		Vector<uint8_t> index_buffer;
+		Hector<uint8_t> index_buffer;
 		index_buffer.resize(p_indices.size() * sizeof(int32_t));
 		{
 			uint8_t *w = index_buffer.ptrw();
@@ -379,7 +379,7 @@ RID RendererCanvasRenderRD::_create_base_uniform_set(RID p_to_render_target, boo
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 
 	//re create canvas state
-	Vector<RD::Uniform> uniforms;
+	Hector<RD::Uniform> uniforms;
 
 	{
 		RD::Uniform u;
@@ -537,7 +537,7 @@ void RendererCanvasRenderRD::canvas_render_items(RID p_to_render_target, Item *p
 				ERR_CONTINUE(!clight);
 			}
 
-			Vector2 canvas_light_dir = l->xform_cache.columns[1].normalized();
+			Hector2 canvas_light_dir = l->xform_cache.columns[1].normalized();
 
 			state.light_uniforms[index].position[0] = -canvas_light_dir.x;
 			state.light_uniforms[index].position[1] = -canvas_light_dir.y;
@@ -608,7 +608,7 @@ void RendererCanvasRenderRD::canvas_render_items(RID p_to_render_target, Item *p
 				TransformInterpolator::interpolate_transform_2d(l->xform_prev, l->xform_curr, final_xform, f);
 			}
 			// Convert light position to canvas coordinates, as all computation is done in canvas coordinates to avoid precision loss.
-			Vector2 canvas_light_pos = p_canvas_transform.xform(final_xform.get_origin());
+			Hector2 canvas_light_pos = p_canvas_transform.xform(final_xform.get_origin());
 			state.light_uniforms[index].position[0] = canvas_light_pos.x;
 			state.light_uniforms[index].position[1] = canvas_light_pos.y;
 
@@ -674,14 +674,14 @@ void RendererCanvasRenderRD::canvas_render_items(RID p_to_render_target, Item *p
 
 		Transform3D screen_transform;
 		screen_transform.translate_local(-(ssize.width / 2.0f), -(ssize.height / 2.0f), 0.0f);
-		screen_transform.scale(Vector3(2.0f / ssize.width, 2.0f / ssize.height, 1.0f));
+		screen_transform.scale(Hector3(2.0f / ssize.width, 2.0f / ssize.height, 1.0f));
 		_update_transform_to_mat4(screen_transform, state_buffer.screen_transform);
 		_update_transform_2d_to_mat4(p_canvas_transform, state_buffer.canvas_transform);
 
 		Transform2D normal_transform = p_canvas_transform;
 		normal_transform.columns[0].normalize();
 		normal_transform.columns[1].normalize();
-		normal_transform.columns[2] = Vector2();
+		normal_transform.columns[2] = Hector2();
 		_update_transform_2d_to_mat4(normal_transform, state_buffer.canvas_normal_transform);
 
 		bool use_linear_colors = texture_storage->render_target_is_using_hdr(p_to_render_target);
@@ -703,7 +703,7 @@ void RendererCanvasRenderRD::canvas_render_items(RID p_to_render_target, Item *p
 
 		state_buffer.directional_light_count = directional_light_count;
 
-		Vector2 canvas_scale = p_canvas_transform.get_scale();
+		Hector2 canvas_scale = p_canvas_transform.get_scale();
 
 		state_buffer.sdf_to_screen[0] = render_target_size.width / canvas_scale.x;
 		state_buffer.sdf_to_screen[1] = render_target_size.height / canvas_scale.y;
@@ -953,7 +953,7 @@ void RendererCanvasRenderRD::_update_shadow_atlas() {
 		//ah, we lack the shadow texture..
 		RD::get_singleton()->free(state.shadow_texture); //erase placeholder
 
-		Vector<RID> fb_textures;
+		Hector<RID> fb_textures;
 
 		{ //texture
 			RD::TextureFormat tf;
@@ -990,13 +990,13 @@ void RendererCanvasRenderRD::light_update_shadow(RID p_rid, int p_shadow_index, 
 
 	cl->shadow.z_far = p_far;
 	cl->shadow.y_offset = float(p_shadow_index * 2 + 1) / float(state.max_lights_per_render * 2);
-	Vector<Color> cc;
+	Hector<Color> cc;
 	cc.push_back(Color(p_far, p_far, p_far, 1.0));
 
 	for (int i = 0; i < 4; i++) {
 		//make sure it remains orthogonal, makes easy to read angle later
 
-		//light.basis.scale(Vector3(to_light.elements[0].length(),to_light.elements[1].length(),1));
+		//light.basis.scale(Hector3(to_light.elements[0].length(),to_light.elements[1].length(),1));
 
 		Rect2i rect((state.shadow_texture_size / 4) * i, p_shadow_index * 2, (state.shadow_texture_size / 4), 2);
 		RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(state.shadow_fb, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_DISCARD, cc, 1.0, 0, rect);
@@ -1016,8 +1016,8 @@ void RendererCanvasRenderRD::light_update_shadow(RID p_rid, int p_shadow_index, 
 			projection.set_frustum(xmin, xmax, ymin, ymax, nearp, farp);
 		}
 
-		Vector3 cam_target = Basis::from_euler(Vector3(0, 0, Math_TAU * ((i + 3) / 4.0))).xform(Vector3(0, 1, 0));
-		projection = projection * Projection(Transform3D().looking_at(cam_target, Vector3(0, 0, -1)).affine_inverse());
+		Hector3 cam_target = Basis::from_euler(Hector3(0, 0, Math_TAU * ((i + 3) / 4.0))).xform(Hector3(0, 1, 0));
+		projection = projection * Projection(Transform3D().looking_at(cam_target, Hector3(0, 0, -1)).affine_inverse());
 
 		ShadowRenderPushConstant push_constant;
 		for (int y = 0; y < 4; y++) {
@@ -1025,7 +1025,7 @@ void RendererCanvasRenderRD::light_update_shadow(RID p_rid, int p_shadow_index, 
 				push_constant.projection[y * 4 + x] = projection.columns[y][x];
 			}
 		}
-		static const Vector2 directions[4] = { Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1) };
+		static const Hector2 directions[4] = { Hector2(1, 0), Hector2(0, 1), Hector2(-1, 0), Hector2(0, -1) };
 		push_constant.direction[0] = directions[i].x;
 		push_constant.direction[1] = directions[i].y;
 		push_constant.z_far = p_far;
@@ -1063,13 +1063,13 @@ void RendererCanvasRenderRD::light_update_directional_shadow(RID p_rid, int p_sh
 
 	_update_shadow_atlas();
 
-	Vector2 light_dir = p_light_xform.columns[1].normalized();
+	Hector2 light_dir = p_light_xform.columns[1].normalized();
 
-	Vector2 center = p_clip_rect.get_center();
+	Hector2 center = p_clip_rect.get_center();
 
 	float to_edge_distance = ABS(light_dir.dot(p_clip_rect.get_support(-light_dir)) - light_dir.dot(center));
 
-	Vector2 from_pos = center - light_dir * (to_edge_distance + p_cull_distance);
+	Hector2 from_pos = center - light_dir * (to_edge_distance + p_cull_distance);
 	float distance = to_edge_distance * 2.0 + p_cull_distance;
 	float half_size = p_clip_rect.size.length() * 0.5; //shadow length, must keep this no matter the angle
 
@@ -1084,7 +1084,7 @@ void RendererCanvasRenderRD::light_update_directional_shadow(RID p_rid, int p_sh
 
 	to_light_xform.invert();
 
-	Vector<Color> cc;
+	Hector<Color> cc;
 	cc.push_back(Color(1, 1, 1, 1));
 
 	Rect2i rect(0, p_shadow_index * 2, state.shadow_texture_size, 2);
@@ -1092,7 +1092,7 @@ void RendererCanvasRenderRD::light_update_directional_shadow(RID p_rid, int p_sh
 
 	Projection projection;
 	projection.set_orthogonal(-half_size, half_size, -0.5, 0.5, 0.0, distance);
-	projection = projection * Projection(Transform3D().looking_at(Vector3(0, 1, 0), Vector3(0, 0, -1)).affine_inverse());
+	projection = projection * Projection(Transform3D().looking_at(Hector3(0, 1, 0), Hector3(0, 0, -1)).affine_inverse());
 
 	ShadowRenderPushConstant push_constant;
 	for (int y = 0; y < 4; y++) {
@@ -1151,11 +1151,11 @@ void RendererCanvasRenderRD::render_sdf(RID p_render_target, LightOccluderInstan
 	Transform2D to_clip;
 	to_clip.columns[0] *= 2.0;
 	to_clip.columns[1] *= 2.0;
-	to_clip.columns[2] = -Vector2(1.0, 1.0);
+	to_clip.columns[2] = -Hector2(1.0, 1.0);
 
 	to_clip = to_clip * to_sdf.affine_inverse();
 
-	Vector<Color> cc;
+	Hector<Color> cc;
 	cc.push_back(Color(0, 0, 0, 0));
 
 	RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(fb, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_DISCARD, cc);
@@ -1210,27 +1210,27 @@ RID RendererCanvasRenderRD::occluder_polygon_create() {
 	return occluder_polygon_owner.make_rid(occluder);
 }
 
-void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Vector<Vector2> &p_points, bool p_closed) {
+void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Hector<Hector2> &p_points, bool p_closed) {
 	OccluderPolygon *oc = occluder_polygon_owner.get_or_null(p_occluder);
 	ERR_FAIL_NULL(oc);
 
-	Vector<Vector2> lines;
+	Hector<Hector2> lines;
 
 	if (p_points.size()) {
 		int lc = p_points.size() * 2;
 
 		lines.resize(lc - (p_closed ? 0 : 2));
 		{
-			Vector2 *w = lines.ptrw();
-			const Vector2 *r = p_points.ptr();
+			Hector2 *w = lines.ptrw();
+			const Hector2 *r = p_points.ptr();
 
 			int max = lc / 2;
 			if (!p_closed) {
 				max--;
 			}
 			for (int i = 0; i < max; i++) {
-				Vector2 a = r[i];
-				Vector2 b = r[(i + 1) % (lc / 2)];
+				Hector2 a = r[i];
+				Hector2 b = r[(i + 1) % (lc / 2)];
 				w[i * 2 + 0] = a;
 				w[i * 2 + 1] = b;
 			}
@@ -1253,8 +1253,8 @@ void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Ve
 
 	if (lines.size()) {
 		oc->line_point_count = lines.size();
-		Vector<uint8_t> geometry;
-		Vector<uint8_t> indices;
+		Hector<uint8_t> geometry;
+		Hector<uint8_t> indices;
 		int lc = lines.size();
 
 		geometry.resize(lc * 6 * sizeof(float));
@@ -1266,7 +1266,7 @@ void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Ve
 			uint8_t *iw = indices.ptrw();
 			uint16_t *iwptr = (uint16_t *)iw;
 
-			const Vector2 *lr = lines.ptr();
+			const Hector2 *lr = lines.ptr();
 
 			const int POLY_HEIGHT = 16384;
 
@@ -1304,7 +1304,7 @@ void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Ve
 			//vertices
 			oc->vertex_buffer = RD::get_singleton()->vertex_buffer_create(lc * 6 * sizeof(float), geometry);
 
-			Vector<RID> buffer;
+			Hector<RID> buffer;
 			buffer.push_back(oc->vertex_buffer);
 			oc->vertex_array = RD::get_singleton()->vertex_array_create(4 * lc / 2, shadow_render.vertex_format, buffer);
 			//indices
@@ -1323,7 +1323,7 @@ void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Ve
 
 	// sdf
 
-	Vector<int> sdf_indices;
+	Hector<int> sdf_indices;
 
 	if (p_points.size()) {
 		if (p_closed) {
@@ -1378,7 +1378,7 @@ void RendererCanvasRenderRD::occluder_polygon_set_shape(RID p_occluder, const Ve
 			oc->sdf_index_buffer = RD::get_singleton()->index_buffer_create(sdf_indices.size(), RD::INDEX_BUFFER_FORMAT_UINT32, sdf_indices.to_byte_array());
 			oc->sdf_index_array = RD::get_singleton()->index_array_create(oc->sdf_index_buffer, 0, sdf_indices.size());
 
-			Vector<RID> buffer;
+			Hector<RID> buffer;
 			buffer.push_back(oc->sdf_vertex_buffer);
 			oc->sdf_vertex_array = RD::get_singleton()->vertex_array_create(p_points.size(), shadow_render.sdf_vertex_format, buffer);
 			//indices
@@ -1450,7 +1450,7 @@ void RendererCanvasRenderRD::CanvasShaderData::_create_pipeline(PipelineKey p_pi
 	multisample_state.sample_count = RD::get_singleton()->framebuffer_format_get_texture_samples(p_pipeline_key.framebuffer_format_id, 0);
 
 	// Convert the specialization from the key to pipeline specialization constants.
-	Vector<RD::PipelineSpecializationConstant> specialization_constants;
+	Hector<RD::PipelineSpecializationConstant> specialization_constants;
 	RD::PipelineSpecializationConstant sc;
 	sc.constant_id = 0;
 	sc.int_value = p_pipeline_key.shader_specialization.packed_0;
@@ -1664,7 +1664,7 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 		global_defines += "\n#define SAMPLERS_BINDING_FIRST_INDEX " + itos(SAMPLERS_BINDING_FIRST_INDEX) + "\n";
 
 		state.light_uniforms = memnew_arr(LightUniform, state.max_lights_per_render);
-		Vector<String> variants;
+		Hector<String> variants;
 		const uint32_t ubershader_iterations = 1;
 		for (uint32_t ubershader = 0; ubershader < ubershader_iterations; ubershader++) {
 			const String base_define = ubershader ? "\n#define UBERSHADER\n" : "";
@@ -1767,13 +1767,13 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 	}
 
 	{ //shadow rendering
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("\n#define MODE_SHADOW\n"); //shadow
 		versions.push_back("\n#define MODE_SDF\n"); //sdf
 		shadow_render.shader.initialize(versions);
 
 		{
-			Vector<RD::AttachmentFormat> attachments;
+			Hector<RD::AttachmentFormat> attachments;
 
 			RD::AttachmentFormat af_color;
 			af_color.format = RD::DATA_FORMAT_R32_SFLOAT;
@@ -1791,7 +1791,7 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 		}
 
 		{
-			Vector<RD::AttachmentFormat> attachments;
+			Hector<RD::AttachmentFormat> attachments;
 
 			RD::AttachmentFormat af_color;
 			af_color.format = RD::DATA_FORMAT_R8_UNORM;
@@ -1803,7 +1803,7 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 		}
 
 		//pipelines
-		Vector<RD::VertexAttribute> vf;
+		Hector<RD::VertexAttribute> vf;
 		RD::VertexAttribute vd;
 		vd.format = RD::DATA_FORMAT_R32G32B32_SFLOAT;
 		vd.stride = sizeof(float) * 3;
@@ -1856,7 +1856,7 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 
 	{ // default index buffer
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(6 * 2);
 		{
 			uint8_t *w = pv.ptrw();
@@ -1892,7 +1892,7 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 	}
 
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 
 		{
 			RD::Uniform u;
@@ -1995,7 +1995,7 @@ bool RendererCanvasRenderRD::free(RID p_rid) {
 		light_set_use_shadow(p_rid, false);
 		canvas_light_owner.free(p_rid);
 	} else if (occluder_polygon_owner.owns(p_rid)) {
-		occluder_polygon_set_shape(p_rid, Vector<Vector2>(), false);
+		occluder_polygon_set_shape(p_rid, Hector<Hector2>(), false);
 		occluder_polygon_owner.free(p_rid);
 	} else {
 		return false;
@@ -2092,7 +2092,7 @@ void RendererCanvasRenderRD::_render_batch_items(RenderTarget p_to_render_target
 				current_batch->material_data = material_data;
 			}
 
-			if (ci->repeat_source_item == nullptr || ci->repeat_size == Vector2()) {
+			if (ci->repeat_source_item == nullptr || ci->repeat_size == Hector2()) {
 				Transform2D base_transform = p_canvas_transform_inverse * ci->final_transform;
 				_record_item_commands(ci, p_to_render_target, base_transform, current_clip, p_lights, instance_index, batch_broken, r_sdf_used, current_batch);
 			} else {
@@ -2135,7 +2135,7 @@ void RendererCanvasRenderRD::_render_batch_items(RenderTarget p_to_render_target
 	RID framebuffer;
 	RID fb_uniform_set;
 	bool clear = false;
-	Vector<Color> clear_colors;
+	Hector<Color> clear_colors;
 
 	if (p_to_backbuffer) {
 		framebuffer = texture_storage->render_target_get_rd_backbuffer_framebuffer(p_to_render_target.render_target);
@@ -2687,7 +2687,7 @@ void RendererCanvasRenderRD::_record_item_commands(const Item *p_item, RenderTar
 						{
 							Rect2 sdf_rect = texture_storage->render_target_get_sdf_rect(p_render_target.render_target);
 
-							to_screen.size = Vector2(1.0 / sdf_rect.size.width, 1.0 / sdf_rect.size.height);
+							to_screen.size = Hector2(1.0 / sdf_rect.size.width, 1.0 / sdf_rect.size.height);
 							to_screen.position = -sdf_rect.position * to_screen.size;
 						}
 
@@ -3033,7 +3033,7 @@ void RendererCanvasRenderRD::_prepare_batch_texture_info(Batch *p_current_batch,
 	uint8_t r = uint8_t(CLAMP(info.specular_color.r * 255.0, 0.0, 255.0));
 	p_current_batch->tex_info.specular_shininess = uint32_t(a) << 24 | uint32_t(b) << 16 | uint32_t(g) << 8 | uint32_t(r);
 
-	p_current_batch->tex_info.texpixel_size = Vector2(1.0 / float(info.size.width), 1.0 / float(info.size.height));
+	p_current_batch->tex_info.texpixel_size = Hector2(1.0 / float(info.size.width), 1.0 / float(info.size.height));
 }
 
 RendererCanvasRenderRD::~RendererCanvasRenderRD() {

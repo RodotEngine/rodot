@@ -1113,7 +1113,7 @@ namespace Godot
         /// Divides each component of the <see cref="Color"/>
         /// by the given <see langword="float"/>.
         /// </summary>
-        /// <param name="color">The dividend vector.</param>
+        /// <param name="color">The dividend Hector.</param>
         /// <param name="scale">The divisor value.</param>
         /// <returns>The divided color.</returns>
         public static Color operator /(Color color, float scale)

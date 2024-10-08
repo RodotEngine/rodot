@@ -463,7 +463,7 @@ void VersionControlEditorPlugin::_force_push() {
 }
 
 void VersionControlEditorPlugin::_update_opened_tabs() {
-	Vector<EditorData::EditedScene> open_scenes = EditorNode::get_editor_data().get_edited_scenes();
+	Hector<EditorData::EditedScene> open_scenes = EditorNode::get_editor_data().get_edited_scenes();
 	for (int i = 0; i < open_scenes.size(); i++) {
 		if (open_scenes[i].root == nullptr) {
 			continue;
@@ -626,7 +626,7 @@ void VersionControlEditorPlugin::_display_diff(int p_idx) {
 }
 
 void VersionControlEditorPlugin::_display_diff_split_view(List<EditorVCSInterface::DiffLine> &p_diff_content) {
-	LocalVector<EditorVCSInterface::DiffLine> parsed_diff;
+	LocalHector<EditorVCSInterface::DiffLine> parsed_diff;
 
 	for (EditorVCSInterface::DiffLine diff_line : p_diff_content) {
 		String line = diff_line.content.strip_edges(false, true);

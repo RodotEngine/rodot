@@ -32,13 +32,13 @@
 #define DELAUNAY_2D_H
 
 #include "core/math/rect2.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 class Delaunay2D {
 public:
 	struct Triangle {
 		int points[3];
-		Vector2 circum_center;
+		Hector2 circum_center;
 		real_t circum_radius_squared;
 		Triangle() {}
 		Triangle(int p_a, int p_b, int p_c) {
@@ -64,14 +64,14 @@ public:
 		}
 	};
 
-	static Triangle create_triangle(const Vector<Vector2> &p_vertices, int p_a, int p_b, int p_c) {
+	static Triangle create_triangle(const Hector<Hector2> &p_vertices, int p_a, int p_b, int p_c) {
 		Triangle triangle = Triangle(p_a, p_b, p_c);
 
 		// Get the values of the circumcircle and store them inside the triangle object.
-		Vector2 a = p_vertices[p_b] - p_vertices[p_a];
-		Vector2 b = p_vertices[p_c] - p_vertices[p_a];
+		Hector2 a = p_vertices[p_b] - p_vertices[p_a];
+		Hector2 b = p_vertices[p_c] - p_vertices[p_a];
 
-		Vector2 O = (b * a.length_squared() - a * b.length_squared()).orthogonal() / (a.cross(b) * 2.0f);
+		Hector2 O = (b * a.length_squared() - a * b.length_squared()).orthogonal() / (a.cross(b) * 2.0f);
 
 		triangle.circum_radius_squared = O.length_squared();
 		triangle.circum_center = O + p_vertices[p_a];
@@ -79,9 +79,9 @@ public:
 		return triangle;
 	}
 
-	static Vector<Triangle> triangulate(const Vector<Vector2> &p_points) {
-		Vector<Vector2> points = p_points;
-		Vector<Triangle> triangles;
+	static Hector<Triangle> triangulate(const Hector<Hector2> &p_points) {
+		Hector<Hector2> points = p_points;
+		Hector<Triangle> triangles;
 
 		int point_count = p_points.size();
 		if (point_count <= 2) {
@@ -95,18 +95,18 @@ public:
 		}
 
 		real_t delta_max = MAX(rect.size.width, rect.size.height);
-		Vector2 center = rect.get_center();
+		Hector2 center = rect.get_center();
 
 		// Construct a bounding triangle around the rectangle.
-		points.push_back(Vector2(center.x - delta_max * 16, center.y - delta_max));
-		points.push_back(Vector2(center.x, center.y + delta_max * 16));
-		points.push_back(Vector2(center.x + delta_max * 16, center.y - delta_max));
+		points.push_back(Hector2(center.x - delta_max * 16, center.y - delta_max));
+		points.push_back(Hector2(center.x, center.y + delta_max * 16));
+		points.push_back(Hector2(center.x + delta_max * 16, center.y - delta_max));
 
 		Triangle bounding_triangle = create_triangle(points, point_count + 0, point_count + 1, point_count + 2);
 		triangles.push_back(bounding_triangle);
 
 		for (int i = 0; i < point_count; i++) {
-			Vector<Edge> polygon;
+			Hector<Edge> polygon;
 
 			// Save the edges of the triangles whose circumcircles contain the i-th vertex. Delete the triangles themselves.
 			for (int j = triangles.size() - 1; j >= 0; j--) {

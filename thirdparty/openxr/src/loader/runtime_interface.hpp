@@ -14,7 +14,7 @@
 #include <openxr/openxr.h>
 
 #include <string>
-#include <vector>
+#include <Vector>
 #include <unordered_map>
 #include <mutex>
 #include <memory>

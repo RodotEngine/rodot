@@ -104,30 +104,30 @@ void SpriteFramesEditor::_sheet_preview_draw() {
 	const Color shadow_color = Color(0, 0, 0, 0.3);
 
 	// Vertical lines.
-	_draw_shadowed_line(split_sheet_preview, draw_offset, Vector2(0, draw_size.y), Vector2(1, 0), line_color, shadow_color);
+	_draw_shadowed_line(split_sheet_preview, draw_offset, Hector2(0, draw_size.y), Hector2(1, 0), line_color, shadow_color);
 	for (int i = 0; i < frame_count.x - 1; i++) {
-		const Point2 start = draw_offset + Vector2(i * draw_sep.x + (i + 1) * draw_frame_size.x, 0);
+		const Point2 start = draw_offset + Hector2(i * draw_sep.x + (i + 1) * draw_frame_size.x, 0);
 		if (separation.x == 0) {
-			_draw_shadowed_line(split_sheet_preview, start, Vector2(0, draw_size.y), Vector2(1, 0), line_color, shadow_color);
+			_draw_shadowed_line(split_sheet_preview, start, Hector2(0, draw_size.y), Hector2(1, 0), line_color, shadow_color);
 		} else {
 			const Size2 size = Size2(draw_sep.x, draw_size.y);
 			split_sheet_preview->draw_rect(Rect2(start, size), line_color);
 		}
 	}
-	_draw_shadowed_line(split_sheet_preview, draw_offset + Vector2(draw_size.x, 0), Vector2(0, draw_size.y), Vector2(1, 0), line_color, shadow_color);
+	_draw_shadowed_line(split_sheet_preview, draw_offset + Hector2(draw_size.x, 0), Hector2(0, draw_size.y), Hector2(1, 0), line_color, shadow_color);
 
 	// Horizontal lines.
-	_draw_shadowed_line(split_sheet_preview, draw_offset, Vector2(draw_size.x, 0), Vector2(0, 1), line_color, shadow_color);
+	_draw_shadowed_line(split_sheet_preview, draw_offset, Hector2(draw_size.x, 0), Hector2(0, 1), line_color, shadow_color);
 	for (int i = 0; i < frame_count.y - 1; i++) {
-		const Point2 start = draw_offset + Vector2(0, i * draw_sep.y + (i + 1) * draw_frame_size.y);
+		const Point2 start = draw_offset + Hector2(0, i * draw_sep.y + (i + 1) * draw_frame_size.y);
 		if (separation.y == 0) {
-			_draw_shadowed_line(split_sheet_preview, start, Vector2(draw_size.x, 0), Vector2(0, 1), line_color, shadow_color);
+			_draw_shadowed_line(split_sheet_preview, start, Hector2(draw_size.x, 0), Hector2(0, 1), line_color, shadow_color);
 		} else {
 			const Size2 size = Size2(draw_size.x, draw_sep.y);
 			split_sheet_preview->draw_rect(Rect2(start, size), line_color);
 		}
 	}
-	_draw_shadowed_line(split_sheet_preview, draw_offset + Vector2(0, draw_size.y), Vector2(draw_size.x, 0), Vector2(0, 1), line_color, shadow_color);
+	_draw_shadowed_line(split_sheet_preview, draw_offset + Hector2(0, draw_size.y), Hector2(draw_size.x, 0), Hector2(0, 1), line_color, shadow_color);
 
 	if (frames_selected.size() == 0) {
 		split_sheet_dialog->get_ok_button()->set_disabled(true);
@@ -157,7 +157,7 @@ void SpriteFramesEditor::_sheet_preview_draw() {
 		split_sheet_preview->draw_rect(Rect2(pos + Size2(5, 5), draw_frame_size - Size2(10, 10)), Color(0, 0, 0, 1), false);
 
 		const String text = itos(i);
-		const Vector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
+		const Hector2 string_size = font->get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
 
 		// Stop rendering text if too large.
 		if (string_size.x + 6 < draw_frame_size.x && string_size.y / 2 + 10 < draw_frame_size.y) {
@@ -271,7 +271,7 @@ void SpriteFramesEditor::_sheet_scroll_input(const Ref<InputEvent> &p_event) {
 
 	const Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid() && mm->get_button_mask().has_flag(MouseButtonMask::MIDDLE)) {
-		const Vector2 dragged = Input::get_singleton()->warp_mouse_motion(mm, split_sheet_scroll->get_global_rect());
+		const Hector2 dragged = Input::get_singleton()->warp_mouse_motion(mm, split_sheet_scroll->get_global_rect());
 		split_sheet_scroll->set_h_scroll(split_sheet_scroll->get_h_scroll() - dragged.x);
 		split_sheet_scroll->set_v_scroll(split_sheet_scroll->get_v_scroll() - dragged.y);
 	}
@@ -308,25 +308,25 @@ void SpriteFramesEditor::_sheet_add_frames() {
 	undo_redo->commit_action();
 }
 
-void SpriteFramesEditor::_sheet_zoom_on_position(float p_zoom, const Vector2 &p_position) {
+void SpriteFramesEditor::_sheet_zoom_on_position(float p_zoom, const Hector2 &p_position) {
 	const float old_zoom = sheet_zoom;
 	sheet_zoom = CLAMP(sheet_zoom * p_zoom, min_sheet_zoom, max_sheet_zoom);
 
 	const Size2 texture_size = split_sheet_preview->get_texture()->get_size();
 	split_sheet_preview->set_custom_minimum_size(texture_size * sheet_zoom);
 
-	Vector2 offset = Vector2(split_sheet_scroll->get_h_scroll(), split_sheet_scroll->get_v_scroll());
+	Hector2 offset = Hector2(split_sheet_scroll->get_h_scroll(), split_sheet_scroll->get_v_scroll());
 	offset = (offset + p_position) / old_zoom * sheet_zoom - p_position;
 	split_sheet_scroll->set_h_scroll(offset.x);
 	split_sheet_scroll->set_v_scroll(offset.y);
 }
 
 void SpriteFramesEditor::_sheet_zoom_in() {
-	_sheet_zoom_on_position(scale_ratio, Vector2());
+	_sheet_zoom_on_position(scale_ratio, Hector2());
 }
 
 void SpriteFramesEditor::_sheet_zoom_out() {
-	_sheet_zoom_on_position(1 / scale_ratio, Vector2());
+	_sheet_zoom_on_position(1 / scale_ratio, Hector2());
 }
 
 void SpriteFramesEditor::_sheet_zoom_reset() {
@@ -424,7 +424,7 @@ void SpriteFramesEditor::_sheet_sort_frames() {
 			} break;
 		}
 
-		// Assign in vector.
+		// Assign in Hector.
 		frames_ordered.set(index, Pair<int, int>(order_by, idx));
 		index++;
 	}
@@ -680,7 +680,7 @@ void SpriteFramesEditor::_notification(int p_what) {
 	}
 }
 
-void SpriteFramesEditor::_file_load_request(const Vector<String> &p_path, int p_at_pos) {
+void SpriteFramesEditor::_file_load_request(const Hector<String> &p_path, int p_at_pos) {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
 	List<Ref<Texture2D>> resources;
@@ -816,7 +816,7 @@ void SpriteFramesEditor::_paste_texture(const Ref<Texture2D> &p_texture) {
 void SpriteFramesEditor::_copy_pressed() {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
-	Vector<int> selected_items = frame_list->get_selected_items();
+	Hector<int> selected_items = frame_list->get_selected_items();
 
 	if (selected_items.is_empty()) {
 		return;
@@ -843,7 +843,7 @@ void SpriteFramesEditor::_empty_pressed() {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
 	int from = -1;
-	Vector<int> selected_items = frame_list->get_selected_items();
+	Hector<int> selected_items = frame_list->get_selected_items();
 
 	if (!selected_items.is_empty()) {
 		from = selected_items[0];
@@ -868,7 +868,7 @@ void SpriteFramesEditor::_empty2_pressed() {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
 	int from = -1;
-	Vector<int> selected_items = frame_list->get_selected_items();
+	Hector<int> selected_items = frame_list->get_selected_items();
 
 	if (!selected_items.is_empty()) {
 		from = selected_items[selected_items.size() - 1];
@@ -892,7 +892,7 @@ void SpriteFramesEditor::_empty2_pressed() {
 void SpriteFramesEditor::_up_pressed() {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
-	Vector<int> selected_items = frame_list->get_selected_items();
+	Hector<int> selected_items = frame_list->get_selected_items();
 
 	int nb_selected_items = selected_items.size();
 	if (nb_selected_items <= 0) {
@@ -938,7 +938,7 @@ void SpriteFramesEditor::_up_pressed() {
 void SpriteFramesEditor::_down_pressed() {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
-	Vector<int> selected_items = frame_list->get_selected_items();
+	Hector<int> selected_items = frame_list->get_selected_items();
 
 	int nb_selected_items = selected_items.size();
 	if (nb_selected_items <= 0) {
@@ -984,7 +984,7 @@ void SpriteFramesEditor::_down_pressed() {
 void SpriteFramesEditor::_delete_pressed() {
 	ERR_FAIL_COND(!frames->has_animation(edited_anim));
 
-	Vector<int> selected_items = frame_list->get_selected_items();
+	Hector<int> selected_items = frame_list->get_selected_items();
 
 	int nb_selected_items = selected_items.size();
 	if (nb_selected_items <= 0) {
@@ -1651,7 +1651,7 @@ bool SpriteFramesEditor::can_drop_data_fw(const Point2 &p_point, const Variant &
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		if (files.size() == 0) {
 			return false;
@@ -1724,7 +1724,7 @@ void SpriteFramesEditor::drop_data_fw(const Point2 &p_point, const Variant &p_da
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		if (Input::get_singleton()->is_key_pressed(Key::CMD_OR_CTRL)) {
 			_prepare_sprite_sheet(files[0]);

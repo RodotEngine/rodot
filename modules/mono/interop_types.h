@@ -78,17 +78,17 @@ typedef struct {
 	uint8_t _dont_touch_that[GODOT_PACKED_ARRAY_SIZE];
 } godot_packed_array;
 
-#define GODOT_VECTOR2_SIZE (sizeof(real_t) * 2)
+#define GODOT_Hector2_SIZE (sizeof(real_t) * 2)
 
 typedef struct {
-	uint8_t _dont_touch_that[GODOT_VECTOR2_SIZE];
-} godot_vector2;
+	uint8_t _dont_touch_that[GODOT_Hector2_SIZE];
+} godot_Hector2;
 
-#define GODOT_VECTOR2I_SIZE (sizeof(int32_t) * 2)
+#define GODOT_Hector2I_SIZE (sizeof(int32_t) * 2)
 
 typedef struct {
-	uint8_t _dont_touch_that[GODOT_VECTOR2I_SIZE];
-} godot_vector2i;
+	uint8_t _dont_touch_that[GODOT_Hector2I_SIZE];
+} godot_Hector2i;
 
 #define GODOT_RECT2_SIZE (sizeof(real_t) * 4)
 
@@ -102,17 +102,17 @@ typedef struct godot_rect2i {
 	uint8_t _dont_touch_that[GODOT_RECT2I_SIZE];
 } godot_rect2i;
 
-#define GODOT_VECTOR3_SIZE (sizeof(real_t) * 3)
+#define GODOT_Hector3_SIZE (sizeof(real_t) * 3)
 
 typedef struct {
-	uint8_t _dont_touch_that[GODOT_VECTOR3_SIZE];
-} godot_vector3;
+	uint8_t _dont_touch_that[GODOT_Hector3_SIZE];
+} godot_Hector3;
 
-#define GODOT_VECTOR3I_SIZE (sizeof(int32_t) * 3)
+#define GODOT_Hector3I_SIZE (sizeof(int32_t) * 3)
 
 typedef struct {
-	uint8_t _dont_touch_that[GODOT_VECTOR3I_SIZE];
-} godot_vector3i;
+	uint8_t _dont_touch_that[GODOT_Hector3I_SIZE];
+} godot_Hector3i;
 
 #define GODOT_TRANSFORM2D_SIZE (sizeof(real_t) * 6)
 
@@ -120,17 +120,17 @@ typedef struct {
 	uint8_t _dont_touch_that[GODOT_TRANSFORM2D_SIZE];
 } godot_transform2d;
 
-#define GODOT_VECTOR4_SIZE (sizeof(real_t) * 4)
+#define GODOT_Hector4_SIZE (sizeof(real_t) * 4)
 
 typedef struct {
-	uint8_t _dont_touch_that[GODOT_VECTOR4_SIZE];
-} godot_vector4;
+	uint8_t _dont_touch_that[GODOT_Hector4_SIZE];
+} godot_Hector4;
 
-#define GODOT_VECTOR4I_SIZE (sizeof(int32_t) * 4)
+#define GODOT_Hector4I_SIZE (sizeof(int32_t) * 4)
 
 typedef struct {
-	uint8_t _dont_touch_that[GODOT_VECTOR4I_SIZE];
-} godot_vector4i;
+	uint8_t _dont_touch_that[GODOT_Hector4I_SIZE];
+} godot_Hector4i;
 
 #define GODOT_PLANE_SIZE (sizeof(real_t) * 4)
 

@@ -100,7 +100,7 @@
   ft_svg_render( FT_Renderer       renderer,
                  FT_GlyphSlot      slot,
                  FT_Render_Mode    mode,
-                 const FT_Vector*  origin )
+                 const FT_Hector*  origin )
   {
     SVG_Renderer  svg_renderer = (SVG_Renderer)renderer;
 
@@ -262,14 +262,14 @@
   ft_svg_transform( FT_Renderer       renderer,
                     FT_GlyphSlot      slot,
                     const FT_Matrix*  _matrix,
-                    const FT_Vector*  _delta )
+                    const FT_Hector*  _delta )
   {
     FT_SVG_Document  doc    = (FT_SVG_Document)slot->other;
     FT_Matrix*       matrix = (FT_Matrix*)_matrix;
-    FT_Vector*       delta  = (FT_Vector*)_delta;
+    FT_Hector*       delta  = (FT_Hector*)_delta;
 
     FT_Matrix  tmp_matrix;
-    FT_Vector  tmp_delta;
+    FT_Hector  tmp_delta;
 
     FT_Matrix  a, b;
     FT_Pos     x, y;

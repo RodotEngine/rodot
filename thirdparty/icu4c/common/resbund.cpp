@@ -259,8 +259,8 @@ const uint8_t *ResourceBundle::getBinary(int32_t& len, UErrorCode& status) const
     return ures_getBinary(fResource, &len, &status);
 }
 
-const int32_t *ResourceBundle::getIntVector(int32_t& len, UErrorCode& status) const {
-    return ures_getIntVector(fResource, &len, &status);
+const int32_t *ResourceBundle::getIntHector(int32_t& len, UErrorCode& status) const {
+    return ures_getIntHector(fResource, &len, &status);
 }
 
 uint32_t ResourceBundle::getUInt(UErrorCode& status) const {

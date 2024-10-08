@@ -13,9 +13,9 @@
 *   created on: 2011jul04
 *   created by: Markus W. Scherer
 *
-*   Common definitions for UHashTable and UVector.
+*   Common definitions for UHashTable and UHector.
 *   UHashTok moved here from uhash.h and renamed UElement.
-*   This allows users of UVector to avoid the confusing #include of uhash.h.
+*   This allows users of UHector to avoid the confusing #include of uhash.h.
 *   uhash.h aliases UElement to UHashTok,
 *   so that we need not change all of its code and its users.
 */
@@ -28,7 +28,7 @@
 U_CDECL_BEGIN
 
 /**
- * A UVector element, or a key or value within a UHashtable.
+ * A UHector element, or a key or value within a UHashtable.
  * It may be either a 32-bit integral value or an opaque void* pointer.
  * The void* pointer may be smaller than 32 bits (e.g. 24 bits)
  * or may be larger (e.g. 64 bits).

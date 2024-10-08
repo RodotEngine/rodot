@@ -48,7 +48,7 @@ struct cblc_bitmap_size_subset_context_t
 {
   const char *cbdt;
   unsigned int cbdt_length;
-  hb_vector_t<char> *cbdt_prime;
+  hb_Hector_t<char> *cbdt_prime;
   unsigned int size;		/* INOUT
 				 *  Input: old size of IndexSubtable
 				 *  Output: new size of IndexSubtable
@@ -62,7 +62,7 @@ struct cblc_bitmap_size_subset_context_t
 };
 
 static inline bool
-_copy_data_to_cbdt (hb_vector_t<char> *cbdt_prime,
+_copy_data_to_cbdt (hb_Hector_t<char> *cbdt_prime,
 		    const void        *data,
 		    unsigned           length)
 {
@@ -279,7 +279,7 @@ struct IndexSubtable
   bool
   copy_glyph_at_idx (hb_serialize_context_t *c, unsigned int idx,
 		     const char *cbdt, unsigned int cbdt_length,
-		     hb_vector_t<char> *cbdt_prime /* INOUT */,
+		     hb_Hector_t<char> *cbdt_prime /* INOUT */,
 		     IndexSubtable *subtable_prime /* INOUT */,
 		     unsigned int *size /* OUT (accumulated) */) const
   {
@@ -365,7 +365,7 @@ struct IndexSubtable
 
 struct IndexSubtableRecord
 {
-  /* XXX Remove this and fix by not inserting it into vector. */
+  /* XXX Remove this and fix by not inserting it into Hector. */
   IndexSubtableRecord& operator = (const IndexSubtableRecord &o)
   {
     firstGlyphIndex = o.firstGlyphIndex;
@@ -392,7 +392,7 @@ struct IndexSubtableRecord
   bool add_new_subtable (hb_subset_context_t* c,
 			 cblc_bitmap_size_subset_context_t *bitmap_size_context,
 			 IndexSubtableRecord *record,
-			 const hb_vector_t<hb_pair_t<hb_codepoint_t, const IndexSubtableRecord*>> *lookup, /* IN */
+			 const hb_Hector_t<hb_pair_t<hb_codepoint_t, const IndexSubtableRecord*>> *lookup, /* IN */
 			 const void *base,
 			 unsigned int *start /* INOUT */) const
   {
@@ -459,10 +459,10 @@ struct IndexSubtableRecord
 
   bool add_new_record (hb_subset_context_t *c,
 		       cblc_bitmap_size_subset_context_t *bitmap_size_context,
-		       const hb_vector_t<hb_pair_t<hb_codepoint_t, const IndexSubtableRecord*>> *lookup, /* IN */
+		       const hb_Hector_t<hb_pair_t<hb_codepoint_t, const IndexSubtableRecord*>> *lookup, /* IN */
 		       const void *base,
 		       unsigned int *start, /* INOUT */
-		       hb_vector_t<IndexSubtableRecord>* records /* INOUT */) const
+		       hb_Hector_t<IndexSubtableRecord>* records /* INOUT */) const
   {
     TRACE_SERIALIZE (this);
     auto snap = c->serializer->snapshot ();
@@ -542,7 +542,7 @@ struct IndexSubtableArray
 
   void
   build_lookup (hb_subset_context_t *c, cblc_bitmap_size_subset_context_t *bitmap_size_context,
-		hb_vector_t<hb_pair_t<hb_codepoint_t,
+		hb_Hector_t<hb_pair_t<hb_codepoint_t,
 		const IndexSubtableRecord*>> *lookup /* OUT */) const
   {
     bool start_glyph_is_set = false;
@@ -578,14 +578,14 @@ struct IndexSubtableArray
   {
     TRACE_SUBSET (this);
 
-    hb_vector_t<hb_pair_t<hb_codepoint_t, const IndexSubtableRecord*>> lookup;
+    hb_Hector_t<hb_pair_t<hb_codepoint_t, const IndexSubtableRecord*>> lookup;
     build_lookup (c, bitmap_size_context, &lookup);
     if (unlikely (!c->serializer->propagate_error (lookup)))
       return false;
 
     bitmap_size_context->size = 0;
     bitmap_size_context->num_tables = 0;
-    hb_vector_t<IndexSubtableRecord> records;
+    hb_Hector_t<IndexSubtableRecord> records;
     for (unsigned int start = 0; start < lookup.length;)
     {
       if (unlikely (!lookup[start].second->add_new_record (c, bitmap_size_context, &lookup, this, &start, &records)))
@@ -599,7 +599,7 @@ struct IndexSubtableArray
 
     /* Workaround to ensure offset ordering is from least to greatest when
      * resolving links. */
-    hb_vector_t<hb_serialize_context_t::objidx_t> objidxs;
+    hb_Hector_t<hb_serialize_context_t::objidx_t> objidxs;
     for (unsigned int i = 0; i < records.length; i++)
       objidxs.push (c->serializer->pop_pack ());
     for (unsigned int i = 0; i < records.length; i++)
@@ -653,7 +653,7 @@ struct BitmapSizeTable
   bool
   subset (hb_subset_context_t *c, const void *base,
 	  const char *cbdt, unsigned int cbdt_length,
-	  hb_vector_t<char> *cbdt_prime /* INOUT */) const
+	  hb_Hector_t<char> *cbdt_prime /* INOUT */) const
   {
     TRACE_SUBSET (this);
     auto *out_table = c->serializer->embed (this);
@@ -748,7 +748,7 @@ struct CBLC
   }
 
   static bool
-  sink_cbdt (hb_subset_context_t *c, hb_vector_t<char>* cbdt_prime)
+  sink_cbdt (hb_subset_context_t *c, hb_Hector_t<char>* cbdt_prime)
   {
     hb_blob_t *cbdt_prime_blob = hb_blob_create (cbdt_prime->arrayZ,
 						 cbdt_prime->length,
@@ -764,7 +764,7 @@ struct CBLC
   bool
   subset_size_table (hb_subset_context_t *c, const BitmapSizeTable& table,
 		     const char *cbdt /* IN */, unsigned int cbdt_length,
-		     CBLC *cblc_prime /* INOUT */, hb_vector_t<char> *cbdt_prime /* INOUT */) const
+		     CBLC *cblc_prime /* INOUT */, hb_Hector_t<char> *cbdt_prime /* INOUT */) const
   {
     TRACE_SUBSET (this);
     cblc_prime->sizeTables.len++;
@@ -996,8 +996,8 @@ CBLC::subset (hb_subset_context_t *c) const
 {
   TRACE_SUBSET (this);
 
-  // Use a vector as a secondary buffer as the tables need to be built in parallel.
-  hb_vector_t<char> cbdt_prime;
+  // Use a Hector as a secondary buffer as the tables need to be built in parallel.
+  hb_Hector_t<char> cbdt_prime;
 
   auto *cblc_prime = c->serializer->start_embed<CBLC> ();
   if (unlikely (!c->serializer->extend_min (cblc_prime))) return_trace (false);

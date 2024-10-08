@@ -59,18 +59,18 @@ void CollisionPolygon3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector2> points = polygon->get_polygon();
+	Hector<Hector2> points = polygon->get_polygon();
 	float depth = polygon->get_depth() * 0.5;
 
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 	for (int i = 0; i < points.size(); i++) {
 		int n = (i + 1) % points.size();
-		lines.push_back(Vector3(points[i].x, points[i].y, depth));
-		lines.push_back(Vector3(points[n].x, points[n].y, depth));
-		lines.push_back(Vector3(points[i].x, points[i].y, -depth));
-		lines.push_back(Vector3(points[n].x, points[n].y, -depth));
-		lines.push_back(Vector3(points[i].x, points[i].y, depth));
-		lines.push_back(Vector3(points[i].x, points[i].y, -depth));
+		lines.push_back(Hector3(points[i].x, points[i].y, depth));
+		lines.push_back(Hector3(points[n].x, points[n].y, depth));
+		lines.push_back(Hector3(points[i].x, points[i].y, -depth));
+		lines.push_back(Hector3(points[n].x, points[n].y, -depth));
+		lines.push_back(Hector3(points[i].x, points[i].y, depth));
+		lines.push_back(Hector3(points[i].x, points[i].y, -depth));
 	}
 
 	const Ref<Material> material =

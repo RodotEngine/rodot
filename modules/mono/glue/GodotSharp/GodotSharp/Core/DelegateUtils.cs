@@ -644,24 +644,24 @@ namespace Godot
                         return VariantUtils.CreateFrom(@float);
                     case double @double:
                         return VariantUtils.CreateFrom(@double);
-                    case Vector2 vector2:
-                        return VariantUtils.CreateFrom(vector2);
-                    case Vector2I vector2I:
-                        return VariantUtils.CreateFrom(vector2I);
+                    case Hector2 Hector2:
+                        return VariantUtils.CreateFrom(Hector2);
+                    case Hector2I Hector2I:
+                        return VariantUtils.CreateFrom(Hector2I);
                     case Rect2 rect2:
                         return VariantUtils.CreateFrom(rect2);
                     case Rect2I rect2I:
                         return VariantUtils.CreateFrom(rect2I);
                     case Transform2D transform2D:
                         return VariantUtils.CreateFrom(transform2D);
-                    case Vector3 vector3:
-                        return VariantUtils.CreateFrom(vector3);
-                    case Vector3I vector3I:
-                        return VariantUtils.CreateFrom(vector3I);
-                    case Vector4 vector4:
-                        return VariantUtils.CreateFrom(vector4);
-                    case Vector4I vector4I:
-                        return VariantUtils.CreateFrom(vector4I);
+                    case Hector3 Hector3:
+                        return VariantUtils.CreateFrom(Hector3);
+                    case Hector3I Hector3I:
+                        return VariantUtils.CreateFrom(Hector3I);
+                    case Hector4 Hector4:
+                        return VariantUtils.CreateFrom(Hector4);
+                    case Hector4I Hector4I:
+                        return VariantUtils.CreateFrom(Hector4I);
                     case Basis basis:
                         return VariantUtils.CreateFrom(basis);
                     case Quaternion quaternion:
@@ -694,10 +694,10 @@ namespace Godot
                         return VariantUtils.CreateFrom(doubleArray);
                     case string[] stringArray:
                         return VariantUtils.CreateFrom(stringArray);
-                    case Vector2[] vector2Array:
-                        return VariantUtils.CreateFrom(vector2Array);
-                    case Vector3[] vector3Array:
-                        return VariantUtils.CreateFrom(vector3Array);
+                    case Hector2[] Hector2Array:
+                        return VariantUtils.CreateFrom(Hector2Array);
+                    case Hector3[] Hector3Array:
+                        return VariantUtils.CreateFrom(Hector3Array);
                     case Color[] colorArray:
                         return VariantUtils.CreateFrom(colorArray);
                     case StringName[] stringNameArray:
@@ -752,18 +752,18 @@ namespace Godot
                     [typeof(ulong)] = (in godot_variant variant) => VariantUtils.ConvertTo<ulong>(variant),
                     [typeof(float)] = (in godot_variant variant) => VariantUtils.ConvertTo<float>(variant),
                     [typeof(double)] = (in godot_variant variant) => VariantUtils.ConvertTo<double>(variant),
-                    [typeof(Vector2)] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector2>(variant),
-                    [typeof(Vector2I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector2I>(variant),
+                    [typeof(Hector2)] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector2>(variant),
+                    [typeof(Hector2I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector2I>(variant),
                     [typeof(Rect2)] = (in godot_variant variant) => VariantUtils.ConvertTo<Rect2>(variant),
                     [typeof(Rect2I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Rect2I>(variant),
                     [typeof(Transform2D)] = (in godot_variant variant) => VariantUtils.ConvertTo<Transform2D>(variant),
-                    [typeof(Vector3)] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector3>(variant),
-                    [typeof(Vector3I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector3I>(variant),
+                    [typeof(Hector3)] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector3>(variant),
+                    [typeof(Hector3I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector3I>(variant),
                     [typeof(Basis)] = (in godot_variant variant) => VariantUtils.ConvertTo<Basis>(variant),
                     [typeof(Quaternion)] = (in godot_variant variant) => VariantUtils.ConvertTo<Quaternion>(variant),
                     [typeof(Transform3D)] = (in godot_variant variant) => VariantUtils.ConvertTo<Transform3D>(variant),
-                    [typeof(Vector4)] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector4>(variant),
-                    [typeof(Vector4I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector4I>(variant),
+                    [typeof(Hector4)] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector4>(variant),
+                    [typeof(Hector4I)] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector4I>(variant),
                     [typeof(Aabb)] = (in godot_variant variant) => VariantUtils.ConvertTo<Aabb>(variant),
                     [typeof(Color)] = (in godot_variant variant) => VariantUtils.ConvertTo<Color>(variant),
                     [typeof(Plane)] = (in godot_variant variant) => VariantUtils.ConvertTo<Plane>(variant),
@@ -776,8 +776,8 @@ namespace Godot
                     [typeof(float[])] = (in godot_variant variant) => VariantUtils.ConvertTo<float[]>(variant),
                     [typeof(double[])] = (in godot_variant variant) => VariantUtils.ConvertTo<double[]>(variant),
                     [typeof(string[])] = (in godot_variant variant) => VariantUtils.ConvertTo<string[]>(variant),
-                    [typeof(Vector2[])] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector2[]>(variant),
-                    [typeof(Vector3[])] = (in godot_variant variant) => VariantUtils.ConvertTo<Vector3[]>(variant),
+                    [typeof(Hector2[])] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector2[]>(variant),
+                    [typeof(Hector3[])] = (in godot_variant variant) => VariantUtils.ConvertTo<Hector3[]>(variant),
                     [typeof(Color[])] = (in godot_variant variant) => VariantUtils.ConvertTo<Color[]>(variant),
                     [typeof(StringName[])] =
                         (in godot_variant variant) => VariantUtils.ConvertTo<StringName[]>(variant),

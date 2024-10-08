@@ -27,7 +27,7 @@ typedef struct oc_mcenc_ctx           oc_mcenc_ctx;
 
 /*Temporary state used for motion estimation.*/
 struct oc_mcenc_ctx{
-  /*The candidate motion vectors.*/
+  /*The candidate motion Hectors.*/
   int                candidates[13][2];
   /*The start of the Set B candidates.*/
   int                setb0;
@@ -46,10 +46,10 @@ struct oc_mcenc_ctx{
    it.*/
 #define OC_YSAD_THRESH2_OFFSET     (64)
 
-/*The vector offsets in the X direction for each search site in the square
+/*The Hector offsets in the X direction for each search site in the square
    pattern.*/
 static const int OC_SQUARE_DX[9]={-1,0,1,-1,0,1,-1,0,1};
-/*The vector offsets in the Y direction for each search site in the square
+/*The Hector offsets in the Y direction for each search site in the square
    pattern.*/
 static const int OC_SQUARE_DY[9]={-1,-1,-1,0,0,0,1,1,1};
 /*The number of sites to search for each boundary condition in the square
@@ -101,7 +101,7 @@ static void oc_mcenc_find_candidates_a(oc_enc_ctx *_enc,oc_mcenc_ctx *_mcenc,
   /*Skip a position to store the median predictor in.*/
   ncandidates=1;
   if(embs[_mbi].ncneighbors>0){
-    /*Fill in the first part of set A: the vectors from adjacent blocks.*/
+    /*Fill in the first part of set A: the Hectors from adjacent blocks.*/
     for(i=0;i<embs[_mbi].ncneighbors;i++){
       nmbi=embs[_mbi].cneighbors[i];
       _mcenc->candidates[ncandidates][0]=
@@ -113,8 +113,8 @@ static void oc_mcenc_find_candidates_a(oc_enc_ctx *_enc,oc_mcenc_ctx *_mcenc,
   }
   accum_x=OC_MV_X(_accum);
   accum_y=OC_MV_Y(_accum);
-  /*Add a few additional vectors to set A: the vectors used in the previous
-     frames and the (0,0) vector.*/
+  /*Add a few additional Hectors to set A: the Hectors used in the previous
+     frames and the (0,0) Hector.*/
   _mcenc->candidates[ncandidates][0]=accum_x;
   _mcenc->candidates[ncandidates][1]=accum_y;
   ncandidates++;
@@ -126,7 +126,7 @@ static void oc_mcenc_find_candidates_a(oc_enc_ctx *_enc,oc_mcenc_ctx *_mcenc,
   _mcenc->candidates[ncandidates][0]=0;
   _mcenc->candidates[ncandidates][1]=0;
   ncandidates++;
-  /*Use the first three vectors of set A to find our best predictor: their
+  /*Use the first three Hectors of set A to find our best predictor: their
      median.*/
   memcpy(a,_mcenc->candidates+1,sizeof(a));
   OC_SORT2I(a[0][0],a[1][0]);
@@ -254,11 +254,11 @@ static unsigned oc_mcenc_ysatd_check_bcandidate_fullpel(const oc_enc_ctx *_enc,
   return err+abs(dc);
 }
 
-/*Perform a motion vector search for this macro block against a single
+/*Perform a motion Hector search for this macro block against a single
    reference frame.
-  As a bonus, individual block motion vectors are computed as well, as much of
+  As a bonus, individual block motion Hectors are computed as well, as much of
    the work can be shared.
-  The actual motion vector is stored in the appropriate place in the
+  The actual motion Hector is stored in the appropriate place in the
    oc_mb_enc_info structure.
   _accum:      Drop frame/golden MV accumulators.
   _mbi:        The macro block index.
@@ -279,7 +279,7 @@ void oc_mcenc_search_frame(oc_enc_ctx *_enc,oc_mv _accum,int _mbi,int _frame,
      LAST2 performed poorly, and therefore the MB is not likely to be uniform
      or suffer from the aperture problem.
     Furthermore we would like to re-use the MV found here for as many MBs as
-     possible, so picking a slightly sub-optimal vector to save a bit or two
+     possible, so picking a slightly sub-optimal Hector to save a bit or two
      may cause increased degredation in many blocks to come.
     We could artificially reduce lambda to compensate, but it's faster to just
      disable it entirely, and use D (the distortion) as the sole criterion.*/
@@ -302,7 +302,7 @@ void oc_mcenc_search_frame(oc_enc_ctx *_enc,oc_mv _accum,int _mbi,int _frame,
   int                  candy;
   int                  bi;
   embs=_enc->mb_info;
-  /*Find some candidate motion vectors.*/
+  /*Find some candidate motion Hectors.*/
   oc_mcenc_find_candidates_a(_enc,&mcenc,_accum,_mbi,_frame);
   /*Clear the cache of locations we've examined.*/
   memset(hit_cache,0,sizeof(hit_cache));
@@ -345,7 +345,7 @@ void oc_mcenc_search_frame(oc_enc_ctx *_enc,oc_mv _accum,int _mbi,int _frame,
     for(ci=1;ci<mcenc.setb0;ci++){
       candx=OC_DIV2(mcenc.candidates[ci][0]);
       candy=OC_DIV2(mcenc.candidates[ci][1]);
-      /*If we've already examined this vector, then we would be using it if it
+      /*If we've already examined this Hector, then we would be using it if it
          was better than what we are using.*/
       hitbit=(ogg_int32_t)1<<candx+15;
       if(hit_cache[candy+15]&hitbit)continue;
@@ -452,7 +452,7 @@ void oc_mcenc_search_frame(oc_enc_ctx *_enc,oc_mv _accum,int _mbi,int _frame,
                  2) It gives us a slightly better chance of escaping local
                      minima.
                     We would not be here if we weren't doing a fairly bad job
-                     in finding a good vector, and checking these vectors can
+                     in finding a good Hector, and checking these Hectors can
                      save us from 100 to several thousand points off our SAD 1
                      in 15 times.
                 TODO: Is this a good idea?
@@ -524,7 +524,7 @@ void oc_mcenc_search(oc_enc_ctx *_enc,int _mbi){
   if(_enc->prevframe_dropped)accum_p=mvs[0][OC_FRAME_PREV];
   else accum_p=0;
   accum_g=mvs[2][OC_FRAME_GOLD];
-  /*Move the motion vector predictors back a frame.*/
+  /*Move the motion Hector predictors back a frame.*/
   mv2_p=mvs[2][OC_FRAME_PREV];
   mvs[2][OC_FRAME_GOLD]=mvs[1][OC_FRAME_GOLD];
   mvs[2][OC_FRAME_PREV]=mvs[1][OC_FRAME_PREV];
@@ -586,7 +586,7 @@ static int oc_mcenc_ysad_halfpel_mbrefine(const oc_enc_ctx *_enc,int _mbi,
         oc_state_get_mv_offsets(&_mcenc->enc.state,&mvoffset0,&mvoffset1,
          (_vec[0]<<1)+dx,(_vec[1]<<1)+dy,ref_ystride,0);
       However, it should also be much faster, as it involves no multiplies and
-       doesn't have to handle chroma vectors.*/
+       doesn't have to handle chroma Hectors.*/
     xmask=OC_SIGNMASK(((_vec[0]<<1)+dx)^dx);
     ymask=OC_SIGNMASK(((_vec[1]<<1)+dy)^dy);
     mvoffset0=mvoffset_base+(dx&xmask)+(offset_y[site]&ymask);
@@ -641,7 +641,7 @@ static unsigned oc_mcenc_ysatd_halfpel_mbrefine(const oc_enc_ctx *_enc,
         oc_state_get_mv_offsets(&_mcenc->enc.state,&mvoffset0,&mvoffset1,
          (_vec[0]<<1)+dx,(_vec[1]<<1)+dy,ref_ystride,0);
       However, it should also be much faster, as it involves no multiplies and
-       doesn't have to handle chroma vectors.*/
+       doesn't have to handle chroma Hectors.*/
     xmask=OC_SIGNMASK(((_vec[0]<<1)+dx)^dx);
     ymask=OC_SIGNMASK(((_vec[1]<<1)+dy)^dy);
     mvoffset0=mvoffset_base+(dx&xmask)+(offset_y[site]&ymask);
@@ -700,7 +700,7 @@ static int oc_mcenc_ysad_halfpel_brefine(const oc_enc_ctx *_enc,
         oc_state_get_mv_offsets(&_mcenc->enc.state,&mvoffset0,&mvoffset1,
          (_vec[0]<<1)+dx,(_vec[1]<<1)+dy,ref_ystride,0);
       However, it should also be much faster, as it involves no multiplies and
-       doesn't have to handle chroma vectors.*/
+       doesn't have to handle chroma Hectors.*/
     xmask=OC_SIGNMASK(((_vec[0]<<1)+dx)^dx);
     ymask=OC_SIGNMASK(((_vec[1]<<1)+dy)^dy);
     mvoffset0=mvoffset_base+(dx&xmask)+(_offset_y[site]&ymask);
@@ -743,7 +743,7 @@ static unsigned oc_mcenc_ysatd_halfpel_brefine(const oc_enc_ctx *_enc,
         oc_state_get_mv_offsets(&_enc->state,&mvoffsets,0,
          (_vec[0]<<1)+dx,(_vec[1]<<1)+dy);
       However, it should also be much faster, as it involves no multiplies and
-       doesn't have to handle chroma vectors.*/
+       doesn't have to handle chroma Hectors.*/
     xmask=OC_SIGNMASK(((_vec[0]<<1)+dx)^dx);
     ymask=OC_SIGNMASK(((_vec[1]<<1)+dy)^dy);
     mvoffset0=mvoffset_base+(dx&xmask)+(_offset_y[site]&ymask);

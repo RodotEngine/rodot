@@ -34,7 +34,7 @@
 #include "nav_rid.h"
 
 #include "core/object/class_db.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 #include <Agent2d.h>
 #include <Agent3d.h>
@@ -42,10 +42,10 @@
 class NavMap;
 
 class NavAgent : public NavRid {
-	Vector3 position;
-	Vector3 target_position;
-	Vector3 velocity;
-	Vector3 velocity_forced;
+	Hector3 position;
+	Hector3 target_position;
+	Hector3 velocity;
+	Hector3 velocity_forced;
 	real_t height = 1.0;
 	real_t radius = 1.0;
 	real_t max_speed = 1.0;
@@ -53,7 +53,7 @@ class NavAgent : public NavRid {
 	real_t time_horizon_obstacles = 0.0;
 	int max_neighbors = 5;
 	real_t neighbor_distance = 5.0;
-	Vector3 safe_velocity;
+	Hector3 safe_velocity;
 	bool clamp_speed = true; // Experimental, clamps velocity to max_speed.
 
 	NavMap *map = nullptr;
@@ -117,17 +117,17 @@ public:
 	void set_max_speed(real_t p_max_speed);
 	real_t get_max_speed() const { return max_speed; }
 
-	void set_position(const Vector3 p_position);
-	const Vector3 &get_position() const { return position; }
+	void set_position(const Hector3 p_position);
+	const Hector3 &get_position() const { return position; }
 
-	void set_target_position(const Vector3 p_target_position);
-	const Vector3 &get_target_position() const { return target_position; }
+	void set_target_position(const Hector3 p_target_position);
+	const Hector3 &get_target_position() const { return target_position; }
 
-	void set_velocity(const Vector3 p_velocity);
-	const Vector3 &get_velocity() const { return velocity; }
+	void set_velocity(const Hector3 p_velocity);
+	const Hector3 &get_velocity() const { return velocity; }
 
-	void set_velocity_forced(const Vector3 p_velocity);
-	const Vector3 &get_velocity_forced() const { return velocity_forced; }
+	void set_velocity_forced(const Hector3 p_velocity);
+	const Hector3 &get_velocity_forced() const { return velocity_forced; }
 
 	void set_avoidance_layers(uint32_t p_layers);
 	uint32_t get_avoidance_layers() const { return avoidance_layers; };

@@ -240,7 +240,7 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 		shader->get_shader_uniform_list(&list, true);
 
 		HashMap<String, HashMap<String, List<PropertyInfo>>> groups;
-		LocalVector<Pair<String, LocalVector<String>>> vgroups;
+		LocalHector<Pair<String, LocalHector<String>>> vgroups;
 		{
 			HashMap<String, List<PropertyInfo>> none_subgroup;
 			none_subgroup.insert("<None>", List<PropertyInfo>());
@@ -256,7 +256,7 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 		for (List<PropertyInfo>::Element *E = list.front(); E; E = E->next()) {
 			if (E->get().usage == PROPERTY_USAGE_GROUP) {
 				if (!E->get().name.is_empty()) {
-					Vector<String> vgroup = E->get().name.split("::");
+					Hector<String> vgroup = E->get().name.split("::");
 					last_group = vgroup[0];
 					if (vgroup.size() > 1) {
 						last_subgroup = vgroup[1];
@@ -278,7 +278,7 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 						subgroup_map.insert("<None>", none_subgroup);
 
 						groups.insert(last_group, subgroup_map);
-						vgroups.push_back(Pair<String, LocalVector<String>>(last_group, { "<None>" }));
+						vgroups.push_back(Pair<String, LocalHector<String>>(last_group, { "<None>" }));
 					}
 
 					if (!groups[last_group].has(last_subgroup)) {
@@ -291,7 +291,7 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 						subgroup.push_back(info);
 
 						groups[last_group].insert(last_subgroup, subgroup);
-						for (Pair<String, LocalVector<String>> &group : vgroups) {
+						for (Pair<String, LocalHector<String>> &group : vgroups) {
 							if (group.first == last_group) {
 								group.second.push_back(last_subgroup);
 								break;
@@ -315,7 +315,7 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 				info.hint_string = "shader_parameter/";
 				groups["<None>"]["<None>"].push_back(info);
 
-				vgroups.push_back(Pair<String, LocalVector<String>>("<None>", { "<None>" }));
+				vgroups.push_back(Pair<String, LocalHector<String>>("<None>", { "<None>" }));
 			}
 
 			const bool is_uniform_cached = param_cache.has(E->get().name);
@@ -333,13 +333,13 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 				}
 
 #ifndef DISABLE_DEPRECATED
-				// PackedFloat32Array -> PackedVector4Array conversion.
-				if (!is_uniform_type_compatible && E->get().type == Variant::PACKED_VECTOR4_ARRAY && cached.get_type() == Variant::PACKED_FLOAT32_ARRAY) {
-					PackedVector4Array varray;
+				// PackedFloat32Array -> PackedHector4Array conversion.
+				if (!is_uniform_type_compatible && E->get().type == Variant::PACKED_Hector4_ARRAY && cached.get_type() == Variant::PACKED_FLOAT32_ARRAY) {
+					PackedHector4Array varray;
 					PackedFloat32Array array = (PackedFloat32Array)cached;
 
 					for (int i = 0; i + 3 < array.size(); i += 4) {
-						varray.push_back(Vector4(array[i], array[i + 1], array[i + 2], array[i + 3]));
+						varray.push_back(Hector4(array[i], array[i + 1], array[i + 2], array[i + 3]));
 					}
 
 					param_cache.insert(E->get().name, varray);
@@ -368,7 +368,7 @@ void ShaderMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 			groups[last_group][last_subgroup].push_back(info);
 		}
 
-		for (const Pair<String, LocalVector<String>> &group_pair : vgroups) {
+		for (const Pair<String, LocalHector<String>> &group_pair : vgroups) {
 			String group = group_pair.first;
 			for (const String &subgroup : group_pair.second) {
 				List<PropertyInfo> &prop_infos = groups[group][subgroup];
@@ -2352,7 +2352,7 @@ void BaseMaterial3D::set_texture(TextureParam p_param, const Ref<Texture2D> &p_t
 	_material_set_param(shader_names->texture_names[p_param], rid);
 
 	if (p_texture.is_valid() && p_param == TEXTURE_ALBEDO) {
-		_material_set_param(shader_names->albedo_texture_size, Vector2i(p_texture->get_width(), p_texture->get_height()));
+		_material_set_param(shader_names->albedo_texture_size, Hector2i(p_texture->get_width(), p_texture->get_height()));
 	}
 
 	notify_property_list_changed();
@@ -2555,21 +2555,21 @@ float BaseMaterial3D::get_point_size() const {
 	return point_size;
 }
 
-void BaseMaterial3D::set_uv1_scale(const Vector3 &p_scale) {
+void BaseMaterial3D::set_uv1_scale(const Hector3 &p_scale) {
 	uv1_scale = p_scale;
 	_material_set_param(shader_names->uv1_scale, p_scale);
 }
 
-Vector3 BaseMaterial3D::get_uv1_scale() const {
+Hector3 BaseMaterial3D::get_uv1_scale() const {
 	return uv1_scale;
 }
 
-void BaseMaterial3D::set_uv1_offset(const Vector3 &p_offset) {
+void BaseMaterial3D::set_uv1_offset(const Hector3 &p_offset) {
 	uv1_offset = p_offset;
 	_material_set_param(shader_names->uv1_offset, p_offset);
 }
 
-Vector3 BaseMaterial3D::get_uv1_offset() const {
+Hector3 BaseMaterial3D::get_uv1_offset() const {
 	return uv1_offset;
 }
 
@@ -2583,21 +2583,21 @@ float BaseMaterial3D::get_uv1_triplanar_blend_sharpness() const {
 	return uv1_triplanar_sharpness;
 }
 
-void BaseMaterial3D::set_uv2_scale(const Vector3 &p_scale) {
+void BaseMaterial3D::set_uv2_scale(const Hector3 &p_scale) {
 	uv2_scale = p_scale;
 	_material_set_param(shader_names->uv2_scale, p_scale);
 }
 
-Vector3 BaseMaterial3D::get_uv2_scale() const {
+Hector3 BaseMaterial3D::get_uv2_scale() const {
 	return uv2_scale;
 }
 
-void BaseMaterial3D::set_uv2_offset(const Vector3 &p_offset) {
+void BaseMaterial3D::set_uv2_offset(const Hector3 &p_offset) {
 	uv2_offset = p_offset;
 	_material_set_param(shader_names->uv2_offset, p_offset);
 }
 
-Vector3 BaseMaterial3D::get_uv2_offset() const {
+Hector3 BaseMaterial3D::get_uv2_offset() const {
 	return uv2_offset;
 }
 
@@ -2678,7 +2678,7 @@ int BaseMaterial3D::get_heightmap_deep_parallax_max_layers() const {
 
 void BaseMaterial3D::set_heightmap_deep_parallax_flip_tangent(bool p_flip) {
 	heightmap_parallax_flip_tangent = p_flip;
-	_material_set_param(shader_names->heightmap_flip, Vector2(heightmap_parallax_flip_tangent ? -1 : 1, heightmap_parallax_flip_binormal ? -1 : 1));
+	_material_set_param(shader_names->heightmap_flip, Hector2(heightmap_parallax_flip_tangent ? -1 : 1, heightmap_parallax_flip_binormal ? -1 : 1));
 }
 
 bool BaseMaterial3D::get_heightmap_deep_parallax_flip_tangent() const {
@@ -2687,7 +2687,7 @@ bool BaseMaterial3D::get_heightmap_deep_parallax_flip_tangent() const {
 
 void BaseMaterial3D::set_heightmap_deep_parallax_flip_binormal(bool p_flip) {
 	heightmap_parallax_flip_binormal = p_flip;
-	_material_set_param(shader_names->heightmap_flip, Vector2(heightmap_parallax_flip_tangent ? -1 : 1, heightmap_parallax_flip_binormal ? -1 : 1));
+	_material_set_param(shader_names->heightmap_flip, Hector2(heightmap_parallax_flip_tangent ? -1 : 1, heightmap_parallax_flip_binormal ? -1 : 1));
 }
 
 bool BaseMaterial3D::get_heightmap_deep_parallax_flip_binormal() const {
@@ -3269,15 +3269,15 @@ void BaseMaterial3D::_bind_methods() {
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "detail_normal", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture", TEXTURE_DETAIL_NORMAL);
 
 	ADD_GROUP("UV1", "uv1_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "uv1_scale", PROPERTY_HINT_LINK), "set_uv1_scale", "get_uv1_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "uv1_offset"), "set_uv1_offset", "get_uv1_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "uv1_scale", PROPERTY_HINT_LINK), "set_uv1_scale", "get_uv1_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "uv1_offset"), "set_uv1_offset", "get_uv1_offset");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "uv1_triplanar"), "set_flag", "get_flag", FLAG_UV1_USE_TRIPLANAR);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "uv1_triplanar_sharpness", PROPERTY_HINT_EXP_EASING), "set_uv1_triplanar_blend_sharpness", "get_uv1_triplanar_blend_sharpness");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "uv1_world_triplanar"), "set_flag", "get_flag", FLAG_UV1_USE_WORLD_TRIPLANAR);
 
 	ADD_GROUP("UV2", "uv2_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "uv2_scale", PROPERTY_HINT_LINK), "set_uv2_scale", "get_uv2_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "uv2_offset"), "set_uv2_offset", "get_uv2_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "uv2_scale", PROPERTY_HINT_LINK), "set_uv2_scale", "get_uv2_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "uv2_offset"), "set_uv2_offset", "get_uv2_offset");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "uv2_triplanar"), "set_flag", "get_flag", FLAG_UV2_USE_TRIPLANAR);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "uv2_triplanar_sharpness", PROPERTY_HINT_EXP_EASING), "set_uv2_triplanar_blend_sharpness", "get_uv2_triplanar_blend_sharpness");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "uv2_world_triplanar"), "set_flag", "get_flag", FLAG_UV2_USE_WORLD_TRIPLANAR);
@@ -3469,11 +3469,11 @@ BaseMaterial3D::BaseMaterial3D(bool p_orm) {
 	set_transmittance_boost(0.0);
 	set_refraction(0.05);
 	set_point_size(1);
-	set_uv1_offset(Vector3(0, 0, 0));
-	set_uv1_scale(Vector3(1, 1, 1));
+	set_uv1_offset(Hector3(0, 0, 0));
+	set_uv1_scale(Hector3(1, 1, 1));
 	set_uv1_triplanar_blend_sharpness(1);
-	set_uv2_offset(Vector3(0, 0, 0));
-	set_uv2_scale(Vector3(1, 1, 1));
+	set_uv2_offset(Hector3(0, 0, 0));
+	set_uv2_scale(Hector3(1, 1, 1));
 	set_uv2_triplanar_blend_sharpness(1);
 	set_billboard_mode(BILLBOARD_DISABLED);
 	set_particles_anim_h_frames(1);

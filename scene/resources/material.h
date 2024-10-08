@@ -516,12 +516,12 @@ private:
 
 	TextureFilter texture_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
 
-	Vector3 uv1_scale;
-	Vector3 uv1_offset;
+	Hector3 uv1_scale;
+	Hector3 uv1_offset;
 	float uv1_triplanar_sharpness = 0.0f;
 
-	Vector3 uv2_scale;
-	Vector3 uv2_offset;
+	Hector3 uv2_scale;
+	Hector3 uv2_offset;
 	float uv2_triplanar_sharpness = 0.0f;
 
 	DetailUV detail_uv = DETAIL_UV_1;
@@ -702,20 +702,20 @@ public:
 	void set_feature(Feature p_feature, bool p_enabled);
 	bool get_feature(Feature p_feature) const;
 
-	void set_uv1_scale(const Vector3 &p_scale);
-	Vector3 get_uv1_scale() const;
+	void set_uv1_scale(const Hector3 &p_scale);
+	Hector3 get_uv1_scale() const;
 
-	void set_uv1_offset(const Vector3 &p_offset);
-	Vector3 get_uv1_offset() const;
+	void set_uv1_offset(const Hector3 &p_offset);
+	Hector3 get_uv1_offset() const;
 
 	void set_uv1_triplanar_blend_sharpness(float p_sharpness);
 	float get_uv1_triplanar_blend_sharpness() const;
 
-	void set_uv2_scale(const Vector3 &p_scale);
-	Vector3 get_uv2_scale() const;
+	void set_uv2_scale(const Hector3 &p_scale);
+	Hector3 get_uv2_scale() const;
 
-	void set_uv2_offset(const Vector3 &p_offset);
-	Vector3 get_uv2_offset() const;
+	void set_uv2_offset(const Hector3 &p_offset);
+	Hector3 get_uv2_offset() const;
 
 	void set_uv2_triplanar_blend_sharpness(float p_sharpness);
 	float get_uv2_triplanar_blend_sharpness() const;

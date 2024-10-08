@@ -403,7 +403,7 @@ void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, Display
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
 
 	if (p_first) {
-		if (p_screen_rect.position != Vector2() || p_screen_rect.size != rt->size) {
+		if (p_screen_rect.position != Hector2() || p_screen_rect.size != rt->size) {
 			// Viewport doesn't cover entire window so clear window to black before blitting.
 			// Querying the actual window size from the DisplayServer would deadlock in separate render thread mode,
 			// so let's set the biggest viewport the implementation supports, to be sure the window is fully covered.
@@ -414,7 +414,7 @@ void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, Display
 		}
 	}
 
-	Vector2i screen_rect_end = p_screen_rect.get_end();
+	Hector2i screen_rect_end = p_screen_rect.get_end();
 
 	// Adreno (TM) 3xx devices have a bug that create wrong Landscape rotation of 180 degree
 	// Reversing both the X and Y axis is equivalent to rotating 180 degrees

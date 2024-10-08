@@ -6,8 +6,8 @@
 #include "platform.h"
 #include "mutex.h"
 #include "alloc.h"
-#include "vector.h"
-#include <vector>
+#include "Hector.h"
+#include <Vector>
 
 namespace embree
 {

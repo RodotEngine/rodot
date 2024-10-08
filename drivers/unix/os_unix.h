@@ -56,7 +56,7 @@ protected:
 public:
 	OS_Unix();
 
-	virtual Vector<String> get_video_adapter_driver_info() const override;
+	virtual Hector<String> get_video_adapter_driver_info() const override;
 
 	virtual String get_stdin_string() override;
 

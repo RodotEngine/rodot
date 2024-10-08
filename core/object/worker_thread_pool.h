@@ -36,7 +36,7 @@
 #include "core/os/os.h"
 #include "core/os/semaphore.h"
 #include "core/os/thread.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_allocator.h"
 #include "core/templates/rid.h"
 #include "core/templates/safe_refcount.h"
@@ -127,7 +127,7 @@ private:
 				exited_languages(false) {}
 	};
 
-	TightLocalVector<ThreadData> threads;
+	TightLocalHector<ThreadData> threads;
 	enum Runlevel {
 		RUNLEVEL_NORMAL,
 		RUNLEVEL_PRE_EXIT_LANGUAGES, // Block adding new tasks

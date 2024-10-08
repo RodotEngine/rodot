@@ -74,11 +74,11 @@ public partial class VariantUtils
         if (typeof(T) == typeof(double))
             return CreateFromFloat(UnsafeAs<double>(from));
 
-        if (typeof(T) == typeof(Vector2))
-            return CreateFromVector2(UnsafeAs<Vector2>(from));
+        if (typeof(T) == typeof(Hector2))
+            return CreateFromHector2(UnsafeAs<Hector2>(from));
 
-        if (typeof(T) == typeof(Vector2I))
-            return CreateFromVector2I(UnsafeAs<Vector2I>(from));
+        if (typeof(T) == typeof(Hector2I))
+            return CreateFromHector2I(UnsafeAs<Hector2I>(from));
 
         if (typeof(T) == typeof(Rect2))
             return CreateFromRect2(UnsafeAs<Rect2>(from));
@@ -92,11 +92,11 @@ public partial class VariantUtils
         if (typeof(T) == typeof(Projection))
             return CreateFromProjection(UnsafeAs<Projection>(from));
 
-        if (typeof(T) == typeof(Vector3))
-            return CreateFromVector3(UnsafeAs<Vector3>(from));
+        if (typeof(T) == typeof(Hector3))
+            return CreateFromHector3(UnsafeAs<Hector3>(from));
 
-        if (typeof(T) == typeof(Vector3I))
-            return CreateFromVector3I(UnsafeAs<Vector3I>(from));
+        if (typeof(T) == typeof(Hector3I))
+            return CreateFromHector3I(UnsafeAs<Hector3I>(from));
 
         if (typeof(T) == typeof(Basis))
             return CreateFromBasis(UnsafeAs<Basis>(from));
@@ -107,11 +107,11 @@ public partial class VariantUtils
         if (typeof(T) == typeof(Transform3D))
             return CreateFromTransform3D(UnsafeAs<Transform3D>(from));
 
-        if (typeof(T) == typeof(Vector4))
-            return CreateFromVector4(UnsafeAs<Vector4>(from));
+        if (typeof(T) == typeof(Hector4))
+            return CreateFromHector4(UnsafeAs<Hector4>(from));
 
-        if (typeof(T) == typeof(Vector4I))
-            return CreateFromVector4I(UnsafeAs<Vector4I>(from));
+        if (typeof(T) == typeof(Hector4I))
+            return CreateFromHector4I(UnsafeAs<Hector4I>(from));
 
         if (typeof(T) == typeof(Aabb))
             return CreateFromAabb(UnsafeAs<Aabb>(from));
@@ -149,14 +149,14 @@ public partial class VariantUtils
         if (typeof(T) == typeof(string[]))
             return CreateFromPackedStringArray(UnsafeAs<string[]>(from));
 
-        if (typeof(T) == typeof(Vector2[]))
-            return CreateFromPackedVector2Array(UnsafeAs<Vector2[]>(from));
+        if (typeof(T) == typeof(Hector2[]))
+            return CreateFromPackedHector2Array(UnsafeAs<Hector2[]>(from));
 
-        if (typeof(T) == typeof(Vector3[]))
-            return CreateFromPackedVector3Array(UnsafeAs<Vector3[]>(from));
+        if (typeof(T) == typeof(Hector3[]))
+            return CreateFromPackedHector3Array(UnsafeAs<Hector3[]>(from));
 
-        if (typeof(T) == typeof(Vector4[]))
-            return CreateFromPackedVector4Array(UnsafeAs<Vector4[]>(from));
+        if (typeof(T) == typeof(Hector4[]))
+            return CreateFromPackedHector4Array(UnsafeAs<Hector4[]>(from));
 
         if (typeof(T) == typeof(Color[]))
             return CreateFromPackedColorArray(UnsafeAs<Color[]>(from));
@@ -265,11 +265,11 @@ public partial class VariantUtils
         if (typeof(T) == typeof(double))
             return UnsafeAsT(ConvertToFloat64(variant));
 
-        if (typeof(T) == typeof(Vector2))
-            return UnsafeAsT(ConvertToVector2(variant));
+        if (typeof(T) == typeof(Hector2))
+            return UnsafeAsT(ConvertToHector2(variant));
 
-        if (typeof(T) == typeof(Vector2I))
-            return UnsafeAsT(ConvertToVector2I(variant));
+        if (typeof(T) == typeof(Hector2I))
+            return UnsafeAsT(ConvertToHector2I(variant));
 
         if (typeof(T) == typeof(Rect2))
             return UnsafeAsT(ConvertToRect2(variant));
@@ -280,11 +280,11 @@ public partial class VariantUtils
         if (typeof(T) == typeof(Transform2D))
             return UnsafeAsT(ConvertToTransform2D(variant));
 
-        if (typeof(T) == typeof(Vector3))
-            return UnsafeAsT(ConvertToVector3(variant));
+        if (typeof(T) == typeof(Hector3))
+            return UnsafeAsT(ConvertToHector3(variant));
 
-        if (typeof(T) == typeof(Vector3I))
-            return UnsafeAsT(ConvertToVector3I(variant));
+        if (typeof(T) == typeof(Hector3I))
+            return UnsafeAsT(ConvertToHector3I(variant));
 
         if (typeof(T) == typeof(Basis))
             return UnsafeAsT(ConvertToBasis(variant));
@@ -298,11 +298,11 @@ public partial class VariantUtils
         if (typeof(T) == typeof(Projection))
             return UnsafeAsT(ConvertToProjection(variant));
 
-        if (typeof(T) == typeof(Vector4))
-            return UnsafeAsT(ConvertToVector4(variant));
+        if (typeof(T) == typeof(Hector4))
+            return UnsafeAsT(ConvertToHector4(variant));
 
-        if (typeof(T) == typeof(Vector4I))
-            return UnsafeAsT(ConvertToVector4I(variant));
+        if (typeof(T) == typeof(Hector4I))
+            return UnsafeAsT(ConvertToHector4I(variant));
 
         if (typeof(T) == typeof(Aabb))
             return UnsafeAsT(ConvertToAabb(variant));
@@ -340,14 +340,14 @@ public partial class VariantUtils
         if (typeof(T) == typeof(string[]))
             return UnsafeAsT(ConvertAsPackedStringArrayToSystemArray(variant));
 
-        if (typeof(T) == typeof(Vector2[]))
-            return UnsafeAsT(ConvertAsPackedVector2ArrayToSystemArray(variant));
+        if (typeof(T) == typeof(Hector2[]))
+            return UnsafeAsT(ConvertAsPackedHector2ArrayToSystemArray(variant));
 
-        if (typeof(T) == typeof(Vector3[]))
-            return UnsafeAsT(ConvertAsPackedVector3ArrayToSystemArray(variant));
+        if (typeof(T) == typeof(Hector3[]))
+            return UnsafeAsT(ConvertAsPackedHector3ArrayToSystemArray(variant));
 
-        if (typeof(T) == typeof(Vector4[]))
-            return UnsafeAsT(ConvertAsPackedVector4ArrayToSystemArray(variant));
+        if (typeof(T) == typeof(Hector4[]))
+            return UnsafeAsT(ConvertAsPackedHector4ArrayToSystemArray(variant));
 
         if (typeof(T) == typeof(Color[]))
             return UnsafeAsT(ConvertAsPackedColorArrayToSystemArray(variant));

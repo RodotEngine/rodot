@@ -122,11 +122,11 @@ bool Skeleton3D::_set(const StringName &p_path, const Variant &p_value) {
 			// This handles the case where the pose was set to the rest position; the pose property would == Transform() and would not be saved to the scene by default.
 			// However, the bound_children property was always saved regardless of value, and it was always saved after both pose and rest.
 			// We don't do anything else with bound_children, as it's not present on Skeleton3D.
-			Vector3 pos = get_bone_pose_position(which);
+			Hector3 pos = get_bone_pose_position(which);
 			Quaternion rot = get_bone_pose_rotation(which);
-			Vector3 scale = get_bone_pose_scale(which);
+			Hector3 scale = get_bone_pose_scale(which);
 			Transform3D rest = get_bone_rest(which);
-			if (rest != Transform3D() && pos == Vector3() && rot == Quaternion() && scale == Vector3(1, 1, 1)) {
+			if (rest != Transform3D() && pos == Hector3() && rot == Quaternion() && scale == Hector3(1, 1, 1)) {
 				set_bone_pose_position(which, rest.origin);
 				set_bone_pose_rotation(which, rest.basis.get_rotation_quaternion());
 				set_bone_pose_scale(which, rest.basis.get_scale());
@@ -188,9 +188,9 @@ void Skeleton3D::_get_property_list(List<PropertyInfo> *p_list) const {
 		p_list->push_back(PropertyInfo(Variant::INT, prep + PNAME("parent"), PROPERTY_HINT_RANGE, "-1," + itos(bones.size() - 1) + ",1", PROPERTY_USAGE_NO_EDITOR));
 		p_list->push_back(PropertyInfo(Variant::TRANSFORM3D, prep + PNAME("rest"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
 		p_list->push_back(PropertyInfo(Variant::BOOL, prep + PNAME("enabled"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::VECTOR3, prep + PNAME("position"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::HECTOR3, prep + PNAME("position"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
 		p_list->push_back(PropertyInfo(Variant::QUATERNION, prep + PNAME("rotation"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::VECTOR3, prep + PNAME("scale"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::HECTOR3, prep + PNAME("scale"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
 
 		for (const KeyValue<StringName, Variant> &K : bones[i].metadata) {
 			PropertyInfo pi = PropertyInfo(bones[i].metadata[K.key].get_type(), prep + PNAME("bone_meta/") + K.key, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR);
@@ -649,16 +649,16 @@ int Skeleton3D::get_bone_parent(int p_bone) const {
 	return bones[p_bone].parent;
 }
 
-Vector<int> Skeleton3D::get_bone_children(int p_bone) const {
+Hector<int> Skeleton3D::get_bone_children(int p_bone) const {
 	const int bone_size = bones.size();
-	ERR_FAIL_INDEX_V(p_bone, bone_size, Vector<int>());
+	ERR_FAIL_INDEX_V(p_bone, bone_size, Hector<int>());
 	if (process_order_dirty) {
 		const_cast<Skeleton3D *>(this)->_update_process_order();
 	}
 	return bones[p_bone].child_bones;
 }
 
-Vector<int> Skeleton3D::get_parentless_bones() const {
+Hector<int> Skeleton3D::get_parentless_bones() const {
 	if (process_order_dirty) {
 		const_cast<Skeleton3D *>(this)->_update_process_order();
 	}
@@ -736,7 +736,7 @@ void Skeleton3D::set_bone_pose(int p_bone, const Transform3D &p_pose) {
 	}
 }
 
-void Skeleton3D::set_bone_pose_position(int p_bone, const Vector3 &p_position) {
+void Skeleton3D::set_bone_pose_position(int p_bone, const Hector3 &p_position) {
 	const int bone_size = bones.size();
 	ERR_FAIL_INDEX(p_bone, bone_size);
 
@@ -756,7 +756,7 @@ void Skeleton3D::set_bone_pose_rotation(int p_bone, const Quaternion &p_rotation
 		_make_dirty();
 	}
 }
-void Skeleton3D::set_bone_pose_scale(int p_bone, const Vector3 &p_scale) {
+void Skeleton3D::set_bone_pose_scale(int p_bone, const Hector3 &p_scale) {
 	const int bone_size = bones.size();
 	ERR_FAIL_INDEX(p_bone, bone_size);
 
@@ -767,9 +767,9 @@ void Skeleton3D::set_bone_pose_scale(int p_bone, const Vector3 &p_scale) {
 	}
 }
 
-Vector3 Skeleton3D::get_bone_pose_position(int p_bone) const {
+Hector3 Skeleton3D::get_bone_pose_position(int p_bone) const {
 	const int bone_size = bones.size();
-	ERR_FAIL_INDEX_V(p_bone, bone_size, Vector3());
+	ERR_FAIL_INDEX_V(p_bone, bone_size, Hector3());
 	return bones[p_bone].pose_position;
 }
 
@@ -779,9 +779,9 @@ Quaternion Skeleton3D::get_bone_pose_rotation(int p_bone) const {
 	return bones[p_bone].pose_rotation;
 }
 
-Vector3 Skeleton3D::get_bone_pose_scale(int p_bone) const {
+Hector3 Skeleton3D::get_bone_pose_scale(int p_bone) const {
 	const int bone_size = bones.size();
-	ERR_FAIL_INDEX_V(p_bone, bone_size, Vector3());
+	ERR_FAIL_INDEX_V(p_bone, bone_size, Hector3());
 	return bones[p_bone].pose_scale;
 }
 
@@ -824,7 +824,7 @@ void Skeleton3D::_update_deferred(UpdateFlag p_update_flag) {
 }
 
 void Skeleton3D::localize_rests() {
-	Vector<int> bones_to_process = get_parentless_bones();
+	Hector<int> bones_to_process = get_parentless_bones();
 	while (bones_to_process.size() > 0) {
 		int current_bone_idx = bones_to_process[0];
 		bones_to_process.erase(current_bone_idx);
@@ -856,24 +856,24 @@ Ref<Skin> Skeleton3D::create_skin_from_rest_transforms() {
 	int len = bones.size();
 
 	// Calculate global rests and invert them.
-	LocalVector<int> bones_to_process;
+	LocalHector<int> bones_to_process;
 	bones_to_process = get_parentless_bones();
 	while (bones_to_process.size() > 0) {
 		int current_bone_idx = bones_to_process[0];
 		const Bone &b = bonesptr[current_bone_idx];
 		bones_to_process.erase(current_bone_idx);
-		LocalVector<int> child_bones_vector;
-		child_bones_vector = get_bone_children(current_bone_idx);
-		int child_bones_size = child_bones_vector.size();
+		LocalHector<int> child_bones_Hector;
+		child_bones_Hector = get_bone_children(current_bone_idx);
+		int child_bones_size = child_bones_Hector.size();
 		if (b.parent < 0) {
 			skin->set_bind_pose(current_bone_idx, b.rest);
 		}
 		for (int i = 0; i < child_bones_size; i++) {
-			int child_bone_idx = child_bones_vector[i];
+			int child_bone_idx = child_bones_Hector[i];
 			const Bone &cb = bonesptr[child_bone_idx];
 			skin->set_bind_pose(child_bone_idx, skin->get_bind_pose(current_bone_idx) * cb.rest);
 			// Add the bone's children to the list of bones to be processed.
-			bones_to_process.push_back(child_bones_vector[i]);
+			bones_to_process.push_back(child_bones_Hector[i]);
 		}
 	}
 
@@ -938,7 +938,7 @@ void Skeleton3D::force_update_bone_children_transforms(int p_bone_idx) {
 	ERR_FAIL_INDEX(p_bone_idx, bone_size);
 
 	Bone *bonesptr = bones.ptrw();
-	thread_local LocalVector<int> bones_to_process;
+	thread_local LocalHector<int> bones_to_process;
 	bones_to_process.clear();
 	bones_to_process.push_back(p_bone_idx);
 
@@ -1028,12 +1028,12 @@ void Skeleton3D::_process_modifiers() {
 		}
 		real_t influence = mod->get_influence();
 		if (influence < 1.0) {
-			LocalVector<Transform3D> old_poses;
+			LocalHector<Transform3D> old_poses;
 			for (int i = 0; i < get_bone_count(); i++) {
 				old_poses.push_back(get_bone_pose(i));
 			}
 			mod->process_modification();
-			LocalVector<Transform3D> new_poses;
+			LocalHector<Transform3D> new_poses;
 			for (int i = 0; i < get_bone_count(); i++) {
 				new_poses.push_back(get_bone_pose(i));
 			}

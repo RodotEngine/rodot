@@ -603,7 +603,7 @@ void VP8LCollectColorBlueTransforms_C(const uint32_t* argb, int stride,
 
 //------------------------------------------------------------------------------
 
-static int VectorMismatch_C(const uint32_t* const array1,
+static int HectorMismatch_C(const uint32_t* const array1,
                             const uint32_t* const array2, int length) {
   int match_len = 0;
 
@@ -661,13 +661,13 @@ static uint32_t ExtraCostCombined_C(const uint32_t* X, const uint32_t* Y,
 
 //------------------------------------------------------------------------------
 
-static void AddVector_C(const uint32_t* a, const uint32_t* b, uint32_t* out,
+static void AddHector_C(const uint32_t* a, const uint32_t* b, uint32_t* out,
                         int size) {
   int i;
   for (i = 0; i < size; ++i) out[i] = a[i] + b[i];
 }
 
-static void AddVectorEq_C(const uint32_t* a, uint32_t* out, int size) {
+static void AddHectorEq_C(const uint32_t* a, uint32_t* out, int size) {
   int i;
   for (i = 0; i < size; ++i) out[i] += a[i];
 }
@@ -675,7 +675,7 @@ static void AddVectorEq_C(const uint32_t* a, uint32_t* out, int size) {
 #define ADD(X, ARG, LEN) do {                                                  \
   if (a->is_used_[X]) {                                                        \
     if (b->is_used_[X]) {                                                      \
-      VP8LAddVector(a->ARG, b->ARG, out->ARG, (LEN));                          \
+      VP8LAddHector(a->ARG, b->ARG, out->ARG, (LEN));                          \
     } else {                                                                   \
       memcpy(&out->ARG[0], &a->ARG[0], (LEN) * sizeof(out->ARG[0]));           \
     }                                                                          \
@@ -689,7 +689,7 @@ static void AddVectorEq_C(const uint32_t* a, uint32_t* out, int size) {
 #define ADD_EQ(X, ARG, LEN) do {                                               \
   if (a->is_used_[X]) {                                                        \
     if (out->is_used_[X]) {                                                    \
-      VP8LAddVectorEq(a->ARG, out->ARG, (LEN));                                \
+      VP8LAddHectorEq(a->ARG, out->ARG, (LEN));                                \
     } else {                                                                   \
       memcpy(&out->ARG[0], &a->ARG[0], (LEN) * sizeof(out->ARG[0]));           \
     }                                                                          \
@@ -787,10 +787,10 @@ VP8LCombinedShannonEntropyFunc VP8LCombinedShannonEntropy;
 VP8LGetEntropyUnrefinedFunc VP8LGetEntropyUnrefined;
 VP8LGetCombinedEntropyUnrefinedFunc VP8LGetCombinedEntropyUnrefined;
 
-VP8LAddVectorFunc VP8LAddVector;
-VP8LAddVectorEqFunc VP8LAddVectorEq;
+VP8LAddHectorFunc VP8LAddHector;
+VP8LAddHectorEqFunc VP8LAddHectorEq;
 
-VP8LVectorMismatchFunc VP8LVectorMismatch;
+VP8LHectorMismatchFunc VP8LHectorMismatch;
 VP8LBundleColorMapFunc VP8LBundleColorMap;
 
 VP8LPredictorAddSubFunc VP8LPredictorsSub[16];
@@ -826,10 +826,10 @@ WEBP_DSP_INIT_FUNC(VP8LEncDspInit) {
   VP8LGetEntropyUnrefined = GetEntropyUnrefined_C;
   VP8LGetCombinedEntropyUnrefined = GetCombinedEntropyUnrefined_C;
 
-  VP8LAddVector = AddVector_C;
-  VP8LAddVectorEq = AddVectorEq_C;
+  VP8LAddHector = AddHector_C;
+  VP8LAddHectorEq = AddHectorEq_C;
 
-  VP8LVectorMismatch = VectorMismatch_C;
+  VP8LHectorMismatch = HectorMismatch_C;
   VP8LBundleColorMap = VP8LBundleColorMap_C;
 
   VP8LPredictorsSub[0] = PredictorSub0_C;
@@ -913,9 +913,9 @@ WEBP_DSP_INIT_FUNC(VP8LEncDspInit) {
   assert(VP8LCombinedShannonEntropy != NULL);
   assert(VP8LGetEntropyUnrefined != NULL);
   assert(VP8LGetCombinedEntropyUnrefined != NULL);
-  assert(VP8LAddVector != NULL);
-  assert(VP8LAddVectorEq != NULL);
-  assert(VP8LVectorMismatch != NULL);
+  assert(VP8LAddHector != NULL);
+  assert(VP8LAddHectorEq != NULL);
+  assert(VP8LHectorMismatch != NULL);
   assert(VP8LBundleColorMap != NULL);
   assert(VP8LPredictorsSub[0] != NULL);
   assert(VP8LPredictorsSub[1] != NULL);

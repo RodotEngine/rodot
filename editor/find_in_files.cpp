@@ -48,7 +48,7 @@
 
 const char *FindInFiles::SIGNAL_RESULT_FOUND = "result_found";
 
-// TODO: Would be nice in Vector and Vectors.
+// TODO: Would be nice in Hector and Hectors.
 template <typename T>
 inline void pop_back(T &container) {
 	container.resize(container.size() - 1);
@@ -882,7 +882,7 @@ void FindInFilesPanel::_on_replace_all_clicked() {
 		TreeItem *file_item = E.value;
 		String fpath = file_item->get_metadata(0);
 
-		Vector<Result> locations;
+		Hector<Result> locations;
 		for (TreeItem *item = file_item->get_first_child(); item; item = item->get_next()) {
 			if (!item->is_checked(0)) {
 				continue;
@@ -936,10 +936,10 @@ public:
 	}
 
 private:
-	Vector<char> _line_buffer;
+	Hector<char> _line_buffer;
 };
 
-void FindInFilesPanel::apply_replaces_in_file(const String &fpath, const Vector<Result> &locations, const String &new_text) {
+void FindInFilesPanel::apply_replaces_in_file(const String &fpath, const Hector<Result> &locations, const String &new_text) {
 	// If the file is already open, I assume the editor will reload it.
 	// If there are unsaved changes, the user will be asked on focus,
 	// however that means either losing changes or losing replaces.

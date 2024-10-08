@@ -32,7 +32,7 @@
 #define QUATERNION_H
 
 #include "core/math/math_funcs.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 #include "core/string/ustring.h"
 
 struct [[nodiscard]] Quaternion {
@@ -65,18 +65,18 @@ struct [[nodiscard]] Quaternion {
 	_FORCE_INLINE_ real_t dot(const Quaternion &p_q) const;
 	real_t angle_to(const Quaternion &p_to) const;
 
-	Vector3 get_euler(EulerOrder p_order = EulerOrder::YXZ) const;
-	static Quaternion from_euler(const Vector3 &p_euler);
+	Hector3 get_euler(EulerOrder p_order = EulerOrder::YXZ) const;
+	static Quaternion from_euler(const Hector3 &p_euler);
 
 	Quaternion slerp(const Quaternion &p_to, real_t p_weight) const;
 	Quaternion slerpni(const Quaternion &p_to, real_t p_weight) const;
 	Quaternion spherical_cubic_interpolate(const Quaternion &p_b, const Quaternion &p_pre_a, const Quaternion &p_post_b, real_t p_weight) const;
 	Quaternion spherical_cubic_interpolate_in_time(const Quaternion &p_b, const Quaternion &p_pre_a, const Quaternion &p_post_b, real_t p_weight, real_t p_b_t, real_t p_pre_a_t, real_t p_post_b_t) const;
 
-	Vector3 get_axis() const;
+	Hector3 get_axis() const;
 	real_t get_angle() const;
 
-	_FORCE_INLINE_ void get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
+	_FORCE_INLINE_ void get_axis_angle(Hector3 &r_axis, real_t &r_angle) const {
 		r_angle = 2 * Math::acos(w);
 		real_t r = ((real_t)1) / Math::sqrt(1 - w * w);
 		r_axis.x = x * r;
@@ -87,16 +87,16 @@ struct [[nodiscard]] Quaternion {
 	void operator*=(const Quaternion &p_q);
 	Quaternion operator*(const Quaternion &p_q) const;
 
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_v) const {
+	_FORCE_INLINE_ Hector3 xform(const Hector3 &p_v) const {
 #ifdef MATH_CHECKS
 		ERR_FAIL_COND_V_MSG(!is_normalized(), p_v, "The quaternion " + operator String() + " must be normalized.");
 #endif
-		Vector3 u(x, y, z);
-		Vector3 uv = u.cross(p_v);
+		Hector3 u(x, y, z);
+		Hector3 uv = u.cross(p_v);
 		return p_v + ((uv * w) + u.cross(uv)) * ((real_t)2);
 	}
 
-	_FORCE_INLINE_ Vector3 xform_inv(const Vector3 &p_v) const {
+	_FORCE_INLINE_ Hector3 xform_inv(const Hector3 &p_v) const {
 		return inverse().xform(p_v);
 	}
 
@@ -124,7 +124,7 @@ struct [[nodiscard]] Quaternion {
 			w(p_w) {
 	}
 
-	Quaternion(const Vector3 &p_axis, real_t p_angle);
+	Quaternion(const Hector3 &p_axis, real_t p_angle);
 
 	Quaternion(const Quaternion &p_q) :
 			x(p_q.x),
@@ -140,8 +140,8 @@ struct [[nodiscard]] Quaternion {
 		w = p_q.w;
 	}
 
-	Quaternion(const Vector3 &p_v0, const Vector3 &p_v1) { // Shortest arc.
-		Vector3 c = p_v0.cross(p_v1);
+	Quaternion(const Hector3 &p_v0, const Hector3 &p_v1) { // Shortest arc.
+		Hector3 c = p_v0.cross(p_v1);
 		real_t d = p_v0.dot(p_v1);
 
 		if (d < -1.0f + (real_t)CMP_EPSILON) {

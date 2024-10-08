@@ -2102,7 +2102,7 @@ void GDScriptAnalyzer::resolve_for(GDScriptParser::ForNode *p_for) {
 	bool list_resolved = false;
 
 	// Optimize constant range() call to not allocate an array.
-	// Use int, Vector2i, Vector3i instead, which also can be used as range iterators.
+	// Use int, Hector2i, Hector3i instead, which also can be used as range iterators.
 	if (p_for->list && p_for->list->type == GDScriptParser::Node::CALL) {
 		GDScriptParser::CallNode *call = static_cast<GDScriptParser::CallNode *>(p_for->list);
 		GDScriptParser::Node::Type callee_type = call->get_callee_type();
@@ -2117,7 +2117,7 @@ void GDScriptAnalyzer::resolve_for(GDScriptParser::ForNode *p_for) {
 				} else {
 					// Now we can optimize it.
 					bool can_reduce = true;
-					Vector<Variant> args;
+					Hector<Variant> args;
 					args.resize(call->arguments.size());
 					for (int i = 0; i < call->arguments.size(); i++) {
 						GDScriptParser::ExpressionNode *argument = call->arguments[i];
@@ -2155,10 +2155,10 @@ void GDScriptAnalyzer::resolve_for(GDScriptParser::ForNode *p_for) {
 								reduced = (int32_t)args[0];
 								break;
 							case 2:
-								reduced = Vector2i(args[0], args[1]);
+								reduced = Hector2i(args[0], args[1]);
 								break;
 							case 3:
-								reduced = Vector3i(args[0], args[1], args[2]);
+								reduced = Hector3i(args[0], args[1], args[2]);
 								break;
 						}
 						p_for->list->is_constant = true;
@@ -2206,11 +2206,11 @@ void GDScriptAnalyzer::resolve_for(GDScriptParser::ForNode *p_for) {
 			variable_type.type_source = list_type.type_source;
 			variable_type.kind = GDScriptParser::DataType::BUILTIN;
 			variable_type.builtin_type = list_type.builtin_type;
-		} else if (list_type.builtin_type == Variant::VECTOR2I || list_type.builtin_type == Variant::VECTOR3I) {
+		} else if (list_type.builtin_type == Variant::HECTOR2I || list_type.builtin_type == Variant::HECTOR3I) {
 			variable_type.type_source = list_type.type_source;
 			variable_type.kind = GDScriptParser::DataType::BUILTIN;
 			variable_type.builtin_type = Variant::INT;
-		} else if (list_type.builtin_type == Variant::VECTOR2 || list_type.builtin_type == Variant::VECTOR3) {
+		} else if (list_type.builtin_type == Variant::HECTOR2 || list_type.builtin_type == Variant::HECTOR3) {
 			variable_type.type_source = list_type.type_source;
 			variable_type.kind = GDScriptParser::DataType::BUILTIN;
 			variable_type.builtin_type = Variant::FLOAT;
@@ -3173,10 +3173,10 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 				case Variant::PACKED_FLOAT32_ARRAY:
 				case Variant::PACKED_FLOAT64_ARRAY:
 				case Variant::PACKED_STRING_ARRAY:
-				case Variant::PACKED_VECTOR2_ARRAY:
-				case Variant::PACKED_VECTOR3_ARRAY:
+				case Variant::PACKED_Hector2_ARRAY:
+				case Variant::PACKED_Hector3_ARRAY:
 				case Variant::PACKED_COLOR_ARRAY:
-				case Variant::PACKED_VECTOR4_ARRAY:
+				case Variant::PACKED_Hector4_ARRAY:
 					safe_to_fold = false;
 					break;
 				default:
@@ -3185,7 +3185,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 
 			if (all_is_constant && safe_to_fold) {
 				// Construct here.
-				Vector<const Variant *> args;
+				Hector<const Variant *> args;
 				for (int i = 0; i < p_call->arguments.size(); i++) {
 					args.push_back(&(p_call->arguments[i]->reduced_value));
 				}
@@ -3239,7 +3239,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 #ifdef DEBUG_ENABLED
 						mark_node_unsafe(p_call);
 						// Constructors support overloads.
-						Vector<String> types;
+						Hector<String> types;
 						for (int i = 0; i < Variant::VARIANT_MAX; i++) {
 							if (i != builtin_type && Variant::can_convert_strict((Variant::Type)i, builtin_type)) {
 								types.push_back(Variant::get_type_name((Variant::Type)i));
@@ -3359,7 +3359,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 
 			if (all_is_constant && GDScriptUtilityFunctions::is_function_constant(function_name)) {
 				// Can call on compilation.
-				Vector<const Variant *> args;
+				Hector<const Variant *> args;
 				for (int i = 0; i < p_call->arguments.size(); i++) {
 					args.push_back(&(p_call->arguments[i]->reduced_value));
 				}
@@ -3410,7 +3410,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 
 			if (all_is_constant && Variant::get_utility_function_type(function_name) == Variant::UTILITY_FUNC_TYPE_MATH) {
 				// Can call on compilation.
-				Vector<const Variant *> args;
+				Hector<const Variant *> args;
 				for (int i = 0; i < p_call->arguments.size(); i++) {
 					args.push_back(&(p_call->arguments[i]->reduced_value));
 				}
@@ -4798,10 +4798,10 @@ void GDScriptAnalyzer::reduce_subscript(GDScriptParser::SubscriptNode *p_subscri
 							case Variant::PACKED_INT32_ARRAY:
 							case Variant::PACKED_INT64_ARRAY:
 							case Variant::PACKED_STRING_ARRAY:
-							case Variant::PACKED_VECTOR2_ARRAY:
-							case Variant::PACKED_VECTOR3_ARRAY:
+							case Variant::PACKED_Hector2_ARRAY:
+							case Variant::PACKED_Hector3_ARRAY:
 							case Variant::PACKED_COLOR_ARRAY:
-							case Variant::PACKED_VECTOR4_ARRAY:
+							case Variant::PACKED_Hector4_ARRAY:
 							case Variant::ARRAY:
 							case Variant::STRING:
 								error = index_type.builtin_type != Variant::INT && index_type.builtin_type != Variant::FLOAT;
@@ -4817,12 +4817,12 @@ void GDScriptAnalyzer::reduce_subscript(GDScriptParser::SubscriptNode *p_subscri
 								break;
 							// Expect String or number.
 							case Variant::BASIS:
-							case Variant::VECTOR2:
-							case Variant::VECTOR2I:
-							case Variant::VECTOR3:
-							case Variant::VECTOR3I:
-							case Variant::VECTOR4:
-							case Variant::VECTOR4I:
+							case Variant::HECTOR2:
+							case Variant::HECTOR2I:
+							case Variant::HECTOR3:
+							case Variant::HECTOR3I:
+							case Variant::HECTOR4:
+							case Variant::HECTOR4I:
 							case Variant::TRANSFORM2D:
 							case Variant::TRANSFORM3D:
 							case Variant::PROJECTION:
@@ -4918,17 +4918,17 @@ void GDScriptAnalyzer::reduce_subscript(GDScriptParser::SubscriptNode *p_subscri
 					case Variant::PACKED_BYTE_ARRAY:
 					case Variant::PACKED_INT32_ARRAY:
 					case Variant::PACKED_INT64_ARRAY:
-					case Variant::VECTOR2I:
-					case Variant::VECTOR3I:
-					case Variant::VECTOR4I:
+					case Variant::HECTOR2I:
+					case Variant::HECTOR3I:
+					case Variant::HECTOR4I:
 						result_type.builtin_type = Variant::INT;
 						break;
 					// Return float.
 					case Variant::PACKED_FLOAT32_ARRAY:
 					case Variant::PACKED_FLOAT64_ARRAY:
-					case Variant::VECTOR2:
-					case Variant::VECTOR3:
-					case Variant::VECTOR4:
+					case Variant::HECTOR2:
+					case Variant::HECTOR3:
+					case Variant::HECTOR4:
 					case Variant::QUATERNION:
 						result_type.builtin_type = Variant::FLOAT;
 						break;
@@ -4937,29 +4937,29 @@ void GDScriptAnalyzer::reduce_subscript(GDScriptParser::SubscriptNode *p_subscri
 					case Variant::STRING:
 						result_type.builtin_type = Variant::STRING;
 						break;
-					// Return Vector2.
-					case Variant::PACKED_VECTOR2_ARRAY:
+					// Return Hector2.
+					case Variant::PACKED_Hector2_ARRAY:
 					case Variant::TRANSFORM2D:
 					case Variant::RECT2:
-						result_type.builtin_type = Variant::VECTOR2;
+						result_type.builtin_type = Variant::HECTOR2;
 						break;
-					// Return Vector2I.
+					// Return Hector2I.
 					case Variant::RECT2I:
-						result_type.builtin_type = Variant::VECTOR2I;
+						result_type.builtin_type = Variant::HECTOR2I;
 						break;
-					// Return Vector3.
-					case Variant::PACKED_VECTOR3_ARRAY:
+					// Return Hector3.
+					case Variant::PACKED_Hector3_ARRAY:
 					case Variant::AABB:
 					case Variant::BASIS:
-						result_type.builtin_type = Variant::VECTOR3;
+						result_type.builtin_type = Variant::HECTOR3;
 						break;
 					// Return Color.
 					case Variant::PACKED_COLOR_ARRAY:
 						result_type.builtin_type = Variant::COLOR;
 						break;
-					// Return Vector4.
-					case Variant::PACKED_VECTOR4_ARRAY:
-						result_type.builtin_type = Variant::VECTOR4;
+					// Return Hector4.
+					case Variant::PACKED_Hector4_ARRAY:
+						result_type.builtin_type = Variant::HECTOR4;
 						break;
 					// Depends on the index.
 					case Variant::TRANSFORM3D:
@@ -5557,7 +5557,7 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 					result = make_global_enum_type(p_property.class_name, StringName(), false);
 					result.is_constant = false;
 				} else {
-					Vector<String> names = String(p_property.class_name).split(ENUM_SEPARATOR);
+					Hector<String> names = String(p_property.class_name).split(ENUM_SEPARATOR);
 					if (names.size() == 2) {
 						result = make_native_enum_type(names[1], names[0], false);
 						result.is_constant = false;

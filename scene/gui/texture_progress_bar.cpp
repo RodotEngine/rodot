@@ -192,7 +192,7 @@ Point2 TextureProgressBar::unit_val_to_uv(float val) {
 
 	// Minimal version of Liang-Barsky clipping algorithm
 	float angle = (val * Math_TAU) - Math_PI * 0.5;
-	Point2 dir = Vector2(Math::cos(angle), Math::sin(angle));
+	Point2 dir = Hector2(Math::cos(angle), Math::sin(angle));
 	float t1 = 1.0;
 	float cp = 0.0;
 	float cq = 0.0;
@@ -253,9 +253,9 @@ Point2 TextureProgressBar::get_relative_center() {
 }
 
 void TextureProgressBar::draw_nine_patch_stretched(const Ref<Texture2D> &p_texture, FillMode p_mode, double p_ratio, const Color &p_modulate) {
-	Vector2 texture_size = p_texture->get_size();
-	Vector2 topleft = Vector2(stretch_margin[SIDE_LEFT], stretch_margin[SIDE_TOP]);
-	Vector2 bottomright = Vector2(stretch_margin[SIDE_RIGHT], stretch_margin[SIDE_BOTTOM]);
+	Hector2 texture_size = p_texture->get_size();
+	Hector2 topleft = Hector2(stretch_margin[SIDE_LEFT], stretch_margin[SIDE_TOP]);
+	Hector2 bottomright = Hector2(stretch_margin[SIDE_RIGHT], stretch_margin[SIDE_BOTTOM]);
 
 	Rect2 src_rect = Rect2(Point2(), texture_size);
 	Rect2 dst_rect = Rect2(Point2(), get_size());
@@ -493,7 +493,7 @@ void TextureProgressBar::_notification(int p_what) {
 								Rect2 source = Rect2(Point2(), progress->get_size());
 								draw_texture_rect_region(progress, region, source, tint_progress);
 							} else if (val != 0) {
-								LocalVector<float> pts;
+								LocalHector<float> pts;
 								float direction = mode == FILL_COUNTER_CLOCKWISE ? -1 : 1;
 								float start;
 
@@ -512,8 +512,8 @@ void TextureProgressBar::_notification(int p_what) {
 								}
 								pts.push_back(to);
 
-								Vector<Point2> uvs;
-								Vector<Point2> points;
+								Hector<Point2> uvs;
+								Hector<Point2> points;
 								for (const float &f : pts) {
 									Point2 uv = unit_val_to_uv(f);
 									if (uvs.has(uv)) {
@@ -529,7 +529,7 @@ void TextureProgressBar::_notification(int p_what) {
 									points.push_back(progress_offset + s * center_point);
 									uvs.push_back(center_point);
 
-									Vector<Color> colors;
+									Hector<Color> colors;
 									colors.push_back(tint_progress);
 									draw_polygon(points, colors, uvs, progress);
 								}
@@ -709,7 +709,7 @@ void TextureProgressBar::_bind_methods() {
 	ADD_GROUP("Radial Fill", "radial_");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radial_initial_angle", PROPERTY_HINT_RANGE, "0.0,360.0,0.1,degrees"), "set_radial_initial_angle", "get_radial_initial_angle");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radial_fill_degrees", PROPERTY_HINT_RANGE, "0.0,360.0,0.1,degrees"), "set_fill_degrees", "get_fill_degrees");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "radial_center_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_radial_center_offset", "get_radial_center_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "radial_center_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_radial_center_offset", "get_radial_center_offset");
 
 	ADD_GROUP("", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "nine_patch_stretch"), "set_nine_patch_stretch", "get_nine_patch_stretch");
@@ -723,7 +723,7 @@ void TextureProgressBar::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_under", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_under_texture", "get_under_texture");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_over", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_over_texture", "get_over_texture");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_progress", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_progress_texture", "get_progress_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "texture_progress_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_progress_offset", "get_texture_progress_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "texture_progress_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_progress_offset", "get_texture_progress_offset");
 
 	ADD_GROUP("Tint", "tint_");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "tint_under"), "set_tint_under", "get_tint_under");

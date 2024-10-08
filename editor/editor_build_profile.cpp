@@ -479,7 +479,7 @@ void EditorBuildProfileManager::_detect_classes() {
 	if (f.is_valid()) {
 		while (!f->eof_reached()) {
 			String l = f->get_line();
-			Vector<String> fields = l.split("::");
+			Hector<String> fields = l.split("::");
 			if (fields.size() == 4) {
 				const String &path = fields[0];
 				DetectedFile df;
@@ -518,7 +518,7 @@ void EditorBuildProfileManager::_detect_classes() {
 
 	// Add forced ones.
 
-	Vector<String> force_detect = edited->get_force_detect_classes().split(",");
+	Hector<String> force_detect = edited->get_force_detect_classes().split(",");
 	for (int i = 0; i < force_detect.size(); i++) {
 		String c = force_detect[i].strip_edges();
 		if (c.is_empty()) {

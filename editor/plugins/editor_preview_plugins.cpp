@@ -114,7 +114,7 @@ Ref<Texture2D> EditorTexturePreviewPlugin::generate(const Ref<Resource> &p_from,
 
 		const int mid_depth = (tex_3d->get_depth() - 1) / 2;
 
-		Vector<Ref<Image>> data = tex_3d->get_data();
+		Hector<Ref<Image>> data = tex_3d->get_data();
 		if (!data.is_empty() && data[mid_depth].is_valid()) {
 			img = data[mid_depth]->duplicate();
 		}
@@ -157,14 +157,14 @@ Ref<Texture2D> EditorTexturePreviewPlugin::generate(const Ref<Resource> &p_from,
 		img->convert(Image::FORMAT_RGBA8);
 	}
 
-	Vector2 new_size = img->get_size();
+	Hector2 new_size = img->get_size();
 	if (new_size.x > p_size.x) {
-		new_size = Vector2(p_size.x, new_size.y * p_size.x / new_size.x);
+		new_size = Hector2(p_size.x, new_size.y * p_size.x / new_size.x);
 	}
 	if (new_size.y > p_size.y) {
-		new_size = Vector2(new_size.x * p_size.y / new_size.y, p_size.y);
+		new_size = Hector2(new_size.x * p_size.y / new_size.y, p_size.y);
 	}
-	Vector2i new_size_i = Vector2i(new_size).maxi(1);
+	Hector2i new_size_i = Hector2i(new_size).maxi(1);
 	img->resize(new_size_i.x, new_size_i.y, Image::INTERPOLATE_CUBIC);
 	post_process_preview(img);
 
@@ -198,12 +198,12 @@ Ref<Texture2D> EditorImagePreviewPlugin::generate(const Ref<Resource> &p_from, c
 		img->convert(Image::FORMAT_RGBA8);
 	}
 
-	Vector2 new_size = img->get_size();
+	Hector2 new_size = img->get_size();
 	if (new_size.x > p_size.x) {
-		new_size = Vector2(p_size.x, new_size.y * p_size.x / new_size.x);
+		new_size = Hector2(p_size.x, new_size.y * p_size.x / new_size.x);
 	}
 	if (new_size.y > p_size.y) {
-		new_size = Vector2(new_size.x * p_size.y / new_size.y, p_size.y);
+		new_size = Hector2(new_size.x * p_size.y / new_size.y, p_size.y);
 	}
 	img->resize(new_size.x, new_size.y, Image::INTERPOLATE_CUBIC);
 	post_process_preview(img);
@@ -231,7 +231,7 @@ Ref<Texture2D> EditorBitmapPreviewPlugin::generate(const Ref<Resource> &p_from, 
 		return Ref<Texture2D>();
 	}
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 
 	data.resize(bm->get_size().width * bm->get_size().height);
 
@@ -259,12 +259,12 @@ Ref<Texture2D> EditorBitmapPreviewPlugin::generate(const Ref<Resource> &p_from, 
 		img->convert(Image::FORMAT_RGBA8);
 	}
 
-	Vector2 new_size = img->get_size();
+	Hector2 new_size = img->get_size();
 	if (new_size.x > p_size.x) {
-		new_size = Vector2(p_size.x, new_size.y * p_size.x / new_size.x);
+		new_size = Hector2(p_size.x, new_size.y * p_size.x / new_size.x);
 	}
 	if (new_size.y > p_size.y) {
-		new_size = Vector2(new_size.x * p_size.y / new_size.y, p_size.y);
+		new_size = Hector2(new_size.x * p_size.y / new_size.y, p_size.y);
 	}
 	img->resize(new_size.x, new_size.y, Image::INTERPOLATE_CUBIC);
 	post_process_preview(img);
@@ -368,7 +368,7 @@ EditorMaterialPreviewPlugin::EditorMaterialPreviewPlugin() {
 
 	camera = RS::get_singleton()->camera_create();
 	RS::get_singleton()->viewport_attach_camera(viewport, camera);
-	RS::get_singleton()->camera_set_transform(camera, Transform3D(Basis(), Vector3(0, 0, 3)));
+	RS::get_singleton()->camera_set_transform(camera, Transform3D(Basis(), Hector3(0, 0, 3)));
 	RS::get_singleton()->camera_set_perspective(camera, 45, 0.1, 10);
 
 	if (GLOBAL_GET("rendering/lights_and_shadows/use_physical_light_units")) {
@@ -379,7 +379,7 @@ EditorMaterialPreviewPlugin::EditorMaterialPreviewPlugin() {
 
 	light = RS::get_singleton()->directional_light_create();
 	light_instance = RS::get_singleton()->instance_create2(light, scenario);
-	RS::get_singleton()->instance_set_transform(light_instance, Transform3D().looking_at(Vector3(-1, -1, -1), Vector3(0, 1, 0)));
+	RS::get_singleton()->instance_set_transform(light_instance, Transform3D().looking_at(Hector3(-1, -1, -1), Hector3(0, 1, 0)));
 
 	light2 = RS::get_singleton()->directional_light_create();
 	RS::get_singleton()->light_set_color(light2, Color(0.7, 0.7, 0.7));
@@ -387,7 +387,7 @@ EditorMaterialPreviewPlugin::EditorMaterialPreviewPlugin() {
 
 	light_instance2 = RS::get_singleton()->instance_create2(light2, scenario);
 
-	RS::get_singleton()->instance_set_transform(light_instance2, Transform3D().looking_at(Vector3(0, 1, 0), Vector3(0, 0, 1)));
+	RS::get_singleton()->instance_set_transform(light_instance2, Transform3D().looking_at(Hector3(0, 1, 0), Hector3(0, 0, 1)));
 
 	sphere = RS::get_singleton()->mesh_create();
 	sphere_instance = RS::get_singleton()->instance_create2(sphere, scenario);
@@ -398,11 +398,11 @@ EditorMaterialPreviewPlugin::EditorMaterialPreviewPlugin() {
 	const double lon_step = Math_TAU / lons;
 	real_t radius = 1.0;
 
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
-	Vector<Vector2> uvs;
-	Vector<real_t> tangents;
-	Basis tt = Basis(Vector3(0, 1, 0), Math_PI * 0.5);
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
+	Hector<Hector2> uvs;
+	Hector<real_t> tangents;
+	Basis tt = Basis(Hector3(0, 1, 0), Math_PI * 0.5);
 
 	for (int i = 1; i <= lats; i++) {
 		double lat0 = lat_step * (i - 1) - Math_TAU / 4;
@@ -422,25 +422,25 @@ EditorMaterialPreviewPlugin::EditorMaterialPreviewPlugin() {
 			double x1 = Math::cos(lng1);
 			double y1 = Math::sin(lng1);
 
-			Vector3 v[4] = {
-				Vector3(x1 * zr0, z0, y1 * zr0),
-				Vector3(x1 * zr1, z1, y1 * zr1),
-				Vector3(x0 * zr1, z1, y0 * zr1),
-				Vector3(x0 * zr0, z0, y0 * zr0)
+			Hector3 v[4] = {
+				Hector3(x1 * zr0, z0, y1 * zr0),
+				Hector3(x1 * zr1, z1, y1 * zr1),
+				Hector3(x0 * zr1, z1, y0 * zr1),
+				Hector3(x0 * zr0, z0, y0 * zr0)
 			};
 
 #define ADD_POINT(m_idx)                                                                       \
 	normals.push_back(v[m_idx]);                                                               \
 	vertices.push_back(v[m_idx] * radius);                                                     \
 	{                                                                                          \
-		Vector2 uv(Math::atan2(v[m_idx].x, v[m_idx].z), Math::atan2(-v[m_idx].y, v[m_idx].z)); \
+		Hector2 uv(Math::atan2(v[m_idx].x, v[m_idx].z), Math::atan2(-v[m_idx].y, v[m_idx].z)); \
 		uv /= Math_PI;                                                                         \
 		uv *= 4.0;                                                                             \
-		uv = uv * 0.5 + Vector2(0.5, 0.5);                                                     \
+		uv = uv * 0.5 + Hector2(0.5, 0.5);                                                     \
 		uvs.push_back(uv);                                                                     \
 	}                                                                                          \
 	{                                                                                          \
-		Vector3 t = tt.xform(v[m_idx]);                                                        \
+		Hector3 t = tt.xform(v[m_idx]);                                                        \
 		tangents.push_back(t.x);                                                               \
 		tangents.push_back(t.y);                                                               \
 		tangents.push_back(t.z);                                                               \
@@ -651,7 +651,7 @@ Ref<Texture2D> EditorAudioStreamPreviewPlugin::generate(const Ref<Resource> &p_f
 	Ref<AudioStream> stream = p_from;
 	ERR_FAIL_COND_V(stream.is_null(), Ref<Texture2D>());
 
-	Vector<uint8_t> img;
+	Hector<uint8_t> img;
 
 	int w = p_size.x;
 	int h = p_size.y;
@@ -669,7 +669,7 @@ Ref<Texture2D> EditorAudioStreamPreviewPlugin::generate(const Ref<Resource> &p_f
 	}
 	int frame_length = AudioServer::get_singleton()->get_mix_rate() * len_s;
 
-	Vector<AudioFrame> frames;
+	Hector<AudioFrame> frames;
 	frames.resize(frame_length);
 
 	playback->start();
@@ -740,11 +740,11 @@ Ref<Texture2D> EditorMeshPreviewPlugin::generate(const Ref<Resource> &p_from, co
 	RS::get_singleton()->instance_set_base(mesh_instance, mesh->get_rid());
 
 	AABB aabb = mesh->get_aabb();
-	Vector3 ofs = aabb.get_center();
+	Hector3 ofs = aabb.get_center();
 	aabb.position -= ofs;
 	Transform3D xform;
-	xform.basis = Basis().rotated(Vector3(0, 1, 0), -Math_PI * 0.125);
-	xform.basis = Basis().rotated(Vector3(1, 0, 0), Math_PI * 0.125) * xform.basis;
+	xform.basis = Basis().rotated(Hector3(0, 1, 0), -Math_PI * 0.125);
+	xform.basis = Basis().rotated(Hector3(1, 0, 0), Math_PI * 0.125) * xform.basis;
 	AABB rot_aabb = xform.xform(aabb);
 	real_t m = MAX(rot_aabb.size.x, rot_aabb.size.y) * 0.5;
 	if (m == 0) {
@@ -752,7 +752,7 @@ Ref<Texture2D> EditorMeshPreviewPlugin::generate(const Ref<Resource> &p_from, co
 	}
 	m = 1.0 / m;
 	m *= 0.5;
-	xform.basis.scale(Vector3(m, m, m));
+	xform.basis.scale(Hector3(m, m, m));
 	xform.origin = -xform.basis.xform(ofs); //-ofs*m;
 	xform.origin.z -= rot_aabb.size.z * 2;
 	RS::get_singleton()->instance_set_transform(mesh_instance, xform);
@@ -766,12 +766,12 @@ Ref<Texture2D> EditorMeshPreviewPlugin::generate(const Ref<Resource> &p_from, co
 
 	img->convert(Image::FORMAT_RGBA8);
 
-	Vector2 new_size = img->get_size();
+	Hector2 new_size = img->get_size();
 	if (new_size.x > p_size.x) {
-		new_size = Vector2(p_size.x, new_size.y * p_size.x / new_size.x);
+		new_size = Hector2(p_size.x, new_size.y * p_size.x / new_size.x);
 	}
 	if (new_size.y > p_size.y) {
-		new_size = Vector2(new_size.x * p_size.y / new_size.y, p_size.y);
+		new_size = Hector2(new_size.x * p_size.y / new_size.y, p_size.y);
 	}
 	img->resize(new_size.x, new_size.y, Image::INTERPOLATE_CUBIC);
 	post_process_preview(img);
@@ -792,7 +792,7 @@ EditorMeshPreviewPlugin::EditorMeshPreviewPlugin() {
 
 	camera = RS::get_singleton()->camera_create();
 	RS::get_singleton()->viewport_attach_camera(viewport, camera);
-	RS::get_singleton()->camera_set_transform(camera, Transform3D(Basis(), Vector3(0, 0, 3)));
+	RS::get_singleton()->camera_set_transform(camera, Transform3D(Basis(), Hector3(0, 0, 3)));
 	//RS::get_singleton()->camera_set_perspective(camera,45,0.1,10);
 	RS::get_singleton()->camera_set_orthogonal(camera, 1.0, 0.01, 1000.0);
 
@@ -804,14 +804,14 @@ EditorMeshPreviewPlugin::EditorMeshPreviewPlugin() {
 
 	light = RS::get_singleton()->directional_light_create();
 	light_instance = RS::get_singleton()->instance_create2(light, scenario);
-	RS::get_singleton()->instance_set_transform(light_instance, Transform3D().looking_at(Vector3(-1, -1, -1), Vector3(0, 1, 0)));
+	RS::get_singleton()->instance_set_transform(light_instance, Transform3D().looking_at(Hector3(-1, -1, -1), Hector3(0, 1, 0)));
 
 	light2 = RS::get_singleton()->directional_light_create();
 	RS::get_singleton()->light_set_color(light2, Color(0.7, 0.7, 0.7));
 	//RS::get_singleton()->light_set_color(light2, RS::LIGHT_COLOR_SPECULAR, Color(0.0, 0.0, 0.0));
 	light_instance2 = RS::get_singleton()->instance_create2(light2, scenario);
 
-	RS::get_singleton()->instance_set_transform(light_instance2, Transform3D().looking_at(Vector3(0, 1, 0), Vector3(0, 0, 1)));
+	RS::get_singleton()->instance_set_transform(light_instance2, Transform3D().looking_at(Hector3(0, 1, 0), Hector3(0, 0, 1)));
 
 	//sphere = RS::get_singleton()->mesh_create();
 	mesh_instance = RS::get_singleton()->instance_create();
@@ -856,9 +856,9 @@ Ref<Texture2D> EditorFontPreviewPlugin::generate_from_path(const String &p_path,
 	if (sample.is_empty()) {
 		sample = sampled_font->get_supported_chars().substr(0, 6);
 	}
-	Vector2 size = sampled_font->get_string_size(sample, HORIZONTAL_ALIGNMENT_LEFT, -1, 50);
+	Hector2 size = sampled_font->get_string_size(sample, HORIZONTAL_ALIGNMENT_LEFT, -1, 50);
 
-	Vector2 pos;
+	Hector2 pos;
 
 	pos.x = 64 - size.x / 2;
 	pos.y = 80;
@@ -876,12 +876,12 @@ Ref<Texture2D> EditorFontPreviewPlugin::generate_from_path(const String &p_path,
 
 	img->convert(Image::FORMAT_RGBA8);
 
-	Vector2 new_size = img->get_size();
+	Hector2 new_size = img->get_size();
 	if (new_size.x > p_size.x) {
-		new_size = Vector2(p_size.x, new_size.y * p_size.x / new_size.x);
+		new_size = Hector2(p_size.x, new_size.y * p_size.x / new_size.x);
 	}
 	if (new_size.y > p_size.y) {
-		new_size = Vector2(new_size.x * p_size.y / new_size.y, p_size.y);
+		new_size = Hector2(new_size.x * p_size.y / new_size.y, p_size.y);
 	}
 	img->resize(new_size.x, new_size.y, Image::INTERPOLATE_CUBIC);
 	post_process_preview(img);

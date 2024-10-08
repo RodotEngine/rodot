@@ -61,8 +61,8 @@ void Shape::normalize() {
         } else {
             EdgeHolder *prevEdge = &contour->edges.back();
             for (std::vector<EdgeHolder>::iterator edge = contour->edges.begin(); edge != contour->edges.end(); ++edge) {
-                Vector2 prevDir = (*prevEdge)->direction(1).normalize();
-                Vector2 curDir = (*edge)->direction(0).normalize();
+                Hector2 prevDir = (*prevEdge)->direction(1).normalize();
+                Hector2 curDir = (*edge)->direction(0).normalize();
                 if (dotProduct(prevDir, curDir) < MSDFGEN_CORNER_DOT_EPSILON-1) {
                     deconvergeEdge(*prevEdge, 1);
                     deconvergeEdge(*edge, 0);

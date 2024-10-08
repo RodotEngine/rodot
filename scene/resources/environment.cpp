@@ -75,12 +75,12 @@ float Environment::get_sky_custom_fov() const {
 	return bg_sky_custom_fov;
 }
 
-void Environment::set_sky_rotation(const Vector3 &p_rotation) {
+void Environment::set_sky_rotation(const Hector3 &p_rotation) {
 	bg_sky_rotation = p_rotation;
 	RS::get_singleton()->environment_set_sky_orientation(environment, Basis::from_euler(p_rotation));
 }
 
-Vector3 Environment::get_sky_rotation() const {
+Hector3 Environment::get_sky_rotation() const {
 	return bg_sky_rotation;
 }
 
@@ -715,7 +715,7 @@ Ref<Texture> Environment::get_glow_map() const {
 }
 
 void Environment::_update_glow() {
-	Vector<float> normalized_levels;
+	Hector<float> normalized_levels;
 	if (glow_normalize_levels) {
 		normalized_levels.resize(7);
 		float size = 0.0;
@@ -1201,7 +1201,7 @@ bool Environment::_set(const StringName &p_name, const Variant &p_value) {
 		set_sky_custom_fov(p_value);
 		return true;
 	} else if (p_name == "background_sky_orientation") {
-		Vector3 euler = p_value.operator Basis().get_euler();
+		Hector3 euler = p_value.operator Basis().get_euler();
 		set_sky_rotation(euler);
 		return true;
 	} else {
@@ -1244,7 +1244,7 @@ void Environment::_bind_methods() {
 	ADD_GROUP("Sky", "sky_");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "sky", PROPERTY_HINT_RESOURCE_TYPE, "Sky"), "set_sky", "get_sky");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sky_custom_fov", PROPERTY_HINT_RANGE, "0,180,0.1,degrees"), "set_sky_custom_fov", "get_sky_custom_fov");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "sky_rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_sky_rotation", "get_sky_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "sky_rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_sky_rotation", "get_sky_rotation");
 
 	// Ambient light
 

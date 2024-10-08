@@ -117,8 +117,8 @@ public:
 		String deprecated_message;
 		bool is_experimental = false;
 		String experimental_message;
-		Vector<ArgumentDoc> arguments;
-		Vector<int> errors_returned;
+		Hector<ArgumentDoc> arguments;
+		Hector<int> errors_returned;
 		String keywords;
 		bool operator<(const MethodDoc &p_method) const {
 			if (name == p_method.name) {
@@ -704,16 +704,16 @@ public:
 		String brief_description;
 		String description;
 		String keywords;
-		Vector<TutorialDoc> tutorials;
-		Vector<MethodDoc> constructors;
-		Vector<MethodDoc> methods;
-		Vector<MethodDoc> operators;
-		Vector<MethodDoc> signals;
-		Vector<ConstantDoc> constants;
+		Hector<TutorialDoc> tutorials;
+		Hector<MethodDoc> constructors;
+		Hector<MethodDoc> methods;
+		Hector<MethodDoc> operators;
+		Hector<MethodDoc> signals;
+		Hector<ConstantDoc> constants;
 		HashMap<String, EnumDoc> enums;
-		Vector<PropertyDoc> properties;
-		Vector<MethodDoc> annotations;
-		Vector<ThemeItemDoc> theme_properties;
+		Hector<PropertyDoc> properties;
+		Hector<MethodDoc> annotations;
+		Hector<ThemeItemDoc> theme_properties;
 		bool is_deprecated = false;
 		String deprecated_message;
 		bool is_experimental = false;

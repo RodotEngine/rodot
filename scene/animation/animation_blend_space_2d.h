@@ -51,7 +51,7 @@ protected:
 	struct BlendPoint {
 		StringName name;
 		Ref<AnimationRootNode> node;
-		Vector2 position;
+		Hector2 position;
 	};
 
 	BlendPoint blend_points[MAX_BLEND_POINTS];
@@ -61,22 +61,22 @@ protected:
 		int points[3] = {};
 	};
 
-	Vector<BlendTriangle> triangles;
+	Hector<BlendTriangle> triangles;
 
 	StringName blend_position = "blend_position";
 	StringName closest = "closest";
-	Vector2 max_space = Vector2(1, 1);
-	Vector2 min_space = Vector2(-1, -1);
-	Vector2 snap = Vector2(0.1, 0.1);
+	Hector2 max_space = Hector2(1, 1);
+	Hector2 min_space = Hector2(-1, -1);
+	Hector2 snap = Hector2(0.1, 0.1);
 	String x_label = "x";
 	String y_label = "y";
 	BlendMode blend_mode = BLEND_MODE_INTERPOLATED;
 
 	void _add_blend_point(int p_index, const Ref<AnimationRootNode> &p_node);
-	void _set_triangles(const Vector<int> &p_triangles);
-	Vector<int> _get_triangles() const;
+	void _set_triangles(const Hector<int> &p_triangles);
+	Hector<int> _get_triangles() const;
 
-	void _blend_triangle(const Vector2 &p_pos, const Vector2 *p_points, float *r_weights);
+	void _blend_triangle(const Hector2 &p_pos, const Hector2 *p_points, float *r_weights);
 
 	bool auto_triangles = true;
 	bool trianges_dirty = false;
@@ -99,10 +99,10 @@ public:
 
 	virtual void get_child_nodes(List<ChildNode> *r_child_nodes) override;
 
-	void add_blend_point(const Ref<AnimationRootNode> &p_node, const Vector2 &p_position, int p_at_index = -1);
-	void set_blend_point_position(int p_point, const Vector2 &p_position);
+	void add_blend_point(const Ref<AnimationRootNode> &p_node, const Hector2 &p_position, int p_at_index = -1);
+	void set_blend_point_position(int p_point, const Hector2 &p_position);
 	void set_blend_point_node(int p_point, const Ref<AnimationRootNode> &p_node);
-	Vector2 get_blend_point_position(int p_point) const;
+	Hector2 get_blend_point_position(int p_point) const;
 	Ref<AnimationRootNode> get_blend_point_node(int p_point) const;
 	void remove_blend_point(int p_point);
 	int get_blend_point_count() const;
@@ -113,14 +113,14 @@ public:
 	void remove_triangle(int p_triangle);
 	int get_triangle_count() const;
 
-	void set_min_space(const Vector2 &p_min);
-	Vector2 get_min_space() const;
+	void set_min_space(const Hector2 &p_min);
+	Hector2 get_min_space() const;
 
-	void set_max_space(const Vector2 &p_max);
-	Vector2 get_max_space() const;
+	void set_max_space(const Hector2 &p_max);
+	Hector2 get_max_space() const;
 
-	void set_snap(const Vector2 &p_snap);
-	Vector2 get_snap() const;
+	void set_snap(const Hector2 &p_snap);
+	Hector2 get_snap() const;
 
 	void set_x_label(const String &p_label);
 	String get_x_label() const;
@@ -131,7 +131,7 @@ public:
 	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 	virtual String get_caption() const override;
 
-	Vector2 get_closest_point(const Vector2 &p_point);
+	Hector2 get_closest_point(const Hector2 &p_point);
 
 	void set_auto_triangles(bool p_enable);
 	bool get_auto_triangles() const;

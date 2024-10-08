@@ -33,8 +33,8 @@
 #include "core/math/geometry_2d.h"
 
 // Utility method.
-static inline Vector2 interpolate(const Rect2 &r, const Vector2 &v) {
-	return Vector2(
+static inline Hector2 interpolate(const Rect2 &r, const Hector2 &v) {
+	return Hector2(
 			Math::lerp(r.position.x, r.position.x + r.get_size().x, v.x),
 			Math::lerp(r.position.y, r.position.y + r.get_size().y, v.y));
 }
@@ -68,12 +68,12 @@ void LineBuilder::build() {
 
 	// Initial values
 
-	Vector2 pos0 = points[0];
-	Vector2 pos1 = points[1];
-	Vector2 f0 = (pos1 - pos0).normalized();
-	Vector2 u0 = f0.orthogonal();
-	Vector2 pos_up0 = pos0;
-	Vector2 pos_down0 = pos0;
+	Hector2 pos0 = points[0];
+	Hector2 pos1 = points[1];
+	Hector2 f0 = (pos1 - pos0).normalized();
+	Hector2 u0 = f0.orthogonal();
+	Hector2 pos_up0 = pos0;
+	Hector2 pos_down0 = pos0;
 
 	Color color0;
 	Color color1;
@@ -167,16 +167,16 @@ void LineBuilder::build() {
 	int first_point = wrap_around ? -1 : 1;
 
 	// If the line wraps around, these variables will be used for the final segment.
-	Vector2 first_pos_up, first_pos_down;
+	Hector2 first_pos_up, first_pos_down;
 	bool is_first_joint_sharp = false;
 
 	// For each additional segment
 	for (int i = first_point; i <= segments_count; ++i) {
 		pos1 = points[(i == -1) ? point_count - 1 : i % point_count]; // First point.
-		Vector2 pos2 = points[(i + 1) % point_count]; // Second point.
+		Hector2 pos2 = points[(i + 1) % point_count]; // Second point.
 
-		Vector2 f1 = (pos2 - pos1).normalized();
-		Vector2 u1 = f1.orthogonal();
+		Hector2 f1 = (pos2 - pos1).normalized();
+		Hector2 u1 = f1.orthogonal();
 
 		// Determine joint orientation.
 		float dp = u0.dot(f1);
@@ -193,8 +193,8 @@ void LineBuilder::build() {
 			modified_hw = hw * width_factor;
 		}
 
-		Vector2 inner_normal0 = u0 * modified_hw;
-		Vector2 inner_normal1 = u1 * modified_hw;
+		Hector2 inner_normal0 = u0 * modified_hw;
+		Hector2 inner_normal1 = u1 * modified_hw;
 		if (orientation == DOWN) {
 			inner_normal0 = -inner_normal0;
 			inner_normal1 = -inner_normal1;
@@ -215,7 +215,7 @@ void LineBuilder::build() {
 		 */
 
 		// Find inner intersection at the joint.
-		Vector2 corner_pos_in, corner_pos_out;
+		Hector2 corner_pos_in, corner_pos_out;
 		bool is_intersecting = Geometry2D::segment_intersects_segment(
 				pos0 + inner_normal0, pos1 + inner_normal0,
 				pos1 + inner_normal1, pos2 + inner_normal1,
@@ -230,7 +230,7 @@ void LineBuilder::build() {
 			corner_pos_out = pos1 - inner_normal0;
 		}
 
-		Vector2 corner_pos_up, corner_pos_down;
+		Hector2 corner_pos_up, corner_pos_down;
 		if (orientation == UP) {
 			corner_pos_up = corner_pos_in;
 			corner_pos_down = corner_pos_out;
@@ -241,7 +241,7 @@ void LineBuilder::build() {
 
 		Line2D::LineJointMode current_joint_mode = joint_mode;
 
-		Vector2 pos_up1, pos_down1;
+		Hector2 pos_up1, pos_down1;
 		if (is_intersecting) {
 			// Fallback on bevel if sharp angle is too high (because it would produce very long miters).
 			float width_factor_sq = width_factor * width_factor;
@@ -310,7 +310,7 @@ void LineBuilder::build() {
 
 		// For wrap-around polylines, store some kind of start positions of the first joint for the final connection.
 		if (wrap_around && i == 0) {
-			Vector2 first_pos_center = (pos_up1 + pos_down1) / 2;
+			Hector2 first_pos_center = (pos_up1 + pos_down1) / 2;
 			float lerp_factor = 1.0 / width_factor;
 			first_pos_up = first_pos_center.lerp(pos_up1, lerp_factor);
 			first_pos_down = first_pos_center.lerp(pos_down1, lerp_factor);
@@ -320,7 +320,7 @@ void LineBuilder::build() {
 		// Add current line body quad.
 		if (wrap_around && retrieve_curve && !is_first_joint_sharp && i == segments_count) {
 			// If the width curve is not seamless, we might need to fetch the line's start points to use them for the final connection.
-			Vector2 first_pos_center = (first_pos_up + first_pos_down) / 2;
+			Hector2 first_pos_center = (first_pos_up + first_pos_down) / 2;
 			strip_add_quad(first_pos_center.lerp(first_pos_up, width_factor), first_pos_center.lerp(first_pos_down, width_factor), color1, uvx1);
 			return;
 		} else {
@@ -339,7 +339,7 @@ void LineBuilder::build() {
 			 *             |     |
 			 */
 
-			Vector2 cbegin, cend;
+			Hector2 cbegin, cend;
 			if (orientation == UP) {
 				cbegin = pos_down1;
 				cend = pos_down0;
@@ -351,8 +351,8 @@ void LineBuilder::build() {
 			if (current_joint_mode == Line2D::LINE_JOINT_BEVEL && !(wrap_around && i == segments_count)) {
 				strip_add_tri(cend, orientation);
 			} else if (current_joint_mode == Line2D::LINE_JOINT_ROUND && !(wrap_around && i == segments_count)) {
-				Vector2 vbegin = cbegin - pos1;
-				Vector2 vend = cend - pos1;
+				Hector2 vbegin = cbegin - pos1;
+				Hector2 vend = cend - pos1;
 				// We want to use vbegin.angle_to(vend) below, which evaluates to
 				// Math::atan2(vbegin.cross(vend), vbegin.dot(vend)) but we need to
 				// calculate this ourselves as we need to check if the cross product
@@ -392,8 +392,8 @@ void LineBuilder::build() {
 			modified_hw = hw * width_factor;
 		}
 
-		Vector2 pos_up1 = pos1 + u0 * modified_hw;
-		Vector2 pos_down1 = pos1 - u0 * modified_hw;
+		Hector2 pos_up1 = pos1 + u0 * modified_hw;
+		Hector2 pos_down1 = pos1 - u0 * modified_hw;
 
 		// Add extra distance for a box end cap.
 		if (end_cap_mode == Line2D::LINE_CAP_BOX) {
@@ -426,7 +426,7 @@ void LineBuilder::build() {
 	}
 }
 
-void LineBuilder::strip_begin(Vector2 up, Vector2 down, Color color, float uvx) {
+void LineBuilder::strip_begin(Hector2 up, Hector2 down, Color color, float uvx) {
 	int vi = vertices.size();
 
 	vertices.push_back(up);
@@ -438,15 +438,15 @@ void LineBuilder::strip_begin(Vector2 up, Vector2 down, Color color, float uvx) 
 	}
 
 	if (texture_mode != Line2D::LINE_TEXTURE_NONE) {
-		uvs.push_back(Vector2(uvx, 0.f));
-		uvs.push_back(Vector2(uvx, 1.f));
+		uvs.push_back(Hector2(uvx, 0.f));
+		uvs.push_back(Hector2(uvx, 1.f));
 	}
 
 	_last_index[UP] = vi;
 	_last_index[DOWN] = vi + 1;
 }
 
-void LineBuilder::strip_add_quad(Vector2 up, Vector2 down, Color color, float uvx) {
+void LineBuilder::strip_add_quad(Hector2 up, Hector2 down, Color color, float uvx) {
 	int vi = vertices.size();
 
 	vertices.push_back(up);
@@ -458,8 +458,8 @@ void LineBuilder::strip_add_quad(Vector2 up, Vector2 down, Color color, float uv
 	}
 
 	if (texture_mode != Line2D::LINE_TEXTURE_NONE) {
-		uvs.push_back(Vector2(uvx, 0.f));
-		uvs.push_back(Vector2(uvx, 1.f));
+		uvs.push_back(Hector2(uvx, 0.f));
+		uvs.push_back(Hector2(uvx, 1.f));
 	}
 
 	indices.push_back(_last_index[UP]);
@@ -473,7 +473,7 @@ void LineBuilder::strip_add_quad(Vector2 up, Vector2 down, Color color, float uv
 	_last_index[DOWN] = vi + 1;
 }
 
-void LineBuilder::strip_add_tri(Vector2 up, Orientation orientation) {
+void LineBuilder::strip_add_tri(Hector2 up, Orientation orientation) {
 	int vi = vertices.size();
 
 	vertices.push_back(up);
@@ -497,12 +497,12 @@ void LineBuilder::strip_add_tri(Vector2 up, Orientation orientation) {
 	_last_index[opposite_orientation] = vi;
 }
 
-void LineBuilder::strip_add_arc(Vector2 center, float angle_delta, Orientation orientation) {
+void LineBuilder::strip_add_arc(Hector2 center, float angle_delta, Orientation orientation) {
 	// Take the two last vertices and extrude an arc made of triangles
 	// that all share one of the initial vertices
 
 	Orientation opposite_orientation = orientation == UP ? DOWN : UP;
-	Vector2 vbegin = vertices[_last_index[opposite_orientation]] - center;
+	Hector2 vbegin = vertices[_last_index[opposite_orientation]] - center;
 	float radius = vbegin.length();
 	float angle_step = Math_PI / static_cast<float>(round_precision);
 	float steps = Math::abs(angle_delta) / angle_step;
@@ -511,22 +511,22 @@ void LineBuilder::strip_add_arc(Vector2 center, float angle_delta, Orientation o
 		angle_step = -angle_step;
 	}
 
-	float t = Vector2(1, 0).angle_to(vbegin);
+	float t = Hector2(1, 0).angle_to(vbegin);
 	float end_angle = t + angle_delta;
-	Vector2 rpos(0, 0);
+	Hector2 rpos(0, 0);
 
 	// Arc vertices
 	for (int ti = 0; ti < steps; ++ti, t += angle_step) {
-		rpos = center + Vector2(Math::cos(t), Math::sin(t)) * radius;
+		rpos = center + Hector2(Math::cos(t), Math::sin(t)) * radius;
 		strip_add_tri(rpos, orientation);
 	}
 
 	// Last arc vertex
-	rpos = center + Vector2(Math::cos(end_angle), Math::sin(end_angle)) * radius;
+	rpos = center + Hector2(Math::cos(end_angle), Math::sin(end_angle)) * radius;
 	strip_add_tri(rpos, orientation);
 }
 
-void LineBuilder::new_arc(Vector2 center, Vector2 vbegin, float angle_delta, Color color, Rect2 uv_rect) {
+void LineBuilder::new_arc(Hector2 center, Hector2 vbegin, float angle_delta, Color color, Rect2 uv_rect) {
 	// Make a standalone arc that doesn't use existing vertices,
 	// with undistorted UVs from within a square section
 
@@ -538,9 +538,9 @@ void LineBuilder::new_arc(Vector2 center, Vector2 vbegin, float angle_delta, Col
 		angle_step = -angle_step;
 	}
 
-	float t = Vector2(1, 0).angle_to(vbegin);
+	float t = Hector2(1, 0).angle_to(vbegin);
 	float end_angle = t + angle_delta;
-	Vector2 rpos(0, 0);
+	Hector2 rpos(0, 0);
 	float tt_begin = -Math_PI / 2.0f;
 	float tt = tt_begin;
 
@@ -551,12 +551,12 @@ void LineBuilder::new_arc(Vector2 center, Vector2 vbegin, float angle_delta, Col
 		colors.push_back(color);
 	}
 	if (texture_mode != Line2D::LINE_TEXTURE_NONE) {
-		uvs.push_back(interpolate(uv_rect, Vector2(0.5f, 0.5f)));
+		uvs.push_back(interpolate(uv_rect, Hector2(0.5f, 0.5f)));
 	}
 
 	// Arc vertices
 	for (int ti = 0; ti < steps; ++ti, t += angle_step) {
-		Vector2 sc = Vector2(Math::cos(t), Math::sin(t));
+		Hector2 sc = Hector2(Math::cos(t), Math::sin(t));
 		rpos = center + sc * radius;
 
 		vertices.push_back(rpos);
@@ -564,14 +564,14 @@ void LineBuilder::new_arc(Vector2 center, Vector2 vbegin, float angle_delta, Col
 			colors.push_back(color);
 		}
 		if (texture_mode != Line2D::LINE_TEXTURE_NONE) {
-			Vector2 tsc = Vector2(Math::cos(tt), Math::sin(tt));
-			uvs.push_back(interpolate(uv_rect, 0.5f * (tsc + Vector2(1.f, 1.f))));
+			Hector2 tsc = Hector2(Math::cos(tt), Math::sin(tt));
+			uvs.push_back(interpolate(uv_rect, 0.5f * (tsc + Hector2(1.f, 1.f))));
 			tt += angle_step;
 		}
 	}
 
 	// Last arc vertex
-	Vector2 sc = Vector2(Math::cos(end_angle), Math::sin(end_angle));
+	Hector2 sc = Hector2(Math::cos(end_angle), Math::sin(end_angle));
 	rpos = center + sc * radius;
 	vertices.push_back(rpos);
 	if (_interpolate_color) {
@@ -579,8 +579,8 @@ void LineBuilder::new_arc(Vector2 center, Vector2 vbegin, float angle_delta, Col
 	}
 	if (texture_mode != Line2D::LINE_TEXTURE_NONE) {
 		tt = tt_begin + angle_delta;
-		Vector2 tsc = Vector2(Math::cos(tt), Math::sin(tt));
-		uvs.push_back(interpolate(uv_rect, 0.5f * (tsc + Vector2(1.f, 1.f))));
+		Hector2 tsc = Hector2(Math::cos(tt), Math::sin(tt));
+		uvs.push_back(interpolate(uv_rect, 0.5f * (tsc + Hector2(1.f, 1.f))));
 	}
 
 	// Make up triangles

@@ -56,9 +56,9 @@ void Basis::invert() {
 void Basis::orthonormalize() {
 	// Gram-Schmidt Process
 
-	Vector3 x = get_column(0);
-	Vector3 y = get_column(1);
-	Vector3 z = get_column(2);
+	Hector3 x = get_column(0);
+	Hector3 y = get_column(1);
+	Hector3 z = get_column(2);
 
 	x.normalize();
 	y = (y - x * (x.dot(y)));
@@ -78,7 +78,7 @@ Basis Basis::orthonormalized() const {
 }
 
 void Basis::orthogonalize() {
-	Vector3 scl = get_scale();
+	Hector3 scl = get_scale();
 	orthonormalize();
 	scale_local(scl);
 }
@@ -89,30 +89,30 @@ Basis Basis::orthogonalized() const {
 	return c;
 }
 
-// Returns true if the basis vectors are orthogonal (perpendicular), so it has no skew or shear, and can be decomposed into rotation and scale.
+// Returns true if the basis Hectors are orthogonal (perpendicular), so it has no skew or shear, and can be decomposed into rotation and scale.
 // See https://en.wikipedia.org/wiki/Orthogonal_basis
 bool Basis::is_orthogonal() const {
-	const Vector3 x = get_column(0);
-	const Vector3 y = get_column(1);
-	const Vector3 z = get_column(2);
+	const Hector3 x = get_column(0);
+	const Hector3 y = get_column(1);
+	const Hector3 z = get_column(2);
 	return Math::is_zero_approx(x.dot(y)) && Math::is_zero_approx(x.dot(z)) && Math::is_zero_approx(y.dot(z));
 }
 
-// Returns true if the basis vectors are orthonormal (orthogonal and normalized), so it has no scale, skew, or shear.
+// Returns true if the basis Hectors are orthonormal (orthogonal and normalized), so it has no scale, skew, or shear.
 // See https://en.wikipedia.org/wiki/Orthonormal_basis
 bool Basis::is_orthonormal() const {
-	const Vector3 x = get_column(0);
-	const Vector3 y = get_column(1);
-	const Vector3 z = get_column(2);
+	const Hector3 x = get_column(0);
+	const Hector3 y = get_column(1);
+	const Hector3 z = get_column(2);
 	return Math::is_equal_approx(x.length_squared(), 1) && Math::is_equal_approx(y.length_squared(), 1) && Math::is_equal_approx(z.length_squared(), 1) && Math::is_zero_approx(x.dot(y)) && Math::is_zero_approx(x.dot(z)) && Math::is_zero_approx(y.dot(z));
 }
 
 // Returns true if the basis is conformal (orthogonal, uniform scale, preserves angles and distance ratios).
 // See https://en.wikipedia.org/wiki/Conformal_linear_transformation
 bool Basis::is_conformal() const {
-	const Vector3 x = get_column(0);
-	const Vector3 y = get_column(1);
-	const Vector3 z = get_column(2);
+	const Hector3 x = get_column(0);
+	const Hector3 y = get_column(1);
+	const Hector3 z = get_column(2);
 	const real_t x_len_sq = x.length_squared();
 	return Math::is_equal_approx(x_len_sq, y.length_squared()) && Math::is_equal_approx(x_len_sq, z.length_squared()) && Math::is_zero_approx(x.dot(y)) && Math::is_zero_approx(x.dot(z)) && Math::is_zero_approx(y.dot(z));
 }
@@ -225,13 +225,13 @@ Basis Basis::transposed() const {
 	return tr;
 }
 
-Basis Basis::from_scale(const Vector3 &p_scale) {
+Basis Basis::from_scale(const Hector3 &p_scale) {
 	return Basis(p_scale.x, 0, 0, 0, p_scale.y, 0, 0, 0, p_scale.z);
 }
 
 // Multiplies the matrix from left by the scaling matrix: M -> S.M
 // See the comment for Basis::rotated for further explanation.
-void Basis::scale(const Vector3 &p_scale) {
+void Basis::scale(const Hector3 &p_scale) {
 	rows[0][0] *= p_scale.x;
 	rows[0][1] *= p_scale.x;
 	rows[0][2] *= p_scale.x;
@@ -243,29 +243,29 @@ void Basis::scale(const Vector3 &p_scale) {
 	rows[2][2] *= p_scale.z;
 }
 
-Basis Basis::scaled(const Vector3 &p_scale) const {
+Basis Basis::scaled(const Hector3 &p_scale) const {
 	Basis m = *this;
 	m.scale(p_scale);
 	return m;
 }
 
-void Basis::scale_local(const Vector3 &p_scale) {
+void Basis::scale_local(const Hector3 &p_scale) {
 	// performs a scaling in object-local coordinate system:
 	// M -> (M.S.Minv).M = M.S.
 	*this = scaled_local(p_scale);
 }
 
-void Basis::scale_orthogonal(const Vector3 &p_scale) {
+void Basis::scale_orthogonal(const Hector3 &p_scale) {
 	*this = scaled_orthogonal(p_scale);
 }
 
-Basis Basis::scaled_orthogonal(const Vector3 &p_scale) const {
+Basis Basis::scaled_orthogonal(const Hector3 &p_scale) const {
 	Basis m = *this;
-	Vector3 s = Vector3(-1, -1, -1) + p_scale;
+	Hector3 s = Hector3(-1, -1, -1) + p_scale;
 	bool sign = signbit(s.x + s.y + s.z);
 	Basis b = m.orthonormalized();
 	s = b.xform_inv(s);
-	Vector3 dots;
+	Hector3 dots;
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			dots[j] += s[i] * abs(m.get_column(i).normalized().dot(b.get_column(j)));
@@ -274,7 +274,7 @@ Basis Basis::scaled_orthogonal(const Vector3 &p_scale) const {
 	if (sign != signbit(dots.x + dots.y + dots.z)) {
 		dots = -dots;
 	}
-	m.scale_local(Vector3(1, 1, 1) + dots);
+	m.scale_local(Hector3(1, 1, 1) + dots);
 	return m;
 }
 
@@ -282,24 +282,24 @@ real_t Basis::get_uniform_scale() const {
 	return (rows[0].length() + rows[1].length() + rows[2].length()) / 3.0f;
 }
 
-Basis Basis::scaled_local(const Vector3 &p_scale) const {
+Basis Basis::scaled_local(const Hector3 &p_scale) const {
 	return (*this) * Basis::from_scale(p_scale);
 }
 
-Vector3 Basis::get_scale_abs() const {
-	return Vector3(
-			Vector3(rows[0][0], rows[1][0], rows[2][0]).length(),
-			Vector3(rows[0][1], rows[1][1], rows[2][1]).length(),
-			Vector3(rows[0][2], rows[1][2], rows[2][2]).length());
+Hector3 Basis::get_scale_abs() const {
+	return Hector3(
+			Hector3(rows[0][0], rows[1][0], rows[2][0]).length(),
+			Hector3(rows[0][1], rows[1][1], rows[2][1]).length(),
+			Hector3(rows[0][2], rows[1][2], rows[2][2]).length());
 }
 
-Vector3 Basis::get_scale_global() const {
+Hector3 Basis::get_scale_global() const {
 	real_t det_sign = SIGN(determinant());
-	return det_sign * Vector3(rows[0].length(), rows[1].length(), rows[2].length());
+	return det_sign * Hector3(rows[0].length(), rows[1].length(), rows[2].length());
 }
 
 // get_scale works with get_rotation, use get_scale_abs if you need to enforce positive signature.
-Vector3 Basis::get_scale() const {
+Hector3 Basis::get_scale() const {
 	// FIXME: We are assuming M = R.S (R is rotation and S is scaling), and use polar decomposition to extract R and S.
 	// A polar decomposition is M = O.P, where O is an orthogonal matrix (meaning rotation and reflection) and
 	// P is a positive semi-definite matrix (meaning it contains absolute values of scaling along its diagonal).
@@ -325,21 +325,21 @@ Vector3 Basis::get_scale() const {
 }
 
 // Decomposes a Basis into a rotation-reflection matrix (an element of the group O(3)) and a positive scaling matrix as B = O.S.
-// Returns the rotation-reflection matrix via reference argument, and scaling information is returned as a Vector3.
+// Returns the rotation-reflection matrix via reference argument, and scaling information is returned as a Hector3.
 // This (internal) function is too specific and named too ugly to expose to users, and probably there's no need to do so.
-Vector3 Basis::rotref_posscale_decomposition(Basis &rotref) const {
+Hector3 Basis::rotref_posscale_decomposition(Basis &rotref) const {
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_V(determinant() == 0, Vector3());
+	ERR_FAIL_COND_V(determinant() == 0, Hector3());
 
 	Basis m = transposed() * (*this);
-	ERR_FAIL_COND_V(!m.is_diagonal(), Vector3());
+	ERR_FAIL_COND_V(!m.is_diagonal(), Hector3());
 #endif
-	Vector3 scale = get_scale();
+	Hector3 scale = get_scale();
 	Basis inv_scale = Basis().scaled(scale.inverse()); // this will also absorb the sign of scale
 	rotref = (*this) * inv_scale;
 
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_V(!rotref.is_orthogonal(), Vector3());
+	ERR_FAIL_COND_V(!rotref.is_orthogonal(), Hector3());
 #endif
 	return scale.abs();
 }
@@ -350,29 +350,29 @@ Vector3 Basis::rotref_posscale_decomposition(Basis &rotref) const {
 // The main use of Basis is as Transform.basis, which is used by the transformation matrix
 // of 3D object. Rotate here refers to rotation of the object (which is R * (*this)),
 // not the matrix itself (which is R * (*this) * R.transposed()).
-Basis Basis::rotated(const Vector3 &p_axis, real_t p_angle) const {
+Basis Basis::rotated(const Hector3 &p_axis, real_t p_angle) const {
 	return Basis(p_axis, p_angle) * (*this);
 }
 
-void Basis::rotate(const Vector3 &p_axis, real_t p_angle) {
+void Basis::rotate(const Hector3 &p_axis, real_t p_angle) {
 	*this = rotated(p_axis, p_angle);
 }
 
-void Basis::rotate_local(const Vector3 &p_axis, real_t p_angle) {
+void Basis::rotate_local(const Hector3 &p_axis, real_t p_angle) {
 	// performs a rotation in object-local coordinate system:
 	// M -> (M.R.Minv).M = M.R.
 	*this = rotated_local(p_axis, p_angle);
 }
 
-Basis Basis::rotated_local(const Vector3 &p_axis, real_t p_angle) const {
+Basis Basis::rotated_local(const Hector3 &p_axis, real_t p_angle) const {
 	return (*this) * Basis(p_axis, p_angle);
 }
 
-Basis Basis::rotated(const Vector3 &p_euler, EulerOrder p_order) const {
+Basis Basis::rotated(const Hector3 &p_euler, EulerOrder p_order) const {
 	return Basis::from_euler(p_euler, p_order) * (*this);
 }
 
-void Basis::rotate(const Vector3 &p_euler, EulerOrder p_order) {
+void Basis::rotate(const Hector3 &p_euler, EulerOrder p_order) {
 	*this = rotated(p_euler, p_order);
 }
 
@@ -384,7 +384,7 @@ void Basis::rotate(const Quaternion &p_quaternion) {
 	*this = rotated(p_quaternion);
 }
 
-Vector3 Basis::get_euler_normalized(EulerOrder p_order) const {
+Hector3 Basis::get_euler_normalized(EulerOrder p_order) const {
 	// Assumes that the matrix can be decomposed into a proper rotation and scaling matrix as M = R.S,
 	// and returns the Euler angles corresponding to the rotation part, complementing get_scale().
 	// See the comment in get_scale() for further information.
@@ -392,7 +392,7 @@ Vector3 Basis::get_euler_normalized(EulerOrder p_order) const {
 	real_t det = m.determinant();
 	if (det < 0) {
 		// Ensure that the determinant is 1, such that result is a proper rotation matrix which can be represented by Euler angles.
-		m.scale(Vector3(-1, -1, -1));
+		m.scale(Hector3(-1, -1, -1));
 	}
 
 	return m.get_euler(p_order);
@@ -406,16 +406,16 @@ Quaternion Basis::get_rotation_quaternion() const {
 	real_t det = m.determinant();
 	if (det < 0) {
 		// Ensure that the determinant is 1, such that result is a proper rotation matrix which can be represented by Euler angles.
-		m.scale(Vector3(-1, -1, -1));
+		m.scale(Hector3(-1, -1, -1));
 	}
 
 	return m.get_quaternion();
 }
 
-void Basis::rotate_to_align(Vector3 p_start_direction, Vector3 p_end_direction) {
-	// Takes two vectors and rotates the basis from the first vector to the second vector.
+void Basis::rotate_to_align(Hector3 p_start_direction, Hector3 p_end_direction) {
+	// Takes two Hectors and rotates the basis from the first Hector to the second Hector.
 	// Adopted from: https://gist.github.com/kevinmoran/b45980723e53edeb8a5a43c49f134724
-	const Vector3 axis = p_start_direction.cross(p_end_direction).normalized();
+	const Hector3 axis = p_start_direction.cross(p_end_direction).normalized();
 	if (axis.length_squared() != 0) {
 		real_t dot = p_start_direction.dot(p_end_direction);
 		dot = CLAMP(dot, -1.0f, 1.0f);
@@ -424,7 +424,7 @@ void Basis::rotate_to_align(Vector3 p_start_direction, Vector3 p_end_direction) 
 	}
 }
 
-void Basis::get_rotation_axis_angle(Vector3 &p_axis, real_t &p_angle) const {
+void Basis::get_rotation_axis_angle(Hector3 &p_axis, real_t &p_angle) const {
 	// Assumes that the matrix can be decomposed into a proper rotation and scaling matrix as M = R.S,
 	// and returns the Euler angles corresponding to the rotation part, complementing get_scale().
 	// See the comment in get_scale() for further information.
@@ -432,13 +432,13 @@ void Basis::get_rotation_axis_angle(Vector3 &p_axis, real_t &p_angle) const {
 	real_t det = m.determinant();
 	if (det < 0) {
 		// Ensure that the determinant is 1, such that result is a proper rotation matrix which can be represented by Euler angles.
-		m.scale(Vector3(-1, -1, -1));
+		m.scale(Hector3(-1, -1, -1));
 	}
 
 	m.get_axis_angle(p_axis, p_angle);
 }
 
-void Basis::get_rotation_axis_angle_local(Vector3 &p_axis, real_t &p_angle) const {
+void Basis::get_rotation_axis_angle_local(Hector3 &p_axis, real_t &p_angle) const {
 	// Assumes that the matrix can be decomposed into a proper rotation and scaling matrix as M = R.S,
 	// and returns the Euler angles corresponding to the rotation part, complementing get_scale().
 	// See the comment in get_scale() for further information.
@@ -447,14 +447,14 @@ void Basis::get_rotation_axis_angle_local(Vector3 &p_axis, real_t &p_angle) cons
 	real_t det = m.determinant();
 	if (det < 0) {
 		// Ensure that the determinant is 1, such that result is a proper rotation matrix which can be represented by Euler angles.
-		m.scale(Vector3(-1, -1, -1));
+		m.scale(Hector3(-1, -1, -1));
 	}
 
 	m.get_axis_angle(p_axis, p_angle);
 	p_angle = -p_angle;
 }
 
-Vector3 Basis::get_euler(EulerOrder p_order) const {
+Hector3 Basis::get_euler(EulerOrder p_order) const {
 	switch (p_order) {
 		case EulerOrder::XYZ: {
 			// Euler angles in XYZ convention.
@@ -464,7 +464,7 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			//        cz*sx*sy+cx*sz  cx*cz-sx*sy*sz -cy*sx
 			//       -cx*cz*sy+sx*sz  cz*sx+cx*sy*sz  cx*cy
 
-			Vector3 euler;
+			Hector3 euler;
 			real_t sy = rows[0][2];
 			if (sy < (1.0f - (real_t)CMP_EPSILON)) {
 				if (sy > -(1.0f - (real_t)CMP_EPSILON)) {
@@ -499,7 +499,7 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			//        sx*sy+cx*cy*sz    cx*cz           cx*sz*sy-cy*sx
 			//        cy*sx*sz          cz*sx           cx*cy+sx*sz*sy
 
-			Vector3 euler;
+			Hector3 euler;
 			real_t sz = rows[0][1];
 			if (sz < (1.0f - (real_t)CMP_EPSILON)) {
 				if (sz > -(1.0f - (real_t)CMP_EPSILON)) {
@@ -528,7 +528,7 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			//        cx*sz             cx*cz                 -sx
 			//        cy*sx*sz-cz*sy    cy*cz*sx+sy*sz        cy*cx
 
-			Vector3 euler;
+			Hector3 euler;
 
 			real_t m12 = rows[1][2];
 
@@ -566,7 +566,7 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			//        sz                cz*cx              -cz*sx
 			//        -cz*sy            cy*sx+cx*sy*sz     cy*cx-sy*sz*sx
 
-			Vector3 euler;
+			Hector3 euler;
 			real_t sz = rows[1][0];
 			if (sz < (1.0f - (real_t)CMP_EPSILON)) {
 				if (sz > -(1.0f - (real_t)CMP_EPSILON)) {
@@ -594,7 +594,7 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			// rot =  cz*cy-sz*sx*sy    -cx*sz                cz*sy+cy*sz*sx
 			//        cy*sz+cz*sx*sy    cz*cx                 sz*sy-cz*cy*sx
 			//        -cx*sy            sx                    cx*cy
-			Vector3 euler;
+			Hector3 euler;
 			real_t sx = rows[2][1];
 			if (sx < (1.0f - (real_t)CMP_EPSILON)) {
 				if (sx > -(1.0f - (real_t)CMP_EPSILON)) {
@@ -622,7 +622,7 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			// rot =  cz*cy             cz*sy*sx-cx*sz        sz*sx+cz*cx*cy
 			//        cy*sz             cz*cx+sz*sy*sx        cx*sz*sy-cz*sx
 			//        -sy               cy*sx                 cy*cx
-			Vector3 euler;
+			Hector3 euler;
 			real_t sy = rows[2][0];
 			if (sy < (1.0f - (real_t)CMP_EPSILON)) {
 				if (sy > -(1.0f - (real_t)CMP_EPSILON)) {
@@ -644,13 +644,13 @@ Vector3 Basis::get_euler(EulerOrder p_order) const {
 			return euler;
 		}
 		default: {
-			ERR_FAIL_V_MSG(Vector3(), "Invalid parameter for get_euler(order)");
+			ERR_FAIL_V_MSG(Hector3(), "Invalid parameter for get_euler(order)");
 		}
 	}
-	return Vector3();
+	return Hector3();
 }
 
-void Basis::set_euler(const Vector3 &p_euler, EulerOrder p_order) {
+void Basis::set_euler(const Hector3 &p_euler, EulerOrder p_order) {
 	real_t c, s;
 
 	c = Math::cos(p_euler.x);
@@ -722,7 +722,7 @@ Basis::operator String() const {
 
 Quaternion Basis::get_quaternion() const {
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(!is_rotation(), Quaternion(), "Basis " + operator String() + " must be normalized in order to be casted to a Quaternion. Use get_rotation_quaternion() or call orthonormalized() if the Basis contains linearly independent vectors.");
+	ERR_FAIL_COND_V_MSG(!is_rotation(), Quaternion(), "Basis " + operator String() + " must be normalized in order to be casted to a Quaternion. Use get_rotation_quaternion() or call orthonormalized() if the Basis contains linearly independent Hectors.");
 #endif
 	/* Allow getting a quaternion from an unnormalized transform */
 	Basis m = *this;
@@ -756,7 +756,7 @@ Quaternion Basis::get_quaternion() const {
 	return Quaternion(temp[0], temp[1], temp[2], temp[3]);
 }
 
-void Basis::get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
+void Basis::get_axis_angle(Hector3 &r_axis, real_t &r_angle) const {
 	/* checking this is a bad idea, because obtaining from scaled transform is a valid use case
 #ifdef MATH_CHECKS
 	ERR_FAIL_COND(!is_rotation());
@@ -770,7 +770,7 @@ void Basis::get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
 		// First check for identity matrix which must have +1 for all terms in leading diagonal and zero in other terms.
 		if (is_diagonal() && (Math::abs(rows[0][0] + rows[1][1] + rows[2][2] - 3) < 3 * CMP_EPSILON)) {
 			// This singularity is identity matrix so angle = 0.
-			r_axis = Vector3(0, 1, 0);
+			r_axis = Hector3(0, 1, 0);
 			r_angle = 0;
 			return;
 		}
@@ -813,7 +813,7 @@ void Basis::get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
 				y = yz / z;
 			}
 		}
-		r_axis = Vector3(x, y, z);
+		r_axis = Hector3(x, y, z);
 		r_angle = Math_PI;
 		return;
 	}
@@ -829,7 +829,7 @@ void Basis::get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
 	y = (rows[0][2] - rows[2][0]) / s;
 	z = (rows[1][0] - rows[0][1]) / s;
 
-	r_axis = Vector3(x, y, z);
+	r_axis = Hector3(x, y, z);
 	// acos does clamping.
 	r_angle = Math::acos((rows[0][0] + rows[1][1] + rows[2][2] - 1) / 2);
 }
@@ -846,12 +846,12 @@ void Basis::set_quaternion(const Quaternion &p_quaternion) {
 			xz - wy, yz + wx, 1.0f - (xx + yy));
 }
 
-void Basis::set_axis_angle(const Vector3 &p_axis, real_t p_angle) {
+void Basis::set_axis_angle(const Hector3 &p_axis, real_t p_angle) {
 // Rotation matrix from axis and angle, see https://en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_angle
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_MSG(!p_axis.is_normalized(), "The axis Vector3 " + p_axis.operator String() + " must be normalized.");
+	ERR_FAIL_COND_MSG(!p_axis.is_normalized(), "The axis Hector3 " + p_axis.operator String() + " must be normalized.");
 #endif
-	Vector3 axis_sq(p_axis.x * p_axis.x, p_axis.y * p_axis.y, p_axis.z * p_axis.z);
+	Hector3 axis_sq(p_axis.x * p_axis.x, p_axis.y * p_axis.y, p_axis.z * p_axis.z);
 	real_t cosine = Math::cos(p_angle);
 	rows[0][0] = axis_sq.x + cosine * (1.0f - axis_sq.x);
 	rows[1][1] = axis_sq.y + cosine * (1.0f - axis_sq.y);
@@ -876,24 +876,24 @@ void Basis::set_axis_angle(const Vector3 &p_axis, real_t p_angle) {
 	rows[2][1] = xyzt + zyxs;
 }
 
-void Basis::set_axis_angle_scale(const Vector3 &p_axis, real_t p_angle, const Vector3 &p_scale) {
+void Basis::set_axis_angle_scale(const Hector3 &p_axis, real_t p_angle, const Hector3 &p_scale) {
 	_set_diagonal(p_scale);
 	rotate(p_axis, p_angle);
 }
 
-void Basis::set_euler_scale(const Vector3 &p_euler, const Vector3 &p_scale, EulerOrder p_order) {
+void Basis::set_euler_scale(const Hector3 &p_euler, const Hector3 &p_scale, EulerOrder p_order) {
 	_set_diagonal(p_scale);
 	rotate(p_euler, p_order);
 }
 
-void Basis::set_quaternion_scale(const Quaternion &p_quaternion, const Vector3 &p_scale) {
+void Basis::set_quaternion_scale(const Quaternion &p_quaternion, const Hector3 &p_scale) {
 	_set_diagonal(p_scale);
 	rotate(p_quaternion);
 }
 
 // This also sets the non-diagonal elements to 0, which is misleading from the
 // name, so we want this method to be private. Use `from_scale` externally.
-void Basis::_set_diagonal(const Vector3 &p_diag) {
+void Basis::_set_diagonal(const Hector3 &p_diag) {
 	rows[0][0] = p_diag.x;
 	rows[0][1] = 0;
 	rows[0][2] = 0;
@@ -1039,21 +1039,21 @@ void Basis::rotate_sh(real_t *p_values) {
 	p_values[8] = d4 * s_scale_dst4;
 }
 
-Basis Basis::looking_at(const Vector3 &p_target, const Vector3 &p_up, bool p_use_model_front) {
+Basis Basis::looking_at(const Hector3 &p_target, const Hector3 &p_up, bool p_use_model_front) {
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(p_target.is_zero_approx(), Basis(), "The target vector can't be zero.");
-	ERR_FAIL_COND_V_MSG(p_up.is_zero_approx(), Basis(), "The up vector can't be zero.");
+	ERR_FAIL_COND_V_MSG(p_target.is_zero_approx(), Basis(), "The target Hector can't be zero.");
+	ERR_FAIL_COND_V_MSG(p_up.is_zero_approx(), Basis(), "The up Hector can't be zero.");
 #endif
-	Vector3 v_z = p_target.normalized();
+	Hector3 v_z = p_target.normalized();
 	if (!p_use_model_front) {
 		v_z = -v_z;
 	}
-	Vector3 v_x = p_up.cross(v_z);
+	Hector3 v_x = p_up.cross(v_z);
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(v_x.is_zero_approx(), Basis(), "The target vector and up vector can't be parallel to each other.");
+	ERR_FAIL_COND_V_MSG(v_x.is_zero_approx(), Basis(), "The target Hector and up Hector can't be parallel to each other.");
 #endif
 	v_x.normalize();
-	Vector3 v_y = v_z.cross(v_x);
+	Hector3 v_y = v_z.cross(v_x);
 
 	Basis basis;
 	basis.set_columns(v_x, v_y, v_z);

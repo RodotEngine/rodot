@@ -33,7 +33,7 @@
 
 #include "core/string/ustring.h"
 #include "core/templates/list.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rb_map.h"
 #include "core/templates/rb_set.h"
 #include "core/typedefs.h"
@@ -84,7 +84,7 @@ private:
 		int line;
 		int index;
 		int size;
-		LocalVector<Token> generated;
+		LocalHector<Token> generated;
 
 	private:
 		void add_generated(const Token &p_t);
@@ -96,9 +96,9 @@ private:
 		char32_t peek();
 		int consume_line_continuations(int p_offset);
 
-		void get_and_clear_generated(LocalVector<char32_t> *r_out);
+		void get_and_clear_generated(LocalHector<char32_t> *r_out);
 		void backtrack(char32_t p_what);
-		LocalVector<Token> advance(char32_t p_what);
+		LocalHector<Token> advance(char32_t p_what);
 		void skip_whitespace();
 		bool consume_empty_line();
 		String get_identifier(bool *r_is_cursor = nullptr, bool p_started = false);
@@ -110,7 +110,7 @@ private:
 
 	class CommentRemover {
 	private:
-		LocalVector<char32_t> stripped;
+		LocalHector<char32_t> stripped;
 		String code;
 		int index;
 		int line;
@@ -130,12 +130,12 @@ private:
 	};
 
 	struct Define {
-		Vector<String> arguments;
+		Hector<String> arguments;
 		String body;
 	};
 
 	struct Branch {
-		Vector<bool> conditions;
+		Hector<bool> conditions;
 		Branch *parent = nullptr;
 		bool else_defined = false;
 
@@ -168,15 +168,15 @@ private:
 	};
 
 private:
-	LocalVector<char32_t> output;
+	LocalHector<char32_t> output;
 	State *state = nullptr;
 
 private:
 	static bool is_char_word(char32_t p_char);
 	static bool is_char_space(char32_t p_char);
 	static bool is_char_end(char32_t p_char);
-	static String vector_to_string(const LocalVector<char32_t> &p_v, int p_start = 0, int p_end = -1);
-	static String tokens_to_string(const LocalVector<Token> &p_tokens);
+	static String Hector_to_string(const LocalHector<char32_t> &p_v, int p_start = 0, int p_end = -1);
+	static String tokens_to_string(const LocalHector<Token> &p_tokens);
 
 	void _set_expected_error(const String &p_what, int p_line) {
 		set_error(vformat(RTR("Expected a '%s'."), p_what), p_line);
@@ -208,7 +208,7 @@ private:
 	bool find_match(const String &p_string, const String &p_value, int &r_index, int &r_index_start);
 	void concatenate_macro_body(String &r_body);
 
-	String next_directive(Tokenizer *p_tokenizer, const Vector<String> &p_directives);
+	String next_directive(Tokenizer *p_tokenizer, const Hector<String> &p_directives);
 	void add_to_output(const String &p_str);
 	void set_error(const String &p_error, int p_line);
 

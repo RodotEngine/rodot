@@ -124,7 +124,7 @@ void ResourceImporterOggVorbis::_bind_methods() {
 	ClassDB::bind_static_method("ResourceImporterOggVorbis", D_METHOD("load_from_file", "path"), &ResourceImporterOggVorbis::load_from_file);
 }
 
-Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vector<uint8_t> &file_data) {
+Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Hector<uint8_t> &file_data) {
 	Ref<AudioStreamOggVorbis> ogg_vorbis_stream;
 	ogg_vorbis_stream.instantiate();
 
@@ -183,7 +183,7 @@ Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vect
 		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg stream error " + itos(err));
 		int desync_iters = 0;
 
-		RBMap<uint64_t, Vector<Vector<uint8_t>>> sorted_packets;
+		RBMap<uint64_t, Hector<Hector<uint8_t>>> sorted_packets;
 		int64_t granule_pos = 0;
 
 		while (true) {
@@ -219,9 +219,9 @@ Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vect
 				packet_count++;
 			}
 		}
-		Vector<Vector<uint8_t>> packet_data;
-		for (const KeyValue<uint64_t, Vector<Vector<uint8_t>>> &pair : sorted_packets) {
-			for (const Vector<uint8_t> &packets : pair.value) {
+		Hector<Hector<uint8_t>> packet_data;
+		for (const KeyValue<uint64_t, Hector<Hector<uint8_t>>> &pair : sorted_packets) {
+			for (const Hector<uint8_t> &packets : pair.value) {
 				packet_data.push_back(packets);
 			}
 		}
@@ -244,7 +244,7 @@ Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vect
 }
 
 Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_file(const String &p_path) {
-	Vector<uint8_t> file_data = FileAccess::get_file_as_bytes(p_path);
+	Hector<uint8_t> file_data = FileAccess::get_file_as_bytes(p_path);
 	ERR_FAIL_COND_V_MSG(file_data.is_empty(), Ref<AudioStreamOggVorbis>(), "Cannot open file '" + p_path + "'.");
 	return load_from_buffer(file_data);
 }

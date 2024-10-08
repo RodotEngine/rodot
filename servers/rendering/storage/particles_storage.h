@@ -68,10 +68,10 @@ public:
 	virtual void particles_set_transform_align(RID p_particles, RS::ParticlesTransformAlign p_transform_align) = 0;
 
 	virtual void particles_set_trails(RID p_particles, bool p_enable, double p_length) = 0;
-	virtual void particles_set_trail_bind_poses(RID p_particles, const Vector<Transform3D> &p_bind_poses) = 0;
+	virtual void particles_set_trail_bind_poses(RID p_particles, const Hector<Transform3D> &p_bind_poses) = 0;
 
 	virtual void particles_restart(RID p_particles) = 0;
-	virtual void particles_emit(RID p_particles, const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) = 0;
+	virtual void particles_emit(RID p_particles, const Transform3D &p_transform, const Hector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) = 0;
 	virtual void particles_set_subemitter(RID p_particles, RID p_subemitter_particles) = 0;
 
 	virtual bool particles_is_inactive(RID p_particles) const = 0;
@@ -86,13 +86,13 @@ public:
 	virtual AABB particles_get_aabb(RID p_particles) const = 0;
 
 	virtual void particles_set_emission_transform(RID p_particles, const Transform3D &p_transform) = 0;
-	virtual void particles_set_emitter_velocity(RID p_particles, const Vector3 &p_velocity) = 0;
+	virtual void particles_set_emitter_velocity(RID p_particles, const Hector3 &p_velocity) = 0;
 	virtual void particles_set_interp_to_end(RID p_particles, float p_interp_to_end) = 0;
 
 	virtual int particles_get_draw_passes(RID p_particles) const = 0;
 	virtual RID particles_get_draw_pass_mesh(RID p_particles, int p_pass) const = 0;
 
-	virtual void particles_set_view_axis(RID p_particles, const Vector3 &p_axis, const Vector3 &p_up_axis) = 0;
+	virtual void particles_set_view_axis(RID p_particles, const Hector3 &p_axis, const Hector3 &p_up_axis) = 0;
 
 	virtual void particles_add_collision(RID p_particles, RID p_particles_collision_instance) = 0;
 	virtual void particles_remove_collision(RID p_particles, RID p_particles_collision_instance) = 0;
@@ -108,13 +108,13 @@ public:
 	virtual void particles_collision_set_collision_type(RID p_particles_collision, RS::ParticlesCollisionType p_type) = 0;
 	virtual void particles_collision_set_cull_mask(RID p_particles_collision, uint32_t p_cull_mask) = 0;
 	virtual void particles_collision_set_sphere_radius(RID p_particles_collision, real_t p_radius) = 0; //for spheres
-	virtual void particles_collision_set_box_extents(RID p_particles_collision, const Vector3 &p_extents) = 0; //for non-spheres
+	virtual void particles_collision_set_box_extents(RID p_particles_collision, const Hector3 &p_extents) = 0; //for non-spheres
 	virtual void particles_collision_set_attractor_strength(RID p_particles_collision, real_t p_strength) = 0;
 	virtual void particles_collision_set_attractor_directionality(RID p_particles_collision, real_t p_directionality) = 0;
 	virtual void particles_collision_set_attractor_attenuation(RID p_particles_collision, real_t p_curve) = 0;
-	virtual void particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) = 0; //for SDF and vector field, heightfield is dynamic
-	virtual void particles_collision_height_field_update(RID p_particles_collision) = 0; //for SDF and vector field
-	virtual void particles_collision_set_height_field_resolution(RID p_particles_collision, RS::ParticlesCollisionHeightfieldResolution p_resolution) = 0; //for SDF and vector field
+	virtual void particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) = 0; //for SDF and Hector field, heightfield is dynamic
+	virtual void particles_collision_height_field_update(RID p_particles_collision) = 0; //for SDF and Hector field
+	virtual void particles_collision_set_height_field_resolution(RID p_particles_collision, RS::ParticlesCollisionHeightfieldResolution p_resolution) = 0; //for SDF and Hector field
 	virtual AABB particles_collision_get_aabb(RID p_particles_collision) const = 0;
 	virtual bool particles_collision_is_heightfield(RID p_particles_collision) const = 0;
 

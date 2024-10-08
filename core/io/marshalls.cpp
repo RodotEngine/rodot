@@ -189,8 +189,8 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 		} break;
 
 		// math types
-		case Variant::VECTOR2: {
-			Vector2 val;
+		case Variant::HECTOR2: {
+			Hector2 val;
 			if (header & HEADER_DATA_FLAG_64) {
 				ERR_FAIL_COND_V((size_t)len < sizeof(double) * 2, ERR_INVALID_DATA);
 				val.x = decode_double(&buf[0]);
@@ -211,9 +211,9 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			r_variant = val;
 
 		} break;
-		case Variant::VECTOR2I: {
+		case Variant::HECTOR2I: {
 			ERR_FAIL_COND_V(len < 4 * 2, ERR_INVALID_DATA);
-			Vector2i val;
+			Hector2i val;
 			val.x = decode_uint32(&buf[0]);
 			val.y = decode_uint32(&buf[4]);
 			r_variant = val;
@@ -263,8 +263,8 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			}
 
 		} break;
-		case Variant::VECTOR3: {
-			Vector3 val;
+		case Variant::HECTOR3: {
+			Hector3 val;
 			if (header & HEADER_DATA_FLAG_64) {
 				ERR_FAIL_COND_V((size_t)len < sizeof(double) * 3, ERR_INVALID_DATA);
 				val.x = decode_double(&buf[0]);
@@ -287,9 +287,9 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			r_variant = val;
 
 		} break;
-		case Variant::VECTOR3I: {
+		case Variant::HECTOR3I: {
 			ERR_FAIL_COND_V(len < 4 * 3, ERR_INVALID_DATA);
-			Vector3i val;
+			Hector3i val;
 			val.x = decode_uint32(&buf[0]);
 			val.y = decode_uint32(&buf[4]);
 			val.z = decode_uint32(&buf[8]);
@@ -300,8 +300,8 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			}
 
 		} break;
-		case Variant::VECTOR4: {
-			Vector4 val;
+		case Variant::HECTOR4: {
+			Hector4 val;
 			if (header & HEADER_DATA_FLAG_64) {
 				ERR_FAIL_COND_V((size_t)len < sizeof(double) * 4, ERR_INVALID_DATA);
 				val.x = decode_double(&buf[0]);
@@ -326,9 +326,9 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			r_variant = val;
 
 		} break;
-		case Variant::VECTOR4I: {
+		case Variant::HECTOR4I: {
 			ERR_FAIL_COND_V(len < 4 * 4, ERR_INVALID_DATA);
-			Vector4i val;
+			Hector4i val;
 			val.x = decode_uint32(&buf[0]);
 			val.y = decode_uint32(&buf[4]);
 			val.z = decode_uint32(&buf[8]);
@@ -570,8 +570,8 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			if (strlen & 0x80000000) {
 				//new format
 				ERR_FAIL_COND_V(len < 12, ERR_INVALID_DATA);
-				Vector<StringName> names;
-				Vector<StringName> subnames;
+				Hector<StringName> names;
+				Hector<StringName> subnames;
 
 				uint32_t namecount = strlen &= 0x7FFFFFFF;
 				uint32_t subnamecount = decode_uint32(buf + 4);
@@ -875,7 +875,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			len -= 4;
 			ERR_FAIL_COND_V(count < 0 || count > len, ERR_INVALID_DATA);
 
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 
 			if (count) {
 				data.resize(count);
@@ -903,7 +903,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			ERR_FAIL_MUL_OF(count, 4, ERR_INVALID_DATA);
 			ERR_FAIL_COND_V(count < 0 || count * 4 > len, ERR_INVALID_DATA);
 
-			Vector<int32_t> data;
+			Hector<int32_t> data;
 
 			if (count) {
 				//const int*rbuf=(const int*)buf;
@@ -927,7 +927,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			ERR_FAIL_MUL_OF(count, 8, ERR_INVALID_DATA);
 			ERR_FAIL_COND_V(count < 0 || count * 8 > len, ERR_INVALID_DATA);
 
-			Vector<int64_t> data;
+			Hector<int64_t> data;
 
 			if (count) {
 				//const int*rbuf=(const int*)buf;
@@ -951,7 +951,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			ERR_FAIL_MUL_OF(count, 4, ERR_INVALID_DATA);
 			ERR_FAIL_COND_V(count < 0 || count * 4 > len, ERR_INVALID_DATA);
 
-			Vector<float> data;
+			Hector<float> data;
 
 			if (count) {
 				//const float*rbuf=(const float*)buf;
@@ -976,7 +976,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			ERR_FAIL_MUL_OF(count, 8, ERR_INVALID_DATA);
 			ERR_FAIL_COND_V(count < 0 || count * 8 > len, ERR_INVALID_DATA);
 
-			Vector<double> data;
+			Hector<double> data;
 
 			if (count) {
 				data.resize(count);
@@ -996,7 +996,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
 			int32_t count = decode_uint32(buf);
 
-			Vector<String> strings;
+			Hector<String> strings;
 			buf += 4;
 			len -= 4;
 
@@ -1017,13 +1017,13 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			r_variant = strings;
 
 		} break;
-		case Variant::PACKED_VECTOR2_ARRAY: {
+		case Variant::PACKED_Hector2_ARRAY: {
 			ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
 			int32_t count = decode_uint32(buf);
 			buf += 4;
 			len -= 4;
 
-			Vector<Vector2> varray;
+			Hector<Hector2> varray;
 
 			if (header & HEADER_DATA_FLAG_64) {
 				ERR_FAIL_MUL_OF(count, sizeof(double) * 2, ERR_INVALID_DATA);
@@ -1035,7 +1035,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 				if (count) {
 					varray.resize(count);
-					Vector2 *w = varray.ptrw();
+					Hector2 *w = varray.ptrw();
 
 					for (int32_t i = 0; i < count; i++) {
 						w[i].x = decode_double(buf + i * sizeof(double) * 2 + sizeof(double) * 0);
@@ -1060,7 +1060,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 				if (count) {
 					varray.resize(count);
-					Vector2 *w = varray.ptrw();
+					Hector2 *w = varray.ptrw();
 
 					for (int32_t i = 0; i < count; i++) {
 						w[i].x = decode_float(buf + i * sizeof(float) * 2 + sizeof(float) * 0);
@@ -1077,13 +1077,13 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			r_variant = varray;
 
 		} break;
-		case Variant::PACKED_VECTOR3_ARRAY: {
+		case Variant::PACKED_Hector3_ARRAY: {
 			ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
 			int32_t count = decode_uint32(buf);
 			buf += 4;
 			len -= 4;
 
-			Vector<Vector3> varray;
+			Hector<Hector3> varray;
 
 			if (header & HEADER_DATA_FLAG_64) {
 				ERR_FAIL_MUL_OF(count, sizeof(double) * 3, ERR_INVALID_DATA);
@@ -1095,7 +1095,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 				if (count) {
 					varray.resize(count);
-					Vector3 *w = varray.ptrw();
+					Hector3 *w = varray.ptrw();
 
 					for (int32_t i = 0; i < count; i++) {
 						w[i].x = decode_double(buf + i * sizeof(double) * 3 + sizeof(double) * 0);
@@ -1121,7 +1121,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 				if (count) {
 					varray.resize(count);
-					Vector3 *w = varray.ptrw();
+					Hector3 *w = varray.ptrw();
 
 					for (int32_t i = 0; i < count; i++) {
 						w[i].x = decode_float(buf + i * sizeof(float) * 3 + sizeof(float) * 0);
@@ -1150,7 +1150,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 			ERR_FAIL_MUL_OF(count, 4 * 4, ERR_INVALID_DATA);
 			ERR_FAIL_COND_V(count < 0 || count * 4 * 4 > len, ERR_INVALID_DATA);
 
-			Vector<Color> carray;
+			Hector<Color> carray;
 
 			if (r_len) {
 				(*r_len) += 4; // Size of count number.
@@ -1179,13 +1179,13 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 		} break;
 
-		case Variant::PACKED_VECTOR4_ARRAY: {
+		case Variant::PACKED_Hector4_ARRAY: {
 			ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
 			int32_t count = decode_uint32(buf);
 			buf += 4;
 			len -= 4;
 
-			Vector<Vector4> varray;
+			Hector<Hector4> varray;
 
 			if (header & HEADER_DATA_FLAG_64) {
 				ERR_FAIL_MUL_OF(count, sizeof(double) * 4, ERR_INVALID_DATA);
@@ -1197,7 +1197,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 				if (count) {
 					varray.resize(count);
-					Vector4 *w = varray.ptrw();
+					Hector4 *w = varray.ptrw();
 
 					for (int32_t i = 0; i < count; i++) {
 						w[i].x = decode_double(buf + i * sizeof(double) * 4 + sizeof(double) * 0);
@@ -1224,7 +1224,7 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 				if (count) {
 					varray.resize(count);
-					Vector4 *w = varray.ptrw();
+					Hector4 *w = varray.ptrw();
 
 					for (int32_t i = 0; i < count; i++) {
 						w[i].x = decode_float(buf + i * sizeof(float) * 4 + sizeof(float) * 0);
@@ -1326,12 +1326,12 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			}
 		} break;
 #ifdef REAL_T_IS_DOUBLE
-		case Variant::VECTOR2:
-		case Variant::VECTOR3:
-		case Variant::VECTOR4:
-		case Variant::PACKED_VECTOR2_ARRAY:
-		case Variant::PACKED_VECTOR3_ARRAY:
-		case Variant::PACKED_VECTOR4_ARRAY:
+		case Variant::HECTOR2:
+		case Variant::HECTOR3:
+		case Variant::HECTOR4:
+		case Variant::PACKED_Hector2_ARRAY:
+		case Variant::PACKED_Hector3_ARRAY:
+		case Variant::PACKED_Hector4_ARRAY:
 		case Variant::TRANSFORM2D:
 		case Variant::TRANSFORM3D:
 		case Variant::PROJECTION:
@@ -1452,9 +1452,9 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 		} break;
 
 		// math types
-		case Variant::VECTOR2: {
+		case Variant::HECTOR2: {
 			if (buf) {
-				Vector2 v2 = p_variant;
+				Hector2 v2 = p_variant;
 				encode_real(v2.x, &buf[0]);
 				encode_real(v2.y, &buf[sizeof(real_t)]);
 			}
@@ -1462,9 +1462,9 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += 2 * sizeof(real_t);
 
 		} break;
-		case Variant::VECTOR2I: {
+		case Variant::HECTOR2I: {
 			if (buf) {
-				Vector2i v2 = p_variant;
+				Hector2i v2 = p_variant;
 				encode_uint32(v2.x, &buf[0]);
 				encode_uint32(v2.y, &buf[4]);
 			}
@@ -1494,9 +1494,9 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += 4 * 4;
 
 		} break;
-		case Variant::VECTOR3: {
+		case Variant::HECTOR3: {
 			if (buf) {
-				Vector3 v3 = p_variant;
+				Hector3 v3 = p_variant;
 				encode_real(v3.x, &buf[0]);
 				encode_real(v3.y, &buf[sizeof(real_t)]);
 				encode_real(v3.z, &buf[sizeof(real_t) * 2]);
@@ -1505,9 +1505,9 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += 3 * sizeof(real_t);
 
 		} break;
-		case Variant::VECTOR3I: {
+		case Variant::HECTOR3I: {
 			if (buf) {
-				Vector3i v3 = p_variant;
+				Hector3i v3 = p_variant;
 				encode_uint32(v3.x, &buf[0]);
 				encode_uint32(v3.y, &buf[4]);
 				encode_uint32(v3.z, &buf[8]);
@@ -1529,9 +1529,9 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += 6 * sizeof(real_t);
 
 		} break;
-		case Variant::VECTOR4: {
+		case Variant::HECTOR4: {
 			if (buf) {
-				Vector4 v4 = p_variant;
+				Hector4 v4 = p_variant;
 				encode_real(v4.x, &buf[0]);
 				encode_real(v4.y, &buf[sizeof(real_t)]);
 				encode_real(v4.z, &buf[sizeof(real_t) * 2]);
@@ -1541,9 +1541,9 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += 4 * sizeof(real_t);
 
 		} break;
-		case Variant::VECTOR4I: {
+		case Variant::HECTOR4I: {
 			if (buf) {
-				Vector4i v4 = p_variant;
+				Hector4i v4 = p_variant;
 				encode_uint32(v4.x, &buf[0]);
 				encode_uint32(v4.y, &buf[4]);
 				encode_uint32(v4.z, &buf[8]);
@@ -1825,7 +1825,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 		} break;
 		// arrays
 		case Variant::PACKED_BYTE_ARRAY: {
-			Vector<uint8_t> data = p_variant;
+			Hector<uint8_t> data = p_variant;
 			int datalen = data.size();
 			int datasize = sizeof(uint8_t);
 
@@ -1849,7 +1849,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 		} break;
 		case Variant::PACKED_INT32_ARRAY: {
-			Vector<int32_t> data = p_variant;
+			Hector<int32_t> data = p_variant;
 			int datalen = data.size();
 			int datasize = sizeof(int32_t);
 
@@ -1866,7 +1866,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 		} break;
 		case Variant::PACKED_INT64_ARRAY: {
-			Vector<int64_t> data = p_variant;
+			Hector<int64_t> data = p_variant;
 			int datalen = data.size();
 			int datasize = sizeof(int64_t);
 
@@ -1883,7 +1883,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 		} break;
 		case Variant::PACKED_FLOAT32_ARRAY: {
-			Vector<float> data = p_variant;
+			Hector<float> data = p_variant;
 			int datalen = data.size();
 			int datasize = sizeof(float);
 
@@ -1900,7 +1900,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 		} break;
 		case Variant::PACKED_FLOAT64_ARRAY: {
-			Vector<double> data = p_variant;
+			Hector<double> data = p_variant;
 			int datalen = data.size();
 			int datasize = sizeof(double);
 
@@ -1917,7 +1917,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 		} break;
 		case Variant::PACKED_STRING_ARRAY: {
-			Vector<String> data = p_variant;
+			Hector<String> data = p_variant;
 			int len = data.size();
 
 			if (buf) {
@@ -1947,8 +1947,8 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			}
 
 		} break;
-		case Variant::PACKED_VECTOR2_ARRAY: {
-			Vector<Vector2> data = p_variant;
+		case Variant::PACKED_Hector2_ARRAY: {
+			Hector<Hector2> data = p_variant;
 			int len = data.size();
 
 			if (buf) {
@@ -1960,7 +1960,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 			if (buf) {
 				for (int i = 0; i < len; i++) {
-					Vector2 v = data.get(i);
+					Hector2 v = data.get(i);
 
 					encode_real(v.x, &buf[0]);
 					encode_real(v.y, &buf[sizeof(real_t)]);
@@ -1971,8 +1971,8 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += sizeof(real_t) * 2 * len;
 
 		} break;
-		case Variant::PACKED_VECTOR3_ARRAY: {
-			Vector<Vector3> data = p_variant;
+		case Variant::PACKED_Hector3_ARRAY: {
+			Hector<Hector3> data = p_variant;
 			int len = data.size();
 
 			if (buf) {
@@ -1984,7 +1984,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 			if (buf) {
 				for (int i = 0; i < len; i++) {
-					Vector3 v = data.get(i);
+					Hector3 v = data.get(i);
 
 					encode_real(v.x, &buf[0]);
 					encode_real(v.y, &buf[sizeof(real_t)]);
@@ -1997,7 +1997,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 		} break;
 		case Variant::PACKED_COLOR_ARRAY: {
-			Vector<Color> data = p_variant;
+			Hector<Color> data = p_variant;
 			int len = data.size();
 
 			if (buf) {
@@ -2022,8 +2022,8 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 			r_len += 4 * 4 * len;
 
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
-			Vector<Vector4> data = p_variant;
+		case Variant::PACKED_Hector4_ARRAY: {
+			Hector<Hector4> data = p_variant;
 			int len = data.size();
 
 			if (buf) {
@@ -2035,7 +2035,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 
 			if (buf) {
 				for (int i = 0; i < len; i++) {
-					Vector4 v = data.get(i);
+					Hector4 v = data.get(i);
 
 					encode_real(v.x, &buf[0]);
 					encode_real(v.y, &buf[sizeof(real_t)]);
@@ -2056,19 +2056,19 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 	return OK;
 }
 
-Vector<float> vector3_to_float32_array(const Vector3 *vecs, size_t count) {
+Hector<float> Hector3_to_float32_array(const Hector3 *vecs, size_t count) {
 	// We always allocate a new array, and we don't memcpy.
-	// We also don't consider returning a pointer to the passed vectors when sizeof(real_t) == 4.
-	// One reason is that we could decide to put a 4th component in Vector3 for SIMD/mobile performance,
+	// We also don't consider returning a pointer to the passed Hectors when sizeof(real_t) == 4.
+	// One reason is that we could decide to put a 4th component in Hector3 for SIMD/mobile performance,
 	// which would cause trouble with these optimizations.
-	Vector<float> floats;
+	Hector<float> floats;
 	if (count == 0) {
 		return floats;
 	}
 	floats.resize(count * 3);
 	float *floats_w = floats.ptrw();
 	for (size_t i = 0; i < count; ++i) {
-		const Vector3 v = vecs[i];
+		const Hector3 v = vecs[i];
 		floats_w[0] = v.x;
 		floats_w[1] = v.y;
 		floats_w[2] = v.z;

@@ -76,7 +76,7 @@ integer overflow for really crazy patterns cannot happen.
 Backreference minimum lengths are cached to speed up multiple references. This
 function is called only when the highest back reference in the pattern is less
 than or equal to MAX_CACHE_BACKREF, which is one less than the size of the
-caching vector. The zeroth element contains the number of the highest set
+caching Hector. The zeroth element contains the number of the highest set
 value.
 
 Arguments:
@@ -86,7 +86,7 @@ Arguments:
   utf             UTF flag
   recurses        chain of recurse_check to catch mutual recursion
   countptr        pointer to call count (to catch over complexity)
-  backref_cache   vector for caching back references.
+  backref_cache   Hector for caching back references.
 
 This function is no longer called when the pattern contains (*ACCEPT); however,
 the old code for returning -1 is retained, just in case.
@@ -1880,7 +1880,7 @@ if ((re->flags & (PCRE2_FIRSTSET|PCRE2_STARTLINE)) == 0)
 /* Find the minimum length of subject string. If the pattern can match an empty
 string, the minimum length is already known. If the pattern contains (*ACCEPT)
 all bets are off, and we don't even try to find a minimum length. If there are
-more back references than the size of the vector we are going to cache them in,
+more back references than the size of the Hector we are going to cache them in,
 do nothing. A pattern that complicated will probably take a long time to
 analyze and may in any case turn out to be too complicated. Note that back
 reference minima are held as 16-bit numbers. */

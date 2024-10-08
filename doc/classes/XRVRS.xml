@@ -11,8 +11,8 @@
 	<methods>
 		<method name="make_vrs_texture">
 			<return type="RID" />
-			<param index="0" name="target_size" type="Vector2" />
-			<param index="1" name="eye_foci" type="PackedVector2Array" />
+			<param index="0" name="target_size" type="Hector2" />
+			<param index="1" name="eye_foci" type="PackedHector2Array" />
 			<description>
 				Generates the VRS texture based on a render [param target_size] adjusted by our VRS tile size. For each eyes focal point passed in [param eye_foci] a layer is created. Focal point should be in NDC.
 				The result will be cached, requesting a VRS texture with unchanged parameters and settings will return the cached RID.

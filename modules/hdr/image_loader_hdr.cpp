@@ -63,14 +63,14 @@ Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 
 	int width = f->get_line().to_int();
 
-	Vector<uint8_t> imgdata;
+	Hector<uint8_t> imgdata;
 
 	imgdata.resize(height * width * (int)sizeof(uint32_t));
 
 	{
 		uint8_t *ptr = imgdata.ptrw();
 
-		Vector<uint8_t> temp_read_data;
+		Hector<uint8_t> temp_read_data;
 		temp_read_data.resize(128);
 		uint8_t *temp_read_ptr = temp_read_data.ptrw();
 

@@ -59,25 +59,25 @@ TEST_CASE("[VariantUtility] Type conversion") {
 	CHECK(converted.get_type() == Variant::Type::INT);
 	CHECK(converted == Variant(123));
 
-	converted = VariantUtilityFunctions::type_convert(5, Variant::Type::VECTOR2);
-	CHECK(converted.get_type() == Variant::Type::VECTOR2);
-	CHECK(converted == Variant(Vector2(0, 0)));
+	converted = VariantUtilityFunctions::type_convert(5, Variant::Type::HECTOR2);
+	CHECK(converted.get_type() == Variant::Type::HECTOR2);
+	CHECK(converted == Variant(Hector2(0, 0)));
 
-	converted = VariantUtilityFunctions::type_convert(Vector3(1, 2, 3), Variant::Type::VECTOR2);
-	CHECK(converted.get_type() == Variant::Type::VECTOR2);
-	CHECK(converted == Variant(Vector2(1, 2)));
+	converted = VariantUtilityFunctions::type_convert(Hector3(1, 2, 3), Variant::Type::HECTOR2);
+	CHECK(converted.get_type() == Variant::Type::HECTOR2);
+	CHECK(converted == Variant(Hector2(1, 2)));
 
-	converted = VariantUtilityFunctions::type_convert(Vector2(1, 2), Variant::Type::VECTOR4);
-	CHECK(converted.get_type() == Variant::Type::VECTOR4);
-	CHECK(converted == Variant(Vector4(1, 2, 0, 0)));
+	converted = VariantUtilityFunctions::type_convert(Hector2(1, 2), Variant::Type::HECTOR4);
+	CHECK(converted.get_type() == Variant::Type::HECTOR4);
+	CHECK(converted == Variant(Hector4(1, 2, 0, 0)));
 
-	converted = VariantUtilityFunctions::type_convert(Vector4(1.2, 3.4, 5.6, 7.8), Variant::Type::VECTOR3I);
-	CHECK(converted.get_type() == Variant::Type::VECTOR3I);
-	CHECK(converted == Variant(Vector3i(1, 3, 5)));
+	converted = VariantUtilityFunctions::type_convert(Hector4(1.2, 3.4, 5.6, 7.8), Variant::Type::HECTOR3I);
+	CHECK(converted.get_type() == Variant::Type::HECTOR3I);
+	CHECK(converted == Variant(Hector3i(1, 3, 5)));
 
 	{
-		Basis basis = Basis::from_scale(Vector3(1.2, 3.4, 5.6));
-		Transform3D transform = Transform3D(basis, Vector3());
+		Basis basis = Basis::from_scale(Hector3(1.2, 3.4, 5.6));
+		Transform3D transform = Transform3D(basis, Hector3());
 
 		converted = VariantUtilityFunctions::type_convert(transform, Variant::Type::BASIS);
 		CHECK(converted.get_type() == Variant::Type::BASIS);
@@ -114,7 +114,7 @@ TEST_CASE("[VariantUtility] Type conversion") {
 
 	{
 		// Check that using Variant::call_utility_function also works.
-		Vector<const Variant *> args;
+		Hector<const Variant *> args;
 		Variant data_arg = "Hi!";
 		args.push_back(&data_arg);
 		Variant type_arg = Variant::Type::NIL;

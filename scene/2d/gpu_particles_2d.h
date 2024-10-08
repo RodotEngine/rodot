@@ -64,8 +64,8 @@ private:
 	bool fractional_delta = false;
 	bool interpolate = true;
 	float interp_to_end_factor = 0;
-	Vector3 previous_velocity;
-	Vector2 previous_position;
+	Hector3 previous_velocity;
+	Hector2 previous_position;
 #ifdef TOOLS_ENABLED
 	bool show_visibility_rect = false;
 #endif
@@ -174,7 +174,7 @@ public:
 		EMIT_FLAG_CUSTOM = RS::PARTICLES_EMIT_FLAG_CUSTOM
 	};
 
-	void emit_particle(const Transform2D &p_transform, const Vector2 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags);
+	void emit_particle(const Transform2D &p_transform, const Hector2 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags);
 
 	void restart();
 	Rect2 capture_rect() const;

@@ -139,7 +139,7 @@ protected:
 
 public:
 	static Ref<AudioStreamOggVorbis> load_from_file(const String &p_path);
-	static Ref<AudioStreamOggVorbis> load_from_buffer(const Vector<uint8_t> &file_data);
+	static Ref<AudioStreamOggVorbis> load_from_buffer(const Hector<uint8_t> &file_data);
 	void set_loop(bool p_enable);
 	virtual bool has_loop() const override;
 

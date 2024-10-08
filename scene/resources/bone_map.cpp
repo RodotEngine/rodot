@@ -135,7 +135,7 @@ void BoneMap::_validate_bone_map() {
 			}
 		}
 		// Remove bones that do not exist in the profile from the map.
-		Vector<StringName> delete_bones;
+		Hector<StringName> delete_bones;
 		StringName k;
 		HashMap<StringName, StringName>::ConstIterator E = bone_map.begin();
 		while (E) {

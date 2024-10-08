@@ -39,7 +39,7 @@
 #define ISLAND_SIZE_RESERVE 512
 #define CONSTRAINT_COUNT_RESERVE 1024
 
-void GodotStep2D::_populate_island(GodotBody2D *p_body, LocalVector<GodotBody2D *> &p_body_island, LocalVector<GodotConstraint2D *> &p_constraint_island) {
+void GodotStep2D::_populate_island(GodotBody2D *p_body, LocalHector<GodotBody2D *> &p_body_island, LocalHector<GodotConstraint2D *> &p_constraint_island) {
 	p_body->set_island_step(_step);
 
 	if (p_body->get_mode() > PhysicsServer2D::BODY_MODE_KINEMATIC) {
@@ -77,7 +77,7 @@ void GodotStep2D::_setup_constraint(uint32_t p_constraint_index, void *p_userdat
 	constraint->setup(delta);
 }
 
-void GodotStep2D::_pre_solve_island(LocalVector<GodotConstraint2D *> &p_constraint_island) const {
+void GodotStep2D::_pre_solve_island(LocalHector<GodotConstraint2D *> &p_constraint_island) const {
 	uint32_t constraint_count = p_constraint_island.size();
 	uint32_t valid_constraint_count = 0;
 	for (uint32_t constraint_index = 0; constraint_index < constraint_count; ++constraint_index) {
@@ -91,7 +91,7 @@ void GodotStep2D::_pre_solve_island(LocalVector<GodotConstraint2D *> &p_constrai
 }
 
 void GodotStep2D::_solve_island(uint32_t p_island_index, void *p_userdata) const {
-	const LocalVector<GodotConstraint2D *> &constraint_island = constraint_islands[p_island_index];
+	const LocalHector<GodotConstraint2D *> &constraint_island = constraint_islands[p_island_index];
 
 	for (int i = 0; i < iterations; i++) {
 		uint32_t constraint_count = constraint_island.size();
@@ -101,7 +101,7 @@ void GodotStep2D::_solve_island(uint32_t p_island_index, void *p_userdata) const
 	}
 }
 
-void GodotStep2D::_check_suspend(LocalVector<GodotBody2D *> &p_body_island) const {
+void GodotStep2D::_check_suspend(LocalHector<GodotBody2D *> &p_body_island) const {
 	bool can_sleep = true;
 
 	uint32_t body_count = p_body_island.size();
@@ -181,7 +181,7 @@ void GodotStep2D::step(GodotSpace2D *p_space, real_t p_delta) {
 			if (constraint_islands.size() < island_count) {
 				constraint_islands.resize(island_count);
 			}
-			LocalVector<GodotConstraint2D *> &constraint_island = constraint_islands[island_count - 1];
+			LocalHector<GodotConstraint2D *> &constraint_island = constraint_islands[island_count - 1];
 			constraint_island.clear();
 
 			all_constraints.push_back(constraint);
@@ -204,7 +204,7 @@ void GodotStep2D::step(GodotSpace2D *p_space, real_t p_delta) {
 			if (body_islands.size() < body_island_count) {
 				body_islands.resize(body_island_count);
 			}
-			LocalVector<GodotBody2D *> &body_island = body_islands[body_island_count - 1];
+			LocalHector<GodotBody2D *> &body_island = body_islands[body_island_count - 1];
 			body_island.clear();
 			body_island.reserve(BODY_ISLAND_SIZE_RESERVE);
 
@@ -212,7 +212,7 @@ void GodotStep2D::step(GodotSpace2D *p_space, real_t p_delta) {
 			if (constraint_islands.size() < island_count) {
 				constraint_islands.resize(island_count);
 			}
-			LocalVector<GodotConstraint2D *> &constraint_island = constraint_islands[island_count - 1];
+			LocalHector<GodotConstraint2D *> &constraint_island = constraint_islands[island_count - 1];
 			constraint_island.clear();
 			constraint_island.reserve(ISLAND_SIZE_RESERVE);
 

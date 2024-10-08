@@ -60,11 +60,11 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			uint32_t *gui = (uint32_t *)data;
 
 			if (p_array_size > 0) {
-				PackedInt32Array ba = convert_array_std140<Vector2i, int32_t>(value);
+				PackedInt32Array ba = convert_array_std140<Hector2i, int32_t>(value);
 				for (int i = 0; i < ba.size(); i++) {
 					ba.set(i, ba[i] ? 1 : 0);
 				}
-				write_array_std140<Vector2i>(ba, gui, p_array_size, 4);
+				write_array_std140<Hector2i>(ba, gui, p_array_size, 4);
 			} else {
 				uint32_t v = value;
 				gui[0] = v & 1 ? 1 : 0;
@@ -75,11 +75,11 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			uint32_t *gui = (uint32_t *)data;
 
 			if (p_array_size > 0) {
-				PackedInt32Array ba = convert_array_std140<Vector3i, int32_t>(value);
+				PackedInt32Array ba = convert_array_std140<Hector3i, int32_t>(value);
 				for (int i = 0; i < ba.size(); i++) {
 					ba.set(i, ba[i] ? 1 : 0);
 				}
-				write_array_std140<Vector3i>(ba, gui, p_array_size, 4);
+				write_array_std140<Hector3i>(ba, gui, p_array_size, 4);
 			} else {
 				uint32_t v = value;
 				gui[0] = (v & 1) ? 1 : 0;
@@ -91,11 +91,11 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			uint32_t *gui = (uint32_t *)data;
 
 			if (p_array_size > 0) {
-				PackedInt32Array ba = convert_array_std140<Vector4i, int32_t>(value);
+				PackedInt32Array ba = convert_array_std140<Hector4i, int32_t>(value);
 				for (int i = 0; i < ba.size(); i++) {
 					ba.set(i, ba[i] ? 1 : 0);
 				}
-				write_array_std140<Vector4i>(ba, gui, p_array_size, 4);
+				write_array_std140<Hector4i>(ba, gui, p_array_size, 4);
 			} else {
 				uint32_t v = value;
 				gui[0] = (v & 1) ? 1 : 0;
@@ -119,10 +119,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			int32_t *gui = (int32_t *)data;
 
 			if (p_array_size > 0) {
-				const PackedInt32Array &iv = convert_array_std140<Vector2i, int32_t>(value);
-				write_array_std140<Vector2i>(iv, gui, p_array_size, 4);
+				const PackedInt32Array &iv = convert_array_std140<Hector2i, int32_t>(value);
+				write_array_std140<Hector2i>(iv, gui, p_array_size, 4);
 			} else {
-				Vector2i v = convert_to_vector<Vector2i>(value);
+				Hector2i v = convert_to_Hector<Hector2i>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 			}
@@ -131,10 +131,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			int32_t *gui = (int32_t *)data;
 
 			if (p_array_size > 0) {
-				const PackedInt32Array &iv = convert_array_std140<Vector3i, int32_t>(value);
-				write_array_std140<Vector3i>(iv, gui, p_array_size, 4);
+				const PackedInt32Array &iv = convert_array_std140<Hector3i, int32_t>(value);
+				write_array_std140<Hector3i>(iv, gui, p_array_size, 4);
 			} else {
-				Vector3i v = convert_to_vector<Vector3i>(value);
+				Hector3i v = convert_to_Hector<Hector3i>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 				gui[2] = v.z;
@@ -144,10 +144,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			int32_t *gui = (int32_t *)data;
 
 			if (p_array_size > 0) {
-				const PackedInt32Array &iv = convert_array_std140<Vector4i, int32_t>(value);
-				write_array_std140<Vector4i>(iv, gui, p_array_size, 4);
+				const PackedInt32Array &iv = convert_array_std140<Hector4i, int32_t>(value);
+				write_array_std140<Hector4i>(iv, gui, p_array_size, 4);
 			} else {
-				Vector4i v = convert_to_vector<Vector4i>(value);
+				Hector4i v = convert_to_Hector<Hector4i>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 				gui[2] = v.z;
@@ -169,10 +169,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			uint32_t *gui = (uint32_t *)data;
 
 			if (p_array_size > 0) {
-				const PackedInt32Array &iv = convert_array_std140<Vector2i, int32_t>(value);
-				write_array_std140<Vector2i>(iv, gui, p_array_size, 4);
+				const PackedInt32Array &iv = convert_array_std140<Hector2i, int32_t>(value);
+				write_array_std140<Hector2i>(iv, gui, p_array_size, 4);
 			} else {
-				Vector2i v = convert_to_vector<Vector2i>(value);
+				Hector2i v = convert_to_Hector<Hector2i>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 			}
@@ -181,10 +181,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			uint32_t *gui = (uint32_t *)data;
 
 			if (p_array_size > 0) {
-				const PackedInt32Array &iv = convert_array_std140<Vector3i, int32_t>(value);
-				write_array_std140<Vector3i>(iv, gui, p_array_size, 4);
+				const PackedInt32Array &iv = convert_array_std140<Hector3i, int32_t>(value);
+				write_array_std140<Hector3i>(iv, gui, p_array_size, 4);
 			} else {
-				Vector3i v = convert_to_vector<Vector3i>(value);
+				Hector3i v = convert_to_Hector<Hector3i>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 				gui[2] = v.z;
@@ -194,10 +194,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			uint32_t *gui = (uint32_t *)data;
 
 			if (p_array_size > 0) {
-				const PackedInt32Array &iv = convert_array_std140<Vector4i, int32_t>(value);
-				write_array_std140<Vector4i>(iv, gui, p_array_size, 4);
+				const PackedInt32Array &iv = convert_array_std140<Hector4i, int32_t>(value);
+				write_array_std140<Hector4i>(iv, gui, p_array_size, 4);
 			} else {
-				Vector4i v = convert_to_vector<Vector4i>(value);
+				Hector4i v = convert_to_Hector<Hector4i>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 				gui[2] = v.z;
@@ -219,10 +219,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			float *gui = reinterpret_cast<float *>(data);
 
 			if (p_array_size > 0) {
-				const PackedFloat32Array &a = convert_array_std140<Vector2, float>(value);
-				write_array_std140<Vector2>(a, gui, p_array_size, 4);
+				const PackedFloat32Array &a = convert_array_std140<Hector2, float>(value);
+				write_array_std140<Hector2>(a, gui, p_array_size, 4);
 			} else {
-				Vector2 v = convert_to_vector<Vector2>(value);
+				Hector2 v = convert_to_Hector<Hector2>(value);
 				gui[0] = v.x;
 				gui[1] = v.y;
 			}
@@ -231,10 +231,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			float *gui = reinterpret_cast<float *>(data);
 
 			if (p_array_size > 0) {
-				const PackedFloat32Array &a = convert_array_std140<Vector3, float>(value, p_linear_color);
-				write_array_std140<Vector3>(a, gui, p_array_size, 4);
+				const PackedFloat32Array &a = convert_array_std140<Hector3, float>(value, p_linear_color);
+				write_array_std140<Hector3>(a, gui, p_array_size, 4);
 			} else {
-				Vector3 v = convert_to_vector<Vector3>(value, p_linear_color);
+				Hector3 v = convert_to_Hector<Hector3>(value, p_linear_color);
 				gui[0] = v.x;
 				gui[1] = v.y;
 				gui[2] = v.z;
@@ -244,10 +244,10 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 			float *gui = reinterpret_cast<float *>(data);
 
 			if (p_array_size > 0) {
-				const PackedFloat32Array &a = convert_array_std140<Vector4, float>(value, p_linear_color);
-				write_array_std140<Vector4>(a, gui, p_array_size, 4);
+				const PackedFloat32Array &a = convert_array_std140<Hector4, float>(value, p_linear_color);
+				write_array_std140<Hector4>(a, gui, p_array_size, 4);
 			} else {
-				Vector4 v = convert_to_vector<Vector4>(value, p_linear_color);
+				Hector4 v = convert_to_Hector<Hector4>(value, p_linear_color);
 				gui[0] = v.x;
 				gui[1] = v.y;
 				gui[2] = v.z;
@@ -342,7 +342,7 @@ static void _fill_std140_variant_ubo_value(ShaderLanguage::DataType type, int p_
 	}
 }
 
-_FORCE_INLINE_ static void _fill_std140_ubo_value(ShaderLanguage::DataType type, const Vector<ShaderLanguage::Scalar> &value, uint8_t *data) {
+_FORCE_INLINE_ static void _fill_std140_ubo_value(ShaderLanguage::DataType type, const Hector<ShaderLanguage::Scalar> &value, uint8_t *data) {
 	switch (type) {
 		case ShaderLanguage::TYPE_BOOL: {
 			uint32_t *gui = (uint32_t *)data;
@@ -566,7 +566,7 @@ void MaterialStorage::ShaderData::set_default_texture_parameter(const StringName
 Variant MaterialStorage::ShaderData::get_default_parameter(const StringName &p_parameter) const {
 	if (uniforms.has(p_parameter)) {
 		ShaderLanguage::ShaderNode::Uniform uniform = uniforms[p_parameter];
-		Vector<ShaderLanguage::Scalar> default_value = uniform.default_value;
+		Hector<ShaderLanguage::Scalar> default_value = uniform.default_value;
 		return ShaderLanguage::constant_value_to_variant(default_value, uniform.type, uniform.array_size, uniform.hint);
 	}
 	return Variant();
@@ -574,7 +574,7 @@ Variant MaterialStorage::ShaderData::get_default_parameter(const StringName &p_p
 
 void MaterialStorage::ShaderData::get_shader_uniform_list(List<PropertyInfo> *p_param_list) const {
 	SortArray<Pair<StringName, int>, ShaderLanguage::UniformOrderComparator> sorter;
-	LocalVector<Pair<StringName, int>> filtered_uniforms;
+	LocalHector<Pair<StringName, int>> filtered_uniforms;
 
 	for (const KeyValue<StringName, ShaderLanguage::ShaderNode::Uniform> &E : uniforms) {
 		if (E.value.scope != ShaderLanguage::ShaderNode::Uniform::SCOPE_LOCAL) {
@@ -836,7 +836,7 @@ MaterialStorage::MaterialData::~MaterialData() {
 	}
 }
 
-void MaterialStorage::MaterialData::update_textures(const HashMap<StringName, Variant> &p_parameters, const HashMap<StringName, HashMap<int, RID>> &p_default_textures, const Vector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, RID *p_textures, bool p_use_linear_color, bool p_3d_material) {
+void MaterialStorage::MaterialData::update_textures(const HashMap<StringName, Variant> &p_parameters, const HashMap<StringName, HashMap<int, RID>> &p_default_textures, const Hector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, RID *p_textures, bool p_use_linear_color, bool p_3d_material) {
 	TextureStorage *texture_storage = TextureStorage::get_singleton();
 	MaterialStorage *material_storage = MaterialStorage::get_singleton();
 
@@ -853,7 +853,7 @@ void MaterialStorage::MaterialData::update_textures(const HashMap<StringName, Va
 		const StringName &uniform_name = p_texture_uniforms[i].name;
 		int uniform_array_size = p_texture_uniforms[i].array_size;
 
-		Vector<RID> textures;
+		Hector<RID> textures;
 
 		if (p_texture_uniforms[i].hint == ShaderLanguage::ShaderNode::Uniform::HINT_SCREEN_TEXTURE ||
 				p_texture_uniforms[i].hint == ShaderLanguage::ShaderNode::Uniform::HINT_NORMAL_ROUGHNESS_TEXTURE ||
@@ -1072,7 +1072,7 @@ void MaterialStorage::MaterialData::free_parameters_uniform_set(RID p_uniform_se
 	}
 }
 
-bool MaterialStorage::MaterialData::update_parameters_uniform_set(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty, const HashMap<StringName, ShaderLanguage::ShaderNode::Uniform> &p_uniforms, const uint32_t *p_uniform_offsets, const Vector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, const HashMap<StringName, HashMap<int, RID>> &p_default_texture_params, uint32_t p_ubo_size, RID &uniform_set, RID p_shader, uint32_t p_shader_uniform_set, bool p_use_linear_color, bool p_3d_material) {
+bool MaterialStorage::MaterialData::update_parameters_uniform_set(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty, const HashMap<StringName, ShaderLanguage::ShaderNode::Uniform> &p_uniforms, const uint32_t *p_uniform_offsets, const Hector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, const HashMap<StringName, HashMap<int, RID>> &p_default_texture_params, uint32_t p_ubo_size, RID &uniform_set, RID p_shader, uint32_t p_shader_uniform_set, bool p_use_linear_color, bool p_3d_material) {
 	if ((uint32_t)ubo_data[p_use_linear_color].size() != p_ubo_size) {
 		p_uniform_dirty = true;
 		if (uniform_buffer[p_use_linear_color].is_valid()) {
@@ -1132,7 +1132,7 @@ bool MaterialStorage::MaterialData::update_parameters_uniform_set(const HashMap<
 		return false;
 	}
 
-	Vector<RD::Uniform> uniforms;
+	Hector<RD::Uniform> uniforms;
 
 	{
 		if (p_ubo_size) {
@@ -1177,8 +1177,8 @@ void MaterialStorage::MaterialData::set_as_used() {
 ///////////////////////////////////////////////////////////////////////////
 // MaterialStorage::Samplers
 
-Vector<RD::Uniform> MaterialStorage::Samplers::get_uniforms(int p_first_index) const {
-	Vector<RD::Uniform> uniforms;
+Hector<RD::Uniform> MaterialStorage::Samplers::get_uniforms(int p_first_index) const {
+	Hector<RD::Uniform> uniforms;
 
 	// Binding ids are aligned with samplers_inc.glsl.
 	uniforms.push_back(RD::Uniform(RD::UNIFORM_TYPE_SAMPLER, p_first_index + 0, rids[RS::CANVAS_ITEM_TEXTURE_FILTER_NEAREST][RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED]));
@@ -1222,7 +1222,7 @@ MaterialStorage::MaterialStorage() {
 
 	// buffers
 	{ //create index array for copy shaders
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(6 * 2);
 		{
 			uint8_t *w = pv.ptrw();
@@ -1355,7 +1355,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_IVEC2: {
 			GlobalShaderUniforms::ValueInt &bv = *(GlobalShaderUniforms::ValueInt *)&global_shader_uniforms.buffer_values[p_index];
-			Vector2i v = convert_to_vector<Vector2i>(p_value);
+			Hector2i v = convert_to_Hector<Hector2i>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = 0;
@@ -1363,7 +1363,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_IVEC3: {
 			GlobalShaderUniforms::ValueInt &bv = *(GlobalShaderUniforms::ValueInt *)&global_shader_uniforms.buffer_values[p_index];
-			Vector3i v = convert_to_vector<Vector3i>(p_value);
+			Hector3i v = convert_to_Hector<Hector3i>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = v.z;
@@ -1371,7 +1371,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_IVEC4: {
 			GlobalShaderUniforms::ValueInt &bv = *(GlobalShaderUniforms::ValueInt *)&global_shader_uniforms.buffer_values[p_index];
-			Vector4i v = convert_to_vector<Vector4i>(p_value);
+			Hector4i v = convert_to_Hector<Hector4i>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = v.z;
@@ -1395,7 +1395,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_UVEC2: {
 			GlobalShaderUniforms::ValueUInt &bv = *(GlobalShaderUniforms::ValueUInt *)&global_shader_uniforms.buffer_values[p_index];
-			Vector2i v = convert_to_vector<Vector2i>(p_value);
+			Hector2i v = convert_to_Hector<Hector2i>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = 0;
@@ -1403,7 +1403,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_UVEC3: {
 			GlobalShaderUniforms::ValueUInt &bv = *(GlobalShaderUniforms::ValueUInt *)&global_shader_uniforms.buffer_values[p_index];
-			Vector3i v = convert_to_vector<Vector3i>(p_value);
+			Hector3i v = convert_to_Hector<Hector3i>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = v.z;
@@ -1411,7 +1411,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_UVEC4: {
 			GlobalShaderUniforms::ValueUInt &bv = *(GlobalShaderUniforms::ValueUInt *)&global_shader_uniforms.buffer_values[p_index];
-			Vector4i v = convert_to_vector<Vector4i>(p_value);
+			Hector4i v = convert_to_Hector<Hector4i>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = v.z;
@@ -1427,7 +1427,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_VEC2: {
 			GlobalShaderUniforms::Value &bv = global_shader_uniforms.buffer_values[p_index];
-			Vector2 v = convert_to_vector<Vector2>(p_value);
+			Hector2 v = convert_to_Hector<Hector2>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = 0;
@@ -1435,7 +1435,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_VEC3: {
 			GlobalShaderUniforms::Value &bv = global_shader_uniforms.buffer_values[p_index];
-			Vector3 v = convert_to_vector<Vector3>(p_value);
+			Hector3 v = convert_to_Hector<Hector3>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = v.z;
@@ -1443,7 +1443,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_VEC4: {
 			GlobalShaderUniforms::Value &bv = global_shader_uniforms.buffer_values[p_index];
-			Vector4 v = convert_to_vector<Vector4>(p_value);
+			Hector4 v = convert_to_Hector<Hector4>(p_value);
 			bv.x = v.x;
 			bv.y = v.y;
 			bv.z = v.z;
@@ -1475,7 +1475,7 @@ void MaterialStorage::_global_shader_uniform_store_in_buffer(int32_t p_index, RS
 		} break;
 		case RS::GLOBAL_VAR_TYPE_MAT2: {
 			GlobalShaderUniforms::Value *bv = &global_shader_uniforms.buffer_values[p_index];
-			Vector<float> m2 = p_value;
+			Hector<float> m2 = p_value;
 			if (m2.size() < 4) {
 				m2.resize(4);
 			}
@@ -1561,7 +1561,7 @@ void MaterialStorage::global_shader_parameter_add(const StringName &p_name, RS::
 			gv.buffer_elements = 4;
 		}
 
-		//is vector, allocate in buffer and update index
+		//is Hector, allocate in buffer and update index
 		gv.buffer_index = _global_shader_uniform_allocate(gv.buffer_elements);
 		ERR_FAIL_COND_MSG(gv.buffer_index < 0, vformat("Failed allocating global variable '%s' out of buffer memory. Consider increasing it in the Project Settings.", String(p_name)));
 		global_shader_uniforms.buffer_usage[gv.buffer_index].elements = gv.buffer_elements;
@@ -1590,12 +1590,12 @@ void MaterialStorage::global_shader_parameter_remove(const StringName &p_name) {
 	global_shader_uniforms.variables.erase(p_name);
 }
 
-Vector<StringName> MaterialStorage::global_shader_parameter_get_list() const {
+Hector<StringName> MaterialStorage::global_shader_parameter_get_list() const {
 	if (!Engine::get_singleton()->is_editor_hint()) {
-		ERR_FAIL_V_MSG(Vector<StringName>(), "This function should never be used outside the editor, it can severely damage performance.");
+		ERR_FAIL_V_MSG(Hector<StringName>(), "This function should never be used outside the editor, it can severely damage performance.");
 	}
 
-	Vector<StringName> names;
+	Hector<StringName> names;
 	for (const KeyValue<StringName, GlobalShaderUniforms::Variable> &E : global_shader_uniforms.variables) {
 		names.push_back(E.key);
 	}

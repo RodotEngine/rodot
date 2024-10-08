@@ -44,7 +44,7 @@ protected:
 	GDVIRTUAL0RC(String, _get_visible_name)
 	GDVIRTUAL0RC(int, _get_preset_count)
 	GDVIRTUAL1RC(String, _get_preset_name, int)
-	GDVIRTUAL0RC(Vector<String>, _get_recognized_extensions)
+	GDVIRTUAL0RC(Hector<String>, _get_recognized_extensions)
 	GDVIRTUAL2RC(TypedArray<Dictionary>, _get_import_options, String, int)
 	GDVIRTUAL0RC(String, _get_save_extension)
 	GDVIRTUAL0RC(String, _get_resource_type)

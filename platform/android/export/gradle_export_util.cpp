@@ -133,7 +133,7 @@ Error create_directory(const String &p_dir) {
 
 // Writes p_data into a file at p_path, creating directories if necessary.
 // Note: this will overwrite the file at p_path if it already exists.
-Error store_file_at_path(const String &p_path, const Vector<uint8_t> &p_data) {
+Error store_file_at_path(const String &p_path, const Hector<uint8_t> &p_data) {
 	String dir = p_path.get_base_dir();
 	Error err = create_directory(dir);
 	if (err != OK) {
@@ -167,7 +167,7 @@ Error store_string_at_path(const String &p_path, const String &p_data) {
 // It is used by the export_project_files method to save all the asset files into the gradle project.
 // It's functionality mirrors that of the method save_apk_file.
 // This method will be called ONLY when gradle build is enabled.
-Error rename_and_store_file_in_gradle_project(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key) {
+Error rename_and_store_file_in_gradle_project(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key) {
 	CustomExportData *export_data = static_cast<CustomExportData *>(p_userdata);
 	String dst_path = p_path.replace_first("res://", export_data->assets_directory + "/");
 	print_verbose("Saving project files from " + p_path + " into " + dst_path);
@@ -288,7 +288,7 @@ String _get_activity_tag(const Ref<EditorExportPlatform> &p_export_platform, con
 
 	manifest_activity_text += "            </intent-filter>\n";
 
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
 		if (export_plugins[i]->supports_platform(p_export_platform)) {
 			const String contents = export_plugins[i]->get_android_manifest_activity_element_contents(p_export_platform, p_debug);
@@ -323,7 +323,7 @@ String _get_application_tag(const Ref<EditorExportPlatform> &p_export_platform, 
 			bool_to_string(p_preset->get("package/retain_data_on_uninstall")),
 			bool_to_string(p_has_read_write_storage_permission));
 
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
 		if (export_plugins[i]->supports_platform(p_export_platform)) {
 			const String contents = export_plugins[i]->get_android_manifest_application_element_contents(p_export_platform, p_debug);

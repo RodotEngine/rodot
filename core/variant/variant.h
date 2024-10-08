@@ -45,12 +45,12 @@
 #include "core/math/rect2i.h"
 #include "core/math/transform_2d.h"
 #include "core/math/transform_3d.h"
-#include "core/math/vector2.h"
-#include "core/math/vector2i.h"
-#include "core/math/vector3.h"
-#include "core/math/vector3i.h"
-#include "core/math/vector4.h"
-#include "core/math/vector4i.h"
+#include "core/math/Hector2.h"
+#include "core/math/Hector2i.h"
+#include "core/math/Hector3.h"
+#include "core/math/Hector3i.h"
+#include "core/math/Hector4.h"
+#include "core/math/Hector4i.h"
 #include "core/object/object_id.h"
 #include "core/os/keyboard.h"
 #include "core/string/node_path.h"
@@ -70,17 +70,17 @@ class Ref;
 struct PropertyInfo;
 struct MethodInfo;
 
-typedef Vector<uint8_t> PackedByteArray;
-typedef Vector<int32_t> PackedInt32Array;
-typedef Vector<int64_t> PackedInt64Array;
-typedef Vector<float> PackedFloat32Array;
-typedef Vector<double> PackedFloat64Array;
-typedef Vector<real_t> PackedRealArray;
-typedef Vector<String> PackedStringArray;
-typedef Vector<Vector2> PackedVector2Array;
-typedef Vector<Vector3> PackedVector3Array;
-typedef Vector<Color> PackedColorArray;
-typedef Vector<Vector4> PackedVector4Array;
+typedef Hector<uint8_t> PackedByteArray;
+typedef Hector<int32_t> PackedInt32Array;
+typedef Hector<int64_t> PackedInt64Array;
+typedef Hector<float> PackedFloat32Array;
+typedef Hector<double> PackedFloat64Array;
+typedef Hector<real_t> PackedRealArray;
+typedef Hector<String> PackedStringArray;
+typedef Hector<Hector2> PackedHector2Array;
+typedef Hector<Hector3> PackedHector3Array;
+typedef Hector<Color> PackedColorArray;
+typedef Hector<Hector4> PackedHector4Array;
 
 class Variant {
 public:
@@ -95,15 +95,15 @@ public:
 		STRING,
 
 		// math types
-		VECTOR2,
-		VECTOR2I,
+		HECTOR2,
+		HECTOR2I,
 		RECT2,
 		RECT2I,
-		VECTOR3,
-		VECTOR3I,
+		HECTOR3,
+		HECTOR3I,
 		TRANSFORM2D,
-		VECTOR4,
-		VECTOR4I,
+		HECTOR4,
+		HECTOR4I,
 		PLANE,
 		QUATERNION,
 		AABB,
@@ -129,10 +129,10 @@ public:
 		PACKED_FLOAT32_ARRAY,
 		PACKED_FLOAT64_ARRAY,
 		PACKED_STRING_ARRAY,
-		PACKED_VECTOR2_ARRAY,
-		PACKED_VECTOR3_ARRAY,
+		PACKED_Hector2_ARRAY,
+		PACKED_Hector3_ARRAY,
 		PACKED_COLOR_ARRAY,
-		PACKED_VECTOR4_ARRAY,
+		PACKED_Hector4_ARRAY,
 
 		VARIANT_MAX
 	};
@@ -229,22 +229,22 @@ private:
 
 	template <typename T>
 	struct PackedArrayRef : public PackedArrayRefBase {
-		Vector<T> array;
+		Hector<T> array;
 		static _FORCE_INLINE_ PackedArrayRef<T> *create() {
 			return memnew(PackedArrayRef<T>);
 		}
-		static _FORCE_INLINE_ PackedArrayRef<T> *create(const Vector<T> &p_from) {
+		static _FORCE_INLINE_ PackedArrayRef<T> *create(const Hector<T> &p_from) {
 			return memnew(PackedArrayRef<T>(p_from));
 		}
 
-		static _FORCE_INLINE_ const Vector<T> &get_array(PackedArrayRefBase *p_base) {
+		static _FORCE_INLINE_ const Hector<T> &get_array(PackedArrayRefBase *p_base) {
 			return static_cast<PackedArrayRef<T> *>(p_base)->array;
 		}
-		static _FORCE_INLINE_ Vector<T> *get_array_ptr(const PackedArrayRefBase *p_base) {
+		static _FORCE_INLINE_ Hector<T> *get_array_ptr(const PackedArrayRefBase *p_base) {
 			return &const_cast<PackedArrayRef<T> *>(static_cast<const PackedArrayRef<T> *>(p_base))->array;
 		}
 
-		_FORCE_INLINE_ PackedArrayRef(const Vector<T> &p_from) {
+		_FORCE_INLINE_ PackedArrayRef(const Hector<T> &p_from) {
 			array = p_from;
 			refcount.init();
 		}
@@ -282,15 +282,15 @@ private:
 			false, //INT,
 			false, //FLOAT,
 			true, //STRING,
-			false, //VECTOR2,
-			false, //VECTOR2I,
+			false, //Hector2,
+			false, //Hector2I,
 			false, //RECT2,
 			false, //RECT2I,
-			false, //VECTOR3,
-			false, //VECTOR3I,
+			false, //Hector3,
+			false, //Hector3I,
 			true, //TRANSFORM2D,
-			false, //VECTOR4,
-			false, //VECTOR4I,
+			false, //Hector4,
+			false, //Hector4I,
 			false, //PLANE,
 			false, //QUATERNION,
 			true, //AABB,
@@ -316,10 +316,10 @@ private:
 			true, //PACKED_FLOAT32_ARRAY,
 			true, //PACKED_FLOAT64_ARRAY,
 			true, //PACKED_STRING_ARRAY,
-			true, //PACKED_VECTOR2_ARRAY,
-			true, //PACKED_VECTOR3_ARRAY,
+			true, //PACKED_Hector2_ARRAY,
+			true, //PACKED_Hector3_ARRAY,
 			true, //PACKED_COLOR_ARRAY,
-			true, //PACKED_VECTOR4_ARRAY,
+			true, //PACKED_Hector4_ARRAY,
 		};
 
 		if (unlikely(needs_deinit[type])) { // Make it fast for types that don't need deinit.
@@ -395,14 +395,14 @@ public:
 	operator double() const;
 	operator String() const;
 	operator StringName() const;
-	operator Vector2() const;
-	operator Vector2i() const;
+	operator Hector2() const;
+	operator Hector2i() const;
 	operator Rect2() const;
 	operator Rect2i() const;
-	operator Vector3() const;
-	operator Vector3i() const;
-	operator Vector4() const;
-	operator Vector4i() const;
+	operator Hector3() const;
+	operator Hector3i() const;
+	operator Hector4() const;
+	operator Hector4i() const;
 	operator Plane() const;
 	operator ::AABB() const;
 	operator Quaternion() const;
@@ -429,16 +429,16 @@ public:
 	operator PackedFloat32Array() const;
 	operator PackedFloat64Array() const;
 	operator PackedStringArray() const;
-	operator PackedVector3Array() const;
-	operator PackedVector2Array() const;
+	operator PackedHector3Array() const;
+	operator PackedHector2Array() const;
 	operator PackedColorArray() const;
-	operator PackedVector4Array() const;
+	operator PackedHector4Array() const;
 
-	operator Vector<::RID>() const;
-	operator Vector<Plane>() const;
-	operator Vector<Face3>() const;
-	operator Vector<Variant>() const;
-	operator Vector<StringName>() const;
+	operator Hector<::RID>() const;
+	operator Hector<Plane>() const;
+	operator Hector<Face3>() const;
+	operator Hector<Variant>() const;
+	operator Hector<StringName>() const;
 
 	// some core type enums to convert to
 	operator Side() const;
@@ -465,14 +465,14 @@ public:
 	Variant(const StringName &p_string);
 	Variant(const char *const p_cstring);
 	Variant(const char32_t *p_wstring);
-	Variant(const Vector2 &p_vector2);
-	Variant(const Vector2i &p_vector2i);
+	Variant(const Hector2 &p_Hector2);
+	Variant(const Hector2i &p_Hector2i);
 	Variant(const Rect2 &p_rect2);
 	Variant(const Rect2i &p_rect2i);
-	Variant(const Vector3 &p_vector3);
-	Variant(const Vector3i &p_vector3i);
-	Variant(const Vector4 &p_vector4);
-	Variant(const Vector4i &p_vector4i);
+	Variant(const Hector3 &p_Hector3);
+	Variant(const Hector3i &p_Hector3i);
+	Variant(const Hector4 &p_Hector4);
+	Variant(const Hector4i &p_Hector4i);
 	Variant(const Plane &p_plane);
 	Variant(const ::AABB &p_aabb);
 	Variant(const Quaternion &p_quat);
@@ -495,16 +495,16 @@ public:
 	Variant(const PackedFloat32Array &p_float32_array);
 	Variant(const PackedFloat64Array &p_float64_array);
 	Variant(const PackedStringArray &p_string_array);
-	Variant(const PackedVector2Array &p_vector2_array);
-	Variant(const PackedVector3Array &p_vector3_array);
+	Variant(const PackedHector2Array &p_Hector2_array);
+	Variant(const PackedHector3Array &p_Hector3_array);
 	Variant(const PackedColorArray &p_color_array);
-	Variant(const PackedVector4Array &p_vector4_array);
+	Variant(const PackedHector4Array &p_Hector4_array);
 
-	Variant(const Vector<::RID> &p_array); // helper
-	Variant(const Vector<Plane> &p_array); // helper
-	Variant(const Vector<Face3> &p_face_array);
-	Variant(const Vector<Variant> &p_array);
-	Variant(const Vector<StringName> &p_array);
+	Variant(const Hector<::RID> &p_array); // helper
+	Variant(const Hector<Plane> &p_array); // helper
+	Variant(const Hector<Face3> &p_face_array);
+	Variant(const Hector<Variant> &p_array);
+	Variant(const Hector<StringName> &p_array);
 
 	Variant(const IPAddress &p_address);
 
@@ -594,7 +594,7 @@ public:
 	static int get_builtin_method_argument_count(Variant::Type p_type, const StringName &p_method);
 	static Variant::Type get_builtin_method_argument_type(Variant::Type p_type, const StringName &p_method, int p_argument);
 	static String get_builtin_method_argument_name(Variant::Type p_type, const StringName &p_method, int p_argument);
-	static Vector<Variant> get_builtin_method_default_arguments(Variant::Type p_type, const StringName &p_method);
+	static Hector<Variant> get_builtin_method_default_arguments(Variant::Type p_type, const StringName &p_method);
 	static bool has_builtin_method_return_value(Variant::Type p_type, const StringName &p_method);
 	static Variant::Type get_builtin_method_return_type(Variant::Type p_type, const StringName &p_method);
 	static bool is_builtin_method_const(Variant::Type p_type, const StringName &p_method);
@@ -825,8 +825,8 @@ public:
 //typedef Array Array;
 
 template <typename... VarArgs>
-Vector<Variant> varray(VarArgs... p_args) {
-	Vector<Variant> v;
+Hector<Variant> varray(VarArgs... p_args) {
+	Hector<Variant> v;
 
 	Variant args[sizeof...(p_args) + 1] = { p_args..., Variant() }; // +1 makes sure zero sized arrays are also supported.
 	uint32_t argc = sizeof...(p_args);

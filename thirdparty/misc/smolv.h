@@ -24,7 +24,7 @@
 // - Reordering instruction opcodes so that the most common ones are the smallest values, for smaller
 //  varint encoding.
 // - Encoding several instructions in a more compact form, e.g. the "typical <=4 component swizzle"
-//  shape of a VectorShuffle instruction, or sequences of MemberDecorate instructions.
+//  shape of a HectorShuffle instruction, or sequences of MemberDecorate instructions.
 //
 // A somewhat similar utility is spirv-remap from glslang, see
 // https://github.com/KhronosGroup/glslang/blob/master/README-spirv-remap.txt
@@ -55,7 +55,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <vector>
+#include <Vector>
 #include <cstddef>
 
 namespace smolv

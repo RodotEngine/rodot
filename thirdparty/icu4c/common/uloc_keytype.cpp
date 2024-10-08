@@ -20,7 +20,7 @@
 #include "uhash.h"
 #include "umutex.h"
 #include "uresimp.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "udataswp.h" /* for InvChar functions */
 
 static UHashtable* gLocExtKeyMap = nullptr;

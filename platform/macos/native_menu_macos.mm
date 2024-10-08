@@ -280,7 +280,7 @@ Size2 NativeMenuMacOS::get_size(const RID &p_rid) const {
 	return Size2(md->menu.size.width, md->menu.size.height) * DisplayServer::get_singleton()->screen_get_max_scale();
 }
 
-void NativeMenuMacOS::popup(const RID &p_rid, const Vector2i &p_position) {
+void NativeMenuMacOS::popup(const RID &p_rid, const Hector2i &p_position) {
 	const MenuData *md = menus.get_or_null(p_rid);
 	ERR_FAIL_NULL(md);
 

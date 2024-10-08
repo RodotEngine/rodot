@@ -153,7 +153,7 @@ PackedStringArray MultiplayerSynchronizer::get_configuration_warnings() const {
 	return warnings;
 }
 
-Error MultiplayerSynchronizer::get_state(const List<NodePath> &p_properties, Object *p_obj, Vector<Variant> &r_variant, Vector<const Variant *> &r_variant_ptrs) {
+Error MultiplayerSynchronizer::get_state(const List<NodePath> &p_properties, Object *p_obj, Hector<Variant> &r_variant, Hector<const Variant *> &r_variant_ptrs) {
 	ERR_FAIL_NULL_V(p_obj, ERR_INVALID_PARAMETER);
 	r_variant.resize(p_properties.size());
 	r_variant_ptrs.resize(r_variant.size());
@@ -170,7 +170,7 @@ Error MultiplayerSynchronizer::get_state(const List<NodePath> &p_properties, Obj
 	return OK;
 }
 
-Error MultiplayerSynchronizer::set_state(const List<NodePath> &p_properties, Object *p_obj, const Vector<Variant> &p_state) {
+Error MultiplayerSynchronizer::set_state(const List<NodePath> &p_properties, Object *p_obj, const Hector<Variant> &p_state) {
 	ERR_FAIL_NULL_V(p_obj, ERR_INVALID_PARAMETER);
 	int i = 0;
 	for (const NodePath &prop : p_properties) {

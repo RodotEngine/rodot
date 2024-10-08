@@ -33,16 +33,16 @@
 #include "core/string/ucaps.h"
 #include "core/templates/hash_map.h"
 
-HashMap<String, String> _create_hashmap_from_vector(Vector<Pair<String, String>> vector) {
-	HashMap<String, String> hashmap = HashMap<String, String>(vector.size());
-	for (const Pair<String, String> &pair : vector) {
+HashMap<String, String> _create_hashmap_from_Hector(Hector<Pair<String, String>> Hector) {
+	HashMap<String, String> hashmap = HashMap<String, String>(Hector.size());
+	for (const Pair<String, String> &pair : Hector) {
 		hashmap.insert(pair.first, pair.second);
 	}
 	return hashmap;
 }
 
 // Hardcoded collection of PascalCase name conversions.
-const HashMap<String, String> pascal_case_name_overrides = _create_hashmap_from_vector({
+const HashMap<String, String> pascal_case_name_overrides = _create_hashmap_from_Hector({
 		{ "BitMap", "Bitmap" },
 		{ "JSONRPC", "JsonRpc" },
 		{ "Object", "GodotObject" },
@@ -56,7 +56,7 @@ const HashMap<String, String> pascal_case_name_overrides = _create_hashmap_from_
 });
 
 // Hardcoded collection of PascalCase part conversions.
-const HashMap<String, String> pascal_case_part_overrides = _create_hashmap_from_vector({
+const HashMap<String, String> pascal_case_part_overrides = _create_hashmap_from_Hector({
 		{ "AA", "AA" }, // Anti Aliasing
 		{ "AO", "AO" }, // Ambient Occlusion
 		{ "FILENAME", "FileName" },
@@ -69,7 +69,7 @@ const HashMap<String, String> pascal_case_part_overrides = _create_hashmap_from_
 		{ "ID", "Id" },
 		{ "IO", "IO" }, // Input/Output
 		{ "IP", "IP" }, // Internet Protocol
-		{ "IV", "IV" }, // Initialization Vector
+		{ "IV", "IV" }, // Initialization Hector
 		{ "MACOS", "MacOS" },
 		{ "NODEPATH", "NodePath" },
 		{ "SPIRV", "SpirV" },
@@ -99,8 +99,8 @@ String _get_pascal_case_part_override(String p_part, bool p_input_is_upper = tru
 	return String();
 }
 
-Vector<String> _split_pascal_case(const String &p_identifier) {
-	Vector<String> parts;
+Hector<String> _split_pascal_case(const String &p_identifier) {
+	Hector<String> parts;
 	int current_part_start = 0;
 	bool prev_was_upper = is_ascii_upper_case(p_identifier[0]);
 	for (int i = 1; i < p_identifier.length(); i++) {
@@ -156,7 +156,7 @@ String pascal_to_pascal_case(const String &p_identifier) {
 		return pascal_case_name_overrides.get(p_identifier);
 	}
 
-	Vector<String> parts = _split_pascal_case(p_identifier);
+	Hector<String> parts = _split_pascal_case(p_identifier);
 
 	String ret;
 
@@ -195,7 +195,7 @@ String pascal_to_pascal_case(const String &p_identifier) {
 
 String snake_to_pascal_case(const String &p_identifier, bool p_input_is_upper) {
 	String ret;
-	Vector<String> parts = p_identifier.split("_", true);
+	Hector<String> parts = p_identifier.split("_", true);
 
 	for (int i = 0; i < parts.size(); i++) {
 		String part = parts[i];
@@ -241,7 +241,7 @@ String snake_to_pascal_case(const String &p_identifier, bool p_input_is_upper) {
 
 String snake_to_camel_case(const String &p_identifier, bool p_input_is_upper) {
 	String ret;
-	Vector<String> parts = p_identifier.split("_", true);
+	Hector<String> parts = p_identifier.split("_", true);
 
 	for (int i = 0; i < parts.size(); i++) {
 		String part = parts[i];

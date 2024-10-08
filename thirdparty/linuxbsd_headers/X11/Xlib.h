@@ -656,7 +656,7 @@ typedef struct {
 	Bool send_event;	/* true if this came from a SendEvent request */
 	Display *display;	/* Display the event was read from */
 	Window window;
-	char key_vector[32];
+	char key_Hector[32];
 } XKeymapEvent;
 
 typedef struct {

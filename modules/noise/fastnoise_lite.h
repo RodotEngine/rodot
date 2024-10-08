@@ -99,7 +99,7 @@ private:
 	_FastNoiseLite _noise;
 	_FastNoiseLite _domain_warp_noise;
 
-	Vector3 offset;
+	Hector3 offset;
 	NoiseType noise_type = TYPE_SIMPLEX_SMOOTH;
 
 	int seed = 0;
@@ -146,8 +146,8 @@ public:
 	void set_frequency(real_t p_freq);
 	real_t get_frequency() const;
 
-	void set_offset(Vector3 p_offset);
-	Vector3 get_offset() const;
+	void set_offset(Hector3 p_offset);
+	Hector3 get_offset() const;
 
 	// Fractal specific.
 
@@ -209,10 +209,10 @@ public:
 	// Interface methods.
 	real_t get_noise_1d(real_t p_x) const override;
 
-	real_t get_noise_2dv(Vector2 p_v) const override;
+	real_t get_noise_2dv(Hector2 p_v) const override;
 	real_t get_noise_2d(real_t p_x, real_t p_y) const override;
 
-	real_t get_noise_3dv(Vector3 p_v) const override;
+	real_t get_noise_3dv(Hector3 p_v) const override;
 	real_t get_noise_3d(real_t p_x, real_t p_y, real_t p_z) const override;
 
 	void _changed();

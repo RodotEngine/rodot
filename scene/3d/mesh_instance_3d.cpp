@@ -300,7 +300,7 @@ Node *MeshInstance3D::create_multiple_convex_collisions_node(const Ref<MeshConve
 		settings.instantiate();
 	}
 
-	Vector<Ref<Shape3D>> shapes = mesh->convex_decompose(settings);
+	Hector<Ref<Shape3D>> shapes = mesh->convex_decompose(settings);
 	if (!shapes.size()) {
 		return nullptr;
 	}
@@ -411,8 +411,8 @@ void MeshInstance3D::_mesh_changed() {
 }
 
 MeshInstance3D *MeshInstance3D::create_debug_tangents_node() {
-	Vector<Vector3> lines;
-	Vector<Color> colors;
+	Hector<Hector3> lines;
+	Hector<Color> colors;
 
 	Ref<Mesh> m = get_mesh();
 	if (!m.is_valid()) {
@@ -423,21 +423,21 @@ MeshInstance3D *MeshInstance3D::create_debug_tangents_node() {
 		Array arrays = m->surface_get_arrays(i);
 		ERR_CONTINUE(arrays.size() != Mesh::ARRAY_MAX);
 
-		Vector<Vector3> verts = arrays[Mesh::ARRAY_VERTEX];
-		Vector<Vector3> norms = arrays[Mesh::ARRAY_NORMAL];
+		Hector<Hector3> verts = arrays[Mesh::ARRAY_VERTEX];
+		Hector<Hector3> norms = arrays[Mesh::ARRAY_NORMAL];
 		if (norms.size() == 0) {
 			continue;
 		}
-		Vector<float> tangents = arrays[Mesh::ARRAY_TANGENT];
+		Hector<float> tangents = arrays[Mesh::ARRAY_TANGENT];
 		if (tangents.size() == 0) {
 			continue;
 		}
 
 		for (int j = 0; j < verts.size(); j++) {
-			Vector3 v = verts[j];
-			Vector3 n = norms[j];
-			Vector3 t = Vector3(tangents[j * 4 + 0], tangents[j * 4 + 1], tangents[j * 4 + 2]);
-			Vector3 b = (n.cross(t)).normalized() * tangents[j * 4 + 3];
+			Hector3 v = verts[j];
+			Hector3 n = norms[j];
+			Hector3 t = Hector3(tangents[j * 4 + 0], tangents[j * 4 + 1], tangents[j * 4 + 2]);
+			Hector3 b = (n.cross(t)).normalized() * tangents[j * 4 + 3];
 
 			lines.push_back(v); //normal
 			colors.push_back(Color(0, 0, 1)); //color
@@ -545,9 +545,9 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_blend_shape_mix(Ref<ArrayM
 
 		ERR_FAIL_COND_V(source_mesh_arrays.size() != RS::ARRAY_MAX, Ref<ArrayMesh>());
 
-		const Vector<Vector3> &source_mesh_vertex_array = source_mesh_arrays[Mesh::ARRAY_VERTEX];
-		const Vector<Vector3> &source_mesh_normal_array = source_mesh_arrays[Mesh::ARRAY_NORMAL];
-		const Vector<float> &source_mesh_tangent_array = source_mesh_arrays[Mesh::ARRAY_TANGENT];
+		const Hector<Hector3> &source_mesh_vertex_array = source_mesh_arrays[Mesh::ARRAY_VERTEX];
+		const Hector<Hector3> &source_mesh_normal_array = source_mesh_arrays[Mesh::ARRAY_NORMAL];
+		const Hector<float> &source_mesh_tangent_array = source_mesh_arrays[Mesh::ARRAY_TANGENT];
 
 		Array new_mesh_arrays;
 		new_mesh_arrays.resize(Mesh::ARRAY_MAX);
@@ -561,16 +561,16 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_blend_shape_mix(Ref<ArrayM
 		bool use_normal_array = source_mesh_normal_array.size() == source_mesh_vertex_array.size();
 		bool use_tangent_array = source_mesh_tangent_array.size() / 4 == source_mesh_vertex_array.size();
 
-		Vector<Vector3> lerped_vertex_array = source_mesh_vertex_array;
-		Vector<Vector3> lerped_normal_array = source_mesh_normal_array;
-		Vector<float> lerped_tangent_array = source_mesh_tangent_array;
+		Hector<Hector3> lerped_vertex_array = source_mesh_vertex_array;
+		Hector<Hector3> lerped_normal_array = source_mesh_normal_array;
+		Hector<float> lerped_tangent_array = source_mesh_tangent_array;
 
-		const Vector3 *source_vertices_ptr = source_mesh_vertex_array.ptr();
-		const Vector3 *source_normals_ptr = source_mesh_normal_array.ptr();
+		const Hector3 *source_vertices_ptr = source_mesh_vertex_array.ptr();
+		const Hector3 *source_normals_ptr = source_mesh_normal_array.ptr();
 		const float *source_tangents_ptr = source_mesh_tangent_array.ptr();
 
-		Vector3 *lerped_vertices_ptrw = lerped_vertex_array.ptrw();
-		Vector3 *lerped_normals_ptrw = lerped_normal_array.ptrw();
+		Hector3 *lerped_vertices_ptrw = lerped_vertex_array.ptrw();
+		Hector3 *lerped_normals_ptrw = lerped_normal_array.ptrw();
 		float *lerped_tangents_ptrw = lerped_tangent_array.ptrw();
 
 		const Array &blendshapes_mesh_arrays = source_mesh->surface_get_blend_shape_arrays(surface_index);
@@ -585,45 +585,45 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_blend_shape_mix(Ref<ArrayM
 
 			const Array &blendshape_mesh_arrays = blendshapes_mesh_arrays[blendshape_index];
 
-			const Vector<Vector3> &blendshape_vertex_array = blendshape_mesh_arrays[Mesh::ARRAY_VERTEX];
-			const Vector<Vector3> &blendshape_normal_array = blendshape_mesh_arrays[Mesh::ARRAY_NORMAL];
-			const Vector<float> &blendshape_tangent_array = blendshape_mesh_arrays[Mesh::ARRAY_TANGENT];
+			const Hector<Hector3> &blendshape_vertex_array = blendshape_mesh_arrays[Mesh::ARRAY_VERTEX];
+			const Hector<Hector3> &blendshape_normal_array = blendshape_mesh_arrays[Mesh::ARRAY_NORMAL];
+			const Hector<float> &blendshape_tangent_array = blendshape_mesh_arrays[Mesh::ARRAY_TANGENT];
 
 			ERR_FAIL_COND_V(source_mesh_vertex_array.size() != blendshape_vertex_array.size(), Ref<ArrayMesh>());
 			ERR_FAIL_COND_V(source_mesh_normal_array.size() != blendshape_normal_array.size(), Ref<ArrayMesh>());
 			ERR_FAIL_COND_V(source_mesh_tangent_array.size() != blendshape_tangent_array.size(), Ref<ArrayMesh>());
 
-			const Vector3 *blendshape_vertices_ptr = blendshape_vertex_array.ptr();
-			const Vector3 *blendshape_normals_ptr = blendshape_normal_array.ptr();
+			const Hector3 *blendshape_vertices_ptr = blendshape_vertex_array.ptr();
+			const Hector3 *blendshape_normals_ptr = blendshape_normal_array.ptr();
 			const float *blendshape_tangents_ptr = blendshape_tangent_array.ptr();
 
 			if (blend_shape_mode == Mesh::BLEND_SHAPE_MODE_NORMALIZED) {
 				for (int i = 0; i < source_mesh_vertex_array.size(); i++) {
-					const Vector3 &source_vertex = source_vertices_ptr[i];
-					const Vector3 &blendshape_vertex = blendshape_vertices_ptr[i];
-					Vector3 lerped_vertex = source_vertex.lerp(blendshape_vertex, blend_weight) - source_vertex;
+					const Hector3 &source_vertex = source_vertices_ptr[i];
+					const Hector3 &blendshape_vertex = blendshape_vertices_ptr[i];
+					Hector3 lerped_vertex = source_vertex.lerp(blendshape_vertex, blend_weight) - source_vertex;
 					lerped_vertices_ptrw[i] += lerped_vertex;
 
 					if (use_normal_array) {
-						const Vector3 &source_normal = source_normals_ptr[i];
-						const Vector3 &blendshape_normal = blendshape_normals_ptr[i];
-						Vector3 lerped_normal = source_normal.lerp(blendshape_normal, blend_weight) - source_normal;
+						const Hector3 &source_normal = source_normals_ptr[i];
+						const Hector3 &blendshape_normal = blendshape_normals_ptr[i];
+						Hector3 lerped_normal = source_normal.lerp(blendshape_normal, blend_weight) - source_normal;
 						lerped_normals_ptrw[i] += lerped_normal;
 					}
 
 					if (use_tangent_array) {
 						int tangent_index = i * 4;
-						const Vector4 source_tangent = Vector4(
+						const Hector4 source_tangent = Hector4(
 								source_tangents_ptr[tangent_index],
 								source_tangents_ptr[tangent_index + 1],
 								source_tangents_ptr[tangent_index + 2],
 								source_tangents_ptr[tangent_index + 3]);
-						const Vector4 blendshape_tangent = Vector4(
+						const Hector4 blendshape_tangent = Hector4(
 								blendshape_tangents_ptr[tangent_index],
 								blendshape_tangents_ptr[tangent_index + 1],
 								blendshape_tangents_ptr[tangent_index + 2],
 								blendshape_tangents_ptr[tangent_index + 3]);
-						Vector4 lerped_tangent = source_tangent.lerp(blendshape_tangent, blend_weight);
+						Hector4 lerped_tangent = source_tangent.lerp(blendshape_tangent, blend_weight);
 						lerped_tangents_ptrw[tangent_index] += lerped_tangent.x;
 						lerped_tangents_ptrw[tangent_index + 1] += lerped_tangent.y;
 						lerped_tangents_ptrw[tangent_index + 2] += lerped_tangent.z;
@@ -632,22 +632,22 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_blend_shape_mix(Ref<ArrayM
 				}
 			} else if (blend_shape_mode == Mesh::BLEND_SHAPE_MODE_RELATIVE) {
 				for (int i = 0; i < source_mesh_vertex_array.size(); i++) {
-					const Vector3 &blendshape_vertex = blendshape_vertices_ptr[i];
+					const Hector3 &blendshape_vertex = blendshape_vertices_ptr[i];
 					lerped_vertices_ptrw[i] += blendshape_vertex * blend_weight;
 
 					if (use_normal_array) {
-						const Vector3 &blendshape_normal = blendshape_normals_ptr[i];
+						const Hector3 &blendshape_normal = blendshape_normals_ptr[i];
 						lerped_normals_ptrw[i] += blendshape_normal * blend_weight;
 					}
 
 					if (use_tangent_array) {
 						int tangent_index = i * 4;
-						const Vector4 blendshape_tangent = Vector4(
+						const Hector4 blendshape_tangent = Hector4(
 								blendshape_tangents_ptr[tangent_index],
 								blendshape_tangents_ptr[tangent_index + 1],
 								blendshape_tangents_ptr[tangent_index + 2],
 								blendshape_tangents_ptr[tangent_index + 3]);
-						Vector4 lerped_tangent = blendshape_tangent * blend_weight;
+						Hector4 lerped_tangent = blendshape_tangent * blend_weight;
 						lerped_tangents_ptrw[tangent_index] += lerped_tangent.x;
 						lerped_tangents_ptrw[tangent_index + 1] += lerped_tangent.y;
 						lerped_tangents_ptrw[tangent_index + 2] += lerped_tangent.z;
@@ -694,7 +694,7 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_skeleton_pose(Ref<ArrayMes
 	ERR_FAIL_COND_V(bone_count <= 0, Ref<ArrayMesh>());
 	ERR_FAIL_COND_V(bone_count < skin_internal->get_bind_count(), Ref<ArrayMesh>());
 
-	LocalVector<Transform3D> bone_transforms;
+	LocalHector<Transform3D> bone_transforms;
 	bone_transforms.resize(bone_count);
 	for (int bone_index = 0; bone_index < bone_count; bone_index++) {
 		bone_transforms[bone_index] = RenderingServer::get_singleton()->skeleton_bone_get_transform(skeleton, bone_index);
@@ -722,11 +722,11 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_skeleton_pose(Ref<ArrayMes
 
 		ERR_FAIL_COND_V(source_mesh_arrays.size() != RS::ARRAY_MAX, Ref<ArrayMesh>());
 
-		const Vector<Vector3> &source_mesh_vertex_array = source_mesh_arrays[Mesh::ARRAY_VERTEX];
-		const Vector<Vector3> &source_mesh_normal_array = source_mesh_arrays[Mesh::ARRAY_NORMAL];
-		const Vector<float> &source_mesh_tangent_array = source_mesh_arrays[Mesh::ARRAY_TANGENT];
-		const Vector<int> &source_mesh_bones_array = source_mesh_arrays[Mesh::ARRAY_BONES];
-		const Vector<float> &source_mesh_weights_array = source_mesh_arrays[Mesh::ARRAY_WEIGHTS];
+		const Hector<Hector3> &source_mesh_vertex_array = source_mesh_arrays[Mesh::ARRAY_VERTEX];
+		const Hector<Hector3> &source_mesh_normal_array = source_mesh_arrays[Mesh::ARRAY_NORMAL];
+		const Hector<float> &source_mesh_tangent_array = source_mesh_arrays[Mesh::ARRAY_TANGENT];
+		const Hector<int> &source_mesh_bones_array = source_mesh_arrays[Mesh::ARRAY_BONES];
+		const Hector<float> &source_mesh_weights_array = source_mesh_arrays[Mesh::ARRAY_WEIGHTS];
 
 		unsigned int vertex_count = source_mesh_vertex_array.size();
 		int expected_bone_array_size = vertex_count * bones_per_vertex;
@@ -745,37 +745,37 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_skeleton_pose(Ref<ArrayMes
 		bool use_normal_array = source_mesh_normal_array.size() == source_mesh_vertex_array.size();
 		bool use_tangent_array = source_mesh_tangent_array.size() / 4 == source_mesh_vertex_array.size();
 
-		Vector<Vector3> lerped_vertex_array = source_mesh_vertex_array;
-		Vector<Vector3> lerped_normal_array = source_mesh_normal_array;
-		Vector<float> lerped_tangent_array = source_mesh_tangent_array;
+		Hector<Hector3> lerped_vertex_array = source_mesh_vertex_array;
+		Hector<Hector3> lerped_normal_array = source_mesh_normal_array;
+		Hector<float> lerped_tangent_array = source_mesh_tangent_array;
 
-		const Vector3 *source_vertices_ptr = source_mesh_vertex_array.ptr();
-		const Vector3 *source_normals_ptr = source_mesh_normal_array.ptr();
+		const Hector3 *source_vertices_ptr = source_mesh_vertex_array.ptr();
+		const Hector3 *source_normals_ptr = source_mesh_normal_array.ptr();
 		const float *source_tangents_ptr = source_mesh_tangent_array.ptr();
 		const int *source_bones_ptr = source_mesh_bones_array.ptr();
 		const float *source_weights_ptr = source_mesh_weights_array.ptr();
 
-		Vector3 *lerped_vertices_ptrw = lerped_vertex_array.ptrw();
-		Vector3 *lerped_normals_ptrw = lerped_normal_array.ptrw();
+		Hector3 *lerped_vertices_ptrw = lerped_vertex_array.ptrw();
+		Hector3 *lerped_normals_ptrw = lerped_normal_array.ptrw();
 		float *lerped_tangents_ptrw = lerped_tangent_array.ptrw();
 
 		for (unsigned int vertex_index = 0; vertex_index < vertex_count; vertex_index++) {
-			Vector3 lerped_vertex;
-			Vector3 lerped_normal;
-			Vector3 lerped_tangent;
+			Hector3 lerped_vertex;
+			Hector3 lerped_normal;
+			Hector3 lerped_tangent;
 
-			const Vector3 &source_vertex = source_vertices_ptr[vertex_index];
+			const Hector3 &source_vertex = source_vertices_ptr[vertex_index];
 
-			Vector3 source_normal;
+			Hector3 source_normal;
 			if (use_normal_array) {
 				source_normal = source_normals_ptr[vertex_index];
 			}
 
 			int tangent_index = vertex_index * 4;
-			Vector4 source_tangent;
-			Vector3 source_tangent_vec3;
+			Hector4 source_tangent;
+			Hector3 source_tangent_vec3;
 			if (use_tangent_array) {
-				source_tangent = Vector4(
+				source_tangent = Hector4(
 						source_tangents_ptr[tangent_index],
 						source_tangents_ptr[tangent_index + 1],
 						source_tangents_ptr[tangent_index + 2],
@@ -783,7 +783,7 @@ Ref<ArrayMesh> MeshInstance3D::bake_mesh_from_current_skeleton_pose(Ref<ArrayMes
 
 				DEV_ASSERT(source_tangent.w == 1.0 || source_tangent.w == -1.0);
 
-				source_tangent_vec3 = Vector3(source_tangent.x, source_tangent.y, source_tangent.z);
+				source_tangent_vec3 = Hector3(source_tangent.x, source_tangent.y, source_tangent.z);
 			}
 
 			for (unsigned int weight_index = 0; weight_index < bones_per_vertex; weight_index++) {

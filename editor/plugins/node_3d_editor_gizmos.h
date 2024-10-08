@@ -33,7 +33,7 @@
 
 #include "core/math/dynamic_bvh.h"
 #include "core/templates/hash_map.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/3d/camera_3d.h"
 #include "scene/3d/node_3d.h"
 #include "scene/3d/skeleton_3d.h"
@@ -57,20 +57,20 @@ class EditorNode3DGizmo : public Node3DGizmo {
 
 	bool selected;
 
-	Vector<Vector3> collision_segments;
+	Hector<Hector3> collision_segments;
 	Ref<TriangleMesh> collision_mesh;
 
-	Vector<Vector3> handles;
-	Vector<int> handle_ids;
-	Vector<Vector3> secondary_handles;
-	Vector<int> secondary_handle_ids;
+	Hector<Hector3> handles;
+	Hector<int> handle_ids;
+	Hector<Hector3> secondary_handles;
+	Hector<int> secondary_handle_ids;
 
 	real_t selectable_icon_size;
 	bool billboard_handle;
 
 	bool valid;
 	bool hidden;
-	Vector<Instance> instances;
+	Hector<Instance> instances;
 	Node3D *spatial_node = nullptr;
 
 	DynamicBVH::ID bvh_node_id;
@@ -89,23 +89,23 @@ protected:
 	GDVIRTUAL2RC(bool, _is_handle_highlighted, int, bool)
 	GDVIRTUAL2RC(Variant, _get_handle_value, int, bool)
 	GDVIRTUAL2(_begin_handle_action, int, bool)
-	GDVIRTUAL4(_set_handle, int, bool, const Camera3D *, Vector2)
+	GDVIRTUAL4(_set_handle, int, bool, const Camera3D *, Hector2)
 	GDVIRTUAL4(_commit_handle, int, bool, Variant, bool)
 
-	GDVIRTUAL2RC(int, _subgizmos_intersect_ray, const Camera3D *, Vector2)
-	GDVIRTUAL2RC(Vector<int>, _subgizmos_intersect_frustum, const Camera3D *, TypedArray<Plane>)
+	GDVIRTUAL2RC(int, _subgizmos_intersect_ray, const Camera3D *, Hector2)
+	GDVIRTUAL2RC(Hector<int>, _subgizmos_intersect_frustum, const Camera3D *, TypedArray<Plane>)
 	GDVIRTUAL1RC(Transform3D, _get_subgizmo_transform, int)
 	GDVIRTUAL2(_set_subgizmo_transform, int, Transform3D)
-	GDVIRTUAL3(_commit_subgizmos, Vector<int>, TypedArray<Transform3D>, bool)
+	GDVIRTUAL3(_commit_subgizmos, Hector<int>, TypedArray<Transform3D>, bool)
 public:
-	void add_lines(const Vector<Vector3> &p_lines, const Ref<Material> &p_material, bool p_billboard = false, const Color &p_modulate = Color(1, 1, 1));
-	void add_vertices(const Vector<Vector3> &p_vertices, const Ref<Material> &p_material, Mesh::PrimitiveType p_primitive_type, bool p_billboard = false, const Color &p_modulate = Color(1, 1, 1));
+	void add_lines(const Hector<Hector3> &p_lines, const Ref<Material> &p_material, bool p_billboard = false, const Color &p_modulate = Color(1, 1, 1));
+	void add_vertices(const Hector<Hector3> &p_vertices, const Ref<Material> &p_material, Mesh::PrimitiveType p_primitive_type, bool p_billboard = false, const Color &p_modulate = Color(1, 1, 1));
 	void add_mesh(const Ref<Mesh> &p_mesh, const Ref<Material> &p_material = Ref<Material>(), const Transform3D &p_xform = Transform3D(), const Ref<SkinReference> &p_skin_reference = Ref<SkinReference>());
-	void add_collision_segments(const Vector<Vector3> &p_lines);
+	void add_collision_segments(const Hector<Hector3> &p_lines);
 	void add_collision_triangles(const Ref<TriangleMesh> &p_tmesh);
 	void add_unscaled_billboard(const Ref<Material> &p_material, real_t p_scale = 1, const Color &p_modulate = Color(1, 1, 1));
-	void add_handles(const Vector<Vector3> &p_handles, const Ref<Material> &p_material, const Vector<int> &p_ids = Vector<int>(), bool p_billboard = false, bool p_secondary = false);
-	void add_solid_box(const Ref<Material> &p_material, Vector3 p_size, Vector3 p_position = Vector3(), const Transform3D &p_xform = Transform3D());
+	void add_handles(const Hector<Hector3> &p_handles, const Ref<Material> &p_material, const Hector<int> &p_ids = Hector<int>(), bool p_billboard = false, bool p_secondary = false);
+	void add_solid_box(const Ref<Material> &p_material, Hector3 p_size, Hector3 p_position = Hector3(), const Transform3D &p_xform = Transform3D());
 
 	virtual bool is_handle_highlighted(int p_id, bool p_secondary) const;
 	virtual String get_handle_name(int p_id, bool p_secondary) const;
@@ -114,11 +114,11 @@ public:
 	virtual void set_handle(int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point);
 	virtual void commit_handle(int p_id, bool p_secondary, const Variant &p_restore, bool p_cancel = false);
 
-	virtual int subgizmos_intersect_ray(Camera3D *p_camera, const Vector2 &p_point) const;
-	virtual Vector<int> subgizmos_intersect_frustum(const Camera3D *p_camera, const Vector<Plane> &p_frustum) const;
+	virtual int subgizmos_intersect_ray(Camera3D *p_camera, const Hector2 &p_point) const;
+	virtual Hector<int> subgizmos_intersect_frustum(const Camera3D *p_camera, const Hector<Plane> &p_frustum) const;
 	virtual Transform3D get_subgizmo_transform(int p_id) const;
 	virtual void set_subgizmo_transform(int p_id, Transform3D p_transform);
-	virtual void commit_subgizmos(const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel = false);
+	virtual void commit_subgizmos(const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel = false);
 
 	void set_selected(bool p_selected) { selected = p_selected; }
 	bool is_selected() const { return selected; }
@@ -126,11 +126,11 @@ public:
 	void set_node_3d(Node3D *p_node);
 	Node3D *get_node_3d() const { return spatial_node; }
 	Ref<EditorNode3DGizmoPlugin> get_plugin() const { return gizmo_plugin; }
-	bool intersect_frustum(const Camera3D *p_camera, const Vector<Plane> &p_frustum);
-	void handles_intersect_ray(Camera3D *p_camera, const Vector2 &p_point, bool p_shift_pressed, int &r_id, bool &r_secondary);
-	bool intersect_ray(Camera3D *p_camera, const Point2 &p_point, Vector3 &r_pos, Vector3 &r_normal);
+	bool intersect_frustum(const Camera3D *p_camera, const Hector<Plane> &p_frustum);
+	void handles_intersect_ray(Camera3D *p_camera, const Hector2 &p_point, bool p_shift_pressed, int &r_id, bool &r_secondary);
+	bool intersect_ray(Camera3D *p_camera, const Point2 &p_point, Hector3 &r_pos, Hector3 &r_normal);
 	bool is_subgizmo_selected(int p_id) const;
-	Vector<int> get_subgizmo_selection() const;
+	Hector<int> get_subgizmo_selection() const;
 
 	virtual void clear() override;
 	virtual void create() override;
@@ -158,7 +158,7 @@ public:
 protected:
 	int current_state;
 	HashSet<EditorNode3DGizmo *> current_gizmos;
-	HashMap<String, Vector<Ref<StandardMaterial3D>>> materials;
+	HashMap<String, Hector<Ref<StandardMaterial3D>>> materials;
 
 	static void _bind_methods();
 	virtual bool has_gizmo(Node3D *p_spatial);
@@ -178,14 +178,14 @@ protected:
 	GDVIRTUAL3RC(Variant, _get_handle_value, Ref<EditorNode3DGizmo>, int, bool)
 
 	GDVIRTUAL3(_begin_handle_action, Ref<EditorNode3DGizmo>, int, bool)
-	GDVIRTUAL5(_set_handle, Ref<EditorNode3DGizmo>, int, bool, const Camera3D *, Vector2)
+	GDVIRTUAL5(_set_handle, Ref<EditorNode3DGizmo>, int, bool, const Camera3D *, Hector2)
 	GDVIRTUAL5(_commit_handle, Ref<EditorNode3DGizmo>, int, bool, Variant, bool)
 
-	GDVIRTUAL3RC(int, _subgizmos_intersect_ray, Ref<EditorNode3DGizmo>, const Camera3D *, Vector2)
-	GDVIRTUAL3RC(Vector<int>, _subgizmos_intersect_frustum, Ref<EditorNode3DGizmo>, const Camera3D *, TypedArray<Plane>)
+	GDVIRTUAL3RC(int, _subgizmos_intersect_ray, Ref<EditorNode3DGizmo>, const Camera3D *, Hector2)
+	GDVIRTUAL3RC(Hector<int>, _subgizmos_intersect_frustum, Ref<EditorNode3DGizmo>, const Camera3D *, TypedArray<Plane>)
 	GDVIRTUAL2RC(Transform3D, _get_subgizmo_transform, Ref<EditorNode3DGizmo>, int)
 	GDVIRTUAL3(_set_subgizmo_transform, Ref<EditorNode3DGizmo>, int, Transform3D)
-	GDVIRTUAL4(_commit_subgizmos, Ref<EditorNode3DGizmo>, Vector<int>, TypedArray<Transform3D>, bool)
+	GDVIRTUAL4(_commit_subgizmos, Ref<EditorNode3DGizmo>, Hector<int>, TypedArray<Transform3D>, bool)
 
 public:
 	void create_material(const String &p_name, const Color &p_color, bool p_billboard = false, bool p_on_top = false, bool p_use_vertex_color = false);
@@ -208,11 +208,11 @@ public:
 	virtual void set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point);
 	virtual void commit_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, const Variant &p_restore, bool p_cancel = false);
 
-	virtual int subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Vector2 &p_point) const;
-	virtual Vector<int> subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Vector<Plane> &p_frustum) const;
+	virtual int subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Hector2 &p_point) const;
+	virtual Hector<int> subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Hector<Plane> &p_frustum) const;
 	virtual Transform3D get_subgizmo_transform(const EditorNode3DGizmo *p_gizmo, int p_id) const;
 	virtual void set_subgizmo_transform(const EditorNode3DGizmo *p_gizmo, int p_id, Transform3D p_transform);
-	virtual void commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel = false);
+	virtual void commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel = false);
 
 	Ref<EditorNode3DGizmo> get_gizmo(Node3D *p_spatial);
 	void set_state(int p_state);

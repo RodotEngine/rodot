@@ -25,7 +25,7 @@
 		<member name="margin" type="float" setter="set_margin" getter="get_margin" default="0.0">
 			The collision margin for the shape.
 		</member>
-		<member name="motion" type="Vector2" setter="set_motion" getter="get_motion" default="Vector2(0, 0)">
+		<member name="motion" type="Hector2" setter="set_motion" getter="get_motion" default="Hector2(0, 0)">
 			The motion of the shape being queried for.
 		</member>
 		<member name="shape" type="Resource" setter="set_shape" getter="get_shape">

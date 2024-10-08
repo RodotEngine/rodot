@@ -127,7 +127,7 @@ void NavigationAgent2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_avoidance_priority"), &NavigationAgent2D::get_avoidance_priority);
 
 	ADD_GROUP("Pathfinding", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "target_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "target_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "path_desired_distance", PROPERTY_HINT_RANGE, "0.1,1000,0.01,or_greater,suffix:px"), "set_path_desired_distance", "get_path_desired_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "target_desired_distance", PROPERTY_HINT_RANGE, "0.1,1000,0.01,or_greater,suffix:px"), "set_target_desired_distance", "get_target_desired_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "path_max_distance", PROPERTY_HINT_RANGE, "10,1000,1,or_greater,suffix:px"), "set_path_max_distance", "get_path_max_distance");
@@ -140,7 +140,7 @@ void NavigationAgent2D::_bind_methods() {
 
 	ADD_GROUP("Avoidance", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "avoidance_enabled"), "set_avoidance_enabled", "get_avoidance_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius", PROPERTY_HINT_RANGE, "0.01,500,0.01,or_greater,suffix:px"), "set_radius", "get_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "neighbor_distance", PROPERTY_HINT_RANGE, "0.1,100000,0.01,or_greater,suffix:px"), "set_neighbor_distance", "get_neighbor_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_neighbors", PROPERTY_HINT_RANGE, "1,10000,1,or_greater"), "set_max_neighbors", "get_max_neighbors");
@@ -174,7 +174,7 @@ void NavigationAgent2D::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("waypoint_reached", PropertyInfo(Variant::DICTIONARY, "details")));
 	ADD_SIGNAL(MethodInfo("link_reached", PropertyInfo(Variant::DICTIONARY, "details")));
 	ADD_SIGNAL(MethodInfo("navigation_finished"));
-	ADD_SIGNAL(MethodInfo("velocity_computed", PropertyInfo(Variant::VECTOR2, "safe_velocity")));
+	ADD_SIGNAL(MethodInfo("velocity_computed", PropertyInfo(Variant::HECTOR2, "safe_velocity")));
 }
 
 #ifndef DISABLE_DEPRECATED
@@ -568,7 +568,7 @@ real_t NavigationAgent2D::get_path_max_distance() {
 	return path_max_distance;
 }
 
-void NavigationAgent2D::set_target_position(Vector2 p_position) {
+void NavigationAgent2D::set_target_position(Hector2 p_position) {
 	// Intentionally not checking for equality of the parameter, as we want to update the path even if the target position is the same in case the world changed.
 	// Revisit later when the navigation server can update the path without requesting a new path.
 
@@ -578,16 +578,16 @@ void NavigationAgent2D::set_target_position(Vector2 p_position) {
 	_request_repath();
 }
 
-Vector2 NavigationAgent2D::get_target_position() const {
+Hector2 NavigationAgent2D::get_target_position() const {
 	return target_position;
 }
 
-Vector2 NavigationAgent2D::get_next_path_position() {
+Hector2 NavigationAgent2D::get_next_path_position() {
 	_update_navigation();
 
-	const Vector<Vector2> &navigation_path = navigation_result->get_path();
+	const Hector<Hector2> &navigation_path = navigation_result->get_path();
 	if (navigation_path.size() == 0) {
-		ERR_FAIL_NULL_V_MSG(agent_parent, Vector2(), "The agent has no parent.");
+		ERR_FAIL_NULL_V_MSG(agent_parent, Hector2(), "The agent has no parent.");
 		return agent_parent->get_global_position();
 	} else {
 		return navigation_path[navigation_path_index];
@@ -617,20 +617,20 @@ bool NavigationAgent2D::is_navigation_finished() {
 	return navigation_finished;
 }
 
-Vector2 NavigationAgent2D::get_final_position() {
+Hector2 NavigationAgent2D::get_final_position() {
 	_update_navigation();
 	return _get_final_position();
 }
 
-Vector2 NavigationAgent2D::_get_final_position() const {
-	const Vector<Vector2> &navigation_path = navigation_result->get_path();
+Hector2 NavigationAgent2D::_get_final_position() const {
+	const Hector<Hector2> &navigation_path = navigation_result->get_path();
 	if (navigation_path.size() == 0) {
-		return Vector2();
+		return Hector2();
 	}
 	return navigation_path[navigation_path.size() - 1];
 }
 
-void NavigationAgent2D::set_velocity_forced(Vector2 p_velocity) {
+void NavigationAgent2D::set_velocity_forced(Hector2 p_velocity) {
 	// Intentionally not checking for equality of the parameter.
 	// We need to always submit the velocity to the navigation server, even when it is the same, in order to run avoidance every frame.
 	// Revisit later when the navigation server can update avoidance without users resubmitting the velocity.
@@ -639,13 +639,13 @@ void NavigationAgent2D::set_velocity_forced(Vector2 p_velocity) {
 	velocity_forced_submitted = true;
 }
 
-void NavigationAgent2D::set_velocity(const Vector2 p_velocity) {
+void NavigationAgent2D::set_velocity(const Hector2 p_velocity) {
 	velocity = p_velocity;
 	velocity_submitted = true;
 }
 
-void NavigationAgent2D::_avoidance_done(Vector3 p_new_velocity) {
-	const Vector2 new_safe_velocity = Vector2(p_new_velocity.x, p_new_velocity.z);
+void NavigationAgent2D::_avoidance_done(Hector3 p_new_velocity) {
+	const Hector2 new_safe_velocity = Hector2(p_new_velocity.x, p_new_velocity.z);
 	safe_velocity = new_safe_velocity;
 	emit_signal(SNAME("velocity_computed"), safe_velocity);
 }
@@ -671,7 +671,7 @@ void NavigationAgent2D::_update_navigation() {
 		return;
 	}
 
-	Vector2 origin = agent_parent->get_global_position();
+	Hector2 origin = agent_parent->get_global_position();
 
 	bool reload_path = false;
 
@@ -682,12 +682,12 @@ void NavigationAgent2D::_update_navigation() {
 	} else {
 		// Check if too far from the navigation path
 		if (navigation_path_index > 0) {
-			const Vector<Vector2> &navigation_path = navigation_result->get_path();
+			const Hector<Hector2> &navigation_path = navigation_result->get_path();
 
-			Vector2 segment[2];
+			Hector2 segment[2];
 			segment[0] = navigation_path[navigation_path_index - 1];
 			segment[1] = navigation_path[navigation_path_index];
-			Vector2 p = Geometry2D::get_closest_point_to_segment(origin, segment);
+			Hector2 p = Geometry2D::get_closest_point_to_segment(origin, segment);
 			if (origin.distance_to(p) >= path_max_distance) {
 				// To faraway, reload path
 				reload_path = true;
@@ -742,7 +742,7 @@ void NavigationAgent2D::_update_navigation() {
 	}
 }
 
-void NavigationAgent2D::_advance_waypoints(const Vector2 &p_origin) {
+void NavigationAgent2D::_advance_waypoints(const Hector2 &p_origin) {
 	if (last_waypoint_reached) {
 		return;
 	}
@@ -775,24 +775,24 @@ void NavigationAgent2D::_move_to_next_waypoint() {
 	navigation_path_index += 1;
 }
 
-bool NavigationAgent2D::_is_within_waypoint_distance(const Vector2 &p_origin) const {
-	const Vector<Vector2> &navigation_path = navigation_result->get_path();
+bool NavigationAgent2D::_is_within_waypoint_distance(const Hector2 &p_origin) const {
+	const Hector<Hector2> &navigation_path = navigation_result->get_path();
 	return p_origin.distance_to(navigation_path[navigation_path_index]) < path_desired_distance;
 }
 
-bool NavigationAgent2D::_is_within_target_distance(const Vector2 &p_origin) const {
+bool NavigationAgent2D::_is_within_target_distance(const Hector2 &p_origin) const {
 	return p_origin.distance_to(target_position) < target_desired_distance;
 }
 
 void NavigationAgent2D::_trigger_waypoint_reached() {
-	const Vector<Vector2> &navigation_path = navigation_result->get_path();
-	const Vector<int32_t> &navigation_path_types = navigation_result->get_path_types();
+	const Hector<Hector2> &navigation_path = navigation_result->get_path();
+	const Hector<int32_t> &navigation_path_types = navigation_result->get_path_types();
 	const TypedArray<RID> &navigation_path_rids = navigation_result->get_path_rids();
-	const Vector<int64_t> &navigation_path_owners = navigation_result->get_path_owner_ids();
+	const Hector<int64_t> &navigation_path_owners = navigation_result->get_path_owner_ids();
 
 	Dictionary details;
 
-	const Vector2 waypoint = navigation_path[navigation_path_index];
+	const Hector2 waypoint = navigation_path[navigation_path_index];
 	details[CoreStringName(position)] = waypoint;
 
 	int waypoint_type = -1;
@@ -821,8 +821,8 @@ void NavigationAgent2D::_trigger_waypoint_reached() {
 		if (waypoint_type == NavigationPathQueryResult2D::PATH_SEGMENT_TYPE_LINK) {
 			const NavigationLink2D *navlink = Object::cast_to<NavigationLink2D>(owner);
 			if (navlink) {
-				Vector2 link_global_start_position = navlink->get_global_start_position();
-				Vector2 link_global_end_position = navlink->get_global_end_position();
+				Hector2 link_global_start_position = navlink->get_global_start_position();
+				Hector2 link_global_end_position = navlink->get_global_end_position();
 				if (waypoint.distance_to(link_global_start_position) < waypoint.distance_to(link_global_end_position)) {
 					details[SNAME("link_entry_position")] = link_global_start_position;
 					details[SNAME("link_exit_position")] = link_global_end_position;
@@ -849,8 +849,8 @@ void NavigationAgent2D::_transition_to_navigation_finished() {
 
 	if (avoidance_enabled) {
 		NavigationServer2D::get_singleton()->agent_set_position(agent, agent_parent->get_global_position());
-		NavigationServer2D::get_singleton()->agent_set_velocity(agent, Vector2(0.0, 0.0));
-		NavigationServer2D::get_singleton()->agent_set_velocity_forced(agent, Vector2(0.0, 0.0));
+		NavigationServer2D::get_singleton()->agent_set_velocity(agent, Hector2(0.0, 0.0));
+		NavigationServer2D::get_singleton()->agent_set_velocity_forced(agent, Hector2(0.0, 0.0));
 	}
 
 	emit_signal(SNAME("navigation_finished"));
@@ -1032,7 +1032,7 @@ void NavigationAgent2D::_update_debug_path() {
 	RenderingServer::get_singleton()->canvas_item_set_z_index(debug_path_instance, RS::CANVAS_ITEM_Z_MAX - 1);
 	RenderingServer::get_singleton()->canvas_item_set_visible(debug_path_instance, agent_parent->is_visible_in_tree());
 
-	const Vector<Vector2> &navigation_path = navigation_result->get_path();
+	const Hector<Hector2> &navigation_path = navigation_result->get_path();
 
 	if (navigation_path.size() <= 1) {
 		return;
@@ -1043,7 +1043,7 @@ void NavigationAgent2D::_update_debug_path() {
 		debug_path_color = debug_path_custom_color;
 	}
 
-	Vector<Color> debug_path_colors;
+	Hector<Color> debug_path_colors;
 	debug_path_colors.resize(navigation_path.size());
 	debug_path_colors.fill(debug_path_color);
 
@@ -1062,7 +1062,7 @@ void NavigationAgent2D::_update_debug_path() {
 	}
 
 	for (int i = 0; i < navigation_path.size(); i++) {
-		const Vector2 &vert = navigation_path[i];
+		const Hector2 &vert = navigation_path[i];
 		Rect2 path_point_rect = Rect2(vert.x - half_point_size, vert.y - half_point_size, point_size, point_size);
 		RenderingServer::get_singleton()->canvas_item_add_rect(debug_path_instance, path_point_rect, debug_path_color);
 	}

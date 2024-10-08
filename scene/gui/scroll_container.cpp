@@ -80,10 +80,10 @@ void ScrollContainer::_cancel_drag() {
 	set_physics_process_internal(false);
 	drag_touching_deaccel = false;
 	drag_touching = false;
-	drag_speed = Vector2();
-	drag_accum = Vector2();
-	last_drag_accum = Vector2();
-	drag_from = Vector2();
+	drag_speed = Hector2();
+	drag_accum = Hector2();
+	last_drag_accum = Hector2();
+	drag_from = Hector2();
 
 	if (beyond_deadzone) {
 		emit_signal(SNAME("scroll_ended"));
@@ -177,10 +177,10 @@ void ScrollContainer::gui_input(const Ref<InputEvent> &p_gui_input) {
 				_cancel_drag();
 			}
 
-			drag_speed = Vector2();
-			drag_accum = Vector2();
-			last_drag_accum = Vector2();
-			drag_from = Vector2(prev_h_scroll, prev_v_scroll);
+			drag_speed = Hector2();
+			drag_accum = Hector2();
+			last_drag_accum = Hector2();
+			drag_from = Hector2(prev_h_scroll, prev_v_scroll);
 			drag_touching = true;
 			drag_touching_deaccel = false;
 			beyond_deadzone = false;
@@ -190,7 +190,7 @@ void ScrollContainer::gui_input(const Ref<InputEvent> &p_gui_input) {
 
 		} else {
 			if (drag_touching) {
-				if (drag_speed == Vector2()) {
+				if (drag_speed == Hector2()) {
 					_cancel_drag();
 				} else {
 					drag_touching_deaccel = true;
@@ -204,7 +204,7 @@ void ScrollContainer::gui_input(const Ref<InputEvent> &p_gui_input) {
 
 	if (mm.is_valid()) {
 		if (drag_touching && !drag_touching_deaccel) {
-			Vector2 motion = mm->get_relative();
+			Hector2 motion = mm->get_relative();
 			drag_accum -= motion;
 
 			if (beyond_deadzone || (h_scroll_enabled && Math::abs(drag_accum.x) > deadzone) || (v_scroll_enabled && Math::abs(drag_accum.y) > deadzone)) {
@@ -216,7 +216,7 @@ void ScrollContainer::gui_input(const Ref<InputEvent> &p_gui_input) {
 					// Resetting drag_accum here ensures smooth scrolling after reaching deadzone.
 					drag_accum = -motion;
 				}
-				Vector2 diff = drag_from + drag_accum;
+				Hector2 diff = drag_from + drag_accum;
 				if (h_scroll_enabled) {
 					h_scroll->scroll_to(diff.x);
 				} else {
@@ -291,7 +291,7 @@ void ScrollContainer::ensure_control_visible(Control *p_control) {
 	float side_margin = v_scroll->is_visible() ? v_scroll->get_size().x : 0.0f;
 	float bottom_margin = h_scroll->is_visible() ? h_scroll->get_size().y : 0.0f;
 
-	Vector2 diff = Vector2(MAX(MIN(other_rect.position.x - (is_layout_rtl() ? side_margin : 0.0f), global_rect.position.x), other_rect.position.x + other_rect.size.x - global_rect.size.x + (!is_layout_rtl() ? side_margin : 0.0f)),
+	Hector2 diff = Hector2(MAX(MIN(other_rect.position.x - (is_layout_rtl() ? side_margin : 0.0f), global_rect.position.x), other_rect.position.x + other_rect.size.x - global_rect.size.x + (!is_layout_rtl() ? side_margin : 0.0f)),
 			MAX(MIN(other_rect.position.y, global_rect.position.y), other_rect.position.y + other_rect.size.y - global_rect.size.y + bottom_margin));
 
 	set_h_scroll(get_h_scroll() + (diff.x - global_rect.position.x));
@@ -365,13 +365,13 @@ void ScrollContainer::_notification(int p_what) {
 		} break;
 
 		case NOTIFICATION_DRAW: {
-			draw_style_box(theme_cache.panel_style, Rect2(Vector2(), get_size()));
+			draw_style_box(theme_cache.panel_style, Rect2(Hector2(), get_size()));
 		} break;
 
 		case NOTIFICATION_INTERNAL_PHYSICS_PROCESS: {
 			if (drag_touching) {
 				if (drag_touching_deaccel) {
-					Vector2 pos = Vector2(h_scroll->get_value(), v_scroll->get_value());
+					Hector2 pos = Hector2(h_scroll->get_value(), v_scroll->get_value());
 					pos += drag_speed * get_physics_process_delta_time();
 
 					bool turnoff_h = false;
@@ -418,7 +418,7 @@ void ScrollContainer::_notification(int p_what) {
 						turnoff_v = true;
 					}
 
-					drag_speed = Vector2(sgn_x * val_x, sgn_y * val_y);
+					drag_speed = Hector2(sgn_x * val_x, sgn_y * val_y);
 
 					if (turnoff_h && turnoff_v) {
 						_cancel_drag();
@@ -426,7 +426,7 @@ void ScrollContainer::_notification(int p_what) {
 
 				} else {
 					if (time_since_motion == 0 || time_since_motion > 0.1) {
-						Vector2 diff = drag_accum - last_drag_accum;
+						Hector2 diff = drag_accum - last_drag_accum;
 						last_drag_accum = drag_accum;
 						drag_speed = diff / get_physics_process_delta_time();
 					}

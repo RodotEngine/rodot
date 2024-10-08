@@ -79,12 +79,12 @@ void DecalGizmoPlugin::begin_handle_action(const EditorNode3DGizmo *p_gizmo, int
 
 void DecalGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point) {
 	Decal *decal = Object::cast_to<Decal>(p_gizmo->get_node_3d());
-	Vector3 size = decal->get_size();
+	Hector3 size = decal->get_size();
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
-	Vector3 position;
+	Hector3 position;
 	helper->box_set_handle(sg, p_id, size, position);
 	decal->set_size(size);
 	decal->set_global_position(position);
@@ -99,34 +99,34 @@ void DecalGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> lines;
-	Vector3 size = decal->get_size();
+	Hector<Hector3> lines;
+	Hector3 size = decal->get_size();
 
 	AABB aabb;
 	aabb.position = -size / 2;
 	aabb.size = size;
 
 	for (int i = 0; i < 12; i++) {
-		Vector3 a, b;
+		Hector3 a, b;
 		aabb.get_edge(i, a, b);
 		if (a.y == b.y) {
 			lines.push_back(a);
 			lines.push_back(b);
 		} else {
-			Vector3 ah = a.lerp(b, 0.2);
+			Hector3 ah = a.lerp(b, 0.2);
 			lines.push_back(a);
 			lines.push_back(ah);
-			Vector3 bh = b.lerp(a, 0.2);
+			Hector3 bh = b.lerp(a, 0.2);
 			lines.push_back(b);
 			lines.push_back(bh);
 		}
 	}
 
 	float half_size_y = size.y / 2;
-	lines.push_back(Vector3(0, half_size_y, 0));
-	lines.push_back(Vector3(0, half_size_y * 1.2, 0));
+	lines.push_back(Hector3(0, half_size_y, 0));
+	lines.push_back(Hector3(0, half_size_y * 1.2, 0));
 
-	Vector<Vector3> handles = helper->box_get_handles(decal->get_size());
+	Hector<Hector3> handles = helper->box_get_handles(decal->get_size());
 	Ref<Material> material = get_material("decal_material", p_gizmo);
 	const Ref<Material> icon = get_material("decal_icon", p_gizmo);
 

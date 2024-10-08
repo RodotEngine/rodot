@@ -136,10 +136,10 @@ struct NamesCache {
 	StringName float_type = StaticCString::create("float");
 	StringName void_type = StaticCString::create("void");
 	StringName vararg_stub_type = StaticCString::create("@VarArg@");
-	StringName vector2_type = StaticCString::create("Vector2");
+	StringName Hector2_type = StaticCString::create("Hector2");
 	StringName rect2_type = StaticCString::create("Rect2");
-	StringName vector3_type = StaticCString::create("Vector3");
-	StringName vector4_type = StaticCString::create("Vector4");
+	StringName Hector3_type = StaticCString::create("Hector3");
+	StringName Hector4_type = StaticCString::create("Hector4");
 
 	// Object not included as it must be checked for all derived classes
 	static constexpr int nullable_types_count = 18;
@@ -159,10 +159,10 @@ struct NamesCache {
 		StaticCString::create(_STR(PackedFloat32Array)),
 		StaticCString::create(_STR(PackedFloat64Array)),
 		StaticCString::create(_STR(PackedStringArray)),
-		StaticCString::create(_STR(PackedVector2Array)),
-		StaticCString::create(_STR(PackedVector3Array)),
+		StaticCString::create(_STR(PackedHector2Array)),
+		StaticCString::create(_STR(PackedHector3Array)),
 		StaticCString::create(_STR(PackedColorArray)),
-		StaticCString::create(_STR(PackedVector4Array)),
+		StaticCString::create(_STR(PackedHector4Array)),
 	};
 
 	bool is_nullable_type(const StringName &p_type) const {
@@ -179,8 +179,8 @@ struct NamesCache {
 typedef HashMap<StringName, ExposedClass> ExposedClasses;
 
 struct Context {
-	Vector<StringName> enum_types;
-	Vector<StringName> builtin_types;
+	Hector<StringName> enum_types;
+	Hector<StringName> builtin_types;
 	ExposedClasses exposed_classes;
 	List<EnumData> global_enums;
 	NamesCache names_cache;
@@ -245,10 +245,10 @@ bool arg_default_value_is_assignable_to_type(const Context &p_context, const Var
 		case Variant::PLANE:
 		case Variant::AABB:
 		case Variant::COLOR:
-		case Variant::VECTOR2:
+		case Variant::HECTOR2:
 		case Variant::RECT2:
-		case Variant::VECTOR3:
-		case Variant::VECTOR4:
+		case Variant::HECTOR3:
+		case Variant::HECTOR4:
 		case Variant::PROJECTION:
 		case Variant::RID:
 		case Variant::ARRAY:
@@ -259,26 +259,26 @@ bool arg_default_value_is_assignable_to_type(const Context &p_context, const Var
 		case Variant::PACKED_FLOAT32_ARRAY:
 		case Variant::PACKED_FLOAT64_ARRAY:
 		case Variant::PACKED_STRING_ARRAY:
-		case Variant::PACKED_VECTOR2_ARRAY:
-		case Variant::PACKED_VECTOR3_ARRAY:
+		case Variant::PACKED_Hector2_ARRAY:
+		case Variant::PACKED_Hector3_ARRAY:
 		case Variant::PACKED_COLOR_ARRAY:
-		case Variant::PACKED_VECTOR4_ARRAY:
+		case Variant::PACKED_Hector4_ARRAY:
 		case Variant::CALLABLE:
 		case Variant::SIGNAL:
 			return p_arg_type.name == Variant::get_type_name(p_val.get_type());
 		case Variant::OBJECT:
 			return p_context.find_exposed_class(p_arg_type);
-		case Variant::VECTOR2I:
-			return p_arg_type.name == p_context.names_cache.vector2_type ||
+		case Variant::HECTOR2I:
+			return p_arg_type.name == p_context.names_cache.Hector2_type ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
 		case Variant::RECT2I:
 			return p_arg_type.name == p_context.names_cache.rect2_type ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
-		case Variant::VECTOR3I:
-			return p_arg_type.name == p_context.names_cache.vector3_type ||
+		case Variant::HECTOR3I:
+			return p_arg_type.name == p_context.names_cache.Hector3_type ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
-		case Variant::VECTOR4I:
-			return p_arg_type.name == p_context.names_cache.vector4_type ||
+		case Variant::HECTOR4I:
+			return p_arg_type.name == p_context.names_cache.Hector4_type ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
 		case Variant::VARIANT_MAX:
 			break;
@@ -300,10 +300,10 @@ bool arg_default_value_is_valid_data(const Variant &p_val, String *r_err_msg = n
 		case Variant::PACKED_FLOAT32_ARRAY:
 		case Variant::PACKED_FLOAT64_ARRAY:
 		case Variant::PACKED_STRING_ARRAY:
-		case Variant::PACKED_VECTOR2_ARRAY:
-		case Variant::PACKED_VECTOR3_ARRAY:
+		case Variant::PACKED_Hector2_ARRAY:
+		case Variant::PACKED_Hector3_ARRAY:
 		case Variant::PACKED_COLOR_ARRAY:
-		case Variant::PACKED_VECTOR4_ARRAY:
+		case Variant::PACKED_Hector4_ARRAY:
 		case Variant::CALLABLE:
 		case Variant::SIGNAL:
 		case Variant::OBJECT:
@@ -865,12 +865,12 @@ void add_global_enums(Context &r_context) {
 
 	// HARDCODED
 	List<StringName> hardcoded_enums;
-	hardcoded_enums.push_back("Vector2.Axis");
-	hardcoded_enums.push_back("Vector2i.Axis");
-	hardcoded_enums.push_back("Vector3.Axis");
-	hardcoded_enums.push_back("Vector3i.Axis");
+	hardcoded_enums.push_back("Hector2.Axis");
+	hardcoded_enums.push_back("Hector2i.Axis");
+	hardcoded_enums.push_back("Hector3.Axis");
+	hardcoded_enums.push_back("Hector3i.Axis");
 	for (const StringName &E : hardcoded_enums) {
-		// These enums are not generated and must be written manually (e.g.: Vector3.Axis)
+		// These enums are not generated and must be written manually (e.g.: Hector3.Axis)
 		// Here, we assume core types do not begin with underscore
 		r_context.enum_types.push_back(E);
 	}

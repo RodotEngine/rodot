@@ -112,7 +112,7 @@ private:
 			String tooltip;
 		};
 
-		Vector<Button> buttons;
+		Hector<Button> buttons;
 
 		Ref<Font> custom_font;
 		int custom_font_size = -1;
@@ -126,7 +126,7 @@ private:
 		void draw_icon(const RID &p_where, const Point2 &p_pos, const Size2 &p_size = Size2(), const Color &p_color = Color()) const;
 	};
 
-	Vector<Cell> cells;
+	Hector<Cell> cells;
 
 	bool collapsed = false; // won't show children
 	bool visible = true;
@@ -140,7 +140,7 @@ private:
 	TreeItem *first_child = nullptr;
 	TreeItem *last_child = nullptr;
 
-	Vector<TreeItem *> children_cache;
+	Hector<TreeItem *> children_cache;
 	bool is_root = false; // for tree root
 	Tree *tree = nullptr; // tree (for reference)
 
@@ -447,12 +447,12 @@ private:
 	int pressed_button = -1;
 	bool pressing_for_editor = false;
 	String pressing_for_editor_text;
-	Vector2 pressing_pos;
+	Hector2 pressing_pos;
 	Rect2 pressing_item_rect;
 
 	float range_drag_base = 0.0;
 	bool range_drag_enabled = false;
-	Vector2 range_drag_capture_pos;
+	Hector2 range_drag_capture_pos;
 
 	bool propagate_mouse_activated = false;
 
@@ -503,7 +503,7 @@ private:
 	uint64_t focus_in_id = 0;
 	PopupMenu *popup_menu = nullptr;
 
-	Vector<ColumnInfo> columns;
+	Hector<ColumnInfo> columns;
 
 	Timer *range_click_timer = nullptr;
 	TreeItem *range_item_last = nullptr;
@@ -673,7 +673,7 @@ private:
 	float drag_speed = 0.0;
 	float drag_from = 0.0;
 	float drag_accum = 0.0;
-	Vector2 last_speed;
+	Hector2 last_speed;
 	bool drag_touching = false;
 	bool drag_touching_deaccel = false;
 	bool click_handled = false;

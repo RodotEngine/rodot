@@ -73,7 +73,7 @@ private:
 	Code code;
 	int line;
 	StringName subject;
-	Vector<Variant> extra_args;
+	Hector<Variant> extra_args;
 
 public:
 	Code get_code() const;
@@ -81,13 +81,13 @@ public:
 	const StringName &get_subject() const;
 	String get_message() const;
 	String get_name() const;
-	Vector<Variant> get_extra_args() const;
+	Hector<Variant> get_extra_args() const;
 
 	static String get_name_from_code(Code p_code);
 	static Code get_code_from_name(const String &p_name);
 	static CodeFlags get_flags_from_codemap(const HashMap<Code, bool> &p_map);
 
-	ShaderWarning(Code p_code = WARNING_MAX, int p_line = -1, const StringName &p_subject = "", const Vector<Variant> &p_extra_args = Vector<Variant>());
+	ShaderWarning(Code p_code = WARNING_MAX, int p_line = -1, const StringName &p_subject = "", const Hector<Variant> &p_extra_args = Hector<Variant>());
 };
 
 #endif // DEBUG_ENABLED

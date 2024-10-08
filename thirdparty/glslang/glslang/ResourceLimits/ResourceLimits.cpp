@@ -54,11 +54,11 @@ const TBuiltInResource DefaultTBuiltInResource = {
     /* .MaxTextureImageUnits = */ 32,
     /* .MaxFragmentUniformComponents = */ 4096,
     /* .MaxDrawBuffers = */ 32,
-    /* .MaxVertexUniformVectors = */ 128,
-    /* .MaxVaryingVectors = */ 8,
-    /* .MaxFragmentUniformVectors = */ 16,
-    /* .MaxVertexOutputVectors = */ 16,
-    /* .MaxFragmentInputVectors = */ 15,
+    /* .MaxVertexUniformHectors = */ 128,
+    /* .MaxVaryingHectors = */ 8,
+    /* .MaxFragmentUniformHectors = */ 16,
+    /* .MaxVertexOutputHectors = */ 16,
+    /* .MaxFragmentInputHectors = */ 15,
     /* .MinProgramTexelOffset = */ -8,
     /* .MaxProgramTexelOffset = */ 7,
     /* .MaxClipDistances = */ 8,
@@ -150,11 +150,11 @@ const TBuiltInResource DefaultTBuiltInResource = {
         /* .whileLoops = */ 1,
         /* .doWhileLoops = */ 1,
         /* .generalUniformIndexing = */ 1,
-        /* .generalAttributeMatrixVectorIndexing = */ 1,
+        /* .generalAttributeMatrixHectorIndexing = */ 1,
         /* .generalVaryingIndexing = */ 1,
         /* .generalSamplerIndexing = */ 1,
         /* .generalVariableIndexing = */ 1,
-        /* .generalConstantMatrixVectorIndexing = */ 1,
+        /* .generalConstantMatrixHectorIndexing = */ 1,
     }};
 
 std::string GetDefaultTBuiltInResourceString()
@@ -173,11 +173,11 @@ std::string GetDefaultTBuiltInResourceString()
             << "MaxTextureImageUnits "                      << DefaultTBuiltInResource.maxTextureImageUnits << "\n"
             << "MaxFragmentUniformComponents "              << DefaultTBuiltInResource.maxFragmentUniformComponents << "\n"
             << "MaxDrawBuffers "                            << DefaultTBuiltInResource.maxDrawBuffers << "\n"
-            << "MaxVertexUniformVectors "                   << DefaultTBuiltInResource.maxVertexUniformVectors << "\n"
-            << "MaxVaryingVectors "                         << DefaultTBuiltInResource.maxVaryingVectors << "\n"
-            << "MaxFragmentUniformVectors "                 << DefaultTBuiltInResource.maxFragmentUniformVectors << "\n"
-            << "MaxVertexOutputVectors "                    << DefaultTBuiltInResource.maxVertexOutputVectors << "\n"
-            << "MaxFragmentInputVectors "                   << DefaultTBuiltInResource.maxFragmentInputVectors << "\n"
+            << "MaxVertexUniformHectors "                   << DefaultTBuiltInResource.maxVertexUniformHectors << "\n"
+            << "MaxVaryingHectors "                         << DefaultTBuiltInResource.maxVaryingHectors << "\n"
+            << "MaxFragmentUniformHectors "                 << DefaultTBuiltInResource.maxFragmentUniformHectors << "\n"
+            << "MaxVertexOutputHectors "                    << DefaultTBuiltInResource.maxVertexOutputHectors << "\n"
+            << "MaxFragmentInputHectors "                   << DefaultTBuiltInResource.maxFragmentInputHectors << "\n"
             << "MinProgramTexelOffset "                     << DefaultTBuiltInResource.minProgramTexelOffset << "\n"
             << "MaxProgramTexelOffset "                     << DefaultTBuiltInResource.maxProgramTexelOffset << "\n"
             << "MaxClipDistances "                          << DefaultTBuiltInResource.maxClipDistances << "\n"
@@ -267,11 +267,11 @@ std::string GetDefaultTBuiltInResourceString()
             << "whileLoops "                                << DefaultTBuiltInResource.limits.whileLoops << "\n"
             << "doWhileLoops "                              << DefaultTBuiltInResource.limits.doWhileLoops << "\n"
             << "generalUniformIndexing "                    << DefaultTBuiltInResource.limits.generalUniformIndexing << "\n"
-            << "generalAttributeMatrixVectorIndexing "      << DefaultTBuiltInResource.limits.generalAttributeMatrixVectorIndexing << "\n"
+            << "generalAttributeMatrixHectorIndexing "      << DefaultTBuiltInResource.limits.generalAttributeMatrixHectorIndexing << "\n"
             << "generalVaryingIndexing "                    << DefaultTBuiltInResource.limits.generalVaryingIndexing << "\n"
             << "generalSamplerIndexing "                    << DefaultTBuiltInResource.limits.generalSamplerIndexing << "\n"
             << "generalVariableIndexing "                   << DefaultTBuiltInResource.limits.generalVariableIndexing << "\n"
-            << "generalConstantMatrixVectorIndexing "       << DefaultTBuiltInResource.limits.generalConstantMatrixVectorIndexing << "\n"
+            << "generalConstantMatrixHectorIndexing "       << DefaultTBuiltInResource.limits.generalConstantMatrixHectorIndexing << "\n"
       ;
 
     return ostream.str();
@@ -327,16 +327,16 @@ void DecodeResourceLimits(TBuiltInResource* resources, char* config)
             resources->maxFragmentUniformComponents = value;
         else if (tokenStr == "MaxDrawBuffers")
             resources->maxDrawBuffers = value;
-        else if (tokenStr == "MaxVertexUniformVectors")
-            resources->maxVertexUniformVectors = value;
-        else if (tokenStr == "MaxVaryingVectors")
-            resources->maxVaryingVectors = value;
-        else if (tokenStr == "MaxFragmentUniformVectors")
-            resources->maxFragmentUniformVectors = value;
-        else if (tokenStr == "MaxVertexOutputVectors")
-            resources->maxVertexOutputVectors = value;
-        else if (tokenStr == "MaxFragmentInputVectors")
-            resources->maxFragmentInputVectors = value;
+        else if (tokenStr == "MaxVertexUniformHectors")
+            resources->maxVertexUniformHectors = value;
+        else if (tokenStr == "MaxVaryingHectors")
+            resources->maxVaryingHectors = value;
+        else if (tokenStr == "MaxFragmentUniformHectors")
+            resources->maxFragmentUniformHectors = value;
+        else if (tokenStr == "MaxVertexOutputHectors")
+            resources->maxVertexOutputHectors = value;
+        else if (tokenStr == "MaxFragmentInputHectors")
+            resources->maxFragmentInputHectors = value;
         else if (tokenStr == "MinProgramTexelOffset")
             resources->minProgramTexelOffset = value;
         else if (tokenStr == "MaxProgramTexelOffset")
@@ -515,16 +515,16 @@ void DecodeResourceLimits(TBuiltInResource* resources, char* config)
             resources->limits.doWhileLoops = (value != 0);
         else if (tokenStr == "generalUniformIndexing")
             resources->limits.generalUniformIndexing = (value != 0);
-        else if (tokenStr == "generalAttributeMatrixVectorIndexing")
-            resources->limits.generalAttributeMatrixVectorIndexing = (value != 0);
+        else if (tokenStr == "generalAttributeMatrixHectorIndexing")
+            resources->limits.generalAttributeMatrixHectorIndexing = (value != 0);
         else if (tokenStr == "generalVaryingIndexing")
             resources->limits.generalVaryingIndexing = (value != 0);
         else if (tokenStr == "generalSamplerIndexing")
             resources->limits.generalSamplerIndexing = (value != 0);
         else if (tokenStr == "generalVariableIndexing")
             resources->limits.generalVariableIndexing = (value != 0);
-        else if (tokenStr == "generalConstantMatrixVectorIndexing")
-            resources->limits.generalConstantMatrixVectorIndexing = (value != 0);
+        else if (tokenStr == "generalConstantMatrixHectorIndexing")
+            resources->limits.generalConstantMatrixHectorIndexing = (value != 0);
         else
             printf("Warning: unrecognized limit (%s) in configuration file.\n", tokenStr.c_str());
 

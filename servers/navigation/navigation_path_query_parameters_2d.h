@@ -71,11 +71,11 @@ public:
 	void set_map(const RID &p_map);
 	const RID &get_map() const;
 
-	void set_start_position(const Vector2 p_start_position);
-	Vector2 get_start_position() const;
+	void set_start_position(const Hector2 p_start_position);
+	Hector2 get_start_position() const;
 
-	void set_target_position(const Vector2 p_target_position);
-	Vector2 get_target_position() const;
+	void set_target_position(const Hector2 p_target_position);
+	Hector2 get_target_position() const;
 
 	void set_navigation_layers(uint32_t p_navigation_layers);
 	uint32_t get_navigation_layers() const;

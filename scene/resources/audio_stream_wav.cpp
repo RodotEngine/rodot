@@ -565,7 +565,7 @@ bool AudioStreamWAV::is_monophonic() const {
 	return false;
 }
 
-void AudioStreamWAV::set_data(const Vector<uint8_t> &p_data) {
+void AudioStreamWAV::set_data(const Hector<uint8_t> &p_data) {
 	AudioServer::get_singleton()->lock();
 
 	int src_data_len = p_data.size();
@@ -581,8 +581,8 @@ void AudioStreamWAV::set_data(const Vector<uint8_t> &p_data) {
 	AudioServer::get_singleton()->unlock();
 }
 
-Vector<uint8_t> AudioStreamWAV::get_data() const {
-	Vector<uint8_t> pv;
+Hector<uint8_t> AudioStreamWAV::get_data() const {
+	Hector<uint8_t> pv;
 
 	if (!data.is_empty()) {
 		pv.resize(data_bytes);
@@ -648,7 +648,7 @@ Error AudioStreamWAV::save_to_wav(const String &p_path) {
 	file->store_32(sub_chunk_2_size); //Subchunk2Size
 
 	// Add data
-	Vector<uint8_t> stream_data = get_data();
+	Hector<uint8_t> stream_data = get_data();
 	const uint8_t *read_data = stream_data.ptr();
 	switch (format) {
 		case AudioStreamWAV::FORMAT_8_BITS:

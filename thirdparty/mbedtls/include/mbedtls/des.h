@@ -282,7 +282,7 @@ int mbedtls_des_crypt_ecb(mbedtls_des_context *ctx,
  * \param ctx      DES context
  * \param mode     MBEDTLS_DES_ENCRYPT or MBEDTLS_DES_DECRYPT
  * \param length   length of the input data
- * \param iv       initialization vector (updated after use)
+ * \param iv       initialization Hector (updated after use)
  * \param input    buffer holding the input data
  * \param output   buffer holding the output data
  *
@@ -332,7 +332,7 @@ int mbedtls_des3_crypt_ecb(mbedtls_des3_context *ctx,
  * \param ctx      3DES context
  * \param mode     MBEDTLS_DES_ENCRYPT or MBEDTLS_DES_DECRYPT
  * \param length   length of the input data
- * \param iv       initialization vector (updated after use)
+ * \param iv       initialization Hector (updated after use)
  * \param input    buffer holding the input data
  * \param output   buffer holding the output data
  *

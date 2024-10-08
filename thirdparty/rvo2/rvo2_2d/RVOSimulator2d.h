@@ -40,9 +40,9 @@
 
 #include <cstddef>
 #include <limits>
-#include <vector>
+#include <Vector>
 
-#include "Vector2.h"
+#include "Hector2.h"
 
 namespace RVO2D {
 	/**
@@ -61,12 +61,12 @@ namespace RVO2D {
 		/**
 		 * \brief     A point on the directed line.
 		 */
-		Vector2 point;
+		Hector2 point;
 
 		/**
 		 * \brief     The direction of the directed line.
 		 */
-		Vector2 direction;
+		Hector2 direction;
 	};
 
 	class Agent2D;
@@ -128,7 +128,7 @@ namespace RVO2D {
 		 */
 		RVOSimulator2D(float timeStep, float neighborDist, size_t maxNeighbors,
 					 float timeHorizon, float timeHorizonObst, float radius,
-					 float maxSpeed, const Vector2 &velocity = Vector2());
+					 float maxSpeed, const Hector2 &velocity = Hector2());
 
 		/**
 		 * \brief      Destroys this simulator instance.
@@ -143,7 +143,7 @@ namespace RVO2D {
 		 * \return     The number of the agent, or RVO2D::RVO2D_ERROR when the agent
 		 *             defaults have not been set.
 		 */
-		size_t addAgent(const Vector2 &position);
+		size_t addAgent(const Hector2 &position);
 
 		/**
 		 * \brief      Adds a new agent to the simulation.
@@ -186,10 +186,10 @@ namespace RVO2D {
 		 *                             of this agent (optional).
 		 * \return     The number of the agent.
 		 */
-		size_t addAgent(const Vector2 &position, float neighborDist,
+		size_t addAgent(const Hector2 &position, float neighborDist,
 						size_t maxNeighbors, float timeHorizon,
 						float timeHorizonObst, float radius, float maxSpeed,
-						const Vector2 &velocity = Vector2());
+						const Hector2 &velocity = Hector2());
 
 		/**
 		 * \brief      Adds a new obstacle to the simulation.
@@ -201,7 +201,7 @@ namespace RVO2D {
 		 *             the environment, the vertices should be listed in clockwise
 		 *             order.
 		 */
-		size_t addObstacle(const std::vector<Vector2> &vertices);
+		size_t addObstacle(const std::vector<Hector2> &vertices);
 
 		/**
 		 * \brief      Lets the simulator perform a simulation step and updates the
@@ -311,7 +311,7 @@ namespace RVO2D {
 		 * \return     The present two-dimensional position of the (center of the)
 		 *             agent.
 		 */
-		const Vector2 &getAgentPosition(size_t agentNo) const;
+		const Hector2 &getAgentPosition(size_t agentNo) const;
 
 		/**
 		 * \brief      Returns the two-dimensional preferred velocity of a
@@ -321,7 +321,7 @@ namespace RVO2D {
 		 *                             retrieved.
 		 * \return     The present two-dimensional preferred velocity of the agent.
 		 */
-		const Vector2 &getAgentPrefVelocity(size_t agentNo) const;
+		const Hector2 &getAgentPrefVelocity(size_t agentNo) const;
 
 		/**
 		 * \brief      Returns the radius of a specified agent.
@@ -358,7 +358,7 @@ namespace RVO2D {
 		 *                             retrieved.
 		 * \return     The present two-dimensional linear velocity of the agent.
 		 */
-		const Vector2 &getAgentVelocity(size_t agentNo) const;
+		const Hector2 &getAgentVelocity(size_t agentNo) const;
 
 		/**
 		 * \brief      Returns the global time of the simulation.
@@ -386,7 +386,7 @@ namespace RVO2D {
 		 * \return     The two-dimensional position of the specified obstacle
 		 *             vertex.
 		 */
-		const Vector2 &getObstacleVertex(size_t vertexNo) const;
+		const Hector2 &getObstacleVertex(size_t vertexNo) const;
 
 		/**
 		 * \brief      Returns the number of the obstacle vertex succeeding the
@@ -435,7 +435,7 @@ namespace RVO2D {
 		 *             visible. Returns true when the obstacles have not been
 		 *             processed.
 		 */
-		bool queryVisibility(const Vector2 &point1, const Vector2 &point2,
+		bool queryVisibility(const Hector2 &point1, const Hector2 &point2,
 							 float radius = 0.0f) const;
 
 		/**
@@ -480,7 +480,7 @@ namespace RVO2D {
 		void setAgentDefaults(float neighborDist, size_t maxNeighbors,
 							  float timeHorizon, float timeHorizonObst,
 							  float radius, float maxSpeed,
-							  const Vector2 &velocity = Vector2());
+							  const Hector2 &velocity = Hector2());
 
 		/**
 		 * \brief      Sets the maximum neighbor count of a specified agent.
@@ -515,7 +515,7 @@ namespace RVO2D {
 		 * \param      position        The replacement of the two-dimensional
 		 *                             position.
 		 */
-		void setAgentPosition(size_t agentNo, const Vector2 &position);
+		void setAgentPosition(size_t agentNo, const Hector2 &position);
 
 		/**
 		 * \brief      Sets the two-dimensional preferred velocity of a
@@ -526,7 +526,7 @@ namespace RVO2D {
 		 * \param      prefVelocity    The replacement of the two-dimensional
 		 *                             preferred velocity.
 		 */
-		void setAgentPrefVelocity(size_t agentNo, const Vector2 &prefVelocity);
+		void setAgentPrefVelocity(size_t agentNo, const Hector2 &prefVelocity);
 
 		/**
 		 * \brief      Sets the radius of a specified agent.
@@ -566,7 +566,7 @@ namespace RVO2D {
 		 * \param      velocity        The replacement two-dimensional linear
 		 *                             velocity.
 		 */
-		void setAgentVelocity(size_t agentNo, const Vector2 &velocity);
+		void setAgentVelocity(size_t agentNo, const Hector2 &velocity);
 
 		/**
 		 * \brief      Sets the time step of the simulation.

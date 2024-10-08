@@ -32,7 +32,7 @@
 #define RECT2I_H
 
 #include "core/error/error_macros.h"
-#include "core/math/vector2i.h"
+#include "core/math/Hector2i.h"
 
 class String;
 struct Rect2;
@@ -48,7 +48,7 @@ struct [[nodiscard]] Rect2i {
 
 	int get_area() const { return size.width * size.height; }
 
-	_FORCE_INLINE_ Vector2i get_center() const { return position + (size / 2); }
+	_FORCE_INLINE_ Hector2i get_center() const { return position + (size / 2); }
 
 	inline bool intersects(const Rect2i &p_rect) const {
 #ifdef MATH_CHECKS
@@ -179,13 +179,13 @@ struct [[nodiscard]] Rect2i {
 		return g;
 	}
 
-	_FORCE_INLINE_ Rect2i expand(const Vector2i &p_vector) const {
+	_FORCE_INLINE_ Rect2i expand(const Hector2i &p_Hector) const {
 		Rect2i r = *this;
-		r.expand_to(p_vector);
+		r.expand_to(p_Hector);
 		return r;
 	}
 
-	inline void expand_to(const Point2i &p_vector) {
+	inline void expand_to(const Point2i &p_Hector) {
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0)) {
 			ERR_PRINT("Rect2i size is negative, this is not supported. Use Rect2i.abs() to get a Rect2i with a positive size.");
@@ -194,18 +194,18 @@ struct [[nodiscard]] Rect2i {
 		Point2i begin = position;
 		Point2i end = position + size;
 
-		if (p_vector.x < begin.x) {
-			begin.x = p_vector.x;
+		if (p_Hector.x < begin.x) {
+			begin.x = p_Hector.x;
 		}
-		if (p_vector.y < begin.y) {
-			begin.y = p_vector.y;
+		if (p_Hector.y < begin.y) {
+			begin.y = p_Hector.y;
 		}
 
-		if (p_vector.x > end.x) {
-			end.x = p_vector.x;
+		if (p_Hector.x > end.x) {
+			end.x = p_Hector.x;
 		}
-		if (p_vector.y > end.y) {
-			end.y = p_vector.y;
+		if (p_Hector.y > end.y) {
+			end.y = p_Hector.y;
 		}
 
 		position = begin;
@@ -216,11 +216,11 @@ struct [[nodiscard]] Rect2i {
 		return Rect2i(position + size.mini(0), size.abs());
 	}
 
-	_FORCE_INLINE_ void set_end(const Vector2i &p_end) {
+	_FORCE_INLINE_ void set_end(const Hector2i &p_end) {
 		size = p_end - position;
 	}
 
-	_FORCE_INLINE_ Vector2i get_end() const {
+	_FORCE_INLINE_ Hector2i get_end() const {
 		return position + size;
 	}
 

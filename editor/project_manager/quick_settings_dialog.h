@@ -44,12 +44,12 @@ class QuickSettingsDialog : public AcceptDialog {
 	GDCLASS(QuickSettingsDialog, AcceptDialog);
 
 #ifndef ANDROID_ENABLED
-	Vector<String> editor_languages;
+	Hector<String> editor_languages;
 #endif
-	Vector<String> editor_themes;
-	Vector<String> editor_scales;
-	Vector<String> editor_network_modes;
-	Vector<String> editor_directory_naming_conventions;
+	Hector<String> editor_themes;
+	Hector<String> editor_scales;
+	Hector<String> editor_network_modes;
+	Hector<String> editor_directory_naming_conventions;
 
 	void _fetch_setting_values();
 	void _update_current_values();

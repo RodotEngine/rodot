@@ -116,7 +116,7 @@ bool NavigationLink2DEditor::forward_canvas_gui_input(const Ref<InputEvent> &p_e
 
 	Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
-		Vector2 point = canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mm->get_position()));
+		Hector2 point = canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mm->get_position()));
 		point = node->get_global_transform().affine_inverse().xform(point);
 
 		if (start_grabbed) {
@@ -143,8 +143,8 @@ void NavigationLink2DEditor::forward_canvas_draw_over_viewport(Control *p_overla
 	}
 
 	Transform2D gt = canvas_item_editor->get_canvas_transform() * node->get_global_transform();
-	Vector2 global_start_position = gt.xform(node->get_start_position());
-	Vector2 global_end_position = gt.xform(node->get_end_position());
+	Hector2 global_start_position = gt.xform(node->get_start_position());
+	Hector2 global_end_position = gt.xform(node->get_end_position());
 
 	// Only drawing the handles here, since the debug rendering will fill in the rest.
 	const Ref<Texture2D> handle = get_editor_theme_icon(SNAME("EditorHandle"));

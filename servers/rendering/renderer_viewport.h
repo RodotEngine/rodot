@@ -31,7 +31,7 @@
 #ifndef RENDERER_VIEWPORT_H
 #define RENDERER_VIEWPORT_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/self_list.h"
 #include "servers/rendering/renderer_scene_render.h"
@@ -194,20 +194,20 @@ public:
 
 	mutable RID_Owner<Viewport, true> viewport_owner;
 
-	Vector<Viewport *> active_viewports;
-	Vector<Viewport *> sorted_active_viewports;
+	Hector<Viewport *> active_viewports;
+	Hector<Viewport *> sorted_active_viewports;
 	bool sorted_active_viewports_dirty = false;
 
 	int total_objects_drawn = 0;
 	int total_vertices_drawn = 0;
 	int total_draw_calls_used = 0;
 
-	int num_viewports_with_motion_vectors = 0;
+	int num_viewports_with_motion_Hectors = 0;
 
 private:
-	Vector<Viewport *> _sort_active_viewports();
+	Hector<Viewport *> _sort_active_viewports();
 	void _viewport_set_size(Viewport *p_viewport, int p_width, int p_height, uint32_t p_view_count);
-	bool _viewport_requires_motion_vectors(Viewport *p_viewport);
+	bool _viewport_requires_motion_Hectors(Viewport *p_viewport);
 	void _configure_3d_render_buffers(Viewport *p_viewport);
 	void _draw_3d(Viewport *p_viewport);
 	void _draw_viewport(Viewport *p_viewport);
@@ -312,7 +312,7 @@ public:
 	int get_total_objects_drawn() const;
 	int get_total_primitives_drawn() const;
 	int get_total_draw_calls_used() const;
-	int get_num_viewports_with_motion_vectors() const;
+	int get_num_viewports_with_motion_Hectors() const;
 
 	// Workaround for setting this on thread.
 	void call_set_vsync_mode(DisplayServer::VSyncMode p_mode, DisplayServer::WindowID p_window);

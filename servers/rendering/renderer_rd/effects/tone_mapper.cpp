@@ -38,7 +38,7 @@ using namespace RendererRD;
 ToneMapper::ToneMapper() {
 	{
 		// Initialize tonemapper
-		Vector<String> tonemap_modes;
+		Hector<String> tonemap_modes;
 		tonemap_modes.push_back("\n");
 		tonemap_modes.push_back("\n#define USE_GLOW_FILTER_BICUBIC\n");
 		tonemap_modes.push_back("\n#define USE_1D_LUT\n");
@@ -137,7 +137,7 @@ void ToneMapper::tonemapper(RID p_source_color, RID p_dst_framebuffer, const Ton
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
 	RID default_mipmap_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
 
-	RD::Uniform u_source_color(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_source_color }));
+	RD::Uniform u_source_color(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_source_color }));
 
 	RD::Uniform u_exposure_texture;
 	u_exposure_texture.uniform_type = RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE;

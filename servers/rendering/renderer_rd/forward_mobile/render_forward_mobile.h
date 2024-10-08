@@ -125,7 +125,7 @@ private:
 		uint32_t view_count = 1;
 		RID render_pass_uniform_set;
 		bool force_wireframe = false;
-		Vector2 uv_offset;
+		Hector2 uv_offset;
 		SceneShaderForwardMobile::ShaderSpecialization base_specialization;
 		float lod_distance_multiplier = 0.0;
 		float screen_mesh_lod_threshold = 0.0;
@@ -133,7 +133,7 @@ private:
 		uint32_t element_offset = 0;
 		uint32_t subpass = 0;
 
-		RenderListParameters(GeometryInstanceSurfaceDataCache **p_elements, RenderElementInfo *p_element_info, int p_element_count, bool p_reverse_cull, PassMode p_pass_mode, RID p_render_pass_uniform_set, SceneShaderForwardMobile::ShaderSpecialization p_base_specialization, bool p_force_wireframe = false, const Vector2 &p_uv_offset = Vector2(), float p_lod_distance_multiplier = 0.0, float p_screen_mesh_lod_threshold = 0.0, uint32_t p_view_count = 1, uint32_t p_element_offset = 0) {
+		RenderListParameters(GeometryInstanceSurfaceDataCache **p_elements, RenderElementInfo *p_element_info, int p_element_count, bool p_reverse_cull, PassMode p_pass_mode, RID p_render_pass_uniform_set, SceneShaderForwardMobile::ShaderSpecialization p_base_specialization, bool p_force_wireframe = false, const Hector2 &p_uv_offset = Hector2(), float p_lod_distance_multiplier = 0.0, float p_screen_mesh_lod_threshold = 0.0, uint32_t p_view_count = 1, uint32_t p_element_offset = 0) {
 			elements = p_elements;
 			element_info = p_element_info;
 			element_count = p_element_count;
@@ -176,7 +176,7 @@ private:
 	void _setup_lightmaps(const RenderDataRD *p_render_data, const PagedArray<RID> &p_lightmaps, const Transform3D &p_cam_transform);
 
 	RID render_base_uniform_set;
-	LocalVector<RID> render_pass_uniform_sets;
+	LocalHector<RID> render_pass_uniform_sets;
 
 	/* Light map */
 
@@ -194,7 +194,7 @@ private:
 	/* Scene state */
 
 	struct SceneState {
-		LocalVector<RID> uniform_buffers;
+		LocalHector<RID> uniform_buffers;
 
 		struct PushConstantUbershader {
 			SceneShaderForwardMobile::ShaderSpecialization specialization;
@@ -226,7 +226,7 @@ private:
 
 		RID instance_buffer[RENDER_LIST_MAX];
 		uint32_t instance_buffer_size[RENDER_LIST_MAX] = { 0, 0, 0 };
-		LocalVector<InstanceData> instance_data[RENDER_LIST_MAX];
+		LocalHector<InstanceData> instance_data[RENDER_LIST_MAX];
 
 		// !BAS! We need to change lightmaps, we're not going to do this with a buffer but pushing the used lightmap in
 		LightmapData lightmaps[MAX_LIGHTMAPS];
@@ -261,15 +261,15 @@ private:
 			Rect2i rect;
 		};
 
-		LocalVector<ShadowPass> shadow_passes;
+		LocalHector<ShadowPass> shadow_passes;
 	} scene_state;
 
 	/* Render List */
 
 	// !BAS! Render list can probably be reused between clustered and mobile?
 	struct RenderList {
-		LocalVector<GeometryInstanceSurfaceDataCache *> elements;
-		LocalVector<RenderElementInfo> element_info;
+		LocalHector<GeometryInstanceSurfaceDataCache *> elements;
+		LocalHector<RenderElementInfo> element_info;
 
 		void clear() {
 			elements.clear();
@@ -332,7 +332,7 @@ private:
 	template <PassMode p_pass_mode>
 	_FORCE_INLINE_ void _render_list_template(RenderingDevice::DrawListID p_draw_list, RenderingDevice::FramebufferFormatID p_framebuffer_Format, RenderListParameters *p_params, uint32_t p_from_element, uint32_t p_to_element);
 	void _render_list(RenderingDevice::DrawListID p_draw_list, RenderingDevice::FramebufferFormatID p_framebuffer_Format, RenderListParameters *p_params, uint32_t p_from_element, uint32_t p_to_element);
-	void _render_list_with_draw_list(RenderListParameters *p_params, RID p_framebuffer, RD::InitialAction p_initial_color_action, RD::FinalAction p_final_color_action, RD::InitialAction p_initial_depth_action, RD::FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values = Vector<Color>(), float p_clear_depth = 0.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2());
+	void _render_list_with_draw_list(RenderListParameters *p_params, RID p_framebuffer, RD::InitialAction p_initial_color_action, RD::FinalAction p_final_color_action, RD::InitialAction p_initial_depth_action, RD::FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values = Hector<Color>(), float p_clear_depth = 0.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2());
 
 	RenderList render_list[RENDER_LIST_MAX];
 
@@ -498,7 +498,7 @@ protected:
 
 	virtual void _render_material(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region, float p_exposure_normalization) override;
 	virtual void _render_uv2(const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region) override;
-	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Vector3i &p_from, const Vector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) override;
+	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Hector3i &p_from, const Hector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) override;
 	virtual void _render_particle_collider_heightfield(RID p_fb, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const PagedArray<RenderGeometryInstance *> &p_instances) override;
 
 	/* Forward ID */
@@ -506,9 +506,9 @@ protected:
 	class ForwardIDStorageMobile : public RendererRD::ForwardIDStorage {
 	public:
 		struct ForwardIDAllocator {
-			LocalVector<bool> allocations;
-			LocalVector<uint8_t> map;
-			LocalVector<uint64_t> last_pass;
+			LocalHector<bool> allocations;
+			LocalHector<uint8_t> map;
+			LocalHector<uint64_t> last_pass;
 		};
 
 		ForwardIDAllocator forward_id_allocators[RendererRD::FORWARD_ID_MAX];
@@ -536,7 +536,7 @@ public:
 
 	/* SDFGI UPDATE */
 
-	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) override {}
+	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Hector3 &p_world_position) override {}
 	virtual int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const override { return 0; }
 	virtual AABB sdfgi_get_pending_region_bounds(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return AABB(); }
 	virtual uint32_t sdfgi_get_pending_region_cascade(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return 0; }
@@ -595,8 +595,8 @@ public:
 	void _geometry_instance_add_surface_with_material_chain(GeometryInstanceForwardMobile *ginstance, uint32_t p_surface, SceneShaderForwardMobile::MaterialData *p_material, RID p_mat_src, RID p_mesh);
 	void _geometry_instance_add_surface(GeometryInstanceForwardMobile *ginstance, uint32_t p_surface, RID p_material, RID p_mesh);
 	void _geometry_instance_update(RenderGeometryInstance *p_geometry_instance);
-	void _mesh_compile_pipeline_for_surface(SceneShaderForwardMobile::ShaderData *p_shader, void *p_mesh_surface, bool p_instanced_surface, RS::PipelineSource p_source, SceneShaderForwardMobile::ShaderData::PipelineKey &r_pipeline_key, Vector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
-	void _mesh_compile_pipelines_for_surface(const SurfacePipelineData &p_surface, const GlobalPipelineData &p_global, RS::PipelineSource p_source, Vector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
+	void _mesh_compile_pipeline_for_surface(SceneShaderForwardMobile::ShaderData *p_shader, void *p_mesh_surface, bool p_instanced_surface, RS::PipelineSource p_source, SceneShaderForwardMobile::ShaderData::PipelineKey &r_pipeline_key, Hector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
+	void _mesh_compile_pipelines_for_surface(const SurfacePipelineData &p_surface, const GlobalPipelineData &p_global, RS::PipelineSource p_source, Hector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
 	void _mesh_generate_all_pipelines_for_surface_cache(GeometryInstanceSurfaceDataCache *p_surface_cache, const GlobalPipelineData &p_global);
 	void _update_dirty_geometry_instances();
 	void _update_dirty_geometry_pipelines();

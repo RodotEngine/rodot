@@ -98,7 +98,7 @@
 			<param index="1" name="key" type="PackedByteArray" />
 			<param index="2" name="iv" type="PackedByteArray" default="PackedByteArray()" />
 			<description>
-				Start the AES context in the given [param mode]. A [param key] of either 16 or 32 bytes must always be provided, while an [param iv] (initialization vector) of exactly 16 bytes, is only needed when [param mode] is either [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT].
+				Start the AES context in the given [param mode]. A [param key] of either 16 or 32 bytes must always be provided, while an [param iv] (initialization Hector) of exactly 16 bytes, is only needed when [param mode] is either [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT].
 			</description>
 		</method>
 		<method name="update">

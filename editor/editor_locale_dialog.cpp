@@ -271,7 +271,7 @@ void EditorLocaleDialog::_update_tree() {
 	TreeItem *l_root = lang_list->create_item(nullptr);
 	lang_list->set_hide_root(true);
 
-	Vector<String> languages = TranslationServer::get_singleton()->get_all_languages();
+	Hector<String> languages = TranslationServer::get_singleton()->get_all_languages();
 	for (const String &E : languages) {
 		if (is_edit_mode || (filter == SHOW_ALL_LOCALES) || f_lang_all.has(E) || f_lang_all.is_empty()) {
 			const String &lang = TranslationServer::get_singleton()->get_language_name(E);
@@ -299,7 +299,7 @@ void EditorLocaleDialog::_update_tree() {
 		t->set_metadata(0, "");
 	}
 
-	Vector<String> scripts = TranslationServer::get_singleton()->get_all_scripts();
+	Hector<String> scripts = TranslationServer::get_singleton()->get_all_scripts();
 	for (const String &E : scripts) {
 		if (is_edit_mode || (filter == SHOW_ALL_LOCALES) || f_script_all.has(E) || f_script_all.is_empty()) {
 			const String &scr_code = TranslationServer::get_singleton()->get_script_name(E);
@@ -327,7 +327,7 @@ void EditorLocaleDialog::_update_tree() {
 		t->set_metadata(0, "");
 	}
 
-	Vector<String> countries = TranslationServer::get_singleton()->get_all_countries();
+	Hector<String> countries = TranslationServer::get_singleton()->get_all_countries();
 	for (const String &E : countries) {
 		if (is_edit_mode || (filter == SHOW_ALL_LOCALES) || f_cnt_all.has(E) || f_cnt_all.is_empty()) {
 			const String &cnt = TranslationServer::get_singleton()->get_country_name(E);
@@ -358,7 +358,7 @@ void EditorLocaleDialog::set_locale(const String &p_locale) {
 	} else {
 		locale_set = true;
 
-		Vector<String> locale_elements = p_locale.split("_");
+		Hector<String> locale_elements = p_locale.split("_");
 		lang_code->set_text(locale_elements[0]);
 		if (locale_elements.size() >= 2) {
 			if (locale_elements[1].length() == 4 && is_ascii_upper_case(locale_elements[1][0]) && is_ascii_lower_case(locale_elements[1][1]) && is_ascii_lower_case(locale_elements[1][2]) && is_ascii_lower_case(locale_elements[1][3])) {

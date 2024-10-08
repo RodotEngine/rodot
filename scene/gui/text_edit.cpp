@@ -164,8 +164,8 @@ int TextEdit::Text::get_line_wrap_amount(int p_line) const {
 	return text[p_line].line_count - 1;
 }
 
-Vector<Vector2i> TextEdit::Text::get_line_wrap_ranges(int p_line) const {
-	Vector<Vector2i> ret;
+Hector<Hector2i> TextEdit::Text::get_line_wrap_ranges(int p_line) const {
+	Hector<Hector2i> ret;
 	ERR_FAIL_INDEX_V(p_line, text.size(), ret);
 
 	Ref<TextParagraph> data_buf = text[p_line].data_buf;
@@ -235,7 +235,7 @@ void TextEdit::Text::invalidate_cache(int p_line, int p_column, bool p_text_chan
 
 	// Apply tab align.
 	if (tab_size > 0) {
-		Vector<float> tabs;
+		Hector<float> tabs;
 		tabs.push_back(font->get_char_size(' ', font_size).width * tab_size);
 		text_line.data_buf->tab_align(tabs);
 	}
@@ -281,7 +281,7 @@ void TextEdit::Text::invalidate_all_lines() {
 	for (int i = 0; i < text.size(); i++) {
 		if (tab_size_dirty) {
 			if (tab_size > 0) {
-				Vector<float> tabs;
+				Hector<float> tabs;
 				tabs.push_back(font->get_char_size(' ', font_size).width * tab_size);
 				text[i].data_buf->tab_align(tabs);
 			}
@@ -380,7 +380,7 @@ bool TextEdit::Text::is_hidden(int p_line) const {
 	return text[p_line].hidden;
 }
 
-void TextEdit::Text::insert(int p_at, const Vector<String> &p_text, const Vector<Array> &p_bidi_override) {
+void TextEdit::Text::insert(int p_at, const Hector<String> &p_text, const Hector<Array> &p_bidi_override) {
 	ERR_FAIL_INDEX(p_at, text.size() + 1);
 
 	int new_line_count = p_text.size() - 1;
@@ -643,7 +643,7 @@ void TextEdit::_notification(int p_what) {
 				RenderingServer::get_singleton()->canvas_item_add_rect(ci, Rect2(Point2i(), get_size()), theme_cache.background_color);
 			}
 
-			Vector<BraceMatchingData> brace_matching;
+			Hector<BraceMatchingData> brace_matching;
 			if (highlight_matching_braces_enabled) {
 				brace_matching.resize(get_caret_count());
 
@@ -797,9 +797,9 @@ void TextEdit::_notification(int p_what) {
 			// Check if highlighted words contain only whitespaces (tabs or spaces).
 			bool only_whitespaces_highlighted = highlighted_text.strip_edges().is_empty();
 
-			Vector<Pair<int, int>> highlighted_lines;
+			Hector<Pair<int, int>> highlighted_lines;
 			highlighted_lines.resize(carets.size());
-			Vector<int> carets_wrap_index;
+			Hector<int> carets_wrap_index;
 			carets_wrap_index.resize(carets.size());
 			for (int i = 0; i < carets.size(); i++) {
 				carets.write[i].visible = false;
@@ -868,7 +868,7 @@ void TextEdit::_notification(int p_what) {
 						break;
 					}
 
-					const Vector<Pair<int64_t, Color>> color_map = _get_line_syntax_highlighting(minimap_line);
+					const Hector<Pair<int64_t, Color>> color_map = _get_line_syntax_highlighting(minimap_line);
 
 					Color line_background_color = text.get_line_background_color(minimap_line);
 
@@ -881,7 +881,7 @@ void TextEdit::_notification(int p_what) {
 
 					Color current_color = editable ? theme_cache.font_color : theme_cache.font_readonly_color;
 
-					const Vector<String> wrap_rows = get_line_wrapped_text(minimap_line);
+					const Hector<String> wrap_rows = get_line_wrapped_text(minimap_line);
 					int line_wrap_amount = get_line_wrap_count(minimap_line);
 					int last_wrap_column = 0;
 
@@ -1029,7 +1029,7 @@ void TextEdit::_notification(int p_what) {
 
 				LineDrawingCache cache_entry;
 
-				const Vector<Pair<int64_t, Color>> color_map = _get_line_syntax_highlighting(line);
+				const Hector<Pair<int64_t, Color>> color_map = _get_line_syntax_highlighting(line);
 
 				// Ensure we at least use the font color.
 				Color current_color = !editable ? theme_cache.font_readonly_color : theme_cache.font_color;
@@ -1039,7 +1039,7 @@ void TextEdit::_notification(int p_what) {
 
 				const Ref<TextParagraph> ldata = draw_placeholder ? placeholder_data_buf : text.get_line_data(line);
 
-				const Vector<String> wrap_rows = draw_placeholder ? placeholder_wraped_rows : get_line_wrapped_text(line);
+				const Hector<String> wrap_rows = draw_placeholder ? placeholder_wraped_rows : get_line_wrapped_text(line);
 				int line_wrap_amount = draw_placeholder ? placeholder_wraped_rows.size() - 1 : get_line_wrap_count(line);
 
 				for (int line_wrap_index = 0; line_wrap_index <= line_wrap_amount; line_wrap_index++) {
@@ -1187,15 +1187,15 @@ void TextEdit::_notification(int p_what) {
 						if (!clipped && has_selection(c) && line >= get_selection_from_line(c) && line <= get_selection_to_line(c)) {
 							int sel_from = (line > get_selection_from_line(c)) ? TS->shaped_text_get_range(rid).x : get_selection_from_column(c);
 							int sel_to = (line < get_selection_to_line(c)) ? TS->shaped_text_get_range(rid).y : get_selection_to_column(c);
-							Vector<Vector2> sel = TS->shaped_text_get_selection(rid, sel_from, sel_to);
+							Hector<Hector2> sel = TS->shaped_text_get_selection(rid, sel_from, sel_to);
 
 							// Show selection at the end of line.
 							if (line_wrap_index == line_wrap_amount && line < get_selection_to_line(c)) {
 								if (rtl) {
-									sel.push_back(Vector2(-char_w, 0));
+									sel.push_back(Hector2(-char_w, 0));
 								} else {
 									float line_end = TS->shaped_text_get_size(rid).width;
-									sel.push_back(Vector2(line_end, line_end + char_w));
+									sel.push_back(Hector2(line_end, line_end + char_w));
 								}
 							}
 
@@ -1221,7 +1221,7 @@ void TextEdit::_notification(int p_what) {
 						int search_text_col = _get_column_pos_of_word(search_text, str, search_flags, 0);
 						int search_text_len = search_text.length();
 						while (search_text_col != -1) {
-							const Vector<Vector2> sel = TS->shaped_text_get_selection(rid, search_text_col + start, search_text_col + search_text_len + start);
+							const Hector<Hector2> sel = TS->shaped_text_get_selection(rid, search_text_col + start, search_text_col + search_text_len + start);
 							for (int j = 0; j < sel.size(); j++) {
 								Rect2 rect = Rect2(sel[j].x + char_margin + ofs_x, ofs_y, sel[j].y - sel[j].x, row_height);
 								if (rect.position.x + rect.size.x <= xmargin_beg || rect.position.x > xmargin_end) {
@@ -1245,7 +1245,7 @@ void TextEdit::_notification(int p_what) {
 						int highlighted_text_col = _get_column_pos_of_word(highlighted_text, str, SEARCH_MATCH_CASE | SEARCH_WHOLE_WORDS, 0);
 						int highlighted_text_len = highlighted_text.length();
 						while (highlighted_text_col != -1) {
-							const Vector<Vector2> sel = TS->shaped_text_get_selection(rid, highlighted_text_col + start, highlighted_text_col + highlighted_text_len + start);
+							const Hector<Hector2> sel = TS->shaped_text_get_selection(rid, highlighted_text_col + start, highlighted_text_col + highlighted_text_len + start);
 							for (int j = 0; j < sel.size(); j++) {
 								Rect2 rect = Rect2(sel[j].x + char_margin + ofs_x, ofs_y, sel[j].y - sel[j].x, row_height);
 								if (rect.position.x + rect.size.x <= xmargin_beg || rect.position.x > xmargin_end) {
@@ -1270,7 +1270,7 @@ void TextEdit::_notification(int p_what) {
 							int lookup_symbol_word_col = _get_column_pos_of_word(lookup_symbol_word, str, SEARCH_MATCH_CASE | SEARCH_WHOLE_WORDS, 0);
 							int lookup_symbol_word_len = lookup_symbol_word.length();
 							while (lookup_symbol_word_col != -1) {
-								const Vector<Vector2> sel = TS->shaped_text_get_selection(rid, lookup_symbol_word_col + start, lookup_symbol_word_col + lookup_symbol_word_len + start);
+								const Hector<Hector2> sel = TS->shaped_text_get_selection(rid, lookup_symbol_word_col + start, lookup_symbol_word_col + lookup_symbol_word_len + start);
 								for (int j = 0; j < sel.size(); j++) {
 									Rect2 rect = Rect2(sel[j].x + char_margin + ofs_x, ofs_y + (theme_cache.line_spacing / 2), sel[j].y - sel[j].x, row_height);
 									if (rect.position.x + rect.size.x <= xmargin_beg || rect.position.x > xmargin_end) {
@@ -1308,7 +1308,7 @@ void TextEdit::_notification(int p_what) {
 							for (int k = 0; k < glyphs[j].repeat; k++) {
 								if ((char_ofs + char_margin) >= xmargin_beg && (char_ofs + glyphs[j].advance + char_margin) <= xmargin_end) {
 									if (glyphs[j].font_rid != RID()) {
-										TS->font_draw_glyph_outline(glyphs[j].font_rid, ci, glyphs[j].font_size, theme_cache.outline_size, Vector2(char_margin + char_ofs + ofs_x + glyphs[j].x_off, ofs_y + glyphs[j].y_off), glyphs[j].index, theme_cache.outline_color);
+										TS->font_draw_glyph_outline(glyphs[j].font_rid, ci, glyphs[j].font_size, theme_cache.outline_size, Hector2(char_margin + char_ofs + ofs_x + glyphs[j].x_off, ofs_y + glyphs[j].y_off), glyphs[j].index, theme_cache.outline_color);
 									}
 								}
 								char_ofs += glyphs[j].advance;
@@ -1382,10 +1382,10 @@ void TextEdit::_notification(int p_what) {
 						for (int k = 0; k < glyphs[j].repeat; k++) {
 							if (!clipped && (char_ofs + char_margin) >= xmargin_beg && (char_ofs + glyphs[j].advance + char_margin) <= xmargin_end) {
 								if (glyphs[j].font_rid != RID()) {
-									TS->font_draw_glyph(glyphs[j].font_rid, ci, glyphs[j].font_size, Vector2(char_margin + char_ofs + ofs_x + glyphs[j].x_off, ofs_y + glyphs[j].y_off), glyphs[j].index, gl_color);
+									TS->font_draw_glyph(glyphs[j].font_rid, ci, glyphs[j].font_size, Hector2(char_margin + char_ofs + ofs_x + glyphs[j].x_off, ofs_y + glyphs[j].y_off), glyphs[j].index, gl_color);
 									had_glyphs_drawn = true;
 								} else if (((glyphs[j].flags & TextServer::GRAPHEME_IS_VIRTUAL) != TextServer::GRAPHEME_IS_VIRTUAL) && ((glyphs[j].flags & TextServer::GRAPHEME_IS_EMBEDDED_OBJECT) != TextServer::GRAPHEME_IS_EMBEDDED_OBJECT)) {
-									TS->draw_hex_code_box(ci, glyphs[j].font_size, Vector2(char_margin + char_ofs + ofs_x + glyphs[j].x_off, ofs_y + glyphs[j].y_off), glyphs[j].index, gl_color);
+									TS->draw_hex_code_box(ci, glyphs[j].font_size, Hector2(char_margin + char_ofs + ofs_x + glyphs[j].x_off, ofs_y + glyphs[j].y_off), glyphs[j].index, gl_color);
 									had_glyphs_drawn = true;
 								}
 							}
@@ -1439,10 +1439,10 @@ void TextEdit::_notification(int p_what) {
 									int h = theme_cache.font->get_height(theme_cache.font_size);
 									if (rtl) {
 										ts_caret.l_dir = TextServer::DIRECTION_RTL;
-										ts_caret.l_caret = Rect2(Vector2(xmargin_end - char_margin + ofs_x, -h / 2), Size2(caret_width * 4, h));
+										ts_caret.l_caret = Rect2(Hector2(xmargin_end - char_margin + ofs_x, -h / 2), Size2(caret_width * 4, h));
 									} else {
 										ts_caret.l_dir = TextServer::DIRECTION_LTR;
-										ts_caret.l_caret = Rect2(Vector2(char_ofs, -h / 2), Size2(caret_width * 4, h));
+										ts_caret.l_caret = Rect2(Hector2(char_ofs, -h / 2), Size2(caret_width * 4, h));
 									}
 								}
 
@@ -1467,12 +1467,12 @@ void TextEdit::_notification(int p_what) {
 													ts_caret.t_caret.position.y = -TS->shaped_text_get_ascent(rid);
 													ts_caret.t_caret.size.y = h;
 												}
-												ts_caret.t_caret.position += Vector2(char_margin + ofs_x, ofs_y);
+												ts_caret.t_caret.position += Hector2(char_margin + ofs_x, ofs_y);
 												draw_rect(ts_caret.t_caret, theme_cache.caret_color, overtype_mode);
 
 												if (ts_caret.l_caret != Rect2() && ts_caret.l_dir != ts_caret.t_dir) {
 													// Draw split caret (leading part).
-													ts_caret.l_caret.position += Vector2(char_margin + ofs_x, ofs_y);
+													ts_caret.l_caret.position += Hector2(char_margin + ofs_x, ofs_y);
 													ts_caret.l_caret.size.x = caret_width;
 													RS::get_singleton()->canvas_item_add_rect(ci, ts_caret.l_caret, theme_cache.caret_color);
 													// Draw extra direction marker on top of split caret.
@@ -1499,7 +1499,7 @@ void TextEdit::_notification(int p_what) {
 												} else {
 													ts_caret.l_caret.size.x = 3 * caret_width;
 												}
-												ts_caret.l_caret.position += Vector2(char_margin + ofs_x, ofs_y);
+												ts_caret.l_caret.position += Hector2(char_margin + ofs_x, ofs_y);
 												if (ts_caret.l_dir == TextServer::DIRECTION_RTL) {
 													ts_caret.l_caret.position.x -= ts_caret.l_caret.size.x;
 												}
@@ -1510,26 +1510,26 @@ void TextEdit::_notification(int p_what) {
 											if (ts_caret.l_caret != Rect2() && ts_caret.l_dir == TextServer::DIRECTION_AUTO) {
 												// Draw extra marker on top of mid caret.
 												Rect2 trect = Rect2(ts_caret.l_caret.position.x - 2.5 * caret_width, ts_caret.l_caret.position.y, 6 * caret_width, caret_width);
-												trect.position += Vector2(char_margin + ofs_x, ofs_y);
+												trect.position += Hector2(char_margin + ofs_x, ofs_y);
 												RS::get_singleton()->canvas_item_add_rect(ci, trect, theme_cache.caret_color);
 											} else if (ts_caret.l_caret != Rect2() && ts_caret.t_caret != Rect2() && ts_caret.l_dir != ts_caret.t_dir) {
 												// Draw extra direction marker on top of split caret.
 												float d = (ts_caret.l_dir == TextServer::DIRECTION_LTR) ? 0.5 : -3;
 												Rect2 trect = Rect2(ts_caret.l_caret.position.x + d * caret_width, ts_caret.l_caret.position.y + ts_caret.l_caret.size.y - caret_width, 3 * caret_width, caret_width);
-												trect.position += Vector2(char_margin + ofs_x, ofs_y);
+												trect.position += Hector2(char_margin + ofs_x, ofs_y);
 												RS::get_singleton()->canvas_item_add_rect(ci, trect, theme_cache.caret_color);
 
 												d = (ts_caret.t_dir == TextServer::DIRECTION_LTR) ? 0.5 : -3;
 												trect = Rect2(ts_caret.t_caret.position.x + d * caret_width, ts_caret.t_caret.position.y, 3 * caret_width, caret_width);
-												trect.position += Vector2(char_margin + ofs_x, ofs_y);
+												trect.position += Hector2(char_margin + ofs_x, ofs_y);
 												RS::get_singleton()->canvas_item_add_rect(ci, trect, theme_cache.caret_color);
 											}
-											ts_caret.l_caret.position += Vector2(char_margin + ofs_x, ofs_y);
+											ts_caret.l_caret.position += Hector2(char_margin + ofs_x, ofs_y);
 											ts_caret.l_caret.size.x = caret_width;
 
 											RS::get_singleton()->canvas_item_add_rect(ci, ts_caret.l_caret, theme_cache.caret_color);
 
-											ts_caret.t_caret.position += Vector2(char_margin + ofs_x, ofs_y);
+											ts_caret.t_caret.position += Hector2(char_margin + ofs_x, ofs_y);
 											ts_caret.t_caret.size.x = caret_width;
 
 											RS::get_singleton()->canvas_item_add_rect(ci, ts_caret.t_caret, theme_cache.caret_color);
@@ -1540,7 +1540,7 @@ void TextEdit::_notification(int p_what) {
 							if (!ime_text.is_empty()) {
 								{
 									// IME Intermediate text range.
-									const Vector<Vector2> sel = TS->shaped_text_get_selection(rid, get_caret_column(c), get_caret_column(c) + ime_text.length());
+									const Hector<Hector2> sel = TS->shaped_text_get_selection(rid, get_caret_column(c), get_caret_column(c) + ime_text.length());
 									for (int j = 0; j < sel.size(); j++) {
 										Rect2 rect = Rect2(sel[j].x + char_margin + ofs_x, ofs_y, sel[j].y - sel[j].x, text_height);
 										if (rect.position.x + rect.size.x <= xmargin_beg || rect.position.x > xmargin_end) {
@@ -1559,7 +1559,7 @@ void TextEdit::_notification(int p_what) {
 								}
 								if (ime_selection.y > 0) {
 									// IME caret.
-									const Vector<Vector2> sel = TS->shaped_text_get_selection(rid, get_caret_column(c) + ime_selection.x, get_caret_column(c) + ime_selection.x + ime_selection.y);
+									const Hector<Hector2> sel = TS->shaped_text_get_selection(rid, get_caret_column(c) + ime_selection.x, get_caret_column(c) + ime_selection.x + ime_selection.y);
 									for (int j = 0; j < sel.size(); j++) {
 										Rect2 rect = Rect2(sel[j].x + char_margin + ofs_x, ofs_y, sel[j].y - sel[j].x, text_height);
 										if (rect.position.x + rect.size.x <= xmargin_beg || rect.position.x > xmargin_end) {
@@ -1696,7 +1696,7 @@ bool TextEdit::alt_input(const Ref<InputEvent> &p_gui_input) {
 			alt_start = true;
 			alt_code = 0;
 			ime_text = "u";
-			ime_selection = Vector2i(0, -1);
+			ime_selection = Hector2i(0, -1);
 			_update_ime_text();
 			return true;
 		}
@@ -1709,7 +1709,7 @@ bool TextEdit::alt_input(const Ref<InputEvent> &p_gui_input) {
 			alt_start_no_hold = true;
 			alt_code = 0;
 			ime_text = "u";
-			ime_selection = Vector2i(0, -1);
+			ime_selection = Hector2i(0, -1);
 			_update_ime_text();
 			return true;
 		}
@@ -1746,7 +1746,7 @@ bool TextEdit::alt_input(const Ref<InputEvent> &p_gui_input) {
 			} else {
 				ime_text = "u";
 			}
-			ime_selection = Vector2i(0, -1);
+			ime_selection = Hector2i(0, -1);
 			_update_ime_text();
 			return true;
 		}
@@ -1757,11 +1757,11 @@ bool TextEdit::alt_input(const Ref<InputEvent> &p_gui_input) {
 			alt_start_no_hold = false;
 			if ((alt_code > 0x31 && alt_code < 0xd800) || (alt_code > 0xdfff && alt_code <= 0x10ffff)) {
 				ime_text = String();
-				ime_selection = Vector2i();
+				ime_selection = Hector2i();
 				handle_unicode_input(alt_code);
 			} else {
 				ime_text = String();
-				ime_selection = Vector2i();
+				ime_selection = Hector2i();
 			}
 			_update_ime_text();
 			return true;
@@ -1772,7 +1772,7 @@ bool TextEdit::alt_input(const Ref<InputEvent> &p_gui_input) {
 			alt_start = false;
 			alt_start_no_hold = false;
 			ime_text = String();
-			ime_selection = Vector2i();
+			ime_selection = Hector2i();
 			_update_ime_text();
 			return true;
 		}
@@ -1789,7 +1789,7 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 	Ref<InputEventMouseButton> mb = p_gui_input;
 
 	if (mb.is_valid()) {
-		Vector2i mpos = mb->get_position();
+		Hector2i mpos = mb->get_position();
 		if (is_layout_rtl()) {
 			mpos.x = get_size().x - mpos.x;
 		}
@@ -2024,7 +2024,7 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 	Ref<InputEventMouseMotion> mm = p_gui_input;
 
 	if (mm.is_valid()) {
-		Vector2i mpos = mm->get_position();
+		Hector2i mpos = mm->get_position();
 		if (is_layout_rtl()) {
 			mpos.x = get_size().x - mpos.x;
 		}
@@ -2056,7 +2056,7 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 		}
 
 		// Check if user is hovering a different gutter, and update if yes.
-		Vector2i current_hovered_gutter = Vector2i(-1, -1);
+		Hector2i current_hovered_gutter = Hector2i(-1, -1);
 
 		int left_margin = theme_cache.style_normal->get_margin(SIDE_LEFT);
 		if (mpos.x <= left_margin + gutters_width + gutter_padding) {
@@ -2068,7 +2068,7 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 
 				if (mpos.x >= left_margin && mpos.x < left_margin + gutters[i].width) {
 					// We are in this gutter i's horizontal area.
-					current_hovered_gutter = Vector2i(i, hovered_row);
+					current_hovered_gutter = Hector2i(i, hovered_row);
 					break;
 				}
 
@@ -2597,7 +2597,7 @@ void TextEdit::_move_caret_to_line_start(bool p_select) {
 		}
 
 		// Move caret column to start of wrapped row and then to start of text.
-		Vector<String> rows = get_line_wrapped_text(get_caret_line(i));
+		Hector<String> rows = get_line_wrapped_text(get_caret_line(i));
 		int wi = get_caret_wrap_index(i);
 		int row_start_col = 0;
 		for (int j = 0; j < wi; j++) {
@@ -2628,7 +2628,7 @@ void TextEdit::_move_caret_to_line_end(bool p_select) {
 		}
 
 		// Move caret column to end of wrapped row and then to end of text.
-		Vector<String> rows = get_line_wrapped_text(get_caret_line(i));
+		Hector<String> rows = get_line_wrapped_text(get_caret_line(i));
 		int wi = get_caret_wrap_index(i);
 		int row_end_col = -1;
 		for (int j = 0; j < wi + 1; j++) {
@@ -2683,7 +2683,7 @@ void TextEdit::_do_backspace(bool p_word, bool p_all_to_left) {
 	start_action(EditAction::ACTION_BACKSPACE);
 	begin_multicaret_edit();
 
-	Vector<int> sorted_carets = get_sorted_carets();
+	Hector<int> sorted_carets = get_sorted_carets();
 	sorted_carets.reverse();
 	for (int i = 0; i < sorted_carets.size(); i++) {
 		int caret_index = sorted_carets[i];
@@ -2754,7 +2754,7 @@ void TextEdit::_delete(bool p_word, bool p_all_to_right) {
 	start_action(EditAction::ACTION_DELETE);
 	begin_multicaret_edit();
 
-	Vector<int> sorted_carets = get_sorted_carets();
+	Hector<int> sorted_carets = get_sorted_carets();
 	for (int i = 0; i < sorted_carets.size(); i++) {
 		int caret_index = sorted_carets[i];
 		if (multicaret_edit_ignore_caret(caret_index)) {
@@ -2888,7 +2888,7 @@ void TextEdit::_update_placeholder() {
 	}
 
 	if (get_tab_size() > 0) {
-		Vector<float> tabs;
+		Hector<float> tabs;
 		tabs.push_back(theme_cache.font->get_char_size(' ', theme_cache.font_size).width * get_tab_size());
 		placeholder_data_buf->tab_align(tabs);
 	}
@@ -2906,7 +2906,7 @@ void TextEdit::_update_placeholder() {
 	// Update wrapped rows.
 	placeholder_wraped_rows.clear();
 	for (int i = 0; i <= wrap_amount; i++) {
-		Vector2i line_range = placeholder_data_buf->get_line_range(i);
+		Hector2i line_range = placeholder_data_buf->get_line_range(i);
 		placeholder_wraped_rows.push_back(placeholder_translated.substr(line_range.x, line_range.y - line_range.x));
 	}
 }
@@ -3172,7 +3172,7 @@ void TextEdit::cancel_ime() {
 		return;
 	}
 	ime_text = String();
-	ime_selection = Vector2i();
+	ime_selection = Hector2i();
 	alt_start = false;
 	alt_start_no_hold = false;
 	_close_ime_window();
@@ -4363,7 +4363,7 @@ Point2 TextEdit::get_local_mouse_pos() const {
 	return mp;
 }
 
-String TextEdit::get_word_at_pos(const Vector2 &p_pos) const {
+String TextEdit::get_word_at_pos(const Hector2 &p_pos) const {
 	Point2i pos = get_line_column_at_pos(p_pos);
 	int row = pos.y;
 	int col = pos.x;
@@ -4459,7 +4459,7 @@ Point2i TextEdit::get_line_column_at_pos(const Point2i &p_pos, bool p_allow_out_
 
 Point2i TextEdit::get_pos_at_line_column(int p_line, int p_column) const {
 	Rect2i rect = get_rect_at_line_column(p_line, p_column);
-	return rect.position.x == -1 ? rect.position : rect.position + Vector2i(0, get_line_height());
+	return rect.position.x == -1 ? rect.position : rect.position + Hector2i(0, get_line_height());
 }
 
 Rect2i TextEdit::get_rect_at_line_column(int p_line, int p_column) const {
@@ -4496,7 +4496,7 @@ Rect2i TextEdit::get_rect_at_line_column(int p_line, int p_column) const {
 	pos.x = get_total_gutter_width() + theme_cache.style_normal->get_margin(SIDE_LEFT) - get_h_scroll();
 
 	RID text_rid = text.get_line_data(p_line)->get_line_rid(wrap_index);
-	Vector2 col_bounds = TS->shaped_text_get_grapheme_bounds(text_rid, p_column);
+	Hector2 col_bounds = TS->shaped_text_get_grapheme_bounds(text_rid, p_column);
 	pos.x += col_bounds.x;
 	size.x = col_bounds.y - col_bounds.x;
 
@@ -4845,7 +4845,7 @@ void TextEdit::add_caret_at_carets(bool p_below) {
 }
 
 struct _CaretSortComparator {
-	_FORCE_INLINE_ bool operator()(const Vector3i &a, const Vector3i &b) const {
+	_FORCE_INLINE_ bool operator()(const Hector3i &a, const Hector3i &b) const {
 		// x is column, y is line, z is caret index.
 		if (a.y == b.y) {
 			return a.x < b.x;
@@ -4854,17 +4854,17 @@ struct _CaretSortComparator {
 	}
 };
 
-Vector<int> TextEdit::get_sorted_carets(bool p_include_ignored_carets) const {
+Hector<int> TextEdit::get_sorted_carets(bool p_include_ignored_carets) const {
 	// Returns caret indexes sorted by selection start or caret position from top to bottom of text.
-	Vector<Vector3i> caret_line_col_indexes;
+	Hector<Hector3i> caret_line_col_indexes;
 	for (int i = 0; i < get_caret_count(); i++) {
 		if (!p_include_ignored_carets && multicaret_edit_ignore_caret(i)) {
 			continue;
 		}
-		caret_line_col_indexes.push_back(Vector3i(get_selection_from_column(i), get_selection_from_line(i), i));
+		caret_line_col_indexes.push_back(Hector3i(get_selection_from_column(i), get_selection_from_line(i), i));
 	}
 	caret_line_col_indexes.sort_custom<_CaretSortComparator>();
-	Vector<int> sorted;
+	Hector<int> sorted;
 	sorted.resize(caret_line_col_indexes.size());
 	for (int i = 0; i < caret_line_col_indexes.size(); i++) {
 		sorted.set(i, caret_line_col_indexes[i].z);
@@ -4952,7 +4952,7 @@ void TextEdit::merge_overlapping_carets() {
 		return;
 	}
 
-	Vector<int> sorted_carets = get_sorted_carets(true);
+	Hector<int> sorted_carets = get_sorted_carets(true);
 	for (int i = 0; i < sorted_carets.size() - 1; i++) {
 		int first_caret = sorted_carets[i];
 		int second_caret = sorted_carets[i + 1];
@@ -5452,7 +5452,7 @@ String TextEdit::get_selected_text(int p_caret) {
 	}
 
 	StringBuilder selected_text;
-	Vector<int> sorted_carets = get_sorted_carets();
+	Hector<int> sorted_carets = get_sorted_carets();
 	for (int i = 0; i < sorted_carets.size(); i++) {
 		int caret_index = sorted_carets[i];
 
@@ -5478,13 +5478,13 @@ int TextEdit::get_selection_at_line_column(int p_line, int p_column, bool p_incl
 	return -1;
 }
 
-Vector<Point2i> TextEdit::get_line_ranges_from_carets(bool p_only_selections, bool p_merge_adjacent) const {
+Hector<Point2i> TextEdit::get_line_ranges_from_carets(bool p_only_selections, bool p_merge_adjacent) const {
 	// Get a series of line ranges that cover all lines that have a caret or selection.
 	// For each Point2i range, x is the first line and y is the last line.
-	Vector<Point2i> ret;
+	Hector<Point2i> ret;
 	int last_to_line = INT_MIN;
 
-	Vector<int> sorted_carets = get_sorted_carets();
+	Hector<int> sorted_carets = get_sorted_carets();
 	for (int i = 0; i < sorted_carets.size(); i++) {
 		int caret_index = sorted_carets[i];
 		if (p_only_selections && !has_selection(caret_index)) {
@@ -5506,10 +5506,10 @@ Vector<Point2i> TextEdit::get_line_ranges_from_carets(bool p_only_selections, bo
 	return ret;
 }
 
-TypedArray<Vector2i> TextEdit::get_line_ranges_from_carets_typed_array(bool p_only_selections, bool p_merge_adjacent) const {
+TypedArray<Hector2i> TextEdit::get_line_ranges_from_carets_typed_array(bool p_only_selections, bool p_merge_adjacent) const {
 	// Wrapper for `get_line_ranges_from_carets` to return a datatype that can be exposed.
-	TypedArray<Vector2i> ret;
-	Vector<Point2i> ranges = get_line_ranges_from_carets(p_only_selections, p_merge_adjacent);
+	TypedArray<Hector2i> ret;
+	Hector<Point2i> ranges = get_line_ranges_from_carets(p_only_selections, p_merge_adjacent);
 	for (const Point2i &range : ranges) {
 		ret.push_back(range);
 	}
@@ -5765,7 +5765,7 @@ int TextEdit::get_line_wrap_index_at_column(int p_line, int p_column) const {
 	/* Loop through wraps in the line text until we get to the column. */
 	int wrap_index = 0;
 	int col = 0;
-	Vector<String> lines = get_line_wrapped_text(p_line);
+	Hector<String> lines = get_line_wrapped_text(p_line);
 	for (int i = 0; i < lines.size(); i++) {
 		wrap_index = i;
 		col += lines[wrap_index].length();
@@ -5776,17 +5776,17 @@ int TextEdit::get_line_wrap_index_at_column(int p_line, int p_column) const {
 	return wrap_index;
 }
 
-Vector<String> TextEdit::get_line_wrapped_text(int p_line) const {
-	ERR_FAIL_INDEX_V(p_line, text.size(), Vector<String>());
+Hector<String> TextEdit::get_line_wrapped_text(int p_line) const {
+	ERR_FAIL_INDEX_V(p_line, text.size(), Hector<String>());
 
-	Vector<String> lines;
+	Hector<String> lines;
 	if (!is_line_wrapped(p_line)) {
 		lines.push_back(text[p_line]);
 		return lines;
 	}
 
 	const String &line_text = text[p_line];
-	Vector<Vector2i> line_ranges = text.get_line_wrap_ranges(p_line);
+	Hector<Hector2i> line_ranges = text.get_line_wrap_ranges(p_line);
 	for (int i = 0; i < line_ranges.size(); i++) {
 		lines.push_back(line_text.substr(line_ranges[i].x, line_ranges[i].y - line_ranges[i].x));
 	}
@@ -6028,7 +6028,7 @@ void TextEdit::adjust_viewport_to_caret(int p_caret) {
 		return;
 	}
 
-	Vector2i caret_pos;
+	Hector2i caret_pos;
 
 	// Get position of the start of caret.
 	if (has_ime_text() && ime_selection.x != 0) {
@@ -6080,7 +6080,7 @@ void TextEdit::center_viewport_to_caret(int p_caret) {
 	if (get_line_wrapping_mode() != LineWrappingMode::LINE_WRAPPING_NONE) {
 		// Center x offset.
 
-		Vector2i caret_pos;
+		Hector2i caret_pos;
 
 		// Get position of the start of caret.
 		if (has_ime_text() && ime_selection.x != 0) {
@@ -7235,7 +7235,7 @@ void TextEdit::_cut_internal(int p_caret) {
 	// Remove full lines.
 	begin_complex_operation();
 	begin_multicaret_edit();
-	Vector<Point2i> line_ranges;
+	Hector<Point2i> line_ranges;
 	if (p_caret == -1) {
 		line_ranges = get_line_ranges_from_carets();
 	} else {
@@ -7268,7 +7268,7 @@ void TextEdit::_copy_internal(int p_caret) {
 
 	// Copy full lines.
 	StringBuilder clipboard;
-	Vector<Point2i> line_ranges;
+	Hector<Point2i> line_ranges;
 	if (p_caret == -1) {
 		// When there are multiple carets on a line, only copy it once.
 		line_ranges = get_line_ranges_from_carets(false, true);
@@ -7309,12 +7309,12 @@ void TextEdit::_paste_internal(int p_caret) {
 	}
 
 	// Paste text at each caret or one line per caret.
-	Vector<String> clipboad_lines = clipboard.split("\n");
+	Hector<String> clipboad_lines = clipboard.split("\n");
 	bool insert_line_per_caret = p_caret == -1 && get_caret_count() > 1 && clipboad_lines.size() == get_caret_count();
 
 	begin_complex_operation();
 	begin_multicaret_edit();
-	Vector<int> sorted_carets = get_sorted_carets();
+	Hector<int> sorted_carets = get_sorted_carets();
 	for (int i = 0; i < sorted_carets.size(); i++) {
 		int caret_index = sorted_carets[i];
 		if (p_caret != -1 && p_caret != caret_index) {
@@ -7651,7 +7651,7 @@ int TextEdit::_get_column_x_offset_for_line(int p_char, int p_line, int p_column
 	ERR_FAIL_INDEX_V(p_line, text.size(), 0);
 
 	int row = 0;
-	Vector<Vector2i> rows2 = text.get_line_wrap_ranges(p_line);
+	Hector<Hector2i> rows2 = text.get_line_wrap_ranges(p_line);
 	for (int i = 0; i < rows2.size(); i++) {
 		if ((p_char >= rows2[i].x) && (p_char < rows2[i].y || (i == rows2.size() - 1 && p_char == rows2[i].y))) {
 			row = i;
@@ -7981,7 +7981,7 @@ void TextEdit::_update_scrollbars() {
 		total_width += minimap_width;
 	}
 
-	content_size_cache = Vector2i(total_width + 10, MAX(total_rows, 1) * get_line_height());
+	content_size_cache = Hector2i(total_width + 10, MAX(total_rows, 1) * get_line_height());
 	if (fit_content_height || fit_content_width) {
 		update_minimum_size();
 	}
@@ -8273,18 +8273,18 @@ void TextEdit::_update_gutter_width() {
 }
 
 /* Syntax highlighting. */
-Vector<Pair<int64_t, Color>> TextEdit::_get_line_syntax_highlighting(int p_line) {
+Hector<Pair<int64_t, Color>> TextEdit::_get_line_syntax_highlighting(int p_line) {
 	if (syntax_highlighter.is_null() || setting_text) {
-		return Vector<Pair<int64_t, Color>>();
+		return Hector<Pair<int64_t, Color>>();
 	}
 
-	HashMap<int, Vector<Pair<int64_t, Color>>>::Iterator E = syntax_highlighting_cache.find(p_line);
+	HashMap<int, Hector<Pair<int64_t, Color>>>::Iterator E = syntax_highlighting_cache.find(p_line);
 	if (E) {
 		return E->value;
 	}
 
 	Dictionary color_map = syntax_highlighter->get_line_syntax_highlighting(p_line);
-	Vector<Pair<int64_t, Color>> result;
+	Hector<Pair<int64_t, Color>> result;
 	result.resize(color_map.size());
 	int i = 0;
 	for (const Variant *key = color_map.next(nullptr); key; key = color_map.next(key), i++) {
@@ -8307,8 +8307,8 @@ void TextEdit::_clear_syntax_highlighting_cache() {
 
 /* Deprecated. */
 #ifndef DISABLE_DEPRECATED
-Vector<int> TextEdit::get_caret_index_edit_order() {
-	Vector<int> carets_order = get_sorted_carets();
+Hector<int> TextEdit::get_caret_index_edit_order() {
+	Hector<int> carets_order = get_sorted_carets();
 	carets_order.reverse();
 	return carets_order;
 }
@@ -8439,7 +8439,7 @@ void TextEdit::_base_insert_text(int p_line, int p_char, const String &p_text, i
 
 	/* STEP 1: Remove \r from source text and separate in substrings. */
 	const String text_to_insert = p_text.replace("\r", "");
-	Vector<String> substrings = text_to_insert.split("\n");
+	Hector<String> substrings = text_to_insert.split("\n");
 
 	// Is this just a new empty line?
 	bool shift_first_line = p_char == 0 && substrings.size() == 2 && text_to_insert == "\n";
@@ -8455,7 +8455,7 @@ void TextEdit::_base_insert_text(int p_line, int p_char, const String &p_text, i
 	substrings.write[0] = text[p_line].substr(0, p_char) + substrings[0];
 	substrings.write[substrings.size() - 1] += postinsert_text;
 
-	Vector<Array> bidi_override;
+	Hector<Array> bidi_override;
 	bidi_override.resize(substrings.size());
 	for (int i = 0; i < substrings.size(); i++) {
 		bidi_override.write[i] = structured_text_parser(st_parser, st_args, substrings[i]);

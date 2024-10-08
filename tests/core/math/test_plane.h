@@ -41,11 +41,11 @@ namespace TestPlane {
 
 TEST_CASE("[Plane] Constructor methods") {
 	const Plane plane = Plane(32, 22, 16, 3);
-	const Plane plane_vector = Plane(Vector3(32, 22, 16), 3);
+	const Plane plane_Hector = Plane(Hector3(32, 22, 16), 3);
 	const Plane plane_copy_plane = Plane(plane);
 
 	CHECK_MESSAGE(
-			plane == plane_vector,
+			plane == plane_Hector,
 			"Planes created with same values but different methods should be equal.");
 
 	CHECK_MESSAGE(
@@ -58,7 +58,7 @@ TEST_CASE("[Plane] Basic getters") {
 	const Plane plane_normalized = Plane(32.0 / 42, 22.0 / 42, 16.0 / 42, 3.0 / 42);
 
 	CHECK_MESSAGE(
-			plane.get_normal().is_equal_approx(Vector3(32, 22, 16)),
+			plane.get_normal().is_equal_approx(Hector3(32, 22, 16)),
 			"get_normal() should return the expected value.");
 
 	CHECK_MESSAGE(
@@ -68,7 +68,7 @@ TEST_CASE("[Plane] Basic getters") {
 
 TEST_CASE("[Plane] Basic setters") {
 	Plane plane = Plane(32, 22, 16, 3);
-	plane.set_normal(Vector3(4, 2, 3));
+	plane.set_normal(Hector3(4, 2, 3));
 
 	CHECK_MESSAGE(
 			plane.is_equal_approx(Plane(4, 2, 3, 3)),
@@ -87,15 +87,15 @@ TEST_CASE("[Plane] Plane-point operations") {
 	const Plane y_facing_plane = Plane(0, 1, 0, 4);
 
 	CHECK_MESSAGE(
-			plane.get_center().is_equal_approx(Vector3(32 * 3, 22 * 3, 16 * 3)),
-			"get_center() should return a vector pointing to the center of the plane.");
+			plane.get_center().is_equal_approx(Hector3(32 * 3, 22 * 3, 16 * 3)),
+			"get_center() should return a Hector pointing to the center of the plane.");
 
 	CHECK_MESSAGE(
-			y_facing_plane.is_point_over(Vector3(0, 5, 0)),
+			y_facing_plane.is_point_over(Hector3(0, 5, 0)),
 			"is_point_over() should return the expected result.");
 
 	CHECK_MESSAGE(
-			y_facing_plane.get_any_perpendicular_normal().is_equal_approx(Vector3(1, 0, 0)),
+			y_facing_plane.get_any_perpendicular_normal().is_equal_approx(Hector3(1, 0, 0)),
 			"get_any_perpindicular_normal() should return the expected result.");
 
 	// TODO distance_to()
@@ -106,37 +106,37 @@ TEST_CASE("[Plane] Has point") {
 	const Plane y_facing_plane = Plane(0, 1, 0, 0);
 	const Plane z_facing_plane = Plane(0, 0, 1, 0);
 
-	const Vector3 x_axis_point = Vector3(10, 0, 0);
-	const Vector3 y_axis_point = Vector3(0, 10, 0);
-	const Vector3 z_axis_point = Vector3(0, 0, 10);
+	const Hector3 x_axis_point = Hector3(10, 0, 0);
+	const Hector3 y_axis_point = Hector3(0, 10, 0);
+	const Hector3 z_axis_point = Hector3(0, 0, 10);
 
 	const Plane x_facing_plane_with_d_offset = Plane(1, 0, 0, 1);
-	const Vector3 y_axis_point_with_d_offset = Vector3(1, 10, 0);
+	const Hector3 y_axis_point_with_d_offset = Hector3(1, 10, 0);
 
 	CHECK_MESSAGE(
 			x_facing_plane.has_point(y_axis_point),
-			"has_point() with contained Vector3 should return the expected result.");
+			"has_point() with contained Hector3 should return the expected result.");
 	CHECK_MESSAGE(
 			x_facing_plane.has_point(z_axis_point),
-			"has_point() with contained Vector3 should return the expected result.");
+			"has_point() with contained Hector3 should return the expected result.");
 
 	CHECK_MESSAGE(
 			y_facing_plane.has_point(x_axis_point),
-			"has_point() with contained Vector3 should return the expected result.");
+			"has_point() with contained Hector3 should return the expected result.");
 	CHECK_MESSAGE(
 			y_facing_plane.has_point(z_axis_point),
-			"has_point() with contained Vector3 should return the expected result.");
+			"has_point() with contained Hector3 should return the expected result.");
 
 	CHECK_MESSAGE(
 			z_facing_plane.has_point(y_axis_point),
-			"has_point() with contained Vector3 should return the expected result.");
+			"has_point() with contained Hector3 should return the expected result.");
 	CHECK_MESSAGE(
 			z_facing_plane.has_point(x_axis_point),
-			"has_point() with contained Vector3 should return the expected result.");
+			"has_point() with contained Hector3 should return the expected result.");
 
 	CHECK_MESSAGE(
 			x_facing_plane_with_d_offset.has_point(y_axis_point_with_d_offset),
-			"has_point() with passed Vector3 should return the expected result.");
+			"has_point() with passed Hector3 should return the expected result.");
 }
 
 TEST_CASE("[Plane] Intersection") {
@@ -144,33 +144,33 @@ TEST_CASE("[Plane] Intersection") {
 	const Plane y_facing_plane = Plane(0, 1, 0, 2);
 	const Plane z_facing_plane = Plane(0, 0, 1, 3);
 
-	Vector3 vec_out;
+	Hector3 vec_out;
 
 	CHECK_MESSAGE(
 			x_facing_plane.intersect_3(y_facing_plane, z_facing_plane, &vec_out),
 			"intersect_3() should return the expected result.");
 	CHECK_MESSAGE(
-			vec_out.is_equal_approx(Vector3(1, 2, 3)),
+			vec_out.is_equal_approx(Hector3(1, 2, 3)),
 			"intersect_3() should modify vec_out to the expected result.");
 
 	CHECK_MESSAGE(
-			x_facing_plane.intersects_ray(Vector3(0, 1, 1), Vector3(2, 0, 0), &vec_out),
+			x_facing_plane.intersects_ray(Hector3(0, 1, 1), Hector3(2, 0, 0), &vec_out),
 			"intersects_ray() should return the expected result.");
 	CHECK_MESSAGE(
-			vec_out.is_equal_approx(Vector3(1, 1, 1)),
+			vec_out.is_equal_approx(Hector3(1, 1, 1)),
 			"intersects_ray() should modify vec_out to the expected result.");
 
 	CHECK_MESSAGE(
-			x_facing_plane.intersects_segment(Vector3(0, 1, 1), Vector3(2, 1, 1), &vec_out),
+			x_facing_plane.intersects_segment(Hector3(0, 1, 1), Hector3(2, 1, 1), &vec_out),
 			"intersects_segment() should return the expected result.");
 	CHECK_MESSAGE(
-			vec_out.is_equal_approx(Vector3(1, 1, 1)),
+			vec_out.is_equal_approx(Hector3(1, 1, 1)),
 			"intersects_segment() should modify vec_out to the expected result.");
 }
 
 TEST_CASE("[Plane] Finite number checks") {
-	const Vector3 x(0, 1, 2);
-	const Vector3 infinite_vec(NAN, NAN, NAN);
+	const Hector3 x(0, 1, 2);
+	const Hector3 infinite_vec(NAN, NAN, NAN);
 	const real_t y = 0;
 	const real_t infinite_y = NAN;
 

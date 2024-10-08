@@ -259,7 +259,7 @@ int mbedtls_hmac_drbg_seed(mbedtls_hmac_drbg_context *ctx,
          * each hash function, then according to SP800-90A rev1 10.1 table 2,
          * min_entropy_len (in bits) is security_strength.
          *
-         * (This also matches the sizes used in the NIST test vectors.)
+         * (This also matches the sizes used in the NIST test Hectors.)
          */
         ctx->entropy_len = md_size <= 20 ? 16 : /* 160-bits hash -> 128 bits */
                            md_size <= 28 ? 24 : /* 224-bits hash -> 192 bits */
@@ -509,7 +509,7 @@ int mbedtls_hmac_drbg_self_test(int verbose)
 
 #define OUTPUT_LEN  80
 
-/* From a NIST PR=true test vector */
+/* From a NIST PR=true test Hector */
 static const unsigned char entropy_pr[] = {
     0xa0, 0xc9, 0xab, 0x58, 0xf1, 0xe2, 0xe5, 0xa4, 0xde, 0x3e, 0xbd, 0x4f,
     0xf7, 0x3e, 0x9c, 0x5b, 0x64, 0xef, 0xd8, 0xca, 0x02, 0x8c, 0xf8, 0x11,
@@ -527,7 +527,7 @@ static const unsigned char result_pr[OUTPUT_LEN] = {
     0xe1, 0x5c, 0x02, 0x9b, 0x44, 0xaf, 0x03, 0x44
 };
 
-/* From a NIST PR=false test vector */
+/* From a NIST PR=false test Hector */
 static const unsigned char entropy_nopr[] = {
     0x79, 0x34, 0x9b, 0xbf, 0x7c, 0xdd, 0xa5, 0x79, 0x95, 0x57, 0x86, 0x66,
     0x21, 0xc9, 0x13, 0x83, 0x11, 0x46, 0x73, 0x3a, 0xbf, 0x8c, 0x35, 0xc8,

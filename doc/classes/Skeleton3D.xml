@@ -138,10 +138,10 @@
 			</description>
 		</method>
 		<method name="get_bone_pose_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="bone_idx" type="int" />
 			<description>
-				Returns the pose position of the bone at [param bone_idx]. The returned [Vector3] is in the local coordinate space of the [Skeleton3D] node.
+				Returns the pose position of the bone at [param bone_idx]. The returned [Hector3] is in the local coordinate space of the [Skeleton3D] node.
 			</description>
 		</method>
 		<method name="get_bone_pose_rotation" qualifiers="const">
@@ -152,7 +152,7 @@
 			</description>
 		</method>
 		<method name="get_bone_pose_scale" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="bone_idx" type="int" />
 			<description>
 				Returns the pose scale of the bone at [param bone_idx].
@@ -323,9 +323,9 @@
 		<method name="set_bone_pose_position">
 			<return type="void" />
 			<param index="0" name="bone_idx" type="int" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
-				Sets the pose position of the bone at [param bone_idx] to [param position]. [param position] is a [Vector3] describing a position local to the [Skeleton3D] node.
+				Sets the pose position of the bone at [param bone_idx] to [param position]. [param position] is a [Hector3] describing a position local to the [Skeleton3D] node.
 			</description>
 		</method>
 		<method name="set_bone_pose_rotation">
@@ -339,7 +339,7 @@
 		<method name="set_bone_pose_scale">
 			<return type="void" />
 			<param index="0" name="bone_idx" type="int" />
-			<param index="1" name="scale" type="Vector3" />
+			<param index="1" name="scale" type="Hector3" />
 			<description>
 				Sets the pose scale of the bone at [param bone_idx] to [param scale].
 			</description>

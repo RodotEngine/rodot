@@ -84,13 +84,13 @@ FT_BEGIN_HEADER
                      FT_UInt       glyph_index );
 
   FT_LOCAL( FT_Bool )
-  cff_blend_check_vector( CFF_Blend  blend,
+  cff_blend_check_Hector( CFF_Blend  blend,
                           FT_UInt    vsindex,
                           FT_UInt    lenNDV,
                           FT_Fixed*  NDV );
 
   FT_LOCAL( FT_Error )
-  cff_blend_build_vector( CFF_Blend  blend,
+  cff_blend_build_Hector( CFF_Blend  blend,
                           FT_UInt    vsindex,
                           FT_UInt    lenNDV,
                           FT_Fixed*  NDV );

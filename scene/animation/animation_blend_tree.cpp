@@ -40,7 +40,7 @@ StringName AnimationNodeAnimation::get_animation() const {
 	return animation;
 }
 
-Vector<String> (*AnimationNodeAnimation::get_editable_animation_list)() = nullptr;
+Hector<String> (*AnimationNodeAnimation::get_editable_animation_list)() = nullptr;
 
 void AnimationNodeAnimation::get_parameter_list(List<PropertyInfo> *r_list) const {
 	AnimationNode::get_parameter_list(r_list);
@@ -67,7 +67,7 @@ AnimationNode::NodeTimeInfo AnimationNodeAnimation::get_node_time_info() const {
 
 void AnimationNodeAnimation::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "animation" && get_editable_animation_list) {
-		Vector<String> names = get_editable_animation_list();
+		Hector<String> names = get_editable_animation_list();
 		String anims;
 		for (int i = 0; i < names.size(); i++) {
 			if (i > 0) {
@@ -1399,7 +1399,7 @@ AnimationNodeOutput::AnimationNodeOutput() {
 }
 
 ///////////////////////////////////////////////////////
-void AnimationNodeBlendTree::add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Vector2 &p_position) {
+void AnimationNodeBlendTree::add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Hector2 &p_position) {
 	ERR_FAIL_COND(nodes.has(p_name));
 	ERR_FAIL_COND(p_node.is_null());
 	ERR_FAIL_COND(p_name == SceneStringName(output));
@@ -1436,18 +1436,18 @@ StringName AnimationNodeBlendTree::get_node_name(const Ref<AnimationNode> &p_nod
 	ERR_FAIL_V(StringName());
 }
 
-void AnimationNodeBlendTree::set_node_position(const StringName &p_node, const Vector2 &p_position) {
+void AnimationNodeBlendTree::set_node_position(const StringName &p_node, const Hector2 &p_position) {
 	ERR_FAIL_COND(!nodes.has(p_node));
 	nodes[p_node].position = p_position;
 }
 
-Vector2 AnimationNodeBlendTree::get_node_position(const StringName &p_node) const {
-	ERR_FAIL_COND_V(!nodes.has(p_node), Vector2());
+Hector2 AnimationNodeBlendTree::get_node_position(const StringName &p_node) const {
+	ERR_FAIL_COND_V(!nodes.has(p_node), Hector2());
 	return nodes[p_node].position;
 }
 
 void AnimationNodeBlendTree::get_child_nodes(List<ChildNode> *r_child_nodes) {
-	Vector<StringName> ns;
+	Hector<StringName> ns;
 
 	for (const KeyValue<StringName, Node> &E : nodes) {
 		ns.push_back(E.key);
@@ -1465,8 +1465,8 @@ bool AnimationNodeBlendTree::has_node(const StringName &p_name) const {
 	return nodes.has(p_name);
 }
 
-Vector<StringName> AnimationNodeBlendTree::get_node_connection_array(const StringName &p_name) const {
-	ERR_FAIL_COND_V(!nodes.has(p_name), Vector<StringName>());
+Hector<StringName> AnimationNodeBlendTree::get_node_connection_array(const StringName &p_name) const {
+	ERR_FAIL_COND_V(!nodes.has(p_name), Hector<StringName>());
 	return nodes[p_name].connections;
 }
 
@@ -1624,11 +1624,11 @@ void AnimationNodeBlendTree::get_node_list(List<StringName> *r_list) {
 	}
 }
 
-void AnimationNodeBlendTree::set_graph_offset(const Vector2 &p_graph_offset) {
+void AnimationNodeBlendTree::set_graph_offset(const Hector2 &p_graph_offset) {
 	graph_offset = p_graph_offset;
 }
 
-Vector2 AnimationNodeBlendTree::get_graph_offset() const {
+Hector2 AnimationNodeBlendTree::get_graph_offset() const {
 	return graph_offset;
 }
 
@@ -1720,7 +1720,7 @@ void AnimationNodeBlendTree::_get_property_list(List<PropertyInfo> *p_list) cons
 		if (prop_name != "output") {
 			p_list->push_back(PropertyInfo(Variant::OBJECT, "nodes/" + prop_name + "/node", PROPERTY_HINT_RESOURCE_TYPE, "AnimationNode", PROPERTY_USAGE_NO_EDITOR));
 		}
-		p_list->push_back(PropertyInfo(Variant::VECTOR2, "nodes/" + prop_name + "/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::HECTOR2, "nodes/" + prop_name + "/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
 	}
 
 	p_list->push_back(PropertyInfo(Variant::ARRAY, "node_connections", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
@@ -1739,7 +1739,7 @@ void AnimationNodeBlendTree::_animation_node_removed(const ObjectID &p_oid, cons
 }
 
 void AnimationNodeBlendTree::reset_state() {
-	graph_offset = Vector2();
+	graph_offset = Hector2();
 	nodes.clear();
 	_initialize_node_tree();
 	emit_changed();
@@ -1771,7 +1771,7 @@ void AnimationNodeBlendTree::get_argument_options(const StringName &p_function, 
 #endif
 
 void AnimationNodeBlendTree::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("add_node", "name", "node", "position"), &AnimationNodeBlendTree::add_node, DEFVAL(Vector2()));
+	ClassDB::bind_method(D_METHOD("add_node", "name", "node", "position"), &AnimationNodeBlendTree::add_node, DEFVAL(Hector2()));
 	ClassDB::bind_method(D_METHOD("get_node", "name"), &AnimationNodeBlendTree::get_node);
 	ClassDB::bind_method(D_METHOD("remove_node", "name"), &AnimationNodeBlendTree::remove_node);
 	ClassDB::bind_method(D_METHOD("rename_node", "name", "new_name"), &AnimationNodeBlendTree::rename_node);
@@ -1785,7 +1785,7 @@ void AnimationNodeBlendTree::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_graph_offset", "offset"), &AnimationNodeBlendTree::set_graph_offset);
 	ClassDB::bind_method(D_METHOD("get_graph_offset"), &AnimationNodeBlendTree::get_graph_offset);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "graph_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_graph_offset", "get_graph_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "graph_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_graph_offset", "get_graph_offset");
 
 	BIND_CONSTANT(CONNECTION_OK);
 	BIND_CONSTANT(CONNECTION_ERROR_NO_INPUT);
@@ -1802,7 +1802,7 @@ void AnimationNodeBlendTree::_initialize_node_tree() {
 	output.instantiate();
 	Node n;
 	n.node = output;
-	n.position = Vector2(300, 150);
+	n.position = Hector2(300, 150);
 	n.connections.resize(1);
 	nodes["output"] = n;
 }

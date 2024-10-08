@@ -39,7 +39,7 @@ void GDScriptEditorTranslationParserPlugin::get_recognized_extensions(List<Strin
 	GDScriptLanguage::get_singleton()->get_recognized_extensions(r_extensions);
 }
 
-Error GDScriptEditorTranslationParserPlugin::parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) {
+Error GDScriptEditorTranslationParserPlugin::parse_file(const String &p_path, Hector<String> *r_ids, Hector<Hector<String>> *r_ids_ctx_plural) {
 	// Extract all translatable strings using the parsed tree from GDScriptParser.
 	// The strategy is to find all ExpressionNode and AssignmentNode from the tree and extract strings if relevant, i.e
 	// Search strings in ExpressionNode -> CallNode -> tr(), set_text(), set_placeholder() etc.
@@ -114,7 +114,7 @@ void GDScriptEditorTranslationParserPlugin::_traverse_block(const GDScriptParser
 		return;
 	}
 
-	const Vector<GDScriptParser::Node *> &statements = p_suite->statements;
+	const Hector<GDScriptParser::Node *> &statements = p_suite->statements;
 	for (int i = 0; i < statements.size(); i++) {
 		const GDScriptParser::Node *statement = statements[i];
 
@@ -272,7 +272,7 @@ void GDScriptEditorTranslationParserPlugin::_assess_call(const GDScriptParser::C
 	StringName function_name = p_call->function_name;
 
 	// Variables for extracting tr() and tr_n().
-	Vector<String> id_ctx_plural;
+	Hector<String> id_ctx_plural;
 	id_ctx_plural.resize(3);
 	bool extract_id_ctx_plural = true;
 
@@ -291,7 +291,7 @@ void GDScriptEditorTranslationParserPlugin::_assess_call(const GDScriptParser::C
 		}
 	} else if (function_name == trn_func || function_name == atrn_func) {
 		// Extract from `tr_n(id, plural, n, ctx)` or `atr_n(id, plural, n, ctx)`.
-		Vector<int> indices;
+		Hector<int> indices;
 		indices.push_back(0);
 		indices.push_back(3);
 		indices.push_back(1);

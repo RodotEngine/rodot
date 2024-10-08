@@ -31,7 +31,7 @@
 #ifndef GPU_PARTICLES_COLLISION_3D_H
 #define GPU_PARTICLES_COLLISION_3D_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/3d/visual_instance_3d.h"
 
 class GPUParticlesCollision3D : public VisualInstance3D {
@@ -74,7 +74,7 @@ public:
 class GPUParticlesCollisionBox3D : public GPUParticlesCollision3D {
 	GDCLASS(GPUParticlesCollisionBox3D, GPUParticlesCollision3D);
 
-	Vector3 size = Vector3(2, 2, 2);
+	Hector3 size = Hector3(2, 2, 2);
 
 protected:
 	static void _bind_methods();
@@ -84,8 +84,8 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	virtual AABB get_aabb() const override;
 
@@ -112,7 +112,7 @@ public:
 	typedef void (*BakeEndFunc)();
 
 private:
-	Vector3 size = Vector3(2, 2, 2);
+	Hector3 size = Hector3(2, 2, 2);
 	Resolution resolution = RESOLUTION_64;
 	uint32_t bake_mask = 0xFFFFFFFF;
 	Ref<Texture3D> texture;
@@ -135,7 +135,7 @@ private:
 	};
 
 	struct FacePos {
-		Vector3 center;
+		Hector3 center;
 		uint32_t index = 0;
 	};
 
@@ -146,19 +146,19 @@ private:
 		}
 	};
 
-	uint32_t _create_bvh(LocalVector<BVH> &bvh_tree, FacePos *p_faces, uint32_t p_face_count, const Face3 *p_triangles, float p_thickness);
+	uint32_t _create_bvh(LocalHector<BVH> &bvh_tree, FacePos *p_faces, uint32_t p_face_count, const Face3 *p_triangles, float p_thickness);
 
 	struct ComputeSDFParams {
 		float *cells = nullptr;
-		Vector3i size;
+		Hector3i size;
 		float cell_size = 0.0;
-		Vector3 cell_offset;
+		Hector3 cell_offset;
 		const BVH *bvh = nullptr;
 		const Face3 *triangles = nullptr;
 		float thickness = 0.0;
 	};
 
-	void _find_closest_distance(const Vector3 &p_pos, const BVH *p_bvh, uint32_t p_bvh_cell, const Face3 *p_triangles, float p_thickness, float &r_closest_distance);
+	void _find_closest_distance(const Hector3 &p_pos, const BVH *p_bvh, uint32_t p_bvh_cell, const Face3 *p_triangles, float p_thickness, float &r_closest_distance);
 	void _compute_sdf_z(uint32_t p_z, ComputeSDFParams *params);
 	void _compute_sdf(ComputeSDFParams *params);
 
@@ -175,8 +175,8 @@ public:
 	void set_thickness(float p_thickness);
 	float get_thickness() const;
 
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_resolution(Resolution p_resolution);
 	Resolution get_resolution() const;
@@ -190,7 +190,7 @@ public:
 	void set_texture(const Ref<Texture3D> &p_texture);
 	Ref<Texture3D> get_texture() const;
 
-	Vector3i get_estimated_cell_size() const;
+	Hector3i get_estimated_cell_size() const;
 	Ref<Image> bake();
 
 	virtual AABB get_aabb() const override;
@@ -225,7 +225,7 @@ public:
 	};
 
 private:
-	Vector3 size = Vector3(2, 2, 2);
+	Hector3 size = Hector3(2, 2, 2);
 	Resolution resolution = RESOLUTION_1024;
 	bool follow_camera_mode = false;
 
@@ -240,8 +240,8 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_resolution(Resolution p_resolution);
 	Resolution get_resolution() const;
@@ -313,7 +313,7 @@ public:
 class GPUParticlesAttractorBox3D : public GPUParticlesAttractor3D {
 	GDCLASS(GPUParticlesAttractorBox3D, GPUParticlesAttractor3D);
 
-	Vector3 size = Vector3(2, 2, 2);
+	Hector3 size = Hector3(2, 2, 2);
 
 protected:
 	static void _bind_methods();
@@ -323,8 +323,8 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	virtual AABB get_aabb() const override;
 
@@ -332,10 +332,10 @@ public:
 	~GPUParticlesAttractorBox3D();
 };
 
-class GPUParticlesAttractorVectorField3D : public GPUParticlesAttractor3D {
-	GDCLASS(GPUParticlesAttractorVectorField3D, GPUParticlesAttractor3D);
+class GPUParticlesAttractorHectorField3D : public GPUParticlesAttractor3D {
+	GDCLASS(GPUParticlesAttractorHectorField3D, GPUParticlesAttractor3D);
 
-	Vector3 size = Vector3(2, 2, 2);
+	Hector3 size = Hector3(2, 2, 2);
 	Ref<Texture3D> texture;
 
 protected:
@@ -346,16 +346,16 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_texture(const Ref<Texture3D> &p_texture);
 	Ref<Texture3D> get_texture() const;
 
 	virtual AABB get_aabb() const override;
 
-	GPUParticlesAttractorVectorField3D();
-	~GPUParticlesAttractorVectorField3D();
+	GPUParticlesAttractorHectorField3D();
+	~GPUParticlesAttractorHectorField3D();
 };
 
 #endif // GPU_PARTICLES_COLLISION_3D_H

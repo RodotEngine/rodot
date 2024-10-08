@@ -41,13 +41,13 @@ SurfaceTool::GenerateRemapFunc SurfaceTool::generate_remap_func = nullptr;
 SurfaceTool::RemapVertexFunc SurfaceTool::remap_vertex_func = nullptr;
 SurfaceTool::RemapIndexFunc SurfaceTool::remap_index_func = nullptr;
 
-void SurfaceTool::strip_mesh_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void SurfaceTool::strip_mesh_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	ERR_FAIL_COND_MSG(!generate_remap_func || !remap_vertex_func || !remap_index_func, "Meshoptimizer library is not initialized.");
 
-	Vector<uint32_t> remap;
+	Hector<uint32_t> remap;
 	remap.resize(r_vertices.size());
-	uint32_t new_vertex_count = generate_remap_func(remap.ptrw(), (unsigned int *)r_indices.ptr(), r_indices.size(), r_vertices.ptr(), r_vertices.size(), sizeof(Vector3));
-	remap_vertex_func(r_vertices.ptrw(), r_vertices.ptr(), r_vertices.size(), sizeof(Vector3), remap.ptr());
+	uint32_t new_vertex_count = generate_remap_func(remap.ptrw(), (unsigned int *)r_indices.ptr(), r_indices.size(), r_vertices.ptr(), r_vertices.size(), sizeof(Hector3));
+	remap_vertex_func(r_vertices.ptrw(), r_vertices.ptr(), r_vertices.size(), sizeof(Hector3), remap.ptr());
 	r_vertices.resize(new_vertex_count);
 	remap_index_func((unsigned int *)r_indices.ptrw(), (unsigned int *)r_indices.ptr(), r_indices.size(), remap.ptr());
 
@@ -227,7 +227,7 @@ void SurfaceTool::begin(Mesh::PrimitiveType p_primitive) {
 	first = true;
 }
 
-void SurfaceTool::add_vertex(const Vector3 &p_vertex) {
+void SurfaceTool::add_vertex(const Hector3 &p_vertex) {
 	ERR_FAIL_COND(!begun);
 
 	Vertex vtx;
@@ -259,7 +259,7 @@ void SurfaceTool::add_vertex(const Vector3 &p_vertex) {
 			}
 		} else if (vtx.weights.size() > expected_vertices) {
 			//more than required, sort, cap and normalize.
-			Vector<WeightSort> weights;
+			Hector<WeightSort> weights;
 			for (int i = 0; i < vtx.weights.size(); i++) {
 				WeightSort ws;
 				ws.index = vtx.bones[i];
@@ -306,7 +306,7 @@ void SurfaceTool::set_color(Color p_color) {
 	last_color = p_color;
 }
 
-void SurfaceTool::set_normal(const Vector3 &p_normal) {
+void SurfaceTool::set_normal(const Hector3 &p_normal) {
 	ERR_FAIL_COND(!begun);
 
 	ERR_FAIL_COND(!first && !(format & Mesh::ARRAY_FORMAT_NORMAL));
@@ -323,7 +323,7 @@ void SurfaceTool::set_tangent(const Plane &p_tangent) {
 	last_tangent = p_tangent;
 }
 
-void SurfaceTool::set_uv(const Vector2 &p_uv) {
+void SurfaceTool::set_uv(const Hector2 &p_uv) {
 	ERR_FAIL_COND(!begun);
 	ERR_FAIL_COND(!first && !(format & Mesh::ARRAY_FORMAT_TEX_UV));
 
@@ -331,7 +331,7 @@ void SurfaceTool::set_uv(const Vector2 &p_uv) {
 	last_uv = p_uv;
 }
 
-void SurfaceTool::set_uv2(const Vector2 &p_uv2) {
+void SurfaceTool::set_uv2(const Hector2 &p_uv2) {
 	ERR_FAIL_COND(!begun);
 	ERR_FAIL_COND(!first && !(format & Mesh::ARRAY_FORMAT_TEX_UV2));
 
@@ -352,7 +352,7 @@ void SurfaceTool::set_custom(int p_channel_index, const Color &p_custom) {
 	last_custom[p_channel_index] = p_custom;
 }
 
-void SurfaceTool::set_bones(const Vector<int> &p_bones) {
+void SurfaceTool::set_bones(const Hector<int> &p_bones) {
 	ERR_FAIL_COND(!begun);
 	ERR_FAIL_COND(!first && !(format & Mesh::ARRAY_FORMAT_BONES));
 
@@ -363,7 +363,7 @@ void SurfaceTool::set_bones(const Vector<int> &p_bones) {
 	last_bones = p_bones;
 }
 
-void SurfaceTool::set_weights(const Vector<float> &p_weights) {
+void SurfaceTool::set_weights(const Hector<float> &p_weights) {
 	ERR_FAIL_COND(!begun);
 	ERR_FAIL_COND(!first && !(format & Mesh::ARRAY_FORMAT_WEIGHTS));
 
@@ -378,11 +378,11 @@ void SurfaceTool::set_smooth_group(uint32_t p_group) {
 	last_smooth_group = p_group;
 }
 
-void SurfaceTool::_add_triangle_fan(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uvs, const Vector<Color> &p_colors, const Vector<Vector2> &p_uv2s, const Vector<Vector3> &p_normals, const TypedArray<Plane> &p_tangents) {
+void SurfaceTool::_add_triangle_fan(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uvs, const Hector<Color> &p_colors, const Hector<Hector2> &p_uv2s, const Hector<Hector3> &p_normals, const TypedArray<Plane> &p_tangents) {
 	add_triangle_fan(p_vertices, p_uvs, p_colors, p_uv2s, p_normals, Variant(p_tangents));
 }
 
-void SurfaceTool::add_triangle_fan(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uvs, const Vector<Color> &p_colors, const Vector<Vector2> &p_uv2s, const Vector<Vector3> &p_normals, const Vector<Plane> &p_tangents) {
+void SurfaceTool::add_triangle_fan(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uvs, const Hector<Color> &p_colors, const Hector<Hector2> &p_uv2s, const Hector<Hector3> &p_normals, const Hector<Plane> &p_tangents) {
 	ERR_FAIL_COND(!begun);
 	ERR_FAIL_COND(primitive != Mesh::PRIMITIVE_TRIANGLES);
 	ERR_FAIL_COND(p_vertices.size() < 3);
@@ -433,9 +433,9 @@ Array SurfaceTool::commit_to_arrays() {
 		switch (i) {
 			case Mesh::ARRAY_VERTEX:
 			case Mesh::ARRAY_NORMAL: {
-				Vector<Vector3> array;
+				Hector<Hector3> array;
 				array.resize(varr_len);
-				Vector3 *w = array.ptrw();
+				Hector3 *w = array.ptrw();
 
 				for (uint32_t idx = 0; idx < vertex_array.size(); idx++) {
 					const Vertex &v = vertex_array[idx];
@@ -456,9 +456,9 @@ Array SurfaceTool::commit_to_arrays() {
 
 			case Mesh::ARRAY_TEX_UV:
 			case Mesh::ARRAY_TEX_UV2: {
-				Vector<Vector2> array;
+				Hector<Hector2> array;
 				array.resize(varr_len);
-				Vector2 *w = array.ptrw();
+				Hector2 *w = array.ptrw();
 
 				for (uint32_t idx = 0; idx < vertex_array.size(); idx++) {
 					const Vertex &v = vertex_array[idx];
@@ -476,7 +476,7 @@ Array SurfaceTool::commit_to_arrays() {
 				a[i] = array;
 			} break;
 			case Mesh::ARRAY_TANGENT: {
-				Vector<float> array;
+				Hector<float> array;
 				array.resize(varr_len * 4);
 				float *w = array.ptrw();
 
@@ -496,7 +496,7 @@ Array SurfaceTool::commit_to_arrays() {
 
 			} break;
 			case Mesh::ARRAY_COLOR: {
-				Vector<Color> array;
+				Hector<Color> array;
 				array.resize(varr_len);
 				Color *w = array.ptrw();
 
@@ -515,7 +515,7 @@ Array SurfaceTool::commit_to_arrays() {
 				int fmt = i - Mesh::ARRAY_CUSTOM0;
 				switch (last_custom_format[fmt]) {
 					case CUSTOM_RGBA8_UNORM: {
-						Vector<uint8_t> array;
+						Hector<uint8_t> array;
 						array.resize(varr_len * 4);
 						uint8_t *w = array.ptrw();
 
@@ -532,7 +532,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_RGBA8_SNORM: {
-						Vector<uint8_t> array;
+						Hector<uint8_t> array;
 						array.resize(varr_len * 4);
 						uint8_t *w = array.ptrw();
 
@@ -549,7 +549,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_RG_HALF: {
-						Vector<uint8_t> array;
+						Hector<uint8_t> array;
 						array.resize(varr_len * 4);
 						uint16_t *w = (uint16_t *)array.ptrw();
 
@@ -564,7 +564,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_RGBA_HALF: {
-						Vector<uint8_t> array;
+						Hector<uint8_t> array;
 						array.resize(varr_len * 8);
 						uint16_t *w = (uint16_t *)array.ptrw();
 
@@ -581,7 +581,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_R_FLOAT: {
-						Vector<float> array;
+						Hector<float> array;
 						array.resize(varr_len);
 						float *w = (float *)array.ptrw();
 
@@ -595,7 +595,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_RG_FLOAT: {
-						Vector<float> array;
+						Hector<float> array;
 						array.resize(varr_len * 2);
 						float *w = (float *)array.ptrw();
 
@@ -610,7 +610,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_RGB_FLOAT: {
-						Vector<float> array;
+						Hector<float> array;
 						array.resize(varr_len * 3);
 						float *w = (float *)array.ptrw();
 
@@ -626,7 +626,7 @@ Array SurfaceTool::commit_to_arrays() {
 						a[i] = array;
 					} break;
 					case CUSTOM_RGBA_FLOAT: {
-						Vector<float> array;
+						Hector<float> array;
 						array.resize(varr_len * 4);
 						float *w = (float *)array.ptrw();
 
@@ -648,7 +648,7 @@ Array SurfaceTool::commit_to_arrays() {
 			} break;
 			case Mesh::ARRAY_BONES: {
 				int count = skin_weights == SKIN_8_WEIGHTS ? 8 : 4;
-				Vector<int> array;
+				Hector<int> array;
 				array.resize(varr_len * count);
 				array.fill(0);
 				int *w = array.ptrw();
@@ -670,7 +670,7 @@ Array SurfaceTool::commit_to_arrays() {
 
 			} break;
 			case Mesh::ARRAY_WEIGHTS: {
-				Vector<float> array;
+				Hector<float> array;
 				int count = skin_weights == SKIN_8_WEIGHTS ? 8 : 4;
 
 				array.resize(varr_len * count);
@@ -696,7 +696,7 @@ Array SurfaceTool::commit_to_arrays() {
 			case Mesh::ARRAY_INDEX: {
 				ERR_CONTINUE(index_array.is_empty());
 
-				Vector<int> array;
+				Hector<int> array;
 				array.resize(index_array.size());
 				int *w = array.ptrw();
 
@@ -756,7 +756,7 @@ void SurfaceTool::index() {
 	}
 
 	HashMap<Vertex, int, VertexHasher> indices;
-	LocalVector<Vertex> old_vertex_array = vertex_array;
+	LocalHector<Vertex> old_vertex_array = vertex_array;
 	vertex_array.clear();
 
 	for (const Vertex &vertex : old_vertex_array) {
@@ -781,7 +781,7 @@ void SurfaceTool::deindex() {
 		return; //nothing to deindex
 	}
 
-	LocalVector<Vertex> old_vertex_array = vertex_array;
+	LocalHector<Vertex> old_vertex_array = vertex_array;
 	vertex_array.clear();
 	for (const int &index : index_array) {
 		ERR_FAIL_COND(uint32_t(index) >= old_vertex_array.size());
@@ -791,7 +791,7 @@ void SurfaceTool::deindex() {
 	index_array.clear();
 }
 
-void SurfaceTool::_create_list(const Ref<Mesh> &p_existing, int p_surface, LocalVector<Vertex> *r_vertex, LocalVector<int> *r_index, uint64_t &lformat) {
+void SurfaceTool::_create_list(const Ref<Mesh> &p_existing, int p_surface, LocalHector<Vertex> *r_vertex, LocalHector<int> *r_index, uint64_t &lformat) {
 	ERR_FAIL_COND_MSG(p_existing.is_null(), "First argument in SurfaceTool::_create_list() must be a valid object of type Mesh");
 
 	Array arr = p_existing->surface_get_arrays(p_surface);
@@ -802,20 +802,20 @@ void SurfaceTool::_create_list(const Ref<Mesh> &p_existing, int p_surface, Local
 const uint32_t SurfaceTool::custom_mask[RS::ARRAY_CUSTOM_COUNT] = { Mesh::ARRAY_FORMAT_CUSTOM0, Mesh::ARRAY_FORMAT_CUSTOM1, Mesh::ARRAY_FORMAT_CUSTOM2, Mesh::ARRAY_FORMAT_CUSTOM3 };
 const uint32_t SurfaceTool::custom_shift[RS::ARRAY_CUSTOM_COUNT] = { Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM1_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM2_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM3_SHIFT };
 
-void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVector<SurfaceTool::Vertex> &ret, uint64_t *r_format) {
+void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalHector<SurfaceTool::Vertex> &ret, uint64_t *r_format) {
 	ERR_FAIL_INDEX(RS::ARRAY_WEIGHTS, p_arrays.size());
 
 	ret.clear();
 
-	Vector<Vector3> varr = p_arrays[RS::ARRAY_VERTEX];
-	Vector<Vector3> narr = p_arrays[RS::ARRAY_NORMAL];
-	Vector<float> tarr = p_arrays[RS::ARRAY_TANGENT];
-	Vector<Color> carr = p_arrays[RS::ARRAY_COLOR];
-	Vector<Vector2> uvarr = p_arrays[RS::ARRAY_TEX_UV];
-	Vector<Vector2> uv2arr = p_arrays[RS::ARRAY_TEX_UV2];
-	Vector<int> barr = p_arrays[RS::ARRAY_BONES];
-	Vector<float> warr = p_arrays[RS::ARRAY_WEIGHTS];
-	Vector<float> custom_float[RS::ARRAY_CUSTOM_COUNT];
+	Hector<Hector3> varr = p_arrays[RS::ARRAY_VERTEX];
+	Hector<Hector3> narr = p_arrays[RS::ARRAY_NORMAL];
+	Hector<float> tarr = p_arrays[RS::ARRAY_TANGENT];
+	Hector<Color> carr = p_arrays[RS::ARRAY_COLOR];
+	Hector<Hector2> uvarr = p_arrays[RS::ARRAY_TEX_UV];
+	Hector<Hector2> uv2arr = p_arrays[RS::ARRAY_TEX_UV2];
+	Hector<int> barr = p_arrays[RS::ARRAY_BONES];
+	Hector<float> warr = p_arrays[RS::ARRAY_WEIGHTS];
+	Hector<float> custom_float[RS::ARRAY_CUSTOM_COUNT];
 
 	int vc = varr.size();
 	if (vc == 0) {
@@ -886,7 +886,7 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 			v.normal = narr[i];
 		}
 		if (lformat & RS::ARRAY_FORMAT_TANGENT) {
-			v.tangent = Vector3(tarr[i * 4 + 0], tarr[i * 4 + 1], tarr[i * 4 + 2]);
+			v.tangent = Hector3(tarr[i * 4 + 0], tarr[i * 4 + 1], tarr[i * 4 + 2]);
 			float d = tarr[i * 4 + 3];
 			v.binormal = v.normal.cross(v.tangent).normalized() * d;
 		}
@@ -900,7 +900,7 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 			v.uv2 = uv2arr[i];
 		}
 		if (lformat & RS::ARRAY_FORMAT_BONES) {
-			Vector<int> b;
+			Hector<int> b;
 			b.resize(wcount);
 			for (int j = 0; j < wcount; j++) {
 				b.write[j] = barr[i * wcount + j];
@@ -908,7 +908,7 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 			v.bones = b;
 		}
 		if (lformat & RS::ARRAY_FORMAT_WEIGHTS) {
-			Vector<float> w;
+			Hector<float> w;
 			w.resize(wcount);
 			for (int j = 0; j < wcount; j++) {
 				w.write[j] = warr[i * wcount + j];
@@ -933,14 +933,14 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 	}
 }
 
-void SurfaceTool::_create_list_from_arrays(Array arr, LocalVector<Vertex> *r_vertex, LocalVector<int> *r_index, uint64_t &lformat) {
+void SurfaceTool::_create_list_from_arrays(Array arr, LocalHector<Vertex> *r_vertex, LocalHector<int> *r_index, uint64_t &lformat) {
 	create_vertex_array_from_arrays(arr, *r_vertex, &lformat);
 	ERR_FAIL_COND(r_vertex->size() == 0);
 
 	//indices
 	r_index->clear();
 
-	Vector<int> idx = arr[RS::ARRAY_INDEX];
+	Hector<int> idx = arr[RS::ARRAY_INDEX];
 	int is = idx.size();
 	if (is) {
 		lformat |= RS::ARRAY_FORMAT_INDEX;
@@ -1031,8 +1031,8 @@ void SurfaceTool::append_from(const Ref<Mesh> &p_existing, int p_surface, const 
 	}
 
 	uint64_t nformat = 0;
-	LocalVector<Vertex> nvertices;
-	LocalVector<int> nindices;
+	LocalHector<Vertex> nvertices;
+	LocalHector<int> nindices;
 	_create_list(p_existing, p_surface, &nvertices, &nindices, nformat);
 	format |= nformat;
 
@@ -1069,8 +1069,8 @@ void SurfaceTool::append_from(const Ref<Mesh> &p_existing, int p_surface, const 
 //mikktspace callbacks
 namespace {
 struct TangentGenerationContextUserData {
-	LocalVector<SurfaceTool::Vertex> *vertices;
-	LocalVector<int> *indices;
+	LocalHector<SurfaceTool::Vertex> *vertices;
+	LocalHector<int> *indices;
 };
 } // namespace
 
@@ -1090,7 +1090,7 @@ int SurfaceTool::mikktGetNumVerticesOfFace(const SMikkTSpaceContext *pContext, c
 
 void SurfaceTool::mikktGetPosition(const SMikkTSpaceContext *pContext, float fvPosOut[], const int iFace, const int iVert) {
 	TangentGenerationContextUserData &triangle_data = *reinterpret_cast<TangentGenerationContextUserData *>(pContext->m_pUserData);
-	Vector3 v;
+	Hector3 v;
 	if (triangle_data.indices->size() > 0) {
 		uint32_t index = triangle_data.indices->operator[](iFace * 3 + iVert);
 		if (index < triangle_data.vertices->size()) {
@@ -1107,7 +1107,7 @@ void SurfaceTool::mikktGetPosition(const SMikkTSpaceContext *pContext, float fvP
 
 void SurfaceTool::mikktGetNormal(const SMikkTSpaceContext *pContext, float fvNormOut[], const int iFace, const int iVert) {
 	TangentGenerationContextUserData &triangle_data = *reinterpret_cast<TangentGenerationContextUserData *>(pContext->m_pUserData);
-	Vector3 v;
+	Hector3 v;
 	if (triangle_data.indices->size() > 0) {
 		uint32_t index = triangle_data.indices->operator[](iFace * 3 + iVert);
 		if (index < triangle_data.vertices->size()) {
@@ -1124,7 +1124,7 @@ void SurfaceTool::mikktGetNormal(const SMikkTSpaceContext *pContext, float fvNor
 
 void SurfaceTool::mikktGetTexCoord(const SMikkTSpaceContext *pContext, float fvTexcOut[], const int iFace, const int iVert) {
 	TangentGenerationContextUserData &triangle_data = *reinterpret_cast<TangentGenerationContextUserData *>(pContext->m_pUserData);
-	Vector2 v;
+	Hector2 v;
 	if (triangle_data.indices->size() > 0) {
 		uint32_t index = triangle_data.indices->operator[](iFace * 3 + iVert);
 		if (index < triangle_data.vertices->size()) {
@@ -1152,8 +1152,8 @@ void SurfaceTool::mikktSetTSpaceDefault(const SMikkTSpaceContext *pContext, cons
 	}
 
 	if (vtx != nullptr) {
-		vtx->tangent = Vector3(fvTangent[0], fvTangent[1], fvTangent[2]);
-		vtx->binormal = Vector3(-fvBiTangent[0], -fvBiTangent[1], -fvBiTangent[2]); // for some reason these are reversed, something with the coordinate system in Godot
+		vtx->tangent = Hector3(fvTangent[0], fvTangent[1], fvTangent[2]);
+		vtx->binormal = Hector3(-fvBiTangent[0], -fvBiTangent[1], -fvBiTangent[2]); // for some reason these are reversed, something with the coordinate system in Godot
 	}
 }
 
@@ -1176,8 +1176,8 @@ void SurfaceTool::generate_tangents() {
 	TangentGenerationContextUserData triangle_data;
 	triangle_data.vertices = &vertex_array;
 	for (Vertex &vertex : vertex_array) {
-		vertex.binormal = Vector3();
-		vertex.tangent = Vector3();
+		vertex.binormal = Hector3();
+		vertex.tangent = Hector3();
 	}
 	triangle_data.indices = &index_array;
 	msc.m_pUserData = &triangle_data;
@@ -1197,12 +1197,12 @@ void SurfaceTool::generate_normals(bool p_flip) {
 
 	ERR_FAIL_COND((vertex_array.size() % 3) != 0);
 
-	HashMap<SmoothGroupVertex, Vector3, SmoothGroupVertexHasher> smooth_hash;
+	HashMap<SmoothGroupVertex, Hector3, SmoothGroupVertexHasher> smooth_hash;
 
 	for (uint32_t vi = 0; vi < vertex_array.size(); vi += 3) {
 		Vertex *v = &vertex_array[vi];
 
-		Vector3 normal;
+		Hector3 normal;
 		if (!p_flip) {
 			normal = Plane(v[0].vertex, v[1].vertex, v[2].vertex).normal;
 		} else {
@@ -1212,7 +1212,7 @@ void SurfaceTool::generate_normals(bool p_flip) {
 		for (int i = 0; i < 3; i++) {
 			// Add face normal to smooth vertex influence if vertex is member of a smoothing group
 			if (v[i].smooth_group != UINT32_MAX) {
-				Vector3 *lv = smooth_hash.getptr(v[i]);
+				Hector3 *lv = smooth_hash.getptr(v[i]);
 				if (!lv) {
 					smooth_hash.insert(v[i], normal);
 				} else {
@@ -1226,9 +1226,9 @@ void SurfaceTool::generate_normals(bool p_flip) {
 
 	for (Vertex &vertex : vertex_array) {
 		if (vertex.smooth_group != UINT32_MAX) {
-			Vector3 *lv = smooth_hash.getptr(vertex);
+			Hector3 *lv = smooth_hash.getptr(vertex);
 			if (!lv) {
-				vertex.normal = Vector3();
+				vertex.normal = Hector3();
 			} else {
 				vertex.normal = lv->normalized();
 			}
@@ -1294,7 +1294,7 @@ void SurfaceTool::optimize_indices_for_cache() {
 	ERR_FAIL_COND(primitive != Mesh::PRIMITIVE_TRIANGLES);
 	ERR_FAIL_COND(index_array.size() % 3 != 0);
 
-	LocalVector old_index_array = index_array;
+	LocalHector old_index_array = index_array;
 	memset(index_array.ptr(), 0, index_array.size() * sizeof(int));
 	optimize_vertex_cache_func((unsigned int *)index_array.ptr(), (unsigned int *)old_index_array.ptr(), old_index_array.size(), vertex_array.size());
 }
@@ -1313,10 +1313,10 @@ AABB SurfaceTool::get_aabb() const {
 
 	return aabb;
 }
-Vector<int> SurfaceTool::generate_lod(float p_threshold, int p_target_index_count) {
+Hector<int> SurfaceTool::generate_lod(float p_threshold, int p_target_index_count) {
 	WARN_DEPRECATED_MSG(R"*(The "SurfaceTool.generate_lod()" method is deprecated. Consider using "ImporterMesh.generate_lods()" instead.)*");
 
-	Vector<int> lod;
+	Hector<int> lod;
 
 	ERR_FAIL_NULL_V(simplify_func, lod);
 	ERR_FAIL_COND_V(p_target_index_count < 0, lod);
@@ -1326,7 +1326,7 @@ Vector<int> SurfaceTool::generate_lod(float p_threshold, int p_target_index_coun
 	ERR_FAIL_COND_V(index_array.size() < (unsigned int)p_target_index_count, lod);
 
 	lod.resize(index_array.size());
-	LocalVector<float> vertices; //uses floats
+	LocalHector<float> vertices; //uses floats
 	vertices.resize(vertex_array.size() * 3);
 	for (uint32_t i = 0; i < vertex_array.size(); i++) {
 		vertices[i * 3 + 0] = vertex_array[i].vertex.x;
@@ -1363,7 +1363,7 @@ void SurfaceTool::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_custom", "channel_index", "custom_color"), &SurfaceTool::set_custom);
 	ClassDB::bind_method(D_METHOD("set_smooth_group", "index"), &SurfaceTool::set_smooth_group);
 
-	ClassDB::bind_method(D_METHOD("add_triangle_fan", "vertices", "uvs", "colors", "uv2s", "normals", "tangents"), &SurfaceTool::_add_triangle_fan, DEFVAL(Vector<Vector2>()), DEFVAL(Vector<Color>()), DEFVAL(Vector<Vector2>()), DEFVAL(Vector<Vector3>()), DEFVAL(TypedArray<Plane>()));
+	ClassDB::bind_method(D_METHOD("add_triangle_fan", "vertices", "uvs", "colors", "uv2s", "normals", "tangents"), &SurfaceTool::_add_triangle_fan, DEFVAL(Hector<Hector2>()), DEFVAL(Hector<Color>()), DEFVAL(Hector<Hector2>()), DEFVAL(Hector<Hector3>()), DEFVAL(TypedArray<Plane>()));
 
 	ClassDB::bind_method(D_METHOD("add_index", "index"), &SurfaceTool::add_index);
 

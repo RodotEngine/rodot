@@ -53,20 +53,20 @@ class ShapeDistanceChecker {
 public:
     class ArtifactClassifier : public BaseArtifactClassifier {
     public:
-        inline ArtifactClassifier(ShapeDistanceChecker *parent, const Vector2 &direction, double span) : BaseArtifactClassifier(span, parent->protectedFlag), parent(parent), direction(direction) { }
+        inline ArtifactClassifier(ShapeDistanceChecker *parent, const Hector2 &direction, double span) : BaseArtifactClassifier(span, parent->protectedFlag), parent(parent), direction(direction) { }
         /// Returns true if the combined results of the tests performed on the median value m interpolated at t indicate an artifact.
         inline bool evaluate(double t, float m, int flags) const {
             if (flags&CLASSIFIER_FLAG_CANDIDATE) {
                 // Skip expensive distance evaluation if the point has already been classified as an artifact by the base classifier.
                 if (flags&CLASSIFIER_FLAG_ARTIFACT)
                     return true;
-                Vector2 tVector = t*direction;
+                Hector2 tHector = t*direction;
                 float oldMSD[N], newMSD[3];
                 // Compute the color that would be currently interpolated at the artifact candidate's position.
-                Point2 sdfCoord = parent->sdfCoord+tVector;
+                Point2 sdfCoord = parent->sdfCoord+tHector;
                 interpolate(oldMSD, parent->sdf, sdfCoord);
                 // Compute the color that would be interpolated at the artifact candidate's position if error correction was applied on the current texel.
-                double aWeight = (1-fabs(tVector.x))*(1-fabs(tVector.y));
+                double aWeight = (1-fabs(tHector.x))*(1-fabs(tHector.y));
                 float aPSD = median(parent->msd[0], parent->msd[1], parent->msd[2]);
                 newMSD[0] = float(oldMSD[0]+aWeight*(aPSD-parent->msd[0]));
                 newMSD[1] = float(oldMSD[1]+aWeight*(aPSD-parent->msd[1]));
@@ -74,7 +74,7 @@ public:
                 // Compute the evaluated distance (interpolated median) before and after error correction, as well as the exact shape distance.
                 float oldPSD = median(oldMSD[0], oldMSD[1], oldMSD[2]);
                 float newPSD = median(newMSD[0], newMSD[1], newMSD[2]);
-                float refPSD = float(parent->invRange*parent->distanceFinder.distance(parent->shapeCoord+tVector*parent->texelSize)+.5);
+                float refPSD = float(parent->invRange*parent->distanceFinder.distance(parent->shapeCoord+tHector*parent->texelSize)+.5);
                 // Compare the differences of the exact distance and the before and after distances.
                 return parent->minImproveRatio*fabsf(newPSD-refPSD) < double(fabsf(oldPSD-refPSD));
             }
@@ -82,22 +82,22 @@ public:
         }
     private:
         ShapeDistanceChecker *parent;
-        Vector2 direction;
+        Hector2 direction;
     };
     Point2 shapeCoord, sdfCoord;
     const float *msd;
     bool protectedFlag;
     inline ShapeDistanceChecker(const BitmapConstRef<float, N> &sdf, const Shape &shape, const Projection &projection, double invRange, double minImproveRatio) : distanceFinder(shape), sdf(sdf), invRange(invRange), minImproveRatio(minImproveRatio) {
-        texelSize = projection.unprojectVector(Vector2(1));
+        texelSize = projection.unprojectHector(Hector2(1));
     }
-    inline ArtifactClassifier classifier(const Vector2 &direction, double span) {
+    inline ArtifactClassifier classifier(const Hector2 &direction, double span) {
         return ArtifactClassifier(this, direction, span);
     }
 private:
     ShapeDistanceFinder<ContourCombiner<PseudoDistanceSelector> > distanceFinder;
     BitmapConstRef<float, N> sdf;
     double invRange;
-    Vector2 texelSize;
+    Hector2 texelSize;
     double minImproveRatio;
 };
 
@@ -191,7 +191,7 @@ template <int N>
 void MSDFErrorCorrection::protectEdges(const BitmapConstRef<float, N> &sdf) {
     float radius;
     // Horizontal texel pairs
-    radius = float(PROTECTION_RADIUS_TOLERANCE*projection.unprojectVector(Vector2(invRange, 0)).length());
+    radius = float(PROTECTION_RADIUS_TOLERANCE*projection.unprojectHector(Hector2(invRange, 0)).length());
     for (int y = 0; y < sdf.height; ++y) {
         const float *left = sdf(0, y);
         const float *right = sdf(1, y);
@@ -207,7 +207,7 @@ void MSDFErrorCorrection::protectEdges(const BitmapConstRef<float, N> &sdf) {
         }
     }
     // Vertical texel pairs
-    radius = float(PROTECTION_RADIUS_TOLERANCE*projection.unprojectVector(Vector2(0, invRange)).length());
+    radius = float(PROTECTION_RADIUS_TOLERANCE*projection.unprojectHector(Hector2(0, invRange)).length());
     for (int y = 0; y < sdf.height-1; ++y) {
         const float *bottom = sdf(0, y);
         const float *top = sdf(0, y+1);
@@ -223,7 +223,7 @@ void MSDFErrorCorrection::protectEdges(const BitmapConstRef<float, N> &sdf) {
         }
     }
     // Diagonal texel pairs
-    radius = float(PROTECTION_RADIUS_TOLERANCE*projection.unprojectVector(Vector2(invRange)).length());
+    radius = float(PROTECTION_RADIUS_TOLERANCE*projection.unprojectHector(Hector2(invRange)).length());
     for (int y = 0; y < sdf.height-1; ++y) {
         const float *lb = sdf(0, y);
         const float *rb = sdf(1, y);
@@ -391,9 +391,9 @@ static bool hasDiagonalArtifact(const ArtifactClassifier &artifactClassifier, fl
 template <int N>
 void MSDFErrorCorrection::findErrors(const BitmapConstRef<float, N> &sdf) {
     // Compute the expected deltas between values of horizontally, vertically, and diagonally adjacent texels.
-    double hSpan = minDeviationRatio*projection.unprojectVector(Vector2(invRange, 0)).length();
-    double vSpan = minDeviationRatio*projection.unprojectVector(Vector2(0, invRange)).length();
-    double dSpan = minDeviationRatio*projection.unprojectVector(Vector2(invRange)).length();
+    double hSpan = minDeviationRatio*projection.unprojectHector(Hector2(invRange, 0)).length();
+    double vSpan = minDeviationRatio*projection.unprojectHector(Hector2(0, invRange)).length();
+    double dSpan = minDeviationRatio*projection.unprojectHector(Hector2(invRange)).length();
     // Inspect all texels.
     for (int y = 0; y < sdf.height; ++y) {
         for (int x = 0; x < sdf.width; ++x) {
@@ -419,9 +419,9 @@ void MSDFErrorCorrection::findErrors(const BitmapConstRef<float, N> &sdf) {
 template <template <typename> class ContourCombiner, int N>
 void MSDFErrorCorrection::findErrors(const BitmapConstRef<float, N> &sdf, const Shape &shape) {
     // Compute the expected deltas between values of horizontally, vertically, and diagonally adjacent texels.
-    double hSpan = minDeviationRatio*projection.unprojectVector(Vector2(invRange, 0)).length();
-    double vSpan = minDeviationRatio*projection.unprojectVector(Vector2(0, invRange)).length();
-    double dSpan = minDeviationRatio*projection.unprojectVector(Vector2(invRange)).length();
+    double hSpan = minDeviationRatio*projection.unprojectHector(Hector2(invRange, 0)).length();
+    double vSpan = minDeviationRatio*projection.unprojectHector(Hector2(0, invRange)).length();
+    double dSpan = minDeviationRatio*projection.unprojectHector(Hector2(invRange)).length();
 #ifdef MSDFGEN_USE_OPENMP
     #pragma omp parallel
 #endif
@@ -447,14 +447,14 @@ void MSDFErrorCorrection::findErrors(const BitmapConstRef<float, N> &sdf, const 
                 const float *l = NULL, *b = NULL, *r = NULL, *t = NULL;
                 // Mark current texel c with the error flag if an artifact occurs when it's interpolated with any of its 8 neighbors.
                 *stencil(x, row) |= (byte) (ERROR*(
-                    (x > 0 && ((l = sdf(x-1, row)), hasLinearArtifact(shapeDistanceChecker.classifier(Vector2(-1, 0), hSpan), cm, c, l))) ||
-                    (row > 0 && ((b = sdf(x, row-1)), hasLinearArtifact(shapeDistanceChecker.classifier(Vector2(0, -1), vSpan), cm, c, b))) ||
-                    (x < sdf.width-1 && ((r = sdf(x+1, row)), hasLinearArtifact(shapeDistanceChecker.classifier(Vector2(+1, 0), hSpan), cm, c, r))) ||
-                    (row < sdf.height-1 && ((t = sdf(x, row+1)), hasLinearArtifact(shapeDistanceChecker.classifier(Vector2(0, +1), vSpan), cm, c, t))) ||
-                    (x > 0 && row > 0 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Vector2(-1, -1), dSpan), cm, c, l, b, sdf(x-1, row-1))) ||
-                    (x < sdf.width-1 && row > 0 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Vector2(+1, -1), dSpan), cm, c, r, b, sdf(x+1, row-1))) ||
-                    (x > 0 && row < sdf.height-1 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Vector2(-1, +1), dSpan), cm, c, l, t, sdf(x-1, row+1))) ||
-                    (x < sdf.width-1 && row < sdf.height-1 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Vector2(+1, +1), dSpan), cm, c, r, t, sdf(x+1, row+1)))
+                    (x > 0 && ((l = sdf(x-1, row)), hasLinearArtifact(shapeDistanceChecker.classifier(Hector2(-1, 0), hSpan), cm, c, l))) ||
+                    (row > 0 && ((b = sdf(x, row-1)), hasLinearArtifact(shapeDistanceChecker.classifier(Hector2(0, -1), vSpan), cm, c, b))) ||
+                    (x < sdf.width-1 && ((r = sdf(x+1, row)), hasLinearArtifact(shapeDistanceChecker.classifier(Hector2(+1, 0), hSpan), cm, c, r))) ||
+                    (row < sdf.height-1 && ((t = sdf(x, row+1)), hasLinearArtifact(shapeDistanceChecker.classifier(Hector2(0, +1), vSpan), cm, c, t))) ||
+                    (x > 0 && row > 0 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Hector2(-1, -1), dSpan), cm, c, l, b, sdf(x-1, row-1))) ||
+                    (x < sdf.width-1 && row > 0 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Hector2(+1, -1), dSpan), cm, c, r, b, sdf(x+1, row-1))) ||
+                    (x > 0 && row < sdf.height-1 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Hector2(-1, +1), dSpan), cm, c, l, t, sdf(x-1, row+1))) ||
+                    (x < sdf.width-1 && row < sdf.height-1 && hasDiagonalArtifact(shapeDistanceChecker.classifier(Hector2(+1, +1), dSpan), cm, c, r, t, sdf(x+1, row+1)))
                 ));
             }
         }

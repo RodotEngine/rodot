@@ -79,8 +79,8 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
         return;
     }
 
-    fUSetNodes          = new UVector(status); // bcos status gets overwritten here
-    fRuleStatusVals     = new UVector(status);
+    fUSetNodes          = new UHector(status); // bcos status gets overwritten here
+    fRuleStatusVals     = new UHector(status);
     fScanner            = new RBBIRuleScanner(this);
     fSetBuilder         = new RBBISetBuilder(this);
     if (U_FAILURE(status)) {

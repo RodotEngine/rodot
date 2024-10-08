@@ -399,7 +399,7 @@ exit:
 
 #if defined(MBEDTLS_SELF_TEST)
 /*
- * Test vectors from the RIPEMD-160 paper and
+ * Test Hectors from the RIPEMD-160 paper and
  * http://homes.esat.kuleuven.be/~bosselae/mbedtls_ripemd160.html#HMAC
  */
 #define TESTS   8

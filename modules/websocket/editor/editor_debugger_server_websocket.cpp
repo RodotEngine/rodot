@@ -44,7 +44,7 @@ void EditorDebuggerServerWebSocket::poll() {
 		Ref<WebSocketPeer> peer = Ref<WebSocketPeer>(WebSocketPeer::create());
 		ERR_FAIL_COND(peer.is_null()); // Bug.
 
-		Vector<String> ws_protocols;
+		Hector<String> ws_protocols;
 		ws_protocols.push_back("binary"); // Compatibility for emscripten TCP-to-WebSocket.
 		peer->set_supported_protocols(ws_protocols);
 

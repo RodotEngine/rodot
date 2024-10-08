@@ -101,7 +101,7 @@ class SceneTreeDock : public VBoxContainer {
 		EDIT_SUBRESOURCE_BASE = 100
 	};
 
-	Vector<ObjectID> subresources;
+	Hector<ObjectID> subresources;
 
 	bool reset_create_dialog = false;
 
@@ -192,7 +192,7 @@ class SceneTreeDock : public VBoxContainer {
 	void _add_children_to_popup(Object *p_obj, int p_depth);
 
 	void _node_reparent(NodePath p_path, bool p_keep_global_xform);
-	void _do_reparent(Node *p_new_parent, int p_position_in_parent, Vector<Node *> p_nodes, bool p_keep_global_xform);
+	void _do_reparent(Node *p_new_parent, int p_position_in_parent, Hector<Node *> p_nodes, bool p_keep_global_xform);
 
 	void _set_owners(Node *p_owner, const Array &p_nodes);
 
@@ -256,18 +256,18 @@ class SceneTreeDock : public VBoxContainer {
 	void _selection_changed();
 	void _update_script_button();
 
-	void _fill_path_renames(Vector<StringName> base_path, Vector<StringName> new_base_path, Node *p_node, HashMap<Node *, NodePath> *p_renames);
+	void _fill_path_renames(Hector<StringName> base_path, Hector<StringName> new_base_path, Node *p_node, HashMap<Node *, NodePath> *p_renames);
 	bool _has_tracks_to_delete(Node *p_node, List<Node *> &p_to_delete) const;
 
 	void _normalize_drop(Node *&to_node, int &to_pos, int p_type);
 	Array _get_selection_array();
 
 	void _nodes_dragged(const Array &p_nodes, NodePath p_to, int p_type);
-	void _files_dropped(const Vector<String> &p_files, NodePath p_to, int p_type);
+	void _files_dropped(const Hector<String> &p_files, NodePath p_to, int p_type);
 	void _script_dropped(const String &p_file, NodePath p_to);
 	void _quick_open(const String &p_file_path);
 
-	void _tree_rmb(const Vector2 &p_menu_pos);
+	void _tree_rmb(const Hector2 &p_menu_pos);
 	void _update_tree_menu();
 
 	void _filter_changed(const String &p_filter);
@@ -275,8 +275,8 @@ class SceneTreeDock : public VBoxContainer {
 	void _filter_option_selected(int option);
 	void _append_filter_options_to(PopupMenu *p_menu, bool p_include_separator = true);
 
-	void _perform_instantiate_scenes(const Vector<String> &p_files, Node *p_parent, int p_pos);
-	void _perform_create_audio_stream_players(const Vector<String> &p_files, Node *p_parent, int p_pos);
+	void _perform_instantiate_scenes(const Hector<String> &p_files, Node *p_parent, int p_pos);
+	void _perform_create_audio_stream_players(const Hector<String> &p_files, Node *p_parent, int p_pos);
 	void _replace_with_branch_scene(const String &p_file, Node *base);
 
 	void _remote_tree_selected();
@@ -325,8 +325,8 @@ public:
 	void add_root_node(Node *p_node);
 	void set_edited_scene(Node *p_scene);
 	void instantiate(const String &p_file);
-	void instantiate_scenes(const Vector<String> &p_files, Node *p_parent = nullptr);
-	void set_selection(const Vector<Node *> &p_nodes);
+	void instantiate_scenes(const Hector<String> &p_files, Node *p_parent = nullptr);
+	void set_selection(const Hector<Node *> &p_nodes);
 	void set_selected(Node *p_node, bool p_emit_selected = false);
 	void fill_path_renames(Node *p_node, Node *p_new_parent, HashMap<Node *, NodePath> *p_renames);
 	void perform_node_renames(Node *p_base, HashMap<Node *, NodePath> *p_renames, HashMap<Ref<Animation>, HashSet<int>> *r_rem_anims = nullptr);

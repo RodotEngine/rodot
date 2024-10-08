@@ -195,7 +195,7 @@ uint32_t split_leaf_complex(uint32_t p_node_id, const BVHABB_CLASS &p_added_item
 	VERBOSE_PRINT("split_leaf");
 
 	// note the tnode before and AFTER splitting may be a different address
-	// in memory because the vector could get relocated. So we need to reget
+	// in memory because the Hector could get relocated. So we need to reget
 	// the tnode after the split
 	BVH_ASSERT(_nodes[p_node_id].is_leaf());
 

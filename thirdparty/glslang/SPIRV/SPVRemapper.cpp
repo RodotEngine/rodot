@@ -82,7 +82,7 @@ namespace spv {
         // TODO: case spv::OpTypeImage:
         // TODO: case spv::OpTypeSampledImage:
         case spv::OpTypeSampler:      return range_t(3, 8);
-        case spv::OpTypeVector:       // fall through
+        case spv::OpTypeHector:       // fall through
         case spv::OpTypeMatrix:       // ...
         case spv::OpTypePipe:         return range_t(3, 4);
         case spv::OpConstant:         return range_t(3, maxCount);
@@ -98,7 +98,7 @@ namespace spv {
             return range_t(1, 2);
 
         switch (opCode) {
-        case spv::OpTypeVector:       // fall through
+        case spv::OpTypeHector:       // fall through
         case spv::OpTypeMatrix:       // ...
         case spv::OpTypeSampler:      // ...
         case spv::OpTypeArray:        // ...
@@ -206,7 +206,7 @@ namespace spv {
         case spv::OpTypeBool:
         case spv::OpTypeInt:
         case spv::OpTypeFloat:
-        case spv::OpTypeVector:
+        case spv::OpTypeHector:
         case spv::OpTypeMatrix:
         case spv::OpTypeImage:
         case spv::OpTypeSampler:
@@ -827,7 +827,7 @@ namespace spv {
                 case spv::OpDot:
                 case spv::OpCompositeExtract:
                 case spv::OpCompositeInsert:
-                case spv::OpVectorShuffle:
+                case spv::OpHectorShuffle:
                 case spv::OpLabel:
                 case spv::OpVariable:
 
@@ -1315,7 +1315,7 @@ namespace spv {
         case spv::OpTypeBool:         return 1;
         case spv::OpTypeInt:          return 3 + (spv[typeStart+3]);
         case spv::OpTypeFloat:        return 5;
-        case spv::OpTypeVector:
+        case spv::OpTypeHector:
             return 6 + hashType(idPos(spv[typeStart+2])) * (spv[typeStart+3] - 1);
         case spv::OpTypeMatrix:
             return 30 + hashType(idPos(spv[typeStart+2])) * (spv[typeStart+3] - 1);

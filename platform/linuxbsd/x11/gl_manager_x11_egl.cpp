@@ -43,16 +43,16 @@ EGLenum GLManagerEGL_X11::_get_platform_extension_enum() const {
 	return EGL_PLATFORM_X11_KHR;
 }
 
-Vector<EGLAttrib> GLManagerEGL_X11::_get_platform_display_attributes() const {
-	return Vector<EGLAttrib>();
+Hector<EGLAttrib> GLManagerEGL_X11::_get_platform_display_attributes() const {
+	return Hector<EGLAttrib>();
 }
 
 EGLenum GLManagerEGL_X11::_get_platform_api_enum() const {
 	return EGL_OPENGL_ES_API;
 }
 
-Vector<EGLint> GLManagerEGL_X11::_get_platform_context_attribs() const {
-	Vector<EGLint> ret;
+Hector<EGLint> GLManagerEGL_X11::_get_platform_context_attribs() const {
+	Hector<EGLint> ret;
 	ret.push_back(EGL_CONTEXT_CLIENT_VERSION);
 	ret.push_back(3);
 	ret.push_back(EGL_NONE);

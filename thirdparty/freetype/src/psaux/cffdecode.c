@@ -222,7 +222,7 @@
     CFF_Builder*  builder = &decoder->builder;
     FT_Int        bchar_index, achar_index;
     TT_Face       face    = decoder->builder.face;
-    FT_Vector     left_bearing, advance;
+    FT_Hector     left_bearing, advance;
     FT_Byte*      charstring;
     FT_ULong      charstring_len;
     FT_Pos        glyph_width;
@@ -1922,7 +1922,7 @@
             FT_TRACE4(( " load\n" ));
 
             /* since we currently don't handle interpolation of multiple */
-            /* master fonts, we store a vector [1 0 0 ...] in the        */
+            /* master fonts, we store a Hector [1 0 0 ...] in the        */
             /* temporary storage array regardless of the Registry index  */
             if ( reg_idx <= 2                 &&
                  idx < CFF_MAX_TRANS_ELEMENTS &&

@@ -69,10 +69,10 @@ void GLTFNode::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "camera"), "set_camera", "get_camera"); // GLTFCameraIndex
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "skin"), "set_skin", "get_skin"); // GLTFSkinIndex
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "skeleton"), "set_skeleton", "get_skeleton"); // GLTFSkeletonIndex
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "position"), "set_position", "get_position"); // Vector3
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "position"), "set_position", "get_position"); // Hector3
 	ADD_PROPERTY(PropertyInfo(Variant::QUATERNION, "rotation"), "set_rotation", "get_rotation"); // Quaternion
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "scale"), "set_scale", "get_scale"); // Vector3
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "children"), "set_children", "get_children"); // Vector<int>
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "scale"), "set_scale", "get_scale"); // Hector3
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "children"), "set_children", "get_children"); // Hector<int>
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "light"), "set_light", "get_light"); // GLTFLightIndex
 }
 
@@ -139,11 +139,11 @@ void GLTFNode::set_skeleton(GLTFSkeletonIndex p_skeleton) {
 	skeleton = p_skeleton;
 }
 
-Vector3 GLTFNode::get_position() {
+Hector3 GLTFNode::get_position() {
 	return transform.origin;
 }
 
-void GLTFNode::set_position(Vector3 p_position) {
+void GLTFNode::set_position(Hector3 p_position) {
 	transform.origin = p_position;
 }
 
@@ -155,19 +155,19 @@ void GLTFNode::set_rotation(Quaternion p_rotation) {
 	transform.basis.set_quaternion_scale(p_rotation, transform.basis.get_scale());
 }
 
-Vector3 GLTFNode::get_scale() {
+Hector3 GLTFNode::get_scale() {
 	return transform.basis.get_scale();
 }
 
-void GLTFNode::set_scale(Vector3 p_scale) {
+void GLTFNode::set_scale(Hector3 p_scale) {
 	transform.basis = transform.basis.orthonormalized() * Basis::from_scale(p_scale);
 }
 
-Vector<int> GLTFNode::get_children() {
+Hector<int> GLTFNode::get_children() {
 	return children;
 }
 
-void GLTFNode::set_children(Vector<int> p_children) {
+void GLTFNode::set_children(Hector<int> p_children) {
 	children = p_children;
 }
 

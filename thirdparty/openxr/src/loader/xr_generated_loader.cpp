@@ -604,14 +604,14 @@ extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateFloat(
 }
 XRLOADER_ABI_CATCH_FALLBACK
 
-extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateVector2f(
+extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateHector2f(
     XrSession                                   session,
     const XrActionStateGetInfo*                 getInfo,
-    XrActionStateVector2f*                      state) XRLOADER_ABI_TRY {
+    XrActionStateHector2f*                      state) XRLOADER_ABI_TRY {
     LoaderInstance* loader_instance;
-    XrResult result = ActiveLoaderInstance::Get(&loader_instance, "xrGetActionStateVector2f");
+    XrResult result = ActiveLoaderInstance::Get(&loader_instance, "xrGetActionStateHector2f");
     if (XR_SUCCEEDED(result)) {
-        result = loader_instance->DispatchTable()->GetActionStateVector2f(session, getInfo, state);
+        result = loader_instance->DispatchTable()->GetActionStateHector2f(session, getInfo, state);
     }
     return result;
 }

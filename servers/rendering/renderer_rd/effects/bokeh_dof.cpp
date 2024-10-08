@@ -42,7 +42,7 @@ BokehDOF::BokehDOF(bool p_prefer_raster_effects) {
 	prefer_raster_effects = p_prefer_raster_effects;
 
 	// Initialize bokeh
-	Vector<String> bokeh_modes;
+	Hector<String> bokeh_modes;
 	bokeh_modes.push_back("\n#define MODE_GEN_BLUR_SIZE\n");
 	bokeh_modes.push_back("\n#define MODE_BOKEH_BOX\n#define OUTPUT_WEIGHT\n");
 	bokeh_modes.push_back("\n#define MODE_BOKEH_BOX\n");
@@ -136,11 +136,11 @@ void BokehDOF::bokeh_dof_compute(const BokehBuffers &p_buffers, RID p_camera_att
 	// setup our uniforms
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
 
-	RD::Uniform u_base_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.base_texture }));
-	RD::Uniform u_depth_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.depth_texture }));
-	RD::Uniform u_secondary_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.secondary_texture }));
-	RD::Uniform u_half_texture0(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.half_texture[0] }));
-	RD::Uniform u_half_texture1(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.half_texture[1] }));
+	RD::Uniform u_base_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.base_texture }));
+	RD::Uniform u_depth_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.depth_texture }));
+	RD::Uniform u_secondary_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.secondary_texture }));
+	RD::Uniform u_half_texture0(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.half_texture[0] }));
+	RD::Uniform u_half_texture1(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.half_texture[1] }));
 
 	RD::Uniform u_base_image(RD::UNIFORM_TYPE_IMAGE, 0, p_buffers.base_texture);
 	RD::Uniform u_secondary_image(RD::UNIFORM_TYPE_IMAGE, 0, p_buffers.secondary_texture);
@@ -327,15 +327,15 @@ void BokehDOF::bokeh_dof_raster(const BokehBuffers &p_buffers, RID p_camera_attr
 	// setup our uniforms
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
 
-	RD::Uniform u_base_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.base_texture }));
-	RD::Uniform u_depth_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.depth_texture }));
-	RD::Uniform u_secondary_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.secondary_texture }));
-	RD::Uniform u_half_texture0(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.half_texture[0] }));
-	RD::Uniform u_half_texture1(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.half_texture[1] }));
-	RD::Uniform u_weight_texture0(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.weight_texture[0] }));
-	RD::Uniform u_weight_texture1(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.weight_texture[1] }));
-	RD::Uniform u_weight_texture2(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.weight_texture[2] }));
-	RD::Uniform u_weight_texture3(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_buffers.weight_texture[3] }));
+	RD::Uniform u_base_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.base_texture }));
+	RD::Uniform u_depth_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.depth_texture }));
+	RD::Uniform u_secondary_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.secondary_texture }));
+	RD::Uniform u_half_texture0(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.half_texture[0] }));
+	RD::Uniform u_half_texture1(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.half_texture[1] }));
+	RD::Uniform u_weight_texture0(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.weight_texture[0] }));
+	RD::Uniform u_weight_texture1(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.weight_texture[1] }));
+	RD::Uniform u_weight_texture2(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.weight_texture[2] }));
+	RD::Uniform u_weight_texture3(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_buffers.weight_texture[3] }));
 
 	if (dof_far || dof_near) {
 		if (dof_far) {

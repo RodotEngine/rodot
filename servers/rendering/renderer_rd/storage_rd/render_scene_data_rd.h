@@ -43,11 +43,11 @@ class RenderSceneDataRD : public RenderSceneData {
 	GDCLASS(RenderSceneDataRD, RenderSceneData);
 
 public:
-	bool calculate_motion_vectors = false;
+	bool calculate_motion_Hectors = false;
 
 	Transform3D cam_transform;
 	Projection cam_projection;
-	Vector2 taa_jitter;
+	Hector2 taa_jitter;
 	float taa_frame_count = 0.0f;
 	uint32_t camera_visible_layers;
 	bool cam_orthogonal = false;
@@ -58,12 +58,12 @@ public:
 
 	// For stereo rendering
 	uint32_t view_count = 1;
-	Vector3 view_eye_offset[RendererSceneRender::MAX_RENDER_VIEWS];
+	Hector3 view_eye_offset[RendererSceneRender::MAX_RENDER_VIEWS];
 	Projection view_projection[RendererSceneRender::MAX_RENDER_VIEWS];
 
 	Transform3D prev_cam_transform;
 	Projection prev_cam_projection;
-	Vector2 prev_taa_jitter;
+	Hector2 prev_taa_jitter;
 	Projection prev_view_projection[RendererSceneRender::MAX_RENDER_VIEWS];
 
 	float z_near = 0.0;
@@ -88,7 +88,7 @@ public:
 	virtual Projection get_cam_projection() const override;
 
 	virtual uint32_t get_view_count() const override;
-	virtual Vector3 get_view_eye_offset(uint32_t p_view) const override;
+	virtual Hector3 get_view_eye_offset(uint32_t p_view) const override;
 	virtual Projection get_view_projection(uint32_t p_view) const override;
 
 	RID create_uniform_buffer();

@@ -46,7 +46,7 @@ int PacketPeer::get_encode_buffer_max_size() const {
 	return encode_buffer_max_size;
 }
 
-Error PacketPeer::get_packet_buffer(Vector<uint8_t> &r_buffer) {
+Error PacketPeer::get_packet_buffer(Hector<uint8_t> &r_buffer) {
 	const uint8_t *buffer;
 	int buffer_size;
 	Error err = get_packet(&buffer, buffer_size);
@@ -67,7 +67,7 @@ Error PacketPeer::get_packet_buffer(Vector<uint8_t> &r_buffer) {
 	return OK;
 }
 
-Error PacketPeer::put_packet_buffer(const Vector<uint8_t> &p_buffer) {
+Error PacketPeer::put_packet_buffer(const Hector<uint8_t> &p_buffer) {
 	int len = p_buffer.size();
 	if (len == 0) {
 		return OK;
@@ -121,12 +121,12 @@ Variant PacketPeer::_bnd_get_var(bool p_allow_objects) {
 	return var;
 }
 
-Error PacketPeer::_put_packet(const Vector<uint8_t> &p_buffer) {
+Error PacketPeer::_put_packet(const Hector<uint8_t> &p_buffer) {
 	return put_packet_buffer(p_buffer);
 }
 
-Vector<uint8_t> PacketPeer::_get_packet() {
-	Vector<uint8_t> raw;
+Hector<uint8_t> PacketPeer::_get_packet() {
+	Hector<uint8_t> raw;
 	last_get_error = get_packet_buffer(raw);
 	return raw;
 }

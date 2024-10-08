@@ -262,8 +262,8 @@ void Node3D::set_quaternion(const Quaternion &p_quaternion) {
 	}
 }
 
-Vector3 Node3D::get_global_position() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::get_global_position() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	return get_global_transform().get_origin();
 }
 
@@ -272,7 +272,7 @@ Basis Node3D::get_global_basis() const {
 	return get_global_transform().get_basis();
 }
 
-void Node3D::set_global_position(const Vector3 &p_position) {
+void Node3D::set_global_position(const Hector3 &p_position) {
 	ERR_THREAD_GUARD;
 	Transform3D transform = get_global_transform();
 	transform.set_origin(p_position);
@@ -286,27 +286,27 @@ void Node3D::set_global_basis(const Basis &p_basis) {
 	set_global_transform(transform);
 }
 
-Vector3 Node3D::get_global_rotation() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::get_global_rotation() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	return get_global_transform().get_basis().get_euler();
 }
 
-Vector3 Node3D::get_global_rotation_degrees() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
-	Vector3 radians = get_global_rotation();
-	return Vector3(Math::rad_to_deg(radians.x), Math::rad_to_deg(radians.y), Math::rad_to_deg(radians.z));
+Hector3 Node3D::get_global_rotation_degrees() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
+	Hector3 radians = get_global_rotation();
+	return Hector3(Math::rad_to_deg(radians.x), Math::rad_to_deg(radians.y), Math::rad_to_deg(radians.z));
 }
 
-void Node3D::set_global_rotation(const Vector3 &p_euler_rad) {
+void Node3D::set_global_rotation(const Hector3 &p_euler_rad) {
 	ERR_THREAD_GUARD;
 	Transform3D transform = get_global_transform();
 	transform.basis = Basis::from_euler(p_euler_rad) * Basis::from_scale(transform.basis.get_scale());
 	set_global_transform(transform);
 }
 
-void Node3D::set_global_rotation_degrees(const Vector3 &p_euler_degrees) {
+void Node3D::set_global_rotation_degrees(const Hector3 &p_euler_degrees) {
 	ERR_THREAD_GUARD;
-	Vector3 radians(Math::deg_to_rad(p_euler_degrees.x), Math::deg_to_rad(p_euler_degrees.y), Math::deg_to_rad(p_euler_degrees.z));
+	Hector3 radians(Math::deg_to_rad(p_euler_degrees.x), Math::deg_to_rad(p_euler_degrees.y), Math::deg_to_rad(p_euler_degrees.z));
 	set_global_rotation(radians);
 }
 
@@ -528,7 +528,7 @@ Transform3D Node3D::get_relative_transform(const Node *p_parent) const {
 	}
 }
 
-void Node3D::set_position(const Vector3 &p_position) {
+void Node3D::set_position(const Hector3 &p_position) {
 	ERR_THREAD_GUARD;
 	data.local_transform.origin = p_position;
 	_propagate_transform_changed(this);
@@ -552,8 +552,8 @@ void Node3D::set_rotation_edit_mode(RotationEditMode p_mode) {
 	data.rotation_edit_mode = p_mode;
 
 	if (p_mode == ROTATION_EDIT_MODE_EULER && _test_dirty_bits(DIRTY_EULER_ROTATION_AND_SCALE)) {
-		// If going to Euler mode, ensure that vectors are _not_ dirty, else the retrieved value may be wrong.
-		// Otherwise keep what is there, so switching back and forth between modes does not break the vectors.
+		// If going to Euler mode, ensure that Hectors are _not_ dirty, else the retrieved value may be wrong.
+		// Otherwise keep what is there, so switching back and forth between modes does not break the Hectors.
 
 		_update_rotation_and_scale();
 	}
@@ -609,7 +609,7 @@ EulerOrder Node3D::get_rotation_order() const {
 	return data.euler_rotation_order;
 }
 
-void Node3D::set_rotation(const Vector3 &p_euler_rad) {
+void Node3D::set_rotation(const Hector3 &p_euler_rad) {
 	ERR_THREAD_GUARD;
 	if (_test_dirty_bits(DIRTY_EULER_ROTATION_AND_SCALE)) {
 		// Update scale only if rotation and scale are dirty, as rotation will be overridden.
@@ -625,13 +625,13 @@ void Node3D::set_rotation(const Vector3 &p_euler_rad) {
 	}
 }
 
-void Node3D::set_rotation_degrees(const Vector3 &p_euler_degrees) {
+void Node3D::set_rotation_degrees(const Hector3 &p_euler_degrees) {
 	ERR_THREAD_GUARD;
-	Vector3 radians(Math::deg_to_rad(p_euler_degrees.x), Math::deg_to_rad(p_euler_degrees.y), Math::deg_to_rad(p_euler_degrees.z));
+	Hector3 radians(Math::deg_to_rad(p_euler_degrees.x), Math::deg_to_rad(p_euler_degrees.y), Math::deg_to_rad(p_euler_degrees.z));
 	set_rotation(radians);
 }
 
-void Node3D::set_scale(const Vector3 &p_scale) {
+void Node3D::set_scale(const Hector3 &p_scale) {
 	ERR_THREAD_GUARD;
 	if (_test_dirty_bits(DIRTY_EULER_ROTATION_AND_SCALE)) {
 		// Update rotation only if rotation and scale are dirty, as scale will be overridden.
@@ -647,13 +647,13 @@ void Node3D::set_scale(const Vector3 &p_scale) {
 	}
 }
 
-Vector3 Node3D::get_position() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::get_position() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	return data.local_transform.origin;
 }
 
-Vector3 Node3D::get_rotation() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::get_rotation() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	if (_test_dirty_bits(DIRTY_EULER_ROTATION_AND_SCALE)) {
 		_update_rotation_and_scale();
 	}
@@ -661,14 +661,14 @@ Vector3 Node3D::get_rotation() const {
 	return data.euler_rotation;
 }
 
-Vector3 Node3D::get_rotation_degrees() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
-	Vector3 radians = get_rotation();
-	return Vector3(Math::rad_to_deg(radians.x), Math::rad_to_deg(radians.y), Math::rad_to_deg(radians.z));
+Hector3 Node3D::get_rotation_degrees() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
+	Hector3 radians = get_rotation();
+	return Hector3(Math::rad_to_deg(radians.x), Math::rad_to_deg(radians.y), Math::rad_to_deg(radians.z));
 }
 
-Vector3 Node3D::get_scale() const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::get_scale() const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	if (_test_dirty_bits(DIRTY_EULER_ROTATION_AND_SCALE)) {
 		_update_rotation_and_scale();
 	}
@@ -777,12 +777,12 @@ TypedArray<Node3DGizmo> Node3D::get_gizmos_bind() const {
 	return ret;
 }
 
-Vector<Ref<Node3DGizmo>> Node3D::get_gizmos() const {
-	ERR_THREAD_GUARD_V(Vector<Ref<Node3DGizmo>>());
+Hector<Ref<Node3DGizmo>> Node3D::get_gizmos() const {
+	ERR_THREAD_GUARD_V(Hector<Ref<Node3DGizmo>>());
 #ifdef TOOLS_ENABLED
 	return data.gizmos;
 #else
-	return Vector<Ref<Node3DGizmo>>();
+	return Hector<Ref<Node3DGizmo>>();
 #endif
 }
 
@@ -957,14 +957,14 @@ bool Node3D::is_visible_in_tree() const {
 	return true;
 }
 
-void Node3D::rotate_object_local(const Vector3 &p_axis, real_t p_angle) {
+void Node3D::rotate_object_local(const Hector3 &p_axis, real_t p_angle) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
 	t.basis.rotate_local(p_axis, p_angle);
 	set_transform(t);
 }
 
-void Node3D::rotate(const Vector3 &p_axis, real_t p_angle) {
+void Node3D::rotate(const Hector3 &p_axis, real_t p_angle) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
 	t.basis.rotate(p_axis, p_angle);
@@ -974,32 +974,32 @@ void Node3D::rotate(const Vector3 &p_axis, real_t p_angle) {
 void Node3D::rotate_x(real_t p_angle) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
-	t.basis.rotate(Vector3(1, 0, 0), p_angle);
+	t.basis.rotate(Hector3(1, 0, 0), p_angle);
 	set_transform(t);
 }
 
 void Node3D::rotate_y(real_t p_angle) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
-	t.basis.rotate(Vector3(0, 1, 0), p_angle);
+	t.basis.rotate(Hector3(0, 1, 0), p_angle);
 	set_transform(t);
 }
 
 void Node3D::rotate_z(real_t p_angle) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
-	t.basis.rotate(Vector3(0, 0, 1), p_angle);
+	t.basis.rotate(Hector3(0, 0, 1), p_angle);
 	set_transform(t);
 }
 
-void Node3D::translate(const Vector3 &p_offset) {
+void Node3D::translate(const Hector3 &p_offset) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
 	t.translate_local(p_offset);
 	set_transform(t);
 }
 
-void Node3D::translate_object_local(const Vector3 &p_offset) {
+void Node3D::translate_object_local(const Hector3 &p_offset) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
 
@@ -1008,35 +1008,35 @@ void Node3D::translate_object_local(const Vector3 &p_offset) {
 	set_transform(t * s);
 }
 
-void Node3D::scale(const Vector3 &p_ratio) {
+void Node3D::scale(const Hector3 &p_ratio) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
 	t.basis.scale(p_ratio);
 	set_transform(t);
 }
 
-void Node3D::scale_object_local(const Vector3 &p_scale) {
+void Node3D::scale_object_local(const Hector3 &p_scale) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_transform();
 	t.basis.scale_local(p_scale);
 	set_transform(t);
 }
 
-void Node3D::global_rotate(const Vector3 &p_axis, real_t p_angle) {
+void Node3D::global_rotate(const Hector3 &p_axis, real_t p_angle) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_global_transform();
 	t.basis.rotate(p_axis, p_angle);
 	set_global_transform(t);
 }
 
-void Node3D::global_scale(const Vector3 &p_scale) {
+void Node3D::global_scale(const Hector3 &p_scale) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_global_transform();
 	t.basis.scale(p_scale);
 	set_global_transform(t);
 }
 
-void Node3D::global_translate(const Vector3 &p_offset) {
+void Node3D::global_translate(const Hector3 &p_offset) {
 	ERR_THREAD_GUARD;
 	Transform3D t = get_global_transform();
 	t.origin += p_offset;
@@ -1055,33 +1055,33 @@ void Node3D::set_identity() {
 	set_transform(Transform3D());
 }
 
-void Node3D::look_at(const Vector3 &p_target, const Vector3 &p_up, bool p_use_model_front) {
+void Node3D::look_at(const Hector3 &p_target, const Hector3 &p_up, bool p_use_model_front) {
 	ERR_THREAD_GUARD;
 	ERR_FAIL_COND_MSG(!is_inside_tree(), "Node not inside tree. Use look_at_from_position() instead.");
-	Vector3 origin = get_global_transform().origin;
+	Hector3 origin = get_global_transform().origin;
 	look_at_from_position(origin, p_target, p_up, p_use_model_front);
 }
 
-void Node3D::look_at_from_position(const Vector3 &p_pos, const Vector3 &p_target, const Vector3 &p_up, bool p_use_model_front) {
+void Node3D::look_at_from_position(const Hector3 &p_pos, const Hector3 &p_target, const Hector3 &p_up, bool p_use_model_front) {
 	ERR_THREAD_GUARD;
 	ERR_FAIL_COND_MSG(p_pos.is_equal_approx(p_target), "Node origin and target are in the same position, look_at() failed.");
-	ERR_FAIL_COND_MSG(p_up.is_zero_approx(), "The up vector can't be zero, look_at() failed.");
-	ERR_FAIL_COND_MSG(p_up.cross(p_target - p_pos).is_zero_approx(), "Up vector and direction between node origin and target are aligned, look_at() failed.");
+	ERR_FAIL_COND_MSG(p_up.is_zero_approx(), "The up Hector can't be zero, look_at() failed.");
+	ERR_FAIL_COND_MSG(p_up.cross(p_target - p_pos).is_zero_approx(), "Up Hector and direction between node origin and target are aligned, look_at() failed.");
 
-	Vector3 forward = p_target - p_pos;
+	Hector3 forward = p_target - p_pos;
 	Basis lookat_basis = Basis::looking_at(forward, p_up, p_use_model_front);
-	Vector3 original_scale = get_scale();
+	Hector3 original_scale = get_scale();
 	set_global_transform(Transform3D(lookat_basis, p_pos));
 	set_scale(original_scale);
 }
 
-Vector3 Node3D::to_local(Vector3 p_global) const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::to_local(Hector3 p_global) const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	return get_global_transform().affine_inverse().xform(p_global);
 }
 
-Vector3 Node3D::to_global(Vector3 p_local) const {
-	ERR_READ_THREAD_GUARD_V(Vector3());
+Hector3 Node3D::to_global(Hector3 p_local) const {
+	ERR_READ_THREAD_GUARD_V(Hector3());
 	return get_global_transform().xform(p_local);
 }
 
@@ -1210,7 +1210,7 @@ bool Node3D::_property_get_revert(const StringName &p_name, Variant &r_property)
 		if (valid && variant.get_type() == Variant::Type::TRANSFORM3D) {
 			r_property = Transform3D(variant).get_basis().get_scale();
 		} else {
-			r_property = Vector3(1.0, 1.0, 1.0);
+			r_property = Hector3(1.0, 1.0, 1.0);
 		}
 	} else if (p_name == "quaternion") {
 		Variant variant = PropertyUtils::get_property_default_value(this, "transform", &valid);
@@ -1224,14 +1224,14 @@ bool Node3D::_property_get_revert(const StringName &p_name, Variant &r_property)
 		if (valid && variant.get_type() == Variant::Type::TRANSFORM3D) {
 			r_property = Transform3D(variant).get_basis().get_euler_normalized(data.euler_rotation_order);
 		} else {
-			r_property = Vector3();
+			r_property = Hector3();
 		}
 	} else if (p_name == "position") {
 		Variant variant = PropertyUtils::get_property_default_value(this, "transform", &valid);
 		if (valid) {
 			r_property = Transform3D(variant).get_origin();
 		} else {
-			r_property = Vector3();
+			r_property = Hector3();
 		}
 	} else {
 		return false;
@@ -1317,8 +1317,8 @@ void Node3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("orthonormalize"), &Node3D::orthonormalize);
 	ClassDB::bind_method(D_METHOD("set_identity"), &Node3D::set_identity);
 
-	ClassDB::bind_method(D_METHOD("look_at", "target", "up", "use_model_front"), &Node3D::look_at, DEFVAL(Vector3(0, 1, 0)), DEFVAL(false));
-	ClassDB::bind_method(D_METHOD("look_at_from_position", "position", "target", "up", "use_model_front"), &Node3D::look_at_from_position, DEFVAL(Vector3(0, 1, 0)), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("look_at", "target", "up", "use_model_front"), &Node3D::look_at, DEFVAL(Hector3(0, 1, 0)), DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("look_at_from_position", "position", "target", "up", "use_model_front"), &Node3D::look_at_from_position, DEFVAL(Hector3(0, 1, 0)), DEFVAL(false));
 
 	ClassDB::bind_method(D_METHOD("to_local", "global_point"), &Node3D::to_local);
 	ClassDB::bind_method(D_METHOD("to_global", "local_point"), &Node3D::to_global);
@@ -1336,20 +1336,20 @@ void Node3D::_bind_methods() {
 	ADD_GROUP("Transform", "");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "transform", PROPERTY_HINT_NONE, "suffix:m", PROPERTY_USAGE_NO_EDITOR), "set_transform", "get_transform");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "global_transform", PROPERTY_HINT_NONE, "suffix:m", PROPERTY_USAGE_NONE), "set_global_transform", "get_global_transform");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "position", PROPERTY_HINT_RANGE, "-99999,99999,0.001,or_greater,or_less,hide_slider,suffix:m", PROPERTY_USAGE_EDITOR), "set_position", "get_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees", PROPERTY_USAGE_EDITOR), "set_rotation", "get_rotation");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_rotation_degrees", "get_rotation_degrees");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "position", PROPERTY_HINT_RANGE, "-99999,99999,0.001,or_greater,or_less,hide_slider,suffix:m", PROPERTY_USAGE_EDITOR), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees", PROPERTY_USAGE_EDITOR), "set_rotation", "get_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_rotation_degrees", "get_rotation_degrees");
 	ADD_PROPERTY(PropertyInfo(Variant::QUATERNION, "quaternion", PROPERTY_HINT_HIDE_QUATERNION_EDIT, "", PROPERTY_USAGE_EDITOR), "set_quaternion", "get_quaternion");
 	ADD_PROPERTY(PropertyInfo(Variant::BASIS, "basis", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_basis", "get_basis");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "scale", PROPERTY_HINT_LINK, "", PROPERTY_USAGE_EDITOR), "set_scale", "get_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "scale", PROPERTY_HINT_LINK, "", PROPERTY_USAGE_EDITOR), "set_scale", "get_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "rotation_edit_mode", PROPERTY_HINT_ENUM, "Euler,Quaternion,Basis"), "set_rotation_edit_mode", "get_rotation_edit_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "rotation_order", PROPERTY_HINT_ENUM, "XYZ,XZY,YXZ,YZX,ZXY,ZYX"), "set_rotation_order", "get_rotation_order");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "top_level"), "set_as_top_level", "is_set_as_top_level");
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "global_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_position", "get_global_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "global_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_position", "get_global_position");
 	ADD_PROPERTY(PropertyInfo(Variant::BASIS, "global_basis", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_basis", "get_global_basis");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "global_rotation", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_rotation", "get_global_rotation");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "global_rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_rotation_degrees", "get_global_rotation_degrees");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "global_rotation", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_rotation", "get_global_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "global_rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_rotation_degrees", "get_global_rotation_degrees");
 	ADD_GROUP("Visibility", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "visible"), "set_visible", "is_visible");
 	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "visibility_parent", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "GeometryInstance3D"), "set_visibility_parent", "get_visibility_parent");

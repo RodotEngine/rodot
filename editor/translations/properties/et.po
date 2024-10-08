@@ -769,10 +769,10 @@ msgstr "Keela Stseenipuu Kokkuvoldimine"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Võõraste Stseenide Automaatne Lahti Harutamine"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "Horisontaalne Vector2 Redigeerimine"
+msgid "Horizontal Hector2 Editing"
+msgstr "Horisontaalne Hector2 Redigeerimine"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Horisontaalsete Vektortüüpide Redigeerimine"
 
 msgid "Open Resources in Current Inspector"
@@ -862,7 +862,7 @@ msgstr "Välised Programmid"
 msgid "Raster Image Editor"
 msgstr "Rasterpildi Redaktor"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Vektorkujutise Redaktor"
 
 msgid "Audio Editor"

@@ -60,7 +60,7 @@ bool FabrikInverseKinematic::build_chain(Task *p_task, bool p_force_simple_chain
 	chain.middle_chain_item = nullptr;
 
 	// Holds all IDs that are composing a single chain in reverse order
-	Vector<BoneId> chain_ids;
+	Hector<BoneId> chain_ids;
 	// This is used to know the chain size
 	int sub_chain_size;
 	// Resize only one time in order to fit all joints for performance reason
@@ -123,7 +123,7 @@ bool FabrikInverseKinematic::build_chain(Task *p_task, bool p_force_simple_chain
 	return true;
 }
 
-void FabrikInverseKinematic::solve_simple(Task *p_task, bool p_solve_magnet, Vector3 p_origin_pos) {
+void FabrikInverseKinematic::solve_simple(Task *p_task, bool p_solve_magnet, Hector3 p_origin_pos) {
 	real_t distance_to_goal(1e4);
 	real_t previous_distance_to_goal(0);
 	int can_solve(p_task->max_iterations);
@@ -143,7 +143,7 @@ void FabrikInverseKinematic::solve_simple_backwards(const Chain &r_chain, bool p
 		return;
 	}
 
-	Vector3 goal;
+	Hector3 goal;
 	ChainItem *sub_chain_tip;
 	if (p_solve_magnet) {
 		goal = r_chain.magnet_position;
@@ -160,7 +160,7 @@ void FabrikInverseKinematic::solve_simple_backwards(const Chain &r_chain, bool p
 			// Not yet in the chain root
 			// So calculate next goal location
 
-			const Vector3 look_parent((sub_chain_tip->parent_item->current_pos - sub_chain_tip->current_pos).normalized());
+			const Hector3 look_parent((sub_chain_tip->parent_item->current_pos - sub_chain_tip->current_pos).normalized());
 			goal = sub_chain_tip->current_pos + (look_parent * sub_chain_tip->length);
 
 			// [TODO] Constraints goes here
@@ -170,13 +170,13 @@ void FabrikInverseKinematic::solve_simple_backwards(const Chain &r_chain, bool p
 	}
 }
 
-void FabrikInverseKinematic::solve_simple_forwards(Chain &r_chain, bool p_solve_magnet, Vector3 p_origin_pos) {
+void FabrikInverseKinematic::solve_simple_forwards(Chain &r_chain, bool p_solve_magnet, Hector3 p_origin_pos) {
 	if (p_solve_magnet && !r_chain.middle_chain_item) {
 		return;
 	}
 
 	ChainItem *sub_chain_root(&r_chain.chain_root);
-	Vector3 origin = p_origin_pos;
+	Hector3 origin = p_origin_pos;
 
 	while (sub_chain_root) { // Reach the tip
 		sub_chain_root->current_pos = origin;
@@ -239,11 +239,11 @@ void FabrikInverseKinematic::make_goal(Task *p_task, const Transform3D &p_invers
 	p_task->end_effectors.write[0].goal_transform = p_inverse_transf * p_task->goal_global_transform;
 }
 
-void FabrikInverseKinematic::solve(Task *p_task, bool override_tip_basis, bool p_use_magnet, const Vector3 &p_magnet_position) {
+void FabrikInverseKinematic::solve(Task *p_task, bool override_tip_basis, bool p_use_magnet, const Hector3 &p_magnet_position) {
 	// Update the initial root transform so its synced with any animation changes
 	_update_chain(p_task->skeleton, &p_task->chain.chain_root);
 
-	Vector3 origin_pos = p_task->skeleton->get_bone_global_pose(p_task->chain.chain_root.bone).origin;
+	Hector3 origin_pos = p_task->skeleton->get_bone_global_pose(p_task->chain.chain_root.bone).origin;
 
 	make_goal(p_task, p_task->skeleton->get_global_transform().affine_inverse());
 
@@ -260,9 +260,9 @@ void FabrikInverseKinematic::solve(Task *p_task, bool override_tip_basis, bool p
 		new_bone_pose.origin = ci->current_pos;
 
 		if (!ci->children.is_empty()) {
-			Vector3 forward_vector = (ci->children[0].initial_transform.origin - ci->initial_transform.origin).normalized();
+			Hector3 forward_Hector = (ci->children[0].initial_transform.origin - ci->initial_transform.origin).normalized();
 			// Rotate the bone towards the next bone in the chain:
-			new_bone_pose.basis.rotate_to_align(forward_vector, new_bone_pose.origin.direction_to(ci->children[0].current_pos));
+			new_bone_pose.basis.rotate_to_align(forward_Hector, new_bone_pose.origin.direction_to(ci->children[0].current_pos));
 
 		} else {
 			// Set target orientation to tip
@@ -354,7 +354,7 @@ void SkeletonIK3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "target", PROPERTY_HINT_NONE, "suffix:m"), "set_target_transform", "get_target_transform");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "override_tip_basis"), "set_override_tip_basis", "is_override_tip_basis");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_magnet"), "set_use_magnet", "is_using_magnet");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "magnet", PROPERTY_HINT_NONE, "suffix:m"), "set_magnet_position", "get_magnet_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "magnet", PROPERTY_HINT_NONE, "suffix:m"), "set_magnet_position", "get_magnet_position");
 	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "target_node"), "set_target_node", "get_target_node");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "min_distance", PROPERTY_HINT_NONE, "suffix:m"), "set_min_distance", "get_min_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_iterations"), "set_max_iterations", "get_max_iterations");
@@ -458,11 +458,11 @@ bool SkeletonIK3D::is_using_magnet() const {
 	return use_magnet;
 }
 
-void SkeletonIK3D::set_magnet_position(const Vector3 &p_local_position) {
+void SkeletonIK3D::set_magnet_position(const Hector3 &p_local_position) {
 	magnet_position = p_local_position;
 }
 
-const Vector3 &SkeletonIK3D::get_magnet_position() const {
+const Hector3 &SkeletonIK3D::get_magnet_position() const {
 	return magnet_position;
 }
 

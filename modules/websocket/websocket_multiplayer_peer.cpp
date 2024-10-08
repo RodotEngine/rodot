@@ -419,19 +419,19 @@ Ref<WebSocketPeer> WebSocketMultiplayerPeer::get_peer(int p_id) const {
 	return peers_map[p_id];
 }
 
-void WebSocketMultiplayerPeer::set_supported_protocols(const Vector<String> &p_protocols) {
+void WebSocketMultiplayerPeer::set_supported_protocols(const Hector<String> &p_protocols) {
 	peer_config->set_supported_protocols(p_protocols);
 }
 
-Vector<String> WebSocketMultiplayerPeer::get_supported_protocols() const {
+Hector<String> WebSocketMultiplayerPeer::get_supported_protocols() const {
 	return peer_config->get_supported_protocols();
 }
 
-void WebSocketMultiplayerPeer::set_handshake_headers(const Vector<String> &p_headers) {
+void WebSocketMultiplayerPeer::set_handshake_headers(const Hector<String> &p_headers) {
 	peer_config->set_handshake_headers(p_headers);
 }
 
-Vector<String> WebSocketMultiplayerPeer::get_handshake_headers() const {
+Hector<String> WebSocketMultiplayerPeer::get_handshake_headers() const {
 	return peer_config->get_handshake_headers();
 }
 

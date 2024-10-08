@@ -1250,7 +1250,7 @@ void Theme::get_type_list(List<StringName> *p_list) const {
 	}
 }
 
-void Theme::get_type_dependencies(const StringName &p_base_type, const StringName &p_type_variation, Vector<StringName> &r_result) {
+void Theme::get_type_dependencies(const StringName &p_base_type, const StringName &p_type_variation, Hector<StringName> &r_result) {
 	// Build the dependency chain for type variations.
 	if (p_type_variation != StringName()) {
 		StringName variation_name = p_type_variation;
@@ -1269,9 +1269,9 @@ void Theme::get_type_dependencies(const StringName &p_base_type, const StringNam
 	ThemeDB::get_singleton()->get_native_type_dependencies(p_base_type, r_result);
 }
 
-// Internal methods for getting lists as a Vector of String (compatible with public API).
-Vector<String> Theme::_get_icon_list(const String &p_theme_type) const {
-	Vector<String> ilret;
+// Internal methods for getting lists as a Hector of String (compatible with public API).
+Hector<String> Theme::_get_icon_list(const String &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_icon_list(p_theme_type, &il);
@@ -1285,8 +1285,8 @@ Vector<String> Theme::_get_icon_list(const String &p_theme_type) const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_icon_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_icon_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_icon_type_list(&il);
@@ -1300,8 +1300,8 @@ Vector<String> Theme::_get_icon_type_list() const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_stylebox_list(const String &p_theme_type) const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_stylebox_list(const String &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_stylebox_list(p_theme_type, &il);
@@ -1315,8 +1315,8 @@ Vector<String> Theme::_get_stylebox_list(const String &p_theme_type) const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_stylebox_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_stylebox_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_stylebox_type_list(&il);
@@ -1330,8 +1330,8 @@ Vector<String> Theme::_get_stylebox_type_list() const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_font_list(const String &p_theme_type) const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_font_list(const String &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_font_list(p_theme_type, &il);
@@ -1345,8 +1345,8 @@ Vector<String> Theme::_get_font_list(const String &p_theme_type) const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_font_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_font_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_font_type_list(&il);
@@ -1360,8 +1360,8 @@ Vector<String> Theme::_get_font_type_list() const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_font_size_list(const String &p_theme_type) const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_font_size_list(const String &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_font_size_list(p_theme_type, &il);
@@ -1375,8 +1375,8 @@ Vector<String> Theme::_get_font_size_list(const String &p_theme_type) const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_font_size_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_font_size_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_font_size_type_list(&il);
@@ -1390,8 +1390,8 @@ Vector<String> Theme::_get_font_size_type_list() const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_color_list(const String &p_theme_type) const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_color_list(const String &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_color_list(p_theme_type, &il);
@@ -1405,8 +1405,8 @@ Vector<String> Theme::_get_color_list(const String &p_theme_type) const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_color_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_color_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_color_type_list(&il);
@@ -1420,8 +1420,8 @@ Vector<String> Theme::_get_color_type_list() const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_constant_list(const String &p_theme_type) const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_constant_list(const String &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_constant_list(p_theme_type, &il);
@@ -1435,8 +1435,8 @@ Vector<String> Theme::_get_constant_list(const String &p_theme_type) const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_constant_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_constant_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_constant_type_list(&il);
@@ -1450,7 +1450,7 @@ Vector<String> Theme::_get_constant_type_list() const {
 	return ilret;
 }
 
-Vector<String> Theme::_get_theme_item_list(DataType p_data_type, const String &p_theme_type) const {
+Hector<String> Theme::_get_theme_item_list(DataType p_data_type, const String &p_theme_type) const {
 	switch (p_data_type) {
 		case DATA_TYPE_COLOR:
 			return _get_color_list(p_theme_type);
@@ -1468,10 +1468,10 @@ Vector<String> Theme::_get_theme_item_list(DataType p_data_type, const String &p
 			break; // Can't happen, but silences warning.
 	}
 
-	return Vector<String>();
+	return Hector<String>();
 }
 
-Vector<String> Theme::_get_theme_item_type_list(DataType p_data_type) const {
+Hector<String> Theme::_get_theme_item_type_list(DataType p_data_type) const {
 	switch (p_data_type) {
 		case DATA_TYPE_COLOR:
 			return _get_color_type_list();
@@ -1489,11 +1489,11 @@ Vector<String> Theme::_get_theme_item_type_list(DataType p_data_type) const {
 			break; // Can't happen, but silences warning.
 	}
 
-	return Vector<String>();
+	return Hector<String>();
 }
 
-Vector<String> Theme::_get_type_variation_list(const StringName &p_theme_type) const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_type_variation_list(const StringName &p_theme_type) const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_type_variation_list(p_theme_type, &il);
@@ -1507,8 +1507,8 @@ Vector<String> Theme::_get_type_variation_list(const StringName &p_theme_type) c
 	return ilret;
 }
 
-Vector<String> Theme::_get_type_list() const {
-	Vector<String> ilret;
+Hector<String> Theme::_get_type_list() const {
+	Hector<String> ilret;
 	List<StringName> il;
 
 	get_type_list(&il);

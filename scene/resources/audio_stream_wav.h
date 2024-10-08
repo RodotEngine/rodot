@@ -62,7 +62,7 @@ class AudioStreamPlaybackWAV : public AudioStreamPlayback {
 		qoa_desc desc = {};
 		uint32_t data_ofs = 0;
 		uint32_t frame_len = 0;
-		LocalVector<int16_t> dec;
+		LocalHector<int16_t> dec;
 		uint32_t dec_len = 0;
 		int64_t cache_pos = -1;
 		int16_t cache[2] = { 0, 0 };
@@ -137,7 +137,7 @@ private:
 	int loop_begin = 0;
 	int loop_end = 0;
 	int mix_rate = 44100;
-	LocalVector<uint8_t> data;
+	LocalHector<uint8_t> data;
 	uint32_t data_bytes = 0;
 
 protected:
@@ -166,8 +166,8 @@ public:
 
 	virtual bool is_monophonic() const override;
 
-	void set_data(const Vector<uint8_t> &p_data);
-	Vector<uint8_t> get_data() const;
+	void set_data(const Hector<uint8_t> &p_data);
+	Hector<uint8_t> get_data() const;
 
 	Error save_to_wav(const String &p_path);
 

@@ -394,9 +394,9 @@ Ref<Resource> Resource::duplicate(bool p_subresources) const {
 			case Variant::Type::PACKED_FLOAT32_ARRAY:
 			case Variant::Type::PACKED_FLOAT64_ARRAY:
 			case Variant::Type::PACKED_STRING_ARRAY:
-			case Variant::Type::PACKED_VECTOR2_ARRAY:
-			case Variant::Type::PACKED_VECTOR3_ARRAY:
-			case Variant::Type::PACKED_VECTOR4_ARRAY: {
+			case Variant::Type::PACKED_Hector2_ARRAY:
+			case Variant::Type::PACKED_Hector3_ARRAY:
+			case Variant::Type::PACKED_Hector4_ARRAY: {
 				r->set(E.name, p.duplicate(p_subresources));
 			} break;
 
@@ -669,7 +669,7 @@ Ref<Resource> ResourceCache::get_ref(const String &p_path) {
 void ResourceCache::get_cached_resources(List<Ref<Resource>> *p_resources) {
 	MutexLock mutex_lock(lock);
 
-	LocalVector<String> to_remove;
+	LocalHector<String> to_remove;
 
 	for (KeyValue<String, Resource *> &E : resources) {
 		Ref<Resource> ref = Ref<Resource>(E.value);

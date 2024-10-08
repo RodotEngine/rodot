@@ -236,7 +236,7 @@
 			</description>
 		</method>
 		<method name="get_caret_draw_pos" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="caret_index" type="int" default="0" />
 			<description>
 				Returns the caret pixel draw position.
@@ -348,11 +348,11 @@
 			</description>
 		</method>
 		<method name="get_line_column_at_pos" qualifiers="const">
-			<return type="Vector2i" />
-			<param index="0" name="position" type="Vector2i" />
+			<return type="Hector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<param index="1" name="allow_out_of_bounds" type="bool" default="true" />
 			<description>
-				Returns the line and column at the given position. In the returned vector, [code]x[/code] is the column, [code]y[/code] is the line. If [param allow_out_of_bounds] is [code]false[/code] and the position is not over the text, both vector values will be set to [code]-1[/code].
+				Returns the line and column at the given position. In the returned Hector, [code]x[/code] is the column, [code]y[/code] is the line. If [param allow_out_of_bounds] is [code]false[/code] and the position is not over the text, both Hector values will be set to [code]-1[/code].
 			</description>
 		</method>
 		<method name="get_line_count" qualifiers="const">
@@ -401,7 +401,7 @@
 			</description>
 		</method>
 		<method name="get_line_ranges_from_carets" qualifiers="const">
-			<return type="Vector2i[]" />
+			<return type="Hector2i[]" />
 			<param index="0" name="only_selections" type="bool" default="false" />
 			<param index="1" name="merge_adjacent" type="bool" default="true" />
 			<description>
@@ -440,7 +440,7 @@
 			</description>
 		</method>
 		<method name="get_local_mouse_pos" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the local mouse position adjusted for the text direction.
 			</description>
@@ -493,7 +493,7 @@
 		</method>
 		<method name="get_minimap_line_at_pos" qualifiers="const">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<description>
 				Returns the equivalent minimap line at [param position].
 			</description>
@@ -505,12 +505,12 @@
 			</description>
 		</method>
 		<method name="get_next_visible_line_index_offset_from" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="line" type="int" />
 			<param index="1" name="wrap_index" type="int" />
 			<param index="2" name="visible_amount" type="int" />
 			<description>
-				Similar to [method get_next_visible_line_offset_from], but takes into account the line wrap indexes. In the returned vector, [code]x[/code] is the line, [code]y[/code] is the wrap index.
+				Similar to [method get_next_visible_line_offset_from], but takes into account the line wrap indexes. In the returned Hector, [code]x[/code] is the line, [code]y[/code] is the wrap index.
 			</description>
 		</method>
 		<method name="get_next_visible_line_offset_from" qualifiers="const">
@@ -522,11 +522,11 @@
 			</description>
 		</method>
 		<method name="get_pos_at_line_column" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="line" type="int" />
 			<param index="1" name="column" type="int" />
 			<description>
-				Returns the local position for the given [param line] and [param column]. If [code]x[/code] or [code]y[/code] of the returned vector equal [code]-1[/code], the position is outside of the viewable area of the control.
+				Returns the local position for the given [param line] and [param column]. If [code]x[/code] or [code]y[/code] of the returned Hector equal [code]-1[/code], the position is outside of the viewable area of the control.
 				[b]Note:[/b] The Y position corresponds to the bottom side of the line. Use [method get_rect_at_line_column] to get the top side position.
 			</description>
 		</method>
@@ -687,7 +687,7 @@
 		</method>
 		<method name="get_word_at_pos" qualifiers="const">
 			<return type="String" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<description>
 				Returns the word at [param position].
 			</description>
@@ -927,14 +927,14 @@
 			</description>
 		</method>
 		<method name="search" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="text" type="String" />
 			<param index="1" name="flags" type="int" />
 			<param index="2" name="from_line" type="int" />
 			<param index="3" name="from_column" type="int" />
 			<description>
 				Perform a search inside the text. Search flags can be specified in the [enum SearchFlags] enum.
-				In the returned vector, [code]x[/code] is the column, [code]y[/code] is the line. If no results are found, both are equal to [code]-1[/code].
+				In the returned Hector, [code]x[/code] is the column, [code]y[/code] is the line. If no results are found, both are equal to [code]-1[/code].
 				[codeblocks]
 				[gdscript]
 				var result = search("print", SEARCH_WHOLE_WORDS, 0, 0)
@@ -944,7 +944,7 @@
 				    var column_number = result.x
 				[/gdscript]
 				[csharp]
-				Vector2I result = Search("print", (uint)TextEdit.SearchFlags.WholeWords, 0, 0);
+				Hector2I result = Search("print", (uint)TextEdit.SearchFlags.WholeWords, 0, 0);
 				if (result.X != -1)
 				{
 				    // Result found.

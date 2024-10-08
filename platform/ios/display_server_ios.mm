@@ -53,7 +53,7 @@ DisplayServerIOS *DisplayServerIOS::get_singleton() {
 	return (DisplayServerIOS *)DisplayServer::get_singleton();
 }
 
-DisplayServerIOS::DisplayServerIOS(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServerIOS::DisplayServerIOS(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	KeyMappingIOS::initialize();
 
 	rendering_driver = p_rendering_driver;
@@ -191,12 +191,12 @@ DisplayServerIOS::~DisplayServerIOS() {
 #endif
 }
 
-DisplayServer *DisplayServerIOS::create_func(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServer *DisplayServerIOS::create_func(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	return memnew(DisplayServerIOS(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, p_context, r_error));
 }
 
-Vector<String> DisplayServerIOS::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerIOS::get_rendering_drivers_func() {
+	Hector<String> drivers;
 
 #if defined(VULKAN_ENABLED)
 	drivers.push_back("vulkan");
@@ -274,19 +274,19 @@ void DisplayServerIOS::touch_press(int p_idx, int p_x, int p_y, bool p_pressed, 
 
 	ev->set_index(p_idx);
 	ev->set_pressed(p_pressed);
-	ev->set_position(Vector2(p_x, p_y));
+	ev->set_position(Hector2(p_x, p_y));
 	ev->set_double_tap(p_double_click);
 	perform_event(ev);
 }
 
-void DisplayServerIOS::touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Vector2 p_tilt) {
+void DisplayServerIOS::touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Hector2 p_tilt) {
 	Ref<InputEventScreenDrag> ev;
 	ev.instantiate();
 	ev->set_index(p_idx);
 	ev->set_pressure(p_pressure);
 	ev->set_tilt(p_tilt);
-	ev->set_position(Vector2(p_x, p_y));
-	ev->set_relative(Vector2(p_x - p_prev_x, p_y - p_prev_y));
+	ev->set_position(Hector2(p_x, p_y));
+	ev->set_relative(Hector2(p_x - p_prev_x, p_y - p_prev_y));
 	ev->set_relative_screen_position(ev->get_relative());
 	perform_event(ev);
 }
@@ -330,19 +330,19 @@ void DisplayServerIOS::key(Key p_key, char32_t p_char, Key p_unshifted, Key p_ph
 
 // MARK: Motion
 
-void DisplayServerIOS::update_gravity(const Vector3 &p_gravity) {
+void DisplayServerIOS::update_gravity(const Hector3 &p_gravity) {
 	Input::get_singleton()->set_gravity(p_gravity);
 }
 
-void DisplayServerIOS::update_accelerometer(const Vector3 &p_accelerometer) {
+void DisplayServerIOS::update_accelerometer(const Hector3 &p_accelerometer) {
 	Input::get_singleton()->set_accelerometer(p_accelerometer / kDisplayServerIOSAcceleration);
 }
 
-void DisplayServerIOS::update_magnetometer(const Vector3 &p_magnetometer) {
+void DisplayServerIOS::update_magnetometer(const Hector3 &p_magnetometer) {
 	Input::get_singleton()->set_magnetometer(p_magnetometer);
 }
 
-void DisplayServerIOS::update_gyroscope(const Vector3 &p_gyroscope) {
+void DisplayServerIOS::update_gyroscope(const Hector3 &p_gyroscope) {
 	Input::get_singleton()->set_gyroscope(p_gyroscope);
 }
 
@@ -536,8 +536,8 @@ float DisplayServerIOS::screen_get_scale(int p_screen) const {
 	return [UIScreen mainScreen].scale;
 }
 
-Vector<DisplayServer::WindowID> DisplayServerIOS::get_window_list() const {
-	Vector<DisplayServer::WindowID> list;
+Hector<DisplayServer::WindowID> DisplayServerIOS::get_window_list() const {
+	Hector<DisplayServer::WindowID> list;
 	list.push_back(MAIN_WINDOW_ID);
 	return list;
 }

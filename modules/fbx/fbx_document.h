@@ -49,7 +49,7 @@ public:
 
 	static Transform3D _as_xform(const ufbx_matrix &p_mat);
 	static String _as_string(const ufbx_string &p_string);
-	static Vector3 _as_vec3(const ufbx_vec3 &p_vector);
+	static Hector3 _as_vec3(const ufbx_vec3 &p_Hector);
 	static String _gen_unique_name(HashSet<String> &unique_names, const String &p_name);
 
 public:
@@ -63,8 +63,8 @@ public:
 
 private:
 	String _get_texture_path(const String &p_base_directory, const String &p_source_file_path) const;
-	void _process_uv_set(PackedVector2Array &uv_array);
-	void _zero_unused_elements(Vector<float> &cur_custom, int start, int end, int num_channels);
+	void _process_uv_set(PackedHector2Array &uv_array);
+	void _zero_unused_elements(Hector<float> &cur_custom, int start, int end, int num_channels);
 	Error _parse_scenes(Ref<FBXState> p_state);
 	Error _parse_nodes(Ref<FBXState> p_state);
 	String _sanitize_animation_name(const String &p_name);
@@ -72,8 +72,8 @@ private:
 	Ref<Texture2D> _get_texture(Ref<FBXState> p_state,
 			const GLTFTextureIndex p_texture, int p_texture_type);
 	Error _parse_meshes(Ref<FBXState> p_state);
-	Ref<Image> _parse_image_bytes_into_image(Ref<FBXState> p_state, const Vector<uint8_t> &p_bytes, const String &p_filename, int p_index);
-	GLTFImageIndex _parse_image_save_image(Ref<FBXState> p_state, const Vector<uint8_t> &p_bytes, const String &p_file_extension, int p_index, Ref<Image> p_image);
+	Ref<Image> _parse_image_bytes_into_image(Ref<FBXState> p_state, const Hector<uint8_t> &p_bytes, const String &p_filename, int p_index);
+	GLTFImageIndex _parse_image_save_image(Ref<FBXState> p_state, const Hector<uint8_t> &p_bytes, const String &p_file_extension, int p_index, Ref<Image> p_image);
 	Error _parse_images(Ref<FBXState> p_state, const String &p_base_path);
 	Error _parse_materials(Ref<FBXState> p_state);
 	Error _parse_skins(Ref<FBXState> p_state);

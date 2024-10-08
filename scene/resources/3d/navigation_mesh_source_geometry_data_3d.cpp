@@ -30,30 +30,30 @@
 
 #include "navigation_mesh_source_geometry_data_3d.h"
 
-void NavigationMeshSourceGeometryData3D::set_vertices(const Vector<float> &p_vertices) {
+void NavigationMeshSourceGeometryData3D::set_vertices(const Hector<float> &p_vertices) {
 	RWLockWrite write_lock(geometry_rwlock);
 	vertices = p_vertices;
 	bounds_dirty = true;
 }
 
-const Vector<float> &NavigationMeshSourceGeometryData3D::get_vertices() const {
+const Hector<float> &NavigationMeshSourceGeometryData3D::get_vertices() const {
 	RWLockRead read_lock(geometry_rwlock);
 	return vertices;
 }
 
-void NavigationMeshSourceGeometryData3D::set_indices(const Vector<int> &p_indices) {
+void NavigationMeshSourceGeometryData3D::set_indices(const Hector<int> &p_indices) {
 	ERR_FAIL_COND(vertices.size() < p_indices.size());
 	RWLockWrite write_lock(geometry_rwlock);
 	indices = p_indices;
 	bounds_dirty = true;
 }
 
-const Vector<int> &NavigationMeshSourceGeometryData3D::get_indices() const {
+const Hector<int> &NavigationMeshSourceGeometryData3D::get_indices() const {
 	RWLockRead read_lock(geometry_rwlock);
 	return indices;
 }
 
-void NavigationMeshSourceGeometryData3D::append_arrays(const Vector<float> &p_vertices, const Vector<int> &p_indices) {
+void NavigationMeshSourceGeometryData3D::append_arrays(const Hector<float> &p_vertices, const Hector<int> &p_indices) {
 	RWLockWrite write_lock(geometry_rwlock);
 
 	const int64_t number_of_vertices_before_merge = vertices.size();
@@ -87,7 +87,7 @@ void NavigationMeshSourceGeometryData3D::clear_projected_obstructions() {
 	bounds_dirty = true;
 }
 
-void NavigationMeshSourceGeometryData3D::_add_vertex(const Vector3 &p_vec3) {
+void NavigationMeshSourceGeometryData3D::_add_vertex(const Hector3 &p_vec3) {
 	vertices.push_back(p_vec3.x);
 	vertices.push_back(p_vec3.y);
 	vertices.push_back(p_vec3.z);
@@ -116,12 +116,12 @@ void NavigationMeshSourceGeometryData3D::_add_mesh(const Ref<Mesh> &p_mesh, cons
 		Array a = p_mesh->surface_get_arrays(i);
 		ERR_CONTINUE(a.is_empty() || (a.size() != Mesh::ARRAY_MAX));
 
-		Vector<Vector3> mesh_vertices = a[Mesh::ARRAY_VERTEX];
+		Hector<Hector3> mesh_vertices = a[Mesh::ARRAY_VERTEX];
 		ERR_CONTINUE(mesh_vertices.is_empty());
-		const Vector3 *vr = mesh_vertices.ptr();
+		const Hector3 *vr = mesh_vertices.ptr();
 
 		if (p_mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
-			Vector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
+			Hector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
 			ERR_CONTINUE(mesh_indices.is_empty() || (mesh_indices.size() != index_count));
 			const int *ir = mesh_indices.ptr();
 
@@ -154,11 +154,11 @@ void NavigationMeshSourceGeometryData3D::_add_mesh(const Ref<Mesh> &p_mesh, cons
 void NavigationMeshSourceGeometryData3D::_add_mesh_array(const Array &p_mesh_array, const Transform3D &p_xform) {
 	ERR_FAIL_COND(p_mesh_array.size() != Mesh::ARRAY_MAX);
 
-	Vector<Vector3> mesh_vertices = p_mesh_array[Mesh::ARRAY_VERTEX];
+	Hector<Hector3> mesh_vertices = p_mesh_array[Mesh::ARRAY_VERTEX];
 	ERR_FAIL_COND(mesh_vertices.is_empty());
-	const Vector3 *vr = mesh_vertices.ptr();
+	const Hector3 *vr = mesh_vertices.ptr();
 
-	Vector<int> mesh_indices = p_mesh_array[Mesh::ARRAY_INDEX];
+	Hector<int> mesh_indices = p_mesh_array[Mesh::ARRAY_INDEX];
 	ERR_FAIL_COND(mesh_indices.is_empty());
 	const int *ir = mesh_indices.ptr();
 
@@ -177,7 +177,7 @@ void NavigationMeshSourceGeometryData3D::_add_mesh_array(const Array &p_mesh_arr
 	}
 }
 
-void NavigationMeshSourceGeometryData3D::_add_faces(const PackedVector3Array &p_faces, const Transform3D &p_xform) {
+void NavigationMeshSourceGeometryData3D::_add_faces(const PackedHector3Array &p_faces, const Transform3D &p_xform) {
 	ERR_FAIL_COND(p_faces.is_empty());
 	ERR_FAIL_COND(p_faces.size() % 3 != 0);
 	int face_count = p_faces.size() / 3;
@@ -215,7 +215,7 @@ void NavigationMeshSourceGeometryData3D::add_mesh_array(const Array &p_mesh_arra
 	bounds_dirty = true;
 }
 
-void NavigationMeshSourceGeometryData3D::add_faces(const PackedVector3Array &p_faces, const Transform3D &p_xform) {
+void NavigationMeshSourceGeometryData3D::add_faces(const PackedHector3Array &p_faces, const Transform3D &p_xform) {
 	ERR_FAIL_COND(p_faces.size() % 3 != 0);
 	RWLockWrite write_lock(geometry_rwlock);
 	_add_faces(p_faces, root_node_transform * p_xform);
@@ -225,9 +225,9 @@ void NavigationMeshSourceGeometryData3D::add_faces(const PackedVector3Array &p_f
 void NavigationMeshSourceGeometryData3D::merge(const Ref<NavigationMeshSourceGeometryData3D> &p_other_geometry) {
 	ERR_FAIL_COND(p_other_geometry.is_null());
 
-	Vector<float> other_vertices;
-	Vector<int> other_indices;
-	Vector<ProjectedObstruction> other_projected_obstructions;
+	Hector<float> other_vertices;
+	Hector<int> other_indices;
+	Hector<ProjectedObstruction> other_projected_obstructions;
 
 	p_other_geometry->get_data(other_vertices, other_indices, other_projected_obstructions);
 
@@ -246,7 +246,7 @@ void NavigationMeshSourceGeometryData3D::merge(const Ref<NavigationMeshSourceGeo
 	bounds_dirty = true;
 }
 
-void NavigationMeshSourceGeometryData3D::add_projected_obstruction(const Vector<Vector3> &p_vertices, float p_elevation, float p_height, bool p_carve) {
+void NavigationMeshSourceGeometryData3D::add_projected_obstruction(const Hector<Hector3> &p_vertices, float p_elevation, float p_height, bool p_carve) {
 	ERR_FAIL_COND(p_vertices.size() < 3);
 	ERR_FAIL_COND(p_height < 0.0);
 
@@ -259,7 +259,7 @@ void NavigationMeshSourceGeometryData3D::add_projected_obstruction(const Vector<
 	float *obstruction_vertices_ptrw = projected_obstruction.vertices.ptrw();
 
 	int vertex_index = 0;
-	for (const Vector3 &vertex : p_vertices) {
+	for (const Hector3 &vertex : p_vertices) {
 		obstruction_vertices_ptrw[vertex_index++] = vertex.x;
 		obstruction_vertices_ptrw[vertex_index++] = vertex.y;
 		obstruction_vertices_ptrw[vertex_index++] = vertex.z;
@@ -287,7 +287,7 @@ void NavigationMeshSourceGeometryData3D::set_projected_obstructions(const Array 
 		}
 
 		ProjectedObstruction projected_obstruction;
-		projected_obstruction.vertices = Vector<float>(data["vertices"]);
+		projected_obstruction.vertices = Hector<float>(data["vertices"]);
 		projected_obstruction.elevation = data["elevation"];
 		projected_obstruction.height = data["height"];
 		projected_obstruction.carve = data["carve"];
@@ -298,7 +298,7 @@ void NavigationMeshSourceGeometryData3D::set_projected_obstructions(const Array 
 	}
 }
 
-Vector<NavigationMeshSourceGeometryData3D::ProjectedObstruction> NavigationMeshSourceGeometryData3D::_get_projected_obstructions() const {
+Hector<NavigationMeshSourceGeometryData3D::ProjectedObstruction> NavigationMeshSourceGeometryData3D::_get_projected_obstructions() const {
 	RWLockRead read_lock(geometry_rwlock);
 	return _projected_obstructions;
 }
@@ -341,7 +341,7 @@ bool NavigationMeshSourceGeometryData3D::_get(const StringName &p_name, Variant 
 	return false;
 }
 
-void NavigationMeshSourceGeometryData3D::set_data(const Vector<float> &p_vertices, const Vector<int> &p_indices, Vector<ProjectedObstruction> &p_projected_obstructions) {
+void NavigationMeshSourceGeometryData3D::set_data(const Hector<float> &p_vertices, const Hector<int> &p_indices, Hector<ProjectedObstruction> &p_projected_obstructions) {
 	RWLockWrite write_lock(geometry_rwlock);
 	vertices = p_vertices;
 	indices = p_indices;
@@ -349,7 +349,7 @@ void NavigationMeshSourceGeometryData3D::set_data(const Vector<float> &p_vertice
 	bounds_dirty = true;
 }
 
-void NavigationMeshSourceGeometryData3D::get_data(Vector<float> &r_vertices, Vector<int> &r_indices, Vector<ProjectedObstruction> &r_projected_obstructions) {
+void NavigationMeshSourceGeometryData3D::get_data(Hector<float> &r_vertices, Hector<int> &r_indices, Hector<ProjectedObstruction> &r_projected_obstructions) {
 	RWLockRead read_lock(geometry_rwlock);
 	r_vertices = vertices;
 	r_indices = indices;
@@ -368,7 +368,7 @@ AABB NavigationMeshSourceGeometryData3D::get_bounds() {
 		bool first_vertex = true;
 
 		for (int i = 0; i < vertices.size() / 3; i++) {
-			const Vector3 vertex = Vector3(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]);
+			const Hector3 vertex = Hector3(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]);
 			if (first_vertex) {
 				first_vertex = false;
 				bounds.position = vertex;
@@ -378,7 +378,7 @@ AABB NavigationMeshSourceGeometryData3D::get_bounds() {
 		}
 		for (const ProjectedObstruction &projected_obstruction : _projected_obstructions) {
 			for (int i = 0; i < projected_obstruction.vertices.size() / 3; i++) {
-				const Vector3 vertex = Vector3(projected_obstruction.vertices[i * 3], projected_obstruction.vertices[i * 3 + 1], projected_obstruction.vertices[i * 3 + 2]);
+				const Hector3 vertex = Hector3(projected_obstruction.vertices[i * 3], projected_obstruction.vertices[i * 3 + 1], projected_obstruction.vertices[i * 3 + 2]);
 				if (first_vertex) {
 					first_vertex = false;
 					bounds.position = vertex;
@@ -419,7 +419,7 @@ void NavigationMeshSourceGeometryData3D::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_bounds"), &NavigationMeshSourceGeometryData3D::get_bounds);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_vertices", "get_vertices");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_vertices", "get_vertices");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "indices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_indices", "get_indices");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "projected_obstructions", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_projected_obstructions", "get_projected_obstructions");
 }

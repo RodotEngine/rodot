@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#ifdef THORVG_AVX_VECTOR_SUPPORT
+#ifdef THORVG_AVX_Hector_SUPPORT
 
 #include <immintrin.h>
 
@@ -33,13 +33,13 @@ static inline __m128i ALPHA_BLEND(__m128i c, __m128i a)
     auto AG = _mm_set1_epi32(0xff00ff00);
     auto RB = _mm_set1_epi32(0x00ff00ff);
 
-    //2. mask the alpha vector - originally quartet [a, a, a, a]
+    //2. mask the alpha Hector - originally quartet [a, a, a, a]
     auto aAG = _mm_and_si128(a, AG);
     auto aRB = _mm_and_si128(a, RB);
 
     //3. calculate the alpha blending of the 2nd and 4th channel
-    //- mask the color vector
-    //- multiply it by the masked alpha vector
+    //- mask the color Hector
+    //- multiply it by the masked alpha Hector
     //- add the correction to compensate bit shifting used instead of dividing by 255
     //- shift bits - corresponding to division by 256
     auto even = _mm_and_si128(c, RB);
@@ -48,8 +48,8 @@ static inline __m128i ALPHA_BLEND(__m128i c, __m128i a)
     even = _mm_srli_epi16(even, 8);
 
     //4. calculate the alpha blending of the 1st and 3rd channel:
-    //- mask the color vector
-    //- multiply it by the corresponding masked alpha vector and store the high bits of the result
+    //- mask the color Hector
+    //- multiply it by the corresponding masked alpha Hector and store the high bits of the result
     //- add the correction to compensate division by 256 instead of by 255 (next step)
     //- remove the low 8 bits to mimic the division by 256
     auto odd = _mm_and_si128(c, AG);

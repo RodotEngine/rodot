@@ -61,7 +61,7 @@ void AnimationTrackEditBool::draw_key(int p_index, float p_pixels_sec, int p_x, 
 	bool checked = get_animation()->track_get_key_value(get_track(), p_index);
 	Ref<Texture2D> icon = get_theme_icon(checked ? "checked" : "unchecked", "CheckBox");
 
-	Vector2 ofs(p_x - icon->get_width() / 2, int(get_size().height - icon->get_height()) / 2);
+	Hector2 ofs(p_x - icon->get_width() / 2, int(get_size().height - icon->get_height()) / 2);
 
 	if (ofs.x + icon->get_width() / 2 < p_clip_left) {
 		return;
@@ -116,7 +116,7 @@ void AnimationTrackEditColor::draw_key_link(int p_index, float p_pixels_sec, int
 		return;
 	}
 
-	Vector<Color> color_samples;
+	Hector<Color> color_samples;
 	color_samples.append(get_animation()->track_get_key_value(get_track(), p_index));
 
 	if (get_animation()->track_get_type(get_track()) == Animation::TYPE_VALUE) {
@@ -147,21 +147,21 @@ void AnimationTrackEditColor::draw_key_link(int p_index, float p_pixels_sec, int
 	}
 
 	for (int i = 0; i < color_samples.size() - 1; i++) {
-		Vector<Vector2> points = {
-			Vector2(Math::lerp(x_from, x_to, float(i) / (color_samples.size() - 1)), y_from),
-			Vector2(Math::lerp(x_from, x_to, float(i + 1) / (color_samples.size() - 1)), y_from),
-			Vector2(Math::lerp(x_from, x_to, float(i + 1) / (color_samples.size() - 1)), y_from + fh),
-			Vector2(Math::lerp(x_from, x_to, float(i) / (color_samples.size() - 1)), y_from + fh)
+		Hector<Hector2> points = {
+			Hector2(Math::lerp(x_from, x_to, float(i) / (color_samples.size() - 1)), y_from),
+			Hector2(Math::lerp(x_from, x_to, float(i + 1) / (color_samples.size() - 1)), y_from),
+			Hector2(Math::lerp(x_from, x_to, float(i + 1) / (color_samples.size() - 1)), y_from + fh),
+			Hector2(Math::lerp(x_from, x_to, float(i) / (color_samples.size() - 1)), y_from + fh)
 		};
 
-		Vector<Color> colors = {
+		Hector<Color> colors = {
 			color_samples[i],
 			color_samples[i + 1],
 			color_samples[i + 1],
 			color_samples[i]
 		};
 
-		draw_primitive(points, colors, Vector<Vector2>());
+		draw_primitive(points, colors, Hector<Hector2>());
 	}
 }
 
@@ -172,12 +172,12 @@ void AnimationTrackEditColor::draw_key(int p_index, float p_pixels_sec, int p_x,
 	int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 	int fh = font->get_height(font_size) * 0.8;
 
-	Rect2 rect(Vector2(p_x - fh / 2, int(get_size().height - fh) / 2), Size2(fh, fh));
+	Rect2 rect(Hector2(p_x - fh / 2, int(get_size().height - fh) / 2), Size2(fh, fh));
 
 	draw_rect_clipped(Rect2(rect.position, rect.size / 2), Color(0.4, 0.4, 0.4));
 	draw_rect_clipped(Rect2(rect.position + rect.size / 2, rect.size / 2), Color(0.4, 0.4, 0.4));
-	draw_rect_clipped(Rect2(rect.position + Vector2(rect.size.x / 2, 0), rect.size / 2), Color(0.6, 0.6, 0.6));
-	draw_rect_clipped(Rect2(rect.position + Vector2(0, rect.size.y / 2), rect.size / 2), Color(0.6, 0.6, 0.6));
+	draw_rect_clipped(Rect2(rect.position + Hector2(rect.size.x / 2, 0), rect.size / 2), Color(0.6, 0.6, 0.6));
+	draw_rect_clipped(Rect2(rect.position + Hector2(0, rect.size.y / 2), rect.size / 2), Color(0.6, 0.6, 0.6));
 	draw_rect_clipped(rect, color);
 
 	if (p_selected) {
@@ -310,7 +310,7 @@ void AnimationTrackEditAudio::draw_key(int p_index, float p_pixels_sec, int p_x,
 		Rect2 rect = Rect2(from_x, (get_size().height - fh) / 2, to_x - from_x, fh);
 		draw_rect(rect, Color(0.25, 0.25, 0.25));
 
-		Vector<Vector2> points;
+		Hector<Hector2> points;
 		points.resize((to_x - from_x) * 2);
 		preview_len = preview->get_length();
 
@@ -321,11 +321,11 @@ void AnimationTrackEditAudio::draw_key(int p_index, float p_pixels_sec, int p_x,
 			float min = preview->get_min(ofs, ofs_n) * 0.5 + 0.5;
 
 			int idx = i - from_x;
-			points.write[idx * 2 + 0] = Vector2(i, rect.position.y + min * rect.size.y);
-			points.write[idx * 2 + 1] = Vector2(i, rect.position.y + max * rect.size.y);
+			points.write[idx * 2 + 0] = Hector2(i, rect.position.y + min * rect.size.y);
+			points.write[idx * 2 + 1] = Hector2(i, rect.position.y + max * rect.size.y);
 		}
 
-		Vector<Color> colors = { Color(0.75, 0.75, 0.75) };
+		Hector<Color> colors = { Color(0.75, 0.75, 0.75) };
 
 		RS::get_singleton()->canvas_item_add_multiline(get_canvas_item(), points, colors);
 
@@ -337,7 +337,7 @@ void AnimationTrackEditAudio::draw_key(int p_index, float p_pixels_sec, int p_x,
 		Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 		int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 		int fh = font->get_height(font_size) * 0.8;
-		Rect2 rect(Vector2(p_x, int(get_size().height - fh) / 2), Size2(fh, fh));
+		Rect2 rect(Hector2(p_x, int(get_size().height - fh) / 2), Size2(fh, fh));
 
 		Color color = get_theme_color(SceneStringName(font_color), SNAME("Label"));
 		draw_rect_clipped(rect, color);
@@ -465,7 +465,7 @@ void AnimationTrackEditSpriteFrame::draw_key(int p_index, float p_pixels_sec, in
 		int hframes = object->call("get_hframes");
 		int vframes = object->call("get_vframes");
 
-		Vector2 coords;
+		Hector2 coords;
 		if (is_coords) {
 			coords = get_animation()->track_get_key_value(get_track(), p_index);
 		} else {
@@ -664,8 +664,8 @@ void AnimationTrackEditSubAnim::draw_key(int p_index, float p_pixels_sec, int p_
 		bg.b = 1 - color.b;
 		draw_rect(rect, bg);
 
-		Vector<Vector2> points;
-		Vector<Color> colors = { color };
+		Hector<Hector2> points;
+		Hector<Color> colors = { color };
 		{
 			Ref<Animation> ap_anim = ap->get_animation(anim);
 
@@ -705,7 +705,7 @@ void AnimationTrackEditSubAnim::draw_key(int p_index, float p_pixels_sec, int p_
 		Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 		int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 		int fh = font->get_height(font_size) * 0.8;
-		Rect2 rect(Vector2(p_x, int(get_size().height - fh) / 2), Size2(fh, fh));
+		Rect2 rect(Hector2(p_x, int(get_size().height - fh) / 2), Size2(fh, fh));
 
 		Color color = get_theme_color(SceneStringName(font_color), SNAME("Label"));
 		draw_rect_clipped(rect, color);
@@ -745,7 +745,7 @@ void AnimationTrackEditVolumeDB::draw_fg(int p_clip_left, int p_clip_right) {
 	int y_from = (get_size().height - tex_h) / 2;
 	int db0 = y_from + (24 / 80.0) * tex_h;
 
-	draw_line(Vector2(p_clip_left, db0), Vector2(p_clip_right, db0), Color(1, 1, 1, 0.3));
+	draw_line(Hector2(p_clip_left, db0), Hector2(p_clip_right, db0), Color(1, 1, 1, 0.3));
 }
 
 void AnimationTrackEditVolumeDB::draw_key_link(int p_index, float p_pixels_sec, int p_x, int p_next_x, int p_clip_left, int p_clip_right) {
@@ -912,7 +912,7 @@ void AnimationTrackEditTypeAudio::draw_key(int p_index, float p_pixels_sec, int 
 	Rect2 rect = Rect2(from_x, (h - fh) / 2, to_x - from_x, fh);
 	draw_rect(rect, Color(0.25, 0.25, 0.25));
 
-	Vector<Vector2> points;
+	Hector<Hector2> points;
 	points.resize((to_x - from_x) * 2);
 	float preview_len = preview->get_length();
 
@@ -926,11 +926,11 @@ void AnimationTrackEditTypeAudio::draw_key(int p_index, float p_pixels_sec, int 
 		float min = preview->get_min(ofs, ofs_n) * 0.5 + 0.5;
 
 		int idx = i - from_x;
-		points.write[idx * 2 + 0] = Vector2(i, rect.position.y + min * rect.size.y);
-		points.write[idx * 2 + 1] = Vector2(i, rect.position.y + max * rect.size.y);
+		points.write[idx * 2 + 0] = Hector2(i, rect.position.y + min * rect.size.y);
+		points.write[idx * 2 + 1] = Hector2(i, rect.position.y + max * rect.size.y);
 	}
 
-	Vector<Color> colors = { Color(0.75, 0.75, 0.75) };
+	Hector<Color> colors = { Color(0.75, 0.75, 0.75) };
 
 	RS::get_singleton()->canvas_item_add_multiline(get_canvas_item(), points, colors);
 
@@ -964,7 +964,7 @@ bool AnimationTrackEditTypeAudio::can_drop_data(const Point2 &p_point, const Var
 		}
 
 		if (drag_data.has("type") && String(drag_data["type"]) == "files") {
-			Vector<String> files = drag_data["files"];
+			Hector<String> files = drag_data["files"];
 
 			if (files.size() == 1) {
 				Ref<AudioStream> res = ResourceLoader::load(files[0]);
@@ -985,7 +985,7 @@ void AnimationTrackEditTypeAudio::drop_data(const Point2 &p_point, const Variant
 		if (drag_data.has("type") && String(drag_data["type"]) == "resource") {
 			stream = drag_data["resource"];
 		} else if (drag_data.has("type") && String(drag_data["type"]) == "files") {
-			Vector<String> files = drag_data["files"];
+			Hector<String> files = drag_data["files"];
 
 			if (files.size() == 1) {
 				stream = ResourceLoader::load(files[0]);
@@ -1266,8 +1266,8 @@ void AnimationTrackEditTypeAnimation::draw_key(int p_index, float p_pixels_sec, 
 		bg.b = 1 - color.b;
 		draw_rect(rect, bg);
 
-		Vector<Vector2> points;
-		Vector<Color> colors = { color };
+		Hector<Hector2> points;
+		Hector<Color> colors = { color };
 		{
 			Ref<Animation> ap_anim = ap->get_animation(anim);
 
@@ -1307,7 +1307,7 @@ void AnimationTrackEditTypeAnimation::draw_key(int p_index, float p_pixels_sec, 
 		Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 		int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 		int fh = font->get_height(font_size) * 0.8;
-		Rect2 rect(Vector2(p_x, int(get_size().height - fh) / 2), Size2(fh, fh));
+		Rect2 rect(Hector2(p_x, int(get_size().height - fh) / 2), Size2(fh, fh));
 
 		Color color = get_theme_color(SceneStringName(font_color), SNAME("Label"));
 		draw_rect_clipped(rect, color);

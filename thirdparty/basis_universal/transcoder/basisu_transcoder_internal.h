@@ -119,9 +119,9 @@ namespace basist
 
 		void clear()
 		{
-			basisu::clear_vector(m_code_sizes);
-			basisu::clear_vector(m_lookup);
-			basisu::clear_vector(m_tree);
+			basisu::clear_Hector(m_code_sizes);
+			basisu::clear_Hector(m_lookup);
+			basisu::clear_Hector(m_tree);
 		}
 
 		bool init(uint32_t total_syms, const uint8_t *pCode_sizes, uint32_t fast_lookup_bits = basisu::cHuffmanFastLookupBits)

@@ -392,7 +392,7 @@ class DisplayServerWindows : public DisplayServer {
 
 	void _update_tablet_ctx(const String &p_old_driver, const String &p_new_driver);
 	String tablet_driver;
-	Vector<String> tablet_drivers;
+	Hector<String> tablet_drivers;
 
 	enum DriverID {
 		DRIVER_ID_COMPAT_OPENGL3 = 1 << 0,
@@ -438,7 +438,7 @@ class DisplayServerWindows : public DisplayServer {
 	RenderingDevice *rendering_device = nullptr;
 #endif
 
-	RBMap<int, Vector2> touch_state;
+	RBMap<int, Hector2> touch_state;
 
 	int pressrc;
 	HINSTANCE hInstance; // Holds The Instance Of The Application
@@ -453,7 +453,7 @@ class DisplayServerWindows : public DisplayServer {
 	struct WindowData {
 		HWND hWnd;
 
-		Vector<Vector2> mpath;
+		Hector<Hector2> mpath;
 
 		bool create_completed = false;
 		bool pre_fs_valid = false;
@@ -492,7 +492,7 @@ class DisplayServerWindows : public DisplayServer {
 
 		int last_pressure_update;
 		float last_pressure;
-		Vector2 last_tilt;
+		Hector2 last_tilt;
 		bool last_pen_inverted = false;
 
 		Size2 min_size;
@@ -506,7 +506,7 @@ class DisplayServerWindows : public DisplayServer {
 
 		// IME
 		HIMC im_himc;
-		Vector2 im_position;
+		Hector2 im_position;
 		bool ime_active = false;
 		bool ime_in_progress = false;
 		bool ime_suppress_next_keyup = false;
@@ -562,7 +562,7 @@ class DisplayServerWindows : public DisplayServer {
 		String filename;
 		bool show_hidden = false;
 		DisplayServer::FileDialogMode mode = FileDialogMode::FILE_DIALOG_MODE_OPEN_ANY;
-		Vector<String> filters;
+		Hector<String> filters;
 		TypedArray<Dictionary> options;
 		WindowID window_id = DisplayServer::INVALID_WINDOW_ID;
 		Callable callback;
@@ -590,7 +590,7 @@ class DisplayServerWindows : public DisplayServer {
 	HashMap<int64_t, MouseButton> pointer_prev_button;
 	HashMap<int64_t, MouseButton> pointer_button;
 	HashMap<int64_t, LONG> pointer_down_time;
-	HashMap<int64_t, Vector2> pointer_last_pos;
+	HashMap<int64_t, Hector2> pointer_last_pos;
 
 	void _send_window_event(const WindowData &wd, WindowEvent p_event);
 	void _get_window_style(bool p_main_window, bool p_initialized, bool p_fullscreen, bool p_multiwindow_fs, bool p_borderless, bool p_resizable, bool p_minimized, bool p_maximized, bool p_maximized_fs, bool p_no_activate_focus, DWORD &r_style, DWORD &r_style_ex);
@@ -608,7 +608,7 @@ class DisplayServerWindows : public DisplayServer {
 
 	HCURSOR cursors[CURSOR_MAX] = { nullptr };
 	CursorShape cursor_shape = CursorShape::CURSOR_ARROW;
-	RBMap<CursorShape, Vector<Variant>> cursors_cache;
+	RBMap<CursorShape, Hector<Variant>> cursors_cache;
 
 	Callable system_theme_changed;
 
@@ -642,7 +642,7 @@ class DisplayServerWindows : public DisplayServer {
 	};
 	BitField<WinKeyModifierMask> _get_mods() const;
 
-	Error _file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb);
+	Error _file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb);
 
 	String _get_keyboard_layout_display_name(const String &p_klid) const;
 	String _get_klid(HKL p_hkl) const;
@@ -673,8 +673,8 @@ public:
 	virtual Color get_base_color() const override;
 	virtual void set_system_theme_change_callback(const Callable &p_callable) override;
 
-	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) override;
-	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
+	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) override;
+	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
 
 	virtual void mouse_set_mode(MouseMode p_mode) override;
 	virtual MouseMode mouse_get_mode() const override;
@@ -703,7 +703,7 @@ public:
 	virtual void screen_set_keep_on(bool p_enable) override; //disable screensaver
 	virtual bool screen_is_kept_on() const override;
 
-	virtual Vector<DisplayServer::WindowID> get_window_list() const override;
+	virtual Hector<DisplayServer::WindowID> get_window_list() const override;
 
 	virtual WindowID create_sub_window(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Rect2i &p_rect = Rect2i(), bool p_exclusive = false, WindowID p_transient_parent = INVALID_WINDOW_ID) override;
 	virtual void show_window(WindowID p_window) override;
@@ -731,7 +731,7 @@ public:
 
 	virtual void window_set_title(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) override;
 	virtual Size2i window_get_title_size(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) const override;
-	virtual void window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override;
+	virtual void window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override;
 
 	virtual int window_get_current_screen(WindowID p_window = MAIN_WINDOW_ID) const override;
 	virtual void window_set_current_screen(int p_screen, WindowID p_window = MAIN_WINDOW_ID) override;
@@ -782,13 +782,13 @@ public:
 
 	virtual void cursor_set_shape(CursorShape p_shape) override;
 	virtual CursorShape cursor_get_shape() const override;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2()) override;
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Hector2 &p_hotspot = Hector2()) override;
 
 	virtual bool get_swap_cancel_ok() override;
 
 	virtual void enable_for_stealing_focus(OS::ProcessID pid) override;
 
-	virtual Error dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) override;
+	virtual Error dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback) override;
 	virtual Error dialog_input_text(String p_title, String p_description, String p_partial, const Callable &p_callback) override;
 
 	virtual int keyboard_get_layout_count() const override;
@@ -826,11 +826,11 @@ public:
 
 	virtual bool is_window_transparency_available() const override;
 
-	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
-	static Vector<String> get_rendering_drivers_func();
+	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_rendering_drivers_func();
 	static void register_windows_driver();
 
-	DisplayServerWindows(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	DisplayServerWindows(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 	~DisplayServerWindows();
 };
 

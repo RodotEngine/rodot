@@ -149,7 +149,7 @@ struct CFF1SuppEncData {
     return_trace (supps.sanitize (c));
   }
 
-  void get_codes (hb_codepoint_t sid, hb_vector_t<hb_codepoint_t> &codes) const
+  void get_codes (hb_codepoint_t sid, hb_Hector_t<hb_codepoint_t> &codes) const
   {
     for (unsigned int i = 0; i < nSups (); i++)
       if (sid == supps[i].glyph)
@@ -177,8 +177,8 @@ struct Encoding
   bool serialize (hb_serialize_context_t *c,
 		  uint8_t format,
 		  unsigned int enc_count,
-		  const hb_vector_t<code_pair_t>& code_ranges,
-		  const hb_vector_t<code_pair_t>& supp_codes)
+		  const hb_Hector_t<code_pair_t>& code_ranges,
+		  const hb_Hector_t<code_pair_t>& supp_codes)
   {
     TRACE_SERIALIZE (this);
     Encoding *dest = c->extend_min (this);
@@ -260,7 +260,7 @@ struct Encoding
   uint8_t table_format () const { return format & 0x7F; }
   bool  has_supplement () const { return format & 0x80; }
 
-  void get_supplement_codes (hb_codepoint_t sid, hb_vector_t<hb_codepoint_t> &codes) const
+  void get_supplement_codes (hb_codepoint_t sid, hb_Hector_t<hb_codepoint_t> &codes) const
   {
     codes.resize (0);
     if (has_supplement ())
@@ -503,7 +503,7 @@ struct Charset
   bool serialize (hb_serialize_context_t *c,
 		  uint8_t format,
 		  unsigned int num_glyphs,
-		  const hb_vector_t<code_pair_t>& sid_ranges)
+		  const hb_Hector_t<code_pair_t>& sid_ranges)
   {
     TRACE_SERIALIZE (this);
     Charset *dest = c->extend_min (this);
@@ -637,7 +637,7 @@ struct Charset
 struct CFF1StringIndex : CFF1Index
 {
   bool serialize (hb_serialize_context_t *c, const CFF1StringIndex &strings,
-		  const hb_vector_t<unsigned> &sidmap)
+		  const hb_Hector_t<unsigned> &sidmap)
   {
     TRACE_SERIALIZE (this);
     if (unlikely ((strings.count == 0) || (sidmap.length == 0)))
@@ -650,8 +650,8 @@ struct CFF1StringIndex : CFF1Index
 
     if (unlikely (sidmap.in_error ())) return_trace (false);
 
-    // Save this in a vector since serialize() iterates it twice.
-    hb_vector_t<hb_ubytes_t> bytesArray (+ hb_iter (sidmap)
+    // Save this in a Hector since serialize() iterates it twice.
+    hb_Hector_t<hb_ubytes_t> bytesArray (+ hb_iter (sidmap)
 					 | hb_map (strings));
 
     if (unlikely (bytesArray.in_error ())) return_trace (false);
@@ -1347,9 +1347,9 @@ struct cff1
     unsigned int	     fdCount = 0;
 
     cff1_top_dict_values_t   topDict;
-    hb_vector_t<cff1_font_dict_values_t>
+    hb_Hector_t<cff1_font_dict_values_t>
 			     fontDicts;
-    hb_vector_t<PRIVDICTVAL> privateDicts;
+    hb_Hector_t<PRIVDICTVAL> privateDicts;
 
     unsigned int	     num_glyphs = 0;
     unsigned int	     num_charset_entries = 0;
@@ -1366,7 +1366,7 @@ struct cff1
     }
     ~accelerator_t ()
     {
-      hb_sorted_vector_t<gname_t> *names = glyph_names.get_relaxed ();
+      hb_sorted_Hector_t<gname_t> *names = glyph_names.get_relaxed ();
       if (names)
       {
 	names->fini ();
@@ -1412,10 +1412,10 @@ struct cff1
       if (unlikely (!len)) return false;
 
     retry:
-      hb_sorted_vector_t<gname_t> *names = glyph_names.get_acquire ();
+      hb_sorted_Hector_t<gname_t> *names = glyph_names.get_acquire ();
       if (unlikely (!names))
       {
-	names = (hb_sorted_vector_t<gname_t> *) hb_calloc (1, sizeof (hb_sorted_vector_t<gname_t>));
+	names = (hb_sorted_Hector_t<gname_t> *) hb_calloc (1, sizeof (hb_sorted_Hector_t<gname_t>));
 	if (likely (names))
 	{
 	  names->init ();
@@ -1484,7 +1484,7 @@ struct cff1
       int cmp (const gname_t &a) const { return cmp (&a, this); }
     };
 
-    mutable hb_atomic_ptr_t<hb_sorted_vector_t<gname_t>> glyph_names;
+    mutable hb_atomic_ptr_t<hb_sorted_Hector_t<gname_t>> glyph_names;
 
     typedef accelerator_templ_t<cff1_private_dict_opset_t, cff1_private_dict_values_t> SUPER;
   };

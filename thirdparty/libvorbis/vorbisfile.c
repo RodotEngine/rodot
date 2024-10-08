@@ -2099,7 +2099,7 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
   return ov_read_filter(vf, buffer, length, bigendianp, word, sgned, bitstream, NULL, NULL);
 }
 
-/* input values: pcm_channels) a float vector per channel of output
+/* input values: pcm_channels) a float Hector per channel of output
                  length) the sample length being read by the app
 
    return values: <0) error/hole in data (OV_HOLE), partial open (OV_EINVAL)

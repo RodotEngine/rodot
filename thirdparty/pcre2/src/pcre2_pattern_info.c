@@ -165,7 +165,7 @@ switch(what)
   break;
 
   case PCRE2_INFO_FRAMESIZE:
-  *((size_t *)where) = offsetof(heapframe, ovector) +
+  *((size_t *)where) = offsetof(heapframe, oHector) +
     re->top_bracket * 2 * sizeof(PCRE2_SIZE);
   break;
 

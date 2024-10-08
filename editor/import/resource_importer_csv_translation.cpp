@@ -91,11 +91,11 @@ Error ResourceImporterCSVTranslation::import(const String &p_source_file, const 
 	Ref<FileAccess> f = FileAccess::open(p_source_file, FileAccess::READ);
 	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_INVALID_PARAMETER, "Cannot open file from path '" + p_source_file + "'.");
 
-	Vector<String> line = f->get_csv_line(delimiter);
+	Hector<String> line = f->get_csv_line(delimiter);
 	ERR_FAIL_COND_V(line.size() <= 1, ERR_PARSE_ERROR);
 
-	Vector<String> locales;
-	Vector<Ref<Translation>> translations;
+	Hector<String> locales;
+	Hector<Ref<Translation>> translations;
 	HashSet<int> skipped_locales;
 
 	for (int i = 1; i < line.size(); i++) {

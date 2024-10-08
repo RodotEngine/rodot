@@ -32,7 +32,7 @@
 #define TRANSFORM_INTERPOLATOR_H
 
 #include "core/math/math_defs.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 
 // Keep all the functions for fixed timestep interpolation together.
 // There are two stages involved:
@@ -59,12 +59,12 @@ public:
 
 private:
 	_FORCE_INLINE_ static bool _sign(real_t p_val) { return p_val >= 0; }
-	static real_t _vec3_sum(const Vector3 &p_pt) { return p_pt.x + p_pt.y + p_pt.z; }
-	static real_t _vec3_normalize(Vector3 &p_vec);
-	_FORCE_INLINE_ static bool _vec3_is_equal_approx(const Vector3 &p_a, const Vector3 &p_b, real_t p_tolerance) {
+	static real_t _vec3_sum(const Hector3 &p_pt) { return p_pt.x + p_pt.y + p_pt.z; }
+	static real_t _vec3_normalize(Hector3 &p_vec);
+	_FORCE_INLINE_ static bool _vec3_is_equal_approx(const Hector3 &p_a, const Hector3 &p_b, real_t p_tolerance) {
 		return Math::is_equal_approx(p_a.x, p_b.x, p_tolerance) && Math::is_equal_approx(p_a.y, p_b.y, p_tolerance) && Math::is_equal_approx(p_a.z, p_b.z, p_tolerance);
 	}
-	static Vector3 _basis_orthonormalize(Basis &r_basis);
+	static Hector3 _basis_orthonormalize(Basis &r_basis);
 	static Method _test_basis(Basis p_basis, bool r_needed_normalize, Quaternion &r_quat);
 	static Basis _basis_slerp_unchecked(Basis p_from, Basis p_to, real_t p_fraction);
 	static Quaternion _quat_slerp_unchecked(const Quaternion &p_from, const Quaternion &p_to, real_t p_fraction);

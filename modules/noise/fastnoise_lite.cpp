@@ -111,12 +111,12 @@ real_t FastNoiseLite::get_frequency() const {
 	return frequency;
 }
 
-void FastNoiseLite::set_offset(Vector3 p_offset) {
+void FastNoiseLite::set_offset(Hector3 p_offset) {
 	offset = p_offset;
 	emit_changed();
 }
 
-Vector3 FastNoiseLite::get_offset() const {
+Hector3 FastNoiseLite::get_offset() const {
 	return offset;
 }
 
@@ -309,7 +309,7 @@ real_t FastNoiseLite::get_noise_1d(real_t p_x) const {
 	return get_noise_2d(p_x, 0.0);
 }
 
-real_t FastNoiseLite::get_noise_2dv(Vector2 p_v) const {
+real_t FastNoiseLite::get_noise_2dv(Hector2 p_v) const {
 	return get_noise_2d(p_v.x, p_v.y);
 }
 
@@ -322,7 +322,7 @@ real_t FastNoiseLite::get_noise_2d(real_t p_x, real_t p_y) const {
 	return _noise.GetNoise(p_x, p_y);
 }
 
-real_t FastNoiseLite::get_noise_3dv(Vector3 p_v) const {
+real_t FastNoiseLite::get_noise_3dv(Hector3 p_v) const {
 	return get_noise_3d(p_v.x, p_v.y, p_v.z);
 }
 
@@ -417,7 +417,7 @@ void FastNoiseLite::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "noise_type", PROPERTY_HINT_ENUM, "Simplex,Simplex Smooth,Cellular,Perlin,Value Cubic,Value"), "set_noise_type", "get_noise_type");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "seed"), "set_seed", "get_seed");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "frequency", PROPERTY_HINT_RANGE, ".0001,1,.0001,exp"), "set_frequency", "get_frequency");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "offset", PROPERTY_HINT_RANGE, "-1000,1000,0.01,or_less,or_greater"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "offset", PROPERTY_HINT_RANGE, "-1000,1000,0.01,or_less,or_greater"), "set_offset", "get_offset");
 
 	ADD_GROUP("Fractal", "fractal_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "fractal_type", PROPERTY_HINT_ENUM, "None,FBM,Ridged,Ping-Pong"), "set_fractal_type", "get_fractal_type");

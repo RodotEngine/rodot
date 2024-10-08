@@ -32,8 +32,8 @@
 
 #include <float.h>
 
-Vector<Ref<Image>> Noise::_get_seamless_image(int p_width, int p_height, int p_depth, bool p_invert, bool p_in_3d_space, real_t p_blend_skirt, bool p_normalize) const {
-	ERR_FAIL_COND_V(p_width <= 0 || p_height <= 0 || p_depth <= 0, Vector<Ref<Image>>());
+Hector<Ref<Image>> Noise::_get_seamless_image(int p_width, int p_height, int p_depth, bool p_invert, bool p_in_3d_space, real_t p_blend_skirt, bool p_normalize) const {
+	ERR_FAIL_COND_V(p_width <= 0 || p_height <= 0 || p_depth <= 0, Hector<Ref<Image>>());
 
 	int skirt_width = MAX(1, p_width * p_blend_skirt);
 	int skirt_height = MAX(1, p_height * p_blend_skirt);
@@ -42,7 +42,7 @@ Vector<Ref<Image>> Noise::_get_seamless_image(int p_width, int p_height, int p_d
 	int src_height = p_height + skirt_height;
 	int src_depth = p_depth + skirt_depth;
 
-	Vector<Ref<Image>> src = _get_image(src_width, src_height, src_depth, p_invert, p_in_3d_space, p_normalize);
+	Hector<Ref<Image>> src = _get_image(src_width, src_height, src_depth, p_invert, p_in_3d_space, p_normalize);
 	bool grayscale = (src[0]->get_format() == Image::FORMAT_L8);
 
 	if (grayscale) {
@@ -53,7 +53,7 @@ Vector<Ref<Image>> Noise::_get_seamless_image(int p_width, int p_height, int p_d
 }
 
 Ref<Image> Noise::get_seamless_image(int p_width, int p_height, bool p_invert, bool p_in_3d_space, real_t p_blend_skirt, bool p_normalize) const {
-	Vector<Ref<Image>> images = _get_seamless_image(p_width, p_height, 1, p_invert, p_in_3d_space, p_blend_skirt, p_normalize);
+	Hector<Ref<Image>> images = _get_seamless_image(p_width, p_height, 1, p_invert, p_in_3d_space, p_blend_skirt, p_normalize);
 	if (images.size() == 0) {
 		return Ref<Image>();
 	}
@@ -61,7 +61,7 @@ Ref<Image> Noise::get_seamless_image(int p_width, int p_height, bool p_invert, b
 }
 
 TypedArray<Image> Noise::get_seamless_image_3d(int p_width, int p_height, int p_depth, bool p_invert, real_t p_blend_skirt, bool p_normalize) const {
-	Vector<Ref<Image>> images = _get_seamless_image(p_width, p_height, p_depth, p_invert, true, p_blend_skirt, p_normalize);
+	Hector<Ref<Image>> images = _get_seamless_image(p_width, p_height, p_depth, p_invert, true, p_blend_skirt, p_normalize);
 
 	TypedArray<Image> ret;
 	ret.resize(images.size());
@@ -80,15 +80,15 @@ uint8_t Noise::_alpha_blend<uint8_t>(uint8_t p_bg, uint8_t p_fg, int p_alpha) co
 	return (uint8_t)((alpha * p_fg + inv_alpha * p_bg) >> 8);
 }
 
-Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, bool p_invert, bool p_in_3d_space, bool p_normalize) const {
-	ERR_FAIL_COND_V(p_width <= 0 || p_height <= 0 || p_depth <= 0, Vector<Ref<Image>>());
+Hector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, bool p_invert, bool p_in_3d_space, bool p_normalize) const {
+	ERR_FAIL_COND_V(p_width <= 0 || p_height <= 0 || p_depth <= 0, Hector<Ref<Image>>());
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	images.resize(p_depth);
 
 	if (p_normalize) {
 		// Get all values and identify min/max values.
-		LocalVector<real_t> values;
+		LocalHector<real_t> values;
 		values.resize(p_width * p_height * p_depth);
 
 		real_t min_val = FLT_MAX;
@@ -111,7 +111,7 @@ Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, boo
 		idx = 0;
 		// Normalize values and write to texture.
 		for (int d = 0; d < p_depth; d++) {
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			data.resize(p_width * p_height);
 
 			uint8_t *wd8 = data.ptrw();
@@ -140,7 +140,7 @@ Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, boo
 		// Without normalization, the expected range of the noise function is [-1, 1].
 
 		for (int d = 0; d < p_depth; d++) {
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			data.resize(p_width * p_height);
 
 			uint8_t *wd8 = data.ptrw();
@@ -165,7 +165,7 @@ Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, boo
 }
 
 Ref<Image> Noise::get_image(int p_width, int p_height, bool p_invert, bool p_in_3d_space, bool p_normalize) const {
-	Vector<Ref<Image>> images = _get_image(p_width, p_height, 1, p_invert, p_in_3d_space, p_normalize);
+	Hector<Ref<Image>> images = _get_image(p_width, p_height, 1, p_invert, p_in_3d_space, p_normalize);
 	if (images.is_empty()) {
 		return Ref<Image>();
 	}
@@ -173,7 +173,7 @@ Ref<Image> Noise::get_image(int p_width, int p_height, bool p_invert, bool p_in_
 }
 
 TypedArray<Image> Noise::get_image_3d(int p_width, int p_height, int p_depth, bool p_invert, bool p_normalize) const {
-	Vector<Ref<Image>> images = _get_image(p_width, p_height, p_depth, p_invert, true, p_normalize);
+	Hector<Ref<Image>> images = _get_image(p_width, p_height, p_depth, p_invert, true, p_normalize);
 
 	TypedArray<Image> ret;
 	ret.resize(images.size());

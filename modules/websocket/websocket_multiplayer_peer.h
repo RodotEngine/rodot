@@ -117,11 +117,11 @@ public:
 	Error create_client(const String &p_url, Ref<TLSOptions> p_options);
 	Error create_server(int p_port, IPAddress p_bind_ip, Ref<TLSOptions> p_options);
 
-	void set_supported_protocols(const Vector<String> &p_protocols);
-	Vector<String> get_supported_protocols() const;
+	void set_supported_protocols(const Hector<String> &p_protocols);
+	Hector<String> get_supported_protocols() const;
 
-	void set_handshake_headers(const Vector<String> &p_headers);
-	Vector<String> get_handshake_headers() const;
+	void set_handshake_headers(const Hector<String> &p_headers);
+	Hector<String> get_handshake_headers() const;
 
 	void set_outbound_buffer_size(int p_buffer_size);
 	int get_outbound_buffer_size() const;

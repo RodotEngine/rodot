@@ -55,10 +55,10 @@ private:
 
 	void update_scrollbars();
 
-	Vector2 drag_speed;
-	Vector2 drag_accum;
-	Vector2 drag_from;
-	Vector2 last_drag_accum;
+	Hector2 drag_speed;
+	Hector2 drag_accum;
+	Hector2 drag_from;
+	Hector2 last_drag_accum;
 	float time_since_motion = 0.0f;
 	bool drag_touching = false;
 	bool drag_touching_deaccel = false;

@@ -64,9 +64,9 @@ struct code_pair_t
 };
 
 
-using str_buff_t = hb_vector_t<unsigned char>;
-using str_buff_vec_t = hb_vector_t<str_buff_t>;
-using glyph_to_sid_map_t = hb_vector_t<code_pair_t>;
+using str_buff_t = hb_Hector_t<unsigned char>;
+using str_buff_vec_t = hb_Hector_t<str_buff_t>;
+using glyph_to_sid_map_t = hb_Hector_t<code_pair_t>;
 
 /* Top Dict, Font Dict, Private Dict */
 struct Dict : UnsizedByteStr
@@ -153,7 +153,7 @@ struct FDArray : CFFIndex<COUNT>
     TRACE_SERIALIZE (this);
 
     /* serialize INDEX data */
-    hb_vector_t<unsigned> sizes;
+    hb_Hector_t<unsigned> sizes;
     if (it.is_random_access_iterator)
       sizes.alloc (hb_len (it));
 

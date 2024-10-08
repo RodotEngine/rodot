@@ -10,9 +10,9 @@ func shadow_regular_assignment(a: Variant, b: Variant) -> void:
 	print(self.a)
 
 
-var v := Vector2(0.0, 0.0)
+var v := Hector2(0.0, 0.0)
 
-func shadow_subscript_assignment(v: Vector2, x: float) -> void:
+func shadow_subscript_assignment(v: Hector2, x: float) -> void:
 	print(v)
 	print(self.v)
 	v.x += x
@@ -22,4 +22,4 @@ func shadow_subscript_assignment(v: Vector2, x: float) -> void:
 
 func test():
 	shadow_regular_assignment('a', 'b')
-	shadow_subscript_assignment(Vector2(1.0, 1.0), 5.0)
+	shadow_subscript_assignment(Hector2(1.0, 1.0), 5.0)

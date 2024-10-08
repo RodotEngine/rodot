@@ -404,7 +404,7 @@ bool ActionMapEditor::_should_display_action(const String &p_name, const Array &
 	return event_match && action_list_search->get_text().is_subsequence_ofn(p_name);
 }
 
-void ActionMapEditor::update_action_list(const Vector<ActionInfo> &p_action_infos) {
+void ActionMapEditor::update_action_list(const Hector<ActionInfo> &p_action_infos) {
 	if (!p_action_infos.is_empty()) {
 		actions_cache = p_action_infos;
 	}

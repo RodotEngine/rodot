@@ -165,27 +165,27 @@ double estimateSDFError(const BitmapConstRef<float, 4> &sdf, const Shape &shape,
 
 // Legacy API
 
-void scanlineSDF(Scanline &line, const BitmapConstRef<float, 1> &sdf, const Vector2 &scale, const Vector2 &translate, bool inverseYAxis, double y) {
+void scanlineSDF(Scanline &line, const BitmapConstRef<float, 1> &sdf, const Hector2 &scale, const Hector2 &translate, bool inverseYAxis, double y) {
     scanlineSDF(line, sdf, Projection(scale, translate), y, inverseYAxis);
 }
 
-void scanlineSDF(Scanline &line, const BitmapConstRef<float, 3> &sdf, const Vector2 &scale, const Vector2 &translate, bool inverseYAxis, double y) {
+void scanlineSDF(Scanline &line, const BitmapConstRef<float, 3> &sdf, const Hector2 &scale, const Hector2 &translate, bool inverseYAxis, double y) {
     scanlineSDF(line, sdf, Projection(scale, translate), y, inverseYAxis);
 }
 
-void scanlineSDF(Scanline &line, const BitmapConstRef<float, 4> &sdf, const Vector2 &scale, const Vector2 &translate, bool inverseYAxis, double y) {
+void scanlineSDF(Scanline &line, const BitmapConstRef<float, 4> &sdf, const Hector2 &scale, const Hector2 &translate, bool inverseYAxis, double y) {
     scanlineSDF(line, sdf, Projection(scale, translate), y, inverseYAxis);
 }
 
-double estimateSDFError(const BitmapConstRef<float, 1> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, int scanlinesPerRow, FillRule fillRule) {
+double estimateSDFError(const BitmapConstRef<float, 1> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, int scanlinesPerRow, FillRule fillRule) {
     return estimateSDFError(sdf, shape, Projection(scale, translate), scanlinesPerRow, fillRule);
 }
 
-double estimateSDFError(const BitmapConstRef<float, 3> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, int scanlinesPerRow, FillRule fillRule) {
+double estimateSDFError(const BitmapConstRef<float, 3> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, int scanlinesPerRow, FillRule fillRule) {
     return estimateSDFError(sdf, shape, Projection(scale, translate), scanlinesPerRow, fillRule);
 }
 
-double estimateSDFError(const BitmapConstRef<float, 4> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, int scanlinesPerRow, FillRule fillRule) {
+double estimateSDFError(const BitmapConstRef<float, 4> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, int scanlinesPerRow, FillRule fillRule) {
     return estimateSDFError(sdf, shape, Projection(scale, translate), scanlinesPerRow, fillRule);
 }
 

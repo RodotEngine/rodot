@@ -69,7 +69,7 @@ public:
 		SHADER_COLOR_PASS_FLAG_SEPARATE_SPECULAR = 1 << 1,
 		SHADER_COLOR_PASS_FLAG_LIGHTMAP = 1 << 2,
 		SHADER_COLOR_PASS_FLAG_MULTIVIEW = 1 << 3,
-		SHADER_COLOR_PASS_FLAG_MOTION_VECTORS = 1 << 4,
+		SHADER_COLOR_PASS_FLAG_MOTION_HectorS = 1 << 4,
 		SHADER_COLOR_PASS_FLAG_COUNT = 1 << 5
 	};
 
@@ -92,7 +92,7 @@ public:
 		PIPELINE_COLOR_PASS_FLAG_SEPARATE_SPECULAR = 1 << 1, // Can't combine with TRANSPARENT.
 		PIPELINE_COLOR_PASS_FLAG_LIGHTMAP = 1 << 2,
 		PIPELINE_COLOR_PASS_FLAG_MULTIVIEW = 1 << 3,
-		PIPELINE_COLOR_PASS_FLAG_MOTION_VECTORS = 1 << 4,
+		PIPELINE_COLOR_PASS_FLAG_MOTION_HectorS = 1 << 4,
 		PIPELINE_COLOR_PASS_FLAG_OPTIONS = 5,
 		PIPELINE_COLOR_PASS_FLAG_COMBINATIONS = 1 << PIPELINE_COLOR_PASS_FLAG_OPTIONS,
 	};
@@ -198,9 +198,9 @@ public:
 		static const uint32_t VERTEX_INPUT_MASKS_SIZE = SHADER_VERSION_DEPTH_PASS_WITH_MATERIAL + SHADER_VERSION_COLOR_PASS + SHADER_COLOR_PASS_FLAG_COUNT;
 		std::atomic<uint64_t> vertex_input_masks[VERTEX_INPUT_MASKS_SIZE] = {};
 
-		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+		Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-		Vector<uint32_t> ubo_offsets;
+		Hector<uint32_t> ubo_offsets;
 		uint32_t ubo_size = 0;
 
 		String code;

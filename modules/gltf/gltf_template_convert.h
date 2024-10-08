@@ -38,7 +38,7 @@
 
 namespace GLTFTemplateConvert {
 template <typename T>
-static Array to_array(const Vector<T> &p_inp) {
+static Array to_array(const Hector<T> &p_inp) {
 	Array ret;
 	for (int i = 0; i < p_inp.size(); i++) {
 		ret.push_back(p_inp[i]);
@@ -58,7 +58,7 @@ static TypedArray<T> to_array(const HashSet<T> &p_inp) {
 }
 
 template <typename T>
-static void set_from_array(Vector<T> &r_out, const Array &p_inp) {
+static void set_from_array(Hector<T> &r_out, const Array &p_inp) {
 	r_out.clear();
 	for (int i = 0; i < p_inp.size(); i++) {
 		r_out.push_back(p_inp[i]);

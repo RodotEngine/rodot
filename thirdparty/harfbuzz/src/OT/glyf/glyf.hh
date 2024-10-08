@@ -93,11 +93,11 @@ struct glyf
 	return_trace (false);
     }
 
-    hb_vector_t<unsigned> padded_offsets;
+    hb_Hector_t<unsigned> padded_offsets;
     if (unlikely (!padded_offsets.alloc (c->plan->new_to_old_gid_list.length, true)))
       return_trace (false);
 
-    hb_vector_t<glyf_impl::SubsetGlyph> glyphs;
+    hb_Hector_t<glyf_impl::SubsetGlyph> glyphs;
     if (!_populate_subset_glyphs (c->plan, font, glyphs))
     {
       hb_font_destroy (font);
@@ -142,12 +142,12 @@ struct glyf
   bool
   _populate_subset_glyphs (const hb_subset_plan_t   *plan,
 			   hb_font_t                *font,
-			   hb_vector_t<glyf_impl::SubsetGlyph>& glyphs /* OUT */) const;
+			   hb_Hector_t<glyf_impl::SubsetGlyph>& glyphs /* OUT */) const;
 
   hb_font_t *
   _create_font_for_instancing (const hb_subset_plan_t *plan) const;
 
-  void _free_compiled_subset_glyphs (hb_vector_t<glyf_impl::SubsetGlyph> &glyphs) const
+  void _free_compiled_subset_glyphs (hb_Hector_t<glyf_impl::SubsetGlyph> &glyphs) const
   {
     for (auto &g : glyphs)
       g.free_compiled_bytes ();
@@ -217,7 +217,7 @@ struct glyf_accelerator_t
        https://github.com/harfbuzz/harfbuzz/issues/2095
        mostly because of gvar handling in VF fonts,
        perhaps a separate path for non-VF fonts can be considered */
-    contour_point_vector_t all_points;
+    contour_point_Hector_t all_points;
 
     bool phantom_only = !consumer.is_consuming_contour_points ();
     if (unlikely (!glyph_for_gid (gid).get_points (font, *this, all_points, nullptr, nullptr, nullptr, true, true, phantom_only, coords)))
@@ -436,7 +436,7 @@ struct glyf_accelerator_t
 inline bool
 glyf::_populate_subset_glyphs (const hb_subset_plan_t   *plan,
 			       hb_font_t *font,
-			       hb_vector_t<glyf_impl::SubsetGlyph>& glyphs /* OUT */) const
+			       hb_Hector_t<glyf_impl::SubsetGlyph>& glyphs /* OUT */) const
 {
   OT::glyf_accelerator_t glyf (plan->source);
   if (!glyphs.alloc (plan->new_to_old_gid_list.length, true)) return false;
@@ -485,7 +485,7 @@ glyf::_create_font_for_instancing (const hb_subset_plan_t *plan) const
   hb_font_t *font = hb_font_create (plan->source);
   if (unlikely (font == hb_font_get_empty ())) return nullptr;
 
-  hb_vector_t<hb_variation_t> vars;
+  hb_Hector_t<hb_variation_t> vars;
   if (unlikely (!vars.alloc (plan->user_axes_location.get_population (), true)))
   {
     hb_font_destroy (font);

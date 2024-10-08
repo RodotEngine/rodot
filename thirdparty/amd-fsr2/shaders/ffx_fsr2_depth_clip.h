@@ -76,28 +76,28 @@ FfxFloat32 ComputeDepthClip(FfxFloat32x2 fUvSample, FfxFloat32 fCurrentDepthSamp
     return (fWeightSum > 0) ? ffxSaturate(1.0f - fDepth / fWeightSum) : 0.0f;
 }
 
-FfxFloat32 ComputeMotionDivergence(FfxInt32x2 iPxPos, FfxInt32x2 iPxInputMotionVectorSize)
+FfxFloat32 ComputeMotionDivergence(FfxInt32x2 iPxPos, FfxInt32x2 iPxInputMotionHectorSize)
 {
     FfxFloat32 minconvergence = 1.0f;
 
-    FfxFloat32x2 fMotionVectorNucleus = LoadInputMotionVector(iPxPos);
-    FfxFloat32 fNucleusVelocityLr = length(fMotionVectorNucleus * RenderSize());
-    FfxFloat32 fMaxVelocityUv = length(fMotionVectorNucleus);
+    FfxFloat32x2 fMotionHectorNucleus = LoadInputMotionHector(iPxPos);
+    FfxFloat32 fNucleusVelocityLr = length(fMotionHectorNucleus * RenderSize());
+    FfxFloat32 fMaxVelocityUv = length(fMotionHectorNucleus);
 
-    const FfxFloat32 MotionVectorVelocityEpsilon = 1e-02f;
+    const FfxFloat32 MotionHectorVelocityEpsilon = 1e-02f;
 
-    if (fNucleusVelocityLr > MotionVectorVelocityEpsilon) {
+    if (fNucleusVelocityLr > MotionHectorVelocityEpsilon) {
         for (FfxInt32 y = -1; y <= 1; ++y) {
             for (FfxInt32 x = -1; x <= 1; ++x) {
 
-                FfxInt32x2 sp = ClampLoad(iPxPos, FfxInt32x2(x, y), iPxInputMotionVectorSize);
+                FfxInt32x2 sp = ClampLoad(iPxPos, FfxInt32x2(x, y), iPxInputMotionHectorSize);
 
-                FfxFloat32x2 fMotionVector = LoadInputMotionVector(sp);
-                FfxFloat32 fVelocityUv = length(fMotionVector);
+                FfxFloat32x2 fMotionHector = LoadInputMotionHector(sp);
+                FfxFloat32 fVelocityUv = length(fMotionHector);
 
                 fMaxVelocityUv = ffxMax(fVelocityUv, fMaxVelocityUv);
                 fVelocityUv = ffxMax(fVelocityUv, fMaxVelocityUv);
-                minconvergence = ffxMin(minconvergence, dot(fMotionVector / fVelocityUv, fMotionVectorNucleus / fVelocityUv));
+                minconvergence = ffxMin(minconvergence, dot(fMotionHector / fVelocityUv, fMotionHectorNucleus / fVelocityUv));
             }
         }
     }
@@ -136,13 +136,13 @@ FfxFloat32 ComputeTemporalMotionDivergence(FfxInt32x2 iPxPos)
 {
     const FfxFloat32x2 fUv = FfxFloat32x2(iPxPos + 0.5f) / RenderSize();
 
-    FfxFloat32x2 fMotionVector = LoadDilatedMotionVector(iPxPos);
-    FfxFloat32x2 fReprojectedUv = fUv + fMotionVector;
+    FfxFloat32x2 fMotionHector = LoadDilatedMotionHector(iPxPos);
+    FfxFloat32x2 fReprojectedUv = fUv + fMotionHector;
     fReprojectedUv = ClampUv(fReprojectedUv, RenderSize(), MaxRenderSize());
-    FfxFloat32x2 fPrevMotionVector = SamplePreviousDilatedMotionVector(fReprojectedUv);
+    FfxFloat32x2 fPrevMotionHector = SamplePreviousDilatedMotionHector(fReprojectedUv);
 
-    float fPxDistance = length(fMotionVector * DisplaySize());
-    return fPxDistance > 1.0f ? ffxLerp(0.0f, 1.0f - ffxSaturate(length(fPrevMotionVector) / length(fMotionVector)), ffxSaturate(ffxPow(fPxDistance / 20.0f, 3.0f))) : 0;
+    float fPxDistance = length(fMotionHector * DisplaySize());
+    return fPxDistance > 1.0f ? ffxLerp(0.0f, 1.0f - ffxSaturate(length(fPrevMotionHector) / length(fMotionHector)), ffxSaturate(ffxPow(fPxDistance / 20.0f, 3.0f))) : 0;
 }
 
 void PreProcessReactiveMasks(FfxInt32x2 iPxLrPos, FfxFloat32 fMotionDivergence)
@@ -216,7 +216,7 @@ FfxFloat32x3 ComputePreparedInputColor(FfxInt32x2 iPxLrPos)
     return fPreparedYCoCg;
 }
 
-FfxFloat32 EvaluateSurface(FfxInt32x2 iPxPos, FfxFloat32x2 fMotionVector)
+FfxFloat32 EvaluateSurface(FfxInt32x2 iPxPos, FfxFloat32x2 fMotionHector)
 {
     FfxFloat32 d0 = GetViewSpaceDepth(LoadReconstructedPrevDepth(iPxPos + FfxInt32x2(0, -1)));
     FfxFloat32 d1 = GetViewSpaceDepth(LoadReconstructedPrevDepth(iPxPos + FfxInt32x2(0, 0)));
@@ -228,22 +228,22 @@ FfxFloat32 EvaluateSurface(FfxInt32x2 iPxPos, FfxFloat32x2 fMotionVector)
 void DepthClip(FfxInt32x2 iPxPos)
 {
     FfxFloat32x2 fDepthUv = (iPxPos + 0.5f) / RenderSize();
-    FfxFloat32x2 fMotionVector = LoadDilatedMotionVector(iPxPos);
+    FfxFloat32x2 fMotionHector = LoadDilatedMotionHector(iPxPos);
 
     // Discard tiny mvs
-    fMotionVector *= FfxFloat32(length(fMotionVector * DisplaySize()) > 0.01f);
+    fMotionHector *= FfxFloat32(length(fMotionHector * DisplaySize()) > 0.01f);
 
-    const FfxFloat32x2 fDilatedUv = fDepthUv + fMotionVector;
+    const FfxFloat32x2 fDilatedUv = fDepthUv + fMotionHector;
     const FfxFloat32 fDilatedDepth = LoadDilatedDepth(iPxPos);
     const FfxFloat32 fCurrentDepthViewSpace = GetViewSpaceDepth(LoadInputDepth(iPxPos));
 
     // Compute prepared input color and depth clip
-    FfxFloat32 fDepthClip = ComputeDepthClip(fDilatedUv, fDilatedDepth) * EvaluateSurface(iPxPos, fMotionVector);
+    FfxFloat32 fDepthClip = ComputeDepthClip(fDilatedUv, fDilatedDepth) * EvaluateSurface(iPxPos, fMotionHector);
     FfxFloat32x3 fPreparedYCoCg = ComputePreparedInputColor(iPxPos);
     StorePreparedInputColor(iPxPos, FfxFloat32x4(fPreparedYCoCg, fDepthClip));
 
     // Compute dilated reactive mask
-#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_VECTORS
+#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_HectorS
     FfxInt32x2 iSamplePos = iPxPos;
 #else
     FfxInt32x2 iSamplePos = ComputeHrPosFromLrPos(iPxPos);

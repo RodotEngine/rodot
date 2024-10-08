@@ -301,13 +301,13 @@ struct WorkspaceEdit {
 	/**
 	 * Holds changes to existing resources.
 	 */
-	HashMap<String, Vector<TextEdit>> changes;
+	HashMap<String, Hector<TextEdit>> changes;
 
 	_FORCE_INLINE_ void add_edit(const String &uri, const TextEdit &edit) {
 		if (changes.has(uri)) {
 			changes[uri].push_back(edit);
 		} else {
-			Vector<TextEdit> edits;
+			Hector<TextEdit> edits;
 			edits.push_back(edit);
 			changes[uri] = edits;
 		}
@@ -317,7 +317,7 @@ struct WorkspaceEdit {
 		Dictionary dict;
 
 		Dictionary out_changes;
-		for (const KeyValue<String, Vector<TextEdit>> &E : changes) {
+		for (const KeyValue<String, Hector<TextEdit>> &E : changes) {
 			Array edits;
 			for (int i = 0; i < E.value.size(); ++i) {
 				Dictionary text_edit;
@@ -340,10 +340,10 @@ struct WorkspaceEdit {
 		new_edit.range.end.line = line;
 		new_edit.range.end.character = end_character;
 
-		if (HashMap<String, Vector<TextEdit>>::Iterator E = changes.find(uri)) {
+		if (HashMap<String, Hector<TextEdit>>::Iterator E = changes.find(uri)) {
 			E->value.push_back(new_edit);
 		} else {
-			Vector<TextEdit> edit_list;
+			Hector<TextEdit> edit_list;
 			edit_list.push_back(new_edit);
 			changes.insert(uri, edit_list);
 		}
@@ -419,7 +419,7 @@ struct CompletionOptions {
 	/**
 	 * The characters that trigger completion automatically.
 	 */
-	Vector<String> triggerCharacters;
+	Hector<String> triggerCharacters;
 
 	CompletionOptions() {
 		triggerCharacters.push_back(".");
@@ -444,7 +444,7 @@ struct SignatureHelpOptions {
 	 * The characters that trigger signature help
 	 * automatically.
 	 */
-	Vector<String> triggerCharacters;
+	Hector<String> triggerCharacters;
 
 	Dictionary to_json() {
 		Dictionary dict;
@@ -508,7 +508,7 @@ struct ExecuteCommandOptions {
 	/**
 	 * The commands to be executed on the server
 	 */
-	Vector<String> commands;
+	Hector<String> commands;
 
 	Dictionary to_json() {
 		Dictionary dict;
@@ -618,7 +618,7 @@ struct DocumentOnTypeFormattingOptions {
 	/**
 	 * More trigger characters.
 	 */
-	Vector<String> moreTriggerCharacter;
+	Hector<String> moreTriggerCharacter;
 
 	Dictionary to_json() {
 		Dictionary dict;
@@ -774,7 +774,7 @@ struct Diagnostic {
 	 * An array of related diagnostic information, e.g. when symbol-names within
 	 * a scope collide all definitions can be marked via this property.
 	 */
-	Vector<DiagnosticRelatedInformation> relatedInformation;
+	Hector<DiagnosticRelatedInformation> relatedInformation;
 
 	Dictionary to_json() const {
 		Dictionary dict;
@@ -1009,14 +1009,14 @@ struct CompletionItem {
 	 * (for example adding an import statement at the top of the file if the completion item will
 	 * insert an unqualified type).
 	 */
-	Vector<TextEdit> additionalTextEdits;
+	Hector<TextEdit> additionalTextEdits;
 
 	/**
 	 * An optional set of characters that when pressed while this completion is active will accept it first and
 	 * then type that character. *Note* that all commit characters should have `length=1` and that superfluous
 	 * characters will be ignored.
 	 */
-	Vector<String> commitCharacters;
+	Hector<String> commitCharacters;
 
 	/**
 	 * An optional command that is executed *after* inserting this completion. *Note* that
@@ -1114,7 +1114,7 @@ struct CompletionList {
 	/**
 	 * The completion items.
 	 */
-	Vector<CompletionItem> items;
+	Hector<CompletionItem> items;
 };
 
 // Use namespace instead of enumeration to follow the LSP specifications
@@ -1215,7 +1215,7 @@ struct DocumentSymbol {
 	/**
 	 * Children of this symbol, e.g. properties of a class.
 	 */
-	Vector<DocumentSymbol> children;
+	Hector<DocumentSymbol> children;
 
 	Dictionary to_json(bool with_doc = false) const {
 		Dictionary dict;
@@ -1525,7 +1525,7 @@ struct SignatureInformation {
 	/**
 	 * The parameters of this signature.
 	 */
-	Vector<ParameterInformation> parameters;
+	Hector<ParameterInformation> parameters;
 
 	Dictionary to_json() const {
 		Dictionary dict;
@@ -1549,7 +1549,7 @@ struct SignatureHelp {
 	/**
 	 * One or more signatures.
 	 */
-	Vector<SignatureInformation> signatures;
+	Hector<SignatureInformation> signatures;
 
 	/**
 	 * The active signature. If omitted or the value lies outside the
@@ -1639,7 +1639,7 @@ struct FileOperationRegistrationOptions {
 	/**
 	 * The actual filters.
 	 */
-	Vector<FileOperationFilter> filters;
+	Hector<FileOperationFilter> filters;
 
 	FileOperationRegistrationOptions() {
 		filters.push_back(FileOperationFilter());
@@ -1904,7 +1904,7 @@ struct GodotCapabilities {
 static String marked_documentation(const String &p_bbcode) {
 	String markdown = p_bbcode.strip_edges();
 
-	Vector<String> lines = markdown.split("\n");
+	Hector<String> lines = markdown.split("\n");
 	bool in_code_block = false;
 	int code_block_indent = -1;
 

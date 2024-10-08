@@ -315,7 +315,7 @@ void GDScript::_get_script_property_list(List<PropertyInfo> *r_list, bool p_incl
 	List<PropertyInfo> props;
 
 	while (sptr) {
-		Vector<_GDScriptMemberSort> msort;
+		Hector<_GDScriptMemberSort> msort;
 		for (const KeyValue<StringName, MemberInfo> &E : sptr->member_indices) {
 			if (!sptr->members.has(E.key)) {
 				continue; // Skip base class members.
@@ -499,7 +499,7 @@ String GDScript::get_class_icon_path() const {
 bool GDScript::_update_exports(bool *r_err, bool p_recursive_call, PlaceHolderScriptInstance *p_instance_to_update, bool p_base_exports_changed) {
 #ifdef TOOLS_ENABLED
 
-	static Vector<GDScript *> base_caches;
+	static Hector<GDScript *> base_caches;
 	if (!p_recursive_call) {
 		base_caches.clear();
 	}
@@ -863,7 +863,7 @@ Error GDScript::reload(bool p_keep_state) {
 #ifdef DEBUG_ENABLED
 	for (const GDScriptWarning &warning : parser.get_warnings()) {
 		if (EngineDebugger::is_active()) {
-			Vector<ScriptLanguage::StackInfo> si;
+			Hector<ScriptLanguage::StackInfo> si;
 			EngineDebugger::get_script_debugger()->send_error("", get_script_path(), warning.start_line, warning.get_name(), warning.get_message(), false, ERR_HANDLER_WARNING, si);
 		}
 	}
@@ -1043,7 +1043,7 @@ void GDScript::_get_property_list(List<PropertyInfo> *p_properties) const {
 	}
 
 	for (const List<const GDScript *>::Element *E = classes.back(); E; E = E->prev()) {
-		Vector<_GDScriptMemberSort> msort;
+		Hector<_GDScriptMemberSort> msort;
 		for (const KeyValue<StringName, MemberInfo> &F : E->get()->static_variables_indices) {
 			_GDScriptMemberSort ms;
 			ms.index = F.value.index;
@@ -1089,7 +1089,7 @@ Error GDScript::load_source_code(const String &p_path) {
 		return OK;
 	}
 
-	Vector<uint8_t> sourcef;
+	Hector<uint8_t> sourcef;
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 	if (err) {
@@ -1125,15 +1125,15 @@ Error GDScript::load_source_code(const String &p_path) {
 	return OK;
 }
 
-void GDScript::set_binary_tokens_source(const Vector<uint8_t> &p_binary_tokens) {
+void GDScript::set_binary_tokens_source(const Hector<uint8_t> &p_binary_tokens) {
 	binary_tokens = p_binary_tokens;
 }
 
-const Vector<uint8_t> &GDScript::get_binary_tokens_source() const {
+const Hector<uint8_t> &GDScript::get_binary_tokens_source() const {
 	return binary_tokens;
 }
 
-Vector<uint8_t> GDScript::get_as_binary_tokens() const {
+Hector<uint8_t> GDScript::get_as_binary_tokens() const {
 	GDScriptTokenizerBuffer tokenizer;
 	return tokenizer.parse_code_string(source, GDScriptTokenizerBuffer::COMPRESS_NONE);
 }
@@ -1187,7 +1187,7 @@ bool GDScript::inherits_script(const Ref<Script> &p_script) const {
 GDScript *GDScript::find_class(const String &p_qualified_name) {
 	String first = p_qualified_name.get_slice("::", 0);
 
-	Vector<String> class_names;
+	Hector<String> class_names;
 	GDScript *result = nullptr;
 	// Empty initial name means start here.
 	if (first.is_empty() || first == global_name) {
@@ -1414,7 +1414,7 @@ void GDScript::_save_orphaned_subclasses(ClearData *p_clear_data) {
 		ObjectID id;
 		String fully_qualified_name;
 	};
-	Vector<ClassRefWithName> weak_subclasses;
+	Hector<ClassRefWithName> weak_subclasses;
 	// collect subclasses ObjectID and name
 	for (KeyValue<StringName, Ref<GDScript>> &E : subclasses) {
 		E.value->_owner = nullptr; //bye, you are no longer owned cause I died
@@ -1897,7 +1897,7 @@ void GDScriptInstance::get_property_list(List<PropertyInfo> *p_properties) const
 
 		//instance a fake script for editing the values
 
-		Vector<_GDScriptMemberSort> msort;
+		Hector<_GDScriptMemberSort> msort;
 		for (const KeyValue<StringName, GDScript::MemberInfo> &F : sptr->member_indices) {
 			if (!sptr->members.has(F.key)) {
 				continue; // Skip base class members.
@@ -2118,7 +2118,7 @@ const Variant GDScriptInstance::get_rpc_config() const {
 void GDScriptInstance::reload_members() {
 #ifdef DEBUG_ENABLED
 
-	Vector<Variant> new_members;
+	Hector<Variant> new_members;
 	new_members.resize(script->member_indices.size());
 
 	//pass the values to the new indices
@@ -2477,7 +2477,7 @@ void GDScriptLanguage::profiling_collate_native_call_data(bool p_accumulated) {
 		HashMap<String, GDScriptFunction::Profile::NativeProfile>::Iterator it = nat_calls->begin();
 
 		while (it != nat_calls->end()) {
-			Vector<String> sig = it->value.signature.split("::");
+			Hector<String> sig = it->value.signature.split("::");
 			HashMap<String, GDScriptFunction::Profile::NativeProfile *>::ConstIterator already_found = seen_nat_calls.find(sig[2]);
 			if (already_found) {
 				already_found->value->total_time += it->value.total_time;
@@ -2843,7 +2843,7 @@ String GDScriptLanguage::get_global_class_name(const String &p_path, String *r_b
 						subclass = nullptr;
 						break;
 					} else {
-						Vector<GDScriptParser::IdentifierNode *> extend_classes = subclass->extends;
+						Hector<GDScriptParser::IdentifierNode *> extend_classes = subclass->extends;
 
 						Ref<FileAccess> subfile = FileAccess::open(subclass->extends_path, FileAccess::READ);
 						if (subfile.is_null()) {

@@ -555,7 +555,7 @@ const char *Expression::token_name[TK_MAX] = {
 };
 
 Expression::ENode *Expression::_parse_expression() {
-	Vector<ExpressionNode> expression_nodes;
+	Hector<ExpressionNode> expression_nodes;
 
 	while (true) {
 		//keep appending stuff to expression
@@ -1368,8 +1368,8 @@ bool Expression::_execute(const Array &p_inputs, Object *p_instance, Expression:
 		case Expression::ENode::TYPE_CONSTRUCTOR: {
 			const Expression::ConstructorNode *constructor = static_cast<const Expression::ConstructorNode *>(p_node);
 
-			Vector<Variant> arr;
-			Vector<const Variant *> argp;
+			Hector<Variant> arr;
+			Hector<const Variant *> argp;
 			arr.resize(constructor->arguments.size());
 			argp.resize(constructor->arguments.size());
 
@@ -1396,8 +1396,8 @@ bool Expression::_execute(const Array &p_inputs, Object *p_instance, Expression:
 		case Expression::ENode::TYPE_BUILTIN_FUNC: {
 			const Expression::BuiltinFuncNode *bifunc = static_cast<const Expression::BuiltinFuncNode *>(p_node);
 
-			Vector<Variant> arr;
-			Vector<const Variant *> argp;
+			Hector<Variant> arr;
+			Hector<const Variant *> argp;
 			arr.resize(bifunc->arguments.size());
 			argp.resize(bifunc->arguments.size());
 
@@ -1430,8 +1430,8 @@ bool Expression::_execute(const Array &p_inputs, Object *p_instance, Expression:
 				return true;
 			}
 
-			Vector<Variant> arr;
-			Vector<const Variant *> argp;
+			Hector<Variant> arr;
+			Hector<const Variant *> argp;
 			arr.resize(call->arguments.size());
 			argp.resize(call->arguments.size());
 
@@ -1463,7 +1463,7 @@ bool Expression::_execute(const Array &p_inputs, Object *p_instance, Expression:
 	return false;
 }
 
-Error Expression::parse(const String &p_expression, const Vector<String> &p_input_names) {
+Error Expression::parse(const String &p_expression, const Hector<String> &p_input_names) {
 	if (nodes) {
 		memdelete(nodes);
 		nodes = nullptr;
@@ -1515,7 +1515,7 @@ String Expression::get_error_text() const {
 }
 
 void Expression::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("parse", "expression", "input_names"), &Expression::parse, DEFVAL(Vector<String>()));
+	ClassDB::bind_method(D_METHOD("parse", "expression", "input_names"), &Expression::parse, DEFVAL(Hector<String>()));
 	ClassDB::bind_method(D_METHOD("execute", "inputs", "base_instance", "show_error", "const_calls_only"), &Expression::execute, DEFVAL(Array()), DEFVAL(Variant()), DEFVAL(true), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("has_execute_failed"), &Expression::has_execute_failed);
 	ClassDB::bind_method(D_METHOD("get_error_text"), &Expression::get_error_text);

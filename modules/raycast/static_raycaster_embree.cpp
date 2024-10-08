@@ -62,20 +62,20 @@ bool StaticRaycasterEmbree::intersect(Ray &r_ray) {
 	return r_ray.geomID != RTC_INVALID_GEOMETRY_ID;
 }
 
-void StaticRaycasterEmbree::intersect(Vector<Ray> &r_rays) {
+void StaticRaycasterEmbree::intersect(Hector<Ray> &r_rays) {
 	Ray *rays = r_rays.ptrw();
 	for (int i = 0; i < r_rays.size(); ++i) {
 		intersect(rays[i]);
 	}
 }
 
-void StaticRaycasterEmbree::add_mesh(const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices, unsigned int p_id) {
+void StaticRaycasterEmbree::add_mesh(const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices, unsigned int p_id) {
 	RTCGeometry embree_mesh = rtcNewGeometry(embree_device, RTC_GEOMETRY_TYPE_TRIANGLE);
 
 	int vertex_count = p_vertices.size();
 
-	Vector3 *embree_vertices = (Vector3 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vector3), vertex_count);
-	memcpy(embree_vertices, p_vertices.ptr(), sizeof(Vector3) * vertex_count);
+	Hector3 *embree_vertices = (Hector3 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Hector3), vertex_count);
+	memcpy(embree_vertices, p_vertices.ptr(), sizeof(Hector3) * vertex_count);
 
 	if (p_indices.is_empty()) {
 		ERR_FAIL_COND(vertex_count % 3 != 0);

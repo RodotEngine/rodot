@@ -71,7 +71,7 @@ TEST_CASE("[SceneTree][Camera3D] Getters and setters") {
 		constexpr float size = 7.0f;
 		constexpr float h_offset = 1.1f;
 		constexpr float v_offset = -1.6f;
-		const Vector2 frustum_offset(5, 7);
+		const Hector2 frustum_offset(5, 7);
 		test_camera->set_near(depth_near);
 		CHECK(test_camera->get_near() == depth_near);
 		test_camera->set_far(depth_far);
@@ -132,7 +132,7 @@ TEST_CASE("[SceneTree][Camera3D] Position queries") {
 	Camera3D *test_camera = memnew(Camera3D);
 	SubViewport *mock_viewport = memnew(SubViewport);
 	// 4:2.
-	mock_viewport->set_size(Vector2(400, 200));
+	mock_viewport->set_size(Hector2(400, 200));
 	SceneTree::get_singleton()->get_root()->add_child(mock_viewport);
 	mock_viewport->add_child(test_camera);
 	test_camera->set_keep_aspect_mode(Camera3D::KeepAspect::KEEP_WIDTH);
@@ -142,17 +142,17 @@ TEST_CASE("[SceneTree][Camera3D] Position queries") {
 		test_camera->set_projection(Camera3D::ProjectionType::PROJECTION_ORTHOGONAL);
 		// The orthogonal case is simpler, so we test a more random position + rotation combination here.
 		// For the other cases we'll use zero translation and rotation instead.
-		test_camera->set_global_position(Vector3(1, 2, 3));
-		test_camera->look_at(Vector3(-4, 5, 1));
+		test_camera->set_global_position(Hector3(1, 2, 3));
+		test_camera->look_at(Hector3(-4, 5, 1));
 		// Width = 5, Aspect Ratio = 400 / 200 = 2, so Height is 2.5.
 		test_camera->set_orthogonal(5.0f, 0.5f, 1000.0f);
 		const Basis basis = test_camera->get_global_basis();
 		// Subtract near so offset starts from the near plane.
-		const Vector3 offset1 = basis.xform(Vector3(-1.5f, 3.5f, 0.2f - test_camera->get_near()));
-		const Vector3 offset2 = basis.xform(Vector3(2.0f, -0.5f, -0.6f - test_camera->get_near()));
-		const Vector3 offset3 = basis.xform(Vector3(-3.0f, 1.0f, -0.6f - test_camera->get_near()));
-		const Vector3 offset4 = basis.xform(Vector3(-2.0f, 1.5f, -0.6f - test_camera->get_near()));
-		const Vector3 offset5 = basis.xform(Vector3(0, 0, 10000.0f - test_camera->get_near()));
+		const Hector3 offset1 = basis.xform(Hector3(-1.5f, 3.5f, 0.2f - test_camera->get_near()));
+		const Hector3 offset2 = basis.xform(Hector3(2.0f, -0.5f, -0.6f - test_camera->get_near()));
+		const Hector3 offset3 = basis.xform(Hector3(-3.0f, 1.0f, -0.6f - test_camera->get_near()));
+		const Hector3 offset4 = basis.xform(Hector3(-2.0f, 1.5f, -0.6f - test_camera->get_near()));
+		const Hector3 offset5 = basis.xform(Hector3(0, 0, 10000.0f - test_camera->get_near()));
 
 		SUBCASE("is_position_behind") {
 			CHECK(test_camera->is_position_behind(test_camera->get_global_position() + offset1));
@@ -188,25 +188,25 @@ TEST_CASE("[SceneTree][Camera3D] Position queries") {
 	SUBCASE("Perspective projection") {
 		test_camera->set_projection(Camera3D::ProjectionType::PROJECTION_PERSPECTIVE);
 		// Camera at origin, looking at +Z.
-		test_camera->set_global_position(Vector3(0, 0, 0));
-		test_camera->set_global_rotation(Vector3(0, 0, 0));
+		test_camera->set_global_position(Hector3(0, 0, 0));
+		test_camera->set_global_rotation(Hector3(0, 0, 0));
 		// Keep width, so horizontal fov = 120.
 		// Since the near plane distance is 1,
 		// with trig we know the near plane's width is 2 * sqrt(3), so its height is sqrt(3).
 		test_camera->set_perspective(120.0f, 1.0f, 1000.0f);
 
 		SUBCASE("is_position_behind") {
-			CHECK_FALSE(test_camera->is_position_behind(Vector3(0, 0, -1.5f)));
-			CHECK(test_camera->is_position_behind(Vector3(2, 0, -0.2f)));
+			CHECK_FALSE(test_camera->is_position_behind(Hector3(0, 0, -1.5f)));
+			CHECK(test_camera->is_position_behind(Hector3(2, 0, -0.2f)));
 		}
 
 		SUBCASE("is_position_in_frustum") {
-			CHECK(test_camera->is_position_in_frustum(Vector3(-1.3f, 0, -1.1f)));
-			CHECK_FALSE(test_camera->is_position_in_frustum(Vector3(2, 0, -1.1f)));
-			CHECK(test_camera->is_position_in_frustum(Vector3(1, 0.5f, -1.1f)));
-			CHECK_FALSE(test_camera->is_position_in_frustum(Vector3(1, 1, -1.1f)));
-			CHECK(test_camera->is_position_in_frustum(Vector3(0, 0, -1.5f)));
-			CHECK_FALSE(test_camera->is_position_in_frustum(Vector3(0, 0, -0.5f)));
+			CHECK(test_camera->is_position_in_frustum(Hector3(-1.3f, 0, -1.1f)));
+			CHECK_FALSE(test_camera->is_position_in_frustum(Hector3(2, 0, -1.1f)));
+			CHECK(test_camera->is_position_in_frustum(Hector3(1, 0.5f, -1.1f)));
+			CHECK_FALSE(test_camera->is_position_in_frustum(Hector3(1, 1, -1.1f)));
+			CHECK(test_camera->is_position_in_frustum(Hector3(0, 0, -1.5f)));
+			CHECK_FALSE(test_camera->is_position_in_frustum(Hector3(0, 0, -0.5f)));
 		}
 	}
 
@@ -219,35 +219,35 @@ TEST_CASE("[SceneTree][Camera3D] Project/Unproject position") {
 	Camera3D *test_camera = memnew(Camera3D);
 	SubViewport *mock_viewport = memnew(SubViewport);
 	// 4:2.
-	mock_viewport->set_size(Vector2(400, 200));
+	mock_viewport->set_size(Hector2(400, 200));
 	SceneTree::get_singleton()->get_root()->add_child(mock_viewport);
 	mock_viewport->add_child(test_camera);
-	test_camera->set_global_position(Vector3(0, 0, 0));
-	test_camera->set_global_rotation(Vector3(0, 0, 0));
+	test_camera->set_global_position(Hector3(0, 0, 0));
+	test_camera->set_global_rotation(Hector3(0, 0, 0));
 	test_camera->set_keep_aspect_mode(Camera3D::KeepAspect::KEEP_HEIGHT);
 
 	SUBCASE("project_position") {
 		SUBCASE("Orthogonal projection") {
 			test_camera->set_orthogonal(5.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_position(Vector2(200, 100), 0.5f).is_equal_approx(Vector3(0, 0, -0.5f)));
+			CHECK(test_camera->project_position(Hector2(200, 100), 0.5f).is_equal_approx(Hector3(0, 0, -0.5f)));
 			// Top left.
-			CHECK(test_camera->project_position(Vector2(0, 0), 1.5f).is_equal_approx(Vector3(-5.0f, 2.5f, -1.5f)));
+			CHECK(test_camera->project_position(Hector2(0, 0), 1.5f).is_equal_approx(Hector3(-5.0f, 2.5f, -1.5f)));
 			// Bottom right.
-			CHECK(test_camera->project_position(Vector2(400, 200), 5.0f).is_equal_approx(Vector3(5.0f, -2.5f, -5.0f)));
+			CHECK(test_camera->project_position(Hector2(400, 200), 5.0f).is_equal_approx(Hector3(5.0f, -2.5f, -5.0f)));
 		}
 
 		SUBCASE("Perspective projection") {
 			test_camera->set_perspective(120.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_position(Vector2(200, 100), 0.5f).is_equal_approx(Vector3(0, 0, -0.5f)));
-			CHECK(test_camera->project_position(Vector2(200, 100), 100.0f).is_equal_approx(Vector3(0, 0, -100.0f)));
+			CHECK(test_camera->project_position(Hector2(200, 100), 0.5f).is_equal_approx(Hector3(0, 0, -0.5f)));
+			CHECK(test_camera->project_position(Hector2(200, 100), 100.0f).is_equal_approx(Hector3(0, 0, -100.0f)));
 			// 3/4th way to Top left.
-			CHECK(test_camera->project_position(Vector2(100, 50), 0.5f).is_equal_approx(Vector3(-SQRT3 * 0.5f, SQRT3 * 0.25f, -0.5f)));
-			CHECK(test_camera->project_position(Vector2(100, 50), 1.0f).is_equal_approx(Vector3(-SQRT3, SQRT3 * 0.5f, -1.0f)));
+			CHECK(test_camera->project_position(Hector2(100, 50), 0.5f).is_equal_approx(Hector3(-SQRT3 * 0.5f, SQRT3 * 0.25f, -0.5f)));
+			CHECK(test_camera->project_position(Hector2(100, 50), 1.0f).is_equal_approx(Hector3(-SQRT3, SQRT3 * 0.5f, -1.0f)));
 			// 3/4th way to Bottom right.
-			CHECK(test_camera->project_position(Vector2(300, 150), 0.5f).is_equal_approx(Vector3(SQRT3 * 0.5f, -SQRT3 * 0.25f, -0.5f)));
-			CHECK(test_camera->project_position(Vector2(300, 150), 1.0f).is_equal_approx(Vector3(SQRT3, -SQRT3 * 0.5f, -1.0f)));
+			CHECK(test_camera->project_position(Hector2(300, 150), 0.5f).is_equal_approx(Hector3(SQRT3 * 0.5f, -SQRT3 * 0.25f, -0.5f)));
+			CHECK(test_camera->project_position(Hector2(300, 150), 1.0f).is_equal_approx(Hector3(SQRT3, -SQRT3 * 0.5f, -1.0f)));
 		}
 	}
 
@@ -256,24 +256,24 @@ TEST_CASE("[SceneTree][Camera3D] Project/Unproject position") {
 		SUBCASE("Orthogonal projection") {
 			test_camera->set_orthogonal(5.0f, 0.5f, 1000.0f);
 			// Center
-			CHECK(test_camera->unproject_position(Vector3(0, 0, -0.5f)).is_equal_approx(Vector2(200, 100)));
+			CHECK(test_camera->unproject_position(Hector3(0, 0, -0.5f)).is_equal_approx(Hector2(200, 100)));
 			// Top left
-			CHECK(test_camera->unproject_position(Vector3(-5.0f, 2.5f, -1.5f)).is_equal_approx(Vector2(0, 0)));
+			CHECK(test_camera->unproject_position(Hector3(-5.0f, 2.5f, -1.5f)).is_equal_approx(Hector2(0, 0)));
 			// Bottom right
-			CHECK(test_camera->unproject_position(Vector3(5.0f, -2.5f, -5.0f)).is_equal_approx(Vector2(400, 200)));
+			CHECK(test_camera->unproject_position(Hector3(5.0f, -2.5f, -5.0f)).is_equal_approx(Hector2(400, 200)));
 		}
 
 		SUBCASE("Perspective projection") {
 			test_camera->set_perspective(120.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->unproject_position(Vector3(0, 0, -0.5f)).is_equal_approx(Vector2(200, 100)));
-			CHECK(test_camera->unproject_position(Vector3(0, 0, -100.0f)).is_equal_approx(Vector2(200, 100)));
+			CHECK(test_camera->unproject_position(Hector3(0, 0, -0.5f)).is_equal_approx(Hector2(200, 100)));
+			CHECK(test_camera->unproject_position(Hector3(0, 0, -100.0f)).is_equal_approx(Hector2(200, 100)));
 			// 3/4th way to Top left.
-			WARN(test_camera->unproject_position(Vector3(-SQRT3 * 0.5f, SQRT3 * 0.25f, -0.5f)).is_equal_approx(Vector2(100, 50)));
-			WARN(test_camera->unproject_position(Vector3(-SQRT3, SQRT3 * 0.5f, -1.0f)).is_equal_approx(Vector2(100, 50)));
+			WARN(test_camera->unproject_position(Hector3(-SQRT3 * 0.5f, SQRT3 * 0.25f, -0.5f)).is_equal_approx(Hector2(100, 50)));
+			WARN(test_camera->unproject_position(Hector3(-SQRT3, SQRT3 * 0.5f, -1.0f)).is_equal_approx(Hector2(100, 50)));
 			// 3/4th way to Bottom right.
-			CHECK(test_camera->unproject_position(Vector3(SQRT3 * 0.5f, -SQRT3 * 0.25f, -0.5f)).is_equal_approx(Vector2(300, 150)));
-			CHECK(test_camera->unproject_position(Vector3(SQRT3, -SQRT3 * 0.5f, -1.0f)).is_equal_approx(Vector2(300, 150)));
+			CHECK(test_camera->unproject_position(Hector3(SQRT3 * 0.5f, -SQRT3 * 0.25f, -0.5f)).is_equal_approx(Hector2(300, 150)));
+			CHECK(test_camera->unproject_position(Hector3(SQRT3, -SQRT3 * 0.5f, -1.0f)).is_equal_approx(Hector2(300, 150)));
 		}
 	}
 
@@ -286,32 +286,32 @@ TEST_CASE("[SceneTree][Camera3D] Project ray") {
 	Camera3D *test_camera = memnew(Camera3D);
 	SubViewport *mock_viewport = memnew(SubViewport);
 	// 4:2.
-	mock_viewport->set_size(Vector2(400, 200));
+	mock_viewport->set_size(Hector2(400, 200));
 	SceneTree::get_singleton()->get_root()->add_child(mock_viewport);
 	mock_viewport->add_child(test_camera);
-	test_camera->set_global_position(Vector3(0, 0, 0));
-	test_camera->set_global_rotation(Vector3(0, 0, 0));
+	test_camera->set_global_position(Hector3(0, 0, 0));
+	test_camera->set_global_rotation(Hector3(0, 0, 0));
 	test_camera->set_keep_aspect_mode(Camera3D::KeepAspect::KEEP_HEIGHT);
 
 	SUBCASE("project_ray_origin") {
 		SUBCASE("Orthogonal projection") {
 			test_camera->set_orthogonal(5.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_ray_origin(Vector2(200, 100)).is_equal_approx(Vector3(0, 0, -0.5f)));
+			CHECK(test_camera->project_ray_origin(Hector2(200, 100)).is_equal_approx(Hector3(0, 0, -0.5f)));
 			// Top left.
-			CHECK(test_camera->project_ray_origin(Vector2(0, 0)).is_equal_approx(Vector3(-5.0f, 2.5f, -0.5f)));
+			CHECK(test_camera->project_ray_origin(Hector2(0, 0)).is_equal_approx(Hector3(-5.0f, 2.5f, -0.5f)));
 			// Bottom right.
-			CHECK(test_camera->project_ray_origin(Vector2(400, 200)).is_equal_approx(Vector3(5.0f, -2.5f, -0.5f)));
+			CHECK(test_camera->project_ray_origin(Hector2(400, 200)).is_equal_approx(Hector3(5.0f, -2.5f, -0.5f)));
 		}
 
 		SUBCASE("Perspective projection") {
 			test_camera->set_perspective(120.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_ray_origin(Vector2(200, 100)).is_equal_approx(Vector3(0, 0, 0)));
+			CHECK(test_camera->project_ray_origin(Hector2(200, 100)).is_equal_approx(Hector3(0, 0, 0)));
 			// Top left.
-			CHECK(test_camera->project_ray_origin(Vector2(0, 0)).is_equal_approx(Vector3(0, 0, 0)));
+			CHECK(test_camera->project_ray_origin(Hector2(0, 0)).is_equal_approx(Hector3(0, 0, 0)));
 			// Bottom right.
-			CHECK(test_camera->project_ray_origin(Vector2(400, 200)).is_equal_approx(Vector3(0, 0, 0)));
+			CHECK(test_camera->project_ray_origin(Hector2(400, 200)).is_equal_approx(Hector3(0, 0, 0)));
 		}
 	}
 
@@ -319,45 +319,45 @@ TEST_CASE("[SceneTree][Camera3D] Project ray") {
 		SUBCASE("Orthogonal projection") {
 			test_camera->set_orthogonal(5.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_ray_normal(Vector2(200, 100)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_ray_normal(Hector2(200, 100)).is_equal_approx(Hector3(0, 0, -1)));
 			// Top left.
-			CHECK(test_camera->project_ray_normal(Vector2(0, 0)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_ray_normal(Hector2(0, 0)).is_equal_approx(Hector3(0, 0, -1)));
 			// Bottom right.
-			CHECK(test_camera->project_ray_normal(Vector2(400, 200)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_ray_normal(Hector2(400, 200)).is_equal_approx(Hector3(0, 0, -1)));
 		}
 
 		SUBCASE("Perspective projection") {
 			test_camera->set_perspective(120.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_ray_normal(Vector2(200, 100)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_ray_normal(Hector2(200, 100)).is_equal_approx(Hector3(0, 0, -1)));
 			// Top left.
-			CHECK(test_camera->project_ray_normal(Vector2(0, 0)).is_equal_approx(Vector3(-SQRT3, SQRT3 / 2, -0.5f).normalized()));
+			CHECK(test_camera->project_ray_normal(Hector2(0, 0)).is_equal_approx(Hector3(-SQRT3, SQRT3 / 2, -0.5f).normalized()));
 			// Bottom right.
-			CHECK(test_camera->project_ray_normal(Vector2(400, 200)).is_equal_approx(Vector3(SQRT3, -SQRT3 / 2, -0.5f).normalized()));
+			CHECK(test_camera->project_ray_normal(Hector2(400, 200)).is_equal_approx(Hector3(SQRT3, -SQRT3 / 2, -0.5f).normalized()));
 		}
 	}
 
 	SUBCASE("project_local_ray_normal") {
-		test_camera->set_rotation_degrees(Vector3(60, 60, 60));
+		test_camera->set_rotation_degrees(Hector3(60, 60, 60));
 
 		SUBCASE("Orthogonal projection") {
 			test_camera->set_orthogonal(5.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_local_ray_normal(Vector2(200, 100)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_local_ray_normal(Hector2(200, 100)).is_equal_approx(Hector3(0, 0, -1)));
 			// Top left.
-			CHECK(test_camera->project_local_ray_normal(Vector2(0, 0)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_local_ray_normal(Hector2(0, 0)).is_equal_approx(Hector3(0, 0, -1)));
 			// Bottom right.
-			CHECK(test_camera->project_local_ray_normal(Vector2(400, 200)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_local_ray_normal(Hector2(400, 200)).is_equal_approx(Hector3(0, 0, -1)));
 		}
 
 		SUBCASE("Perspective projection") {
 			test_camera->set_perspective(120.0f, 0.5f, 1000.0f);
 			// Center.
-			CHECK(test_camera->project_local_ray_normal(Vector2(200, 100)).is_equal_approx(Vector3(0, 0, -1)));
+			CHECK(test_camera->project_local_ray_normal(Hector2(200, 100)).is_equal_approx(Hector3(0, 0, -1)));
 			// Top left.
-			CHECK(test_camera->project_local_ray_normal(Vector2(0, 0)).is_equal_approx(Vector3(-SQRT3, SQRT3 / 2, -0.5f).normalized()));
+			CHECK(test_camera->project_local_ray_normal(Hector2(0, 0)).is_equal_approx(Hector3(-SQRT3, SQRT3 / 2, -0.5f).normalized()));
 			// Bottom right.
-			CHECK(test_camera->project_local_ray_normal(Vector2(400, 200)).is_equal_approx(Vector3(SQRT3, -SQRT3 / 2, -0.5f).normalized()));
+			CHECK(test_camera->project_local_ray_normal(Hector2(400, 200)).is_equal_approx(Hector3(SQRT3, -SQRT3 / 2, -0.5f).normalized()));
 		}
 	}
 

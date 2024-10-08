@@ -185,9 +185,9 @@ namespace embree
     Vec3vf<M> v0;      // 1st vertex of the triangles
     Vec3vf<M> v1;      // 2nd vertex of the triangles
     Vec3vf<M> v2;      // 3rd vertex of the triangles
-    Vec3vf<M> dv0;     // difference vector between time steps t0 and t1 for first vertex
-    Vec3vf<M> dv1;     // difference vector between time steps t0 and t1 for second vertex
-    Vec3vf<M> dv2;     // difference vector between time steps t0 and t1 for third vertex
+    Vec3vf<M> dv0;     // difference Hector between time steps t0 and t1 for first vertex
+    Vec3vf<M> dv1;     // difference Hector between time steps t0 and t1 for second vertex
+    Vec3vf<M> dv2;     // difference Hector between time steps t0 and t1 for third vertex
   private:
     vuint<M> geomIDs; // geometry ID
     vuint<M> primIDs; // primitive ID

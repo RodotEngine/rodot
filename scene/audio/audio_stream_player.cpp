@@ -62,9 +62,9 @@ void AudioStreamPlayer::set_volume_db(float p_volume) {
 	ERR_FAIL_COND_MSG(Math::is_nan(p_volume), "Volume can't be set to NaN.");
 	internal->volume_db = p_volume;
 
-	Vector<AudioFrame> volume_vector = _get_volume_vector();
+	Hector<AudioFrame> volume_Hector = _get_volume_Hector();
 	for (Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {
-		AudioServer::get_singleton()->set_playback_all_bus_volumes_linear(playback, volume_vector);
+		AudioServer::get_singleton()->set_playback_all_bus_volumes_linear(playback, volume_Hector);
 	}
 }
 
@@ -93,14 +93,14 @@ void AudioStreamPlayer::play(float p_from_pos) {
 	if (stream_playback.is_null()) {
 		return;
 	}
-	AudioServer::get_singleton()->start_playback_stream(stream_playback, internal->bus, _get_volume_vector(), p_from_pos, internal->pitch_scale);
+	AudioServer::get_singleton()->start_playback_stream(stream_playback, internal->bus, _get_volume_Hector(), p_from_pos, internal->pitch_scale);
 	internal->ensure_playback_limit();
 
 	// Sample handling.
 	if (stream_playback->get_is_sample() && stream_playback->get_sample_playback().is_valid()) {
 		Ref<AudioSamplePlayback> sample_playback = stream_playback->get_sample_playback();
 		sample_playback->offset = p_from_pos;
-		sample_playback->volume_vector = _get_volume_vector();
+		sample_playback->volume_Hector = _get_volume_Hector();
 		sample_playback->bus = get_bus();
 
 		AudioServer::get_singleton()->start_sample_playback(sample_playback);
@@ -126,7 +126,7 @@ float AudioStreamPlayer::get_playback_position() {
 void AudioStreamPlayer::set_bus(const StringName &p_bus) {
 	internal->bus = p_bus;
 	for (const Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {
-		AudioServer::get_singleton()->set_playback_bus_exclusive(playback, p_bus, _get_volume_vector());
+		AudioServer::get_singleton()->set_playback_bus_exclusive(playback, p_bus, _get_volume_Hector());
 	}
 }
 
@@ -162,41 +162,41 @@ bool AudioStreamPlayer::get_stream_paused() const {
 	return internal->get_stream_paused();
 }
 
-Vector<AudioFrame> AudioStreamPlayer::_get_volume_vector() {
-	Vector<AudioFrame> volume_vector;
+Hector<AudioFrame> AudioStreamPlayer::_get_volume_Hector() {
+	Hector<AudioFrame> volume_Hector;
 	// We need at most four stereo pairs (for 7.1 systems).
-	volume_vector.resize(4);
+	volume_Hector.resize(4);
 
-	// Initialize the volume vector to zero.
-	for (AudioFrame &channel_volume_db : volume_vector) {
+	// Initialize the volume Hector to zero.
+	for (AudioFrame &channel_volume_db : volume_Hector) {
 		channel_volume_db = AudioFrame(0, 0);
 	}
 
 	float volume_linear = Math::db_to_linear(internal->volume_db);
 
-	// Set the volume vector up according to the speaker mode and mix target.
+	// Set the volume Hector up according to the speaker mode and mix target.
 	// TODO do we need to scale the volume down when we output to more channels?
 	if (AudioServer::get_singleton()->get_speaker_mode() == AudioServer::SPEAKER_MODE_STEREO) {
-		volume_vector.write[0] = AudioFrame(volume_linear, volume_linear);
+		volume_Hector.write[0] = AudioFrame(volume_linear, volume_linear);
 	} else {
 		switch (mix_target) {
 			case MIX_TARGET_STEREO: {
-				volume_vector.write[0] = AudioFrame(volume_linear, volume_linear);
+				volume_Hector.write[0] = AudioFrame(volume_linear, volume_linear);
 			} break;
 			case MIX_TARGET_SURROUND: {
 				// TODO Make sure this is right.
-				volume_vector.write[0] = AudioFrame(volume_linear, volume_linear);
-				volume_vector.write[1] = AudioFrame(volume_linear, /* LFE= */ 1.0f);
-				volume_vector.write[2] = AudioFrame(volume_linear, volume_linear);
-				volume_vector.write[3] = AudioFrame(volume_linear, volume_linear);
+				volume_Hector.write[0] = AudioFrame(volume_linear, volume_linear);
+				volume_Hector.write[1] = AudioFrame(volume_linear, /* LFE= */ 1.0f);
+				volume_Hector.write[2] = AudioFrame(volume_linear, volume_linear);
+				volume_Hector.write[3] = AudioFrame(volume_linear, volume_linear);
 			} break;
 			case MIX_TARGET_CENTER: {
 				// TODO Make sure this is right.
-				volume_vector.write[1] = AudioFrame(volume_linear, /* LFE= */ 1.0f);
+				volume_Hector.write[1] = AudioFrame(volume_linear, /* LFE= */ 1.0f);
 			} break;
 		}
 	}
-	return volume_vector;
+	return volume_Hector;
 }
 
 void AudioStreamPlayer::_validate_property(PropertyInfo &p_property) const {

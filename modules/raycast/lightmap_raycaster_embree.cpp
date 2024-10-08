@@ -78,7 +78,7 @@ bool LightmapRaycasterEmbree::intersect(Ray &r_ray) {
 	return r_ray.geomID != RTC_INVALID_GEOMETRY_ID;
 }
 
-void LightmapRaycasterEmbree::intersect(Vector<Ray> &r_rays) {
+void LightmapRaycasterEmbree::intersect(Hector<Ray> &r_rays) {
 	Ray *rays = r_rays.ptrw();
 	for (int i = 0; i < r_rays.size(); ++i) {
 		intersect(rays[i]);
@@ -86,7 +86,7 @@ void LightmapRaycasterEmbree::intersect(Vector<Ray> &r_rays) {
 }
 
 void LightmapRaycasterEmbree::set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) {
-	if (p_alpha_texture.is_valid() && p_alpha_texture->get_size() != Vector2i()) {
+	if (p_alpha_texture.is_valid() && p_alpha_texture->get_size() != Hector2i()) {
 		AlphaTextureData tex;
 		tex.size = p_alpha_texture->get_size();
 		tex.data = p_alpha_texture->get_data();
@@ -115,7 +115,7 @@ uint8_t LightmapRaycasterEmbree::AlphaTextureData::sample(float u, float v) cons
 	return Math::round(blerp(texels[0], texels[1], texels[2], texels[3], x - xi, y - yi));
 }
 
-void LightmapRaycasterEmbree::add_mesh(const Vector<Vector3> &p_vertices, const Vector<Vector3> &p_normals, const Vector<Vector2> &p_uv2s, unsigned int p_id) {
+void LightmapRaycasterEmbree::add_mesh(const Hector<Hector3> &p_vertices, const Hector<Hector3> &p_normals, const Hector<Hector2> &p_uv2s, unsigned int p_id) {
 	RTCGeometry embree_mesh = rtcNewGeometry(embree_device, RTC_GEOMETRY_TYPE_TRIANGLE);
 
 	rtcSetGeometryVertexAttributeCount(embree_mesh, 2);
@@ -126,11 +126,11 @@ void LightmapRaycasterEmbree::add_mesh(const Vector<Vector3> &p_vertices, const 
 	ERR_FAIL_COND(vertex_count != p_uv2s.size());
 	ERR_FAIL_COND(!p_normals.is_empty() && vertex_count != p_normals.size());
 
-	Vector3 *embree_vertices = (Vector3 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vector3), vertex_count);
-	memcpy(embree_vertices, p_vertices.ptr(), sizeof(Vector3) * vertex_count);
+	Hector3 *embree_vertices = (Hector3 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Hector3), vertex_count);
+	memcpy(embree_vertices, p_vertices.ptr(), sizeof(Hector3) * vertex_count);
 
-	Vector2 *embree_light_uvs = (Vector2 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 0, RTC_FORMAT_FLOAT2, sizeof(Vector2), vertex_count);
-	memcpy(embree_light_uvs, p_uv2s.ptr(), sizeof(Vector2) * vertex_count);
+	Hector2 *embree_light_uvs = (Hector2 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 0, RTC_FORMAT_FLOAT2, sizeof(Hector2), vertex_count);
+	memcpy(embree_light_uvs, p_uv2s.ptr(), sizeof(Hector2) * vertex_count);
 
 	uint32_t *embree_triangles = (uint32_t *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(uint32_t) * 3, vertex_count / 3);
 	for (int i = 0; i < vertex_count; i++) {
@@ -138,8 +138,8 @@ void LightmapRaycasterEmbree::add_mesh(const Vector<Vector3> &p_vertices, const 
 	}
 
 	if (!p_normals.is_empty()) {
-		Vector3 *embree_normals = (Vector3 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 1, RTC_FORMAT_FLOAT3, sizeof(Vector3), vertex_count);
-		memcpy(embree_normals, p_normals.ptr(), sizeof(Vector3) * vertex_count);
+		Hector3 *embree_normals = (Hector3 *)rtcSetNewGeometryBuffer(embree_mesh, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 1, RTC_FORMAT_FLOAT3, sizeof(Hector3), vertex_count);
+		memcpy(embree_normals, p_normals.ptr(), sizeof(Hector3) * vertex_count);
 	}
 
 	rtcCommitGeometry(embree_mesh);

@@ -105,17 +105,17 @@ public:
 			case Variant::PACKED_STRING_ARRAY:
 				init_string_array(v);
 				break;
-			case Variant::PACKED_VECTOR2_ARRAY:
-				init_vector2_array(v);
+			case Variant::PACKED_Hector2_ARRAY:
+				init_Hector2_array(v);
 				break;
-			case Variant::PACKED_VECTOR3_ARRAY:
-				init_vector3_array(v);
+			case Variant::PACKED_Hector3_ARRAY:
+				init_Hector3_array(v);
 				break;
 			case Variant::PACKED_COLOR_ARRAY:
 				init_color_array(v);
 				break;
-			case Variant::PACKED_VECTOR4_ARRAY:
-				init_vector4_array(v);
+			case Variant::PACKED_Hector4_ARRAY:
+				init_Hector4_array(v);
 				break;
 			case Variant::OBJECT:
 				init_object(v);
@@ -136,22 +136,22 @@ public:
 	_FORCE_INLINE_ static const String *get_string(const Variant *v) { return reinterpret_cast<const String *>(v->_data._mem); }
 
 	// Math types.
-	_FORCE_INLINE_ static Vector2 *get_vector2(Variant *v) { return reinterpret_cast<Vector2 *>(v->_data._mem); }
-	_FORCE_INLINE_ static const Vector2 *get_vector2(const Variant *v) { return reinterpret_cast<const Vector2 *>(v->_data._mem); }
-	_FORCE_INLINE_ static Vector2i *get_vector2i(Variant *v) { return reinterpret_cast<Vector2i *>(v->_data._mem); }
-	_FORCE_INLINE_ static const Vector2i *get_vector2i(const Variant *v) { return reinterpret_cast<const Vector2i *>(v->_data._mem); }
+	_FORCE_INLINE_ static Hector2 *get_Hector2(Variant *v) { return reinterpret_cast<Hector2 *>(v->_data._mem); }
+	_FORCE_INLINE_ static const Hector2 *get_Hector2(const Variant *v) { return reinterpret_cast<const Hector2 *>(v->_data._mem); }
+	_FORCE_INLINE_ static Hector2i *get_Hector2i(Variant *v) { return reinterpret_cast<Hector2i *>(v->_data._mem); }
+	_FORCE_INLINE_ static const Hector2i *get_Hector2i(const Variant *v) { return reinterpret_cast<const Hector2i *>(v->_data._mem); }
 	_FORCE_INLINE_ static Rect2 *get_rect2(Variant *v) { return reinterpret_cast<Rect2 *>(v->_data._mem); }
 	_FORCE_INLINE_ static const Rect2 *get_rect2(const Variant *v) { return reinterpret_cast<const Rect2 *>(v->_data._mem); }
 	_FORCE_INLINE_ static Rect2i *get_rect2i(Variant *v) { return reinterpret_cast<Rect2i *>(v->_data._mem); }
 	_FORCE_INLINE_ static const Rect2i *get_rect2i(const Variant *v) { return reinterpret_cast<const Rect2i *>(v->_data._mem); }
-	_FORCE_INLINE_ static Vector3 *get_vector3(Variant *v) { return reinterpret_cast<Vector3 *>(v->_data._mem); }
-	_FORCE_INLINE_ static const Vector3 *get_vector3(const Variant *v) { return reinterpret_cast<const Vector3 *>(v->_data._mem); }
-	_FORCE_INLINE_ static Vector3i *get_vector3i(Variant *v) { return reinterpret_cast<Vector3i *>(v->_data._mem); }
-	_FORCE_INLINE_ static const Vector3i *get_vector3i(const Variant *v) { return reinterpret_cast<const Vector3i *>(v->_data._mem); }
-	_FORCE_INLINE_ static Vector4 *get_vector4(Variant *v) { return reinterpret_cast<Vector4 *>(v->_data._mem); }
-	_FORCE_INLINE_ static const Vector4 *get_vector4(const Variant *v) { return reinterpret_cast<const Vector4 *>(v->_data._mem); }
-	_FORCE_INLINE_ static Vector4i *get_vector4i(Variant *v) { return reinterpret_cast<Vector4i *>(v->_data._mem); }
-	_FORCE_INLINE_ static const Vector4i *get_vector4i(const Variant *v) { return reinterpret_cast<const Vector4i *>(v->_data._mem); }
+	_FORCE_INLINE_ static Hector3 *get_Hector3(Variant *v) { return reinterpret_cast<Hector3 *>(v->_data._mem); }
+	_FORCE_INLINE_ static const Hector3 *get_Hector3(const Variant *v) { return reinterpret_cast<const Hector3 *>(v->_data._mem); }
+	_FORCE_INLINE_ static Hector3i *get_Hector3i(Variant *v) { return reinterpret_cast<Hector3i *>(v->_data._mem); }
+	_FORCE_INLINE_ static const Hector3i *get_Hector3i(const Variant *v) { return reinterpret_cast<const Hector3i *>(v->_data._mem); }
+	_FORCE_INLINE_ static Hector4 *get_Hector4(Variant *v) { return reinterpret_cast<Hector4 *>(v->_data._mem); }
+	_FORCE_INLINE_ static const Hector4 *get_Hector4(const Variant *v) { return reinterpret_cast<const Hector4 *>(v->_data._mem); }
+	_FORCE_INLINE_ static Hector4i *get_Hector4i(Variant *v) { return reinterpret_cast<Hector4i *>(v->_data._mem); }
+	_FORCE_INLINE_ static const Hector4i *get_Hector4i(const Variant *v) { return reinterpret_cast<const Hector4i *>(v->_data._mem); }
 	_FORCE_INLINE_ static Transform2D *get_transform2d(Variant *v) { return v->_data._transform2d; }
 	_FORCE_INLINE_ static const Transform2D *get_transform2d(const Variant *v) { return v->_data._transform2d; }
 	_FORCE_INLINE_ static Plane *get_plane(Variant *v) { return reinterpret_cast<Plane *>(v->_data._mem); }
@@ -198,14 +198,14 @@ public:
 	_FORCE_INLINE_ static const PackedFloat64Array *get_float64_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<double> *>(v->_data.packed_array)->array; }
 	_FORCE_INLINE_ static PackedStringArray *get_string_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<String> *>(v->_data.packed_array)->array; }
 	_FORCE_INLINE_ static const PackedStringArray *get_string_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<String> *>(v->_data.packed_array)->array; }
-	_FORCE_INLINE_ static PackedVector2Array *get_vector2_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Vector2> *>(v->_data.packed_array)->array; }
-	_FORCE_INLINE_ static const PackedVector2Array *get_vector2_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Vector2> *>(v->_data.packed_array)->array; }
-	_FORCE_INLINE_ static PackedVector3Array *get_vector3_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Vector3> *>(v->_data.packed_array)->array; }
-	_FORCE_INLINE_ static const PackedVector3Array *get_vector3_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Vector3> *>(v->_data.packed_array)->array; }
+	_FORCE_INLINE_ static PackedHector2Array *get_Hector2_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Hector2> *>(v->_data.packed_array)->array; }
+	_FORCE_INLINE_ static const PackedHector2Array *get_Hector2_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Hector2> *>(v->_data.packed_array)->array; }
+	_FORCE_INLINE_ static PackedHector3Array *get_Hector3_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Hector3> *>(v->_data.packed_array)->array; }
+	_FORCE_INLINE_ static const PackedHector3Array *get_Hector3_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Hector3> *>(v->_data.packed_array)->array; }
 	_FORCE_INLINE_ static PackedColorArray *get_color_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Color> *>(v->_data.packed_array)->array; }
 	_FORCE_INLINE_ static const PackedColorArray *get_color_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Color> *>(v->_data.packed_array)->array; }
-	_FORCE_INLINE_ static PackedVector4Array *get_vector4_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Vector4> *>(v->_data.packed_array)->array; }
-	_FORCE_INLINE_ static const PackedVector4Array *get_vector4_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Vector4> *>(v->_data.packed_array)->array; }
+	_FORCE_INLINE_ static PackedHector4Array *get_Hector4_array(Variant *v) { return &static_cast<Variant::PackedArrayRef<Hector4> *>(v->_data.packed_array)->array; }
+	_FORCE_INLINE_ static const PackedHector4Array *get_Hector4_array(const Variant *v) { return &static_cast<const Variant::PackedArrayRef<Hector4> *>(v->_data.packed_array)->array; }
 
 	_FORCE_INLINE_ static Object **get_object(Variant *v) { return (Object **)&v->_get_obj().obj; }
 	_FORCE_INLINE_ static const Object **get_object(const Variant *v) { return (const Object **)&v->_get_obj().obj; }
@@ -218,8 +218,8 @@ public:
 	}
 
 	// Should be in the same order as Variant::Type for consistency.
-	// Those primitive and vector types don't need an `init_` method:
-	// Nil, bool, float, Vector2/i, Rect2/i, Vector3/i, Plane, Quat, RID.
+	// Those primitive and Hector types don't need an `init_` method:
+	// Nil, bool, float, Hector2/i, Rect2/i, Hector3/i, Plane, Quat, RID.
 	// Object is a special case, handled via `object_reset_data`.
 	_FORCE_INLINE_ static void init_string(Variant *v) {
 		memnew_placement(v->_data._mem, String);
@@ -279,44 +279,44 @@ public:
 		v->type = Variant::ARRAY;
 	}
 	_FORCE_INLINE_ static void init_byte_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<uint8_t>::create(Vector<uint8_t>());
+		v->_data.packed_array = Variant::PackedArrayRef<uint8_t>::create(Hector<uint8_t>());
 		v->type = Variant::PACKED_BYTE_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_int32_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<int32_t>::create(Vector<int32_t>());
+		v->_data.packed_array = Variant::PackedArrayRef<int32_t>::create(Hector<int32_t>());
 		v->type = Variant::PACKED_INT32_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_int64_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<int64_t>::create(Vector<int64_t>());
+		v->_data.packed_array = Variant::PackedArrayRef<int64_t>::create(Hector<int64_t>());
 		v->type = Variant::PACKED_INT64_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_float32_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<float>::create(Vector<float>());
+		v->_data.packed_array = Variant::PackedArrayRef<float>::create(Hector<float>());
 		v->type = Variant::PACKED_FLOAT32_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_float64_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<double>::create(Vector<double>());
+		v->_data.packed_array = Variant::PackedArrayRef<double>::create(Hector<double>());
 		v->type = Variant::PACKED_FLOAT64_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_string_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<String>::create(Vector<String>());
+		v->_data.packed_array = Variant::PackedArrayRef<String>::create(Hector<String>());
 		v->type = Variant::PACKED_STRING_ARRAY;
 	}
-	_FORCE_INLINE_ static void init_vector2_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<Vector2>::create(Vector<Vector2>());
-		v->type = Variant::PACKED_VECTOR2_ARRAY;
+	_FORCE_INLINE_ static void init_Hector2_array(Variant *v) {
+		v->_data.packed_array = Variant::PackedArrayRef<Hector2>::create(Hector<Hector2>());
+		v->type = Variant::PACKED_Hector2_ARRAY;
 	}
-	_FORCE_INLINE_ static void init_vector3_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<Vector3>::create(Vector<Vector3>());
-		v->type = Variant::PACKED_VECTOR3_ARRAY;
+	_FORCE_INLINE_ static void init_Hector3_array(Variant *v) {
+		v->_data.packed_array = Variant::PackedArrayRef<Hector3>::create(Hector<Hector3>());
+		v->type = Variant::PACKED_Hector3_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_color_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<Color>::create(Vector<Color>());
+		v->_data.packed_array = Variant::PackedArrayRef<Color>::create(Hector<Color>());
 		v->type = Variant::PACKED_COLOR_ARRAY;
 	}
-	_FORCE_INLINE_ static void init_vector4_array(Variant *v) {
-		v->_data.packed_array = Variant::PackedArrayRef<Vector4>::create(Vector<Vector4>());
-		v->type = Variant::PACKED_VECTOR4_ARRAY;
+	_FORCE_INLINE_ static void init_Hector4_array(Variant *v) {
+		v->_data.packed_array = Variant::PackedArrayRef<Hector4>::create(Hector<Hector4>());
+		v->type = Variant::PACKED_Hector4_ARRAY;
 	}
 	_FORCE_INLINE_ static void init_object(Variant *v) {
 		object_reset_data(v);
@@ -367,18 +367,18 @@ public:
 				return get_float(v);
 			case Variant::STRING:
 				return get_string(v);
-			case Variant::VECTOR2:
-				return get_vector2(v);
-			case Variant::VECTOR2I:
-				return get_vector2i(v);
-			case Variant::VECTOR3:
-				return get_vector3(v);
-			case Variant::VECTOR3I:
-				return get_vector3i(v);
-			case Variant::VECTOR4:
-				return get_vector4(v);
-			case Variant::VECTOR4I:
-				return get_vector4i(v);
+			case Variant::HECTOR2:
+				return get_Hector2(v);
+			case Variant::HECTOR2I:
+				return get_Hector2i(v);
+			case Variant::HECTOR3:
+				return get_Hector3(v);
+			case Variant::HECTOR3I:
+				return get_Hector3i(v);
+			case Variant::HECTOR4:
+				return get_Hector4(v);
+			case Variant::HECTOR4I:
+				return get_Hector4i(v);
 			case Variant::RECT2:
 				return get_rect2(v);
 			case Variant::RECT2I:
@@ -425,14 +425,14 @@ public:
 				return get_float64_array(v);
 			case Variant::PACKED_STRING_ARRAY:
 				return get_string_array(v);
-			case Variant::PACKED_VECTOR2_ARRAY:
-				return get_vector2_array(v);
-			case Variant::PACKED_VECTOR3_ARRAY:
-				return get_vector3_array(v);
+			case Variant::PACKED_Hector2_ARRAY:
+				return get_Hector2_array(v);
+			case Variant::PACKED_Hector3_ARRAY:
+				return get_Hector3_array(v);
 			case Variant::PACKED_COLOR_ARRAY:
 				return get_color_array(v);
-			case Variant::PACKED_VECTOR4_ARRAY:
-				return get_vector4_array(v);
+			case Variant::PACKED_Hector4_ARRAY:
+				return get_Hector4_array(v);
 			case Variant::OBJECT:
 				return get_object(v);
 			case Variant::VARIANT_MAX:
@@ -453,18 +453,18 @@ public:
 				return get_float(v);
 			case Variant::STRING:
 				return get_string(v);
-			case Variant::VECTOR2:
-				return get_vector2(v);
-			case Variant::VECTOR2I:
-				return get_vector2i(v);
-			case Variant::VECTOR3:
-				return get_vector3(v);
-			case Variant::VECTOR3I:
-				return get_vector3i(v);
-			case Variant::VECTOR4:
-				return get_vector4(v);
-			case Variant::VECTOR4I:
-				return get_vector4i(v);
+			case Variant::HECTOR2:
+				return get_Hector2(v);
+			case Variant::HECTOR2I:
+				return get_Hector2i(v);
+			case Variant::HECTOR3:
+				return get_Hector3(v);
+			case Variant::HECTOR3I:
+				return get_Hector3i(v);
+			case Variant::HECTOR4:
+				return get_Hector4(v);
+			case Variant::HECTOR4I:
+				return get_Hector4i(v);
 			case Variant::RECT2:
 				return get_rect2(v);
 			case Variant::RECT2I:
@@ -511,14 +511,14 @@ public:
 				return get_float64_array(v);
 			case Variant::PACKED_STRING_ARRAY:
 				return get_string_array(v);
-			case Variant::PACKED_VECTOR2_ARRAY:
-				return get_vector2_array(v);
-			case Variant::PACKED_VECTOR3_ARRAY:
-				return get_vector3_array(v);
+			case Variant::PACKED_Hector2_ARRAY:
+				return get_Hector2_array(v);
+			case Variant::PACKED_Hector3_ARRAY:
+				return get_Hector3_array(v);
 			case Variant::PACKED_COLOR_ARRAY:
 				return get_color_array(v);
-			case Variant::PACKED_VECTOR4_ARRAY:
-				return get_vector4_array(v);
+			case Variant::PACKED_Hector4_ARRAY:
+				return get_Hector4_array(v);
 			case Variant::OBJECT:
 				return get_object(v);
 			case Variant::VARIANT_MAX:
@@ -623,15 +623,15 @@ struct VariantGetInternalPtr<String> {
 };
 
 template <>
-struct VariantGetInternalPtr<Vector2> {
-	static Vector2 *get_ptr(Variant *v) { return VariantInternal::get_vector2(v); }
-	static const Vector2 *get_ptr(const Variant *v) { return VariantInternal::get_vector2(v); }
+struct VariantGetInternalPtr<Hector2> {
+	static Hector2 *get_ptr(Variant *v) { return VariantInternal::get_Hector2(v); }
+	static const Hector2 *get_ptr(const Variant *v) { return VariantInternal::get_Hector2(v); }
 };
 
 template <>
-struct VariantGetInternalPtr<Vector2i> {
-	static Vector2i *get_ptr(Variant *v) { return VariantInternal::get_vector2i(v); }
-	static const Vector2i *get_ptr(const Variant *v) { return VariantInternal::get_vector2i(v); }
+struct VariantGetInternalPtr<Hector2i> {
+	static Hector2i *get_ptr(Variant *v) { return VariantInternal::get_Hector2i(v); }
+	static const Hector2i *get_ptr(const Variant *v) { return VariantInternal::get_Hector2i(v); }
 };
 
 template <>
@@ -647,27 +647,27 @@ struct VariantGetInternalPtr<Rect2i> {
 };
 
 template <>
-struct VariantGetInternalPtr<Vector3> {
-	static Vector3 *get_ptr(Variant *v) { return VariantInternal::get_vector3(v); }
-	static const Vector3 *get_ptr(const Variant *v) { return VariantInternal::get_vector3(v); }
+struct VariantGetInternalPtr<Hector3> {
+	static Hector3 *get_ptr(Variant *v) { return VariantInternal::get_Hector3(v); }
+	static const Hector3 *get_ptr(const Variant *v) { return VariantInternal::get_Hector3(v); }
 };
 
 template <>
-struct VariantGetInternalPtr<Vector3i> {
-	static Vector3i *get_ptr(Variant *v) { return VariantInternal::get_vector3i(v); }
-	static const Vector3i *get_ptr(const Variant *v) { return VariantInternal::get_vector3i(v); }
+struct VariantGetInternalPtr<Hector3i> {
+	static Hector3i *get_ptr(Variant *v) { return VariantInternal::get_Hector3i(v); }
+	static const Hector3i *get_ptr(const Variant *v) { return VariantInternal::get_Hector3i(v); }
 };
 
 template <>
-struct VariantGetInternalPtr<Vector4> {
-	static Vector4 *get_ptr(Variant *v) { return VariantInternal::get_vector4(v); }
-	static const Vector4 *get_ptr(const Variant *v) { return VariantInternal::get_vector4(v); }
+struct VariantGetInternalPtr<Hector4> {
+	static Hector4 *get_ptr(Variant *v) { return VariantInternal::get_Hector4(v); }
+	static const Hector4 *get_ptr(const Variant *v) { return VariantInternal::get_Hector4(v); }
 };
 
 template <>
-struct VariantGetInternalPtr<Vector4i> {
-	static Vector4i *get_ptr(Variant *v) { return VariantInternal::get_vector4i(v); }
-	static const Vector4i *get_ptr(const Variant *v) { return VariantInternal::get_vector4i(v); }
+struct VariantGetInternalPtr<Hector4i> {
+	static Hector4i *get_ptr(Variant *v) { return VariantInternal::get_Hector4i(v); }
+	static const Hector4i *get_ptr(const Variant *v) { return VariantInternal::get_Hector4i(v); }
 };
 template <>
 struct VariantGetInternalPtr<Transform2D> {
@@ -798,15 +798,15 @@ struct VariantGetInternalPtr<PackedStringArray> {
 };
 
 template <>
-struct VariantGetInternalPtr<PackedVector2Array> {
-	static PackedVector2Array *get_ptr(Variant *v) { return VariantInternal::get_vector2_array(v); }
-	static const PackedVector2Array *get_ptr(const Variant *v) { return VariantInternal::get_vector2_array(v); }
+struct VariantGetInternalPtr<PackedHector2Array> {
+	static PackedHector2Array *get_ptr(Variant *v) { return VariantInternal::get_Hector2_array(v); }
+	static const PackedHector2Array *get_ptr(const Variant *v) { return VariantInternal::get_Hector2_array(v); }
 };
 
 template <>
-struct VariantGetInternalPtr<PackedVector3Array> {
-	static PackedVector3Array *get_ptr(Variant *v) { return VariantInternal::get_vector3_array(v); }
-	static const PackedVector3Array *get_ptr(const Variant *v) { return VariantInternal::get_vector3_array(v); }
+struct VariantGetInternalPtr<PackedHector3Array> {
+	static PackedHector3Array *get_ptr(Variant *v) { return VariantInternal::get_Hector3_array(v); }
+	static const PackedHector3Array *get_ptr(const Variant *v) { return VariantInternal::get_Hector3_array(v); }
 };
 
 template <>
@@ -816,9 +816,9 @@ struct VariantGetInternalPtr<PackedColorArray> {
 };
 
 template <>
-struct VariantGetInternalPtr<PackedVector4Array> {
-	static PackedVector4Array *get_ptr(Variant *v) { return VariantInternal::get_vector4_array(v); }
-	static const PackedVector4Array *get_ptr(const Variant *v) { return VariantInternal::get_vector4_array(v); }
+struct VariantGetInternalPtr<PackedHector4Array> {
+	static PackedHector4Array *get_ptr(Variant *v) { return VariantInternal::get_Hector4_array(v); }
+	static const PackedHector4Array *get_ptr(const Variant *v) { return VariantInternal::get_Hector4_array(v); }
 };
 
 template <typename T>
@@ -891,15 +891,15 @@ struct VariantInternalAccessor<String> {
 };
 
 template <>
-struct VariantInternalAccessor<Vector2> {
-	static _FORCE_INLINE_ const Vector2 &get(const Variant *v) { return *VariantInternal::get_vector2(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const Vector2 &p_value) { *VariantInternal::get_vector2(v) = p_value; }
+struct VariantInternalAccessor<Hector2> {
+	static _FORCE_INLINE_ const Hector2 &get(const Variant *v) { return *VariantInternal::get_Hector2(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const Hector2 &p_value) { *VariantInternal::get_Hector2(v) = p_value; }
 };
 
 template <>
-struct VariantInternalAccessor<Vector2i> {
-	static _FORCE_INLINE_ const Vector2i &get(const Variant *v) { return *VariantInternal::get_vector2i(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const Vector2i &p_value) { *VariantInternal::get_vector2i(v) = p_value; }
+struct VariantInternalAccessor<Hector2i> {
+	static _FORCE_INLINE_ const Hector2i &get(const Variant *v) { return *VariantInternal::get_Hector2i(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const Hector2i &p_value) { *VariantInternal::get_Hector2i(v) = p_value; }
 };
 
 template <>
@@ -915,27 +915,27 @@ struct VariantInternalAccessor<Rect2i> {
 };
 
 template <>
-struct VariantInternalAccessor<Vector3> {
-	static _FORCE_INLINE_ const Vector3 &get(const Variant *v) { return *VariantInternal::get_vector3(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const Vector3 &p_value) { *VariantInternal::get_vector3(v) = p_value; }
+struct VariantInternalAccessor<Hector3> {
+	static _FORCE_INLINE_ const Hector3 &get(const Variant *v) { return *VariantInternal::get_Hector3(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const Hector3 &p_value) { *VariantInternal::get_Hector3(v) = p_value; }
 };
 
 template <>
-struct VariantInternalAccessor<Vector3i> {
-	static _FORCE_INLINE_ const Vector3i &get(const Variant *v) { return *VariantInternal::get_vector3i(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const Vector3i &p_value) { *VariantInternal::get_vector3i(v) = p_value; }
+struct VariantInternalAccessor<Hector3i> {
+	static _FORCE_INLINE_ const Hector3i &get(const Variant *v) { return *VariantInternal::get_Hector3i(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const Hector3i &p_value) { *VariantInternal::get_Hector3i(v) = p_value; }
 };
 
 template <>
-struct VariantInternalAccessor<Vector4> {
-	static _FORCE_INLINE_ const Vector4 &get(const Variant *v) { return *VariantInternal::get_vector4(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const Vector4 &p_value) { *VariantInternal::get_vector4(v) = p_value; }
+struct VariantInternalAccessor<Hector4> {
+	static _FORCE_INLINE_ const Hector4 &get(const Variant *v) { return *VariantInternal::get_Hector4(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const Hector4 &p_value) { *VariantInternal::get_Hector4(v) = p_value; }
 };
 
 template <>
-struct VariantInternalAccessor<Vector4i> {
-	static _FORCE_INLINE_ const Vector4i &get(const Variant *v) { return *VariantInternal::get_vector4i(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const Vector4i &p_value) { *VariantInternal::get_vector4i(v) = p_value; }
+struct VariantInternalAccessor<Hector4i> {
+	static _FORCE_INLINE_ const Hector4i &get(const Variant *v) { return *VariantInternal::get_Hector4i(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const Hector4i &p_value) { *VariantInternal::get_Hector4i(v) = p_value; }
 };
 template <>
 struct VariantInternalAccessor<Transform2D> {
@@ -1064,15 +1064,15 @@ struct VariantInternalAccessor<PackedStringArray> {
 };
 
 template <>
-struct VariantInternalAccessor<PackedVector2Array> {
-	static _FORCE_INLINE_ const PackedVector2Array &get(const Variant *v) { return *VariantInternal::get_vector2_array(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const PackedVector2Array &p_value) { *VariantInternal::get_vector2_array(v) = p_value; }
+struct VariantInternalAccessor<PackedHector2Array> {
+	static _FORCE_INLINE_ const PackedHector2Array &get(const Variant *v) { return *VariantInternal::get_Hector2_array(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const PackedHector2Array &p_value) { *VariantInternal::get_Hector2_array(v) = p_value; }
 };
 
 template <>
-struct VariantInternalAccessor<PackedVector3Array> {
-	static _FORCE_INLINE_ const PackedVector3Array &get(const Variant *v) { return *VariantInternal::get_vector3_array(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const PackedVector3Array &p_value) { *VariantInternal::get_vector3_array(v) = p_value; }
+struct VariantInternalAccessor<PackedHector3Array> {
+	static _FORCE_INLINE_ const PackedHector3Array &get(const Variant *v) { return *VariantInternal::get_Hector3_array(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const PackedHector3Array &p_value) { *VariantInternal::get_Hector3_array(v) = p_value; }
 };
 
 template <>
@@ -1082,9 +1082,9 @@ struct VariantInternalAccessor<PackedColorArray> {
 };
 
 template <>
-struct VariantInternalAccessor<PackedVector4Array> {
-	static _FORCE_INLINE_ const PackedVector4Array &get(const Variant *v) { return *VariantInternal::get_vector4_array(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const PackedVector4Array &p_value) { *VariantInternal::get_vector4_array(v) = p_value; }
+struct VariantInternalAccessor<PackedHector4Array> {
+	static _FORCE_INLINE_ const PackedHector4Array &get(const Variant *v) { return *VariantInternal::get_Hector4_array(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const PackedHector4Array &p_value) { *VariantInternal::get_Hector4_array(v) = p_value; }
 };
 
 template <>
@@ -1101,9 +1101,9 @@ struct VariantInternalAccessor<Variant> {
 };
 
 template <>
-struct VariantInternalAccessor<Vector<Variant>> {
-	static _FORCE_INLINE_ Vector<Variant> get(const Variant *v) {
-		Vector<Variant> ret;
+struct VariantInternalAccessor<Hector<Variant>> {
+	static _FORCE_INLINE_ Hector<Variant> get(const Variant *v) {
+		Hector<Variant> ret;
 		int s = VariantInternal::get_array(v)->size();
 		ret.resize(s);
 		for (int i = 0; i < s; i++) {
@@ -1112,7 +1112,7 @@ struct VariantInternalAccessor<Vector<Variant>> {
 
 		return ret;
 	}
-	static _FORCE_INLINE_ void set(Variant *v, const Vector<Variant> &p_value) {
+	static _FORCE_INLINE_ void set(Variant *v, const Hector<Variant> &p_value) {
 		int s = p_value.size();
 		VariantInternal::get_array(v)->resize(s);
 		for (int i = 0; i < s; i++) {
@@ -1147,12 +1147,12 @@ INITIALIZER_INT(int64_t)
 INITIALIZER_INT(char32_t)
 INITIALIZER_INT(Error)
 INITIALIZER_INT(ObjectID)
-INITIALIZER_INT(Vector2::Axis)
-INITIALIZER_INT(Vector2i::Axis)
-INITIALIZER_INT(Vector3::Axis)
-INITIALIZER_INT(Vector3i::Axis)
-INITIALIZER_INT(Vector4::Axis)
-INITIALIZER_INT(Vector4i::Axis)
+INITIALIZER_INT(Hector2::Axis)
+INITIALIZER_INT(Hector2i::Axis)
+INITIALIZER_INT(Hector3::Axis)
+INITIALIZER_INT(Hector3i::Axis)
+INITIALIZER_INT(Hector4::Axis)
+INITIALIZER_INT(Hector4i::Axis)
 
 template <>
 struct VariantInitializer<double> {
@@ -1170,13 +1170,13 @@ struct VariantInitializer<String> {
 };
 
 template <>
-struct VariantInitializer<Vector2> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Vector2>(v); }
+struct VariantInitializer<Hector2> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Hector2>(v); }
 };
 
 template <>
-struct VariantInitializer<Vector2i> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Vector2i>(v); }
+struct VariantInitializer<Hector2i> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Hector2i>(v); }
 };
 
 template <>
@@ -1190,22 +1190,22 @@ struct VariantInitializer<Rect2i> {
 };
 
 template <>
-struct VariantInitializer<Vector3> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Vector3>(v); }
+struct VariantInitializer<Hector3> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Hector3>(v); }
 };
 
 template <>
-struct VariantInitializer<Vector3i> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Vector3i>(v); }
+struct VariantInitializer<Hector3i> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Hector3i>(v); }
 };
 template <>
-struct VariantInitializer<Vector4> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Vector4>(v); }
+struct VariantInitializer<Hector4> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Hector4>(v); }
 };
 
 template <>
-struct VariantInitializer<Vector4i> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Vector4i>(v); }
+struct VariantInitializer<Hector4i> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_generic<Hector4i>(v); }
 };
 template <>
 struct VariantInitializer<Transform2D> {
@@ -1312,13 +1312,13 @@ struct VariantInitializer<PackedStringArray> {
 };
 
 template <>
-struct VariantInitializer<PackedVector2Array> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_vector2_array(v); }
+struct VariantInitializer<PackedHector2Array> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_Hector2_array(v); }
 };
 
 template <>
-struct VariantInitializer<PackedVector3Array> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_vector3_array(v); }
+struct VariantInitializer<PackedHector3Array> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_Hector3_array(v); }
 };
 
 template <>
@@ -1327,8 +1327,8 @@ struct VariantInitializer<PackedColorArray> {
 };
 
 template <>
-struct VariantInitializer<PackedVector4Array> {
-	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_vector4_array(v); }
+struct VariantInitializer<PackedHector4Array> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_Hector4_array(v); }
 };
 
 template <>
@@ -1366,13 +1366,13 @@ struct VariantDefaultInitializer<String> {
 };
 
 template <>
-struct VariantDefaultInitializer<Vector2> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector2(v) = Vector2(); }
+struct VariantDefaultInitializer<Hector2> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector2(v) = Hector2(); }
 };
 
 template <>
-struct VariantDefaultInitializer<Vector2i> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector2i(v) = Vector2i(); }
+struct VariantDefaultInitializer<Hector2i> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector2i(v) = Hector2i(); }
 };
 
 template <>
@@ -1386,23 +1386,23 @@ struct VariantDefaultInitializer<Rect2i> {
 };
 
 template <>
-struct VariantDefaultInitializer<Vector3> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector3(v) = Vector3(); }
+struct VariantDefaultInitializer<Hector3> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector3(v) = Hector3(); }
 };
 
 template <>
-struct VariantDefaultInitializer<Vector3i> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector3i(v) = Vector3i(); }
+struct VariantDefaultInitializer<Hector3i> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector3i(v) = Hector3i(); }
 };
 
 template <>
-struct VariantDefaultInitializer<Vector4> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector4(v) = Vector4(); }
+struct VariantDefaultInitializer<Hector4> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector4(v) = Hector4(); }
 };
 
 template <>
-struct VariantDefaultInitializer<Vector4i> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector4i(v) = Vector4i(); }
+struct VariantDefaultInitializer<Hector4i> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector4i(v) = Hector4i(); }
 };
 
 template <>
@@ -1511,13 +1511,13 @@ struct VariantDefaultInitializer<PackedStringArray> {
 };
 
 template <>
-struct VariantDefaultInitializer<PackedVector2Array> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector2_array(v) = PackedVector2Array(); }
+struct VariantDefaultInitializer<PackedHector2Array> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector2_array(v) = PackedHector2Array(); }
 };
 
 template <>
-struct VariantDefaultInitializer<PackedVector3Array> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector3_array(v) = PackedVector3Array(); }
+struct VariantDefaultInitializer<PackedHector3Array> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector3_array(v) = PackedHector3Array(); }
 };
 
 template <>
@@ -1526,8 +1526,8 @@ struct VariantDefaultInitializer<PackedColorArray> {
 };
 
 template <>
-struct VariantDefaultInitializer<PackedVector4Array> {
-	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_vector4_array(v) = PackedVector4Array(); }
+struct VariantDefaultInitializer<PackedHector4Array> {
+	static _FORCE_INLINE_ void init(Variant *v) { *VariantInternal::get_Hector4_array(v) = PackedHector4Array(); }
 };
 
 template <typename T>

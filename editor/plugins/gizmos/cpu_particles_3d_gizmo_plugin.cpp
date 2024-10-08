@@ -65,29 +65,29 @@ void CPUParticles3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 	AABB aabb = particles->get_visibility_aabb();
 
 	for (int i = 0; i < 12; i++) {
-		Vector3 a, b;
+		Hector3 a, b;
 		aabb.get_edge(i, a, b);
 		lines.push_back(a);
 		lines.push_back(b);
 	}
 
-	Vector<Vector3> handles;
+	Hector<Hector3> handles;
 
 	for (int i = 0; i < 3; i++) {
-		Vector3 ax;
+		Hector3 ax;
 		ax[i] = aabb.position[i] + aabb.size[i];
 		ax[(i + 1) % 3] = aabb.position[(i + 1) % 3] + aabb.size[(i + 1) % 3] * 0.5;
 		ax[(i + 2) % 3] = aabb.position[(i + 2) % 3] + aabb.size[(i + 2) % 3] * 0.5;
 		handles.push_back(ax);
 	}
 
-	Vector3 center = aabb.get_center();
+	Hector3 center = aabb.get_center();
 	for (int i = 0; i < 3; i++) {
-		Vector3 ax;
+		Hector3 ax;
 		ax[i] = 1.0;
 		handles.push_back(center + ax);
 		lines.push_back(center);

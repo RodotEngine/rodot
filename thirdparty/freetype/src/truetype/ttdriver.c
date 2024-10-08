@@ -173,7 +173,7 @@
    *   tt_get_kerning
    *
    * @Description:
-   *   A driver method used to return the kerning vector between two
+   *   A driver method used to return the kerning Hector between two
    *   glyphs of the same face.
    *
    * @Input:
@@ -188,7 +188,7 @@
    *
    * @Output:
    *   kerning ::
-   *     The kerning vector.  This is in font units for
+   *     The kerning Hector.  This is in font units for
    *     scalable formats, and in pixels for fixed-sizes
    *     formats.
    *
@@ -207,7 +207,7 @@
   tt_get_kerning( FT_Face     face,        /* TT_Face */
                   FT_UInt     left_glyph,
                   FT_UInt     right_glyph,
-                  FT_Vector*  kerning )
+                  FT_Hector*  kerning )
   {
     TT_Face       ttface = (TT_Face)face;
     SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
@@ -522,8 +522,8 @@
     TT_Set_Named_Instance, /* FT_Set_Named_Instance_Func  set_named_instance         */
     TT_Get_Default_Named_Instance,
                     /* FT_Get_Default_Named_Instance_Func get_default_named_instance */
-    NULL,                  /* FT_Set_MM_WeightVector_Func set_mm_weightvector        */
-    NULL,                  /* FT_Get_MM_WeightVector_Func get_mm_weightvector        */
+    NULL,                  /* FT_Set_MM_WeightHector_Func set_mm_weightHector        */
+    NULL,                  /* FT_Get_MM_WeightHector_Func get_mm_weightHector        */
 
     tt_construct_ps_name,  /* FT_Construct_PS_Name_Func   construct_ps_name          */
     tt_var_load_delta_set_index_mapping,

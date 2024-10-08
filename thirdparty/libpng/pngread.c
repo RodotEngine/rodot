@@ -2384,7 +2384,7 @@ png_image_read_colormap(png_voidp argument)
          {
             /* Alpha must be removed as the PNG data is processed when the
              * background is a color because the G and A channels are
-             * independent and the vector addition (non-parallel vectors) is a
+             * independent and the Hector addition (non-parallel Hectors) is a
              * 2-D problem.
              *
              * This can be reduced to the same algorithm as above by making a

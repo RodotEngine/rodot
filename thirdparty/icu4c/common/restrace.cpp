@@ -28,7 +28,7 @@ void ResourceTracer::trace(const char* resType) const {
     CharString resPath;
     getResPath(resPath, status);
 
-    // The longest type ("intvector") is 9 chars
+    // The longest type ("intHector") is 9 chars
     const char kSpaces[] = "         ";
     CharString format;
     format.append(kSpaces, sizeof(kSpaces) - 1 - uprv_strlen(resType), status);

@@ -33,7 +33,7 @@
 void Marker2D::_draw_cross() {
 	const real_t extents = get_gizmo_extents();
 
-	PackedVector2Array points = {
+	PackedHector2Array points = {
 		Point2(+extents, 0),
 		Point2(),
 		Point2(),

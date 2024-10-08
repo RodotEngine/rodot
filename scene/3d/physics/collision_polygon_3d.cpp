@@ -45,7 +45,7 @@ void CollisionPolygon3D::_build_polygon() {
 		return;
 	}
 
-	Vector<Vector<Vector2>> decomp = Geometry2D::decompose_polygon_in_convex(polygon);
+	Hector<Hector<Hector2>> decomp = Geometry2D::decompose_polygon_in_convex(polygon);
 	if (decomp.size() == 0) {
 		return;
 	}
@@ -55,16 +55,16 @@ void CollisionPolygon3D::_build_polygon() {
 
 	for (int i = 0; i < decomp.size(); i++) {
 		Ref<ConvexPolygonShape3D> convex = memnew(ConvexPolygonShape3D);
-		Vector<Vector3> cp;
+		Hector<Hector3> cp;
 		int cs = decomp[i].size();
 		cp.resize(cs * 2);
 		{
-			Vector3 *w = cp.ptrw();
+			Hector3 *w = cp.ptrw();
 			int idx = 0;
 			for (int j = 0; j < cs; j++) {
-				Vector2 d = decomp[i][j];
-				w[idx++] = Vector3(d.x, d.y, depth * 0.5);
-				w[idx++] = Vector3(d.x, d.y, -depth * 0.5);
+				Hector2 d = decomp[i][j];
+				w[idx++] = Hector3(d.x, d.y, depth * 0.5);
+				w[idx++] = Hector3(d.x, d.y, -depth * 0.5);
 			}
 		}
 
@@ -117,7 +117,7 @@ void CollisionPolygon3D::_notification(int p_what) {
 	}
 }
 
-void CollisionPolygon3D::set_polygon(const Vector<Point2> &p_polygon) {
+void CollisionPolygon3D::set_polygon(const Hector<Point2> &p_polygon) {
 	polygon = p_polygon;
 	if (collision_object) {
 		_build_polygon();
@@ -126,7 +126,7 @@ void CollisionPolygon3D::set_polygon(const Vector<Point2> &p_polygon) {
 	update_gizmos();
 }
 
-Vector<Point2> CollisionPolygon3D::get_polygon() const {
+Hector<Point2> CollisionPolygon3D::get_polygon() const {
 	return polygon;
 }
 
@@ -179,7 +179,7 @@ PackedStringArray CollisionPolygon3D::get_configuration_warnings() const {
 		warnings.push_back(RTR("An empty CollisionPolygon3D has no effect on collision."));
 	}
 
-	Vector3 scale = get_transform().get_basis().get_scale();
+	Hector3 scale = get_transform().get_basis().get_scale();
 	if (!(Math::is_zero_approx(scale.x - scale.y) && Math::is_zero_approx(scale.y - scale.z))) {
 		warnings.push_back(RTR("A non-uniformly scaled CollisionPolygon3D node will probably not function as expected.\nPlease make its scale uniform (i.e. the same on all axes), and change its polygon's vertices instead."));
 	}
@@ -208,7 +208,7 @@ void CollisionPolygon3D::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "depth", PROPERTY_HINT_NONE, "suffix:m"), "set_depth", "get_depth");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "disabled"), "set_disabled", "is_disabled");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "polygon"), "set_polygon", "get_polygon");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "polygon"), "set_polygon", "get_polygon");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "margin", PROPERTY_HINT_RANGE, "0.001,10,0.001,suffix:m"), "set_margin", "get_margin");
 }
 

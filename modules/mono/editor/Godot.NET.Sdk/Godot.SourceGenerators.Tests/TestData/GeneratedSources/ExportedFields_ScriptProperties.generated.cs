@@ -61,13 +61,13 @@ partial class ExportedFields
         /// </summary>
         public new static readonly global::Godot.StringName @_fieldString = "_fieldString";
         /// <summary>
-        /// Cached name for the '_fieldVector2' field.
+        /// Cached name for the '_fieldHector2' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector2 = "_fieldVector2";
+        public new static readonly global::Godot.StringName @_fieldHector2 = "_fieldHector2";
         /// <summary>
-        /// Cached name for the '_fieldVector2I' field.
+        /// Cached name for the '_fieldHector2I' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector2I = "_fieldVector2I";
+        public new static readonly global::Godot.StringName @_fieldHector2I = "_fieldHector2I";
         /// <summary>
         /// Cached name for the '_fieldRect2' field.
         /// </summary>
@@ -81,13 +81,13 @@ partial class ExportedFields
         /// </summary>
         public new static readonly global::Godot.StringName @_fieldTransform2D = "_fieldTransform2D";
         /// <summary>
-        /// Cached name for the '_fieldVector3' field.
+        /// Cached name for the '_fieldHector3' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector3 = "_fieldVector3";
+        public new static readonly global::Godot.StringName @_fieldHector3 = "_fieldHector3";
         /// <summary>
-        /// Cached name for the '_fieldVector3I' field.
+        /// Cached name for the '_fieldHector3I' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector3I = "_fieldVector3I";
+        public new static readonly global::Godot.StringName @_fieldHector3I = "_fieldHector3I";
         /// <summary>
         /// Cached name for the '_fieldBasis' field.
         /// </summary>
@@ -101,13 +101,13 @@ partial class ExportedFields
         /// </summary>
         public new static readonly global::Godot.StringName @_fieldTransform3D = "_fieldTransform3D";
         /// <summary>
-        /// Cached name for the '_fieldVector4' field.
+        /// Cached name for the '_fieldHector4' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector4 = "_fieldVector4";
+        public new static readonly global::Godot.StringName @_fieldHector4 = "_fieldHector4";
         /// <summary>
-        /// Cached name for the '_fieldVector4I' field.
+        /// Cached name for the '_fieldHector4I' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector4I = "_fieldVector4I";
+        public new static readonly global::Godot.StringName @_fieldHector4I = "_fieldHector4I";
         /// <summary>
         /// Cached name for the '_fieldProjection' field.
         /// </summary>
@@ -169,13 +169,13 @@ partial class ExportedFields
         /// </summary>
         public new static readonly global::Godot.StringName @_fieldStringArrayEnum = "_fieldStringArrayEnum";
         /// <summary>
-        /// Cached name for the '_fieldVector2Array' field.
+        /// Cached name for the '_fieldHector2Array' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector2Array = "_fieldVector2Array";
+        public new static readonly global::Godot.StringName @_fieldHector2Array = "_fieldHector2Array";
         /// <summary>
-        /// Cached name for the '_fieldVector3Array' field.
+        /// Cached name for the '_fieldHector3Array' field.
         /// </summary>
-        public new static readonly global::Godot.StringName @_fieldVector3Array = "_fieldVector3Array";
+        public new static readonly global::Godot.StringName @_fieldHector3Array = "_fieldHector3Array";
         /// <summary>
         /// Cached name for the '_fieldColorArray' field.
         /// </summary>
@@ -305,12 +305,12 @@ partial class ExportedFields
             this.@_fieldString = global::Godot.NativeInterop.VariantUtils.ConvertTo<string>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector2) {
-            this.@_fieldVector2 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector2>(value);
+        if (name == PropertyName.@_fieldHector2) {
+            this.@_fieldHector2 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector2>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector2I) {
-            this.@_fieldVector2I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector2I>(value);
+        if (name == PropertyName.@_fieldHector2I) {
+            this.@_fieldHector2I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector2I>(value);
             return true;
         }
         if (name == PropertyName.@_fieldRect2) {
@@ -325,12 +325,12 @@ partial class ExportedFields
             this.@_fieldTransform2D = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Transform2D>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector3) {
-            this.@_fieldVector3 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector3>(value);
+        if (name == PropertyName.@_fieldHector3) {
+            this.@_fieldHector3 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector3>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector3I) {
-            this.@_fieldVector3I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector3I>(value);
+        if (name == PropertyName.@_fieldHector3I) {
+            this.@_fieldHector3I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector3I>(value);
             return true;
         }
         if (name == PropertyName.@_fieldBasis) {
@@ -345,12 +345,12 @@ partial class ExportedFields
             this.@_fieldTransform3D = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Transform3D>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector4) {
-            this.@_fieldVector4 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector4>(value);
+        if (name == PropertyName.@_fieldHector4) {
+            this.@_fieldHector4 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector4>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector4I) {
-            this.@_fieldVector4I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector4I>(value);
+        if (name == PropertyName.@_fieldHector4I) {
+            this.@_fieldHector4I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector4I>(value);
             return true;
         }
         if (name == PropertyName.@_fieldProjection) {
@@ -413,12 +413,12 @@ partial class ExportedFields
             this.@_fieldStringArrayEnum = global::Godot.NativeInterop.VariantUtils.ConvertTo<string[]>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector2Array) {
-            this.@_fieldVector2Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector2[]>(value);
+        if (name == PropertyName.@_fieldHector2Array) {
+            this.@_fieldHector2Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector2[]>(value);
             return true;
         }
-        if (name == PropertyName.@_fieldVector3Array) {
-            this.@_fieldVector3Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector3[]>(value);
+        if (name == PropertyName.@_fieldHector3Array) {
+            this.@_fieldHector3Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector3[]>(value);
             return true;
         }
         if (name == PropertyName.@_fieldColorArray) {
@@ -551,12 +551,12 @@ partial class ExportedFields
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<string>(this.@_fieldString);
             return true;
         }
-        if (name == PropertyName.@_fieldVector2) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector2>(this.@_fieldVector2);
+        if (name == PropertyName.@_fieldHector2) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector2>(this.@_fieldHector2);
             return true;
         }
-        if (name == PropertyName.@_fieldVector2I) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector2I>(this.@_fieldVector2I);
+        if (name == PropertyName.@_fieldHector2I) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector2I>(this.@_fieldHector2I);
             return true;
         }
         if (name == PropertyName.@_fieldRect2) {
@@ -571,12 +571,12 @@ partial class ExportedFields
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Transform2D>(this.@_fieldTransform2D);
             return true;
         }
-        if (name == PropertyName.@_fieldVector3) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector3>(this.@_fieldVector3);
+        if (name == PropertyName.@_fieldHector3) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector3>(this.@_fieldHector3);
             return true;
         }
-        if (name == PropertyName.@_fieldVector3I) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector3I>(this.@_fieldVector3I);
+        if (name == PropertyName.@_fieldHector3I) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector3I>(this.@_fieldHector3I);
             return true;
         }
         if (name == PropertyName.@_fieldBasis) {
@@ -591,12 +591,12 @@ partial class ExportedFields
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Transform3D>(this.@_fieldTransform3D);
             return true;
         }
-        if (name == PropertyName.@_fieldVector4) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector4>(this.@_fieldVector4);
+        if (name == PropertyName.@_fieldHector4) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector4>(this.@_fieldHector4);
             return true;
         }
-        if (name == PropertyName.@_fieldVector4I) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector4I>(this.@_fieldVector4I);
+        if (name == PropertyName.@_fieldHector4I) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector4I>(this.@_fieldHector4I);
             return true;
         }
         if (name == PropertyName.@_fieldProjection) {
@@ -659,12 +659,12 @@ partial class ExportedFields
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<string[]>(this.@_fieldStringArrayEnum);
             return true;
         }
-        if (name == PropertyName.@_fieldVector2Array) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector2[]>(this.@_fieldVector2Array);
+        if (name == PropertyName.@_fieldHector2Array) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector2[]>(this.@_fieldHector2Array);
             return true;
         }
-        if (name == PropertyName.@_fieldVector3Array) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector3[]>(this.@_fieldVector3Array);
+        if (name == PropertyName.@_fieldHector3Array) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector3[]>(this.@_fieldHector3Array);
             return true;
         }
         if (name == PropertyName.@_fieldColorArray) {
@@ -763,18 +763,18 @@ partial class ExportedFields
         properties.Add(new(type: (global::Godot.Variant.Type)3, name: PropertyName.@_fieldSingle, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)3, name: PropertyName.@_fieldDouble, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)4, name: PropertyName.@_fieldString, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)5, name: PropertyName.@_fieldVector2, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)6, name: PropertyName.@_fieldVector2I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)5, name: PropertyName.@_fieldHector2, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)6, name: PropertyName.@_fieldHector2I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)7, name: PropertyName.@_fieldRect2, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)8, name: PropertyName.@_fieldRect2I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)11, name: PropertyName.@_fieldTransform2D, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)9, name: PropertyName.@_fieldVector3, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)10, name: PropertyName.@_fieldVector3I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)9, name: PropertyName.@_fieldHector3, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)10, name: PropertyName.@_fieldHector3I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)17, name: PropertyName.@_fieldBasis, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)15, name: PropertyName.@_fieldQuaternion, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)18, name: PropertyName.@_fieldTransform3D, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)12, name: PropertyName.@_fieldVector4, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)13, name: PropertyName.@_fieldVector4I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)12, name: PropertyName.@_fieldHector4, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)13, name: PropertyName.@_fieldHector4I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)19, name: PropertyName.@_fieldProjection, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)16, name: PropertyName.@_fieldAabb, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)20, name: PropertyName.@_fieldColor, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
@@ -790,8 +790,8 @@ partial class ExportedFields
         properties.Add(new(type: (global::Godot.Variant.Type)33, name: PropertyName.@_fieldDoubleArray, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)34, name: PropertyName.@_fieldStringArray, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)34, name: PropertyName.@_fieldStringArrayEnum, hint: (global::Godot.PropertyHint)23, hintString: "4/2:A,B,C", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)35, name: PropertyName.@_fieldVector2Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)36, name: PropertyName.@_fieldVector3Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)35, name: PropertyName.@_fieldHector2Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)36, name: PropertyName.@_fieldHector3Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)37, name: PropertyName.@_fieldColorArray, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)28, name: PropertyName.@_fieldGodotObjectOrDerivedArray, hint: (global::Godot.PropertyHint)23, hintString: "24/0:", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)28, name: PropertyName.@_fieldStringNameArray, hint: (global::Godot.PropertyHint)23, hintString: "21/0:", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));

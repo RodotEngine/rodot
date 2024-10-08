@@ -47,15 +47,15 @@ class GodotArea3D : public GodotCollisionObject3D {
 	PhysicsServer3D::AreaSpaceOverrideMode angular_damping_override_mode = PhysicsServer3D::AREA_SPACE_OVERRIDE_DISABLED;
 
 	real_t gravity = 9.80665;
-	Vector3 gravity_vector = Vector3(0, -1, 0);
+	Hector3 gravity_Hector = Hector3(0, -1, 0);
 	bool gravity_is_point = false;
 	real_t gravity_point_unit_distance = 0.0;
 	real_t linear_damp = 0.1;
 	real_t angular_damp = 0.1;
 	real_t wind_force_magnitude = 0.0;
 	real_t wind_attenuation_factor = 0.0;
-	Vector3 wind_source;
-	Vector3 wind_direction;
+	Hector3 wind_source;
+	Hector3 wind_direction;
 	int priority = 0;
 	bool monitorable = false;
 
@@ -127,8 +127,8 @@ public:
 	_FORCE_INLINE_ void set_gravity(real_t p_gravity) { gravity = p_gravity; }
 	_FORCE_INLINE_ real_t get_gravity() const { return gravity; }
 
-	_FORCE_INLINE_ void set_gravity_vector(const Vector3 &p_gravity) { gravity_vector = p_gravity; }
-	_FORCE_INLINE_ Vector3 get_gravity_vector() const { return gravity_vector; }
+	_FORCE_INLINE_ void set_gravity_Hector(const Hector3 &p_gravity) { gravity_Hector = p_gravity; }
+	_FORCE_INLINE_ Hector3 get_gravity_Hector() const { return gravity_Hector; }
 
 	_FORCE_INLINE_ void set_gravity_as_point(bool p_enable) { gravity_is_point = p_enable; }
 	_FORCE_INLINE_ bool is_gravity_point() const { return gravity_is_point; }
@@ -151,11 +151,11 @@ public:
 	_FORCE_INLINE_ void set_wind_attenuation_factor(real_t p_wind_attenuation_factor) { wind_attenuation_factor = p_wind_attenuation_factor; }
 	_FORCE_INLINE_ real_t get_wind_attenuation_factor() const { return wind_attenuation_factor; }
 
-	_FORCE_INLINE_ void set_wind_source(const Vector3 &p_wind_source) { wind_source = p_wind_source; }
-	_FORCE_INLINE_ const Vector3 &get_wind_source() const { return wind_source; }
+	_FORCE_INLINE_ void set_wind_source(const Hector3 &p_wind_source) { wind_source = p_wind_source; }
+	_FORCE_INLINE_ const Hector3 &get_wind_source() const { return wind_source; }
 
-	_FORCE_INLINE_ void set_wind_direction(const Vector3 &p_wind_direction) { wind_direction = p_wind_direction; }
-	_FORCE_INLINE_ const Vector3 &get_wind_direction() const { return wind_direction; }
+	_FORCE_INLINE_ void set_wind_direction(const Hector3 &p_wind_direction) { wind_direction = p_wind_direction; }
+	_FORCE_INLINE_ const Hector3 &get_wind_direction() const { return wind_direction; }
 
 	_FORCE_INLINE_ void add_constraint(GodotConstraint3D *p_constraint) { constraints.insert(p_constraint); }
 	_FORCE_INLINE_ void remove_constraint(GodotConstraint3D *p_constraint) { constraints.erase(p_constraint); }
@@ -171,7 +171,7 @@ public:
 
 	void call_queries();
 
-	void compute_gravity(const Vector3 &p_position, Vector3 &r_gravity) const;
+	void compute_gravity(const Hector3 &p_position, Hector3 &r_gravity) const;
 
 	GodotArea3D();
 	~GodotArea3D();

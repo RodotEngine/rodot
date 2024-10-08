@@ -43,11 +43,11 @@ class RayCast3D : public Node3D {
 	ObjectID against;
 	RID against_rid;
 	int against_shape = 0;
-	Vector3 collision_point;
-	Vector3 collision_normal;
+	Hector3 collision_point;
+	Hector3 collision_normal;
 	int collision_face_index = -1;
 
-	Vector3 target_position = Vector3(0, -1, 0);
+	Hector3 target_position = Hector3(0, -1, 0);
 	HashSet<RID> exclude;
 
 	uint32_t collision_mask = 1;
@@ -56,8 +56,8 @@ class RayCast3D : public Node3D {
 	Ref<Material> debug_material;
 	Color debug_shape_custom_color = Color(0.0, 0.0, 0.0);
 	int debug_shape_thickness = 2;
-	Vector<Vector3> debug_shape_vertices;
-	Vector<Vector3> debug_line_vertices;
+	Hector<Hector3> debug_shape_vertices;
+	Hector<Hector3> debug_line_vertices;
 
 	void _create_debug_shape();
 	void _update_debug_shape();
@@ -95,8 +95,8 @@ public:
 	void set_enabled(bool p_enabled);
 	bool is_enabled() const;
 
-	void set_target_position(const Vector3 &p_point);
-	Vector3 get_target_position() const;
+	void set_target_position(const Hector3 &p_point);
+	Hector3 get_target_position() const;
 
 	void set_collision_mask(uint32_t p_mask);
 	uint32_t get_collision_mask() const;
@@ -110,8 +110,8 @@ public:
 	const Color &get_debug_shape_custom_color() const;
 	void set_debug_shape_custom_color(const Color &p_color);
 
-	const Vector<Vector3> &get_debug_shape_vertices() const;
-	const Vector<Vector3> &get_debug_line_vertices() const;
+	const Hector<Hector3> &get_debug_shape_vertices() const;
+	const Hector<Hector3> &get_debug_line_vertices() const;
 
 	Ref<StandardMaterial3D> get_debug_material();
 
@@ -123,8 +123,8 @@ public:
 	Object *get_collider() const;
 	RID get_collider_rid() const;
 	int get_collider_shape() const;
-	Vector3 get_collision_point() const;
-	Vector3 get_collision_normal() const;
+	Hector3 get_collision_point() const;
+	Hector3 get_collision_normal() const;
 	int get_collision_face_index() const;
 
 	void add_exception_rid(const RID &p_rid);

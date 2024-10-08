@@ -52,7 +52,7 @@ public:
 
 	float offset = 0.0f;
 	float pitch_scale = 1.0;
-	Vector<AudioFrame> volume_vector;
+	Hector<AudioFrame> volume_Hector;
 	StringName bus;
 };
 
@@ -68,7 +68,7 @@ public:
 	};
 
 	Ref<AudioStream> stream;
-	Vector<AudioFrame> data;
+	Hector<AudioFrame> data;
 	int num_channels = 1;
 	int sample_rate = 44100;
 	LoopMode loop_mode = LOOP_DISABLED;
@@ -287,7 +287,7 @@ private:
 	PropertyListHelper property_helper;
 
 	HashSet<AudioStreamPlaybackRandomizer *> playbacks;
-	Vector<PoolEntry> audio_stream_pool;
+	Hector<PoolEntry> audio_stream_pool;
 	float random_pitch_scale = 1.0f;
 	float random_volume_offset_db = 0.0f;
 

@@ -42,8 +42,8 @@ Dictionary Translation::_get_messages() const {
 	return d;
 }
 
-Vector<String> Translation::_get_message_list() const {
-	Vector<String> msgs;
+Hector<String> Translation::_get_message_list() const {
+	Hector<String> msgs;
 	msgs.resize(translation_map.size());
 	int idx = 0;
 	for (const KeyValue<StringName, StringName> &E : translation_map) {
@@ -54,8 +54,8 @@ Vector<String> Translation::_get_message_list() const {
 	return msgs;
 }
 
-Vector<String> Translation::get_translated_message_list() const {
-	Vector<String> msgs;
+Hector<String> Translation::get_translated_message_list() const {
+	Hector<String> msgs;
 	msgs.resize(translation_map.size());
 	int idx = 0;
 	for (const KeyValue<StringName, StringName> &E : translation_map) {
@@ -95,9 +95,9 @@ void Translation::add_message(const StringName &p_src_text, const StringName &p_
 	translation_map[p_src_text] = p_xlated_text;
 }
 
-void Translation::add_plural_message(const StringName &p_src_text, const Vector<String> &p_plural_xlated_texts, const StringName &p_context) {
+void Translation::add_plural_message(const StringName &p_src_text, const Hector<String> &p_plural_xlated_texts, const StringName &p_context) {
 	WARN_PRINT("Translation class doesn't handle plural messages. Calling add_plural_message() on a Translation instance is probably a mistake. \nUse a derived Translation class that handles plurals, such as TranslationPO class");
-	ERR_FAIL_COND_MSG(p_plural_xlated_texts.is_empty(), "Parameter vector p_plural_xlated_texts passed in is empty.");
+	ERR_FAIL_COND_MSG(p_plural_xlated_texts.is_empty(), "Parameter Hector p_plural_xlated_texts passed in is empty.");
 	translation_map[p_src_text] = p_plural_xlated_texts[0];
 }
 

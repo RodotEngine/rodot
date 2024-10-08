@@ -11,7 +11,7 @@ namespace embree
 {
   namespace isa
   {
-    PrimInfo createPrimRefArray(Geometry* geometry, unsigned int geomID, const size_t numPrimRefs, mvector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
+    PrimInfo createPrimRefArray(Geometry* geometry, unsigned int geomID, const size_t numPrimRefs, mHector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
     {
       ParallelPrefixSumState<PrimInfo> pstate;
       
@@ -32,7 +32,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfo createPrimRefArray(Scene* scene, Geometry::GTypeMask types, bool mblur, const size_t numPrimRefs, mvector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
+    PrimInfo createPrimRefArray(Scene* scene, Geometry::GTypeMask types, bool mblur, const size_t numPrimRefs, mHector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
     {
       ParallelForForPrefixSumState<PrimInfo> pstate;
       Scene::Iterator2 iter(scene,types,mblur);
@@ -55,7 +55,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfo createPrimRefArray(Scene* scene, Geometry::GTypeMask types, bool mblur, const size_t numPrimRefs, mvector<PrimRef>& prims, mvector<SubGridBuildData>& sgrids, BuildProgressMonitor& progressMonitor)
+    PrimInfo createPrimRefArray(Scene* scene, Geometry::GTypeMask types, bool mblur, const size_t numPrimRefs, mHector<PrimRef>& prims, mHector<SubGridBuildData>& sgrids, BuildProgressMonitor& progressMonitor)
     {
       ParallelForForPrefixSumState<PrimInfo> pstate;
       Scene::Iterator2 iter(scene,types,mblur);
@@ -78,7 +78,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfo createPrimRefArrayMBlur(Scene* scene, Geometry::GTypeMask types, const size_t numPrimRefs, mvector<PrimRef>& prims, BuildProgressMonitor& progressMonitor, size_t itime)
+    PrimInfo createPrimRefArrayMBlur(Scene* scene, Geometry::GTypeMask types, const size_t numPrimRefs, mHector<PrimRef>& prims, BuildProgressMonitor& progressMonitor, size_t itime)
     {
       ParallelForForPrefixSumState<PrimInfo> pstate;
       Scene::Iterator2 iter(scene,types,true);
@@ -101,7 +101,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfoMB createPrimRefArrayMSMBlur(Scene* scene, Geometry::GTypeMask types, const size_t numPrimRefs, mvector<PrimRefMB>& prims, BuildProgressMonitor& progressMonitor, BBox1f t0t1)
+    PrimInfoMB createPrimRefArrayMSMBlur(Scene* scene, Geometry::GTypeMask types, const size_t numPrimRefs, mHector<PrimRefMB>& prims, BuildProgressMonitor& progressMonitor, BBox1f t0t1)
     {
       ParallelForForPrefixSumState<PrimInfoMB> pstate;
       Scene::Iterator2 iter(scene,types,true);
@@ -127,7 +127,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfoMB createPrimRefArrayMSMBlur(Scene* scene, Geometry::GTypeMask types, const size_t numPrimRefs, mvector<PrimRefMB>& prims, mvector<SubGridBuildData>& sgrids, BuildProgressMonitor& progressMonitor, BBox1f t0t1)
+    PrimInfoMB createPrimRefArrayMSMBlur(Scene* scene, Geometry::GTypeMask types, const size_t numPrimRefs, mHector<PrimRefMB>& prims, mHector<SubGridBuildData>& sgrids, BuildProgressMonitor& progressMonitor, BBox1f t0t1)
     {
       ParallelForForPrefixSumState<PrimInfoMB> pstate;
       Scene::Iterator2 iter(scene,types,true);
@@ -154,7 +154,7 @@ namespace embree
     }
 
     template<typename Mesh>
-    size_t createMortonCodeArray(Mesh* mesh, mvector<BVHBuilderMorton::BuildPrim>& morton, BuildProgressMonitor& progressMonitor)
+    size_t createMortonCodeArray(Mesh* mesh, mHector<BVHBuilderMorton::BuildPrim>& morton, BuildProgressMonitor& progressMonitor)
     {
       size_t numPrimitives = morton.size();
 
@@ -234,7 +234,7 @@ namespace embree
     // special variants for grid meshes
 
 #if defined(EMBREE_GEOMETRY_GRID)
-    PrimInfo createPrimRefArrayGrids(Scene* scene, mvector<PrimRef>& prims, mvector<SubGridBuildData>& sgrids)
+    PrimInfo createPrimRefArrayGrids(Scene* scene, mHector<PrimRef>& prims, mHector<SubGridBuildData>& sgrids)
     {
       PrimInfo pinfo(empty);
       size_t numPrimitives = 0;
@@ -273,7 +273,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfo createPrimRefArrayGrids(GridMesh* mesh, mvector<PrimRef>& prims, mvector<SubGridBuildData>& sgrids)
+    PrimInfo createPrimRefArrayGrids(GridMesh* mesh, mHector<PrimRef>& prims, mHector<SubGridBuildData>& sgrids)
     {
       unsigned int geomID_ = std::numeric_limits<unsigned int>::max ();
 
@@ -307,7 +307,7 @@ namespace embree
       return pinfo;
     }
 
-    PrimInfoMB createPrimRefArrayMSMBlurGrid(Scene* scene, mvector<PrimRefMB>& prims, mvector<SubGridBuildData>& sgrids, BuildProgressMonitor& progressMonitor, BBox1f t0t1)
+    PrimInfoMB createPrimRefArrayMSMBlurGrid(Scene* scene, mHector<PrimRefMB>& prims, mHector<SubGridBuildData>& sgrids, BuildProgressMonitor& progressMonitor, BBox1f t0t1)
     {
       /* first run to get #primitives */
       ParallelForForPrefixSumState<PrimInfoMB> pstate;
@@ -350,10 +350,10 @@ namespace embree
     // ====================================================================================================
     // ====================================================================================================
     
-    IF_ENABLED_TRIS (template size_t createMortonCodeArray<TriangleMesh>(TriangleMesh* mesh COMMA mvector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
-    IF_ENABLED_QUADS(template size_t createMortonCodeArray<QuadMesh>(QuadMesh* mesh COMMA mvector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
-    IF_ENABLED_USER (template size_t createMortonCodeArray<UserGeometry>(UserGeometry* mesh COMMA mvector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
-    IF_ENABLED_INSTANCE (template size_t createMortonCodeArray<Instance>(Instance* mesh COMMA mvector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
-    IF_ENABLED_INSTANCE_ARRAY (template size_t createMortonCodeArray<InstanceArray>(InstanceArray* mesh COMMA mvector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
+    IF_ENABLED_TRIS (template size_t createMortonCodeArray<TriangleMesh>(TriangleMesh* mesh COMMA mHector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
+    IF_ENABLED_QUADS(template size_t createMortonCodeArray<QuadMesh>(QuadMesh* mesh COMMA mHector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
+    IF_ENABLED_USER (template size_t createMortonCodeArray<UserGeometry>(UserGeometry* mesh COMMA mHector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
+    IF_ENABLED_INSTANCE (template size_t createMortonCodeArray<Instance>(Instance* mesh COMMA mHector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
+    IF_ENABLED_INSTANCE_ARRAY (template size_t createMortonCodeArray<InstanceArray>(InstanceArray* mesh COMMA mHector<BVHBuilderMorton::BuildPrim>& morton COMMA BuildProgressMonitor& progressMonitor));
   }
 }

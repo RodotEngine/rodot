@@ -34,7 +34,7 @@
 #if defined(X11_ENABLED) && defined(GLES3_ENABLED)
 
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/display_server.h"
 
 #ifdef SOWRAP_ENABLED
@@ -87,8 +87,8 @@ private:
 		::Display *x11_display = nullptr;
 	} _x_windisp;
 
-	LocalVector<GLWindow> _windows;
-	LocalVector<GLDisplay> _displays;
+	LocalHector<GLWindow> _windows;
+	LocalHector<GLDisplay> _displays;
 
 	GLWindow *_current_window = nullptr;
 
@@ -129,7 +129,7 @@ public:
 	void *get_glx_context(DisplayServer::WindowID p_window_id);
 
 	Error open_display(Display *p_display);
-	GLManager_X11(const Vector2i &p_size, ContextType p_context_type);
+	GLManager_X11(const Hector2i &p_size, ContextType p_context_type);
 	~GLManager_X11();
 };
 

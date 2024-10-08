@@ -39,16 +39,16 @@
 namespace TestCurve3D {
 
 void add_sample_curve_points(Ref<Curve3D> &curve) {
-	Vector3 p0 = Vector3(0, 0, 0);
-	Vector3 p1 = Vector3(50, 0, 0);
-	Vector3 p2 = Vector3(50, 50, 50);
-	Vector3 p3 = Vector3(0, 50, 0);
+	Hector3 p0 = Hector3(0, 0, 0);
+	Hector3 p1 = Hector3(50, 0, 0);
+	Hector3 p2 = Hector3(50, 50, 50);
+	Hector3 p3 = Hector3(0, 50, 0);
 
-	Vector3 control0 = p1 - p0;
-	Vector3 control1 = p3 - p2;
+	Hector3 control0 = p1 - p0;
+	Hector3 control1 = p3 - p2;
 
-	curve->add_point(p0, Vector3(), control0);
-	curve->add_point(p3, control1, Vector3());
+	curve->add_point(p0, Hector3(), control0);
+	curve->add_point(p3, control1, Hector3());
 }
 
 TEST_CASE("[Curve3D] Default curve is empty") {
@@ -66,7 +66,7 @@ TEST_CASE("[Curve3D] Point management") {
 		curve->remove_point(0);
 		CHECK(curve->get_point_count() == 1);
 
-		curve->add_point(Vector3());
+		curve->add_point(Hector3());
 		CHECK(curve->get_point_count() == 2);
 
 		curve->clear_points();
@@ -74,12 +74,12 @@ TEST_CASE("[Curve3D] Point management") {
 	}
 
 	SUBCASE("Functions for changing single point properties should behave as expected") {
-		Vector3 new_in = Vector3(1, 1, 1);
-		Vector3 new_out = Vector3(1, 1, 1);
-		Vector3 new_pos = Vector3(1, 1, 1);
+		Hector3 new_in = Hector3(1, 1, 1);
+		Hector3 new_out = Hector3(1, 1, 1);
+		Hector3 new_pos = Hector3(1, 1, 1);
 		real_t new_tilt = 1;
 
-		curve->add_point(Vector3());
+		curve->add_point(Hector3());
 
 		CHECK(curve->get_point_in(0) != new_in);
 		curve->set_point_in(0, new_in);
@@ -103,22 +103,22 @@ TEST_CASE("[Curve3D] Baked") {
 	Ref<Curve3D> curve = memnew(Curve3D);
 
 	SUBCASE("Single Point") {
-		curve->add_point(Vector3());
+		curve->add_point(Hector3());
 
 		CHECK(curve->get_baked_length() == 0);
 		CHECK(curve->get_baked_points().size() == 1);
 		CHECK(curve->get_baked_tilts().size() == 1);
-		CHECK(curve->get_baked_up_vectors().size() == 1);
+		CHECK(curve->get_baked_up_Hectors().size() == 1);
 	}
 
 	SUBCASE("Straight line") {
-		curve->add_point(Vector3());
-		curve->add_point(Vector3(0, 50, 0));
+		curve->add_point(Hector3());
+		curve->add_point(Hector3(0, 50, 0));
 
 		CHECK(Math::is_equal_approx(curve->get_baked_length(), 50));
 		CHECK(curve->get_baked_points().size() == 369);
 		CHECK(curve->get_baked_tilts().size() == 369);
-		CHECK(curve->get_baked_up_vectors().size() == 369);
+		CHECK(curve->get_baked_up_Hectors().size() == 369);
 	}
 
 	SUBCASE("Beziér Curve") {
@@ -136,13 +136,13 @@ TEST_CASE("[Curve3D] Baked") {
 			CHECK(curve->get_baked_length() < len);
 			CHECK(curve->get_baked_points().size() < n_points);
 			CHECK(curve->get_baked_tilts().size() < n_points);
-			CHECK(curve->get_baked_up_vectors().size() < n_points);
+			CHECK(curve->get_baked_up_Hectors().size() < n_points);
 		}
 
-		SUBCASE("Disable up vectors") {
-			curve->set_up_vector_enabled(false);
-			CHECK(curve->is_up_vector_enabled() == false);
-			CHECK(curve->get_baked_up_vectors().size() == 0);
+		SUBCASE("Disable up Hectors") {
+			curve->set_up_Hector_enabled(false);
+			CHECK(curve->is_up_Hector_enabled() == false);
+			CHECK(curve->get_baked_up_Hectors().size() == 0);
 		}
 	}
 }
@@ -150,90 +150,90 @@ TEST_CASE("[Curve3D] Baked") {
 TEST_CASE("[Curve3D] Sampling") {
 	// Sampling over a simple straight line to make assertions simpler
 	Ref<Curve3D> curve = memnew(Curve3D);
-	curve->add_point(Vector3());
-	curve->add_point(Vector3(0, 50, 0));
+	curve->add_point(Hector3());
+	curve->add_point(Hector3(0, 50, 0));
 
 	SUBCASE("sample") {
-		CHECK(curve->sample(0, 0) == Vector3(0, 0, 0));
-		CHECK(curve->sample(0, 0.5) == Vector3(0, 25, 0));
-		CHECK(curve->sample(0, 1) == Vector3(0, 50, 0));
+		CHECK(curve->sample(0, 0) == Hector3(0, 0, 0));
+		CHECK(curve->sample(0, 0.5) == Hector3(0, 25, 0));
+		CHECK(curve->sample(0, 1) == Hector3(0, 50, 0));
 	}
 
 	SUBCASE("samplef") {
-		CHECK(curve->samplef(0) == Vector3(0, 0, 0));
-		CHECK(curve->samplef(0.5) == Vector3(0, 25, 0));
-		CHECK(curve->samplef(1) == Vector3(0, 50, 0));
+		CHECK(curve->samplef(0) == Hector3(0, 0, 0));
+		CHECK(curve->samplef(0.5) == Hector3(0, 25, 0));
+		CHECK(curve->samplef(1) == Hector3(0, 50, 0));
 	}
 
 	SUBCASE("sample_baked, cubic = false") {
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector3(0, 0, 0))) == Vector3(0, 0, 0));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector3(0, 25, 0))) == Vector3(0, 25, 0));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector3(0, 50, 0))) == Vector3(0, 50, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector3(0, 0, 0))) == Hector3(0, 0, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector3(0, 25, 0))) == Hector3(0, 25, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector3(0, 50, 0))) == Hector3(0, 50, 0));
 	}
 
 	SUBCASE("sample_baked, cubic = true") {
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector3(0, 0, 0)), true) == Vector3(0, 0, 0));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector3(0, 25, 0)), true) == Vector3(0, 25, 0));
-		CHECK(curve->sample_baked(curve->get_closest_offset(Vector3(0, 50, 0)), true) == Vector3(0, 50, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector3(0, 0, 0)), true) == Hector3(0, 0, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector3(0, 25, 0)), true) == Hector3(0, 25, 0));
+		CHECK(curve->sample_baked(curve->get_closest_offset(Hector3(0, 50, 0)), true) == Hector3(0, 50, 0));
 	}
 
 	SUBCASE("sample_baked_with_rotation, cubic = false, p_apply_tilt = false") {
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 0, 0))) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 0, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 25, 0))) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 25, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 50, 0))) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 50, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 0, 0))) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 0, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 25, 0))) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 25, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 50, 0))) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 50, 0)));
 	}
 
 	SUBCASE("sample_baked_with_rotation, cubic = false, p_apply_tilt = true") {
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 0, 0)), false, true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 0, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 25, 0)), false, true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 25, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 50, 0)), false, true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 50, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 0, 0)), false, true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 0, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 25, 0)), false, true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 25, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 50, 0)), false, true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 50, 0)));
 	}
 
 	SUBCASE("sample_baked_with_rotation, cubic = true, p_apply_tilt = false") {
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 0, 0)), true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 0, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 25, 0)), true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 25, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 50, 0)), true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 50, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 0, 0)), true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 0, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 25, 0)), true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 25, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 50, 0)), true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 50, 0)));
 	}
 
 	SUBCASE("sample_baked_with_rotation, cubic = true, p_apply_tilt = true") {
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 0, 0)), true, true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 0, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 25, 0)), true, true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 25, 0)));
-		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Vector3(0, 50, 0)), true, true) == Transform3D(Basis(Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, -1, 0)), Vector3(0, 50, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 0, 0)), true, true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 0, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 25, 0)), true, true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 25, 0)));
+		CHECK(curve->sample_baked_with_rotation(curve->get_closest_offset(Hector3(0, 50, 0)), true, true) == Transform3D(Basis(Hector3(0, 0, -1), Hector3(1, 0, 0), Hector3(0, -1, 0)), Hector3(0, 50, 0)));
 	}
 
 	SUBCASE("sample_baked_tilt") {
-		CHECK(curve->sample_baked_tilt(curve->get_closest_offset(Vector3(0, 0, 0))) == 0);
-		CHECK(curve->sample_baked_tilt(curve->get_closest_offset(Vector3(0, 25, 0))) == 0);
-		CHECK(curve->sample_baked_tilt(curve->get_closest_offset(Vector3(0, 50, 0))) == 0);
+		CHECK(curve->sample_baked_tilt(curve->get_closest_offset(Hector3(0, 0, 0))) == 0);
+		CHECK(curve->sample_baked_tilt(curve->get_closest_offset(Hector3(0, 25, 0))) == 0);
+		CHECK(curve->sample_baked_tilt(curve->get_closest_offset(Hector3(0, 50, 0))) == 0);
 	}
 
-	SUBCASE("sample_baked_up_vector, p_apply_tilt = false") {
-		CHECK(curve->sample_baked_up_vector(curve->get_closest_offset(Vector3(0, 0, 0))) == Vector3(1, 0, 0));
-		CHECK(curve->sample_baked_up_vector(curve->get_closest_offset(Vector3(0, 25, 0))) == Vector3(1, 0, 0));
-		CHECK(curve->sample_baked_up_vector(curve->get_closest_offset(Vector3(0, 50, 0))) == Vector3(1, 0, 0));
+	SUBCASE("sample_baked_up_Hector, p_apply_tilt = false") {
+		CHECK(curve->sample_baked_up_Hector(curve->get_closest_offset(Hector3(0, 0, 0))) == Hector3(1, 0, 0));
+		CHECK(curve->sample_baked_up_Hector(curve->get_closest_offset(Hector3(0, 25, 0))) == Hector3(1, 0, 0));
+		CHECK(curve->sample_baked_up_Hector(curve->get_closest_offset(Hector3(0, 50, 0))) == Hector3(1, 0, 0));
 	}
 
-	SUBCASE("sample_baked_up_vector, p_apply_tilt = true") {
-		CHECK(curve->sample_baked_up_vector(curve->get_closest_offset(Vector3(0, 0, 0)), true) == Vector3(1, 0, 0));
-		CHECK(curve->sample_baked_up_vector(curve->get_closest_offset(Vector3(0, 25, 0)), true) == Vector3(1, 0, 0));
-		CHECK(curve->sample_baked_up_vector(curve->get_closest_offset(Vector3(0, 50, 0)), true) == Vector3(1, 0, 0));
+	SUBCASE("sample_baked_up_Hector, p_apply_tilt = true") {
+		CHECK(curve->sample_baked_up_Hector(curve->get_closest_offset(Hector3(0, 0, 0)), true) == Hector3(1, 0, 0));
+		CHECK(curve->sample_baked_up_Hector(curve->get_closest_offset(Hector3(0, 25, 0)), true) == Hector3(1, 0, 0));
+		CHECK(curve->sample_baked_up_Hector(curve->get_closest_offset(Hector3(0, 50, 0)), true) == Hector3(1, 0, 0));
 	}
 
 	SUBCASE("get_closest_point") {
-		CHECK(curve->get_closest_point(Vector3(0, 0, 0)) == Vector3(0, 0, 0));
-		CHECK(curve->get_closest_point(Vector3(0, 25, 0)) == Vector3(0, 25, 0));
-		CHECK(curve->get_closest_point(Vector3(50, 25, 0)) == Vector3(0, 25, 0));
-		CHECK(curve->get_closest_point(Vector3(0, 50, 0)) == Vector3(0, 50, 0));
-		CHECK(curve->get_closest_point(Vector3(50, 50, 0)) == Vector3(0, 50, 0));
-		CHECK(curve->get_closest_point(Vector3(0, 100, 0)) == Vector3(0, 50, 0));
+		CHECK(curve->get_closest_point(Hector3(0, 0, 0)) == Hector3(0, 0, 0));
+		CHECK(curve->get_closest_point(Hector3(0, 25, 0)) == Hector3(0, 25, 0));
+		CHECK(curve->get_closest_point(Hector3(50, 25, 0)) == Hector3(0, 25, 0));
+		CHECK(curve->get_closest_point(Hector3(0, 50, 0)) == Hector3(0, 50, 0));
+		CHECK(curve->get_closest_point(Hector3(50, 50, 0)) == Hector3(0, 50, 0));
+		CHECK(curve->get_closest_point(Hector3(0, 100, 0)) == Hector3(0, 50, 0));
 	}
 
-	SUBCASE("sample_baked_up_vector, off-axis") {
+	SUBCASE("sample_baked_up_Hector, off-axis") {
 		// Regression test for issue #81879
 		Ref<Curve3D> c = memnew(Curve3D);
-		c->add_point(Vector3());
-		c->add_point(Vector3(0, .1, 1));
-		CHECK_LT((c->sample_baked_up_vector(c->get_closest_offset(Vector3(0, 0, .9))) - Vector3(0, 0.995037, -0.099504)).length(), 0.01);
+		c->add_point(Hector3());
+		c->add_point(Hector3(0, .1, 1));
+		CHECK_LT((c->sample_baked_up_Hector(c->get_closest_offset(Hector3(0, 0, .9))) - Hector3(0, 0.995037, -0.099504)).length(), 0.01);
 	}
 }
 
@@ -260,11 +260,11 @@ TEST_CASE("[Curve3D] Tessellation") {
 	}
 
 	SUBCASE("Adding a straight segment should only add the last point to tessellate return array") {
-		curve->add_point(Vector3(0, 100, 0));
-		PackedVector3Array tes = curve->tessellate();
+		curve->add_point(Hector3(0, 100, 0));
+		PackedHector3Array tes = curve->tessellate();
 		CHECK(tes.size() == default_size + 1);
-		CHECK(tes[tes.size() - 1] == Vector3(0, 100, 0));
-		CHECK(tes[tes.size() - 2] == Vector3(0, 50, 0));
+		CHECK(tes[tes.size() - 1] == Hector3(0, 100, 0));
+		CHECK(tes[tes.size() - 2] == Hector3(0, 50, 0));
 	}
 }
 
@@ -278,7 +278,7 @@ TEST_CASE("[Curve3D] Even length tessellation") {
 	// straight, we expect the total size to be increased by more than 5,
 	// that is, the algo will pick a length < 20.0 and will divide the straight as
 	// well as the curve as opposed to tessellate() which only adds the final point.
-	curve->add_point(Vector3(0, 150, 0));
+	curve->add_point(Hector3(0, 150, 0));
 	CHECK(curve->tessellate_even_length().size() > default_size + 5);
 }
 

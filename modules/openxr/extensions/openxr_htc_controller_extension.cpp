@@ -89,10 +89,10 @@ void OpenXRHTCControllerExtension::on_register_metadata() {
 	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Squeeze click", "/user/hand/left", "/user/hand/left/input/squeeze/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Squeeze click", "/user/hand/right", "/user/hand/right/input/squeeze/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 
-	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick click", "/user/hand/left", "/user/hand/left/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick touch", "/user/hand/left", "/user/hand/left/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
-	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick click", "/user/hand/right", "/user/hand/right/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/htc/vive_cosmos_controller", "Thumbstick touch", "/user/hand/right", "/user/hand/right/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
 
@@ -128,10 +128,10 @@ void OpenXRHTCControllerExtension::on_register_metadata() {
 	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Squeeze click", "/user/hand/right", "/user/hand/right/input/squeeze/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Squeeze touch", "/user/hand/right", "/user/hand/right/input/squeeze/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
 
-	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick click", "/user/hand/left", "/user/hand/left/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick touch", "/user/hand/left", "/user/hand/left/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
-	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick click", "/user/hand/right", "/user/hand/right/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/htc/vive_focus3_controller", "Thumbstick touch", "/user/hand/right", "/user/hand/right/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
 

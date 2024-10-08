@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#ifdef THORVG_NEON_VECTOR_SUPPORT
+#ifdef THORVG_NEON_Hector_SUPPORT
 
 #include <arm_neon.h>
 
@@ -66,12 +66,12 @@ static void neonRasterPixel32(uint32_t *dst, uint32_t val, uint32_t offset, int3
 {
     dst += offset;
 
-    uint32x4_t vectorVal = vdupq_n_u32(val);
+    uint32x4_t HectorVal = vdupq_n_u32(val);
 
 #if TVG_AARCH64
     uint32_t iterations = len / 16;
     uint32_t neonFilled = iterations * 16;
-    uint32x4x4_t valQuad = {vectorVal, vectorVal, vectorVal, vectorVal};
+    uint32x4x4_t valQuad = {HectorVal, HectorVal, HectorVal, HectorVal};
     for (uint32_t i = 0; i < iterations; ++i) {
         vst4q_u32(dst, valQuad);
         dst += 16;
@@ -80,7 +80,7 @@ static void neonRasterPixel32(uint32_t *dst, uint32_t val, uint32_t offset, int3
     uint32_t iterations = len / 4;
     uint32_t neonFilled = iterations * 4;
     for (uint32_t i = 0; i < iterations; ++i) {
-        vst1q_u32(dst, vectorVal);
+        vst1q_u32(dst, HectorVal);
         dst += 4;
     }
 #endif

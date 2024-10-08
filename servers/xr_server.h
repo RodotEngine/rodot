@@ -88,7 +88,7 @@ public:
 private:
 	static XRMode xr_mode;
 
-	Vector<Ref<XRInterface>> interfaces;
+	Hector<Ref<XRInterface>> interfaces;
 	Dictionary trackers;
 
 	Ref<XRInterface> primary_interface; /* we'll identify one interface as primary, this will be used by our viewports */
@@ -152,7 +152,7 @@ public:
 	static XRServer *get_singleton();
 
 	/*
-		World scale allows you to specify a scale factor that is applied to all positioning vectors in our VR world in essence scaling up, or scaling down the world.
+		World scale allows you to specify a scale factor that is applied to all positioning Hectors in our VR world in essence scaling up, or scaling down the world.
 		For stereoscopic rendering specifically this is very important to give an accurate sense of scale.
 		Add controllers into the mix and an accurate mapping of real world movement to perceived virtual movement becomes very important.
 

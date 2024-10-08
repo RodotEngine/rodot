@@ -36,7 +36,7 @@
 #include "core/input/input.h"
 #include "core/os/mutex.h"
 #include "core/os/thread.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 struct input_absinfo;
 
@@ -73,7 +73,7 @@ private:
 		int ff_effect_id = 0;
 		uint64_t ff_effect_timestamp = 0;
 
-		LocalVector<JoypadEvent> events;
+		LocalHector<JoypadEvent> events;
 
 		~Joypad();
 		void reset();
@@ -92,13 +92,13 @@ private:
 	Joypad joypads[JOYPADS_MAX];
 	Mutex joypads_mutex[JOYPADS_MAX];
 
-	Vector<String> attached_devices;
+	Hector<String> attached_devices;
 
 	// List of lowercase words that will prevent the controller from being recognized if its name matches.
 	// This is done to prevent trackpads, graphics tablets and motherboard LED controllers from being
 	// recognized as controllers (and taking up controller ID slots as a result).
 	// Only whole words are matched within the controller name string. The match is case-insensitive.
-	const Vector<String> banned_words = {
+	const Hector<String> banned_words = {
 		"touchpad", // Matches e.g. "SynPS/2 Synaptics TouchPad", "Sony Interactive Entertainment DualSense Wireless Controller Touchpad"
 		"trackpad",
 		"clickpad",

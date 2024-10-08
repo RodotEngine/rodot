@@ -331,7 +331,7 @@ public:
     * @see RuleBaseBreakIterator::getRuleStatusVec
     *
     * @param fillInVec an array to be filled in with the status values.
-    * @param capacity  the length of the supplied vector.  A length of zero causes
+    * @param capacity  the length of the supplied Hector.  A length of zero causes
     *                  the function to return the number of status values, in the
     *                  normal way, without attempting to store any values.
     * @param status    receives error codes.

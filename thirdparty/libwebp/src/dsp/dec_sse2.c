@@ -53,7 +53,7 @@ static void Transform_SSE2(const int16_t* in, uint8_t* dst, int do_two) {
 
   // Load and concatenate the transform coefficients (we'll do two transforms
   // in parallel). In the case of only one transform, the second half of the
-  // vectors will just contain random value we'll never use nor store.
+  // Hectors will just contain random value we'll never use nor store.
   __m128i in0, in1, in2, in3;
   {
     in0 = _mm_loadl_epi64((const __m128i*)&in[0]);

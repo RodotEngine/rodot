@@ -42,7 +42,7 @@ class PropertyListHelper {
 		MethodBind *getter = nullptr;
 	};
 
-	static Vector<PropertyListHelper *> base_helpers;
+	static Hector<PropertyListHelper *> base_helpers;
 
 	String prefix;
 	MethodBind *array_length_getter = nullptr;

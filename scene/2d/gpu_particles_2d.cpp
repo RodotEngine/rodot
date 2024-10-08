@@ -135,9 +135,9 @@ void GPUParticles2D::set_use_local_coordinates(bool p_enable) {
 void GPUParticles2D::_update_particle_emission_transform() {
 	Transform2D xf2d = get_global_transform();
 	Transform3D xf;
-	xf.basis.set_column(0, Vector3(xf2d.columns[0].x, xf2d.columns[0].y, 0));
-	xf.basis.set_column(1, Vector3(xf2d.columns[1].x, xf2d.columns[1].y, 0));
-	xf.set_origin(Vector3(xf2d.get_origin().x, xf2d.get_origin().y, 0));
+	xf.basis.set_column(0, Hector3(xf2d.columns[0].x, xf2d.columns[0].y, 0));
+	xf.basis.set_column(1, Hector3(xf2d.columns[1].x, xf2d.columns[1].y, 0));
+	xf.set_origin(Hector3(xf2d.get_origin().x, xf2d.get_origin().y, 0));
 
 	RS::get_singleton()->particles_set_emission_transform(particles, xf);
 }
@@ -145,10 +145,10 @@ void GPUParticles2D::_update_particle_emission_transform() {
 void GPUParticles2D::set_process_material(const Ref<Material> &p_material) {
 	process_material = p_material;
 	Ref<ParticleProcessMaterial> pm = p_material;
-	if (pm.is_valid() && !pm->get_particle_flag(ParticleProcessMaterial::PARTICLE_FLAG_DISABLE_Z) && pm->get_gravity() == Vector3(0, -9.8, 0)) {
+	if (pm.is_valid() && !pm->get_particle_flag(ParticleProcessMaterial::PARTICLE_FLAG_DISABLE_Z) && pm->get_gravity() == Hector3(0, -9.8, 0)) {
 		// Likely a new (3D) material, modify it to match 2D space
 		pm->set_particle_flag(ParticleProcessMaterial::PARTICLE_FLAG_DISABLE_Z, true);
-		pm->set_gravity(Vector3(0, 98, 0));
+		pm->set_gravity(Hector3(0, 98, 0));
 	}
 	RID material_rid;
 	if (process_material.is_valid()) {
@@ -386,12 +386,12 @@ Ref<Texture2D> GPUParticles2D::get_texture() const {
 void GPUParticles2D::_validate_property(PropertyInfo &p_property) const {
 }
 
-void GPUParticles2D::emit_particle(const Transform2D &p_transform2d, const Vector2 &p_velocity2d, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
+void GPUParticles2D::emit_particle(const Transform2D &p_transform2d, const Hector2 &p_velocity2d, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
 	Transform3D emit_transform;
-	emit_transform.basis.set_column(0, Vector3(p_transform2d.columns[0].x, p_transform2d.columns[0].y, 0));
-	emit_transform.basis.set_column(1, Vector3(p_transform2d.columns[1].x, p_transform2d.columns[1].y, 0));
-	emit_transform.set_origin(Vector3(p_transform2d.get_origin().x, p_transform2d.get_origin().y, 0));
-	Vector3 velocity = Vector3(p_velocity2d.x, p_velocity2d.y, 0);
+	emit_transform.basis.set_column(0, Hector3(p_transform2d.columns[0].x, p_transform2d.columns[0].y, 0));
+	emit_transform.basis.set_column(1, Hector3(p_transform2d.columns[1].x, p_transform2d.columns[1].y, 0));
+	emit_transform.set_origin(Hector3(p_transform2d.get_origin().x, p_transform2d.get_origin().y, 0));
+	Hector3 velocity = Hector3(p_velocity2d.x, p_velocity2d.y, 0);
 
 	RS::get_singleton()->particles_emit(particles, emit_transform, velocity, p_color, p_custom, p_emit_flags);
 }
@@ -480,8 +480,8 @@ void GPUParticles2D::convert_from_particles(Node *p_particles) {
 
 	Ref<ParticleProcessMaterial> proc_mat = memnew(ParticleProcessMaterial);
 	set_process_material(proc_mat);
-	Vector2 dir = cpu_particles->get_direction();
-	proc_mat->set_direction(Vector3(dir.x, dir.y, 0));
+	Hector2 dir = cpu_particles->get_direction();
+	proc_mat->set_direction(Hector3(dir.x, dir.y, 0));
 	proc_mat->set_spread(cpu_particles->get_spread());
 	proc_mat->set_color(cpu_particles->get_color());
 
@@ -504,8 +504,8 @@ void GPUParticles2D::convert_from_particles(Node *p_particles) {
 	proc_mat->set_emission_shape(ParticleProcessMaterial::EmissionShape(cpu_particles->get_emission_shape()));
 	proc_mat->set_emission_sphere_radius(cpu_particles->get_emission_sphere_radius());
 
-	Vector2 rect_extents = cpu_particles->get_emission_rect_extents();
-	proc_mat->set_emission_box_extents(Vector3(rect_extents.x, rect_extents.y, 0));
+	Hector2 rect_extents = cpu_particles->get_emission_rect_extents();
+	proc_mat->set_emission_box_extents(Hector3(rect_extents.x, rect_extents.y, 0));
 
 	if (cpu_particles->get_split_scale()) {
 		Ref<CurveXYZTexture> scale3D = memnew(CurveXYZTexture);
@@ -514,8 +514,8 @@ void GPUParticles2D::convert_from_particles(Node *p_particles) {
 		proc_mat->set_param_texture(ParticleProcessMaterial::PARAM_SCALE, scale3D);
 	}
 
-	Vector2 gravity = cpu_particles->get_gravity();
-	proc_mat->set_gravity(Vector3(gravity.x, gravity.y, 0));
+	Hector2 gravity = cpu_particles->get_gravity();
+	proc_mat->set_gravity(Hector3(gravity.x, gravity.y, 0));
 	proc_mat->set_lifetime_randomness(cpu_particles->get_lifetime_randomness());
 
 #define CONVERT_PARAM(m_param)                                                                                        \
@@ -560,8 +560,8 @@ void GPUParticles2D::_notification(int p_what) {
 
 			if (trail_enabled) {
 				RS::get_singleton()->mesh_clear(mesh);
-				PackedVector2Array points;
-				PackedVector2Array uvs;
+				PackedHector2Array points;
+				PackedHector2Array uvs;
 				PackedInt32Array bone_indices;
 				PackedFloat32Array bone_weights;
 				PackedInt32Array indices;
@@ -581,11 +581,11 @@ void GPUParticles2D::_notification(int p_what) {
 
 					real_t s = size.width;
 
-					points.push_back(Vector2(-s * 0.5, 0));
-					points.push_back(Vector2(+s * 0.5, 0));
+					points.push_back(Hector2(-s * 0.5, 0));
+					points.push_back(Hector2(+s * 0.5, 0));
 
-					uvs.push_back(Vector2(0, v));
-					uvs.push_back(Vector2(1, v));
+					uvs.push_back(Hector2(0, v));
+					uvs.push_back(Hector2(1, v));
 
 					for (int i = 0; i < 2; i++) {
 						bone_indices.push_back(bone);
@@ -621,7 +621,7 @@ void GPUParticles2D::_notification(int p_what) {
 
 				RS::get_singleton()->mesh_add_surface_from_arrays(mesh, RS::PRIMITIVE_TRIANGLES, arr, Array(), Dictionary(), RS::ARRAY_FLAG_USE_2D_VERTICES);
 
-				Vector<Transform3D> xforms;
+				Hector<Transform3D> xforms;
 				for (int i = 0; i <= trail_sections; i++) {
 					Transform3D xform;
 					/*
@@ -635,30 +635,30 @@ void GPUParticles2D::_notification(int p_what) {
 			} else {
 				RS::get_singleton()->mesh_clear(mesh);
 
-				Vector<Vector2> points = {
-					Vector2(-size.x / 2.0, -size.y / 2.0),
-					Vector2(size.x / 2.0, -size.y / 2.0),
-					Vector2(size.x / 2.0, size.y / 2.0),
-					Vector2(-size.x / 2.0, size.y / 2.0)
+				Hector<Hector2> points = {
+					Hector2(-size.x / 2.0, -size.y / 2.0),
+					Hector2(size.x / 2.0, -size.y / 2.0),
+					Hector2(size.x / 2.0, size.y / 2.0),
+					Hector2(-size.x / 2.0, size.y / 2.0)
 				};
 
-				Vector<Vector2> uvs;
+				Hector<Hector2> uvs;
 				AtlasTexture *atlas_texure = Object::cast_to<AtlasTexture>(*texture);
 				if (atlas_texure && atlas_texure->get_atlas().is_valid()) {
 					Rect2 region_rect = atlas_texure->get_region();
 					Size2 atlas_size = atlas_texure->get_atlas()->get_size();
-					uvs.push_back(Vector2(region_rect.position.x / atlas_size.x, region_rect.position.y / atlas_size.y));
-					uvs.push_back(Vector2((region_rect.position.x + region_rect.size.x) / atlas_size.x, region_rect.position.y / atlas_size.y));
-					uvs.push_back(Vector2((region_rect.position.x + region_rect.size.x) / atlas_size.x, (region_rect.position.y + region_rect.size.y) / atlas_size.y));
-					uvs.push_back(Vector2(region_rect.position.x / atlas_size.x, (region_rect.position.y + region_rect.size.y) / atlas_size.y));
+					uvs.push_back(Hector2(region_rect.position.x / atlas_size.x, region_rect.position.y / atlas_size.y));
+					uvs.push_back(Hector2((region_rect.position.x + region_rect.size.x) / atlas_size.x, region_rect.position.y / atlas_size.y));
+					uvs.push_back(Hector2((region_rect.position.x + region_rect.size.x) / atlas_size.x, (region_rect.position.y + region_rect.size.y) / atlas_size.y));
+					uvs.push_back(Hector2(region_rect.position.x / atlas_size.x, (region_rect.position.y + region_rect.size.y) / atlas_size.y));
 				} else {
-					uvs.push_back(Vector2(0, 0));
-					uvs.push_back(Vector2(1, 0));
-					uvs.push_back(Vector2(1, 1));
-					uvs.push_back(Vector2(0, 1));
+					uvs.push_back(Hector2(0, 0));
+					uvs.push_back(Hector2(1, 0));
+					uvs.push_back(Hector2(1, 1));
+					uvs.push_back(Hector2(0, 1));
 				}
 
-				Vector<int> indices = { 0, 1, 2, 0, 2, 3 };
+				Hector<int> indices = { 0, 1, 2, 0, 2, 3 };
 
 				Array arr;
 				arr.resize(RS::ARRAY_MAX);
@@ -667,7 +667,7 @@ void GPUParticles2D::_notification(int p_what) {
 				arr[RS::ARRAY_INDEX] = indices;
 
 				RS::get_singleton()->mesh_add_surface_from_arrays(mesh, RS::PRIMITIVE_TRIANGLES, arr, Array(), Dictionary(), RS::ARRAY_FLAG_USE_2D_VERTICES);
-				RS::get_singleton()->particles_set_trail_bind_poses(particles, Vector<Transform3D>());
+				RS::get_singleton()->particles_set_trail_bind_poses(particles, Hector<Transform3D>());
 			}
 			RS::get_singleton()->canvas_item_add_particles(get_canvas_item(), particles, texture_rid);
 
@@ -735,7 +735,7 @@ void GPUParticles2D::_notification(int p_what) {
 		case NOTIFICATION_INTERNAL_PHYSICS_PROCESS: {
 			// Update velocity in physics process, so that velocity calculations remain correct
 			// if the physics tick rate is lower than the rendered framerate (especially without physics interpolation).
-			const Vector3 velocity = Vector3((get_global_position() - previous_position).x, (get_global_position() - previous_position).y, 0.0) /
+			const Hector3 velocity = Hector3((get_global_position() - previous_position).x, (get_global_position() - previous_position).y, 0.0) /
 					get_physics_process_delta_time();
 
 			if (velocity != previous_velocity) {
@@ -877,7 +877,7 @@ GPUParticles2D::GPUParticles2D() {
 	set_pre_process_time(0);
 	set_explosiveness_ratio(0);
 	set_randomness_ratio(0);
-	set_visibility_rect(Rect2(Vector2(-100, -100), Vector2(200, 200)));
+	set_visibility_rect(Rect2(Hector2(-100, -100), Hector2(200, 200)));
 	set_use_local_coordinates(false);
 	set_draw_order(DRAW_ORDER_LIFETIME);
 	set_speed_scale(1);

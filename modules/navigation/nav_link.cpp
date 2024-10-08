@@ -67,7 +67,7 @@ void NavLink::set_bidirectional(bool p_bidirectional) {
 	link_dirty = true;
 }
 
-void NavLink::set_start_position(const Vector3 p_position) {
+void NavLink::set_start_position(const Hector3 p_position) {
 	if (start_position == p_position) {
 		return;
 	}
@@ -75,7 +75,7 @@ void NavLink::set_start_position(const Vector3 p_position) {
 	link_dirty = true;
 }
 
-void NavLink::set_end_position(const Vector3 p_position) {
+void NavLink::set_end_position(const Hector3 p_position) {
 	if (end_position == p_position) {
 		return;
 	}

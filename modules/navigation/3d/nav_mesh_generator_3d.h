@@ -54,7 +54,7 @@ class NavMeshGenerator3D : public Object {
 		Callable callback;
 	};
 	static RID_Owner<NavMeshGeometryParser3D> generator_parser_owner;
-	static LocalVector<NavMeshGeometryParser3D *> generator_parsers;
+	static LocalHector<NavMeshGeometryParser3D *> generator_parsers;
 
 	static bool use_threads;
 	static bool baking_use_multiple_threads;

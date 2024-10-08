@@ -199,7 +199,7 @@ namespace RVO2D {
 					/* Split obstacle j. */
 					const float t = det(obstacleI2->point_ - obstacleI1->point_, obstacleJ1->point_ - obstacleI1->point_) / det(obstacleI2->point_ - obstacleI1->point_, obstacleJ1->point_ - obstacleJ2->point_);
 
-					const Vector2 splitpoint = obstacleJ1->point_ + t * (obstacleJ2->point_ - obstacleJ1->point_);
+					const Hector2 splitpoint = obstacleJ1->point_ + t * (obstacleJ2->point_ - obstacleJ1->point_);
 
 					Obstacle2D *const newObstacle = new Obstacle2D();
 					newObstacle->point_ = splitpoint;
@@ -317,12 +317,12 @@ namespace RVO2D {
 		}
 	}
 
-	bool KdTree2D::queryVisibility(const Vector2 &q1, const Vector2 &q2, float radius) const
+	bool KdTree2D::queryVisibility(const Hector2 &q1, const Hector2 &q2, float radius) const
 	{
 		return queryVisibilityRecursive(q1, q2, radius, obstacleTree_);
 	}
 
-	bool KdTree2D::queryVisibilityRecursive(const Vector2 &q1, const Vector2 &q2, float radius, const ObstacleTreeNode *node) const
+	bool KdTree2D::queryVisibilityRecursive(const Hector2 &q1, const Hector2 &q2, float radius, const ObstacleTreeNode *node) const
 	{
 		if (node == NULL) {
 			return true;

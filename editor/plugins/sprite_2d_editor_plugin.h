@@ -64,18 +64,18 @@ class Sprite2DEditor : public Control {
 
 	ConfirmationDialog *debug_uv_dialog = nullptr;
 	Panel *debug_uv = nullptr;
-	Vector<Vector2> uv_lines;
-	Vector<Vector<Vector2>> outline_lines;
-	Vector<Vector<Vector2>> computed_outline_lines;
-	Vector<Vector2> computed_vertices;
-	Vector<Vector2> computed_uv;
-	Vector<int> computed_indices;
+	Hector<Hector2> uv_lines;
+	Hector<Hector<Hector2>> outline_lines;
+	Hector<Hector<Hector2>> computed_outline_lines;
+	Hector<Hector2> computed_vertices;
+	Hector<Hector2> computed_uv;
+	Hector<int> computed_indices;
 
 	HScrollBar *h_scroll = nullptr;
 	VScrollBar *v_scroll = nullptr;
 	EditorZoomWidget *zoom_widget = nullptr;
 	Ref<ViewPanner> panner;
-	Vector2 draw_offset;
+	Hector2 draw_offset;
 	real_t draw_zoom = 1.0;
 
 	SpinBox *simplification = nullptr;
@@ -92,8 +92,8 @@ class Sprite2DEditor : public Control {
 	void _debug_uv_draw();
 	void _popup_debug_uv_dialog();
 	void _center_view();
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 	void _update_zoom_and_pan(bool p_zoom_at_center);
 	void _update_mesh_data();
 

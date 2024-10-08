@@ -96,7 +96,7 @@ class AudioStreamMP3 : public AudioStream {
 
 	friend class AudioStreamPlaybackMP3;
 
-	LocalVector<uint8_t> data;
+	LocalHector<uint8_t> data;
 	uint32_t data_len = 0;
 
 	float sample_rate = 1.0;
@@ -132,8 +132,8 @@ public:
 	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
 	virtual String get_stream_name() const override;
 
-	void set_data(const Vector<uint8_t> &p_data);
-	Vector<uint8_t> get_data() const;
+	void set_data(const Hector<uint8_t> &p_data);
+	Hector<uint8_t> get_data() const;
 
 	virtual double get_length() const override;
 

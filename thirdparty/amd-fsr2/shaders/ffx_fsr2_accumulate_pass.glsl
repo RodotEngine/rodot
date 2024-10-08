@@ -28,10 +28,10 @@
 
 #define FSR2_BIND_SRV_INPUT_EXPOSURE                         0
 #define FSR2_BIND_SRV_DILATED_REACTIVE_MASKS                 1
-#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_VECTORS
-#define FSR2_BIND_SRV_DILATED_MOTION_VECTORS                 2
+#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_HectorS
+#define FSR2_BIND_SRV_DILATED_MOTION_HectorS                 2
 #else
-#define FSR2_BIND_SRV_INPUT_MOTION_VECTORS                   2
+#define FSR2_BIND_SRV_INPUT_MOTION_HectorS                   2
 #endif
 #define FSR2_BIND_SRV_INTERNAL_UPSCALED                      3
 #define FSR2_BIND_SRV_LOCK_STATUS                            4
@@ -52,7 +52,7 @@
 #define FSR2_BIND_CB_FSR2                                    18
 
 // -- GODOT start --
-#if FFX_FSR2_OPTION_GODOT_DERIVE_INVALID_MOTION_VECTORS
+#if FFX_FSR2_OPTION_GODOT_DERIVE_INVALID_MOTION_HectorS
 #define FSR2_BIND_SRV_INPUT_DEPTH                            5
 #endif
 // -- GODOT end --

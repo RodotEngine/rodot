@@ -38,28 +38,28 @@ class MeshDataTool : public RefCounted {
 
 	uint64_t format = 0;
 	struct Vertex {
-		Vector3 vertex;
+		Hector3 vertex;
 		Color color;
-		Vector3 normal; // normal, binormal, tangent
+		Hector3 normal; // normal, binormal, tangent
 		Plane tangent;
-		Vector2 uv;
-		Vector2 uv2;
-		Vector<int> bones;
-		Vector<float> weights;
-		Vector<int> edges;
-		Vector<int> faces;
+		Hector2 uv;
+		Hector2 uv2;
+		Hector<int> bones;
+		Hector<float> weights;
+		Hector<int> edges;
+		Hector<int> faces;
 		Variant meta;
 	};
 
-	Vector<Vertex> vertices;
+	Hector<Vertex> vertices;
 
 	struct Edge {
 		int vertex[2] = {};
-		Vector<int> faces;
+		Hector<int> faces;
 		Variant meta;
 	};
 
-	Vector<Edge> edges;
+	Hector<Edge> edges;
 
 	struct Face {
 		int v[3] = {};
@@ -67,7 +67,7 @@ class MeshDataTool : public RefCounted {
 		Variant meta;
 	};
 
-	Vector<Face> faces;
+	Hector<Face> faces;
 
 	Ref<Material> material;
 
@@ -90,38 +90,38 @@ public:
 	int get_edge_count() const;
 	int get_face_count() const;
 
-	Vector3 get_vertex(int p_idx) const;
-	void set_vertex(int p_idx, const Vector3 &p_vertex);
+	Hector3 get_vertex(int p_idx) const;
+	void set_vertex(int p_idx, const Hector3 &p_vertex);
 
-	Vector3 get_vertex_normal(int p_idx) const;
-	void set_vertex_normal(int p_idx, const Vector3 &p_normal);
+	Hector3 get_vertex_normal(int p_idx) const;
+	void set_vertex_normal(int p_idx, const Hector3 &p_normal);
 
 	Plane get_vertex_tangent(int p_idx) const;
 	void set_vertex_tangent(int p_idx, const Plane &p_tangent);
 
-	Vector2 get_vertex_uv(int p_idx) const;
-	void set_vertex_uv(int p_idx, const Vector2 &p_uv);
+	Hector2 get_vertex_uv(int p_idx) const;
+	void set_vertex_uv(int p_idx, const Hector2 &p_uv);
 
-	Vector2 get_vertex_uv2(int p_idx) const;
-	void set_vertex_uv2(int p_idx, const Vector2 &p_uv2);
+	Hector2 get_vertex_uv2(int p_idx) const;
+	void set_vertex_uv2(int p_idx, const Hector2 &p_uv2);
 
 	Color get_vertex_color(int p_idx) const;
 	void set_vertex_color(int p_idx, const Color &p_color);
 
-	Vector<int> get_vertex_bones(int p_idx) const;
-	void set_vertex_bones(int p_idx, const Vector<int> &p_bones);
+	Hector<int> get_vertex_bones(int p_idx) const;
+	void set_vertex_bones(int p_idx, const Hector<int> &p_bones);
 
-	Vector<float> get_vertex_weights(int p_idx) const;
-	void set_vertex_weights(int p_idx, const Vector<float> &p_weights);
+	Hector<float> get_vertex_weights(int p_idx) const;
+	void set_vertex_weights(int p_idx, const Hector<float> &p_weights);
 
 	Variant get_vertex_meta(int p_idx) const;
 	void set_vertex_meta(int p_idx, const Variant &p_meta);
 
-	Vector<int> get_vertex_edges(int p_idx) const;
-	Vector<int> get_vertex_faces(int p_idx) const;
+	Hector<int> get_vertex_edges(int p_idx) const;
+	Hector<int> get_vertex_faces(int p_idx) const;
 
 	int get_edge_vertex(int p_edge, int p_vertex) const;
-	Vector<int> get_edge_faces(int p_edge) const;
+	Hector<int> get_edge_faces(int p_edge) const;
 	Variant get_edge_meta(int p_idx) const;
 	void set_edge_meta(int p_idx, const Variant &p_meta);
 
@@ -129,7 +129,7 @@ public:
 	int get_face_edge(int p_face, int p_vertex) const;
 	Variant get_face_meta(int p_face) const;
 	void set_face_meta(int p_face, const Variant &p_meta);
-	Vector3 get_face_normal(int p_face) const;
+	Hector3 get_face_normal(int p_face) const;
 
 	Ref<Material> get_material() const;
 	void set_material(const Ref<Material> &p_material);

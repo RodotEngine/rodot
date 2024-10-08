@@ -1322,7 +1322,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_KERNING ::
    *     The face contains kerning information.  If set, the kerning distance
    *     can be retrieved using the function @FT_Get_Kerning.  Otherwise the
-   *     function always returns the vector (0,0).  Note that FreeType
+   *     function always returns the Hector (0,0).  Note that FreeType
    *     doesn't handle kerning data from the SFNT 'GPOS' table (as present
    *     in many OpenType fonts).
    *
@@ -1391,7 +1391,7 @@ FT_BEGIN_HEADER
    *     [Since 2.9] Set if the current face (or named instance) has been
    *     altered with @FT_Set_MM_Design_Coordinates,
    *     @FT_Set_Var_Design_Coordinates, @FT_Set_Var_Blend_Coordinates, or
-   *     @FT_Set_MM_WeightVector to select a non-default instance.
+   *     @FT_Set_MM_WeightHector to select a non-default instance.
    *
    *   FT_FACE_FLAG_SVG ::
    *     [Since 2.12] The face has an 'SVG~' OpenType table.
@@ -1628,7 +1628,7 @@ FT_BEGIN_HEADER
    * @description:
    *   A macro that returns true whenever a face object has been altered by
    *   @FT_Set_MM_Design_Coordinates, @FT_Set_Var_Design_Coordinates,
-   *   @FT_Set_Var_Blend_Coordinates, or @FT_Set_MM_WeightVector.
+   *   @FT_Set_Var_Blend_Coordinates, or @FT_Set_MM_WeightHector.
    *
    * @since:
    *   2.9
@@ -2268,7 +2268,7 @@ FT_BEGIN_HEADER
     FT_Glyph_Metrics  metrics;
     FT_Fixed          linearHoriAdvance;
     FT_Fixed          linearVertAdvance;
-    FT_Vector         advance;
+    FT_Hector         advance;
 
     FT_Glyph_Format   format;
 
@@ -3655,8 +3655,8 @@ FT_BEGIN_HEADER
    *     A pointer to the transformation's 2x2 matrix.  Use `NULL` for the
    *     identity matrix.
    *   delta ::
-   *     A pointer to the translation vector.  Use `NULL` for the null
-   *     vector.
+   *     A pointer to the translation Hector.  Use `NULL` for the null
+   *     Hector.
    *
    * @note:
    *   This function is provided as a convenience, but keep in mind that
@@ -3676,7 +3676,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Set_Transform( FT_Face     face,
                     FT_Matrix*  matrix,
-                    FT_Vector*  delta );
+                    FT_Hector*  delta );
 
 
   /**************************************************************************
@@ -3699,7 +3699,7 @@ FT_BEGIN_HEADER
    *     are not interested in the value.
    *
    *   delta ::
-   *     A pointer to a translation vector.  Set this to NULL if you are not
+   *     A pointer to a translation Hector.  Set this to NULL if you are not
    *     interested in the value.
    *
    * @since:
@@ -3709,7 +3709,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Get_Transform( FT_Face     face,
                     FT_Matrix*  matrix,
-                    FT_Vector*  delta );
+                    FT_Hector*  delta );
 
 
   /**************************************************************************
@@ -3776,7 +3776,7 @@ FT_BEGIN_HEADER
    *     to usable data.
    *
    * @note:
-   *   The selected render mode only affects vector glyphs of a font.
+   *   The selected render mode only affects Hector glyphs of a font.
    *   Embedded bitmaps often have a different pixel mode like
    *   @FT_PIXEL_MODE_MONO.  You can use @FT_Bitmap_Convert to transform them
    *   into 8-bit pixmaps.
@@ -3994,7 +3994,7 @@ FT_BEGIN_HEADER
    *     Return un-grid-fitted kerning distances in 26.6 fractional pixels.
    *
    *   FT_KERNING_UNSCALED ::
-   *     Return the kerning vector in original font units.
+   *     Return the kerning Hector in original font units.
    *
    * @note:
    *   `FT_KERNING_DEFAULT` returns full pixel values; it also makes FreeType
@@ -4027,7 +4027,7 @@ FT_BEGIN_HEADER
    *   FT_Get_Kerning
    *
    * @description:
-   *   Return the kerning vector between two glyphs of the same face.
+   *   Return the kerning Hector between two glyphs of the same face.
    *
    * @input:
    *   face ::
@@ -4041,11 +4041,11 @@ FT_BEGIN_HEADER
    *
    *   kern_mode ::
    *     See @FT_Kerning_Mode for more information.  Determines the scale and
-   *     dimension of the returned kerning vector.
+   *     dimension of the returned kerning Hector.
    *
    * @output:
    *   akerning ::
-   *     The kerning vector.  This is either in font units, fractional pixels
+   *     The kerning Hector.  This is either in font units, fractional pixels
    *     (26.6 format), or pixels for scalable formats, and in pixels for
    *     fixed-sizes formats.
    *
@@ -4067,7 +4067,7 @@ FT_BEGIN_HEADER
                   FT_UInt     left_glyph,
                   FT_UInt     right_glyph,
                   FT_UInt     kern_mode,
-                  FT_Vector  *akerning );
+                  FT_Hector  *akerning );
 
 
   /**************************************************************************
@@ -4985,11 +4985,11 @@ FT_BEGIN_HEADER
    *   Computations
    *
    * @abstract:
-   *   Crunching fixed numbers and vectors.
+   *   Crunching fixed numbers and Hectors.
    *
    * @description:
    *   This section contains various functions used to perform computations
-   *   on 16.16 fixed-point numbers or 2D vectors.  FreeType does not use
+   *   on 16.16 fixed-point numbers or 2D Hectors.  FreeType does not use
    *   floating-point data types.
    *
    *   **Attention**: Most arithmetic functions take `FT_Long` as arguments.
@@ -5004,7 +5004,7 @@ FT_BEGIN_HEADER
    *   FT_RoundFix
    *   FT_CeilFix
    *   FT_FloorFix
-   *   FT_Vector_Transform
+   *   FT_Hector_Transform
    *   FT_Matrix_Multiply
    *   FT_Matrix_Invert
    *
@@ -5170,24 +5170,24 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @function:
-   *   FT_Vector_Transform
+   *   FT_Hector_Transform
    *
    * @description:
-   *   Transform a single vector through a 2x2 matrix.
+   *   Transform a single Hector through a 2x2 matrix.
    *
    * @inout:
-   *   vector ::
-   *     The target vector to transform.
+   *   Hector ::
+   *     The target Hector to transform.
    *
    * @input:
    *   matrix ::
    *     A pointer to the source 2x2 matrix.
    *
    * @note:
-   *   The result is undefined if either `vector` or `matrix` is invalid.
+   *   The result is undefined if either `Hector` or `matrix` is invalid.
    */
   FT_EXPORT( void )
-  FT_Vector_Transform( FT_Vector*        vector,
+  FT_Hector_Transform( FT_Hector*        Hector,
                        const FT_Matrix*  matrix );
 
 

@@ -226,7 +226,7 @@ Array TextLine::get_objects() const {
 }
 
 Rect2 TextLine::get_object_rect(Variant p_key) const {
-	Vector2 ofs;
+	Hector2 ofs;
 
 	float length = TS->shaped_text_get_width(rid);
 	if (width > 0) {
@@ -285,7 +285,7 @@ HorizontalAlignment TextLine::get_horizontal_alignment() const {
 	return alignment;
 }
 
-void TextLine::tab_align(const Vector<float> &p_tab_stops) {
+void TextLine::tab_align(const Hector<float> &p_tab_stops) {
 	tab_stops = p_tab_stops;
 	dirty = true;
 }
@@ -370,10 +370,10 @@ float TextLine::get_line_underline_thickness() const {
 	return TS->shaped_text_get_underline_thickness(rid);
 }
 
-void TextLine::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_color) const {
+void TextLine::draw(RID p_canvas, const Hector2 &p_pos, const Color &p_color) const {
 	const_cast<TextLine *>(this)->_shape();
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 
 	float length = TS->shaped_text_get_width(rid);
 	if (width > 0) {
@@ -417,10 +417,10 @@ void TextLine::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_color) co
 	return TS->shaped_text_draw(rid, p_canvas, ofs, clip_l, clip_l + width, p_color);
 }
 
-void TextLine::draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_size, const Color &p_color) const {
+void TextLine::draw_outline(RID p_canvas, const Hector2 &p_pos, int p_outline_size, const Color &p_color) const {
 	const_cast<TextLine *>(this)->_shape();
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 
 	float length = TS->shaped_text_get_width(rid);
 	if (width > 0) {

@@ -34,7 +34,7 @@
 #include "core/io/file_access.h"
 #include "core/os/memory.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 thread_local Error DirAccess::last_dir_open_error = OK;
 
@@ -170,7 +170,7 @@ Error DirAccess::make_dir_recursive(const String &p_dir) {
 
 	full_dir = full_dir.replace_first(base, "").simplify_path();
 
-	Vector<String> subdirs = full_dir.split("/");
+	Hector<String> subdirs = full_dir.split("/");
 
 	String curpath = base;
 	for (int i = 0; i < subdirs.size(); i++) {
@@ -357,7 +357,7 @@ Error DirAccess::copy(const String &p_from, const String &p_to, int p_chmod_flag
 		fsrc->seek(0);
 		err = OK;
 		size_t buffer_size = MIN(size * sizeof(uint8_t), copy_buffer_limit);
-		LocalVector<uint8_t> buffer;
+		LocalHector<uint8_t> buffer;
 		buffer.resize(buffer_size);
 		while (size > 0) {
 			if (fsrc->get_error() != OK) {

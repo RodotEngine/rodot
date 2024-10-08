@@ -24,7 +24,7 @@
 			</description>
 		</method>
 		<method name="get_hand_joint_angular_velocity" qualifiers="const" deprecated="Use [method XRHandTracker.get_hand_joint_angular_velocity] obtained from [method XRServer.get_tracker] instead.">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="hand" type="int" enum="OpenXRInterface.Hand" />
 			<param index="1" name="joint" type="int" enum="OpenXRInterface.HandJoints" />
 			<description>
@@ -40,7 +40,7 @@
 			</description>
 		</method>
 		<method name="get_hand_joint_linear_velocity" qualifiers="const" deprecated="Use [method XRHandTracker.get_hand_joint_linear_velocity] obtained from [method XRServer.get_tracker] instead.">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="hand" type="int" enum="OpenXRInterface.Hand" />
 			<param index="1" name="joint" type="int" enum="OpenXRInterface.HandJoints" />
 			<description>
@@ -48,7 +48,7 @@
 			</description>
 		</method>
 		<method name="get_hand_joint_position" qualifiers="const" deprecated="Use [method XRHandTracker.get_hand_joint_transform] obtained from [method XRServer.get_tracker] instead.">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="hand" type="int" enum="OpenXRInterface.Hand" />
 			<param index="1" name="joint" type="int" enum="OpenXRInterface.HandJoints" />
 			<description>

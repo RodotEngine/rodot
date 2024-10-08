@@ -39,8 +39,8 @@ RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode, UEr
     if (U_FAILURE(status)) {
         return;
     }
-    // fDStates is UVector<RBBIStateDescriptor *>
-    fDStates = new UVector(status);
+    // fDStates is UHector<RBBIStateDescriptor *>
+    fDStates = new UHector(status);
     if (U_SUCCESS(status) && fDStates == nullptr ) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -192,7 +192,7 @@ void  RBBITableBuilder::buildForwardTable() {
 
     //
     // Update the global table of rule status {tag} values
-    // The rule builder has a global vector of status values that are common
+    // The rule builder has a global Hector of status values that are common
     //    for all tables.  Merge the ones from this table into the global set.
     //
     mergeRuleStatusVals();
@@ -359,7 +359,7 @@ void RBBITableBuilder::calcFollowPos(RBBINode *n) {
         RBBINode *i;   // is 'i' in Aho's description
         uint32_t     ix;
 
-        UVector *LastPosOfLeftChild = n->fLeftChild->fLastPosSet;
+        UHector *LastPosOfLeftChild = n->fLeftChild->fLastPosSet;
 
         for (ix=0; ix<(uint32_t)LastPosOfLeftChild->size(); ix++) {
             i = (RBBINode *)LastPosOfLeftChild->elementAt(ix);
@@ -386,10 +386,10 @@ void RBBITableBuilder::calcFollowPos(RBBINode *n) {
 //-----------------------------------------------------------------------------
 //
 //    addRuleRootNodes    Recursively walk a parse tree, adding all nodes flagged
-//                        as roots of a rule to a destination vector.
+//                        as roots of a rule to a destination Hector.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::addRuleRootNodes(UVector *dest, RBBINode *node) {
+void RBBITableBuilder::addRuleRootNodes(UHector *dest, RBBINode *node) {
     if (node == nullptr || U_FAILURE(*fStatus)) {
         return;
     }
@@ -412,7 +412,7 @@ void RBBITableBuilder::addRuleRootNodes(UVector *dest, RBBINode *node) {
 //-----------------------------------------------------------------------------
 void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNode) {
 
-    UVector         leafNodes(*fStatus);
+    UHector         leafNodes(*fStatus);
     if (U_FAILURE(*fStatus)) {
         return;
     }
@@ -427,10 +427,10 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
     // with inbound chaining enabled, which is the union of the 
     // firstPosition sets from each of the rule root nodes.
     
-    UVector ruleRootNodes(*fStatus);
+    UHector ruleRootNodes(*fStatus);
     addRuleRootNodes(&ruleRootNodes, tree);
 
-    UVector matchStartNodes(*fStatus);
+    UHector matchStartNodes(*fStatus);
     for (int j=0; j<ruleRootNodes.size(); ++j) {
         RBBINode *node = static_cast<RBBINode *>(ruleRootNodes.elementAt(j));
         if (node->fChainIn) {
@@ -520,7 +520,7 @@ void RBBITableBuilder::bofFixup() {
     //  We want the nodes that can start a match in the
     //     part labeled "rest of tree"
     // 
-    UVector *matchStartNodes = fTree->fLeftChild->fRightChild->fFirstPosSet;
+    UHector *matchStartNodes = fTree->fLeftChild->fRightChild->fFirstPosSet;
 
     RBBINode *startNode;
     int       startNodeIx;
@@ -565,7 +565,7 @@ void RBBITableBuilder::buildStateTable() {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
         goto ExitBuildSTdeleteall;
     }
-    failState->fPositions = new UVector(*fStatus);
+    failState->fPositions = new UHector(*fStatus);
     if (failState->fPositions == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -586,7 +586,7 @@ void RBBITableBuilder::buildStateTable() {
     if (U_FAILURE(*fStatus)) {
         goto ExitBuildSTdeleteall;
     }
-    initialState->fPositions = new UVector(*fStatus);
+    initialState->fPositions = new UHector(*fStatus);
     if (initialState->fPositions == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -624,14 +624,14 @@ void RBBITableBuilder::buildStateTable() {
             // let U be the set of positions that are in followpos(p)
             //    for some position p in T
             //    such that the symbol at position p is a;
-            UVector    *U = nullptr;
+            UHector    *U = nullptr;
             RBBINode   *p;
             int32_t     px;
             for (px=0; px<T->fPositions->size(); px++) {
                 p = (RBBINode *)T->fPositions->elementAt(px);
                 if ((p->fType == RBBINode::leafChar) &&  (p->fVal == a)) {
                     if (U == nullptr) {
-                        U = new UVector(*fStatus);
+                        U = new UHector(*fStatus);
                         if (U == nullptr) {
                         	*fStatus = U_MEMORY_ALLOCATION_ERROR;
                         	goto ExitBuildSTdeleteall;
@@ -695,7 +695,7 @@ ExitBuildSTdeleteall:
  *
  */
 void RBBITableBuilder::mapLookAheadRules() {
-    fLookAheadRuleMap =  new UVector32(fRB->fScanner->numRules() + 1, *fStatus);
+    fLookAheadRuleMap =  new UHector32(fRB->fScanner->numRules() + 1, *fStatus);
     if (fLookAheadRuleMap == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -774,7 +774,7 @@ void     RBBITableBuilder::flagAcceptingStates() {
     if (U_FAILURE(*fStatus)) {
         return;
     }
-    UVector     endMarkerNodes(*fStatus);
+    UHector     endMarkerNodes(*fStatus);
     RBBINode    *endMarker;
     int32_t     i;
     int32_t     n;
@@ -827,7 +827,7 @@ void     RBBITableBuilder::flagLookAheadStates() {
     if (U_FAILURE(*fStatus)) {
         return;
     }
-    UVector     lookAheadNodes(*fStatus);
+    UHector     lookAheadNodes(*fStatus);
     RBBINode    *lookAheadNode;
     int32_t     i;
     int32_t     n;
@@ -869,7 +869,7 @@ void     RBBITableBuilder::flagTaggedStates() {
     if (U_FAILURE(*fStatus)) {
         return;
     }
-    UVector     tagNodes(*fStatus);
+    UHector     tagNodes(*fStatus);
     RBBINode    *tagNode;
     int32_t     i;
     int32_t     n;
@@ -901,7 +901,7 @@ void     RBBITableBuilder::flagTaggedStates() {
 //  mergeRuleStatusVals
 //
 //      Update the global table of rule status {tag} values
-//      The rule builder has a global vector of status values that are common
+//      The rule builder has a global Hector of status values that are common
 //      for all tables.  Merge the ones from this table into the global set.
 //
 //-----------------------------------------------------------------------------
@@ -929,7 +929,7 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
     //    For each state
     for (n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor *sd = (RBBIStateDescriptor *)fDStates->elementAt(n);
-        UVector *thisStatesTagValues = sd->fTagVals;
+        UHector *thisStatesTagValues = sd->fTagVals;
         if (thisStatesTagValues == nullptr) {
             // No tag values are explicitly associated with this state.
             //   Set the default tag value.
@@ -991,27 +991,27 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
 
 //-----------------------------------------------------------------------------
 //
-//  sortedAdd  Add a value to a vector of sorted values (ints).
+//  sortedAdd  Add a value to a Hector of sorted values (ints).
 //             Do not replicate entries; if the value is already there, do not
 //                add a second one.
-//             Lazily create the vector if it does not already exist.
+//             Lazily create the Hector if it does not already exist.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
+void RBBITableBuilder::sortedAdd(UHector **Hector, int32_t val) {
     int32_t i;
 
-    if (*vector == nullptr) {
-        *vector = new UVector(*fStatus);
+    if (*Hector == nullptr) {
+        *Hector = new UHector(*fStatus);
     }
-    if (*vector == nullptr || U_FAILURE(*fStatus)) {
+    if (*Hector == nullptr || U_FAILURE(*fStatus)) {
         return;
     }
-    UVector *vec = *vector;
+    UHector *vec = *Hector;
     int32_t  vSize = vec->size();
     for (i=0; i<vSize; i++) {
         int32_t valAtI = vec->elementAti(i);
         if (valAtI == val) {
-            // The value is already in the vector.  Don't add it again.
+            // The value is already in the Hector.  Don't add it again.
             return;
         }
         if (valAtI > val) {
@@ -1025,12 +1025,12 @@ void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
 
 //-----------------------------------------------------------------------------
 //
-//  setAdd     Set operation on UVector
+//  setAdd     Set operation on UHector
 //             dest = dest union source
 //             Elements may only appear once and must be sorted.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
+void RBBITableBuilder::setAdd(UHector *dest, UHector *source) {
     U_ASSERT(!dest->hasDeleter());
     U_ASSERT(!source->hasDeleter());
     int32_t destOriginalSize = dest->size();
@@ -1095,12 +1095,12 @@ void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
 
 //-----------------------------------------------------------------------------
 //
-//  setEqual    Set operation on UVector.
+//  setEqual    Set operation on UHector.
 //              Compare for equality.
 //              Elements must be sorted.
 //
 //-----------------------------------------------------------------------------
-UBool RBBITableBuilder::setEquals(UVector *a, UVector *b) {
+UBool RBBITableBuilder::setEquals(UHector *a, UHector *b) {
     return a->equals(*b);
 }
 
@@ -1481,8 +1481,8 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     }
 
     // Populate the initial safe table.
-    // The table as a whole is UVector<UnicodeString>
-    // Each row is represented by a UnicodeString, being used as a Vector<int16>.
+    // The table as a whole is UHector<UnicodeString>
+    // Each row is represented by a UnicodeString, being used as a Hector<int16>.
     // Row 0 is the stop state.
     // Row 1 is the start state.
     // Row 2 and beyond are other states, initially one per char class, but
@@ -1491,8 +1491,8 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     // fLookAhead, etc. are not needed for the safe table, and are omitted at this stage of building.
 
     U_ASSERT(fSafeTable == nullptr);
-    LocalPointer<UVector> lpSafeTable(
-        new UVector(uprv_deleteUObject, uhash_compareUnicodeString, numCharClasses + 2, status), status);
+    LocalPointer<UHector> lpSafeTable(
+        new UHector(uprv_deleteUObject, uhash_compareUnicodeString, numCharClasses + 2, status), status);
     if (U_FAILURE(status)) {
         return;
     }
@@ -1631,11 +1631,11 @@ void RBBITableBuilder::exportSafeTable(void *where) {
 
 //-----------------------------------------------------------------------------
 //
-//   printSet    Debug function.   Print the contents of a UVector
+//   printSet    Debug function.   Print the contents of a UHector
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBITableBuilder::printSet(UVector *s) {
+void RBBITableBuilder::printSet(UHector *s) {
     int32_t  i;
     for (i=0; i<s->size(); i++) {
         const RBBINode *v = static_cast<const RBBINode *>(s->elementAt(i));
@@ -1734,7 +1734,7 @@ void RBBITableBuilder::printRuleStatusTable() {
     int32_t  thisRecord = 0;
     int32_t  nextRecord = 0;
     int      i;
-    UVector  *tbl = fRB->fRuleStatusVals;
+    UHector  *tbl = fRB->fRuleStatusVals;
 
     RBBIDebugPrintf("index |  tags \n");
     RBBIDebugPrintf("-------------------\n");
@@ -1769,7 +1769,7 @@ RBBIStateDescriptor::RBBIStateDescriptor(int lastInputSymbol, UErrorCode *fStatu
     fPositions = nullptr;
     fDtran     = nullptr;
 
-    fDtran     = new UVector32(lastInputSymbol+1, *fStatus);
+    fDtran     = new UHector32(lastInputSymbol+1, *fStatus);
     if (U_FAILURE(*fStatus)) {
         return;
     }

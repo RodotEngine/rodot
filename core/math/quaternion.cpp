@@ -39,9 +39,9 @@ real_t Quaternion::angle_to(const Quaternion &p_to) const {
 	return Math::acos(d * d * 2 - 1);
 }
 
-Vector3 Quaternion::get_euler(EulerOrder p_order) const {
+Hector3 Quaternion::get_euler(EulerOrder p_order) const {
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(!is_normalized(), Vector3(0, 0, 0), "The quaternion " + operator String() + " must be normalized.");
+	ERR_FAIL_COND_V_MSG(!is_normalized(), Hector3(0, 0, 0), "The quaternion " + operator String() + " must be normalized.");
 #endif
 	return Basis(*this).get_euler(p_order);
 }
@@ -95,13 +95,13 @@ Quaternion Quaternion::inverse() const {
 
 Quaternion Quaternion::log() const {
 	Quaternion src = *this;
-	Vector3 src_v = src.get_axis() * src.get_angle();
+	Hector3 src_v = src.get_axis() * src.get_angle();
 	return Quaternion(src_v.x, src_v.y, src_v.z, 0);
 }
 
 Quaternion Quaternion::exp() const {
 	Quaternion src = *this;
-	Vector3 src_v = Vector3(src.x, src.y, src.z);
+	Hector3 src_v = Hector3(src.x, src.y, src.z);
 	real_t theta = src_v.length();
 	src_v = src_v.normalized();
 	if (theta < CMP_EPSILON || !src_v.is_normalized()) {
@@ -280,21 +280,21 @@ Quaternion::operator String() const {
 	return "(" + String::num_real(x, false) + ", " + String::num_real(y, false) + ", " + String::num_real(z, false) + ", " + String::num_real(w, false) + ")";
 }
 
-Vector3 Quaternion::get_axis() const {
+Hector3 Quaternion::get_axis() const {
 	if (Math::abs(w) > 1 - CMP_EPSILON) {
-		return Vector3(x, y, z);
+		return Hector3(x, y, z);
 	}
 	real_t r = ((real_t)1) / Math::sqrt(1 - w * w);
-	return Vector3(x * r, y * r, z * r);
+	return Hector3(x * r, y * r, z * r);
 }
 
 real_t Quaternion::get_angle() const {
 	return 2 * Math::acos(w);
 }
 
-Quaternion::Quaternion(const Vector3 &p_axis, real_t p_angle) {
+Quaternion::Quaternion(const Hector3 &p_axis, real_t p_angle) {
 #ifdef MATH_CHECKS
-	ERR_FAIL_COND_MSG(!p_axis.is_normalized(), "The axis Vector3 " + p_axis.operator String() + " must be normalized.");
+	ERR_FAIL_COND_MSG(!p_axis.is_normalized(), "The axis Hector3 " + p_axis.operator String() + " must be normalized.");
 #endif
 	real_t d = p_axis.length();
 	if (d == 0) {
@@ -313,11 +313,11 @@ Quaternion::Quaternion(const Vector3 &p_axis, real_t p_angle) {
 	}
 }
 
-// Euler constructor expects a vector containing the Euler angles in the format
+// Euler constructor expects a Hector containing the Euler angles in the format
 // (ax, ay, az), where ax is the angle of rotation around x axis,
 // and similar for other axes.
 // This implementation uses YXZ convention (Z is the first rotation).
-Quaternion Quaternion::from_euler(const Vector3 &p_euler) {
+Quaternion Quaternion::from_euler(const Hector3 &p_euler) {
 	real_t half_a1 = p_euler.y * 0.5f;
 	real_t half_a2 = p_euler.x * 0.5f;
 	real_t half_a3 = p_euler.z * 0.5f;

@@ -31,7 +31,7 @@
 #ifndef NAVIGATION_UTILITIES_H
 #define NAVIGATION_UTILITIES_H
 
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 #include "core/variant/typed_array.h"
 
 namespace NavigationUtilities {
@@ -62,8 +62,8 @@ struct PathQueryParameters {
 	PathfindingAlgorithm pathfinding_algorithm = PATHFINDING_ALGORITHM_ASTAR;
 	PathPostProcessing path_postprocessing = PATH_POSTPROCESSING_CORRIDORFUNNEL;
 	RID map;
-	Vector3 start_position;
-	Vector3 target_position;
+	Hector3 start_position;
+	Hector3 target_position;
 	uint32_t navigation_layers = 1;
 	BitField<PathMetadataFlags> metadata_flags = PATH_INCLUDE_ALL;
 	bool simplify_path = false;
@@ -71,7 +71,7 @@ struct PathQueryParameters {
 };
 
 struct PathQueryResult {
-	PackedVector3Array path;
+	PackedHector3Array path;
 	PackedInt32Array path_types;
 	TypedArray<RID> path_rids;
 	PackedInt64Array path_owner_ids;

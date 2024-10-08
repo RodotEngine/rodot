@@ -1843,8 +1843,8 @@ namespace VULKAN_HPP_NAMESPACE
       result += "BoxFilterSampledQCOM | ";
     if ( value & FormatFeatureFlagBits2::eOpticalFlowImageNV )
       result += "OpticalFlowImageNV | ";
-    if ( value & FormatFeatureFlagBits2::eOpticalFlowVectorNV )
-      result += "OpticalFlowVectorNV | ";
+    if ( value & FormatFeatureFlagBits2::eOpticalFlowHectorNV )
+      result += "OpticalFlowHectorNV | ";
     if ( value & FormatFeatureFlagBits2::eOpticalFlowCostNV )
       result += "OpticalFlowCostNV | ";
 
@@ -4550,7 +4550,7 @@ namespace VULKAN_HPP_NAMESPACE
       case StructureType::eBindDescriptorBufferEmbeddedSamplersInfoEXT: return "BindDescriptorBufferEmbeddedSamplersInfoEXT";
       case StructureType::ePhysicalDeviceDescriptorPoolOverallocationFeaturesNV: return "PhysicalDeviceDescriptorPoolOverallocationFeaturesNV";
       case StructureType::ePhysicalDeviceRawAccessChainsFeaturesNV: return "PhysicalDeviceRawAccessChainsFeaturesNV";
-      case StructureType::ePhysicalDeviceShaderAtomicFloat16VectorFeaturesNV: return "PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV";
+      case StructureType::ePhysicalDeviceShaderAtomicFloat16HectorFeaturesNV: return "PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV";
       case StructureType::ePhysicalDeviceRayTracingValidationFeaturesNV: return "PhysicalDeviceRayTracingValidationFeaturesNV";
       default: return "invalid ( " + VULKAN_HPP_NAMESPACE::toHexString( static_cast<uint32_t>( value ) ) + " )";
     }
@@ -6777,7 +6777,7 @@ namespace VULKAN_HPP_NAMESPACE
       case FormatFeatureFlagBits2::eBlockMatchingQCOM: return "BlockMatchingQCOM";
       case FormatFeatureFlagBits2::eBoxFilterSampledQCOM: return "BoxFilterSampledQCOM";
       case FormatFeatureFlagBits2::eOpticalFlowImageNV: return "OpticalFlowImageNV";
-      case FormatFeatureFlagBits2::eOpticalFlowVectorNV: return "OpticalFlowVectorNV";
+      case FormatFeatureFlagBits2::eOpticalFlowHectorNV: return "OpticalFlowHectorNV";
       case FormatFeatureFlagBits2::eOpticalFlowCostNV: return "OpticalFlowCostNV";
       default: return "invalid ( " + VULKAN_HPP_NAMESPACE::toHexString( static_cast<uint32_t>( value ) ) + " )";
     }
@@ -8775,8 +8775,8 @@ namespace VULKAN_HPP_NAMESPACE
       case OpticalFlowSessionBindingPointNV::eInput: return "Input";
       case OpticalFlowSessionBindingPointNV::eReference: return "Reference";
       case OpticalFlowSessionBindingPointNV::eHint: return "Hint";
-      case OpticalFlowSessionBindingPointNV::eFlowVector: return "FlowVector";
-      case OpticalFlowSessionBindingPointNV::eBackwardFlowVector: return "BackwardFlowVector";
+      case OpticalFlowSessionBindingPointNV::eFlowHector: return "FlowHector";
+      case OpticalFlowSessionBindingPointNV::eBackwardFlowHector: return "BackwardFlowHector";
       case OpticalFlowSessionBindingPointNV::eCost: return "Cost";
       case OpticalFlowSessionBindingPointNV::eBackwardCost: return "BackwardCost";
       case OpticalFlowSessionBindingPointNV::eGlobalFlow: return "GlobalFlow";

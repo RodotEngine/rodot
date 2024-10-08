@@ -373,12 +373,12 @@ static void classifyVertices(unsigned char* result, unsigned int* loop, unsigned
 #endif
 }
 
-struct Vector3
+struct Hector3
 {
 	float x, y, z;
 };
 
-static float rescalePositions(Vector3* result, const float* vertex_positions_data, size_t vertex_count, size_t vertex_positions_stride)
+static float rescalePositions(Hector3* result, const float* vertex_positions_data, size_t vertex_count, size_t vertex_positions_stride)
 {
 	size_t vertex_stride_float = vertex_positions_stride / sizeof(float);
 
@@ -480,7 +480,7 @@ struct Collapse
 	float distance_error;
 };
 
-static float normalize(Vector3& v)
+static float normalize(Hector3& v)
 {
 	float length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 
@@ -520,7 +520,7 @@ static void quadricAdd(QuadricGrad* G, const QuadricGrad* R, size_t attribute_co
 	}
 }
 
-static float quadricError(const Quadric& Q, const Vector3& v)
+static float quadricError(const Quadric& Q, const Hector3& v)
 {
 	float rx = Q.b0;
 	float ry = Q.b1;
@@ -548,7 +548,7 @@ static float quadricError(const Quadric& Q, const Vector3& v)
 	return fabsf(r) * s;
 }
 
-static float quadricError(const Quadric& Q, const QuadricGrad* G, size_t attribute_count, const Vector3& v, const float* va)
+static float quadricError(const Quadric& Q, const QuadricGrad* G, size_t attribute_count, const Hector3& v, const float* va)
 {
 	float rx = Q.b0;
 	float ry = Q.b1;
@@ -607,13 +607,13 @@ static void quadricFromPlane(Quadric& Q, float a, float b, float c, float d, flo
 	Q.w = w;
 }
 
-static void quadricFromTriangle(Quadric& Q, const Vector3& p0, const Vector3& p1, const Vector3& p2, float weight)
+static void quadricFromTriangle(Quadric& Q, const Hector3& p0, const Hector3& p1, const Hector3& p2, float weight)
 {
-	Vector3 p10 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
-	Vector3 p20 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
+	Hector3 p10 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
+	Hector3 p20 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
 
 	// normal = cross(p1 - p0, p2 - p0)
-	Vector3 normal = {p10.y * p20.z - p10.z * p20.y, p10.z * p20.x - p10.x * p20.z, p10.x * p20.y - p10.y * p20.x};
+	Hector3 normal = {p10.y * p20.z - p10.z * p20.y, p10.z * p20.x - p10.x * p20.z, p10.x * p20.y - p10.y * p20.x};
 	float area = normalize(normal);
 
 	float distance = normal.x * p0.x + normal.y * p0.y + normal.z * p0.z;
@@ -622,17 +622,17 @@ static void quadricFromTriangle(Quadric& Q, const Vector3& p0, const Vector3& p1
 	quadricFromPlane(Q, normal.x, normal.y, normal.z, -distance, sqrtf(area) * weight);
 }
 
-static void quadricFromTriangleEdge(Quadric& Q, const Vector3& p0, const Vector3& p1, const Vector3& p2, float weight)
+static void quadricFromTriangleEdge(Quadric& Q, const Hector3& p0, const Hector3& p1, const Hector3& p2, float weight)
 {
-	Vector3 p10 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
+	Hector3 p10 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
 	float length = normalize(p10);
 
 	// p20p = length of projection of p2-p0 onto normalize(p1 - p0)
-	Vector3 p20 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
+	Hector3 p20 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
 	float p20p = p20.x * p10.x + p20.y * p10.y + p20.z * p10.z;
 
 	// normal = altitude of triangle from point p2 onto edge p1-p0
-	Vector3 normal = {p20.x - p10.x * p20p, p20.y - p10.y * p20p, p20.z - p10.z * p20p};
+	Hector3 normal = {p20.x - p10.x * p20p, p20.y - p10.y * p20p, p20.z - p10.z * p20p};
 	normalize(normal);
 
 	float distance = normal.x * p0.x + normal.y * p0.y + normal.z * p0.z;
@@ -641,18 +641,18 @@ static void quadricFromTriangleEdge(Quadric& Q, const Vector3& p0, const Vector3
 	quadricFromPlane(Q, normal.x, normal.y, normal.z, -distance, length * weight);
 }
 
-static void quadricFromAttributes(Quadric& Q, QuadricGrad* G, const Vector3& p0, const Vector3& p1, const Vector3& p2, const float* va0, const float* va1, const float* va2, size_t attribute_count)
+static void quadricFromAttributes(Quadric& Q, QuadricGrad* G, const Hector3& p0, const Hector3& p1, const Hector3& p2, const float* va0, const float* va1, const float* va2, size_t attribute_count)
 {
 	// for each attribute we want to encode the following function into the quadric:
 	// (eval(pos) - attr)^2
 	// where eval(pos) interpolates attribute across the triangle like so:
 	// eval(pos) = pos.x * gx + pos.y * gy + pos.z * gz + gw
 	// where gx/gy/gz/gw are gradients
-	Vector3 p10 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
-	Vector3 p20 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
+	Hector3 p10 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
+	Hector3 p20 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
 
 	// weight is scaled linearly with edge length
-	Vector3 normal = {p10.y * p20.z - p10.z * p20.y, p10.z * p20.x - p10.x * p20.z, p10.x * p20.y - p10.y * p20.x};
+	Hector3 normal = {p10.y * p20.z - p10.z * p20.y, p10.z * p20.x - p10.x * p20.z, p10.x * p20.y - p10.y * p20.x};
 	float area = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
 	float w = sqrtf(area); // TODO this needs more experimentation
 
@@ -660,9 +660,9 @@ static void quadricFromAttributes(Quadric& Q, QuadricGrad* G, const Vector3& p0,
 	// v = (d11 * d20 - d01 * d21) / denom
 	// w = (d00 * d21 - d01 * d20) / denom
 	// u = 1 - v - w
-	// here v0, v1 are triangle edge vectors, v2 is a vector from point to triangle corner, and dij = dot(vi, vj)
-	const Vector3& v0 = p10;
-	const Vector3& v1 = p20;
+	// here v0, v1 are triangle edge Hectors, v2 is a Hector from point to triangle corner, and dij = dot(vi, vj)
+	const Hector3& v0 = p10;
+	const Hector3& v1 = p20;
 	float d00 = v0.x * v0.x + v0.y * v0.y + v0.z * v0.z;
 	float d01 = v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
 	float d11 = v1.x * v1.x + v1.y * v1.y + v1.z * v1.z;
@@ -717,7 +717,7 @@ static void quadricFromAttributes(Quadric& Q, QuadricGrad* G, const Vector3& p0,
 	}
 }
 
-static void fillFaceQuadrics(Quadric* vertex_quadrics, const unsigned int* indices, size_t index_count, const Vector3* vertex_positions, const unsigned int* remap)
+static void fillFaceQuadrics(Quadric* vertex_quadrics, const unsigned int* indices, size_t index_count, const Hector3* vertex_positions, const unsigned int* remap)
 {
 	for (size_t i = 0; i < index_count; i += 3)
 	{
@@ -734,7 +734,7 @@ static void fillFaceQuadrics(Quadric* vertex_quadrics, const unsigned int* indic
 	}
 }
 
-static void fillEdgeQuadrics(Quadric* vertex_quadrics, const unsigned int* indices, size_t index_count, const Vector3* vertex_positions, const unsigned int* remap, const unsigned char* vertex_kind, const unsigned int* loop, const unsigned int* loopback)
+static void fillEdgeQuadrics(Quadric* vertex_quadrics, const unsigned int* indices, size_t index_count, const Hector3* vertex_positions, const unsigned int* remap, const unsigned char* vertex_kind, const unsigned int* loop, const unsigned int* loopback)
 {
 	for (size_t i = 0; i < index_count; i += 3)
 	{
@@ -782,7 +782,7 @@ static void fillEdgeQuadrics(Quadric* vertex_quadrics, const unsigned int* indic
 	}
 }
 
-static void fillAttributeQuadrics(Quadric* attribute_quadrics, QuadricGrad* attribute_gradients, const unsigned int* indices, size_t index_count, const Vector3* vertex_positions, const float* vertex_attributes, size_t attribute_count, const unsigned int* remap)
+static void fillAttributeQuadrics(Quadric* attribute_quadrics, QuadricGrad* attribute_gradients, const unsigned int* indices, size_t index_count, const Hector3* vertex_positions, const float* vertex_attributes, size_t attribute_count, const unsigned int* remap)
 {
 	for (size_t i = 0; i < index_count; i += 3)
 	{
@@ -806,25 +806,25 @@ static void fillAttributeQuadrics(Quadric* attribute_quadrics, QuadricGrad* attr
 }
 
 // does triangle ABC flip when C is replaced with D?
-static bool hasTriangleFlip(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d)
+static bool hasTriangleFlip(const Hector3& a, const Hector3& b, const Hector3& c, const Hector3& d)
 {
-	Vector3 eb = {b.x - a.x, b.y - a.y, b.z - a.z};
-	Vector3 ec = {c.x - a.x, c.y - a.y, c.z - a.z};
-	Vector3 ed = {d.x - a.x, d.y - a.y, d.z - a.z};
+	Hector3 eb = {b.x - a.x, b.y - a.y, b.z - a.z};
+	Hector3 ec = {c.x - a.x, c.y - a.y, c.z - a.z};
+	Hector3 ed = {d.x - a.x, d.y - a.y, d.z - a.z};
 
-	Vector3 nbc = {eb.y * ec.z - eb.z * ec.y, eb.z * ec.x - eb.x * ec.z, eb.x * ec.y - eb.y * ec.x};
-	Vector3 nbd = {eb.y * ed.z - eb.z * ed.y, eb.z * ed.x - eb.x * ed.z, eb.x * ed.y - eb.y * ed.x};
+	Hector3 nbc = {eb.y * ec.z - eb.z * ec.y, eb.z * ec.x - eb.x * ec.z, eb.x * ec.y - eb.y * ec.x};
+	Hector3 nbd = {eb.y * ed.z - eb.z * ed.y, eb.z * ed.x - eb.x * ed.z, eb.x * ed.y - eb.y * ed.x};
 
 	return nbc.x * nbd.x + nbc.y * nbd.y + nbc.z * nbd.z <= 0;
 }
 
-static bool hasTriangleFlips(const EdgeAdjacency& adjacency, const Vector3* vertex_positions, const unsigned int* collapse_remap, unsigned int i0, unsigned int i1)
+static bool hasTriangleFlips(const EdgeAdjacency& adjacency, const Hector3* vertex_positions, const unsigned int* collapse_remap, unsigned int i0, unsigned int i1)
 {
 	assert(collapse_remap[i0] == i0);
 	assert(collapse_remap[i1] == i1);
 
-	const Vector3& v0 = vertex_positions[i0];
-	const Vector3& v1 = vertex_positions[i1];
+	const Hector3& v0 = vertex_positions[i0];
+	const Hector3& v1 = vertex_positions[i1];
 
 	const EdgeAdjacency::Edge* edges = &adjacency.data[adjacency.offsets[i0]];
 	size_t count = adjacency.offsets[i0 + 1] - adjacency.offsets[i0];
@@ -926,7 +926,7 @@ static size_t pickEdgeCollapses(Collapse* collapses, size_t collapse_capacity, c
 	return collapse_count;
 }
 
-static void rankEdgeCollapses(Collapse* collapses, size_t collapse_count, const Vector3* vertex_positions, const float* vertex_attributes, const Quadric* vertex_quadrics, const Quadric* attribute_quadrics, const QuadricGrad* attribute_gradients, size_t attribute_count, const unsigned int* remap)
+static void rankEdgeCollapses(Collapse* collapses, size_t collapse_count, const Hector3* vertex_positions, const float* vertex_attributes, const Quadric* vertex_quadrics, const Quadric* attribute_quadrics, const QuadricGrad* attribute_gradients, size_t attribute_count, const unsigned int* remap)
 {
 	for (size_t i = 0; i < collapse_count; ++i)
 	{
@@ -997,7 +997,7 @@ static void sortEdgeCollapses(unsigned int* sort_order, const Collapse* collapse
 	}
 }
 
-static size_t performEdgeCollapses(unsigned int* collapse_remap, unsigned char* collapse_locked, Quadric* vertex_quadrics, Quadric* attribute_quadrics, QuadricGrad* attribute_gradients, size_t attribute_count, const Collapse* collapses, size_t collapse_count, const unsigned int* collapse_order, const unsigned int* remap, const unsigned int* wedge, const unsigned char* vertex_kind, const Vector3* vertex_positions, const EdgeAdjacency& adjacency, size_t triangle_collapse_goal, float error_limit, float& result_error)
+static size_t performEdgeCollapses(unsigned int* collapse_remap, unsigned char* collapse_locked, Quadric* vertex_quadrics, Quadric* attribute_quadrics, QuadricGrad* attribute_gradients, size_t attribute_count, const Collapse* collapses, size_t collapse_count, const unsigned int* collapse_order, const unsigned int* remap, const unsigned int* wedge, const unsigned char* vertex_kind, const Hector3* vertex_positions, const EdgeAdjacency& adjacency, size_t triangle_collapse_goal, float error_limit, float& result_error)
 {
 	size_t edge_collapses = 0;
 	size_t triangle_collapses = 0;
@@ -1219,14 +1219,14 @@ struct TriangleHasher
 	}
 };
 
-static void computeVertexIds(unsigned int* vertex_ids, const Vector3* vertex_positions, size_t vertex_count, int grid_size)
+static void computeVertexIds(unsigned int* vertex_ids, const Hector3* vertex_positions, size_t vertex_count, int grid_size)
 {
 	assert(grid_size >= 1 && grid_size <= 1024);
 	float cell_scale = float(grid_size - 1);
 
 	for (size_t i = 0; i < vertex_count; ++i)
 	{
-		const Vector3& v = vertex_positions[i];
+		const Hector3& v = vertex_positions[i];
 
 		int xi = int(v.x * cell_scale + 0.5f);
 		int yi = int(v.y * cell_scale + 0.5f);
@@ -1298,7 +1298,7 @@ static size_t countVertexCells(unsigned int* table, size_t table_size, const uns
 	return result;
 }
 
-static void fillCellQuadrics(Quadric* cell_quadrics, const unsigned int* indices, size_t index_count, const Vector3* vertex_positions, const unsigned int* vertex_cells)
+static void fillCellQuadrics(Quadric* cell_quadrics, const unsigned int* indices, size_t index_count, const Hector3* vertex_positions, const unsigned int* vertex_cells)
 {
 	for (size_t i = 0; i < index_count; i += 3)
 	{
@@ -1328,7 +1328,7 @@ static void fillCellQuadrics(Quadric* cell_quadrics, const unsigned int* indices
 	}
 }
 
-static void fillCellReservoirs(Reservoir* cell_reservoirs, size_t cell_count, const Vector3* vertex_positions, const float* vertex_colors, size_t vertex_colors_stride, size_t vertex_count, const unsigned int* vertex_cells)
+static void fillCellReservoirs(Reservoir* cell_reservoirs, size_t cell_count, const Hector3* vertex_positions, const float* vertex_colors, size_t vertex_colors_stride, size_t vertex_count, const unsigned int* vertex_cells)
 {
 	static const float dummy_color[] = { 0.f, 0.f, 0.f };
 
@@ -1337,7 +1337,7 @@ static void fillCellReservoirs(Reservoir* cell_reservoirs, size_t cell_count, co
 	for (size_t i = 0; i < vertex_count; ++i)
 	{
 		unsigned int cell = vertex_cells[i];
-		const Vector3& v = vertex_positions[i];
+		const Hector3& v = vertex_positions[i];
 		Reservoir& r = cell_reservoirs[cell];
 
 		const float* color = vertex_colors ? &vertex_colors[i * vertex_colors_stride_float] : dummy_color;
@@ -1366,7 +1366,7 @@ static void fillCellReservoirs(Reservoir* cell_reservoirs, size_t cell_count, co
 	}
 }
 
-static void fillCellRemap(unsigned int* cell_remap, float* cell_errors, size_t cell_count, const unsigned int* vertex_cells, const Quadric* cell_quadrics, const Vector3* vertex_positions, size_t vertex_count)
+static void fillCellRemap(unsigned int* cell_remap, float* cell_errors, size_t cell_count, const unsigned int* vertex_cells, const Quadric* cell_quadrics, const Hector3* vertex_positions, size_t vertex_count)
 {
 	memset(cell_remap, -1, cell_count * sizeof(unsigned int));
 
@@ -1383,7 +1383,7 @@ static void fillCellRemap(unsigned int* cell_remap, float* cell_errors, size_t c
 	}
 }
 
-static void fillCellRemap(unsigned int* cell_remap, float* cell_errors, size_t cell_count, const unsigned int* vertex_cells, const Reservoir* cell_reservoirs, const Vector3* vertex_positions, const float* vertex_colors, size_t vertex_colors_stride, float color_weight, size_t vertex_count)
+static void fillCellRemap(unsigned int* cell_remap, float* cell_errors, size_t cell_count, const unsigned int* vertex_cells, const Reservoir* cell_reservoirs, const Hector3* vertex_positions, const float* vertex_colors, size_t vertex_colors_stride, float color_weight, size_t vertex_count)
 {
 	static const float dummy_color[] = { 0.f, 0.f, 0.f };
 
@@ -1394,7 +1394,7 @@ static void fillCellRemap(unsigned int* cell_remap, float* cell_errors, size_t c
 	for (size_t i = 0; i < vertex_count; ++i)
 	{
 		unsigned int cell = vertex_cells[i];
-		const Vector3& v = vertex_positions[i];
+		const Hector3& v = vertex_positions[i];
 		const Reservoir& r = cell_reservoirs[cell];
 
 		const float* color = vertex_colors ? &vertex_colors[i * vertex_colors_stride_float] : dummy_color;
@@ -1521,7 +1521,7 @@ size_t meshopt_simplifyEdge(unsigned int* destination, const unsigned int* indic
 	    int(kinds[Kind_Manifold]), int(kinds[Kind_Border]), int(kinds[Kind_Seam]), int(kinds[Kind_Complex]), int(kinds[Kind_Locked]));
 #endif
 
-	Vector3* vertex_positions = allocator.allocate<Vector3>(vertex_count);
+	Hector3* vertex_positions = allocator.allocate<Hector3>(vertex_count);
 	rescalePositions(vertex_positions, vertex_positions_data, vertex_count, vertex_positions_stride);
 
 	float* vertex_attributes = NULL;
@@ -1661,7 +1661,7 @@ size_t meshopt_simplifySloppy(unsigned int* destination, const unsigned int* ind
 
 	meshopt_Allocator allocator;
 
-	Vector3* vertex_positions = allocator.allocate<Vector3>(vertex_count);
+	Hector3* vertex_positions = allocator.allocate<Hector3>(vertex_count);
 	rescalePositions(vertex_positions, vertex_positions_data, vertex_count, vertex_positions_stride);
 
 	// find the optimal grid size using guided binary search
@@ -1797,7 +1797,7 @@ size_t meshopt_simplifyPoints(unsigned int* destination, const float* vertex_pos
 
 	meshopt_Allocator allocator;
 
-	Vector3* vertex_positions = allocator.allocate<Vector3>(vertex_count);
+	Hector3* vertex_positions = allocator.allocate<Hector3>(vertex_count);
 	rescalePositions(vertex_positions, vertex_positions_data, vertex_count, vertex_positions_stride);
 
 	// find the optimal grid size using guided binary search

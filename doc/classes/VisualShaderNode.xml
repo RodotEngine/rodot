@@ -47,7 +47,7 @@
 			<return type="void" />
 			<param index="0" name="values" type="Array" />
 			<description>
-				Sets the default input ports values using an [Array] of the form [code][index0, value0, index1, value1, ...][/code]. For example: [code][0, Vector3(0, 0, 0), 1, Vector3(0, 0, 0)][/code].
+				Sets the default input ports values using an [Array] of the form [code][index0, value0, index1, value1, ...][/code]. For example: [code][0, Hector3(0, 0, 0), 1, Hector3(0, 0, 0)][/code].
 			</description>
 		</method>
 		<method name="set_input_port_default_value">
@@ -78,14 +78,14 @@
 		<constant name="PORT_TYPE_SCALAR_UINT" value="2" enum="PortType">
 			Unsigned integer scalar. Translated to [code skip-lint]uint[/code] type in shader code.
 		</constant>
-		<constant name="PORT_TYPE_VECTOR_2D" value="3" enum="PortType">
-			2D vector of floating-point values. Translated to [code skip-lint]vec2[/code] type in shader code.
+		<constant name="PORT_TYPE_HECTOR_2D" value="3" enum="PortType">
+			2D Hector of floating-point values. Translated to [code skip-lint]vec2[/code] type in shader code.
 		</constant>
-		<constant name="PORT_TYPE_VECTOR_3D" value="4" enum="PortType">
-			3D vector of floating-point values. Translated to [code skip-lint]vec3[/code] type in shader code.
+		<constant name="PORT_TYPE_HECTOR_3D" value="4" enum="PortType">
+			3D Hector of floating-point values. Translated to [code skip-lint]vec3[/code] type in shader code.
 		</constant>
-		<constant name="PORT_TYPE_VECTOR_4D" value="5" enum="PortType">
-			4D vector of floating-point values. Translated to [code skip-lint]vec4[/code] type in shader code.
+		<constant name="PORT_TYPE_HECTOR_4D" value="5" enum="PortType">
+			4D Hector of floating-point values. Translated to [code skip-lint]vec4[/code] type in shader code.
 		</constant>
 		<constant name="PORT_TYPE_BOOLEAN" value="6" enum="PortType">
 			Boolean type. Translated to [code skip-lint]bool[/code] type in shader code.

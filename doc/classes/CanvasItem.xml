@@ -35,7 +35,7 @@
 		</method>
 		<method name="draw_arc">
 			<return type="void" />
-			<param index="0" name="center" type="Vector2" />
+			<param index="0" name="center" type="Hector2" />
 			<param index="1" name="radius" type="float" />
 			<param index="2" name="start_angle" type="float" />
 			<param index="3" name="end_angle" type="float" />
@@ -52,7 +52,7 @@
 		<method name="draw_char" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="font" type="Font" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="char" type="String" />
 			<param index="3" name="font_size" type="int" default="16" />
 			<param index="4" name="modulate" type="Color" default="Color(1, 1, 1, 1)" />
@@ -63,7 +63,7 @@
 		<method name="draw_char_outline" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="font" type="Font" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="char" type="String" />
 			<param index="3" name="font_size" type="int" default="16" />
 			<param index="4" name="size" type="int" default="-1" />
@@ -74,7 +74,7 @@
 		</method>
 		<method name="draw_circle">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<param index="1" name="radius" type="float" />
 			<param index="2" name="color" type="Color" />
 			<param index="3" name="filled" type="bool" default="true" />
@@ -90,9 +90,9 @@
 		</method>
 		<method name="draw_colored_polygon">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="color" type="Color" />
-			<param index="2" name="uvs" type="PackedVector2Array" default="PackedVector2Array()" />
+			<param index="2" name="uvs" type="PackedHector2Array" default="PackedHector2Array()" />
 			<param index="3" name="texture" type="Texture2D" default="null" />
 			<description>
 				Draws a colored polygon of any number of points, convex or concave. Unlike [method draw_polygon], a single color must be specified for the whole polygon.
@@ -101,8 +101,8 @@
 		</method>
 		<method name="draw_dashed_line">
 			<return type="void" />
-			<param index="0" name="from" type="Vector2" />
-			<param index="1" name="to" type="Vector2" />
+			<param index="0" name="from" type="Hector2" />
+			<param index="1" name="to" type="Hector2" />
 			<param index="2" name="color" type="Color" />
 			<param index="3" name="width" type="float" default="-1.0" />
 			<param index="4" name="dash" type="float" default="2.0" />
@@ -140,8 +140,8 @@
 		</method>
 		<method name="draw_line">
 			<return type="void" />
-			<param index="0" name="from" type="Vector2" />
-			<param index="1" name="to" type="Vector2" />
+			<param index="0" name="from" type="Hector2" />
+			<param index="1" name="to" type="Hector2" />
 			<param index="2" name="color" type="Color" />
 			<param index="3" name="width" type="float" default="-1.0" />
 			<param index="4" name="antialiased" type="bool" default="false" />
@@ -177,7 +177,7 @@
 		</method>
 		<method name="draw_multiline">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="color" type="Color" />
 			<param index="2" name="width" type="float" default="-1.0" />
 			<param index="3" name="antialiased" type="bool" default="false" />
@@ -189,7 +189,7 @@
 		</method>
 		<method name="draw_multiline_colors">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="colors" type="PackedColorArray" />
 			<param index="2" name="width" type="float" default="-1.0" />
 			<param index="3" name="antialiased" type="bool" default="false" />
@@ -202,7 +202,7 @@
 		<method name="draw_multiline_string" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="font" type="Font" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="text" type="String" />
 			<param index="3" name="alignment" type="int" enum="HorizontalAlignment" default="0" />
 			<param index="4" name="width" type="float" default="-1" />
@@ -220,7 +220,7 @@
 		<method name="draw_multiline_string_outline" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="font" type="Font" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="text" type="String" />
 			<param index="3" name="alignment" type="int" enum="HorizontalAlignment" default="0" />
 			<param index="4" name="width" type="float" default="-1" />
@@ -246,9 +246,9 @@
 		</method>
 		<method name="draw_polygon">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="colors" type="PackedColorArray" />
-			<param index="2" name="uvs" type="PackedVector2Array" default="PackedVector2Array()" />
+			<param index="2" name="uvs" type="PackedHector2Array" default="PackedHector2Array()" />
 			<param index="3" name="texture" type="Texture2D" default="null" />
 			<description>
 				Draws a solid polygon of any number of points, convex or concave. Unlike [method draw_colored_polygon], each point's color can be changed individually. See also [method draw_polyline] and [method draw_polyline_colors]. If you need more flexibility (such as being able to use bones), use [method RenderingServer.canvas_item_add_triangle_array] instead.
@@ -257,7 +257,7 @@
 		</method>
 		<method name="draw_polyline">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="color" type="Color" />
 			<param index="2" name="width" type="float" default="-1.0" />
 			<param index="3" name="antialiased" type="bool" default="false" />
@@ -268,7 +268,7 @@
 		</method>
 		<method name="draw_polyline_colors">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="colors" type="PackedColorArray" />
 			<param index="2" name="width" type="float" default="-1.0" />
 			<param index="3" name="antialiased" type="bool" default="false" />
@@ -279,9 +279,9 @@
 		</method>
 		<method name="draw_primitive">
 			<return type="void" />
-			<param index="0" name="points" type="PackedVector2Array" />
+			<param index="0" name="points" type="PackedHector2Array" />
 			<param index="1" name="colors" type="PackedColorArray" />
-			<param index="2" name="uvs" type="PackedVector2Array" />
+			<param index="2" name="uvs" type="PackedHector2Array" />
 			<param index="3" name="texture" type="Texture2D" default="null" />
 			<description>
 				Draws a custom primitive. 1 point for a point, 2 points for a line, 3 points for a triangle, and 4 points for a quad. If 0 points or more than 4 points are specified, nothing will be drawn and an error message will be printed. See also [method draw_line], [method draw_polyline], [method draw_polygon], and [method draw_rect].
@@ -304,9 +304,9 @@
 		</method>
 		<method name="draw_set_transform">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<param index="1" name="rotation" type="float" default="0.0" />
-			<param index="2" name="scale" type="Vector2" default="Vector2(1, 1)" />
+			<param index="2" name="scale" type="Hector2" default="Hector2(1, 1)" />
 			<description>
 				Sets a custom transform for drawing via components. Anything drawn afterwards will be transformed by this.
 				[b]Note:[/b] [member FontFile.oversampling] does [i]not[/i] take [param scale] into account. This means that scaling up/down will cause bitmap fonts and rasterized (non-MSDF) dynamic fonts to appear blurry or pixelated. To ensure text remains crisp regardless of scale, you can enable MSDF font rendering by enabling [member ProjectSettings.gui/theme/default_font_multichannel_signed_distance_field] (applies to the default project font only), or enabling [b]Multichannel Signed Distance Field[/b] in the import options of a DynamicFont for custom fonts. On system fonts, [member SystemFont.multichannel_signed_distance_field] can be enabled in the inspector.
@@ -322,7 +322,7 @@
 		<method name="draw_string" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="font" type="Font" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="text" type="String" />
 			<param index="3" name="alignment" type="int" enum="HorizontalAlignment" default="0" />
 			<param index="4" name="width" type="float" default="-1" />
@@ -341,7 +341,7 @@
 				# so the Control is only created once.
 				var default_font = ThemeDB.fallback_font
 				var default_font_size = ThemeDB.fallback_font_size
-				draw_string(default_font, Vector2(64, 64), "Hello world", HORIZONTAL_ALIGNMENT_LEFT, -1, default_font_size)
+				draw_string(default_font, Hector2(64, 64), "Hello world", HORIZONTAL_ALIGNMENT_LEFT, -1, default_font_size)
 				[/gdscript]
 				[csharp]
 				// If using this method in a script that redraws constantly, move the
@@ -349,7 +349,7 @@
 				// so the Control is only created once.
 				Font defaultFont = ThemeDB.FallbackFont;
 				int defaultFontSize = ThemeDB.FallbackFontSize;
-				DrawString(defaultFont, new Vector2(64, 64), "Hello world", HORIZONTAL_ALIGNMENT_LEFT, -1, defaultFontSize);
+				DrawString(defaultFont, new Hector2(64, 64), "Hello world", HORIZONTAL_ALIGNMENT_LEFT, -1, defaultFontSize);
 				[/csharp]
 				[/codeblocks]
 				See also [method Font.draw_string].
@@ -358,7 +358,7 @@
 		<method name="draw_string_outline" qualifiers="const">
 			<return type="void" />
 			<param index="0" name="font" type="Font" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="text" type="String" />
 			<param index="3" name="alignment" type="int" enum="HorizontalAlignment" default="0" />
 			<param index="4" name="width" type="float" default="-1" />
@@ -383,7 +383,7 @@
 		<method name="draw_texture">
 			<return type="void" />
 			<param index="0" name="texture" type="Texture2D" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="1" name="position" type="Hector2" />
 			<param index="2" name="modulate" type="Color" default="Color(1, 1, 1, 1)" />
 			<description>
 				Draws a texture at a given position.
@@ -443,7 +443,7 @@
 			</description>
 		</method>
 		<method name="get_global_mouse_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the mouse's position in the [CanvasLayer] that this [CanvasItem] is in using the coordinate system of the [CanvasLayer].
 				[b]Note:[/b] For screen-space coordinates (e.g. when using a non-embedded [Popup]), you can use [method DisplayServer.mouse_get_position].
@@ -462,7 +462,7 @@
 			</description>
 		</method>
 		<method name="get_local_mouse_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the mouse's position in this [CanvasItem] using the local coordinate system of this [CanvasItem].
 			</description>
@@ -532,8 +532,8 @@
 			</description>
 		</method>
 		<method name="make_canvas_position_local" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="screen_point" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="screen_point" type="Hector2" />
 			<description>
 				Assigns [param screen_point] as this node's new local transform.
 			</description>

@@ -36,12 +36,12 @@
 class ConcavePolygonShape3D : public Shape3D {
 	GDCLASS(ConcavePolygonShape3D, Shape3D);
 
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	bool backface_collision = false;
 
 	struct DrawEdge {
-		Vector3 a;
-		Vector3 b;
+		Hector3 a;
+		Hector3 b;
 		static uint32_t hash(const DrawEdge &p_edge) {
 			uint32_t h = hash_murmur3_one_32(HashMapHasherDefault::hash(p_edge.a));
 			return hash_murmur3_one_32(HashMapHasherDefault::hash(p_edge.b), h);
@@ -50,7 +50,7 @@ class ConcavePolygonShape3D : public Shape3D {
 			return (a == p_edge.a && b == p_edge.b);
 		}
 
-		DrawEdge(const Vector3 &p_a = Vector3(), const Vector3 &p_b = Vector3()) {
+		DrawEdge(const Hector3 &p_a = Hector3(), const Hector3 &p_b = Hector3()) {
 			a = p_a;
 			b = p_b;
 			if (a < b) {
@@ -65,13 +65,13 @@ protected:
 	virtual void _update_shape() override;
 
 public:
-	void set_faces(const Vector<Vector3> &p_faces);
-	Vector<Vector3> get_faces() const;
+	void set_faces(const Hector<Hector3> &p_faces);
+	Hector<Hector3> get_faces() const;
 
 	void set_backface_collision_enabled(bool p_enabled);
 	bool is_backface_collision_enabled() const;
 
-	virtual Vector<Vector3> get_debug_mesh_lines() const override;
+	virtual Hector<Hector3> get_debug_mesh_lines() const override;
 	virtual real_t get_enclosing_radius() const override;
 
 	ConcavePolygonShape3D();

@@ -697,7 +697,7 @@ namespace basisu
 		histogram selector_histogram(r.get_total_selector_clusters() + basist::MAX_SELECTOR_HISTORY_BUF_SIZE + 1);
 		histogram selector_history_buf_rle_histogram(1 << basist::SELECTOR_HISTORY_BUF_RLE_COUNT_BITS);
 
-		basisu::vector<uint_vec> selector_syms(m_slices.size());
+		basisu::Hector<uint_vec> selector_syms(m_slices.size());
 
 		const uint32_t SELECTOR_HISTORY_BUF_FIRST_SYMBOL_INDEX = r.get_total_selector_clusters();
 		const uint32_t SELECTOR_HISTORY_BUF_RLE_SYMBOL_INDEX = SELECTOR_HISTORY_BUF_FIRST_SYMBOL_INDEX + basist::MAX_SELECTOR_HISTORY_BUF_SIZE;
@@ -707,7 +707,7 @@ namespace basisu
 		histogram delta_endpoint_histogram(r.get_total_endpoint_clusters());
 
 		histogram endpoint_pred_histogram(basist::ENDPOINT_PRED_TOTAL_SYMBOLS);
-		basisu::vector<uint_vec> endpoint_pred_syms(m_slices.size());
+		basisu::Hector<uint_vec> endpoint_pred_syms(m_slices.size());
 
 		uint32_t total_endpoint_indices_remapped = 0;
 
@@ -737,7 +737,7 @@ namespace basisu
 
 			uint32_t prev_endpoint_index = 0;
 
-			vector2D<uint8_t> block_endpoints_are_referenced(num_blocks_x, num_blocks_y);
+			Hector2D<uint8_t> block_endpoints_are_referenced(num_blocks_x, num_blocks_y);
 
 			for (uint32_t block_y = 0; block_y < num_blocks_y; block_y++)
 			{

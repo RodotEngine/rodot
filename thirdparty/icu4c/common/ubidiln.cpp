@@ -50,8 +50,8 @@
  * a direct implementation of especially rule (L2) with an array of
  * one (32-bit) integer per text character.
  *
- * Here, the levels array is scanned as soon as necessary, and a vector of
- * same-level-runs is created. Reordering then is done on this vector.
+ * Here, the levels array is scanned as soon as necessary, and a Hector of
+ * same-level-runs is created. Reordering then is done on this Hector.
  * For each run of text positions that were resolved to the same level,
  * only 8 bytes are stored: the first text position of the run and the visual
  * position behind the run after reordering.

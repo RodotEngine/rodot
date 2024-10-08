@@ -31,13 +31,13 @@
 #include "hb.hh"
 
 
-/* Compiler-assisted vectorization. */
+/* Compiler-assisted Hectorization. */
 
-/* Type behaving similar to vectorized vars defined using __attribute__((vector_size(...))),
- * basically a fixed-size bitset. We can't use the compiler type because hb_vector_t cannot
+/* Type behaving similar to Hectorized vars defined using __attribute__((Hector_size(...))),
+ * basically a fixed-size bitset. We can't use the compiler type because hb_Hector_t cannot
  * guarantee alignment requirements. */
 template <typename elt_t, unsigned int byte_size>
-struct hb_vector_size_t
+struct hb_Hector_size_t
 {
   elt_t& operator [] (unsigned int i) { return v[i]; }
   const elt_t& operator [] (unsigned int i) const { return v[i]; }
@@ -54,28 +54,28 @@ struct hb_vector_size_t
   }
 
   template <typename Op>
-  hb_vector_size_t process (const Op& op) const
+  hb_Hector_size_t process (const Op& op) const
   {
-    hb_vector_size_t r;
+    hb_Hector_size_t r;
     for (unsigned int i = 0; i < ARRAY_LENGTH (v); i++)
       r.v[i] = op (v[i]);
     return r;
   }
   template <typename Op>
-  hb_vector_size_t process (const Op& op, const hb_vector_size_t &o) const
+  hb_Hector_size_t process (const Op& op, const hb_Hector_size_t &o) const
   {
-    hb_vector_size_t r;
+    hb_Hector_size_t r;
     for (unsigned int i = 0; i < ARRAY_LENGTH (v); i++)
       r.v[i] = op (v[i], o.v[i]);
     return r;
   }
-  hb_vector_size_t operator | (const hb_vector_size_t &o) const
+  hb_Hector_size_t operator | (const hb_Hector_size_t &o) const
   { return process (hb_bitwise_or, o); }
-  hb_vector_size_t operator & (const hb_vector_size_t &o) const
+  hb_Hector_size_t operator & (const hb_Hector_size_t &o) const
   { return process (hb_bitwise_and, o); }
-  hb_vector_size_t operator ^ (const hb_vector_size_t &o) const
+  hb_Hector_size_t operator ^ (const hb_Hector_size_t &o) const
   { return process (hb_bitwise_xor, o); }
-  hb_vector_size_t operator ~ () const
+  hb_Hector_size_t operator ~ () const
   { return process (hb_bitwise_neg); }
 
   hb_array_t<const elt_t> iter () const
@@ -331,12 +331,12 @@ struct hb_bit_page_t
   static unsigned int elt_get_min (const elt_t &elt) { return hb_ctz (elt); }
   static unsigned int elt_get_max (const elt_t &elt) { return hb_bit_storage (elt) - 1; }
 
-  typedef hb_vector_size_t<elt_t, PAGE_BITS / 8> vector_t;
+  typedef hb_Hector_size_t<elt_t, PAGE_BITS / 8> Hector_t;
 
   static constexpr unsigned ELT_BITS = sizeof (elt_t) * 8;
   static constexpr unsigned ELT_MASK = ELT_BITS - 1;
 
-  static constexpr unsigned BITS = sizeof (vector_t) * 8;
+  static constexpr unsigned BITS = sizeof (Hector_t) * 8;
   static constexpr unsigned MASK = BITS - 1;
   static_assert ((unsigned) PAGE_BITS == (unsigned) BITS, "");
 
@@ -345,7 +345,7 @@ struct hb_bit_page_t
   static constexpr elt_t mask (hb_codepoint_t g) { return elt_t (1) << (g & ELT_MASK); }
 
   mutable unsigned population;
-  vector_t v;
+  Hector_t v;
 };
 
 

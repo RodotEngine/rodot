@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <vector>
+#include <Vector>
 #include "EdgeHolder.h"
 
 namespace msdfgen {

@@ -44,12 +44,12 @@ class EditorExportPlatformLinuxBSD : public EditorExportPlatformPC {
 	struct SSHCleanupCommand {
 		String host;
 		String port;
-		Vector<String> ssh_args;
+		Hector<String> ssh_args;
 		String cmd_args;
 		bool wait = false;
 
 		SSHCleanupCommand() {}
-		SSHCleanupCommand(const String &p_host, const String &p_port, const Vector<String> &p_ssh_arg, const String &p_cmd_args, bool p_wait = false) {
+		SSHCleanupCommand(const String &p_host, const String &p_port, const Hector<String> &p_ssh_arg, const String &p_cmd_args, bool p_wait = false) {
 			host = p_host;
 			port = p_port;
 			ssh_args = p_ssh_arg;
@@ -61,7 +61,7 @@ class EditorExportPlatformLinuxBSD : public EditorExportPlatformPC {
 	Ref<ImageTexture> run_icon;
 	Ref<ImageTexture> stop_icon;
 
-	Vector<SSHCleanupCommand> cleanup_commands;
+	Hector<SSHCleanupCommand> cleanup_commands;
 	OS::ProcessID ssh_pid = 0;
 	int menu_options = 0;
 

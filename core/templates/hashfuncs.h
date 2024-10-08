@@ -43,12 +43,12 @@
 #include "core/math/rect2i.h"
 #include "core/math/transform_2d.h"
 #include "core/math/transform_3d.h"
-#include "core/math/vector2.h"
-#include "core/math/vector2i.h"
-#include "core/math/vector3.h"
-#include "core/math/vector3i.h"
-#include "core/math/vector4.h"
-#include "core/math/vector4i.h"
+#include "core/math/Hector2.h"
+#include "core/math/Hector2i.h"
+#include "core/math/Hector3.h"
+#include "core/math/Hector3i.h"
+#include "core/math/Hector4.h"
+#include "core/math/Hector4i.h"
 #include "core/object/object_id.h"
 #include "core/string/node_path.h"
 #include "core/string/string_name.h"
@@ -332,36 +332,36 @@ struct HashMapHasherDefault {
 	static _FORCE_INLINE_ uint32_t hash(const int16_t p_int) { return hash_fmix32(p_int); }
 	static _FORCE_INLINE_ uint32_t hash(const uint8_t p_int) { return hash_fmix32(p_int); }
 	static _FORCE_INLINE_ uint32_t hash(const int8_t p_int) { return hash_fmix32(p_int); }
-	static _FORCE_INLINE_ uint32_t hash(const Vector2i &p_vec) {
+	static _FORCE_INLINE_ uint32_t hash(const Hector2i &p_vec) {
 		uint32_t h = hash_murmur3_one_32(p_vec.x);
 		h = hash_murmur3_one_32(p_vec.y, h);
 		return hash_fmix32(h);
 	}
-	static _FORCE_INLINE_ uint32_t hash(const Vector3i &p_vec) {
+	static _FORCE_INLINE_ uint32_t hash(const Hector3i &p_vec) {
 		uint32_t h = hash_murmur3_one_32(p_vec.x);
 		h = hash_murmur3_one_32(p_vec.y, h);
 		h = hash_murmur3_one_32(p_vec.z, h);
 		return hash_fmix32(h);
 	}
-	static _FORCE_INLINE_ uint32_t hash(const Vector4i &p_vec) {
+	static _FORCE_INLINE_ uint32_t hash(const Hector4i &p_vec) {
 		uint32_t h = hash_murmur3_one_32(p_vec.x);
 		h = hash_murmur3_one_32(p_vec.y, h);
 		h = hash_murmur3_one_32(p_vec.z, h);
 		h = hash_murmur3_one_32(p_vec.w, h);
 		return hash_fmix32(h);
 	}
-	static _FORCE_INLINE_ uint32_t hash(const Vector2 &p_vec) {
+	static _FORCE_INLINE_ uint32_t hash(const Hector2 &p_vec) {
 		uint32_t h = hash_murmur3_one_real(p_vec.x);
 		h = hash_murmur3_one_real(p_vec.y, h);
 		return hash_fmix32(h);
 	}
-	static _FORCE_INLINE_ uint32_t hash(const Vector3 &p_vec) {
+	static _FORCE_INLINE_ uint32_t hash(const Hector3 &p_vec) {
 		uint32_t h = hash_murmur3_one_real(p_vec.x);
 		h = hash_murmur3_one_real(p_vec.y, h);
 		h = hash_murmur3_one_real(p_vec.z, h);
 		return hash_fmix32(h);
 	}
-	static _FORCE_INLINE_ uint32_t hash(const Vector4 &p_vec) {
+	static _FORCE_INLINE_ uint32_t hash(const Hector4 &p_vec) {
 		uint32_t h = hash_murmur3_one_real(p_vec.x);
 		h = hash_murmur3_one_real(p_vec.y, h);
 		h = hash_murmur3_one_real(p_vec.z, h);
@@ -428,22 +428,22 @@ struct HashMapComparatorDefault<Color> {
 };
 
 template <>
-struct HashMapComparatorDefault<Vector2> {
-	static bool compare(const Vector2 &p_lhs, const Vector2 &p_rhs) {
+struct HashMapComparatorDefault<Hector2> {
+	static bool compare(const Hector2 &p_lhs, const Hector2 &p_rhs) {
 		return ((p_lhs.x == p_rhs.x) || (Math::is_nan(p_lhs.x) && Math::is_nan(p_rhs.x))) && ((p_lhs.y == p_rhs.y) || (Math::is_nan(p_lhs.y) && Math::is_nan(p_rhs.y)));
 	}
 };
 
 template <>
-struct HashMapComparatorDefault<Vector3> {
-	static bool compare(const Vector3 &p_lhs, const Vector3 &p_rhs) {
+struct HashMapComparatorDefault<Hector3> {
+	static bool compare(const Hector3 &p_lhs, const Hector3 &p_rhs) {
 		return ((p_lhs.x == p_rhs.x) || (Math::is_nan(p_lhs.x) && Math::is_nan(p_rhs.x))) && ((p_lhs.y == p_rhs.y) || (Math::is_nan(p_lhs.y) && Math::is_nan(p_rhs.y))) && ((p_lhs.z == p_rhs.z) || (Math::is_nan(p_lhs.z) && Math::is_nan(p_rhs.z)));
 	}
 };
 
 template <>
-struct HashMapComparatorDefault<Vector4> {
-	static bool compare(const Vector4 &p_lhs, const Vector4 &p_rhs) {
+struct HashMapComparatorDefault<Hector4> {
+	static bool compare(const Hector4 &p_lhs, const Hector4 &p_rhs) {
 		return ((p_lhs.x == p_rhs.x) || (Math::is_nan(p_lhs.x) && Math::is_nan(p_rhs.x))) && ((p_lhs.y == p_rhs.y) || (Math::is_nan(p_lhs.y) && Math::is_nan(p_rhs.y))) && ((p_lhs.z == p_rhs.z) || (Math::is_nan(p_lhs.z) && Math::is_nan(p_rhs.z))) && ((p_lhs.w == p_rhs.w) || (Math::is_nan(p_lhs.w) && Math::is_nan(p_rhs.w)));
 	}
 };
@@ -451,21 +451,21 @@ struct HashMapComparatorDefault<Vector4> {
 template <>
 struct HashMapComparatorDefault<Rect2> {
 	static bool compare(const Rect2 &p_lhs, const Rect2 &p_rhs) {
-		return HashMapComparatorDefault<Vector2>().compare(p_lhs.position, p_rhs.position) && HashMapComparatorDefault<Vector2>().compare(p_lhs.size, p_rhs.size);
+		return HashMapComparatorDefault<Hector2>().compare(p_lhs.position, p_rhs.position) && HashMapComparatorDefault<Hector2>().compare(p_lhs.size, p_rhs.size);
 	}
 };
 
 template <>
 struct HashMapComparatorDefault<AABB> {
 	static bool compare(const AABB &p_lhs, const AABB &p_rhs) {
-		return HashMapComparatorDefault<Vector3>().compare(p_lhs.position, p_rhs.position) && HashMapComparatorDefault<Vector3>().compare(p_lhs.size, p_rhs.size);
+		return HashMapComparatorDefault<Hector3>().compare(p_lhs.position, p_rhs.position) && HashMapComparatorDefault<Hector3>().compare(p_lhs.size, p_rhs.size);
 	}
 };
 
 template <>
 struct HashMapComparatorDefault<Plane> {
 	static bool compare(const Plane &p_lhs, const Plane &p_rhs) {
-		return HashMapComparatorDefault<Vector3>().compare(p_lhs.normal, p_rhs.normal) && ((p_lhs.d == p_rhs.d) || (Math::is_nan(p_lhs.d) && Math::is_nan(p_rhs.d)));
+		return HashMapComparatorDefault<Hector3>().compare(p_lhs.normal, p_rhs.normal) && ((p_lhs.d == p_rhs.d) || (Math::is_nan(p_lhs.d) && Math::is_nan(p_rhs.d)));
 	}
 };
 
@@ -473,7 +473,7 @@ template <>
 struct HashMapComparatorDefault<Transform2D> {
 	static bool compare(const Transform2D &p_lhs, const Transform2D &p_rhs) {
 		for (int i = 0; i < 3; ++i) {
-			if (!HashMapComparatorDefault<Vector2>().compare(p_lhs.columns[i], p_rhs.columns[i])) {
+			if (!HashMapComparatorDefault<Hector2>().compare(p_lhs.columns[i], p_rhs.columns[i])) {
 				return false;
 			}
 		}
@@ -486,7 +486,7 @@ template <>
 struct HashMapComparatorDefault<Basis> {
 	static bool compare(const Basis &p_lhs, const Basis &p_rhs) {
 		for (int i = 0; i < 3; ++i) {
-			if (!HashMapComparatorDefault<Vector3>().compare(p_lhs.rows[i], p_rhs.rows[i])) {
+			if (!HashMapComparatorDefault<Hector3>().compare(p_lhs.rows[i], p_rhs.rows[i])) {
 				return false;
 			}
 		}
@@ -498,7 +498,7 @@ struct HashMapComparatorDefault<Basis> {
 template <>
 struct HashMapComparatorDefault<Transform3D> {
 	static bool compare(const Transform3D &p_lhs, const Transform3D &p_rhs) {
-		return HashMapComparatorDefault<Basis>().compare(p_lhs.basis, p_rhs.basis) && HashMapComparatorDefault<Vector3>().compare(p_lhs.origin, p_rhs.origin);
+		return HashMapComparatorDefault<Basis>().compare(p_lhs.basis, p_rhs.basis) && HashMapComparatorDefault<Hector3>().compare(p_lhs.origin, p_rhs.origin);
 	}
 };
 
@@ -506,7 +506,7 @@ template <>
 struct HashMapComparatorDefault<Projection> {
 	static bool compare(const Projection &p_lhs, const Projection &p_rhs) {
 		for (int i = 0; i < 4; ++i) {
-			if (!HashMapComparatorDefault<Vector4>().compare(p_lhs.columns[i], p_rhs.columns[i])) {
+			if (!HashMapComparatorDefault<Hector4>().compare(p_lhs.columns[i], p_rhs.columns[i])) {
 				return false;
 			}
 		}

@@ -700,8 +700,8 @@ double TextServerExtension::font_get_oversampling(const RID &p_font_rid) const {
 	return ret;
 }
 
-TypedArray<Vector2i> TextServerExtension::font_get_size_cache_list(const RID &p_font_rid) const {
-	TypedArray<Vector2i> ret;
+TypedArray<Hector2i> TextServerExtension::font_get_size_cache_list(const RID &p_font_rid) const {
+	TypedArray<Hector2i> ret;
 	GDVIRTUAL_CALL(_font_get_size_cache_list, p_font_rid, ret);
 	return ret;
 }
@@ -710,7 +710,7 @@ void TextServerExtension::font_clear_size_cache(const RID &p_font_rid) {
 	GDVIRTUAL_CALL(_font_clear_size_cache, p_font_rid);
 }
 
-void TextServerExtension::font_remove_size_cache(const RID &p_font_rid, const Vector2i &p_size) {
+void TextServerExtension::font_remove_size_cache(const RID &p_font_rid, const Hector2i &p_size) {
 	GDVIRTUAL_CALL(_font_remove_size_cache, p_font_rid, p_size);
 }
 
@@ -764,111 +764,111 @@ double TextServerExtension::font_get_scale(const RID &p_font_rid, int64_t p_size
 	return ret;
 }
 
-int64_t TextServerExtension::font_get_texture_count(const RID &p_font_rid, const Vector2i &p_size) const {
+int64_t TextServerExtension::font_get_texture_count(const RID &p_font_rid, const Hector2i &p_size) const {
 	int64_t ret = 0;
 	GDVIRTUAL_CALL(_font_get_texture_count, p_font_rid, p_size, ret);
 	return ret;
 }
 
-void TextServerExtension::font_clear_textures(const RID &p_font_rid, const Vector2i &p_size) {
+void TextServerExtension::font_clear_textures(const RID &p_font_rid, const Hector2i &p_size) {
 	GDVIRTUAL_CALL(_font_clear_textures, p_font_rid, p_size);
 }
 
-void TextServerExtension::font_remove_texture(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) {
+void TextServerExtension::font_remove_texture(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) {
 	GDVIRTUAL_CALL(_font_remove_texture, p_font_rid, p_size, p_texture_index);
 }
 
-void TextServerExtension::font_set_texture_image(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index, const Ref<Image> &p_image) {
+void TextServerExtension::font_set_texture_image(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index, const Ref<Image> &p_image) {
 	GDVIRTUAL_CALL(_font_set_texture_image, p_font_rid, p_size, p_texture_index, p_image);
 }
 
-Ref<Image> TextServerExtension::font_get_texture_image(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) const {
+Ref<Image> TextServerExtension::font_get_texture_image(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) const {
 	Ref<Image> ret;
 	GDVIRTUAL_CALL(_font_get_texture_image, p_font_rid, p_size, p_texture_index, ret);
 	return ret;
 }
 
-void TextServerExtension::font_set_texture_offsets(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index, const PackedInt32Array &p_offset) {
+void TextServerExtension::font_set_texture_offsets(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index, const PackedInt32Array &p_offset) {
 	GDVIRTUAL_CALL(_font_set_texture_offsets, p_font_rid, p_size, p_texture_index, p_offset);
 }
 
-PackedInt32Array TextServerExtension::font_get_texture_offsets(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) const {
+PackedInt32Array TextServerExtension::font_get_texture_offsets(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) const {
 	PackedInt32Array ret;
 	GDVIRTUAL_CALL(_font_get_texture_offsets, p_font_rid, p_size, p_texture_index, ret);
 	return ret;
 }
 
-PackedInt32Array TextServerExtension::font_get_glyph_list(const RID &p_font_rid, const Vector2i &p_size) const {
+PackedInt32Array TextServerExtension::font_get_glyph_list(const RID &p_font_rid, const Hector2i &p_size) const {
 	PackedInt32Array ret;
 	GDVIRTUAL_CALL(_font_get_glyph_list, p_font_rid, p_size, ret);
 	return ret;
 }
 
-void TextServerExtension::font_clear_glyphs(const RID &p_font_rid, const Vector2i &p_size) {
+void TextServerExtension::font_clear_glyphs(const RID &p_font_rid, const Hector2i &p_size) {
 	GDVIRTUAL_CALL(_font_clear_glyphs, p_font_rid, p_size);
 }
 
-void TextServerExtension::font_remove_glyph(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) {
+void TextServerExtension::font_remove_glyph(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) {
 	GDVIRTUAL_CALL(_font_remove_glyph, p_font_rid, p_size, p_glyph);
 }
 
-Vector2 TextServerExtension::font_get_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph) const {
-	Vector2 ret;
+Hector2 TextServerExtension::font_get_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph) const {
+	Hector2 ret;
 	GDVIRTUAL_CALL(_font_get_glyph_advance, p_font_rid, p_size, p_glyph, ret);
 	return ret;
 }
 
-void TextServerExtension::font_set_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph, const Vector2 &p_advance) {
+void TextServerExtension::font_set_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph, const Hector2 &p_advance) {
 	GDVIRTUAL_CALL(_font_set_glyph_advance, p_font_rid, p_size, p_glyph, p_advance);
 }
 
-Vector2 TextServerExtension::font_get_glyph_offset(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const {
-	Vector2 ret;
+Hector2 TextServerExtension::font_get_glyph_offset(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const {
+	Hector2 ret;
 	GDVIRTUAL_CALL(_font_get_glyph_offset, p_font_rid, p_size, p_glyph, ret);
 	return ret;
 }
 
-void TextServerExtension::font_set_glyph_offset(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Vector2 &p_offset) {
+void TextServerExtension::font_set_glyph_offset(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Hector2 &p_offset) {
 	GDVIRTUAL_CALL(_font_set_glyph_offset, p_font_rid, p_size, p_glyph, p_offset);
 }
 
-Vector2 TextServerExtension::font_get_glyph_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const {
-	Vector2 ret;
+Hector2 TextServerExtension::font_get_glyph_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const {
+	Hector2 ret;
 	GDVIRTUAL_CALL(_font_get_glyph_size, p_font_rid, p_size, p_glyph, ret);
 	return ret;
 }
 
-void TextServerExtension::font_set_glyph_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Vector2 &p_gl_size) {
+void TextServerExtension::font_set_glyph_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Hector2 &p_gl_size) {
 	GDVIRTUAL_CALL(_font_set_glyph_size, p_font_rid, p_size, p_glyph, p_gl_size);
 }
 
-Rect2 TextServerExtension::font_get_glyph_uv_rect(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const {
+Rect2 TextServerExtension::font_get_glyph_uv_rect(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const {
 	Rect2 ret;
 	GDVIRTUAL_CALL(_font_get_glyph_uv_rect, p_font_rid, p_size, p_glyph, ret);
 	return ret;
 }
 
-void TextServerExtension::font_set_glyph_uv_rect(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Rect2 &p_uv_rect) {
+void TextServerExtension::font_set_glyph_uv_rect(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Rect2 &p_uv_rect) {
 	GDVIRTUAL_CALL(_font_set_glyph_uv_rect, p_font_rid, p_size, p_glyph, p_uv_rect);
 }
 
-int64_t TextServerExtension::font_get_glyph_texture_idx(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const {
+int64_t TextServerExtension::font_get_glyph_texture_idx(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const {
 	int64_t ret = 0;
 	GDVIRTUAL_CALL(_font_get_glyph_texture_idx, p_font_rid, p_size, p_glyph, ret);
 	return ret;
 }
 
-void TextServerExtension::font_set_glyph_texture_idx(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, int64_t p_texture_idx) {
+void TextServerExtension::font_set_glyph_texture_idx(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, int64_t p_texture_idx) {
 	GDVIRTUAL_CALL(_font_set_glyph_texture_idx, p_font_rid, p_size, p_glyph, p_texture_idx);
 }
 
-RID TextServerExtension::font_get_glyph_texture_rid(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const {
+RID TextServerExtension::font_get_glyph_texture_rid(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const {
 	RID ret;
 	GDVIRTUAL_CALL(_font_get_glyph_texture_rid, p_font_rid, p_size, p_glyph, ret);
 	return ret;
 }
 
-Size2 TextServerExtension::font_get_glyph_texture_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const {
+Size2 TextServerExtension::font_get_glyph_texture_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const {
 	Size2 ret;
 	GDVIRTUAL_CALL(_font_get_glyph_texture_size, p_font_rid, p_size, p_glyph, ret);
 	return ret;
@@ -880,8 +880,8 @@ Dictionary TextServerExtension::font_get_glyph_contours(const RID &p_font_rid, i
 	return ret;
 }
 
-TypedArray<Vector2i> TextServerExtension::font_get_kerning_list(const RID &p_font_rid, int64_t p_size) const {
-	TypedArray<Vector2i> ret;
+TypedArray<Hector2i> TextServerExtension::font_get_kerning_list(const RID &p_font_rid, int64_t p_size) const {
+	TypedArray<Hector2i> ret;
 	GDVIRTUAL_CALL(_font_get_kerning_list, p_font_rid, p_size, ret);
 	return ret;
 }
@@ -890,16 +890,16 @@ void TextServerExtension::font_clear_kerning_map(const RID &p_font_rid, int64_t 
 	GDVIRTUAL_CALL(_font_clear_kerning_map, p_font_rid, p_size);
 }
 
-void TextServerExtension::font_remove_kerning(const RID &p_font_rid, int64_t p_size, const Vector2i &p_glyph_pair) {
+void TextServerExtension::font_remove_kerning(const RID &p_font_rid, int64_t p_size, const Hector2i &p_glyph_pair) {
 	GDVIRTUAL_CALL(_font_remove_kerning, p_font_rid, p_size, p_glyph_pair);
 }
 
-void TextServerExtension::font_set_kerning(const RID &p_font_rid, int64_t p_size, const Vector2i &p_glyph_pair, const Vector2 &p_kerning) {
+void TextServerExtension::font_set_kerning(const RID &p_font_rid, int64_t p_size, const Hector2i &p_glyph_pair, const Hector2 &p_kerning) {
 	GDVIRTUAL_CALL(_font_set_kerning, p_font_rid, p_size, p_glyph_pair, p_kerning);
 }
 
-Vector2 TextServerExtension::font_get_kerning(const RID &p_font_rid, int64_t p_size, const Vector2i &p_glyph_pair) const {
-	Vector2 ret;
+Hector2 TextServerExtension::font_get_kerning(const RID &p_font_rid, int64_t p_size, const Hector2i &p_glyph_pair) const {
+	Hector2 ret;
 	GDVIRTUAL_CALL(_font_get_kerning, p_font_rid, p_size, p_glyph_pair, ret);
 	return ret;
 }
@@ -934,19 +934,19 @@ PackedInt32Array TextServerExtension::font_get_supported_glyphs(const RID &p_fon
 	return ret;
 }
 
-void TextServerExtension::font_render_range(const RID &p_font_rid, const Vector2i &p_size, int64_t p_start, int64_t p_end) {
+void TextServerExtension::font_render_range(const RID &p_font_rid, const Hector2i &p_size, int64_t p_start, int64_t p_end) {
 	GDVIRTUAL_CALL(_font_render_range, p_font_rid, p_size, p_start, p_end);
 }
 
-void TextServerExtension::font_render_glyph(const RID &p_font_rid, const Vector2i &p_size, int64_t p_index) {
+void TextServerExtension::font_render_glyph(const RID &p_font_rid, const Hector2i &p_size, int64_t p_index) {
 	GDVIRTUAL_CALL(_font_render_glyph, p_font_rid, p_size, p_index);
 }
 
-void TextServerExtension::font_draw_glyph(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color) const {
+void TextServerExtension::font_draw_glyph(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color) const {
 	GDVIRTUAL_CALL(_font_draw_glyph, p_font_rid, p_canvas, p_size, p_pos, p_index, p_color);
 }
 
-void TextServerExtension::font_draw_glyph_outline(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, int64_t p_outline_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color) const {
+void TextServerExtension::font_draw_glyph_outline(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, int64_t p_outline_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color) const {
 	GDVIRTUAL_CALL(_font_draw_glyph_outline, p_font_rid, p_canvas, p_size, p_outline_size, p_pos, p_index, p_color);
 }
 
@@ -1034,15 +1034,15 @@ void TextServerExtension::font_set_global_oversampling(double p_oversampling) {
 	GDVIRTUAL_CALL(_font_set_global_oversampling, p_oversampling);
 }
 
-Vector2 TextServerExtension::get_hex_code_box_size(int64_t p_size, int64_t p_index) const {
-	Vector2 ret;
+Hector2 TextServerExtension::get_hex_code_box_size(int64_t p_size, int64_t p_index) const {
+	Hector2 ret;
 	if (GDVIRTUAL_CALL(_get_hex_code_box_size, p_size, p_index, ret)) {
 		return ret;
 	}
 	return TextServer::get_hex_code_box_size(p_size, p_index);
 }
 
-void TextServerExtension::draw_hex_code_box(const RID &p_canvas, int64_t p_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color) const {
+void TextServerExtension::draw_hex_code_box(const RID &p_canvas, int64_t p_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color) const {
 	if (!GDVIRTUAL_CALL(_draw_hex_code_box, p_canvas, p_size, p_pos, p_index, p_color)) {
 		TextServer::draw_hex_code_box(p_canvas, p_size, p_pos, p_index, p_color);
 	}
@@ -1242,8 +1242,8 @@ int64_t TextServerExtension::shaped_text_get_glyph_count(const RID &p_shaped) co
 	return ret;
 }
 
-Vector2i TextServerExtension::shaped_text_get_range(const RID &p_shaped) const {
-	Vector2i ret;
+Hector2i TextServerExtension::shaped_text_get_range(const RID &p_shaped) const {
+	Hector2i ret;
 	GDVIRTUAL_CALL(_shaped_text_get_range, p_shaped, ret);
 	return ret;
 }
@@ -1312,8 +1312,8 @@ Rect2 TextServerExtension::shaped_text_get_object_rect(const RID &p_shaped, cons
 	return ret;
 }
 
-Vector2i TextServerExtension::shaped_text_get_object_range(const RID &p_shaped, const Variant &p_key) const {
-	Vector2i ret;
+Hector2i TextServerExtension::shaped_text_get_object_range(const RID &p_shaped, const Variant &p_key) const {
+	Hector2i ret;
 	GDVIRTUAL_CALL(_shaped_text_get_object_range, p_shaped, p_key, ret);
 	return ret;
 }
@@ -1376,8 +1376,8 @@ CaretInfo TextServerExtension::shaped_text_get_carets(const RID &p_shaped, int64
 	return TextServer::shaped_text_get_carets(p_shaped, p_position);
 }
 
-Vector<Vector2> TextServerExtension::shaped_text_get_selection(const RID &p_shaped, int64_t p_start, int64_t p_end) const {
-	Vector<Vector2> ret;
+Hector<Hector2> TextServerExtension::shaped_text_get_selection(const RID &p_shaped, int64_t p_start, int64_t p_end) const {
+	Hector<Hector2> ret;
 	if (GDVIRTUAL_CALL(_shaped_text_get_selection, p_shaped, p_start, p_end, ret)) {
 		return ret;
 	}
@@ -1400,22 +1400,22 @@ int64_t TextServerExtension::shaped_text_hit_test_position(const RID &p_shaped, 
 	return TextServer::shaped_text_hit_test_position(p_shaped, p_coords);
 }
 
-void TextServerExtension::shaped_text_draw(const RID &p_shaped, const RID &p_canvas, const Vector2 &p_pos, double p_clip_l, double p_clip_r, const Color &p_color) const {
+void TextServerExtension::shaped_text_draw(const RID &p_shaped, const RID &p_canvas, const Hector2 &p_pos, double p_clip_l, double p_clip_r, const Color &p_color) const {
 	if (GDVIRTUAL_CALL(_shaped_text_draw, p_shaped, p_canvas, p_pos, p_clip_l, p_clip_r, p_color)) {
 		return;
 	}
 	TextServer::shaped_text_draw(p_shaped, p_canvas, p_pos, p_clip_l, p_clip_r, p_color);
 }
 
-void TextServerExtension::shaped_text_draw_outline(const RID &p_shaped, const RID &p_canvas, const Vector2 &p_pos, double p_clip_l, double p_clip_r, int64_t p_outline_size, const Color &p_color) const {
+void TextServerExtension::shaped_text_draw_outline(const RID &p_shaped, const RID &p_canvas, const Hector2 &p_pos, double p_clip_l, double p_clip_r, int64_t p_outline_size, const Color &p_color) const {
 	if (GDVIRTUAL_CALL(_shaped_text_draw_outline, p_shaped, p_canvas, p_pos, p_clip_l, p_clip_r, p_outline_size, p_color)) {
 		return;
 	}
 	TextServer::shaped_text_draw_outline(p_shaped, p_canvas, p_pos, p_clip_l, p_clip_r, p_outline_size, p_color);
 }
 
-Vector2 TextServerExtension::shaped_text_get_grapheme_bounds(const RID &p_shaped, int64_t p_pos) const {
-	Vector2 ret;
+Hector2 TextServerExtension::shaped_text_get_grapheme_bounds(const RID &p_shaped, int64_t p_pos) const {
+	Hector2 ret;
 	if (GDVIRTUAL_CALL(_shaped_text_get_grapheme_bounds, p_shaped, p_pos, ret)) {
 		return ret;
 	}
@@ -1540,8 +1540,8 @@ String TextServerExtension::string_to_lower(const String &p_string, const String
 	return p_string;
 }
 
-TypedArray<Vector3i> TextServerExtension::parse_structured_text(StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const {
-	TypedArray<Vector3i> ret;
+TypedArray<Hector3i> TextServerExtension::parse_structured_text(StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const {
+	TypedArray<Hector3i> ret;
 	if (GDVIRTUAL_CALL(_parse_structured_text, p_parser_type, p_args, p_text, ret)) {
 		return ret;
 	}

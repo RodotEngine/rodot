@@ -100,7 +100,7 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 		return;
 	}
 
-	// 2D:                                                     3D plane (axes match exactly when `axis == Vector3::AXIS_Z`):
+	// 2D:                                                     3D plane (axes match exactly when `axis == Hector3::AXIS_Z`):
 	//   -X+                                                     -X+
 	//  -                                                       +
 	//  Y  +--------+       +--------+       +--------+         Y  +--------+
@@ -121,14 +121,14 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	real_t px_size = get_pixel_size();
 
 	// (2) Order vertices (0123) bottom-top in 2D / top-bottom in 3D.
-	Vector2 vertices[4] = {
-		(final_rect.position + Vector2(0, final_rect.size.y)) * px_size,
+	Hector2 vertices[4] = {
+		(final_rect.position + Hector2(0, final_rect.size.y)) * px_size,
 		(final_rect.position + final_rect.size) * px_size,
-		(final_rect.position + Vector2(final_rect.size.x, 0)) * px_size,
+		(final_rect.position + Hector2(final_rect.size.x, 0)) * px_size,
 		final_rect.position * px_size,
 	};
 
-	Vector2 src_tsize = p_texture->get_size();
+	Hector2 src_tsize = p_texture->get_size();
 
 	// Properly setup UVs for impostor textures (AtlasTexture).
 	Ref<AtlasTexture> atlas_tex = p_texture;
@@ -138,11 +138,11 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	}
 
 	// (3) Assign UVs (abcd) according to the vertices order (bottom-top in 2D / top-bottom in 3D).
-	Vector2 uvs[4] = {
+	Hector2 uvs[4] = {
 		final_src_rect.position / src_tsize,
-		(final_src_rect.position + Vector2(final_src_rect.size.x, 0)) / src_tsize,
+		(final_src_rect.position + Hector2(final_src_rect.size.x, 0)) / src_tsize,
 		(final_src_rect.position + final_src_rect.size) / src_tsize,
-		(final_src_rect.position + Vector2(0, final_src_rect.size.y)) / src_tsize,
+		(final_src_rect.position + Hector2(0, final_src_rect.size.y)) / src_tsize,
 	};
 
 	if (is_flipped_h()) {
@@ -155,12 +155,12 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 		SWAP(uvs[1], uvs[2]);
 	}
 
-	Vector3 normal;
+	Hector3 normal;
 	int ax = get_axis();
 	normal[ax] = 1.0;
 
 	Plane tangent;
-	if (ax == Vector3::AXIS_X) {
+	if (ax == Hector3::AXIS_X) {
 		tangent = Plane(0, 0, -1, 1);
 	} else {
 		tangent = Plane(1, 0, 0, 1);
@@ -169,15 +169,15 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	int x_axis = ((ax + 1) % 3);
 	int y_axis = ((ax + 2) % 3);
 
-	if (ax != Vector3::AXIS_Z) {
+	if (ax != Hector3::AXIS_Z) {
 		SWAP(x_axis, y_axis);
 
 		for (int i = 0; i < 4; i++) {
-			//uvs[i] = Vector2(1.0,1.0)-uvs[i];
+			//uvs[i] = Hector2(1.0,1.0)-uvs[i];
 			//SWAP(vertices[i].x,vertices[i].y);
-			if (ax == Vector3::AXIS_Y) {
+			if (ax == Hector3::AXIS_Y) {
 				vertices[i].y = -vertices[i].y;
-			} else if (ax == Vector3::AXIS_X) {
+			} else if (ax == Hector3::AXIS_X) {
 				vertices[i].x = -vertices[i].x;
 			}
 		}
@@ -191,7 +191,7 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 
 	uint32_t v_normal;
 	{
-		Vector2 res = normal.octahedron_encode();
+		Hector2 res = normal.octahedron_encode();
 		uint32_t value = 0;
 		value |= (uint16_t)CLAMP(res.x * 65535, 0, 65535);
 		value |= (uint16_t)CLAMP(res.y * 65535, 0, 65535) << 16;
@@ -201,7 +201,7 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	uint32_t v_tangent;
 	{
 		Plane t = tangent;
-		Vector2 res = t.normal.octahedron_tangent_encode(t.d);
+		Hector2 res = t.normal.octahedron_tangent_encode(t.d);
 		uint32_t value = 0;
 		value |= (uint16_t)CLAMP(res.x * 65535, 0, 65535);
 		value |= (uint16_t)CLAMP(res.y * 65535, 0, 65535) << 16;
@@ -222,12 +222,12 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	};
 
 	for (int i = 0; i < 4; i++) {
-		Vector3 vtx;
+		Hector3 vtx;
 		vtx[x_axis] = vertices[i][0];
 		vtx[y_axis] = vertices[i][1];
 		if (i == 0) {
 			aabb_new.position = vtx;
-			aabb_new.size = Vector3();
+			aabb_new.size = Hector3();
 		} else {
 			aabb_new.expand_to(vtx);
 		}
@@ -378,7 +378,7 @@ real_t SpriteBase3D::get_pixel_size() const {
 	return pixel_size;
 }
 
-void SpriteBase3D::set_axis(Vector3::Axis p_axis) {
+void SpriteBase3D::set_axis(Hector3::Axis p_axis) {
 	ERR_FAIL_INDEX(p_axis, 3);
 
 	if (axis == p_axis) {
@@ -389,7 +389,7 @@ void SpriteBase3D::set_axis(Vector3::Axis p_axis) {
 	_queue_redraw();
 }
 
-Vector3::Axis SpriteBase3D::get_axis() const {
+Hector3::Axis SpriteBase3D::get_axis() const {
 	return axis;
 }
 
@@ -423,9 +423,9 @@ Ref<TriangleMesh> SpriteBase3D::generate_triangle_mesh() const {
 		return triangle_mesh;
 	}
 
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	faces.resize(6);
-	Vector3 *facesw = faces.ptrw();
+	Hector3 *facesw = faces.ptrw();
 
 	Rect2 final_rect = get_item_rect();
 
@@ -435,23 +435,23 @@ Ref<TriangleMesh> SpriteBase3D::generate_triangle_mesh() const {
 
 	real_t px_size = get_pixel_size();
 
-	Vector2 vertices[4] = {
-		(final_rect.position + Vector2(0, final_rect.size.y)) * px_size,
+	Hector2 vertices[4] = {
+		(final_rect.position + Hector2(0, final_rect.size.y)) * px_size,
 		(final_rect.position + final_rect.size) * px_size,
-		(final_rect.position + Vector2(final_rect.size.x, 0)) * px_size,
+		(final_rect.position + Hector2(final_rect.size.x, 0)) * px_size,
 		final_rect.position * px_size,
 	};
 
 	int x_axis = ((axis + 1) % 3);
 	int y_axis = ((axis + 2) % 3);
 
-	if (axis != Vector3::AXIS_Z) {
+	if (axis != Hector3::AXIS_Z) {
 		SWAP(x_axis, y_axis);
 
 		for (int i = 0; i < 4; i++) {
-			if (axis == Vector3::AXIS_Y) {
+			if (axis == Hector3::AXIS_Y) {
 				vertices[i].y = -vertices[i].y;
-			} else if (axis == Vector3::AXIS_X) {
+			} else if (axis == Hector3::AXIS_X) {
 				vertices[i].x = -vertices[i].x;
 			}
 		}
@@ -464,7 +464,7 @@ Ref<TriangleMesh> SpriteBase3D::generate_triangle_mesh() const {
 
 	for (int j = 0; j < 6; j++) {
 		int i = indices[j];
-		Vector3 vtx;
+		Hector3 vtx;
 		vtx[x_axis] = vertices[i][0];
 		vtx[y_axis] = vertices[i][1];
 		facesw[j] = vtx;
@@ -640,7 +640,7 @@ void SpriteBase3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("generate_triangle_mesh"), &SpriteBase3D::generate_triangle_mesh);
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "centered"), "set_centered", "is_centered");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_h"), "set_flip_h", "is_flipped_h");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_v"), "set_flip_v", "is_flipped_v");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "modulate"), "set_modulate", "get_modulate");
@@ -685,18 +685,18 @@ SpriteBase3D::SpriteBase3D() {
 	RS::get_singleton()->material_set_param(material, "specular", 0.5);
 	RS::get_singleton()->material_set_param(material, "metallic", 0.0);
 	RS::get_singleton()->material_set_param(material, "roughness", 1.0);
-	RS::get_singleton()->material_set_param(material, "uv1_offset", Vector3(0, 0, 0));
-	RS::get_singleton()->material_set_param(material, "uv1_scale", Vector3(1, 1, 1));
-	RS::get_singleton()->material_set_param(material, "uv2_offset", Vector3(0, 0, 0));
-	RS::get_singleton()->material_set_param(material, "uv2_scale", Vector3(1, 1, 1));
+	RS::get_singleton()->material_set_param(material, "uv1_offset", Hector3(0, 0, 0));
+	RS::get_singleton()->material_set_param(material, "uv1_scale", Hector3(1, 1, 1));
+	RS::get_singleton()->material_set_param(material, "uv2_offset", Hector3(0, 0, 0));
+	RS::get_singleton()->material_set_param(material, "uv2_scale", Hector3(1, 1, 1));
 
 	mesh = RenderingServer::get_singleton()->mesh_create();
 
-	PackedVector3Array mesh_vertices;
-	PackedVector3Array mesh_normals;
+	PackedHector3Array mesh_vertices;
+	PackedHector3Array mesh_normals;
 	PackedFloat32Array mesh_tangents;
 	PackedColorArray mesh_colors;
-	PackedVector2Array mesh_uvs;
+	PackedHector2Array mesh_uvs;
 	PackedInt32Array indices;
 
 	mesh_vertices.resize(4);
@@ -707,14 +707,14 @@ SpriteBase3D::SpriteBase3D() {
 
 	// Create basic mesh and store format information.
 	for (int i = 0; i < 4; i++) {
-		mesh_normals.write[i] = Vector3(0.0, 0.0, 1.0);
+		mesh_normals.write[i] = Hector3(0.0, 0.0, 1.0);
 		mesh_tangents.write[i * 4 + 0] = 1.0;
 		mesh_tangents.write[i * 4 + 1] = 0.0;
 		mesh_tangents.write[i * 4 + 2] = 0.0;
 		mesh_tangents.write[i * 4 + 3] = 1.0;
 		mesh_colors.write[i] = Color(1.0, 1.0, 1.0, 1.0);
-		mesh_uvs.write[i] = Vector2(0.0, 0.0);
-		mesh_vertices.write[i] = Vector3(0.0, 0.0, 0.0);
+		mesh_uvs.write[i] = Hector2(0.0, 0.0);
+		mesh_vertices.write[i] = Hector3(0.0, 0.0, 0.0);
 	}
 
 	indices.resize(6);
@@ -764,7 +764,7 @@ void Sprite3D::_draw() {
 		set_base(RID());
 		return;
 	}
-	Vector2 tsize = texture->get_size();
+	Hector2 tsize = texture->get_size();
 	if (tsize.x == 0 || tsize.y == 0) {
 		return;
 	}
@@ -855,15 +855,15 @@ int Sprite3D::get_frame() const {
 	return frame;
 }
 
-void Sprite3D::set_frame_coords(const Vector2i &p_coord) {
+void Sprite3D::set_frame_coords(const Hector2i &p_coord) {
 	ERR_FAIL_INDEX(p_coord.x, hframes);
 	ERR_FAIL_INDEX(p_coord.y, vframes);
 
 	set_frame(p_coord.y * hframes + p_coord.x);
 }
 
-Vector2i Sprite3D::get_frame_coords() const {
-	return Vector2i(frame % hframes, frame / hframes);
+Hector2i Sprite3D::get_frame_coords() const {
+	return Hector2i(frame % hframes, frame / hframes);
 }
 
 void Sprite3D::set_vframes(int p_amount) {
@@ -984,7 +984,7 @@ void Sprite3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "hframes", PROPERTY_HINT_RANGE, "1,16384,1"), "set_hframes", "get_hframes");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "vframes", PROPERTY_HINT_RANGE, "1,16384,1"), "set_vframes", "get_vframes");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "frame"), "set_frame", "get_frame");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "frame_coords", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_frame_coords", "get_frame_coords");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "frame_coords", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_frame_coords", "get_frame_coords");
 	ADD_GROUP("Region", "region_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "region_enabled"), "set_region_enabled", "is_region_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::RECT2, "region_rect", PROPERTY_HINT_NONE, "suffix:px"), "set_region_rect", "get_region_rect");

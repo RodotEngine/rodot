@@ -36,7 +36,7 @@
 /**** SHADER ****/
 /****************/
 
-Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_spirv, ShaderReflection &r_reflection) {
+Error RenderingDeviceDriver::_reflect_spirv(HectorView<ShaderStageSPIRVData> p_spirv, ShaderReflection &r_reflection) {
 	r_reflection = {};
 
 	for (uint32_t i = 0; i < p_spirv.size(); i++) {
@@ -71,7 +71,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 			if (binding_count > 0) {
 				// Parse bindings.
 
-				Vector<SpvReflectDescriptorBinding *> bindings;
+				Hector<SpvReflectDescriptorBinding *> bindings;
 				bindings.resize(binding_count);
 				result = spvReflectEnumerateDescriptorBindings(&module, &binding_count, bindings.ptrw());
 
@@ -220,7 +220,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating specialization constants.");
 
 				if (sc_count) {
-					Vector<SpvReflectSpecializationConstant *> spec_constants;
+					Hector<SpvReflectSpecializationConstant *> spec_constants;
 					spec_constants.resize(sc_count);
 
 					result = spvReflectEnumerateSpecializationConstants(&module, &sc_count, spec_constants.ptrw());
@@ -277,7 +277,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating input variables.");
 
 				if (iv_count) {
-					Vector<SpvReflectInterfaceVariable *> input_vars;
+					Hector<SpvReflectInterfaceVariable *> input_vars;
 					input_vars.resize(iv_count);
 
 					result = spvReflectEnumerateInputVariables(&module, &iv_count, input_vars.ptrw());
@@ -299,7 +299,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating output variables.");
 
 				if (ov_count) {
-					Vector<SpvReflectInterfaceVariable *> output_vars;
+					Hector<SpvReflectInterfaceVariable *> output_vars;
 					output_vars.resize(ov_count);
 
 					result = spvReflectEnumerateOutputVariables(&module, &ov_count, output_vars.ptrw());
@@ -324,7 +324,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 				ERR_FAIL_COND_V_MSG(pc_count > 1, FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "': Only one push constant is supported, which should be the same across shader stages.");
 
-				Vector<SpvReflectBlockVariable *> pconstants;
+				Hector<SpvReflectBlockVariable *> pconstants;
 				pconstants.resize(pc_count);
 				result = spvReflectEnumeratePushConstantBlocks(&module, &pc_count, pconstants.ptrw());
 				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,

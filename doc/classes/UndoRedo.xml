@@ -22,7 +22,7 @@
 		    undo_redo.create_action("Move the node")
 		    undo_redo.add_do_method(do_something)
 		    undo_redo.add_undo_method(undo_something)
-		    undo_redo.add_do_property(node, "position", Vector2(100,100))
+		    undo_redo.add_do_property(node, "position", Hector2(100,100))
 		    undo_redo.add_undo_property(node, "position", node.position)
 		    undo_redo.commit_action()
 		[/gdscript]
@@ -50,7 +50,7 @@
 		    _undoRedo.CreateAction("Move the node");
 		    _undoRedo.AddDoMethod(new Callable(this, MethodName.DoSomething));
 		    _undoRedo.AddUndoMethod(new Callable(this, MethodName.UndoSomething));
-		    _undoRedo.AddDoProperty(node, "position", new Vector2(100, 100));
+		    _undoRedo.AddDoProperty(node, "position", new Hector2(100, 100));
 		    _undoRedo.AddUndoProperty(node, "position", node.Position);
 		    _undoRedo.CommitAction();
 		}

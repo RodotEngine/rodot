@@ -33,7 +33,7 @@
 		<member name="nine_patch_stretch" type="bool" setter="set_nine_patch_stretch" getter="get_nine_patch_stretch" default="false">
 			If [code]true[/code], Godot treats the bar's textures like in [NinePatchRect]. Use the [code]stretch_margin_*[/code] properties like [member stretch_margin_bottom] to set up the nine patch's 3×3 grid. When using a radial [member fill_mode], this setting will enable stretching.
 		</member>
-		<member name="radial_center_offset" type="Vector2" setter="set_radial_center_offset" getter="get_radial_center_offset" default="Vector2(0, 0)">
+		<member name="radial_center_offset" type="Hector2" setter="set_radial_center_offset" getter="get_radial_center_offset" default="Hector2(0, 0)">
 			Offsets [member texture_progress] if [member fill_mode] is [constant FILL_CLOCKWISE], [constant FILL_COUNTER_CLOCKWISE], or [constant FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE].
 		</member>
 		<member name="radial_fill_degrees" type="float" setter="set_fill_degrees" getter="get_fill_degrees" default="360.0">
@@ -64,7 +64,7 @@
 			[Texture2D] that clips based on the node's [code]value[/code] and [member fill_mode]. As [code]value[/code] increased, the texture fills up. It shows entirely when [code]value[/code] reaches [code]max_value[/code]. It doesn't show at all if [code]value[/code] is equal to [code]min_value[/code].
 			The [code]value[/code] property comes from [Range]. See [member Range.value], [member Range.min_value], [member Range.max_value].
 		</member>
-		<member name="texture_progress_offset" type="Vector2" setter="set_texture_progress_offset" getter="get_texture_progress_offset" default="Vector2(0, 0)">
+		<member name="texture_progress_offset" type="Hector2" setter="set_texture_progress_offset" getter="get_texture_progress_offset" default="Hector2(0, 0)">
 			The offset of [member texture_progress]. Useful for [member texture_over] and [member texture_under] with fancy borders, to avoid transparent margins in your progress texture.
 		</member>
 		<member name="texture_under" type="Texture2D" setter="set_under_texture" getter="get_under_texture">

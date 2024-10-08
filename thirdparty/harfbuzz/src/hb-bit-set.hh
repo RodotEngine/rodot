@@ -78,8 +78,8 @@ struct hb_bit_set_t
   bool successful = true; /* Allocations successful */
   mutable unsigned int population = 0;
   mutable hb_atomic_int_t last_page_lookup = 0;
-  hb_sorted_vector_t<page_map_t> page_map;
-  hb_vector_t<page_t> pages;
+  hb_sorted_Hector_t<page_map_t> page_map;
+  hb_Hector_t<page_t> pages;
 
   void err () { if (successful) successful = false; } /* TODO Remove */
   bool in_error () const { return !successful; }
@@ -291,7 +291,7 @@ struct hb_bit_set_t
     {
       // Pre-allocate the workspace that compact() will need so we can bail on allocation failure
       // before attempting to rewrite the page map.
-      hb_vector_t<unsigned> compact_workspace;
+      hb_Hector_t<unsigned> compact_workspace;
       if (unlikely (!allocate_compact_workspace (compact_workspace))) return;
 
       unsigned int write_index = 0;
@@ -437,7 +437,7 @@ struct hb_bit_set_t
   }
 
   private:
-  bool allocate_compact_workspace (hb_vector_t<unsigned>& workspace)
+  bool allocate_compact_workspace (hb_Hector_t<unsigned>& workspace)
   {
     if (unlikely (!workspace.resize_exact (pages.length)))
     {
@@ -449,14 +449,14 @@ struct hb_bit_set_t
   }
 
   /*
-   * workspace should be a pre-sized vector allocated to hold at exactly pages.length
+   * workspace should be a pre-sized Hector allocated to hold at exactly pages.length
    * elements.
    */
-  void compact (hb_vector_t<unsigned>& workspace,
+  void compact (hb_Hector_t<unsigned>& workspace,
                 unsigned int length)
   {
     assert(workspace.length == pages.length);
-    hb_vector_t<unsigned>& old_index_to_page_map_index = workspace;
+    hb_Hector_t<unsigned>& old_index_to_page_map_index = workspace;
 
     hb_fill (old_index_to_page_map_index.writer(), 0xFFFFFFFF);
     for (unsigned i = 0; i < length; i++)
@@ -464,7 +464,7 @@ struct hb_bit_set_t
 
     compact_pages (old_index_to_page_map_index);
   }
-  void compact_pages (const hb_vector_t<unsigned>& old_index_to_page_map_index)
+  void compact_pages (const hb_Hector_t<unsigned>& old_index_to_page_map_index)
   {
     unsigned int write_index = 0;
     for (unsigned int i = 0; i < pages.length; i++)
@@ -480,7 +480,7 @@ struct hb_bit_set_t
   }
   public:
 
-  void process_ (hb_bit_page_t::vector_t (*op) (const hb_bit_page_t::vector_t &, const hb_bit_page_t::vector_t &),
+  void process_ (hb_bit_page_t::Hector_t (*op) (const hb_bit_page_t::Hector_t &, const hb_bit_page_t::Hector_t &),
 		 bool passthru_left, bool passthru_right,
 		 const hb_bit_set_t &other)
   {
@@ -498,7 +498,7 @@ struct hb_bit_set_t
 
     // Pre-allocate the workspace that compact() will need so we can bail on allocation failure
     // before attempting to rewrite the page map.
-    hb_vector_t<unsigned> compact_workspace;
+    hb_Hector_t<unsigned> compact_workspace;
     if (!passthru_left && unlikely (!allocate_compact_workspace (compact_workspace))) return;
 
     for (; a < na && b < nb; )
@@ -508,7 +508,7 @@ struct hb_bit_set_t
 	if (!passthru_left)
 	{
 	  // Move page_map entries that we're keeping from the left side set
-	  // to the front of the page_map vector. This isn't necessary if
+	  // to the front of the page_map Hector. This isn't necessary if
 	  // passthru_left is set since no left side pages will be removed
 	  // in that case.
 	  if (write_index < a)
@@ -605,8 +605,8 @@ struct hb_bit_set_t
     resize (newCount);
   }
   template <typename Op>
-  static hb_bit_page_t::vector_t
-  op_ (const hb_bit_page_t::vector_t &a, const hb_bit_page_t::vector_t &b)
+  static hb_bit_page_t::Hector_t
+  op_ (const hb_bit_page_t::Hector_t &a, const hb_bit_page_t::Hector_t &b)
   { return Op{} (a, b); }
   template <typename Op>
   void process (const Op& op, const hb_bit_set_t &other)
@@ -911,7 +911,7 @@ struct hb_bit_set_t
   {
     unsigned major = get_major (g);
 
-    /* The extra page_map length is necessary; can't just rely on vector here,
+    /* The extra page_map length is necessary; can't just rely on Hector here,
      * since the next check would be tricked because a null page also has
      * major==0, which we can't distinguish from an actually major==0 page... */
     unsigned i = last_page_lookup;
@@ -945,7 +945,7 @@ struct hb_bit_set_t
   {
     unsigned major = get_major (g);
 
-    /* The extra page_map length is necessary; can't just rely on vector here,
+    /* The extra page_map length is necessary; can't just rely on Hector here,
      * since the next check would be tricked because a null page also has
      * major==0, which we can't distinguish from an actually major==0 page... */
     unsigned i = last_page_lookup;

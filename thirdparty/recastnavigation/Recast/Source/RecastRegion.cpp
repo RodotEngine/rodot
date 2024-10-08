@@ -253,7 +253,7 @@ static bool floodRegion(int x, int y, int i,
 						unsigned short level, unsigned short r,
 						rcCompactHeightfield& chf,
 						unsigned short* srcReg, unsigned short* srcDist,
-						rcTempVector<LevelStackEntry>& stack)
+						rcTempHector<LevelStackEntry>& stack)
 {
 	const int w = chf.width;
 	
@@ -361,7 +361,7 @@ struct DirtyEntry
 static void expandRegions(int maxIter, unsigned short level,
 					      rcCompactHeightfield& chf,
 					      unsigned short* srcReg, unsigned short* srcDist,
-					      rcTempVector<LevelStackEntry>& stack,
+					      rcTempHector<LevelStackEntry>& stack,
 					      bool fillStack)
 {
 	const int w = chf.width;
@@ -397,7 +397,7 @@ static void expandRegions(int maxIter, unsigned short level,
 		}
 	}
 
-	rcTempVector<DirtyEntry> dirtyEntries;
+	rcTempHector<DirtyEntry> dirtyEntries;
 	int iter = 0;
 	while (stack.size() > 0)
 	{
@@ -470,7 +470,7 @@ static void expandRegions(int maxIter, unsigned short level,
 static void sortCellsByLevel(unsigned short startLevel,
 							  rcCompactHeightfield& chf,
 							  const unsigned short* srcReg,
-							  unsigned int nbStacks, rcTempVector<LevelStackEntry>* stacks,
+							  unsigned int nbStacks, rcTempHector<LevelStackEntry>* stacks,
 							  unsigned short loglevelsPerStack) // the levels per stack (2 in our case) as a bit shift
 {
 	const int w = chf.width;
@@ -505,8 +505,8 @@ static void sortCellsByLevel(unsigned short startLevel,
 }
 
 
-static void appendStacks(const rcTempVector<LevelStackEntry>& srcStack,
-						 rcTempVector<LevelStackEntry>& dstStack,
+static void appendStacks(const rcTempHector<LevelStackEntry>& srcStack,
+						 rcTempHector<LevelStackEntry>& dstStack,
 						 const unsigned short* srcReg)
 {
 	for (int j=0; j<srcStack.size(); j++)
@@ -794,7 +794,7 @@ static bool mergeAndFilterRegions(rcContext* ctx, int minRegionArea, int mergeRe
 	const int h = chf.height;
 	
 	const int nreg = maxRegionId+1;
-	rcTempVector<rcRegion> regions;
+	rcTempHector<rcRegion> regions;
 	if (!regions.reserve(nreg)) {
 		ctx->log(RC_LOG_ERROR, "mergeAndFilterRegions: Out of memory 'regions' (%d).", nreg);
 		return false;
@@ -1049,7 +1049,7 @@ static bool mergeAndFilterLayerRegions(rcContext* ctx, int minRegionArea,
 	const int h = chf.height;
 	
 	const int nreg = maxRegionId+1;
-	rcTempVector<rcRegion> regions;
+	rcTempHector<rcRegion> regions;
 	
 	// Construct regions
 	if (!regions.reserve(nreg)) {
@@ -1543,11 +1543,11 @@ bool rcBuildRegions(rcContext* ctx, rcCompactHeightfield& chf,
 
 	const int LOG_NB_STACKS = 3;
 	const int NB_STACKS = 1 << LOG_NB_STACKS;
-	rcTempVector<LevelStackEntry> lvlStacks[NB_STACKS];
+	rcTempHector<LevelStackEntry> lvlStacks[NB_STACKS];
 	for (int i=0; i<NB_STACKS; ++i)
 		lvlStacks[i].reserve(256);
 
-	rcTempVector<LevelStackEntry> stack;
+	rcTempHector<LevelStackEntry> stack;
 	stack.reserve(256);
 	
 	unsigned short* srcReg = buf;

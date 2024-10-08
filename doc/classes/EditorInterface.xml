@@ -276,7 +276,7 @@
 		<method name="popup_dialog_centered">
 			<return type="void" />
 			<param index="0" name="dialog" type="Window" />
-			<param index="1" name="minsize" type="Vector2i" default="Vector2i(0, 0)" />
+			<param index="1" name="minsize" type="Hector2i" default="Hector2i(0, 0)" />
 			<description>
 				Pops up the [param dialog] in the editor UI with [method Window.popup_exclusive_centered]. The dialog must have no current parent, otherwise the method fails.
 				See also [method Window.set_unparent_when_invisible].
@@ -285,7 +285,7 @@
 		<method name="popup_dialog_centered_clamped">
 			<return type="void" />
 			<param index="0" name="dialog" type="Window" />
-			<param index="1" name="minsize" type="Vector2i" default="Vector2i(0, 0)" />
+			<param index="1" name="minsize" type="Hector2i" default="Hector2i(0, 0)" />
 			<param index="2" name="fallback_ratio" type="float" default="0.75" />
 			<description>
 				Pops up the [param dialog] in the editor UI with [method Window.popup_exclusive_centered_clamped]. The dialog must have no current parent, otherwise the method fails.

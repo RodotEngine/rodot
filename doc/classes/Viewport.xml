@@ -78,7 +78,7 @@
 			</description>
 		</method>
 		<method name="get_mouse_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the mouse's position in this [Viewport] using the coordinate system of this [Viewport].
 			</description>
@@ -253,7 +253,7 @@
 		</method>
 		<method name="warp_mouse">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<description>
 				Moves the mouse pointer to the specified position in this [Viewport] using the coordinate system of this [Viewport].
 				[b]Note:[/b] [method warp_mouse] is only supported on Windows, macOS and Linux. It has no effect on Android, iOS and Web.
@@ -402,7 +402,7 @@
 			[b]Note:[/b] Due to memory constraints, occlusion culling is not supported by default in Web export templates. It can be enabled by compiling custom Web export templates with [code]module_raycast_enabled=yes[/code].
 		</member>
 		<member name="use_taa" type="bool" setter="set_use_taa" getter="is_using_taa" default="false">
-			Enables Temporal Anti-Aliasing for this viewport. TAA works by jittering the camera and accumulating the images of the last rendered frames, motion vector rendering is used to account for camera and object motion.
+			Enables Temporal Anti-Aliasing for this viewport. TAA works by jittering the camera and accumulating the images of the last rendered frames, motion Hector rendering is used to account for camera and object motion.
 			[b]Note:[/b] The implementation is not complete yet, some visual instances such as particles and skinned meshes may show artifacts.
 		</member>
 		<member name="use_xr" type="bool" setter="set_use_xr" getter="is_using_xr" default="false">
@@ -613,8 +613,8 @@
 		<constant name="DEBUG_DRAW_OCCLUDERS" value="24" enum="DebugDraw">
 			Draws the buffer used for occlusion culling.
 		</constant>
-		<constant name="DEBUG_DRAW_MOTION_VECTORS" value="25" enum="DebugDraw">
-			Draws vector lines over the viewport to indicate the movement of pixels between frames.
+		<constant name="DEBUG_DRAW_MOTION_HectorS" value="25" enum="DebugDraw">
+			Draws Hector lines over the viewport to indicate the movement of pixels between frames.
 		</constant>
 		<constant name="DEBUG_DRAW_INTERNAL_BUFFER" value="26" enum="DebugDraw">
 			Draws the internal resolution buffer of the scene before post-processing is applied.

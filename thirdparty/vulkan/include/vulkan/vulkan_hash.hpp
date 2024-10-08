@@ -7187,7 +7187,7 @@ namespace std
       VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.width );
       VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.height );
       VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.imageFormat );
-      VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.flowVectorFormat );
+      VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.flowHectorFormat );
       VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.costFormat );
       VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.outputGridSize );
       VULKAN_HPP_HASH_COMBINE( seed, opticalFlowSessionCreateInfoNV.hintGridSize );
@@ -11021,15 +11021,15 @@ namespace std
   };
 
   template <>
-  struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV>
+  struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV>
   {
-    std::size_t operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const & physicalDeviceShaderAtomicFloat16VectorFeaturesNV )
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV const & physicalDeviceShaderAtomicFloat16HectorFeaturesNV )
       const VULKAN_HPP_NOEXCEPT
     {
       std::size_t seed = 0;
-      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderAtomicFloat16VectorFeaturesNV.sType );
-      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderAtomicFloat16VectorFeaturesNV.pNext );
-      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderAtomicFloat16VectorFeaturesNV.shaderFloat16VectorAtomics );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderAtomicFloat16HectorFeaturesNV.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderAtomicFloat16HectorFeaturesNV.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderAtomicFloat16HectorFeaturesNV.shaderFloat16HectorAtomics );
       return seed;
     }
   };

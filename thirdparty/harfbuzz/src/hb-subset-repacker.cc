@@ -44,7 +44,7 @@ hb_blob_t* hb_subset_repack_or_fail (hb_tag_t table_tag,
                                      hb_object_t* hb_objects,
                                      unsigned num_hb_objs)
 {
-  hb_vector_t<const hb_object_t *> packed;
+  hb_Hector_t<const hb_object_t *> packed;
   packed.alloc (num_hb_objs + 1);
   packed.push (nullptr);
   for (unsigned i = 0 ; i < num_hb_objs ; i++)

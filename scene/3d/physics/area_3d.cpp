@@ -59,21 +59,21 @@ real_t Area3D::get_gravity_point_unit_distance() const {
 	return gravity_point_unit_distance;
 }
 
-void Area3D::set_gravity_point_center(const Vector3 &p_center) {
+void Area3D::set_gravity_point_center(const Hector3 &p_center) {
 	gravity_vec = p_center;
-	PhysicsServer3D::get_singleton()->area_set_param(get_rid(), PhysicsServer3D::AREA_PARAM_GRAVITY_VECTOR, p_center);
+	PhysicsServer3D::get_singleton()->area_set_param(get_rid(), PhysicsServer3D::AREA_PARAM_GRAVITY_Hector, p_center);
 }
 
-const Vector3 &Area3D::get_gravity_point_center() const {
+const Hector3 &Area3D::get_gravity_point_center() const {
 	return gravity_vec;
 }
 
-void Area3D::set_gravity_direction(const Vector3 &p_direction) {
+void Area3D::set_gravity_direction(const Hector3 &p_direction) {
 	gravity_vec = p_direction;
-	PhysicsServer3D::get_singleton()->area_set_param(get_rid(), PhysicsServer3D::AREA_PARAM_GRAVITY_VECTOR, p_direction);
+	PhysicsServer3D::get_singleton()->area_set_param(get_rid(), PhysicsServer3D::AREA_PARAM_GRAVITY_Hector, p_direction);
 }
 
-const Vector3 &Area3D::get_gravity_direction() const {
+const Hector3 &Area3D::get_gravity_direction() const {
 	return gravity_vec;
 }
 
@@ -166,8 +166,8 @@ const NodePath &Area3D::get_wind_source_path() const {
 
 void Area3D::_initialize_wind() {
 	real_t temp_magnitude = 0.0;
-	Vector3 wind_direction(0., 0., 0.);
-	Vector3 wind_source(0., 0., 0.);
+	Hector3 wind_direction(0., 0., 0.);
+	Hector3 wind_source(0., 0., 0.);
 
 	// Overwrite with area-specified info if available
 	if (!wind_source_path.is_empty()) {
@@ -176,7 +176,7 @@ void Area3D::_initialize_wind() {
 		Node3D *wind_source_node3d = Object::cast_to<Node3D>(wind_source_node);
 		ERR_FAIL_NULL_MSG(wind_source_node3d, "Path to wind source does not point to a Node3D: '" + wind_source_path + "'.");
 		Transform3D global_transform = wind_source_node3d->get_transform();
-		wind_direction = -global_transform.basis.get_column(Vector3::AXIS_Z).normalized();
+		wind_direction = -global_transform.basis.get_column(Hector3::AXIS_Z).normalized();
 		wind_source = global_transform.origin;
 		temp_magnitude = wind_force_magnitude;
 	}
@@ -775,8 +775,8 @@ void Area3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "gravity_space_override", PROPERTY_HINT_ENUM, "Disabled,Combine,Combine-Replace,Replace,Replace-Combine", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_gravity_space_override_mode", "get_gravity_space_override_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "gravity_point", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_gravity_is_point", "is_gravity_a_point");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "gravity_point_unit_distance", PROPERTY_HINT_RANGE, "0,1024,0.001,or_greater,exp,suffix:m"), "set_gravity_point_unit_distance", "get_gravity_point_unit_distance");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gravity_point_center", PROPERTY_HINT_NONE, "suffix:m"), "set_gravity_point_center", "get_gravity_point_center");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gravity_direction"), "set_gravity_direction", "get_gravity_direction");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "gravity_point_center", PROPERTY_HINT_NONE, "suffix:m"), "set_gravity_point_center", "get_gravity_point_center");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "gravity_direction"), "set_gravity_direction", "get_gravity_direction");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "gravity", PROPERTY_HINT_RANGE, U"-32,32,0.001,or_less,or_greater,suffix:m/s\u00B2"), "set_gravity", "get_gravity");
 
 	ADD_GROUP("Linear Damp", "linear_damp_");
@@ -814,7 +814,7 @@ Area3D::Area3D() :
 	audio_bus = SceneStringName(Master);
 	reverb_bus = SceneStringName(Master);
 	set_gravity(9.8);
-	set_gravity_direction(Vector3(0, -1, 0));
+	set_gravity_direction(Hector3(0, -1, 0));
 	set_monitoring(true);
 	set_monitorable(true);
 }

@@ -22,7 +22,7 @@
  *      Algorithm for the Internet Key Exchange Protocol (IKE)
  *   https://tools.ietf.org/html/rfc4615
  *
- *   Additional test vectors: ISO/IEC 9797-1
+ *   Additional test Hectors: ISO/IEC 9797-1
  *
  */
 

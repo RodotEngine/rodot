@@ -31,7 +31,7 @@
 #ifndef TEXTURE_STORAGE_RD_H
 #define TEXTURE_STORAGE_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_array.h"
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/renderer_rd/shaders/canvas_sdf.glsl.gen.h"
@@ -164,7 +164,7 @@ private:
 			uint32_t offset = 0;
 			uint32_t buffer_size = 0;
 		};
-		Vector<BufferSlice3D> buffer_slices_3d;
+		Hector<BufferSlice3D> buffer_slices_3d;
 		uint32_t buffer_size_3d = 0;
 
 		RenderTarget *render_target = nullptr;
@@ -175,7 +175,7 @@ private:
 		String path;
 
 		RID proxy_to;
-		Vector<RID> proxies;
+		Hector<RID> proxies;
 
 		HashSet<RID> lightmap_users;
 
@@ -274,13 +274,13 @@ private:
 			RID texture;
 			Size2i size;
 		};
-		Vector<MipMap> texture_mipmaps;
+		Hector<MipMap> texture_mipmaps;
 
 		Size2i size;
 	} decal_atlas;
 
 	struct Decal {
-		Vector3 size = Vector3(2, 2, 2);
+		Hector3 size = Hector3(2, 2, 2);
 		RID textures[RS::DECAL_TEXTURE_MAX];
 		float emission_energy = 1.0;
 		float albedo_mix = 1.0;
@@ -351,7 +351,7 @@ private:
 		Size2i size;
 		uint32_t view_count;
 		RID color;
-		Vector<RID> color_slices;
+		Hector<RID> color_slices;
 		RID color_multisample; // Needed when 2D MSAA is enabled.
 
 		RS::ViewportMSAA msaa = RS::VIEWPORT_MSAA_DISABLED; // 2D MSAA mode
@@ -371,7 +371,7 @@ private:
 		RID backbuffer_fb;
 		RID backbuffer_mipmap0;
 
-		Vector<RID> backbuffer_mipmaps;
+		Hector<RID> backbuffer_mipmaps;
 
 		RID framebuffer_uniform_set;
 		RID backbuffer_uniform_set;
@@ -508,15 +508,15 @@ public:
 	virtual void texture_free(RID p_rid) override;
 
 	virtual void texture_2d_initialize(RID p_texture, const Ref<Image> &p_image) override;
-	virtual void texture_2d_layered_initialize(RID p_texture, const Vector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) override;
-	virtual void texture_3d_initialize(RID p_texture, Image::Format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) override;
+	virtual void texture_2d_layered_initialize(RID p_texture, const Hector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) override;
+	virtual void texture_3d_initialize(RID p_texture, Image::Format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data) override;
 	virtual void texture_external_initialize(RID p_texture, int p_width, int p_height, uint64_t p_external_buffer) override;
 	virtual void texture_proxy_initialize(RID p_texture, RID p_base) override; //all slices, then all the mipmaps, must be coherent
 
 	virtual RID texture_create_from_native_handle(RS::TextureType p_type, Image::Format p_format, uint64_t p_native_handle, int p_width, int p_height, int p_depth, int p_layers = 1, RS::TextureLayeredType p_layered_type = RS::TEXTURE_LAYERED_2D_ARRAY) override;
 
 	virtual void texture_2d_update(RID p_texture, const Ref<Image> &p_image, int p_layer = 0) override;
-	virtual void texture_3d_update(RID p_texture, const Vector<Ref<Image>> &p_data) override;
+	virtual void texture_3d_update(RID p_texture, const Hector<Ref<Image>> &p_data) override;
 	virtual void texture_external_update(RID p_texture, int p_width, int p_height, uint64_t p_external_buffer) override;
 	virtual void texture_proxy_update(RID p_proxy, RID p_base) override;
 
@@ -527,7 +527,7 @@ public:
 
 	virtual Ref<Image> texture_2d_get(RID p_texture) const override;
 	virtual Ref<Image> texture_2d_layer_get(RID p_texture, int p_layer) const override;
-	virtual Vector<Ref<Image>> texture_3d_get(RID p_texture) const override;
+	virtual Hector<Ref<Image>> texture_3d_get(RID p_texture) const override;
 
 	virtual void texture_replace(RID p_texture, RID p_by_texture) override;
 	virtual void texture_set_size_override(RID p_texture, int p_width, int p_height) override;
@@ -603,7 +603,7 @@ public:
 	virtual void decal_initialize(RID p_decal) override;
 	virtual void decal_free(RID p_rid) override;
 
-	virtual void decal_set_size(RID p_decal, const Vector3 &p_size) override;
+	virtual void decal_set_size(RID p_decal, const Hector3 &p_size) override;
 	virtual void decal_set_texture(RID p_decal, RS::DecalTexture p_type, RID p_texture) override;
 	virtual void decal_set_emission_energy(RID p_decal, float p_energy) override;
 	virtual void decal_set_albedo_mix(RID p_decal, float p_mix) override;
@@ -619,7 +619,7 @@ public:
 	virtual void texture_add_to_decal_atlas(RID p_texture, bool p_panorama_to_dp = false) override;
 	virtual void texture_remove_from_decal_atlas(RID p_texture, bool p_panorama_to_dp = false) override;
 
-	_FORCE_INLINE_ Vector3 decal_get_size(RID p_decal) {
+	_FORCE_INLINE_ Hector3 decal_get_size(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->size;
 	}

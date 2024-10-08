@@ -4,7 +4,7 @@
 		A 4×4 matrix for 3D projective transformations.
 	</brief_description>
 	<description>
-		A 4×4 matrix used for 3D projective transformations. It can represent transformations such as translation, rotation, scaling, shearing, and perspective division. It consists of four [Vector4] columns.
+		A 4×4 matrix used for 3D projective transformations. It can represent transformations such as translation, rotation, scaling, shearing, and perspective division. It consists of four [Hector4] columns.
 		For purely linear transformations (translation, rotation, and scale), it is recommended to use [Transform3D], as it is more performant and requires less memory.
 		Used internally as [Camera3D]'s projection matrix.
 	</description>
@@ -33,12 +33,12 @@
 		</constructor>
 		<constructor name="Projection">
 			<return type="Projection" />
-			<param index="0" name="x_axis" type="Vector4" />
-			<param index="1" name="y_axis" type="Vector4" />
-			<param index="2" name="z_axis" type="Vector4" />
-			<param index="3" name="w_axis" type="Vector4" />
+			<param index="0" name="x_axis" type="Hector4" />
+			<param index="1" name="y_axis" type="Hector4" />
+			<param index="2" name="z_axis" type="Hector4" />
+			<param index="3" name="w_axis" type="Hector4" />
 			<description>
-				Constructs a Projection from four [Vector4] values (matrix columns).
+				Constructs a Projection from four [Hector4] values (matrix columns).
 			</description>
 		</constructor>
 	</constructors>
@@ -88,7 +88,7 @@
 			<return type="Projection" />
 			<param index="0" name="size" type="float" />
 			<param index="1" name="aspect" type="float" />
-			<param index="2" name="offset" type="Vector2" />
+			<param index="2" name="offset" type="Hector2" />
 			<param index="3" name="z_near" type="float" />
 			<param index="4" name="z_far" type="float" />
 			<param index="5" name="flip_fov" type="bool" default="false" />
@@ -176,7 +176,7 @@
 			</description>
 		</method>
 		<method name="get_far_plane_half_extents" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the dimensions of the far clipping plane of the projection, divided by two.
 			</description>
@@ -217,7 +217,7 @@
 			</description>
 		</method>
 		<method name="get_viewport_half_extents" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the dimensions of the viewport plane that this [Projection] projects positions onto, divided by two.
 			</description>
@@ -248,9 +248,9 @@
 		</method>
 		<method name="jitter_offseted" qualifiers="const">
 			<return type="Projection" />
-			<param index="0" name="offset" type="Vector2" />
+			<param index="0" name="offset" type="Hector2" />
 			<description>
-				Returns a [Projection] with the X and Y values from the given [Vector2] added to the first and second values of the final column respectively.
+				Returns a [Projection] with the X and Y values from the given [Hector2] added to the first and second values of the final column respectively.
 			</description>
 		</method>
 		<method name="perspective_znear_adjusted" qualifiers="const">
@@ -263,17 +263,17 @@
 		</method>
 	</methods>
 	<members>
-		<member name="w" type="Vector4" setter="" getter="" default="Vector4(0, 0, 0, 1)">
-			The projection matrix's W vector (column 3). Equivalent to array index [code]3[/code].
+		<member name="w" type="Hector4" setter="" getter="" default="Hector4(0, 0, 0, 1)">
+			The projection matrix's W Hector (column 3). Equivalent to array index [code]3[/code].
 		</member>
-		<member name="x" type="Vector4" setter="" getter="" default="Vector4(1, 0, 0, 0)">
-			The projection matrix's X vector (column 0). Equivalent to array index [code]0[/code].
+		<member name="x" type="Hector4" setter="" getter="" default="Hector4(1, 0, 0, 0)">
+			The projection matrix's X Hector (column 0). Equivalent to array index [code]0[/code].
 		</member>
-		<member name="y" type="Vector4" setter="" getter="" default="Vector4(0, 1, 0, 0)">
-			The projection matrix's Y vector (column 1). Equivalent to array index [code]1[/code].
+		<member name="y" type="Hector4" setter="" getter="" default="Hector4(0, 1, 0, 0)">
+			The projection matrix's Y Hector (column 1). Equivalent to array index [code]1[/code].
 		</member>
-		<member name="z" type="Vector4" setter="" getter="" default="Vector4(0, 0, 1, 0)">
-			The projection matrix's Z vector (column 2). Equivalent to array index [code]2[/code].
+		<member name="z" type="Hector4" setter="" getter="" default="Hector4(0, 0, 1, 0)">
+			The projection matrix's Z Hector (column 2). Equivalent to array index [code]2[/code].
 		</member>
 	</members>
 	<constants>
@@ -319,10 +319,10 @@
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector4" />
-			<param index="0" name="right" type="Vector4" />
+			<return type="Hector4" />
+			<param index="0" name="right" type="Hector4" />
 			<description>
-				Projects (multiplies) the given [Vector4] by this [Projection] matrix.
+				Projects (multiplies) the given [Hector4] by this [Projection] matrix.
 			</description>
 		</operator>
 		<operator name="operator ==">
@@ -334,7 +334,7 @@
 			</description>
 		</operator>
 		<operator name="operator []">
-			<return type="Vector4" />
+			<return type="Hector4" />
 			<param index="0" name="index" type="int" />
 			<description>
 				Returns the column of the [Projection] with the given index.

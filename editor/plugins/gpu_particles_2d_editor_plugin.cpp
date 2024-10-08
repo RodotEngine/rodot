@@ -187,9 +187,9 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	Size2i s = img->get_size();
 	ERR_FAIL_COND(s.width == 0 || s.height == 0);
 
-	Vector<Point2> valid_positions;
-	Vector<Point2> valid_normals;
-	Vector<uint8_t> valid_colors;
+	Hector<Point2> valid_positions;
+	Hector<Point2> valid_normals;
+	Hector<uint8_t> valid_colors;
 
 	valid_positions.resize(s.width * s.height);
 
@@ -208,7 +208,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	int vpc = 0;
 
 	{
-		Vector<uint8_t> img_data = img->get_data();
+		Hector<uint8_t> img_data = img->get_data();
 		const uint8_t *r = img_data.ptr();
 
 		for (int i = 0; i < s.width; i++) {
@@ -244,7 +244,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 							valid_positions.write[vpc] = Point2(i, j);
 
 							if (emode == EMISSION_MODE_BORDER_DIRECTED) {
-								Vector2 normal;
+								Hector2 normal;
 								for (int x = i - 2; x <= i + 2; x++) {
 									for (int y = j - 2; y <= j + 2; y++) {
 										if (x == i && y == j) {
@@ -252,7 +252,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 										}
 
 										if (x < 0 || y < 0 || x >= s.width || y >= s.height || r[(y * s.width + x) * 4 + 3] <= 128) {
-											normal += Vector2(x - i, y - j).normalized();
+											normal += Hector2(x - i, y - j).normalized();
 										}
 									}
 								}
@@ -283,7 +283,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 
 	ERR_FAIL_COND_MSG(valid_positions.is_empty(), "No pixels with transparency > 128 in image...");
 
-	Vector<uint8_t> texdata;
+	Hector<uint8_t> texdata;
 
 	int w = 2048;
 	int h = (vpc / 2048) + 1;
@@ -291,9 +291,9 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	texdata.resize(w * h * 2 * sizeof(float));
 
 	{
-		Vector2 offset;
+		Hector2 offset;
 		if (emission_mask_centered->is_pressed()) {
-			offset = Vector2(-s.width * 0.5, -s.height * 0.5);
+			offset = Hector2(-s.width * 0.5, -s.height * 0.5);
 		}
 
 		uint8_t *tw = texdata.ptrw();
@@ -310,7 +310,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	pm->set_emission_point_count(vpc);
 
 	if (capture_colors) {
-		Vector<uint8_t> colordata;
+		Hector<uint8_t> colordata;
 		colordata.resize(w * h * 4); //use RG texture
 
 		{
@@ -328,7 +328,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	if (valid_normals.size()) {
 		pm->set_emission_shape(ParticleProcessMaterial::EMISSION_SHAPE_DIRECTED_POINTS);
 
-		Vector<uint8_t> normdata;
+		Hector<uint8_t> normdata;
 		normdata.resize(w * h * 2 * sizeof(float)); //use RG texture
 
 		{

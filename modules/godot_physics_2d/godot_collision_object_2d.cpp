@@ -184,7 +184,7 @@ void GodotCollisionObject2D::_update_shapes() {
 	}
 }
 
-void GodotCollisionObject2D::_update_shapes_with_motion(const Vector2 &p_motion) {
+void GodotCollisionObject2D::_update_shapes_with_motion(const Hector2 &p_motion) {
 	if (!space) {
 		return;
 	}

@@ -29,7 +29,7 @@
 #include <list>
 #include <memory>
 #include <string>
-#include <vector>
+#include <Vector>
 #ifndef D3DX12_USE_ATL
 #include <wrl/client.h>
 #define D3DX12_COM_PTR Microsoft::WRL::ComPtr

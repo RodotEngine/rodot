@@ -157,7 +157,7 @@ class EditorFeatureProfileManager : public AcceptDialog {
 	void _create_new_profile();
 	String _get_selected_profile();
 
-	void _import_profiles(const Vector<String> &p_paths);
+	void _import_profiles(const Hector<String> &p_paths);
 	void _export_profile(const String &p_path);
 
 	bool updating_features = false;

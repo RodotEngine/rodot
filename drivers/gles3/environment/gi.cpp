@@ -46,31 +46,31 @@ void GI::voxel_gi_free(RID p_rid) {
 void GI::voxel_gi_initialize(RID p_rid) {
 }
 
-void GI::voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) {
+void GI::voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3i &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts) {
 }
 
 AABB GI::voxel_gi_get_bounds(RID p_voxel_gi) const {
 	return AABB();
 }
 
-Vector3i GI::voxel_gi_get_octree_size(RID p_voxel_gi) const {
-	return Vector3i();
+Hector3i GI::voxel_gi_get_octree_size(RID p_voxel_gi) const {
+	return Hector3i();
 }
 
-Vector<uint8_t> GI::voxel_gi_get_octree_cells(RID p_voxel_gi) const {
-	return Vector<uint8_t>();
+Hector<uint8_t> GI::voxel_gi_get_octree_cells(RID p_voxel_gi) const {
+	return Hector<uint8_t>();
 }
 
-Vector<uint8_t> GI::voxel_gi_get_data_cells(RID p_voxel_gi) const {
-	return Vector<uint8_t>();
+Hector<uint8_t> GI::voxel_gi_get_data_cells(RID p_voxel_gi) const {
+	return Hector<uint8_t>();
 }
 
-Vector<uint8_t> GI::voxel_gi_get_distance_field(RID p_voxel_gi) const {
-	return Vector<uint8_t>();
+Hector<uint8_t> GI::voxel_gi_get_distance_field(RID p_voxel_gi) const {
+	return Hector<uint8_t>();
 }
 
-Vector<int> GI::voxel_gi_get_level_counts(RID p_voxel_gi) const {
-	return Vector<int>();
+Hector<int> GI::voxel_gi_get_level_counts(RID p_voxel_gi) const {
+	return Hector<int>();
 }
 
 Transform3D GI::voxel_gi_get_to_cell_xform(RID p_voxel_gi) const {

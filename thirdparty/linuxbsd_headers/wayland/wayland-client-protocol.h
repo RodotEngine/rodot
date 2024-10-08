@@ -4510,7 +4510,7 @@ struct wl_pointer_listener {
 	 * Scroll and other axis notifications.
 	 *
 	 * For scroll events (vertical and horizontal scroll axes), the
-	 * value parameter is the length of a vector along the specified
+	 * value parameter is the length of a Hector along the specified
 	 * axis in a coordinate space identical to those of motion events,
 	 * representing a relative movement along the specified axis.
 	 *
@@ -4518,14 +4518,14 @@ struct wl_pointer_listener {
 	 * axis events will be emitted.
 	 *
 	 * When applicable, for example for touch pads, the server can
-	 * choose to emit scroll events where the motion vector is
-	 * equivalent to a motion event vector.
+	 * choose to emit scroll events where the motion Hector is
+	 * equivalent to a motion event Hector.
 	 *
 	 * When applicable, a client can transform its content relative to
 	 * the scroll distance.
 	 * @param time timestamp with millisecond granularity
 	 * @param axis axis type
-	 * @param value length of vector in surface-local coordinate space
+	 * @param value length of Hector in surface-local coordinate space
 	 */
 	void (*axis)(void *data,
 		     struct wl_pointer *wl_pointer,
@@ -4544,10 +4544,10 @@ struct wl_pointer_listener {
 	 * compositor will send an optional wl_pointer.axis_source event,
 	 * two wl_pointer.axis events (horizontal and vertical) and finally
 	 * a wl_pointer.frame event. The client may use this information to
-	 * calculate a diagonal vector for scrolling.
+	 * calculate a diagonal Hector for scrolling.
 	 *
 	 * When multiple wl_pointer.axis events occur within the same
-	 * frame, the motion vector is the combined motion of all events.
+	 * frame, the motion Hector is the combined motion of all events.
 	 * When a wl_pointer.axis and a wl_pointer.axis_stop event occur
 	 * within the same frame, this indicates that axis movement in one
 	 * axis has stopped but continues in the other axis. When multiple

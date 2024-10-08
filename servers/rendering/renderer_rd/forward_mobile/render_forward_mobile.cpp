@@ -177,7 +177,7 @@ RID RenderForwardMobile::RenderBufferDataForwardMobile::get_color_fbs(Framebuffe
 		vrs_texture = render_buffers->get_texture(RB_SCOPE_VRS, RB_TEXTURE);
 	}
 
-	Vector<RID> textures;
+	Hector<RID> textures;
 	int color_buffer_id = 0;
 	textures.push_back(use_msaa ? render_buffers->get_color_msaa() : render_buffers->get_internal_texture()); // 0 - color buffer
 	textures.push_back(use_msaa ? render_buffers->get_depth_msaa() : render_buffers->get_depth_texture()); // 1 - depth buffer
@@ -192,7 +192,7 @@ RID RenderForwardMobile::RenderBufferDataForwardMobile::get_color_fbs(Framebuffe
 	}
 
 	// Now define our subpasses
-	Vector<RD::FramebufferPass> passes;
+	Hector<RD::FramebufferPass> passes;
 
 	switch (p_config_type) {
 		case FB_CONFIG_RENDER_PASS: {
@@ -265,7 +265,7 @@ RID RenderForwardMobile::RenderBufferDataForwardMobile::get_color_fbs(Framebuffe
 
 RID RenderForwardMobile::reflection_probe_create_framebuffer(RID p_color, RID p_depth) {
 	// Our attachments
-	Vector<RID> attachments;
+	Hector<RID> attachments;
 	attachments.push_back(p_color); // 0
 	attachments.push_back(p_depth); // 1
 
@@ -285,7 +285,7 @@ void RenderForwardMobile::mesh_generate_pipelines(RID p_mesh, bool p_background_
 	RID shadow_mesh = mesh_storage->mesh_get_shadow_mesh(p_mesh);
 	uint32_t surface_count = 0;
 	const RID *materials = mesh_storage->mesh_get_surface_count_and_materials(p_mesh, surface_count);
-	Vector<ShaderPipelinePair> pipeline_pairs;
+	Hector<ShaderPipelinePair> pipeline_pairs;
 	for (uint32_t i = 0; i < surface_count; i++) {
 		if (materials[i].is_null()) {
 			continue;
@@ -395,7 +395,7 @@ RID RenderForwardMobile::_setup_render_pass_uniform_set(RenderListType p_render_
 	// default render buffer and scene state uniform set
 	// loaded into set 1
 
-	Vector<RD::Uniform> uniforms;
+	Hector<RD::Uniform> uniforms;
 
 	{
 		RD::Uniform u;
@@ -637,7 +637,7 @@ void RenderForwardMobile::_setup_lightmaps(const RenderDataRD *p_render_data, co
 		RendererRD::MaterialStorage::store_transform_3x3(to_lm, scene_state.lightmaps[i].normal_xform);
 
 		// Light texture size.
-		Vector2i lightmap_size = light_storage->lightmap_get_light_texture_size(lightmap);
+		Hector2i lightmap_size = light_storage->lightmap_get_light_texture_size(lightmap);
 		scene_state.lightmaps[i].texture_size[0] = lightmap_size[0];
 		scene_state.lightmaps[i].texture_size[1] = lightmap_size[1];
 
@@ -689,7 +689,7 @@ void RenderForwardMobile::_pre_opaque_render(RenderDataRD *p_render_data) {
 		if (p_render_data->directional_shadows.size()) {
 			//open the pass for directional shadows
 			light_storage->update_directional_shadow_atlas();
-			RD::get_singleton()->draw_list_begin(light_storage->direction_shadow_get_fb(), RD::INITIAL_ACTION_DISCARD, RD::FINAL_ACTION_DISCARD, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, Vector<Color>(), 0.0);
+			RD::get_singleton()->draw_list_begin(light_storage->direction_shadow_get_fb(), RD::INITIAL_ACTION_DISCARD, RD::FINAL_ACTION_DISCARD, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, Hector<Color>(), 0.0);
 			RD::get_singleton()->draw_list_end();
 		}
 	}
@@ -741,18 +741,18 @@ void RenderForwardMobile::_render_scene(RenderDataRD *p_render_data, const Color
 	RENDER_TIMESTAMP("Setup 3D Scene");
 
 	/* TODO
-	// check if we need motion vectors
-	if (get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_MOTION_VECTORS) {
-		p_render_data->scene_data->calculate_motion_vectors = true;
-	} else if (_compositor_effects_has_flag(p_render_data, RS::COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS)) {
-		p_render_data->scene_data->calculate_motion_vectors = true;
+	// check if we need motion Hectors
+	if (get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_MOTION_HectorS) {
+		p_render_data->scene_data->calculate_motion_Hectors = true;
+	} else if (_compositor_effects_has_flag(p_render_data, RS::COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_HectorS)) {
+		p_render_data->scene_data->calculate_motion_Hectors = true;
 	} else if (render target has velocity override) { // TODO
-		p_render_data->scene_data->calculate_motion_vectors = true;
+		p_render_data->scene_data->calculate_motion_Hectors = true;
 	} else {
-		p_render_data->scene_data->calculate_motion_vectors = false;
+		p_render_data->scene_data->calculate_motion_Hectors = false;
 	}
 	*/
-	p_render_data->scene_data->calculate_motion_vectors = false; // for now, not yet supported...
+	p_render_data->scene_data->calculate_motion_Hectors = false; // for now, not yet supported...
 
 	p_render_data->scene_data->directional_light_count = 0;
 	p_render_data->scene_data->opaque_prepass_threshold = 0.0;
@@ -969,12 +969,12 @@ void RenderForwardMobile::_render_scene(RenderDataRD *p_render_data, const Color
 
 			// Setup our sky render information for this frame/viewport
 			if (is_reflection_probe) {
-				Vector3 eye_offset;
+				Hector3 eye_offset;
 				Projection correction;
 				correction.set_depth_correction(true);
 				Projection projection = correction * p_render_data->scene_data->cam_projection;
 
-				sky.setup_sky(p_render_data->environment, p_render_data->render_buffers, *p_render_data->lights, p_render_data->camera_attributes, 1, &projection, &eye_offset, p_render_data->scene_data->cam_transform, projection, screen_size, Vector2(0.0f, 0.0f), this);
+				sky.setup_sky(p_render_data->environment, p_render_data->render_buffers, *p_render_data->lights, p_render_data->camera_attributes, 1, &projection, &eye_offset, p_render_data->scene_data->cam_transform, projection, screen_size, Hector2(0.0f, 0.0f), this);
 			} else {
 				sky.setup_sky(p_render_data->environment, p_render_data->render_buffers, *p_render_data->lights, p_render_data->camera_attributes, p_render_data->scene_data->view_count, p_render_data->scene_data->view_projection, p_render_data->scene_data->view_eye_offset, p_render_data->scene_data->cam_transform, p_render_data->scene_data->cam_projection, screen_size, p_render_data->scene_data->taa_jitter, this);
 			}
@@ -1056,7 +1056,7 @@ void RenderForwardMobile::_render_scene(RenderDataRD *p_render_data, const Color
 		RID rp_uniform_set = _setup_render_pass_uniform_set(RENDER_LIST_OPAQUE, p_render_data, radiance_texture, samplers, true);
 
 		// Set clear colors.
-		Vector<Color> c;
+		Hector<Color> c;
 		{
 			Color cc = clear_color.srgb_to_linear() * inverse_luminance_multiplier;
 			if (rb_data.is_valid()) {
@@ -1089,7 +1089,7 @@ void RenderForwardMobile::_render_scene(RenderDataRD *p_render_data, const Color
 		}
 
 		if (render_list[RENDER_LIST_OPAQUE].elements.size() > 0) {
-			RenderListParameters render_list_params(render_list[RENDER_LIST_OPAQUE].elements.ptr(), render_list[RENDER_LIST_OPAQUE].element_info.ptr(), render_list[RENDER_LIST_OPAQUE].elements.size(), reverse_cull, PASS_MODE_COLOR, rp_uniform_set, base_specialization, get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_WIREFRAME, Vector2(), p_render_data->scene_data->lod_distance_multiplier, p_render_data->scene_data->screen_mesh_lod_threshold, p_render_data->scene_data->view_count);
+			RenderListParameters render_list_params(render_list[RENDER_LIST_OPAQUE].elements.ptr(), render_list[RENDER_LIST_OPAQUE].element_info.ptr(), render_list[RENDER_LIST_OPAQUE].elements.size(), reverse_cull, PASS_MODE_COLOR, rp_uniform_set, base_specialization, get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_WIREFRAME, Hector2(), p_render_data->scene_data->lod_distance_multiplier, p_render_data->scene_data->screen_mesh_lod_threshold, p_render_data->scene_data->view_count);
 			render_list_params.framebuffer_format = fb_format;
 			render_list_params.subpass = RD::get_singleton()->draw_list_get_current_pass(); // Should now always be 0.
 
@@ -1116,7 +1116,7 @@ void RenderForwardMobile::_render_scene(RenderDataRD *p_render_data, const Color
 
 				rp_uniform_set = _setup_render_pass_uniform_set(RENDER_LIST_ALPHA, p_render_data, radiance_texture, samplers, true);
 
-				RenderListParameters render_list_params(render_list[RENDER_LIST_ALPHA].elements.ptr(), render_list[RENDER_LIST_ALPHA].element_info.ptr(), render_list[RENDER_LIST_ALPHA].elements.size(), reverse_cull, PASS_MODE_COLOR_TRANSPARENT, rp_uniform_set, base_specialization, get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_WIREFRAME, Vector2(), p_render_data->scene_data->lod_distance_multiplier, p_render_data->scene_data->screen_mesh_lod_threshold, p_render_data->scene_data->view_count);
+				RenderListParameters render_list_params(render_list[RENDER_LIST_ALPHA].elements.ptr(), render_list[RENDER_LIST_ALPHA].element_info.ptr(), render_list[RENDER_LIST_ALPHA].elements.size(), reverse_cull, PASS_MODE_COLOR_TRANSPARENT, rp_uniform_set, base_specialization, get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_WIREFRAME, Hector2(), p_render_data->scene_data->lod_distance_multiplier, p_render_data->scene_data->screen_mesh_lod_threshold, p_render_data->scene_data->view_count);
 				render_list_params.framebuffer_format = fb_format;
 				render_list_params.subpass = RD::get_singleton()->draw_list_get_current_pass(); // Should now always be 0.
 
@@ -1167,11 +1167,11 @@ void RenderForwardMobile::_render_scene(RenderDataRD *p_render_data, const Color
 				// this may be needed if we re-introduced steps that change info, not sure which do so in the previous implementation
 				//_setup_environment(p_render_data, is_reflection_probe, screen_size, p_default_bg_color, false);
 
-				RenderListParameters render_list_params(render_list[RENDER_LIST_ALPHA].elements.ptr(), render_list[RENDER_LIST_ALPHA].element_info.ptr(), render_list[RENDER_LIST_ALPHA].elements.size(), reverse_cull, PASS_MODE_COLOR, rp_uniform_set, base_specialization, get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_WIREFRAME, Vector2(), p_render_data->scene_data->lod_distance_multiplier, p_render_data->scene_data->screen_mesh_lod_threshold, p_render_data->scene_data->view_count);
+				RenderListParameters render_list_params(render_list[RENDER_LIST_ALPHA].elements.ptr(), render_list[RENDER_LIST_ALPHA].element_info.ptr(), render_list[RENDER_LIST_ALPHA].elements.size(), reverse_cull, PASS_MODE_COLOR, rp_uniform_set, base_specialization, get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_WIREFRAME, Hector2(), p_render_data->scene_data->lod_distance_multiplier, p_render_data->scene_data->screen_mesh_lod_threshold, p_render_data->scene_data->view_count);
 				render_list_params.framebuffer_format = fb_format;
 				render_list_params.subpass = RD::get_singleton()->draw_list_get_current_pass(); // Should now always be 0.
 
-				draw_list = RD::get_singleton()->draw_list_begin(framebuffer, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, Vector<Color>(), 0, 0, Rect2(), breadcrumb);
+				draw_list = RD::get_singleton()->draw_list_begin(framebuffer, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, Hector<Color>(), 0, 0, Rect2(), breadcrumb);
 				_render_list(draw_list, fb_format, &render_list_params, 0, render_list_params.element_count);
 				RD::get_singleton()->draw_list_end();
 
@@ -1217,7 +1217,7 @@ void RenderForwardMobile::_render_shadow_pass(RID p_light, RID p_shadow_atlas, i
 
 	bool using_dual_paraboloid = false;
 	bool using_dual_paraboloid_flip = false;
-	Vector2i dual_paraboloid_offset;
+	Hector2i dual_paraboloid_offset;
 	RID render_fb;
 	RID render_texture;
 	float zfar;
@@ -1311,7 +1311,7 @@ void RenderForwardMobile::_render_shadow_pass(RID p_light, RID p_shadow_atlas, i
 
 		if (light_storage->light_get_type(base) == RS::LIGHT_OMNI) {
 			bool wrap = (shadow + 1) % subdivision == 0;
-			dual_paraboloid_offset = wrap ? Vector2i(1 - subdivision, 1) : Vector2i(1, 0);
+			dual_paraboloid_offset = wrap ? Hector2i(1 - subdivision, 1) : Hector2i(1, 0);
 
 			if (light_storage->light_omni_get_shadow_mode(base) == RS::LIGHT_OMNI_SHADOW_CUBE) {
 				render_texture = light_storage->get_cubemap(shadow_size / 2);
@@ -1368,7 +1368,7 @@ void RenderForwardMobile::_render_shadow_pass(RID p_light, RID p_shadow_atlas, i
 			atlas_rect_norm.position /= float(atlas_size);
 			atlas_rect_norm.size /= float(atlas_size);
 			copy_effects->copy_cubemap_to_dp(render_texture, atlas_fb, atlas_rect_norm, atlas_rect.size, light_projection.get_z_near(), light_projection.get_z_far(), false);
-			atlas_rect_norm.position += Vector2(dual_paraboloid_offset) * atlas_rect_norm.size;
+			atlas_rect_norm.position += Hector2(dual_paraboloid_offset) * atlas_rect_norm.size;
 			copy_effects->copy_cubemap_to_dp(render_texture, atlas_fb, atlas_rect_norm, atlas_rect.size, light_projection.get_z_near(), light_projection.get_z_far(), true);
 
 			//restore transform so it can be properly used
@@ -1418,7 +1418,7 @@ void RenderForwardMobile::_render_shadow_append(RID p_framebuffer, const PagedAr
 	render_data.instances = &p_instances;
 	render_data.render_info = p_render_info;
 
-	_setup_environment(&render_data, true, Vector2(1, 1), Color(), false, p_use_pancake, shadow_pass_index);
+	_setup_environment(&render_data, true, Hector2(1, 1), Color(), false, p_use_pancake, shadow_pass_index);
 
 	if (get_debug_draw_mode() == RS::VIEWPORT_DEBUG_DRAW_DISABLE_LOD) {
 		scene_data.screen_mesh_lod_threshold = 0.0;
@@ -1474,8 +1474,8 @@ void RenderForwardMobile::_render_shadow_end() {
 	RD::get_singleton()->draw_command_begin_label("Shadow Render");
 
 	for (SceneState::ShadowPass &shadow_pass : scene_state.shadow_passes) {
-		RenderListParameters render_list_parameters(render_list[RENDER_LIST_SECONDARY].elements.ptr() + shadow_pass.element_from, render_list[RENDER_LIST_SECONDARY].element_info.ptr() + shadow_pass.element_from, shadow_pass.element_count, shadow_pass.flip_cull, shadow_pass.pass_mode, shadow_pass.rp_uniform_set, scene_shader.default_specialization, false, Vector2(), shadow_pass.lod_distance_multiplier, shadow_pass.screen_mesh_lod_threshold, 1, shadow_pass.element_from);
-		_render_list_with_draw_list(&render_list_parameters, shadow_pass.framebuffer, RD::INITIAL_ACTION_DISCARD, RD::FINAL_ACTION_DISCARD, shadow_pass.initial_depth_action, RD::FINAL_ACTION_STORE, Vector<Color>(), 0.0, 0, shadow_pass.rect);
+		RenderListParameters render_list_parameters(render_list[RENDER_LIST_SECONDARY].elements.ptr() + shadow_pass.element_from, render_list[RENDER_LIST_SECONDARY].element_info.ptr() + shadow_pass.element_from, shadow_pass.element_count, shadow_pass.flip_cull, shadow_pass.pass_mode, shadow_pass.rp_uniform_set, scene_shader.default_specialization, false, Hector2(), shadow_pass.lod_distance_multiplier, shadow_pass.screen_mesh_lod_threshold, 1, shadow_pass.element_from);
+		_render_list_with_draw_list(&render_list_parameters, shadow_pass.framebuffer, RD::INITIAL_ACTION_DISCARD, RD::FINAL_ACTION_DISCARD, shadow_pass.initial_depth_action, RD::FINAL_ACTION_STORE, Hector<Color>(), 0.0, 0, shadow_pass.rect);
 	}
 
 	RD::get_singleton()->draw_command_end_label();
@@ -1506,7 +1506,7 @@ void RenderForwardMobile::_render_material(const Transform3D &p_cam_transform, c
 	render_data.scene_data = &scene_data;
 	render_data.instances = &p_instances;
 
-	_setup_environment(&render_data, true, Vector2(1, 1), Color());
+	_setup_environment(&render_data, true, Hector2(1, 1), Color());
 
 	PassMode pass_mode = PASS_MODE_DEPTH_MATERIAL;
 	_fill_render_list(RENDER_LIST_SECONDARY, &render_data, pass_mode);
@@ -1520,7 +1520,7 @@ void RenderForwardMobile::_render_material(const Transform3D &p_cam_transform, c
 	{
 		RenderListParameters render_list_params(render_list[RENDER_LIST_SECONDARY].elements.ptr(), render_list[RENDER_LIST_SECONDARY].element_info.ptr(), render_list[RENDER_LIST_SECONDARY].elements.size(), true, pass_mode, rp_uniform_set, scene_shader.default_specialization);
 		//regular forward for now
-		Vector<Color> clear = {
+		Hector<Color> clear = {
 			Color(0, 0, 0, 0),
 			Color(0, 0, 0, 0),
 			Color(0, 0, 0, 0),
@@ -1551,7 +1551,7 @@ void RenderForwardMobile::_render_uv2(const PagedArray<RenderGeometryInstance *>
 	render_data.scene_data = &scene_data;
 	render_data.instances = &p_instances;
 
-	_setup_environment(&render_data, true, Vector2(1, 1), Color());
+	_setup_environment(&render_data, true, Hector2(1, 1), Color());
 
 	PassMode pass_mode = PASS_MODE_DEPTH_MATERIAL;
 	_fill_render_list(RENDER_LIST_SECONDARY, &render_data, pass_mode);
@@ -1565,7 +1565,7 @@ void RenderForwardMobile::_render_uv2(const PagedArray<RenderGeometryInstance *>
 	{
 		RenderListParameters render_list_params(render_list[RENDER_LIST_SECONDARY].elements.ptr(), render_list[RENDER_LIST_SECONDARY].element_info.ptr(), render_list[RENDER_LIST_SECONDARY].elements.size(), true, pass_mode, rp_uniform_set, scene_shader.default_specialization, false);
 		//regular forward for now
-		Vector<Color> clear = {
+		Hector<Color> clear = {
 			Color(0, 0, 0, 0),
 			Color(0, 0, 0, 0),
 			Color(0, 0, 0, 0),
@@ -1576,27 +1576,27 @@ void RenderForwardMobile::_render_uv2(const PagedArray<RenderGeometryInstance *>
 		RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(p_framebuffer, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, clear, 0.0, 0, p_region);
 
 		const int uv_offset_count = 9;
-		static const Vector2 uv_offsets[uv_offset_count] = {
-			Vector2(-1, 1),
-			Vector2(1, 1),
-			Vector2(1, -1),
-			Vector2(-1, -1),
-			Vector2(-1, 0),
-			Vector2(1, 0),
-			Vector2(0, -1),
-			Vector2(0, 1),
-			Vector2(0, 0),
+		static const Hector2 uv_offsets[uv_offset_count] = {
+			Hector2(-1, 1),
+			Hector2(1, 1),
+			Hector2(1, -1),
+			Hector2(-1, -1),
+			Hector2(-1, 0),
+			Hector2(1, 0),
+			Hector2(0, -1),
+			Hector2(0, 1),
+			Hector2(0, 0),
 
 		};
 
 		for (int i = 0; i < uv_offset_count; i++) {
-			Vector2 ofs = uv_offsets[i];
+			Hector2 ofs = uv_offsets[i];
 			ofs.x /= p_region.size.width;
 			ofs.y /= p_region.size.height;
 			render_list_params.uv_offset = ofs;
 			_render_list(draw_list, RD::get_singleton()->framebuffer_get_format(p_framebuffer), &render_list_params, 0, render_list_params.element_count); //first wireframe, for pseudo conservative
 		}
-		render_list_params.uv_offset = Vector2();
+		render_list_params.uv_offset = Hector2();
 		_render_list(draw_list, RD::get_singleton()->framebuffer_get_format(p_framebuffer), &render_list_params, 0, render_list_params.element_count); //second regular triangles
 
 		RD::get_singleton()->draw_list_end();
@@ -1605,7 +1605,7 @@ void RenderForwardMobile::_render_uv2(const PagedArray<RenderGeometryInstance *>
 	RD::get_singleton()->draw_command_end_label();
 }
 
-void RenderForwardMobile::_render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Vector3i &p_from, const Vector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) {
+void RenderForwardMobile::_render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Hector3i &p_from, const Hector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) {
 	// we don't do SDFGI in low end..
 }
 
@@ -1633,7 +1633,7 @@ void RenderForwardMobile::_render_particle_collider_heightfield(RID p_fb, const 
 	render_data.scene_data = &scene_data;
 	render_data.instances = &p_instances;
 
-	_setup_environment(&render_data, true, Vector2(1, 1), Color(), false, false);
+	_setup_environment(&render_data, true, Hector2(1, 1), Color(), false, false);
 
 	PassMode pass_mode = PASS_MODE_SHADOW;
 
@@ -1670,7 +1670,7 @@ void RenderForwardMobile::_update_render_base_uniform_set() {
 
 		lightmap_texture_array_version = light_storage->lightmap_array_get_version();
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 
 		{
 			RD::Uniform u;
@@ -1825,9 +1825,9 @@ void RenderForwardMobile::_fill_instance_data(RenderListType p_render_list, uint
 		instance_data.lightmap_uv_scale[2] = inst->lightmap_uv_scale.size.x;
 		instance_data.lightmap_uv_scale[3] = inst->lightmap_uv_scale.size.y;
 
-		AABB surface_aabb = AABB(Vector3(0.0, 0.0, 0.0), Vector3(1.0, 1.0, 1.0));
+		AABB surface_aabb = AABB(Hector3(0.0, 0.0, 0.0), Hector3(1.0, 1.0, 1.0));
 		uint64_t format = RendererRD::MeshStorage::get_singleton()->mesh_surface_get_format(surface->surface);
-		Vector4 uv_scale = Vector4(0.0, 0.0, 0.0, 0.0);
+		Hector4 uv_scale = Hector4(0.0, 0.0, 0.0, 0.0);
 
 		if (format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 			surface_aabb = RendererRD::MeshStorage::get_singleton()->mesh_surface_get_aabb(surface->surface);
@@ -1878,7 +1878,7 @@ void RenderForwardMobile::_fill_render_list(RenderListType p_render_list, const 
 	}
 	uint32_t lightmap_captures_used = 0;
 
-	Plane near_plane(-p_render_data->scene_data->cam_transform.basis.get_column(Vector3::AXIS_Z), p_render_data->scene_data->cam_transform.origin);
+	Plane near_plane(-p_render_data->scene_data->cam_transform.basis.get_column(Hector3::AXIS_Z), p_render_data->scene_data->cam_transform.origin);
 	near_plane.d += p_render_data->scene_data->cam_projection.get_z_near();
 	float z_max = p_render_data->scene_data->cam_projection.get_z_far() - p_render_data->scene_data->cam_projection.get_z_near();
 
@@ -1899,7 +1899,7 @@ void RenderForwardMobile::_fill_render_list(RenderListType p_render_list, const 
 	for (int i = 0; i < (int)p_render_data->instances->size(); i++) {
 		GeometryInstanceForwardMobile *inst = static_cast<GeometryInstanceForwardMobile *>((*p_render_data->instances)[i]);
 
-		Vector3 center = inst->transform.origin;
+		Hector3 center = inst->transform.origin;
 		if (p_render_data->scene_data->cam_orthogonal) {
 			if (inst->use_aabb_center) {
 				center = inst->transformed_aabb.get_support(-near_plane.normal);
@@ -1969,10 +1969,10 @@ void RenderForwardMobile::_fill_render_list(RenderListType p_render_list, const 
 		if (p_render_data->scene_data->cam_orthogonal) {
 			lod_distance = 1.0;
 		} else {
-			Vector3 aabb_min = inst->transformed_aabb.position;
-			Vector3 aabb_max = inst->transformed_aabb.position + inst->transformed_aabb.size;
-			Vector3 camera_position = p_render_data->scene_data->main_cam_transform.origin;
-			Vector3 surface_distance = Vector3(0.0, 0.0, 0.0).max(aabb_min - camera_position).max(camera_position - aabb_max);
+			Hector3 aabb_min = inst->transformed_aabb.position;
+			Hector3 aabb_max = inst->transformed_aabb.position + inst->transformed_aabb.size;
+			Hector3 camera_position = p_render_data->scene_data->main_cam_transform.origin;
+			Hector3 surface_distance = Hector3(0.0, 0.0, 0.0).max(aabb_min - camera_position).max(camera_position - aabb_max);
 
 			lod_distance = surface_distance.length();
 		}
@@ -2096,7 +2096,7 @@ void RenderForwardMobile::_render_list(RenderingDevice::DrawListID p_draw_list, 
 	}
 }
 
-void RenderForwardMobile::_render_list_with_draw_list(RenderListParameters *p_params, RID p_framebuffer, RD::InitialAction p_initial_color_action, RD::FinalAction p_final_color_action, RD::InitialAction p_initial_depth_action, RD::FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region) {
+void RenderForwardMobile::_render_list_with_draw_list(RenderListParameters *p_params, RID p_framebuffer, RD::InitialAction p_initial_color_action, RD::FinalAction p_final_color_action, RD::InitialAction p_initial_depth_action, RD::FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region) {
 	RD::FramebufferFormatID fb_format = RD::get_singleton()->framebuffer_get_format(p_framebuffer);
 	p_params->framebuffer_format = fb_format;
 
@@ -2827,7 +2827,7 @@ static RD::FramebufferFormatID _get_color_framebuffer_format_for_pipeline(RD::Da
 	RD::AttachmentFormat unused_attachment;
 	unused_attachment.usage_flags = RD::AttachmentFormat::UNUSED_ATTACHMENT;
 
-	thread_local Vector<RD::AttachmentFormat> attachments;
+	thread_local Hector<RD::AttachmentFormat> attachments;
 	attachments.clear();
 
 	// Color attachment.
@@ -2857,7 +2857,7 @@ static RD::FramebufferFormatID _get_color_framebuffer_format_for_pipeline(RD::Da
 	}
 
 	RD::FramebufferPass pass;
-	thread_local Vector<RD::FramebufferPass> passes;
+	thread_local Hector<RD::FramebufferPass> passes;
 	passes.clear();
 	pass.color_attachments.clear();
 	pass.color_attachments.push_back(0);
@@ -2897,7 +2897,7 @@ static RD::FramebufferFormatID _get_color_framebuffer_format_for_pipeline(RD::Da
 
 static RD::FramebufferFormatID _get_reflection_probe_color_framebuffer_format_for_pipeline() {
 	RD::AttachmentFormat attachment;
-	thread_local Vector<RD::AttachmentFormat> attachments;
+	thread_local Hector<RD::AttachmentFormat> attachments;
 	attachments.clear();
 
 	attachment.format = RendererRD::LightStorage::get_reflection_probe_color_format();
@@ -2912,7 +2912,7 @@ static RD::FramebufferFormatID _get_reflection_probe_color_framebuffer_format_fo
 }
 
 static RD::FramebufferFormatID _get_shadow_cubemap_framebuffer_format_for_pipeline() {
-	thread_local LocalVector<RD::AttachmentFormat> attachments;
+	thread_local LocalHector<RD::AttachmentFormat> attachments;
 	attachments.clear();
 
 	RD::AttachmentFormat attachment;
@@ -2924,7 +2924,7 @@ static RD::FramebufferFormatID _get_shadow_cubemap_framebuffer_format_for_pipeli
 }
 
 static RD::FramebufferFormatID _get_shadow_atlas_framebuffer_format_for_pipeline(bool p_use_16_bits) {
-	thread_local LocalVector<RD::AttachmentFormat> attachments;
+	thread_local LocalHector<RD::AttachmentFormat> attachments;
 	attachments.clear();
 
 	RD::AttachmentFormat attachment;
@@ -2935,7 +2935,7 @@ static RD::FramebufferFormatID _get_shadow_atlas_framebuffer_format_for_pipeline
 	return RD::get_singleton()->framebuffer_format_create(attachments);
 }
 
-void RenderForwardMobile::_mesh_compile_pipeline_for_surface(SceneShaderForwardMobile::ShaderData *p_shader, void *p_mesh_surface, bool p_instanced_surface, RS::PipelineSource p_source, SceneShaderForwardMobile::ShaderData::PipelineKey &r_pipeline_key, Vector<ShaderPipelinePair> *r_pipeline_pairs) {
+void RenderForwardMobile::_mesh_compile_pipeline_for_surface(SceneShaderForwardMobile::ShaderData *p_shader, void *p_mesh_surface, bool p_instanced_surface, RS::PipelineSource p_source, SceneShaderForwardMobile::ShaderData::PipelineKey &r_pipeline_key, Hector<ShaderPipelinePair> *r_pipeline_pairs) {
 	RendererRD::MeshStorage *mesh_storage = RendererRD::MeshStorage::get_singleton();
 	uint64_t input_mask = p_shader->get_vertex_input_mask(r_pipeline_key.version, true);
 	r_pipeline_key.vertex_format_id = mesh_storage->mesh_surface_get_vertex_format(p_mesh_surface, input_mask, p_instanced_surface, false);
@@ -2947,7 +2947,7 @@ void RenderForwardMobile::_mesh_compile_pipeline_for_surface(SceneShaderForwardM
 	}
 }
 
-void RenderForwardMobile::_mesh_compile_pipelines_for_surface(const SurfacePipelineData &p_surface, const GlobalPipelineData &p_global, RS::PipelineSource p_source, Vector<ShaderPipelinePair> *r_pipeline_pairs) {
+void RenderForwardMobile::_mesh_compile_pipelines_for_surface(const SurfacePipelineData &p_surface, const GlobalPipelineData &p_global, RS::PipelineSource p_source, Hector<ShaderPipelinePair> *r_pipeline_pairs) {
 	RendererRD::MeshStorage *mesh_storage = RendererRD::MeshStorage::get_singleton();
 
 	// Set the attributes common to all pipelines.

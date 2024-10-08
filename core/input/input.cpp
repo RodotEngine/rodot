@@ -77,9 +77,9 @@ Input *Input::singleton = nullptr;
 
 void (*Input::set_mouse_mode_func)(Input::MouseMode) = nullptr;
 Input::MouseMode (*Input::get_mouse_mode_func)() = nullptr;
-void (*Input::warp_mouse_func)(const Vector2 &p_position) = nullptr;
+void (*Input::warp_mouse_func)(const Hector2 &p_position) = nullptr;
 Input::CursorShape (*Input::get_current_cursor_shape_func)() = nullptr;
-void (*Input::set_custom_mouse_cursor_func)(const Ref<Resource> &, Input::CursorShape, const Vector2 &) = nullptr;
+void (*Input::set_custom_mouse_cursor_func)(const Ref<Resource> &, Input::CursorShape, const Hector2 &) = nullptr;
 
 Input *Input::get_singleton() {
 	return singleton;
@@ -107,7 +107,7 @@ void Input::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_action_strength", "action", "exact_match"), &Input::get_action_strength, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("get_action_raw_strength", "action", "exact_match"), &Input::get_action_raw_strength, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("get_axis", "negative_action", "positive_action"), &Input::get_axis);
-	ClassDB::bind_method(D_METHOD("get_vector", "negative_x", "positive_x", "negative_y", "positive_y", "deadzone"), &Input::get_vector, DEFVAL(-1.0f));
+	ClassDB::bind_method(D_METHOD("get_Hector", "negative_x", "positive_x", "negative_y", "positive_y", "deadzone"), &Input::get_Hector, DEFVAL(-1.0f));
 	ClassDB::bind_method(D_METHOD("add_joy_mapping", "mapping", "update_existing"), &Input::add_joy_mapping, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("remove_joy_mapping", "guid"), &Input::remove_joy_mapping);
 	ClassDB::bind_method(D_METHOD("is_joy_known", "device"), &Input::is_joy_known);
@@ -140,7 +140,7 @@ void Input::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("action_release", "action"), &Input::action_release);
 	ClassDB::bind_method(D_METHOD("set_default_cursor_shape", "shape"), &Input::set_default_cursor_shape, DEFVAL(CURSOR_ARROW));
 	ClassDB::bind_method(D_METHOD("get_current_cursor_shape"), &Input::get_current_cursor_shape);
-	ClassDB::bind_method(D_METHOD("set_custom_mouse_cursor", "image", "shape", "hotspot"), &Input::set_custom_mouse_cursor, DEFVAL(CURSOR_ARROW), DEFVAL(Vector2()));
+	ClassDB::bind_method(D_METHOD("set_custom_mouse_cursor", "image", "shape", "hotspot"), &Input::set_custom_mouse_cursor, DEFVAL(CURSOR_ARROW), DEFVAL(Hector2()));
 	ClassDB::bind_method(D_METHOD("parse_input_event", "event"), &Input::parse_input_event);
 	ClassDB::bind_method(D_METHOD("set_use_accumulated_input", "enable"), &Input::set_use_accumulated_input);
 	ClassDB::bind_method(D_METHOD("is_using_accumulated_input"), &Input::is_using_accumulated_input);
@@ -188,7 +188,7 @@ void Input::get_argument_options(const StringName &p_function, int p_idx, List<S
 
 	if ((p_idx == 0 && (pf == "is_action_pressed" || pf == "action_press" || pf == "action_release" || pf == "is_action_just_pressed" || pf == "is_action_just_released" || pf == "get_action_strength" || pf == "get_action_raw_strength")) ||
 			(p_idx < 2 && pf == "get_axis") ||
-			(p_idx < 4 && pf == "get_vector")) {
+			(p_idx < 4 && pf == "get_Hector")) {
 		List<PropertyInfo> pinfo;
 		ProjectSettings::get_singleton()->get_property_list(&pinfo);
 
@@ -205,7 +205,7 @@ void Input::get_argument_options(const StringName &p_function, int p_idx, List<S
 }
 #endif
 
-void Input::VelocityTrack::update(const Vector2 &p_delta_p, const Vector2 &p_screen_delta_p) {
+void Input::VelocityTrack::update(const Hector2 &p_delta_p, const Hector2 &p_screen_delta_p) {
 	uint64_t tick = OS::get_singleton()->get_ticks_usec();
 	uint32_t tdiff = tick - last_tick;
 	float delta_t = tdiff / 1000000.0;
@@ -213,8 +213,8 @@ void Input::VelocityTrack::update(const Vector2 &p_delta_p, const Vector2 &p_scr
 
 	if (delta_t > max_ref_frame) {
 		// First movement in a long time, reset and start again.
-		velocity = Vector2();
-		screen_velocity = Vector2();
+		velocity = Hector2();
+		screen_velocity = Hector2();
 		accum = p_delta_p;
 		screen_accum = p_screen_delta_p;
 		accum_t = 0;
@@ -232,14 +232,14 @@ void Input::VelocityTrack::update(const Vector2 &p_delta_p, const Vector2 &p_scr
 
 	velocity = accum / accum_t;
 	screen_velocity = screen_accum / accum_t;
-	accum = Vector2();
+	accum = Hector2();
 	accum_t = 0;
 }
 
 void Input::VelocityTrack::reset() {
 	last_tick = OS::get_singleton()->get_ticks_usec();
-	velocity = Vector2();
-	accum = Vector2();
+	velocity = Hector2();
+	accum = Hector2();
 	accum_t = 0;
 }
 
@@ -382,8 +382,8 @@ float Input::get_axis(const StringName &p_negative_action, const StringName &p_p
 	return get_action_strength(p_positive_action) - get_action_strength(p_negative_action);
 }
 
-Vector2 Input::get_vector(const StringName &p_negative_x, const StringName &p_positive_x, const StringName &p_negative_y, const StringName &p_positive_y, float p_deadzone) const {
-	Vector2 vector = Vector2(
+Hector2 Input::get_Hector(const StringName &p_negative_x, const StringName &p_positive_x, const StringName &p_negative_y, const StringName &p_positive_y, float p_deadzone) const {
+	Hector2 Hector = Hector2(
 			get_action_raw_strength(p_positive_x) - get_action_raw_strength(p_negative_x),
 			get_action_raw_strength(p_positive_y) - get_action_raw_strength(p_negative_y));
 
@@ -397,14 +397,14 @@ Vector2 Input::get_vector(const StringName &p_negative_x, const StringName &p_po
 	}
 
 	// Circular length limiting and deadzone.
-	float length = vector.length();
+	float length = Hector.length();
 	if (length <= p_deadzone) {
-		return Vector2();
+		return Hector2();
 	} else if (length > 1.0f) {
-		return vector / length;
+		return Hector / length;
 	} else {
 		// Inverse lerp length to map (p_deadzone, 1) to (0, 1).
-		return vector * (Math::inverse_lerp(p_deadzone, 1.0f, length) / length);
+		return Hector * (Math::inverse_lerp(p_deadzone, 1.0f, length) / length);
 	}
 }
 
@@ -423,11 +423,11 @@ String Input::get_joy_name(int p_idx) {
 	return joy_names[p_idx].name;
 }
 
-Vector2 Input::get_joy_vibration_strength(int p_device) {
+Hector2 Input::get_joy_vibration_strength(int p_device) {
 	if (joy_vibration.has(p_device)) {
-		return Vector2(joy_vibration[p_device].weak_magnitude, joy_vibration[p_device].strong_magnitude);
+		return Hector2(joy_vibration[p_device].weak_magnitude, joy_vibration[p_device].strong_magnitude);
 	} else {
-		return Vector2(0, 0);
+		return Hector2(0, 0);
 	}
 }
 
@@ -511,7 +511,7 @@ void Input::joy_connection_changed(int p_idx, bool p_connected, const String &p_
 	call_deferred("emit_signal", SNAME("joy_connection_changed"), p_idx, p_connected);
 }
 
-Vector3 Input::get_gravity() const {
+Hector3 Input::get_gravity() const {
 	_THREAD_SAFE_METHOD_
 
 #ifdef DEBUG_ENABLED
@@ -523,7 +523,7 @@ Vector3 Input::get_gravity() const {
 	return gravity;
 }
 
-Vector3 Input::get_accelerometer() const {
+Hector3 Input::get_accelerometer() const {
 	_THREAD_SAFE_METHOD_
 
 #ifdef DEBUG_ENABLED
@@ -535,7 +535,7 @@ Vector3 Input::get_accelerometer() const {
 	return accelerometer;
 }
 
-Vector3 Input::get_magnetometer() const {
+Hector3 Input::get_magnetometer() const {
 	_THREAD_SAFE_METHOD_
 
 #ifdef DEBUG_ENABLED
@@ -547,7 +547,7 @@ Vector3 Input::get_magnetometer() const {
 	return magnetometer;
 }
 
-Vector3 Input::get_gyroscope() const {
+Hector3 Input::get_gyroscope() const {
 	_THREAD_SAFE_METHOD_
 
 #ifdef DEBUG_ENABLED
@@ -629,8 +629,8 @@ void Input::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_em
 		if (mouse_pos != position) {
 			set_mouse_position(position);
 		}
-		Vector2 relative = mm->get_relative();
-		Vector2 screen_relative = mm->get_relative_screen_position();
+		Hector2 relative = mm->get_relative();
+		Hector2 screen_relative = mm->get_relative_screen_position();
 		mouse_velocity_track.update(relative, screen_relative);
 
 		if (event_dispatch_function && emulate_touch_from_mouse && !p_is_emulated && mm->get_button_mask().has_flag(MouseButtonMask::LEFT)) {
@@ -837,25 +837,25 @@ void Input::vibrate_handheld(int p_duration_ms, float p_amplitude) {
 	OS::get_singleton()->vibrate_handheld(p_duration_ms, p_amplitude);
 }
 
-void Input::set_gravity(const Vector3 &p_gravity) {
+void Input::set_gravity(const Hector3 &p_gravity) {
 	_THREAD_SAFE_METHOD_
 
 	gravity = p_gravity;
 }
 
-void Input::set_accelerometer(const Vector3 &p_accel) {
+void Input::set_accelerometer(const Hector3 &p_accel) {
 	_THREAD_SAFE_METHOD_
 
 	accelerometer = p_accel;
 }
 
-void Input::set_magnetometer(const Vector3 &p_magnetometer) {
+void Input::set_magnetometer(const Hector3 &p_magnetometer) {
 	_THREAD_SAFE_METHOD_
 
 	magnetometer = p_magnetometer;
 }
 
-void Input::set_gyroscope(const Vector3 &p_gyroscope) {
+void Input::set_gyroscope(const Hector3 &p_gyroscope) {
 	_THREAD_SAFE_METHOD_
 
 	gyroscope = p_gyroscope;
@@ -870,12 +870,12 @@ Point2 Input::get_mouse_position() const {
 }
 
 Point2 Input::get_last_mouse_velocity() {
-	mouse_velocity_track.update(Vector2(), Vector2());
+	mouse_velocity_track.update(Hector2(), Hector2());
 	return mouse_velocity_track.velocity;
 }
 
 Point2 Input::get_last_mouse_screen_velocity() {
-	mouse_velocity_track.update(Vector2(), Vector2());
+	mouse_velocity_track.update(Hector2(), Hector2());
 	return mouse_velocity_track.screen_velocity;
 }
 
@@ -883,7 +883,7 @@ BitField<MouseButtonMask> Input::get_mouse_button_mask() const {
 	return mouse_button_mask; // do not trust OS implementation, should remove it - OS::get_singleton()->get_mouse_button_state();
 }
 
-void Input::warp_mouse(const Vector2 &p_position) {
+void Input::warp_mouse(const Hector2 &p_position) {
 	warp_mouse_func(p_position);
 }
 
@@ -1009,7 +1009,7 @@ Input::CursorShape Input::get_current_cursor_shape() const {
 	return get_current_cursor_shape_func();
 }
 
-void Input::set_custom_mouse_cursor(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void Input::set_custom_mouse_cursor(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	if (Engine::get_singleton()->is_editor_hint()) {
 		return;
 	}
@@ -1478,7 +1478,7 @@ void Input::parse_mapping(const String &p_mapping) {
 	_THREAD_SAFE_METHOD_;
 	JoyDeviceMapping mapping;
 
-	Vector<String> entry = p_mapping.split(",");
+	Hector<String> entry = p_mapping.split(",");
 	if (entry.size() < 2) {
 		return;
 	}
@@ -1581,7 +1581,7 @@ void Input::parse_mapping(const String &p_mapping) {
 void Input::add_joy_mapping(const String &p_mapping, bool p_update_existing) {
 	parse_mapping(p_mapping);
 	if (p_update_existing) {
-		Vector<String> entry = p_mapping.split(",");
+		Hector<String> entry = p_mapping.split(",");
 		const String &uid = entry[0];
 		for (KeyValue<int, Joypad> &E : joy_names) {
 			Joypad &joy = E.value;
@@ -1676,7 +1676,7 @@ Input::Input() {
 	// If defined, parse SDL_GAMECONTROLLERCONFIG for possible new mappings/overrides.
 	String env_mapping = OS::get_singleton()->get_environment("SDL_GAMECONTROLLERCONFIG");
 	if (!env_mapping.is_empty()) {
-		Vector<String> entries = env_mapping.split("\n");
+		Hector<String> entries = env_mapping.split("\n");
 		for (int i = 0; i < entries.size(); i++) {
 			if (entries[i].is_empty()) {
 				continue;
@@ -1687,9 +1687,9 @@ Input::Input() {
 
 	String env_ignore_devices = OS::get_singleton()->get_environment("SDL_GAMECONTROLLER_IGNORE_DEVICES");
 	if (!env_ignore_devices.is_empty()) {
-		Vector<String> entries = env_ignore_devices.split(",");
+		Hector<String> entries = env_ignore_devices.split(",");
 		for (int i = 0; i < entries.size(); i++) {
-			Vector<String> vid_pid = entries[i].split("/");
+			Hector<String> vid_pid = entries[i].split("/");
 
 			if (vid_pid.size() < 2) {
 				continue;

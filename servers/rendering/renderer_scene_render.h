@@ -65,7 +65,7 @@ public:
 
 	/* SDFGI UPDATE */
 
-	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) = 0;
+	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Hector3 &p_world_position) = 0;
 	virtual int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const = 0;
 	virtual AABB sdfgi_get_pending_region_bounds(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const = 0;
 	virtual uint32_t sdfgi_get_pending_region_cascade(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const = 0;
@@ -182,9 +182,9 @@ public:
 	virtual void environment_set_volumetric_fog_filter_active(bool p_enable) = 0;
 
 	// GLOW
-	void environment_set_glow(RID p_env, bool p_enable, Vector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, RS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map);
+	void environment_set_glow(RID p_env, bool p_enable, Hector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, RS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map);
 	bool environment_get_glow_enabled(RID p_env) const;
-	Vector<float> environment_get_glow_levels(RID p_env) const;
+	Hector<float> environment_get_glow_levels(RID p_env) const;
 	float environment_get_glow_intensity(RID p_env) const;
 	float environment_get_glow_strength(RID p_env) const;
 	float environment_get_glow_bloom(RID p_env) const;
@@ -267,12 +267,12 @@ public:
 	virtual void fog_volume_instance_set_transform(RID p_fog_volume_instance, const Transform3D &p_transform) = 0;
 	virtual void fog_volume_instance_set_active(RID p_fog_volume_instance, bool p_active) = 0;
 	virtual RID fog_volume_instance_get_volume(RID p_fog_volume_instance) const = 0;
-	virtual Vector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const = 0;
+	virtual Hector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const = 0;
 
 	virtual RID voxel_gi_instance_create(RID p_voxel_gi) = 0;
 	virtual void voxel_gi_instance_set_transform_to_data(RID p_probe, const Transform3D &p_xform) = 0;
 	virtual bool voxel_gi_needs_update(RID p_probe) const = 0;
-	virtual void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) = 0;
+	virtual void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) = 0;
 
 	virtual void voxel_gi_set_quality(RS::VoxelGIQuality) = 0;
 
@@ -293,7 +293,7 @@ public:
 		uint32_t *static_cascade_indices = nullptr;
 		PagedArray<RID> *static_positional_lights;
 
-		const Vector<RID> *directional_lights;
+		const Hector<RID> *directional_lights;
 		const RID *positional_light_instances;
 		uint32_t positional_light_count;
 	};
@@ -311,10 +311,10 @@ public:
 
 		Transform3D view_offset[RendererSceneRender::MAX_RENDER_VIEWS];
 		Projection view_projection[RendererSceneRender::MAX_RENDER_VIEWS];
-		Vector2 taa_jitter;
+		Hector2 taa_jitter;
 		float taa_frame_count = 0.0f;
 
-		void set_camera(const Transform3D p_transform, const Projection p_projection, bool p_is_orthogonal, bool p_vaspect, const Vector2 &p_taa_jitter = Vector2(), float p_taa_frame_count = 0.0f, uint32_t p_visible_layers = 0xFFFFFFFF);
+		void set_camera(const Transform3D p_transform, const Projection p_projection, bool p_is_orthogonal, bool p_vaspect, const Hector2 &p_taa_jitter = Hector2(), float p_taa_frame_count = 0.0f, uint32_t p_visible_layers = 0xFFFFFFFF);
 		void set_multiview_camera(uint32_t p_view_count, const Transform3D *p_transforms, const Projection *p_projections, bool p_is_orthogonal, bool p_vaspect);
 	};
 
@@ -340,7 +340,7 @@ public:
 
 	virtual bool free(RID p_rid) = 0;
 
-	virtual void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) = 0;
+	virtual void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) = 0;
 
 	virtual void decals_set_filter(RS::DecalFilter p_filter) = 0;
 	virtual void light_projectors_set_filter(RS::LightProjectorFilter p_filter) = 0;

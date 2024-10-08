@@ -78,9 +78,9 @@ class DependencyEditorOwners : public AcceptDialog {
 
 	void _fill_owners(EditorFileSystemDirectory *efsd);
 
-	void _list_rmb_clicked(int p_item, const Vector2 &p_pos, MouseButton p_mouse_button_index);
+	void _list_rmb_clicked(int p_item, const Hector2 &p_pos, MouseButton p_mouse_button_index);
 	void _select_file(int p_idx);
-	void _empty_clicked(const Vector2 &p_pos, MouseButton p_mouse_button_index);
+	void _empty_clicked(const Hector2 &p_pos, MouseButton p_mouse_button_index);
 	void _file_option(int p_option);
 
 private:
@@ -100,8 +100,8 @@ class DependencyRemoveDialog : public ConfirmationDialog {
 	Tree *owners = nullptr;
 
 	HashMap<String, String> all_remove_files;
-	Vector<String> dirs_to_delete;
-	Vector<String> files_to_delete;
+	Hector<String> dirs_to_delete;
+	Hector<String> files_to_delete;
 
 	struct RemovedDependency {
 		String file;
@@ -119,16 +119,16 @@ class DependencyRemoveDialog : public ConfirmationDialog {
 	};
 
 	void _find_files_in_removed_folder(EditorFileSystemDirectory *efsd, const String &p_folder);
-	void _find_all_removed_dependencies(EditorFileSystemDirectory *efsd, Vector<RemovedDependency> &p_removed);
-	void _find_localization_remaps_of_removed_files(Vector<RemovedDependency> &p_removed);
-	void _build_removed_dependency_tree(const Vector<RemovedDependency> &p_removed);
+	void _find_all_removed_dependencies(EditorFileSystemDirectory *efsd, Hector<RemovedDependency> &p_removed);
+	void _find_localization_remaps_of_removed_files(Hector<RemovedDependency> &p_removed);
+	void _build_removed_dependency_tree(const Hector<RemovedDependency> &p_removed);
 
 	void ok_pressed() override;
 
 	static void _bind_methods();
 
 public:
-	void show(const Vector<String> &p_folders, const Vector<String> &p_files);
+	void show(const Hector<String> &p_folders, const Hector<String> &p_files);
 	DependencyRemoveDialog();
 };
 
@@ -151,7 +151,7 @@ private:
 	void custom_action(const String &) override;
 
 public:
-	void show(Mode p_mode, const String &p_for_file, const Vector<String> &report);
+	void show(Mode p_mode, const String &p_for_file, const Hector<String> &report);
 	DependencyErrorDialog();
 };
 

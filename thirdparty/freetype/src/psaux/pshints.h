@@ -196,7 +196,7 @@ FT_BEGIN_HEADER
     CF2_Fixed  scaleC;         /* matrix c */
     CF2_Fixed  scaleY;         /* matrix d */
 
-    FT_Vector  fractionalTranslation;  /* including deviceXScale */
+    FT_Hector  fractionalTranslation;  /* including deviceXScale */
 #if 0
     CF2_Fixed  hShift;    /* character space horizontal shift */
                           /* (for fauxing)                    */
@@ -222,24 +222,24 @@ FT_BEGIN_HEADER
     /* vertical/horizontal snap distance in character space */
     CF2_Fixed  snapThreshold;
 
-    FT_Vector  offsetStart0;  /* first and second points of first */
-    FT_Vector  offsetStart1;  /* element with offset applied      */
+    FT_Hector  offsetStart0;  /* first and second points of first */
+    FT_Hector  offsetStart1;  /* element with offset applied      */
 
     /* current point, character space, before offset */
-    FT_Vector  currentCS;
+    FT_Hector  currentCS;
     /* current point, device space */
-    FT_Vector  currentDS;
+    FT_Hector  currentDS;
     /* start point of subpath, character space */
-    FT_Vector  start;
+    FT_Hector  start;
 
     /* the following members constitute the `queue' of one element */
     FT_Bool  elemIsQueued;
     CF2_Int  prevElemOp;
 
-    FT_Vector  prevElemP0;
-    FT_Vector  prevElemP1;
-    FT_Vector  prevElemP2;
-    FT_Vector  prevElemP3;
+    FT_Hector  prevElemP0;
+    FT_Hector  prevElemP1;
+    FT_Hector  prevElemP2;
+    FT_Hector  prevElemP3;
 
   } CF2_GlyphPathRec, *CF2_GlyphPath;
 
@@ -255,7 +255,7 @@ FT_BEGIN_HEADER
                       CF2_HintMask          hintMask,
                       CF2_Fixed             hintOrigin,
                       const CF2_Blues       blues,
-                      const FT_Vector*      fractionalTranslation );
+                      const FT_Hector*      fractionalTranslation );
   FT_LOCAL( void )
   cf2_glyphpath_finalize( CF2_GlyphPath  glyphpath );
 

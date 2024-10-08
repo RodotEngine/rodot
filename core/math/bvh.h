@@ -57,7 +57,7 @@
 #define BVHTREE_CLASS BVH_Tree<T, NUM_TREES, 2, MAX_ITEMS, USER_PAIR_TEST_FUNCTION, USER_CULL_TEST_FUNCTION, USE_PAIRS, BOUNDS, POINT>
 #define BVH_LOCKED_FUNCTION BVHLockedFunction _lock_guard(&_mutex, BVH_THREAD_SAFE &&_thread_safe);
 
-template <typename T, int NUM_TREES = 1, bool USE_PAIRS = false, int MAX_ITEMS = 32, typename USER_PAIR_TEST_FUNCTION = BVH_DummyPairTestFunction<T>, typename USER_CULL_TEST_FUNCTION = BVH_DummyCullTestFunction<T>, typename BOUNDS = AABB, typename POINT = Vector3, bool BVH_THREAD_SAFE = true>
+template <typename T, int NUM_TREES = 1, bool USE_PAIRS = false, int MAX_ITEMS = 32, typename USER_PAIR_TEST_FUNCTION = BVH_DummyPairTestFunction<T>, typename USER_CULL_TEST_FUNCTION = BVH_DummyCullTestFunction<T>, typename BOUNDS = AABB, typename POINT = Hector3, bool BVH_THREAD_SAFE = true>
 class BVH_Manager {
 public:
 	// note we are using uint32_t instead of BVHHandle, losing type safety, but this
@@ -398,13 +398,13 @@ public:
 		return params.result_count_overall;
 	}
 
-	int cull_convex(const Vector<Plane> &p_convex, T **p_result_array, int p_result_max, const T *p_tester, uint32_t p_tree_collision_mask = 0xFFFFFFFF) {
+	int cull_convex(const Hector<Plane> &p_convex, T **p_result_array, int p_result_max, const T *p_tester, uint32_t p_tree_collision_mask = 0xFFFFFFFF) {
 		BVH_LOCKED_FUNCTION
 		if (!p_convex.size()) {
 			return 0;
 		}
 
-		Vector<Vector3> convex_points = Geometry3D::compute_convex_mesh_points(&p_convex[0], p_convex.size());
+		Hector<Hector3> convex_points = Geometry3D::compute_convex_mesh_points(&p_convex[0], p_convex.size());
 		if (convex_points.size() == 0) {
 			return 0;
 		}
@@ -770,7 +770,7 @@ private:
 
 	// for collision pairing,
 	// maintain a list of all items moved etc on each frame / tick
-	LocalVector<BVHHandle, uint32_t, true> changed_items;
+	LocalHector<BVHHandle, uint32_t, true> changed_items;
 	uint32_t _tick = 1; // Start from 1 so items with 0 indicate never updated.
 
 	class BVHLockedFunction {

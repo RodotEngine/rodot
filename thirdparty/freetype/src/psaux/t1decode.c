@@ -268,7 +268,7 @@
     FT_Int       n_base_points;
     FT_Outline*  base = decoder->builder.base;
 #endif
-    FT_Vector    left_bearing, advance;
+    FT_Hector    left_bearing, advance;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     T1_Face      face  = (T1_Face)decoder->builder.face;
@@ -815,7 +815,7 @@
             goto Unexpected_OtherSubr;
 
           if ( !decoder->flex_state           ||
-               decoder->num_flex_vectors != 7 )
+               decoder->num_flex_Hectors != 7 )
           {
             FT_ERROR(( "t1_decoder_parse_charstrings:"
                        " unexpected flex end\n" ));
@@ -837,10 +837,10 @@
             goto Fail;
 
           decoder->flex_state        = 1;
-          decoder->num_flex_vectors  = 0;
+          decoder->num_flex_Hectors  = 0;
           break;
 
-        case 2:                     /* add flex vectors */
+        case 2:                     /* add flex Hectors */
           {
             FT_Int  idx;
 
@@ -858,12 +858,12 @@
             /* note that we should not add a point for index 0; */
             /* this will move our current position to the flex  */
             /* point without adding any point to the outline    */
-            idx = decoder->num_flex_vectors++;
+            idx = decoder->num_flex_Hectors++;
             if ( idx > 0 && idx < 7 )
             {
               /* in malformed fonts it is possible to have other */
               /* opcodes in the middle of a flex (which don't    */
-              /* increase `num_flex_vectors'); we thus have to   */
+              /* increase `num_flex_Hectors'); we thus have to   */
               /* check whether we can add a point                */
               if ( FT_SET_ERROR( t1_builder_check_points( builder, 1 ) ) )
                 goto Syntax_Error;
@@ -946,7 +946,7 @@
               for ( mm = 1; mm < blend->num_designs; mm++ )
                 tmp = ADD_LONG( tmp,
                                 FT_MulFix( *delta++,
-                                           blend->weight_vector[mm] ) );
+                                           blend->weight_Hector[mm] ) );
 
               *values++ = tmp;
             }
@@ -958,7 +958,7 @@
         case 19:
           /* <idx> 1 19 callothersubr                             */
           /* => replace elements starting from index cvi( <idx> ) */
-          /*    of BuildCharArray with WeightVector               */
+          /*    of BuildCharArray with WeightHector               */
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
@@ -974,9 +974,9 @@
               goto Unexpected_OtherSubr;
 
             ft_memcpy( &decoder->buildchar[idx],
-                       blend->weight_vector,
+                       blend->weight_Hector,
                        blend->num_designs *
-                         sizeof ( blend->weight_vector[0] ) );
+                         sizeof ( blend->weight_Hector[0] ) );
           }
           break;
 

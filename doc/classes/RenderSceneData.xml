@@ -37,7 +37,7 @@
 			</description>
 		</method>
 		<method name="get_view_eye_offset" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="view" type="int" />
 			<description>
 				Returns the eye offset per view used to render this frame. This is the offset between our camera transform and the eye transform.

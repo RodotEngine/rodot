@@ -74,11 +74,11 @@ int GodotBroadPhase3DBVH::get_subindex(ID p_id) const {
 	return bvh.get_subindex(p_id - 1);
 }
 
-int GodotBroadPhase3DBVH::cull_point(const Vector3 &p_point, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices) {
+int GodotBroadPhase3DBVH::cull_point(const Hector3 &p_point, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices) {
 	return bvh.cull_point(p_point, p_results, p_max_results, nullptr, 0xFFFFFFFF, p_result_indices);
 }
 
-int GodotBroadPhase3DBVH::cull_segment(const Vector3 &p_from, const Vector3 &p_to, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices) {
+int GodotBroadPhase3DBVH::cull_segment(const Hector3 &p_from, const Hector3 &p_to, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices) {
 	return bvh.cull_segment(p_from, p_to, p_results, p_max_results, nullptr, 0xFFFFFFFF, p_result_indices);
 }
 

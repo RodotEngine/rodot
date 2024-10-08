@@ -11,8 +11,8 @@
 
 namespace embree
 {
-  #define VectorT typename L::Vector
-  #define ScalarT typename L::Vector::Scalar
+  #define HectorT typename L::Hector
+  #define ScalarT typename L::Hector::Scalar
 
   ////////////////////////////////////////////////////////////////////////////////
   // Affine Space
@@ -22,7 +22,7 @@ namespace embree
     struct AffineSpaceT
     {
       L l;           /*< linear part of affine space */
-      VectorT p;     /*< affine part of affine space */
+      HectorT p;     /*< affine part of affine space */
 
       ////////////////////////////////////////////////////////////////////////////////
       // Constructors, Assignment, Cast, Copy Operations
@@ -30,11 +30,11 @@ namespace embree
 
       __forceinline AffineSpaceT           ( )                           { }
       __forceinline AffineSpaceT           ( const AffineSpaceT& other ) { l = other.l; p = other.p; }
-      __forceinline AffineSpaceT           ( const L           & other ) { l = other  ; p = VectorT(zero); }
+      __forceinline AffineSpaceT           ( const L           & other ) { l = other  ; p = HectorT(zero); }
       __forceinline AffineSpaceT& operator=( const AffineSpaceT& other ) { l = other.l; p = other.p; return *this; }
 
-      __forceinline AffineSpaceT( const VectorT& vx, const VectorT& vy, const VectorT& vz, const VectorT& p ) : l(vx,vy,vz), p(p) {}
-      __forceinline AffineSpaceT( const L& l, const VectorT& p ) : l(l), p(p) {}
+      __forceinline AffineSpaceT( const HectorT& vx, const HectorT& vy, const HectorT& vz, const HectorT& p ) : l(vx,vy,vz), p(p) {}
+      __forceinline AffineSpaceT( const L& l, const HectorT& p ) : l(l), p(p) {}
 
       template<typename L1> __forceinline AffineSpaceT( const AffineSpaceT<L1>& s ) : l(s.l), p(s.p) {}
 
@@ -46,25 +46,25 @@ namespace embree
       __forceinline AffineSpaceT( OneTy )  : l(one),  p(zero) {}
 
       /*! return matrix for scaling */
-      static __forceinline AffineSpaceT scale(const VectorT& s) { return L::scale(s); }
+      static __forceinline AffineSpaceT scale(const HectorT& s) { return L::scale(s); }
 
       /*! return matrix for translation */
-      static __forceinline AffineSpaceT translate(const VectorT& p) { return AffineSpaceT(one,p); }
+      static __forceinline AffineSpaceT translate(const HectorT& p) { return AffineSpaceT(one,p); }
 
       /*! return matrix for rotation, only in 2D */
       static __forceinline AffineSpaceT rotate(const ScalarT& r) { return L::rotate(r); }
 
       /*! return matrix for rotation around arbitrary point (2D) or axis (3D) */
-      static __forceinline AffineSpaceT rotate(const VectorT& u, const ScalarT& r) { return L::rotate(u,r); }
+      static __forceinline AffineSpaceT rotate(const HectorT& u, const ScalarT& r) { return L::rotate(u,r); }
 
       /*! return matrix for rotation around arbitrary axis and point, only in 3D */
-      static __forceinline AffineSpaceT rotate(const VectorT& p, const VectorT& u, const ScalarT& r) { return translate(+p) * rotate(u,r) * translate(-p);  }
+      static __forceinline AffineSpaceT rotate(const HectorT& p, const HectorT& u, const ScalarT& r) { return translate(+p) * rotate(u,r) * translate(-p);  }
 
       /*! return matrix for looking at given point, only in 3D */
-      static __forceinline AffineSpaceT lookat(const VectorT& eye, const VectorT& point, const VectorT& up) {
-        VectorT Z = normalize(point-eye);
-        VectorT U = normalize(cross(up,Z));
-        VectorT V = normalize(cross(Z,U));
+      static __forceinline AffineSpaceT lookat(const HectorT& eye, const HectorT& point, const HectorT& up) {
+        HectorT Z = normalize(point-eye);
+        HectorT U = normalize(cross(up,Z));
+        HectorT V = normalize(cross(Z,U));
         return AffineSpaceT(L(U,V,Z),eye);
       }
 
@@ -99,9 +99,9 @@ namespace embree
   template<typename L> __forceinline AffineSpaceT<L>& operator /=( AffineSpaceT<L>& a, const AffineSpaceT<L>& b ) { return a = a / b; }
   template<typename L> __forceinline AffineSpaceT<L>& operator /=( AffineSpaceT<L>& a, const ScalarT        & b ) { return a = a / b; }
 
-  template<typename L> __forceinline VectorT xfmPoint (const AffineSpaceT<L>& m, const VectorT& p) { return madd(VectorT(p.x),m.l.vx,madd(VectorT(p.y),m.l.vy,madd(VectorT(p.z),m.l.vz,m.p))); }
-  template<typename L> __forceinline VectorT xfmVector(const AffineSpaceT<L>& m, const VectorT& v) { return xfmVector(m.l,v); }
-  template<typename L> __forceinline VectorT xfmNormal(const AffineSpaceT<L>& m, const VectorT& n) { return xfmNormal(m.l,n); }
+  template<typename L> __forceinline HectorT xfmPoint (const AffineSpaceT<L>& m, const HectorT& p) { return madd(HectorT(p.x),m.l.vx,madd(HectorT(p.y),m.l.vy,madd(HectorT(p.z),m.l.vz,m.p))); }
+  template<typename L> __forceinline HectorT xfmHector(const AffineSpaceT<L>& m, const HectorT& v) { return xfmHector(m.l,v); }
+  template<typename L> __forceinline HectorT xfmNormal(const AffineSpaceT<L>& m, const HectorT& n) { return xfmNormal(m.l,n); }
 
   __forceinline const BBox<Vec3fa> xfmBounds(const AffineSpaceT<LinearSpace3<Vec3fa> >& m, const BBox<Vec3fa>& b) 
   { 
@@ -128,7 +128,7 @@ namespace embree
   /// Select
   ////////////////////////////////////////////////////////////////////////////////
 
-  template<typename L> __forceinline AffineSpaceT<L> select ( const typename L::Vector::Scalar::Bool& s, const AffineSpaceT<L>& t, const AffineSpaceT<L>& f ) {
+  template<typename L> __forceinline AffineSpaceT<L> select ( const typename L::Hector::Scalar::Bool& s, const AffineSpaceT<L>& t, const AffineSpaceT<L>& f ) {
     return AffineSpaceT<L>(select(s,t.l,f.l),select(s,t.p,f.p));
   }
 
@@ -305,7 +305,7 @@ namespace embree
   ////////////////////////////////////////////////////////////////////////////////
   /*
    * ! Template Specialization for 2D: return matrix for rotation around point
-   * (rotation around arbitrarty vector is not meaningful in 2D)
+   * (rotation around arbitrarty Hector is not meaningful in 2D)
    */
   template<> __forceinline
   AffineSpace2f AffineSpace2f::rotate(const Vec2f& p, const float& r) {
@@ -356,6 +356,6 @@ namespace embree
     return space;
   }
 
-  #undef VectorT
+  #undef HectorT
   #undef ScalarT
 }

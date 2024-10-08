@@ -51,13 +51,13 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <godot_cpp/variant/packed_string_array.hpp>
-#include <godot_cpp/variant/packed_vector2_array.hpp>
+#include <godot_cpp/variant/packed_Hector2_array.hpp>
 #include <godot_cpp/variant/rect2.hpp>
 #include <godot_cpp/variant/rid.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
-#include <godot_cpp/variant/vector2.hpp>
-#include <godot_cpp/variant/vector2i.hpp>
+#include <godot_cpp/variant/Hector2.hpp>
+#include <godot_cpp/variant/Hector2i.hpp>
 
 #include <godot_cpp/classes/text_server.hpp>
 #include <godot_cpp/classes/text_server_extension.hpp>
@@ -75,7 +75,7 @@
 #include <godot_cpp/templates/hash_set.hpp>
 #include <godot_cpp/templates/rid_owner.hpp>
 #include <godot_cpp/templates/safe_refcount.hpp>
-#include <godot_cpp/templates/vector.hpp>
+#include <godot_cpp/templates/Hector.hpp>
 
 using namespace godot;
 
@@ -142,7 +142,7 @@ class TextServerAdvanced : public TextServerExtension {
 		String exp;
 	};
 
-	Vector<NumSystemData> num_systems;
+	Hector<NumSystemData> num_systems;
 
 	struct FeatureInfo {
 		StringName name;
@@ -262,7 +262,7 @@ class TextServerAdvanced : public TextServerExtension {
 		int texture_idx = -1;
 		Rect2 rect;
 		Rect2 uv_rect;
-		Vector2 advance;
+		Hector2 advance;
 	};
 
 	struct FontForSizeAdvanced {
@@ -273,12 +273,12 @@ class TextServerAdvanced : public TextServerExtension {
 		double scale = 1.0;
 		double oversampling = 1.0;
 
-		Vector2i size;
+		Hector2i size;
 
-		Vector<ShelfPackTexture> textures;
+		Hector<ShelfPackTexture> textures;
 		HashMap<int64_t, int64_t> inv_glyph_map;
 		HashMap<int32_t, FontGlyph> glyph_map;
-		HashMap<Vector2i, Vector2> kerning_map;
+		HashMap<Hector2i, Hector2> kerning_map;
 		hb_font_t *hb_handle = nullptr;
 
 #ifdef MODULE_FREETYPE_ENABLED
@@ -332,7 +332,7 @@ class TextServerAdvanced : public TextServerExtension {
 		int extra_spacing[4] = { 0, 0, 0, 0 };
 		double baseline_offset = 0.0;
 
-		HashMap<Vector2i, FontForSizeAdvanced *> cache;
+		HashMap<Hector2i, FontForSizeAdvanced *> cache;
 
 		bool face_init = false;
 		HashSet<uint32_t> supported_scripts;
@@ -350,7 +350,7 @@ class TextServerAdvanced : public TextServerExtension {
 		int face_index = 0;
 
 		~FontAdvanced() {
-			for (const KeyValue<Vector2i, FontForSizeAdvanced *> &E : cache) {
+			for (const KeyValue<Hector2i, FontForSizeAdvanced *> &E : cache) {
 				memdelete(E.value);
 			}
 			cache.clear();
@@ -359,32 +359,32 @@ class TextServerAdvanced : public TextServerExtension {
 
 	_FORCE_INLINE_ FontTexturePosition find_texture_pos_for_glyph(FontForSizeAdvanced *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const;
 #ifdef MODULE_MSDFGEN_ENABLED
-	_FORCE_INLINE_ FontGlyph rasterize_msdf(FontAdvanced *p_font_data, FontForSizeAdvanced *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const;
+	_FORCE_INLINE_ FontGlyph rasterize_msdf(FontAdvanced *p_font_data, FontForSizeAdvanced *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Hector2 &p_advance) const;
 #endif
 #ifdef MODULE_FREETYPE_ENABLED
-	_FORCE_INLINE_ FontGlyph rasterize_bitmap(FontForSizeAdvanced *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const;
+	_FORCE_INLINE_ FontGlyph rasterize_bitmap(FontForSizeAdvanced *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Hector2 &p_advance, bool p_bgra) const;
 #endif
-	_FORCE_INLINE_ bool _ensure_glyph(FontAdvanced *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph) const;
-	_FORCE_INLINE_ bool _ensure_cache_for_size(FontAdvanced *p_font_data, const Vector2i &p_size, FontForSizeAdvanced *&r_cache_for_size, bool p_silent = false) const;
+	_FORCE_INLINE_ bool _ensure_glyph(FontAdvanced *p_font_data, const Hector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph) const;
+	_FORCE_INLINE_ bool _ensure_cache_for_size(FontAdvanced *p_font_data, const Hector2i &p_size, FontForSizeAdvanced *&r_cache_for_size, bool p_silent = false) const;
 	_FORCE_INLINE_ bool _font_validate(const RID &p_font_rid) const;
 	_FORCE_INLINE_ void _font_clear_cache(FontAdvanced *p_font_data);
 	static void _generateMTSDF_threaded(void *p_td, uint32_t p_y);
 
-	_FORCE_INLINE_ Vector2i _get_size(const FontAdvanced *p_font_data, int p_size) const {
+	_FORCE_INLINE_ Hector2i _get_size(const FontAdvanced *p_font_data, int p_size) const {
 		if (p_font_data->msdf) {
-			return Vector2i(p_font_data->msdf_source_size, 0);
+			return Hector2i(p_font_data->msdf_source_size, 0);
 		} else if (p_font_data->fixed_size > 0) {
-			return Vector2i(p_font_data->fixed_size, 0);
+			return Hector2i(p_font_data->fixed_size, 0);
 		} else {
-			return Vector2i(p_size, 0);
+			return Hector2i(p_size, 0);
 		}
 	}
 
-	_FORCE_INLINE_ Vector2i _get_size_outline(const FontAdvanced *p_font_data, const Vector2i &p_size) const {
+	_FORCE_INLINE_ Hector2i _get_size_outline(const FontAdvanced *p_font_data, const Hector2i &p_size) const {
 		if (p_font_data->msdf) {
-			return Vector2i(p_font_data->msdf_source_size, 0);
+			return Hector2i(p_font_data->msdf_source_size, 0);
 		} else if (p_font_data->fixed_size > 0) {
-			return Vector2i(p_font_data->fixed_size, MIN(p_size.y, 1));
+			return Hector2i(p_font_data->fixed_size, MIN(p_size.y, 1));
 		} else {
 			return p_size;
 		}
@@ -449,7 +449,7 @@ class TextServerAdvanced : public TextServerExtension {
 	struct TrimData {
 		int trim_pos = -1;
 		int ellipsis_pos = -1;
-		Vector<Glyph> ellipsis_glyph_buf;
+		Hector<Glyph> ellipsis_glyph_buf;
 	};
 
 	struct ShapedTextDataAdvanced {
@@ -479,7 +479,7 @@ class TextServerAdvanced : public TextServerExtension {
 			Dictionary features;
 			Variant meta;
 		};
-		Vector<Span> spans;
+		Hector<Span> spans;
 
 		struct EmbeddedObject {
 			int start = -1;
@@ -515,13 +515,13 @@ class TextServerAdvanced : public TextServerExtension {
 		TrimData overrun_trim_data;
 		bool fit_width_minimum_reached = false;
 
-		Vector<Glyph> glyphs;
-		Vector<Glyph> glyphs_logical;
+		Hector<Glyph> glyphs;
+		Hector<Glyph> glyphs_logical;
 
 		/* Intermediate data */
 		Char16String utf16;
-		Vector<UBiDi *> bidi_iter;
-		Vector<Vector3i> bidi_override;
+		Hector<UBiDi *> bidi_iter;
+		Hector<Hector3i> bidi_override;
 		ScriptIterator *script_iter = nullptr;
 		hb_buffer_t *hb_buffer = nullptr;
 
@@ -623,7 +623,7 @@ class TextServerAdvanced : public TextServerExtension {
 	};
 
 	struct SystemFontCache {
-		Vector<SystemFontCacheRec> var;
+		Hector<SystemFontCacheRec> var;
 		int max_var = 0;
 	};
 
@@ -663,7 +663,7 @@ class TextServerAdvanced : public TextServerExtension {
 	Glyph _shape_single_glyph(ShapedTextDataAdvanced *p_sd, char32_t p_char, hb_script_t p_script, hb_direction_t p_direction, const RID &p_font, int64_t p_font_size);
 	_FORCE_INLINE_ RID _find_sys_font_for_text(const RID &p_fdef, const String &p_script_code, const String &p_language, const String &p_text);
 
-	_FORCE_INLINE_ void _add_featuers(const Dictionary &p_source, Vector<hb_feature_t> &r_ftrs);
+	_FORCE_INLINE_ void _add_featuers(const Dictionary &p_source, Hector<hb_feature_t> &r_ftrs);
 
 	Mutex ft_mutex;
 
@@ -812,9 +812,9 @@ public:
 	MODBIND2(font_set_oversampling, const RID &, double);
 	MODBIND1RC(double, font_get_oversampling, const RID &);
 
-	MODBIND1RC(TypedArray<Vector2i>, font_get_size_cache_list, const RID &);
+	MODBIND1RC(TypedArray<Hector2i>, font_get_size_cache_list, const RID &);
 	MODBIND1(font_clear_size_cache, const RID &);
-	MODBIND2(font_remove_size_cache, const RID &, const Vector2i &);
+	MODBIND2(font_remove_size_cache, const RID &, const Hector2i &);
 
 	MODBIND3(font_set_ascent, const RID &, int64_t, double);
 	MODBIND2RC(double, font_get_ascent, const RID &, int64_t);
@@ -831,46 +831,46 @@ public:
 	MODBIND3(font_set_scale, const RID &, int64_t, double);
 	MODBIND2RC(double, font_get_scale, const RID &, int64_t);
 
-	MODBIND2RC(int64_t, font_get_texture_count, const RID &, const Vector2i &);
-	MODBIND2(font_clear_textures, const RID &, const Vector2i &);
-	MODBIND3(font_remove_texture, const RID &, const Vector2i &, int64_t);
+	MODBIND2RC(int64_t, font_get_texture_count, const RID &, const Hector2i &);
+	MODBIND2(font_clear_textures, const RID &, const Hector2i &);
+	MODBIND3(font_remove_texture, const RID &, const Hector2i &, int64_t);
 
-	MODBIND4(font_set_texture_image, const RID &, const Vector2i &, int64_t, const Ref<Image> &);
-	MODBIND3RC(Ref<Image>, font_get_texture_image, const RID &, const Vector2i &, int64_t);
+	MODBIND4(font_set_texture_image, const RID &, const Hector2i &, int64_t, const Ref<Image> &);
+	MODBIND3RC(Ref<Image>, font_get_texture_image, const RID &, const Hector2i &, int64_t);
 
-	MODBIND4(font_set_texture_offsets, const RID &, const Vector2i &, int64_t, const PackedInt32Array &);
-	MODBIND3RC(PackedInt32Array, font_get_texture_offsets, const RID &, const Vector2i &, int64_t);
+	MODBIND4(font_set_texture_offsets, const RID &, const Hector2i &, int64_t, const PackedInt32Array &);
+	MODBIND3RC(PackedInt32Array, font_get_texture_offsets, const RID &, const Hector2i &, int64_t);
 
-	MODBIND2RC(PackedInt32Array, font_get_glyph_list, const RID &, const Vector2i &);
-	MODBIND2(font_clear_glyphs, const RID &, const Vector2i &);
-	MODBIND3(font_remove_glyph, const RID &, const Vector2i &, int64_t);
+	MODBIND2RC(PackedInt32Array, font_get_glyph_list, const RID &, const Hector2i &);
+	MODBIND2(font_clear_glyphs, const RID &, const Hector2i &);
+	MODBIND3(font_remove_glyph, const RID &, const Hector2i &, int64_t);
 
-	MODBIND3RC(Vector2, font_get_glyph_advance, const RID &, int64_t, int64_t);
-	MODBIND4(font_set_glyph_advance, const RID &, int64_t, int64_t, const Vector2 &);
+	MODBIND3RC(Hector2, font_get_glyph_advance, const RID &, int64_t, int64_t);
+	MODBIND4(font_set_glyph_advance, const RID &, int64_t, int64_t, const Hector2 &);
 
-	MODBIND3RC(Vector2, font_get_glyph_offset, const RID &, const Vector2i &, int64_t);
-	MODBIND4(font_set_glyph_offset, const RID &, const Vector2i &, int64_t, const Vector2 &);
+	MODBIND3RC(Hector2, font_get_glyph_offset, const RID &, const Hector2i &, int64_t);
+	MODBIND4(font_set_glyph_offset, const RID &, const Hector2i &, int64_t, const Hector2 &);
 
-	MODBIND3RC(Vector2, font_get_glyph_size, const RID &, const Vector2i &, int64_t);
-	MODBIND4(font_set_glyph_size, const RID &, const Vector2i &, int64_t, const Vector2 &);
+	MODBIND3RC(Hector2, font_get_glyph_size, const RID &, const Hector2i &, int64_t);
+	MODBIND4(font_set_glyph_size, const RID &, const Hector2i &, int64_t, const Hector2 &);
 
-	MODBIND3RC(Rect2, font_get_glyph_uv_rect, const RID &, const Vector2i &, int64_t);
-	MODBIND4(font_set_glyph_uv_rect, const RID &, const Vector2i &, int64_t, const Rect2 &);
+	MODBIND3RC(Rect2, font_get_glyph_uv_rect, const RID &, const Hector2i &, int64_t);
+	MODBIND4(font_set_glyph_uv_rect, const RID &, const Hector2i &, int64_t, const Rect2 &);
 
-	MODBIND3RC(int64_t, font_get_glyph_texture_idx, const RID &, const Vector2i &, int64_t);
-	MODBIND4(font_set_glyph_texture_idx, const RID &, const Vector2i &, int64_t, int64_t);
+	MODBIND3RC(int64_t, font_get_glyph_texture_idx, const RID &, const Hector2i &, int64_t);
+	MODBIND4(font_set_glyph_texture_idx, const RID &, const Hector2i &, int64_t, int64_t);
 
-	MODBIND3RC(RID, font_get_glyph_texture_rid, const RID &, const Vector2i &, int64_t);
-	MODBIND3RC(Size2, font_get_glyph_texture_size, const RID &, const Vector2i &, int64_t);
+	MODBIND3RC(RID, font_get_glyph_texture_rid, const RID &, const Hector2i &, int64_t);
+	MODBIND3RC(Size2, font_get_glyph_texture_size, const RID &, const Hector2i &, int64_t);
 
 	MODBIND3RC(Dictionary, font_get_glyph_contours, const RID &, int64_t, int64_t);
 
-	MODBIND2RC(TypedArray<Vector2i>, font_get_kerning_list, const RID &, int64_t);
+	MODBIND2RC(TypedArray<Hector2i>, font_get_kerning_list, const RID &, int64_t);
 	MODBIND2(font_clear_kerning_map, const RID &, int64_t);
-	MODBIND3(font_remove_kerning, const RID &, int64_t, const Vector2i &);
+	MODBIND3(font_remove_kerning, const RID &, int64_t, const Hector2i &);
 
-	MODBIND4(font_set_kerning, const RID &, int64_t, const Vector2i &, const Vector2 &);
-	MODBIND3RC(Vector2, font_get_kerning, const RID &, int64_t, const Vector2i &);
+	MODBIND4(font_set_kerning, const RID &, int64_t, const Hector2i &, const Hector2 &);
+	MODBIND3RC(Hector2, font_get_kerning, const RID &, int64_t, const Hector2i &);
 
 	MODBIND4RC(int64_t, font_get_glyph_index, const RID &, int64_t, int64_t, int64_t);
 	MODBIND3RC(int64_t, font_get_char_from_glyph_index, const RID &, int64_t, int64_t);
@@ -879,11 +879,11 @@ public:
 	MODBIND1RC(String, font_get_supported_chars, const RID &);
 	MODBIND1RC(PackedInt32Array, font_get_supported_glyphs, const RID &);
 
-	MODBIND4(font_render_range, const RID &, const Vector2i &, int64_t, int64_t);
-	MODBIND3(font_render_glyph, const RID &, const Vector2i &, int64_t);
+	MODBIND4(font_render_range, const RID &, const Hector2i &, int64_t, int64_t);
+	MODBIND3(font_render_glyph, const RID &, const Hector2i &, int64_t);
 
-	MODBIND6C(font_draw_glyph, const RID &, const RID &, int64_t, const Vector2 &, int64_t, const Color &);
-	MODBIND7C(font_draw_glyph_outline, const RID &, const RID &, int64_t, int64_t, const Vector2 &, int64_t, const Color &);
+	MODBIND6C(font_draw_glyph, const RID &, const RID &, int64_t, const Hector2 &, int64_t, const Color &);
+	MODBIND7C(font_draw_glyph_outline, const RID &, const RID &, int64_t, int64_t, const Hector2 &, int64_t, const Color &);
 
 	MODBIND2RC(bool, font_is_language_supported, const RID &, const String &);
 	MODBIND3(font_set_language_support_override, const RID &, const String &, bool);
@@ -967,11 +967,11 @@ public:
 	MODBIND1R(const Glyph *, shaped_text_sort_logical, const RID &);
 	MODBIND1RC(int64_t, shaped_text_get_glyph_count, const RID &);
 
-	MODBIND1RC(Vector2i, shaped_text_get_range, const RID &);
+	MODBIND1RC(Hector2i, shaped_text_get_range, const RID &);
 
 	MODBIND1RC(Array, shaped_text_get_objects, const RID &);
 	MODBIND2RC(Rect2, shaped_text_get_object_rect, const RID &, const Variant &);
-	MODBIND2RC(Vector2i, shaped_text_get_object_range, const RID &, const Variant &);
+	MODBIND2RC(Hector2i, shaped_text_get_object_range, const RID &, const Variant &);
 	MODBIND2RC(int64_t, shaped_text_get_object_glyph, const RID &, const Variant &);
 
 	MODBIND1RC(Size2, shaped_text_get_size, const RID &);

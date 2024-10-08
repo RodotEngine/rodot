@@ -42,21 +42,21 @@ class GodotPhysicsDirectBodyState3D;
 class GodotBody3D : public GodotCollisionObject3D {
 	PhysicsServer3D::BodyMode mode = PhysicsServer3D::BODY_MODE_RIGID;
 
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
 
-	Vector3 prev_linear_velocity;
-	Vector3 prev_angular_velocity;
+	Hector3 prev_linear_velocity;
+	Hector3 prev_angular_velocity;
 
-	Vector3 constant_linear_velocity;
-	Vector3 constant_angular_velocity;
+	Hector3 constant_linear_velocity;
+	Hector3 constant_angular_velocity;
 
-	Vector3 biased_linear_velocity;
-	Vector3 biased_angular_velocity;
+	Hector3 biased_linear_velocity;
+	Hector3 biased_angular_velocity;
 	real_t mass = 1.0;
 	real_t bounce = 0.0;
 	real_t friction = 1.0;
-	Vector3 inertia;
+	Hector3 inertia;
 
 	PhysicsServer3D::BodyDampMode linear_damp_mode = PhysicsServer3D::BODY_DAMP_MODE_COMBINE;
 	PhysicsServer3D::BodyDampMode angular_damp_mode = PhysicsServer3D::BODY_DAMP_MODE_COMBINE;
@@ -72,29 +72,29 @@ class GodotBody3D : public GodotCollisionObject3D {
 	uint16_t locked_axis = 0;
 
 	real_t _inv_mass = 1.0;
-	Vector3 _inv_inertia; // Relative to the principal axes of inertia
+	Hector3 _inv_inertia; // Relative to the principal axes of inertia
 
 	// Relative to the local frame of reference
 	Basis principal_inertia_axes_local;
-	Vector3 center_of_mass_local;
+	Hector3 center_of_mass_local;
 
 	// In world orientation with local origin
 	Basis _inv_inertia_tensor;
 	Basis principal_inertia_axes;
-	Vector3 center_of_mass;
+	Hector3 center_of_mass;
 
 	bool calculate_inertia = true;
 	bool calculate_center_of_mass = true;
 
-	Vector3 gravity;
+	Hector3 gravity;
 
 	real_t still_time = 0.0;
 
-	Vector3 applied_force;
-	Vector3 applied_torque;
+	Hector3 applied_force;
+	Hector3 applied_torque;
 
-	Vector3 constant_force;
-	Vector3 constant_torque;
+	Hector3 constant_force;
+	Hector3 constant_torque;
 
 	SelfList<GodotBody3D> active_list;
 	SelfList<GodotBody3D> mass_properties_update_list;
@@ -114,23 +114,23 @@ class GodotBody3D : public GodotCollisionObject3D {
 
 	HashMap<GodotConstraint3D *, int> constraint_map;
 
-	Vector<AreaCMP> areas;
+	Hector<AreaCMP> areas;
 
 	struct Contact {
-		Vector3 local_pos;
-		Vector3 local_normal;
-		Vector3 local_velocity_at_pos;
+		Hector3 local_pos;
+		Hector3 local_normal;
+		Hector3 local_velocity_at_pos;
 		real_t depth = 0.0;
 		int local_shape = 0;
-		Vector3 collider_pos;
+		Hector3 collider_pos;
 		int collider_shape = 0;
 		ObjectID collider_instance_id;
 		RID collider;
-		Vector3 collider_velocity_at_pos;
-		Vector3 impulse;
+		Hector3 collider_velocity_at_pos;
+		Hector3 impulse;
 	};
 
-	Vector<Contact> contacts; //no contacts by default
+	Hector<Contact> contacts; //no contacts by default
 	int contact_count = 0;
 
 	Callable body_state_callback;
@@ -185,7 +185,7 @@ public:
 	_FORCE_INLINE_ int get_max_contacts_reported() const { return contacts.size(); }
 
 	_FORCE_INLINE_ bool can_report_contacts() const { return !contacts.is_empty(); }
-	_FORCE_INLINE_ void add_contact(const Vector3 &p_local_pos, const Vector3 &p_local_normal, real_t p_depth, int p_local_shape, const Vector3 &p_local_velocity_at_pos, const Vector3 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Vector3 &p_collider_velocity_at_pos, const Vector3 &p_impulse);
+	_FORCE_INLINE_ void add_contact(const Hector3 &p_local_pos, const Hector3 &p_local_normal, real_t p_depth, int p_local_shape, const Hector3 &p_local_velocity_at_pos, const Hector3 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Hector3 &p_collider_velocity_at_pos, const Hector3 &p_impulse);
 
 	_FORCE_INLINE_ void add_exception(const RID &p_exception) { exceptions.insert(p_exception); }
 	_FORCE_INLINE_ void remove_exception(const RID &p_exception) { exceptions.erase(p_exception); }
@@ -204,39 +204,39 @@ public:
 	_FORCE_INLINE_ bool get_omit_force_integration() const { return omit_force_integration; }
 
 	_FORCE_INLINE_ Basis get_principal_inertia_axes() const { return principal_inertia_axes; }
-	_FORCE_INLINE_ Vector3 get_center_of_mass() const { return center_of_mass; }
-	_FORCE_INLINE_ Vector3 get_center_of_mass_local() const { return center_of_mass_local; }
-	_FORCE_INLINE_ Vector3 xform_local_to_principal(const Vector3 &p_pos) const { return principal_inertia_axes_local.xform(p_pos - center_of_mass_local); }
+	_FORCE_INLINE_ Hector3 get_center_of_mass() const { return center_of_mass; }
+	_FORCE_INLINE_ Hector3 get_center_of_mass_local() const { return center_of_mass_local; }
+	_FORCE_INLINE_ Hector3 xform_local_to_principal(const Hector3 &p_pos) const { return principal_inertia_axes_local.xform(p_pos - center_of_mass_local); }
 
-	_FORCE_INLINE_ void set_linear_velocity(const Vector3 &p_velocity) { linear_velocity = p_velocity; }
-	_FORCE_INLINE_ Vector3 get_linear_velocity() const { return linear_velocity; }
+	_FORCE_INLINE_ void set_linear_velocity(const Hector3 &p_velocity) { linear_velocity = p_velocity; }
+	_FORCE_INLINE_ Hector3 get_linear_velocity() const { return linear_velocity; }
 
-	_FORCE_INLINE_ void set_angular_velocity(const Vector3 &p_velocity) { angular_velocity = p_velocity; }
-	_FORCE_INLINE_ Vector3 get_angular_velocity() const { return angular_velocity; }
+	_FORCE_INLINE_ void set_angular_velocity(const Hector3 &p_velocity) { angular_velocity = p_velocity; }
+	_FORCE_INLINE_ Hector3 get_angular_velocity() const { return angular_velocity; }
 
-	_FORCE_INLINE_ Vector3 get_prev_linear_velocity() const { return prev_linear_velocity; }
-	_FORCE_INLINE_ Vector3 get_prev_angular_velocity() const { return prev_angular_velocity; }
+	_FORCE_INLINE_ Hector3 get_prev_linear_velocity() const { return prev_linear_velocity; }
+	_FORCE_INLINE_ Hector3 get_prev_angular_velocity() const { return prev_angular_velocity; }
 
-	_FORCE_INLINE_ const Vector3 &get_biased_linear_velocity() const { return biased_linear_velocity; }
-	_FORCE_INLINE_ const Vector3 &get_biased_angular_velocity() const { return biased_angular_velocity; }
+	_FORCE_INLINE_ const Hector3 &get_biased_linear_velocity() const { return biased_linear_velocity; }
+	_FORCE_INLINE_ const Hector3 &get_biased_angular_velocity() const { return biased_angular_velocity; }
 
-	_FORCE_INLINE_ void apply_central_impulse(const Vector3 &p_impulse) {
+	_FORCE_INLINE_ void apply_central_impulse(const Hector3 &p_impulse) {
 		linear_velocity += p_impulse * _inv_mass;
 	}
 
-	_FORCE_INLINE_ void apply_impulse(const Vector3 &p_impulse, const Vector3 &p_position = Vector3()) {
+	_FORCE_INLINE_ void apply_impulse(const Hector3 &p_impulse, const Hector3 &p_position = Hector3()) {
 		linear_velocity += p_impulse * _inv_mass;
 		angular_velocity += _inv_inertia_tensor.xform((p_position - center_of_mass).cross(p_impulse));
 	}
 
-	_FORCE_INLINE_ void apply_torque_impulse(const Vector3 &p_impulse) {
+	_FORCE_INLINE_ void apply_torque_impulse(const Hector3 &p_impulse) {
 		angular_velocity += _inv_inertia_tensor.xform(p_impulse);
 	}
 
-	_FORCE_INLINE_ void apply_bias_impulse(const Vector3 &p_impulse, const Vector3 &p_position = Vector3(), real_t p_max_delta_av = -1.0) {
+	_FORCE_INLINE_ void apply_bias_impulse(const Hector3 &p_impulse, const Hector3 &p_position = Hector3(), real_t p_max_delta_av = -1.0) {
 		biased_linear_velocity += p_impulse * _inv_mass;
 		if (p_max_delta_av != 0.0) {
-			Vector3 delta_av = _inv_inertia_tensor.xform((p_position - center_of_mass).cross(p_impulse));
+			Hector3 delta_av = _inv_inertia_tensor.xform((p_position - center_of_mass).cross(p_impulse));
 			if (p_max_delta_av > 0 && delta_av.length() > p_max_delta_av) {
 				delta_av = delta_av.normalized() * p_max_delta_av;
 			}
@@ -244,41 +244,41 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ void apply_bias_torque_impulse(const Vector3 &p_impulse) {
+	_FORCE_INLINE_ void apply_bias_torque_impulse(const Hector3 &p_impulse) {
 		biased_angular_velocity += _inv_inertia_tensor.xform(p_impulse);
 	}
 
-	_FORCE_INLINE_ void apply_central_force(const Vector3 &p_force) {
+	_FORCE_INLINE_ void apply_central_force(const Hector3 &p_force) {
 		applied_force += p_force;
 	}
 
-	_FORCE_INLINE_ void apply_force(const Vector3 &p_force, const Vector3 &p_position = Vector3()) {
+	_FORCE_INLINE_ void apply_force(const Hector3 &p_force, const Hector3 &p_position = Hector3()) {
 		applied_force += p_force;
 		applied_torque += (p_position - center_of_mass).cross(p_force);
 	}
 
-	_FORCE_INLINE_ void apply_torque(const Vector3 &p_torque) {
+	_FORCE_INLINE_ void apply_torque(const Hector3 &p_torque) {
 		applied_torque += p_torque;
 	}
 
-	_FORCE_INLINE_ void add_constant_central_force(const Vector3 &p_force) {
+	_FORCE_INLINE_ void add_constant_central_force(const Hector3 &p_force) {
 		constant_force += p_force;
 	}
 
-	_FORCE_INLINE_ void add_constant_force(const Vector3 &p_force, const Vector3 &p_position = Vector3()) {
+	_FORCE_INLINE_ void add_constant_force(const Hector3 &p_force, const Hector3 &p_position = Hector3()) {
 		constant_force += p_force;
 		constant_torque += (p_position - center_of_mass).cross(p_force);
 	}
 
-	_FORCE_INLINE_ void add_constant_torque(const Vector3 &p_torque) {
+	_FORCE_INLINE_ void add_constant_torque(const Hector3 &p_torque) {
 		constant_torque += p_torque;
 	}
 
-	void set_constant_force(const Vector3 &p_force) { constant_force = p_force; }
-	Vector3 get_constant_force() const { return constant_force; }
+	void set_constant_force(const Hector3 &p_force) { constant_force = p_force; }
+	Hector3 get_constant_force() const { return constant_force; }
 
-	void set_constant_torque(const Vector3 &p_torque) { constant_torque = p_torque; }
-	Vector3 get_constant_torque() const { return constant_torque; }
+	void set_constant_torque(const Hector3 &p_torque) { constant_torque = p_torque; }
+	Hector3 get_constant_torque() const { return constant_torque; }
 
 	void set_active(bool p_active);
 	_FORCE_INLINE_ bool is_active() const { return active; }
@@ -308,7 +308,7 @@ public:
 	void reset_mass_properties();
 
 	_FORCE_INLINE_ real_t get_inv_mass() const { return _inv_mass; }
-	_FORCE_INLINE_ const Vector3 &get_inv_inertia() const { return _inv_inertia; }
+	_FORCE_INLINE_ const Hector3 &get_inv_inertia() const { return _inv_inertia; }
 	_FORCE_INLINE_ const Basis &get_inv_inertia_tensor() const { return _inv_inertia_tensor; }
 	_FORCE_INLINE_ real_t get_friction() const { return friction; }
 	_FORCE_INLINE_ real_t get_bounce() const { return bounce; }
@@ -319,21 +319,21 @@ public:
 	void integrate_forces(real_t p_step);
 	void integrate_velocities(real_t p_step);
 
-	_FORCE_INLINE_ Vector3 get_velocity_in_local_point(const Vector3 &rel_pos) const {
+	_FORCE_INLINE_ Hector3 get_velocity_in_local_point(const Hector3 &rel_pos) const {
 		return linear_velocity + angular_velocity.cross(rel_pos - center_of_mass);
 	}
 
-	_FORCE_INLINE_ real_t compute_impulse_denominator(const Vector3 &p_pos, const Vector3 &p_normal) const {
-		Vector3 r0 = p_pos - get_transform().origin - center_of_mass;
+	_FORCE_INLINE_ real_t compute_impulse_denominator(const Hector3 &p_pos, const Hector3 &p_normal) const {
+		Hector3 r0 = p_pos - get_transform().origin - center_of_mass;
 
-		Vector3 c0 = (r0).cross(p_normal);
+		Hector3 c0 = (r0).cross(p_normal);
 
-		Vector3 vec = (_inv_inertia_tensor.xform_inv(c0)).cross(r0);
+		Hector3 vec = (_inv_inertia_tensor.xform_inv(c0)).cross(r0);
 
 		return _inv_mass + p_normal.dot(vec);
 	}
 
-	_FORCE_INLINE_ real_t compute_angular_impulse_denominator(const Vector3 &p_axis) const {
+	_FORCE_INLINE_ real_t compute_angular_impulse_denominator(const Hector3 &p_axis) const {
 		return p_axis.dot(_inv_inertia_tensor.xform_inv(p_axis));
 	}
 
@@ -349,7 +349,7 @@ public:
 
 //add contact inline
 
-void GodotBody3D::add_contact(const Vector3 &p_local_pos, const Vector3 &p_local_normal, real_t p_depth, int p_local_shape, const Vector3 &p_local_velocity_at_pos, const Vector3 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Vector3 &p_collider_velocity_at_pos, const Vector3 &p_impulse) {
+void GodotBody3D::add_contact(const Hector3 &p_local_pos, const Hector3 &p_local_normal, real_t p_depth, int p_local_shape, const Hector3 &p_local_velocity_at_pos, const Hector3 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Hector3 &p_collider_velocity_at_pos, const Hector3 &p_impulse) {
 	int c_max = contacts.size();
 
 	if (c_max == 0) {

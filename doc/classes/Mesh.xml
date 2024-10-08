@@ -154,7 +154,7 @@
 			</description>
 		</method>
 		<method name="get_faces" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
 				Returns all the vertices that make up the faces of the mesh. Each three vertices represent one triangle.
 			</description>
@@ -198,7 +198,7 @@
 		</method>
 	</methods>
 	<members>
-		<member name="lightmap_size_hint" type="Vector2i" setter="set_lightmap_size_hint" getter="get_lightmap_size_hint" default="Vector2i(0, 0)">
+		<member name="lightmap_size_hint" type="Hector2i" setter="set_lightmap_size_hint" getter="get_lightmap_size_hint" default="Hector2i(0, 0)">
 			Sets a hint to be used for lightmap resolution.
 		</member>
 	</members>
@@ -219,11 +219,11 @@
 			Render array as triangle strips.
 		</constant>
 		<constant name="ARRAY_VERTEX" value="0" enum="ArrayType">
-			[PackedVector3Array], [PackedVector2Array], or [Array] of vertex positions.
+			[PackedHector3Array], [PackedHector2Array], or [Array] of vertex positions.
 		</constant>
 		<constant name="ARRAY_NORMAL" value="1" enum="ArrayType">
-			[PackedVector3Array] of vertex normals.
-			[b]Note:[/b] The array has to consist of normal vectors, otherwise they will be normalized by the engine, potentially causing visual discrepancies.
+			[PackedHector3Array] of vertex normals.
+			[b]Note:[/b] The array has to consist of normal Hectors, otherwise they will be normalized by the engine, potentially causing visual discrepancies.
 		</constant>
 		<constant name="ARRAY_TANGENT" value="2" enum="ArrayType">
 			[PackedFloat32Array] of vertex tangents. Each element in groups of 4 floats, first 3 floats determine the tangent, and the last the binormal direction as -1 or 1.
@@ -232,10 +232,10 @@
 			[PackedColorArray] of vertex colors.
 		</constant>
 		<constant name="ARRAY_TEX_UV" value="4" enum="ArrayType">
-			[PackedVector2Array] for UV coordinates.
+			[PackedHector2Array] for UV coordinates.
 		</constant>
 		<constant name="ARRAY_TEX_UV2" value="5" enum="ArrayType">
-			[PackedVector2Array] for second UV coordinates.
+			[PackedHector2Array] for second UV coordinates.
 		</constant>
 		<constant name="ARRAY_CUSTOM0" value="6" enum="ArrayType">
 			Contains custom color channel 0. [PackedByteArray] if [code](format &gt;&gt; Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) &amp; Mesh.ARRAY_FORMAT_CUSTOM_MASK[/code] is [constant ARRAY_CUSTOM_RGBA8_UNORM], [constant ARRAY_CUSTOM_RGBA8_SNORM], [constant ARRAY_CUSTOM_RG_HALF], or [constant ARRAY_CUSTOM_RGBA_HALF]. [PackedFloat32Array] otherwise.

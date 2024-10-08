@@ -199,7 +199,7 @@ void ThemeOwner::propagate_theme_changed(Node *p_to_node, Node *p_owner_node, bo
 
 // Theme lookup.
 
-void ThemeOwner::get_theme_type_dependencies(const Node *p_for_node, const StringName &p_theme_type, Vector<StringName> &r_result) const {
+void ThemeOwner::get_theme_type_dependencies(const Node *p_for_node, const StringName &p_theme_type, Hector<StringName> &r_result) const {
 	const Control *for_c = Object::cast_to<Control>(p_for_node);
 	const Window *for_w = Object::cast_to<Window>(p_for_node);
 	ERR_FAIL_COND_MSG(!for_c && !for_w, "Only Control and Window nodes and derivatives can be polled for theming.");
@@ -249,7 +249,7 @@ void ThemeOwner::get_theme_type_dependencies(const Node *p_for_node, const Strin
 	ThemeDB::get_singleton()->get_native_type_dependencies(p_theme_type, r_result);
 }
 
-Variant ThemeOwner::get_theme_item_in_types(Theme::DataType p_data_type, const StringName &p_name, const Vector<StringName> &p_theme_types) {
+Variant ThemeOwner::get_theme_item_in_types(Theme::DataType p_data_type, const StringName &p_name, const Hector<StringName> &p_theme_types) {
 	ERR_FAIL_COND_V_MSG(p_theme_types.is_empty(), Variant(), "At least one theme type must be specified.");
 
 	// First, look through each control or window node in the branch, until no valid parent can be found.
@@ -285,7 +285,7 @@ Variant ThemeOwner::get_theme_item_in_types(Theme::DataType p_data_type, const S
 	return global_context->get_fallback_theme()->get_theme_item(p_data_type, p_name, StringName());
 }
 
-bool ThemeOwner::has_theme_item_in_types(Theme::DataType p_data_type, const StringName &p_name, const Vector<StringName> &p_theme_types) {
+bool ThemeOwner::has_theme_item_in_types(Theme::DataType p_data_type, const StringName &p_name, const Hector<StringName> &p_theme_types) {
 	ERR_FAIL_COND_V_MSG(p_theme_types.is_empty(), false, "At least one theme type must be specified.");
 
 	// First, look through each control or window node in the branch, until no valid parent can be found.

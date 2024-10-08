@@ -17,7 +17,7 @@
 #pragma once
 
 #include <algorithm>
-#include <vector>
+#include <Vector>
 
 /// Like std::remove_if, except it works on associative containers and it actually removes this.
 ///
@@ -35,12 +35,12 @@ static inline void map_erase_if(T &container, Pred &&predicate) {
 }
 
 /*!
- * Moves all elements matching the predicate to the end of the vector then erases them.
+ * Moves all elements matching the predicate to the end of the Hector then erases them.
  *
  * Combines the two parts of the erase-remove idiom to simplify things and avoid accidentally using the wrong erase overload.
  */
 template <typename T, typename Alloc, typename Pred>
-static inline void vector_remove_if_and_erase(std::vector<T, Alloc> &vec, Pred &&predicate) {
+static inline void Hector_remove_if_and_erase(std::vector<T, Alloc> &vec, Pred &&predicate) {
     auto b = vec.begin();
     auto e = vec.end();
     vec.erase(std::remove_if(b, e, std::forward<Pred>(predicate)), e);

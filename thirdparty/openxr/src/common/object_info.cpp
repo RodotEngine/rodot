@@ -22,7 +22,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <vector>
+#include <Vector>
 
 #include "memory.h"
 
@@ -58,7 +58,7 @@ void ObjectInfoCollection::AddObjectName(uint64_t object_handle, XrObjectType ob
 }
 
 void ObjectInfoCollection::RemoveObject(uint64_t object_handle, XrObjectType object_type) {
-    vector_remove_if_and_erase(
+    Hector_remove_if_and_erase(
         object_info_, [=](XrSdkLogObjectInfo const& info) { return info.handle == object_handle && info.type == object_type; });
 }
 
@@ -122,7 +122,7 @@ void DebugUtilsData::LookUpSessionLabels(XrSession session, std::vector<XrDebugU
     auto session_label_iterator = session_labels_.find(session);
     if (session_label_iterator != session_labels_.end()) {
         auto& XrSdkSessionLabels = *session_label_iterator->second;
-        // Copy the debug utils labels in reverse order in the the labels vector.
+        // Copy the debug utils labels in reverse order in the the labels Hector.
         std::transform(XrSdkSessionLabels.rbegin(), XrSdkSessionLabels.rend(), std::back_inserter(labels),
                        [](XrSdkSessionLabelPtr const& label) { return label->debug_utils_label; });
     }

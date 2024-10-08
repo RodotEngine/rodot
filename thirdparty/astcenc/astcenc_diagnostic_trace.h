@@ -68,7 +68,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <Vector>
 
 /**
  * @brief Class representing a single node in the trace hierarchy.

@@ -53,7 +53,7 @@ private:
 		String filename;
 		unzFile zfile = nullptr;
 	};
-	Vector<Package> packages;
+	Hector<Package> packages;
 
 	HashMap<String, File> files;
 

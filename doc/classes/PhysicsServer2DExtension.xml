@@ -242,7 +242,7 @@
 		<method name="_body_add_constant_central_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_add_constant_central_force].
 			</description>
@@ -250,8 +250,8 @@
 		<method name="_body_add_constant_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
-			<param index="2" name="position" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
+			<param index="2" name="position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_add_constant_force].
 			</description>
@@ -277,7 +277,7 @@
 		<method name="_body_apply_central_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_apply_central_force].
 			</description>
@@ -285,7 +285,7 @@
 		<method name="_body_apply_central_impulse" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector2" />
+			<param index="1" name="impulse" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_apply_central_impulse].
 			</description>
@@ -293,8 +293,8 @@
 		<method name="_body_apply_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
-			<param index="2" name="position" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
+			<param index="2" name="position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_apply_force].
 			</description>
@@ -302,8 +302,8 @@
 		<method name="_body_apply_impulse" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector2" />
-			<param index="2" name="position" type="Vector2" />
+			<param index="1" name="impulse" type="Hector2" />
+			<param index="2" name="position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_apply_impulse].
 			</description>
@@ -353,7 +353,7 @@
 			<param index="1" name="body_shape" type="int" />
 			<param index="2" name="shape" type="RID" />
 			<param index="3" name="shape_xform" type="Transform2D" />
-			<param index="4" name="motion" type="Vector2" />
+			<param index="4" name="motion" type="Hector2" />
 			<param index="5" name="results" type="void*" />
 			<param index="6" name="result_max" type="int" />
 			<param index="7" name="result_count" type="int32_t*" />
@@ -405,7 +405,7 @@
 			</description>
 		</method>
 		<method name="_body_get_constant_force" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="body" type="RID" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_get_constant_force].
@@ -540,7 +540,7 @@
 		<method name="_body_set_axis_velocity" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="axis_velocity" type="Vector2" />
+			<param index="1" name="axis_velocity" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_set_axis_velocity].
 			</description>
@@ -572,7 +572,7 @@
 		<method name="_body_set_constant_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsServer2D.body_set_constant_force].
 			</description>
@@ -720,7 +720,7 @@
 			<return type="bool" />
 			<param index="0" name="body" type="RID" />
 			<param index="1" name="from" type="Transform2D" />
-			<param index="2" name="motion" type="Vector2" />
+			<param index="2" name="motion" type="Hector2" />
 			<param index="3" name="margin" type="float" />
 			<param index="4" name="collide_separation_ray" type="bool" />
 			<param index="5" name="recovery_as_collision" type="bool" />
@@ -865,8 +865,8 @@
 		<method name="_joint_make_damped_spring" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="anchor_a" type="Vector2" />
-			<param index="2" name="anchor_b" type="Vector2" />
+			<param index="1" name="anchor_a" type="Hector2" />
+			<param index="2" name="anchor_b" type="Hector2" />
 			<param index="3" name="body_a" type="RID" />
 			<param index="4" name="body_b" type="RID" />
 			<description>
@@ -876,9 +876,9 @@
 		<method name="_joint_make_groove" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="a_groove1" type="Vector2" />
-			<param index="2" name="a_groove2" type="Vector2" />
-			<param index="3" name="b_anchor" type="Vector2" />
+			<param index="1" name="a_groove1" type="Hector2" />
+			<param index="2" name="a_groove2" type="Hector2" />
+			<param index="3" name="b_anchor" type="Hector2" />
 			<param index="4" name="body_a" type="RID" />
 			<param index="5" name="body_b" type="RID" />
 			<description>
@@ -888,7 +888,7 @@
 		<method name="_joint_make_pin" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="anchor" type="Vector2" />
+			<param index="1" name="anchor" type="Hector2" />
 			<param index="2" name="body_a" type="RID" />
 			<param index="3" name="body_b" type="RID" />
 			<description>
@@ -967,10 +967,10 @@
 			<return type="bool" />
 			<param index="0" name="shape_A" type="RID" />
 			<param index="1" name="xform_A" type="Transform2D" />
-			<param index="2" name="motion_A" type="Vector2" />
+			<param index="2" name="motion_A" type="Hector2" />
 			<param index="3" name="shape_B" type="RID" />
 			<param index="4" name="xform_B" type="Transform2D" />
-			<param index="5" name="motion_B" type="Vector2" />
+			<param index="5" name="motion_B" type="Hector2" />
 			<param index="6" name="results" type="void*" />
 			<param index="7" name="result_max" type="int" />
 			<param index="8" name="result_count" type="int32_t*" />
@@ -1033,7 +1033,7 @@
 			</description>
 		</method>
 		<method name="_space_get_contacts" qualifiers="virtual const">
-			<return type="PackedVector2Array" />
+			<return type="PackedHector2Array" />
 			<param index="0" name="space" type="RID" />
 			<description>
 				Should return the positions of all contacts that have occurred during the last physics step in the given [param space]. See also [method _space_get_contact_count] and [method _space_set_debug_contacts].

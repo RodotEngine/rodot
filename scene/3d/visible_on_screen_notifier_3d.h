@@ -38,7 +38,7 @@ class Camera3D;
 class VisibleOnScreenNotifier3D : public VisualInstance3D {
 	GDCLASS(VisibleOnScreenNotifier3D, VisualInstance3D);
 
-	AABB aabb = AABB(Vector3(-1, -1, -1), Vector3(2, 2, 2));
+	AABB aabb = AABB(Hector3(-1, -1, -1), Hector3(2, 2, 2));
 
 private:
 	bool on_screen = false;

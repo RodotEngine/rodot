@@ -34,10 +34,10 @@
 #include "core/io/file_access.h"
 #include "core/math/aabb.h"
 #include "core/math/projection.h"
-#include "core/math/vector3.h"
-#include "core/templates/local_vector.h"
+#include "core/math/Hector3.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/oa_hash_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/variant/variant.h"
 
 #include "thirdparty/misc/r128.h"
@@ -50,7 +50,7 @@ class Delaunay3D {
 		QUANTIZATION_MAX = 1 << 16 // A power of two smaller than the 23 bit significand of a float.
 	};
 	struct GridPos {
-		Vector3i pos;
+		Hector3i pos;
 		List<Simplex *>::Element *E = nullptr;
 	};
 
@@ -60,7 +60,7 @@ class Delaunay3D {
 		R128 circum_center_y;
 		R128 circum_center_z;
 		R128 circum_r2;
-		LocalVector<GridPos> grid_positions;
+		LocalHector<GridPos> grid_positions;
 		List<Simplex *>::Element *SE = nullptr;
 
 		_FORCE_INLINE_ Simplex() {}
@@ -105,7 +105,7 @@ class Delaunay3D {
 		}
 	};
 
-	_FORCE_INLINE_ static void circum_sphere_compute(const Vector3 *p_points, Simplex *p_simplex) {
+	_FORCE_INLINE_ static void circum_sphere_compute(const Hector3 *p_points, Simplex *p_simplex) {
 		// The only part in the algorithm where there may be precision errors is this one,
 		// so ensure that we do it with the maximum precision possible.
 
@@ -163,7 +163,7 @@ class Delaunay3D {
 		p_simplex->circum_r2 = radius1;
 	}
 
-	_FORCE_INLINE_ static bool simplex_contains(const Vector3 *p_points, const Simplex &p_simplex, uint32_t p_vertex) {
+	_FORCE_INLINE_ static bool simplex_contains(const Hector3 *p_points, const Simplex &p_simplex, uint32_t p_vertex) {
 		R128 v_x = p_points[p_vertex].x;
 		R128 v_y = p_points[p_vertex].y;
 		R128 v_z = p_points[p_vertex].z;
@@ -179,9 +179,9 @@ class Delaunay3D {
 		// When it's too small, large amounts of planar simplices are created.
 	}
 
-	static bool simplex_is_coplanar(const Vector3 *p_points, const Simplex &p_simplex) {
+	static bool simplex_is_coplanar(const Hector3 *p_points, const Simplex &p_simplex) {
 		// Checking every possible distance like this is overkill, but only checking
-		// one is not enough. If the simplex is almost planar then the vectors p1-p2
+		// one is not enough. If the simplex is almost planar then the Hectors p1-p2
 		// and p1-p3 can be practically collinear, which makes Plane unreliable.
 		for (uint32_t i = 0; i < 4; i++) {
 			Plane p(p_points[p_simplex.points[i]], p_points[p_simplex.points[(i + 1) % 4]], p_points[p_simplex.points[(i + 2) % 4]]);
@@ -200,16 +200,16 @@ public:
 		uint32_t points[4];
 	};
 
-	static Vector<OutputSimplex> tetrahedralize(const Vector<Vector3> &p_points) {
+	static Hector<OutputSimplex> tetrahedralize(const Hector<Hector3> &p_points) {
 		uint32_t point_count = p_points.size();
-		Vector3 *points = (Vector3 *)memalloc(sizeof(Vector3) * (point_count + 4));
-		const Vector3 *src_points = p_points.ptr();
-		Vector3 proportions;
+		Hector3 *points = (Hector3 *)memalloc(sizeof(Hector3) * (point_count + 4));
+		const Hector3 *src_points = p_points.ptr();
+		Hector3 proportions;
 
 		{
 			AABB rect;
 			for (uint32_t i = 0; i < point_count; i++) {
-				Vector3 point = src_points[i];
+				Hector3 point = src_points[i];
 				if (i == 0) {
 					rect.position = point;
 				} else {
@@ -218,26 +218,26 @@ public:
 			}
 
 			real_t longest_axis = rect.size[rect.get_longest_axis_index()];
-			proportions = Vector3(longest_axis, longest_axis, longest_axis) / rect.size;
+			proportions = Hector3(longest_axis, longest_axis, longest_axis) / rect.size;
 
 			for (uint32_t i = 0; i < point_count; i++) {
 				// Scale points to the unit cube to better utilize R128 precision
 				// and quantize to stabilize triangulation over a wide range of
 				// distances.
-				points[i] = Vector3(Vector3i((src_points[i] - rect.position) / longest_axis * QUANTIZATION_MAX)) / QUANTIZATION_MAX;
+				points[i] = Hector3(Hector3i((src_points[i] - rect.position) / longest_axis * QUANTIZATION_MAX)) / QUANTIZATION_MAX;
 			}
 
 			const real_t delta_max = Math::sqrt(2.0) * 100.0;
-			Vector3 center = Vector3(0.5, 0.5, 0.5);
+			Hector3 center = Hector3(0.5, 0.5, 0.5);
 
 			// The larger the root simplex is, the more likely it is that the
 			// triangulation is convex. If it's not absolutely huge, there can
 			// be missing simplices that are not created for the outermost faces
 			// of the point cloud if the point density is very low there.
-			points[point_count + 0] = center + Vector3(0, 1, 0) * delta_max;
-			points[point_count + 1] = center + Vector3(0, -1, 1) * delta_max;
-			points[point_count + 2] = center + Vector3(1, -1, -1) * delta_max;
-			points[point_count + 3] = center + Vector3(-1, -1, -1) * delta_max;
+			points[point_count + 0] = center + Hector3(0, 1, 0) * delta_max;
+			points[point_count + 1] = center + Hector3(0, -1, 1) * delta_max;
+			points[point_count + 2] = center + Hector3(1, -1, -1) * delta_max;
+			points[point_count + 3] = center + Hector3(-1, -1, -1) * delta_max;
 		}
 
 		List<Simplex *> acceleration_grid[ACCEL_GRID_SIZE][ACCEL_GRID_SIZE][ACCEL_GRID_SIZE];
@@ -253,7 +253,7 @@ public:
 					for (uint32_t k = 0; k < ACCEL_GRID_SIZE; k++) {
 						GridPos gp;
 						gp.E = acceleration_grid[i][j][k].push_back(root);
-						gp.pos = Vector3i(i, j, k);
+						gp.pos = Hector3i(i, j, k);
 						root->grid_positions.push_back(gp);
 					}
 				}
@@ -263,7 +263,7 @@ public:
 		}
 
 		OAHashMap<Triangle, uint32_t, TriangleHasher> triangles_inserted;
-		LocalVector<Triangle> triangles;
+		LocalHector<Triangle> triangles;
 
 		for (uint32_t i = 0; i < point_count; i++) {
 			bool unique = true;
@@ -277,7 +277,7 @@ public:
 				continue;
 			}
 
-			Vector3i grid_pos = Vector3i(points[i] * proportions * ACCEL_GRID_SIZE);
+			Hector3i grid_pos = Hector3i(points[i] * proportions * ACCEL_GRID_SIZE);
 			grid_pos = grid_pos.clampi(0, ACCEL_GRID_SIZE - 1);
 
 			for (List<Simplex *>::Element *E = acceleration_grid[grid_pos.x][grid_pos.y][grid_pos.z].front(); E;) {
@@ -310,7 +310,7 @@ public:
 					simplex_list.erase(simplex->SE);
 
 					for (const GridPos &gp : simplex->grid_positions) {
-						Vector3i p = gp.pos;
+						Hector3i p = gp.pos;
 						acceleration_grid[p.x][p.y][p.z].erase(gp.E);
 					}
 					memdelete(simplex);
@@ -326,15 +326,15 @@ public:
 				circum_sphere_compute(points, new_simplex);
 				new_simplex->SE = simplex_list.push_back(new_simplex);
 				{
-					Vector3 center;
+					Hector3 center;
 					center.x = double(new_simplex->circum_center_x);
 					center.y = double(new_simplex->circum_center_y);
 					center.z = double(new_simplex->circum_center_z);
 
 					const real_t radius2 = Math::sqrt(double(new_simplex->circum_r2)) + 0.0001;
-					Vector3 extents = Vector3(radius2, radius2, radius2);
-					Vector3i from = Vector3i((center - extents) * proportions * ACCEL_GRID_SIZE);
-					Vector3i to = Vector3i((center + extents) * proportions * ACCEL_GRID_SIZE);
+					Hector3 extents = Hector3(radius2, radius2, radius2);
+					Hector3i from = Hector3i((center - extents) * proportions * ACCEL_GRID_SIZE);
+					Hector3i to = Hector3i((center + extents) * proportions * ACCEL_GRID_SIZE);
 					from = from.clampi(0, ACCEL_GRID_SIZE - 1);
 					to = to.clampi(0, ACCEL_GRID_SIZE - 1);
 
@@ -342,7 +342,7 @@ public:
 						for (int32_t y = from.y; y <= to.y; y++) {
 							for (int32_t z = from.z; z <= to.z; z++) {
 								GridPos gp;
-								gp.pos = Vector3(x, y, z);
+								gp.pos = Hector3(x, y, z);
 								gp.E = acceleration_grid[x][y][z].push_back(new_simplex);
 								new_simplex->grid_positions.push_back(gp);
 							}
@@ -356,7 +356,7 @@ public:
 		}
 
 		//print_line("end with simplices: " + itos(simplex_list.size()));
-		Vector<OutputSimplex> ret_simplices;
+		Hector<OutputSimplex> ret_simplices;
 		ret_simplices.resize(simplex_list.size());
 		OutputSimplex *ret_simplicesw = ret_simplices.ptrw();
 		uint32_t simplices_written = 0;

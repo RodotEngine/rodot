@@ -42,7 +42,7 @@
 namespace glslang {
 
 //
-// Basic type.  Arrays, vectors, sampler details, etc., are orthogonal to this.
+// Basic type.  Arrays, Hectors, sampler details, etc., are orthogonal to this.
 //
 enum TBasicType {
     EbtVoid,

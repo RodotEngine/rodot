@@ -77,7 +77,7 @@ using Microsoft::WRL::ComPtr;
 class RenderingContextDriverD3D12 : public RenderingContextDriver {
 	ComPtr<ID3D12DeviceFactory> device_factory;
 	ComPtr<IDXGIFactory2> dxgi_factory;
-	TightLocalVector<Device> driver_devices;
+	TightLocalHector<Device> driver_devices;
 	bool tearing_supported = false;
 
 	Error _init_device_factory();

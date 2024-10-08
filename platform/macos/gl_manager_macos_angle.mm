@@ -45,8 +45,8 @@ EGLenum GLManagerANGLE_MacOS::_get_platform_extension_enum() const {
 	return EGL_PLATFORM_ANGLE_ANGLE;
 }
 
-Vector<EGLAttrib> GLManagerANGLE_MacOS::_get_platform_display_attributes() const {
-	Vector<EGLAttrib> ret;
+Hector<EGLAttrib> GLManagerANGLE_MacOS::_get_platform_display_attributes() const {
+	Hector<EGLAttrib> ret;
 	ret.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
 	ret.push_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
 	ret.push_back(EGL_NONE);
@@ -58,8 +58,8 @@ EGLenum GLManagerANGLE_MacOS::_get_platform_api_enum() const {
 	return EGL_OPENGL_ES_API;
 }
 
-Vector<EGLint> GLManagerANGLE_MacOS::_get_platform_context_attribs() const {
-	Vector<EGLint> ret;
+Hector<EGLint> GLManagerANGLE_MacOS::_get_platform_context_attribs() const {
+	Hector<EGLint> ret;
 	ret.push_back(EGL_CONTEXT_CLIENT_VERSION);
 	ret.push_back(3);
 	ret.push_back(EGL_NONE);

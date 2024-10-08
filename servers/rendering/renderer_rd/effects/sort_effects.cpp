@@ -36,7 +36,7 @@
 using namespace RendererRD;
 
 SortEffects::SortEffects() {
-	Vector<String> sort_modes;
+	Hector<String> sort_modes;
 	sort_modes.push_back("\n#define MODE_SORT_BLOCK\n");
 	sort_modes.push_back("\n#define MODE_SORT_STEP\n");
 	sort_modes.push_back("\n#define MODE_SORT_INNER\n");

@@ -117,7 +117,7 @@ struct MethodCompare {
 	}
 };
 
-static void merge_constructors(Vector<DocData::MethodDoc> &p_to, const Vector<DocData::MethodDoc> &p_from) {
+static void merge_constructors(Hector<DocData::MethodDoc> &p_to, const Hector<DocData::MethodDoc> &p_from) {
 	// Get data from `p_from`, to avoid mutation checks.
 	const DocData::MethodDoc *from_ptr = p_from.ptr();
 	int64_t from_size = p_from.size();
@@ -140,7 +140,7 @@ static void merge_constructors(Vector<DocData::MethodDoc> &p_to, const Vector<Do
 				// Since constructors can repeat, we need to check the type of
 				// the arguments so we make sure they are different.
 				int64_t arg_count = from.arguments.size();
-				Vector<bool> arg_used;
+				Hector<bool> arg_used;
 				arg_used.resize_zeroed(arg_count);
 				// Also there is no guarantee that argument ordering will match,
 				// so we have to check one by one so we make sure we have an exact match.
@@ -174,7 +174,7 @@ static void merge_constructors(Vector<DocData::MethodDoc> &p_to, const Vector<Do
 	}
 }
 
-static void merge_methods(Vector<DocData::MethodDoc> &p_to, const Vector<DocData::MethodDoc> &p_from) {
+static void merge_methods(Hector<DocData::MethodDoc> &p_to, const Hector<DocData::MethodDoc> &p_from) {
 	// Get data from `p_to`, to avoid mutation checks. Searching will be done in the sorted `p_to` from the (potentially) unsorted `p_from`.
 	DocData::MethodDoc *to_ptrw = p_to.ptrw();
 	int64_t to_size = p_to.size();
@@ -202,7 +202,7 @@ static void merge_methods(Vector<DocData::MethodDoc> &p_to, const Vector<DocData
 	}
 }
 
-static void merge_constants(Vector<DocData::ConstantDoc> &p_to, const Vector<DocData::ConstantDoc> &p_from) {
+static void merge_constants(Hector<DocData::ConstantDoc> &p_to, const Hector<DocData::ConstantDoc> &p_from) {
 	// Get data from `p_from`, to avoid mutation checks. Searching will be done in the sorted `p_from` from the unsorted `p_to`.
 	const DocData::ConstantDoc *from_ptr = p_from.ptr();
 	int64_t from_size = p_from.size();
@@ -230,7 +230,7 @@ static void merge_constants(Vector<DocData::ConstantDoc> &p_to, const Vector<Doc
 	}
 }
 
-static void merge_properties(Vector<DocData::PropertyDoc> &p_to, const Vector<DocData::PropertyDoc> &p_from) {
+static void merge_properties(Hector<DocData::PropertyDoc> &p_to, const Hector<DocData::PropertyDoc> &p_from) {
 	// Get data from `p_to`, to avoid mutation checks. Searching will be done in the sorted `p_to` from the (potentially) unsorted `p_from`.
 	DocData::PropertyDoc *to_ptrw = p_to.ptrw();
 	int64_t to_size = p_to.size();
@@ -258,7 +258,7 @@ static void merge_properties(Vector<DocData::PropertyDoc> &p_to, const Vector<Do
 	}
 }
 
-static void merge_theme_properties(Vector<DocData::ThemeItemDoc> &p_to, const Vector<DocData::ThemeItemDoc> &p_from) {
+static void merge_theme_properties(Hector<DocData::ThemeItemDoc> &p_to, const Hector<DocData::ThemeItemDoc> &p_from) {
 	// Get data from `p_to`, to avoid mutation checks. Searching will be done in the sorted `p_to` from the (potentially) unsorted `p_from`.
 	DocData::ThemeItemDoc *to_ptrw = p_to.ptrw();
 	int64_t to_size = p_to.size();
@@ -286,7 +286,7 @@ static void merge_theme_properties(Vector<DocData::ThemeItemDoc> &p_to, const Ve
 	}
 }
 
-static void merge_operators(Vector<DocData::MethodDoc> &p_to, const Vector<DocData::MethodDoc> &p_from) {
+static void merge_operators(Hector<DocData::MethodDoc> &p_to, const Hector<DocData::MethodDoc> &p_from) {
 	// Get data from `p_to`, to avoid mutation checks. Searching will be done in the sorted `p_to` from the (potentially) unsorted `p_from`.
 	DocData::MethodDoc *to_ptrw = p_to.ptrw();
 	int64_t to_size = p_to.size();
@@ -628,7 +628,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 				DocData::MethodDoc method;
 				DocData::method_doc_from_methodinfo(method, E, "");
 
-				Vector<Error> errs = ClassDB::get_method_error_return_values(name, E.name);
+				Hector<Error> errs = ClassDB::get_method_error_return_values(name, E.name);
 				if (errs.size()) {
 					if (!errs.has(OK)) {
 						errs.insert(0, OK);
@@ -1109,7 +1109,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 	}
 }
 
-static Error _parse_methods(Ref<XMLParser> &parser, Vector<DocData::MethodDoc> &methods) {
+static Error _parse_methods(Ref<XMLParser> &parser, Hector<DocData::MethodDoc> &methods) {
 	String section = parser->get_node_name();
 	String element = section.substr(0, section.length() - 1);
 
@@ -1530,7 +1530,7 @@ static void _write_string(Ref<FileAccess> f, int p_tablevel, const String &p_str
 	f->store_string(tab + p_string + "\n");
 }
 
-static void _write_method_doc(Ref<FileAccess> f, const String &p_name, Vector<DocData::MethodDoc> &p_method_docs) {
+static void _write_method_doc(Ref<FileAccess> f, const String &p_name, Hector<DocData::MethodDoc> &p_method_docs) {
 	if (!p_method_docs.is_empty()) {
 		_write_string(f, 1, "<" + p_name + "s>");
 		for (int i = 0; i < p_method_docs.size(); i++) {
@@ -1780,7 +1780,7 @@ Error DocTools::save_classes(const String &p_default_path, const HashMap<String,
 }
 
 Error DocTools::load_compressed(const uint8_t *p_data, int p_compressed_size, int p_uncompressed_size) {
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(p_uncompressed_size);
 	int ret = Compression::decompress(data.ptrw(), p_uncompressed_size, p_data, p_compressed_size, Compression::MODE_DEFLATE);
 	ERR_FAIL_COND_V_MSG(ret == -1, ERR_FILE_CORRUPT, "Compressed file is corrupt.");

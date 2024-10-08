@@ -212,7 +212,7 @@ bool CodeSignCodeResources::add_nested_file(const String &p_root, const String &
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	ERR_FAIL_COND_V(da.is_null(), false);
 
-	Vector<String> files_to_add;
+	Hector<String> files_to_add;
 	if (LipO::is_lipo(p_exepath)) {
 		String tmp_path_name = EditorPaths::get_singleton()->get_cache_dir().path_join("_lipo");
 		Error err = da->make_dir_recursive(tmp_path_name);
@@ -256,7 +256,7 @@ bool CodeSignCodeResources::add_nested_file(const String &p_root, const String &
 		String req_string;
 		if (rq_blob.size() > 8) {
 			CodeSignRequirements rq = CodeSignRequirements(rq_blob);
-			Vector<String> rqs = rq.parse_requirements();
+			Hector<String> rqs = rq.parse_requirements();
 			for (int j = 0; j < rqs.size(); j++) {
 				if (rqs[j].begins_with("designated => ")) {
 					req_string = rqs[j].replace("designated => ", "");
@@ -627,9 +627,9 @@ _FORCE_INLINE_ bool CodeSignRequirements::_parse_match(uint32_t &r_pos, String &
 #undef _R
 }
 
-Vector<String> CodeSignRequirements::parse_requirements() const {
+Hector<String> CodeSignRequirements::parse_requirements() const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
-	Vector<String> list;
+	Hector<String> list;
 
 	// Read requirements set header.
 	ERR_FAIL_COND_V_MSG(blob.size() < 12, list, "CodeSign/Requirements: Blob is too small.");
@@ -987,8 +987,8 @@ CodeSignCodeDirectory::CodeSignCodeDirectory(uint8_t p_hash_size, uint8_t p_hash
 		cd->team_offset = 0;
 	}
 
-	// Scatter vector.
-	cd->scatter_vector_offset = 0; // Not used.
+	// Scatter Hector.
+	cd->scatter_Hector_offset = 0; // Not used.
 
 	// Executable hashes offset.
 	cd->hash_offset = BSWAP32(cd_off + special_slots * cd->hash_size);
@@ -1245,7 +1245,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 	}
 
 	// Extract fat binary.
-	Vector<String> files_to_sign;
+	Hector<String> files_to_sign;
 	if (LipO::is_lipo(main_exe)) {
 		print_verbose(vformat("CodeSign: Executable is fat, extracting..."));
 		String tmp_path_name = EditorPaths::get_singleton()->get_cache_dir().path_join("_lipo");

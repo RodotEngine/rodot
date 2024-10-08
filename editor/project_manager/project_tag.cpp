@@ -61,7 +61,7 @@ ProjectTag::ProjectTag(const String &p_text, bool p_display_close) {
 
 	ColorRect *cr = memnew(ColorRect);
 	add_child(cr);
-	cr->set_custom_minimum_size(Vector2(4, 0) * EDSCALE);
+	cr->set_custom_minimum_size(Hector2(4, 0) * EDSCALE);
 	cr->set_color(tag_color);
 
 	button = memnew(Button);

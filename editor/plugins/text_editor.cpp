@@ -325,8 +325,8 @@ void TextEditor::ensure_focus() {
 	code_editor->get_text_editor()->grab_focus();
 }
 
-Vector<String> TextEditor::get_functions() {
-	return Vector<String>();
+Hector<String> TextEditor::get_functions() {
+	return Hector<String>();
 }
 
 bool TextEditor::show_members_overview() {
@@ -559,7 +559,7 @@ void TextEditor::_prepare_edit_menu() {
 	popup->set_item_disabled(popup->get_item_index(EDIT_REDO), !tx->has_redo());
 }
 
-void TextEditor::_make_context_menu(bool p_selection, bool p_can_fold, bool p_is_folded, Vector2 p_position) {
+void TextEditor::_make_context_menu(bool p_selection, bool p_can_fold, bool p_is_folded, Hector2 p_position) {
 	context_menu->clear();
 	if (p_selection) {
 		context_menu->add_shortcut(ED_GET_SHORTCUT("ui_cut"), EDIT_CUT);

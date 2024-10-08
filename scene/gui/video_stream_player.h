@@ -55,7 +55,7 @@ class VideoStreamPlayer : public Control {
 	Ref<Texture2D> texture;
 
 	AudioRBResampler resampler;
-	Vector<AudioFrame> mix_buffer;
+	Hector<AudioFrame> mix_buffer;
 	int wait_resampler = 0;
 	int wait_resampler_limit = 2;
 

@@ -244,7 +244,7 @@ void AnimationPlayerEditor::_go_to_nearest_keyframe(bool p_backward) {
 	Node *root = get_tree()->get_edited_scene_root();
 	EditorSelection *selection = EditorNode::get_singleton()->get_editor_selection();
 
-	Vector<int> selected_tracks;
+	Hector<int> selected_tracks;
 	for (int i = 0; i < track_count; ++i) {
 		if (selection->is_selected(root->get_node_or_null(anim->track_get_path(i)))) {
 			selected_tracks.push_back(i);
@@ -1762,7 +1762,7 @@ void AnimationPlayerEditor::_prepare_onion_layers_2_prolog() {
 
 	// Tweak the root viewport to ensure it's rendered before our target.
 	RID root_vp = get_tree()->get_root()->get_viewport_rid();
-	onion.temp.screen_rect = Rect2(Vector2(), DisplayServer::get_singleton()->window_get_size(DisplayServer::MAIN_WINDOW_ID));
+	onion.temp.screen_rect = Rect2(Hector2(), DisplayServer::get_singleton()->window_get_size(DisplayServer::MAIN_WINDOW_ID));
 	RS::get_singleton()->viewport_attach_to_screen(root_vp, Rect2(), DisplayServer::INVALID_WINDOW_ID);
 	RS::get_singleton()->viewport_set_update_mode(root_vp, RS::VIEWPORT_UPDATE_ALWAYS);
 

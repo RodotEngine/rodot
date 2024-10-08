@@ -78,7 +78,7 @@ EditorQuickOpenDialog::EditorQuickOpenDialog() {
 	get_ok_button()->hide();
 }
 
-String EditorQuickOpenDialog::get_dialog_title(const Vector<StringName> &p_base_types) {
+String EditorQuickOpenDialog::get_dialog_title(const Hector<StringName> &p_base_types) {
 	if (p_base_types.size() > 1) {
 		return TTR("Select Resource");
 	}
@@ -90,7 +90,7 @@ String EditorQuickOpenDialog::get_dialog_title(const Vector<StringName> &p_base_
 	return TTR("Select") + " " + p_base_types[0];
 }
 
-void EditorQuickOpenDialog::popup_dialog(const Vector<StringName> &p_base_types, const Callable &p_item_selected_callback) {
+void EditorQuickOpenDialog::popup_dialog(const Hector<StringName> &p_base_types, const Callable &p_item_selected_callback) {
 	ERR_FAIL_COND(p_base_types.is_empty());
 	ERR_FAIL_COND(!p_item_selected_callback.is_valid());
 
@@ -230,7 +230,7 @@ QuickOpenResultContainer::~QuickOpenResultContainer() {
 	}
 }
 
-void QuickOpenResultContainer::init(const Vector<StringName> &p_base_types) {
+void QuickOpenResultContainer::init(const Hector<StringName> &p_base_types) {
 	base_types = p_base_types;
 	never_opened = false;
 
@@ -639,8 +639,8 @@ String QuickOpenResultContainer::get_selected() const {
 	}
 }
 
-QuickOpenDisplayMode QuickOpenResultContainer::get_adaptive_display_mode(const Vector<StringName> &p_base_types) {
-	static const Vector<StringName> grid_preferred_types = {
+QuickOpenDisplayMode QuickOpenResultContainer::get_adaptive_display_mode(const Hector<StringName> &p_base_types) {
+	static const Hector<StringName> grid_preferred_types = {
 		"Font",
 		"Texture2D",
 		"Material",

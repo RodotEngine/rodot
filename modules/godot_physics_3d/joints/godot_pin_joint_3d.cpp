@@ -59,7 +59,7 @@ bool GodotPinJoint3D::setup(real_t p_step) {
 
 	m_appliedImpulse = real_t(0.);
 
-	Vector3 normal(0, 0, 0);
+	Hector3 normal(0, 0, 0);
 
 	for (int i = 0; i < 3; i++) {
 		normal[i] = 1;
@@ -82,25 +82,25 @@ bool GodotPinJoint3D::setup(real_t p_step) {
 }
 
 void GodotPinJoint3D::solve(real_t p_step) {
-	Vector3 pivotAInW = A->get_transform().xform(m_pivotInA);
-	Vector3 pivotBInW = B->get_transform().xform(m_pivotInB);
+	Hector3 pivotAInW = A->get_transform().xform(m_pivotInA);
+	Hector3 pivotBInW = B->get_transform().xform(m_pivotInB);
 
-	Vector3 normal(0, 0, 0);
+	Hector3 normal(0, 0, 0);
 
-	//Vector3 angvelA = A->get_transform().origin.getBasis().transpose() * A->getAngularVelocity();
-	//Vector3 angvelB = B->get_transform().origin.getBasis().transpose() * B->getAngularVelocity();
+	//Hector3 angvelA = A->get_transform().origin.getBasis().transpose() * A->getAngularVelocity();
+	//Hector3 angvelB = B->get_transform().origin.getBasis().transpose() * B->getAngularVelocity();
 
 	for (int i = 0; i < 3; i++) {
 		normal[i] = 1;
 		real_t jacDiagABInv = real_t(1.) / m_jac[i].getDiagonal();
 
-		Vector3 rel_pos1 = pivotAInW - A->get_transform().origin;
-		Vector3 rel_pos2 = pivotBInW - B->get_transform().origin;
+		Hector3 rel_pos1 = pivotAInW - A->get_transform().origin;
+		Hector3 rel_pos2 = pivotBInW - B->get_transform().origin;
 		//this jacobian entry could be re-used for all iterations
 
-		Vector3 vel1 = A->get_velocity_in_local_point(rel_pos1);
-		Vector3 vel2 = B->get_velocity_in_local_point(rel_pos2);
-		Vector3 vel = vel1 - vel2;
+		Hector3 vel1 = A->get_velocity_in_local_point(rel_pos1);
+		Hector3 vel2 = B->get_velocity_in_local_point(rel_pos2);
+		Hector3 vel = vel1 - vel2;
 
 		real_t rel_vel;
 		rel_vel = normal.dot(vel);
@@ -127,12 +127,12 @@ void GodotPinJoint3D::solve(real_t p_step) {
 		}
 
 		m_appliedImpulse += impulse;
-		Vector3 impulse_vector = normal * impulse;
+		Hector3 impulse_Hector = normal * impulse;
 		if (dynamic_A) {
-			A->apply_impulse(impulse_vector, pivotAInW - A->get_transform().origin);
+			A->apply_impulse(impulse_Hector, pivotAInW - A->get_transform().origin);
 		}
 		if (dynamic_B) {
-			B->apply_impulse(-impulse_vector, pivotBInW - B->get_transform().origin);
+			B->apply_impulse(-impulse_Hector, pivotBInW - B->get_transform().origin);
 		}
 
 		normal[i] = 0;
@@ -166,7 +166,7 @@ real_t GodotPinJoint3D::get_param(PhysicsServer3D::PinJointParam p_param) const 
 	return 0;
 }
 
-GodotPinJoint3D::GodotPinJoint3D(GodotBody3D *p_body_a, const Vector3 &p_pos_a, GodotBody3D *p_body_b, const Vector3 &p_pos_b) :
+GodotPinJoint3D::GodotPinJoint3D(GodotBody3D *p_body_a, const Hector3 &p_pos_a, GodotBody3D *p_body_b, const Hector3 &p_pos_b) :
 		GodotJoint3D(_arr, 2) {
 	A = p_body_a;
 	B = p_body_b;

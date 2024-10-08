@@ -72,10 +72,10 @@ void OpenXRHuaweiControllerExtension::on_register_metadata() {
 	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trigger", "/user/hand/right", "/user/hand/right/input/trigger/value", "", OpenXRAction::OPENXR_ACTION_FLOAT);
 	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trigger click", "/user/hand/right", "/user/hand/right/input/trigger/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 
-	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad", "/user/hand/left", "/user/hand/left/input/trackpad", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad", "/user/hand/left", "/user/hand/left/input/trackpad", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad click", "/user/hand/left", "/user/hand/left/input/trackpad/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad touch", "/user/hand/left", "/user/hand/left/input/trackpad/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
-	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad", "/user/hand/right", "/user/hand/right/input/trackpad", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad", "/user/hand/right", "/user/hand/right/input/trackpad", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad click", "/user/hand/right", "/user/hand/right/input/trackpad/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/huawei/controller", "Trackpad touch", "/user/hand/right", "/user/hand/right/input/trackpad/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
 

@@ -46,8 +46,8 @@ protected:
 	static void _bind_methods();
 
 	GDVIRTUAL1RC(bool, _handles, String)
-	GDVIRTUAL3RC(Ref<Texture2D>, _generate, Ref<Resource>, Vector2i, Dictionary)
-	GDVIRTUAL3RC(Ref<Texture2D>, _generate_from_path, String, Vector2i, Dictionary)
+	GDVIRTUAL3RC(Ref<Texture2D>, _generate, Ref<Resource>, Hector2i, Dictionary)
+	GDVIRTUAL3RC(Ref<Texture2D>, _generate_from_path, String, Hector2i, Dictionary)
 	GDVIRTUAL0RC(bool, _generate_small_preview_automatically)
 	GDVIRTUAL0RC(bool, _can_generate_small_preview)
 
@@ -118,7 +118,7 @@ class EditorResourcePreview : public Node {
 	void _write_preview_cache(Ref<FileAccess> p_file, int p_thumbnail_size, bool p_has_small_texture, uint64_t p_modified_time, const String &p_hash, const Dictionary &p_metadata);
 	void _read_preview_cache(Ref<FileAccess> p_file, int *r_thumbnail_size, bool *r_has_small_texture, uint64_t *r_modified_time, String *r_hash, Dictionary *r_metadata, bool *r_outdated);
 
-	Vector<Ref<EditorResourcePreviewGenerator>> preview_generators;
+	Hector<Ref<EditorResourcePreviewGenerator>> preview_generators;
 
 	void _update_thumbnail_sizes();
 

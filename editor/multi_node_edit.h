@@ -36,7 +36,7 @@
 class MultiNodeEdit : public RefCounted {
 	GDCLASS(MultiNodeEdit, RefCounted);
 
-	LocalVector<NodePath> nodes;
+	LocalHector<NodePath> nodes;
 	struct PLData {
 		int uses = 0;
 		PropertyInfo info;

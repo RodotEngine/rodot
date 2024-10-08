@@ -33,7 +33,7 @@
 #include "editor/editor_string_names.h"
 #include "scene/theme/theme_db.h"
 
-Vector<StringName> EditorTheme::editor_theme_types;
+Hector<StringName> EditorTheme::editor_theme_types;
 
 // TODO: Refactor these and corresponding Theme methods to use the bool get_xxx(r_value) pattern internally.
 

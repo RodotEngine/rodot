@@ -1048,7 +1048,7 @@ void ParsedIR::make_constant_null(uint32_t id, uint32_t type, bool add_to_typed_
 		if (!constant_type.array_size_literal.back())
 			SPIRV_CROSS_THROW("Array size of OpConstantNull must be a literal.");
 
-		SmallVector<uint32_t> elements(constant_type.array.back());
+		SmallHector<uint32_t> elements(constant_type.array.back());
 		for (uint32_t i = 0; i < constant_type.array.back(); i++)
 			elements[i] = parent_id;
 
@@ -1059,7 +1059,7 @@ void ParsedIR::make_constant_null(uint32_t id, uint32_t type, bool add_to_typed_
 	else if (!constant_type.member_types.empty())
 	{
 		uint32_t member_ids = increase_bound_by(uint32_t(constant_type.member_types.size()));
-		SmallVector<uint32_t> elements(constant_type.member_types.size());
+		SmallHector<uint32_t> elements(constant_type.member_types.size());
 		for (uint32_t i = 0; i < constant_type.member_types.size(); i++)
 		{
 			make_constant_null(member_ids + i, constant_type.member_types[i], add_to_typed_id_set);

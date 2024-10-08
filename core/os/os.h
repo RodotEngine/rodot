@@ -38,7 +38,7 @@
 #include "core/os/time_enums.h"
 #include "core/string/ustring.h"
 #include "core/templates/list.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -139,7 +139,7 @@ public:
 
 	int get_display_driver_id() const { return _display_driver_id; }
 
-	virtual Vector<String> get_video_adapter_driver_info() const = 0;
+	virtual Hector<String> get_video_adapter_driver_info() const = 0;
 	virtual bool get_user_prefers_integrated_gpu() const { return false; }
 
 	void print_error(const char *p_function, const char *p_file, int p_line, const char *p_code, const char *p_rationale, bool p_editor_notify = false, Logger::ErrorType p_type = Logger::ERR_ERROR);
@@ -177,9 +177,9 @@ public:
 	void set_delta_smoothing(bool p_enabled);
 	bool is_delta_smoothing_enabled() const;
 
-	virtual Vector<String> get_system_fonts() const { return Vector<String>(); };
+	virtual Hector<String> get_system_fonts() const { return Hector<String>(); };
 	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const { return String(); };
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const { return Vector<String>(); };
+	virtual Hector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const { return Hector<String>(); };
 	virtual String get_executable_path() const;
 	virtual Error execute(const String &p_path, const List<String> &p_arguments, String *r_pipe = nullptr, int *r_exitcode = nullptr, bool read_stderr = false, Mutex *p_pipe_mutex = nullptr, bool p_open_console = false) = 0;
 	virtual Dictionary execute_with_pipe(const String &p_path, const List<String> &p_arguments, bool p_blocking = true) { return Dictionary(); }
@@ -320,7 +320,7 @@ public:
 
 	virtual bool request_permission(const String &p_name) { return true; }
 	virtual bool request_permissions() { return true; }
-	virtual Vector<String> get_granted_permissions() const { return Vector<String>(); }
+	virtual Hector<String> get_granted_permissions() const { return Hector<String>(); }
 	virtual void revoke_granted_permissions() {}
 
 	// For recording / measuring benchmark data. Only enabled with tools

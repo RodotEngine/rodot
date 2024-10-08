@@ -85,7 +85,7 @@ private:
 	bool ime_active = false;
 	bool ime_started = false;
 	String ime_text;
-	Vector2i ime_selection;
+	Hector2i ime_selection;
 
 	struct KeyEvent {
 		bool pressed = false;
@@ -99,7 +99,7 @@ private:
 		int mod = 0;
 	};
 
-	Vector<KeyEvent> key_event_buffer;
+	Hector<KeyEvent> key_event_buffer;
 	int key_event_pos = 0;
 
 	bool swap_cancel_ok = false;
@@ -136,19 +136,19 @@ private:
 	WASM_EXPORT static void window_blur_callback();
 	static void _window_blur_callback();
 	WASM_EXPORT static void update_voices_callback(int p_size, const char **p_voice);
-	static void _update_voices_callback(const Vector<String> &p_voices);
+	static void _update_voices_callback(const Hector<String> &p_voices);
 	WASM_EXPORT static void update_clipboard_callback(const char *p_text);
 	static void _update_clipboard_callback(const String &p_text);
 	WASM_EXPORT static void send_window_event_callback(int p_notification);
 	static void _send_window_event_callback(int p_notification);
 	WASM_EXPORT static void drop_files_js_callback(const char **p_filev, int p_filec);
-	static void _drop_files_js_callback(const Vector<String> &p_files);
+	static void _drop_files_js_callback(const Hector<String> &p_files);
 
 	void process_joypads();
 	void process_keys();
 
-	static Vector<String> get_rendering_drivers_func();
-	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_window_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_rendering_drivers_func();
+	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_window_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 
 	static void _dispatch_input_event(const Ref<InputEvent> &p_event);
 
@@ -179,7 +179,7 @@ public:
 	// cursor
 	virtual void cursor_set_shape(CursorShape p_shape) override;
 	virtual CursorShape cursor_get_shape() const override;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2()) override;
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Hector2 &p_hotspot = Hector2()) override;
 
 	// mouse
 	virtual void mouse_set_mode(MouseMode p_mode) override;
@@ -214,7 +214,7 @@ public:
 	virtual void virtual_keyboard_hide() override;
 
 	// windows
-	virtual Vector<DisplayServer::WindowID> get_window_list() const override;
+	virtual Hector<DisplayServer::WindowID> get_window_list() const override;
 	virtual WindowID get_window_at_screen_position(const Point2i &p_position) const override;
 
 	virtual void window_attach_instance_id(ObjectID p_instance, WindowID p_window = MAIN_WINDOW_ID) override;

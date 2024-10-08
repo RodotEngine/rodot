@@ -39,7 +39,7 @@ namespace GodotTools.Build
 
             var vbLeft = new VBoxContainer
             {
-                CustomMinimumSize = new Vector2(0, 180 * EditorScale),
+                CustomMinimumSize = new Hector2(0, 180 * EditorScale),
                 SizeFlagsVertical = SizeFlags.ExpandFill,
                 SizeFlagsHorizontal = SizeFlags.ExpandFill,
             };

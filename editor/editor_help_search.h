@@ -85,11 +85,11 @@ class EditorHelpSearch : public ConfirmationDialog {
 	void _filter_combo_item_selected(int p_option);
 	void _confirmed();
 
-	bool _all_terms_in_name(const Vector<String> &p_terms, const String &p_name) const;
-	void _match_method_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::MethodDoc> &p_methods, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
-	void _match_const_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::ConstantDoc> &p_constants, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
-	void _match_property_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::PropertyDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
-	void _match_theme_property_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::ThemeItemDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
+	bool _all_terms_in_name(const Hector<String> &p_terms, const String &p_name) const;
+	void _match_method_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::MethodDoc> &p_methods, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
+	void _match_const_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::ConstantDoc> &p_constants, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
+	void _match_property_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::PropertyDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
+	void _match_theme_property_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::ThemeItemDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const;
 
 	Dictionary _native_search_cb(const String &p_search_string, int p_result_limit);
 	void _native_action_cb(const String &p_item_string);
@@ -133,14 +133,14 @@ class EditorHelpSearch::Runner : public RefCounted {
 		const DocData::ClassDoc *doc = nullptr;
 		bool name = false;
 		String keyword;
-		LocalVector<MemberMatch<DocData::MethodDoc>> constructors;
-		LocalVector<MemberMatch<DocData::MethodDoc>> methods;
-		LocalVector<MemberMatch<DocData::MethodDoc>> operators;
-		LocalVector<MemberMatch<DocData::MethodDoc>> signals;
-		LocalVector<MemberMatch<DocData::ConstantDoc>> constants;
-		LocalVector<MemberMatch<DocData::PropertyDoc>> properties;
-		LocalVector<MemberMatch<DocData::ThemeItemDoc>> theme_properties;
-		LocalVector<MemberMatch<DocData::MethodDoc>> annotations;
+		LocalHector<MemberMatch<DocData::MethodDoc>> constructors;
+		LocalHector<MemberMatch<DocData::MethodDoc>> methods;
+		LocalHector<MemberMatch<DocData::MethodDoc>> operators;
+		LocalHector<MemberMatch<DocData::MethodDoc>> signals;
+		LocalHector<MemberMatch<DocData::ConstantDoc>> constants;
+		LocalHector<MemberMatch<DocData::PropertyDoc>> properties;
+		LocalHector<MemberMatch<DocData::ThemeItemDoc>> theme_properties;
+		LocalHector<MemberMatch<DocData::MethodDoc>> annotations;
 
 		bool required() {
 			return name || !keyword.is_empty() || !constructors.is_empty() || !methods.is_empty() || !operators.is_empty() || !signals.is_empty() || !constants.is_empty() || !properties.is_empty() || !theme_properties.is_empty() || !annotations.is_empty();
@@ -151,16 +151,16 @@ class EditorHelpSearch::Runner : public RefCounted {
 	Tree *results_tree = nullptr;
 	TreeCache *tree_cache = nullptr;
 	String term;
-	Vector<String> terms;
+	Hector<String> terms;
 	int search_flags;
 
 	Color disabled_color;
 
 	HashMap<String, DocData::ClassDoc>::Iterator iterator_doc;
-	LocalVector<RBSet<String, NaturalNoCaseComparator>::Element *> iterator_stack;
+	LocalHector<RBSet<String, NaturalNoCaseComparator>::Element *> iterator_stack;
 	HashMap<String, ClassMatch> matches;
 	HashMap<String, ClassMatch>::Iterator iterator_match;
-	LocalVector<Pair<DocData::ClassDoc *, String>> matched_classes;
+	LocalHector<Pair<DocData::ClassDoc *, String>> matched_classes;
 	TreeItem *root_item = nullptr;
 	HashMap<String, TreeItem *> class_items;
 	TreeItem *matched_item = nullptr;
@@ -189,7 +189,7 @@ class EditorHelpSearch::Runner : public RefCounted {
 	String _build_method_tooltip(const DocData::ClassDoc *p_class_doc, const DocData::MethodDoc *p_doc) const;
 	String _build_keywords_tooltip(const String &p_keywords) const;
 
-	void _match_method_name_and_push_back(Vector<DocData::MethodDoc> &p_methods, LocalVector<MemberMatch<DocData::MethodDoc>> *r_match_methods);
+	void _match_method_name_and_push_back(Hector<DocData::MethodDoc> &p_methods, LocalHector<MemberMatch<DocData::MethodDoc>> *r_match_methods);
 	bool _all_terms_in_name(const String &p_name) const;
 	String _match_keywords_in_all_terms(const String &p_keywords) const;
 	bool _match_string(const String &p_term, const String &p_string) const;

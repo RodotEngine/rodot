@@ -89,7 +89,7 @@ int mbedtls_padlock_xcryptecb(mbedtls_aes_context *ctx,
  * \param ctx      AES context
  * \param mode     MBEDTLS_AES_ENCRYPT or MBEDTLS_AES_DECRYPT
  * \param length   length of the input data
- * \param iv       initialization vector (updated after use)
+ * \param iv       initialization Hector (updated after use)
  * \param input    buffer holding the input data
  * \param output   buffer holding the output data
  *

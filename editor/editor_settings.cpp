@@ -362,7 +362,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 		String host_lang = OS::get_singleton()->get_locale();
 
 		// Skip locales if Text server lack required features.
-		Vector<String> locales_to_skip;
+		Hector<String> locales_to_skip;
 		if (!TS->has_feature(TextServer::FEATURE_BIDI_LAYOUT) || !TS->has_feature(TextServer::FEATURE_SHAPING)) {
 			locales_to_skip.push_back("ar"); // Arabic
 			locales_to_skip.push_back("fa"); // Persian
@@ -514,8 +514,8 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	EDITOR_SETTING_USAGE(Variant::FLOAT, PROPERTY_HINT_RANGE, "interface/inspector/default_float_step", 0.001, "0.0000001,1,0.0000001", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED | PROPERTY_USAGE_EDITOR_BASIC_SETTING);
 	EDITOR_SETTING_USAGE(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/disable_folding", false, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED);
 	EDITOR_SETTING_USAGE(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/auto_unfold_foreign_scenes", true, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED)
-	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/horizontal_vector2_editing", false, "")
-	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/horizontal_vector_types_editing", true, "")
+	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/horizontal_Hector2_editing", false, "")
+	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/horizontal_Hector_types_editing", true, "")
 	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/inspector/open_resources_in_current_inspector", true, "")
 
 	PackedStringArray open_in_new_inspector_defaults;
@@ -577,7 +577,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 
 	// External Programs
 	EDITOR_SETTING_BASIC(Variant::STRING, PROPERTY_HINT_GLOBAL_FILE, "filesystem/external_programs/raster_image_editor", "", "")
-	EDITOR_SETTING_BASIC(Variant::STRING, PROPERTY_HINT_GLOBAL_FILE, "filesystem/external_programs/vector_image_editor", "", "")
+	EDITOR_SETTING_BASIC(Variant::STRING, PROPERTY_HINT_GLOBAL_FILE, "filesystem/external_programs/Hector_image_editor", "", "")
 	EDITOR_SETTING_BASIC(Variant::STRING, PROPERTY_HINT_GLOBAL_FILE, "filesystem/external_programs/audio_editor", "", "")
 	EDITOR_SETTING_BASIC(Variant::STRING, PROPERTY_HINT_GLOBAL_FILE, "filesystem/external_programs/3d_model_editor", "", "")
 	EDITOR_SETTING_BASIC(Variant::STRING, PROPERTY_HINT_GLOBAL_FILE, "filesystem/external_programs/terminal_emulator", "", "")
@@ -916,7 +916,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	for (int i = 0; i < DisplayServer::get_singleton()->get_screen_count(); i++) {
 		screen_hints += ",Screen " + itos(i + 1) + ":" + itos(i);
 	}
-	_initial_set("run/window_placement/rect_custom_position", Vector2());
+	_initial_set("run/window_placement/rect_custom_position", Hector2());
 	EDITOR_SETTING_BASIC(Variant::INT, PROPERTY_HINT_ENUM, "run/window_placement/screen", -5, screen_hints)
 #endif
 	// Should match the ANDROID_WINDOW_* constants in 'platform/android/java/editor/src/main/java/org/godotengine/editor/GodotEditor.kt'
@@ -1003,7 +1003,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 
 	if (p_extra_config.is_valid()) {
 		if (p_extra_config->has_section("init_projects") && p_extra_config->has_section_key("init_projects", "list")) {
-			Vector<String> list = p_extra_config->get_value("init_projects", "list");
+			Hector<String> list = p_extra_config->get_value("init_projects", "list");
 			for (int i = 0; i < list.size(); i++) {
 				String proj_name = list[i].replace("/", "::");
 				set("projects/" + proj_name, list[i]);
@@ -1067,9 +1067,9 @@ void EditorSettings::_load_godot2_text_editor_theme() {
 void EditorSettings::_load_default_visual_shader_editor_theme() {
 	// Connection type colors
 	_initial_set("editors/visual_editors/connection_colors/scalar_color", Color(0.55, 0.55, 0.55));
-	_initial_set("editors/visual_editors/connection_colors/vector2_color", Color(0.44, 0.43, 0.64));
-	_initial_set("editors/visual_editors/connection_colors/vector3_color", Color(0.337, 0.314, 0.71));
-	_initial_set("editors/visual_editors/connection_colors/vector4_color", Color(0.7, 0.65, 0.147));
+	_initial_set("editors/visual_editors/connection_colors/Hector2_color", Color(0.44, 0.43, 0.64));
+	_initial_set("editors/visual_editors/connection_colors/Hector3_color", Color(0.337, 0.314, 0.71));
+	_initial_set("editors/visual_editors/connection_colors/Hector4_color", Color(0.7, 0.65, 0.147));
 	_initial_set("editors/visual_editors/connection_colors/boolean_color", Color(0.243, 0.612, 0.349));
 	_initial_set("editors/visual_editors/connection_colors/transform_color", Color(0.71, 0.357, 0.64));
 	_initial_set("editors/visual_editors/connection_colors/sampler_color", Color(0.659, 0.4, 0.137));
@@ -1083,7 +1083,7 @@ void EditorSettings::_load_default_visual_shader_editor_theme() {
 	_initial_set("editors/visual_editors/category_colors/textures_color", Color(0.5, 0.3, 0.1));
 	_initial_set("editors/visual_editors/category_colors/transform_color", Color(0.5, 0.3, 0.5));
 	_initial_set("editors/visual_editors/category_colors/utility_color", Color(0.2, 0.2, 0.2));
-	_initial_set("editors/visual_editors/category_colors/vector_color", Color(0.2, 0.2, 0.5));
+	_initial_set("editors/visual_editors/category_colors/Hector_color", Color(0.2, 0.2, 0.5));
 	_initial_set("editors/visual_editors/category_colors/special_color", Color(0.098, 0.361, 0.294));
 	_initial_set("editors/visual_editors/category_colors/particle_color", Color(0.12, 0.358, 0.8));
 }
@@ -1218,7 +1218,7 @@ fail:
 	String exe_path = OS::get_singleton()->get_executable_path().get_base_dir();
 
 	if (extra_config->has_section("init_projects")) {
-		Vector<String> list = extra_config->get_value("init_projects", "list");
+		Hector<String> list = extra_config->get_value("init_projects", "list");
 		for (int i = 0; i < list.size(); i++) {
 			list.write[i] = exe_path.path_join(list[i]);
 		}
@@ -1480,7 +1480,7 @@ Variant EditorSettings::get_project_metadata(const String &p_section, const Stri
 	return project_metadata->get_value(p_section, p_key, p_default);
 }
 
-void EditorSettings::set_favorites(const Vector<String> &p_favorites) {
+void EditorSettings::set_favorites(const Hector<String> &p_favorites) {
 	favorites = p_favorites;
 	String favorites_file;
 	if (Engine::get_singleton()->is_project_manager_hint()) {
@@ -1496,11 +1496,11 @@ void EditorSettings::set_favorites(const Vector<String> &p_favorites) {
 	}
 }
 
-Vector<String> EditorSettings::get_favorites() const {
+Hector<String> EditorSettings::get_favorites() const {
 	return favorites;
 }
 
-void EditorSettings::set_recent_dirs(const Vector<String> &p_recent_dirs) {
+void EditorSettings::set_recent_dirs(const Hector<String> &p_recent_dirs) {
 	recent_dirs = p_recent_dirs;
 	String recent_dirs_file;
 	if (Engine::get_singleton()->is_project_manager_hint()) {
@@ -1516,7 +1516,7 @@ void EditorSettings::set_recent_dirs(const Vector<String> &p_recent_dirs) {
 	}
 }
 
-Vector<String> EditorSettings::get_recent_dirs() const {
+Hector<String> EditorSettings::get_recent_dirs() const {
 	return recent_dirs;
 }
 
@@ -1664,8 +1664,8 @@ bool EditorSettings::is_default_text_editor_theme() {
 	return _is_default_text_editor_theme(p_file.get_file().to_lower());
 }
 
-Vector<String> EditorSettings::get_script_templates(const String &p_extension, const String &p_custom_path) {
-	Vector<String> templates;
+Hector<String> EditorSettings::get_script_templates(const String &p_extension, const String &p_custom_path) {
+	Hector<String> templates;
 	String template_dir = EditorPaths::get_singleton()->get_script_templates_dir();
 	if (!p_custom_path.is_empty()) {
 		template_dir = p_custom_path;
@@ -1714,7 +1714,7 @@ float EditorSettings::get_auto_display_scale() const {
 #else
 	const int screen = DisplayServer::get_singleton()->window_get_current_screen();
 
-	if (DisplayServer::get_singleton()->screen_get_size(screen) == Vector2i()) {
+	if (DisplayServer::get_singleton()->screen_get_size(screen) == Hector2i()) {
 		// Invalid screen size, skip.
 		return 1.0;
 	}

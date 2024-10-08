@@ -517,7 +517,7 @@ bool ResourceFormatImporter::are_import_settings_valid(const String &p_path) con
 }
 
 String ResourceFormatImporter::get_import_settings_hash() const {
-	Vector<Ref<ResourceImporter>> sorted_importers = importers;
+	Hector<Ref<ResourceImporter>> sorted_importers = importers;
 
 	sorted_importers.sort_custom<SortImporterByName>();
 

@@ -203,8 +203,8 @@ void OpenXRInteractionProfileEditor::_add_io_path(VBoxContainer *p_container, co
 		case OpenXRAction::OPENXR_ACTION_FLOAT: {
 			type_label->set_text(TTR("Float"));
 		} break;
-		case OpenXRAction::OPENXR_ACTION_VECTOR2: {
-			type_label->set_text(TTR("Vector2"));
+		case OpenXRAction::OPENXR_ACTION_Hector2: {
+			type_label->set_text(TTR("Hector2"));
 		} break;
 		case OpenXRAction::OPENXR_ACTION_POSE: {
 			type_label->set_text(TTR("Pose"));
@@ -272,7 +272,7 @@ void OpenXRInteractionProfileEditor::_update_interaction_profile() {
 	// in with the new...
 
 	// Determine toplevel paths
-	Vector<String> top_level_paths;
+	Hector<String> top_level_paths;
 	for (int i = 0; i < profile_def->io_paths.size(); i++) {
 		const OpenXRInteractionProfileMetadata::IOPath *io_path = &profile_def->io_paths[i];
 

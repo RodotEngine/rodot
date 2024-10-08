@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
    *   FT_Pos
    *
    * @description:
-   *   The type FT_Pos is used to store vectorial coordinates.  Depending on
+   *   The type FT_Pos is used to store Hectorial coordinates.  Depending on
    *   the context, these can represent distances in integer font units, or
    *   16.16, or 26.6 fixed-point pixel coordinates.
    */
@@ -55,10 +55,10 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   FT_Vector
+   *   FT_Hector
    *
    * @description:
-   *   A simple structure used to store a 2D vector; coordinates are of the
+   *   A simple structure used to store a 2D Hector; coordinates are of the
    *   FT_Pos type.
    *
    * @fields:
@@ -67,12 +67,12 @@ FT_BEGIN_HEADER
    *   y ::
    *     The vertical coordinate.
    */
-  typedef struct  FT_Vector_
+  typedef struct  FT_Hector_
   {
     FT_Pos  x;
     FT_Pos  y;
 
-  } FT_Vector;
+  } FT_Hector;
 
 
   /**************************************************************************
@@ -302,7 +302,7 @@ FT_BEGIN_HEADER
    *     The number of points in the outline.
    *
    *   points ::
-   *     A pointer to an array of `n_points` @FT_Vector elements, giving the
+   *     A pointer to an array of `n_points` @FT_Hector elements, giving the
    *     outline's point coordinates.
    *
    *   tags ::
@@ -344,7 +344,7 @@ FT_BEGIN_HEADER
     short       n_contours;      /* number of contours in glyph        */
     short       n_points;        /* number of points in the glyph      */
 
-    FT_Vector*  points;          /* the outline's points               */
+    FT_Hector*  points;          /* the outline's points               */
     char*       tags;            /* the points flags                   */
     short*      contours;        /* the contour end points             */
 
@@ -511,7 +511,7 @@ FT_BEGIN_HEADER
    *   Error code.  0~means success.
    */
   typedef int
-  (*FT_Outline_MoveToFunc)( const FT_Vector*  to,
+  (*FT_Outline_MoveToFunc)( const FT_Hector*  to,
                             void*             user );
 
 #define FT_Outline_MoveTo_Func  FT_Outline_MoveToFunc
@@ -540,7 +540,7 @@ FT_BEGIN_HEADER
    *   Error code.  0~means success.
    */
   typedef int
-  (*FT_Outline_LineToFunc)( const FT_Vector*  to,
+  (*FT_Outline_LineToFunc)( const FT_Hector*  to,
                             void*             user );
 
 #define FT_Outline_LineTo_Func  FT_Outline_LineToFunc
@@ -574,8 +574,8 @@ FT_BEGIN_HEADER
    *   Error code.  0~means success.
    */
   typedef int
-  (*FT_Outline_ConicToFunc)( const FT_Vector*  control,
-                             const FT_Vector*  to,
+  (*FT_Outline_ConicToFunc)( const FT_Hector*  control,
+                             const FT_Hector*  to,
                              void*             user );
 
 #define FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
@@ -610,9 +610,9 @@ FT_BEGIN_HEADER
    *   Error code.  0~means success.
    */
   typedef int
-  (*FT_Outline_CubicToFunc)( const FT_Vector*  control1,
-                             const FT_Vector*  control2,
-                             const FT_Vector*  to,
+  (*FT_Outline_CubicToFunc)( const FT_Hector*  control1,
+                             const FT_Hector*  control2,
+                             const FT_Hector*  to,
                              void*             user );
 
 #define FT_Outline_CubicTo_Func  FT_Outline_CubicToFunc
@@ -737,13 +737,13 @@ FT_BEGIN_HEADER
    *     @FT_GlyphSlotRec structure to read it.
    *
    *   FT_GLYPH_FORMAT_OUTLINE ::
-   *     The glyph image is a vectorial outline made of line segments and
+   *     The glyph image is a Hectorial outline made of line segments and
    *     Bezier arcs; it can be described as an @FT_Outline; you generally
    *     want to access the `outline` field of the @FT_GlyphSlotRec structure
    *     to read it.
    *
    *   FT_GLYPH_FORMAT_PLOTTER ::
-   *     The glyph image is a vectorial path with no inside and outside
+   *     The glyph image is a Hectorial path with no inside and outside
    *     contours.  Some Type~1 fonts, like those in the Hershey family,
    *     contain glyphs in this format.  These are described as @FT_Outline,
    *     but FreeType isn't currently capable of rendering them correctly.
@@ -795,7 +795,7 @@ FT_BEGIN_HEADER
    *   Scanline Converter
    *
    * @abstract:
-   *   How vectorial outlines are converted into bitmaps and pixmaps.
+   *   How Hectorial outlines are converted into bitmaps and pixmaps.
    *
    * @description:
    *   A raster or a rasterizer is a scan converter in charge of producing a

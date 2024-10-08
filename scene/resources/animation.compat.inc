@@ -30,7 +30,7 @@
 
 #ifndef DISABLE_DEPRECATED
 
-Vector3 Animation::_position_track_interpolate_bind_compat_86629(int p_track, double p_time) const {
+Hector3 Animation::_position_track_interpolate_bind_compat_86629(int p_track, double p_time) const {
 	return position_track_interpolate(p_track, p_time, false);
 }
 
@@ -38,7 +38,7 @@ Quaternion Animation::_rotation_track_interpolate_bind_compat_86629(int p_track,
 	return rotation_track_interpolate(p_track, p_time, false);
 }
 
-Vector3 Animation::_scale_track_interpolate_bind_compat_86629(int p_track, double p_time) const {
+Hector3 Animation::_scale_track_interpolate_bind_compat_86629(int p_track, double p_time) const {
 	return scale_track_interpolate(p_track, p_time, false);
 }
 

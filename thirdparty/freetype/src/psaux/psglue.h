@@ -101,10 +101,10 @@ FT_BEGIN_HEADER
 
   typedef struct  CF2_CallbackParamsRec_
   {
-    FT_Vector  pt0;
-    FT_Vector  pt1;
-    FT_Vector  pt2;
-    FT_Vector  pt3;
+    FT_Hector  pt0;
+    FT_Hector  pt1;
+    FT_Hector  pt2;
+    FT_Hector  pt3;
 
     CF2_Int  op;
 

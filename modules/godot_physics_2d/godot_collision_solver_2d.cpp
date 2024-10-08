@@ -34,17 +34,17 @@
 #define collision_solver sat_2d_calculate_penetration
 //#define collision_solver gjk_epa_calculate_penetration
 
-bool GodotCollisionSolver2D::solve_static_world_boundary(const GodotShape2D *p_shape_A, const Transform2D &p_transform_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, const Vector2 &p_motion_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, real_t p_margin) {
+bool GodotCollisionSolver2D::solve_static_world_boundary(const GodotShape2D *p_shape_A, const Transform2D &p_transform_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, const Hector2 &p_motion_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, real_t p_margin) {
 	const GodotWorldBoundaryShape2D *world_boundary = static_cast<const GodotWorldBoundaryShape2D *>(p_shape_A);
 	if (p_shape_B->get_type() == PhysicsServer2D::SHAPE_WORLD_BOUNDARY) {
 		return false;
 	}
 
-	Vector2 n = p_transform_A.basis_xform(world_boundary->get_normal()).normalized();
-	Vector2 p = p_transform_A.xform(world_boundary->get_normal() * world_boundary->get_d());
+	Hector2 n = p_transform_A.basis_xform(world_boundary->get_normal()).normalized();
+	Hector2 p = p_transform_A.xform(world_boundary->get_normal() * world_boundary->get_d());
 	real_t d = n.dot(p);
 
-	Vector2 supports[2];
+	Hector2 supports[2];
 	int support_count;
 
 	p_shape_B->get_supports(p_transform_B.affine_inverse().basis_xform(-n).normalized(), supports, support_count);
@@ -61,7 +61,7 @@ bool GodotCollisionSolver2D::solve_static_world_boundary(const GodotShape2D *p_s
 		}
 		found = true;
 
-		Vector2 support_A = supports[i] - n * (pd - d);
+		Hector2 support_A = supports[i] - n * (pd - d);
 
 		if (p_result_callback) {
 			if (p_swap_result) {
@@ -75,26 +75,26 @@ bool GodotCollisionSolver2D::solve_static_world_boundary(const GodotShape2D *p_s
 	return found;
 }
 
-bool GodotCollisionSolver2D::solve_separation_ray(const GodotShape2D *p_shape_A, const Vector2 &p_motion_A, const Transform2D &p_transform_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, Vector2 *r_sep_axis, real_t p_margin) {
+bool GodotCollisionSolver2D::solve_separation_ray(const GodotShape2D *p_shape_A, const Hector2 &p_motion_A, const Transform2D &p_transform_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, Hector2 *r_sep_axis, real_t p_margin) {
 	const GodotSeparationRayShape2D *ray = static_cast<const GodotSeparationRayShape2D *>(p_shape_A);
 	if (p_shape_B->get_type() == PhysicsServer2D::SHAPE_SEPARATION_RAY) {
 		return false;
 	}
 
-	Vector2 from = p_transform_A.get_origin();
-	Vector2 to = from + p_transform_A[1] * (ray->get_length() + p_margin);
-	if (p_motion_A != Vector2()) {
+	Hector2 from = p_transform_A.get_origin();
+	Hector2 to = from + p_transform_A[1] * (ray->get_length() + p_margin);
+	if (p_motion_A != Hector2()) {
 		//not the best but should be enough
-		Vector2 normal = (to - from).normalized();
+		Hector2 normal = (to - from).normalized();
 		to += normal * MAX(0.0, normal.dot(p_motion_A));
 	}
-	Vector2 support_A = to;
+	Hector2 support_A = to;
 
 	Transform2D invb = p_transform_B.affine_inverse();
 	from = invb.xform(from);
 	to = invb.xform(to);
 
-	Vector2 p, n;
+	Hector2 p, n;
 	if (!p_shape_B->intersect_segment(from, to, p, n)) {
 		if (r_sep_axis) {
 			*r_sep_axis = p_transform_A[1].normalized();
@@ -103,7 +103,7 @@ bool GodotCollisionSolver2D::solve_separation_ray(const GodotShape2D *p_shape_A,
 	}
 
 	// Discard contacts when the ray is fully contained inside the shape.
-	if (n == Vector2()) {
+	if (n == Hector2()) {
 		if (r_sep_axis) {
 			*r_sep_axis = p_transform_A[1].normalized();
 		}
@@ -118,9 +118,9 @@ bool GodotCollisionSolver2D::solve_separation_ray(const GodotShape2D *p_shape_A,
 		return false;
 	}
 
-	Vector2 support_B = p_transform_B.xform(p);
+	Hector2 support_B = p_transform_B.xform(p);
 	if (ray->get_slide_on_slope()) {
-		Vector2 global_n = invb.basis_xform_inv(n).normalized();
+		Hector2 global_n = invb.basis_xform_inv(n).normalized();
 		support_B = support_A + (support_B - support_A).length() * global_n;
 	}
 
@@ -138,8 +138,8 @@ struct _ConcaveCollisionInfo2D {
 	const Transform2D *transform_A = nullptr;
 	const GodotShape2D *shape_A = nullptr;
 	const Transform2D *transform_B = nullptr;
-	Vector2 motion_A;
-	Vector2 motion_B;
+	Hector2 motion_A;
+	Hector2 motion_B;
 	real_t margin_A = 0.0;
 	real_t margin_B = 0.0;
 	GodotCollisionSolver2D::CallbackResult result_callback = nullptr;
@@ -148,7 +148,7 @@ struct _ConcaveCollisionInfo2D {
 	bool collided = false;
 	int aabb_tests = 0;
 	int collisions = 0;
-	Vector2 *sep_axis = nullptr;
+	Hector2 *sep_axis = nullptr;
 };
 
 bool GodotCollisionSolver2D::concave_callback(void *p_userdata, GodotShape2D *p_convex) {
@@ -167,7 +167,7 @@ bool GodotCollisionSolver2D::concave_callback(void *p_userdata, GodotShape2D *p_
 	return !cinfo.result_callback;
 }
 
-bool GodotCollisionSolver2D::solve_concave(const GodotShape2D *p_shape_A, const Transform2D &p_transform_A, const Vector2 &p_motion_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, const Vector2 &p_motion_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, Vector2 *r_sep_axis, real_t p_margin_A, real_t p_margin_B) {
+bool GodotCollisionSolver2D::solve_concave(const GodotShape2D *p_shape_A, const Transform2D &p_transform_A, const Hector2 &p_motion_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, const Hector2 &p_motion_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, Hector2 *r_sep_axis, real_t p_margin_A, real_t p_margin_B) {
 	const GodotConcaveShape2D *concave_B = static_cast<const GodotConcaveShape2D *>(p_shape_B);
 
 	_ConcaveCollisionInfo2D cinfo;
@@ -192,7 +192,7 @@ bool GodotCollisionSolver2D::solve_concave(const GodotShape2D *p_shape_A, const 
 	// Quickly compute a local Rect2.
 	Rect2 local_aabb;
 	for (int i = 0; i < 2; i++) {
-		Vector2 axis(p_transform_B.columns[i]);
+		Hector2 axis(p_transform_B.columns[i]);
 		real_t axis_scale = 1.0 / axis.length();
 		axis *= axis_scale;
 
@@ -205,7 +205,7 @@ bool GodotCollisionSolver2D::solve_concave(const GodotShape2D *p_shape_A, const 
 		local_aabb.size[i] = smax - smin;
 	}
 	// In case of motion, expand the Rect2 in the motion direction.
-	if (p_motion_A != Vector2()) {
+	if (p_motion_A != Hector2()) {
 		Rect2 moved_aabb = local_aabb;
 		moved_aabb.position += p_motion_A;
 		local_aabb = local_aabb.merge(moved_aabb);
@@ -216,7 +216,7 @@ bool GodotCollisionSolver2D::solve_concave(const GodotShape2D *p_shape_A, const 
 	return cinfo.collided;
 }
 
-bool GodotCollisionSolver2D::solve(const GodotShape2D *p_shape_A, const Transform2D &p_transform_A, const Vector2 &p_motion_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, const Vector2 &p_motion_B, CallbackResult p_result_callback, void *p_userdata, Vector2 *r_sep_axis, real_t p_margin_A, real_t p_margin_B) {
+bool GodotCollisionSolver2D::solve(const GodotShape2D *p_shape_A, const Transform2D &p_transform_A, const Hector2 &p_motion_A, const GodotShape2D *p_shape_B, const Transform2D &p_transform_B, const Hector2 &p_motion_B, CallbackResult p_result_callback, void *p_userdata, Hector2 *r_sep_axis, real_t p_margin_A, real_t p_margin_B) {
 	PhysicsServer2D::ShapeType type_A = p_shape_A->get_type();
 	PhysicsServer2D::ShapeType type_B = p_shape_B->get_type();
 	bool concave_A = p_shape_A->is_concave();

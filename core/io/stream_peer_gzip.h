@@ -45,7 +45,7 @@ private:
 	bool compressing = true;
 
 	RingBuffer<uint8_t> rb;
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 
 	Error _process(uint8_t *p_dst, int p_dst_size, const uint8_t *p_src, int p_src_size, int &r_consumed, int &r_out, bool p_close = false);
 	void _close();

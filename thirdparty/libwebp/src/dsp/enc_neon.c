@@ -123,7 +123,7 @@ static WEBP_INLINE void TransformPass_NEON(int16x8x2_t* const rows) {
 static void ITransformOne_NEON(const uint8_t* ref,
                                const int16_t* in, uint8_t* dst) {
   int16x8x2_t rows;
-  INIT_VECTOR2(rows, vld1q_s16(in + 0), vld1q_s16(in + 8));
+  INIT_Hector2(rows, vld1q_s16(in + 0), vld1q_s16(in + 8));
   TransformPass_NEON(&rows);
   TransformPass_NEON(&rows);
   Add4x4_NEON(rows.val[0], rows.val[1], ref, dst);
@@ -489,7 +489,7 @@ static void FTransformWHT_NEON(const int16_t* src, int16_t* out) {
   const int16x4_t zero = vdup_n_s16(0);
   int32x4x4_t tmp0;
   int16x4x4_t in;
-  INIT_VECTOR4(in, zero, zero, zero, zero);
+  INIT_Hector4(in, zero, zero, zero, zero);
   LOAD_LANE_16b(in.val[0], 0);
   LOAD_LANE_16b(in.val[1], 0);
   LOAD_LANE_16b(in.val[2], 0);
@@ -593,7 +593,7 @@ static WEBP_INLINE int16x8x4_t DistoHorizontalPass_NEON(
   // tmp[1] = a3 + a2
   // tmp[2] = a3 - a2
   // tmp[3] = a0 - a1
-  INIT_VECTOR4(q4_out,
+  INIT_Hector4(q4_out,
                vabsq_s16(vaddq_s16(q_a0, q_a1)),
                vabsq_s16(vaddq_s16(q_a3, q_a2)),
                vabdq_s16(q_a3, q_a2), vabdq_s16(q_a0, q_a1));
@@ -611,7 +611,7 @@ static WEBP_INLINE int16x8x4_t DistoVerticalPass_NEON(const uint8x8x4_t q4_in) {
                                                         q4_in.val[2]));
   int16x8x4_t q4_out;
 
-  INIT_VECTOR4(q4_out,
+  INIT_Hector4(q4_out,
                vaddq_s16(q_a0, q_a1), vaddq_s16(q_a3, q_a2),
                vsubq_s16(q_a3, q_a2), vsubq_s16(q_a0, q_a1));
   return q4_out;
@@ -621,7 +621,7 @@ static WEBP_INLINE int16x4x4_t DistoLoadW_NEON(const uint16_t* w) {
   const uint16x8_t q_w07 = vld1q_u16(&w[0]);
   const uint16x8_t q_w8f = vld1q_u16(&w[8]);
   int16x4x4_t d4_w;
-  INIT_VECTOR4(d4_w,
+  INIT_Hector4(d4_w,
                vget_low_s16(vreinterpretq_s16_u16(q_w07)),
                vget_high_s16(vreinterpretq_s16_u16(q_w07)),
                vget_low_s16(vreinterpretq_s16_u16(q_w8f)),
@@ -676,7 +676,7 @@ static int Disto4x4_NEON(const uint8_t* const a, const uint8_t* const b,
   LOAD_LANE_32b(b + 1 * BPS, d_in_ab_4567, 1);
   LOAD_LANE_32b(b + 2 * BPS, d_in_ab_89ab, 1);
   LOAD_LANE_32b(b + 3 * BPS, d_in_ab_cdef, 1);
-  INIT_VECTOR4(d4_in,
+  INIT_Hector4(d4_in,
                vreinterpret_u8_u32(d_in_ab_0123),
                vreinterpret_u8_u32(d_in_ab_4567),
                vreinterpret_u8_u32(d_in_ab_89ab),
@@ -869,20 +869,20 @@ static int QuantizeBlock_NEON(int16_t in[16], int16_t out[16],
 #if defined(__APPLE__) && WEBP_AARCH64 && \
     defined(__apple_build_version__) && (__apple_build_version__< 6020037)
   uint8x16x2_t all_out;
-  INIT_VECTOR2(all_out, vreinterpretq_u8_s16(out0), vreinterpretq_u8_s16(out1));
-  INIT_VECTOR4(shuffles,
+  INIT_Hector2(all_out, vreinterpretq_u8_s16(out0), vreinterpretq_u8_s16(out1));
+  INIT_Hector4(shuffles,
                vtbl2q_u8(all_out, vld1_u8(kShuffles[0])),
                vtbl2q_u8(all_out, vld1_u8(kShuffles[1])),
                vtbl2q_u8(all_out, vld1_u8(kShuffles[2])),
                vtbl2q_u8(all_out, vld1_u8(kShuffles[3])));
 #else
   uint8x8x4_t all_out;
-  INIT_VECTOR4(all_out,
+  INIT_Hector4(all_out,
                vreinterpret_u8_s16(vget_low_s16(out0)),
                vreinterpret_u8_s16(vget_high_s16(out0)),
                vreinterpret_u8_s16(vget_low_s16(out1)),
                vreinterpret_u8_s16(vget_high_s16(out1)));
-  INIT_VECTOR4(shuffles,
+  INIT_Hector4(shuffles,
                vtbl4_u8(all_out, vld1_u8(kShuffles[0])),
                vtbl4_u8(all_out, vld1_u8(kShuffles[1])),
                vtbl4_u8(all_out, vld1_u8(kShuffles[2])),

@@ -100,7 +100,7 @@ struct hb_pool_t
   };
 
   T* next;
-  hb_vector_t<chunk_t *> chunks;
+  hb_Hector_t<chunk_t *> chunks;
 };
 
 

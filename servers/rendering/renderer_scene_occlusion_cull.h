@@ -32,7 +32,7 @@
 #define RENDERER_SCENE_OCCLUSION_CULL_H
 
 #include "core/math/projection.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/rendering_server.h"
 
 class RendererSceneOcclusionCull {
@@ -42,11 +42,11 @@ protected:
 public:
 	class HZBuffer {
 	protected:
-		static const Vector3 corners[8];
+		static const Hector3 corners[8];
 
-		LocalVector<float> data;
-		LocalVector<Size2i> sizes;
-		LocalVector<float *> mips;
+		LocalHector<float> data;
+		LocalHector<Size2i> sizes;
+		LocalHector<float *> mips;
 
 		RID debug_texture;
 		Ref<Image> debug_image;
@@ -56,44 +56,44 @@ public:
 		uint64_t occlusion_frame = 0;
 		Size2i occlusion_buffer_size;
 
-		_FORCE_INLINE_ bool _is_occluded(const real_t p_bounds[6], const Vector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near) const {
+		_FORCE_INLINE_ bool _is_occluded(const real_t p_bounds[6], const Hector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near) const {
 			if (is_empty()) {
 				return false;
 			}
 
-			Vector3 closest_point = p_cam_position.clamp(Vector3(p_bounds[0], p_bounds[1], p_bounds[2]), Vector3(p_bounds[3], p_bounds[4], p_bounds[5]));
+			Hector3 closest_point = p_cam_position.clamp(Hector3(p_bounds[0], p_bounds[1], p_bounds[2]), Hector3(p_bounds[3], p_bounds[4], p_bounds[5]));
 
 			if (closest_point == p_cam_position) {
 				return false;
 			}
 
-			Vector3 closest_point_view = p_cam_inv_transform.xform(closest_point);
+			Hector3 closest_point_view = p_cam_inv_transform.xform(closest_point);
 			if (closest_point_view.z > -p_near) {
 				return false;
 			}
 
 			float min_depth = -closest_point_view.z * 0.95f;
 
-			Vector2 rect_min = Vector2(FLT_MAX, FLT_MAX);
-			Vector2 rect_max = Vector2(FLT_MIN, FLT_MIN);
+			Hector2 rect_min = Hector2(FLT_MAX, FLT_MAX);
+			Hector2 rect_max = Hector2(FLT_MIN, FLT_MIN);
 
 			for (int j = 0; j < 8; j++) {
-				const Vector3 &c = RendererSceneOcclusionCull::HZBuffer::corners[j];
-				Vector3 nc = Vector3(1, 1, 1) - c;
-				Vector3 corner = Vector3(p_bounds[0] * c.x + p_bounds[3] * nc.x, p_bounds[1] * c.y + p_bounds[4] * nc.y, p_bounds[2] * c.z + p_bounds[5] * nc.z);
-				Vector3 view = p_cam_inv_transform.xform(corner);
+				const Hector3 &c = RendererSceneOcclusionCull::HZBuffer::corners[j];
+				Hector3 nc = Hector3(1, 1, 1) - c;
+				Hector3 corner = Hector3(p_bounds[0] * c.x + p_bounds[3] * nc.x, p_bounds[1] * c.y + p_bounds[4] * nc.y, p_bounds[2] * c.z + p_bounds[5] * nc.z);
+				Hector3 view = p_cam_inv_transform.xform(corner);
 
 				Plane vp = Plane(view, 1.0);
 				Plane projected = p_cam_projection.xform4(vp);
 
 				float w = projected.d;
 				if (w < 1.0) {
-					rect_min = Vector2(0.0f, 0.0f);
-					rect_max = Vector2(1.0f, 1.0f);
+					rect_min = Hector2(0.0f, 0.0f);
+					rect_max = Hector2(1.0f, 1.0f);
 					break;
 				}
 
-				Vector2 normalized = Vector2(projected.normal.x / w * 0.5f + 0.5f, projected.normal.y / w * 0.5f + 0.5f);
+				Hector2 normalized = Hector2(projected.normal.x / w * 0.5f + 0.5f, projected.normal.y / w * 0.5f + 0.5f);
 				rect_min = rect_min.min(normalized);
 				rect_max = rect_max.max(normalized);
 			}
@@ -103,7 +103,7 @@ public:
 
 			int mip_count = mips.size();
 
-			Vector2 screen_diagonal = (rect_max - rect_min) * sizes[0];
+			Hector2 screen_diagonal = (rect_max - rect_min) * sizes[0];
 			float size = MAX(screen_diagonal.x, screen_diagonal.y);
 			float l = Math::ceil(Math::log2(size));
 			int lod = CLAMP(l, 0, mip_count - 1);
@@ -162,7 +162,7 @@ public:
 		// Thin wrapper around _is_occluded(),
 		// allowing occlusion timers to delay the disappearance
 		// of objects to prevent flickering when using jittering.
-		_FORCE_INLINE_ bool is_occluded(const real_t p_bounds[6], const Vector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near, uint64_t &r_occlusion_timeout) const {
+		_FORCE_INLINE_ bool is_occluded(const real_t p_bounds[6], const Hector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near, uint64_t &r_occlusion_timeout) const {
 			bool occluded = _is_occluded(p_bounds, p_cam_position, p_cam_inv_transform, p_cam_projection, p_near);
 
 			// Special case, temporal jitter disabled,
@@ -205,7 +205,7 @@ public:
 	virtual RID occluder_allocate() { return RID(); }
 	virtual void occluder_initialize(RID p_occluder) {}
 	virtual void free_occluder(RID p_occluder) { _print_warning(); }
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) { _print_warning(); }
+	virtual void occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) { _print_warning(); }
 
 	virtual void add_scenario(RID p_scenario) {}
 	virtual void remove_scenario(RID p_scenario) {}
@@ -218,7 +218,7 @@ public:
 		return nullptr;
 	}
 	virtual void buffer_set_scenario(RID p_buffer, RID p_scenario) { _print_warning(); }
-	virtual void buffer_set_size(RID p_buffer, const Vector2i &p_size) { _print_warning(); }
+	virtual void buffer_set_size(RID p_buffer, const Hector2i &p_size) { _print_warning(); }
 	virtual void buffer_update(RID p_buffer, const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal) {}
 
 	virtual RID buffer_get_debug_texture(RID p_buffer) {

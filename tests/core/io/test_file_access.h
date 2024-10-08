@@ -41,17 +41,17 @@ TEST_CASE("[FileAccess] CSV read") {
 	Ref<FileAccess> f = FileAccess::open(TestUtils::get_data_path("testdata.csv"), FileAccess::READ);
 	REQUIRE(!f.is_null());
 
-	Vector<String> header = f->get_csv_line(); // Default delimiter: ",".
+	Hector<String> header = f->get_csv_line(); // Default delimiter: ",".
 	REQUIRE(header.size() == 4);
 
-	Vector<String> row1 = f->get_csv_line(","); // Explicit delimiter, should be the same.
+	Hector<String> row1 = f->get_csv_line(","); // Explicit delimiter, should be the same.
 	REQUIRE(row1.size() == 4);
 	CHECK(row1[0] == "GOOD_MORNING");
 	CHECK(row1[1] == "Good Morning");
 	CHECK(row1[2] == "Guten Morgen");
 	CHECK(row1[3] == "Bonjour");
 
-	Vector<String> row2 = f->get_csv_line();
+	Hector<String> row2 = f->get_csv_line();
 	REQUIRE(row2.size() == 4);
 	CHECK(row2[0] == "GOOD_EVENING");
 	CHECK(row2[1] == "Good Evening");
@@ -60,7 +60,7 @@ TEST_CASE("[FileAccess] CSV read") {
 	CHECK_MESSAGE(row2[2] != "\"", "Should not parse empty string as a single double quote.");
 	CHECK(row2[3] == "\"\""); // Intentionally testing only escaped double quotes.
 
-	Vector<String> row3 = f->get_csv_line();
+	Hector<String> row3 = f->get_csv_line();
 	REQUIRE(row3.size() == 6);
 	CHECK(row3[0] == "Without quotes");
 	CHECK(row3[1] == "With, comma");
@@ -69,13 +69,13 @@ TEST_CASE("[FileAccess] CSV read") {
 	CHECK(row3[4] == "With \"inner\nsplit\" quotes and\nline breaks");
 	CHECK(row3[5] == "With \\nnewline chars"); // Escaped, not an actual newline.
 
-	Vector<String> row4 = f->get_csv_line("~"); // Custom delimiter, makes inline commas easier.
+	Hector<String> row4 = f->get_csv_line("~"); // Custom delimiter, makes inline commas easier.
 	REQUIRE(row4.size() == 3);
 	CHECK(row4[0] == "Some other");
 	CHECK(row4[1] == "delimiter");
 	CHECK(row4[2] == "should still work, shouldn't it?");
 
-	Vector<String> row5 = f->get_csv_line("\t"); // Tab separated variables.
+	Hector<String> row5 = f->get_csv_line("\t"); // Tab separated variables.
 	REQUIRE(row5.size() == 3);
 	CHECK(row5[0] == "What about");
 	CHECK(row5[1] == "tab separated");

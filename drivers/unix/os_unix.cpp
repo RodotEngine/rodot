@@ -178,8 +178,8 @@ void OS_Unix::finalize_core() {
 	NetSocketPosix::cleanup();
 }
 
-Vector<String> OS_Unix::get_video_adapter_driver_info() const {
-	return Vector<String>();
+Hector<String> OS_Unix::get_video_adapter_driver_info() const {
+	return Hector<String>();
 }
 
 String OS_Unix::get_stdin_string() {
@@ -453,19 +453,19 @@ Dictionary OS_Unix::get_memory_info() const {
 	while (f.is_valid() && !f->eof_reached()) {
 		String s = f->get_line().strip_edges();
 		if (s.begins_with("MemTotal:")) {
-			Vector<String> stok = s.replace("MemTotal:", "").strip_edges().split(" ");
+			Hector<String> stok = s.replace("MemTotal:", "").strip_edges().split(" ");
 			if (stok.size() == 2) {
 				mtotal = stok[0].to_int() * 1024;
 			}
 		}
 		if (s.begins_with("MemFree:")) {
-			Vector<String> stok = s.replace("MemFree:", "").strip_edges().split(" ");
+			Hector<String> stok = s.replace("MemFree:", "").strip_edges().split(" ");
 			if (stok.size() == 2) {
 				mfree = stok[0].to_int() * 1024;
 			}
 		}
 		if (s.begins_with("SwapFree:")) {
-			Vector<String> stok = s.replace("SwapFree:", "").strip_edges().split(" ");
+			Hector<String> stok = s.replace("SwapFree:", "").strip_edges().split(" ");
 			if (stok.size() == 2) {
 				sfree = stok[0].to_int() * 1024;
 			}
@@ -544,13 +544,13 @@ Dictionary OS_Unix::execute_with_pipe(const String &p_path, const List<String> &
 
 	if (pid == 0) {
 		// The child process.
-		Vector<CharString> cs;
+		Hector<CharString> cs;
 		cs.push_back(p_path.utf8());
 		for (const String &arg : p_arguments) {
 			cs.push_back(arg.utf8());
 		}
 
-		Vector<char *> args;
+		Hector<char *> args;
 		for (int i = 0; i < cs.size(); i++) {
 			args.push_back((char *)cs[i].get_data());
 		}
@@ -645,13 +645,13 @@ Error OS_Unix::execute(const String &p_path, const List<String> &p_arguments, St
 
 	if (pid == 0) {
 		// The child process
-		Vector<CharString> cs;
+		Hector<CharString> cs;
 		cs.push_back(p_path.utf8());
 		for (const String &arg : p_arguments) {
 			cs.push_back(arg.utf8());
 		}
 
-		Vector<char *> args;
+		Hector<char *> args;
 		for (int i = 0; i < cs.size(); i++) {
 			args.push_back((char *)cs[i].get_data());
 		}
@@ -687,13 +687,13 @@ Error OS_Unix::create_process(const String &p_path, const List<String> &p_argume
 		// This ensures the process won't go zombie at the end.
 		setsid();
 
-		Vector<CharString> cs;
+		Hector<CharString> cs;
 		cs.push_back(p_path.utf8());
 		for (const String &arg : p_arguments) {
 			cs.push_back(arg.utf8());
 		}
 
-		Vector<char *> args;
+		Hector<char *> args;
 		for (int i = 0; i < cs.size(); i++) {
 			args.push_back((char *)cs[i].get_data());
 		}
@@ -1009,7 +1009,7 @@ void UnixTerminalLogger::log_error(const char *p_function, const char *p_file, i
 UnixTerminalLogger::~UnixTerminalLogger() {}
 
 OS_Unix::OS_Unix() {
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(UnixTerminalLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 }

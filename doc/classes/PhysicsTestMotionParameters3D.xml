@@ -28,8 +28,8 @@
 		<member name="max_collisions" type="int" setter="set_max_collisions" getter="get_max_collisions" default="1">
 			Maximum number of returned collisions, between [code]1[/code] and [code]32[/code]. Always returns the deepest detected collisions.
 		</member>
-		<member name="motion" type="Vector3" setter="set_motion" getter="get_motion" default="Vector3(0, 0, 0)">
-			Motion vector to define the length and direction of the motion to test.
+		<member name="motion" type="Hector3" setter="set_motion" getter="get_motion" default="Hector3(0, 0, 0)">
+			Motion Hector to define the length and direction of the motion to test.
 		</member>
 		<member name="recovery_as_collision" type="bool" setter="set_recovery_as_collision_enabled" getter="is_recovery_as_collision_enabled" default="false">
 			If set to [code]true[/code], any depenetration from the recovery phase is reported as a collision; this is used e.g. by [CharacterBody3D] for improving floor detection during floor snapping.

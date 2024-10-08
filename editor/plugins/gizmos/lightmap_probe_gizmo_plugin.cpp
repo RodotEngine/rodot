@@ -62,7 +62,7 @@ void LightmapProbeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 
 	int stack_count = 8;
 	int sector_count = 16;
@@ -70,7 +70,7 @@ void LightmapProbeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	float sector_step = (Math_PI * 2.0) / sector_count;
 	float stack_step = Math_PI / stack_count;
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 	float radius = 0.2;
 
 	for (int i = 0; i <= stack_count; ++i) {
@@ -87,7 +87,7 @@ void LightmapProbeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			float x = xy * Math::cos(sector_angle); // r * cos(u) * cos(v)
 			float y = xy * Math::sin(sector_angle); // r * cos(u) * sin(v)
 
-			Vector3 n = Vector3(x, z, y);
+			Hector3 n = Hector3(x, z, y);
 			vertices.push_back(n);
 		}
 	}

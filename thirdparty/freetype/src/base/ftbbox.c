@@ -35,7 +35,7 @@
 
   typedef struct  TBBox_Rec_
   {
-    FT_Vector  last;
+    FT_Hector  last;
     FT_BBox    bbox;
 
   } TBBox_Rec;
@@ -73,7 +73,7 @@
    *
    * @Input:
    *   to ::
-   *     A pointer to the destination vector.
+   *     A pointer to the destination Hector.
    *
    * @InOut:
    *   user ::
@@ -83,7 +83,7 @@
    *   Always 0.  Needed for the interface only.
    */
   FT_CALLBACK_DEF( int )
-  BBox_Move_To( const FT_Vector*  to,
+  BBox_Move_To( const FT_Hector*  to,
                 void*             user_ )
   {
     TBBox_Rec*  user = (TBBox_Rec*)user_;
@@ -110,7 +110,7 @@
    *
    * @Input:
    *   to ::
-   *     A pointer to the destination vector.
+   *     A pointer to the destination Hector.
    *
    * @InOut:
    *   user ::
@@ -120,7 +120,7 @@
    *   Always 0.  Needed for the interface only.
    */
   FT_CALLBACK_DEF( int )
-  BBox_Line_To( const FT_Vector*  to,
+  BBox_Line_To( const FT_Hector*  to,
                 void*             user_ )
   {
     TBBox_Rec*  user = (TBBox_Rec*)user_;
@@ -198,7 +198,7 @@
    *     A pointer to a control point.
    *
    *   to ::
-   *     A pointer to the destination vector.
+   *     A pointer to the destination Hector.
    *
    * @InOut:
    *   user ::
@@ -212,8 +212,8 @@
    *   extremum coordinates, as it is sufficiently fast.
    */
   FT_CALLBACK_DEF( int )
-  BBox_Conic_To( const FT_Vector*  control,
-                 const FT_Vector*  to,
+  BBox_Conic_To( const FT_Hector*  control,
+                 const FT_Hector*  to,
                  void*             user_ )
   {
     TBBox_Rec*  user = (TBBox_Rec*)user_;
@@ -406,7 +406,7 @@
    *     A pointer to the second control point.
    *
    *   to ::
-   *     A pointer to the destination vector.
+   *     A pointer to the destination Hector.
    *
    * @InOut:
    *   user ::
@@ -420,9 +420,9 @@
    *   extremum coordinates, we subdivide instead.
    */
   FT_CALLBACK_DEF( int )
-  BBox_Cubic_To( const FT_Vector*  control1,
-                 const FT_Vector*  control2,
-                 const FT_Vector*  to,
+  BBox_Cubic_To( const FT_Hector*  control1,
+                 const FT_Hector*  control2,
+                 const FT_Hector*  to,
                  void*             user_ )
   {
     TBBox_Rec*  user = (TBBox_Rec*)user_;
@@ -478,7 +478,7 @@
                          -0x7FFFFFFFL, -0x7FFFFFFFL };
     FT_BBox     bbox = {  0x7FFFFFFFL,  0x7FFFFFFFL,
                          -0x7FFFFFFFL, -0x7FFFFFFFL };
-    FT_Vector*  vec;
+    FT_Hector*  vec;
     FT_UShort   n;
 
 

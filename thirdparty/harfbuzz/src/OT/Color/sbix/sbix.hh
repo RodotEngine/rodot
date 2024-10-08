@@ -389,8 +389,8 @@ struct sbix
     auto *out = c->serializer->start_embed<Array32OfOffset32To<SBIXStrike>> ();
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
 
-    hb_vector_t<Offset32To<SBIXStrike>*> new_strikes;
-    hb_vector_t<hb_serialize_context_t::objidx_t> objidxs;
+    hb_Hector_t<Offset32To<SBIXStrike>*> new_strikes;
+    hb_Hector_t<hb_serialize_context_t::objidx_t> objidxs;
     for (int i = strikes.len - 1; i >= 0; --i)
     {
       auto* o = out->serialize_append (c->serializer);

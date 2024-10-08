@@ -79,11 +79,11 @@ public:
 	GDVIRTUAL0RC_REQUIRED(TypedArray<Dictionary>, _get_documentation)
 	GDVIRTUAL0RC(String, _get_class_icon_path)
 #ifdef TOOLS_ENABLED
-	virtual Vector<DocData::ClassDoc> get_documentation() const override {
+	virtual Hector<DocData::ClassDoc> get_documentation() const override {
 		TypedArray<Dictionary> doc;
 		GDVIRTUAL_CALL(_get_documentation, doc);
 
-		Vector<DocData::ClassDoc> class_doc;
+		Hector<DocData::ClassDoc> class_doc;
 		for (int i = 0; i < doc.size(); i++) {
 			class_doc.append(DocData::ClassDoc::from_dict(doc[i]));
 		}
@@ -233,10 +233,10 @@ public:
 
 	/* EDITOR FUNCTIONS */
 
-	GDVIRTUAL0RC_REQUIRED(Vector<String>, _get_reserved_words)
+	GDVIRTUAL0RC_REQUIRED(Hector<String>, _get_reserved_words)
 
 	virtual void get_reserved_words(List<String> *p_words) const override {
-		Vector<String> ret;
+		Hector<String> ret;
 		GDVIRTUAL_CALL(_get_reserved_words, ret);
 		for (int i = 0; i < ret.size(); i++) {
 			p_words->push_back(ret[i]);
@@ -244,30 +244,30 @@ public:
 	}
 	EXBIND1RC(bool, is_control_flow_keyword, const String &)
 
-	GDVIRTUAL0RC_REQUIRED(Vector<String>, _get_comment_delimiters)
+	GDVIRTUAL0RC_REQUIRED(Hector<String>, _get_comment_delimiters)
 
 	virtual void get_comment_delimiters(List<String> *p_words) const override {
-		Vector<String> ret;
+		Hector<String> ret;
 		GDVIRTUAL_CALL(_get_comment_delimiters, ret);
 		for (int i = 0; i < ret.size(); i++) {
 			p_words->push_back(ret[i]);
 		}
 	}
 
-	GDVIRTUAL0RC(Vector<String>, _get_doc_comment_delimiters)
+	GDVIRTUAL0RC(Hector<String>, _get_doc_comment_delimiters)
 
 	virtual void get_doc_comment_delimiters(List<String> *p_words) const override {
-		Vector<String> ret;
+		Hector<String> ret;
 		GDVIRTUAL_CALL(_get_doc_comment_delimiters, ret);
 		for (int i = 0; i < ret.size(); i++) {
 			p_words->push_back(ret[i]);
 		}
 	}
 
-	GDVIRTUAL0RC_REQUIRED(Vector<String>, _get_string_delimiters)
+	GDVIRTUAL0RC_REQUIRED(Hector<String>, _get_string_delimiters)
 
 	virtual void get_string_delimiters(List<String> *p_words) const override {
-		Vector<String> ret;
+		Hector<String> ret;
 		GDVIRTUAL_CALL(_get_string_delimiters, ret);
 		for (int i = 0; i < ret.size(); i++) {
 			p_words->push_back(ret[i]);
@@ -278,10 +278,10 @@ public:
 
 	GDVIRTUAL1RC_REQUIRED(TypedArray<Dictionary>, _get_built_in_templates, StringName)
 
-	virtual Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override {
+	virtual Hector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override {
 		TypedArray<Dictionary> ret;
 		GDVIRTUAL_CALL(_get_built_in_templates, p_object, ret);
-		Vector<ScriptTemplate> stret;
+		Hector<ScriptTemplate> stret;
 		for (int i = 0; i < ret.size(); i++) {
 			Dictionary d = ret[i];
 			ScriptTemplate st;
@@ -312,7 +312,7 @@ public:
 			return false;
 		}
 		if (r_functions != nullptr && ret.has("functions")) {
-			Vector<String> functions = ret["functions"];
+			Hector<String> functions = ret["functions"];
 			for (int i = 0; i < functions.size(); i++) {
 				r_functions->push_back(functions[i]);
 			}
@@ -567,10 +567,10 @@ public:
 	EXBIND4R(String, debug_parse_stack_level_expression, int, const String &, int, int)
 
 	GDVIRTUAL0R_REQUIRED(TypedArray<Dictionary>, _debug_get_current_stack_info)
-	virtual Vector<StackInfo> debug_get_current_stack_info() override {
+	virtual Hector<StackInfo> debug_get_current_stack_info() override {
 		TypedArray<Dictionary> ret;
 		GDVIRTUAL_CALL(_debug_get_current_stack_info, ret);
-		Vector<StackInfo> sret;
+		Hector<StackInfo> sret;
 		for (const Variant &var : ret) {
 			StackInfo si;
 			Dictionary d = var;

@@ -168,7 +168,7 @@ namespace basisu
 		}
 	};
 
-	typedef vector2D<pvrtc4_block> pvrtc4_block_vector2D;
+	typedef Hector2D<pvrtc4_block> pvrtc4_block_Hector2D;
 
 	uint32_t pvrtc4_swizzle_uv(uint32_t XSize, uint32_t YSize, uint32_t XPos, uint32_t YPos);
 
@@ -216,8 +216,8 @@ namespace basisu
 		inline uint32_t get_block_width() const { return m_block_width; }
 		inline uint32_t get_block_height() const { return m_block_height; }
 
-		inline const pvrtc4_block_vector2D &get_blocks() const { return m_blocks; }
-		inline		 pvrtc4_block_vector2D &get_blocks() { return m_blocks; }
+		inline const pvrtc4_block_Hector2D &get_blocks() const { return m_blocks; }
+		inline		 pvrtc4_block_Hector2D &get_blocks() { return m_blocks; }
 
 		inline uint32_t get_total_blocks() const { return m_block_width * m_block_height; }
 
@@ -269,7 +269,7 @@ namespace basisu
 
 		void deswizzle()
 		{
-			pvrtc4_block_vector2D temp(m_blocks);
+			pvrtc4_block_Hector2D temp(m_blocks);
 
 			for (uint32_t y = 0; y < m_block_height; y++)
 				for (uint32_t x = 0; x < m_block_width; x++)
@@ -278,7 +278,7 @@ namespace basisu
 
 		void swizzle()
 		{
-			pvrtc4_block_vector2D temp(m_blocks);
+			pvrtc4_block_Hector2D temp(m_blocks);
 
 			for (uint32_t y = 0; y < m_block_height; y++)
 				for (uint32_t x = 0; x < m_block_width; x++)
@@ -448,7 +448,7 @@ namespace basisu
 	
 	public:						
 		uint32_t m_width, m_height;
-		pvrtc4_block_vector2D m_blocks;
+		pvrtc4_block_Hector2D m_blocks;
 		uint32_t m_block_width, m_block_height;
 						
 		bool m_uses_alpha;

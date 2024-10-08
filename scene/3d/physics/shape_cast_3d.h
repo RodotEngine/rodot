@@ -46,7 +46,7 @@ class ShapeCast3D : public Node3D {
 
 	Ref<Shape3D> shape;
 	RID shape_rid;
-	Vector3 target_position = Vector3(0, -1, 0);
+	Hector3 target_position = Hector3(0, -1, 0);
 
 	HashSet<RID> exclude;
 	real_t margin = 0.0;
@@ -57,8 +57,8 @@ class ShapeCast3D : public Node3D {
 
 	Ref<Material> debug_material;
 	Color debug_shape_custom_color = Color(0.0, 0.0, 0.0);
-	Vector<Vector3> debug_shape_vertices;
-	Vector<Vector3> debug_line_vertices;
+	Hector<Hector3> debug_shape_vertices;
+	Hector<Hector3> debug_line_vertices;
 
 	void _create_debug_shape();
 	void _update_debug_shape();
@@ -68,7 +68,7 @@ class ShapeCast3D : public Node3D {
 
 	// Result
 	int max_results = 32;
-	Vector<PhysicsDirectSpaceState3D::ShapeRestInfo> result;
+	Hector<PhysicsDirectSpaceState3D::ShapeRestInfo> result;
 	bool collided = false;
 	real_t collision_safe_fraction = 1.0;
 	real_t collision_unsafe_fraction = 1.0;
@@ -95,8 +95,8 @@ public:
 	void set_shape(const Ref<Shape3D> &p_shape);
 	Ref<Shape3D> get_shape() const;
 
-	void set_target_position(const Vector3 &p_point);
-	Vector3 get_target_position() const;
+	void set_target_position(const Hector3 &p_point);
+	Hector3 get_target_position() const;
 
 	void set_margin(real_t p_margin);
 	real_t get_margin() const;
@@ -116,8 +116,8 @@ public:
 	const Color &get_debug_shape_custom_color() const;
 	void set_debug_shape_custom_color(const Color &p_color);
 
-	const Vector<Vector3> &get_debug_shape_vertices() const;
-	const Vector<Vector3> &get_debug_line_vertices() const;
+	const Hector<Hector3> &get_debug_shape_vertices() const;
+	const Hector<Hector3> &get_debug_line_vertices() const;
 
 	Ref<StandardMaterial3D> get_debug_material();
 
@@ -126,8 +126,8 @@ public:
 	Object *get_collider(int p_idx) const;
 	RID get_collider_rid(int p_idx) const;
 	int get_collider_shape(int p_idx) const;
-	Vector3 get_collision_point(int p_idx) const;
-	Vector3 get_collision_normal(int p_idx) const;
+	Hector3 get_collision_point(int p_idx) const;
+	Hector3 get_collision_normal(int p_idx) const;
 
 	real_t get_closest_collision_safe_fraction() const;
 	real_t get_closest_collision_unsafe_fraction() const;

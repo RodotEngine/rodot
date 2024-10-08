@@ -86,17 +86,17 @@ void GridMapEditor::_menu_option(int p_option) {
 			if (edit_axis != new_axis) {
 				int item1 = options->get_popup()->get_item_index(MENU_OPTION_NEXT_LEVEL);
 				int item2 = options->get_popup()->get_item_index(MENU_OPTION_PREV_LEVEL);
-				if (edit_axis == Vector3::AXIS_Y) {
+				if (edit_axis == Hector3::AXIS_Y) {
 					options->get_popup()->set_item_text(item1, TTR("Next Plane"));
 					options->get_popup()->set_item_text(item2, TTR("Previous Plane"));
 					spin_box_label->set_text(TTR("Plane:"));
-				} else if (new_axis == Vector3::AXIS_Y) {
+				} else if (new_axis == Hector3::AXIS_Y) {
 					options->get_popup()->set_item_text(item1, TTR("Next Floor"));
 					options->get_popup()->set_item_text(item2, TTR("Previous Floor"));
 					spin_box_label->set_text(TTR("Floor:"));
 				}
 			}
-			edit_axis = Vector3::Axis(new_axis);
+			edit_axis = Hector3::Axis(new_axis);
 			update_grid();
 
 		} break;
@@ -104,14 +104,14 @@ void GridMapEditor::_menu_option(int p_option) {
 			Basis r;
 			if (input_action == INPUT_PASTE) {
 				r = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
-				r.rotate(Vector3(0, 1, 0), -Math_PI / 2.0);
+				r.rotate(Hector3(0, 1, 0), -Math_PI / 2.0);
 				paste_indicator.orientation = node->get_orthogonal_index_from_basis(r);
 				_update_paste_indicator();
 				break;
 			}
 
 			r = node->get_basis_with_orthogonal_index(cursor_rot);
-			r.rotate(Vector3(0, 1, 0), -Math_PI / 2.0);
+			r.rotate(Hector3(0, 1, 0), -Math_PI / 2.0);
 			cursor_rot = node->get_orthogonal_index_from_basis(r);
 			_update_cursor_transform();
 		} break;
@@ -119,14 +119,14 @@ void GridMapEditor::_menu_option(int p_option) {
 			Basis r;
 			if (input_action == INPUT_PASTE) {
 				r = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
-				r.rotate(Vector3(1, 0, 0), -Math_PI / 2.0);
+				r.rotate(Hector3(1, 0, 0), -Math_PI / 2.0);
 				paste_indicator.orientation = node->get_orthogonal_index_from_basis(r);
 				_update_paste_indicator();
 				break;
 			}
 
 			r = node->get_basis_with_orthogonal_index(cursor_rot);
-			r.rotate(Vector3(1, 0, 0), -Math_PI / 2.0);
+			r.rotate(Hector3(1, 0, 0), -Math_PI / 2.0);
 			cursor_rot = node->get_orthogonal_index_from_basis(r);
 			_update_cursor_transform();
 		} break;
@@ -134,14 +134,14 @@ void GridMapEditor::_menu_option(int p_option) {
 			Basis r;
 			if (input_action == INPUT_PASTE) {
 				r = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
-				r.rotate(Vector3(0, 0, 1), -Math_PI / 2.0);
+				r.rotate(Hector3(0, 0, 1), -Math_PI / 2.0);
 				paste_indicator.orientation = node->get_orthogonal_index_from_basis(r);
 				_update_paste_indicator();
 				break;
 			}
 
 			r = node->get_basis_with_orthogonal_index(cursor_rot);
-			r.rotate(Vector3(0, 0, 1), -Math_PI / 2.0);
+			r.rotate(Hector3(0, 0, 1), -Math_PI / 2.0);
 			cursor_rot = node->get_orthogonal_index_from_basis(r);
 			_update_cursor_transform();
 		} break;
@@ -149,14 +149,14 @@ void GridMapEditor::_menu_option(int p_option) {
 			Basis r;
 			if (input_action == INPUT_PASTE) {
 				r = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
-				r.rotate(Vector3(0, 1, 0), Math_PI / 2.0);
+				r.rotate(Hector3(0, 1, 0), Math_PI / 2.0);
 				paste_indicator.orientation = node->get_orthogonal_index_from_basis(r);
 				_update_paste_indicator();
 				break;
 			}
 
 			r = node->get_basis_with_orthogonal_index(cursor_rot);
-			r.rotate(Vector3(0, 1, 0), Math_PI / 2.0);
+			r.rotate(Hector3(0, 1, 0), Math_PI / 2.0);
 			cursor_rot = node->get_orthogonal_index_from_basis(r);
 			_update_cursor_transform();
 		} break;
@@ -164,14 +164,14 @@ void GridMapEditor::_menu_option(int p_option) {
 			Basis r;
 			if (input_action == INPUT_PASTE) {
 				r = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
-				r.rotate(Vector3(1, 0, 0), Math_PI / 2.0);
+				r.rotate(Hector3(1, 0, 0), Math_PI / 2.0);
 				paste_indicator.orientation = node->get_orthogonal_index_from_basis(r);
 				_update_paste_indicator();
 				break;
 			}
 
 			r = node->get_basis_with_orthogonal_index(cursor_rot);
-			r.rotate(Vector3(1, 0, 0), Math_PI / 2.0);
+			r.rotate(Hector3(1, 0, 0), Math_PI / 2.0);
 			cursor_rot = node->get_orthogonal_index_from_basis(r);
 			_update_cursor_transform();
 		} break;
@@ -179,14 +179,14 @@ void GridMapEditor::_menu_option(int p_option) {
 			Basis r;
 			if (input_action == INPUT_PASTE) {
 				r = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
-				r.rotate(Vector3(0, 0, 1), Math_PI / 2.0);
+				r.rotate(Hector3(0, 0, 1), Math_PI / 2.0);
 				paste_indicator.orientation = node->get_orthogonal_index_from_basis(r);
 				_update_paste_indicator();
 				break;
 			}
 
 			r = node->get_basis_with_orthogonal_index(cursor_rot);
-			r.rotate(Vector3(0, 0, 1), Math_PI / 2.0);
+			r.rotate(Hector3(0, 0, 1), Math_PI / 2.0);
 			cursor_rot = node->get_orthogonal_index_from_basis(r);
 			_update_cursor_transform();
 		} break;
@@ -280,7 +280,7 @@ void GridMapEditor::_update_selection_transform() {
 	}
 
 	Transform3D xf;
-	xf.scale((Vector3(1, 1, 1) + (selection.end - selection.begin)) * node->get_cell_size());
+	xf.scale((Hector3(1, 1, 1) + (selection.end - selection.begin)) * node->get_cell_size());
 	xf.origin = selection.begin * node->get_cell_size();
 
 	RenderingServer::get_singleton()->instance_set_transform(selection_instance, node->get_global_transform() * xf);
@@ -289,9 +289,9 @@ void GridMapEditor::_update_selection_transform() {
 		if (i != edit_axis || (edit_floor[edit_axis] < selection.begin[edit_axis]) || (edit_floor[edit_axis] > selection.end[edit_axis] + 1)) {
 			RenderingServer::get_singleton()->instance_set_transform(selection_level_instance[i], xf_zero);
 		} else {
-			Vector3 scale = (selection.end - selection.begin + Vector3(1, 1, 1));
+			Hector3 scale = (selection.end - selection.begin + Hector3(1, 1, 1));
 			scale[edit_axis] = 1.0;
-			Vector3 position = selection.begin;
+			Hector3 position = selection.begin;
 			position[edit_axis] = edit_floor[edit_axis];
 
 			scale *= node->get_cell_size();
@@ -326,7 +326,7 @@ void GridMapEditor::_validate_selection() {
 	_update_selection_transform();
 }
 
-void GridMapEditor::_set_selection(bool p_active, const Vector3 &p_begin, const Vector3 &p_end) {
+void GridMapEditor::_set_selection(bool p_active, const Hector3 &p_begin, const Hector3 &p_end) {
 	selection.active = p_active;
 	selection.begin = p_begin;
 	selection.end = p_end;
@@ -359,10 +359,10 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 	}
 
 	Camera3D *camera = p_camera;
-	Vector3 from = camera->project_ray_origin(p_point);
-	Vector3 normal = camera->project_ray_normal(p_point);
+	Hector3 from = camera->project_ray_origin(p_point);
+	Hector3 normal = camera->project_ray_normal(p_point);
 	Transform3D local_xform = node->get_global_transform().affine_inverse();
-	Vector<Plane> planes = camera->get_frustum();
+	Hector<Plane> planes = camera->get_frustum();
 	from = local_xform.xform(from);
 	normal = local_xform.basis.xform(normal).normalized();
 
@@ -370,7 +370,7 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 	p.normal[edit_axis] = 1.0;
 	p.d = edit_floor[edit_axis] * node->get_cell_size()[edit_axis];
 
-	Vector3 inters;
+	Hector3 inters;
 	if (!p.intersects_segment(from, from + normal * settings_pick_distance->get_value(), &inters)) {
 		return false;
 	}
@@ -385,7 +385,7 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 	}
 
 	int cell[3];
-	Vector3 cell_size = node->get_cell_size();
+	Hector3 cell_size = node->get_cell_size();
 
 	for (int i = 0; i < 3; i++) {
 		if (i == edit_axis) {
@@ -402,7 +402,7 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 	RS::get_singleton()->instance_set_transform(grid_instance[edit_axis], node->get_global_transform() * edit_grid_xform);
 
 	if (cursor_instance.is_valid()) {
-		cursor_origin = (Vector3(cell[0], cell[1], cell[2]) + Vector3(0.5 * node->get_center_x(), 0.5 * node->get_center_y(), 0.5 * node->get_center_z())) * node->get_cell_size();
+		cursor_origin = (Hector3(cell[0], cell[1], cell[2]) + Hector3(0.5 * node->get_center_x(), 0.5 * node->get_center_y(), 0.5 * node->get_center_z())) * node->get_cell_size();
 		cursor_visible = true;
 
 		if (input_action == INPUT_SELECT || input_action == INPUT_PASTE) {
@@ -413,11 +413,11 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 	}
 
 	if (input_action == INPUT_PASTE) {
-		paste_indicator.current = Vector3i(cell[0], cell[1], cell[2]);
+		paste_indicator.current = Hector3i(cell[0], cell[1], cell[2]);
 		_update_paste_indicator();
 
 	} else if (input_action == INPUT_SELECT) {
-		selection.current = Vector3i(cell[0], cell[1], cell[2]);
+		selection.current = Hector3i(cell[0], cell[1], cell[2]);
 		if (p_click) {
 			selection.click = selection.current;
 		}
@@ -426,7 +426,7 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 
 		return true;
 	} else if (input_action == INPUT_PICK) {
-		int item = node->get_cell_item(Vector3i(cell[0], cell[1], cell[2]));
+		int item = node->get_cell_item(Hector3i(cell[0], cell[1], cell[2]));
 		if (item >= 0) {
 			selected_palette = item;
 
@@ -446,23 +446,23 @@ bool GridMapEditor::do_input_action(Camera3D *p_camera, const Point2 &p_point, b
 
 	if (input_action == INPUT_PAINT) {
 		SetItem si;
-		si.position = Vector3i(cell[0], cell[1], cell[2]);
+		si.position = Hector3i(cell[0], cell[1], cell[2]);
 		si.new_value = selected_palette;
 		si.new_orientation = cursor_rot;
-		si.old_value = node->get_cell_item(Vector3i(cell[0], cell[1], cell[2]));
-		si.old_orientation = node->get_cell_item_orientation(Vector3i(cell[0], cell[1], cell[2]));
+		si.old_value = node->get_cell_item(Hector3i(cell[0], cell[1], cell[2]));
+		si.old_orientation = node->get_cell_item_orientation(Hector3i(cell[0], cell[1], cell[2]));
 		set_items.push_back(si);
-		node->set_cell_item(Vector3i(cell[0], cell[1], cell[2]), selected_palette, cursor_rot);
+		node->set_cell_item(Hector3i(cell[0], cell[1], cell[2]), selected_palette, cursor_rot);
 		return true;
 	} else if (input_action == INPUT_ERASE) {
 		SetItem si;
-		si.position = Vector3i(cell[0], cell[1], cell[2]);
+		si.position = Hector3i(cell[0], cell[1], cell[2]);
 		si.new_value = -1;
 		si.new_orientation = 0;
-		si.old_value = node->get_cell_item(Vector3i(cell[0], cell[1], cell[2]));
-		si.old_orientation = node->get_cell_item_orientation(Vector3i(cell[0], cell[1], cell[2]));
+		si.old_value = node->get_cell_item(Hector3i(cell[0], cell[1], cell[2]));
+		si.old_orientation = node->get_cell_item_orientation(Hector3i(cell[0], cell[1], cell[2]));
 		set_items.push_back(si);
-		node->set_cell_item(Vector3i(cell[0], cell[1], cell[2]), -1);
+		node->set_cell_item(Hector3i(cell[0], cell[1], cell[2]), -1);
 		return true;
 	}
 
@@ -479,7 +479,7 @@ void GridMapEditor::_delete_selection() {
 	for (int i = selection.begin.x; i <= selection.end.x; i++) {
 		for (int j = selection.begin.y; j <= selection.end.y; j++) {
 			for (int k = selection.begin.z; k <= selection.end.z; k++) {
-				Vector3i selected = Vector3i(i, j, k);
+				Hector3i selected = Hector3i(i, j, k);
 				undo_redo->add_do_method(node, "set_cell_item", selected, GridMap::INVALID_CELL_ITEM);
 				undo_redo->add_undo_method(node, "set_cell_item", selected, node->get_cell_item(selected), node->get_cell_item_orientation(selected));
 			}
@@ -500,7 +500,7 @@ void GridMapEditor::_fill_selection() {
 	for (int i = selection.begin.x; i <= selection.end.x; i++) {
 		for (int j = selection.begin.y; j <= selection.end.y; j++) {
 			for (int k = selection.begin.z; k <= selection.end.z; k++) {
-				Vector3i selected = Vector3i(i, j, k);
+				Hector3i selected = Hector3i(i, j, k);
 				undo_redo->add_do_method(node, "set_cell_item", selected, selected_palette, cursor_rot);
 				undo_redo->add_undo_method(node, "set_cell_item", selected, node->get_cell_item(selected), node->get_cell_item_orientation(selected));
 			}
@@ -527,7 +527,7 @@ void GridMapEditor::_set_clipboard_data() {
 	for (int i = selection.begin.x; i <= selection.end.x; i++) {
 		for (int j = selection.begin.y; j <= selection.end.y; j++) {
 			for (int k = selection.begin.z; k <= selection.end.z; k++) {
-				Vector3i selected = Vector3i(i, j, k);
+				Hector3i selected = Hector3i(i, j, k);
 				int itm = node->get_cell_item(selected);
 				if (itm == GridMap::INVALID_CELL_ITEM) {
 					continue;
@@ -537,7 +537,7 @@ void GridMapEditor::_set_clipboard_data() {
 
 				ClipboardItem item;
 				item.cell_item = itm;
-				item.grid_offset = Vector3(selected) - selection.begin;
+				item.grid_offset = Hector3(selected) - selection.begin;
 				item.orientation = node->get_cell_item_orientation(selected);
 				item.instance = RenderingServer::get_singleton()->instance_create2(mesh->get_rid(), get_tree()->get_root()->get_world_3d()->get_scenario());
 
@@ -555,8 +555,8 @@ void GridMapEditor::_update_paste_indicator() {
 		return;
 	}
 
-	Vector3 center = 0.5 * Vector3(real_t(node->get_center_x()), real_t(node->get_center_y()), real_t(node->get_center_z()));
-	Vector3 scale = (Vector3(1, 1, 1) + (paste_indicator.end - paste_indicator.begin)) * node->get_cell_size();
+	Hector3 center = 0.5 * Hector3(real_t(node->get_center_x()), real_t(node->get_center_y()), real_t(node->get_center_z()));
+	Hector3 scale = (Hector3(1, 1, 1) + (paste_indicator.end - paste_indicator.begin)) * node->get_cell_size();
 	Transform3D xf;
 	xf.scale(scale);
 	xf.origin = (paste_indicator.begin + (paste_indicator.current - paste_indicator.click) + center) * node->get_cell_size();
@@ -588,12 +588,12 @@ void GridMapEditor::_do_paste() {
 	Basis rot;
 	rot = node->get_basis_with_orthogonal_index(paste_indicator.orientation);
 
-	Vector3 ofs = paste_indicator.current - paste_indicator.click;
+	Hector3 ofs = paste_indicator.current - paste_indicator.click;
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	undo_redo->create_action(TTR("GridMap Paste Selection"));
 
 	for (const ClipboardItem &item : clipboard_items) {
-		Vector3 position = rot.xform(item.grid_offset) + paste_indicator.begin + ofs;
+		Hector3 position = rot.xform(item.grid_offset) + paste_indicator.begin + ofs;
 
 		Basis orm;
 		orm = node->get_basis_with_orthogonal_index(item.orientation);
@@ -875,7 +875,7 @@ void GridMapEditor::update_palette() {
 	search_box->set_editable(true);
 	info_message->hide();
 
-	Vector<int> ids;
+	Hector<int> ids;
 	ids = mesh_library->get_item_list();
 
 	List<_CGMEItemSort> il;
@@ -994,7 +994,7 @@ void GridMapEditor::update_grid() {
 	grid_ofs[edit_axis] = edit_floor[edit_axis] * node->get_cell_size()[edit_axis];
 
 	// If there's a valid tile cursor, offset the grid, otherwise move it back to the node.
-	edit_grid_xform.origin = cursor_instance.is_valid() ? grid_ofs : Vector3();
+	edit_grid_xform.origin = cursor_instance.is_valid() ? grid_ofs : Hector3();
 	edit_grid_xform.basis = Basis();
 
 	for (int i = 0; i < 3; i++) {
@@ -1006,35 +1006,35 @@ void GridMapEditor::update_grid() {
 	updating = false;
 }
 
-void GridMapEditor::_draw_grids(const Vector3 &cell_size) {
-	Vector3 edited_floor = node->get_meta("_editor_floor_", Vector3());
+void GridMapEditor::_draw_grids(const Hector3 &cell_size) {
+	Hector3 edited_floor = node->get_meta("_editor_floor_", Hector3());
 
 	for (int i = 0; i < 3; i++) {
 		RS::get_singleton()->mesh_clear(grid[i]);
 		edit_floor[i] = edited_floor[i];
 	}
 
-	Vector<Vector3> grid_points[3];
-	Vector<Color> grid_colors[3];
+	Hector<Hector3> grid_points[3];
+	Hector<Color> grid_colors[3];
 
 	for (int i = 0; i < 3; i++) {
-		Vector3 axis;
+		Hector3 axis;
 		axis[i] = 1;
-		Vector3 axis_n1;
+		Hector3 axis_n1;
 		axis_n1[(i + 1) % 3] = cell_size[(i + 1) % 3];
-		Vector3 axis_n2;
+		Hector3 axis_n2;
 		axis_n2[(i + 2) % 3] = cell_size[(i + 2) % 3];
 
 		for (int j = -GRID_CURSOR_SIZE; j <= GRID_CURSOR_SIZE; j++) {
 			for (int k = -GRID_CURSOR_SIZE; k <= GRID_CURSOR_SIZE; k++) {
-				Vector3 p = axis_n1 * j + axis_n2 * k;
-				float trans = Math::pow(MAX(0, 1.0 - (Vector2(j, k).length() / GRID_CURSOR_SIZE)), 2);
+				Hector3 p = axis_n1 * j + axis_n2 * k;
+				float trans = Math::pow(MAX(0, 1.0 - (Hector2(j, k).length() / GRID_CURSOR_SIZE)), 2);
 
-				Vector3 pj = axis_n1 * (j + 1) + axis_n2 * k;
-				float transj = Math::pow(MAX(0, 1.0 - (Vector2(j + 1, k).length() / GRID_CURSOR_SIZE)), 2);
+				Hector3 pj = axis_n1 * (j + 1) + axis_n2 * k;
+				float transj = Math::pow(MAX(0, 1.0 - (Hector2(j + 1, k).length() / GRID_CURSOR_SIZE)), 2);
 
-				Vector3 pk = axis_n1 * j + axis_n2 * (k + 1);
-				float transk = Math::pow(MAX(0, 1.0 - (Vector2(j, k + 1).length() / GRID_CURSOR_SIZE)), 2);
+				Hector3 pk = axis_n1 * j + axis_n2 * (k + 1);
+				float transk = Math::pow(MAX(0, 1.0 - (Hector2(j, k + 1).length() / GRID_CURSOR_SIZE)), 2);
 
 				grid_points[i].push_back(p);
 				grid_points[i].push_back(pk);
@@ -1167,7 +1167,7 @@ void GridMapEditor::_floor_changed(float p_value) {
 	}
 
 	edit_floor[edit_axis] = p_value;
-	node->set_meta("_editor_floor_", Vector3(edit_floor[0], edit_floor[1], edit_floor[2]));
+	node->set_meta("_editor_floor_", Hector3(edit_floor[0], edit_floor[1], edit_floor[2]));
 	update_grid();
 	_update_selection_transform();
 }
@@ -1325,7 +1325,7 @@ GridMapEditor::GridMapEditor() {
 	info_message->set_anchors_and_offsets_preset(PRESET_FULL_RECT, PRESET_MODE_KEEP_SIZE, 8 * EDSCALE);
 	mesh_library_palette->add_child(info_message);
 
-	edit_axis = Vector3::AXIS_Y;
+	edit_axis = Hector3::AXIS_Y;
 	edit_floor[0] = -1;
 	edit_floor[1] = -1;
 	edit_floor[2] = -1;
@@ -1336,12 +1336,12 @@ GridMapEditor::GridMapEditor() {
 	{
 		// Selection mesh create.
 
-		Vector<Vector3> lines;
-		Vector<Vector3> triangles;
-		Vector<Vector3> square[3];
+		Hector<Hector3> lines;
+		Hector<Hector3> triangles;
+		Hector<Hector3> square[3];
 
 		for (int i = 0; i < 6; i++) {
-			Vector3 face_points[4];
+			Hector3 face_points[4];
 
 			for (int j = 0; j < 4; j++) {
 				float v[3];
@@ -1358,30 +1358,30 @@ GridMapEditor::GridMapEditor() {
 				}
 			}
 
-			triangles.push_back(face_points[0] * 0.5 + Vector3(0.5, 0.5, 0.5));
-			triangles.push_back(face_points[1] * 0.5 + Vector3(0.5, 0.5, 0.5));
-			triangles.push_back(face_points[2] * 0.5 + Vector3(0.5, 0.5, 0.5));
+			triangles.push_back(face_points[0] * 0.5 + Hector3(0.5, 0.5, 0.5));
+			triangles.push_back(face_points[1] * 0.5 + Hector3(0.5, 0.5, 0.5));
+			triangles.push_back(face_points[2] * 0.5 + Hector3(0.5, 0.5, 0.5));
 
-			triangles.push_back(face_points[2] * 0.5 + Vector3(0.5, 0.5, 0.5));
-			triangles.push_back(face_points[3] * 0.5 + Vector3(0.5, 0.5, 0.5));
-			triangles.push_back(face_points[0] * 0.5 + Vector3(0.5, 0.5, 0.5));
+			triangles.push_back(face_points[2] * 0.5 + Hector3(0.5, 0.5, 0.5));
+			triangles.push_back(face_points[3] * 0.5 + Hector3(0.5, 0.5, 0.5));
+			triangles.push_back(face_points[0] * 0.5 + Hector3(0.5, 0.5, 0.5));
 		}
 
 		for (int i = 0; i < 12; i++) {
-			AABB base(Vector3(0, 0, 0), Vector3(1, 1, 1));
-			Vector3 a, b;
+			AABB base(Hector3(0, 0, 0), Hector3(1, 1, 1));
+			Hector3 a, b;
 			base.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
 		}
 
 		for (int i = 0; i < 3; i++) {
-			Vector3 points[4];
+			Hector3 points[4];
 			for (int j = 0; j < 4; j++) {
 				static const bool orderx[4] = { false, true, true, false };
 				static const bool ordery[4] = { false, false, true, true };
 
-				Vector3 sp;
+				Hector3 sp;
 				if (orderx[j]) {
 					sp[(i + 1) % 3] = 1.0;
 				}
@@ -1393,7 +1393,7 @@ GridMapEditor::GridMapEditor() {
 			}
 
 			for (int j = 0; j < 4; j++) {
-				Vector3 ofs;
+				Hector3 ofs;
 				ofs[i] += 0.01;
 				square[i].push_back(points[j] - ofs);
 				square[i].push_back(points[(j + 1) % 4] - ofs);

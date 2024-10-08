@@ -23,7 +23,7 @@
 #include "patternprops.h"
 #include "uelement.h"
 #include "util.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "charstr.h"
 #include "ustrfmt.h"
 #include "uassert.h"
@@ -104,7 +104,7 @@ static inline void _dbgdt(UnicodeSet* set) {
 #endif
 
 //----------------------------------------------------------------
-// UnicodeString in UVector support
+// UnicodeString in UHector support
 //----------------------------------------------------------------
 
 static void U_CALLCONV cloneUnicodeString(UElement *dst, UElement *src) {
@@ -1603,13 +1603,13 @@ int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& 
 //----------------------------------------------------------------
 
 /**
- * Allocate our strings vector and return true if successful.
+ * Allocate our strings Hector and return true if successful.
  */
 UBool UnicodeSet::allocateStrings(UErrorCode &status) {
     if (U_FAILURE(status)) {
         return false;
     }
-    strings = new UVector(uprv_deleteUObject,
+    strings = new UHector(uprv_deleteUObject,
                           uhash_compareUnicodeString, 1, status);
     if (strings == nullptr) { // Check for memory allocation error.
         status = U_MEMORY_ALLOCATION_ERROR;

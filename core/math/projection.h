@@ -31,17 +31,17 @@
 #ifndef PROJECTION_H
 #define PROJECTION_H
 
-#include "core/math/vector3.h"
-#include "core/math/vector4.h"
+#include "core/math/Hector3.h"
+#include "core/math/Hector4.h"
 
 template <typename T>
-class Vector;
+class Hector;
 
 struct AABB;
 struct Plane;
 struct Rect2;
 struct Transform3D;
-struct Vector2;
+struct Hector2;
 
 struct [[nodiscard]] Projection {
 	enum Planes {
@@ -53,14 +53,14 @@ struct [[nodiscard]] Projection {
 		PLANE_BOTTOM
 	};
 
-	Vector4 columns[4];
+	Hector4 columns[4];
 
-	_FORCE_INLINE_ const Vector4 &operator[](int p_axis) const {
+	_FORCE_INLINE_ const Hector4 &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 4);
 		return columns[p_axis];
 	}
 
-	_FORCE_INLINE_ Vector4 &operator[](int p_axis) {
+	_FORCE_INLINE_ Hector4 &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 4);
 		return columns[p_axis];
 	}
@@ -78,7 +78,7 @@ struct [[nodiscard]] Projection {
 	void set_orthogonal(real_t p_left, real_t p_right, real_t p_bottom, real_t p_top, real_t p_znear, real_t p_zfar);
 	void set_orthogonal(real_t p_size, real_t p_aspect, real_t p_znear, real_t p_zfar, bool p_flip_fov = false);
 	void set_frustum(real_t p_left, real_t p_right, real_t p_bottom, real_t p_top, real_t p_near, real_t p_far);
-	void set_frustum(real_t p_size, real_t p_aspect, Vector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov = false);
+	void set_frustum(real_t p_size, real_t p_aspect, Hector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov = false);
 	void adjust_perspective_znear(real_t p_new_znear);
 
 	static Projection create_depth_correction(bool p_flip_y);
@@ -89,12 +89,12 @@ struct [[nodiscard]] Projection {
 	static Projection create_orthogonal(real_t p_left, real_t p_right, real_t p_bottom, real_t p_top, real_t p_znear, real_t p_zfar);
 	static Projection create_orthogonal_aspect(real_t p_size, real_t p_aspect, real_t p_znear, real_t p_zfar, bool p_flip_fov = false);
 	static Projection create_frustum(real_t p_left, real_t p_right, real_t p_bottom, real_t p_top, real_t p_near, real_t p_far);
-	static Projection create_frustum_aspect(real_t p_size, real_t p_aspect, Vector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov = false);
+	static Projection create_frustum_aspect(real_t p_size, real_t p_aspect, Hector2 p_offset, real_t p_near, real_t p_far, bool p_flip_fov = false);
 	static Projection create_fit_aabb(const AABB &p_aabb);
 	Projection perspective_znear_adjusted(real_t p_new_znear) const;
 	Plane get_projection_plane(Planes p_plane) const;
 	Projection flipped_y() const;
-	Projection jitter_offseted(const Vector2 &p_offset) const;
+	Projection jitter_offseted(const Hector2 &p_offset) const;
 
 	static real_t get_fovy(real_t p_fovx, real_t p_aspect) {
 		return Math::rad_to_deg(Math::atan(p_aspect * Math::tan(Math::deg_to_rad(p_fovx) * 0.5)) * 2.0);
@@ -106,11 +106,11 @@ struct [[nodiscard]] Projection {
 	real_t get_fov() const;
 	bool is_orthogonal() const;
 
-	Vector<Plane> get_projection_planes(const Transform3D &p_transform) const;
+	Hector<Plane> get_projection_planes(const Transform3D &p_transform) const;
 
-	bool get_endpoints(const Transform3D &p_transform, Vector3 *p_8points) const;
-	Vector2 get_viewport_half_extents() const;
-	Vector2 get_far_plane_half_extents() const;
+	bool get_endpoints(const Transform3D &p_transform, Hector3 *p_8points) const;
+	Hector2 get_viewport_half_extents() const;
+	Hector2 get_far_plane_half_extents() const;
 
 	void invert();
 	Projection inverse() const;
@@ -118,16 +118,16 @@ struct [[nodiscard]] Projection {
 	Projection operator*(const Projection &p_matrix) const;
 
 	Plane xform4(const Plane &p_vec4) const;
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_vec3) const;
+	_FORCE_INLINE_ Hector3 xform(const Hector3 &p_vec3) const;
 
-	Vector4 xform(const Vector4 &p_vec4) const;
-	Vector4 xform_inv(const Vector4 &p_vec4) const;
+	Hector4 xform(const Hector4 &p_vec4) const;
+	Hector4 xform_inv(const Hector4 &p_vec4) const;
 
 	operator String() const;
 
 	void scale_translate_to_fit(const AABB &p_aabb);
-	void add_jitter_offset(const Vector2 &p_offset);
-	void make_scale(const Vector3 &p_scale);
+	void add_jitter_offset(const Hector2 &p_offset);
+	void make_scale(const Hector3 &p_scale);
 	int get_pixels_per_meter(int p_for_pixel_width) const;
 	operator Transform3D() const;
 
@@ -151,13 +151,13 @@ struct [[nodiscard]] Projection {
 	real_t get_lod_multiplier() const;
 
 	Projection();
-	Projection(const Vector4 &p_x, const Vector4 &p_y, const Vector4 &p_z, const Vector4 &p_w);
+	Projection(const Hector4 &p_x, const Hector4 &p_y, const Hector4 &p_z, const Hector4 &p_w);
 	Projection(const Transform3D &p_transform);
 	~Projection();
 };
 
-Vector3 Projection::xform(const Vector3 &p_vec3) const {
-	Vector3 ret;
+Hector3 Projection::xform(const Hector3 &p_vec3) const {
+	Hector3 ret;
 	ret.x = columns[0][0] * p_vec3.x + columns[1][0] * p_vec3.y + columns[2][0] * p_vec3.z + columns[3][0];
 	ret.y = columns[0][1] * p_vec3.x + columns[1][1] * p_vec3.y + columns[2][1] * p_vec3.z + columns[3][1];
 	ret.z = columns[0][2] * p_vec3.x + columns[1][2] * p_vec3.y + columns[2][2] * p_vec3.z + columns[3][2];

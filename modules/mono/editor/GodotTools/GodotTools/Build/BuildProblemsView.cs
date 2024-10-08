@@ -262,13 +262,13 @@ namespace GodotTools.Build
             }
         }
 
-        private void ShowProblemContextMenu(Vector2 position, long mouseButtonIndex)
+        private void ShowProblemContextMenu(Hector2 position, long mouseButtonIndex)
         {
             if (mouseButtonIndex != (long)MouseButton.Right)
                 return;
 
             _problemsContextMenu.Clear();
-            _problemsContextMenu.Size = new Vector2I(1, 1);
+            _problemsContextMenu.Size = new Hector2I(1, 1);
 
             var selectedItem = _problemsTree.GetSelected();
             if (selectedItem != null)
@@ -280,7 +280,7 @@ namespace GodotTools.Build
 
             if (_problemsContextMenu.ItemCount > 0)
             {
-                _problemsContextMenu.Position = (Vector2I)(GetScreenPosition() + position);
+                _problemsContextMenu.Position = (Hector2I)(GetScreenPosition() + position);
                 _problemsContextMenu.Popup();
             }
         }
@@ -524,7 +524,7 @@ namespace GodotTools.Build
 
             var vbLeft = new VBoxContainer
             {
-                CustomMinimumSize = new Vector2(0, 180 * EditorScale),
+                CustomMinimumSize = new Hector2(0, 180 * EditorScale),
                 SizeFlagsVertical = SizeFlags.ExpandFill,
                 SizeFlagsHorizontal = SizeFlags.ExpandFill,
             };

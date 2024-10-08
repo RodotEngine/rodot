@@ -80,10 +80,10 @@ enum StartupStep {
 static SafeNumeric<int> step; // Shared between UI and render threads
 
 static Size2 new_size;
-static Vector3 accelerometer;
-static Vector3 gravity;
-static Vector3 magnetometer;
-static Vector3 gyroscope;
+static Hector3 accelerometer;
+static Hector3 gravity;
+static Hector3 magnetometer;
+static Hector3 gyroscope;
 
 static void _terminate(JNIEnv *env, bool p_restart = false) {
 	if (step.get() == STEP_TERMINATED) {
@@ -320,7 +320,7 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_dispatchMouseEvent(JN
 		return;
 	}
 
-	input_handler->process_mouse_event(p_event_type, p_button_mask, Point2(p_x, p_y), Vector2(p_delta_x, p_delta_y), p_double_click, p_source_mouse_relative, p_pressure, Vector2(p_tilt_x, p_tilt_y));
+	input_handler->process_mouse_event(p_event_type, p_button_mask, Point2(p_x, p_y), Hector2(p_delta_x, p_delta_y), p_double_click, p_source_mouse_relative, p_pressure, Hector2(p_tilt_x, p_tilt_y));
 }
 
 // Called on the UI thread
@@ -329,7 +329,7 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_dispatchTouchEvent(JN
 		return;
 	}
 
-	Vector<AndroidInputHandler::TouchPos> points;
+	Hector<AndroidInputHandler::TouchPos> points;
 	for (int i = 0; i < pointer_count; i++) {
 		jfloat p[6];
 		env->GetFloatArrayRegion(position, i * 6, 6, p);
@@ -337,7 +337,7 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_dispatchTouchEvent(JN
 		tp.id = (int)p[0];
 		tp.pos = Point2(p[1], p[2]);
 		tp.pressure = p[3];
-		tp.tilt = Vector2(p[4], p[5]);
+		tp.tilt = Hector2(p[4], p[5]);
 		points.push_back(tp);
 	}
 
@@ -357,7 +357,7 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_pan(JNIEnv *env, jcla
 	if (step.get() <= STEP_SETUP) {
 		return;
 	}
-	input_handler->process_pan(Point2(p_x, p_y), Vector2(p_delta_x, p_delta_y));
+	input_handler->process_pan(Point2(p_x, p_y), Hector2(p_delta_x, p_delta_y));
 }
 
 // Called on the UI thread
@@ -436,19 +436,19 @@ JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_key(JNIEnv *env, jcla
 }
 
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_accelerometer(JNIEnv *env, jclass clazz, jfloat x, jfloat y, jfloat z) {
-	accelerometer = Vector3(x, y, z);
+	accelerometer = Hector3(x, y, z);
 }
 
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_gravity(JNIEnv *env, jclass clazz, jfloat x, jfloat y, jfloat z) {
-	gravity = Vector3(x, y, z);
+	gravity = Hector3(x, y, z);
 }
 
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_magnetometer(JNIEnv *env, jclass clazz, jfloat x, jfloat y, jfloat z) {
-	magnetometer = Vector3(x, y, z);
+	magnetometer = Hector3(x, y, z);
 }
 
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_gyroscope(JNIEnv *env, jclass clazz, jfloat x, jfloat y, jfloat z) {
-	gyroscope = Vector3(x, y, z);
+	gyroscope = Hector3(x, y, z);
 }
 
 JNIEXPORT void JNICALL Java_org_godotengine_godot_GodotLib_focusin(JNIEnv *env, jclass clazz) {

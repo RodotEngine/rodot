@@ -34,7 +34,7 @@
 #include "godot_physics_server_2d.h"
 #include "godot_space_2d.h"
 
-Vector2 GodotPhysicsDirectBodyState2D::get_total_gravity() const {
+Hector2 GodotPhysicsDirectBodyState2D::get_total_gravity() const {
 	return body->gravity;
 }
 
@@ -46,11 +46,11 @@ real_t GodotPhysicsDirectBodyState2D::get_total_linear_damp() const {
 	return body->total_linear_damp;
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_center_of_mass() const {
+Hector2 GodotPhysicsDirectBodyState2D::get_center_of_mass() const {
 	return body->get_center_of_mass();
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_center_of_mass_local() const {
+Hector2 GodotPhysicsDirectBodyState2D::get_center_of_mass_local() const {
 	return body->get_center_of_mass_local();
 }
 
@@ -62,12 +62,12 @@ real_t GodotPhysicsDirectBodyState2D::get_inverse_inertia() const {
 	return body->get_inv_inertia();
 }
 
-void GodotPhysicsDirectBodyState2D::set_linear_velocity(const Vector2 &p_velocity) {
+void GodotPhysicsDirectBodyState2D::set_linear_velocity(const Hector2 &p_velocity) {
 	body->wakeup();
 	body->set_linear_velocity(p_velocity);
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_linear_velocity() const {
+Hector2 GodotPhysicsDirectBodyState2D::get_linear_velocity() const {
 	return body->get_linear_velocity();
 }
 
@@ -88,16 +88,16 @@ Transform2D GodotPhysicsDirectBodyState2D::get_transform() const {
 	return body->get_transform();
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_velocity_at_local_position(const Vector2 &p_position) const {
+Hector2 GodotPhysicsDirectBodyState2D::get_velocity_at_local_position(const Hector2 &p_position) const {
 	return body->get_velocity_in_local_point(p_position);
 }
 
-void GodotPhysicsDirectBodyState2D::apply_central_impulse(const Vector2 &p_impulse) {
+void GodotPhysicsDirectBodyState2D::apply_central_impulse(const Hector2 &p_impulse) {
 	body->wakeup();
 	body->apply_central_impulse(p_impulse);
 }
 
-void GodotPhysicsDirectBodyState2D::apply_impulse(const Vector2 &p_impulse, const Vector2 &p_position) {
+void GodotPhysicsDirectBodyState2D::apply_impulse(const Hector2 &p_impulse, const Hector2 &p_position) {
 	body->wakeup();
 	body->apply_impulse(p_impulse, p_position);
 }
@@ -107,12 +107,12 @@ void GodotPhysicsDirectBodyState2D::apply_torque_impulse(real_t p_torque) {
 	body->apply_torque_impulse(p_torque);
 }
 
-void GodotPhysicsDirectBodyState2D::apply_central_force(const Vector2 &p_force) {
+void GodotPhysicsDirectBodyState2D::apply_central_force(const Hector2 &p_force) {
 	body->wakeup();
 	body->apply_central_force(p_force);
 }
 
-void GodotPhysicsDirectBodyState2D::apply_force(const Vector2 &p_force, const Vector2 &p_position) {
+void GodotPhysicsDirectBodyState2D::apply_force(const Hector2 &p_force, const Hector2 &p_position) {
 	body->wakeup();
 	body->apply_force(p_force, p_position);
 }
@@ -122,12 +122,12 @@ void GodotPhysicsDirectBodyState2D::apply_torque(real_t p_torque) {
 	body->apply_torque(p_torque);
 }
 
-void GodotPhysicsDirectBodyState2D::add_constant_central_force(const Vector2 &p_force) {
+void GodotPhysicsDirectBodyState2D::add_constant_central_force(const Hector2 &p_force) {
 	body->wakeup();
 	body->add_constant_central_force(p_force);
 }
 
-void GodotPhysicsDirectBodyState2D::add_constant_force(const Vector2 &p_force, const Vector2 &p_position) {
+void GodotPhysicsDirectBodyState2D::add_constant_force(const Hector2 &p_force, const Hector2 &p_position) {
 	body->wakeup();
 	body->add_constant_force(p_force, p_position);
 }
@@ -137,14 +137,14 @@ void GodotPhysicsDirectBodyState2D::add_constant_torque(real_t p_torque) {
 	body->add_constant_torque(p_torque);
 }
 
-void GodotPhysicsDirectBodyState2D::set_constant_force(const Vector2 &p_force) {
+void GodotPhysicsDirectBodyState2D::set_constant_force(const Hector2 &p_force) {
 	if (!p_force.is_zero_approx()) {
 		body->wakeup();
 	}
 	body->set_constant_force(p_force);
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_constant_force() const {
+Hector2 GodotPhysicsDirectBodyState2D::get_constant_force() const {
 	return body->get_constant_force();
 }
 
@@ -171,13 +171,13 @@ int GodotPhysicsDirectBodyState2D::get_contact_count() const {
 	return body->contact_count;
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_contact_local_position(int p_contact_idx) const {
-	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Vector2());
+Hector2 GodotPhysicsDirectBodyState2D::get_contact_local_position(int p_contact_idx) const {
+	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Hector2());
 	return body->contacts[p_contact_idx].local_pos;
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_contact_local_normal(int p_contact_idx) const {
-	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Vector2());
+Hector2 GodotPhysicsDirectBodyState2D::get_contact_local_normal(int p_contact_idx) const {
+	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Hector2());
 	return body->contacts[p_contact_idx].local_normal;
 }
 
@@ -186,8 +186,8 @@ int GodotPhysicsDirectBodyState2D::get_contact_local_shape(int p_contact_idx) co
 	return body->contacts[p_contact_idx].local_shape;
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_contact_local_velocity_at_position(int p_contact_idx) const {
-	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Vector2());
+Hector2 GodotPhysicsDirectBodyState2D::get_contact_local_velocity_at_position(int p_contact_idx) const {
+	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Hector2());
 	return body->contacts[p_contact_idx].local_velocity_at_pos;
 }
 
@@ -195,8 +195,8 @@ RID GodotPhysicsDirectBodyState2D::get_contact_collider(int p_contact_idx) const
 	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, RID());
 	return body->contacts[p_contact_idx].collider;
 }
-Vector2 GodotPhysicsDirectBodyState2D::get_contact_collider_position(int p_contact_idx) const {
-	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Vector2());
+Hector2 GodotPhysicsDirectBodyState2D::get_contact_collider_position(int p_contact_idx) const {
+	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Hector2());
 	return body->contacts[p_contact_idx].collider_pos;
 }
 
@@ -210,13 +210,13 @@ int GodotPhysicsDirectBodyState2D::get_contact_collider_shape(int p_contact_idx)
 	return body->contacts[p_contact_idx].collider_shape;
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_contact_collider_velocity_at_position(int p_contact_idx) const {
-	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Vector2());
+Hector2 GodotPhysicsDirectBodyState2D::get_contact_collider_velocity_at_position(int p_contact_idx) const {
+	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Hector2());
 	return body->contacts[p_contact_idx].collider_velocity_at_pos;
 }
 
-Vector2 GodotPhysicsDirectBodyState2D::get_contact_impulse(int p_contact_idx) const {
-	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Vector2());
+Hector2 GodotPhysicsDirectBodyState2D::get_contact_impulse(int p_contact_idx) const {
+	ERR_FAIL_INDEX_V(p_contact_idx, body->contact_count, Hector2());
 	return body->contacts[p_contact_idx].impulse;
 }
 

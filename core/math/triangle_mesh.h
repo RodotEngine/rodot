@@ -39,18 +39,18 @@ class TriangleMesh : public RefCounted {
 
 public:
 	struct Triangle {
-		Vector3 normal;
+		Hector3 normal;
 		int indices[3];
 		int32_t surface_index;
 	};
 
 private:
-	Vector<Triangle> triangles;
-	Vector<Vector3> vertices;
+	Hector<Triangle> triangles;
+	Hector<Hector3> vertices;
 
 	struct BVH {
 		AABB aabb;
-		Vector3 center; //used for sorting
+		Hector3 center; //used for sorting
 		int left;
 		int right;
 
@@ -76,22 +76,22 @@ private:
 
 	int _create_bvh(BVH *p_bvh, BVH **p_bb, int p_from, int p_size, int p_depth, int &max_depth, int &max_alloc);
 
-	Vector<BVH> bvh;
+	Hector<BVH> bvh;
 	int max_depth;
 	bool valid;
 
 public:
 	bool is_valid() const;
-	bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_point, Vector3 &r_normal, int32_t *r_surf_index = nullptr) const;
-	bool intersect_ray(const Vector3 &p_begin, const Vector3 &p_dir, Vector3 &r_point, Vector3 &r_normal, int32_t *r_surf_index = nullptr) const;
-	bool inside_convex_shape(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count, Vector3 p_scale = Vector3(1, 1, 1)) const;
-	Vector<Face3> get_faces() const;
+	bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_point, Hector3 &r_normal, int32_t *r_surf_index = nullptr) const;
+	bool intersect_ray(const Hector3 &p_begin, const Hector3 &p_dir, Hector3 &r_point, Hector3 &r_normal, int32_t *r_surf_index = nullptr) const;
+	bool inside_convex_shape(const Plane *p_planes, int p_plane_count, const Hector3 *p_points, int p_point_count, Hector3 p_scale = Hector3(1, 1, 1)) const;
+	Hector<Face3> get_faces() const;
 
-	const Vector<Triangle> &get_triangles() const { return triangles; }
-	const Vector<Vector3> &get_vertices() const { return vertices; }
-	void get_indices(Vector<int> *r_triangles_indices) const;
+	const Hector<Triangle> &get_triangles() const { return triangles; }
+	const Hector<Hector3> &get_vertices() const { return vertices; }
+	void get_indices(Hector<int> *r_triangles_indices) const;
 
-	void create(const Vector<Vector3> &p_faces, const Vector<int32_t> &p_surface_indices = Vector<int32_t>());
+	void create(const Hector<Hector3> &p_faces, const Hector<int32_t> &p_surface_indices = Hector<int32_t>());
 	TriangleMesh();
 };
 

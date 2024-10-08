@@ -25,13 +25,13 @@ global_shader_uniforms;
 
 #define ATTRACTOR_TYPE_SPHERE 0
 #define ATTRACTOR_TYPE_BOX 1
-#define ATTRACTOR_TYPE_VECTOR_FIELD 2
+#define ATTRACTOR_TYPE_HECTOR_FIELD 2
 
 struct Attractor {
 	mat4 transform;
 	vec3 extents; //exents or radius
 	uint type;
-	uint texture_index; //texture index for vector field
+	uint texture_index; //texture index for Hector field
 	float strength;
 	float attenuation;
 	float directionality;
@@ -50,7 +50,7 @@ struct Collider {
 	vec3 extents; //exents or radius
 	uint type;
 
-	uint texture_index; //texture index for vector field
+	uint texture_index; //texture index for Hector field
 	float scale;
 	uint pad[2];
 };
@@ -475,7 +475,7 @@ void main() {
 					amount = max(0.0, 1.0 - d);
 
 				} break;
-				case ATTRACTOR_TYPE_VECTOR_FIELD: {
+				case ATTRACTOR_TYPE_HECTOR_FIELD: {
 					vec3 uvw_pos = (local_pos / FRAME.attractors[i].extents + 1.0) * 0.5;
 					if (any(lessThan(uvw_pos, vec3(0.0))) || any(greaterThan(uvw_pos, vec3(1.0)))) {
 						continue;

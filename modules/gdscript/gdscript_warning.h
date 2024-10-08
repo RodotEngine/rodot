@@ -35,7 +35,7 @@
 
 #include "core/object/object.h"
 #include "core/string/ustring.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 class GDScriptWarning {
 public:
@@ -157,7 +157,7 @@ public:
 	Code code = WARNING_MAX;
 	int start_line = -1, end_line = -1;
 	int leftmost_column = -1, rightmost_column = -1;
-	Vector<String> symbols;
+	Hector<String> symbols;
 
 	String get_name() const;
 	String get_message() const;

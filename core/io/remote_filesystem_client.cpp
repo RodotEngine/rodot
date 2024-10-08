@@ -42,24 +42,24 @@
 #define FILES_SUBFOLDER "remote_filesystem_files"
 #define FILES_CACHE_FILE "remote_filesystem.cache"
 
-Vector<RemoteFilesystemClient::FileCache> RemoteFilesystemClient::_load_cache_file() {
+Hector<RemoteFilesystemClient::FileCache> RemoteFilesystemClient::_load_cache_file() {
 	Ref<FileAccess> fa = FileAccess::open(cache_path.path_join(FILES_CACHE_FILE), FileAccess::READ);
 	if (!fa.is_valid()) {
-		return Vector<FileCache>(); // No cache, return empty
+		return Hector<FileCache>(); // No cache, return empty
 	}
 
 	int version = fa->get_line().to_int();
 	if (version != FILESYSTEM_CACHE_VERSION) {
-		return Vector<FileCache>(); // Version mismatch, ignore everything.
+		return Hector<FileCache>(); // Version mismatch, ignore everything.
 	}
 
 	String file_path = cache_path.path_join(FILES_SUBFOLDER);
 
-	Vector<FileCache> file_cache;
+	Hector<FileCache> file_cache;
 
 	while (!fa->eof_reached()) {
 		String l = fa->get_line();
-		Vector<String> fields = l.split("::");
+		Hector<String> fields = l.split("::");
 		if (fields.size() != 3) {
 			break;
 		}
@@ -84,7 +84,7 @@ Vector<RemoteFilesystemClient::FileCache> RemoteFilesystemClient::_load_cache_fi
 	return file_cache;
 }
 
-Error RemoteFilesystemClient::_store_file(const String &p_path, const LocalVector<uint8_t> &p_file, uint64_t &modified_time) {
+Error RemoteFilesystemClient::_store_file(const String &p_path, const LocalHector<uint8_t> &p_file, uint64_t &modified_time) {
 	modified_time = 0;
 	String full_path = cache_path.path_join(FILES_SUBFOLDER).path_join(p_path);
 	String base_file_dir = full_path.get_base_dir();
@@ -111,7 +111,7 @@ Error RemoteFilesystemClient::_store_file(const String &p_path, const LocalVecto
 Error RemoteFilesystemClient::_remove_file(const String &p_path) {
 	return DirAccess::remove_absolute(cache_path.path_join(FILES_SUBFOLDER).path_join(p_path));
 }
-Error RemoteFilesystemClient::_store_cache_file(const Vector<FileCache> &p_cache) {
+Error RemoteFilesystemClient::_store_cache_file(const Hector<FileCache> &p_cache) {
 	String full_path = cache_path.path_join(FILES_CACHE_FILE);
 	String base_file_dir = full_path.get_base_dir();
 	Error err = DirAccess::make_dir_recursive_absolute(base_file_dir);
@@ -187,7 +187,7 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	}
 	tcp_client->put_data(password, PASSWORD_LENGTH);
 	print_verbose("Remote Filesystem: Tags.");
-	Vector<String> tags;
+	Hector<String> tags;
 	{
 		tags.push_back(OS::get_singleton()->get_identifier());
 		switch (OS::get_singleton()->get_preferred_texture_format()) {
@@ -209,10 +209,10 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	// Size of compressed list of files
 	print_verbose("Remote Filesystem: Sending file list");
 
-	Vector<FileCache> file_cache = _load_cache_file();
+	Hector<FileCache> file_cache = _load_cache_file();
 
 	// Encode file cache to send it via network.
-	Vector<uint8_t> file_cache_buffer;
+	Hector<uint8_t> file_cache_buffer;
 	if (file_cache.size()) {
 		StringBuilder sbuild;
 		for (int i = 0; i < file_cache.size(); i++) {
@@ -241,9 +241,9 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 
 	ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, ERR_CONNECTION_ERROR, "Remote filesystem server disconnected while waiting for file list");
 
-	LocalVector<uint8_t> file_buffer;
+	LocalHector<uint8_t> file_buffer;
 
-	Vector<FileCache> temp_file_cache;
+	Hector<FileCache> temp_file_cache;
 
 	HashSet<String> files_processed;
 	for (uint32_t i = 0; i < file_count; i++) {
@@ -260,7 +260,7 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 		files_processed.insert(file);
 	}
 
-	Vector<FileCache> new_file_cache;
+	Hector<FileCache> new_file_cache;
 
 	// Get the actual files. As a robustness measure, if the connection is interrupted here, any file not yet received will be considered removed.
 	// Since the file changed anyway, this makes it the easiest way to keep robustness.

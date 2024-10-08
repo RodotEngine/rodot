@@ -90,18 +90,18 @@ void VisibleOnScreenNotifier3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p
 	p_id = p_id % 3;
 
 	AABB aabb = notifier->get_aabb();
-	Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	Vector3 ray_dir = p_camera->project_ray_normal(p_point);
+	Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	Hector3 ray_dir = p_camera->project_ray_normal(p_point);
 
-	Vector3 sg[2] = { gi.xform(ray_from), gi.xform(ray_from + ray_dir * 4096) };
+	Hector3 sg[2] = { gi.xform(ray_from), gi.xform(ray_from + ray_dir * 4096) };
 
-	Vector3 ofs = aabb.get_center();
+	Hector3 ofs = aabb.get_center();
 
-	Vector3 axis;
+	Hector3 axis;
 	axis[p_id] = 1.0;
 
 	if (move) {
-		Vector3 ra, rb;
+		Hector3 ra, rb;
 		Geometry3D::get_closest_points_between_segments(ofs - axis * 4096, ofs + axis * 4096, sg[0], sg[1], ra, rb);
 
 		float d = ra[p_id];
@@ -113,7 +113,7 @@ void VisibleOnScreenNotifier3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p
 		notifier->set_aabb(aabb);
 
 	} else {
-		Vector3 ra, rb;
+		Hector3 ra, rb;
 		Geometry3D::get_closest_points_between_segments(ofs, ofs + axis * 4096, sg[0], sg[1], ra, rb);
 
 		float d = ra[p_id] - ofs[p_id];
@@ -151,29 +151,29 @@ void VisibleOnScreenNotifier3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 	AABB aabb = notifier->get_aabb();
 
 	for (int i = 0; i < 12; i++) {
-		Vector3 a, b;
+		Hector3 a, b;
 		aabb.get_edge(i, a, b);
 		lines.push_back(a);
 		lines.push_back(b);
 	}
 
-	Vector<Vector3> handles;
+	Hector<Hector3> handles;
 
 	for (int i = 0; i < 3; i++) {
-		Vector3 ax;
+		Hector3 ax;
 		ax[i] = aabb.position[i] + aabb.size[i];
 		ax[(i + 1) % 3] = aabb.position[(i + 1) % 3] + aabb.size[(i + 1) % 3] * 0.5;
 		ax[(i + 2) % 3] = aabb.position[(i + 2) % 3] + aabb.size[(i + 2) % 3] * 0.5;
 		handles.push_back(ax);
 	}
 
-	Vector3 center = aabb.get_center();
+	Hector3 center = aabb.get_center();
 	for (int i = 0; i < 3; i++) {
-		Vector3 ax;
+		Hector3 ax;
 		ax[i] = 1.0;
 		handles.push_back(center + ax);
 		lines.push_back(center);

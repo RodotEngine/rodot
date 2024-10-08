@@ -546,7 +546,7 @@ struct parsed_values_t
   const VAL &operator [] (unsigned int i) const { return values[i]; }
 
   unsigned int       opStart;
-  hb_vector_t<VAL>   values;
+  hb_Hector_t<VAL>   values;
 };
 
 template <typename ARG=number_t>

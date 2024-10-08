@@ -105,7 +105,7 @@ private:
 	Ref<TLSOptions> tls_options;
 
 	// Packet buffers.
-	Vector<uint8_t> packet_buffer;
+	Hector<uint8_t> packet_buffer;
 	// Our packet info is just a boolean (is_string), using uint8_t for it.
 	PacketBuffer<uint8_t> in_buffer;
 

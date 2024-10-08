@@ -140,7 +140,7 @@ public:
 	virtual int get_height() const;
 	virtual int get_depth() const;
 	virtual bool has_mipmaps() const;
-	virtual Vector<Ref<Image>> get_data() const;
+	virtual Hector<Ref<Image>> get_data() const;
 	virtual Ref<Resource> create_placeholder() const;
 };
 

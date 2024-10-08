@@ -36,7 +36,7 @@
 #include "core/error/error_macros.h"
 #include "core/string/print_string.h"
 #include "core/string/ustring.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 namespace GDScriptTests {
 
@@ -108,12 +108,12 @@ public:
 
 	GDScriptTest(const String &p_source_path, const String &p_output_path, const String &p_base_dir);
 	GDScriptTest() :
-			GDScriptTest(String(), String(), String()) {} // Needed to use in Vector.
+			GDScriptTest(String(), String(), String()) {} // Needed to use in Hector.
 };
 
 class GDScriptTestRunner {
 	String source_dir;
-	Vector<GDScriptTest> tests;
+	Hector<GDScriptTest> tests;
 
 	bool is_generating = false;
 	bool do_init_languages = false;

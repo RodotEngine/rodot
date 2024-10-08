@@ -163,13 +163,13 @@ Basis TransformInterpolator::_basis_slerp_unchecked(Basis p_from, Basis p_to, re
 
 void TransformInterpolator::interpolate_basis_scaled_slerp(Basis p_prev, Basis p_curr, Basis &r_result, real_t p_fraction) {
 	// Normalize both and find lengths.
-	Vector3 lengths_prev = _basis_orthonormalize(p_prev);
-	Vector3 lengths_curr = _basis_orthonormalize(p_curr);
+	Hector3 lengths_prev = _basis_orthonormalize(p_prev);
+	Hector3 lengths_curr = _basis_orthonormalize(p_curr);
 
 	r_result = _basis_slerp_unchecked(p_prev, p_curr, p_fraction);
 
 	// Now the result is unit length basis, we need to scale.
-	Vector3 lengths_lerped = lengths_prev + ((lengths_curr - lengths_prev) * p_fraction);
+	Hector3 lengths_lerped = lengths_prev + ((lengths_curr - lengths_prev) * p_fraction);
 
 	// Keep a note that the column / row order of the basis is weird,
 	// so keep an eye for bugs with this.
@@ -186,7 +186,7 @@ void TransformInterpolator::interpolate_basis_linear(const Basis &p_prev, const 
 	// This is kind of silly, as we should probably fix the bugs elsewhere in Godot that can't deal with
 	// zero scale, but until that time...
 	for (int n = 0; n < 3; n++) {
-		Vector3 &axis = r_result[n];
+		Hector3 &axis = r_result[n];
 
 		// Not ok, this could cause errors due to bugs elsewhere,
 		// so we will bodge set this to a small value.
@@ -202,7 +202,7 @@ void TransformInterpolator::interpolate_basis_linear(const Basis &p_prev, const 
 }
 
 // Returns length.
-real_t TransformInterpolator::_vec3_normalize(Vector3 &p_vec) {
+real_t TransformInterpolator::_vec3_normalize(Hector3 &p_vec) {
 	real_t lengthsq = p_vec.length_squared();
 	if (lengthsq == 0.0f) {
 		p_vec.x = p_vec.y = p_vec.z = 0.0f;
@@ -216,14 +216,14 @@ real_t TransformInterpolator::_vec3_normalize(Vector3 &p_vec) {
 }
 
 // Returns lengths.
-Vector3 TransformInterpolator::_basis_orthonormalize(Basis &r_basis) {
+Hector3 TransformInterpolator::_basis_orthonormalize(Basis &r_basis) {
 	// Gram-Schmidt Process.
 
-	Vector3 x = r_basis.get_column(0);
-	Vector3 y = r_basis.get_column(1);
-	Vector3 z = r_basis.get_column(2);
+	Hector3 x = r_basis.get_column(0);
+	Hector3 y = r_basis.get_column(1);
+	Hector3 z = r_basis.get_column(2);
 
-	Vector3 lengths;
+	Hector3 lengths;
 
 	lengths.x = _vec3_normalize(x);
 	y = (y - x * (x.dot(y)));
@@ -240,12 +240,12 @@ Vector3 TransformInterpolator::_basis_orthonormalize(Basis &r_basis) {
 
 TransformInterpolator::Method TransformInterpolator::_test_basis(Basis p_basis, bool r_needed_normalize, Quaternion &r_quat) {
 	// Axis lengths.
-	Vector3 al = Vector3(p_basis.get_column(0).length_squared(),
+	Hector3 al = Hector3(p_basis.get_column(0).length_squared(),
 			p_basis.get_column(1).length_squared(),
 			p_basis.get_column(2).length_squared());
 
 	// Non unit scale?
-	if (r_needed_normalize || !_vec3_is_equal_approx(al, Vector3(1.0, 1.0, 1.0), (real_t)0.001f)) {
+	if (r_needed_normalize || !_vec3_is_equal_approx(al, Hector3(1.0, 1.0, 1.0), (real_t)0.001f)) {
 		// If the basis is not normalized (at least approximately), it will fail the checks needed for slerp.
 		// So we try to detect a scaled (but not sheared) basis, which we *can* slerp by normalizing first,
 		// and lerping the scales separately.
@@ -308,7 +308,7 @@ TransformInterpolator::Method TransformInterpolator::_test_basis(Basis p_basis, 
 
 // This check doesn't seem to be needed but is preserved in case of bugs.
 bool TransformInterpolator::_basis_is_orthogonal_any_scale(const Basis &p_basis) {
-	Vector3 cross = p_basis.get_column(0).cross(p_basis.get_column(1));
+	Hector3 cross = p_basis.get_column(0).cross(p_basis.get_column(1));
 	real_t l = _vec3_normalize(cross);
 	// Too small numbers, revert to lerp.
 	if (l < 0.001f) {

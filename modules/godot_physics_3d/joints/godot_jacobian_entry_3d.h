@@ -59,11 +59,11 @@ public:
 	GodotJacobianEntry3D(
 			const Basis &world2A,
 			const Basis &world2B,
-			const Vector3 &rel_pos1, const Vector3 &rel_pos2,
-			const Vector3 &jointAxis,
-			const Vector3 &inertiaInvA,
+			const Hector3 &rel_pos1, const Hector3 &rel_pos2,
+			const Hector3 &jointAxis,
+			const Hector3 &inertiaInvA,
 			const real_t massInvA,
-			const Vector3 &inertiaInvB,
+			const Hector3 &inertiaInvB,
 			const real_t massInvB) :
 			m_linearJointAxis(jointAxis) {
 		m_aJ = world2A.xform(rel_pos1.cross(m_linearJointAxis));
@@ -76,12 +76,12 @@ public:
 	}
 
 	//angular constraint between two different rigidbodies
-	GodotJacobianEntry3D(const Vector3 &jointAxis,
+	GodotJacobianEntry3D(const Hector3 &jointAxis,
 			const Basis &world2A,
 			const Basis &world2B,
-			const Vector3 &inertiaInvA,
-			const Vector3 &inertiaInvB) :
-			m_linearJointAxis(Vector3(real_t(0.), real_t(0.), real_t(0.))) {
+			const Hector3 &inertiaInvA,
+			const Hector3 &inertiaInvB) :
+			m_linearJointAxis(Hector3(real_t(0.), real_t(0.), real_t(0.))) {
 		m_aJ = world2A.xform(jointAxis);
 		m_bJ = world2B.xform(-jointAxis);
 		m_0MinvJt = inertiaInvA * m_aJ;
@@ -92,11 +92,11 @@ public:
 	}
 
 	//angular constraint between two different rigidbodies
-	GodotJacobianEntry3D(const Vector3 &axisInA,
-			const Vector3 &axisInB,
-			const Vector3 &inertiaInvA,
-			const Vector3 &inertiaInvB) :
-			m_linearJointAxis(Vector3(real_t(0.), real_t(0.), real_t(0.))),
+	GodotJacobianEntry3D(const Hector3 &axisInA,
+			const Hector3 &axisInB,
+			const Hector3 &inertiaInvA,
+			const Hector3 &inertiaInvB) :
+			m_linearJointAxis(Hector3(real_t(0.), real_t(0.), real_t(0.))),
 			m_aJ(axisInA),
 			m_bJ(-axisInB) {
 		m_0MinvJt = inertiaInvA * m_aJ;
@@ -109,15 +109,15 @@ public:
 	//constraint on one rigidbody
 	GodotJacobianEntry3D(
 			const Basis &world2A,
-			const Vector3 &rel_pos1, const Vector3 &rel_pos2,
-			const Vector3 &jointAxis,
-			const Vector3 &inertiaInvA,
+			const Hector3 &rel_pos1, const Hector3 &rel_pos2,
+			const Hector3 &jointAxis,
+			const Hector3 &inertiaInvA,
 			const real_t massInvA) :
 			m_linearJointAxis(jointAxis) {
 		m_aJ = world2A.xform(rel_pos1.cross(jointAxis));
 		m_bJ = world2A.xform(rel_pos2.cross(-jointAxis));
 		m_0MinvJt = inertiaInvA * m_aJ;
-		m_1MinvJt = Vector3(real_t(0.), real_t(0.), real_t(0.));
+		m_1MinvJt = Hector3(real_t(0.), real_t(0.), real_t(0.));
 		m_Adiag = massInvA + m_0MinvJt.dot(m_aJ);
 
 		ERR_FAIL_COND(m_Adiag <= real_t(0.0));
@@ -136,19 +136,19 @@ public:
 	// for two constraints on sharing two same rigidbodies (for example two contact points between two rigidbodies)
 	real_t getNonDiagonal(const GodotJacobianEntry3D &jacB, const real_t massInvA, const real_t massInvB) const {
 		const GodotJacobianEntry3D &jacA = *this;
-		Vector3 lin = jacA.m_linearJointAxis * jacB.m_linearJointAxis;
-		Vector3 ang0 = jacA.m_0MinvJt * jacB.m_aJ;
-		Vector3 ang1 = jacA.m_1MinvJt * jacB.m_bJ;
-		Vector3 lin0 = massInvA * lin;
-		Vector3 lin1 = massInvB * lin;
-		Vector3 sum = ang0 + ang1 + lin0 + lin1;
+		Hector3 lin = jacA.m_linearJointAxis * jacB.m_linearJointAxis;
+		Hector3 ang0 = jacA.m_0MinvJt * jacB.m_aJ;
+		Hector3 ang1 = jacA.m_1MinvJt * jacB.m_bJ;
+		Hector3 lin0 = massInvA * lin;
+		Hector3 lin1 = massInvB * lin;
+		Hector3 sum = ang0 + ang1 + lin0 + lin1;
 		return sum[0] + sum[1] + sum[2];
 	}
 
-	real_t getRelativeVelocity(const Vector3 &linvelA, const Vector3 &angvelA, const Vector3 &linvelB, const Vector3 &angvelB) {
-		Vector3 linrel = linvelA - linvelB;
-		Vector3 angvela = angvelA * m_aJ;
-		Vector3 angvelb = angvelB * m_bJ;
+	real_t getRelativeVelocity(const Hector3 &linvelA, const Hector3 &angvelA, const Hector3 &linvelB, const Hector3 &angvelB) {
+		Hector3 linrel = linvelA - linvelB;
+		Hector3 angvela = angvelA * m_aJ;
+		Hector3 angvelb = angvelB * m_bJ;
 		linrel *= m_linearJointAxis;
 		angvela += angvelb;
 		angvela += linrel;
@@ -157,12 +157,12 @@ public:
 	}
 	//private:
 
-	Vector3 m_linearJointAxis;
-	Vector3 m_aJ;
-	Vector3 m_bJ;
-	Vector3 m_0MinvJt;
-	Vector3 m_1MinvJt;
-	//Optimization: can be stored in the w/last component of one of the vectors
+	Hector3 m_linearJointAxis;
+	Hector3 m_aJ;
+	Hector3 m_bJ;
+	Hector3 m_0MinvJt;
+	Hector3 m_1MinvJt;
+	//Optimization: can be stored in the w/last component of one of the Hectors
 	real_t m_Adiag = 1.0;
 };
 

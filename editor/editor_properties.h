@@ -110,7 +110,7 @@ class EditorPropertyTextEnum : public EditorProperty {
 	Button *accept_button = nullptr;
 	Button *cancel_button = nullptr;
 
-	Vector<String> options;
+	Hector<String> options;
 	bool string_name = false;
 	bool loose_mode = false;
 
@@ -127,14 +127,14 @@ protected:
 	void _notification(int p_what);
 
 public:
-	void setup(const Vector<String> &p_options, bool p_string_name = false, bool p_loose_mode = false);
+	void setup(const Hector<String> &p_options, bool p_string_name = false, bool p_loose_mode = false);
 	virtual void update_property() override;
 	EditorPropertyTextEnum();
 };
 
 class EditorPropertyPath : public EditorProperty {
 	GDCLASS(EditorPropertyPath, EditorProperty);
-	Vector<String> extensions;
+	Hector<String> extensions;
 	bool folder = false;
 	bool global = false;
 	bool save_mode = false;
@@ -153,7 +153,7 @@ protected:
 	void _notification(int p_what);
 
 public:
-	void setup(const Vector<String> &p_extensions, bool p_folder, bool p_global);
+	void setup(const Hector<String> &p_extensions, bool p_folder, bool p_global);
 	void set_save_mode();
 	virtual void update_property() override;
 	EditorPropertyPath();
@@ -222,7 +222,7 @@ protected:
 	virtual void _set_read_only(bool p_read_only) override;
 
 public:
-	void setup(const Vector<String> &p_options);
+	void setup(const Hector<String> &p_options);
 	virtual void update_property() override;
 	void set_option_button_clip(bool p_enable);
 	EditorPropertyEnum();
@@ -231,8 +231,8 @@ public:
 class EditorPropertyFlags : public EditorProperty {
 	GDCLASS(EditorPropertyFlags, EditorProperty);
 	VBoxContainer *vbox = nullptr;
-	Vector<CheckBox *> flags;
-	Vector<uint32_t> flag_values;
+	Hector<CheckBox *> flags;
+	Hector<uint32_t> flag_values;
 
 	void _flag_toggled(int p_index);
 
@@ -240,7 +240,7 @@ protected:
 	virtual void _set_read_only(bool p_read_only) override;
 
 public:
-	void setup(const Vector<String> &p_options);
+	void setup(const Hector<String> &p_options);
 	virtual void update_property() override;
 	EditorPropertyFlags();
 };
@@ -251,7 +251,7 @@ class EditorPropertyLayersGrid : public Control {
 	GDCLASS(EditorPropertyLayersGrid, Control);
 
 private:
-	Vector<Rect2> flag_rects;
+	Hector<Rect2> flag_rects;
 	Rect2 expand_rect;
 	bool expand_hovered = false;
 	bool expanded = false;
@@ -265,7 +265,7 @@ private:
 
 	void _rename_pressed(int p_menu);
 	void _rename_operation_confirm();
-	void _update_hovered(const Vector2 &p_position);
+	void _update_hovered(const Hector2 &p_position);
 	void _on_hover_exit();
 	void _update_flag(bool p_replace);
 	Size2 get_grid_size() const;
@@ -278,8 +278,8 @@ public:
 	uint32_t value = 0;
 	int layer_group_size = 0;
 	uint32_t layer_count = 0;
-	Vector<String> names;
-	Vector<String> tooltips;
+	Hector<String> names;
+	Hector<String> tooltips;
 
 	void set_read_only(bool p_read_only);
 	virtual Size2 get_minimum_size() const override;
@@ -491,7 +491,7 @@ class EditorPropertyQuaternion : public EditorProperty {
 	EditorSpinSlider *euler[3];
 	Button *edit_button = nullptr;
 
-	Vector3 edit_euler;
+	Hector3 edit_euler;
 
 	void _value_changed(double p_val, const String &p_name);
 	void _edit_custom_value();
@@ -627,7 +627,7 @@ class EditorPropertyNodePath : public EditorProperty {
 	bool use_path_from_scene_root = false;
 	bool editing_node = false;
 
-	Vector<StringName> valid_types;
+	Hector<StringName> valid_types;
 	void _node_selected(const NodePath &p_path);
 	void _node_assign();
 	Node *get_base_node();
@@ -649,7 +649,7 @@ protected:
 
 public:
 	virtual void update_property() override;
-	void setup(const Vector<StringName> &p_valid_types, bool p_use_path_from_scene_root = true, bool p_editing_node = false);
+	void setup(const Hector<StringName> &p_valid_types, bool p_use_path_from_scene_root = true, bool p_editing_node = false);
 	EditorPropertyNodePath();
 };
 

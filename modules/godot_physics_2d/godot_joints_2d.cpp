@@ -63,7 +63,7 @@ void GodotJoint2D::copy_settings_from(GodotJoint2D *p_joint) {
 	disable_collisions_between_bodies(p_joint->is_disabled_collisions_between_bodies());
 }
 
-static inline real_t k_scalar(GodotBody2D *a, GodotBody2D *b, const Vector2 &rA, const Vector2 &rB, const Vector2 &n) {
+static inline real_t k_scalar(GodotBody2D *a, GodotBody2D *b, const Hector2 &rA, const Hector2 &rB, const Hector2 &n) {
 	real_t value = 0.0;
 
 	{
@@ -81,9 +81,9 @@ static inline real_t k_scalar(GodotBody2D *a, GodotBody2D *b, const Vector2 &rA,
 	return value;
 }
 
-static inline Vector2
-relative_velocity(GodotBody2D *a, GodotBody2D *b, Vector2 rA, Vector2 rB) {
-	Vector2 sum = a->get_linear_velocity() - (rA - a->get_center_of_mass()).orthogonal() * a->get_angular_velocity();
+static inline Hector2
+relative_velocity(GodotBody2D *a, GodotBody2D *b, Hector2 rA, Hector2 rB) {
+	Hector2 sum = a->get_linear_velocity() - (rA - a->get_center_of_mass()).orthogonal() * a->get_angular_velocity();
 	if (b) {
 		return (b->get_linear_velocity() - (rB - b->get_center_of_mass()).orthogonal() * b->get_angular_velocity()) - sum;
 	} else {
@@ -92,7 +92,7 @@ relative_velocity(GodotBody2D *a, GodotBody2D *b, Vector2 rA, Vector2 rB) {
 }
 
 static inline real_t
-normal_relative_velocity(GodotBody2D *a, GodotBody2D *b, Vector2 rA, Vector2 rB, Vector2 n) {
+normal_relative_velocity(GodotBody2D *a, GodotBody2D *b, Hector2 rA, Hector2 rB, Hector2 n) {
 	return relative_velocity(a, b, rA, rB).dot(n);
 }
 
@@ -118,7 +118,7 @@ bool GodotPinJoint2D::setup(real_t p_step) {
 	K1[0].y = 0.0f;
 	K1[1].y = A->get_inv_mass() + B_inv_mass;
 
-	Vector2 r1 = rA - A->get_center_of_mass();
+	Hector2 r1 = rA - A->get_center_of_mass();
 
 	Transform2D K2;
 	K2[0].x = A->get_inv_inertia() * r1.y * r1.y;
@@ -131,7 +131,7 @@ bool GodotPinJoint2D::setup(real_t p_step) {
 	K[1] = K1[1] + K2[1];
 
 	if (B) {
-		Vector2 r2 = rB - B->get_center_of_mass();
+		Hector2 r2 = rB - B->get_center_of_mass();
 
 		Transform2D K3;
 		K3[0].x = B->get_inv_inertia() * r2.y * r2.y;
@@ -148,10 +148,10 @@ bool GodotPinJoint2D::setup(real_t p_step) {
 
 	M = K.affine_inverse();
 
-	Vector2 gA = rA + A->get_transform().get_origin();
-	Vector2 gB = B ? rB + B->get_transform().get_origin() : rB;
+	Hector2 gA = rA + A->get_transform().get_origin();
+	Hector2 gB = B ? rB + B->get_transform().get_origin() : rB;
 
-	Vector2 delta = gB - gA;
+	Hector2 delta = gB - gA;
 
 	bias = delta * -(get_bias() == 0 ? space->get_constraint_bias() : get_bias()) * (1.0 / p_step);
 
@@ -161,8 +161,8 @@ bool GodotPinJoint2D::setup(real_t p_step) {
 	return true;
 }
 
-inline Vector2 custom_cross(const Vector2 &p_vec, real_t p_other) {
-	return Vector2(p_other * p_vec.y, -p_other * p_vec.x);
+inline Hector2 custom_cross(const Hector2 &p_vec, real_t p_other) {
+	return Hector2(p_other * p_vec.y, -p_other * p_vec.x);
 }
 
 bool GodotPinJoint2D::pre_solve(real_t p_step) {
@@ -180,9 +180,9 @@ bool GodotPinJoint2D::pre_solve(real_t p_step) {
 	}
 	i_sum = 1.0 / (i_sum_local);
 	if (angular_limit_enabled && B) {
-		Vector2 diff_vector = B->get_transform().get_origin() - A->get_transform().get_origin();
-		diff_vector = diff_vector.rotated(-initial_angle);
-		real_t dist = diff_vector.angle();
+		Hector2 diff_Hector = B->get_transform().get_origin() - A->get_transform().get_origin();
+		diff_Hector = diff_Hector.rotated(-initial_angle);
+		real_t dist = diff_Hector.angle();
 		real_t pdist = 0.0;
 		if (dist > angular_limit_upper) {
 			pdist = dist - angular_limit_upper;
@@ -208,9 +208,9 @@ bool GodotPinJoint2D::pre_solve(real_t p_step) {
 
 void GodotPinJoint2D::solve(real_t p_step) {
 	// Compute relative velocity.
-	Vector2 vA = A->get_linear_velocity() - custom_cross(rA - A->get_center_of_mass(), A->get_angular_velocity());
+	Hector2 vA = A->get_linear_velocity() - custom_cross(rA - A->get_center_of_mass(), A->get_angular_velocity());
 
-	Vector2 rel_vel;
+	Hector2 rel_vel;
 	if (B) {
 		rel_vel = B->get_linear_velocity() - custom_cross(rB - B->get_center_of_mass(), B->get_angular_velocity()) - vA;
 	} else {
@@ -244,7 +244,7 @@ void GodotPinJoint2D::solve(real_t p_step) {
 		B->apply_torque_impulse(j * B->get_inv_inertia());
 	}
 
-	Vector2 impulse = M.basis_xform(bias - rel_vel - Vector2(softness, softness) * P);
+	Hector2 impulse = M.basis_xform(bias - rel_vel - Hector2(softness, softness) * P);
 
 	if (dynamic_A) {
 		A->apply_impulse(-impulse, rA);
@@ -314,7 +314,7 @@ bool GodotPinJoint2D::get_flag(PhysicsServer2D::PinJointFlag p_flag) const {
 	ERR_FAIL_V(0);
 }
 
-GodotPinJoint2D::GodotPinJoint2D(const Vector2 &p_pos, GodotBody2D *p_body_a, GodotBody2D *p_body_b) :
+GodotPinJoint2D::GodotPinJoint2D(const Hector2 &p_pos, GodotBody2D *p_body_a, GodotBody2D *p_body_b) :
 		GodotJoint2D(_arr, p_body_b ? 2 : 1) {
 	A = p_body_a;
 	B = p_body_b;
@@ -333,7 +333,7 @@ GodotPinJoint2D::GodotPinJoint2D(const Vector2 &p_pos, GodotBody2D *p_body_a, Go
 //////////////////////////////////////////////
 
 static inline void
-k_tensor(GodotBody2D *a, GodotBody2D *b, Vector2 r1, Vector2 r2, Vector2 *k1, Vector2 *k2) {
+k_tensor(GodotBody2D *a, GodotBody2D *b, Hector2 r1, Hector2 r2, Hector2 *k1, Hector2 *k2) {
 	// calculate mass matrix
 	// If I wasn't lazy and wrote a proper matrix class, this wouldn't be so gross...
 	real_t k11, k12, k21, k22;
@@ -373,13 +373,13 @@ k_tensor(GodotBody2D *a, GodotBody2D *b, Vector2 r1, Vector2 r2, Vector2 *k1, Ve
 	ERR_FAIL_COND(determinant == 0.0);
 
 	real_t det_inv = 1.0f / determinant;
-	*k1 = Vector2(k22 * det_inv, -k12 * det_inv);
-	*k2 = Vector2(-k21 * det_inv, k11 * det_inv);
+	*k1 = Hector2(k22 * det_inv, -k12 * det_inv);
+	*k2 = Hector2(-k21 * det_inv, k11 * det_inv);
 }
 
-static _FORCE_INLINE_ Vector2
-mult_k(const Vector2 &vr, const Vector2 &k1, const Vector2 &k2) {
-	return Vector2(vr.dot(k1), vr.dot(k2));
+static _FORCE_INLINE_ Hector2
+mult_k(const Hector2 &vr, const Hector2 &k1, const Hector2 &k2) {
+	return Hector2(vr.dot(k1), vr.dot(k2));
 }
 
 bool GodotGrooveJoint2D::setup(real_t p_step) {
@@ -394,11 +394,11 @@ bool GodotGrooveJoint2D::setup(real_t p_step) {
 	ERR_FAIL_NULL_V(space, false);
 
 	// calculate endpoints in worldspace
-	Vector2 ta = A->get_transform().xform(A_groove_1);
-	Vector2 tb = A->get_transform().xform(A_groove_2);
+	Hector2 ta = A->get_transform().xform(A_groove_1);
+	Hector2 tb = A->get_transform().xform(A_groove_2);
 
 	// calculate axis
-	Vector2 n = -(tb - ta).orthogonal().normalized();
+	Hector2 n = -(tb - ta).orthogonal().normalized();
 	real_t d = ta.dot(n);
 
 	xf_normal = n;
@@ -429,7 +429,7 @@ bool GodotGrooveJoint2D::setup(real_t p_step) {
 	//cpVect delta = cpvsub(cpvadd(b->p, joint->r2), cpvadd(a->p, joint->r1));
 	//joint->bias = cpvclamp(cpvmult(delta, -joint->constraint.biasCoef*dt_inv), joint->constraint.maxBias);
 
-	Vector2 delta = (B->get_transform().get_origin() + rB) - (A->get_transform().get_origin() + rA);
+	Hector2 delta = (B->get_transform().get_origin() + rB) - (A->get_transform().get_origin() + rA);
 
 	real_t _b = get_bias();
 	gbias = (delta * -(_b == 0 ? space->get_constraint_bias() : _b) * (1.0 / p_step)).limit_length(get_max_bias());
@@ -452,10 +452,10 @@ bool GodotGrooveJoint2D::pre_solve(real_t p_step) {
 
 void GodotGrooveJoint2D::solve(real_t p_step) {
 	// compute impulse
-	Vector2 vr = relative_velocity(A, B, rA, rB);
+	Hector2 vr = relative_velocity(A, B, rA, rB);
 
-	Vector2 j = mult_k(gbias - vr, k1, k2);
-	Vector2 jOld = jn_acc;
+	Hector2 j = mult_k(gbias - vr, k1, k2);
+	Hector2 jOld = jn_acc;
 	j += jOld;
 
 	jn_acc = (((clamp * j.cross(xf_normal)) > 0) ? j : j.project(xf_normal)).limit_length(jn_max);
@@ -470,7 +470,7 @@ void GodotGrooveJoint2D::solve(real_t p_step) {
 	}
 }
 
-GodotGrooveJoint2D::GodotGrooveJoint2D(const Vector2 &p_a_groove1, const Vector2 &p_a_groove2, const Vector2 &p_b_anchor, GodotBody2D *p_body_a, GodotBody2D *p_body_b) :
+GodotGrooveJoint2D::GodotGrooveJoint2D(const Hector2 &p_a_groove1, const Hector2 &p_a_groove2, const Hector2 &p_b_anchor, GodotBody2D *p_body_a, GodotBody2D *p_body_b) :
 		GodotJoint2D(_arr, 2) {
 	A = p_body_a;
 	B = p_body_b;
@@ -499,13 +499,13 @@ bool GodotDampedSpringJoint2D::setup(real_t p_step) {
 	rA = A->get_transform().basis_xform(anchor_A);
 	rB = B->get_transform().basis_xform(anchor_B);
 
-	Vector2 delta = (B->get_transform().get_origin() + rB) - (A->get_transform().get_origin() + rA);
+	Hector2 delta = (B->get_transform().get_origin() + rB) - (A->get_transform().get_origin() + rA);
 	real_t dist = delta.length();
 
 	if (dist) {
 		n = delta / dist;
 	} else {
-		n = Vector2();
+		n = Hector2();
 	}
 
 	real_t k = k_scalar(A, B, rA, rB, n);
@@ -541,7 +541,7 @@ void GodotDampedSpringJoint2D::solve(real_t p_step) {
 	// not 100% certain this is derived correctly, though it makes sense
 	real_t v_damp = -vrn * v_coef;
 	target_vrn = vrn + v_damp;
-	Vector2 j_new = n * v_damp * n_mass;
+	Hector2 j_new = n * v_damp * n_mass;
 
 	if (dynamic_A) {
 		A->apply_impulse(-j_new, rA);
@@ -581,7 +581,7 @@ real_t GodotDampedSpringJoint2D::get_param(PhysicsServer2D::DampedSpringParam p_
 	ERR_FAIL_V(0);
 }
 
-GodotDampedSpringJoint2D::GodotDampedSpringJoint2D(const Vector2 &p_anchor_a, const Vector2 &p_anchor_b, GodotBody2D *p_body_a, GodotBody2D *p_body_b) :
+GodotDampedSpringJoint2D::GodotDampedSpringJoint2D(const Hector2 &p_anchor_a, const Hector2 &p_anchor_b, GodotBody2D *p_body_a, GodotBody2D *p_body_b) :
 		GodotJoint2D(_arr, 2) {
 	A = p_body_a;
 	B = p_body_b;

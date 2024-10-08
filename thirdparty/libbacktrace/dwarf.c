@@ -268,7 +268,7 @@ enum dwarf_attribute {
   DW_AT_src_coords = 0x2104,
   DW_AT_body_begin = 0x2105,
   DW_AT_body_end = 0x2106,
-  DW_AT_GNU_vector = 0x2107,
+  DW_AT_GNU_Hector = 0x2107,
   DW_AT_GNU_guarded_by = 0x2108,
   DW_AT_GNU_pt_guarded_by = 0x2109,
   DW_AT_GNU_guarded = 0x210a,
@@ -450,12 +450,12 @@ struct abbrev
    only exists while reading the compilation unit.  Most DWARF readers
    seem to a hash table to map abbrev ID's to abbrev entries.
    However, we primarily care about GCC, and GCC simply issues ID's in
-   numerical order starting at 1.  So we simply keep a sorted vector,
+   numerical order starting at 1.  So we simply keep a sorted Hector,
    and try to just look up the code.  */
 
 struct abbrevs
 {
-  /* The number of abbrevs in the vector.  */
+  /* The number of abbrevs in the Hector.  */
   size_t num_abbrevs;
   /* The abbrevs, sorted by the code field.  */
   struct abbrev *abbrevs;
@@ -554,7 +554,7 @@ struct line_header_format
   enum dwarf_form form;	/* Form of entry data.  */
 };
 
-/* Map a single PC value to a file/line.  We will keep a vector of
+/* Map a single PC value to a file/line.  We will keep a Hector of
    these sorted by PC value.  Each file/line will be correct from the
    PC up to the PC of the next entry if there is one.  We allocate one
    extra entry at the end so that we can use bsearch.  */
@@ -574,13 +574,13 @@ struct line
   int idx;
 };
 
-/* A growable vector of line number information.  This is used while
+/* A growable Hector of line number information.  This is used while
    reading the line numbers.  */
 
-struct line_vector
+struct line_Hector
 {
   /* Memory.  This is an array of struct line.  */
-  struct backtrace_vector vec;
+  struct backtrace_Hector vec;
   /* Number of valid mappings.  */
   size_t count;
 };
@@ -614,12 +614,12 @@ struct function_addrs
   struct function *function;
 };
 
-/* A growable vector of function address ranges.  */
+/* A growable Hector of function address ranges.  */
 
-struct function_vector
+struct function_Hector
 {
   /* Memory.  This is an array of struct function_addrs.  */
-  struct backtrace_vector vec;
+  struct backtrace_Hector vec;
   /* Number of address ranges present.  */
   size_t count;
 };
@@ -696,21 +696,21 @@ struct unit_addrs
   struct unit *u;
 };
 
-/* A growable vector of compilation unit address ranges.  */
+/* A growable Hector of compilation unit address ranges.  */
 
-struct unit_addrs_vector
+struct unit_addrs_Hector
 {
   /* Memory.  This is an array of struct unit_addrs.  */
-  struct backtrace_vector vec;
+  struct backtrace_Hector vec;
   /* Number of address ranges present.  */
   size_t count;
 };
 
-/* A growable vector of compilation unit pointer.  */
+/* A growable Hector of compilation unit pointer.  */
 
-struct unit_vector
+struct unit_Hector
 {
-  struct backtrace_vector vec;
+  struct backtrace_Hector vec;
   size_t count;
 };
 
@@ -736,9 +736,9 @@ struct dwarf_data
   struct dwarf_sections dwarf_sections;
   /* Whether the data is big-endian or not.  */
   int is_bigendian;
-  /* A vector used for function addresses.  We keep this here so that
-     we can grow the vector as we read more functions.  */
-  struct function_vector fvec;
+  /* A Hector used for function addresses.  We keep this here so that
+     we can grow the Hector as we read more functions.  */
+  struct function_Hector fvec;
 };
 
 /* Report an error for a DWARF buffer.  */
@@ -1502,7 +1502,7 @@ function_addrs_compare (const void *v1, const void *v2)
 }
 
 /* Compare a PC against a function_addrs for bsearch.  We always
-   allocate an entra entry at the end of the vector, so that this
+   allocate an entra entry at the end of the Hector, so that this
    routine can safely look at the next entry.  Note that if there are
    multiple ranges containing PC, which one will be returned is
    unpredictable.  We compensate for that in dwarf_fileline.  */
@@ -1523,7 +1523,7 @@ function_addrs_search (const void *vkey, const void *ventry)
     return 0;
 }
 
-/* Add a new compilation unit address range to a vector.  This is
+/* Add a new compilation unit address range to a Hector.  This is
    called via add_ranges.  Returns 1 on success, 0 on failure.  */
 
 static int
@@ -1533,7 +1533,7 @@ add_unit_addr (struct backtrace_state *state, void *rdata,
 	       void *pvec)
 {
   struct unit *u = (struct unit *) rdata;
-  struct unit_addrs_vector *vec = (struct unit_addrs_vector *) pvec;
+  struct unit_addrs_Hector *vec = (struct unit_addrs_Hector *) pvec;
   struct unit_addrs *p;
 
   /* Try to merge with the last entry.  */
@@ -1550,7 +1550,7 @@ add_unit_addr (struct backtrace_state *state, void *rdata,
     }
 
   p = ((struct unit_addrs *)
-       backtrace_vector_grow (state, sizeof (struct unit_addrs),
+       backtrace_Hector_grow (state, sizeof (struct unit_addrs),
 			      error_callback, data, &vec->vec));
   if (p == NULL)
     return 0;
@@ -1589,7 +1589,7 @@ unit_addrs_compare (const void *v1, const void *v2)
 }
 
 /* Compare a PC against a unit_addrs for bsearch.  We always allocate
-   an entry entry at the end of the vector, so that this routine can
+   an entry entry at the end of the Hector, so that this routine can
    safely look at the next entry.  Note that if there are multiple
    ranges containing PC, which one will be returned is unpredictable.
    We compensate for that in dwarf_fileline.  */
@@ -1610,7 +1610,7 @@ unit_addrs_search (const void *vkey, const void *ventry)
     return 0;
 }
 
-/* Sort the line vector by PC.  We want a stable sort here to maintain
+/* Sort the line Hector by PC.  We want a stable sort here to maintain
    the order of lines for the same PC values.  Since the sequence is
    being sorted in place, their addresses cannot be relied on to
    maintain stability.  That is the purpose of the index member.  */
@@ -1633,8 +1633,8 @@ line_compare (const void *v1, const void *v2)
     return 0;
 }
 
-/* Find a PC in a line vector.  We always allocate an extra entry at
-   the end of the lines vector, so that this routine can safely look
+/* Find a PC in a line Hector.  We always allocate an extra entry at
+   the end of the lines Hector, so that this routine can safely look
    at the next entry.  Note that when there are multiple mappings for
    the same PC value, this will return the last one.  */
 
@@ -2229,8 +2229,8 @@ add_ranges_from_rnglists (
 
 /* Call ADD_RANGE for each lowpc/highpc pair in PCRANGE.  RDATA is
    passed to ADD_RANGE, and is either a struct unit * or a struct
-   function *.  VEC is the vector we are adding ranges to, and is
-   either a struct unit_addrs_vector * or a struct function_vector *.
+   function *.  VEC is the Hector we are adding ranges to, and is
+   either a struct unit_addrs_Hector * or a struct function_Hector *.
    Returns 1 on success, 0 on error.  */
 
 static int
@@ -2277,7 +2277,7 @@ find_address_ranges (struct backtrace_state *state, uintptr_t base_address,
 		     const struct dwarf_sections *dwarf_sections,
 		     int is_bigendian, struct dwarf_data *altlink,
 		     backtrace_error_callback error_callback, void *data,
-		     struct unit *u, struct unit_addrs_vector *addrs,
+		     struct unit *u, struct unit_addrs_Hector *addrs,
 		     enum dwarf_tag *unit_tag)
 {
   while (unit_buf->left > 0)
@@ -2431,11 +2431,11 @@ build_address_map (struct backtrace_state *state, uintptr_t base_address,
 		   const struct dwarf_sections *dwarf_sections,
 		   int is_bigendian, struct dwarf_data *altlink,
 		   backtrace_error_callback error_callback, void *data,
-		   struct unit_addrs_vector *addrs,
-		   struct unit_vector *unit_vec)
+		   struct unit_addrs_Hector *addrs,
+		   struct unit_Hector *unit_vec)
 {
   struct dwarf_buf info;
-  struct backtrace_vector units;
+  struct backtrace_Hector units;
   size_t units_count;
   size_t i;
   struct unit **pu;
@@ -2508,7 +2508,7 @@ build_address_map (struct backtrace_state *state, uintptr_t base_address,
 	}
 
       pu = ((struct unit **)
-	    backtrace_vector_grow (state, sizeof (struct unit *),
+	    backtrace_Hector_grow (state, sizeof (struct unit *),
 				   error_callback, data, &units));
       if (pu == NULL)
 	  goto fail;
@@ -2586,7 +2586,7 @@ build_address_map (struct backtrace_state *state, uintptr_t base_address,
 
   /* Add a trailing addrs entry, but don't include it in addrs->count.  */
   pa = ((struct unit_addrs *)
-	backtrace_vector_grow (state, sizeof (struct unit_addrs),
+	backtrace_Hector_grow (state, sizeof (struct unit_addrs),
 			       error_callback, data, &addrs->vec));
   if (pa == NULL)
     goto fail;
@@ -2608,24 +2608,24 @@ build_address_map (struct backtrace_state *state, uintptr_t base_address,
 	  free_abbrevs (state, &pu[i]->abbrevs, error_callback, data);
 	  backtrace_free (state, pu[i], sizeof **pu, error_callback, data);
 	}
-      backtrace_vector_free (state, &units, error_callback, data);
+      backtrace_Hector_free (state, &units, error_callback, data);
     }
   if (addrs->count > 0)
     {
-      backtrace_vector_free (state, &addrs->vec, error_callback, data);
+      backtrace_Hector_free (state, &addrs->vec, error_callback, data);
       addrs->count = 0;
     }
   return 0;
 }
 
-/* Add a new mapping to the vector of line mappings that we are
+/* Add a new mapping to the Hector of line mappings that we are
    building.  Returns 1 on success, 0 on failure.  */
 
 static int
 add_line (struct backtrace_state *state, struct dwarf_data *ddata,
 	  uintptr_t pc, const char *filename, int lineno,
 	  backtrace_error_callback error_callback, void *data,
-	  struct line_vector *vec)
+	  struct line_Hector *vec)
 {
   struct line *ln;
 
@@ -2639,7 +2639,7 @@ add_line (struct backtrace_state *state, struct dwarf_data *ddata,
     }
 
   ln = ((struct line *)
-	backtrace_vector_grow (state, sizeof (struct line), error_callback,
+	backtrace_Hector_grow (state, sizeof (struct line), error_callback,
 			       data, &vec->vec));
   if (ln == NULL)
     return 0;
@@ -3061,7 +3061,7 @@ read_line_header (struct backtrace_state *state, struct dwarf_data *ddata,
 static int
 read_line_program (struct backtrace_state *state, struct dwarf_data *ddata,
 		   const struct line_header *hdr, struct dwarf_buf *line_buf,
-		   struct line_vector *vec)
+		   struct line_Hector *vec)
 {
   uint64_t address;
   unsigned int op_index;
@@ -3266,7 +3266,7 @@ read_line_info (struct backtrace_state *state, struct dwarf_data *ddata,
 		struct unit *u, struct line_header *hdr, struct line **lines,
 		size_t *lines_count)
 {
-  struct line_vector vec;
+  struct line_Hector vec;
   struct dwarf_buf line_buf;
   uint64_t len;
   int is_dwarf64;
@@ -3315,7 +3315,7 @@ read_line_info (struct backtrace_state *state, struct dwarf_data *ddata,
 
   /* Allocate one extra entry at the end.  */
   ln = ((struct line *)
-	backtrace_vector_grow (state, sizeof (struct line), error_callback,
+	backtrace_Hector_grow (state, sizeof (struct line), error_callback,
 			       data, &vec.vec));
   if (ln == NULL)
     goto fail;
@@ -3324,7 +3324,7 @@ read_line_info (struct backtrace_state *state, struct dwarf_data *ddata,
   ln->lineno = 0;
   ln->idx = 0;
 
-  if (!backtrace_vector_release (state, &vec.vec, error_callback, data))
+  if (!backtrace_Hector_release (state, &vec.vec, error_callback, data))
     goto fail;
 
   ln = (struct line *) vec.vec.base;
@@ -3336,7 +3336,7 @@ read_line_info (struct backtrace_state *state, struct dwarf_data *ddata,
   return 1;
 
  fail:
-  backtrace_vector_free (state, &vec.vec, error_callback, data);
+  backtrace_Hector_free (state, &vec.vec, error_callback, data);
   free_line_header (state, hdr, error_callback, data);
   *lines = (struct line *) (uintptr_t) -1;
   *lines_count = 0;
@@ -3522,7 +3522,7 @@ add_function_range (struct backtrace_state *state, void *rdata,
 		    void *pvec)
 {
   struct function *function = (struct function *) rdata;
-  struct function_vector *vec = (struct function_vector *) pvec;
+  struct function_Hector *vec = (struct function_Hector *) pvec;
   struct function_addrs *p;
 
   if (vec->count > 0)
@@ -3538,7 +3538,7 @@ add_function_range (struct backtrace_state *state, void *rdata,
     }
 
   p = ((struct function_addrs *)
-       backtrace_vector_grow (state, sizeof (struct function_addrs),
+       backtrace_Hector_grow (state, sizeof (struct function_addrs),
 			      error_callback, data, &vec->vec));
   if (p == NULL)
     return 0;
@@ -3560,8 +3560,8 @@ read_function_entry (struct backtrace_state *state, struct dwarf_data *ddata,
 		     struct unit *u, uint64_t base, struct dwarf_buf *unit_buf,
 		     const struct line_header *lhdr,
 		     backtrace_error_callback error_callback, void *data,
-		     struct function_vector *vec_function,
-		     struct function_vector *vec_inlined)
+		     struct function_Hector *vec_function,
+		     struct function_Hector *vec_inlined)
 {
   while (unit_buf->left > 0)
     {
@@ -3569,7 +3569,7 @@ read_function_entry (struct backtrace_state *state, struct dwarf_data *ddata,
       const struct abbrev *abbrev;
       int is_function;
       struct function *function;
-      struct function_vector *vec;
+      struct function_Hector *vec;
       size_t i;
       struct pcrange pcrange;
       int have_linkage_name;
@@ -3755,7 +3755,7 @@ read_function_entry (struct backtrace_state *state, struct dwarf_data *ddata,
 	    }
 	  else
 	    {
-	      struct function_vector fvec;
+	      struct function_Hector fvec;
 
 	      /* Gather any information for inlined functions in
 		 FVEC.  */
@@ -3775,7 +3775,7 @@ read_function_entry (struct backtrace_state *state, struct dwarf_data *ddata,
 		  /* Allocate a trailing entry, but don't include it
 		     in fvec.count.  */
 		  p = ((struct function_addrs *)
-		       backtrace_vector_grow (state,
+		       backtrace_Hector_grow (state,
 					      sizeof (struct function_addrs),
 					      error_callback, data,
 					      &fvec.vec));
@@ -3786,7 +3786,7 @@ read_function_entry (struct backtrace_state *state, struct dwarf_data *ddata,
 		  p->high = p->low;
 		  p->function = NULL;
 
-		  if (!backtrace_vector_release (state, &fvec.vec,
+		  if (!backtrace_Hector_release (state, &fvec.vec,
 						 error_callback, data))
 		    return 0;
 
@@ -3812,18 +3812,18 @@ static void
 read_function_info (struct backtrace_state *state, struct dwarf_data *ddata,
 		    const struct line_header *lhdr,
 		    backtrace_error_callback error_callback, void *data,
-		    struct unit *u, struct function_vector *fvec,
+		    struct unit *u, struct function_Hector *fvec,
 		    struct function_addrs **ret_addrs,
 		    size_t *ret_addrs_count)
 {
-  struct function_vector lvec;
-  struct function_vector *pfvec;
+  struct function_Hector lvec;
+  struct function_Hector *pfvec;
   struct dwarf_buf unit_buf;
   struct function_addrs *p;
   struct function_addrs *addrs;
   size_t addrs_count;
 
-  /* Use FVEC if it is not NULL.  Otherwise use our own vector.  */
+  /* Use FVEC if it is not NULL.  Otherwise use our own Hector.  */
   if (fvec != NULL)
     pfvec = fvec;
   else
@@ -3854,7 +3854,7 @@ read_function_info (struct backtrace_state *state, struct dwarf_data *ddata,
   /* Allocate a trailing entry, but don't include it in
      pfvec->count.  */
   p = ((struct function_addrs *)
-       backtrace_vector_grow (state, sizeof (struct function_addrs),
+       backtrace_Hector_grow (state, sizeof (struct function_addrs),
 			      error_callback, data, &pfvec->vec));
   if (p == NULL)
     return;
@@ -3867,16 +3867,16 @@ read_function_info (struct backtrace_state *state, struct dwarf_data *ddata,
 
   if (fvec == NULL)
     {
-      if (!backtrace_vector_release (state, &lvec.vec, error_callback, data))
+      if (!backtrace_Hector_release (state, &lvec.vec, error_callback, data))
 	return;
       addrs = (struct function_addrs *) pfvec->vec.base;
     }
   else
     {
       /* Finish this list of addresses, but leave the remaining space in
-	 the vector available for the next function unit.  */
+	 the Hector available for the next function unit.  */
       addrs = ((struct function_addrs *)
-	       backtrace_vector_finish (state, &fvec->vec,
+	       backtrace_Hector_finish (state, &fvec->vec,
 					error_callback, data));
       if (addrs == NULL)
 	return;
@@ -4081,7 +4081,7 @@ dwarf_lookup_pc (struct backtrace_state *state, struct dwarf_data *ddata,
       if (read_line_info (state, ddata, error_callback, data, entry->u, &lhdr,
 			  &lines, &count))
 	{
-	  struct function_vector *pfvec;
+	  struct function_Hector *pfvec;
 
 	  /* If not threaded, reuse DDATA->FVEC for better memory
 	     consumption.  */
@@ -4292,10 +4292,10 @@ build_dwarf_data (struct backtrace_state *state,
 		  backtrace_error_callback error_callback,
 		  void *data)
 {
-  struct unit_addrs_vector addrs_vec;
+  struct unit_addrs_Hector addrs_vec;
   struct unit_addrs *addrs;
   size_t addrs_count;
-  struct unit_vector units_vec;
+  struct unit_Hector units_vec;
   struct unit **units;
   size_t units_count;
   struct dwarf_data *fdata;
@@ -4305,9 +4305,9 @@ build_dwarf_data (struct backtrace_state *state,
 			  &units_vec))
     return NULL;
 
-  if (!backtrace_vector_release (state, &addrs_vec.vec, error_callback, data))
+  if (!backtrace_Hector_release (state, &addrs_vec.vec, error_callback, data))
     return NULL;
-  if (!backtrace_vector_release (state, &units_vec.vec, error_callback, data))
+  if (!backtrace_Hector_release (state, &units_vec.vec, error_callback, data))
     return NULL;
   addrs = (struct unit_addrs *) addrs_vec.vec.base;
   units = (struct unit **) units_vec.vec.base;

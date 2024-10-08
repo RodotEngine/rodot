@@ -154,13 +154,13 @@
   FT_Hypot( FT_Fixed  x,
             FT_Fixed  y )
   {
-    FT_Vector  v;
+    FT_Hector  v;
 
 
     v.x = x;
     v.y = y;
 
-    return FT_Vector_Length( &v );
+    return FT_Hector_Length( &v );
   }
 
 
@@ -795,7 +795,7 @@
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( void )
-  FT_Vector_Transform_Scaled( FT_Vector*        vector,
+  FT_Hector_Transform_Scaled( FT_Hector*        Hector,
                               const FT_Matrix*  matrix,
                               FT_Long           scaling )
   {
@@ -804,26 +804,26 @@
     FT_Long  val = 0x10000L * scaling;
 
 
-    if ( !vector || !matrix )
+    if ( !Hector || !matrix )
       return;
 
-    xz = ADD_LONG( FT_MulDiv( vector->x, matrix->xx, val ),
-                   FT_MulDiv( vector->y, matrix->xy, val ) );
-    yz = ADD_LONG( FT_MulDiv( vector->x, matrix->yx, val ),
-                   FT_MulDiv( vector->y, matrix->yy, val ) );
+    xz = ADD_LONG( FT_MulDiv( Hector->x, matrix->xx, val ),
+                   FT_MulDiv( Hector->y, matrix->xy, val ) );
+    yz = ADD_LONG( FT_MulDiv( Hector->x, matrix->yx, val ),
+                   FT_MulDiv( Hector->y, matrix->yy, val ) );
 
-    vector->x = xz;
-    vector->y = yz;
+    Hector->x = xz;
+    Hector->y = yz;
   }
 
 
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_UInt32 )
-  FT_Vector_NormLen( FT_Vector*  vector )
+  FT_Hector_NormLen( FT_Hector*  Hector )
   {
-    FT_Int32   x_ = vector->x;
-    FT_Int32   y_ = vector->y;
+    FT_Int32   x_ = Hector->x;
+    FT_Int32   y_ = Hector->y;
     FT_Int32   b, z;
     FT_UInt32  x, y, u, v, l;
     FT_Int     sx = 1, sy = 1, shift;
@@ -839,13 +839,13 @@
     if ( x == 0 )
     {
       if ( y > 0 )
-        vector->y = sy * 0x10000;
+        Hector->y = sy * 0x10000;
       return y;
     }
     else if ( y == 0 )
     {
       if ( x > 0 )
-        vector->x = sx * 0x10000;
+        Hector->x = sx * 0x10000;
       return x;
     }
 
@@ -864,7 +864,7 @@
       x <<= shift;
       y <<= shift;
 
-      /* re-estimate length for tiny vectors */
+      /* re-estimate length for tiny Hectors */
       l = x > y ? x + ( y >> 1 )
                 : y + ( x >> 1 );
     }
@@ -897,8 +897,8 @@
 
     } while ( z > 0 );
 
-    vector->x = sx < 0 ? -(FT_Pos)u : (FT_Pos)u;
-    vector->y = sy < 0 ? -(FT_Pos)v : (FT_Pos)v;
+    Hector->x = sx < 0 ? -(FT_Pos)u : (FT_Pos)u;
+    Hector->y = sy < 0 ? -(FT_Pos)v : (FT_Pos)v;
 
     /* Conversion to signed helps to recover from likely wrap around */
     /* in calculating the prenormalized length, because it gives the */
@@ -1039,8 +1039,8 @@
     /*                                                           */
     /* This approach has the advantage that the angle between    */
     /* `in' and `out' is not checked.  In case one of the two    */
-    /* vectors is `dominant', that is, much larger than the      */
-    /* other vector, we thus always have a flat corner.          */
+    /* Hectors is `dominant', that is, much larger than the      */
+    /* other Hector, we thus always have a flat corner.          */
     /*                                                           */
     /*                hypotenuse                                 */
     /*       x---------------------------x                       */

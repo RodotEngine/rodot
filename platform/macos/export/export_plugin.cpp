@@ -540,7 +540,7 @@ void EditorExportPlatformMacOS::get_export_options(List<ExportOption> *r_options
 	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/removable_volumes_usage_description_localized", PROPERTY_HINT_LOCALIZABLE_STRING), Dictionary()));
 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "privacy/tracking_enabled"), false));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "privacy/tracking_domains"), Vector<String>()));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "privacy/tracking_domains"), Hector<String>()));
 
 	{
 		String hint;
@@ -576,15 +576,15 @@ void EditorExportPlatformMacOS::get_export_options(List<ExportOption> *r_options
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "ssh_remote_deploy/cleanup_script", PROPERTY_HINT_MULTILINE_TEXT), cleanup_script));
 }
 
-void _rgba8_to_packbits_encode(int p_ch, int p_size, Vector<uint8_t> &p_source, Vector<uint8_t> &p_dest) {
+void _rgba8_to_packbits_encode(int p_ch, int p_size, Hector<uint8_t> &p_source, Hector<uint8_t> &p_dest) {
 	int src_len = p_size * p_size;
 
-	Vector<uint8_t> result;
+	Hector<uint8_t> result;
 
 	int i = 0;
 	const uint8_t *src = p_source.ptr();
 	while (i < src_len) {
-		Vector<uint8_t> seq;
+		Hector<uint8_t> seq;
 
 		uint8_t count = 0;
 		while (count <= 0x7f && i < src_len) {
@@ -625,8 +625,8 @@ void _rgba8_to_packbits_encode(int p_ch, int p_size, Vector<uint8_t> &p_source, 
 	memcpy(&p_dest.write[ofs], result.ptr(), result.size());
 }
 
-void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_preset, const Ref<Image> &p_icon, Vector<uint8_t> &p_data) {
-	Vector<uint8_t> data;
+void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_preset, const Ref<Image> &p_icon, Hector<uint8_t> &p_data) {
+	Hector<uint8_t> data;
 
 	data.resize(8);
 	data.write[0] = 'i';
@@ -661,7 +661,7 @@ void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_pres
 
 		if (icon_infos[i].is_png) {
 			// Encode PNG icon.
-			Vector<uint8_t> png_buffer;
+			Hector<uint8_t> png_buffer;
 			Error err = PNGDriverCommon::image_to_png(copy, png_buffer);
 			if (err == OK) {
 				int ofs = data.size();
@@ -674,7 +674,7 @@ void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_pres
 				encode_uint32(len, &data.write[ofs + 4]);
 			}
 		} else {
-			Vector<uint8_t> src_data = copy->get_data();
+			Hector<uint8_t> src_data = copy->get_data();
 
 			// Encode 24-bit RGB RLE icon.
 			{
@@ -718,11 +718,11 @@ void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_pres
 	p_data = data;
 }
 
-void EditorExportPlatformMacOS::_fix_privacy_manifest(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &plist) {
+void EditorExportPlatformMacOS::_fix_privacy_manifest(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &plist) {
 	String str;
 	String strnew;
 	str.parse_utf8((const char *)plist.ptr(), plist.size());
-	Vector<String> lines = str.split("\n");
+	Hector<String> lines = str.split("\n");
 	for (int i = 0; i < lines.size(); i++) {
 		if (lines[i].find("$priv_collection") != -1) {
 			bool section_opened = false;
@@ -776,7 +776,7 @@ void EditorExportPlatformMacOS::_fix_privacy_manifest(const Ref<EditorExportPres
 			} else {
 				strnew += "\t<false/>\n";
 			}
-			Vector<String> tracking_domains = p_preset->get("privacy/tracking_domains");
+			Hector<String> tracking_domains = p_preset->get("privacy/tracking_domains");
 			if (!tracking_domains.is_empty()) {
 				strnew += "\t<key>NSPrivacyTrackingDomains</key>\n";
 				strnew += "\t<array>\n";
@@ -797,11 +797,11 @@ void EditorExportPlatformMacOS::_fix_privacy_manifest(const Ref<EditorExportPres
 	}
 }
 
-void EditorExportPlatformMacOS::_fix_plist(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &plist, const String &p_binary) {
+void EditorExportPlatformMacOS::_fix_plist(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &plist, const String &p_binary) {
 	String str;
 	String strnew;
 	str.parse_utf8((const char *)plist.ptr(), plist.size());
-	Vector<String> lines = str.split("\n");
+	Hector<String> lines = str.split("\n");
 	for (int i = 0; i < lines.size(); i++) {
 		if (lines[i].contains("$binary")) {
 			strnew += lines[i].replace("$binary", p_binary) + "\n";
@@ -1211,7 +1211,7 @@ void EditorExportPlatformMacOS::_code_sign(const Ref<EditorExportPreset> &p_pres
 
 void EditorExportPlatformMacOS::_code_sign_directory(const Ref<EditorExportPreset> &p_preset, const String &p_path,
 		const String &p_ent_path, const String &p_helper_ent_path, bool p_should_error_on_non_code) {
-	static Vector<String> extensions_to_sign;
+	static Hector<String> extensions_to_sign;
 
 	bool sandbox = p_preset->get("codesign/entitlements/app_sandbox/enabled");
 	if (extensions_to_sign.is_empty()) {
@@ -1268,7 +1268,7 @@ Error EditorExportPlatformMacOS::_copy_and_sign_files(Ref<DirAccess> &dir_access
 		const Ref<EditorExportPreset> &p_preset, const String &p_ent_path,
 		const String &p_helper_ent_path,
 		bool p_should_error_on_non_code_sign, bool p_sandbox) {
-	static Vector<String> extensions_to_sign;
+	static Hector<String> extensions_to_sign;
 
 	if (extensions_to_sign.is_empty()) {
 		extensions_to_sign.push_back("dylib");
@@ -1384,7 +1384,7 @@ Error EditorExportPlatformMacOS::_export_macos_plugins_for(Ref<EditorExportPlugi
 		bool p_sign_enabled, const Ref<EditorExportPreset> &p_preset,
 		const String &p_ent_path, const String &p_helper_ent_path, bool p_sandbox) {
 	Error error{ OK };
-	const Vector<String> &macos_plugins{ p_editor_export_plugin->get_macos_plugin_files() };
+	const Hector<String> &macos_plugins{ p_editor_export_plugin->get_macos_plugin_files() };
 	for (int i = 0; i < macos_plugins.size(); ++i) {
 		String src_path{ ProjectSettings::get_singleton()->globalize_path(macos_plugins[i]) };
 		String path_in_app{ p_app_path_name + "/Contents/PlugIns/" + src_path.get_file() };
@@ -1661,7 +1661,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 	Dictionary removable_volumes_usage_descriptions = p_preset->get("privacy/removable_volumes_usage_description_localized");
 	Dictionary copyrights = p_preset->get("application/copyright_localized");
 
-	Vector<String> translations = GLOBAL_GET("internationalization/locale/translations");
+	Hector<String> translations = GLOBAL_GET("internationalization/locale/translations");
 	if (translations.size() > 0) {
 		{
 			String fname = tmp_app_path_name + "/Contents/Resources/en.lproj";
@@ -1784,7 +1784,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 
 		String file = String::utf8(fname);
 
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(info.uncompressed_size);
 
 		// Read.
@@ -1966,7 +1966,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 		}
 
 		String pack_path = tmp_app_path_name + "/Contents/Resources/" + pkg_name + ".pck";
-		Vector<SharedObject> shared_objects;
+		Hector<SharedObject> shared_objects;
 		err = save_pack(p_preset, p_debug, pack_path, &shared_objects);
 
 		bool lib_validation = p_preset->get("codesign/entitlements/disable_library_validation");
@@ -2187,7 +2187,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 				}
 			}
 
-			Vector<Ref<EditorExportPlugin>> export_plugins{ EditorExport::get_singleton()->get_export_plugins() };
+			Hector<Ref<EditorExportPlugin>> export_plugins{ EditorExport::get_singleton()->get_export_plugins() };
 			for (int i = 0; i < export_plugins.size(); ++i) {
 				err = _export_macos_plugins_for(export_plugins[i], tmp_app_path_name, da, sign_enabled, p_preset, ent_path, hlp_ent_path, sandbox);
 				if (err != OK) {
@@ -2558,8 +2558,8 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 	if (port.is_empty()) {
 		port = "22";
 	}
-	Vector<String> extra_args_ssh = p_preset->get("ssh_remote_deploy/extra_args_ssh").operator String().split(" ", false);
-	Vector<String> extra_args_scp = p_preset->get("ssh_remote_deploy/extra_args_scp").operator String().split(" ", false);
+	Hector<String> extra_args_ssh = p_preset->get("ssh_remote_deploy/extra_args_ssh").operator String().split(" ", false);
+	Hector<String> extra_args_scp = p_preset->get("ssh_remote_deploy/extra_args_scp").operator String().split(" ", false);
 
 	const String basepath = dest.path_join("tmp_macos_export");
 
@@ -2589,7 +2589,7 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 
 	String cmd_args;
 	{
-		Vector<String> cmd_args_list = gen_export_flags(p_debug_flags);
+		Hector<String> cmd_args_list = gen_export_flags(p_debug_flags);
 		for (int i = 0; i < cmd_args_list.size(); i++) {
 			if (i != 0) {
 				cmd_args += " ";

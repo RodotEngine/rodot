@@ -44,7 +44,7 @@
 	return self;
 }
 
-- (void)makeAccessoryView:(NSSavePanel *)p_panel filters:(const Vector<String> &)p_filters options:(const TypedArray<Dictionary> &)p_options {
+- (void)makeAccessoryView:(NSSavePanel *)p_panel filters:(const Hector<String> &)p_filters options:(const TypedArray<Dictionary> &)p_options {
 	dialog = p_panel;
 
 	NSMutableArray *constraints = [NSMutableArray array];
@@ -66,7 +66,7 @@
 			continue;
 		}
 		const String &name = item["name"];
-		const Vector<String> &values = item["values"];
+		const Hector<String> &values = item["values"];
 		int default_idx = item["default"];
 
 		NSTextField *label = [NSTextField labelWithString:[NSString stringWithUTF8String:name.utf8().get_data()]];
@@ -116,7 +116,7 @@
 		if (p_filters.size() > 1) {
 			NSPopUpButton *popup = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
 			for (int i = 0; i < p_filters.size(); i++) {
-				Vector<String> tokens = p_filters[i].split(";");
+				Hector<String> tokens = p_filters[i].split(";");
 				if (tokens.size() >= 1) {
 					String flt = tokens[0].strip_edges();
 					int filter_slice_count = flt.get_slice_count(",");
@@ -144,7 +144,7 @@
 				[view addRowWithViews:[NSArray arrayWithObjects:label, popup, nil]];
 			}
 		} else if (p_filters.size() == 1) {
-			Vector<String> tokens = p_filters[0].split(";");
+			Hector<String> tokens = p_filters[0].split(";");
 			if (tokens.size() >= 1) {
 				String flt = tokens[0].strip_edges();
 				int filter_slice_count = flt.get_slice_count(",");

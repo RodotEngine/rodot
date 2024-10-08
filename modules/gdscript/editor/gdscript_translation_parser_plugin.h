@@ -39,8 +39,8 @@
 class GDScriptEditorTranslationParserPlugin : public EditorTranslationParserPlugin {
 	GDCLASS(GDScriptEditorTranslationParserPlugin, EditorTranslationParserPlugin);
 
-	Vector<String> *ids = nullptr;
-	Vector<Vector<String>> *ids_ctx_plural = nullptr;
+	Hector<String> *ids = nullptr;
+	Hector<Hector<String>> *ids_ctx_plural = nullptr;
 
 	// List of patterns used for extracting translation strings.
 	StringName tr_func = "tr";
@@ -69,7 +69,7 @@ class GDScriptEditorTranslationParserPlugin : public EditorTranslationParserPlug
 	void _extract_fd_filter_array(const GDScriptParser::ExpressionNode *p_expression);
 
 public:
-	virtual Error parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) override;
+	virtual Error parse_file(const String &p_path, Hector<String> *r_ids, Hector<Hector<String>> *r_ids_ctx_plural) override;
 	virtual void get_recognized_extensions(List<String> *r_extensions) const override;
 
 	GDScriptEditorTranslationParserPlugin();

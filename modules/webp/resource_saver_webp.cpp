@@ -50,7 +50,7 @@ Error ResourceSaverWebP::save(const Ref<Resource> &p_resource, const String &p_p
 }
 
 Error ResourceSaverWebP::save_image(const String &p_path, const Ref<Image> &p_img, const bool p_lossy, const float p_quality) {
-	Vector<uint8_t> buffer = save_image_to_buffer(p_img, p_lossy, p_quality);
+	Hector<uint8_t> buffer = save_image_to_buffer(p_img, p_lossy, p_quality);
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
 	ERR_FAIL_COND_V_MSG(err, err, vformat("Can't save WebP at path: '%s'.", p_path));
@@ -65,8 +65,8 @@ Error ResourceSaverWebP::save_image(const String &p_path, const Ref<Image> &p_im
 	return OK;
 }
 
-Vector<uint8_t> ResourceSaverWebP::save_image_to_buffer(const Ref<Image> &p_img, const bool p_lossy, const float p_quality) {
-	Vector<uint8_t> buffer;
+Hector<uint8_t> ResourceSaverWebP::save_image_to_buffer(const Ref<Image> &p_img, const bool p_lossy, const float p_quality) {
+	Hector<uint8_t> buffer;
 	if (p_lossy) {
 		buffer = WebPCommon::_webp_lossy_pack(p_img, p_quality);
 	} else {

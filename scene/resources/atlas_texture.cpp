@@ -201,7 +201,7 @@ bool AtlasTexture::get_rect_region(const Rect2 &p_rect, const Rect2 &p_src_rect,
 	if (src.size == Size2() && atlas.is_valid()) {
 		src.size = atlas->get_size();
 	}
-	Vector2 scale = p_rect.size / src.size;
+	Hector2 scale = p_rect.size / src.size;
 
 	src.position += (region.position - margin.position);
 	Rect2 src_clipped = _get_region_rect().intersection(src);
@@ -209,7 +209,7 @@ bool AtlasTexture::get_rect_region(const Rect2 &p_rect, const Rect2 &p_src_rect,
 		return false;
 	}
 
-	Vector2 ofs = (src_clipped.position - src.position);
+	Hector2 ofs = (src_clipped.position - src.position);
 	if (scale.x < 0) {
 		ofs.x += (src_clipped.size.x - src.size.x);
 	}

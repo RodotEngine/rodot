@@ -211,7 +211,7 @@ void AnimationNodeStateMachinePlayback::_set_current(AnimationNodeStateMachine *
 		return;
 	}
 
-	Vector<int> indices = p_state_machine->find_transition_to(current);
+	Hector<int> indices = p_state_machine->find_transition_to(current);
 	int group_start_size = indices.size();
 	if (group_start_size) {
 		group_start_transition = p_state_machine->get_transition(indices[0]);
@@ -318,7 +318,7 @@ StringName AnimationNodeStateMachinePlayback::get_fading_from_node() const {
 	return fading_from;
 }
 
-Vector<StringName> AnimationNodeStateMachinePlayback::get_travel_path() const {
+Hector<StringName> AnimationNodeStateMachinePlayback::get_travel_path() const {
 	return path;
 }
 
@@ -375,7 +375,7 @@ void AnimationNodeStateMachinePlayback::_start_children(AnimationTree *p_tree, A
 	if (p_state_machine->get_state_machine_type() == AnimationNodeStateMachine::STATE_MACHINE_TYPE_GROUPED) {
 		return; // This function must be fired only by the top state machine, do nothing in child state machine.
 	}
-	Vector<String> temp_path = p_path.split("/");
+	Hector<String> temp_path = p_path.split("/");
 	if (temp_path.size() > 1) {
 		for (int i = 1; i < temp_path.size(); i++) {
 			String concatenated;
@@ -402,8 +402,8 @@ bool AnimationNodeStateMachinePlayback::_travel_children(AnimationTree *p_tree, 
 	if (p_state_machine->get_state_machine_type() == AnimationNodeStateMachine::STATE_MACHINE_TYPE_GROUPED) {
 		return false; // This function must be fired only by the top state machine, do nothing in child state machine.
 	}
-	Vector<String> temp_path = p_path.split("/");
-	Vector<ChildStateMachineInfo> children;
+	Hector<String> temp_path = p_path.split("/");
+	Hector<ChildStateMachineInfo> children;
 
 	bool found_route = true;
 	bool is_parent_same_state = p_is_parent_same_state;
@@ -507,7 +507,7 @@ String AnimationNodeStateMachinePlayback::_validate_path(AnimationNodeStateMachi
 	String target = p_path;
 	Ref<AnimationNodeStateMachine> anodesm = p_state_machine->find_node_by_path(target);
 	while (anodesm.is_valid() && anodesm->get_state_machine_type() == AnimationNodeStateMachine::STATE_MACHINE_TYPE_GROUPED) {
-		Vector<int> indices = anodesm->find_transition_from(AnimationNodeStateMachine::START_NODE);
+		Hector<int> indices = anodesm->find_transition_from(AnimationNodeStateMachine::START_NODE);
 		if (indices.size()) {
 			target = target + "/" + anodesm->get_transition_to(indices[0]); // Find next state of Start.
 		} else {
@@ -518,7 +518,7 @@ String AnimationNodeStateMachinePlayback::_validate_path(AnimationNodeStateMachi
 	return target;
 }
 
-bool AnimationNodeStateMachinePlayback::_make_travel_path(AnimationTree *p_tree, AnimationNodeStateMachine *p_state_machine, bool p_is_allow_transition_to_self, Vector<StringName> &r_path, bool p_test_only) {
+bool AnimationNodeStateMachinePlayback::_make_travel_path(AnimationTree *p_tree, AnimationNodeStateMachine *p_state_machine, bool p_is_allow_transition_to_self, Hector<StringName> &r_path, bool p_test_only) {
 	StringName travel = travel_request;
 	travel_request = StringName();
 
@@ -533,10 +533,10 @@ bool AnimationNodeStateMachinePlayback::_make_travel_path(AnimationTree *p_tree,
 		return !p_is_allow_transition_to_self;
 	}
 
-	Vector<StringName> new_path;
+	Hector<StringName> new_path;
 
-	Vector2 current_pos = p_state_machine->states[current].position;
-	Vector2 target_pos = p_state_machine->states[travel].position;
+	Hector2 current_pos = p_state_machine->states[current].position;
+	Hector2 target_pos = p_state_machine->states[travel].position;
 
 	bool found_route = false;
 	HashMap<StringName, AStarCost> cost_map;
@@ -740,7 +740,7 @@ AnimationNode::NodeTimeInfo AnimationNodeStateMachinePlayback::_process(const St
 	if (start_request != StringName()) {
 		path.clear();
 		String start_target = _validate_path(p_state_machine, start_request);
-		Vector<String> start_path = String(start_target).split("/");
+		Hector<String> start_path = String(start_target).split("/");
 		start_request = start_path[0];
 		if (start_path.size()) {
 			_start_children(tree, p_state_machine, start_target, p_test_only);
@@ -757,11 +757,11 @@ AnimationNode::NodeTimeInfo AnimationNodeStateMachinePlayback::_process(const St
 	if (travel_request != StringName()) {
 		// Fix path.
 		String travel_target = _validate_path(p_state_machine, travel_request);
-		Vector<String> travel_path = travel_target.split("/");
+		Hector<String> travel_path = travel_target.split("/");
 		travel_request = travel_path[0];
 		StringName temp_travel_request = travel_request; // For the case that can't travel.
 		// Process children.
-		Vector<StringName> new_path;
+		Hector<StringName> new_path;
 		bool can_travel = _make_travel_path(tree, p_state_machine, travel_path.size() <= 1 ? p_state_machine->is_allow_transition_to_self() : false, new_path, p_test_only);
 		if (travel_path.size()) {
 			if (can_travel) {
@@ -905,7 +905,7 @@ bool AnimationNodeStateMachinePlayback::_transition_to_next_recursive(AnimationT
 	AnimationMixer::PlaybackInfo pi;
 	pi.delta = p_delta;
 	NextInfo next;
-	Vector<StringName> transition_path;
+	Hector<StringName> transition_path;
 	transition_path.push_back(current);
 	while (true) {
 		next = _find_next(p_tree, p_state_machine);
@@ -1146,7 +1146,7 @@ Ref<AnimationNodeStateMachinePlayback> AnimationNodeStateMachinePlayback::_get_p
 	if (base_path.is_empty()) {
 		return Ref<AnimationNodeStateMachinePlayback>();
 	}
-	Vector<String> split = base_path.split("/");
+	Hector<String> split = base_path.split("/");
 	ERR_FAIL_COND_V_MSG(split.size() < 2, Ref<AnimationNodeStateMachinePlayback>(), "Path is too short.");
 	StringName self_path = split[split.size() - 2];
 	split.remove_at(split.size() - 2);
@@ -1166,7 +1166,7 @@ Ref<AnimationNodeStateMachine> AnimationNodeStateMachinePlayback::_get_parent_st
 	if (base_path.is_empty()) {
 		return Ref<AnimationNodeStateMachine>();
 	}
-	Vector<String> split = base_path.split("/");
+	Hector<String> split = base_path.split("/");
 	ERR_FAIL_COND_V_MSG(split.size() < 3, Ref<AnimationNodeStateMachine>(), "Path is too short.");
 	split = split.slice(1, split.size() - 2);
 	Ref<AnimationNode> root = p_tree->get_root_animation_node();
@@ -1254,7 +1254,7 @@ bool AnimationNodeStateMachine::is_parameter_read_only(const StringName &p_param
 	return false;
 }
 
-void AnimationNodeStateMachine::add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Vector2 &p_position) {
+void AnimationNodeStateMachine::add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Hector2 &p_position) {
 	ERR_FAIL_COND(states.has(p_name));
 	ERR_FAIL_COND(p_node.is_null());
 	ERR_FAIL_COND(String(p_name).contains("/"));
@@ -1349,7 +1349,7 @@ StringName AnimationNodeStateMachine::get_node_name(const Ref<AnimationNode> &p_
 }
 
 void AnimationNodeStateMachine::get_child_nodes(List<ChildNode> *r_child_nodes) {
-	Vector<StringName> nodes;
+	Hector<StringName> nodes;
 
 	for (const KeyValue<StringName, State> &E : states) {
 		nodes.push_back(E.key);
@@ -1478,8 +1478,8 @@ int AnimationNodeStateMachine::find_transition(const StringName &p_from, const S
 	return -1;
 }
 
-Vector<int> AnimationNodeStateMachine::find_transition_from(const StringName &p_from) const {
-	Vector<int> ret;
+Hector<int> AnimationNodeStateMachine::find_transition_from(const StringName &p_from) const {
+	Hector<int> ret;
 	for (int i = 0; i < transitions.size(); i++) {
 		if (transitions[i].from == p_from) {
 			ret.push_back(i);
@@ -1488,8 +1488,8 @@ Vector<int> AnimationNodeStateMachine::find_transition_from(const StringName &p_
 	return ret;
 }
 
-Vector<int> AnimationNodeStateMachine::find_transition_to(const StringName &p_to) const {
-	Vector<int> ret;
+Hector<int> AnimationNodeStateMachine::find_transition_to(const StringName &p_to) const {
+	Hector<int> ret;
 	for (int i = 0; i < transitions.size(); i++) {
 		if (transitions[i].to == p_to) {
 			ret.push_back(i);
@@ -1504,7 +1504,7 @@ bool AnimationNodeStateMachine::_can_connect(const StringName &p_name) {
 	}
 
 	String node_name = p_name;
-	Vector<String> path = node_name.split("/");
+	Hector<String> path = node_name.split("/");
 
 	if (path.size() < 2) {
 		return false;
@@ -1586,10 +1586,10 @@ void AnimationNodeStateMachine::remove_transition_by_index(const int p_transitio
 	transitions.write[p_transition].transition->disconnect("advance_condition_changed", callable_mp(this, &AnimationNodeStateMachine::_tree_changed));
 	transitions.remove_at(p_transition);
 
-	Vector<String> path_from = String(tr.from).split("/");
-	Vector<String> path_to = String(tr.to).split("/");
+	Hector<String> path_from = String(tr.from).split("/");
+	Hector<String> path_to = String(tr.to).split("/");
 
-	List<Vector<String>> paths;
+	List<Hector<String>> paths;
 	paths.push_back(path_from);
 	paths.push_back(path_to);
 }
@@ -1603,11 +1603,11 @@ void AnimationNodeStateMachine::_remove_transition(const Ref<AnimationNodeStateM
 	}
 }
 
-void AnimationNodeStateMachine::set_graph_offset(const Vector2 &p_offset) {
+void AnimationNodeStateMachine::set_graph_offset(const Hector2 &p_offset) {
 	graph_offset = p_offset;
 }
 
-Vector2 AnimationNodeStateMachine::get_graph_offset() const {
+Hector2 AnimationNodeStateMachine::get_graph_offset() const {
 	return graph_offset;
 }
 
@@ -1715,11 +1715,11 @@ void AnimationNodeStateMachine::_get_property_list(List<PropertyInfo> *p_list) c
 
 	for (const StringName &prop_name : names) {
 		p_list->push_back(PropertyInfo(Variant::OBJECT, "states/" + prop_name + "/node", PROPERTY_HINT_RESOURCE_TYPE, "AnimationNode", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::VECTOR2, "states/" + prop_name + "/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::HECTOR2, "states/" + prop_name + "/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
 	}
 
 	p_list->push_back(PropertyInfo(Variant::ARRAY, "transitions", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-	p_list->push_back(PropertyInfo(Variant::VECTOR2, "graph_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+	p_list->push_back(PropertyInfo(Variant::HECTOR2, "graph_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
 
 	for (PropertyInfo &E : *p_list) {
 		_validate_property(E);
@@ -1738,33 +1738,33 @@ void AnimationNodeStateMachine::reset_state() {
 	states.clear();
 	transitions.clear();
 	playback = "playback";
-	graph_offset = Vector2();
+	graph_offset = Hector2();
 
 	Ref<AnimationNodeStartState> s;
 	s.instantiate();
 	State start;
 	start.node = s;
-	start.position = Vector2(200, 100);
+	start.position = Hector2(200, 100);
 	states[START_NODE] = start;
 
 	Ref<AnimationNodeEndState> e;
 	e.instantiate();
 	State end;
 	end.node = e;
-	end.position = Vector2(900, 100);
+	end.position = Hector2(900, 100);
 	states[END_NODE] = end;
 
 	emit_changed();
 	emit_signal(SNAME("tree_changed"));
 }
 
-void AnimationNodeStateMachine::set_node_position(const StringName &p_name, const Vector2 &p_position) {
+void AnimationNodeStateMachine::set_node_position(const StringName &p_name, const Hector2 &p_position) {
 	ERR_FAIL_COND(!states.has(p_name));
 	states[p_name].position = p_position;
 }
 
-Vector2 AnimationNodeStateMachine::get_node_position(const StringName &p_name) const {
-	ERR_FAIL_COND_V(!states.has(p_name), Vector2());
+Hector2 AnimationNodeStateMachine::get_node_position(const StringName &p_name) const {
+	ERR_FAIL_COND_V(!states.has(p_name), Hector2());
 	return states[p_name].position;
 }
 
@@ -1800,7 +1800,7 @@ void AnimationNodeStateMachine::get_argument_options(const StringName &p_functio
 #endif
 
 void AnimationNodeStateMachine::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("add_node", "name", "node", "position"), &AnimationNodeStateMachine::add_node, DEFVAL(Vector2()));
+	ClassDB::bind_method(D_METHOD("add_node", "name", "node", "position"), &AnimationNodeStateMachine::add_node, DEFVAL(Hector2()));
 	ClassDB::bind_method(D_METHOD("replace_node", "name", "node"), &AnimationNodeStateMachine::replace_node);
 	ClassDB::bind_method(D_METHOD("get_node", "name"), &AnimationNodeStateMachine::get_node);
 	ClassDB::bind_method(D_METHOD("remove_node", "name"), &AnimationNodeStateMachine::remove_node);
@@ -1849,13 +1849,13 @@ AnimationNodeStateMachine::AnimationNodeStateMachine() {
 	s.instantiate();
 	State start;
 	start.node = s;
-	start.position = Vector2(200, 100);
+	start.position = Hector2(200, 100);
 	states[START_NODE] = start;
 
 	Ref<AnimationNodeEndState> e;
 	e.instantiate();
 	State end;
 	end.node = e;
-	end.position = Vector2(900, 100);
+	end.position = Hector2(900, 100);
 	states[END_NODE] = end;
 }

@@ -23,7 +23,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 #define OPENXR_ENABLE_LAYERS_ENV_VAR "XR_ENABLE_API_LAYERS"
 
@@ -216,7 +216,7 @@ XrResult ApiLayerInterface::LoadApiLayers(const std::string& openxr_command, uin
     bool found_all_layers = true;
 
     if (XR_SUCCEEDED(result)) {
-        // Put all explicit and then xrCreateInstance enabled layers into a string vector
+        // Put all explicit and then xrCreateInstance enabled layers into a string Hector
 
         std::vector<std::string> enabled_explicit_api_layer_names = {};
 
@@ -421,7 +421,7 @@ XrResult ApiLayerInterface::LoadApiLayers(const std::string& openxr_command, uin
             supported_extensions.emplace_back(ext_prop.extensionName);
         }
 
-        // Add this API layer to the vector
+        // Add this API layer to the Hector
         api_layer_interfaces.emplace_back(new ApiLayerInterface(manifest_file->LayerName(), layer_library, supported_extensions,
                                                                 api_layer_info.getInstanceProcAddr,
                                                                 api_layer_info.createApiLayerInstance));

@@ -192,7 +192,7 @@ bool TParseContextBase::lValueErrorCheck(const TSourceLoc& loc, const char* op, 
             case EOpIndexDirect:
             case EOpIndexIndirect:     // fall through
             case EOpIndexDirectStruct: // fall through
-            case EOpVectorSwizzle:
+            case EOpHectorSwizzle:
             case EOpMatrixSwizzle:
                 return lValueErrorCheck(loc, op, binaryNode->getLeft());
             default:
@@ -254,7 +254,7 @@ void TParseContextBase::rValueErrorCheck(const TSourceLoc& loc, const char* op, 
             case EOpIndexDirect:
             case EOpIndexIndirect:
             case EOpIndexDirectStruct:
-            case EOpVectorSwizzle:
+            case EOpHectorSwizzle:
             case EOpMatrixSwizzle:
                 rValueErrorCheck(loc, op, binaryNode->getLeft());
                 break;
@@ -295,10 +295,10 @@ void TParseContextBase::checkIndex(const TSourceLoc& loc, const TType& type, int
             error(loc, "", "[", "array index out of range '%d'", index);
             index = type.getOuterArraySize() - 1;
         }
-    } else if (type.isVector()) {
-        if (index >= type.getVectorSize()) {
-            error(loc, "", "[", "vector index out of range '%d'", index);
-            index = type.getVectorSize() - 1;
+    } else if (type.isHector()) {
+        if (index >= type.getHectorSize()) {
+            error(loc, "", "[", "Hector index out of range '%d'", index);
+            index = type.getHectorSize() - 1;
         }
     } else if (type.isMatrix()) {
         if (index >= type.getMatrixCols()) {
@@ -370,7 +370,7 @@ TVariable* TParseContextBase::getEditableVariable(const char* name)
 //    caller's choice for how to report)
 //
 const TFunction* TParseContextBase::selectFunction(
-    const TVector<const TFunction*> candidateList,
+    const THector<const TFunction*> candidateList,
     const TFunction& call,
     std::function<bool(const TType& from, const TType& to, TOperator op, int arg)> convertible,
     std::function<bool(const TType& from, const TType& to1, const TType& to2)> better,
@@ -412,7 +412,7 @@ const TFunction* TParseContextBase::selectFunction(
     tie = false;
 
     // 1. prune to viable...
-    TVector<const TFunction*> viableCandidates;
+    THector<const TFunction*> viableCandidates;
     for (auto it = candidateList.begin(); it != candidateList.end(); ++it) {
         const TFunction& candidate = *(*it);
 
@@ -501,16 +501,16 @@ const TFunction* TParseContextBase::selectFunction(
 
 //
 // Look at a '.' field selector string and change it into numerical selectors
-// for a vector or scalar.
+// for a Hector or scalar.
 //
 // Always return some form of swizzle, so the result is always usable.
 //
 void TParseContextBase::parseSwizzleSelector(const TSourceLoc& loc, const TString& compString, int vecSize,
-                                             TSwizzleSelectors<TVectorSelector>& selector)
+                                             TSwizzleSelectors<THectorSelector>& selector)
 {
     // Too long?
     if (compString.size() > MaxSwizzleSelectors)
-        error(loc, "vector swizzle too long", compString.c_str(), "");
+        error(loc, "Hector swizzle too long", compString.c_str(), "");
 
     // Use this to test that all swizzle characters are from the same swizzle-namespace-set
     enum {
@@ -584,13 +584,13 @@ void TParseContextBase::parseSwizzleSelector(const TSourceLoc& loc, const TStrin
     // Additional error checking.
     for (int i = 0; i < selector.size(); ++i) {
         if (selector[i] >= vecSize) {
-            error(loc, "vector swizzle selection out of range",  compString.c_str(), "");
+            error(loc, "Hector swizzle selection out of range",  compString.c_str(), "");
             selector.resize(i);
             break;
         }
 
         if (i > 0 && fieldSet[i] != fieldSet[i-1]) {
-            error(loc, "vector swizzle selectors not from the same set", compString.c_str(), "");
+            error(loc, "Hector swizzle selectors not from the same set", compString.c_str(), "");
             selector.resize(i);
             break;
         }

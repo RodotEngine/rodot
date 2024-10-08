@@ -117,7 +117,7 @@ void GodotBody3D::update_mass_properties() {
 					// NOTE: we don't take the scale of collision shapes into account when computing the inertia tensor!
 					shape_inertia_tensor = shape_basis * shape_inertia_tensor * shape_basis.transposed();
 
-					Vector3 shape_origin = shape_transform.origin - center_of_mass_local;
+					Hector3 shape_origin = shape_transform.origin - center_of_mass_local;
 					inertia_tensor += shape_inertia_tensor + (Basis() * shape_origin.dot(shape_origin) - shape_origin.outer(shape_origin)) * mass_new;
 				}
 
@@ -151,7 +151,7 @@ void GodotBody3D::update_mass_properties() {
 		} break;
 		case PhysicsServer3D::BODY_MODE_KINEMATIC:
 		case PhysicsServer3D::BODY_MODE_STATIC: {
-			_inv_inertia = Vector3();
+			_inv_inertia = Hector3();
 			_inv_mass = 0;
 		} break;
 		case PhysicsServer3D::BODY_MODE_RIGID_LINEAR: {
@@ -266,7 +266,7 @@ Variant GodotBody3D::get_param(PhysicsServer3D::BodyParameter p_param) const {
 			if (mode == PhysicsServer3D::BODY_MODE_RIGID) {
 				return _inv_inertia.inverse();
 			} else {
-				return Vector3();
+				return Hector3();
 			}
 		} break;
 		case PhysicsServer3D::BODY_PARAM_CENTER_OF_MASS: {
@@ -304,11 +304,11 @@ void GodotBody3D::set_mode(PhysicsServer3D::BodyMode p_mode) {
 		case PhysicsServer3D::BODY_MODE_KINEMATIC: {
 			_set_inv_transform(get_transform().affine_inverse());
 			_inv_mass = 0;
-			_inv_inertia = Vector3();
+			_inv_inertia = Hector3();
 			_set_static(p_mode == PhysicsServer3D::BODY_MODE_STATIC);
 			set_active(p_mode == PhysicsServer3D::BODY_MODE_KINEMATIC && contacts.size());
-			linear_velocity = Vector3();
-			angular_velocity = Vector3();
+			linear_velocity = Hector3();
+			angular_velocity = Hector3();
 			if (mode == PhysicsServer3D::BODY_MODE_KINEMATIC && prev != mode) {
 				first_time_kinematic = true;
 			}
@@ -329,8 +329,8 @@ void GodotBody3D::set_mode(PhysicsServer3D::BodyMode p_mode) {
 		} break;
 		case PhysicsServer3D::BODY_MODE_RIGID_LINEAR: {
 			_inv_mass = mass > 0 ? (1.0 / mass) : 0;
-			_inv_inertia = Vector3();
-			angular_velocity = Vector3();
+			_inv_inertia = Hector3();
+			angular_velocity = Hector3();
 			_update_transform_dependent();
 			_set_static(false);
 			set_active(true);
@@ -396,10 +396,10 @@ void GodotBody3D::set_state(PhysicsServer3D::BodyState p_state, const Variant &p
 			}
 			bool do_sleep = p_variant;
 			if (do_sleep) {
-				linear_velocity = Vector3();
-				//biased_linear_velocity=Vector3();
-				angular_velocity = Vector3();
-				//biased_angular_velocity=Vector3();
+				linear_velocity = Hector3();
+				//biased_linear_velocity=Hector3();
+				angular_velocity = Hector3();
+				//biased_angular_velocity=Hector3();
 				set_active(false);
 			} else {
 				set_active(true);
@@ -488,7 +488,7 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 
 	bool stopped = false;
 
-	gravity = Vector3(0, 0, 0);
+	gravity = Hector3(0, 0, 0);
 
 	total_linear_damp = 0.0;
 	total_angular_damp = 0.0;
@@ -501,7 +501,7 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 			if (!gravity_done) {
 				PhysicsServer3D::AreaSpaceOverrideMode area_gravity_mode = (PhysicsServer3D::AreaSpaceOverrideMode)(int)aa[i].area->get_param(PhysicsServer3D::AREA_PARAM_GRAVITY_OVERRIDE_MODE);
 				if (area_gravity_mode != PhysicsServer3D::AREA_SPACE_OVERRIDE_DISABLED) {
-					Vector3 area_gravity;
+					Hector3 area_gravity;
 					aa[i].area->compute_gravity(get_transform().get_origin(), area_gravity);
 					switch (area_gravity_mode) {
 						case PhysicsServer3D::AREA_SPACE_OVERRIDE_COMBINE:
@@ -569,7 +569,7 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 		ERR_FAIL_NULL(default_area);
 
 		if (!gravity_done) {
-			Vector3 default_gravity;
+			Hector3 default_gravity;
 			default_area->compute_gravity(get_transform().get_origin(), default_gravity);
 			gravity += default_gravity;
 		}
@@ -608,7 +608,7 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 	prev_linear_velocity = linear_velocity;
 	prev_angular_velocity = angular_velocity;
 
-	Vector3 motion;
+	Hector3 motion;
 	bool do_motion = false;
 
 	if (mode == PhysicsServer3D::BODY_MODE_KINEMATIC) {
@@ -619,7 +619,7 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 
 		//compute a FAKE angular velocity, not so easy
 		Basis rot = new_transform.basis.orthonormalized() * get_transform().basis.orthonormalized().transposed();
-		Vector3 axis;
+		Hector3 axis;
 		real_t angle;
 
 		rot.get_axis_angle(axis, angle);
@@ -629,8 +629,8 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 		if (!omit_force_integration) {
 			//overridden by direct state query
 
-			Vector3 force = gravity * mass + applied_force + constant_force;
-			Vector3 torque = applied_torque + constant_torque;
+			Hector3 force = gravity * mass + applied_force + constant_force;
+			Hector3 torque = applied_torque + constant_torque;
 
 			real_t damp = 1.0 - p_step * total_linear_damp;
 
@@ -657,11 +657,11 @@ void GodotBody3D::integrate_forces(real_t p_step) {
 		}
 	}
 
-	applied_force = Vector3();
-	applied_torque = Vector3();
+	applied_force = Hector3();
+	applied_torque = Hector3();
 
-	biased_angular_velocity = Vector3();
-	biased_linear_velocity = Vector3();
+	biased_angular_velocity = Hector3();
+	biased_linear_velocity = Hector3();
 
 	if (do_motion) { //shapes temporarily extend for raycast
 		_update_shapes_with_motion(motion);
@@ -700,20 +700,20 @@ void GodotBody3D::integrate_velocities(real_t p_step) {
 	if (mode == PhysicsServer3D::BODY_MODE_KINEMATIC) {
 		_set_transform(new_transform, false);
 		_set_inv_transform(new_transform.affine_inverse());
-		if (contacts.size() == 0 && linear_velocity == Vector3() && angular_velocity == Vector3()) {
+		if (contacts.size() == 0 && linear_velocity == Hector3() && angular_velocity == Hector3()) {
 			set_active(false); //stopped moving, deactivate
 		}
 
 		return;
 	}
 
-	Vector3 total_angular_velocity = angular_velocity + biased_angular_velocity;
+	Hector3 total_angular_velocity = angular_velocity + biased_angular_velocity;
 
 	real_t ang_vel = total_angular_velocity.length();
 	Transform3D transform_new = get_transform();
 
 	if (!Math::is_zero_approx(ang_vel)) {
-		Vector3 ang_vel_axis = total_angular_velocity / ang_vel;
+		Hector3 ang_vel_axis = total_angular_velocity / ang_vel;
 		Basis rot(ang_vel_axis, ang_vel * p_step);
 		Basis identity3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 		transform_new.origin += ((identity3 - rot) * transform_new.basis).xform(center_of_mass_local);
@@ -721,7 +721,7 @@ void GodotBody3D::integrate_velocities(real_t p_step) {
 		transform_new.orthonormalize();
 	}
 
-	Vector3 total_linear_velocity = linear_velocity + biased_linear_velocity;
+	Hector3 total_linear_velocity = linear_velocity + biased_linear_velocity;
 	/*for(int i=0;i<3;i++) {
 		if (axis_lock&(1<<i)) {
 			transform_new.origin[i]=0.0;

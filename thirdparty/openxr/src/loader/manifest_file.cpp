@@ -38,7 +38,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 #ifndef FALLBACK_CONFIG_DIRS
 #define FALLBACK_CONFIG_DIRS "/etc/xdg"

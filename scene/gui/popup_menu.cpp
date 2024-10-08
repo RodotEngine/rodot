@@ -874,7 +874,7 @@ void PopupMenu::_draw_items() {
 		// Text
 		if (items[i].separator) {
 			if (!text.is_empty()) {
-				Vector2 text_pos = Point2(separator_ofs, item_ofs.y + Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
+				Hector2 text_pos = Point2(separator_ofs, item_ofs.y + Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
 
 				if (theme_cache.font_separator_outline_size > 0 && theme_cache.font_separator_outline_color.a > 0) {
 					items[i].text_buf->draw_outline(ci, text_pos, theme_cache.font_separator_outline_size, theme_cache.font_separator_outline_color);
@@ -885,13 +885,13 @@ void PopupMenu::_draw_items() {
 			item_ofs.x += icon_ofs + check_ofs;
 
 			if (rtl) {
-				Vector2 text_pos = Size2(control->get_size().width - items[i].text_buf->get_size().width - item_ofs.x, item_ofs.y) + Point2(0, Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
+				Hector2 text_pos = Size2(control->get_size().width - items[i].text_buf->get_size().width - item_ofs.x, item_ofs.y) + Point2(0, Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
 				if (theme_cache.font_outline_size > 0 && theme_cache.font_outline_color.a > 0) {
 					items[i].text_buf->draw_outline(ci, text_pos, theme_cache.font_outline_size, theme_cache.font_outline_color);
 				}
 				items[i].text_buf->draw(ci, text_pos, items[i].disabled ? theme_cache.font_disabled_color : (i == mouse_over ? theme_cache.font_hover_color : theme_cache.font_color));
 			} else {
-				Vector2 text_pos = item_ofs + Point2(0, Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
+				Hector2 text_pos = item_ofs + Point2(0, Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
 				if (theme_cache.font_outline_size > 0 && theme_cache.font_outline_color.a > 0) {
 					items[i].text_buf->draw_outline(ci, text_pos, theme_cache.font_outline_size, theme_cache.font_outline_color);
 				}
@@ -906,7 +906,7 @@ void PopupMenu::_draw_items() {
 			} else {
 				item_ofs.x = display_width - theme_cache.panel_style->get_margin(SIDE_RIGHT) - items[i].accel_text_buf->get_size().x - theme_cache.item_end_padding;
 			}
-			Vector2 text_pos = item_ofs + Point2(0, Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
+			Hector2 text_pos = item_ofs + Point2(0, Math::floor((h - items[i].text_buf->get_size().y) / 2.0));
 			if (theme_cache.font_outline_size > 0 && theme_cache.font_outline_color.a > 0) {
 				items[i].accel_text_buf->draw_outline(ci, text_pos, theme_cache.font_outline_size, theme_cache.font_outline_color);
 			}
@@ -2834,7 +2834,7 @@ void PopupMenu::popup(const Rect2i &p_bounds) {
 	} else {
 		set_flag(FLAG_NO_FOCUS, !is_embedded());
 
-		moved = Vector2();
+		moved = Hector2();
 		popup_time_msec = OS::get_singleton()->get_ticks_msec();
 		if (!is_embedded()) {
 			float win_scale = get_parent_visible_window()->get_content_scale_factor();
@@ -2842,7 +2842,7 @@ void PopupMenu::popup(const Rect2i &p_bounds) {
 			Size2 minsize = get_contents_minimum_size() * win_scale;
 			minsize.height = Math::ceil(minsize.height); // Ensures enough height at fractional content scales to prevent the v_scroll_bar from showing.
 			set_min_size(minsize); // `height` is truncated here by the cast to Size2i for Window.min_size.
-			set_size(Vector2(0, 0)); // Shrinkwraps to min size.
+			set_size(Hector2(0, 0)); // Shrinkwraps to min size.
 		}
 		Popup::popup(p_bounds);
 	}

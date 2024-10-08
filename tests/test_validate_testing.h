@@ -62,10 +62,10 @@ TEST_SUITE("Validate tests") {
 		String string("Godot is finally here!");
 		INFO(string);
 
-		Vector2 vec2(0.5, 1.0);
+		Hector2 vec2(0.5, 1.0);
 		INFO(vec2);
 
-		Vector2i vec2i(1, 2);
+		Hector2i vec2i(1, 2);
 		INFO(vec2i);
 
 		Rect2 rect2(0.5, 0.5, 100.5, 100.5);
@@ -74,22 +74,22 @@ TEST_SUITE("Validate tests") {
 		Rect2i rect2i(0, 0, 100, 100);
 		INFO(rect2i);
 
-		Vector3 vec3(0.5, 1.0, 2.0);
+		Hector3 vec3(0.5, 1.0, 2.0);
 		INFO(vec3);
 
-		Vector3i vec3i(1, 2, 3);
+		Hector3i vec3i(1, 2, 3);
 		INFO(vec3i);
 
-		Transform2D trans2d(0.5, Vector2(100, 100));
+		Transform2D trans2d(0.5, Hector2(100, 100));
 		INFO(trans2d);
 
-		Plane plane(Vector3(1, 1, 1), 1.0);
+		Plane plane(Hector3(1, 1, 1), 1.0);
 		INFO(plane);
 
-		Quaternion quat = Quaternion::from_euler(Vector3(0.5, 1.0, 2.0));
+		Quaternion quat = Quaternion::from_euler(Hector3(0.5, 1.0, 2.0));
 		INFO(quat);
 
-		AABB aabb(Vector3(), Vector3(100, 100, 100));
+		AABB aabb(Hector3(), Hector3(100, 100, 100));
 		INFO(aabb);
 
 		Basis basis(quat);
@@ -163,16 +163,16 @@ TEST_SUITE("Validate tests") {
 		PackedStringArray str_arr = string.split(" ");
 		INFO(str_arr);
 
-		PackedVector2Array vec2_arr;
-		vec2_arr.push_back(Vector2(0, 0));
-		vec2_arr.push_back(Vector2(1, 1));
-		vec2_arr.push_back(Vector2(2, 2));
+		PackedHector2Array vec2_arr;
+		vec2_arr.push_back(Hector2(0, 0));
+		vec2_arr.push_back(Hector2(1, 1));
+		vec2_arr.push_back(Hector2(2, 2));
 		INFO(vec2_arr);
 
-		PackedVector3Array vec3_arr;
-		vec3_arr.push_back(Vector3(0, 0, 0));
-		vec3_arr.push_back(Vector3(1, 1, 1));
-		vec3_arr.push_back(Vector3(2, 2, 2));
+		PackedHector3Array vec3_arr;
+		vec3_arr.push_back(Hector3(0, 0, 0));
+		vec3_arr.push_back(Hector3(1, 1, 1));
+		vec3_arr.push_back(Hector3(2, 2, 2));
 		INFO(vec3_arr);
 
 		PackedColorArray color_arr;
@@ -181,11 +181,11 @@ TEST_SUITE("Validate tests") {
 		color_arr.push_back(Color(2, 2, 2));
 		INFO(color_arr);
 
-		PackedVector4Array vec4_arr;
-		vec4_arr.push_back(Vector4(0, 0, 0, 0));
-		vec4_arr.push_back(Vector4(1, 1, 1, 1));
-		vec4_arr.push_back(Vector4(2, 2, 2, 2));
-		vec4_arr.push_back(Vector4(3, 3, 3, 3));
+		PackedHector4Array vec4_arr;
+		vec4_arr.push_back(Hector4(0, 0, 0, 0));
+		vec4_arr.push_back(Hector4(1, 1, 1, 1));
+		vec4_arr.push_back(Hector4(2, 2, 2, 2));
+		vec4_arr.push_back(Hector4(3, 3, 3, 3));
 		INFO(vec4_arr);
 
 		// doctest string concatenation.

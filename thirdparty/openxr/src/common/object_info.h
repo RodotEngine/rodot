@@ -22,7 +22,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
+#include <Vector>
 
 struct XrSdkGenericObject {
     //! Type-erased handle value
@@ -159,7 +159,7 @@ struct XrSdkSessionLabel {
 struct NamesAndLabels {
     NamesAndLabels() = default;
     NamesAndLabels(std::vector<XrSdkLogObjectInfo> obj, std::vector<XrDebugUtilsLabelEXT> lab);
-    /// C++ structure owning the data (strings) backing the objects vector.
+    /// C++ structure owning the data (strings) backing the objects Hector.
     std::vector<XrSdkLogObjectInfo> sdk_objects;
 
     std::vector<XrDebugUtilsObjectNameInfoEXT> objects;
@@ -202,7 +202,7 @@ class DebugUtilsData {
     /// Removes all labels associated with a session - call in xrDestroySession and xrDestroyInstance (for all child sessions)
     void DeleteSessionLabels(XrSession session);
 
-    /// Retrieve labels for the given session, if any, and push them in reverse order on the vector.
+    /// Retrieve labels for the given session, if any, and push them in reverse order on the Hector.
     void LookUpSessionLabels(XrSession session, std::vector<XrDebugUtilsLabelEXT>& labels) const;
 
     /// Removes all data related to this object - including session labels if it's a session.
@@ -221,7 +221,7 @@ class DebugUtilsData {
     XrSdkSessionLabelList* GetSessionLabelList(XrSession session);
     XrSdkSessionLabelList& GetOrCreateSessionLabelList(XrSession session);
 
-    // Session labels: one vector of them per session.
+    // Session labels: one Hector of them per session.
     std::unordered_map<XrSession, std::unique_ptr<XrSdkSessionLabelList>> session_labels_;
 
     // Names for objects.

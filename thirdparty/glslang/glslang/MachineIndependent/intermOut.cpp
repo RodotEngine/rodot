@@ -128,8 +128,8 @@ bool TOutputTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
     case EOpAddAssign:                out.debug << "add second child into first child";          break;
     case EOpSubAssign:                out.debug << "subtract second child into first child";     break;
     case EOpMulAssign:                out.debug << "multiply second child into first child";     break;
-    case EOpVectorTimesMatrixAssign:  out.debug << "matrix mult second child into first child";  break;
-    case EOpVectorTimesScalarAssign:  out.debug << "vector scale second child into first child"; break;
+    case EOpHectorTimesMatrixAssign:  out.debug << "matrix mult second child into first child";  break;
+    case EOpHectorTimesScalarAssign:  out.debug << "Hector scale second child into first child"; break;
     case EOpMatrixTimesScalarAssign:  out.debug << "matrix scale second child into first child"; break;
     case EOpMatrixTimesMatrixAssign:  out.debug << "matrix mult second child into first child";  break;
     case EOpDivAssign:                out.debug << "divide second child into first child";       break;
@@ -149,7 +149,7 @@ bool TOutputTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
             out.debug << (*members)[node->getRight()->getAsConstantUnion()->getConstArray()[0].getIConst()].type->getFieldName();
             out.debug << ": direct index for structure";      break;
         }
-    case EOpVectorSwizzle: out.debug << "vector swizzle"; break;
+    case EOpHectorSwizzle: out.debug << "Hector swizzle"; break;
     case EOpMatrixSwizzle: out.debug << "matrix swizzle"; break;
 
     case EOpAdd:    out.debug << "add";                     break;
@@ -168,12 +168,12 @@ bool TOutputTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
     case EOpGreaterThan:      out.debug << "Compare Greater Than";          break;
     case EOpLessThanEqual:    out.debug << "Compare Less Than or Equal";    break;
     case EOpGreaterThanEqual: out.debug << "Compare Greater Than or Equal"; break;
-    case EOpVectorEqual:      out.debug << "Equal";                         break;
-    case EOpVectorNotEqual:   out.debug << "NotEqual";                      break;
+    case EOpHectorEqual:      out.debug << "Equal";                         break;
+    case EOpHectorNotEqual:   out.debug << "NotEqual";                      break;
 
-    case EOpVectorTimesScalar: out.debug << "vector-scale";          break;
-    case EOpVectorTimesMatrix: out.debug << "vector-times-matrix";   break;
-    case EOpMatrixTimesVector: out.debug << "matrix-times-vector";   break;
+    case EOpHectorTimesScalar: out.debug << "Hector-scale";          break;
+    case EOpHectorTimesMatrix: out.debug << "Hector-times-matrix";   break;
+    case EOpMatrixTimesHector: out.debug << "matrix-times-Hector";   break;
     case EOpMatrixTimesScalar: out.debug << "matrix-scale";          break;
     case EOpMatrixTimesMatrix: out.debug << "matrix-multiply";       break;
 
@@ -206,7 +206,7 @@ bool TOutputTraverser::visitUnary(TVisit /* visit */, TIntermUnary* node)
 
     switch (node->getOp()) {
     case EOpNegative:       out.debug << "Negate value";         break;
-    case EOpVectorLogicalNot:
+    case EOpHectorLogicalNot:
     case EOpLogicalNot:     out.debug << "Negate conditional";   break;
     case EOpBitwiseNot:     out.debug << "Bitwise not";          break;
 
@@ -817,8 +817,8 @@ bool TOutputTraverser::visitAggregate(TVisit /* visit */, TIntermAggregate* node
     case EOpGreaterThan:      out.debug << "Compare Greater Than";          break;
     case EOpLessThanEqual:    out.debug << "Compare Less Than or Equal";    break;
     case EOpGreaterThanEqual: out.debug << "Compare Greater Than or Equal"; break;
-    case EOpVectorEqual:      out.debug << "Equal";                         break;
-    case EOpVectorNotEqual:   out.debug << "NotEqual";                      break;
+    case EOpHectorEqual:      out.debug << "Equal";                         break;
+    case EOpHectorNotEqual:   out.debug << "NotEqual";                      break;
 
     case EOpMod:           out.debug << "mod";         break;
     case EOpModf:          out.debug << "modf";        break;

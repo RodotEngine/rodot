@@ -79,7 +79,7 @@
 
 
   static void
-  ft_conic_split( FT_Vector*  base )
+  ft_conic_split( FT_Hector*  base )
   {
     FT_Pos  a, b;
 
@@ -101,11 +101,11 @@
 
 
   static FT_Bool
-  ft_conic_is_small_enough( FT_Vector*  base,
+  ft_conic_is_small_enough( FT_Hector*  base,
                             FT_Angle   *angle_in,
                             FT_Angle   *angle_out )
   {
-    FT_Vector  d1, d2;
+    FT_Hector  d1, d2;
     FT_Angle   theta;
     FT_Int     close1, close2;
 
@@ -152,7 +152,7 @@
 
 
   static void
-  ft_cubic_split( FT_Vector*  base )
+  ft_cubic_split( FT_Hector*  base )
   {
     FT_Pos  a, b, c;
 
@@ -195,12 +195,12 @@
 
 
   static FT_Bool
-  ft_cubic_is_small_enough( FT_Vector*  base,
+  ft_cubic_is_small_enough( FT_Hector*  base,
                             FT_Angle   *angle_in,
                             FT_Angle   *angle_mid,
                             FT_Angle   *angle_out )
   {
-    FT_Vector  d1, d2, d3;
+    FT_Hector  d1, d2, d3;
     FT_Angle   theta1, theta2;
     FT_Int     close1, close2, close3;
 
@@ -313,7 +313,7 @@
   {
     FT_UInt     num_points;
     FT_UInt     max_points;
-    FT_Vector*  points;
+    FT_Hector*  points;
     FT_Byte*    tags;
     FT_Bool     movable;  /* TRUE for ends of lineto borders */
     FT_Int      start;    /* index of current sub-path start point */
@@ -378,13 +378,13 @@
       {
         /* reverse the points */
         {
-          FT_Vector*  vec1 = border->points + start + 1;
-          FT_Vector*  vec2 = border->points + count - 1;
+          FT_Hector*  vec1 = border->points + start + 1;
+          FT_Hector*  vec2 = border->points + count - 1;
 
 
           for ( ; vec1 < vec2; vec1++, vec2-- )
           {
-            FT_Vector  tmp;
+            FT_Hector  tmp;
 
 
             tmp   = *vec1;
@@ -422,7 +422,7 @@
 
   static FT_Error
   ft_stroke_border_lineto( FT_StrokeBorder  border,
-                           FT_Vector*       to,
+                           FT_Hector*       to,
                            FT_Bool          movable )
   {
     FT_Error  error = FT_Err_Ok;
@@ -447,7 +447,7 @@
       error = ft_stroke_border_grow( border, 1 );
       if ( !error )
       {
-        FT_Vector*  vec = border->points + border->num_points;
+        FT_Hector*  vec = border->points + border->num_points;
         FT_Byte*    tag = border->tags   + border->num_points;
 
 
@@ -464,8 +464,8 @@
 
   static FT_Error
   ft_stroke_border_conicto( FT_StrokeBorder  border,
-                            FT_Vector*       control,
-                            FT_Vector*       to )
+                            FT_Hector*       control,
+                            FT_Hector*       to )
   {
     FT_Error  error;
 
@@ -475,7 +475,7 @@
     error = ft_stroke_border_grow( border, 2 );
     if ( !error )
     {
-      FT_Vector*  vec = border->points + border->num_points;
+      FT_Hector*  vec = border->points + border->num_points;
       FT_Byte*    tag = border->tags   + border->num_points;
 
 
@@ -496,9 +496,9 @@
 
   static FT_Error
   ft_stroke_border_cubicto( FT_StrokeBorder  border,
-                            FT_Vector*       control1,
-                            FT_Vector*       control2,
-                            FT_Vector*       to )
+                            FT_Hector*       control1,
+                            FT_Hector*       control2,
+                            FT_Hector*       to )
   {
     FT_Error  error;
 
@@ -508,7 +508,7 @@
     error = ft_stroke_border_grow( border, 3 );
     if ( !error )
     {
-      FT_Vector*  vec = border->points + border->num_points;
+      FT_Hector*  vec = border->points + border->num_points;
       FT_Byte*    tag = border->tags   + border->num_points;
 
 
@@ -534,13 +534,13 @@
 
   static FT_Error
   ft_stroke_border_arcto( FT_StrokeBorder  border,
-                          FT_Vector*       center,
+                          FT_Hector*       center,
                           FT_Fixed         radius,
                           FT_Angle         angle_start,
                           FT_Angle         angle_diff )
   {
     FT_Fixed   coef;
-    FT_Vector  a0, a1, a2, a3;
+    FT_Hector  a0, a1, a2, a3;
     FT_Int     i, arcs = 1;
     FT_Error   error = FT_Err_Ok;
 
@@ -555,7 +555,7 @@
     coef += coef / 3;
 
     /* compute start and first control point */
-    FT_Vector_From_Polar( &a0, radius, angle_start );
+    FT_Hector_From_Polar( &a0, radius, angle_start );
     a1.x = FT_MulFix( -a0.y, coef );
     a1.y = FT_MulFix(  a0.x, coef );
 
@@ -567,7 +567,7 @@
     for ( i = 1; i <= arcs; i++ )
     {
       /* compute end and second control point */
-      FT_Vector_From_Polar( &a3, radius,
+      FT_Hector_From_Polar( &a3, radius,
                             angle_start + i * angle_diff / arcs );
       a2.x = FT_MulFix(  a3.y, coef );
       a2.y = FT_MulFix( -a3.x, coef );
@@ -593,7 +593,7 @@
 
   static FT_Error
   ft_stroke_border_moveto( FT_StrokeBorder  border,
-                           FT_Vector*       to )
+                           FT_Hector*       to )
   {
     /* close current open path if any ? */
     if ( border->start >= 0 )
@@ -656,7 +656,7 @@
     FT_UInt   num_contours = 0;
 
     FT_UInt     count      = border->num_points;
-    FT_Vector*  point      = border->points;
+    FT_Hector*  point      = border->points;
     FT_Byte*    tags       = border->tags;
     FT_Int      in_contour = 0;
 
@@ -763,12 +763,12 @@
   {
     FT_Angle             angle_in;             /* direction into curr join */
     FT_Angle             angle_out;            /* direction out of join  */
-    FT_Vector            center;               /* current position */
+    FT_Hector            center;               /* current position */
     FT_Fixed             line_length;          /* length of last lineto */
     FT_Bool              first_point;          /* is this the start? */
     FT_Bool              subpath_open;         /* is the subpath open? */
     FT_Angle             subpath_angle;        /* subpath start direction */
-    FT_Vector            subpath_start;        /* subpath start position */
+    FT_Hector            subpath_start;        /* subpath start position */
     FT_Fixed             subpath_line_length;  /* subpath start lineto len */
     FT_Bool              handle_wide_strokes;  /* use wide strokes logic? */
 
@@ -925,13 +925,13 @@
     else
     {
       /* add a square or butt cap */
-      FT_Vector        middle, delta;
+      FT_Hector        middle, delta;
       FT_Fixed         radius = stroker->radius;
       FT_StrokeBorder  border = stroker->borders + side;
 
 
       /* compute middle point and first angle point */
-      FT_Vector_From_Polar( &middle, radius, angle );
+      FT_Hector_From_Polar( &middle, radius, angle );
       delta.x = side ?  middle.y : -middle.y;
       delta.y = side ? -middle.x :  middle.x;
 
@@ -974,8 +974,8 @@
     FT_StrokeBorder  border = stroker->borders + side;
     FT_Angle         phi, theta, rotate;
     FT_Fixed         length;
-    FT_Vector        sigma = { 0, 0 };
-    FT_Vector        delta;
+    FT_Hector        sigma = { 0, 0 };
+    FT_Hector        delta;
     FT_Error         error = FT_Err_Ok;
     FT_Bool          intersect;          /* use intersection of lines? */
 
@@ -996,7 +996,7 @@
       FT_Fixed  min_length;
 
 
-      FT_Vector_Unit( &sigma, theta );
+      FT_Hector_Unit( &sigma, theta );
       min_length =
         ft_pos_abs( FT_MulDiv( stroker->radius, sigma.y, sigma.x ) );
 
@@ -1007,7 +1007,7 @@
 
     if ( !intersect )
     {
-      FT_Vector_From_Polar( &delta, stroker->radius,
+      FT_Hector_From_Polar( &delta, stroker->radius,
                             stroker->angle_out + rotate );
       delta.x += stroker->center.x;
       delta.y += stroker->center.y;
@@ -1021,7 +1021,7 @@
 
       length = FT_DivFix( stroker->radius, sigma.x );
 
-      FT_Vector_From_Polar( &delta, length, phi );
+      FT_Hector_From_Polar( &delta, length, phi );
       delta.x += stroker->center.x;
       delta.y += stroker->center.y;
     }
@@ -1049,7 +1049,7 @@
     {
       /* this is a mitered (pointed) or beveled (truncated) corner */
       FT_Fixed   radius = stroker->radius;
-      FT_Vector  sigma = { 0, 0 };
+      FT_Hector  sigma = { 0, 0 };
       FT_Angle   theta = 0, phi = 0;
       FT_Bool    bevel, fixed_bevel;
 
@@ -1072,7 +1072,7 @@
 
         phi    = stroker->angle_in + theta + rotate;
 
-        FT_Vector_From_Polar( &sigma, stroker->miter_limit, theta );
+        FT_Hector_From_Polar( &sigma, stroker->miter_limit, theta );
 
         /* is miter limit exceeded? */
         if ( sigma.x < 0x10000L )
@@ -1089,11 +1089,11 @@
         if ( fixed_bevel )
         {
           /* the outer corners are simply joined together */
-          FT_Vector  delta;
+          FT_Hector  delta;
 
 
           /* add bevel */
-          FT_Vector_From_Polar( &delta,
+          FT_Hector_From_Polar( &delta,
                                 radius,
                                 stroker->angle_out + rotate );
           delta.x += stroker->center.x;
@@ -1105,12 +1105,12 @@
         else /* variable bevel or clipped miter */
         {
           /* the miter is truncated */
-          FT_Vector  middle, delta;
+          FT_Hector  middle, delta;
           FT_Fixed   coef;
 
 
           /* compute middle point and first angle point */
-          FT_Vector_From_Polar( &middle,
+          FT_Hector_From_Polar( &middle,
                                 FT_MulFix( radius, stroker->miter_limit ),
                                 phi );
 
@@ -1139,7 +1139,7 @@
           /* (line_length is zero for curves)                     */
           if ( line_length == 0 )
           {
-            FT_Vector_From_Polar( &delta,
+            FT_Hector_From_Polar( &delta,
                                   radius,
                                   stroker->angle_out + rotate );
 
@@ -1153,12 +1153,12 @@
       else /* this is a miter (intersection) */
       {
         FT_Fixed   length;
-        FT_Vector  delta;
+        FT_Hector  delta;
 
 
         length = FT_MulDiv( stroker->radius, stroker->miter_limit, sigma.x );
 
-        FT_Vector_From_Polar( &delta, length, phi );
+        FT_Hector_From_Polar( &delta, length, phi );
         delta.x += stroker->center.x;
         delta.y += stroker->center.y;
 
@@ -1170,7 +1170,7 @@
         /* (line_length is zero for curves)                */
         if ( line_length == 0 )
         {
-          FT_Vector_From_Polar( &delta,
+          FT_Hector_From_Polar( &delta,
                                 stroker->radius,
                                 stroker->angle_out + rotate );
           delta.x += stroker->center.x;
@@ -1225,13 +1225,13 @@
                             FT_Angle    start_angle,
                             FT_Fixed    line_length )
   {
-    FT_Vector        delta;
-    FT_Vector        point;
+    FT_Hector        delta;
+    FT_Hector        point;
     FT_Error         error;
     FT_StrokeBorder  border;
 
 
-    FT_Vector_From_Polar( &delta, stroker->radius,
+    FT_Hector_From_Polar( &delta, stroker->radius,
                           start_angle + FT_ANGLE_PI2 );
 
     point.x = stroker->center.x + delta.x;
@@ -1263,11 +1263,11 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_LineTo( FT_Stroker  stroker,
-                     FT_Vector*  to )
+                     FT_Hector*  to )
   {
     FT_Error         error = FT_Err_Ok;
     FT_StrokeBorder  border;
-    FT_Vector        delta;
+    FT_Hector        delta;
     FT_Angle         angle;
     FT_Int           side;
     FT_Fixed         line_length;
@@ -1284,10 +1284,10 @@
        goto Exit;
 
     /* compute length of line */
-    line_length = FT_Vector_Length( &delta );
+    line_length = FT_Hector_Length( &delta );
 
     angle = FT_Atan2( delta.x, delta.y );
-    FT_Vector_From_Polar( &delta, stroker->radius, angle + FT_ANGLE_PI2 );
+    FT_Hector_From_Polar( &delta, stroker->radius, angle + FT_ANGLE_PI2 );
 
     /* process corner if necessary */
     if ( stroker->first_point )
@@ -1311,7 +1311,7 @@
     /* now add a line segment to both the `inside' and `outside' paths */
     for ( border = stroker->borders, side = 1; side >= 0; side--, border++ )
     {
-      FT_Vector  point;
+      FT_Hector  point;
 
 
       point.x = to->x + delta.x;
@@ -1339,13 +1339,13 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_ConicTo( FT_Stroker  stroker,
-                      FT_Vector*  control,
-                      FT_Vector*  to )
+                      FT_Hector*  control,
+                      FT_Hector*  to )
   {
     FT_Error    error = FT_Err_Ok;
-    FT_Vector   bez_stack[34];
-    FT_Vector*  arc;
-    FT_Vector*  limit = bez_stack + 30;
+    FT_Hector   bez_stack[34];
+    FT_Hector*  arc;
+    FT_Hector*  limit = bez_stack + 30;
     FT_Bool     first_arc = TRUE;
 
 
@@ -1424,7 +1424,7 @@
       /* the arc's angle is small enough; we can add it directly to each */
       /* border                                                          */
       {
-        FT_Vector        ctrl, end;
+        FT_Hector        ctrl, end;
         FT_Angle         theta, phi, rotate, alpha0 = 0;
         FT_Fixed         length;
         FT_StrokeBorder  border;
@@ -1446,18 +1446,18 @@
           rotate = FT_SIDE_TO_ROTATE( side );
 
           /* compute control point */
-          FT_Vector_From_Polar( &ctrl, length, phi + rotate );
+          FT_Hector_From_Polar( &ctrl, length, phi + rotate );
           ctrl.x += arc[1].x;
           ctrl.y += arc[1].y;
 
           /* compute end point */
-          FT_Vector_From_Polar( &end, stroker->radius, angle_out + rotate );
+          FT_Hector_From_Polar( &end, stroker->radius, angle_out + rotate );
           end.x += arc[0].x;
           end.y += arc[0].y;
 
           if ( stroker->handle_wide_strokes )
           {
-            FT_Vector  start;
+            FT_Hector  start;
             FT_Angle   alpha1;
 
 
@@ -1473,7 +1473,7 @@
                    FT_ANGLE_PI / 2                             )
             {
               FT_Angle   beta, gamma;
-              FT_Vector  bvec, delta;
+              FT_Hector  bvec, delta;
               FT_Fixed   blen, sinA, sinB, alen;
 
 
@@ -1484,14 +1484,14 @@
               bvec.x = end.x - start.x;
               bvec.y = end.y - start.y;
 
-              blen = FT_Vector_Length( &bvec );
+              blen = FT_Hector_Length( &bvec );
 
               sinA = ft_pos_abs( FT_Sin( alpha1 - gamma ) );
               sinB = ft_pos_abs( FT_Sin( beta - gamma ) );
 
               alen = FT_MulDiv( blen, sinA, sinB );
 
-              FT_Vector_From_Polar( &delta, alen, beta );
+              FT_Hector_From_Polar( &delta, alen, beta );
               delta.x += start.x;
               delta.y += start.y;
 
@@ -1541,14 +1541,14 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_CubicTo( FT_Stroker  stroker,
-                      FT_Vector*  control1,
-                      FT_Vector*  control2,
-                      FT_Vector*  to )
+                      FT_Hector*  control1,
+                      FT_Hector*  control2,
+                      FT_Hector*  to )
   {
     FT_Error    error = FT_Err_Ok;
-    FT_Vector   bez_stack[37];
-    FT_Vector*  arc;
-    FT_Vector*  limit = bez_stack + 32;
+    FT_Hector   bez_stack[37];
+    FT_Hector*  arc;
+    FT_Hector*  limit = bez_stack + 32;
     FT_Bool     first_arc = TRUE;
 
 
@@ -1631,7 +1631,7 @@
       /* the arc's angle is small enough; we can add it directly to each */
       /* border                                                          */
       {
-        FT_Vector        ctrl1, ctrl2, end;
+        FT_Hector        ctrl1, ctrl2, end;
         FT_Angle         theta1, phi1, theta2, phi2, rotate, alpha0 = 0;
         FT_Fixed         length1, length2;
         FT_StrokeBorder  border;
@@ -1656,22 +1656,22 @@
           rotate = FT_SIDE_TO_ROTATE( side );
 
           /* compute control points */
-          FT_Vector_From_Polar( &ctrl1, length1, phi1 + rotate );
+          FT_Hector_From_Polar( &ctrl1, length1, phi1 + rotate );
           ctrl1.x += arc[2].x;
           ctrl1.y += arc[2].y;
 
-          FT_Vector_From_Polar( &ctrl2, length2, phi2 + rotate );
+          FT_Hector_From_Polar( &ctrl2, length2, phi2 + rotate );
           ctrl2.x += arc[1].x;
           ctrl2.y += arc[1].y;
 
           /* compute end point */
-          FT_Vector_From_Polar( &end, stroker->radius, angle_out + rotate );
+          FT_Hector_From_Polar( &end, stroker->radius, angle_out + rotate );
           end.x += arc[0].x;
           end.y += arc[0].y;
 
           if ( stroker->handle_wide_strokes )
           {
-            FT_Vector  start;
+            FT_Hector  start;
             FT_Angle   alpha1;
 
 
@@ -1687,7 +1687,7 @@
                    FT_ANGLE_PI / 2                             )
             {
               FT_Angle   beta, gamma;
-              FT_Vector  bvec, delta;
+              FT_Hector  bvec, delta;
               FT_Fixed   blen, sinA, sinB, alen;
 
 
@@ -1698,14 +1698,14 @@
               bvec.x = end.x - start.x;
               bvec.y = end.y - start.y;
 
-              blen = FT_Vector_Length( &bvec );
+              blen = FT_Hector_Length( &bvec );
 
               sinA = ft_pos_abs( FT_Sin( alpha1 - gamma ) );
               sinB = ft_pos_abs( FT_Sin( beta - gamma ) );
 
               alen = FT_MulDiv( blen, sinA, sinB );
 
-              FT_Vector_From_Polar( &delta, alen, beta );
+              FT_Hector_From_Polar( &delta, alen, beta );
               delta.x += start.x;
               delta.y += start.y;
 
@@ -1758,7 +1758,7 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_BeginSubPath( FT_Stroker  stroker,
-                           FT_Vector*  to,
+                           FT_Hector*  to,
                            FT_Bool     open )
   {
     if ( !stroker || !to )
@@ -1811,9 +1811,9 @@
         goto Exit;
 
       {
-        FT_Vector*  dst_point = right->points + right->num_points;
+        FT_Hector*  dst_point = right->points + right->num_points;
         FT_Byte*    dst_tag   = right->tags   + right->num_points;
-        FT_Vector*  src_point = left->points  + left->num_points - 1;
+        FT_Hector*  src_point = left->points  + left->num_points - 1;
         FT_Byte*    src_tag   = left->tags    + left->num_points - 1;
 
 
@@ -2044,12 +2044,12 @@
                            FT_Outline*  outline,
                            FT_Bool      opened )
   {
-    FT_Vector   v_last;
-    FT_Vector   v_control;
-    FT_Vector   v_start;
+    FT_Hector   v_last;
+    FT_Hector   v_control;
+    FT_Hector   v_start;
 
-    FT_Vector*  point;
-    FT_Vector*  limit;
+    FT_Hector*  point;
+    FT_Hector*  limit;
     char*       tags;
 
     FT_Error    error;
@@ -2129,7 +2129,7 @@
         {
         case FT_CURVE_TAG_ON:  /* emit a single line_to */
           {
-            FT_Vector  vec;
+            FT_Hector  vec;
 
 
             vec.x = point->x;
@@ -2148,8 +2148,8 @@
         Do_Conic:
           if ( point < limit )
           {
-            FT_Vector  vec;
-            FT_Vector  v_middle;
+            FT_Hector  vec;
+            FT_Hector  v_middle;
 
 
             point++;
@@ -2185,7 +2185,7 @@
 
         default:  /* FT_CURVE_TAG_CUBIC */
           {
-            FT_Vector  vec1, vec2;
+            FT_Hector  vec1, vec2;
 
 
             if ( point + 1 > limit                             ||
@@ -2200,7 +2200,7 @@
 
             if ( point <= limit )
             {
-              FT_Vector  vec;
+              FT_Hector  vec;
 
 
               vec = point[0];

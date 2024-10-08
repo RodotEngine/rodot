@@ -56,14 +56,14 @@ void EditorExportPlatformIOS::get_preset_features(const Ref<EditorExportPreset> 
 	r_features->push_back("etc2");
 	r_features->push_back("astc");
 
-	Vector<String> architectures = _get_preset_architectures(p_preset);
+	Hector<String> architectures = _get_preset_architectures(p_preset);
 	for (int i = 0; i < architectures.size(); ++i) {
 		r_features->push_back(architectures[i]);
 	}
 }
 
-Vector<EditorExportPlatformIOS::ExportArchitecture> EditorExportPlatformIOS::_get_supported_architectures() const {
-	Vector<ExportArchitecture> archs;
+Hector<EditorExportPlatformIOS::ExportArchitecture> EditorExportPlatformIOS::_get_supported_architectures() const {
+	Hector<ExportArchitecture> archs;
 	archs.push_back(ExportArchitecture("arm64", true));
 	return archs;
 }
@@ -115,8 +115,8 @@ static const IconInfo icon_infos[] = {
 struct APIAccessInfo {
 	String prop_name;
 	String type_name;
-	Vector<String> prop_flag_value;
-	Vector<String> prop_flag_name;
+	Hector<String> prop_flag_value;
+	Hector<String> prop_flag_name;
 	int default_value;
 };
 
@@ -265,7 +265,7 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "custom_template/debug", PROPERTY_HINT_GLOBAL_FILE, "*.zip"), ""));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "custom_template/release", PROPERTY_HINT_GLOBAL_FILE, "*.zip"), ""));
 
-	Vector<ExportArchitecture> architectures = _get_supported_architectures();
+	Hector<ExportArchitecture> architectures = _get_supported_architectures();
 	for (int i = 0; i < architectures.size(); ++i) {
 		r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, vformat("%s/%s", PNAME("architectures"), architectures[i].name)), architectures[i].is_default));
 	}
@@ -297,7 +297,7 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "application/delete_old_export_files_unconditionally"), false));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "application/generate_simulator_library_if_missing"), true));
 
-	Vector<PluginConfigIOS> found_plugins = get_plugins();
+	Hector<PluginConfigIOS> found_plugins = get_plugins();
 	for (int i = 0; i < found_plugins.size(); i++) {
 		r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, vformat("%s/%s", PNAME("plugins"), found_plugins[i].name)), false));
 	}
@@ -354,7 +354,7 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 	}
 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "privacy/tracking_enabled"), false));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "privacy/tracking_domains"), Vector<String>()));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "privacy/tracking_domains"), Hector<String>()));
 
 	{
 		String hint;
@@ -392,7 +392,7 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::COLOR, "storyboard/custom_bg_color"), Color()));
 }
 
-void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &pfile, const IOSConfigData &p_config, bool p_debug) {
+void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &pfile, const IOSConfigData &p_config, bool p_debug) {
 	static const String export_method_string[] = {
 		"app-store",
 		"development",
@@ -412,7 +412,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 	String str;
 	String strnew;
 	str.parse_utf8((const char *)pfile.ptr(), pfile.size());
-	Vector<String> lines = str.split("\n");
+	Hector<String> lines = str.split("\n");
 	for (int i = 0; i < lines.size(); i++) {
 		if (lines[i].contains("$binary")) {
 			strnew += lines[i].replace("$binary", p_config.binary_name) + "\n";
@@ -501,7 +501,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			// I've removed armv7 as we can run on 64bit only devices
 			// Note that capabilities listed here are requirements for the app to be installed.
 			// They don't enable anything.
-			Vector<String> capabilities_list = p_config.capabilities;
+			Hector<String> capabilities_list = p_config.capabilities;
 
 			if ((bool)p_preset->get("capabilities/access_wifi") && !capabilities_list.has("wifi")) {
 				capabilities_list.push_back("wifi");
@@ -653,7 +653,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			strnew += lines[i].replace("$launch_screen_background_color", value) + "\n";
 		} else if (lines[i].contains("$pbx_locale_file_reference")) {
 			String locale_files;
-			Vector<String> translations = GLOBAL_GET("internationalization/locale/translations");
+			Hector<String> translations = GLOBAL_GET("internationalization/locale/translations");
 			if (translations.size() > 0) {
 				HashSet<String> languages;
 				for (const String &E : translations) {
@@ -672,7 +672,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			strnew += lines[i].replace("$pbx_locale_file_reference", locale_files);
 		} else if (lines[i].contains("$pbx_locale_build_reference")) {
 			String locale_files;
-			Vector<String> translations = GLOBAL_GET("internationalization/locale/translations");
+			Hector<String> translations = GLOBAL_GET("internationalization/locale/translations");
 			if (translations.size() > 0) {
 				HashSet<String> languages;
 				for (const String &E : translations) {
@@ -770,7 +770,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			} else {
 				strnew += "\t<false/>\n";
 			}
-			Vector<String> tracking_domains = p_preset->get("privacy/tracking_domains");
+			Hector<String> tracking_domains = p_preset->get("privacy/tracking_domains");
 			if (!tracking_domains.is_empty()) {
 				strnew += "\t<key>NSPrivacyTrackingDomains</key>\n";
 				strnew += "\t<array>\n";
@@ -814,7 +814,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 }
 
 String EditorExportPlatformIOS::_get_additional_plist_content() {
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	String result;
 	for (int i = 0; i < export_plugins.size(); ++i) {
 		result += export_plugins[i]->get_ios_plist_content();
@@ -823,7 +823,7 @@ String EditorExportPlatformIOS::_get_additional_plist_content() {
 }
 
 String EditorExportPlatformIOS::_get_linker_flags() {
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	String result;
 	for (int i = 0; i < export_plugins.size(); ++i) {
 		String flags = export_plugins[i]->get_ios_linker_flags();
@@ -840,7 +840,7 @@ String EditorExportPlatformIOS::_get_linker_flags() {
 }
 
 String EditorExportPlatformIOS::_get_cpp_code() {
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	String result;
 	for (int i = 0; i < export_plugins.size(); ++i) {
 		result += export_plugins[i]->get_ios_cpp_code();
@@ -971,7 +971,7 @@ Error EditorExportPlatformIOS::_export_icons(const Ref<EditorExportPreset> &p_pr
 					err = new_img->save_png(p_iconset_dir + exp_name);
 				} else if (img->get_width() != side_size || img->get_height() != side_size) {
 					if (resize_waning) {
-						add_message(EXPORT_MESSAGE_WARNING, TTR("Export Icons"), vformat("Icon (%s): '%s' has incorrect size %s and was automatically resized to %s.", info.preset_key, icon_path, img->get_size(), Vector2i(side_size, side_size)));
+						add_message(EXPORT_MESSAGE_WARNING, TTR("Export Icons"), vformat("Icon (%s): '%s' has incorrect size %s and was automatically resized to %s.", info.preset_key, icon_path, img->get_size(), Hector2i(side_size, side_size)));
 					}
 					img->resize(side_size, side_size, (Image::Interpolation)(p_preset->get("application/icon_interpolation").operator int()));
 					err = img->save_png(p_iconset_dir + exp_name);
@@ -1105,7 +1105,7 @@ Error EditorExportPlatformIOS::_export_loading_screen_file(const Ref<EditorExpor
 }
 
 Error EditorExportPlatformIOS::_walk_dir_recursive(Ref<DirAccess> &p_da, FileHandler p_handler, void *p_userdata) {
-	Vector<String> dirs;
+	Hector<String> dirs;
 	String current_dir = p_da->get_current_dir();
 	p_da->list_dir_begin();
 	String path = p_da->get_next();
@@ -1183,7 +1183,7 @@ private:
 	}
 
 	static String _hex_pad(uint32_t num) {
-		Vector<char> ret;
+		Hector<char> ret;
 		ret.resize(sizeof(num) * 2);
 		for (uint64_t i = 0; i < sizeof(num) * 2; ++i) {
 			uint8_t four_bits = (num >> (sizeof(num) * 8 - (i + 1) * 4)) & 0xF;
@@ -1215,7 +1215,7 @@ public:
 };
 
 struct ExportLibsData {
-	Vector<String> lib_paths;
+	Hector<String> lib_paths;
 	String dest_dir;
 };
 
@@ -1562,7 +1562,7 @@ Error EditorExportPlatformIOS::_convert_to_framework(const String &p_source, con
 	return OK;
 }
 
-void EditorExportPlatformIOS::_add_assets_to_project(const String &p_out_dir, const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &p_project_data, const Vector<IOSExportAsset> &p_additional_assets) {
+void EditorExportPlatformIOS::_add_assets_to_project(const String &p_out_dir, const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &p_project_data, const Hector<IOSExportAsset> &p_additional_assets) {
 	// that is just a random number, we just need Godot IDs not to clash with
 	// existing IDs in the project.
 	PbxId current_id = { 0x58938401, 0, 0 };
@@ -1655,7 +1655,7 @@ void EditorExportPlatformIOS::_add_assets_to_project(const String &p_out_dir, co
 	}
 }
 
-Error EditorExportPlatformIOS::_copy_asset(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const String &p_asset, const String *p_custom_file_name, bool p_is_framework, bool p_should_embed, Vector<IOSExportAsset> &r_exported_assets) {
+Error EditorExportPlatformIOS::_copy_asset(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const String &p_asset, const String *p_custom_file_name, bool p_is_framework, bool p_should_embed, Hector<IOSExportAsset> &r_exported_assets) {
 	String binary_name = p_out_dir.get_file().get_basename();
 
 	Ref<DirAccess> da = DirAccess::create_for_path(p_asset);
@@ -1808,7 +1808,7 @@ Error EditorExportPlatformIOS::_copy_asset(const Ref<EditorExportPreset> &p_pres
 	return OK;
 }
 
-Error EditorExportPlatformIOS::_export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Vector<String> &p_assets, bool p_is_framework, bool p_should_embed, Vector<IOSExportAsset> &r_exported_assets) {
+Error EditorExportPlatformIOS::_export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Hector<String> &p_assets, bool p_is_framework, bool p_should_embed, Hector<IOSExportAsset> &r_exported_assets) {
 	for (int f_idx = 0; f_idx < p_assets.size(); ++f_idx) {
 		const String &asset = p_assets[f_idx];
 		if (asset.begins_with("res://")) {
@@ -1827,30 +1827,30 @@ Error EditorExportPlatformIOS::_export_additional_assets(const Ref<EditorExportP
 	return OK;
 }
 
-Error EditorExportPlatformIOS::_export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Vector<SharedObject> &p_libraries, Vector<IOSExportAsset> &r_exported_assets) {
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+Error EditorExportPlatformIOS::_export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Hector<SharedObject> &p_libraries, Hector<IOSExportAsset> &r_exported_assets) {
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
-		Vector<String> linked_frameworks = export_plugins[i]->get_ios_frameworks();
+		Hector<String> linked_frameworks = export_plugins[i]->get_ios_frameworks();
 		Error err = _export_additional_assets(p_preset, p_out_dir, linked_frameworks, true, false, r_exported_assets);
 		ERR_FAIL_COND_V(err, err);
 
-		Vector<String> embedded_frameworks = export_plugins[i]->get_ios_embedded_frameworks();
+		Hector<String> embedded_frameworks = export_plugins[i]->get_ios_embedded_frameworks();
 		err = _export_additional_assets(p_preset, p_out_dir, embedded_frameworks, true, true, r_exported_assets);
 		ERR_FAIL_COND_V(err, err);
 
-		Vector<String> project_static_libs = export_plugins[i]->get_ios_project_static_libs();
+		Hector<String> project_static_libs = export_plugins[i]->get_ios_project_static_libs();
 		for (int j = 0; j < project_static_libs.size(); j++) {
 			project_static_libs.write[j] = project_static_libs[j].get_file(); // Only the file name as it's copied to the project
 		}
 		err = _export_additional_assets(p_preset, p_out_dir, project_static_libs, true, false, r_exported_assets);
 		ERR_FAIL_COND_V(err, err);
 
-		Vector<String> ios_bundle_files = export_plugins[i]->get_ios_bundle_files();
+		Hector<String> ios_bundle_files = export_plugins[i]->get_ios_bundle_files();
 		err = _export_additional_assets(p_preset, p_out_dir, ios_bundle_files, false, false, r_exported_assets);
 		ERR_FAIL_COND_V(err, err);
 	}
 
-	Vector<String> library_paths;
+	Hector<String> library_paths;
 	for (int i = 0; i < p_libraries.size(); ++i) {
 		library_paths.push_back(p_libraries[i].path);
 	}
@@ -1860,9 +1860,9 @@ Error EditorExportPlatformIOS::_export_additional_assets(const Ref<EditorExportP
 	return OK;
 }
 
-Vector<String> EditorExportPlatformIOS::_get_preset_architectures(const Ref<EditorExportPreset> &p_preset) const {
-	Vector<ExportArchitecture> all_archs = _get_supported_architectures();
-	Vector<String> enabled_archs;
+Hector<String> EditorExportPlatformIOS::_get_preset_architectures(const Ref<EditorExportPreset> &p_preset) const {
+	Hector<ExportArchitecture> all_archs = _get_supported_architectures();
+	Hector<String> enabled_archs;
 	for (int i = 0; i < all_archs.size(); ++i) {
 		bool is_enabled = p_preset->get("architectures/" + all_archs[i].name);
 		if (is_enabled) {
@@ -1872,19 +1872,19 @@ Vector<String> EditorExportPlatformIOS::_get_preset_architectures(const Ref<Edit
 	return enabled_archs;
 }
 
-Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset> &p_preset, IOSConfigData &p_config_data, const String &dest_dir, Vector<IOSExportAsset> &r_exported_assets, bool p_debug) {
+Error EditorExportPlatformIOS::_export_ios_plugins(const Ref<EditorExportPreset> &p_preset, IOSConfigData &p_config_data, const String &dest_dir, Hector<IOSExportAsset> &r_exported_assets, bool p_debug) {
 	String plugin_definition_cpp_code;
 	String plugin_initialization_cpp_code;
 	String plugin_deinitialization_cpp_code;
 
-	Vector<String> plugin_linked_dependencies;
-	Vector<String> plugin_embedded_dependencies;
-	Vector<String> plugin_files;
+	Hector<String> plugin_linked_dependencies;
+	Hector<String> plugin_embedded_dependencies;
+	Hector<String> plugin_files;
 
-	Vector<PluginConfigIOS> enabled_plugins = get_enabled_plugins(p_preset);
+	Hector<PluginConfigIOS> enabled_plugins = get_enabled_plugins(p_preset);
 
-	Vector<String> added_linked_dependenciy_names;
-	Vector<String> added_embedded_dependenciy_names;
+	Hector<String> added_linked_dependenciy_names;
+	Hector<String> added_embedded_dependenciy_names;
 	HashMap<String, String> plist_values;
 
 	HashSet<String> plugin_linker_flags;
@@ -2207,7 +2207,7 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 		return ERR_SKIP;
 	}
 	String pack_path = binary_dir + ".pck";
-	Vector<SharedObject> libraries;
+	Hector<SharedObject> libraries;
 	Error err = save_pack(p_preset, p_debug, pack_path, &libraries);
 	if (err) {
 		// Message is supplied by the subroutine method.
@@ -2253,13 +2253,13 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 		"",
 		"",
 		"",
-		Vector<String>(),
+		Hector<String>(),
 		false
 	};
 
 	config_data.plist_content += p_preset->get("application/additional_plist_content").operator String() + "\n";
 
-	Vector<IOSExportAsset> assets;
+	Hector<IOSExportAsset> assets;
 
 	Ref<DirAccess> tmp_app_path = DirAccess::create_for_path(dest_dir);
 	if (tmp_app_path.is_null()) {
@@ -2287,7 +2287,7 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 
 	//export rest of the files
 	int ret = unzGoToFirstFile(src_pkg_zip);
-	Vector<uint8_t> project_file_data;
+	Hector<uint8_t> project_file_data;
 	while (ret == UNZ_OK) {
 #if defined(MACOS_ENABLED) || defined(LINUXBSD_ENABLED)
 		bool is_execute = false;
@@ -2304,7 +2304,7 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 		String file = String::utf8(fname);
 
 		print_line("READ: " + file);
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(info.uncompressed_size);
 
 		//read
@@ -2394,8 +2394,8 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 		if (!_archive_has_arm64(sim_lib_path, &cputype, &cpusubtype) && _archive_has_arm64(dev_lib_path) && FileAccess::exists(dev_lib_path)) {
 			add_message(EXPORT_MESSAGE_INFO, TTR("Export"), TTR("ARM64 simulator library, generating from device library."));
 
-			Vector<String> tmp_lib_files;
-			Vector<Vector2i> tmp_lib_cputypes;
+			Hector<String> tmp_lib_files;
+			Hector<Hector2i> tmp_lib_cputypes;
 			// Extract/copy simulator lib.
 			if (FileAccess::exists(sim_lib_path)) {
 				if (LipO::is_lipo(sim_lib_path)) {
@@ -2406,14 +2406,14 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 							const String &f_name = tmp_lib_path + itos(tmp_lib_files.size());
 							lipo->extract_arch(i, f_name);
 							tmp_lib_files.push_back(f_name);
-							tmp_lib_cputypes.push_back(Vector2i(lipo->get_arch_cputype(i), lipo->get_arch_cpusubtype(i)));
+							tmp_lib_cputypes.push_back(Hector2i(lipo->get_arch_cputype(i), lipo->get_arch_cpusubtype(i)));
 						}
 					}
 				} else {
 					const String &f_name = tmp_lib_path + itos(tmp_lib_files.size());
 					tmp_app_path->copy(sim_lib_path, f_name);
 					tmp_lib_files.push_back(f_name);
-					tmp_lib_cputypes.push_back(Vector2i(cputype, cpusubtype));
+					tmp_lib_cputypes.push_back(Hector2i(cputype, cpusubtype));
 				}
 			}
 			// Copy device lib.
@@ -2426,7 +2426,7 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 							const String &f_name = tmp_lib_path + itos(tmp_lib_files.size());
 							lipo->extract_arch(i, f_name);
 							tmp_lib_files.push_back(f_name);
-							tmp_lib_cputypes.push_back(Vector2i(0x100000c, 0)); // ARM64.
+							tmp_lib_cputypes.push_back(Hector2i(0x100000c, 0)); // ARM64.
 							break;
 						}
 					}
@@ -2435,7 +2435,7 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 				const String &f_name = tmp_lib_path + itos(tmp_lib_files.size());
 				tmp_app_path->copy(dev_lib_path, f_name);
 				tmp_lib_files.push_back(f_name);
-				tmp_lib_cputypes.push_back(Vector2i(0x100000c, 0)); // ARM64.
+				tmp_lib_cputypes.push_back(Hector2i(0x100000c, 0)); // ARM64.
 			}
 
 			// Patch device lib.
@@ -2463,7 +2463,7 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 	Dictionary microphone_usage_descriptions = p_preset->get("privacy/microphone_usage_description_localized");
 	Dictionary photolibrary_usage_descriptions = p_preset->get("privacy/photolibrary_usage_description_localized");
 
-	Vector<String> translations = GLOBAL_GET("internationalization/locale/translations");
+	Hector<String> translations = GLOBAL_GET("internationalization/locale/translations");
 	if (translations.size() > 0) {
 		{
 			String fname = binary_dir + "/en.lproj";
@@ -2507,9 +2507,9 @@ Error EditorExportPlatformIOS::_export_project_helper(const Ref<EditorExportPres
 	}
 
 	// Copy project static libs to the project
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
-		Vector<String> project_static_libs = export_plugins[i]->get_ios_project_static_libs();
+		Hector<String> project_static_libs = export_plugins[i]->get_ios_project_static_libs();
 		for (int j = 0; j < project_static_libs.size(); j++) {
 			const String &static_lib_path = project_static_libs[j];
 			String dest_lib_file_path = dest_dir + static_lib_path.get_file();
@@ -2835,7 +2835,7 @@ bool EditorExportPlatformIOS::is_package_name_valid(const String &p_package, Str
 bool EditorExportPlatformIOS::_check_xcode_install() {
 	static bool xcode_found = false;
 	if (!xcode_found) {
-		Vector<String> mdfind_paths;
+		Hector<String> mdfind_paths;
 		List<String> mdfind_args;
 		mdfind_args.push_back("kMDItemCFBundleIdentifier=com.apple.dt.Xcode");
 
@@ -2862,7 +2862,7 @@ void EditorExportPlatformIOS::_check_for_changes_poll_thread(void *ud) {
 		if (!ea->plugins_changed.is_set()) {
 			MutexLock lock(ea->plugins_lock);
 
-			Vector<PluginConfigIOS> loaded_plugins = get_plugins();
+			Hector<PluginConfigIOS> loaded_plugins = get_plugins();
 
 			if (ea->plugins.size() != loaded_plugins.size()) {
 				ea->plugins_changed.set();
@@ -2877,7 +2877,7 @@ void EditorExportPlatformIOS::_check_for_changes_poll_thread(void *ud) {
 		}
 
 		// Check for devices updates.
-		Vector<Device> ldevices;
+		Hector<Device> ldevices;
 
 		// Enum real devices (via ios_deploy, pre Xcode 15).
 		String idepl = EDITOR_GET("export/ios/ios_deploy");
@@ -3090,7 +3090,7 @@ Error EditorExportPlatformIOS::run(const Ref<EditorExportPreset> &p_preset, int 
 		CLEANUP_AND_RETURN(err);
 	}
 
-	Vector<String> cmd_args_list;
+	Hector<String> cmd_args_list;
 	String host = EDITOR_GET("network/debug/remote_host");
 	int remote_port = (int)EDITOR_GET("network/debug/remote_port");
 

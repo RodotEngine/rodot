@@ -52,7 +52,7 @@ void Occluder3D::_update() {
 
 	aabb = AABB();
 
-	const Vector3 *ptr = vertices.ptr();
+	const Hector3 *ptr = vertices.ptr();
 	for (int i = 0; i < vertices.size(); i++) {
 		aabb.expand_to(ptr[i]);
 	}
@@ -64,7 +64,7 @@ void Occluder3D::_update() {
 	emit_changed();
 }
 
-PackedVector3Array Occluder3D::get_vertices() const {
+PackedHector3Array Occluder3D::get_vertices() const {
 	return vertices;
 }
 
@@ -72,25 +72,25 @@ PackedInt32Array Occluder3D::get_indices() const {
 	return indices;
 }
 
-Vector<Vector3> Occluder3D::get_debug_lines() const {
+Hector<Hector3> Occluder3D::get_debug_lines() const {
 	if (!debug_lines.is_empty()) {
 		return debug_lines;
 	}
 
 	if (indices.size() % 3 != 0) {
-		return Vector<Vector3>();
+		return Hector<Hector3>();
 	}
 
-	const Vector3 *vertices_ptr = vertices.ptr();
+	const Hector3 *vertices_ptr = vertices.ptr();
 	debug_lines.resize(indices.size() / 3 * 6);
-	Vector3 *line_ptr = debug_lines.ptrw();
+	Hector3 *line_ptr = debug_lines.ptrw();
 	int line_i = 0;
 	for (int i = 0; i < indices.size() / 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			int a = indices[i * 3 + j];
 			int b = indices[i * 3 + (j + 1) % 3];
-			ERR_FAIL_INDEX_V_MSG(a, vertices.size(), Vector<Vector3>(), "Occluder indices are out of range.");
-			ERR_FAIL_INDEX_V_MSG(b, vertices.size(), Vector<Vector3>(), "Occluder indices are out of range.");
+			ERR_FAIL_INDEX_V_MSG(a, vertices.size(), Hector<Hector3>(), "Occluder indices are out of range.");
+			ERR_FAIL_INDEX_V_MSG(b, vertices.size(), Hector<Hector3>(), "Occluder indices are out of range.");
 			line_ptr[line_i++] = vertices_ptr[a];
 			line_ptr[line_i++] = vertices_ptr[b];
 		}
@@ -142,13 +142,13 @@ Occluder3D::~Occluder3D() {
 
 /////////////////////////////////////////////////
 
-void ArrayOccluder3D::set_arrays(PackedVector3Array p_vertices, PackedInt32Array p_indices) {
+void ArrayOccluder3D::set_arrays(PackedHector3Array p_vertices, PackedInt32Array p_indices) {
 	vertices = p_vertices;
 	indices = p_indices;
 	_update();
 }
 
-void ArrayOccluder3D::set_vertices(PackedVector3Array p_vertices) {
+void ArrayOccluder3D::set_vertices(PackedHector3Array p_vertices) {
 	vertices = p_vertices;
 	_update();
 }
@@ -158,7 +158,7 @@ void ArrayOccluder3D::set_indices(PackedInt32Array p_indices) {
 	_update();
 }
 
-void ArrayOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void ArrayOccluder3D::_update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	r_vertices = vertices;
 	r_indices = indices;
 }
@@ -172,7 +172,7 @@ void ArrayOccluder3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_indices", "indices"), &ArrayOccluder3D::set_indices);
 	ClassDB::bind_method(D_METHOD("get_indices"), &ArrayOccluder3D::get_indices);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_vertices", "get_vertices");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_vertices", "get_vertices");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "indices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_indices", "get_indices");
 }
 
@@ -197,14 +197,14 @@ Size2 QuadOccluder3D::get_size() const {
 	return size;
 }
 
-void QuadOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void QuadOccluder3D::_update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	Size2 _size = Size2(size.x / 2.0f, size.y / 2.0f);
 
 	r_vertices = {
-		Vector3(-_size.x, -_size.y, 0),
-		Vector3(-_size.x, _size.y, 0),
-		Vector3(_size.x, _size.y, 0),
-		Vector3(_size.x, -_size.y, 0),
+		Hector3(-_size.x, -_size.y, 0),
+		Hector3(-_size.x, _size.y, 0),
+		Hector3(_size.x, _size.y, 0),
+		Hector3(_size.x, -_size.y, 0),
 	};
 
 	r_indices = {
@@ -217,7 +217,7 @@ void QuadOccluder3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &QuadOccluder3D::set_size);
 	ClassDB::bind_method(D_METHOD("get_size"), &QuadOccluder3D::get_size);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 }
 
 QuadOccluder3D::QuadOccluder3D() {
@@ -228,7 +228,7 @@ QuadOccluder3D::~QuadOccluder3D() {
 
 /////////////////////////////////////////////////
 
-void BoxOccluder3D::set_size(const Vector3 &p_size) {
+void BoxOccluder3D::set_size(const Hector3 &p_size) {
 	if (size == p_size) {
 		return;
 	}
@@ -237,24 +237,24 @@ void BoxOccluder3D::set_size(const Vector3 &p_size) {
 	_update();
 }
 
-Vector3 BoxOccluder3D::get_size() const {
+Hector3 BoxOccluder3D::get_size() const {
 	return size;
 }
 
-void BoxOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
-	Vector3 _size = Vector3(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
+void BoxOccluder3D::_update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
+	Hector3 _size = Hector3(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
 
 	r_vertices = {
 		// front
-		Vector3(-_size.x, -_size.y, _size.z),
-		Vector3(_size.x, -_size.y, _size.z),
-		Vector3(_size.x, _size.y, _size.z),
-		Vector3(-_size.x, _size.y, _size.z),
+		Hector3(-_size.x, -_size.y, _size.z),
+		Hector3(_size.x, -_size.y, _size.z),
+		Hector3(_size.x, _size.y, _size.z),
+		Hector3(-_size.x, _size.y, _size.z),
 		// back
-		Vector3(-_size.x, -_size.y, -_size.z),
-		Vector3(_size.x, -_size.y, -_size.z),
-		Vector3(_size.x, _size.y, -_size.z),
-		Vector3(-_size.x, _size.y, -_size.z),
+		Hector3(-_size.x, -_size.y, -_size.z),
+		Hector3(_size.x, -_size.y, -_size.z),
+		Hector3(_size.x, _size.y, -_size.z),
+		Hector3(-_size.x, _size.y, -_size.z),
 	};
 
 	r_indices = {
@@ -283,7 +283,7 @@ void BoxOccluder3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &BoxOccluder3D::set_size);
 	ClassDB::bind_method(D_METHOD("get_size"), &BoxOccluder3D::get_size);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 }
 
 BoxOccluder3D::BoxOccluder3D() {
@@ -307,10 +307,10 @@ float SphereOccluder3D::get_radius() const {
 	return radius;
 }
 
-void SphereOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void SphereOccluder3D::_update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	r_vertices.resize((RINGS + 2) * (RADIAL_SEGMENTS + 1));
 	int vertex_i = 0;
-	Vector3 *vertex_ptr = r_vertices.ptrw();
+	Hector3 *vertex_ptr = r_vertices.ptrw();
 
 	r_indices.resize((RINGS + 1) * RADIAL_SEGMENTS * 6);
 	int idx_i = 0;
@@ -328,7 +328,7 @@ void SphereOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt3
 
 			float x = Math::cos(u * Math_TAU);
 			float z = Math::sin(u * Math_TAU);
-			vertex_ptr[vertex_i++] = Vector3(x * w, y, z * w) * radius;
+			vertex_ptr[vertex_i++] = Hector3(x * w, y, z * w) * radius;
 
 			if (i > 0 && j > 0) {
 				idx_ptr[idx_i++] = previous_row + i - 1;
@@ -363,28 +363,28 @@ SphereOccluder3D::~SphereOccluder3D() {
 
 /////////////////////////////////////////////////
 
-void PolygonOccluder3D::set_polygon(const Vector<Vector2> &p_polygon) {
+void PolygonOccluder3D::set_polygon(const Hector<Hector2> &p_polygon) {
 	polygon = p_polygon;
 	_update();
 }
 
-Vector<Vector2> PolygonOccluder3D::get_polygon() const {
+Hector<Hector2> PolygonOccluder3D::get_polygon() const {
 	return polygon;
 }
 
-void PolygonOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void PolygonOccluder3D::_update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	if (polygon.size() < 3) {
 		r_vertices.clear();
 		r_indices.clear();
 		return;
 	}
 
-	Vector<Point2> occluder_polygon = polygon;
+	Hector<Point2> occluder_polygon = polygon;
 	if (Triangulate::get_area(occluder_polygon) > 0) {
 		occluder_polygon.reverse();
 	}
 
-	Vector<int> occluder_indices = Geometry2D::triangulate_polygon(occluder_polygon);
+	Hector<int> occluder_indices = Geometry2D::triangulate_polygon(occluder_polygon);
 
 	if (occluder_indices.size() < 3) {
 		r_vertices.clear();
@@ -393,10 +393,10 @@ void PolygonOccluder3D::_update_arrays(PackedVector3Array &r_vertices, PackedInt
 	}
 
 	r_vertices.resize(occluder_polygon.size());
-	Vector3 *vertex_ptr = r_vertices.ptrw();
-	const Vector2 *polygon_ptr = occluder_polygon.ptr();
+	Hector3 *vertex_ptr = r_vertices.ptrw();
+	const Hector2 *polygon_ptr = occluder_polygon.ptr();
 	for (int i = 0; i < occluder_polygon.size(); i++) {
-		vertex_ptr[i] = Vector3(polygon_ptr[i].x, polygon_ptr[i].y, 0.0);
+		vertex_ptr[i] = Hector3(polygon_ptr[i].x, polygon_ptr[i].y, 0.0);
 	}
 
 	r_indices.resize(occluder_indices.size());
@@ -413,7 +413,7 @@ void PolygonOccluder3D::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("_has_editable_3d_polygon_no_depth"), &PolygonOccluder3D::_has_editable_3d_polygon_no_depth);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "polygon"), "set_polygon", "get_polygon");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "polygon"), "set_polygon", "get_polygon");
 }
 
 PolygonOccluder3D::PolygonOccluder3D() {
@@ -512,26 +512,26 @@ bool OccluderInstance3D::_bake_material_check(Ref<Material> p_material) {
 	return true;
 }
 
-void OccluderInstance3D::_bake_surface(const Transform3D &p_transform, Array p_surface_arrays, Ref<Material> p_material, float p_simplification_dist, PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void OccluderInstance3D::_bake_surface(const Transform3D &p_transform, Array p_surface_arrays, Ref<Material> p_material, float p_simplification_dist, PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	if (!_bake_material_check(p_material)) {
 		return;
 	}
 	ERR_FAIL_COND_MSG(p_surface_arrays.size() != Mesh::ARRAY_MAX, "Invalid surface array.");
 
-	PackedVector3Array vertices = p_surface_arrays[Mesh::ARRAY_VERTEX];
+	PackedHector3Array vertices = p_surface_arrays[Mesh::ARRAY_VERTEX];
 	PackedInt32Array indices = p_surface_arrays[Mesh::ARRAY_INDEX];
 
 	if (vertices.size() == 0 || indices.size() == 0) {
 		return;
 	}
 
-	Vector3 *vertices_ptr = vertices.ptrw();
+	Hector3 *vertices_ptr = vertices.ptrw();
 	for (int j = 0; j < vertices.size(); j++) {
 		vertices_ptr[j] = p_transform.xform(vertices_ptr[j]);
 	}
 
 	if (!Math::is_zero_approx(p_simplification_dist) && SurfaceTool::simplify_func) {
-		Vector<float> vertices_f32 = vector3_to_float32_array(vertices.ptr(), vertices.size());
+		Hector<float> vertices_f32 = Hector3_to_float32_array(vertices.ptr(), vertices.size());
 
 		float error_scale = SurfaceTool::simplify_scale_func(vertices_f32.ptr(), vertices.size(), sizeof(float) * 3);
 		float target_error = p_simplification_dist / error_scale;
@@ -553,7 +553,7 @@ void OccluderInstance3D::_bake_surface(const Transform3D &p_transform, Array p_s
 
 	int vertex_offset = r_vertices.size();
 	r_vertices.resize(vertex_offset + vertices.size());
-	memcpy(r_vertices.ptrw() + vertex_offset, vertices.ptr(), vertices.size() * sizeof(Vector3));
+	memcpy(r_vertices.ptrw() + vertex_offset, vertices.ptr(), vertices.size() * sizeof(Hector3));
 
 	int index_offset = r_indices.size();
 	r_indices.resize(index_offset + indices.size());
@@ -563,7 +563,7 @@ void OccluderInstance3D::_bake_surface(const Transform3D &p_transform, Array p_s
 	}
 }
 
-void OccluderInstance3D::_bake_node(Node *p_node, PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void OccluderInstance3D::_bake_node(Node *p_node, PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	MeshInstance3D *mi = Object::cast_to<MeshInstance3D>(p_node);
 	if (mi && mi->is_visible_in_tree()) {
 		Ref<Mesh> mesh = mi->get_mesh();
@@ -600,7 +600,7 @@ void OccluderInstance3D::_bake_node(Node *p_node, PackedVector3Array &r_vertices
 	}
 }
 
-void OccluderInstance3D::bake_single_node(const Node3D *p_node, float p_simplification_distance, PackedVector3Array &r_vertices, PackedInt32Array &r_indices) {
+void OccluderInstance3D::bake_single_node(const Node3D *p_node, float p_simplification_distance, PackedHector3Array &r_vertices, PackedInt32Array &r_indices) {
 	ERR_FAIL_NULL(p_node);
 
 	Transform3D xform = p_node->is_inside_tree() ? p_node->get_global_transform() : p_node->get_transform();
@@ -657,7 +657,7 @@ OccluderInstance3D::BakeError OccluderInstance3D::bake_scene(Node *p_from_node, 
 		}
 	}
 
-	PackedVector3Array vertices;
+	PackedHector3Array vertices;
 	PackedInt32Array indices;
 
 	_bake_node(p_from_node, vertices, indices);

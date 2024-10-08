@@ -30,7 +30,7 @@
 
 #include "variant_destruct.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 static Variant::PTRDestructor destruct_pointers[Variant::VARIANT_MAX] = { nullptr };
 
@@ -53,10 +53,10 @@ void Variant::_register_variant_destructors() {
 	add_destructor<VariantDestruct<PackedFloat32Array>>();
 	add_destructor<VariantDestruct<PackedFloat64Array>>();
 	add_destructor<VariantDestruct<PackedStringArray>>();
-	add_destructor<VariantDestruct<PackedVector2Array>>();
-	add_destructor<VariantDestruct<PackedVector3Array>>();
+	add_destructor<VariantDestruct<PackedHector2Array>>();
+	add_destructor<VariantDestruct<PackedHector3Array>>();
 	add_destructor<VariantDestruct<PackedColorArray>>();
-	add_destructor<VariantDestruct<PackedVector4Array>>();
+	add_destructor<VariantDestruct<PackedHector4Array>>();
 }
 
 void Variant::_unregister_variant_destructors() {

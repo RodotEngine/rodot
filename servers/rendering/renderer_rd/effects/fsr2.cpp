@@ -219,7 +219,7 @@ static FfxErrorCode create_resource_rd(FfxFsr2Interface *p_backend_interface, co
 		res_desc.mipCount = uint32_t(1 + floor(log2(MAX(MAX(res_desc.width, res_desc.height), res_desc.depth))));
 	}
 
-	Vector<PackedByteArray> initial_data;
+	Hector<PackedByteArray> initial_data;
 	if (p_create_resource_description->initDataSize) {
 		PackedByteArray byte_array;
 		byte_array.resize(p_create_resource_description->initDataSize);
@@ -266,7 +266,7 @@ static FfxErrorCode register_resource_rd(FfxFsr2Interface *p_backend_interface, 
 
 static FfxErrorCode unregister_resources_rd(FfxFsr2Interface *p_backend_interface) {
 	FSR2Context::Scratch &scratch = *reinterpret_cast<FSR2Context::Scratch *>(p_backend_interface->scratchBuffer);
-	LocalVector<uint32_t> dynamic_list_copy = scratch.resources.dynamic_list;
+	LocalHector<uint32_t> dynamic_list_copy = scratch.resources.dynamic_list;
 	for (uint32_t i : dynamic_list_copy) {
 		scratch.resources.remove(i);
 	}
@@ -326,13 +326,13 @@ static FfxErrorCode create_pipeline_rd(FfxFsr2Interface *p_backend_interface, Ff
 	ERR_FAIL_COND_V(p_out_pipeline->constCount > FFX_MAX_NUM_CONST_BUFFERS, FFX_ERROR_OUT_OF_RANGE);
 	memcpy(p_out_pipeline->cbResourceBindings, effect_pass.uniform_bindings.ptr(), sizeof(FfxResourceBinding) * p_out_pipeline->constCount);
 
-	bool low_resolution_mvs = (p_pipeline_description->contextFlags & FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_VECTORS) == 0;
+	bool low_resolution_mvs = (p_pipeline_description->contextFlags & FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_HectorS) == 0;
 
 	if (p_pass == FFX_FSR2_PASS_ACCUMULATE || p_pass == FFX_FSR2_PASS_ACCUMULATE_SHARPEN) {
-		// Change the binding for motion vectors in this particular pass if low resolution MVs are used.
+		// Change the binding for motion Hectors in this particular pass if low resolution MVs are used.
 		if (low_resolution_mvs) {
 			FfxResourceBinding &binding = p_out_pipeline->srvResourceBindings[2];
-			wcscpy_s(binding.name, L"r_dilated_motion_vectors");
+			wcscpy_s(binding.name, L"r_dilated_motion_Hectors");
 		}
 	}
 
@@ -377,7 +377,7 @@ static FfxErrorCode execute_gpu_job_copy_rd(FSR2Context::Scratch &p_scratch, con
 	ERR_FAIL_COND_V(dst_desc.type == FFX_RESOURCE_TYPE_BUFFER, FFX_ERROR_INVALID_ARGUMENT);
 
 	for (uint32_t mip_level = 0; mip_level < src_desc.mipCount; mip_level++) {
-		RD::get_singleton()->texture_copy(src, dst, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(src_desc.width, src_desc.height, src_desc.depth), mip_level, mip_level, 0, 0);
+		RD::get_singleton()->texture_copy(src, dst, Hector3(0, 0, 0), Hector3(0, 0, 0), Hector3(src_desc.width, src_desc.height, src_desc.depth), mip_level, mip_level, 0, 0);
 	}
 
 	return FFX_OK;
@@ -393,7 +393,7 @@ static FfxErrorCode execute_gpu_job_compute_rd(FSR2Context::Scratch &p_scratch, 
 	FSR2Effect::Pipeline &backend_pipeline = *reinterpret_cast<FSR2Effect::Pipeline *>(p_job.pipeline.pipeline);
 	ERR_FAIL_COND_V(backend_pipeline.pipeline_rid.is_null(), FFX_ERROR_INVALID_ARGUMENT);
 
-	Vector<RD::Uniform> compute_uniforms;
+	Hector<RD::Uniform> compute_uniforms;
 	for (uint32_t i = 0; i < p_job.pipeline.srvCount; i++) {
 		RID texture_rid = p_scratch.resources.rids[p_job.srvs[i].internalIndex];
 		RD::Uniform texture_uniform(RD::UNIFORM_TYPE_TEXTURE, p_job.pipeline.srvResourceBindings[i].slotIndex, texture_rid);
@@ -407,7 +407,7 @@ static FfxErrorCode execute_gpu_job_compute_rd(FSR2Context::Scratch &p_scratch, 
 		storage_uniform.binding = p_job.pipeline.uavResourceBindings[i].slotIndex;
 
 		if (p_job.uavMip[i] > 0) {
-			LocalVector<RID> &mip_slice_rids = p_scratch.resources.mip_slice_rids[p_job.uavs[i].internalIndex];
+			LocalHector<RID> &mip_slice_rids = p_scratch.resources.mip_slice_rids[p_job.uavs[i].internalIndex];
 			if (mip_slice_rids.is_empty()) {
 				mip_slice_rids.resize(p_scratch.resources.descriptions[p_job.uavs[i].internalIndex].mipCount);
 			}
@@ -525,11 +525,11 @@ FSR2Effect::FSR2Effect() {
 	String general_defines_base =
 			"\n#define FFX_GPU\n"
 			"\n#define FFX_GLSL 1\n"
-			"\n#define FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_VECTORS 1\n"
+			"\n#define FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_HectorS 1\n"
 			"\n#define FFX_FSR2_OPTION_HDR_COLOR_INPUT 1\n"
 			"\n#define FFX_FSR2_OPTION_INVERTED_DEPTH 1\n"
 			"\n#define FFX_FSR2_OPTION_GODOT_REACTIVE_MASK_CLAMP 1\n"
-			"\n#define FFX_FSR2_OPTION_GODOT_DERIVE_INVALID_MOTION_VECTORS 1\n";
+			"\n#define FFX_FSR2_OPTION_GODOT_DERIVE_INVALID_MOTION_HectorS 1\n";
 
 	if (use_lut) {
 		general_defines_base += "\n#define FFX_FSR2_OPTION_REPROJECT_USE_LANCZOS_TYPE 1\n";
@@ -540,7 +540,7 @@ FSR2Effect::FSR2Effect() {
 		general_defines += "\n#define FFX_HALF 1\n";
 	}
 
-	Vector<String> modes;
+	Hector<String> modes;
 	modes.push_back("");
 
 	// Since Godot currently lacks a shader reflection mechanism to persist the name of the bindings in the shader cache and
@@ -559,12 +559,12 @@ FSR2Effect::FSR2Effect() {
 
 		pass.sampled_bindings = {
 			FfxResourceBinding{ 0, 0, L"r_reconstructed_previous_nearest_depth" },
-			FfxResourceBinding{ 1, 0, L"r_dilated_motion_vectors" },
+			FfxResourceBinding{ 1, 0, L"r_dilated_motion_Hectors" },
 			FfxResourceBinding{ 2, 0, L"r_dilatedDepth" },
 			FfxResourceBinding{ 3, 0, L"r_reactive_mask" },
 			FfxResourceBinding{ 4, 0, L"r_transparency_and_composition_mask" },
-			FfxResourceBinding{ 6, 0, L"r_previous_dilated_motion_vectors" },
-			FfxResourceBinding{ 7, 0, L"r_input_motion_vectors" },
+			FfxResourceBinding{ 6, 0, L"r_previous_dilated_motion_Hectors" },
+			FfxResourceBinding{ 7, 0, L"r_input_motion_Hectors" },
 			FfxResourceBinding{ 8, 0, L"r_input_color_jittered" },
 			FfxResourceBinding{ 9, 0, L"r_input_depth" },
 			FfxResourceBinding{ 10, 0, L"r_input_exposure" }
@@ -588,7 +588,7 @@ FSR2Effect::FSR2Effect() {
 		pass.shader_version = pass.shader->version_create();
 
 		pass.sampled_bindings = {
-			FfxResourceBinding{ 0, 0, L"r_input_motion_vectors" },
+			FfxResourceBinding{ 0, 0, L"r_input_motion_Hectors" },
 			FfxResourceBinding{ 1, 0, L"r_input_depth" },
 			FfxResourceBinding{ 2, 0, L"r_input_color_jittered" },
 			FfxResourceBinding{ 3, 0, L"r_input_exposure" },
@@ -597,7 +597,7 @@ FSR2Effect::FSR2Effect() {
 
 		pass.storage_bindings = {
 			FfxResourceBinding{ 5, 0, L"rw_reconstructed_previous_nearest_depth" },
-			FfxResourceBinding{ 6, 0, L"rw_dilated_motion_vectors" },
+			FfxResourceBinding{ 6, 0, L"rw_dilated_motion_Hectors" },
 			FfxResourceBinding{ 7, 0, L"rw_dilatedDepth" },
 			FfxResourceBinding{ 8, 0, L"rw_prepared_input_color" },
 			FfxResourceBinding{ 9, 0, L"rw_luma_history" },
@@ -631,7 +631,7 @@ FSR2Effect::FSR2Effect() {
 	}
 
 	{
-		Vector<String> accumulate_modes;
+		Hector<String> accumulate_modes;
 		accumulate_modes.push_back("\n");
 		accumulate_modes.push_back("\n#define FFX_FSR2_OPTION_APPLY_SHARPENING 1\n");
 
@@ -651,7 +651,7 @@ FSR2Effect::FSR2Effect() {
 		pass.sampled_bindings = {
 			FfxResourceBinding{ 0, 0, L"r_input_exposure" },
 			FfxResourceBinding{ 1, 0, L"r_dilated_reactive_masks" },
-			FfxResourceBinding{ 2, 0, L"r_input_motion_vectors" },
+			FfxResourceBinding{ 2, 0, L"r_input_motion_Hectors" },
 			FfxResourceBinding{ 3, 0, L"r_internal_upscaled_color" },
 			FfxResourceBinding{ 4, 0, L"r_lock_status" },
 			FfxResourceBinding{ 5, 0, L"r_input_depth" },
@@ -756,7 +756,7 @@ FSR2Effect::FSR2Effect() {
 		pass.sampled_bindings = {
 			FfxResourceBinding{ 0, 0, L"r_input_opaque_only" },
 			FfxResourceBinding{ 1, 0, L"r_input_color_jittered" },
-			FfxResourceBinding{ 2, 0, L"r_input_motion_vectors" },
+			FfxResourceBinding{ 2, 0, L"r_input_motion_Hectors" },
 			FfxResourceBinding{ 3, 0, L"r_input_prev_color_pre_alpha" },
 			FfxResourceBinding{ 4, 0, L"r_input_prev_color_post_alpha" },
 			FfxResourceBinding{ 5, 0, L"r_reactive_mask" },
@@ -850,7 +850,7 @@ void FSR2Effect::upscale(const Parameters &p_params) {
 	dispatch_desc.commandList = nullptr;
 	dispatch_desc.color = get_resource_rd(&color, L"color");
 	dispatch_desc.depth = get_resource_rd(&depth, L"depth");
-	dispatch_desc.motionVectors = get_resource_rd(&velocity, L"velocity");
+	dispatch_desc.motionHectors = get_resource_rd(&velocity, L"velocity");
 	dispatch_desc.reactive = get_resource_rd(&reactive, L"reactive");
 	dispatch_desc.exposure = get_resource_rd(&exposure, L"exposure");
 	dispatch_desc.transparencyAndComposition = {};
@@ -858,8 +858,8 @@ void FSR2Effect::upscale(const Parameters &p_params) {
 	dispatch_desc.colorOpaqueOnly = {};
 	dispatch_desc.jitterOffset.x = p_params.jitter.x;
 	dispatch_desc.jitterOffset.y = p_params.jitter.y;
-	dispatch_desc.motionVectorScale.x = float(p_params.internal_size.width);
-	dispatch_desc.motionVectorScale.y = float(p_params.internal_size.height);
+	dispatch_desc.motionHectorScale.x = float(p_params.internal_size.width);
+	dispatch_desc.motionHectorScale.y = float(p_params.internal_size.height);
 	dispatch_desc.reset = p_params.reset_accumulation;
 	dispatch_desc.renderSize.width = p_params.internal_size.width;
 	dispatch_desc.renderSize.height = p_params.internal_size.height;

@@ -205,11 +205,11 @@ void EditorVisualProfiler::_update_plot() {
 		graph_height_cpu = highest_cpu;
 		graph_height_gpu = highest_gpu;
 
-		Vector<Color> columnv_cpu;
+		Hector<Color> columnv_cpu;
 		columnv_cpu.resize(h);
 		Color *column_cpu = columnv_cpu.ptrw();
 
-		Vector<Color> columnv_gpu;
+		Hector<Color> columnv_gpu;
 		columnv_gpu.resize(h);
 		Color *column_gpu = columnv_gpu.ptrw();
 
@@ -466,8 +466,8 @@ void EditorVisualProfiler::_graph_tex_draw() {
 		int half_width = graph->get_size().x / 2;
 		int cur_x = frame * half_width / max_frames;
 
-		graph->draw_line(Vector2(cur_x, 0), Vector2(cur_x, graph->get_size().y), color * Color(1, 1, 1));
-		graph->draw_line(Vector2(cur_x + half_width, 0), Vector2(cur_x + half_width, graph->get_size().y), color * Color(1, 1, 1));
+		graph->draw_line(Hector2(cur_x, 0), Hector2(cur_x, graph->get_size().y), color * Color(1, 1, 1));
+		graph->draw_line(Hector2(cur_x + half_width, 0), Hector2(cur_x + half_width, graph->get_size().y), color * Color(1, 1, 1));
 	}
 
 	if (graph_height_cpu > 0) {
@@ -475,10 +475,10 @@ void EditorVisualProfiler::_graph_tex_draw() {
 
 		int half_width = graph->get_size().x / 2;
 
-		graph->draw_line(Vector2(0, frame_y), Vector2(half_width, frame_y), color * Color(1, 1, 1, 0.5));
+		graph->draw_line(Hector2(0, frame_y), Hector2(half_width, frame_y), color * Color(1, 1, 1, 0.5));
 
 		const String limit_str = String::num(graph_limit, 2) + " ms";
-		graph->draw_string(font, Vector2(half_width - font->get_string_size(limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x - 2, frame_y - 2), limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1, 0.75));
+		graph->draw_string(font, Hector2(half_width - font->get_string_size(limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x - 2, frame_y - 2), limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1, 0.75));
 	}
 
 	if (graph_height_gpu > 0) {
@@ -486,14 +486,14 @@ void EditorVisualProfiler::_graph_tex_draw() {
 
 		int half_width = graph->get_size().x / 2;
 
-		graph->draw_line(Vector2(half_width, frame_y), Vector2(graph->get_size().x, frame_y), color * Color(1, 1, 1, 0.5));
+		graph->draw_line(Hector2(half_width, frame_y), Hector2(graph->get_size().x, frame_y), color * Color(1, 1, 1, 0.5));
 
 		const String limit_str = String::num(graph_limit, 2) + " ms";
-		graph->draw_string(font, Vector2(half_width * 2 - font->get_string_size(limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x - 2, frame_y - 2), limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1, 0.75));
+		graph->draw_string(font, Hector2(half_width * 2 - font->get_string_size(limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x - 2, frame_y - 2), limit_str, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1, 0.75));
 	}
 
-	graph->draw_string(font, Vector2(font->get_string_size("X", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x, font->get_ascent(font_size) + 2), "CPU:", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1));
-	graph->draw_string(font, Vector2(font->get_string_size("X", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + graph->get_size().width / 2, font->get_ascent(font_size) + 2), "GPU:", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1));
+	graph->draw_string(font, Hector2(font->get_string_size("X", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x, font->get_ascent(font_size) + 2), "CPU:", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1));
+	graph->draw_string(font, Hector2(font->get_string_size("X", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + graph->get_size().width / 2, font->get_ascent(font_size) + 2), "GPU:", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color * Color(1, 1, 1));
 }
 
 void EditorVisualProfiler::_graph_tex_mouse_exit() {
@@ -682,16 +682,16 @@ bool EditorVisualProfiler::is_profiling() {
 	return activate->is_pressed();
 }
 
-Vector<Vector<String>> EditorVisualProfiler::get_data_as_csv() const {
-	Vector<Vector<String>> res;
+Hector<Hector<String>> EditorVisualProfiler::get_data_as_csv() const {
+	Hector<Hector<String>> res;
 #if 0
 	if (frame_metrics.is_empty()) {
 		return res;
 	}
 
 	// signatures
-	Vector<String> signatures;
-	const Vector<EditorFrameProfiler::Metric::Category> &categories = frame_metrics[0].categories;
+	Hector<String> signatures;
+	const Hector<EditorFrameProfiler::Metric::Category> &categories = frame_metrics[0].categories;
 
 	for (int j = 0; j < categories.size(); j++) {
 		const EditorFrameProfiler::Metric::Category &c = categories[j];
@@ -704,7 +704,7 @@ Vector<Vector<String>> EditorVisualProfiler::get_data_as_csv() const {
 	res.push_back(signatures);
 
 	// values
-	Vector<String> values;
+	Hector<String> values;
 	values.resize(signatures.size());
 
 	int index = last_metric;
@@ -720,7 +720,7 @@ Vector<Vector<String>> EditorVisualProfiler::get_data_as_csv() const {
 			continue;
 		}
 		int it = 0;
-		const Vector<EditorFrameProfiler::Metric::Category> &frame_cat = frame_metrics[index].categories;
+		const Hector<EditorFrameProfiler::Metric::Category> &frame_cat = frame_metrics[index].categories;
 
 		for (int j = 0; j < frame_cat.size(); j++) {
 			const EditorFrameProfiler::Metric::Category &c = frame_cat[j];

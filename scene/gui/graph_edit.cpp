@@ -73,18 +73,18 @@ Control::CursorShape GraphEditMinimap::get_cursor_shape(const Point2 &p_pos) con
 }
 
 void GraphEditMinimap::update_minimap() {
-	Vector2 graph_offset = _get_graph_offset();
-	Vector2 graph_size = _get_graph_size();
+	Hector2 graph_offset = _get_graph_offset();
+	Hector2 graph_size = _get_graph_size();
 
 	camera_position = ge->get_scroll_offset() - graph_offset;
 	camera_size = ge->get_size();
 
-	Vector2 render_size = _get_render_size();
+	Hector2 render_size = _get_render_size();
 	float target_ratio = render_size.width / render_size.height;
 	float graph_ratio = graph_size.width / graph_size.height;
 
 	graph_proportions = graph_size;
-	graph_padding = Vector2(0, 0);
+	graph_padding = Hector2(0, 0);
 	if (graph_ratio > target_ratio) {
 		graph_proportions.width = graph_size.width;
 		graph_proportions.height = graph_size.width / target_ratio;
@@ -100,26 +100,26 @@ void GraphEditMinimap::update_minimap() {
 }
 
 Rect2 GraphEditMinimap::get_camera_rect() {
-	Vector2 camera_center = _convert_from_graph_position(camera_position + camera_size / 2) + minimap_offset;
-	Vector2 camera_viewport = _convert_from_graph_position(camera_size);
-	Vector2 camera_pos = (camera_center - camera_viewport / 2);
+	Hector2 camera_center = _convert_from_graph_position(camera_position + camera_size / 2) + minimap_offset;
+	Hector2 camera_viewport = _convert_from_graph_position(camera_size);
+	Hector2 camera_pos = (camera_center - camera_viewport / 2);
 	return Rect2(camera_pos, camera_viewport);
 }
 
-Vector2 GraphEditMinimap::_get_render_size() {
+Hector2 GraphEditMinimap::_get_render_size() {
 	if (!is_inside_tree()) {
-		return Vector2(0, 0);
+		return Hector2(0, 0);
 	}
 
 	return get_size() - 2 * minimap_padding;
 }
 
-Vector2 GraphEditMinimap::_get_graph_offset() {
-	return Vector2(ge->h_scrollbar->get_min(), ge->v_scrollbar->get_min());
+Hector2 GraphEditMinimap::_get_graph_offset() {
+	return Hector2(ge->h_scrollbar->get_min(), ge->v_scrollbar->get_min());
 }
 
-Vector2 GraphEditMinimap::_get_graph_size() {
-	Vector2 graph_size = Vector2(ge->h_scrollbar->get_max(), ge->v_scrollbar->get_max()) - Vector2(ge->h_scrollbar->get_min(), ge->v_scrollbar->get_min());
+Hector2 GraphEditMinimap::_get_graph_size() {
+	Hector2 graph_size = Hector2(ge->h_scrollbar->get_max(), ge->v_scrollbar->get_max()) - Hector2(ge->h_scrollbar->get_min(), ge->v_scrollbar->get_min());
 
 	if (graph_size.width == 0) {
 		graph_size.width = 1;
@@ -131,9 +131,9 @@ Vector2 GraphEditMinimap::_get_graph_size() {
 	return graph_size;
 }
 
-Vector2 GraphEditMinimap::_convert_from_graph_position(const Vector2 &p_position) {
-	Vector2 map_position = Vector2(0, 0);
-	Vector2 render_size = _get_render_size();
+Hector2 GraphEditMinimap::_convert_from_graph_position(const Hector2 &p_position) {
+	Hector2 map_position = Hector2(0, 0);
+	Hector2 render_size = _get_render_size();
 
 	map_position.x = p_position.x * render_size.width / graph_proportions.x;
 	map_position.y = p_position.y * render_size.height / graph_proportions.y;
@@ -141,9 +141,9 @@ Vector2 GraphEditMinimap::_convert_from_graph_position(const Vector2 &p_position
 	return map_position;
 }
 
-Vector2 GraphEditMinimap::_convert_to_graph_position(const Vector2 &p_position) {
-	Vector2 graph_position = Vector2(0, 0);
-	Vector2 render_size = _get_render_size();
+Hector2 GraphEditMinimap::_convert_to_graph_position(const Hector2 &p_position) {
+	Hector2 graph_position = Hector2(0, 0);
+	Hector2 render_size = _get_render_size();
 
 	graph_position.x = p_position.x * graph_proportions.x / render_size.width;
 	graph_position.y = p_position.y * graph_proportions.y / render_size.height;
@@ -169,7 +169,7 @@ void GraphEditMinimap::gui_input(const Ref<InputEvent> &p_ev) {
 			if (resizer_hitbox.has_point(mb->get_position())) {
 				is_resizing = true;
 			} else {
-				Vector2 click_position = _convert_to_graph_position(mb->get_position() - minimap_padding) - graph_padding;
+				Hector2 click_position = _convert_to_graph_position(mb->get_position() - minimap_padding) - graph_padding;
 				_adjust_graph_scroll(click_position);
 			}
 		} else {
@@ -180,21 +180,21 @@ void GraphEditMinimap::gui_input(const Ref<InputEvent> &p_ev) {
 	} else if (mm.is_valid() && is_pressing) {
 		if (is_resizing) {
 			// Prevent setting minimap wider than GraphEdit.
-			Vector2 new_minimap_size;
+			Hector2 new_minimap_size;
 			new_minimap_size = (get_size() - mm->get_relative()).min(ge->get_size() - 2.0 * minimap_padding);
 			ge->set_minimap_size(new_minimap_size);
 
 			queue_redraw();
 		} else {
-			Vector2 click_position = _convert_to_graph_position(mm->get_position() - minimap_padding) - graph_padding;
+			Hector2 click_position = _convert_to_graph_position(mm->get_position() - minimap_padding) - graph_padding;
 			_adjust_graph_scroll(click_position);
 		}
 		accept_event();
 	}
 }
 
-void GraphEditMinimap::_adjust_graph_scroll(const Vector2 &p_offset) {
-	Vector2 graph_offset = _get_graph_offset();
+void GraphEditMinimap::_adjust_graph_scroll(const Hector2 &p_offset) {
+	Hector2 graph_offset = _get_graph_offset();
 	ge->set_scroll_offset(p_offset + graph_offset - camera_size / 2);
 }
 
@@ -209,7 +209,7 @@ void GraphEditMinimap::_bind_methods() {
 GraphEditMinimap::GraphEditMinimap(GraphEdit *p_edit) {
 	ge = p_edit;
 
-	minimap_padding = Vector2(MINIMAP_PADDING, MINIMAP_PADDING);
+	minimap_padding = Hector2(MINIMAP_PADDING, MINIMAP_PADDING);
 	minimap_offset = minimap_padding + _convert_from_graph_position(graph_padding);
 }
 
@@ -337,7 +337,7 @@ const List<Ref<GraphEdit::Connection>> &GraphEdit::get_connection_list() const {
 	return connections;
 }
 
-void GraphEdit::set_scroll_offset(const Vector2 &p_offset) {
+void GraphEdit::set_scroll_offset(const Hector2 &p_offset) {
 	setting_scroll_offset = true;
 	h_scrollbar->set_value(p_offset.x);
 	v_scrollbar->set_value(p_offset.y);
@@ -345,8 +345,8 @@ void GraphEdit::set_scroll_offset(const Vector2 &p_offset) {
 	setting_scroll_offset = false;
 }
 
-Vector2 GraphEdit::get_scroll_offset() const {
-	return Vector2(h_scrollbar->get_value(), v_scrollbar->get_value());
+Hector2 GraphEdit::get_scroll_offset() const {
+	return Hector2(h_scrollbar->get_value(), v_scrollbar->get_value());
 }
 
 void GraphEdit::_scroll_moved(double) {
@@ -373,8 +373,8 @@ void GraphEdit::_update_scroll_offset() {
 		Point2 pos = graph_element->get_position_offset() * zoom;
 		pos -= Point2(h_scrollbar->get_value(), v_scrollbar->get_value());
 		graph_element->set_position(pos);
-		if (graph_element->get_scale() != Vector2(zoom, zoom)) {
-			graph_element->set_scale(Vector2(zoom, zoom));
+		if (graph_element->get_scale() != Hector2(zoom, zoom)) {
+			graph_element->set_scale(Hector2(zoom, zoom));
 		}
 	}
 
@@ -500,12 +500,12 @@ void GraphEdit::_graph_element_deselected(Node *p_node) {
 	emit_signal(SNAME("node_deselected"), graph_element);
 }
 
-void GraphEdit::_graph_element_resize_request(const Vector2 &p_new_minsize, Node *p_node) {
+void GraphEdit::_graph_element_resize_request(const Hector2 &p_new_minsize, Node *p_node) {
 	GraphElement *graph_element = Object::cast_to<GraphElement>(p_node);
 	ERR_FAIL_NULL(graph_element);
 
 	// Snap the new size to the grid if snapping is enabled.
-	Vector2 new_size = p_new_minsize;
+	Hector2 new_size = p_new_minsize;
 	if (snapping_enabled ^ Input::get_singleton()->is_key_pressed(Key::CTRL)) {
 		new_size = new_size.snappedf(snapping_distance);
 	}
@@ -514,7 +514,7 @@ void GraphEdit::_graph_element_resize_request(const Vector2 &p_new_minsize, Node
 	GraphFrame *frame = Object::cast_to<GraphFrame>(graph_element);
 	if (frame && !frame->is_autoshrink_enabled()) {
 		Rect2 frame_rect = _compute_shrinked_frame_rect(frame);
-		Vector2 computed_min_size = (frame_rect.position + frame_rect.size) - frame->get_position_offset();
+		Hector2 computed_min_size = (frame_rect.position + frame_rect.size) - frame->get_position_offset();
 		frame->set_size(new_size.max(computed_min_size));
 	} else {
 		graph_element->set_size(new_size);
@@ -529,7 +529,7 @@ void GraphEdit::_graph_element_resize_request(const Vector2 &p_new_minsize, Node
 	}
 }
 
-void GraphEdit::_graph_frame_autoshrink_changed(const Vector2 &p_new_minsize, GraphFrame *p_frame) {
+void GraphEdit::_graph_frame_autoshrink_changed(const Hector2 &p_new_minsize, GraphFrame *p_frame) {
 	ERR_FAIL_NULL_MSG(connections_layer, "connections_layer is missing.");
 
 	_update_graph_frame(p_frame);
@@ -639,7 +639,7 @@ void GraphEdit::add_child_notify(Node *p_child) {
 		}
 		graph_element->connect(SceneStringName(item_rect_changed), callable_mp((CanvasItem *)minimap, &GraphEditMinimap::queue_redraw));
 
-		graph_element->set_scale(Vector2(zoom, zoom));
+		graph_element->set_scale(Hector2(zoom, zoom));
 		_graph_element_moved(graph_element);
 		graph_element->set_mouse_filter(MOUSE_FILTER_PASS);
 	}
@@ -779,8 +779,8 @@ void GraphEdit::_notification(int p_what) {
 }
 
 Rect2 GraphEdit::_compute_shrinked_frame_rect(const GraphFrame *p_frame) {
-	Vector2 min_point{ FLT_MAX, FLT_MAX };
-	Vector2 max_point{ -FLT_MAX, -FLT_MAX };
+	Hector2 min_point{ FLT_MAX, FLT_MAX };
+	Hector2 max_point{ -FLT_MAX, -FLT_MAX };
 
 	if (!frame_attached_nodes.has(p_frame->get_name())) {
 		return Rect2(p_frame->get_position_offset(), Size2());
@@ -798,8 +798,8 @@ Rect2 GraphEdit::_compute_shrinked_frame_rect(const GraphFrame *p_frame) {
 			continue;
 		}
 
-		Vector2 node_pos = attached_node->get_position_offset();
-		Vector2 size = attached_node->get_size();
+		Hector2 node_pos = attached_node->get_position_offset();
+		Hector2 size = attached_node->get_size();
 		min_point = min_point.min(node_pos);
 		max_point = max_point.max(node_pos + size);
 	}
@@ -820,13 +820,13 @@ Rect2 GraphEdit::_compute_shrinked_frame_rect(const GraphFrame *p_frame) {
 void GraphEdit::_update_graph_frame(GraphFrame *p_frame) {
 	Rect2 frame_rect = _compute_shrinked_frame_rect(p_frame);
 
-	Vector2 min_point = frame_rect.position;
-	Vector2 max_point = frame_rect.position + frame_rect.size;
+	Hector2 min_point = frame_rect.position;
+	Hector2 max_point = frame_rect.position + frame_rect.size;
 
 	// Only update the size if there are attached nodes.
 	if (frame_attached_nodes.has(p_frame->get_name()) && frame_attached_nodes.get(p_frame->get_name()).size() > 0) {
 		if (!p_frame->is_autoshrink_enabled()) {
-			Vector2 old_offset = p_frame->get_position_offset();
+			Hector2 old_offset = p_frame->get_position_offset();
 			min_point = min_point.min(old_offset);
 			max_point = max_point.max(old_offset + p_frame->get_size());
 		}
@@ -867,7 +867,7 @@ void GraphEdit::_set_drag_frame_attached_nodes(GraphFrame *p_frame, bool p_drag)
 	}
 }
 
-void GraphEdit::_set_position_of_frame_attached_nodes(GraphFrame *p_frame, const Vector2 &p_pos) {
+void GraphEdit::_set_position_of_frame_attached_nodes(GraphFrame *p_frame, const Hector2 &p_pos) {
 	if (!frame_attached_nodes.has(p_frame->get_name())) {
 		return;
 	}
@@ -878,7 +878,7 @@ void GraphEdit::_set_position_of_frame_attached_nodes(GraphFrame *p_frame, const
 			continue;
 		}
 
-		Vector2 pos = (attached_node->get_drag_from() * zoom + drag_accum) / zoom;
+		Hector2 pos = (attached_node->get_drag_from() * zoom + drag_accum) / zoom;
 		if (snapping_enabled ^ Input::get_singleton()->is_key_pressed(Key::CTRL)) {
 			pos = pos.snappedf(snapping_distance);
 		}
@@ -902,7 +902,7 @@ bool GraphEdit::_filter_input(const Point2 &p_point) {
 		Ref<Texture2D> port_icon = graph_node->theme_cache.port;
 
 		for (int j = 0; j < graph_node->get_input_port_count(); j++) {
-			Vector2i port_size = Vector2i(port_icon->get_width(), port_icon->get_height());
+			Hector2i port_size = Hector2i(port_icon->get_width(), port_icon->get_height());
 
 			// Determine slot height.
 			int slot_index = graph_node->get_input_port_slot(j);
@@ -916,7 +916,7 @@ bool GraphEdit::_filter_input(const Point2 &p_point) {
 		}
 
 		for (int j = 0; j < graph_node->get_output_port_count(); j++) {
-			Vector2i port_size = Vector2i(port_icon->get_width(), port_icon->get_height());
+			Hector2i port_size = Hector2i(port_icon->get_width(), port_icon->get_height());
 
 			// Determine slot height.
 			int slot_index = graph_node->get_output_port_slot(j);
@@ -952,8 +952,8 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 			Ref<Texture2D> port_icon = graph_node->theme_cache.port;
 
 			for (int j = 0; j < graph_node->get_output_port_count(); j++) {
-				Vector2 pos = graph_node->get_output_port_position(j) * zoom + graph_node->get_position();
-				Vector2i port_size = Vector2i(port_icon->get_width(), port_icon->get_height());
+				Hector2 pos = graph_node->get_output_port_position(j) * zoom + graph_node->get_position();
+				Hector2i port_size = Hector2i(port_icon->get_width(), port_icon->get_height());
 
 				// Determine slot height.
 				int slot_index = graph_node->get_output_port_slot(j);
@@ -1008,9 +1008,9 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 			}
 
 			for (int j = 0; j < graph_node->get_input_port_count(); j++) {
-				Vector2 pos = graph_node->get_input_port_position(j) * zoom + graph_node->get_position();
+				Hector2 pos = graph_node->get_input_port_position(j) * zoom + graph_node->get_position();
 
-				Vector2i port_size = Vector2i(port_icon->get_width(), port_icon->get_height());
+				Hector2i port_size = Hector2i(port_icon->get_width(), port_icon->get_height());
 
 				// Determine slot height.
 				int slot_index = graph_node->get_input_port_slot(j);
@@ -1074,7 +1074,7 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 		connecting_valid = just_disconnected || click_pos.distance_to(connecting_to_point / zoom) > MIN_DRAG_DISTANCE_FOR_VALID_CONNECTION;
 
 		if (connecting_valid) {
-			Vector2 mpos = mm->get_position() / zoom;
+			Hector2 mpos = mm->get_position() / zoom;
 			for (int i = get_child_count() - 1; i >= 0; i--) {
 				GraphNode *graph_node = Object::cast_to<GraphNode>(get_child(i));
 				if (!graph_node || !graph_node->is_visible_in_tree()) {
@@ -1085,8 +1085,8 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 
 				if (!connecting_from_output) {
 					for (int j = 0; j < graph_node->get_output_port_count(); j++) {
-						Vector2 pos = graph_node->get_output_port_position(j) * zoom + graph_node->get_position();
-						Vector2i port_size = Vector2i(port_icon->get_width(), port_icon->get_height());
+						Hector2 pos = graph_node->get_output_port_position(j) * zoom + graph_node->get_position();
+						Hector2i port_size = Hector2i(port_icon->get_width(), port_icon->get_height());
 
 						// Determine slot height.
 						int slot_index = graph_node->get_output_port_slot(j);
@@ -1110,8 +1110,8 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 					connecting_target_valid = false;
 				} else {
 					for (int j = 0; j < graph_node->get_input_port_count(); j++) {
-						Vector2 pos = graph_node->get_input_port_position(j) * zoom + graph_node->get_position();
-						Vector2i port_size = Vector2i(port_icon->get_width(), port_icon->get_height());
+						Hector2 pos = graph_node->get_input_port_position(j) * zoom + graph_node->get_position();
+						Hector2i port_size = Hector2i(port_icon->get_width(), port_icon->get_height());
 
 						// Determine slot height.
 						int slot_index = graph_node->get_input_port_slot(j);
@@ -1168,7 +1168,7 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 	}
 }
 
-bool GraphEdit::_check_clickable_control(Control *p_control, const Vector2 &mpos, const Vector2 &p_offset) {
+bool GraphEdit::_check_clickable_control(Control *p_control, const Hector2 &mpos, const Hector2 &p_offset) {
 	if (p_control->is_set_as_top_level() || !p_control->is_visible() || !p_control->is_inside_tree()) {
 		return false;
 	}
@@ -1196,17 +1196,17 @@ bool GraphEdit::_check_clickable_control(Control *p_control, const Vector2 &mpos
 	}
 }
 
-bool GraphEdit::is_in_input_hotzone(GraphNode *p_graph_node, int p_port_idx, const Vector2 &p_mouse_pos, const Vector2i &p_port_size) {
+bool GraphEdit::is_in_input_hotzone(GraphNode *p_graph_node, int p_port_idx, const Hector2 &p_mouse_pos, const Hector2i &p_port_size) {
 	bool success;
 	if (GDVIRTUAL_CALL(_is_in_input_hotzone, p_graph_node, p_port_idx, p_mouse_pos, success)) {
 		return success;
 	} else {
-		Vector2 pos = p_graph_node->get_input_port_position(p_port_idx) * zoom + p_graph_node->get_position();
+		Hector2 pos = p_graph_node->get_input_port_position(p_port_idx) * zoom + p_graph_node->get_position();
 		return is_in_port_hotzone(pos / zoom, p_mouse_pos, p_port_size, true);
 	}
 }
 
-bool GraphEdit::is_in_output_hotzone(GraphNode *p_graph_node, int p_port_idx, const Vector2 &p_mouse_pos, const Vector2i &p_port_size) {
+bool GraphEdit::is_in_output_hotzone(GraphNode *p_graph_node, int p_port_idx, const Hector2 &p_mouse_pos, const Hector2i &p_port_size) {
 	if (p_graph_node->is_resizable()) {
 		Ref<Texture2D> resizer = p_graph_node->theme_cache.resizer;
 		Rect2 resizer_rect = Rect2(p_graph_node->get_position() / zoom + p_graph_node->get_size() - resizer->get_size(), resizer->get_size());
@@ -1219,12 +1219,12 @@ bool GraphEdit::is_in_output_hotzone(GraphNode *p_graph_node, int p_port_idx, co
 	if (GDVIRTUAL_CALL(_is_in_output_hotzone, p_graph_node, p_port_idx, p_mouse_pos, success)) {
 		return success;
 	} else {
-		Vector2 pos = p_graph_node->get_output_port_position(p_port_idx) * zoom + p_graph_node->get_position();
+		Hector2 pos = p_graph_node->get_output_port_position(p_port_idx) * zoom + p_graph_node->get_position();
 		return is_in_port_hotzone(pos / zoom, p_mouse_pos, p_port_size, false);
 	}
 }
 
-bool GraphEdit::is_in_port_hotzone(const Vector2 &p_pos, const Vector2 &p_mouse_pos, const Vector2i &p_port_size, bool p_left) {
+bool GraphEdit::is_in_port_hotzone(const Hector2 &p_pos, const Hector2 &p_mouse_pos, const Hector2i &p_port_size, bool p_left) {
 	Rect2 hotzone = Rect2(
 			p_pos.x - (p_left ? theme_cache.port_hotzone_outer_extent : theme_cache.port_hotzone_inner_extent),
 			p_pos.y - p_port_size.height / 2.0,
@@ -1259,8 +1259,8 @@ bool GraphEdit::is_in_port_hotzone(const Vector2 &p_pos, const Vector2 &p_mouse_
 	return true;
 }
 
-PackedVector2Array GraphEdit::get_connection_line(const Vector2 &p_from, const Vector2 &p_to) const {
-	Vector<Vector2> ret;
+PackedHector2Array GraphEdit::get_connection_line(const Hector2 &p_from, const Hector2 &p_to) const {
+	Hector<Hector2> ret;
 	if (GDVIRTUAL_CALL(_get_connection_line, p_from, p_to, ret)) {
 		return ret;
 	}
@@ -1273,9 +1273,9 @@ PackedVector2Array GraphEdit::get_connection_line(const Vector2 &p_from, const V
 
 	Curve2D curve;
 	curve.add_point(p_from);
-	curve.set_point_out(0, Vector2(cp_offset, 0));
+	curve.set_point_out(0, Hector2(cp_offset, 0));
 	curve.add_point(p_to);
-	curve.set_point_in(1, Vector2(-cp_offset, 0));
+	curve.set_point_in(1, Hector2(-cp_offset, 0));
 
 	if (lines_curvature > 0) {
 		return curve.tessellate(MAX_CONNECTION_LINE_CURVE_TESSELATION_STAGES, 2.0);
@@ -1284,8 +1284,8 @@ PackedVector2Array GraphEdit::get_connection_line(const Vector2 &p_from, const V
 	}
 }
 
-Ref<GraphEdit::Connection> GraphEdit::get_closest_connection_at_point(const Vector2 &p_point, float p_max_distance) const {
-	Vector2 transformed_point = p_point + get_scroll_offset();
+Ref<GraphEdit::Connection> GraphEdit::get_closest_connection_at_point(const Hector2 &p_point, float p_max_distance) const {
+	Hector2 transformed_point = p_point + get_scroll_offset();
 
 	Ref<GraphEdit::Connection> closest_connection;
 	float closest_distance = p_max_distance;
@@ -1294,7 +1294,7 @@ Ref<GraphEdit::Connection> GraphEdit::get_closest_connection_at_point(const Vect
 			continue;
 		}
 
-		Vector<Vector2> points = get_connection_line(c->_cache.from_pos * zoom, c->_cache.to_pos * zoom);
+		Hector<Hector2> points = get_connection_line(c->_cache.from_pos * zoom, c->_cache.to_pos * zoom);
 		for (int i = 0; i < points.size() - 1; i++) {
 			float distance = Geometry2D::get_distance_to_segment(transformed_point, &points[i]);
 			if (distance <= lines_thickness * 0.5 + p_max_distance && distance < closest_distance) {
@@ -1317,7 +1317,7 @@ List<Ref<GraphEdit::Connection>> GraphEdit::get_connections_intersecting_with_re
 			continue;
 		}
 
-		Vector<Vector2> points = get_connection_line(c->_cache.from_pos * zoom, c->_cache.to_pos * zoom);
+		Hector<Hector2> points = get_connection_line(c->_cache.from_pos * zoom, c->_cache.to_pos * zoom);
 		for (int i = 0; i < points.size() - 1; i++) {
 			if (Geometry2D::segment_intersects_rect(points[i], points[i + 1], transformed_rect)) {
 				intersecting_connections.push_back(c);
@@ -1328,21 +1328,21 @@ List<Ref<GraphEdit::Connection>> GraphEdit::get_connections_intersecting_with_re
 	return intersecting_connections;
 }
 
-void GraphEdit::_draw_minimap_connection_line(const Vector2 &p_from_graph_position, const Vector2 &p_to_graph_position, const Color &p_from_color, const Color &p_to_color) {
-	Vector<Vector2> points = get_connection_line(p_from_graph_position, p_to_graph_position);
+void GraphEdit::_draw_minimap_connection_line(const Hector2 &p_from_graph_position, const Hector2 &p_to_graph_position, const Color &p_from_color, const Color &p_to_color) {
+	Hector<Hector2> points = get_connection_line(p_from_graph_position, p_to_graph_position);
 	ERR_FAIL_COND_MSG(points.size() < 2, "\"_get_connection_line()\" returned an invalid line.");
 	// Convert to minimap points.
-	for (Vector2 &point : points) {
+	for (Hector2 &point : points) {
 		point = minimap->_convert_from_graph_position(point) + minimap->minimap_offset;
 	}
 
 	// Setup polyline colors.
-	LocalVector<Color> colors;
+	LocalHector<Color> colors;
 	colors.reserve(points.size());
-	const Vector2 &from = points[0];
-	const Vector2 &to = points[points.size() - 1];
+	const Hector2 &from = points[0];
+	const Hector2 &to = points[points.size() - 1];
 	float length_inv = 1.0 / (from).distance_to(to);
-	for (const Vector2 &point : points) {
+	for (const Hector2 &point : points) {
 		float normalized_curve_position = from.distance_to(point) * length_inv;
 		colors.push_back(p_from_color.lerp(p_to_color, normalized_curve_position));
 	}
@@ -1372,8 +1372,8 @@ void GraphEdit::_update_connections() {
 				continue;
 			}
 
-			const Vector2 from_pos = gnode_from->get_output_port_position(c->from_port) + gnode_from->get_position_offset();
-			const Vector2 to_pos = gnode_to->get_input_port_position(c->to_port) + gnode_to->get_position_offset();
+			const Hector2 from_pos = gnode_from->get_output_port_position(c->from_port) + gnode_from->get_position_offset();
+			const Hector2 to_pos = gnode_to->get_input_port_position(c->to_port) + gnode_to->get_position_offset();
 
 			const Color from_color = gnode_from->get_output_port_color(c->from_port);
 			const Color to_color = gnode_to->get_input_port_color(c->to_port);
@@ -1386,7 +1386,7 @@ void GraphEdit::_update_connections() {
 			c->_cache.from_color = from_color;
 			c->_cache.to_color = to_color;
 
-			PackedVector2Array line_points = get_connection_line(from_pos * zoom, to_pos * zoom);
+			PackedHector2Array line_points = get_connection_line(from_pos * zoom, to_pos * zoom);
 			c->_cache.line->set_points(line_points);
 
 			Ref<ShaderMaterial> line_material = c->_cache.line->get_material();
@@ -1402,7 +1402,7 @@ void GraphEdit::_update_connections() {
 			line_material->set_shader_parameter("rim_color", theme_cache.connection_rim_color);
 
 			// Compute bounding box of the line, including the line width.
-			c->_cache.aabb = Rect2(line_points[0], Vector2());
+			c->_cache.aabb = Rect2(line_points[0], Hector2());
 			for (int i = 0; i < line_points.size(); i++) {
 				c->_cache.aabb.expand_to(line_points[i]);
 			}
@@ -1474,8 +1474,8 @@ void GraphEdit::_update_top_connection_layer() {
 	GraphNode *graph_node_from = Object::cast_to<GraphNode>(get_node_or_null(NodePath(connecting_from_node)));
 	ERR_FAIL_NULL(graph_node_from);
 
-	Vector2 from_pos = graph_node_from->get_position() / zoom;
-	Vector2 to_pos = connecting_to_point / zoom;
+	Hector2 from_pos = graph_node_from->get_position() / zoom;
+	Hector2 to_pos = connecting_to_point / zoom;
 	int from_type;
 	int to_type = connecting_type;
 	Color from_color;
@@ -1513,7 +1513,7 @@ void GraphEdit::_update_top_connection_layer() {
 		SWAP(from_color, to_color);
 	}
 
-	PackedVector2Array line_points = get_connection_line(from_pos * zoom, to_pos * zoom);
+	PackedHector2Array line_points = get_connection_line(from_pos * zoom, to_pos * zoom);
 	dragged_connection_line->set_points(line_points);
 
 	Ref<ShaderMaterial> line_material = dragged_connection_line->get_material();
@@ -1548,8 +1548,8 @@ void GraphEdit::_minimap_draw() {
 	Rect2 minimap_rect = Rect2(Point2(), minimap->get_size());
 	minimap->draw_style_box(minimap->theme_cache.panel, minimap_rect);
 
-	Vector2 graph_offset = minimap->_get_graph_offset();
-	Vector2 minimap_offset = minimap->minimap_offset;
+	Hector2 graph_offset = minimap->_get_graph_offset();
+	Hector2 minimap_offset = minimap->minimap_offset;
 
 	// Draw frame nodes.
 	for (int i = get_child_count() - 1; i >= 0; i--) {
@@ -1558,8 +1558,8 @@ void GraphEdit::_minimap_draw() {
 			continue;
 		}
 
-		Vector2 node_position = minimap->_convert_from_graph_position(graph_frame->get_position_offset() * zoom - graph_offset) + minimap_offset;
-		Vector2 node_size = minimap->_convert_from_graph_position(graph_frame->get_size() * zoom);
+		Hector2 node_position = minimap->_convert_from_graph_position(graph_frame->get_position_offset() * zoom - graph_offset) + minimap_offset;
+		Hector2 node_size = minimap->_convert_from_graph_position(graph_frame->get_size() * zoom);
 		Rect2 node_rect = Rect2(node_position, node_size);
 
 		Ref<StyleBoxFlat> sb_minimap = minimap->theme_cache.node_style->duplicate();
@@ -1584,8 +1584,8 @@ void GraphEdit::_minimap_draw() {
 			continue;
 		}
 
-		Vector2 node_position = minimap->_convert_from_graph_position(graph_node->get_position_offset() * zoom - graph_offset) + minimap_offset;
-		Vector2 node_size = minimap->_convert_from_graph_position(graph_node->get_size() * zoom);
+		Hector2 node_position = minimap->_convert_from_graph_position(graph_node->get_position_offset() * zoom - graph_offset) + minimap_offset;
+		Hector2 node_size = minimap->_convert_from_graph_position(graph_node->get_size() * zoom);
 		Rect2 node_rect = Rect2(node_position, node_size);
 
 		Ref<StyleBoxFlat> sb_minimap = minimap->theme_cache.node_style->duplicate();
@@ -1602,8 +1602,8 @@ void GraphEdit::_minimap_draw() {
 
 	// Draw node connections.
 	for (const Ref<Connection> &c : connections) {
-		Vector2 from_graph_position = c->_cache.from_pos * zoom - graph_offset;
-		Vector2 to_graph_position = c->_cache.to_pos * zoom - graph_offset;
+		Hector2 from_graph_position = c->_cache.from_pos * zoom - graph_offset;
+		Hector2 to_graph_position = c->_cache.to_pos * zoom - graph_offset;
 		Color from_color = c->_cache.from_color;
 		Color to_color = c->_cache.to_color;
 
@@ -1626,11 +1626,11 @@ void GraphEdit::_minimap_draw() {
 }
 
 void GraphEdit::_draw_grid() {
-	Vector2 offset = get_scroll_offset() / zoom;
+	Hector2 offset = get_scroll_offset() / zoom;
 	Size2 size = get_size() / zoom;
 
 	Point2i from_pos = (offset / float(snapping_distance)).floor();
-	Point2i len = (size / float(snapping_distance)).floor() + Vector2(1, 1);
+	Point2i len = (size / float(snapping_distance)).floor() + Hector2(1, 1);
 
 	switch (grid_pattern) {
 		case GRID_PATTERN_LINES: {
@@ -1644,7 +1644,7 @@ void GraphEdit::_draw_grid() {
 				}
 
 				float base_offset = i * snapping_distance * zoom - offset.x * zoom;
-				draw_line(Vector2(base_offset, 0), Vector2(base_offset, get_size().height), color);
+				draw_line(Hector2(base_offset, 0), Hector2(base_offset, get_size().height), color);
 			}
 
 			for (int i = from_pos.y; i < from_pos.y + len.y; i++) {
@@ -1657,7 +1657,7 @@ void GraphEdit::_draw_grid() {
 				}
 
 				float base_offset = i * snapping_distance * zoom - offset.y * zoom;
-				draw_line(Vector2(0, base_offset), Vector2(get_size().width, base_offset), color);
+				draw_line(Hector2(0, base_offset), Hector2(get_size().width, base_offset), color);
 			}
 		} break;
 		case GRID_PATTERN_DOTS: {
@@ -1737,7 +1737,7 @@ void GraphEdit::gui_input(const Ref<InputEvent> &p_ev) {
 		for (int i = get_child_count() - 1; i >= 0; i--) {
 			GraphElement *graph_element = Object::cast_to<GraphElement>(get_child(i));
 			if (graph_element && graph_element->is_selected() && graph_element->is_draggable()) {
-				Vector2 pos = (graph_element->get_drag_from() * zoom + drag_accum) / zoom;
+				Hector2 pos = (graph_element->get_drag_from() * zoom + drag_accum) / zoom;
 
 				// Snapping can be toggled temporarily by holding down Ctrl.
 				// This is done here as to not toggle the grid when holding down Ctrl.
@@ -1816,7 +1816,7 @@ void GraphEdit::gui_input(const Ref<InputEvent> &p_ev) {
 		}
 
 		if (mb->get_button_index() == MouseButton::LEFT && !mb->is_pressed() && dragging) {
-			if (!just_selected && drag_accum == Vector2() && Input::get_singleton()->is_key_pressed(Key::CMD_OR_CTRL)) {
+			if (!just_selected && drag_accum == Hector2() && Input::get_singleton()->is_key_pressed(Key::CMD_OR_CTRL)) {
 				// Deselect current node.
 				for (int i = get_child_count() - 1; i >= 0; i--) {
 					GraphElement *graph_element = Object::cast_to<GraphElement>(get_child(i));
@@ -1830,7 +1830,7 @@ void GraphEdit::gui_input(const Ref<InputEvent> &p_ev) {
 				}
 			}
 
-			if (drag_accum != Vector2()) {
+			if (drag_accum != Hector2()) {
 				for (int i = get_child_count() - 1; i >= 0; i--) {
 					GraphElement *graph_element = Object::cast_to<GraphElement>(get_child(i));
 					if (graph_element && graph_element->is_selected()) {
@@ -1847,7 +1847,7 @@ void GraphEdit::gui_input(const Ref<InputEvent> &p_ev) {
 				emit_signal(SNAME("end_node_move"));
 				moving_selection = false;
 
-				Vector<GraphElement *> dragged_nodes;
+				Hector<GraphElement *> dragged_nodes;
 				for (int i = get_child_count() - 1; i >= 0; i--) {
 					GraphElement *moved_node = Object::cast_to<GraphElement>(get_child(i));
 					if (moved_node && moved_node->is_selected() && moved_node->is_draggable()) {
@@ -1925,7 +1925,7 @@ void GraphEdit::gui_input(const Ref<InputEvent> &p_ev) {
 
 				// Left-clicked on a node, select it.
 				dragging = true;
-				drag_accum = Vector2();
+				drag_accum = Hector2();
 				just_selected = !graph_element->is_selected();
 				if (!graph_element->is_selected() && !Input::get_singleton()->is_key_pressed(Key::CMD_OR_CTRL)) {
 					for (int i = 0; i < get_child_count(); i++) {
@@ -2044,7 +2044,7 @@ void GraphEdit::gui_input(const Ref<InputEvent> &p_ev) {
 	}
 }
 
-void GraphEdit::_pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event) {
+void GraphEdit::_pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event) {
 	ERR_FAIL_NULL_MSG(connections_layer, "connections_layer is missing.");
 
 	h_scrollbar->set_value(h_scrollbar->get_value() - p_scroll_vec.x);
@@ -2053,7 +2053,7 @@ void GraphEdit::_pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event) {
 	connections_layer->queue_redraw();
 }
 
-void GraphEdit::_zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event) {
+void GraphEdit::_zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event) {
 	// We need to invalidate all connections since we don't know whether
 	// the user is zooming/panning at the same time.
 	_invalidate_connection_line_cache();
@@ -2142,7 +2142,7 @@ void GraphEdit::set_zoom(float p_zoom) {
 	set_zoom_custom(p_zoom, get_size() / 2);
 }
 
-void GraphEdit::set_zoom_custom(float p_zoom, const Vector2 &p_center) {
+void GraphEdit::set_zoom_custom(float p_zoom, const Hector2 &p_center) {
 	ERR_FAIL_NULL_MSG(connections_layer, "connections_layer is missing.");
 
 	p_zoom = CLAMP(p_zoom, zoom_min, zoom_max);
@@ -2150,7 +2150,7 @@ void GraphEdit::set_zoom_custom(float p_zoom, const Vector2 &p_center) {
 		return;
 	}
 
-	Vector2 scrollbar_offset = (Vector2(h_scrollbar->get_value(), v_scrollbar->get_value()) + p_center) / zoom;
+	Hector2 scrollbar_offset = (Hector2(h_scrollbar->get_value(), v_scrollbar->get_value()) + p_center) / zoom;
 
 	zoom = p_zoom;
 
@@ -2164,7 +2164,7 @@ void GraphEdit::set_zoom_custom(float p_zoom, const Vector2 &p_center) {
 	connections_layer->queue_redraw();
 
 	if (is_visible_in_tree()) {
-		Vector2 offset = scrollbar_offset * zoom - p_center;
+		Hector2 offset = scrollbar_offset * zoom - p_center;
 		h_scrollbar->set_value(offset.x);
 		v_scrollbar->set_value(offset.y);
 	}
@@ -2261,7 +2261,7 @@ TypedArray<Dictionary> GraphEdit::_get_connection_list() const {
 	return arr;
 }
 
-Dictionary GraphEdit::_get_closest_connection_at_point(const Vector2 &p_point, float p_max_distance) const {
+Dictionary GraphEdit::_get_closest_connection_at_point(const Hector2 &p_point, float p_max_distance) const {
 	Dictionary ret;
 	Ref<Connection> c = get_closest_connection_at_point(p_point, p_max_distance);
 	if (c.is_valid()) {
@@ -2450,9 +2450,9 @@ void GraphEdit::_show_grid_toggled() {
 	queue_redraw();
 }
 
-void GraphEdit::set_minimap_size(Vector2 p_size) {
+void GraphEdit::set_minimap_size(Hector2 p_size) {
 	minimap->set_size(p_size);
-	Vector2 minimap_size = minimap->get_size(); // The size might've been adjusted by the minimum size.
+	Hector2 minimap_size = minimap->get_size(); // The size might've been adjusted by the minimum size.
 
 	minimap->set_anchors_preset(Control::PRESET_BOTTOM_RIGHT);
 	minimap->set_offset(Side::SIDE_LEFT, -minimap_size.width - MINIMAP_OFFSET);
@@ -2462,7 +2462,7 @@ void GraphEdit::set_minimap_size(Vector2 p_size) {
 	minimap->queue_redraw();
 }
 
-Vector2 GraphEdit::get_minimap_size() const {
+Hector2 GraphEdit::get_minimap_size() const {
 	return minimap->get_size();
 }
 
@@ -2738,7 +2738,7 @@ void GraphEdit::_bind_methods() {
 	GDVIRTUAL_BIND(_get_connection_line, "from_position", "to_position")
 	GDVIRTUAL_BIND(_is_node_hover_valid, "from_node", "from_port", "to_node", "to_port");
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "show_grid"), "set_show_grid", "is_showing_grid");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "grid_pattern", PROPERTY_HINT_ENUM, "Lines,Dots"), "set_grid_pattern", "get_grid_pattern");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "snapping_enabled"), "set_snapping_enabled", "is_snapping_enabled");
@@ -2759,7 +2759,7 @@ void GraphEdit::_bind_methods() {
 
 	ADD_GROUP("Minimap", "minimap_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "minimap_enabled"), "set_minimap_enabled", "is_minimap_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "minimap_size", PROPERTY_HINT_NONE, "suffix:px"), "set_minimap_size", "get_minimap_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "minimap_size", PROPERTY_HINT_NONE, "suffix:px"), "set_minimap_size", "get_minimap_size");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "minimap_opacity"), "set_minimap_opacity", "get_minimap_opacity");
 
 	ADD_GROUP("Toolbar Menu", "");
@@ -2772,8 +2772,8 @@ void GraphEdit::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("connection_request", PropertyInfo(Variant::STRING_NAME, "from_node"), PropertyInfo(Variant::INT, "from_port"), PropertyInfo(Variant::STRING_NAME, "to_node"), PropertyInfo(Variant::INT, "to_port")));
 	ADD_SIGNAL(MethodInfo("disconnection_request", PropertyInfo(Variant::STRING_NAME, "from_node"), PropertyInfo(Variant::INT, "from_port"), PropertyInfo(Variant::STRING_NAME, "to_node"), PropertyInfo(Variant::INT, "to_port")));
-	ADD_SIGNAL(MethodInfo("connection_to_empty", PropertyInfo(Variant::STRING_NAME, "from_node"), PropertyInfo(Variant::INT, "from_port"), PropertyInfo(Variant::VECTOR2, "release_position")));
-	ADD_SIGNAL(MethodInfo("connection_from_empty", PropertyInfo(Variant::STRING_NAME, "to_node"), PropertyInfo(Variant::INT, "to_port"), PropertyInfo(Variant::VECTOR2, "release_position")));
+	ADD_SIGNAL(MethodInfo("connection_to_empty", PropertyInfo(Variant::STRING_NAME, "from_node"), PropertyInfo(Variant::INT, "from_port"), PropertyInfo(Variant::HECTOR2, "release_position")));
+	ADD_SIGNAL(MethodInfo("connection_from_empty", PropertyInfo(Variant::STRING_NAME, "to_node"), PropertyInfo(Variant::INT, "to_port"), PropertyInfo(Variant::HECTOR2, "release_position")));
 	ADD_SIGNAL(MethodInfo("connection_drag_started", PropertyInfo(Variant::STRING_NAME, "from_node"), PropertyInfo(Variant::INT, "from_port"), PropertyInfo(Variant::BOOL, "is_output")));
 	ADD_SIGNAL(MethodInfo("connection_drag_ended"));
 
@@ -2785,14 +2785,14 @@ void GraphEdit::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("node_selected", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
 	ADD_SIGNAL(MethodInfo("node_deselected", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
-	ADD_SIGNAL(MethodInfo("frame_rect_changed", PropertyInfo(Variant::OBJECT, "frame", PROPERTY_HINT_RESOURCE_TYPE, "GraphFrame"), PropertyInfo(Variant::VECTOR2, "new_rect")));
+	ADD_SIGNAL(MethodInfo("frame_rect_changed", PropertyInfo(Variant::OBJECT, "frame", PROPERTY_HINT_RESOURCE_TYPE, "GraphFrame"), PropertyInfo(Variant::HECTOR2, "new_rect")));
 
-	ADD_SIGNAL(MethodInfo("popup_request", PropertyInfo(Variant::VECTOR2, "at_position")));
+	ADD_SIGNAL(MethodInfo("popup_request", PropertyInfo(Variant::HECTOR2, "at_position")));
 
 	ADD_SIGNAL(MethodInfo("begin_node_move"));
 	ADD_SIGNAL(MethodInfo("end_node_move"));
 	ADD_SIGNAL(MethodInfo("graph_elements_linked_to_frame_request", PropertyInfo(Variant::ARRAY, "elements"), PropertyInfo(Variant::STRING_NAME, "frame")));
-	ADD_SIGNAL(MethodInfo("scroll_offset_changed", PropertyInfo(Variant::VECTOR2, "offset")));
+	ADD_SIGNAL(MethodInfo("scroll_offset_changed", PropertyInfo(Variant::HECTOR2, "offset")));
 
 	BIND_ENUM_CONSTANT(SCROLL_ZOOMS);
 	BIND_ENUM_CONSTANT(SCROLL_PANS);
@@ -2889,7 +2889,7 @@ GraphEdit::GraphEdit() {
 	menu_panel = memnew(PanelContainer);
 	menu_panel->set_visible(show_menu);
 	top_layer->add_child(menu_panel);
-	menu_panel->set_position(Vector2(10, 10));
+	menu_panel->set_position(Hector2(10, 10));
 
 	menu_hbox = memnew(HBoxContainer);
 	menu_panel->add_child(menu_hbox);
@@ -2982,7 +2982,7 @@ GraphEdit::GraphEdit() {
 
 	// Minimap.
 
-	const Vector2 minimap_size = Vector2(240, 160);
+	const Hector2 minimap_size = Hector2(240, 160);
 	const float minimap_opacity = 0.65;
 
 	minimap = memnew(GraphEditMinimap(this));
@@ -2990,7 +2990,7 @@ GraphEdit::GraphEdit() {
 	minimap->set_name("_minimap");
 	minimap->set_modulate(Color(1, 1, 1, minimap_opacity));
 	minimap->set_mouse_filter(MOUSE_FILTER_PASS);
-	minimap->set_custom_minimum_size(Vector2(50, 50));
+	minimap->set_custom_minimum_size(Hector2(50, 50));
 	minimap->set_size(minimap_size);
 	minimap->set_anchors_preset(Control::PRESET_BOTTOM_RIGHT);
 	minimap->set_offset(Side::SIDE_LEFT, -minimap_size.width - MINIMAP_OFFSET);

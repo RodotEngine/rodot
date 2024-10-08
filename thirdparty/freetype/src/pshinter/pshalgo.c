@@ -1081,7 +1081,7 @@
   psh_glyph_load_points( PSH_Glyph  glyph,
                          FT_Int     dimension )
   {
-    FT_Vector*  vec   = glyph->outline->points;
+    FT_Hector*  vec   = glyph->outline->points;
     PSH_Point   point = glyph->points;
     FT_UInt     count = glyph->num_points;
 
@@ -1117,7 +1117,7 @@
   {
     FT_UInt     n;
     PSH_Point   point = glyph->points;
-    FT_Vector*  vec   = glyph->outline->points;
+    FT_Hector*  vec   = glyph->outline->points;
     char*       tags  = glyph->outline->tags;
 
 
@@ -1217,7 +1217,7 @@
     {
       PSH_Point   points = glyph->points;
       PSH_Point   point  = points;
-      FT_Vector*  vec    = outline->points;
+      FT_Hector*  vec    = outline->points;
       FT_UInt     n;
 
 

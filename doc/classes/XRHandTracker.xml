@@ -12,7 +12,7 @@
 	</tutorials>
 	<methods>
 		<method name="get_hand_joint_angular_velocity" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="joint" type="int" enum="XRHandTracker.HandJoint" />
 			<description>
 				Returns the angular velocity for the given hand joint.
@@ -26,7 +26,7 @@
 			</description>
 		</method>
 		<method name="get_hand_joint_linear_velocity" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="joint" type="int" enum="XRHandTracker.HandJoint" />
 			<description>
 				Returns the linear velocity for the given hand joint.
@@ -49,7 +49,7 @@
 		<method name="set_hand_joint_angular_velocity">
 			<return type="void" />
 			<param index="0" name="joint" type="int" enum="XRHandTracker.HandJoint" />
-			<param index="1" name="angular_velocity" type="Vector3" />
+			<param index="1" name="angular_velocity" type="Hector3" />
 			<description>
 				Sets the angular velocity for the given hand joint.
 			</description>
@@ -65,7 +65,7 @@
 		<method name="set_hand_joint_linear_velocity">
 			<return type="void" />
 			<param index="0" name="joint" type="int" enum="XRHandTracker.HandJoint" />
-			<param index="1" name="linear_velocity" type="Vector3" />
+			<param index="1" name="linear_velocity" type="Hector3" />
 			<description>
 				Sets the linear velocity for the given hand joint.
 			</description>

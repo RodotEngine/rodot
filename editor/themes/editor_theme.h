@@ -36,7 +36,7 @@
 class EditorTheme : public Theme {
 	GDCLASS(EditorTheme, Theme);
 
-	static Vector<StringName> editor_theme_types;
+	static Hector<StringName> editor_theme_types;
 
 	uint32_t generated_hash = 0;
 	uint32_t generated_fonts_hash = 0;

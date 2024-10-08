@@ -269,8 +269,8 @@ EditorPlugin *EditorData::get_handling_main_editor(Object *p_object) {
 	return nullptr;
 }
 
-Vector<EditorPlugin *> EditorData::get_handling_sub_editors(Object *p_object) {
-	Vector<EditorPlugin *> sub_plugins;
+Hector<EditorPlugin *> EditorData::get_handling_sub_editors(Object *p_object) {
+	Hector<EditorPlugin *> sub_plugins;
 	for (int i = editor_plugins.size() - 1; i > -1; i--) {
 		if (!editor_plugins[i]->has_main_screen() && editor_plugins[i]->handles(p_object)) {
 			sub_plugins.push_back(editor_plugins[i]);
@@ -468,7 +468,7 @@ void EditorData::remove_undo_redo_inspector_hook_callback(Callable p_callable) {
 	undo_redo_callbacks.erase(p_callable);
 }
 
-const Vector<Callable> EditorData::get_undo_redo_inspector_hook_callback() {
+const Hector<Callable> EditorData::get_undo_redo_inspector_hook_callback() {
 	return undo_redo_callbacks;
 }
 
@@ -530,7 +530,7 @@ void EditorData::add_custom_type(const String &p_type, const String &p_inherits,
 	ct.script = p_script;
 
 	if (!custom_types.has(p_inherits)) {
-		custom_types[p_inherits] = Vector<CustomType>();
+		custom_types[p_inherits] = Hector<CustomType>();
 	}
 	custom_types[p_inherits].push_back(ct);
 }
@@ -557,7 +557,7 @@ Variant EditorData::instantiate_custom_type(const String &p_type, const String &
 }
 
 const EditorData::CustomType *EditorData::get_custom_type_by_name(const String &p_type) const {
-	for (const KeyValue<String, Vector<CustomType>> &E : custom_types) {
+	for (const KeyValue<String, Hector<CustomType>> &E : custom_types) {
 		for (const CustomType &F : E.value) {
 			if (F.name == p_type) {
 				return &F;
@@ -568,7 +568,7 @@ const EditorData::CustomType *EditorData::get_custom_type_by_name(const String &
 }
 
 const EditorData::CustomType *EditorData::get_custom_type_by_path(const String &p_path) const {
-	for (const KeyValue<String, Vector<CustomType>> &E : custom_types) {
+	for (const KeyValue<String, Hector<CustomType>> &E : custom_types) {
 		for (const CustomType &F : E.value) {
 			if (F.script->get_path() == p_path) {
 				return &F;
@@ -583,7 +583,7 @@ bool EditorData::is_type_recognized(const String &p_type) const {
 }
 
 void EditorData::remove_custom_type(const String &p_type) {
-	for (KeyValue<String, Vector<CustomType>> &E : custom_types) {
+	for (KeyValue<String, Hector<CustomType>> &E : custom_types) {
 		for (int i = 0; i < E.value.size(); i++) {
 			if (E.value[i].name == p_type) {
 				E.value.remove_at(i);
@@ -794,8 +794,8 @@ int EditorData::get_edited_scene_count() const {
 	return edited_scene.size();
 }
 
-Vector<EditorData::EditedScene> EditorData::get_edited_scenes() const {
-	Vector<EditedScene> out_edited_scenes_list = Vector<EditedScene>();
+Hector<EditorData::EditedScene> EditorData::get_edited_scenes() const {
+	Hector<EditedScene> out_edited_scenes_list = Hector<EditedScene>();
 
 	for (int i = 0; i < edited_scene.size(); i++) {
 		out_edited_scenes_list.push_back(edited_scene[i]);

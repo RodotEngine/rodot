@@ -106,18 +106,18 @@ void Camera2D::_update_process_callback() {
 	}
 }
 
-void Camera2D::set_zoom(const Vector2 &p_zoom) {
+void Camera2D::set_zoom(const Hector2 &p_zoom) {
 	// Setting zoom to zero causes 'affine_invert' issues
 	ERR_FAIL_COND_MSG(Math::is_zero_approx(p_zoom.x) || Math::is_zero_approx(p_zoom.y), "Zoom level must be different from 0 (can be negative).");
 
 	zoom = p_zoom;
-	zoom_scale = Vector2(1, 1) / zoom;
+	zoom_scale = Hector2(1, 1) / zoom;
 	Point2 old_smoothed_camera_pos = smoothed_camera_pos;
 	_update_scroll();
 	smoothed_camera_pos = old_smoothed_camera_pos;
 };
 
-Vector2 Camera2D::get_zoom() const {
+Hector2 Camera2D::get_zoom() const {
 	return zoom;
 };
 
@@ -240,7 +240,7 @@ Transform2D Camera2D::get_camera_transform() {
 		}
 	}
 
-	if (offset != Vector2()) {
+	if (offset != Hector2()) {
 		screen_rect.position += offset;
 	}
 
@@ -380,11 +380,11 @@ void Camera2D::_notification(int p_what) {
 				Transform2D inv_camera_transform = get_camera_transform().affine_inverse();
 				Size2 screen_size = _get_camera_screen_size();
 
-				Vector2 screen_endpoints[4] = {
-					inv_camera_transform.xform(Vector2(0, 0)),
-					inv_camera_transform.xform(Vector2(screen_size.width, 0)),
-					inv_camera_transform.xform(Vector2(screen_size.width, screen_size.height)),
-					inv_camera_transform.xform(Vector2(0, screen_size.height))
+				Hector2 screen_endpoints[4] = {
+					inv_camera_transform.xform(Hector2(0, 0)),
+					inv_camera_transform.xform(Hector2(screen_size.width, 0)),
+					inv_camera_transform.xform(Hector2(screen_size.width, screen_size.height)),
+					inv_camera_transform.xform(Hector2(0, screen_size.height))
 				};
 
 				Transform2D inv_transform = get_global_transform().affine_inverse(); // undo global space
@@ -401,13 +401,13 @@ void Camera2D::_notification(int p_what) {
 					limit_drawing_width = 3;
 				}
 
-				Vector2 camera_origin = get_global_position();
-				Vector2 camera_scale = get_global_scale().abs();
-				Vector2 limit_points[4] = {
-					(Vector2(limit[SIDE_LEFT], limit[SIDE_TOP]) - camera_origin) / camera_scale,
-					(Vector2(limit[SIDE_RIGHT], limit[SIDE_TOP]) - camera_origin) / camera_scale,
-					(Vector2(limit[SIDE_RIGHT], limit[SIDE_BOTTOM]) - camera_origin) / camera_scale,
-					(Vector2(limit[SIDE_LEFT], limit[SIDE_BOTTOM]) - camera_origin) / camera_scale
+				Hector2 camera_origin = get_global_position();
+				Hector2 camera_scale = get_global_scale().abs();
+				Hector2 limit_points[4] = {
+					(Hector2(limit[SIDE_LEFT], limit[SIDE_TOP]) - camera_origin) / camera_scale,
+					(Hector2(limit[SIDE_RIGHT], limit[SIDE_TOP]) - camera_origin) / camera_scale,
+					(Hector2(limit[SIDE_RIGHT], limit[SIDE_BOTTOM]) - camera_origin) / camera_scale,
+					(Hector2(limit[SIDE_LEFT], limit[SIDE_BOTTOM]) - camera_origin) / camera_scale
 				};
 
 				for (int i = 0; i < 4; i++) {
@@ -425,11 +425,11 @@ void Camera2D::_notification(int p_what) {
 				Transform2D inv_camera_transform = get_camera_transform().affine_inverse();
 				Size2 screen_size = _get_camera_screen_size();
 
-				Vector2 margin_endpoints[4] = {
-					inv_camera_transform.xform(Vector2((screen_size.width / 2) - ((screen_size.width / 2) * drag_margin[SIDE_LEFT]), (screen_size.height / 2) - ((screen_size.height / 2) * drag_margin[SIDE_TOP]))),
-					inv_camera_transform.xform(Vector2((screen_size.width / 2) + ((screen_size.width / 2) * drag_margin[SIDE_RIGHT]), (screen_size.height / 2) - ((screen_size.height / 2) * drag_margin[SIDE_TOP]))),
-					inv_camera_transform.xform(Vector2((screen_size.width / 2) + ((screen_size.width / 2) * drag_margin[SIDE_RIGHT]), (screen_size.height / 2) + ((screen_size.height / 2) * drag_margin[SIDE_BOTTOM]))),
-					inv_camera_transform.xform(Vector2((screen_size.width / 2) - ((screen_size.width / 2) * drag_margin[SIDE_LEFT]), (screen_size.height / 2) + ((screen_size.height / 2) * drag_margin[SIDE_BOTTOM])))
+				Hector2 margin_endpoints[4] = {
+					inv_camera_transform.xform(Hector2((screen_size.width / 2) - ((screen_size.width / 2) * drag_margin[SIDE_LEFT]), (screen_size.height / 2) - ((screen_size.height / 2) * drag_margin[SIDE_TOP]))),
+					inv_camera_transform.xform(Hector2((screen_size.width / 2) + ((screen_size.width / 2) * drag_margin[SIDE_RIGHT]), (screen_size.height / 2) - ((screen_size.height / 2) * drag_margin[SIDE_TOP]))),
+					inv_camera_transform.xform(Hector2((screen_size.width / 2) + ((screen_size.width / 2) * drag_margin[SIDE_RIGHT]), (screen_size.height / 2) + ((screen_size.height / 2) * drag_margin[SIDE_BOTTOM]))),
+					inv_camera_transform.xform(Hector2((screen_size.width / 2) - ((screen_size.width / 2) * drag_margin[SIDE_LEFT]), (screen_size.height / 2) + ((screen_size.height / 2) * drag_margin[SIDE_BOTTOM])))
 				};
 
 				Transform2D inv_transform = get_global_transform().affine_inverse(); // undo global space
@@ -443,14 +443,14 @@ void Camera2D::_notification(int p_what) {
 	}
 }
 
-void Camera2D::set_offset(const Vector2 &p_offset) {
+void Camera2D::set_offset(const Hector2 &p_offset) {
 	offset = p_offset;
 	Point2 old_smoothed_camera_pos = smoothed_camera_pos;
 	_update_scroll();
 	smoothed_camera_pos = old_smoothed_camera_pos;
 }
 
-Vector2 Camera2D::get_offset() const {
+Hector2 Camera2D::get_offset() const {
 	return offset;
 }
 
@@ -613,7 +613,7 @@ real_t Camera2D::get_drag_margin(Side p_side) const {
 	return drag_margin[p_side];
 }
 
-Vector2 Camera2D::get_camera_position() const {
+Hector2 Camera2D::get_camera_position() const {
 	return camera_pos;
 }
 
@@ -900,11 +900,11 @@ void Camera2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_margin_drawing_enabled", "margin_drawing_enabled"), &Camera2D::set_margin_drawing_enabled);
 	ClassDB::bind_method(D_METHOD("is_margin_drawing_enabled"), &Camera2D::is_margin_drawing_enabled);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "anchor_mode", PROPERTY_HINT_ENUM, "Fixed Top Left,Drag Center"), "set_anchor_mode", "get_anchor_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ignore_rotation"), "set_ignore_rotation", "is_ignoring_rotation");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "custom_viewport", PROPERTY_HINT_RESOURCE_TYPE, "Viewport", PROPERTY_USAGE_NONE), "set_custom_viewport", "get_custom_viewport");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_callback", PROPERTY_HINT_ENUM, "Physics,Idle"), "set_process_callback", "get_process_callback");
 

@@ -53,9 +53,9 @@ namespace path {
 
 String find_executable(const String &p_name) {
 #ifdef WINDOWS_ENABLED
-	Vector<String> exts = OS::get_singleton()->get_environment("PATHEXT").split(ENV_PATH_SEP, false);
+	Hector<String> exts = OS::get_singleton()->get_environment("PATHEXT").split(ENV_PATH_SEP, false);
 #endif
-	Vector<String> env_path = OS::get_singleton()->get_environment("PATH").split(ENV_PATH_SEP, false);
+	Hector<String> env_path = OS::get_singleton()->get_environment("PATH").split(ENV_PATH_SEP, false);
 
 	if (env_path.is_empty()) {
 		return String();
@@ -232,13 +232,13 @@ String relative_to(const String &p_path, const String &p_relative_to) {
 	return relative_to_impl(path_abs_norm, relative_to_abs_norm);
 }
 
-const Vector<String> reserved_assembly_names = { "GodotSharp", "GodotSharpEditor", "Godot.SourceGenerators" };
+const Hector<String> reserved_assembly_names = { "GodotSharp", "GodotSharpEditor", "Godot.SourceGenerators" };
 
 String get_csharp_project_name() {
 	String name = GLOBAL_GET("dotnet/project/assembly_name");
 	if (name.is_empty()) {
 		name = GLOBAL_GET("application/config/name");
-		Vector<String> invalid_chars = Vector<String>({ //
+		Hector<String> invalid_chars = Hector<String>({ //
 				// Windows reserved filename chars.
 				":", "*", "?", "\"", "<", ">", "|",
 				// Directory separators.

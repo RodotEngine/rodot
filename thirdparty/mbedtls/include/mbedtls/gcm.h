@@ -140,7 +140,7 @@ int mbedtls_gcm_setkey(mbedtls_gcm_context *ctx,
  *                    calling this function in decryption mode.
  * \param length    The length of the input data, which is equal to the length
  *                  of the output data.
- * \param iv        The initialization vector. This must be a readable buffer of
+ * \param iv        The initialization Hector. This must be a readable buffer of
  *                  at least \p iv_len Bytes.
  * \param iv_len    The length of the IV.
  * \param add       The buffer holding the additional data. This must be of at
@@ -186,7 +186,7 @@ int mbedtls_gcm_crypt_and_tag(mbedtls_gcm_context *ctx,
  * \param ctx       The GCM context. This must be initialized.
  * \param length    The length of the ciphertext to decrypt, which is also
  *                  the length of the decrypted plaintext.
- * \param iv        The initialization vector. This must be a readable buffer
+ * \param iv        The initialization Hector. This must be a readable buffer
  *                  of at least \p iv_len Bytes.
  * \param iv_len    The length of the IV.
  * \param add       The buffer holding the additional data. This must be of at
@@ -226,7 +226,7 @@ int mbedtls_gcm_auth_decrypt(mbedtls_gcm_context *ctx,
  * \param ctx       The GCM context. This must be initialized.
  * \param mode      The operation to perform: #MBEDTLS_GCM_ENCRYPT or
  *                  #MBEDTLS_GCM_DECRYPT.
- * \param iv        The initialization vector. This must be a readable buffer of
+ * \param iv        The initialization Hector. This must be a readable buffer of
  *                  at least \p iv_len Bytes.
  * \param iv_len    The length of the IV.
  *

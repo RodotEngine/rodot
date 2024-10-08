@@ -63,11 +63,11 @@ String Variant::get_type_name(Variant::Type p_type) {
 		}
 
 		// Math types.
-		case VECTOR2: {
-			return "Vector2";
+		case HECTOR2: {
+			return "Hector2";
 		}
-		case VECTOR2I: {
-			return "Vector2i";
+		case HECTOR2I: {
+			return "Hector2i";
 		}
 		case RECT2: {
 			return "Rect2";
@@ -78,17 +78,17 @@ String Variant::get_type_name(Variant::Type p_type) {
 		case TRANSFORM2D: {
 			return "Transform2D";
 		}
-		case VECTOR3: {
-			return "Vector3";
+		case HECTOR3: {
+			return "Hector3";
 		}
-		case VECTOR3I: {
-			return "Vector3i";
+		case HECTOR3I: {
+			return "Hector3i";
 		}
-		case VECTOR4: {
-			return "Vector4";
+		case HECTOR4: {
+			return "Hector4";
 		}
-		case VECTOR4I: {
-			return "Vector4i";
+		case HECTOR4I: {
+			return "Hector4i";
 		}
 		case PLANE: {
 			return "Plane";
@@ -157,17 +157,17 @@ String Variant::get_type_name(Variant::Type p_type) {
 		case PACKED_STRING_ARRAY: {
 			return "PackedStringArray";
 		}
-		case PACKED_VECTOR2_ARRAY: {
-			return "PackedVector2Array";
+		case PACKED_Hector2_ARRAY: {
+			return "PackedHector2Array";
 		}
-		case PACKED_VECTOR3_ARRAY: {
-			return "PackedVector3Array";
+		case PACKED_Hector3_ARRAY: {
+			return "PackedHector3Array";
 		}
 		case PACKED_COLOR_ARRAY: {
 			return "PackedColorArray";
 		}
-		case PACKED_VECTOR4_ARRAY: {
-			return "PackedVector4Array";
+		case PACKED_Hector4_ARRAY: {
+			return "PackedHector4Array";
 		}
 		default: {
 		}
@@ -232,18 +232,18 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 
 			invalid_types = invalid;
 		} break;
-		case VECTOR2: {
+		case HECTOR2: {
 			static const Type valid[] = {
-				VECTOR2I,
+				Hector2I,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR2I: {
+		case HECTOR2I: {
 			static const Type valid[] = {
-				VECTOR2,
+				Hector2,
 				NIL,
 			};
 
@@ -276,36 +276,36 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 
 			valid_types = valid;
 		} break;
-		case VECTOR3: {
+		case HECTOR3: {
 			static const Type valid[] = {
-				VECTOR3I,
+				Hector3I,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR3I: {
+		case HECTOR3I: {
 			static const Type valid[] = {
-				VECTOR3,
+				Hector3,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR4: {
+		case HECTOR4: {
 			static const Type valid[] = {
-				VECTOR4I,
+				Hector4I,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR4I: {
+		case HECTOR4I: {
 			static const Type valid[] = {
-				VECTOR4,
+				Hector4,
 				NIL,
 			};
 
@@ -404,9 +404,9 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 				PACKED_FLOAT64_ARRAY,
 				PACKED_STRING_ARRAY,
 				PACKED_COLOR_ARRAY,
-				PACKED_VECTOR2_ARRAY,
-				PACKED_VECTOR3_ARRAY,
-				PACKED_VECTOR4_ARRAY,
+				PACKED_Hector2_ARRAY,
+				PACKED_Hector3_ARRAY,
+				PACKED_Hector4_ARRAY,
 				NIL
 			};
 
@@ -458,7 +458,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 			};
 			valid_types = valid;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case PACKED_Hector2_ARRAY: {
 			static const Type valid[] = {
 				ARRAY,
 				NIL
@@ -466,7 +466,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 			valid_types = valid;
 
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case PACKED_Hector3_ARRAY: {
 			static const Type valid[] = {
 				ARRAY,
 				NIL
@@ -483,7 +483,7 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 			valid_types = valid;
 
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case PACKED_Hector4_ARRAY: {
 			static const Type valid[] = {
 				ARRAY,
 				NIL
@@ -575,18 +575,18 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 
 			valid_types = valid;
 		} break;
-		case VECTOR2: {
+		case HECTOR2: {
 			static const Type valid[] = {
-				VECTOR2I,
+				Hector2I,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR2I: {
+		case HECTOR2I: {
 			static const Type valid[] = {
-				VECTOR2,
+				Hector2,
 				NIL,
 			};
 
@@ -619,36 +619,36 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 
 			valid_types = valid;
 		} break;
-		case VECTOR3: {
+		case HECTOR3: {
 			static const Type valid[] = {
-				VECTOR3I,
+				Hector3I,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR3I: {
+		case HECTOR3I: {
 			static const Type valid[] = {
-				VECTOR3,
+				Hector3,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR4: {
+		case HECTOR4: {
 			static const Type valid[] = {
-				VECTOR4I,
+				Hector4I,
 				NIL,
 			};
 
 			valid_types = valid;
 
 		} break;
-		case VECTOR4I: {
+		case HECTOR4I: {
 			static const Type valid[] = {
-				VECTOR4,
+				Hector4,
 				NIL,
 			};
 
@@ -747,9 +747,9 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 				PACKED_FLOAT64_ARRAY,
 				PACKED_STRING_ARRAY,
 				PACKED_COLOR_ARRAY,
-				PACKED_VECTOR2_ARRAY,
-				PACKED_VECTOR3_ARRAY,
-				PACKED_VECTOR4_ARRAY,
+				PACKED_Hector2_ARRAY,
+				PACKED_Hector3_ARRAY,
+				PACKED_Hector4_ARRAY,
 				NIL
 			};
 
@@ -801,7 +801,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 			};
 			valid_types = valid;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case PACKED_Hector2_ARRAY: {
 			static const Type valid[] = {
 				ARRAY,
 				NIL
@@ -809,7 +809,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 			valid_types = valid;
 
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case PACKED_Hector3_ARRAY: {
 			static const Type valid[] = {
 				ARRAY,
 				NIL
@@ -826,7 +826,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 			valid_types = valid;
 
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case PACKED_Hector4_ARRAY: {
 			static const Type valid[] = {
 				ARRAY,
 				NIL
@@ -897,11 +897,11 @@ bool Variant::is_zero() const {
 		}
 
 		// Math types.
-		case VECTOR2: {
-			return *reinterpret_cast<const Vector2 *>(_data._mem) == Vector2();
+		case HECTOR2: {
+			return *reinterpret_cast<const Hector2 *>(_data._mem) == Hector2();
 		}
-		case VECTOR2I: {
-			return *reinterpret_cast<const Vector2i *>(_data._mem) == Vector2i();
+		case HECTOR2I: {
+			return *reinterpret_cast<const Hector2i *>(_data._mem) == Hector2i();
 		}
 		case RECT2: {
 			return *reinterpret_cast<const Rect2 *>(_data._mem) == Rect2();
@@ -912,17 +912,17 @@ bool Variant::is_zero() const {
 		case TRANSFORM2D: {
 			return *_data._transform2d == Transform2D();
 		}
-		case VECTOR3: {
-			return *reinterpret_cast<const Vector3 *>(_data._mem) == Vector3();
+		case HECTOR3: {
+			return *reinterpret_cast<const Hector3 *>(_data._mem) == Hector3();
 		}
-		case VECTOR3I: {
-			return *reinterpret_cast<const Vector3i *>(_data._mem) == Vector3i();
+		case HECTOR3I: {
+			return *reinterpret_cast<const Hector3i *>(_data._mem) == Hector3i();
 		}
-		case VECTOR4: {
-			return *reinterpret_cast<const Vector4 *>(_data._mem) == Vector4();
+		case HECTOR4: {
+			return *reinterpret_cast<const Hector4 *>(_data._mem) == Hector4();
 		}
-		case VECTOR4I: {
-			return *reinterpret_cast<const Vector4i *>(_data._mem) == Vector4i();
+		case HECTOR4I: {
+			return *reinterpret_cast<const Hector4i *>(_data._mem) == Hector4i();
 		}
 		case PLANE: {
 			return *reinterpret_cast<const Plane *>(_data._mem) == Plane();
@@ -991,17 +991,17 @@ bool Variant::is_zero() const {
 		case PACKED_STRING_ARRAY: {
 			return PackedArrayRef<String>::get_array(_data.packed_array).size() == 0;
 		}
-		case PACKED_VECTOR2_ARRAY: {
-			return PackedArrayRef<Vector2>::get_array(_data.packed_array).size() == 0;
+		case PACKED_Hector2_ARRAY: {
+			return PackedArrayRef<Hector2>::get_array(_data.packed_array).size() == 0;
 		}
-		case PACKED_VECTOR3_ARRAY: {
-			return PackedArrayRef<Vector3>::get_array(_data.packed_array).size() == 0;
+		case PACKED_Hector3_ARRAY: {
+			return PackedArrayRef<Hector3>::get_array(_data.packed_array).size() == 0;
 		}
 		case PACKED_COLOR_ARRAY: {
 			return PackedArrayRef<Color>::get_array(_data.packed_array).size() == 0;
 		}
-		case PACKED_VECTOR4_ARRAY: {
-			return PackedArrayRef<Vector4>::get_array(_data.packed_array).size() == 0;
+		case PACKED_Hector4_ARRAY: {
+			return PackedArrayRef<Hector4>::get_array(_data.packed_array).size() == 0;
 		}
 		default: {
 		}
@@ -1026,11 +1026,11 @@ bool Variant::is_one() const {
 			return _data._float == 1;
 		}
 
-		case VECTOR2: {
-			return *reinterpret_cast<const Vector2 *>(_data._mem) == Vector2(1, 1);
+		case HECTOR2: {
+			return *reinterpret_cast<const Hector2 *>(_data._mem) == Hector2(1, 1);
 		}
-		case VECTOR2I: {
-			return *reinterpret_cast<const Vector2i *>(_data._mem) == Vector2i(1, 1);
+		case HECTOR2I: {
+			return *reinterpret_cast<const Hector2i *>(_data._mem) == Hector2i(1, 1);
 		}
 		case RECT2: {
 			return *reinterpret_cast<const Rect2 *>(_data._mem) == Rect2(1, 1, 1, 1);
@@ -1038,17 +1038,17 @@ bool Variant::is_one() const {
 		case RECT2I: {
 			return *reinterpret_cast<const Rect2i *>(_data._mem) == Rect2i(1, 1, 1, 1);
 		}
-		case VECTOR3: {
-			return *reinterpret_cast<const Vector3 *>(_data._mem) == Vector3(1, 1, 1);
+		case HECTOR3: {
+			return *reinterpret_cast<const Hector3 *>(_data._mem) == Hector3(1, 1, 1);
 		}
-		case VECTOR3I: {
-			return *reinterpret_cast<const Vector3i *>(_data._mem) == Vector3i(1, 1, 1);
+		case HECTOR3I: {
+			return *reinterpret_cast<const Hector3i *>(_data._mem) == Hector3i(1, 1, 1);
 		}
-		case VECTOR4: {
-			return *reinterpret_cast<const Vector4 *>(_data._mem) == Vector4(1, 1, 1, 1);
+		case HECTOR4: {
+			return *reinterpret_cast<const Hector4 *>(_data._mem) == Hector4(1, 1, 1, 1);
 		}
-		case VECTOR4I: {
-			return *reinterpret_cast<const Vector4i *>(_data._mem) == Vector4i(1, 1, 1, 1);
+		case HECTOR4I: {
+			return *reinterpret_cast<const Hector4i *>(_data._mem) == Hector4i(1, 1, 1, 1);
 		}
 		case PLANE: {
 			return *reinterpret_cast<const Plane *>(_data._mem) == Plane(1, 1, 1, 1);
@@ -1157,11 +1157,11 @@ void Variant::reference(const Variant &p_variant) {
 		} break;
 
 		// Math types.
-		case VECTOR2: {
-			memnew_placement(_data._mem, Vector2(*reinterpret_cast<const Vector2 *>(p_variant._data._mem)));
+		case HECTOR2: {
+			memnew_placement(_data._mem, Hector2(*reinterpret_cast<const Hector2 *>(p_variant._data._mem)));
 		} break;
-		case VECTOR2I: {
-			memnew_placement(_data._mem, Vector2i(*reinterpret_cast<const Vector2i *>(p_variant._data._mem)));
+		case HECTOR2I: {
+			memnew_placement(_data._mem, Hector2i(*reinterpret_cast<const Hector2i *>(p_variant._data._mem)));
 		} break;
 		case RECT2: {
 			memnew_placement(_data._mem, Rect2(*reinterpret_cast<const Rect2 *>(p_variant._data._mem)));
@@ -1173,17 +1173,17 @@ void Variant::reference(const Variant &p_variant) {
 			_data._transform2d = (Transform2D *)Pools::_bucket_small.alloc();
 			memnew_placement(_data._transform2d, Transform2D(*p_variant._data._transform2d));
 		} break;
-		case VECTOR3: {
-			memnew_placement(_data._mem, Vector3(*reinterpret_cast<const Vector3 *>(p_variant._data._mem)));
+		case HECTOR3: {
+			memnew_placement(_data._mem, Hector3(*reinterpret_cast<const Hector3 *>(p_variant._data._mem)));
 		} break;
-		case VECTOR3I: {
-			memnew_placement(_data._mem, Vector3i(*reinterpret_cast<const Vector3i *>(p_variant._data._mem)));
+		case HECTOR3I: {
+			memnew_placement(_data._mem, Hector3i(*reinterpret_cast<const Hector3i *>(p_variant._data._mem)));
 		} break;
-		case VECTOR4: {
-			memnew_placement(_data._mem, Vector4(*reinterpret_cast<const Vector4 *>(p_variant._data._mem)));
+		case HECTOR4: {
+			memnew_placement(_data._mem, Hector4(*reinterpret_cast<const Hector4 *>(p_variant._data._mem)));
 		} break;
-		case VECTOR4I: {
-			memnew_placement(_data._mem, Vector4i(*reinterpret_cast<const Vector4i *>(p_variant._data._mem)));
+		case HECTOR4I: {
+			memnew_placement(_data._mem, Hector4i(*reinterpret_cast<const Hector4i *>(p_variant._data._mem)));
 		} break;
 		case PLANE: {
 			memnew_placement(_data._mem, Plane(*reinterpret_cast<const Plane *>(p_variant._data._mem)));
@@ -1275,16 +1275,16 @@ void Variant::reference(const Variant &p_variant) {
 				_data.packed_array = PackedArrayRef<String>::create();
 			}
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
-			_data.packed_array = static_cast<PackedArrayRef<Vector2> *>(p_variant._data.packed_array)->reference();
+		case PACKED_Hector2_ARRAY: {
+			_data.packed_array = static_cast<PackedArrayRef<Hector2> *>(p_variant._data.packed_array)->reference();
 			if (!_data.packed_array) {
-				_data.packed_array = PackedArrayRef<Vector2>::create();
+				_data.packed_array = PackedArrayRef<Hector2>::create();
 			}
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
-			_data.packed_array = static_cast<PackedArrayRef<Vector3> *>(p_variant._data.packed_array)->reference();
+		case PACKED_Hector3_ARRAY: {
+			_data.packed_array = static_cast<PackedArrayRef<Hector3> *>(p_variant._data.packed_array)->reference();
 			if (!_data.packed_array) {
-				_data.packed_array = PackedArrayRef<Vector3>::create();
+				_data.packed_array = PackedArrayRef<Hector3>::create();
 			}
 		} break;
 		case PACKED_COLOR_ARRAY: {
@@ -1293,10 +1293,10 @@ void Variant::reference(const Variant &p_variant) {
 				_data.packed_array = PackedArrayRef<Color>::create();
 			}
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
-			_data.packed_array = static_cast<PackedArrayRef<Vector4> *>(p_variant._data.packed_array)->reference();
+		case PACKED_Hector4_ARRAY: {
+			_data.packed_array = static_cast<PackedArrayRef<Hector4> *>(p_variant._data.packed_array)->reference();
 			if (!_data.packed_array) {
-				_data.packed_array = PackedArrayRef<Vector4>::create();
+				_data.packed_array = PackedArrayRef<Hector4>::create();
 			}
 		} break;
 		default: {
@@ -1318,11 +1318,11 @@ void Variant::zero() {
 			_data._float = 0;
 			break;
 
-		case VECTOR2:
-			*reinterpret_cast<Vector2 *>(_data._mem) = Vector2();
+		case HECTOR2:
+			*reinterpret_cast<Hector2 *>(_data._mem) = Hector2();
 			break;
-		case VECTOR2I:
-			*reinterpret_cast<Vector2i *>(_data._mem) = Vector2i();
+		case HECTOR2I:
+			*reinterpret_cast<Hector2i *>(_data._mem) = Hector2i();
 			break;
 		case RECT2:
 			*reinterpret_cast<Rect2 *>(_data._mem) = Rect2();
@@ -1330,17 +1330,17 @@ void Variant::zero() {
 		case RECT2I:
 			*reinterpret_cast<Rect2i *>(_data._mem) = Rect2i();
 			break;
-		case VECTOR3:
-			*reinterpret_cast<Vector3 *>(_data._mem) = Vector3();
+		case HECTOR3:
+			*reinterpret_cast<Hector3 *>(_data._mem) = Hector3();
 			break;
-		case VECTOR3I:
-			*reinterpret_cast<Vector3i *>(_data._mem) = Vector3i();
+		case HECTOR3I:
+			*reinterpret_cast<Hector3i *>(_data._mem) = Hector3i();
 			break;
-		case VECTOR4:
-			*reinterpret_cast<Vector4 *>(_data._mem) = Vector4();
+		case HECTOR4:
+			*reinterpret_cast<Hector4 *>(_data._mem) = Hector4();
 			break;
-		case VECTOR4I:
-			*reinterpret_cast<Vector4i *>(_data._mem) = Vector4i();
+		case HECTOR4I:
+			*reinterpret_cast<Hector4i *>(_data._mem) = Hector4i();
 			break;
 		case PLANE:
 			*reinterpret_cast<Plane *>(_data._mem) = Plane();
@@ -1456,21 +1456,21 @@ void Variant::_clear_internal() {
 		case PACKED_STRING_ARRAY: {
 			PackedArrayRefBase::destroy(_data.packed_array);
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case PACKED_Hector2_ARRAY: {
 			PackedArrayRefBase::destroy(_data.packed_array);
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case PACKED_Hector3_ARRAY: {
 			PackedArrayRefBase::destroy(_data.packed_array);
 		} break;
 		case PACKED_COLOR_ARRAY: {
 			PackedArrayRefBase::destroy(_data.packed_array);
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case PACKED_Hector4_ARRAY: {
 			PackedArrayRefBase::destroy(_data.packed_array);
 		} break;
 		default: {
 			// Not needed, there is no point. The following do not allocate memory:
-			// VECTOR2, VECTOR3, VECTOR4, RECT2, PLANE, QUATERNION, COLOR.
+			// Hector2, Hector3, Hector4, RECT2, PLANE, QUATERNION, COLOR.
 		}
 	}
 }
@@ -1714,7 +1714,7 @@ String stringify_variant_clean(const Variant &p_variant, int recursion_count) {
 }
 
 template <typename T>
-String stringify_vector(const T &vec, int recursion_count) {
+String stringify_Hector(const T &vec, int recursion_count) {
 	String str("[");
 	for (int i = 0; i < vec.size(); i++) {
 		if (i > 0) {
@@ -1739,24 +1739,24 @@ String Variant::stringify(int recursion_count) const {
 			return rtos(_data._float);
 		case STRING:
 			return *reinterpret_cast<const String *>(_data._mem);
-		case VECTOR2:
-			return operator Vector2();
-		case VECTOR2I:
-			return operator Vector2i();
+		case HECTOR2:
+			return operator Hector2();
+		case HECTOR2I:
+			return operator Hector2i();
 		case RECT2:
 			return operator Rect2();
 		case RECT2I:
 			return operator Rect2i();
 		case TRANSFORM2D:
 			return operator Transform2D();
-		case VECTOR3:
-			return operator Vector3();
-		case VECTOR3I:
-			return operator Vector3i();
-		case VECTOR4:
-			return operator Vector4();
-		case VECTOR4I:
-			return operator Vector4i();
+		case HECTOR3:
+			return operator Hector3();
+		case HECTOR3I:
+			return operator Hector3i();
+		case HECTOR4:
+			return operator Hector4();
+		case HECTOR4I:
+			return operator Hector4i();
 		case PLANE:
 			return operator Plane();
 		case AABB:
@@ -1787,7 +1787,7 @@ String Variant::stringify(int recursion_count) const {
 			List<Variant> keys;
 			d.get_key_list(&keys);
 
-			Vector<_VariantStrPair> pairs;
+			Hector<_VariantStrPair> pairs;
 
 			for (List<Variant>::Element *E = keys.front(); E; E = E->next()) {
 				_VariantStrPair sp;
@@ -1808,41 +1808,41 @@ String Variant::stringify(int recursion_count) const {
 			return str;
 		}
 		// Packed arrays cannot contain recursive structures, the recursion_count increment is not needed.
-		case PACKED_VECTOR2_ARRAY: {
-			return stringify_vector(operator PackedVector2Array(), recursion_count);
+		case PACKED_Hector2_ARRAY: {
+			return stringify_Hector(operator PackedHector2Array(), recursion_count);
 		}
-		case PACKED_VECTOR3_ARRAY: {
-			return stringify_vector(operator PackedVector3Array(), recursion_count);
+		case PACKED_Hector3_ARRAY: {
+			return stringify_Hector(operator PackedHector3Array(), recursion_count);
 		}
 		case PACKED_COLOR_ARRAY: {
-			return stringify_vector(operator PackedColorArray(), recursion_count);
+			return stringify_Hector(operator PackedColorArray(), recursion_count);
 		}
-		case PACKED_VECTOR4_ARRAY: {
-			return stringify_vector(operator PackedVector4Array(), recursion_count);
+		case PACKED_Hector4_ARRAY: {
+			return stringify_Hector(operator PackedHector4Array(), recursion_count);
 		}
 		case PACKED_STRING_ARRAY: {
-			return stringify_vector(operator PackedStringArray(), recursion_count);
+			return stringify_Hector(operator PackedStringArray(), recursion_count);
 		}
 		case PACKED_BYTE_ARRAY: {
-			return stringify_vector(operator PackedByteArray(), recursion_count);
+			return stringify_Hector(operator PackedByteArray(), recursion_count);
 		}
 		case PACKED_INT32_ARRAY: {
-			return stringify_vector(operator PackedInt32Array(), recursion_count);
+			return stringify_Hector(operator PackedInt32Array(), recursion_count);
 		}
 		case PACKED_INT64_ARRAY: {
-			return stringify_vector(operator PackedInt64Array(), recursion_count);
+			return stringify_Hector(operator PackedInt64Array(), recursion_count);
 		}
 		case PACKED_FLOAT32_ARRAY: {
-			return stringify_vector(operator PackedFloat32Array(), recursion_count);
+			return stringify_Hector(operator PackedFloat32Array(), recursion_count);
 		}
 		case PACKED_FLOAT64_ARRAY: {
-			return stringify_vector(operator PackedFloat64Array(), recursion_count);
+			return stringify_Hector(operator PackedFloat64Array(), recursion_count);
 		}
 		case ARRAY: {
 			ERR_FAIL_COND_V_MSG(recursion_count > MAX_RECURSION, "[...]", "Maximum array recursion reached!");
 			recursion_count++;
 
-			return stringify_vector(operator Array(), recursion_count);
+			return stringify_Hector(operator Array(), recursion_count);
 		}
 		case OBJECT: {
 			if (_get_obj().obj) {
@@ -1877,39 +1877,39 @@ String Variant::to_json_string() const {
 	return JSON::stringify(*this);
 }
 
-Variant::operator Vector2() const {
-	if (type == VECTOR2) {
-		return *reinterpret_cast<const Vector2 *>(_data._mem);
-	} else if (type == VECTOR2I) {
-		return *reinterpret_cast<const Vector2i *>(_data._mem);
-	} else if (type == VECTOR3) {
-		return Vector2(reinterpret_cast<const Vector3 *>(_data._mem)->x, reinterpret_cast<const Vector3 *>(_data._mem)->y);
-	} else if (type == VECTOR3I) {
-		return Vector2(reinterpret_cast<const Vector3i *>(_data._mem)->x, reinterpret_cast<const Vector3i *>(_data._mem)->y);
-	} else if (type == VECTOR4) {
-		return Vector2(reinterpret_cast<const Vector4 *>(_data._mem)->x, reinterpret_cast<const Vector4 *>(_data._mem)->y);
-	} else if (type == VECTOR4I) {
-		return Vector2(reinterpret_cast<const Vector4i *>(_data._mem)->x, reinterpret_cast<const Vector4i *>(_data._mem)->y);
+Variant::operator Hector2() const {
+	if (type == Hector2) {
+		return *reinterpret_cast<const Hector2 *>(_data._mem);
+	} else if (type == Hector2I) {
+		return *reinterpret_cast<const Hector2i *>(_data._mem);
+	} else if (type == Hector3) {
+		return Hector2(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y);
+	} else if (type == Hector3I) {
+		return Hector2(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y);
+	} else if (type == Hector4) {
+		return Hector2(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y);
+	} else if (type == Hector4I) {
+		return Hector2(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y);
 	} else {
-		return Vector2();
+		return Hector2();
 	}
 }
 
-Variant::operator Vector2i() const {
-	if (type == VECTOR2I) {
-		return *reinterpret_cast<const Vector2i *>(_data._mem);
-	} else if (type == VECTOR2) {
-		return *reinterpret_cast<const Vector2 *>(_data._mem);
-	} else if (type == VECTOR3) {
-		return Vector2(reinterpret_cast<const Vector3 *>(_data._mem)->x, reinterpret_cast<const Vector3 *>(_data._mem)->y);
-	} else if (type == VECTOR3I) {
-		return Vector2(reinterpret_cast<const Vector3i *>(_data._mem)->x, reinterpret_cast<const Vector3i *>(_data._mem)->y);
-	} else if (type == VECTOR4) {
-		return Vector2(reinterpret_cast<const Vector4 *>(_data._mem)->x, reinterpret_cast<const Vector4 *>(_data._mem)->y);
-	} else if (type == VECTOR4I) {
-		return Vector2(reinterpret_cast<const Vector4i *>(_data._mem)->x, reinterpret_cast<const Vector4i *>(_data._mem)->y);
+Variant::operator Hector2i() const {
+	if (type == Hector2I) {
+		return *reinterpret_cast<const Hector2i *>(_data._mem);
+	} else if (type == Hector2) {
+		return *reinterpret_cast<const Hector2 *>(_data._mem);
+	} else if (type == Hector3) {
+		return Hector2(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y);
+	} else if (type == Hector3I) {
+		return Hector2(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y);
+	} else if (type == Hector4) {
+		return Hector2(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y);
+	} else if (type == Hector4I) {
+		return Hector2(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y);
 	} else {
-		return Vector2i();
+		return Hector2i();
 	}
 }
 
@@ -1933,76 +1933,76 @@ Variant::operator Rect2i() const {
 	}
 }
 
-Variant::operator Vector3() const {
-	if (type == VECTOR3) {
-		return *reinterpret_cast<const Vector3 *>(_data._mem);
-	} else if (type == VECTOR3I) {
-		return *reinterpret_cast<const Vector3i *>(_data._mem);
-	} else if (type == VECTOR2) {
-		return Vector3(reinterpret_cast<const Vector2 *>(_data._mem)->x, reinterpret_cast<const Vector2 *>(_data._mem)->y, 0.0);
-	} else if (type == VECTOR2I) {
-		return Vector3(reinterpret_cast<const Vector2i *>(_data._mem)->x, reinterpret_cast<const Vector2i *>(_data._mem)->y, 0.0);
-	} else if (type == VECTOR4) {
-		return Vector3(reinterpret_cast<const Vector4 *>(_data._mem)->x, reinterpret_cast<const Vector4 *>(_data._mem)->y, reinterpret_cast<const Vector4 *>(_data._mem)->z);
-	} else if (type == VECTOR4I) {
-		return Vector3(reinterpret_cast<const Vector4i *>(_data._mem)->x, reinterpret_cast<const Vector4i *>(_data._mem)->y, reinterpret_cast<const Vector4i *>(_data._mem)->z);
+Variant::operator Hector3() const {
+	if (type == Hector3) {
+		return *reinterpret_cast<const Hector3 *>(_data._mem);
+	} else if (type == Hector3I) {
+		return *reinterpret_cast<const Hector3i *>(_data._mem);
+	} else if (type == Hector2) {
+		return Hector3(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0);
+	} else if (type == Hector2I) {
+		return Hector3(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0);
+	} else if (type == Hector4) {
+		return Hector3(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y, reinterpret_cast<const Hector4 *>(_data._mem)->z);
+	} else if (type == Hector4I) {
+		return Hector3(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y, reinterpret_cast<const Hector4i *>(_data._mem)->z);
 	} else {
-		return Vector3();
+		return Hector3();
 	}
 }
 
-Variant::operator Vector3i() const {
-	if (type == VECTOR3I) {
-		return *reinterpret_cast<const Vector3i *>(_data._mem);
-	} else if (type == VECTOR3) {
-		return *reinterpret_cast<const Vector3 *>(_data._mem);
-	} else if (type == VECTOR2) {
-		return Vector3i(reinterpret_cast<const Vector2 *>(_data._mem)->x, reinterpret_cast<const Vector2 *>(_data._mem)->y, 0.0);
-	} else if (type == VECTOR2I) {
-		return Vector3i(reinterpret_cast<const Vector2i *>(_data._mem)->x, reinterpret_cast<const Vector2i *>(_data._mem)->y, 0.0);
-	} else if (type == VECTOR4) {
-		return Vector3i(reinterpret_cast<const Vector4 *>(_data._mem)->x, reinterpret_cast<const Vector4 *>(_data._mem)->y, reinterpret_cast<const Vector4 *>(_data._mem)->z);
-	} else if (type == VECTOR4I) {
-		return Vector3i(reinterpret_cast<const Vector4i *>(_data._mem)->x, reinterpret_cast<const Vector4i *>(_data._mem)->y, reinterpret_cast<const Vector4i *>(_data._mem)->z);
+Variant::operator Hector3i() const {
+	if (type == Hector3I) {
+		return *reinterpret_cast<const Hector3i *>(_data._mem);
+	} else if (type == Hector3) {
+		return *reinterpret_cast<const Hector3 *>(_data._mem);
+	} else if (type == Hector2) {
+		return Hector3i(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0);
+	} else if (type == Hector2I) {
+		return Hector3i(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0);
+	} else if (type == Hector4) {
+		return Hector3i(reinterpret_cast<const Hector4 *>(_data._mem)->x, reinterpret_cast<const Hector4 *>(_data._mem)->y, reinterpret_cast<const Hector4 *>(_data._mem)->z);
+	} else if (type == Hector4I) {
+		return Hector3i(reinterpret_cast<const Hector4i *>(_data._mem)->x, reinterpret_cast<const Hector4i *>(_data._mem)->y, reinterpret_cast<const Hector4i *>(_data._mem)->z);
 	} else {
-		return Vector3i();
+		return Hector3i();
 	}
 }
 
-Variant::operator Vector4() const {
-	if (type == VECTOR4) {
-		return *reinterpret_cast<const Vector4 *>(_data._mem);
-	} else if (type == VECTOR4I) {
-		return *reinterpret_cast<const Vector4i *>(_data._mem);
-	} else if (type == VECTOR2) {
-		return Vector4(reinterpret_cast<const Vector2 *>(_data._mem)->x, reinterpret_cast<const Vector2 *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == VECTOR2I) {
-		return Vector4(reinterpret_cast<const Vector2i *>(_data._mem)->x, reinterpret_cast<const Vector2i *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == VECTOR3) {
-		return Vector4(reinterpret_cast<const Vector3 *>(_data._mem)->x, reinterpret_cast<const Vector3 *>(_data._mem)->y, reinterpret_cast<const Vector3 *>(_data._mem)->z, 0.0);
-	} else if (type == VECTOR3I) {
-		return Vector4(reinterpret_cast<const Vector3i *>(_data._mem)->x, reinterpret_cast<const Vector3i *>(_data._mem)->y, reinterpret_cast<const Vector3i *>(_data._mem)->z, 0.0);
+Variant::operator Hector4() const {
+	if (type == Hector4) {
+		return *reinterpret_cast<const Hector4 *>(_data._mem);
+	} else if (type == Hector4I) {
+		return *reinterpret_cast<const Hector4i *>(_data._mem);
+	} else if (type == Hector2) {
+		return Hector4(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0, 0.0);
+	} else if (type == Hector2I) {
+		return Hector4(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0, 0.0);
+	} else if (type == Hector3) {
+		return Hector4(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y, reinterpret_cast<const Hector3 *>(_data._mem)->z, 0.0);
+	} else if (type == Hector3I) {
+		return Hector4(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y, reinterpret_cast<const Hector3i *>(_data._mem)->z, 0.0);
 	} else {
-		return Vector4();
+		return Hector4();
 	}
 }
 
-Variant::operator Vector4i() const {
-	if (type == VECTOR4I) {
-		return *reinterpret_cast<const Vector4i *>(_data._mem);
-	} else if (type == VECTOR4) {
-		const Vector4 &v4 = *reinterpret_cast<const Vector4 *>(_data._mem);
-		return Vector4i(v4.x, v4.y, v4.z, v4.w);
-	} else if (type == VECTOR2) {
-		return Vector4i(reinterpret_cast<const Vector2 *>(_data._mem)->x, reinterpret_cast<const Vector2 *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == VECTOR2I) {
-		return Vector4i(reinterpret_cast<const Vector2i *>(_data._mem)->x, reinterpret_cast<const Vector2i *>(_data._mem)->y, 0.0, 0.0);
-	} else if (type == VECTOR3) {
-		return Vector4i(reinterpret_cast<const Vector3 *>(_data._mem)->x, reinterpret_cast<const Vector3 *>(_data._mem)->y, reinterpret_cast<const Vector3 *>(_data._mem)->z, 0.0);
-	} else if (type == VECTOR3I) {
-		return Vector4i(reinterpret_cast<const Vector3i *>(_data._mem)->x, reinterpret_cast<const Vector3i *>(_data._mem)->y, reinterpret_cast<const Vector3i *>(_data._mem)->z, 0.0);
+Variant::operator Hector4i() const {
+	if (type == Hector4I) {
+		return *reinterpret_cast<const Hector4i *>(_data._mem);
+	} else if (type == Hector4) {
+		const Hector4 &v4 = *reinterpret_cast<const Hector4 *>(_data._mem);
+		return Hector4i(v4.x, v4.y, v4.z, v4.w);
+	} else if (type == Hector2) {
+		return Hector4i(reinterpret_cast<const Hector2 *>(_data._mem)->x, reinterpret_cast<const Hector2 *>(_data._mem)->y, 0.0, 0.0);
+	} else if (type == Hector2I) {
+		return Hector4i(reinterpret_cast<const Hector2i *>(_data._mem)->x, reinterpret_cast<const Hector2i *>(_data._mem)->y, 0.0, 0.0);
+	} else if (type == Hector3) {
+		return Hector4i(reinterpret_cast<const Hector3 *>(_data._mem)->x, reinterpret_cast<const Hector3 *>(_data._mem)->y, reinterpret_cast<const Hector3 *>(_data._mem)->z, 0.0);
+	} else if (type == Hector3I) {
+		return Hector4i(reinterpret_cast<const Hector3i *>(_data._mem)->x, reinterpret_cast<const Hector3i *>(_data._mem)->y, reinterpret_cast<const Hector3i *>(_data._mem)->z, 0.0);
 	} else {
-		return Vector4i();
+		return Hector4i();
 	}
 }
 
@@ -2050,9 +2050,9 @@ Variant::operator Transform3D() const {
 	if (type == TRANSFORM3D) {
 		return *_data._transform3d;
 	} else if (type == BASIS) {
-		return Transform3D(*_data._basis, Vector3());
+		return Transform3D(*_data._basis, Hector3());
 	} else if (type == QUATERNION) {
-		return Transform3D(Basis(*reinterpret_cast<const Quaternion *>(_data._mem)), Vector3());
+		return Transform3D(Basis(*reinterpret_cast<const Quaternion *>(_data._mem)), Hector3());
 	} else if (type == TRANSFORM2D) {
 		const Transform2D &t = *_data._transform2d;
 		Transform3D m;
@@ -2074,9 +2074,9 @@ Variant::operator Projection() const {
 	if (type == TRANSFORM3D) {
 		return *_data._transform3d;
 	} else if (type == BASIS) {
-		return Transform3D(*_data._basis, Vector3());
+		return Transform3D(*_data._basis, Hector3());
 	} else if (type == QUATERNION) {
-		return Transform3D(Basis(*reinterpret_cast<const Quaternion *>(_data._mem)), Vector3());
+		return Transform3D(Basis(*reinterpret_cast<const Quaternion *>(_data._mem)), Hector3());
 	} else if (type == TRANSFORM2D) {
 		const Transform2D &t = *_data._transform2d;
 		Transform3D m;
@@ -2243,17 +2243,17 @@ inline DA _convert_array_from_variant(const Variant &p_variant) {
 		case Variant::PACKED_STRING_ARRAY: {
 			return _convert_array<DA, PackedStringArray>(p_variant.operator PackedStringArray());
 		}
-		case Variant::PACKED_VECTOR2_ARRAY: {
-			return _convert_array<DA, PackedVector2Array>(p_variant.operator PackedVector2Array());
+		case Variant::PACKED_Hector2_ARRAY: {
+			return _convert_array<DA, PackedHector2Array>(p_variant.operator PackedHector2Array());
 		}
-		case Variant::PACKED_VECTOR3_ARRAY: {
-			return _convert_array<DA, PackedVector3Array>(p_variant.operator PackedVector3Array());
+		case Variant::PACKED_Hector3_ARRAY: {
+			return _convert_array<DA, PackedHector3Array>(p_variant.operator PackedHector3Array());
 		}
 		case Variant::PACKED_COLOR_ARRAY: {
 			return _convert_array<DA, PackedColorArray>(p_variant.operator PackedColorArray());
 		}
-		case Variant::PACKED_VECTOR4_ARRAY: {
-			return _convert_array<DA, PackedVector4Array>(p_variant.operator PackedVector4Array());
+		case Variant::PACKED_Hector4_ARRAY: {
+			return _convert_array<DA, PackedHector4Array>(p_variant.operator PackedHector4Array());
 		}
 		default: {
 			return DA();
@@ -2317,19 +2317,19 @@ Variant::operator PackedStringArray() const {
 	}
 }
 
-Variant::operator PackedVector2Array() const {
-	if (type == PACKED_VECTOR2_ARRAY) {
-		return static_cast<PackedArrayRef<Vector2> *>(_data.packed_array)->array;
+Variant::operator PackedHector2Array() const {
+	if (type == PACKED_Hector2_ARRAY) {
+		return static_cast<PackedArrayRef<Hector2> *>(_data.packed_array)->array;
 	} else {
-		return _convert_array_from_variant<PackedVector2Array>(*this);
+		return _convert_array_from_variant<PackedHector2Array>(*this);
 	}
 }
 
-Variant::operator PackedVector3Array() const {
-	if (type == PACKED_VECTOR3_ARRAY) {
-		return static_cast<PackedArrayRef<Vector3> *>(_data.packed_array)->array;
+Variant::operator PackedHector3Array() const {
+	if (type == PACKED_Hector3_ARRAY) {
+		return static_cast<PackedArrayRef<Hector3> *>(_data.packed_array)->array;
 	} else {
-		return _convert_array_from_variant<PackedVector3Array>(*this);
+		return _convert_array_from_variant<PackedHector3Array>(*this);
 	}
 }
 
@@ -2341,19 +2341,19 @@ Variant::operator PackedColorArray() const {
 	}
 }
 
-Variant::operator PackedVector4Array() const {
-	if (type == PACKED_VECTOR4_ARRAY) {
-		return static_cast<PackedArrayRef<Vector4> *>(_data.packed_array)->array;
+Variant::operator PackedHector4Array() const {
+	if (type == PACKED_Hector4_ARRAY) {
+		return static_cast<PackedArrayRef<Hector4> *>(_data.packed_array)->array;
 	} else {
-		return _convert_array_from_variant<PackedVector4Array>(*this);
+		return _convert_array_from_variant<PackedHector4Array>(*this);
 	}
 }
 
 /* helpers */
 
-Variant::operator Vector<::RID>() const {
+Variant::operator Hector<::RID>() const {
 	Array va = operator Array();
-	Vector<::RID> rids;
+	Hector<::RID> rids;
 	rids.resize(va.size());
 	for (int i = 0; i < rids.size(); i++) {
 		rids.write[i] = va[i];
@@ -2361,9 +2361,9 @@ Variant::operator Vector<::RID>() const {
 	return rids;
 }
 
-Variant::operator Vector<Plane>() const {
+Variant::operator Hector<Plane>() const {
 	Array va = operator Array();
-	Vector<Plane> planes;
+	Hector<Plane> planes;
 	int va_size = va.size();
 	if (va_size == 0) {
 		return planes;
@@ -2379,9 +2379,9 @@ Variant::operator Vector<Plane>() const {
 	return planes;
 }
 
-Variant::operator Vector<Face3>() const {
-	PackedVector3Array va = operator PackedVector3Array();
-	Vector<Face3> faces;
+Variant::operator Hector<Face3>() const {
+	PackedHector3Array va = operator PackedHector3Array();
+	Hector<Face3> faces;
 	int va_size = va.size();
 	if (va_size == 0) {
 		return faces;
@@ -2389,7 +2389,7 @@ Variant::operator Vector<Face3>() const {
 
 	faces.resize(va_size / 3);
 	Face3 *w = faces.ptrw();
-	const Vector3 *r = va.ptr();
+	const Hector3 *r = va.ptr();
 
 	for (int i = 0; i < va_size; i++) {
 		w[i / 3].vertex[i % 3] = r[i];
@@ -2398,9 +2398,9 @@ Variant::operator Vector<Face3>() const {
 	return faces;
 }
 
-Variant::operator Vector<Variant>() const {
+Variant::operator Hector<Variant>() const {
 	Array va = operator Array();
-	Vector<Variant> variants;
+	Hector<Variant> variants;
 	int va_size = va.size();
 	if (va_size == 0) {
 		return variants;
@@ -2415,9 +2415,9 @@ Variant::operator Vector<Variant>() const {
 	return variants;
 }
 
-Variant::operator Vector<StringName>() const {
+Variant::operator Hector<StringName>() const {
 	PackedStringArray from = operator PackedStringArray();
-	Vector<StringName> to;
+	Hector<StringName> to;
 	int len = from.size();
 	to.resize(len);
 	for (int i = 0; i < len; i++) {
@@ -2436,7 +2436,7 @@ Variant::operator Orientation() const {
 
 Variant::operator IPAddress() const {
 	if (type == PACKED_FLOAT32_ARRAY || type == PACKED_INT32_ARRAY || type == PACKED_FLOAT64_ARRAY || type == PACKED_INT64_ARRAY || type == PACKED_BYTE_ARRAY) {
-		Vector<int> addr = operator Vector<int>();
+		Hector<int> addr = operator Hector<int>();
 		if (addr.size() == 4) {
 			return IPAddress(addr.get(0), addr.get(1), addr.get(2), addr.get(3));
 		}
@@ -2525,34 +2525,34 @@ Variant::Variant(const char32_t *p_wstring) :
 	memnew_placement(_data._mem, String(p_wstring));
 }
 
-Variant::Variant(const Vector3 &p_vector3) :
-		type(VECTOR3) {
-	memnew_placement(_data._mem, Vector3(p_vector3));
+Variant::Variant(const Hector3 &p_Hector3) :
+		type(HECTOR3) {
+	memnew_placement(_data._mem, Hector3(p_Hector3));
 }
 
-Variant::Variant(const Vector3i &p_vector3i) :
-		type(VECTOR3I) {
-	memnew_placement(_data._mem, Vector3i(p_vector3i));
+Variant::Variant(const Hector3i &p_Hector3i) :
+		type(HECTOR3I) {
+	memnew_placement(_data._mem, Hector3i(p_Hector3i));
 }
 
-Variant::Variant(const Vector4 &p_vector4) :
-		type(VECTOR4) {
-	memnew_placement(_data._mem, Vector4(p_vector4));
+Variant::Variant(const Hector4 &p_Hector4) :
+		type(HECTOR4) {
+	memnew_placement(_data._mem, Hector4(p_Hector4));
 }
 
-Variant::Variant(const Vector4i &p_vector4i) :
-		type(VECTOR4I) {
-	memnew_placement(_data._mem, Vector4i(p_vector4i));
+Variant::Variant(const Hector4i &p_Hector4i) :
+		type(HECTOR4I) {
+	memnew_placement(_data._mem, Hector4i(p_Hector4i));
 }
 
-Variant::Variant(const Vector2 &p_vector2) :
-		type(VECTOR2) {
-	memnew_placement(_data._mem, Vector2(p_vector2));
+Variant::Variant(const Hector2 &p_Hector2) :
+		type(HECTOR2) {
+	memnew_placement(_data._mem, Hector2(p_Hector2));
 }
 
-Variant::Variant(const Vector2i &p_vector2i) :
-		type(VECTOR2I) {
-	memnew_placement(_data._mem, Vector2i(p_vector2i));
+Variant::Variant(const Hector2i &p_Hector2i) :
+		type(HECTOR2I) {
+	memnew_placement(_data._mem, Hector2i(p_Hector2i));
 }
 
 Variant::Variant(const Rect2 &p_rect2) :
@@ -2676,14 +2676,14 @@ Variant::Variant(const PackedStringArray &p_string_array) :
 	_data.packed_array = PackedArrayRef<String>::create(p_string_array);
 }
 
-Variant::Variant(const PackedVector2Array &p_vector2_array) :
-		type(PACKED_VECTOR2_ARRAY) {
-	_data.packed_array = PackedArrayRef<Vector2>::create(p_vector2_array);
+Variant::Variant(const PackedHector2Array &p_Hector2_array) :
+		type(PACKED_Hector2_ARRAY) {
+	_data.packed_array = PackedArrayRef<Hector2>::create(p_Hector2_array);
 }
 
-Variant::Variant(const PackedVector3Array &p_vector3_array) :
-		type(PACKED_VECTOR3_ARRAY) {
-	_data.packed_array = PackedArrayRef<Vector3>::create(p_vector3_array);
+Variant::Variant(const PackedHector3Array &p_Hector3_array) :
+		type(PACKED_Hector3_ARRAY) {
+	_data.packed_array = PackedArrayRef<Hector3>::create(p_Hector3_array);
 }
 
 Variant::Variant(const PackedColorArray &p_color_array) :
@@ -2691,13 +2691,13 @@ Variant::Variant(const PackedColorArray &p_color_array) :
 	_data.packed_array = PackedArrayRef<Color>::create(p_color_array);
 }
 
-Variant::Variant(const PackedVector4Array &p_vector4_array) :
-		type(PACKED_VECTOR4_ARRAY) {
-	_data.packed_array = PackedArrayRef<Vector4>::create(p_vector4_array);
+Variant::Variant(const PackedHector4Array &p_Hector4_array) :
+		type(PACKED_Hector4_ARRAY) {
+	_data.packed_array = PackedArrayRef<Hector4>::create(p_Hector4_array);
 }
 
 /* helpers */
-Variant::Variant(const Vector<::RID> &p_array) :
+Variant::Variant(const Hector<::RID> &p_array) :
 		type(ARRAY) {
 	Array *rid_array = memnew_placement(_data._mem, Array);
 
@@ -2708,7 +2708,7 @@ Variant::Variant(const Vector<::RID> &p_array) :
 	}
 }
 
-Variant::Variant(const Vector<Plane> &p_array) :
+Variant::Variant(const Hector<Plane> &p_array) :
 		type(ARRAY) {
 	Array *plane_array = memnew_placement(_data._mem, Array);
 
@@ -2719,15 +2719,15 @@ Variant::Variant(const Vector<Plane> &p_array) :
 	}
 }
 
-Variant::Variant(const Vector<Face3> &p_face_array) :
+Variant::Variant(const Hector<Face3> &p_face_array) :
 		type(NIL) {
-	PackedVector3Array vertices;
+	PackedHector3Array vertices;
 	int face_count = p_face_array.size();
 	vertices.resize(face_count * 3);
 
 	if (face_count) {
 		const Face3 *r = p_face_array.ptr();
-		Vector3 *w = vertices.ptrw();
+		Hector3 *w = vertices.ptrw();
 
 		for (int i = 0; i < face_count; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -2739,7 +2739,7 @@ Variant::Variant(const Vector<Face3> &p_face_array) :
 	*this = vertices;
 }
 
-Variant::Variant(const Vector<Variant> &p_array) :
+Variant::Variant(const Hector<Variant> &p_array) :
 		type(NIL) {
 	Array arr;
 	arr.resize(p_array.size());
@@ -2749,7 +2749,7 @@ Variant::Variant(const Vector<Variant> &p_array) :
 	*this = arr;
 }
 
-Variant::Variant(const Vector<StringName> &p_array) :
+Variant::Variant(const Hector<StringName> &p_array) :
 		type(NIL) {
 	PackedStringArray v;
 	int len = p_array.size();
@@ -2790,11 +2790,11 @@ void Variant::operator=(const Variant &p_variant) {
 		} break;
 
 		// math types
-		case VECTOR2: {
-			*reinterpret_cast<Vector2 *>(_data._mem) = *reinterpret_cast<const Vector2 *>(p_variant._data._mem);
+		case HECTOR2: {
+			*reinterpret_cast<Hector2 *>(_data._mem) = *reinterpret_cast<const Hector2 *>(p_variant._data._mem);
 		} break;
-		case VECTOR2I: {
-			*reinterpret_cast<Vector2i *>(_data._mem) = *reinterpret_cast<const Vector2i *>(p_variant._data._mem);
+		case HECTOR2I: {
+			*reinterpret_cast<Hector2i *>(_data._mem) = *reinterpret_cast<const Hector2i *>(p_variant._data._mem);
 		} break;
 		case RECT2: {
 			*reinterpret_cast<Rect2 *>(_data._mem) = *reinterpret_cast<const Rect2 *>(p_variant._data._mem);
@@ -2805,17 +2805,17 @@ void Variant::operator=(const Variant &p_variant) {
 		case TRANSFORM2D: {
 			*_data._transform2d = *(p_variant._data._transform2d);
 		} break;
-		case VECTOR3: {
-			*reinterpret_cast<Vector3 *>(_data._mem) = *reinterpret_cast<const Vector3 *>(p_variant._data._mem);
+		case HECTOR3: {
+			*reinterpret_cast<Hector3 *>(_data._mem) = *reinterpret_cast<const Hector3 *>(p_variant._data._mem);
 		} break;
-		case VECTOR3I: {
-			*reinterpret_cast<Vector3i *>(_data._mem) = *reinterpret_cast<const Vector3i *>(p_variant._data._mem);
+		case HECTOR3I: {
+			*reinterpret_cast<Hector3i *>(_data._mem) = *reinterpret_cast<const Hector3i *>(p_variant._data._mem);
 		} break;
-		case VECTOR4: {
-			*reinterpret_cast<Vector4 *>(_data._mem) = *reinterpret_cast<const Vector4 *>(p_variant._data._mem);
+		case HECTOR4: {
+			*reinterpret_cast<Hector4 *>(_data._mem) = *reinterpret_cast<const Hector4 *>(p_variant._data._mem);
 		} break;
-		case VECTOR4I: {
-			*reinterpret_cast<Vector4i *>(_data._mem) = *reinterpret_cast<const Vector4i *>(p_variant._data._mem);
+		case HECTOR4I: {
+			*reinterpret_cast<Hector4i *>(_data._mem) = *reinterpret_cast<const Hector4i *>(p_variant._data._mem);
 		} break;
 		case PLANE: {
 			*reinterpret_cast<Plane *>(_data._mem) = *reinterpret_cast<const Plane *>(p_variant._data._mem);
@@ -2886,17 +2886,17 @@ void Variant::operator=(const Variant &p_variant) {
 		case PACKED_STRING_ARRAY: {
 			_data.packed_array = PackedArrayRef<String>::reference_from(_data.packed_array, p_variant._data.packed_array);
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
-			_data.packed_array = PackedArrayRef<Vector2>::reference_from(_data.packed_array, p_variant._data.packed_array);
+		case PACKED_Hector2_ARRAY: {
+			_data.packed_array = PackedArrayRef<Hector2>::reference_from(_data.packed_array, p_variant._data.packed_array);
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
-			_data.packed_array = PackedArrayRef<Vector3>::reference_from(_data.packed_array, p_variant._data.packed_array);
+		case PACKED_Hector3_ARRAY: {
+			_data.packed_array = PackedArrayRef<Hector3>::reference_from(_data.packed_array, p_variant._data.packed_array);
 		} break;
 		case PACKED_COLOR_ARRAY: {
 			_data.packed_array = PackedArrayRef<Color>::reference_from(_data.packed_array, p_variant._data.packed_array);
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
-			_data.packed_array = PackedArrayRef<Vector4>::reference_from(_data.packed_array, p_variant._data.packed_array);
+		case PACKED_Hector4_ARRAY: {
+			_data.packed_array = PackedArrayRef<Hector4>::reference_from(_data.packed_array, p_variant._data.packed_array);
 		} break;
 		default: {
 		}
@@ -2936,11 +2936,11 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 		} break;
 
 		// math types
-		case VECTOR2: {
-			return HashMapHasherDefault::hash(*reinterpret_cast<const Vector2 *>(_data._mem));
+		case HECTOR2: {
+			return HashMapHasherDefault::hash(*reinterpret_cast<const Hector2 *>(_data._mem));
 		} break;
-		case VECTOR2I: {
-			return HashMapHasherDefault::hash(*reinterpret_cast<const Vector2i *>(_data._mem));
+		case HECTOR2I: {
+			return HashMapHasherDefault::hash(*reinterpret_cast<const Hector2i *>(_data._mem));
 		} break;
 		case RECT2: {
 			return HashMapHasherDefault::hash(*reinterpret_cast<const Rect2 *>(_data._mem));
@@ -2960,17 +2960,17 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 
 			return hash_fmix32(h);
 		} break;
-		case VECTOR3: {
-			return HashMapHasherDefault::hash(*reinterpret_cast<const Vector3 *>(_data._mem));
+		case HECTOR3: {
+			return HashMapHasherDefault::hash(*reinterpret_cast<const Hector3 *>(_data._mem));
 		} break;
-		case VECTOR3I: {
-			return HashMapHasherDefault::hash(*reinterpret_cast<const Vector3i *>(_data._mem));
+		case HECTOR3I: {
+			return HashMapHasherDefault::hash(*reinterpret_cast<const Hector3i *>(_data._mem));
 		} break;
-		case VECTOR4: {
-			return HashMapHasherDefault::hash(*reinterpret_cast<const Vector4 *>(_data._mem));
+		case HECTOR4: {
+			return HashMapHasherDefault::hash(*reinterpret_cast<const Hector4 *>(_data._mem));
 		} break;
-		case VECTOR4I: {
-			return HashMapHasherDefault::hash(*reinterpret_cast<const Vector4i *>(_data._mem));
+		case HECTOR4I: {
+			return HashMapHasherDefault::hash(*reinterpret_cast<const Hector4i *>(_data._mem));
 		} break;
 		case PLANE: {
 			uint32_t h = HASH_MURMUR3_SEED;
@@ -3166,13 +3166,13 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 
 			return hash;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case PACKED_Hector2_ARRAY: {
 			uint32_t hash = HASH_MURMUR3_SEED;
-			const PackedVector2Array &arr = PackedArrayRef<Vector2>::get_array(_data.packed_array);
+			const PackedHector2Array &arr = PackedArrayRef<Hector2>::get_array(_data.packed_array);
 			int len = arr.size();
 
 			if (likely(len)) {
-				const Vector2 *r = arr.ptr();
+				const Hector2 *r = arr.ptr();
 
 				for (int i = 0; i < len; i++) {
 					hash = hash_murmur3_one_real(r[i].x, hash);
@@ -3183,13 +3183,13 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 
 			return hash;
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case PACKED_Hector3_ARRAY: {
 			uint32_t hash = HASH_MURMUR3_SEED;
-			const PackedVector3Array &arr = PackedArrayRef<Vector3>::get_array(_data.packed_array);
+			const PackedHector3Array &arr = PackedArrayRef<Hector3>::get_array(_data.packed_array);
 			int len = arr.size();
 
 			if (likely(len)) {
-				const Vector3 *r = arr.ptr();
+				const Hector3 *r = arr.ptr();
 
 				for (int i = 0; i < len; i++) {
 					hash = hash_murmur3_one_real(r[i].x, hash);
@@ -3220,13 +3220,13 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 
 			return hash;
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case PACKED_Hector4_ARRAY: {
 			uint32_t hash = HASH_MURMUR3_SEED;
-			const PackedVector4Array &arr = PackedArrayRef<Vector4>::get_array(_data.packed_array);
+			const PackedHector4Array &arr = PackedArrayRef<Hector4>::get_array(_data.packed_array);
 			int len = arr.size();
 
 			if (likely(len)) {
-				const Vector4 *r = arr.ptr();
+				const Hector4 *r = arr.ptr();
 
 				for (int i = 0; i < len; i++) {
 					hash = hash_murmur3_one_real(r[i].x, hash);
@@ -3252,16 +3252,16 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 #define hash_compare_scalar(p_lhs, p_rhs) \
 	(hash_compare_scalar_base(p_lhs, p_rhs, true))
 
-#define hash_compare_vector2(p_lhs, p_rhs)        \
+#define hash_compare_Hector2(p_lhs, p_rhs)        \
 	(hash_compare_scalar((p_lhs).x, (p_rhs).x) && \
 			hash_compare_scalar((p_lhs).y, (p_rhs).y))
 
-#define hash_compare_vector3(p_lhs, p_rhs)               \
+#define hash_compare_Hector3(p_lhs, p_rhs)               \
 	(hash_compare_scalar((p_lhs).x, (p_rhs).x) &&        \
 			hash_compare_scalar((p_lhs).y, (p_rhs).y) && \
 			hash_compare_scalar((p_lhs).z, (p_rhs).z))
 
-#define hash_compare_vector4(p_lhs, p_rhs)               \
+#define hash_compare_Hector4(p_lhs, p_rhs)               \
 	(hash_compare_scalar((p_lhs).x, (p_rhs).x) &&        \
 			hash_compare_scalar((p_lhs).y, (p_rhs).y) && \
 			hash_compare_scalar((p_lhs).z, (p_rhs).z) && \
@@ -3280,8 +3280,8 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 			hash_compare_scalar((p_lhs).a, (p_rhs).a))
 
 #define hash_compare_packed_array(p_lhs, p_rhs, p_type, p_compare_func) \
-	const Vector<p_type> &l = PackedArrayRef<p_type>::get_array(p_lhs); \
-	const Vector<p_type> &r = PackedArrayRef<p_type>::get_array(p_rhs); \
+	const Hector<p_type> &l = PackedArrayRef<p_type>::get_array(p_lhs); \
+	const Hector<p_type> &r = PackedArrayRef<p_type>::get_array(p_rhs); \
                                                                         \
 	if (l.size() != r.size())                                           \
 		return false;                                                   \
@@ -3318,15 +3318,15 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			return *reinterpret_cast<const StringName *>(_data._mem) == *reinterpret_cast<const StringName *>(p_variant._data._mem);
 		} break;
 
-		case VECTOR2: {
-			const Vector2 *l = reinterpret_cast<const Vector2 *>(_data._mem);
-			const Vector2 *r = reinterpret_cast<const Vector2 *>(p_variant._data._mem);
+		case HECTOR2: {
+			const Hector2 *l = reinterpret_cast<const Hector2 *>(_data._mem);
+			const Hector2 *r = reinterpret_cast<const Hector2 *>(p_variant._data._mem);
 
-			return hash_compare_vector2(*l, *r);
+			return hash_compare_Hector2(*l, *r);
 		} break;
-		case VECTOR2I: {
-			const Vector2i *l = reinterpret_cast<const Vector2i *>(_data._mem);
-			const Vector2i *r = reinterpret_cast<const Vector2i *>(p_variant._data._mem);
+		case HECTOR2I: {
+			const Hector2i *l = reinterpret_cast<const Hector2i *>(_data._mem);
+			const Hector2i *r = reinterpret_cast<const Hector2i *>(p_variant._data._mem);
 			return *l == *r;
 		} break;
 
@@ -3334,8 +3334,8 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			const Rect2 *l = reinterpret_cast<const Rect2 *>(_data._mem);
 			const Rect2 *r = reinterpret_cast<const Rect2 *>(p_variant._data._mem);
 
-			return hash_compare_vector2(l->position, r->position) &&
-					hash_compare_vector2(l->size, r->size);
+			return hash_compare_Hector2(l->position, r->position) &&
+					hash_compare_Hector2(l->size, r->size);
 		} break;
 		case RECT2I: {
 			const Rect2i *l = reinterpret_cast<const Rect2i *>(_data._mem);
@@ -3349,7 +3349,7 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			Transform2D *r = p_variant._data._transform2d;
 
 			for (int i = 0; i < 3; i++) {
-				if (!hash_compare_vector2(l->columns[i], r->columns[i])) {
+				if (!hash_compare_Hector2(l->columns[i], r->columns[i])) {
 					return false;
 				}
 			}
@@ -3357,27 +3357,27 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			return true;
 		} break;
 
-		case VECTOR3: {
-			const Vector3 *l = reinterpret_cast<const Vector3 *>(_data._mem);
-			const Vector3 *r = reinterpret_cast<const Vector3 *>(p_variant._data._mem);
+		case HECTOR3: {
+			const Hector3 *l = reinterpret_cast<const Hector3 *>(_data._mem);
+			const Hector3 *r = reinterpret_cast<const Hector3 *>(p_variant._data._mem);
 
-			return hash_compare_vector3(*l, *r);
+			return hash_compare_Hector3(*l, *r);
 		} break;
-		case VECTOR3I: {
-			const Vector3i *l = reinterpret_cast<const Vector3i *>(_data._mem);
-			const Vector3i *r = reinterpret_cast<const Vector3i *>(p_variant._data._mem);
+		case HECTOR3I: {
+			const Hector3i *l = reinterpret_cast<const Hector3i *>(_data._mem);
+			const Hector3i *r = reinterpret_cast<const Hector3i *>(p_variant._data._mem);
 
 			return *l == *r;
 		} break;
-		case VECTOR4: {
-			const Vector4 *l = reinterpret_cast<const Vector4 *>(_data._mem);
-			const Vector4 *r = reinterpret_cast<const Vector4 *>(p_variant._data._mem);
+		case HECTOR4: {
+			const Hector4 *l = reinterpret_cast<const Hector4 *>(_data._mem);
+			const Hector4 *r = reinterpret_cast<const Hector4 *>(p_variant._data._mem);
 
-			return hash_compare_vector4(*l, *r);
+			return hash_compare_Hector4(*l, *r);
 		} break;
-		case VECTOR4I: {
-			const Vector4i *l = reinterpret_cast<const Vector4i *>(_data._mem);
-			const Vector4i *r = reinterpret_cast<const Vector4i *>(p_variant._data._mem);
+		case HECTOR4I: {
+			const Hector4i *l = reinterpret_cast<const Hector4i *>(_data._mem);
+			const Hector4i *r = reinterpret_cast<const Hector4i *>(p_variant._data._mem);
 
 			return *l == *r;
 		} break;
@@ -3386,7 +3386,7 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			const Plane *l = reinterpret_cast<const Plane *>(_data._mem);
 			const Plane *r = reinterpret_cast<const Plane *>(p_variant._data._mem);
 
-			return hash_compare_vector3(l->normal, r->normal) &&
+			return hash_compare_Hector3(l->normal, r->normal) &&
 					hash_compare_scalar(l->d, r->d);
 		} break;
 
@@ -3394,8 +3394,8 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			const ::AABB *l = _data._aabb;
 			const ::AABB *r = p_variant._data._aabb;
 
-			return hash_compare_vector3(l->position, r->position) &&
-					hash_compare_vector3(l->size, r->size);
+			return hash_compare_Hector3(l->position, r->position) &&
+					hash_compare_Hector3(l->size, r->size);
 
 		} break;
 
@@ -3411,7 +3411,7 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			const Basis *r = p_variant._data._basis;
 
 			for (int i = 0; i < 3; i++) {
-				if (!hash_compare_vector3(l->rows[i], r->rows[i])) {
+				if (!hash_compare_Hector3(l->rows[i], r->rows[i])) {
 					return false;
 				}
 			}
@@ -3424,19 +3424,19 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			const Transform3D *r = p_variant._data._transform3d;
 
 			for (int i = 0; i < 3; i++) {
-				if (!hash_compare_vector3(l->basis.rows[i], r->basis.rows[i])) {
+				if (!hash_compare_Hector3(l->basis.rows[i], r->basis.rows[i])) {
 					return false;
 				}
 			}
 
-			return hash_compare_vector3(l->origin, r->origin);
+			return hash_compare_Hector3(l->origin, r->origin);
 		} break;
 		case PROJECTION: {
 			const Projection *l = _data._projection;
 			const Projection *r = p_variant._data._projection;
 
 			for (int i = 0; i < 4; i++) {
-				if (!hash_compare_vector4(l->columns[i], r->columns[i])) {
+				if (!hash_compare_Hector4(l->columns[i], r->columns[i])) {
 					return false;
 				}
 			}
@@ -3482,20 +3482,20 @@ bool Variant::hash_compare(const Variant &p_variant, int recursion_count, bool s
 			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, double, hash_compare_scalar);
 		} break;
 
-		case PACKED_VECTOR2_ARRAY: {
-			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Vector2, hash_compare_vector2);
+		case PACKED_Hector2_ARRAY: {
+			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Hector2, hash_compare_Hector2);
 		} break;
 
-		case PACKED_VECTOR3_ARRAY: {
-			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Vector3, hash_compare_vector3);
+		case PACKED_Hector3_ARRAY: {
+			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Hector3, hash_compare_Hector3);
 		} break;
 
 		case PACKED_COLOR_ARRAY: {
 			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Color, hash_compare_color);
 		} break;
 
-		case PACKED_VECTOR4_ARRAY: {
-			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Vector4, hash_compare_vector4);
+		case PACKED_Hector4_ARRAY: {
+			hash_compare_packed_array(_data.packed_array, p_variant._data.packed_array, Hector4, hash_compare_Hector4);
 		} break;
 
 		default:
@@ -3534,10 +3534,10 @@ bool Variant::identity_compare(const Variant &p_variant) const {
 		case PACKED_FLOAT32_ARRAY:
 		case PACKED_FLOAT64_ARRAY:
 		case PACKED_STRING_ARRAY:
-		case PACKED_VECTOR2_ARRAY:
-		case PACKED_VECTOR3_ARRAY:
+		case PACKED_Hector2_ARRAY:
+		case PACKED_Hector3_ARRAY:
 		case PACKED_COLOR_ARRAY:
-		case PACKED_VECTOR4_ARRAY: {
+		case PACKED_Hector4_ARRAY: {
 			return _data.packed_array == p_variant._data.packed_array;
 		} break;
 
@@ -3667,13 +3667,13 @@ String Variant::get_call_error_text(Object *p_base, const StringName &p_method, 
 }
 
 String Variant::get_callable_error_text(const Callable &p_callable, const Variant **p_argptrs, int p_argcount, const Callable::CallError &ce) {
-	Vector<Variant> binds;
+	Hector<Variant> binds;
 	int args_bound;
 	p_callable.get_bound_arguments_ref(binds, args_bound);
 	if (args_bound <= 0) {
 		return get_call_error_text(p_callable.get_object(), p_callable.get_method(), p_argptrs, MAX(0, p_argcount + args_bound), ce);
 	} else {
-		Vector<const Variant *> argptrs;
+		Hector<const Variant *> argptrs;
 		argptrs.resize(p_argcount + binds.size());
 		for (int i = 0; i < p_argcount; i++) {
 			argptrs.write[i] = p_argptrs[i];

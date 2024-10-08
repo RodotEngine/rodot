@@ -1096,7 +1096,7 @@ void ItemList::_notification(int p_what) {
 
 			ensure_selected_visible = false;
 
-			Vector2 base_ofs = theme_cache.panel_style->get_offset();
+			Hector2 base_ofs = theme_cache.panel_style->get_offset();
 			base_ofs.y -= int(scroll_bar->get_value());
 
 			// Define a visible frame to check against and optimize drawing.
@@ -1126,7 +1126,7 @@ void ItemList::_notification(int p_what) {
 					}
 
 					const int y = base_ofs.y + separators[i];
-					draw_line(Vector2(theme_cache.panel_style->get_margin(SIDE_LEFT), y), Vector2(width, y), theme_cache.guide_color);
+					draw_line(Hector2(theme_cache.panel_style->get_margin(SIDE_LEFT), y), Hector2(width, y), theme_cache.guide_color);
 				}
 			}
 
@@ -1193,7 +1193,7 @@ void ItemList::_notification(int p_what) {
 					}
 				}
 
-				Vector2 text_ofs;
+				Hector2 text_ofs;
 				if (items[i].icon.is_valid()) {
 					Size2 icon_size;
 					//= _adjust_to_max_size(items[i].get_icon_size(),fixed_icon_size) * icon_scale;
@@ -1204,7 +1204,7 @@ void ItemList::_notification(int p_what) {
 						icon_size = items[i].get_icon_size() * icon_scale;
 					}
 
-					Vector2 icon_ofs;
+					Hector2 icon_ofs;
 
 					Point2 pos = items[i].rect_cache.position + icon_ofs + base_ofs;
 
@@ -1243,7 +1243,7 @@ void ItemList::_notification(int p_what) {
 						draw_rect.size.y = size_tmp.x;
 					}
 
-					Rect2 region = (items[i].icon_region.size.x == 0 || items[i].icon_region.size.y == 0) ? Rect2(Vector2(), items[i].icon->get_size()) : Rect2(items[i].icon_region);
+					Rect2 region = (items[i].icon_region.size.x == 0 || items[i].icon_region.size.y == 0) ? Rect2(Hector2(), items[i].icon->get_size()) : Rect2(items[i].icon_region);
 
 					if (rtl) {
 						draw_rect.position.x = size.width - draw_rect.position.x - draw_rect.size.x;
@@ -1272,7 +1272,7 @@ void ItemList::_notification(int p_what) {
 				if (!items[i].text.is_empty()) {
 					int max_len = -1;
 
-					Vector2 size2 = items[i].text_buf->get_size();
+					Hector2 size2 = items[i].text_buf->get_size();
 					if (fixed_column_width) {
 						max_len = fixed_column_width;
 					} else if (same_column_width) {
@@ -1444,7 +1444,7 @@ void ItemList::force_update_list_size() {
 	// Repeat until all items fit.
 	while (true) {
 		bool all_fit = true;
-		Vector2 ofs;
+		Hector2 ofs;
 		int col = 0;
 		int max_w = 0;
 		int max_h = 0;
@@ -1553,7 +1553,7 @@ String ItemList::_atr(int p_idx, const String &p_text) const {
 }
 
 int ItemList::get_item_at_position(const Point2 &p_pos, bool p_exact) const {
-	Vector2 pos = p_pos;
+	Hector2 pos = p_pos;
 	pos -= theme_cache.panel_style->get_offset();
 	pos.y += scroll_bar->get_value();
 
@@ -1591,7 +1591,7 @@ bool ItemList::is_pos_at_end_of_items(const Point2 &p_pos) const {
 		return true;
 	}
 
-	Vector2 pos = p_pos;
+	Hector2 pos = p_pos;
 	pos -= theme_cache.panel_style->get_offset();
 	pos.y += scroll_bar->get_value();
 
@@ -1686,8 +1686,8 @@ real_t ItemList::get_icon_scale() const {
 	return icon_scale;
 }
 
-Vector<int> ItemList::get_selected_items() {
-	Vector<int> selected;
+Hector<int> ItemList::get_selected_items() {
+	Hector<int> selected;
 	for (int i = 0; i < items.size(); i++) {
 		if (items[i].selected) {
 			selected.push_back(i);
@@ -1929,7 +1929,7 @@ void ItemList::_bind_methods() {
 	ADD_GROUP("Icon", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "icon_mode", PROPERTY_HINT_ENUM, "Top,Left"), "set_icon_mode", "get_icon_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "icon_scale"), "set_icon_scale", "get_icon_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "fixed_icon_size", PROPERTY_HINT_NONE, "suffix:px"), "set_fixed_icon_size", "get_fixed_icon_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "fixed_icon_size", PROPERTY_HINT_NONE, "suffix:px"), "set_fixed_icon_size", "get_fixed_icon_size");
 
 	BIND_ENUM_CONSTANT(ICON_MODE_TOP);
 	BIND_ENUM_CONSTANT(ICON_MODE_LEFT);
@@ -1938,8 +1938,8 @@ void ItemList::_bind_methods() {
 	BIND_ENUM_CONSTANT(SELECT_MULTI);
 
 	ADD_SIGNAL(MethodInfo("item_selected", PropertyInfo(Variant::INT, "index")));
-	ADD_SIGNAL(MethodInfo("empty_clicked", PropertyInfo(Variant::VECTOR2, "at_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
-	ADD_SIGNAL(MethodInfo("item_clicked", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::VECTOR2, "at_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
+	ADD_SIGNAL(MethodInfo("empty_clicked", PropertyInfo(Variant::HECTOR2, "at_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
+	ADD_SIGNAL(MethodInfo("item_clicked", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::HECTOR2, "at_position"), PropertyInfo(Variant::INT, "mouse_button_index")));
 	ADD_SIGNAL(MethodInfo("multi_selected", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::BOOL, "selected")));
 	ADD_SIGNAL(MethodInfo("item_activated", PropertyInfo(Variant::INT, "index")));
 

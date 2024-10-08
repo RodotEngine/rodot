@@ -32,7 +32,7 @@ U_NAMESPACE_END
 #include "unicode/strenum.h"
 
 #include "hash.h"
-#include "uvector.h"
+#include "uHector.h"
 
 #include "serv.h"
 #include "locutil.h"

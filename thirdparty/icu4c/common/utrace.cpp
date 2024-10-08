@@ -278,9 +278,9 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
 
         case 'v':
             {
-                /* Vector of values, e.g. %vh */
-                char     vectorType;
-                int32_t  vectorLen;
+                /* Hector of values, e.g. %vh */
+                char     HectorType;
+                int32_t  HectorLen;
                 const char   *i8Ptr;
                 int16_t  *i16Ptr;
                 int32_t  *i32Ptr;
@@ -289,8 +289,8 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                 int32_t   charsToOutput = 0;
                 int32_t   i;
                 
-                vectorType = fmt[fmtIx];    /* b, h, d, l, p, etc. */
-                if (vectorType != 0) {
+                HectorType = fmt[fmtIx];    /* b, h, d, l, p, etc. */
+                if (HectorType != 0) {
                     fmtIx++;
                 }
                 i8Ptr = (const char *)va_arg(args, void*);
@@ -298,12 +298,12 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                 i32Ptr = (int32_t *)i8Ptr;
                 i64Ptr = (int64_t *)i8Ptr;
                 ptrPtr = (void **)i8Ptr;
-                vectorLen =(int32_t)va_arg(args, int32_t);
+                HectorLen =(int32_t)va_arg(args, int32_t);
                 if (ptrPtr == nullptr) {
                     outputString("*NULL* ", outBuf, &outIx, capacity, indent);
                 } else {
-                    for (i=0; i<vectorLen || vectorLen==-1; i++) { 
-                        switch (vectorType) {
+                    for (i=0; i<HectorLen || HectorLen==-1; i++) { 
+                        switch (HectorType) {
                         case 'b':
                             charsToOutput = 2;
                             longArg = *i8Ptr++;
@@ -354,13 +354,13 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                             outputHexBytes(longArg, charsToOutput, outBuf, &outIx, capacity);
                             outputChar(' ', outBuf, &outIx, capacity, indent);
                         }
-                        if (vectorLen == -1 && longArg == 0) {
+                        if (HectorLen == -1 && longArg == 0) {
                             break;
                         }
                     }
                 }
                 outputChar('[', outBuf, &outIx, capacity, indent);
-                outputHexBytes(vectorLen, 8, outBuf, &outIx, capacity);
+                outputHexBytes(HectorLen, 8, outBuf, &outIx, capacity);
                 outputChar(']', outBuf, &outIx, capacity, indent);
             }
             break;

@@ -56,10 +56,10 @@ public:
         BACK_UTF8_NOT_CONTAINED = BACK | UTF8  | NOT_CONTAINED
     };
 
-    UnicodeSetStringSpan(const UnicodeSet &set, const UVector &setStrings, uint32_t which);
+    UnicodeSetStringSpan(const UnicodeSet &set, const UHector &setStrings, uint32_t which);
 
     // Copy constructor. Assumes which==ALL for a frozen set.
-    UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan, const UVector &newParentSetStrings);
+    UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan, const UHector &newParentSetStrings);
 
     ~UnicodeSetStringSpan();
 
@@ -108,7 +108,7 @@ private:
     UnicodeSet *pSpanNotSet;
 
     // The strings of the parent set.
-    const UVector &strings;
+    const UHector &strings;
 
     // Pointer to the UTF-8 string lengths.
     // Also pointer to further allocated storage for meta data and

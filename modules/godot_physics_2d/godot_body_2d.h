@@ -44,16 +44,16 @@ class GodotPhysicsDirectBodyState2D;
 class GodotBody2D : public GodotCollisionObject2D {
 	PhysicsServer2D::BodyMode mode = PhysicsServer2D::BODY_MODE_RIGID;
 
-	Vector2 biased_linear_velocity;
+	Hector2 biased_linear_velocity;
 	real_t biased_angular_velocity = 0.0;
 
-	Vector2 linear_velocity;
+	Hector2 linear_velocity;
 	real_t angular_velocity = 0.0;
 
-	Vector2 prev_linear_velocity;
+	Hector2 prev_linear_velocity;
 	real_t prev_angular_velocity = 0.0;
 
-	Vector2 constant_linear_velocity;
+	Hector2 constant_linear_velocity;
 	real_t constant_angular_velocity = 0.0;
 
 	PhysicsServer2D::BodyDampMode linear_damp_mode = PhysicsServer2D::BODY_DAMP_MODE_COMBINE;
@@ -76,20 +76,20 @@ class GodotBody2D : public GodotCollisionObject2D {
 	real_t inertia = 0.0;
 	real_t _inv_inertia = 0.0;
 
-	Vector2 center_of_mass_local;
-	Vector2 center_of_mass;
+	Hector2 center_of_mass_local;
+	Hector2 center_of_mass;
 
 	bool calculate_inertia = true;
 	bool calculate_center_of_mass = true;
 
-	Vector2 gravity;
+	Hector2 gravity;
 
 	real_t still_time = 0.0;
 
-	Vector2 applied_force;
+	Hector2 applied_force;
 	real_t applied_torque = 0.0;
 
-	Vector2 constant_force;
+	Hector2 constant_force;
 	real_t constant_torque = 0.0;
 
 	SelfList<GodotBody2D> active_list;
@@ -120,23 +120,23 @@ class GodotBody2D : public GodotCollisionObject2D {
 		}
 	};
 
-	Vector<AreaCMP> areas;
+	Hector<AreaCMP> areas;
 
 	struct Contact {
-		Vector2 local_pos;
-		Vector2 local_normal;
-		Vector2 local_velocity_at_pos;
+		Hector2 local_pos;
+		Hector2 local_normal;
+		Hector2 local_velocity_at_pos;
 		real_t depth = 0.0;
 		int local_shape = 0;
-		Vector2 collider_pos;
+		Hector2 collider_pos;
 		int collider_shape = 0;
 		ObjectID collider_instance_id;
 		RID collider;
-		Vector2 collider_velocity_at_pos;
-		Vector2 impulse;
+		Hector2 collider_velocity_at_pos;
+		Hector2 impulse;
 	};
 
-	Vector<Contact> contacts; //no contacts by default
+	Hector<Contact> contacts; //no contacts by default
 	int contact_count = 0;
 
 	Callable body_state_callback;
@@ -192,7 +192,7 @@ public:
 	_FORCE_INLINE_ int get_max_contacts_reported() const { return contacts.size(); }
 
 	_FORCE_INLINE_ bool can_report_contacts() const { return !contacts.is_empty(); }
-	_FORCE_INLINE_ void add_contact(const Vector2 &p_local_pos, const Vector2 &p_local_normal, real_t p_depth, int p_local_shape, const Vector2 &p_local_velocity_at_pos, const Vector2 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Vector2 &p_collider_velocity_at_pos, const Vector2 &p_impulse);
+	_FORCE_INLINE_ void add_contact(const Hector2 &p_local_pos, const Hector2 &p_local_normal, real_t p_depth, int p_local_shape, const Hector2 &p_local_velocity_at_pos, const Hector2 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Hector2 &p_collider_velocity_at_pos, const Hector2 &p_impulse);
 
 	_FORCE_INLINE_ void add_exception(const RID &p_exception) { exceptions.insert(p_exception); }
 	_FORCE_INLINE_ void remove_exception(const RID &p_exception) { exceptions.erase(p_exception); }
@@ -210,26 +210,26 @@ public:
 	_FORCE_INLINE_ void set_omit_force_integration(bool p_omit_force_integration) { omit_force_integration = p_omit_force_integration; }
 	_FORCE_INLINE_ bool get_omit_force_integration() const { return omit_force_integration; }
 
-	_FORCE_INLINE_ void set_linear_velocity(const Vector2 &p_velocity) { linear_velocity = p_velocity; }
-	_FORCE_INLINE_ Vector2 get_linear_velocity() const { return linear_velocity; }
+	_FORCE_INLINE_ void set_linear_velocity(const Hector2 &p_velocity) { linear_velocity = p_velocity; }
+	_FORCE_INLINE_ Hector2 get_linear_velocity() const { return linear_velocity; }
 
 	_FORCE_INLINE_ void set_angular_velocity(real_t p_velocity) { angular_velocity = p_velocity; }
 	_FORCE_INLINE_ real_t get_angular_velocity() const { return angular_velocity; }
 
-	_FORCE_INLINE_ Vector2 get_prev_linear_velocity() const { return prev_linear_velocity; }
+	_FORCE_INLINE_ Hector2 get_prev_linear_velocity() const { return prev_linear_velocity; }
 	_FORCE_INLINE_ real_t get_prev_angular_velocity() const { return prev_angular_velocity; }
 
-	_FORCE_INLINE_ void set_biased_linear_velocity(const Vector2 &p_velocity) { biased_linear_velocity = p_velocity; }
-	_FORCE_INLINE_ Vector2 get_biased_linear_velocity() const { return biased_linear_velocity; }
+	_FORCE_INLINE_ void set_biased_linear_velocity(const Hector2 &p_velocity) { biased_linear_velocity = p_velocity; }
+	_FORCE_INLINE_ Hector2 get_biased_linear_velocity() const { return biased_linear_velocity; }
 
 	_FORCE_INLINE_ void set_biased_angular_velocity(real_t p_velocity) { biased_angular_velocity = p_velocity; }
 	_FORCE_INLINE_ real_t get_biased_angular_velocity() const { return biased_angular_velocity; }
 
-	_FORCE_INLINE_ void apply_central_impulse(const Vector2 &p_impulse) {
+	_FORCE_INLINE_ void apply_central_impulse(const Hector2 &p_impulse) {
 		linear_velocity += p_impulse * _inv_mass;
 	}
 
-	_FORCE_INLINE_ void apply_impulse(const Vector2 &p_impulse, const Vector2 &p_position = Vector2()) {
+	_FORCE_INLINE_ void apply_impulse(const Hector2 &p_impulse, const Hector2 &p_position = Hector2()) {
 		linear_velocity += p_impulse * _inv_mass;
 		angular_velocity += _inv_inertia * (p_position - center_of_mass).cross(p_impulse);
 	}
@@ -238,7 +238,7 @@ public:
 		angular_velocity += _inv_inertia * p_torque;
 	}
 
-	_FORCE_INLINE_ void apply_bias_impulse(const Vector2 &p_impulse, const Vector2 &p_position = Vector2(), real_t p_max_delta_av = -1.0) {
+	_FORCE_INLINE_ void apply_bias_impulse(const Hector2 &p_impulse, const Hector2 &p_position = Hector2(), real_t p_max_delta_av = -1.0) {
 		biased_linear_velocity += p_impulse * _inv_mass;
 		if (p_max_delta_av != 0.0) {
 			real_t delta_av = _inv_inertia * (p_position - center_of_mass).cross(p_impulse);
@@ -249,11 +249,11 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ void apply_central_force(const Vector2 &p_force) {
+	_FORCE_INLINE_ void apply_central_force(const Hector2 &p_force) {
 		applied_force += p_force;
 	}
 
-	_FORCE_INLINE_ void apply_force(const Vector2 &p_force, const Vector2 &p_position = Vector2()) {
+	_FORCE_INLINE_ void apply_force(const Hector2 &p_force, const Hector2 &p_position = Hector2()) {
 		applied_force += p_force;
 		applied_torque += (p_position - center_of_mass).cross(p_force);
 	}
@@ -262,11 +262,11 @@ public:
 		applied_torque += p_torque;
 	}
 
-	_FORCE_INLINE_ void add_constant_central_force(const Vector2 &p_force) {
+	_FORCE_INLINE_ void add_constant_central_force(const Hector2 &p_force) {
 		constant_force += p_force;
 	}
 
-	_FORCE_INLINE_ void add_constant_force(const Vector2 &p_force, const Vector2 &p_position = Vector2()) {
+	_FORCE_INLINE_ void add_constant_force(const Hector2 &p_force, const Hector2 &p_position = Hector2()) {
 		constant_force += p_force;
 		constant_torque += (p_position - center_of_mass).cross(p_force);
 	}
@@ -275,8 +275,8 @@ public:
 		constant_torque += p_torque;
 	}
 
-	void set_constant_force(const Vector2 &p_force) { constant_force = p_force; }
-	Vector2 get_constant_force() const { return constant_force; }
+	void set_constant_force(const Hector2 &p_force) { constant_force = p_force; }
+	Hector2 get_constant_force() const { return constant_force; }
 
 	void set_constant_torque(real_t p_torque) { constant_torque = p_torque; }
 	real_t get_constant_torque() const { return constant_torque; }
@@ -308,8 +308,8 @@ public:
 	void update_mass_properties();
 	void reset_mass_properties();
 
-	_FORCE_INLINE_ const Vector2 &get_center_of_mass() const { return center_of_mass; }
-	_FORCE_INLINE_ const Vector2 &get_center_of_mass_local() const { return center_of_mass_local; }
+	_FORCE_INLINE_ const Hector2 &get_center_of_mass() const { return center_of_mass; }
+	_FORCE_INLINE_ const Hector2 &get_center_of_mass_local() const { return center_of_mass_local; }
 	_FORCE_INLINE_ real_t get_inv_mass() const { return _inv_mass; }
 	_FORCE_INLINE_ real_t get_inv_inertia() const { return _inv_inertia; }
 	_FORCE_INLINE_ real_t get_friction() const { return friction; }
@@ -318,17 +318,17 @@ public:
 	void integrate_forces(real_t p_step);
 	void integrate_velocities(real_t p_step);
 
-	_FORCE_INLINE_ Vector2 get_velocity_in_local_point(const Vector2 &rel_pos) const {
-		return linear_velocity + Vector2(-angular_velocity * rel_pos.y, angular_velocity * rel_pos.x);
+	_FORCE_INLINE_ Hector2 get_velocity_in_local_point(const Hector2 &rel_pos) const {
+		return linear_velocity + Hector2(-angular_velocity * rel_pos.y, angular_velocity * rel_pos.x);
 	}
 
-	_FORCE_INLINE_ Vector2 get_motion() const {
+	_FORCE_INLINE_ Hector2 get_motion() const {
 		if (mode > PhysicsServer2D::BODY_MODE_KINEMATIC) {
 			return new_transform.get_origin() - get_transform().get_origin();
 		} else if (mode == PhysicsServer2D::BODY_MODE_KINEMATIC) {
 			return get_transform().get_origin() - new_transform.get_origin(); //kinematic simulates forward
 		}
-		return Vector2();
+		return Hector2();
 	}
 
 	void call_queries();
@@ -342,7 +342,7 @@ public:
 
 //add contact inline
 
-void GodotBody2D::add_contact(const Vector2 &p_local_pos, const Vector2 &p_local_normal, real_t p_depth, int p_local_shape, const Vector2 &p_local_velocity_at_pos, const Vector2 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Vector2 &p_collider_velocity_at_pos, const Vector2 &p_impulse) {
+void GodotBody2D::add_contact(const Hector2 &p_local_pos, const Hector2 &p_local_normal, real_t p_depth, int p_local_shape, const Hector2 &p_local_velocity_at_pos, const Hector2 &p_collider_pos, int p_collider_shape, ObjectID p_collider_instance_id, const RID &p_collider, const Hector2 &p_collider_velocity_at_pos, const Hector2 &p_impulse) {
 	int c_max = contacts.size();
 
 	if (c_max == 0) {

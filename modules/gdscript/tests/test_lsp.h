@@ -144,7 +144,7 @@ struct InlineTestData {
 	String name;
 	String ref;
 
-	static bool try_parse(const Vector<String> &p_lines, const int p_line_number, InlineTestData &r_data) {
+	static bool try_parse(const Hector<String> &p_lines, const int p_line_number, InlineTestData &r_data) {
 		String line = p_lines[p_line_number];
 
 		RegEx regex = RegEx("^\\t*#[ |]*(?<range>(?<left><)?\\^+)(\\s+(?<name>(?!->)\\S+))?(\\s+->\\s+(?<ref>\\S+))?");
@@ -187,7 +187,7 @@ struct InlineTestData {
 	}
 };
 
-Vector<InlineTestData> read_tests(const String &p_path) {
+Hector<InlineTestData> read_tests(const String &p_path) {
 	Error err;
 	String source = FileAccess::get_file_as_string(p_path, &err);
 	REQUIRE_MESSAGE(err == OK, vformat("Cannot read '%s'", p_path));
@@ -221,7 +221,7 @@ Vector<InlineTestData> read_tests(const String &p_path) {
 	PackedStringArray lines = source.split("\n");
 
 	PackedStringArray names;
-	Vector<InlineTestData> data;
+	Hector<InlineTestData> data;
 	for (int i = 0; i < lines.size(); i++) {
 		InlineTestData d;
 		if (InlineTestData::try_parse(lines, i, d)) {
@@ -240,7 +240,7 @@ Vector<InlineTestData> read_tests(const String &p_path) {
 	return data;
 }
 
-void test_resolve_symbol(const String &p_uri, const InlineTestData &p_test_data, const Vector<InlineTestData> &p_all_data) {
+void test_resolve_symbol(const String &p_uri, const InlineTestData &p_test_data, const Hector<InlineTestData> &p_all_data) {
 	if (p_test_data.ref.is_empty()) {
 		return;
 	}
@@ -275,8 +275,8 @@ void test_resolve_symbol(const String &p_uri, const InlineTestData &p_test_data,
 	}
 }
 
-Vector<InlineTestData> filter_ref_towards(const Vector<InlineTestData> &p_data, const String &p_name) {
-	Vector<InlineTestData> res;
+Hector<InlineTestData> filter_ref_towards(const Hector<InlineTestData> &p_data, const String &p_name) {
+	Hector<InlineTestData> res;
 
 	for (const InlineTestData &d : p_data) {
 		if (d.ref == p_name) {
@@ -287,7 +287,7 @@ Vector<InlineTestData> filter_ref_towards(const Vector<InlineTestData> &p_data, 
 	return res;
 }
 
-void test_resolve_symbols(const String &p_uri, const Vector<InlineTestData> &p_test_data, const Vector<InlineTestData> &p_all_data) {
+void test_resolve_symbols(const String &p_uri, const Hector<InlineTestData> &p_test_data, const Hector<InlineTestData> &p_all_data) {
 	for (const InlineTestData &d : p_test_data) {
 		test_resolve_symbol(p_uri, d, p_all_data);
 	}
@@ -397,17 +397,17 @@ func f():
 			String path = "res://lsp/local_variables.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			SUBCASE("Can get correct ranges for public variables") {
-				Vector<InlineTestData> test_data = filter_ref_towards(all_test_data, "member");
+				Hector<InlineTestData> test_data = filter_ref_towards(all_test_data, "member");
 				test_resolve_symbols(uri, test_data, all_test_data);
 			}
 			SUBCASE("Can get correct ranges for local variables") {
-				Vector<InlineTestData> test_data = filter_ref_towards(all_test_data, "test");
+				Hector<InlineTestData> test_data = filter_ref_towards(all_test_data, "test");
 				test_resolve_symbols(uri, test_data, all_test_data);
 			}
 			SUBCASE("Can get correct ranges for local parameters") {
-				Vector<InlineTestData> test_data = filter_ref_towards(all_test_data, "arg");
+				Hector<InlineTestData> test_data = filter_ref_towards(all_test_data, "arg");
 				test_resolve_symbols(uri, test_data, all_test_data);
 			}
 		}
@@ -416,7 +416,7 @@ func f():
 			String path = "res://lsp/indentation.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 
@@ -424,7 +424,7 @@ func f():
 			String path = "res://lsp/scopes.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 
@@ -432,7 +432,7 @@ func f():
 			String path = "res://lsp/lambdas.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 
@@ -440,7 +440,7 @@ func f():
 			String path = "res://lsp/class.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 
@@ -448,7 +448,7 @@ func f():
 			String path = "res://lsp/enums.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 
@@ -456,7 +456,7 @@ func f():
 			String path = "res://lsp/shadowing_initializer.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 
@@ -464,7 +464,7 @@ func f():
 			String path = "res://lsp/properties.gd";
 			assert_no_errors_in(path);
 			String uri = workspace->get_file_uri(path);
-			Vector<InlineTestData> all_test_data = read_tests(path);
+			Hector<InlineTestData> all_test_data = read_tests(path);
 			test_resolve_symbols(uri, all_test_data, all_test_data);
 		}
 

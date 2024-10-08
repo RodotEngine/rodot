@@ -846,7 +846,7 @@ int mbedtls_cipher_set_padding_mode(mbedtls_cipher_context_t *ctx,
 #endif /* MBEDTLS_CIPHER_MODE_WITH_PADDING */
 
 /**
- * \brief           This function sets the initialization vector (IV)
+ * \brief           This function sets the initialization Hector (IV)
  *                  or nonce.
  *
  * \note            Some ciphers do not use IVs nor nonce. For these

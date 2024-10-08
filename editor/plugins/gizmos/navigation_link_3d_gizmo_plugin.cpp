@@ -58,11 +58,11 @@ void NavigationLink3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	RID nav_map = link->get_world_3d()->get_navigation_map();
 	real_t search_radius = NavigationServer3D::get_singleton()->map_get_link_connection_radius(nav_map);
-	Vector3 up_vector = NavigationServer3D::get_singleton()->map_get_up(nav_map);
-	Vector3::Axis up_axis = up_vector.max_axis_index();
+	Hector3 up_Hector = NavigationServer3D::get_singleton()->map_get_up(nav_map);
+	Hector3::Axis up_axis = up_Hector.max_axis_index();
 
-	Vector3 start_position = link->get_start_position();
-	Vector3 end_position = link->get_end_position();
+	Hector3 start_position = link->get_start_position();
+	Hector3 end_position = link->get_end_position();
 
 	Ref<Material> link_material = get_material("navigation_link_material", p_gizmo);
 	Ref<Material> link_material_disabled = get_material("navigation_link_material_disabled", p_gizmo);
@@ -71,7 +71,7 @@ void NavigationLink3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	p_gizmo->clear();
 
 	// Draw line between the points.
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 	lines.append(start_position);
 	lines.append(end_position);
 
@@ -80,22 +80,22 @@ void NavigationLink3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		// Create a circle
 		const float ra = Math::deg_to_rad((float)(i * 12));
 		const float rb = Math::deg_to_rad((float)((i + 1) * 12));
-		const Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * search_radius;
-		const Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * search_radius;
+		const Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * search_radius;
+		const Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * search_radius;
 
 		// Draw axis-aligned circle
 		switch (up_axis) {
-			case Vector3::AXIS_X:
-				lines.append(start_position + Vector3(0, a.x, a.y));
-				lines.append(start_position + Vector3(0, b.x, b.y));
+			case Hector3::AXIS_X:
+				lines.append(start_position + Hector3(0, a.x, a.y));
+				lines.append(start_position + Hector3(0, b.x, b.y));
 				break;
-			case Vector3::AXIS_Y:
-				lines.append(start_position + Vector3(a.x, 0, a.y));
-				lines.append(start_position + Vector3(b.x, 0, b.y));
+			case Hector3::AXIS_Y:
+				lines.append(start_position + Hector3(a.x, 0, a.y));
+				lines.append(start_position + Hector3(b.x, 0, b.y));
 				break;
-			case Vector3::AXIS_Z:
-				lines.append(start_position + Vector3(a.x, a.y, 0));
-				lines.append(start_position + Vector3(b.x, b.y, 0));
+			case Hector3::AXIS_Z:
+				lines.append(start_position + Hector3(a.x, a.y, 0));
+				lines.append(start_position + Hector3(b.x, b.y, 0));
 				break;
 		}
 	}
@@ -105,22 +105,22 @@ void NavigationLink3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		// Create a circle
 		const float ra = Math::deg_to_rad((float)(i * 12));
 		const float rb = Math::deg_to_rad((float)((i + 1) * 12));
-		const Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * search_radius;
-		const Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * search_radius;
+		const Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * search_radius;
+		const Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * search_radius;
 
 		// Draw axis-aligned circle
 		switch (up_axis) {
-			case Vector3::AXIS_X:
-				lines.append(end_position + Vector3(0, a.x, a.y));
-				lines.append(end_position + Vector3(0, b.x, b.y));
+			case Hector3::AXIS_X:
+				lines.append(end_position + Hector3(0, a.x, a.y));
+				lines.append(end_position + Hector3(0, b.x, b.y));
 				break;
-			case Vector3::AXIS_Y:
-				lines.append(end_position + Vector3(a.x, 0, a.y));
-				lines.append(end_position + Vector3(b.x, 0, b.y));
+			case Hector3::AXIS_Y:
+				lines.append(end_position + Hector3(a.x, 0, a.y));
+				lines.append(end_position + Hector3(b.x, 0, b.y));
 				break;
-			case Vector3::AXIS_Z:
-				lines.append(end_position + Vector3(a.x, a.y, 0));
-				lines.append(end_position + Vector3(b.x, b.y, 0));
+			case Hector3::AXIS_Z:
+				lines.append(end_position + Hector3(a.x, a.y, 0));
+				lines.append(end_position + Hector3(b.x, b.y, 0));
 				break;
 		}
 	}
@@ -128,7 +128,7 @@ void NavigationLink3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	p_gizmo->add_lines(lines, link->is_enabled() ? link_material : link_material_disabled);
 	p_gizmo->add_collision_segments(lines);
 
-	Vector<Vector3> handles;
+	Hector<Hector3> handles;
 	handles.append(start_position);
 	handles.append(end_position);
 	p_gizmo->add_handles(handles, handles_material);
@@ -150,15 +150,15 @@ void NavigationLink3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, i
 	Transform3D gi = gt.affine_inverse();
 
 	Transform3D ct = p_camera->get_global_transform();
-	Vector3 cam_dir = ct.basis.get_column(Vector3::AXIS_Z);
+	Hector3 cam_dir = ct.basis.get_column(Hector3::AXIS_Z);
 
-	Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	Vector3 ray_dir = p_camera->project_ray_normal(p_point);
+	Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	Hector3 ray_dir = p_camera->project_ray_normal(p_point);
 
-	Vector3 position = p_id == 0 ? link->get_start_position() : link->get_end_position();
+	Hector3 position = p_id == 0 ? link->get_start_position() : link->get_end_position();
 	Plane move_plane = Plane(cam_dir, gt.xform(position));
 
-	Vector3 intersection;
+	Hector3 intersection;
 	if (!move_plane.intersects_ray(ray_from, ray_dir, &intersection)) {
 		return;
 	}

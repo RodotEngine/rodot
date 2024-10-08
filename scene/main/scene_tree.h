@@ -94,8 +94,8 @@ private:
 
 	struct ProcessGroup {
 		CallQueue call_queue;
-		Vector<Node *> nodes;
-		Vector<Node *> physics_nodes;
+		Hector<Node *> nodes;
+		Hector<Node *> physics_nodes;
 		bool node_order_dirty = true;
 		bool physics_node_order_dirty = true;
 		bool removed = false;
@@ -109,9 +109,9 @@ private:
 
 	PagedAllocator<ProcessGroup, true> group_allocator; // Allocate groups on pages, to enhance cache usage.
 
-	LocalVector<ProcessGroup *> process_groups;
+	LocalHector<ProcessGroup *> process_groups;
 	bool process_groups_dirty = true;
-	LocalVector<ProcessGroup *> local_process_group_cache; // Used when processing to group what needs to
+	LocalHector<ProcessGroup *> local_process_group_cache; // Used when processing to group what needs to
 	uint64_t process_last_pass = 1;
 
 	ProcessGroup default_process_group;
@@ -119,7 +119,7 @@ private:
 	bool node_threading_disabled = false;
 
 	struct Group {
-		Vector<Node *> nodes;
+		Hector<Node *> nodes;
 		bool changed = false;
 	};
 
@@ -178,7 +178,7 @@ private:
 
 	List<ObjectID> delete_queue;
 
-	HashMap<UGCall, Vector<Variant>, UGCall> unique_group_calls;
+	HashMap<UGCall, Hector<Variant>, UGCall> unique_group_calls;
 	bool ugc_locked = false;
 	void _flush_ugc();
 

@@ -27,7 +27,7 @@
 
 #include "hb.hh"
 #include "hb-map.hh"
-#include "hb-vector.hh"
+#include "hb-Hector.hh"
 
 
 /*
@@ -38,7 +38,7 @@ struct hb_multimap_t
 {
   void add (hb_codepoint_t k, hb_codepoint_t v)
   {
-    hb_vector_t<hb_codepoint_t> *m;
+    hb_Hector_t<hb_codepoint_t> *m;
     if (multiples.has (k, &m))
     {
       m->push (v);
@@ -51,7 +51,7 @@ struct hb_multimap_t
       hb_codepoint_t old = *old_v;
       singulars.del (k);
 
-      multiples.set (k, hb_vector_t<hb_codepoint_t> {old, v});
+      multiples.set (k, hb_Hector_t<hb_codepoint_t> {old, v});
       return;
     }
 
@@ -64,7 +64,7 @@ struct hb_multimap_t
     if (singulars.has (k, &v))
       return hb_array (v, 1);
 
-    hb_vector_t<hb_codepoint_t> *m;
+    hb_Hector_t<hb_codepoint_t> *m;
     if (multiples.has (k, &m))
       return m->as_array ();
 
@@ -88,7 +88,7 @@ struct hb_multimap_t
 
   protected:
   hb_map_t singulars;
-  hb_hashmap_t<hb_codepoint_t, hb_vector_t<hb_codepoint_t>> multiples;
+  hb_hashmap_t<hb_codepoint_t, hb_Hector_t<hb_codepoint_t>> multiples;
 };
 
 

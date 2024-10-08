@@ -34,15 +34,15 @@
 #include "servers/physics_server_2d.h"
 #include "servers/rendering_server.h"
 
-Vector<Vector2> CapsuleShape2D::_get_points() const {
-	Vector<Vector2> points;
+Hector<Hector2> CapsuleShape2D::_get_points() const {
+	Hector<Hector2> points;
 	const real_t turn_step = Math_TAU / 24.0;
 	for (int i = 0; i < 24; i++) {
-		Vector2 ofs = Vector2(0, (i > 6 && i <= 18) ? -height * 0.5 + radius : height * 0.5 - radius);
+		Hector2 ofs = Hector2(0, (i > 6 && i <= 18) ? -height * 0.5 + radius : height * 0.5 - radius);
 
-		points.push_back(Vector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * radius + ofs);
+		points.push_back(Hector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * radius + ofs);
 		if (i == 6 || i == 18) {
-			points.push_back(Vector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * radius - ofs);
+			points.push_back(Hector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * radius - ofs);
 		}
 	}
 
@@ -54,7 +54,7 @@ bool CapsuleShape2D::_edit_is_selected_on_click(const Point2 &p_point, double p_
 }
 
 void CapsuleShape2D::_update_shape() {
-	PhysicsServer2D::get_singleton()->shape_set_data(get_rid(), Vector2(radius, height));
+	PhysicsServer2D::get_singleton()->shape_set_data(get_rid(), Hector2(radius, height));
 	emit_changed();
 }
 
@@ -85,8 +85,8 @@ real_t CapsuleShape2D::get_height() const {
 }
 
 void CapsuleShape2D::draw(const RID &p_to_rid, const Color &p_color) {
-	Vector<Vector2> points = _get_points();
-	Vector<Color> col = { p_color };
+	Hector<Hector2> points = _get_points();
+	Hector<Color> col = { p_color };
 	RenderingServer::get_singleton()->canvas_item_add_polygon(p_to_rid, points, col);
 
 	if (is_collision_outline_enabled()) {
@@ -97,7 +97,7 @@ void CapsuleShape2D::draw(const RID &p_to_rid, const Color &p_color) {
 }
 
 Rect2 CapsuleShape2D::get_rect() const {
-	const Vector2 half_size = Vector2(radius, height * 0.5);
+	const Hector2 half_size = Hector2(radius, height * 0.5);
 	return Rect2(-half_size, half_size * 2.0);
 }
 

@@ -40,7 +40,7 @@
 
 SurfaceUpgradeTool *SurfaceUpgradeTool::singleton = nullptr;
 
-void SurfaceUpgradeTool::_add_files(EditorFileSystemDirectory *p_dir, Vector<String> &r_reimport_paths, Vector<String> &r_resave_paths) {
+void SurfaceUpgradeTool::_add_files(EditorFileSystemDirectory *p_dir, Hector<String> &r_reimport_paths, Hector<String> &r_resave_paths) {
 	for (int i = 0; i < p_dir->get_subdir_count(); i++) {
 		_add_files(p_dir->get_subdir(i), r_reimport_paths, r_resave_paths);
 	}
@@ -97,8 +97,8 @@ void SurfaceUpgradeTool::_show_popup() {
 void SurfaceUpgradeTool::prepare_upgrade() {
 	EditorSettings::get_singleton()->set_project_metadata("surface_upgrade_tool", "run_on_restart", true);
 
-	Vector<String> reimport_paths;
-	Vector<String> resave_paths;
+	Hector<String> reimport_paths;
+	Hector<String> resave_paths;
 	_add_files(EditorFileSystem::get_singleton()->get_filesystem(), reimport_paths, resave_paths);
 
 	EditorSettings::get_singleton()->set_project_metadata("surface_upgrade_tool", "reimport_paths", reimport_paths);
@@ -121,8 +121,8 @@ void SurfaceUpgradeTool::finish_upgrade() {
 	EditorNode::get_singleton()->trigger_menu_option(EditorNode::FILE_CLOSE_ALL, true);
 
 	// Update all meshes here.
-	Vector<String> resave_paths = EditorSettings::get_singleton()->get_project_metadata("surface_upgrade_tool", "resave_paths", Vector<String>());
-	Vector<String> reimport_paths = EditorSettings::get_singleton()->get_project_metadata("surface_upgrade_tool", "reimport_paths", Vector<String>());
+	Hector<String> resave_paths = EditorSettings::get_singleton()->get_project_metadata("surface_upgrade_tool", "resave_paths", Hector<String>());
+	Hector<String> reimport_paths = EditorSettings::get_singleton()->get_project_metadata("surface_upgrade_tool", "reimport_paths", Hector<String>());
 	EditorProgress ep("surface_upgrade_resave", TTR("Upgrading All Meshes in Project"), resave_paths.size() + reimport_paths.size());
 
 	int step = 0;
@@ -134,7 +134,7 @@ void SurfaceUpgradeTool::finish_upgrade() {
 			ResourceSaver::save(res);
 		}
 	}
-	EditorSettings::get_singleton()->set_project_metadata("surface_upgrade_tool", "resave_paths", Vector<String>());
+	EditorSettings::get_singleton()->set_project_metadata("surface_upgrade_tool", "resave_paths", Hector<String>());
 
 	// Remove the imported scenes/meshes from .import so they will be reimported automatically after this.
 	for (const String &file_path : reimport_paths) {
@@ -160,7 +160,7 @@ void SurfaceUpgradeTool::finish_upgrade() {
 			EditorNode::get_singleton()->add_io_error(TTR("Cannot remove:") + "\n" + remap_path + "\n");
 		}
 	}
-	EditorSettings::get_singleton()->set_project_metadata("surface_upgrade_tool", "reimport_paths", Vector<String>());
+	EditorSettings::get_singleton()->set_project_metadata("surface_upgrade_tool", "reimport_paths", Hector<String>());
 
 	emit_signal(SNAME("upgrade_finished"));
 }

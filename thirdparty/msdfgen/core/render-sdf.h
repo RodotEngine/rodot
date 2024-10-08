@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include "Hector2.hpp"
 #include "BitmapRef.hpp"
 
 namespace msdfgen {

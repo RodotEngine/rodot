@@ -75,7 +75,7 @@ class ConnectDialogBinds : public Object {
 	GDCLASS(ConnectDialogBinds, Object);
 
 public:
-	Vector<Variant> params;
+	Hector<Variant> params;
 
 	bool _set(const StringName &p_name, const Variant &p_value) {
 		String name = p_name;
@@ -537,7 +537,7 @@ int ConnectDialog::get_unbinds() const {
 	return int(unbind_count->get_value());
 }
 
-Vector<Variant> ConnectDialog::get_binds() const {
+Hector<Variant> ConnectDialog::get_binds() const {
 	return cdbinds->params;
 }
 
@@ -728,7 +728,7 @@ ConnectDialog::ConnectDialog() {
 	VBoxContainer *vbc_left = memnew(VBoxContainer);
 	main_hb->add_child(vbc_left);
 	vbc_left->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-	vbc_left->set_custom_minimum_size(Vector2(400 * EDSCALE, 0));
+	vbc_left->set_custom_minimum_size(Hector2(400 * EDSCALE, 0));
 
 	from_signal = memnew(LineEdit);
 	vbc_left->add_margin_child(TTR("From Signal:"), from_signal);
@@ -771,7 +771,7 @@ ConnectDialog::ConnectDialog() {
 
 	method_popup = memnew(AcceptDialog);
 	method_popup->set_title(TTR("Select Method"));
-	method_popup->set_min_size(Vector2(400, 600) * EDSCALE);
+	method_popup->set_min_size(Hector2(400, 600) * EDSCALE);
 	add_child(method_popup);
 
 	VBoxContainer *method_vbc = memnew(VBoxContainer);
@@ -812,7 +812,7 @@ ConnectDialog::ConnectDialog() {
 	vbc_right = memnew(VBoxContainer);
 	main_hb->add_child(vbc_right);
 	vbc_right->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-	vbc_right->set_custom_minimum_size(Vector2(150 * EDSCALE, 0));
+	vbc_right->set_custom_minimum_size(Hector2(150 * EDSCALE, 0));
 	vbc_right->hide();
 
 	HBoxContainer *add_bind_hb = memnew(HBoxContainer);
@@ -1325,7 +1325,7 @@ void ConnectionsDock::_tree_gui_input(const Ref<InputEvent> &p_event) {
 			tree->set_selected(item);
 		}
 
-		Vector2 screen_position = tree->get_screen_position() + mb_event->get_position();
+		Hector2 screen_position = tree->get_screen_position() + mb_event->get_position();
 
 		switch (_get_item_type(*item)) {
 			case TREE_ITEM_TYPE_ROOT:

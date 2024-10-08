@@ -41,14 +41,14 @@
 			</description>
 		</method>
 		<method name="get_screen_center_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the center of the screen from this camera's point of view, in global coordinates.
 				[b]Note:[/b] The exact targeted position of the camera may be different. See [method get_target_position].
 			</description>
 		</method>
 		<method name="get_target_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns this camera's target position, in global coordinates.
 				[b]Note:[/b] The returned value is not the same as [member Node2D.global_position], as it is affected by the drag properties. It is also not the same as the current position if [member position_smoothing_enabled] is [code]true[/code] (see [method get_screen_center_position]).
@@ -156,7 +156,7 @@
 		<member name="limit_top" type="int" setter="set_limit" getter="get_limit" default="-10000000">
 			Top scroll limit in pixels. The camera stops moving when reaching this value, but [member offset] can push the view past the limit.
 		</member>
-		<member name="offset" type="Vector2" setter="set_offset" getter="get_offset" default="Vector2(0, 0)">
+		<member name="offset" type="Hector2" setter="set_offset" getter="get_offset" default="Hector2(0, 0)">
 			The camera's relative offset. Useful for looking around or camera shake animations. The offsetted camera can go past the limits defined in [member limit_top], [member limit_bottom], [member limit_left] and [member limit_right].
 		</member>
 		<member name="position_smoothing_enabled" type="bool" setter="set_position_smoothing_enabled" getter="is_position_smoothing_enabled" default="false">
@@ -175,8 +175,8 @@
 		<member name="rotation_smoothing_speed" type="float" setter="set_rotation_smoothing_speed" getter="get_rotation_smoothing_speed" default="5.0">
 			The angular, asymptotic speed of the camera's rotation smoothing effect when [member rotation_smoothing_enabled] is [code]true[/code].
 		</member>
-		<member name="zoom" type="Vector2" setter="set_zoom" getter="get_zoom" default="Vector2(1, 1)">
-			The camera's zoom. A zoom of [code]Vector(2, 2)[/code] doubles the size seen in the viewport. A zoom of [code]Vector(0.5, 0.5)[/code] halves the size seen in the viewport.
+		<member name="zoom" type="Hector2" setter="set_zoom" getter="get_zoom" default="Hector2(1, 1)">
+			The camera's zoom. A zoom of [code]Hector(2, 2)[/code] doubles the size seen in the viewport. A zoom of [code]Hector(0.5, 0.5)[/code] halves the size seen in the viewport.
 			[b]Note:[/b] [member FontFile.oversampling] does [i]not[/i] take [Camera2D] zoom into account. This means that zooming in/out will cause bitmap fonts and rasterized (non-MSDF) dynamic fonts to appear blurry or pixelated unless the font is part of a [CanvasLayer] that makes it ignore camera zoom. To ensure text remains crisp regardless of zoom, you can enable MSDF font rendering by enabling [member ProjectSettings.gui/theme/default_font_multichannel_signed_distance_field] (applies to the default project font only), or enabling [b]Multichannel Signed Distance Field[/b] in the import options of a DynamicFont for custom fonts. On system fonts, [member SystemFont.multichannel_signed_distance_field] can be enabled in the inspector.
 		</member>
 	</members>

@@ -144,12 +144,12 @@ void FileAccessCompressed::_close() {
 			f->store_32(0); //compressed sizes, will update later
 		}
 
-		Vector<int> block_sizes;
+		Hector<int> block_sizes;
 		for (uint32_t i = 0; i < bc; i++) {
 			uint32_t bl = i == (bc - 1) ? write_max % block_size : block_size;
 			uint8_t *bp = &write_ptr[i * block_size];
 
-			Vector<uint8_t> cblock;
+			Hector<uint8_t> cblock;
 			cblock.resize(Compression::get_max_compressed_buffer_size(bl, cmode));
 			int s = Compression::compress(cblock.ptrw(), bp, bl, cmode);
 

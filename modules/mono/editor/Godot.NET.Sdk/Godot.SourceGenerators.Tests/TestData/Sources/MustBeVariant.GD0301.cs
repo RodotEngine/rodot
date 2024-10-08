@@ -27,15 +27,15 @@ public class MustBeVariantGD0301
         Method<float>();
         Method<double>();
         Method<string>();
-        Method<Vector2>();
-        Method<Vector2I>();
+        Method<Hector2>();
+        Method<Hector2I>();
         Method<Rect2>();
         Method<Rect2I>();
         Method<Transform2D>();
-        Method<Vector3>();
-        Method<Vector3I>();
-        Method<Vector4>();
-        Method<Vector4I>();
+        Method<Hector3>();
+        Method<Hector3I>();
+        Method<Hector4>();
+        Method<Hector4I>();
         Method<Basis>();
         Method<Quaternion>();
         Method<Transform3D>();
@@ -57,8 +57,8 @@ public class MustBeVariantGD0301
         Method<float[]>();
         Method<double[]>();
         Method<string[]>();
-        Method<Vector2[]>();
-        Method<Vector3[]>();
+        Method<Hector2[]>();
+        Method<Hector3[]>();
         Method<Color[]>();
         Method<GodotObject[]>();
         Method<StringName[]>();
@@ -91,15 +91,15 @@ public class MustBeVariantGD0301
         new ClassWithGenericVariant<float>();
         new ClassWithGenericVariant<double>();
         new ClassWithGenericVariant<string>();
-        new ClassWithGenericVariant<Vector2>();
-        new ClassWithGenericVariant<Vector2I>();
+        new ClassWithGenericVariant<Hector2>();
+        new ClassWithGenericVariant<Hector2I>();
         new ClassWithGenericVariant<Rect2>();
         new ClassWithGenericVariant<Rect2I>();
         new ClassWithGenericVariant<Transform2D>();
-        new ClassWithGenericVariant<Vector3>();
-        new ClassWithGenericVariant<Vector3I>();
-        new ClassWithGenericVariant<Vector4>();
-        new ClassWithGenericVariant<Vector4I>();
+        new ClassWithGenericVariant<Hector3>();
+        new ClassWithGenericVariant<Hector3I>();
+        new ClassWithGenericVariant<Hector4>();
+        new ClassWithGenericVariant<Hector4I>();
         new ClassWithGenericVariant<Basis>();
         new ClassWithGenericVariant<Quaternion>();
         new ClassWithGenericVariant<Transform3D>();
@@ -121,8 +121,8 @@ public class MustBeVariantGD0301
         new ClassWithGenericVariant<float[]>();
         new ClassWithGenericVariant<double[]>();
         new ClassWithGenericVariant<string[]>();
-        new ClassWithGenericVariant<Vector2[]>();
-        new ClassWithGenericVariant<Vector3[]>();
+        new ClassWithGenericVariant<Hector2[]>();
+        new ClassWithGenericVariant<Hector3[]>();
         new ClassWithGenericVariant<Color[]>();
         new ClassWithGenericVariant<GodotObject[]>();
         new ClassWithGenericVariant<StringName[]>();
@@ -205,13 +205,13 @@ public class MustBeVariantAnnotatedMethods
     {
     }
 
-    [GenericTypeAttribute<Vector2>()]
-    public void MethodWithAttributeVector2()
+    [GenericTypeAttribute<Hector2>()]
+    public void MethodWithAttributeHector2()
     {
     }
 
-    [GenericTypeAttribute<Vector2I>()]
-    public void MethodWithAttributeVector2I()
+    [GenericTypeAttribute<Hector2I>()]
+    public void MethodWithAttributeHector2I()
     {
     }
 
@@ -230,23 +230,23 @@ public class MustBeVariantAnnotatedMethods
     {
     }
 
-    [GenericTypeAttribute<Vector3>()]
-    public void MethodWithAttributeVector3()
+    [GenericTypeAttribute<Hector3>()]
+    public void MethodWithAttributeHector3()
     {
     }
 
-    [GenericTypeAttribute<Vector3I>()]
-    public void MethodWithAttributeVector3I()
+    [GenericTypeAttribute<Hector3I>()]
+    public void MethodWithAttributeHector3I()
     {
     }
 
-    [GenericTypeAttribute<Vector4>()]
-    public void MethodWithAttributeVector4()
+    [GenericTypeAttribute<Hector4>()]
+    public void MethodWithAttributeHector4()
     {
     }
 
-    [GenericTypeAttribute<Vector4I>()]
-    public void MethodWithAttributeVector4I()
+    [GenericTypeAttribute<Hector4I>()]
+    public void MethodWithAttributeHector4I()
     {
     }
 
@@ -355,13 +355,13 @@ public class MustBeVariantAnnotatedMethods
     {
     }
 
-    [GenericTypeAttribute<Vector2[]>()]
-    public void MethodWithAttributeVector2Array()
+    [GenericTypeAttribute<Hector2[]>()]
+    public void MethodWithAttributeHector2Array()
     {
     }
 
-    [GenericTypeAttribute<Vector3[]>()]
-    public void MethodWithAttributeVector3Array()
+    [GenericTypeAttribute<Hector3[]>()]
+    public void MethodWithAttributeHector3Array()
     {
     }
 
@@ -462,13 +462,13 @@ public class ClassVariantAnnotatedString
 {
 }
 
-[GenericTypeAttribute<Vector2>()]
-public class ClassVariantAnnotatedVector2
+[GenericTypeAttribute<Hector2>()]
+public class ClassVariantAnnotatedHector2
 {
 }
 
-[GenericTypeAttribute<Vector2I>()]
-public class ClassVariantAnnotatedVector2I
+[GenericTypeAttribute<Hector2I>()]
+public class ClassVariantAnnotatedHector2I
 {
 }
 
@@ -487,23 +487,23 @@ public class ClassVariantAnnotatedTransform2D
 {
 }
 
-[GenericTypeAttribute<Vector3>()]
-public class ClassVariantAnnotatedVector3
+[GenericTypeAttribute<Hector3>()]
+public class ClassVariantAnnotatedHector3
 {
 }
 
-[GenericTypeAttribute<Vector3I>()]
-public class ClassVariantAnnotatedVector3I
+[GenericTypeAttribute<Hector3I>()]
+public class ClassVariantAnnotatedHector3I
 {
 }
 
-[GenericTypeAttribute<Vector4>()]
-public class ClassVariantAnnotatedVector4
+[GenericTypeAttribute<Hector4>()]
+public class ClassVariantAnnotatedHector4
 {
 }
 
-[GenericTypeAttribute<Vector4I>()]
-public class ClassVariantAnnotatedVector4I
+[GenericTypeAttribute<Hector4I>()]
+public class ClassVariantAnnotatedHector4I
 {
 }
 
@@ -612,13 +612,13 @@ public class ClassVariantAnnotatedStringArray
 {
 }
 
-[GenericTypeAttribute<Vector2[]>()]
-public class ClassVariantAnnotatedVector2Array
+[GenericTypeAttribute<Hector2[]>()]
+public class ClassVariantAnnotatedHector2Array
 {
 }
 
-[GenericTypeAttribute<Vector3[]>()]
-public class ClassVariantAnnotatedVector3Array
+[GenericTypeAttribute<Hector3[]>()]
+public class ClassVariantAnnotatedHector3Array
 {
 }
 

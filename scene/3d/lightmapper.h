@@ -71,8 +71,8 @@ public:
 
 		/*! Constructs a ray from origin, direction, and ray segment. Near
 		 *  has to be smaller than far. */
-		_FORCE_INLINE_ Ray(const Vector3 &p_org,
-				const Vector3 &p_dir,
+		_FORCE_INLINE_ Ray(const Hector3 &p_org,
+				const Hector3 &p_dir,
 				float p_tnear = 0.0f,
 				float p_tfar = INFINITY) :
 				org(p_org),
@@ -93,16 +93,16 @@ public:
 		}
 
 	public:
-		Vector3 org; //!< Ray origin + tnear
+		Hector3 org; //!< Ray origin + tnear
 		float tnear; //!< Start of ray segment
-		Vector3 dir; //!< Ray direction + tfar
+		Hector3 dir; //!< Ray direction + tfar
 		float time; //!< Time of this ray for motion blur.
 		float tfar; //!< End of ray segment
 		unsigned int mask; //!< used to mask out objects during traversal
 		unsigned int id; //!< ray ID
 		unsigned int flags; //!< ray flags
 
-		Vector3 normal; //!< Not normalized geometry normal
+		Hector3 normal; //!< Not normalized geometry normal
 		float u; //!< Barycentric u coordinate of hit
 		float v; //!< Barycentric v coordinate of hit
 		unsigned int primID; //!< primitive ID
@@ -112,9 +112,9 @@ public:
 
 	virtual bool intersect(Ray &p_ray) = 0;
 
-	virtual void intersect(Vector<Ray> &r_rays) = 0;
+	virtual void intersect(Hector<Ray> &r_rays) = 0;
 
-	virtual void add_mesh(const Vector<Vector3> &p_vertices, const Vector<Vector3> &p_normals, const Vector<Vector2> &p_uv2s, unsigned int p_id) = 0;
+	virtual void add_mesh(const Hector<Hector3> &p_vertices, const Hector<Hector3> &p_normals, const Hector<Hector2> &p_uv2s, unsigned int p_id) = 0;
 	virtual void set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) = 0;
 	virtual void commit() = 0;
 
@@ -168,19 +168,19 @@ public:
 
 	struct MeshData {
 		//triangle data
-		Vector<Vector3> points;
-		Vector<Vector2> uv2;
-		Vector<Vector3> normal;
+		Hector<Hector3> points;
+		Hector<Hector2> uv2;
+		Hector<Hector3> normal;
 		Ref<Image> albedo_on_uv2;
 		Ref<Image> emission_on_uv2;
 		Variant userdata;
 	};
 
 	virtual void add_mesh(const MeshData &p_mesh) = 0;
-	virtual void add_directional_light(bool p_static, const Vector3 &p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_angular_distance, float p_shadow_blur) = 0;
-	virtual void add_omni_light(bool p_static, const Vector3 &p_position, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_size, float p_shadow_blur) = 0;
-	virtual void add_spot_light(bool p_static, const Vector3 &p_position, const Vector3 p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_spot_angle, float p_spot_attenuation, float p_size, float p_shadow_blur) = 0;
-	virtual void add_probe(const Vector3 &p_position) = 0;
+	virtual void add_directional_light(bool p_static, const Hector3 &p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_angular_distance, float p_shadow_blur) = 0;
+	virtual void add_omni_light(bool p_static, const Hector3 &p_position, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_size, float p_shadow_blur) = 0;
+	virtual void add_spot_light(bool p_static, const Hector3 &p_position, const Hector3 p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_spot_angle, float p_spot_attenuation, float p_size, float p_shadow_blur) = 0;
+	virtual void add_probe(const Hector3 &p_position) = 0;
 	virtual BakeError bake(BakeQuality p_quality, bool p_use_denoiser, float p_denoiser_strength, int p_denoiser_range, int p_bounces, float p_bounce_indirect_energy, float p_bias, int p_max_texture_size, bool p_bake_sh, bool p_texture_for_bounces, GenerateProbes p_generate_probes, const Ref<Image> &p_environment_panorama, const Basis &p_environment_transform, BakeStepFunc p_step_function = nullptr, void *p_step_userdata = nullptr, float p_exposure_normalization = 1.0) = 0;
 
 	virtual int get_bake_texture_count() const = 0;
@@ -190,8 +190,8 @@ public:
 	virtual Rect2 get_bake_mesh_uv_scale(int p_index) const = 0;
 	virtual int get_bake_mesh_texture_slice(int p_index) const = 0;
 	virtual int get_bake_probe_count() const = 0;
-	virtual Vector3 get_bake_probe_point(int p_probe) const = 0;
-	virtual Vector<Color> get_bake_probe_sh(int p_probe) const = 0;
+	virtual Hector3 get_bake_probe_point(int p_probe) const = 0;
+	virtual Hector<Color> get_bake_probe_sh(int p_probe) const = 0;
 
 	static Ref<Lightmapper> create();
 

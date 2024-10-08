@@ -106,7 +106,7 @@ bool is_valid_offset (int64_t offset,
  */
 inline bool
 will_overflow (graph_t& graph,
-               hb_vector_t<overflow_record_t>* overflows = nullptr)
+               hb_Hector_t<overflow_record_t>* overflows = nullptr)
 {
   if (overflows) overflows->resize (0);
   graph.update_positions ();
@@ -140,7 +140,7 @@ will_overflow (graph_t& graph,
 
 inline
 void print_overflows (graph_t& graph,
-                      const hb_vector_t<overflow_record_t>& overflows)
+                      const hb_Hector_t<overflow_record_t>& overflows)
 {
   if (!DEBUG_ENABLED(SUBSET_REPACK)) return;
 
@@ -224,7 +224,7 @@ void serialize_link (const hb_serialize_context_t::object_t::link_t& link,
  */
 inline hb_blob_t* serialize (const graph_t& graph)
 {
-  hb_vector_t<char> buffer;
+  hb_Hector_t<char> buffer;
   size_t size = graph.total_size_in_bytes ();
 
   if (!size) return hb_blob_get_empty ();

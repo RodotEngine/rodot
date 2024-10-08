@@ -158,7 +158,7 @@ bool OS_Android::request_permissions() {
 	return godot_java->request_permissions();
 }
 
-Vector<String> OS_Android::get_granted_permissions() const {
+Hector<String> OS_Android::get_granted_permissions() const {
 	return godot_java->get_granted_permissions();
 }
 
@@ -295,7 +295,7 @@ String OS_Android::get_distribution_name() const {
 }
 
 String OS_Android::get_version() const {
-	const Vector<const char *> roms = { "ro.havoc.version", "org.pex.version", "org.pixelexperience.version",
+	const Hector<const char *> roms = { "ro.havoc.version", "org.pex.version", "org.pixelexperience.version",
 		"ro.potato.version", "ro.xtended.version", "org.evolution.version", "ro.corvus.version", "ro.pa.version",
 		"ro.crdroid.version", "ro.syberia.version", "ro.arrow.version", "ro.lineage.version" };
 	for (int i = 0; i < roms.size(); i++) {
@@ -448,9 +448,9 @@ void OS_Android::_load_system_font_config() {
 				} else if (parser->get_node_name() == "family") {
 					fn = parser->has_attribute("name") ? parser->get_named_attribute_value("name").strip_edges() : String();
 					String lang_code = parser->has_attribute("lang") ? parser->get_named_attribute_value("lang").strip_edges() : String();
-					Vector<String> lang_codes = lang_code.split(",");
+					Hector<String> lang_codes = lang_code.split(",");
 					for (int i = 0; i < lang_codes.size(); i++) {
-						Vector<String> lang_code_elements = lang_codes[i].split("-");
+						Hector<String> lang_code_elements = lang_codes[i].split("-");
 						if (lang_code_elements.size() >= 1 && lang_code_elements[0] != "und") {
 							// Add missing script codes.
 							if (lang_code_elements[0] == "ko") {
@@ -539,18 +539,18 @@ void OS_Android::_load_system_font_config() {
 	font_config_loaded = true;
 }
 
-Vector<String> OS_Android::get_system_fonts() const {
+Hector<String> OS_Android::get_system_fonts() const {
 	if (!font_config_loaded) {
 		const_cast<OS_Android *>(this)->_load_system_font_config();
 	}
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const String &E : font_names) {
 		ret.push_back(E);
 	}
 	return ret;
 }
 
-Vector<String> OS_Android::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
+Hector<String> OS_Android::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
 	if (!font_config_loaded) {
 		const_cast<OS_Android *>(this)->_load_system_font_config();
 	}
@@ -560,7 +560,7 @@ Vector<String> OS_Android::get_system_font_path_for_text(const String &p_font_na
 	}
 	String root = String(getenv("ANDROID_ROOT")).path_join("fonts");
 	String lang_prefix = p_locale.split("_")[0];
-	Vector<String> ret;
+	Hector<String> ret;
 	int best_score = 0;
 	for (const List<FontInfo>::Element *E = fonts.front(); E; E = E->next()) {
 		int score = 0;
@@ -836,7 +836,7 @@ OS_Android::OS_Android(GodotJavaWrapper *p_godot_java, GodotIOJavaWrapper *p_god
 	godot_java = p_godot_java;
 	godot_io_java = p_godot_io_java;
 
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(AndroidLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 
@@ -891,7 +891,7 @@ Error OS_Android::setup_remote_filesystem(const String &p_server_host, int p_por
 }
 
 void OS_Android::load_platform_gdextensions() const {
-	Vector<String> extension_list_config_file = godot_java->get_gdextension_list_config_file();
+	Hector<String> extension_list_config_file = godot_java->get_gdextension_list_config_file();
 	for (String config_file_path : extension_list_config_file) {
 		GDExtensionManager::LoadStatus err = GDExtensionManager::get_singleton()->load_extension(config_file_path);
 		ERR_CONTINUE_MSG(err == GDExtensionManager::LOAD_STATUS_FAILED, "Error loading platform extension: " + config_file_path);

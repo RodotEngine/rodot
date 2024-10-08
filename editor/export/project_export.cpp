@@ -272,12 +272,12 @@ void ProjectExportDialog::_edit_preset(int p_index) {
 	name->set_text(current->get_name());
 
 	List<String> extension_list = current->get_platform()->get_binary_extensions(current);
-	Vector<String> extension_vector;
+	Hector<String> extension_Hector;
 	for (const String &extension : extension_list) {
-		extension_vector.push_back("*." + extension);
+		extension_Hector.push_back("*." + extension);
 	}
 
-	export_path->setup(extension_vector, false, true);
+	export_path->setup(extension_Hector, false, true);
 	export_path->update_property();
 	advanced_options->set_disabled(false);
 	advanced_options->set_pressed(current->are_advanced_options_enabled());
@@ -297,7 +297,7 @@ void ProjectExportDialog::_edit_preset(int p_index) {
 
 	patches->clear();
 	TreeItem *patch_root = patches->create_item();
-	Vector<String> patch_list = current->get_patches();
+	Hector<String> patch_list = current->get_patches();
 	for (int i = 0; i < patch_list.size(); i++) {
 		TreeItem *patch = patches->create_item(patch_root);
 		const String &patch_path = patch_list[i];
@@ -316,7 +316,7 @@ void ProjectExportDialog::_edit_preset(int p_index) {
 	String error;
 	if (!current->get_platform()->can_export(current, error, needs_templates)) {
 		if (!error.is_empty()) {
-			Vector<String> items = error.split("\n", false);
+			Hector<String> items = error.split("\n", false);
 			error = "";
 			for (int i = 0; i < items.size(); i++) {
 				if (i > 0) {
@@ -340,7 +340,7 @@ void ProjectExportDialog::_edit_preset(int p_index) {
 		export_button->set_disabled(true);
 	} else {
 		if (error != String()) {
-			Vector<String> items = error.split("\n", false);
+			Hector<String> items = error.split("\n", false);
 			error = "";
 			for (int i = 0; i < items.size(); i++) {
 				if (i > 0) {
@@ -424,7 +424,7 @@ void ProjectExportDialog::_update_feature_list() {
 	current->get_platform()->get_preset_features(current, &features_list);
 
 	String custom = current->get_custom_features();
-	Vector<String> custom_list = custom.split(",");
+	Hector<String> custom_list = custom.split(",");
 	for (int i = 0; i < custom_list.size(); i++) {
 		String f = custom_list[i].strip_edges();
 		if (!f.is_empty()) {
@@ -1105,7 +1105,7 @@ void ProjectExportDialog::_patch_tree_button_clicked(Object *p_item, int p_colum
 	ERR_FAIL_COND(current.is_null());
 
 	if (p_id == 0) {
-		Vector<String> preset_patches = current->get_patches();
+		Hector<String> preset_patches = current->get_patches();
 		ERR_FAIL_INDEX(patch_index, preset_patches.size());
 		patch_erase->set_text(vformat(TTR("Delete patch '%s' from list?"), preset_patches[patch_index].get_file()));
 		patch_erase->popup_centered();
@@ -1136,7 +1136,7 @@ void ProjectExportDialog::_patch_file_selected(const String &p_path) {
 
 	String relative_path = ProjectSettings::get_singleton()->get_resource_path().path_to_file(p_path);
 
-	Vector<String> preset_patches = current->get_patches();
+	Hector<String> preset_patches = current->get_patches();
 	if (patch_index >= preset_patches.size()) {
 		current->add_patch(relative_path);
 	} else {
@@ -1150,7 +1150,7 @@ void ProjectExportDialog::_patch_delete_confirmed() {
 	Ref<EditorExportPreset> current = get_current_preset();
 	ERR_FAIL_COND(current.is_null());
 
-	Vector<String> preset_patches = current->get_patches();
+	Hector<String> preset_patches = current->get_patches();
 	if (patch_index < preset_patches.size()) {
 		current->remove_patch(patch_index);
 		_update_current_preset();
@@ -1749,9 +1749,9 @@ ProjectExportDialog::ProjectExportDialog() {
 	export_project->connect("file_selected", callable_mp(this, &ProjectExportDialog::_export_project_to_path));
 	export_project->get_line_edit()->connect(SceneStringName(text_changed), callable_mp(this, &ProjectExportDialog::_validate_export_path));
 
-	export_project->add_option(TTR("Export With Debug"), Vector<String>(), true);
-	export_pck_zip->add_option(TTR("Export With Debug"), Vector<String>(), true);
-	export_pck_zip->add_option(TTR("Export As Patch"), Vector<String>(), true);
+	export_project->add_option(TTR("Export With Debug"), Hector<String>(), true);
+	export_pck_zip->add_option(TTR("Export With Debug"), Hector<String>(), true);
+	export_pck_zip->add_option(TTR("Export As Patch"), Hector<String>(), true);
 
 	set_hide_on_ok(false);
 

@@ -42,7 +42,7 @@ struct LocalDebugger::ScriptsProfiler {
 
 	double frame_time = 0;
 	uint64_t idle_accum = 0;
-	Vector<ScriptLanguage::ProfilingInfo> pinfo;
+	Hector<ScriptLanguage::ProfilingInfo> pinfo;
 
 	void toggle(bool p_enable, const Array &p_opts) {
 		if (p_enable) {
@@ -321,7 +321,7 @@ void LocalDebugger::debug(bool p_can_continue, bool p_is_error_breakpoint) {
 
 void LocalDebugger::print_variables(const List<String> &names, const List<Variant> &values, const String &variable_prefix) {
 	String value;
-	Vector<String> value_lines;
+	Hector<String> value_lines;
 	const List<Variant>::Element *V = values.front();
 	for (const String &E : names) {
 		value = String(V->get());

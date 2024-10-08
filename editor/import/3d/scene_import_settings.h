@@ -223,7 +223,7 @@ class SceneImportSettingsDialog : public ConfirmationDialog {
 
 	int current_action = 0;
 
-	Vector<TreeItem *> save_path_items;
+	Hector<TreeItem *> save_path_items;
 
 	TreeItem *save_path_item = nullptr;
 	void _save_path_changed(const String &p_path);

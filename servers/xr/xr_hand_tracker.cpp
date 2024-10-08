@@ -154,23 +154,23 @@ float XRHandTracker::get_hand_joint_radius(XRHandTracker::HandJoint p_joint) con
 	return hand_joint_radii[p_joint];
 }
 
-void XRHandTracker::set_hand_joint_linear_velocity(XRHandTracker::HandJoint p_joint, const Vector3 &p_velocity) {
+void XRHandTracker::set_hand_joint_linear_velocity(XRHandTracker::HandJoint p_joint, const Hector3 &p_velocity) {
 	ERR_FAIL_INDEX(p_joint, HAND_JOINT_MAX);
 	hand_joint_linear_velocities[p_joint] = p_velocity;
 }
 
-Vector3 XRHandTracker::get_hand_joint_linear_velocity(XRHandTracker::HandJoint p_joint) const {
-	ERR_FAIL_INDEX_V(p_joint, HAND_JOINT_MAX, Vector3());
+Hector3 XRHandTracker::get_hand_joint_linear_velocity(XRHandTracker::HandJoint p_joint) const {
+	ERR_FAIL_INDEX_V(p_joint, HAND_JOINT_MAX, Hector3());
 	return hand_joint_linear_velocities[p_joint];
 }
 
-void XRHandTracker::set_hand_joint_angular_velocity(XRHandTracker::HandJoint p_joint, const Vector3 &p_velocity) {
+void XRHandTracker::set_hand_joint_angular_velocity(XRHandTracker::HandJoint p_joint, const Hector3 &p_velocity) {
 	ERR_FAIL_INDEX(p_joint, HAND_JOINT_MAX);
 	hand_joint_angular_velocities[p_joint] = p_velocity;
 }
 
-Vector3 XRHandTracker::get_hand_joint_angular_velocity(XRHandTracker::HandJoint p_joint) const {
-	ERR_FAIL_INDEX_V(p_joint, HAND_JOINT_MAX, Vector3());
+Hector3 XRHandTracker::get_hand_joint_angular_velocity(XRHandTracker::HandJoint p_joint) const {
+	ERR_FAIL_INDEX_V(p_joint, HAND_JOINT_MAX, Hector3());
 	return hand_joint_angular_velocities[p_joint];
 }
 

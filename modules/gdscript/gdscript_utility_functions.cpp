@@ -37,7 +37,7 @@
 #include "core/object/method_bind.h"
 #include "core/object/object.h"
 #include "core/templates/oa_hash_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/variant/typed_array.h"
 
 #ifdef DEBUG_ENABLED
@@ -276,7 +276,7 @@ struct GDScriptUtilityFunctionsDefinitions {
 
 				GDScript *p = base.ptr();
 				String path = p->get_script_path();
-				Vector<StringName> sname;
+				Hector<StringName> sname;
 
 				while (p->_owner) {
 					sname.push_back(p->local_name);
@@ -295,7 +295,7 @@ struct GDScriptUtilityFunctionsDefinitions {
 					return;
 				}
 
-				NodePath cp(sname, Vector<StringName>(), false);
+				NodePath cp(sname, Hector<StringName>(), false);
 
 				Dictionary d;
 				d["@subpath"] = cp;
@@ -484,43 +484,43 @@ struct GDScriptUtilityFunctionsDefinitions {
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_BYTE_ARRAY: {
-				Vector<uint8_t> d = *p_args[0];
+				Hector<uint8_t> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_INT32_ARRAY: {
-				Vector<int32_t> d = *p_args[0];
+				Hector<int32_t> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_INT64_ARRAY: {
-				Vector<int64_t> d = *p_args[0];
+				Hector<int64_t> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_FLOAT32_ARRAY: {
-				Vector<float> d = *p_args[0];
+				Hector<float> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_FLOAT64_ARRAY: {
-				Vector<double> d = *p_args[0];
+				Hector<double> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_STRING_ARRAY: {
-				Vector<String> d = *p_args[0];
+				Hector<String> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
-			case Variant::PACKED_VECTOR2_ARRAY: {
-				Vector<Vector2> d = *p_args[0];
+			case Variant::PACKED_Hector2_ARRAY: {
+				Hector<Hector2> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
-			case Variant::PACKED_VECTOR3_ARRAY: {
-				Vector<Vector3> d = *p_args[0];
+			case Variant::PACKED_Hector3_ARRAY: {
+				Hector<Hector3> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			case Variant::PACKED_COLOR_ARRAY: {
-				Vector<Color> d = *p_args[0];
+				Hector<Color> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
-			case Variant::PACKED_VECTOR4_ARRAY: {
-				Vector<Vector4> d = *p_args[0];
+			case Variant::PACKED_Hector4_ARRAY: {
+				Hector<Hector4> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
 			default: {

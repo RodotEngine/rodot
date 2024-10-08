@@ -24,7 +24,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 #ifdef XR_USE_PLATFORM_ANDROID
 #include <json/value.h>

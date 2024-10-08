@@ -114,7 +114,7 @@ _hb_face_builder_data_reference_blob (hb_face_builder_data_t *data)
   hb_tag_t sfnt_tag = is_cff ? OT::OpenTypeFontFile::CFFTag : OT::OpenTypeFontFile::TrueTypeTag;
 
   // Sort the tags so that produced face is deterministic.
-  hb_vector_t<hb_pair_t <hb_tag_t, face_table_info_t>> sorted_entries;
+  hb_Hector_t<hb_pair_t <hb_tag_t, face_table_info_t>> sorted_entries;
   data->tables.iter () | hb_sink (sorted_entries);
   if (unlikely (sorted_entries.in_error ()))
   {
@@ -175,7 +175,7 @@ _hb_face_builder_get_table_tags (const hb_face_t *face HB_UNUSED,
   }
 
   // Sort the tags.
-  hb_vector_t<hb_tag_t> sorted_tags;
+  hb_Hector_t<hb_tag_t> sorted_tags;
   data->tables.keys () | hb_sink (sorted_tags);
   if (unlikely (sorted_tags.in_error ()))
   {

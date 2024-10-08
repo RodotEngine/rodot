@@ -41,7 +41,7 @@ private:
 		T info;
 	} _Packet;
 
-	Vector<_Packet> _packets;
+	Hector<_Packet> _packets;
 	int _queued = 0;
 	int _write_pos = 0;
 	int _read_pos = 0;

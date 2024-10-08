@@ -254,7 +254,7 @@ bool get_dotnet_self_registered_dir(String &r_dotnet_root) {
 		return false;
 	}
 
-	Vector<WCHAR> buffer;
+	Hector<WCHAR> buffer;
 	buffer.resize(size / sizeof(WCHAR));
 	result = RegGetValueW(hkey, nullptr, (LPCWSTR)(value.get_data()), RRF_RT_REG_SZ, nullptr, (LPBYTE)buffer.ptrw(), &size);
 	if (result != ERROR_SUCCESS) {

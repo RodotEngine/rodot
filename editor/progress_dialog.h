@@ -79,7 +79,7 @@ class ProgressDialog : public PopupPanel {
 	HashMap<String, Task> tasks;
 	VBoxContainer *main = nullptr;
 
-	LocalVector<Window *> host_windows;
+	LocalHector<Window *> host_windows;
 
 	static ProgressDialog *singleton;
 	void _popup();

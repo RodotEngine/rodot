@@ -33,7 +33,7 @@
 #include "scene/3d/mesh_instance_3d.h"
 #include "scene/3d/physics/collision_object_3d.h"
 
-void RayCast3D::set_target_position(const Vector3 &p_point) {
+void RayCast3D::set_target_position(const Hector3 &p_point) {
 	target_position = p_point;
 	update_gizmos();
 
@@ -46,7 +46,7 @@ void RayCast3D::set_target_position(const Vector3 &p_point) {
 	}
 }
 
-Vector3 RayCast3D::get_target_position() const {
+Hector3 RayCast3D::get_target_position() const {
 	return target_position;
 }
 
@@ -96,11 +96,11 @@ int RayCast3D::get_collider_shape() const {
 	return against_shape;
 }
 
-Vector3 RayCast3D::get_collision_point() const {
+Hector3 RayCast3D::get_collision_point() const {
 	return collision_point;
 }
 
-Vector3 RayCast3D::get_collision_normal() const {
+Hector3 RayCast3D::get_collision_normal() const {
 	return collision_normal;
 }
 
@@ -225,9 +225,9 @@ void RayCast3D::_update_raycast_state() {
 
 	Transform3D gt = get_global_transform();
 
-	Vector3 to = target_position;
-	if (to == Vector3()) {
-		to = Vector3(0, 0.01, 0);
+	Hector3 to = target_position;
+	if (to == Hector3()) {
+		to = Hector3(0, 0.01, 0);
 	}
 
 	PhysicsDirectSpaceState3D::RayParameters ray_params;
@@ -376,7 +376,7 @@ void RayCast3D::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "exclude_parent"), "set_exclude_parent_body", "get_exclude_parent_body");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "target_position", PROPERTY_HINT_NONE, "suffix:m"), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "target_position", PROPERTY_HINT_NONE, "suffix:m"), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "hit_from_inside"), "set_hit_from_inside", "is_hit_from_inside_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "hit_back_faces"), "set_hit_back_faces", "is_hit_back_faces_enabled");
@@ -398,22 +398,22 @@ void RayCast3D::_update_debug_shape_vertices() {
 	debug_shape_vertices.clear();
 	debug_line_vertices.clear();
 
-	if (target_position == Vector3()) {
+	if (target_position == Hector3()) {
 		return;
 	}
 
-	debug_line_vertices.push_back(Vector3());
+	debug_line_vertices.push_back(Hector3());
 	debug_line_vertices.push_back(target_position);
 
 	if (debug_shape_thickness > 1) {
 		float scale_factor = 100.0;
-		Vector3 dir = Vector3(target_position).normalized();
+		Hector3 dir = Hector3(target_position).normalized();
 		// Draw truncated pyramid
-		Vector3 normal = (fabs(dir.x) + fabs(dir.y) > CMP_EPSILON) ? Vector3(-dir.y, dir.x, 0).normalized() : Vector3(0, -dir.z, dir.y).normalized();
+		Hector3 normal = (fabs(dir.x) + fabs(dir.y) > CMP_EPSILON) ? Hector3(-dir.y, dir.x, 0).normalized() : Hector3(0, -dir.z, dir.y).normalized();
 		normal *= debug_shape_thickness / scale_factor;
 		int vertices_strip_order[14] = { 4, 5, 0, 1, 2, 5, 6, 4, 7, 0, 3, 2, 7, 6 };
 		for (int v = 0; v < 14; v++) {
-			Vector3 vertex = vertices_strip_order[v] < 4 ? normal : normal / 3.0 + target_position;
+			Hector3 vertex = vertices_strip_order[v] < 4 ? normal : normal / 3.0 + target_position;
 			debug_shape_vertices.push_back(vertex.rotated(dir, Math_PI * (0.5 * (vertices_strip_order[v] % 4) + 0.25)));
 		}
 	}
@@ -432,11 +432,11 @@ void RayCast3D::set_debug_shape_thickness(const int p_debug_shape_thickness) {
 	}
 }
 
-const Vector<Vector3> &RayCast3D::get_debug_shape_vertices() const {
+const Hector<Hector3> &RayCast3D::get_debug_shape_vertices() const {
 	return debug_shape_vertices;
 }
 
-const Vector<Vector3> &RayCast3D::get_debug_line_vertices() const {
+const Hector<Hector3> &RayCast3D::get_debug_line_vertices() const {
 	return debug_line_vertices;
 }
 

@@ -786,7 +786,7 @@ namespace basisu
 		}
 	};
 		
-	typedef basisu::vector<etc_block> etc_block_vec;
+	typedef basisu::Hector<etc_block> etc_block_vec;
 
 	// Returns false if the unpack fails (could be bogus data or ETC2)
 	bool unpack_etc1(const etc_block& block, color_rgba *pDst, bool preserve_alpha = false);
@@ -1030,7 +1030,7 @@ namespace basisu
 			}
 
 			etc1_solution_coordinates  m_coords;
-			basisu::vector<uint8_t>    m_selectors;
+			basisu::Hector<uint8_t>    m_selectors;
 			uint64_t                     m_error;
 			bool                       m_valid;
 
@@ -1062,18 +1062,18 @@ namespace basisu
 		vec3F m_avg_color;
 		int m_br, m_bg, m_bb;
 		int m_max_comp_spread;
-		basisu::vector<uint16_t> m_luma;
-		basisu::vector<uint32_t> m_sorted_luma;
-		basisu::vector<uint32_t> m_sorted_luma_indices;
+		basisu::Hector<uint16_t> m_luma;
+		basisu::Hector<uint32_t> m_sorted_luma;
+		basisu::Hector<uint32_t> m_sorted_luma_indices;
 		const uint32_t* m_pSorted_luma_indices;
 		uint32_t* m_pSorted_luma;
 
-		basisu::vector<uint8_t> m_selectors;
-		basisu::vector<uint8_t> m_best_selectors;
+		basisu::Hector<uint8_t> m_selectors;
+		basisu::Hector<uint8_t> m_best_selectors;
 
 		potential_solution m_best_solution;
 		potential_solution m_trial_solution;
-		basisu::vector<uint8_t> m_temp_selectors;
+		basisu::Hector<uint8_t> m_temp_selectors;
 
 		enum { cSolutionsTriedHashBits = 10, cTotalSolutionsTriedHashSize = 1 << cSolutionsTriedHashBits, cSolutionsTriedHashMask = cTotalSolutionsTriedHashSize - 1 };
 		uint8_t m_solutions_tried[cTotalSolutionsTriedHashSize / 8];

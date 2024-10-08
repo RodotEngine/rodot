@@ -1485,7 +1485,7 @@ exit:
 
 #if defined(MBEDTLS_SELF_TEST)
 /*
- * AES test vectors from:
+ * AES test Hectors from:
  *
  * http://csrc.nist.gov/archive/aes/rijndael/rijndael-vals.zip
  */
@@ -1543,7 +1543,7 @@ static const unsigned char aes_test_cbc_enc[][16] =
 
 #if defined(MBEDTLS_CIPHER_MODE_CFB)
 /*
- * AES-CFB128 test vectors from:
+ * AES-CFB128 test Hectors from:
  *
  * http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
  */
@@ -1613,7 +1613,7 @@ static const unsigned char aes_test_cfb128_ct[][64] =
 
 #if defined(MBEDTLS_CIPHER_MODE_OFB)
 /*
- * AES-OFB test vectors from:
+ * AES-OFB test Hectors from:
  *
  * https://csrc.nist.gov/publications/detail/sp/800-38a/final
  */
@@ -1683,7 +1683,7 @@ static const unsigned char aes_test_ofb_ct[][64] =
 
 #if defined(MBEDTLS_CIPHER_MODE_CTR)
 /*
- * AES-CTR test vectors from:
+ * AES-CTR test Hectors from:
  *
  * http://www.faqs.org/rfcs/rfc3686.html
  */
@@ -1745,7 +1745,7 @@ static const int aes_test_ctr_len[3] =
 
 #if defined(MBEDTLS_CIPHER_MODE_XTS)
 /*
- * AES-XTS test vectors from:
+ * AES-XTS test Hectors from:
  *
  * IEEE P1619/D16 Annex B
  * https://web.archive.org/web/20150629024421/http://grouper.ieee.org/groups/1619/email/pdf00086.pdf

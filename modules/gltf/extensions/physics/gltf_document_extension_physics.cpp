@@ -34,7 +34,7 @@
 #include "scene/3d/physics/static_body_3d.h"
 
 // Import process.
-Error GLTFDocumentExtensionPhysics::import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions) {
+Error GLTFDocumentExtensionPhysics::import_preflight(Ref<GLTFState> p_state, Hector<String> p_extensions) {
 	if (!p_extensions.has("OMI_collider") && !p_extensions.has("OMI_physics_body") && !p_extensions.has("OMI_physics_shape")) {
 		return ERR_SKIP;
 	}
@@ -72,8 +72,8 @@ Error GLTFDocumentExtensionPhysics::import_preflight(Ref<GLTFState> p_state, Vec
 	return OK;
 }
 
-Vector<String> GLTFDocumentExtensionPhysics::get_supported_extensions() {
-	Vector<String> ret;
+Hector<String> GLTFDocumentExtensionPhysics::get_supported_extensions() {
+	Hector<String> ret;
 	ret.push_back("OMI_collider");
 	ret.push_back("OMI_physics_body");
 	ret.push_back("OMI_physics_shape");
@@ -338,13 +338,13 @@ Node3D *GLTFDocumentExtensionPhysics::generate_scene_node(Ref<GLTFState> p_state
 }
 
 // Export process.
-bool _are_all_faces_equal(const Vector<Face3> &p_a, const Vector<Face3> &p_b) {
+bool _are_all_faces_equal(const Hector<Face3> &p_a, const Hector<Face3> &p_b) {
 	if (p_a.size() != p_b.size()) {
 		return false;
 	}
 	for (int i = 0; i < p_a.size(); i++) {
-		const Vector3 *a_vertices = p_a[i].vertex;
-		const Vector3 *b_vertices = p_b[i].vertex;
+		const Hector3 *a_vertices = p_a[i].vertex;
+		const Hector3 *b_vertices = p_b[i].vertex;
 		for (int j = 0; j < 3; j++) {
 			if (!a_vertices[j].is_equal_approx(b_vertices[j])) {
 				return false;
@@ -357,7 +357,7 @@ bool _are_all_faces_equal(const Vector<Face3> &p_a, const Vector<Face3> &p_b) {
 GLTFMeshIndex _get_or_insert_mesh_in_state(Ref<GLTFState> p_state, Ref<ImporterMesh> p_mesh) {
 	ERR_FAIL_COND_V(p_mesh.is_null(), -1);
 	TypedArray<GLTFMesh> state_meshes = p_state->get_meshes();
-	Vector<Face3> mesh_faces = p_mesh->get_faces();
+	Hector<Face3> mesh_faces = p_mesh->get_faces();
 	// De-duplication: If the state already has the mesh we need, use that one.
 	for (GLTFMeshIndex i = 0; i < state_meshes.size(); i++) {
 		Ref<GLTFMesh> state_gltf_mesh = state_meshes[i];

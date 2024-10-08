@@ -104,7 +104,7 @@ TEST_CASE("[StreamPeerBuffer] Get underlying data array") {
 	spb->put_u8(second);
 	spb->put_u8(third);
 
-	Vector<uint8_t> data_array = spb->get_data_array();
+	Hector<uint8_t> data_array = spb->get_data_array();
 
 	CHECK_EQ(data_array[0], first);
 	CHECK_EQ(data_array[1], second);
@@ -122,7 +122,7 @@ TEST_CASE("[StreamPeerBuffer] Set underlying data array") {
 	spb->put_u8(2);
 	spb->put_u8(3);
 
-	Vector<uint8_t> new_data_array;
+	Hector<uint8_t> new_data_array;
 	new_data_array.push_back(first);
 	new_data_array.push_back(second);
 	new_data_array.push_back(third);

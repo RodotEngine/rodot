@@ -12,9 +12,9 @@
 	<methods>
 		<method name="add_point">
 			<return type="void" />
-			<param index="0" name="position" type="Vector3" />
-			<param index="1" name="in" type="Vector3" default="Vector3(0, 0, 0)" />
-			<param index="2" name="out" type="Vector3" default="Vector3(0, 0, 0)" />
+			<param index="0" name="position" type="Hector3" />
+			<param index="1" name="in" type="Hector3" default="Hector3(0, 0, 0)" />
+			<param index="2" name="out" type="Hector3" default="Hector3(0, 0, 0)" />
 			<param index="3" name="index" type="int" default="-1" />
 			<description>
 				Adds a point with the specified [param position] relative to the curve's own position, with control points [param in] and [param out]. Appends the new point at the end of the point list.
@@ -34,9 +34,9 @@
 			</description>
 		</method>
 		<method name="get_baked_points" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
-				Returns the cache of points as a [PackedVector3Array].
+				Returns the cache of points as a [PackedHector3Array].
 			</description>
 		</method>
 		<method name="get_baked_tilts" qualifiers="const">
@@ -45,45 +45,45 @@
 				Returns the cache of tilts as a [PackedFloat32Array].
 			</description>
 		</method>
-		<method name="get_baked_up_vectors" qualifiers="const">
-			<return type="PackedVector3Array" />
+		<method name="get_baked_up_Hectors" qualifiers="const">
+			<return type="PackedHector3Array" />
 			<description>
-				Returns the cache of up vectors as a [PackedVector3Array].
-				If [member up_vector_enabled] is [code]false[/code], the cache will be empty.
+				Returns the cache of up Hectors as a [PackedHector3Array].
+				If [member up_Hector_enabled] is [code]false[/code], the cache will be empty.
 			</description>
 		</method>
 		<method name="get_closest_offset" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="to_point" type="Vector3" />
+			<param index="0" name="to_point" type="Hector3" />
 			<description>
-				Returns the closest offset to [param to_point]. This offset is meant to be used in [method sample_baked] or [method sample_baked_up_vector].
+				Returns the closest offset to [param to_point]. This offset is meant to be used in [method sample_baked] or [method sample_baked_up_Hector].
 				[param to_point] must be in this curve's local space.
 			</description>
 		</method>
 		<method name="get_closest_point" qualifiers="const">
-			<return type="Vector3" />
-			<param index="0" name="to_point" type="Vector3" />
+			<return type="Hector3" />
+			<param index="0" name="to_point" type="Hector3" />
 			<description>
 				Returns the closest point on baked segments (in curve's local space) to [param to_point].
 				[param to_point] must be in this curve's local space.
 			</description>
 		</method>
 		<method name="get_point_in" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the control point leading to the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0, 0)[/code].
 			</description>
 		</method>
 		<method name="get_point_out" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the control point leading out of the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0, 0)[/code].
 			</description>
 		</method>
 		<method name="get_point_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0, 0)[/code].
@@ -104,7 +104,7 @@
 			</description>
 		</method>
 		<method name="sample" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="idx" type="int" />
 			<param index="1" name="t" type="float" />
 			<description>
@@ -113,7 +113,7 @@
 			</description>
 		</method>
 		<method name="sample_baked" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="offset" type="float" default="0.0" />
 			<param index="1" name="cubic" type="bool" default="false" />
 			<description>
@@ -121,13 +121,13 @@
 				Cubic interpolation tends to follow the curves better, but linear is faster (and often, precise enough).
 			</description>
 		</method>
-		<method name="sample_baked_up_vector" qualifiers="const">
-			<return type="Vector3" />
+		<method name="sample_baked_up_Hector" qualifiers="const">
+			<return type="Hector3" />
 			<param index="0" name="offset" type="float" />
 			<param index="1" name="apply_tilt" type="bool" default="false" />
 			<description>
-				Returns an up vector within the curve at position [param offset], where [param offset] is measured as a distance in 3D units along the curve. To do that, it finds the two cached up vectors where the [param offset] lies between, then interpolates the values. If [param apply_tilt] is [code]true[/code], an interpolated tilt is applied to the interpolated up vector.
-				If the curve has no up vectors, the function sends an error to the console, and returns [code](0, 1, 0)[/code].
+				Returns an up Hector within the curve at position [param offset], where [param offset] is measured as a distance in 3D units along the curve. To do that, it finds the two cached up Hectors where the [param offset] lies between, then interpolates the values. If [param apply_tilt] is [code]true[/code], an interpolated tilt is applied to the interpolated up Hector.
+				If the curve has no up Hectors, the function sends an error to the console, and returns [code](0, 1, 0)[/code].
 			</description>
 		</method>
 		<method name="sample_baked_with_rotation" qualifiers="const">
@@ -136,11 +136,11 @@
 			<param index="1" name="cubic" type="bool" default="false" />
 			<param index="2" name="apply_tilt" type="bool" default="false" />
 			<description>
-				Returns a [Transform3D] with [code]origin[/code] as point position, [code]basis.x[/code] as sideway vector, [code]basis.y[/code] as up vector, [code]basis.z[/code] as forward vector. When the curve length is 0, there is no reasonable way to calculate the rotation, all vectors aligned with global space axes. See also [method sample_baked].
+				Returns a [Transform3D] with [code]origin[/code] as point position, [code]basis.x[/code] as sideway Hector, [code]basis.y[/code] as up Hector, [code]basis.z[/code] as forward Hector. When the curve length is 0, there is no reasonable way to calculate the rotation, all Hectors aligned with global space axes. See also [method sample_baked].
 			</description>
 		</method>
 		<method name="samplef" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="fofs" type="float" />
 			<description>
 				Returns the position at the vertex [param fofs]. It calls [method sample] using the integer part of [param fofs] as [code]idx[/code], and its fractional part as [code]t[/code].
@@ -149,7 +149,7 @@
 		<method name="set_point_in">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Sets the position of the control point leading to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 			</description>
@@ -157,7 +157,7 @@
 		<method name="set_point_out">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Sets the position of the control point leading out of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 			</description>
@@ -165,7 +165,7 @@
 		<method name="set_point_position">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Sets the position for the vertex [param idx]. If the index is out of bounds, the function sends an error to the console.
 			</description>
@@ -180,7 +180,7 @@
 			</description>
 		</method>
 		<method name="tessellate" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<param index="0" name="max_stages" type="int" default="5" />
 			<param index="1" name="tolerance_degrees" type="float" default="4" />
 			<description>
@@ -191,7 +191,7 @@
 			</description>
 		</method>
 		<method name="tessellate_even_length" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<param index="0" name="max_stages" type="int" default="5" />
 			<param index="1" name="tolerance_length" type="float" default="0.2" />
 			<description>
@@ -207,8 +207,8 @@
 		<member name="point_count" type="int" setter="set_point_count" getter="get_point_count" default="0">
 			The number of points describing the curve.
 		</member>
-		<member name="up_vector_enabled" type="bool" setter="set_up_vector_enabled" getter="is_up_vector_enabled" default="true">
-			If [code]true[/code], the curve will bake up vectors used for orientation. This is used when [member PathFollow3D.rotation_mode] is set to [constant PathFollow3D.ROTATION_ORIENTED]. Changing it forces the cache to be recomputed.
+		<member name="up_Hector_enabled" type="bool" setter="set_up_Hector_enabled" getter="is_up_Hector_enabled" default="true">
+			If [code]true[/code], the curve will bake up Hectors used for orientation. This is used when [member PathFollow3D.rotation_mode] is set to [constant PathFollow3D.ROTATION_ORIENTED]. Changing it forces the cache to be recomputed.
 		</member>
 	</members>
 </class>

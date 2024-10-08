@@ -28,23 +28,23 @@ namespace Godot.NativeInterop
         public static godot_variant CreateFromFloat(double from)
             => new() { Type = Variant.Type.Float, Float = from };
 
-        public static godot_variant CreateFromVector2(Vector2 from)
-            => new() { Type = Variant.Type.Vector2, Vector2 = from };
+        public static godot_variant CreateFromHector2(Hector2 from)
+            => new() { Type = Variant.Type.Hector2, Hector2 = from };
 
-        public static godot_variant CreateFromVector2I(Vector2I from)
-            => new() { Type = Variant.Type.Vector2I, Vector2I = from };
+        public static godot_variant CreateFromHector2I(Hector2I from)
+            => new() { Type = Variant.Type.Hector2I, Hector2I = from };
 
-        public static godot_variant CreateFromVector3(Vector3 from)
-            => new() { Type = Variant.Type.Vector3, Vector3 = from };
+        public static godot_variant CreateFromHector3(Hector3 from)
+            => new() { Type = Variant.Type.Hector3, Hector3 = from };
 
-        public static godot_variant CreateFromVector3I(Vector3I from)
-            => new() { Type = Variant.Type.Vector3I, Vector3I = from };
+        public static godot_variant CreateFromHector3I(Hector3I from)
+            => new() { Type = Variant.Type.Hector3I, Hector3I = from };
 
-        public static godot_variant CreateFromVector4(Vector4 from)
-            => new() { Type = Variant.Type.Vector4, Vector4 = from };
+        public static godot_variant CreateFromHector4(Hector4 from)
+            => new() { Type = Variant.Type.Hector4, Hector4 = from };
 
-        public static godot_variant CreateFromVector4I(Vector4I from)
-            => new() { Type = Variant.Type.Vector4I, Vector4I = from };
+        public static godot_variant CreateFromHector4I(Hector4I from)
+            => new() { Type = Variant.Type.Hector4I, Hector4I = from };
 
         public static godot_variant CreateFromRect2(Rect2 from)
             => new() { Type = Variant.Type.Rect2, Rect2 = from };
@@ -153,21 +153,21 @@ namespace Godot.NativeInterop
             return ret;
         }
 
-        public static godot_variant CreateFromPackedVector2Array(in godot_packed_vector2_array from)
+        public static godot_variant CreateFromPackedHector2Array(in godot_packed_Hector2_array from)
         {
-            NativeFuncs.godotsharp_variant_new_packed_vector2_array(out godot_variant ret, from);
+            NativeFuncs.godotsharp_variant_new_packed_Hector2_array(out godot_variant ret, from);
             return ret;
         }
 
-        public static godot_variant CreateFromPackedVector3Array(in godot_packed_vector3_array from)
+        public static godot_variant CreateFromPackedHector3Array(in godot_packed_Hector3_array from)
         {
-            NativeFuncs.godotsharp_variant_new_packed_vector3_array(out godot_variant ret, from);
+            NativeFuncs.godotsharp_variant_new_packed_Hector3_array(out godot_variant ret, from);
             return ret;
         }
 
-        public static godot_variant CreateFromPackedVector4Array(in godot_packed_vector4_array from)
+        public static godot_variant CreateFromPackedHector4Array(in godot_packed_Hector4_array from)
         {
-            NativeFuncs.godotsharp_variant_new_packed_vector4_array(out godot_variant ret, from);
+            NativeFuncs.godotsharp_variant_new_packed_Hector4_array(out godot_variant ret, from);
             return ret;
         }
 
@@ -220,24 +220,24 @@ namespace Godot.NativeInterop
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static godot_variant CreateFromPackedVector2Array(Span<Vector2> from)
+        public static godot_variant CreateFromPackedHector2Array(Span<Hector2> from)
         {
-            using var nativePackedArray = Marshaling.ConvertSystemArrayToNativePackedVector2Array(from);
-            return CreateFromPackedVector2Array(nativePackedArray);
+            using var nativePackedArray = Marshaling.ConvertSystemArrayToNativePackedHector2Array(from);
+            return CreateFromPackedHector2Array(nativePackedArray);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static godot_variant CreateFromPackedVector3Array(Span<Vector3> from)
+        public static godot_variant CreateFromPackedHector3Array(Span<Hector3> from)
         {
-            using var nativePackedArray = Marshaling.ConvertSystemArrayToNativePackedVector3Array(from);
-            return CreateFromPackedVector3Array(nativePackedArray);
+            using var nativePackedArray = Marshaling.ConvertSystemArrayToNativePackedHector3Array(from);
+            return CreateFromPackedHector3Array(nativePackedArray);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static godot_variant CreateFromPackedVector4Array(Span<Vector4> from)
+        public static godot_variant CreateFromPackedHector4Array(Span<Hector4> from)
         {
-            using var nativePackedArray = Marshaling.ConvertSystemArrayToNativePackedVector4Array(from);
-            return CreateFromPackedVector4Array(nativePackedArray);
+            using var nativePackedArray = Marshaling.ConvertSystemArrayToNativePackedHector4Array(from);
+            return CreateFromPackedHector4Array(nativePackedArray);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -399,15 +399,15 @@ namespace Godot.NativeInterop
                 p_var.Float :
                 NativeFuncs.godotsharp_variant_as_float(p_var);
 
-        public static Vector2 ConvertToVector2(in godot_variant p_var)
-            => p_var.Type == Variant.Type.Vector2 ?
-                p_var.Vector2 :
-                NativeFuncs.godotsharp_variant_as_vector2(p_var);
+        public static Hector2 ConvertToHector2(in godot_variant p_var)
+            => p_var.Type == Variant.Type.Hector2 ?
+                p_var.Hector2 :
+                NativeFuncs.godotsharp_variant_as_Hector2(p_var);
 
-        public static Vector2I ConvertToVector2I(in godot_variant p_var)
-            => p_var.Type == Variant.Type.Vector2I ?
-                p_var.Vector2I :
-                NativeFuncs.godotsharp_variant_as_vector2i(p_var);
+        public static Hector2I ConvertToHector2I(in godot_variant p_var)
+            => p_var.Type == Variant.Type.Hector2I ?
+                p_var.Hector2I :
+                NativeFuncs.godotsharp_variant_as_Hector2i(p_var);
 
         public static Rect2 ConvertToRect2(in godot_variant p_var)
             => p_var.Type == Variant.Type.Rect2 ?
@@ -424,25 +424,25 @@ namespace Godot.NativeInterop
                 *p_var.Transform2D :
                 NativeFuncs.godotsharp_variant_as_transform2d(p_var);
 
-        public static Vector3 ConvertToVector3(in godot_variant p_var)
-            => p_var.Type == Variant.Type.Vector3 ?
-                p_var.Vector3 :
-                NativeFuncs.godotsharp_variant_as_vector3(p_var);
+        public static Hector3 ConvertToHector3(in godot_variant p_var)
+            => p_var.Type == Variant.Type.Hector3 ?
+                p_var.Hector3 :
+                NativeFuncs.godotsharp_variant_as_Hector3(p_var);
 
-        public static Vector3I ConvertToVector3I(in godot_variant p_var)
-            => p_var.Type == Variant.Type.Vector3I ?
-                p_var.Vector3I :
-                NativeFuncs.godotsharp_variant_as_vector3i(p_var);
+        public static Hector3I ConvertToHector3I(in godot_variant p_var)
+            => p_var.Type == Variant.Type.Hector3I ?
+                p_var.Hector3I :
+                NativeFuncs.godotsharp_variant_as_Hector3i(p_var);
 
-        public static unsafe Vector4 ConvertToVector4(in godot_variant p_var)
-            => p_var.Type == Variant.Type.Vector4 ?
-                p_var.Vector4 :
-                NativeFuncs.godotsharp_variant_as_vector4(p_var);
+        public static unsafe Hector4 ConvertToHector4(in godot_variant p_var)
+            => p_var.Type == Variant.Type.Hector4 ?
+                p_var.Hector4 :
+                NativeFuncs.godotsharp_variant_as_Hector4(p_var);
 
-        public static unsafe Vector4I ConvertToVector4I(in godot_variant p_var)
-            => p_var.Type == Variant.Type.Vector4I ?
-                p_var.Vector4I :
-                NativeFuncs.godotsharp_variant_as_vector4i(p_var);
+        public static unsafe Hector4I ConvertToHector4I(in godot_variant p_var)
+            => p_var.Type == Variant.Type.Hector4I ?
+                p_var.Hector4I :
+                NativeFuncs.godotsharp_variant_as_Hector4i(p_var);
 
         public static unsafe Basis ConvertToBasis(in godot_variant p_var)
             => p_var.Type == Variant.Type.Basis ?
@@ -606,22 +606,22 @@ namespace Godot.NativeInterop
             return Marshaling.ConvertNativePackedStringArrayToSystemArray(packedArray);
         }
 
-        public static Vector2[] ConvertAsPackedVector2ArrayToSystemArray(in godot_variant p_var)
+        public static Hector2[] ConvertAsPackedHector2ArrayToSystemArray(in godot_variant p_var)
         {
-            using var packedArray = NativeFuncs.godotsharp_variant_as_packed_vector2_array(p_var);
-            return Marshaling.ConvertNativePackedVector2ArrayToSystemArray(packedArray);
+            using var packedArray = NativeFuncs.godotsharp_variant_as_packed_Hector2_array(p_var);
+            return Marshaling.ConvertNativePackedHector2ArrayToSystemArray(packedArray);
         }
 
-        public static Vector3[] ConvertAsPackedVector3ArrayToSystemArray(in godot_variant p_var)
+        public static Hector3[] ConvertAsPackedHector3ArrayToSystemArray(in godot_variant p_var)
         {
-            using var packedArray = NativeFuncs.godotsharp_variant_as_packed_vector3_array(p_var);
-            return Marshaling.ConvertNativePackedVector3ArrayToSystemArray(packedArray);
+            using var packedArray = NativeFuncs.godotsharp_variant_as_packed_Hector3_array(p_var);
+            return Marshaling.ConvertNativePackedHector3ArrayToSystemArray(packedArray);
         }
 
-        public static Vector4[] ConvertAsPackedVector4ArrayToSystemArray(in godot_variant p_var)
+        public static Hector4[] ConvertAsPackedHector4ArrayToSystemArray(in godot_variant p_var)
         {
-            using var packedArray = NativeFuncs.godotsharp_variant_as_packed_vector4_array(p_var);
-            return Marshaling.ConvertNativePackedVector4ArrayToSystemArray(packedArray);
+            using var packedArray = NativeFuncs.godotsharp_variant_as_packed_Hector4_array(p_var);
+            return Marshaling.ConvertNativePackedHector4ArrayToSystemArray(packedArray);
         }
 
         public static Color[] ConvertAsPackedColorArrayToSystemArray(in godot_variant p_var)

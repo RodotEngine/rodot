@@ -138,7 +138,7 @@ struct LSR;
 class LikelySubtags;
 class LocaleDistance;
 class LocaleLsrIterator;
-class UVector;
+class UHector;
 
 /**
  * Immutable class that picks the best match between a user's desired locales and
@@ -528,10 +528,10 @@ public:
         Builder &operator=(const Builder &other) = delete;
 
         void clearSupportedLocales();
-        bool ensureSupportedLocaleVector();
+        bool ensureSupportedLocaleHector();
 
         UErrorCode errorCode_ = U_ZERO_ERROR;
-        UVector *supportedLocales_ = nullptr;
+        UHector *supportedLocales_ = nullptr;
         int32_t thresholdDistance_ = -1;
         ULocMatchDemotion demotion_ = ULOCMATCH_DEMOTION_REGION;
         Locale *defaultLocale_ = nullptr;

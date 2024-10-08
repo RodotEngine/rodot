@@ -388,7 +388,7 @@ public:
 		virtual String get_datatype_name() const { return ""; }
 		virtual int get_array_size() const { return 0; }
 		virtual bool is_indexed() const { return false; }
-		virtual Vector<Scalar> get_values() const { return Vector<Scalar>(); }
+		virtual Hector<Scalar> get_values() const { return Hector<Scalar>(); }
 
 		Node(Type t) :
 				type(t) {}
@@ -411,14 +411,14 @@ public:
 		int return_array_size = 0;
 		Operator op = OP_EQUAL;
 		StringName struct_name;
-		Vector<Node *> arguments;
-		Vector<Scalar> values;
+		Hector<Node *> arguments;
+		Hector<Scalar> values;
 
 		virtual DataType get_datatype() const override { return return_cache; }
 		virtual String get_datatype_name() const override { return String(struct_name); }
 		virtual int get_array_size() const override { return return_array_size; }
 		virtual bool is_indexed() const override { return op == OP_INDEX; }
-		virtual Vector<Scalar> get_values() const override { return values; }
+		virtual Hector<Scalar> get_values() const override { return values; }
 
 		OperatorNode() :
 				Node(NODE_TYPE_OPERATOR) {}
@@ -448,10 +448,10 @@ public:
 			StringName name;
 			uint32_t size = 0U;
 			Node *size_expression = nullptr;
-			Vector<Node *> initializer;
+			Hector<Node *> initializer;
 			bool single_expression = false;
 		};
-		Vector<Declaration> declarations;
+		Hector<Declaration> declarations;
 
 		virtual DataType get_datatype() const override { return datatype; }
 
@@ -482,7 +482,7 @@ public:
 	struct ArrayConstructNode : public Node {
 		DataType datatype = TYPE_VOID;
 		String struct_name;
-		Vector<Node *> initializer;
+		Hector<Node *> initializer;
 
 		virtual DataType get_datatype() const override { return datatype; }
 		virtual String get_datatype_name() const override { return struct_name; }
@@ -497,13 +497,13 @@ public:
 		String struct_name = "";
 		int array_size = 0;
 
-		Vector<Scalar> values;
-		Vector<VariableDeclarationNode::Declaration> array_declarations;
+		Hector<Scalar> values;
+		Hector<VariableDeclarationNode::Declaration> array_declarations;
 
 		virtual DataType get_datatype() const override { return datatype; }
 		virtual String get_datatype_name() const override { return struct_name; }
 		virtual int get_array_size() const override { return array_size; }
-		virtual Vector<Scalar> get_values() const override {
+		virtual Hector<Scalar> get_values() const override {
 			return values;
 		}
 
@@ -537,7 +537,7 @@ public:
 			int line; //for completion
 			int array_size;
 			bool is_const;
-			Vector<Scalar> values;
+			Hector<Scalar> values;
 		};
 
 		HashMap<StringName, Variable> variables;
@@ -555,8 +555,8 @@ public:
 
 	struct ControlFlowNode : public Node {
 		FlowOperation flow_op = FLOW_OP_IF;
-		Vector<Node *> expressions;
-		Vector<BlockNode *> blocks;
+		Hector<Node *> expressions;
+		Hector<BlockNode *> blocks;
 
 		ControlFlowNode() :
 				Node(NODE_TYPE_CONTROL_FLOW) {}
@@ -669,7 +669,7 @@ public:
 			DataType type = TYPE_VOID;
 			DataPrecision precision = PRECISION_DEFAULT;
 			int array_size = 0;
-			Vector<Scalar> default_value;
+			Hector<Scalar> default_value;
 			Scope scope = SCOPE_LOCAL;
 			Hint hint = HINT_NONE;
 			bool use_color = false;
@@ -698,11 +698,11 @@ public:
 		HashMap<StringName, Uniform> uniforms;
 		HashMap<StringName, Struct> structs;
 		HashMap<StringName, Function> functions;
-		Vector<StringName> render_modes;
+		Hector<StringName> render_modes;
 
-		Vector<Function> vfunctions;
-		Vector<Constant> vconstants;
-		Vector<Struct> vstructs;
+		Hector<Function> vfunctions;
+		Hector<Constant> vconstants;
+		Hector<Struct> vstructs;
 
 		ShaderNode() :
 				Node(NODE_TYPE_SHADER) {}
@@ -733,7 +733,7 @@ public:
 		StringName return_struct_name;
 		DataPrecision return_precision = PRECISION_DEFAULT;
 		int return_array_size = 0;
-		Vector<Argument> arguments;
+		Hector<Argument> arguments;
 		BlockNode *body = nullptr;
 		bool can_discard = false;
 
@@ -760,7 +760,7 @@ public:
 	};
 
 	struct ExpressionInfo {
-		Vector<Expression> *expression = nullptr;
+		Hector<Expression> *expression = nullptr;
 		TokenType tt_break = TK_EMPTY;
 		bool is_last_expr = false;
 	};
@@ -821,7 +821,7 @@ public:
 	static bool is_scalar_type(DataType p_type);
 	static bool is_float_type(DataType p_type);
 	static bool is_sampler_type(DataType p_type);
-	static Variant constant_value_to_variant(const Vector<Scalar> &p_value, DataType p_type, int p_array_size, ShaderLanguage::ShaderNode::Uniform::Hint p_hint = ShaderLanguage::ShaderNode::Uniform::HINT_NONE);
+	static Variant constant_value_to_variant(const Hector<Scalar> &p_value, DataType p_type, int p_array_size, ShaderLanguage::ShaderNode::Uniform::Hint p_hint = ShaderLanguage::ShaderNode::Uniform::HINT_NONE);
 	static PropertyInfo uniform_to_property_info(const ShaderNode::Uniform &p_uniform);
 	static uint32_t get_datatype_size(DataType p_type);
 	static uint32_t get_datatype_component_count(DataType p_type);
@@ -854,13 +854,13 @@ public:
 			}
 		};
 
-		Vector<Argument> arguments;
+		Hector<Argument> arguments;
 		DataType return_type = TYPE_VOID;
 	};
 
 	struct ModeInfo {
 		StringName name;
-		Vector<StringName> options;
+		Hector<StringName> options;
 
 		ModeInfo() {}
 
@@ -930,8 +930,8 @@ private:
 		TokenType token;
 		const char *text;
 		uint32_t flags;
-		const Vector<String> excluded_shader_types;
-		const Vector<String> functions;
+		const Hector<String> excluded_shader_types;
+		const Hector<String> functions;
 	};
 
 	static const KeyWord keyword_list[];
@@ -942,7 +942,7 @@ private:
 	String error_str;
 	int error_line = 0;
 
-	Vector<FilePosition> include_positions;
+	Hector<FilePosition> include_positions;
 	HashSet<String> include_markers_handled;
 
 	// Additional function information (eg. call hierarchy). No need to expose it to compiler.
@@ -991,13 +991,13 @@ private:
 	bool check_warnings = false;
 	uint32_t warning_flags = 0;
 
-	void _add_line_warning(ShaderWarning::Code p_code, const StringName &p_subject = "", const Vector<Variant> &p_extra_args = Vector<Variant>()) {
+	void _add_line_warning(ShaderWarning::Code p_code, const StringName &p_subject = "", const Hector<Variant> &p_extra_args = Hector<Variant>()) {
 		warnings.push_back(ShaderWarning(p_code, tk_line, p_subject, p_extra_args));
 	}
-	void _add_global_warning(ShaderWarning::Code p_code, const StringName &p_subject = "", const Vector<Variant> &p_extra_args = Vector<Variant>()) {
+	void _add_global_warning(ShaderWarning::Code p_code, const StringName &p_subject = "", const Hector<Variant> &p_extra_args = Hector<Variant>()) {
 		warnings.push_back(ShaderWarning(p_code, -1, p_subject, p_extra_args));
 	}
-	void _add_warning(ShaderWarning::Code p_code, int p_line, const StringName &p_subject = "", const Vector<Variant> &p_extra_args = Vector<Variant>()) {
+	void _add_warning(ShaderWarning::Code p_code, int p_line, const StringName &p_subject = "", const Hector<Variant> &p_extra_args = Hector<Variant>()) {
 		warnings.push_back(ShaderWarning(p_code, p_line, p_subject, p_extra_args));
 	}
 	void _check_warning_accums();
@@ -1083,7 +1083,7 @@ private:
 
 	IdentifierType last_type = IDENTIFIER_MAX;
 
-	bool _find_identifier(const BlockNode *p_block, bool p_allow_reassign, const FunctionInfo &p_function_info, const StringName &p_identifier, DataType *r_data_type = nullptr, IdentifierType *r_type = nullptr, bool *r_is_const = nullptr, int *r_array_size = nullptr, StringName *r_struct_name = nullptr, Vector<Scalar> *r_constant_values = nullptr);
+	bool _find_identifier(const BlockNode *p_block, bool p_allow_reassign, const FunctionInfo &p_function_info, const StringName &p_identifier, DataType *r_data_type = nullptr, IdentifierType *r_type = nullptr, bool *r_is_const = nullptr, int *r_array_size = nullptr, StringName *r_struct_name = nullptr, Hector<Scalar> *r_constant_values = nullptr);
 #ifdef DEBUG_ENABLED
 	void _parse_used_identifier(const StringName &p_identifier, IdentifierType p_type, const StringName &p_function);
 #endif // DEBUG_ENABLED
@@ -1091,13 +1091,13 @@ private:
 	bool _validate_assign(Node *p_node, const FunctionInfo &p_function_info, String *r_message = nullptr);
 	bool _validate_operator(const BlockNode *p_block, OperatorNode *p_op, DataType *r_ret_type = nullptr, int *r_ret_size = nullptr);
 
-	Vector<Scalar> _get_node_values(const BlockNode *p_block, Node *p_node);
+	Hector<Scalar> _get_node_values(const BlockNode *p_block, Node *p_node);
 	bool _eval_operator(const BlockNode *p_block, OperatorNode *p_op);
 	Scalar _eval_unary_scalar(const Scalar &p_a, Operator p_op, DataType p_ret_type);
 	Scalar _eval_scalar(const Scalar &p_a, const Scalar &p_b, Operator p_op, DataType p_ret_type, bool &r_is_valid);
-	Vector<Scalar> _eval_unary_vector(const Vector<Scalar> &p_va, DataType p_ret_type, Operator p_op);
-	Vector<Scalar> _eval_vector(const Vector<Scalar> &p_va, const Vector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type, Operator p_op, bool &r_is_valid);
-	Vector<Scalar> _eval_vector_transform(const Vector<Scalar> &p_va, const Vector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type);
+	Hector<Scalar> _eval_unary_Hector(const Hector<Scalar> &p_va, DataType p_ret_type, Operator p_op);
+	Hector<Scalar> _eval_Hector(const Hector<Scalar> &p_va, const Hector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type, Operator p_op, bool &r_is_valid);
+	Hector<Scalar> _eval_Hector_transform(const Hector<Scalar> &p_va, const Hector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type);
 
 	struct BuiltinEntry {
 		const char *name;
@@ -1181,7 +1181,7 @@ private:
 	String _get_shader_type_list(const HashSet<String> &p_shader_types) const;
 	String _get_qualifier_str(ArgumentQualifier p_qualifier) const;
 
-	Error _parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Vector<ModeInfo> &p_render_modes, const HashSet<String> &p_shader_types);
+	Error _parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Hector<ModeInfo> &p_render_modes, const HashSet<String> &p_shader_types);
 
 	Error _find_last_flow_op_in_block(BlockNode *p_block, FlowOperation p_op);
 	Error _find_last_flow_op_in_op(ControlFlowNode *p_flow, FlowOperation p_op);
@@ -1206,7 +1206,7 @@ public:
 
 	struct ShaderCompileInfo {
 		HashMap<StringName, FunctionInfo> functions;
-		Vector<ModeInfo> render_modes;
+		Hector<ModeInfo> render_modes;
 		VaryingFunctionNames varying_function_names = VaryingFunctionNames();
 		HashSet<String> shader_types;
 		GlobalShaderUniformGetTypeFunc global_shader_uniform_type_func = nullptr;
@@ -1217,7 +1217,7 @@ public:
 	Error complete(const String &p_code, const ShaderCompileInfo &p_info, List<ScriptLanguage::CodeCompletionOption> *r_options, String &r_call_hint);
 
 	String get_error_text();
-	Vector<FilePosition> get_include_positions();
+	Hector<FilePosition> get_include_positions();
 	int get_error_line();
 
 	ShaderNode *get_shader();

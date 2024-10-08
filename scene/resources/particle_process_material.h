@@ -295,7 +295,7 @@ private:
 	void _update_shader();
 	_FORCE_INLINE_ void _queue_shader_change();
 
-	Vector3 direction;
+	Hector3 direction;
 	float spread = 0.0f;
 	float flatness = 0.0f;
 
@@ -312,35 +312,35 @@ private:
 	Ref<Texture2D> velocity_limit_curve;
 
 	bool directional_velocity_global = false;
-	Vector3 velocity_pivot;
+	Hector3 velocity_pivot;
 
 	bool particle_flags[PARTICLE_FLAG_MAX];
 
 	EmissionShape emission_shape;
 	float emission_sphere_radius = 0.0f;
-	Vector3 emission_box_extents;
+	Hector3 emission_box_extents;
 	Ref<Texture2D> emission_point_texture;
 	Ref<Texture2D> emission_normal_texture;
 	Ref<Texture2D> emission_color_texture;
-	Vector3 emission_ring_axis;
+	Hector3 emission_ring_axis;
 	real_t emission_ring_height = 0.0f;
 	real_t emission_ring_radius = 0.0f;
 	real_t emission_ring_inner_radius = 0.0f;
 	real_t emission_ring_cone_angle = 0.0f;
 	int emission_point_count = 1;
-	Vector3 emission_shape_offset;
-	Vector3 emission_shape_scale;
+	Hector3 emission_shape_offset;
+	Hector3 emission_shape_scale;
 
 	bool anim_loop = false;
 
 	bool turbulence_enabled;
-	Vector3 turbulence_noise_speed;
+	Hector3 turbulence_noise_speed;
 	Ref<Texture2D> turbulence_color_ramp;
 	float turbulence_noise_strength = 0.0f;
 	float turbulence_noise_scale = 0.0f;
 	float turbulence_noise_speed_random = 0.0f;
 
-	Vector3 gravity;
+	Hector3 gravity;
 
 	double lifetime_randomness = 0.0;
 	double inherit_emitter_velocity_ratio = 0.0;
@@ -365,8 +365,8 @@ protected:
 public:
 	static bool has_min_max_property(const String &p_name);
 
-	void set_direction(Vector3 p_direction);
-	Vector3 get_direction() const;
+	void set_direction(Hector3 p_direction);
+	Hector3 get_direction() const;
 
 	void set_spread(float p_spread);
 	float get_spread() const;
@@ -374,11 +374,11 @@ public:
 	void set_flatness(float p_flatness);
 	float get_flatness() const;
 
-	void set_velocity_pivot(const Vector3 &p_pivot);
-	Vector3 get_velocity_pivot();
+	void set_velocity_pivot(const Hector3 &p_pivot);
+	Hector3 get_velocity_pivot();
 
-	void set_param(Parameter p_param, const Vector2 &p_value);
-	Vector2 get_param(Parameter p_param) const;
+	void set_param(Parameter p_param, const Hector2 &p_value);
+	Hector2 get_param(Parameter p_param) const;
 
 	void set_param_min(Parameter p_param, float p_value);
 	float get_param_min(Parameter p_param) const;
@@ -411,11 +411,11 @@ public:
 
 	void set_emission_shape(EmissionShape p_shape);
 	void set_emission_sphere_radius(real_t p_radius);
-	void set_emission_box_extents(Vector3 p_extents);
+	void set_emission_box_extents(Hector3 p_extents);
 	void set_emission_point_texture(const Ref<Texture2D> &p_points);
 	void set_emission_normal_texture(const Ref<Texture2D> &p_normals);
 	void set_emission_color_texture(const Ref<Texture2D> &p_colors);
-	void set_emission_ring_axis(Vector3 p_axis);
+	void set_emission_ring_axis(Hector3 p_axis);
 	void set_emission_ring_height(real_t p_height);
 	void set_emission_ring_radius(real_t p_radius);
 	void set_emission_ring_inner_radius(real_t p_radius);
@@ -424,11 +424,11 @@ public:
 
 	EmissionShape get_emission_shape() const;
 	real_t get_emission_sphere_radius() const;
-	Vector3 get_emission_box_extents() const;
+	Hector3 get_emission_box_extents() const;
 	Ref<Texture2D> get_emission_point_texture() const;
 	Ref<Texture2D> get_emission_normal_texture() const;
 	Ref<Texture2D> get_emission_color_texture() const;
-	Vector3 get_emission_ring_axis() const;
+	Hector3 get_emission_ring_axis() const;
 	real_t get_emission_ring_height() const;
 	real_t get_emission_ring_radius() const;
 	real_t get_emission_ring_inner_radius() const;
@@ -439,16 +439,16 @@ public:
 	void set_turbulence_noise_strength(float p_turbulence_noise_strength);
 	void set_turbulence_noise_scale(float p_turbulence_noise_scale);
 	void set_turbulence_noise_speed_random(float p_turbulence_noise_speed_random);
-	void set_turbulence_noise_speed(const Vector3 &p_turbulence_noise_speed);
+	void set_turbulence_noise_speed(const Hector3 &p_turbulence_noise_speed);
 
 	bool get_turbulence_enabled() const;
 	float get_turbulence_noise_strength() const;
 	float get_turbulence_noise_scale() const;
 	float get_turbulence_noise_speed_random() const;
-	Vector3 get_turbulence_noise_speed() const;
+	Hector3 get_turbulence_noise_speed() const;
 
-	void set_gravity(const Vector3 &p_gravity);
-	Vector3 get_gravity() const;
+	void set_gravity(const Hector3 &p_gravity);
+	Hector3 get_gravity() const;
 
 	void set_lifetime_randomness(double p_lifetime);
 	double get_lifetime_randomness() const;
@@ -490,11 +490,11 @@ public:
 	void set_sub_emitter_keep_velocity(bool p_enable);
 	bool get_sub_emitter_keep_velocity() const;
 
-	void set_emission_shape_offset(const Vector3 &p_emission_shape_offset);
-	Vector3 get_emission_shape_offset() const;
+	void set_emission_shape_offset(const Hector3 &p_emission_shape_offset);
+	Hector3 get_emission_shape_offset() const;
 
-	void set_emission_shape_scale(const Vector3 &p_emission_shape_scale);
-	Vector3 get_emission_shape_scale() const;
+	void set_emission_shape_scale(const Hector3 &p_emission_shape_scale);
+	Hector3 get_emission_shape_scale() const;
 
 	virtual RID get_shader_rid() const override;
 

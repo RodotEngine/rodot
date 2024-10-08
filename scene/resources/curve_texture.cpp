@@ -65,8 +65,8 @@ int CurveTexture::get_width() const {
 void CurveTexture::ensure_default_setup(float p_min, float p_max) {
 	if (_curve.is_null()) {
 		Ref<Curve> curve = Ref<Curve>(memnew(Curve));
-		curve->add_point(Vector2(0, 1));
-		curve->add_point(Vector2(1, 1));
+		curve->add_point(Hector2(0, 1));
+		curve->add_point(Hector2(1, 1));
 		curve->set_min_value(p_min);
 		curve->set_max_value(p_max);
 		set_curve(curve);
@@ -88,7 +88,7 @@ void CurveTexture::set_curve(Ref<Curve> p_curve) {
 }
 
 void CurveTexture::_update() {
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(_width * sizeof(float) * (texture_mode == TEXTURE_MODE_RGB ? 3 : 1));
 
 	// The array is locked in that scope
@@ -210,8 +210,8 @@ int CurveXYZTexture::get_width() const {
 void CurveXYZTexture::ensure_default_setup(float p_min, float p_max) {
 	if (_curve_x.is_null()) {
 		Ref<Curve> curve = Ref<Curve>(memnew(Curve));
-		curve->add_point(Vector2(0, 1));
-		curve->add_point(Vector2(1, 1));
+		curve->add_point(Hector2(0, 1));
+		curve->add_point(Hector2(1, 1));
 		curve->set_min_value(p_min);
 		curve->set_max_value(p_max);
 		set_curve_x(curve);
@@ -219,8 +219,8 @@ void CurveXYZTexture::ensure_default_setup(float p_min, float p_max) {
 
 	if (_curve_y.is_null()) {
 		Ref<Curve> curve = Ref<Curve>(memnew(Curve));
-		curve->add_point(Vector2(0, 1));
-		curve->add_point(Vector2(1, 1));
+		curve->add_point(Hector2(0, 1));
+		curve->add_point(Hector2(1, 1));
 		curve->set_min_value(p_min);
 		curve->set_max_value(p_max);
 		set_curve_y(curve);
@@ -228,8 +228,8 @@ void CurveXYZTexture::ensure_default_setup(float p_min, float p_max) {
 
 	if (_curve_z.is_null()) {
 		Ref<Curve> curve = Ref<Curve>(memnew(Curve));
-		curve->add_point(Vector2(0, 1));
-		curve->add_point(Vector2(1, 1));
+		curve->add_point(Hector2(0, 1));
+		curve->add_point(Hector2(1, 1));
 		curve->set_min_value(p_min);
 		curve->set_max_value(p_max);
 		set_curve_z(curve);
@@ -276,7 +276,7 @@ void CurveXYZTexture::set_curve_z(Ref<Curve> p_curve) {
 }
 
 void CurveXYZTexture::_update() {
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(_width * sizeof(float) * 3);
 
 	// The array is locked in that scope

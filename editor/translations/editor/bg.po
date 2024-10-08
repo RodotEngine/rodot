@@ -4536,7 +4536,7 @@ msgstr "Константа за трансформация."
 msgid "Transform parameter."
 msgstr "Свойство на трансформация."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "Векторна функция."
 
 msgid "New Project"

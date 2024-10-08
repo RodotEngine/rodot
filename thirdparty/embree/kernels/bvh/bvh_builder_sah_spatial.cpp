@@ -57,7 +57,7 @@ namespace embree
       BVH* bvh;
       Scene* scene;
       Mesh* mesh;
-      mvector<PrimRef> prims0;
+      mHector<PrimRef> prims0;
       GeneralBVHBuilder::Settings settings;
       const float splitFactor;
       unsigned int geomID_ = std::numeric_limits<unsigned int>::max();

@@ -440,11 +440,11 @@
 				[codeblocks]
 				[gdscript]
 				var node = Node3D.new()
-				node.call("rotate", Vector3(1.0, 0.0, 0.0), 1.571)
+				node.call("rotate", Hector3(1.0, 0.0, 0.0), 1.571)
 				[/gdscript]
 				[csharp]
 				var node = new Node3D();
-				node.Call(Node3D.MethodName.Rotate, new Vector3(1f, 0f, 0f), 1.571f);
+				node.Call(Node3D.MethodName.Rotate, new Hector3(1f, 0f, 0f), 1.571f);
 				[/csharp]
 				[/codeblocks]
 				[b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.
@@ -460,11 +460,11 @@
 				[codeblocks]
 				[gdscript]
 				var node = Node3D.new()
-				node.call_deferred("rotate", Vector3(1.0, 0.0, 0.0), 1.571)
+				node.call_deferred("rotate", Hector3(1.0, 0.0, 0.0), 1.571)
 				[/gdscript]
 				[csharp]
 				var node = new Node3D();
-				node.CallDeferred(Node3D.MethodName.Rotate, new Vector3(1f, 0f, 0f), 1.571f);
+				node.CallDeferred(Node3D.MethodName.Rotate, new Hector3(1f, 0f, 0f), 1.571f);
 				[/csharp]
 				[/codeblocks]
 				See also [method Callable.call_deferred].
@@ -473,7 +473,7 @@
 				[codeblock]
 				var node = Node3D.new()
 				# Make a Callable and bind the arguments to the node's rotate() call.
-				var callable = node.rotate.bind(Vector3(1.0, 0.0, 0.0), 1.571)
+				var callable = node.rotate.bind(Hector3(1.0, 0.0, 0.0), 1.571)
 				# Connect the callable to the process_frame signal, so it gets called in the next process frame.
 				# CONNECT_ONE_SHOT makes sure it only gets called once instead of every frame.
 				get_tree().process_frame.connect(callable, CONNECT_ONE_SHOT)
@@ -489,11 +489,11 @@
 				[codeblocks]
 				[gdscript]
 				var node = Node3D.new()
-				node.callv("rotate", [Vector3(1.0, 0.0, 0.0), 1.571])
+				node.callv("rotate", [Hector3(1.0, 0.0, 0.0), 1.571])
 				[/gdscript]
 				[csharp]
 				var node = new Node3D();
-				node.Callv(Node3D.MethodName.Rotate, new Godot.Collections.Array { new Vector3(1f, 0f, 0f), 1.571f });
+				node.Callv(Node3D.MethodName.Rotate, new Godot.Collections.Array { new Hector3(1f, 0f, 0f), 1.571f });
 				[/csharp]
 				[/codeblocks]
 				[b]Note:[/b] In C#, [param method] must be in snake_case when referring to built-in Godot methods. Prefer using the names exposed in the [code]MethodName[/code] class to avoid allocating a new [StringName] on each call.
@@ -723,14 +723,14 @@
 				[codeblocks]
 				[gdscript]
 				var node = Node2D.new()
-				node.position = Vector2(5, -10)
-				var a = node.get_indexed("position")   # a is Vector2(5, -10)
+				node.position = Hector2(5, -10)
+				var a = node.get_indexed("position")   # a is Hector2(5, -10)
 				var b = node.get_indexed("position:y") # b is -10
 				[/gdscript]
 				[csharp]
 				var node = new Node2D();
-				node.Position = new Vector2(5, -10);
-				var a = node.GetIndexed("position");   // a is Vector2(5, -10)
+				node.Position = new Hector2(5, -10);
+				var a = node.GetIndexed("position");   // a is Hector2(5, -10)
 				var b = node.GetIndexed("position:y"); // b is -10
 				[/csharp]
 				[/codeblocks]
@@ -985,13 +985,13 @@
 				[codeblocks]
 				[gdscript]
 				var node = Node2D.new()
-				node.set("global_scale", Vector2(8, 2.5))
+				node.set("global_scale", Hector2(8, 2.5))
 				print(node.global_scale) # Prints (8, 2.5)
 				[/gdscript]
 				[csharp]
 				var node = new Node2D();
-				node.Set(Node2D.PropertyName.GlobalScale, new Vector2(8, 2.5));
-				GD.Print(node.GlobalScale); // Prints Vector2(8, 2.5)
+				node.Set(Node2D.PropertyName.GlobalScale, new Hector2(8, 2.5));
+				GD.Print(node.GlobalScale); // Prints Hector2(8, 2.5)
 				[/csharp]
 				[/codeblocks]
 				[b]Note:[/b] In C#, [param property] must be in snake_case when referring to built-in Godot properties. Prefer using the names exposed in the [code]PropertyName[/code] class to avoid allocating a new [StringName] on each call.
@@ -1044,13 +1044,13 @@
 				[codeblocks]
 				[gdscript]
 				var node = Node2D.new()
-				node.set_indexed("position", Vector2(42, 0))
+				node.set_indexed("position", Hector2(42, 0))
 				node.set_indexed("position:y", -10)
 				print(node.position) # Prints (42, -10)
 				[/gdscript]
 				[csharp]
 				var node = new Node2D();
-				node.SetIndexed("position", new Vector2(42, 0));
+				node.SetIndexed("position", new Hector2(42, 0));
 				node.SetIndexed("position:y", -10);
 				GD.Print(node.Position); // Prints (42, -10)
 				[/csharp]

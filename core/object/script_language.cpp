@@ -384,7 +384,7 @@ void ScriptServer::thread_exit() {
 }
 
 HashMap<StringName, ScriptServer::GlobalScriptClass> ScriptServer::global_classes;
-HashMap<StringName, Vector<StringName>> ScriptServer::inheriters_cache;
+HashMap<StringName, Hector<StringName>> ScriptServer::inheriters_cache;
 bool ScriptServer::inheriters_cache_dirty = true;
 
 void ScriptServer::global_classes_clear() {
@@ -424,11 +424,11 @@ void ScriptServer::get_inheriters_list(const StringName &p_base_type, List<Strin
 		inheriters_cache.clear();
 		for (const KeyValue<StringName, GlobalScriptClass> &K : global_classes) {
 			if (!inheriters_cache.has(K.value.base)) {
-				inheriters_cache[K.value.base] = Vector<StringName>();
+				inheriters_cache[K.value.base] = Hector<StringName>();
 			}
 			inheriters_cache[K.value.base].push_back(K.key);
 		}
-		for (KeyValue<StringName, Vector<StringName>> &K : inheriters_cache) {
+		for (KeyValue<StringName, Hector<StringName>> &K : inheriters_cache) {
 			K.value.sort_custom<StringName::AlphCompare>();
 		}
 		inheriters_cache_dirty = false;
@@ -438,7 +438,7 @@ void ScriptServer::get_inheriters_list(const StringName &p_base_type, List<Strin
 		return;
 	}
 
-	const Vector<StringName> &v = inheriters_cache[p_base_type];
+	const Hector<StringName> &v = inheriters_cache[p_base_type];
 	for (int i = 0; i < v.size(); i++) {
 		r_classes->push_back(v[i]);
 	}
@@ -529,15 +529,15 @@ ScriptCodeCompletionCache::ScriptCodeCompletionCache() {
 
 void ScriptLanguage::get_core_type_words(List<String> *p_core_type_words) const {
 	p_core_type_words->push_back("String");
-	p_core_type_words->push_back("Vector2");
-	p_core_type_words->push_back("Vector2i");
+	p_core_type_words->push_back("Hector2");
+	p_core_type_words->push_back("Hector2i");
 	p_core_type_words->push_back("Rect2");
 	p_core_type_words->push_back("Rect2i");
-	p_core_type_words->push_back("Vector3");
-	p_core_type_words->push_back("Vector3i");
+	p_core_type_words->push_back("Hector3");
+	p_core_type_words->push_back("Hector3i");
 	p_core_type_words->push_back("Transform2D");
-	p_core_type_words->push_back("Vector4");
-	p_core_type_words->push_back("Vector4i");
+	p_core_type_words->push_back("Hector4");
+	p_core_type_words->push_back("Hector4i");
 	p_core_type_words->push_back("Plane");
 	p_core_type_words->push_back("Quaternion");
 	p_core_type_words->push_back("AABB");
@@ -558,10 +558,10 @@ void ScriptLanguage::get_core_type_words(List<String> *p_core_type_words) const 
 	p_core_type_words->push_back("PackedFloat32Array");
 	p_core_type_words->push_back("PackedFloat64Array");
 	p_core_type_words->push_back("PackedStringArray");
-	p_core_type_words->push_back("PackedVector2Array");
-	p_core_type_words->push_back("PackedVector3Array");
+	p_core_type_words->push_back("PackedHector2Array");
+	p_core_type_words->push_back("PackedHector3Array");
 	p_core_type_words->push_back("PackedColorArray");
-	p_core_type_words->push_back("PackedVector4Array");
+	p_core_type_words->push_back("PackedHector4Array");
 }
 
 void ScriptLanguage::frame() {
@@ -569,7 +569,7 @@ void ScriptLanguage::frame() {
 
 TypedArray<int> ScriptLanguage::CodeCompletionOption::get_option_characteristics(const String &p_base) {
 	// Return characacteristics of the match found by order of importance.
-	// Matches will be ranked by a lexicographical order on the vector returned by this function.
+	// Matches will be ranked by a lexicographical order on the Hector returned by this function.
 	// The lower values indicate better matches and that they should go before in the order of appearance.
 	if (last_matches == matches) {
 		return charac;

@@ -48,13 +48,13 @@ private:
 	float gain = 1;
 	float gain_target = 1;
 
-	LocalVector<float> sample_buffer_left;
-	LocalVector<float> sample_buffer_right;
+	LocalHector<float> sample_buffer_left;
+	LocalHector<float> sample_buffer_right;
 
 	int gain_samples_to_store = 0;
 	int gain_bucket_cursor = 0;
 	int gain_bucket_size = 0;
-	LocalVector<float> gain_buckets;
+	LocalHector<float> gain_buckets;
 
 public:
 	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;

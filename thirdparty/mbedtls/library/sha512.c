@@ -929,7 +929,7 @@ exit:
 #if defined(MBEDTLS_SELF_TEST)
 
 /*
- * FIPS-180-2 test vectors
+ * FIPS-180-2 test Hectors
  */
 static const unsigned char sha_test_buf[3][113] =
 {
@@ -948,7 +948,7 @@ static const size_t sha_test_buflen[3] =
 typedef const unsigned char (sha_test_sum_t)[64];
 
 /*
- * SHA-384 test vectors
+ * SHA-384 test Hectors
  */
 #if defined(MBEDTLS_SHA384_C)
 static sha_test_sum_t sha384_test_sum[] =
@@ -975,7 +975,7 @@ static sha_test_sum_t sha384_test_sum[] =
 #endif /* MBEDTLS_SHA384_C */
 
 /*
- * SHA-512 test vectors
+ * SHA-512 test Hectors
  */
 #if defined(MBEDTLS_SHA512_C)
 static sha_test_sum_t sha512_test_sum[] =

@@ -145,13 +145,13 @@ void EditorColorMap::create() {
 	add_conversion_color_pair("#41ec80", "#2ce573"); // RID
 	add_conversion_color_pair("#b9ec41", "#96ce1a"); // Transform2D
 	add_conversion_color_pair("#f68f45", "#f49047"); // Transform3D
-	add_conversion_color_pair("#ac73f1", "#ad76ee"); // Vector2
-	add_conversion_color_pair("#de66f0", "#dc6aed"); // Vector3
-	add_conversion_color_pair("#f066bd", "#ed6abd"); // Vector4
+	add_conversion_color_pair("#ac73f1", "#ad76ee"); // Hector2
+	add_conversion_color_pair("#de66f0", "#dc6aed"); // Hector3
+	add_conversion_color_pair("#f066bd", "#ed6abd"); // Hector4
 
 	// Visual shaders
-	add_conversion_color_pair("#77ce57", "#67c046"); // Vector funcs
-	add_conversion_color_pair("#ea686c", "#d95256"); // Vector transforms
+	add_conversion_color_pair("#77ce57", "#67c046"); // Hector funcs
+	add_conversion_color_pair("#ea686c", "#d95256"); // Hector transforms
 	add_conversion_color_pair("#eac968", "#d9b64f"); // Textures and cubemaps
 	add_conversion_color_pair("#cf68ea", "#c050dd"); // Functions and expressions
 

@@ -95,14 +95,14 @@ TEST_CASE("[SceneTree][Primitive][Capsule] Capsule Primitive") {
 		int num_radial_segments{ 4 };
 		int num_rings{ 8 };
 		CapsuleMesh::create_mesh_array(data, radius, height, num_radial_segments, num_rings);
-		Vector<Vector3> points = data[RS::ARRAY_VERTEX];
+		Hector<Hector3> points = data[RS::ARRAY_VERTEX];
 
 		SUBCASE("[Primitive][Capsule] Ensure all vertices positions are within bounding radius and height") {
 			// Get mesh data
 
 			// Check all points within radius of capsule
 			float dist_to_yaxis = 0.f;
-			for (Vector3 point : points) {
+			for (Hector3 point : points) {
 				float new_dist_to_y = point.x * point.x + point.z * point.z;
 				if (new_dist_to_y > dist_to_yaxis)
 					dist_to_yaxis = new_dist_to_y;
@@ -113,7 +113,7 @@ TEST_CASE("[SceneTree][Primitive][Capsule] Capsule Primitive") {
 			// Check highest point and lowest point are within height of each other
 			float max_y{ 0.f };
 			float min_y{ 0.f };
-			for (Vector3 point : points) {
+			for (Hector3 point : points) {
 				if (point.y > max_y)
 					max_y = point.y;
 				if (point.y < min_y)
@@ -124,13 +124,13 @@ TEST_CASE("[SceneTree][Primitive][Capsule] Capsule Primitive") {
 		}
 
 		SUBCASE("[Primitive][Capsule] If normal.y == 0, then mesh makes a cylinder.") {
-			Vector<Vector3> normals = data[RS::ARRAY_NORMAL];
+			Hector<Hector3> normals = data[RS::ARRAY_NORMAL];
 			for (int ii = 0; ii < points.size(); ++ii) {
 				float point_dist_from_yaxis = Math::sqrt(points[ii].x * points[ii].x + points[ii].z * points[ii].z);
-				Vector3 yaxis_to_point{ points[ii].x / point_dist_from_yaxis, 0.f, points[ii].z / point_dist_from_yaxis };
+				Hector3 yaxis_to_point{ points[ii].x / point_dist_from_yaxis, 0.f, points[ii].z / point_dist_from_yaxis };
 				if (normals[ii].y == 0.f) {
 					float mag_of_normal = Math::sqrt(normals[ii].x * normals[ii].x + normals[ii].z * normals[ii].z);
-					Vector3 normalized_normal = normals[ii] / mag_of_normal;
+					Hector3 normalized_normal = normals[ii] / mag_of_normal;
 					CHECK_MESSAGE(point_dist_from_yaxis == doctest::Approx(radius),
 							"Points on the tube of the capsule are radius away from y-axis.");
 					CHECK_MESSAGE(normalized_normal.is_equal_approx(yaxis_to_point),
@@ -154,7 +154,7 @@ TEST_CASE("[SceneTree][Primitive][Box] Box Primitive") {
 	}
 
 	SUBCASE("[SceneTree][Primitive][Box] Set properties and get them with accessor methods") {
-		Vector3 size{ 2.1, 3.3, 1.7 };
+		Hector3 size{ 2.1, 3.3, 1.7 };
 		box->set_size(size);
 		box->set_subdivide_width(3);
 		box->set_subdivide_height(2);
@@ -181,21 +181,21 @@ TEST_CASE("[SceneTree][Primitive][Box] Box Primitive") {
 	SUBCASE("[Primitive][Box] Check mesh is correct.") {
 		Array data{};
 		data.resize(RS::ARRAY_MAX);
-		Vector3 size{ 0.5f, 1.2f, .9f };
+		Hector3 size{ 0.5f, 1.2f, .9f };
 		int subdivide_width{ 3 };
 		int subdivide_height{ 2 };
 		int subdivide_depth{ 8 };
 		BoxMesh::create_mesh_array(data, size, subdivide_width, subdivide_height, subdivide_depth);
-		Vector<Vector3> points = data[RS::ARRAY_VERTEX];
-		Vector<Vector3> normals = data[RS::ARRAY_NORMAL];
+		Hector<Hector3> points = data[RS::ARRAY_VERTEX];
+		Hector<Hector3> normals = data[RS::ARRAY_NORMAL];
 
 		SUBCASE("Only 6 distinct normals.") {
-			Vector<Vector3> distinct_normals{};
+			Hector<Hector3> distinct_normals{};
 			distinct_normals.push_back(normals[0]);
 
-			for (const Vector3 &normal : normals) {
+			for (const Hector3 &normal : normals) {
 				bool add_normal{ true };
-				for (const Vector3 &vec : distinct_normals) {
+				for (const Hector3 &vec : distinct_normals) {
 					if (vec.is_equal_approx(normal))
 						add_normal = false;
 				}
@@ -277,14 +277,14 @@ TEST_CASE("[SceneTree][Primitive][Cylinder] Cylinder Primitive") {
 		bool top_cap = true;
 		bool bottom_cap = true;
 		CylinderMesh::create_mesh_array(data, radius, radius, height, radial_segments, rings, top_cap, bottom_cap);
-		Vector<Vector3> points = data[RS::ARRAY_VERTEX];
-		Vector<Vector3> normals = data[RS::ARRAY_NORMAL];
+		Hector<Hector3> points = data[RS::ARRAY_VERTEX];
+		Hector<Hector3> normals = data[RS::ARRAY_NORMAL];
 
 		SUBCASE("[Primitive][Cylinder] Side points are radius away from y-axis.") {
 			bool is_radius_correct{ true };
 			for (int index = 0; index < normals.size(); ++index) {
 				if (Math::is_equal_approx(normals[index].y, 0)) {
-					if (!Math::is_equal_approx((points[index] - Vector3(0, points[index].y, 0)).length_squared(), radius * radius)) {
+					if (!Math::is_equal_approx((points[index] - Hector3(0, points[index].y, 0)).length_squared(), radius * radius)) {
 						is_radius_correct = false;
 						break;
 					}
@@ -297,10 +297,10 @@ TEST_CASE("[SceneTree][Primitive][Cylinder] Cylinder Primitive") {
 		SUBCASE("[Primitive][Cylinder] Only possible normals point in direction of point or in positive/negative y direction.") {
 			bool is_correct_normals{ true };
 			for (int index = 0; index < normals.size(); ++index) {
-				Vector3 yaxis_to_point = points[index] - Vector3(0.f, points[index].y, 0.f);
-				Vector3 point_to_normal = normals[index].normalized() - yaxis_to_point.normalized();
+				Hector3 yaxis_to_point = points[index] - Hector3(0.f, points[index].y, 0.f);
+				Hector3 point_to_normal = normals[index].normalized() - yaxis_to_point.normalized();
 				//				std::cout << "<" << point_to_normal.x << ", " << point_to_normal.y << ", " << point_to_normal.z << ">\n";
-				if (!(point_to_normal.is_equal_approx(Vector3(0, 0, 0))) &&
+				if (!(point_to_normal.is_equal_approx(Hector3(0, 0, 0))) &&
 						(!Math::is_equal_approx(Math::abs(normals[index].normalized().y), 1))) {
 					is_correct_normals = false;
 					break;
@@ -381,14 +381,14 @@ TEST_CASE("[SceneTree][Primitive][Cylinder] Cylinder Primitive") {
 		int radial_segments = 8;
 		int rings = 5;
 		CylinderMesh::create_mesh_array(data, top_radius, bottom_radius, height, radial_segments, rings, false, false);
-		Vector<Vector3> points = data[RS::ARRAY_VERTEX];
-		Vector<Vector3> normals = data[RS::ARRAY_NORMAL];
+		Hector<Hector3> points = data[RS::ARRAY_VERTEX];
+		Hector<Hector3> normals = data[RS::ARRAY_NORMAL];
 
 		SUBCASE("[Primitive][Cylinder] Side points lie correct distance from y-axis") {
 			bool is_radius_correct{ true };
 			for (int index = 0; index < points.size(); ++index) {
 				real_t radius = ((top_radius - bottom_radius) / height) * (points[index].y - 0.5 * height) + top_radius;
-				Vector3 distance_to_yaxis = points[index] - Vector3(0.f, points[index].y, 0.f);
+				Hector3 distance_to_yaxis = points[index] - Hector3(0.f, points[index].y, 0.f);
 				if (!Math::is_equal_approx(distance_to_yaxis.length_squared(), radius * radius)) {
 					is_radius_correct = false;
 					break;
@@ -398,14 +398,14 @@ TEST_CASE("[SceneTree][Primitive][Cylinder] Cylinder Primitive") {
 			CHECK(is_radius_correct);
 		}
 
-		SUBCASE("[Primitive][Cylinder] Normal on side is orthogonal to side tangent vector") {
+		SUBCASE("[Primitive][Cylinder] Normal on side is orthogonal to side tangent Hector") {
 			bool is_normal_correct{ true };
 			for (int index = 0; index < points.size(); ++index) {
-				Vector3 yaxis_to_point = points[index] - Vector3(0.f, points[index].y, 0.f);
-				Vector3 yaxis_to_rb = yaxis_to_point.normalized() * bottom_radius;
-				Vector3 rb_to_point = yaxis_to_point - yaxis_to_rb;
-				Vector3 y_to_bottom = -Vector3(0.f, points[index].y + 0.5 * height, 0.f);
-				Vector3 side_tangent = rb_to_point - y_to_bottom;
+				Hector3 yaxis_to_point = points[index] - Hector3(0.f, points[index].y, 0.f);
+				Hector3 yaxis_to_rb = yaxis_to_point.normalized() * bottom_radius;
+				Hector3 rb_to_point = yaxis_to_point - yaxis_to_rb;
+				Hector3 y_to_bottom = -Hector3(0.f, points[index].y + 0.5 * height, 0.f);
+				Hector3 side_tangent = rb_to_point - y_to_bottom;
 
 				if (!Math::is_equal_approx(normals[index].dot(side_tangent), 0)) {
 					is_normal_correct = false;
@@ -432,7 +432,7 @@ TEST_CASE("[SceneTree][Primitive][Plane] Plane Primitive") {
 
 	SUBCASE("[SceneTree][Primitive][Plane] Set properties and get them.") {
 		Size2 size{ 3.2, 1.8 };
-		Vector3 offset{ -7.3, 0.4, -1.7 };
+		Hector3 offset{ -7.3, 0.4, -1.7 };
 		plane->set_size(size);
 		plane->set_subdivide_width(15);
 		plane->set_subdivide_depth(29);
@@ -479,7 +479,7 @@ TEST_CASE("[SceneTree][Primitive][Prism] Prism Primitive") {
 	}
 
 	SUBCASE("[Primitive][Prism] Are able to change prism properties.") {
-		Vector3 size{ 4.3, 9.1, 0.43 };
+		Hector3 size{ 4.3, 9.1, 0.43 };
 		prism->set_left_to_right(3.4f);
 		prism->set_size(size);
 		prism->set_subdivide_width(36);
@@ -547,12 +547,12 @@ TEST_CASE("[SceneTree][Primitive][Sphere] Sphere Primitive") {
 		int radial_segments = 8;
 		int rings = 5;
 		SphereMesh::create_mesh_array(data, radius, 2 * radius, radial_segments, rings);
-		Vector<Vector3> points = data[RS::ARRAY_VERTEX];
-		Vector<Vector3> normals = data[RS::ARRAY_NORMAL];
+		Hector<Hector3> points = data[RS::ARRAY_VERTEX];
+		Hector<Hector3> normals = data[RS::ARRAY_NORMAL];
 
 		SUBCASE("[Primitive][Sphere] All points lie radius away from origin.") {
 			bool is_radius_correct = true;
-			for (Vector3 point : points) {
+			for (Hector3 point : points) {
 				if (!Math::is_equal_approx(point.length_squared(), radius * radius)) {
 					is_radius_correct = false;
 					break;

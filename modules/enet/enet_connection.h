@@ -91,8 +91,8 @@ private:
 	class Compressor {
 	private:
 		CompressionMode mode = COMPRESS_NONE;
-		Vector<uint8_t> src_mem;
-		Vector<uint8_t> dst_mem;
+		Hector<uint8_t> src_mem;
+		Hector<uint8_t> dst_mem;
 		ENetCompressor enet_compressor;
 
 		Compressor(CompressionMode mode);

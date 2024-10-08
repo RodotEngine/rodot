@@ -37,7 +37,7 @@
 
 namespace TestWorkerThreadPool {
 
-static LocalVector<SafeNumeric<int>> counter;
+static LocalHector<SafeNumeric<int>> counter;
 static SafeFlag exit;
 
 static void static_test(void *p_arg) {
@@ -52,8 +52,8 @@ TEST_CASE("[WorkerThreadPool] Process threads using individual tasks") {
 		const int count = Math::pow(2.0f, Math::random(0.0f, 5.0f));
 		const bool low_priority = Math::rand() % 2;
 
-		LocalVector<WorkerThreadPool::TaskID> tasks1;
-		LocalVector<WorkerThreadPool::TaskID> tasks2;
+		LocalHector<WorkerThreadPool::TaskID> tasks1;
+		LocalHector<WorkerThreadPool::TaskID> tasks2;
 		tasks1.resize(count);
 		tasks2.resize(count);
 
@@ -135,13 +135,13 @@ TEST_CASE("[WorkerThreadPool] Run a yielding daemon as the only hope for other t
 	int num_threads = WorkerThreadPool::get_singleton()->get_thread_count();
 
 	// Keep all the other threads busy.
-	LocalVector<WorkerThreadPool::TaskID> task_ids;
+	LocalHector<WorkerThreadPool::TaskID> task_ids;
 	for (int i = 0; i < num_threads - 1; i++) {
 		task_ids.push_back(WorkerThreadPool::get_singleton()->add_native_task(static_busy_task, nullptr, true));
 	}
 
-	LocalVector<WorkerThreadPool::TaskID> legit_task_ids;
-	LocalVector<bool> legit_task_needed_yield;
+	LocalHector<WorkerThreadPool::TaskID> legit_task_ids;
+	LocalHector<bool> legit_task_needed_yield;
 	int legit_tasks_count = num_threads * 4;
 	legit_task_needed_yield.resize(legit_tasks_count);
 	for (int i = 0; i < legit_tasks_count; i++) {

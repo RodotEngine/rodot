@@ -80,15 +80,15 @@ DeclareCustomTextureSample(LockStatusSample, FFX_FSR2_GET_LANCZOS_SAMPLER1D(FFX_
 #endif
 #endif
 
-FfxFloat32x2 GetMotionVector(FfxInt32x2 iPxHrPos, FfxFloat32x2 fHrUv)
+FfxFloat32x2 GetMotionHector(FfxInt32x2 iPxHrPos, FfxFloat32x2 fHrUv)
 {
-#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_VECTORS
-    FfxFloat32x2 fDilatedMotionVector = LoadDilatedMotionVector(FFX_MIN16_I2(fHrUv * RenderSize()));
+#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_HectorS
+    FfxFloat32x2 fDilatedMotionHector = LoadDilatedMotionHector(FFX_MIN16_I2(fHrUv * RenderSize()));
 #else
-    FfxFloat32x2 fDilatedMotionVector = LoadInputMotionVector(iPxHrPos);
+    FfxFloat32x2 fDilatedMotionHector = LoadInputMotionHector(iPxHrPos);
 #endif
 
-    return fDilatedMotionVector;
+    return fDilatedMotionHector;
 }
 
 FfxBoolean IsUvInside(FfxFloat32x2 fUv)
@@ -98,7 +98,7 @@ FfxBoolean IsUvInside(FfxFloat32x2 fUv)
 
 void ComputeReprojectedUVs(const AccumulationPassCommonParams params, FFX_PARAMETER_OUT FfxFloat32x2 fReprojectedHrUv, FFX_PARAMETER_OUT FfxBoolean bIsExistingSample)
 {
-    fReprojectedHrUv = params.fHrUv + params.fMotionVector;
+    fReprojectedHrUv = params.fHrUv + params.fMotionHector;
 
     bIsExistingSample = IsUvInside(fReprojectedHrUv);
 }

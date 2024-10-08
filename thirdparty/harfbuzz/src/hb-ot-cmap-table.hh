@@ -477,7 +477,7 @@ struct CmapSubtableFormat4
     if (unlikely (!c->extend_min (this))) return;
     this->format = 4;
 
-    hb_vector_t<hb_codepoint_pair_t> cp_to_gid {
+    hb_Hector_t<hb_codepoint_pair_t> cp_to_gid {
       format4_iter
     };
 
@@ -996,7 +996,7 @@ struct CmapSubtableFormat12 : CmapSubtableLongSegmented<CmapSubtableFormat12>
     this->groups.len = (this->length - min_size) / CmapSubtableLongGroup::static_size;
   }
 
-  static size_t get_sub_table_size (const hb_sorted_vector_t<CmapSubtableLongGroup> &groups_data)
+  static size_t get_sub_table_size (const hb_sorted_Hector_t<CmapSubtableLongGroup> &groups_data)
   { return 16 + 12 * groups_data.length; }
 
   private:
@@ -1394,7 +1394,7 @@ struct CmapSubtableFormat14
      * we then have to reverse the order of the written variation selector
      * records after everything is finalized.
      */
-    hb_vector_t<hb_pair_t<unsigned, unsigned>> obj_indices;
+    hb_Hector_t<hb_pair_t<unsigned, unsigned>> obj_indices;
     for (int i = src_tbl->record.len - 1; i >= 0; i--)
     {
       hb_pair_t<unsigned, unsigned> result = src_tbl->record[i].copy (c, unicodes, glyphs_requested, glyph_map, base);
@@ -1433,7 +1433,7 @@ struct CmapSubtableFormat14
   }
 
   void _add_links_to_variation_records (hb_serialize_context_t *c,
-					const hb_vector_t<hb_pair_t<unsigned, unsigned>>& obj_indices)
+					const hb_Hector_t<hb_pair_t<unsigned, unsigned>>& obj_indices)
   {
     for (unsigned i = 0; i < obj_indices.length; i++)
     {

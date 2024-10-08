@@ -13,7 +13,7 @@
 	<tutorials>
 	</tutorials>
 	<members>
-		<member name="segments" type="PackedVector2Array" setter="set_segments" getter="get_segments" default="PackedVector2Array()">
+		<member name="segments" type="PackedHector2Array" setter="set_segments" getter="get_segments" default="PackedHector2Array()">
 			The array of points that make up the [ConcavePolygonShape2D]'s line segments. The array (of length divisible by two) is naturally divided into pairs (one pair for each segment); each pair consists of the starting point of a segment and the endpoint of a segment.
 		</member>
 	</members>

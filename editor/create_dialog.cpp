@@ -93,7 +93,7 @@ void CreateDialog::_fill_type_list() {
 				continue;
 			}
 
-			const Vector<EditorData::CustomType> &ct = ed.get_custom_types()[type];
+			const Hector<EditorData::CustomType> &ct = ed.get_custom_types()[type];
 			for (int i = 0; i < ct.size(); i++) {
 				custom_type_parents[ct[i].name] = type;
 				custom_type_indices[ct[i].name] = i;

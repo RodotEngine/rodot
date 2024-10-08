@@ -98,7 +98,7 @@ public:
 		bool prefer_raster_effects;
 
 	public:
-		Vector<RID> reduce;
+		Hector<RID> reduce;
 		RID current;
 
 		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override;

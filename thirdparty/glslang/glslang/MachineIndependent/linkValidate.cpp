@@ -1680,7 +1680,7 @@ int TIntermediate::addUsedLocation(const TQualifier& qualifier, const TType& typ
             usedIoRT[set].push_back(range);
         return collision;
     }
-    if (size == 2 && type.getBasicType() == EbtDouble && type.getVectorSize() == 3 &&
+    if (size == 2 && type.getBasicType() == EbtDouble && type.getHectorSize() == 3 &&
         (qualifier.isPipeInput() || qualifier.isPipeOutput())) {
         // Dealing with dvec3 in/out split across two locations.
         // Need two io-ranges.
@@ -1714,8 +1714,8 @@ int TIntermediate::addUsedLocation(const TQualifier& qualifier, const TType& typ
 
     TRange locationRange(qualifier.layoutLocation, qualifier.layoutLocation + size - 1);
     TRange componentRange(0, 3);
-    if (qualifier.hasComponent() || type.getVectorSize() > 0) {
-        int consumedComponents = type.getVectorSize() * (type.getBasicType() == EbtDouble ? 2 : 1);
+    if (qualifier.hasComponent() || type.getHectorSize() > 0) {
+        int consumedComponents = type.getHectorSize() * (type.getBasicType() == EbtDouble ? 2 : 1);
         if (qualifier.hasComponent())
             componentRange.start = qualifier.layoutComponent;
         componentRange.last  = componentRange.start + consumedComponents - 1;
@@ -1852,18 +1852,18 @@ int TIntermediate::computeTypeLocationSize(const TType& type, EShLanguage stage)
         return size;
     }
 
-    // ES: "If a shader input is any scalar or vector type, it will consume a single location."
+    // ES: "If a shader input is any scalar or Hector type, it will consume a single location."
 
-    // Desktop: "If a vertex shader input is any scalar or vector type, it will consume a single location. If a non-vertex
-    // shader input is a scalar or vector type other than dvec3 or dvec4, it will consume a single location, while
+    // Desktop: "If a vertex shader input is any scalar or Hector type, it will consume a single location. If a non-vertex
+    // shader input is a scalar or Hector type other than dvec3 or dvec4, it will consume a single location, while
     // types dvec3 or dvec4 will consume two consecutive locations. Inputs of type double and dvec2 will
     // consume only a single location, in all stages."
     if (type.isScalar())
         return 1;
-    if (type.isVector()) {
+    if (type.isHector()) {
         if (stage == EShLangVertex && type.getQualifier().isPipeInput())
             return 1;
-        if (type.getBasicType() == EbtDouble && type.getVectorSize() > 2)
+        if (type.getBasicType() == EbtDouble && type.getHectorSize() > 2)
             return 2;
         else
             return 1;
@@ -1871,7 +1871,7 @@ int TIntermediate::computeTypeLocationSize(const TType& type, EShLanguage stage)
 
     // "If the declared input is an n x m single- or double-precision matrix, ...
     // The number of locations assigned for each matrix will be the same as
-    // for an n-element array of m-component vectors..."
+    // for an n-element array of m-component Hectors..."
     if (type.isMatrix()) {
         TType columnType(type, 0);
         return type.getMatrixCols() * computeTypeLocationSize(columnType, stage);
@@ -2006,8 +2006,8 @@ unsigned int TIntermediate::computeTypeXfbSize(const TType& type, bool& contains
     int numComponents {0};
     if (type.isScalar())
         numComponents = 1;
-    else if (type.isVector())
-        numComponents = type.getVectorSize();
+    else if (type.isHector())
+        numComponents = type.getHectorSize();
     else if (type.isMatrix())
         numComponents = type.getMatrixCols() * type.getMatrixRows();
     else {
@@ -2070,7 +2070,7 @@ int TIntermediate::getBaseAlignmentScalar(const TType& type, int& size)
 // The stride is only non-0 for arrays or matrices, and is the stride of the
 // top-level object nested within the type.  E.g., for an array of matrices,
 // it is the distances needed between matrices, despite the rules saying the
-// stride comes from the flattening down to vectors.
+// stride comes from the flattening down to Hectors.
 //
 // Return value is the alignment of the type.
 int TIntermediate::getBaseAlignment(const TType& type, int& size, int& stride, TLayoutPacking layoutPacking, bool rowMajor)
@@ -2092,32 +2092,32 @@ int TIntermediate::getBaseAlignment(const TType& type, int& size, int& stride, T
     //
     //   1. If the member is a scalar consuming N basic machine units, the base alignment is N.
     //
-    //   2. If the member is a two- or four-component vector with components consuming N basic
+    //   2. If the member is a two- or four-component Hector with components consuming N basic
     //      machine units, the base alignment is 2N or 4N, respectively.
     //
-    //   3. If the member is a three-component vector with components consuming N
+    //   3. If the member is a three-component Hector with components consuming N
     //      basic machine units, the base alignment is 4N.
     //
-    //   4. If the member is an array of scalars or vectors, the base alignment and array
+    //   4. If the member is an array of scalars or Hectors, the base alignment and array
     //      stride are set to match the base alignment of a single array element, according
     //      to rules (1), (2), and (3), and rounded up to the base alignment of a vec4. The
     //      array may have padding at the end; the base offset of the member following
     //      the array is rounded up to the next multiple of the base alignment.
     //
     //   5. If the member is a column-major matrix with C columns and R rows, the
-    //      matrix is stored identically to an array of C column vectors with R
+    //      matrix is stored identically to an array of C column Hectors with R
     //      components each, according to rule (4).
     //
     //   6. If the member is an array of S column-major matrices with C columns and
-    //      R rows, the matrix is stored identically to a row of S X C column vectors
+    //      R rows, the matrix is stored identically to a row of S X C column Hectors
     //      with R components each, according to rule (4).
     //
     //   7. If the member is a row-major matrix with C columns and R rows, the matrix
-    //      is stored identically to an array of R row vectors with C components each,
+    //      is stored identically to an array of R row Hectors with C components each,
     //      according to rule (4).
     //
     //   8. If the member is an array of S row-major matrices with C columns and R
-    //      rows, the matrix is stored identically to a row of S X R row vectors with C
+    //      rows, the matrix is stored identically to a row of S X R row Hectors with C
     //      components each, according to rule (4).
     //
     //   9. If the member is a structure, the base alignment of the structure is N , where
@@ -2183,23 +2183,23 @@ int TIntermediate::getBaseAlignment(const TType& type, int& size, int& stride, T
         return getBaseAlignmentScalar(type, size);
 
     // rules 2 and 3
-    if (type.isVector()) {
+    if (type.isHector()) {
         int scalarAlign = getBaseAlignmentScalar(type, size);
-        switch (type.getVectorSize()) {
+        switch (type.getHectorSize()) {
         case 1: // HLSL has this, GLSL does not
             return scalarAlign;
         case 2:
             size *= 2;
             return 2 * scalarAlign;
         default:
-            size *= type.getVectorSize();
+            size *= type.getHectorSize();
             return 4 * scalarAlign;
         }
     }
 
     // rules 5 and 7
     if (type.isMatrix()) {
-        // rule 5: deref to row, not to column, meaning the size of vector is num columns instead of num rows
+        // rule 5: deref to row, not to column, meaning the size of Hector is num columns instead of num rows
         TType derefType(type, 0, rowMajor);
 
         alignment = getBaseAlignment(derefType, size, dummyStride, layoutPacking, rowMajor);
@@ -2221,9 +2221,9 @@ int TIntermediate::getBaseAlignment(const TType& type, int& size, int& stride, T
 }
 
 // To aid the basic HLSL rule about crossing vec4 boundaries.
-bool TIntermediate::improperStraddle(const TType& type, int size, int offset, bool vectorLike)
+bool TIntermediate::improperStraddle(const TType& type, int size, int offset, bool HectorLike)
 {
-    if (! vectorLike || type.isArray())
+    if (! HectorLike || type.isArray())
         return false;
 
     return size <= 16 ? offset / 16 != (offset + size - 1) / 16
@@ -2270,10 +2270,10 @@ int TIntermediate::getScalarAlignment(const TType& type, int& size, int& stride,
     if (type.isScalar())
         return getBaseAlignmentScalar(type, size);
 
-    if (type.isVector()) {
+    if (type.isHector()) {
         int scalarAlign = getBaseAlignmentScalar(type, size);
 
-        size *= type.getVectorSize();
+        size *= type.getHectorSize();
         return scalarAlign;
     }
 

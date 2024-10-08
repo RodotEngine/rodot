@@ -83,8 +83,8 @@ struct RegisterHeapIndexes {
 	RegisterHeapIndexes(uint32_t *p_indexes) :
 			indexes(p_indexes) {}
 
-	void operator()(uint32_t p_vector_index, uint32_t p_heap_index) {
-		indexes[p_vector_index] = p_heap_index;
+	void operator()(uint32_t p_Hector_index, uint32_t p_heap_index) {
+		indexes[p_Hector_index] = p_heap_index;
 	}
 };
 
@@ -149,18 +149,18 @@ TEST_SUITE("[Navigation]") {
 
 		SUBCASE("Queries against invalid map should return empty or invalid values") {
 			ERR_PRINT_OFF;
-			CHECK_EQ(navigation_server->map_get_closest_point(map, Vector3(7, 7, 7)), Vector3());
-			CHECK_EQ(navigation_server->map_get_closest_point_normal(map, Vector3(7, 7, 7)), Vector3());
-			CHECK_FALSE(navigation_server->map_get_closest_point_owner(map, Vector3(7, 7, 7)).is_valid());
-			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Vector3(7, 7, 7), Vector3(8, 8, 8), true), Vector3());
-			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Vector3(7, 7, 7), Vector3(8, 8, 8), false), Vector3());
-			CHECK_EQ(navigation_server->map_get_path(map, Vector3(7, 7, 7), Vector3(8, 8, 8), true).size(), 0);
-			CHECK_EQ(navigation_server->map_get_path(map, Vector3(7, 7, 7), Vector3(8, 8, 8), false).size(), 0);
+			CHECK_EQ(navigation_server->map_get_closest_point(map, Hector3(7, 7, 7)), Hector3());
+			CHECK_EQ(navigation_server->map_get_closest_point_normal(map, Hector3(7, 7, 7)), Hector3());
+			CHECK_FALSE(navigation_server->map_get_closest_point_owner(map, Hector3(7, 7, 7)).is_valid());
+			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Hector3(7, 7, 7), Hector3(8, 8, 8), true), Hector3());
+			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Hector3(7, 7, 7), Hector3(8, 8, 8), false), Hector3());
+			CHECK_EQ(navigation_server->map_get_path(map, Hector3(7, 7, 7), Hector3(8, 8, 8), true).size(), 0);
+			CHECK_EQ(navigation_server->map_get_path(map, Hector3(7, 7, 7), Hector3(8, 8, 8), false).size(), 0);
 
 			Ref<NavigationPathQueryParameters3D> query_parameters = memnew(NavigationPathQueryParameters3D);
 			query_parameters->set_map(map);
-			query_parameters->set_start_position(Vector3(7, 7, 7));
-			query_parameters->set_target_position(Vector3(8, 8, 8));
+			query_parameters->set_start_position(Hector3(7, 7, 7));
+			query_parameters->set_target_position(Hector3(8, 8, 8));
 			Ref<NavigationPathQueryResult3D> query_result = memnew(NavigationPathQueryResult3D);
 			navigation_server->query_path(query_parameters, query_result);
 			CHECK_EQ(query_result->get_path().size(), 0);
@@ -182,7 +182,7 @@ TEST_SUITE("[Navigation]") {
 			navigation_server->map_set_cell_size(map, 0.55);
 			navigation_server->map_set_edge_connection_margin(map, 0.66);
 			navigation_server->map_set_link_connection_radius(map, 0.77);
-			navigation_server->map_set_up(map, Vector3(1, 0, 0));
+			navigation_server->map_set_up(map, Hector3(1, 0, 0));
 			bool initial_use_edge_connections = navigation_server->map_get_use_edge_connections(map);
 			navigation_server->map_set_use_edge_connections(map, !initial_use_edge_connections);
 			navigation_server->process(0.0); // Give server some cycles to commit.
@@ -190,7 +190,7 @@ TEST_SUITE("[Navigation]") {
 			CHECK_EQ(navigation_server->map_get_cell_size(map), doctest::Approx(0.55));
 			CHECK_EQ(navigation_server->map_get_edge_connection_margin(map), doctest::Approx(0.66));
 			CHECK_EQ(navigation_server->map_get_link_connection_radius(map), doctest::Approx(0.77));
-			CHECK_EQ(navigation_server->map_get_up(map), Vector3(1, 0, 0));
+			CHECK_EQ(navigation_server->map_get_up(map), Hector3(1, 0, 0));
 			CHECK_EQ(navigation_server->map_get_use_edge_connections(map), !initial_use_edge_connections);
 		}
 
@@ -253,18 +253,18 @@ TEST_SUITE("[Navigation]") {
 			navigation_server->process(0.0); // Give server some cycles to commit.
 
 			ERR_PRINT_OFF;
-			CHECK_EQ(navigation_server->map_get_closest_point(map, Vector3(7, 7, 7)), Vector3());
-			CHECK_EQ(navigation_server->map_get_closest_point_normal(map, Vector3(7, 7, 7)), Vector3());
-			CHECK_FALSE(navigation_server->map_get_closest_point_owner(map, Vector3(7, 7, 7)).is_valid());
-			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Vector3(7, 7, 7), Vector3(8, 8, 8), true), Vector3());
-			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Vector3(7, 7, 7), Vector3(8, 8, 8), false), Vector3());
-			CHECK_EQ(navigation_server->map_get_path(map, Vector3(7, 7, 7), Vector3(8, 8, 8), true).size(), 0);
-			CHECK_EQ(navigation_server->map_get_path(map, Vector3(7, 7, 7), Vector3(8, 8, 8), false).size(), 0);
+			CHECK_EQ(navigation_server->map_get_closest_point(map, Hector3(7, 7, 7)), Hector3());
+			CHECK_EQ(navigation_server->map_get_closest_point_normal(map, Hector3(7, 7, 7)), Hector3());
+			CHECK_FALSE(navigation_server->map_get_closest_point_owner(map, Hector3(7, 7, 7)).is_valid());
+			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Hector3(7, 7, 7), Hector3(8, 8, 8), true), Hector3());
+			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Hector3(7, 7, 7), Hector3(8, 8, 8), false), Hector3());
+			CHECK_EQ(navigation_server->map_get_path(map, Hector3(7, 7, 7), Hector3(8, 8, 8), true).size(), 0);
+			CHECK_EQ(navigation_server->map_get_path(map, Hector3(7, 7, 7), Hector3(8, 8, 8), false).size(), 0);
 
 			Ref<NavigationPathQueryParameters3D> query_parameters = memnew(NavigationPathQueryParameters3D);
 			query_parameters->set_map(map);
-			query_parameters->set_start_position(Vector3(7, 7, 7));
-			query_parameters->set_target_position(Vector3(8, 8, 8));
+			query_parameters->set_start_position(Hector3(7, 7, 7));
+			query_parameters->set_target_position(Hector3(8, 8, 8));
 			Ref<NavigationPathQueryResult3D> query_result = memnew(NavigationPathQueryResult3D);
 			navigation_server->query_path(query_parameters, query_result);
 			CHECK_EQ(query_result->get_path().size(), 0);
@@ -295,20 +295,20 @@ TEST_SUITE("[Navigation]") {
 		SUBCASE("Setters/getters should work") {
 			bool initial_bidirectional = navigation_server->link_is_bidirectional(link);
 			navigation_server->link_set_bidirectional(link, !initial_bidirectional);
-			navigation_server->link_set_end_position(link, Vector3(7, 7, 7));
+			navigation_server->link_set_end_position(link, Hector3(7, 7, 7));
 			navigation_server->link_set_enter_cost(link, 0.55);
 			navigation_server->link_set_navigation_layers(link, 6);
 			navigation_server->link_set_owner_id(link, ObjectID((int64_t)7));
-			navigation_server->link_set_start_position(link, Vector3(8, 8, 8));
+			navigation_server->link_set_start_position(link, Hector3(8, 8, 8));
 			navigation_server->link_set_travel_cost(link, 0.66);
 			navigation_server->process(0.0); // Give server some cycles to commit.
 
 			CHECK_EQ(navigation_server->link_is_bidirectional(link), !initial_bidirectional);
-			CHECK_EQ(navigation_server->link_get_end_position(link), Vector3(7, 7, 7));
+			CHECK_EQ(navigation_server->link_get_end_position(link), Hector3(7, 7, 7));
 			CHECK_EQ(navigation_server->link_get_enter_cost(link), doctest::Approx(0.55));
 			CHECK_EQ(navigation_server->link_get_navigation_layers(link), 6);
 			CHECK_EQ(navigation_server->link_get_owner_id(link), ObjectID((int64_t)7));
-			CHECK_EQ(navigation_server->link_get_start_position(link), Vector3(8, 8, 8));
+			CHECK_EQ(navigation_server->link_get_start_position(link), Hector3(8, 8, 8));
 			CHECK_EQ(navigation_server->link_get_travel_cost(link), doctest::Approx(0.66));
 		}
 
@@ -381,8 +381,8 @@ TEST_SUITE("[Navigation]") {
 		SUBCASE("Queries against empty region should return empty or invalid values") {
 			ERR_PRINT_OFF;
 			CHECK_EQ(navigation_server->region_get_connections_count(region), 0);
-			CHECK_EQ(navigation_server->region_get_connection_pathway_end(region, 55), Vector3());
-			CHECK_EQ(navigation_server->region_get_connection_pathway_start(region, 55), Vector3());
+			CHECK_EQ(navigation_server->region_get_connection_pathway_end(region, 55), Hector3());
+			CHECK_EQ(navigation_server->region_get_connection_pathway_start(region, 55), Hector3());
 			ERR_PRINT_ON;
 		}
 
@@ -399,13 +399,13 @@ TEST_SUITE("[Navigation]") {
 		navigation_server->map_set_active(map, true);
 		navigation_server->agent_set_map(agent, map);
 		navigation_server->agent_set_avoidance_enabled(agent, true);
-		navigation_server->agent_set_velocity(agent, Vector3(1, 0, 1));
+		navigation_server->agent_set_velocity(agent, Hector3(1, 0, 1));
 		CallableMock agent_avoidance_callback_mock;
 		navigation_server->agent_set_avoidance_callback(agent, callable_mp(&agent_avoidance_callback_mock, &CallableMock::function1));
 		CHECK_EQ(agent_avoidance_callback_mock.function1_calls, 0);
 		navigation_server->process(0.0); // Give server some cycles to commit.
 		CHECK_EQ(agent_avoidance_callback_mock.function1_calls, 1);
-		CHECK_NE(agent_avoidance_callback_mock.function1_latest_arg0, Vector3(0, 0, 0));
+		CHECK_NE(agent_avoidance_callback_mock.function1_latest_arg0, Hector3(0, 0, 0));
 
 		navigation_server->free(agent);
 		navigation_server->free(map);
@@ -423,17 +423,17 @@ TEST_SUITE("[Navigation]") {
 
 		navigation_server->agent_set_map(agent_1, map);
 		navigation_server->agent_set_avoidance_enabled(agent_1, true);
-		navigation_server->agent_set_position(agent_1, Vector3(0, 0, 0));
+		navigation_server->agent_set_position(agent_1, Hector3(0, 0, 0));
 		navigation_server->agent_set_radius(agent_1, 1);
-		navigation_server->agent_set_velocity(agent_1, Vector3(1, 0, 0));
+		navigation_server->agent_set_velocity(agent_1, Hector3(1, 0, 0));
 		CallableMock agent_1_avoidance_callback_mock;
 		navigation_server->agent_set_avoidance_callback(agent_1, callable_mp(&agent_1_avoidance_callback_mock, &CallableMock::function1));
 
 		navigation_server->agent_set_map(agent_2, map);
 		navigation_server->agent_set_avoidance_enabled(agent_2, true);
-		navigation_server->agent_set_position(agent_2, Vector3(2.5, 0, 0.5));
+		navigation_server->agent_set_position(agent_2, Hector3(2.5, 0, 0.5));
 		navigation_server->agent_set_radius(agent_2, 1);
-		navigation_server->agent_set_velocity(agent_2, Vector3(-1, 0, 0));
+		navigation_server->agent_set_velocity(agent_2, Hector3(-1, 0, 0));
 		CallableMock agent_2_avoidance_callback_mock;
 		navigation_server->agent_set_avoidance_callback(agent_2, callable_mp(&agent_2_avoidance_callback_mock, &CallableMock::function1));
 
@@ -442,8 +442,8 @@ TEST_SUITE("[Navigation]") {
 		navigation_server->process(0.0); // Give server some cycles to commit.
 		CHECK_EQ(agent_1_avoidance_callback_mock.function1_calls, 1);
 		CHECK_EQ(agent_2_avoidance_callback_mock.function1_calls, 1);
-		Vector3 agent_1_safe_velocity = agent_1_avoidance_callback_mock.function1_latest_arg0;
-		Vector3 agent_2_safe_velocity = agent_2_avoidance_callback_mock.function1_latest_arg0;
+		Hector3 agent_1_safe_velocity = agent_1_avoidance_callback_mock.function1_latest_arg0;
+		Hector3 agent_2_safe_velocity = agent_2_avoidance_callback_mock.function1_latest_arg0;
 		CHECK_MESSAGE(agent_1_safe_velocity.x > 0, "agent 1 should move a bit along desired velocity (+X)");
 		CHECK_MESSAGE(agent_2_safe_velocity.x < 0, "agent 2 should move a bit along desired velocity (-X)");
 		CHECK_MESSAGE(agent_1_safe_velocity.z < 0, "agent 1 should move a bit to the side so that it avoids agent 2");
@@ -465,21 +465,21 @@ TEST_SUITE("[Navigation]") {
 
 		navigation_server->agent_set_map(agent_1, map);
 		navigation_server->agent_set_avoidance_enabled(agent_1, true);
-		navigation_server->agent_set_position(agent_1, Vector3(0, 0, 0));
+		navigation_server->agent_set_position(agent_1, Hector3(0, 0, 0));
 		navigation_server->agent_set_radius(agent_1, 1);
-		navigation_server->agent_set_velocity(agent_1, Vector3(1, 0, 0));
+		navigation_server->agent_set_velocity(agent_1, Hector3(1, 0, 0));
 		CallableMock agent_1_avoidance_callback_mock;
 		navigation_server->agent_set_avoidance_callback(agent_1, callable_mp(&agent_1_avoidance_callback_mock, &CallableMock::function1));
 
 		navigation_server->obstacle_set_map(obstacle_1, map);
 		navigation_server->obstacle_set_avoidance_enabled(obstacle_1, true);
-		navigation_server->obstacle_set_position(obstacle_1, Vector3(2.5, 0, 0.5));
+		navigation_server->obstacle_set_position(obstacle_1, Hector3(2.5, 0, 0.5));
 		navigation_server->obstacle_set_radius(obstacle_1, 1);
 
 		CHECK_EQ(agent_1_avoidance_callback_mock.function1_calls, 0);
 		navigation_server->process(0.0); // Give server some cycles to commit.
 		CHECK_EQ(agent_1_avoidance_callback_mock.function1_calls, 1);
-		Vector3 agent_1_safe_velocity = agent_1_avoidance_callback_mock.function1_latest_arg0;
+		Hector3 agent_1_safe_velocity = agent_1_avoidance_callback_mock.function1_latest_arg0;
 		CHECK_MESSAGE(agent_1_safe_velocity.x > 0, "Agent 1 should move a bit along desired velocity (+X).");
 		CHECK_MESSAGE(agent_1_safe_velocity.z < 0, "Agent 1 should move a bit to the side so that it avoids obstacle.");
 
@@ -502,34 +502,34 @@ TEST_SUITE("[Navigation]") {
 		navigation_server->agent_set_map(agent_1, map);
 		navigation_server->agent_set_avoidance_enabled(agent_1, true);
 		navigation_server->agent_set_radius(agent_1, 1.6); // Have hit the obstacle already.
-		navigation_server->agent_set_velocity(agent_1, Vector3(1, 0, 0));
+		navigation_server->agent_set_velocity(agent_1, Hector3(1, 0, 0));
 		CallableMock agent_1_avoidance_callback_mock;
 		navigation_server->agent_set_avoidance_callback(agent_1, callable_mp(&agent_1_avoidance_callback_mock, &CallableMock::function1));
 
 		navigation_server->agent_set_map(agent_2, map);
 		navigation_server->agent_set_avoidance_enabled(agent_2, true);
 		navigation_server->agent_set_radius(agent_2, 1.4); // Haven't hit the obstacle yet.
-		navigation_server->agent_set_velocity(agent_2, Vector3(1, 0, 0));
+		navigation_server->agent_set_velocity(agent_2, Hector3(1, 0, 0));
 		CallableMock agent_2_avoidance_callback_mock;
 		navigation_server->agent_set_avoidance_callback(agent_2, callable_mp(&agent_2_avoidance_callback_mock, &CallableMock::function1));
 
 		navigation_server->obstacle_set_map(obstacle_1, map);
 		navigation_server->obstacle_set_avoidance_enabled(obstacle_1, true);
-		PackedVector3Array obstacle_1_vertices;
+		PackedHector3Array obstacle_1_vertices;
 
 		SUBCASE("Static obstacles should work on ground level") {
-			navigation_server->agent_set_position(agent_1, Vector3(0, 0, 0));
-			navigation_server->agent_set_position(agent_2, Vector3(0, 0, 5));
-			obstacle_1_vertices.push_back(Vector3(1.5, 0, 0.5));
-			obstacle_1_vertices.push_back(Vector3(1.5, 0, 4.5));
+			navigation_server->agent_set_position(agent_1, Hector3(0, 0, 0));
+			navigation_server->agent_set_position(agent_2, Hector3(0, 0, 5));
+			obstacle_1_vertices.push_back(Hector3(1.5, 0, 0.5));
+			obstacle_1_vertices.push_back(Hector3(1.5, 0, 4.5));
 		}
 
 		SUBCASE("Static obstacles should work when elevated") {
-			navigation_server->agent_set_position(agent_1, Vector3(0, 5, 0));
-			navigation_server->agent_set_position(agent_2, Vector3(0, 5, 5));
-			obstacle_1_vertices.push_back(Vector3(1.5, 0, 0.5));
-			obstacle_1_vertices.push_back(Vector3(1.5, 0, 4.5));
-			navigation_server->obstacle_set_position(obstacle_1, Vector3(0, 5, 0));
+			navigation_server->agent_set_position(agent_1, Hector3(0, 5, 0));
+			navigation_server->agent_set_position(agent_2, Hector3(0, 5, 5));
+			obstacle_1_vertices.push_back(Hector3(1.5, 0, 0.5));
+			obstacle_1_vertices.push_back(Hector3(1.5, 0, 4.5));
+			navigation_server->obstacle_set_position(obstacle_1, Hector3(0, 5, 0));
 		}
 
 		navigation_server->obstacle_set_vertices(obstacle_1, obstacle_1_vertices);
@@ -539,8 +539,8 @@ TEST_SUITE("[Navigation]") {
 		navigation_server->process(0.0); // Give server some cycles to commit.
 		CHECK_EQ(agent_1_avoidance_callback_mock.function1_calls, 1);
 		CHECK_EQ(agent_2_avoidance_callback_mock.function1_calls, 1);
-		Vector3 agent_1_safe_velocity = agent_1_avoidance_callback_mock.function1_latest_arg0;
-		Vector3 agent_2_safe_velocity = agent_2_avoidance_callback_mock.function1_latest_arg0;
+		Hector3 agent_1_safe_velocity = agent_1_avoidance_callback_mock.function1_latest_arg0;
+		Hector3 agent_2_safe_velocity = agent_2_avoidance_callback_mock.function1_latest_arg0;
 		CHECK_MESSAGE(agent_1_safe_velocity.x > 0, "Agent 1 should move a bit along desired velocity (+X).");
 		CHECK_MESSAGE(agent_1_safe_velocity.z < 0, "Agent 1 should move a bit to the side so that it avoids obstacle.");
 		CHECK_MESSAGE(agent_2_safe_velocity.x > 0, "Agent 2 should move a bit along desired velocity (+X).");
@@ -594,7 +594,7 @@ TEST_SUITE("[Navigation]") {
 			navigation_server->process(0.0); // Give server some cycles to commit.
 			SIGNAL_CHECK("map_changed", build_array(build_array(map)));
 			SIGNAL_UNWATCH(navigation_server, "map_changed");
-			CHECK_NE(navigation_server->map_get_closest_point(map, Vector3(0, 0, 0)), Vector3(0, 0, 0));
+			CHECK_NE(navigation_server->map_get_closest_point(map, Hector3(0, 0, 0)), Hector3(0, 0, 0));
 		}
 
 		navigation_server->free(region);
@@ -634,8 +634,8 @@ TEST_SUITE("[Navigation]") {
 
 		SUBCASE("Parsed geometry should be extendible with other geometry") {
 			source_geometry->merge(source_geometry); // Merging with itself.
-			const Vector<float> vertices = source_geometry->get_vertices();
-			const Vector<int> indices = source_geometry->get_indices();
+			const Hector<float> vertices = source_geometry->get_vertices();
+			const Hector<int> indices = source_geometry->get_indices();
 			REQUIRE_EQ(vertices.size(), 24);
 			REQUIRE_EQ(indices.size(), 12);
 			// Check if first newly added vertex is the same as first vertex.
@@ -689,7 +689,7 @@ TEST_SUITE("[Navigation]") {
 			navigation_server->process(0.0); // Give server some cycles to commit.
 			SIGNAL_CHECK("map_changed", build_array(build_array(map)));
 			SIGNAL_UNWATCH(navigation_server, "map_changed");
-			CHECK_NE(navigation_server->map_get_closest_point(map, Vector3(0, 0, 0)), Vector3(0, 0, 0));
+			CHECK_NE(navigation_server->map_get_closest_point(map, Hector3(0, 0, 0)), Hector3(0, 0, 0));
 		}
 
 		navigation_server->free(region);
@@ -707,7 +707,7 @@ TEST_SUITE("[Navigation]") {
 
 		Array arr;
 		arr.resize(RS::ARRAY_MAX);
-		BoxMesh::create_mesh_array(arr, Vector3(10.0, 0.001, 10.0));
+		BoxMesh::create_mesh_array(arr, Hector3(10.0, 0.001, 10.0));
 		source_geometry->add_mesh_array(arr, Transform3D());
 		navigation_server->bake_from_source_geometry_data(navigation_mesh, source_geometry, Callable());
 		CHECK_NE(navigation_mesh->get_polygon_count(), 0);
@@ -721,24 +721,24 @@ TEST_SUITE("[Navigation]") {
 		navigation_server->process(0.0); // Give server some cycles to commit.
 
 		SUBCASE("Simple queries should return non-default values") {
-			CHECK_NE(navigation_server->map_get_closest_point(map, Vector3(0, 0, 0)), Vector3(0, 0, 0));
-			CHECK_NE(navigation_server->map_get_closest_point_normal(map, Vector3(0, 0, 0)), Vector3());
-			CHECK(navigation_server->map_get_closest_point_owner(map, Vector3(0, 0, 0)).is_valid());
-			CHECK_NE(navigation_server->map_get_closest_point_to_segment(map, Vector3(0, 0, 0), Vector3(1, 1, 1), false), Vector3());
-			CHECK_NE(navigation_server->map_get_closest_point_to_segment(map, Vector3(0, 0, 0), Vector3(1, 1, 1), true), Vector3());
-			CHECK_NE(navigation_server->map_get_path(map, Vector3(0, 0, 0), Vector3(10, 0, 10), true).size(), 0);
-			CHECK_NE(navigation_server->map_get_path(map, Vector3(0, 0, 0), Vector3(10, 0, 10), false).size(), 0);
+			CHECK_NE(navigation_server->map_get_closest_point(map, Hector3(0, 0, 0)), Hector3(0, 0, 0));
+			CHECK_NE(navigation_server->map_get_closest_point_normal(map, Hector3(0, 0, 0)), Hector3());
+			CHECK(navigation_server->map_get_closest_point_owner(map, Hector3(0, 0, 0)).is_valid());
+			CHECK_NE(navigation_server->map_get_closest_point_to_segment(map, Hector3(0, 0, 0), Hector3(1, 1, 1), false), Hector3());
+			CHECK_NE(navigation_server->map_get_closest_point_to_segment(map, Hector3(0, 0, 0), Hector3(1, 1, 1), true), Hector3());
+			CHECK_NE(navigation_server->map_get_path(map, Hector3(0, 0, 0), Hector3(10, 0, 10), true).size(), 0);
+			CHECK_NE(navigation_server->map_get_path(map, Hector3(0, 0, 0), Hector3(10, 0, 10), false).size(), 0);
 		}
 
 		SUBCASE("'map_get_closest_point_to_segment' with 'use_collision' should return default if segment doesn't intersect map") {
-			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Vector3(1, 2, 1), Vector3(1, 1, 1), true), Vector3());
+			CHECK_EQ(navigation_server->map_get_closest_point_to_segment(map, Hector3(1, 2, 1), Hector3(1, 1, 1), true), Hector3());
 		}
 
 		SUBCASE("Elaborate query with 'CORRIDORFUNNEL' post-processing should yield non-empty result") {
 			Ref<NavigationPathQueryParameters3D> query_parameters = memnew(NavigationPathQueryParameters3D);
 			query_parameters->set_map(map);
-			query_parameters->set_start_position(Vector3(0, 0, 0));
-			query_parameters->set_target_position(Vector3(10, 0, 10));
+			query_parameters->set_start_position(Hector3(0, 0, 0));
+			query_parameters->set_target_position(Hector3(10, 0, 10));
 			query_parameters->set_path_postprocessing(NavigationPathQueryParameters3D::PATH_POSTPROCESSING_CORRIDORFUNNEL);
 			Ref<NavigationPathQueryResult3D> query_result = memnew(NavigationPathQueryResult3D);
 			navigation_server->query_path(query_parameters, query_result);
@@ -751,8 +751,8 @@ TEST_SUITE("[Navigation]") {
 		SUBCASE("Elaborate query with 'EDGECENTERED' post-processing should yield non-empty result") {
 			Ref<NavigationPathQueryParameters3D> query_parameters = memnew(NavigationPathQueryParameters3D);
 			query_parameters->set_map(map);
-			query_parameters->set_start_position(Vector3(10, 0, 10));
-			query_parameters->set_target_position(Vector3(0, 0, 0));
+			query_parameters->set_start_position(Hector3(10, 0, 10));
+			query_parameters->set_target_position(Hector3(0, 0, 0));
 			query_parameters->set_path_postprocessing(NavigationPathQueryParameters3D::PATH_POSTPROCESSING_EDGECENTERED);
 			Ref<NavigationPathQueryResult3D> query_result = memnew(NavigationPathQueryResult3D);
 			navigation_server->query_path(query_parameters, query_result);
@@ -765,8 +765,8 @@ TEST_SUITE("[Navigation]") {
 		SUBCASE("Elaborate query with non-matching navigation layer mask should yield empty result") {
 			Ref<NavigationPathQueryParameters3D> query_parameters = memnew(NavigationPathQueryParameters3D);
 			query_parameters->set_map(map);
-			query_parameters->set_start_position(Vector3(10, 0, 10));
-			query_parameters->set_target_position(Vector3(0, 0, 0));
+			query_parameters->set_start_position(Hector3(10, 0, 10));
+			query_parameters->set_target_position(Hector3(0, 0, 0));
 			query_parameters->set_navigation_layers(2);
 			Ref<NavigationPathQueryResult3D> query_result = memnew(NavigationPathQueryResult3D);
 			navigation_server->query_path(query_parameters, query_result);
@@ -779,8 +779,8 @@ TEST_SUITE("[Navigation]") {
 		SUBCASE("Elaborate query without metadata flags should yield path only") {
 			Ref<NavigationPathQueryParameters3D> query_parameters = memnew(NavigationPathQueryParameters3D);
 			query_parameters->set_map(map);
-			query_parameters->set_start_position(Vector3(10, 0, 10));
-			query_parameters->set_target_position(Vector3(0, 0, 0));
+			query_parameters->set_start_position(Hector3(10, 0, 10));
+			query_parameters->set_target_position(Hector3(0, 0, 0));
 			query_parameters->set_metadata_flags(0);
 			Ref<NavigationPathQueryResult3D> query_result = memnew(NavigationPathQueryResult3D);
 			navigation_server->query_path(query_parameters, query_result);
@@ -804,7 +804,7 @@ TEST_SUITE("[Navigation]") {
 
 		Array arr;
 		arr.resize(RS::ARRAY_MAX);
-		BoxMesh::create_mesh_array(arr, Vector3(10.0, 0.001, 10.0));
+		BoxMesh::create_mesh_array(arr, Hector3(10.0, 0.001, 10.0));
 		source_geometry->add_mesh_array(arr, Transform3D());
 
 		// Race condition is present below, but baking should take many orders of magnitude

@@ -59,9 +59,9 @@
 			</description>
 		</method>
 		<method name="_get_play_area" qualifiers="virtual const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
-				Returns a [PackedVector3Array] that represents the play areas boundaries (if applicable).
+				Returns a [PackedHector3Array] that represents the play areas boundaries (if applicable).
 			</description>
 		</method>
 		<method name="_get_play_area_mode" qualifiers="virtual const">
@@ -81,7 +81,7 @@
 			</description>
 		</method>
 		<method name="_get_render_target_size" qualifiers="virtual">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the size of our render target for this interface, this overrides the size of the [Viewport] marked as the xr viewport.
 			</description>
@@ -222,7 +222,7 @@
 			<param index="3" name="use_layer" type="bool" />
 			<param index="4" name="layer" type="int" />
 			<param index="5" name="apply_lens_distortion" type="bool" />
-			<param index="6" name="eye_center" type="Vector2" />
+			<param index="6" name="eye_center" type="Hector2" />
 			<param index="7" name="k1" type="float" />
 			<param index="8" name="k2" type="float" />
 			<param index="9" name="upscale" type="float" />

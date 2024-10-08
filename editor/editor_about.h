@@ -58,7 +58,7 @@ private:
 	RichTextLabel *license_text_label = nullptr;
 	RichTextLabel *_tpl_text = nullptr;
 	TextureRect *_logo = nullptr;
-	Vector<ItemList *> name_lists;
+	Hector<ItemList *> name_lists;
 
 protected:
 	void _notification(int p_what);

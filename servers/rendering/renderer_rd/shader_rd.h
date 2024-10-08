@@ -34,7 +34,7 @@
 #include "core/os/mutex.h"
 #include "core/string/string_builder.h"
 #include "core/templates/hash_map.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rb_map.h"
 #include "core/templates/rid_owner.h"
 #include "core/variant/variant.h"
@@ -57,11 +57,11 @@ public:
 private:
 	//versions
 	CharString general_defines;
-	Vector<VariantDefine> variant_defines;
-	Vector<bool> variants_enabled;
-	Vector<uint32_t> variant_to_group;
-	HashMap<int, LocalVector<int>> group_to_variant_map;
-	Vector<bool> group_enabled;
+	Hector<VariantDefine> variant_defines;
+	Hector<bool> variants_enabled;
+	Hector<uint32_t> variant_to_group;
+	HashMap<int, LocalHector<int>> group_to_variant_map;
+	Hector<bool> group_enabled;
 
 	struct Version {
 		CharString uniforms;
@@ -69,11 +69,11 @@ private:
 		CharString compute_globals;
 		CharString fragment_globals;
 		HashMap<StringName, CharString> code_sections;
-		Vector<CharString> custom_defines;
-		Vector<WorkerThreadPool::GroupID> group_compilation_tasks;
+		Hector<CharString> custom_defines;
+		Hector<WorkerThreadPool::GroupID> group_compilation_tasks;
 
-		Vector<Vector<uint8_t>> variant_data;
-		Vector<RID> variants;
+		Hector<Hector<uint8_t>> variant_data;
+		Hector<RID> variants;
 
 		bool valid;
 		bool dirty;
@@ -114,7 +114,7 @@ private:
 			StringName code;
 			CharString text;
 		};
-		LocalVector<Chunk> chunks;
+		LocalHector<Chunk> chunks;
 	};
 
 	bool is_compute = false;
@@ -124,7 +124,7 @@ private:
 	CharString base_compute_defines;
 
 	String base_sha256;
-	LocalVector<String> group_sha256;
+	LocalHector<String> group_sha256;
 
 	static String shader_cache_dir;
 	static bool shader_cache_cleanup_on_start;
@@ -159,8 +159,8 @@ protected:
 public:
 	RID version_create();
 
-	void version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Vector<String> &p_custom_defines);
-	void version_set_compute_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_compute_globals, const Vector<String> &p_custom_defines);
+	void version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Hector<String> &p_custom_defines);
+	void version_set_compute_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_compute_globals, const Hector<String> &p_custom_defines);
 
 	_FORCE_INLINE_ RID version_get_shader(RID p_version, int p_variant) {
 		ERR_FAIL_INDEX_V(p_variant, variant_defines.size(), RID());
@@ -211,8 +211,8 @@ public:
 
 	RS::ShaderNativeSourceCode version_get_native_source_code(RID p_version);
 
-	void initialize(const Vector<String> &p_variant_defines, const String &p_general_defines = "");
-	void initialize(const Vector<VariantDefine> &p_variant_defines, const String &p_general_defines = "");
+	void initialize(const Hector<String> &p_variant_defines, const String &p_general_defines = "");
+	void initialize(const Hector<VariantDefine> &p_variant_defines, const String &p_general_defines = "");
 
 	virtual ~ShaderRD();
 };

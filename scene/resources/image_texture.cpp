@@ -268,7 +268,7 @@ ImageTextureLayered::LayeredType ImageTextureLayered::get_layered_type() const {
 }
 
 Error ImageTextureLayered::_create_from_images(const TypedArray<Image> &p_images) {
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	for (int i = 0; i < p_images.size(); i++) {
 		Ref<Image> img = p_images[i];
 		ERR_FAIL_COND_V(img.is_null(), ERR_INVALID_PARAMETER);
@@ -290,7 +290,7 @@ void ImageTextureLayered::_set_images(const TypedArray<Image> &p_images) {
 	ERR_FAIL_COND(_create_from_images(p_images) != OK);
 }
 
-Error ImageTextureLayered::create_from_images(Vector<Ref<Image>> p_images) {
+Error ImageTextureLayered::create_from_images(Hector<Ref<Image>> p_images) {
 	int new_layers = p_images.size();
 	ERR_FAIL_COND_V(new_layers == 0, ERR_INVALID_PARAMETER);
 	if (layered_type == LAYERED_TYPE_CUBEMAP) {
@@ -402,7 +402,7 @@ bool ImageTexture3D::has_mipmaps() const {
 }
 
 Error ImageTexture3D::_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Image> &p_data) {
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	images.resize(p_data.size());
 	for (int i = 0; i < images.size(); i++) {
 		images.write[i] = p_data[i];
@@ -411,7 +411,7 @@ Error ImageTexture3D::_create(Image::Format p_format, int p_width, int p_height,
 }
 
 void ImageTexture3D::_update(const TypedArray<Image> &p_data) {
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	images.resize(p_data.size());
 	for (int i = 0; i < images.size(); i++) {
 		images.write[i] = p_data[i];
@@ -419,7 +419,7 @@ void ImageTexture3D::_update(const TypedArray<Image> &p_data) {
 	return update(images);
 }
 
-Error ImageTexture3D::create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) {
+Error ImageTexture3D::create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data) {
 	RID tex = RenderingServer::get_singleton()->texture_3d_create(p_format, p_width, p_height, p_depth, p_mipmaps, p_data);
 	ERR_FAIL_COND_V(tex.is_null(), ERR_CANT_CREATE);
 
@@ -438,13 +438,13 @@ Error ImageTexture3D::create(Image::Format p_format, int p_width, int p_height, 
 	return OK;
 }
 
-void ImageTexture3D::update(const Vector<Ref<Image>> &p_data) {
+void ImageTexture3D::update(const Hector<Ref<Image>> &p_data) {
 	ERR_FAIL_COND(!texture.is_valid());
 	RenderingServer::get_singleton()->texture_3d_update(texture, p_data);
 }
 
-Vector<Ref<Image>> ImageTexture3D::get_data() const {
-	ERR_FAIL_COND_V(!texture.is_valid(), Vector<Ref<Image>>());
+Hector<Ref<Image>> ImageTexture3D::get_data() const {
+	ERR_FAIL_COND_V(!texture.is_valid(), Hector<Ref<Image>>());
 	return RS::get_singleton()->texture_3d_get(texture);
 }
 
@@ -465,7 +465,7 @@ void ImageTexture3D::set_path(const String &p_path, bool p_take_over) {
 TypedArray<Image> ImageTexture3D::_get_images() const {
 	TypedArray<Image> images;
 	if (texture.is_valid()) {
-		Vector<Ref<Image>> raw_images = get_data();
+		Hector<Ref<Image>> raw_images = get_data();
 		ERR_FAIL_COND_V(raw_images.is_empty(), TypedArray<Image>());
 
 		for (int i = 0; i < raw_images.size(); i++) {

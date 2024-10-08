@@ -52,7 +52,7 @@ class NavMap : public NavRid {
 	RWLock map_rwlock;
 
 	/// Map Up
-	Vector3 up = Vector3(0, 1, 0);
+	Hector3 up = Hector3(0, 1, 0);
 
 	/// To find the polygons edges the vertices are displaced in a grid where
 	/// each cell has the following cell_size and cell_height.
@@ -76,31 +76,31 @@ class NavMap : public NavRid {
 	bool regenerate_links = true;
 
 	/// Map regions
-	LocalVector<NavRegion *> regions;
+	LocalHector<NavRegion *> regions;
 
 	/// Map links
-	LocalVector<NavLink *> links;
-	LocalVector<gd::Polygon> link_polygons;
+	LocalHector<NavLink *> links;
+	LocalHector<gd::Polygon> link_polygons;
 
 	/// Map polygons
-	LocalVector<gd::Polygon> polygons;
+	LocalHector<gd::Polygon> polygons;
 
 	/// RVO avoidance worlds
 	RVO2D::RVOSimulator2D rvo_simulation_2d;
 	RVO3D::RVOSimulator3D rvo_simulation_3d;
 
 	/// avoidance controlled agents
-	LocalVector<NavAgent *> active_2d_avoidance_agents;
-	LocalVector<NavAgent *> active_3d_avoidance_agents;
+	LocalHector<NavAgent *> active_2d_avoidance_agents;
+	LocalHector<NavAgent *> active_3d_avoidance_agents;
 
 	/// dirty flag when one of the agent's arrays are modified
 	bool agents_dirty = true;
 
 	/// All the Agents (even the controlled one)
-	LocalVector<NavAgent *> agents;
+	LocalHector<NavAgent *> agents;
 
 	/// All the avoidance obstacles (both static and dynamic)
-	LocalVector<NavObstacle *> obstacles;
+	LocalHector<NavObstacle *> obstacles;
 
 	/// Are rvo obstacles modified?
 	bool obstacles_dirty = true;
@@ -126,7 +126,7 @@ class NavMap : public NavRid {
 	int pm_edge_free_count = 0;
 	int pm_obstacle_count = 0;
 
-	HashMap<NavRegion *, LocalVector<gd::Edge::Connection>> region_external_connections;
+	HashMap<NavRegion *, LocalHector<gd::Edge::Connection>> region_external_connections;
 
 public:
 	NavMap();
@@ -134,8 +134,8 @@ public:
 
 	uint32_t get_iteration_id() const { return iteration_id; }
 
-	void set_up(Vector3 p_up);
-	Vector3 get_up() const {
+	void set_up(Hector3 p_up);
+	Hector3 get_up() const {
 		return up;
 	}
 
@@ -167,31 +167,31 @@ public:
 		return link_connection_radius;
 	}
 
-	gd::PointKey get_point_key(const Vector3 &p_pos) const;
+	gd::PointKey get_point_key(const Hector3 &p_pos) const;
 
-	Vector<Vector3> get_path(Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Vector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Vector<int64_t> *r_path_owners) const;
-	Vector3 get_closest_point_to_segment(const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision) const;
-	Vector3 get_closest_point(const Vector3 &p_point) const;
-	Vector3 get_closest_point_normal(const Vector3 &p_point) const;
-	gd::ClosestPointQueryResult get_closest_point_info(const Vector3 &p_point) const;
-	RID get_closest_point_owner(const Vector3 &p_point) const;
+	Hector<Hector3> get_path(Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Hector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Hector<int64_t> *r_path_owners) const;
+	Hector3 get_closest_point_to_segment(const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision) const;
+	Hector3 get_closest_point(const Hector3 &p_point) const;
+	Hector3 get_closest_point_normal(const Hector3 &p_point) const;
+	gd::ClosestPointQueryResult get_closest_point_info(const Hector3 &p_point) const;
+	RID get_closest_point_owner(const Hector3 &p_point) const;
 
 	void add_region(NavRegion *p_region);
 	void remove_region(NavRegion *p_region);
-	const LocalVector<NavRegion *> &get_regions() const {
+	const LocalHector<NavRegion *> &get_regions() const {
 		return regions;
 	}
 
 	void add_link(NavLink *p_link);
 	void remove_link(NavLink *p_link);
-	const LocalVector<NavLink *> &get_links() const {
+	const LocalHector<NavLink *> &get_links() const {
 		return links;
 	}
 
 	bool has_agent(NavAgent *agent) const;
 	void add_agent(NavAgent *agent);
 	void remove_agent(NavAgent *agent);
-	const LocalVector<NavAgent *> &get_agents() const {
+	const LocalHector<NavAgent *> &get_agents() const {
 		return agents;
 	}
 
@@ -201,11 +201,11 @@ public:
 	bool has_obstacle(NavObstacle *obstacle) const;
 	void add_obstacle(NavObstacle *obstacle);
 	void remove_obstacle(NavObstacle *obstacle);
-	const LocalVector<NavObstacle *> &get_obstacles() const {
+	const LocalHector<NavObstacle *> &get_obstacles() const {
 		return obstacles;
 	}
 
-	Vector3 get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const;
+	Hector3 get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const;
 
 	void sync();
 	void step(real_t p_deltatime);
@@ -223,8 +223,8 @@ public:
 	int get_pm_obstacle_count() const { return pm_obstacle_count; }
 
 	int get_region_connections_count(NavRegion *p_region) const;
-	Vector3 get_region_connection_pathway_start(NavRegion *p_region, int p_connection_id) const;
-	Vector3 get_region_connection_pathway_end(NavRegion *p_region, int p_connection_id) const;
+	Hector3 get_region_connection_pathway_start(NavRegion *p_region, int p_connection_id) const;
+	Hector3 get_region_connection_pathway_end(NavRegion *p_region, int p_connection_id) const;
 
 private:
 	void compute_single_step(uint32_t index, NavAgent **agent);

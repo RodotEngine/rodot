@@ -105,10 +105,10 @@ namespace embree
 
       __forceinline BSplineCurveT<Vec3ff> xfm_pr(const LinearSpace3fa& space, const Vec3fa& p) const
       {
-        const Vec3ff q0(xfmVector(space,(Vec3fa)v0-p), v0.w);
-        const Vec3ff q1(xfmVector(space,(Vec3fa)v1-p), v1.w);
-        const Vec3ff q2(xfmVector(space,(Vec3fa)v2-p), v2.w);
-        const Vec3ff q3(xfmVector(space,(Vec3fa)v3-p), v3.w);
+        const Vec3ff q0(xfmHector(space,(Vec3fa)v0-p), v0.w);
+        const Vec3ff q1(xfmHector(space,(Vec3fa)v1-p), v1.w);
+        const Vec3ff q2(xfmHector(space,(Vec3fa)v2-p), v2.w);
+        const Vec3ff q3(xfmHector(space,(Vec3fa)v3-p), v3.w);
         return BSplineCurveT<Vec3ff>(q0,q1,q2,q3);
       }
       

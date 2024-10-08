@@ -83,7 +83,7 @@ void PhysicsBody3D::remove_collision_exception_with(Node *p_node) {
 	PhysicsServer3D::get_singleton()->body_remove_collision_exception(get_rid(), collision_object->get_rid());
 }
 
-Ref<KinematicCollision3D> PhysicsBody3D::_move(const Vector3 &p_motion, bool p_test_only, real_t p_margin, bool p_recovery_as_collision, int p_max_collisions) {
+Ref<KinematicCollision3D> PhysicsBody3D::_move(const Hector3 &p_motion, bool p_test_only, real_t p_margin, bool p_recovery_as_collision, int p_max_collisions) {
 	PhysicsServer3D::MotionParameters parameters(get_global_transform(), p_motion, p_margin);
 	parameters.max_collisions = p_max_collisions;
 	parameters.recovery_as_collision = p_recovery_as_collision;
@@ -127,14 +127,14 @@ bool PhysicsBody3D::move_and_collide(const PhysicsServer3D::MotionParameters &p_
 
 		if (p_cancel_sliding) {
 			// When motion is null, recovery is the resulting motion.
-			Vector3 motion_normal;
+			Hector3 motion_normal;
 			if (motion_length > CMP_EPSILON) {
 				motion_normal = p_parameters.motion / motion_length;
 			}
 
 			// Check depth of recovery.
 			real_t projected_length = r_result.travel.dot(motion_normal);
-			Vector3 recovery = r_result.travel - motion_normal * projected_length;
+			Hector3 recovery = r_result.travel - motion_normal * projected_length;
 			real_t recovery_length = recovery.length();
 			// Fixes cases where canceling slide causes the motion to go too deep into the ground,
 			// because we're only taking rest information into account and not general recovery.
@@ -161,7 +161,7 @@ bool PhysicsBody3D::move_and_collide(const PhysicsServer3D::MotionParameters &p_
 	return colliding;
 }
 
-bool PhysicsBody3D::test_move(const Transform3D &p_from, const Vector3 &p_motion, const Ref<KinematicCollision3D> &r_collision, real_t p_margin, bool p_recovery_as_collision, int p_max_collisions) {
+bool PhysicsBody3D::test_move(const Transform3D &p_from, const Hector3 &p_motion, const Ref<KinematicCollision3D> &r_collision, real_t p_margin, bool p_recovery_as_collision, int p_max_collisions) {
 	ERR_FAIL_COND_V(!is_inside_tree(), false);
 
 	PhysicsServer3D::MotionResult *r = nullptr;
@@ -180,9 +180,9 @@ bool PhysicsBody3D::test_move(const Transform3D &p_from, const Vector3 &p_motion
 	return PhysicsServer3D::get_singleton()->body_test_motion(get_rid(), parameters, r);
 }
 
-Vector3 PhysicsBody3D::get_gravity() const {
+Hector3 PhysicsBody3D::get_gravity() const {
 	PhysicsDirectBodyState3D *state = PhysicsServer3D::get_singleton()->body_get_direct_state(get_rid());
-	ERR_FAIL_NULL_V(state, Vector3());
+	ERR_FAIL_NULL_V(state, Hector3());
 	return state->get_total_gravity();
 }
 
@@ -199,12 +199,12 @@ bool PhysicsBody3D::get_axis_lock(PhysicsServer3D::BodyAxis p_axis) const {
 	return (locked_axis & p_axis);
 }
 
-Vector3 PhysicsBody3D::get_linear_velocity() const {
-	return Vector3();
+Hector3 PhysicsBody3D::get_linear_velocity() const {
+	return Hector3();
 }
 
-Vector3 PhysicsBody3D::get_angular_velocity() const {
-	return Vector3();
+Hector3 PhysicsBody3D::get_angular_velocity() const {
+	return Hector3();
 }
 
 real_t PhysicsBody3D::get_inverse_mass() const {

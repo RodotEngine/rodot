@@ -123,9 +123,9 @@ struct hb_paint_extents_context_t
   }
 
   protected:
-  hb_vector_t<hb_transform_t> transforms;
-  hb_vector_t<hb_bounds_t> clips;
-  hb_vector_t<hb_bounds_t> groups;
+  hb_Hector_t<hb_transform_t> transforms;
+  hb_Hector_t<hb_bounds_t> clips;
+  hb_Hector_t<hb_bounds_t> groups;
 };
 
 HB_INTERNAL hb_paint_funcs_t *

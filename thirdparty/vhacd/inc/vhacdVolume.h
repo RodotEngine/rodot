@@ -16,7 +16,7 @@
 #ifndef VHACD_VOLUME_H
 #define VHACD_VOLUME_H
 #include "vhacdMesh.h"
-#include "vhacdVector.h"
+#include "vhacdHector.h"
 #include <assert.h>
 
 #ifdef _MSC_VER

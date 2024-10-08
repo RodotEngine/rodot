@@ -57,15 +57,15 @@ void GLTFDocumentExtension::_bind_methods() {
 }
 
 // Import process.
-Error GLTFDocumentExtension::import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions) {
+Error GLTFDocumentExtension::import_preflight(Ref<GLTFState> p_state, Hector<String> p_extensions) {
 	ERR_FAIL_COND_V(p_state.is_null(), ERR_INVALID_PARAMETER);
 	Error err = OK;
 	GDVIRTUAL_CALL(_import_preflight, p_state, p_extensions, err);
 	return err;
 }
 
-Vector<String> GLTFDocumentExtension::get_supported_extensions() {
-	Vector<String> ret;
+Hector<String> GLTFDocumentExtension::get_supported_extensions() {
+	Hector<String> ret;
 	GDVIRTUAL_CALL(_get_supported_extensions, ret);
 	return ret;
 }
@@ -169,8 +169,8 @@ Error GLTFDocumentExtension::export_preserialize(Ref<GLTFState> p_state) {
 	return err;
 }
 
-Vector<String> GLTFDocumentExtension::get_saveable_image_formats() {
-	Vector<String> ret;
+Hector<String> GLTFDocumentExtension::get_saveable_image_formats() {
+	Hector<String> ret;
 	GDVIRTUAL_CALL(_get_saveable_image_formats, ret);
 	return ret;
 }

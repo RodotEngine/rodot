@@ -49,7 +49,7 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
         if (acceptsListener(*l)) {
             Mutex lmx(&notifyLock);
             if (listeners == nullptr) {
-                LocalPointer<UVector> lpListeners(new UVector(5, status), status);
+                LocalPointer<UHector> lpListeners(new UHector(5, status), status);
                 if (U_FAILURE(status)) {
                     return;
                 }

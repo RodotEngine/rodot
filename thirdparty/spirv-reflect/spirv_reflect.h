@@ -111,7 +111,7 @@ typedef enum SpvReflectTypeFlagBits {
   SPV_REFLECT_TYPE_FLAG_BOOL                            = 0x00000002,
   SPV_REFLECT_TYPE_FLAG_INT                             = 0x00000004,
   SPV_REFLECT_TYPE_FLAG_FLOAT                           = 0x00000008,
-  SPV_REFLECT_TYPE_FLAG_VECTOR                          = 0x00000100,
+  SPV_REFLECT_TYPE_FLAG_Hector                          = 0x00000100,
   SPV_REFLECT_TYPE_FLAG_MATRIX                          = 0x00000200,
   SPV_REFLECT_TYPE_FLAG_EXTERNAL_IMAGE                  = 0x00010000,
   SPV_REFLECT_TYPE_FLAG_EXTERNAL_SAMPLER                = 0x00020000,
@@ -343,9 +343,9 @@ typedef struct SpvReflectNumericTraits {
     uint32_t                        signedness;
   } scalar;
 
-  struct Vector {
+  struct Hector {
     uint32_t                        component_count;
-  } vector;
+  } Hector;
 
   struct Matrix {
     uint32_t                        column_count;
@@ -1591,7 +1591,7 @@ const char* spvReflectBlockVariableTypeName(
 #if defined(__cplusplus) && !defined(SPIRV_REFLECT_DISABLE_CPP_BINDINGS)
 #include <cstdlib>
 #include <string>
-#include <vector>
+#include <Vector>
 
 namespace spv_reflect {
 

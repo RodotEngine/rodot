@@ -423,7 +423,7 @@ void GPUParticles3D::_validate_property(PropertyInfo &p_property) const {
 	}
 }
 
-void GPUParticles3D::emit_particle(const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
+void GPUParticles3D::emit_particle(const Transform3D &p_transform, const Hector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
 	RS::get_singleton()->particles_emit(particles, p_transform, p_velocity, p_color, p_custom, p_emit_flags);
 }
 
@@ -482,7 +482,7 @@ void GPUParticles3D::_notification(int p_what) {
 		case NOTIFICATION_INTERNAL_PHYSICS_PROCESS: {
 			// Update velocity in physics process, so that velocity calculations remain correct
 			// if the physics tick rate is lower than the rendered framerate (especially without physics interpolation).
-			const Vector3 velocity = (get_global_position() - previous_position) / get_physics_process_delta_time();
+			const Hector3 velocity = (get_global_position() - previous_position) / get_physics_process_delta_time();
 
 			if (velocity != previous_velocity) {
 				RS::get_singleton()->particles_set_emitter_velocity(particles, velocity);
@@ -532,7 +532,7 @@ void GPUParticles3D::_notification(int p_what) {
 }
 
 void GPUParticles3D::_skinning_changed() {
-	Vector<Transform3D> xforms;
+	Hector<Transform3D> xforms;
 	if (skin.is_valid()) {
 		xforms.resize(skin->get_bind_count());
 		for (int i = 0; i < skin->get_bind_count(); i++) {
@@ -813,7 +813,7 @@ GPUParticles3D::GPUParticles3D() {
 	set_explosiveness_ratio(0);
 	set_randomness_ratio(0);
 	set_trail_lifetime(0.3);
-	set_visibility_aabb(AABB(Vector3(-4, -4, -4), Vector3(8, 8, 8)));
+	set_visibility_aabb(AABB(Hector3(-4, -4, -4), Hector3(8, 8, 8)));
 	set_use_local_coordinates(false);
 	set_draw_passes(1);
 	set_draw_order(DRAW_ORDER_INDEX);

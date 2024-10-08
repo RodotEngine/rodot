@@ -11,11 +11,11 @@ namespace Godot
     /// 3×3 matrix used for 3D rotation and scale.
     /// Almost always used as an orthogonal basis for a Transform.
     ///
-    /// Contains 3 vector fields X, Y and Z as its columns, which are typically
-    /// interpreted as the local basis vectors of a 3D transformation. For such use,
+    /// Contains 3 Hector fields X, Y and Z as its columns, which are typically
+    /// interpreted as the local basis Hectors of a 3D transformation. For such use,
     /// it is composed of a scaling and a rotation matrix, in that order (M = R.S).
     ///
-    /// Can also be accessed as array of 3D vectors. These vectors are normally
+    /// Can also be accessed as array of 3D Hectors. These Hectors are normally
     /// orthogonal to each other, but are not necessarily normalized (due to scaling).
     ///
     /// For more information, read this documentation article:
@@ -28,63 +28,63 @@ namespace Godot
         // NOTE: x, y and z are public-only. Use Column0, Column1 and Column2 internally.
 
         /// <summary>
-        /// The basis matrix's X vector (column 0).
+        /// The basis matrix's X Hector (column 0).
         /// </summary>
         /// <value>Equivalent to <see cref="Column0"/> and array index <c>[0]</c>.</value>
-        public Vector3 X
+        public Hector3 X
         {
             readonly get => Column0;
             set => Column0 = value;
         }
 
         /// <summary>
-        /// The basis matrix's Y vector (column 1).
+        /// The basis matrix's Y Hector (column 1).
         /// </summary>
         /// <value>Equivalent to <see cref="Column1"/> and array index <c>[1]</c>.</value>
-        public Vector3 Y
+        public Hector3 Y
         {
             readonly get => Column1;
             set => Column1 = value;
         }
 
         /// <summary>
-        /// The basis matrix's Z vector (column 2).
+        /// The basis matrix's Z Hector (column 2).
         /// </summary>
         /// <value>Equivalent to <see cref="Column2"/> and array index <c>[2]</c>.</value>
-        public Vector3 Z
+        public Hector3 Z
         {
             readonly get => Column2;
             set => Column2 = value;
         }
 
         /// <summary>
-        /// Row 0 of the basis matrix. Shows which vectors contribute
+        /// Row 0 of the basis matrix. Shows which Hectors contribute
         /// to the X direction. Rows are not very useful for user code,
         /// but are more efficient for some internal calculations.
         /// </summary>
-        public Vector3 Row0;
+        public Hector3 Row0;
 
         /// <summary>
-        /// Row 1 of the basis matrix. Shows which vectors contribute
+        /// Row 1 of the basis matrix. Shows which Hectors contribute
         /// to the Y direction. Rows are not very useful for user code,
         /// but are more efficient for some internal calculations.
         /// </summary>
-        public Vector3 Row1;
+        public Hector3 Row1;
 
         /// <summary>
-        /// Row 2 of the basis matrix. Shows which vectors contribute
+        /// Row 2 of the basis matrix. Shows which Hectors contribute
         /// to the Z direction. Rows are not very useful for user code,
         /// but are more efficient for some internal calculations.
         /// </summary>
-        public Vector3 Row2;
+        public Hector3 Row2;
 
         /// <summary>
-        /// Column 0 of the basis matrix (the X vector).
+        /// Column 0 of the basis matrix (the X Hector).
         /// </summary>
         /// <value>Equivalent to <see cref="X"/> and array index <c>[0]</c>.</value>
-        public Vector3 Column0
+        public Hector3 Column0
         {
-            readonly get => new Vector3(Row0.X, Row1.X, Row2.X);
+            readonly get => new Hector3(Row0.X, Row1.X, Row2.X);
             set
             {
                 Row0.X = value.X;
@@ -94,12 +94,12 @@ namespace Godot
         }
 
         /// <summary>
-        /// Column 1 of the basis matrix (the Y vector).
+        /// Column 1 of the basis matrix (the Y Hector).
         /// </summary>
         /// <value>Equivalent to <see cref="Y"/> and array index <c>[1]</c>.</value>
-        public Vector3 Column1
+        public Hector3 Column1
         {
-            readonly get => new Vector3(Row0.Y, Row1.Y, Row2.Y);
+            readonly get => new Hector3(Row0.Y, Row1.Y, Row2.Y);
             set
             {
                 Row0.Y = value.X;
@@ -109,12 +109,12 @@ namespace Godot
         }
 
         /// <summary>
-        /// Column 2 of the basis matrix (the Z vector).
+        /// Column 2 of the basis matrix (the Z Hector).
         /// </summary>
         /// <value>Equivalent to <see cref="Z"/> and array index <c>[2]</c>.</value>
-        public Vector3 Column2
+        public Hector3 Column2
         {
-            readonly get => new Vector3(Row0.Z, Row1.Z, Row2.Z);
+            readonly get => new Hector3(Row0.Z, Row1.Z, Row2.Z);
             set
             {
                 Row0.Z = value.X;
@@ -127,12 +127,12 @@ namespace Godot
         /// Assuming that the matrix is the combination of a rotation and scaling,
         /// return the absolute value of scaling factors along each axis.
         /// </summary>
-        public readonly Vector3 Scale
+        public readonly Hector3 Scale
         {
             get
             {
                 real_t detSign = Mathf.Sign(Determinant());
-                return detSign * new Vector3
+                return detSign * new Hector3
                 (
                     Column0.Length(),
                     Column1.Length(),
@@ -142,14 +142,14 @@ namespace Godot
         }
 
         /// <summary>
-        /// Access whole columns in the form of <see cref="Vector3"/>.
+        /// Access whole columns in the form of <see cref="Hector3"/>.
         /// </summary>
-        /// <param name="column">Which column vector.</param>
+        /// <param name="column">Which column Hector.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="column"/> is not 0, 1, 2 or 3.
         /// </exception>
         /// <value>The basis column.</value>
-        public Vector3 this[int column]
+        public Hector3 this[int column]
         {
             readonly get
             {
@@ -198,13 +198,13 @@ namespace Godot
             }
             set
             {
-                Vector3 columnVector = this[column];
-                columnVector[row] = value;
-                this[column] = columnVector;
+                Hector3 columnHector = this[column];
+                columnHector[row] = value;
+                this[column] = columnHector;
             }
         }
 
-        internal void SetQuaternionScale(Quaternion quaternion, Vector3 scale)
+        internal void SetQuaternionScale(Quaternion quaternion, Hector3 scale)
         {
             SetDiagonal(scale);
             Rotate(quaternion);
@@ -215,11 +215,11 @@ namespace Godot
             this = new Basis(quaternion) * this;
         }
 
-        private void SetDiagonal(Vector3 diagonal)
+        private void SetDiagonal(Hector3 diagonal)
         {
-            Row0 = new Vector3(diagonal.X, 0, 0);
-            Row1 = new Vector3(0, diagonal.Y, 0);
-            Row2 = new Vector3(0, 0, diagonal.Z);
+            Row0 = new Hector3(diagonal.X, 0, 0);
+            Row1 = new Hector3(0, diagonal.Y, 0);
+            Row2 = new Hector3(0, 0, diagonal.Z);
         }
 
         /// <summary>
@@ -244,15 +244,15 @@ namespace Godot
         /// Returns the basis's rotation in the form of Euler angles.
         /// The Euler order depends on the <paramref name="order"/> parameter,
         /// by default it uses the YXZ convention: when decomposing,
-        /// first Z, then X, and Y last. The returned vector contains
+        /// first Z, then X, and Y last. The returned Hector contains
         /// the rotation angles in the format (X angle, Y angle, Z angle).
         ///
         /// Consider using the <see cref="GetRotationQuaternion"/> method instead, which
         /// returns a <see cref="Quaternion"/> quaternion instead of Euler angles.
         /// </summary>
         /// <param name="order">The Euler order to use. By default, use YXZ order (most common).</param>
-        /// <returns>A <see cref="Vector3"/> representing the basis rotation in Euler angles.</returns>
-        public readonly Vector3 GetEuler(EulerOrder order = EulerOrder.Yxz)
+        /// <returns>A <see cref="Hector3"/> representing the basis rotation in Euler angles.</returns>
+        public readonly Hector3 GetEuler(EulerOrder order = EulerOrder.Yxz)
         {
             switch (order)
             {
@@ -264,7 +264,7 @@ namespace Godot
                     // rot =  cy*cz          -cy*sz           sy
                     //        cz*sx*sy+cx*sz  cx*cz-sx*sy*sz -cy*sx
                     //       -cx*cz*sy+sx*sz  cz*sx+cx*sy*sz  cx*cy
-                    Vector3 euler;
+                    Hector3 euler;
                     real_t sy = Row0[2];
                     if (sy < (1.0f - Mathf.Epsilon))
                     {
@@ -308,7 +308,7 @@ namespace Godot
                     // rot =  cz*cy             -sz             cz*sy
                     //        sx*sy+cx*cy*sz    cx*cz           cx*sz*sy-cy*sx
                     //        cy*sx*sz          cz*sx           cx*cy+sx*sz*sy
-                    Vector3 euler;
+                    Hector3 euler;
                     real_t sz = Row0[1];
                     if (sz < (1.0f - Mathf.Epsilon))
                     {
@@ -343,7 +343,7 @@ namespace Godot
                     // rot =  cy*cz+sy*sx*sz    cz*sy*sx-cy*sz        cx*sy
                     //        cx*sz             cx*cz                 -sx
                     //        cy*sx*sz-cz*sy    cy*cz*sx+sy*sz        cy*cx
-                    Vector3 euler;
+                    Hector3 euler;
                     real_t m12 = Row1[2];
                     if (m12 < (1 - Mathf.Epsilon))
                     {
@@ -388,7 +388,7 @@ namespace Godot
                     // rot =  cy*cz             sy*sx-cy*cx*sz     cx*sy+cy*sz*sx
                     //        sz                cz*cx              -cz*sx
                     //        -cz*sy            cy*sx+cx*sy*sz     cy*cx-sy*sz*sx
-                    Vector3 euler;
+                    Hector3 euler;
                     real_t sz = Row1[0];
                     if (sz < (1.0f - Mathf.Epsilon))
                     {
@@ -423,7 +423,7 @@ namespace Godot
                     // rot =  cz*cy-sz*sx*sy    -cx*sz                cz*sy+cy*sz*sx
                     //        cy*sz+cz*sx*sy    cz*cx                 sz*sy-cz*cy*sx
                     //        -cx*sy            sx                    cx*cy
-                    Vector3 euler;
+                    Hector3 euler;
                     real_t sx = Row2[1];
                     if (sx < (1.0f - Mathf.Epsilon))
                     {
@@ -458,7 +458,7 @@ namespace Godot
                     // rot =  cz*cy             cz*sy*sx-cx*sz        sz*sx+cz*cx*cy
                     //        cy*sz             cz*cx+sz*sy*sx        cx*sz*sy-cz*sx
                     //        -sy               cy*sx                 cy*cx
-                    Vector3 euler;
+                    Hector3 euler;
                     real_t sy = Row2[0];
                     if (sy < (1.0f - Mathf.Epsilon))
                     {
@@ -557,7 +557,7 @@ namespace Godot
             {
                 // Ensure that the determinant is 1, such that result is a proper
                 // rotation matrix which can be represented by Euler angles.
-                orthonormalizedBasis = orthonormalizedBasis.Scaled(-Vector3.One);
+                orthonormalizedBasis = orthonormalizedBasis.Scaled(-Hector3.One);
             }
 
             return orthonormalizedBasis.GetQuaternion();
@@ -601,7 +601,7 @@ namespace Godot
         /// Returns <see langword="true"/> if this basis is finite, by calling
         /// <see cref="Mathf.IsFinite(real_t)"/> on each component.
         /// </summary>
-        /// <returns>Whether this vector is finite or not.</returns>
+        /// <returns>Whether this Hector is finite or not.</returns>
         public readonly bool IsFinite()
         {
             return Row0.IsFinite() && Row1.IsFinite() && Row2.IsFinite();
@@ -619,53 +619,53 @@ namespace Godot
         /// <summary>
         /// Creates a <see cref="Basis"/> with a rotation such that the forward
         /// axis (-Z) points towards the <paramref name="target"/> position.
-        /// The up axis (+Y) points as close to the <paramref name="up"/> vector
+        /// The up axis (+Y) points as close to the <paramref name="up"/> Hector
         /// as possible while staying perpendicular to the forward axis.
         /// The resulting Basis is orthonormalized.
-        /// The <paramref name="target"/> and <paramref name="up"/> vectors
+        /// The <paramref name="target"/> and <paramref name="up"/> Hectors
         /// cannot be zero, and cannot be parallel to each other.
         /// </summary>
         /// <param name="target">The position to look at.</param>
         /// <param name="up">The relative up direction.</param>
         /// <param name="useModelFront">
         /// If true, then the model is oriented in reverse,
-        /// towards the model front axis (+Z, Vector3.ModelFront),
+        /// towards the model front axis (+Z, Hector3.ModelFront),
         /// which is more useful for orienting 3D models.
         /// </param>
         /// <returns>The resulting basis matrix.</returns>
-        public static Basis LookingAt(Vector3 target, Vector3? up = null, bool useModelFront = false)
+        public static Basis LookingAt(Hector3 target, Hector3? up = null, bool useModelFront = false)
         {
-            up ??= Vector3.Up;
+            up ??= Hector3.Up;
 #if DEBUG
             if (target.IsZeroApprox())
             {
-                throw new ArgumentException("The vector can't be zero.", nameof(target));
+                throw new ArgumentException("The Hector can't be zero.", nameof(target));
             }
             if (up.Value.IsZeroApprox())
             {
-                throw new ArgumentException("The vector can't be zero.", nameof(up));
+                throw new ArgumentException("The Hector can't be zero.", nameof(up));
             }
 #endif
-            Vector3 column2 = target.Normalized();
+            Hector3 column2 = target.Normalized();
             if (!useModelFront)
             {
                 column2 = -column2;
             }
-            Vector3 column0 = up.Value.Cross(column2);
+            Hector3 column0 = up.Value.Cross(column2);
 #if DEBUG
             if (column0.IsZeroApprox())
             {
-                throw new ArgumentException("The target vector and up vector can't be parallel to each other.");
+                throw new ArgumentException("The target Hector and up Hector can't be parallel to each other.");
             }
 #endif
             column0.Normalize();
-            Vector3 column1 = column2.Cross(column0);
+            Hector3 column1 = column2.Cross(column0);
             return new Basis(column0, column1, column2);
         }
 
-        /// <inheritdoc cref="LookingAt(Vector3, Nullable{Vector3}, bool)"/>
+        /// <inheritdoc cref="LookingAt(Hector3, Nullable{Hector3}, bool)"/>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static Basis LookingAt(Vector3 target, Vector3 up)
+        public static Basis LookingAt(Hector3 target, Hector3 up)
         {
             return LookingAt(target, up, false);
         }
@@ -678,9 +678,9 @@ namespace Godot
         /// <returns>An orthonormalized basis matrix.</returns>
         public readonly Basis Orthonormalized()
         {
-            Vector3 column0 = this[0];
-            Vector3 column1 = this[1];
-            Vector3 column2 = this[2];
+            Hector3 column0 = this[0];
+            Hector3 column1 = this[1];
+            Hector3 column2 = this[2];
 
             column0.Normalize();
             column1 = column1 - column0 * column0.Dot(column1);
@@ -693,12 +693,12 @@ namespace Godot
 
         /// <summary>
         /// Introduce an additional rotation around the given <paramref name="axis"/>
-        /// by <paramref name="angle"/> (in radians). The axis must be a normalized vector.
+        /// by <paramref name="angle"/> (in radians). The axis must be a normalized Hector.
         /// </summary>
         /// <param name="axis">The axis to rotate around. Must be normalized.</param>
         /// <param name="angle">The angle to rotate, in radians.</param>
         /// <returns>The rotated basis matrix.</returns>
-        public readonly Basis Rotated(Vector3 axis, real_t angle)
+        public readonly Basis Rotated(Hector3 axis, real_t angle)
         {
             return new Basis(axis, angle) * this;
         }
@@ -708,7 +708,7 @@ namespace Godot
         /// </summary>
         /// <param name="scale">The scale to introduce.</param>
         /// <returns>The scaled basis matrix.</returns>
-        public readonly Basis Scaled(Vector3 scale)
+        public readonly Basis Scaled(Hector3 scale)
         {
             Basis b = this;
             b.Row0 *= scale.X;
@@ -740,9 +740,9 @@ namespace Godot
         /// <summary>
         /// Transposed dot product with the X axis of the matrix.
         /// </summary>
-        /// <param name="with">A vector to calculate the dot product with.</param>
+        /// <param name="with">A Hector to calculate the dot product with.</param>
         /// <returns>The resulting dot product.</returns>
-        public readonly real_t Tdotx(Vector3 with)
+        public readonly real_t Tdotx(Hector3 with)
         {
             return Row0[0] * with[0] + Row1[0] * with[1] + Row2[0] * with[2];
         }
@@ -750,9 +750,9 @@ namespace Godot
         /// <summary>
         /// Transposed dot product with the Y axis of the matrix.
         /// </summary>
-        /// <param name="with">A vector to calculate the dot product with.</param>
+        /// <param name="with">A Hector to calculate the dot product with.</param>
         /// <returns>The resulting dot product.</returns>
-        public readonly real_t Tdoty(Vector3 with)
+        public readonly real_t Tdoty(Hector3 with)
         {
             return Row0[1] * with[0] + Row1[1] * with[1] + Row2[1] * with[2];
         }
@@ -760,9 +760,9 @@ namespace Godot
         /// <summary>
         /// Transposed dot product with the Z axis of the matrix.
         /// </summary>
-        /// <param name="with">A vector to calculate the dot product with.</param>
+        /// <param name="with">A Hector to calculate the dot product with.</param>
         /// <returns>The resulting dot product.</returns>
-        public readonly real_t Tdotz(Vector3 with)
+        public readonly real_t Tdotz(Hector3 with)
         {
             return Row0[2] * with[0] + Row1[2] * with[1] + Row2[2] * with[2];
         }
@@ -824,22 +824,22 @@ namespace Godot
         /// This is used as a replacement for <c>Basis()</c> in GDScript.
         /// Do not use <c>new Basis()</c> with no arguments in C#, because it sets all values to zero.
         /// </summary>
-        /// <value>Equivalent to <c>new Basis(Vector3.Right, Vector3.Up, Vector3.Back)</c>.</value>
+        /// <value>Equivalent to <c>new Basis(Hector3.Right, Hector3.Up, Hector3.Back)</c>.</value>
         public static Basis Identity { get { return _identity; } }
         /// <summary>
         /// The basis that will flip something along the X axis when used in a transformation.
         /// </summary>
-        /// <value>Equivalent to <c>new Basis(Vector3.Left, Vector3.Up, Vector3.Back)</c>.</value>
+        /// <value>Equivalent to <c>new Basis(Hector3.Left, Hector3.Up, Hector3.Back)</c>.</value>
         public static Basis FlipX { get { return _flipX; } }
         /// <summary>
         /// The basis that will flip something along the Y axis when used in a transformation.
         /// </summary>
-        /// <value>Equivalent to <c>new Basis(Vector3.Right, Vector3.Down, Vector3.Back)</c>.</value>
+        /// <value>Equivalent to <c>new Basis(Hector3.Right, Hector3.Down, Hector3.Back)</c>.</value>
         public static Basis FlipY { get { return _flipY; } }
         /// <summary>
         /// The basis that will flip something along the Z axis when used in a transformation.
         /// </summary>
-        /// <value>Equivalent to <c>new Basis(Vector3.Right, Vector3.Up, Vector3.Forward)</c>.</value>
+        /// <value>Equivalent to <c>new Basis(Hector3.Right, Hector3.Up, Hector3.Forward)</c>.</value>
         public static Basis FlipZ { get { return _flipZ; } }
 
         /// <summary>
@@ -863,20 +863,20 @@ namespace Godot
             real_t yz = quaternion.Y * zs;
             real_t zz = quaternion.Z * zs;
 
-            Row0 = new Vector3(1.0f - (yy + zz), xy - wz, xz + wy);
-            Row1 = new Vector3(xy + wz, 1.0f - (xx + zz), yz - wx);
-            Row2 = new Vector3(xz - wy, yz + wx, 1.0f - (xx + yy));
+            Row0 = new Hector3(1.0f - (yy + zz), xy - wz, xz + wy);
+            Row1 = new Hector3(xy + wz, 1.0f - (xx + zz), yz - wx);
+            Row2 = new Hector3(xz - wy, yz + wx, 1.0f - (xx + yy));
         }
 
         /// <summary>
         /// Constructs a pure rotation basis matrix, rotated around the given <paramref name="axis"/>
-        /// by <paramref name="angle"/> (in radians). The axis must be a normalized vector.
+        /// by <paramref name="angle"/> (in radians). The axis must be a normalized Hector.
         /// </summary>
         /// <param name="axis">The axis to rotate around. Must be normalized.</param>
         /// <param name="angle">The angle to rotate, in radians.</param>
-        public Basis(Vector3 axis, real_t angle)
+        public Basis(Hector3 axis, real_t angle)
         {
-            Vector3 axisSq = new Vector3(axis.X * axis.X, axis.Y * axis.Y, axis.Z * axis.Z);
+            Hector3 axisSq = new Hector3(axis.X * axis.X, axis.Y * axis.Y, axis.Z * axis.Z);
             (real_t sin, real_t cos) = Mathf.SinCos(angle);
 
             Row0.X = axisSq.X + cos * (1.0f - axisSq.X);
@@ -902,16 +902,16 @@ namespace Godot
         }
 
         /// <summary>
-        /// Constructs a basis matrix from 3 axis vectors (matrix columns).
+        /// Constructs a basis matrix from 3 axis Hectors (matrix columns).
         /// </summary>
-        /// <param name="column0">The X vector, or Column0.</param>
-        /// <param name="column1">The Y vector, or Column1.</param>
-        /// <param name="column2">The Z vector, or Column2.</param>
-        public Basis(Vector3 column0, Vector3 column1, Vector3 column2)
+        /// <param name="column0">The X Hector, or Column0.</param>
+        /// <param name="column1">The Y Hector, or Column1.</param>
+        /// <param name="column2">The Z Hector, or Column2.</param>
+        public Basis(Hector3 column0, Hector3 column1, Hector3 column2)
         {
-            Row0 = new Vector3(column0.X, column1.X, column2.X);
-            Row1 = new Vector3(column0.Y, column1.Y, column2.Y);
-            Row2 = new Vector3(column0.Z, column1.Z, column2.Z);
+            Row0 = new Hector3(column0.X, column1.X, column2.X);
+            Row1 = new Hector3(column0.Y, column1.Y, column2.Y);
+            Row2 = new Hector3(column0.Z, column1.Z, column2.Z);
             // Same as:
             // Column0 = column0;
             // Column1 = column1;
@@ -923,20 +923,20 @@ namespace Godot
         /// Constructs a transformation matrix from the given components.
         /// Arguments are named such that xy is equal to calling <c>X.Y</c>.
         /// </summary>
-        /// <param name="xx">The X component of the X column vector, accessed via <c>b.X.X</c> or <c>[0][0]</c>.</param>
-        /// <param name="yx">The X component of the Y column vector, accessed via <c>b.Y.X</c> or <c>[1][0]</c>.</param>
-        /// <param name="zx">The X component of the Z column vector, accessed via <c>b.Z.X</c> or <c>[2][0]</c>.</param>
-        /// <param name="xy">The Y component of the X column vector, accessed via <c>b.X.Y</c> or <c>[0][1]</c>.</param>
-        /// <param name="yy">The Y component of the Y column vector, accessed via <c>b.Y.Y</c> or <c>[1][1]</c>.</param>
-        /// <param name="zy">The Y component of the Z column vector, accessed via <c>b.Y.Y</c> or <c>[2][1]</c>.</param>
-        /// <param name="xz">The Z component of the X column vector, accessed via <c>b.X.Y</c> or <c>[0][2]</c>.</param>
-        /// <param name="yz">The Z component of the Y column vector, accessed via <c>b.Y.Y</c> or <c>[1][2]</c>.</param>
-        /// <param name="zz">The Z component of the Z column vector, accessed via <c>b.Y.Y</c> or <c>[2][2]</c>.</param>
+        /// <param name="xx">The X component of the X column Hector, accessed via <c>b.X.X</c> or <c>[0][0]</c>.</param>
+        /// <param name="yx">The X component of the Y column Hector, accessed via <c>b.Y.X</c> or <c>[1][0]</c>.</param>
+        /// <param name="zx">The X component of the Z column Hector, accessed via <c>b.Z.X</c> or <c>[2][0]</c>.</param>
+        /// <param name="xy">The Y component of the X column Hector, accessed via <c>b.X.Y</c> or <c>[0][1]</c>.</param>
+        /// <param name="yy">The Y component of the Y column Hector, accessed via <c>b.Y.Y</c> or <c>[1][1]</c>.</param>
+        /// <param name="zy">The Y component of the Z column Hector, accessed via <c>b.Y.Y</c> or <c>[2][1]</c>.</param>
+        /// <param name="xz">The Z component of the X column Hector, accessed via <c>b.X.Y</c> or <c>[0][2]</c>.</param>
+        /// <param name="yz">The Z component of the Y column Hector, accessed via <c>b.Y.Y</c> or <c>[1][2]</c>.</param>
+        /// <param name="zz">The Z component of the Z column Hector, accessed via <c>b.Y.Y</c> or <c>[2][2]</c>.</param>
         public Basis(real_t xx, real_t yx, real_t zx, real_t xy, real_t yy, real_t zy, real_t xz, real_t yz, real_t zz)
         {
-            Row0 = new Vector3(xx, yx, zx);
-            Row1 = new Vector3(xy, yy, zy);
-            Row2 = new Vector3(xz, yz, zz);
+            Row0 = new Hector3(xx, yx, zx);
+            Row1 = new Hector3(xy, yy, zy);
+            Row2 = new Hector3(xz, yz, zz);
         }
 
         /// <summary>
@@ -944,30 +944,30 @@ namespace Godot
         /// </summary>
         /// <param name="euler">The Euler angles to use.</param>
         /// <param name="order">The order to compose the Euler angles.</param>
-        public static Basis FromEuler(Vector3 euler, EulerOrder order = EulerOrder.Yxz)
+        public static Basis FromEuler(Hector3 euler, EulerOrder order = EulerOrder.Yxz)
         {
             (real_t sin, real_t cos) = Mathf.SinCos(euler.X);
             Basis xmat = new Basis
             (
-                new Vector3(1, 0, 0),
-                new Vector3(0, cos, sin),
-                new Vector3(0, -sin, cos)
+                new Hector3(1, 0, 0),
+                new Hector3(0, cos, sin),
+                new Hector3(0, -sin, cos)
             );
 
             (sin, cos) = Mathf.SinCos(euler.Y);
             Basis ymat = new Basis
             (
-                new Vector3(cos, 0, -sin),
-                new Vector3(0, 1, 0),
-                new Vector3(sin, 0, cos)
+                new Hector3(cos, 0, -sin),
+                new Hector3(0, 1, 0),
+                new Hector3(sin, 0, cos)
             );
 
             (sin, cos) = Mathf.SinCos(euler.Z);
             Basis zmat = new Basis
             (
-                new Vector3(cos, sin, 0),
-                new Vector3(-sin, cos, 0),
-                new Vector3(0, 0, 1)
+                new Hector3(cos, sin, 0),
+                new Hector3(-sin, cos, 0),
+                new Hector3(0, 0, 1)
             );
 
             switch (order)
@@ -994,9 +994,9 @@ namespace Godot
         /// The scale values are set as the main diagonal of the matrix,
         /// and all of the other parts of the matrix are zero.
         /// </summary>
-        /// <param name="scale">The scale Vector3.</param>
+        /// <param name="scale">The scale Hector3.</param>
         /// <returns>A pure scale Basis matrix.</returns>
-        public static Basis FromScale(Vector3 scale)
+        public static Basis FromScale(Hector3 scale)
         {
             return new Basis(
                 scale.X, 0, 0,
@@ -1024,38 +1024,38 @@ namespace Godot
         }
 
         /// <summary>
-        /// Returns a Vector3 transformed (multiplied) by the basis matrix.
+        /// Returns a Hector3 transformed (multiplied) by the basis matrix.
         /// </summary>
         /// <param name="basis">The basis matrix transformation to apply.</param>
-        /// <param name="vector">A Vector3 to transform.</param>
-        /// <returns>The transformed Vector3.</returns>
-        public static Vector3 operator *(Basis basis, Vector3 vector)
+        /// <param name="Hector">A Hector3 to transform.</param>
+        /// <returns>The transformed Hector3.</returns>
+        public static Hector3 operator *(Basis basis, Hector3 Hector)
         {
-            return new Vector3
+            return new Hector3
             (
-                basis.Row0.Dot(vector),
-                basis.Row1.Dot(vector),
-                basis.Row2.Dot(vector)
+                basis.Row0.Dot(Hector),
+                basis.Row1.Dot(Hector),
+                basis.Row2.Dot(Hector)
             );
         }
 
         /// <summary>
-        /// Returns a Vector3 transformed (multiplied) by the inverse basis matrix,
+        /// Returns a Hector3 transformed (multiplied) by the inverse basis matrix,
         /// under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection
         /// is fine, scaling/skew is not).
-        /// <c>vector * basis</c> is equivalent to <c>basis.Transposed() * vector</c>. See <see cref="Transposed"/>.
-        /// For transforming by inverse of a non-orthonormal basis (e.g. with scaling) <c>basis.Inverse() * vector</c> can be used instead. See <see cref="Inverse"/>.
+        /// <c>Hector * basis</c> is equivalent to <c>basis.Transposed() * Hector</c>. See <see cref="Transposed"/>.
+        /// For transforming by inverse of a non-orthonormal basis (e.g. with scaling) <c>basis.Inverse() * Hector</c> can be used instead. See <see cref="Inverse"/>.
         /// </summary>
-        /// <param name="vector">A Vector3 to inversely transform.</param>
+        /// <param name="Hector">A Hector3 to inversely transform.</param>
         /// <param name="basis">The basis matrix transformation to apply.</param>
-        /// <returns>The inversely transformed vector.</returns>
-        public static Vector3 operator *(Vector3 vector, Basis basis)
+        /// <returns>The inversely transformed Hector.</returns>
+        public static Hector3 operator *(Hector3 Hector, Basis basis)
         {
-            return new Vector3
+            return new Hector3
             (
-                basis.Row0[0] * vector.X + basis.Row1[0] * vector.Y + basis.Row2[0] * vector.Z,
-                basis.Row0[1] * vector.X + basis.Row1[1] * vector.Y + basis.Row2[1] * vector.Z,
-                basis.Row0[2] * vector.X + basis.Row1[2] * vector.Y + basis.Row2[2] * vector.Z
+                basis.Row0[0] * Hector.X + basis.Row1[0] * Hector.Y + basis.Row2[0] * Hector.Z,
+                basis.Row0[1] * Hector.X + basis.Row1[1] * Hector.Y + basis.Row2[1] * Hector.Z,
+                basis.Row0[2] * Hector.X + basis.Row1[2] * Hector.Y + basis.Row2[2] * Hector.Z
             );
         }
 
@@ -1112,7 +1112,7 @@ namespace Godot
 
         /// <summary>
         /// Returns <see langword="true"/> if this basis and <paramref name="other"/> are approximately equal,
-        /// by running <see cref="Vector3.IsEqualApprox(Vector3)"/> on each component.
+        /// by running <see cref="Hector3.IsEqualApprox(Hector3)"/> on each component.
         /// </summary>
         /// <param name="other">The other basis to compare.</param>
         /// <returns>Whether or not the bases are approximately equal.</returns>

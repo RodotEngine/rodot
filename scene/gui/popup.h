@@ -33,14 +33,14 @@
 
 #include "scene/main/window.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class Panel;
 
 class Popup : public Window {
 	GDCLASS(Popup, Window);
 
-	LocalVector<Window *> visible_parents;
+	LocalHector<Window *> visible_parents;
 	bool popped_up = false;
 
 public:

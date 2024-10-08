@@ -100,11 +100,11 @@ private:
 	Button *show_hidden = nullptr;
 	Button *show_filename_filter_button = nullptr;
 
-	Vector<String> filters;
+	Hector<String> filters;
 	String file_name_filter;
 	bool show_filename_filter = false;
 
-	Vector<String> local_history;
+	Hector<String> local_history;
 	int local_history_pos = 0;
 	void _push_history();
 
@@ -141,14 +141,14 @@ private:
 
 	struct Option {
 		String name;
-		Vector<String> values;
+		Hector<String> values;
 		int default_idx = 0;
 	};
 
 	static inline PropertyListHelper base_property_helper;
 	PropertyListHelper property_helper;
 
-	Vector<Option> options;
+	Hector<Option> options;
 	Dictionary selected_options;
 	bool options_dirty = false;
 
@@ -189,7 +189,7 @@ private:
 	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 	void _native_popup();
-	void _native_dialog_cb(bool p_ok, const Vector<String> &p_files, int p_filter, const Dictionary &p_selected_options);
+	void _native_dialog_cb(bool p_ok, const Hector<String> &p_files, int p_filter, const Dictionary &p_selected_options);
 
 	bool _is_open_should_be_disabled();
 
@@ -217,14 +217,14 @@ public:
 	void popup_file_dialog();
 	void clear_filters();
 	void add_filter(const String &p_filter, const String &p_description = "");
-	void set_filters(const Vector<String> &p_filters);
-	Vector<String> get_filters() const;
+	void set_filters(const Hector<String> &p_filters);
+	Hector<String> get_filters() const;
 	void clear_filename_filter();
 	void set_filename_filter(const String &p_filename_filter);
 	String get_filename_filter() const;
 
 	void set_enable_multiple_selection(bool p_enable);
-	Vector<String> get_selected_files() const;
+	Hector<String> get_selected_files() const;
 
 	String get_current_dir() const;
 	String get_current_file() const;
@@ -234,13 +234,13 @@ public:
 	void set_current_path(const String &p_path);
 
 	String get_option_name(int p_option) const;
-	Vector<String> get_option_values(int p_option) const;
+	Hector<String> get_option_values(int p_option) const;
 	int get_option_default(int p_option) const;
 	void set_option_name(int p_option, const String &p_name);
-	void set_option_values(int p_option, const Vector<String> &p_values);
+	void set_option_values(int p_option, const Hector<String> &p_values);
 	void set_option_default(int p_option, int p_index);
 
-	void add_option(const String &p_name, const Vector<String> &p_values, int p_index);
+	void add_option(const String &p_name, const Hector<String> &p_values, int p_index);
 
 	void set_option_count(int p_count);
 	int get_option_count() const;

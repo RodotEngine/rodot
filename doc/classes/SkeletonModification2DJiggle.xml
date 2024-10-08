@@ -39,10 +39,10 @@
 			</description>
 		</method>
 		<method name="get_jiggle_joint_gravity" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="joint_idx" type="int" />
 			<description>
-				Returns a [Vector2] representing the amount of gravity the Jiggle joint at [param joint_idx] is influenced by.
+				Returns a [Hector2] representing the amount of gravity the Jiggle joint at [param joint_idx] is influenced by.
 			</description>
 		</method>
 		<method name="get_jiggle_joint_mass" qualifiers="const">
@@ -113,9 +113,9 @@
 		<method name="set_jiggle_joint_gravity">
 			<return type="void" />
 			<param index="0" name="joint_idx" type="int" />
-			<param index="1" name="gravity" type="Vector2" />
+			<param index="1" name="gravity" type="Hector2" />
 			<description>
-				Sets the gravity vector of the Jiggle joint at [param joint_idx].
+				Sets the gravity Hector of the Jiggle joint at [param joint_idx].
 			</description>
 		</method>
 		<method name="set_jiggle_joint_mass">
@@ -162,7 +162,7 @@
 		<member name="damping" type="float" setter="set_damping" getter="get_damping" default="0.75">
 			The default amount of damping applied to the Jiggle joints, if they are not overridden. Higher values lead to more of the calculated velocity being applied.
 		</member>
-		<member name="gravity" type="Vector2" setter="set_gravity" getter="get_gravity" default="Vector2(0, 6)">
+		<member name="gravity" type="Hector2" setter="set_gravity" getter="get_gravity" default="Hector2(0, 6)">
 			The default amount of gravity applied to the Jiggle joints, if they are not overridden.
 		</member>
 		<member name="jiggle_data_chain_length" type="int" setter="set_jiggle_data_chain_length" getter="get_jiggle_data_chain_length" default="0">
@@ -178,7 +178,7 @@
 			The NodePath to the node that is the target for the Jiggle modification. This node is what the Jiggle chain will attempt to rotate the bone chain to.
 		</member>
 		<member name="use_gravity" type="bool" setter="set_use_gravity" getter="get_use_gravity" default="false">
-			Whether the gravity vector, [member gravity], should be applied to the Jiggle joints, assuming they are not overriding the default settings.
+			Whether the gravity Hector, [member gravity], should be applied to the Jiggle joints, assuming they are not overriding the default settings.
 		</member>
 	</members>
 </class>

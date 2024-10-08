@@ -34,7 +34,7 @@
 #include "core/debugger/engine_profiler.h"
 #include "core/io/marshalls.h"
 #include "core/object/script_language.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/main/scene_tree.h"
 #include "scene/main/window.h"
 #include "scene/resources/packed_scene.h"
@@ -164,8 +164,8 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 
 	} else if (p_msg == "live_node_call") {
 		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
-		LocalVector<Variant> args;
-		LocalVector<Variant *> argptrs;
+		LocalHector<Variant> args;
+		LocalHector<Variant *> argptrs;
 		args.resize(p_args.size() - 2);
 		argptrs.resize(args.size());
 		for (uint32_t i = 0; i < args.size(); i++) {
@@ -176,8 +176,8 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 
 	} else if (p_msg == "live_res_call") {
 		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
-		LocalVector<Variant> args;
-		LocalVector<Variant *> argptrs;
+		LocalHector<Variant> args;
+		LocalHector<Variant *> argptrs;
 		args.resize(p_args.size() - 2);
 		argptrs.resize(args.size());
 		for (uint32_t i = 0; i < args.size(); i++) {
@@ -273,7 +273,7 @@ void SceneDebugger::_set_object_property(ObjectID p_id, const String &p_property
 
 	String prop_name = p_property;
 	if (p_property.begins_with("Members/")) {
-		Vector<String> ss = p_property.split("/");
+		Hector<String> ss = p_property.split("/");
 		prop_name = ss[ss.size() - 1];
 	}
 
@@ -878,7 +878,7 @@ void LiveEditor::_remove_node_func(const NodePath &p_at) {
 		return; //scene not editable
 	}
 
-	Vector<Node *> to_delete;
+	Hector<Node *> to_delete;
 
 	for (HashSet<Node *>::Iterator F = E->value.begin(); F; ++F) {
 		Node *n = *F;
@@ -916,7 +916,7 @@ void LiveEditor::_remove_and_keep_node_func(const NodePath &p_at, ObjectID p_kee
 		return; //scene not editable
 	}
 
-	Vector<Node *> to_remove;
+	Hector<Node *> to_remove;
 	for (HashSet<Node *>::Iterator F = E->value.begin(); F; ++F) {
 		Node *n = *F;
 

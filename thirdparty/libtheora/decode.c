@@ -716,7 +716,7 @@ static void oc_dec_mb_modes_unpack(oc_dec_ctx *_dec){
       If the bitstream doesn't contain each index exactly once, it's likely
        corrupt and the rest of the packet is garbage anyway, but this way we
        won't crash, and we'll decode SOMETHING.*/
-    /*LOOP VECTORIZES*/
+    /*LOOP HectorIZES*/
     for(mi=0;mi<OC_NMODES;mi++)scheme0_alphabet[mi]=OC_MODE_INTER_NOMV;
     for(mi=0;mi<OC_NMODES;mi++){
       val=oc_pack_read(&_dec->opb,3);
@@ -801,8 +801,8 @@ static oc_mv oc_mv_unpack(oc_pack_buf *_opb,const ogg_int16_t *_tree){
   return OC_MV(dx,dy);
 }
 
-/*Unpacks the list of motion vectors for INTER frames, and propagtes the macro
-   block modes and motion vectors to the individual fragments.*/
+/*Unpacks the list of motion Hectors for INTER frames, and propagtes the macro
+   block modes and motion Hectors to the individual fragments.*/
 static void oc_dec_mv_unpack_and_frag_modes_fill(oc_dec_ctx *_dec){
   const oc_mb_map        *mb_maps;
   const signed char      *mb_modes;
@@ -1502,7 +1502,7 @@ void oc_dec_dc_unpredict_mcu_plane_c(oc_dec_ctx *_dec,
 /*Reconstructs all coded fragments in a single MCU (one or two super block
    rows).
   This requires that each coded fragment have a proper macro block mode and
-   motion vector (if not in INTRA mode), and have its DC value decoded, with
+   motion Hector (if not in INTRA mode), and have its DC value decoded, with
    the DC prediction process reversed, and the number of coded and uncoded
    fragments in this plane of the MCU be counted.
   The token lists for each color plane and coefficient should also be filled

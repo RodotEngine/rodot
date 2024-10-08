@@ -105,11 +105,11 @@ void GLTFBufferView::set_vertex_attributes(bool p_attributes) {
 	vertex_attributes = p_attributes;
 }
 
-Vector<uint8_t> GLTFBufferView::load_buffer_view_data(const Ref<GLTFState> p_state) const {
-	ERR_FAIL_COND_V(p_state.is_null(), Vector<uint8_t>());
-	ERR_FAIL_COND_V_MSG(byte_stride > 0, Vector<uint8_t>(), "Buffer views with byte stride are not yet supported by this method.");
-	const TypedArray<Vector<uint8_t>> &buffers = p_state->get_buffers();
-	ERR_FAIL_INDEX_V(buffer, buffers.size(), Vector<uint8_t>());
+Hector<uint8_t> GLTFBufferView::load_buffer_view_data(const Ref<GLTFState> p_state) const {
+	ERR_FAIL_COND_V(p_state.is_null(), Hector<uint8_t>());
+	ERR_FAIL_COND_V_MSG(byte_stride > 0, Hector<uint8_t>(), "Buffer views with byte stride are not yet supported by this method.");
+	const TypedArray<Hector<uint8_t>> &buffers = p_state->get_buffers();
+	ERR_FAIL_INDEX_V(buffer, buffers.size(), Hector<uint8_t>());
 	const PackedByteArray &buffer_data = buffers[buffer];
 	const int64_t byte_end = byte_offset + byte_length;
 	return buffer_data.slice(byte_offset, byte_end);

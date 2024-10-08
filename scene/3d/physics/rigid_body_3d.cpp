@@ -340,7 +340,7 @@ real_t RigidBody3D::get_mass() const {
 	return mass;
 }
 
-void RigidBody3D::set_inertia(const Vector3 &p_inertia) {
+void RigidBody3D::set_inertia(const Hector3 &p_inertia) {
 	ERR_FAIL_COND(p_inertia.x < 0);
 	ERR_FAIL_COND(p_inertia.y < 0);
 	ERR_FAIL_COND(p_inertia.z < 0);
@@ -349,7 +349,7 @@ void RigidBody3D::set_inertia(const Vector3 &p_inertia) {
 	PhysicsServer3D::get_singleton()->body_set_param(get_rid(), PhysicsServer3D::BODY_PARAM_INERTIA, inertia);
 }
 
-const Vector3 &RigidBody3D::get_inertia() const {
+const Hector3 &RigidBody3D::get_inertia() const {
 	return inertia;
 }
 
@@ -362,9 +362,9 @@ void RigidBody3D::set_center_of_mass_mode(CenterOfMassMode p_mode) {
 
 	switch (center_of_mass_mode) {
 		case CENTER_OF_MASS_MODE_AUTO: {
-			center_of_mass = Vector3();
+			center_of_mass = Hector3();
 			PhysicsServer3D::get_singleton()->body_reset_mass_properties(get_rid());
-			if (inertia != Vector3()) {
+			if (inertia != Hector3()) {
 				PhysicsServer3D::get_singleton()->body_set_param(get_rid(), PhysicsServer3D::BODY_PARAM_INERTIA, inertia);
 			}
 		} break;
@@ -381,7 +381,7 @@ RigidBody3D::CenterOfMassMode RigidBody3D::get_center_of_mass_mode() const {
 	return center_of_mass_mode;
 }
 
-void RigidBody3D::set_center_of_mass(const Vector3 &p_center_of_mass) {
+void RigidBody3D::set_center_of_mass(const Hector3 &p_center_of_mass) {
 	if (center_of_mass == p_center_of_mass) {
 		return;
 	}
@@ -392,7 +392,7 @@ void RigidBody3D::set_center_of_mass(const Vector3 &p_center_of_mass) {
 	PhysicsServer3D::get_singleton()->body_set_param(get_rid(), PhysicsServer3D::BODY_PARAM_CENTER_OF_MASS, center_of_mass);
 }
 
-const Vector3 &RigidBody3D::get_center_of_mass() const {
+const Hector3 &RigidBody3D::get_center_of_mass() const {
 	return center_of_mass;
 }
 
@@ -460,28 +460,28 @@ real_t RigidBody3D::get_angular_damp() const {
 	return angular_damp;
 }
 
-void RigidBody3D::set_axis_velocity(const Vector3 &p_axis) {
-	Vector3 axis = p_axis.normalized();
+void RigidBody3D::set_axis_velocity(const Hector3 &p_axis) {
+	Hector3 axis = p_axis.normalized();
 	linear_velocity -= axis * axis.dot(linear_velocity);
 	linear_velocity += p_axis;
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_LINEAR_VELOCITY, linear_velocity);
 }
 
-void RigidBody3D::set_linear_velocity(const Vector3 &p_velocity) {
+void RigidBody3D::set_linear_velocity(const Hector3 &p_velocity) {
 	linear_velocity = p_velocity;
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_LINEAR_VELOCITY, linear_velocity);
 }
 
-Vector3 RigidBody3D::get_linear_velocity() const {
+Hector3 RigidBody3D::get_linear_velocity() const {
 	return linear_velocity;
 }
 
-void RigidBody3D::set_angular_velocity(const Vector3 &p_velocity) {
+void RigidBody3D::set_angular_velocity(const Hector3 &p_velocity) {
 	angular_velocity = p_velocity;
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_ANGULAR_VELOCITY, angular_velocity);
 }
 
-Vector3 RigidBody3D::get_angular_velocity() const {
+Hector3 RigidBody3D::get_angular_velocity() const {
 	return angular_velocity;
 }
 
@@ -533,58 +533,58 @@ int RigidBody3D::get_contact_count() const {
 	return contact_count;
 }
 
-void RigidBody3D::apply_central_impulse(const Vector3 &p_impulse) {
+void RigidBody3D::apply_central_impulse(const Hector3 &p_impulse) {
 	PhysicsServer3D::get_singleton()->body_apply_central_impulse(get_rid(), p_impulse);
 }
 
-void RigidBody3D::apply_impulse(const Vector3 &p_impulse, const Vector3 &p_position) {
+void RigidBody3D::apply_impulse(const Hector3 &p_impulse, const Hector3 &p_position) {
 	PhysicsServer3D *singleton = PhysicsServer3D::get_singleton();
 	singleton->body_apply_impulse(get_rid(), p_impulse, p_position);
 }
 
-void RigidBody3D::apply_torque_impulse(const Vector3 &p_impulse) {
+void RigidBody3D::apply_torque_impulse(const Hector3 &p_impulse) {
 	PhysicsServer3D::get_singleton()->body_apply_torque_impulse(get_rid(), p_impulse);
 }
 
-void RigidBody3D::apply_central_force(const Vector3 &p_force) {
+void RigidBody3D::apply_central_force(const Hector3 &p_force) {
 	PhysicsServer3D::get_singleton()->body_apply_central_force(get_rid(), p_force);
 }
 
-void RigidBody3D::apply_force(const Vector3 &p_force, const Vector3 &p_position) {
+void RigidBody3D::apply_force(const Hector3 &p_force, const Hector3 &p_position) {
 	PhysicsServer3D *singleton = PhysicsServer3D::get_singleton();
 	singleton->body_apply_force(get_rid(), p_force, p_position);
 }
 
-void RigidBody3D::apply_torque(const Vector3 &p_torque) {
+void RigidBody3D::apply_torque(const Hector3 &p_torque) {
 	PhysicsServer3D::get_singleton()->body_apply_torque(get_rid(), p_torque);
 }
 
-void RigidBody3D::add_constant_central_force(const Vector3 &p_force) {
+void RigidBody3D::add_constant_central_force(const Hector3 &p_force) {
 	PhysicsServer3D::get_singleton()->body_add_constant_central_force(get_rid(), p_force);
 }
 
-void RigidBody3D::add_constant_force(const Vector3 &p_force, const Vector3 &p_position) {
+void RigidBody3D::add_constant_force(const Hector3 &p_force, const Hector3 &p_position) {
 	PhysicsServer3D *singleton = PhysicsServer3D::get_singleton();
 	singleton->body_add_constant_force(get_rid(), p_force, p_position);
 }
 
-void RigidBody3D::add_constant_torque(const Vector3 &p_torque) {
+void RigidBody3D::add_constant_torque(const Hector3 &p_torque) {
 	PhysicsServer3D::get_singleton()->body_add_constant_torque(get_rid(), p_torque);
 }
 
-void RigidBody3D::set_constant_force(const Vector3 &p_force) {
+void RigidBody3D::set_constant_force(const Hector3 &p_force) {
 	PhysicsServer3D::get_singleton()->body_set_constant_force(get_rid(), p_force);
 }
 
-Vector3 RigidBody3D::get_constant_force() const {
+Hector3 RigidBody3D::get_constant_force() const {
 	return PhysicsServer3D::get_singleton()->body_get_constant_force(get_rid());
 }
 
-void RigidBody3D::set_constant_torque(const Vector3 &p_torque) {
+void RigidBody3D::set_constant_torque(const Hector3 &p_torque) {
 	PhysicsServer3D::get_singleton()->body_set_constant_torque(get_rid(), p_torque);
 }
 
-Vector3 RigidBody3D::get_constant_torque() const {
+Hector3 RigidBody3D::get_constant_torque() const {
 	return PhysicsServer3D::get_singleton()->body_get_constant_torque(get_rid());
 }
 
@@ -661,7 +661,7 @@ void RigidBody3D::_reload_physics_characteristics() {
 PackedStringArray RigidBody3D::get_configuration_warnings() const {
 	PackedStringArray warnings = CollisionObject3D::get_configuration_warnings();
 
-	Vector3 scale = get_transform().get_basis().get_scale();
+	Hector3 scale = get_transform().get_basis().get_scale();
 	if (ABS(scale.x - 1.0) > 0.05 || ABS(scale.y - 1.0) > 0.05 || ABS(scale.z - 1.0) > 0.05) {
 		warnings.push_back(RTR("Scale changes to RigidBody3D will be overridden by the physics engine when running.\nPlease change the size in children collision shapes instead."));
 	}
@@ -724,15 +724,15 @@ void RigidBody3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_axis_velocity", "axis_velocity"), &RigidBody3D::set_axis_velocity);
 
 	ClassDB::bind_method(D_METHOD("apply_central_impulse", "impulse"), &RigidBody3D::apply_central_impulse);
-	ClassDB::bind_method(D_METHOD("apply_impulse", "impulse", "position"), &RigidBody3D::apply_impulse, Vector3());
+	ClassDB::bind_method(D_METHOD("apply_impulse", "impulse", "position"), &RigidBody3D::apply_impulse, Hector3());
 	ClassDB::bind_method(D_METHOD("apply_torque_impulse", "impulse"), &RigidBody3D::apply_torque_impulse);
 
 	ClassDB::bind_method(D_METHOD("apply_central_force", "force"), &RigidBody3D::apply_central_force);
-	ClassDB::bind_method(D_METHOD("apply_force", "force", "position"), &RigidBody3D::apply_force, Vector3());
+	ClassDB::bind_method(D_METHOD("apply_force", "force", "position"), &RigidBody3D::apply_force, Hector3());
 	ClassDB::bind_method(D_METHOD("apply_torque", "torque"), &RigidBody3D::apply_torque);
 
 	ClassDB::bind_method(D_METHOD("add_constant_central_force", "force"), &RigidBody3D::add_constant_central_force);
-	ClassDB::bind_method(D_METHOD("add_constant_force", "force", "position"), &RigidBody3D::add_constant_force, Vector3());
+	ClassDB::bind_method(D_METHOD("add_constant_force", "force", "position"), &RigidBody3D::add_constant_force, Hector3());
 	ClassDB::bind_method(D_METHOD("add_constant_torque", "torque"), &RigidBody3D::add_constant_torque);
 
 	ClassDB::bind_method(D_METHOD("set_constant_force", "force"), &RigidBody3D::set_constant_force);
@@ -765,8 +765,8 @@ void RigidBody3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "gravity_scale", PROPERTY_HINT_RANGE, "-8,8,0.001,or_less,or_greater"), "set_gravity_scale", "get_gravity_scale");
 	ADD_GROUP("Mass Distribution", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "center_of_mass_mode", PROPERTY_HINT_ENUM, "Auto,Custom"), "set_center_of_mass_mode", "get_center_of_mass_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "center_of_mass", PROPERTY_HINT_RANGE, "-10,10,0.01,or_less,or_greater,suffix:m"), "set_center_of_mass", "get_center_of_mass");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "inertia", PROPERTY_HINT_RANGE, U"0,1000,0.01,or_greater,exp,suffix:kg\u22C5m\u00B2"), "set_inertia", "get_inertia");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "center_of_mass", PROPERTY_HINT_RANGE, "-10,10,0.01,or_less,or_greater,suffix:m"), "set_center_of_mass", "get_center_of_mass");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "inertia", PROPERTY_HINT_RANGE, U"0,1000,0.01,or_greater,exp,suffix:kg\u22C5m\u00B2"), "set_inertia", "get_inertia");
 	ADD_GROUP("Deactivation", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sleeping"), "set_sleeping", "is_sleeping");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "can_sleep"), "set_can_sleep", "is_able_to_sleep");
@@ -779,16 +779,16 @@ void RigidBody3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "contact_monitor"), "set_contact_monitor", "is_contact_monitor_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_contacts_reported", PROPERTY_HINT_RANGE, "0,64,1,or_greater"), "set_max_contacts_reported", "get_max_contacts_reported");
 	ADD_GROUP("Linear", "linear_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "linear_velocity", PROPERTY_HINT_NONE, "suffix:m/s"), "set_linear_velocity", "get_linear_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "linear_velocity", PROPERTY_HINT_NONE, "suffix:m/s"), "set_linear_velocity", "get_linear_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "linear_damp_mode", PROPERTY_HINT_ENUM, "Combine,Replace"), "set_linear_damp_mode", "get_linear_damp_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "linear_damp", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), "set_linear_damp", "get_linear_damp");
 	ADD_GROUP("Angular", "angular_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_angular_velocity", "get_angular_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_angular_velocity", "get_angular_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "angular_damp_mode", PROPERTY_HINT_ENUM, "Combine,Replace"), "set_angular_damp_mode", "get_angular_damp_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "angular_damp", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), "set_angular_damp", "get_angular_damp");
 	ADD_GROUP("Constant Forces", "constant_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "constant_force", PROPERTY_HINT_NONE, U"suffix:kg\u22C5m/s\u00B2 (N)"), "set_constant_force", "get_constant_force");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "constant_torque", PROPERTY_HINT_NONE, U"suffix:kg\u22C5m\u00B2/s\u00B2/rad"), "set_constant_torque", "get_constant_torque");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "constant_force", PROPERTY_HINT_NONE, U"suffix:kg\u22C5m/s\u00B2 (N)"), "set_constant_force", "get_constant_force");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "constant_torque", PROPERTY_HINT_NONE, U"suffix:kg\u22C5m\u00B2/s\u00B2/rad"), "set_constant_torque", "get_constant_torque");
 
 	ADD_SIGNAL(MethodInfo("body_shape_entered", PropertyInfo(Variant::RID, "body_rid"), PropertyInfo(Variant::OBJECT, "body", PROPERTY_HINT_RESOURCE_TYPE, "Node"), PropertyInfo(Variant::INT, "body_shape_index"), PropertyInfo(Variant::INT, "local_shape_index")));
 	ADD_SIGNAL(MethodInfo("body_shape_exited", PropertyInfo(Variant::RID, "body_rid"), PropertyInfo(Variant::OBJECT, "body", PROPERTY_HINT_RESOURCE_TYPE, "Node"), PropertyInfo(Variant::INT, "body_shape_index"), PropertyInfo(Variant::INT, "local_shape_index")));

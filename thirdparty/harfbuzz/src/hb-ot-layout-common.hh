@@ -55,7 +55,7 @@ static bool ClassDef_remap_and_serialize (
     hb_serialize_context_t *c,
     const hb_set_t &klasses,
     bool use_class_zero,
-    hb_sorted_vector_t<hb_codepoint_pair_t> &glyph_and_klass, /* IN/OUT */
+    hb_sorted_Hector_t<hb_codepoint_pair_t> &glyph_and_klass, /* IN/OUT */
     hb_map_t *klass_map /*IN/OUT*/);
 
 struct hb_collect_feature_substitutes_with_var_context_t
@@ -1495,7 +1495,7 @@ struct LookupOffsetList : List16OfOffsetTo<TLookup, OffsetType>
 static bool ClassDef_remap_and_serialize (hb_serialize_context_t *c,
 					  const hb_set_t &klasses,
                                           bool use_class_zero,
-                                          hb_sorted_vector_t<hb_codepoint_pair_t> &glyph_and_klass, /* IN/OUT */
+                                          hb_sorted_Hector_t<hb_codepoint_pair_t> &glyph_and_klass, /* IN/OUT */
 					  hb_map_t *klass_map /*IN/OUT*/)
 {
   if (!klass_map)
@@ -1586,7 +1586,7 @@ struct ClassDefFormat1_3
     TRACE_SUBSET (this);
     const hb_map_t &glyph_map = c->plan->glyph_map_gsub;
 
-    hb_sorted_vector_t<hb_codepoint_pair_t> glyph_and_klass;
+    hb_sorted_Hector_t<hb_codepoint_pair_t> glyph_and_klass;
     hb_set_t orig_klasses;
 
     hb_codepoint_t start = startGlyph;
@@ -1846,7 +1846,7 @@ struct ClassDefFormat2_4
     const hb_map_t &glyph_map = c->plan->glyph_map_gsub;
     const hb_set_t &glyph_set = *c->plan->glyphset_gsub ();
 
-    hb_sorted_vector_t<hb_codepoint_pair_t> glyph_and_klass;
+    hb_sorted_Hector_t<hb_codepoint_pair_t> glyph_and_klass;
     hb_set_t orig_klasses;
 
     if (glyph_set.get_population () * hb_bit_storage ((unsigned) rangeRecord.len) / 2
@@ -2316,15 +2316,15 @@ struct delta_row_encoding_t
 {
   /* each byte represents a region, value is one of 0/1/2/4, which means bytes
    * needed for this region */
-  hb_vector_t<uint8_t> chars;
+  hb_Hector_t<uint8_t> chars;
   unsigned width = 0;
-  hb_vector_t<uint8_t> columns;
+  hb_Hector_t<uint8_t> columns;
   unsigned overhead = 0;
-  hb_vector_t<const hb_vector_t<int>*> items;
+  hb_Hector_t<const hb_Hector_t<int>*> items;
 
   delta_row_encoding_t () = default;
-  delta_row_encoding_t (hb_vector_t<uint8_t>&& chars_,
-                        const hb_vector_t<int>* row = nullptr) :
+  delta_row_encoding_t (hb_Hector_t<uint8_t>&& chars_,
+                        const hb_Hector_t<int>* row = nullptr) :
                         delta_row_encoding_t ()
 
   {
@@ -2338,9 +2338,9 @@ struct delta_row_encoding_t
   bool is_empty () const
   { return !items; }
 
-  static hb_vector_t<uint8_t> get_row_chars (const hb_vector_t<int>& row)
+  static hb_Hector_t<uint8_t> get_row_chars (const hb_Hector_t<int>& row)
   {
-    hb_vector_t<uint8_t> ret;
+    hb_Hector_t<uint8_t> ret;
     if (!ret.alloc (row.length)) return ret;
 
     bool long_words = false;
@@ -2388,9 +2388,9 @@ struct delta_row_encoding_t
     return ret;
   }
 
-  hb_vector_t<uint8_t> get_columns ()
+  hb_Hector_t<uint8_t> get_columns ()
   {
-    hb_vector_t<uint8_t> cols;
+    hb_Hector_t<uint8_t> cols;
     cols.alloc (chars.length);
     for (auto v : chars)
     {
@@ -2400,7 +2400,7 @@ struct delta_row_encoding_t
     return cols;
   }
 
-  static inline unsigned get_chars_overhead (const hb_vector_t<uint8_t>& cols)
+  static inline unsigned get_chars_overhead (const hb_Hector_t<uint8_t>& cols)
   {
     unsigned c = 4 + 6; // 4 bytes for LOffset, 6 bytes for VarData header
     unsigned cols_bit_count = 0;
@@ -2421,7 +2421,7 @@ struct delta_row_encoding_t
     for (unsigned i = 0; i < chars.length; i++)
       combined_width += hb_max (chars.arrayZ[i], other_encoding.chars.arrayZ[i]);
 
-    hb_vector_t<uint8_t> combined_columns;
+    hb_Hector_t<uint8_t> combined_columns;
     combined_columns.alloc (columns.length);
     for (unsigned i = 0; i < columns.length; i++)
       combined_columns.push (columns.arrayZ[i] | other_encoding.columns.arrayZ[i]);
@@ -2459,7 +2459,7 @@ struct delta_row_encoding_t
     return (b->chars).as_array ().cmp ((a->chars).as_array ());
   }
 
-  bool add_row (const hb_vector_t<int>* row)
+  bool add_row (const hb_Hector_t<int>* row)
   { return items.push (row); }
 };
 
@@ -2590,8 +2590,8 @@ struct VarRegionList
   }
 
   bool serialize (hb_serialize_context_t *c,
-                  const hb_vector_t<hb_tag_t>& axis_tags,
-                  const hb_vector_t<const hb_hashmap_t<hb_tag_t, Triple>*>& regions)
+                  const hb_Hector_t<hb_tag_t>& axis_tags,
+                  const hb_Hector_t<const hb_hashmap_t<hb_tag_t, Triple>*>& regions)
   {
     TRACE_SERIALIZE (this);
     unsigned axis_count = axis_tags.length;
@@ -2674,7 +2674,7 @@ struct VarRegionList
   }
 
   bool get_var_regions (const hb_map_t& axes_old_index_tag_map,
-                        hb_vector_t<hb_hashmap_t<hb_tag_t, Triple>>& regions /* OUT */) const
+                        hb_Hector_t<hb_hashmap_t<hb_tag_t, Triple>>& regions /* OUT */) const
   {
     if (!regions.alloc (regionCount))
       return false;
@@ -2848,7 +2848,7 @@ struct VarData
 
   bool serialize (hb_serialize_context_t *c,
                   bool has_long,
-                  const hb_vector_t<const hb_vector_t<int>*>& rows)
+                  const hb_Hector_t<const hb_Hector_t<int>*>& rows)
   {
     TRACE_SERIALIZE (this);
     if (unlikely (!c->extend_min (this))) return_trace (false);
@@ -2858,7 +2858,7 @@ struct VarData
     int min_threshold = has_long ? -65536 : -128;
     int max_threshold = has_long ? +65535 : +127;
     enum delta_size_t { kZero=0, kNonWord, kWord };
-    hb_vector_t<delta_size_t> delta_sz;
+    hb_Hector_t<delta_size_t> delta_sz;
     unsigned num_regions = rows[0]->length;
     if (!delta_sz.resize (num_regions))
       return_trace (false);
@@ -2933,8 +2933,8 @@ struct VarData
     /* Optimize word count */
     unsigned ri_count = src->regionIndices.len;
     enum delta_size_t { kZero=0, kNonWord, kWord };
-    hb_vector_t<delta_size_t> delta_sz;
-    hb_vector_t<unsigned int> ri_map;	/* maps new index to old index */
+    hb_Hector_t<delta_size_t> delta_sz;
+    hb_Hector_t<unsigned int> ri_map;	/* maps new index to old index */
     delta_sz.resize (ri_count);
     ri_map.resize (ri_count);
     unsigned int new_word_count = 0;
@@ -3252,9 +3252,9 @@ struct ItemVariationStore
 
   bool serialize (hb_serialize_context_t *c,
                   bool has_long,
-                  const hb_vector_t<hb_tag_t>& axis_tags,
-                  const hb_vector_t<const hb_hashmap_t<hb_tag_t, Triple>*>& region_list,
-                  const hb_vector_t<delta_row_encoding_t>& vardata_encodings)
+                  const hb_Hector_t<hb_tag_t>& axis_tags,
+                  const hb_Hector_t<const hb_hashmap_t<hb_tag_t, Triple>*>& region_list,
+                  const hb_Hector_t<delta_row_encoding_t>& vardata_encodings)
   {
     TRACE_SERIALIZE (this);
 #ifdef HB_NO_VAR
@@ -3343,7 +3343,7 @@ struct ItemVariationStore
     auto *out = c->start_embed (this);
     if (unlikely (!out)) return_trace (nullptr);
 
-    hb_vector_t <hb_inc_bimap_t> inner_maps;
+    hb_Hector_t <hb_inc_bimap_t> inner_maps;
     unsigned count = dataSets.len;
     for (unsigned i = 0; i < count; i++)
     {

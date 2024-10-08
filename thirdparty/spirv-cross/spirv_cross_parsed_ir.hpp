@@ -39,7 +39,7 @@ namespace SPIRV_CROSS_NAMESPACE
 class ParsedIR
 {
 private:
-	// This must be destroyed after the "ids" vector.
+	// This must be destroyed after the "ids" Hector.
 	std::unique_ptr<ObjectPoolGroup> pool_group;
 
 public:
@@ -61,7 +61,7 @@ public:
 	std::vector<uint32_t> spirv;
 
 	// Holds various data structures which inherit from IVariant.
-	SmallVector<Variant> ids;
+	SmallHector<Variant> ids;
 
 	// Various meta data for IDs, decorations, names, etc.
 	std::unordered_map<ID, Meta> meta;
@@ -69,14 +69,14 @@ public:
 	// Holds all IDs which have a certain type.
 	// This is needed so we can iterate through a specific kind of resource quickly,
 	// and in-order of module declaration.
-	SmallVector<ID> ids_for_type[TypeCount];
+	SmallHector<ID> ids_for_type[TypeCount];
 
 	// Special purpose lists which contain a union of types.
 	// This is needed so we can declare specialization constants and structs in an interleaved fashion,
 	// among other things.
 	// Constants can be undef or of struct type, and struct array sizes can use specialization constants.
-	SmallVector<ID> ids_for_constant_undef_or_type;
-	SmallVector<ID> ids_for_constant_or_variable;
+	SmallHector<ID> ids_for_constant_undef_or_type;
+	SmallHector<ID> ids_for_constant_or_variable;
 
 	// We need to keep track of the width the Ops that contains a type for the
 	// OpSwitch instruction, since this one doesn't contains the type in the
@@ -87,8 +87,8 @@ public:
 
 	// Declared capabilities and extensions in the SPIR-V module.
 	// Not really used except for reflection at the moment.
-	SmallVector<spv::Capability> declared_capabilities;
-	SmallVector<std::string> declared_extensions;
+	SmallHector<spv::Capability> declared_capabilities;
+	SmallHector<std::string> declared_extensions;
 
 	// Meta data about blocks. The cross-compiler needs to query if a block is either of these types.
 	// It is a bitset as there can be more than one tag per block.
@@ -101,7 +101,7 @@ public:
 		BLOCK_META_MULTISELECT_MERGE_BIT = 1 << 4
 	};
 	using BlockMetaFlags = uint8_t;
-	SmallVector<BlockMetaFlags> block_meta;
+	SmallHector<BlockMetaFlags> block_meta;
 	std::unordered_map<BlockID, BlockID> continue_block_to_loop_header;
 
 	// Normally, we'd stick SPIREntryPoint in ids array, but it conflicts with SPIRFunction.

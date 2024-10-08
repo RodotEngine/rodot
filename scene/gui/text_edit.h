@@ -145,7 +145,7 @@ private:
 		};
 
 		struct Line {
-			Vector<Gutter> gutters;
+			Hector<Gutter> gutters;
 
 			String data;
 			Array bidi_override;
@@ -166,7 +166,7 @@ private:
 		bool is_dirty = false;
 		bool tab_size_dirty = false;
 
-		mutable Vector<Line> text;
+		mutable Hector<Line> text;
 		Ref<Font> font;
 		int font_size = -1;
 		int font_height = 0;
@@ -227,13 +227,13 @@ private:
 		BitField<TextServer::LineBreakFlag> get_brk_flags() const;
 		int get_line_wrap_amount(int p_line) const;
 
-		Vector<Vector2i> get_line_wrap_ranges(int p_line) const;
+		Hector<Hector2i> get_line_wrap_ranges(int p_line) const;
 		const Ref<TextParagraph> get_line_data(int p_line) const;
 
 		void set(int p_line, const String &p_text, const Array &p_bidi_override);
 		void set_hidden(int p_line, bool p_hidden);
 		bool is_hidden(int p_line) const;
-		void insert(int p_at, const Vector<String> &p_text, const Vector<Array> &p_bidi_override);
+		void insert(int p_at, const Hector<String> &p_text, const Hector<Array> &p_bidi_override);
 		void remove_range(int p_from_line, int p_to_line);
 		int size() const { return text.size(); }
 		void clear();
@@ -290,7 +290,7 @@ private:
 	int placeholder_line_height = -1;
 	int placeholder_max_width = -1;
 
-	Vector<String> placeholder_wraped_rows;
+	Hector<String> placeholder_wraped_rows;
 
 	void _update_placeholder();
 	bool _using_placeholder() const;
@@ -341,8 +341,8 @@ private:
 			TYPE_INSERT,
 			TYPE_REMOVE
 		};
-		Vector<Caret> start_carets;
-		Vector<Caret> end_carets;
+		Hector<Caret> start_carets;
+		Hector<Caret> end_carets;
 
 		Type type = TYPE_NONE;
 		int from_line = 0;
@@ -391,8 +391,8 @@ private:
 	/* Mouse */
 	struct LineDrawingCache {
 		int y_offset = 0;
-		Vector<int> first_visible_chars;
-		Vector<int> last_visible_chars;
+		Hector<int> first_visible_chars;
+		Hector<int> last_visible_chars;
 	};
 
 	HashMap<int, LineDrawingCache> line_drawing_cache;
@@ -420,8 +420,8 @@ private:
 		int column = 0;
 	};
 
-	// Vector containing all the carets, index '0' is the "main caret" and should never be removed.
-	Vector<Caret> carets;
+	// Hector containing all the carets, index '0' is the "main caret" and should never be removed.
+	Hector<Caret> carets;
 
 	bool setting_caret_line = false;
 	bool caret_pos_dirty = false;
@@ -477,7 +477,7 @@ private:
 
 	Timer *click_select_held = nullptr;
 	uint64_t last_dblclk = 0;
-	Vector2 last_dblclk_pos;
+	Hector2 last_dblclk_pos;
 
 	void _selection_changed(int p_caret = -1);
 	void _click_selection_held();
@@ -503,7 +503,7 @@ private:
 	HScrollBar *h_scroll = nullptr;
 	VScrollBar *v_scroll = nullptr;
 
-	Vector2i content_size_cache;
+	Hector2i content_size_cache;
 	bool fit_content_height = false;
 	bool fit_content_width = false;
 	bool scroll_past_end_of_file_enabled = false;
@@ -557,18 +557,18 @@ private:
 	void _update_minimap_drag();
 
 	/* Gutters. */
-	Vector<GutterInfo> gutters;
+	Hector<GutterInfo> gutters;
 	int gutters_width = 0;
 	int gutter_padding = 0;
-	Vector2i hovered_gutter = Vector2i(-1, -1); // X = gutter index, Y = row.
+	Hector2i hovered_gutter = Hector2i(-1, -1); // X = gutter index, Y = row.
 
 	void _update_gutter_width();
 
 	/* Syntax highlighting. */
 	Ref<SyntaxHighlighter> syntax_highlighter;
-	HashMap<int, Vector<Pair<int64_t, Color>>> syntax_highlighting_cache;
+	HashMap<int, Hector<Pair<int64_t, Color>>> syntax_highlighting_cache;
 
-	Vector<Pair<int64_t, Color>> _get_line_syntax_highlighting(int p_line);
+	Hector<Pair<int64_t, Color>> _get_line_syntax_highlighting(int p_line);
 	void _clear_syntax_highlighting_cache();
 
 	/* Visual. */
@@ -851,7 +851,7 @@ public:
 	/* Mouse */
 	Point2 get_local_mouse_pos() const;
 
-	String get_word_at_pos(const Vector2 &p_pos) const;
+	String get_word_at_pos(const Hector2 &p_pos) const;
 
 	Point2i get_line_column_at_pos(const Point2i &p_pos, bool p_allow_out_of_bounds = true) const;
 	Point2i get_pos_at_line_column(int p_line, int p_column) const;
@@ -891,7 +891,7 @@ public:
 	int get_caret_count() const;
 	void add_caret_at_carets(bool p_below);
 
-	Vector<int> get_sorted_carets(bool p_include_ignored_carets = false) const;
+	Hector<int> get_sorted_carets(bool p_include_ignored_carets = false) const;
 	void collapse_carets(int p_from_line, int p_from_column, int p_to_line, int p_to_column, bool p_inclusive = false);
 
 	void merge_overlapping_carets();
@@ -936,8 +936,8 @@ public:
 
 	String get_selected_text(int p_caret = -1);
 	int get_selection_at_line_column(int p_line, int p_column, bool p_include_edges = true, bool p_only_selections = true) const;
-	Vector<Point2i> get_line_ranges_from_carets(bool p_only_selections = false, bool p_merge_adjacent = true) const;
-	TypedArray<Vector2i> get_line_ranges_from_carets_typed_array(bool p_only_selections = false, bool p_merge_adjacent = true) const;
+	Hector<Point2i> get_line_ranges_from_carets(bool p_only_selections = false, bool p_merge_adjacent = true) const;
+	TypedArray<Hector2i> get_line_ranges_from_carets_typed_array(bool p_only_selections = false, bool p_merge_adjacent = true) const;
 
 	void set_selection_origin_line(int p_line, bool p_can_be_hidden = true, int p_wrap_index = -1, int p_caret = 0);
 	void set_selection_origin_column(int p_column, int p_caret = 0);
@@ -965,7 +965,7 @@ public:
 	int get_line_wrap_count(int p_line) const;
 	int get_line_wrap_index_at_column(int p_line, int p_column) const;
 
-	Vector<String> get_line_wrapped_text(int p_line) const;
+	Hector<String> get_line_wrapped_text(int p_line) const;
 
 	/* Viewport. */
 	// Scrolling.
@@ -1026,7 +1026,7 @@ public:
 	void add_gutter(int p_at = -1);
 	void remove_gutter(int p_gutter);
 	int get_gutter_count() const;
-	Vector2i get_hovered_gutter() const { return hovered_gutter; }
+	Hector2i get_hovered_gutter() const { return hovered_gutter; }
 
 	void set_gutter_name(int p_gutter, const String &p_name);
 	String get_gutter_name(int p_gutter) const;
@@ -1108,7 +1108,7 @@ public:
 
 	/* Deprecated. */
 #ifndef DISABLE_DEPRECATED
-	Vector<int> get_caret_index_edit_order();
+	Hector<int> get_caret_index_edit_order();
 	void adjust_carets_after_edit(int p_caret, int p_from_line, int p_from_col, int p_to_line, int p_to_col);
 
 	int get_selection_line(int p_caret = 0) const;

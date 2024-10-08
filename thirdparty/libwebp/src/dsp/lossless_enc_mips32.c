@@ -344,7 +344,7 @@ static void GetCombinedEntropyUnrefined_MIPS32(const uint32_t X[],
     ASM_END_COMMON_0                                    \
     ASM_END_COMMON_1
 
-static void AddVector_MIPS32(const uint32_t* pa, const uint32_t* pb,
+static void AddHector_MIPS32(const uint32_t* pa, const uint32_t* pb,
                              uint32_t* pout, int size) {
   uint32_t temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
   const int end = ((size) / 4) * 4;
@@ -356,7 +356,7 @@ static void AddVector_MIPS32(const uint32_t* pa, const uint32_t* pb,
   for (i = 0; i < size - end; ++i) pout[i] = pa[i] + pb[i];
 }
 
-static void AddVectorEq_MIPS32(const uint32_t* pa, uint32_t* pout, int size) {
+static void AddHectorEq_MIPS32(const uint32_t* pa, uint32_t* pout, int size) {
   uint32_t temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;
   const int end = ((size) / 4) * 4;
   const uint32_t* const LoopEnd = pa + end;
@@ -386,8 +386,8 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8LEncDspInitMIPS32(void) {
   VP8LExtraCostCombined = ExtraCostCombined_MIPS32;
   VP8LGetEntropyUnrefined = GetEntropyUnrefined_MIPS32;
   VP8LGetCombinedEntropyUnrefined = GetCombinedEntropyUnrefined_MIPS32;
-  VP8LAddVector = AddVector_MIPS32;
-  VP8LAddVectorEq = AddVectorEq_MIPS32;
+  VP8LAddHector = AddHector_MIPS32;
+  VP8LAddHectorEq = AddHectorEq_MIPS32;
 }
 
 #else  // !WEBP_USE_MIPS32

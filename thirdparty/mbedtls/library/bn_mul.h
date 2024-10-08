@@ -8,8 +8,8 @@
  *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
  */
 /*
- *      Multiply source vector [s] with b, add result
- *       to destination vector [d] and set carry c.
+ *      Multiply source Hector [s] with b, add result
+ *       to destination Hector [d] and set carry c.
  *
  *      Currently supports:
  *

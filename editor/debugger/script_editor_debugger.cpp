@@ -175,7 +175,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 				ERR_PRINT("Failed to open " + p_file);
 				return;
 			}
-			Vector<String> line;
+			Hector<String> line;
 			line.resize(Performance::MONITOR_MAX);
 
 			// signatures
@@ -185,7 +185,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 			file->store_csv_line(line);
 
 			// values
-			Vector<List<float>::Element *> iterators;
+			Hector<List<float>::Element *> iterators;
 			iterators.resize(Performance::MONITOR_MAX);
 			bool continue_iteration = false;
 			for (int i = 0; i < Performance::MONITOR_MAX; i++) {
@@ -207,7 +207,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 			}
 			file->store_string("\n");
 
-			Vector<Vector<String>> profiler_data = profiler->get_data_as_csv();
+			Hector<Hector<String>> profiler_data = profiler->get_data_as_csv();
 			for (int i = 0; i < profiler_data.size(); i++) {
 				file->store_csv_line(profiler_data[i]);
 			}
@@ -221,7 +221,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 				return;
 			}
 
-			Vector<String> headers;
+			Hector<String> headers;
 			headers.resize(vmem_tree->get_columns());
 			for (int i = 0; i < vmem_tree->get_columns(); ++i) {
 				headers.write[i] = vmem_tree->get_column_title(i);
@@ -231,7 +231,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 			if (vmem_tree->get_root()) {
 				TreeItem *ti = vmem_tree->get_root()->get_first_child();
 				while (ti) {
-					Vector<String> values;
+					Hector<String> values;
 					values.resize(vmem_tree->get_columns());
 					for (int i = 0; i < vmem_tree->get_columns(); ++i) {
 						values.write[i] = ti->get_text(i);
@@ -478,10 +478,10 @@ void ScriptEditorDebugger::_parse_message(const String &p_msg, uint64_t p_thread
 		ERR_FAIL_COND(p_data.size() != 2);
 
 		ERR_FAIL_COND(p_data[0].get_type() != Variant::PACKED_STRING_ARRAY);
-		Vector<String> output_strings = p_data[0];
+		Hector<String> output_strings = p_data[0];
 
 		ERR_FAIL_COND(p_data[1].get_type() != Variant::PACKED_INT32_ARRAY);
-		Vector<int> output_types = p_data[1];
+		Hector<int> output_types = p_data[1];
 
 		ERR_FAIL_COND(output_strings.size() != output_types.size());
 
@@ -507,7 +507,7 @@ void ScriptEditorDebugger::_parse_message(const String &p_msg, uint64_t p_thread
 			emit_signal(SNAME("output"), output_strings[i], msg_type);
 		}
 	} else if (p_msg == "performance:profile_frame") {
-		Vector<float> frame_data;
+		Hector<float> frame_data;
 		frame_data.resize(p_data.size());
 		for (int i = 0; i < p_data.size(); i++) {
 			frame_data.write[i] = p_data[i];
@@ -618,7 +618,7 @@ void ScriptEditorDebugger::_parse_message(const String &p_msg, uint64_t p_thread
 				cpp_cond->set_metadata(0, source_meta);
 			}
 		}
-		Vector<uint8_t> v;
+		Hector<uint8_t> v;
 		v.resize(100);
 
 		// Source of the error.
@@ -774,7 +774,7 @@ void ScriptEditorDebugger::_parse_message(const String &p_msg, uint64_t p_thread
 				item.signature = profiler_signature[signature];
 
 				String name = profiler_signature[signature];
-				Vector<String> strings = name.split("::");
+				Hector<String> strings = name.split("::");
 				if (strings.size() == 3) {
 					item.name = strings[2];
 					item.script = strings[0];
@@ -807,7 +807,7 @@ void ScriptEditorDebugger::_parse_message(const String &p_msg, uint64_t p_thread
 		emit_signal(SNAME("stop_requested"));
 		_stop_and_notify();
 	} else if (p_msg == "performance:profile_names") {
-		Vector<StringName> monitors;
+		Hector<StringName> monitors;
 		monitors.resize(p_data.size());
 		for (int i = 0; i < p_data.size(); i++) {
 			ERR_FAIL_COND(p_data[i].get_type() != Variant::STRING_NAME);
@@ -1046,7 +1046,7 @@ void ScriptEditorDebugger::_update_buttons_state() {
 	le_set->set_disabled(!has_editor_tree);
 
 	thread_list_updating = true;
-	LocalVector<ThreadDebugged *> threadss;
+	LocalHector<ThreadDebugged *> threadss;
 	for (KeyValue<uint64_t, ThreadDebugged> &I : threads_debugged) {
 		threadss.push_back(&I.value);
 	}
@@ -1541,7 +1541,7 @@ void ScriptEditorDebugger::reload_all_scripts() {
 	_put_msg("reload_all_scripts", Array(), debugging_thread_id != Thread::UNASSIGNED_ID ? debugging_thread_id : Thread::MAIN_ID);
 }
 
-void ScriptEditorDebugger::reload_scripts(const Vector<String> &p_script_paths) {
+void ScriptEditorDebugger::reload_scripts(const Hector<String> &p_script_paths) {
 	_put_msg("reload_scripts", Variant(p_script_paths).operator Array(), debugging_thread_id != Thread::UNASSIGNED_ID ? debugging_thread_id : Thread::MAIN_ID);
 }
 
@@ -1615,7 +1615,7 @@ void ScriptEditorDebugger::_clear_errors_list() {
 	clear_button->set_disabled(true);
 }
 
-void ScriptEditorDebugger::_breakpoints_item_rmb_selected(const Vector2 &p_pos, MouseButton p_button) {
+void ScriptEditorDebugger::_breakpoints_item_rmb_selected(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
@@ -1637,7 +1637,7 @@ void ScriptEditorDebugger::_breakpoints_item_rmb_selected(const Vector2 &p_pos, 
 }
 
 // Right click on specific file(s) or folder(s).
-void ScriptEditorDebugger::_error_tree_item_rmb_selected(const Vector2 &p_pos, MouseButton p_button) {
+void ScriptEditorDebugger::_error_tree_item_rmb_selected(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
@@ -1708,7 +1708,7 @@ void ScriptEditorDebugger::_item_menu_id_pressed(int p_option) {
 			}
 
 			// Parse back the `file:line @ method()` string.
-			const Vector<String> file_line_number = ci->get_text(1).split("@")[0].strip_edges().split(":");
+			const Hector<String> file_line_number = ci->get_text(1).split("@")[0].strip_edges().split(":");
 			ERR_FAIL_COND_MSG(file_line_number.size() < 2, "Incorrect C++ source stack trace file:line format (please report).");
 			const String &file = file_line_number[0];
 			const int line_number = file_line_number[1].to_int();

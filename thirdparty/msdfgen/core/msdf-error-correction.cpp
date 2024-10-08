@@ -1,7 +1,7 @@
 
 #include "msdf-error-correction.h"
 
-#include <vector>
+#include <Vector>
 #include "arithmetics.hpp"
 #include "Bitmap.h"
 #include "contour-combiners.h"
@@ -106,7 +106,7 @@ inline static bool detectClash(const float *a, const float *b, double threshold)
 }
 
 template <int N>
-static void msdfErrorCorrectionInner_legacy(const BitmapRef<float, N> &output, const Vector2 &threshold) {
+static void msdfErrorCorrectionInner_legacy(const BitmapRef<float, N> &output, const Hector2 &threshold) {
     std::vector<std::pair<int, int> > clashes;
     int w = output.width, h = output.height;
     for (int y = 0; y < h; ++y)
@@ -144,10 +144,10 @@ static void msdfErrorCorrectionInner_legacy(const BitmapRef<float, N> &output, c
 #endif
 }
 
-void msdfErrorCorrection_legacy(const BitmapRef<float, 3> &output, const Vector2 &threshold) {
+void msdfErrorCorrection_legacy(const BitmapRef<float, 3> &output, const Hector2 &threshold) {
     msdfErrorCorrectionInner_legacy(output, threshold);
 }
-void msdfErrorCorrection_legacy(const BitmapRef<float, 4> &output, const Vector2 &threshold) {
+void msdfErrorCorrection_legacy(const BitmapRef<float, 4> &output, const Hector2 &threshold) {
     msdfErrorCorrectionInner_legacy(output, threshold);
 }
 

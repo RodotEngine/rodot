@@ -1,4 +1,4 @@
-var Vector2
+var Hector2
 
 func test():
 	pass

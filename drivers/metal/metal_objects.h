@@ -67,7 +67,7 @@
 #import <optional>
 #import <spirv.hpp>
 
-// These types can be used in Vector and other containers that use
+// These types can be used in Hector and other containers that use
 // pointer operations not supported by ARC.
 namespace MTL {
 #define MTL_CLASS(name)                                  \
@@ -204,7 +204,7 @@ private:
 	void _render_set_dirty_state();
 	void _render_bind_uniform_sets();
 
-	static void _populate_vertices(simd::float4 *p_vertices, Size2i p_fb_size, VectorView<Rect2i> p_rects);
+	static void _populate_vertices(simd::float4 *p_vertices, Size2i p_fb_size, HectorView<Rect2i> p_rects);
 	static uint32_t _populate_vertices(simd::float4 *p_vertices, uint32_t p_index, Rect2i const &p_rect, Size2i p_fb_size);
 	void _end_render_pass();
 	void _render_clear_render_area();
@@ -216,9 +216,9 @@ public:
 		MDRenderPass *pass = nullptr;
 		MDFrameBuffer *frameBuffer = nullptr;
 		MDRenderPipeline *pipeline = nullptr;
-		LocalVector<RDD::RenderPassClearValue> clear_values;
-		LocalVector<MTLViewport> viewports;
-		LocalVector<MTLScissorRect> scissors;
+		LocalHector<RDD::RenderPassClearValue> clear_values;
+		LocalHector<MTLViewport> viewports;
+		LocalHector<MTLScissorRect> scissors;
 		std::optional<Color> blend_constants;
 		uint32_t current_subpass = UINT32_MAX;
 		Rect2i render_area = {};
@@ -228,8 +228,8 @@ public:
 		id<MTLBuffer> __unsafe_unretained index_buffer = nil; // Buffer is owned by RDD.
 		MTLIndexType index_type = MTLIndexTypeUInt16;
 		uint32_t index_offset = 0;
-		LocalVector<id<MTLBuffer> __unsafe_unretained> vertex_buffers;
-		LocalVector<NSUInteger> vertex_offsets;
+		LocalHector<id<MTLBuffer> __unsafe_unretained> vertex_buffers;
+		LocalHector<NSUInteger> vertex_offsets;
 		// clang-format off
 		enum DirtyFlag: uint8_t {
 			DIRTY_NONE     = 0b0000'0000,
@@ -247,7 +247,7 @@ public:
 		// clang-format on
 		BitField<DirtyFlag> dirty = DIRTY_NONE;
 
-		LocalVector<MDUniformSet *> uniform_sets;
+		LocalHector<MDUniformSet *> uniform_sets;
 		// Bit mask of the uniform sets that are dirty, to prevent redundant binding.
 		uint64_t uniform_set_mask = 0;
 
@@ -389,15 +389,15 @@ public:
 #pragma mark - Render Commands
 
 	void render_bind_uniform_set(RDD::UniformSetID p_uniform_set, RDD::ShaderID p_shader, uint32_t p_set_index);
-	void render_clear_attachments(VectorView<RDD::AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects);
-	void render_set_viewport(VectorView<Rect2i> p_viewports);
-	void render_set_scissor(VectorView<Rect2i> p_scissors);
+	void render_clear_attachments(HectorView<RDD::AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects);
+	void render_set_viewport(HectorView<Rect2i> p_viewports);
+	void render_set_scissor(HectorView<Rect2i> p_scissors);
 	void render_set_blend_constants(const Color &p_constants);
 	void render_begin_pass(RDD::RenderPassID p_render_pass,
 			RDD::FramebufferID p_frameBuffer,
 			RDD::CommandBufferType p_cmd_buffer_type,
 			const Rect2i &p_rect,
-			VectorView<RDD::RenderPassClearValue> p_clear_values);
+			HectorView<RDD::RenderPassClearValue> p_clear_values);
 	void render_next_subpass();
 	void render_draw(uint32_t p_vertex_count,
 			uint32_t p_instance_count,
@@ -501,7 +501,7 @@ struct API_AVAILABLE(macos(11.0), ios(14.0)) UniformInfo {
 };
 
 struct API_AVAILABLE(macos(11.0), ios(14.0)) UniformSet {
-	LocalVector<UniformInfo> uniforms;
+	LocalHector<UniformInfo> uniforms;
 	uint32_t buffer_size = 0;
 	HashMap<RDC::ShaderStage, uint32_t> offsets;
 	HashMap<RDC::ShaderStage, id<MTLArgumentEncoder>> encoders;
@@ -580,11 +580,11 @@ struct ShaderCacheEntry {
 class API_AVAILABLE(macos(11.0), ios(14.0)) MDShader {
 public:
 	CharString name;
-	Vector<UniformSet> sets;
+	Hector<UniformSet> sets;
 
-	virtual void encode_push_constant_data(VectorView<uint32_t> p_data, MDCommandBuffer *p_cb) = 0;
+	virtual void encode_push_constant_data(HectorView<uint32_t> p_data, MDCommandBuffer *p_cb) = 0;
 
-	MDShader(CharString p_name, Vector<UniformSet> p_sets) :
+	MDShader(CharString p_name, Hector<UniformSet> p_sets) :
 			name(p_name), sets(p_sets) {}
 	virtual ~MDShader() = default;
 };
@@ -602,9 +602,9 @@ public:
 	CharString kernel_source;
 #endif
 
-	void encode_push_constant_data(VectorView<uint32_t> p_data, MDCommandBuffer *p_cb) final;
+	void encode_push_constant_data(HectorView<uint32_t> p_data, MDCommandBuffer *p_cb) final;
 
-	MDComputeShader(CharString p_name, Vector<UniformSet> p_sets, MDLibrary *p_kernel);
+	MDComputeShader(CharString p_name, Hector<UniformSet> p_sets, MDLibrary *p_kernel);
 };
 
 class API_AVAILABLE(macos(11.0), ios(14.0)) MDRenderShader final : public MDShader {
@@ -627,9 +627,9 @@ public:
 	CharString frag_source;
 #endif
 
-	void encode_push_constant_data(VectorView<uint32_t> p_data, MDCommandBuffer *p_cb) final;
+	void encode_push_constant_data(HectorView<uint32_t> p_data, MDCommandBuffer *p_cb) final;
 
-	MDRenderShader(CharString p_name, Vector<UniformSet> p_sets, MDLibrary *p_vert, MDLibrary *p_frag);
+	MDRenderShader(CharString p_name, Hector<UniformSet> p_sets, MDLibrary *p_vert, MDLibrary *p_frag);
 };
 
 enum StageResourceUsage : uint32_t {
@@ -673,7 +673,7 @@ struct BoundUniformSet {
 class API_AVAILABLE(macos(11.0), ios(14.0)) MDUniformSet {
 public:
 	uint32_t index;
-	LocalVector<RDD::BoundUniform> uniforms;
+	LocalHector<RDD::BoundUniform> uniforms;
 	HashMap<MDShader *, BoundUniformSet> bound_uniforms;
 
 	BoundUniformSet &boundUniformSetForShader(MDShader *p_shader, id<MTLDevice> p_device);
@@ -697,10 +697,10 @@ _FORCE_INLINE_ bool operator&(MDAttachmentType p_a, MDAttachmentType p_b) {
 
 struct MDSubpass {
 	uint32_t subpass_index = 0;
-	LocalVector<RDD::AttachmentReference> input_references;
-	LocalVector<RDD::AttachmentReference> color_references;
+	LocalHector<RDD::AttachmentReference> input_references;
+	LocalHector<RDD::AttachmentReference> color_references;
 	RDD::AttachmentReference depth_stencil_reference;
-	LocalVector<RDD::AttachmentReference> resolve_references;
+	LocalHector<RDD::AttachmentReference> resolve_references;
 
 	MTLFmtCaps getRequiredFmtCapsForAttachmentAt(uint32_t p_index) const;
 };
@@ -759,14 +759,14 @@ public:
 
 class API_AVAILABLE(macos(11.0), ios(14.0)) MDRenderPass {
 public:
-	Vector<MDAttachment> attachments;
-	Vector<MDSubpass> subpasses;
+	Hector<MDAttachment> attachments;
+	Hector<MDSubpass> subpasses;
 
 	uint32_t get_sample_count() const {
 		return attachments.is_empty() ? 1 : attachments[0].samples;
 	}
 
-	MDRenderPass(Vector<MDAttachment> &p_attachments, Vector<MDSubpass> &p_subpasses);
+	MDRenderPass(Hector<MDAttachment> &p_attachments, Hector<MDSubpass> &p_subpasses);
 };
 
 class API_AVAILABLE(macos(11.0), ios(14.0)) MDPipeline {
@@ -870,9 +870,9 @@ public:
 
 class API_AVAILABLE(macos(11.0), ios(14.0)) MDFrameBuffer {
 public:
-	Vector<MTL::Texture> textures;
+	Hector<MTL::Texture> textures;
 	Size2i size;
-	MDFrameBuffer(Vector<MTL::Texture> p_textures, Size2i p_size) :
+	MDFrameBuffer(Hector<MTL::Texture> p_textures, Size2i p_size) :
 			textures(p_textures), size(p_size) {}
 	MDFrameBuffer() {}
 

@@ -80,7 +80,7 @@ typedef struct {
 	// The call-back m_setTSpaceBasic() is sufficient for basic normal mapping.
 
 	// This function is used to return the tangent and fSign to the application.
-	// fvTangent is a unit length vector.
+	// fvTangent is a unit length Hector.
 	// For normal maps it is sufficient to use the following simplified version of the bitangent which is generated at pixel/vertex level.
 	// bitangent = fSign * cross(vN, tangent);
 	// Note that the results are returned unindexed. It is possible to generate a new index list
@@ -89,7 +89,7 @@ typedef struct {
 	void (*m_setTSpaceBasic)(const SMikkTSpaceContext * pContext, const float fvTangent[], const float fSign, const int iFace, const int iVert);
 
 	// This function is used to return tangent space results to the application.
-	// fvTangent and fvBiTangent are unit length vectors and fMagS and fMagT are their
+	// fvTangent and fvBiTangent are unit length Hectors and fMagS and fMagT are their
 	// true magnitudes which can be used for relief mapping effects.
 	// fvBiTangent is the "real" bitangent and thus may not be perpendicular to fvTangent.
 	// However, both are perpendicular to the vertex normal.

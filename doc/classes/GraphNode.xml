@@ -15,7 +15,7 @@
 		<method name="_draw_port" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="slot_index" type="int" />
-			<param index="1" name="position" type="Vector2i" />
+			<param index="1" name="position" type="Hector2i" />
 			<param index="2" name="left" type="bool" />
 			<param index="3" name="color" type="Color" />
 			<description>
@@ -48,7 +48,7 @@
 			</description>
 		</method>
 		<method name="get_input_port_position">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="port_idx" type="int" />
 			<description>
 				Returns the position of the input port with the given [param port_idx].
@@ -82,7 +82,7 @@
 			</description>
 		</method>
 		<method name="get_output_port_position">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="port_idx" type="int" />
 			<description>
 				Returns the position of the output port with the given [param port_idx].

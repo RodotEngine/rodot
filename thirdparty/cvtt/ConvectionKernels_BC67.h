@@ -20,7 +20,7 @@ namespace cvtt
             struct WorkInfo;
         }
 
-        template<int TVectorSize>
+        template<int THectorSize>
         class IndexSelectorHDR;
     }
 

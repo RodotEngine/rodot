@@ -254,7 +254,7 @@ void Window::_validate_property(PropertyInfo &p_property) const {
 		}
 		names.sort_custom<StringName::AlphCompare>();
 
-		Vector<StringName> unique_names;
+		Hector<StringName> unique_names;
 		String hint_string;
 		for (const StringName &E : names) {
 			// Skip duplicate values.
@@ -443,7 +443,7 @@ Size2i Window::_clamp_limit_size(const Size2i &p_limit_size) {
 	// Force window limits to respect size limitations of rendering server.
 	Size2i max_window_size = RS::get_singleton()->get_maximum_viewport_size();
 	if (max_window_size != Size2i()) {
-		return p_limit_size.clamp(Vector2i(), max_window_size);
+		return p_limit_size.clamp(Hector2i(), max_window_size);
 	} else {
 		return p_limit_size.maxi(0);
 	}
@@ -803,7 +803,7 @@ void Window::update_mouse_cursor_state() {
 	// see the changes in the viewport, we need to trigger a mouse motion event.
 	// This function should be called whenever scene tree changes affect the mouse cursor.
 	Ref<InputEventMouseMotion> mm;
-	Vector2 pos = get_mouse_position();
+	Hector2 pos = get_mouse_position();
 	Transform2D xform = get_global_canvas_transform().affine_inverse();
 	mm.instantiate();
 	mm->set_position(pos);
@@ -1199,7 +1199,7 @@ void Window::_update_viewport_size() {
 				window_transform.translate_local(margin);
 				if (final_size.x != 0 && final_size.y != 0) {
 					Transform2D scale_transform;
-					scale_transform.scale(Vector2(attach_to_screen_rect.size) / Vector2(final_size));
+					scale_transform.scale(Hector2(attach_to_screen_rect.size) / Hector2(final_size));
 					window_transform *= scale_transform;
 				}
 			} break;
@@ -1556,7 +1556,7 @@ DisplayServer::WindowID Window::get_window_id() const {
 	return window_id;
 }
 
-void Window::set_mouse_passthrough_polygon(const Vector<Vector2> &p_region) {
+void Window::set_mouse_passthrough_polygon(const Hector<Hector2> &p_region) {
 	ERR_MAIN_THREAD_GUARD;
 	mpath = p_region;
 	if (window_id == DisplayServer::INVALID_WINDOW_ID) {
@@ -1565,7 +1565,7 @@ void Window::set_mouse_passthrough_polygon(const Vector<Vector2> &p_region) {
 	DisplayServer::get_singleton()->window_set_mouse_passthrough(mpath, window_id);
 }
 
-Vector<Vector2> Window::get_mouse_passthrough_polygon() const {
+Hector<Hector2> Window::get_mouse_passthrough_polygon() const {
 	return mpath;
 }
 
@@ -1685,7 +1685,7 @@ void Window::_window_input_text(const String &p_text) {
 	push_text_input(p_text);
 }
 
-void Window::_window_drop_files(const Vector<String> &p_files) {
+void Window::_window_drop_files(const Hector<String> &p_files) {
 	emit_signal(SNAME("files_dropped"), p_files);
 }
 
@@ -1753,7 +1753,7 @@ void Window::popup_centered_clamped(const Size2i &p_size, float p_fallback_ratio
 		parent_rect.size = DisplayServer::get_singleton()->screen_get_size(parent_screen);
 	}
 
-	Vector2i size_ratio = parent_rect.size * p_fallback_ratio;
+	Hector2i size_ratio = parent_rect.size * p_fallback_ratio;
 
 	Rect2i popup_rect;
 	popup_rect.size = size_ratio.min(expected_size);
@@ -1951,7 +1951,7 @@ Rect2i Window::fit_rect_in_parent(Rect2i p_rect, const Rect2i &p_parent_rect) co
 
 Size2 Window::get_contents_minimum_size() const {
 	ERR_READ_THREAD_GUARD_V(Size2());
-	Vector2 ms;
+	Hector2 ms;
 	if (GDVIRTUAL_CALL(_get_contents_minimum_size, ms)) {
 		return ms;
 	}
@@ -2149,7 +2149,7 @@ Ref<Texture2D> Window::get_theme_icon(const StringName &p_name, const StringName
 		return theme_icon_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Ref<Texture2D> icon = theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_ICON, p_name, theme_types);
 	theme_icon_cache[p_theme_type][p_name] = icon;
@@ -2173,7 +2173,7 @@ Ref<StyleBox> Window::get_theme_stylebox(const StringName &p_name, const StringN
 		return theme_style_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Ref<StyleBox> style = theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_STYLEBOX, p_name, theme_types);
 	theme_style_cache[p_theme_type][p_name] = style;
@@ -2197,7 +2197,7 @@ Ref<Font> Window::get_theme_font(const StringName &p_name, const StringName &p_t
 		return theme_font_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Ref<Font> font = theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_FONT, p_name, theme_types);
 	theme_font_cache[p_theme_type][p_name] = font;
@@ -2221,7 +2221,7 @@ int Window::get_theme_font_size(const StringName &p_name, const StringName &p_th
 		return theme_font_size_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	int font_size = theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_FONT_SIZE, p_name, theme_types);
 	theme_font_size_cache[p_theme_type][p_name] = font_size;
@@ -2245,7 +2245,7 @@ Color Window::get_theme_color(const StringName &p_name, const StringName &p_them
 		return theme_color_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Color color = theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_COLOR, p_name, theme_types);
 	theme_color_cache[p_theme_type][p_name] = color;
@@ -2269,7 +2269,7 @@ int Window::get_theme_constant(const StringName &p_name, const StringName &p_the
 		return theme_constant_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	int constant = theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_CONSTANT, p_name, theme_types);
 	theme_constant_cache[p_theme_type][p_name] = constant;
@@ -2315,7 +2315,7 @@ bool Window::has_theme_icon(const StringName &p_name, const StringName &p_theme_
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_ICON, p_name, theme_types);
 }
@@ -2332,7 +2332,7 @@ bool Window::has_theme_stylebox(const StringName &p_name, const StringName &p_th
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_STYLEBOX, p_name, theme_types);
 }
@@ -2349,7 +2349,7 @@ bool Window::has_theme_font(const StringName &p_name, const StringName &p_theme_
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_FONT, p_name, theme_types);
 }
@@ -2366,7 +2366,7 @@ bool Window::has_theme_font_size(const StringName &p_name, const StringName &p_t
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_FONT_SIZE, p_name, theme_types);
 }
@@ -2383,7 +2383,7 @@ bool Window::has_theme_color(const StringName &p_name, const StringName &p_theme
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_COLOR, p_name, theme_types);
 }
@@ -2400,7 +2400,7 @@ bool Window::has_theme_constant(const StringName &p_name, const StringName &p_th
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_CONSTANT, p_name, theme_types);
 }
@@ -2771,7 +2771,7 @@ bool Window::is_attached_in_viewport() const {
 	return get_embedder();
 }
 
-void Window::_update_mouse_over(Vector2 p_pos) {
+void Window::_update_mouse_over(Hector2 p_pos) {
 	if (!mouse_in_window) {
 		if (is_embedded()) {
 			mouse_in_window = true;
@@ -2981,11 +2981,11 @@ void Window::_bind_methods() {
 
 	// Keep the enum values in sync with the `WindowInitialPosition` enum.
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "initial_position", PROPERTY_HINT_ENUM, "Absolute,Center of Primary Screen,Center of Main Window Screen,Center of Other Screen,Center of Screen With Mouse Pointer,Center of Screen With Keyboard Focus"), "set_initial_position", "get_initial_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size", PROPERTY_HINT_NONE, "suffix:px"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "position", PROPERTY_HINT_NONE, "suffix:px"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "size", PROPERTY_HINT_NONE, "suffix:px"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "current_screen", PROPERTY_HINT_RANGE, "0,64,1,or_greater"), "set_current_screen", "get_current_screen");
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "mouse_passthrough_polygon"), "set_mouse_passthrough_polygon", "get_mouse_passthrough_polygon");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "mouse_passthrough_polygon"), "set_mouse_passthrough_polygon", "get_mouse_passthrough_polygon");
 
 	ADD_GROUP("Flags", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "visible"), "set_visible", "is_visible");
@@ -3004,12 +3004,12 @@ void Window::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "force_native"), "set_force_native", "get_force_native");
 
 	ADD_GROUP("Limits", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "min_size", PROPERTY_HINT_NONE, "suffix:px"), "set_min_size", "get_min_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "max_size", PROPERTY_HINT_NONE, "suffix:px"), "set_max_size", "get_max_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "min_size", PROPERTY_HINT_NONE, "suffix:px"), "set_min_size", "get_min_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "max_size", PROPERTY_HINT_NONE, "suffix:px"), "set_max_size", "get_max_size");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "keep_title_visible"), "set_keep_title_visible", "get_keep_title_visible");
 
 	ADD_GROUP("Content Scale", "content_scale_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "content_scale_size"), "set_content_scale_size", "get_content_scale_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "content_scale_size"), "set_content_scale_size", "get_content_scale_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "content_scale_mode", PROPERTY_HINT_ENUM, "Disabled,Canvas Items,Viewport"), "set_content_scale_mode", "get_content_scale_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "content_scale_aspect", PROPERTY_HINT_ENUM, "Ignore,Keep,Keep Width,Keep Height,Expand"), "set_content_scale_aspect", "get_content_scale_aspect");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "content_scale_stretch", PROPERTY_HINT_ENUM, "Fractional,Integer"), "set_content_scale_stretch", "get_content_scale_stretch");

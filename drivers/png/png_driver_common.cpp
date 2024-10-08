@@ -105,7 +105,7 @@ Error png_to_image(const uint8_t *p_source, size_t p_size, bool p_force_linear, 
 	}
 
 	const png_uint_32 stride = PNG_IMAGE_ROW_STRIDE(png_img);
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	Error err = buffer.resize(PNG_IMAGE_BUFFER_SIZE(png_img, stride));
 	if (err) {
 		png_image_free(&png_img); // only required when we return before finish_read
@@ -124,7 +124,7 @@ Error png_to_image(const uint8_t *p_source, size_t p_size, bool p_force_linear, 
 	return OK;
 }
 
-Error image_to_png(const Ref<Image> &p_image, Vector<uint8_t> &p_buffer) {
+Error image_to_png(const Ref<Image> &p_image, Hector<uint8_t> &p_buffer) {
 	Ref<Image> source_image = p_image->duplicate();
 
 	if (source_image->is_compressed()) {
@@ -162,7 +162,7 @@ Error image_to_png(const Ref<Image> &p_image, Vector<uint8_t> &p_buffer) {
 			}
 	}
 
-	const Vector<uint8_t> image_data = source_image->get_data();
+	const Hector<uint8_t> image_data = source_image->get_data();
 	const uint8_t *reader = image_data.ptr();
 
 	// we may be passed a buffer with existing content we're expected to append to

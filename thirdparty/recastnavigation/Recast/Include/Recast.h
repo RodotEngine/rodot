@@ -687,13 +687,13 @@ template<class T> inline T rcClamp(T value, T minInclusive, T maxInclusive)
 float rcSqrt(float x);
 
 /// @}
-/// @name Vector helper functions.
+/// @name Hector helper functions.
 /// @{
 
-/// Derives the cross product of two vectors. (@p v1 x @p v2)
+/// Derives the cross product of two Hectors. (@p v1 x @p v2)
 /// @param[out]		dest	The cross product. [(x, y, z)]
-/// @param[in]		v1		A Vector [(x, y, z)]
-/// @param[in]		v2		A vector [(x, y, z)]
+/// @param[in]		v1		A Hector [(x, y, z)]
+/// @param[in]		v2		A Hector [(x, y, z)]
 inline void rcVcross(float* dest, const float* v1, const float* v2)
 {
 	dest[0] = v1[1]*v2[2] - v1[2]*v2[1];
@@ -701,19 +701,19 @@ inline void rcVcross(float* dest, const float* v1, const float* v2)
 	dest[2] = v1[0]*v2[1] - v1[1]*v2[0];
 }
 
-/// Derives the dot product of two vectors. (@p v1 . @p v2)
-/// @param[in]		v1	A Vector [(x, y, z)]
-/// @param[in]		v2	A vector [(x, y, z)]
+/// Derives the dot product of two Hectors. (@p v1 . @p v2)
+/// @param[in]		v1	A Hector [(x, y, z)]
+/// @param[in]		v2	A Hector [(x, y, z)]
 /// @return The dot product.
 inline float rcVdot(const float* v1, const float* v2)
 {
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
 }
 
-/// Performs a scaled vector addition. (@p v1 + (@p v2 * @p s))
-/// @param[out]		dest	The result vector. [(x, y, z)]
-/// @param[in]		v1		The base vector. [(x, y, z)]
-/// @param[in]		v2		The vector to scale and add to @p v1. [(x, y, z)]
+/// Performs a scaled Hector addition. (@p v1 + (@p v2 * @p s))
+/// @param[out]		dest	The result Hector. [(x, y, z)]
+/// @param[in]		v1		The base Hector. [(x, y, z)]
+/// @param[in]		v2		The Hector to scale and add to @p v1. [(x, y, z)]
 /// @param[in]		s		The amount to scale @p v2 by before adding to @p v1.
 inline void rcVmad(float* dest, const float* v1, const float* v2, const float s)
 {
@@ -722,10 +722,10 @@ inline void rcVmad(float* dest, const float* v1, const float* v2, const float s)
 	dest[2] = v1[2]+v2[2]*s;
 }
 
-/// Performs a vector addition. (@p v1 + @p v2)
-/// @param[out]		dest	The result vector. [(x, y, z)]
-/// @param[in]		v1		The base vector. [(x, y, z)]
-/// @param[in]		v2		The vector to add to @p v1. [(x, y, z)]
+/// Performs a Hector addition. (@p v1 + @p v2)
+/// @param[out]		dest	The result Hector. [(x, y, z)]
+/// @param[in]		v1		The base Hector. [(x, y, z)]
+/// @param[in]		v2		The Hector to add to @p v1. [(x, y, z)]
 inline void rcVadd(float* dest, const float* v1, const float* v2)
 {
 	dest[0] = v1[0]+v2[0];
@@ -733,10 +733,10 @@ inline void rcVadd(float* dest, const float* v1, const float* v2)
 	dest[2] = v1[2]+v2[2];
 }
 
-/// Performs a vector subtraction. (@p v1 - @p v2)
-/// @param[out]		dest	The result vector. [(x, y, z)]
-/// @param[in]		v1		The base vector. [(x, y, z)]
-/// @param[in]		v2		The vector to subtract from @p v1. [(x, y, z)]
+/// Performs a Hector subtraction. (@p v1 - @p v2)
+/// @param[out]		dest	The result Hector. [(x, y, z)]
+/// @param[in]		v1		The base Hector. [(x, y, z)]
+/// @param[in]		v2		The Hector to subtract from @p v1. [(x, y, z)]
 inline void rcVsub(float* dest, const float* v1, const float* v2)
 {
 	dest[0] = v1[0]-v2[0];
@@ -744,9 +744,9 @@ inline void rcVsub(float* dest, const float* v1, const float* v2)
 	dest[2] = v1[2]-v2[2];
 }
 
-/// Selects the minimum value of each element from the specified vectors.
-/// @param[in,out]	mn	A vector.  (Will be updated with the result.) [(x, y, z)]
-/// @param[in]		v	A vector. [(x, y, z)]
+/// Selects the minimum value of each element from the specified Hectors.
+/// @param[in,out]	mn	A Hector.  (Will be updated with the result.) [(x, y, z)]
+/// @param[in]		v	A Hector. [(x, y, z)]
 inline void rcVmin(float* mn, const float* v)
 {
 	mn[0] = rcMin(mn[0], v[0]);
@@ -754,9 +754,9 @@ inline void rcVmin(float* mn, const float* v)
 	mn[2] = rcMin(mn[2], v[2]);
 }
 
-/// Selects the maximum value of each element from the specified vectors.
-/// @param[in,out]	mx	A vector.  (Will be updated with the result.) [(x, y, z)]
-/// @param[in]		v	A vector. [(x, y, z)]
+/// Selects the maximum value of each element from the specified Hectors.
+/// @param[in,out]	mx	A Hector.  (Will be updated with the result.) [(x, y, z)]
+/// @param[in]		v	A Hector. [(x, y, z)]
 inline void rcVmax(float* mx, const float* v)
 {
 	mx[0] = rcMax(mx[0], v[0]);
@@ -764,9 +764,9 @@ inline void rcVmax(float* mx, const float* v)
 	mx[2] = rcMax(mx[2], v[2]);
 }
 
-/// Performs a vector copy.
+/// Performs a Hector copy.
 /// @param[out]		dest	The result. [(x, y, z)]
-/// @param[in]		v		The vector to copy. [(x, y, z)]
+/// @param[in]		v		The Hector to copy. [(x, y, z)]
 inline void rcVcopy(float* dest, const float* v)
 {
 	dest[0] = v[0];
@@ -798,8 +798,8 @@ inline float rcVdistSqr(const float* v1, const float* v2)
 	return dx*dx + dy*dy + dz*dz;
 }
 
-/// Normalizes the vector.
-/// @param[in,out]	v	The vector to normalize. [(x, y, z)]
+/// Normalizes the Hector.
+/// @param[in,out]	v	The Hector to normalize. [(x, y, z)]
 inline void rcVnormalize(float* v)
 {
 	float d = 1.0f / rcSqrt(rcSqr(v[0]) + rcSqr(v[1]) + rcSqr(v[2]));

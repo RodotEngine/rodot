@@ -187,7 +187,7 @@ static String f2sp0(float p_float) {
 	return num;
 }
 
-static String get_constant_text(SL::DataType p_type, const Vector<SL::Scalar> &p_values) {
+static String get_constant_text(SL::DataType p_type, const Hector<SL::Scalar> &p_values) {
 	switch (p_type) {
 		case SL::TYPE_BOOL:
 			return p_values[0].boolean ? "true" : "false";
@@ -314,7 +314,7 @@ void ShaderCompiler::_dump_function_deps(const SL::ShaderNode *p_node, const Str
 
 	ERR_FAIL_COND(fidx == -1);
 
-	Vector<StringName> uses_functions;
+	Hector<StringName> uses_functions;
 
 	for (const StringName &E : p_node->vfunctions[fidx].uses_function) {
 		uses_functions.push_back(E);
@@ -527,15 +527,15 @@ String ShaderCompiler::_dump_node_code(const SL::Node *p_node, int p_level, Gene
 
 			r_gen_code.texture_uniforms.resize(max_texture_uniforms);
 
-			Vector<int> uniform_sizes;
-			Vector<int> uniform_alignments;
-			Vector<StringName> uniform_defines;
+			Hector<int> uniform_sizes;
+			Hector<int> uniform_alignments;
+			Hector<StringName> uniform_defines;
 			uniform_sizes.resize(max_uniforms);
 			uniform_alignments.resize(max_uniforms);
 			uniform_defines.resize(max_uniforms);
 			bool uses_uniforms = false;
 
-			Vector<StringName> uniform_names;
+			Hector<StringName> uniform_names;
 
 			for (const KeyValue<StringName, SL::ShaderNode::Uniform> &E : pnode->uniforms) {
 				uniform_names.push_back(E.key);
@@ -662,7 +662,7 @@ String ShaderCompiler::_dump_node_code(const SL::Node *p_node, int p_level, Gene
 
 			List<Pair<StringName, SL::ShaderNode::Varying>> var_frag_to_light;
 
-			Vector<StringName> varying_names;
+			Hector<StringName> varying_names;
 
 			for (const KeyValue<StringName, SL::ShaderNode::Varying> &E : pnode->varyings) {
 				varying_names.push_back(E.key);
@@ -944,7 +944,7 @@ String ShaderCompiler::_dump_node_code(const SL::Node *p_node, int p_level, Gene
 
 						code = name;
 					} else {
-						//a scalar or vector
+						//a scalar or Hector
 						if (u.scope == ShaderLanguage::ShaderNode::Uniform::SCOPE_GLOBAL) {
 							code = actions.base_uniform_string + _mkid(vnode->name); //texture, use as is
 							//global variable, this means the code points to an index to the global table
@@ -1044,7 +1044,7 @@ String ShaderCompiler::_dump_node_code(const SL::Node *p_node, int p_level, Gene
 					if (u.is_texture()) {
 						code = _mkid(anode->name); //texture, use as is
 					} else {
-						//a scalar or vector
+						//a scalar or Hector
 						if (u.scope == ShaderLanguage::ShaderNode::Uniform::SCOPE_GLOBAL) {
 							code = actions.base_uniform_string + _mkid(anode->name); //texture, use as is
 							//global variable, this means the code points to an index to the global table
@@ -1481,13 +1481,13 @@ Error ShaderCompiler::compile(RS::ShaderMode p_mode, const String &p_code, Ident
 	Error err = parser.compile(p_code, info);
 
 	if (err != OK) {
-		Vector<ShaderLanguage::FilePosition> include_positions = parser.get_include_positions();
+		Hector<ShaderLanguage::FilePosition> include_positions = parser.get_include_positions();
 
 		String current;
-		HashMap<String, Vector<String>> includes;
-		includes[""] = Vector<String>();
-		Vector<String> include_stack;
-		Vector<String> shader_lines = p_code.split("\n");
+		HashMap<String, Hector<String>> includes;
+		includes[""] = Hector<String>();
+		Hector<String> include_stack;
+		Hector<String> shader_lines = p_code.split("\n");
 
 		// Reconstruct the files.
 		for (int i = 0; i < shader_lines.size(); i++) {
@@ -1499,7 +1499,7 @@ Error ShaderCompiler::compile(RS::ShaderMode p_mode, const String &p_code, Ident
 				includes[current].append("#include \"" + inc_path + "\""); // Restore the include directive
 				include_stack.push_back(current);
 				current = inc_path;
-				includes[inc_path] = Vector<String>();
+				includes[inc_path] = Hector<String>();
 
 			} else if (l.begins_with("@@<")) {
 				if (include_stack.size()) {
@@ -1512,7 +1512,7 @@ Error ShaderCompiler::compile(RS::ShaderMode p_mode, const String &p_code, Ident
 		}
 
 		// Print the files.
-		for (const KeyValue<String, Vector<String>> &E : includes) {
+		for (const KeyValue<String, Hector<String>> &E : includes) {
 			if (E.key.is_empty()) {
 				if (p_path == "") {
 					print_line("--Main Shader--");
@@ -1528,7 +1528,7 @@ Error ShaderCompiler::compile(RS::ShaderMode p_mode, const String &p_code, Ident
 					err_line = include_positions[i].line;
 				}
 			}
-			const Vector<String> &V = E.value;
+			const Hector<String> &V = E.value;
 			for (int i = 0; i < V.size(); i++) {
 				if (i == err_line - 1) {
 					// Mark the error line to be visible without having to look at

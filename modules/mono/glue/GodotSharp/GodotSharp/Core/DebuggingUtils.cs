@@ -74,7 +74,7 @@ namespace Godot
 
         // ReSharper disable once InconsistentNaming
         [StructLayout(LayoutKind.Sequential)]
-        internal ref struct godot_stack_info_vector
+        internal ref struct godot_stack_info_Hector
         {
             private IntPtr _writeProxy;
             private unsafe godot_stack_info* _ptr;
@@ -89,16 +89,16 @@ namespace Godot
             {
                 if (size < 0)
                     throw new ArgumentOutOfRangeException(nameof(size));
-                var err = NativeFuncs.godotsharp_stack_info_vector_resize(ref this, size);
+                var err = NativeFuncs.godotsharp_stack_info_Hector_resize(ref this, size);
                 if (err != Error.Ok)
-                    throw new InvalidOperationException("Failed to resize vector. Error code is: " + err.ToString());
+                    throw new InvalidOperationException("Failed to resize Hector. Error code is: " + err.ToString());
             }
 
             public unsafe void Dispose()
             {
                 if (_ptr == null)
                     return;
-                NativeFuncs.godotsharp_stack_info_vector_destroy(ref this);
+                NativeFuncs.godotsharp_stack_info_Hector_destroy(ref this);
                 _ptr = null;
             }
         }
@@ -114,11 +114,11 @@ namespace Godot
         }
 
         [UnmanagedCallersOnly]
-        internal static unsafe void GetCurrentStackInfo(void* destVector)
+        internal static unsafe void GetCurrentStackInfo(void* destHector)
         {
             try
             {
-                var vector = (godot_stack_info_vector*)destVector;
+                var Hector = (godot_stack_info_Hector*)destHector;
 
                 // We skip 2 frames:
                 // The first skipped frame is the current method.
@@ -129,7 +129,7 @@ namespace Godot
                 if (frameCount == 0)
                     return;
 
-                vector->Resize(frameCount);
+                Hector->Resize(frameCount);
 
                 int i = 0;
                 foreach (StackFrame frame in stackTrace.GetFrames())
@@ -147,10 +147,10 @@ namespace Godot
 
                     GetStackFrameMethodDecl(frame, out string methodDecl);
 
-                    godot_stack_info* stackInfo = &vector->Elements[i];
+                    godot_stack_info* stackInfo = &Hector->Elements[i];
 
-                    // Assign directly to element in Vector. This way we don't need to worry
-                    // about disposal if an exception is thrown. The Vector takes care of it.
+                    // Assign directly to element in Hector. This way we don't need to worry
+                    // about disposal if an exception is thrown. The Hector takes care of it.
                     stackInfo->File = Marshaling.ConvertStringToNative(fileName);
                     stackInfo->Func = Marshaling.ConvertStringToNative(methodDecl);
                     stackInfo->Line = fileLineNumber;
@@ -158,8 +158,8 @@ namespace Godot
                     i++;
                 }
 
-                // Resize the vector again in case we skipped some frames.
-                vector->Resize(i);
+                // Resize the Hector again in case we skipped some frames.
+                Hector->Resize(i);
             }
             catch (Exception e)
             {

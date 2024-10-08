@@ -85,7 +85,7 @@ private:
 		Color color;
 		real_t custom[4] = {};
 		real_t rotation = 0.0;
-		Vector2 velocity;
+		Hector2 velocity;
 		bool active = false;
 		real_t angle_rand = 0.0;
 		real_t scale_rand = 0.0;
@@ -107,9 +107,9 @@ private:
 	RID mesh;
 	RID multimesh;
 
-	Vector<Particle> particles;
-	Vector<float> particle_data;
-	Vector<int> particle_order;
+	Hector<Particle> particles;
+	Hector<float> particle_data;
+	Hector<int> particle_order;
 
 	struct SortLifetime {
 		const Particle *particles = nullptr;
@@ -121,7 +121,7 @@ private:
 
 	struct SortAxis {
 		const Particle *particles = nullptr;
-		Vector2 axis;
+		Hector2 axis;
 		bool operator()(int p_a, int p_b) const {
 			return axis.dot(particles[p_a].transform[2]) < axis.dot(particles[p_b].transform[2]);
 		}
@@ -149,7 +149,7 @@ private:
 
 	////////
 
-	Vector2 direction = Vector2(1, 0);
+	Hector2 direction = Hector2(1, 0);
 	real_t spread = 45.0;
 
 	real_t parameters_min[PARAM_MAX] = {};
@@ -164,17 +164,17 @@ private:
 
 	EmissionShape emission_shape = EMISSION_SHAPE_POINT;
 	real_t emission_sphere_radius = 1.0;
-	Vector2 emission_rect_extents = Vector2(1, 1);
-	Vector<Vector2> emission_points;
-	Vector<Vector2> emission_normals;
-	Vector<Color> emission_colors;
+	Hector2 emission_rect_extents = Hector2(1, 1);
+	Hector<Hector2> emission_points;
+	Hector<Hector2> emission_normals;
+	Hector<Color> emission_colors;
 	int emission_point_count = 0;
 
 	Ref<Curve> scale_curve_x;
 	Ref<Curve> scale_curve_y;
 	bool split_scale = false;
 
-	Vector2 gravity = Vector2(0, 980);
+	Hector2 gravity = Hector2(0, 980);
 
 	void _update_internal();
 	void _particles_process(double p_delta);
@@ -232,8 +232,8 @@ public:
 
 	///////////////////
 
-	void set_direction(Vector2 p_direction);
-	Vector2 get_direction() const;
+	void set_direction(Hector2 p_direction);
+	Hector2 get_direction() const;
 
 	void set_spread(real_t p_spread);
 	real_t get_spread() const;
@@ -261,26 +261,26 @@ public:
 
 	void set_emission_shape(EmissionShape p_shape);
 	void set_emission_sphere_radius(real_t p_radius);
-	void set_emission_rect_extents(Vector2 p_extents);
-	void set_emission_points(const Vector<Vector2> &p_points);
-	void set_emission_normals(const Vector<Vector2> &p_normals);
-	void set_emission_colors(const Vector<Color> &p_colors);
+	void set_emission_rect_extents(Hector2 p_extents);
+	void set_emission_points(const Hector<Hector2> &p_points);
+	void set_emission_normals(const Hector<Hector2> &p_normals);
+	void set_emission_colors(const Hector<Color> &p_colors);
 	void set_scale_curve_x(Ref<Curve> p_scale_curve);
 	void set_scale_curve_y(Ref<Curve> p_scale_curve);
 	void set_split_scale(bool p_split_scale);
 
 	EmissionShape get_emission_shape() const;
 	real_t get_emission_sphere_radius() const;
-	Vector2 get_emission_rect_extents() const;
-	Vector<Vector2> get_emission_points() const;
-	Vector<Vector2> get_emission_normals() const;
-	Vector<Color> get_emission_colors() const;
+	Hector2 get_emission_rect_extents() const;
+	Hector<Hector2> get_emission_points() const;
+	Hector<Hector2> get_emission_normals() const;
+	Hector<Color> get_emission_colors() const;
 	Ref<Curve> get_scale_curve_x() const;
 	Ref<Curve> get_scale_curve_y() const;
 	bool get_split_scale();
 
-	void set_gravity(const Vector2 &p_gravity);
-	Vector2 get_gravity() const;
+	void set_gravity(const Hector2 &p_gravity);
+	Hector2 get_gravity() const;
 
 	PackedStringArray get_configuration_warnings() const override;
 

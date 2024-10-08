@@ -216,7 +216,7 @@ void SceneTree::_flush_ugc() {
 	ugc_locked = true;
 
 	while (unique_group_calls.size()) {
-		HashMap<UGCall, Vector<Variant>, UGCall>::Iterator E = unique_group_calls.begin();
+		HashMap<UGCall, Hector<Variant>, UGCall>::Iterator E = unique_group_calls.begin();
 
 		const Variant **argptrs = (const Variant **)alloca(E->value.size() * sizeof(Variant *));
 
@@ -250,7 +250,7 @@ void SceneTree::_update_group_order(Group &g) {
 }
 
 void SceneTree::call_group_flagsp(uint32_t p_call_flags, const StringName &p_group, const StringName &p_function, const Variant **p_args, int p_argcount) {
-	Vector<Node *> nodes_copy;
+	Hector<Node *> nodes_copy;
 
 	{
 		_THREAD_SAFE_METHOD_
@@ -275,7 +275,7 @@ void SceneTree::call_group_flagsp(uint32_t p_call_flags, const StringName &p_gro
 				return;
 			}
 
-			Vector<Variant> args;
+			Hector<Variant> args;
 			for (int i = 0; i < p_argcount; i++) {
 				args.push_back(*p_args[i]);
 			}
@@ -343,7 +343,7 @@ void SceneTree::call_group_flagsp(uint32_t p_call_flags, const StringName &p_gro
 }
 
 void SceneTree::notify_group_flags(uint32_t p_call_flags, const StringName &p_group, int p_notification) {
-	Vector<Node *> nodes_copy;
+	Hector<Node *> nodes_copy;
 	{
 		_THREAD_SAFE_METHOD_
 		HashMap<StringName, Group>::Iterator E = group_map.find(p_group);
@@ -405,7 +405,7 @@ void SceneTree::notify_group_flags(uint32_t p_call_flags, const StringName &p_gr
 }
 
 void SceneTree::set_group_flags(uint32_t p_call_flags, const StringName &p_group, const String &p_name, const Variant &p_value) {
-	Vector<Node *> nodes_copy;
+	Hector<Node *> nodes_copy;
 	{
 		_THREAD_SAFE_METHOD_
 
@@ -909,13 +909,13 @@ Ref<ArrayMesh> SceneTree::get_debug_contact_mesh() {
 	mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
 	mat->set_albedo(get_debug_collision_contact_color());
 
-	Vector3 diamond[6] = {
-		Vector3(-1, 0, 0),
-		Vector3(1, 0, 0),
-		Vector3(0, -1, 0),
-		Vector3(0, 1, 0),
-		Vector3(0, 0, -1),
-		Vector3(0, 0, 1)
+	Hector3 diamond[6] = {
+		Hector3(-1, 0, 0),
+		Hector3(1, 0, 0),
+		Hector3(0, -1, 0),
+		Hector3(0, 1, 0),
+		Hector3(0, 0, -1),
+		Hector3(0, 0, 1)
 	};
 
 	/* clang-format off */
@@ -931,12 +931,12 @@ Ref<ArrayMesh> SceneTree::get_debug_contact_mesh() {
 	};
 	/* clang-format on */
 
-	Vector<int> indices;
+	Hector<int> indices;
 	for (int i = 0; i < 8 * 3; i++) {
 		indices.push_back(diamond_faces[i]);
 	}
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 	for (int i = 0; i < 6; i++) {
 		vertices.push_back(diamond[i] * 0.1);
 	}
@@ -978,7 +978,7 @@ void SceneTree::_process_group(ProcessGroup *p_group, bool p_physics) {
 
 	p_group->call_queue.flush(); // Flush messages before processing.
 
-	Vector<Node *> &nodes = p_physics ? p_group->physics_nodes : p_group->nodes;
+	Hector<Node *> &nodes = p_physics ? p_group->physics_nodes : p_group->nodes;
 	if (nodes.is_empty()) {
 		return;
 	}
@@ -996,7 +996,7 @@ void SceneTree::_process_group(ProcessGroup *p_group, bool p_physics) {
 	}
 
 	// Make a copy, so if nodes are added/removed from process, this does not break
-	Vector<Node *> nodes_copy = nodes;
+	Hector<Node *> nodes_copy = nodes;
 
 	uint32_t node_count = nodes_copy.size();
 	Node **nodes_ptr = (Node **)nodes_copy.ptr(); // Force cast, pointer will not change.
@@ -1226,7 +1226,7 @@ void SceneTree::_add_node_to_process_group(Node *p_node, Node *p_owner) {
 }
 
 void SceneTree::_call_input_pause(const StringName &p_group, CallInputType p_call_type, const Ref<InputEvent> &p_input, Viewport *p_viewport) {
-	Vector<Node *> nodes_copy;
+	Hector<Node *> nodes_copy;
 	{
 		_THREAD_SAFE_METHOD_
 
@@ -1242,7 +1242,7 @@ void SceneTree::_call_input_pause(const StringName &p_group, CallInputType p_cal
 		_update_group_order(g);
 
 		//copy, so copy on write happens in case something is removed from process while being called
-		//performance is not lost because only if something is added/removed the vector is copied.
+		//performance is not lost because only if something is added/removed the Hector is copied.
 		nodes_copy = g.nodes;
 	}
 
@@ -1254,7 +1254,7 @@ void SceneTree::_call_input_pause(const StringName &p_group, CallInputType p_cal
 		nodes_removed_on_group_call_lock++;
 	}
 
-	Vector<ObjectID> no_context_node_ids; // Nodes may be deleted due to this shortcut input.
+	Hector<ObjectID> no_context_node_ids; // Nodes may be deleted due to this shortcut input.
 
 	for (int i = gr_node_count - 1; i >= 0; i--) {
 		if (p_viewport->is_input_handled()) {
@@ -1577,10 +1577,10 @@ Ref<MultiplayerAPI> SceneTree::get_multiplayer(const NodePath &p_for_path) const
 		return multiplayer;
 	}
 
-	const Vector<StringName> tnames = p_for_path.get_names();
+	const Hector<StringName> tnames = p_for_path.get_names();
 	const StringName *nptr = tnames.ptr();
 	for (const KeyValue<NodePath, Ref<MultiplayerAPI>> &E : custom_multiplayers) {
-		const Vector<StringName> snames = E.key.get_names();
+		const Hector<StringName> snames = E.key.get_names();
 		if (tnames.size() < snames.size()) {
 			continue;
 		}
@@ -1613,10 +1613,10 @@ void SceneTree::set_multiplayer(Ref<MultiplayerAPI> p_multiplayer, const NodePat
 		if (custom_multiplayers.has(p_root_path)) {
 			custom_multiplayers[p_root_path]->object_configuration_remove(nullptr, p_root_path);
 		} else if (p_multiplayer.is_valid()) {
-			const Vector<StringName> tnames = p_root_path.get_names();
+			const Hector<StringName> tnames = p_root_path.get_names();
 			const StringName *nptr = tnames.ptr();
 			for (const KeyValue<NodePath, Ref<MultiplayerAPI>> &E : custom_multiplayers) {
-				const Vector<StringName> snames = E.key.get_names();
+				const Hector<StringName> snames = E.key.get_names();
 				if (tnames.size() < snames.size()) {
 					continue;
 				}

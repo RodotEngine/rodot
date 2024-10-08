@@ -29,14 +29,14 @@ using namespace spv;
 
 namespace SPIRV_CROSS_NAMESPACE
 {
-Parser::Parser(vector<uint32_t> spirv)
+Parser::Parser(Hector<uint32_t> spirv)
 {
 	ir.spirv = std::move(spirv);
 }
 
 Parser::Parser(const uint32_t *spirv_data, size_t word_count)
 {
-	ir.spirv = vector<uint32_t>(spirv_data, spirv_data + word_count);
+	ir.spirv = Hector<uint32_t>(spirv_data, spirv_data + word_count);
 }
 
 static bool decoration_is_string(Decoration decoration)
@@ -103,7 +103,7 @@ void Parser::parse()
 
 	uint32_t offset = 5;
 
-	SmallVector<Instruction> instructions;
+	SmallHector<Instruction> instructions;
 	while (offset < len)
 	{
 		Instruction instr = {};
@@ -158,7 +158,7 @@ const uint32_t *Parser::stream(const Instruction &instr) const
 	return &ir.spirv[instr.offset];
 }
 
-static string extract_string(const vector<uint32_t> &spirv, uint32_t offset)
+static string extract_string(const Hector<uint32_t> &spirv, uint32_t offset)
 {
 	string ret;
 	for (uint32_t i = offset; i < spirv.size(); i++)
@@ -562,7 +562,7 @@ void Parser::parse(const Instruction &instruction)
 	// Build composite types by "inheriting".
 	// NOTE: The self member is also copied! For pointers and array modifiers this is a good thing
 	// since we can refer to decorations on pointee classes which is needed for UBO/SSBO, I/O blocks in geometry/tess etc.
-	case OpTypeVector:
+	case OpTypeHector:
 	{
 		uint32_t id = ops[0];
 		uint32_t vecsize = ops[2];

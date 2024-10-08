@@ -37,8 +37,8 @@
 class NodePath {
 	struct Data {
 		SafeRefCount refcount;
-		Vector<StringName> path;
-		Vector<StringName> subpath;
+		Hector<StringName> path;
+		Hector<StringName> subpath;
 		StringName concatenated_path;
 		StringName concatenated_subpath;
 		bool absolute;
@@ -58,8 +58,8 @@ public:
 	int get_subname_count() const;
 	StringName get_subname(int p_idx) const;
 	int get_total_name_count() const;
-	Vector<StringName> get_names() const;
-	Vector<StringName> get_subnames() const;
+	Hector<StringName> get_names() const;
+	Hector<StringName> get_subnames() const;
 	StringName get_concatenated_names() const;
 	StringName get_concatenated_subnames() const;
 	NodePath slice(int p_begin, int p_end = INT_MAX) const;
@@ -89,8 +89,8 @@ public:
 	void simplify();
 	NodePath simplified() const;
 
-	NodePath(const Vector<StringName> &p_path, bool p_absolute);
-	NodePath(const Vector<StringName> &p_path, const Vector<StringName> &p_subpath, bool p_absolute);
+	NodePath(const Hector<StringName> &p_path, bool p_absolute);
+	NodePath(const Hector<StringName> &p_path, const Hector<StringName> &p_subpath, bool p_absolute);
 	NodePath(const NodePath &p_path);
 	NodePath(const String &p_path);
 	NodePath() {}

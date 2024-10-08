@@ -102,13 +102,13 @@ public:
     virtual void unimplemented(const TSourceLoc&, const char* featureDesc);
     virtual void doubleCheck(const TSourceLoc&, const char* op);
     virtual void float16Check(const TSourceLoc&, const char* op, bool builtIn = false);
-    virtual void float16ScalarVectorCheck(const TSourceLoc&, const char* op, bool builtIn = false);
+    virtual void float16ScalarHectorCheck(const TSourceLoc&, const char* op, bool builtIn = false);
     virtual bool float16Arithmetic();
     virtual void requireFloat16Arithmetic(const TSourceLoc& loc, const char* op, const char* featureDesc);
-    virtual void int16ScalarVectorCheck(const TSourceLoc&, const char* op, bool builtIn = false);
+    virtual void int16ScalarHectorCheck(const TSourceLoc&, const char* op, bool builtIn = false);
     virtual bool int16Arithmetic();
     virtual void requireInt16Arithmetic(const TSourceLoc& loc, const char* op, const char* featureDesc);
-    virtual void int8ScalarVectorCheck(const TSourceLoc&, const char* op, bool builtIn = false);
+    virtual void int8ScalarHectorCheck(const TSourceLoc&, const char* op, bool builtIn = false);
     virtual bool int8Arithmetic();
     virtual void requireInt8Arithmetic(const TSourceLoc& loc, const char* op, const char* featureDesc);
     virtual void float16OpaqueCheck(const TSourceLoc&, const char* op, bool builtIn = false);
@@ -171,7 +171,7 @@ public:
 protected:
     TMap<TString, TExtensionBehavior> extensionBehavior;    // for each extension string, what its current behavior is
     TMap<TString, unsigned int> extensionMinSpv;            // for each extension string, store minimum spirv required
-    TVector<TString> spvUnsupportedExt;                     // for extensions reserved for spv usage.
+    THector<TString> spvUnsupportedExt;                     // for extensions reserved for spv usage.
     EShMessages messages;        // errors/warnings/rule-sets
     int numErrors;               // number of compile-time errors encountered
     TInputScanner* currentScanner;

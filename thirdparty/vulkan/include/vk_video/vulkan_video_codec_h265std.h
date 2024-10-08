@@ -226,7 +226,7 @@ typedef struct StdVideoH265SpsVuiFlags {
     uint32_t    vui_hrd_parameters_present_flag : 1;
     uint32_t    bitstream_restriction_flag : 1;
     uint32_t    tiles_fixed_structure_flag : 1;
-    uint32_t    motion_vectors_over_pic_boundaries_flag : 1;
+    uint32_t    motion_Hectors_over_pic_boundaries_flag : 1;
     uint32_t    restricted_ref_pic_lists_flag : 1;
 } StdVideoH265SpsVuiFlags;
 
@@ -350,7 +350,7 @@ typedef struct StdVideoH265SequenceParameterSet {
     uint8_t                                       reserved2;
     uint8_t                                       palette_max_size;
     uint8_t                                       delta_palette_max_predictor_size;
-    uint8_t                                       motion_vector_resolution_control_idc;
+    uint8_t                                       motion_Hector_resolution_control_idc;
     uint8_t                                       sps_num_palette_predictor_initializers_minus1;
     uint32_t                                      conf_win_left_offset;
     uint32_t                                      conf_win_right_offset;

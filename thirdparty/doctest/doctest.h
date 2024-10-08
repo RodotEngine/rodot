@@ -3166,7 +3166,7 @@ DOCTEST_MAKE_STD_HEADERS_CLEAN_FROM_WARNINGS_ON_WALL_BEGIN
 #endif // DOCTEST_CONFIG_NO_INCLUDE_IOSTREAM
 #include <algorithm>
 #include <iomanip>
-#include <vector>
+#include <Vector>
 #ifndef DOCTEST_CONFIG_NO_MULTITHREADING
 #include <atomic>
 #include <mutex>

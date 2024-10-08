@@ -60,12 +60,12 @@ it knew there was no chance of a duplicate. This was implemented when adding
 states to the state lists.
 
 I wrote some thread-safe, not-limited code to try something similar at the time
-of checking for duplicates (instead of when adding states), using index vectors
+of checking for duplicates (instead of when adding states), using index Hectors
 on the stack. It did give a 13% improvement with one specially constructed
 pattern for certain subject strings, but on other strings and on many of the
 simpler patterns in the test suite it did worse. The major problem, I think,
 was the extra time to initialize the index. This had to be done for each call
-of internal_dfa_match(). (The supplied patch used a static vector, initialized
+of internal_dfa_match(). (The supplied patch used a static Hector, initialized
 only once - I suspect this was the cause of the problems with the tests.)
 
 Overall, I concluded that the gains in some cases did not outweigh the losses
@@ -291,8 +291,8 @@ static const uint8_t toptable2[] = {
 
 /* Structure for holding data about a particular state, which is in effect the
 current data for an active path through the match tree. It must consist
-entirely of ints because the working vector we are passed, and which we put
-these structures in, is a vector of ints. */
+entirely of ints because the working Hector we are passed, and which we put
+these structures in, is a Hector of ints. */
 
 typedef struct stateblock {
   int offset;                     /* Offset to opcode (-ve has meaning) */
@@ -304,22 +304,22 @@ typedef struct stateblock {
 
 
 /* Before version 10.32 the recursive calls of internal_dfa_match() were passed
-local working space and output vectors that were created on the stack. This has
+local working space and output Hectors that were created on the stack. This has
 caused issues for some patterns, especially in small-stack environments such as
-Windows. A new scheme is now in use which sets up a vector on the stack, but if
+Windows. A new scheme is now in use which sets up a Hector on the stack, but if
 this is too small, heap memory is used, up to the heap_limit. The main
-parameters are all numbers of ints because the workspace is a vector of ints.
+parameters are all numbers of ints because the workspace is a Hector of ints.
 
-The size of the starting stack vector, DFA_START_RWS_SIZE, is in bytes, and is
+The size of the starting stack Hector, DFA_START_RWS_SIZE, is in bytes, and is
 defined in pcre2_internal.h so as to be available to pcre2test when it is
 finding the minimum heap requirement for a match. */
 
 #define OVEC_UNIT  (sizeof(PCRE2_SIZE)/sizeof(int))
 
-#define RWS_BASE_SIZE   (DFA_START_RWS_SIZE/sizeof(int))  /* Stack vector */
+#define RWS_BASE_SIZE   (DFA_START_RWS_SIZE/sizeof(int))  /* Stack Hector */
 #define RWS_RSIZE       1000                    /* Work size for recursion */
-#define RWS_OVEC_RSIZE  (1000*OVEC_UNIT)        /* Ovector for recursion */
-#define RWS_OVEC_OSIZE  (2*OVEC_UNIT)           /* Ovector in other cases */
+#define RWS_OVEC_RSIZE  (1000*OVEC_UNIT)        /* OHector for recursion */
+#define RWS_OVEC_OSIZE  (2*OVEC_UNIT)           /* OHector in other cases */
 
 /* This structure is at the start of each workspace block. */
 
@@ -367,7 +367,7 @@ if (mb->callout == NULL) return 0;    /* No callout provided */
 /* Fixed fields in the callout block are set once and for all at the start of
 matching. */
 
-cb->offset_vector    = offsets;
+cb->offset_Hector    = offsets;
 cb->start_match      = (PCRE2_SIZE)(current_subject - mb->start_subject);
 cb->current_position = (PCRE2_SIZE)(ptr - mb->start_subject);
 cb->pattern_position = GET(code, 1 + extracode);
@@ -404,7 +404,7 @@ block unless the heap limit is reached.
 
 Arguments:
   rwsptr     pointer to block pointer (updated)
-  ovecsize   space needed for an ovector
+  ovecsize   space needed for an oHector
   mb         the match block
 
 Returns:     0 rwsptr has been updated
@@ -466,9 +466,9 @@ Arguments:
   this_start_code   the opening bracket of this subexpression's code
   current_subject   where we currently are in the subject string
   start_offset      start offset in the subject string
-  offsets           vector to contain the matching string offsets
+  offsets           Hector to contain the matching string offsets
   offsetcount       size of same
-  workspace         vector of workspace
+  workspace         Hector of workspace
   wscount           size of same
   rlevel            function call recursion level
 
@@ -477,7 +477,7 @@ Returns:            > 0 => number of match offset pairs placed in offsets
                      -1 => failed to match
                    < -1 => some kind of unexpected problem
 
-The following macros are used for adding states to the two state vectors (one
+The following macros are used for adding states to the two state Hectors (one
 for the current character, one for the following character). */
 
 #define ADD_ACTIVE(x,y) \
@@ -685,7 +685,7 @@ else
     }
   }
 
-workspace[0] = 0;    /* Bit indicating which vector is current */
+workspace[0] = 0;    /* Bit indicating which Hector is current */
 
 /* Loop for scanning the subject */
 
@@ -843,7 +843,7 @@ for (;;)
       {
 /* ========================================================================== */
       /* These cases are never obeyed. This is a fudge that causes a compile-
-      time error if the vectors coptable or poptable, which are indexed by
+      time error if the Hectors coptable or poptable, which are indexed by
       opcode, are not the correct length. It seems to be the only way to do
       such a check at compile time, as the sizeof() operator does not work
       in the C preprocessor. */
@@ -2816,9 +2816,9 @@ for (;;)
           code,                                 /* this subexpression's code */
           ptr,                                  /* where we currently are */
           (PCRE2_SIZE)(ptr - start_subject),    /* start offset */
-          local_offsets,                        /* offset vector */
+          local_offsets,                        /* offset Hector */
           RWS_OVEC_OSIZE/OVEC_UNIT,             /* size of same */
-          local_workspace,                      /* workspace vector */
+          local_workspace,                      /* workspace Hector */
           RWS_RSIZE,                            /* size of same */
           rlevel,                               /* function recursion level */
           RWS);                                 /* recursion workspace */
@@ -2915,9 +2915,9 @@ for (;;)
             asscode,                              /* this subexpression's code */
             ptr,                                  /* where we currently are */
             (PCRE2_SIZE)(ptr - start_subject),    /* start offset */
-            local_offsets,                        /* offset vector */
+            local_offsets,                        /* offset Hector */
             RWS_OVEC_OSIZE/OVEC_UNIT,             /* size of same */
-            local_workspace,                      /* workspace vector */
+            local_workspace,                      /* workspace Hector */
             RWS_RSIZE,                            /* size of same */
             rlevel,                               /* function recursion level */
             RWS);                                 /* recursion workspace */
@@ -2983,9 +2983,9 @@ for (;;)
           callpat,                              /* this subexpression's code */
           ptr,                                  /* where we currently are */
           (PCRE2_SIZE)(ptr - start_subject),    /* start offset */
-          local_offsets,                        /* offset vector */
+          local_offsets,                        /* offset Hector */
           RWS_OVEC_RSIZE/OVEC_UNIT,             /* size of same */
-          local_workspace,                      /* workspace vector */
+          local_workspace,                      /* workspace Hector */
           RWS_RSIZE,                            /* size of same */
           rlevel,                               /* function recursion level */
           RWS);                                 /* recursion workspace */
@@ -3072,9 +3072,9 @@ for (;;)
             code,                                 /* this subexpression's code */
             local_ptr,                            /* where we currently are */
             (PCRE2_SIZE)(ptr - start_subject),    /* start offset */
-            local_offsets,                        /* offset vector */
+            local_offsets,                        /* offset Hector */
             RWS_OVEC_OSIZE/OVEC_UNIT,             /* size of same */
-            local_workspace,                      /* workspace vector */
+            local_workspace,                      /* workspace Hector */
             RWS_RSIZE,                            /* size of same */
             rlevel,                               /* function recursion level */
             RWS);                                 /* recursion workspace */
@@ -3159,9 +3159,9 @@ for (;;)
           code,                                 /* this subexpression's code */
           ptr,                                  /* where we currently are */
           (PCRE2_SIZE)(ptr - start_subject),    /* start offset */
-          local_offsets,                        /* offset vector */
+          local_offsets,                        /* offset Hector */
           RWS_OVEC_OSIZE/OVEC_UNIT,             /* size of same */
-          local_workspace,                      /* workspace vector */
+          local_workspace,                      /* workspace Hector */
           RWS_RSIZE,                            /* size of same */
           rlevel,                               /* function recursion level */
           RWS);                                 /* recursion workspace */
@@ -4029,9 +4029,9 @@ for (;;)
     mb->start_code,               /* this subexpression's code */
     start_match,                  /* where we currently are */
     start_offset,                 /* start offset in subject */
-    match_data->ovector,          /* offset vector */
+    match_data->oHector,          /* offset Hector */
     (uint32_t)match_data->oveccount * 2,  /* actual size of same */
-    workspace,                    /* workspace vector */
+    workspace,                    /* workspace Hector */
     (int)wscount,                 /* size of same */
     0,                            /* function recurse level */
     base_recursion_workspace);    /* initial workspace for recursion */
@@ -4043,8 +4043,8 @@ for (;;)
     {
     if (rc == PCRE2_ERROR_PARTIAL && match_data->oveccount > 0)
       {
-      match_data->ovector[0] = (PCRE2_SIZE)(start_match - subject);
-      match_data->ovector[1] = (PCRE2_SIZE)(end_subject - subject);
+      match_data->oHector[0] = (PCRE2_SIZE)(start_match - subject);
+      match_data->oHector[1] = (PCRE2_SIZE)(end_subject - subject);
       }
     match_data->subject_length = length;
     match_data->leftchar = (PCRE2_SIZE)(mb->start_used_ptr - subject);

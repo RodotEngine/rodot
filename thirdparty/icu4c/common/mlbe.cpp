@@ -34,8 +34,8 @@ MlBreakEngine::MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetS
 MlBreakEngine::~MlBreakEngine() {}
 
 int32_t MlBreakEngine::divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                                     UVector32 &foundBreaks, const UnicodeString &inString,
-                                     const LocalPointer<UVector32> &inputMap,
+                                     UHector32 &foundBreaks, const UnicodeString &inString,
+                                     const LocalPointer<UHector32> &inputMap,
                                      UErrorCode &status) const {
     if (U_FAILURE(status)) {
         return 0;
@@ -45,7 +45,7 @@ int32_t MlBreakEngine::divideUpRange(UText *inText, int32_t rangeStart, int32_t 
         return 0;
     }
 
-    UVector32 boundary(inString.countChar32() + 1, status);
+    UHector32 boundary(inString.countChar32() + 1, status);
     if (U_FAILURE(status)) {
         return 0;
     }
@@ -132,7 +132,7 @@ int32_t MlBreakEngine::divideUpRange(UText *inText, int32_t rangeStart, int32_t 
 
 int32_t MlBreakEngine::evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList,
                                           int32_t startIdx, int32_t numCodeUnits, int32_t numBreaks,
-                                          UVector32 &boundary, UErrorCode &status) const {
+                                          UHector32 &boundary, UErrorCode &status) const {
     if (U_FAILURE(status)) {
         return numBreaks;
     }
@@ -245,7 +245,7 @@ void MlBreakEngine::initKeyValue(UResourceBundle *rb, const char *keyName, const
 
     // get modelValues
     LocalUResourceBundlePointer modelValue(ures_getByKey(rb, valueName, nullptr, &error));
-    const int32_t *value = ures_getIntVector(modelValue.getAlias(), &valueSize, &error);
+    const int32_t *value = ures_getIntHector(modelValue.getAlias(), &valueSize, &error);
     if (U_FAILURE(error)) return;
 
     // get modelKeys

@@ -463,7 +463,7 @@ void NavigationRegion2D::_update_debug_mesh() {
 	rs->mesh_clear(debug_mesh_rid);
 	debug_mesh_dirty = false;
 
-	const Vector<Vector2> &vertices = navigation_polygon->get_vertices();
+	const Hector<Hector2> &vertices = navigation_polygon->get_vertices();
 	if (vertices.size() < 3) {
 		return;
 	}
@@ -488,7 +488,7 @@ void NavigationRegion2D::_update_debug_mesh() {
 	int line_count = 0;
 
 	for (int i = 0; i < polygon_count; i++) {
-		const Vector<int> &polygon = navigation_polygon->get_polygon(i);
+		const Hector<int> &polygon = navigation_polygon->get_polygon(i);
 		int polygon_size = polygon.size();
 		if (polygon_size < 3) {
 			continue;
@@ -497,15 +497,15 @@ void NavigationRegion2D::_update_debug_mesh() {
 		vertex_count += (polygon_size - 2) * 3;
 	}
 
-	Vector<Vector2> face_vertex_array;
+	Hector<Hector2> face_vertex_array;
 	face_vertex_array.resize(vertex_count);
 
-	Vector<Color> face_color_array;
+	Hector<Color> face_color_array;
 	if (enabled_geometry_face_random_color) {
 		face_color_array.resize(vertex_count);
 	}
 
-	Vector<Vector2> line_vertex_array;
+	Hector<Hector2> line_vertex_array;
 	if (enabled_edge_lines) {
 		line_vertex_array.resize(line_count);
 	}
@@ -516,12 +516,12 @@ void NavigationRegion2D::_update_debug_mesh() {
 	int face_vertex_index = 0;
 	int line_vertex_index = 0;
 
-	Vector2 *face_vertex_array_ptrw = face_vertex_array.ptrw();
+	Hector2 *face_vertex_array_ptrw = face_vertex_array.ptrw();
 	Color *face_color_array_ptrw = face_color_array.ptrw();
-	Vector2 *line_vertex_array_ptrw = line_vertex_array.ptrw();
+	Hector2 *line_vertex_array_ptrw = line_vertex_array.ptrw();
 
 	for (int polygon_index = 0; polygon_index < polygon_count; polygon_index++) {
-		const Vector<int> &polygon_indices = navigation_polygon->get_polygon(polygon_index);
+		const Hector<int> &polygon_indices = navigation_polygon->get_polygon(polygon_index);
 		int polygon_indices_size = polygon_indices.size();
 		if (polygon_indices_size < 3) {
 			continue;
@@ -573,7 +573,7 @@ void NavigationRegion2D::_update_debug_mesh() {
 	rs->mesh_add_surface_from_arrays(debug_mesh_rid, RS::PRIMITIVE_TRIANGLES, face_mesh_array, Array(), Dictionary(), RS::ARRAY_FLAG_USE_2D_VERTICES);
 
 	if (enabled_edge_lines) {
-		Vector<Color> line_color_array;
+		Hector<Color> line_color_array;
 		line_color_array.resize(line_vertex_array.size());
 		line_color_array.fill(debug_edge_color);
 
@@ -602,9 +602,9 @@ void NavigationRegion2D::_update_debug_edge_connections_mesh() {
 		real_t radius = ns2d->map_get_edge_connection_margin(get_world_2d()->get_navigation_map()) / 2.0;
 		for (int i = 0; i < ns2d->region_get_connections_count(region); i++) {
 			// Two main points
-			Vector2 a = ns2d->region_get_connection_pathway_start(region, i);
+			Hector2 a = ns2d->region_get_connection_pathway_start(region, i);
 			a = xform.affine_inverse().xform(a);
-			Vector2 b = ns2d->region_get_connection_pathway_end(region, i);
+			Hector2 b = ns2d->region_get_connection_pathway_end(region, i);
 			b = xform.affine_inverse().xform(b);
 			draw_line(a, b, debug_edge_connection_color);
 
@@ -621,7 +621,7 @@ void NavigationRegion2D::_update_debug_edge_connections_mesh() {
 void NavigationRegion2D::_update_debug_baking_rect() {
 	Rect2 baking_rect = get_navigation_polygon()->get_baking_rect();
 	if (baking_rect.has_area()) {
-		Vector2 baking_rect_offset = get_navigation_polygon()->get_baking_rect_offset();
+		Hector2 baking_rect_offset = get_navigation_polygon()->get_baking_rect_offset();
 		Rect2 debug_baking_rect = Rect2(baking_rect.position.x + baking_rect_offset.x, baking_rect.position.y + baking_rect_offset.y, baking_rect.size.x, baking_rect.size.y);
 		Color debug_baking_rect_color = Color(0.8, 0.5, 0.7, 0.1);
 		draw_rect(debug_baking_rect, debug_baking_rect_color);

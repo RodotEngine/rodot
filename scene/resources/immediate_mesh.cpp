@@ -49,12 +49,12 @@ void ImmediateMesh::surface_set_color(const Color &p_color) {
 
 	current_color = p_color;
 }
-void ImmediateMesh::surface_set_normal(const Vector3 &p_normal) {
+void ImmediateMesh::surface_set_normal(const Hector3 &p_normal) {
 	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
 
 	if (!uses_normals) {
 		normals.resize(vertices.size());
-		for (Vector3 &normal : normals) {
+		for (Hector3 &normal : normals) {
 			normal = p_normal;
 		}
 		uses_normals = true;
@@ -74,11 +74,11 @@ void ImmediateMesh::surface_set_tangent(const Plane &p_tangent) {
 
 	current_tangent = p_tangent;
 }
-void ImmediateMesh::surface_set_uv(const Vector2 &p_uv) {
+void ImmediateMesh::surface_set_uv(const Hector2 &p_uv) {
 	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
 	if (!uses_uvs) {
 		uvs.resize(vertices.size());
-		for (Vector2 &uv : uvs) {
+		for (Hector2 &uv : uvs) {
 			uv = p_uv;
 		}
 		uses_uvs = true;
@@ -86,11 +86,11 @@ void ImmediateMesh::surface_set_uv(const Vector2 &p_uv) {
 
 	current_uv = p_uv;
 }
-void ImmediateMesh::surface_set_uv2(const Vector2 &p_uv2) {
+void ImmediateMesh::surface_set_uv2(const Hector2 &p_uv2) {
 	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
 	if (!uses_uv2s) {
 		uv2s.resize(vertices.size());
-		for (Vector2 &uv : uv2s) {
+		for (Hector2 &uv : uv2s) {
 			uv = p_uv2;
 		}
 		uses_uv2s = true;
@@ -98,7 +98,7 @@ void ImmediateMesh::surface_set_uv2(const Vector2 &p_uv2) {
 
 	current_uv2 = p_uv2;
 }
-void ImmediateMesh::surface_add_vertex(const Vector3 &p_vertex) {
+void ImmediateMesh::surface_add_vertex(const Hector3 &p_vertex) {
 	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
 	ERR_FAIL_COND_MSG(vertices.size() && active_surface_data.vertex_2d, "Can't mix 2D and 3D vertices in a surface.");
 
@@ -120,7 +120,7 @@ void ImmediateMesh::surface_add_vertex(const Vector3 &p_vertex) {
 	vertices.push_back(p_vertex);
 }
 
-void ImmediateMesh::surface_add_vertex_2d(const Vector2 &p_vertex) {
+void ImmediateMesh::surface_add_vertex_2d(const Hector2 &p_vertex) {
 	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
 	ERR_FAIL_COND_MSG(vertices.size() && !active_surface_data.vertex_2d, "Can't mix 2D and 3D vertices in a surface.");
 
@@ -139,7 +139,7 @@ void ImmediateMesh::surface_add_vertex_2d(const Vector2 &p_vertex) {
 	if (uses_uv2s) {
 		uv2s.push_back(current_uv2);
 	}
-	Vector3 v(p_vertex.x, p_vertex.y, 0);
+	Hector3 v(p_vertex.x, p_vertex.y, 0);
 	vertices.push_back(v);
 
 	active_surface_data.vertex_2d = true;
@@ -194,7 +194,7 @@ void ImmediateMesh::surface_end() {
 			if (uses_normals) {
 				uint32_t *normal = (uint32_t *)&surface_vertex_ptr[i * normal_tangent_stride + normal_offset];
 
-				Vector2 n = normals[i].octahedron_encode();
+				Hector2 n = normals[i].octahedron_encode();
 
 				uint32_t value = 0;
 				value |= (uint16_t)CLAMP(n.x * 65535, 0, 65535);
@@ -204,11 +204,11 @@ void ImmediateMesh::surface_end() {
 			}
 			if (uses_tangents || uses_normals) {
 				uint32_t *tangent = (uint32_t *)&surface_vertex_ptr[i * normal_tangent_stride + tangent_offset];
-				Vector2 t;
+				Hector2 t;
 				if (uses_tangents) {
 					t = tangents[i].normal.octahedron_tangent_encode(tangents[i].d);
 				} else {
-					Vector3 tan = Vector3(normals[i].z, -normals[i].x, normals[i].y).cross(normals[i].normalized()).normalized();
+					Hector3 tan = Hector3(normals[i].z, -normals[i].x, normals[i].y).cross(normals[i].normalized()).normalized();
 					t = tan.octahedron_tangent_encode(1.0);
 				}
 

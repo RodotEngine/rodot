@@ -310,7 +310,7 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 		int sh = h;
 
 		//mipmaps need to be read independently, they will be later combined
-		Vector<Ref<Image>> mipmap_images;
+		Hector<Ref<Image>> mipmap_images;
 		uint64_t total_size = 0;
 
 		bool first = true;
@@ -326,7 +326,7 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 				continue;
 			}
 
-			Vector<uint8_t> pv;
+			Hector<uint8_t> pv;
 			pv.resize(size);
 			{
 				uint8_t *wr = pv.ptrw();
@@ -373,7 +373,7 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 
 		} else {
 			//rarer use case, but needs to be supported
-			Vector<uint8_t> img_data;
+			Hector<uint8_t> img_data;
 			img_data.resize(total_size);
 
 			{
@@ -381,7 +381,7 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 
 				int ofs = 0;
 				for (int i = 0; i < mipmap_images.size(); i++) {
-					Vector<uint8_t> id = mipmap_images[i]->get_data();
+					Hector<uint8_t> id = mipmap_images[i]->get_data();
 					int len = id.size();
 					const uint8_t *r = id.ptr();
 					memcpy(&wr[ofs], r, len);
@@ -404,7 +404,7 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 			f->seek(f->get_position() + size);
 			return Ref<Image>();
 		}
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(size);
 		{
 			uint8_t *wr = pv.ptrw();
@@ -433,7 +433,7 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 				continue; //oops, size limit enforced, go to next
 			}
 
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			data.resize(size - ofs);
 
 			{
@@ -507,7 +507,7 @@ Image::Format CompressedTexture3D::get_format() const {
 	return format;
 }
 
-Error CompressedTexture3D::_load_data(const String &p_path, Vector<Ref<Image>> &r_data, Image::Format &r_format, int &r_width, int &r_height, int &r_depth, bool &r_mipmaps) {
+Error CompressedTexture3D::_load_data(const String &p_path, Hector<Ref<Image>> &r_data, Image::Format &r_format, int &r_width, int &r_height, int &r_depth, bool &r_mipmaps) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, vformat("Unable to open file: %s.", p_path));
 
@@ -550,7 +550,7 @@ Error CompressedTexture3D::_load_data(const String &p_path, Vector<Ref<Image>> &
 }
 
 Error CompressedTexture3D::load(const String &p_path) {
-	Vector<Ref<Image>> data;
+	Hector<Ref<Image>> data;
 
 	int tw, th, td;
 	Image::Format tfmt;
@@ -613,11 +613,11 @@ RID CompressedTexture3D::get_rid() const {
 	return texture;
 }
 
-Vector<Ref<Image>> CompressedTexture3D::get_data() const {
+Hector<Ref<Image>> CompressedTexture3D::get_data() const {
 	if (texture.is_valid()) {
 		return RS::get_singleton()->texture_3d_get(texture);
 	} else {
-		return Vector<Ref<Image>>();
+		return Hector<Ref<Image>>();
 	}
 }
 
@@ -696,7 +696,7 @@ Image::Format CompressedTextureLayered::get_format() const {
 	return format;
 }
 
-Error CompressedTextureLayered::_load_data(const String &p_path, Vector<Ref<Image>> &images, int &mipmap_limit, int p_size_limit) {
+Error CompressedTextureLayered::_load_data(const String &p_path, Hector<Ref<Image>> &images, int &mipmap_limit, int p_size_limit) {
 	ERR_FAIL_COND_V(images.size() != 0, ERR_INVALID_PARAMETER);
 
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
@@ -741,7 +741,7 @@ Error CompressedTextureLayered::_load_data(const String &p_path, Vector<Ref<Imag
 }
 
 Error CompressedTextureLayered::load(const String &p_path) {
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 
 	int mipmap_limit;
 

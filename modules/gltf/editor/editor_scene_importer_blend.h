@@ -107,7 +107,7 @@ class EditorFileSystemImportFormatSupportQueryBlend : public EditorFileSystemImp
 
 public:
 	virtual bool is_active() const override;
-	virtual Vector<String> get_file_extensions() const override;
+	virtual Hector<String> get_file_extensions() const override;
 	virtual bool query() override;
 
 	EditorFileSystemImportFormatSupportQueryBlend();

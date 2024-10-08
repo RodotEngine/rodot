@@ -93,7 +93,7 @@ class GenericTilePolygonEditor : public VBoxContainer {
 
 private:
 	Ref<TileSet> tile_set;
-	LocalVector<Vector<Point2>> polygons;
+	LocalHector<Hector<Point2>> polygons;
 	bool multiple_polygon_mode = false;
 
 	bool use_undo_redo = true;
@@ -102,7 +102,7 @@ private:
 	int hovered_polygon_index = -1;
 	int hovered_point_index = -1;
 	int hovered_segment_index = -1;
-	Vector2 hovered_segment_point;
+	Hector2 hovered_segment_point;
 
 	enum DragType {
 		DRAG_TYPE_NONE,
@@ -113,8 +113,8 @@ private:
 	DragType drag_type = DRAG_TYPE_NONE;
 	int drag_polygon_index = 0;
 	int drag_point_index = 0;
-	Vector2 drag_last_pos;
-	PackedVector2Array drag_old_polygon;
+	Hector2 drag_last_pos;
+	PackedHector2Array drag_old_polygon;
 
 	HBoxContainer *toolbar = nullptr;
 	Ref<ButtonGroup> tools_button_group;
@@ -133,17 +133,17 @@ private:
 	MenuButton *button_pixel_snap = nullptr;
 	SpinBox *snap_subdivision = nullptr;
 
-	Vector<Point2> in_creation_polygon;
+	Hector<Point2> in_creation_polygon;
 
 	Panel *panel = nullptr;
 	Control *base_control = nullptr;
 	EditorZoomWidget *editor_zoom_widget = nullptr;
 	Button *button_center_view = nullptr;
-	Vector2 panning;
+	Hector2 panning;
 	bool initializing = true;
 
 	Ref<TileSetAtlasSource> background_atlas_source;
-	Vector2i background_atlas_coords;
+	Hector2i background_atlas_coords;
 	int background_alternative_id;
 
 	Color polygon_color = Color(1.0, 0.0, 0.0);
@@ -168,8 +168,8 @@ private:
 
 	void _snap_to_tile_shape(Point2 &r_point, float &r_current_snapped_dist, float p_snap_dist);
 	void _snap_point(Point2 &r_point);
-	void _grab_polygon_point(Vector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_point_index);
-	void _grab_polygon_segment_point(Vector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_segment_index, Vector2 &r_point);
+	void _grab_polygon_point(Hector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_point_index);
+	void _grab_polygon_segment_point(Hector2 p_pos, const Transform2D &p_polygon_xform, int &r_polygon_index, int &r_segment_index, Hector2 &r_point);
 
 protected:
 	void _notification(int p_what);
@@ -179,14 +179,14 @@ public:
 	void set_use_undo_redo(bool p_use_undo_redo);
 
 	void set_tile_set(Ref<TileSet> p_tile_set);
-	void set_background_tile(const TileSetAtlasSource *p_atlas_source, const Vector2 &p_atlas_coords, int p_alternative_id);
+	void set_background_tile(const TileSetAtlasSource *p_atlas_source, const Hector2 &p_atlas_coords, int p_alternative_id);
 
 	int get_polygon_count();
-	int add_polygon(const Vector<Point2> &p_polygon, int p_index = -1);
+	int add_polygon(const Hector<Point2> &p_polygon, int p_index = -1);
 	void remove_polygon(int p_index);
 	void clear_polygons();
-	void set_polygon(int p_polygon_index, const Vector<Point2> &p_polygon);
-	Vector<Point2> get_polygon(int p_polygon_index);
+	void set_polygon(int p_polygon_index, const Hector<Point2> &p_polygon);
+	Hector<Point2> get_polygon(int p_polygon_index);
 
 	void set_polygons_color(Color p_color);
 	void set_multiple_polygon_mode(bool p_multiple_polygon_mode);
@@ -216,8 +216,8 @@ private:
 		DRAG_TYPE_PAINT_RECT,
 	};
 	DragType drag_type = DRAG_TYPE_NONE;
-	Vector2 drag_start_pos;
-	Vector2 drag_last_pos;
+	Hector2 drag_start_pos;
+	Hector2 drag_last_pos;
 	HashMap<TileMapCell, Variant, TileMapCell> drag_modified;
 	Variant drag_painted_value;
 
@@ -232,9 +232,9 @@ protected:
 	void _notification(int p_what);
 
 	virtual Variant _get_painted_value();
-	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile);
-	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value);
-	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile);
+	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile);
+	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value);
+	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile);
 	virtual void _setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value);
 
 public:
@@ -282,12 +282,12 @@ private:
 	// UI
 	GenericTilePolygonEditor *polygon_editor = nullptr;
 
-	void _polygon_changed(const PackedVector2Array &p_polygon);
+	void _polygon_changed(const PackedHector2Array &p_polygon);
 
 	virtual Variant _get_painted_value() override;
-	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) override;
-	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) override;
-	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) override;
+	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) override;
+	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) override;
+	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) override;
 	virtual void _setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value) override;
 
 protected:
@@ -318,9 +318,9 @@ class TileDataCollisionEditor : public TileDataDefaultEditor {
 	void _polygons_changed();
 
 	virtual Variant _get_painted_value() override;
-	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) override;
-	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) override;
-	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) override;
+	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) override;
+	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) override;
+	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) override;
 	virtual void _setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value) override;
 
 protected:
@@ -354,8 +354,8 @@ private:
 		DRAG_TYPE_PAINT_TERRAIN_BITS_RECT,
 	};
 	DragType drag_type = DRAG_TYPE_NONE;
-	Vector2 drag_start_pos;
-	Vector2 drag_last_pos;
+	Hector2 drag_start_pos;
+	Hector2 drag_last_pos;
 	HashMap<TileMapCell, Variant, TileMapCell> drag_modified;
 	Variant drag_painted_value;
 
@@ -391,17 +391,17 @@ class TileDataNavigationEditor : public TileDataDefaultEditor {
 
 private:
 	int navigation_layer = -1;
-	PackedVector2Array navigation_polygon;
+	PackedHector2Array navigation_polygon;
 
 	// UI
 	GenericTilePolygonEditor *polygon_editor = nullptr;
 
-	void _polygon_changed(const PackedVector2Array &p_polygon);
+	void _polygon_changed(const PackedHector2Array &p_polygon);
 
 	virtual Variant _get_painted_value() override;
-	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) override;
-	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile, const Variant &p_value) override;
-	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Vector2 p_coords, int p_alternative_tile) override;
+	virtual void _set_painted_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) override;
+	virtual void _set_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile, const Variant &p_value) override;
+	virtual Variant _get_value(TileSetAtlasSource *p_tile_set_atlas_source, Hector2 p_coords, int p_alternative_tile) override;
 	virtual void _setup_undo_redo_action(TileSetAtlasSource *p_tile_set_atlas_source, const HashMap<TileMapCell, Variant, TileMapCell> &p_previous_values, const Variant &p_new_value) override;
 
 protected:

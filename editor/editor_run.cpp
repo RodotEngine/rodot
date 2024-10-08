@@ -164,24 +164,24 @@ Error EditorRun::run(const String &p_scene, const String &p_write_movie) {
 				args.push_back(itos(screen_rect.position.x) + "," + itos(screen_rect.position.y));
 			} break;
 			case 1: { // centered
-				Vector2 pos = (screen_rect.position) + ((screen_rect.size - window_size) / 2).floor();
+				Hector2 pos = (screen_rect.position) + ((screen_rect.size - window_size) / 2).floor();
 				args.push_back("--position");
 				args.push_back(itos(pos.x) + "," + itos(pos.y));
 			} break;
 			case 2: { // custom pos
-				Vector2 pos = EDITOR_GET("run/window_placement/rect_custom_position");
+				Hector2 pos = EDITOR_GET("run/window_placement/rect_custom_position");
 				pos += screen_rect.position;
 				args.push_back("--position");
 				args.push_back(itos(pos.x) + "," + itos(pos.y));
 			} break;
 			case 3: { // force maximized
-				Vector2 pos = screen_rect.position + screen_rect.size / 2;
+				Hector2 pos = screen_rect.position + screen_rect.size / 2;
 				args.push_back("--position");
 				args.push_back(itos(pos.x) + "," + itos(pos.y));
 				args.push_back("--maximized");
 			} break;
 			case 4: { // force fullscreen
-				Vector2 pos = screen_rect.position + screen_rect.size / 2;
+				Hector2 pos = screen_rect.position + screen_rect.size / 2;
 				args.push_back("--position");
 				args.push_back(itos(pos.x) + "," + itos(pos.y));
 				args.push_back("--fullscreen");

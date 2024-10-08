@@ -238,16 +238,16 @@ not rely on this. */
 
 #define COMPILE_ERROR_BASE 100
 
-/* The initial frames vector for remembering pcre2_match() backtracking points
+/* The initial frames Hector for remembering pcre2_match() backtracking points
 is allocated on the heap, of this size (bytes) or ten times the frame size if
 larger, unless the heap limit is smaller. Typical frame sizes are a few hundred
 bytes (it depends on the number of capturing parentheses) so 20KiB handles
-quite a few frames. A larger vector on the heap is obtained for matches that
+quite a few frames. A larger Hector on the heap is obtained for matches that
 need more frames, subject to the heap limit. */
 
 #define START_FRAMES_SIZE 20480
 
-/* For DFA matching, an initial internal workspace vector is allocated on the
+/* For DFA matching, an initial internal workspace Hector is allocated on the
 stack. The heap is used only if this turns out to be too small. */
 
 #define DFA_START_RWS_SIZE 30720
@@ -1891,7 +1891,7 @@ typedef struct {
 #define UCD_BPROPS(ch)      UCD_BPROPS_PROP(GET_UCD(ch))
 #define UCD_BIDICLASS(ch)   UCD_BIDICLASS_PROP(GET_UCD(ch))
 
-/* The "scriptx" and bprops fields contain offsets into vectors of 32-bit words
+/* The "scriptx" and bprops fields contain offsets into Hectors of 32-bit words
 that form a bitmap representing a list of scripts or boolean properties. These
 macros test or set a bit in the map by number. */
 

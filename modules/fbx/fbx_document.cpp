@@ -74,12 +74,12 @@ static bool _file_access_skip_fn(void *user, size_t size) {
 	return true;
 }
 
-static Vector2 _as_vec2(const ufbx_vec2 &p_vector) {
-	return Vector2(real_t(p_vector.x), real_t(p_vector.y));
+static Hector2 _as_vec2(const ufbx_vec2 &p_Hector) {
+	return Hector2(real_t(p_Hector.x), real_t(p_Hector.y));
 }
 
-static Color _as_color(const ufbx_vec4 &p_vector) {
-	return Color(real_t(p_vector.x), real_t(p_vector.y), real_t(p_vector.z), real_t(p_vector.w));
+static Color _as_color(const ufbx_vec4 &p_Hector) {
+	return Color(real_t(p_Hector.x), real_t(p_Hector.y), real_t(p_Hector.z), real_t(p_Hector.w));
 }
 
 static Quaternion _as_quaternion(const ufbx_quat &p_quat) {
@@ -93,7 +93,7 @@ static Transform3D _as_transform(const ufbx_transform &p_xform) {
 	return result;
 }
 
-static real_t _relative_error(const Vector3 &p_a, const Vector3 &p_b) {
+static real_t _relative_error(const Hector3 &p_a, const Hector3 &p_b) {
 	return p_a.distance_to(p_b) / MAX(p_a.length(), p_b.length());
 }
 
@@ -151,8 +151,8 @@ static Ref<Image> _get_decompressed_image(Ref<Texture2D> texture) {
 	return image;
 }
 
-static Vector<Vector2> _decode_vertex_attrib_vec2(const ufbx_vertex_vec2 &p_attrib, const Vector<uint32_t> &p_indices) {
-	Vector<Vector2> ret;
+static Hector<Hector2> _decode_vertex_attrib_vec2(const ufbx_vertex_vec2 &p_attrib, const Hector<uint32_t> &p_indices) {
+	Hector<Hector2> ret;
 
 	int num_indices = p_indices.size();
 	ret.resize(num_indices);
@@ -162,8 +162,8 @@ static Vector<Vector2> _decode_vertex_attrib_vec2(const ufbx_vertex_vec2 &p_attr
 	return ret;
 }
 
-static Vector<Vector3> _decode_vertex_attrib_vec3(const ufbx_vertex_vec3 &p_attrib, const Vector<uint32_t> &p_indices) {
-	Vector<Vector3> ret;
+static Hector<Hector3> _decode_vertex_attrib_vec3(const ufbx_vertex_vec3 &p_attrib, const Hector<uint32_t> &p_indices) {
+	Hector<Hector3> ret;
 
 	int num_indices = p_indices.size();
 	ret.resize(num_indices);
@@ -173,13 +173,13 @@ static Vector<Vector3> _decode_vertex_attrib_vec3(const ufbx_vertex_vec3 &p_attr
 	return ret;
 }
 
-static Vector<float> _decode_vertex_attrib_vec3_as_tangent(const ufbx_vertex_vec3 &p_attrib, const Vector<uint32_t> &p_indices) {
-	Vector<float> ret;
+static Hector<float> _decode_vertex_attrib_vec3_as_tangent(const ufbx_vertex_vec3 &p_attrib, const Hector<uint32_t> &p_indices) {
+	Hector<float> ret;
 
 	int num_indices = p_indices.size();
 	ret.resize(num_indices * 4);
 	for (int i = 0; i < num_indices; i++) {
-		Vector3 v = FBXDocument::_as_vec3(p_attrib[p_indices[i]]);
+		Hector3 v = FBXDocument::_as_vec3(p_attrib[p_indices[i]]);
 		ret.write[i * 4 + 0] = v.x;
 		ret.write[i * 4 + 1] = v.y;
 		ret.write[i * 4 + 2] = v.z;
@@ -188,8 +188,8 @@ static Vector<float> _decode_vertex_attrib_vec3_as_tangent(const ufbx_vertex_vec
 	return ret;
 }
 
-static Vector<Color> _decode_vertex_attrib_color(const ufbx_vertex_vec4 &p_attrib, const Vector<uint32_t> &p_indices) {
-	Vector<Color> ret;
+static Hector<Color> _decode_vertex_attrib_color(const ufbx_vertex_vec4 &p_attrib, const Hector<uint32_t> &p_indices) {
+	Hector<Color> ret;
 
 	int num_indices = p_indices.size();
 	ret.resize(num_indices);
@@ -199,11 +199,11 @@ static Vector<Color> _decode_vertex_attrib_color(const ufbx_vertex_vec4 &p_attri
 	return ret;
 }
 
-static Vector3 _encode_vertex_index(uint32_t p_index) {
-	return Vector3(real_t(p_index & 0xffff), real_t(p_index >> 16), 0.0f);
+static Hector3 _encode_vertex_index(uint32_t p_index) {
+	return Hector3(real_t(p_index & 0xffff), real_t(p_index >> 16), 0.0f);
 }
 
-static uint32_t _decode_vertex_index(const Vector3 &p_vertex) {
+static uint32_t _decode_vertex_index(const Hector3 &p_vertex) {
 	return uint32_t(p_vertex.x) | uint32_t(p_vertex.y) << 16;
 }
 
@@ -446,7 +446,7 @@ Error FBXDocument::_parse_nodes(Ref<FBXState> p_state) {
 Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 	ufbx_scene *fbx_scene = p_state->scene.get();
 
-	LocalVector<int> nodes_by_mesh_id;
+	LocalHector<int> nodes_by_mesh_id;
 	nodes_by_mesh_id.reserve(fbx_scene->meshes.count);
 	for (size_t i = 0; i < fbx_scene->meshes.count; i++) {
 		nodes_by_mesh_id.push_back(-1);
@@ -486,8 +486,8 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 			use_blend_shapes = true;
 		}
 
-		Vector<float> blend_weights;
-		Vector<int> blend_channels;
+		Hector<float> blend_weights;
+		Hector<int> blend_channels;
 		if (use_blend_shapes) {
 			print_verbose("FBX: Mesh has targets");
 
@@ -538,7 +538,7 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 					continue;
 				}
 
-				Vector<uint32_t> indices;
+				Hector<uint32_t> indices;
 				indices.resize(num_indices);
 
 				uint32_t offset = 0;
@@ -598,7 +598,7 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 				// Ideally this would be an extra channel in the vertex but as the vertex format is
 				// fixed and we already use user data for extra UV channels this'll do.
 				if (use_blend_shapes) {
-					Vector<Vector3> vertex_indices;
+					Hector<Hector3> vertex_indices;
 					int num_blend_shape_indices = indices.size();
 					vertex_indices.resize(num_blend_shape_indices);
 					for (int i = 0; i < num_blend_shape_indices; i++) {
@@ -611,18 +611,18 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 
 				// Normals always exist as they're generated if missing,
 				// see `ufbx_load_opts.generate_missing_normals`.
-				Vector<Vector3> normals = _decode_vertex_attrib_vec3(fbx_mesh->vertex_normal, indices);
+				Hector<Hector3> normals = _decode_vertex_attrib_vec3(fbx_mesh->vertex_normal, indices);
 				array[Mesh::ARRAY_NORMAL] = normals;
 
 				if (fbx_mesh->vertex_tangent.exists) {
-					Vector<float> tangents = _decode_vertex_attrib_vec3_as_tangent(fbx_mesh->vertex_tangent, indices);
+					Hector<float> tangents = _decode_vertex_attrib_vec3_as_tangent(fbx_mesh->vertex_tangent, indices);
 
 					// Patch bitangent sign if available
 					if (fbx_mesh->vertex_bitangent.exists) {
 						for (int i = 0; i < vertex_num; i++) {
-							Vector3 tangent = Vector3(tangents[i * 4], tangents[i * 4 + 1], tangents[i * 4 + 2]);
-							Vector3 bitangent = _as_vec3(fbx_mesh->vertex_bitangent[indices[i]]);
-							Vector3 generated_bitangent = normals[i].cross(tangent);
+							Hector3 tangent = Hector3(tangents[i * 4], tangents[i * 4 + 1], tangents[i * 4 + 2]);
+							Hector3 bitangent = _as_vec3(fbx_mesh->vertex_bitangent[indices[i]]);
+							Hector3 generated_bitangent = normals[i].cross(tangent);
 							if (generated_bitangent.dot(bitangent) < 0.0f) {
 								tangents.write[i * 4 + 3] = -1.0f;
 							}
@@ -633,21 +633,21 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 				}
 
 				if (fbx_mesh->vertex_uv.exists) {
-					PackedVector2Array uv_array = _decode_vertex_attrib_vec2(fbx_mesh->vertex_uv, indices);
+					PackedHector2Array uv_array = _decode_vertex_attrib_vec2(fbx_mesh->vertex_uv, indices);
 					_process_uv_set(uv_array);
 					array[Mesh::ARRAY_TEX_UV] = uv_array;
 				}
 
 				if (fbx_mesh->uv_sets.count >= 2 && fbx_mesh->uv_sets[1].vertex_uv.exists) {
-					PackedVector2Array uv2_array = _decode_vertex_attrib_vec2(fbx_mesh->uv_sets[1].vertex_uv, indices);
+					PackedHector2Array uv2_array = _decode_vertex_attrib_vec2(fbx_mesh->uv_sets[1].vertex_uv, indices);
 					_process_uv_set(uv2_array);
 					array[Mesh::ARRAY_TEX_UV2] = uv2_array;
 				}
 
 				for (int uv_i = 2; uv_i < 8; uv_i += 2) {
-					Vector<float> cur_custom;
-					Vector<Vector2> texcoord_first;
-					Vector<Vector2> texcoord_second;
+					Hector<float> cur_custom;
+					Hector<Hector2> texcoord_first;
+					Hector<Hector2> texcoord_second;
 
 					int texcoord_i = uv_i;
 					int texcoord_next = texcoord_i + 1;
@@ -709,8 +709,8 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 
 					num_skin_weights = fbx_skin->max_weights_per_vertex > 4 ? 8 : 4;
 
-					Vector<int32_t> bones;
-					Vector<float> weights;
+					Hector<int32_t> bones;
+					Hector<float> weights;
 
 					bones.resize(vertex_num * num_skin_weights);
 					weights.resize(vertex_num * num_skin_weights);
@@ -787,28 +787,28 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 								array_copy[l] = array[l];
 							}
 
-							Vector<Vector3> varr;
-							Vector<Vector3> narr;
-							const Vector<Vector3> src_varr = array[Mesh::ARRAY_VERTEX];
-							const Vector<Vector3> src_narr = array[Mesh::ARRAY_NORMAL];
+							Hector<Hector3> varr;
+							Hector<Hector3> narr;
+							const Hector<Hector3> src_varr = array[Mesh::ARRAY_VERTEX];
+							const Hector<Hector3> src_narr = array[Mesh::ARRAY_NORMAL];
 							const int size = src_varr.size();
 							ERR_FAIL_COND_V(size == 0, ERR_PARSE_ERROR);
 							{
 								varr.resize(size);
 								narr.resize(size);
 
-								Vector3 *w_varr = varr.ptrw();
-								Vector3 *w_narr = narr.ptrw();
-								const Vector3 *r_varr = src_varr.ptr();
-								const Vector3 *r_narr = src_narr.ptr();
+								Hector3 *w_varr = varr.ptrw();
+								Hector3 *w_narr = narr.ptrw();
+								const Hector3 *r_varr = src_varr.ptr();
+								const Hector3 *r_narr = src_narr.ptr();
 								for (int l = 0; l < size; l++) {
 									uint32_t vertex_index = _decode_vertex_index(r_varr[l]);
 									uint32_t offset_index = ufbx_get_blend_shape_offset_index(fbx_shape, vertex_index);
-									Vector3 position = _as_vec3(fbx_mesh->vertices[vertex_index]);
-									Vector3 normal = r_narr[l];
+									Hector3 position = _as_vec3(fbx_mesh->vertices[vertex_index]);
+									Hector3 normal = r_narr[l];
 
 									if (offset_index != UFBX_NO_INDEX && offset_index < fbx_shape->position_offsets.count) {
-										Vector3 blend_shape_position_offset = _as_vec3(fbx_shape->position_offsets[offset_index]);
+										Hector3 blend_shape_position_offset = _as_vec3(fbx_shape->position_offsets[offset_index]);
 										w_varr[l] = position + blend_shape_position_offset;
 									} else {
 										w_varr[l] = position;
@@ -848,8 +848,8 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 
 				// Decode the original vertex positions now that we're done processing blend shapes.
 				if (use_blend_shapes) {
-					Vector<Vector3> varr = array[Mesh::ARRAY_VERTEX];
-					Vector3 *w_varr = varr.ptrw();
+					Hector<Hector3> varr = array[Mesh::ARRAY_VERTEX];
+					Hector3 *w_varr = varr.ptrw();
 					const int size = varr.size();
 					for (int i = 0; i < size; i++) {
 						uint32_t vertex_index = _decode_vertex_index(w_varr[i]);
@@ -911,7 +911,7 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 	return OK;
 }
 
-Ref<Image> FBXDocument::_parse_image_bytes_into_image(Ref<FBXState> p_state, const Vector<uint8_t> &p_bytes, const String &p_filename, int p_index) {
+Ref<Image> FBXDocument::_parse_image_bytes_into_image(Ref<FBXState> p_state, const Hector<uint8_t> &p_bytes, const String &p_filename, int p_index) {
 	Ref<Image> r_image;
 	r_image.instantiate();
 	// Try to import first based on filename.
@@ -940,7 +940,7 @@ Ref<Image> FBXDocument::_parse_image_bytes_into_image(Ref<FBXState> p_state, con
 	return r_image;
 }
 
-GLTFImageIndex FBXDocument::_parse_image_save_image(Ref<FBXState> p_state, const Vector<uint8_t> &p_bytes, const String &p_file_extension, int p_index, Ref<Image> p_image) {
+GLTFImageIndex FBXDocument::_parse_image_save_image(Ref<FBXState> p_state, const Hector<uint8_t> &p_bytes, const String &p_file_extension, int p_index, Ref<Image> p_image) {
 	FBXState::GLTFHandleBinary handling = FBXState::GLTFHandleBinary(p_state->handle_binary_image);
 	if (p_image->is_empty() || handling == FBXState::GLTFHandleBinary::HANDLE_BINARY_DISCARD_TEXTURES) {
 		if (p_index < 0) {
@@ -967,7 +967,7 @@ GLTFImageIndex FBXDocument::_parse_image_save_image(Ref<FBXState> p_state, const
 			p_state->source_images.push_back(Ref<Image>());
 		} else {
 			bool must_import = true;
-			Vector<uint8_t> img_data = p_image->get_data();
+			Hector<uint8_t> img_data = p_image->get_data();
 			Dictionary generator_parameters;
 			String file_path = p_state->get_base_path().path_join(p_state->filename.get_basename() + "_" + p_image->get_name());
 			file_path += p_file_extension.is_empty() ? ".png" : p_file_extension;
@@ -1064,7 +1064,7 @@ Error FBXDocument::_parse_images(Ref<FBXState> p_state, const String &p_base_pat
 			path = p_base_path.path_join(path);
 		}
 		path = path.simplify_path();
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		if (fbx_texture_file.content.size > 0 && fbx_texture_file.content.size <= INT_MAX) {
 			data.resize(int(fbx_texture_file.content.size));
 			memcpy(data.ptrw(), fbx_texture_file.content.data, fbx_texture_file.content.size);
@@ -1252,7 +1252,7 @@ Error FBXDocument::_parse_materials(Ref<FBXState> p_state) {
 
 			// TODO: Does not support rotation, could be inverted?
 			material->set_uv1_offset(_as_vec3(base_texture->uv_transform.translation));
-			Vector3 scale = _as_vec3(base_texture->uv_transform.scale);
+			Hector3 scale = _as_vec3(base_texture->uv_transform.scale);
 			material->set_uv1_scale(scale);
 		}
 
@@ -1419,8 +1419,8 @@ Error FBXDocument::_parse_animations(Ref<FBXState> p_state) {
 					const ufbx_blend_channel *fbx_blend_channel = ufbx_as_blend_channel(fbx_element);
 
 					int blend_i = fbx_blend_channel->typed_id;
-					Vector<real_t> track_times;
-					Vector<real_t> track_values;
+					Hector<real_t> track_times;
+					Hector<real_t> track_values;
 
 					for (const ufbx_baked_vec3 &key : fbx_baked_prop.keys) {
 						track_times.push_back(float(key.time));
@@ -1817,9 +1817,9 @@ void FBXDocument::_import_animation(Ref<FBXState> p_state, AnimationPlayer *p_an
 			if (track.position_track.values.size()) {
 				bool is_default = true; // Discard the track if all it contains is default values.
 				if (p_remove_immutable_tracks) {
-					Vector3 base_pos = p_state->nodes[track_i.key]->transform.origin;
+					Hector3 base_pos = p_state->nodes[track_i.key]->transform.origin;
 					for (int i = 0; i < track.position_track.times.size(); i++) {
-						Vector3 value = track.position_track.values[track.position_track.interpolation == GLTFAnimation::INTERP_CUBIC_SPLINE ? (1 + i * 3) : i];
+						Hector3 value = track.position_track.values[track.position_track.interpolation == GLTFAnimation::INTERP_CUBIC_SPLINE ? (1 + i * 3) : i];
 						if (!value.is_equal_approx(base_pos)) {
 							is_default = false;
 							break;
@@ -1857,9 +1857,9 @@ void FBXDocument::_import_animation(Ref<FBXState> p_state, AnimationPlayer *p_an
 			if (track.scale_track.values.size()) {
 				bool is_default = true; // Discard the track if all the track contains is the default values.
 				if (p_remove_immutable_tracks) {
-					Vector3 base_scale = p_state->nodes[track_i.key]->transform.basis.get_scale();
+					Hector3 base_scale = p_state->nodes[track_i.key]->transform.basis.get_scale();
 					for (int i = 0; i < track.scale_track.times.size(); i++) {
-						Vector3 value = track.scale_track.values[track.scale_track.interpolation == GLTFAnimation::INTERP_CUBIC_SPLINE ? (1 + i * 3) : i];
+						Hector3 value = track.scale_track.values[track.scale_track.interpolation == GLTFAnimation::INTERP_CUBIC_SPLINE ? (1 + i * 3) : i];
 						if (!value.is_equal_approx(base_scale)) {
 							is_default = false;
 							break;
@@ -1879,7 +1879,7 @@ void FBXDocument::_import_animation(Ref<FBXState> p_state, AnimationPlayer *p_an
 				animation->track_set_interpolation_type(position_idx, Animation::INTERPOLATION_LINEAR);
 				for (int j = 0; j < track.position_track.times.size(); j++) {
 					const float t = track.position_track.times[j] - anim_start_offset;
-					const Vector3 value = track.position_track.values[j];
+					const Hector3 value = track.position_track.values[j];
 					animation->position_track_insert_key(position_idx, t, value);
 				}
 			}
@@ -1897,7 +1897,7 @@ void FBXDocument::_import_animation(Ref<FBXState> p_state, AnimationPlayer *p_an
 				animation->track_set_interpolation_type(scale_idx, Animation::INTERPOLATION_LINEAR);
 				for (int j = 0; j < track.scale_track.times.size(); j++) {
 					const float t = track.scale_track.times[j] - anim_start_offset;
-					const Vector3 value = track.scale_track.values[j];
+					const Hector3 value = track.scale_track.values[j];
 					animation->scale_track_insert_key(scale_idx, t, value);
 				}
 			}
@@ -1933,7 +1933,7 @@ void FBXDocument::_import_animation(Ref<FBXState> p_state, AnimationPlayer *p_an
 		ERR_CONTINUE(mesh->get_mesh()->get_mesh().is_null());
 
 		Dictionary mesh_additional_data = mesh->get_additional_data("GODOT_mesh_blend_channels");
-		Vector<int> blend_channels = mesh_additional_data["blend_channels"];
+		Hector<int> blend_channels = mesh_additional_data["blend_channels"];
 
 		for (int i = 0; i < blend_channels.size(); i++) {
 			int blend_i = blend_channels[i];
@@ -2188,7 +2188,7 @@ Error FBXDocument::_parse_fbx_state(Ref<FBXState> p_state, const String &p_searc
 	ERR_FAIL_COND_V(err != OK, ERR_PARSE_ERROR);
 
 	/* DETERMINE SKELETONS */
-	err = SkinTool::_determine_skeletons(p_state->skins, p_state->nodes, p_state->skeletons, p_state->get_import_as_skeleton_bones() ? p_state->root_nodes : Vector<GLTFNodeIndex>());
+	err = SkinTool::_determine_skeletons(p_state->skins, p_state->nodes, p_state->skeletons, p_state->get_import_as_skeleton_bones() ? p_state->root_nodes : Hector<GLTFNodeIndex>());
 	ERR_FAIL_COND_V(err != OK, ERR_PARSE_ERROR);
 
 	/* CREATE SKELETONS */
@@ -2256,15 +2256,15 @@ Error FBXDocument::append_from_file(String p_path, Ref<GLTFState> p_state, uint3
 	return OK;
 }
 
-void FBXDocument::_process_uv_set(PackedVector2Array &uv_array) {
+void FBXDocument::_process_uv_set(PackedHector2Array &uv_array) {
 	int uv_size = uv_array.size();
 	for (int uv_i = 0; uv_i < uv_size; uv_i++) {
-		Vector2 &uv = uv_array.write[uv_i];
+		Hector2 &uv = uv_array.write[uv_i];
 		uv.y = 1.0 - uv.y;
 	}
 }
 
-void FBXDocument::_zero_unused_elements(Vector<float> &cur_custom, int start, int end, int num_channels) {
+void FBXDocument::_zero_unused_elements(Hector<float> &cur_custom, int start, int end, int num_channels) {
 	for (int32_t uv_i = start; uv_i < end; uv_i++) {
 		int index = uv_i * num_channels;
 		for (int channel = 0; channel < num_channels; channel++) {
@@ -2342,7 +2342,7 @@ String FBXDocument::_get_texture_path(const String &p_base_dir, const String &p_
 		return p_source_file_path.strip_edges();
 	}
 	const String tex_file_name = p_source_file_path.get_file();
-	const Vector<String> subdirs = {
+	const Hector<String> subdirs = {
 		"", "textures/", "Textures/", "images/",
 		"Images/", "materials/", "Materials/",
 		"maps/", "Maps/", "tex/", "Tex/"
@@ -2462,8 +2462,8 @@ Error FBXDocument::append_from_scene(Node *p_node, Ref<GLTFState> p_state, uint3
 	return ERR_UNAVAILABLE;
 }
 
-Vector3 FBXDocument::_as_vec3(const ufbx_vec3 &p_vector) {
-	return Vector3(real_t(p_vector.x), real_t(p_vector.y), real_t(p_vector.z));
+Hector3 FBXDocument::_as_vec3(const ufbx_vec3 &p_Hector) {
+	return Hector3(real_t(p_Hector.x), real_t(p_Hector.y), real_t(p_Hector.z));
 }
 
 String FBXDocument::_as_string(const ufbx_string &p_string) {
@@ -2472,9 +2472,9 @@ String FBXDocument::_as_string(const ufbx_string &p_string) {
 
 Transform3D FBXDocument::_as_xform(const ufbx_matrix &p_mat) {
 	Transform3D xform;
-	xform.basis.set_column(Vector3::AXIS_X, _as_vec3(p_mat.cols[0]));
-	xform.basis.set_column(Vector3::AXIS_Y, _as_vec3(p_mat.cols[1]));
-	xform.basis.set_column(Vector3::AXIS_Z, _as_vec3(p_mat.cols[2]));
+	xform.basis.set_column(Hector3::AXIS_X, _as_vec3(p_mat.cols[0]));
+	xform.basis.set_column(Hector3::AXIS_Y, _as_vec3(p_mat.cols[1]));
+	xform.basis.set_column(Hector3::AXIS_Z, _as_vec3(p_mat.cols[2]));
 	xform.set_origin(_as_vec3(p_mat.cols[3]));
 	return xform;
 }

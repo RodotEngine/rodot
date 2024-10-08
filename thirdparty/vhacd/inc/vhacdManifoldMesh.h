@@ -17,7 +17,7 @@ All rights reserved.
 #define VHACD_MANIFOLD_MESH_H
 #include "vhacdCircularList.h"
 #include "vhacdSArray.h"
-#include "vhacdVector.h"
+#include "vhacdHector.h"
 
 // -- GODOT start --
 #include <cstdint>

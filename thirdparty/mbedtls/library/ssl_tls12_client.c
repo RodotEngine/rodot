@@ -431,7 +431,7 @@ static int ssl_write_use_srtp_ext(mbedtls_ssl_context *ssl,
     }
     /* Extension length = 2 bytes for profiles length,
      *                    ssl->conf->dtls_srtp_profile_list_len * 2 (each profile is 2 bytes length ),
-     *                    1 byte for srtp_mki vector length and the mki_len value
+     *                    1 byte for srtp_mki Hector length and the mki_len value
      */
     ext_len = 2 + 2 * (ssl->conf->dtls_srtp_profile_list_len) + 1 + mki_len;
 
@@ -501,7 +501,7 @@ static int ssl_write_use_srtp_ext(mbedtls_ssl_context *ssl,
      *                         + extension length (2 bytes)
      *                         + protection profile length (2 bytes)
      *                         + 2 * number of protection profiles
-     *                         + srtp_mki vector length(1 byte)
+     *                         + srtp_mki Hector length(1 byte)
      *                         + mki value
      */
     *olen = p - buf;

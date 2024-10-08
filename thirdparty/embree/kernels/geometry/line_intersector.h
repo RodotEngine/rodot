@@ -58,8 +58,8 @@ namespace embree
           const Vec4vf<M> v0 = enlargeRadiusToMinWidth<M>(context,geom,ray_org,v0i);
           const Vec4vf<M> v1 = enlargeRadiusToMinWidth<M>(context,geom,ray_org,v1i);
           
-          Vec4vf<M> p0(xfmVector(ray_space,v0.xyz()-ray_org), v0.w);
-          Vec4vf<M> p1(xfmVector(ray_space,v1.xyz()-ray_org), v1.w);
+          Vec4vf<M> p0(xfmHector(ray_space,v0.xyz()-ray_org), v0.w);
+          Vec4vf<M> p1(xfmHector(ray_space,v1.xyz()-ray_org), v1.w);
           
           /* approximative intersection with cone */
           const Vec4vf<M> v = p1-p0;
@@ -112,8 +112,8 @@ namespace embree
           const Vec4vf<M> v0 = enlargeRadiusToMinWidth<M>(context,geom,ray_org,v0i);
           const Vec4vf<M> v1 = enlargeRadiusToMinWidth<M>(context,geom,ray_org,v1i);
           
-          Vec4vf<M> p0(xfmVector(ray_space,v0.xyz()-ray_org), v0.w);
-          Vec4vf<M> p1(xfmVector(ray_space,v1.xyz()-ray_org), v1.w);
+          Vec4vf<M> p0(xfmHector(ray_space,v0.xyz()-ray_org), v0.w);
+          Vec4vf<M> p1(xfmHector(ray_space,v1.xyz()-ray_org), v1.w);
           
           /* approximative intersection with cone */
           const Vec4vf<M> v = p1-p0;

@@ -77,7 +77,7 @@ protected:
 	Transform2D transform; // display transform
 	int base_width = 0;
 	int base_height = 0;
-	Vector<FeedFormat> formats;
+	Hector<FeedFormat> formats;
 	Dictionary parameters;
 	int selected_format = -1;
 

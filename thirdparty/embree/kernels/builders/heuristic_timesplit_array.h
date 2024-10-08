@@ -17,7 +17,7 @@ namespace embree
       struct HeuristicMBlurTemporalSplit
       {
         typedef BinSplit<MBLUR_NUM_OBJECT_BINS> Split;
-        typedef mvector<PrimRefMB>* PrimRefVector;
+        typedef mHector<PrimRefMB>* PrimRefHector;
         typedef typename PrimRefMB::BBox BBox; 
 
         static const size_t PARALLEL_THRESHOLD = 3 * 1024;
@@ -159,7 +159,7 @@ namespace embree
           return tsplit;
         }
 
-        __forceinline std::unique_ptr<mvector<PrimRefMB>> split(const Split& tsplit, const SetMB& set, SetMB& lset, SetMB& rset)
+        __forceinline std::unique_ptr<mHector<PrimRefMB>> split(const Split& tsplit, const SetMB& set, SetMB& lset, SetMB& rset)
         {
           assert(tsplit.sah != float(inf));
           assert(tsplit.fpos > set.time_range.lower);
@@ -168,11 +168,11 @@ namespace embree
           float center_time = tsplit.fpos;
           const BBox1f time_range0(set.time_range.lower,center_time);
           const BBox1f time_range1(center_time,set.time_range.upper);
-          mvector<PrimRefMB>& prims = *set.prims;
+          mHector<PrimRefMB>& prims = *set.prims;
           
           /* calculate primrefs for first time range */
-          std::unique_ptr<mvector<PrimRefMB>> new_vector(new mvector<PrimRefMB>(device, set.size()));
-          PrimRefVector lprims = new_vector.get();
+          std::unique_ptr<mHector<PrimRefMB>> new_Hector(new mHector<PrimRefMB>(device, set.size()));
+          PrimRefHector lprims = new_Hector.get();
           
           auto reduction_func0 = [&] (const range<size_t>& r) {
             PrimInfoMB pinfo = empty;
@@ -226,7 +226,7 @@ namespace embree
         
           rset = SetMB(rinfo,&prims,time_range1);
 
-          return new_vector;
+          return new_Hector;
         }
 
       private:

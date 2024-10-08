@@ -39,18 +39,18 @@ namespace Godot.SourceGenerators
                 MarshalType.Single => VariantType.Float,
                 MarshalType.Double => VariantType.Float,
                 MarshalType.String => VariantType.String,
-                MarshalType.Vector2 => VariantType.Vector2,
-                MarshalType.Vector2I => VariantType.Vector2I,
+                MarshalType.Hector2 => VariantType.Hector2,
+                MarshalType.Hector2I => VariantType.Hector2I,
                 MarshalType.Rect2 => VariantType.Rect2,
                 MarshalType.Rect2I => VariantType.Rect2I,
                 MarshalType.Transform2D => VariantType.Transform2D,
-                MarshalType.Vector3 => VariantType.Vector3,
-                MarshalType.Vector3I => VariantType.Vector3I,
+                MarshalType.Hector3 => VariantType.Hector3,
+                MarshalType.Hector3I => VariantType.Hector3I,
                 MarshalType.Basis => VariantType.Basis,
                 MarshalType.Quaternion => VariantType.Quaternion,
                 MarshalType.Transform3D => VariantType.Transform3D,
-                MarshalType.Vector4 => VariantType.Vector4,
-                MarshalType.Vector4I => VariantType.Vector4I,
+                MarshalType.Hector4 => VariantType.Hector4,
+                MarshalType.Hector4I => VariantType.Hector4I,
                 MarshalType.Projection => VariantType.Projection,
                 MarshalType.Aabb => VariantType.Aabb,
                 MarshalType.Color => VariantType.Color,
@@ -64,9 +64,9 @@ namespace Godot.SourceGenerators
                 MarshalType.Float32Array => VariantType.PackedFloat32Array,
                 MarshalType.Float64Array => VariantType.PackedFloat64Array,
                 MarshalType.StringArray => VariantType.PackedStringArray,
-                MarshalType.Vector2Array => VariantType.PackedVector2Array,
-                MarshalType.Vector3Array => VariantType.PackedVector3Array,
-                MarshalType.Vector4Array => VariantType.PackedVector4Array,
+                MarshalType.Hector2Array => VariantType.PackedHector2Array,
+                MarshalType.Hector3Array => VariantType.PackedHector3Array,
+                MarshalType.Hector4Array => VariantType.PackedHector4Array,
                 MarshalType.ColorArray => VariantType.PackedColorArray,
                 MarshalType.GodotObjectOrDerivedArray => VariantType.Array,
                 MarshalType.SystemArrayOfStringName => VariantType.Array,
@@ -130,18 +130,18 @@ namespace Godot.SourceGenerators
                         {
                             return type switch
                             {
-                                { Name: "Vector2" } => MarshalType.Vector2,
-                                { Name: "Vector2I" } => MarshalType.Vector2I,
+                                { Name: "Hector2" } => MarshalType.Hector2,
+                                { Name: "Hector2I" } => MarshalType.Hector2I,
                                 { Name: "Rect2" } => MarshalType.Rect2,
                                 { Name: "Rect2I" } => MarshalType.Rect2I,
                                 { Name: "Transform2D" } => MarshalType.Transform2D,
-                                { Name: "Vector3" } => MarshalType.Vector3,
-                                { Name: "Vector3I" } => MarshalType.Vector3I,
+                                { Name: "Hector3" } => MarshalType.Hector3,
+                                { Name: "Hector3I" } => MarshalType.Hector3I,
                                 { Name: "Basis" } => MarshalType.Basis,
                                 { Name: "Quaternion" } => MarshalType.Quaternion,
                                 { Name: "Transform3D" } => MarshalType.Transform3D,
-                                { Name: "Vector4" } => MarshalType.Vector4,
-                                { Name: "Vector4I" } => MarshalType.Vector4I,
+                                { Name: "Hector4" } => MarshalType.Hector4,
+                                { Name: "Hector4I" } => MarshalType.Hector4I,
                                 { Name: "Projection" } => MarshalType.Projection,
                                 { Name: "Aabb" } => MarshalType.Aabb,
                                 { Name: "Color" } => MarshalType.Color,
@@ -187,12 +187,12 @@ namespace Godot.SourceGenerators
                         {
                             switch (elementType)
                             {
-                                case { Name: "Vector2" }:
-                                    return MarshalType.Vector2Array;
-                                case { Name: "Vector3" }:
-                                    return MarshalType.Vector3Array;
-                                case { Name: "Vector4" }:
-                                    return MarshalType.Vector4Array;
+                                case { Name: "Hector2" }:
+                                    return MarshalType.Hector2Array;
+                                case { Name: "Hector3" }:
+                                    return MarshalType.Hector3Array;
+                                case { Name: "Hector4" }:
+                                    return MarshalType.Hector4Array;
                                 case { Name: "Color" }:
                                     return MarshalType.ColorArray;
                                 case { Name: "StringName" }:

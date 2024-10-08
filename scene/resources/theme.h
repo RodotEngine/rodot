@@ -69,24 +69,24 @@ private:
 
 	void _emit_theme_changed(bool p_notify_list_changed = false);
 
-	Vector<String> _get_icon_list(const String &p_theme_type) const;
-	Vector<String> _get_icon_type_list() const;
-	Vector<String> _get_stylebox_list(const String &p_theme_type) const;
-	Vector<String> _get_stylebox_type_list() const;
-	Vector<String> _get_font_list(const String &p_theme_type) const;
-	Vector<String> _get_font_type_list() const;
-	Vector<String> _get_font_size_list(const String &p_theme_type) const;
-	Vector<String> _get_font_size_type_list() const;
-	Vector<String> _get_color_list(const String &p_theme_type) const;
-	Vector<String> _get_color_type_list() const;
-	Vector<String> _get_constant_list(const String &p_theme_type) const;
-	Vector<String> _get_constant_type_list() const;
+	Hector<String> _get_icon_list(const String &p_theme_type) const;
+	Hector<String> _get_icon_type_list() const;
+	Hector<String> _get_stylebox_list(const String &p_theme_type) const;
+	Hector<String> _get_stylebox_type_list() const;
+	Hector<String> _get_font_list(const String &p_theme_type) const;
+	Hector<String> _get_font_type_list() const;
+	Hector<String> _get_font_size_list(const String &p_theme_type) const;
+	Hector<String> _get_font_size_type_list() const;
+	Hector<String> _get_color_list(const String &p_theme_type) const;
+	Hector<String> _get_color_type_list() const;
+	Hector<String> _get_constant_list(const String &p_theme_type) const;
+	Hector<String> _get_constant_type_list() const;
 
-	Vector<String> _get_theme_item_list(DataType p_data_type, const String &p_theme_type) const;
-	Vector<String> _get_theme_item_type_list(DataType p_data_type) const;
+	Hector<String> _get_theme_item_list(DataType p_data_type, const String &p_theme_type) const;
+	Hector<String> _get_theme_item_type_list(DataType p_data_type) const;
 
-	Vector<String> _get_type_variation_list(const StringName &p_theme_type) const;
-	Vector<String> _get_type_list() const;
+	Hector<String> _get_type_variation_list(const StringName &p_theme_type) const;
+	Hector<String> _get_type_list() const;
 
 protected:
 	bool _set(const StringName &p_name, const Variant &p_value);
@@ -216,7 +216,7 @@ public:
 	void add_type(const StringName &p_theme_type);
 	void remove_type(const StringName &p_theme_type);
 	void get_type_list(List<StringName> *p_list) const;
-	void get_type_dependencies(const StringName &p_base_type, const StringName &p_type_variant, Vector<StringName> &r_result);
+	void get_type_dependencies(const StringName &p_base_type, const StringName &p_type_variant, Hector<StringName> &r_result);
 
 	void merge_with(const Ref<Theme> &p_other);
 	void clear();

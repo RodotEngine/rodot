@@ -330,7 +330,7 @@ _findMetaData(const char16_t* currency, UErrorCode& ec) {
     }
 
     int32_t len;
-    const int32_t *data = ures_getIntVector(rb, &len, &ec);
+    const int32_t *data = ures_getIntHector(rb, &len, &ec);
     if (U_FAILURE(ec) || len != 4) {
         // Config/build error; return hard-coded defaults
         if (U_SUCCESS(ec)) {
@@ -2127,7 +2127,7 @@ ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
 
                     if (U_SUCCESS(localStatus)) {
                         int32_t fromLength = 0;
-                        const int32_t *fromArray = ures_getIntVector(fromRes, &fromLength, &localStatus);
+                        const int32_t *fromArray = ures_getIntHector(fromRes, &fromLength, &localStatus);
                         int64_t currDate64 = ((uint64_t)fromArray[0]) << 32;
                         currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         fromDate = (UDate)currDate64;
@@ -2141,7 +2141,7 @@ ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
 
                     if (U_SUCCESS(localStatus)) {
                         int32_t toLength = 0;
-                        const int32_t *toArray = ures_getIntVector(toRes, &toLength, &localStatus);
+                        const int32_t *toArray = ures_getIntHector(toRes, &toLength, &localStatus);
                         int64_t currDate64 = (uint64_t)toArray[0] << 32;
                         currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         toDate = (UDate)currDate64;
@@ -2333,7 +2333,7 @@ ucurr_countCurrencies(const char* locale,
                 // get the from date
                 int32_t fromLength = 0;
                 UResourceBundle *fromRes = ures_getByKey(currencyRes, "from", nullptr, &localStatus);
-                const int32_t *fromArray = ures_getIntVector(fromRes, &fromLength, &localStatus);
+                const int32_t *fromArray = ures_getIntHector(fromRes, &fromLength, &localStatus);
 
                 int64_t currDate64 = (int64_t)((uint64_t)(fromArray[0]) << 32);
                 currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
@@ -2343,7 +2343,7 @@ ucurr_countCurrencies(const char* locale,
                 {
                     int32_t toLength = 0;
                     UResourceBundle *toRes = ures_getByKey(currencyRes, "to", nullptr, &localStatus);
-                    const int32_t *toArray = ures_getIntVector(toRes, &toLength, &localStatus);
+                    const int32_t *toArray = ures_getIntHector(toRes, &toLength, &localStatus);
 
                     currDate64 = (int64_t)toArray[0] << 32;
                     currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
@@ -2455,7 +2455,7 @@ ucurr_forLocaleAndDate(const char* locale,
                     // get the from date
                     int32_t fromLength = 0;
                     UResourceBundle *fromRes = ures_getByKey(currencyRes, "from", nullptr, &localStatus);
-                    const int32_t *fromArray = ures_getIntVector(fromRes, &fromLength, &localStatus);
+                    const int32_t *fromArray = ures_getIntHector(fromRes, &fromLength, &localStatus);
 
                     int64_t currDate64 = (int64_t)((uint64_t)fromArray[0] << 32);
                     currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
@@ -2465,7 +2465,7 @@ ucurr_forLocaleAndDate(const char* locale,
                     {
                         int32_t toLength = 0;
                         UResourceBundle *toRes = ures_getByKey(currencyRes, "to", nullptr, &localStatus);
-                        const int32_t *toArray = ures_getIntVector(toRes, &toLength, &localStatus);
+                        const int32_t *toArray = ures_getIntHector(toRes, &toLength, &localStatus);
 
                         currDate64 = (int64_t)toArray[0] << 32;
                         currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));

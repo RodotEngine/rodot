@@ -42,7 +42,7 @@ class MethodBind {
 	uint32_t hint_flags = METHOD_FLAGS_DEFAULT;
 	StringName name;
 	StringName instance_class;
-	Vector<Variant> default_arguments;
+	Hector<Variant> default_arguments;
 	int default_argument_count = 0;
 	int argument_count = 0;
 
@@ -54,7 +54,7 @@ class MethodBind {
 protected:
 	Variant::Type *argument_types = nullptr;
 #ifdef DEBUG_METHODS_ENABLED
-	Vector<StringName> arg_names;
+	Hector<StringName> arg_names;
 #endif
 	void _set_const(bool p_const);
 	void _set_static(bool p_static);
@@ -66,7 +66,7 @@ protected:
 	void set_argument_count(int p_count) { argument_count = p_count; }
 
 public:
-	_FORCE_INLINE_ const Vector<Variant> &get_default_arguments() const { return default_arguments; }
+	_FORCE_INLINE_ const Hector<Variant> &get_default_arguments() const { return default_arguments; }
 	_FORCE_INLINE_ int get_default_argument_count() const { return default_argument_count; }
 
 	_FORCE_INLINE_ Variant has_default_argument(int p_arg) const {
@@ -98,8 +98,8 @@ public:
 	PropertyInfo get_return_info() const;
 
 #ifdef DEBUG_METHODS_ENABLED
-	void set_argument_names(const Vector<StringName> &p_names); // Set by ClassDB, can't be inferred otherwise.
-	Vector<StringName> get_argument_names() const;
+	void set_argument_names(const Hector<StringName> &p_names); // Set by ClassDB, can't be inferred otherwise.
+	Hector<StringName> get_argument_names() const;
 
 	virtual GodotTypeInfo::Metadata get_argument_meta(int p_arg) const = 0;
 #endif
@@ -131,7 +131,7 @@ public:
 	_FORCE_INLINE_ bool is_return_type_raw_object_ptr() { return _returns_raw_obj_ptr; }
 	_FORCE_INLINE_ void set_return_type_is_raw_object_ptr(bool p_returns_raw_obj) { _returns_raw_obj_ptr = p_returns_raw_obj; }
 
-	void set_default_arguments(const Vector<Variant> &p_defargs);
+	void set_default_arguments(const Hector<Variant> &p_defargs);
 
 	uint32_t get_hash() const;
 
@@ -190,7 +190,7 @@ public:
 		at[0] = _gen_return_type_info().type;
 		if (method_info.arguments.size()) {
 #ifdef DEBUG_METHODS_ENABLED
-			Vector<StringName> names;
+			Hector<StringName> names;
 			names.resize(method_info.arguments.size());
 #endif
 			int i = 0;

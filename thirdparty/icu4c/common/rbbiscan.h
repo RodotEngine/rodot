@@ -19,7 +19,7 @@
 #include "unicode/uniset.h"
 #include "unicode/parseerr.h"
 #include "uhash.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                           //    looks up references to $variables within a set.
 #include "rbbinode.h"

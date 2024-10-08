@@ -405,7 +405,7 @@ namespace embree
                                     Vec3f(node->naabb.l.vz.x[i], node->naabb.l.vz.y[i], node->naabb.l.vz.z[i]),
                                     Vec3f(node->naabb.p   .x[i], node->naabb.p   .y[i], node->naabb.p   .z[i]));
 
-      const Vec3vf<K> dir = xfmVector(naabb, ray.dir);
+      const Vec3vf<K> dir = xfmHector(naabb, ray.dir);
       const Vec3vf<K> nrdir = Vec3vf<K>(vfloat<K>(-1.0f)) * rcp_safe(dir); // FIXME: negate instead of mul with -1?
       const Vec3vf<K> org = xfmPoint(naabb, ray.org);
 
@@ -447,7 +447,7 @@ namespace embree
       const Vec3vf<K> lower = lerp(b0_lower, b1_lower, time);
       const Vec3vf<K> upper = lerp(b0_upper, b1_upper, time);
 
-      const Vec3vf<K> dir = xfmVector(xfm, ray.dir);
+      const Vec3vf<K> dir = xfmHector(xfm, ray.dir);
       const Vec3vf<K> rdir = rcp_safe(dir);
       const Vec3vf<K> org = xfmPoint(xfm, ray.org);
 

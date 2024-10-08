@@ -60,7 +60,7 @@ static int __bsr_clz32(uint32_t x) {
 #endif
 
 template <typename T>
-class Vector;
+class Hector;
 
 class RandomPCG {
 	pcg32_random_t pcg;
@@ -90,7 +90,7 @@ public:
 		return pcg32_boundedrand_r(&pcg, bounds);
 	}
 
-	int64_t rand_weighted(const Vector<float> &p_weights);
+	int64_t rand_weighted(const Hector<float> &p_weights);
 
 	// Obtaining floating point numbers in [0, 1] range with "good enough" uniformity.
 	// These functions sample the output of rand() as the fraction part of an infinite binary number,

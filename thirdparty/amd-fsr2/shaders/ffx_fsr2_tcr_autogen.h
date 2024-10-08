@@ -175,7 +175,7 @@ FFX_MIN16_F ComputeAabbOverlap(FFX_MIN16_I2 uDispatchThreadId, FFX_MIN16_I2 iPre
 {
     FFX_MIN16_F retVal = FFX_MIN16_F(0.f);
 
-    FfxFloat32x2 fMotionVector = LoadInputMotionVector(uDispatchThreadId);
+    FfxFloat32x2 fMotionHector = LoadInputMotionHector(uDispatchThreadId);
     FfxFloat32x3 colorPreAlpha = LoadOpaqueOnly(uDispatchThreadId);
     FfxFloat32x3 colorPostAlpha = LoadInputColor(uDispatchThreadId);
     FfxFloat32x3 colorPrevPreAlpha = LoadPrevPreAlpha(iPrevIdx);

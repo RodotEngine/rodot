@@ -11,7 +11,7 @@
 #include "ProcessCommon.hpp"
 #include "ProcessRGB.hpp"
 #include "Tables.hpp"
-#include "Vector.hpp"
+#include "Hector.hpp"
 #if defined __SSE4_1__ || defined __AVX2__ || defined _MSC_VER
 #  ifdef _MSC_VER
 #    include <intrin.h>
@@ -2439,7 +2439,7 @@ uint32_t compressBlockTH( uint8_t *src, Luma& l, uint32_t& compressed1, uint32_t
 
     // 6) finds the best candidate with the lowest error
 #ifdef __AVX2__
-    // Vectorized ver
+    // Hectorized ver
     bestErr = calculateErrorTH( tMode, colorsRGB444, bestDist, bestPixIndices, startDistCandidate, r8, g8, b8 );
 #else
     // Scalar ver

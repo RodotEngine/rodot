@@ -78,7 +78,7 @@ public:
 	bool get_vertex_attributes() const;
 	void set_vertex_attributes(bool p_attributes);
 
-	Vector<uint8_t> load_buffer_view_data(const Ref<GLTFState> p_state) const;
+	Hector<uint8_t> load_buffer_view_data(const Ref<GLTFState> p_state) const;
 };
 
 #endif // GLTF_BUFFER_VIEW_H

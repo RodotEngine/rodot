@@ -49,7 +49,7 @@ public:
 
 	virtual void camera_set_perspective(RID p_camera, float p_fovy_degrees, float p_z_near, float p_z_far) = 0;
 	virtual void camera_set_orthogonal(RID p_camera, float p_size, float p_z_near, float p_z_far) = 0;
-	virtual void camera_set_frustum(RID p_camera, float p_size, Vector2 p_offset, float p_z_near, float p_z_far) = 0;
+	virtual void camera_set_frustum(RID p_camera, float p_size, Hector2 p_offset, float p_z_near, float p_z_far) = 0;
 	virtual void camera_set_transform(RID p_camera, const Transform3D &p_transform) = 0;
 	virtual void camera_set_cull_mask(RID p_camera, uint32_t p_layers) = 0;
 	virtual void camera_set_environment(RID p_camera, RID p_env) = 0;
@@ -60,7 +60,7 @@ public:
 
 	virtual RID occluder_allocate() = 0;
 	virtual void occluder_initialize(RID p_occluder) = 0;
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) = 0;
+	virtual void occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) = 0;
 
 	virtual RID scenario_allocate() = 0;
 	virtual void scenario_initialize(RID p_rid) = 0;
@@ -101,9 +101,9 @@ public:
 	virtual void instance_set_ignore_culling(RID p_instance, bool p_enabled) = 0;
 
 	// don't use these in a game!
-	virtual Vector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const = 0;
-	virtual Vector<ObjectID> instances_cull_ray(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario = RID()) const = 0;
-	virtual Vector<ObjectID> instances_cull_convex(const Vector<Plane> &p_convex, RID p_scenario = RID()) const = 0;
+	virtual Hector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const = 0;
+	virtual Hector<ObjectID> instances_cull_ray(const Hector3 &p_from, const Hector3 &p_to, RID p_scenario = RID()) const = 0;
+	virtual Hector<ObjectID> instances_cull_convex(const Hector<Plane> &p_convex, RID p_scenario = RID()) const = 0;
 
 	virtual void instance_geometry_set_flag(RID p_instance, RS::InstanceFlags p_flags, bool p_enabled) = 0;
 	virtual void instance_geometry_set_cast_shadows_setting(RID p_instance, RS::ShadowCastingSetting p_shadow_casting_setting) = 0;
@@ -233,10 +233,10 @@ public:
 
 	// Glow
 
-	virtual void environment_set_glow(RID p_env, bool p_enable, Vector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, RS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map) = 0;
+	virtual void environment_set_glow(RID p_env, bool p_enable, Hector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, RS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map) = 0;
 
 	virtual bool environment_get_glow_enabled(RID p_env) const = 0;
-	virtual Vector<float> environment_get_glow_levels(RID p_env) const = 0;
+	virtual Hector<float> environment_get_glow_levels(RID p_env) const = 0;
 	virtual float environment_get_glow_intensity(RID p_env) const = 0;
 	virtual float environment_get_glow_strength(RID p_env) const = 0;
 	virtual float environment_get_glow_bloom(RID p_env) const = 0;
@@ -338,7 +338,7 @@ public:
 	virtual TypedArray<Image> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) = 0;
 	virtual void voxel_gi_set_quality(RS::VoxelGIQuality) = 0;
 
-	virtual void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) = 0;
+	virtual void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) = 0;
 
 	virtual void render_empty_scene(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_scenario, RID p_shadow_atlas) = 0;
 

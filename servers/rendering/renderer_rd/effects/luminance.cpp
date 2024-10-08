@@ -39,7 +39,7 @@ Luminance::Luminance(bool p_prefer_raster_effects) {
 	prefer_raster_effects = p_prefer_raster_effects;
 
 	if (prefer_raster_effects) {
-		Vector<String> luminance_reduce_modes;
+		Hector<String> luminance_reduce_modes;
 		luminance_reduce_modes.push_back("\n#define FIRST_PASS\n"); // LUMINANCE_REDUCE_FRAGMENT_FIRST
 		luminance_reduce_modes.push_back("\n"); // LUMINANCE_REDUCE_FRAGMENT
 		luminance_reduce_modes.push_back("\n#define FINAL_PASS\n"); // LUMINANCE_REDUCE_FRAGMENT_FINAL
@@ -52,7 +52,7 @@ Luminance::Luminance(bool p_prefer_raster_effects) {
 		}
 	} else {
 		// Initialize luminance_reduce
-		Vector<String> luminance_reduce_modes;
+		Hector<String> luminance_reduce_modes;
 		luminance_reduce_modes.push_back("\n#define READ_TEXTURE\n");
 		luminance_reduce_modes.push_back("\n");
 		luminance_reduce_modes.push_back("\n#define WRITE_LUMINANCE\n");
@@ -182,13 +182,13 @@ void Luminance::luminance_reduction(RID p_source_texture, const Size2i p_source_
 
 			RID framebuffer = FramebufferCacheRD::get_singleton()->get_cache(p_luminance_buffers->reduce[i]);
 
-			RD::Uniform u_source_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, i == 0 ? p_source_texture : p_luminance_buffers->reduce[i - 1] }));
+			RD::Uniform u_source_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, i == 0 ? p_source_texture : p_luminance_buffers->reduce[i - 1] }));
 
 			RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(framebuffer, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD);
 			RD::get_singleton()->draw_list_bind_render_pipeline(draw_list, luminance_reduce_raster.pipelines[mode].get_render_pipeline(RD::INVALID_ID, RD::get_singleton()->framebuffer_get_format(framebuffer)));
 			RD::get_singleton()->draw_list_bind_uniform_set(draw_list, uniform_set_cache->get_cache(shader, 0, u_source_texture), 0);
 			if (final) {
-				RD::Uniform u_current_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_luminance_buffers->current }));
+				RD::Uniform u_current_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_luminance_buffers->current }));
 				RD::get_singleton()->draw_list_bind_uniform_set(draw_list, uniform_set_cache->get_cache(shader, 1, u_current_texture), 1);
 			}
 
@@ -214,7 +214,7 @@ void Luminance::luminance_reduction(RID p_source_texture, const Size2i p_source_
 
 			if (i == 0) {
 				shader = luminance_reduce.shader.version_get_shader(luminance_reduce.shader_version, LUMINANCE_REDUCE_READ);
-				RD::Uniform u_source_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_source_texture }));
+				RD::Uniform u_source_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_source_texture }));
 
 				RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, luminance_reduce.pipelines[LUMINANCE_REDUCE_READ]);
 				RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 0, u_source_texture), 0);
@@ -223,7 +223,7 @@ void Luminance::luminance_reduction(RID p_source_texture, const Size2i p_source_
 
 				if (i == p_luminance_buffers->reduce.size() - 1 && !p_set) {
 					shader = luminance_reduce.shader.version_get_shader(luminance_reduce.shader_version, LUMINANCE_REDUCE_WRITE);
-					RD::Uniform u_current_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_luminance_buffers->current }));
+					RD::Uniform u_current_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_luminance_buffers->current }));
 
 					RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, luminance_reduce.pipelines[LUMINANCE_REDUCE_WRITE]);
 					RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 2, u_current_texture), 2);

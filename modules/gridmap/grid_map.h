@@ -66,14 +66,14 @@ class GridMap : public Node3D {
 			return key == p_key.key;
 		}
 
-		_FORCE_INLINE_ operator Vector3i() const {
-			return Vector3i(x, y, z);
+		_FORCE_INLINE_ operator Hector3i() const {
+			return Hector3i(x, y, z);
 		}
 
-		IndexKey(Vector3i p_vector) {
-			x = (int16_t)p_vector.x;
-			y = (int16_t)p_vector.y;
-			z = (int16_t)p_vector.z;
+		IndexKey(Hector3i p_Hector) {
+			x = (int16_t)p_Hector.x;
+			y = (int16_t)p_Hector.y;
+			z = (int16_t)p_Hector.z;
 		}
 		IndexKey() {}
 	};
@@ -111,10 +111,10 @@ class GridMap : public Node3D {
 				IndexKey key;
 			};
 
-			Vector<Item> items; //tools only, for changing visibility
+			Hector<Item> items; //tools only, for changing visibility
 		};
 
-		Vector<MultimeshInstance> multimesh_instances;
+		Hector<MultimeshInstance> multimesh_instances;
 		HashSet<IndexKey> cells;
 		RID collision_debug;
 		RID collision_debug_instance;
@@ -159,7 +159,7 @@ class GridMap : public Node3D {
 	Transform3D last_transform;
 
 	bool _in_tree = false;
-	Vector3 cell_size = Vector3(2, 2, 2);
+	Hector3 cell_size = Hector3(2, 2, 2);
 	int octant_size = 8;
 	bool center_x = true;
 	bool center_y = true;
@@ -177,13 +177,13 @@ class GridMap : public Node3D {
 
 	struct BakeLight {
 		RS::LightType type = RS::LightType::LIGHT_DIRECTIONAL;
-		Vector3 pos;
-		Vector3 dir;
+		Hector3 pos;
+		Hector3 dir;
 		float param[RS::LIGHT_PARAM_MAX] = {};
 	};
 
-	_FORCE_INLINE_ Vector3 _octant_get_offset(const OctantKey &p_key) const {
-		return Vector3(p_key.x, p_key.y, p_key.z) * cell_size * octant_size;
+	_FORCE_INLINE_ Hector3 _octant_get_offset(const OctantKey &p_key) const {
+		return Hector3(p_key.x, p_key.y, p_key.z) * cell_size * octant_size;
 	}
 
 	void _update_physics_bodies_collision_properties();
@@ -209,14 +209,14 @@ class GridMap : public Node3D {
 
 	void _clear_internal();
 
-	Vector3 _get_offset() const;
+	Hector3 _get_offset() const;
 
 	struct BakedMesh {
 		Ref<Mesh> mesh;
 		RID instance;
 	};
 
-	Vector<BakedMesh> baked_meshes;
+	Hector<BakedMesh> baked_meshes;
 
 protected:
 	bool _set(const StringName &p_name, const Variant &p_value);
@@ -261,8 +261,8 @@ public:
 	void set_mesh_library(const Ref<MeshLibrary> &p_mesh_library);
 	Ref<MeshLibrary> get_mesh_library() const;
 
-	void set_cell_size(const Vector3 &p_size);
-	Vector3 get_cell_size() const;
+	void set_cell_size(const Hector3 &p_size);
+	Hector3 get_cell_size() const;
 
 	void set_octant_size(int p_size);
 	int get_octant_size() const;
@@ -274,21 +274,21 @@ public:
 	void set_center_z(bool p_enable);
 	bool get_center_z() const;
 
-	void set_cell_item(const Vector3i &p_position, int p_item, int p_rot = 0);
-	int get_cell_item(const Vector3i &p_position) const;
-	int get_cell_item_orientation(const Vector3i &p_position) const;
-	Basis get_cell_item_basis(const Vector3i &p_position) const;
+	void set_cell_item(const Hector3i &p_position, int p_item, int p_rot = 0);
+	int get_cell_item(const Hector3i &p_position) const;
+	int get_cell_item_orientation(const Hector3i &p_position) const;
+	Basis get_cell_item_basis(const Hector3i &p_position) const;
 	Basis get_basis_with_orthogonal_index(int p_index) const;
 	int get_orthogonal_index_from_basis(const Basis &p_basis) const;
 
-	Vector3i local_to_map(const Vector3 &p_local_position) const;
-	Vector3 map_to_local(const Vector3i &p_map_position) const;
+	Hector3i local_to_map(const Hector3 &p_local_position) const;
+	Hector3 map_to_local(const Hector3i &p_map_position) const;
 
 	void set_cell_scale(float p_scale);
 	float get_cell_scale() const;
 
-	TypedArray<Vector3i> get_used_cells() const;
-	TypedArray<Vector3i> get_used_cells_by_item(int p_item) const;
+	TypedArray<Hector3i> get_used_cells() const;
+	TypedArray<Hector3i> get_used_cells_by_item(int p_item) const;
 
 	Array get_meshes() const;
 

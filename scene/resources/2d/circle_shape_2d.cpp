@@ -71,15 +71,15 @@ real_t CircleShape2D::get_enclosing_radius() const {
 }
 
 void CircleShape2D::draw(const RID &p_to_rid, const Color &p_color) {
-	Vector<Vector2> points;
+	Hector<Hector2> points;
 	points.resize(24);
 
 	const real_t turn_step = Math_TAU / 24.0;
 	for (int i = 0; i < 24; i++) {
-		points.write[i] = Vector2(Math::cos(i * turn_step), Math::sin(i * turn_step)) * get_radius();
+		points.write[i] = Hector2(Math::cos(i * turn_step), Math::sin(i * turn_step)) * get_radius();
 	}
 
-	Vector<Color> col = { p_color };
+	Hector<Color> col = { p_color };
 	RenderingServer::get_singleton()->canvas_item_add_polygon(p_to_rid, points, col);
 
 	if (is_collision_outline_enabled()) {

@@ -26,7 +26,7 @@
 
 #define FSR2_BIND_SRV_INPUT_OPAQUE_ONLY                     0
 #define FSR2_BIND_SRV_INPUT_COLOR                           1
-#define FSR2_BIND_SRV_INPUT_MOTION_VECTORS                  2
+#define FSR2_BIND_SRV_INPUT_MOTION_HectorS                  2
 #define FSR2_BIND_SRV_PREV_PRE_ALPHA_COLOR                  3
 #define FSR2_BIND_SRV_PREV_POST_ALPHA_COLOR                 4
 #define FSR2_BIND_SRV_REACTIVE_MASK                         5
@@ -41,7 +41,7 @@
 #define FSR2_BIND_CB_REACTIVE                               12
 
 // -- GODOT start --
-#if FFX_FSR2_OPTION_GODOT_DERIVE_INVALID_MOTION_VECTORS
+#if FFX_FSR2_OPTION_GODOT_DERIVE_INVALID_MOTION_HectorS
 #define FSR2_BIND_SRV_INPUT_DEPTH                           13
 #endif
 // -- GODOT end --
@@ -93,7 +93,7 @@ void main()
     // ToDo: take into account jitter (i.e. add delta of previous jitter and current jitter to previous UV
     // fetch pre- and post-alpha color values
     FFX_MIN16_F2 fUv = ( FFX_MIN16_F2(uDispatchThreadId) + FFX_MIN16_F2(0.5f, 0.5f) ) / FFX_MIN16_F2( RenderSize() );
-    FFX_MIN16_F2 fPrevUV = fUv + FFX_MIN16_F2( LoadInputMotionVector(uDispatchThreadId) );
+    FFX_MIN16_F2 fPrevUV = fUv + FFX_MIN16_F2( LoadInputMotionHector(uDispatchThreadId) );
     FFX_MIN16_I2 iPrevIdx = FFX_MIN16_I2(fPrevUV * FFX_MIN16_F2(RenderSize()) - 0.5f);
 
     FFX_MIN16_F3 colorPreAlpha  = FFX_MIN16_F3( LoadOpaqueOnly( uDispatchThreadId ) );

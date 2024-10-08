@@ -1068,7 +1068,7 @@ typedef struct mbedtls_ssl_hs_buffer mbedtls_ssl_hs_buffer;
  * - For stream/CBC, the type of message digest to be used.
  * - For stream/CBC, (static) encryption/decryption keys for the digest.
  * - For AEAD transformations, the size (potentially 0) of an explicit,
- *   random initialization vector placed in encrypted records.
+ *   random initialization Hector placed in encrypted records.
  * - For some transformations (currently AEAD) an implicit IV. It is static
  *   and (if present) is combined with the explicit IV in a transformation-
  *   -dependent way (e.g. appending in TLS 1.2 and XOR'ing in TLS 1.3).
@@ -2131,7 +2131,7 @@ int mbedtls_ssl_tls13_fetch_handshake_msg(mbedtls_ssl_context *ssl,
  *        extension or not.
  *
  * \param[in] ssl  SSL context
- * \param[in] buf  Address of the first byte of the extensions vector.
+ * \param[in] buf  Address of the first byte of the extensions Hector.
  * \param[in] end  End of the buffer containing the list of extensions.
  * \param[out] supported_versions_data  If the extension is present, address of
  *                                      its first byte of data, NULL otherwise.

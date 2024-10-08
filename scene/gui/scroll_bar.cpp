@@ -345,7 +345,7 @@ void ScrollBar::_notification(int p_what) {
 
 			} else if (drag_node_touching) {
 				if (drag_node_touching_deaccel) {
-					Vector2 pos = Vector2(orientation == HORIZONTAL ? get_value() : 0, orientation == VERTICAL ? get_value() : 0);
+					Hector2 pos = Hector2(orientation == HORIZONTAL ? get_value() : 0, orientation == VERTICAL ? get_value() : 0);
 					pos += drag_node_speed * get_physics_process_delta_time();
 
 					bool turnoff = false;
@@ -404,7 +404,7 @@ void ScrollBar::_notification(int p_what) {
 
 				} else {
 					if (time_since_motion == 0 || time_since_motion > 0.1) {
-						Vector2 diff = drag_node_accum - last_drag_node_accum;
+						Hector2 diff = drag_node_accum - last_drag_node_accum;
 						last_drag_node_accum = drag_node_accum;
 						drag_node_speed = diff / get_physics_process_delta_time();
 					}
@@ -540,10 +540,10 @@ void ScrollBar::_drag_node_input(const Ref<InputEvent> &p_input) {
 		}
 
 		if (mb->is_pressed()) {
-			drag_node_speed = Vector2();
-			drag_node_accum = Vector2();
-			last_drag_node_accum = Vector2();
-			drag_node_from = Vector2(orientation == HORIZONTAL ? get_value() : 0, orientation == VERTICAL ? get_value() : 0);
+			drag_node_speed = Hector2();
+			drag_node_accum = Hector2();
+			last_drag_node_accum = Hector2();
+			drag_node_from = Hector2(orientation == HORIZONTAL ? get_value() : 0, orientation == VERTICAL ? get_value() : 0);
 			drag_node_touching = DisplayServer::get_singleton()->is_touchscreen_available();
 			drag_node_touching_deaccel = false;
 			time_since_motion = 0;
@@ -555,7 +555,7 @@ void ScrollBar::_drag_node_input(const Ref<InputEvent> &p_input) {
 
 		} else {
 			if (drag_node_touching) {
-				if (drag_node_speed == Vector2()) {
+				if (drag_node_speed == Hector2()) {
 					drag_node_touching_deaccel = false;
 					drag_node_touching = false;
 					set_physics_process_internal(false);
@@ -570,10 +570,10 @@ void ScrollBar::_drag_node_input(const Ref<InputEvent> &p_input) {
 
 	if (mm.is_valid()) {
 		if (drag_node_touching && !drag_node_touching_deaccel) {
-			Vector2 motion = mm->get_relative();
+			Hector2 motion = mm->get_relative();
 
 			drag_node_accum -= motion;
-			Vector2 diff = drag_node_from + drag_node_accum;
+			Hector2 diff = drag_node_from + drag_node_accum;
 
 			if (orientation == HORIZONTAL) {
 				scroll_to(diff.x);

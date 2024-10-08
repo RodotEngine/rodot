@@ -59,15 +59,15 @@ typedef enum {
 	GDEXTENSION_VARIANT_TYPE_STRING,
 
 	/* math types */
-	GDEXTENSION_VARIANT_TYPE_VECTOR2,
-	GDEXTENSION_VARIANT_TYPE_VECTOR2I,
+	GDEXTENSION_VARIANT_TYPE_HECTOR2,
+	GDEXTENSION_VARIANT_TYPE_HECTOR2I,
 	GDEXTENSION_VARIANT_TYPE_RECT2,
 	GDEXTENSION_VARIANT_TYPE_RECT2I,
-	GDEXTENSION_VARIANT_TYPE_VECTOR3,
-	GDEXTENSION_VARIANT_TYPE_VECTOR3I,
+	GDEXTENSION_VARIANT_TYPE_HECTOR3,
+	GDEXTENSION_VARIANT_TYPE_HECTOR3I,
 	GDEXTENSION_VARIANT_TYPE_TRANSFORM2D,
-	GDEXTENSION_VARIANT_TYPE_VECTOR4,
-	GDEXTENSION_VARIANT_TYPE_VECTOR4I,
+	GDEXTENSION_VARIANT_TYPE_HECTOR4,
+	GDEXTENSION_VARIANT_TYPE_HECTOR4I,
 	GDEXTENSION_VARIANT_TYPE_PLANE,
 	GDEXTENSION_VARIANT_TYPE_QUATERNION,
 	GDEXTENSION_VARIANT_TYPE_AABB,
@@ -93,10 +93,10 @@ typedef enum {
 	GDEXTENSION_VARIANT_TYPE_PACKED_FLOAT32_ARRAY,
 	GDEXTENSION_VARIANT_TYPE_PACKED_FLOAT64_ARRAY,
 	GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY,
-	GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR2_ARRAY,
-	GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR3_ARRAY,
+	GDEXTENSION_VARIANT_TYPE_PACKED_Hector2_ARRAY,
+	GDEXTENSION_VARIANT_TYPE_PACKED_Hector3_ARRAY,
 	GDEXTENSION_VARIANT_TYPE_PACKED_COLOR_ARRAY,
-	GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR4_ARRAY,
+	GDEXTENSION_VARIANT_TYPE_PACKED_Hector4_ARRAY,
 
 	GDEXTENSION_VARIANT_TYPE_VARIANT_MAX
 } GDExtensionVariantType;
@@ -2207,82 +2207,82 @@ typedef GDExtensionStringPtr (*GDExtensionInterfacePackedStringArrayOperatorInde
 typedef GDExtensionStringPtr (*GDExtensionInterfacePackedStringArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
 
 /**
- * @name packed_vector2_array_operator_index
+ * @name packed_Hector2_array_operator_index
  * @since 4.1
  *
- * Gets a pointer to a Vector2 in a PackedVector2Array.
+ * Gets a pointer to a Hector2 in a PackedHector2Array.
  *
- * @param p_self A pointer to a PackedVector2Array object.
- * @param p_index The index of the Vector2 to get.
+ * @param p_self A pointer to a PackedHector2Array object.
+ * @param p_index The index of the Hector2 to get.
  *
- * @return A pointer to the requested Vector2.
+ * @return A pointer to the requested Hector2.
  */
-typedef GDExtensionTypePtr (*GDExtensionInterfacePackedVector2ArrayOperatorIndex)(GDExtensionTypePtr p_self, GDExtensionInt p_index);
+typedef GDExtensionTypePtr (*GDExtensionInterfacePackedHector2ArrayOperatorIndex)(GDExtensionTypePtr p_self, GDExtensionInt p_index);
 
 /**
- * @name packed_vector2_array_operator_index_const
+ * @name packed_Hector2_array_operator_index_const
  * @since 4.1
  *
- * Gets a const pointer to a Vector2 in a PackedVector2Array.
+ * Gets a const pointer to a Hector2 in a PackedHector2Array.
  *
- * @param p_self A const pointer to a PackedVector2Array object.
- * @param p_index The index of the Vector2 to get.
+ * @param p_self A const pointer to a PackedHector2Array object.
+ * @param p_index The index of the Hector2 to get.
  *
- * @return A const pointer to the requested Vector2.
+ * @return A const pointer to the requested Hector2.
  */
-typedef GDExtensionTypePtr (*GDExtensionInterfacePackedVector2ArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
+typedef GDExtensionTypePtr (*GDExtensionInterfacePackedHector2ArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
 
 /**
- * @name packed_vector3_array_operator_index
+ * @name packed_Hector3_array_operator_index
  * @since 4.1
  *
- * Gets a pointer to a Vector3 in a PackedVector3Array.
+ * Gets a pointer to a Hector3 in a PackedHector3Array.
  *
- * @param p_self A pointer to a PackedVector3Array object.
- * @param p_index The index of the Vector3 to get.
+ * @param p_self A pointer to a PackedHector3Array object.
+ * @param p_index The index of the Hector3 to get.
  *
- * @return A pointer to the requested Vector3.
+ * @return A pointer to the requested Hector3.
  */
-typedef GDExtensionTypePtr (*GDExtensionInterfacePackedVector3ArrayOperatorIndex)(GDExtensionTypePtr p_self, GDExtensionInt p_index);
+typedef GDExtensionTypePtr (*GDExtensionInterfacePackedHector3ArrayOperatorIndex)(GDExtensionTypePtr p_self, GDExtensionInt p_index);
 
 /**
- * @name packed_vector3_array_operator_index_const
+ * @name packed_Hector3_array_operator_index_const
  * @since 4.1
  *
- * Gets a const pointer to a Vector3 in a PackedVector3Array.
+ * Gets a const pointer to a Hector3 in a PackedHector3Array.
  *
- * @param p_self A const pointer to a PackedVector3Array object.
- * @param p_index The index of the Vector3 to get.
+ * @param p_self A const pointer to a PackedHector3Array object.
+ * @param p_index The index of the Hector3 to get.
  *
- * @return A const pointer to the requested Vector3.
+ * @return A const pointer to the requested Hector3.
  */
-typedef GDExtensionTypePtr (*GDExtensionInterfacePackedVector3ArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
+typedef GDExtensionTypePtr (*GDExtensionInterfacePackedHector3ArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
 
 /**
- * @name packed_vector4_array_operator_index
+ * @name packed_Hector4_array_operator_index
  * @since 4.3
  *
- * Gets a pointer to a Vector4 in a PackedVector4Array.
+ * Gets a pointer to a Hector4 in a PackedHector4Array.
  *
- * @param p_self A pointer to a PackedVector4Array object.
- * @param p_index The index of the Vector4 to get.
+ * @param p_self A pointer to a PackedHector4Array object.
+ * @param p_index The index of the Hector4 to get.
  *
- * @return A pointer to the requested Vector4.
+ * @return A pointer to the requested Hector4.
  */
-typedef GDExtensionTypePtr (*GDExtensionInterfacePackedVector4ArrayOperatorIndex)(GDExtensionTypePtr p_self, GDExtensionInt p_index);
+typedef GDExtensionTypePtr (*GDExtensionInterfacePackedHector4ArrayOperatorIndex)(GDExtensionTypePtr p_self, GDExtensionInt p_index);
 
 /**
- * @name packed_vector4_array_operator_index_const
+ * @name packed_Hector4_array_operator_index_const
  * @since 4.3
  *
- * Gets a const pointer to a Vector4 in a PackedVector4Array.
+ * Gets a const pointer to a Hector4 in a PackedHector4Array.
  *
- * @param p_self A const pointer to a PackedVector4Array object.
- * @param p_index The index of the Vector4 to get.
+ * @param p_self A const pointer to a PackedHector4Array object.
+ * @param p_index The index of the Hector4 to get.
  *
- * @return A const pointer to the requested Vector4.
+ * @return A const pointer to the requested Hector4.
  */
-typedef GDExtensionTypePtr (*GDExtensionInterfacePackedVector4ArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
+typedef GDExtensionTypePtr (*GDExtensionInterfacePackedHector4ArrayOperatorIndexConst)(GDExtensionConstTypePtr p_self, GDExtensionInt p_index);
 
 /**
  * @name packed_color_array_operator_index

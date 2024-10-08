@@ -86,7 +86,7 @@ void Node2D::_edit_set_rect(const Rect2 &p_edit_rect) {
 
 	Rect2 r = _edit_get_rect();
 
-	Vector2 zero_offset;
+	Hector2 zero_offset;
 	Size2 new_scale(1, 1);
 
 	if (r.size.x != 0) {
@@ -251,12 +251,12 @@ void Node2D::rotate(real_t p_radians) {
 	set_rotation(get_rotation() + p_radians);
 }
 
-void Node2D::translate(const Vector2 &p_amount) {
+void Node2D::translate(const Hector2 &p_amount) {
 	ERR_THREAD_GUARD;
 	set_position(get_position() + p_amount);
 }
 
-void Node2D::global_translate(const Vector2 &p_amount) {
+void Node2D::global_translate(const Hector2 &p_amount) {
 	ERR_THREAD_GUARD;
 	set_global_position(get_global_position() + p_amount);
 }
@@ -269,7 +269,7 @@ void Node2D::apply_scale(const Size2 &p_amount) {
 void Node2D::move_x(real_t p_delta, bool p_scaled) {
 	ERR_THREAD_GUARD;
 	Transform2D t = get_transform();
-	Vector2 m = t[0];
+	Hector2 m = t[0];
 	if (!p_scaled) {
 		m.normalize();
 	}
@@ -279,7 +279,7 @@ void Node2D::move_x(real_t p_delta, bool p_scaled) {
 void Node2D::move_y(real_t p_delta, bool p_scaled) {
 	ERR_THREAD_GUARD;
 	Transform2D t = get_transform();
-	Vector2 m = t[1];
+	Hector2 m = t[1];
 	if (!p_scaled) {
 		m.normalize();
 	}
@@ -405,12 +405,12 @@ Transform2D Node2D::get_relative_transform_to_parent(const Node *p_parent) const
 	}
 }
 
-void Node2D::look_at(const Vector2 &p_pos) {
+void Node2D::look_at(const Hector2 &p_pos) {
 	ERR_THREAD_GUARD;
 	rotate(get_angle_to(p_pos));
 }
 
-real_t Node2D::get_angle_to(const Vector2 &p_pos) const {
+real_t Node2D::get_angle_to(const Hector2 &p_pos) const {
 	ERR_READ_THREAD_GUARD_V(0);
 	return (to_local(p_pos) * get_scale()).angle();
 }
@@ -487,17 +487,17 @@ void Node2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_relative_transform_to_parent", "parent"), &Node2D::get_relative_transform_to_parent);
 
 	ADD_GROUP("Transform", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position", PROPERTY_HINT_RANGE, "-99999,99999,0.001,or_less,or_greater,hide_slider,suffix:px"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position", PROPERTY_HINT_RANGE, "-99999,99999,0.001,or_less,or_greater,hide_slider,suffix:px"), "set_position", "get_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_rotation", "get_rotation");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_rotation_degrees", "get_rotation_degrees");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scale", PROPERTY_HINT_LINK), "set_scale", "get_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scale", PROPERTY_HINT_LINK), "set_scale", "get_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "skew", PROPERTY_HINT_RANGE, "-89.9,89.9,0.1,radians_as_degrees"), "set_skew", "get_skew");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM2D, "transform", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_NONE), "set_transform", "get_transform");
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "global_position", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_NONE), "set_global_position", "get_global_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "global_position", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_NONE), "set_global_position", "get_global_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "global_rotation", PROPERTY_HINT_NONE, "radians_as_degrees", PROPERTY_USAGE_NONE), "set_global_rotation", "get_global_rotation");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "global_rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_rotation_degrees", "get_global_rotation_degrees");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "global_scale", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_scale", "get_global_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "global_scale", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_scale", "get_global_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "global_skew", PROPERTY_HINT_NONE, "radians_as_degrees", PROPERTY_USAGE_NONE), "set_global_skew", "get_global_skew");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM2D, "global_transform", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_NONE), "set_global_transform", "get_global_transform");
 }

@@ -1025,10 +1025,10 @@ msgstr "Stile predefinito di nomi delle proprietà"
 msgid "Default Float Step"
 msgstr "Passo predefinito dei float"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "Modifica Vector2 orizzontalmente"
+msgid "Horizontal Hector2 Editing"
+msgstr "Modifica Hector2 orizzontalmente"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Modifica tipi di vettori orizzontalmente"
 
 msgid "Open Resources in Current Inspector"
@@ -1139,7 +1139,7 @@ msgstr "Programmi esterni"
 msgid "Raster Image Editor"
 msgstr "Editor di immagini rasterizzate"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Editor di immagini vettoriali"
 
 msgid "Audio Editor"
@@ -1884,14 +1884,14 @@ msgstr "Colori per connessioni"
 msgid "Scalar Color"
 msgstr "Colore per tipo scalare"
 
-msgid "Vector2 Color"
-msgstr "Colore per tipo Vector2"
+msgid "Hector2 Color"
+msgstr "Colore per tipo Hector2"
 
-msgid "Vector 3 Color"
-msgstr "Colore per tipo Vector 3"
+msgid "Hector 3 Color"
+msgstr "Colore per tipo Hector 3"
 
-msgid "Vector 4 Color"
-msgstr "Colore per tipo Vector 4"
+msgid "Hector 4 Color"
+msgstr "Colore per tipo Hector 4"
 
 msgid "Boolean Color"
 msgstr "Colore per tipo booleano"
@@ -1923,7 +1923,7 @@ msgstr "Colore per le texture"
 msgid "Utility Color"
 msgstr "Colore per utilità"
 
-msgid "Vector Color"
+msgid "Hector Color"
 msgstr "Colore per tipo vettore"
 
 msgid "Special Color"
@@ -8365,7 +8365,7 @@ msgstr "Accesso al colore risolto"
 msgid "Access Resolved Depth"
 msgstr "Accesso alla profondità risolto"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "Ha bisogno di vettori di movimento"
 
 msgid "Needs Normal Roughness"
@@ -8386,7 +8386,7 @@ msgstr "Risoluzione di precalcolo"
 msgid "Bake Interval"
 msgstr "Intervallo di precalcolo"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Vettore che punta in alto"
 
 msgid "Curve X"
@@ -10306,7 +10306,7 @@ msgstr "Recupero come collisione"
 msgid "Default Gravity"
 msgstr "Gravità predefinita"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Vettore di gravità predefinito"
 
 msgid "Default Linear Damp"

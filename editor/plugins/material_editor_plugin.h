@@ -50,7 +50,7 @@ class Label;
 class MaterialEditor : public Control {
 	GDCLASS(MaterialEditor, Control);
 
-	Vector2 rot;
+	Hector2 rot;
 
 	SubViewportContainer *vc_2d = nullptr;
 	SubViewport *viewport_2d = nullptr;

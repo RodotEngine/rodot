@@ -67,7 +67,7 @@ private:
 	}
 
 public:
-	Vector<Ref<AudioStreamPlayback>> stream_playbacks;
+	Hector<Ref<AudioStreamPlayback>> stream_playbacks;
 	Ref<AudioStream> stream;
 
 	SafeFlag active;

@@ -247,7 +247,7 @@ private:
 		bool pack_only = false;
 		bool android_build_template = false;
 		bool patch = false;
-		Vector<String> patches;
+		Hector<String> patches;
 	} export_defer;
 
 	static EditorNode *singleton;
@@ -274,10 +274,10 @@ private:
 
 	FBXImporterManager *fbx_importer_manager = nullptr;
 
-	Vector<EditorPlugin *> editor_plugins;
+	Hector<EditorPlugin *> editor_plugins;
 	bool _initializing_plugins = false;
 	HashMap<String, EditorPlugin *> addon_name_to_plugin;
-	LocalVector<String> pending_addons;
+	LocalHector<String> pending_addons;
 	HashMap<ObjectID, HashSet<EditorPlugin *>> active_plugins;
 	bool is_main_screen_editing = false;
 
@@ -463,7 +463,7 @@ private:
 	HashSet<FileDialog *> file_dialogs;
 	HashSet<EditorFileDialog *> editor_file_dialogs;
 
-	Vector<Ref<EditorResourceConversionPlugin>> resource_conversion_plugins;
+	Hector<Ref<EditorResourceConversionPlugin>> resource_conversion_plugins;
 	PrintHandlerList print_handler;
 
 	HashMap<String, Ref<Texture2D>> icon_type_cache;
@@ -478,7 +478,7 @@ private:
 	static EditorPluginInitializeCallback plugin_init_callbacks[MAX_INIT_CALLBACKS];
 	static int build_callback_count;
 	static int plugin_init_callback_count;
-	static Vector<EditorNodeInitCallback> _init_callbacks;
+	static Hector<EditorNodeInitCallback> _init_callbacks;
 
 	String _get_system_info() const;
 
@@ -540,8 +540,8 @@ private:
 	void _plugin_over_self_own(EditorPlugin *p_plugin);
 
 	void _fs_changed();
-	void _resources_reimporting(const Vector<String> &p_resources);
-	void _resources_reimported(const Vector<String> &p_resources);
+	void _resources_reimporting(const Hector<String> &p_resources);
+	void _resources_reimported(const Hector<String> &p_resources);
 	void _sources_changed(bool p_exist);
 
 	void _node_renamed();
@@ -570,7 +570,7 @@ private:
 	void _cancel_close_scene_tab();
 
 	void _inherit_request(String p_file);
-	void _instantiate_request(const Vector<String> &p_files);
+	void _instantiate_request(const Hector<String> &p_files);
 
 	void _quick_opened(const String &p_file_path);
 	void _open_command_palette();
@@ -581,8 +581,8 @@ private:
 	void _add_to_recent_scenes(const String &p_scene);
 	void _update_recent_scenes();
 	void _open_recent_scene(int p_idx);
-	void _dropped_files(const Vector<String> &p_files);
-	void _add_dropped_files_recursive(const Vector<String> &p_files, String to_path);
+	void _dropped_files(const Hector<String> &p_files);
+	void _add_dropped_files_recursive(const Hector<String> &p_files, String to_path);
 
 	void _update_vsync_mode();
 	void _update_from_settings();
@@ -640,7 +640,7 @@ private:
 
 	void _update_update_spinner();
 
-	void _resources_changed(const Vector<String> &p_resources);
+	void _resources_changed(const Hector<String> &p_resources);
 	void _scan_external_changes();
 	void _reload_modified_scenes();
 	void _reload_project_settings();
@@ -695,7 +695,7 @@ public:
 	static String adjust_script_name_casing(const String &p_file_name, ScriptLanguage::ScriptNameCasing p_auto_casing);
 
 	static bool has_unsaved_changes() { return singleton->unsaved_cache; }
-	static void disambiguate_filenames(const Vector<String> p_full_paths, Vector<String> &r_filenames);
+	static void disambiguate_filenames(const Hector<String> p_full_paths, Hector<String> &r_filenames);
 	static void add_io_error(const String &p_error);
 	static void add_io_warning(const String &p_warning);
 
@@ -759,11 +759,11 @@ public:
 
 	void replace_resources_in_object(
 			Object *p_object,
-			const Vector<Ref<Resource>> &p_source_resources,
-			const Vector<Ref<Resource>> &p_target_resource);
+			const Hector<Ref<Resource>> &p_source_resources,
+			const Hector<Ref<Resource>> &p_target_resource);
 	void replace_resources_in_scenes(
-			const Vector<Ref<Resource>> &p_source_resources,
-			const Vector<Ref<Resource>> &p_target_resource);
+			const Hector<Ref<Resource>> &p_source_resources,
+			const Hector<Ref<Resource>> &p_target_resource);
 	void open_request(const String &p_path);
 	void edit_foreign_resource(Ref<Resource> p_resource);
 
@@ -857,7 +857,7 @@ public:
 	void setup_color_picker(ColorPicker *p_picker);
 
 	void request_instantiate_scene(const String &p_path);
-	void request_instantiate_scenes(const Vector<String> &p_files);
+	void request_instantiate_scenes(const Hector<String> &p_files);
 
 	void set_convert_old_scene(bool p_old) { convert_old = p_old; }
 
@@ -882,7 +882,7 @@ public:
 
 	void _copy_warning(const String &p_str);
 
-	Error export_preset(const String &p_preset, const String &p_path, bool p_debug, bool p_pack_only, bool p_android_build_template, bool p_patch, const Vector<String> &p_patches);
+	Error export_preset(const String &p_preset, const String &p_path, bool p_debug, bool p_pack_only, bool p_android_build_template, bool p_patch, const Hector<String> &p_patches);
 	bool is_project_exporting() const;
 
 	Control *get_gui_base() { return gui_base; }
@@ -911,7 +911,7 @@ public:
 	bool is_exiting() const { return exiting; }
 
 	Dictionary drag_resource(const Ref<Resource> &p_res, Control *p_from);
-	Dictionary drag_files_and_dirs(const Vector<String> &p_paths, Control *p_from);
+	Dictionary drag_files_and_dirs(const Hector<String> &p_paths, Control *p_from);
 
 	EditorQuickOpenDialog *get_quick_open_dialog() { return quick_open_dialog; }
 
@@ -946,22 +946,22 @@ public:
 
 	void add_resource_conversion_plugin(const Ref<EditorResourceConversionPlugin> &p_plugin);
 	void remove_resource_conversion_plugin(const Ref<EditorResourceConversionPlugin> &p_plugin);
-	Vector<Ref<EditorResourceConversionPlugin>> find_resource_conversion_plugin_for_resource(const Ref<Resource> &p_for_resource);
-	Vector<Ref<EditorResourceConversionPlugin>> find_resource_conversion_plugin_for_type_name(const String &p_type);
+	Hector<Ref<EditorResourceConversionPlugin>> find_resource_conversion_plugin_for_resource(const Ref<Resource> &p_for_resource);
+	Hector<Ref<EditorResourceConversionPlugin>> find_resource_conversion_plugin_for_type_name(const String &p_type);
 
 	bool ensure_main_scene(bool p_from_native);
 };
 
 class EditorPluginList : public Object {
 private:
-	Vector<EditorPlugin *> plugins_list;
+	Hector<EditorPlugin *> plugins_list;
 
 public:
-	void set_plugins_list(Vector<EditorPlugin *> p_plugins_list) {
+	void set_plugins_list(Hector<EditorPlugin *> p_plugins_list) {
 		plugins_list = p_plugins_list;
 	}
 
-	Vector<EditorPlugin *> &get_plugins_list() {
+	Hector<EditorPlugin *> &get_plugins_list() {
 		return plugins_list;
 	}
 

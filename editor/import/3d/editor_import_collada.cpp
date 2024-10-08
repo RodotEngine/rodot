@@ -50,7 +50,7 @@ struct ColladaImport {
 	Collada collada;
 	Node3D *scene = nullptr;
 
-	Vector<Ref<Animation>> animations;
+	Hector<Ref<Animation>> animations;
 
 	struct NodeMap {
 		//String path;
@@ -77,7 +77,7 @@ struct ColladaImport {
 	HashMap<Skeleton3D *, HashMap<String, int>> skeleton_bone_map;
 
 	HashSet<String> valid_animated_nodes;
-	Vector<int> valid_animated_properties;
+	Hector<int> valid_animated_properties;
 	HashMap<String, bool> bones_with_animation;
 
 	HashSet<String> mesh_unique_names;
@@ -88,14 +88,14 @@ struct ColladaImport {
 	Error _create_scene(Collada::Node *p_node, Node3D *p_parent);
 	Error _create_resources(Collada::Node *p_node, bool p_use_compression);
 	Error _create_material(const String &p_target);
-	Error _create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p_mesh, const HashMap<String, Collada::NodeGeometry::Material> &p_material_map, const Collada::MeshData &meshdata, const Transform3D &p_local_xform, const Vector<int> &bone_remap, const Collada::SkinControllerData *p_skin_controller, const Collada::MorphControllerData *p_morph_data, const Vector<Ref<ImporterMesh>> &p_morph_meshes = Vector<Ref<ImporterMesh>>(), bool p_use_compression = false, bool p_use_mesh_material = false);
+	Error _create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p_mesh, const HashMap<String, Collada::NodeGeometry::Material> &p_material_map, const Collada::MeshData &meshdata, const Transform3D &p_local_xform, const Hector<int> &bone_remap, const Collada::SkinControllerData *p_skin_controller, const Collada::MorphControllerData *p_morph_data, const Hector<Ref<ImporterMesh>> &p_morph_meshes = Hector<Ref<ImporterMesh>>(), bool p_use_compression = false, bool p_use_mesh_material = false);
 	Error load(const String &p_path, int p_flags, bool p_force_make_tangents = false, bool p_use_compression = false);
 	void _fix_param_animation_tracks();
 	void create_animation(int p_clip, bool p_import_value_tracks);
 	void create_animations(bool p_import_value_tracks);
 
 	HashSet<String> tracks_in_clips;
-	Vector<String> missing_textures;
+	Hector<String> missing_textures;
 
 	void _pre_process_lights(Collada::Node *p_node);
 };
@@ -467,7 +467,7 @@ Error ColladaImport::_create_material(const String &p_target) {
 	return OK;
 }
 
-Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p_mesh, const HashMap<String, Collada::NodeGeometry::Material> &p_material_map, const Collada::MeshData &meshdata, const Transform3D &p_local_xform, const Vector<int> &bone_remap, const Collada::SkinControllerData *p_skin_controller, const Collada::MorphControllerData *p_morph_data, const Vector<Ref<ImporterMesh>> &p_morph_meshes, bool p_use_compression, bool p_use_mesh_material) {
+Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p_mesh, const HashMap<String, Collada::NodeGeometry::Material> &p_material_map, const Collada::MeshData &meshdata, const Transform3D &p_local_xform, const Hector<int> &bone_remap, const Collada::SkinControllerData *p_skin_controller, const Collada::MorphControllerData *p_morph_data, const Hector<Ref<ImporterMesh>> &p_morph_meshes, bool p_use_compression, bool p_use_mesh_material) {
 	bool local_xform_mirror = p_local_xform.basis.determinant() < 0;
 
 	if (p_morph_data) {
@@ -637,7 +637,7 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 		/* ADD WEIGHTS IF EXIST */
 		/************************/
 
-		HashMap<int, Vector<Collada::Vertex::Weight>> pre_weights;
+		HashMap<int, Hector<Collada::Vertex::Weight>> pre_weights;
 
 		bool has_weights = false;
 
@@ -666,7 +666,7 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 			for (int w_i = 0; w_i < p_skin_controller->weights.sets.size(); w_i++) {
 				int amount = p_skin_controller->weights.sets[w_i];
 
-				Vector<Collada::Vertex::Weight> weights;
+				Hector<Collada::Vertex::Weight> weights;
 
 				for (int a_i = 0; a_i < amount; a_i++) {
 					Collada::Vertex::Weight w;
@@ -769,7 +769,7 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 				int vertex_pos = (vertex_src->stride ? vertex_src->stride : 3) * vertex_index;
 				ERR_FAIL_INDEX_V(vertex_pos + 0, vertex_src->array.size(), ERR_INVALID_DATA);
 				ERR_FAIL_INDEX_V(vertex_pos + 2, vertex_src->array.size(), ERR_INVALID_DATA);
-				vertex.vertex = Vector3(vertex_src->array[vertex_pos + 0], vertex_src->array[vertex_pos + 1], vertex_src->array[vertex_pos + 2]);
+				vertex.vertex = Hector3(vertex_src->array[vertex_pos + 0], vertex_src->array[vertex_pos + 1], vertex_src->array[vertex_pos + 2]);
 
 				if (pre_weights.has(vertex_index)) {
 					vertex.weights = pre_weights[vertex_index];
@@ -779,18 +779,18 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 					int normal_pos = (normal_src->stride ? normal_src->stride : 3) * p.indices[src + normal_ofs];
 					ERR_FAIL_INDEX_V(normal_pos + 0, normal_src->array.size(), ERR_INVALID_DATA);
 					ERR_FAIL_INDEX_V(normal_pos + 2, normal_src->array.size(), ERR_INVALID_DATA);
-					vertex.normal = Vector3(normal_src->array[normal_pos + 0], normal_src->array[normal_pos + 1], normal_src->array[normal_pos + 2]);
+					vertex.normal = Hector3(normal_src->array[normal_pos + 0], normal_src->array[normal_pos + 1], normal_src->array[normal_pos + 2]);
 
 					if (tangent_src && binormal_src) {
 						int binormal_pos = (binormal_src->stride ? binormal_src->stride : 3) * p.indices[src + binormal_ofs];
 						ERR_FAIL_INDEX_V(binormal_pos + 0, binormal_src->array.size(), ERR_INVALID_DATA);
 						ERR_FAIL_INDEX_V(binormal_pos + 2, binormal_src->array.size(), ERR_INVALID_DATA);
-						Vector3 binormal = Vector3(binormal_src->array[binormal_pos + 0], binormal_src->array[binormal_pos + 1], binormal_src->array[binormal_pos + 2]);
+						Hector3 binormal = Hector3(binormal_src->array[binormal_pos + 0], binormal_src->array[binormal_pos + 1], binormal_src->array[binormal_pos + 2]);
 
 						int tangent_pos = (tangent_src->stride ? tangent_src->stride : 3) * p.indices[src + tangent_ofs];
 						ERR_FAIL_INDEX_V(tangent_pos + 0, tangent_src->array.size(), ERR_INVALID_DATA);
 						ERR_FAIL_INDEX_V(tangent_pos + 2, tangent_src->array.size(), ERR_INVALID_DATA);
-						Vector3 tangent = Vector3(tangent_src->array[tangent_pos + 0], tangent_src->array[tangent_pos + 1], tangent_src->array[tangent_pos + 2]);
+						Hector3 tangent = Hector3(tangent_src->array[tangent_pos + 0], tangent_src->array[tangent_pos + 1], tangent_src->array[tangent_pos + 2]);
 
 						vertex.tangent.normal = tangent;
 						vertex.tangent.d = vertex.normal.cross(tangent).dot(binormal) > 0 ? 1 : -1;
@@ -801,14 +801,14 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 					int uv_pos = (uv_src->stride ? uv_src->stride : 2) * p.indices[src + uv_ofs];
 					ERR_FAIL_INDEX_V(uv_pos + 0, uv_src->array.size(), ERR_INVALID_DATA);
 					ERR_FAIL_INDEX_V(uv_pos + 1, uv_src->array.size(), ERR_INVALID_DATA);
-					vertex.uv = Vector3(uv_src->array[uv_pos + 0], 1.0 - uv_src->array[uv_pos + 1], 0);
+					vertex.uv = Hector3(uv_src->array[uv_pos + 0], 1.0 - uv_src->array[uv_pos + 1], 0);
 				}
 
 				if (uv2_src) {
 					int uv2_pos = (uv2_src->stride ? uv2_src->stride : 2) * p.indices[src + uv2_ofs];
 					ERR_FAIL_INDEX_V(uv2_pos + 0, uv2_src->array.size(), ERR_INVALID_DATA);
 					ERR_FAIL_INDEX_V(uv2_pos + 1, uv2_src->array.size(), ERR_INVALID_DATA);
-					vertex.uv2 = Vector3(uv2_src->array[uv2_pos + 0], 1.0 - uv2_src->array[uv2_pos + 1], 0);
+					vertex.uv2 = Hector3(uv2_src->array[uv2_pos + 0], 1.0 - uv2_src->array[uv2_pos + 1], 0);
 				}
 
 				if (color_src) {
@@ -819,8 +819,8 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 				}
 
 #ifndef NO_UP_AXIS_SWAP
-				if (collada.state.up_axis == Vector3::AXIS_Z) {
-					Vector3 bn = vertex.normal.cross(vertex.tangent.normal) * vertex.tangent.d;
+				if (collada.state.up_axis == Hector3::AXIS_Z) {
+					Hector3 bn = vertex.normal.cross(vertex.tangent.normal) * vertex.tangent.d;
 
 					SWAP(vertex.vertex.z, vertex.vertex.y);
 					vertex.vertex.z = -vertex.vertex.z;
@@ -872,7 +872,7 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 			}
 		}
 
-		Vector<Collada::Vertex> vertex_array; //there we go, vertex array
+		Hector<Collada::Vertex> vertex_array; //there we go, vertex array
 
 		vertex_array.resize(vertex_set.size());
 		for (const Collada::Vertex &F : vertex_set) {
@@ -938,7 +938,7 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 					if (binormal_src && tangent_src) {
 						surftool->set_tangent(vertex_array[k].tangent);
 					} else if (generate_dummy_tangents) {
-						Vector3 tan = Vector3(vertex_array[k].normal.z, -vertex_array[k].normal.x, vertex_array[k].normal.y).cross(vertex_array[k].normal.normalized()).normalized();
+						Hector3 tan = Hector3(vertex_array[k].normal.z, -vertex_array[k].normal.x, vertex_array[k].normal.y).cross(vertex_array[k].normal.normalized()).normalized();
 						surftool->set_tangent(Plane(tan.x, tan.y, tan.z, 1.0));
 					}
 				} else {
@@ -948,18 +948,18 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 					}
 				}
 				if (uv_src) {
-					surftool->set_uv(Vector2(vertex_array[k].uv.x, vertex_array[k].uv.y));
+					surftool->set_uv(Hector2(vertex_array[k].uv.x, vertex_array[k].uv.y));
 				}
 				if (uv2_src) {
-					surftool->set_uv2(Vector2(vertex_array[k].uv2.x, vertex_array[k].uv2.y));
+					surftool->set_uv2(Hector2(vertex_array[k].uv2.x, vertex_array[k].uv2.y));
 				}
 				if (color_src) {
 					surftool->set_color(vertex_array[k].color);
 				}
 
 				if (has_weights) {
-					Vector<float> weights;
-					Vector<int> bones;
+					Hector<float> weights;
+					Hector<int> bones;
 					weights.resize(RS::ARRAY_WEIGHTS_SIZE);
 					bones.resize(RS::ARRAY_WEIGHTS_SIZE);
 					//float sum=0.0;
@@ -1019,10 +1019,10 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 
 			if (mesh_flags & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES && (generate_dummy_tangents || generate_tangents)) {
 				// Compression is enabled, so let's validate that the normals and tangents are correct.
-				Vector<Vector3> normals = d[Mesh::ARRAY_NORMAL];
-				Vector<float> tangents = d[Mesh::ARRAY_TANGENT];
+				Hector<Hector3> normals = d[Mesh::ARRAY_NORMAL];
+				Hector<float> tangents = d[Mesh::ARRAY_TANGENT];
 				for (int vert = 0; vert < normals.size(); vert++) {
-					Vector3 tan = Vector3(tangents[vert * 4 + 0], tangents[vert * 4 + 1], tangents[vert * 4 + 2]);
+					Hector3 tan = Hector3(tangents[vert * 4 + 0], tangents[vert * 4 + 1], tangents[vert * 4 + 2]);
 					if (abs(tan.dot(normals[vert])) > 0.0001) {
 						// Tangent is not perpendicular to the normal, so we can't use compression.
 						mesh_flags &= ~RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES;
@@ -1113,12 +1113,12 @@ Error ColladaImport::_create_resources(Collada::Node *p_node, bool p_use_compres
 
 				int pc = vertices.array.size() / 3;
 				for (int i = 0; i < pc; i++) {
-					Vector3 pos(vertices.array[i * 3 + 0], vertices.array[i * 3 + 1], vertices.array[i * 3 + 2]);
-					Vector3 in(in_tangents.array[i * 3 + 0], in_tangents.array[i * 3 + 1], in_tangents.array[i * 3 + 2]);
-					Vector3 out(out_tangents.array[i * 3 + 0], out_tangents.array[i * 3 + 1], out_tangents.array[i * 3 + 2]);
+					Hector3 pos(vertices.array[i * 3 + 0], vertices.array[i * 3 + 1], vertices.array[i * 3 + 2]);
+					Hector3 in(in_tangents.array[i * 3 + 0], in_tangents.array[i * 3 + 1], in_tangents.array[i * 3 + 2]);
+					Hector3 out(out_tangents.array[i * 3 + 0], out_tangents.array[i * 3 + 1], out_tangents.array[i * 3 + 2]);
 
 #ifndef NO_UP_AXIS_SWAP
-					if (collada.state.up_axis == Vector3::AXIS_Z) {
+					if (collada.state.up_axis == Hector3::AXIS_Z) {
 						SWAP(pos.y, pos.z);
 						pos.z = -pos.z;
 						SWAP(in.y, in.z);
@@ -1137,9 +1137,9 @@ Error ColladaImport::_create_resources(Collada::Node *p_node, bool p_use_compres
 					}
 				}
 				if (cd.closed && pc > 1) {
-					Vector3 pos = c->get_point_position(0);
-					Vector3 in = c->get_point_in(0);
-					Vector3 out = c->get_point_out(0);
+					Hector3 pos = c->get_point_position(0);
+					Hector3 in = c->get_point_in(0);
+					Hector3 out = c->get_point_out(0);
 					c->add_point(pos, in, out, -1);
 				}
 
@@ -1159,8 +1159,8 @@ Error ColladaImport::_create_resources(Collada::Node *p_node, bool p_use_compres
 			Collada::MorphControllerData *morph = nullptr;
 			String meshid;
 			Transform3D apply_xform;
-			Vector<int> bone_remap;
-			Vector<Ref<ImporterMesh>> morphs;
+			Hector<int> bone_remap;
+			Hector<Ref<ImporterMesh>> morphs;
 
 			if (ng2->controller) {
 				String ngsource = ng2->source;
@@ -1169,7 +1169,7 @@ Error ColladaImport::_create_resources(Collada::Node *p_node, bool p_use_compres
 					ERR_FAIL_COND_V(!collada.state.skin_controller_data_map.has(ngsource), ERR_INVALID_DATA);
 					skin = &collada.state.skin_controller_data_map[ngsource];
 
-					Vector<String> skeletons = ng2->skeletons;
+					Hector<String> skeletons = ng2->skeletons;
 
 					ERR_FAIL_COND_V(skeletons.is_empty(), ERR_INVALID_DATA);
 
@@ -1225,14 +1225,14 @@ Error ColladaImport::_create_resources(Collada::Node *p_node, bool p_use_compres
 						bool valid = false;
 						if (morph->sources.has(target)) {
 							valid = true;
-							Vector<String> names = morph->sources[target].sarray;
+							Hector<String> names = morph->sources[target].sarray;
 							for (int i = 0; i < names.size(); i++) {
 								const String &meshid2 = names[i];
 								if (collada.state.mesh_data_map.has(meshid2)) {
 									Ref<ImporterMesh> mesh = Ref<ImporterMesh>(memnew(ImporterMesh));
 									const Collada::MeshData &meshdata = collada.state.mesh_data_map[meshid2];
 									mesh->set_name(meshdata.name);
-									Error err = _create_mesh_surfaces(false, mesh, ng2->material_map, meshdata, apply_xform, bone_remap, skin, nullptr, Vector<Ref<ImporterMesh>>(), false);
+									Error err = _create_mesh_surfaces(false, mesh, ng2->material_map, meshdata, apply_xform, bone_remap, skin, nullptr, Hector<Ref<ImporterMesh>>(), false);
 									ERR_FAIL_COND_V(err, err);
 
 									morphs.push_back(mesh);
@@ -1419,7 +1419,7 @@ void ColladaImport::_fix_param_animation_tracks() {
 									String track_name = weights + "(" + itos(i) + ")";
 									String mesh_name = target_src.sarray[i];
 									if (collada.state.mesh_name_map.has(mesh_name) && collada.state.referenced_tracks.has(track_name)) {
-										const Vector<int> &rt = collada.state.referenced_tracks[track_name];
+										const Hector<int> &rt = collada.state.referenced_tracks[track_name];
 
 										for (int rti = 0; rti < rt.size(); rti++) {
 											Collada::AnimationTrack *at = &collada.state.animation_tracks.write[rt[rti]];
@@ -1512,7 +1512,7 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 			for (int j = 0; j < tc; j++) {
 				String n = collada.state.animation_clips[i].tracks[j];
 				if (collada.state.by_id_tracks.has(n)) {
-					const Vector<int> &ti = collada.state.by_id_tracks[n];
+					const Hector<int> &ti = collada.state.by_id_tracks[n];
 					for (int k = 0; k < ti.size(); k++) {
 						track_filter.insert(ti[k]);
 					}
@@ -1524,7 +1524,7 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 		for (int j = 0; j < tc; j++) {
 			String n = collada.state.animation_clips[p_clip].tracks[j];
 			if (collada.state.by_id_tracks.has(n)) {
-				const Vector<int> &ti = collada.state.by_id_tracks[n];
+				const Hector<int> &ti = collada.state.by_id_tracks[n];
 				for (int k = 0; k < ti.size(); k++) {
 					track_filter.insert(ti[k]);
 				}
@@ -1535,7 +1535,7 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 	//animation->set_loop(true);
 	//create animation tracks
 
-	Vector<real_t> base_snapshots;
+	Hector<real_t> base_snapshots;
 
 	float f = 0;
 	float snapshot_interval = 1.0 / bake_fps; //should be customizable somewhere...
@@ -1633,7 +1633,7 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 			animation->track_set_imported(scale_idx, true); //helps merging later
 		}
 
-		Vector<real_t> snapshots = base_snapshots;
+		Hector<real_t> snapshots = base_snapshots;
 
 		if (nm.anim_tracks.size() == 1) {
 			//use snapshot keys from anim track instead, because this was most likely exported baked
@@ -1675,7 +1675,7 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 					continue;
 				}
 
-				Vector<float> data = at.get_value_at_time(snapshots[i]);
+				Hector<float> data = at.get_value_at_time(snapshots[i]);
 				ERR_CONTINUE(data.is_empty());
 
 				Collada::Node::XForm &xf = cn->xform_list.write[xform_idx];
@@ -1700,10 +1700,10 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 			Transform3D xform = cn->compute_transform(collada);
 			xform = collada.fix_transform(xform) * cn->post_transform;
 
-			Vector3 s = xform.basis.get_scale();
+			Hector3 s = xform.basis.get_scale();
 			bool singular_matrix = Math::is_zero_approx(s.x) || Math::is_zero_approx(s.y) || Math::is_zero_approx(s.z);
 			Quaternion q = singular_matrix ? Quaternion() : xform.basis.get_rotation_quaternion();
-			Vector3 l = xform.origin;
+			Hector3 l = xform.origin;
 
 			if (position_idx >= 0) {
 				animation->position_track_insert_key(position_idx, snapshots[i], l);
@@ -1771,7 +1771,7 @@ void ColladaImport::create_animation(int p_clip, bool p_import_value_tracks) {
 			for (int j = 0; j < at.keys.size(); j++) {
 				float time = at.keys[j].time;
 				Variant value;
-				Vector<float> data = at.keys[j].data;
+				Hector<float> data = at.keys[j].data;
 				if (data.size() == 1) {
 					//push a float
 					value = data[0];

@@ -39,14 +39,14 @@
 #include <string.h>
 
 namespace WebPCommon {
-Vector<uint8_t> _webp_lossy_pack(const Ref<Image> &p_image, float p_quality) {
-	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Vector<uint8_t>());
+Hector<uint8_t> _webp_lossy_pack(const Ref<Image> &p_image, float p_quality) {
+	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Hector<uint8_t>());
 
 	return _webp_packer(p_image, CLAMP(p_quality * 100.0f, 0.0f, 100.0f), false);
 }
 
-Vector<uint8_t> _webp_lossless_pack(const Ref<Image> &p_image) {
-	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Vector<uint8_t>());
+Hector<uint8_t> _webp_lossless_pack(const Ref<Image> &p_image) {
+	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Hector<uint8_t>());
 
 	float compression_factor = GLOBAL_GET("rendering/textures/webp_compression/lossless_compression_factor");
 	compression_factor = CLAMP(compression_factor, 0.0f, 100.0f);
@@ -54,14 +54,14 @@ Vector<uint8_t> _webp_lossless_pack(const Ref<Image> &p_image) {
 	return _webp_packer(p_image, compression_factor, true);
 }
 
-Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_lossless) {
+Hector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_lossless) {
 	int compression_method = GLOBAL_GET("rendering/textures/webp_compression/compression_method");
 	compression_method = CLAMP(compression_method, 0, 6);
 
 	Ref<Image> img = p_image->duplicate();
 	if (img->is_compressed()) {
 		Error error = img->decompress();
-		ERR_FAIL_COND_V_MSG(error != OK, Vector<uint8_t>(), "Couldn't decompress image.");
+		ERR_FAIL_COND_V_MSG(error != OK, Hector<uint8_t>(), "Couldn't decompress image.");
 	}
 	if (img->detect_alpha()) {
 		img->convert(Image::FORMAT_RGBA8);
@@ -70,7 +70,7 @@ Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_
 	}
 
 	Size2 s(img->get_width(), img->get_height());
-	Vector<uint8_t> data = img->get_data();
+	Hector<uint8_t> data = img->get_data();
 	const uint8_t *r = data.ptr();
 
 	// we need to use the more complex API in order to access specific flags...
@@ -78,7 +78,7 @@ Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_
 	WebPConfig config;
 	WebPPicture pic;
 	if (!WebPConfigInit(&config) || !WebPPictureInit(&pic)) {
-		ERR_FAIL_V(Vector<uint8_t>());
+		ERR_FAIL_V(Hector<uint8_t>());
 	}
 
 	WebPMemoryWriter wrt;
@@ -110,11 +110,11 @@ Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_
 
 	if (!success_encode) {
 		WebPMemoryWriterClear(&wrt);
-		ERR_FAIL_V_MSG(Vector<uint8_t>(), "WebP packing failed.");
+		ERR_FAIL_V_MSG(Hector<uint8_t>(), "WebP packing failed.");
 	}
 
 	// copy from wrt
-	Vector<uint8_t> dst;
+	Hector<uint8_t> dst;
 	dst.resize(wrt.size);
 	uint8_t *w = dst.ptrw();
 	memcpy(w, wrt.mem, wrt.size);
@@ -122,7 +122,7 @@ Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_
 	return dst;
 }
 
-Ref<Image> _webp_unpack(const Vector<uint8_t> &p_buffer) {
+Ref<Image> _webp_unpack(const Hector<uint8_t> &p_buffer) {
 	int size = p_buffer.size();
 	ERR_FAIL_COND_V(size <= 0, Ref<Image>());
 	const uint8_t *r = p_buffer.ptr();
@@ -134,7 +134,7 @@ Ref<Image> _webp_unpack(const Vector<uint8_t> &p_buffer) {
 		ERR_FAIL_V_MSG(Ref<Image>(), "Error unpacking WebP image.");
 	}
 
-	Vector<uint8_t> dst_image;
+	Hector<uint8_t> dst_image;
 	int datasize = features.width * features.height * (features.has_alpha ? 4 : 3);
 	dst_image.resize(datasize);
 
@@ -161,7 +161,7 @@ Error webp_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 		ERR_FAIL_V(ERR_FILE_CORRUPT);
 	}
 
-	Vector<uint8_t> dst_image;
+	Hector<uint8_t> dst_image;
 	int datasize = features.width * features.height * (features.has_alpha ? 4 : 3);
 	dst_image.resize(datasize);
 	uint8_t *dst_w = dst_image.ptrw();

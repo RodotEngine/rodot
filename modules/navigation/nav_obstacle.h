@@ -34,7 +34,7 @@
 #include "nav_rid.h"
 
 #include "core/object/class_db.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class NavAgent;
 class NavMap;
@@ -42,9 +42,9 @@ class NavMap;
 class NavObstacle : public NavRid {
 	NavAgent *agent = nullptr;
 	NavMap *map = nullptr;
-	Vector3 velocity;
-	Vector3 position;
-	Vector<Vector3> vertices;
+	Hector3 velocity;
+	Hector3 position;
+	Hector<Hector3> vertices;
 
 	real_t radius = 0.0;
 	real_t height = 0.0;
@@ -74,8 +74,8 @@ public:
 	void set_agent(NavAgent *p_agent);
 	NavAgent *get_agent() { return agent; }
 
-	void set_position(const Vector3 p_position);
-	const Vector3 &get_position() const { return position; }
+	void set_position(const Hector3 p_position);
+	const Hector3 &get_position() const { return position; }
 
 	void set_radius(real_t p_radius);
 	real_t get_radius() const { return radius; }
@@ -83,11 +83,11 @@ public:
 	void set_height(const real_t p_height);
 	real_t get_height() const { return height; }
 
-	void set_velocity(const Vector3 p_velocity);
-	const Vector3 &get_velocity() const { return velocity; }
+	void set_velocity(const Hector3 p_velocity);
+	const Hector3 &get_velocity() const { return velocity; }
 
-	void set_vertices(const Vector<Vector3> &p_vertices);
-	const Vector<Vector3> &get_vertices() const { return vertices; }
+	void set_vertices(const Hector<Hector3> &p_vertices);
+	const Hector<Hector3> &get_vertices() const { return vertices; }
 
 	bool is_map_changed();
 

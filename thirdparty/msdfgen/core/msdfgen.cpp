@@ -1,7 +1,7 @@
 
 #include "../msdfgen.h"
 
-#include <vector>
+#include <Vector>
 #include "edge-selectors.h"
 #include "contour-combiners.h"
 #include "ShapeDistanceFinder.h"
@@ -106,25 +106,25 @@ void generateMTSDF(const BitmapRef<float, 4> &output, const Shape &shape, const 
 
 // Legacy API
 
-void generateSDF(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate, bool overlapSupport) {
+void generateSDF(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate, bool overlapSupport) {
     generateSDF(output, shape, Projection(scale, translate), range, GeneratorConfig(overlapSupport));
 }
 
-void generatePseudoSDF(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate, bool overlapSupport) {
+void generatePseudoSDF(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate, bool overlapSupport) {
     generatePseudoSDF(output, shape, Projection(scale, translate), range, GeneratorConfig(overlapSupport));
 }
 
-void generateMSDF(const BitmapRef<float, 3> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate, const ErrorCorrectionConfig &errorCorrectionConfig, bool overlapSupport) {
+void generateMSDF(const BitmapRef<float, 3> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate, const ErrorCorrectionConfig &errorCorrectionConfig, bool overlapSupport) {
     generateMSDF(output, shape, Projection(scale, translate), range, MSDFGeneratorConfig(overlapSupport, errorCorrectionConfig));
 }
 
-void generateMTSDF(const BitmapRef<float, 4> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate, const ErrorCorrectionConfig &errorCorrectionConfig, bool overlapSupport) {
+void generateMTSDF(const BitmapRef<float, 4> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate, const ErrorCorrectionConfig &errorCorrectionConfig, bool overlapSupport) {
     generateMTSDF(output, shape, Projection(scale, translate), range, MSDFGeneratorConfig(overlapSupport, errorCorrectionConfig));
 }
 
 // Legacy version
 
-void generateSDF_legacy(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate) {
+void generateSDF_legacy(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate) {
 #ifdef MSDFGEN_USE_OPENMP
     #pragma omp parallel for
 #endif
@@ -132,7 +132,7 @@ void generateSDF_legacy(const BitmapRef<float, 1> &output, const Shape &shape, d
         int row = shape.inverseYAxis ? output.height-y-1 : y;
         for (int x = 0; x < output.width; ++x) {
             double dummy;
-            Point2 p = Vector2(x+.5, y+.5)/scale-translate;
+            Point2 p = Hector2(x+.5, y+.5)/scale-translate;
             SignedDistance minDistance;
             for (std::vector<Contour>::const_iterator contour = shape.contours.begin(); contour != shape.contours.end(); ++contour)
                 for (std::vector<EdgeHolder>::const_iterator edge = contour->edges.begin(); edge != contour->edges.end(); ++edge) {
@@ -145,14 +145,14 @@ void generateSDF_legacy(const BitmapRef<float, 1> &output, const Shape &shape, d
     }
 }
 
-void generatePseudoSDF_legacy(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate) {
+void generatePseudoSDF_legacy(const BitmapRef<float, 1> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate) {
 #ifdef MSDFGEN_USE_OPENMP
     #pragma omp parallel for
 #endif
     for (int y = 0; y < output.height; ++y) {
         int row = shape.inverseYAxis ? output.height-y-1 : y;
         for (int x = 0; x < output.width; ++x) {
-            Point2 p = Vector2(x+.5, y+.5)/scale-translate;
+            Point2 p = Hector2(x+.5, y+.5)/scale-translate;
             SignedDistance minDistance;
             const EdgeHolder *nearEdge = NULL;
             double nearParam = 0;
@@ -173,14 +173,14 @@ void generatePseudoSDF_legacy(const BitmapRef<float, 1> &output, const Shape &sh
     }
 }
 
-void generateMSDF_legacy(const BitmapRef<float, 3> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate, ErrorCorrectionConfig errorCorrectionConfig) {
+void generateMSDF_legacy(const BitmapRef<float, 3> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate, ErrorCorrectionConfig errorCorrectionConfig) {
 #ifdef MSDFGEN_USE_OPENMP
     #pragma omp parallel for
 #endif
     for (int y = 0; y < output.height; ++y) {
         int row = shape.inverseYAxis ? output.height-y-1 : y;
         for (int x = 0; x < output.width; ++x) {
-            Point2 p = Vector2(x+.5, y+.5)/scale-translate;
+            Point2 p = Hector2(x+.5, y+.5)/scale-translate;
 
             struct {
                 SignedDistance minDistance;
@@ -227,14 +227,14 @@ void generateMSDF_legacy(const BitmapRef<float, 3> &output, const Shape &shape, 
     msdfErrorCorrection(output, shape, Projection(scale, translate), range, MSDFGeneratorConfig(false, errorCorrectionConfig));
 }
 
-void generateMTSDF_legacy(const BitmapRef<float, 4> &output, const Shape &shape, double range, const Vector2 &scale, const Vector2 &translate, ErrorCorrectionConfig errorCorrectionConfig) {
+void generateMTSDF_legacy(const BitmapRef<float, 4> &output, const Shape &shape, double range, const Hector2 &scale, const Hector2 &translate, ErrorCorrectionConfig errorCorrectionConfig) {
 #ifdef MSDFGEN_USE_OPENMP
     #pragma omp parallel for
 #endif
     for (int y = 0; y < output.height; ++y) {
         int row = shape.inverseYAxis ? output.height-y-1 : y;
         for (int x = 0; x < output.width; ++x) {
-            Point2 p = Vector2(x+.5, y+.5)/scale-translate;
+            Point2 p = Hector2(x+.5, y+.5)/scale-translate;
 
             SignedDistance minDistance;
             struct {

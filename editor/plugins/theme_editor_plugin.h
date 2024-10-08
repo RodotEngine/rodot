@@ -368,7 +368,7 @@ class ThemeTypeEditor : public MarginContainer {
 	TypeDialogMode add_type_mode = ADD_THEME_TYPE;
 	ThemeTypeDialog *add_type_dialog = nullptr;
 
-	Vector<Control *> focusables;
+	Hector<Control *> focusables;
 	Timer *update_debounce_timer = nullptr;
 
 	VBoxContainer *_create_item_list(Theme::DataType p_data_type);

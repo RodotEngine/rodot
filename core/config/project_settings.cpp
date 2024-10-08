@@ -291,7 +291,7 @@ bool ProjectSettings::_set(const StringName &p_name, const Variant &p_value) {
 		}
 	} else {
 		if (p_name == CoreStringName(_custom_features)) {
-			Vector<String> custom_feature_array = String(p_value).split(",");
+			Hector<String> custom_feature_array = String(p_value).split(",");
 			for (int i = 0; i < custom_feature_array.size(); i++) {
 				custom_features.insert(custom_feature_array[i]);
 			}
@@ -302,14 +302,14 @@ bool ProjectSettings::_set(const StringName &p_name, const Variant &p_value) {
 		{ // Feature overrides.
 			int dot = p_name.operator String().find(".");
 			if (dot != -1) {
-				Vector<String> s = p_name.operator String().split(".");
+				Hector<String> s = p_name.operator String().split(".");
 
 				for (int i = 1; i < s.size(); i++) {
 					String feature = s[i].strip_edges();
 					Pair<StringName, StringName> feature_override(feature, p_name);
 
 					if (!feature_overrides.has(s[0])) {
-						feature_overrides[s[0]] = LocalVector<Pair<StringName, StringName>>();
+						feature_overrides[s[0]] = LocalHector<Pair<StringName, StringName>>();
 					}
 
 					feature_overrides[s[0]].push_back(feature_override);
@@ -359,7 +359,7 @@ Variant ProjectSettings::get_setting_with_override(const StringName &p_name) con
 
 	StringName name = p_name;
 	if (feature_overrides.has(name)) {
-		const LocalVector<Pair<StringName, StringName>> &overrides = feature_overrides[name];
+		const LocalHector<Pair<StringName, StringName>> &overrides = feature_overrides[name];
 		for (uint32_t i = 0; i < overrides.size(); i++) {
 			if (OS::get_singleton()->has_feature(overrides[i].first)) { // Custom features are checked in OS.has_feature() already. No need to check twice.
 				if (props.has(overrides[i].second)) {
@@ -726,7 +726,7 @@ Error ProjectSettings::_load_settings_binary(const String &p_path) {
 		key.parse_utf8(cs.ptr());
 
 		uint32_t vlen = f->get_32();
-		Vector<uint8_t> d;
+		Hector<uint8_t> d;
 		d.resize(vlen);
 		f->get_buffer(d.ptrw(), vlen);
 		Variant value;
@@ -880,7 +880,7 @@ Error ProjectSettings::_save_settings_binary(const String &p_file, const RBMap<S
 		err = encode_variant(p_custom_features, nullptr, len, false);
 		ERR_FAIL_COND_V(err != OK, err);
 
-		Vector<uint8_t> buff;
+		Hector<uint8_t> buff;
 		buff.resize(len);
 
 		err = encode_variant(p_custom_features, buff.ptrw(), len, false);
@@ -912,7 +912,7 @@ Error ProjectSettings::_save_settings_binary(const String &p_file, const RBMap<S
 			err = encode_variant(value, nullptr, len, true);
 			ERR_FAIL_COND_V_MSG(err != OK, ERR_INVALID_DATA, "Error when trying to encode Variant.");
 
-			Vector<uint8_t> buff;
+			Hector<uint8_t> buff;
 			buff.resize(len);
 
 			err = encode_variant(value, buff.ptrw(), len, true);
@@ -997,7 +997,7 @@ bool _csproj_exists(const String &p_root_dir) {
 }
 #endif // TOOLS_ENABLED
 
-Error ProjectSettings::save_custom(const String &p_path, const CustomMap &p_custom, const Vector<String> &p_custom_features, bool p_merge_with_current) {
+Error ProjectSettings::save_custom(const String &p_path, const CustomMap &p_custom, const Hector<String> &p_custom_features, bool p_merge_with_current) {
 	ERR_FAIL_COND_V_MSG(p_path.is_empty(), ERR_INVALID_PARAMETER, "Project settings save path cannot be empty.");
 
 #ifdef TOOLS_ENABLED
@@ -1457,7 +1457,7 @@ ProjectSettings::ProjectSettings() {
 
 	// Keep the enum values in sync with the `DisplayServer::SCREEN_` enum.
 	GLOBAL_DEF_BASIC(PropertyInfo(Variant::INT, "display/window/size/initial_position_type", PROPERTY_HINT_ENUM, "Absolute,Center of Primary Screen,Center of Other Screen,Center of Screen With Mouse Pointer,Center of Screen With Keyboard Focus"), 1);
-	GLOBAL_DEF_BASIC(PropertyInfo(Variant::VECTOR2I, "display/window/size/initial_position"), Vector2i());
+	GLOBAL_DEF_BASIC(PropertyInfo(Variant::HECTOR2I, "display/window/size/initial_position"), Hector2i());
 	GLOBAL_DEF_BASIC(PropertyInfo(Variant::INT, "display/window/size/initial_screen", PROPERTY_HINT_RANGE, "0,64,1,or_greater"), 0);
 
 	GLOBAL_DEF_BASIC("display/window/size/resizable", true);

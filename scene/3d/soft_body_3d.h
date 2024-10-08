@@ -42,7 +42,7 @@ class SoftBodyRenderingServerHandler : public PhysicsServer3DRenderingServerHand
 
 	RID mesh;
 	int surface = 0;
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	uint32_t stride = 0;
 	uint32_t normal_stride = 0;
 	uint32_t offset_vertices = 0;
@@ -60,8 +60,8 @@ private:
 	void commit_changes();
 
 public:
-	void set_vertex(int p_vertex_id, const Vector3 &p_vertex) override;
-	void set_normal(int p_vertex_id, const Vector3 &p_normal) override;
+	void set_vertex(int p_vertex_id, const Hector3 &p_vertex) override;
+	void set_normal(int p_vertex_id, const Hector3 &p_normal) override;
 	void set_aabb(const AABB &p_aabb) override;
 };
 
@@ -78,7 +78,7 @@ public:
 		int point_index = -1;
 		NodePath spatial_attachment_path;
 		Node3D *spatial_attachment = nullptr; // Cache
-		Vector3 offset;
+		Hector3 offset;
 
 		PinnedPoint();
 		PinnedPoint(const PinnedPoint &obj_tocopy);
@@ -96,7 +96,7 @@ private:
 	uint32_t collision_mask = 1;
 	uint32_t collision_layer = 1;
 	NodePath parent_collision_ignore;
-	Vector<PinnedPoint> pinned_points;
+	Hector<PinnedPoint> pinned_points;
 	bool simulation_started = false;
 	bool pinned_points_cache_dirty = true;
 
@@ -154,8 +154,8 @@ public:
 	void set_parent_collision_ignore(const NodePath &p_parent_collision_ignore);
 	const NodePath &get_parent_collision_ignore() const;
 
-	void set_pinned_points_indices(Vector<PinnedPoint> p_pinned_points_indices);
-	Vector<PinnedPoint> get_pinned_points_indices();
+	void set_pinned_points_indices(Hector<PinnedPoint> p_pinned_points_indices);
+	Hector<PinnedPoint> get_pinned_points_indices();
 
 	void set_simulation_precision(int p_simulation_precision);
 	int get_simulation_precision();
@@ -179,7 +179,7 @@ public:
 	void add_collision_exception_with(Node *p_node);
 	void remove_collision_exception_with(Node *p_node);
 
-	Vector3 get_point_transform(int p_point_index);
+	Hector3 get_point_transform(int p_point_index);
 
 	void pin_point_toggle(int p_point_index);
 	void pin_point(int p_point_index, bool pin, const NodePath &p_spatial_attachment_path = NodePath(), int p_insert_at = -1);

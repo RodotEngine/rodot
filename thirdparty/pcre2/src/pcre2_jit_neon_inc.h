@@ -290,7 +290,7 @@ while (*str_ptr < str_end)
 
 #if defined(FFCPS)
 # if defined (FFCPS_DIFF1)
-  data2 = VEXTQ(prev_data, data, VECTOR_FACTOR - 1);
+  data2 = VEXTQ(prev_data, data, Hector_FACTOR - 1);
 # else
   data2 = VLD1Q(*str_ptr - diff);
 #  if PCRE2_CODE_UNIT_WIDTH != 8

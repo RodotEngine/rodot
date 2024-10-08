@@ -110,7 +110,7 @@ public:
 	bool get_flag(PhysicsServer3D::HingeJointFlag p_flag) const;
 
 	GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const Transform3D &frameA, const Transform3D &frameB);
-	GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const Vector3 &pivotInA, const Vector3 &pivotInB, const Vector3 &axisInA, const Vector3 &axisInB);
+	GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const Hector3 &pivotInA, const Hector3 &pivotInB, const Hector3 &axisInA, const Hector3 &axisInB);
 };
 
 #endif // GODOT_HINGE_JOINT_3D_H

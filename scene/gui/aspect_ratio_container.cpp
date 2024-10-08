@@ -77,8 +77,8 @@ void AspectRatioContainer::set_alignment_vertical(AlignmentMode p_alignment_vert
 	queue_sort();
 }
 
-Vector<int> AspectRatioContainer::get_allowed_size_flags_horizontal() const {
-	Vector<int> flags;
+Hector<int> AspectRatioContainer::get_allowed_size_flags_horizontal() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	flags.append(SIZE_SHRINK_BEGIN);
 	flags.append(SIZE_SHRINK_CENTER);
@@ -86,8 +86,8 @@ Vector<int> AspectRatioContainer::get_allowed_size_flags_horizontal() const {
 	return flags;
 }
 
-Vector<int> AspectRatioContainer::get_allowed_size_flags_vertical() const {
-	Vector<int> flags;
+Hector<int> AspectRatioContainer::get_allowed_size_flags_vertical() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	flags.append(SIZE_SHRINK_BEGIN);
 	flags.append(SIZE_SHRINK_CENTER);
@@ -160,10 +160,10 @@ void AspectRatioContainer::_notification(int p_what) {
 						align_y = 1.0;
 					} break;
 				}
-				Vector2 offset = (size - child_size) * Vector2(align_x, align_y);
+				Hector2 offset = (size - child_size) * Hector2(align_x, align_y);
 
 				if (rtl) {
-					fit_child_in_rect(c, Rect2(Vector2(size.x - offset.x - child_size.x, offset.y), child_size));
+					fit_child_in_rect(c, Rect2(Hector2(size.x - offset.x - child_size.x, offset.y), child_size));
 				} else {
 					fit_child_in_rect(c, Rect2(offset, child_size));
 				}

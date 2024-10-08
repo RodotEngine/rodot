@@ -33,7 +33,7 @@
 
 #include "core/object/object_id.h"
 #include "core/os/thread_safe.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_allocator.h"
 #include "core/variant/variant.h"
 
@@ -71,8 +71,8 @@ private:
 	Allocator *allocator = nullptr;
 	bool allocator_is_custom = false;
 
-	LocalVector<Page *> pages;
-	LocalVector<uint32_t> page_bytes;
+	LocalHector<Page *> pages;
+	LocalHector<uint32_t> page_bytes;
 	uint32_t max_pages = 0;
 	uint32_t pages_used = 0;
 	bool flushing = false;

@@ -41,7 +41,7 @@ class JNISingleton : public Object {
 
 	struct MethodData {
 		Variant::Type ret_type;
-		Vector<Variant::Type> argtypes;
+		Hector<Variant::Type> argtypes;
 	};
 
 	RBMap<StringName, MethodData> method_map;
@@ -76,14 +76,14 @@ public:
 		return wrapped_object;
 	}
 
-	void add_method(const StringName &p_name, const Vector<Variant::Type> &p_args, Variant::Type p_ret_type) {
+	void add_method(const StringName &p_name, const Hector<Variant::Type> &p_args, Variant::Type p_ret_type) {
 		MethodData md;
 		md.argtypes = p_args;
 		md.ret_type = p_ret_type;
 		method_map[p_name] = md;
 	}
 
-	void add_signal(const StringName &p_name, const Vector<Variant::Type> &p_args) {
+	void add_signal(const StringName &p_name, const Hector<Variant::Type> &p_args) {
 		MethodInfo mi;
 		mi.name = p_name;
 		for (int i = 0; i < p_args.size(); i++) {

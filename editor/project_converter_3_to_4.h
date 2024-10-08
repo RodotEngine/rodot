@@ -55,8 +55,8 @@ public:
 #else // Has regex.
 
 #include "core/string/ustring.h"
-#include "core/templates/local_vector.h"
-#include "core/templates/vector.h"
+#include "core/templates/local_Hector.h"
+#include "core/templates/Hector.h"
 
 struct SourceLine {
 	String line;
@@ -71,60 +71,60 @@ class ProjectConverter3To4 {
 	uint64_t maximum_file_size;
 	uint64_t maximum_line_length;
 
-	void fix_tool_declaration(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	void fix_pause_mode(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	void fix_tool_declaration(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	void fix_pause_mode(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
 
-	void rename_colors(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	void convert_hexadecimal_colors(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	Vector<String> check_for_rename_colors(Vector<String> &lines, const RegExContainer &reg_container);
+	void rename_colors(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	void convert_hexadecimal_colors(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	Hector<String> check_for_rename_colors(Hector<String> &lines, const RegExContainer &reg_container);
 
-	void rename_classes(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	Vector<String> check_for_rename_classes(Vector<String> &lines, const RegExContainer &reg_container);
+	void rename_classes(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	Hector<String> check_for_rename_classes(Hector<String> &lines, const RegExContainer &reg_container);
 
-	void rename_gdscript_functions(Vector<SourceLine> &source_lines, const RegExContainer &reg_container, bool builtin);
-	Vector<String> check_for_rename_gdscript_functions(Vector<String> &lines, const RegExContainer &reg_container, bool builtin);
+	void rename_gdscript_functions(Hector<SourceLine> &source_lines, const RegExContainer &reg_container, bool builtin);
+	Hector<String> check_for_rename_gdscript_functions(Hector<String> &lines, const RegExContainer &reg_container, bool builtin);
 	void process_gdscript_line(String &line, const RegExContainer &reg_container, bool builtin);
 
-	void rename_csharp_functions(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	Vector<String> check_for_rename_csharp_functions(Vector<String> &lines, const RegExContainer &reg_container);
+	void rename_csharp_functions(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	Hector<String> check_for_rename_csharp_functions(Hector<String> &lines, const RegExContainer &reg_container);
 	void process_csharp_line(String &line, const RegExContainer &reg_container);
 
-	void rename_csharp_attributes(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	Vector<String> check_for_rename_csharp_attributes(Vector<String> &lines, const RegExContainer &reg_container);
+	void rename_csharp_attributes(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	Hector<String> check_for_rename_csharp_attributes(Hector<String> &lines, const RegExContainer &reg_container);
 
-	void rename_gdscript_keywords(Vector<SourceLine> &r_source_lines, const RegExContainer &p_reg_container, bool p_builtin);
-	Vector<String> check_for_rename_gdscript_keywords(Vector<String> &r_lines, const RegExContainer &p_reg_container, bool p_builtin);
+	void rename_gdscript_keywords(Hector<SourceLine> &r_source_lines, const RegExContainer &p_reg_container, bool p_builtin);
+	Hector<String> check_for_rename_gdscript_keywords(Hector<String> &r_lines, const RegExContainer &p_reg_container, bool p_builtin);
 
-	void rename_input_map_scancode(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	Vector<String> check_for_rename_input_map_scancode(Vector<String> &lines, const RegExContainer &reg_container);
+	void rename_input_map_scancode(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	Hector<String> check_for_rename_input_map_scancode(Hector<String> &lines, const RegExContainer &reg_container);
 
-	void rename_joypad_buttons_and_axes(Vector<SourceLine> &source_lines, const RegExContainer &reg_container);
-	Vector<String> check_for_rename_joypad_buttons_and_axes(Vector<String> &lines, const RegExContainer &reg_container);
+	void rename_joypad_buttons_and_axes(Hector<SourceLine> &source_lines, const RegExContainer &reg_container);
+	Hector<String> check_for_rename_joypad_buttons_and_axes(Hector<String> &lines, const RegExContainer &reg_container);
 
-	void custom_rename(Vector<SourceLine> &source_lines, const String &from, const String &to);
-	Vector<String> check_for_custom_rename(Vector<String> &lines, const String &from, const String &to);
+	void custom_rename(Hector<SourceLine> &source_lines, const String &from, const String &to);
+	Hector<String> check_for_custom_rename(Hector<String> &lines, const String &from, const String &to);
 
-	void rename_common(const char *array[][2], LocalVector<RegEx *> &cached_regexes, Vector<SourceLine> &source_lines);
-	Vector<String> check_for_rename_common(const char *array[][2], LocalVector<RegEx *> &cached_regexes, Vector<String> &lines);
+	void rename_common(const char *array[][2], LocalHector<RegEx *> &cached_regexes, Hector<SourceLine> &source_lines);
+	Hector<String> check_for_rename_common(const char *array[][2], LocalHector<RegEx *> &cached_regexes, Hector<String> &lines);
 
-	Vector<String> check_for_files();
+	Hector<String> check_for_files();
 
-	Vector<String> parse_arguments(const String &line);
+	Hector<String> parse_arguments(const String &line);
 	int get_end_parenthesis(const String &line) const;
-	String connect_arguments(const Vector<String> &line, int from, int to = -1) const;
+	String connect_arguments(const Hector<String> &line, int from, int to = -1) const;
 	String get_starting_space(const String &line) const;
 	String get_object_of_execution(const String &line) const;
 	bool contains_function_call(const String &line, const String &function) const;
 
 	String line_formatter(int current_line, String from, String to, String line);
 	String simple_line_formatter(int current_line, String old_line, String line);
-	String collect_string_from_vector(Vector<SourceLine> &vector);
-	Vector<SourceLine> split_lines(const String &text);
+	String collect_string_from_Hector(Hector<SourceLine> &Hector);
+	Hector<SourceLine> split_lines(const String &text);
 
 	bool test_single_array(const char *array[][2], bool ignore_second_check = false);
-	bool test_conversion_gdscript_builtin(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Vector<SourceLine> &, const RegExContainer &, bool), const String &what, const RegExContainer &reg_container, bool builtin);
-	bool test_conversion_with_regex(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Vector<SourceLine> &, const RegExContainer &), const String &what, const RegExContainer &reg_container);
-	bool test_conversion_basic(const String &name, const String &expected, const char *array[][2], LocalVector<RegEx *> &regex_cache, const String &what);
+	bool test_conversion_gdscript_builtin(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Hector<SourceLine> &, const RegExContainer &, bool), const String &what, const RegExContainer &reg_container, bool builtin);
+	bool test_conversion_with_regex(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Hector<SourceLine> &, const RegExContainer &), const String &what, const RegExContainer &reg_container);
+	bool test_conversion_basic(const String &name, const String &expected, const char *array[][2], LocalHector<RegEx *> &regex_cache, const String &what);
 	bool test_array_names();
 	bool test_conversion(RegExContainer &reg_container);
 

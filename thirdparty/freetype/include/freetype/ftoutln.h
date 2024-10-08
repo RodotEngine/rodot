@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
    *   Outline Processing
    *
    * @abstract:
-   *   Functions to create, transform, and render vectorial glyph images.
+   *   Functions to create, transform, and render Hectorial glyph images.
    *
    * @description:
    *   This section contains routines used to create and destroy scalable

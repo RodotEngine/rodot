@@ -956,10 +956,10 @@ msgstr "폴딩 비활성화"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "외부 씬 자동으로 펼치기"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "수평 2차원 벡터 변경"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "수평 벡터 타입 변경"
 
 msgid "Open Resources in Current Inspector"
@@ -1058,7 +1058,7 @@ msgstr "외부 프로그램"
 msgid "Raster Image Editor"
 msgstr "래스터 이미지 에디터"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "벡터 이미지 에디터"
 
 msgid "Audio Editor"
@@ -7379,7 +7379,7 @@ msgstr "모양 RID"
 msgid "Default Gravity"
 msgstr "기본 중력"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "기본 중력 벡터"
 
 msgid "Default Linear Damp"

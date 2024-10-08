@@ -588,23 +588,23 @@ void AnimationMixer::_clear_playing_caches() {
 }
 
 void AnimationMixer::_init_root_motion_cache() {
-	root_motion_cache.loc = Vector3(0, 0, 0);
+	root_motion_cache.loc = Hector3(0, 0, 0);
 	root_motion_cache.rot = Quaternion(0, 0, 0, 1);
-	root_motion_cache.scale = Vector3(1, 1, 1);
-	root_motion_position = Vector3(0, 0, 0);
+	root_motion_cache.scale = Hector3(1, 1, 1);
+	root_motion_position = Hector3(0, 0, 0);
 	root_motion_rotation = Quaternion(0, 0, 0, 1);
-	root_motion_scale = Vector3(0, 0, 0);
-	root_motion_position_accumulator = Vector3(0, 0, 0);
+	root_motion_scale = Hector3(0, 0, 0);
+	root_motion_position_accumulator = Hector3(0, 0, 0);
 	root_motion_rotation_accumulator = Quaternion(0, 0, 0, 1);
-	root_motion_scale_accumulator = Vector3(1, 1, 1);
+	root_motion_scale_accumulator = Hector3(1, 1, 1);
 }
 
 bool AnimationMixer::_update_caches() {
 	setup_pass++;
 
-	root_motion_cache.loc = Vector3(0, 0, 0);
+	root_motion_cache.loc = Hector3(0, 0, 0);
 	root_motion_cache.rot = Quaternion(0, 0, 0, 1);
-	root_motion_cache.scale = Vector3(1, 1, 1);
+	root_motion_cache.scale = Hector3(1, 1, 1);
 
 	List<StringName> sname_list;
 	get_animation_list(&sname_list);
@@ -659,7 +659,7 @@ bool AnimationMixer::_update_caches() {
 
 			if (!track) {
 				Ref<Resource> resource;
-				Vector<StringName> leftover_path;
+				Hector<StringName> leftover_path;
 
 				Node *child = parent->get_node_and_resource(path, resource, leftover_path);
 				if (!child) {
@@ -953,7 +953,7 @@ Variant AnimationMixer::_post_process_key_value(const Ref<Animation> &p_anim, in
 			if (p_object_sub_idx >= 0) {
 				Skeleton3D *skel = Object::cast_to<Skeleton3D>(ObjectDB::get_instance(p_object_id));
 				if (skel) {
-					return Vector3(p_value) * skel->get_motion_scale();
+					return Hector3(p_value) * skel->get_motion_scale();
 				}
 			}
 			return p_value;
@@ -978,12 +978,12 @@ Variant AnimationMixer::post_process_key_value(const Ref<Animation> &p_anim, int
 
 void AnimationMixer::_blend_init() {
 	// Check all tracks, see if they need modification.
-	root_motion_position = Vector3(0, 0, 0);
+	root_motion_position = Hector3(0, 0, 0);
 	root_motion_rotation = Quaternion(0, 0, 0, 1);
-	root_motion_scale = Vector3(0, 0, 0);
-	root_motion_position_accumulator = Vector3(0, 0, 0);
+	root_motion_scale = Hector3(0, 0, 0);
+	root_motion_position_accumulator = Hector3(0, 0, 0);
 	root_motion_rotation_accumulator = Quaternion(0, 0, 0, 1);
-	root_motion_scale_accumulator = Vector3(1, 1, 1);
+	root_motion_scale_accumulator = Hector3(1, 1, 1);
 
 	if (!cache_valid) {
 		if (!_update_caches()) {
@@ -1001,9 +1001,9 @@ void AnimationMixer::_blend_init() {
 			case Animation::TYPE_POSITION_3D: {
 				TrackCacheTransform *t = static_cast<TrackCacheTransform *>(track);
 				if (track->root_motion) {
-					root_motion_cache.loc = Vector3(0, 0, 0);
+					root_motion_cache.loc = Hector3(0, 0, 0);
 					root_motion_cache.rot = Quaternion(0, 0, 0, 1);
-					root_motion_cache.scale = Vector3(1, 1, 1);
+					root_motion_cache.scale = Hector3(1, 1, 1);
 				}
 				t->loc = t->init_loc;
 				t->rot = t->init_rot;
@@ -1084,9 +1084,9 @@ void AnimationMixer::_blend_calc_total_weight() {
 		real_t weight = ai.playback_info.weight;
 		const real_t *track_weights_ptr = ai.playback_info.track_weights.ptr();
 		int track_weights_count = ai.playback_info.track_weights.size();
-		static LocalVector<Animation::TypeHash> processed_hashes;
+		static LocalHector<Animation::TypeHash> processed_hashes;
 		processed_hashes.clear();
-		const Vector<Animation::Track *> tracks = a->get_tracks();
+		const Hector<Animation::Track *> tracks = a->get_tracks();
 		for (const Animation::Track *animation_track : tracks) {
 			if (!animation_track->enabled) {
 				continue;
@@ -1130,7 +1130,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 #ifndef _3D_DISABLED
 		bool calc_root = !seeked || is_external_seeking;
 #endif // _3D_DISABLED
-		const Vector<Animation::Track *> tracks = a->get_tracks();
+		const Hector<Animation::Track *> tracks = a->get_tracks();
 		Animation::Track *const *tracks_ptr = tracks.ptr();
 		real_t a_length = a->get_length();
 		int count = tracks.size();
@@ -1202,7 +1202,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 								}
 							}
 						}
-						Vector3 loc[2];
+						Hector3 loc[2];
 						if (!backward) {
 							if (Animation::is_greater_approx(prev_time, time)) {
 								Error err = a->try_position_track_interpolate(i, prev_time, &loc[0]);
@@ -1239,7 +1239,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						prev_time = !backward ? start : end;
 					}
 					{
-						Vector3 loc;
+						Hector3 loc;
 						Error err = a->try_position_track_interpolate(i, time, &loc);
 						if (err != OK) {
 							continue;
@@ -1377,7 +1377,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 								}
 							}
 						}
-						Vector3 scale[2];
+						Hector3 scale[2];
 						if (!backward) {
 							if (Animation::is_greater_approx(prev_time, time)) {
 								Error err = a->try_scale_track_interpolate(i, prev_time, &scale[0]);
@@ -1414,7 +1414,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						prev_time = !backward ? start : end;
 					}
 					{
-						Vector3 scale;
+						Hector3 scale;
 						Error err = a->try_scale_track_interpolate(i, time, &scale);
 						if (err != OK) {
 							continue;
@@ -1548,14 +1548,14 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 							continue;
 						}
 						StringName method = a->method_track_get_name(i, idx);
-						Vector<Variant> params = a->method_track_get_params(i, idx);
+						Hector<Variant> params = a->method_track_get_params(i, idx);
 						_call_object(t->object_id, method, params, callback_mode_method == ANIMATION_CALLBACK_MODE_METHOD_DEFERRED);
 					} else {
 						List<int> indices;
 						a->track_get_key_indices_in_range(i, time, delta, &indices, looped_flag);
 						for (int &F : indices) {
 							StringName method = a->method_track_get_name(i, F);
-							Vector<Variant> params = a->method_track_get_params(i, F);
+							Hector<Variant> params = a->method_track_get_params(i, F);
 							_call_object(t->object_id, method, params, callback_mode_method == ANIMATION_CALLBACK_MODE_METHOD_DEFERRED);
 						}
 					}
@@ -1755,7 +1755,7 @@ void AnimationMixer::_blend_apply() {
 				if (t->root_motion) {
 					root_motion_position = root_motion_cache.loc;
 					root_motion_rotation = root_motion_cache.rot;
-					root_motion_scale = root_motion_cache.scale - Vector3(1, 1, 1);
+					root_motion_scale = root_motion_cache.scale - Hector3(1, 1, 1);
 					root_motion_position_accumulator = t->loc;
 					root_motion_rotation_accumulator = t->rot;
 					root_motion_scale_accumulator = t->scale;
@@ -1845,11 +1845,11 @@ void AnimationMixer::_blend_apply() {
 				TrackCacheAudio *t = static_cast<TrackCacheAudio *>(track);
 
 				// Audio ending process.
-				LocalVector<ObjectID> erase_maps;
+				LocalHector<ObjectID> erase_maps;
 				for (KeyValue<ObjectID, PlayingAudioTrackInfo> &L : t->playing_streams) {
 					PlayingAudioTrackInfo &track_info = L.value;
 					float db = Math::linear_to_db(track_info.use_blend ? track_info.volume : 1.0);
-					LocalVector<int> erase_streams;
+					LocalHector<int> erase_streams;
 					HashMap<int, PlayingAudioStreamInfo> &map = track_info.stream_info;
 					for (const KeyValue<int, PlayingAudioStreamInfo> &M : map) {
 						PlayingAudioStreamInfo pasi = M.value;
@@ -1905,7 +1905,7 @@ void AnimationMixer::_blend_apply() {
 	}
 }
 
-void AnimationMixer::_call_object(ObjectID p_object_id, const StringName &p_method, const Vector<Variant> &p_params, bool p_deferred) {
+void AnimationMixer::_call_object(ObjectID p_object_id, const StringName &p_method, const Hector<Variant> &p_params, bool p_deferred) {
 	// Separate function to use alloca() more efficiently
 	const Variant **argptrs = (const Variant **)alloca(sizeof(Variant *) * p_params.size());
 	const Variant *args = p_params.ptr();
@@ -1964,7 +1964,7 @@ NodePath AnimationMixer::get_root_motion_track() const {
 	return root_motion_track;
 }
 
-Vector3 AnimationMixer::get_root_motion_position() const {
+Hector3 AnimationMixer::get_root_motion_position() const {
 	return root_motion_position;
 }
 
@@ -1972,11 +1972,11 @@ Quaternion AnimationMixer::get_root_motion_rotation() const {
 	return root_motion_rotation;
 }
 
-Vector3 AnimationMixer::get_root_motion_scale() const {
+Hector3 AnimationMixer::get_root_motion_scale() const {
 	return root_motion_scale;
 }
 
-Vector3 AnimationMixer::get_root_motion_position_accumulator() const {
+Hector3 AnimationMixer::get_root_motion_position_accumulator() const {
 	return root_motion_position_accumulator;
 }
 
@@ -1984,7 +1984,7 @@ Quaternion AnimationMixer::get_root_motion_rotation_accumulator() const {
 	return root_motion_rotation_accumulator;
 }
 
-Vector3 AnimationMixer::get_root_motion_scale_accumulator() const {
+Hector3 AnimationMixer::get_root_motion_scale_accumulator() const {
 	return root_motion_scale_accumulator;
 }
 

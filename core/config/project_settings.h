@@ -98,9 +98,9 @@ protected:
 	List<String> input_presets;
 
 	HashSet<String> custom_features;
-	HashMap<StringName, LocalVector<Pair<StringName, StringName>>> feature_overrides;
+	HashMap<StringName, LocalHector<Pair<StringName, StringName>>> feature_overrides;
 
-	LocalVector<String> hidden_prefixes;
+	LocalHector<String> hidden_prefixes;
 	HashMap<StringName, AutoloadInfo> autoloads;
 	HashMap<StringName, String> global_groups;
 	HashMap<StringName, HashSet<StringName>> scene_groups_cache;
@@ -186,7 +186,7 @@ public:
 	Error setup(const String &p_path, const String &p_main_pack, bool p_upwards = false, bool p_ignore_override = false);
 
 	Error load_custom(const String &p_path);
-	Error save_custom(const String &p_path = "", const CustomMap &p_custom = CustomMap(), const Vector<String> &p_custom_features = Vector<String>(), bool p_merge_with_current = true);
+	Error save_custom(const String &p_path = "", const CustomMap &p_custom = CustomMap(), const Hector<String> &p_custom_features = Hector<String>(), bool p_merge_with_current = true);
 	Error save();
 	void set_custom_property_info(const PropertyInfo &p_info);
 	const HashMap<StringName, PropertyInfo> &get_custom_property_info() const;

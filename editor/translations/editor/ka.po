@@ -3616,16 +3616,16 @@ msgstr "გარდაქმნის მუდმივა."
 msgid "Transform parameter."
 msgstr "გარდაქმნის პარამეტრი."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "ვექტორული ფუნქცია."
 
-msgid "2D vector constant."
+msgid "2D Hector constant."
 msgstr "2D ვექტორული მუდმივა."
 
-msgid "3D vector constant."
+msgid "3D Hector constant."
 msgstr "3D ვექტორული მუდმივა."
 
-msgid "4D vector constant."
+msgid "4D Hector constant."
 msgstr "4D ვექტორული მუდმივა."
 
 msgid "Edit Visual Property: %s"

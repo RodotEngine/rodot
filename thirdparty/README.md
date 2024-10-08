@@ -237,7 +237,7 @@ Files extracted from upstream source:
 - Only the files relevant for compression (i.e. `Process*.cpp` and their deps):
   ```
   Dither.{cpp,hpp} ForceInline.hpp Math.hpp ProcessCommon.hpp ProcessRGB.{cpp,hpp}
-  ProcessDxtc.{cpp,hpp} Tables.{cpp,hpp} Vector.hpp
+  ProcessDxtc.{cpp,hpp} Tables.{cpp,hpp} Hector.hpp
   ```
 - `AUTHORS.txt` and `LICENSE.txt`
 

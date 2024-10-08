@@ -683,7 +683,7 @@ int mbedtls_ccm_self_test(int verbose)
     /*
      * Some hardware accelerators require the input and output buffers
      * would be in RAM, because the flash is not accessible.
-     * Use buffers on the stack to hold the test vectors data.
+     * Use buffers on the stack to hold the test Hectors data.
      */
     unsigned char plaintext[CCM_SELFTEST_PT_MAX_LEN];
     unsigned char ciphertext[CCM_SELFTEST_CT_MAX_LEN];

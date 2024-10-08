@@ -131,7 +131,7 @@ Error ImageLoaderSVG::create_image_from_utf8_buffer(Ref<Image> p_image, const ui
 		ERR_FAIL_V_MSG(FAILED, "ImageLoaderSVG: Couldn't sync ThorVG canvas.");
 	}
 
-	Vector<uint8_t> image;
+	Hector<uint8_t> image;
 	image.resize(width * height * sizeof(uint32_t));
 
 	for (uint32_t y = 0; y < height; y++) {
@@ -174,7 +174,7 @@ void ImageLoaderSVG::get_recognized_extensions(List<String> *p_extensions) const
 
 Error ImageLoaderSVG::load_image(Ref<Image> p_image, Ref<FileAccess> p_fileaccess, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	const uint64_t len = p_fileaccess->get_length() - p_fileaccess->get_position();
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	buffer.resize(len);
 	p_fileaccess->get_buffer(buffer.ptrw(), buffer.size());
 

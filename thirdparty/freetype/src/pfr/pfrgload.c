@@ -95,8 +95,8 @@
     /* we need to delete it                                          */
     if ( last > first )
     {
-      FT_Vector*  p1 = outline->points + first;
-      FT_Vector*  p2 = outline->points + last;
+      FT_Hector*  p1 = outline->points + first;
+      FT_Hector*  p2 = outline->points + last;
 
 
       if ( p1->x == p2->x && p1->y == p2->y )
@@ -124,7 +124,7 @@
 
   static FT_Error
   pfr_glyph_line_to( PFR_Glyph   glyph,
-                     FT_Vector*  to )
+                     FT_Hector*  to )
   {
     FT_GlyphLoader  loader  = glyph->loader;
     FT_Outline*     outline = &loader->current.outline;
@@ -158,9 +158,9 @@
 
   static FT_Error
   pfr_glyph_curve_to( PFR_Glyph   glyph,
-                      FT_Vector*  control1,
-                      FT_Vector*  control2,
-                      FT_Vector*  to )
+                      FT_Hector*  control1,
+                      FT_Hector*  control2,
+                      FT_Hector*  to )
   {
     FT_GlyphLoader  loader  = glyph->loader;
     FT_Outline*     outline = &loader->current.outline;
@@ -178,7 +178,7 @@
     error = FT_GLYPHLOADER_CHECK_POINTS( loader, 3, 0 );
     if ( !error )
     {
-      FT_Vector*  vec = outline->points         + outline->n_points;
+      FT_Hector*  vec = outline->points         + outline->n_points;
       FT_Byte*    tag = (FT_Byte*)outline->tags + outline->n_points;
 
 
@@ -199,7 +199,7 @@
 
   static FT_Error
   pfr_glyph_move_to( PFR_Glyph   glyph,
-                     FT_Vector*  to )
+                     FT_Hector*  to )
   {
     FT_GlyphLoader  loader  = glyph->loader;
     FT_Error        error;
@@ -346,8 +346,8 @@
 
     /* now load a simple glyph */
     {
-      FT_Vector   pos[4];
-      FT_Vector*  cur;
+      FT_Hector   pos[4];
+      FT_Hector*  cur;
 
 
       pos[0].x = pos[0].y = 0;
@@ -784,7 +784,7 @@
         /* translate and eventually scale the new glyph points */
         if ( subglyph->x_scale != 0x10000L || subglyph->y_scale != 0x10000L )
         {
-          FT_Vector*  vec = base->points + old_points;
+          FT_Hector*  vec = base->points + old_points;
 
 
           for ( i = 0; i < num_points; i++, vec++ )
@@ -797,7 +797,7 @@
         }
         else
         {
-          FT_Vector*  vec = loader->base.outline.points + old_points;
+          FT_Hector*  vec = loader->base.outline.points + old_points;
 
 
           for ( i = 0; i < num_points; i++, vec++ )

@@ -79,10 +79,10 @@ Ref<Resource> ResourceLoader::load(const String &p_path, const String &p_type_hi
 	return ret;
 }
 
-Vector<String> ResourceLoader::get_recognized_extensions_for_type(const String &p_type) {
+Hector<String> ResourceLoader::get_recognized_extensions_for_type(const String &p_type) {
 	List<String> exts;
 	::ResourceLoader::get_recognized_extensions_for_type(p_type, &exts);
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const String &E : exts) {
 		ret.push_back(E);
 	}
@@ -166,10 +166,10 @@ Error ResourceSaver::save(const Ref<Resource> &p_resource, const String &p_path,
 	return ::ResourceSaver::save(p_resource, p_path, p_flags);
 }
 
-Vector<String> ResourceSaver::get_recognized_extensions(const Ref<Resource> &p_resource) {
+Hector<String> ResourceSaver::get_recognized_extensions(const Ref<Resource> &p_resource) {
 	List<String> exts;
 	::ResourceSaver::get_recognized_extensions(p_resource, &exts);
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const String &E : exts) {
 		ret.push_back(E);
 	}
@@ -269,7 +269,7 @@ void OS::crash(const String &p_message) {
 	CRASH_NOW_MSG(p_message);
 }
 
-Vector<String> OS::get_system_fonts() const {
+Hector<String> OS::get_system_fonts() const {
 	return ::OS::get_singleton()->get_system_fonts();
 }
 
@@ -277,7 +277,7 @@ String OS::get_system_font_path(const String &p_font_name, int p_weight, int p_s
 	return ::OS::get_singleton()->get_system_font_path(p_font_name, p_weight, p_stretch, p_italic);
 }
 
-Vector<String> OS::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
+Hector<String> OS::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
 	return ::OS::get_singleton()->get_system_font_path_for_text(p_font_name, p_text, p_locale, p_script, p_weight, p_stretch, p_italic);
 }
 
@@ -307,7 +307,7 @@ String OS::read_string_from_stdin() {
 	return ::OS::get_singleton()->get_stdin_string();
 }
 
-int OS::execute(const String &p_path, const Vector<String> &p_arguments, Array r_output, bool p_read_stderr, bool p_open_console) {
+int OS::execute(const String &p_path, const Hector<String> &p_arguments, Array r_output, bool p_read_stderr, bool p_open_console) {
 	List<String> args;
 	for (const String &arg : p_arguments) {
 		args.push_back(arg);
@@ -325,7 +325,7 @@ int OS::execute(const String &p_path, const Vector<String> &p_arguments, Array r
 	return exitcode;
 }
 
-Dictionary OS::execute_with_pipe(const String &p_path, const Vector<String> &p_arguments, bool p_blocking) {
+Dictionary OS::execute_with_pipe(const String &p_path, const Hector<String> &p_arguments, bool p_blocking) {
 	List<String> args;
 	for (const String &arg : p_arguments) {
 		args.push_back(arg);
@@ -333,7 +333,7 @@ Dictionary OS::execute_with_pipe(const String &p_path, const Vector<String> &p_a
 	return ::OS::get_singleton()->execute_with_pipe(p_path, args, p_blocking);
 }
 
-int OS::create_instance(const Vector<String> &p_arguments) {
+int OS::create_instance(const Hector<String> &p_arguments) {
 	List<String> args;
 	for (const String &arg : p_arguments) {
 		args.push_back(arg);
@@ -346,7 +346,7 @@ int OS::create_instance(const Vector<String> &p_arguments) {
 	return pid;
 }
 
-int OS::create_process(const String &p_path, const Vector<String> &p_arguments, bool p_open_console) {
+int OS::create_process(const String &p_path, const Hector<String> &p_arguments, bool p_open_console) {
 	List<String> args;
 	for (const String &arg : p_arguments) {
 		args.push_back(arg);
@@ -403,13 +403,13 @@ String OS::get_version() const {
 	return ::OS::get_singleton()->get_version();
 }
 
-Vector<String> OS::get_video_adapter_driver_info() const {
+Hector<String> OS::get_video_adapter_driver_info() const {
 	return ::OS::get_singleton()->get_video_adapter_driver_info();
 }
 
-Vector<String> OS::get_cmdline_args() {
+Hector<String> OS::get_cmdline_args() {
 	List<String> cmdline = ::OS::get_singleton()->get_cmdline_args();
-	Vector<String> cmdlinev;
+	Hector<String> cmdlinev;
 	for (const String &E : cmdline) {
 		cmdlinev.push_back(E);
 	}
@@ -417,9 +417,9 @@ Vector<String> OS::get_cmdline_args() {
 	return cmdlinev;
 }
 
-Vector<String> OS::get_cmdline_user_args() {
+Hector<String> OS::get_cmdline_user_args() {
 	List<String> cmdline = ::OS::get_singleton()->get_cmdline_user_args();
-	Vector<String> cmdlinev;
+	Hector<String> cmdlinev;
 	for (const String &E : cmdline) {
 		cmdlinev.push_back(E);
 	}
@@ -427,7 +427,7 @@ Vector<String> OS::get_cmdline_user_args() {
 	return cmdlinev;
 }
 
-void OS::set_restart_on_exit(bool p_restart, const Vector<String> &p_restart_arguments) {
+void OS::set_restart_on_exit(bool p_restart, const Hector<String> &p_restart_arguments) {
 	List<String> args_list;
 	for (const String &restart_argument : p_restart_arguments) {
 		args_list.push_back(restart_argument);
@@ -440,14 +440,14 @@ bool OS::is_restart_on_exit_set() const {
 	return ::OS::get_singleton()->is_restart_on_exit_set();
 }
 
-Vector<String> OS::get_restart_on_exit_arguments() const {
+Hector<String> OS::get_restart_on_exit_arguments() const {
 	List<String> args = ::OS::get_singleton()->get_restart_on_exit_arguments();
-	Vector<String> args_vector;
+	Hector<String> args_Hector;
 	for (List<String>::Element *E = args.front(); E; E = E->next()) {
-		args_vector.push_back(E->get());
+		args_Hector.push_back(E->get());
 	}
 
-	return args_vector;
+	return args_Hector;
 }
 
 String OS::get_locale() const {
@@ -588,7 +588,7 @@ bool OS::request_permissions() {
 	return ::OS::get_singleton()->request_permissions();
 }
 
-Vector<String> OS::get_granted_permissions() const {
+Hector<String> OS::get_granted_permissions() const {
 	return ::OS::get_singleton()->get_granted_permissions();
 }
 
@@ -653,7 +653,7 @@ void OS::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_video_adapter_driver_info"), &OS::get_video_adapter_driver_info);
 
-	ClassDB::bind_method(D_METHOD("set_restart_on_exit", "restart", "arguments"), &OS::set_restart_on_exit, DEFVAL(Vector<String>()));
+	ClassDB::bind_method(D_METHOD("set_restart_on_exit", "restart", "arguments"), &OS::set_restart_on_exit, DEFVAL(Hector<String>()));
 	ClassDB::bind_method(D_METHOD("is_restart_on_exit_set"), &OS::is_restart_on_exit_set);
 	ClassDB::bind_method(D_METHOD("get_restart_on_exit_arguments"), &OS::get_restart_on_exit_arguments);
 
@@ -730,16 +730,16 @@ Geometry2D *Geometry2D::get_singleton() {
 	return singleton;
 }
 
-bool Geometry2D::is_point_in_circle(const Vector2 &p_point, const Vector2 &p_circle_pos, real_t p_circle_radius) {
+bool Geometry2D::is_point_in_circle(const Hector2 &p_point, const Hector2 &p_circle_pos, real_t p_circle_radius) {
 	return ::Geometry2D::is_point_in_circle(p_point, p_circle_pos, p_circle_radius);
 }
 
-real_t Geometry2D::segment_intersects_circle(const Vector2 &p_from, const Vector2 &p_to, const Vector2 &p_circle_pos, real_t p_circle_radius) {
+real_t Geometry2D::segment_intersects_circle(const Hector2 &p_from, const Hector2 &p_to, const Hector2 &p_circle_pos, real_t p_circle_radius) {
 	return ::Geometry2D::segment_intersects_circle(p_from, p_to, p_circle_pos, p_circle_radius);
 }
 
-Variant Geometry2D::segment_intersects_segment(const Vector2 &p_from_a, const Vector2 &p_to_a, const Vector2 &p_from_b, const Vector2 &p_to_b) {
-	Vector2 result;
+Variant Geometry2D::segment_intersects_segment(const Hector2 &p_from_a, const Hector2 &p_to_a, const Hector2 &p_from_b, const Hector2 &p_to_b) {
+	Hector2 result;
 	if (::Geometry2D::segment_intersects_segment(p_from_a, p_to_a, p_from_b, p_to_b, &result)) {
 		return result;
 	} else {
@@ -747,8 +747,8 @@ Variant Geometry2D::segment_intersects_segment(const Vector2 &p_from_a, const Ve
 	}
 }
 
-Variant Geometry2D::line_intersects_line(const Vector2 &p_from_a, const Vector2 &p_dir_a, const Vector2 &p_from_b, const Vector2 &p_dir_b) {
-	Vector2 result;
+Variant Geometry2D::line_intersects_line(const Hector2 &p_from_a, const Hector2 &p_dir_a, const Hector2 &p_from_b, const Hector2 &p_dir_b) {
+	Hector2 result;
 	if (::Geometry2D::line_intersects_line(p_from_a, p_dir_a, p_from_b, p_dir_b, result)) {
 		return result;
 	} else {
@@ -756,51 +756,51 @@ Variant Geometry2D::line_intersects_line(const Vector2 &p_from_a, const Vector2 
 	}
 }
 
-Vector<Vector2> Geometry2D::get_closest_points_between_segments(const Vector2 &p1, const Vector2 &q1, const Vector2 &p2, const Vector2 &q2) {
-	Vector2 r1, r2;
+Hector<Hector2> Geometry2D::get_closest_points_between_segments(const Hector2 &p1, const Hector2 &q1, const Hector2 &p2, const Hector2 &q2) {
+	Hector2 r1, r2;
 	::Geometry2D::get_closest_points_between_segments(p1, q1, p2, q2, r1, r2);
-	Vector<Vector2> r = { r1, r2 };
+	Hector<Hector2> r = { r1, r2 };
 	return r;
 }
 
-Vector2 Geometry2D::get_closest_point_to_segment(const Vector2 &p_point, const Vector2 &p_a, const Vector2 &p_b) {
-	Vector2 s[2] = { p_a, p_b };
+Hector2 Geometry2D::get_closest_point_to_segment(const Hector2 &p_point, const Hector2 &p_a, const Hector2 &p_b) {
+	Hector2 s[2] = { p_a, p_b };
 	return ::Geometry2D::get_closest_point_to_segment(p_point, s);
 }
 
-Vector2 Geometry2D::get_closest_point_to_segment_uncapped(const Vector2 &p_point, const Vector2 &p_a, const Vector2 &p_b) {
-	Vector2 s[2] = { p_a, p_b };
+Hector2 Geometry2D::get_closest_point_to_segment_uncapped(const Hector2 &p_point, const Hector2 &p_a, const Hector2 &p_b) {
+	Hector2 s[2] = { p_a, p_b };
 	return ::Geometry2D::get_closest_point_to_segment_uncapped(p_point, s);
 }
 
-bool Geometry2D::point_is_inside_triangle(const Vector2 &s, const Vector2 &a, const Vector2 &b, const Vector2 &c) const {
+bool Geometry2D::point_is_inside_triangle(const Hector2 &s, const Hector2 &a, const Hector2 &b, const Hector2 &c) const {
 	return ::Geometry2D::is_point_in_triangle(s, a, b, c);
 }
 
-bool Geometry2D::is_polygon_clockwise(const Vector<Vector2> &p_polygon) {
+bool Geometry2D::is_polygon_clockwise(const Hector<Hector2> &p_polygon) {
 	return ::Geometry2D::is_polygon_clockwise(p_polygon);
 }
 
-bool Geometry2D::is_point_in_polygon(const Point2 &p_point, const Vector<Vector2> &p_polygon) {
+bool Geometry2D::is_point_in_polygon(const Point2 &p_point, const Hector<Hector2> &p_polygon) {
 	return ::Geometry2D::is_point_in_polygon(p_point, p_polygon);
 }
 
-Vector<int> Geometry2D::triangulate_polygon(const Vector<Vector2> &p_polygon) {
+Hector<int> Geometry2D::triangulate_polygon(const Hector<Hector2> &p_polygon) {
 	return ::Geometry2D::triangulate_polygon(p_polygon);
 }
 
-Vector<int> Geometry2D::triangulate_delaunay(const Vector<Vector2> &p_points) {
+Hector<int> Geometry2D::triangulate_delaunay(const Hector<Hector2> &p_points) {
 	return ::Geometry2D::triangulate_delaunay(p_points);
 }
 
-Vector<Point2> Geometry2D::convex_hull(const Vector<Point2> &p_points) {
+Hector<Point2> Geometry2D::convex_hull(const Hector<Point2> &p_points) {
 	return ::Geometry2D::convex_hull(p_points);
 }
 
-TypedArray<PackedVector2Array> Geometry2D::decompose_polygon_in_convex(const Vector<Vector2> &p_polygon) {
-	Vector<Vector<Point2>> decomp = ::Geometry2D::decompose_polygon_in_convex(p_polygon);
+TypedArray<PackedHector2Array> Geometry2D::decompose_polygon_in_convex(const Hector<Hector2> &p_polygon) {
+	Hector<Hector<Point2>> decomp = ::Geometry2D::decompose_polygon_in_convex(p_polygon);
 
-	TypedArray<PackedVector2Array> ret;
+	TypedArray<PackedHector2Array> ret;
 
 	for (int i = 0; i < decomp.size(); ++i) {
 		ret.push_back(decomp[i]);
@@ -808,21 +808,10 @@ TypedArray<PackedVector2Array> Geometry2D::decompose_polygon_in_convex(const Vec
 	return ret;
 }
 
-TypedArray<PackedVector2Array> Geometry2D::merge_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::merge_polygons(p_polygon_a, p_polygon_b);
+TypedArray<PackedHector2Array> Geometry2D::merge_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::merge_polygons(p_polygon_a, p_polygon_b);
 
-	TypedArray<PackedVector2Array> ret;
-
-	for (int i = 0; i < polys.size(); ++i) {
-		ret.push_back(polys[i]);
-	}
-	return ret;
-}
-
-TypedArray<PackedVector2Array> Geometry2D::clip_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::clip_polygons(p_polygon_a, p_polygon_b);
-
-	TypedArray<PackedVector2Array> ret;
+	TypedArray<PackedHector2Array> ret;
 
 	for (int i = 0; i < polys.size(); ++i) {
 		ret.push_back(polys[i]);
@@ -830,21 +819,10 @@ TypedArray<PackedVector2Array> Geometry2D::clip_polygons(const Vector<Vector2> &
 	return ret;
 }
 
-TypedArray<PackedVector2Array> Geometry2D::intersect_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::intersect_polygons(p_polygon_a, p_polygon_b);
+TypedArray<PackedHector2Array> Geometry2D::clip_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::clip_polygons(p_polygon_a, p_polygon_b);
 
-	TypedArray<PackedVector2Array> ret;
-
-	for (int i = 0; i < polys.size(); ++i) {
-		ret.push_back(polys[i]);
-	}
-	return ret;
-}
-
-TypedArray<PackedVector2Array> Geometry2D::exclude_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::exclude_polygons(p_polygon_a, p_polygon_b);
-
-	TypedArray<PackedVector2Array> ret;
+	TypedArray<PackedHector2Array> ret;
 
 	for (int i = 0; i < polys.size(); ++i) {
 		ret.push_back(polys[i]);
@@ -852,21 +830,10 @@ TypedArray<PackedVector2Array> Geometry2D::exclude_polygons(const Vector<Vector2
 	return ret;
 }
 
-TypedArray<PackedVector2Array> Geometry2D::clip_polyline_with_polygon(const Vector<Vector2> &p_polyline, const Vector<Vector2> &p_polygon) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::clip_polyline_with_polygon(p_polyline, p_polygon);
+TypedArray<PackedHector2Array> Geometry2D::intersect_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::intersect_polygons(p_polygon_a, p_polygon_b);
 
-	TypedArray<PackedVector2Array> ret;
-
-	for (int i = 0; i < polys.size(); ++i) {
-		ret.push_back(polys[i]);
-	}
-	return ret;
-}
-
-TypedArray<PackedVector2Array> Geometry2D::intersect_polyline_with_polygon(const Vector<Vector2> &p_polyline, const Vector<Vector2> &p_polygon) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::intersect_polyline_with_polygon(p_polyline, p_polygon);
-
-	TypedArray<PackedVector2Array> ret;
+	TypedArray<PackedHector2Array> ret;
 
 	for (int i = 0; i < polys.size(); ++i) {
 		ret.push_back(polys[i]);
@@ -874,21 +841,10 @@ TypedArray<PackedVector2Array> Geometry2D::intersect_polyline_with_polygon(const
 	return ret;
 }
 
-TypedArray<PackedVector2Array> Geometry2D::offset_polygon(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::offset_polygon(p_polygon, p_delta, ::Geometry2D::PolyJoinType(p_join_type));
+TypedArray<PackedHector2Array> Geometry2D::exclude_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::exclude_polygons(p_polygon_a, p_polygon_b);
 
-	TypedArray<PackedVector2Array> ret;
-
-	for (int i = 0; i < polys.size(); ++i) {
-		ret.push_back(polys[i]);
-	}
-	return ret;
-}
-
-TypedArray<PackedVector2Array> Geometry2D::offset_polyline(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type) {
-	Vector<Vector<Point2>> polys = ::Geometry2D::offset_polyline(p_polygon, p_delta, ::Geometry2D::PolyJoinType(p_join_type), ::Geometry2D::PolyEndType(p_end_type));
-
-	TypedArray<PackedVector2Array> ret;
+	TypedArray<PackedHector2Array> ret;
 
 	for (int i = 0; i < polys.size(); ++i) {
 		ret.push_back(polys[i]);
@@ -896,20 +852,64 @@ TypedArray<PackedVector2Array> Geometry2D::offset_polyline(const Vector<Vector2>
 	return ret;
 }
 
-Dictionary Geometry2D::make_atlas(const Vector<Size2> &p_rects) {
+TypedArray<PackedHector2Array> Geometry2D::clip_polyline_with_polygon(const Hector<Hector2> &p_polyline, const Hector<Hector2> &p_polygon) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::clip_polyline_with_polygon(p_polyline, p_polygon);
+
+	TypedArray<PackedHector2Array> ret;
+
+	for (int i = 0; i < polys.size(); ++i) {
+		ret.push_back(polys[i]);
+	}
+	return ret;
+}
+
+TypedArray<PackedHector2Array> Geometry2D::intersect_polyline_with_polygon(const Hector<Hector2> &p_polyline, const Hector<Hector2> &p_polygon) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::intersect_polyline_with_polygon(p_polyline, p_polygon);
+
+	TypedArray<PackedHector2Array> ret;
+
+	for (int i = 0; i < polys.size(); ++i) {
+		ret.push_back(polys[i]);
+	}
+	return ret;
+}
+
+TypedArray<PackedHector2Array> Geometry2D::offset_polygon(const Hector<Hector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::offset_polygon(p_polygon, p_delta, ::Geometry2D::PolyJoinType(p_join_type));
+
+	TypedArray<PackedHector2Array> ret;
+
+	for (int i = 0; i < polys.size(); ++i) {
+		ret.push_back(polys[i]);
+	}
+	return ret;
+}
+
+TypedArray<PackedHector2Array> Geometry2D::offset_polyline(const Hector<Hector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type) {
+	Hector<Hector<Point2>> polys = ::Geometry2D::offset_polyline(p_polygon, p_delta, ::Geometry2D::PolyJoinType(p_join_type), ::Geometry2D::PolyEndType(p_end_type));
+
+	TypedArray<PackedHector2Array> ret;
+
+	for (int i = 0; i < polys.size(); ++i) {
+		ret.push_back(polys[i]);
+	}
+	return ret;
+}
+
+Dictionary Geometry2D::make_atlas(const Hector<Size2> &p_rects) {
 	Dictionary ret;
 
-	Vector<Size2i> rects;
+	Hector<Size2i> rects;
 	for (int i = 0; i < p_rects.size(); i++) {
 		rects.push_back(p_rects[i]);
 	}
 
-	Vector<Point2i> result;
+	Hector<Point2i> result;
 	Size2i size;
 
 	::Geometry2D::make_atlas(rects, result, size);
 
-	Vector<Point2> r_result;
+	Hector<Point2> r_result;
 	for (int i = 0; i < result.size(); i++) {
 		r_result.push_back(result[i]);
 	}
@@ -978,8 +978,8 @@ Geometry3D *Geometry3D::get_singleton() {
 	return singleton;
 }
 
-Vector<Vector3> Geometry3D::compute_convex_mesh_points(const TypedArray<Plane> &p_planes) {
-	Vector<Plane> planes_vec;
+Hector<Hector3> Geometry3D::compute_convex_mesh_points(const TypedArray<Plane> &p_planes) {
+	Hector<Plane> planes_vec;
 	int size = p_planes.size();
 	planes_vec.resize(size);
 	for (int i = 0; i < size; ++i) {
@@ -989,45 +989,45 @@ Vector<Vector3> Geometry3D::compute_convex_mesh_points(const TypedArray<Plane> &
 	return ret;
 }
 
-TypedArray<Plane> Geometry3D::build_box_planes(const Vector3 &p_extents) {
+TypedArray<Plane> Geometry3D::build_box_planes(const Hector3 &p_extents) {
 	Variant ret = ::Geometry3D::build_box_planes(p_extents);
 	return ret;
 }
 
-TypedArray<Plane> Geometry3D::build_cylinder_planes(float p_radius, float p_height, int p_sides, Vector3::Axis p_axis) {
+TypedArray<Plane> Geometry3D::build_cylinder_planes(float p_radius, float p_height, int p_sides, Hector3::Axis p_axis) {
 	Variant ret = ::Geometry3D::build_cylinder_planes(p_radius, p_height, p_sides, p_axis);
 	return ret;
 }
 
-TypedArray<Plane> Geometry3D::build_capsule_planes(float p_radius, float p_height, int p_sides, int p_lats, Vector3::Axis p_axis) {
+TypedArray<Plane> Geometry3D::build_capsule_planes(float p_radius, float p_height, int p_sides, int p_lats, Hector3::Axis p_axis) {
 	Variant ret = ::Geometry3D::build_capsule_planes(p_radius, p_height, p_sides, p_lats, p_axis);
 	return ret;
 }
 
-Vector<Vector3> Geometry3D::get_closest_points_between_segments(const Vector3 &p1, const Vector3 &p2, const Vector3 &q1, const Vector3 &q2) {
-	Vector3 r1, r2;
+Hector<Hector3> Geometry3D::get_closest_points_between_segments(const Hector3 &p1, const Hector3 &p2, const Hector3 &q1, const Hector3 &q2) {
+	Hector3 r1, r2;
 	::Geometry3D::get_closest_points_between_segments(p1, p2, q1, q2, r1, r2);
-	Vector<Vector3> r = { r1, r2 };
+	Hector<Hector3> r = { r1, r2 };
 	return r;
 }
 
-Vector3 Geometry3D::get_closest_point_to_segment(const Vector3 &p_point, const Vector3 &p_a, const Vector3 &p_b) {
-	Vector3 s[2] = { p_a, p_b };
+Hector3 Geometry3D::get_closest_point_to_segment(const Hector3 &p_point, const Hector3 &p_a, const Hector3 &p_b) {
+	Hector3 s[2] = { p_a, p_b };
 	return ::Geometry3D::get_closest_point_to_segment(p_point, s);
 }
 
-Vector3 Geometry3D::get_closest_point_to_segment_uncapped(const Vector3 &p_point, const Vector3 &p_a, const Vector3 &p_b) {
-	Vector3 s[2] = { p_a, p_b };
+Hector3 Geometry3D::get_closest_point_to_segment_uncapped(const Hector3 &p_point, const Hector3 &p_a, const Hector3 &p_b) {
+	Hector3 s[2] = { p_a, p_b };
 	return ::Geometry3D::get_closest_point_to_segment_uncapped(p_point, s);
 }
 
-Vector3 Geometry3D::get_triangle_barycentric_coords(const Vector3 &p_point, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2) {
-	Vector3 res = ::Geometry3D::triangle_get_barycentric_coords(p_v0, p_v1, p_v2, p_point);
+Hector3 Geometry3D::get_triangle_barycentric_coords(const Hector3 &p_point, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2) {
+	Hector3 res = ::Geometry3D::triangle_get_barycentric_coords(p_v0, p_v1, p_v2, p_point);
 	return res;
 }
 
-Variant Geometry3D::ray_intersects_triangle(const Vector3 &p_from, const Vector3 &p_dir, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2) {
-	Vector3 res;
+Variant Geometry3D::ray_intersects_triangle(const Hector3 &p_from, const Hector3 &p_dir, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2) {
+	Hector3 res;
 	if (::Geometry3D::ray_intersects_triangle(p_from, p_dir, p_v0, p_v1, p_v2, &res)) {
 		return res;
 	} else {
@@ -1035,8 +1035,8 @@ Variant Geometry3D::ray_intersects_triangle(const Vector3 &p_from, const Vector3
 	}
 }
 
-Variant Geometry3D::segment_intersects_triangle(const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2) {
-	Vector3 res;
+Variant Geometry3D::segment_intersects_triangle(const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2) {
+	Hector3 res;
 	if (::Geometry3D::segment_intersects_triangle(p_from, p_to, p_v0, p_v1, p_v2, &res)) {
 		return res;
 	} else {
@@ -1044,9 +1044,9 @@ Variant Geometry3D::segment_intersects_triangle(const Vector3 &p_from, const Vec
 	}
 }
 
-Vector<Vector3> Geometry3D::segment_intersects_sphere(const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_sphere_pos, real_t p_sphere_radius) {
-	Vector<Vector3> r;
-	Vector3 res, norm;
+Hector<Hector3> Geometry3D::segment_intersects_sphere(const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_sphere_pos, real_t p_sphere_radius) {
+	Hector<Hector3> r;
+	Hector3 res, norm;
 	if (!::Geometry3D::segment_intersects_sphere(p_from, p_to, p_sphere_pos, p_sphere_radius, &res, &norm)) {
 		return r;
 	}
@@ -1057,9 +1057,9 @@ Vector<Vector3> Geometry3D::segment_intersects_sphere(const Vector3 &p_from, con
 	return r;
 }
 
-Vector<Vector3> Geometry3D::segment_intersects_cylinder(const Vector3 &p_from, const Vector3 &p_to, float p_height, float p_radius) {
-	Vector<Vector3> r;
-	Vector3 res, norm;
+Hector<Hector3> Geometry3D::segment_intersects_cylinder(const Hector3 &p_from, const Hector3 &p_to, float p_height, float p_radius) {
+	Hector<Hector3> r;
+	Hector3 res, norm;
 	if (!::Geometry3D::segment_intersects_cylinder(p_from, p_to, p_height, p_radius, &res, &norm)) {
 		return r;
 	}
@@ -1070,10 +1070,10 @@ Vector<Vector3> Geometry3D::segment_intersects_cylinder(const Vector3 &p_from, c
 	return r;
 }
 
-Vector<Vector3> Geometry3D::segment_intersects_convex(const Vector3 &p_from, const Vector3 &p_to, const TypedArray<Plane> &p_planes) {
-	Vector<Vector3> r;
-	Vector3 res, norm;
-	Vector<Plane> planes = Variant(p_planes);
+Hector<Hector3> Geometry3D::segment_intersects_convex(const Hector3 &p_from, const Hector3 &p_to, const TypedArray<Plane> &p_planes) {
+	Hector<Hector3> r;
+	Hector3 res, norm;
+	Hector<Plane> planes = Variant(p_planes);
 	if (!::Geometry3D::segment_intersects_convex(p_from, p_to, planes.ptr(), planes.size(), &res, &norm)) {
 		return r;
 	}
@@ -1084,19 +1084,19 @@ Vector<Vector3> Geometry3D::segment_intersects_convex(const Vector3 &p_from, con
 	return r;
 }
 
-Vector<Vector3> Geometry3D::clip_polygon(const Vector<Vector3> &p_points, const Plane &p_plane) {
+Hector<Hector3> Geometry3D::clip_polygon(const Hector<Hector3> &p_points, const Plane &p_plane) {
 	return ::Geometry3D::clip_polygon(p_points, p_plane);
 }
 
-Vector<int32_t> Geometry3D::tetrahedralize_delaunay(const Vector<Vector3> &p_points) {
+Hector<int32_t> Geometry3D::tetrahedralize_delaunay(const Hector<Hector3> &p_points) {
 	return ::Geometry3D::tetrahedralize_delaunay(p_points);
 }
 
 void Geometry3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("compute_convex_mesh_points", "planes"), &Geometry3D::compute_convex_mesh_points);
 	ClassDB::bind_method(D_METHOD("build_box_planes", "extents"), &Geometry3D::build_box_planes);
-	ClassDB::bind_method(D_METHOD("build_cylinder_planes", "radius", "height", "sides", "axis"), &Geometry3D::build_cylinder_planes, DEFVAL(Vector3::AXIS_Z));
-	ClassDB::bind_method(D_METHOD("build_capsule_planes", "radius", "height", "sides", "lats", "axis"), &Geometry3D::build_capsule_planes, DEFVAL(Vector3::AXIS_Z));
+	ClassDB::bind_method(D_METHOD("build_cylinder_planes", "radius", "height", "sides", "axis"), &Geometry3D::build_cylinder_planes, DEFVAL(Hector3::AXIS_Z));
+	ClassDB::bind_method(D_METHOD("build_capsule_planes", "radius", "height", "sides", "lats", "axis"), &Geometry3D::build_capsule_planes, DEFVAL(Hector3::AXIS_Z));
 
 	ClassDB::bind_method(D_METHOD("get_closest_points_between_segments", "p1", "p2", "q1", "q2"), &Geometry3D::get_closest_points_between_segments);
 
@@ -1129,7 +1129,7 @@ String Marshalls::variant_to_base64(const Variant &p_var, bool p_full_objects) {
 	Error err = encode_variant(p_var, nullptr, len, p_full_objects);
 	ERR_FAIL_COND_V_MSG(err != OK, "", "Error when trying to encode Variant.");
 
-	Vector<uint8_t> buff;
+	Hector<uint8_t> buff;
 	buff.resize(len);
 	uint8_t *w = buff.ptrw();
 
@@ -1146,7 +1146,7 @@ Variant Marshalls::base64_to_variant(const String &p_str, bool p_allow_objects) 
 	int strlen = p_str.length();
 	CharString cstr = p_str.ascii();
 
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 	buf.resize(strlen / 4 * 3 + 1);
 	uint8_t *w = buf.ptrw();
 
@@ -1160,23 +1160,23 @@ Variant Marshalls::base64_to_variant(const String &p_str, bool p_allow_objects) 
 	return v;
 }
 
-String Marshalls::raw_to_base64(const Vector<uint8_t> &p_arr) {
+String Marshalls::raw_to_base64(const Hector<uint8_t> &p_arr) {
 	String ret = CryptoCore::b64_encode_str(p_arr.ptr(), p_arr.size());
 	ERR_FAIL_COND_V(ret.is_empty(), ret);
 	return ret;
 }
 
-Vector<uint8_t> Marshalls::base64_to_raw(const String &p_str) {
+Hector<uint8_t> Marshalls::base64_to_raw(const String &p_str) {
 	int strlen = p_str.length();
 	CharString cstr = p_str.ascii();
 
 	size_t arr_len = 0;
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 	{
 		buf.resize(strlen / 4 * 3 + 1);
 		uint8_t *w = buf.ptrw();
 
-		ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)cstr.get_data(), strlen) != OK, Vector<uint8_t>());
+		ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)cstr.get_data(), strlen) != OK, Hector<uint8_t>());
 	}
 	buf.resize(arr_len);
 
@@ -1194,7 +1194,7 @@ String Marshalls::base64_to_utf8(const String &p_str) {
 	int strlen = p_str.length();
 	CharString cstr = p_str.ascii();
 
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 	buf.resize(strlen / 4 * 3 + 1 + 1);
 	uint8_t *w = buf.ptrw();
 
@@ -1815,10 +1815,10 @@ void Engine::unregister_singleton(const StringName &p_name) {
 	::Engine::get_singleton()->remove_singleton(p_name);
 }
 
-Vector<String> Engine::get_singleton_list() const {
+Hector<String> Engine::get_singleton_list() const {
 	List<::Engine::Singleton> singletons;
 	::Engine::get_singleton()->get_singletons(&singletons);
-	Vector<String> ret;
+	Hector<String> ret;
 	for (List<::Engine::Singleton>::Element *E = singletons.front(); E; E = E->next()) {
 		ret.push_back(E->get().name);
 	}

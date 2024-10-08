@@ -40,7 +40,7 @@ const float FM_RAD_TO_DEG = (360.0f / (2.0f * FM_PI));
 
 //***************** Float versions
 //***
-//*** vectors are assumed to be 3 floats or 3 doubles representing X, Y, Z
+//*** Hectors are assumed to be 3 floats or 3 doubles representing X, Y, Z
 //*** quaternions are assumed to be 4 floats or 4 doubles representing X,Y,Z,W
 //*** matrices are assumed to be 16 floats or 16 doubles representing a standard D3D or OpenGL style 4x4 matrix
 //*** bounding volumes are expressed as two sets of 3 floats/double representing bmin(x,y,z) and bmax(x,y,z)
@@ -109,8 +109,8 @@ void  fm_eulerToMatrixDX(double x,double y,double z,double matrix[16]); // conve
 void  fm_quatToMatrix(const float quat[4],float matrix[16]); // convert quaterinion rotation to matrix, translation set to zero.
 void  fm_quatToMatrix(const double quat[4],double matrix[16]); // convert quaterinion rotation to matrix, translation set to zero.
 
-void  fm_quatRotate(const float quat[4],const float v[3],float r[3]); // rotate a vector directly by a quaternion.
-void  fm_quatRotate(const double quat[4],const double v[3],double r[3]); // rotate a vector directly by a quaternion.
+void  fm_quatRotate(const float quat[4],const float v[3],float r[3]); // rotate a Hector directly by a quaternion.
+void  fm_quatRotate(const double quat[4],const double v[3],double r[3]); // rotate a Hector directly by a quaternion.
 
 void  fm_getTranslation(const float matrix[16],float t[3]);
 void  fm_getTranslation(const double matrix[16],double t[3]);
@@ -154,14 +154,14 @@ double fm_dot(const double p1[3],const double p2[3]);
 void  fm_cross(float cross[3],const float a[3],const float b[3]);
 void  fm_cross(double cross[3],const double a[3],const double b[3]);
 
-float  fm_computeNormalVector(float n[3],const float p1[3],const float p2[3]); // as P2-P1 normalized.
-double  fm_computeNormalVector(double n[3],const double p1[3],const double p2[3]); // as P2-P1 normalized.
+float  fm_computeNormalHector(float n[3],const float p1[3],const float p2[3]); // as P2-P1 normalized.
+double  fm_computeNormalHector(double n[3],const double p1[3],const double p2[3]); // as P2-P1 normalized.
 
 bool  fm_computeWindingOrder(const float p1[3],const float p2[3],const float p3[3]); // returns true if the triangle is clockwise.
 bool  fm_computeWindingOrder(const double p1[3],const double p2[3],const double p3[3]); // returns true if the triangle is clockwise.
 
-float  fm_normalize(float n[3]); // normalize this vector and return the distance
-double  fm_normalize(double n[3]); // normalize this vector and return the distance
+float  fm_normalize(float n[3]); // normalize this Hector and return the distance
+double  fm_normalize(double n[3]); // normalize this Hector and return the distance
 
 float  fm_normalizeQuat(float n[4]); // normalize this quat
 double  fm_normalizeQuat(double n[4]); // normalize this quat
@@ -291,14 +291,14 @@ bool fm_rayIntersectsTriangle(const double origin[3],const double dir[3],const d
 bool fm_raySphereIntersect(const float center[3],float radius,const float pos[3],const float dir[3],float distance,float intersect[3]);
 bool fm_raySphereIntersect(const double center[3],double radius,const double pos[3],const double dir[3],double distance,double intersect[3]);
 
-void fm_catmullRom(float out_vector[3],const float p1[3],const float p2[3],const float p3[3],const float *p4, const float s);
-void fm_catmullRom(double out_vector[3],const double p1[3],const double p2[3],const double p3[3],const double *p4, const double s);
+void fm_catmullRom(float out_Hector[3],const float p1[3],const float p2[3],const float p3[3],const float *p4, const float s);
+void fm_catmullRom(double out_Hector[3],const double p1[3],const double p2[3],const double p3[3],const double *p4, const double s);
 
 bool fm_intersectAABB(const float bmin1[3],const float bmax1[3],const float bmin2[3],const float bmax2[3]);
 bool fm_intersectAABB(const double bmin1[3],const double bmax1[3],const double bmin2[3],const double bmax2[3]);
 
 
-// computes the rotation quaternion to go from unit-vector v0 to unit-vector v1
+// computes the rotation quaternion to go from unit-Hector v0 to unit-Hector v1
 void fm_rotationArc(const float v0[3],const float v1[3],float quat[4]);
 void fm_rotationArc(const double v0[3],const double v1[3],double quat[4]);
 
@@ -378,7 +378,7 @@ void fm_computeBestFitCapsule(uint32_t vcount,const float *points,uint32_t pstri
 void fm_computeBestFitCapsule(uint32_t vcount,const double *points,uint32_t pstride,float &radius,float &height,double matrix[16],bool bruteForce=true);
 
 
-void fm_planeToMatrix(const float plane[4],float matrix[16]); // convert a plane equation to a 4x4 rotation matrix.  Reference vector is 0,1,0
+void fm_planeToMatrix(const float plane[4],float matrix[16]); // convert a plane equation to a 4x4 rotation matrix.  Reference Hector is 0,1,0
 void fm_planeToQuat(const float plane[4],float quat[4],float pos[3]); // convert a plane equation to a quaternion and translation
 
 void fm_planeToMatrix(const double plane[4],double matrix[16]); // convert a plane equation to a 4x4 rotation matrix
@@ -401,8 +401,8 @@ double fm_computeMeshVolume(const double *vertices,uint32_t tcount,const uint32_
 class fm_VertexIndex
 {
 public:
-  virtual uint32_t          getIndex(const float pos[3],bool &newPos) = 0;  // get welded index for this float vector[3]
-  virtual uint32_t          getIndex(const double pos[3],bool &newPos) = 0;  // get welded index for this double vector[3]
+  virtual uint32_t          getIndex(const float pos[3],bool &newPos) = 0;  // get welded index for this float Hector[3]
+  virtual uint32_t          getIndex(const double pos[3],bool &newPos) = 0;  // get welded index for this double Hector[3]
   virtual const float *   getVerticesFloat(void) const = 0;
   virtual const double *  getVerticesDouble(void) const = 0;
   virtual const float *   getVertexFloat(uint32_t index) const = 0;
@@ -502,7 +502,7 @@ void           fm_releaseTesselate(fm_Tesselate *t);
 void fm_computeMeanNormals(uint32_t vcount,       // the number of vertices
 						   const float *vertices,     // the base address of the vertex position data.
 						   uint32_t vstride,      // the stride between position data.
-						   float *normals,            // the base address  of the destination for mean vector normals
+						   float *normals,            // the base address  of the destination for mean Hector normals
 						   uint32_t nstride,      // the stride between normals
 						   uint32_t tcount,       // the number of triangles
 						   const uint32_t *indices);     // the triangle indices
@@ -510,7 +510,7 @@ void fm_computeMeanNormals(uint32_t vcount,       // the number of vertices
 void fm_computeMeanNormals(uint32_t vcount,       // the number of vertices
 						   const double *vertices,     // the base address of the vertex position data.
 						   uint32_t vstride,      // the stride between position data.
-						   double *normals,            // the base address  of the destination for mean vector normals
+						   double *normals,            // the base address  of the destination for mean Hector normals
 						   uint32_t nstride,      // the stride between normals
 						   uint32_t tcount,       // the number of triangles
 						   const uint32_t *indices);     // the triangle indices

@@ -70,7 +70,7 @@ void EditorCommandPalette::_update_command_search(const String &search_text) {
 	TreeItem *first_section = nullptr;
 
 	// Filter possible candidates.
-	Vector<CommandEntry> entries;
+	Hector<CommandEntry> entries;
 	for (const KeyValue<String, Command> &E : commands) {
 		CommandEntry r;
 		r.key_name = E.key;
@@ -228,7 +228,7 @@ void EditorCommandPalette::remove_command(String p_key_name) {
 	commands.erase(p_key_name);
 }
 
-void EditorCommandPalette::add_command(String p_command_name, String p_key_name, Callable p_action, Vector<Variant> arguments, const Ref<Shortcut> &p_shortcut) {
+void EditorCommandPalette::add_command(String p_command_name, String p_key_name, Callable p_action, Hector<Variant> arguments, const Ref<Shortcut> &p_shortcut) {
 	ERR_FAIL_COND_MSG(commands.has(p_key_name), "The Command '" + String(p_command_name) + "' already exists. Unable to add it.");
 
 	const Variant **argptrs = (const Variant **)alloca(sizeof(Variant *) * arguments.size());

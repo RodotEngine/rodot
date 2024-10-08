@@ -89,7 +89,7 @@ struct AttachList
     auto *out = c->serializer->start_embed (*this);
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+coverage, attachPoint)
     | hb_filter (glyphset, hb_first)
     | hb_filter (subset_offset_array (c, out->attachPoint, this), hb_second)
@@ -397,7 +397,7 @@ struct LigCaretList
     auto *out = c->serializer->start_embed (*this);
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+coverage, ligGlyph)
     | hb_filter (glyphset, hb_first)
     | hb_filter (subset_offset_array (c, out->ligGlyph, this), hb_second)
@@ -457,7 +457,7 @@ struct MarkGlyphSetsFormat1
   }
 
   template <typename set_t>
-  void collect_coverage (hb_vector_t<set_t> &sets) const
+  void collect_coverage (hb_Hector_t<set_t> &sets) const
   {
      for (const auto &offset : coverage)
      {
@@ -527,7 +527,7 @@ struct MarkGlyphSets
   }
 
   template <typename set_t>
-  void collect_coverage (hb_vector_t<set_t> &sets) const
+  void collect_coverage (hb_Hector_t<set_t> &sets) const
   {
     switch (u.format) {
     case 1: u.format1.collect_coverage (sets); return;
@@ -1014,7 +1014,7 @@ struct GDEF
 
     hb_blob_ptr_t<GDEF> table;
 #ifndef HB_NO_GDEF_CACHE
-    hb_vector_t<hb_set_digest_t> mark_glyph_set_digests;
+    hb_Hector_t<hb_set_digest_t> mark_glyph_set_digests;
     mutable hb_cache_t<21, 3, 8> glyph_props_cache;
 #endif
   };

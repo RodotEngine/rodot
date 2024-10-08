@@ -119,7 +119,7 @@ void Button::_update_theme_item_cache() {
 		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.disabled->get_margin(SIDE_TOP));
 		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.disabled->get_margin(SIDE_BOTTOM));
 	}
-	theme_cache.max_style_size = theme_cache.max_style_size.max(Vector2(theme_cache.style_margin_left + theme_cache.style_margin_right, theme_cache.style_margin_top + theme_cache.style_margin_bottom));
+	theme_cache.max_style_size = theme_cache.max_style_size.max(Hector2(theme_cache.style_margin_left + theme_cache.style_margin_right, theme_cache.style_margin_top + theme_cache.style_margin_bottom));
 }
 
 Size2 Button::_get_largest_stylebox_size() const {

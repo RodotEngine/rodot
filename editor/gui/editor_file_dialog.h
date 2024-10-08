@@ -140,11 +140,11 @@ private:
 	ItemList *favorites = nullptr;
 	ItemList *recent = nullptr;
 
-	Vector<String> local_history;
+	Hector<String> local_history;
 	int local_history_pos = 0;
 	void _push_history();
 
-	Vector<String> filters;
+	Hector<String> filters;
 
 	bool previews_enabled = true;
 	bool preview_waiting = false;
@@ -192,14 +192,14 @@ private:
 
 	struct Option {
 		String name;
-		Vector<String> values;
+		Hector<String> values;
 		int default_idx = 0;
 	};
 
 	static inline PropertyListHelper base_property_helper;
 	PropertyListHelper property_helper;
 
-	Vector<Option> options;
+	Hector<Option> options;
 	Dictionary selected_options;
 	bool options_dirty = false;
 
@@ -221,11 +221,11 @@ private:
 
 	void _item_selected(int p_item);
 	void _multi_selected(int p_item, bool p_selected);
-	void _items_clear_selection(const Vector2 &p_pos, MouseButton p_mouse_button_index);
+	void _items_clear_selection(const Hector2 &p_pos, MouseButton p_mouse_button_index);
 	void _item_dc_selected(int p_item);
 
-	void _item_list_item_rmb_clicked(int p_item, const Vector2 &p_pos, MouseButton p_mouse_button_index);
-	void _item_list_empty_clicked(const Vector2 &p_pos, MouseButton p_mouse_button_index);
+	void _item_list_item_rmb_clicked(int p_item, const Hector2 &p_pos, MouseButton p_mouse_button_index);
+	void _item_list_empty_clicked(const Hector2 &p_pos, MouseButton p_mouse_button_index);
 	void _item_menu_id_pressed(int p_option);
 
 	void _select_drive(int p_idx);
@@ -269,7 +269,7 @@ private:
 	void _update_side_menu_visibility(bool p_native_dlg);
 
 	void _native_popup();
-	void _native_dialog_cb(bool p_ok, const Vector<String> &p_files, int p_filter, const Dictionary &p_selected_options);
+	void _native_dialog_cb(bool p_ok, const Hector<String> &p_files, int p_filter, const Dictionary &p_selected_options);
 
 	TypedArray<Dictionary> _get_options() const;
 	void _update_option_controls();
@@ -299,11 +299,11 @@ public:
 	void popup_file_dialog();
 	void clear_filters();
 	void add_filter(const String &p_filter, const String &p_description = "");
-	void set_filters(const Vector<String> &p_filters);
-	Vector<String> get_filters() const;
+	void set_filters(const Hector<String> &p_filters);
+	Hector<String> get_filters() const;
 
 	void set_enable_multiple_selection(bool p_enable);
-	Vector<String> get_selected_files() const;
+	Hector<String> get_selected_files() const;
 
 	String get_current_dir() const;
 	String get_current_file() const;
@@ -313,13 +313,13 @@ public:
 	void set_current_path(const String &p_path);
 
 	String get_option_name(int p_option) const;
-	Vector<String> get_option_values(int p_option) const;
+	Hector<String> get_option_values(int p_option) const;
 	int get_option_default(int p_option) const;
 	void set_option_name(int p_option, const String &p_name);
-	void set_option_values(int p_option, const Vector<String> &p_values);
+	void set_option_values(int p_option, const Hector<String> &p_values);
 	void set_option_default(int p_option, int p_index);
 
-	void add_option(const String &p_name, const Vector<String> &p_values, int p_index);
+	void add_option(const String &p_name, const Hector<String> &p_values, int p_index);
 
 	void set_option_count(int p_count);
 	int get_option_count() const;

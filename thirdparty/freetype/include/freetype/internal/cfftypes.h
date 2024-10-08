@@ -156,7 +156,7 @@ FT_BEGIN_HEADER
   typedef struct CFF_FontRec_*  CFF_Font;
 
 
-  /* This object manages one cached blend vector.                  */
+  /* This object manages one cached blend Hector.                  */
   /*                                                               */
   /* There is a BlendRec for Private DICT parsing in each subfont  */
   /* and a BlendRec for charstrings in CF2_Font instance data.     */
@@ -198,7 +198,7 @@ FT_BEGIN_HEADER
     FT_Matrix  font_matrix;
     FT_Bool    has_font_matrix;
     FT_ULong   units_per_em;  /* temporarily used as scaling value also */
-    FT_Vector  font_offset;
+    FT_Hector  font_offset;
     FT_ULong   unique_id;
     FT_BBox    font_bbox;
     FT_Pos     stroke_width;
@@ -305,7 +305,7 @@ FT_BEGIN_HEADER
     CFF_PrivateRec      private_dict;
 
     /* fields for CFF2 */
-    CFF_BlendRec  blend;      /* current blend vector       */
+    CFF_BlendRec  blend;      /* current blend Hector       */
     FT_UInt       lenNDV;     /* current length NDV or zero */
     FT_Fixed*     NDV;        /* ptr to current NDV or NULL */
 

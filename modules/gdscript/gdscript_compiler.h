@@ -58,17 +58,17 @@ class GDScriptCompiler {
 		bool use_self = false;
 		int arg_count = 0;
 		int default_arg_count = 0;
-		//Vector<GDScriptDataType> argument_types;
+		//Hector<GDScriptDataType> argument_types;
 		//GDScriptDataType return_type;
-		Vector<FunctionLambdaInfo> sublambdas;
+		Hector<FunctionLambdaInfo> sublambdas;
 	};
 
 	struct ScriptLambdaInfo {
-		Vector<FunctionLambdaInfo> implicit_initializer_info;
-		Vector<FunctionLambdaInfo> implicit_ready_info;
-		Vector<FunctionLambdaInfo> static_initializer_info;
-		HashMap<StringName, Vector<FunctionLambdaInfo>> member_function_infos;
-		Vector<FunctionLambdaInfo> other_function_infos;
+		Hector<FunctionLambdaInfo> implicit_initializer_info;
+		Hector<FunctionLambdaInfo> implicit_ready_info;
+		Hector<FunctionLambdaInfo> static_initializer_info;
+		HashMap<StringName, Hector<FunctionLambdaInfo>> member_function_infos;
+		Hector<FunctionLambdaInfo> other_function_infos;
 		HashMap<StringName, ScriptLambdaInfo> subclass_info;
 	};
 
@@ -162,11 +162,11 @@ class GDScriptCompiler {
 	Error _prepare_compilation(GDScript *p_script, const GDScriptParser::ClassNode *p_class, bool p_keep_state);
 	Error _compile_class(GDScript *p_script, const GDScriptParser::ClassNode *p_class, bool p_keep_state);
 	FunctionLambdaInfo _get_function_replacement_info(GDScriptFunction *p_func, int p_index = -1, int p_depth = 0, GDScriptFunction *p_parent_func = nullptr);
-	Vector<FunctionLambdaInfo> _get_function_lambda_replacement_info(GDScriptFunction *p_func, int p_depth = 0, GDScriptFunction *p_parent_func = nullptr);
+	Hector<FunctionLambdaInfo> _get_function_lambda_replacement_info(GDScriptFunction *p_func, int p_depth = 0, GDScriptFunction *p_parent_func = nullptr);
 	ScriptLambdaInfo _get_script_lambda_replacement_info(GDScript *p_script);
 	bool _do_function_infos_match(const FunctionLambdaInfo &p_old_info, const FunctionLambdaInfo *p_new_info);
 	void _get_function_ptr_replacements(HashMap<GDScriptFunction *, GDScriptFunction *> &r_replacements, const FunctionLambdaInfo &p_old_info, const FunctionLambdaInfo *p_new_info);
-	void _get_function_ptr_replacements(HashMap<GDScriptFunction *, GDScriptFunction *> &r_replacements, const Vector<FunctionLambdaInfo> &p_old_infos, const Vector<FunctionLambdaInfo> *p_new_infos);
+	void _get_function_ptr_replacements(HashMap<GDScriptFunction *, GDScriptFunction *> &r_replacements, const Hector<FunctionLambdaInfo> &p_old_infos, const Hector<FunctionLambdaInfo> *p_new_infos);
 	void _get_function_ptr_replacements(HashMap<GDScriptFunction *, GDScriptFunction *> &r_replacements, const ScriptLambdaInfo &p_old_info, const ScriptLambdaInfo *p_new_info);
 	int err_line = 0;
 	int err_column = 0;

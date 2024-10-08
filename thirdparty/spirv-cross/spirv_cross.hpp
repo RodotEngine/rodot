@@ -85,30 +85,30 @@ struct BuiltInResource
 
 struct ShaderResources
 {
-	SmallVector<Resource> uniform_buffers;
-	SmallVector<Resource> storage_buffers;
-	SmallVector<Resource> stage_inputs;
-	SmallVector<Resource> stage_outputs;
-	SmallVector<Resource> subpass_inputs;
-	SmallVector<Resource> storage_images;
-	SmallVector<Resource> sampled_images;
-	SmallVector<Resource> atomic_counters;
-	SmallVector<Resource> acceleration_structures;
-	SmallVector<Resource> gl_plain_uniforms;
+	SmallHector<Resource> uniform_buffers;
+	SmallHector<Resource> storage_buffers;
+	SmallHector<Resource> stage_inputs;
+	SmallHector<Resource> stage_outputs;
+	SmallHector<Resource> subpass_inputs;
+	SmallHector<Resource> storage_images;
+	SmallHector<Resource> sampled_images;
+	SmallHector<Resource> atomic_counters;
+	SmallHector<Resource> acceleration_structures;
+	SmallHector<Resource> gl_plain_uniforms;
 
 	// There can only be one push constant block,
-	// but keep the vector in case this restriction is lifted in the future.
-	SmallVector<Resource> push_constant_buffers;
+	// but keep the Hector in case this restriction is lifted in the future.
+	SmallHector<Resource> push_constant_buffers;
 
-	SmallVector<Resource> shader_record_buffers;
+	SmallHector<Resource> shader_record_buffers;
 
 	// For Vulkan GLSL and HLSL source,
 	// these correspond to separate texture2D and samplers respectively.
-	SmallVector<Resource> separate_images;
-	SmallVector<Resource> separate_samplers;
+	SmallHector<Resource> separate_images;
+	SmallHector<Resource> separate_samplers;
 
-	SmallVector<BuiltInResource> builtin_inputs;
-	SmallVector<BuiltInResource> builtin_outputs;
+	SmallHector<BuiltInResource> builtin_inputs;
+	SmallHector<BuiltInResource> builtin_outputs;
 };
 
 struct CombinedImageSampler
@@ -261,11 +261,11 @@ public:
 		return join("_", index);
 	}
 
-	// Returns a vector of which members of a struct are potentially in use by a
+	// Returns a Hector of which members of a struct are potentially in use by a
 	// SPIR-V shader. The granularity of this analysis is per-member of a struct.
 	// This can be used for Buffer (UBO), BufferBlock/StorageBuffer (SSBO) and PushConstant blocks.
 	// ID is the Resource::id obtained from get_shader_resources().
-	SmallVector<BufferRange> get_active_buffer_ranges(VariableID id) const;
+	SmallHector<BufferRange> get_active_buffer_ranges(VariableID id) const;
 
 	// Returns the effective size of a buffer block.
 	size_t get_declared_struct_size(const SPIRType &struct_type) const;
@@ -338,7 +338,7 @@ public:
 	// New variants of entry point query and reflection.
 	// Names for entry points in the SPIR-V module may alias if they belong to different execution models.
 	// To disambiguate, we must pass along with the entry point names the execution model.
-	SmallVector<EntryPoint> get_entry_points_and_stages() const;
+	SmallHector<EntryPoint> get_entry_points_and_stages() const;
 	void set_entry_point(const std::string &entry, spv::ExecutionModel execution_model);
 
 	// Renames an entry point from old_name to new_name.
@@ -374,16 +374,16 @@ public:
 	bool is_tessellation_shader() const;
 	bool is_tessellating_triangles() const;
 
-	// In SPIR-V, the compute work group size can be represented by a constant vector, in which case
+	// In SPIR-V, the compute work group size can be represented by a constant Hector, in which case
 	// the LocalSize execution mode is ignored.
 	//
-	// This constant vector can be a constant vector, specialization constant vector, or partly specialized constant vector.
+	// This constant Hector can be a constant Hector, specialization constant Hector, or partly specialized constant Hector.
 	// To modify and query work group dimensions which are specialization constants, SPIRConstant values must be modified
 	// directly via get_constant() rather than using LocalSize directly. This function will return which constants should be modified.
 	//
 	// To modify dimensions which are *not* specialization constants, set_execution_mode should be used directly.
 	// Arguments to set_execution_mode which are specialization constants are effectively ignored during compilation.
-	// NOTE: This is somewhat different from how SPIR-V works. In SPIR-V, the constant vector will completely replace LocalSize,
+	// NOTE: This is somewhat different from how SPIR-V works. In SPIR-V, the constant Hector will completely replace LocalSize,
 	// while in this interface, LocalSize is only ignored for specialization constants.
 	//
 	// The specialization constant will be written to x, y and z arguments.
@@ -432,7 +432,7 @@ public:
 	void build_combined_image_samplers();
 
 	// Gets a remapping for the combined image samplers.
-	const SmallVector<CombinedImageSampler> &get_combined_image_samplers() const
+	const SmallHector<CombinedImageSampler> &get_combined_image_samplers() const
 	{
 		return combined_image_samplers;
 	}
@@ -457,7 +457,7 @@ public:
 	// For composite types, the subconstants can be iterated over and modified.
 	// constant_type is the SPIRType for the specialization constant,
 	// which can be queried to determine which fields in the unions should be poked at.
-	SmallVector<SpecializationConstant> get_specialization_constants() const;
+	SmallHector<SpecializationConstant> get_specialization_constants() const;
 	SPIRConstant &get_constant(ConstantID id);
 	const SPIRConstant &get_constant(ConstantID id) const;
 
@@ -508,10 +508,10 @@ public:
 	bool buffer_get_hlsl_counter_buffer(VariableID id, uint32_t &counter_id) const;
 
 	// Gets the list of all SPIR-V Capabilities which were declared in the SPIR-V module.
-	const SmallVector<spv::Capability> &get_declared_capabilities() const;
+	const SmallHector<spv::Capability> &get_declared_capabilities() const;
 
 	// Gets the list of all SPIR-V extensions which were declared in the SPIR-V module.
-	const SmallVector<std::string> &get_declared_extensions() const;
+	const SmallHector<std::string> &get_declared_extensions() const;
 
 	// When declaring buffer blocks in GLSL, the name declared in the GLSL source
 	// might not be the same as the name declared in the SPIR-V module due to naming conflicts.
@@ -571,8 +571,8 @@ protected:
 	ParsedIR ir;
 	// Marks variables which have global scope and variables which can alias with other variables
 	// (SSBO, image load store, etc)
-	SmallVector<uint32_t> global_variables;
-	SmallVector<uint32_t> aliased_variables;
+	SmallHector<uint32_t> global_variables;
+	SmallHector<uint32_t> aliased_variables;
 
 	SPIRFunction *current_function = nullptr;
 	SPIRBlock *current_block = nullptr;
@@ -680,7 +680,7 @@ protected:
 	bool is_immutable(uint32_t id) const;
 	bool is_member_builtin(const SPIRType &type, uint32_t index, spv::BuiltIn *builtin) const;
 	bool is_scalar(const SPIRType &type) const;
-	bool is_vector(const SPIRType &type) const;
+	bool is_Hector(const SPIRType &type) const;
 	bool is_matrix(const SPIRType &type) const;
 	bool is_array(const SPIRType &type) const;
 	bool is_pointer(const SPIRType &type) const;
@@ -772,7 +772,7 @@ protected:
 	// variable is part of that entry points interface.
 	bool interface_variable_exists_in_entry_point(uint32_t id) const;
 
-	SmallVector<CombinedImageSampler> combined_image_samplers;
+	SmallHector<CombinedImageSampler> combined_image_samplers;
 
 	void remap_variable_type_name(const SPIRType &type, const std::string &var_name, std::string &type_name) const
 	{
@@ -826,7 +826,7 @@ protected:
 
 	struct BufferAccessHandler : OpcodeHandler
 	{
-		BufferAccessHandler(const Compiler &compiler_, SmallVector<BufferRange> &ranges_, uint32_t id_)
+		BufferAccessHandler(const Compiler &compiler_, SmallHector<BufferRange> &ranges_, uint32_t id_)
 		    : compiler(compiler_)
 		    , ranges(ranges_)
 		    , id(id_)
@@ -836,7 +836,7 @@ protected:
 		bool handle(spv::Op opcode, const uint32_t *args, uint32_t length) override;
 
 		const Compiler &compiler;
-		SmallVector<BufferRange> &ranges;
+		SmallHector<BufferRange> &ranges;
 		uint32_t id;
 
 		std::unordered_set<uint32_t> seen;
@@ -910,7 +910,7 @@ protected:
 	bool traverse_all_reachable_opcodes(const SPIRBlock &block, OpcodeHandler &handler) const;
 	bool traverse_all_reachable_opcodes(const SPIRFunction &block, OpcodeHandler &handler) const;
 	// This must be an ordered data structure so we always pick the same type aliases.
-	SmallVector<uint32_t> global_struct_cache;
+	SmallHector<uint32_t> global_struct_cache;
 
 	ShaderResources get_shader_resources(const std::unordered_set<VariableID> *active_variables) const;
 
@@ -1064,7 +1064,7 @@ protected:
 		uint32_t get_base_non_block_type_id(uint32_t type_id) const;
 	};
 	void analyze_non_block_pointer_types();
-	SmallVector<uint32_t> physical_storage_non_block_pointer_types;
+	SmallHector<uint32_t> physical_storage_non_block_pointer_types;
 	std::unordered_map<uint32_t, PhysicalBlockMeta> physical_storage_type_to_alignment;
 
 	void analyze_variable_scope(SPIRFunction &function, AnalyzeVariableScopeAccessHandler &handler);
@@ -1096,7 +1096,7 @@ protected:
 		bool control_flow_interlock = false;
 		bool use_critical_section = false;
 		bool call_stack_is_interlocked = false;
-		SmallVector<uint32_t> call_stack;
+		SmallHector<uint32_t> call_stack;
 
 		void access_potential_resource(uint32_t id);
 	};
@@ -1119,7 +1119,7 @@ protected:
 		uint32_t current_block_id = 0;
 		bool split_function_case = false;
 		bool control_flow_interlock = false;
-		SmallVector<uint32_t> call_stack;
+		SmallHector<uint32_t> call_stack;
 	};
 
 	void analyze_interlocked_resource_usage();
@@ -1170,7 +1170,7 @@ protected:
 	// Get the correct case list for the OpSwitch, since it can be either a
 	// 32 bit wide condition or a 64 bit, but the type is not embedded in the
 	// instruction itself.
-	const SmallVector<SPIRBlock::Case> &get_case_list(const SPIRBlock &block) const;
+	const SmallHector<SPIRBlock::Case> &get_case_list(const SPIRBlock &block) const;
 
 private:
 	// Used only to implement the old deprecated get_entry_point() interface.

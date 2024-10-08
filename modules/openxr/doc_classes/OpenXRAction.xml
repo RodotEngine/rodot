@@ -29,8 +29,8 @@
 		<constant name="OPENXR_ACTION_FLOAT" value="1" enum="ActionType">
 			This action provides a float value between [code]0.0[/code] and [code]1.0[/code] for any analog input such as triggers.
 		</constant>
-		<constant name="OPENXR_ACTION_VECTOR2" value="2" enum="ActionType">
-			This action provides a [Vector2] value and can be bound to embedded trackpads and joysticks.
+		<constant name="OPENXR_ACTION_Hector2" value="2" enum="ActionType">
+			This action provides a [Hector2] value and can be bound to embedded trackpads and joysticks.
 		</constant>
 		<constant name="OPENXR_ACTION_POSE" value="3" enum="ActionType">
 		</constant>

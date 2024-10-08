@@ -108,7 +108,7 @@ Ref<PropertyTweener> Tween::tween_property(const Object *p_target, const NodePat
 	ERR_FAIL_NULL_V(p_target, nullptr);
 	CHECK_VALID();
 
-	Vector<StringName> property_subnames = p_property.get_as_property_path().get_subnames();
+	Hector<StringName> property_subnames = p_property.get_as_property_path().get_subnames();
 #ifdef DEBUG_ENABLED
 	bool prop_valid;
 	const Variant &prop_value = p_target->get_indexed(property_subnames, &prop_valid);
@@ -644,7 +644,7 @@ void PropertyTweener::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_delay", "delay"), &PropertyTweener::set_delay);
 }
 
-PropertyTweener::PropertyTweener(const Object *p_target, const Vector<StringName> &p_property, const Variant &p_to, double p_duration) {
+PropertyTweener::PropertyTweener(const Object *p_target, const Hector<StringName> &p_property, const Variant &p_to, double p_duration) {
 	target = p_target->get_instance_id();
 	property = p_property;
 	initial_val = p_target->get_indexed(property);

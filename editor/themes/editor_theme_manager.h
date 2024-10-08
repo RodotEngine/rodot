@@ -141,7 +141,7 @@ class EditorThemeManager {
 		Ref<StyleBoxFlat> content_panel_style;
 		Ref<StyleBoxFlat> tree_panel_style;
 
-		Vector2 widget_margin;
+		Hector2 widget_margin;
 
 		uint32_t hash();
 		uint32_t hash_fonts();

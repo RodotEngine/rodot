@@ -47,7 +47,7 @@ class AStar3D : public RefCounted {
 		Point() {}
 
 		int64_t id = 0;
-		Vector3 pos;
+		Hector3 pos;
 		real_t weight_scale = 0;
 		bool enabled = false;
 
@@ -127,22 +127,22 @@ protected:
 	GDVIRTUAL2RC(real_t, _compute_cost, int64_t, int64_t)
 
 #ifndef DISABLE_DEPRECATED
-	Vector<int64_t> _get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
-	Vector<Vector3> _get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
+	Hector<int64_t> _get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
+	Hector<Hector3> _get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
 	static void _bind_compatibility_methods();
 #endif
 
 public:
 	int64_t get_available_point_id() const;
 
-	void add_point(int64_t p_id, const Vector3 &p_pos, real_t p_weight_scale = 1);
-	Vector3 get_point_position(int64_t p_id) const;
-	void set_point_position(int64_t p_id, const Vector3 &p_pos);
+	void add_point(int64_t p_id, const Hector3 &p_pos, real_t p_weight_scale = 1);
+	Hector3 get_point_position(int64_t p_id) const;
+	void set_point_position(int64_t p_id, const Hector3 &p_pos);
 	real_t get_point_weight_scale(int64_t p_id) const;
 	void set_point_weight_scale(int64_t p_id, real_t p_weight_scale);
 	void remove_point(int64_t p_id);
 	bool has_point(int64_t p_id) const;
-	Vector<int64_t> get_point_connections(int64_t p_id);
+	Hector<int64_t> get_point_connections(int64_t p_id);
 	PackedInt64Array get_point_ids();
 
 	void set_point_disabled(int64_t p_id, bool p_disabled = true);
@@ -157,11 +157,11 @@ public:
 	void reserve_space(int64_t p_num_nodes);
 	void clear();
 
-	int64_t get_closest_point(const Vector3 &p_point, bool p_include_disabled = false) const;
-	Vector3 get_closest_position_in_segment(const Vector3 &p_point) const;
+	int64_t get_closest_point(const Hector3 &p_point, bool p_include_disabled = false) const;
+	Hector3 get_closest_position_in_segment(const Hector3 &p_point) const;
 
-	Vector<Vector3> get_point_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
-	Vector<int64_t> get_id_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
+	Hector<Hector3> get_point_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
+	Hector<int64_t> get_id_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
 
 	AStar3D() {}
 	~AStar3D();
@@ -183,22 +183,22 @@ protected:
 	GDVIRTUAL2RC(real_t, _compute_cost, int64_t, int64_t)
 
 #ifndef DISABLE_DEPRECATED
-	Vector<int64_t> _get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
-	Vector<Vector2> _get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
+	Hector<int64_t> _get_id_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
+	Hector<Hector2> _get_point_path_bind_compat_88047(int64_t p_from_id, int64_t p_to_id);
 	static void _bind_compatibility_methods();
 #endif
 
 public:
 	int64_t get_available_point_id() const;
 
-	void add_point(int64_t p_id, const Vector2 &p_pos, real_t p_weight_scale = 1);
-	Vector2 get_point_position(int64_t p_id) const;
-	void set_point_position(int64_t p_id, const Vector2 &p_pos);
+	void add_point(int64_t p_id, const Hector2 &p_pos, real_t p_weight_scale = 1);
+	Hector2 get_point_position(int64_t p_id) const;
+	void set_point_position(int64_t p_id, const Hector2 &p_pos);
 	real_t get_point_weight_scale(int64_t p_id) const;
 	void set_point_weight_scale(int64_t p_id, real_t p_weight_scale);
 	void remove_point(int64_t p_id);
 	bool has_point(int64_t p_id) const;
-	Vector<int64_t> get_point_connections(int64_t p_id);
+	Hector<int64_t> get_point_connections(int64_t p_id);
 	PackedInt64Array get_point_ids();
 
 	void set_point_disabled(int64_t p_id, bool p_disabled = true);
@@ -213,11 +213,11 @@ public:
 	void reserve_space(int64_t p_num_nodes);
 	void clear();
 
-	int64_t get_closest_point(const Vector2 &p_point, bool p_include_disabled = false) const;
-	Vector2 get_closest_position_in_segment(const Vector2 &p_point) const;
+	int64_t get_closest_point(const Hector2 &p_point, bool p_include_disabled = false) const;
+	Hector2 get_closest_position_in_segment(const Hector2 &p_point) const;
 
-	Vector<Vector2> get_point_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
-	Vector<int64_t> get_id_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
+	Hector<Hector2> get_point_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
+	Hector<int64_t> get_id_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
 
 	AStar2D() {}
 	~AStar2D() {}

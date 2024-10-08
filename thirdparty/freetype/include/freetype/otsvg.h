@@ -309,7 +309,7 @@ FT_BEGIN_HEADER
     FT_UShort  end_glyph_id;
 
     FT_Matrix  transform;
-    FT_Vector  delta;
+    FT_Hector  delta;
 
   } FT_SVG_DocumentRec;
 

@@ -80,7 +80,7 @@ namespace embree
       max_time_steps = max(max_time_steps,get(i)->numTimeSteps);
     }
 
-    /* initialize vectors*/
+    /* initialize Hectors*/
     std::vector<size_t> statistics[Geometry::GTY_END];
     for (size_t i=0; i<Geometry::GTY_END; i++)
       statistics[i].resize(max_time_steps);

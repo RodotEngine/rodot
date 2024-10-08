@@ -52,12 +52,12 @@ namespace RVO3D {
 		/**
 		 * \brief   The direction of the directed line.
 		 */
-		Vector3 direction;
+		Hector3 direction;
 
 		/**
 		 * \brief   A point on the directed line.
 		 */
-		Vector3 point;
+		Hector3 point;
 	};
 
 	/**
@@ -71,7 +71,7 @@ namespace RVO3D {
 	 * \param   result        A reference to the result of the linear program.
 	 * \return  True if successful.
 	 */
-	bool linearProgram1(const std::vector<Plane> &planes, size_t planeNo, const Line3D &line, float radius, const Vector3 &optVelocity, bool directionOpt, Vector3 &result);
+	bool linearProgram1(const std::vector<Plane> &planes, size_t planeNo, const Line3D &line, float radius, const Hector3 &optVelocity, bool directionOpt, Hector3 &result);
 
 	/**
 	 * \brief   Solves a two-dimensional linear program on a specified plane subject to linear constraints defined by planes and a spherical constraint.
@@ -83,7 +83,7 @@ namespace RVO3D {
 	 * \param   result        A reference to the result of the linear program.
 	 * \return  True if successful.
 	 */
-	bool linearProgram2(const std::vector<Plane> &planes, size_t planeNo, float radius, const Vector3 &optVelocity, bool directionOpt, Vector3 &result);
+	bool linearProgram2(const std::vector<Plane> &planes, size_t planeNo, float radius, const Hector3 &optVelocity, bool directionOpt, Hector3 &result);
 
 	/**
 	 * \brief   Solves a three-dimensional linear program subject to linear constraints defined by planes and a spherical constraint.
@@ -94,7 +94,7 @@ namespace RVO3D {
 	 * \param   result        A reference to the result of the linear program.
 	 * \return  The number of the plane it fails on, and the number of planes if successful.
 	 */
-	size_t linearProgram3(const std::vector<Plane> &planes, float radius, const Vector3 &optVelocity, bool directionOpt, Vector3 &result);
+	size_t linearProgram3(const std::vector<Plane> &planes, float radius, const Hector3 &optVelocity, bool directionOpt, Hector3 &result);
 
 	/**
 	 * \brief   Solves a four-dimensional linear program subject to linear constraints defined by planes and a spherical constraint.
@@ -103,7 +103,7 @@ namespace RVO3D {
 	 * \param   radius     The radius of the spherical constraint.
 	 * \param   result     A reference to the result of the linear program.
 	 */
-	void linearProgram4(const std::vector<Plane> &planes, size_t beginPlane, float radius, Vector3 &result);
+	void linearProgram4(const std::vector<Plane> &planes, size_t beginPlane, float radius, Hector3 &result);
 
 	Agent3D::Agent3D() : id_(0), maxNeighbors_(0), maxSpeed_(0.0f), neighborDist_(0.0f), radius_(0.0f), timeHorizon_(0.0f) { }
 
@@ -129,19 +129,19 @@ namespace RVO3D {
 			//const float timeHorizon_mod = (avoidance_priority_ - other->avoidance_priority_ + 1.0f) * 0.5f;
 			//const float invTimeHorizon = (1.0f / timeHorizon_) * timeHorizon_mod;
 
-			const Vector3 relativePosition = other->position_ - position_;
-			const Vector3 relativeVelocity = velocity_ - other->velocity_;
+			const Hector3 relativePosition = other->position_ - position_;
+			const Hector3 relativeVelocity = velocity_ - other->velocity_;
 			const float distSq = absSq(relativePosition);
 			const float combinedRadius = radius_ + other->radius_;
 			const float combinedRadiusSq = sqr(combinedRadius);
 
 			Plane plane;
-			Vector3 u;
+			Hector3 u;
 
 			if (distSq > combinedRadiusSq) {
 				/* No collision. */
-				const Vector3 w = relativeVelocity - invTimeHorizon * relativePosition;
-				/* Vector from cutoff center to relative velocity. */
+				const Hector3 w = relativeVelocity - invTimeHorizon * relativePosition;
+				/* Hector from cutoff center to relative velocity. */
 				const float wLengthSq = absSq(w);
 
 				const float dotProduct = w * relativePosition;
@@ -149,7 +149,7 @@ namespace RVO3D {
 				if (dotProduct < 0.0f && sqr(dotProduct) > combinedRadiusSq * wLengthSq) {
 					/* Project on cut-off circle. */
 					const float wLength = std::sqrt(wLengthSq);
-					const Vector3 unitW = w / wLength;
+					const Hector3 unitW = w / wLength;
 
 					plane.normal = unitW;
 					u = (combinedRadius * invTimeHorizon - wLength) * unitW;
@@ -160,9 +160,9 @@ namespace RVO3D {
 					const float b = relativePosition * relativeVelocity;
 					const float c = absSq(relativeVelocity) - absSq(cross(relativePosition, relativeVelocity)) / (distSq - combinedRadiusSq);
 					const float t = (b + std::sqrt(sqr(b) - a * c)) / a;
-					const Vector3 w = relativeVelocity - t * relativePosition;
+					const Hector3 w = relativeVelocity - t * relativePosition;
 					const float wLength = abs(w);
-					const Vector3 unitW = w / wLength;
+					const Hector3 unitW = w / wLength;
 
 					plane.normal = unitW;
 					u = (combinedRadius * t - wLength) * unitW;
@@ -171,9 +171,9 @@ namespace RVO3D {
 			else {
 				/* Collision. */
 				const float invTimeStep = 1.0f / sim_->timeStep_;
-				const Vector3 w = relativeVelocity - invTimeStep * relativePosition;
+				const Hector3 w = relativeVelocity - invTimeStep * relativePosition;
 				const float wLength = abs(w);
-				const Vector3 unitW = w / wLength;
+				const Hector3 unitW = w / wLength;
 
 				plane.normal = unitW;
 				u = (combinedRadius * invTimeStep - wLength) * unitW;
@@ -233,7 +233,7 @@ namespace RVO3D {
 		position_ += velocity_ * sim_->timeStep_;
 	}
 
-	bool linearProgram1(const std::vector<Plane> &planes, size_t planeNo, const Line3D &line, float radius, const Vector3 &optVelocity, bool directionOpt, Vector3 &result)
+	bool linearProgram1(const std::vector<Plane> &planes, size_t planeNo, const Line3D &line, float radius, const Hector3 &optVelocity, bool directionOpt, Hector3 &result)
 	{
 		const float dotProduct = line.point * line.direction;
 		const float discriminant = sqr(dotProduct) + sqr(radius) - absSq(line.point);
@@ -306,7 +306,7 @@ namespace RVO3D {
 		return true;
 	}
 
-	bool linearProgram2(const std::vector<Plane> &planes, size_t planeNo, float radius, const Vector3 &optVelocity, bool directionOpt, Vector3 &result)
+	bool linearProgram2(const std::vector<Plane> &planes, size_t planeNo, float radius, const Hector3 &optVelocity, bool directionOpt, Hector3 &result)
 	{
 		const float planeDist = planes[planeNo].point * planes[planeNo].normal;
 		const float planeDistSq = sqr(planeDist);
@@ -319,11 +319,11 @@ namespace RVO3D {
 
 		const float planeRadiusSq = radiusSq - planeDistSq;
 
-		const Vector3 planeCenter = planeDist * planes[planeNo].normal;
+		const Hector3 planeCenter = planeDist * planes[planeNo].normal;
 
 		if (directionOpt) {
 			/* Project direction optVelocity on plane planeNo. */
-			const Vector3 planeOptVelocity = optVelocity - (optVelocity * planes[planeNo].normal) * planes[planeNo].normal;
+			const Hector3 planeOptVelocity = optVelocity - (optVelocity * planes[planeNo].normal) * planes[planeNo].normal;
 			const float planeOptVelocityLengthSq = absSq(planeOptVelocity);
 
 			if (planeOptVelocityLengthSq <= RVO3D_EPSILON) {
@@ -339,7 +339,7 @@ namespace RVO3D {
 
 			/* If outside planeCircle, project on planeCircle. */
 			if (absSq(result) > radiusSq) {
-				const Vector3 planeResult = result - planeCenter;
+				const Hector3 planeResult = result - planeCenter;
 				const float planeResultLengthSq = absSq(planeResult);
 				result = planeCenter + std::sqrt(planeRadiusSq / planeResultLengthSq) * planeResult;
 			}
@@ -349,7 +349,7 @@ namespace RVO3D {
 			if (planes[i].normal * (planes[i].point - result) > 0.0f) {
 				/* Result does not satisfy constraint i. Compute new optimal result. */
 				/* Compute intersection line of plane i and plane planeNo. */
-				Vector3 crossProduct = cross(planes[i].normal, planes[planeNo].normal);
+				Hector3 crossProduct = cross(planes[i].normal, planes[planeNo].normal);
 
 				if (absSq(crossProduct) <= RVO3D_EPSILON) {
 					/* Planes planeNo and i are (almost) parallel, and plane i fully invalidates plane planeNo. */
@@ -358,7 +358,7 @@ namespace RVO3D {
 
 				Line3D line;
 				line.direction = normalize(crossProduct);
-				const Vector3 lineNormal = cross(line.direction, planes[planeNo].normal);
+				const Hector3 lineNormal = cross(line.direction, planes[planeNo].normal);
 				line.point = planes[planeNo].point + (((planes[i].point - planes[planeNo].point) * planes[i].normal) / (lineNormal * planes[i].normal)) * lineNormal;
 
 				if (!linearProgram1(planes, i, line, radius, optVelocity, directionOpt, result)) {
@@ -370,7 +370,7 @@ namespace RVO3D {
 		return true;
 	}
 
-	size_t linearProgram3(const std::vector<Plane> &planes, float radius, const Vector3 &optVelocity, bool directionOpt, Vector3 &result)
+	size_t linearProgram3(const std::vector<Plane> &planes, float radius, const Hector3 &optVelocity, bool directionOpt, Hector3 &result)
 	{
 		if (directionOpt) {
 			/* Optimize direction. Note that the optimization velocity is of unit length in this case. */
@@ -388,7 +388,7 @@ namespace RVO3D {
 		for (size_t i = 0; i < planes.size(); ++i) {
 			if (planes[i].normal * (planes[i].point - result) > 0.0f) {
 				/* Result does not satisfy constraint i. Compute new optimal result. */
-				const Vector3 tempResult = result;
+				const Hector3 tempResult = result;
 
 				if (!linearProgram2(planes, i, radius, optVelocity, directionOpt, result)) {
 					result = tempResult;
@@ -400,7 +400,7 @@ namespace RVO3D {
 		return planes.size();
 	}
 
-	void linearProgram4(const std::vector<Plane> &planes, size_t beginPlane, float radius, Vector3 &result)
+	void linearProgram4(const std::vector<Plane> &planes, size_t beginPlane, float radius, Hector3 &result)
 	{
 		float distance = 0.0f;
 
@@ -412,7 +412,7 @@ namespace RVO3D {
 				for (size_t j = 0; j < i; ++j) {
 					Plane plane;
 
-					const Vector3 crossProduct = cross(planes[j].normal, planes[i].normal);
+					const Hector3 crossProduct = cross(planes[j].normal, planes[i].normal);
 
 					if (absSq(crossProduct) <= RVO3D_EPSILON) {
 						/* Plane i and plane j are (almost) parallel. */
@@ -427,7 +427,7 @@ namespace RVO3D {
 					}
 					else {
 						/* Plane.point is point on line of intersection between plane i and plane j. */
-						const Vector3 lineNormal = cross(crossProduct, planes[i].normal);
+						const Hector3 lineNormal = cross(crossProduct, planes[i].normal);
 						plane.point = planes[i].point + (((planes[j].point - planes[i].point) * planes[j].normal) / (lineNormal * planes[j].normal)) * lineNormal;
 					}
 
@@ -435,7 +435,7 @@ namespace RVO3D {
 					projPlanes.push_back(plane);
 				}
 
-				const Vector3 tempResult = result;
+				const Hector3 tempResult = result;
 
 				if (linearProgram3(projPlanes, radius, planes[i].normal, true, result) < projPlanes.size()) {
 					/* This should in principle not happen.  The result is by definition already in the feasible region of this linear program. If it fails, it is due to small floating point error, and the current result is kept. */

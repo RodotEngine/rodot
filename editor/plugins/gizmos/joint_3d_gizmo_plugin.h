@@ -47,10 +47,10 @@ public:
 	int get_priority() const override;
 	void redraw(EditorNode3DGizmo *p_gizmo) override;
 
-	static void CreatePinJointGizmo(const Transform3D &p_offset, Vector<Vector3> &r_cursor_points);
-	static void CreateHingeJointGizmo(const Transform3D &p_offset, const Transform3D &p_trs_joint, const Transform3D &p_trs_body_a, const Transform3D &p_trs_body_b, real_t p_limit_lower, real_t p_limit_upper, bool p_use_limit, Vector<Vector3> &r_common_points, Vector<Vector3> *r_body_a_points, Vector<Vector3> *r_body_b_points);
-	static void CreateSliderJointGizmo(const Transform3D &p_offset, const Transform3D &p_trs_joint, const Transform3D &p_trs_body_a, const Transform3D &p_trs_body_b, real_t p_angular_limit_lower, real_t p_angular_limit_upper, real_t p_linear_limit_lower, real_t p_linear_limit_upper, Vector<Vector3> &r_points, Vector<Vector3> *r_body_a_points, Vector<Vector3> *r_body_b_points);
-	static void CreateConeTwistJointGizmo(const Transform3D &p_offset, const Transform3D &p_trs_joint, const Transform3D &p_trs_body_a, const Transform3D &p_trs_body_b, real_t p_swing, real_t p_twist, Vector<Vector3> *r_body_a_points, Vector<Vector3> *r_body_b_points);
+	static void CreatePinJointGizmo(const Transform3D &p_offset, Hector<Hector3> &r_cursor_points);
+	static void CreateHingeJointGizmo(const Transform3D &p_offset, const Transform3D &p_trs_joint, const Transform3D &p_trs_body_a, const Transform3D &p_trs_body_b, real_t p_limit_lower, real_t p_limit_upper, bool p_use_limit, Hector<Hector3> &r_common_points, Hector<Hector3> *r_body_a_points, Hector<Hector3> *r_body_b_points);
+	static void CreateSliderJointGizmo(const Transform3D &p_offset, const Transform3D &p_trs_joint, const Transform3D &p_trs_body_a, const Transform3D &p_trs_body_b, real_t p_angular_limit_lower, real_t p_angular_limit_upper, real_t p_linear_limit_lower, real_t p_linear_limit_upper, Hector<Hector3> &r_points, Hector<Hector3> *r_body_a_points, Hector<Hector3> *r_body_b_points);
+	static void CreateConeTwistJointGizmo(const Transform3D &p_offset, const Transform3D &p_trs_joint, const Transform3D &p_trs_body_a, const Transform3D &p_trs_body_b, real_t p_swing, real_t p_twist, Hector<Hector3> *r_body_a_points, Hector<Hector3> *r_body_b_points);
 	static void CreateGeneric6DOFJointGizmo(
 			const Transform3D &p_offset,
 			const Transform3D &p_trs_joint,
@@ -74,9 +74,9 @@ public:
 			real_t p_linear_limit_upper_z,
 			bool p_enable_angular_limit_z,
 			bool p_enable_linear_limit_z,
-			Vector<Vector3> &r_points,
-			Vector<Vector3> *r_body_a_points,
-			Vector<Vector3> *r_body_b_points);
+			Hector<Hector3> &r_points,
+			Hector<Hector3> *r_body_a_points,
+			Hector<Hector3> *r_body_b_points);
 
 	Joint3DGizmoPlugin();
 };
@@ -84,7 +84,7 @@ public:
 class JointGizmosDrawer {
 public:
 	static Basis look_body(const Transform3D &p_joint_transform, const Transform3D &p_body_transform);
-	static Basis look_body_toward(Vector3::Axis p_axis, const Transform3D &joint_transform, const Transform3D &body_transform);
+	static Basis look_body_toward(Hector3::Axis p_axis, const Transform3D &joint_transform, const Transform3D &body_transform);
 	static Basis look_body_toward_x(const Transform3D &p_joint_transform, const Transform3D &p_body_transform);
 	static Basis look_body_toward_y(const Transform3D &p_joint_transform, const Transform3D &p_body_transform);
 	/// Special function just used for physics joints, it returns a basis constrained toward Joint Z axis
@@ -92,8 +92,8 @@ public:
 	static Basis look_body_toward_z(const Transform3D &p_joint_transform, const Transform3D &p_body_transform);
 
 	// Draw circle around p_axis
-	static void draw_circle(Vector3::Axis p_axis, real_t p_radius, const Transform3D &p_offset, const Basis &p_base, real_t p_limit_lower, real_t p_limit_upper, Vector<Vector3> &r_points, bool p_inverse = false);
-	static void draw_cone(const Transform3D &p_offset, const Basis &p_base, real_t p_swing, real_t p_twist, Vector<Vector3> &r_points);
+	static void draw_circle(Hector3::Axis p_axis, real_t p_radius, const Transform3D &p_offset, const Basis &p_base, real_t p_limit_lower, real_t p_limit_upper, Hector<Hector3> &r_points, bool p_inverse = false);
+	static void draw_cone(const Transform3D &p_offset, const Basis &p_base, real_t p_swing, real_t p_twist, Hector<Hector3> &r_points);
 };
 
 #endif // JOINT_3D_GIZMO_PLUGIN_H

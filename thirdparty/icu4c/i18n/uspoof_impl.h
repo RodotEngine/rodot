@@ -100,7 +100,7 @@ public:
     // Data Members
     //
 
-    int32_t           fChecks;            // Bit vector of checks to perform.
+    int32_t           fChecks;            // Bit Hector of checks to perform.
 
     SpoofData        *fSpoofData;
     
@@ -131,7 +131,7 @@ public:
     int32_t toCombinedBitmask(int32_t expectedChecks);
 
     // Data Members
-    int32_t fChecks;                       // Bit vector of checks that were failed.
+    int32_t fChecks;                       // Bit Hector of checks that were failed.
     UnicodeSet fNumerics;                  // Set of numerics found in the string.
     URestrictionLevel fRestrictionLevel;   // The restriction level of the string.
 };

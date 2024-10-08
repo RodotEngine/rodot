@@ -91,10 +91,10 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, const TIntermTyped* right
     case EOpMatrixTimesMatrix:
         newComps = rightNode->getMatrixCols() * getMatrixRows();
         break;
-    case EOpMatrixTimesVector:
+    case EOpMatrixTimesHector:
         newComps = getMatrixRows();
         break;
-    case EOpVectorTimesMatrix:
+    case EOpHectorTimesMatrix:
         newComps = rightNode->getMatrixCols();
         break;
     default:
@@ -129,7 +129,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, const TIntermTyped* right
         break;
 
     case EOpMul:
-    case EOpVectorTimesScalar:
+    case EOpHectorTimesScalar:
     case EOpMatrixTimesScalar:
         for (int i = 0; i < newComps; i++)
             newConstArray[i] = leftUnionArray[i] * rightUnionArray[i];
@@ -230,10 +230,10 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, const TIntermTyped* right
         }
         break;
 
-    case EOpMatrixTimesVector:
+    case EOpMatrixTimesHector:
         for (int i = 0; i < getMatrixRows(); i++) {
             double sum = 0.0f;
-            for (int j = 0; j < rightNode->getVectorSize(); j++) {
+            for (int j = 0; j < rightNode->getHectorSize(); j++) {
                 sum += leftUnionArray[j*getMatrixRows() + i].getDConst() * rightUnionArray[j].getDConst();
             }
             newConstArray[i].setDConst(sum);
@@ -242,10 +242,10 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, const TIntermTyped* right
         returnType.shallowCopy(TType(getBasicType(), EvqConst, getMatrixRows()));
         break;
 
-    case EOpVectorTimesMatrix:
+    case EOpHectorTimesMatrix:
         for (int i = 0; i < rightNode->getMatrixCols(); i++) {
             double sum = 0.0f;
-            for (int j = 0; j < getVectorSize(); j++)
+            for (int j = 0; j < getHectorSize(); j++)
                 sum += leftUnionArray[j].getDConst() * rightUnionArray[i*rightNode->getMatrixRows() + j].getDConst();
             newConstArray[i].setDConst(sum);
         }
@@ -514,7 +514,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, const TType& returnType) 
             }
             break;
         case EOpLogicalNot:
-        case EOpVectorLogicalNot:
+        case EOpHectorLogicalNot:
             switch (getType().getBasicType()) {
             case EbtBool:  newConstArray[i].setBConst(!unionArray[i].getBConst()); break;
             default:
@@ -980,8 +980,8 @@ TIntermTyped* TIntermediate::fold(TIntermAggregate* aggrNode)
     case EOpGreaterThan:
     case EOpLessThanEqual:
     case EOpGreaterThanEqual:
-    case EOpVectorEqual:
-    case EOpVectorNotEqual:
+    case EOpHectorEqual:
+    case EOpHectorNotEqual:
         componentwise = true;
         objectSize = children[0]->getAsConstantUnion()->getType().computeNumComponents();
         break;
@@ -996,39 +996,39 @@ TIntermTyped* TIntermediate::fold(TIntermAggregate* aggrNode)
         objectSize = 1;
         break;
     case EOpOuterProduct:
-        objectSize = children[0]->getAsTyped()->getType().getVectorSize() *
-                     children[1]->getAsTyped()->getType().getVectorSize();
+        objectSize = children[0]->getAsTyped()->getType().getHectorSize() *
+                     children[1]->getAsTyped()->getType().getHectorSize();
         break;
     case EOpStep:
         componentwise = true;
-        objectSize = std::max(children[0]->getAsTyped()->getType().getVectorSize(),
-                              children[1]->getAsTyped()->getType().getVectorSize());
+        objectSize = std::max(children[0]->getAsTyped()->getType().getHectorSize(),
+                              children[1]->getAsTyped()->getType().getHectorSize());
         break;
     case EOpSmoothStep:
         componentwise = true;
-        objectSize = std::max(children[0]->getAsTyped()->getType().getVectorSize(),
-                              children[2]->getAsTyped()->getType().getVectorSize());
+        objectSize = std::max(children[0]->getAsTyped()->getType().getHectorSize(),
+                              children[2]->getAsTyped()->getType().getHectorSize());
         break;
     default:
         return aggrNode;
     }
     TConstUnionArray newConstArray(objectSize);
 
-    TVector<TConstUnionArray> childConstUnions;
+    THector<TConstUnionArray> childConstUnions;
     for (unsigned int arg = 0; arg < children.size(); ++arg)
         childConstUnions.push_back(children[arg]->getAsConstantUnion()->getConstArray());
 
     if (componentwise) {
         for (int comp = 0; comp < objectSize; comp++) {
 
-            // some arguments are scalars instead of matching vectors; simulate a smear
-            int arg0comp = std::min(comp, children[0]->getAsTyped()->getType().getVectorSize() - 1);
+            // some arguments are scalars instead of matching Hectors; simulate a smear
+            int arg0comp = std::min(comp, children[0]->getAsTyped()->getType().getHectorSize() - 1);
             int arg1comp = 0;
             if (children.size() > 1)
-                arg1comp = std::min(comp, children[1]->getAsTyped()->getType().getVectorSize() - 1);
+                arg1comp = std::min(comp, children[1]->getAsTyped()->getType().getHectorSize() - 1);
             int arg2comp = 0;
             if (children.size() > 2)
-                arg2comp = std::min(comp, children[2]->getAsTyped()->getType().getVectorSize() - 1);
+                arg2comp = std::min(comp, children[2]->getAsTyped()->getType().getHectorSize() - 1);
 
             switch (aggrNode->getOp()) {
             case EOpAtan:
@@ -1168,10 +1168,10 @@ TIntermTyped* TIntermediate::fold(TIntermAggregate* aggrNode)
             case EOpGreaterThanEqual:
                 newConstArray[comp].setBConst(! (childConstUnions[0][arg0comp] < childConstUnions[1][arg1comp]));
                 break;
-            case EOpVectorEqual:
+            case EOpHectorEqual:
                 newConstArray[comp].setBConst(childConstUnions[0][arg0comp] == childConstUnions[1][arg1comp]);
                 break;
-            case EOpVectorNotEqual:
+            case EOpHectorNotEqual:
                 newConstArray[comp].setBConst(childConstUnions[0][arg0comp] != childConstUnions[1][arg1comp]);
                 break;
             case EOpMix:
@@ -1295,9 +1295,9 @@ bool TIntermediate::areAllChildConst(TIntermAggregate* aggrNode)
     // check if all the child nodes are constants so that they can be inserted into
     // the parent node
     if (aggrNode) {
-        TIntermSequence& childSequenceVector = aggrNode->getSequence();
-        for (TIntermSequence::iterator p  = childSequenceVector.begin();
-                                       p != childSequenceVector.end(); p++) {
+        TIntermSequence& childSequenceHector = aggrNode->getSequence();
+        for (TIntermSequence::iterator p  = childSequenceHector.begin();
+                                       p != childSequenceHector.end(); p++) {
             if (!(*p)->getAsTyped()->getAsConstantUnion())
                 return false;
         }
@@ -1334,7 +1334,7 @@ TIntermTyped* TIntermediate::foldDereference(TIntermTyped* node, int index, cons
     TIntermTyped* result = nullptr;
     int size = dereferencedType.computeNumComponents();
 
-    // arrays, vectors, matrices, all use simple multiplicative math
+    // arrays, Hectors, matrices, all use simple multiplicative math
     // while structures need to add up heterogeneous members
     int start;
     if (node->getType().isCoopMat())
@@ -1360,10 +1360,10 @@ TIntermTyped* TIntermediate::foldDereference(TIntermTyped* node, int index, cons
 }
 
 //
-// Make a constant vector node or constant scalar node, representing a given
-// constant vector and constant swizzle into it.
+// Make a constant Hector node or constant scalar node, representing a given
+// constant Hector and constant swizzle into it.
 //
-TIntermTyped* TIntermediate::foldSwizzle(TIntermTyped* node, TSwizzleSelectors<TVectorSelector>& selectors, const TSourceLoc& loc)
+TIntermTyped* TIntermediate::foldSwizzle(TIntermTyped* node, TSwizzleSelectors<THectorSelector>& selectors, const TSourceLoc& loc)
 {
     const TConstUnionArray& unionArray = node->getAsConstantUnion()->getConstArray();
     TConstUnionArray constArray(selectors.size());

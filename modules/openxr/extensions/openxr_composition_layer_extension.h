@@ -81,14 +81,14 @@ public:
 private:
 	static OpenXRCompositionLayerExtension *singleton;
 
-	Vector<OpenXRViewportCompositionLayerProvider *> composition_layers;
+	Hector<OpenXRViewportCompositionLayerProvider *> composition_layers;
 
 	bool cylinder_ext_available = false;
 	bool equirect_ext_available = false;
 	bool android_surface_ext_available = false;
 
 #ifdef ANDROID_ENABLED
-	Vector<XrSwapchain> android_surface_swapchain_free_queue;
+	Hector<XrSwapchain> android_surface_swapchain_free_queue;
 	void free_queued_android_surface_swapchains();
 
 	EXT_PROTO_XRRESULT_FUNC1(xrDestroySwapchain, (XrSwapchain), swapchain)

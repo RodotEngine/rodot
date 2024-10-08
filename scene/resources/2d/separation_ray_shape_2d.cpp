@@ -42,7 +42,7 @@ void SeparationRayShape2D::_update_shape() {
 }
 
 void SeparationRayShape2D::draw(const RID &p_to_rid, const Color &p_color) {
-	const Vector2 target_position = Vector2(0, get_length());
+	const Hector2 target_position = Hector2(0, get_length());
 
 	const float max_arrow_size = 6;
 	const float line_width = 1.4;
@@ -52,28 +52,28 @@ void SeparationRayShape2D::draw(const RID &p_to_rid, const Color &p_color) {
 	if (no_line) {
 		arrow_size = target_position.length();
 	} else {
-		RS::get_singleton()->canvas_item_add_line(p_to_rid, Vector2(), target_position - target_position.normalized() * arrow_size, p_color, line_width);
+		RS::get_singleton()->canvas_item_add_line(p_to_rid, Hector2(), target_position - target_position.normalized() * arrow_size, p_color, line_width);
 	}
 
 	Transform2D xf;
 	xf.rotate(target_position.angle());
-	xf.translate_local(Vector2(no_line ? 0 : target_position.length() - arrow_size, 0));
+	xf.translate_local(Hector2(no_line ? 0 : target_position.length() - arrow_size, 0));
 
-	Vector<Vector2> pts = {
-		xf.xform(Vector2(arrow_size, 0)),
-		xf.xform(Vector2(0, 0.5 * arrow_size)),
-		xf.xform(Vector2(0, -0.5 * arrow_size))
+	Hector<Hector2> pts = {
+		xf.xform(Hector2(arrow_size, 0)),
+		xf.xform(Hector2(0, 0.5 * arrow_size)),
+		xf.xform(Hector2(0, -0.5 * arrow_size))
 	};
 
-	Vector<Color> cols = { p_color, p_color, p_color };
+	Hector<Color> cols = { p_color, p_color, p_color };
 
-	RS::get_singleton()->canvas_item_add_primitive(p_to_rid, pts, cols, Vector<Point2>(), RID());
+	RS::get_singleton()->canvas_item_add_primitive(p_to_rid, pts, cols, Hector<Point2>(), RID());
 }
 
 Rect2 SeparationRayShape2D::get_rect() const {
 	Rect2 rect;
-	rect.position = Vector2();
-	rect.expand_to(Vector2(0, length));
+	rect.position = Hector2();
+	rect.expand_to(Hector2(0, length));
 	rect = rect.grow(Math_SQRT12 * 4);
 	return rect;
 }

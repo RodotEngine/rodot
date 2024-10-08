@@ -48,7 +48,7 @@ class SurfaceUpgradeTool : public Object {
 	static void _try_show_popup();
 	void _show_popup();
 
-	void _add_files(EditorFileSystemDirectory *p_dir, Vector<String> &r_reimport_paths, Vector<String> &r_resave_paths);
+	void _add_files(EditorFileSystemDirectory *p_dir, Hector<String> &r_reimport_paths, Hector<String> &r_resave_paths);
 
 protected:
 	static void _bind_methods();

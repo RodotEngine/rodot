@@ -44,29 +44,29 @@ bool PhysicalBone3D::JointData::_get(const StringName &p_name, Variant &r_ret) c
 void PhysicalBone3D::JointData::_get_property_list(List<PropertyInfo> *p_list) const {
 }
 
-void PhysicalBone3D::apply_central_impulse(const Vector3 &p_impulse) {
+void PhysicalBone3D::apply_central_impulse(const Hector3 &p_impulse) {
 	PhysicsServer3D::get_singleton()->body_apply_central_impulse(get_rid(), p_impulse);
 }
 
-void PhysicalBone3D::apply_impulse(const Vector3 &p_impulse, const Vector3 &p_position) {
+void PhysicalBone3D::apply_impulse(const Hector3 &p_impulse, const Hector3 &p_position) {
 	PhysicsServer3D::get_singleton()->body_apply_impulse(get_rid(), p_impulse, p_position);
 }
 
-void PhysicalBone3D::set_linear_velocity(const Vector3 &p_velocity) {
+void PhysicalBone3D::set_linear_velocity(const Hector3 &p_velocity) {
 	linear_velocity = p_velocity;
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_LINEAR_VELOCITY, linear_velocity);
 }
 
-Vector3 PhysicalBone3D::get_linear_velocity() const {
+Hector3 PhysicalBone3D::get_linear_velocity() const {
 	return linear_velocity;
 }
 
-void PhysicalBone3D::set_angular_velocity(const Vector3 &p_velocity) {
+void PhysicalBone3D::set_angular_velocity(const Hector3 &p_velocity) {
 	angular_velocity = p_velocity;
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_ANGULAR_VELOCITY, angular_velocity);
 }
 
-Vector3 PhysicalBone3D::get_angular_velocity() const {
+Hector3 PhysicalBone3D::get_angular_velocity() const {
 	return angular_velocity;
 }
 
@@ -451,15 +451,15 @@ bool PhysicalBone3D::SixDOFJointData::_set(const StringName &p_name, const Varia
 		return false;
 	}
 
-	Vector3::Axis axis;
+	Hector3::Axis axis;
 	{
 		const String axis_s = path.get_slicec('/', 1);
 		if ("x" == axis_s) {
-			axis = Vector3::AXIS_X;
+			axis = Hector3::AXIS_X;
 		} else if ("y" == axis_s) {
-			axis = Vector3::AXIS_Y;
+			axis = Hector3::AXIS_Y;
 		} else if ("z" == axis_s) {
-			axis = Vector3::AXIS_Z;
+			axis = Hector3::AXIS_Z;
 		} else {
 			return false;
 		}
@@ -824,7 +824,7 @@ void PhysicalBone3D::_body_state_changed(PhysicsDirectBodyState3D *p_state) {
 
 void PhysicalBone3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("apply_central_impulse", "impulse"), &PhysicalBone3D::apply_central_impulse);
-	ClassDB::bind_method(D_METHOD("apply_impulse", "impulse", "position"), &PhysicalBone3D::apply_impulse, Vector3());
+	ClassDB::bind_method(D_METHOD("apply_impulse", "impulse", "position"), &PhysicalBone3D::apply_impulse, Hector3());
 
 	ClassDB::bind_method(D_METHOD("set_joint_type", "joint_type"), &PhysicalBone3D::set_joint_type);
 	ClassDB::bind_method(D_METHOD("get_joint_type"), &PhysicalBone3D::get_joint_type);
@@ -884,7 +884,7 @@ void PhysicalBone3D::_bind_methods() {
 	ADD_GROUP("Joint", "joint_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "joint_type", PROPERTY_HINT_ENUM, "None,PinJoint,ConeJoint,HingeJoint,SliderJoint,6DOFJoint"), "set_joint_type", "get_joint_type");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "joint_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_joint_offset", "get_joint_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "joint_rotation", PROPERTY_HINT_RANGE, "-360,360,0.01,or_less,or_greater,radians_as_degrees"), "set_joint_rotation", "get_joint_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "joint_rotation", PROPERTY_HINT_RANGE, "-360,360,0.01,or_less,or_greater,radians_as_degrees"), "set_joint_rotation", "get_joint_rotation");
 
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "body_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_body_offset", "get_body_offset");
 
@@ -897,8 +897,8 @@ void PhysicalBone3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "linear_damp", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), "set_linear_damp", "get_linear_damp");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "angular_damp_mode", PROPERTY_HINT_ENUM, "Combine,Replace"), "set_angular_damp_mode", "get_angular_damp_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "angular_damp", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), "set_angular_damp", "get_angular_damp");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "linear_velocity", PROPERTY_HINT_NONE, "suffix:m/s"), "set_linear_velocity", "get_linear_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_angular_velocity", "get_angular_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "linear_velocity", PROPERTY_HINT_NONE, "suffix:m/s"), "set_linear_velocity", "get_linear_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_angular_velocity", "get_angular_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "can_sleep"), "set_can_sleep", "is_able_to_sleep");
 
 	BIND_ENUM_CONSTANT(DAMP_MODE_COMBINE);
@@ -998,27 +998,27 @@ void PhysicalBone3D::_reload_joint() {
 			PhysicsServer3D::get_singleton()->joint_make_generic_6dof(joint, body_a->get_rid(), local_a, get_rid(), joint_offset);
 			const SixDOFJointData *g6dofjd(static_cast<const SixDOFJointData *>(joint_data));
 			for (int axis = 0; axis < 3; ++axis) {
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_LINEAR_LIMIT, g6dofjd->axis_data[axis].linear_limit_enabled);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_UPPER_LIMIT, g6dofjd->axis_data[axis].linear_limit_upper);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_LOWER_LIMIT, g6dofjd->axis_data[axis].linear_limit_lower);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_LIMIT_SOFTNESS, g6dofjd->axis_data[axis].linear_limit_softness);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_LINEAR_SPRING, g6dofjd->axis_data[axis].linear_spring_enabled);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_SPRING_STIFFNESS, g6dofjd->axis_data[axis].linear_spring_stiffness);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_SPRING_DAMPING, g6dofjd->axis_data[axis].linear_spring_damping);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_SPRING_EQUILIBRIUM_POINT, g6dofjd->axis_data[axis].linear_equilibrium_point);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_RESTITUTION, g6dofjd->axis_data[axis].linear_restitution);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_DAMPING, g6dofjd->axis_data[axis].linear_damping);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_ANGULAR_LIMIT, g6dofjd->axis_data[axis].angular_limit_enabled);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_UPPER_LIMIT, g6dofjd->axis_data[axis].angular_limit_upper);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_LOWER_LIMIT, g6dofjd->axis_data[axis].angular_limit_lower);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_LIMIT_SOFTNESS, g6dofjd->axis_data[axis].angular_limit_softness);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_RESTITUTION, g6dofjd->axis_data[axis].angular_restitution);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_DAMPING, g6dofjd->axis_data[axis].angular_damping);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_ERP, g6dofjd->axis_data[axis].erp);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_ANGULAR_SPRING, g6dofjd->axis_data[axis].angular_spring_enabled);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_SPRING_STIFFNESS, g6dofjd->axis_data[axis].angular_spring_stiffness);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_SPRING_DAMPING, g6dofjd->axis_data[axis].angular_spring_damping);
-				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Vector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_SPRING_EQUILIBRIUM_POINT, g6dofjd->axis_data[axis].angular_equilibrium_point);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_LINEAR_LIMIT, g6dofjd->axis_data[axis].linear_limit_enabled);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_UPPER_LIMIT, g6dofjd->axis_data[axis].linear_limit_upper);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_LOWER_LIMIT, g6dofjd->axis_data[axis].linear_limit_lower);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_LIMIT_SOFTNESS, g6dofjd->axis_data[axis].linear_limit_softness);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_LINEAR_SPRING, g6dofjd->axis_data[axis].linear_spring_enabled);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_SPRING_STIFFNESS, g6dofjd->axis_data[axis].linear_spring_stiffness);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_SPRING_DAMPING, g6dofjd->axis_data[axis].linear_spring_damping);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_SPRING_EQUILIBRIUM_POINT, g6dofjd->axis_data[axis].linear_equilibrium_point);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_RESTITUTION, g6dofjd->axis_data[axis].linear_restitution);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_LINEAR_DAMPING, g6dofjd->axis_data[axis].linear_damping);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_ANGULAR_LIMIT, g6dofjd->axis_data[axis].angular_limit_enabled);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_UPPER_LIMIT, g6dofjd->axis_data[axis].angular_limit_upper);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_LOWER_LIMIT, g6dofjd->axis_data[axis].angular_limit_lower);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_LIMIT_SOFTNESS, g6dofjd->axis_data[axis].angular_limit_softness);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_RESTITUTION, g6dofjd->axis_data[axis].angular_restitution);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_DAMPING, g6dofjd->axis_data[axis].angular_damping);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_ERP, g6dofjd->axis_data[axis].erp);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_flag(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_ANGULAR_SPRING, g6dofjd->axis_data[axis].angular_spring_enabled);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_SPRING_STIFFNESS, g6dofjd->axis_data[axis].angular_spring_stiffness);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_SPRING_DAMPING, g6dofjd->axis_data[axis].angular_spring_damping);
+				PhysicsServer3D::get_singleton()->generic_6dof_joint_set_param(joint, static_cast<Hector3::Axis>(axis), PhysicsServer3D::G6DOF_JOINT_ANGULAR_SPRING_EQUILIBRIUM_POINT, g6dofjd->axis_data[axis].angular_equilibrium_point);
 			}
 
 		} break;
@@ -1130,13 +1130,13 @@ const Transform3D &PhysicalBone3D::get_joint_offset() const {
 	return joint_offset;
 }
 
-void PhysicalBone3D::set_joint_rotation(const Vector3 &p_euler_rad) {
+void PhysicalBone3D::set_joint_rotation(const Hector3 &p_euler_rad) {
 	joint_offset.basis.set_euler_scale(p_euler_rad, joint_offset.basis.get_scale());
 
 	_update_joint_offset();
 }
 
-Vector3 PhysicalBone3D::get_joint_rotation() const {
+Hector3 PhysicalBone3D::get_joint_rotation() const {
 	return joint_offset.basis.get_euler_normalized();
 }
 

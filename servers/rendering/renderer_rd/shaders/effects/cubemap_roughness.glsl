@@ -29,9 +29,9 @@ void main() {
 		float solid_angle_texel = 4.0 * M_PI / (6.0 * params.face_size * params.face_size);
 		float roughness2 = params.roughness * params.roughness;
 		float roughness4 = roughness2 * roughness2;
-		vec3 UpVector = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
+		vec3 UpHector = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
 		mat3 T;
-		T[0] = normalize(cross(UpVector, N));
+		T[0] = normalize(cross(UpHector, N));
 		T[1] = cross(N, T[0]);
 		T[2] = N;
 

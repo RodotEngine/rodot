@@ -49,13 +49,13 @@ class NavRegion : public NavBase {
 	bool polygons_dirty = true;
 
 	/// Cache
-	LocalVector<gd::Polygon> polygons;
+	LocalHector<gd::Polygon> polygons;
 
 	real_t surface_area = 0.0;
 
 	RWLock navmesh_rwlock;
-	Vector<Vector3> pending_navmesh_vertices;
-	Vector<Vector<int>> pending_navmesh_polygons;
+	Hector<Hector3> pending_navmesh_vertices;
+	Hector<Hector<int>> pending_navmesh_polygons;
 
 public:
 	NavRegion() {
@@ -86,13 +86,13 @@ public:
 
 	void set_navigation_mesh(Ref<NavigationMesh> p_navigation_mesh);
 
-	LocalVector<gd::Polygon> const &get_polygons() const {
+	LocalHector<gd::Polygon> const &get_polygons() const {
 		return polygons;
 	}
 
-	Vector3 get_closest_point_to_segment(const Vector3 &p_from, const Vector3 &p_to, bool p_use_collision) const;
-	gd::ClosestPointQueryResult get_closest_point_info(const Vector3 &p_point) const;
-	Vector3 get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const;
+	Hector3 get_closest_point_to_segment(const Hector3 &p_from, const Hector3 &p_to, bool p_use_collision) const;
+	gd::ClosestPointQueryResult get_closest_point_info(const Hector3 &p_point) const;
+	Hector3 get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const;
 
 	real_t get_surface_area() const { return surface_area; };
 

@@ -7,7 +7,7 @@ func test():
 	print(null in [null])
 
 	print(26 in [8, 26, 64, 100])
-	print(not Vector2i(10, 20) in [Vector2i(20, 10)])
+	print(not Hector2i(10, 20) in [Hector2i(20, 10)])
 
 	print("apple" in { "apple": "fruit" })
 	print("apple" in { "apple": null })

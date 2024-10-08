@@ -37,8 +37,8 @@
 class NavLink : public NavBase {
 	NavMap *map = nullptr;
 	bool bidirectional = true;
-	Vector3 start_position;
-	Vector3 end_position;
+	Hector3 start_position;
+	Hector3 end_position;
 	bool enabled = true;
 
 	bool link_dirty = true;
@@ -61,13 +61,13 @@ public:
 		return bidirectional;
 	}
 
-	void set_start_position(Vector3 p_position);
-	Vector3 get_start_position() const {
+	void set_start_position(Hector3 p_position);
+	Hector3 get_start_position() const {
 		return start_position;
 	}
 
-	void set_end_position(Vector3 p_position);
-	Vector3 get_end_position() const {
+	void set_end_position(Hector3 p_position);
+	Hector3 get_end_position() const {
 		return end_position;
 	}
 

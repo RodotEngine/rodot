@@ -127,7 +127,7 @@ public:
 	struct MeshData {
 		String name;
 		struct Source {
-			Vector<float> array;
+			Hector<float> array;
 			int stride = 0;
 		};
 
@@ -147,13 +147,13 @@ public:
 
 			String material;
 			HashMap<String, SourceRef> sources;
-			Vector<float> polygons;
-			Vector<float> indices;
+			Hector<float> polygons;
+			Hector<float> indices;
 			int count = 0;
 			int vertex_size = 0;
 		};
 
-		Vector<Primitives> primitives;
+		Hector<Primitives> primitives;
 
 		bool found_double_sided = false;
 		bool double_sided = true;
@@ -166,8 +166,8 @@ public:
 		bool closed = false;
 
 		struct Source {
-			Vector<String> sarray;
-			Vector<float> array;
+			Hector<String> sarray;
+			Hector<float> array;
 			int stride = 0;
 		};
 
@@ -185,8 +185,8 @@ public:
 		Transform3D bind_shape;
 
 		struct Source {
-			Vector<String> sarray; //maybe for names
-			Vector<float> array;
+			Hector<String> sarray; //maybe for names
+			Hector<float> array;
 			int stride = 1;
 			Source() {}
 		};
@@ -205,8 +205,8 @@ public:
 
 			String material;
 			HashMap<String, SourceRef> sources;
-			Vector<float> sets;
-			Vector<float> indices;
+			Hector<float> sets;
+			Hector<float> indices;
 			int count = 0;
 		} weights;
 
@@ -221,8 +221,8 @@ public:
 
 		struct Source {
 			int stride = 1;
-			Vector<String> sarray; //maybe for names
-			Vector<float> array;
+			Hector<String> sarray; //maybe for names
+			Hector<float> array;
 			Source() {}
 		};
 
@@ -234,10 +234,10 @@ public:
 
 	struct Vertex {
 		int idx = 0;
-		Vector3 vertex;
-		Vector3 normal;
-		Vector3 uv;
-		Vector3 uv2;
+		Hector3 vertex;
+		Hector3 normal;
+		Hector3 uv;
+		Hector3 uv2;
 		Plane tangent;
 		Color color;
 		int uid = 0;
@@ -247,7 +247,7 @@ public:
 			bool operator<(const Weight w) const { return weight > w.weight; } //heaviest first
 		};
 
-		Vector<Weight> weights;
+		Hector<Weight> weights;
 
 		void fix_weights() {
 			weights.sort();
@@ -332,7 +332,7 @@ public:
 
 			String id;
 			Op op = OP_ROTATE;
-			Vector<float> data;
+			Hector<float> data;
 		};
 
 		Type type = TYPE_NODE;
@@ -341,10 +341,10 @@ public:
 		String id;
 		String empty_draw_type;
 		bool noname = false;
-		Vector<XForm> xform_list;
+		Hector<XForm> xform_list;
 		Transform3D default_transform;
 		Transform3D post_transform;
-		Vector<Node *> children;
+		Hector<Node *> children;
 
 		Node *parent = nullptr;
 
@@ -383,7 +383,7 @@ public:
 		};
 
 		HashMap<String, Material> material_map;
-		Vector<String> skeletons;
+		Hector<String> skeletons;
 
 		NodeGeometry() { type = TYPE_GEOMETRY; }
 	};
@@ -402,7 +402,7 @@ public:
 
 	struct VisualScene {
 		String name;
-		Vector<Node *> root_nodes;
+		Hector<Node *> root_nodes;
 
 		~VisualScene() {
 			for (int i = 0; i < root_nodes.size(); i++) {
@@ -415,7 +415,7 @@ public:
 		String name;
 		float begin = 0;
 		float end = 1;
-		Vector<String> tracks;
+		Hector<String> tracks;
 
 		AnimationClip() {}
 	};
@@ -439,7 +439,7 @@ public:
 			};
 
 			float time = 0;
-			Vector<float> data;
+			Hector<float> data;
 			Point2 in_tangent;
 			Point2 out_tangent;
 			InterpolationType interp_type = INTERP_LINEAR;
@@ -447,9 +447,9 @@ public:
 			Key() {}
 		};
 
-		Vector<float> get_value_at_time(float p_time) const;
+		Hector<float> get_value_at_time(float p_time) const;
 
-		Vector<Key> keys;
+		Hector<Key> keys;
 
 		AnimationTrack() {}
 	};
@@ -462,7 +462,7 @@ public:
 		int import_flags = 0;
 
 		float unit_scale = 1.0;
-		Vector3::Axis up_axis = Vector3::AXIS_Y;
+		Hector3::Axis up_axis = Hector3::AXIS_Y;
 		bool z_up = false;
 
 		struct Version {
@@ -503,10 +503,10 @@ public:
 		String root_visual_scene;
 		String root_physics_scene;
 
-		Vector<AnimationClip> animation_clips;
-		Vector<AnimationTrack> animation_tracks;
-		HashMap<String, Vector<int>> referenced_tracks;
-		HashMap<String, Vector<int>> by_id_tracks;
+		Hector<AnimationClip> animation_clips;
+		Hector<AnimationTrack> animation_tracks;
+		HashMap<String, Hector<int>> referenced_tracks;
+		HashMap<String, Hector<int>> by_id_tracks;
 
 		float animation_length = 0;
 
@@ -555,8 +555,8 @@ private: // private stuff
 	void _parse_library(XMLParser &p_parser);
 
 	Variant _parse_param(XMLParser &p_parser);
-	Vector<float> _read_float_array(XMLParser &p_parser);
-	Vector<String> _read_string_array(XMLParser &p_parser);
+	Hector<float> _read_float_array(XMLParser &p_parser);
+	Hector<String> _read_string_array(XMLParser &p_parser);
 	Transform3D _read_transform(XMLParser &p_parser);
 	String _read_empty_draw_type(XMLParser &p_parser);
 

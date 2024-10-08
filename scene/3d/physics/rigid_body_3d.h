@@ -59,14 +59,14 @@ private:
 	FreezeMode freeze_mode = FREEZE_MODE_STATIC;
 
 	real_t mass = 1.0;
-	Vector3 inertia;
+	Hector3 inertia;
 	CenterOfMassMode center_of_mass_mode = CENTER_OF_MASS_MODE_AUTO;
-	Vector3 center_of_mass;
+	Hector3 center_of_mass;
 
 	Ref<PhysicsMaterial> physics_material_override;
 
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
 	Basis inverse_inertia_tensor;
 	real_t gravity_scale = 1.0;
 
@@ -156,25 +156,25 @@ public:
 
 	virtual real_t get_inverse_mass() const override { return 1.0 / mass; }
 
-	void set_inertia(const Vector3 &p_inertia);
-	const Vector3 &get_inertia() const;
+	void set_inertia(const Hector3 &p_inertia);
+	const Hector3 &get_inertia() const;
 
 	void set_center_of_mass_mode(CenterOfMassMode p_mode);
 	CenterOfMassMode get_center_of_mass_mode() const;
 
-	void set_center_of_mass(const Vector3 &p_center_of_mass);
-	const Vector3 &get_center_of_mass() const;
+	void set_center_of_mass(const Hector3 &p_center_of_mass);
+	const Hector3 &get_center_of_mass() const;
 
 	void set_physics_material_override(const Ref<PhysicsMaterial> &p_physics_material_override);
 	Ref<PhysicsMaterial> get_physics_material_override() const;
 
-	void set_linear_velocity(const Vector3 &p_velocity);
-	Vector3 get_linear_velocity() const override;
+	void set_linear_velocity(const Hector3 &p_velocity);
+	Hector3 get_linear_velocity() const override;
 
-	void set_axis_velocity(const Vector3 &p_axis);
+	void set_axis_velocity(const Hector3 &p_axis);
 
-	void set_angular_velocity(const Vector3 &p_velocity);
-	Vector3 get_angular_velocity() const override;
+	void set_angular_velocity(const Hector3 &p_velocity);
+	Hector3 get_angular_velocity() const override;
 
 	Basis get_inverse_inertia_tensor() const;
 
@@ -214,23 +214,23 @@ public:
 
 	TypedArray<Node3D> get_colliding_bodies() const;
 
-	void apply_central_impulse(const Vector3 &p_impulse);
-	void apply_impulse(const Vector3 &p_impulse, const Vector3 &p_position = Vector3());
-	void apply_torque_impulse(const Vector3 &p_impulse);
+	void apply_central_impulse(const Hector3 &p_impulse);
+	void apply_impulse(const Hector3 &p_impulse, const Hector3 &p_position = Hector3());
+	void apply_torque_impulse(const Hector3 &p_impulse);
 
-	void apply_central_force(const Vector3 &p_force);
-	void apply_force(const Vector3 &p_force, const Vector3 &p_position = Vector3());
-	void apply_torque(const Vector3 &p_torque);
+	void apply_central_force(const Hector3 &p_force);
+	void apply_force(const Hector3 &p_force, const Hector3 &p_position = Hector3());
+	void apply_torque(const Hector3 &p_torque);
 
-	void add_constant_central_force(const Vector3 &p_force);
-	void add_constant_force(const Vector3 &p_force, const Vector3 &p_position = Vector3());
-	void add_constant_torque(const Vector3 &p_torque);
+	void add_constant_central_force(const Hector3 &p_force);
+	void add_constant_force(const Hector3 &p_force, const Hector3 &p_position = Hector3());
+	void add_constant_torque(const Hector3 &p_torque);
 
-	void set_constant_force(const Vector3 &p_force);
-	Vector3 get_constant_force() const;
+	void set_constant_force(const Hector3 &p_force);
+	Hector3 get_constant_force() const;
 
-	void set_constant_torque(const Vector3 &p_torque);
-	Vector3 get_constant_torque() const;
+	void set_constant_torque(const Hector3 &p_torque);
+	Hector3 get_constant_torque() const;
 
 	virtual PackedStringArray get_configuration_warnings() const override;
 

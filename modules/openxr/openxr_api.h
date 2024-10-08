@@ -39,13 +39,13 @@
 #include "core/error/error_macros.h"
 #include "core/math/projection.h"
 #include "core/math/transform_3d.h"
-#include "core/math/vector2.h"
+#include "core/math/Hector2.h"
 #include "core/os/memory.h"
 #include "core/string/print_string.h"
 #include "core/string/ustring.h"
 #include "core/templates/rb_map.h"
 #include "core/templates/rid_owner.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "servers/rendering_server.h"
 #include "servers/xr/xr_pose.h"
 
@@ -64,7 +64,7 @@ public:
 		bool image_acquired = false;
 		bool skip_acquire_swapchain = false;
 
-		static Vector<OpenXRSwapChainInfo> free_queue;
+		static Hector<OpenXRSwapChainInfo> free_queue;
 
 	public:
 		_FORCE_INLINE_ XrSwapchain get_swapchain() const { return swapchain; }
@@ -85,7 +85,7 @@ private:
 	static OpenXRAPI *singleton;
 
 	// Registered extension wrappers
-	static Vector<OpenXRExtensionWrapper *> registered_extension_wrappers;
+	static Hector<OpenXRExtensionWrapper *> registered_extension_wrappers;
 
 	// linked XR interface
 	OpenXRInterface *xr_interface = nullptr;
@@ -97,10 +97,10 @@ private:
 	// extensions
 	uint32_t num_supported_extensions = 0;
 	XrExtensionProperties *supported_extensions = nullptr;
-	Vector<CharString> enabled_extensions;
+	Hector<CharString> enabled_extensions;
 
 	// composition layer providers
-	Vector<OpenXRCompositionLayerProvider *> composition_layer_providers;
+	Hector<OpenXRCompositionLayerProvider *> composition_layer_providers;
 
 	// view configuration
 	uint32_t num_view_configuration_types = 0;
@@ -224,7 +224,7 @@ private:
 	EXT_PROTO_XRRESULT_FUNC6(xrEnumerateViewConfigurationViews, (XrInstance), instance, (XrSystemId), systemId, (XrViewConfigurationType), viewConfigurationType, (uint32_t), viewCapacityInput, (uint32_t *), viewCountOutput, (XrViewConfigurationView *), views)
 	EXT_PROTO_XRRESULT_FUNC3(xrGetActionStateBoolean, (XrSession), session, (const XrActionStateGetInfo *), getInfo, (XrActionStateBoolean *), state)
 	EXT_PROTO_XRRESULT_FUNC3(xrGetActionStateFloat, (XrSession), session, (const XrActionStateGetInfo *), getInfo, (XrActionStateFloat *), state)
-	EXT_PROTO_XRRESULT_FUNC3(xrGetActionStateVector2f, (XrSession), session, (const XrActionStateGetInfo *), getInfo, (XrActionStateVector2f *), state)
+	EXT_PROTO_XRRESULT_FUNC3(xrGetActionStateHector2f, (XrSession), session, (const XrActionStateGetInfo *), getInfo, (XrActionStateHector2f *), state)
 	EXT_PROTO_XRRESULT_FUNC3(xrGetCurrentInteractionProfile, (XrSession), session, (XrPath), topLevelUserPath, (XrInteractionProfileState *), interactionProfile)
 	EXT_PROTO_XRRESULT_FUNC2(xrGetInstanceProperties, (XrInstance), instance, (XrInstanceProperties *), instanceProperties)
 	EXT_PROTO_XRRESULT_FUNC3(xrGetReferenceSpaceBoundsRect, (XrSession), session, (XrReferenceSpaceType), referenceSpaceType, (XrExtent2Df *), bounds)
@@ -290,7 +290,7 @@ private:
 		RID action_set_rid; // RID of the action set this action belongs to
 		String name; // Name for this action (i.e. "aim_pose")
 		XrActionType action_type; // Type of action (bool, float, etc.)
-		Vector<ActionTracker> trackers; // The trackers this action can be used with
+		Hector<ActionTracker> trackers; // The trackers this action can be used with
 		XrAction handle; // OpenXR handle for this action
 	};
 	RID_Owner<Action, true> action_owner;
@@ -299,7 +299,7 @@ private:
 	struct InteractionProfile { // Interaction profiles define suggested bindings between the physical inputs on controller types and our actions
 		String name; // Name of the interaction profile (i.e. "/interaction_profiles/valve/index_controller")
 		XrPath path; // OpenXR path for this profile
-		Vector<XrActionSuggestedBinding> bindings; // OpenXR action bindings
+		Hector<XrActionSuggestedBinding> bindings; // OpenXR action bindings
 	};
 	RID_Owner<InteractionProfile, true> interaction_profile_owner;
 	RID get_interaction_profile_rid(XrPath p_path);
@@ -409,7 +409,7 @@ public:
 	// helper method to get a valid Transform3D from an openxr space location
 	XRPose::TrackingConfidence transform_from_location(const XrSpaceLocation &p_location, Transform3D &r_transform);
 	XRPose::TrackingConfidence transform_from_location(const XrHandJointLocationEXT &p_location, Transform3D &r_transform);
-	void parse_velocities(const XrSpaceVelocity &p_velocity, Vector3 &r_linear_velocity, Vector3 &r_angular_velocity);
+	void parse_velocities(const XrSpaceVelocity &p_velocity, Hector3 &r_linear_velocity, Hector3 &r_angular_velocity);
 
 	bool xr_result(XrResult result, const char *format, Array args = Array()) const;
 	bool is_top_level_path_supported(const String &p_toplevel_path);
@@ -432,7 +432,7 @@ public:
 	void set_xr_interface(OpenXRInterface *p_xr_interface);
 	static void register_extension_wrapper(OpenXRExtensionWrapper *p_extension_wrapper);
 	static void unregister_extension_wrapper(OpenXRExtensionWrapper *p_extension_wrapper);
-	static const Vector<OpenXRExtensionWrapper *> &get_registered_extension_wrappers();
+	static const Hector<OpenXRExtensionWrapper *> &get_registered_extension_wrappers();
 	static void register_extension_metadata();
 	static void cleanup_extension_wrappers();
 
@@ -466,10 +466,10 @@ public:
 	XrHandTrackerEXT get_hand_tracker(int p_hand_index);
 
 	Size2 get_recommended_target_size();
-	XRPose::TrackingConfidence get_head_center(Transform3D &r_transform, Vector3 &r_linear_velocity, Vector3 &r_angular_velocity);
+	XRPose::TrackingConfidence get_head_center(Transform3D &r_transform, Hector3 &r_linear_velocity, Hector3 &r_angular_velocity);
 	bool get_view_transform(uint32_t p_view, Transform3D &r_transform);
 	bool get_view_projection(uint32_t p_view, double p_z_near, double p_z_far, Projection &p_camera_matrix);
-	Vector2 get_eye_focus(uint32_t p_view, float p_aspect);
+	Hector2 get_eye_focus(uint32_t p_view, float p_aspect);
 	bool process();
 
 	void pre_render();
@@ -515,10 +515,10 @@ public:
 
 	RID action_set_create(const String p_name, const String p_localized_name, const int p_priority);
 	String action_set_get_name(RID p_action_set);
-	bool attach_action_sets(const Vector<RID> &p_action_sets);
+	bool attach_action_sets(const Hector<RID> &p_action_sets);
 	void action_set_free(RID p_action_set);
 
-	RID action_create(RID p_action_set, const String p_name, const String p_localized_name, OpenXRAction::ActionType p_action_type, const Vector<RID> &p_trackers);
+	RID action_create(RID p_action_set, const String p_name, const String p_localized_name, OpenXRAction::ActionType p_action_type, const Hector<RID> &p_trackers);
 	String action_get_name(RID p_action);
 	void action_free(RID p_action);
 
@@ -532,11 +532,11 @@ public:
 	RID find_tracker(const String &p_name);
 	RID find_action(const String &p_name);
 
-	bool sync_action_sets(const Vector<RID> p_active_sets);
+	bool sync_action_sets(const Hector<RID> p_active_sets);
 	bool get_action_bool(RID p_action, RID p_tracker);
 	float get_action_float(RID p_action, RID p_tracker);
-	Vector2 get_action_vector2(RID p_action, RID p_tracker);
-	XRPose::TrackingConfidence get_action_pose(RID p_action, RID p_tracker, Transform3D &r_transform, Vector3 &r_linear_velocity, Vector3 &r_angular_velocity);
+	Hector2 get_action_Hector2(RID p_action, RID p_tracker);
+	XRPose::TrackingConfidence get_action_pose(RID p_action, RID p_tracker, Transform3D &r_transform, Hector3 &r_linear_velocity, Hector3 &r_angular_velocity);
 	bool trigger_haptic_pulse(RID p_action, RID p_tracker, float p_frequency, float p_amplitude, XrDuration p_duration_ns);
 
 	void register_composition_layer_provider(OpenXRCompositionLayerProvider *provider);

@@ -86,7 +86,7 @@ void WebToolsEditorPlugin::_download_zip() {
 	{
 		Ref<FileAccess> f = FileAccess::open(output_path, FileAccess::READ);
 		ERR_FAIL_COND_MSG(f.is_null(), "Unable to create ZIP file.");
-		Vector<uint8_t> buf;
+		Hector<uint8_t> buf;
 		buf.resize(f->get_length());
 		f->get_buffer(buf.ptrw(), buf.size());
 		godot_js_os_download_buffer(buf.ptr(), buf.size(), output_name.utf8().get_data(), "application/zip");
@@ -102,7 +102,7 @@ void WebToolsEditorPlugin::_zip_file(String p_path, String p_base_path, zipFile 
 		WARN_PRINT("Unable to open file for zipping: " + p_path);
 		return;
 	}
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	uint64_t len = f->get_length();
 	data.resize(len);
 	f->get_buffer(data.ptrw(), len);

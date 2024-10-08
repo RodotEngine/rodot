@@ -93,12 +93,12 @@ void AudioStreamImportSettingsDialog::_draw_preview() {
 
 	Ref<Font> beat_font = get_theme_font(SNAME("main"), EditorStringName(EditorFonts));
 	int main_size = get_theme_font_size(SNAME("main_size"), EditorStringName(EditorFonts));
-	Vector<Vector2> points;
+	Hector<Hector2> points;
 	points.resize(width * 2);
 	Color color_active = get_theme_color(SNAME("contrast_color_2"), EditorStringName(Editor));
 	Color color_inactive = color_active;
 	color_inactive.a *= 0.5;
-	Vector<Color> colors;
+	Hector<Color> colors;
 	colors.resize(width);
 
 	float inactive_from = 1e20;
@@ -123,8 +123,8 @@ void AudioStreamImportSettingsDialog::_draw_preview() {
 		float min = preview->get_min(ofs, ofs_n) * 0.5 + 0.5;
 
 		int idx = i;
-		points.write[idx * 2 + 0] = Vector2(i + 1, rect.position.y + min * rect.size.y);
-		points.write[idx * 2 + 1] = Vector2(i + 1, rect.position.y + max * rect.size.y);
+		points.write[idx * 2 + 0] = Hector2(i + 1, rect.position.y + min * rect.size.y);
+		points.write[idx * 2 + 1] = Hector2(i + 1, rect.position.y + max * rect.size.y);
 
 		colors.write[idx] = ofs > inactive_from ? color_inactive : color_active;
 	}

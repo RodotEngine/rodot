@@ -218,7 +218,7 @@ void CFG::build_post_order_visit_order()
 
 void CFG::add_branch(uint32_t from, uint32_t to)
 {
-	const auto add_unique = [](SmallVector<uint32_t> &l, uint32_t value) {
+	const auto add_unique = [](SmallHector<uint32_t> &l, uint32_t value) {
 		auto itr = find(begin(l), end(l), value);
 		if (itr == end(l))
 			l.push_back(value);

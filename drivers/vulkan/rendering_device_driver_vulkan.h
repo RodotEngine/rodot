@@ -130,8 +130,8 @@ class RenderingDeviceDriverVulkan : public RenderingDeviceDriver {
 	VkPhysicalDeviceFeatures requested_device_features = {};
 	HashMap<CharString, bool> requested_device_extensions;
 	HashSet<CharString> enabled_device_extension_names;
-	TightLocalVector<TightLocalVector<Queue>> queue_families;
-	TightLocalVector<VkQueueFamilyProperties> queue_family_properties;
+	TightLocalHector<TightLocalHector<Queue>> queue_families;
+	TightLocalHector<VkQueueFamilyProperties> queue_family_properties;
 	RDD::Capabilities device_capabilities;
 	SubgroupCapabilities subgroup_capabilities;
 	MultiviewCapabilities multiview_capabilities;
@@ -149,8 +149,8 @@ class RenderingDeviceDriverVulkan : public RenderingDeviceDriver {
 	Error _initialize_device_extensions();
 	Error _check_device_features();
 	Error _check_device_capabilities();
-	Error _add_queue_create_info(LocalVector<VkDeviceQueueCreateInfo> &r_queue_create_info);
-	Error _initialize_device(const LocalVector<VkDeviceQueueCreateInfo> &p_queue_create_info);
+	Error _add_queue_create_info(LocalHector<VkDeviceQueueCreateInfo> &r_queue_create_info);
+	Error _initialize_device(const LocalHector<VkDeviceQueueCreateInfo> &p_queue_create_info);
 	Error _initialize_allocator();
 	Error _initialize_pipeline_cache();
 	VkResult _create_render_pass(VkDevice p_device, const VkRenderPassCreateInfo2 *p_create_info, const VkAllocationCallbacks *p_allocator, VkRenderPass *p_render_pass);
@@ -242,13 +242,13 @@ public:
 	/**********************/
 private:
 	struct VertexFormatInfo {
-		TightLocalVector<VkVertexInputBindingDescription> vk_bindings;
-		TightLocalVector<VkVertexInputAttributeDescription> vk_attributes;
+		TightLocalHector<VkVertexInputBindingDescription> vk_bindings;
+		TightLocalHector<VkVertexInputAttributeDescription> vk_attributes;
 		VkPipelineVertexInputStateCreateInfo vk_create_info = {};
 	};
 
 public:
-	virtual VertexFormatID vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) override final;
+	virtual VertexFormatID vertex_format_create(HectorView<VertexAttribute> p_vertex_attribs) override final;
 	virtual void vertex_format_free(VertexFormatID p_vertex_format) override final;
 
 	/******************/
@@ -259,9 +259,9 @@ public:
 			CommandBufferID p_cmd_buffer,
 			BitField<PipelineStageBits> p_src_stages,
 			BitField<PipelineStageBits> p_dst_stages,
-			VectorView<MemoryBarrier> p_memory_barriers,
-			VectorView<BufferBarrier> p_buffer_barriers,
-			VectorView<TextureBarrier> p_texture_barriers) override final;
+			HectorView<MemoryBarrier> p_memory_barriers,
+			HectorView<BufferBarrier> p_buffer_barriers,
+			HectorView<TextureBarrier> p_texture_barriers) override final;
 
 	/****************/
 	/**** FENCES ****/
@@ -296,13 +296,13 @@ public:
 	// ----- QUEUE -----
 private:
 	struct CommandQueue {
-		LocalVector<VkSemaphore> present_semaphores;
-		LocalVector<VkSemaphore> image_semaphores;
-		LocalVector<SwapChain *> image_semaphores_swap_chains;
-		LocalVector<uint32_t> pending_semaphores_for_execute;
-		LocalVector<uint32_t> pending_semaphores_for_fence;
-		LocalVector<uint32_t> free_image_semaphores;
-		LocalVector<Pair<Fence *, uint32_t>> image_semaphores_for_fences;
+		LocalHector<VkSemaphore> present_semaphores;
+		LocalHector<VkSemaphore> image_semaphores;
+		LocalHector<SwapChain *> image_semaphores_swap_chains;
+		LocalHector<uint32_t> pending_semaphores_for_execute;
+		LocalHector<uint32_t> pending_semaphores_for_fence;
+		LocalHector<uint32_t> free_image_semaphores;
+		LocalHector<Pair<Fence *, uint32_t>> image_semaphores_for_fences;
 		uint32_t queue_family = 0;
 		uint32_t queue_index = 0;
 		uint32_t present_semaphore_index = 0;
@@ -310,7 +310,7 @@ private:
 
 public:
 	virtual CommandQueueID command_queue_create(CommandQueueFamilyID p_cmd_queue_family, bool p_identify_as_main_queue = false) override final;
-	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) override final;
+	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, HectorView<SemaphoreID> p_wait_semaphores, HectorView<CommandBufferID> p_cmd_buffers, HectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, HectorView<SwapChainID> p_swap_chains) override final;
 	virtual void command_queue_free(CommandQueueID p_cmd_queue) override final;
 
 private:
@@ -331,7 +331,7 @@ public:
 	virtual bool command_buffer_begin(CommandBufferID p_cmd_buffer) override final;
 	virtual bool command_buffer_begin_secondary(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, uint32_t p_subpass, FramebufferID p_framebuffer) override final;
 	virtual void command_buffer_end(CommandBufferID p_cmd_buffer) override final;
-	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) override final;
+	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, HectorView<CommandBufferID> p_secondary_cmd_buffers) override final;
 
 	/********************/
 	/**** SWAP CHAIN ****/
@@ -343,11 +343,11 @@ private:
 		RenderingContextDriver::SurfaceID surface = RenderingContextDriver::SurfaceID();
 		VkFormat format = VK_FORMAT_UNDEFINED;
 		VkColorSpaceKHR color_space = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
-		TightLocalVector<VkImage> images;
-		TightLocalVector<VkImageView> image_views;
-		TightLocalVector<FramebufferID> framebuffers;
-		LocalVector<CommandQueue *> command_queues_acquired;
-		LocalVector<uint32_t> command_queues_acquired_semaphores;
+		TightLocalHector<VkImage> images;
+		TightLocalHector<VkImageView> image_views;
+		TightLocalHector<FramebufferID> framebuffers;
+		LocalHector<CommandQueue *> command_queues_acquired;
+		LocalHector<uint32_t> command_queues_acquired_semaphores;
 		RenderPassID render_pass;
 		uint32_t image_index = 0;
 	};
@@ -366,7 +366,7 @@ public:
 	/**** FRAMEBUFFER ****/
 	/*********************/
 
-	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) override final;
+	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) override final;
 	virtual void framebuffer_free(FramebufferID p_framebuffer) override final;
 
 	/****************/
@@ -411,15 +411,15 @@ private:
 
 	struct ShaderInfo {
 		VkShaderStageFlags vk_push_constant_stages = 0;
-		TightLocalVector<VkPipelineShaderStageCreateInfo> vk_stages_create_info;
-		TightLocalVector<VkDescriptorSetLayout> vk_descriptor_set_layouts;
+		TightLocalHector<VkPipelineShaderStageCreateInfo> vk_stages_create_info;
+		TightLocalHector<VkDescriptorSetLayout> vk_descriptor_set_layouts;
 		VkPipelineLayout vk_pipeline_layout = VK_NULL_HANDLE;
 	};
 
 public:
 	virtual String shader_get_binary_cache_key() override final;
-	virtual Vector<uint8_t> shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) override final;
-	virtual ShaderID shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) override final;
+	virtual Hector<uint8_t> shader_compile_binary_from_spirv(HectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) override final;
+	virtual ShaderID shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) override final;
 	virtual void shader_free(ShaderID p_shader) override final;
 
 	virtual void shader_destroy_modules(ShaderID p_shader) override final;
@@ -467,7 +467,7 @@ private:
 	};
 
 public:
-	virtual UniformSetID uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) override final;
+	virtual UniformSetID uniform_set_create(HectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) override final;
 	virtual void uniform_set_free(UniformSetID p_uniform_set) override final;
 
 	// ----- COMMANDS -----
@@ -479,14 +479,14 @@ public:
 	/******************/
 
 	virtual void command_clear_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, uint64_t p_offset, uint64_t p_size) override final;
-	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) override final;
+	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, HectorView<BufferCopyRegion> p_regions) override final;
 
-	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) override final;
+	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<TextureCopyRegion> p_regions) override final;
 	virtual void command_resolve_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, uint32_t p_src_layer, uint32_t p_src_mipmap, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, uint32_t p_dst_layer, uint32_t p_dst_mipmap) override final;
 	virtual void command_clear_color_texture(CommandBufferID p_cmd_buffer, TextureID p_texture, TextureLayout p_texture_layout, const Color &p_color, const TextureSubresourceRange &p_subresources) override final;
 
-	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) override final;
-	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) override final;
+	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<BufferTextureCopyRegion> p_regions) override final;
+	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, HectorView<BufferTextureCopyRegion> p_regions) override final;
 
 	/******************/
 	/**** PIPELINE ****/
@@ -506,7 +506,7 @@ private:
 	struct PipelineCache {
 		String file_path;
 		size_t current_size = 0;
-		Vector<uint8_t> buffer; // Header then data.
+		Hector<uint8_t> buffer; // Header then data.
 		VkPipelineCache vk_cache = VK_NULL_HANDLE;
 	};
 
@@ -520,14 +520,14 @@ public:
 
 	// ----- BINDING -----
 
-	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_first_index, VectorView<uint32_t> p_data) override final;
+	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_first_index, HectorView<uint32_t> p_data) override final;
 
 	// ----- CACHE -----
 
-	virtual bool pipeline_cache_create(const Vector<uint8_t> &p_data) override final;
+	virtual bool pipeline_cache_create(const Hector<uint8_t> &p_data) override final;
 	virtual void pipeline_cache_free() override final;
 	virtual size_t pipeline_cache_query_size() override final;
-	virtual Vector<uint8_t> pipeline_cache_serialize() override final;
+	virtual Hector<uint8_t> pipeline_cache_serialize() override final;
 
 	/*******************/
 	/**** RENDERING ****/
@@ -535,17 +535,17 @@ public:
 
 	// ----- SUBPASS -----
 
-	virtual RenderPassID render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) override final;
+	virtual RenderPassID render_pass_create(HectorView<Attachment> p_attachments, HectorView<Subpass> p_subpasses, HectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) override final;
 	virtual void render_pass_free(RenderPassID p_render_pass) override final;
 
 	// ----- COMMANDS -----
 
-	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) override final;
+	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RenderPassClearValue> p_clear_values) override final;
 	virtual void command_end_render_pass(CommandBufferID p_cmd_buffer) override final;
 	virtual void command_next_render_subpass(CommandBufferID p_cmd_buffer, CommandBufferType p_cmd_buffer_type) override final;
-	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) override final;
-	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) override final;
-	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) override final;
+	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_viewports) override final;
+	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_scissors) override final;
+	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, HectorView<AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) override final;
 
 	// Binding.
 	virtual void command_bind_render_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) override final;
@@ -577,11 +577,11 @@ public:
 			PipelineMultisampleState p_multisample_state,
 			PipelineDepthStencilState p_depth_stencil_state,
 			PipelineColorBlendState p_blend_state,
-			VectorView<int32_t> p_color_attachments,
+			HectorView<int32_t> p_color_attachments,
 			BitField<PipelineDynamicStateFlags> p_dynamic_state,
 			RenderPassID p_render_pass,
 			uint32_t p_render_subpass,
-			VectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
+			HectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
 
 	/*****************/
 	/**** COMPUTE ****/
@@ -599,7 +599,7 @@ public:
 
 	// ----- PIPELINE -----
 
-	virtual PipelineID compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
+	virtual PipelineID compute_pipeline_create(ShaderID p_shader, HectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
 
 	/*****************/
 	/**** QUERIES ****/

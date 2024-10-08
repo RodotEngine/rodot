@@ -35,7 +35,7 @@
 #include "../../util.h"
 #include "../openxr_extension_wrapper.h"
 
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "drivers/vulkan/vulkan_hooks.h"
 
 // Always include this as late as possible.
@@ -56,8 +56,8 @@ public:
 	virtual bool create_vulkan_device(const VkDeviceCreateInfo *p_device_create_info, VkDevice *r_device) override final;
 	virtual void set_direct_queue_family_and_index(uint32_t p_queue_family_index, uint32_t p_queue_index) override final;
 
-	virtual void get_usable_swapchain_formats(Vector<int64_t> &p_usable_swap_chains) override;
-	virtual void get_usable_depth_formats(Vector<int64_t> &p_usable_swap_chains) override;
+	virtual void get_usable_swapchain_formats(Hector<int64_t> &p_usable_swap_chains) override;
+	virtual void get_usable_depth_formats(Hector<int64_t> &p_usable_swap_chains) override;
 	virtual String get_swapchain_format_name(int64_t p_swapchain_format) const override;
 	virtual bool get_swapchain_image_data(XrSwapchain p_swapchain, int64_t p_swapchain_format, uint32_t p_width, uint32_t p_height, uint32_t p_sample_count, uint32_t p_array_size, void **r_swapchain_graphics_data) override;
 	virtual void cleanup_swapchain_graphics_data(void **p_swapchain_graphics_data) override;
@@ -70,7 +70,7 @@ private:
 
 	struct SwapchainGraphicsData {
 		bool is_multiview;
-		Vector<RID> texture_rids;
+		Hector<RID> texture_rids;
 	};
 
 	bool check_graphics_api_support(XrVersion p_desired_version);

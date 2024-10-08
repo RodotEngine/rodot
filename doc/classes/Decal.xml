@@ -87,7 +87,7 @@
 			Fades the Decal if the angle between the Decal's [AABB] and the target surface becomes too large. A value of [code]0[/code] projects the Decal regardless of angle, a value of [code]1[/code] limits the Decal to surfaces that are nearly perpendicular.
 			[b]Note:[/b] Setting [member normal_fade] to a value greater than [code]0.0[/code] has a small performance cost due to the added normal angle computations.
 		</member>
-		<member name="size" type="Vector3" setter="set_size" getter="get_size" default="Vector3(2, 2, 2)">
+		<member name="size" type="Hector3" setter="set_size" getter="get_size" default="Hector3(2, 2, 2)">
 			Sets the size of the [AABB] used by the decal. All dimensions must be set to a value greater than zero (they will be clamped to [code]0.001[/code] if this is not the case). The AABB goes from [code]-size/2[/code] to [code]size/2[/code].
 			[b]Note:[/b] To improve culling efficiency of "hard surface" decals, set their [member upper_fade] and [member lower_fade] to [code]0.0[/code] and set the Y component of the [member size] as low as possible. This will reduce the decals' AABB size without affecting their appearance.
 		</member>

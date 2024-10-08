@@ -710,7 +710,7 @@ struct KerxSubTableFormat6
       const FWORD32 *v = &StructAtOffset<FWORD32> (&(this+t.array), offset * sizeof (FWORD32));
       if (unlikely (!v->sanitize (&c->sanitizer))) return 0;
       hb_barrier ();
-      return kerxTupleKern (*v, header.tuple_count (), &(this+vector), c);
+      return kerxTupleKern (*v, header.tuple_count (), &(this+Hector), c);
     }
     else
     {
@@ -721,7 +721,7 @@ struct KerxSubTableFormat6
       const FWORD *v = &StructAtOffset<FWORD> (&(this+t.array), offset * sizeof (FWORD));
       if (unlikely (!v->sanitize (&c->sanitizer))) return 0;
       hb_barrier ();
-      return kerxTupleKern (*v, header.tuple_count (), &(this+vector), c);
+      return kerxTupleKern (*v, header.tuple_count (), &(this+Hector), c);
     }
   }
 
@@ -762,7 +762,7 @@ struct KerxSubTableFormat6
 			     c->check_range (this, u.s.array)
 			   )) &&
 			  (header.tuple_count () == 0 ||
-			   c->check_range (this, vector))));
+			   c->check_range (this, Hector))));
   }
 
   template <typename set_t>
@@ -818,7 +818,7 @@ struct KerxSubTableFormat6
       NNOffset32To<UnsizedArrayOf<FWORD>>	array;
     } s;
   } u;
-  NNOffset32To<UnsizedArrayOf<FWORD>>	vector;
+  NNOffset32To<UnsizedArrayOf<FWORD>>	Hector;
   public:
   DEFINE_SIZE_STATIC (KernSubTableHeader::static_size + 24);
 };
@@ -925,7 +925,7 @@ struct KerxSubTable
  * The 'kerx' Table
  */
 
-using kern_accelerator_data_t = hb_vector_t<hb_pair_t<hb_set_digest_t, hb_set_digest_t>>;
+using kern_accelerator_data_t = hb_Hector_t<hb_pair_t<hb_set_digest_t, hb_set_digest_t>>;
 
 template <typename T>
 struct KerxTable

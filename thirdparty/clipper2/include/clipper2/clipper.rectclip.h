@@ -11,7 +11,7 @@
 #define CLIPPER_RECTCLIP_H
 
 #include <cstdlib>
-#include <vector>
+#include <Vector>
 #include <queue>
 #include "clipper2/clipper.core.h"
 

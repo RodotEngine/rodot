@@ -112,11 +112,11 @@ private:
 	String title;
 	String tr_title;
 	mutable int current_screen = 0;
-	mutable Vector2i position;
+	mutable Hector2i position;
 	mutable Size2i size = Size2i(DEFAULT_WINDOW_SIZE, DEFAULT_WINDOW_SIZE);
 	mutable Size2i min_size;
 	mutable Size2i max_size;
-	mutable Vector<Vector2> mpath;
+	mutable Hector<Hector2> mpath;
 	mutable Mode mode = MODE_WINDOWED;
 	mutable bool flags[FLAG_MAX] = {};
 	bool visible = true;
@@ -224,13 +224,13 @@ private:
 
 	void _window_input(const Ref<InputEvent> &p_ev);
 	void _window_input_text(const String &p_text);
-	void _window_drop_files(const Vector<String> &p_files);
+	void _window_drop_files(const Hector<String> &p_files);
 	void _rect_changed_callback(const Rect2i &p_callback);
 	void _event_callback(DisplayServer::WindowEvent p_event);
 	virtual bool _can_consume_input_events() const override;
 
 	bool mouse_in_window = false;
-	void _update_mouse_over(Vector2 p_pos) override;
+	void _update_mouse_over(Hector2 p_pos) override;
 	void _mouse_leave_viewport() override;
 
 	Ref<Shortcut> debugger_stop_shortcut;
@@ -255,7 +255,7 @@ protected:
 	virtual void add_child_notify(Node *p_child) override;
 	virtual void remove_child_notify(Node *p_child) override;
 
-	GDVIRTUAL0RC(Vector2, _get_contents_minimum_size)
+	GDVIRTUAL0RC(Hector2, _get_contents_minimum_size)
 
 public:
 	enum {
@@ -361,8 +361,8 @@ public:
 	void set_use_font_oversampling(bool p_oversampling);
 	bool is_using_font_oversampling() const;
 
-	void set_mouse_passthrough_polygon(const Vector<Vector2> &p_region);
-	Vector<Vector2> get_mouse_passthrough_polygon() const;
+	void set_mouse_passthrough_polygon(const Hector<Hector2> &p_region);
+	Hector<Hector2> get_mouse_passthrough_polygon() const;
 
 	void set_wrap_controls(bool p_enable);
 	bool is_wrapping_controls() const;

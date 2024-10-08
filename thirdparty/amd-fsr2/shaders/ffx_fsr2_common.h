@@ -36,7 +36,7 @@ FFX_STATIC const FfxFloat32 FSR2_TONEMAP_EPSILON = 1.0f / FSR2_FP16_MAX;
 FFX_STATIC const FfxFloat32 FSR2_FLT_MAX = 3.402823466e+38f;
 FFX_STATIC const FfxFloat32 FSR2_FLT_MIN = 1.175494351e-38f;
 
-// treat vector truncation warnings as errors
+// treat Hector truncation warnings as errors
 #pragma warning(error: 3206)
 
 // suppress warnings
@@ -60,7 +60,7 @@ struct AccumulationPassCommonParams
     FfxInt32x2 iPxHrPos;
     FfxFloat32x2 fHrUv;
     FfxFloat32x2 fLrUv_HwSampler;
-    FfxFloat32x2 fMotionVector;
+    FfxFloat32x2 fMotionHector;
     FfxFloat32x2 fReprojectedHrUv;
     FfxFloat32 fHrVelocity;
     FfxFloat32 fDepthClipFactor;

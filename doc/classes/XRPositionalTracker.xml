@@ -16,7 +16,7 @@
 			<return type="Variant" />
 			<param index="0" name="name" type="StringName" />
 			<description>
-				Returns an input for this tracker. It can return a boolean, float or [Vector2] value depending on whether the input is a button, trigger or thumbstick/thumbpad.
+				Returns an input for this tracker. It can return a boolean, float or [Hector2] value depending on whether the input is a button, trigger or thumbstick/thumbpad.
 			</description>
 		</method>
 		<method name="get_pose" qualifiers="const">
@@ -52,8 +52,8 @@
 			<return type="void" />
 			<param index="0" name="name" type="StringName" />
 			<param index="1" name="transform" type="Transform3D" />
-			<param index="2" name="linear_velocity" type="Vector3" />
-			<param index="3" name="angular_velocity" type="Vector3" />
+			<param index="2" name="linear_velocity" type="Hector3" />
+			<param index="3" name="angular_velocity" type="Hector3" />
 			<param index="4" name="tracking_confidence" type="int" enum="XRPose.TrackingConfidence" />
 			<description>
 				Sets the transform, linear velocity, angular velocity and tracking confidence for the given pose. This method is called by a [XRInterface] implementation and should not be used directly.
@@ -88,9 +88,9 @@
 				Emitted when a trigger or similar input on this tracker changes value.
 			</description>
 		</signal>
-		<signal name="input_vector2_changed">
+		<signal name="input_Hector2_changed">
 			<param index="0" name="name" type="String" />
-			<param index="1" name="vector" type="Vector2" />
+			<param index="1" name="Hector" type="Hector2" />
 			<description>
 				Emitted when a thumbstick or thumbpad on this tracker moves.
 			</description>

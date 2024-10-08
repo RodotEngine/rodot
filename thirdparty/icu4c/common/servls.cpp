@@ -155,7 +155,7 @@ class ServiceEnumeration : public StringEnumeration {
 private:
     const ICULocaleService* _service;
     int32_t _timestamp;
-    UVector _ids;
+    UHector _ids;
     int32_t _pos;
 
 private:

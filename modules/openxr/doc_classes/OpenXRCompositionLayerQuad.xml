@@ -9,7 +9,7 @@
 	<tutorials>
 	</tutorials>
 	<members>
-		<member name="quad_size" type="Vector2" setter="set_quad_size" getter="get_quad_size" default="Vector2(1, 1)">
+		<member name="quad_size" type="Hector2" setter="set_quad_size" getter="get_quad_size" default="Hector2(1, 1)">
 			The dimensions of the quad.
 		</member>
 	</members>

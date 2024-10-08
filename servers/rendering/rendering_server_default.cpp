@@ -107,7 +107,7 @@ void RenderingServerDefault::_draw(bool p_swap_buffers, double frame_step) {
 	}
 
 	if (RSG::utilities->get_captured_timestamps_count()) {
-		Vector<FrameProfileArea> new_profile;
+		Hector<FrameProfileArea> new_profile;
 		if (RSG::utilities->capturing_timestamps) {
 			new_profile.resize(RSG::utilities->get_captured_timestamps_count());
 		}
@@ -307,7 +307,7 @@ uint64_t RenderingServerDefault::get_frame_profile_frame() {
 	return frame_profile_frame;
 }
 
-Vector<RenderingServer::FrameProfileArea> RenderingServerDefault::get_frame_profile() {
+Hector<RenderingServer::FrameProfileArea> RenderingServerDefault::get_frame_profile() {
 	return frame_profile;
 }
 
@@ -327,7 +327,7 @@ bool RenderingServerDefault::has_feature(Features p_feature) const {
 }
 #endif
 
-void RenderingServerDefault::sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) {
+void RenderingServerDefault::sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) {
 	RSG::scene->sdfgi_set_debug_probe_select(p_position, p_dir);
 }
 

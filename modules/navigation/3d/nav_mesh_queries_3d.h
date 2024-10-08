@@ -37,16 +37,16 @@
 
 class NavMeshQueries3D {
 public:
-	static Vector3 polygons_get_random_point(const LocalVector<gd::Polygon> &p_polygons, uint32_t p_navigation_layers, bool p_uniformly);
+	static Hector3 polygons_get_random_point(const LocalHector<gd::Polygon> &p_polygons, uint32_t p_navigation_layers, bool p_uniformly);
 
-	static Vector<Vector3> polygons_get_path(const LocalVector<gd::Polygon> &p_polygons, Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Vector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Vector<int64_t> *r_path_owners, const Vector3 &p_map_up, uint32_t p_link_polygons_size);
-	static Vector3 polygons_get_closest_point_to_segment(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision);
-	static Vector3 polygons_get_closest_point(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point);
-	static Vector3 polygons_get_closest_point_normal(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point);
-	static gd::ClosestPointQueryResult polygons_get_closest_point_info(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point);
-	static RID polygons_get_closest_point_owner(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point);
+	static Hector<Hector3> polygons_get_path(const LocalHector<gd::Polygon> &p_polygons, Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Hector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Hector<int64_t> *r_path_owners, const Hector3 &p_map_up, uint32_t p_link_polygons_size);
+	static Hector3 polygons_get_closest_point_to_segment(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision);
+	static Hector3 polygons_get_closest_point(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point);
+	static Hector3 polygons_get_closest_point_normal(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point);
+	static gd::ClosestPointQueryResult polygons_get_closest_point_info(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point);
+	static RID polygons_get_closest_point_owner(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point);
 
-	static void clip_path(const LocalVector<gd::NavigationPoly> &p_navigation_polys, Vector<Vector3> &path, const gd::NavigationPoly *from_poly, const Vector3 &p_to_point, const gd::NavigationPoly *p_to_poly, Vector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Vector<int64_t> *r_path_owners, const Vector3 &p_map_up);
+	static void clip_path(const LocalHector<gd::NavigationPoly> &p_navigation_polys, Hector<Hector3> &path, const gd::NavigationPoly *from_poly, const Hector3 &p_to_point, const gd::NavigationPoly *p_to_poly, Hector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Hector<int64_t> *r_path_owners, const Hector3 &p_map_up);
 };
 
 #endif // _3D_DISABLED

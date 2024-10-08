@@ -186,7 +186,7 @@ public:
 	void play_section_backwards(const StringName &p_name = StringName(), double p_start_time = -1, double p_end_time = -1, double p_custom_blend = -1);
 	void play_with_capture(const StringName &p_name = StringName(), double p_duration = -1.0, double p_custom_blend = -1, float p_custom_scale = 1.0, bool p_from_end = false, Tween::TransitionType p_trans_type = Tween::TRANS_LINEAR, Tween::EaseType p_ease_type = Tween::EASE_IN);
 	void queue(const StringName &p_name);
-	Vector<String> get_queue();
+	Hector<String> get_queue();
 	void clear_queue();
 	void pause();
 	void stop(bool p_keep_state = false);

@@ -46,12 +46,12 @@ EGLenum EGLManagerWaylandGLES::_get_platform_api_enum() const {
 	return EGL_OPENGL_ES_API;
 }
 
-Vector<EGLAttrib> EGLManagerWaylandGLES::_get_platform_display_attributes() const {
-	return Vector<EGLAttrib>();
+Hector<EGLAttrib> EGLManagerWaylandGLES::_get_platform_display_attributes() const {
+	return Hector<EGLAttrib>();
 }
 
-Vector<EGLint> EGLManagerWaylandGLES::_get_platform_context_attribs() const {
-	Vector<EGLint> ret;
+Hector<EGLint> EGLManagerWaylandGLES::_get_platform_context_attribs() const {
+	Hector<EGLint> ret;
 	ret.push_back(EGL_CONTEXT_MAJOR_VERSION);
 	ret.push_back(3);
 	ret.push_back(EGL_NONE);

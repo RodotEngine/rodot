@@ -84,8 +84,8 @@ public:
 	real_t m_swingSpan2 = 0.0;
 	real_t m_twistSpan = 0.0;
 
-	Vector3 m_swingAxis;
-	Vector3 m_twistAxis;
+	Hector3 m_swingAxis;
+	Hector3 m_twistAxis;
 
 	real_t m_kSwing = 0.0;
 	real_t m_kTwist = 0.0;

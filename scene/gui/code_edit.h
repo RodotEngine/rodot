@@ -83,7 +83,7 @@ private:
 		String open_key = "";
 		String close_key = "";
 	};
-	Vector<BracePair> auto_brace_completion_pairs;
+	Hector<BracePair> auto_brace_completion_pairs;
 
 	int _get_auto_brace_pair_open_at_pos(int p_line, int p_col);
 	int _get_auto_brace_pair_close_at_pos(int p_line, int p_col);
@@ -147,9 +147,9 @@ private:
 		bool line_only = true;
 	};
 	bool setting_delimiters = false;
-	Vector<Delimiter> delimiters;
+	Hector<Delimiter> delimiters;
 	/*
-	 *  Vector entry per line, contains a Map of column numbers to delimiter index, -1 marks the end of a region.
+	 *  Hector entry per line, contains a Map of column numbers to delimiter index, -1 marks the end of a region.
 	 *  e.g the following text will be stored as so:
 	 *
 	 *  0: nothing here
@@ -160,7 +160,7 @@ private:
 	 *  5: test
 	 *  6: string"
 	 *
-	 *  Vector [
+	 *  Hector [
 	 *      0 = []
 	 *      1 = []
 	 *      2 = [
@@ -183,7 +183,7 @@ private:
 	 *      ]
 	 *  ]
 	 */
-	Vector<RBMap<int, int>> delimiter_cache;
+	Hector<RBMap<int, int>> delimiter_cache;
 
 	void _update_delimiter_cache(int p_from_line = 0, int p_to_line = -1);
 	int _is_in_delimiter(int p_line, int p_column, DelimiterType p_type) const;
@@ -210,7 +210,7 @@ private:
 	bool is_code_completion_scroll_hovered = false;
 	bool is_code_completion_scroll_pressed = false;
 	bool is_code_completion_drag_started = false;
-	Vector<ScriptLanguage::CodeCompletionOption> code_completion_options;
+	Hector<ScriptLanguage::CodeCompletionOption> code_completion_options;
 	int code_completion_line_ofs = 0;
 	int code_completion_current_selected = 0;
 	int code_completion_force_item_center = -1;
@@ -226,7 +226,7 @@ private:
 
 	void _update_scroll_selected_line(float p_mouse_y);
 	void _filter_code_completion_candidates_impl();
-	bool _should_reset_selected_option_for_new_options(const Vector<ScriptLanguage::CodeCompletionOption> &p_new_options);
+	bool _should_reset_selected_option_for_new_options(const Hector<ScriptLanguage::CodeCompletionOption> &p_new_options);
 
 	/* Line length guidelines */
 	TypedArray<int> line_length_guideline_columns;

@@ -183,7 +183,7 @@ struct str_encoder_t
 	memmove (s + sign, s2, len);
 	snprintf (s + sign + len, sizeof (buf) - (s + sign + len - buf), "E-%u", (unsigned) (strlen (s + sign) - 1));
       }
-      hb_vector_t<char> nibbles;
+      hb_Hector_t<char> nibbles;
       while (*s)
       {
 	char c = s[0];
@@ -389,7 +389,7 @@ struct subr_closures_t
 
   bool in_error () const { return local_closures.in_error (); }
   hb_set_t  global_closure;
-  hb_vector_t<hb_set_t> local_closures;
+  hb_Hector_t<hb_set_t> local_closures;
 };
 
 struct parsed_cs_op_t : op_str_t
@@ -510,10 +510,10 @@ struct parsed_cs_str_t : parsed_values_t<parsed_cs_op_t>
   typedef parsed_values_t<parsed_cs_op_t> SUPER;
 };
 
-struct parsed_cs_str_vec_t : hb_vector_t<parsed_cs_str_t>
+struct parsed_cs_str_vec_t : hb_Hector_t<parsed_cs_str_t>
 {
   private:
-  typedef hb_vector_t<parsed_cs_str_t> SUPER;
+  typedef hb_Hector_t<parsed_cs_str_t> SUPER;
 };
 
 struct cff_subset_accelerator_t
@@ -522,7 +522,7 @@ struct cff_subset_accelerator_t
       hb_blob_t* original_blob,
       const parsed_cs_str_vec_t& parsed_charstrings,
       const parsed_cs_str_vec_t& parsed_global_subrs,
-      const hb_vector_t<parsed_cs_str_vec_t>& parsed_local_subrs) {
+      const hb_Hector_t<parsed_cs_str_vec_t>& parsed_local_subrs) {
     cff_subset_accelerator_t* accel =
         (cff_subset_accelerator_t*) hb_malloc (sizeof(cff_subset_accelerator_t));
     if (unlikely (!accel)) return nullptr;
@@ -545,7 +545,7 @@ struct cff_subset_accelerator_t
       hb_blob_t* original_blob_,
       const parsed_cs_str_vec_t& parsed_charstrings_,
       const parsed_cs_str_vec_t& parsed_global_subrs_,
-      const hb_vector_t<parsed_cs_str_vec_t>& parsed_local_subrs_)
+      const hb_Hector_t<parsed_cs_str_vec_t>& parsed_local_subrs_)
   {
     parsed_charstrings = parsed_charstrings_;
     parsed_global_subrs = parsed_global_subrs_;
@@ -569,7 +569,7 @@ struct cff_subset_accelerator_t
 
   parsed_cs_str_vec_t parsed_charstrings;
   parsed_cs_str_vec_t parsed_global_subrs;
-  hb_vector_t<parsed_cs_str_vec_t> parsed_local_subrs;
+  hb_Hector_t<parsed_cs_str_vec_t> parsed_local_subrs;
   mutable hb_atomic_ptr_t<glyph_to_sid_map_t> glyph_to_sid_map;
 
  private:
@@ -694,7 +694,7 @@ struct subr_remaps_t
   }
 
   subr_remap_t	       global_remap;
-  hb_vector_t<subr_remap_t>  local_remaps;
+  hb_Hector_t<subr_remap_t>  local_remaps;
 };
 
 template <typename SUBSETTER, typename SUBRS, typename ACC, typename ENV, typename OPSET, op_code_t endchar_op=OpCode_Invalid>
@@ -859,7 +859,7 @@ struct subr_subsetter_t
       if (endchar_op != OpCode_Invalid)
         for (; last < gid; last++)
 	{
-	  // Hack to point vector to static string.
+	  // Hack to point Hector to static string.
 	  auto &b = buffArray.arrayZ[last];
 	  b.length = 1;
 	  b.arrayZ = const_cast<unsigned char *>(endchar_str);
@@ -875,7 +875,7 @@ struct subr_subsetter_t
     if (endchar_op != OpCode_Invalid)
       for (; last < num_glyphs; last++)
       {
-	// Hack to point vector to static string.
+	// Hack to point Hector to static string.
 	auto &b = buffArray.arrayZ[last];
 	b.length = 1;
 	b.arrayZ = const_cast<unsigned char *>(endchar_str);
@@ -1044,7 +1044,7 @@ struct subr_subsetter_t
   }
 
   bool closure_subroutines (const parsed_cs_str_vec_t& global_subrs,
-                            const hb_vector_t<parsed_cs_str_vec_t>& local_subrs)
+                            const hb_Hector_t<parsed_cs_str_vec_t>& local_subrs)
   {
     closures.reset ();
     for (auto _ : plan->new_to_old_gid_list)
@@ -1190,9 +1190,9 @@ struct subr_subsetter_t
 
   subr_closures_t		closures;
 
-  hb_vector_t<const parsed_cs_str_t*>     cached_charstrings;
+  hb_Hector_t<const parsed_cs_str_t*>     cached_charstrings;
   const parsed_cs_str_vec_t*              parsed_global_subrs;
-  const hb_vector_t<parsed_cs_str_vec_t>* parsed_local_subrs;
+  const hb_Hector_t<parsed_cs_str_vec_t>* parsed_local_subrs;
 
   subr_remaps_t			remaps;
 
@@ -1200,7 +1200,7 @@ struct subr_subsetter_t
 
   parsed_cs_str_vec_t		parsed_charstrings;
   parsed_cs_str_vec_t		parsed_global_subrs_storage;
-  hb_vector_t<parsed_cs_str_vec_t>  parsed_local_subrs_storage;
+  hb_Hector_t<parsed_cs_str_vec_t>  parsed_local_subrs_storage;
   typedef typename SUBRS::count_type subr_count_type;
 };
 
@@ -1213,7 +1213,7 @@ hb_plan_subset_cff_fdselect (const hb_subset_plan_t *plan,
 			    unsigned int &subset_fd_count /* OUT */,
 			    unsigned int &subset_fdselect_size /* OUT */,
 			    unsigned int &subset_fdselect_format /* OUT */,
-			    hb_vector_t<CFF::code_pair_t> &fdselect_ranges /* OUT */,
+			    hb_Hector_t<CFF::code_pair_t> &fdselect_ranges /* OUT */,
 			    hb_inc_bimap_t &fdmap /* OUT */);
 
 HB_INTERNAL bool
@@ -1223,6 +1223,6 @@ hb_serialize_cff_fdselect (hb_serialize_context_t *c,
 			  unsigned int fd_count,
 			  unsigned int fdselect_format,
 			  unsigned int size,
-			  const hb_vector_t<CFF::code_pair_t> &fdselect_ranges);
+			  const hb_Hector_t<CFF::code_pair_t> &fdselect_ranges);
 
 #endif /* HB_SUBSET_CFF_COMMON_HH */

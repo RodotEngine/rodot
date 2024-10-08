@@ -479,10 +479,10 @@ const GodotWebXR = {
 		if (subimage === null) {
 			return 0;
 		}
-		if (!subimage.motionVectorTexture) {
+		if (!subimage.motionHectorTexture) {
 			return 0;
 		}
-		return GodotWebXR.getTextureId(subimage.motionVectorTexture);
+		return GodotWebXR.getTextureId(subimage.motionHectorTexture);
 	},
 
 	godot_webxr_update_input_source__proxy: 'sync',

@@ -63,15 +63,15 @@ static const ResourceBinding srvResourceBindingTable[] =
 {
     {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_COLOR,                              L"r_input_color_jittered"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_OPAQUE_ONLY,                        L"r_input_opaque_only"},
-    {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_VECTORS,                     L"r_input_motion_vectors"},
+    {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_HectorS,                     L"r_input_motion_Hectors"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_DEPTH,                              L"r_input_depth" },
     {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_EXPOSURE,                           L"r_input_exposure"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_AUTO_EXPOSURE,                            L"r_auto_exposure"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_REACTIVE_MASK,                      L"r_reactive_mask"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_TRANSPARENCY_AND_COMPOSITION_MASK,  L"r_transparency_and_composition_mask"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_RECONSTRUCTED_PREVIOUS_NEAREST_DEPTH,     L"r_reconstructed_previous_nearest_depth"},
-    {FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_VECTORS,                   L"r_dilated_motion_vectors"},
-    {FFX_FSR2_RESOURCE_IDENTIFIER_PREVIOUS_DILATED_MOTION_VECTORS,          L"r_previous_dilated_motion_vectors"},
+    {FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_HectorS,                   L"r_dilated_motion_Hectors"},
+    {FFX_FSR2_RESOURCE_IDENTIFIER_PREVIOUS_DILATED_MOTION_HectorS,          L"r_previous_dilated_motion_Hectors"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_DEPTH,                            L"r_dilatedDepth"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR,                  L"r_internal_upscaled_color"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_LOCK_STATUS,                              L"r_lock_status"},
@@ -93,7 +93,7 @@ static const ResourceBinding srvResourceBindingTable[] =
 static const ResourceBinding uavResourceBindingTable[] =
 {
     {FFX_FSR2_RESOURCE_IDENTIFIER_RECONSTRUCTED_PREVIOUS_NEAREST_DEPTH,    L"rw_reconstructed_previous_nearest_depth"},
-    {FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_VECTORS,                  L"rw_dilated_motion_vectors"},
+    {FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_HectorS,                  L"rw_dilated_motion_Hectors"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_DEPTH,                           L"rw_dilatedDepth"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR,                 L"rw_internal_upscaled_color"},
     {FFX_FSR2_RESOURCE_IDENTIFIER_LOCK_STATUS,                             L"rw_lock_status"},
@@ -228,9 +228,9 @@ static void fsr2DebugCheckDispatch(FfxFsr2Context_Private* context, const FfxFsr
         context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_ERROR, L"depth resource is null");
     }
 
-    if (params->motionVectors.resource == nullptr)
+    if (params->motionHectors.resource == nullptr)
     {
-        context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_ERROR, L"motionVectors resource is null");
+        context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_ERROR, L"motionHectors resource is null");
     }
 
     if (params->exposure.resource != nullptr)
@@ -251,15 +251,15 @@ static void fsr2DebugCheckDispatch(FfxFsr2Context_Private* context, const FfxFsr
         context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_WARNING, L"jitterOffset contains value outside of expected range [-1.0, 1.0]");
     }
 
-    if ((params->motionVectorScale.x > (float)context->contextDescription.maxRenderSize.width) ||
-        (params->motionVectorScale.y > (float)context->contextDescription.maxRenderSize.height))
+    if ((params->motionHectorScale.x > (float)context->contextDescription.maxRenderSize.width) ||
+        (params->motionHectorScale.y > (float)context->contextDescription.maxRenderSize.height))
     {
-        context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_WARNING, L"motionVectorScale contains scale value greater than maxRenderSize");
+        context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_WARNING, L"motionHectorScale contains scale value greater than maxRenderSize");
     }
-    if ((params->motionVectorScale.x == 0.0f) ||
-        (params->motionVectorScale.y == 0.0f))
+    if ((params->motionHectorScale.x == 0.0f) ||
+        (params->motionHectorScale.y == 0.0f))
     {
-        context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_WARNING, L"motionVectorScale contains zero scale value");
+        context->contextDescription.fpMessage(FFX_FSR2_MESSAGE_TYPE_WARNING, L"motionHectorScale contains zero scale value");
     }
 
     if ((params->renderSize.width > context->contextDescription.maxRenderSize.width) ||
@@ -511,10 +511,10 @@ static FfxErrorCode fsr2Create(FfxFsr2Context_Private* context, const FfxFsr2Con
         {   FFX_FSR2_RESOURCE_IDENTIFIER_RECONSTRUCTED_PREVIOUS_NEAREST_DEPTH, L"FSR2_ReconstructedPrevNearestDepth", FFX_RESOURCE_USAGE_UAV,
             FFX_SURFACE_FORMAT_R32_UINT, contextDescription->maxRenderSize.width, contextDescription->maxRenderSize.height, 1, FFX_RESOURCE_FLAGS_ALIASABLE },
 
-        {   FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_VECTORS_1, L"FSR2_InternalDilatedVelocity1", (FfxResourceUsage)(FFX_RESOURCE_USAGE_RENDERTARGET | FFX_RESOURCE_USAGE_UAV),
+        {   FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_HectorS_1, L"FSR2_InternalDilatedVelocity1", (FfxResourceUsage)(FFX_RESOURCE_USAGE_RENDERTARGET | FFX_RESOURCE_USAGE_UAV),
             FFX_SURFACE_FORMAT_R16G16_FLOAT, contextDescription->maxRenderSize.width, contextDescription->maxRenderSize.height, 1, FFX_RESOURCE_FLAGS_NONE },
 
-        {   FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_VECTORS_2, L"FSR2_InternalDilatedVelocity2", (FfxResourceUsage)(FFX_RESOURCE_USAGE_RENDERTARGET | FFX_RESOURCE_USAGE_UAV),
+        {   FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_HectorS_2, L"FSR2_InternalDilatedVelocity2", (FfxResourceUsage)(FFX_RESOURCE_USAGE_RENDERTARGET | FFX_RESOURCE_USAGE_UAV),
             FFX_SURFACE_FORMAT_R16G16_FLOAT, contextDescription->maxRenderSize.width, contextDescription->maxRenderSize.height, 1, FFX_RESOURCE_FLAGS_NONE },
 
         {   FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_DEPTH, L"FSR2_DilatedDepth", (FfxResourceUsage)(FFX_RESOURCE_USAGE_RENDERTARGET | FFX_RESOURCE_USAGE_UAV),
@@ -569,7 +569,7 @@ static FfxErrorCode fsr2Create(FfxFsr2Context_Private* context, const FfxFsr2Con
             FFX_SURFACE_FORMAT_R32G32_FLOAT, 1, 1, 1, FFX_RESOURCE_FLAGS_NONE },
 
 
-        // only one for now, will need pingpont to respect the motion vectors
+        // only one for now, will need pingpont to respect the motion Hectors
         {   FFX_FSR2_RESOURCE_IDENTIFIER_AUTOREACTIVE, L"FSR2_AutoReactive", FFX_RESOURCE_USAGE_UAV,
             FFX_SURFACE_FORMAT_R8_UNORM, contextDescription->maxRenderSize.width, contextDescription->maxRenderSize.height, 1, FFX_RESOURCE_FLAGS_NONE },
         {   FFX_FSR2_RESOURCE_IDENTIFIER_AUTOCOMPOSITION, L"FSR2_AutoComposition", FFX_RESOURCE_USAGE_UAV,
@@ -651,7 +651,7 @@ static FfxErrorCode fsr2Release(FfxFsr2Context_Private* context)
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_OPAQUE_ONLY] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_COLOR] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_DEPTH] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
-    context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_VECTORS] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
+    context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_HectorS] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_EXPOSURE] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_REACTIVE_MASK] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_TRANSPARENCY_AND_COMPOSITION_MASK] = { FFX_FSR2_RESOURCE_IDENTIFIER_NULL };
@@ -811,8 +811,8 @@ static FfxErrorCode fsr2Dispatch(FfxFsr2Context_Private* context, const FfxFsr2D
     const uint32_t lockStatusUavResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_LOCK_STATUS_1 : FFX_FSR2_RESOURCE_IDENTIFIER_LOCK_STATUS_2;
     const uint32_t upscaledColorSrvResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR_2 : FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR_1;
     const uint32_t upscaledColorUavResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR_1 : FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR_2;
-    const uint32_t dilatedMotionVectorsResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_VECTORS_2 : FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_VECTORS_1;
-    const uint32_t previousDilatedMotionVectorsResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_VECTORS_1 : FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_VECTORS_2;
+    const uint32_t dilatedMotionHectorsResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_HectorS_2 : FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_HectorS_1;
+    const uint32_t previousDilatedMotionHectorsResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_HectorS_1 : FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_DILATED_MOTION_HectorS_2;
     const uint32_t lumaHistorySrvResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_LUMA_HISTORY_2 : FFX_FSR2_RESOURCE_IDENTIFIER_LUMA_HISTORY_1;
     const uint32_t lumaHistoryUavResourceIndex = isOddFrame ? FFX_FSR2_RESOURCE_IDENTIFIER_LUMA_HISTORY_1 : FFX_FSR2_RESOURCE_IDENTIFIER_LUMA_HISTORY_2;
 
@@ -826,7 +826,7 @@ static FfxErrorCode fsr2Dispatch(FfxFsr2Context_Private* context, const FfxFsr2D
 
     context->contextDescription.callbacks.fpRegisterResource(&context->contextDescription.callbacks, &params->color, &context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_COLOR]);
     context->contextDescription.callbacks.fpRegisterResource(&context->contextDescription.callbacks, &params->depth, &context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_DEPTH]);
-    context->contextDescription.callbacks.fpRegisterResource(&context->contextDescription.callbacks, &params->motionVectors, &context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_VECTORS]);
+    context->contextDescription.callbacks.fpRegisterResource(&context->contextDescription.callbacks, &params->motionHectors, &context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_HectorS]);
 
     // if auto exposure is enabled use the auto exposure SRV, otherwise what the app sends.
     if (context->contextDescription.flags & FFX_FSR2_ENABLE_AUTO_EXPOSURE) {
@@ -864,9 +864,9 @@ static FfxErrorCode fsr2Dispatch(FfxFsr2Context_Private* context, const FfxFsr2D
     context->uavResources[FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR] = context->uavResources[upscaledColorUavResourceIndex];
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_RCAS_INPUT] = context->uavResources[upscaledColorUavResourceIndex];
 
-    context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_VECTORS] = context->srvResources[dilatedMotionVectorsResourceIndex];
-    context->uavResources[FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_VECTORS] = context->uavResources[dilatedMotionVectorsResourceIndex];
-    context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_PREVIOUS_DILATED_MOTION_VECTORS] = context->srvResources[previousDilatedMotionVectorsResourceIndex];
+    context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_HectorS] = context->srvResources[dilatedMotionHectorsResourceIndex];
+    context->uavResources[FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_HectorS] = context->uavResources[dilatedMotionHectorsResourceIndex];
+    context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_PREVIOUS_DILATED_MOTION_HectorS] = context->srvResources[previousDilatedMotionHectorsResourceIndex];
 
     context->uavResources[FFX_FSR2_RESOURCE_IDENTIFIER_LUMA_HISTORY] = context->uavResources[lumaHistoryUavResourceIndex];
     context->srvResources[FFX_FSR2_RESOURCE_IDENTIFIER_LUMA_HISTORY] = context->srvResources[lumaHistorySrvResourceIndex];
@@ -907,17 +907,17 @@ static FfxErrorCode fsr2Dispatch(FfxFsr2Context_Private* context, const FfxFsr2D
     context->constants.previousFramePreExposure = context->constants.preExposure;
     context->constants.preExposure = (params->preExposure != 0) ? params->preExposure : 1.0f;
 
-    // motion vector data
-    const int32_t* motionVectorsTargetSize = (context->contextDescription.flags & FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_VECTORS) ? context->constants.displaySize : context->constants.renderSize;
+    // motion Hector data
+    const int32_t* motionHectorsTargetSize = (context->contextDescription.flags & FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_HectorS) ? context->constants.displaySize : context->constants.renderSize;
 
-    context->constants.motionVectorScale[0] = (params->motionVectorScale.x / motionVectorsTargetSize[0]);
-    context->constants.motionVectorScale[1] = (params->motionVectorScale.y / motionVectorsTargetSize[1]);
+    context->constants.motionHectorScale[0] = (params->motionHectorScale.x / motionHectorsTargetSize[0]);
+    context->constants.motionHectorScale[1] = (params->motionHectorScale.y / motionHectorsTargetSize[1]);
 
     // compute jitter cancellation
-    if (context->contextDescription.flags & FFX_FSR2_ENABLE_MOTION_VECTORS_JITTER_CANCELLATION) {
+    if (context->contextDescription.flags & FFX_FSR2_ENABLE_MOTION_HectorS_JITTER_CANCELLATION) {
 
-        context->constants.motionVectorJitterCancellation[0] = (context->previousJitterOffset[0] - context->constants.jitterOffset[0]) / motionVectorsTargetSize[0];
-        context->constants.motionVectorJitterCancellation[1] = (context->previousJitterOffset[1] - context->constants.jitterOffset[1]) / motionVectorsTargetSize[1];
+        context->constants.motionHectorJitterCancellation[0] = (context->previousJitterOffset[0] - context->constants.jitterOffset[0]) / motionHectorsTargetSize[0];
+        context->constants.motionHectorJitterCancellation[1] = (context->previousJitterOffset[1] - context->constants.jitterOffset[1]) / motionHectorsTargetSize[1];
 
         context->previousJitterOffset[0] = context->constants.jitterOffset[0];
         context->previousJitterOffset[1] = context->constants.jitterOffset[1];

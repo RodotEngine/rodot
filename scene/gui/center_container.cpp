@@ -62,12 +62,12 @@ bool CenterContainer::is_using_top_left() const {
 	return use_top_left;
 }
 
-Vector<int> CenterContainer::get_allowed_size_flags_horizontal() const {
-	return Vector<int>();
+Hector<int> CenterContainer::get_allowed_size_flags_horizontal() const {
+	return Hector<int>();
 }
 
-Vector<int> CenterContainer::get_allowed_size_flags_vertical() const {
-	return Vector<int>();
+Hector<int> CenterContainer::get_allowed_size_flags_vertical() const {
+	return Hector<int>();
 }
 
 void CenterContainer::_notification(int p_what) {

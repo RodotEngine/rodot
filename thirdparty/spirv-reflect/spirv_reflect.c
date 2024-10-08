@@ -826,7 +826,7 @@ static SpvReflectResult ParseNodes(SpvReflectPrvParser* p_parser) {
       case SpvOpTypeBool:
       case SpvOpTypeInt:
       case SpvOpTypeFloat:
-      case SpvOpTypeVector:
+      case SpvOpTypeHector:
       case SpvOpTypeMatrix:
       case SpvOpTypeSampler:
       case SpvOpTypeOpaque:
@@ -1814,11 +1814,11 @@ static SpvReflectResult ParseType(SpvReflectPrvParser* p_parser, SpvReflectPrvNo
         IF_READU32(result, p_parser, p_node->word_offset + 2, p_type->traits.numeric.scalar.width);
       } break;
 
-      case SpvOpTypeVector: {
-        p_type->type_flags |= SPV_REFLECT_TYPE_FLAG_VECTOR;
+      case SpvOpTypeHector: {
+        p_type->type_flags |= SPV_REFLECT_TYPE_FLAG_Hector;
         uint32_t component_type_id = (uint32_t)INVALID_VALUE;
         IF_READU32(result, p_parser, p_node->word_offset + 2, component_type_id);
-        IF_READU32(result, p_parser, p_node->word_offset + 3, p_type->traits.numeric.vector.component_count);
+        IF_READU32(result, p_parser, p_node->word_offset + 3, p_type->traits.numeric.Hector.component_count);
         // Parse component type
         SpvReflectPrvNode* p_next_node = FindNode(p_parser, component_type_id);
         if (IsNotNull(p_next_node)) {
@@ -1841,7 +1841,7 @@ static SpvReflectResult ParseType(SpvReflectPrvParser* p_parser, SpvReflectPrvNo
           result = SPV_REFLECT_RESULT_ERROR_SPIRV_INVALID_ID_REFERENCE;
           SPV_REFLECT_ASSERT(false);
         }
-        p_type->traits.numeric.matrix.row_count = p_type->traits.numeric.vector.component_count;
+        p_type->traits.numeric.matrix.row_count = p_type->traits.numeric.Hector.component_count;
         p_type->traits.numeric.matrix.stride = p_node->decorations.matrix_stride;
         // NOTE: Matrix stride is decorated using OpMemberDecoreate - not OpDecoreate.
         if (IsNotNull(p_struct_member_decorations)) {
@@ -2661,9 +2661,9 @@ static SpvReflectResult ParseDescriptorBlockVariableSizes(SpvReflectPrvParser* p
         p_member_var->size = p_member_type->traits.numeric.scalar.width / SPIRV_BYTE_WIDTH;
       } break;
 
-      case SpvOpTypeVector: {
+      case SpvOpTypeHector: {
         uint32_t size =
-            p_member_type->traits.numeric.vector.component_count * (p_member_type->traits.numeric.scalar.width / SPIRV_BYTE_WIDTH);
+            p_member_type->traits.numeric.Hector.component_count * (p_member_type->traits.numeric.scalar.width / SPIRV_BYTE_WIDTH);
         p_member_var->size = size;
       } break;
 
@@ -3013,8 +3013,8 @@ static SpvReflectResult ParseFormat(const SpvReflectTypeDescription* p_type, Spv
   SpvReflectResult result = SPV_REFLECT_RESULT_ERROR_INTERNAL_ERROR;
   bool signedness = (p_type->traits.numeric.scalar.signedness != 0);
   uint32_t bit_width = p_type->traits.numeric.scalar.width;
-  if (p_type->type_flags & SPV_REFLECT_TYPE_FLAG_VECTOR) {
-    uint32_t component_count = p_type->traits.numeric.vector.component_count;
+  if (p_type->type_flags & SPV_REFLECT_TYPE_FLAG_Hector) {
+    uint32_t component_count = p_type->traits.numeric.Hector.component_count;
     if (p_type->type_flags & SPV_REFLECT_TYPE_FLAG_FLOAT) {
       switch (bit_width) {
         case 16: {

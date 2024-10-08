@@ -37,8 +37,8 @@ class StaticBody3D : public PhysicsBody3D {
 	GDCLASS(StaticBody3D, PhysicsBody3D);
 
 private:
-	Vector3 constant_linear_velocity;
-	Vector3 constant_angular_velocity;
+	Hector3 constant_linear_velocity;
+	Hector3 constant_angular_velocity;
 
 	Ref<PhysicsMaterial> physics_material_override;
 
@@ -49,11 +49,11 @@ public:
 	void set_physics_material_override(const Ref<PhysicsMaterial> &p_physics_material_override);
 	Ref<PhysicsMaterial> get_physics_material_override() const;
 
-	void set_constant_linear_velocity(const Vector3 &p_vel);
-	void set_constant_angular_velocity(const Vector3 &p_vel);
+	void set_constant_linear_velocity(const Hector3 &p_vel);
+	void set_constant_angular_velocity(const Hector3 &p_vel);
 
-	Vector3 get_constant_linear_velocity() const;
-	Vector3 get_constant_angular_velocity() const;
+	Hector3 get_constant_linear_velocity() const;
+	Hector3 get_constant_angular_velocity() const;
 
 	StaticBody3D(PhysicsServer3D::BodyMode p_mode = PhysicsServer3D::BODY_MODE_STATIC);
 

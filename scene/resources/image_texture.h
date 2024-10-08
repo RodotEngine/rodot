@@ -115,7 +115,7 @@ public:
 	virtual bool has_mipmaps() const override;
 	virtual LayeredType get_layered_type() const override;
 
-	Error create_from_images(Vector<Ref<Image>> p_images);
+	Error create_from_images(Hector<Ref<Image>> p_images);
 	void update_layer(const Ref<Image> &p_image, int p_layer);
 	virtual Ref<Image> get_layer_data(int p_layer) const override;
 
@@ -153,9 +153,9 @@ public:
 	virtual int get_depth() const override;
 	virtual bool has_mipmaps() const override;
 
-	Error create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data);
-	void update(const Vector<Ref<Image>> &p_data);
-	virtual Vector<Ref<Image>> get_data() const override;
+	Error create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data);
+	void update(const Hector<Ref<Image>> &p_data);
+	virtual Hector<Ref<Image>> get_data() const override;
 
 	virtual RID get_rid() const override;
 	virtual void set_path(const String &p_path, bool p_take_over = false) override;

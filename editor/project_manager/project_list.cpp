@@ -881,7 +881,7 @@ void ProjectList::_on_explore_pressed(const String &p_path) {
 // Project list selection.
 
 void ProjectList::_clear_project_selection() {
-	Vector<Item> previous_selected_items = get_selected_projects();
+	Hector<Item> previous_selected_items = get_selected_projects();
 	_selected_project_paths.clear();
 
 	for (int i = 0; i < previous_selected_items.size(); ++i) {
@@ -935,8 +935,8 @@ void ProjectList::select_first_visible_project() {
 	}
 }
 
-Vector<ProjectList::Item> ProjectList::get_selected_projects() const {
-	Vector<Item> items;
+Hector<ProjectList::Item> ProjectList::get_selected_projects() const {
+	Hector<Item> items;
 	if (_selected_project_paths.size() == 0) {
 		return items;
 	}

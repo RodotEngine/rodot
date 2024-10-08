@@ -40,10 +40,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 #include "RVOSimulator3d.h"
-#include "Vector3.h"
+#include "Hector3.h"
 
 namespace RVO3D {
 	/**
@@ -79,10 +79,10 @@ namespace RVO3D {
 		 */
 		void update(RVOSimulator3D *sim_);
 
-		Vector3 newVelocity_;
-		Vector3 position_;
-		Vector3 prefVelocity_;
-		Vector3 velocity_;
+		Hector3 newVelocity_;
+		Hector3 position_;
+		Hector3 prefVelocity_;
+		Hector3 velocity_;
 		RVOSimulator3D *sim_;
 		size_t id_;
 		size_t maxNeighbors_;

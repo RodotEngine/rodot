@@ -37,9 +37,9 @@
 #define RVO3D_KD_TREE_H_
 
 #include <cstddef>
-#include <vector>
+#include <Vector>
 
-#include "Vector3.h"
+#include "Hector3.h"
 
 namespace RVO3D {
 	class Agent3D;
@@ -78,12 +78,12 @@ namespace RVO3D {
 			/**
 			 * \brief   The maximum coordinates.
 			 */
-			Vector3 maxCoord;
+			Hector3 maxCoord;
 
 			/**
 			 * \brief   The minimum coordinates.
 			 */
-			Vector3 minCoord;
+			Hector3 minCoord;
 		};
 
 		/**

@@ -364,7 +364,7 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermTyped* child,
             break; // HLSL can promote logical not
         }
 
-        if (child->getType().getBasicType() != EbtBool || child->getType().isMatrix() || child->getType().isArray() || child->getType().isVector()) {
+        if (child->getType().getBasicType() != EbtBool || child->getType().isMatrix() || child->getType().isArray() || child->getType().isHector()) {
             return nullptr;
         }
         break;
@@ -401,10 +401,10 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermTyped* child,
     }
 
     if (newType != EbtVoid) {
-        child = addConversion(op, TType(newType, EvqTemporary, child->getVectorSize(),
+        child = addConversion(op, TType(newType, EvqTemporary, child->getHectorSize(),
                                                                child->getMatrixCols(),
                                                                child->getMatrixRows(),
-                                                               child->isVector()),
+                                                               child->isHector()),
                               child);
         if (child == nullptr)
             return nullptr;
@@ -837,7 +837,7 @@ TIntermTyped* TIntermediate::createConversion(TBasicType convertTo, TIntermTyped
         return nullptr;
     }
 
-    TType newType(convertTo, EvqTemporary, node->getVectorSize(), node->getMatrixCols(), node->getMatrixRows());
+    TType newType(convertTo, EvqTemporary, node->getHectorSize(), node->getMatrixCols(), node->getMatrixRows());
     newNode = addUnaryNode(newOp, node, node->getLoc(), newType);
 
     if (node->getAsConstantUnion()) {
@@ -917,9 +917,9 @@ TIntermediate::addPairConversion(TOperator op, TIntermTyped* node0, TIntermTyped
     case EOpDiv:
     case EOpMod:
 
-    case EOpVectorTimesScalar:
-    case EOpVectorTimesMatrix:
-    case EOpMatrixTimesVector:
+    case EOpHectorTimesScalar:
+    case EOpHectorTimesMatrix:
+    case EOpMatrixTimesHector:
     case EOpMatrixTimesScalar:
 
     case EOpAnd:
@@ -1035,7 +1035,7 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
         return nullptr;
 
     // Note: callers are responsible for other aspects of shape,
-    // like vector and matrix sizes.
+    // like Hector and matrix sizes.
 
     switch (op) {
     //
@@ -1067,7 +1067,7 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
     case EOpAddAssign:
     case EOpSubAssign:
     case EOpMulAssign:
-    case EOpVectorTimesScalarAssign:
+    case EOpHectorTimesScalarAssign:
     case EOpMatrixTimesScalarAssign:
     case EOpDivAssign:
     case EOpModAssign:
@@ -1211,7 +1211,7 @@ TIntermTyped* TIntermediate::addUniShapeConversion(TOperator op, const TType& ty
         break;
 
     case EOpMulAssign:
-        // want to support vector *= scalar native ops in AST and lower, not smear, similarly for
+        // want to support Hector *= scalar native ops in AST and lower, not smear, similarly for
         // matrix *= scalar, etc.
 
     case EOpAddAssign:
@@ -1222,7 +1222,7 @@ TIntermTyped* TIntermediate::addUniShapeConversion(TOperator op, const TType& ty
     case EOpExclusiveOrAssign:
     case EOpRightShiftAssign:
     case EOpLeftShiftAssign:
-        if (node->getVectorSize() == 1)
+        if (node->getHectorSize() == 1)
             return node;
         break;
 
@@ -1282,17 +1282,17 @@ void TIntermediate::addBiShapeConversion(TOperator op, TIntermTyped*& lhsNode, T
     case EOpAdd:
     case EOpSub:
     case EOpDiv:
-        // want to support vector * scalar native ops in AST and lower, not smear, similarly for
-        // matrix * vector, etc.
-        if (lhsNode->getVectorSize() == 1 || rhsNode->getVectorSize() == 1)
+        // want to support Hector * scalar native ops in AST and lower, not smear, similarly for
+        // matrix * Hector, etc.
+        if (lhsNode->getHectorSize() == 1 || rhsNode->getHectorSize() == 1)
             return;
         break;
 
     case EOpRightShift:
     case EOpLeftShift:
-        // can natively support the right operand being a scalar and the left a vector,
+        // can natively support the right operand being a scalar and the left a Hector,
         // but not the reverse
-        if (rhsNode->getVectorSize() == 1)
+        if (rhsNode->getHectorSize() == 1)
             return;
         break;
 
@@ -1354,13 +1354,13 @@ TIntermTyped* TIntermediate::addShapeConversion(const TType& type, TIntermTyped*
     TOperator constructorOp = mapTypeToConstructorOp(type);
 
     if (getSource() == EShSourceHlsl) {
-        // HLSL rules for scalar, vector and matrix conversions:
+        // HLSL rules for scalar, Hector and matrix conversions:
         // 1) scalar can become anything, initializing every component with its value
-        // 2) vector and matrix can become scalar, first element is used (warning: truncation)
+        // 2) Hector and matrix can become scalar, first element is used (warning: truncation)
         // 3) matrix can become matrix with less rows and/or columns (warning: truncation)
-        // 4) vector can become vector with less rows size (warning: truncation)
-        // 5a) vector 4 can become 2x2 matrix (special case) (same packing layout, its a reinterpret)
-        // 5b) 2x2 matrix can become vector 4 (special case) (same packing layout, its a reinterpret)
+        // 4) Hector can become Hector with less rows size (warning: truncation)
+        // 5a) Hector 4 can become 2x2 matrix (special case) (same packing layout, its a reinterpret)
+        // 5b) 2x2 matrix can become Hector 4 (special case) (same packing layout, its a reinterpret)
 
         const TType &sourceType = node->getType();
 
@@ -1400,33 +1400,33 @@ TIntermTyped* TIntermediate::addShapeConversion(const TType& type, TIntermTyped*
                     sourceType.getMatrixCols() >= type.getMatrixCols() && sourceType.getMatrixRows() >= type.getMatrixRows())
                     return setAggregateOperator(makeAggregate(node), constructorOp, type, node->getLoc());
             // rule 5b
-            } else if (type.isVector()) {
-                if (type.getVectorSize() == 4 && sourceType.getMatrixCols() == 2 && sourceType.getMatrixRows() == 2)
+            } else if (type.isHector()) {
+                if (type.getHectorSize() == 4 && sourceType.getMatrixCols() == 2 && sourceType.getMatrixRows() == 2)
                     return setAggregateOperator(makeAggregate(node), constructorOp, type, node->getLoc());
             }
         }
 
         // rule 4 and 5a
-        if (sourceType.isVector()) {
+        if (sourceType.isHector()) {
             // rule 4
-            if (type.isVector())
+            if (type.isHector())
             {
-                if (sourceType.getVectorSize() > type.getVectorSize())
+                if (sourceType.getHectorSize() > type.getHectorSize())
                     return setAggregateOperator(makeAggregate(node), constructorOp, type, node->getLoc());
             // rule 5a
             } else if (type.isMatrix()) {
-                if (sourceType.getVectorSize() == 4 && type.getMatrixCols() == 2 && type.getMatrixRows() == 2)
+                if (sourceType.getHectorSize() == 4 && type.getMatrixCols() == 2 && type.getMatrixRows() == 2)
                     return setAggregateOperator(makeAggregate(node), constructorOp, type, node->getLoc());
             }
         }
     }
 
-    // scalar -> vector or vec1 -> vector or
-    // vector -> scalar or
-    // bigger vector -> smaller vector
-    if ((node->getType().isScalarOrVec1() && type.isVector()) ||
-        (node->getType().isVector() && type.isScalar()) ||
-        (node->isVector() && type.isVector() && node->getVectorSize() > type.getVectorSize()))
+    // scalar -> Hector or vec1 -> Hector or
+    // Hector -> scalar or
+    // bigger Hector -> smaller Hector
+    if ((node->getType().isScalarOrVec1() && type.isHector()) ||
+        (node->getType().isHector() && type.isScalar()) ||
+        (node->isHector() && type.isHector() && node->getHectorSize() > type.getHectorSize()))
         return setAggregateOperator(makeAggregate(node), constructorOp, type, node->getLoc());
 
     return node;
@@ -1593,7 +1593,7 @@ bool TIntermediate::isFPIntegralConversion(TBasicType from, TBasicType to) const
 
 //
 // See if the 'from' type is allowed to be implicitly converted to the
-// 'to' type.  This is not about vector/array/struct, only about basic type.
+// 'to' type.  This is not about Hector/array/struct, only about basic type.
 //
 bool TIntermediate::canImplicitlyPromote(TBasicType from, TBasicType to, TOperator op) const
 {
@@ -1618,7 +1618,7 @@ bool TIntermediate::canImplicitlyPromote(TBasicType from, TBasicType to, TOperat
             case EOpAddAssign:               // ...
             case EOpSubAssign:               // ...
             case EOpMulAssign:               // ...
-            case EOpVectorTimesScalarAssign: // ...
+            case EOpHectorTimesScalarAssign: // ...
             case EOpMatrixTimesScalarAssign: // ...
             case EOpDivAssign:               // ...
             case EOpModAssign:               // ...
@@ -2015,7 +2015,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
             default: break; // some compilers want this
             }
         } else {
-            switch(type.getVectorSize()) {
+            switch(type.getHectorSize()) {
             case 1: op = EOpConstructFloat; break;
             case 2: op = EOpConstructVec2;  break;
             case 3: op = EOpConstructVec3;  break;
@@ -2053,7 +2053,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
                 break;
             }
         } else {
-            switch(type.getVectorSize()) {
+            switch(type.getHectorSize()) {
             case 1: op = EOpConstructInt;   break;
             case 2: op = EOpConstructIVec2; break;
             case 3: op = EOpConstructIVec3; break;
@@ -2091,7 +2091,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
                 break;
             }
         } else {
-            switch(type.getVectorSize()) {
+            switch(type.getHectorSize()) {
             case 1: op = EOpConstructUint;  break;
             case 2: op = EOpConstructUVec2; break;
             case 3: op = EOpConstructUVec3; break;
@@ -2129,7 +2129,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
                 break;
             }
         } else {
-            switch(type.getVectorSize()) {
+            switch(type.getHectorSize()) {
             case 1:  op = EOpConstructBool;  break;
             case 2:  op = EOpConstructBVec2; break;
             case 3:  op = EOpConstructBVec3; break;
@@ -2167,7 +2167,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
                 break;
             }
         } else {
-            switch(type.getVectorSize()) {
+            switch(type.getHectorSize()) {
             case 1: op = EOpConstructDouble; break;
             case 2: op = EOpConstructDVec2;  break;
             case 3: op = EOpConstructDVec3;  break;
@@ -2206,7 +2206,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
             }
         }
         else {
-            switch (type.getVectorSize()) {
+            switch (type.getHectorSize()) {
             case 1: op = EOpConstructFloat16;  break;
             case 2: op = EOpConstructF16Vec2;  break;
             case 3: op = EOpConstructF16Vec3;  break;
@@ -2216,7 +2216,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
         }
         break;
     case EbtInt8:
-        switch(type.getVectorSize()) {
+        switch(type.getHectorSize()) {
         case 1: op = EOpConstructInt8;   break;
         case 2: op = EOpConstructI8Vec2; break;
         case 3: op = EOpConstructI8Vec3; break;
@@ -2225,7 +2225,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
         }
         break;
     case EbtUint8:
-        switch(type.getVectorSize()) {
+        switch(type.getHectorSize()) {
         case 1: op = EOpConstructUint8;  break;
         case 2: op = EOpConstructU8Vec2; break;
         case 3: op = EOpConstructU8Vec3; break;
@@ -2234,7 +2234,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
         }
         break;
     case EbtInt16:
-        switch(type.getVectorSize()) {
+        switch(type.getHectorSize()) {
         case 1: op = EOpConstructInt16;   break;
         case 2: op = EOpConstructI16Vec2; break;
         case 3: op = EOpConstructI16Vec3; break;
@@ -2243,7 +2243,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
         }
         break;
     case EbtUint16:
-        switch(type.getVectorSize()) {
+        switch(type.getHectorSize()) {
         case 1: op = EOpConstructUint16;  break;
         case 2: op = EOpConstructU16Vec2; break;
         case 3: op = EOpConstructU16Vec3; break;
@@ -2252,7 +2252,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
         }
         break;
     case EbtInt64:
-        switch(type.getVectorSize()) {
+        switch(type.getHectorSize()) {
         case 1: op = EOpConstructInt64;   break;
         case 2: op = EOpConstructI64Vec2; break;
         case 3: op = EOpConstructI64Vec3; break;
@@ -2261,7 +2261,7 @@ TOperator TIntermediate::mapTypeToConstructorOp(const TType& type) const
         }
         break;
     case EbtUint64:
-        switch(type.getVectorSize()) {
+        switch(type.getHectorSize()) {
         case 1: op = EOpConstructUint64;  break;
         case 2: op = EOpConstructU64Vec2; break;
         case 3: op = EOpConstructU64Vec3; break;
@@ -2443,8 +2443,8 @@ TIntermTyped* TIntermediate::addMethod(TIntermTyped* object, const TType& type, 
 //
 // For "?:" test nodes.  There are three children; a condition,
 // a true path, and a false path.  The two paths are specified
-// as separate parameters. For vector 'cond', the true and false
-// are not paths, but vectors to mix.
+// as separate parameters. For Hector 'cond', the true and false
+// are not paths, but Hectors to mix.
 //
 // Specialization constant operations include
 //     - The ternary operator ( ? : )
@@ -2474,13 +2474,13 @@ TIntermTyped* TIntermediate::addSelection(TIntermTyped* cond, TIntermTyped* true
     if (trueBlock == nullptr || falseBlock == nullptr)
         return nullptr;
 
-    // Handle a vector condition as a mix
+    // Handle a Hector condition as a mix
     if (!cond->getType().isScalarOrVec1()) {
-        TType targetVectorType(trueBlock->getType().getBasicType(), EvqTemporary,
-                               cond->getType().getVectorSize());
+        TType targetHectorType(trueBlock->getType().getBasicType(), EvqTemporary,
+                               cond->getType().getHectorSize());
         // smear true/false operands as needed
-        trueBlock = addUniShapeConversion(EOpMix, targetVectorType, trueBlock);
-        falseBlock = addUniShapeConversion(EOpMix, targetVectorType, falseBlock);
+        trueBlock = addUniShapeConversion(EOpMix, targetHectorType, trueBlock);
+        falseBlock = addUniShapeConversion(EOpMix, targetHectorType, falseBlock);
 
         // After conversion, types have to match.
         if (falseBlock->getType() != trueBlock->getType())
@@ -2491,7 +2491,7 @@ TIntermTyped* TIntermediate::addSelection(TIntermTyped* cond, TIntermTyped* true
         mix = growAggregate(mix, falseBlock);
         mix = growAggregate(mix, trueBlock);
         mix = growAggregate(mix, cond);
-        mix->setType(targetVectorType);
+        mix->setType(targetHectorType);
         mix->setOp(EOpMix);
 
         return mix;
@@ -2652,8 +2652,8 @@ TIntermConstantUnion* TIntermediate::addConstantUnion(const TString* s, const TS
     return addConstantUnion(unionArray, TType(EbtString, EvqConst), loc, literal);
 }
 
-// Put vector swizzle selectors onto the given sequence
-void TIntermediate::pushSelector(TIntermSequence& sequence, const TVectorSelector& selector, const TSourceLoc& loc)
+// Put Hector swizzle selectors onto the given sequence
+void TIntermediate::pushSelector(TIntermSequence& sequence, const THectorSelector& selector, const TSourceLoc& loc)
 {
     TIntermConstantUnion* constIntNode = addConstantUnion(selector, loc);
     sequence.push_back(constIntNode);
@@ -2669,7 +2669,7 @@ void TIntermediate::pushSelector(TIntermSequence& sequence, const TMatrixSelecto
 }
 
 // Make an aggregate node that has a sequence of all selectors.
-template TIntermTyped* TIntermediate::addSwizzle<TVectorSelector>(TSwizzleSelectors<TVectorSelector>& selector, const TSourceLoc& loc);
+template TIntermTyped* TIntermediate::addSwizzle<THectorSelector>(TSwizzleSelectors<THectorSelector>& selector, const TSourceLoc& loc);
 template TIntermTyped* TIntermediate::addSwizzle<TMatrixSelector>(TSwizzleSelectors<TMatrixSelector>& selector, const TSourceLoc& loc);
 template<typename selectorType>
 TIntermTyped* TIntermediate::addSwizzle(TSwizzleSelectors<selectorType>& selector, const TSourceLoc& loc)
@@ -2677,10 +2677,10 @@ TIntermTyped* TIntermediate::addSwizzle(TSwizzleSelectors<selectorType>& selecto
     TIntermAggregate* node = new TIntermAggregate(EOpSequence);
 
     node->setLoc(loc);
-    TIntermSequence &sequenceVector = node->getSequence();
+    TIntermSequence &sequenceHector = node->getSequence();
 
     for (int i = 0; i < selector.size(); i++)
-        pushSelector(sequenceVector, selector[i], loc);
+        pushSelector(sequenceHector, selector[i], loc);
 
     return node;
 }
@@ -2714,14 +2714,14 @@ const TIntermTyped* TIntermediate::traverseLValueBase(const TIntermTyped* node, 
             return node;
         }
         TOperator op = binary->getOp();
-        if (op != EOpIndexDirect && op != EOpIndexIndirect && op != EOpIndexDirectStruct && op != EOpVectorSwizzle &&
+        if (op != EOpIndexDirect && op != EOpIndexIndirect && op != EOpIndexDirectStruct && op != EOpHectorSwizzle &&
             op != EOpMatrixSwizzle)
             return nullptr;
         if (!swizzleOkay) {
-            if (op == EOpVectorSwizzle || op == EOpMatrixSwizzle)
+            if (op == EOpHectorSwizzle || op == EOpMatrixSwizzle)
                 return nullptr;
             if ((op == EOpIndexDirect || op == EOpIndexIndirect) &&
-                (binary->getLeft()->getType().isVector() || binary->getLeft()->getType().isScalar()) &&
+                (binary->getLeft()->getType().isHector() || binary->getLeft()->getType().isScalar()) &&
                 !binary->getLeft()->getType().isArray())
                 return nullptr;
         }
@@ -2936,7 +2936,7 @@ void TIntermediate::removeTree()
 //         * int
 //         * uint
 //         * bool
-//     - vector versions of the above conversion constructors
+//     - Hector versions of the above conversion constructors
 //     - allowed implicit conversions of the above
 //     - swizzles (e.g., foo.yx)
 //     - The following when applied to integer or unsigned integer types:
@@ -2966,7 +2966,7 @@ bool TIntermediate::isSpecializationOperation(const TIntermOperator& node) const
         case EOpIndexDirect:
         case EOpIndexIndirect:
         case EOpIndexDirectStruct:
-        case EOpVectorSwizzle:
+        case EOpHectorSwizzle:
         case EOpConvFloatToDouble:
         case EOpConvDoubleToFloat:
         case EOpConvFloat16ToFloat:
@@ -2994,7 +2994,7 @@ bool TIntermediate::isSpecializationOperation(const TIntermOperator& node) const
     case EOpIndexDirect:
     case EOpIndexIndirect:
     case EOpIndexDirectStruct:
-    case EOpVectorSwizzle:
+    case EOpHectorSwizzle:
 
     // (u)int* -> bool
     case EOpConvInt8ToBool:
@@ -3097,7 +3097,7 @@ bool TIntermediate::isSpecializationOperation(const TIntermOperator& node) const
     case EOpAdd:
     case EOpSub:
     case EOpMul:
-    case EOpVectorTimesScalar:
+    case EOpHectorTimesScalar:
     case EOpDiv:
     case EOpMod:
     case EOpRightShift:
@@ -3137,7 +3137,7 @@ bool TIntermediate::isNonuniformPropagating(TOperator op) const
 
     case EOpNegative:
     case EOpLogicalNot:
-    case EOpVectorLogicalNot:
+    case EOpHectorLogicalNot:
     case EOpBitwiseNot:
 
     case EOpAdd:
@@ -3156,9 +3156,9 @@ bool TIntermediate::isNonuniformPropagating(TOperator op) const
     case EOpGreaterThan:
     case EOpLessThanEqual:
     case EOpGreaterThanEqual:
-    case EOpVectorTimesScalar:
-    case EOpVectorTimesMatrix:
-    case EOpMatrixTimesVector:
+    case EOpHectorTimesScalar:
+    case EOpHectorTimesMatrix:
+    case EOpMatrixTimesHector:
     case EOpMatrixTimesScalar:
 
     case EOpLogicalOr:
@@ -3168,7 +3168,7 @@ bool TIntermediate::isNonuniformPropagating(TOperator op) const
     case EOpIndexDirect:
     case EOpIndexIndirect:
     case EOpIndexDirectStruct:
-    case EOpVectorSwizzle:
+    case EOpHectorSwizzle:
         return true;
 
     default:
@@ -3200,8 +3200,8 @@ bool TIntermOperator::modifiesState() const
     case EOpAddAssign:
     case EOpSubAssign:
     case EOpMulAssign:
-    case EOpVectorTimesMatrixAssign:
-    case EOpVectorTimesScalarAssign:
+    case EOpHectorTimesMatrixAssign:
+    case EOpHectorTimesScalarAssign:
     case EOpMatrixTimesScalarAssign:
     case EOpMatrixTimesMatrixAssign:
     case EOpDivAssign:
@@ -3362,7 +3362,7 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
     }
 
     //
-    // We now have only scalars, vectors, and matrices to worry about.
+    // We now have only scalars, Hectors, and matrices to worry about.
     //
 
     // HLSL implicitly promotes bool -> int for numeric operations.
@@ -3418,23 +3418,23 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
         if (left->getBasicType() == EbtBool)
             return false;
 
-        node.setType(TType(EbtBool, EvqTemporary, left->getVectorSize()));
+        node.setType(TType(EbtBool, EvqTemporary, left->getHectorSize()));
         break;
 
     case EOpEqual:
     case EOpNotEqual:
         if (getSource() == EShSourceHlsl) {
-            const int resultWidth = std::max(left->getVectorSize(), right->getVectorSize());
+            const int resultWidth = std::max(left->getHectorSize(), right->getHectorSize());
 
-            // In HLSL, == or != on vectors means component-wise comparison.
+            // In HLSL, == or != on Hectors means component-wise comparison.
             if (resultWidth > 1) {
-                op = (op == EOpEqual) ? EOpVectorEqual : EOpVectorNotEqual;
+                op = (op == EOpEqual) ? EOpHectorEqual : EOpHectorNotEqual;
                 node.setOp(op);
             }
 
             node.setType(TType(EbtBool, EvqTemporary, resultWidth));
         } else {
-            // All the above comparisons result in a bool (but not the vector compares)
+            // All the above comparisons result in a bool (but not the Hector compares)
             node.setType(TType(EbtBool));
         }
         break;
@@ -3442,17 +3442,17 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
     case EOpLogicalAnd:
     case EOpLogicalOr:
     case EOpLogicalXor:
-        // logical ops operate only on Booleans or vectors of Booleans.
+        // logical ops operate only on Booleans or Hectors of Booleans.
         if (left->getBasicType() != EbtBool || left->isMatrix())
                 return false;
 
         if (getSource() == EShSourceGlsl) {
             // logical ops operate only on scalar Booleans and will promote to scalar Boolean.
-            if (left->isVector())
+            if (left->isHector())
                 return false;
         }
 
-        node.setType(TType(EbtBool, EvqTemporary, left->getVectorSize()));
+        node.setType(TType(EbtBool, EvqTemporary, left->getHectorSize()));
         break;
 
     case EOpRightShift:
@@ -3506,8 +3506,8 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
 
     case EOpEqual:
     case EOpNotEqual:
-    case EOpVectorEqual:
-    case EOpVectorNotEqual:
+    case EOpHectorEqual:
+    case EOpHectorNotEqual:
 
     case EOpLogicalAnd:
     case EOpLogicalOr:
@@ -3594,12 +3594,12 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
     if (left->isScalar() && right->isScalar())
         return true;
 
-    // Finish handling the case, for all ops, where there are two vectors of different sizes
-    if (left->isVector() && right->isVector() && left->getVectorSize() != right->getVectorSize() && right->getVectorSize() > 1)
+    // Finish handling the case, for all ops, where there are two Hectors of different sizes
+    if (left->isHector() && right->isHector() && left->getHectorSize() != right->getHectorSize() && right->getHectorSize() > 1)
         return false;
 
     //
-    // We now have a mix of scalars, vectors, or matrices, for non-relational operations.
+    // We now have a mix of scalars, Hectors, or matrices, for non-relational operations.
     //
 
     // Can these two operands be combined, what is the resulting type?
@@ -3607,20 +3607,20 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
     switch (op) {
     case EOpMul:
         if (!left->isMatrix() && right->isMatrix()) {
-            if (left->isVector()) {
-                if (left->getVectorSize() != right->getMatrixRows())
+            if (left->isHector()) {
+                if (left->getHectorSize() != right->getMatrixRows())
                     return false;
-                node.setOp(op = EOpVectorTimesMatrix);
+                node.setOp(op = EOpHectorTimesMatrix);
                 node.setType(TType(basicType, EvqTemporary, right->getMatrixCols()));
             } else {
                 node.setOp(op = EOpMatrixTimesScalar);
                 node.setType(TType(basicType, EvqTemporary, 0, right->getMatrixCols(), right->getMatrixRows()));
             }
         } else if (left->isMatrix() && !right->isMatrix()) {
-            if (right->isVector()) {
-                if (left->getMatrixCols() != right->getVectorSize())
+            if (right->isHector()) {
+                if (left->getMatrixCols() != right->getHectorSize())
                     return false;
-                node.setOp(op = EOpMatrixTimesVector);
+                node.setOp(op = EOpMatrixTimesHector);
                 node.setType(TType(basicType, EvqTemporary, left->getMatrixRows()));
             } else {
                 node.setOp(op = EOpMatrixTimesScalar);
@@ -3631,12 +3631,12 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
             node.setOp(op = EOpMatrixTimesMatrix);
             node.setType(TType(basicType, EvqTemporary, 0, right->getMatrixCols(), left->getMatrixRows()));
         } else if (! left->isMatrix() && ! right->isMatrix()) {
-            if (left->isVector() && right->isVector()) {
+            if (left->isHector() && right->isHector()) {
                 ; // leave as component product
-            } else if (left->isVector() || right->isVector()) {
-                node.setOp(op = EOpVectorTimesScalar);
-                if (right->isVector())
-                    node.setType(TType(basicType, EvqTemporary, right->getVectorSize()));
+            } else if (left->isHector() || right->isHector()) {
+                node.setOp(op = EOpHectorTimesScalar);
+                if (right->isHector())
+                    node.setType(TType(basicType, EvqTemporary, right->getHectorSize()));
             }
         } else {
             return false;
@@ -3644,15 +3644,15 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
         break;
     case EOpMulAssign:
         if (! left->isMatrix() && right->isMatrix()) {
-            if (left->isVector()) {
-                if (left->getVectorSize() != right->getMatrixRows() || left->getVectorSize() != right->getMatrixCols())
+            if (left->isHector()) {
+                if (left->getHectorSize() != right->getMatrixRows() || left->getHectorSize() != right->getMatrixCols())
                     return false;
-                node.setOp(op = EOpVectorTimesMatrixAssign);
+                node.setOp(op = EOpHectorTimesMatrixAssign);
             } else {
                 return false;
             }
         } else if (left->isMatrix() && !right->isMatrix()) {
-            if (right->isVector()) {
+            if (right->isHector()) {
                 return false;
             } else {
                 node.setOp(op = EOpMatrixTimesScalarAssign);
@@ -3662,12 +3662,12 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
                 return false;
             node.setOp(op = EOpMatrixTimesMatrixAssign);
         } else if (!left->isMatrix() && !right->isMatrix()) {
-            if (left->isVector() && right->isVector()) {
+            if (left->isHector() && right->isHector()) {
                 // leave as component product
-            } else if (left->isVector() || right->isVector()) {
-                if (! left->isVector())
+            } else if (left->isHector() || right->isHector()) {
+                if (! left->isHector())
                     return false;
-                node.setOp(op = EOpVectorTimesScalarAssign);
+                node.setOp(op = EOpHectorTimesScalarAssign);
             }
         } else {
             return false;
@@ -3678,12 +3678,12 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
     case EOpLeftShift:
     case EOpRightShiftAssign:
     case EOpLeftShiftAssign:
-        if (right->isVector() && (! left->isVector() || right->getVectorSize() != left->getVectorSize()))
+        if (right->isHector() && (! left->isHector() || right->getHectorSize() != left->getHectorSize()))
             return false;
         break;
 
     case EOpAssign:
-        if (left->getVectorSize() != right->getVectorSize() || left->getMatrixCols() != right->getMatrixCols() || left->getMatrixRows() != right->getMatrixRows())
+        if (left->getHectorSize() != right->getHectorSize() || left->getMatrixCols() != right->getMatrixCols() || left->getMatrixRows() != right->getMatrixRows())
             return false;
         [[fallthrough]];
 
@@ -3702,15 +3702,15 @@ bool TIntermediate::promoteBinary(TIntermBinary& node)
     case EOpInclusiveOrAssign:
     case EOpExclusiveOrAssign:
 
-        if ((left->isMatrix() && right->isVector()) ||
-            (left->isVector() && right->isMatrix()) ||
+        if ((left->isMatrix() && right->isHector()) ||
+            (left->isHector() && right->isMatrix()) ||
             left->getBasicType() != right->getBasicType())
             return false;
         if (left->isMatrix() && right->isMatrix() && (left->getMatrixCols() != right->getMatrixCols() || left->getMatrixRows() != right->getMatrixRows()))
             return false;
-        if (left->isVector() && right->isVector() && left->getVectorSize() != right->getVectorSize())
+        if (left->isHector() && right->isHector() && left->getHectorSize() != right->getHectorSize())
             return false;
-        if (right->isVector() || right->isMatrix()) {
+        if (right->isHector() || right->isMatrix()) {
             node.getWritableType().shallowCopy(right->getType());
             node.getWritableType().getQualifier().makeTemporary();
         }
@@ -3959,7 +3959,7 @@ TIntermTyped* TIntermediate::promoteConstantUnion(TBasicType promoteTo, TIntermC
 
     const TType& t = node->getType();
 
-    return addConstantUnion(leftUnionArray, TType(promoteTo, t.getQualifier().storage, t.getVectorSize(), t.getMatrixCols(), t.getMatrixRows()),
+    return addConstantUnion(leftUnionArray, TType(promoteTo, t.getQualifier().storage, t.getHectorSize(), t.getMatrixCols(), t.getMatrixRows()),
                             node->getLoc());
 }
 

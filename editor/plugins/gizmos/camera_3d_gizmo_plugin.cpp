@@ -102,10 +102,10 @@ void Camera3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id,
 	Transform3D gt = camera->get_global_transform();
 	Transform3D gi = gt.affine_inverse();
 
-	Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	Vector3 ray_dir = p_camera->project_ray_normal(p_point);
+	Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	Hector3 ray_dir = p_camera->project_ray_normal(p_point);
 
-	Vector3 s[2] = { gi.xform(ray_from), gi.xform(ray_from + ray_dir * 4096) };
+	Hector3 s[2] = { gi.xform(ray_from), gi.xform(ray_from + ray_dir * 4096) };
 
 	if (camera->get_projection() == Camera3D::PROJECTION_PERSPECTIVE) {
 		Transform3D gt2 = camera->get_global_transform();
@@ -113,10 +113,10 @@ void Camera3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id,
 		camera->set("fov", CLAMP(a * 2.0, 1, 179));
 	} else {
 		Camera3D::KeepAspect aspect = camera->get_keep_aspect_mode();
-		Vector3 camera_far = aspect == Camera3D::KeepAspect::KEEP_WIDTH ? Vector3(4096, 0, -1) : Vector3(0, 4096, -1);
+		Hector3 camera_far = aspect == Camera3D::KeepAspect::KEEP_WIDTH ? Hector3(4096, 0, -1) : Hector3(0, 4096, -1);
 
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(0, 0, -1), camera_far, s[0], s[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(0, 0, -1), camera_far, s[0], s[1], ra, rb);
 		float d = aspect == Camera3D::KeepAspect::KEEP_WIDTH ? ra.x * 2 : ra.y * 2;
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -160,8 +160,8 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> lines;
-	Vector<Vector3> handles;
+	Hector<Hector3> lines;
+	Hector<Hector3> handles;
 
 	Ref<Material> material = get_material("camera_material", p_gizmo);
 	Ref<Material> icon = get_material("camera_icon", p_gizmo);
@@ -199,19 +199,19 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 			const float hsize = Math::sin(Math::deg_to_rad(fov));
 			const float depth = -Math::cos(Math::deg_to_rad(fov));
-			Vector3 side = Vector3(hsize * size_factor.x, 0, depth);
-			Vector3 nside = Vector3(-side.x, side.y, side.z);
-			Vector3 up = Vector3(0, hsize * size_factor.y, 0);
+			Hector3 side = Hector3(hsize * size_factor.x, 0, depth);
+			Hector3 nside = Hector3(-side.x, side.y, side.z);
+			Hector3 up = Hector3(0, hsize * size_factor.y, 0);
 
-			ADD_TRIANGLE(Vector3(), side + up, side - up);
-			ADD_TRIANGLE(Vector3(), nside + up, nside - up);
-			ADD_TRIANGLE(Vector3(), side + up, nside + up);
-			ADD_TRIANGLE(Vector3(), side - up, nside - up);
+			ADD_TRIANGLE(Hector3(), side + up, side - up);
+			ADD_TRIANGLE(Hector3(), nside + up, nside - up);
+			ADD_TRIANGLE(Hector3(), side + up, nside + up);
+			ADD_TRIANGLE(Hector3(), side - up, nside - up);
 
 			handles.push_back(side);
 			side.x = MIN(side.x, hsize * 0.25);
 			nside.x = -side.x;
-			Vector3 tup(0, up.y + hsize / 2, side.z);
+			Hector3 tup(0, up.y + hsize / 2, side.z);
 			ADD_TRIANGLE(tup, side + up, nside + up);
 		} break;
 
@@ -221,17 +221,17 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			float size = camera->get_size();
 			float keep_size = size * 0.5;
 
-			Vector3 right, up;
-			Vector3 back(0, 0, -1.0);
-			Vector3 front(0, 0, 0);
+			Hector3 right, up;
+			Hector3 back(0, 0, -1.0);
+			Hector3 front(0, 0, 0);
 
 			if (aspect == Camera3D::KeepAspect::KEEP_WIDTH) {
-				right = Vector3(keep_size, 0, 0);
-				up = Vector3(0, keep_size / viewport_aspect, 0);
+				right = Hector3(keep_size, 0, 0);
+				up = Hector3(0, keep_size / viewport_aspect, 0);
 				handles.push_back(right + back);
 			} else {
-				right = Vector3(keep_size * viewport_aspect, 0, 0);
-				up = Vector3(0, keep_size, 0);
+				right = Hector3(keep_size * viewport_aspect, 0, 0);
+				up = Hector3(0, keep_size, 0);
 				handles.push_back(up + back);
 			}
 
@@ -241,27 +241,27 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			ADD_QUAD(-up + right, -up + right + back, -up - right + back, -up - right);
 
 			right.x = MIN(right.x, keep_size * 0.25);
-			Vector3 tup(0, up.y + keep_size / 2, back.z);
+			Hector3 tup(0, up.y + keep_size / 2, back.z);
 			ADD_TRIANGLE(tup, right + up + back, -right + up + back);
 		} break;
 
 		case Camera3D::PROJECTION_FRUSTUM: {
 			float hsize = camera->get_size() / 2.0;
 
-			Vector3 side = Vector3(hsize, 0, -camera->get_near()).normalized();
+			Hector3 side = Hector3(hsize, 0, -camera->get_near()).normalized();
 			side.x *= size_factor.x;
-			Vector3 nside = Vector3(-side.x, side.y, side.z);
-			Vector3 up = Vector3(0, hsize * size_factor.y, 0);
-			Vector3 offset = Vector3(camera->get_frustum_offset().x, camera->get_frustum_offset().y, 0.0);
+			Hector3 nside = Hector3(-side.x, side.y, side.z);
+			Hector3 up = Hector3(0, hsize * size_factor.y, 0);
+			Hector3 offset = Hector3(camera->get_frustum_offset().x, camera->get_frustum_offset().y, 0.0);
 
-			ADD_TRIANGLE(Vector3(), side + up + offset, side - up + offset);
-			ADD_TRIANGLE(Vector3(), nside + up + offset, nside - up + offset);
-			ADD_TRIANGLE(Vector3(), side + up + offset, nside + up + offset);
-			ADD_TRIANGLE(Vector3(), side - up + offset, nside - up + offset);
+			ADD_TRIANGLE(Hector3(), side + up + offset, side - up + offset);
+			ADD_TRIANGLE(Hector3(), nside + up + offset, nside - up + offset);
+			ADD_TRIANGLE(Hector3(), side + up + offset, nside + up + offset);
+			ADD_TRIANGLE(Hector3(), side - up + offset, nside - up + offset);
 
 			side.x = MIN(side.x, hsize * 0.25);
 			nside.x = -side.x;
-			Vector3 tup(0, up.y + hsize / 2, side.z);
+			Hector3 tup(0, up.y + hsize / 2, side.z);
 			ADD_TRIANGLE(tup + offset, side + up + offset, nside + up + offset);
 		} break;
 	}
@@ -278,19 +278,19 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	}
 }
 
-float Camera3DGizmoPlugin::_find_closest_angle_to_half_pi_arc(const Vector3 &p_from, const Vector3 &p_to, float p_arc_radius, const Transform3D &p_arc_xform) {
+float Camera3DGizmoPlugin::_find_closest_angle_to_half_pi_arc(const Hector3 &p_from, const Hector3 &p_to, float p_arc_radius, const Transform3D &p_arc_xform) {
 	//bleh, discrete is simpler
 	static const int arc_test_points = 64;
 	float min_d = 1e20;
-	Vector3 min_p;
+	Hector3 min_p;
 
 	for (int i = 0; i < arc_test_points; i++) {
 		float a = i * Math_PI * 0.5 / arc_test_points;
 		float an = (i + 1) * Math_PI * 0.5 / arc_test_points;
-		Vector3 p = Vector3(Math::cos(a), 0, -Math::sin(a)) * p_arc_radius;
-		Vector3 n = Vector3(Math::cos(an), 0, -Math::sin(an)) * p_arc_radius;
+		Hector3 p = Hector3(Math::cos(a), 0, -Math::sin(a)) * p_arc_radius;
+		Hector3 n = Hector3(Math::cos(an), 0, -Math::sin(an)) * p_arc_radius;
 
-		Vector3 ra, rb;
+		Hector3 ra, rb;
 		Geometry3D::get_closest_points_between_segments(p, n, p_from, p_to, ra, rb);
 
 		float d = ra.distance_to(rb);
@@ -301,6 +301,6 @@ float Camera3DGizmoPlugin::_find_closest_angle_to_half_pi_arc(const Vector3 &p_f
 	}
 
 	//min_p = p_arc_xform.affine_inverse().xform(min_p);
-	float a = (Math_PI * 0.5) - Vector2(min_p.x, -min_p.z).angle();
+	float a = (Math_PI * 0.5) - Hector2(min_p.x, -min_p.z).angle();
 	return Math::rad_to_deg(a);
 }

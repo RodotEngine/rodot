@@ -250,11 +250,11 @@ void CPUParticles3D::restart() {
 	set_emitting(true);
 }
 
-void CPUParticles3D::set_direction(Vector3 p_direction) {
+void CPUParticles3D::set_direction(Hector3 p_direction) {
 	direction = p_direction;
 }
 
-Vector3 CPUParticles3D::get_direction() const {
+Hector3 CPUParticles3D::get_direction() const {
 	return direction;
 }
 
@@ -416,23 +416,23 @@ void CPUParticles3D::set_emission_sphere_radius(real_t p_radius) {
 	emission_sphere_radius = p_radius;
 }
 
-void CPUParticles3D::set_emission_box_extents(Vector3 p_extents) {
+void CPUParticles3D::set_emission_box_extents(Hector3 p_extents) {
 	emission_box_extents = p_extents;
 }
 
-void CPUParticles3D::set_emission_points(const Vector<Vector3> &p_points) {
+void CPUParticles3D::set_emission_points(const Hector<Hector3> &p_points) {
 	emission_points = p_points;
 }
 
-void CPUParticles3D::set_emission_normals(const Vector<Vector3> &p_normals) {
+void CPUParticles3D::set_emission_normals(const Hector<Hector3> &p_normals) {
 	emission_normals = p_normals;
 }
 
-void CPUParticles3D::set_emission_colors(const Vector<Color> &p_colors) {
+void CPUParticles3D::set_emission_colors(const Hector<Color> &p_colors) {
 	emission_colors = p_colors;
 }
 
-void CPUParticles3D::set_emission_ring_axis(Vector3 p_axis) {
+void CPUParticles3D::set_emission_ring_axis(Hector3 p_axis) {
 	emission_ring_axis = p_axis;
 }
 
@@ -473,23 +473,23 @@ real_t CPUParticles3D::get_emission_sphere_radius() const {
 	return emission_sphere_radius;
 }
 
-Vector3 CPUParticles3D::get_emission_box_extents() const {
+Hector3 CPUParticles3D::get_emission_box_extents() const {
 	return emission_box_extents;
 }
 
-Vector<Vector3> CPUParticles3D::get_emission_points() const {
+Hector<Hector3> CPUParticles3D::get_emission_points() const {
 	return emission_points;
 }
 
-Vector<Vector3> CPUParticles3D::get_emission_normals() const {
+Hector<Hector3> CPUParticles3D::get_emission_normals() const {
 	return emission_normals;
 }
 
-Vector<Color> CPUParticles3D::get_emission_colors() const {
+Hector<Color> CPUParticles3D::get_emission_colors() const {
 	return emission_colors;
 }
 
-Vector3 CPUParticles3D::get_emission_ring_axis() const {
+Hector3 CPUParticles3D::get_emission_ring_axis() const {
 	return emission_ring_axis;
 }
 
@@ -513,11 +513,11 @@ CPUParticles3D::EmissionShape CPUParticles3D::get_emission_shape() const {
 	return emission_shape;
 }
 
-void CPUParticles3D::set_gravity(const Vector3 &p_gravity) {
+void CPUParticles3D::set_gravity(const Hector3 &p_gravity) {
 	gravity = p_gravity;
 }
 
-Vector3 CPUParticles3D::get_gravity() const {
+Hector3 CPUParticles3D::get_gravity() const {
 	return gravity;
 }
 
@@ -788,30 +788,30 @@ void CPUParticles3D::_particles_process(double p_delta) {
 
 			if (particle_flags[PARTICLE_FLAG_DISABLE_Z]) {
 				real_t angle1_rad = Math::atan2(direction.y, direction.x) + Math::deg_to_rad((Math::randf() * 2.0 - 1.0) * spread);
-				Vector3 rot = Vector3(Math::cos(angle1_rad), Math::sin(angle1_rad), 0.0);
+				Hector3 rot = Hector3(Math::cos(angle1_rad), Math::sin(angle1_rad), 0.0);
 				p.velocity = rot * Math::lerp(parameters_min[PARAM_INITIAL_LINEAR_VELOCITY], parameters_max[PARAM_INITIAL_LINEAR_VELOCITY], (real_t)Math::randf());
 			} else {
 				//initiate velocity spread in 3D
 				real_t angle1_rad = Math::deg_to_rad((Math::randf() * (real_t)2.0 - (real_t)1.0) * spread);
 				real_t angle2_rad = Math::deg_to_rad((Math::randf() * (real_t)2.0 - (real_t)1.0) * ((real_t)1.0 - flatness) * spread);
 
-				Vector3 direction_xz = Vector3(Math::sin(angle1_rad), 0, Math::cos(angle1_rad));
-				Vector3 direction_yz = Vector3(0, Math::sin(angle2_rad), Math::cos(angle2_rad));
-				Vector3 spread_direction = Vector3(direction_xz.x * direction_yz.z, direction_yz.y, direction_xz.z * direction_yz.z);
-				Vector3 direction_nrm = direction;
+				Hector3 direction_xz = Hector3(Math::sin(angle1_rad), 0, Math::cos(angle1_rad));
+				Hector3 direction_yz = Hector3(0, Math::sin(angle2_rad), Math::cos(angle2_rad));
+				Hector3 spread_direction = Hector3(direction_xz.x * direction_yz.z, direction_yz.y, direction_xz.z * direction_yz.z);
+				Hector3 direction_nrm = direction;
 				if (direction_nrm.length_squared() > 0) {
 					direction_nrm.normalize();
 				} else {
-					direction_nrm = Vector3(0, 0, 1);
+					direction_nrm = Hector3(0, 0, 1);
 				}
 				// rotate spread to direction
-				Vector3 binormal = Vector3(0.0, 1.0, 0.0).cross(direction_nrm);
+				Hector3 binormal = Hector3(0.0, 1.0, 0.0).cross(direction_nrm);
 				if (binormal.length_squared() < 0.00000001) {
 					// direction is parallel to Y. Choose Z as the binormal.
-					binormal = Vector3(0.0, 0.0, 1.0);
+					binormal = Hector3(0.0, 0.0, 1.0);
 				}
 				binormal.normalize();
-				Vector3 normal = binormal.cross(direction_nrm);
+				Hector3 normal = binormal.cross(direction_nrm);
 				spread_direction = binormal * spread_direction.x + normal * spread_direction.y + direction_nrm * spread_direction.z;
 				p.velocity = spread_direction * Math::lerp(parameters_min[PARAM_INITIAL_LINEAR_VELOCITY], parameters_max[PARAM_INITIAL_LINEAR_VELOCITY], (real_t)Math::randf());
 			}
@@ -835,16 +835,16 @@ void CPUParticles3D::_particles_process(double p_delta) {
 					real_t t = Math_TAU * Math::randf();
 					real_t x = Math::randf();
 					real_t radius = emission_sphere_radius * Math::sqrt(1.0 - s * s);
-					p.transform.origin = Vector3(0, 0, 0).lerp(Vector3(radius * Math::cos(t), radius * Math::sin(t), emission_sphere_radius * s), x);
+					p.transform.origin = Hector3(0, 0, 0).lerp(Hector3(radius * Math::cos(t), radius * Math::sin(t), emission_sphere_radius * s), x);
 				} break;
 				case EMISSION_SHAPE_SPHERE_SURFACE: {
 					real_t s = 2.0 * Math::randf() - 1.0;
 					real_t t = Math_TAU * Math::randf();
 					real_t radius = emission_sphere_radius * Math::sqrt(1.0 - s * s);
-					p.transform.origin = Vector3(radius * Math::cos(t), radius * Math::sin(t), emission_sphere_radius * s);
+					p.transform.origin = Hector3(radius * Math::cos(t), radius * Math::sin(t), emission_sphere_radius * s);
 				} break;
 				case EMISSION_SHAPE_BOX: {
-					p.transform.origin = Vector3(Math::randf() * 2.0 - 1.0, Math::randf() * 2.0 - 1.0, Math::randf() * 2.0 - 1.0) * emission_box_extents;
+					p.transform.origin = Hector3(Math::randf() * 2.0 - 1.0, Math::randf() * 2.0 - 1.0, Math::randf() * 2.0 - 1.0) * emission_box_extents;
 				} break;
 				case EMISSION_SHAPE_POINTS:
 				case EMISSION_SHAPE_DIRECTED_POINTS: {
@@ -859,20 +859,20 @@ void CPUParticles3D::_particles_process(double p_delta) {
 
 					if (emission_shape == EMISSION_SHAPE_DIRECTED_POINTS && emission_normals.size() == pc) {
 						if (particle_flags[PARTICLE_FLAG_DISABLE_Z]) {
-							Vector3 normal = emission_normals.get(random_idx);
-							Vector2 normal_2d(normal.x, normal.y);
+							Hector3 normal = emission_normals.get(random_idx);
+							Hector2 normal_2d(normal.x, normal.y);
 							Transform2D m2;
 							m2.columns[0] = normal_2d;
 							m2.columns[1] = normal_2d.orthogonal();
-							Vector2 velocity_2d(p.velocity.x, p.velocity.y);
+							Hector2 velocity_2d(p.velocity.x, p.velocity.y);
 							velocity_2d = m2.basis_xform(velocity_2d);
 							p.velocity.x = velocity_2d.x;
 							p.velocity.y = velocity_2d.y;
 						} else {
-							Vector3 normal = emission_normals.get(random_idx);
-							Vector3 v0 = Math::abs(normal.z) < 0.999 ? Vector3(0.0, 0.0, 1.0) : Vector3(0, 1.0, 0.0);
-							Vector3 tangent = v0.cross(normal).normalized();
-							Vector3 bitangent = tangent.cross(normal).normalized();
+							Hector3 normal = emission_normals.get(random_idx);
+							Hector3 v0 = Math::abs(normal.z) < 0.999 ? Hector3(0.0, 0.0, 1.0) : Hector3(0, 1.0, 0.0);
+							Hector3 tangent = v0.cross(normal).normalized();
+							Hector3 bitangent = tangent.cross(normal).normalized();
 							Basis m3;
 							m3.set_column(0, tangent);
 							m3.set_column(1, bitangent);
@@ -894,12 +894,12 @@ void CPUParticles3D::_particles_process(double p_delta) {
 					real_t ring_random_angle = Math::randf() * Math_TAU;
 					real_t ring_random_radius = Math::sqrt(Math::randf() * (radius_clamped * radius_clamped - emission_ring_inner_radius * emission_ring_inner_radius) + emission_ring_inner_radius * emission_ring_inner_radius);
 					ring_random_radius = Math::lerp(ring_random_radius, ring_random_radius * (top_radius / radius_clamped), y_pos);
-					Vector3 axis = emission_ring_axis == Vector3(0.0, 0.0, 0.0) ? Vector3(0.0, 0.0, 1.0) : emission_ring_axis.normalized();
-					Vector3 ortho_axis;
-					if (axis.abs() == Vector3(1.0, 0.0, 0.0)) {
-						ortho_axis = Vector3(0.0, 1.0, 0.0).cross(axis);
+					Hector3 axis = emission_ring_axis == Hector3(0.0, 0.0, 0.0) ? Hector3(0.0, 0.0, 1.0) : emission_ring_axis.normalized();
+					Hector3 ortho_axis;
+					if (axis.abs() == Hector3(1.0, 0.0, 0.0)) {
+						ortho_axis = Hector3(0.0, 1.0, 0.0).cross(axis);
 					} else {
-						ortho_axis = Vector3(1.0, 0.0, 0.0).cross(axis);
+						ortho_axis = Hector3(1.0, 0.0, 0.0).cross(axis);
 					}
 					ortho_axis = ortho_axis.normalized();
 					ortho_axis.rotate(axis, ring_random_angle);
@@ -984,25 +984,25 @@ void CPUParticles3D::_particles_process(double p_delta) {
 				tex_anim_offset = curve_parameters[PARAM_ANIM_OFFSET]->sample(tv);
 			}
 
-			Vector3 force = gravity;
-			Vector3 position = p.transform.origin;
+			Hector3 force = gravity;
+			Hector3 position = p.transform.origin;
 			if (particle_flags[PARTICLE_FLAG_DISABLE_Z]) {
 				position.z = 0.0;
 			}
 			//apply linear acceleration
-			force += p.velocity.length() > 0.0 ? p.velocity.normalized() * tex_linear_accel * Math::lerp(parameters_min[PARAM_LINEAR_ACCEL], parameters_max[PARAM_LINEAR_ACCEL], rand_from_seed(alt_seed)) : Vector3();
+			force += p.velocity.length() > 0.0 ? p.velocity.normalized() * tex_linear_accel * Math::lerp(parameters_min[PARAM_LINEAR_ACCEL], parameters_max[PARAM_LINEAR_ACCEL], rand_from_seed(alt_seed)) : Hector3();
 			//apply radial acceleration
-			Vector3 org = emission_xform.origin;
-			Vector3 diff = position - org;
-			force += diff.length() > 0.0 ? diff.normalized() * (tex_radial_accel)*Math::lerp(parameters_min[PARAM_RADIAL_ACCEL], parameters_max[PARAM_RADIAL_ACCEL], rand_from_seed(alt_seed)) : Vector3();
+			Hector3 org = emission_xform.origin;
+			Hector3 diff = position - org;
+			force += diff.length() > 0.0 ? diff.normalized() * (tex_radial_accel)*Math::lerp(parameters_min[PARAM_RADIAL_ACCEL], parameters_max[PARAM_RADIAL_ACCEL], rand_from_seed(alt_seed)) : Hector3();
 			if (particle_flags[PARTICLE_FLAG_DISABLE_Z]) {
-				Vector2 yx = Vector2(diff.y, diff.x);
-				Vector2 yx2 = (yx * Vector2(-1.0, 1.0)).normalized();
-				force += yx.length() > 0.0 ? Vector3(yx2.x, yx2.y, 0.0) * (tex_tangential_accel * Math::lerp(parameters_min[PARAM_TANGENTIAL_ACCEL], parameters_max[PARAM_TANGENTIAL_ACCEL], rand_from_seed(alt_seed))) : Vector3();
+				Hector2 yx = Hector2(diff.y, diff.x);
+				Hector2 yx2 = (yx * Hector2(-1.0, 1.0)).normalized();
+				force += yx.length() > 0.0 ? Hector3(yx2.x, yx2.y, 0.0) * (tex_tangential_accel * Math::lerp(parameters_min[PARAM_TANGENTIAL_ACCEL], parameters_max[PARAM_TANGENTIAL_ACCEL], rand_from_seed(alt_seed))) : Hector3();
 
 			} else {
-				Vector3 crossDiff = diff.normalized().cross(gravity.normalized());
-				force += crossDiff.length() > 0.0 ? crossDiff.normalized() * (tex_tangential_accel * Math::lerp(parameters_min[PARAM_TANGENTIAL_ACCEL], parameters_max[PARAM_TANGENTIAL_ACCEL], rand_from_seed(alt_seed))) : Vector3();
+				Hector3 crossDiff = diff.normalized().cross(gravity.normalized());
+				force += crossDiff.length() > 0.0 ? crossDiff.normalized() * (tex_tangential_accel * Math::lerp(parameters_min[PARAM_TANGENTIAL_ACCEL], parameters_max[PARAM_TANGENTIAL_ACCEL], rand_from_seed(alt_seed))) : Hector3();
 			}
 			//apply attractor forces
 			p.velocity += force * local_delta;
@@ -1013,10 +1013,10 @@ void CPUParticles3D::_particles_process(double p_delta) {
 					real_t ang = orbit_amount * local_delta * Math_TAU;
 					// Not sure why the ParticleProcessMaterial code uses a clockwise rotation matrix,
 					// but we use -ang here to reproduce its behavior.
-					Transform2D rot = Transform2D(-ang, Vector2());
-					Vector2 rotv = rot.basis_xform(Vector2(diff.x, diff.y));
-					p.transform.origin -= Vector3(diff.x, diff.y, 0);
-					p.transform.origin += Vector3(rotv.x, rotv.y, 0);
+					Transform2D rot = Transform2D(-ang, Hector2());
+					Hector2 rotv = rot.basis_xform(Hector2(diff.x, diff.y));
+					p.transform.origin -= Hector3(diff.x, diff.y, 0);
+					p.transform.origin += Hector3(rotv.x, rotv.y, 0);
 				}
 			}
 			if (curve_parameters[PARAM_INITIAL_LINEAR_VELOCITY].is_valid()) {
@@ -1028,7 +1028,7 @@ void CPUParticles3D::_particles_process(double p_delta) {
 				real_t damp = tex_damping * Math::lerp(parameters_min[PARAM_DAMPING], parameters_max[PARAM_DAMPING], rand_from_seed(alt_seed));
 				v -= damp * local_delta;
 				if (v < 0.0) {
-					p.velocity = Vector3();
+					p.velocity = Hector3();
 				} else {
 					p.velocity = p.velocity.normalized() * v;
 				}
@@ -1041,7 +1041,7 @@ void CPUParticles3D::_particles_process(double p_delta) {
 		//apply color
 		//apply hue rotation
 
-		Vector3 tex_scale = Vector3(1.0, 1.0, 1.0);
+		Hector3 tex_scale = Hector3(1.0, 1.0, 1.0);
 		if (split_scale) {
 			if (scale_curve_x.is_valid()) {
 				tex_scale.x = scale_curve_x->sample(tv);
@@ -1093,7 +1093,7 @@ void CPUParticles3D::_particles_process(double p_delta) {
 			p.color = color;
 		}
 
-		Vector3 color_rgb = hue_rot_mat.xform_inv(Vector3(p.color.r, p.color.g, p.color.b));
+		Hector3 color_rgb = hue_rot_mat.xform_inv(Hector3(p.color.r, p.color.g, p.color.b));
 		p.color.r = color_rgb.x;
 		p.color.g = color_rgb.y;
 		p.color.b = color_rgb.z;
@@ -1108,12 +1108,12 @@ void CPUParticles3D::_particles_process(double p_delta) {
 					p.transform.basis.set_column(1, p.transform.basis.get_column(1));
 				}
 				p.transform.basis.set_column(0, p.transform.basis.get_column(1).cross(p.transform.basis.get_column(2)).normalized());
-				p.transform.basis.set_column(2, Vector3(0, 0, 1));
+				p.transform.basis.set_column(2, Hector3(0, 0, 1));
 
 			} else {
-				p.transform.basis.set_column(0, Vector3(Math::cos(p.custom[0]), -Math::sin(p.custom[0]), 0.0));
-				p.transform.basis.set_column(1, Vector3(Math::sin(p.custom[0]), Math::cos(p.custom[0]), 0.0));
-				p.transform.basis.set_column(2, Vector3(0, 0, 1));
+				p.transform.basis.set_column(0, Hector3(Math::cos(p.custom[0]), -Math::sin(p.custom[0]), 0.0));
+				p.transform.basis.set_column(1, Hector3(Math::sin(p.custom[0]), Math::cos(p.custom[0]), 0.0));
+				p.transform.basis.set_column(2, Hector3(0, 0, 1));
 			}
 
 		} else {
@@ -1137,7 +1137,7 @@ void CPUParticles3D::_particles_process(double p_delta) {
 
 			//turn particle by rotation in Y
 			if (particle_flags[PARTICLE_FLAG_ROTATE_Y]) {
-				Basis rot_y(Vector3(0, 1, 0), p.custom[0]);
+				Basis rot_y(Hector3(0, 1, 0), p.custom[0]);
 				p.transform.basis = rot_y;
 			}
 		}
@@ -1145,7 +1145,7 @@ void CPUParticles3D::_particles_process(double p_delta) {
 		p.transform.basis = p.transform.basis.orthonormalized();
 		//scale by scale
 
-		Vector3 base_scale = tex_scale * Math::lerp(parameters_min[PARAM_SCALE], parameters_max[PARAM_SCALE], p.scale_rand);
+		Hector3 base_scale = tex_scale * Math::lerp(parameters_min[PARAM_SCALE], parameters_max[PARAM_SCALE], p.scale_rand);
 		if (base_scale.x < CMP_EPSILON) {
 			base_scale.x = CMP_EPSILON;
 		}
@@ -1200,7 +1200,7 @@ void CPUParticles3D::_update_particle_data_buffer() {
 			ERR_FAIL_NULL(get_viewport());
 			Camera3D *c = get_viewport()->get_camera_3d();
 			if (c) {
-				Vector3 dir = c->get_global_transform().basis.get_column(2); //far away to close
+				Hector3 dir = c->get_global_transform().basis.get_column(2); //far away to close
 
 				if (local_coords) {
 					// will look different from Particles in editor as this is based on the camera in the scenetree
@@ -1589,11 +1589,11 @@ void CPUParticles3D::_bind_methods() {
 	ADD_GROUP("Emission Shape", "emission_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "emission_shape", PROPERTY_HINT_ENUM, "Point,Sphere,Sphere Surface,Box,Points,Directed Points,Ring", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_emission_shape", "get_emission_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_sphere_radius", PROPERTY_HINT_RANGE, "0.01,128,0.01"), "set_emission_sphere_radius", "get_emission_sphere_radius");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_box_extents"), "set_emission_box_extents", "get_emission_box_extents");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "emission_points"), "set_emission_points", "get_emission_points");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "emission_normals"), "set_emission_normals", "get_emission_normals");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "emission_box_extents"), "set_emission_box_extents", "get_emission_box_extents");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "emission_points"), "set_emission_points", "get_emission_points");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "emission_normals"), "set_emission_normals", "get_emission_normals");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_COLOR_ARRAY, "emission_colors"), "set_emission_colors", "get_emission_colors");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_ring_axis"), "set_emission_ring_axis", "get_emission_ring_axis");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "emission_ring_axis"), "set_emission_ring_axis", "get_emission_ring_axis");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_ring_height", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_emission_ring_height", "get_emission_ring_height");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_ring_radius", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_emission_ring_radius", "get_emission_ring_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_ring_inner_radius", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_emission_ring_inner_radius", "get_emission_ring_inner_radius");
@@ -1603,11 +1603,11 @@ void CPUParticles3D::_bind_methods() {
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "particle_flag_rotate_y"), "set_particle_flag", "get_particle_flag", PARTICLE_FLAG_ROTATE_Y);
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "particle_flag_disable_z"), "set_particle_flag", "get_particle_flag", PARTICLE_FLAG_DISABLE_Z);
 	ADD_GROUP("Direction", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "direction"), "set_direction", "get_direction");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "direction"), "set_direction", "get_direction");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spread", PROPERTY_HINT_RANGE, "0,180,0.01"), "set_spread", "get_spread");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flatness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_flatness", "get_flatness");
 	ADD_GROUP("Gravity", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gravity"), "set_gravity", "get_gravity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "gravity"), "set_gravity", "get_gravity");
 	ADD_GROUP("Initial Velocity", "initial_");
 	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "initial_velocity_min", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_param_min", "get_param_min", PARAM_INITIAL_LINEAR_VELOCITY);
 	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "initial_velocity_max", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_param_max", "get_param_max", PARAM_INITIAL_LINEAR_VELOCITY);
@@ -1729,14 +1729,14 @@ CPUParticles3D::CPUParticles3D() {
 	set_param_max(PARAM_ANIM_OFFSET, 0);
 	set_emission_shape(EMISSION_SHAPE_POINT);
 	set_emission_sphere_radius(1);
-	set_emission_box_extents(Vector3(1, 1, 1));
-	set_emission_ring_axis(Vector3(0, 0, 1.0));
+	set_emission_box_extents(Hector3(1, 1, 1));
+	set_emission_ring_axis(Hector3(0, 0, 1.0));
 	set_emission_ring_height(1);
 	set_emission_ring_radius(1);
 	set_emission_ring_inner_radius(0);
 	set_emission_ring_cone_angle(90);
 
-	set_gravity(Vector3(0, -9.8, 0));
+	set_gravity(Hector3(0, -9.8, 0));
 
 	for (int i = 0; i < PARTICLE_FLAG_MAX; i++) {
 		particle_flags[i] = false;

@@ -77,7 +77,7 @@
    *   cff_get_kerning
    *
    * @Description:
-   *   A driver method used to return the kerning vector between two
+   *   A driver method used to return the kerning Hector between two
    *   glyphs of the same face.
    *
    * @Input:
@@ -92,7 +92,7 @@
    *
    * @Output:
    *   kerning ::
-   *     The kerning vector.  This is in font units for
+   *     The kerning Hector.  This is in font units for
    *     scalable formats, and in pixels for fixed-sizes
    *     formats.
    *
@@ -111,7 +111,7 @@
   cff_get_kerning( FT_Face     face,          /* CFF_Face */
                    FT_UInt     left_glyph,
                    FT_UInt     right_glyph,
-                   FT_Vector*  kerning )
+                   FT_Hector*  kerning )
   {
     CFF_Face      cffface = (CFF_Face)face;
     SFNT_Service  sfnt    = (SFNT_Service)cffface->sfnt;
@@ -875,28 +875,28 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  cff_set_mm_weightvector( FT_Face    face,          /* CFF_Face */
+  cff_set_mm_weightHector( FT_Face    face,          /* CFF_Face */
                            FT_UInt    len,
-                           FT_Fixed*  weightvector )
+                           FT_Fixed*  weightHector )
   {
     CFF_Face                 cffface = (CFF_Face)face;
     FT_Service_MultiMasters  mm      = (FT_Service_MultiMasters)cffface->mm;
 
 
-    return mm->set_mm_weightvector( face, len, weightvector );
+    return mm->set_mm_weightHector( face, len, weightHector );
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  cff_get_mm_weightvector( FT_Face    face,          /* CFF_Face */
+  cff_get_mm_weightHector( FT_Face    face,          /* CFF_Face */
                            FT_UInt*   len,
-                           FT_Fixed*  weightvector )
+                           FT_Fixed*  weightHector )
   {
     CFF_Face                 cffface = (CFF_Face)face;
     FT_Service_MultiMasters  mm      = (FT_Service_MultiMasters)cffface->mm;
 
 
-    return mm->get_mm_weightvector( face, len, weightvector );
+    return mm->get_mm_weightHector( face, len, weightHector );
   }
 
 
@@ -1055,10 +1055,10 @@
              /* FT_Set_Named_Instance_Func         set_named_instance         */
     cff_get_default_named_instance,
              /* FT_Get_Default_Named_Instance_Func get_default_named_instance */
-    cff_set_mm_weightvector,
-             /* FT_Set_MM_WeightVector_Func        set_mm_weightvector        */
-    cff_get_mm_weightvector,
-             /* FT_Get_MM_WeightVector_Func        get_mm_weightvector        */
+    cff_set_mm_weightHector,
+             /* FT_Set_MM_WeightHector_Func        set_mm_weightHector        */
+    cff_get_mm_weightHector,
+             /* FT_Get_MM_WeightHector_Func        get_mm_weightHector        */
     cff_construct_ps_name,
              /* FT_Construct_PS_Name_Func          construct_ps_name          */
     cff_load_delta_set_index_mapping,
@@ -1136,8 +1136,8 @@
     cff_get_standard_encoding,  /* FT_Get_Standard_Encoding_Func get_standard_encoding */
     cff_load_private_dict,      /* FT_Load_Private_Dict_Func     load_private_dict     */
     cff_fd_select_get,          /* FT_FD_Select_Get_Func         fd_select_get         */
-    cff_blend_check_vector,     /* FT_Blend_Check_Vector_Func    blend_check_vector    */
-    cff_blend_build_vector      /* FT_Blend_Build_Vector_Func    blend_build_vector    */
+    cff_blend_check_Hector,     /* FT_Blend_Check_Hector_Func    blend_check_Hector    */
+    cff_blend_build_Hector      /* FT_Blend_Build_Hector_Func    blend_build_Hector    */
   )
 
 

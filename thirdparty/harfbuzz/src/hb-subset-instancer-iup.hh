@@ -28,10 +28,10 @@
 #include "hb-subset-plan.hh"
 /* given contour points and deltas, optimize a set of referenced points within error
  * tolerance. Returns optimized referenced point indices */
-HB_INTERNAL bool iup_delta_optimize (const contour_point_vector_t& contour_points,
-                                     const hb_vector_t<int>& x_deltas,
-                                     const hb_vector_t<int>& y_deltas,
-                                     hb_vector_t<bool>& opt_indices, /* OUT */
+HB_INTERNAL bool iup_delta_optimize (const contour_point_Hector_t& contour_points,
+                                     const hb_Hector_t<int>& x_deltas,
+                                     const hb_Hector_t<int>& y_deltas,
+                                     hb_Hector_t<bool>& opt_indices, /* OUT */
                                      double tolerance = 0.0);
 
 #endif /* HB_SUBSET_INSTANCER_IUP_HH */

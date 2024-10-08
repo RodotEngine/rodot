@@ -21,7 +21,7 @@
 #include "uassert.h"
 #include "uhash.h"
 #include "ustr_imp.h"
-#include "uvector.h"
+#include "uHector.h"
 
 #define UND_LSR LSR("und", "", "", LSR::EXPLICIT_LSR)
 
@@ -167,10 +167,10 @@ void LocaleMatcher::Builder::clearSupportedLocales() {
     }
 }
 
-bool LocaleMatcher::Builder::ensureSupportedLocaleVector() {
+bool LocaleMatcher::Builder::ensureSupportedLocaleHector() {
     if (U_FAILURE(errorCode_)) { return false; }
     if (supportedLocales_ != nullptr) { return true; }
-    LocalPointer<UVector> lpSupportedLocales(new UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
+    LocalPointer<UHector> lpSupportedLocales(new UHector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
     if (U_FAILURE(errorCode_)) { return false; }
     supportedLocales_ = lpSupportedLocales.orphan();
     return true;
@@ -181,7 +181,7 @@ LocaleMatcher::Builder &LocaleMatcher::Builder::setSupportedLocalesFromListStrin
     LocalePriorityList list(locales, errorCode_);
     if (U_FAILURE(errorCode_)) { return *this; }
     clearSupportedLocales();
-    if (!ensureSupportedLocaleVector()) { return *this; }
+    if (!ensureSupportedLocaleHector()) { return *this; }
     int32_t length = list.getLengthIncludingRemoved();
     for (int32_t i = 0; i < length; ++i) {
         Locale *locale = list.orphanLocaleAt(i);
@@ -195,7 +195,7 @@ LocaleMatcher::Builder &LocaleMatcher::Builder::setSupportedLocalesFromListStrin
 }
 
 LocaleMatcher::Builder &LocaleMatcher::Builder::setSupportedLocales(Locale::Iterator &locales) {
-    if (ensureSupportedLocaleVector()) {
+    if (ensureSupportedLocaleHector()) {
         clearSupportedLocales();
         while (locales.hasNext() && U_SUCCESS(errorCode_)) {
             const Locale &locale = locales.next();
@@ -207,7 +207,7 @@ LocaleMatcher::Builder &LocaleMatcher::Builder::setSupportedLocales(Locale::Iter
 }
 
 LocaleMatcher::Builder &LocaleMatcher::Builder::addSupportedLocale(const Locale &locale) {
-    if (ensureSupportedLocaleVector()) {
+    if (ensureSupportedLocaleHector()) {
         LocalPointer<Locale> clone(locale.clone(), errorCode_);
         supportedLocales_->adoptElement(clone.orphan(), errorCode_);
     }

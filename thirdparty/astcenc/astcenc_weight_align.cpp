@@ -27,8 +27,8 @@
  * - we then compute the length and angle of the resulting sum.
  *
  * This should produce the following results:
- * - perfect alignment results in a vector whose length is equal to the sum of lengths of all inputs
- * - even distribution results in a vector of length 0.
+ * - perfect alignment results in a Hector whose length is equal to the sum of lengths of all inputs
+ * - even distribution results in a Hector of length 0.
  * - all samples identical results in perfect alignment for every scaling.
  *
  * For each scaling factor within a given set, we compute an alignment factor from 0 to 1. This
@@ -166,7 +166,7 @@ static void compute_lowest_and_highest_weight(
 
 	vfloat rcp_stepsize = vfloat::lane_id() + vfloat(1.0f);
 
-	// Arrays are ANGULAR_STEPS long, so always safe to run full vectors
+	// Arrays are ANGULAR_STEPS long, so always safe to run full Hectors
 	for (unsigned int sp = 0; sp < max_angular_steps; sp += ASTCENC_SIMD_WIDTH)
 	{
 		vfloat minidx(128.0f);
@@ -258,7 +258,7 @@ static void compute_angular_endpoints_for_quant_levels(
 	                                  angular_offsets, lowest_weight, weight_span, error,
 	                                  cut_low_weight_error, cut_high_weight_error);
 
-	// For each quantization level, find the best error terms. Use packed vectors so data-dependent
+	// For each quantization level, find the best error terms. Use packed Hectors so data-dependent
 	// branches can become selects. This involves some integer to float casts, but the values are
 	// small enough so they never round the wrong way.
 	vfloat4 best_results[36];

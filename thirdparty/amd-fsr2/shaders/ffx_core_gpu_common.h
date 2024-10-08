@@ -1108,8 +1108,8 @@ FfxFloat32x4 ffxApproximateReciprocalSquareRoot(FfxFloat32x4 a)
 
 /// Calculate dot product of 'a' and 'b'.
 ///
-/// @param [in] a                   First vector input.
-/// @param [in] b                   Second vector input.
+/// @param [in] a                   First Hector input.
+/// @param [in] b                   Second Hector input.
 ///
 /// @returns
 /// The value of <c><i>a</i></c> dot <c><i>b</i></c>.
@@ -1122,8 +1122,8 @@ FfxFloat32 ffxDot2(FfxFloat32x2 a, FfxFloat32x2 b)
 
 /// Calculate dot product of 'a' and 'b'.
 ///
-/// @param [in] a                   First vector input.
-/// @param [in] b                   Second vector input.
+/// @param [in] a                   First Hector input.
+/// @param [in] b                   Second Hector input.
 ///
 /// @returns
 /// The value of <c><i>a</i></c> dot <c><i>b</i></c>.
@@ -1136,8 +1136,8 @@ FfxFloat32 ffxDot3(FfxFloat32x3 a, FfxFloat32x3 b)
 
 /// Calculate dot product of 'a' and 'b'.
 ///
-/// @param [in] a                   First vector input.
-/// @param [in] b                   Second vector input.
+/// @param [in] a                   First Hector input.
+/// @param [in] b                   Second Hector input.
 ///
 /// @returns
 /// The value of <c><i>a</i></c> dot <c><i>b</i></c>.

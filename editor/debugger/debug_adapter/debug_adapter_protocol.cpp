@@ -192,11 +192,11 @@ void DebugAdapterProtocol::reset_stack_info() {
 
 int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 	switch (p_var.get_type()) {
-		case Variant::VECTOR2:
-		case Variant::VECTOR2I: {
+		case Variant::HECTOR2:
+		case Variant::HECTOR2I: {
 			int id = variable_id++;
-			Vector2 vec = p_var;
-			const String type_scalar = Variant::get_type_name(p_var.get_type() == Variant::VECTOR2 ? Variant::FLOAT : Variant::INT);
+			Hector2 vec = p_var;
+			const String type_scalar = Variant::get_type_name(p_var.get_type() == Variant::HECTOR2 ? Variant::FLOAT : Variant::INT);
 			DAP::Variable x, y;
 			x.name = "x";
 			y.name = "y";
@@ -238,11 +238,11 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			variable_list.insert(id, arr);
 			return id;
 		}
-		case Variant::VECTOR3:
-		case Variant::VECTOR3I: {
+		case Variant::HECTOR3:
+		case Variant::HECTOR3I: {
 			int id = variable_id++;
-			Vector3 vec = p_var;
-			const String type_scalar = Variant::get_type_name(p_var.get_type() == Variant::VECTOR3 ? Variant::FLOAT : Variant::INT);
+			Hector3 vec = p_var;
+			const String type_scalar = Variant::get_type_name(p_var.get_type() == Variant::HECTOR3 ? Variant::FLOAT : Variant::INT);
 			DAP::Variable x, y, z;
 			x.name = "x";
 			y.name = "y";
@@ -264,7 +264,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 		case Variant::TRANSFORM2D: {
 			int id = variable_id++;
 			Transform2D transform = p_var;
-			const String type_vec2 = Variant::get_type_name(Variant::VECTOR2);
+			const String type_vec2 = Variant::get_type_name(Variant::HECTOR2);
 			DAP::Variable x, y, origin;
 			x.name = "x";
 			y.name = "y";
@@ -293,7 +293,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			d.name = "d";
 			normal.name = "normal";
 			d.type = Variant::get_type_name(Variant::FLOAT);
-			normal.type = Variant::get_type_name(Variant::VECTOR3);
+			normal.type = Variant::get_type_name(Variant::HECTOR3);
 			d.value = rtos(plane.d);
 			normal.value = plane.normal;
 			normal.variablesReference = parse_variant(plane.normal);
@@ -333,7 +333,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 		case Variant::AABB: {
 			int id = variable_id++;
 			AABB aabb = p_var;
-			const String type_vec3 = Variant::get_type_name(Variant::VECTOR3);
+			const String type_vec3 = Variant::get_type_name(Variant::HECTOR3);
 			DAP::Variable position, size;
 			position.name = "position";
 			size.name = "size";
@@ -353,7 +353,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 		case Variant::BASIS: {
 			int id = variable_id++;
 			Basis basis = p_var;
-			const String type_vec3 = Variant::get_type_name(Variant::VECTOR3);
+			const String type_vec3 = Variant::get_type_name(Variant::HECTOR3);
 			DAP::Variable x, y, z;
 			x.name = "x";
 			y.name = "y";
@@ -382,7 +382,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			basis.name = "basis";
 			origin.name = "origin";
 			basis.type = Variant::get_type_name(Variant::BASIS);
-			origin.type = Variant::get_type_name(Variant::VECTOR3);
+			origin.type = Variant::get_type_name(Variant::HECTOR3);
 			basis.value = transform.basis;
 			origin.value = transform.origin;
 			basis.variablesReference = parse_variant(transform.basis);
@@ -585,9 +585,9 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			variable_list.insert(id, arr);
 			return id;
 		}
-		case Variant::PACKED_VECTOR2_ARRAY: {
+		case Variant::PACKED_Hector2_ARRAY: {
 			int id = variable_id++;
-			PackedVector2Array array = p_var;
+			PackedHector2Array array = p_var;
 			DAP::Variable size;
 			size.name = "size";
 			size.type = Variant::get_type_name(Variant::INT);
@@ -599,7 +599,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			for (int i = 0; i < array.size(); i++) {
 				DAP::Variable var;
 				var.name = itos(i);
-				var.type = Variant::get_type_name(Variant::VECTOR2);
+				var.type = Variant::get_type_name(Variant::HECTOR2);
 				var.value = array[i];
 				var.variablesReference = parse_variant(array[i]);
 				arr.push_back(var.to_json());
@@ -607,9 +607,9 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			variable_list.insert(id, arr);
 			return id;
 		}
-		case Variant::PACKED_VECTOR3_ARRAY: {
+		case Variant::PACKED_Hector3_ARRAY: {
 			int id = variable_id++;
-			PackedVector3Array array = p_var;
+			PackedHector3Array array = p_var;
 			DAP::Variable size;
 			size.name = "size";
 			size.type = Variant::get_type_name(Variant::INT);
@@ -621,7 +621,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			for (int i = 0; i < array.size(); i++) {
 				DAP::Variable var;
 				var.name = itos(i);
-				var.type = Variant::get_type_name(Variant::VECTOR3);
+				var.type = Variant::get_type_name(Variant::HECTOR3);
 				var.value = array[i];
 				var.variablesReference = parse_variant(array[i]);
 				arr.push_back(var.to_json());
@@ -651,9 +651,9 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			variable_list.insert(id, arr);
 			return id;
 		}
-		case Variant::PACKED_VECTOR4_ARRAY: {
+		case Variant::PACKED_Hector4_ARRAY: {
 			int id = variable_id++;
-			PackedVector4Array array = p_var;
+			PackedHector4Array array = p_var;
 			DAP::Variable size;
 			size.name = "size";
 			size.type = Variant::get_type_name(Variant::INT);
@@ -665,7 +665,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 			for (int i = 0; i < array.size(); i++) {
 				DAP::Variable var;
 				var.name = itos(i);
-				var.type = Variant::get_type_name(Variant::VECTOR4);
+				var.type = Variant::get_type_name(Variant::HECTOR4);
 				var.value = array[i];
 				var.variablesReference = parse_variant(array[i]);
 				arr.push_back(var.to_json());

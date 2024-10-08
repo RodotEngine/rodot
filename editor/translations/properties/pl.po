@@ -1070,10 +1070,10 @@ msgstr "Wyłącz zwijanie"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Automatyczne rozwijanie obcych scen"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "Pozioma edycja Vector2"
+msgid "Horizontal Hector2 Editing"
+msgstr "Pozioma edycja Hector2"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Pozioma edycja typów wektorowych"
 
 msgid "Open Resources in Current Inspector"
@@ -1184,7 +1184,7 @@ msgstr "Programy zewnętrzne"
 msgid "Raster Image Editor"
 msgstr "Edytor obrazów rastrowych"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Edytor obrazów wektorowych"
 
 msgid "Audio Editor"
@@ -1974,14 +1974,14 @@ msgstr "Kolory połączeń"
 msgid "Scalar Color"
 msgstr "Kolor skalarów"
 
-msgid "Vector2 Color"
-msgstr "Kolor typu Vector2"
+msgid "Hector2 Color"
+msgstr "Kolor typu Hector2"
 
-msgid "Vector 3 Color"
-msgstr "Kolor typu Vector3"
+msgid "Hector 3 Color"
+msgstr "Kolor typu Hector3"
 
-msgid "Vector 4 Color"
-msgstr "Kolor typu Vector4"
+msgid "Hector 4 Color"
+msgstr "Kolor typu Hector4"
 
 msgid "Boolean Color"
 msgstr "Kolor typu Boolean"
@@ -2013,7 +2013,7 @@ msgstr "Kolor tekstur"
 msgid "Utility Color"
 msgstr "Kolor narzędzi"
 
-msgid "Vector Color"
+msgid "Hector Color"
 msgstr "Kolor wektorów"
 
 msgid "Special Color"
@@ -4192,7 +4192,7 @@ msgstr "Wyklucz obiekty"
 msgid "Default Gravity"
 msgstr "Domyślna grawitacja"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Domyślny wektor grawitacji"
 
 msgid "Physics Engine"

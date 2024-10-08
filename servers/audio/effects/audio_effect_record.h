@@ -48,8 +48,8 @@ class AudioEffectRecordInstance : public AudioEffectInstance {
 	bool is_recording;
 	Thread io_thread;
 
-	Vector<AudioFrame> ring_buffer;
-	Vector<float> recording_data;
+	Hector<AudioFrame> ring_buffer;
+	Hector<float> recording_data;
 
 	unsigned int ring_buffer_pos;
 	unsigned int ring_buffer_mask;

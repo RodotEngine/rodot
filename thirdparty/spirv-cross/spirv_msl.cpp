@@ -478,7 +478,7 @@ void CompilerMSL::build_implicit_builtins()
 				has_workgroup_size = true;
 			}
 
-			// The base workgroup needs to have the same type and vector size
+			// The base workgroup needs to have the same type and Hector size
 			// as the workgroup or invocation ID, so keep track of the type that
 			// was used.
 			if (need_dispatch_base && workgroup_id_type == 0 &&
@@ -499,7 +499,7 @@ void CompilerMSL::build_implicit_builtins()
 				uint32_t var_id = offset + 2;
 
 				// Create gl_FragCoord.
-				SPIRType vec4_type { OpTypeVector };
+				SPIRType vec4_type { OpTypeHector };
 				vec4_type.basetype = SPIRType::Float;
 				vec4_type.width = 32;
 				vec4_type.vecsize = 4;
@@ -729,7 +729,7 @@ void CompilerMSL::build_implicit_builtins()
 			{
 				uint32_t var_id = ir.increase_bound_by(1);
 
-				set<SPIRVariable>(var_id, build_extended_vector_type(get_uint_type_id(), 3), StorageClassInput);
+				set<SPIRVariable>(var_id, build_extended_Hector_type(get_uint_type_id(), 3), StorageClassInput);
 				set_extended_decoration(var_id, SPIRVCrossDecorationBuiltInStageInputSize);
 				get_entry_point().interface_variables.push_back(var_id);
 				set_name(var_id, "spvStageInputSize");
@@ -784,7 +784,7 @@ void CompilerMSL::build_implicit_builtins()
 		if (need_dispatch_base || need_vertex_base_params)
 		{
 			if (workgroup_id_type == 0)
-				workgroup_id_type = build_extended_vector_type(get_uint_type_id(), 3);
+				workgroup_id_type = build_extended_Hector_type(get_uint_type_id(), 3);
 			uint32_t var_id;
 			if (msl_options.supports_msl_version(1, 2))
 			{
@@ -898,7 +898,7 @@ void CompilerMSL::build_implicit_builtins()
 			uint32_t var_id = offset + 1;
 
 			// Create gl_WorkgroupSize.
-			uint32_t type_id = build_extended_vector_type(get_uint_type_id(), 3);
+			uint32_t type_id = build_extended_Hector_type(get_uint_type_id(), 3);
 			SPIRType uint_type_ptr = get<SPIRType>(type_id);
 			uint_type_ptr.op = OpTypePointer;
 			uint_type_ptr.pointer = true;
@@ -1038,7 +1038,7 @@ void CompilerMSL::build_implicit_builtins()
 		uint32_t var_id = offset + 2;
 
 		// Create gl_Position.
-		SPIRType vec4_type { OpTypeVector };
+		SPIRType vec4_type { OpTypeHector };
 		vec4_type.basetype = SPIRType::Float;
 		vec4_type.width = 32;
 		vec4_type.vecsize = 4;
@@ -1222,7 +1222,7 @@ void CompilerMSL::emit_entry_point_declarations()
 		if (type.basetype == SPIRType::Sampler)
 			add_resource_name(samp.first);
 
-		SmallVector<string> args;
+		SmallHector<string> args;
 		auto &s = samp.second;
 
 		if (s.coord != MSL_SAMPLER_COORD_NORMALIZED)
@@ -2387,7 +2387,7 @@ uint32_t CompilerMSL::get_target_components_for_fragment_location(uint32_t locat
 		return itr->second;
 }
 
-uint32_t CompilerMSL::build_extended_vector_type(uint32_t type_id, uint32_t components, SPIRType::BaseType basetype)
+uint32_t CompilerMSL::build_extended_Hector_type(uint32_t type_id, uint32_t components, SPIRType::BaseType basetype)
 {
 	assert(components > 1);
 	uint32_t new_type_id = ir.increase_bound_by(1);
@@ -2408,8 +2408,8 @@ uint32_t CompilerMSL::build_extended_vector_type(uint32_t type_id, uint32_t comp
 	}
 
 	auto *type = &set<SPIRType>(new_type_id, *p_old_type);
-	assert(is_scalar(*type) || is_vector(*type));
-	type->op = OpTypeVector;
+	assert(is_scalar(*type) || is_Hector(*type));
+	type->op = OpTypeHector;
 	type->vecsize = components;
 	if (basetype != SPIRType::Unknown)
 		type->basetype = basetype;
@@ -2510,13 +2510,13 @@ bool CompilerMSL::add_component_variable_to_interface_block(spv::StorageClass st
 					{
 						statement(to_name(var.self), "[", loc_off, "]", " = ", ib_var_ref,
 						          ".m_location_", location + loc_off,
-						          vector_swizzle(type_components, start_component), ";");
+						          Hector_swizzle(type_components, start_component), ";");
 					}
 				}
 				else
 				{
 					statement(to_name(var.self), " = ", ib_var_ref, ".m_location_", location,
-					          vector_swizzle(type_components, start_component), ";");
+					          Hector_swizzle(type_components, start_component), ";");
 				}
 			});
 		}
@@ -2529,14 +2529,14 @@ bool CompilerMSL::add_component_variable_to_interface_block(spv::StorageClass st
 					for (uint32_t loc_off = 0; loc_off < array_size; loc_off++)
 					{
 						statement(ib_var_ref, ".m_location_", location + loc_off,
-						          vector_swizzle(type_components, start_component), " = ",
+						          Hector_swizzle(type_components, start_component), " = ",
 						          to_name(var.self), "[", loc_off, "];");
 					}
 				}
 				else
 				{
 					statement(ib_var_ref, ".m_location_", location,
-					          vector_swizzle(type_components, start_component), " = ", to_name(var.self), ";");
+					          Hector_swizzle(type_components, start_component), " = ", to_name(var.self), ";");
 				}
 			});
 		}
@@ -2588,7 +2588,7 @@ void CompilerMSL::add_plain_variable_to_interface_block(StorageClass storage, co
 		if (type_components < target_components)
 		{
 			// Make a new type here.
-			type_id = build_extended_vector_type(type_id, target_components);
+			type_id = build_extended_Hector_type(type_id, target_components);
 			padded_output = true;
 		}
 	}
@@ -2623,14 +2623,14 @@ void CompilerMSL::add_plain_variable_to_interface_block(StorageClass storage, co
 		if (padded_output)
 		{
 			entry_func.fixup_hooks_out.push_back([=, &var]() {
-				statement(qual_var_name, vector_swizzle(type_components, start_component), " = ", to_name(var.self),
+				statement(qual_var_name, Hector_swizzle(type_components, start_component), " = ", to_name(var.self),
 				          ";");
 			});
 		}
 		else
 		{
 			entry_func.fixup_hooks_in.push_back([=, &var]() {
-				statement(to_name(var.self), " = ", qual_var_name, vector_swizzle(type_components, start_component),
+				statement(to_name(var.self), " = ", qual_var_name, Hector_swizzle(type_components, start_component),
 				          ";");
 			});
 		}
@@ -2828,7 +2828,7 @@ void CompilerMSL::add_composite_variable_to_interface_block(StorageClass storage
 			if (usable_type->vecsize < target_components)
 			{
 				// Make a new type here.
-				type_id = build_extended_vector_type(usable_type->self, target_components);
+				type_id = build_extended_Hector_type(usable_type->self, target_components);
 				padded_output = true;
 			}
 		}
@@ -3372,7 +3372,7 @@ void CompilerMSL::add_plain_member_variable_to_interface_block(StorageClass stor
 
 // In Metal, the tessellation levels are stored as tightly packed half-precision floating point values.
 // But, stage-in attribute offsets and strides must be multiples of four, so we can't pass the levels
-// individually. Therefore, we must pass them as vectors. Triangles get a single float4, with the outer
+// individually. Therefore, we must pass them as Hectors. Triangles get a single float4, with the outer
 // levels in 'xyz' and the inner level in 'w'. Quads get a float4 containing the outer levels and a
 // float2 containing the inner levels.
 void CompilerMSL::add_tess_level_input_to_interface_block(const std::string &ib_var_ref, SPIRType &ib_type,
@@ -3410,7 +3410,7 @@ void CompilerMSL::add_tess_level_input_to_interface_block(const std::string &ib_
 		// If we already added the other one, we can skip this step.
 		if (!added_builtin_tess_level)
 		{
-			uint32_t type_id = build_extended_vector_type(var_type.self, 4);
+			uint32_t type_id = build_extended_Hector_type(var_type.self, 4);
 
 			ib_type.member_types.push_back(type_id);
 
@@ -3429,7 +3429,7 @@ void CompilerMSL::add_tess_level_input_to_interface_block(const std::string &ib_
 	{
 		mbr_name = builtin_to_glsl(builtin, StorageClassFunction);
 
-		uint32_t type_id = build_extended_vector_type(var_type.self, builtin == BuiltInTessLevelOuter ? 4 : 2);
+		uint32_t type_id = build_extended_Hector_type(var_type.self, builtin == BuiltInTessLevelOuter ? 4 : 2);
 
 		uint32_t ptr_type_id = ir.increase_bound_by(1);
 		auto &new_var_type = set<SPIRType>(ptr_type_id, get<SPIRType>(type_id));
@@ -3854,7 +3854,7 @@ void CompilerMSL::fix_up_interface_member_indices(StorageClass storage, uint32_t
 uint32_t CompilerMSL::add_interface_block(StorageClass storage, bool patch)
 {
 	// Accumulate the variables that should appear in the interface struct.
-	SmallVector<SPIRVariable *> vars;
+	SmallHector<SPIRVariable *> vars;
 	bool incl_builtins = storage == StorageClassOutput || is_tessellation_shader();
 	bool has_seen_barycentric = false;
 
@@ -4273,7 +4273,7 @@ uint32_t CompilerMSL::add_interface_block(StorageClass storage, bool patch)
 			set<SPIRType>(type_id, type);
 			if (input.second.vecsize > 1)
 			{
-				type.op = OpTypeVector;
+				type.op = OpTypeHector;
 				type.vecsize = input.second.vecsize;
 				set<SPIRType>(vec_type_id, type);
 				type_id = vec_type_id;
@@ -4341,7 +4341,7 @@ uint32_t CompilerMSL::add_interface_block(StorageClass storage, bool patch)
 			set<SPIRType>(type_id, type);
 			if (output.second.vecsize > 1)
 			{
-				type.op = OpTypeVector;
+				type.op = OpTypeHector;
 				type.vecsize = output.second.vecsize;
 				set<SPIRType>(vec_type_id, type);
 				type_id = vec_type_id;
@@ -4383,7 +4383,7 @@ uint32_t CompilerMSL::add_interface_block(StorageClass storage, bool patch)
 		auto &location_meta = loc.second;
 
 		uint32_t ib_mbr_idx = uint32_t(ib_type.member_types.size());
-		uint32_t type_id = build_extended_vector_type(location_meta.base_type_id, location_meta.num_components);
+		uint32_t type_id = build_extended_Hector_type(location_meta.base_type_id, location_meta.num_components);
 		ib_type.member_types.push_back(type_id);
 
 		set_member_name(ib_type.self, ib_mbr_idx, join("m_location_", location));
@@ -4543,7 +4543,7 @@ uint32_t CompilerMSL::ensure_correct_input_type(uint32_t type_id, uint32_t locat
 	if (p_va == end(inputs_by_location))
 	{
 		if (num_components > type.vecsize)
-			return build_extended_vector_type(type_id, num_components);
+			return build_extended_Hector_type(type_id, num_components);
 		else
 			return type_id;
 	}
@@ -4561,15 +4561,15 @@ uint32_t CompilerMSL::ensure_correct_input_type(uint32_t type_id, uint32_t locat
 		case SPIRType::UShort:
 		case SPIRType::UInt:
 			if (num_components > type.vecsize)
-				return build_extended_vector_type(type_id, num_components);
+				return build_extended_Hector_type(type_id, num_components);
 			else
 				return type_id;
 
 		case SPIRType::Short:
-			return build_extended_vector_type(type_id, num_components > type.vecsize ? num_components : type.vecsize,
+			return build_extended_Hector_type(type_id, num_components > type.vecsize ? num_components : type.vecsize,
 			                                  SPIRType::UShort);
 		case SPIRType::Int:
-			return build_extended_vector_type(type_id, num_components > type.vecsize ? num_components : type.vecsize,
+			return build_extended_Hector_type(type_id, num_components > type.vecsize ? num_components : type.vecsize,
 			                                  SPIRType::UInt);
 
 		default:
@@ -4584,12 +4584,12 @@ uint32_t CompilerMSL::ensure_correct_input_type(uint32_t type_id, uint32_t locat
 		case SPIRType::UShort:
 		case SPIRType::UInt:
 			if (num_components > type.vecsize)
-				return build_extended_vector_type(type_id, num_components);
+				return build_extended_Hector_type(type_id, num_components);
 			else
 				return type_id;
 
 		case SPIRType::Int:
-			return build_extended_vector_type(type_id, num_components > type.vecsize ? num_components : type.vecsize,
+			return build_extended_Hector_type(type_id, num_components > type.vecsize ? num_components : type.vecsize,
 			                                  SPIRType::UInt);
 
 		default:
@@ -4599,7 +4599,7 @@ uint32_t CompilerMSL::ensure_correct_input_type(uint32_t type_id, uint32_t locat
 
 	default:
 		if (num_components > type.vecsize)
-			type_id = build_extended_vector_type(type_id, num_components);
+			type_id = build_extended_Hector_type(type_id, num_components);
 		break;
 	}
 
@@ -4742,7 +4742,7 @@ void CompilerMSL::align_struct(SPIRType &ib_type, unordered_set<uint32_t> &align
 	// Test the alignment of each member, and if a member should be closer to the previous
 	// member than the default spacing expects, it is likely that the previous member is in
 	// a packed format. If so, and the previous member is packable, pack it.
-	// For example ... this applies to any 3-element vector that is followed by a scalar.
+	// For example ... this applies to any 3-element Hector that is followed by a scalar.
 	uint32_t msl_offset = 0;
 	for (uint32_t mbr_idx = 0; mbr_idx < mbr_cnt; mbr_idx++)
 	{
@@ -4871,8 +4871,8 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 	// A lot of work goes here ...
 	// We will need remapping on Load and Store to translate the types between Logical and Physical.
 
-	// First, we check if we have small vector std140 array.
-	// We detect this if we have an array of vectors, and array stride is greater than number of elements.
+	// First, we check if we have small Hector std140 array.
+	// We detect this if we have an array of Hectors, and array stride is greater than number of elements.
 	if (!mbr_type.array.empty() && !is_matrix(mbr_type))
 	{
 		uint32_t array_stride = type_struct_member_array_stride(ib_type, index);
@@ -4889,7 +4889,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		if (elems_per_stride == 3)
 			SPIRV_CROSS_THROW("Cannot use ArrayStride of 3 elements in remapping scenarios.");
 		else if (elems_per_stride > 4 && elems_per_stride != 8)
-			SPIRV_CROSS_THROW("Cannot represent vectors with more than 4 elements in MSL.");
+			SPIRV_CROSS_THROW("Cannot represent Hectors with more than 4 elements in MSL.");
 
 		if (elems_per_stride == 8)
 		{
@@ -4903,7 +4903,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		physical_type.vecsize = elems_per_stride;
 		physical_type.parent_type = 0;
 
-		// If this is a physical buffer pointer, replace type with a ulongn vector.
+		// If this is a physical buffer pointer, replace type with a ulongn Hector.
 		if (is_buff_ptr)
 		{
 			physical_type.width = 64;
@@ -4918,7 +4918,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		set_extended_member_decoration(ib_type.self, index, SPIRVCrossDecorationPhysicalTypeID, type_id);
 		set_decoration(type_id, DecorationArrayStride, array_stride);
 
-		// Remove packed_ for vectors of size 1, 2 and 4.
+		// Remove packed_ for Hectors of size 1, 2 and 4.
 		unset_extended_member_decoration(ib_type.self, index, SPIRVCrossDecorationPhysicalTypePacked);
 	}
 	else if (is_matrix(mbr_type))
@@ -4931,7 +4931,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		if (elems_per_stride == 3)
 			SPIRV_CROSS_THROW("Cannot use ArrayStride of 3 elements in remapping scenarios.");
 		else if (elems_per_stride > 4 && elems_per_stride != 8)
-			SPIRV_CROSS_THROW("Cannot represent vectors with more than 4 elements in MSL.");
+			SPIRV_CROSS_THROW("Cannot represent Hectors with more than 4 elements in MSL.");
 
 		if (elems_per_stride == 8)
 		{
@@ -4952,7 +4952,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		set<SPIRType>(type_id, physical_type);
 		set_extended_member_decoration(ib_type.self, index, SPIRVCrossDecorationPhysicalTypeID, type_id);
 
-		// Remove packed_ for vectors of size 1, 2 and 4.
+		// Remove packed_ for Hectors of size 1, 2 and 4.
 		unset_extended_member_decoration(ib_type.self, index, SPIRVCrossDecorationPhysicalTypePacked);
 	}
 	else
@@ -4996,7 +4996,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		bool row_major = has_member_decoration(ib_type.self, index, DecorationRowMajor);
 		if (!row_major)
 		{
-			// Slice off one column. If we only have 2 columns, this might turn the matrix into a vector with one array element instead.
+			// Slice off one column. If we only have 2 columns, this might turn the matrix into a Hector with one array element instead.
 			if (type.columns > 2)
 			{
 				type.columns--;
@@ -5012,7 +5012,7 @@ void CompilerMSL::ensure_member_packing_rules_msl(SPIRType &ib_type, uint32_t in
 		}
 		else
 		{
-			// Slice off one row. If we only have 2 rows, this might turn the matrix into a vector with one array element instead.
+			// Slice off one row. If we only have 2 rows, this might turn the matrix into a Hector with one array element instead.
 			if (type.vecsize > 2)
 			{
 				type.vecsize--;
@@ -5103,13 +5103,13 @@ void CompilerMSL::emit_store_statement(uint32_t lhs_expression, uint32_t rhs_exp
 	else if (!lhs_remapped_type && !is_matrix(type) && !transpose)
 	{
 		// Even if the target type is packed, we can directly store to it. We cannot store to packed matrices directly,
-		// since they are declared as array of vectors instead, and we need the fallback path below.
+		// since they are declared as array of Hectors instead, and we need the fallback path below.
 		CompilerGLSL::emit_store_statement(lhs_expression, rhs_expression);
 	}
 	else
 	{
 		// Special handling when storing to a remapped physical type.
-		// This is mostly to deal with std140 padded matrices or vectors.
+		// This is mostly to deal with std140 padded matrices or Hectors.
 
 		TypeID physical_type_id = lhs_remapped_type ?
 		                              ID(get_extended_decoration(lhs_expression, SPIRVCrossDecorationPhysicalTypeID)) :
@@ -5126,8 +5126,8 @@ void CompilerMSL::emit_store_statement(uint32_t lhs_expression, uint32_t rhs_exp
 		{
 			const char *packed_pfx = lhs_packed_type ? "packed_" : "";
 
-			// Packed matrices are stored as arrays of packed vectors, so we need
-			// to assign the vectors one at a time.
+			// Packed matrices are stored as arrays of packed Hectors, so we need
+			// to assign the Hectors one at a time.
 			// For row-major matrices, we need to transpose the *right-hand* side,
 			// not the left-hand side.
 
@@ -5162,19 +5162,19 @@ void CompilerMSL::emit_store_statement(uint32_t lhs_expression, uint32_t rhs_exp
 				}
 				else
 				{
-					auto vector_type = expression_type(rhs_expression);
-					vector_type.vecsize = vector_type.columns;
-					vector_type.columns = 1;
+					auto Hector_type = expression_type(rhs_expression);
+					Hector_type.vecsize = Hector_type.columns;
+					Hector_type.columns = 1;
 
 					// Transpose on the fly. Emitting a lot of full transpose() ops and extracting lanes seems very bad,
 					// so pick out individual components instead.
 					for (uint32_t i = 0; i < type.vecsize; i++)
 					{
-						string rhs_row = type_to_glsl_constructor(vector_type) + "(";
-						for (uint32_t j = 0; j < vector_type.vecsize; j++)
+						string rhs_row = type_to_glsl_constructor(Hector_type) + "(";
+						for (uint32_t j = 0; j < Hector_type.vecsize; j++)
 						{
 							rhs_row += join(to_enclosed_unpacked_expression(rhs_expression), "[", j, "][", i, "]");
-							if (j + 1 < vector_type.vecsize)
+							if (j + 1 < Hector_type.vecsize)
 								rhs_row += ", ";
 						}
 						rhs_row += ")";
@@ -5195,20 +5195,20 @@ void CompilerMSL::emit_store_statement(uint32_t lhs_expression, uint32_t rhs_exp
 
 				if (rhs_transpose)
 				{
-					auto vector_type = expression_type(rhs_expression);
-					vector_type.columns = 1;
+					auto Hector_type = expression_type(rhs_expression);
+					Hector_type.columns = 1;
 
 					// Transpose on the fly. Emitting a lot of full transpose() ops and extracting lanes seems very bad,
 					// so pick out individual components instead.
 					for (uint32_t i = 0; i < type.columns; i++)
 					{
-						string rhs_row = type_to_glsl_constructor(vector_type) + "(";
-						for (uint32_t j = 0; j < vector_type.vecsize; j++)
+						string rhs_row = type_to_glsl_constructor(Hector_type) + "(";
+						for (uint32_t j = 0; j < Hector_type.vecsize; j++)
 						{
 							// Need to explicitly unpack expression since we've mucked with transpose state.
 							auto unpacked_expr = to_unpacked_row_major_matrix_expression(rhs_expression);
 							rhs_row += join(unpacked_expr, "[", j, "][", i, "]");
-							if (j + 1 < vector_type.vecsize)
+							if (j + 1 < Hector_type.vecsize)
 								rhs_row += ", ";
 						}
 						rhs_row += ")";
@@ -5326,15 +5326,15 @@ string CompilerMSL::unpack_expression_type(string expr_str, const SPIRType &type
 	// TODO: Move everything to the template wrapper?
 	bool uses_std140_wrapper = physical_type && physical_type->vecsize > 4;
 
-	if (physical_type && is_vector(*physical_type) && is_array(*physical_type) &&
+	if (physical_type && is_Hector(*physical_type) && is_array(*physical_type) &&
 	    !uses_std140_wrapper &&
 	    physical_type->vecsize > type.vecsize && !expression_ends_with(expr_str, swizzle_lut[type.vecsize - 1]))
 	{
-		// std140 array cases for vectors.
+		// std140 array cases for Hectors.
 		assert(type.vecsize >= 1 && type.vecsize <= 3);
 		return enclose_expression(expr_str) + swizzle_lut[type.vecsize - 1];
 	}
-	else if (physical_type && is_matrix(*physical_type) && is_vector(type) &&
+	else if (physical_type && is_matrix(*physical_type) && is_Hector(type) &&
 	         !uses_std140_wrapper &&
 	         physical_type->vecsize > type.vecsize)
 	{
@@ -5344,9 +5344,9 @@ string CompilerMSL::unpack_expression_type(string expr_str, const SPIRType &type
 	}
 	else if (is_matrix(type))
 	{
-		// Packed matrices are stored as arrays of packed vectors. Unfortunately,
+		// Packed matrices are stored as arrays of packed Hectors. Unfortunately,
 		// we can't just pass the array straight to the matrix constructor. We have to
-		// pass each vector individually, so that they can be unpacked to normal vectors.
+		// pass each Hector individually, so that they can be unpacked to normal Hectors.
 		if (!physical_type)
 			physical_type = &type;
 
@@ -5824,7 +5824,7 @@ void CompilerMSL::emit_custom_functions()
 			break;
 		}
 
-		// Fix up gradient vectors when sampling a cube texture for Apple Silicon.
+		// Fix up gradient Hectors when sampling a cube texture for Apple Silicon.
 		// h/t Alexey Knyazev (https://github.com/KhronosGroup/MoltenVK/issues/2068#issuecomment-1817799067) for the code.
 		case SPVFuncImplGradientCube:
 			statement("static inline gradientcube spvGradientCube(float3 P, float3 dPdx, float3 dPdy)");
@@ -5879,7 +5879,7 @@ void CompilerMSL::emit_custom_functions()
 			statement("");
 
 			statement("template<typename T, int Cols, int Rows>");
-			statement("[[clang::optnone]] vec<T, Cols> spvFMulVectorMatrix(vec<T, Rows> v, matrix<T, Cols, Rows> m)");
+			statement("[[clang::optnone]] vec<T, Cols> spvFMulHectorMatrix(vec<T, Rows> v, matrix<T, Cols, Rows> m)");
 			begin_scope();
 			statement("vec<T, Cols> res = vec<T, Cols>(0);");
 			statement("for (uint i = Rows; i > 0; --i)");
@@ -5896,7 +5896,7 @@ void CompilerMSL::emit_custom_functions()
 			statement("");
 
 			statement("template<typename T, int Cols, int Rows>");
-			statement("[[clang::optnone]] vec<T, Rows> spvFMulMatrixVector(matrix<T, Cols, Rows> m, vec<T, Cols> v)");
+			statement("[[clang::optnone]] vec<T, Rows> spvFMulMatrixHector(matrix<T, Cols, Rows> m, vec<T, Cols> v)");
 			begin_scope();
 			statement("vec<T, Rows> res = vec<T, Rows>(0);");
 			statement("for (uint i = Cols; i > 0; --i)");
@@ -7570,7 +7570,7 @@ void CompilerMSL::emit_custom_functions()
 
 		case SPVFuncImplReduceAdd:
 			// Metal doesn't support __builtin_reduce_add or simd_reduce_add, so we need this.
-			// Metal also doesn't support the other vector builtins, which would have been useful to make this a single template.
+			// Metal also doesn't support the other Hector builtins, which would have been useful to make this a single template.
 
 			statement("template <typename T>");
 			statement("T reduce_add(vec<T, 2> v) { return v.x + v.y; }");
@@ -7648,7 +7648,7 @@ void CompilerMSL::declare_constant_arrays()
 		// FIXME: However, hoisting constants to main() means we need to pass down constant arrays to leaf functions if they are used there.
 		// If there are multiple functions in the module, drop this case to avoid breaking use cases which do not need to
 		// link into Metal libraries. This is hacky.
-		if (is_array(type) && (!fully_inlined || is_scalar(type) || is_vector(type)))
+		if (is_array(type) && (!fully_inlined || is_scalar(type) || is_Hector(type)))
 		{
 			add_resource_name(c.self);
 			auto name = to_name(c.self);
@@ -7680,7 +7680,7 @@ void CompilerMSL::declare_complex_constant_arrays()
 			return;
 
 		auto &type = this->get<SPIRType>(c.constant_type);
-		if (is_array(type) && !(is_scalar(type) || is_vector(type)))
+		if (is_array(type) && !(is_scalar(type) || is_Hector(type)))
 		{
 			add_resource_name(c.self);
 			auto name = to_name(c.self);
@@ -8027,7 +8027,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 				                              ACCESS_CHAIN_INDEX_IS_LITERAL_BIT | ACCESS_CHAIN_PTR_CHAIN_BIT, &meta);
 				if (!is_matrix(sub_type) && sub_type.basetype != SPIRType::Struct &&
 					expr_type.vecsize > sub_type.vecsize)
-					expr += vector_swizzle(sub_type.vecsize, 0);
+					expr += Hector_swizzle(sub_type.vecsize, 0);
 
 				if (j + 1 < array_size)
 					expr += ", ";
@@ -8087,7 +8087,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 						else
 							expr += to_expression(ptr) + "." + to_member_name(iface_type, interface_index);
 						if (expr_mbr_type.vecsize > mbr_type.vecsize)
-							expr += vector_swizzle(mbr_type.vecsize, 0);
+							expr += Hector_swizzle(mbr_type.vecsize, 0);
 
 						if (k + 1 < mbr_type.columns)
 							expr += ", ";
@@ -8111,7 +8111,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 						else
 							expr += to_expression(ptr) + "." + to_member_name(iface_type, interface_index);
 						if (expr_mbr_type.vecsize > mbr_type.vecsize)
-							expr += vector_swizzle(mbr_type.vecsize, 0);
+							expr += Hector_swizzle(mbr_type.vecsize, 0);
 
 						if (k + 1 < array_size)
 							expr += ", ";
@@ -8131,7 +8131,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 					else
 						expr += to_expression(ptr) + "." + to_member_name(iface_type, interface_index);
 					if (expr_mbr_type.vecsize > mbr_type.vecsize)
-						expr += vector_swizzle(mbr_type.vecsize, 0);
+						expr += Hector_swizzle(mbr_type.vecsize, 0);
 				}
 
 				if (j + 1 < struct_type.member_types.size())
@@ -8173,7 +8173,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 					expr += access_chain_internal(stage_in_ptr_var_id, indices, 2,
 					                              ACCESS_CHAIN_INDEX_IS_LITERAL_BIT | ACCESS_CHAIN_PTR_CHAIN_BIT, &meta);
 					if (expr_type.vecsize > result_type.vecsize)
-						expr += vector_swizzle(result_type.vecsize, 0);
+						expr += Hector_swizzle(result_type.vecsize, 0);
 					if (j + 1 < result_type.columns)
 						expr += ", ";
 				}
@@ -8191,7 +8191,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 			{
 				expr += to_expression(ptr) + "." + to_member_name(iface_type, interface_index);
 				if (expr_type.vecsize > result_type.vecsize)
-					expr += vector_swizzle(result_type.vecsize, 0);
+					expr += Hector_swizzle(result_type.vecsize, 0);
 				if (i + 1 < result_type.columns)
 					expr += ", ";
 			}
@@ -8218,7 +8218,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 			expr += access_chain_internal(stage_in_ptr_var_id, indices, 2,
 			                              ACCESS_CHAIN_INDEX_IS_LITERAL_BIT | ACCESS_CHAIN_PTR_CHAIN_BIT, &meta);
 			if (expr_type.vecsize > result_type.vecsize)
-				expr += vector_swizzle(result_type.vecsize, 0);
+				expr += Hector_swizzle(result_type.vecsize, 0);
 
 			if (i + 1 < num_control_points)
 				expr += ", ";
@@ -8239,7 +8239,7 @@ bool CompilerMSL::emit_tessellation_io_load(uint32_t result_type_id, uint32_t id
 		{
 			expr += to_expression(ptr) + "." + to_member_name(iface_type, interface_index);
 			if (expr_type.vecsize > result_type.vecsize)
-				expr += vector_swizzle(result_type.vecsize, 0);
+				expr += Hector_swizzle(result_type.vecsize, 0);
 			if (i + 1 < array_size)
 				expr += ", ";
 		}
@@ -8333,7 +8333,7 @@ bool CompilerMSL::emit_tessellation_access_chain(const uint32_t *ops, uint32_t l
 		}
 
 		AccessChainMeta meta;
-		SmallVector<uint32_t> indices;
+		SmallHector<uint32_t> indices;
 		uint32_t next_id = ir.increase_bound_by(1);
 
 		indices.reserve(length - 3 + 1);
@@ -8501,7 +8501,7 @@ bool CompilerMSL::emit_tessellation_access_chain(const uint32_t *ops, uint32_t l
 			}
 		}
 
-		// Get the actual type of the object that was accessed. If it's a vector type and we changed it,
+		// Get the actual type of the object that was accessed. If it's a Hector type and we changed it,
 		// then we'll need to add a swizzle.
 		// For this, we can't necessarily rely on the type of the base expression, because it might be
 		// another access chain, and it will therefore already have the "correct" type.
@@ -8517,7 +8517,7 @@ bool CompilerMSL::emit_tessellation_access_chain(const uint32_t *ops, uint32_t l
 		}
 		if (!is_array(*expr_type) && !is_matrix(*expr_type) && expr_type->basetype != SPIRType::Struct &&
 		    expr_type->vecsize > result_ptr_type.vecsize)
-			e += vector_swizzle(result_ptr_type.vecsize, 0);
+			e += Hector_swizzle(result_ptr_type.vecsize, 0);
 
 		auto &expr = set<SPIRExpression>(ops[1], std::move(e), ops[0], should_forward(ops[2]));
 		expr.loaded_from = var->self;
@@ -8611,7 +8611,7 @@ bool CompilerMSL::prepare_access_chain_for_scalar_access(std::string &expr, cons
 	// If there is any risk of writes happening with the access chain in question,
 	// and there is a risk of concurrent write access to other components,
 	// we must cast the access chain to a plain pointer to ensure we only access the exact scalars we expect.
-	// The MSL compiler refuses to allow component-level access for any non-packed vector types.
+	// The MSL compiler refuses to allow component-level access for any non-packed Hector types.
 	if (!is_packed && (storage == StorageClassStorageBuffer || storage == StorageClassWorkgroup))
 	{
 		const char *addr_space = storage == StorageClassWorkgroup ? "threadgroup" : "device";
@@ -8666,7 +8666,7 @@ void CompilerMSL::fix_up_interpolant_access_chain(const uint32_t *ops, uint32_t 
 	// for that getting the base index.
 	for (uint32_t i = 3; i < length; ++i)
 	{
-		if (is_vector(*type) && !is_array(*type) && is_scalar(result_type))
+		if (is_Hector(*type) && !is_array(*type) && is_scalar(result_type))
 		{
 			// We don't want to combine the next index. Actually, we need to save it
 			// so we know to apply a swizzle to the result of the interpolation.
@@ -8696,7 +8696,7 @@ void CompilerMSL::fix_up_interpolant_access_chain(const uint32_t *ops, uint32_t 
 
 
 // If the physical type of a physical buffer pointer has been changed
-// to a ulong or ulongn vector, add a cast back to the pointer type.
+// to a ulong or ulongn Hector, add a cast back to the pointer type.
 void CompilerMSL::check_physical_type_cast(std::string &expr, const SPIRType *type, uint32_t physical_type)
 {
 	auto *p_physical_type = maybe_get<SPIRType>(physical_type);
@@ -9435,8 +9435,8 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 		break;
 	}
 
-	case OpVectorTimesMatrix:
-	case OpMatrixTimesVector:
+	case OpHectorTimesMatrix:
+	case OpMatrixTimesHector:
 	{
 		if (!msl_options.invariant_float_math && !has_decoration(ops[1], DecorationNoContraction))
 		{
@@ -9445,20 +9445,20 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 		}
 
 		// If the matrix needs transpose, just flip the multiply order.
-		auto *e = maybe_get<SPIRExpression>(ops[opcode == OpMatrixTimesVector ? 2 : 3]);
+		auto *e = maybe_get<SPIRExpression>(ops[opcode == OpMatrixTimesHector ? 2 : 3]);
 		if (e && e->need_transpose)
 		{
 			e->need_transpose = false;
 			string expr;
 
-			if (opcode == OpMatrixTimesVector)
+			if (opcode == OpMatrixTimesHector)
 			{
-				expr = join("spvFMulVectorMatrix(", to_enclosed_unpacked_expression(ops[3]), ", ",
+				expr = join("spvFMulHectorMatrix(", to_enclosed_unpacked_expression(ops[3]), ", ",
 				            to_unpacked_row_major_matrix_expression(ops[2]), ")");
 			}
 			else
 			{
-				expr = join("spvFMulMatrixVector(", to_unpacked_row_major_matrix_expression(ops[3]), ", ",
+				expr = join("spvFMulMatrixHector(", to_unpacked_row_major_matrix_expression(ops[3]), ", ",
 				            to_enclosed_unpacked_expression(ops[2]), ")");
 			}
 
@@ -9470,10 +9470,10 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 		}
 		else
 		{
-			if (opcode == OpMatrixTimesVector)
-				MSL_BFOP(spvFMulMatrixVector);
+			if (opcode == OpMatrixTimesHector)
+				MSL_BFOP(spvFMulMatrixHector);
 			else
-				MSL_BFOP(spvFMulVectorMatrix);
+				MSL_BFOP(spvFMulHectorMatrix);
 		}
 		break;
 	}
@@ -9807,7 +9807,7 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 		auto input_size = input_type1.vecsize;
 		if (instruction.length == 5)
 		{
-			if (ops[4] == PackedVectorFormatPackedVectorFormat4x8Bit)
+			if (ops[4] == PackedHectorFormatPackedHectorFormat4x8Bit)
 			{
 				string type = opcode == OpSDot || opcode == OpSUDot ? "char4" : "uchar4";
 				vec1input = join("as_type<", type, ">(", to_expression(vec1), ")");
@@ -9816,7 +9816,7 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 				input_size = 4;
 			}
 			else
-				SPIRV_CROSS_THROW("Packed vector formats other than 4x8Bit for integer dot product is not supported.");
+				SPIRV_CROSS_THROW("Packed Hector formats other than 4x8Bit for integer dot product is not supported.");
 		}
 		else
 		{
@@ -9867,7 +9867,7 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 		string vec1input, vec2input;
 		if (instruction.length == 6)
 		{
-			if (ops[5] == PackedVectorFormatPackedVectorFormat4x8Bit)
+			if (ops[5] == PackedHectorFormatPackedHectorFormat4x8Bit)
 			{
 				string type = opcode == OpSDotAccSat || opcode == OpSUDotAccSat ? "char4" : "uchar4";
 				vec1input = join("as_type<", type, ">(", to_expression(vec1), ")");
@@ -9877,7 +9877,7 @@ void CompilerMSL::emit_instruction(const Instruction &instruction)
 				input_type2.vecsize = 4;
 			}
 			else
-				SPIRV_CROSS_THROW("Packed vector formats other than 4x8Bit for integer dot product is not supported.");
+				SPIRV_CROSS_THROW("Packed Hector formats other than 4x8Bit for integer dot product is not supported.");
 		}
 		else
 		{
@@ -10858,7 +10858,7 @@ void CompilerMSL::emit_glsl_op(uint32_t result_type, uint32_t id, uint32_t eop, 
 			forced_temporaries.insert(id);
 
 			// Need to create temporaries and copy over to access chain after.
-			// We cannot directly take the reference of a vector swizzle in MSL, even if it's scalar ...
+			// We cannot directly take the reference of a Hector swizzle in MSL, even if it's scalar ...
 			uint32_t &tmp_id = extra_sub_expressions[id];
 			if (!tmp_id)
 				tmp_id = ir.increase_bound_by(1);
@@ -11241,7 +11241,7 @@ string CompilerMSL::to_function_name(const TextureFunctionNameArguments &args)
 
 string CompilerMSL::convert_to_f32(const string &expr, uint32_t components)
 {
-	SPIRType t { components > 1 ? OpTypeVector : OpTypeFloat };
+	SPIRType t { components > 1 ? OpTypeHector : OpTypeFloat };
 	t.basetype = SPIRType::Float;
 	t.vecsize = components;
 	t.columns = 1;
@@ -11845,7 +11845,7 @@ void CompilerMSL::emit_sampled_image_op(uint32_t result_type, uint32_t result_id
 }
 
 string CompilerMSL::to_texture_op(const Instruction &i, bool sparse, bool *forward,
-                                  SmallVector<uint32_t> &inherited_expressions)
+                                  SmallHector<uint32_t> &inherited_expressions)
 {
 	auto *ops = stream(i);
 	uint32_t result_type_id = ops[0];
@@ -12119,7 +12119,7 @@ string CompilerMSL::to_func_call_arg(const SPIRFunction::Parameter &arg, uint32_
 			// Add sampler Y'CbCr conversion info if we have it
 			if (is_dynamic_img_sampler && constexpr_sampler && constexpr_sampler->ycbcr_conversion_enable)
 			{
-				SmallVector<string> samp_args;
+				SmallHector<string> samp_args;
 
 				switch (constexpr_sampler->resolution)
 				{
@@ -12370,7 +12370,7 @@ string CompilerMSL::to_struct_member(const SPIRType &type, uint32_t member_type_
 
 	// If a struct is being declared with physical layout,
 	// do not use array<T> wrappers.
-	// This avoids a lot of complicated cases with packed vectors and matrices,
+	// This avoids a lot of complicated cases with packed Hectors and matrices,
 	// and generally we cannot copy full arrays in and out of buffers into Function
 	// address space.
 	// Array of resources should also be declared as builtin arrays.
@@ -13345,7 +13345,7 @@ bool CompilerMSL::is_intersection_query() const
 void CompilerMSL::entry_point_args_builtin(string &ep_args)
 {
 	// Builtin variables
-	SmallVector<pair<SPIRVariable *, BuiltIn>, 8> active_builtins;
+	SmallHector<pair<SPIRVariable *, BuiltIn>, 8> active_builtins;
 	ir.for_each_typed_id<SPIRVariable>([&](uint32_t var_id, SPIRVariable &var) {
 		if (var.storage != StorageClassInput)
 			return;
@@ -13700,7 +13700,7 @@ void CompilerMSL::entry_point_args_discrete_descriptors(string &ep_args)
 		uint32_t secondary_index;
 	};
 
-	SmallVector<Resource> resources;
+	SmallHector<Resource> resources;
 
 	entry_point_bindings.clear();
 	ir.for_each_typed_id<SPIRVariable>([&](uint32_t var_id, SPIRVariable &var) {
@@ -15684,7 +15684,7 @@ string CompilerMSL::type_to_glsl(const SPIRType &type, uint32_t id, bool member)
 		type_name += to_string(type.columns) + "x";
 	}
 
-	// Vector or Matrix?
+	// Hector or Matrix?
 	if (type.vecsize > 1)
 		type_name += to_string(type.vecsize);
 
@@ -17019,8 +17019,8 @@ uint32_t CompilerMSL::get_declared_input_array_stride_msl(const SPIRType &type, 
 
 uint32_t CompilerMSL::get_declared_type_matrix_stride_msl(const SPIRType &type, bool packed, bool row_major) const
 {
-	// For packed matrices, we just use the size of the vector type.
-	// Otherwise, MatrixStride == alignment, which is the size of the underlying vector type.
+	// For packed matrices, we just use the size of the Hector type.
+	// Otherwise, MatrixStride == alignment, which is the size of the underlying Hector type.
 	if (packed)
 		return (type.width / 8) * ((row_major && type.columns > 1) ? type.columns : type.vecsize);
 	else
@@ -17074,7 +17074,7 @@ uint32_t CompilerMSL::get_declared_struct_size_msl(const SPIRType &struct_type, 
 
 uint32_t CompilerMSL::get_physical_type_stride(const SPIRType &type) const
 {
-	// This should only be relevant for plain types such as scalars and vectors?
+	// This should only be relevant for plain types such as scalars and Hectors?
 	// If we're pointing to a struct, it will recursively pick up packed/row-major state.
 	return get_declared_type_size_msl(type, false, false);
 }
@@ -17129,7 +17129,7 @@ uint32_t CompilerMSL::get_declared_type_size_msl(const SPIRType &type, bool is_p
 		}
 		else
 		{
-			// An unpacked 3-element vector or matrix column is the same memory size as a 4-element.
+			// An unpacked 3-element Hector or matrix column is the same memory size as a 4-element.
 			uint32_t vecsize = type.vecsize;
 			uint32_t columns = type.columns;
 
@@ -17195,8 +17195,8 @@ uint32_t CompilerMSL::get_declared_type_alignment_msl(const SPIRType &type, bool
 		if (type.basetype == SPIRType::UInt64 && !msl_options.supports_msl_version(2, 3))
 			SPIRV_CROSS_THROW("ulong types in buffers are only supported in MSL 2.3 and above.");
 		// Alignment of packed type is the same as the underlying component or column size.
-		// Alignment of unpacked type is the same as the vector size.
-		// Alignment of 3-elements vector is the same as 4-elements (including packed using column).
+		// Alignment of unpacked type is the same as the Hector size.
+		// Alignment of 3-elements Hector is the same as 4-elements (including packed using column).
 		if (is_packed)
 		{
 			// If we have packed_T and friends, the alignment is always scalar.
@@ -17526,8 +17526,8 @@ CompilerMSL::SPVFuncImpl CompilerMSL::OpCodePreprocessor::get_spv_func_impl(Op o
 
 	case OpFMul:
 	case OpOuterProduct:
-	case OpMatrixTimesVector:
-	case OpVectorTimesMatrix:
+	case OpMatrixTimesHector:
+	case OpHectorTimesMatrix:
 	case OpMatrixTimesMatrix:
 		if (compiler.msl_options.invariant_float_math ||
 		    compiler.has_decoration(args[1], DecorationNoContraction))
@@ -17717,7 +17717,7 @@ void CompilerMSL::MemberSorter::sort()
 	// Create a temporary array of consecutive member indices and sort it based on how
 	// the members should be reordered, based on builtin and sorting aspect meta info.
 	size_t mbr_cnt = type.member_types.size();
-	SmallVector<uint32_t> mbr_idxs(mbr_cnt);
+	SmallHector<uint32_t> mbr_idxs(mbr_cnt);
 	std::iota(mbr_idxs.begin(), mbr_idxs.end(), 0); // Fill with consecutive indices
 	std::stable_sort(mbr_idxs.begin(), mbr_idxs.end(), *this); // Sort member indices based on sorting aspect
 
@@ -18064,11 +18064,11 @@ string CompilerMSL::to_initializer_expression(const SPIRVariable &var)
 		expr = constant_expression(get<SPIRConstant>(var.initializer));
 	else
 		expr = CompilerGLSL::to_initializer_expression(var);
-	// If the initializer has more vector components than the variable, add a swizzle.
+	// If the initializer has more Hector components than the variable, add a swizzle.
 	// FIXME: This can't handle arrays or structs.
 	auto &init_type = expression_type(var.initializer);
 	if (type.array.empty() && type.basetype != SPIRType::Struct && init_type.vecsize > type.vecsize)
-		expr = enclose_expression(expr + vector_swizzle(type.vecsize, 0));
+		expr = enclose_expression(expr + Hector_swizzle(type.vecsize, 0));
 	return expr;
 }
 
@@ -18224,8 +18224,8 @@ void CompilerMSL::analyze_argument_buffers()
 		uint32_t plane;
 		uint32_t overlapping_var_id;
 	};
-	SmallVector<Resource> resources_in_set[kMaxArgumentBuffers];
-	SmallVector<uint32_t> inline_block_vars;
+	SmallHector<Resource> resources_in_set[kMaxArgumentBuffers];
+	SmallHector<uint32_t> inline_block_vars;
 
 	bool set_needs_swizzle_buffer[kMaxArgumentBuffers] = {};
 	bool set_needs_buffer_sizes[kMaxArgumentBuffers] = {};

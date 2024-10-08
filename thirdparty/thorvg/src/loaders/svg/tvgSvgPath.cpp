@@ -192,7 +192,7 @@ void _pathAppendArcTo(Array<PathCommand>* cmds, Array<Point>* pts, Point* cur, P
 
     //Sstep 4 (F6.5.4)
     //We dont' use arccos (as per w3c doc), see
-    //http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/index.htm
+    //http://www.euclideanspace.com/maths/algebra/Hectors/angleBetween/index.htm
     //Note: atan2 (0.0, 1.0) == 0.0
     at = mathAtan2(((y1p - cyp) / ry), ((x1p - cxp) / rx));
     theta1 = (at < 0.0f) ? 2.0f * MATH_PI + at : at;

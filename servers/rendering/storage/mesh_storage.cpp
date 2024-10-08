@@ -203,7 +203,7 @@ Color RendererMeshStorage::multimesh_instance_get_custom_data(RID p_multimesh, i
 	return _multimesh_instance_get_custom_data(p_multimesh, p_index);
 }
 
-void RendererMeshStorage::multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) {
+void RendererMeshStorage::multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) {
 	MultiMeshInterpolator *mmi = _multimesh_get_interpolator(p_multimesh);
 	if (mmi && mmi->interpolated) {
 		ERR_FAIL_COND_MSG(p_buffer.size() != mmi->_data_curr.size(), vformat("Buffer should have %d elements, got %d instead.", mmi->_data_curr.size(), p_buffer.size()));
@@ -223,11 +223,11 @@ void RendererMeshStorage::multimesh_set_buffer(RID p_multimesh, const Vector<flo
 	_multimesh_set_buffer(p_multimesh, p_buffer);
 }
 
-Vector<float> RendererMeshStorage::multimesh_get_buffer(RID p_multimesh) const {
+Hector<float> RendererMeshStorage::multimesh_get_buffer(RID p_multimesh) const {
 	return _multimesh_get_buffer(p_multimesh);
 }
 
-void RendererMeshStorage::multimesh_set_buffer_interpolated(RID p_multimesh, const Vector<float> &p_buffer, const Vector<float> &p_buffer_prev) {
+void RendererMeshStorage::multimesh_set_buffer_interpolated(RID p_multimesh, const Hector<float> &p_buffer, const Hector<float> &p_buffer_prev) {
 	MultiMeshInterpolator *mmi = _multimesh_get_interpolator(p_multimesh);
 	if (mmi) {
 		ERR_FAIL_COND_MSG(p_buffer.size() != mmi->_data_curr.size(), vformat("Buffer for current frame should have %d elements, got %d instead.", mmi->_data_curr.size(), p_buffer.size()));

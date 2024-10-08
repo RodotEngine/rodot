@@ -2070,7 +2070,7 @@ struct delta_set_index_map_subset_plan_t
   unsigned map_count;
   unsigned outer_bit_count;
   unsigned inner_bit_count;
-  hb_vector_t<uint32_t> output_map;
+  hb_Hector_t<uint32_t> output_map;
 };
 
 struct COLR
@@ -2433,12 +2433,12 @@ struct COLR
     | hb_map_retains_sorting ([&](hb_codepoint_t old_gid)
 			      {
 				const BaseGlyphRecord* old_record = get_base_glyph_record (old_gid);
-				hb_vector_t<LayerRecord> out_layers;
+				hb_Hector_t<LayerRecord> out_layers;
 
 				if (unlikely (!old_record ||
 					      old_record->firstLayerIdx >= numLayers ||
 					      old_record->firstLayerIdx + old_record->numLayers > numLayers))
-				  return hb_pair_t<bool, hb_vector_t<LayerRecord>> (false, out_layers);
+				  return hb_pair_t<bool, hb_Hector_t<LayerRecord>> (false, out_layers);
 
 				auto layers = (this+layersZ).as_array (numLayers).sub_array (old_record->firstLayerIdx,
 											     old_record->numLayers);
@@ -2447,12 +2447,12 @@ struct COLR
 				  out_layers[i] = layers[i];
 				  hb_codepoint_t new_gid = 0;
 				  if (unlikely (!c->plan->new_gid_for_old_gid (out_layers[i].glyphId, &new_gid)))
-				    return hb_pair_t<bool, hb_vector_t<LayerRecord>> (false, out_layers);
+				    return hb_pair_t<bool, hb_Hector_t<LayerRecord>> (false, out_layers);
 				  out_layers[i].glyphId = new_gid;
 				  out_layers[i].colorIdx = c->plan->colr_palettes.get (layers[i].colorIdx);
 				}
 
-				return hb_pair_t<bool, hb_vector_t<LayerRecord>> (true, out_layers);
+				return hb_pair_t<bool, hb_Hector_t<LayerRecord>> (true, out_layers);
 			      })
     | hb_filter (hb_first)
     | hb_map_retains_sorting (hb_second)

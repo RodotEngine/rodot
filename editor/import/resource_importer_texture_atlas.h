@@ -40,8 +40,8 @@ class ResourceImporterTextureAtlas : public ResourceImporter {
 		Rect2 region;
 		bool is_cropped = false;
 		bool is_mesh = false;
-		Vector<int> chart_pieces; //one for region, many for mesh
-		Vector<Vector<Vector2>> chart_vertices; //for mesh
+		Hector<int> chart_pieces; //one for region, many for mesh
+		Hector<Hector<Hector2>> chart_vertices; //for mesh
 		Ref<Image> image;
 	};
 

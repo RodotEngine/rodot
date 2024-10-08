@@ -215,10 +215,10 @@ extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateFloat(
     XrSession                                   session,
     const XrActionStateGetInfo*                 getInfo,
     XrActionStateFloat*                         state);
-extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateVector2f(
+extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateHector2f(
     XrSession                                   session,
     const XrActionStateGetInfo*                 getInfo,
-    XrActionStateVector2f*                      state);
+    XrActionStateHector2f*                      state);
 extern "C" LOADER_EXPORT XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStatePose(
     XrSession                                   session,
     const XrActionStateGetInfo*                 getInfo,

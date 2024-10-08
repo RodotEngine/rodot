@@ -314,7 +314,7 @@ void SceneShaderForwardMobile::ShaderData::_create_pipeline(PipelineKey p_pipeli
 	}
 
 	// Convert the specialization from the key to pipeline specialization constants.
-	Vector<RD::PipelineSpecializationConstant> specialization_constants;
+	Hector<RD::PipelineSpecializationConstant> specialization_constants;
 	RD::PipelineSpecializationConstant sc;
 	sc.constant_id = 0;
 	sc.int_value = p_pipeline_key.shader_specialization.packed_0;
@@ -453,7 +453,7 @@ void SceneShaderForwardMobile::init(const String p_defines) {
 	/* SCENE SHADER */
 
 	{
-		Vector<String> shader_versions;
+		Hector<String> shader_versions;
 		for (uint32_t ubershader = 0; ubershader < 2; ubershader++) {
 			const String base_define = ubershader ? "\n#define UBERSHADER\n" : "";
 			shader_versions.push_back(base_define + ""); // SHADER_VERSION_COLOR_PASS
@@ -761,7 +761,7 @@ void fragment() {
 
 	{
 		default_vec4_xform_buffer = RD::get_singleton()->storage_buffer_create(256);
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
 		u.append_id(default_vec4_xform_buffer);

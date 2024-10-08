@@ -30,7 +30,7 @@ typedef oc_sb_map_quad  oc_sb_map[4];
 typedef ptrdiff_t       oc_mb_map_plane[4];
 /*A map from a macro block to fragment numbers.*/
 typedef oc_mb_map_plane oc_mb_map[3];
-/*A motion vector.*/
+/*A motion Hector.*/
 typedef ogg_int16_t     oc_mv;
 
 typedef struct oc_sb_flags              oc_sb_flags;
@@ -162,7 +162,7 @@ typedef struct oc_theora_state          oc_theora_state;
 
 /*The amount of padding to add to the reconstructed frame buffers on all
    sides.
-  This is used to allow unrestricted motion vectors without special casing.
+  This is used to allow unrestricted motion Hectors without special casing.
   This must be a multiple of 2.*/
 # define OC_UMV_PADDING (16)
 
@@ -191,22 +191,22 @@ typedef struct oc_theora_state          oc_theora_state;
 /*Encoded with no motion compensated prediction.*/
 # define OC_MODE_INTRA          (1)
 /*Encoded difference from the previous frame offset by the given motion
-   vector.*/
+   Hector.*/
 # define OC_MODE_INTER_MV       (2)
 /*Encoded difference from the previous frame offset by the last coded motion
-   vector.*/
+   Hector.*/
 # define OC_MODE_INTER_MV_LAST  (3)
 /*Encoded difference from the previous frame offset by the second to last
-   coded motion vector.*/
+   coded motion Hector.*/
 # define OC_MODE_INTER_MV_LAST2 (4)
 /*Encoded difference from the same macro block in the previous golden
    frame.*/
 # define OC_MODE_GOLDEN_NOMV    (5)
 /*Encoded difference from the previous golden frame offset by the given motion
-   vector.*/
+   Hector.*/
 # define OC_MODE_GOLDEN_MV      (6)
 /*Encoded difference from the previous frame offset by the individual motion
-   vectors given for each block.*/
+   Hectors given for each block.*/
 # define OC_MODE_INTER_MV_FOUR  (7)
 /*The number of (coded) modes.*/
 # define OC_NMODES              (8)
@@ -395,7 +395,7 @@ struct oc_theora_state{
   /*The the offset into the reference frame buffer to the upper-left pixel of
      each fragment.*/
   ptrdiff_t          *frag_buf_offs;
-  /*The motion vector for each fragment.*/
+  /*The motion Hector for each fragment.*/
   oc_mv              *frag_mvs;
   /*The total number of fragments in a single frame.*/
   ptrdiff_t           nfrags;
@@ -469,19 +469,19 @@ struct oc_theora_state{
 
 
 
-/*The function type used to fill in the chroma plane motion vectors for a
-   macro block when 4 different motion vectors are specified in the luma
+/*The function type used to fill in the chroma plane motion Hectors for a
+   macro block when 4 different motion Hectors are specified in the luma
    plane.
-  _cbmvs: The chroma block-level motion vectors to fill in.
-  _lmbmv: The luma macro-block level motion vector to fill in for use in
+  _cbmvs: The chroma block-level motion Hectors to fill in.
+  _lmbmv: The luma macro-block level motion Hector to fill in for use in
            prediction.
-  _lbmvs: The luma block-level motion vectors.*/
+  _lbmvs: The luma block-level motion Hectors.*/
 typedef void (*oc_set_chroma_mvs_func)(oc_mv _cbmvs[4],const oc_mv _lbmvs[4]);
 
 
 
-/*A table of functions used to fill in the Cb,Cr plane motion vectors for a
-   macro block when 4 different motion vectors are specified in the luma
+/*A table of functions used to fill in the Cb,Cr plane motion Hectors for a
+   macro block when 4 different motion Hectors are specified in the luma
    plane.*/
 extern const oc_set_chroma_mvs_func OC_SET_CHROMA_MVS_TABLE[TH_PF_NFORMATS];
 

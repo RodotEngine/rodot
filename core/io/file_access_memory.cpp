@@ -34,11 +34,11 @@
 #include "core/io/dir_access.h"
 #include "core/templates/rb_map.h"
 
-static HashMap<String, Vector<uint8_t>> *files = nullptr;
+static HashMap<String, Hector<uint8_t>> *files = nullptr;
 
-void FileAccessMemory::register_file(const String &p_name, const Vector<uint8_t> &p_data) {
+void FileAccessMemory::register_file(const String &p_name, const Hector<uint8_t> &p_data) {
 	if (!files) {
-		files = memnew((HashMap<String, Vector<uint8_t>>));
+		files = memnew((HashMap<String, Hector<uint8_t>>));
 	}
 
 	String name;
@@ -84,7 +84,7 @@ Error FileAccessMemory::open_internal(const String &p_path, int p_mode_flags) {
 	String name = fix_path(p_path);
 	//name = DirAccess::normalize_path(name);
 
-	HashMap<String, Vector<uint8_t>>::Iterator E = files->find(name);
+	HashMap<String, Hector<uint8_t>>::Iterator E = files->find(name);
 	ERR_FAIL_COND_V_MSG(!E, ERR_FILE_NOT_FOUND, "Can't find file '" + p_path + "'.");
 
 	data = E->value.ptrw();

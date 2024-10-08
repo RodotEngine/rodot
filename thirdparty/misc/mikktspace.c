@@ -1404,7 +1404,7 @@ static STSpace EvalTspace(int face_indices[], const int iFaces, const int piTriL
 			v2 = vsub(v2, vscale(vdot(n,v2),n)); if ( VNotZero(v2) ) v2 = Normalize(v2);
 
 			// weight contribution by the angle
-			// between the two edge vectors
+			// between the two edge Hectors
 			fCos = vdot(v1,v2); fCos=fCos>1?1:(fCos<(-1) ? (-1) : fCos);
 			fAngle = (float) acos(fCos);
 			fMagS = pTriInfos[f].fMagS;

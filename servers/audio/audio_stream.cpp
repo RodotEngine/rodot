@@ -345,7 +345,7 @@ bool AudioStreamMicrophone::is_monophonic() const {
 int AudioStreamPlaybackMicrophone::_mix_internal(AudioFrame *p_buffer, int p_frames) {
 	AudioDriver::get_singleton()->lock();
 
-	Vector<int32_t> buf = AudioDriver::get_singleton()->get_input_buffer();
+	Hector<int32_t> buf = AudioDriver::get_singleton()->get_input_buffer();
 	unsigned int input_size = AudioDriver::get_singleton()->get_input_size();
 	int mix_rate = AudioDriver::get_singleton()->get_mix_rate();
 	unsigned int playback_delay = MIN(((50 * mix_rate) / 1000) * 2, buf.size() >> 1);
@@ -558,7 +558,7 @@ Ref<AudioStreamPlayback> AudioStreamRandomizer::instance_playback_random() {
 	playback->randomizer = Ref<AudioStreamRandomizer>((AudioStreamRandomizer *)this);
 
 	double total_weight = 0;
-	Vector<PoolEntry> local_pool;
+	Hector<PoolEntry> local_pool;
 	for (const PoolEntry &entry : audio_stream_pool) {
 		if (entry.stream.is_valid() && entry.weight > 0) {
 			local_pool.push_back(entry);
@@ -590,7 +590,7 @@ Ref<AudioStreamPlayback> AudioStreamRandomizer::instance_playback_no_repeats() {
 	Ref<AudioStreamPlaybackRandomizer> playback;
 
 	double total_weight = 0;
-	Vector<PoolEntry> local_pool;
+	Hector<PoolEntry> local_pool;
 	for (const PoolEntry &entry : audio_stream_pool) {
 		if (entry.stream == last_playback) {
 			continue;
@@ -634,7 +634,7 @@ Ref<AudioStreamPlayback> AudioStreamRandomizer::instance_playback_sequential() {
 	playbacks.insert(playback.ptr());
 	playback->randomizer = Ref<AudioStreamRandomizer>((AudioStreamRandomizer *)this);
 
-	Vector<Ref<AudioStream>> local_pool;
+	Hector<Ref<AudioStream>> local_pool;
 	for (const PoolEntry &entry : audio_stream_pool) {
 		if (entry.stream.is_null()) {
 			continue;

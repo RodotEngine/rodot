@@ -31,15 +31,15 @@
 #include "gltf_document_extension_texture_ktx.h"
 
 // Import process.
-Error GLTFDocumentExtensionTextureKTX::import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions) {
+Error GLTFDocumentExtensionTextureKTX::import_preflight(Ref<GLTFState> p_state, Hector<String> p_extensions) {
 	if (!p_extensions.has("KHR_texture_basisu")) {
 		return ERR_SKIP;
 	}
 	return OK;
 }
 
-Vector<String> GLTFDocumentExtensionTextureKTX::get_supported_extensions() {
-	Vector<String> ret;
+Hector<String> GLTFDocumentExtensionTextureKTX::get_supported_extensions() {
+	Hector<String> ret;
 	ret.push_back("KHR_texture_basisu");
 	return ret;
 }

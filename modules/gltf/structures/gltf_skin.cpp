@@ -58,11 +58,11 @@ void GLTFSkin::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_godot_skin", "godot_skin"), &GLTFSkin::set_godot_skin);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "skin_root"), "set_skin_root", "get_skin_root"); // GLTFNodeIndex
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "joints_original"), "set_joints_original", "get_joints_original"); // Vector<GLTFNodeIndex>
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "inverse_binds", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL), "set_inverse_binds", "get_inverse_binds"); // Vector<Transform3D>
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "joints"), "set_joints", "get_joints"); // Vector<GLTFNodeIndex>
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "non_joints"), "set_non_joints", "get_non_joints"); // Vector<GLTFNodeIndex>
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "roots"), "set_roots", "get_roots"); // Vector<GLTFNodeIndex>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "joints_original"), "set_joints_original", "get_joints_original"); // Hector<GLTFNodeIndex>
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "inverse_binds", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL), "set_inverse_binds", "get_inverse_binds"); // Hector<Transform3D>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "joints"), "set_joints", "get_joints"); // Hector<GLTFNodeIndex>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "non_joints"), "set_non_joints", "get_non_joints"); // Hector<GLTFNodeIndex>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_INT32_ARRAY, "roots"), "set_roots", "get_roots"); // Hector<GLTFNodeIndex>
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "skeleton"), "set_skeleton", "get_skeleton"); // int
 	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "joint_i_to_bone_i", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL), "set_joint_i_to_bone_i", "get_joint_i_to_bone_i"); // RBMap<int,
 	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "joint_i_to_name", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL), "set_joint_i_to_name", "get_joint_i_to_name"); // RBMap<int,
@@ -77,11 +77,11 @@ void GLTFSkin::set_skin_root(GLTFNodeIndex p_skin_root) {
 	skin_root = p_skin_root;
 }
 
-Vector<GLTFNodeIndex> GLTFSkin::get_joints_original() {
+Hector<GLTFNodeIndex> GLTFSkin::get_joints_original() {
 	return joints_original;
 }
 
-void GLTFSkin::set_joints_original(Vector<GLTFNodeIndex> p_joints_original) {
+void GLTFSkin::set_joints_original(Hector<GLTFNodeIndex> p_joints_original) {
 	joints_original = p_joints_original;
 }
 
@@ -93,27 +93,27 @@ void GLTFSkin::set_inverse_binds(TypedArray<Transform3D> p_inverse_binds) {
 	GLTFTemplateConvert::set_from_array(inverse_binds, p_inverse_binds);
 }
 
-Vector<GLTFNodeIndex> GLTFSkin::get_joints() {
+Hector<GLTFNodeIndex> GLTFSkin::get_joints() {
 	return joints;
 }
 
-void GLTFSkin::set_joints(Vector<GLTFNodeIndex> p_joints) {
+void GLTFSkin::set_joints(Hector<GLTFNodeIndex> p_joints) {
 	joints = p_joints;
 }
 
-Vector<GLTFNodeIndex> GLTFSkin::get_non_joints() {
+Hector<GLTFNodeIndex> GLTFSkin::get_non_joints() {
 	return non_joints;
 }
 
-void GLTFSkin::set_non_joints(Vector<GLTFNodeIndex> p_non_joints) {
+void GLTFSkin::set_non_joints(Hector<GLTFNodeIndex> p_non_joints) {
 	non_joints = p_non_joints;
 }
 
-Vector<GLTFNodeIndex> GLTFSkin::get_roots() {
+Hector<GLTFNodeIndex> GLTFSkin::get_roots() {
 	return roots;
 }
 
-void GLTFSkin::set_roots(Vector<GLTFNodeIndex> p_roots) {
+void GLTFSkin::set_roots(Hector<GLTFNodeIndex> p_roots) {
 	roots = p_roots;
 }
 

@@ -48,7 +48,7 @@ class LipO : public RefCounted {
 	};
 
 	Ref<FileAccess> fa;
-	Vector<FatArch> archs;
+	Hector<FatArch> archs;
 
 	static inline size_t PAD(size_t s, size_t a) {
 		return (a - s % a);
@@ -57,8 +57,8 @@ class LipO : public RefCounted {
 public:
 	static bool is_lipo(const String &p_path);
 
-	bool create_file(const String &p_output_path, const Vector<String> &p_files);
-	bool create_file(const String &p_output_path, const Vector<String> &p_files, const Vector<Vector2i> &p_cputypes);
+	bool create_file(const String &p_output_path, const Hector<String> &p_files);
+	bool create_file(const String &p_output_path, const Hector<String> &p_files, const Hector<Hector2i> &p_cputypes);
 
 	bool open_file(const String &p_path);
 	int get_arch_count() const;

@@ -350,7 +350,7 @@ void Camera3D::set_orthogonal(real_t p_size, real_t p_z_near, real_t p_z_far) {
 	update_gizmos();
 }
 
-void Camera3D::set_frustum(real_t p_size, Vector2 p_offset, real_t p_z_near, real_t p_z_far) {
+void Camera3D::set_frustum(real_t p_size, Hector2 p_offset, real_t p_z_near, real_t p_z_far) {
 	if (!force_change && size == p_size && frustum_offset == p_offset && p_z_near == _near && p_z_far == _far && mode == PROJECTION_FRUSTUM) {
 		return;
 	}
@@ -420,38 +420,38 @@ bool Camera3D::is_current() const {
 	}
 }
 
-Vector3 Camera3D::project_ray_normal(const Point2 &p_pos) const {
-	Vector3 ray = project_local_ray_normal(p_pos);
+Hector3 Camera3D::project_ray_normal(const Point2 &p_pos) const {
+	Hector3 ray = project_local_ray_normal(p_pos);
 	return get_camera_transform().basis.xform(ray).normalized();
 };
 
-Vector3 Camera3D::project_local_ray_normal(const Point2 &p_pos) const {
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector3(), "Camera is not inside scene.");
+Hector3 Camera3D::project_local_ray_normal(const Point2 &p_pos) const {
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector3(), "Camera is not inside scene.");
 
 	Size2 viewport_size = get_viewport()->get_camera_rect_size();
-	Vector2 cpos = get_viewport()->get_camera_coords(p_pos);
-	Vector3 ray;
+	Hector2 cpos = get_viewport()->get_camera_coords(p_pos);
+	Hector3 ray;
 
 	if (mode == PROJECTION_ORTHOGONAL) {
-		ray = Vector3(0, 0, -1);
+		ray = Hector3(0, 0, -1);
 	} else {
 		Projection cm = _get_camera_projection(_near);
-		Vector2 screen_he = cm.get_viewport_half_extents();
-		ray = Vector3(((cpos.x / viewport_size.width) * 2.0 - 1.0) * screen_he.x, ((1.0 - (cpos.y / viewport_size.height)) * 2.0 - 1.0) * screen_he.y, -_near).normalized();
+		Hector2 screen_he = cm.get_viewport_half_extents();
+		ray = Hector3(((cpos.x / viewport_size.width) * 2.0 - 1.0) * screen_he.x, ((1.0 - (cpos.y / viewport_size.height)) * 2.0 - 1.0) * screen_he.y, -_near).normalized();
 	}
 
 	return ray;
 };
 
-Vector3 Camera3D::project_ray_origin(const Point2 &p_pos) const {
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector3(), "Camera is not inside scene.");
+Hector3 Camera3D::project_ray_origin(const Point2 &p_pos) const {
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector3(), "Camera is not inside scene.");
 
 	Size2 viewport_size = get_viewport()->get_camera_rect_size();
-	Vector2 cpos = get_viewport()->get_camera_coords(p_pos);
-	ERR_FAIL_COND_V(viewport_size.y == 0, Vector3());
+	Hector2 cpos = get_viewport()->get_camera_coords(p_pos);
+	ERR_FAIL_COND_V(viewport_size.y == 0, Hector3());
 
 	if (mode == PROJECTION_ORTHOGONAL) {
-		Vector2 pos = cpos / viewport_size;
+		Hector2 pos = cpos / viewport_size;
 		real_t vsize, hsize;
 		if (keep_aspect == KEEP_WIDTH) {
 			vsize = size / viewport_size.aspect();
@@ -461,7 +461,7 @@ Vector3 Camera3D::project_ray_origin(const Point2 &p_pos) const {
 			vsize = size;
 		}
 
-		Vector3 ray;
+		Hector3 ray;
 		ray.x = pos.x * (hsize)-hsize / 2;
 		ray.y = (1.0 - pos.y) * (vsize)-vsize / 2;
 		ray.z = -_near;
@@ -472,22 +472,22 @@ Vector3 Camera3D::project_ray_origin(const Point2 &p_pos) const {
 	};
 };
 
-bool Camera3D::is_position_behind(const Vector3 &p_pos) const {
+bool Camera3D::is_position_behind(const Hector3 &p_pos) const {
 	Transform3D t = get_global_transform();
-	Vector3 eyedir = -t.basis.get_column(2).normalized();
+	Hector3 eyedir = -t.basis.get_column(2).normalized();
 	return eyedir.dot(p_pos - t.origin) < _near;
 }
 
-Vector<Vector3> Camera3D::get_near_plane_points() const {
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector<Vector3>(), "Camera is not inside scene.");
+Hector<Hector3> Camera3D::get_near_plane_points() const {
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector<Hector3>(), "Camera is not inside scene.");
 
 	Projection cm = _get_camera_projection(_near);
 
-	Vector3 endpoints[8];
+	Hector3 endpoints[8];
 	cm.get_endpoints(Transform3D(), endpoints);
 
-	Vector<Vector3> points = {
-		Vector3(),
+	Hector<Hector3> points = {
+		Hector3(),
 		endpoints[4],
 		endpoints[5],
 		endpoints[6],
@@ -496,8 +496,8 @@ Vector<Vector3> Camera3D::get_near_plane_points() const {
 	return points;
 }
 
-Point2 Camera3D::unproject_position(const Vector3 &p_pos) const {
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector2(), "Camera is not inside scene.");
+Point2 Camera3D::unproject_position(const Hector3 &p_pos) const {
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector2(), "Camera is not inside scene.");
 
 	Size2 viewport_size = get_viewport()->get_visible_rect().size;
 
@@ -520,8 +520,8 @@ Point2 Camera3D::unproject_position(const Vector3 &p_pos) const {
 	return res;
 }
 
-Vector3 Camera3D::project_position(const Point2 &p_point, real_t p_z_depth) const {
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector3(), "Camera is not inside scene.");
+Hector3 Camera3D::project_position(const Point2 &p_point, real_t p_z_depth) const {
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector3(), "Camera is not inside scene.");
 
 	if (p_z_depth == 0 && mode != PROJECTION_ORTHOGONAL) {
 		return get_global_transform().origin;
@@ -530,14 +530,14 @@ Vector3 Camera3D::project_position(const Point2 &p_point, real_t p_z_depth) cons
 
 	Projection cm = _get_camera_projection(p_z_depth);
 
-	Vector2 vp_he = cm.get_viewport_half_extents();
+	Hector2 vp_he = cm.get_viewport_half_extents();
 
-	Vector2 point;
+	Hector2 point;
 	point.x = (p_point.x / viewport_size.x) * 2.0 - 1.0;
 	point.y = (1.0 - (p_point.y / viewport_size.y)) * 2.0 - 1.0;
 	point *= vp_he;
 
-	Vector3 p(point.x, point.y, -p_z_depth);
+	Hector3 p(point.x, point.y, -p_z_depth);
 
 	return get_camera_transform().xform(p);
 }
@@ -706,7 +706,7 @@ void Camera3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "current"), "set_current", "is_current");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fov", PROPERTY_HINT_RANGE, "1,179,0.1,degrees"), "set_fov", "get_fov");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "size", PROPERTY_HINT_RANGE, "0.001,100,0.001,or_greater,suffix:m"), "set_size", "get_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "frustum_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_frustum_offset", "get_frustum_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "frustum_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_frustum_offset", "get_frustum_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "near", PROPERTY_HINT_RANGE, "0.001,10,0.001,or_greater,exp,suffix:m"), "set_near", "get_near");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "far", PROPERTY_HINT_RANGE, "0.01,4000,0.01,or_greater,exp,suffix:m"), "set_far", "get_far");
 
@@ -734,7 +734,7 @@ real_t Camera3D::get_near() const {
 	return _near;
 }
 
-Vector2 Camera3D::get_frustum_offset() const {
+Hector2 Camera3D::get_frustum_offset() const {
 	return frustum_offset;
 }
 
@@ -763,7 +763,7 @@ void Camera3D::set_near(real_t p_near) {
 	_update_camera_mode();
 }
 
-void Camera3D::set_frustum_offset(Vector2 p_offset) {
+void Camera3D::set_frustum_offset(Hector2 p_offset) {
 	frustum_offset = p_offset;
 	_update_camera_mode();
 }
@@ -801,8 +801,8 @@ bool Camera3D::get_cull_mask_value(int p_layer_number) const {
 	return layers & (1 << (p_layer_number - 1));
 }
 
-Vector<Plane> Camera3D::get_frustum() const {
-	ERR_FAIL_COND_V(!is_inside_world(), Vector<Plane>());
+Hector<Plane> Camera3D::get_frustum() const {
+	ERR_FAIL_COND_V(!is_inside_world(), Hector<Plane>());
 
 	Projection cm = _get_camera_projection(_near);
 
@@ -814,8 +814,8 @@ TypedArray<Plane> Camera3D::_get_frustum() const {
 	return ret;
 }
 
-bool Camera3D::is_position_in_frustum(const Vector3 &p_position) const {
-	Vector<Plane> frustum = get_frustum();
+bool Camera3D::is_position_in_frustum(const Hector3 &p_position) const {
+	Hector<Plane> frustum = get_frustum();
 	for (int i = 0; i < frustum.size(); i++) {
 		if (frustum[i].is_point_over(p_position)) {
 			return false;
@@ -842,11 +842,11 @@ real_t Camera3D::get_h_offset() const {
 	return h_offset;
 }
 
-Vector3 Camera3D::get_doppler_tracked_velocity() const {
+Hector3 Camera3D::get_doppler_tracked_velocity() const {
 	if (doppler_tracking != DOPPLER_TRACKING_DISABLED) {
 		return velocity_tracker->get_tracked_linear_velocity();
 	} else {
-		return Vector3();
+		return Hector3();
 	}
 }
 
@@ -858,7 +858,7 @@ RID Camera3D::get_pyramid_shape_rid() {
 		PhysicsServer3D::get_singleton()->shape_set_data(pyramid_shape, pyramid_shape_points);
 
 	} else { //check if points changed
-		Vector<Vector3> local_points = get_near_plane_points();
+		Hector<Hector3> local_points = get_near_plane_points();
 
 		bool all_equal = true;
 

@@ -115,21 +115,21 @@ namespace embree
       static const size_t PARALLEL_FIND_BLOCK_SIZE = 1024;
       static const size_t PARALLEL_PARTITION_BLOCK_SIZE = 128;
 
-      typedef mvector<PrimRefMB>* PrimRefVector;
+      typedef mHector<PrimRefMB>* PrimRefHector;
 
       __forceinline SetMB() {}
 
-       __forceinline SetMB(const PrimInfoMB& pinfo_i, PrimRefVector prims)
+       __forceinline SetMB(const PrimInfoMB& pinfo_i, PrimRefHector prims)
          : PrimInfoMB(pinfo_i), prims(prims) {}
 
-      __forceinline SetMB(const PrimInfoMB& pinfo_i, PrimRefVector prims, range<size_t> object_range_in, BBox1f time_range_in)
+      __forceinline SetMB(const PrimInfoMB& pinfo_i, PrimRefHector prims, range<size_t> object_range_in, BBox1f time_range_in)
         : PrimInfoMB(pinfo_i), prims(prims)
       {
         object_range = object_range_in;
         time_range = intersect(time_range,time_range_in);
       }
       
-      __forceinline SetMB(const PrimInfoMB& pinfo_i, PrimRefVector prims, BBox1f time_range_in)
+      __forceinline SetMB(const PrimInfoMB& pinfo_i, PrimRefHector prims, BBox1f time_range_in)
         : PrimInfoMB(pinfo_i), prims(prims)
       {
         time_range = intersect(time_range,time_range_in);
@@ -204,7 +204,7 @@ namespace embree
       }
       
     public:
-      PrimRefVector prims;
+      PrimRefHector prims;
     };
 //}
 }

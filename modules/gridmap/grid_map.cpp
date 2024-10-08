@@ -46,7 +46,7 @@ bool GridMap::_set(const StringName &p_name, const Variant &p_value) {
 		Dictionary d = p_value;
 
 		if (d.has("cells")) {
-			Vector<int> cells = d["cells"];
+			Hector<int> cells = d["cells"];
 			int amount = cells.size();
 			const int *r = cells.ptr();
 			ERR_FAIL_COND_V(amount % 3, false); // not even
@@ -96,7 +96,7 @@ bool GridMap::_get(const StringName &p_name, Variant &r_ret) const {
 	if (name == "data") {
 		Dictionary d;
 
-		Vector<int> cells;
+		Hector<int> cells;
 		cells.resize(cell_map.size() * 3);
 		{
 			int *w = cells.ptrw();
@@ -271,14 +271,14 @@ Ref<MeshLibrary> GridMap::get_mesh_library() const {
 	return mesh_library;
 }
 
-void GridMap::set_cell_size(const Vector3 &p_size) {
+void GridMap::set_cell_size(const Hector3 &p_size) {
 	ERR_FAIL_COND(p_size.x < 0.001 || p_size.y < 0.001 || p_size.z < 0.001);
 	cell_size = p_size;
 	_recreate_octant_data();
 	emit_signal(SNAME("cell_size_changed"), cell_size);
 }
 
-Vector3 GridMap::get_cell_size() const {
+Hector3 GridMap::get_cell_size() const {
 	return cell_size;
 }
 
@@ -319,7 +319,7 @@ bool GridMap::get_center_z() const {
 	return center_z;
 }
 
-void GridMap::set_cell_item(const Vector3i &p_position, int p_item, int p_rot) {
+void GridMap::set_cell_item(const Hector3i &p_position, int p_item, int p_rot) {
 	if (baked_meshes.size() && !recreating_octants) {
 		//if you set a cell item, baked meshes go good bye
 		clear_baked_meshes();
@@ -399,7 +399,7 @@ void GridMap::set_cell_item(const Vector3i &p_position, int p_item, int p_rot) {
 	cell_map[key] = c;
 }
 
-int GridMap::get_cell_item(const Vector3i &p_position) const {
+int GridMap::get_cell_item(const Hector3i &p_position) const {
 	ERR_FAIL_INDEX_V(ABS(p_position.x), 1 << 20, INVALID_CELL_ITEM);
 	ERR_FAIL_INDEX_V(ABS(p_position.y), 1 << 20, INVALID_CELL_ITEM);
 	ERR_FAIL_INDEX_V(ABS(p_position.z), 1 << 20, INVALID_CELL_ITEM);
@@ -415,7 +415,7 @@ int GridMap::get_cell_item(const Vector3i &p_position) const {
 	return cell_map[key].item;
 }
 
-int GridMap::get_cell_item_orientation(const Vector3i &p_position) const {
+int GridMap::get_cell_item_orientation(const Hector3i &p_position) const {
 	ERR_FAIL_INDEX_V(ABS(p_position.x), 1 << 20, -1);
 	ERR_FAIL_INDEX_V(ABS(p_position.y), 1 << 20, -1);
 	ERR_FAIL_INDEX_V(ABS(p_position.z), 1 << 20, -1);
@@ -458,7 +458,7 @@ static const Basis _ortho_bases[24] = {
 	Basis(0, -1, 0, 0, 0, -1, 1, 0, 0)
 };
 
-Basis GridMap::get_cell_item_basis(const Vector3i &p_position) const {
+Basis GridMap::get_cell_item_basis(const Hector3i &p_position) const {
 	int orientation = get_cell_item_orientation(p_position);
 
 	if (orientation == -1) {
@@ -500,14 +500,14 @@ int GridMap::get_orthogonal_index_from_basis(const Basis &p_basis) const {
 	return 0;
 }
 
-Vector3i GridMap::local_to_map(const Vector3 &p_world_position) const {
-	Vector3 map_position = (p_world_position / cell_size).floor();
-	return Vector3i(map_position);
+Hector3i GridMap::local_to_map(const Hector3 &p_world_position) const {
+	Hector3 map_position = (p_world_position / cell_size).floor();
+	return Hector3i(map_position);
 }
 
-Vector3 GridMap::map_to_local(const Vector3i &p_map_position) const {
-	Vector3 offset = _get_offset();
-	Vector3 local_position(
+Hector3 GridMap::map_to_local(const Hector3i &p_map_position) const {
+	Hector3 offset = _get_offset();
+	Hector3 local_position(
 			p_map_position.x * cell_size.x + offset.x,
 			p_map_position.y * cell_size.y + offset.y,
 			p_map_position.z * cell_size.z + offset.z);
@@ -582,7 +582,7 @@ bool GridMap::_octant_update(const OctantKey &p_key) {
 		return true;
 	}
 
-	Vector<Vector3> col_debug;
+	Hector<Hector3> col_debug;
 
 	/*
 	 * foreach item in this octant,
@@ -600,14 +600,14 @@ bool GridMap::_octant_update(const OctantKey &p_key) {
 			continue;
 		}
 
-		Vector3 cellpos = Vector3(E.x, E.y, E.z);
-		Vector3 ofs = _get_offset();
+		Hector3 cellpos = Hector3(E.x, E.y, E.z);
+		Hector3 ofs = _get_offset();
 
 		Transform3D xform;
 
 		xform.basis = _ortho_bases[c.rot];
 		xform.set_origin(cellpos * cell_size + ofs);
-		xform.basis.scale(Vector3(cell_scale, cell_scale, cell_scale));
+		xform.basis.scale(Hector3(cell_scale, cell_scale, cell_scale));
 		if (baked_meshes.size() == 0) {
 			if (mesh_library->get_item_mesh(c.item).is_valid()) {
 				if (!multimesh_items.has(c.item)) {
@@ -621,7 +621,7 @@ bool GridMap::_octant_update(const OctantKey &p_key) {
 			}
 		}
 
-		Vector<MeshLibrary::ShapeData> shapes = mesh_library->get_item_shapes(c.item);
+		Hector<MeshLibrary::ShapeData> shapes = mesh_library->get_item_shapes(c.item);
 		// add the item's shape at given xform to octant's static_body
 		for (int i = 0; i < shapes.size(); i++) {
 			// add the item's shape
@@ -994,7 +994,7 @@ void GridMap::_recreate_octant_data() {
 	HashMap<IndexKey, Cell, IndexKey> cell_copy = cell_map;
 	_clear_internal();
 	for (const KeyValue<IndexKey, Cell> &E : cell_copy) {
-		set_cell_item(Vector3i(E.key), E.value.item, E.value.rot);
+		set_cell_item(Hector3i(E.key), E.value.item, E.value.rot);
 	}
 	recreating_octants = false;
 }
@@ -1118,7 +1118,7 @@ void GridMap::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh_library", PROPERTY_HINT_RESOURCE_TYPE, "MeshLibrary"), "set_mesh_library", "get_mesh_library");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "physics_material", PROPERTY_HINT_RESOURCE_TYPE, "PhysicsMaterial"), "set_physics_material", "get_physics_material");
 	ADD_GROUP("Cell", "cell_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "cell_size", PROPERTY_HINT_NONE, "suffix:m"), "set_cell_size", "get_cell_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "cell_size", PROPERTY_HINT_NONE, "suffix:m"), "set_cell_size", "get_cell_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "cell_octant_size", PROPERTY_HINT_RANGE, "1,1024,1"), "set_octant_size", "get_octant_size");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cell_center_x"), "set_center_x", "get_center_x");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cell_center_y"), "set_center_y", "get_center_y");
@@ -1133,7 +1133,7 @@ void GridMap::_bind_methods() {
 
 	BIND_CONSTANT(INVALID_CELL_ITEM);
 
-	ADD_SIGNAL(MethodInfo("cell_size_changed", PropertyInfo(Variant::VECTOR3, "cell_size")));
+	ADD_SIGNAL(MethodInfo("cell_size_changed", PropertyInfo(Variant::HECTOR3, "cell_size")));
 	ADD_SIGNAL(MethodInfo(CoreStringName(changed)));
 }
 
@@ -1146,23 +1146,23 @@ float GridMap::get_cell_scale() const {
 	return cell_scale;
 }
 
-TypedArray<Vector3i> GridMap::get_used_cells() const {
-	TypedArray<Vector3i> a;
+TypedArray<Hector3i> GridMap::get_used_cells() const {
+	TypedArray<Hector3i> a;
 	a.resize(cell_map.size());
 	int i = 0;
 	for (const KeyValue<IndexKey, Cell> &E : cell_map) {
-		Vector3i p(E.key.x, E.key.y, E.key.z);
+		Hector3i p(E.key.x, E.key.y, E.key.z);
 		a[i++] = p;
 	}
 
 	return a;
 }
 
-TypedArray<Vector3i> GridMap::get_used_cells_by_item(int p_item) const {
-	TypedArray<Vector3i> a;
+TypedArray<Hector3i> GridMap::get_used_cells_by_item(int p_item) const {
+	TypedArray<Hector3i> a;
 	for (const KeyValue<IndexKey, Cell> &E : cell_map) {
 		if ((int)E.value.item == p_item) {
-			Vector3i p(E.key.x, E.key.y, E.key.z);
+			Hector3i p(E.key.x, E.key.y, E.key.z);
 			a.push_back(p);
 		}
 	}
@@ -1175,7 +1175,7 @@ Array GridMap::get_meshes() const {
 		return Array();
 	}
 
-	Vector3 ofs = _get_offset();
+	Hector3 ofs = _get_offset();
 	Array meshes;
 
 	for (const KeyValue<IndexKey, Cell> &E : cell_map) {
@@ -1190,14 +1190,14 @@ Array GridMap::get_meshes() const {
 
 		IndexKey ik = E.key;
 
-		Vector3 cellpos = Vector3(ik.x, ik.y, ik.z);
+		Hector3 cellpos = Hector3(ik.x, ik.y, ik.z);
 
 		Transform3D xform;
 
 		xform.basis = _ortho_bases[E.value.rot];
 
 		xform.set_origin(cellpos * cell_size + ofs);
-		xform.basis.scale(Vector3(cell_scale, cell_scale, cell_scale));
+		xform.basis.scale(Hector3(cell_scale, cell_scale, cell_scale));
 
 		meshes.push_back(xform * mesh_library->get_item_mesh_transform(id));
 		meshes.push_back(mesh);
@@ -1206,8 +1206,8 @@ Array GridMap::get_meshes() const {
 	return meshes;
 }
 
-Vector3 GridMap::_get_offset() const {
-	return Vector3(
+Hector3 GridMap::_get_offset() const {
+	return Hector3(
 			cell_size.x * 0.5 * int(center_x),
 			cell_size.y * 0.5 * int(center_y),
 			cell_size.z * 0.5 * int(center_z));
@@ -1244,14 +1244,14 @@ void GridMap::make_baked_meshes(bool p_gen_lightmap_uv, float p_lightmap_uv_texe
 			continue;
 		}
 
-		Vector3 cellpos = Vector3(key.x, key.y, key.z);
-		Vector3 ofs = _get_offset();
+		Hector3 cellpos = Hector3(key.x, key.y, key.z);
+		Hector3 ofs = _get_offset();
 
 		Transform3D xform;
 
 		xform.basis = _ortho_bases[E.value.rot];
 		xform.set_origin(cellpos * cell_size + ofs);
-		xform.basis.scale(Vector3(cell_scale, cell_scale, cell_scale));
+		xform.basis.scale(Hector3(cell_scale, cell_scale, cell_scale));
 
 		OctantKey ok;
 		ok.x = key.x / octant_size;
@@ -1395,7 +1395,7 @@ void GridMap::_update_octant_navigation_debug_edge_connections_mesh(const Octant
 	float edge_connection_margin = NavigationServer3D::get_singleton()->map_get_edge_connection_margin(get_world_3d()->get_navigation_map());
 	float half_edge_connection_margin = edge_connection_margin * 0.5;
 
-	Vector<Vector3> vertex_array;
+	Hector<Hector3> vertex_array;
 
 	for (KeyValue<IndexKey, Octant::NavigationCell> &F : g.navigation_cell_ids) {
 		if (cell_map.has(F.key) && F.value.region.is_valid()) {
@@ -1405,22 +1405,22 @@ void GridMap::_update_octant_navigation_debug_edge_connections_mesh(const Octant
 			}
 
 			for (int i = 0; i < connections_count; i++) {
-				Vector3 connection_pathway_start = NavigationServer3D::get_singleton()->region_get_connection_pathway_start(F.value.region, i);
-				Vector3 connection_pathway_end = NavigationServer3D::get_singleton()->region_get_connection_pathway_end(F.value.region, i);
+				Hector3 connection_pathway_start = NavigationServer3D::get_singleton()->region_get_connection_pathway_start(F.value.region, i);
+				Hector3 connection_pathway_end = NavigationServer3D::get_singleton()->region_get_connection_pathway_end(F.value.region, i);
 
-				Vector3 direction_start_end = connection_pathway_start.direction_to(connection_pathway_end);
-				Vector3 direction_end_start = connection_pathway_end.direction_to(connection_pathway_start);
+				Hector3 direction_start_end = connection_pathway_start.direction_to(connection_pathway_end);
+				Hector3 direction_end_start = connection_pathway_end.direction_to(connection_pathway_start);
 
-				Vector3 start_right_dir = direction_start_end.cross(Vector3(0, 1, 0));
-				Vector3 start_left_dir = -start_right_dir;
+				Hector3 start_right_dir = direction_start_end.cross(Hector3(0, 1, 0));
+				Hector3 start_left_dir = -start_right_dir;
 
-				Vector3 end_right_dir = direction_end_start.cross(Vector3(0, 1, 0));
-				Vector3 end_left_dir = -end_right_dir;
+				Hector3 end_right_dir = direction_end_start.cross(Hector3(0, 1, 0));
+				Hector3 end_left_dir = -end_right_dir;
 
-				Vector3 left_start_pos = connection_pathway_start + (start_left_dir * half_edge_connection_margin);
-				Vector3 right_start_pos = connection_pathway_start + (start_right_dir * half_edge_connection_margin);
-				Vector3 left_end_pos = connection_pathway_end + (end_right_dir * half_edge_connection_margin);
-				Vector3 right_end_pos = connection_pathway_end + (end_left_dir * half_edge_connection_margin);
+				Hector3 left_start_pos = connection_pathway_start + (start_left_dir * half_edge_connection_margin);
+				Hector3 right_start_pos = connection_pathway_start + (start_right_dir * half_edge_connection_margin);
+				Hector3 left_end_pos = connection_pathway_end + (end_right_dir * half_edge_connection_margin);
+				Hector3 right_end_pos = connection_pathway_end + (end_left_dir * half_edge_connection_margin);
 
 				vertex_array.push_back(right_end_pos);
 				vertex_array.push_back(left_start_pos);

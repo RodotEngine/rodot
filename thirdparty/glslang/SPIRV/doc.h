@@ -40,7 +40,7 @@
 
 #include "spirv.hpp"
 
-#include <vector>
+#include <Vector>
 
 namespace spv {
 

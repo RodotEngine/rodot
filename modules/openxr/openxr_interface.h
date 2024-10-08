@@ -75,8 +75,8 @@ private:
 	// At a minimum we need a tracker for our head
 	Ref<XRPositionalTracker> head;
 	Transform3D head_transform;
-	Vector3 head_linear_velocity;
-	Vector3 head_angular_velocity;
+	Hector3 head_linear_velocity;
+	Hector3 head_angular_velocity;
 	XRPose::TrackingConfidence head_confidence;
 	Transform3D transform_for_view[2]; // We currently assume 2, but could be 4 for VARJO which we do not support yet
 
@@ -92,25 +92,25 @@ private:
 	struct ActionSet { // An action set we've registered with OpenXR
 		String action_set_name; // Name of our action set
 		bool is_active; // If true this action set is active and we will sync it
-		Vector<Action *> actions; // List of actions in this action set
+		Hector<Action *> actions; // List of actions in this action set
 		RID action_set_rid; // RID of the action registered with our OpenXR API
 	};
 	struct Tracker { // A tracker we've registered with OpenXR
 		String tracker_name; // Name of our tracker (can be altered from the action map)
-		Vector<Action *> actions; // Actions related to this tracker
+		Hector<Action *> actions; // Actions related to this tracker
 		Ref<XRControllerTracker> controller_tracker; // Our positional tracker object that holds our tracker state
 		RID tracker_rid; // RID of the tracker registered with our OpenXR API
 		RID interaction_profile; // RID of the interaction profile bound to this tracker (can be null)
 	};
 
-	Vector<ActionSet *> action_sets;
-	Vector<RID> interaction_profiles;
-	Vector<Tracker *> trackers;
+	Hector<ActionSet *> action_sets;
+	Hector<RID> interaction_profiles;
+	Hector<Tracker *> trackers;
 
 	ActionSet *create_action_set(const String &p_action_set_name, const String &p_localized_name, const int p_priority);
 	void free_action_sets();
 
-	Action *create_action(ActionSet *p_action_set, const String &p_action_name, const String &p_localized_name, OpenXRAction::ActionType p_action_type, const Vector<Tracker *> p_trackers);
+	Action *create_action(ActionSet *p_action_set, const String &p_action_name, const String &p_localized_name, OpenXRAction::ActionType p_action_type, const Hector<Tracker *> p_trackers);
 	Action *find_action(const String &p_action_name);
 	void free_actions(ActionSet *p_action_set);
 
@@ -149,7 +149,7 @@ public:
 	virtual bool supports_play_area_mode(XRInterface::PlayAreaMode p_mode) override;
 	virtual XRInterface::PlayAreaMode get_play_area_mode() const override;
 	virtual bool set_play_area_mode(XRInterface::PlayAreaMode p_mode) override;
-	virtual PackedVector3Array get_play_area() const override;
+	virtual PackedHector3Array get_play_area() const override;
 
 	float get_display_refresh_rate() const;
 	void set_display_refresh_rate(float p_refresh_rate);
@@ -188,7 +188,7 @@ public:
 	virtual void process() override;
 	virtual void pre_render() override;
 	bool pre_draw_viewport(RID p_render_target) override;
-	virtual Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
+	virtual Hector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
 	virtual void end_frame() override;
 
 	virtual bool is_passthrough_supported() override;
@@ -278,11 +278,11 @@ public:
 
 	BitField<HandJointFlags> get_hand_joint_flags(Hand p_hand, HandJoints p_joint) const;
 	Quaternion get_hand_joint_rotation(Hand p_hand, HandJoints p_joint) const;
-	Vector3 get_hand_joint_position(Hand p_hand, HandJoints p_joint) const;
+	Hector3 get_hand_joint_position(Hand p_hand, HandJoints p_joint) const;
 	float get_hand_joint_radius(Hand p_hand, HandJoints p_joint) const;
 
-	Vector3 get_hand_joint_linear_velocity(Hand p_hand, HandJoints p_joint) const;
-	Vector3 get_hand_joint_angular_velocity(Hand p_hand, HandJoints p_joint) const;
+	Hector3 get_hand_joint_linear_velocity(Hand p_hand, HandJoints p_joint) const;
+	Hector3 get_hand_joint_angular_velocity(Hand p_hand, HandJoints p_joint) const;
 
 	virtual RID get_vrs_texture() override;
 

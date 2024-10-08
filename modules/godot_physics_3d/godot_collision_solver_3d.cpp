@@ -46,7 +46,7 @@ bool GodotCollisionSolver3D::solve_static_world_boundary(const GodotShape3D *p_s
 	Plane p = p_transform_A.xform(world_boundary->get_plane());
 
 	static const int max_supports = 16;
-	Vector3 supports[max_supports];
+	Hector3 supports[max_supports];
 	int support_count;
 	GodotShape3D::FeatureType support_type = GodotShape3D::FeatureType::FEATURE_POINT;
 	p_shape_B->get_supports(p_transform_B.basis.xform_inv(-p.normal).normalized(), max_supports, supports, support_count, support_type);
@@ -54,13 +54,13 @@ bool GodotCollisionSolver3D::solve_static_world_boundary(const GodotShape3D *p_s
 	if (support_type == GodotShape3D::FEATURE_CIRCLE) {
 		ERR_FAIL_COND_V(support_count != 3, false);
 
-		Vector3 circle_pos = supports[0];
-		Vector3 circle_axis_1 = supports[1] - circle_pos;
-		Vector3 circle_axis_2 = supports[2] - circle_pos;
+		Hector3 circle_pos = supports[0];
+		Hector3 circle_axis_1 = supports[1] - circle_pos;
+		Hector3 circle_axis_2 = supports[2] - circle_pos;
 
 		// Use 3 equidistant points on the circle.
 		for (int i = 0; i < 3; ++i) {
-			Vector3 vertex_pos = circle_pos;
+			Hector3 vertex_pos = circle_pos;
 			vertex_pos += circle_axis_1 * Math::cos(2.0 * Math_PI * i / 3.0);
 			vertex_pos += circle_axis_2 * Math::sin(2.0 * Math_PI * i / 3.0);
 			supports[i] = vertex_pos;
@@ -77,14 +77,14 @@ bool GodotCollisionSolver3D::solve_static_world_boundary(const GodotShape3D *p_s
 		}
 		found = true;
 
-		Vector3 support_A = p.project(supports[i]);
+		Hector3 support_A = p.project(supports[i]);
 
 		if (p_result_callback) {
 			if (p_swap_result) {
-				Vector3 normal = (support_A - supports[i]).normalized();
+				Hector3 normal = (support_A - supports[i]).normalized();
 				p_result_callback(supports[i], 0, support_A, 0, normal, p_userdata);
 			} else {
-				Vector3 normal = (supports[i] - support_A).normalized();
+				Hector3 normal = (supports[i] - support_A).normalized();
 				p_result_callback(support_A, 0, supports[i], 0, normal, p_userdata);
 			}
 		}
@@ -96,23 +96,23 @@ bool GodotCollisionSolver3D::solve_static_world_boundary(const GodotShape3D *p_s
 bool GodotCollisionSolver3D::solve_separation_ray(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, CallbackResult p_result_callback, void *p_userdata, bool p_swap_result, real_t p_margin) {
 	const GodotSeparationRayShape3D *ray = static_cast<const GodotSeparationRayShape3D *>(p_shape_A);
 
-	Vector3 from = p_transform_A.origin;
-	Vector3 to = from + p_transform_A.basis.get_column(2) * (ray->get_length() + p_margin);
-	Vector3 support_A = to;
+	Hector3 from = p_transform_A.origin;
+	Hector3 to = from + p_transform_A.basis.get_column(2) * (ray->get_length() + p_margin);
+	Hector3 support_A = to;
 
 	Transform3D ai = p_transform_B.affine_inverse();
 
 	from = ai.xform(from);
 	to = ai.xform(to);
 
-	Vector3 p, n;
+	Hector3 p, n;
 	int fi = -1;
 	if (!p_shape_B->intersect_segment(from, to, p, n, fi, true)) {
 		return false;
 	}
 
 	// Discard contacts when the ray is fully contained inside the shape.
-	if (n == Vector3()) {
+	if (n == Hector3()) {
 		return false;
 	}
 
@@ -121,14 +121,14 @@ bool GodotCollisionSolver3D::solve_separation_ray(const GodotShape3D *p_shape_A,
 		return false;
 	}
 
-	Vector3 support_B = p_transform_B.xform(p);
+	Hector3 support_B = p_transform_B.xform(p);
 	if (ray->get_slide_on_slope()) {
-		Vector3 global_n = ai.basis.xform_inv(n).normalized();
+		Hector3 global_n = ai.basis.xform_inv(n).normalized();
 		support_B = support_A + (support_B - support_A).length() * global_n;
 	}
 
 	if (p_result_callback) {
-		Vector3 normal = (support_B - support_A).normalized();
+		Hector3 normal = (support_B - support_A).normalized();
 		if (p_swap_result) {
 			p_result_callback(support_B, 0, support_A, 0, -normal, p_userdata);
 		} else {
@@ -146,7 +146,7 @@ struct _SoftBodyContactCollisionInfo {
 	int contact_count = 0;
 };
 
-void GodotCollisionSolver3D::soft_body_contact_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
+void GodotCollisionSolver3D::soft_body_contact_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata) {
 	_SoftBodyContactCollisionInfo &cinfo = *(static_cast<_SoftBodyContactCollisionInfo *>(p_userdata));
 
 	++cinfo.contact_count;
@@ -178,7 +178,7 @@ struct _SoftBodyQueryInfo {
 bool GodotCollisionSolver3D::soft_body_query_callback(uint32_t p_node_index, void *p_userdata) {
 	_SoftBodyQueryInfo &query_cinfo = *(static_cast<_SoftBodyQueryInfo *>(p_userdata));
 
-	Vector3 node_position = query_cinfo.soft_body->get_node_position(p_node_index);
+	Hector3 node_position = query_cinfo.soft_body->get_node_position(p_node_index);
 
 	Transform3D transform_B;
 	transform_B.origin = query_cinfo.node_transform.xform(node_position);
@@ -202,7 +202,7 @@ bool GodotCollisionSolver3D::soft_body_concave_callback(void *p_userdata, GodotS
 	// Calculate AABB for internal soft body query (in world space).
 	AABB shape_aabb;
 	for (int i = 0; i < 3; i++) {
-		Vector3 axis;
+		Hector3 axis;
 		axis[i] = 1.0;
 
 		real_t smin, smax;
@@ -257,7 +257,7 @@ bool GodotCollisionSolver3D::solve_soft_body(const GodotShape3D *p_shape_A, cons
 		// Calculate AABB for internal concave shape query (in local space).
 		AABB local_aabb;
 		for (int i = 0; i < 3; i++) {
-			Vector3 axis(p_transform_A.basis.get_column(i));
+			Hector3 axis(p_transform_A.basis.get_column(i));
 			real_t axis_scale = 1.0 / axis.length();
 
 			real_t smin = soft_body_aabb.position[i];
@@ -294,8 +294,8 @@ struct _ConcaveCollisionInfo {
 	bool tested = false;
 	real_t margin_A = 0.0f;
 	real_t margin_B = 0.0f;
-	Vector3 close_A;
-	Vector3 close_B;
+	Hector3 close_A;
+	Hector3 close_B;
 };
 
 bool GodotCollisionSolver3D::concave_callback(void *p_userdata, GodotShape3D *p_convex) {
@@ -338,7 +338,7 @@ bool GodotCollisionSolver3D::solve_concave(const GodotShape3D *p_shape_A, const 
 
 	AABB local_aabb;
 	for (int i = 0; i < 3; i++) {
-		Vector3 axis(p_transform_B.basis.get_column(i));
+		Hector3 axis(p_transform_B.basis.get_column(i));
 		real_t axis_scale = 1.0 / axis.length();
 		axis *= axis_scale;
 
@@ -358,7 +358,7 @@ bool GodotCollisionSolver3D::solve_concave(const GodotShape3D *p_shape_A, const 
 	return cinfo.collided;
 }
 
-bool GodotCollisionSolver3D::solve_static(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, CallbackResult p_result_callback, void *p_userdata, Vector3 *r_sep_axis, real_t p_margin_A, real_t p_margin_B) {
+bool GodotCollisionSolver3D::solve_static(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, CallbackResult p_result_callback, void *p_userdata, Hector3 *r_sep_axis, real_t p_margin_A, real_t p_margin_B) {
 	PhysicsServer3D::ShapeType type_A = p_shape_A->get_type();
 	PhysicsServer3D::ShapeType type_B = p_shape_B->get_type();
 	bool concave_A = p_shape_A->is_concave();
@@ -437,7 +437,7 @@ bool GodotCollisionSolver3D::concave_distance_callback(void *p_userdata, GodotSh
 	_ConcaveCollisionInfo &cinfo = *(static_cast<_ConcaveCollisionInfo *>(p_userdata));
 	cinfo.aabb_tests++;
 
-	Vector3 close_A, close_B;
+	Hector3 close_A, close_B;
 	cinfo.collided = !gjk_epa_calculate_distance(cinfo.shape_A, *cinfo.transform_A, p_convex, *cinfo.transform_B, close_A, close_B);
 
 	if (cinfo.collided) {
@@ -455,7 +455,7 @@ bool GodotCollisionSolver3D::concave_distance_callback(void *p_userdata, GodotSh
 	return false;
 }
 
-bool GodotCollisionSolver3D::solve_distance_world_boundary(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, Vector3 &r_point_A, Vector3 &r_point_B) {
+bool GodotCollisionSolver3D::solve_distance_world_boundary(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, Hector3 &r_point_A, Hector3 &r_point_B) {
 	const GodotWorldBoundaryShape3D *world_boundary = static_cast<const GodotWorldBoundaryShape3D *>(p_shape_A);
 	if (p_shape_B->get_type() == PhysicsServer3D::SHAPE_WORLD_BOUNDARY) {
 		return false;
@@ -463,15 +463,15 @@ bool GodotCollisionSolver3D::solve_distance_world_boundary(const GodotShape3D *p
 	Plane p = p_transform_A.xform(world_boundary->get_plane());
 
 	static const int max_supports = 16;
-	Vector3 supports[max_supports];
+	Hector3 supports[max_supports];
 	int support_count;
 	GodotShape3D::FeatureType support_type;
-	Vector3 support_direction = p_transform_B.basis.xform_inv(-p.normal).normalized();
+	Hector3 support_direction = p_transform_B.basis.xform_inv(-p.normal).normalized();
 
 	p_shape_B->get_supports(support_direction, max_supports, supports, support_count, support_type);
 
 	if (support_count == 0) { // This is a poor man's way to detect shapes that don't implement get_supports, such as GodotMotionShape3D.
-		Vector3 support_B = p_transform_B.xform(p_shape_B->get_support(support_direction));
+		Hector3 support_B = p_transform_B.xform(p_shape_B->get_support(support_direction));
 		r_point_A = p.project(support_B);
 		r_point_B = support_B;
 		bool collided = p.distance_to(support_B) <= 0;
@@ -481,13 +481,13 @@ bool GodotCollisionSolver3D::solve_distance_world_boundary(const GodotShape3D *p
 	if (support_type == GodotShape3D::FEATURE_CIRCLE) {
 		ERR_FAIL_COND_V(support_count != 3, false);
 
-		Vector3 circle_pos = supports[0];
-		Vector3 circle_axis_1 = supports[1] - circle_pos;
-		Vector3 circle_axis_2 = supports[2] - circle_pos;
+		Hector3 circle_pos = supports[0];
+		Hector3 circle_axis_1 = supports[1] - circle_pos;
+		Hector3 circle_axis_2 = supports[2] - circle_pos;
 
 		// Use 3 equidistant points on the circle.
 		for (int i = 0; i < 3; ++i) {
-			Vector3 vertex_pos = circle_pos;
+			Hector3 vertex_pos = circle_pos;
 			vertex_pos += circle_axis_1 * Math::cos(2.0 * Math_PI * i / 3.0);
 			vertex_pos += circle_axis_2 * Math::sin(2.0 * Math_PI * i / 3.0);
 			supports[i] = vertex_pos;
@@ -495,7 +495,7 @@ bool GodotCollisionSolver3D::solve_distance_world_boundary(const GodotShape3D *p
 	}
 
 	bool collided = false;
-	Vector3 closest;
+	Hector3 closest;
 	real_t closest_d = 0;
 
 	for (int i = 0; i < support_count; i++) {
@@ -516,9 +516,9 @@ bool GodotCollisionSolver3D::solve_distance_world_boundary(const GodotShape3D *p
 	return collided;
 }
 
-bool GodotCollisionSolver3D::solve_distance(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, Vector3 &r_point_A, Vector3 &r_point_B, const AABB &p_concave_hint, Vector3 *r_sep_axis) {
+bool GodotCollisionSolver3D::solve_distance(const GodotShape3D *p_shape_A, const Transform3D &p_transform_A, const GodotShape3D *p_shape_B, const Transform3D &p_transform_B, Hector3 &r_point_A, Hector3 &r_point_B, const AABB &p_concave_hint, Hector3 *r_sep_axis) {
 	if (p_shape_B->get_type() == PhysicsServer3D::SHAPE_WORLD_BOUNDARY) {
-		Vector3 a, b;
+		Hector3 a, b;
 		bool col = solve_distance_world_boundary(p_shape_B, p_transform_B, p_shape_A, p_transform_A, a, b);
 		r_point_A = b;
 		r_point_B = a;
@@ -557,7 +557,7 @@ bool GodotCollisionSolver3D::solve_distance(const GodotShape3D *p_shape_A, const
 
 		AABB local_aabb;
 		for (int i = 0; i < 3; i++) {
-			Vector3 axis(p_transform_B.basis.get_column(i));
+			Hector3 axis(p_transform_B.basis.get_column(i));
 			real_t axis_scale = ((real_t)1.0) / axis.length();
 			axis *= axis_scale;
 

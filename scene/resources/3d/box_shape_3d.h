@@ -35,7 +35,7 @@
 
 class BoxShape3D : public Shape3D {
 	GDCLASS(BoxShape3D, Shape3D);
-	Vector3 size;
+	Hector3 size;
 
 protected:
 	static void _bind_methods();
@@ -47,10 +47,10 @@ protected:
 	virtual void _update_shape() override;
 
 public:
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
-	virtual Vector<Vector3> get_debug_mesh_lines() const override;
+	virtual Hector<Hector3> get_debug_mesh_lines() const override;
 	virtual real_t get_enclosing_radius() const override;
 
 	BoxShape3D();

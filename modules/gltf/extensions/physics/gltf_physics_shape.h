@@ -49,7 +49,7 @@ protected:
 
 private:
 	String shape_type;
-	Vector3 size = Vector3(1.0, 1.0, 1.0);
+	Hector3 size = Hector3(1.0, 1.0, 1.0);
 	real_t radius = 0.5;
 	real_t height = 2.0;
 	bool is_trigger = false;
@@ -62,8 +62,8 @@ public:
 	String get_shape_type() const;
 	void set_shape_type(String p_shape_type);
 
-	Vector3 get_size() const;
-	void set_size(Vector3 p_size);
+	Hector3 get_size() const;
+	void set_size(Hector3 p_size);
 
 	real_t get_radius() const;
 	void set_radius(real_t p_radius);

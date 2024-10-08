@@ -89,14 +89,14 @@ public:
 		id window_view;
 		id window_button_view;
 
-		Vector<Vector2> mpath;
+		Hector<Hector2> mpath;
 
 		Point2i mouse_pos;
 
 		Size2i min_size;
 		Size2i max_size;
 		Size2i size;
-		Vector2i wb_offset = Vector2i(14, 14);
+		Hector2i wb_offset = Hector2i(14, 14);
 
 		NSRect last_frame_rect;
 
@@ -155,7 +155,7 @@ private:
 	NSTimeInterval last_warp = 0;
 	bool ignore_warp = false;
 
-	Vector<KeyEvent> key_event_buffer;
+	Hector<KeyEvent> key_event_buffer;
 	int key_event_pos = 0;
 
 	id tts = nullptr;
@@ -175,7 +175,7 @@ private:
 		String name;
 		String code;
 	};
-	Vector<LayoutInfo> kbd_layouts;
+	Hector<LayoutInfo> kbd_layouts;
 	int current_layout = 0;
 	bool keyboard_layout_dirty = true;
 
@@ -189,7 +189,7 @@ private:
 
 	CursorShape cursor_shape = CURSOR_ARROW;
 	NSCursor *cursors[CURSOR_MAX];
-	HashMap<CursorShape, Vector<Variant>> cursors_cache;
+	HashMap<CursorShape, Hector<Variant>> cursors_cache;
 
 	HashMap<WindowID, WindowData> windows;
 
@@ -230,7 +230,7 @@ private:
 
 	static NSCursor *_cursor_from_selector(SEL p_selector, SEL p_fallback = nil);
 
-	Error _file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb);
+	Error _file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb);
 
 public:
 	void menu_callback(id p_sender);
@@ -292,11 +292,11 @@ public:
 	virtual Color get_base_color() const override;
 	virtual void set_system_theme_change_callback(const Callable &p_callable) override;
 
-	virtual Error dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) override;
+	virtual Error dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback) override;
 	virtual Error dialog_input_text(String p_title, String p_description, String p_partial, const Callable &p_callback) override;
 
-	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) override;
-	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
+	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) override;
+	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
 
 	virtual void mouse_set_mode(MouseMode p_mode) override;
 	virtual MouseMode mouse_get_mode() const override;
@@ -327,7 +327,7 @@ public:
 	virtual void screen_set_keep_on(bool p_enable) override;
 	virtual bool screen_is_kept_on() const override;
 
-	virtual Vector<int> get_window_list() const override;
+	virtual Hector<int> get_window_list() const override;
 
 	virtual WindowID create_sub_window(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Rect2i &p_rect = Rect2i(), bool p_exclusive = false, WindowID p_transient_parent = INVALID_WINDOW_ID) override;
 	virtual void show_window(WindowID p_id) override;
@@ -345,7 +345,7 @@ public:
 
 	virtual void window_set_title(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) override;
 	virtual Size2i window_get_title_size(const String &p_title, WindowID p_window) const override;
-	virtual void window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override;
+	virtual void window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override;
 
 	virtual int window_get_current_screen(WindowID p_window = MAIN_WINDOW_ID) const override;
 	virtual void window_set_current_screen(int p_screen, WindowID p_window = MAIN_WINDOW_ID) override;
@@ -402,8 +402,8 @@ public:
 	virtual bool window_maximize_on_title_dbl_click() const override;
 	virtual bool window_minimize_on_title_dbl_click() const override;
 
-	virtual void window_set_window_buttons_offset(const Vector2i &p_offset, WindowID p_window = MAIN_WINDOW_ID) override;
-	virtual Vector3i window_get_safe_title_margins(WindowID p_window = MAIN_WINDOW_ID) const override;
+	virtual void window_set_window_buttons_offset(const Hector2i &p_offset, WindowID p_window = MAIN_WINDOW_ID) override;
+	virtual Hector3i window_get_safe_title_margins(WindowID p_window = MAIN_WINDOW_ID) const override;
 
 	virtual Point2i ime_get_selection() const override;
 	virtual String ime_get_text() const override;
@@ -411,7 +411,7 @@ public:
 	void cursor_update_shape();
 	virtual void cursor_set_shape(CursorShape p_shape) override;
 	virtual CursorShape cursor_get_shape() const override;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2()) override;
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Hector2 &p_hotspot = Hector2()) override;
 
 	virtual bool get_swap_cancel_ok() override;
 
@@ -442,12 +442,12 @@ public:
 
 	virtual bool is_window_transparency_available() const override;
 
-	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
-	static Vector<String> get_rendering_drivers_func();
+	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_rendering_drivers_func();
 
 	static void register_macos_driver();
 
-	DisplayServerMacOS(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	DisplayServerMacOS(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 	~DisplayServerMacOS();
 };
 

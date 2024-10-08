@@ -68,7 +68,7 @@
 ////////////////////////////////////
 // OpenXRAPI::OpenXRSwapChainInfo
 
-Vector<OpenXRAPI::OpenXRSwapChainInfo> OpenXRAPI::OpenXRSwapChainInfo::free_queue;
+Hector<OpenXRAPI::OpenXRSwapChainInfo> OpenXRAPI::OpenXRSwapChainInfo::free_queue;
 
 bool OpenXRAPI::OpenXRSwapChainInfo::create(XrSwapchainCreateFlags p_create_flags, XrSwapchainUsageFlags p_usage_flags, int64_t p_swapchain_format, uint32_t p_width, uint32_t p_height, uint32_t p_sample_count, uint32_t p_array_size) {
 	OpenXRAPI *openxr_api = OpenXRAPI::get_singleton();
@@ -268,7 +268,7 @@ RID OpenXRAPI::OpenXRSwapChainInfo::get_image() {
 // OpenXRAPI
 
 OpenXRAPI *OpenXRAPI::singleton = nullptr;
-Vector<OpenXRExtensionWrapper *> OpenXRAPI::registered_extension_wrappers;
+Hector<OpenXRExtensionWrapper *> OpenXRAPI::registered_extension_wrappers;
 
 bool OpenXRAPI::openxr_is_enabled(bool p_check_run_in_editor) {
 	if (XRServer::get_xr_mode() == XRServer::XRMODE_DEFAULT) {
@@ -550,7 +550,7 @@ bool OpenXRAPI::create_instance() {
 		}
 	}
 
-	Vector<const char *> extension_ptrs;
+	Hector<const char *> extension_ptrs;
 	for (int i = 0; i < enabled_extensions.size(); i++) {
 		print_verbose(String("OpenXR: Enabling extension ") + String(enabled_extensions[i]));
 		extension_ptrs.push_back(enabled_extensions[i].get_data());
@@ -1161,8 +1161,8 @@ bool OpenXRAPI::obtain_swapchain_formats() {
 	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, false);
 
 	{
-		// Build a vector with swapchain formats we want to use, from best fit to worst
-		Vector<int64_t> usable_swapchain_formats;
+		// Build a Hector with swapchain formats we want to use, from best fit to worst
+		Hector<int64_t> usable_swapchain_formats;
 		color_swapchain_format = 0;
 
 		graphics_extension->get_usable_swapchain_formats(usable_swapchain_formats);
@@ -1183,8 +1183,8 @@ bool OpenXRAPI::obtain_swapchain_formats() {
 	}
 
 	{
-		// Build a vector with swapchain formats we want to use, from best fit to worst
-		Vector<int64_t> usable_swapchain_formats;
+		// Build a Hector with swapchain formats we want to use, from best fit to worst
+		Hector<int64_t> usable_swapchain_formats;
 		depth_swapchain_format = 0;
 
 		graphics_extension->get_usable_depth_formats(usable_swapchain_formats);
@@ -1608,7 +1608,7 @@ bool OpenXRAPI::resolve_instance_openxr_symbols() {
 	OPENXR_API_INIT_XR_FUNC_V(xrEnumerateViewConfigurationViews);
 	OPENXR_API_INIT_XR_FUNC_V(xrGetActionStateBoolean);
 	OPENXR_API_INIT_XR_FUNC_V(xrGetActionStateFloat);
-	OPENXR_API_INIT_XR_FUNC_V(xrGetActionStateVector2f);
+	OPENXR_API_INIT_XR_FUNC_V(xrGetActionStateHector2f);
 	OPENXR_API_INIT_XR_FUNC_V(xrGetCurrentInteractionProfile);
 	OPENXR_API_INIT_XR_FUNC_V(xrGetReferenceSpaceBoundsRect);
 	OPENXR_API_INIT_XR_FUNC_V(xrGetSystem);
@@ -1771,7 +1771,7 @@ void OpenXRAPI::unregister_extension_wrapper(OpenXRExtensionWrapper *p_extension
 	registered_extension_wrappers.erase(p_extension_wrapper);
 }
 
-const Vector<OpenXRExtensionWrapper *> &OpenXRAPI::get_registered_extension_wrappers() {
+const Hector<OpenXRExtensionWrapper *> &OpenXRAPI::get_registered_extension_wrappers() {
 	return registered_extension_wrappers;
 }
 
@@ -1821,7 +1821,7 @@ Size2 OpenXRAPI::get_recommended_target_size() {
 	return target_size;
 }
 
-XRPose::TrackingConfidence OpenXRAPI::get_head_center(Transform3D &r_transform, Vector3 &r_linear_velocity, Vector3 &r_angular_velocity) {
+XRPose::TrackingConfidence OpenXRAPI::get_head_center(Transform3D &r_transform, Hector3 &r_linear_velocity, Hector3 &r_angular_velocity) {
 	XrResult result;
 
 	if (!running) {
@@ -1920,35 +1920,35 @@ bool OpenXRAPI::get_view_projection(uint32_t p_view, double p_z_near, double p_z
 	return graphics_extension->create_projection_fov(render_state.views[p_view].fov, p_z_near, p_z_far, p_camera_matrix);
 }
 
-Vector2 OpenXRAPI::get_eye_focus(uint32_t p_view, float p_aspect) {
-	ERR_FAIL_NULL_V(graphics_extension, Vector2());
+Hector2 OpenXRAPI::get_eye_focus(uint32_t p_view, float p_aspect) {
+	ERR_FAIL_NULL_V(graphics_extension, Hector2());
 
 	if (!render_state.running) {
-		return Vector2();
+		return Hector2();
 	}
 
 	// xrWaitFrame not run yet
 	if (render_state.predicted_display_time == 0) {
-		return Vector2();
+		return Hector2();
 	}
 
 	// we don't have valid view info
 	if (render_state.views == nullptr || !render_state.view_pose_valid) {
-		return Vector2();
+		return Hector2();
 	}
 
 	Projection cm;
 	if (!graphics_extension->create_projection_fov(render_state.views[p_view].fov, 0.1, 1000.0, cm)) {
-		return Vector2();
+		return Hector2();
 	}
 
 	// Default focus to center...
-	Vector3 focus = cm.xform(Vector3(0.0, 0.0, 999.9));
+	Hector3 focus = cm.xform(Hector3(0.0, 0.0, 999.9));
 
 	// Lets check for eye tracking...
 	OpenXREyeGazeInteractionExtension *eye_gaze_interaction = OpenXREyeGazeInteractionExtension::get_singleton();
 	if (eye_gaze_interaction && eye_gaze_interaction->supports_eye_gaze_interaction()) {
-		Vector3 eye_gaze_pose;
+		Hector3 eye_gaze_pose;
 		if (eye_gaze_interaction->get_eye_gaze_pose(1.0, eye_gaze_pose)) {
 			Transform3D view_transform = transform_from_pose(render_state.views[p_view].pose);
 
@@ -1957,7 +1957,7 @@ Vector2 OpenXRAPI::get_eye_focus(uint32_t p_view, float p_aspect) {
 		}
 	}
 
-	return Vector2(focus.x, focus.y);
+	return Hector2(focus.x, focus.y);
 }
 
 bool OpenXRAPI::poll_events() {
@@ -2413,7 +2413,7 @@ void OpenXRAPI::end_frame() {
 		render_state.projection_views[eye].pose = render_state.views[eye].pose;
 	}
 
-	Vector<OrderedCompositionLayer> ordered_layers_list;
+	Hector<OrderedCompositionLayer> ordered_layers_list;
 	bool projection_layer_is_first = true;
 
 	// Add composition layers from providers
@@ -2453,7 +2453,7 @@ void OpenXRAPI::end_frame() {
 	ordered_layers_list.sort_custom<OrderedCompositionLayer>();
 
 	// Now make a list we can pass on to OpenXR.
-	Vector<const XrCompositionLayerBaseHeader *> layers_list;
+	Hector<const XrCompositionLayerBaseHeader *> layers_list;
 	for (OrderedCompositionLayer &ordered_layer : ordered_layers_list) {
 		layers_list.push_back(ordered_layer.composition_layer);
 	}
@@ -2681,7 +2681,7 @@ OpenXRAPI::~OpenXRAPI() {
 Transform3D OpenXRAPI::transform_from_pose(const XrPosef &p_pose) {
 	Quaternion q(p_pose.orientation.x, p_pose.orientation.y, p_pose.orientation.z, p_pose.orientation.w);
 	Basis basis(q);
-	Vector3 origin(p_pose.position.x, p_pose.position.y, p_pose.position.z);
+	Hector3 origin(p_pose.position.x, p_pose.position.y, p_pose.position.z);
 
 	return Transform3D(basis, origin);
 }
@@ -2689,7 +2689,7 @@ Transform3D OpenXRAPI::transform_from_pose(const XrPosef &p_pose) {
 template <typename T>
 XRPose::TrackingConfidence _transform_from_location(const T &p_location, Transform3D &r_transform) {
 	Basis basis;
-	Vector3 origin;
+	Hector3 origin;
 	XRPose::TrackingConfidence confidence = XRPose::XR_TRACKING_CONFIDENCE_NONE;
 	const XrPosef &pose = p_location.pose;
 
@@ -2711,7 +2711,7 @@ XRPose::TrackingConfidence _transform_from_location(const T &p_location, Transfo
 
 	// Check location
 	if (p_location.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT) {
-		r_transform.origin = Vector3(pose.position.x, pose.position.y, pose.position.z);
+		r_transform.origin = Hector3(pose.position.x, pose.position.y, pose.position.z);
 
 		if (!(p_location.locationFlags & XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT)) {
 			// Location is being tracked but we're using old/predicted data, so low tracking confidence
@@ -2722,7 +2722,7 @@ XRPose::TrackingConfidence _transform_from_location(const T &p_location, Transfo
 		}
 	} else {
 		// No tracking or 3DOF I guess..
-		r_transform.origin = Vector3();
+		r_transform.origin = Hector3();
 	}
 
 	return confidence;
@@ -2736,18 +2736,18 @@ XRPose::TrackingConfidence OpenXRAPI::transform_from_location(const XrHandJointL
 	return _transform_from_location(p_location, r_transform);
 }
 
-void OpenXRAPI::parse_velocities(const XrSpaceVelocity &p_velocity, Vector3 &r_linear_velocity, Vector3 &r_angular_velocity) {
+void OpenXRAPI::parse_velocities(const XrSpaceVelocity &p_velocity, Hector3 &r_linear_velocity, Hector3 &r_angular_velocity) {
 	if (p_velocity.velocityFlags & XR_SPACE_VELOCITY_LINEAR_VALID_BIT) {
-		XrVector3f linear_velocity = p_velocity.linearVelocity;
-		r_linear_velocity = Vector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
+		XrHector3f linear_velocity = p_velocity.linearVelocity;
+		r_linear_velocity = Hector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
 	} else {
-		r_linear_velocity = Vector3();
+		r_linear_velocity = Hector3();
 	}
 	if (p_velocity.velocityFlags & XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) {
-		XrVector3f angular_velocity = p_velocity.angularVelocity;
-		r_angular_velocity = Vector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
+		XrHector3f angular_velocity = p_velocity.angularVelocity;
+		r_angular_velocity = Hector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
 	} else {
-		r_angular_velocity = Vector3();
+		r_angular_velocity = Hector3();
 	}
 }
 
@@ -2903,10 +2903,10 @@ String OpenXRAPI::action_set_get_name(RID p_action_set) {
 	return action_set->name;
 }
 
-bool OpenXRAPI::attach_action_sets(const Vector<RID> &p_action_sets) {
+bool OpenXRAPI::attach_action_sets(const Hector<RID> &p_action_sets) {
 	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, false);
 
-	Vector<XrActionSet> action_handles;
+	Hector<XrActionSet> action_handles;
 	action_handles.resize(p_action_sets.size());
 	for (int i = 0; i < p_action_sets.size(); i++) {
 		ActionSet *action_set = action_set_owner.get_or_null(p_action_sets[i]);
@@ -2998,7 +2998,7 @@ RID OpenXRAPI::find_action(const String &p_name) {
 	return RID();
 }
 
-RID OpenXRAPI::action_create(RID p_action_set, const String p_name, const String p_localized_name, OpenXRAction::ActionType p_action_type, const Vector<RID> &p_trackers) {
+RID OpenXRAPI::action_create(RID p_action_set, const String p_name, const String p_localized_name, OpenXRAction::ActionType p_action_type, const Hector<RID> &p_trackers) {
 	ERR_FAIL_COND_V(instance == XR_NULL_HANDLE, RID());
 
 	Action action;
@@ -3016,8 +3016,8 @@ RID OpenXRAPI::action_create(RID p_action_set, const String p_name, const String
 		case OpenXRAction::OPENXR_ACTION_FLOAT:
 			action.action_type = XR_ACTION_TYPE_FLOAT_INPUT;
 			break;
-		case OpenXRAction::OPENXR_ACTION_VECTOR2:
-			action.action_type = XR_ACTION_TYPE_VECTOR2F_INPUT;
+		case OpenXRAction::OPENXR_ACTION_Hector2:
+			action.action_type = XR_ACTION_TYPE_HECTOR2F_INPUT;
 			break;
 		case OpenXRAction::OPENXR_ACTION_POSE:
 			action.action_type = XR_ACTION_TYPE_POSE_INPUT;
@@ -3030,7 +3030,7 @@ RID OpenXRAPI::action_create(RID p_action_set, const String p_name, const String
 			break;
 	}
 
-	Vector<XrPath> toplevel_paths;
+	Hector<XrPath> toplevel_paths;
 	for (int i = 0; i < p_trackers.size(); i++) {
 		Tracker *tracker = tracker_owner.get_or_null(p_trackers[i]);
 		if (tracker != nullptr && tracker->toplevel_path != XR_NULL_PATH) {
@@ -3233,14 +3233,14 @@ void OpenXRAPI::interaction_profile_free(RID p_interaction_profile) {
 	interaction_profile_owner.free(p_interaction_profile);
 }
 
-bool OpenXRAPI::sync_action_sets(const Vector<RID> p_active_sets) {
+bool OpenXRAPI::sync_action_sets(const Hector<RID> p_active_sets) {
 	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, false);
 
 	if (!running) {
 		return false;
 	}
 
-	Vector<XrActiveActionSet> active_sets;
+	Hector<XrActiveActionSet> active_sets;
 	for (int i = 0; i < p_active_sets.size(); i++) {
 		ActionSet *action_set = action_set_owner.get_or_null(p_active_sets[i]);
 		if (action_set && action_set->handle != XR_NULL_HANDLE) {
@@ -3333,18 +3333,18 @@ float OpenXRAPI::get_action_float(RID p_action, RID p_tracker) {
 	return result_state.isActive ? result_state.currentState : 0.0;
 }
 
-Vector2 OpenXRAPI::get_action_vector2(RID p_action, RID p_tracker) {
-	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, Vector2());
+Hector2 OpenXRAPI::get_action_Hector2(RID p_action, RID p_tracker) {
+	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, Hector2());
 	Action *action = action_owner.get_or_null(p_action);
-	ERR_FAIL_NULL_V(action, Vector2());
+	ERR_FAIL_NULL_V(action, Hector2());
 	Tracker *tracker = tracker_owner.get_or_null(p_tracker);
-	ERR_FAIL_NULL_V(tracker, Vector2());
+	ERR_FAIL_NULL_V(tracker, Hector2());
 
 	if (!running) {
-		return Vector2();
+		return Hector2();
 	}
 
-	ERR_FAIL_COND_V(action->action_type != XR_ACTION_TYPE_VECTOR2F_INPUT, Vector2());
+	ERR_FAIL_COND_V(action->action_type != XR_ACTION_TYPE_HECTOR2F_INPUT, Hector2());
 
 	XrActionStateGetInfo get_info = {
 		XR_TYPE_ACTION_STATE_GET_INFO, // type
@@ -3353,19 +3353,19 @@ Vector2 OpenXRAPI::get_action_vector2(RID p_action, RID p_tracker) {
 		tracker->toplevel_path // subactionPath
 	};
 
-	XrActionStateVector2f result_state;
-	result_state.type = XR_TYPE_ACTION_STATE_VECTOR2F,
+	XrActionStateHector2f result_state;
+	result_state.type = XR_TYPE_ACTION_STATE_HECTOR2F,
 	result_state.next = nullptr;
-	XrResult result = xrGetActionStateVector2f(session, &get_info, &result_state);
+	XrResult result = xrGetActionStateHector2f(session, &get_info, &result_state);
 	if (XR_FAILED(result)) {
-		print_line("OpenXR: couldn't get action vector2! [", get_error_string(result), "]");
-		return Vector2();
+		print_line("OpenXR: couldn't get action Hector2! [", get_error_string(result), "]");
+		return Hector2();
 	}
 
-	return result_state.isActive ? Vector2(result_state.currentState.x, result_state.currentState.y) : Vector2();
+	return result_state.isActive ? Hector2(result_state.currentState.x, result_state.currentState.y) : Hector2();
 }
 
-XRPose::TrackingConfidence OpenXRAPI::get_action_pose(RID p_action, RID p_tracker, Transform3D &r_transform, Vector3 &r_linear_velocity, Vector3 &r_angular_velocity) {
+XRPose::TrackingConfidence OpenXRAPI::get_action_pose(RID p_action, RID p_tracker, Transform3D &r_transform, Hector3 &r_linear_velocity, Hector3 &r_angular_velocity) {
 	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, XRPose::XR_TRACKING_CONFIDENCE_NONE);
 	Action *action = action_owner.get_or_null(p_action);
 	ERR_FAIL_NULL_V(action, XRPose::XR_TRACKING_CONFIDENCE_NONE);

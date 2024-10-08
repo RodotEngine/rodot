@@ -165,7 +165,7 @@ void PostImportPluginSkeletonRenamer::internal_process(InternalImportCategory p_
 		// Preprocess of renaming bones to avoid to conflict with original bone name.
 		HashMap<String, String> pre_rename_map; // HashMap<skeleton bone name, target(profile) bone name>
 		{
-			Vector<String> solved_name_stack;
+			Hector<String> solved_name_stack;
 			for (int i = 0; i < len; i++) {
 				String bone_name = skeleton->get_bone_name(i);
 				String target_name = bone_map->find_profile_bone_name(bone_name);
@@ -188,7 +188,7 @@ void PostImportPluginSkeletonRenamer::internal_process(InternalImportCategory p_
 		// Main process of renaming bones.
 		{
 			// Apply pre-renaming result to prepared main rename map.
-			Vector<String> remove_queue;
+			Hector<String> remove_queue;
 			for (HashMap<String, String>::Iterator E = main_rename_map.begin(); E; ++E) {
 				if (pre_rename_map.has(E->key)) {
 					remove_queue.push_back(E->key);

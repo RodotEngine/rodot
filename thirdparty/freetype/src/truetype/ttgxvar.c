@@ -3860,11 +3860,11 @@
   tt_delta_shift( int         p1,
                   int         p2,
                   int         ref,
-                  FT_Vector*  in_points,
-                  FT_Vector*  out_points )
+                  FT_Hector*  in_points,
+                  FT_Hector*  out_points )
   {
     int        p;
-    FT_Vector  delta;
+    FT_Hector  delta;
 
 
     delta.x = out_points[ref].x - in_points[ref].x;
@@ -3898,8 +3898,8 @@
                         int         p2,
                         int         ref1,
                         int         ref2,
-                        FT_Vector*  in_points,
-                        FT_Vector*  out_points )
+                        FT_Hector*  in_points,
+                        FT_Hector*  out_points )
   {
     int  p, i;
 
@@ -3913,8 +3913,8 @@
     for ( i = 0; i <= 1; i++ )
     {
       /* shift array pointers so that we can access `foo.y' as `foo.x' */
-      in_points  = (FT_Vector*)( (FT_Pos*)in_points + i );
-      out_points = (FT_Vector*)( (FT_Pos*)out_points + i );
+      in_points  = (FT_Hector*)( (FT_Pos*)in_points + i );
+      out_points = (FT_Hector*)( (FT_Pos*)out_points + i );
 
       if ( in_points[ref1].x > in_points[ref2].x )
       {
@@ -3963,8 +3963,8 @@
 
   static void
   tt_interpolate_deltas( FT_Outline*  outline,
-                         FT_Vector*   out_points,
-                         FT_Vector*   in_points,
+                         FT_Hector*   out_points,
+                         FT_Hector*   in_points,
                          FT_Bool*     has_delta )
   {
     FT_Int  first_point;
@@ -4077,7 +4077,7 @@
   FT_LOCAL_DEF( FT_Error )
   TT_Vary_Apply_Glyph_Deltas( TT_Loader    loader,
                               FT_Outline*  outline,
-                              FT_Vector*   unrounded )
+                              FT_Hector*   unrounded )
   {
     FT_Error   error;
     TT_Face    face        = loader->face;
@@ -4086,8 +4086,8 @@
     FT_UInt    glyph_index = loader->glyph_index;
     FT_UInt    n_points    = (FT_UInt)outline->n_points + 4;
 
-    FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
-    FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
+    FT_Hector*  points_org = NULL;  /* coordinates in 16.16 format */
+    FT_Hector*  points_out = NULL;  /* coordinates in 16.16 format */
     FT_Bool*    has_delta  = NULL;
 
     FT_ULong  glyph_start;

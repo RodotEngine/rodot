@@ -1140,12 +1140,12 @@ Ref<JavaClass> JavaClassWrapper::_wrap(const String &p_class, bool p_allow_priva
 
 	Ref<JavaClass> java_class = memnew(JavaClass);
 	java_class->java_class_name = class_name_dots;
-	Vector<String> class_name_parts = class_name_dots.split(".");
+	Hector<String> class_name_parts = class_name_dots.split(".");
 	java_class->java_constructor_name = class_name_parts[class_name_parts.size() - 1];
 	java_class->_class = (jclass)env->NewGlobalRef(bclass);
 	class_cache[class_name_dots] = java_class;
 
-	LocalVector<jobject> methods_and_constructors;
+	LocalHector<jobject> methods_and_constructors;
 	int constructor_count = env->GetArrayLength(constructors);
 	int method_count = env->GetArrayLength(methods);
 	methods_and_constructors.resize(method_count + constructor_count);
@@ -1171,7 +1171,7 @@ Ref<JavaClass> JavaClassWrapper::_wrap(const String &p_class, bool p_allow_priva
 			env->DeleteLocalRef(name);
 		}
 
-		Vector<String> params;
+		Hector<String> params;
 
 		jint mods = env->CallIntMethod(obj, is_constructor ? Constructor_getModifiers : Method_getModifiers);
 

@@ -125,7 +125,7 @@ private:
 
 	bool slider_theme_modified = true;
 
-	Vector<ColorMode *> modes;
+	Hector<ColorMode *> modes;
 
 	Popup *picker_window = nullptr;
 	// Legacy color picking.
@@ -307,7 +307,7 @@ public:
 	void set_editor_settings(Object *p_editor_settings);
 #endif
 	HSlider *get_slider(int idx);
-	Vector<float> get_active_slider_values();
+	Hector<float> get_active_slider_values();
 
 	static void init_shaders();
 	static void finish_shaders();

@@ -1109,10 +1109,10 @@ msgstr "Désactiver le repliage"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Déplier automatiquement les scènes étrangères"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "Édition horizontale de Vector2"
+msgid "Horizontal Hector2 Editing"
+msgstr "Édition horizontale de Hector2"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Édition de Types de Vecteur Horizontal"
 
 msgid "Open Resources in Current Inspector"
@@ -1223,8 +1223,8 @@ msgstr "Programmes externes"
 msgid "Raster Image Editor"
 msgstr "Éditeur d'images tramées"
 
-msgid "Vector Image Editor"
-msgstr "Éditeur d'images vectorielles"
+msgid "Hector Image Editor"
+msgstr "Éditeur d'images Hectorielles"
 
 msgid "Audio Editor"
 msgstr "Éditeur audio"
@@ -2006,13 +2006,13 @@ msgstr "Couleurs de connexion"
 msgid "Scalar Color"
 msgstr "Couleur de scalaire"
 
-msgid "Vector2 Color"
-msgstr "Couleur Vector2"
+msgid "Hector2 Color"
+msgstr "Couleur Hector2"
 
-msgid "Vector 3 Color"
+msgid "Hector 3 Color"
 msgstr "Couleur Vecteur 3"
 
-msgid "Vector 4 Color"
+msgid "Hector 4 Color"
 msgstr "Couleur Vecteur 4"
 
 msgid "Boolean Color"
@@ -2045,7 +2045,7 @@ msgstr "Couleur de textures"
 msgid "Utility Color"
 msgstr "Couleur d'utilitaire"
 
-msgid "Vector Color"
+msgid "Hector Color"
 msgstr "Couleur de vecteur"
 
 msgid "Special Color"
@@ -8334,7 +8334,7 @@ msgstr "Couleur d'accès résolu"
 msgid "Access Resolved Depth"
 msgstr "Accès à la profondeur résolue"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "A besoin de vecteurs de mouvement"
 
 msgid "Needs Normal Roughness"
@@ -8355,7 +8355,7 @@ msgstr "Précalculer la résolution"
 msgid "Bake Interval"
 msgstr "Intervalle de Précalcul"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Vecteur Haut"
 
 msgid "Curve X"
@@ -9738,7 +9738,7 @@ msgstr "Récupération comme collision"
 msgid "Default Gravity"
 msgstr "Gravité par Défaut"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Vecteur de gravité par défaut"
 
 msgid "Default Linear Damp"

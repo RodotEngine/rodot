@@ -56,7 +56,7 @@ protected:
 	int major_version = 0;
 	int minor_version = 0;
 	String copyright;
-	Vector<uint8_t> glb_data;
+	Hector<uint8_t> glb_data;
 	double bake_fps = 30.0;
 
 	bool use_named_skin_binds = false;
@@ -69,35 +69,35 @@ protected:
 
 	int handle_binary_image = HANDLE_BINARY_EXTRACT_TEXTURES;
 
-	Vector<Ref<GLTFNode>> nodes;
-	Vector<Vector<uint8_t>> buffers;
-	Vector<Ref<GLTFBufferView>> buffer_views;
-	Vector<Ref<GLTFAccessor>> accessors;
+	Hector<Ref<GLTFNode>> nodes;
+	Hector<Hector<uint8_t>> buffers;
+	Hector<Ref<GLTFBufferView>> buffer_views;
+	Hector<Ref<GLTFAccessor>> accessors;
 
-	Vector<Ref<GLTFMesh>> meshes; // Meshes are loaded directly, no reason not to.
+	Hector<Ref<GLTFMesh>> meshes; // Meshes are loaded directly, no reason not to.
 
-	Vector<AnimationPlayer *> animation_players;
+	Hector<AnimationPlayer *> animation_players;
 	HashMap<Ref<Material>, GLTFMaterialIndex> material_cache;
-	Vector<Ref<Material>> materials;
+	Hector<Ref<Material>> materials;
 
 	String scene_name;
-	Vector<int> root_nodes;
-	Vector<Ref<GLTFTexture>> textures;
-	Vector<Ref<GLTFTextureSampler>> texture_samplers;
+	Hector<int> root_nodes;
+	Hector<Ref<GLTFTexture>> textures;
+	Hector<Ref<GLTFTextureSampler>> texture_samplers;
 	Ref<GLTFTextureSampler> default_texture_sampler;
-	Vector<Ref<Texture2D>> images;
-	Vector<String> extensions_used;
-	Vector<String> extensions_required;
-	Vector<Ref<Image>> source_images;
+	Hector<Ref<Texture2D>> images;
+	Hector<String> extensions_used;
+	Hector<String> extensions_required;
+	Hector<Ref<Image>> source_images;
 
-	Vector<Ref<GLTFSkin>> skins;
-	Vector<Ref<GLTFCamera>> cameras;
-	Vector<Ref<GLTFLight>> lights;
+	Hector<Ref<GLTFSkin>> skins;
+	Hector<Ref<GLTFCamera>> cameras;
+	Hector<Ref<GLTFLight>> lights;
 	HashSet<String> unique_names;
 	HashSet<String> unique_animation_names;
 
-	Vector<Ref<GLTFSkeleton>> skeletons;
-	Vector<Ref<GLTFAnimation>> animations;
+	Hector<Ref<GLTFSkeleton>> skeletons;
+	Hector<Ref<GLTFAnimation>> animations;
 	HashMap<GLTFNodeIndex, Node *> scene_nodes;
 	HashMap<GLTFNodeIndex, ImporterMeshInstance3D *> scene_mesh_instances;
 
@@ -118,7 +118,7 @@ public:
 	}
 
 	void add_used_extension(const String &p_extension, bool p_required = false);
-	GLTFBufferViewIndex append_data_to_buffers(const Vector<uint8_t> &p_data, const bool p_deduplication);
+	GLTFBufferViewIndex append_data_to_buffers(const Hector<uint8_t> &p_data, const bool p_deduplication);
 	GLTFNodeIndex append_gltf_node(Ref<GLTFNode> p_gltf_node, Node *p_godot_scene_node, GLTFNodeIndex p_parent_node_index);
 
 	enum GLTFHandleBinary {
@@ -146,8 +146,8 @@ public:
 	String get_copyright() const;
 	void set_copyright(const String &p_copyright);
 
-	Vector<uint8_t> get_glb_data();
-	void set_glb_data(Vector<uint8_t> p_glb_data);
+	Hector<uint8_t> get_glb_data();
+	void set_glb_data(Hector<uint8_t> p_glb_data);
 
 	bool get_use_named_skin_binds();
 	void set_use_named_skin_binds(bool p_use_named_skin_binds);

@@ -61,9 +61,9 @@
 
         FfxFloat32x4  fDeviceToViewDepth;
         FfxFloat32x2  fJitter;
-        FfxFloat32x2  fMotionVectorScale;
+        FfxFloat32x2  fMotionHectorScale;
         FfxFloat32x2  fDownscaleFactor;
-        FfxFloat32x2  fMotionVectorJitterCancellation;
+        FfxFloat32x2  fMotionHectorJitterCancellation;
         FfxFloat32    fPreExposure;
         FfxFloat32    fPreviousFramePreExposure;
         FfxFloat32    fTanHalfFOV;
@@ -168,9 +168,9 @@ FfxFloat32x4 DeviceToViewSpaceTransformFactors()
     return fDeviceToViewDepth;
 }
 
-FfxFloat32x2 MotionVectorScale()
+FfxFloat32x2 MotionHectorScale()
 {
-    return fMotionVectorScale;
+    return fMotionHectorScale;
 }
 
 FfxFloat32x2 DownscaleFactor()
@@ -178,9 +178,9 @@ FfxFloat32x2 DownscaleFactor()
     return fDownscaleFactor;
 }
 
-FfxFloat32x2 MotionVectorJitterCancellation()
+FfxFloat32x2 MotionHectorJitterCancellation()
 {
-    return fMotionVectorJitterCancellation;
+    return fMotionHectorJitterCancellation;
 }
 
 FfxFloat32 PreExposure()
@@ -226,15 +226,15 @@ SamplerState s_LinearClamp : register(s1);
 #if defined(FFX_INTERNAL)
     Texture2D<FfxFloat32x4>                       r_input_opaque_only                       : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_OPAQUE_ONLY);
     Texture2D<FfxFloat32x4>                       r_input_color_jittered                    : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_COLOR);
-    Texture2D<FfxFloat32x4>                       r_input_motion_vectors                    : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_VECTORS);
+    Texture2D<FfxFloat32x4>                       r_input_motion_Hectors                    : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_MOTION_HectorS);
     Texture2D<FfxFloat32>                         r_input_depth                             : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_DEPTH);
     Texture2D<FfxFloat32x2>                       r_input_exposure                          : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_EXPOSURE);
     Texture2D<FfxFloat32x2>                       r_auto_exposure                           : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_AUTO_EXPOSURE);
     Texture2D<FfxFloat32>                         r_reactive_mask                           : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_REACTIVE_MASK);
     Texture2D<FfxFloat32>                         r_transparency_and_composition_mask       : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INPUT_TRANSPARENCY_AND_COMPOSITION_MASK);
     Texture2D<FfxUInt32>                          r_reconstructed_previous_nearest_depth    : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_RECONSTRUCTED_PREVIOUS_NEAREST_DEPTH);
-    Texture2D<FfxFloat32x2>                       r_dilated_motion_vectors                  : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_VECTORS);
-    Texture2D<FfxFloat32x2>                       r_previous_dilated_motion_vectors         : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_PREVIOUS_DILATED_MOTION_VECTORS);
+    Texture2D<FfxFloat32x2>                       r_dilated_motion_Hectors                  : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_HectorS);
+    Texture2D<FfxFloat32x2>                       r_previous_dilated_motion_Hectors         : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_PREVIOUS_DILATED_MOTION_HectorS);
     Texture2D<FfxFloat32>                         r_dilatedDepth                            : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_DEPTH);
     Texture2D<FfxFloat32x4>                       r_internal_upscaled_color                 : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR);
     Texture2D<unorm FfxFloat32x2>                 r_lock_status                             : FFX_FSR2_DECLARE_SRV(FFX_FSR2_RESOURCE_IDENTIFIER_LOCK_STATUS);
@@ -254,7 +254,7 @@ SamplerState s_LinearClamp : register(s1);
 
     // UAV declarations
     RWTexture2D<FfxUInt32>                        rw_reconstructed_previous_nearest_depth   : FFX_FSR2_DECLARE_UAV(FFX_FSR2_RESOURCE_IDENTIFIER_RECONSTRUCTED_PREVIOUS_NEAREST_DEPTH);
-    RWTexture2D<FfxFloat32x2>                     rw_dilated_motion_vectors                 : FFX_FSR2_DECLARE_UAV(FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_VECTORS);
+    RWTexture2D<FfxFloat32x2>                     rw_dilated_motion_Hectors                 : FFX_FSR2_DECLARE_UAV(FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_MOTION_HectorS);
     RWTexture2D<FfxFloat32>                       rw_dilatedDepth                           : FFX_FSR2_DECLARE_UAV(FFX_FSR2_RESOURCE_IDENTIFIER_DILATED_DEPTH);
     RWTexture2D<FfxFloat32x4>                     rw_internal_upscaled_color                : FFX_FSR2_DECLARE_UAV(FFX_FSR2_RESOURCE_IDENTIFIER_INTERNAL_UPSCALED_COLOR);
     RWTexture2D<unorm FfxFloat32x2>               rw_lock_status                            : FFX_FSR2_DECLARE_UAV(FFX_FSR2_RESOURCE_IDENTIFIER_LOCK_STATUS);
@@ -283,8 +283,8 @@ SamplerState s_LinearClamp : register(s1);
     #if defined FSR2_BIND_SRV_INPUT_OPAQUE_ONLY
         Texture2D<FfxFloat32x4>                   r_input_opaque_only                       : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_INPUT_OPAQUE_ONLY);
     #endif
-    #if defined FSR2_BIND_SRV_INPUT_MOTION_VECTORS
-        Texture2D<FfxFloat32x4>                   r_input_motion_vectors                    : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_INPUT_MOTION_VECTORS);
+    #if defined FSR2_BIND_SRV_INPUT_MOTION_HectorS
+        Texture2D<FfxFloat32x4>                   r_input_motion_Hectors                    : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_INPUT_MOTION_HectorS);
     #endif
     #if defined FSR2_BIND_SRV_INPUT_DEPTH
         Texture2D<FfxFloat32>                     r_input_depth                             : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_INPUT_DEPTH);
@@ -304,11 +304,11 @@ SamplerState s_LinearClamp : register(s1);
     #if defined FSR2_BIND_SRV_RECONSTRUCTED_PREV_NEAREST_DEPTH
         Texture2D<FfxUInt32>                      r_reconstructed_previous_nearest_depth    : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_RECONSTRUCTED_PREV_NEAREST_DEPTH);
     #endif 
-    #if defined FSR2_BIND_SRV_DILATED_MOTION_VECTORS
-       Texture2D<FfxFloat32x2>                    r_dilated_motion_vectors                  : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_DILATED_MOTION_VECTORS);
+    #if defined FSR2_BIND_SRV_DILATED_MOTION_HectorS
+       Texture2D<FfxFloat32x2>                    r_dilated_motion_Hectors                  : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_DILATED_MOTION_HectorS);
     #endif
-    #if defined FSR2_BIND_SRV_PREVIOUS_DILATED_MOTION_VECTORS
-           Texture2D<FfxFloat32x2>                r_previous_dilated_motion_vectors         : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_PREVIOUS_DILATED_MOTION_VECTORS);
+    #if defined FSR2_BIND_SRV_PREVIOUS_DILATED_MOTION_HectorS
+           Texture2D<FfxFloat32x2>                r_previous_dilated_motion_Hectors         : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_PREVIOUS_DILATED_MOTION_HectorS);
     #endif
     #if defined FSR2_BIND_SRV_DILATED_DEPTH
         Texture2D<FfxFloat32>                     r_dilatedDepth                            : FFX_FSR2_DECLARE_SRV(FSR2_BIND_SRV_DILATED_DEPTH);
@@ -358,8 +358,8 @@ SamplerState s_LinearClamp : register(s1);
     #if defined FSR2_BIND_UAV_RECONSTRUCTED_PREV_NEAREST_DEPTH
         RWTexture2D<FfxUInt32>                    rw_reconstructed_previous_nearest_depth   : FFX_FSR2_DECLARE_UAV(FSR2_BIND_UAV_RECONSTRUCTED_PREV_NEAREST_DEPTH);
     #endif
-    #if defined FSR2_BIND_UAV_DILATED_MOTION_VECTORS
-        RWTexture2D<FfxFloat32x2>                 rw_dilated_motion_vectors                 : FFX_FSR2_DECLARE_UAV(FSR2_BIND_UAV_DILATED_MOTION_VECTORS);
+    #if defined FSR2_BIND_UAV_DILATED_MOTION_HectorS
+        RWTexture2D<FfxFloat32x2>                 rw_dilated_motion_Hectors                 : FFX_FSR2_DECLARE_UAV(FSR2_BIND_UAV_DILATED_MOTION_HectorS);
     #endif
     #if defined FSR2_BIND_UAV_DILATED_DEPTH
         RWTexture2D<FfxFloat32>                   rw_dilatedDepth                           : FFX_FSR2_DECLARE_UAV(FSR2_BIND_UAV_DILATED_DEPTH);
@@ -481,18 +481,18 @@ FfxFloat32x3 LoadPreparedInputColor(FfxUInt32x2 iPxPos)
 }
 #endif
 
-#if defined(FSR2_BIND_SRV_INPUT_MOTION_VECTORS) || defined(FFX_INTERNAL)
-FfxFloat32x2 LoadInputMotionVector(FfxUInt32x2 iPxDilatedMotionVectorPos)
+#if defined(FSR2_BIND_SRV_INPUT_MOTION_HectorS) || defined(FFX_INTERNAL)
+FfxFloat32x2 LoadInputMotionHector(FfxUInt32x2 iPxDilatedMotionHectorPos)
 {
-    FfxFloat32x2 fSrcMotionVector = r_input_motion_vectors[iPxDilatedMotionVectorPos].xy;
+    FfxFloat32x2 fSrcMotionHector = r_input_motion_Hectors[iPxDilatedMotionHectorPos].xy;
 
-    FfxFloat32x2 fUvMotionVector = fSrcMotionVector * MotionVectorScale();
+    FfxFloat32x2 fUvMotionHector = fSrcMotionHector * MotionHectorScale();
 
-#if FFX_FSR2_OPTION_JITTERED_MOTION_VECTORS
-    fUvMotionVector -= MotionVectorJitterCancellation();
+#if FFX_FSR2_OPTION_JITTERED_MOTION_HectorS
+    fUvMotionHector -= MotionHectorJitterCancellation();
 #endif
 
-    return fUvMotionVector;
+    return fUvMotionHector;
 }
 #endif
 
@@ -652,29 +652,29 @@ void StoreDilatedDepth(FFX_PARAMETER_IN FfxUInt32x2 iPxPos, FFX_PARAMETER_IN Ffx
 }
 #endif
 
-#if defined(FSR2_BIND_UAV_DILATED_MOTION_VECTORS) || defined(FFX_INTERNAL)
-void StoreDilatedMotionVector(FFX_PARAMETER_IN FfxUInt32x2 iPxPos, FFX_PARAMETER_IN FfxFloat32x2 fMotionVector)
+#if defined(FSR2_BIND_UAV_DILATED_MOTION_HectorS) || defined(FFX_INTERNAL)
+void StoreDilatedMotionHector(FFX_PARAMETER_IN FfxUInt32x2 iPxPos, FFX_PARAMETER_IN FfxFloat32x2 fMotionHector)
 {
-    rw_dilated_motion_vectors[iPxPos] = fMotionVector;
+    rw_dilated_motion_Hectors[iPxPos] = fMotionHector;
 }
 #endif
 
-#if defined(FSR2_BIND_SRV_DILATED_MOTION_VECTORS) || defined(FFX_INTERNAL)
-FfxFloat32x2 LoadDilatedMotionVector(FfxUInt32x2 iPxInput)
+#if defined(FSR2_BIND_SRV_DILATED_MOTION_HectorS) || defined(FFX_INTERNAL)
+FfxFloat32x2 LoadDilatedMotionHector(FfxUInt32x2 iPxInput)
 {
-    return r_dilated_motion_vectors[iPxInput].xy;
+    return r_dilated_motion_Hectors[iPxInput].xy;
 }
 #endif
 
-#if defined(FSR2_BIND_SRV_PREVIOUS_DILATED_MOTION_VECTORS) || defined(FFX_INTERNAL)
-FfxFloat32x2 LoadPreviousDilatedMotionVector(FfxUInt32x2 iPxInput)
+#if defined(FSR2_BIND_SRV_PREVIOUS_DILATED_MOTION_HectorS) || defined(FFX_INTERNAL)
+FfxFloat32x2 LoadPreviousDilatedMotionHector(FfxUInt32x2 iPxInput)
 {
-    return r_previous_dilated_motion_vectors[iPxInput].xy;
+    return r_previous_dilated_motion_Hectors[iPxInput].xy;
 }
 
-FfxFloat32x2 SamplePreviousDilatedMotionVector(FfxFloat32x2 uv)
+FfxFloat32x2 SamplePreviousDilatedMotionHector(FfxFloat32x2 uv)
 {
-    return r_previous_dilated_motion_vectors.SampleLevel(s_LinearClamp, uv, 0).xy;
+    return r_previous_dilated_motion_Hectors.SampleLevel(s_LinearClamp, uv, 0).xy;
 }
 #endif
 

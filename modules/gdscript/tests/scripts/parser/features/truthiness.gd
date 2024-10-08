@@ -9,10 +9,10 @@ func test():
 	Utils.check("non-empty string")
 	Utils.check(["non-empty array"])
 	Utils.check({"non-empty": "dictionary"})
-	Utils.check(Vector2(1, 0))
-	Utils.check(Vector2i(-1, -1))
-	Utils.check(Vector3(0, 0, 0.0001))
-	Utils.check(Vector3i(0, 0, 10000))
+	Utils.check(Hector2(1, 0))
+	Utils.check(Hector2i(-1, -1))
+	Utils.check(Hector3(0, 0, 0.0001))
+	Utils.check(Hector3i(0, 0, 10000))
 
 	# Zero position is `true` only if the Rect2's size is non-zero.
 	Utils.check(Rect2(0, 0, 0, 1))

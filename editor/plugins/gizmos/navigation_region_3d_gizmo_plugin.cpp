@@ -68,7 +68,7 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	AABB baking_aabb = navigationmesh->get_filter_baking_aabb();
 	if (baking_aabb.has_volume()) {
-		Vector3 baking_aabb_offset = navigationmesh->get_filter_baking_aabb_offset();
+		Hector3 baking_aabb_offset = navigationmesh->get_filter_baking_aabb_offset();
 
 		if (p_gizmo->is_selected()) {
 			Ref<Material> material = get_material("baking_aabb_material", p_gizmo);
@@ -76,11 +76,11 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		}
 	}
 
-	Vector<Vector3> vertices = navigationmesh->get_vertices();
-	const Vector3 *vr = vertices.ptr();
+	Hector<Hector3> vertices = navigationmesh->get_vertices();
+	const Hector3 *vr = vertices.ptr();
 	List<Face3> faces;
 	for (int i = 0; i < navigationmesh->get_polygon_count(); i++) {
-		Vector<int> p = navigationmesh->get_polygon(i);
+		Hector<int> p = navigationmesh->get_polygon(i);
 
 		for (int j = 2; j < p.size(); j++) {
 			Face3 f;
@@ -97,11 +97,11 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	}
 
 	HashMap<_EdgeKey, bool, _EdgeKey> edge_map;
-	Vector<Vector3> tmeshfaces;
+	Hector<Hector3> tmeshfaces;
 	tmeshfaces.resize(faces.size() * 3);
 
 	{
-		Vector3 *tw = tmeshfaces.ptrw();
+		Hector3 *tw = tmeshfaces.ptrw();
 		int tidx = 0;
 
 		for (const Face3 &f : faces) {
@@ -125,7 +125,7 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			}
 		}
 	}
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 
 	for (const KeyValue<_EdgeKey, bool> &E : edge_map) {
 		if (E.value) {
@@ -144,11 +144,11 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	int polygon_count = navigationmesh->get_polygon_count();
 
 	// build geometry face surface
-	Vector<Vector3> face_vertex_array;
+	Hector<Hector3> face_vertex_array;
 	face_vertex_array.resize(polygon_count * 3);
 
 	for (int i = 0; i < polygon_count; i++) {
-		Vector<int> polygon = navigationmesh->get_polygon(i);
+		Hector<int> polygon = navigationmesh->get_polygon(i);
 
 		face_vertex_array.push_back(vertices[polygon[0]]);
 		face_vertex_array.push_back(vertices[polygon[1]]);
@@ -166,7 +166,7 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		Color debug_navigation_geometry_face_color = NavigationServer3D::get_singleton()->get_debug_navigation_geometry_face_color();
 		Color polygon_color = debug_navigation_geometry_face_color;
 
-		Vector<Color> face_color_array;
+		Hector<Color> face_color_array;
 		face_color_array.resize(polygon_count * 3);
 
 		for (int i = 0; i < polygon_count; i++) {
@@ -174,7 +174,7 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			polygon_color.set_hsv(debug_navigation_geometry_face_color.get_h() + rand.random(-1.0, 1.0) * 0.1, debug_navigation_geometry_face_color.get_s(), debug_navigation_geometry_face_color.get_v() + rand.random(-1.0, 1.0) * 0.2);
 			polygon_color.a = debug_navigation_geometry_face_color.a;
 
-			Vector<int> polygon = navigationmesh->get_polygon(i);
+			Hector<int> polygon = navigationmesh->get_polygon(i);
 
 			face_color_array.push_back(polygon_color);
 			face_color_array.push_back(polygon_color);
@@ -189,11 +189,11 @@ void NavigationRegion3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	// if enabled build geometry edge line surface
 	bool enabled_edge_lines = NavigationServer3D::get_singleton()->get_debug_navigation_enable_edge_lines();
 	if (enabled_edge_lines) {
-		Vector<Vector3> line_vertex_array;
+		Hector<Hector3> line_vertex_array;
 		line_vertex_array.resize(polygon_count * 6);
 
 		for (int i = 0; i < polygon_count; i++) {
-			Vector<int> polygon = navigationmesh->get_polygon(i);
+			Hector<int> polygon = navigationmesh->get_polygon(i);
 
 			line_vertex_array.push_back(vertices[polygon[0]]);
 			line_vertex_array.push_back(vertices[polygon[1]]);

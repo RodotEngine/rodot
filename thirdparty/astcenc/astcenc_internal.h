@@ -40,8 +40,8 @@
  *
  * A promise is an expression that the optimizer is can assume is true for to help it generate
  * faster code. Common use cases for this are to promise that a for loop will iterate more than
- * once, or that the loop iteration count is a multiple of a vector length, which avoids pre-loop
- * checks and can avoid loop tails if loops are unrolled by the auto-vectorizer.
+ * once, or that the loop iteration count is a multiple of a Hector length, which avoids pre-loop
+ * checks and can avoid loop tails if loops are unrolled by the auto-Hectorizer.
  */
 #if defined(NDEBUG)
 	#if !defined(__clang__) && defined(_MSC_VER)
@@ -147,8 +147,8 @@ static constexpr unsigned int TUNE_MAX_PARTITIONING_CANDIDATES { 8 };
  * spacing. It is used below TUNE_MAX_ANGULAR_QUANT (inclusive). Above this we
  * assume the min weight is 0.0f, and the max weight is 1.0f.
  *
- * Note the angular algorithm is vectorized, and using QUANT_12 exactly fills
- * one 8-wide vector. Decreasing by one doesn't buy much performance, and
+ * Note the angular algorithm is Hectorized, and using QUANT_12 exactly fills
+ * one 8-wide Hector. Decreasing by one doesn't buy much performance, and
  * increasing by one is disproportionately expensive.
  */
 static constexpr unsigned int TUNE_MAX_ANGULAR_QUANT { 7 }; /* QUANT_12 */
@@ -371,19 +371,19 @@ struct decimation_info
 
 	/**
 	 * @brief The weight index of the N weights that are interpolated for each texel.
-	 * Stored transposed to improve vectorization.
+	 * Stored transposed to improve Hectorization.
 	 */
 	ASTCENC_ALIGNAS uint8_t texel_weights_tr[4][BLOCK_MAX_TEXELS];
 
 	/**
 	 * @brief The bilinear contribution of the N weights that are interpolated for each texel.
-	 * Value is between 0 and 16, stored transposed to improve vectorization.
+	 * Value is between 0 and 16, stored transposed to improve Hectorization.
 	 */
 	ASTCENC_ALIGNAS uint8_t texel_weight_contribs_int_tr[4][BLOCK_MAX_TEXELS];
 
 	/**
 	 * @brief The bilinear contribution of the N weights that are interpolated for each texel.
-	 * Value is between 0 and 1, stored transposed to improve vectorization.
+	 * Value is between 0 and 1, stored transposed to improve Hectorization.
 	 */
 	ASTCENC_ALIGNAS float texel_weight_contribs_float_tr[4][BLOCK_MAX_TEXELS];
 
@@ -392,19 +392,19 @@ struct decimation_info
 
 	/**
 	 * @brief The list of texels that use a specific weight index.
-	 * Stored transposed to improve vectorization.
+	 * Stored transposed to improve Hectorization.
 	 */
 	ASTCENC_ALIGNAS uint8_t weight_texels_tr[BLOCK_MAX_TEXELS][BLOCK_MAX_WEIGHTS];
 
 	/**
 	 * @brief The bilinear contribution to the N texels that use each weight.
-	 * Value is between 0 and 1, stored transposed to improve vectorization.
+	 * Value is between 0 and 1, stored transposed to improve Hectorization.
 	 */
 	ASTCENC_ALIGNAS float weights_texel_contribs_tr[BLOCK_MAX_TEXELS][BLOCK_MAX_WEIGHTS];
 
 	/**
 	 * @brief The bilinear contribution to the Nth texel that uses each weight.
-	 * Value is between 0 and 1, stored transposed to improve vectorization.
+	 * Value is between 0 and 1, stored transposed to improve Hectorization.
 	 */
 	float texel_contrib_for_weight[BLOCK_MAX_TEXELS][BLOCK_MAX_WEIGHTS];
 };
@@ -452,14 +452,14 @@ struct decimation_mode
 	int8_t maxprec_2planes;
 
 	/**
-	 * @brief Bitvector indicating weight quant modes used by active 1 plane block modes.
+	 * @brief BitHector indicating weight quant modes used by active 1 plane block modes.
 	 *
 	 * Bit 0 = QUANT_2, Bit 1 = QUANT_3, etc.
 	 */
 	uint16_t refprec_1plane;
 
 	/**
-	 * @brief Bitvector indicating weight quant methods used by active 2 plane block modes.
+	 * @brief BitHector indicating weight quant methods used by active 2 plane block modes.
 	 *
 	 * Bit 0 = QUANT_2, Bit 1 = QUANT_3, etc.
 	 */
@@ -731,9 +731,9 @@ struct block_size_descriptor
  * @brief The image data for a single block.
  *
  * The @c data_[rgba] fields store the image data in an encoded SoA float form designed for easy
- * vectorization. Input data is converted to float and stored as values between 0 and 65535. LDR
+ * Hectorization. Input data is converted to float and stored as values between 0 and 65535. LDR
  * data is stored as direct UNORM data, HDR data is stored as LNS data. They are allocated SIMD
- * elements over-size to allow vectorized stores of unaligned and partial SIMD lanes (e.g. in a
+ * elements over-size to allow Hectorized stores of unaligned and partial SIMD lanes (e.g. in a
  * 6x6x6 block the final row write will read elements 210-217 (vec8) or 214-217 (vec4), which is
  * two elements above the last real data element). The overspill values are never written to memory,
  * and would be benign, but the padding avoids hitting undefined behavior.
@@ -1436,7 +1436,7 @@ unsigned int get_ise_sequence_bitcount(
  * @param      component2   The second component included in the analysis.
  * @param[out] pm           The output partition metrics.
  *                          - Only pi.partition_count array entries actually get initialized.
- *                          - Direction vectors @c pm.dir are not normalized.
+ *                          - Direction Hectors @c pm.dir are not normalized.
  */
 void compute_avgs_and_dirs_2_comp(
 	const partition_info& pi,
@@ -1453,7 +1453,7 @@ void compute_avgs_and_dirs_2_comp(
  * @param      omitted_component   The component excluded from the analysis.
  * @param[out] pm                  The output partition metrics.
  *                                 - Only pi.partition_count array entries actually get initialized.
- *                                 - Direction vectors @c pm.dir are not normalized.
+ *                                 - Direction Hectors @c pm.dir are not normalized.
  */
 void compute_avgs_and_dirs_3_comp(
 	const partition_info& pi,
@@ -1471,7 +1471,7 @@ void compute_avgs_and_dirs_3_comp(
  * @param      blk   The image block color data to be compressed.
  * @param[out] pm    The output partition metrics.
  *                   - Only pi.partition_count array entries actually get initialized.
- *                   - Direction vectors @c pm.dir are not normalized.
+ *                   - Direction Hectors @c pm.dir are not normalized.
  */
 void compute_avgs_and_dirs_3_comp_rgb(
 	const partition_info& pi,
@@ -1485,7 +1485,7 @@ void compute_avgs_and_dirs_3_comp_rgb(
  * @param      blk   The image block color data to be compressed.
  * @param[out] pm    The output partition metrics.
  *                   - Only pi.partition_count array entries actually get initialized.
- *                   - Direction vectors @c pm.dir are not normalized.
+ *                   - Direction Hectors @c pm.dir are not normalized.
  */
 void compute_avgs_and_dirs_4_comp(
 	const partition_info& pi,
@@ -1572,12 +1572,12 @@ unsigned int find_best_partition_candidates(
 ============================================================================ */
 
 /**
- * @brief Get a vector mask indicating lanes decompressing into a UNORM8 value.
+ * @brief Get a Hector mask indicating lanes decompressing into a UNORM8 value.
  *
  * @param decode_mode   The color profile for LDR_SRGB settings.
  * @param blk           The image block for output image bitness settings.
  *
- * @return The component mask vector.
+ * @return The component mask Hector.
  */
 static inline vmask4 get_u8_component_mask(
 	astcenc_profile decode_mode,
@@ -1967,8 +1967,8 @@ unsigned int compute_ideal_endpoint_formats(
  * @param         di                   The weight grid decimation table.
  * @param         dec_weights_uquant   The quantized weight set.
  * @param[in,out] ep                   The color endpoints (modifed in place).
- * @param[out]    rgbs_vectors         The RGB+scale vectors for LDR blocks.
- * @param[out]    rgbo_vectors         The RGB+offset vectors for HDR blocks.
+ * @param[out]    rgbs_Hectors         The RGB+scale Hectors for LDR blocks.
+ * @param[out]    rgbo_Hectors         The RGB+offset Hectors for HDR blocks.
  */
 void recompute_ideal_colors_1plane(
 	const image_block& blk,
@@ -1976,8 +1976,8 @@ void recompute_ideal_colors_1plane(
 	const decimation_info& di,
 	const uint8_t* dec_weights_uquant,
 	endpoints& ep,
-	vfloat4 rgbs_vectors[BLOCK_MAX_PARTITIONS],
-	vfloat4 rgbo_vectors[BLOCK_MAX_PARTITIONS]);
+	vfloat4 rgbs_Hectors[BLOCK_MAX_PARTITIONS],
+	vfloat4 rgbo_Hectors[BLOCK_MAX_PARTITIONS]);
 
 /**
  * @brief For a given 2 plane weight set recompute the endpoint colors.
@@ -1991,8 +1991,8 @@ void recompute_ideal_colors_1plane(
  * @param         dec_weights_uquant_plane1   The quantized weight set for plane 1.
  * @param         dec_weights_uquant_plane2   The quantized weight set for plane 2.
  * @param[in,out] ep                          The color endpoints (modifed in place).
- * @param[out]    rgbs_vector                 The RGB+scale color for LDR blocks.
- * @param[out]    rgbo_vector                 The RGB+offset color for HDR blocks.
+ * @param[out]    rgbs_Hector                 The RGB+scale color for LDR blocks.
+ * @param[out]    rgbo_Hector                 The RGB+offset color for HDR blocks.
  * @param         plane2_component            The component assigned to plane 2.
  */
 void recompute_ideal_colors_2planes(
@@ -2002,8 +2002,8 @@ void recompute_ideal_colors_2planes(
 	const uint8_t* dec_weights_uquant_plane1,
 	const uint8_t* dec_weights_uquant_plane2,
 	endpoints& ep,
-	vfloat4& rgbs_vector,
-	vfloat4& rgbo_vector,
+	vfloat4& rgbs_Hector,
+	vfloat4& rgbo_Hector,
 	int plane2_component);
 
 /**

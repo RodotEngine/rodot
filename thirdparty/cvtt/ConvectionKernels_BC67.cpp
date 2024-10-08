@@ -848,15 +848,15 @@ namespace cvtt
             static const int g_numFragments = sizeof(g_fragments) / sizeof(g_fragments[0]);
         }
 
-        struct PackingVector
+        struct PackingHector
         {
-            uint32_t m_vector[4];
+            uint32_t m_Hector[4];
             int m_offset;
 
             void Init()
             {
                 for (int i = 0; i < 4; i++)
-                    m_vector[i] = 0;
+                    m_Hector[i] = 0;
 
                 m_offset = 0;
             }
@@ -864,7 +864,7 @@ namespace cvtt
             void InitPacked(const uint32_t *v, int bits)
             {
                 for (int b = 0; b < bits; b += 32)
-                    m_vector[b / 32] = v[b / 32];
+                    m_Hector[b / 32] = v[b / 32];
 
                 m_offset = bits;
             }
@@ -874,11 +874,11 @@ namespace cvtt
                 int vOffset = m_offset >> 5;
                 int bitOffset = m_offset & 0x1f;
 
-                m_vector[vOffset] |= (static_cast<uint32_t>(value) << bitOffset) & static_cast<uint32_t>(0xffffffff);
+                m_Hector[vOffset] |= (static_cast<uint32_t>(value) << bitOffset) & static_cast<uint32_t>(0xffffffff);
 
                 int overflowBits = bitOffset + bits - 32;
                 if (overflowBits > 0)
-                    m_vector[vOffset + 1] |= (static_cast<uint32_t>(value) >> (bits - overflowBits));
+                    m_Hector[vOffset + 1] |= (static_cast<uint32_t>(value) >> (bits - overflowBits));
 
                 m_offset += bits;
             }
@@ -889,7 +889,7 @@ namespace cvtt
 
                 for (int v = 0; v < 4; v++)
                 {
-                    uint32_t chunk = m_vector[v];
+                    uint32_t chunk = m_Hector[v];
                     for (int b = 0; b < 4; b++)
                         output[v * 4 + b] = static_cast<uint8_t>((chunk >> (b * 8)) & 0xff);
                 }
@@ -897,29 +897,29 @@ namespace cvtt
         };
 
 
-        struct UnpackingVector
+        struct UnpackingHector
         {
-            uint32_t m_vector[4];
+            uint32_t m_Hector[4];
 
             void Init(const uint8_t *bytes)
             {
                 for (int i = 0; i < 4; i++)
-                    m_vector[i] = 0;
+                    m_Hector[i] = 0;
 
                 for (int b = 0; b < 16; b++)
-                    m_vector[b / 4] |= (bytes[b] << ((b % 4) * 8));
+                    m_Hector[b / 4] |= (bytes[b] << ((b % 4) * 8));
             }
 
             inline void UnpackStart(uint32_t *v, int bits)
             {
                 for (int b = 0; b < bits; b += 32)
-                    v[b / 32] = m_vector[b / 32];
+                    v[b / 32] = m_Hector[b / 32];
 
                 int entriesShifted = bits / 32;
                 int carry = bits % 32;
 
                 for (int i = entriesShifted; i < 4; i++)
-                    m_vector[i - entriesShifted] = m_vector[i];
+                    m_Hector[i - entriesShifted] = m_Hector[i];
 
                 int entriesRemaining = 4 - entriesShifted;
                 if (carry)
@@ -927,9 +927,9 @@ namespace cvtt
                     uint32_t bitMask = (1 << carry) - 1;
                     for (int i = 0; i < entriesRemaining; i++)
                     {
-                        m_vector[i] >>= carry;
+                        m_Hector[i] >>= carry;
                         if (i != entriesRemaining - 1)
-                            m_vector[i] |= (m_vector[i + 1] & bitMask) << (32 - carry);
+                            m_Hector[i] |= (m_Hector[i + 1] & bitMask) << (32 - carry);
                     }
                 }
             }
@@ -938,13 +938,13 @@ namespace cvtt
             {
                 uint32_t bitMask = (1 << bits) - 1;
 
-                ParallelMath::ScalarUInt16 result = static_cast<ParallelMath::ScalarUInt16>(m_vector[0] & bitMask);
+                ParallelMath::ScalarUInt16 result = static_cast<ParallelMath::ScalarUInt16>(m_Hector[0] & bitMask);
 
                 for (int i = 0; i < 4; i++)
                 {
-                    m_vector[i] >>= bits;
+                    m_Hector[i] >>= bits;
                     if (i != 3)
-                        m_vector[i] |= (m_vector[i + 1] & bitMask) << (32 - bits);
+                        m_Hector[i] |= (m_Hector[i + 1] & bitMask) << (32 - bits);
                 }
 
                 return result;
@@ -2201,7 +2201,7 @@ void cvtt::Internal::BC7Computer::Pack(uint32_t flags, const PixelBlockU8* input
 
     for (int block = 0; block < ParallelMath::ParallelSize; block++)
     {
-        PackingVector pv;
+        PackingHector pv;
         pv.Init();
 
         ParallelMath::ScalarUInt16 mode = ParallelMath::Extract(work.m_mode, block);
@@ -2404,7 +2404,7 @@ void cvtt::Internal::BC7Computer::Pack(uint32_t flags, const PixelBlockU8* input
 
 void cvtt::Internal::BC7Computer::UnpackOne(PixelBlockU8 &output, const uint8_t* packedBlock)
 {
-    UnpackingVector pv;
+    UnpackingHector pv;
     pv.Init(packedBlock);
 
     int mode = 8;
@@ -3215,7 +3215,7 @@ void cvtt::Internal::BC6HComputer::Pack(uint32_t flags, const PixelBlockF16* inp
 
         uint16_t modeID = modeInfo.m_modeID;
 
-        PackingVector pv;
+        PackingHector pv;
         pv.Init();
 
         for (size_t i = 0; i < headerBits; i++) {
@@ -3299,7 +3299,7 @@ void cvtt::Internal::BC6HComputer::SignExtendSingle(int &v, int bits)
 
 void cvtt::Internal::BC6HComputer::UnpackOne(PixelBlockF16 &output, const uint8_t *pBC, bool isSigned)
 {
-    UnpackingVector pv;
+    UnpackingHector pv;
     pv.Init(pBC);
 
     int numModeBits = 2;

@@ -46,7 +46,7 @@
 			</description>
 		</method>
 		<method name="get_point_transform">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="point_index" type="int" />
 			<description>
 				Returns local translation of a vertex in the surface array.

@@ -51,7 +51,7 @@ void RenderGeometryInstanceBase::set_material_overlay(RID p_overlay) {
 	data->dirty_dependencies = true;
 }
 
-void RenderGeometryInstanceBase::set_surface_materials(const Vector<RID> &p_materials) {
+void RenderGeometryInstanceBase::set_surface_materials(const Hector<RID> &p_materials) {
 	data->surface_materials = p_materials;
 
 	_mark_dirty();
@@ -70,7 +70,7 @@ void RenderGeometryInstanceBase::set_transform(const Transform3D &p_transform, c
 	data->aabb = p_aabb;
 	transformed_aabb = p_transformed_aabb;
 
-	Vector3 model_scale_vec = p_transform.basis.get_scale_abs();
+	Hector3 model_scale_vec = p_transform.basis.get_scale_abs();
 	// handle non uniform scale here
 
 	float max_scale = MAX(model_scale_vec.x, MAX(model_scale_vec.y, model_scale_vec.z));

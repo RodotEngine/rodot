@@ -267,7 +267,7 @@ protected:
 
 typedef std::map<TString, TVarEntryInfo> TVarLiveMap;
 
-// override function "operator=", if a vector<const _Kty, _Ty> being sort,
+// override function "operator=", if a Hector<const _Kty, _Ty> being sort,
 // when use vc++, the sort function will call :
 // pair& operator=(const pair<_Other1, _Other2>& _Right)
 // {
@@ -288,7 +288,7 @@ struct TVarLivePair : std::pair<const TString, TVarEntryInfo> {
     }
     TVarLivePair(const TVarLivePair& src) : pair(src) { }
 };
-typedef std::vector<TVarLivePair> TVarLiveVector;
+typedef std::vector<TVarLivePair> TVarLiveHector;
 
 // I/O mapper
 class TIoMapper {

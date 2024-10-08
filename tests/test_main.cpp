@@ -71,12 +71,12 @@
 #include "tests/core/math/test_rect2i.h"
 #include "tests/core/math/test_transform_2d.h"
 #include "tests/core/math/test_transform_3d.h"
-#include "tests/core/math/test_vector2.h"
-#include "tests/core/math/test_vector2i.h"
-#include "tests/core/math/test_vector3.h"
-#include "tests/core/math/test_vector3i.h"
-#include "tests/core/math/test_vector4.h"
-#include "tests/core/math/test_vector4i.h"
+#include "tests/core/math/test_Hector2.h"
+#include "tests/core/math/test_Hector2i.h"
+#include "tests/core/math/test_Hector3.h"
+#include "tests/core/math/test_Hector3i.h"
+#include "tests/core/math/test_Hector4.h"
+#include "tests/core/math/test_Hector4i.h"
 #include "tests/core/object/test_class_db.h"
 #include "tests/core/object/test_method_bind.h"
 #include "tests/core/object/test_object.h"
@@ -90,12 +90,12 @@
 #include "tests/core/templates/test_hash_map.h"
 #include "tests/core/templates/test_hash_set.h"
 #include "tests/core/templates/test_list.h"
-#include "tests/core/templates/test_local_vector.h"
+#include "tests/core/templates/test_local_Hector.h"
 #include "tests/core/templates/test_lru.h"
 #include "tests/core/templates/test_oa_hash_map.h"
 #include "tests/core/templates/test_paged_array.h"
 #include "tests/core/templates/test_rid.h"
-#include "tests/core/templates/test_vector.h"
+#include "tests/core/templates/test_Hector.h"
 #include "tests/core/test_crypto.h"
 #include "tests/core/test_hashing_context.h"
 #include "tests/core/test_time.h"
@@ -219,7 +219,7 @@ int test_main(int argc, char *argv[]) {
 	}
 	// Doctest runner.
 	doctest::Context test_context;
-	LocalVector<String> test_args;
+	LocalHector<String> test_args;
 
 	// Clean arguments of "--test" from the args.
 	for (int x = 0; x < argc; x++) {
@@ -283,7 +283,7 @@ struct GodotTestCaseListener : public doctest::IReporter {
 			OS::get_singleton()->set_has_server_feature_callback(nullptr);
 			for (int i = 0; i < DisplayServer::get_create_function_count(); i++) {
 				if (String("mock") == DisplayServer::get_create_function_name(i)) {
-					DisplayServer::create(i, "", DisplayServer::WindowMode::WINDOW_MODE_MINIMIZED, DisplayServer::VSyncMode::VSYNC_ENABLED, 0, nullptr, Vector2i(0, 0), DisplayServer::SCREEN_PRIMARY, DisplayServer::CONTEXT_EDITOR, err);
+					DisplayServer::create(i, "", DisplayServer::WindowMode::WINDOW_MODE_MINIMIZED, DisplayServer::VSyncMode::VSYNC_ENABLED, 0, nullptr, Hector2i(0, 0), DisplayServer::SCREEN_PRIMARY, DisplayServer::CONTEXT_EDITOR, err);
 					break;
 				}
 			}

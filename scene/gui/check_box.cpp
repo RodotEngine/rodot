@@ -118,7 +118,7 @@ void CheckBox::_notification(int p_what) {
 				}
 			}
 
-			Vector2 ofs;
+			Hector2 ofs;
 			if (is_layout_rtl()) {
 				ofs.x = get_size().x - theme_cache.normal_style->get_margin(SIDE_RIGHT) - get_icon_size().width;
 			} else {

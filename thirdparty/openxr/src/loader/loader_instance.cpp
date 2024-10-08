@@ -28,7 +28,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 namespace {
 std::unique_ptr<LoaderInstance>& GetSetCurrentLoaderInstance() {

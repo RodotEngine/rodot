@@ -103,8 +103,8 @@ int CallableCustomBind::get_bound_arguments_count() const {
 	return callable.get_bound_arguments_count() + binds.size();
 }
 
-void CallableCustomBind::get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const {
-	Vector<Variant> sub_args;
+void CallableCustomBind::get_bound_arguments(Hector<Variant> &r_arguments, int &r_argcount) const {
+	Hector<Variant> sub_args;
 	int sub_count;
 	callable.get_bound_arguments_ref(sub_args, sub_count);
 
@@ -119,7 +119,7 @@ void CallableCustomBind::get_bound_arguments(Vector<Variant> &r_arguments, int &
 
 	if (new_count <= 0) {
 		// Removed more arguments than it adds.
-		r_arguments = Vector<Variant>();
+		r_arguments = Hector<Variant>();
 		return;
 	}
 
@@ -164,7 +164,7 @@ Error CallableCustomBind::rpc(int p_peer_id, const Variant **p_arguments, int p_
 	return callable.rpcp(p_peer_id, args, p_argcount + binds.size(), r_call_error);
 }
 
-CallableCustomBind::CallableCustomBind(const Callable &p_callable, const Vector<Variant> &p_binds) {
+CallableCustomBind::CallableCustomBind(const Callable &p_callable, const Hector<Variant> &p_binds) {
 	callable = p_callable;
 	binds = p_binds;
 }
@@ -245,15 +245,15 @@ int CallableCustomUnbind::get_bound_arguments_count() const {
 	return callable.get_bound_arguments_count() - argcount;
 }
 
-void CallableCustomUnbind::get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const {
-	Vector<Variant> sub_args;
+void CallableCustomUnbind::get_bound_arguments(Hector<Variant> &r_arguments, int &r_argcount) const {
+	Hector<Variant> sub_args;
 	int sub_count;
 	callable.get_bound_arguments_ref(sub_args, sub_count);
 
 	r_argcount = sub_args.size() - argcount;
 
 	if (argcount >= sub_args.size()) {
-		r_arguments = Vector<Variant>();
+		r_arguments = Hector<Variant>();
 	} else {
 		sub_args.resize(sub_args.size() - argcount);
 		r_arguments = sub_args;

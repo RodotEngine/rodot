@@ -59,21 +59,21 @@ real_t Area2D::get_gravity_point_unit_distance() const {
 	return gravity_point_unit_distance;
 }
 
-void Area2D::set_gravity_point_center(const Vector2 &p_center) {
+void Area2D::set_gravity_point_center(const Hector2 &p_center) {
 	gravity_vec = p_center;
-	PhysicsServer2D::get_singleton()->area_set_param(get_rid(), PhysicsServer2D::AREA_PARAM_GRAVITY_VECTOR, p_center);
+	PhysicsServer2D::get_singleton()->area_set_param(get_rid(), PhysicsServer2D::AREA_PARAM_GRAVITY_Hector, p_center);
 }
 
-const Vector2 &Area2D::get_gravity_point_center() const {
+const Hector2 &Area2D::get_gravity_point_center() const {
 	return gravity_vec;
 }
 
-void Area2D::set_gravity_direction(const Vector2 &p_direction) {
+void Area2D::set_gravity_direction(const Hector2 &p_direction) {
 	gravity_vec = p_direction;
-	PhysicsServer2D::get_singleton()->area_set_param(get_rid(), PhysicsServer2D::AREA_PARAM_GRAVITY_VECTOR, p_direction);
+	PhysicsServer2D::get_singleton()->area_set_param(get_rid(), PhysicsServer2D::AREA_PARAM_GRAVITY_Hector, p_direction);
 }
 
-const Vector2 &Area2D::get_gravity_direction() const {
+const Hector2 &Area2D::get_gravity_direction() const {
 	return gravity_vec;
 }
 
@@ -650,8 +650,8 @@ void Area2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "gravity_space_override", PROPERTY_HINT_ENUM, "Disabled,Combine,Combine-Replace,Replace,Replace-Combine", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_gravity_space_override_mode", "get_gravity_space_override_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "gravity_point", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_gravity_is_point", "is_gravity_a_point");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "gravity_point_unit_distance", PROPERTY_HINT_RANGE, "0,1024,0.001,or_greater,exp,suffix:px"), "set_gravity_point_unit_distance", "get_gravity_point_unit_distance");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "gravity_point_center", PROPERTY_HINT_NONE, "suffix:px"), "set_gravity_point_center", "get_gravity_point_center");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "gravity_direction"), "set_gravity_direction", "get_gravity_direction");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "gravity_point_center", PROPERTY_HINT_NONE, "suffix:px"), "set_gravity_point_center", "get_gravity_point_center");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "gravity_direction"), "set_gravity_direction", "get_gravity_direction");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "gravity", PROPERTY_HINT_RANGE, U"-4096,4096,0.001,or_less,or_greater,suffix:px/s\u00B2"), "set_gravity", "get_gravity");
 
 	ADD_GROUP("Linear Damp", "linear_damp_");
@@ -676,7 +676,7 @@ void Area2D::_bind_methods() {
 Area2D::Area2D() :
 		CollisionObject2D(PhysicsServer2D::get_singleton()->area_create(), true) {
 	set_gravity(980);
-	set_gravity_direction(Vector2(0, 1));
+	set_gravity_direction(Hector2(0, 1));
 	set_monitoring(true);
 	set_monitorable(true);
 	set_hide_clip_children(true);

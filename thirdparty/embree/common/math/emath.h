@@ -61,7 +61,7 @@ namespace embree
   __forceinline float rcp  ( const float x )
   {
 #if defined(__aarch64__)
-      // Move scalar to vector register and do rcp.
+      // Move scalar to Hector register and do rcp.
       __m128 a;
       a[0] = x;
       float32x4_t reciprocal = vrecpeq_f32(a);
@@ -89,7 +89,7 @@ namespace embree
 
   __forceinline float signmsk ( const float x ) {
 #if defined(__aarch64__)
-      // FP and Neon shares same vector register in arm64
+      // FP and Neon shares same Hector register in arm64
       __m128 a;
       __m128i b;
       a[0] = x;
@@ -102,7 +102,7 @@ namespace embree
   }
   __forceinline float xorf( const float x, const float y ) {
 #if defined(__aarch64__)
-      // FP and Neon shares same vector register in arm64
+      // FP and Neon shares same Hector register in arm64
       __m128 a;
       __m128 b;
       a[0] = x;
@@ -115,7 +115,7 @@ namespace embree
   }
   __forceinline float andf( const float x, const unsigned y ) {
 #if defined(__aarch64__)
-      // FP and Neon shares same vector register in arm64
+      // FP and Neon shares same Hector register in arm64
       __m128 a;
       __m128i b;
       a[0] = x;
@@ -129,7 +129,7 @@ namespace embree
   __forceinline float rsqrt( const float x )
   {
 #if defined(__aarch64__)
-      // FP and Neon shares same vector register in arm64
+      // FP and Neon shares same Hector register in arm64
       __m128 a;
       a[0] = x;
       __m128 value = _mm_rsqrt_ps(a);
@@ -206,7 +206,7 @@ namespace embree
 
 #if defined(__aarch64__)
     __forceinline float mini(float a, float b) {
-        // FP and Neon shares same vector register in arm64
+        // FP and Neon shares same Hector register in arm64
         __m128 x;
         __m128 y;
         x[0] = a;
@@ -225,7 +225,7 @@ namespace embree
 
 #if defined(__aarch64__)
     __forceinline float maxi(float a, float b) {
-        // FP and Neon shares same vector register in arm64
+        // FP and Neon shares same Hector register in arm64
         __m128 x;
         __m128 y;
         x[0] = a;

@@ -14,14 +14,14 @@ namespace Godot
     [StructLayout(LayoutKind.Sequential)]
     public struct Aabb : IEquatable<Aabb>
     {
-        private Vector3 _position;
-        private Vector3 _size;
+        private Hector3 _position;
+        private Hector3 _size;
 
         /// <summary>
         /// Beginning corner. Typically has values lower than <see cref="End"/>.
         /// </summary>
         /// <value>Directly uses a private field.</value>
-        public Vector3 Position
+        public Hector3 Position
         {
             readonly get { return _position; }
             set { _position = value; }
@@ -32,7 +32,7 @@ namespace Godot
         /// If the size is negative, you can use <see cref="Abs"/> to fix it.
         /// </summary>
         /// <value>Directly uses a private field.</value>
-        public Vector3 Size
+        public Hector3 Size
         {
             readonly get { return _size; }
             set { _size = value; }
@@ -46,7 +46,7 @@ namespace Godot
         /// Getting is equivalent to <paramref name="value"/> = <see cref="Position"/> + <see cref="Size"/>,
         /// setting is equivalent to <see cref="Size"/> = <paramref name="value"/> - <see cref="Position"/>
         /// </value>
-        public Vector3 End
+        public Hector3 End
         {
             readonly get { return _position + _size; }
             set { _size = value - _position; }
@@ -68,8 +68,8 @@ namespace Godot
         /// <returns>The modified <see cref="Aabb"/>.</returns>
         public readonly Aabb Abs()
         {
-            Vector3 end = End;
-            Vector3 topLeft = end.Min(_position);
+            Hector3 end = End;
+            Hector3 topLeft = end.Min(_position);
             return new Aabb(topLeft, _size.Abs());
         }
 
@@ -78,7 +78,7 @@ namespace Godot
         /// to <see cref="Position"/> + (<see cref="Size"/> / 2).
         /// </summary>
         /// <returns>The center.</returns>
-        public readonly Vector3 GetCenter()
+        public readonly Hector3 GetCenter()
         {
             return _position + (_size * 0.5f);
         }
@@ -92,10 +92,10 @@ namespace Godot
         /// </returns>
         public readonly bool Encloses(Aabb with)
         {
-            Vector3 srcMin = _position;
-            Vector3 srcMax = _position + _size;
-            Vector3 dstMin = with._position;
-            Vector3 dstMax = with._position + with._size;
+            Hector3 srcMin = _position;
+            Hector3 srcMax = _position + _size;
+            Hector3 dstMin = with._position;
+            Hector3 dstMax = with._position + with._size;
 
             return srcMin.X <= dstMin.X &&
                    srcMax.X >= dstMax.X &&
@@ -110,10 +110,10 @@ namespace Godot
         /// </summary>
         /// <param name="point">The point to include.</param>
         /// <returns>The expanded <see cref="Aabb"/>.</returns>
-        public readonly Aabb Expand(Vector3 point)
+        public readonly Aabb Expand(Hector3 point)
         {
-            Vector3 begin = _position;
-            Vector3 end = _position + _size;
+            Hector3 begin = _position;
+            Hector3 end = _position + _size;
 
             if (point.X < begin.X)
             {
@@ -152,26 +152,26 @@ namespace Godot
         /// <paramref name="idx"/> is less than 0 or greater than 7.
         /// </exception>
         /// <returns>An endpoint of the <see cref="Aabb"/>.</returns>
-        public readonly Vector3 GetEndpoint(int idx)
+        public readonly Hector3 GetEndpoint(int idx)
         {
             switch (idx)
             {
                 case 0:
-                    return new Vector3(_position.X, _position.Y, _position.Z);
+                    return new Hector3(_position.X, _position.Y, _position.Z);
                 case 1:
-                    return new Vector3(_position.X, _position.Y, _position.Z + _size.Z);
+                    return new Hector3(_position.X, _position.Y, _position.Z + _size.Z);
                 case 2:
-                    return new Vector3(_position.X, _position.Y + _size.Y, _position.Z);
+                    return new Hector3(_position.X, _position.Y + _size.Y, _position.Z);
                 case 3:
-                    return new Vector3(_position.X, _position.Y + _size.Y, _position.Z + _size.Z);
+                    return new Hector3(_position.X, _position.Y + _size.Y, _position.Z + _size.Z);
                 case 4:
-                    return new Vector3(_position.X + _size.X, _position.Y, _position.Z);
+                    return new Hector3(_position.X + _size.X, _position.Y, _position.Z);
                 case 5:
-                    return new Vector3(_position.X + _size.X, _position.Y, _position.Z + _size.Z);
+                    return new Hector3(_position.X + _size.X, _position.Y, _position.Z + _size.Z);
                 case 6:
-                    return new Vector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z);
+                    return new Hector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z);
                 case 7:
-                    return new Vector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z + _size.Z);
+                    return new Hector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z + _size.Z);
                 default:
                 {
                     throw new ArgumentOutOfRangeException(nameof(idx),
@@ -183,44 +183,44 @@ namespace Godot
         /// <summary>
         /// Returns the normalized longest axis of the <see cref="Aabb"/>.
         /// </summary>
-        /// <returns>A vector representing the normalized longest axis of the <see cref="Aabb"/>.</returns>
-        public readonly Vector3 GetLongestAxis()
+        /// <returns>A Hector representing the normalized longest axis of the <see cref="Aabb"/>.</returns>
+        public readonly Hector3 GetLongestAxis()
         {
-            var axis = new Vector3(1f, 0f, 0f);
+            var axis = new Hector3(1f, 0f, 0f);
             real_t maxSize = _size.X;
 
             if (_size.Y > maxSize)
             {
-                axis = new Vector3(0f, 1f, 0f);
+                axis = new Hector3(0f, 1f, 0f);
                 maxSize = _size.Y;
             }
 
             if (_size.Z > maxSize)
             {
-                axis = new Vector3(0f, 0f, 1f);
+                axis = new Hector3(0f, 0f, 1f);
             }
 
             return axis;
         }
 
         /// <summary>
-        /// Returns the <see cref="Vector3.Axis"/> index of the longest axis of the <see cref="Aabb"/>.
+        /// Returns the <see cref="Hector3.Axis"/> index of the longest axis of the <see cref="Aabb"/>.
         /// </summary>
-        /// <returns>A <see cref="Vector3.Axis"/> index for which axis is longest.</returns>
-        public readonly Vector3.Axis GetLongestAxisIndex()
+        /// <returns>A <see cref="Hector3.Axis"/> index for which axis is longest.</returns>
+        public readonly Hector3.Axis GetLongestAxisIndex()
         {
-            var axis = Vector3.Axis.X;
+            var axis = Hector3.Axis.X;
             real_t maxSize = _size.X;
 
             if (_size.Y > maxSize)
             {
-                axis = Vector3.Axis.Y;
+                axis = Hector3.Axis.Y;
                 maxSize = _size.Y;
             }
 
             if (_size.Z > maxSize)
             {
-                axis = Vector3.Axis.Z;
+                axis = Hector3.Axis.Z;
             }
 
             return axis;
@@ -246,44 +246,44 @@ namespace Godot
         /// <summary>
         /// Returns the normalized shortest axis of the <see cref="Aabb"/>.
         /// </summary>
-        /// <returns>A vector representing the normalized shortest axis of the <see cref="Aabb"/>.</returns>
-        public readonly Vector3 GetShortestAxis()
+        /// <returns>A Hector representing the normalized shortest axis of the <see cref="Aabb"/>.</returns>
+        public readonly Hector3 GetShortestAxis()
         {
-            var axis = new Vector3(1f, 0f, 0f);
+            var axis = new Hector3(1f, 0f, 0f);
             real_t maxSize = _size.X;
 
             if (_size.Y < maxSize)
             {
-                axis = new Vector3(0f, 1f, 0f);
+                axis = new Hector3(0f, 1f, 0f);
                 maxSize = _size.Y;
             }
 
             if (_size.Z < maxSize)
             {
-                axis = new Vector3(0f, 0f, 1f);
+                axis = new Hector3(0f, 0f, 1f);
             }
 
             return axis;
         }
 
         /// <summary>
-        /// Returns the <see cref="Vector3.Axis"/> index of the shortest axis of the <see cref="Aabb"/>.
+        /// Returns the <see cref="Hector3.Axis"/> index of the shortest axis of the <see cref="Aabb"/>.
         /// </summary>
-        /// <returns>A <see cref="Vector3.Axis"/> index for which axis is shortest.</returns>
-        public readonly Vector3.Axis GetShortestAxisIndex()
+        /// <returns>A <see cref="Hector3.Axis"/> index for which axis is shortest.</returns>
+        public readonly Hector3.Axis GetShortestAxisIndex()
         {
-            var axis = Vector3.Axis.X;
+            var axis = Hector3.Axis.X;
             real_t maxSize = _size.X;
 
             if (_size.Y < maxSize)
             {
-                axis = Vector3.Axis.Y;
+                axis = Hector3.Axis.Y;
                 maxSize = _size.Y;
             }
 
             if (_size.Z < maxSize)
             {
-                axis = Vector3.Axis.Z;
+                axis = Hector3.Axis.Z;
             }
 
             return axis;
@@ -311,10 +311,10 @@ namespace Godot
         /// This is useful for collision detection algorithms.
         /// </summary>
         /// <param name="dir">The direction to find support for.</param>
-        /// <returns>A vector representing the support.</returns>
-        public readonly Vector3 GetSupport(Vector3 dir)
+        /// <returns>A Hector representing the support.</returns>
+        public readonly Hector3 GetSupport(Hector3 dir)
         {
-            Vector3 support = _position;
+            Hector3 support = _position;
             if (dir.X > 0.0f)
             {
                 support.X += _size.X;
@@ -357,7 +357,7 @@ namespace Godot
         /// <returns>
         /// A <see langword="bool"/> for whether or not the <see cref="Aabb"/> contains <paramref name="point"/>.
         /// </returns>
-        public readonly bool HasPoint(Vector3 point)
+        public readonly bool HasPoint(Hector3 point)
         {
             if (point.X < _position.X)
                 return false;
@@ -410,12 +410,12 @@ namespace Godot
         /// <returns>The clipped <see cref="Aabb"/>.</returns>
         public readonly Aabb Intersection(Aabb with)
         {
-            Vector3 srcMin = _position;
-            Vector3 srcMax = _position + _size;
-            Vector3 dstMin = with._position;
-            Vector3 dstMax = with._position + with._size;
+            Hector3 srcMin = _position;
+            Hector3 srcMax = _position + _size;
+            Hector3 dstMin = with._position;
+            Hector3 dstMax = with._position + with._size;
 
-            Vector3 min, max;
+            Hector3 min, max;
 
             if (srcMin.X > dstMax.X || srcMax.X < dstMin.X)
             {
@@ -479,16 +479,16 @@ namespace Godot
         /// </returns>
         public readonly bool IntersectsPlane(Plane plane)
         {
-            Vector3[] points =
+            Hector3[] points =
             {
-                new Vector3(_position.X, _position.Y, _position.Z),
-                new Vector3(_position.X, _position.Y, _position.Z + _size.Z),
-                new Vector3(_position.X, _position.Y + _size.Y, _position.Z),
-                new Vector3(_position.X, _position.Y + _size.Y, _position.Z + _size.Z),
-                new Vector3(_position.X + _size.X, _position.Y, _position.Z),
-                new Vector3(_position.X + _size.X, _position.Y, _position.Z + _size.Z),
-                new Vector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z),
-                new Vector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z + _size.Z)
+                new Hector3(_position.X, _position.Y, _position.Z),
+                new Hector3(_position.X, _position.Y, _position.Z + _size.Z),
+                new Hector3(_position.X, _position.Y + _size.Y, _position.Z),
+                new Hector3(_position.X, _position.Y + _size.Y, _position.Z + _size.Z),
+                new Hector3(_position.X + _size.X, _position.Y, _position.Z),
+                new Hector3(_position.X + _size.X, _position.Y, _position.Z + _size.Z),
+                new Hector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z),
+                new Hector3(_position.X + _size.X, _position.Y + _size.Y, _position.Z + _size.Z)
             };
 
             bool over = false;
@@ -518,7 +518,7 @@ namespace Godot
         /// <returns>
         /// A <see langword="bool"/> for whether or not the <see cref="Aabb"/> intersects the line segment.
         /// </returns>
-        public readonly bool IntersectsSegment(Vector3 from, Vector3 to)
+        public readonly bool IntersectsSegment(Hector3 from, Hector3 to)
         {
             real_t min = 0f;
             real_t max = 1f;
@@ -576,7 +576,7 @@ namespace Godot
         /// Returns <see langword="true"/> if this <see cref="Aabb"/> is finite, by calling
         /// <see cref="Mathf.IsFinite(real_t)"/> on each component.
         /// </summary>
-        /// <returns>Whether this vector is finite or not.</returns>
+        /// <returns>Whether this Hector is finite or not.</returns>
         public readonly bool IsFinite()
         {
             return _position.IsFinite() && _size.IsFinite();
@@ -589,18 +589,18 @@ namespace Godot
         /// <returns>The merged <see cref="Aabb"/>.</returns>
         public readonly Aabb Merge(Aabb with)
         {
-            Vector3 beg1 = _position;
-            Vector3 beg2 = with._position;
-            var end1 = new Vector3(_size.X, _size.Y, _size.Z) + beg1;
-            var end2 = new Vector3(with._size.X, with._size.Y, with._size.Z) + beg2;
+            Hector3 beg1 = _position;
+            Hector3 beg2 = with._position;
+            var end1 = new Hector3(_size.X, _size.Y, _size.Z) + beg1;
+            var end2 = new Hector3(with._size.X, with._size.Y, with._size.Z) + beg2;
 
-            var min = new Vector3(
+            var min = new Hector3(
                 beg1.X < beg2.X ? beg1.X : beg2.X,
                 beg1.Y < beg2.Y ? beg1.Y : beg2.Y,
                 beg1.Z < beg2.Z ? beg1.Z : beg2.Z
             );
 
-            var max = new Vector3(
+            var max = new Hector3(
                 end1.X > end2.X ? end1.X : end2.X,
                 end1.Y > end2.Y ? end1.Y : end2.Y,
                 end1.Z > end2.Z ? end1.Z : end2.Z
@@ -614,7 +614,7 @@ namespace Godot
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="size">The size, typically positive.</param>
-        public Aabb(Vector3 position, Vector3 size)
+        public Aabb(Hector3 position, Hector3 size)
         {
             _position = position;
             _size = size;
@@ -628,10 +628,10 @@ namespace Godot
         /// <param name="width">The width, typically positive.</param>
         /// <param name="height">The height, typically positive.</param>
         /// <param name="depth">The depth, typically positive.</param>
-        public Aabb(Vector3 position, real_t width, real_t height, real_t depth)
+        public Aabb(Hector3 position, real_t width, real_t height, real_t depth)
         {
             _position = position;
-            _size = new Vector3(width, height, depth);
+            _size = new Hector3(width, height, depth);
         }
 
         /// <summary>
@@ -642,9 +642,9 @@ namespace Godot
         /// <param name="y">The position's Y coordinate.</param>
         /// <param name="z">The position's Z coordinate.</param>
         /// <param name="size">The size, typically positive.</param>
-        public Aabb(real_t x, real_t y, real_t z, Vector3 size)
+        public Aabb(real_t x, real_t y, real_t z, Hector3 size)
         {
-            _position = new Vector3(x, y, z);
+            _position = new Hector3(x, y, z);
             _size = size;
         }
 
@@ -661,8 +661,8 @@ namespace Godot
         /// <param name="depth">The depth, typically positive.</param>
         public Aabb(real_t x, real_t y, real_t z, real_t width, real_t height, real_t depth)
         {
-            _position = new Vector3(x, y, z);
-            _size = new Vector3(width, height, depth);
+            _position = new Hector3(x, y, z);
+            _size = new Hector3(width, height, depth);
         }
 
         /// <summary>
@@ -718,7 +718,7 @@ namespace Godot
 
         /// <summary>
         /// Returns <see langword="true"/> if this AABB and <paramref name="other"/> are approximately equal,
-        /// by running <see cref="Vector3.IsEqualApprox(Vector3)"/> on each component.
+        /// by running <see cref="Hector3.IsEqualApprox(Hector3)"/> on each component.
         /// </summary>
         /// <param name="other">The other AABB to compare.</param>
         /// <returns>Whether or not the AABBs structures are approximately equal.</returns>

@@ -18,7 +18,7 @@
 				[b]Example:[/b] Move the node by [code]100[/code] pixels to the right.
 				[codeblock]
 				var tween = get_tree().create_tween()
-				tween.tween_property(self, "position", Vector2.RIGHT * 100, 1).as_relative()
+				tween.tween_property(self, "position", Hector2.RIGHT * 100, 1).as_relative()
 				[/codeblock]
 			</description>
 		</method>
@@ -30,7 +30,7 @@
 				[b]Example:[/b] Move the node from position [code](100, 100)[/code] to [code](200, 100)[/code].
 				[codeblock]
 				var tween = get_tree().create_tween()
-				tween.tween_property(self, "position", Vector2(200, 100), 1).from(Vector2(100, 100))
+				tween.tween_property(self, "position", Hector2(200, 100), 1).from(Hector2(100, 100))
 				[/codeblock]
 			</description>
 		</method>
@@ -39,8 +39,8 @@
 			<description>
 				Makes the [PropertyTweener] use the current property value (i.e. at the time of creating this [PropertyTweener]) as a starting point. This is equivalent of using [method from] with the current value. These two calls will do the same:
 				[codeblock]
-				tween.tween_property(self, "position", Vector2(200, 100), 1).from(position)
-				tween.tween_property(self, "position", Vector2(200, 100), 1).from_current()
+				tween.tween_property(self, "position", Hector2(200, 100), 1).from(position)
+				tween.tween_property(self, "position", Hector2(200, 100), 1).from_current()
 				[/codeblock]
 			</description>
 		</method>

@@ -30,11 +30,11 @@
 
 #include "animatable_body_3d.h"
 
-Vector3 AnimatableBody3D::get_linear_velocity() const {
+Hector3 AnimatableBody3D::get_linear_velocity() const {
 	return linear_velocity;
 }
 
-Vector3 AnimatableBody3D::get_angular_velocity() const {
+Hector3 AnimatableBody3D::get_angular_velocity() const {
 	return angular_velocity;
 }
 

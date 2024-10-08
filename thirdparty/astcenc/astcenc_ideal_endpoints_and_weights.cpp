@@ -913,7 +913,7 @@ void compute_ideal_weights_for_decimation(
 
 	// Populate the interpolated weight grid based on the initial average
 	// Process SIMD-width texel coordinates at at time while we can. Safe to
-	// over-process full SIMD vectors - the tail is zeroed.
+	// over-process full SIMD Hectors - the tail is zeroed.
 	if (di.max_texel_weight_count <= 2)
 	{
 		for (unsigned int i = 0; i < texel_count; i += ASTCENC_SIMD_WIDTH)
@@ -1107,7 +1107,7 @@ void compute_quantized_weights_for_decimation(
  * @param rgbq_sum            Sum of partition component error weights * texel weight * color data.
  * @param psum                Sum of RGB color weights * texel weight^2.
  */
-static inline vfloat4 compute_rgbo_vector(
+static inline vfloat4 compute_rgbo_Hector(
 	vfloat4 rgba_weight_sum,
 	vfloat4 weight_weight_sum,
 	vfloat4 rgbq_sum,
@@ -1160,8 +1160,8 @@ void recompute_ideal_colors_1plane(
 	const decimation_info& di,
 	const uint8_t* dec_weights_uquant,
 	endpoints& ep,
-	vfloat4 rgbs_vectors[BLOCK_MAX_PARTITIONS],
-	vfloat4 rgbo_vectors[BLOCK_MAX_PARTITIONS]
+	vfloat4 rgbs_Hectors[BLOCK_MAX_PARTITIONS],
+	vfloat4 rgbo_Hectors[BLOCK_MAX_PARTITIONS]
 ) {
 	unsigned int weight_count = di.weight_count;
 	unsigned int total_texel_count = blk.texel_count;
@@ -1287,13 +1287,13 @@ void recompute_ideal_colors_1plane(
 		color_vec_x = color_vec_x * color_weight;
 		color_vec_y = color_vec_y * color_weight;
 
-		// Initialize the luminance and scale vectors with a reasonable default
+		// Initialize the luminance and scale Hectors with a reasonable default
 		float scalediv = scale_min / astc::max(scale_max, 1e-10f);
 		scalediv = astc::clamp1f(scalediv);
 
 		vfloat4 sds = scale_dir * scale_max;
 
-		rgbs_vectors[i] = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), scalediv);
+		rgbs_Hectors[i] = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), scalediv);
 
 		if (wmin1 >= wmax1 * 0.999f)
 		{
@@ -1305,7 +1305,7 @@ void recompute_ideal_colors_1plane(
 			ep.endpt0[i] = select(ep.endpt0[i], avg, notnan_mask);
 			ep.endpt1[i] = select(ep.endpt1[i], avg, notnan_mask);
 
-			rgbs_vectors[i] = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), 1.0f);
+			rgbs_Hectors[i] = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), 1.0f);
 		}
 		else
 		{
@@ -1342,7 +1342,7 @@ void recompute_ideal_colors_1plane(
 			{
 				float scalediv2 = scale_ep0 / scale_ep1;
 				vfloat4 sdsm = scale_dir * scale_ep1;
-				rgbs_vectors[i] = vfloat4(sdsm.lane<0>(), sdsm.lane<1>(), sdsm.lane<2>(), scalediv2);
+				rgbs_Hectors[i] = vfloat4(sdsm.lane<0>(), sdsm.lane<1>(), sdsm.lane<2>(), scalediv2);
 			}
 		}
 
@@ -1355,11 +1355,11 @@ void recompute_ideal_colors_1plane(
 			vfloat4 rgbq_sum = color_vec_x + color_vec_y;
 			rgbq_sum.set_lane<3>(hadd_rgb_s(color_vec_y));
 
-			vfloat4 rgbovec = compute_rgbo_vector(rgba_weight_sum, weight_weight_sum, rgbq_sum, psum);
-			rgbo_vectors[i] = rgbovec;
+			vfloat4 rgbovec = compute_rgbo_Hector(rgba_weight_sum, weight_weight_sum, rgbq_sum, psum);
+			rgbo_Hectors[i] = rgbovec;
 
 			// We can get a failure due to the use of a singular (non-invertible) matrix
-			// If it failed, compute rgbo_vectors[] with a different method ...
+			// If it failed, compute rgbo_Hectors[] with a different method ...
 			if (astc::isnan(dot_s(rgbovec, rgbovec)))
 			{
 				vfloat4 v0 = ep.endpt0[i];
@@ -1370,7 +1370,7 @@ void recompute_ideal_colors_1plane(
 
 				vfloat4 avg = (v0 + v1) * 0.5f;
 				vfloat4 ep0 = avg - vfloat4(avgdif) * 0.5f;
-				rgbo_vectors[i] = vfloat4(ep0.lane<0>(), ep0.lane<1>(), ep0.lane<2>(), avgdif);
+				rgbo_Hectors[i] = vfloat4(ep0.lane<0>(), ep0.lane<1>(), ep0.lane<2>(), avgdif);
 			}
 		}
 	}
@@ -1384,8 +1384,8 @@ void recompute_ideal_colors_2planes(
 	const uint8_t* dec_weights_uquant_plane1,
 	const uint8_t* dec_weights_uquant_plane2,
 	endpoints& ep,
-	vfloat4& rgbs_vector,
-	vfloat4& rgbo_vector,
+	vfloat4& rgbs_Hector,
+	vfloat4& rgbo_Hector,
 	int plane2_component
 ) {
 	unsigned int weight_count = di.weight_count;
@@ -1534,13 +1534,13 @@ void recompute_ideal_colors_2planes(
 	color_vec_x = color_vec_x * color_weight;
 	color_vec_y = color_vec_y * color_weight;
 
-	// Initialize the luminance and scale vectors with a reasonable default
+	// Initialize the luminance and scale Hectors with a reasonable default
 	float scalediv = scale_min / astc::max(scale_max, 1e-10f);
 	scalediv = astc::clamp1f(scalediv);
 
 	vfloat4 sds = scale_dir * scale_max;
 
-	rgbs_vector = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), scalediv);
+	rgbs_Hector = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), scalediv);
 
 	if (wmin1 >= wmax1 * 0.999f)
 	{
@@ -1555,7 +1555,7 @@ void recompute_ideal_colors_2planes(
 		ep.endpt0[0] = select(ep.endpt0[0], avg, full_mask);
 		ep.endpt1[0] = select(ep.endpt1[0], avg, full_mask);
 
-		rgbs_vector = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), 1.0f);
+		rgbs_Hector = vfloat4(sds.lane<0>(), sds.lane<1>(), sds.lane<2>(), 1.0f);
 	}
 	else
 	{
@@ -1593,7 +1593,7 @@ void recompute_ideal_colors_2planes(
 		{
 			float scalediv2 = scale_ep0 / scale_ep1;
 			vfloat4 sdsm = scale_dir * scale_ep1;
-			rgbs_vector = vfloat4(sdsm.lane<0>(), sdsm.lane<1>(), sdsm.lane<2>(), scalediv2);
+			rgbs_Hector = vfloat4(sdsm.lane<0>(), sdsm.lane<1>(), sdsm.lane<2>(), scalediv2);
 		}
 	}
 
@@ -1640,11 +1640,11 @@ void recompute_ideal_colors_2planes(
 		vfloat4 rgbq_sum = color_vec_x + color_vec_y;
 		rgbq_sum.set_lane<3>(hadd_rgb_s(color_vec_y));
 
-		rgbo_vector = compute_rgbo_vector(rgba_weight_sum, weight_weight_sum, rgbq_sum, psum);
+		rgbo_Hector = compute_rgbo_Hector(rgba_weight_sum, weight_weight_sum, rgbq_sum, psum);
 
 		// We can get a failure due to the use of a singular (non-invertible) matrix
-		// If it failed, compute rgbo_vectors[] with a different method ...
-		if (astc::isnan(dot_s(rgbo_vector, rgbo_vector)))
+		// If it failed, compute rgbo_Hectors[] with a different method ...
+		if (astc::isnan(dot_s(rgbo_Hector, rgbo_Hector)))
 		{
 			vfloat4 v0 = ep.endpt0[0];
 			vfloat4 v1 = ep.endpt1[0];
@@ -1655,7 +1655,7 @@ void recompute_ideal_colors_2planes(
 			vfloat4 avg = (v0 + v1) * 0.5f;
 			vfloat4 ep0 = avg - vfloat4(avgdif) * 0.5f;
 
-			rgbo_vector = vfloat4(ep0.lane<0>(), ep0.lane<1>(), ep0.lane<2>(), avgdif);
+			rgbo_Hector = vfloat4(ep0.lane<0>(), ep0.lane<1>(), ep0.lane<2>(), avgdif);
 		}
 	}
 }

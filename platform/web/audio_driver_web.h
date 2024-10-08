@@ -98,7 +98,7 @@ public:
 	virtual bool is_sample_playback_active(const Ref<AudioSamplePlayback> &p_playback) override;
 	virtual double get_sample_playback_position(const Ref<AudioSamplePlayback> &p_playback) override;
 	virtual void update_sample_playback_pitch_scale(const Ref<AudioSamplePlayback> &p_playback, float p_pitch_scale = 0.0f) override;
-	virtual void set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes) override;
+	virtual void set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Hector<AudioFrame>> &p_bus_volumes) override;
 
 	virtual void set_sample_bus_count(int p_count) override;
 	virtual void remove_sample_bus(int p_index) override;

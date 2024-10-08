@@ -378,7 +378,7 @@
 			</description>
 		</method>
 		<method name="get_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="rid" type="RID" />
 			<description>
 				Returns global menu size.
@@ -492,7 +492,7 @@
 		<method name="popup">
 			<return type="void" />
 			<param index="0" name="rid" type="RID" />
-			<param index="1" name="position" type="Vector2i" />
+			<param index="1" name="position" type="Hector2i" />
 			<description>
 				Shows the global menu at [param position] in the screen coordinates.
 				[b]Note:[/b] This method is implemented on macOS and Windows.

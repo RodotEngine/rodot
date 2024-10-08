@@ -72,7 +72,7 @@ TEST_CASE("[HashSet] Insert, iterate and remove many elements") {
 		idx++;
 	}
 
-	Vector<int> elems_still_valid;
+	Hector<int> elems_still_valid;
 
 	for (int i = 0; i < elem_max; i++) {
 		if ((i % 5) == 0) {
@@ -107,7 +107,7 @@ TEST_CASE("[HashSet] Insert, iterate and remove many strings") {
 		idx++;
 	}
 
-	Vector<String> elems_still_valid;
+	Hector<String> elems_still_valid;
 
 	for (int i = 0; i < elem_max; i++) {
 		if ((i % 5) == 0) {
@@ -178,7 +178,7 @@ TEST_CASE("[HashSet] Iteration") {
 	set.insert(0);
 	set.insert(123485);
 
-	Vector<int> expected;
+	Hector<int> expected;
 	expected.push_back(42);
 	expected.push_back(123);
 	expected.push_back(0);
@@ -198,7 +198,7 @@ TEST_CASE("[HashSet] Copy") {
 	set.insert(0);
 	set.insert(123485);
 
-	Vector<int> expected;
+	Hector<int> expected;
 	expected.push_back(42);
 	expected.push_back(123);
 	expected.push_back(0);

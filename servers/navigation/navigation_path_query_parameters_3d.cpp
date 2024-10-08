@@ -87,19 +87,19 @@ const RID &NavigationPathQueryParameters3D::get_map() const {
 	return parameters.map;
 }
 
-void NavigationPathQueryParameters3D::set_start_position(const Vector3 &p_start_position) {
+void NavigationPathQueryParameters3D::set_start_position(const Hector3 &p_start_position) {
 	parameters.start_position = p_start_position;
 }
 
-const Vector3 &NavigationPathQueryParameters3D::get_start_position() const {
+const Hector3 &NavigationPathQueryParameters3D::get_start_position() const {
 	return parameters.start_position;
 }
 
-void NavigationPathQueryParameters3D::set_target_position(const Vector3 &p_target_position) {
+void NavigationPathQueryParameters3D::set_target_position(const Hector3 &p_target_position) {
 	parameters.target_position = p_target_position;
 }
 
-const Vector3 &NavigationPathQueryParameters3D::get_target_position() const {
+const Hector3 &NavigationPathQueryParameters3D::get_target_position() const {
 	return parameters.target_position;
 }
 
@@ -164,8 +164,8 @@ void NavigationPathQueryParameters3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_simplify_epsilon"), &NavigationPathQueryParameters3D::get_simplify_epsilon);
 
 	ADD_PROPERTY(PropertyInfo(Variant::RID, "map"), "set_map", "get_map");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "start_position"), "set_start_position", "get_start_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "target_position"), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "start_position"), "set_start_position", "get_start_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "target_position"), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "navigation_layers", PROPERTY_HINT_LAYERS_3D_NAVIGATION), "set_navigation_layers", "get_navigation_layers");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "pathfinding_algorithm", PROPERTY_HINT_ENUM, "AStar"), "set_pathfinding_algorithm", "get_pathfinding_algorithm");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "path_postprocessing", PROPERTY_HINT_ENUM, "Corridorfunnel,Edgecentered"), "set_path_postprocessing", "get_path_postprocessing");

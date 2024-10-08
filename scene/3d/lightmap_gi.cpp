@@ -108,7 +108,7 @@ void LightmapGIData::set_lightmap_textures(const TypedArray<TextureLayered> &p_d
 	if (p_data.size() == 1) {
 		light_texture = p_data[0];
 	} else {
-		Vector<Ref<Image>> images;
+		Hector<Ref<Image>> images;
 		for (int i = 0; i < p_data.size(); i++) {
 			Ref<TextureLayered> texture = p_data[i];
 			ERR_FAIL_COND_MSG(texture.is_null(), vformat("Invalid TextureLayered at index %d.", i));
@@ -159,7 +159,7 @@ bool LightmapGIData::_is_using_packed_directional() const {
 	return _uses_packed_directional;
 }
 
-void LightmapGIData::set_capture_data(const AABB &p_bounds, bool p_interior, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree, float p_baked_exposure) {
+void LightmapGIData::set_capture_data(const AABB &p_bounds, bool p_interior, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree, float p_baked_exposure) {
 	if (p_points.size()) {
 		int pc = p_points.size();
 		ERR_FAIL_COND(pc * 9 != p_point_sh.size());
@@ -169,7 +169,7 @@ void LightmapGIData::set_capture_data(const AABB &p_bounds, bool p_interior, con
 		RS::get_singleton()->lightmap_set_probe_bounds(lightmap, p_bounds);
 		RS::get_singleton()->lightmap_set_probe_interior(lightmap, p_interior);
 	} else {
-		RS::get_singleton()->lightmap_set_probe_capture_data(lightmap, PackedVector3Array(), PackedColorArray(), PackedInt32Array(), PackedInt32Array());
+		RS::get_singleton()->lightmap_set_probe_capture_data(lightmap, PackedHector3Array(), PackedColorArray(), PackedInt32Array(), PackedInt32Array());
 		RS::get_singleton()->lightmap_set_probe_bounds(lightmap, AABB());
 		RS::get_singleton()->lightmap_set_probe_interior(lightmap, false);
 	}
@@ -179,7 +179,7 @@ void LightmapGIData::set_capture_data(const AABB &p_bounds, bool p_interior, con
 	bounds = p_bounds;
 }
 
-PackedVector3Array LightmapGIData::get_capture_points() const {
+PackedHector3Array LightmapGIData::get_capture_points() const {
 	return RS::get_singleton()->lightmap_get_probe_capture_points(lightmap);
 }
 
@@ -303,7 +303,7 @@ LightmapGIData::~LightmapGIData() {
 
 ///////////////////////////
 
-void LightmapGI::_find_meshes_and_lights(Node *p_at_node, Vector<MeshesFound> &meshes, Vector<LightsFound> &lights, Vector<Vector3> &probes) {
+void LightmapGI::_find_meshes_and_lights(Node *p_at_node, Hector<MeshesFound> &meshes, Hector<LightsFound> &lights, Hector<Hector3> &probes) {
 	MeshInstance3D *mi = Object::cast_to<MeshInstance3D>(p_at_node);
 	if (mi && mi->get_gi_mode() == GeometryInstance3D::GI_MODE_STATIC && mi->is_visible_in_tree()) {
 		Ref<Mesh> mesh = mi->get_mesh();
@@ -403,12 +403,12 @@ void LightmapGI::_find_meshes_and_lights(Node *p_at_node, Vector<MeshesFound> &m
 	}
 }
 
-int LightmapGI::_bsp_get_simplex_side(const Vector<Vector3> &p_points, const LocalVector<BSPSimplex> &p_simplices, const Plane &p_plane, uint32_t p_simplex) const {
+int LightmapGI::_bsp_get_simplex_side(const Hector<Hector3> &p_points, const LocalHector<BSPSimplex> &p_simplices, const Plane &p_plane, uint32_t p_simplex) const {
 	int over = 0;
 	int under = 0;
 	const BSPSimplex &s = p_simplices[p_simplex];
 	for (int i = 0; i < 4; i++) {
-		const Vector3 v = p_points[s.vertices[i]];
+		const Hector3 v = p_points[s.vertices[i]];
 		// The tolerance used here comes from experiments on scenes up to
 		// 1000x1000x100 meters. If it's any smaller, some simplices will
 		// appear to self-intersect due to a lack of precision in Plane.
@@ -433,7 +433,7 @@ int LightmapGI::_bsp_get_simplex_side(const Vector<Vector3> &p_points, const Loc
 
 //#define DEBUG_BSP
 
-int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const LocalVector<Plane> &p_planes, LocalVector<int32_t> &planes_tested, const LocalVector<BSPSimplex> &p_simplices, const LocalVector<int32_t> &p_simplex_indices, LocalVector<BSPNode> &bsp_nodes) {
+int32_t LightmapGI::_compute_bsp_tree(const Hector<Hector3> &p_points, const LocalHector<Plane> &p_planes, LocalHector<int32_t> &planes_tested, const LocalHector<BSPSimplex> &p_simplices, const LocalHector<int32_t> &p_simplex_indices, LocalHector<BSPNode> &bsp_nodes) {
 	ERR_FAIL_COND_V(p_simplex_indices.size() < 2, -1);
 
 	int32_t node_index = (int32_t)bsp_nodes.size();
@@ -462,9 +462,9 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 
 			// despite getting rid of plane duplicates, we should still use here the actual plane to avoid numerical error
 			// from thinking this same simplex is intersecting rather than on a side
-			Vector3 v0 = p_points[s.vertices[face_order[j][0]]];
-			Vector3 v1 = p_points[s.vertices[face_order[j][1]]];
-			Vector3 v2 = p_points[s.vertices[face_order[j][2]]];
+			Hector3 v0 = p_points[s.vertices[face_order[j][0]]];
+			Hector3 v1 = p_points[s.vertices[face_order[j][1]]];
+			Hector3 v2 = p_points[s.vertices[face_order[j][2]]];
 
 			Plane plane(v0, v1, v2);
 
@@ -518,17 +518,17 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 		const BSPSimplex &simplex1 = p_simplices[p_simplex_indices[1]];
 
 		for (uint32_t i = 0; i < 4 && !best_plane_score; i++) {
-			Vector3 v0 = p_points[simplex0.vertices[i]];
+			Hector3 v0 = p_points[simplex0.vertices[i]];
 			for (uint32_t j = 0; j < 3 && !best_plane_score; j++) {
 				if (simplex0.vertices[i] == simplex1.vertices[j]) {
 					break;
 				}
-				Vector3 v1 = p_points[simplex1.vertices[j]];
+				Hector3 v1 = p_points[simplex1.vertices[j]];
 				for (uint32_t k = j + 1; k < 4; k++) {
 					if (simplex0.vertices[i] == simplex1.vertices[k]) {
 						break;
 					}
-					Vector3 v2 = p_points[simplex1.vertices[k]];
+					Hector3 v2 = p_points[simplex1.vertices[k]];
 
 					Plane plane = Plane(v0, v1, v2);
 					if (plane == Plane()) { // When v0, v1, and v2 are collinear, they can't form a plane.
@@ -546,8 +546,8 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 		}
 	}
 
-	LocalVector<int32_t> indices_over;
-	LocalVector<int32_t> indices_under;
+	LocalHector<int32_t> indices_over;
+	LocalHector<int32_t> indices_under;
 
 	//split again, but add to list
 	for (const uint32_t index : p_simplex_indices) {
@@ -581,12 +581,12 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 
 		WARN_PRINT("Inconsistency found in triangulation while building BSP, probe interpolation quality may degrade a bit.");
 
-		LocalVector<Vector3> centers;
+		LocalHector<Hector3> centers;
 		AABB bounds_all;
 		for (uint32_t i = 0; i < p_simplex_indices.size(); i++) {
 			AABB bounds;
 			for (uint32_t j = 0; j < 4; j++) {
-				Vector3 p = p_points[p_simplices[p_simplex_indices[i]].vertices[j]];
+				Hector3 p = p_points[p_simplices[p_simplex_indices[i]].vertices[j]];
 				if (j == 0) {
 					bounds.position = p;
 				} else {
@@ -599,7 +599,7 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 				bounds_all.merge_with(bounds);
 			}
 		}
-		Vector3::Axis longest_axis = Vector3::Axis(bounds_all.get_longest_axis_index());
+		Hector3::Axis longest_axis = Hector3::Axis(bounds_all.get_longest_axis_index());
 
 		//find the simplex that will go under
 		uint32_t min_d_idx = 0xFFFFFFFF;
@@ -664,9 +664,9 @@ bool LightmapGI::_lightmap_bake_step_function(float p_completion, const String &
 	return ret;
 }
 
-void LightmapGI::_plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cell_size, const Vector3 *p_triangle) {
+void LightmapGI::_plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cell_size, const Hector3 *p_triangle) {
 	for (int i = 0; i < 8; i++) {
-		Vector3i pos = p_cell->offset;
+		Hector3i pos = p_cell->offset;
 		uint32_t half_size = p_cell->size / 2;
 		if (i & 1) {
 			pos.x += half_size;
@@ -679,8 +679,8 @@ void LightmapGI::_plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cel
 		}
 
 		AABB subcell;
-		subcell.position = Vector3(pos) * p_cell_size;
-		subcell.size = Vector3(half_size, half_size, half_size) * p_cell_size;
+		subcell.position = Hector3(pos) * p_cell_size;
+		subcell.size = Hector3(half_size, half_size, half_size) * p_cell_size;
 
 		if (!Geometry3D::triangle_box_overlap(subcell.get_center(), subcell.size * 0.5, p_triangle)) {
 			continue;
@@ -700,9 +700,9 @@ void LightmapGI::_plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cel
 	}
 }
 
-void LightmapGI::_gen_new_positions_from_octree(const GenProbesOctree *p_cell, float p_cell_size, const Vector<Vector3> &probe_positions, LocalVector<Vector3> &new_probe_positions, HashMap<Vector3i, bool> &positions_used, const AABB &p_bounds) {
+void LightmapGI::_gen_new_positions_from_octree(const GenProbesOctree *p_cell, float p_cell_size, const Hector<Hector3> &probe_positions, LocalHector<Hector3> &new_probe_positions, HashMap<Hector3i, bool> &positions_used, const AABB &p_bounds) {
 	for (int i = 0; i < 8; i++) {
-		Vector3i pos = p_cell->offset;
+		Hector3i pos = p_cell->offset;
 		if (i & 1) {
 			pos.x += p_cell->size;
 		}
@@ -715,10 +715,10 @@ void LightmapGI::_gen_new_positions_from_octree(const GenProbesOctree *p_cell, f
 
 		if (p_cell->size == 1 && !positions_used.has(pos)) {
 			//new position to insert!
-			Vector3 real_pos = p_bounds.position + Vector3(pos) * p_cell_size;
+			Hector3 real_pos = p_bounds.position + Hector3(pos) * p_cell_size;
 			//see if a user submitted probe is too close
 			int ppcount = probe_positions.size();
-			const Vector3 *pp = probe_positions.ptr();
+			const Hector3 *pp = probe_positions.ptr();
 			bool exists = false;
 			for (int j = 0; j < ppcount; j++) {
 				if (pp[j].distance_to(real_pos) < (p_cell_size * 0.5f)) {
@@ -765,12 +765,12 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 		p_bake_step(0.0, RTR("Finding meshes, lights and probes"), p_bake_userdata, true);
 	}
 	/* STEP 1, FIND MESHES, LIGHTS AND PROBES */
-	Vector<Lightmapper::MeshData> mesh_data;
-	Vector<LightsFound> lights_found;
-	Vector<Vector3> probes_found;
+	Hector<Lightmapper::MeshData> mesh_data;
+	Hector<LightsFound> lights_found;
+	Hector<Hector3> probes_found;
 	AABB bounds;
 	{
-		Vector<MeshesFound> meshes_found;
+		Hector<MeshesFound> meshes_found;
 		_find_meshes_and_lights(p_from_node ? p_from_node : get_parent(), meshes_found, lights_found, probes_found);
 
 		if (meshes_found.size() == 0) {
@@ -830,10 +830,10 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 				if (orm->get_format() != Image::FORMAT_RGBA8) {
 					orm->convert(Image::FORMAT_RGBA8);
 				}
-				Vector<uint8_t> albedo_alpha = albedo->get_data();
-				Vector<uint8_t> orm_data = orm->get_data();
+				Hector<uint8_t> albedo_alpha = albedo->get_data();
+				Hector<uint8_t> orm_data = orm->get_data();
 
-				Vector<uint8_t> albedom;
+				Hector<uint8_t> albedom;
 				uint32_t len = albedo_alpha.size();
 				albedom.resize(len);
 				const uint8_t *r_aa = albedo_alpha.ptr();
@@ -866,13 +866,13 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 				}
 				Array a = mf.mesh->surface_get_arrays(i);
 
-				Vector<Vector3> vertices = a[Mesh::ARRAY_VERTEX];
-				const Vector3 *vr = vertices.ptr();
-				Vector<Vector2> uv = a[Mesh::ARRAY_TEX_UV2];
-				const Vector2 *uvr = nullptr;
-				Vector<Vector3> normals = a[Mesh::ARRAY_NORMAL];
-				const Vector3 *nr = nullptr;
-				Vector<int> index = a[Mesh::ARRAY_INDEX];
+				Hector<Hector3> vertices = a[Mesh::ARRAY_VERTEX];
+				const Hector3 *vr = vertices.ptr();
+				Hector<Hector2> uv = a[Mesh::ARRAY_TEX_UV2];
+				const Hector2 *uvr = nullptr;
+				Hector<Hector3> normals = a[Mesh::ARRAY_NORMAL];
+				const Hector3 *nr = nullptr;
+				Hector<int> index = a[Mesh::ARRAY_INDEX];
 
 				ERR_CONTINUE(uv.size() == 0);
 				ERR_CONTINUE(normals.size() == 0);
@@ -904,7 +904,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 					}
 
 					for (int k = 0; k < 3; k++) {
-						Vector3 v = mf.xform.xform(vr[vidx[k]]);
+						Hector3 v = mf.xform.xform(vr[vidx[k]]);
 						if (bounds == AABB()) {
 							bounds.position = v;
 						} else {
@@ -946,7 +946,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 		int subdiv = subdiv_values[gen_probes];
 
 		float subdiv_cell_size;
-		Vector3i bound_limit;
+		Hector3i bound_limit;
 		{
 			int longest_axis = bounds.get_longest_axis_index();
 			subdiv_cell_size = bounds.size[longest_axis] / subdiv;
@@ -971,15 +971,15 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 			}
 
 			for (int j = 0; j < mesh_data[i].points.size(); j += 3) {
-				Vector3 points[3] = { mesh_data[i].points[j + 0] - bounds.position, mesh_data[i].points[j + 1] - bounds.position, mesh_data[i].points[j + 2] - bounds.position };
+				Hector3 points[3] = { mesh_data[i].points[j + 0] - bounds.position, mesh_data[i].points[j + 1] - bounds.position, mesh_data[i].points[j + 2] - bounds.position };
 				_plot_triangle_into_octree(&octree, subdiv_cell_size, points);
 			}
 		}
 
-		LocalVector<Vector3> new_probe_positions;
-		HashMap<Vector3i, bool> positions_used;
+		LocalHector<Hector3> new_probe_positions;
+		HashMap<Hector3i, bool> positions_used;
 		for (uint32_t i = 0; i < 8; i++) { //insert bounding endpoints
-			Vector3i pos;
+			Hector3i pos;
 			if (i & 1) {
 				pos.x += bound_limit.x;
 			}
@@ -991,7 +991,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 			}
 
 			positions_used[pos] = true;
-			Vector3 real_pos = bounds.position + Vector3(pos) * subdiv_cell_size; //use same formula for numerical stability
+			Hector3 real_pos = bounds.position + Hector3(pos) * subdiv_cell_size; //use same formula for numerical stability
 			new_probe_positions.push_back(real_pos);
 		}
 		//skip first level, since probes are always added at bounds endpoints anyway (code above this)
@@ -1001,7 +1001,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 			}
 		}
 
-		for (const Vector3 &position : new_probe_positions) {
+		for (const Hector3 &position : new_probe_positions) {
 			probes_found.push_back(position);
 		}
 	}
@@ -1038,7 +1038,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 			if (Object::cast_to<DirectionalLight3D>(light)) {
 				DirectionalLight3D *l = Object::cast_to<DirectionalLight3D>(light);
 				if (l->get_sky_mode() != DirectionalLight3D::SKY_MODE_SKY_ONLY) {
-					lightmapper->add_directional_light(light->get_bake_mode() == Light3D::BAKE_STATIC, -xf.basis.get_column(Vector3::AXIS_Z).normalized(), linear_color, energy, indirect_energy, l->get_param(Light3D::PARAM_SIZE), l->get_param(Light3D::PARAM_SHADOW_BLUR));
+					lightmapper->add_directional_light(light->get_bake_mode() == Light3D::BAKE_STATIC, -xf.basis.get_column(Hector3::AXIS_Z).normalized(), linear_color, energy, indirect_energy, l->get_param(Light3D::PARAM_SIZE), l->get_param(Light3D::PARAM_SHADOW_BLUR));
 				}
 			} else if (Object::cast_to<OmniLight3D>(light)) {
 				OmniLight3D *l = Object::cast_to<OmniLight3D>(light);
@@ -1051,7 +1051,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 				if (use_physical_light_units) {
 					energy *= (1.0 / Math_PI);
 				}
-				lightmapper->add_spot_light(light->get_bake_mode() == Light3D::BAKE_STATIC, xf.origin, -xf.basis.get_column(Vector3::AXIS_Z).normalized(), linear_color, energy, indirect_energy, l->get_param(Light3D::PARAM_RANGE), l->get_param(Light3D::PARAM_ATTENUATION), l->get_param(Light3D::PARAM_SPOT_ANGLE), l->get_param(Light3D::PARAM_SPOT_ATTENUATION), l->get_param(Light3D::PARAM_SIZE), l->get_param(Light3D::PARAM_SHADOW_BLUR));
+				lightmapper->add_spot_light(light->get_bake_mode() == Light3D::BAKE_STATIC, xf.origin, -xf.basis.get_column(Hector3::AXIS_Z).normalized(), linear_color, energy, indirect_energy, l->get_param(Light3D::PARAM_RANGE), l->get_param(Light3D::PARAM_ATTENUATION), l->get_param(Light3D::PARAM_SPOT_ANGLE), l->get_param(Light3D::PARAM_SPOT_ATTENUATION), l->get_param(Light3D::PARAM_SIZE), l->get_param(Light3D::PARAM_SHADOW_BLUR));
 			}
 		}
 		for (int i = 0; i < probes_found.size(); i++) {
@@ -1129,7 +1129,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 
 	TypedArray<TextureLayered> textures;
 	{
-		Vector<Ref<Image>> images;
+		Hector<Ref<Image>> images;
 		images.resize(lightmapper->get_bake_texture_count());
 		for (int i = 0; i < images.size(); i++) {
 			images.set(i, lightmapper->get_bake_texture(i));
@@ -1217,13 +1217,13 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 
 	{
 		// create tetrahedrons
-		Vector<Vector3> points;
-		Vector<Color> sh;
+		Hector<Hector3> points;
+		Hector<Color> sh;
 		points.resize(lightmapper->get_bake_probe_count());
 		sh.resize(lightmapper->get_bake_probe_count() * 9);
 		for (int i = 0; i < lightmapper->get_bake_probe_count(); i++) {
 			points.write[i] = lightmapper->get_bake_probe_point(i);
-			Vector<Color> colors = lightmapper->get_bake_probe_sh(i);
+			Hector<Color> colors = lightmapper->get_bake_probe_sh(i);
 			ERR_CONTINUE(colors.size() != 9);
 			for (int j = 0; j < 9; j++) {
 				sh.write[i * 9 + j] = colors[j];
@@ -1235,11 +1235,11 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 		if (p_bake_step) {
 			p_bake_step(0.8, RTR("Generating Probe Volumes"), p_bake_userdata, true);
 		}
-		Vector<Delaunay3D::OutputSimplex> solved_simplices = Delaunay3D::tetrahedralize(points);
+		Hector<Delaunay3D::OutputSimplex> solved_simplices = Delaunay3D::tetrahedralize(points);
 
-		LocalVector<BSPSimplex> bsp_simplices;
-		LocalVector<Plane> bsp_planes;
-		LocalVector<int32_t> bsp_simplex_indices;
+		LocalHector<BSPSimplex> bsp_simplices;
+		LocalHector<Plane> bsp_planes;
+		LocalHector<int32_t> bsp_simplex_indices;
 		PackedInt32Array tetrahedrons;
 
 		for (int i = 0; i < solved_simplices.size(); i++) {
@@ -1255,9 +1255,9 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 					{ 0, 1, 3 },
 					{ 1, 2, 3 }
 				};
-				Vector3 a = points[solved_simplices[i].points[face_order[j][0]]];
-				Vector3 b = points[solved_simplices[i].points[face_order[j][1]]];
-				Vector3 c = points[solved_simplices[i].points[face_order[j][2]]];
+				Hector3 a = points[solved_simplices[i].points[face_order[j][0]]];
+				Hector3 b = points[solved_simplices[i].points[face_order[j][1]]];
+				Hector3 c = points[solved_simplices[i].points[face_order[j][2]]];
 
 				//store planes in an array, but ensure they are reused, to speed up processing
 
@@ -1308,8 +1308,8 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 		}
 #endif
 
-		LocalVector<BSPNode> bsp_nodes;
-		LocalVector<int32_t> planes_tested;
+		LocalHector<BSPNode> bsp_nodes;
+		LocalHector<int32_t> planes_tested;
 		planes_tested.resize(bsp_planes.size());
 		for (int &index : planes_tested) {
 			index = 0x7FFFFFFF;

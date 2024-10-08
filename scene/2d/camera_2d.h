@@ -60,9 +60,9 @@ protected:
 	StringName group_name;
 	StringName canvas_group_name;
 	RID canvas;
-	Vector2 offset;
-	Vector2 zoom = Vector2(1, 1);
-	Vector2 zoom_scale = Vector2(1, 1);
+	Hector2 offset;
+	Hector2 zoom = Hector2(1, 1);
+	Hector2 zoom_scale = Hector2(1, 1);
 	AnchorMode anchor_mode = ANCHOR_MODE_DRAG_CENTER;
 	bool ignore_rotation = true;
 	bool enabled = true;
@@ -123,8 +123,8 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 
 public:
-	void set_offset(const Vector2 &p_offset);
-	Vector2 get_offset() const;
+	void set_offset(const Hector2 &p_offset);
+	Hector2 get_offset() const;
 
 	void set_anchor_mode(AnchorMode p_anchor_mode);
 	AnchorMode get_anchor_mode() const;
@@ -175,15 +175,15 @@ public:
 	void clear_current();
 	bool is_current() const;
 
-	void set_zoom(const Vector2 &p_zoom);
-	Vector2 get_zoom() const;
+	void set_zoom(const Hector2 &p_zoom);
+	Hector2 get_zoom() const;
 
 	Point2 get_camera_screen_center() const;
 
 	void set_custom_viewport(Node *p_viewport);
 	Node *get_custom_viewport() const;
 
-	Vector2 get_camera_position() const;
+	Hector2 get_camera_position() const;
 	void force_update_scroll();
 	void reset_smoothing();
 	void align();

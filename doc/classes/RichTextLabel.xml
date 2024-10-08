@@ -568,8 +568,8 @@
 		</method>
 		<method name="set_cell_size_override">
 			<return type="void" />
-			<param index="0" name="min_size" type="Vector2" />
-			<param index="1" name="max_size" type="Vector2" />
+			<param index="0" name="min_size" type="Hector2" />
+			<param index="1" name="max_size" type="Hector2" />
 			<description>
 				Sets minimum and maximum size overrides for a table cell.
 			</description>

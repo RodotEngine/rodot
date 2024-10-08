@@ -32,7 +32,7 @@
 #define RECT2_H
 
 #include "core/error/error_macros.h"
-#include "core/math/vector2.h"
+#include "core/math/Hector2.h"
 
 class String;
 struct Rect2i;
@@ -42,14 +42,14 @@ struct [[nodiscard]] Rect2 {
 	Point2 position;
 	Size2 size;
 
-	const Vector2 &get_position() const { return position; }
-	void set_position(const Vector2 &p_pos) { position = p_pos; }
-	const Vector2 &get_size() const { return size; }
-	void set_size(const Vector2 &p_size) { size = p_size; }
+	const Hector2 &get_position() const { return position; }
+	void set_position(const Hector2 &p_pos) { position = p_pos; }
+	const Hector2 &get_size() const { return size; }
+	void set_size(const Hector2 &p_size) { size = p_size; }
 
 	real_t get_area() const { return size.width * size.height; }
 
-	_FORCE_INLINE_ Vector2 get_center() const { return position + (size * 0.5f); }
+	_FORCE_INLINE_ Hector2 get_center() const { return position + (size * 0.5f); }
 
 	inline bool intersects(const Rect2 &p_rect, bool p_include_borders = false) const {
 #ifdef MATH_CHECKS
@@ -88,7 +88,7 @@ struct [[nodiscard]] Rect2 {
 		return true;
 	}
 
-	inline real_t distance_to(const Vector2 &p_point) const {
+	inline real_t distance_to(const Hector2 &p_point) const {
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -244,33 +244,33 @@ struct [[nodiscard]] Rect2 {
 		return g;
 	}
 
-	_FORCE_INLINE_ Rect2 expand(const Vector2 &p_vector) const {
+	_FORCE_INLINE_ Rect2 expand(const Hector2 &p_Hector) const {
 		Rect2 r = *this;
-		r.expand_to(p_vector);
+		r.expand_to(p_Hector);
 		return r;
 	}
 
-	inline void expand_to(const Vector2 &p_vector) { // In place function for speed.
+	inline void expand_to(const Hector2 &p_Hector) { // In place function for speed.
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
 		}
 #endif
-		Vector2 begin = position;
-		Vector2 end = position + size;
+		Hector2 begin = position;
+		Hector2 end = position + size;
 
-		if (p_vector.x < begin.x) {
-			begin.x = p_vector.x;
+		if (p_Hector.x < begin.x) {
+			begin.x = p_Hector.x;
 		}
-		if (p_vector.y < begin.y) {
-			begin.y = p_vector.y;
+		if (p_Hector.y < begin.y) {
+			begin.y = p_Hector.y;
 		}
 
-		if (p_vector.x > end.x) {
-			end.x = p_vector.x;
+		if (p_Hector.x > end.x) {
+			end.x = p_Hector.x;
 		}
-		if (p_vector.y > end.y) {
-			end.y = p_vector.y;
+		if (p_Hector.y > end.y) {
+			end.y = p_Hector.y;
 		}
 
 		position = begin;
@@ -285,8 +285,8 @@ struct [[nodiscard]] Rect2 {
 		return Rect2(position.round(), size.round());
 	}
 
-	Vector2 get_support(const Vector2 &p_direction) const {
-		Vector2 support = position;
+	Hector2 get_support(const Hector2 &p_direction) const {
+		Hector2 support = position;
 		if (p_direction.x > 0.0f) {
 			support.x += size.x;
 		}
@@ -296,26 +296,26 @@ struct [[nodiscard]] Rect2 {
 		return support;
 	}
 
-	_FORCE_INLINE_ bool intersects_filled_polygon(const Vector2 *p_points, int p_point_count) const {
-		Vector2 center = get_center();
+	_FORCE_INLINE_ bool intersects_filled_polygon(const Hector2 *p_points, int p_point_count) const {
+		Hector2 center = get_center();
 		int side_plus = 0;
 		int side_minus = 0;
-		Vector2 end = position + size;
+		Hector2 end = position + size;
 
 		int i_f = p_point_count - 1;
 		for (int i = 0; i < p_point_count; i++) {
-			const Vector2 &a = p_points[i_f];
-			const Vector2 &b = p_points[i];
+			const Hector2 &a = p_points[i_f];
+			const Hector2 &b = p_points[i];
 			i_f = i;
 
-			Vector2 r = (b - a);
+			Hector2 r = (b - a);
 			const real_t l = r.length();
 			if (l == 0.0f) {
 				continue;
 			}
 
 			// Check inside.
-			Vector2 tg = r.orthogonal();
+			Hector2 tg = r.orthogonal();
 			const real_t s = tg.dot(center) - tg.dot(a);
 			if (s < 0.0f) {
 				side_plus++;
@@ -325,12 +325,12 @@ struct [[nodiscard]] Rect2 {
 
 			// Check ray box.
 			r /= l;
-			Vector2 ir(1.0f / r.x, 1.0f / r.y);
+			Hector2 ir(1.0f / r.x, 1.0f / r.y);
 
 			// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
 			// r.org is origin of ray
-			Vector2 t13 = (position - a) * ir;
-			Vector2 t24 = (end - a) * ir;
+			Hector2 t13 = (position - a) * ir;
+			Hector2 t24 = (end - a) * ir;
 
 			const real_t tmin = MAX(MIN(t13.x, t24.x), MIN(t13.y, t24.y));
 			const real_t tmax = MIN(MAX(t13.x, t24.x), MAX(t13.y, t24.y));
@@ -350,11 +350,11 @@ struct [[nodiscard]] Rect2 {
 		}
 	}
 
-	_FORCE_INLINE_ void set_end(const Vector2 &p_end) {
+	_FORCE_INLINE_ void set_end(const Hector2 &p_end) {
 		size = p_end - position;
 	}
 
-	_FORCE_INLINE_ Vector2 get_end() const {
+	_FORCE_INLINE_ Hector2 get_end() const {
 		return position + size;
 	}
 

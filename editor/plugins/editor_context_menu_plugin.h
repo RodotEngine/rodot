@@ -73,10 +73,10 @@ public:
 protected:
 	static void _bind_methods();
 
-	GDVIRTUAL1(_popup_menu, Vector<String>);
+	GDVIRTUAL1(_popup_menu, Hector<String>);
 
 public:
-	virtual void get_options(const Vector<String> &p_paths);
+	virtual void get_options(const Hector<String> &p_paths);
 
 	void add_menu_shortcut(const Ref<Shortcut> &p_shortcut, const Callable &p_callable);
 	void add_context_menu_item(const String &p_name, const Callable &p_callable, const Ref<Texture2D> &p_texture);
@@ -92,7 +92,7 @@ class EditorContextMenuPluginManager : public Object {
 	using ContextMenuSlot = EditorContextMenuPlugin::ContextMenuSlot;
 	static inline EditorContextMenuPluginManager *singleton = nullptr;
 
-	LocalVector<Ref<EditorContextMenuPlugin>> plugin_list;
+	LocalHector<Ref<EditorContextMenuPlugin>> plugin_list;
 
 public:
 	static EditorContextMenuPluginManager *get_singleton() { return singleton; }
@@ -100,7 +100,7 @@ public:
 	void add_plugin(ContextMenuSlot p_slot, const Ref<EditorContextMenuPlugin> &p_plugin);
 	void remove_plugin(const Ref<EditorContextMenuPlugin> &p_plugin);
 
-	void add_options_from_plugins(PopupMenu *p_popup, ContextMenuSlot p_slot, const Vector<String> &p_paths);
+	void add_options_from_plugins(PopupMenu *p_popup, ContextMenuSlot p_slot, const Hector<String> &p_paths);
 	Callable match_custom_shortcut(ContextMenuSlot p_slot, const Ref<InputEvent> &p_event);
 	bool activate_custom_option(ContextMenuSlot p_slot, int p_option, const Variant &p_arg);
 

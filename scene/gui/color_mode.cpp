@@ -55,7 +55,7 @@ float ColorModeRGB::get_slider_value(int idx) const {
 }
 
 Color ColorModeRGB::get_color() const {
-	Vector<float> values = color_picker->get_active_slider_values();
+	Hector<float> values = color_picker->get_active_slider_values();
 	Color color;
 	for (int i = 0; i < 4; i++) {
 		color.components[i] = values[i] / 255.0;
@@ -64,9 +64,9 @@ Color ColorModeRGB::get_color() const {
 }
 
 void ColorModeRGB::slider_draw(int p_which) {
-	Vector<Vector2> pos;
+	Hector<Hector2> pos;
 	pos.resize(4);
-	Vector<Color> col;
+	Hector<Color> col;
 	col.resize(4);
 	HSlider *slider = color_picker->get_slider(p_which);
 	Size2 size = slider->get_size();
@@ -97,16 +97,16 @@ void ColorModeRGB::slider_draw(int p_which) {
 	col.set(1, right_color);
 	col.set(2, right_color);
 	col.set(3, left_color);
-	pos.set(0, Vector2(0, 0));
-	pos.set(1, Vector2(size.x, 0));
-	pos.set(2, Vector2(size.x, margin));
-	pos.set(3, Vector2(0, margin));
+	pos.set(0, Hector2(0, 0));
+	pos.set(1, Hector2(size.x, 0));
+	pos.set(2, Hector2(size.x, margin));
+	pos.set(3, Hector2(0, margin));
 
 	slider->draw_polygon(pos, col);
 }
 
 void ColorModeHSV::_value_changed() {
-	Vector<float> values = color_picker->get_active_slider_values();
+	Hector<float> values = color_picker->get_active_slider_values();
 
 	if (values[1] > 0 || values[0] != cached_hue) {
 		cached_hue = values[0];
@@ -152,16 +152,16 @@ float ColorModeHSV::get_slider_value(int idx) const {
 }
 
 Color ColorModeHSV::get_color() const {
-	Vector<float> values = color_picker->get_active_slider_values();
+	Hector<float> values = color_picker->get_active_slider_values();
 	Color color;
 	color.set_hsv(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0, values[3] / 255.0);
 	return color;
 }
 
 void ColorModeHSV::slider_draw(int p_which) {
-	Vector<Vector2> pos;
+	Hector<Hector2> pos;
 	pos.resize(4);
-	Vector<Color> col;
+	Hector<Color> col;
 	col.resize(4);
 	HSlider *slider = color_picker->get_slider(p_which);
 	Size2 size = slider->get_size();
@@ -196,16 +196,16 @@ void ColorModeHSV::slider_draw(int p_which) {
 	col.set(1, right_color);
 	col.set(2, right_color);
 	col.set(3, left_color);
-	pos.set(0, Vector2(0, 0));
-	pos.set(1, Vector2(size.x, 0));
-	pos.set(2, Vector2(size.x, margin));
-	pos.set(3, Vector2(0, margin));
+	pos.set(0, Hector2(0, 0));
+	pos.set(1, Hector2(size.x, 0));
+	pos.set(2, Hector2(size.x, margin));
+	pos.set(3, Hector2(0, margin));
 
 	slider->draw_polygon(pos, col);
 
 	if (p_which == 0) { // H
 		Ref<Texture2D> hue = color_picker->theme_cache.color_hue;
-		slider->draw_texture_rect(hue, Rect2(Vector2(), Vector2(size.x, margin)), false, Color::from_hsv(0, 0, color.get_v(), color.get_s()));
+		slider->draw_texture_rect(hue, Rect2(Hector2(), Hector2(size.x, margin)), false, Color::from_hsv(0, 0, color.get_v(), color.get_s()));
 	}
 }
 
@@ -225,7 +225,7 @@ float ColorModeRAW::get_slider_value(int idx) const {
 }
 
 Color ColorModeRAW::get_color() const {
-	Vector<float> values = color_picker->get_active_slider_values();
+	Hector<float> values = color_picker->get_active_slider_values();
 	Color color;
 	for (int i = 0; i < 4; i++) {
 		color.components[i] = values[i];
@@ -234,9 +234,9 @@ Color ColorModeRAW::get_color() const {
 }
 
 void ColorModeRAW::slider_draw(int p_which) {
-	Vector<Vector2> pos;
+	Hector<Hector2> pos;
 	pos.resize(4);
-	Vector<Color> col;
+	Hector<Color> col;
 	col.resize(4);
 	HSlider *slider = color_picker->get_slider(p_which);
 	Size2 size = slider->get_size();
@@ -257,10 +257,10 @@ void ColorModeRAW::slider_draw(int p_which) {
 		col.set(1, right_color);
 		col.set(2, right_color);
 		col.set(3, left_color);
-		pos.set(0, Vector2(0, 0));
-		pos.set(1, Vector2(size.x, 0));
-		pos.set(2, Vector2(size.x, margin));
-		pos.set(3, Vector2(0, margin));
+		pos.set(0, Hector2(0, 0));
+		pos.set(1, Hector2(size.x, 0));
+		pos.set(2, Hector2(size.x, margin));
+		pos.set(3, Hector2(0, margin));
 
 		slider->draw_polygon(pos, col);
 	}
@@ -279,7 +279,7 @@ bool ColorModeRAW::apply_theme() const {
 }
 
 void ColorModeOKHSL::_value_changed() {
-	Vector<float> values = color_picker->get_active_slider_values();
+	Hector<float> values = color_picker->get_active_slider_values();
 
 	if (values[1] > 0 || values[0] != cached_hue) {
 		cached_hue = values[0];
@@ -325,7 +325,7 @@ float ColorModeOKHSL::get_slider_value(int idx) const {
 }
 
 Color ColorModeOKHSL::get_color() const {
-	Vector<float> values = color_picker->get_active_slider_values();
+	Hector<float> values = color_picker->get_active_slider_values();
 	Color color;
 	color.set_ok_hsl(values[0] / 360.0, values[1] / 100.0, values[2] / 100.0, values[3] / 255.0);
 	return color;
@@ -336,8 +336,8 @@ void ColorModeOKHSL::slider_draw(int p_which) {
 	Size2 size = slider->get_size();
 	const real_t margin = 16 * color_picker->theme_cache.base_scale;
 
-	Vector<Vector2> pos;
-	Vector<Color> col;
+	Hector<Hector2> pos;
+	Hector<Color> col;
 	Color left_color;
 	Color right_color;
 	Color color = color_picker->get_pick_color();
@@ -359,12 +359,12 @@ void ColorModeOKHSL::slider_draw(int p_which) {
 		col.set(3, right_color);
 		col.set(4, middle_color);
 		col.set(5, left_color);
-		pos.set(0, Vector2(0, 0));
-		pos.set(1, Vector2(size.x * 0.5, 0));
-		pos.set(2, Vector2(size.x, 0));
-		pos.set(3, Vector2(size.x, margin));
-		pos.set(4, Vector2(size.x * 0.5, margin));
-		pos.set(5, Vector2(0, margin));
+		pos.set(0, Hector2(0, 0));
+		pos.set(1, Hector2(size.x * 0.5, 0));
+		pos.set(2, Hector2(size.x, 0));
+		pos.set(3, Hector2(size.x, margin));
+		pos.set(4, Hector2(size.x * 0.5, margin));
+		pos.set(5, Hector2(0, margin));
 	} else {
 		pos.resize(4);
 		col.resize(4);
@@ -390,17 +390,17 @@ void ColorModeOKHSL::slider_draw(int p_which) {
 		col.set(1, right_color);
 		col.set(2, right_color);
 		col.set(3, left_color);
-		pos.set(0, Vector2(0, 0));
-		pos.set(1, Vector2(size.x, 0));
-		pos.set(2, Vector2(size.x, margin));
-		pos.set(3, Vector2(0, margin));
+		pos.set(0, Hector2(0, 0));
+		pos.set(1, Hector2(size.x, 0));
+		pos.set(2, Hector2(size.x, margin));
+		pos.set(3, Hector2(0, margin));
 	}
 
 	slider->draw_polygon(pos, col);
 
 	if (p_which == 0) { // H
 		Ref<Texture2D> hue = color_picker->theme_cache.color_okhsl_hue;
-		slider->draw_texture_rect(hue, Rect2(Vector2(), Vector2(size.x, margin)), false, Color::from_hsv(0, 0, color.get_ok_hsl_l() * 2.0, color.get_ok_hsl_s()));
+		slider->draw_texture_rect(hue, Rect2(Hector2(), Hector2(size.x, margin)), false, Color::from_hsv(0, 0, color.get_ok_hsl_l() * 2.0, color.get_ok_hsl_s()));
 		return;
 	}
 }

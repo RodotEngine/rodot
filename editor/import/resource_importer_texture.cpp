@@ -92,7 +92,7 @@ void ResourceImporterTexture::update_imports() {
 	}
 
 	MutexLock lock(mutex);
-	Vector<String> to_reimport;
+	Hector<String> to_reimport;
 	{
 		if (make_flags.is_empty()) {
 			return;
@@ -267,7 +267,7 @@ void ResourceImporterTexture::save_to_ctex_format(Ref<FileAccess> f, const Ref<I
 			f->store_32(p_image->get_format());
 
 			for (int i = 0; i < p_image->get_mipmap_count() + 1; i++) {
-				Vector<uint8_t> data;
+				Hector<uint8_t> data;
 				if (use_webp) {
 					data = Image::webp_lossless_packer(i ? p_image->get_image_from_mipmap(i) : p_image);
 				} else {
@@ -289,7 +289,7 @@ void ResourceImporterTexture::save_to_ctex_format(Ref<FileAccess> f, const Ref<I
 			f->store_32(p_image->get_format());
 
 			for (int i = 0; i < p_image->get_mipmap_count() + 1; i++) {
-				Vector<uint8_t> data = Image::webp_lossy_packer(i ? p_image->get_image_from_mipmap(i) : p_image, p_lossy_quality);
+				Hector<uint8_t> data = Image::webp_lossy_packer(i ? p_image->get_image_from_mipmap(i) : p_image, p_lossy_quality);
 				int data_len = data.size();
 				f->store_32(data_len);
 
@@ -308,7 +308,7 @@ void ResourceImporterTexture::save_to_ctex_format(Ref<FileAccess> f, const Ref<I
 			f->store_32(image->get_mipmap_count());
 			f->store_32(image->get_format());
 
-			Vector<uint8_t> data = image->get_data();
+			Hector<uint8_t> data = image->get_data();
 			int dl = data.size();
 			const uint8_t *r = data.ptr();
 			f->store_buffer(r, dl);
@@ -320,7 +320,7 @@ void ResourceImporterTexture::save_to_ctex_format(Ref<FileAccess> f, const Ref<I
 			f->store_32(p_image->get_mipmap_count());
 			f->store_32(p_image->get_format());
 
-			Vector<uint8_t> data = p_image->get_data();
+			Hector<uint8_t> data = p_image->get_data();
 			int dl = data.size();
 			const uint8_t *r = data.ptr();
 
@@ -333,7 +333,7 @@ void ResourceImporterTexture::save_to_ctex_format(Ref<FileAccess> f, const Ref<I
 			f->store_16(p_image->get_height());
 			f->store_32(p_image->get_mipmap_count());
 			f->store_32(p_image->get_format());
-			Vector<uint8_t> data = Image::basis_universal_packer(p_image, p_channels);
+			Hector<uint8_t> data = Image::basis_universal_packer(p_image, p_channels);
 			int data_len = data.size();
 			f->store_32(data_len);
 			const uint8_t *r = data.ptr();
@@ -768,7 +768,7 @@ bool ResourceImporterTexture::are_import_settings_valid(const String &p_path, co
 	}
 
 	// Will become invalid if formats are missing to import.
-	Vector<String> formats_imported;
+	Hector<String> formats_imported;
 	if (p_meta.has("imported_formats")) {
 		formats_imported = p_meta["imported_formats"];
 	}

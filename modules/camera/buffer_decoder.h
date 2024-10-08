@@ -32,7 +32,7 @@
 #define BUFFER_DECODER_H
 
 #include "core/io/image.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 class CameraFeed;
 
@@ -66,8 +66,8 @@ public:
 
 class SeparateYuyvBufferDecoder : public AbstractYuyvBufferDecoder {
 private:
-	Vector<uint8_t> y_image_data;
-	Vector<uint8_t> cbcr_image_data;
+	Hector<uint8_t> y_image_data;
+	Hector<uint8_t> cbcr_image_data;
 	Ref<Image> y_image;
 	Ref<Image> cbcr_image;
 
@@ -78,7 +78,7 @@ public:
 
 class YuyvToGrayscaleBufferDecoder : public AbstractYuyvBufferDecoder {
 private:
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 
 public:
 	YuyvToGrayscaleBufferDecoder(CameraFeed *p_camera_feed);
@@ -87,7 +87,7 @@ public:
 
 class YuyvToRgbBufferDecoder : public AbstractYuyvBufferDecoder {
 private:
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 
 public:
 	YuyvToRgbBufferDecoder(CameraFeed *p_camera_feed);
@@ -96,7 +96,7 @@ public:
 
 class CopyBufferDecoder : public BufferDecoder {
 private:
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 	bool rgba = false;
 
 public:
@@ -106,7 +106,7 @@ public:
 
 class JpegBufferDecoder : public BufferDecoder {
 private:
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 
 public:
 	JpegBufferDecoder(CameraFeed *p_camera_feed);

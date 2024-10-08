@@ -39,7 +39,7 @@
 #include "main/main.h"
 #endif
 
-Vector<TranslationServer::LocaleScriptInfo> TranslationServer::locale_script_info;
+Hector<TranslationServer::LocaleScriptInfo> TranslationServer::locale_script_info;
 
 HashMap<String, String> TranslationServer::language_map;
 HashMap<String, String> TranslationServer::script_map;
@@ -65,7 +65,7 @@ void TranslationServer::init_locale_info() {
 		info.name = locale_scripts[idx][0];
 		info.script = locale_scripts[idx][1];
 		info.default_country = locale_scripts[idx][2];
-		Vector<String> supported_countries = String(locale_scripts[idx][3]).split(",", false);
+		Hector<String> supported_countries = String(locale_scripts[idx][3]).split(",", false);
 		for (int i = 0; i < supported_countries.size(); i++) {
 			info.supported_countries.insert(supported_countries[i]);
 		}
@@ -128,7 +128,7 @@ String TranslationServer::_standardize_locale(const String &p_locale, bool p_add
 
 	// Extract locale elements.
 	String lang_name, script_name, country_name, variant_name;
-	Vector<String> locale_elements = univ_locale.get_slice("@", 0).split("_");
+	Hector<String> locale_elements = univ_locale.get_slice("@", 0).split("_");
 	lang_name = locale_elements[0];
 	if (locale_elements.size() >= 2) {
 		if (locale_elements[1].length() == 4 && is_ascii_upper_case(locale_elements[1][0]) && is_ascii_lower_case(locale_elements[1][1]) && is_ascii_lower_case(locale_elements[1][2]) && is_ascii_lower_case(locale_elements[1][3])) {
@@ -152,7 +152,7 @@ String TranslationServer::_standardize_locale(const String &p_locale, bool p_add
 	}
 
 	// Try extract script and variant from the extra part.
-	Vector<String> script_extra = univ_locale.get_slice("@", 1).split(";");
+	Hector<String> script_extra = univ_locale.get_slice("@", 1).split(";");
 	for (int i = 0; i < script_extra.size(); i++) {
 		if (script_extra[i].to_lower() == "cyrillic") {
 			script_name = "Cyrl";
@@ -236,8 +236,8 @@ int TranslationServer::compare_locales(const String &p_locale_a, const String &p
 		return 10;
 	}
 
-	Vector<String> locale_a_elements = locale_a.split("_");
-	Vector<String> locale_b_elements = locale_b.split("_");
+	Hector<String> locale_a_elements = locale_a.split("_");
+	Hector<String> locale_b_elements = locale_b.split("_");
 	if (locale_a_elements[0] == locale_b_elements[0]) {
 		// Matching language, both locales have extra parts.
 		// Return number of matching elements.
@@ -258,7 +258,7 @@ int TranslationServer::compare_locales(const String &p_locale_a, const String &p
 
 String TranslationServer::get_locale_name(const String &p_locale) const {
 	String lang_name, script_name, country_name;
-	Vector<String> locale_elements = standardize_locale(p_locale).split("_");
+	Hector<String> locale_elements = standardize_locale(p_locale).split("_");
 	lang_name = locale_elements[0];
 	if (locale_elements.size() >= 2) {
 		if (locale_elements[1].length() == 4 && is_ascii_upper_case(locale_elements[1][0]) && is_ascii_lower_case(locale_elements[1][1]) && is_ascii_lower_case(locale_elements[1][2]) && is_ascii_lower_case(locale_elements[1][3])) {
@@ -284,8 +284,8 @@ String TranslationServer::get_locale_name(const String &p_locale) const {
 	return name;
 }
 
-Vector<String> TranslationServer::get_all_languages() const {
-	Vector<String> languages;
+Hector<String> TranslationServer::get_all_languages() const {
+	Hector<String> languages;
 
 	for (const KeyValue<String, String> &E : language_map) {
 		languages.push_back(E.key);
@@ -298,8 +298,8 @@ String TranslationServer::get_language_name(const String &p_language) const {
 	return language_map[p_language];
 }
 
-Vector<String> TranslationServer::get_all_scripts() const {
-	Vector<String> scripts;
+Hector<String> TranslationServer::get_all_scripts() const {
+	Hector<String> scripts;
 
 	for (const KeyValue<String, String> &E : script_map) {
 		scripts.push_back(E.key);
@@ -312,8 +312,8 @@ String TranslationServer::get_script_name(const String &p_script) const {
 	return script_map[p_script];
 }
 
-Vector<String> TranslationServer::get_all_countries() const {
-	Vector<String> countries;
+Hector<String> TranslationServer::get_all_countries() const {
+	Hector<String> countries;
 
 	for (const KeyValue<String, String> &E : country_name_map) {
 		countries.push_back(E.key);
@@ -391,7 +391,7 @@ TranslationServer *TranslationServer::singleton = nullptr;
 
 bool TranslationServer::_load_translations(const String &p_from) {
 	if (ProjectSettings::get_singleton()->has_setting(p_from)) {
-		const Vector<String> &translation_names = GLOBAL_GET(p_from);
+		const Hector<String> &translation_names = GLOBAL_GET(p_from);
 
 		int tcount = translation_names.size();
 

@@ -49,7 +49,7 @@ class ConnectionInfoDialog : public AcceptDialog {
 	virtual void ok_pressed() override;
 
 public:
-	void popup_connections(const String &p_method, const Vector<Node *> &p_nodes);
+	void popup_connections(const String &p_method, const Hector<Node *> &p_nodes);
 
 	ConnectionInfoDialog();
 };
@@ -65,7 +65,7 @@ class ScriptTextEditor : public ScriptEditorBase {
 	bool script_is_valid = false;
 	bool editor_enabled = false;
 
-	Vector<String> functions;
+	Hector<String> functions;
 	List<ScriptLanguage::Warning> warnings;
 	List<ScriptLanguage::ScriptError> errors;
 	HashMap<String, List<ScriptLanguage::ScriptError>> depended_errors;
@@ -73,7 +73,7 @@ class ScriptTextEditor : public ScriptEditorBase {
 
 	List<Connection> missing_connections;
 
-	Vector<String> member_keywords;
+	Hector<String> member_keywords;
 
 	HBoxContainer *edit_hb = nullptr;
 
@@ -103,7 +103,7 @@ class ScriptTextEditor : public ScriptEditorBase {
 
 	PopupPanel *color_panel = nullptr;
 	ColorPicker *color_picker = nullptr;
-	Vector2 color_position;
+	Hector2 color_position;
 	String color_args;
 
 	bool theme_loaded = false;
@@ -191,7 +191,7 @@ protected:
 
 	void _edit_option(int p_op);
 	void _edit_option_toggle_inline_comment();
-	void _make_context_menu(bool p_selection, bool p_color, bool p_foldable, bool p_open_docs, bool p_goto_definition, Vector2 p_pos);
+	void _make_context_menu(bool p_selection, bool p_color, bool p_foldable, bool p_open_docs, bool p_goto_definition, Hector2 p_pos);
 	void _text_edit_gui_input(const Ref<InputEvent> &ev);
 	void _color_changed(const Color &p_color);
 	void _prepare_edit_menu();
@@ -219,7 +219,7 @@ public:
 	virtual Ref<Resource> get_edited_resource() const override;
 	virtual void set_edited_resource(const Ref<Resource> &p_res) override;
 	virtual void enable_editor(Control *p_shortcut_context = nullptr) override;
-	virtual Vector<String> get_functions() override;
+	virtual Hector<String> get_functions() override;
 	virtual void reload_text() override;
 	virtual String get_name() override;
 	virtual Ref<Texture2D> get_theme_icon() override;

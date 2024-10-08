@@ -33,7 +33,7 @@
 #include "vhacdSArray.h"
 #include "vhacdTimer.h"
 #include "vhacdVHACD.h"
-#include "vhacdVector.h"
+#include "vhacdHector.h"
 #include "vhacdVolume.h"
 #include "FloatMath.h"
 
@@ -53,7 +53,7 @@
 const int32_t SIMD_WIDTH = 4;
 inline int32_t FindMinimumElement(const float* const d, float* const _, const int32_t n)
 {
-    // Min within vectors
+    // Min within Hectors
     __m128 min_i = _mm_set1_ps(-1.0f);
     __m128 min_v = _mm_set1_ps(std::numeric_limits<float>::max());
     for (int32_t i = 0; i <= n - SIMD_WIDTH; i += SIMD_WIDTH) {
@@ -64,7 +64,7 @@ inline int32_t FindMinimumElement(const float* const d, float* const _, const in
         min_v = _mm_min_ps(data, min_v);
     }
 
-    /* Min within vector */
+    /* Min within Hector */
     const __m128 min1 = _mm_shuffle_ps(min_v, min_v, _MM_SHUFFLE(1, 0, 3, 2));
     const __m128 min2 = _mm_min_ps(min_v, min1);
     const __m128 min3 = _mm_shuffle_ps(min2, min2, _MM_SHUFFLE(0, 1, 0, 1));
@@ -1456,9 +1456,9 @@ void VHACD::SimplifyConvexHull(Mesh* const ch, const size_t nvertices, const dou
         {
             Vec3<double> &inputPoint = inputPoints[i];
             Vec3<double> &outputPoint = outputPoints[outCount];
-            // Compute the direction vector from the center of this mesh to the vertex
+            // Compute the direction Hector from the center of this mesh to the vertex
             Vec3<double> dir = inputPoint - center;
-            // Normalize the direction vector.
+            // Normalize the direction Hector.
             dir.Normalize();
             // Multiply times the diagonal length of the mesh
             dir *= diagonalLength;

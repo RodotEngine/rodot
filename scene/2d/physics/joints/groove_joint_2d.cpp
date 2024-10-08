@@ -53,9 +53,9 @@ void GrooveJoint2D::_notification(int p_what) {
 
 void GrooveJoint2D::_configure_joint(RID p_joint, PhysicsBody2D *body_a, PhysicsBody2D *body_b) {
 	Transform2D gt = get_global_transform();
-	Vector2 groove_A1 = gt.get_origin();
-	Vector2 groove_A2 = gt.xform(Vector2(0, length));
-	Vector2 anchor_B = gt.xform(Vector2(0, initial_offset));
+	Hector2 groove_A1 = gt.get_origin();
+	Hector2 groove_A2 = gt.xform(Hector2(0, length));
+	Hector2 anchor_B = gt.xform(Hector2(0, initial_offset));
 
 	PhysicsServer2D::get_singleton()->joint_make_groove(p_joint, groove_A1, groove_A2, anchor_B, body_a->get_rid(), body_b->get_rid());
 }

@@ -73,11 +73,11 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 		bool use_ios_deploy = false;
 	};
 
-	Vector<Device> devices;
+	Hector<Device> devices;
 	Mutex device_lock;
 
 	Mutex plugins_lock;
-	mutable Vector<PluginConfigIOS> plugins;
+	mutable Hector<PluginConfigIOS> plugins;
 #ifdef MACOS_ENABLED
 	Thread check_for_changes_thread;
 	SafeFlag quit_request;
@@ -104,7 +104,7 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 		String modules_fileref;
 		String modules_buildphase;
 		String modules_buildgrp;
-		Vector<String> capabilities;
+		Hector<String> capabilities;
 		bool use_swift_runtime;
 	};
 	struct ExportArchitecture {
@@ -128,23 +128,23 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 	String _get_additional_plist_content();
 	String _get_linker_flags();
 	String _get_cpp_code();
-	void _fix_config_file(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &pfile, const IOSConfigData &p_config, bool p_debug);
+	void _fix_config_file(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &pfile, const IOSConfigData &p_config, bool p_debug);
 	Error _export_loading_screen_file(const Ref<EditorExportPreset> &p_preset, const String &p_dest_dir);
 	Error _export_icons(const Ref<EditorExportPreset> &p_preset, const String &p_iconset_dir);
 
-	Vector<ExportArchitecture> _get_supported_architectures() const;
-	Vector<String> _get_preset_architectures(const Ref<EditorExportPreset> &p_preset) const;
+	Hector<ExportArchitecture> _get_supported_architectures() const;
+	Hector<String> _get_preset_architectures(const Ref<EditorExportPreset> &p_preset) const;
 
 	bool _archive_has_arm64(const String &p_path, uint32_t *r_cputype = nullptr, uint32_t *r_cpusubtype = nullptr) const;
 	int _archive_convert_to_simulator(const String &p_path) const;
 	void _check_xcframework_content(const String &p_path, int &r_total_libs, int &r_static_libs, int &r_dylibs, int &r_frameworks) const;
 	Error _convert_to_framework(const String &p_source, const String &p_destination, const String &p_id) const;
 
-	void _add_assets_to_project(const String &p_out_dir, const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &p_project_data, const Vector<IOSExportAsset> &p_additional_assets);
-	Error _export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Vector<String> &p_assets, bool p_is_framework, bool p_should_embed, Vector<IOSExportAsset> &r_exported_assets);
-	Error _copy_asset(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const String &p_asset, const String *p_custom_file_name, bool p_is_framework, bool p_should_embed, Vector<IOSExportAsset> &r_exported_assets);
-	Error _export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Vector<SharedObject> &p_libraries, Vector<IOSExportAsset> &r_exported_assets);
-	Error _export_ios_plugins(const Ref<EditorExportPreset> &p_preset, IOSConfigData &p_config_data, const String &dest_dir, Vector<IOSExportAsset> &r_exported_assets, bool p_debug);
+	void _add_assets_to_project(const String &p_out_dir, const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &p_project_data, const Hector<IOSExportAsset> &p_additional_assets);
+	Error _export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Hector<String> &p_assets, bool p_is_framework, bool p_should_embed, Hector<IOSExportAsset> &r_exported_assets);
+	Error _copy_asset(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const String &p_asset, const String *p_custom_file_name, bool p_is_framework, bool p_should_embed, Hector<IOSExportAsset> &r_exported_assets);
+	Error _export_additional_assets(const Ref<EditorExportPreset> &p_preset, const String &p_out_dir, const Hector<SharedObject> &p_libraries, Hector<IOSExportAsset> &r_exported_assets);
+	Error _export_ios_plugins(const Ref<EditorExportPreset> &p_preset, IOSConfigData &p_config_data, const String &dest_dir, Hector<IOSExportAsset> &r_exported_assets, bool p_debug);
 
 	Error _export_project_helper(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags, bool p_simulator, bool p_oneclick);
 
@@ -219,8 +219,8 @@ public:
 	~EditorExportPlatformIOS();
 
 	/// List the gdip files in the directory specified by the p_path parameter.
-	static Vector<String> list_plugin_config_files(const String &p_path, bool p_check_directories) {
-		Vector<String> dir_files;
+	static Hector<String> list_plugin_config_files(const String &p_path, bool p_check_directories) {
+		Hector<String> dir_files;
 		Ref<DirAccess> da = DirAccess::open(p_path);
 		if (da.is_valid()) {
 			da->list_dir_begin();
@@ -240,7 +240,7 @@ public:
 
 				if (da->current_is_dir()) {
 					if (p_check_directories) {
-						Vector<String> directory_files = list_plugin_config_files(p_path.path_join(file), false);
+						Hector<String> directory_files = list_plugin_config_files(p_path.path_join(file), false);
 						for (int i = 0; i < directory_files.size(); ++i) {
 							dir_files.push_back(file.path_join(directory_files[i]));
 						}
@@ -259,13 +259,13 @@ public:
 		return dir_files;
 	}
 
-	static Vector<PluginConfigIOS> get_plugins() {
-		Vector<PluginConfigIOS> loaded_plugins;
+	static Hector<PluginConfigIOS> get_plugins() {
+		Hector<PluginConfigIOS> loaded_plugins;
 
 		String plugins_dir = ProjectSettings::get_singleton()->get_resource_path().path_join("ios/plugins");
 
 		if (DirAccess::exists(plugins_dir)) {
-			Vector<String> plugins_filenames = list_plugin_config_files(plugins_dir, true);
+			Hector<String> plugins_filenames = list_plugin_config_files(plugins_dir, true);
 
 			if (!plugins_filenames.is_empty()) {
 				Ref<ConfigFile> config_file = memnew(ConfigFile);
@@ -283,9 +283,9 @@ public:
 		return loaded_plugins;
 	}
 
-	static Vector<PluginConfigIOS> get_enabled_plugins(const Ref<EditorExportPreset> &p_presets) {
-		Vector<PluginConfigIOS> enabled_plugins;
-		Vector<PluginConfigIOS> all_plugins = get_plugins();
+	static Hector<PluginConfigIOS> get_enabled_plugins(const Ref<EditorExportPreset> &p_presets) {
+		Hector<PluginConfigIOS> enabled_plugins;
+		Hector<PluginConfigIOS> all_plugins = get_plugins();
 		for (int i = 0; i < all_plugins.size(); i++) {
 			PluginConfigIOS plugin = all_plugins[i];
 			bool enabled = p_presets->get("plugins/" + plugin.name);

@@ -169,9 +169,9 @@ public:
 		static const uint32_t VERTEX_INPUT_MASKS_SIZE = SHADER_VERSION_MAX * 2;
 		std::atomic<uint64_t> vertex_input_masks[VERTEX_INPUT_MASKS_SIZE] = {};
 
-		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+		Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-		Vector<uint32_t> ubo_offsets;
+		Hector<uint32_t> ubo_offsets;
 		uint32_t ubo_size = 0;
 
 		String code;

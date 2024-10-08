@@ -31,7 +31,7 @@
 #ifndef RENDERER_SCENE_RENDER_RD_H
 #define RENDERER_SCENE_RENDER_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/renderer_compositor.h"
 #include "servers/rendering/renderer_rd/cluster_builder_rd.h"
@@ -89,7 +89,7 @@ protected:
 
 	virtual void _render_material(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region, float p_exposure_normalization) = 0;
 	virtual void _render_uv2(const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region) = 0;
-	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Vector3i &p_from, const Vector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) = 0;
+	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Hector3i &p_from, const Hector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) = 0;
 	virtual void _render_particle_collider_heightfield(RID p_fb, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const PagedArray<RenderGeometryInstance *> &p_instances) = 0;
 
 	void _debug_sdfgi_probes(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_framebuffer, uint32_t p_view_count, const Projection *p_camera_with_transforms);
@@ -165,9 +165,9 @@ public:
 
 	/* LIGHTING */
 
-	virtual void setup_added_reflection_probe(const Transform3D &p_transform, const Vector3 &p_half_size) {}
+	virtual void setup_added_reflection_probe(const Transform3D &p_transform, const Hector3 &p_half_size) {}
 	virtual void setup_added_light(const RS::LightType p_type, const Transform3D &p_transform, float p_radius, float p_spot_aperture) {}
-	virtual void setup_added_decal(const Transform3D &p_transform, const Vector3 &p_half_size) {}
+	virtual void setup_added_decal(const Transform3D &p_transform, const Hector3 &p_half_size) {}
 
 	/* GI */
 
@@ -218,14 +218,14 @@ public:
 	virtual void fog_volume_instance_set_transform(RID p_fog_volume_instance, const Transform3D &p_transform) override;
 	virtual void fog_volume_instance_set_active(RID p_fog_volume_instance, bool p_active) override;
 	virtual RID fog_volume_instance_get_volume(RID p_fog_volume_instance) const override;
-	virtual Vector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const override;
+	virtual Hector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const override;
 
 	/* gi light probes */
 
 	virtual RID voxel_gi_instance_create(RID p_base) override;
 	virtual void voxel_gi_instance_set_transform_to_data(RID p_probe, const Transform3D &p_xform) override;
 	virtual bool voxel_gi_needs_update(RID p_probe) const override;
-	virtual void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) override;
+	virtual void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) override;
 	virtual void voxel_gi_set_quality(RS::VoxelGIQuality p_quality) override { gi.voxel_gi_quality = p_quality; }
 
 	/* render buffers */
@@ -330,7 +330,7 @@ public:
 
 	virtual void set_time(double p_time, double p_step) override;
 
-	virtual void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) override;
+	virtual void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) override;
 
 	virtual bool is_vrs_supported() const;
 	virtual bool is_dynamic_gi_supported() const;

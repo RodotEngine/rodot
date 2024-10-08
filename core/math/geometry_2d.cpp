@@ -37,8 +37,8 @@
 
 #define PRECISION 5 // Based on CMP_EPSILON.
 
-Vector<Vector<Vector2>> Geometry2D::decompose_polygon_in_convex(const Vector<Point2> &polygon) {
-	Vector<Vector<Vector2>> decomp;
+Hector<Hector<Hector2>> Geometry2D::decompose_polygon_in_convex(const Hector<Point2> &polygon) {
+	Hector<Hector<Hector2>> decomp;
 	List<TPPLPoly> in_poly, out_poly;
 
 	TPPLPoly inp;
@@ -79,12 +79,12 @@ struct _AtlasWorkRect {
 };
 
 struct _AtlasWorkRectResult {
-	Vector<_AtlasWorkRect> result;
+	Hector<_AtlasWorkRect> result;
 	int max_w = 0;
 	int max_h = 0;
 };
 
-void Geometry2D::make_atlas(const Vector<Size2i> &p_rects, Vector<Point2i> &r_result, Size2i &r_size) {
+void Geometry2D::make_atlas(const Hector<Size2i> &p_rects, Hector<Point2i> &r_result, Size2i &r_size) {
 	// Super simple, almost brute force scanline stacking fitter.
 	// It's pretty basic for now, but it tries to make sure that the aspect ratio of the
 	// resulting atlas is somehow square. This is necessary because video cards have limits
@@ -99,7 +99,7 @@ void Geometry2D::make_atlas(const Vector<Size2i> &p_rects, Vector<Point2i> &r_re
 		ERR_FAIL_COND(p_rects[i].height <= 0);
 	}
 
-	Vector<_AtlasWorkRect> wrects;
+	Hector<_AtlasWorkRect> wrects;
 	wrects.resize(p_rects.size());
 	for (int i = 0; i < p_rects.size(); i++) {
 		wrects.write[i].s = p_rects[i];
@@ -108,7 +108,7 @@ void Geometry2D::make_atlas(const Vector<Size2i> &p_rects, Vector<Point2i> &r_re
 	wrects.sort();
 	int widest = wrects[0].s.width;
 
-	Vector<_AtlasWorkRectResult> results;
+	Hector<_AtlasWorkRectResult> results;
 
 	for (int i = 0; i <= 12; i++) {
 		int w = 1 << i;
@@ -118,7 +118,7 @@ void Geometry2D::make_atlas(const Vector<Size2i> &p_rects, Vector<Point2i> &r_re
 			continue;
 		}
 
-		Vector<int> hmax;
+		Hector<int> hmax;
 		hmax.resize(w);
 		for (int j = 0; j < w; j++) {
 			hmax.write[j] = 0;
@@ -195,7 +195,7 @@ void Geometry2D::make_atlas(const Vector<Size2i> &p_rects, Vector<Point2i> &r_re
 	r_size = Size2(results[best].max_w, results[best].max_h);
 }
 
-Vector<Vector<Point2>> Geometry2D::_polypaths_do_operation(PolyBooleanOperation p_op, const Vector<Point2> &p_polypath_a, const Vector<Point2> &p_polypath_b, bool is_a_open) {
+Hector<Hector<Point2>> Geometry2D::_polypaths_do_operation(PolyBooleanOperation p_op, const Hector<Point2> &p_polypath_a, const Hector<Point2> &p_polypath_b, bool is_a_open) {
 	using namespace Clipper2Lib;
 
 	ClipType op = ClipType::Union;
@@ -242,11 +242,11 @@ Vector<Vector<Point2>> Geometry2D::_polypaths_do_operation(PolyBooleanOperation 
 		clp.Execute(op, FillRule::EvenOdd, paths); // Works on closed polygons only.
 	}
 
-	Vector<Vector<Point2>> polypaths;
+	Hector<Hector<Point2>> polypaths;
 	for (PathsD::size_type i = 0; i < paths.size(); ++i) {
 		const PathD &path = paths[i];
 
-		Vector<Vector2> polypath;
+		Hector<Hector2> polypath;
 		for (PathsD::size_type j = 0; j < path.size(); ++j) {
 			polypath.push_back(Point2(static_cast<real_t>(path[j].x), static_cast<real_t>(path[j].y)));
 		}
@@ -255,7 +255,7 @@ Vector<Vector<Point2>> Geometry2D::_polypaths_do_operation(PolyBooleanOperation 
 	return polypaths;
 }
 
-Vector<Vector<Point2>> Geometry2D::_polypath_offset(const Vector<Point2> &p_polypath, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type) {
+Hector<Hector<Point2>> Geometry2D::_polypath_offset(const Hector<Point2> &p_polypath, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type) {
 	using namespace Clipper2Lib;
 
 	JoinType jt = JoinType::Square;
@@ -302,11 +302,11 @@ Vector<Vector<Point2>> Geometry2D::_polypath_offset(const Vector<Point2> &p_poly
 	// Here the miter_limit = 2.0 and arc_tolerance = 0.0 are Clipper2 defaults,
 	// and the PRECISION is used to scale points up internally, to attain the desired precision.
 
-	Vector<Vector<Point2>> polypaths;
+	Hector<Hector<Point2>> polypaths;
 	for (PathsD::size_type i = 0; i < paths.size(); ++i) {
 		const PathD &path = paths[i];
 
-		Vector<Vector2> polypath2;
+		Hector<Hector2> polypath2;
 		for (PathsD::size_type j = 0; j < path.size(); ++j) {
 			polypath2.push_back(Point2(static_cast<real_t>(path[j].x), static_cast<real_t>(path[j].y)));
 		}
@@ -315,15 +315,15 @@ Vector<Vector<Point2>> Geometry2D::_polypath_offset(const Vector<Point2> &p_poly
 	return polypaths;
 }
 
-Vector<Vector3i> Geometry2D::partial_pack_rects(const Vector<Vector2i> &p_sizes, const Size2i &p_atlas_size) {
-	Vector<stbrp_node> nodes;
+Hector<Hector3i> Geometry2D::partial_pack_rects(const Hector<Hector2i> &p_sizes, const Size2i &p_atlas_size) {
+	Hector<stbrp_node> nodes;
 	nodes.resize(p_atlas_size.width);
 	memset(nodes.ptrw(), 0, sizeof(stbrp_node) * nodes.size());
 
 	stbrp_context context;
 	stbrp_init_target(&context, p_atlas_size.width, p_atlas_size.height, nodes.ptrw(), p_atlas_size.width);
 
-	Vector<stbrp_rect> rects;
+	Hector<stbrp_rect> rects;
 	rects.resize(p_sizes.size());
 
 	for (int i = 0; i < p_sizes.size(); i++) {
@@ -337,11 +337,11 @@ Vector<Vector3i> Geometry2D::partial_pack_rects(const Vector<Vector2i> &p_sizes,
 
 	stbrp_pack_rects(&context, rects.ptrw(), rects.size());
 
-	Vector<Vector3i> ret;
+	Hector<Hector3i> ret;
 	ret.resize(p_sizes.size());
 
 	for (int i = 0; i < p_sizes.size(); i++) {
-		ret.write[rects[i].id] = Vector3i(rects[i].x, rects[i].y, rects[i].was_packed != 0 ? 1 : 0);
+		ret.write[rects[i].id] = Hector3i(rects[i].x, rects[i].y, rects[i].was_packed != 0 ? 1 : 0);
 	}
 
 	return ret;

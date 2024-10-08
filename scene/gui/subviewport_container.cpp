@@ -99,12 +99,12 @@ int SubViewportContainer::get_stretch_shrink() const {
 	return shrink;
 }
 
-Vector<int> SubViewportContainer::get_allowed_size_flags_horizontal() const {
-	return Vector<int>();
+Hector<int> SubViewportContainer::get_allowed_size_flags_horizontal() const {
+	return Hector<int>();
 }
 
-Vector<int> SubViewportContainer::get_allowed_size_flags_vertical() const {
-	return Vector<int>();
+Hector<int> SubViewportContainer::get_allowed_size_flags_vertical() const {
+	return Hector<int>();
 }
 
 void SubViewportContainer::_notification(int p_what) {
@@ -139,9 +139,9 @@ void SubViewportContainer::_notification(int p_what) {
 				}
 
 				if (stretch) {
-					draw_texture_rect(c->get_texture(), Rect2(Vector2(), get_size()));
+					draw_texture_rect(c->get_texture(), Rect2(Hector2(), get_size()));
 				} else {
-					draw_texture_rect(c->get_texture(), Rect2(Vector2(), c->get_size()));
+					draw_texture_rect(c->get_texture(), Rect2(Hector2(), c->get_size()));
 				}
 			}
 		} break;
@@ -219,7 +219,7 @@ void SubViewportContainer::gui_input(const Ref<InputEvent> &p_event) {
 
 	if (stretch && shrink > 1) {
 		Transform2D xform;
-		xform.scale(Vector2(1, 1) / shrink);
+		xform.scale(Hector2(1, 1) / shrink);
 		_send_event_to_viewports(p_event->xformed_by(xform));
 	} else {
 		_send_event_to_viewports(p_event);

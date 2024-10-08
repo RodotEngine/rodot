@@ -76,7 +76,7 @@ void PhysicalBone3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		return;
 	}
 
-	Vector<Vector3> points;
+	Hector<Hector3> points;
 
 	switch (physical_bone->get_joint_type()) {
 		case PhysicalBone3D::JOINT_TYPE_PIN: {

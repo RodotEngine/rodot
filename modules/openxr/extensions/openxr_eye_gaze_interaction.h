@@ -50,7 +50,7 @@ public:
 
 	virtual void on_register_metadata() override;
 
-	bool get_eye_gaze_pose(double p_dist, Vector3 &r_eye_pose);
+	bool get_eye_gaze_pose(double p_dist, Hector3 &r_eye_pose);
 
 private:
 	static OpenXREyeGazeInteractionExtension *singleton;

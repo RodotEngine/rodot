@@ -50,7 +50,7 @@ class EditorResourcePicker : public HBoxContainer {
 	bool editable = true;
 	bool dropping = false;
 
-	Vector<String> inheritors_array;
+	Hector<String> inheritors_array;
 	mutable HashSet<StringName> allowed_types_without_convert;
 	mutable HashSet<StringName> allowed_types_with_convert;
 
@@ -126,7 +126,7 @@ protected:
 public:
 	void set_base_type(const String &p_base_type);
 	String get_base_type() const;
-	Vector<String> get_allowed_types() const;
+	Hector<String> get_allowed_types() const;
 
 	void set_edited_resource(Ref<Resource> p_resource);
 	void set_edited_resource_no_check(Ref<Resource> p_resource);

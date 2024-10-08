@@ -51,9 +51,9 @@ public:
 	virtual int64_t font_get_fixed_size(const RID &p_font_rid) const override { return 0; }
 	virtual void font_set_fixed_size_scale_mode(const RID &p_font_rid, TextServer::FixedSizeScaleMode p_fixed_size_scale_mode) override {}
 	virtual TextServer::FixedSizeScaleMode font_get_fixed_size_scale_mode(const RID &p_font_rid) const override { return FIXED_SIZE_SCALE_DISABLE; }
-	virtual TypedArray<Vector2i> font_get_size_cache_list(const RID &p_font_rid) const override { return TypedArray<Vector2i>(); }
+	virtual TypedArray<Hector2i> font_get_size_cache_list(const RID &p_font_rid) const override { return TypedArray<Hector2i>(); }
 	virtual void font_clear_size_cache(const RID &p_font_rid) override {}
-	virtual void font_remove_size_cache(const RID &p_font_rid, const Vector2i &p_size) override {}
+	virtual void font_remove_size_cache(const RID &p_font_rid, const Hector2i &p_size) override {}
 	virtual void font_set_ascent(const RID &p_font_rid, int64_t p_size, double p_ascent) override {}
 	virtual double font_get_ascent(const RID &p_font_rid, int64_t p_size) const override { return 0; }
 	virtual void font_set_descent(const RID &p_font_rid, int64_t p_size, double p_descent) override {}
@@ -64,33 +64,33 @@ public:
 	virtual double font_get_underline_thickness(const RID &p_font_rid, int64_t p_size) const override { return 0; }
 	virtual void font_set_scale(const RID &p_font_rid, int64_t p_size, double p_scale) override {}
 	virtual double font_get_scale(const RID &p_font_rid, int64_t p_size) const override { return 0; }
-	virtual int64_t font_get_texture_count(const RID &p_font_rid, const Vector2i &p_size) const override { return 0; }
-	virtual void font_clear_textures(const RID &p_font_rid, const Vector2i &p_size) override {}
-	virtual void font_remove_texture(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) override {}
-	virtual void font_set_texture_image(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index, const Ref<Image> &p_image) override {}
-	virtual Ref<Image> font_get_texture_image(const RID &p_font_rid, const Vector2i &p_size, int64_t p_texture_index) const override { return Ref<Image>(); }
-	virtual PackedInt32Array font_get_glyph_list(const RID &p_font_rid, const Vector2i &p_size) const override { return PackedInt32Array(); }
-	virtual void font_clear_glyphs(const RID &p_font_rid, const Vector2i &p_size) override {}
-	virtual void font_remove_glyph(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) override {}
-	virtual Vector2 font_get_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph) const override { return Vector2(); }
-	virtual void font_set_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph, const Vector2 &p_advance) override {}
-	virtual Vector2 font_get_glyph_offset(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override { return Vector2(); }
-	virtual void font_set_glyph_offset(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Vector2 &p_offset) override {}
-	virtual Vector2 font_get_glyph_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override { return Vector2(); }
-	virtual void font_set_glyph_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Vector2 &p_gl_size) override {}
-	virtual Rect2 font_get_glyph_uv_rect(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override { return Rect2(); }
-	virtual void font_set_glyph_uv_rect(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, const Rect2 &p_uv_rect) override {}
-	virtual int64_t font_get_glyph_texture_idx(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override { return 0; }
-	virtual void font_set_glyph_texture_idx(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph, int64_t p_texture_idx) override {}
-	virtual RID font_get_glyph_texture_rid(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override { return RID(); }
-	virtual Size2 font_get_glyph_texture_size(const RID &p_font_rid, const Vector2i &p_size, int64_t p_glyph) const override { return Size2(); }
+	virtual int64_t font_get_texture_count(const RID &p_font_rid, const Hector2i &p_size) const override { return 0; }
+	virtual void font_clear_textures(const RID &p_font_rid, const Hector2i &p_size) override {}
+	virtual void font_remove_texture(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) override {}
+	virtual void font_set_texture_image(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index, const Ref<Image> &p_image) override {}
+	virtual Ref<Image> font_get_texture_image(const RID &p_font_rid, const Hector2i &p_size, int64_t p_texture_index) const override { return Ref<Image>(); }
+	virtual PackedInt32Array font_get_glyph_list(const RID &p_font_rid, const Hector2i &p_size) const override { return PackedInt32Array(); }
+	virtual void font_clear_glyphs(const RID &p_font_rid, const Hector2i &p_size) override {}
+	virtual void font_remove_glyph(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) override {}
+	virtual Hector2 font_get_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph) const override { return Hector2(); }
+	virtual void font_set_glyph_advance(const RID &p_font_rid, int64_t p_size, int64_t p_glyph, const Hector2 &p_advance) override {}
+	virtual Hector2 font_get_glyph_offset(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override { return Hector2(); }
+	virtual void font_set_glyph_offset(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Hector2 &p_offset) override {}
+	virtual Hector2 font_get_glyph_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override { return Hector2(); }
+	virtual void font_set_glyph_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Hector2 &p_gl_size) override {}
+	virtual Rect2 font_get_glyph_uv_rect(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override { return Rect2(); }
+	virtual void font_set_glyph_uv_rect(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, const Rect2 &p_uv_rect) override {}
+	virtual int64_t font_get_glyph_texture_idx(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override { return 0; }
+	virtual void font_set_glyph_texture_idx(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph, int64_t p_texture_idx) override {}
+	virtual RID font_get_glyph_texture_rid(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override { return RID(); }
+	virtual Size2 font_get_glyph_texture_size(const RID &p_font_rid, const Hector2i &p_size, int64_t p_glyph) const override { return Size2(); }
 	virtual int64_t font_get_glyph_index(const RID &p_font_rid, int64_t p_size, int64_t p_char, int64_t p_variation_selector) const override { return 0; }
 	virtual int64_t font_get_char_from_glyph_index(const RID &p_font_rid, int64_t p_size, int64_t p_glyph_index) const override { return 0; }
 	virtual bool font_has_char(const RID &p_font_rid, int64_t p_char) const override { return false; }
 	virtual String font_get_supported_chars(const RID &p_font_rid) const override { return String(); }
 	virtual PackedInt32Array font_get_supported_glyphs(const RID &p_font_rid) const override { return PackedInt32Array(); };
-	virtual void font_draw_glyph(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color) const override {}
-	virtual void font_draw_glyph_outline(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, int64_t p_outline_size, const Vector2 &p_pos, int64_t p_index, const Color &p_color) const override {}
+	virtual void font_draw_glyph(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color) const override {}
+	virtual void font_draw_glyph_outline(const RID &p_font_rid, const RID &p_canvas, int64_t p_size, int64_t p_outline_size, const Hector2 &p_pos, int64_t p_index, const Color &p_color) const override {}
 
 	virtual RID create_shaped_text(TextServer::Direction p_direction, TextServer::Orientation p_orientation) override { return RID(); }
 	virtual void shaped_text_clear(const RID &p_shaped) override {}
@@ -107,14 +107,14 @@ public:
 	virtual const Glyph *shaped_text_get_glyphs(const RID &p_shaped) const override { return nullptr; }
 	virtual const Glyph *shaped_text_sort_logical(const RID &p_shaped) override { return nullptr; }
 	virtual int64_t shaped_text_get_glyph_count(const RID &p_shaped) const override { return 0; }
-	virtual Vector2i shaped_text_get_range(const RID &p_shaped) const override { return Vector2i(); }
+	virtual Hector2i shaped_text_get_range(const RID &p_shaped) const override { return Hector2i(); }
 	virtual int64_t shaped_text_get_trim_pos(const RID &p_shaped) const override { return -1; }
 	virtual int64_t shaped_text_get_ellipsis_pos(const RID &p_shaped) const override { return -1; }
 	virtual const Glyph *shaped_text_get_ellipsis_glyphs(const RID &p_shaped) const override { return nullptr; }
 	virtual int64_t shaped_text_get_ellipsis_glyph_count(const RID &p_shaped) const override { return -1; }
 	virtual Array shaped_text_get_objects(const RID &p_shaped) const override { return Array(); }
 	virtual Rect2 shaped_text_get_object_rect(const RID &p_shaped, const Variant &p_key) const override { return Rect2(); }
-	virtual Vector2i shaped_text_get_object_range(const RID &p_shaped, const Variant &p_key) const override { return Vector2i(); }
+	virtual Hector2i shaped_text_get_object_range(const RID &p_shaped, const Variant &p_key) const override { return Hector2i(); }
 	virtual int64_t shaped_text_get_object_glyph(const RID &p_shaped, const Variant &p_key) const override { return -1; }
 	virtual Size2 shaped_text_get_size(const RID &p_shaped) const override { return Size2(); }
 	virtual double shaped_text_get_ascent(const RID &p_shaped) const override { return 0; }

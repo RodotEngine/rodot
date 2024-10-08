@@ -549,19 +549,19 @@ namespace embree
       throw_RTCError(RTC_ERROR_INVALID_OPERATION,"createPrimRefArray not implemented for this geometry"); 
     }
 
-    PrimInfo createPrimRefArray(mvector<PrimRef>& prims, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    PrimInfo createPrimRefArray(mHector<PrimRef>& prims, const range<size_t>& r, size_t k, unsigned int geomID) const {
       return createPrimRefArray(prims.data(),r,k,geomID);
     }
 
-    PrimInfo createPrimRefArray(avector<PrimRef>& prims, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    PrimInfo createPrimRefArray(aHector<PrimRef>& prims, const range<size_t>& r, size_t k, unsigned int geomID) const {
       return createPrimRefArray(prims.data(),r,k,geomID);
     }
 
-    virtual PrimInfo createPrimRefArray(mvector<PrimRef>& prims, mvector<SubGridBuildData>& sgrids, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    virtual PrimInfo createPrimRefArray(mHector<PrimRef>& prims, mHector<SubGridBuildData>& sgrids, const range<size_t>& r, size_t k, unsigned int geomID) const {
       return createPrimRefArray(prims,r,k,geomID);
     }
 
-    virtual PrimInfo createPrimRefArrayMB(mvector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    virtual PrimInfo createPrimRefArrayMB(mHector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const {
       throw_RTCError(RTC_ERROR_INVALID_OPERATION,"createPrimRefMBArray not implemented for this geometry"); 
     }
 
@@ -570,19 +570,19 @@ namespace embree
       throw_RTCError(RTC_ERROR_INVALID_OPERATION,"createPrimRefMBArray not implemented for this geometry");
     }
 
-    PrimInfo createPrimRefArrayMB(mvector<PrimRef>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    PrimInfo createPrimRefArrayMB(mHector<PrimRef>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
       return createPrimRefArrayMB(prims.data(),t0t1,r,k,geomID);
     }
 
-    PrimInfo createPrimRefArrayMB(avector<PrimRef>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    PrimInfo createPrimRefArrayMB(aHector<PrimRef>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
       return createPrimRefArrayMB(prims.data(),t0t1,r,k,geomID);
     }
     
-    virtual PrimInfoMB createPrimRefMBArray(mvector<PrimRefMB>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    virtual PrimInfoMB createPrimRefMBArray(mHector<PrimRefMB>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
       throw_RTCError(RTC_ERROR_INVALID_OPERATION,"createPrimRefMBArray not implemented for this geometry"); 
     }
 
-    virtual PrimInfoMB createPrimRefMBArray(mvector<PrimRefMB>& prims, mvector<SubGridBuildData>& sgrids, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
+    virtual PrimInfoMB createPrimRefMBArray(mHector<PrimRefMB>& prims, mHector<SubGridBuildData>& sgrids, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const {
       return createPrimRefMBArray(prims,t0t1,r,k,geomID);
     }
 

@@ -117,8 +117,8 @@ Utilities::~Utilities() {
 	}
 }
 
-Vector<uint8_t> Utilities::buffer_get_data(GLenum p_target, GLuint p_buffer, uint32_t p_buffer_size) {
-	Vector<uint8_t> ret;
+Hector<uint8_t> Utilities::buffer_get_data(GLenum p_target, GLuint p_buffer, uint32_t p_buffer_size) {
+	Hector<uint8_t> ret;
 
 	if (p_buffer_size == 0) {
 		return ret;
@@ -134,7 +134,7 @@ Vector<uint8_t> Utilities::buffer_get_data(GLenum p_target, GLuint p_buffer, uin
 	}
 #else
 	void *data = glMapBufferRange(p_target, 0, p_buffer_size, GL_MAP_READ_BIT);
-	ERR_FAIL_NULL_V(data, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(data, Hector<uint8_t>());
 	{
 		uint8_t *w = ret.ptrw();
 		memcpy(w, data, p_buffer_size);

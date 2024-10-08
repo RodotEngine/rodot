@@ -56,9 +56,9 @@ protected:
 	SpinBox *emission_amount = nullptr;
 	OptionButton *emission_fill = nullptr;
 
-	Vector<Face3> geometry;
+	Hector<Face3> geometry;
 
-	bool _generate(Vector<Vector3> &points, Vector<Vector3> &normals);
+	bool _generate(Hector<Hector3> &points, Hector<Hector3> &normals);
 	virtual void _generate_emission_points() {}
 	void _node_selected(const NodePath &p_path);
 

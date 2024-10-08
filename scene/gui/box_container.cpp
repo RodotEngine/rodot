@@ -337,8 +337,8 @@ Control *BoxContainer::add_spacer(bool p_begin) {
 	return c;
 }
 
-Vector<int> BoxContainer::get_allowed_size_flags_horizontal() const {
-	Vector<int> flags;
+Hector<int> BoxContainer::get_allowed_size_flags_horizontal() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	if (!vertical) {
 		flags.append(SIZE_EXPAND);
@@ -349,8 +349,8 @@ Vector<int> BoxContainer::get_allowed_size_flags_horizontal() const {
 	return flags;
 }
 
-Vector<int> BoxContainer::get_allowed_size_flags_vertical() const {
-	Vector<int> flags;
+Hector<int> BoxContainer::get_allowed_size_flags_vertical() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	if (vertical) {
 		flags.append(SIZE_EXPAND);

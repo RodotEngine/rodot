@@ -61,9 +61,9 @@ struct ValueFormat : HBUINT16
   unsigned int get_len () const  { return hb_popcount ((unsigned int) *this); }
   unsigned int get_size () const { return get_len () * Value::static_size; }
 
-  hb_vector_t<unsigned> get_device_table_indices () const {
+  hb_Hector_t<unsigned> get_device_table_indices () const {
     unsigned i = 0;
-    hb_vector_t<unsigned> result;
+    hb_Hector_t<unsigned> result;
     unsigned format = *this;
 
     if (format & xPlacement) i++;

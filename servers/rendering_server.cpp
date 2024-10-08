@@ -73,7 +73,7 @@ Array RenderingServer::_texture_debug_usage_bind() {
 	return arr;
 }
 
-static PackedInt64Array to_int_array(const Vector<ObjectID> &ids) {
+static PackedInt64Array to_int_array(const Hector<ObjectID> &ids) {
 	PackedInt64Array a;
 	a.resize(ids.size());
 	for (int i = 0; i < ids.size(); ++i) {
@@ -83,24 +83,24 @@ static PackedInt64Array to_int_array(const Vector<ObjectID> &ids) {
 }
 
 PackedInt64Array RenderingServer::_instances_cull_aabb_bind(const AABB &p_aabb, RID p_scenario) const {
-	Vector<ObjectID> ids = instances_cull_aabb(p_aabb, p_scenario);
+	Hector<ObjectID> ids = instances_cull_aabb(p_aabb, p_scenario);
 	return to_int_array(ids);
 }
 
-PackedInt64Array RenderingServer::_instances_cull_ray_bind(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario) const {
-	Vector<ObjectID> ids = instances_cull_ray(p_from, p_to, p_scenario);
+PackedInt64Array RenderingServer::_instances_cull_ray_bind(const Hector3 &p_from, const Hector3 &p_to, RID p_scenario) const {
+	Hector<ObjectID> ids = instances_cull_ray(p_from, p_to, p_scenario);
 	return to_int_array(ids);
 }
 
 PackedInt64Array RenderingServer::_instances_cull_convex_bind(const TypedArray<Plane> &p_convex, RID p_scenario) const {
-	Vector<Plane> planes;
+	Hector<Plane> planes;
 	for (int i = 0; i < p_convex.size(); ++i) {
 		const Variant &v = p_convex[i];
 		ERR_FAIL_COND_V(v.get_type() != Variant::PLANE, PackedInt64Array());
 		planes.push_back(v);
 	}
 
-	Vector<ObjectID> ids = instances_cull_convex(planes, p_scenario);
+	Hector<ObjectID> ids = instances_cull_convex(planes, p_scenario);
 	return to_int_array(ids);
 }
 
@@ -111,7 +111,7 @@ RID RenderingServer::get_test_texture() {
 
 #define TEST_TEXTURE_SIZE 256
 
-	Vector<uint8_t> test_data;
+	Hector<uint8_t> test_data;
 	test_data.resize(TEST_TEXTURE_SIZE * TEST_TEXTURE_SIZE * 3);
 
 	{
@@ -160,10 +160,10 @@ void RenderingServer::_free_internal_rids() {
 }
 
 RID RenderingServer::_make_test_cube() {
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector3> uvs;
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector3> uvs;
 
 #define ADD_VTX(m_idx)                           \
 	vertices.push_back(face_points[m_idx]);      \
@@ -172,11 +172,11 @@ RID RenderingServer::_make_test_cube() {
 	tangents.push_back(normal_points[m_idx][2]); \
 	tangents.push_back(normal_points[m_idx][0]); \
 	tangents.push_back(1.0);                     \
-	uvs.push_back(Vector3(uv_points[m_idx * 2 + 0], uv_points[m_idx * 2 + 1], 0));
+	uvs.push_back(Hector3(uv_points[m_idx * 2 + 0], uv_points[m_idx * 2 + 1], 0));
 
 	for (int i = 0; i < 6; i++) {
-		Vector3 face_points[4];
-		Vector3 normal_points[4];
+		Hector3 face_points[4];
+		Hector3 normal_points[4];
 		float uv_points[8] = { 0, 0, 0, 1, 1, 1, 1, 0 };
 
 		for (int j = 0; j < 4; j++) {
@@ -192,7 +192,7 @@ RID RenderingServer::_make_test_cube() {
 					face_points[3 - j][(i + k) % 3] = -v[k];
 				}
 			}
-			normal_points[j] = Vector3();
+			normal_points[j] = Hector3();
 			normal_points[j][i % 3] = (i >= 3 ? -1 : 1);
 		}
 
@@ -215,7 +215,7 @@ RID RenderingServer::_make_test_cube() {
 	d[RenderingServer::ARRAY_TEX_UV] = uvs;
 	d[RenderingServer::ARRAY_VERTEX] = vertices;
 
-	Vector<int> indices;
+	Hector<int> indices;
 	indices.resize(vertices.size());
 	for (int i = 0; i < vertices.size(); i++) {
 		indices.set(i, i);
@@ -240,8 +240,8 @@ RID RenderingServer::_make_test_cube() {
 }
 
 RID RenderingServer::make_sphere_mesh(int p_lats, int p_lons, real_t p_radius) {
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
 	const double lat_step = Math_TAU / p_lats;
 	const double lon_step = Math_TAU / p_lons;
 
@@ -263,11 +263,11 @@ RID RenderingServer::make_sphere_mesh(int p_lats, int p_lons, real_t p_radius) {
 			double x1 = Math::cos(lng1);
 			double y1 = Math::sin(lng1);
 
-			Vector3 v[4] = {
-				Vector3(x1 * zr0, z0, y1 * zr0),
-				Vector3(x1 * zr1, z1, y1 * zr1),
-				Vector3(x0 * zr1, z1, y0 * zr1),
-				Vector3(x0 * zr0, z0, y0 * zr0)
+			Hector3 v[4] = {
+				Hector3(x1 * zr0, z0, y1 * zr0),
+				Hector3(x1 * zr1, z1, y1 * zr1),
+				Hector3(x0 * zr1, z1, y0 * zr1),
+				Hector3(x0 * zr0, z0, y0 * zr0)
 			};
 
 #define ADD_POINT(m_idx)         \
@@ -301,7 +301,7 @@ RID RenderingServer::get_white_texture() {
 		return white_texture;
 	}
 
-	Vector<uint8_t> wt;
+	Hector<uint8_t> wt;
 	wt.resize(16 * 3);
 	{
 		uint8_t *w = wt.ptrw();
@@ -314,11 +314,11 @@ RID RenderingServer::get_white_texture() {
 	return white_texture;
 }
 
-void _get_axis_angle(const Vector3 &p_normal, const Vector4 &p_tangent, float &r_angle, Vector3 &r_axis) {
-	Vector3 normal = p_normal.normalized();
-	Vector3 tangent = Vector3(p_tangent.x, p_tangent.y, p_tangent.z).normalized();
+void _get_axis_angle(const Hector3 &p_normal, const Hector4 &p_tangent, float &r_angle, Hector3 &r_axis) {
+	Hector3 normal = p_normal.normalized();
+	Hector3 tangent = Hector3(p_tangent.x, p_tangent.y, p_tangent.z).normalized();
 	float d = p_tangent.w;
-	Vector3 binormal = normal.cross(tangent).normalized();
+	Hector3 binormal = normal.cross(tangent).normalized();
 	real_t angle;
 
 	Basis tbn = Basis();
@@ -335,25 +335,25 @@ void _get_axis_angle(const Vector3 &p_normal, const Vector4 &p_tangent, float &r
 	}
 }
 
-// The inputs to this function should match the outputs of _get_axis_angle. I.e. p_axis is a normalized vector
+// The inputs to this function should match the outputs of _get_axis_angle. I.e. p_axis is a normalized Hector
 // and p_angle includes the binormal direction.
-void _get_tbn_from_axis_angle(const Vector3 &p_axis, float p_angle, Vector3 &r_normal, Vector4 &r_tangent) {
+void _get_tbn_from_axis_angle(const Hector3 &p_axis, float p_angle, Hector3 &r_normal, Hector4 &r_tangent) {
 	float binormal_sign = p_angle > 0.5 ? 1.0 : -1.0;
 	float angle = Math::abs(p_angle * 2.0 - 1.0) * Math_PI;
 
 	Basis tbn = Basis(p_axis, angle);
-	Vector3 tan = tbn.rows[0];
-	r_tangent = Vector4(tan.x, tan.y, tan.z, binormal_sign);
+	Hector3 tan = tbn.rows[0];
+	r_tangent = Hector4(tan.x, tan.y, tan.z, binormal_sign);
 	r_normal = tbn.rows[2];
 }
 
-AABB _compute_aabb_from_points(const Vector3 *p_data, int p_length) {
+AABB _compute_aabb_from_points(const Hector3 *p_data, int p_length) {
 	if (p_length == 0) {
 		return AABB();
 	}
 
-	Vector3 min = p_data[0];
-	Vector3 max = p_data[0];
+	Hector3 min = p_data[0];
+	Hector3 max = p_data[0];
 
 	for (int i = 1; i < p_length; ++i) {
 		min = min.min(p_data[i]);
@@ -363,7 +363,7 @@ AABB _compute_aabb_from_points(const Vector3 *p_data, int p_length) {
 	return AABB(min, max - min);
 }
 
-Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint32_t *p_offsets, uint32_t p_vertex_stride, uint32_t p_normal_stride, uint32_t p_attrib_stride, uint32_t p_skin_stride, Vector<uint8_t> &r_vertex_array, Vector<uint8_t> &r_attrib_array, Vector<uint8_t> &r_skin_array, int p_vertex_array_len, Vector<uint8_t> &r_index_array, int p_index_array_len, AABB &r_aabb, Vector<AABB> &r_bone_aabb, Vector4 &r_uv_scale) {
+Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint32_t *p_offsets, uint32_t p_vertex_stride, uint32_t p_normal_stride, uint32_t p_attrib_stride, uint32_t p_skin_stride, Hector<uint8_t> &r_vertex_array, Hector<uint8_t> &r_attrib_array, Hector<uint8_t> &r_skin_array, int p_vertex_array_len, Hector<uint8_t> &r_index_array, int p_index_array_len, AABB &r_aabb, Hector<AABB> &r_bone_aabb, Hector4 &r_uv_scale) {
 	uint8_t *vw = r_vertex_array.ptrw();
 	uint8_t *aw = r_attrib_array.ptrw();
 	uint8_t *sw = r_skin_array.ptrw();
@@ -377,22 +377,22 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 
 	// Preprocess UVs if compression is enabled
 	if (p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES && ((p_format & RS::ARRAY_FORMAT_TEX_UV) || (p_format & RS::ARRAY_FORMAT_TEX_UV2))) {
-		const Vector2 *uv_src = nullptr;
+		const Hector2 *uv_src = nullptr;
 		if (p_format & RS::ARRAY_FORMAT_TEX_UV) {
-			Vector<Vector2> array = p_arrays[RS::ARRAY_TEX_UV];
+			Hector<Hector2> array = p_arrays[RS::ARRAY_TEX_UV];
 			uv_src = array.ptr();
 		}
 
-		const Vector2 *uv2_src = nullptr;
+		const Hector2 *uv2_src = nullptr;
 		if (p_format & RS::ARRAY_FORMAT_TEX_UV2) {
-			Vector<Vector2> array = p_arrays[RS::ARRAY_TEX_UV2];
+			Hector<Hector2> array = p_arrays[RS::ARRAY_TEX_UV2];
 			uv2_src = array.ptr();
 		}
 
-		Vector2 max_val = Vector2(0.0, 0.0);
-		Vector2 min_val = Vector2(0.0, 0.0);
-		Vector2 max_val2 = Vector2(0.0, 0.0);
-		Vector2 min_val2 = Vector2(0.0, 0.0);
+		Hector2 max_val = Hector2(0.0, 0.0);
+		Hector2 min_val = Hector2(0.0, 0.0);
+		Hector2 max_val2 = Hector2(0.0, 0.0);
+		Hector2 min_val2 = Hector2(0.0, 0.0);
 
 		for (int i = 0; i < p_vertex_array_len; i++) {
 			if (p_format & RS::ARRAY_FORMAT_TEX_UV) {
@@ -412,9 +412,9 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				min_val.y >= 0.0 && min_val2.y >= 0.0 && max_val.y <= 1.0 && max_val2.y <= 1.0) {
 			// When all channels are in the 0-1 range, we will compress to 16-bit without scaling to
 			// preserve the bits as best as possible.
-			r_uv_scale = Vector4(0.0, 0.0, 0.0, 0.0);
+			r_uv_scale = Hector4(0.0, 0.0, 0.0, 0.0);
 		} else {
-			r_uv_scale = Vector4(max_val.x, max_val.y, max_val2.x, max_val2.y) * Vector4(2.0, 2.0, 2.0, 2.0);
+			r_uv_scale = Hector4(max_val.x, max_val.y, max_val2.x, max_val2.y) * Hector4(2.0, 2.0, 2.0, 2.0);
 		}
 	}
 
@@ -426,19 +426,19 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 		switch (ai) {
 			case RS::ARRAY_VERTEX: {
 				if (p_format & RS::ARRAY_FLAG_USE_2D_VERTICES) {
-					Vector<Vector2> array = p_arrays[ai];
+					Hector<Hector2> array = p_arrays[ai];
 					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
 
-					const Vector2 *src = array.ptr();
+					const Hector2 *src = array.ptr();
 
 					// Setting vertices means regenerating the AABB.
 					Rect2 aabb;
 
 					{
 						for (int i = 0; i < p_vertex_array_len; i++) {
-							float vector[2] = { (float)src[i].x, (float)src[i].y };
+							float Hector[2] = { (float)src[i].x, (float)src[i].y };
 
-							memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(float) * 2);
+							memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], Hector, sizeof(float) * 2);
 
 							if (i == 0) {
 								aabb = Rect2(src[i], SMALL_VEC2); // Must have a bit of size.
@@ -448,13 +448,13 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						}
 					}
 
-					r_aabb = AABB(Vector3(aabb.position.x, aabb.position.y, 0), Vector3(aabb.size.x, aabb.size.y, 0));
+					r_aabb = AABB(Hector3(aabb.position.x, aabb.position.y, 0), Hector3(aabb.size.x, aabb.size.y, 0));
 
 				} else {
-					Vector<Vector3> array = p_arrays[ai];
+					Hector<Hector3> array = p_arrays[ai];
 					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
 
-					const Vector3 *src = array.ptr();
+					const Hector3 *src = array.ptr();
 
 					r_aabb = _compute_aabb_from_points(src, p_vertex_array_len);
 					r_aabb.size = r_aabb.size.max(SMALL_VEC3);
@@ -463,143 +463,143 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						if (!(p_format & RS::ARRAY_FORMAT_NORMAL)) {
 							// Early out if we are only setting vertex positions.
 							for (int i = 0; i < p_vertex_array_len; i++) {
-								Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
-								uint16_t vector[4] = {
+								Hector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
+								uint16_t Hector[4] = {
 									(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
 									(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
 									(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
 									(uint16_t)0
 								};
 
-								memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
+								memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], Hector, sizeof(uint16_t) * 4);
 							}
 							continue;
 						}
 
 						// Validate normal and tangent arrays.
-						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_VECTOR3_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_Hector3_ARRAY, ERR_INVALID_PARAMETER);
 
-						Vector<Vector3> normal_array = p_arrays[RS::ARRAY_NORMAL];
+						Hector<Hector3> normal_array = p_arrays[RS::ARRAY_NORMAL];
 						ERR_FAIL_COND_V(normal_array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
-						const Vector3 *normal_src = normal_array.ptr();
+						const Hector3 *normal_src = normal_array.ptr();
 
 						Variant::Type tangent_type = p_arrays[RS::ARRAY_TANGENT].get_type();
 						ERR_FAIL_COND_V(tangent_type != Variant::PACKED_FLOAT32_ARRAY && tangent_type != Variant::PACKED_FLOAT64_ARRAY && tangent_type != Variant::NIL, ERR_INVALID_PARAMETER);
 
 						// We need a different version if using double precision tangents.
 						if (tangent_type == Variant::PACKED_FLOAT32_ARRAY) {
-							Vector<float> tangent_array = p_arrays[RS::ARRAY_TANGENT];
+							Hector<float> tangent_array = p_arrays[RS::ARRAY_TANGENT];
 							ERR_FAIL_COND_V(tangent_array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
 							const float *tangent_src = tangent_array.ptr();
 
 							// Set data for vertex, normal, and tangent.
 							for (int i = 0; i < p_vertex_array_len; i++) {
 								float angle = 0.0;
-								Vector3 axis;
-								Vector4 tangent = Vector4(tangent_src[i * 4 + 0], tangent_src[i * 4 + 1], tangent_src[i * 4 + 2], tangent_src[i * 4 + 3]);
+								Hector3 axis;
+								Hector4 tangent = Hector4(tangent_src[i * 4 + 0], tangent_src[i * 4 + 1], tangent_src[i * 4 + 2], tangent_src[i * 4 + 3]);
 								_get_axis_angle(normal_src[i], tangent, angle, axis);
 
 								// Store axis.
 								{
-									Vector2 res = axis.octahedron_encode();
-									uint16_t vector[2] = {
+									Hector2 res = axis.octahedron_encode();
+									uint16_t Hector[2] = {
 										(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 										(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 									};
 
-									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], vector, 4);
+									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], Hector, 4);
 								}
 
 								// Store vertex position + angle.
 								{
-									Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
-									uint16_t vector[4] = {
+									Hector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
+									uint16_t Hector[4] = {
 										(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
 										(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
 										(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
 										(uint16_t)CLAMP(angle * 65535, 0, 65535)
 									};
 
-									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
+									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], Hector, sizeof(uint16_t) * 4);
 								}
 							}
 						} else if (tangent_type == Variant::PACKED_FLOAT64_ARRAY) {
-							Vector<double> tangent_array = p_arrays[RS::ARRAY_TANGENT];
+							Hector<double> tangent_array = p_arrays[RS::ARRAY_TANGENT];
 							ERR_FAIL_COND_V(tangent_array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
 							const double *tangent_src = tangent_array.ptr();
 
 							// Set data for vertex, normal, and tangent.
 							for (int i = 0; i < p_vertex_array_len; i++) {
 								float angle;
-								Vector3 axis;
-								Vector4 tangent = Vector4(tangent_src[i * 4 + 0], tangent_src[i * 4 + 1], tangent_src[i * 4 + 2], tangent_src[i * 4 + 3]);
+								Hector3 axis;
+								Hector4 tangent = Hector4(tangent_src[i * 4 + 0], tangent_src[i * 4 + 1], tangent_src[i * 4 + 2], tangent_src[i * 4 + 3]);
 								_get_axis_angle(normal_src[i], tangent, angle, axis);
 
 								// Store axis.
 								{
-									Vector2 res = axis.octahedron_encode();
-									uint16_t vector[2] = {
+									Hector2 res = axis.octahedron_encode();
+									uint16_t Hector[2] = {
 										(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 										(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 									};
 
-									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], vector, 4);
+									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], Hector, 4);
 								}
 
 								// Store vertex position + angle.
 								{
-									Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
-									uint16_t vector[4] = {
+									Hector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
+									uint16_t Hector[4] = {
 										(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
 										(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
 										(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
 										(uint16_t)CLAMP(angle * 65535, 0, 65535)
 									};
 
-									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
+									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], Hector, sizeof(uint16_t) * 4);
 								}
 							}
 						} else { // No tangent array.
 							// Set data for vertex, normal, and tangent.
 							for (int i = 0; i < p_vertex_array_len; i++) {
 								float angle;
-								Vector3 axis;
-								// Generate an arbitrary vector that is tangential to normal.
+								Hector3 axis;
+								// Generate an arbitrary Hector that is tangential to normal.
 								// This assumes that the normal is never (0,0,0).
-								Vector3 tan = Vector3(normal_src[i].z, -normal_src[i].x, normal_src[i].y).cross(normal_src[i].normalized()).normalized();
-								Vector4 tangent = Vector4(tan.x, tan.y, tan.z, 1.0);
+								Hector3 tan = Hector3(normal_src[i].z, -normal_src[i].x, normal_src[i].y).cross(normal_src[i].normalized()).normalized();
+								Hector4 tangent = Hector4(tan.x, tan.y, tan.z, 1.0);
 								_get_axis_angle(normal_src[i], tangent, angle, axis);
 
 								// Store axis.
 								{
-									Vector2 res = axis.octahedron_encode();
-									uint16_t vector[2] = {
+									Hector2 res = axis.octahedron_encode();
+									uint16_t Hector[2] = {
 										(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 										(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 									};
 
-									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], vector, 4);
+									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], Hector, 4);
 								}
 
 								// Store vertex position + angle.
 								{
-									Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
-									uint16_t vector[4] = {
+									Hector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
+									uint16_t Hector[4] = {
 										(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
 										(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
 										(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
 										(uint16_t)CLAMP(angle * 65535, 0, 65535)
 									};
 
-									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
+									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], Hector, sizeof(uint16_t) * 4);
 								}
 							}
 						}
 					} else {
 						for (int i = 0; i < p_vertex_array_len; i++) {
-							float vector[3] = { (float)src[i].x, (float)src[i].y, (float)src[i].z };
+							float Hector[3] = { (float)src[i].x, (float)src[i].y, (float)src[i].z };
 
-							memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(float) * 3);
+							memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], Hector, sizeof(float) * 3);
 						}
 					}
 				}
@@ -608,20 +608,20 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			case RS::ARRAY_NORMAL: {
 				// If using compression we store normal while storing vertices.
 				if (!(p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES)) {
-					ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_Hector3_ARRAY, ERR_INVALID_PARAMETER);
 
-					Vector<Vector3> array = p_arrays[ai];
+					Hector<Hector3> array = p_arrays[ai];
 					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
 
-					const Vector3 *src = array.ptr();
+					const Hector3 *src = array.ptr();
 					for (int i = 0; i < p_vertex_array_len; i++) {
-						Vector2 res = src[i].octahedron_encode();
-						uint16_t vector[2] = {
+						Hector2 res = src[i].octahedron_encode();
+						uint16_t Hector[2] = {
 							(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 							(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 						};
 
-						memcpy(&vw[p_offsets[ai] + i * p_normal_stride], vector, 4);
+						memcpy(&vw[p_offsets[ai] + i * p_normal_stride], Hector, 4);
 					}
 				}
 			} break;
@@ -633,71 +633,71 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					ERR_FAIL_COND_V(type != Variant::PACKED_FLOAT32_ARRAY && type != Variant::PACKED_FLOAT64_ARRAY && type != Variant::NIL, ERR_INVALID_PARAMETER);
 
 					if (type == Variant::PACKED_FLOAT32_ARRAY) {
-						Vector<float> array = p_arrays[ai];
+						Hector<float> array = p_arrays[ai];
 						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
 						const float *src_ptr = array.ptr();
 
 						for (int i = 0; i < p_vertex_array_len; i++) {
-							const Vector3 src(src_ptr[i * 4 + 0], src_ptr[i * 4 + 1], src_ptr[i * 4 + 2]);
-							Vector2 res = src.octahedron_tangent_encode(src_ptr[i * 4 + 3]);
-							uint16_t vector[2] = {
+							const Hector3 src(src_ptr[i * 4 + 0], src_ptr[i * 4 + 1], src_ptr[i * 4 + 2]);
+							Hector2 res = src.octahedron_tangent_encode(src_ptr[i * 4 + 3]);
+							uint16_t Hector[2] = {
 								(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 								(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 							};
 
-							if (vector[0] == 0 && vector[1] == 65535) {
+							if (Hector[0] == 0 && Hector[1] == 65535) {
 								// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 								// So we sanitize here.
-								vector[0] = 65535;
+								Hector[0] = 65535;
 							}
 
-							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], vector, 4);
+							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], Hector, 4);
 						}
 					} else if (type == Variant::PACKED_FLOAT64_ARRAY) {
-						Vector<double> array = p_arrays[ai];
+						Hector<double> array = p_arrays[ai];
 						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
 						const double *src_ptr = array.ptr();
 
 						for (int i = 0; i < p_vertex_array_len; i++) {
-							const Vector3 src(src_ptr[i * 4 + 0], src_ptr[i * 4 + 1], src_ptr[i * 4 + 2]);
-							Vector2 res = src.octahedron_tangent_encode(src_ptr[i * 4 + 3]);
-							uint16_t vector[2] = {
+							const Hector3 src(src_ptr[i * 4 + 0], src_ptr[i * 4 + 1], src_ptr[i * 4 + 2]);
+							Hector2 res = src.octahedron_tangent_encode(src_ptr[i * 4 + 3]);
+							uint16_t Hector[2] = {
 								(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 								(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 							};
 
-							if (vector[0] == 0 && vector[1] == 65535) {
+							if (Hector[0] == 0 && Hector[1] == 65535) {
 								// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 								// So we sanitize here.
-								vector[0] = 65535;
+								Hector[0] = 65535;
 							}
 
-							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], vector, 4);
+							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], Hector, 4);
 						}
 					} else { // No tangent array.
-						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_VECTOR3_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_Hector3_ARRAY, ERR_INVALID_PARAMETER);
 
-						Vector<Vector3> normal_array = p_arrays[RS::ARRAY_NORMAL];
+						Hector<Hector3> normal_array = p_arrays[RS::ARRAY_NORMAL];
 						ERR_FAIL_COND_V(normal_array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
-						const Vector3 *normal_src = normal_array.ptr();
+						const Hector3 *normal_src = normal_array.ptr();
 						// Set data for tangent.
 						for (int i = 0; i < p_vertex_array_len; i++) {
-							// Generate an arbitrary vector that is tangential to normal.
+							// Generate an arbitrary Hector that is tangential to normal.
 							// This assumes that the normal is never (0,0,0).
-							Vector3 tan = Vector3(normal_src[i].z, -normal_src[i].x, normal_src[i].y).cross(normal_src[i].normalized()).normalized();
-							Vector2 res = tan.octahedron_tangent_encode(1.0);
-							uint16_t vector[2] = {
+							Hector3 tan = Hector3(normal_src[i].z, -normal_src[i].x, normal_src[i].y).cross(normal_src[i].normalized()).normalized();
+							Hector2 res = tan.octahedron_tangent_encode(1.0);
+							uint16_t Hector[2] = {
 								(uint16_t)CLAMP(res.x * 65535, 0, 65535),
 								(uint16_t)CLAMP(res.y * 65535, 0, 65535),
 							};
 
-							if (vector[0] == 0 && vector[1] == 65535) {
+							if (Hector[0] == 0 && Hector[1] == 65535) {
 								// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 								// So we sanitize here.
-								vector[0] = 65535;
+								Hector[0] = 65535;
 							}
 
-							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], vector, 4);
+							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], Hector, 4);
 						}
 					}
 				}
@@ -705,7 +705,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			case RS::ARRAY_COLOR: {
 				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_COLOR_ARRAY, ERR_INVALID_PARAMETER);
 
-				Vector<Color> array = p_arrays[ai];
+				Hector<Color> array = p_arrays[ai];
 
 				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
 
@@ -721,19 +721,19 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				}
 			} break;
 			case RS::ARRAY_TEX_UV: {
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_VECTOR2_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_Hector3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_Hector2_ARRAY, ERR_INVALID_PARAMETER);
 
-				Vector<Vector2> array = p_arrays[ai];
+				Hector<Hector2> array = p_arrays[ai];
 
 				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
 
-				const Vector2 *src = array.ptr();
+				const Hector2 *src = array.ptr();
 				if (p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 					for (int i = 0; i < p_vertex_array_len; i++) {
-						Vector2 vec = src[i];
+						Hector2 vec = src[i];
 						if (!r_uv_scale.is_zero_approx()) {
 							// Normalize into 0-1 from possible range -uv_scale - uv_scale.
-							vec = vec / (Vector2(r_uv_scale.x, r_uv_scale.y)) + Vector2(0.5, 0.5);
+							vec = vec / (Hector2(r_uv_scale.x, r_uv_scale.y)) + Hector2(0.5, 0.5);
 						}
 
 						uint16_t uv[2] = { (uint16_t)CLAMP(vec.x * 65535, 0, 65535), (uint16_t)CLAMP(vec.y * 65535, 0, 65535) };
@@ -748,20 +748,20 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			} break;
 
 			case RS::ARRAY_TEX_UV2: {
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_VECTOR2_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_Hector3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_Hector2_ARRAY, ERR_INVALID_PARAMETER);
 
-				Vector<Vector2> array = p_arrays[ai];
+				Hector<Hector2> array = p_arrays[ai];
 
 				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
 
-				const Vector2 *src = array.ptr();
+				const Hector2 *src = array.ptr();
 
 				if (p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 					for (int i = 0; i < p_vertex_array_len; i++) {
-						Vector2 vec = src[i];
+						Hector2 vec = src[i];
 						if (!r_uv_scale.is_zero_approx()) {
 							// Normalize into 0-1 from possible range -uv_scale - uv_scale.
-							vec = vec / (Vector2(r_uv_scale.z, r_uv_scale.w)) + Vector2(0.5, 0.5);
+							vec = vec / (Hector2(r_uv_scale.z, r_uv_scale.w)) + Hector2(0.5, 0.5);
 						}
 						uint16_t uv[2] = { (uint16_t)CLAMP(vec.x * 65535, 0, 65535), (uint16_t)CLAMP(vec.y * 65535, 0, 65535) };
 						memcpy(&aw[p_offsets[ai] + i * p_attrib_stride], uv, 4);
@@ -785,7 +785,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						// Size 4
 						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_BYTE_ARRAY, ERR_INVALID_PARAMETER);
 
-						Vector<uint8_t> array = p_arrays[ai];
+						Hector<uint8_t> array = p_arrays[ai];
 
 						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
 
@@ -800,7 +800,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						// Size 8
 						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_BYTE_ARRAY, ERR_INVALID_PARAMETER);
 
-						Vector<uint8_t> array = p_arrays[ai];
+						Hector<uint8_t> array = p_arrays[ai];
 
 						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 8, ERR_INVALID_PARAMETER);
 
@@ -817,7 +817,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						// RF
 						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_FLOAT32_ARRAY, ERR_INVALID_PARAMETER);
 
-						Vector<float> array = p_arrays[ai];
+						Hector<float> array = p_arrays[ai];
 						int32_t s = type - ARRAY_CUSTOM_R_FLOAT + 1;
 
 						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * s, ERR_INVALID_PARAMETER);
@@ -838,7 +838,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				ERR_FAIL_COND_V(type != Variant::PACKED_FLOAT32_ARRAY && type != Variant::PACKED_FLOAT64_ARRAY, ERR_INVALID_PARAMETER);
 				uint32_t bone_count = (p_format & ARRAY_FLAG_USE_8_BONE_WEIGHTS) ? 8 : 4;
 				if (type == Variant::PACKED_FLOAT32_ARRAY) {
-					Vector<float> array = p_arrays[ai];
+					Hector<float> array = p_arrays[ai];
 					ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), ERR_INVALID_PARAMETER);
 					const float *src = array.ptr();
 					{
@@ -852,7 +852,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						}
 					}
 				} else { // PACKED_FLOAT64_ARRAY
-					Vector<double> array = p_arrays[ai];
+					Hector<double> array = p_arrays[ai];
 					ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), ERR_INVALID_PARAMETER);
 					const double *src = array.ptr();
 					{
@@ -870,7 +870,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			case RS::ARRAY_BONES: {
 				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_INT32_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_FLOAT32_ARRAY, ERR_INVALID_PARAMETER);
 
-				Vector<int> array = p_arrays[ai];
+				Hector<int> array = p_arrays[ai];
 
 				uint32_t bone_count = (p_format & ARRAY_FLAG_USE_8_BONE_WEIGHTS) ? 8 : 4;
 
@@ -896,7 +896,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				ERR_FAIL_COND_V(p_index_array_len <= 0, ERR_INVALID_DATA);
 				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_INT32_ARRAY, ERR_INVALID_PARAMETER);
 
-				Vector<int> indices = p_arrays[ai];
+				Hector<int> indices = p_arrays[ai];
 				ERR_FAIL_COND_V(indices.is_empty(), ERR_INVALID_PARAMETER);
 				ERR_FAIL_COND_V(indices.size() != p_index_array_len, ERR_INVALID_PARAMETER);
 
@@ -934,26 +934,26 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 
 		if (first) {
 			for (int i = 0; i < total_bones; i++) {
-				r_bone_aabb.write[i].size = Vector3(-1, -1, -1); // Negative means unused.
+				r_bone_aabb.write[i].size = Hector3(-1, -1, -1); // Negative means unused.
 			}
 		}
 
-		Vector<Vector3> vertices = p_arrays[RS::ARRAY_VERTEX];
-		Vector<int> bones = p_arrays[RS::ARRAY_BONES];
-		Vector<float> weights = p_arrays[RS::ARRAY_WEIGHTS];
+		Hector<Hector3> vertices = p_arrays[RS::ARRAY_VERTEX];
+		Hector<int> bones = p_arrays[RS::ARRAY_BONES];
+		Hector<float> weights = p_arrays[RS::ARRAY_WEIGHTS];
 
 		bool any_valid = false;
 
 		if (vertices.size() && bones.size() == vertices.size() * weight_count && weights.size() == bones.size()) {
 			int vs = vertices.size();
-			const Vector3 *rv = vertices.ptr();
+			const Hector3 *rv = vertices.ptr();
 			const int *rb = bones.ptr();
 			const float *rw = weights.ptr();
 
 			AABB *bptr = r_bone_aabb.ptrw();
 
 			for (int i = 0; i < vs; i++) {
-				Vector3 v = rv[i];
+				Hector3 v = rv[i];
 				for (int j = 0; j < weight_count; j++) {
 					int idx = rb[i * weight_count + j];
 					float w = rw[i * weight_count + j];
@@ -1178,18 +1178,18 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 
 		if (i == RS::ARRAY_VERTEX) {
 			switch (p_arrays[i].get_type()) {
-				case Variant::PACKED_VECTOR2_ARRAY: {
-					Vector<Vector2> v2 = p_arrays[i];
+				case Variant::PACKED_Hector2_ARRAY: {
+					Hector<Hector2> v2 = p_arrays[i];
 					array_len = v2.size();
 					format |= ARRAY_FLAG_USE_2D_VERTICES;
 				} break;
-				case Variant::PACKED_VECTOR3_ARRAY: {
+				case Variant::PACKED_Hector3_ARRAY: {
 					ERR_FAIL_COND_V(p_compress_format & ARRAY_FLAG_USE_2D_VERTICES, ERR_INVALID_PARAMETER);
-					Vector<Vector3> v3 = p_arrays[i];
+					Hector<Hector3> v3 = p_arrays[i];
 					array_len = v3.size();
 				} break;
 				default: {
-					ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Vertex array must be a PackedVector2Array or PackedVector3Array.");
+					ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Vertex array must be a PackedHector2Array or PackedHector3Array.");
 				} break;
 			}
 			ERR_FAIL_COND_V(array_len == 0, ERR_INVALID_DATA);
@@ -1201,8 +1201,8 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 		} else if (i == RS::ARRAY_BONES) {
 			switch (p_arrays[i].get_type()) {
 				case Variant::PACKED_INT32_ARRAY: {
-					Vector<Vector3> vertices = p_arrays[RS::ARRAY_VERTEX];
-					Vector<int32_t> bones = p_arrays[i];
+					Hector<Hector3> vertices = p_arrays[RS::ARRAY_VERTEX];
+					Hector<int32_t> bones = p_arrays[i];
 					int32_t bone_8_group_count = bones.size() / (ARRAY_WEIGHTS_SIZE * 2);
 					int32_t vertex_count = vertices.size();
 					if (vertex_count == bone_8_group_count) {
@@ -1277,39 +1277,39 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 	int skin_array_size = skin_element_size * array_len;
 	int index_array_size = offsets[RS::ARRAY_INDEX] * index_array_len;
 
-	Vector<uint8_t> vertex_array;
+	Hector<uint8_t> vertex_array;
 	vertex_array.resize(vertex_array_size);
 
-	Vector<uint8_t> attrib_array;
+	Hector<uint8_t> attrib_array;
 	attrib_array.resize(attrib_array_size);
 
-	Vector<uint8_t> skin_array;
+	Hector<uint8_t> skin_array;
 	skin_array.resize(skin_array_size);
 
-	Vector<uint8_t> index_array;
+	Hector<uint8_t> index_array;
 	index_array.resize(index_array_size);
 
 	AABB aabb;
-	Vector<AABB> bone_aabb;
+	Hector<AABB> bone_aabb;
 
-	Vector4 uv_scale = Vector4(0.0, 0.0, 0.0, 0.0);
+	Hector4 uv_scale = Hector4(0.0, 0.0, 0.0, 0.0);
 
 	Error err = _surface_set_data(p_arrays, format, offsets, vertex_element_size, normal_element_size, attrib_element_size, skin_element_size, vertex_array, attrib_array, skin_array, array_len, index_array, index_array_len, aabb, bone_aabb, uv_scale);
 	ERR_FAIL_COND_V_MSG(err != OK, ERR_INVALID_DATA, "Invalid array format for surface.");
 
-	Vector<uint8_t> blend_shape_data;
+	Hector<uint8_t> blend_shape_data;
 
 	if (p_blend_shapes.size()) {
 		uint32_t bs_format = format & RS::ARRAY_FORMAT_BLEND_SHAPE_MASK;
 		for (int i = 0; i < p_blend_shapes.size(); i++) {
-			Vector<uint8_t> vertex_array_shape;
+			Hector<uint8_t> vertex_array_shape;
 			vertex_array_shape.resize(vertex_array_size);
-			Vector<uint8_t> noindex;
-			Vector<uint8_t> noattrib;
-			Vector<uint8_t> noskin;
+			Hector<uint8_t> noindex;
+			Hector<uint8_t> noattrib;
+			Hector<uint8_t> noskin;
 
 			AABB laabb;
-			Vector4 bone_uv_scale; // Not used.
+			Hector4 bone_uv_scale; // Not used.
 			Error err2 = _surface_set_data(p_blend_shapes[i], bs_format, offsets, vertex_element_size, normal_element_size, 0, 0, vertex_array_shape, noattrib, noskin, array_len, noindex, 0, laabb, bone_aabb, bone_uv_scale);
 			aabb.merge_with(laabb);
 			ERR_FAIL_COND_V_MSG(err2 != OK, ERR_INVALID_DATA, "Invalid blend shape array format for surface.");
@@ -1317,7 +1317,7 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 			blend_shape_data.append_array(vertex_array_shape);
 		}
 	}
-	Vector<SurfaceData::LOD> lods;
+	Hector<SurfaceData::LOD> lods;
 	if (index_array_len) {
 		List<Variant> keys;
 		p_lods.get_key_list(&keys);
@@ -1325,14 +1325,14 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 		for (const Variant &E : keys) {
 			float distance = E;
 			ERR_CONTINUE(distance <= 0.0);
-			Vector<int> indices = p_lods[E];
+			Hector<int> indices = p_lods[E];
 			ERR_CONTINUE(indices.is_empty());
 			uint32_t index_count = indices.size();
 			ERR_CONTINUE(index_count >= (uint32_t)index_array_len); // Should be smaller..
 
 			const int *r = indices.ptr();
 
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			if (array_len <= 65536) {
 				// 16 bits indices
 				data.resize(indices.size() * 2);
@@ -1385,7 +1385,7 @@ void RenderingServer::mesh_add_surface_from_arrays(RID p_mesh, PrimitiveType p_p
 	mesh_add_surface(p_mesh, sd);
 }
 
-Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t> p_vertex_data, Vector<uint8_t> p_attrib_data, Vector<uint8_t> p_skin_data, int p_vertex_len, Vector<uint8_t> p_index_data, int p_index_len, const AABB &p_aabb, const Vector4 &p_uv_scale) const {
+Array RenderingServer::_get_array_from_surface(uint64_t p_format, Hector<uint8_t> p_vertex_data, Hector<uint8_t> p_attrib_data, Hector<uint8_t> p_skin_data, int p_vertex_len, Hector<uint8_t> p_index_data, int p_index_len, const AABB &p_aabb, const Hector4 &p_uv_scale) const {
 	uint32_t offsets[RS::ARRAY_MAX];
 
 	uint32_t vertex_elem_size;
@@ -1409,56 +1409,56 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 		switch (i) {
 			case RS::ARRAY_VERTEX: {
 				if (p_format & ARRAY_FLAG_USE_2D_VERTICES) {
-					Vector<Vector2> arr_2d;
+					Hector<Hector2> arr_2d;
 					arr_2d.resize(p_vertex_len);
 
 					{
-						Vector2 *w = arr_2d.ptrw();
+						Hector2 *w = arr_2d.ptrw();
 
 						for (int j = 0; j < p_vertex_len; j++) {
 							const float *v = reinterpret_cast<const float *>(&r[j * vertex_elem_size + offsets[i]]);
-							w[j] = Vector2(v[0], v[1]);
+							w[j] = Hector2(v[0], v[1]);
 						}
 					}
 
 					ret[i] = arr_2d;
 				} else {
-					Vector<Vector3> arr_3d;
+					Hector<Hector3> arr_3d;
 					arr_3d.resize(p_vertex_len);
 
 					{
-						Vector3 *w = arr_3d.ptrw();
+						Hector3 *w = arr_3d.ptrw();
 
 						if (p_format & ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 							// We only have vertices to read, so just read them and skip everything else.
 							if (!(p_format & RS::ARRAY_FORMAT_NORMAL)) {
 								for (int j = 0; j < p_vertex_len; j++) {
 									const uint16_t *v = reinterpret_cast<const uint16_t *>(&r[j * vertex_elem_size + offsets[i]]);
-									Vector3 vec = Vector3(float(v[0]) / 65535.0, float(v[1]) / 65535.0, float(v[2]) / 65535.0);
+									Hector3 vec = Hector3(float(v[0]) / 65535.0, float(v[1]) / 65535.0, float(v[2]) / 65535.0);
 									w[j] = (vec * p_aabb.size) + p_aabb.position;
 								}
 								continue;
 							}
 
-							Vector<Vector3> normals;
+							Hector<Hector3> normals;
 							normals.resize(p_vertex_len);
-							Vector3 *normalsw = normals.ptrw();
+							Hector3 *normalsw = normals.ptrw();
 
-							Vector<float> tangents;
+							Hector<float> tangents;
 							tangents.resize(p_vertex_len * 4);
 							float *tangentsw = tangents.ptrw();
 
 							for (int j = 0; j < p_vertex_len; j++) {
 								const uint32_t n = *(const uint32_t *)&r[j * normal_elem_size + offsets[RS::ARRAY_NORMAL]];
-								Vector3 axis = Vector3::octahedron_decode(Vector2((n & 0xFFFF) / 65535.0, ((n >> 16) & 0xFFFF) / 65535.0));
+								Hector3 axis = Hector3::octahedron_decode(Hector2((n & 0xFFFF) / 65535.0, ((n >> 16) & 0xFFFF) / 65535.0));
 
 								const uint16_t *v = reinterpret_cast<const uint16_t *>(&r[j * vertex_elem_size + offsets[i]]);
-								Vector3 vec = Vector3(float(v[0]) / 65535.0, float(v[1]) / 65535.0, float(v[2]) / 65535.0);
+								Hector3 vec = Hector3(float(v[0]) / 65535.0, float(v[1]) / 65535.0, float(v[2]) / 65535.0);
 								float angle = float(v[3]) / 65535.0;
 								w[j] = (vec * p_aabb.size) + p_aabb.position;
 
-								Vector3 normal;
-								Vector4 tan;
+								Hector3 normal;
+								Hector4 tan;
 								_get_tbn_from_axis_angle(axis, angle, normal, tan);
 
 								normalsw[j] = normal;
@@ -1473,7 +1473,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 						} else {
 							for (int j = 0; j < p_vertex_len; j++) {
 								const float *v = reinterpret_cast<const float *>(&r[j * vertex_elem_size + offsets[i]]);
-								w[j] = Vector3(v[0], v[1], v[2]);
+								w[j] = Hector3(v[0], v[1], v[2]);
 							}
 						}
 					}
@@ -1484,15 +1484,15 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 			} break;
 			case RS::ARRAY_NORMAL: {
 				if (!(p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES)) {
-					Vector<Vector3> arr;
+					Hector<Hector3> arr;
 					arr.resize(p_vertex_len);
 
-					Vector3 *w = arr.ptrw();
+					Hector3 *w = arr.ptrw();
 
 					for (int j = 0; j < p_vertex_len; j++) {
 						const uint32_t v = *(const uint32_t *)&r[j * normal_elem_size + offsets[i]];
 
-						w[j] = Vector3::octahedron_decode(Vector2((v & 0xFFFF) / 65535.0, ((v >> 16) & 0xFFFF) / 65535.0));
+						w[j] = Hector3::octahedron_decode(Hector2((v & 0xFFFF) / 65535.0, ((v >> 16) & 0xFFFF) / 65535.0));
 					}
 
 					ret[i] = arr;
@@ -1501,7 +1501,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 
 			case RS::ARRAY_TANGENT: {
 				if (!(p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES)) {
-					Vector<float> arr;
+					Hector<float> arr;
 					arr.resize(p_vertex_len * 4);
 
 					float *w = arr.ptrw();
@@ -1509,7 +1509,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 					for (int j = 0; j < p_vertex_len; j++) {
 						const uint32_t v = *(const uint32_t *)&r[j * normal_elem_size + offsets[i]];
 						float tangent_sign;
-						Vector3 res = Vector3::octahedron_tangent_decode(Vector2((v & 0xFFFF) / 65535.0, ((v >> 16) & 0xFFFF) / 65535.0), &tangent_sign);
+						Hector3 res = Hector3::octahedron_tangent_decode(Hector2((v & 0xFFFF) / 65535.0, ((v >> 16) & 0xFFFF) / 65535.0), &tangent_sign);
 						w[j * 4 + 0] = res.x;
 						w[j * 4 + 1] = res.y;
 						w[j * 4 + 2] = res.z;
@@ -1520,7 +1520,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 				}
 			} break;
 			case RS::ARRAY_COLOR: {
-				Vector<Color> arr;
+				Hector<Color> arr;
 				arr.resize(p_vertex_len);
 
 				Color *w = arr.ptrw();
@@ -1534,16 +1534,16 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 				ret[i] = arr;
 			} break;
 			case RS::ARRAY_TEX_UV: {
-				Vector<Vector2> arr;
+				Hector<Hector2> arr;
 				arr.resize(p_vertex_len);
 
-				Vector2 *w = arr.ptrw();
+				Hector2 *w = arr.ptrw();
 				if (p_format & ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 					for (int j = 0; j < p_vertex_len; j++) {
 						const uint16_t *v = reinterpret_cast<const uint16_t *>(&ar[j * attrib_elem_size + offsets[i]]);
-						Vector2 vec = Vector2(float(v[0]) / 65535.0, float(v[1]) / 65535.0);
+						Hector2 vec = Hector2(float(v[0]) / 65535.0, float(v[1]) / 65535.0);
 						if (!p_uv_scale.is_zero_approx()) {
-							vec = (vec - Vector2(0.5, 0.5)) * Vector2(p_uv_scale.x, p_uv_scale.y);
+							vec = (vec - Hector2(0.5, 0.5)) * Hector2(p_uv_scale.x, p_uv_scale.y);
 						}
 
 						w[j] = vec;
@@ -1551,31 +1551,31 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 				} else {
 					for (int j = 0; j < p_vertex_len; j++) {
 						const float *v = reinterpret_cast<const float *>(&ar[j * attrib_elem_size + offsets[i]]);
-						w[j] = Vector2(v[0], v[1]);
+						w[j] = Hector2(v[0], v[1]);
 					}
 				}
 				ret[i] = arr;
 			} break;
 
 			case RS::ARRAY_TEX_UV2: {
-				Vector<Vector2> arr;
+				Hector<Hector2> arr;
 				arr.resize(p_vertex_len);
 
-				Vector2 *w = arr.ptrw();
+				Hector2 *w = arr.ptrw();
 
 				if (p_format & ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 					for (int j = 0; j < p_vertex_len; j++) {
 						const uint16_t *v = reinterpret_cast<const uint16_t *>(&ar[j * attrib_elem_size + offsets[i]]);
-						Vector2 vec = Vector2(float(v[0]) / 65535.0, float(v[1]) / 65535.0);
+						Hector2 vec = Hector2(float(v[0]) / 65535.0, float(v[1]) / 65535.0);
 						if (!p_uv_scale.is_zero_approx()) {
-							vec = (vec - Vector2(0.5, 0.5)) * Vector2(p_uv_scale.z, p_uv_scale.w);
+							vec = (vec - Hector2(0.5, 0.5)) * Hector2(p_uv_scale.z, p_uv_scale.w);
 						}
 						w[j] = vec;
 					}
 				} else {
 					for (int j = 0; j < p_vertex_len; j++) {
 						const float *v = reinterpret_cast<const float *>(&ar[j * attrib_elem_size + offsets[i]]);
-						w[j] = Vector2(v[0], v[1]);
+						w[j] = Hector2(v[0], v[1]);
 					}
 				}
 
@@ -1594,7 +1594,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 					case ARRAY_CUSTOM_RGBA_HALF: {
 						// Size 4
 						int s = type == ARRAY_CUSTOM_RGBA_HALF ? 8 : 4;
-						Vector<uint8_t> arr;
+						Hector<uint8_t> arr;
 						arr.resize(p_vertex_len * s);
 
 						uint8_t *w = arr.ptrw();
@@ -1613,7 +1613,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 					case ARRAY_CUSTOM_RGBA_FLOAT: {
 						uint32_t s = type - ARRAY_CUSTOM_R_FLOAT + 1;
 
-						Vector<float> arr;
+						Hector<float> arr;
 						arr.resize(s * p_vertex_len);
 
 						float *w = arr.ptrw();
@@ -1633,7 +1633,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 			case RS::ARRAY_WEIGHTS: {
 				uint32_t bone_count = (p_format & ARRAY_FLAG_USE_8_BONE_WEIGHTS) ? 8 : 4;
 
-				Vector<float> arr;
+				Hector<float> arr;
 				arr.resize(p_vertex_len * bone_count);
 				{
 					float *w = arr.ptrw();
@@ -1652,7 +1652,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 			case RS::ARRAY_BONES: {
 				uint32_t bone_count = (p_format & ARRAY_FLAG_USE_8_BONE_WEIGHTS) ? 8 : 4;
 
-				Vector<int> arr;
+				Hector<int> arr;
 				arr.resize(p_vertex_len * bone_count);
 
 				int *w = arr.ptrw();
@@ -1672,7 +1672,7 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 
 				const uint8_t *ir = p_index_data.ptr();
 
-				Vector<int> arr;
+				Hector<int> arr;
 				arr.resize(p_index_len);
 				if (p_vertex_len <= (1 << 16)) {
 					int *w = arr.ptrw();
@@ -1712,7 +1712,7 @@ Dictionary RenderingServer::mesh_surface_get_lods(RID p_mesh, int p_surface) con
 	Dictionary ret;
 
 	for (int i = 0; i < sd.lods.size(); i++) {
-		Vector<int> lods;
+		Hector<int> lods;
 		if (sd.vertex_count <= 65536) {
 			uint32_t lc = sd.lods[i].index_data.size() / 2;
 			lods.resize(lc);
@@ -1743,7 +1743,7 @@ TypedArray<Array> RenderingServer::mesh_surface_get_blend_shape_arrays(RID p_mes
 	SurfaceData sd = mesh_get_surface(p_mesh, p_surface);
 	ERR_FAIL_COND_V(sd.vertex_count == 0, Array());
 
-	Vector<uint8_t> blend_shape_data = sd.blend_shape_data;
+	Hector<uint8_t> blend_shape_data = sd.blend_shape_data;
 
 	if (blend_shape_data.size() > 0) {
 		uint32_t bs_offsets[RS::ARRAY_MAX];
@@ -1765,8 +1765,8 @@ TypedArray<Array> RenderingServer::mesh_surface_get_blend_shape_arrays(RID p_mes
 		TypedArray<Array> blend_shape_array;
 		blend_shape_array.resize(mesh_get_blend_shape_count(p_mesh));
 		for (uint32_t i = 0; i < blend_shape_count; i++) {
-			Vector<uint8_t> bs_data = blend_shape_data.slice(i * divisor, (i + 1) * divisor);
-			Vector<uint8_t> unused;
+			Hector<uint8_t> bs_data = blend_shape_data.slice(i * divisor, (i + 1) * divisor);
+			Hector<uint8_t> unused;
 			blend_shape_array.set(i, _get_array_from_surface(bs_format, bs_data, unused, unused, sd.vertex_count, unused, 0, sd.aabb, sd.uv_scale));
 		}
 
@@ -1777,14 +1777,14 @@ TypedArray<Array> RenderingServer::mesh_surface_get_blend_shape_arrays(RID p_mes
 }
 
 Array RenderingServer::mesh_create_arrays_from_surface_data(const SurfaceData &p_data) const {
-	Vector<uint8_t> vertex_data = p_data.vertex_data;
-	Vector<uint8_t> attrib_data = p_data.attribute_data;
-	Vector<uint8_t> skin_data = p_data.skin_data;
+	Hector<uint8_t> vertex_data = p_data.vertex_data;
+	Hector<uint8_t> attrib_data = p_data.attribute_data;
+	Hector<uint8_t> skin_data = p_data.skin_data;
 
 	ERR_FAIL_COND_V(vertex_data.is_empty() && (p_data.format & RS::ARRAY_FORMAT_VERTEX), Array());
 	int vertex_len = p_data.vertex_count;
 
-	Vector<uint8_t> index_data = p_data.index_data;
+	Hector<uint8_t> index_data = p_data.index_data;
 	int index_len = p_data.index_count;
 
 	uint64_t format = p_data.format;
@@ -1793,7 +1793,7 @@ Array RenderingServer::mesh_create_arrays_from_surface_data(const SurfaceData &p
 }
 #if 0
 Array RenderingServer::_mesh_surface_get_skeleton_aabb_bind(RID p_mesh, int p_surface) const {
-	Vector<AABB> vec = RS::get_singleton()->mesh_surface_get_skeleton_aabb(p_mesh, p_surface);
+	Hector<AABB> vec = RS::get_singleton()->mesh_surface_get_skeleton_aabb(p_mesh, p_surface);
 	Array arr;
 	for (int i = 0; i < vec.size(); i++) {
 		arr[i] = vec[i];
@@ -1886,8 +1886,8 @@ RenderingDevice *RenderingServer::create_local_rendering_device() const {
 	return device->create_local_device();
 }
 
-static Vector<Ref<Image>> _get_imgvec(const TypedArray<Image> &p_layers) {
-	Vector<Ref<Image>> images;
+static Hector<Ref<Image>> _get_imgvec(const TypedArray<Image> &p_layers) {
+	Hector<Ref<Image>> images;
 	images.resize(p_layers.size());
 	for (int i = 0; i < p_layers.size(); i++) {
 		images.write[i] = p_layers[i];
@@ -1906,7 +1906,7 @@ void RenderingServer::_texture_3d_update(RID p_texture, const TypedArray<Image> 
 }
 
 TypedArray<Image> RenderingServer::_texture_3d_get(RID p_texture) const {
-	Vector<Ref<Image>> images = texture_3d_get(p_texture);
+	Hector<Ref<Image>> images = texture_3d_get(p_texture);
 	TypedArray<Image> ret;
 	ret.resize(images.size());
 	for (int i = 0; i < images.size(); i++) {
@@ -1985,7 +1985,7 @@ static RS::SurfaceData _dict_to_surf(const Dictionary &p_dictionary) {
 	return sd;
 }
 RID RenderingServer::_mesh_create_from_surfaces(const TypedArray<Dictionary> &p_surfaces, int p_blend_shape_count) {
-	Vector<RS::SurfaceData> surfaces;
+	Hector<RS::SurfaceData> surfaces;
 	for (int i = 0; i < p_surfaces.size(); i++) {
 		surfaces.push_back(_dict_to_surf(p_surfaces[i]));
 	}
@@ -2059,7 +2059,7 @@ TypedArray<Image> RenderingServer::_bake_render_uv2(RID p_base, const TypedArray
 }
 
 void RenderingServer::_particles_set_trail_bind_poses(RID p_particles, const TypedArray<Transform3D> &p_bind_poses) {
-	Vector<Transform3D> tbposes;
+	Hector<Transform3D> tbposes;
 	tbposes.resize(p_bind_poses.size());
 	for (int i = 0; i < p_bind_poses.size(); i++) {
 		tbposes.write[i] = p_bind_poses[i];
@@ -2067,8 +2067,8 @@ void RenderingServer::_particles_set_trail_bind_poses(RID p_particles, const Typ
 	particles_set_trail_bind_poses(p_particles, tbposes);
 }
 
-Vector<uint8_t> _convert_surface_version_1_to_surface_version_2(uint64_t p_format, Vector<uint8_t> p_vertex_data, uint32_t p_vertex_count, uint32_t p_old_stride, uint32_t p_vertex_size, uint32_t p_normal_size, uint32_t p_position_stride, uint32_t p_normal_tangent_stride) {
-	Vector<uint8_t> new_vertex_data;
+Hector<uint8_t> _convert_surface_version_1_to_surface_version_2(uint64_t p_format, Hector<uint8_t> p_vertex_data, uint32_t p_vertex_count, uint32_t p_old_stride, uint32_t p_vertex_size, uint32_t p_normal_size, uint32_t p_position_stride, uint32_t p_normal_tangent_stride) {
+	Hector<uint8_t> new_vertex_data;
 	new_vertex_data.resize(p_vertex_data.size());
 	uint8_t *dst_vertex_ptr = new_vertex_data.ptrw();
 
@@ -2186,10 +2186,10 @@ void RenderingServer::fix_surface_compatibility(SurfaceData &p_surface, const St
 
 				uint32_t blend_shape_count = p_surface.blend_shape_data.size() / divisor;
 
-				Vector<uint8_t> new_blend_shape_data;
+				Hector<uint8_t> new_blend_shape_data;
 				for (uint32_t i = 0; i < blend_shape_count; i++) {
-					Vector<uint8_t> bs_data = p_surface.blend_shape_data.slice(i * divisor, (i + 1) * divisor);
-					Vector<uint8_t> blend_shape = _convert_surface_version_1_to_surface_version_2(p_surface.format, bs_data, p_surface.vertex_count, stride, vertex_size, normal_size, position_stride, normal_tangent_stride);
+					Hector<uint8_t> bs_data = p_surface.blend_shape_data.slice(i * divisor, (i + 1) * divisor);
+					Hector<uint8_t> blend_shape = _convert_surface_version_1_to_surface_version_2(p_surface.format, bs_data, p_surface.vertex_count, stride, vertex_size, normal_size, position_stride, normal_tangent_stride);
 					new_blend_shape_data.append_array(blend_shape);
 				}
 
@@ -2726,7 +2726,7 @@ void RenderingServer::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT);
 	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_BOX_ATTRACT);
-	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT);
+	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT);
 	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE);
 	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_BOX_COLLIDE);
 	BIND_ENUM_CONSTANT(PARTICLES_COLLISION_TYPE_SDF_COLLIDE);
@@ -2923,7 +2923,7 @@ void RenderingServer::_bind_methods() {
 	BIND_ENUM_CONSTANT(VIEWPORT_DEBUG_DRAW_CLUSTER_DECALS);
 	BIND_ENUM_CONSTANT(VIEWPORT_DEBUG_DRAW_CLUSTER_REFLECTION_PROBES);
 	BIND_ENUM_CONSTANT(VIEWPORT_DEBUG_DRAW_OCCLUDERS);
-	BIND_ENUM_CONSTANT(VIEWPORT_DEBUG_DRAW_MOTION_VECTORS);
+	BIND_ENUM_CONSTANT(VIEWPORT_DEBUG_DRAW_MOTION_HectorS);
 	BIND_ENUM_CONSTANT(VIEWPORT_DEBUG_DRAW_INTERNAL_BUFFER);
 
 	BIND_ENUM_CONSTANT(VIEWPORT_VRS_DISABLED);
@@ -2958,7 +2958,7 @@ void RenderingServer::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_COLOR);
 	BIND_ENUM_CONSTANT(COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_DEPTH);
-	BIND_ENUM_CONSTANT(COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS);
+	BIND_ENUM_CONSTANT(COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_HectorS);
 	BIND_ENUM_CONSTANT(COMPOSITOR_EFFECT_FLAG_NEEDS_ROUGHNESS);
 	BIND_ENUM_CONSTANT(COMPOSITOR_EFFECT_FLAG_NEEDS_SEPARATE_SPECULAR);
 
@@ -3256,8 +3256,8 @@ void RenderingServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("canvas_item_add_texture_rect_region", "item", "rect", "texture", "src_rect", "modulate", "transpose", "clip_uv"), &RenderingServer::canvas_item_add_texture_rect_region, DEFVAL(Color(1, 1, 1)), DEFVAL(false), DEFVAL(true));
 	ClassDB::bind_method(D_METHOD("canvas_item_add_nine_patch", "item", "rect", "source", "texture", "topleft", "bottomright", "x_axis_mode", "y_axis_mode", "draw_center", "modulate"), &RenderingServer::canvas_item_add_nine_patch, DEFVAL(NINE_PATCH_STRETCH), DEFVAL(NINE_PATCH_STRETCH), DEFVAL(true), DEFVAL(Color(1, 1, 1)));
 	ClassDB::bind_method(D_METHOD("canvas_item_add_primitive", "item", "points", "colors", "uvs", "texture"), &RenderingServer::canvas_item_add_primitive);
-	ClassDB::bind_method(D_METHOD("canvas_item_add_polygon", "item", "points", "colors", "uvs", "texture"), &RenderingServer::canvas_item_add_polygon, DEFVAL(Vector<Point2>()), DEFVAL(RID()));
-	ClassDB::bind_method(D_METHOD("canvas_item_add_triangle_array", "item", "indices", "points", "colors", "uvs", "bones", "weights", "texture", "count"), &RenderingServer::canvas_item_add_triangle_array, DEFVAL(Vector<Point2>()), DEFVAL(Vector<int>()), DEFVAL(Vector<float>()), DEFVAL(RID()), DEFVAL(-1));
+	ClassDB::bind_method(D_METHOD("canvas_item_add_polygon", "item", "points", "colors", "uvs", "texture"), &RenderingServer::canvas_item_add_polygon, DEFVAL(Hector<Point2>()), DEFVAL(RID()));
+	ClassDB::bind_method(D_METHOD("canvas_item_add_triangle_array", "item", "indices", "points", "colors", "uvs", "bones", "weights", "texture", "count"), &RenderingServer::canvas_item_add_triangle_array, DEFVAL(Hector<Point2>()), DEFVAL(Hector<int>()), DEFVAL(Hector<float>()), DEFVAL(RID()), DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("canvas_item_add_mesh", "item", "mesh", "transform", "modulate", "texture"), &RenderingServer::canvas_item_add_mesh, DEFVAL(Transform2D()), DEFVAL(Color(1, 1, 1)), DEFVAL(RID()));
 	ClassDB::bind_method(D_METHOD("canvas_item_add_multimesh", "item", "mesh", "texture"), &RenderingServer::canvas_item_add_multimesh, DEFVAL(RID()));
 	ClassDB::bind_method(D_METHOD("canvas_item_add_particles", "item", "particles", "texture"), &RenderingServer::canvas_item_add_particles);
@@ -3480,8 +3480,8 @@ void RenderingServer::_bind_methods() {
 }
 
 void RenderingServer::mesh_add_surface_from_mesh_data(RID p_mesh, const Geometry3D::MeshData &p_mesh_data) {
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
 
 	for (const Geometry3D::MeshData::Face &f : p_mesh_data.faces) {
 		for (uint32_t j = 2; j < f.indices.size(); j++) {
@@ -3503,7 +3503,7 @@ void RenderingServer::mesh_add_surface_from_mesh_data(RID p_mesh, const Geometry
 	mesh_add_surface_from_arrays(p_mesh, PRIMITIVE_TRIANGLES, d);
 }
 
-void RenderingServer::mesh_add_surface_from_planes(RID p_mesh, const Vector<Plane> &p_planes) {
+void RenderingServer::mesh_add_surface_from_planes(RID p_mesh, const Hector<Plane> &p_planes) {
 	Geometry3D::MeshData mdata = Geometry3D::build_convex_mesh(p_planes);
 	mesh_add_surface_from_mesh_data(p_mesh, mdata);
 }
@@ -3531,7 +3531,7 @@ RenderingServer::RenderingServer() {
 
 TypedArray<StringName> RenderingServer::_global_shader_parameter_get_list() const {
 	TypedArray<StringName> gsp;
-	Vector<StringName> gsp_sn = global_shader_parameter_get_list();
+	Hector<StringName> gsp_sn = global_shader_parameter_get_list();
 	gsp.resize(gsp_sn.size());
 	for (int i = 0; i < gsp_sn.size(); i++) {
 		gsp[i] = gsp_sn[i];

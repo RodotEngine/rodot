@@ -59,7 +59,7 @@ class QuickOpenResultContainer : public VBoxContainer {
 	GDCLASS(QuickOpenResultContainer, VBoxContainer)
 
 public:
-	void init(const Vector<StringName> &p_base_types);
+	void init(const Hector<StringName> &p_base_types);
 	void handle_search_box_input(const Ref<InputEvent> &p_ie);
 	void update_results(const String &p_query);
 
@@ -87,8 +87,8 @@ private:
 		float score = 0;
 	};
 
-	Vector<StringName> base_types;
-	Vector<Candidate> candidates;
+	Hector<StringName> base_types;
+	Hector<Candidate> candidates;
 
 	OAHashMap<StringName, List<Candidate>> selected_history;
 
@@ -101,7 +101,7 @@ private:
 	bool never_opened = true;
 
 	QuickOpenDisplayMode content_display_mode = QuickOpenDisplayMode::LIST;
-	Vector<QuickOpenResultItem *> result_items;
+	Hector<QuickOpenResultItem *> result_items;
 
 	ScrollContainer *scroll_container = nullptr;
 	VBoxContainer *list = nullptr;
@@ -117,7 +117,7 @@ private:
 
 	OAHashMap<StringName, Ref<Texture2D>> file_type_icons;
 
-	static QuickOpenDisplayMode get_adaptive_display_mode(const Vector<StringName> &p_base_types);
+	static QuickOpenDisplayMode get_adaptive_display_mode(const Hector<StringName> &p_base_types);
 
 	void _create_initial_results(bool p_include_addons);
 	void _find_candidates_in_folder(EditorFileSystemDirectory *p_directory, bool p_include_addons);
@@ -211,7 +211,7 @@ class EditorQuickOpenDialog : public AcceptDialog {
 	GDCLASS(EditorQuickOpenDialog, AcceptDialog);
 
 public:
-	void popup_dialog(const Vector<StringName> &p_base_types, const Callable &p_item_selected_callback);
+	void popup_dialog(const Hector<StringName> &p_base_types, const Callable &p_item_selected_callback);
 	EditorQuickOpenDialog();
 
 protected:
@@ -219,7 +219,7 @@ protected:
 	virtual void ok_pressed() override;
 
 private:
-	static String get_dialog_title(const Vector<StringName> &p_base_types);
+	static String get_dialog_title(const Hector<StringName> &p_base_types);
 
 	LineEdit *search_box = nullptr;
 	QuickOpenResultContainer *container = nullptr;

@@ -500,11 +500,11 @@ u_getMainProperties(UChar32 c) {
 U_CFUNC uint32_t
 u_getUnicodeProperties(UChar32 c, int32_t column) {
     U_ASSERT(column>=0);
-    if(column>=propsVectorsColumns) {
+    if(column>=propsHectorsColumns) {
         return 0;
     } else {
-        uint16_t vecIndex=UTRIE2_GET16(&propsVectorsTrie, c);
-        return propsVectors[vecIndex+column];
+        uint16_t vecIndex=UTRIE2_GET16(&propsHectorsTrie, c);
+        return propsHectors[vecIndex+column];
     }
 }
 
@@ -703,6 +703,6 @@ upropsvec_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
         return;
     }
 
-    /* add the start code point of each same-value range of the properties vectors trie */
-    utrie2_enum(&propsVectorsTrie, nullptr, _enumPropertyStartsRange, sa);
+    /* add the start code point of each same-value range of the properties Hectors trie */
+    utrie2_enum(&propsHectorsTrie, nullptr, _enumPropertyStartsRange, sa);
 }

@@ -37,7 +37,7 @@ class PolygonPathFinder : public Resource {
 	GDCLASS(PolygonPathFinder, Resource);
 
 	struct Point {
-		Vector2 pos;
+		Hector2 pos;
 		HashSet<int> connections;
 		float distance = 0.0;
 		float penalty = 0.0;
@@ -66,13 +66,13 @@ class PolygonPathFinder : public Resource {
 		}
 	};
 
-	Vector2 outside_point;
+	Hector2 outside_point;
 	Rect2 bounds;
 
-	Vector<Point> points;
+	Hector<Point> points;
 	HashSet<Edge, Edge> edges;
 
-	bool _is_point_inside(const Vector2 &p_point) const;
+	bool _is_point_inside(const Hector2 &p_point) const;
 
 	void _set_data(const Dictionary &p_data);
 	Dictionary _get_data() const;
@@ -81,15 +81,15 @@ protected:
 	static void _bind_methods();
 
 public:
-	void setup(const Vector<Vector2> &p_points, const Vector<int> &p_connections);
-	Vector<Vector2> find_path(const Vector2 &p_from, const Vector2 &p_to);
+	void setup(const Hector<Hector2> &p_points, const Hector<int> &p_connections);
+	Hector<Hector2> find_path(const Hector2 &p_from, const Hector2 &p_to);
 
 	void set_point_penalty(int p_point, float p_penalty);
 	float get_point_penalty(int p_point) const;
 
-	bool is_point_inside(const Vector2 &p_point) const;
-	Vector2 get_closest_point(const Vector2 &p_point) const;
-	Vector<Vector2> get_intersections(const Vector2 &p_from, const Vector2 &p_to) const;
+	bool is_point_inside(const Hector2 &p_point) const;
+	Hector2 get_closest_point(const Hector2 &p_point) const;
+	Hector<Hector2> get_intersections(const Hector2 &p_from, const Hector2 &p_to) const;
 	Rect2 get_bounds() const;
 
 	PolygonPathFinder();

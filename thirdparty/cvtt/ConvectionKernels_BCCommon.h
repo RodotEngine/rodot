@@ -21,57 +21,57 @@ namespace cvtt
 
             static int TweakRoundsForRange(int range);
 
-            template<int TVectorSize>
-            static void ComputeErrorLDR(uint32_t flags, const MUInt15 reconstructed[TVectorSize], const MUInt15 original[TVectorSize], int numRealChannels, AggregatedError<TVectorSize> &aggError)
+            template<int THectorSize>
+            static void ComputeErrorLDR(uint32_t flags, const MUInt15 reconstructed[THectorSize], const MUInt15 original[THectorSize], int numRealChannels, AggregatedError<THectorSize> &aggError)
             {
                 for (int ch = 0; ch < numRealChannels; ch++)
                     aggError.Add(ParallelMath::SqDiffUInt8(reconstructed[ch], original[ch]), ch);
             }
 
-            template<int TVectorSize>
-            static void ComputeErrorLDR(uint32_t flags, const MUInt15 reconstructed[TVectorSize], const MUInt15 original[TVectorSize], AggregatedError<TVectorSize> &aggError)
+            template<int THectorSize>
+            static void ComputeErrorLDR(uint32_t flags, const MUInt15 reconstructed[THectorSize], const MUInt15 original[THectorSize], AggregatedError<THectorSize> &aggError)
             {
-                ComputeErrorLDR<TVectorSize>(flags, reconstructed, original, TVectorSize, aggError);
+                ComputeErrorLDR<THectorSize>(flags, reconstructed, original, THectorSize, aggError);
             }
 
-            template<int TVectorSize>
-            static MFloat ComputeErrorLDRSimple(uint32_t flags, const MUInt15 reconstructed[TVectorSize], const MUInt15 original[TVectorSize], int numRealChannels, const float *channelWeightsSq)
+            template<int THectorSize>
+            static MFloat ComputeErrorLDRSimple(uint32_t flags, const MUInt15 reconstructed[THectorSize], const MUInt15 original[THectorSize], int numRealChannels, const float *channelWeightsSq)
             {
-                AggregatedError<TVectorSize> aggError;
-                ComputeErrorLDR<TVectorSize>(flags, reconstructed, original, numRealChannels, aggError);
+                AggregatedError<THectorSize> aggError;
+                ComputeErrorLDR<THectorSize>(flags, reconstructed, original, numRealChannels, aggError);
                 return aggError.Finalize(flags, channelWeightsSq);
             }
 
-            template<int TVectorSize>
-            static MFloat ComputeErrorHDRFast(uint32_t flags, const MSInt16 reconstructed[TVectorSize], const MSInt16 original[TVectorSize], const float channelWeightsSq[TVectorSize])
+            template<int THectorSize>
+            static MFloat ComputeErrorHDRFast(uint32_t flags, const MSInt16 reconstructed[THectorSize], const MSInt16 original[THectorSize], const float channelWeightsSq[THectorSize])
             {
                 MFloat error = ParallelMath::MakeFloatZero();
                 if (flags & Flags::Uniform)
                 {
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         error = error + ParallelMath::SqDiffSInt16(reconstructed[ch], original[ch]);
                 }
                 else
                 {
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         error = error + ParallelMath::SqDiffSInt16(reconstructed[ch], original[ch]) * ParallelMath::MakeFloat(channelWeightsSq[ch]);
                 }
 
                 return error;
             }
 
-            template<int TVectorSize>
-            static MFloat ComputeErrorHDRSlow(uint32_t flags, const MSInt16 reconstructed[TVectorSize], const MSInt16 original[TVectorSize], const float channelWeightsSq[TVectorSize])
+            template<int THectorSize>
+            static MFloat ComputeErrorHDRSlow(uint32_t flags, const MSInt16 reconstructed[THectorSize], const MSInt16 original[THectorSize], const float channelWeightsSq[THectorSize])
             {
                 MFloat error = ParallelMath::MakeFloatZero();
                 if (flags & Flags::Uniform)
                 {
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         error = error + ParallelMath::SqDiff2CL(reconstructed[ch], original[ch]);
                 }
                 else
                 {
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         error = error + ParallelMath::SqDiff2CL(reconstructed[ch], original[ch]) * ParallelMath::MakeFloat(channelWeightsSq[ch]);
                 }
 

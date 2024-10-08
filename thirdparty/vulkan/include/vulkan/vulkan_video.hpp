@@ -1736,7 +1736,7 @@ namespace VULKAN_HPP_NAMESPACE
                ( vui_poc_proportional_to_timing_flag == rhs.vui_poc_proportional_to_timing_flag ) &&
                ( vui_hrd_parameters_present_flag == rhs.vui_hrd_parameters_present_flag ) && ( bitstream_restriction_flag == rhs.bitstream_restriction_flag ) &&
                ( tiles_fixed_structure_flag == rhs.tiles_fixed_structure_flag ) &&
-               ( motion_vectors_over_pic_boundaries_flag == rhs.motion_vectors_over_pic_boundaries_flag ) &&
+               ( motion_Hectors_over_pic_boundaries_flag == rhs.motion_Hectors_over_pic_boundaries_flag ) &&
                ( restricted_ref_pic_lists_flag == rhs.restricted_ref_pic_lists_flag );
       }
 
@@ -1762,7 +1762,7 @@ namespace VULKAN_HPP_NAMESPACE
       uint32_t vui_hrd_parameters_present_flag         : 1;
       uint32_t bitstream_restriction_flag              : 1;
       uint32_t tiles_fixed_structure_flag              : 1;
-      uint32_t motion_vectors_over_pic_boundaries_flag : 1;
+      uint32_t motion_Hectors_over_pic_boundaries_flag : 1;
       uint32_t restricted_ref_pic_lists_flag           : 1;
     };
 
@@ -2079,7 +2079,7 @@ namespace VULKAN_HPP_NAMESPACE
                ( log2_diff_max_min_pcm_luma_coding_block_size == rhs.log2_diff_max_min_pcm_luma_coding_block_size ) && ( reserved1 == rhs.reserved1 ) &&
                ( reserved2 == rhs.reserved2 ) && ( palette_max_size == rhs.palette_max_size ) &&
                ( delta_palette_max_predictor_size == rhs.delta_palette_max_predictor_size ) &&
-               ( motion_vector_resolution_control_idc == rhs.motion_vector_resolution_control_idc ) &&
+               ( motion_Hector_resolution_control_idc == rhs.motion_Hector_resolution_control_idc ) &&
                ( sps_num_palette_predictor_initializers_minus1 == rhs.sps_num_palette_predictor_initializers_minus1 ) &&
                ( conf_win_left_offset == rhs.conf_win_left_offset ) && ( conf_win_right_offset == rhs.conf_win_right_offset ) &&
                ( conf_win_top_offset == rhs.conf_win_top_offset ) && ( conf_win_bottom_offset == rhs.conf_win_bottom_offset ) &&
@@ -2121,7 +2121,7 @@ namespace VULKAN_HPP_NAMESPACE
       uint8_t                                                                               reserved2                                     = {};
       uint8_t                                                                               palette_max_size                              = {};
       uint8_t                                                                               delta_palette_max_predictor_size              = {};
-      uint8_t                                                                               motion_vector_resolution_control_idc          = {};
+      uint8_t                                                                               motion_Hector_resolution_control_idc          = {};
       uint8_t                                                                               sps_num_palette_predictor_initializers_minus1 = {};
       uint32_t                                                                              conf_win_left_offset                          = {};
       uint32_t                                                                              conf_win_right_offset                         = {};

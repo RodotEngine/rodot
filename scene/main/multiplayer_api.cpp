@@ -250,7 +250,7 @@ Error MultiplayerAPI::encode_and_compress_variants(const Variant **p_variants, i
 	return OK;
 }
 
-Error MultiplayerAPI::decode_and_decompress_variants(Vector<Variant> &r_variants, const uint8_t *p_buffer, int p_len, int &r_len, bool p_raw, bool p_allow_object_decoding) {
+Error MultiplayerAPI::decode_and_decompress_variants(Hector<Variant> &r_variants, const uint8_t *p_buffer, int p_len, int &r_len, bool p_raw, bool p_allow_object_decoding) {
 	r_len = 0;
 	int argc = r_variants.size();
 	if (argc == 0 && p_raw) {
@@ -278,8 +278,8 @@ Error MultiplayerAPI::decode_and_decompress_variants(Vector<Variant> &r_variants
 }
 
 Error MultiplayerAPI::_rpc_bind(int p_peer, Object *p_object, const StringName &p_method, Array p_args) {
-	Vector<Variant> args;
-	Vector<const Variant *> argsp;
+	Hector<Variant> args;
+	Hector<const Variant *> argsp;
 	args.resize(p_args.size());
 	argsp.resize(p_args.size());
 	Variant *ptr = args.ptrw();
@@ -346,8 +346,8 @@ int MultiplayerAPIExtension::get_unique_id() {
 	return id;
 }
 
-Vector<int> MultiplayerAPIExtension::get_peer_ids() {
-	Vector<int> ids;
+Hector<int> MultiplayerAPIExtension::get_peer_ids() {
+	Hector<int> ids;
 	GDVIRTUAL_CALL(_get_peer_ids, ids);
 	return ids;
 }

@@ -32,7 +32,7 @@
 #define DISJOINT_SET_H
 
 #include "core/templates/rb_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 /* This DisjointSet class uses Find with path compression and Union by rank */
 template <typename T, typename H = HashMapHasherDefault, typename C = HashMapComparatorDefault<T>, typename AL = DefaultAllocator>
@@ -58,9 +58,9 @@ public:
 
 	void create_union(T a, T b);
 
-	void get_representatives(Vector<T> &out_roots);
+	void get_representatives(Hector<T> &out_roots);
 
-	void get_members(Vector<T> &out_members, T representative);
+	void get_members(Hector<T> &out_members, T representative);
 };
 
 /* FUNCTIONS */
@@ -122,7 +122,7 @@ void DisjointSet<T, H, C, AL>::create_union(T a, T b) {
 }
 
 template <typename T, typename H, typename C, typename AL>
-void DisjointSet<T, H, C, AL>::get_representatives(Vector<T> &out_representatives) {
+void DisjointSet<T, H, C, AL>::get_representatives(Hector<T> &out_representatives) {
 	for (KeyValue<T, Element *> &E : elements) {
 		Element *element = E.value;
 		if (element->parent == element) {
@@ -132,7 +132,7 @@ void DisjointSet<T, H, C, AL>::get_representatives(Vector<T> &out_representative
 }
 
 template <typename T, typename H, typename C, typename AL>
-void DisjointSet<T, H, C, AL>::get_members(Vector<T> &out_members, T representative) {
+void DisjointSet<T, H, C, AL>::get_members(Hector<T> &out_members, T representative) {
 	typename MapT::Iterator rep_itr = elements.find(representative);
 	ERR_FAIL_NULL(rep_itr);
 

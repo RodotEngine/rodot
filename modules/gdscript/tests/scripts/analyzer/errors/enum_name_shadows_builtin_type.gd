@@ -1,4 +1,4 @@
-enum Vector2 { A, B }
+enum Hector2 { A, B }
 
 func test():
 	pass

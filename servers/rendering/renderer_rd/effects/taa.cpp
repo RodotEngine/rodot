@@ -36,7 +36,7 @@
 using namespace RendererRD;
 
 TAA::TAA() {
-	Vector<String> taa_modes;
+	Hector<String> taa_modes;
 	taa_modes.push_back("\n#define MODE_TAA_RESOLVE");
 	taa_shader.initialize(taa_modes);
 	shader_version = taa_shader.version_create();

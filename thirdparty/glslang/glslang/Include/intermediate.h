@@ -75,7 +75,7 @@ enum TOperator {
 
     EOpNegative,
     EOpLogicalNot,
-    EOpVectorLogicalNot,
+    EOpHectorLogicalNot,
     EOpBitwiseNot,
 
     EOpPostIncrement,
@@ -301,17 +301,17 @@ enum TOperator {
     EOpExclusiveOr,
     EOpEqual,
     EOpNotEqual,
-    EOpVectorEqual,
-    EOpVectorNotEqual,
+    EOpHectorEqual,
+    EOpHectorNotEqual,
     EOpLessThan,
     EOpGreaterThan,
     EOpLessThanEqual,
     EOpGreaterThanEqual,
     EOpComma,
 
-    EOpVectorTimesScalar,
-    EOpVectorTimesMatrix,
-    EOpMatrixTimesVector,
+    EOpHectorTimesScalar,
+    EOpHectorTimesMatrix,
+    EOpMatrixTimesHector,
     EOpMatrixTimesScalar,
 
     EOpLogicalOr,
@@ -322,7 +322,7 @@ enum TOperator {
     EOpIndexIndirect,
     EOpIndexDirectStruct,
 
-    EOpVectorSwizzle,
+    EOpHectorSwizzle,
 
     EOpMethod,
     EOpScoping,
@@ -668,9 +668,9 @@ enum TOperator {
     EOpConstructBool,
     EOpConstructFloat,
     EOpConstructDouble,
-    // Keep vector and matrix constructors in a consistent relative order for
+    // Keep Hector and matrix constructors in a consistent relative order for
     // TParseContext::constructBuiltIn, which converts between 8/16/32 bit
-    // vector constructors
+    // Hector constructors
     EOpConstructVec2,
     EOpConstructVec3,
     EOpConstructVec4,
@@ -779,8 +779,8 @@ enum TOperator {
     EOpAddAssign,
     EOpSubAssign,
     EOpMulAssign,
-    EOpVectorTimesMatrixAssign,
-    EOpVectorTimesScalarAssign,
+    EOpHectorTimesMatrixAssign,
+    EOpHectorTimesScalarAssign,
     EOpMatrixTimesScalarAssign,
     EOpMatrixTimesMatrixAssign,
     EOpDivAssign,
@@ -795,7 +795,7 @@ enum TOperator {
     // Array operators
     //
 
-    // Can apply to arrays, vectors, or matrices.
+    // Can apply to arrays, Hectors, or matrices.
     // Can be decomposed to a constant at compile time, but this does not always happen,
     // due to link-time effects. So, consumer can expect either a link-time sized or
     // run-time sized array.
@@ -1036,7 +1036,7 @@ enum TOperator {
     EOpEvaluateAttributeSnapped,         // InterpolateAtOffset with int position on 16x16 grid
     EOpF32tof16,                         // HLSL conversion: half of a PackHalf2x16
     EOpF16tof32,                         // HLSL conversion: half of an UnpackHalf2x16
-    EOpLit,                              // HLSL lighting coefficient vector
+    EOpLit,                              // HLSL lighting coefficient Hector
     EOpTextureBias,                      // HLSL texture bias: will be lowered to EOpTexture
     EOpAsDouble,                         // slightly different from EOpUint64BitsToDouble
     EOpD3DCOLORtoUBYTE4,                 // convert and swizzle 4-component color to UBYTE4 range
@@ -1215,12 +1215,12 @@ public:
     virtual TArraySizes* getArraySizes() { return type.getArraySizes(); }
     virtual const TArraySizes* getArraySizes() const { return type.getArraySizes(); }
     virtual void propagatePrecision(TPrecisionQualifier);
-    virtual int getVectorSize() const { return type.getVectorSize(); }
+    virtual int getHectorSize() const { return type.getHectorSize(); }
     virtual int getMatrixCols() const { return type.getMatrixCols(); }
     virtual int getMatrixRows() const { return type.getMatrixRows(); }
     virtual bool isMatrix() const { return type.isMatrix(); }
     virtual bool isArray()  const { return type.isArray(); }
-    virtual bool isVector() const { return type.isVector(); }
+    virtual bool isHector() const { return type.isHector(); }
     virtual bool isScalar() const { return type.isScalar(); }
     virtual bool isStruct() const { return type.isStruct(); }
     virtual bool isFloatingDomain() const { return type.isFloatingDomain(); }
@@ -1687,8 +1687,8 @@ protected:
     TSpirvInstruction spirvInst;
 };
 
-typedef TVector<TIntermNode*> TIntermSequence;
-typedef TVector<TStorageQualifier> TQualifierList;
+typedef THector<TIntermNode*> TIntermSequence;
+typedef THector<TStorageQualifier> TQualifierList;
 //
 // Nodes that operate on an arbitrary sized set of children.
 //
@@ -1885,7 +1885,7 @@ protected:
     int maxDepth;
 
     // All the nodes from root to the current node's parent during traversing.
-    TVector<TIntermNode *> path;
+    THector<TIntermNode *> path;
 };
 
 // KHR_vulkan_glsl says "Two arrays sized with specialization constants are the same type only if

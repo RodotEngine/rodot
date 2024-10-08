@@ -48,7 +48,7 @@ struct FileInfo {
 	String path;
 	String icon_path;
 	StringName type;
-	Vector<String> sources;
+	Hector<String> sources;
 	bool import_broken = false;
 	uint64_t modified_time = 0;
 

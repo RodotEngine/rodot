@@ -10,18 +10,18 @@
 		[gdscript]
 		var astar_grid = AStarGrid2D.new()
 		astar_grid.region = Rect2i(0, 0, 32, 32)
-		astar_grid.cell_size = Vector2(16, 16)
+		astar_grid.cell_size = Hector2(16, 16)
 		astar_grid.update()
-		print(astar_grid.get_id_path(Vector2i(0, 0), Vector2i(3, 4))) # prints (0, 0), (1, 1), (2, 2), (3, 3), (3, 4)
-		print(astar_grid.get_point_path(Vector2i(0, 0), Vector2i(3, 4))) # prints (0, 0), (16, 16), (32, 32), (48, 48), (48, 64)
+		print(astar_grid.get_id_path(Hector2i(0, 0), Hector2i(3, 4))) # prints (0, 0), (1, 1), (2, 2), (3, 3), (3, 4)
+		print(astar_grid.get_point_path(Hector2i(0, 0), Hector2i(3, 4))) # prints (0, 0), (16, 16), (32, 32), (48, 48), (48, 64)
 		[/gdscript]
 		[csharp]
 		AStarGrid2D astarGrid = new AStarGrid2D();
 		astarGrid.Region = new Rect2I(0, 0, 32, 32);
-		astarGrid.CellSize = new Vector2I(16, 16);
+		astarGrid.CellSize = new Hector2I(16, 16);
 		astarGrid.Update();
-		GD.Print(astarGrid.GetIdPath(Vector2I.Zero, new Vector2I(3, 4))); // prints (0, 0), (1, 1), (2, 2), (3, 3), (3, 4)
-		GD.Print(astarGrid.GetPointPath(Vector2I.Zero, new Vector2I(3, 4))); // prints (0, 0), (16, 16), (32, 32), (48, 48), (48, 64)
+		GD.Print(astarGrid.GetIdPath(Hector2I.Zero, new Hector2I(3, 4))); // prints (0, 0), (1, 1), (2, 2), (3, 3), (3, 4)
+		GD.Print(astarGrid.GetPointPath(Hector2I.Zero, new Hector2I(3, 4))); // prints (0, 0), (16, 16), (32, 32), (48, 48), (48, 64)
 		[/csharp]
 		[/codeblocks]
 		To remove a point from the pathfinding grid, it must be set as "solid" with [method set_point_solid].
@@ -31,8 +31,8 @@
 	<methods>
 		<method name="_compute_cost" qualifiers="virtual const">
 			<return type="float" />
-			<param index="0" name="from_id" type="Vector2i" />
-			<param index="1" name="to_id" type="Vector2i" />
+			<param index="0" name="from_id" type="Hector2i" />
+			<param index="1" name="to_id" type="Hector2i" />
 			<description>
 				Called when computing the cost between two connected points.
 				Note that this function is hidden in the default [AStarGrid2D] class.
@@ -40,8 +40,8 @@
 		</method>
 		<method name="_estimate_cost" qualifiers="virtual const">
 			<return type="float" />
-			<param index="0" name="from_id" type="Vector2i" />
-			<param index="1" name="end_id" type="Vector2i" />
+			<param index="0" name="from_id" type="Hector2i" />
+			<param index="1" name="end_id" type="Hector2i" />
 			<description>
 				Called when estimating the cost between a point and the path's ending point.
 				Note that this function is hidden in the default [AStarGrid2D] class.
@@ -72,9 +72,9 @@
 			</description>
 		</method>
 		<method name="get_id_path">
-			<return type="Vector2i[]" />
-			<param index="0" name="from_id" type="Vector2i" />
-			<param index="1" name="to_id" type="Vector2i" />
+			<return type="Hector2i[]" />
+			<param index="0" name="from_id" type="Hector2i" />
+			<param index="1" name="to_id" type="Hector2i" />
 			<param index="2" name="allow_partial_path" type="bool" default="false" />
 			<description>
 				Returns an array with the IDs of the points that form the path found by AStar2D between the given points. The array is ordered from the starting point to the ending point of the path.
@@ -86,13 +86,13 @@
 			<return type="Dictionary[]" />
 			<param index="0" name="region" type="Rect2i" />
 			<description>
-				Returns an array of dictionaries with point data ([code]id[/code]: [Vector2i], [code]position[/code]: [Vector2], [code]solid[/code]: [bool], [code]weight_scale[/code]: [float]) within a [param region].
+				Returns an array of dictionaries with point data ([code]id[/code]: [Hector2i], [code]position[/code]: [Hector2], [code]solid[/code]: [bool], [code]weight_scale[/code]: [float]) within a [param region].
 			</description>
 		</method>
 		<method name="get_point_path">
-			<return type="PackedVector2Array" />
-			<param index="0" name="from_id" type="Vector2i" />
-			<param index="1" name="to_id" type="Vector2i" />
+			<return type="PackedHector2Array" />
+			<param index="0" name="from_id" type="Hector2i" />
+			<param index="1" name="to_id" type="Hector2i" />
 			<param index="2" name="allow_partial_path" type="bool" default="false" />
 			<description>
 				Returns an array with the points that are in the path found by [AStarGrid2D] between the given points. The array is ordered from the starting point to the ending point of the path.
@@ -102,15 +102,15 @@
 			</description>
 		</method>
 		<method name="get_point_position" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="id" type="Vector2i" />
+			<return type="Hector2" />
+			<param index="0" name="id" type="Hector2i" />
 			<description>
 				Returns the position of the point associated with the given [param id].
 			</description>
 		</method>
 		<method name="get_point_weight_scale" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="id" type="Vector2i" />
+			<param index="0" name="id" type="Hector2i" />
 			<description>
 				Returns the weight scale of the point associated with the given [param id].
 			</description>
@@ -126,26 +126,26 @@
 			<param index="0" name="x" type="int" />
 			<param index="1" name="y" type="int" />
 			<description>
-				Returns [code]true[/code] if the [param x] and [param y] is a valid grid coordinate (id), i.e. if it is inside [member region]. Equivalent to [code]region.has_point(Vector2i(x, y))[/code].
+				Returns [code]true[/code] if the [param x] and [param y] is a valid grid coordinate (id), i.e. if it is inside [member region]. Equivalent to [code]region.has_point(Hector2i(x, y))[/code].
 			</description>
 		</method>
 		<method name="is_in_boundsv" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="id" type="Vector2i" />
+			<param index="0" name="id" type="Hector2i" />
 			<description>
-				Returns [code]true[/code] if the [param id] vector is a valid grid coordinate, i.e. if it is inside [member region]. Equivalent to [code]region.has_point(id)[/code].
+				Returns [code]true[/code] if the [param id] Hector is a valid grid coordinate, i.e. if it is inside [member region]. Equivalent to [code]region.has_point(id)[/code].
 			</description>
 		</method>
 		<method name="is_point_solid" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="id" type="Vector2i" />
+			<param index="0" name="id" type="Hector2i" />
 			<description>
 				Returns [code]true[/code] if a point is disabled for pathfinding. By default, all points are enabled.
 			</description>
 		</method>
 		<method name="set_point_solid">
 			<return type="void" />
-			<param index="0" name="id" type="Vector2i" />
+			<param index="0" name="id" type="Hector2i" />
 			<param index="1" name="solid" type="bool" default="true" />
 			<description>
 				Disables or enables the specified point for pathfinding. Useful for making an obstacle. By default, all points are enabled.
@@ -154,7 +154,7 @@
 		</method>
 		<method name="set_point_weight_scale">
 			<return type="void" />
-			<param index="0" name="id" type="Vector2i" />
+			<param index="0" name="id" type="Hector2i" />
 			<param index="1" name="weight_scale" type="float" />
 			<description>
 				Sets the [param weight_scale] for the point with the given [param id]. The [param weight_scale] is multiplied by the result of [method _compute_cost] when determining the overall cost of traveling across a segment from a neighboring point to this point.
@@ -173,7 +173,7 @@
 		<member name="cell_shape" type="int" setter="set_cell_shape" getter="get_cell_shape" enum="AStarGrid2D.CellShape" default="0">
 			The cell shape. Affects how the positions are placed in the grid. If changed, [method update] needs to be called before finding the next path.
 		</member>
-		<member name="cell_size" type="Vector2" setter="set_cell_size" getter="get_cell_size" default="Vector2(1, 1)">
+		<member name="cell_size" type="Hector2" setter="set_cell_size" getter="get_cell_size" default="Hector2(1, 1)">
 			The size of the point cell which will be applied to calculate the resulting point position returned by [method get_point_path]. If changed, [method update] needs to be called before finding the next path.
 		</member>
 		<member name="default_compute_heuristic" type="int" setter="set_default_compute_heuristic" getter="get_default_compute_heuristic" enum="AStarGrid2D.Heuristic" default="0">
@@ -189,13 +189,13 @@
 			Enables or disables jumping to skip up the intermediate points and speeds up the searching algorithm.
 			[b]Note:[/b] Currently, toggling it on disables the consideration of weight scaling in pathfinding.
 		</member>
-		<member name="offset" type="Vector2" setter="set_offset" getter="get_offset" default="Vector2(0, 0)">
+		<member name="offset" type="Hector2" setter="set_offset" getter="get_offset" default="Hector2(0, 0)">
 			The offset of the grid which will be applied to calculate the resulting point position returned by [method get_point_path]. If changed, [method update] needs to be called before finding the next path.
 		</member>
 		<member name="region" type="Rect2i" setter="set_region" getter="get_region" default="Rect2i(0, 0, 0, 0)">
 			The region of grid cells available for pathfinding. If changed, [method update] needs to be called before finding the next path.
 		</member>
-		<member name="size" type="Vector2i" setter="set_size" getter="get_size" default="Vector2i(0, 0)" deprecated="Use [member region] instead.">
+		<member name="size" type="Hector2i" setter="set_size" getter="get_size" default="Hector2i(0, 0)" deprecated="Use [member region] instead.">
 			The size of the grid (number of cells of size [member cell_size] on each axis). If changed, [method update] needs to be called before finding the next path.
 		</member>
 	</members>

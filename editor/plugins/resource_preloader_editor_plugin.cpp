@@ -50,7 +50,7 @@ void ResourcePreloaderEditor::_notification(int p_what) {
 	}
 }
 
-void ResourcePreloaderEditor::_files_load_request(const Vector<String> &p_paths) {
+void ResourcePreloaderEditor::_files_load_request(const Hector<String> &p_paths) {
 	for (int i = 0; i < p_paths.size(); i++) {
 		const String &path = p_paths[i];
 
@@ -287,7 +287,7 @@ bool ResourcePreloaderEditor::can_drop_data_fw(const Point2 &p_point, const Vari
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		return files.size() != 0;
 	}
@@ -336,7 +336,7 @@ void ResourcePreloaderEditor::drop_data_fw(const Point2 &p_point, const Variant 
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		_files_load_request(files);
 	}

@@ -167,8 +167,8 @@ void TParseContext::setLimits(const TBuiltInResource& r)
     resources = r;
     intermediate.setLimits(r);
 
-    anyIndexLimits = ! limits.generalAttributeMatrixVectorIndexing ||
-                     ! limits.generalConstantMatrixVectorIndexing ||
+    anyIndexLimits = ! limits.generalAttributeMatrixHectorIndexing ||
+                     ! limits.generalConstantMatrixHectorIndexing ||
                      ! limits.generalSamplerIndexing ||
                      ! limits.generalUniformIndexing ||
                      ! limits.generalVariableIndexing ||
@@ -325,7 +325,7 @@ void TParseContext::setInvariant(const TSourceLoc& loc, const char* builtin) {
     }
 }
 
-void TParseContext::handlePragma(const TSourceLoc& loc, const TVector<TString>& tokens)
+void TParseContext::handlePragma(const TSourceLoc& loc, const THector<TString>& tokens)
 {
     if (pragmaCallback)
         pragmaCallback(loc.line, tokens);
@@ -534,18 +534,18 @@ TIntermTyped* TParseContext::handleBracketDereference(const TSourceLoc& loc, TIn
     // basic type checks...
     variableCheck(base);
 
-    if (! base->isArray() && ! base->isMatrix() && ! base->isVector() && ! base->getType().isCoopMat() &&
+    if (! base->isArray() && ! base->isMatrix() && ! base->isHector() && ! base->getType().isCoopMat() &&
         ! base->isReference()) {
         if (base->getAsSymbolNode())
-            error(loc, " left of '[' is not of type array, matrix, or vector ", base->getAsSymbolNode()->getName().c_str(), "");
+            error(loc, " left of '[' is not of type array, matrix, or Hector ", base->getAsSymbolNode()->getName().c_str(), "");
         else
-            error(loc, " left of '[' is not of type array, matrix, or vector ", "expression", "");
+            error(loc, " left of '[' is not of type array, matrix, or Hector ", "expression", "");
 
         // Insert dummy error-recovery result
         return intermediate.addConstantUnion(0.0, EbtFloat, loc);
     }
 
-    if (!base->isArray() && base->isVector()) {
+    if (!base->isArray() && base->isHector()) {
         if (base->getType().contains16BitFloat())
             requireFloat16Arithmetic(loc, "[", "does not operate on types containing float16");
         if (base->getType().contains16BitInt())
@@ -679,8 +679,8 @@ void TParseContext::handleIndexLimits(const TSourceLoc& /*loc*/, TIntermTyped* b
 {
     if ((! limits.generalSamplerIndexing && base->getBasicType() == EbtSampler) ||
         (! limits.generalUniformIndexing && base->getQualifier().isUniformOrBuffer() && language != EShLangVertex) ||
-        (! limits.generalAttributeMatrixVectorIndexing && base->getQualifier().isPipeInput() && language == EShLangVertex && (base->getType().isMatrix() || base->getType().isVector())) ||
-        (! limits.generalConstantMatrixVectorIndexing && base->getAsConstantUnion()) ||
+        (! limits.generalAttributeMatrixHectorIndexing && base->getQualifier().isPipeInput() && language == EShLangVertex && (base->getType().isMatrix() || base->getType().isHector())) ||
+        (! limits.generalConstantMatrixHectorIndexing && base->getAsConstantUnion()) ||
         (! limits.generalVariableIndexing && ! base->getType().getQualifier().isUniformOrBuffer() &&
                                              ! base->getType().getQualifier().isPipeInput() &&
                                              ! base->getType().getQualifier().isPipeOutput() &&
@@ -952,8 +952,8 @@ TIntermTyped* TParseContext::handleDotDereference(const TSourceLoc& loc, TInterm
         if (base->isArray()) {
             profileRequires(loc, ENoProfile, 120, E_GL_3DL_array_objects, ".length");
             profileRequires(loc, EEsProfile, 300, nullptr, ".length");
-        } else if (base->isVector() || base->isMatrix()) {
-            const char* feature = ".length() on vectors and matrices";
+        } else if (base->isHector() || base->isMatrix()) {
+            const char* feature = ".length() on Hectors and matrices";
             requireProfile(loc, ~EEsProfile, feature);
             profileRequires(loc, ~EEsProfile, 420, E_GL_ARB_shading_language_420pack, feature);
         } else if (!base->getType().isCoopMat()) {
@@ -982,7 +982,7 @@ TIntermTyped* TParseContext::handleDotDereference(const TSourceLoc& loc, TInterm
     // leaving swizzles and struct/block dereferences.
 
     TIntermTyped* result = base;
-    if ((base->isVector() || base->isScalar()) &&
+    if ((base->isHector() || base->isScalar()) &&
         (base->isFloatingDomain() || base->isIntegerDomain() || base->getBasicType() == EbtBool)) {
         result = handleDotSwizzle(loc, base, field);
     } else if (base->isStruct() || base->isReference()) {
@@ -1059,14 +1059,14 @@ TIntermTyped* TParseContext::handleDotSwizzle(const TSourceLoc& loc, TIntermType
         profileRequires(loc, ~EEsProfile, 420, E_GL_ARB_shading_language_420pack, dotFeature);
     }
 
-    TSwizzleSelectors<TVectorSelector> selectors;
-    parseSwizzleSelector(loc, field, base->getVectorSize(), selectors);
+    TSwizzleSelectors<THectorSelector> selectors;
+    parseSwizzleSelector(loc, field, base->getHectorSize(), selectors);
 
-    if (base->isVector() && selectors.size() != 1 && base->getType().contains16BitFloat())
+    if (base->isHector() && selectors.size() != 1 && base->getType().contains16BitFloat())
         requireFloat16Arithmetic(loc, ".", "can't swizzle types containing float16");
-    if (base->isVector() && selectors.size() != 1 && base->getType().contains16BitInt())
+    if (base->isHector() && selectors.size() != 1 && base->getType().contains16BitInt())
         requireInt16Arithmetic(loc, ".", "can't swizzle types containing (u)int16");
-    if (base->isVector() && selectors.size() != 1 && base->getType().contains8BitInt())
+    if (base->isHector() && selectors.size() != 1 && base->getType().contains8BitInt())
         requireInt8Arithmetic(loc, ".", "can't swizzle types containing (u)int8");
 
     if (base->isScalar()) {
@@ -1090,7 +1090,7 @@ TIntermTyped* TParseContext::handleDotSwizzle(const TSourceLoc& loc, TIntermType
             result->setType(TType(base->getBasicType(), EvqTemporary, base->getType().getQualifier().precision));
         } else {
             TIntermTyped* index = intermediate.addSwizzle(selectors, loc);
-            result = intermediate.addIndex(EOpVectorSwizzle, base, index, loc);
+            result = intermediate.addIndex(EOpHectorSwizzle, base, index, loc);
             result->setType(TType(base->getBasicType(), EvqTemporary, base->getType().getQualifier().precision, selectors.size()));
         }
         // Swizzle operations propagate specialization-constantness
@@ -1433,8 +1433,8 @@ TIntermTyped* TParseContext::handleFunctionCall(const TSourceLoc& loc, TFunction
 
                     // TODO 4.5 functionality:  A shader will fail to compile
                     // if the value passed to the memargument of an atomic memory function does not correspond to a buffer or
-                    // shared variable. It is acceptable to pass an element of an array or a single component of a vector to the
-                    // memargument of an atomic memory function, as long as the underlying array or vector is a buffer or
+                    // shared variable. It is acceptable to pass an element of an array or a single component of a Hector to the
+                    // memargument of an atomic memory function, as long as the underlying array or Hector is a buffer or
                     // shared variable.
                 }
 
@@ -1791,8 +1791,8 @@ TIntermTyped* TParseContext::handleLengthMethod(const TSourceLoc& loc, TFunction
                 length = type.getOuterArraySize();
         } else if (type.isMatrix())
             length = type.getMatrixCols();
-        else if (type.isVector())
-            length = type.getVectorSize();
+        else if (type.isHector())
+            length = type.getHectorSize();
         else if (type.isCoopMat())
             return intermediate.addBuiltInFunctionCall(loc, EOpArrayLength, true, intermNode, TType(EbtInt));
         else {
@@ -2203,7 +2203,7 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
     case EOpTextureLod:
     {
         if ((fnCandidate.getParamCount() > 2) && ((*argp)[1]->getAsTyped()->getType().getBasicType() == EbtFloat) &&
-            ((*argp)[1]->getAsTyped()->getType().getVectorSize() == 4) && fnCandidate[0].type->getSampler().shadow) {
+            ((*argp)[1]->getAsTyped()->getType().getHectorSize() == 4) && fnCandidate[0].type->getSampler().shadow) {
             featureString = fnCandidate.getName();
             if (callNode.getOp() == EOpTexture)
                 featureString += "(..., float bias)";
@@ -2332,7 +2332,7 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
                 error(loc, "argument must be compile-time constant", "texel offset", "");
             else if ((*argp)[arg]->getAsConstantUnion()) {
                 const TType& type = (*argp)[arg]->getAsTyped()->getType();
-                for (int c = 0; c < type.getVectorSize(); ++c) {
+                for (int c = 0; c < type.getHectorSize(); ++c) {
                     int offset = (*argp)[arg]->getAsConstantUnion()->getConstArray()[c].getIConst();
                     if (offset > resources.maxProgramTexelOffset || offset < resources.minProgramTexelOffset)
                         error(loc, "value is out of range:", "texel offset",
@@ -2345,7 +2345,7 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
                 if (s.is2D() && s.isArrayed() && s.isShadow()) {
                     if (
                         ((*argp)[1]->getAsTyped()->getType().getBasicType() == EbtFloat) && 
-                        ((*argp)[1]->getAsTyped()->getType().getVectorSize() == 4) &&
+                        ((*argp)[1]->getAsTyped()->getType().getHectorSize() == 4) &&
                         (fnCandidate.getParamCount() == 4)) {
                         featureString = fnCandidate.getName() + " for sampler2DArrayShadow";
                         feature = featureString.c_str();
@@ -2364,7 +2364,7 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
                 TSampler s = arg0->getType().getSampler();
                 if (s.is2D() && s.isArrayed() && s.isShadow() &&
                     ((*argp)[1]->getAsTyped()->getType().getBasicType() == EbtFloat) &&
-                    ((*argp)[1]->getAsTyped()->getType().getVectorSize() == 4) &&
+                    ((*argp)[1]->getAsTyped()->getType().getHectorSize() == 4) &&
                     (fnCandidate.getParamCount() == 4)) {
                         featureString = fnCandidate.getName() + " for sampler2DArrayShadow";
                         feature = featureString.c_str();
@@ -2529,13 +2529,13 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
             else if (callNode.getType().getBasicType() == EbtUint64 && imageType.getQualifier().getFormat() != ElfR64ui)
                 error(loc, "only supported on image with format r64ui", fnCandidate.getName().c_str(), "");
         } else if(callNode.getType().getBasicType() == EbtFloat16 && 
-                ((callNode.getType().getVectorSize() == 2 && arg0->getType().getQualifier().getFormat() == ElfRg16f) ||
-                  (callNode.getType().getVectorSize() == 4 && arg0->getType().getQualifier().getFormat() == ElfRgba16f))) {
+                ((callNode.getType().getHectorSize() == 2 && arg0->getType().getQualifier().getFormat() == ElfRg16f) ||
+                  (callNode.getType().getHectorSize() == 4 && arg0->getType().getQualifier().getFormat() == ElfRgba16f))) {
             if (StartsWith(fnCandidate.getName(), "imageAtomicAdd") ||
                 StartsWith(fnCandidate.getName(), "imageAtomicExchange") ||
                 StartsWith(fnCandidate.getName(), "imageAtomicMin") ||
                 StartsWith(fnCandidate.getName(), "imageAtomicMax")) {
-                requireExtensions(loc, 1, &E_GL_NV_shader_atomic_fp16_vector, fnCandidate.getName().c_str());
+                requireExtensions(loc, 1, &E_GL_NV_shader_atomic_fp16_Hector, fnCandidate.getName().c_str());
             } else {
                 error(loc, "f16vec2/4 operation not supported on: ", fnCandidate.getName().c_str(), "");
             }
@@ -2600,8 +2600,8 @@ void TParseContext::builtInOpCheck(const TSourceLoc& loc, const TFunction& fnCan
         } else if ((callNode.getOp() == EOpAtomicAdd || callNode.getOp() == EOpAtomicExchange ||
                     callNode.getOp() == EOpAtomicMin || callNode.getOp() == EOpAtomicMax) &&
                    arg0->getType().getBasicType() == EbtFloat16 && 
-                   (arg0->getType().getVectorSize() == 2 || arg0->getType().getVectorSize() == 4 )) {
-            requireExtensions(loc, 1, &E_GL_NV_shader_atomic_fp16_vector, fnCandidate.getName().c_str());
+                   (arg0->getType().getHectorSize() == 2 || arg0->getType().getHectorSize() == 4 )) {
+            requireExtensions(loc, 1, &E_GL_NV_shader_atomic_fp16_Hector, fnCandidate.getName().c_str());
         } else if ((callNode.getOp() == EOpAtomicAdd || callNode.getOp() == EOpAtomicExchange) &&
                    (arg0->getType().getBasicType() == EbtFloat ||
                     arg0->getType().getBasicType() == EbtDouble)) {
@@ -2926,7 +2926,7 @@ void TParseContext::nonOpBuiltInCheck(const TSourceLoc& loc, const TFunction& fn
                         error(loc, "argument must be compile-time constant", "texel offset", "");
                     else {
                         const TType& type = callNode.getSequence()[arg]->getAsTyped()->getType();
-                        for (int c = 0; c < type.getVectorSize(); ++c) {
+                        for (int c = 0; c < type.getHectorSize(); ++c) {
                             int offset = callNode.getSequence()[arg]->getAsConstantUnion()->getConstArray()[c].getIConst();
                             if (offset > resources.maxProgramTexelOffset || offset < resources.minProgramTexelOffset)
                                 error(loc, "value is out of range:", "texel offset", "[gl_MinProgramTexelOffset, gl_MaxProgramTexelOffset]");
@@ -3129,7 +3129,7 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc& loc, const char* op, TInt
                 }
             }
             break; // left node is checked by base class
-        case EOpVectorSwizzle:
+        case EOpHectorSwizzle:
             errorReturn = lValueErrorCheck(loc, op, binaryNode->getLeft());
             if (!errorReturn) {
                 int offset[4] = {0,0,0,0};
@@ -3392,7 +3392,7 @@ bool TParseContext::builtInName(const TString& identifier)
 //         * int
 //         * uint
 //         * bool
-//     - vector versions of the above conversion constructors
+//     - Hector versions of the above conversion constructors
 //
 // Returns true if there was an error in construction.
 //
@@ -3486,7 +3486,7 @@ bool TParseContext::constructorError(const TSourceLoc& loc, TIntermNode* node, T
         // 'full' will go to true when enough args have been seen.  If we loop
         // again, there is an extra argument.
         if (full) {
-            // For vectors and matrices, it's okay to have too many components
+            // For Hectors and matrices, it's okay to have too many components
             // available, but not okay to have unused arguments.
             overFull = true;
         }
@@ -3525,8 +3525,8 @@ bool TParseContext::constructorError(const TSourceLoc& loc, TIntermNode* node, T
     case EOpConstructF16Vec4:
         if (type.isArray())
             requireFloat16Arithmetic(loc, constructorString.c_str(), "16-bit arrays not supported");
-        if (type.isVector() && function.getParamCount() != 1)
-            requireFloat16Arithmetic(loc, constructorString.c_str(), "16-bit vectors only take vector types");
+        if (type.isHector() && function.getParamCount() != 1)
+            requireFloat16Arithmetic(loc, constructorString.c_str(), "16-bit Hectors only take Hector types");
         break;
     case EOpConstructUint16:
     case EOpConstructU16Vec2:
@@ -3538,8 +3538,8 @@ bool TParseContext::constructorError(const TSourceLoc& loc, TIntermNode* node, T
     case EOpConstructI16Vec4:
         if (type.isArray())
             requireInt16Arithmetic(loc, constructorString.c_str(), "16-bit arrays not supported");
-        if (type.isVector() && function.getParamCount() != 1)
-            requireInt16Arithmetic(loc, constructorString.c_str(), "16-bit vectors only take vector types");
+        if (type.isHector() && function.getParamCount() != 1)
+            requireInt16Arithmetic(loc, constructorString.c_str(), "16-bit Hectors only take Hector types");
         break;
     case EOpConstructUint8:
     case EOpConstructU8Vec2:
@@ -3551,8 +3551,8 @@ bool TParseContext::constructorError(const TSourceLoc& loc, TIntermNode* node, T
     case EOpConstructI8Vec4:
         if (type.isArray())
             requireInt8Arithmetic(loc, constructorString.c_str(), "8-bit arrays not supported");
-        if (type.isVector() && function.getParamCount() != 1)
-            requireInt8Arithmetic(loc, constructorString.c_str(), "8-bit vectors only take vector types");
+        if (type.isHector() && function.getParamCount() != 1)
+            requireInt8Arithmetic(loc, constructorString.c_str(), "8-bit Hectors only take Hector types");
         break;
     default:
         break;
@@ -3751,7 +3751,7 @@ bool TParseContext::constructorTextureSamplerError(const TSourceLoc& loc, const 
     if (function.getParamCount() == 1) {
         TType* pType = function[0].type;
         TBasicType basicType = pType->getBasicType();
-        bool isIntegerVec2 = ((basicType == EbtUint || basicType == EbtInt) && pType->getVectorSize() == 2);
+        bool isIntegerVec2 = ((basicType == EbtUint || basicType == EbtInt) && pType->getHectorSize() == 2);
         bool bindlessMode = extensionTurnedOn(E_GL_ARB_bindless_texture);
         if (isIntegerVec2 && bindlessMode) {
             if (pType->getSampler().isImage())
@@ -3833,14 +3833,14 @@ bool TParseContext::voidErrorCheck(const TSourceLoc& loc, const TString& identif
 // Checks to see if the node (for the expression) contains a scalar boolean expression or not
 void TParseContext::boolCheck(const TSourceLoc& loc, const TIntermTyped* type)
 {
-    if (type->getBasicType() != EbtBool || type->isArray() || type->isMatrix() || type->isVector())
+    if (type->getBasicType() != EbtBool || type->isArray() || type->isMatrix() || type->isHector())
         error(loc, "boolean expression expected", "", "");
 }
 
 // This function checks to see if the node (for the expression) contains a scalar boolean expression or not
 void TParseContext::boolCheck(const TSourceLoc& loc, const TPublicType& pType)
 {
-    if (pType.basicType != EbtBool || pType.arraySizes || pType.matrixCols > 1 || (pType.vectorSize > 1))
+    if (pType.basicType != EbtBool || pType.arraySizes || pType.matrixCols > 1 || (pType.HectorSize > 1))
         error(loc, "boolean expression expected", "", "");
 }
 
@@ -6518,7 +6518,7 @@ void TParseContext::layoutTypeCheck(const TSourceLoc& loc, const TType& type)
         }
         if (qualifier.hasComponent()) {
             // "It is a compile-time error if this sequence of components gets larger than 3."
-            if (qualifier.layoutComponent + type.getVectorSize() * (type.getBasicType() == EbtDouble ? 2 : 1) > 4)
+            if (qualifier.layoutComponent + type.getHectorSize() * (type.getBasicType() == EbtDouble ? 2 : 1) > 4)
                 error(loc, "type overflows the available 4 components", "component", "");
 
             // "It is a compile-time error to apply the component qualifier to a matrix, a structure, a block, or an array containing any of these."
@@ -7067,7 +7067,7 @@ const TFunction* TParseContext::findFunction120(const TSourceLoc& loc, const TFu
     // more than one function."
 
     const TFunction* candidate = nullptr;
-    TVector<const TFunction*> candidateList;
+    THector<const TFunction*> candidateList;
     symbolTable.findFunctionNameList(call.getMangledName(), candidateList, builtIn);
 
     for (auto it = candidateList.begin(); it != candidateList.end(); ++it) {
@@ -7168,7 +7168,7 @@ const TFunction* TParseContext::findFunction400(const TSourceLoc& loc, const TFu
     // no exact match, use the generic selector, parameterized by the GLSL rules
 
     // create list of candidates to send
-    TVector<const TFunction*> candidateList;
+    THector<const TFunction*> candidateList;
     symbolTable.findFunctionNameList(call.getMangledName(), candidateList, builtIn);
 
     // can 'from' convert to 'to'?
@@ -7244,7 +7244,7 @@ const TFunction* TParseContext::findFunctionExplicitTypes(const TSourceLoc& loc,
     // no exact match, use the generic selector, parameterized by the GLSL rules
 
     // create list of candidates to send
-    TVector<const TFunction*> candidateList;
+    THector<const TFunction*> candidateList;
     symbolTable.findFunctionNameList(call.getMangledName(), candidateList, builtIn);
 
     // can 'from' convert to 'to'?
@@ -7588,7 +7588,7 @@ void TParseContext::vkRelaxedRemapUniformMembers(const TSourceLoc& loc, const TP
                       memberType.basicType = type.getBasicType();
                       memberType.sampler = type.getSampler();
                       memberType.qualifier = type.getQualifier();
-                      memberType.vectorSize = type.getVectorSize();
+                      memberType.HectorSize = type.getHectorSize();
                       memberType.matrixCols = type.getMatrixCols();
                       memberType.matrixRows = type.getMatrixRows();
                       memberType.coopmatNV = type.isCoopMatNV();
@@ -8243,19 +8243,19 @@ TIntermTyped* TParseContext::convertInitializerList(const TSourceLoc& loc, const
             error(loc, "wrong number of matrix columns:", "initializer list", type.getCompleteString(intermediate.getEnhancedMsgs()).c_str());
             return nullptr;
         }
-        TType vectorType(type, 0); // dereferenced type
+        TType HectorType(type, 0); // dereferenced type
         for (int i = 0; i < type.getMatrixCols(); ++i) {
-            initList->getSequence()[i] = convertInitializerList(loc, vectorType, initList->getSequence()[i]->getAsTyped());
+            initList->getSequence()[i] = convertInitializerList(loc, HectorType, initList->getSequence()[i]->getAsTyped());
             if (initList->getSequence()[i] == nullptr)
                 return nullptr;
         }
-    } else if (type.isVector()) {
-        if (type.getVectorSize() != (int)initList->getSequence().size()) {
-            error(loc, "wrong vector size (or rows in a matrix column):", "initializer list", type.getCompleteString(intermediate.getEnhancedMsgs()).c_str());
+    } else if (type.isHector()) {
+        if (type.getHectorSize() != (int)initList->getSequence().size()) {
+            error(loc, "wrong Hector size (or rows in a matrix column):", "initializer list", type.getCompleteString(intermediate.getEnhancedMsgs()).c_str());
             return nullptr;
         }
         TBasicType destType = type.getBasicType();
-        for (int i = 0; i < type.getVectorSize(); ++i) {
+        for (int i = 0; i < type.getHectorSize(); ++i) {
             TBasicType initType = initList->getSequence()[i]->getAsTyped()->getBasicType();
             if (destType != initType && !intermediate.canImplicitlyPromote(initType, destType)) {
                 error(loc, "type mismatch in initializer list", "initializer list", type.getCompleteString(intermediate.getEnhancedMsgs()).c_str());
@@ -8349,7 +8349,7 @@ TIntermTyped* TParseContext::addConstructor(const TSourceLoc& loc, TIntermNode* 
     //
     // Handle list of arguments.
     //
-    TIntermSequence &sequenceVector = aggrNode->getSequence();    // Stores the information about the parameter to the constructor
+    TIntermSequence &sequenceHector = aggrNode->getSequence();    // Stores the information about the parameter to the constructor
     // if the structure constructor contains more than one parameter, then construct
     // each parameter
 
@@ -8358,8 +8358,8 @@ TIntermTyped* TParseContext::addConstructor(const TSourceLoc& loc, TIntermNode* 
     // for each parameter to the constructor call, check to see if the right type is passed or convert them
     // to the right type if possible (and allowed).
     // for structure constructors, just check if the right type is passed, no conversion is allowed.
-    for (TIntermSequence::iterator p = sequenceVector.begin();
-                                   p != sequenceVector.end(); p++, paramCount++) {
+    for (TIntermSequence::iterator p = sequenceHector.begin();
+                                   p != sequenceHector.end(); p++, paramCount++) {
         if (type.isArray())
             newNode = constructAggregate(*p, elementType, paramCount+1, node->getLoc());
         else if (op == EOpConstructStruct)
@@ -8376,7 +8376,7 @@ TIntermTyped* TParseContext::addConstructor(const TSourceLoc& loc, TIntermNode* 
     TIntermTyped *ret_node = intermediate.setAggregateOperator(aggrNode, op, type, loc);
 
     TIntermAggregate *agg_node = ret_node->getAsAggregate();
-    if (agg_node && (agg_node->isVector() || agg_node->isArray() || agg_node->isMatrix()))
+    if (agg_node && (agg_node->isHector() || agg_node->isArray() || agg_node->isMatrix()))
         agg_node->updatePrecision();
 
     return ret_node;
@@ -8398,9 +8398,9 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
     // TODO: This could be generalized to more type combinations, but that would require
     // more extensive testing and full algorithm rework. For now, the need to do two changes makes
     // the recursive call work, and avoids the most egregious case of creating integer matrices.
-    if (node->getType().isMatrix() && (type.isScalar() || type.isVector()) &&
+    if (node->getType().isMatrix() && (type.isScalar() || type.isHector()) &&
             type.isFloatingDomain() != node->getType().isFloatingDomain()) {
-        TType transitionType(node->getBasicType(), glslang::EvqTemporary, type.getVectorSize(), 0, 0, node->isVector());
+        TType transitionType(node->getBasicType(), glslang::EvqTemporary, type.getHectorSize(), 0, 0, node->isHector());
         TOperator transitionOp = intermediate.mapTypeToConstructorOp(transitionType);
         node = constructBuiltIn(transitionType, transitionOp, node, loc, false);
     }
@@ -8446,7 +8446,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
             // force the basic type of the constructor param to uvec2, otherwise spv builder will
             // report some errors
             TIntermTyped* newSrcNode = intermediate.createConversion(EbtUint, node);
-            newSrcNode->getAsTyped()->getWritableType().setVectorSize(2);
+            newSrcNode->getAsTyped()->getWritableType().setHectorSize(2);
 
             TIntermTyped* newNode =
                 intermediate.addBuiltInFunctionCall(node->getLoc(), EOpConstructUVec2, false, newSrcNode, type);
@@ -8467,7 +8467,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
         break;
     case EOpConstructTextureSampler:
         if ((node->getType().getBasicType() == EbtUint || node->getType().getBasicType() == EbtInt) &&
-            node->getType().getVectorSize() == 2) {
+            node->getType().getHectorSize() == 2) {
             requireExtensions(loc, 1, &E_GL_ARB_bindless_texture, "ivec2/uvec2 convert to texture handle");
             // No matter ivec2 or uvec2, Set EOpPackUint2x32 just to generate an opBitcast op code
             TIntermTyped* newNode =
@@ -8508,7 +8508,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
         // 8/16-bit storage extensions don't support constructing composites of 8/16-bit types,
         // so construct a 32-bit type and convert
         if (!intermediate.getArithemeticFloat16Enabled()) {
-            TType tempType(EbtFloat, EvqTemporary, type.getVectorSize());
+            TType tempType(EbtFloat, EvqTemporary, type.getHectorSize());
             newNode = node;
             if (tempType != newNode->getType()) {
                 TOperator aggregateOp;
@@ -8531,7 +8531,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
         // 8/16-bit storage extensions don't support constructing composites of 8/16-bit types,
         // so construct a 32-bit type and convert
         if (!intermediate.getArithemeticInt8Enabled()) {
-            TType tempType(EbtInt, EvqTemporary, type.getVectorSize());
+            TType tempType(EbtInt, EvqTemporary, type.getHectorSize());
             newNode = node;
             if (tempType != newNode->getType()) {
                 TOperator aggregateOp;
@@ -8554,7 +8554,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
         // 8/16-bit storage extensions don't support constructing composites of 8/16-bit types,
         // so construct a 32-bit type and convert
         if (!intermediate.getArithemeticInt8Enabled()) {
-            TType tempType(EbtUint, EvqTemporary, type.getVectorSize());
+            TType tempType(EbtUint, EvqTemporary, type.getHectorSize());
             newNode = node;
             if (tempType != newNode->getType()) {
                 TOperator aggregateOp;
@@ -8577,7 +8577,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
         // 8/16-bit storage extensions don't support constructing composites of 8/16-bit types,
         // so construct a 32-bit type and convert
         if (!intermediate.getArithemeticInt16Enabled()) {
-            TType tempType(EbtInt, EvqTemporary, type.getVectorSize());
+            TType tempType(EbtInt, EvqTemporary, type.getHectorSize());
             newNode = node;
             if (tempType != newNode->getType()) {
                 TOperator aggregateOp;
@@ -8600,7 +8600,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
         // 8/16-bit storage extensions don't support constructing composites of 8/16-bit types,
         // so construct a 32-bit type and convert
         if (!intermediate.getArithemeticInt16Enabled()) {
-            TType tempType(EbtUint, EvqTemporary, type.getVectorSize());
+            TType tempType(EbtUint, EvqTemporary, type.getHectorSize());
             newNode = node;
             if (tempType != newNode->getType()) {
                 TOperator aggregateOp;
@@ -8650,8 +8650,8 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
                 type);
             return newNode;
         // construct reference from uvec2
-        } else if (node->getType().isVector() && node->getType().getBasicType() == EbtUint &&
-                   node->getVectorSize() == 2) {
+        } else if (node->getType().isHector() && node->getType().getBasicType() == EbtUint &&
+                   node->getHectorSize() == 2) {
             requireExtensions(loc, 1, &E_GL_EXT_buffer_reference_uvec2, "uvec2 conversion to reference");
             TIntermTyped* newNode = intermediate.addBuiltInFunctionCall(node->getLoc(), EOpConvUvec2ToPtr, true, node,
                 type);
@@ -8790,7 +8790,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType& type, TOperator op, T
             requireExtensions(loc, Num_ray_tracing_EXTs, ray_tracing_EXTs, "uint64_t conversion to acclerationStructureEXT");
             return intermediate.addBuiltInFunctionCall(node->getLoc(), EOpConvUint64ToAccStruct, true, node,
                 type);
-        } else if (node->getType().isVector() && node->getType().getBasicType() == EbtUint && node->getVectorSize() == 2) {
+        } else if (node->getType().isHector() && node->getType().getBasicType() == EbtUint && node->getHectorSize() == 2) {
             // construct acceleration structure from uint64
             requireExtensions(loc, Num_ray_tracing_EXTs, ray_tracing_EXTs, "uvec2 conversion to accelerationStructureEXT");
             return intermediate.addBuiltInFunctionCall(node->getLoc(), EOpConvUvec2ToAccStruct, true, node,
@@ -9511,12 +9511,12 @@ void TParseContext::fixBlockUniformLayoutPacking(TQualifier& qualifier, TTypeLis
         if (qualifier.layoutPacking != ElpNone) {
             if (tmpTypeList == nullptr) {
                 if ((*originTypeList)[member].type->getQualifier().layoutPacking == ElpNone &&
-                    !(*originTypeList)[member].type->isScalarOrVector()) {
+                    !(*originTypeList)[member].type->isScalarOrHector()) {
                     (*originTypeList)[member].type->getQualifier().layoutPacking = qualifier.layoutPacking;
                 }
             } else {
                 if ((*tmpTypeList)[member].type->getQualifier().layoutPacking == ElpNone &&
-                    !(*tmpTypeList)[member].type->isScalarOrVector()) {
+                    !(*tmpTypeList)[member].type->isScalarOrHector()) {
                     (*tmpTypeList)[member].type->getQualifier().layoutPacking = qualifier.layoutPacking;
                 }
             }
@@ -10032,7 +10032,7 @@ TIntermNode* TParseContext::addSwitch(const TSourceLoc& loc, TIntermTyped* expre
 
     if (expression == nullptr ||
         (expression->getBasicType() != EbtInt && expression->getBasicType() != EbtUint) ||
-        expression->getType().isArray() || expression->getType().isMatrix() || expression->getType().isVector())
+        expression->getType().isArray() || expression->getType().isMatrix() || expression->getType().isHector())
             error(loc, "condition must be a scalar integer expression", "switch", "");
 
     // If there is nothing to do, drop the switch but still execute the expression

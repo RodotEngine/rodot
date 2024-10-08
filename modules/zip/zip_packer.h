@@ -56,7 +56,7 @@ public:
 	Error close();
 
 	Error start_file(const String &p_path);
-	Error write_file(const Vector<uint8_t> &p_data);
+	Error write_file(const Hector<uint8_t> &p_data);
 	Error close_file();
 
 	ZIPPacker();

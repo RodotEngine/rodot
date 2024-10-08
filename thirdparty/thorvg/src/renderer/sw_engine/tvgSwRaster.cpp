@@ -436,9 +436,9 @@ static bool _rasterBlendingRect(SwSurface* surface, const SwBBox& region, uint8_
 
 static bool _rasterTranslucentRect(SwSurface* surface, const SwBBox& region, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-#if defined(THORVG_AVX_VECTOR_SUPPORT)
+#if defined(THORVG_AVX_Hector_SUPPORT)
     return avxRasterTranslucentRect(surface, region, r, g, b, a);
-#elif defined(THORVG_NEON_VECTOR_SUPPORT)
+#elif defined(THORVG_NEON_Hector_SUPPORT)
     return neonRasterTranslucentRect(surface, region, r, g, b, a);
 #else
     return cRasterTranslucentRect(surface, region, r, g, b, a);
@@ -614,9 +614,9 @@ static bool _rasterBlendingRle(SwSurface* surface, const SwRleData* rle, uint8_t
 
 static bool _rasterTranslucentRle(SwSurface* surface, const SwRleData* rle, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-#if defined(THORVG_AVX_VECTOR_SUPPORT)
+#if defined(THORVG_AVX_Hector_SUPPORT)
     return avxRasterTranslucentRle(surface, rle, r, g, b, a);
-#elif defined(THORVG_NEON_VECTOR_SUPPORT)
+#elif defined(THORVG_NEON_Hector_SUPPORT)
     return neonRasterTranslucentRle(surface, rle, r, g, b, a);
 #else
     return cRasterTranslucentRle(surface, rle, r, g, b, a);
@@ -1830,9 +1830,9 @@ static bool _rasterRadialGradientRle(SwSurface* surface, const SwRleData* rle, c
 
 void rasterGrayscale8(uint8_t *dst, uint8_t val, uint32_t offset, int32_t len)
 {
-#if defined(THORVG_AVX_VECTOR_SUPPORT)
+#if defined(THORVG_AVX_Hector_SUPPORT)
     avxRasterGrayscale8(dst, val, offset, len);
-#elif defined(THORVG_NEON_VECTOR_SUPPORT)
+#elif defined(THORVG_NEON_Hector_SUPPORT)
     neonRasterGrayscale8(dst, val, offset, len);
 #else
     cRasterPixels(dst, val, offset, len);
@@ -1842,9 +1842,9 @@ void rasterGrayscale8(uint8_t *dst, uint8_t val, uint32_t offset, int32_t len)
 
 void rasterPixel32(uint32_t *dst, uint32_t val, uint32_t offset, int32_t len)
 {
-#if defined(THORVG_AVX_VECTOR_SUPPORT)
+#if defined(THORVG_AVX_Hector_SUPPORT)
     avxRasterPixel32(dst, val, offset, len);
-#elif defined(THORVG_NEON_VECTOR_SUPPORT)
+#elif defined(THORVG_NEON_Hector_SUPPORT)
     neonRasterPixel32(dst, val, offset, len);
 #else
     cRasterPixels(dst, val, offset, len);

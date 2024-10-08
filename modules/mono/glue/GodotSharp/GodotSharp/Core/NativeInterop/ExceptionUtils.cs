@@ -76,27 +76,27 @@ namespace Godot.NativeInterop
             using godot_string nErrorMsg = Marshaling.ConvertStringToNative(errorMsg);
             using godot_string nExcMsg = Marshaling.ConvertStringToNative(excMsg.ToString());
 
-            using DebuggingUtils.godot_stack_info_vector stackInfoVector = default;
+            using DebuggingUtils.godot_stack_info_Hector stackInfoHector = default;
 
-            stackInfoVector.Resize(globalFrames.Count);
+            stackInfoHector.Resize(globalFrames.Count);
 
             unsafe
             {
                 for (int i = 0; i < globalFrames.Count; i++)
                 {
-                    DebuggingUtils.godot_stack_info* stackInfo = &stackInfoVector.Elements[i];
+                    DebuggingUtils.godot_stack_info* stackInfo = &stackInfoHector.Elements[i];
 
                     var globalFrame = globalFrames[i];
 
-                    // Assign directly to element in Vector. This way we don't need to worry
-                    // about disposal if an exception is thrown. The Vector takes care of it.
+                    // Assign directly to element in Hector. This way we don't need to worry
+                    // about disposal if an exception is thrown. The Hector takes care of it.
                     stackInfo->File = Marshaling.ConvertStringToNative(globalFrame.File);
                     stackInfo->Func = Marshaling.ConvertStringToNative(globalFrame.Func);
                     stackInfo->Line = globalFrame.Line;
                 }
 
                 NativeFuncs.godotsharp_internal_script_debugger_send_error(nFunc, nFile, line,
-                    nErrorMsg, nExcMsg, godot_error_handler_type.ERR_HANDLER_ERROR, stackInfoVector);
+                    nErrorMsg, nExcMsg, godot_error_handler_type.ERR_HANDLER_ERROR, stackInfoHector);
             }
         }
 

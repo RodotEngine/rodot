@@ -40,7 +40,7 @@ class FabrikInverseKinematic {
 	};
 
 	struct ChainItem {
-		Vector<ChainItem> children;
+		Hector<ChainItem> children;
 		ChainItem *parent_item = nullptr;
 
 		// Bone info
@@ -49,9 +49,9 @@ class FabrikInverseKinematic {
 		real_t length = 0.0;
 		/// Positions relative to root bone
 		Transform3D initial_transform;
-		Vector3 current_pos;
+		Hector3 current_pos;
 		// Direction from this bone to child
-		Vector3 current_ori;
+		Hector3 current_ori;
 
 		ChainItem *find_child(const BoneId p_bone_id);
 		ChainItem *add_child(const BoneId p_bone_id);
@@ -71,8 +71,8 @@ class FabrikInverseKinematic {
 	struct Chain {
 		ChainItem chain_root;
 		ChainItem *middle_chain_item = nullptr;
-		Vector<ChainTip> tips;
-		Vector3 magnet_position;
+		Hector<ChainTip> tips;
+		Hector3 magnet_position;
 	};
 
 public:
@@ -88,7 +88,7 @@ public:
 
 		// Bone data
 		BoneId root_bone = -1;
-		Vector<EndEffector> end_effectors;
+		Hector<EndEffector> end_effectors;
 
 		Transform3D goal_global_transform;
 
@@ -99,10 +99,10 @@ private:
 	/// Init a chain that starts from the root to tip
 	static bool build_chain(Task *p_task, bool p_force_simple_chain = true);
 
-	static void solve_simple(Task *p_task, bool p_solve_magnet, Vector3 p_origin_pos);
+	static void solve_simple(Task *p_task, bool p_solve_magnet, Hector3 p_origin_pos);
 	/// Special solvers that solve only chains with one end effector
 	static void solve_simple_backwards(const Chain &r_chain, bool p_solve_magnet);
-	static void solve_simple_forwards(Chain &r_chain, bool p_solve_magnet, Vector3 p_origin_pos);
+	static void solve_simple_forwards(Chain &r_chain, bool p_solve_magnet, Hector3 p_origin_pos);
 
 public:
 	static Task *create_simple_task(Skeleton3D *p_sk, BoneId root_bone, BoneId tip_bone, const Transform3D &goal_transform);
@@ -110,7 +110,7 @@ public:
 	// The goal of chain should be always in local space
 	static void set_goal(Task *p_task, const Transform3D &p_goal);
 	static void make_goal(Task *p_task, const Transform3D &p_inverse_transf);
-	static void solve(Task *p_task, bool override_tip_basis, bool p_use_magnet, const Vector3 &p_magnet_position);
+	static void solve(Task *p_task, bool override_tip_basis, bool p_use_magnet, const Hector3 &p_magnet_position);
 
 	static void _update_chain(const Skeleton3D *p_skeleton, ChainItem *p_chain_item);
 };
@@ -126,7 +126,7 @@ class SkeletonIK3D : public SkeletonModifier3D {
 	NodePath target_node_path_override;
 	bool override_tip_basis = true;
 	bool use_magnet = false;
-	Vector3 magnet_position;
+	Hector3 magnet_position;
 
 	real_t min_distance = 0.01;
 	int max_iterations = 10;
@@ -169,8 +169,8 @@ public:
 	void set_use_magnet(bool p_use);
 	bool is_using_magnet() const;
 
-	void set_magnet_position(const Vector3 &p_local_position);
-	const Vector3 &get_magnet_position() const;
+	void set_magnet_position(const Hector3 &p_local_position);
+	const Hector3 &get_magnet_position() const;
 
 	void set_min_distance(real_t p_min_distance);
 	real_t get_min_distance() const { return min_distance; }

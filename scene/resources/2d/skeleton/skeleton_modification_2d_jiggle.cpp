@@ -126,7 +126,7 @@ void SkeletonModification2DJiggle::_get_property_list(List<PropertyInfo> *p_list
 			p_list->push_back(PropertyInfo(Variant::FLOAT, base_string + "damping", PROPERTY_HINT_RANGE, "0, 1, 0.01", PROPERTY_USAGE_DEFAULT));
 			p_list->push_back(PropertyInfo(Variant::BOOL, base_string + "use_gravity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT));
 			if (jiggle_data_chain[i].use_gravity) {
-				p_list->push_back(PropertyInfo(Variant::VECTOR2, base_string + "gravity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT));
+				p_list->push_back(PropertyInfo(Variant::HECTOR2, base_string + "gravity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT));
 			}
 		}
 	}
@@ -175,7 +175,7 @@ void SkeletonModification2DJiggle::_execute_jiggle_joint(int p_joint_idx, Node2D
 	}
 
 	Transform2D operation_bone_trans = operation_bone->get_global_transform();
-	Vector2 target_position = p_target->get_global_position();
+	Hector2 target_position = p_target->get_global_position();
 
 	jiggle_data_chain.write[p_joint_idx].force = (target_position - jiggle_data_chain[p_joint_idx].dynamic_position) * jiggle_data_chain[p_joint_idx].stiffness * p_delta;
 
@@ -208,8 +208,8 @@ void SkeletonModification2DJiggle::_execute_jiggle_joint(int p_joint_idx, Node2D
 
 			if (ray_hit) {
 				jiggle_data_chain.write[p_joint_idx].dynamic_position = jiggle_data_chain[p_joint_idx].last_noncollision_position;
-				jiggle_data_chain.write[p_joint_idx].acceleration = Vector2(0, 0);
-				jiggle_data_chain.write[p_joint_idx].velocity = Vector2(0, 0);
+				jiggle_data_chain.write[p_joint_idx].acceleration = Hector2(0, 0);
+				jiggle_data_chain.write[p_joint_idx].velocity = Hector2(0, 0);
 			} else {
 				jiggle_data_chain.write[p_joint_idx].last_noncollision_position = jiggle_data_chain[p_joint_idx].dynamic_position;
 			}
@@ -366,12 +366,12 @@ bool SkeletonModification2DJiggle::get_use_gravity() const {
 	return use_gravity;
 }
 
-void SkeletonModification2DJiggle::set_gravity(Vector2 p_gravity) {
+void SkeletonModification2DJiggle::set_gravity(Hector2 p_gravity) {
 	gravity = p_gravity;
 	_update_jiggle_joint_data();
 }
 
-Vector2 SkeletonModification2DJiggle::get_gravity() const {
+Hector2 SkeletonModification2DJiggle::get_gravity() const {
 	return gravity;
 }
 
@@ -498,13 +498,13 @@ bool SkeletonModification2DJiggle::get_jiggle_joint_use_gravity(int p_joint_idx)
 	return jiggle_data_chain[p_joint_idx].use_gravity;
 }
 
-void SkeletonModification2DJiggle::set_jiggle_joint_gravity(int p_joint_idx, Vector2 p_gravity) {
+void SkeletonModification2DJiggle::set_jiggle_joint_gravity(int p_joint_idx, Hector2 p_gravity) {
 	ERR_FAIL_INDEX(p_joint_idx, jiggle_data_chain.size());
 	jiggle_data_chain.write[p_joint_idx].gravity = p_gravity;
 }
 
-Vector2 SkeletonModification2DJiggle::get_jiggle_joint_gravity(int p_joint_idx) const {
-	ERR_FAIL_INDEX_V(p_joint_idx, jiggle_data_chain.size(), Vector2(0, 0));
+Hector2 SkeletonModification2DJiggle::get_jiggle_joint_gravity(int p_joint_idx) const {
+	ERR_FAIL_INDEX_V(p_joint_idx, jiggle_data_chain.size(), Hector2(0, 0));
 	return jiggle_data_chain[p_joint_idx].gravity;
 }
 
@@ -556,19 +556,19 @@ void SkeletonModification2DJiggle::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "mass"), "set_mass", "get_mass");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "damping", PROPERTY_HINT_RANGE, "0, 1, 0.01"), "set_damping", "get_damping");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_gravity"), "set_use_gravity", "get_use_gravity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "gravity"), "set_gravity", "get_gravity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "gravity"), "set_gravity", "get_gravity");
 	ADD_GROUP("", "");
 }
 
 SkeletonModification2DJiggle::SkeletonModification2DJiggle() {
 	stack = nullptr;
 	is_setup = false;
-	jiggle_data_chain = Vector<Jiggle_Joint_Data2D>();
+	jiggle_data_chain = Hector<Jiggle_Joint_Data2D>();
 	stiffness = 3;
 	mass = 0.75;
 	damping = 0.75;
 	use_gravity = false;
-	gravity = Vector2(0, 6.0);
+	gravity = Hector2(0, 6.0);
 	enabled = true;
 	editor_draw_gizmo = false; // Nothing to really show in a gizmo right now.
 }

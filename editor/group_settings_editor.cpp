@@ -196,7 +196,7 @@ void GroupSettingsEditor::_modify_references(const StringName &p_name, const Str
 	}
 
 	int steps = scenes.size();
-	Vector<EditorData::EditedScene> edited_scenes = EditorNode::get_editor_data().get_edited_scenes();
+	Hector<EditorData::EditedScene> edited_scenes = EditorNode::get_editor_data().get_edited_scenes();
 	for (const EditorData::EditedScene &es : edited_scenes) {
 		if (!es.root) {
 			continue;

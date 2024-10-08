@@ -81,11 +81,11 @@ class ParticleProcessMaterialMinMaxPropertyEditor : public EditorProperty {
 	EditorSpinSlider *min_edit = nullptr;
 	EditorSpinSlider *max_edit = nullptr;
 
-	Vector2 edit_size;
-	Vector2 margin;
-	Vector2 usable_area;
+	Hector2 edit_size;
+	Hector2 margin;
+	Hector2 usable_area;
 
-	Vector2 property_range;
+	Hector2 property_range;
 
 	bool mouse_inside = false;
 	Hover hover = Hover::NONE;

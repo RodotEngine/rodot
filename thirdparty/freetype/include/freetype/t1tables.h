@@ -301,8 +301,8 @@ FT_BEGIN_HEADER
     FT_Fixed*        design_pos[T1_MAX_MM_DESIGNS];
     PS_DesignMapRec  design_map[T1_MAX_MM_AXIS];
 
-    FT_Fixed*        weight_vector;
-    FT_Fixed*        default_weight_vector;
+    FT_Fixed*        weight_Hector;
+    FT_Fixed*        default_weight_Hector;
 
     PS_FontInfo      font_infos[T1_MAX_MM_DESIGNS + 1];
     PS_Private       privates  [T1_MAX_MM_DESIGNS + 1];
@@ -314,11 +314,11 @@ FT_BEGIN_HEADER
     /* since 2.3.0 */
 
     /* undocumented, optional: the default design instance;   */
-    /* corresponds to default_weight_vector --                */
-    /* num_default_design_vector == 0 means it is not present */
+    /* corresponds to default_weight_Hector --                */
+    /* num_default_design_Hector == 0 means it is not present */
     /* in the font and associated metrics files               */
-    FT_UInt          default_design_vector[T1_MAX_MM_DESIGNS];
-    FT_UInt          num_default_design_vector;
+    FT_UInt          default_design_Hector[T1_MAX_MM_DESIGNS];
+    FT_UInt          num_default_design_Hector;
 
   } PS_BlendRec, *PS_Blend;
 
@@ -356,7 +356,7 @@ FT_BEGIN_HEADER
     FT_Byte        paint_type;
     FT_Byte        font_type;
     FT_Matrix      font_matrix;
-    FT_Vector      font_offset;
+    FT_Hector      font_offset;
 
     FT_UInt        num_subrs;
     FT_ULong       subrmap_offset;

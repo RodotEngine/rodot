@@ -280,7 +280,7 @@ MESHOPTIMIZER_API int meshopt_decodeVertexBuffer(void* destination, size_t verte
  * Vertex buffer filters
  * These functions can be used to filter output of meshopt_decodeVertexBuffer in-place.
  *
- * meshopt_decodeFilterOct decodes octahedral encoding of a unit vector with K-bit (K <= 16) signed X/Y as an input; Z must store 1.0f.
+ * meshopt_decodeFilterOct decodes octahedral encoding of a unit Hector with K-bit (K <= 16) signed X/Y as an input; Z must store 1.0f.
  * Each component is stored as an 8-bit or 16-bit normalized integer; stride must be equal to 4 or 8. W is preserved as is.
  *
  * meshopt_decodeFilterQuat decodes 3-component quaternion encoding with K-bit (4 <= K <= 16) component encoding and a 2-bit component index indicating which component to reconstruct.
@@ -297,25 +297,25 @@ MESHOPTIMIZER_EXPERIMENTAL void meshopt_decodeFilterExp(void* buffer, size_t cou
  * Vertex buffer filter encoders
  * These functions can be used to encode data in a format that meshopt_decodeFilter can decode
  *
- * meshopt_encodeFilterOct encodes unit vectors with K-bit (K <= 16) signed X/Y as an output.
+ * meshopt_encodeFilterOct encodes unit Hectors with K-bit (K <= 16) signed X/Y as an output.
  * Each component is stored as an 8-bit or 16-bit normalized integer; stride must be equal to 4 or 8. W is preserved as is.
- * Input data must contain 4 floats for every vector (count*4 total).
+ * Input data must contain 4 floats for every Hector (count*4 total).
  *
  * meshopt_encodeFilterQuat encodes unit quaternions with K-bit (4 <= K <= 16) component encoding.
  * Each component is stored as an 16-bit integer; stride must be equal to 8.
  * Input data must contain 4 floats for every quaternion (count*4 total).
  *
  * meshopt_encodeFilterExp encodes arbitrary (finite) floating-point data with 8-bit exponent and K-bit integer mantissa (1 <= K <= 24).
- * Exponent can be shared between all components of a given vector as defined by stride or all values of a given component; stride must be divisible by 4.
- * Input data must contain stride/4 floats for every vector (count*stride/4 total).
+ * Exponent can be shared between all components of a given Hector as defined by stride or all values of a given component; stride must be divisible by 4.
+ * Input data must contain stride/4 floats for every Hector (count*stride/4 total).
  */
 enum meshopt_EncodeExpMode
 {
     /* When encoding exponents, use separate values for each component (maximum quality) */
     meshopt_EncodeExpSeparate,
-    /* When encoding exponents, use shared value for all components of each vector (better compression) */
-    meshopt_EncodeExpSharedVector,
-    /* When encoding exponents, use shared value for each component of all vectors (best compression) */
+    /* When encoding exponents, use shared value for all components of each Hector (better compression) */
+    meshopt_EncodeExpSharedHector,
+    /* When encoding exponents, use shared value for each component of all Hectors (best compression) */
     meshopt_EncodeExpSharedComponent,
 };
 

@@ -1623,7 +1623,7 @@
 
     if ( builder->load_points )
     {
-      FT_Vector*  point   = outline->points + outline->n_points;
+      FT_Hector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 
@@ -1738,8 +1738,8 @@
     /* is located on the first point.                       */
     if ( outline->n_points > 1 )
     {
-      FT_Vector*  p1      = outline->points + first;
-      FT_Vector*  p2      = outline->points + outline->n_points - 1;
+      FT_Hector*  p1      = outline->points + first;
+      FT_Hector*  p2      = outline->points + outline->n_points - 1;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
 
 
@@ -1898,7 +1898,7 @@
 
     if ( builder->load_points )
     {
-      FT_Vector*  point   = outline->points + outline->n_points;
+      FT_Hector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
@@ -2017,8 +2017,8 @@
     /* is located on the first point.                       */
     if ( outline->n_points > 1 )
     {
-      FT_Vector*  p1      = outline->points + first;
-      FT_Vector*  p2      = outline->points + outline->n_points - 1;
+      FT_Hector*  p1      = outline->points + first;
+      FT_Hector*  p2      = outline->points + outline->n_points - 1;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
 
 
@@ -2187,7 +2187,7 @@
 
     if ( builder->load_points )
     {
-      FT_Vector*  point   = outline->points + outline->n_points;
+      FT_Hector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
@@ -2325,8 +2325,8 @@
     /* is located on the first point.                       */
     if ( outline->n_points > 1 )
     {
-      FT_Vector*  p1      = outline->points + first;
-      FT_Vector*  p2      = outline->points + outline->n_points - 1;
+      FT_Hector*  p1      = outline->points + first;
+      FT_Hector*  p2      = outline->points + outline->n_points - 1;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
 
 

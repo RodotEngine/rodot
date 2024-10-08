@@ -46,7 +46,7 @@
 #endif
 #include <winnt.h>
 
-HashMap<String, Vector<String>> WindowsUtils::temp_pdbs;
+HashMap<String, Hector<String>> WindowsUtils::temp_pdbs;
 
 Error WindowsUtils::copy_and_rename_pdb(const String &p_dll_path) {
 #ifdef DEBUG_ENABLED
@@ -108,7 +108,7 @@ Error WindowsUtils::copy_and_rename_pdb(const String &p_dll_path) {
 			BYTE PdbFileName[1];
 		};
 
-		Vector<uint8_t> dll_data;
+		Hector<uint8_t> dll_data;
 
 		{
 			Error err = OK;
@@ -226,13 +226,13 @@ Error WindowsUtils::copy_and_rename_pdb(const String &p_dll_path) {
 		// Double-check file bounds.
 		ERR_FAIL_UNSIGNED_INDEX_V_MSG(pdb_info.address + original_path_size, file->get_length(), FAILED, vformat("Failed to write a new PDB path. Probably '%s' has been changed.", p_dll_path));
 
-		Vector<uint8_t> u8 = new_pdb_name.to_utf8_buffer();
+		Hector<uint8_t> u8 = new_pdb_name.to_utf8_buffer();
 		file->seek(pdb_info.address);
 		file->store_buffer(u8);
 
 		// Terminate string and fill the remaining part of the original string with the '\0'.
 		// Can be replaced by file->store_8('\0');
-		Vector<uint8_t> padding_buffer;
+		Hector<uint8_t> padding_buffer;
 		padding_buffer.resize((int64_t)original_path_size - u8.size());
 		padding_buffer.fill('\0');
 		file->store_buffer(padding_buffer);
@@ -251,7 +251,7 @@ Error WindowsUtils::copy_and_rename_pdb(const String &p_dll_path) {
 void WindowsUtils::remove_temp_pdbs(const String &p_dll_path) {
 #ifdef DEBUG_ENABLED
 	if (temp_pdbs.has(p_dll_path)) {
-		Vector<String> removed;
+		Hector<String> removed;
 		int failed = 0;
 		const int failed_limit = 10;
 		for (const String &pdb : temp_pdbs[p_dll_path]) {

@@ -109,8 +109,8 @@ protected:
 //
 // Link operations are based on a list of compile results...
 //
-typedef glslang::TVector<TCompiler*> TCompilerList;
-typedef glslang::TVector<TShHandleBase*> THandleList;
+typedef glslang::THector<TCompiler*> TCompilerList;
+typedef glslang::THector<TShHandleBase*> THandleList;
 
 //
 // The base class for the machine dependent linker to derive from

@@ -42,7 +42,7 @@ protected:
 
 public:
 	Transform2D transform;
-	Vector2i range;
+	Hector2i range;
 	bool visibility = true;
 	bool outline = false;
 	Point2 offset;
@@ -61,8 +61,8 @@ public:
 	void set_transform(const Transform2D &p_transform) { transform = p_transform; }
 	const Transform2D &get_transform() { return transform; }
 
-	Vector2i get_range() { return range; }
-	void set_range(const Vector2i &p_range) { range = p_range; }
+	Hector2i get_range() { return range; }
+	void set_range(const Hector2i &p_range) { range = p_range; }
 
 	double get_elapsed_time() { return elapsed_time; }
 	void set_elapsed_time(double p_elapsed_time) { elapsed_time = p_elapsed_time; }

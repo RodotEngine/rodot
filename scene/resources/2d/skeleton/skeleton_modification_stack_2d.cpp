@@ -125,7 +125,7 @@ void SkeletonModificationStack2D::draw_editor_gizmos() {
 				modifications.get(i)->_draw_editor_gizmo();
 			}
 		}
-		skeleton->draw_set_transform(Vector2(0, 0));
+		skeleton->draw_set_transform(Hector2(0, 0));
 		editor_gizmo_dirty = false;
 	}
 }

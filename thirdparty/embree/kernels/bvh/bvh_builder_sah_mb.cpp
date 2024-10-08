@@ -142,7 +142,7 @@ namespace embree
       void buildSingleSegment(size_t numPrimitives)
       {
         /* create primref array */
-        mvector<PrimRef> prims(scene->device,numPrimitives);
+        mHector<PrimRef> prims(scene->device,numPrimitives);
 	const PrimInfo pinfo = createPrimRefArrayMBlur(scene,gtype_,numPrimitives,prims,bvh->scene->progressInterface,0);
         /* early out if no valid primitives */
         if (pinfo.size() == 0) { bvh->clear(); return; }
@@ -175,7 +175,7 @@ namespace embree
       void buildMultiSegment(size_t numPrimitives)
       {
         /* create primref array */
-        mvector<PrimRefMB> prims(scene->device,numPrimitives);
+        mHector<PrimRefMB> prims(scene->device,numPrimitives);
 	PrimInfoMB pinfo = createPrimRefArrayMSMBlur(scene,gtype_,numPrimitives,prims,bvh->scene->progressInterface);
 
         /* early out if no valid primitives */
@@ -424,14 +424,14 @@ namespace embree
       const float intCost;
       const size_t minLeafSize;
       const size_t maxLeafSize;
-      mvector<SubGridBuildData> sgrids;
+      mHector<SubGridBuildData> sgrids;
 
 
       BVHNBuilderMBlurSAHGrid (BVH* bvh, Scene* scene, const size_t sahBlockSize, const float intCost, const size_t minLeafSize, const size_t maxLeafSize)
         : bvh(bvh), scene(scene), sahBlockSize(sahBlockSize), intCost(intCost), minLeafSize(minLeafSize), maxLeafSize(min(maxLeafSize,BVH::maxLeafBlocks)), sgrids(scene->device,0) {}
 
 
-      PrimInfo createPrimRefArrayMBlurGrid(Scene* scene, mvector<PrimRef>& prims, BuildProgressMonitor& progressMonitor, size_t itime)
+      PrimInfo createPrimRefArrayMBlurGrid(Scene* scene, mHector<PrimRef>& prims, BuildProgressMonitor& progressMonitor, size_t itime)
       {
         /* first run to get #primitives */
         ParallelForForPrefixSumState<PrimInfo> pstate;
@@ -489,7 +489,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfoMB createPrimRefArrayMSMBlurGrid(Scene* scene, mvector<PrimRefMB>& prims, BuildProgressMonitor& progressMonitor, BBox1f t0t1 = BBox1f(0.0f,1.0f))
+      PrimInfoMB createPrimRefArrayMSMBlurGrid(Scene* scene, mHector<PrimRefMB>& prims, BuildProgressMonitor& progressMonitor, BBox1f t0t1 = BBox1f(0.0f,1.0f))
       {
         /* first run to get #primitives */
         ParallelForForPrefixSumState<PrimInfoMB> pstate;
@@ -568,7 +568,7 @@ namespace embree
       void buildSingleSegment(size_t numPrimitives)
       {
         /* create primref array */
-        mvector<PrimRef> prims(scene->device,numPrimitives);
+        mHector<PrimRef> prims(scene->device,numPrimitives);
         const PrimInfo pinfo = createPrimRefArrayMBlurGrid(scene,prims,bvh->scene->progressInterface,0);
         /* early out if no valid primitives */
         if (pinfo.size() == 0) { bvh->clear(); return; }
@@ -606,7 +606,7 @@ namespace embree
       void buildMultiSegment(size_t numPrimitives)
       {
         /* create primref array */
-        mvector<PrimRefMB> prims(scene->device,numPrimitives);
+        mHector<PrimRefMB> prims(scene->device,numPrimitives);
         PrimInfoMB pinfo = createPrimRefArrayMSMBlurGrid(scene,prims,bvh->scene->progressInterface);
 
         /* early out if no valid primitives */

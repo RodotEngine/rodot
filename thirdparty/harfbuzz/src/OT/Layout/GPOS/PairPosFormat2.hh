@@ -307,7 +307,7 @@ struct PairPosFormat2_4 : ValueBase
     out->valueFormat2 = newFormats.second;
 
     unsigned total_len = len1 + len2;
-    hb_vector_t<unsigned> class2_idxs (+ hb_range ((unsigned) class2Count) | hb_filter (klass2_map));
+    hb_Hector_t<unsigned> class2_idxs (+ hb_range ((unsigned) class2Count) | hb_filter (klass2_map));
     for (unsigned class1_idx : + hb_range ((unsigned) class1Count) | hb_filter (klass1_map))
     {
       for (unsigned class2_idx : class2_idxs)

@@ -46,7 +46,7 @@
 #include "core/templates/hash_map.h"
 #include "core/templates/list.h"
 #include "core/templates/rb_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/variant/variant.h"
 
 #ifdef DEBUG_ENABLED
@@ -102,7 +102,7 @@ public:
 
 	class DataType {
 	public:
-		Vector<DataType> container_element_types;
+		Hector<DataType> container_element_types;
 
 		enum Kind {
 			BUILTIN,
@@ -274,7 +274,7 @@ public:
 	struct ClassDocData {
 		String brief;
 		String description;
-		Vector<Pair<String, String>> tutorials;
+		Hector<Pair<String, String>> tutorials;
 		bool is_deprecated = false;
 		String deprecated_message;
 		bool is_experimental = false;
@@ -366,8 +366,8 @@ public:
 
 	struct AnnotationNode : public Node {
 		StringName name;
-		Vector<ExpressionNode *> arguments;
-		Vector<Variant> resolved_arguments;
+		Hector<ExpressionNode *> arguments;
+		Hector<Variant> resolved_arguments;
 
 		AnnotationInfo *info = nullptr;
 		PropertyInfo export_info;
@@ -383,7 +383,7 @@ public:
 	};
 
 	struct ArrayNode : public ExpressionNode {
-		Vector<ExpressionNode *> elements;
+		Hector<ExpressionNode *> elements;
 
 		ArrayNode() {
 			type = ARRAY;
@@ -497,7 +497,7 @@ public:
 
 	struct CallNode : public ExpressionNode {
 		ExpressionNode *callee = nullptr;
-		Vector<ExpressionNode *> arguments;
+		Hector<ExpressionNode *> arguments;
 		StringName function_name;
 		bool is_super = false;
 		bool is_static = false;
@@ -541,7 +541,7 @@ public:
 		};
 
 		IdentifierNode *identifier = nullptr;
-		Vector<Value> values;
+		Hector<Value> values;
 		Variant dictionary;
 #ifdef TOOLS_ENABLED
 		MemberDocData doc_data;
@@ -740,7 +740,7 @@ public:
 		IdentifierNode *identifier = nullptr;
 		String icon_path;
 		String simplified_icon_path;
-		Vector<Member> members;
+		Hector<Member> members;
 		HashMap<StringName, int> members_indices;
 		ClassNode *outer = nullptr;
 		bool extends_used = false;
@@ -748,7 +748,7 @@ public:
 		bool has_static_data = false;
 		bool annotated_static_unload = false;
 		String extends_path;
-		Vector<IdentifierNode *> extends; // List for indexing: extends A.B.C
+		Hector<IdentifierNode *> extends; // List for indexing: extends A.B.C
 		DataType base_type;
 		String fqcn; // Fully-qualified class name. Identifies uniquely any class in the project.
 #ifdef TOOLS_ENABLED
@@ -819,7 +819,7 @@ public:
 			ExpressionNode *key = nullptr;
 			ExpressionNode *value = nullptr;
 		};
-		Vector<Pair> elements;
+		Hector<Pair> elements;
 
 		enum Style {
 			LUA_TABLE,
@@ -846,7 +846,7 @@ public:
 
 	struct FunctionNode : public Node {
 		IdentifierNode *identifier = nullptr;
-		Vector<ParameterNode *> parameters;
+		Hector<ParameterNode *> parameters;
 		HashMap<StringName, int> parameters_indices;
 		TypeNode *return_type = nullptr;
 		SuiteNode *body = nullptr;
@@ -855,7 +855,7 @@ public:
 		Variant rpc_config;
 		MethodInfo info;
 		LambdaNode *source_lambda = nullptr;
-		Vector<Variant> default_arg_values;
+		Hector<Variant> default_arg_values;
 #ifdef TOOLS_ENABLED
 		MemberDocData doc_data;
 #endif // TOOLS_ENABLED
@@ -931,7 +931,7 @@ public:
 		FunctionNode *function = nullptr;
 		FunctionNode *parent_function = nullptr;
 		LambdaNode *parent_lambda = nullptr;
-		Vector<IdentifierNode *> captures;
+		Hector<IdentifierNode *> captures;
 		HashMap<StringName, int> captures_indices;
 		bool use_self = false;
 
@@ -954,7 +954,7 @@ public:
 
 	struct MatchNode : public Node {
 		ExpressionNode *test = nullptr;
-		Vector<MatchBranchNode *> branches;
+		Hector<MatchBranchNode *> branches;
 
 		MatchNode() {
 			type = MATCH;
@@ -962,7 +962,7 @@ public:
 	};
 
 	struct MatchBranchNode : public Node {
-		Vector<PatternNode *> patterns;
+		Hector<PatternNode *> patterns;
 		SuiteNode *block = nullptr;
 		bool has_wildcard = false;
 		SuiteNode *guard_body = nullptr;
@@ -1001,14 +1001,14 @@ public:
 			IdentifierNode *bind;
 			ExpressionNode *expression;
 		};
-		Vector<PatternNode *> array;
+		Hector<PatternNode *> array;
 		bool rest_used = false; // For array/dict patterns.
 
 		struct Pair {
 			ExpressionNode *key = nullptr;
 			PatternNode *value_pattern = nullptr;
 		};
-		Vector<Pair> dictionary;
+		Hector<Pair> dictionary;
 
 		HashMap<StringName, IdentifierNode *> binds;
 
@@ -1048,7 +1048,7 @@ public:
 
 	struct SignalNode : public Node {
 		IdentifierNode *identifier = nullptr;
-		Vector<ParameterNode *> parameters;
+		Hector<ParameterNode *> parameters;
 		HashMap<StringName, int> parameters_indices;
 		MethodInfo method_info;
 #ifdef TOOLS_ENABLED
@@ -1078,7 +1078,7 @@ public:
 
 	struct SuiteNode : public Node {
 		SuiteNode *parent_block = nullptr;
-		Vector<Node *> statements;
+		Hector<Node *> statements;
 		struct Local {
 			enum Type {
 				UNDEFINED,
@@ -1160,7 +1160,7 @@ public:
 			}
 		};
 		Local empty;
-		Vector<Local> locals;
+		Hector<Local> locals;
 		HashMap<StringName, int> locals_indices;
 
 		FunctionNode *parent_function = nullptr;
@@ -1200,8 +1200,8 @@ public:
 	};
 
 	struct TypeNode : public Node {
-		Vector<IdentifierNode *> type_chain;
-		Vector<TypeNode *> container_types;
+		Hector<IdentifierNode *> type_chain;
+		Hector<TypeNode *> container_types;
 
 		TypeNode *get_container_type_or_null(int p_index) const {
 			return p_index >= 0 && p_index < container_types.size() ? container_types[p_index] : nullptr;
@@ -1347,7 +1347,7 @@ private:
 		const Node *source = nullptr;
 		GDScriptWarning::Code code = GDScriptWarning::WARNING_MAX;
 		bool treated_as_error = false;
-		Vector<String> symbols;
+		Hector<String> symbols;
 	};
 
 	bool is_ignoring_warnings = false;
@@ -1450,10 +1450,10 @@ private:
 	void clear();
 	void push_error(const String &p_message, const Node *p_origin = nullptr);
 #ifdef DEBUG_ENABLED
-	void push_warning(const Node *p_source, GDScriptWarning::Code p_code, const Vector<String> &p_symbols);
+	void push_warning(const Node *p_source, GDScriptWarning::Code p_code, const Hector<String> &p_symbols);
 	template <typename... Symbols>
 	void push_warning(const Node *p_source, GDScriptWarning::Code p_code, const Symbols &...p_symbols) {
-		push_warning(p_source, p_code, Vector<String>{ p_symbols... });
+		push_warning(p_source, p_code, Hector<String>{ p_symbols... });
 	}
 	void apply_pending_warnings();
 #endif
@@ -1497,7 +1497,7 @@ private:
 	SuiteNode *parse_suite(const String &p_context, SuiteNode *p_suite = nullptr, bool p_for_lambda = false);
 	// Annotations
 	AnnotationNode *parse_annotation(uint32_t p_valid_targets);
-	static bool register_annotation(const MethodInfo &p_info, uint32_t p_target_kinds, AnnotationAction p_apply, const Vector<Variant> &p_default_arguments = Vector<Variant>(), bool p_is_vararg = false);
+	static bool register_annotation(const MethodInfo &p_info, uint32_t p_target_kinds, AnnotationAction p_apply, const Hector<Variant> &p_default_arguments = Hector<Variant>(), bool p_is_vararg = false);
 	bool validate_annotation_arguments(AnnotationNode *p_annotation);
 	void clear_unused_annotations();
 	bool tool_annotation(AnnotationNode *p_annotation, Node *p_target, ClassNode *p_class);
@@ -1570,7 +1570,7 @@ private:
 
 public:
 	Error parse(const String &p_source_code, const String &p_script_path, bool p_for_completion, bool p_parse_body = true);
-	Error parse_binary(const Vector<uint8_t> &p_binary, const String &p_script_path);
+	Error parse_binary(const Hector<uint8_t> &p_binary, const String &p_script_path);
 	ClassNode *get_tree() const { return head; }
 	bool is_tool() const { return _is_tool; }
 	Ref<GDScriptParserRef> get_depended_parser_for(const String &p_path);

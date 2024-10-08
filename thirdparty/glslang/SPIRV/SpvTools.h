@@ -42,7 +42,7 @@
 #define GLSLANG_SPV_TOOLS_H
 
 #if ENABLE_OPT
-#include <vector>
+#include <Vector>
 #include <ostream>
 #include "spirv-tools/libspirv.h"
 #endif

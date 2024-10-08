@@ -79,7 +79,7 @@ class TVariable;
 class TFunction;
 class TAnonMember;
 
-typedef TVector<const char*> TExtensionList;
+typedef THector<const char*> TExtensionList;
 
 class TSymbol {
 public:
@@ -208,7 +208,7 @@ protected:
 
     TConstUnionArray constArray;               // for compile-time constant value
     TIntermTyped* constSubtree;                // for specialization constant computation
-    TVector<TExtensionList>* memberExtensions; // per-member extension list, allocated only when needed
+    THector<TExtensionList>* memberExtensions; // per-member extension list, allocated only when needed
     int anonId; // the ID used for anonymous blocks: TODO: see if uniqueId could serve a dual purpose
 };
 
@@ -334,7 +334,7 @@ protected:
     explicit TFunction(const TFunction&);
     TFunction& operator=(const TFunction&);
 
-    typedef TVector<TParameter> TParamList;
+    typedef THector<TParameter> TParamList;
     TParamList parameters;
     TType returnType;
     TBuiltInVariable declaredBuiltIn;
@@ -492,7 +492,7 @@ public:
             return (*it).second;
     }
 
-    void findFunctionNameList(const TString& name, TVector<const TFunction*>& list)
+    void findFunctionNameList(const TString& name, THector<const TFunction*>& list)
     {
         size_t parenAt = name.find_first_of('(');
         TString base(name, 0, parenAt + 1);
@@ -595,7 +595,7 @@ protected:
     tLevel level;  // named mappings
     TPrecisionQualifier *defaultPrecision;
     // pair<FromName, ToName>
-    TVector<std::pair<TString, TString>> retargetedSymbols;
+    THector<std::pair<TString, TString>> retargetedSymbols;
     int anonId;
     bool thisLevel;  // True if this level of the symbol table is a structure scope containing member function
                      // that are supposed to see anonymous access to member variables.
@@ -845,7 +845,7 @@ public:
         return false;
     }
 
-    void findFunctionNameList(const TString& name, TVector<const TFunction*>& list, bool& builtIn)
+    void findFunctionNameList(const TString& name, THector<const TFunction*>& list, bool& builtIn)
     {
         // For user levels, return the set found in the first scope with a match
         builtIn = false;

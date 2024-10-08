@@ -46,7 +46,7 @@ private:
 		NodePath physical_bone_node;
 		ObjectID physical_bone_node_cache;
 	};
-	Vector<PhysicalBone_Data2D> physical_bone_chain;
+	Hector<PhysicalBone_Data2D> physical_bone_chain;
 
 	void _physical_bone_update_cache(int p_joint_idx);
 

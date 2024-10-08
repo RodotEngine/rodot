@@ -38,10 +38,10 @@
 #include "rendering_server_globals.h"
 #include "storage/texture_storage.h"
 
-static Transform2D _canvas_get_transform(RendererViewport::Viewport *p_viewport, RendererCanvasCull::Canvas *p_canvas, RendererViewport::Viewport::CanvasData *p_canvas_data, const Vector2 &p_vp_size) {
+static Transform2D _canvas_get_transform(RendererViewport::Viewport *p_viewport, RendererCanvasCull::Canvas *p_canvas, RendererViewport::Viewport::CanvasData *p_canvas_data, const Hector2 &p_vp_size) {
 	Transform2D xf = p_viewport->global_transform;
 
-	Vector2 pixel_snap_offset;
+	Hector2 pixel_snap_offset;
 	if (p_viewport->snap_2d_transforms_to_pixel) {
 		// We use `floor(p + 0.5)` to snap canvas items, but `ceil(p - 0.5)`
 		// to snap viewport transform because the viewport transform is inverse
@@ -69,11 +69,11 @@ static Transform2D _canvas_get_transform(RendererViewport::Viewport *p_viewport,
 	xf = xf * c_xform;
 
 	if (scale != 1.0 && !RSG::canvas->disable_scale) {
-		Vector2 pivot = p_vp_size * 0.5;
+		Hector2 pivot = p_vp_size * 0.5;
 		Transform2D xfpivot;
 		xfpivot.set_origin(pivot);
 		Transform2D xfscale;
-		xfscale.scale(Vector2(scale, scale));
+		xfscale.scale(Hector2(scale, scale));
 
 		xf = xfpivot.affine_inverse() * xf;
 		xf = xfscale * xf;
@@ -83,12 +83,12 @@ static Transform2D _canvas_get_transform(RendererViewport::Viewport *p_viewport,
 	return xf;
 }
 
-Vector<RendererViewport::Viewport *> RendererViewport::_sort_active_viewports() {
+Hector<RendererViewport::Viewport *> RendererViewport::_sort_active_viewports() {
 	// We need to sort the viewports in a "topological order", children first and
 	// parents last. We also need to keep sibling viewports in the original order
 	// from top to bottom.
 
-	Vector<Viewport *> result;
+	Hector<Viewport *> result;
 	List<Viewport *> nodes;
 
 	for (int i = active_viewports.size() - 1; i >= 0; --i) {
@@ -401,7 +401,7 @@ void RendererViewport::_draw_viewport(Viewport *p_viewport) {
 					Size2 tsize = RSG::texture_storage->texture_size_with_proxy(cl->texture);
 					tsize *= cl->scale;
 
-					Vector2 offset = tsize / 2.0;
+					Hector2 offset = tsize / 2.0;
 					cl->rect_cache = Rect2(-offset + cl->texture_offset, tsize);
 
 					if (!RSG::canvas->_interpolation_data.interpolation_enabled || !cl->interpolated) {
@@ -445,7 +445,7 @@ void RendererViewport::_draw_viewport(Viewport *p_viewport) {
 						TransformInterpolator::interpolate_transform_2d(cl->xform_prev, cl->xform_curr, cl->xform_cache, f);
 						cl->xform_cache = xf * cl->xform_cache;
 					}
-					cl->xform_cache.columns[2] = Vector2(); //translation is pointless
+					cl->xform_cache.columns[2] = Hector2(); //translation is pointless
 					if (cl->use_shadow) {
 						cl->shadows_next_ptr = directional_lights_with_shadow;
 						directional_lights_with_shadow = cl;
@@ -509,27 +509,27 @@ void RendererViewport::_draw_viewport(Viewport *p_viewport) {
 			//update shadows if any
 			RendererCanvasRender::Light *light = directional_lights_with_shadow;
 			while (light) {
-				Vector2 light_dir = -light->xform_cache.columns[1].normalized(); // Y is light direction
+				Hector2 light_dir = -light->xform_cache.columns[1].normalized(); // Y is light direction
 				float cull_distance = light->directional_distance;
 
-				Vector2 light_dir_sign;
+				Hector2 light_dir_sign;
 				light_dir_sign.x = (ABS(light_dir.x) < CMP_EPSILON) ? 0.0 : ((light_dir.x > 0.0) ? 1.0 : -1.0);
 				light_dir_sign.y = (ABS(light_dir.y) < CMP_EPSILON) ? 0.0 : ((light_dir.y > 0.0) ? 1.0 : -1.0);
 
-				Vector2 points[6];
+				Hector2 points[6];
 				int point_count = 0;
 
 				for (int j = 0; j < 4; j++) {
-					static const Vector2 signs[4] = { Vector2(1, 1), Vector2(1, 0), Vector2(0, 0), Vector2(0, 1) };
-					Vector2 sign_cmp = signs[j] * 2.0 - Vector2(1.0, 1.0);
-					Vector2 point = clip_rect.position + clip_rect.size * signs[j];
+					static const Hector2 signs[4] = { Hector2(1, 1), Hector2(1, 0), Hector2(0, 0), Hector2(0, 1) };
+					Hector2 sign_cmp = signs[j] * 2.0 - Hector2(1.0, 1.0);
+					Hector2 point = clip_rect.position + clip_rect.size * signs[j];
 
 					if (sign_cmp == light_dir_sign) {
 						//both point in same direction, plot offsetted
 						points[point_count++] = point + light_dir * cull_distance;
 					} else if (sign_cmp.x == light_dir_sign.x || sign_cmp.y == light_dir_sign.y) {
 						int next_j = (j + 1) % 4;
-						Vector2 next_sign_cmp = signs[next_j] * 2.0 - Vector2(1.0, 1.0);
+						Hector2 next_sign_cmp = signs[next_j] * 2.0 - Hector2(1.0, 1.0);
 
 						//one point in the same direction, plot segment
 
@@ -550,7 +550,7 @@ void RendererViewport::_draw_viewport(Viewport *p_viewport) {
 					}
 				}
 
-				Vector2 xf_points[6];
+				Hector2 xf_points[6];
 
 				RendererCanvasRender::LightOccluderInstance *occluders = nullptr;
 
@@ -703,7 +703,7 @@ void RendererViewport::draw_viewports(bool p_swap_buffers) {
 		sorted_active_viewports_dirty = false;
 	}
 
-	HashMap<DisplayServer::WindowID, Vector<BlitToScreen>> blit_to_screen_list;
+	HashMap<DisplayServer::WindowID, Hector<BlitToScreen>> blit_to_screen_list;
 	//draw viewports
 	RENDER_TIMESTAMP("> Render Viewports");
 
@@ -798,7 +798,7 @@ void RendererViewport::draw_viewports(bool p_swap_buffers) {
 				_draw_viewport(vp);
 
 				// commit our eyes
-				Vector<BlitToScreen> blits = xr_interface->post_draw_viewport(vp->render_target, vp->viewport_to_screen_rect);
+				Hector<BlitToScreen> blits = xr_interface->post_draw_viewport(vp->render_target, vp->viewport_to_screen_rect);
 				if (vp->viewport_to_screen != DisplayServer::INVALID_WINDOW_ID) {
 					if (OS::get_singleton()->get_current_rendering_driver_name().begins_with("opengl3")) {
 						if (blits.size() > 0) {
@@ -807,7 +807,7 @@ void RendererViewport::draw_viewports(bool p_swap_buffers) {
 						}
 					} else if (blits.size() > 0) {
 						if (!blit_to_screen_list.has(vp->viewport_to_screen)) {
-							blit_to_screen_list[vp->viewport_to_screen] = Vector<BlitToScreen>();
+							blit_to_screen_list[vp->viewport_to_screen] = Hector<BlitToScreen>();
 						}
 
 						for (int b = 0; b < blits.size(); b++) {
@@ -831,17 +831,17 @@ void RendererViewport::draw_viewports(bool p_swap_buffers) {
 				if (vp->viewport_to_screen_rect != Rect2()) {
 					blit.dst_rect = vp->viewport_to_screen_rect;
 				} else {
-					blit.dst_rect.position = Vector2();
+					blit.dst_rect.position = Hector2();
 					blit.dst_rect.size = vp->size;
 				}
 
-				Vector<BlitToScreen> *blits = blit_to_screen_list.getptr(vp->viewport_to_screen);
+				Hector<BlitToScreen> *blits = blit_to_screen_list.getptr(vp->viewport_to_screen);
 				if (blits == nullptr) {
-					blits = &blit_to_screen_list.insert(vp->viewport_to_screen, Vector<BlitToScreen>())->value;
+					blits = &blit_to_screen_list.insert(vp->viewport_to_screen, Hector<BlitToScreen>())->value;
 				}
 
 				if (OS::get_singleton()->get_current_rendering_driver_name().begins_with("opengl3")) {
-					Vector<BlitToScreen> blit_to_screen_vec;
+					Hector<BlitToScreen> blit_to_screen_vec;
 					blit_to_screen_vec.push_back(blit);
 					RSG::rasterizer->blit_render_targets_to_screen(vp->viewport_to_screen, blit_to_screen_vec.ptr(), 1);
 					RSG::rasterizer->gl_end_frame(p_swap_buffers);
@@ -875,7 +875,7 @@ void RendererViewport::draw_viewports(bool p_swap_buffers) {
 	RENDER_TIMESTAMP("< Render Viewports");
 
 	if (p_swap_buffers && !blit_to_screen_list.is_empty()) {
-		for (const KeyValue<int, Vector<BlitToScreen>> &E : blit_to_screen_list) {
+		for (const KeyValue<int, Hector<BlitToScreen>> &E : blit_to_screen_list) {
 			RSG::rasterizer->blit_render_targets_to_screen(E.key, E.value.ptr(), E.value.size());
 		}
 	}
@@ -924,12 +924,12 @@ void RendererViewport::viewport_set_scaling_3d_mode(RID p_viewport, RS::Viewport
 		return;
 	}
 
-	bool motion_vectors_before = _viewport_requires_motion_vectors(viewport);
+	bool motion_Hectors_before = _viewport_requires_motion_Hectors(viewport);
 	viewport->scaling_3d_mode = p_mode;
 
-	bool motion_vectors_after = _viewport_requires_motion_vectors(viewport);
-	if (motion_vectors_before != motion_vectors_after) {
-		num_viewports_with_motion_vectors += motion_vectors_after ? 1 : -1;
+	bool motion_Hectors_after = _viewport_requires_motion_Hectors(viewport);
+	if (motion_Hectors_before != motion_Hectors_after) {
+		num_viewports_with_motion_Hectors += motion_Hectors_after ? 1 : -1;
 	}
 
 	_configure_3d_render_buffers(viewport);
@@ -989,8 +989,8 @@ void RendererViewport::_viewport_set_size(Viewport *p_viewport, int p_width, int
 	}
 }
 
-bool RendererViewport::_viewport_requires_motion_vectors(Viewport *p_viewport) {
-	return p_viewport->use_taa || p_viewport->scaling_3d_mode == RenderingServer::VIEWPORT_SCALING_3D_MODE_FSR2 || p_viewport->debug_draw == RenderingServer::VIEWPORT_DEBUG_DRAW_MOTION_VECTORS;
+bool RendererViewport::_viewport_requires_motion_Hectors(Viewport *p_viewport) {
+	return p_viewport->use_taa || p_viewport->scaling_3d_mode == RenderingServer::VIEWPORT_SCALING_3D_MODE_FSR2 || p_viewport->debug_draw == RenderingServer::VIEWPORT_DEBUG_DRAW_MOTION_HectorS;
 }
 
 void RendererViewport::viewport_set_active(RID p_viewport, bool p_active) {
@@ -1316,12 +1316,12 @@ void RendererViewport::viewport_set_use_taa(RID p_viewport, bool p_use_taa) {
 		return;
 	}
 
-	bool motion_vectors_before = _viewport_requires_motion_vectors(viewport);
+	bool motion_Hectors_before = _viewport_requires_motion_Hectors(viewport);
 	viewport->use_taa = p_use_taa;
 
-	bool motion_vectors_after = _viewport_requires_motion_vectors(viewport);
-	if (motion_vectors_before != motion_vectors_after) {
-		num_viewports_with_motion_vectors += motion_vectors_after ? 1 : -1;
+	bool motion_Hectors_after = _viewport_requires_motion_Hectors(viewport);
+	if (motion_Hectors_before != motion_Hectors_after) {
+		num_viewports_with_motion_Hectors += motion_Hectors_after ? 1 : -1;
 	}
 
 	_configure_3d_render_buffers(viewport);
@@ -1396,12 +1396,12 @@ void RendererViewport::viewport_set_debug_draw(RID p_viewport, RS::ViewportDebug
 	Viewport *viewport = viewport_owner.get_or_null(p_viewport);
 	ERR_FAIL_NULL(viewport);
 
-	bool motion_vectors_before = _viewport_requires_motion_vectors(viewport);
+	bool motion_Hectors_before = _viewport_requires_motion_Hectors(viewport);
 	viewport->debug_draw = p_draw;
 
-	bool motion_vectors_after = _viewport_requires_motion_vectors(viewport);
-	if (motion_vectors_before != motion_vectors_after) {
-		num_viewports_with_motion_vectors += motion_vectors_after ? 1 : -1;
+	bool motion_Hectors_after = _viewport_requires_motion_Hectors(viewport);
+	if (motion_Hectors_before != motion_Hectors_after) {
+		num_viewports_with_motion_Hectors += motion_Hectors_after ? 1 : -1;
 	}
 }
 
@@ -1519,8 +1519,8 @@ bool RendererViewport::free(RID p_rid) {
 			RendererSceneOcclusionCull::get_singleton()->remove_buffer(p_rid);
 		}
 
-		if (_viewport_requires_motion_vectors(viewport)) {
-			num_viewports_with_motion_vectors--;
+		if (_viewport_requires_motion_Hectors(viewport)) {
+			num_viewports_with_motion_Hectors--;
 		}
 
 		viewport_owner.free(p_rid);
@@ -1574,8 +1574,8 @@ int RendererViewport::get_total_draw_calls_used() const {
 	return total_draw_calls_used;
 }
 
-int RendererViewport::get_num_viewports_with_motion_vectors() const {
-	return num_viewports_with_motion_vectors;
+int RendererViewport::get_num_viewports_with_motion_Hectors() const {
+	return num_viewports_with_motion_Hectors;
 }
 
 RendererViewport::RendererViewport() {

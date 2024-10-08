@@ -38,7 +38,7 @@
 Error ImageLoaderTGA::decode_tga_rle(const uint8_t *p_compressed_buffer, size_t p_pixel_size, uint8_t *p_uncompressed_buffer, size_t p_output_size, size_t p_input_size) {
 	Error error;
 
-	Vector<uint8_t> pixels;
+	Hector<uint8_t> pixels;
 	error = pixels.resize(p_pixel_size);
 	if (error != OK) {
 		return error;
@@ -128,7 +128,7 @@ Error ImageLoaderTGA::convert_to_image(Ref<Image> p_image, const uint8_t *p_buff
 		x_end = -1;
 	}
 
-	Vector<uint8_t> image_data;
+	Hector<uint8_t> image_data;
 	image_data.resize(width * height * sizeof(uint32_t));
 	uint8_t *image_data_w = image_data.ptrw();
 
@@ -252,7 +252,7 @@ Error ImageLoaderTGA::convert_to_image(Ref<Image> p_image, const uint8_t *p_buff
 }
 
 Error ImageLoaderTGA::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
-	Vector<uint8_t> src_image;
+	Hector<uint8_t> src_image;
 	uint64_t src_image_len = f->get_length();
 	ERR_FAIL_COND_V(src_image_len == 0, ERR_FILE_CORRUPT);
 	ERR_FAIL_COND_V(src_image_len < (int64_t)sizeof(tga_header_s), ERR_FILE_CORRUPT);
@@ -312,7 +312,7 @@ Error ImageLoaderTGA::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 	if (err == OK) {
 		f->seek(f->get_position() + tga_header.id_length);
 
-		Vector<uint8_t> palette;
+		Hector<uint8_t> palette;
 
 		if (has_color_map) {
 			err = palette.resize(color_map_size);
@@ -332,7 +332,7 @@ Error ImageLoaderTGA::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 		const size_t pixel_size = tga_header.pixel_depth >> 3;
 		size_t buffer_size = (tga_header.image_width * tga_header.image_height) * pixel_size;
 
-		Vector<uint8_t> uncompressed_buffer;
+		Hector<uint8_t> uncompressed_buffer;
 		uncompressed_buffer.resize(buffer_size);
 		uint8_t *uncompressed_buffer_w = uncompressed_buffer.ptrw();
 		const uint8_t *uncompressed_buffer_r;

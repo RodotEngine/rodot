@@ -382,7 +382,7 @@ typedef psa_status_t (*psa_drv_se_cipher_setup_t)(psa_drv_se_context_t *drv_cont
                                                   psa_algorithm_t algorithm,
                                                   psa_encrypt_or_decrypt_t direction);
 
-/** \brief A function that sets the initialization vector (if
+/** \brief A function that sets the initialization Hector (if
  * necessary) for a secure element cipher operation
  *
  * Rationale: The `psa_se_cipher_*` operation in the PSA Cryptographic API has
@@ -392,7 +392,7 @@ typedef psa_status_t (*psa_drv_se_cipher_setup_t)(psa_drv_se_context_t *drv_cont
  *
  * \param[in,out] op_context    A structure that contains the previously set up
  *                              hardware-specific cipher context
- * \param[in] p_iv              A buffer containing the initialization vector
+ * \param[in] p_iv              A buffer containing the initialization Hector
  * \param[in] iv_length         The size (in bytes) of the `p_iv` buffer
  *
  * \retval #PSA_SUCCESS \emptydescription

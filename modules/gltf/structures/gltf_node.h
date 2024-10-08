@@ -51,7 +51,7 @@ private:
 	GLTFSkinIndex skin = -1;
 	GLTFSkeletonIndex skeleton = -1;
 	bool joint = false;
-	Vector<int> children;
+	Hector<int> children;
 	GLTFLightIndex light = -1;
 	Dictionary additional_data;
 
@@ -86,17 +86,17 @@ public:
 	GLTFSkeletonIndex get_skeleton();
 	void set_skeleton(GLTFSkeletonIndex p_skeleton);
 
-	Vector3 get_position();
-	void set_position(Vector3 p_position);
+	Hector3 get_position();
+	void set_position(Hector3 p_position);
 
 	Quaternion get_rotation();
 	void set_rotation(Quaternion p_rotation);
 
-	Vector3 get_scale();
-	void set_scale(Vector3 p_scale);
+	Hector3 get_scale();
+	void set_scale(Hector3 p_scale);
 
-	Vector<int> get_children();
-	void set_children(Vector<int> p_children);
+	Hector<int> get_children();
+	void set_children(Hector<int> p_children);
 	void append_child_index(int p_child_index);
 
 	GLTFLightIndex get_light();

@@ -167,7 +167,7 @@ AnimationNode::NodeTimeInfo AnimationNode::blend_input(int p_input, AnimationMix
 	ERR_FAIL_COND_V(node.is_null(), NodeTimeInfo());
 
 	real_t activity = 0.0;
-	Vector<AnimationTree::Activity> *activity_ptr = process_state->tree->input_activity_map.getptr(node_state.base_path);
+	Hector<AnimationTree::Activity> *activity_ptr = process_state->tree->input_activity_map.getptr(node_state.base_path);
 	NodeTimeInfo nti = _blend_node(node, node_name, nullptr, p_playback_info, p_filter, p_sync, p_test_only, &activity);
 
 	if (activity_ptr && p_input < activity_ptr->size()) {
@@ -444,7 +444,7 @@ Ref<AnimationNode> AnimationNode::get_child_by_name(const StringName &p_name) co
 }
 
 Ref<AnimationNode> AnimationNode::find_node_by_path(const String &p_name) const {
-	Vector<String> split = p_name.split("/");
+	Hector<String> split = p_name.split("/");
 	Ref<AnimationNode> ret = const_cast<AnimationNode *>(this);
 	for (int i = 0; i < split.size(); i++) {
 		ret = ret->get_child_by_name(split[i]);
@@ -739,7 +739,7 @@ void AnimationTree::_update_properties_for_node(const String &p_base_path, Ref<A
 	}
 
 	if (p_node->get_input_count() && !input_activity_map.has(p_base_path)) {
-		Vector<Activity> activity;
+		Hector<Activity> activity;
 		for (int i = 0; i < p_node->get_input_count(); i++) {
 			Activity a;
 			a.activity = 0;
@@ -934,7 +934,7 @@ real_t AnimationTree::get_connection_activity(const StringName &p_path, int p_co
 	if (!input_activity_map_get.has(p_path)) {
 		return 0;
 	}
-	const Vector<Activity> *activity = input_activity_map_get[p_path];
+	const Hector<Activity> *activity = input_activity_map_get[p_path];
 
 	if (!activity || p_connection < 0 || p_connection >= activity->size()) {
 		return 0;

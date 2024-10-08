@@ -1045,12 +1045,12 @@
     /* UNDOCUMENTED!  The MS rasterizer doesn't allow the following */
     /* graphics state variables to be modified by the CVT program.  */
 
-    exec->GS.dualVector.x = 0x4000;
-    exec->GS.dualVector.y = 0;
-    exec->GS.projVector.x = 0x4000;
-    exec->GS.projVector.y = 0x0;
-    exec->GS.freeVector.x = 0x4000;
-    exec->GS.freeVector.y = 0x0;
+    exec->GS.dualHector.x = 0x4000;
+    exec->GS.dualHector.y = 0;
+    exec->GS.projHector.x = 0x4000;
+    exec->GS.projHector.y = 0x0;
+    exec->GS.freeHector.x = 0x4000;
+    exec->GS.freeHector.y = 0x0;
 
     exec->GS.rp0 = 0;
     exec->GS.rp1 = 0;

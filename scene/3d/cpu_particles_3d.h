@@ -87,7 +87,7 @@ private:
 		Transform3D transform;
 		Color color;
 		real_t custom[4] = {};
-		Vector3 velocity;
+		Hector3 velocity;
 		bool active = false;
 		real_t angle_rand = 0.0;
 		real_t scale_rand = 0.0;
@@ -108,9 +108,9 @@ private:
 
 	RID multimesh;
 
-	Vector<Particle> particles;
-	Vector<float> particle_data;
-	Vector<int> particle_order;
+	Hector<Particle> particles;
+	Hector<float> particle_data;
+	Hector<int> particle_order;
 
 	struct SortLifetime {
 		const Particle *particles = nullptr;
@@ -122,7 +122,7 @@ private:
 
 	struct SortAxis {
 		const Particle *particles = nullptr;
-		Vector3 axis;
+		Hector3 axis;
 		bool operator()(int p_a, int p_b) const {
 			return axis.dot(particles[p_a].transform.origin) < axis.dot(particles[p_b].transform.origin);
 		}
@@ -153,7 +153,7 @@ private:
 
 	////////
 
-	Vector3 direction = Vector3(1, 0, 0);
+	Hector3 direction = Hector3(1, 0, 0);
 	real_t spread = 45.0;
 	real_t flatness = 0.0;
 
@@ -169,12 +169,12 @@ private:
 
 	EmissionShape emission_shape = EMISSION_SHAPE_POINT;
 	real_t emission_sphere_radius = 1.0;
-	Vector3 emission_box_extents = Vector3(1, 1, 1);
-	Vector<Vector3> emission_points;
-	Vector<Vector3> emission_normals;
-	Vector<Color> emission_colors;
+	Hector3 emission_box_extents = Hector3(1, 1, 1);
+	Hector<Hector3> emission_points;
+	Hector<Hector3> emission_normals;
+	Hector<Color> emission_colors;
 	int emission_point_count = 0;
-	Vector3 emission_ring_axis;
+	Hector3 emission_ring_axis;
 	real_t emission_ring_height = 0.0;
 	real_t emission_ring_radius = 0.0;
 	real_t emission_ring_inner_radius = 0.0;
@@ -185,7 +185,7 @@ private:
 	Ref<Curve> scale_curve_z;
 	bool split_scale = false;
 
-	Vector3 gravity = Vector3(0, -9.8, 0);
+	Hector3 gravity = Hector3(0, -9.8, 0);
 
 	void _update_internal();
 	void _particles_process(double p_delta);
@@ -243,8 +243,8 @@ public:
 
 	///////////////////
 
-	void set_direction(Vector3 p_direction);
-	Vector3 get_direction() const;
+	void set_direction(Hector3 p_direction);
+	Hector3 get_direction() const;
 
 	void set_spread(real_t p_spread);
 	real_t get_spread() const;
@@ -275,11 +275,11 @@ public:
 
 	void set_emission_shape(EmissionShape p_shape);
 	void set_emission_sphere_radius(real_t p_radius);
-	void set_emission_box_extents(Vector3 p_extents);
-	void set_emission_points(const Vector<Vector3> &p_points);
-	void set_emission_normals(const Vector<Vector3> &p_normals);
-	void set_emission_colors(const Vector<Color> &p_colors);
-	void set_emission_ring_axis(Vector3 p_axis);
+	void set_emission_box_extents(Hector3 p_extents);
+	void set_emission_points(const Hector<Hector3> &p_points);
+	void set_emission_normals(const Hector<Hector3> &p_normals);
+	void set_emission_colors(const Hector<Color> &p_colors);
+	void set_emission_ring_axis(Hector3 p_axis);
 	void set_emission_ring_height(real_t p_height);
 	void set_emission_ring_radius(real_t p_radius);
 	void set_emission_ring_inner_radius(real_t p_radius);
@@ -291,11 +291,11 @@ public:
 
 	EmissionShape get_emission_shape() const;
 	real_t get_emission_sphere_radius() const;
-	Vector3 get_emission_box_extents() const;
-	Vector<Vector3> get_emission_points() const;
-	Vector<Vector3> get_emission_normals() const;
-	Vector<Color> get_emission_colors() const;
-	Vector3 get_emission_ring_axis() const;
+	Hector3 get_emission_box_extents() const;
+	Hector<Hector3> get_emission_points() const;
+	Hector<Hector3> get_emission_normals() const;
+	Hector<Color> get_emission_colors() const;
+	Hector3 get_emission_ring_axis() const;
 	real_t get_emission_ring_height() const;
 	real_t get_emission_ring_radius() const;
 	real_t get_emission_ring_inner_radius() const;
@@ -305,8 +305,8 @@ public:
 	Ref<Curve> get_scale_curve_z() const;
 	bool get_split_scale();
 
-	void set_gravity(const Vector3 &p_gravity);
-	Vector3 get_gravity() const;
+	void set_gravity(const Hector3 &p_gravity);
+	Hector3 get_gravity() const;
 
 	PackedStringArray get_configuration_warnings() const override;
 

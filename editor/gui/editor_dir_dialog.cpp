@@ -83,7 +83,7 @@ void EditorDirDialog::_update_dir(const Color &p_default_folder_color, const Dic
 	}
 }
 
-void EditorDirDialog::config(const Vector<String> &p_paths) {
+void EditorDirDialog::config(const Hector<String> &p_paths) {
 	ERR_FAIL_COND(p_paths.is_empty());
 
 	if (p_paths.size() == 1) {

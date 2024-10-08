@@ -17,7 +17,7 @@ namespace embree
   template<typename T>
   struct QuaternionT
   {
-    typedef Vec3<T> Vector;
+    typedef Vec3<T> Hector;
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Construction
@@ -48,7 +48,7 @@ namespace embree
       return QuaternionT<T>(cos(T(0.5)*r),sin(T(0.5)*r)*normalize(u));
     }
 
-    /*! returns the rotation axis of the quaternion as a vector */
+    /*! returns the rotation axis of the quaternion as a Hector */
     __forceinline Vec3<T> v( ) const { return Vec3<T>(i, j, k); }
 
   public:
@@ -130,7 +130,7 @@ namespace embree
 
 
   template<typename T> __forceinline Vec3<T> xfmPoint ( const QuaternionT<T>& a, const Vec3<T>&       b ) { return (a*QuaternionT<T>(b)*conj(a)).v(); }
-  template<typename T> __forceinline Vec3<T> xfmVector( const QuaternionT<T>& a, const Vec3<T>&       b ) { return (a*QuaternionT<T>(b)*conj(a)).v(); }
+  template<typename T> __forceinline Vec3<T> xfmHector( const QuaternionT<T>& a, const Vec3<T>&       b ) { return (a*QuaternionT<T>(b)*conj(a)).v(); }
   template<typename T> __forceinline Vec3<T> xfmNormal( const QuaternionT<T>& a, const Vec3<T>&       b ) { return (a*QuaternionT<T>(b)*conj(a)).v(); }
 
   template<typename T> __forceinline T dot(const QuaternionT<T>& a, const QuaternionT<T>& b) { return a.r*b.r + a.i*b.i + a.j*b.j + a.k*b.k; }

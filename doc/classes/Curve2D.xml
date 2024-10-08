@@ -12,9 +12,9 @@
 	<methods>
 		<method name="add_point">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2" />
-			<param index="1" name="in" type="Vector2" default="Vector2(0, 0)" />
-			<param index="2" name="out" type="Vector2" default="Vector2(0, 0)" />
+			<param index="0" name="position" type="Hector2" />
+			<param index="1" name="in" type="Hector2" default="Hector2(0, 0)" />
+			<param index="2" name="out" type="Hector2" default="Hector2(0, 0)" />
 			<param index="3" name="index" type="int" default="-1" />
 			<description>
 				Adds a point with the specified [param position] relative to the curve's own position, with control points [param in] and [param out]. Appends the new point at the end of the point list.
@@ -34,43 +34,43 @@
 			</description>
 		</method>
 		<method name="get_baked_points" qualifiers="const">
-			<return type="PackedVector2Array" />
+			<return type="PackedHector2Array" />
 			<description>
-				Returns the cache of points as a [PackedVector2Array].
+				Returns the cache of points as a [PackedHector2Array].
 			</description>
 		</method>
 		<method name="get_closest_offset" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="to_point" type="Vector2" />
+			<param index="0" name="to_point" type="Hector2" />
 			<description>
 				Returns the closest offset to [param to_point]. This offset is meant to be used in [method sample_baked].
 				[param to_point] must be in this curve's local space.
 			</description>
 		</method>
 		<method name="get_closest_point" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="to_point" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="to_point" type="Hector2" />
 			<description>
 				Returns the closest point on baked segments (in curve's local space) to [param to_point].
 				[param to_point] must be in this curve's local space.
 			</description>
 		</method>
 		<method name="get_point_in" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the control point leading to the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0)[/code].
 			</description>
 		</method>
 		<method name="get_point_out" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the control point leading out of the vertex [param idx]. The returned position is relative to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0)[/code].
 			</description>
 		</method>
 		<method name="get_point_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="idx" type="int" />
 			<description>
 				Returns the position of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console, and returns [code](0, 0)[/code].
@@ -84,7 +84,7 @@
 			</description>
 		</method>
 		<method name="sample" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="idx" type="int" />
 			<param index="1" name="t" type="float" />
 			<description>
@@ -93,7 +93,7 @@
 			</description>
 		</method>
 		<method name="sample_baked" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="offset" type="float" default="0.0" />
 			<param index="1" name="cubic" type="bool" default="false" />
 			<description>
@@ -107,7 +107,7 @@
 			<param index="0" name="offset" type="float" default="0.0" />
 			<param index="1" name="cubic" type="bool" default="false" />
 			<description>
-				Similar to [method sample_baked], but returns [Transform2D] that includes a rotation along the curve, with [member Transform2D.origin] as the point position and the [member Transform2D.x] vector pointing in the direction of the path at that point. Returns an empty transform if the length of the curve is [code]0[/code].
+				Similar to [method sample_baked], but returns [Transform2D] that includes a rotation along the curve, with [member Transform2D.origin] as the point position and the [member Transform2D.x] Hector pointing in the direction of the path at that point. Returns an empty transform if the length of the curve is [code]0[/code].
 				[codeblock]
 				var baked = curve.sample_baked_with_rotation(offset)
 				# The returned Transform2D can be set directly.
@@ -119,7 +119,7 @@
 			</description>
 		</method>
 		<method name="samplef" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="fofs" type="float" />
 			<description>
 				Returns the position at the vertex [param fofs]. It calls [method sample] using the integer part of [param fofs] as [code]idx[/code], and its fractional part as [code]t[/code].
@@ -128,7 +128,7 @@
 		<method name="set_point_in">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Sets the position of the control point leading to the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 			</description>
@@ -136,7 +136,7 @@
 		<method name="set_point_out">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Sets the position of the control point leading out of the vertex [param idx]. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 			</description>
@@ -144,13 +144,13 @@
 		<method name="set_point_position">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Sets the position for the vertex [param idx]. If the index is out of bounds, the function sends an error to the console.
 			</description>
 		</method>
 		<method name="tessellate" qualifiers="const">
-			<return type="PackedVector2Array" />
+			<return type="PackedHector2Array" />
 			<param index="0" name="max_stages" type="int" default="5" />
 			<param index="1" name="tolerance_degrees" type="float" default="4" />
 			<description>
@@ -161,7 +161,7 @@
 			</description>
 		</method>
 		<method name="tessellate_even_length" qualifiers="const">
-			<return type="PackedVector2Array" />
+			<return type="PackedHector2Array" />
 			<param index="0" name="max_stages" type="int" default="5" />
 			<param index="1" name="tolerance_length" type="float" default="20.0" />
 			<description>

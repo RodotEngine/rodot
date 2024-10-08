@@ -359,7 +359,7 @@ void Image::get_mipmap_offset_size_and_dimensions(int p_mipmap, int64_t &r_ofs, 
 	r_size = ofs2 - ofs;
 }
 
-Image::Image3DValidateError Image::validate_3d_image(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_images) {
+Image::Image3DValidateError Image::validate_3d_image(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_images) {
 	int w = p_width;
 	int h = p_height;
 	int d = p_depth;
@@ -1800,7 +1800,7 @@ void Image::shrink_x2() {
 
 	if (mipmaps) {
 		//just use the lower mipmap as base and copy all
-		Vector<uint8_t> new_img;
+		Hector<uint8_t> new_img;
 
 		int ofs = get_mipmap_offset(1);
 
@@ -1820,7 +1820,7 @@ void Image::shrink_x2() {
 		data = new_img;
 
 	} else {
-		Vector<uint8_t> new_img;
+		Hector<uint8_t> new_img;
 
 		ERR_FAIL_COND(!_can_modify(format));
 		int ps = get_format_pixel_size(format);
@@ -1899,7 +1899,7 @@ void Image::normalize() {
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			Color c = get_pixel(x, y);
-			Vector3 v(c.r * 2.0 - 1.0, c.g * 2.0 - 1.0, c.b * 2.0 - 1.0);
+			Hector3 v(c.r * 2.0 - 1.0, c.g * 2.0 - 1.0, c.b * 2.0 - 1.0);
 			v.normalize();
 			c.r = v.x * 0.5 + 0.5;
 			c.g = v.y * 0.5 + 0.5;
@@ -2028,7 +2028,7 @@ Error Image::generate_mipmaps(bool p_renormalize) {
 }
 
 Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, const Ref<Image> &p_normal_map) {
-	LocalVector<double> normal_sat_vec; //summed area table
+	LocalHector<double> normal_sat_vec; //summed area table
 	int normal_w = 0, normal_h = 0;
 
 	ERR_FAIL_COND_V_MSG(p_normal_map.is_null() || p_normal_map->is_empty(), ERR_INVALID_PARAMETER, "Must provide a valid normal map for roughness mipmaps");
@@ -2076,9 +2076,9 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 
 #if 0
 	{
-		Vector3 beg(normal_sat_vec[0], normal_sat_vec[1], normal_sat_vec[2]);
-		Vector3 end(normal_sat_vec[normal_sat_vec.size() - 3], normal_sat_vec[normal_sat_vec.size() - 2], normal_sat_vec[normal_sat_vec.size() - 1]);
-		Vector3 avg = (end - beg) / (normal_w * normal_h);
+		Hector3 beg(normal_sat_vec[0], normal_sat_vec[1], normal_sat_vec[2]);
+		Hector3 end(normal_sat_vec[normal_sat_vec.size() - 3], normal_sat_vec[normal_sat_vec.size() - 2], normal_sat_vec[normal_sat_vec.size() - 1]);
+		Hector3 avg = (end - beg) / (normal_w * normal_h);
 		print_line("average: " + avg);
 	}
 #endif
@@ -2140,7 +2140,7 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 				}
 
 				double div = double(size_x * size_y);
-				Vector3 vec(avg[0] / div, avg[1] / div, avg[2] / div);
+				Hector3 vec(avg[0] / div, avg[1] / div, avg[2] / div);
 
 				float r = vec.length();
 
@@ -2226,7 +2226,7 @@ bool Image::is_empty() const {
 	return (data.size() == 0);
 }
 
-Vector<uint8_t> Image::get_data() const {
+Hector<uint8_t> Image::get_data() const {
 	return data;
 }
 
@@ -2237,14 +2237,14 @@ Ref<Image> Image::create_empty(int p_width, int p_height, bool p_use_mipmaps, Fo
 	return image;
 }
 
-Ref<Image> Image::create_from_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data) {
+Ref<Image> Image::create_from_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Hector<uint8_t> &p_data) {
 	Ref<Image> image;
 	image.instantiate();
 	image->initialize_data(p_width, p_height, p_use_mipmaps, p_format, p_data);
 	return image;
 }
 
-void Image::set_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data) {
+void Image::set_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Hector<uint8_t> &p_data) {
 	initialize_data(p_width, p_height, p_use_mipmaps, p_format, p_data);
 }
 
@@ -2274,7 +2274,7 @@ void Image::initialize_data(int p_width, int p_height, bool p_use_mipmaps, Forma
 	format = p_format;
 }
 
-void Image::initialize_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data) {
+void Image::initialize_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Hector<uint8_t> &p_data) {
 	ERR_FAIL_COND_MSG(p_width <= 0, "The Image width specified (" + itos(p_width) + " pixels) must be greater than 0 pixels.");
 	ERR_FAIL_COND_MSG(p_height <= 0, "The Image height specified (" + itos(p_height) + " pixels) must be greater than 0 pixels.");
 	ERR_FAIL_COND_MSG(p_width > MAX_WIDTH,
@@ -2614,17 +2614,17 @@ Error Image::save_jpg(const String &p_path, float p_quality) const {
 	return save_jpg_func(p_path, Ref<Image>((Image *)this), p_quality);
 }
 
-Vector<uint8_t> Image::save_png_to_buffer() const {
+Hector<uint8_t> Image::save_png_to_buffer() const {
 	if (save_png_buffer_func == nullptr) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	return save_png_buffer_func(Ref<Image>((Image *)this));
 }
 
-Vector<uint8_t> Image::save_jpg_to_buffer(float p_quality) const {
+Hector<uint8_t> Image::save_jpg_to_buffer(float p_quality) const {
 	if (save_jpg_buffer_func == nullptr) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	return save_jpg_buffer_func(Ref<Image>((Image *)this), p_quality);
@@ -2638,9 +2638,9 @@ Error Image::save_exr(const String &p_path, bool p_grayscale) const {
 	return save_exr_func(p_path, Ref<Image>((Image *)this), p_grayscale);
 }
 
-Vector<uint8_t> Image::save_exr_to_buffer(bool p_grayscale) const {
+Hector<uint8_t> Image::save_exr_to_buffer(bool p_grayscale) const {
 	if (save_exr_buffer_func == nullptr) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 	return save_exr_buffer_func(Ref<Image>((Image *)this), p_grayscale);
 }
@@ -2654,11 +2654,11 @@ Error Image::save_webp(const String &p_path, const bool p_lossy, const float p_q
 	return save_webp_func(p_path, Ref<Image>((Image *)this), p_lossy, p_quality);
 }
 
-Vector<uint8_t> Image::save_webp_to_buffer(const bool p_lossy, const float p_quality) const {
+Hector<uint8_t> Image::save_webp_to_buffer(const bool p_lossy, const float p_quality) const {
 	if (save_webp_buffer_func == nullptr) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
-	ERR_FAIL_COND_V_MSG(p_lossy && !(0.0f <= p_quality && p_quality <= 1.0f), Vector<uint8_t>(), "The WebP lossy quality was set to " + rtos(p_quality) + ", which is not valid. WebP lossy quality must be between 0.0 and 1.0 (inclusive).");
+	ERR_FAIL_COND_V_MSG(p_lossy && !(0.0f <= p_quality && p_quality <= 1.0f), Hector<uint8_t>(), "The WebP lossy quality was set to " + rtos(p_quality) + ", which is not valid. WebP lossy quality must be between 0.0 and 1.0 (inclusive).");
 
 	return save_webp_buffer_func(Ref<Image>((Image *)this), p_lossy, p_quality);
 }
@@ -2814,7 +2814,7 @@ Image::Image(int p_width, int p_height, bool p_use_mipmaps, Format p_format) {
 	initialize_data(p_width, p_height, p_use_mipmaps, p_format);
 }
 
-Image::Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const Vector<uint8_t> &p_data) {
+Image::Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const Hector<uint8_t> &p_data) {
 	width = 0;
 	height = 0;
 	mipmaps = p_mipmaps;
@@ -3156,13 +3156,13 @@ void (*Image::_image_decompress_etc1)(Image *) = nullptr;
 void (*Image::_image_decompress_etc2)(Image *) = nullptr;
 void (*Image::_image_decompress_astc)(Image *) = nullptr;
 
-Vector<uint8_t> (*Image::webp_lossy_packer)(const Ref<Image> &, float) = nullptr;
-Vector<uint8_t> (*Image::webp_lossless_packer)(const Ref<Image> &) = nullptr;
-Ref<Image> (*Image::webp_unpacker)(const Vector<uint8_t> &) = nullptr;
-Vector<uint8_t> (*Image::png_packer)(const Ref<Image> &) = nullptr;
-Ref<Image> (*Image::png_unpacker)(const Vector<uint8_t> &) = nullptr;
-Vector<uint8_t> (*Image::basis_universal_packer)(const Ref<Image> &, Image::UsedChannels) = nullptr;
-Ref<Image> (*Image::basis_universal_unpacker)(const Vector<uint8_t> &) = nullptr;
+Hector<uint8_t> (*Image::webp_lossy_packer)(const Ref<Image> &, float) = nullptr;
+Hector<uint8_t> (*Image::webp_lossless_packer)(const Ref<Image> &) = nullptr;
+Ref<Image> (*Image::webp_unpacker)(const Hector<uint8_t> &) = nullptr;
+Hector<uint8_t> (*Image::png_packer)(const Ref<Image> &) = nullptr;
+Ref<Image> (*Image::png_unpacker)(const Hector<uint8_t> &) = nullptr;
+Hector<uint8_t> (*Image::basis_universal_packer)(const Ref<Image> &, Image::UsedChannels) = nullptr;
+Ref<Image> (*Image::basis_universal_unpacker)(const Hector<uint8_t> &) = nullptr;
 Ref<Image> (*Image::basis_universal_unpacker_ptr)(const uint8_t *, int) = nullptr;
 
 void Image::_set_data(const Dictionary &p_data) {
@@ -3176,7 +3176,7 @@ void Image::_set_data(const Dictionary &p_data) {
 	int dheight = p_data["height"];
 	String dformat = p_data["format"];
 	bool dmipmaps = p_data["mipmaps"];
-	Vector<uint8_t> ddata = p_data["data"];
+	Hector<uint8_t> ddata = p_data["data"];
 	Format ddformat = FORMAT_MAX;
 	for (int i = 0; i < FORMAT_MAX; i++) {
 		if (dformat == get_format_name(Format(i))) {
@@ -3445,12 +3445,12 @@ void Image::adjust_bcs(float p_brightness, float p_contrast, float p_saturation)
 
 	for (uint32_t i = 0; i < pixel_count; i++) {
 		Color c = _get_color_at_ofs(w, i);
-		Vector3 rgb(c.r, c.g, c.b);
+		Hector3 rgb(c.r, c.g, c.b);
 
 		rgb *= p_brightness;
-		rgb = Vector3(0.5, 0.5, 0.5).lerp(rgb, p_contrast);
+		rgb = Hector3(0.5, 0.5, 0.5).lerp(rgb, p_contrast);
 		float center = (rgb.x + rgb.y + rgb.z) / 3.0;
-		rgb = Vector3(center, center, center).lerp(rgb, p_saturation);
+		rgb = Hector3(center, center, center).lerp(rgb, p_saturation);
 		c.r = rgb.x;
 		c.g = rgb.y;
 		c.b = rgb.z;
@@ -3768,7 +3768,7 @@ Ref<Image> Image::get_image_from_mipmap(int p_mipmap) const {
 	int w, h;
 	get_mipmap_offset_size_and_dimensions(p_mipmap, ofs, size, w, h);
 
-	Vector<uint8_t> new_data;
+	Hector<uint8_t> new_data;
 	new_data.resize(size);
 
 	{
@@ -3793,7 +3793,7 @@ void Image::bump_map_to_normal_map(float bump_scale) {
 	clear_mipmaps();
 	convert(Image::FORMAT_RF);
 
-	Vector<uint8_t> result_image; //rgba output
+	Hector<uint8_t> result_image; //rgba output
 	result_image.resize(width * height * 4);
 
 	{
@@ -3819,10 +3819,10 @@ void Image::bump_map_to_normal_map(float bump_scale) {
 				float here = read_ptr[ty * width + tx];
 				float to_right = read_ptr[ty * width + px];
 				float above = read_ptr[py * width + tx];
-				Vector3 up = Vector3(0, 1, (here - above) * bump_scale);
-				Vector3 across = Vector3(1, 0, (to_right - here) * bump_scale);
+				Hector3 up = Hector3(0, 1, (here - above) * bump_scale);
+				Hector3 across = Hector3(1, 0, (to_right - here) * bump_scale);
 
-				Vector3 normal = across.cross(up);
+				Hector3 normal = across.cross(up);
 				normal.normalize();
 
 				write_ptr[((ty * width + tx) << 2) + 0] = (127.5 + normal.x * 127.5);
@@ -3956,7 +3956,7 @@ void Image::fix_alpha_edges() {
 		return; //not needed
 	}
 
-	Vector<uint8_t> dcopy = data;
+	Hector<uint8_t> dcopy = data;
 	const uint8_t *srcptr = dcopy.ptr();
 
 	uint8_t *data_ptr = data.ptrw();
@@ -4018,19 +4018,19 @@ String Image::get_format_name(Format p_format) {
 	return format_names[p_format];
 }
 
-Error Image::load_png_from_buffer(const Vector<uint8_t> &p_array) {
+Error Image::load_png_from_buffer(const Hector<uint8_t> &p_array) {
 	return _load_from_buffer(p_array, _png_mem_loader_func);
 }
 
-Error Image::load_jpg_from_buffer(const Vector<uint8_t> &p_array) {
+Error Image::load_jpg_from_buffer(const Hector<uint8_t> &p_array) {
 	return _load_from_buffer(p_array, _jpg_mem_loader_func);
 }
 
-Error Image::load_webp_from_buffer(const Vector<uint8_t> &p_array) {
+Error Image::load_webp_from_buffer(const Hector<uint8_t> &p_array) {
 	return _load_from_buffer(p_array, _webp_mem_loader_func);
 }
 
-Error Image::load_tga_from_buffer(const Vector<uint8_t> &p_array) {
+Error Image::load_tga_from_buffer(const Hector<uint8_t> &p_array) {
 	ERR_FAIL_NULL_V_MSG(
 			_tga_mem_loader_func,
 			ERR_UNAVAILABLE,
@@ -4038,7 +4038,7 @@ Error Image::load_tga_from_buffer(const Vector<uint8_t> &p_array) {
 	return _load_from_buffer(p_array, _tga_mem_loader_func);
 }
 
-Error Image::load_bmp_from_buffer(const Vector<uint8_t> &p_array) {
+Error Image::load_bmp_from_buffer(const Hector<uint8_t> &p_array) {
 	ERR_FAIL_NULL_V_MSG(
 			_bmp_mem_loader_func,
 			ERR_UNAVAILABLE,
@@ -4046,7 +4046,7 @@ Error Image::load_bmp_from_buffer(const Vector<uint8_t> &p_array) {
 	return _load_from_buffer(p_array, _bmp_mem_loader_func);
 }
 
-Error Image::load_svg_from_buffer(const Vector<uint8_t> &p_array, float scale) {
+Error Image::load_svg_from_buffer(const Hector<uint8_t> &p_array, float scale) {
 	ERR_FAIL_NULL_V_MSG(
 			_svg_scalable_mem_loader_func,
 			ERR_UNAVAILABLE,
@@ -4068,7 +4068,7 @@ Error Image::load_svg_from_string(const String &p_svg_str, float scale) {
 	return load_svg_from_buffer(p_svg_str.to_utf8_buffer(), scale);
 }
 
-Error Image::load_ktx_from_buffer(const Vector<uint8_t> &p_array) {
+Error Image::load_ktx_from_buffer(const Hector<uint8_t> &p_array) {
 	ERR_FAIL_NULL_V_MSG(
 			_ktx_mem_loader_func,
 			ERR_UNAVAILABLE,
@@ -4115,7 +4115,7 @@ void Image::convert_rgba8_to_bgra8() {
 	}
 }
 
-Error Image::_load_from_buffer(const Vector<uint8_t> &p_array, ImageMemLoadFunc p_loader) {
+Error Image::_load_from_buffer(const Hector<uint8_t> &p_array, ImageMemLoadFunc p_loader) {
 	int buffer_size = p_array.size();
 
 	ERR_FAIL_COND_V(buffer_size == 0, ERR_INVALID_PARAMETER);
@@ -4148,11 +4148,11 @@ void Image::average_4_rgbe9995(uint32_t &p_out, const uint32_t &p_a, const uint3
 }
 
 void Image::renormalize_uint8(uint8_t *p_rgb) {
-	Vector3 n(p_rgb[0] / 255.0, p_rgb[1] / 255.0, p_rgb[2] / 255.0);
+	Hector3 n(p_rgb[0] / 255.0, p_rgb[1] / 255.0, p_rgb[2] / 255.0);
 	n *= 2.0;
-	n -= Vector3(1, 1, 1);
+	n -= Hector3(1, 1, 1);
 	n.normalize();
-	n += Vector3(1, 1, 1);
+	n += Hector3(1, 1, 1);
 	n *= 0.5;
 	n *= 255;
 	p_rgb[0] = CLAMP(int(n.x), 0, 255);
@@ -4161,7 +4161,7 @@ void Image::renormalize_uint8(uint8_t *p_rgb) {
 }
 
 void Image::renormalize_float(float *p_rgb) {
-	Vector3 n(p_rgb[0], p_rgb[1], p_rgb[2]);
+	Hector3 n(p_rgb[0], p_rgb[1], p_rgb[2]);
 	n.normalize();
 	p_rgb[0] = n.x;
 	p_rgb[1] = n.y;
@@ -4169,7 +4169,7 @@ void Image::renormalize_float(float *p_rgb) {
 }
 
 void Image::renormalize_half(uint16_t *p_rgb) {
-	Vector3 n(Math::half_to_float(p_rgb[0]), Math::half_to_float(p_rgb[1]), Math::half_to_float(p_rgb[2]));
+	Hector3 n(Math::half_to_float(p_rgb[0]), Math::half_to_float(p_rgb[1]), Math::half_to_float(p_rgb[2]));
 	n.normalize();
 	p_rgb[0] = Math::make_half_float(n.x);
 	p_rgb[1] = Math::make_half_float(n.y);

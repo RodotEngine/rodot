@@ -58,13 +58,13 @@ public:
 	static Error encode_and_compress_variant(const Variant &p_variant, uint8_t *p_buffer, int &r_len, bool p_allow_object_decoding);
 	static Error decode_and_decompress_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int *r_len, bool p_allow_object_decoding);
 	static Error encode_and_compress_variants(const Variant **p_variants, int p_count, uint8_t *p_buffer, int &r_len, bool *r_raw = nullptr, bool p_allow_object_decoding = false);
-	static Error decode_and_decompress_variants(Vector<Variant> &r_variants, const uint8_t *p_buffer, int p_len, int &r_len, bool p_raw = false, bool p_allow_object_decoding = false);
+	static Error decode_and_decompress_variants(Hector<Variant> &r_variants, const uint8_t *p_buffer, int p_len, int &r_len, bool p_raw = false, bool p_allow_object_decoding = false);
 
 	virtual Error poll() = 0;
 	virtual void set_multiplayer_peer(const Ref<MultiplayerPeer> &p_peer) = 0;
 	virtual Ref<MultiplayerPeer> get_multiplayer_peer() = 0;
 	virtual int get_unique_id() = 0;
-	virtual Vector<int> get_peer_ids() = 0;
+	virtual Hector<int> get_peer_ids() = 0;
 
 	virtual Error rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) = 0;
 	virtual int get_remote_sender_id() = 0;
@@ -92,7 +92,7 @@ public:
 	virtual void set_multiplayer_peer(const Ref<MultiplayerPeer> &p_peer) override;
 	virtual Ref<MultiplayerPeer> get_multiplayer_peer() override;
 	virtual int get_unique_id() override;
-	virtual Vector<int> get_peer_ids() override;
+	virtual Hector<int> get_peer_ids() override;
 
 	virtual Error rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) override;
 	virtual int get_remote_sender_id() override;

@@ -35,7 +35,7 @@
 
 #include "core/math/bvh.h"
 #include "core/math/rect2.h"
-#include "core/math/vector2.h"
+#include "core/math/Hector2.h"
 
 class GodotBroadPhase2DBVH : public GodotBroadPhase2D {
 	template <typename T>
@@ -65,7 +65,7 @@ class GodotBroadPhase2DBVH : public GodotBroadPhase2D {
 		TREE_FLAG_DYNAMIC = 1 << TREE_DYNAMIC,
 	};
 
-	BVH_Manager<GodotCollisionObject2D, 2, true, 128, UserPairTestFunction<GodotCollisionObject2D>, UserCullTestFunction<GodotCollisionObject2D>, Rect2, Vector2> bvh;
+	BVH_Manager<GodotCollisionObject2D, 2, true, 128, UserPairTestFunction<GodotCollisionObject2D>, UserCullTestFunction<GodotCollisionObject2D>, Rect2, Hector2> bvh;
 
 	static void *_pair_callback(void *, uint32_t, GodotCollisionObject2D *, int, uint32_t, GodotCollisionObject2D *, int);
 	static void _unpair_callback(void *, uint32_t, GodotCollisionObject2D *, int, uint32_t, GodotCollisionObject2D *, int, void *);
@@ -86,7 +86,7 @@ public:
 	virtual bool is_static(ID p_id) const override;
 	virtual int get_subindex(ID p_id) const override;
 
-	virtual int cull_segment(const Vector2 &p_from, const Vector2 &p_to, GodotCollisionObject2D **p_results, int p_max_results, int *p_result_indices = nullptr) override;
+	virtual int cull_segment(const Hector2 &p_from, const Hector2 &p_to, GodotCollisionObject2D **p_results, int p_max_results, int *p_result_indices = nullptr) override;
 	virtual int cull_aabb(const Rect2 &p_aabb, GodotCollisionObject2D **p_results, int p_max_results, int *p_result_indices = nullptr) override;
 
 	virtual void set_pair_callback(PairCallback p_pair_callback, void *p_userdata) override;

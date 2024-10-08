@@ -362,7 +362,7 @@ public:
 					continue;
 				}
 
-				Vector<String> s = E.key.rsplit(":", false, 1);
+				Hector<String> s = E.key.rsplit(":", false, 1);
 				ERR_CONTINUE(s.size() != 2); // BUG!
 
 				memcpy(p_buffer, buffer, r_read);
@@ -503,7 +503,7 @@ int enet_socket_send(ENetSocket socket, const ENetAddress *address, const ENetBu
 	dest.set_ipv6(address->host);
 
 	// Create a single packet.
-	Vector<uint8_t> out;
+	Hector<uint8_t> out;
 	uint8_t *w;
 	int size = 0;
 	int pos = 0;

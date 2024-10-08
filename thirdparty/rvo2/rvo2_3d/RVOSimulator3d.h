@@ -39,9 +39,9 @@
 
 #include <cstddef>
 #include <limits>
-#include <vector>
+#include <Vector>
 
-#include "Vector3.h"
+#include "Hector3.h"
 
 namespace RVO3D {
 	class Agent3D;
@@ -62,12 +62,12 @@ namespace RVO3D {
 		/**
 		 * \brief   A point on the plane.
 		 */
-		Vector3 point;
+		Hector3 point;
 
 		/**
 		 * \brief   The normal to the plane.
 		 */
-		Vector3 normal;
+		Hector3 normal;
 	};
 
 	/**
@@ -92,7 +92,7 @@ namespace RVO3D {
 		 * \param   maxSpeed      The default maximum speed of a new agent. Must be non-negative.
 		 * \param   velocity      The default initial three-dimensional linear velocity of a new agent (optional).
 		 */
-		RVOSimulator3D(float timeStep, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Vector3 &velocity = Vector3());
+		RVOSimulator3D(float timeStep, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Hector3 &velocity = Hector3());
 
 		/**
 		 * \brief   Destroys this simulator instance.
@@ -104,7 +104,7 @@ namespace RVO3D {
 		 * \param   position  The three-dimensional starting position of this agent.
 		 * \return  The number of the agent, or RVO3D::RVO3D_ERROR when the agent defaults have not been set.
 		 */
-		size_t addAgent(const Vector3 &position);
+		size_t addAgent(const Hector3 &position);
 
 		/**
 		 * \brief   Adds a new agent to the simulation.
@@ -117,7 +117,7 @@ namespace RVO3D {
 		 * \param   velocity      The initial three-dimensional linear velocity of this agent (optional).
 		 * \return  The number of the agent.
 		 */
-		size_t addAgent(const Vector3 &position, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Vector3 &velocity = Vector3());
+		size_t addAgent(const Hector3 &position, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Hector3 &velocity = Hector3());
 
 		/**
 		 * \brief   Lets the simulator perform a simulation step and updates the three-dimensional position and three-dimensional velocity of each agent.
@@ -181,14 +181,14 @@ namespace RVO3D {
 		 * \param   agentNo  The number of the agent whose three-dimensional position is to be retrieved.
 		 * \return  The present three-dimensional position of the (center of the) agent.
 		 */
-		const Vector3 &getAgentPosition(size_t agentNo) const;
+		const Hector3 &getAgentPosition(size_t agentNo) const;
 
 		/**
 		 * \brief   Returns the three-dimensional preferred velocity of a specified agent.
 		 * \param   agentNo  The number of the agent whose three-dimensional preferred velocity is to be retrieved.
 		 * \return  The present three-dimensional preferred velocity of the agent.
 		 */
-		const Vector3 &getAgentPrefVelocity(size_t agentNo) const;
+		const Hector3 &getAgentPrefVelocity(size_t agentNo) const;
 
 		/**
 		 * \brief   Returns the radius of a specified agent.
@@ -209,7 +209,7 @@ namespace RVO3D {
 		 * \param   agentNo  The number of the agent whose three-dimensional linear velocity is to be retrieved.
 		 * \return  The present three-dimensional linear velocity of the agent.
 		 */
-		const Vector3 &getAgentVelocity(size_t agentNo) const;
+		const Hector3 &getAgentVelocity(size_t agentNo) const;
 
 		/**
 		 * \brief   Returns the global time of the simulation.
@@ -245,7 +245,7 @@ namespace RVO3D {
 		 * \param   maxSpeed      The default maximum speed of a new agent. Must be non-negative.
 		 * \param   velocity      The default initial three-dimensional linear velocity of a new agent (optional).
 		 */
-		void setAgentDefaults(float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Vector3 &velocity = Vector3());
+		void setAgentDefaults(float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Hector3 &velocity = Hector3());
 
 		/**
 		 * \brief   Sets the maximum neighbor count of a specified agent.
@@ -273,14 +273,14 @@ namespace RVO3D {
 		 * \param   agentNo   The number of the agent whose three-dimensional position is to be modified.
 		 * \param   position  The replacement of the three-dimensional position.
 		 */
-		void setAgentPosition(size_t agentNo, const Vector3 &position);
+		void setAgentPosition(size_t agentNo, const Hector3 &position);
 
 		/**
 		 * \brief   Sets the three-dimensional preferred velocity of a specified agent.
 		 * \param   agentNo       The number of the agent whose three-dimensional preferred velocity is to be modified.
 		 * \param   prefVelocity  The replacement of the three-dimensional preferred velocity.
 		 */
-		void setAgentPrefVelocity(size_t agentNo, const Vector3 &prefVelocity);
+		void setAgentPrefVelocity(size_t agentNo, const Hector3 &prefVelocity);
 
 		/**
 		 * \brief   Sets the radius of a specified agent.
@@ -301,7 +301,7 @@ namespace RVO3D {
 		 * \param   agentNo   The number of the agent whose three-dimensional linear velocity is to be modified.
 		 * \param   velocity  The replacement three-dimensional linear velocity.
 		 */
-		void setAgentVelocity(size_t agentNo, const Vector3 &velocity);
+		void setAgentVelocity(size_t agentNo, const Hector3 &velocity);
 
 		/**
 		 * \brief   Sets the time step of the simulation.

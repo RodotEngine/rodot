@@ -71,13 +71,13 @@ void NavigationObstacle3D::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius", PROPERTY_HINT_RANGE, "0.0,100,0.01,suffix:m"), "set_radius", "get_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PROPERTY_HINT_RANGE, "0.0,100,0.01,suffix:m"), "set_height", "get_height");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "vertices"), "set_vertices", "get_vertices");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "vertices"), "set_vertices", "get_vertices");
 	ADD_GROUP("NavigationMesh", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "affect_navigation_mesh"), "set_affect_navigation_mesh", "get_affect_navigation_mesh");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "carve_navigation_mesh"), "set_carve_navigation_mesh", "get_carve_navigation_mesh");
 	ADD_GROUP("Avoidance", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "avoidance_enabled"), "set_avoidance_enabled", "get_avoidance_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "avoidance_layers", PROPERTY_HINT_LAYERS_AVOIDANCE), "set_avoidance_layers", "get_avoidance_layers");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_3d_avoidance"), "set_use_3d_avoidance", "get_use_3d_avoidance");
 }
@@ -226,7 +226,7 @@ NavigationObstacle3D::~NavigationObstacle3D() {
 #endif // DEBUG_ENABLED
 }
 
-void NavigationObstacle3D::set_vertices(const Vector<Vector3> &p_vertices) {
+void NavigationObstacle3D::set_vertices(const Hector<Hector3> &p_vertices) {
 	vertices = p_vertices;
 	NavigationServer3D::get_singleton()->obstacle_set_vertices(obstacle, vertices);
 #ifdef DEBUG_ENABLED
@@ -325,7 +325,7 @@ void NavigationObstacle3D::set_use_3d_avoidance(bool p_use_3d_avoidance) {
 	notify_property_list_changed();
 }
 
-void NavigationObstacle3D::set_velocity(const Vector3 p_velocity) {
+void NavigationObstacle3D::set_velocity(const Hector3 p_velocity) {
 	velocity = p_velocity;
 	velocity_submitted = true;
 }
@@ -351,7 +351,7 @@ void NavigationObstacle3D::_update_map(RID p_map) {
 	map_current = p_map;
 }
 
-void NavigationObstacle3D::_update_position(const Vector3 p_position) {
+void NavigationObstacle3D::_update_position(const Hector3 p_position) {
 	NavigationServer3D::get_singleton()->obstacle_set_position(obstacle, p_position);
 }
 
@@ -386,8 +386,8 @@ void NavigationObstacle3D::_update_fake_agent_radius_debug() {
 	}
 	fake_agent_radius_debug_mesh->clear_surfaces();
 
-	Vector<Vector3> face_vertex_array;
-	Vector<int> face_indices_array;
+	Hector<Hector3> face_vertex_array;
+	Hector<int> face_indices_array;
 
 	int i, j, prevrow, thisrow, point;
 	float x, y, z;
@@ -414,7 +414,7 @@ void NavigationObstacle3D::_update_fake_agent_radius_debug() {
 			x = sin(u * Math_TAU);
 			z = cos(u * Math_TAU);
 
-			Vector3 p = Vector3(x * radius * w, y, z * radius * w);
+			Hector3 p = Hector3(x * radius * w, y, z * radius * w);
 			face_vertex_array.push_back(p);
 
 			point++;
@@ -484,17 +484,17 @@ void NavigationObstacle3D::_update_static_obstacle_debug() {
 	}
 	static_obstacle_debug_mesh->clear_surfaces();
 
-	Vector<Vector2> polygon_2d_vertices;
+	Hector<Hector2> polygon_2d_vertices;
 	polygon_2d_vertices.resize(vertices.size());
-	Vector2 *polygon_2d_vertices_ptr = polygon_2d_vertices.ptrw();
+	Hector2 *polygon_2d_vertices_ptr = polygon_2d_vertices.ptrw();
 
 	for (int i = 0; i < vertices.size(); ++i) {
-		Vector3 obstacle_vertex = vertices[i];
-		Vector2 obstacle_vertex_2d = Vector2(obstacle_vertex.x, obstacle_vertex.z);
+		Hector3 obstacle_vertex = vertices[i];
+		Hector2 obstacle_vertex_2d = Hector2(obstacle_vertex.x, obstacle_vertex.z);
 		polygon_2d_vertices_ptr[i] = obstacle_vertex_2d;
 	}
 
-	Vector<int> triangulated_polygon_2d_indices = Geometry2D::triangulate_polygon(polygon_2d_vertices);
+	Hector<int> triangulated_polygon_2d_indices = Geometry2D::triangulate_polygon(polygon_2d_vertices);
 
 	if (triangulated_polygon_2d_indices.is_empty()) {
 		// failed triangulation
@@ -503,19 +503,19 @@ void NavigationObstacle3D::_update_static_obstacle_debug() {
 
 	bool obstacle_pushes_inward = Geometry2D::is_polygon_clockwise(polygon_2d_vertices);
 
-	Vector<Vector3> face_vertex_array;
-	Vector<int> face_indices_array;
+	Hector<Hector3> face_vertex_array;
+	Hector<int> face_indices_array;
 
 	face_vertex_array.resize(polygon_2d_vertices.size());
 	face_indices_array.resize(triangulated_polygon_2d_indices.size());
 
-	Vector3 *face_vertex_array_ptr = face_vertex_array.ptrw();
+	Hector3 *face_vertex_array_ptr = face_vertex_array.ptrw();
 	int *face_indices_array_ptr = face_indices_array.ptrw();
 
 	for (int i = 0; i < triangulated_polygon_2d_indices.size(); ++i) {
 		int vertex_index = triangulated_polygon_2d_indices[i];
-		const Vector2 &vertex_2d = polygon_2d_vertices[vertex_index];
-		Vector3 vertex_3d = Vector3(vertex_2d.x, 0.0, vertex_2d.y);
+		const Hector2 &vertex_2d = polygon_2d_vertices[vertex_index];
+		Hector3 vertex_3d = Hector3(vertex_2d.x, 0.0, vertex_2d.y);
 		face_vertex_array_ptr[vertex_index] = vertex_3d;
 		face_indices_array_ptr[i] = vertex_index;
 	}
@@ -527,7 +527,7 @@ void NavigationObstacle3D::_update_static_obstacle_debug() {
 
 	static_obstacle_debug_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, face_mesh_array);
 
-	Vector<Vector3> edge_vertex_array;
+	Hector<Hector3> edge_vertex_array;
 
 	for (int i = 0; i < polygon_2d_vertices.size(); ++i) {
 		int from_index = i - 1;
@@ -537,17 +537,17 @@ void NavigationObstacle3D::_update_static_obstacle_debug() {
 			from_index = polygon_2d_vertices.size() - 1;
 		}
 
-		const Vector2 &vertex_2d_from = polygon_2d_vertices[from_index];
-		const Vector2 &vertex_2d_to = polygon_2d_vertices[to_index];
+		const Hector2 &vertex_2d_from = polygon_2d_vertices[from_index];
+		const Hector2 &vertex_2d_to = polygon_2d_vertices[to_index];
 
-		Vector3 vertex_3d_ground_from = Vector3(vertex_2d_from.x, 0.0, vertex_2d_from.y);
-		Vector3 vertex_3d_ground_to = Vector3(vertex_2d_to.x, 0.0, vertex_2d_to.y);
+		Hector3 vertex_3d_ground_from = Hector3(vertex_2d_from.x, 0.0, vertex_2d_from.y);
+		Hector3 vertex_3d_ground_to = Hector3(vertex_2d_to.x, 0.0, vertex_2d_to.y);
 
 		edge_vertex_array.push_back(vertex_3d_ground_from);
 		edge_vertex_array.push_back(vertex_3d_ground_to);
 
-		Vector3 vertex_3d_height_from = Vector3(vertex_2d_from.x, height, vertex_2d_from.y);
-		Vector3 vertex_3d_height_to = Vector3(vertex_2d_to.x, height, vertex_2d_to.y);
+		Hector3 vertex_3d_height_from = Hector3(vertex_2d_from.x, height, vertex_2d_from.y);
+		Hector3 vertex_3d_height_to = Hector3(vertex_2d_to.x, height, vertex_2d_to.y);
 
 		edge_vertex_array.push_back(vertex_3d_height_from);
 		edge_vertex_array.push_back(vertex_3d_height_to);

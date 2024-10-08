@@ -44,7 +44,7 @@ private:
 		Input() {}
 	};
 
-	Vector<Input> inputs;
+	Hector<Input> inputs;
 	Variant::Type output_type = Variant::NIL;
 
 	String expression;
@@ -204,7 +204,7 @@ private:
 
 	struct ConstructorNode : public ENode {
 		Variant::Type data_type = Variant::Type::NIL;
-		Vector<ENode *> arguments;
+		Hector<ENode *> arguments;
 
 		ConstructorNode() {
 			type = TYPE_CONSTRUCTOR;
@@ -214,7 +214,7 @@ private:
 	struct CallNode : public ENode {
 		ENode *base = nullptr;
 		StringName method;
-		Vector<ENode *> arguments;
+		Hector<ENode *> arguments;
 
 		CallNode() {
 			type = TYPE_CALL;
@@ -222,14 +222,14 @@ private:
 	};
 
 	struct ArrayNode : public ENode {
-		Vector<ENode *> array;
+		Hector<ENode *> array;
 		ArrayNode() {
 			type = TYPE_ARRAY;
 		}
 	};
 
 	struct DictionaryNode : public ENode {
-		Vector<ENode *> dict;
+		Hector<ENode *> dict;
 		DictionaryNode() {
 			type = TYPE_DICTIONARY;
 		}
@@ -237,7 +237,7 @@ private:
 
 	struct BuiltinFuncNode : public ENode {
 		StringName func;
-		Vector<ENode *> arguments;
+		Hector<ENode *> arguments;
 		BuiltinFuncNode() {
 			type = TYPE_BUILTIN_FUNC;
 		}
@@ -254,7 +254,7 @@ private:
 	ENode *root = nullptr;
 	ENode *nodes = nullptr;
 
-	Vector<String> input_names;
+	Hector<String> input_names;
 
 	bool execution_error = false;
 	bool _execute(const Array &p_inputs, Object *p_instance, Expression::ENode *p_node, Variant &r_ret, bool p_const_calls_only, String &r_error_str);
@@ -263,7 +263,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	Error parse(const String &p_expression, const Vector<String> &p_input_names = Vector<String>());
+	Error parse(const String &p_expression, const Hector<String> &p_input_names = Hector<String>());
 	Variant execute(const Array &p_inputs = Array(), Object *p_base = nullptr, bool p_show_error = true, bool p_const_calls_only = false);
 	bool has_execute_failed() const;
 	String get_error_text() const;

@@ -52,17 +52,17 @@ int TriangleMesh::_create_bvh(BVH *p_bvh, BVH **p_bb, int p_from, int p_size, in
 	int li = aabb.get_longest_axis_index();
 
 	switch (li) {
-		case Vector3::AXIS_X: {
+		case Hector3::AXIS_X: {
 			SortArray<BVH *, BVHCmpX> sort_x;
 			sort_x.nth_element(0, p_size, p_size / 2, &p_bb[p_from]);
 			//sort_x.sort(&p_bb[p_from],p_size);
 		} break;
-		case Vector3::AXIS_Y: {
+		case Hector3::AXIS_Y: {
 			SortArray<BVH *, BVHCmpY> sort_y;
 			sort_y.nth_element(0, p_size, p_size / 2, &p_bb[p_from]);
 			//sort_y.sort(&p_bb[p_from],p_size);
 		} break;
-		case Vector3::AXIS_Z: {
+		case Hector3::AXIS_Z: {
 			SortArray<BVH *, BVHCmpZ> sort_z;
 			sort_z.nth_element(0, p_size, p_size / 2, &p_bb[p_from]);
 			//sort_z.sort(&p_bb[p_from],p_size);
@@ -84,7 +84,7 @@ int TriangleMesh::_create_bvh(BVH *p_bvh, BVH **p_bb, int p_from, int p_size, in
 	return index;
 }
 
-void TriangleMesh::get_indices(Vector<int> *r_triangles_indices) const {
+void TriangleMesh::get_indices(Hector<int> *r_triangles_indices) const {
 	if (!valid) {
 		return;
 	}
@@ -104,7 +104,7 @@ void TriangleMesh::get_indices(Vector<int> *r_triangles_indices) const {
 	}
 }
 
-void TriangleMesh::create(const Vector<Vector3> &p_faces, const Vector<int32_t> &p_surface_indices) {
+void TriangleMesh::create(const Hector<Hector3> &p_faces, const Hector<int32_t> &p_surface_indices) {
 	valid = false;
 
 	ERR_FAIL_COND(p_surface_indices.size() && p_surface_indices.size() != p_faces.size());
@@ -122,19 +122,19 @@ void TriangleMesh::create(const Vector<Vector3> &p_faces, const Vector<int32_t> 
 		//except for the Set for repeated triangles, everything
 		//goes in-place.
 
-		const Vector3 *r = p_faces.ptr();
+		const Hector3 *r = p_faces.ptr();
 		const int32_t *si = p_surface_indices.ptr();
 		Triangle *w = triangles.ptrw();
-		HashMap<Vector3, int> db;
+		HashMap<Hector3, int> db;
 
 		for (int i = 0; i < fc; i++) {
 			Triangle &f = w[i];
-			const Vector3 *v = &r[i * 3];
+			const Hector3 *v = &r[i * 3];
 
 			for (int j = 0; j < 3; j++) {
 				int vidx = -1;
-				Vector3 vs = v[j].snappedf(0.0001);
-				HashMap<Vector3, int>::Iterator E = db.find(vs);
+				Hector3 vs = v[j].snappedf(0.0001);
+				HashMap<Hector3, int>::Iterator E = db.find(vs);
 				if (E) {
 					vidx = E->value;
 				} else {
@@ -160,13 +160,13 @@ void TriangleMesh::create(const Vector<Vector3> &p_faces, const Vector<int32_t> 
 		}
 
 		vertices.resize(db.size());
-		Vector3 *vw = vertices.ptrw();
-		for (const KeyValue<Vector3, int> &E : db) {
+		Hector3 *vw = vertices.ptrw();
+		for (const KeyValue<Hector3, int> &E : db) {
 			vw[E.value] = E.key;
 		}
 	}
 
-	Vector<BVH *> bwptrs;
+	Hector<BVH *> bwptrs;
 	bwptrs.resize(fc);
 	BVH **bwp = bwptrs.ptrw();
 	for (int i = 0; i < fc; i++) {
@@ -182,7 +182,7 @@ void TriangleMesh::create(const Vector<Vector3> &p_faces, const Vector<int32_t> 
 	valid = true;
 }
 
-bool TriangleMesh::intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_point, Vector3 &r_normal, int32_t *r_surf_index) const {
+bool TriangleMesh::intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_point, Hector3 &r_normal, int32_t *r_surf_index) const {
 	uint32_t *stack = (uint32_t *)alloca(sizeof(int) * max_depth);
 
 	enum {
@@ -196,14 +196,14 @@ bool TriangleMesh::intersect_segment(const Vector3 &p_begin, const Vector3 &p_en
 
 	};
 
-	Vector3 n = (p_end - p_begin).normalized();
+	Hector3 n = (p_end - p_begin).normalized();
 	real_t d = 1e10;
 	bool inters = false;
 
 	int level = 0;
 
 	const Triangle *triangleptr = triangles.ptr();
-	const Vector3 *vertexptr = vertices.ptr();
+	const Hector3 *vertexptr = vertices.ptr();
 	const BVH *bvhptr = bvh.ptr();
 
 	int pos = bvh.size() - 1;
@@ -223,7 +223,7 @@ bool TriangleMesh::intersect_segment(const Vector3 &p_begin, const Vector3 &p_en
 						const Triangle &s = triangleptr[b.face_index];
 						Face3 f3(vertexptr[s.indices[0]], vertexptr[s.indices[1]], vertexptr[s.indices[2]]);
 
-						Vector3 res;
+						Hector3 res;
 
 						if (f3.intersects_segment(p_begin, p_end, &res)) {
 							real_t nd = n.dot(res);
@@ -283,7 +283,7 @@ bool TriangleMesh::intersect_segment(const Vector3 &p_begin, const Vector3 &p_en
 	return inters;
 }
 
-bool TriangleMesh::intersect_ray(const Vector3 &p_begin, const Vector3 &p_dir, Vector3 &r_point, Vector3 &r_normal, int32_t *r_surf_index) const {
+bool TriangleMesh::intersect_ray(const Hector3 &p_begin, const Hector3 &p_dir, Hector3 &r_point, Hector3 &r_normal, int32_t *r_surf_index) const {
 	uint32_t *stack = (uint32_t *)alloca(sizeof(int) * max_depth);
 
 	enum {
@@ -297,14 +297,14 @@ bool TriangleMesh::intersect_ray(const Vector3 &p_begin, const Vector3 &p_dir, V
 
 	};
 
-	Vector3 n = p_dir;
+	Hector3 n = p_dir;
 	real_t d = 1e20;
 	bool inters = false;
 
 	int level = 0;
 
 	const Triangle *triangleptr = triangles.ptr();
-	const Vector3 *vertexptr = vertices.ptr();
+	const Hector3 *vertexptr = vertices.ptr();
 	const BVH *bvhptr = bvh.ptr();
 
 	int pos = bvh.size() - 1;
@@ -324,7 +324,7 @@ bool TriangleMesh::intersect_ray(const Vector3 &p_begin, const Vector3 &p_dir, V
 						const Triangle &s = triangleptr[b.face_index];
 						Face3 f3(vertexptr[s.indices[0]], vertexptr[s.indices[1]], vertexptr[s.indices[2]]);
 
-						Vector3 res;
+						Hector3 res;
 
 						if (f3.intersects_ray(p_begin, p_dir, &res)) {
 							real_t nd = n.dot(res);
@@ -384,7 +384,7 @@ bool TriangleMesh::intersect_ray(const Vector3 &p_begin, const Vector3 &p_dir, V
 	return inters;
 }
 
-bool TriangleMesh::inside_convex_shape(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count, Vector3 p_scale) const {
+bool TriangleMesh::inside_convex_shape(const Plane *p_planes, int p_plane_count, const Hector3 *p_points, int p_point_count, Hector3 p_scale) const {
 	uint32_t *stack = (uint32_t *)alloca(sizeof(int) * max_depth);
 
 	enum {
@@ -401,7 +401,7 @@ bool TriangleMesh::inside_convex_shape(const Plane *p_planes, int p_plane_count,
 	int level = 0;
 
 	const Triangle *triangleptr = triangles.ptr();
-	const Vector3 *vertexptr = vertices.ptr();
+	const Hector3 *vertexptr = vertices.ptr();
 	const BVH *bvhptr = bvh.ptr();
 
 	Transform3D scale(Basis().scaled(p_scale));
@@ -429,7 +429,7 @@ bool TriangleMesh::inside_convex_shape(const Plane *p_planes, int p_plane_count,
 					if (b.face_index >= 0) {
 						const Triangle &s = triangleptr[b.face_index];
 						for (int j = 0; j < 3; ++j) {
-							Vector3 point = scale.xform(vertexptr[s.indices[j]]);
+							Hector3 point = scale.xform(vertexptr[s.indices[j]]);
 							for (int i = 0; i < p_plane_count; i++) {
 								const Plane &p = p_planes[i];
 								if (p.is_point_over(point)) {
@@ -481,18 +481,18 @@ bool TriangleMesh::is_valid() const {
 	return valid;
 }
 
-Vector<Face3> TriangleMesh::get_faces() const {
+Hector<Face3> TriangleMesh::get_faces() const {
 	if (!valid) {
-		return Vector<Face3>();
+		return Hector<Face3>();
 	}
 
-	Vector<Face3> faces;
+	Hector<Face3> faces;
 	int ts = triangles.size();
 	faces.resize(triangles.size());
 
 	Face3 *w = faces.ptrw();
 	const Triangle *r = triangles.ptr();
-	const Vector3 *rv = vertices.ptr();
+	const Hector3 *rv = vertices.ptr();
 
 	for (int i = 0; i < ts; i++) {
 		for (int j = 0; j < 3; j++) {

@@ -64,12 +64,12 @@ class EditorExportPlatformMacOS : public EditorExportPlatform {
 	struct SSHCleanupCommand {
 		String host;
 		String port;
-		Vector<String> ssh_args;
+		Hector<String> ssh_args;
 		String cmd_args;
 		bool wait = false;
 
 		SSHCleanupCommand() {}
-		SSHCleanupCommand(const String &p_host, const String &p_port, const Vector<String> &p_ssh_arg, const String &p_cmd_args, bool p_wait = false) {
+		SSHCleanupCommand(const String &p_host, const String &p_port, const Hector<String> &p_ssh_arg, const String &p_cmd_args, bool p_wait = false) {
 			host = p_host;
 			port = p_port;
 			ssh_args = p_ssh_arg;
@@ -81,13 +81,13 @@ class EditorExportPlatformMacOS : public EditorExportPlatform {
 	Ref<ImageTexture> run_icon;
 	Ref<ImageTexture> stop_icon;
 
-	Vector<SSHCleanupCommand> cleanup_commands;
+	Hector<SSHCleanupCommand> cleanup_commands;
 	OS::ProcessID ssh_pid = 0;
 	int menu_options = 0;
 
-	void _fix_privacy_manifest(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &plist);
-	void _fix_plist(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &plist, const String &p_binary);
-	void _make_icon(const Ref<EditorExportPreset> &p_preset, const Ref<Image> &p_icon, Vector<uint8_t> &p_data);
+	void _fix_privacy_manifest(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &plist);
+	void _fix_plist(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &plist, const String &p_binary);
+	void _make_icon(const Ref<EditorExportPreset> &p_preset, const Ref<Image> &p_icon, Hector<uint8_t> &p_data);
 
 	Error _notarize(const Ref<EditorExportPreset> &p_preset, const String &p_path);
 	void _code_sign(const Ref<EditorExportPreset> &p_preset, const String &p_path, const String &p_ent_path, bool p_warn = true, bool p_set_id = false);

@@ -38,8 +38,8 @@ class CanvasLayer : public Node {
 	GDCLASS(CanvasLayer, Node);
 
 	bool locrotscale_dirty = false;
-	Vector2 ofs;
-	Size2 scale = Vector2(1, 1);
+	Hector2 ofs;
+	Size2 scale = Hector2(1, 1);
 	real_t rot = 0.0;
 	int layer = 1;
 	Transform2D transform;
@@ -81,8 +81,8 @@ public:
 	Transform2D get_transform() const;
 	Transform2D get_final_transform() const;
 
-	void set_offset(const Vector2 &p_offset);
-	Vector2 get_offset() const;
+	void set_offset(const Hector2 &p_offset);
+	Hector2 get_offset() const;
 
 	void set_rotation(real_t p_radians);
 	real_t get_rotation() const;

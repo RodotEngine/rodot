@@ -407,7 +407,7 @@ TEST_CASE("[String] Find case insensitive") {
 }
 
 TEST_CASE("[String] Find MK") {
-	Vector<String> keys;
+	Hector<String> keys;
 	keys.push_back("sty");
 	keys.push_back("tty");
 	keys.push_back("man");
@@ -677,7 +677,7 @@ TEST_CASE("[String] Splitting") {
 	{
 		const String s = "Mars Jupiter Saturn Uranus";
 		const char *slices[4] = { "Mars", "Jupiter", "Saturn", "Uranus" };
-		Vector<String> l = s.split_spaces();
+		Hector<String> l = s.split_spaces();
 		for (int i = 0; i < l.size(); i++) {
 			CHECK(l[i] == slices[i]);
 		}
@@ -687,14 +687,14 @@ TEST_CASE("[String] Splitting") {
 		const String s = "1.2;2.3 4.5";
 		const double slices[3] = { 1.2, 2.3, 4.5 };
 
-		const Vector<double> d_arr = s.split_floats(";");
+		const Hector<double> d_arr = s.split_floats(";");
 		CHECK(d_arr.size() == 2);
 		for (int i = 0; i < d_arr.size(); i++) {
 			CHECK(ABS(d_arr[i] - slices[i]) <= 0.00001);
 		}
 
-		const Vector<String> keys = { ";", " " };
-		const Vector<float> f_arr = s.split_floats_mk(keys);
+		const Hector<String> keys = { ";", " " };
+		const Hector<float> f_arr = s.split_floats_mk(keys);
 		CHECK(f_arr.size() == 3);
 		for (int i = 0; i < f_arr.size(); i++) {
 			CHECK(ABS(f_arr[i] - slices[i]) <= 0.00001);
@@ -705,14 +705,14 @@ TEST_CASE("[String] Splitting") {
 		const String s = " -2.0        5";
 		const double slices[10] = { 0, -2, 0, 0, 0, 0, 0, 0, 0, 5 };
 
-		const Vector<double> arr = s.split_floats(" ");
+		const Hector<double> arr = s.split_floats(" ");
 		CHECK(arr.size() == 10);
 		for (int i = 0; i < arr.size(); i++) {
 			CHECK(ABS(arr[i] - slices[i]) <= 0.00001);
 		}
 
-		const Vector<String> keys = { ";", " " };
-		const Vector<float> mk = s.split_floats_mk(keys);
+		const Hector<String> keys = { ";", " " };
+		const Hector<float> mk = s.split_floats_mk(keys);
 		CHECK(mk.size() == 10);
 		for (int i = 0; i < mk.size(); i++) {
 			CHECK(mk[i] == slices[i]);
@@ -723,14 +723,14 @@ TEST_CASE("[String] Splitting") {
 		const String s = "1;2 4";
 		const int slices[3] = { 1, 2, 4 };
 
-		const Vector<int> arr = s.split_ints(";");
+		const Hector<int> arr = s.split_ints(";");
 		CHECK(arr.size() == 2);
 		for (int i = 0; i < arr.size(); i++) {
 			CHECK(arr[i] == slices[i]);
 		}
 
-		const Vector<String> keys = { ";", " " };
-		const Vector<int> mk = s.split_ints_mk(keys);
+		const Hector<String> keys = { ";", " " };
+		const Hector<int> mk = s.split_ints_mk(keys);
 		CHECK(mk.size() == 3);
 		for (int i = 0; i < mk.size(); i++) {
 			CHECK(mk[i] == slices[i]);
@@ -970,100 +970,100 @@ TEST_CASE("[String] sprintf") {
 	REQUIRE(error == false);
 	CHECK(output == String("fish -99.990000  frog"));
 
-	///// Vectors
+	///// Hectors
 
-	// Vector2
+	// Hector2
 	format = "fish %v frog";
 	args.clear();
-	args.push_back(Variant(Vector2(19.99, 1.00)));
+	args.push_back(Variant(Hector2(19.99, 1.00)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (19.990000, 1.000000) frog"));
 
-	// Vector3
+	// Hector3
 	format = "fish %v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.99, 1.00, -2.05)));
+	args.push_back(Variant(Hector3(19.99, 1.00, -2.05)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (19.990000, 1.000000, -2.050000) frog"));
 
-	// Vector4
+	// Hector4
 	format = "fish %v frog";
 	args.clear();
-	args.push_back(Variant(Vector4(19.99, 1.00, -2.05, 5.5)));
+	args.push_back(Variant(Hector4(19.99, 1.00, -2.05, 5.5)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (19.990000, 1.000000, -2.050000, 5.500000) frog"));
 
-	// Vector with negative values.
+	// Hector with negative values.
 	format = "fish %v frog";
 	args.clear();
-	args.push_back(Variant(Vector2(-19.99, -1.00)));
+	args.push_back(Variant(Hector2(-19.99, -1.00)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (-19.990000, -1.000000) frog"));
 
-	// Vector left-padded.
+	// Hector left-padded.
 	format = "fish %11v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.99, 1.00, -2.05)));
+	args.push_back(Variant(Hector3(19.99, 1.00, -2.05)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (  19.990000,    1.000000,   -2.050000) frog"));
 
-	// Vector left-padded with inf/nan
+	// Hector left-padded with inf/nan
 	format = "fish %11v frog";
 	args.clear();
-	args.push_back(Variant(Vector2(INFINITY, NAN)));
+	args.push_back(Variant(Hector2(INFINITY, NAN)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (        inf,         nan) frog"));
 
-	// Vector right-padded.
+	// Hector right-padded.
 	format = "fish %-11v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.99, 1.00, -2.05)));
+	args.push_back(Variant(Hector3(19.99, 1.00, -2.05)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (19.990000  , 1.000000   , -2.050000  ) frog"));
 
-	// Vector left-padded with zeros.
+	// Hector left-padded with zeros.
 	format = "fish %011v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.99, 1.00, -2.05)));
+	args.push_back(Variant(Hector3(19.99, 1.00, -2.05)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (0019.990000, 0001.000000, -002.050000) frog"));
 
-	// Vector given Vector3i.
+	// Hector given Hector3i.
 	format = "fish %v frog";
 	args.clear();
-	args.push_back(Variant(Vector3i(19, 1, -2)));
+	args.push_back(Variant(Hector3i(19, 1, -2)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (19.000000, 1.000000, -2.000000) frog"));
 
-	// Vector with 1 decimal.
+	// Hector with 1 decimal.
 	format = "fish %.1v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.99, 1.00, -2.05)));
+	args.push_back(Variant(Hector3(19.99, 1.00, -2.05)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (20.0, 1.0, -2.0) frog"));
 
-	// Vector with 12 decimals.
+	// Hector with 12 decimals.
 	format = "fish %.12v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.00, 1.00, -2.00)));
+	args.push_back(Variant(Hector3(19.00, 1.00, -2.00)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (19.000000000000, 1.000000000000, -2.000000000000) frog"));
 
-	// Vector with no decimals.
+	// Hector with no decimals.
 	format = "fish %.v frog";
 	args.clear();
-	args.push_back(Variant(Vector3(19.99, 1.00, -2.05)));
+	args.push_back(Variant(Hector3(19.99, 1.00, -2.05)));
 	output = format.sprintf(args, &error);
 	REQUIRE(error == false);
 	CHECK(output == String("fish (20, 1, -2) frog"));
@@ -1185,14 +1185,14 @@ TEST_CASE("[String] sprintf") {
 	REQUIRE(error);
 	CHECK(output == "too many decimal points in format");
 
-	// * not a number or vector.
+	// * not a number or Hector.
 	format = "fish %*f frog";
 	args.clear();
 	args.push_back("cheese");
 	args.push_back(99.99);
 	output = format.sprintf(args, &error);
 	REQUIRE(error);
-	CHECK(output == "* wants number or vector");
+	CHECK(output == "* wants number or Hector");
 
 	// Character too long.
 	format = "fish %c frog";
@@ -1309,8 +1309,8 @@ TEST_CASE("[String] Capitalize against many strings") {
 	output = "Linear 2 Db";
 	CHECK(input.capitalize() == output);
 
-	input = "vector3";
-	output = "Vector 3";
+	input = "Hector3";
+	output = "Hector 3";
 	CHECK(input.capitalize() == output);
 
 	input = "sha256";
@@ -1379,7 +1379,7 @@ TEST_CASE("[String] Checking case conversion methods") {
 		{ U"2D",                     U"2d",                   U"2d",                   U"2d"                      },
 		{ U"2d",                     U"2d",                   U"2d",                   U"2d"                      },
 		{ U"2db",                    U"2Db",                  U"2Db",                  U"2_db"                    },
-		{ U"Vector3",                U"vector3",              U"Vector3",              U"vector_3"                },
+		{ U"Hector3",                U"Hector3",              U"Hector3",              U"Hector_3"                },
 		{ U"sha256",                 U"sha256",               U"Sha256",               U"sha_256"                 },
 		{ U"Node2D",                 U"node2d",               U"Node2d",               U"node_2d"                 },
 		{ U"RichTextLabel",          U"richTextLabel",        U"RichTextLabel",        U"rich_text_label"         },
@@ -1589,7 +1589,7 @@ TEST_CASE("[String] Count and countn functionality") {
 
 TEST_CASE("[String] Bigrams") {
 	String s = "abcd";
-	Vector<String> bigr = s.bigrams();
+	Hector<String> bigr = s.bigrams();
 
 	CHECK(bigr.size() == 3);
 	CHECK(bigr[0] == "ab");
@@ -1826,7 +1826,7 @@ TEST_CASE("[String] SHA1/SHA256/MD5") {
 TEST_CASE("[String] Join") {
 	String comma = ", ";
 	String empty = "";
-	Vector<String> parts;
+	Hector<String> parts;
 
 	CHECK(comma.join(parts) == "");
 	CHECK(empty.join(parts) == "");

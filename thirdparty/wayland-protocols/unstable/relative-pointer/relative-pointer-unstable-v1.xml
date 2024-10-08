@@ -123,13 +123,13 @@
       <arg name="utime_lo" type="uint"
 	   summary="low 32 bits of a 64 bit timestamp with microsecond granularity"/>
       <arg name="dx" type="fixed"
-	   summary="the x component of the motion vector"/>
+	   summary="the x component of the motion Hector"/>
       <arg name="dy" type="fixed"
-	   summary="the y component of the motion vector"/>
+	   summary="the y component of the motion Hector"/>
       <arg name="dx_unaccel" type="fixed"
-	   summary="the x component of the unaccelerated motion vector"/>
+	   summary="the x component of the unaccelerated motion Hector"/>
       <arg name="dy_unaccel" type="fixed"
-	   summary="the y component of the unaccelerated motion vector"/>
+	   summary="the y component of the unaccelerated motion Hector"/>
     </event>
   </interface>
 

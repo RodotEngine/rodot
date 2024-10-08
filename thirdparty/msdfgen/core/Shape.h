@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <vector>
+#include <Vector>
 #include "Contour.h"
 #include "Scanline.h"
 
@@ -12,7 +12,7 @@ namespace msdfgen {
 // The proportional amount by which a curve's control point will be adjusted to eliminate convergent corners.
 #define MSDFGEN_DECONVERGENCE_FACTOR .000001
 
-/// Vector shape representation.
+/// Hector shape representation.
 class Shape {
 
 public:

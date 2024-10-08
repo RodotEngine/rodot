@@ -37,7 +37,7 @@
 #include "../../util.h"
 #include "../openxr_extension_wrapper.h"
 
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 // Always include this as late as possible.
 #include "../../openxr_platform_inc.h"
@@ -49,8 +49,8 @@ public:
 	virtual void on_instance_created(const XrInstance p_instance) override;
 	virtual void *set_session_create_and_get_next_pointer(void *p_next_pointer) override;
 
-	virtual void get_usable_swapchain_formats(Vector<int64_t> &p_usable_swap_chains) override;
-	virtual void get_usable_depth_formats(Vector<int64_t> &p_usable_swap_chains) override;
+	virtual void get_usable_swapchain_formats(Hector<int64_t> &p_usable_swap_chains) override;
+	virtual void get_usable_depth_formats(Hector<int64_t> &p_usable_swap_chains) override;
 	virtual String get_swapchain_format_name(int64_t p_swapchain_format) const override;
 	virtual bool get_swapchain_image_data(XrSwapchain p_swapchain, int64_t p_swapchain_format, uint32_t p_width, uint32_t p_height, uint32_t p_sample_count, uint32_t p_array_size, void **r_swapchain_graphics_data) override;
 	virtual void cleanup_swapchain_graphics_data(void **p_swapchain_graphics_data) override;
@@ -70,7 +70,7 @@ private:
 
 	struct SwapchainGraphicsData {
 		bool is_multiview;
-		Vector<RID> texture_rids;
+		Hector<RID> texture_rids;
 	};
 
 	bool check_graphics_api_support(XrVersion p_desired_version);

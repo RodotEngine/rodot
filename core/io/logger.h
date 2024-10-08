@@ -33,7 +33,7 @@
 
 #include "core/io/file_access.h"
 #include "core/string/ustring.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "modules/modules_enabled.gen.h" // For regex.
 #ifdef MODULE_REGEX_ENABLED
 #include "modules/regex/regex.h"
@@ -101,10 +101,10 @@ public:
 };
 
 class CompositeLogger : public Logger {
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 
 public:
-	explicit CompositeLogger(const Vector<Logger *> &p_loggers);
+	explicit CompositeLogger(const Hector<Logger *> &p_loggers);
 
 	virtual void logv(const char *p_format, va_list p_list, bool p_err) override _PRINTF_FORMAT_ATTRIBUTE_2_0;
 	virtual void log_error(const char *p_function, const char *p_file, int p_line, const char *p_code, const char *p_rationale, bool p_editor_notify, ErrorType p_type = ERR_ERROR) override;

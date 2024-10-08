@@ -680,7 +680,7 @@ void RasterizerSceneGLES3::_setup_sky(const RenderDataGLES3 *p_render_data, cons
 			if (type == RS::LIGHT_DIRECTIONAL && light_storage->light_directional_get_sky_mode(base) != RS::LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_ONLY) {
 				DirectionalLightData &sky_light_data = sky_globals.directional_lights[sky_globals.directional_light_count];
 				Transform3D light_transform = li->transform;
-				Vector3 world_direction = light_transform.basis.xform(Vector3(0, 0, 1)).normalized();
+				Hector3 world_direction = light_transform.basis.xform(Hector3(0, 0, 1)).normalized();
 
 				sky_light_data.direction[0] = world_direction.x;
 				sky_light_data.direction[1] = world_direction.y;
@@ -934,21 +934,21 @@ void RasterizerSceneGLES3::_update_sky_radiance(RID p_env, const Projection &p_p
 
 	// Update radiance cubemap
 	if (sky->reflection_dirty && (sky->processing_layer >= max_processing_layer || update_single_frame)) {
-		static const Vector3 view_normals[6] = {
-			Vector3(+1, 0, 0),
-			Vector3(-1, 0, 0),
-			Vector3(0, +1, 0),
-			Vector3(0, -1, 0),
-			Vector3(0, 0, +1),
-			Vector3(0, 0, -1)
+		static const Hector3 view_normals[6] = {
+			Hector3(+1, 0, 0),
+			Hector3(-1, 0, 0),
+			Hector3(0, +1, 0),
+			Hector3(0, -1, 0),
+			Hector3(0, 0, +1),
+			Hector3(0, 0, -1)
 		};
-		static const Vector3 view_up[6] = {
-			Vector3(0, -1, 0),
-			Vector3(0, -1, 0),
-			Vector3(0, 0, +1),
-			Vector3(0, 0, -1),
-			Vector3(0, -1, 0),
-			Vector3(0, -1, 0)
+		static const Hector3 view_up[6] = {
+			Hector3(0, -1, 0),
+			Hector3(0, -1, 0),
+			Hector3(0, 0, +1),
+			Hector3(0, 0, -1),
+			Hector3(0, -1, 0),
+			Hector3(0, -1, 0)
 		};
 
 		Projection cm;
@@ -1198,8 +1198,8 @@ RID RasterizerSceneGLES3::fog_volume_instance_get_volume(RID p_fog_volume_instan
 	return RID();
 }
 
-Vector3 RasterizerSceneGLES3::fog_volume_instance_get_position(RID p_fog_volume_instance) const {
-	return Vector3();
+Hector3 RasterizerSceneGLES3::fog_volume_instance_get_position(RID p_fog_volume_instance) const {
+	return Hector3();
 }
 
 RID RasterizerSceneGLES3::voxel_gi_instance_create(RID p_voxel_gi) {
@@ -1213,7 +1213,7 @@ bool RasterizerSceneGLES3::voxel_gi_needs_update(RID p_probe) const {
 	return false;
 }
 
-void RasterizerSceneGLES3::voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
+void RasterizerSceneGLES3::voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
 }
 
 void RasterizerSceneGLES3::voxel_gi_set_quality(RS::VoxelGIQuality) {
@@ -1236,7 +1236,7 @@ void RasterizerSceneGLES3::_fill_render_list(RenderListType p_render_list, const
 
 	Plane near_plane;
 	if (p_render_data->cam_orthogonal) {
-		near_plane = Plane(-p_render_data->cam_transform.basis.get_column(Vector3::AXIS_Z), p_render_data->cam_transform.origin);
+		near_plane = Plane(-p_render_data->cam_transform.basis.get_column(Hector3::AXIS_Z), p_render_data->cam_transform.origin);
 		near_plane.d += p_render_data->cam_projection.get_z_near();
 	}
 	float z_max = p_render_data->cam_projection.get_z_far() - p_render_data->cam_projection.get_z_near();
@@ -1258,7 +1258,7 @@ void RasterizerSceneGLES3::_fill_render_list(RenderListType p_render_list, const
 	for (int i = 0; i < (int)p_render_data->instances->size(); i++) {
 		GeometryInstanceGLES3 *inst = static_cast<GeometryInstanceGLES3 *>((*p_render_data->instances)[i]);
 
-		Vector3 center = inst->transform.origin;
+		Hector3 center = inst->transform.origin;
 		if (p_render_data->cam_orthogonal) {
 			if (inst->use_aabb_center) {
 				center = inst->transformed_aabb.get_support(-near_plane.normal);
@@ -1368,10 +1368,10 @@ void RasterizerSceneGLES3::_fill_render_list(RenderListType p_render_list, const
 		if (p_render_data->cam_orthogonal) {
 			lod_distance = 1.0;
 		} else {
-			Vector3 aabb_min = inst->transformed_aabb.position;
-			Vector3 aabb_max = inst->transformed_aabb.position + inst->transformed_aabb.size;
-			Vector3 camera_position = p_render_data->main_cam_transform.origin;
-			Vector3 surface_distance = Vector3(0.0, 0.0, 0.0).max(aabb_min - camera_position).max(camera_position - aabb_max);
+			Hector3 aabb_min = inst->transformed_aabb.position;
+			Hector3 aabb_max = inst->transformed_aabb.position + inst->transformed_aabb.size;
+			Hector3 camera_position = p_render_data->main_cam_transform.origin;
+			Hector3 surface_distance = Hector3(0.0, 0.0, 0.0).max(aabb_min - camera_position).max(camera_position - aabb_max);
 
 			lod_distance = surface_distance.length();
 		}
@@ -1486,7 +1486,7 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 	scene_state.ubo.viewport_size[0] = p_screen_size.x;
 	scene_state.ubo.viewport_size[1] = p_screen_size.y;
 
-	Size2 screen_pixel_size = Vector2(1.0, 1.0) / Size2(p_screen_size);
+	Size2 screen_pixel_size = Hector2(1.0, 1.0) / Size2(p_screen_size);
 	scene_state.ubo.screen_pixel_size[0] = screen_pixel_size.x;
 	scene_state.ubo.screen_pixel_size[1] = screen_pixel_size.y;
 
@@ -1661,7 +1661,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 
 				Transform3D light_transform = li->transform;
 
-				Vector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Vector3(0, 0, 1))).normalized();
+				Hector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Hector3(0, 0, 1))).normalized();
 
 				light_data.direction[0] = direction.x;
 				light_data.direction[1] = direction.y;
@@ -1813,7 +1813,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 		li->gl_id = index;
 
 		Transform3D light_transform = li->transform;
-		Vector3 pos = inverse_transform.xform(light_transform.origin);
+		Hector3 pos = inverse_transform.xform(light_transform.origin);
 
 		light_data.position[0] = pos.x;
 		light_data.position[1] = pos.y;
@@ -1824,7 +1824,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 		float radius = MAX(0.001, light_storage->light_get_param(base, RS::LIGHT_PARAM_RANGE));
 		light_data.inv_radius = 1.0 / radius;
 
-		Vector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Vector3(0, 0, -1))).normalized();
+		Hector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Hector3(0, 0, -1))).normalized();
 
 		light_data.direction[0] = direction.x;
 		light_data.direction[1] = direction.y;
@@ -1979,9 +1979,9 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 void RasterizerSceneGLES3::_render_shadows(const RenderDataGLES3 *p_render_data, const Size2i &p_viewport_size) {
 	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
 
-	LocalVector<int> cube_shadows;
-	LocalVector<int> shadows;
-	LocalVector<int> directional_shadows;
+	LocalHector<int> cube_shadows;
+	LocalHector<int> shadows;
+	LocalHector<int> directional_shadows;
 
 	float lod_distance_multiplier = p_render_data->cam_projection.get_lod_multiplier();
 
@@ -3343,11 +3343,11 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::LIGHTMAP_SLICE, inst->lightmap_slice_index, shader->version, instance_variant, spec_constants);
 
-						Vector4 uv_scale(inst->lightmap_uv_scale.position.x, inst->lightmap_uv_scale.position.y, inst->lightmap_uv_scale.size.x, inst->lightmap_uv_scale.size.y);
+						Hector4 uv_scale(inst->lightmap_uv_scale.position.x, inst->lightmap_uv_scale.position.y, inst->lightmap_uv_scale.size.x, inst->lightmap_uv_scale.size.y);
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::LIGHTMAP_UV_SCALE, uv_scale, shader->version, instance_variant, spec_constants);
 
 						if (lightmap_bicubic_upscale) {
-							Vector2 light_texture_size(lm->light_texture_size.x, lm->light_texture_size.y);
+							Hector2 light_texture_size(lm->light_texture_size.x, lm->light_texture_size.y);
 							material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::LIGHTMAP_TEXTURE_SIZE, light_texture_size, shader->version, instance_variant, spec_constants);
 						}
 
@@ -3436,9 +3436,9 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_SIZE, s->aabb.size, shader->version, instance_variant, spec_constants);
 					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::UV_SCALE, s->uv_scale, shader->version, instance_variant, spec_constants);
 				} else {
-					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_POSITION, Vector3(0.0, 0.0, 0.0), shader->version, instance_variant, spec_constants);
-					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_SIZE, Vector3(1.0, 1.0, 1.0), shader->version, instance_variant, spec_constants);
-					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::UV_SCALE, Vector4(0.0, 0.0, 0.0, 0.0), shader->version, instance_variant, spec_constants);
+					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_POSITION, Hector3(0.0, 0.0, 0.0), shader->version, instance_variant, spec_constants);
+					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_SIZE, Hector3(1.0, 1.0, 1.0), shader->version, instance_variant, spec_constants);
+					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::UV_SCALE, Hector4(0.0, 0.0, 0.0, 0.0), shader->version, instance_variant, spec_constants);
 				}
 			}
 
@@ -3565,15 +3565,15 @@ void RasterizerSceneGLES3::render_particle_collider_heightfield(RID p_collider, 
 	GLES3::ParticlesStorage *particles_storage = GLES3::ParticlesStorage::get_singleton();
 
 	ERR_FAIL_COND(!particles_storage->particles_collision_is_heightfield(p_collider));
-	Vector3 extents = particles_storage->particles_collision_get_extents(p_collider) * p_transform.basis.get_scale();
+	Hector3 extents = particles_storage->particles_collision_get_extents(p_collider) * p_transform.basis.get_scale();
 	Projection cm;
 	cm.set_orthogonal(-extents.x, extents.x, -extents.z, extents.z, 0, extents.y * 2.0);
 
-	Vector3 cam_pos = p_transform.origin;
+	Hector3 cam_pos = p_transform.origin;
 	cam_pos.y += extents.y;
 
 	Transform3D cam_xform;
-	cam_xform.set_look_at(cam_pos, cam_pos - p_transform.basis.get_column(Vector3::AXIS_Y), -p_transform.basis.get_column(Vector3::AXIS_Z).normalized());
+	cam_xform.set_look_at(cam_pos, cam_pos - p_transform.basis.get_column(Hector3::AXIS_Y), -p_transform.basis.get_column(Hector3::AXIS_Z).normalized());
 
 	GLuint fb = particles_storage->particles_collision_get_heightfield_framebuffer(p_collider);
 	Size2i fb_size = particles_storage->particles_collision_get_heightfield_size(p_collider);
@@ -3593,7 +3593,7 @@ void RasterizerSceneGLES3::render_particle_collider_heightfield(RID p_collider, 
 
 	render_data.instances = &p_instances;
 
-	_setup_environment(&render_data, true, Vector2(fb_size), true, Color(), false);
+	_setup_environment(&render_data, true, Hector2(fb_size), true, Color(), false);
 
 	PassMode pass_mode = PASS_MODE_SHADOW;
 
@@ -3638,7 +3638,7 @@ void RasterizerSceneGLES3::_render_uv2(const PagedArray<RenderGeometryInstance *
 
 	scene_state.ubo.emissive_exposure_normalization = -1.0; // Use default exposure normalization.
 
-	_setup_environment(&render_data, true, Vector2(1, 1), true, Color(), false);
+	_setup_environment(&render_data, true, Hector2(1, 1), true, Color(), false);
 
 	PassMode pass_mode = PASS_MODE_MATERIAL;
 
@@ -3661,7 +3661,7 @@ void RasterizerSceneGLES3::_render_uv2(const PagedArray<RenderGeometryInstance *
 		scene_state.enable_gl_depth_draw(true);
 		glDepthFunc(GL_GREATER);
 
-		TightLocalVector<GLenum> draw_buffers;
+		TightLocalHector<GLenum> draw_buffers;
 		draw_buffers.push_back(GL_COLOR_ATTACHMENT0);
 		draw_buffers.push_back(GL_COLOR_ATTACHMENT1);
 		draw_buffers.push_back(GL_COLOR_ATTACHMENT2);
@@ -3680,30 +3680,30 @@ void RasterizerSceneGLES3::_render_uv2(const PagedArray<RenderGeometryInstance *
 		base_spec_constant |= SceneShaderGLES3::DISABLE_LIGHT_SPOT;
 		base_spec_constant |= SceneShaderGLES3::DISABLE_LIGHTMAP;
 
-		RenderListParameters render_list_params(render_list[RENDER_LIST_SECONDARY].elements.ptr(), render_list[RENDER_LIST_SECONDARY].elements.size(), false, base_spec_constant, true, Vector2(0, 0));
+		RenderListParameters render_list_params(render_list[RENDER_LIST_SECONDARY].elements.ptr(), render_list[RENDER_LIST_SECONDARY].elements.size(), false, base_spec_constant, true, Hector2(0, 0));
 
 		const int uv_offset_count = 9;
-		static const Vector2 uv_offsets[uv_offset_count] = {
-			Vector2(-1, 1),
-			Vector2(1, 1),
-			Vector2(1, -1),
-			Vector2(-1, -1),
-			Vector2(-1, 0),
-			Vector2(1, 0),
-			Vector2(0, -1),
-			Vector2(0, 1),
-			Vector2(0, 0),
+		static const Hector2 uv_offsets[uv_offset_count] = {
+			Hector2(-1, 1),
+			Hector2(1, 1),
+			Hector2(1, -1),
+			Hector2(-1, -1),
+			Hector2(-1, 0),
+			Hector2(1, 0),
+			Hector2(0, -1),
+			Hector2(0, 1),
+			Hector2(0, 0),
 		};
 
 		for (int i = 0; i < uv_offset_count; i++) {
-			Vector2 ofs = uv_offsets[i];
+			Hector2 ofs = uv_offsets[i];
 			ofs.x /= p_region.size.width;
 			ofs.y /= p_region.size.height;
 			render_list_params.uv_offset = ofs;
 			_render_list_template<PASS_MODE_MATERIAL>(&render_list_params, &render_data, 0, render_list[RENDER_LIST_SECONDARY].elements.size());
 		}
 
-		render_list_params.uv_offset = Vector2(0, 0);
+		render_list_params.uv_offset = Hector2(0, 0);
 		render_list_params.force_wireframe = false;
 		_render_list_template<PASS_MODE_MATERIAL>(&render_list_params, &render_data, 0, render_list[RENDER_LIST_SECONDARY].elements.size());
 
@@ -3779,9 +3779,9 @@ void RasterizerSceneGLES3::_render_buffers_debug_draw(Ref<RenderSceneBuffersGLES
 					atlas_rect.position.x += (shadow_idx % subdivision) * shadow_size;
 					atlas_rect.position.y += (shadow_idx / subdivision) * shadow_size;
 
-					atlas_uv_rect.position = Vector2(atlas_rect.position) / float(shadow_atlas_size);
+					atlas_uv_rect.position = Hector2(atlas_rect.position) / float(shadow_atlas_size);
 
-					atlas_uv_rect.size = Vector2(size, size);
+					atlas_uv_rect.size = Hector2(size, size);
 
 					GLuint shadow_tex = light_storage->shadow_atlas_get_quadrant_shadow_texture(p_shadow_atlas, quadrant, shadow_idx);
 					// Copy from shadowmap to debug atlas.
@@ -3811,7 +3811,7 @@ void RasterizerSceneGLES3::_render_buffers_debug_draw(Ref<RenderSceneBuffersGLES
 			glViewport(0, 0, size.width, size.height);
 			glBindTexture(GL_TEXTURE_2D, shadow_atlas_texture);
 
-			copy_effects->copy_to_rect(Rect2(Vector2(), Vector2(0.5, 0.5)));
+			copy_effects->copy_to_rect(Rect2(Hector2(), Hector2(0.5, 0.5)));
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
 		}
@@ -3830,7 +3830,7 @@ void RasterizerSceneGLES3::_render_buffers_debug_draw(Ref<RenderSceneBuffersGLES
 			scene_state.enable_gl_depth_test(false);
 			scene_state.enable_gl_depth_draw(false);
 
-			copy_effects->copy_to_rect(Rect2(Vector2(), Vector2(0.5, 0.5)));
+			copy_effects->copy_to_rect(Rect2(Hector2(), Hector2(0.5, 0.5)));
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
@@ -3928,7 +3928,7 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 	ERR_FAIL_NULL_V(gi_inst, TypedArray<Image>());
 
 	uint32_t sc = RSG::mesh_storage->mesh_get_surface_count(p_base);
-	Vector<RID> materials;
+	Hector<RID> materials;
 	materials.resize(sc);
 
 	for (uint32_t i = 0; i < sc; i++) {
@@ -4037,7 +4037,7 @@ void RasterizerSceneGLES3::update() {
 	_update_dirty_skys();
 }
 
-void RasterizerSceneGLES3::sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) {
+void RasterizerSceneGLES3::sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) {
 }
 
 void RasterizerSceneGLES3::decals_set_filter(RS::DecalFilter p_filter) {

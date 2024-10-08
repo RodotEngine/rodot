@@ -388,7 +388,7 @@
 				Restore the plugin GUI layout and data saved by [method _get_window_layout]. This method is called for every plugin on editor startup. Use the provided [param configuration] file to read your saved data.
 				[codeblock]
 				func _set_window_layout(configuration):
-				    $Window.position = configuration.get_value("MyPlugin", "window_position", Vector2())
+				    $Window.position = configuration.get_value("MyPlugin", "window_position", Hector2())
 				    $Icon.modulate = configuration.get_value("MyPlugin", "icon_color", Color.WHITE)
 				[/codeblock]
 			</description>

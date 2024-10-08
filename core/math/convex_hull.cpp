@@ -38,7 +38,7 @@
  * - int32_t is consistently used instead of int in some cases
  * - integrated patch db0d6c92927f5a1358b887f2645c11f3014f0e8a from Bullet (CWE-190 integer overflow in btConvexHullComputer)
  * - adapted to Godot's code style
- * - replaced Bullet's types (e.g. vectors) with Godot's
+ * - replaced Bullet's types (e.g. Hectors) with Godot's
  * - replaced custom Pool implementation with PagedAllocator
  */
 
@@ -602,16 +602,16 @@ private:
 		ORIENTATION_CLOCKWISE,
 		ORIENTATION_COUNTER_CLOCKWISE };
 
-	Vector3 scaling;
-	Vector3 center;
+	Hector3 scaling;
+	Hector3 center;
 	PagedAllocator<Vertex> vertex_pool;
 	PagedAllocator<Edge> edge_pool;
 	PagedAllocator<Face> face_pool;
-	LocalVector<Vertex *> original_vertices;
+	LocalHector<Vertex *> original_vertices;
 	int32_t merge_stamp = 0;
-	Vector3::Axis min_axis = Vector3::Axis::AXIS_X;
-	Vector3::Axis med_axis = Vector3::Axis::AXIS_X;
-	Vector3::Axis max_axis = Vector3::Axis::AXIS_X;
+	Hector3::Axis min_axis = Hector3::Axis::AXIS_X;
+	Hector3::Axis med_axis = Hector3::Axis::AXIS_X;
+	Hector3::Axis max_axis = Hector3::Axis::AXIS_X;
 	int32_t used_edge_pairs = 0;
 	int32_t max_used_edge_pairs = 0;
 
@@ -656,11 +656,11 @@ private:
 
 	void merge(IntermediateHull &p_h0, IntermediateHull &p_h1);
 
-	Vector3 to_gd_vector(const Point32 &p_v);
+	Hector3 to_gd_Hector(const Point32 &p_v);
 
-	Vector3 get_gd_normal(Face *p_face);
+	Hector3 get_gd_normal(Face *p_face);
 
-	bool shift_face(Face *p_face, real_t p_amount, LocalVector<Vertex *> &p_stack);
+	bool shift_face(Face *p_face, real_t p_amount, LocalHector<Vertex *> &p_stack);
 
 public:
 	~ConvexHullInternal() {
@@ -671,9 +671,9 @@ public:
 
 	Vertex *vertex_list = nullptr;
 
-	void compute(const Vector3 *p_coords, int32_t p_count);
+	void compute(const Hector3 *p_coords, int32_t p_count);
 
-	Vector3 get_coordinates(const Vertex *p_v);
+	Hector3 get_coordinates(const Vertex *p_v);
 
 	real_t shrink(real_t amount, real_t p_clamp_amount);
 };
@@ -1576,10 +1576,10 @@ struct PointComparator {
 	}
 };
 
-void ConvexHullInternal::compute(const Vector3 *p_coords, int32_t p_count) {
+void ConvexHullInternal::compute(const Hector3 *p_coords, int32_t p_count) {
 	AABB aabb;
 	for (int32_t i = 0; i < p_count; i++) {
-		Vector3 p = p_coords[i];
+		Hector3 p = p_coords[i];
 		if (i == 0) {
 			aabb.position = p;
 		} else {
@@ -1587,13 +1587,13 @@ void ConvexHullInternal::compute(const Vector3 *p_coords, int32_t p_count) {
 		}
 	}
 
-	Vector3 s = aabb.size;
+	Hector3 s = aabb.size;
 	max_axis = s.max_axis_index();
 	min_axis = s.min_axis_index();
 	if (min_axis == max_axis) {
-		min_axis = Vector3::Axis((max_axis + 1) % 3);
+		min_axis = Hector3::Axis((max_axis + 1) % 3);
 	}
-	med_axis = Vector3::Axis(3 - max_axis - min_axis);
+	med_axis = Hector3::Axis(3 - max_axis - min_axis);
 
 	s /= real_t(10216);
 	if (((med_axis + 1) % 3) != max_axis) {
@@ -1613,10 +1613,10 @@ void ConvexHullInternal::compute(const Vector3 *p_coords, int32_t p_count) {
 
 	center = aabb.position;
 
-	LocalVector<Point32> points;
+	LocalHector<Point32> points;
 	points.resize(p_count);
 	for (int32_t i = 0; i < p_count; i++) {
-		Vector3 p = p_coords[i];
+		Hector3 p = p_coords[i];
 		p = (p - center) * s;
 		points[i].x = (int32_t)p[med_axis];
 		points[i].y = (int32_t)p[max_axis];
@@ -1653,20 +1653,20 @@ void ConvexHullInternal::compute(const Vector3 *p_coords, int32_t p_count) {
 #endif
 }
 
-Vector3 ConvexHullInternal::to_gd_vector(const Point32 &p_v) {
-	Vector3 p;
+Hector3 ConvexHullInternal::to_gd_Hector(const Point32 &p_v) {
+	Hector3 p;
 	p[med_axis] = real_t(p_v.x);
 	p[max_axis] = real_t(p_v.y);
 	p[min_axis] = real_t(p_v.z);
 	return p * scaling;
 }
 
-Vector3 ConvexHullInternal::get_gd_normal(Face *p_face) {
-	return to_gd_vector(p_face->dir0).cross(to_gd_vector(p_face->dir1)).normalized();
+Hector3 ConvexHullInternal::get_gd_normal(Face *p_face) {
+	return to_gd_Hector(p_face->dir0).cross(to_gd_Hector(p_face->dir1)).normalized();
 }
 
-Vector3 ConvexHullInternal::get_coordinates(const Vertex *p_v) {
-	Vector3 p;
+Hector3 ConvexHullInternal::get_coordinates(const Vertex *p_v) {
+	Hector3 p;
 	p[med_axis] = p_v->xvalue();
 	p[max_axis] = p_v->yvalue();
 	p[min_axis] = p_v->zvalue();
@@ -1678,10 +1678,10 @@ real_t ConvexHullInternal::shrink(real_t p_amount, real_t p_clamp_amount) {
 		return 0;
 	}
 	int32_t stamp = --merge_stamp;
-	LocalVector<Vertex *> stack;
+	LocalHector<Vertex *> stack;
 	vertex_list->copy = stamp;
 	stack.push_back(vertex_list);
-	LocalVector<Face *> faces;
+	LocalHector<Face *> faces;
 
 	Point32 ref = vertex_list->point;
 	Int128 hull_center_x(0, 0);
@@ -1737,7 +1737,7 @@ real_t ConvexHullInternal::shrink(real_t p_amount, real_t p_clamp_amount) {
 		return 0;
 	}
 
-	Vector3 hull_center;
+	Hector3 hull_center;
 	hull_center[med_axis] = hull_center_x.to_scalar();
 	hull_center[max_axis] = hull_center_y.to_scalar();
 	hull_center[min_axis] = hull_center_z.to_scalar();
@@ -1749,8 +1749,8 @@ real_t ConvexHullInternal::shrink(real_t p_amount, real_t p_clamp_amount) {
 	if (p_clamp_amount > 0) {
 		real_t min_dist = FLT_MAX;
 		for (int32_t i = 0; i < face_count; i++) {
-			Vector3 normal = get_gd_normal(faces[i]);
-			real_t dist = normal.dot(to_gd_vector(faces[i]->origin) - hull_center);
+			Hector3 normal = get_gd_normal(faces[i]);
+			real_t dist = normal.dot(to_gd_Hector(faces[i]->origin) - hull_center);
 			if (dist < min_dist) {
 				min_dist = dist;
 			}
@@ -1777,8 +1777,8 @@ real_t ConvexHullInternal::shrink(real_t p_amount, real_t p_clamp_amount) {
 	return p_amount;
 }
 
-bool ConvexHullInternal::shift_face(Face *p_face, real_t p_amount, LocalVector<Vertex *> &p_stack) {
-	Vector3 orig_shift = get_gd_normal(p_face) * -p_amount;
+bool ConvexHullInternal::shift_face(Face *p_face, real_t p_amount, LocalHector<Vertex *> &p_stack) {
+	Hector3 orig_shift = get_gd_normal(p_face) * -p_amount;
 	if (scaling[0] != 0) {
 		orig_shift[0] /= scaling[0];
 	}
@@ -2138,7 +2138,7 @@ bool ConvexHullInternal::shift_face(Face *p_face, real_t p_amount, LocalVector<V
 	return true;
 }
 
-static int32_t get_vertex_copy(ConvexHullInternal::Vertex *p_vertex, LocalVector<ConvexHullInternal::Vertex *> &p_vertices) {
+static int32_t get_vertex_copy(ConvexHullInternal::Vertex *p_vertex, LocalHector<ConvexHullInternal::Vertex *> &p_vertices) {
 	int32_t index = p_vertex->copy;
 	if (index < 0) {
 		index = p_vertices.size();
@@ -2151,7 +2151,7 @@ static int32_t get_vertex_copy(ConvexHullInternal::Vertex *p_vertex, LocalVector
 	return index;
 }
 
-real_t ConvexHullComputer::compute(const Vector3 *p_coords, int32_t p_count, real_t p_shrink, real_t p_shrink_clamp) {
+real_t ConvexHullComputer::compute(const Hector3 *p_coords, int32_t p_count, real_t p_shrink, real_t p_shrink_clamp) {
 	if (p_count <= 0) {
 		vertices.clear();
 		edges.clear();
@@ -2174,7 +2174,7 @@ real_t ConvexHullComputer::compute(const Vector3 *p_coords, int32_t p_count, rea
 	edges.clear();
 	faces.clear();
 
-	LocalVector<ConvexHullInternal::Vertex *> old_vertices;
+	LocalHector<ConvexHullInternal::Vertex *> old_vertices;
 	get_vertex_copy(hull.vertex_list, old_vertices);
 	int32_t copied = 0;
 	while (copied < (int32_t)old_vertices.size()) {
@@ -2243,7 +2243,7 @@ real_t ConvexHullComputer::compute(const Vector3 *p_coords, int32_t p_count, rea
 	return shift;
 }
 
-Error ConvexHullComputer::convex_hull(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_mesh) {
+Error ConvexHullComputer::convex_hull(const Hector<Hector3> &p_points, Geometry3D::MeshData &r_mesh) {
 	r_mesh = Geometry3D::MeshData(); // clear
 
 	if (p_points.size() == 0) {
@@ -2256,7 +2256,7 @@ Error ConvexHullComputer::convex_hull(const Vector<Vector3> &p_points, Geometry3
 	r_mesh.vertices = ch.vertices;
 
 	// Tag which face each edge belongs to
-	LocalVector<int32_t> edge_faces;
+	LocalHector<int32_t> edge_faces;
 	edge_faces.resize(ch.edges.size());
 
 	for (uint32_t i = 0; i < ch.edges.size(); i++) {

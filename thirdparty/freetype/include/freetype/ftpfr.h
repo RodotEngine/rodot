@@ -115,8 +115,8 @@ FT_BEGIN_HEADER
    *      Index of the right glyph.
    *
    * @output:
-   *    avector ::
-   *      A kerning vector.
+   *    aHector ::
+   *      A kerning Hector.
    *
    * @return:
    *    FreeType error code.  0~means success.
@@ -133,7 +133,7 @@ FT_BEGIN_HEADER
   FT_Get_PFR_Kerning( FT_Face     face,
                       FT_UInt     left,
                       FT_UInt     right,
-                      FT_Vector  *avector );
+                      FT_Hector  *aHector );
 
 
   /**************************************************************************

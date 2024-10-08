@@ -1341,7 +1341,7 @@ static int ssl_tls13_is_supported_versions_ext_present(
     const unsigned char *supported_versions_data_end;
 
     /*
-     * Check there is enough data to access the legacy_session_id_echo vector
+     * Check there is enough data to access the legacy_session_id_echo Hector
      * length:
      * - legacy_version                 2 bytes
      * - random                         MBEDTLS_SERVER_HELLO_RANDOM_LEN bytes

@@ -380,7 +380,7 @@
 
       inverse = loader->trans_matrix;
       if ( !FT_Matrix_Invert( &inverse ) )
-        FT_Vector_Transform( &loader->trans_delta, &inverse );
+        FT_Hector_Transform( &loader->trans_delta, &inverse );
     }
 
     switch ( slot->format )
@@ -500,19 +500,19 @@
   Hint_Metrics:
     {
       FT_BBox    bbox;
-      FT_Vector  vvector;
+      FT_Hector  vHector;
 
 
-      vvector.x = slot->metrics.vertBearingX - slot->metrics.horiBearingX;
-      vvector.y = slot->metrics.vertBearingY - slot->metrics.horiBearingY;
-      vvector.x = FT_MulFix( vvector.x, style_metrics->scaler.x_scale );
-      vvector.y = FT_MulFix( vvector.y, style_metrics->scaler.y_scale );
+      vHector.x = slot->metrics.vertBearingX - slot->metrics.horiBearingX;
+      vHector.y = slot->metrics.vertBearingY - slot->metrics.horiBearingY;
+      vHector.x = FT_MulFix( vHector.x, style_metrics->scaler.x_scale );
+      vHector.y = FT_MulFix( vHector.y, style_metrics->scaler.y_scale );
 
       /* transform the hinted outline if needed */
       if ( loader->transformed )
       {
         FT_Outline_Transform( &gloader->base.outline, &loader->trans_matrix );
-        FT_Vector_Transform( &vvector, &loader->trans_matrix );
+        FT_Hector_Transform( &vHector, &loader->trans_matrix );
       }
 
       /* we must translate our final outline by -pp1.x and compute */
@@ -532,8 +532,8 @@
       slot->metrics.horiBearingX = bbox.xMin;
       slot->metrics.horiBearingY = bbox.yMax;
 
-      slot->metrics.vertBearingX = FT_PIX_FLOOR( bbox.xMin + vvector.x );
-      slot->metrics.vertBearingY = FT_PIX_FLOOR( bbox.yMax + vvector.y );
+      slot->metrics.vertBearingX = FT_PIX_FLOOR( bbox.xMin + vHector.x );
+      slot->metrics.vertBearingY = FT_PIX_FLOOR( bbox.yMax + vHector.y );
 
       /* for mono-width fonts (like Andale, Courier, etc.) we need */
       /* to keep the original rounded advance width; ditto for     */

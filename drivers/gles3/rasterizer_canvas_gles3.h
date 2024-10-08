@@ -203,7 +203,7 @@ public:
 		PolygonID last_id = 0;
 	} polygon_buffers;
 
-	RendererCanvasRender::PolygonID request_polygon(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>()) override;
+	RendererCanvasRender::PolygonID request_polygon(const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), const Hector<int> &p_bones = Hector<int>(), const Hector<float> &p_weights = Hector<float>()) override;
 	void free_polygon(PolygonID p_polygon) override;
 
 	struct InstanceData {
@@ -287,7 +287,7 @@ public:
 	// We track them and ensure that they don't get reused until at least 2 frames have passed
 	// to avoid the GPU stalling to wait for a resource to become available.
 	struct DataBuffer {
-		Vector<GLuint> instance_buffers;
+		Hector<GLuint> instance_buffers;
 		GLuint light_ubo = 0;
 		GLuint state_ubo = 0;
 		uint64_t last_frame_used = -3;
@@ -295,8 +295,8 @@ public:
 	};
 
 	struct State {
-		LocalVector<DataBuffer> canvas_instance_data_buffers;
-		LocalVector<Batch> canvas_instance_batches;
+		LocalHector<DataBuffer> canvas_instance_data_buffers;
+		LocalHector<Batch> canvas_instance_batches;
 		uint32_t current_data_buffer_index = 0;
 		uint32_t current_instance_buffer_index = 0;
 		uint32_t current_batch_index = 0;
@@ -338,7 +338,7 @@ public:
 	void canvas_begin(RID p_to_render_target, bool p_to_backbuffer, bool p_backbuffer_has_mipmaps);
 
 	//virtual void draw_window_margins(int *black_margin, RID *black_image) override;
-	void draw_lens_distortion_rect(const Rect2 &p_rect, float p_k1, float p_k2, const Vector2 &p_eye_center, float p_oversample);
+	void draw_lens_distortion_rect(const Rect2 &p_rect, float p_k1, float p_k2, const Hector2 &p_eye_center, float p_oversample);
 
 	void reset_canvas();
 
@@ -350,7 +350,7 @@ public:
 
 	void render_sdf(RID p_render_target, LightOccluderInstance *p_occluders) override;
 	RID occluder_polygon_create() override;
-	void occluder_polygon_set_shape(RID p_occluder, const Vector<Vector2> &p_points, bool p_closed) override;
+	void occluder_polygon_set_shape(RID p_occluder, const Hector<Hector2> &p_points, bool p_closed) override;
 	void occluder_polygon_set_cull_mode(RID p_occluder, RS::CanvasOccluderPolygonCullMode p_mode) override;
 	void set_shadow_texture_size(int p_size) override;
 

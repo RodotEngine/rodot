@@ -100,7 +100,7 @@ void RendererSceneCull::camera_set_orthogonal(RID p_camera, float p_size, float 
 	camera->zfar = p_z_far;
 }
 
-void RendererSceneCull::camera_set_frustum(RID p_camera, float p_size, Vector2 p_offset, float p_z_near, float p_z_far) {
+void RendererSceneCull::camera_set_frustum(RID p_camera, float p_size, Hector2 p_offset, float p_z_near, float p_z_far) {
 	Camera *camera = camera_owner.get_or_null(p_camera);
 	ERR_FAIL_NULL(camera);
 	camera->type = Camera::FRUSTUM;
@@ -162,7 +162,7 @@ void RendererSceneCull::occluder_initialize(RID p_rid) {
 	RendererSceneOcclusionCull::get_singleton()->occluder_initialize(p_rid);
 }
 
-void RendererSceneCull::occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) {
+void RendererSceneCull::occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) {
 	RendererSceneOcclusionCull::get_singleton()->occluder_set_mesh(p_occluder, p_vertices, p_indices);
 }
 
@@ -957,7 +957,7 @@ void RendererSceneCull::instance_set_transform(RID p_instance, const Transform3D
 #ifdef DEBUG_ENABLED
 
 		for (int i = 0; i < 4; i++) {
-			const Vector3 &v = i < 3 ? p_transform.basis.rows[i] : p_transform.origin;
+			const Hector3 &v = i < 3 ? p_transform.basis.rows[i] : p_transform.origin;
 			ERR_FAIL_COND(!v.is_finite());
 		}
 
@@ -989,7 +989,7 @@ void RendererSceneCull::instance_set_transform(RID p_instance, const Transform3D
 #ifdef DEBUG_ENABLED
 
 	for (int i = 0; i < 4; i++) {
-		const Vector3 &v = i < 3 ? p_transform.basis.rows[i] : p_transform.origin;
+		const Hector3 &v = i < 3 ? p_transform.basis.rows[i] : p_transform.origin;
 		ERR_FAIL_COND(!v.is_finite());
 	}
 
@@ -1237,15 +1237,15 @@ void RendererSceneCull::instance_set_ignore_culling(RID p_instance, bool p_enabl
 	}
 }
 
-Vector<ObjectID> RendererSceneCull::instances_cull_aabb(const AABB &p_aabb, RID p_scenario) const {
-	Vector<ObjectID> instances;
+Hector<ObjectID> RendererSceneCull::instances_cull_aabb(const AABB &p_aabb, RID p_scenario) const {
+	Hector<ObjectID> instances;
 	Scenario *scenario = scenario_owner.get_or_null(p_scenario);
 	ERR_FAIL_NULL_V(scenario, instances);
 
 	const_cast<RendererSceneCull *>(this)->update_dirty_instances(); // check dirty instances before culling
 
 	struct CullAABB {
-		Vector<ObjectID> instances;
+		Hector<ObjectID> instances;
 		_FORCE_INLINE_ bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 			if (!p_instance->object_id.is_null()) {
@@ -1261,14 +1261,14 @@ Vector<ObjectID> RendererSceneCull::instances_cull_aabb(const AABB &p_aabb, RID 
 	return cull_aabb.instances;
 }
 
-Vector<ObjectID> RendererSceneCull::instances_cull_ray(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario) const {
-	Vector<ObjectID> instances;
+Hector<ObjectID> RendererSceneCull::instances_cull_ray(const Hector3 &p_from, const Hector3 &p_to, RID p_scenario) const {
+	Hector<ObjectID> instances;
 	Scenario *scenario = scenario_owner.get_or_null(p_scenario);
 	ERR_FAIL_NULL_V(scenario, instances);
 	const_cast<RendererSceneCull *>(this)->update_dirty_instances(); // check dirty instances before culling
 
 	struct CullRay {
-		Vector<ObjectID> instances;
+		Hector<ObjectID> instances;
 		_FORCE_INLINE_ bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 			if (!p_instance->object_id.is_null()) {
@@ -1284,16 +1284,16 @@ Vector<ObjectID> RendererSceneCull::instances_cull_ray(const Vector3 &p_from, co
 	return cull_ray.instances;
 }
 
-Vector<ObjectID> RendererSceneCull::instances_cull_convex(const Vector<Plane> &p_convex, RID p_scenario) const {
-	Vector<ObjectID> instances;
+Hector<ObjectID> RendererSceneCull::instances_cull_convex(const Hector<Plane> &p_convex, RID p_scenario) const {
+	Hector<ObjectID> instances;
 	Scenario *scenario = scenario_owner.get_or_null(p_scenario);
 	ERR_FAIL_NULL_V(scenario, instances);
 	const_cast<RendererSceneCull *>(this)->update_dirty_instances(); // check dirty instances before culling
 
-	Vector<Vector3> points = Geometry3D::compute_convex_mesh_points(&p_convex[0], p_convex.size());
+	Hector<Hector3> points = Geometry3D::compute_convex_mesh_points(&p_convex[0], p_convex.size());
 
 	struct CullConvex {
-		Vector<ObjectID> instances;
+		Hector<ObjectID> instances;
 		_FORCE_INLINE_ bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 			if (!p_instance->object_id.is_null()) {
@@ -1704,7 +1704,7 @@ void RendererSceneCull::instance_geometry_get_shader_parameter_list(RID p_instan
 
 	const_cast<RendererSceneCull *>(this)->update_dirty_instances();
 
-	Vector<StringName> names;
+	Hector<StringName> names;
 	for (const KeyValue<StringName, Instance::InstanceShaderParameter> &E : instance->instance_shader_uniforms) {
 		names.push_back(E.key);
 	}
@@ -2185,9 +2185,9 @@ void RendererSceneCull::_update_instance_lightmap_captures(Instance *p_instance)
 		}
 
 		Transform3D to_bounds = lightmap->transform.affine_inverse();
-		Vector3 center = p_instance->transform.xform(p_instance->aabb.get_center()); //use aabb center
+		Hector3 center = p_instance->transform.xform(p_instance->aabb.get_center()); //use aabb center
 
-		Vector3 lm_pos = to_bounds.xform(center);
+		Hector3 lm_pos = to_bounds.xform(center);
 
 		AABB bounds = RSG::light_storage->lightmap_get_aabb(lightmap->base);
 		if (!bounds.has_point(lm_pos)) {
@@ -2210,7 +2210,7 @@ void RendererSceneCull::_update_instance_lightmap_captures(Instance *p_instance)
 			}
 		}
 
-		Vector3 inner_pos = ((lm_pos - bounds.position) / bounds.size) * 2.0 - Vector3(1.0, 1.0, 1.0);
+		Hector3 inner_pos = ((lm_pos - bounds.position) / bounds.size) * 2.0 - Hector3(1.0, 1.0, 1.0);
 
 		real_t blend = MAX(ABS(inner_pos.x), MAX(ABS(inner_pos.y), ABS(inner_pos.z)));
 		//make blend more rounded
@@ -2306,7 +2306,7 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 		real_t aspect = p_cam_projection.get_aspect();
 
 		if (p_cam_orthogonal) {
-			Vector2 vp_he = p_cam_projection.get_viewport_half_extents();
+			Hector2 vp_he = p_cam_projection.get_viewport_half_extents();
 
 			camera_matrix.set_orthogonal(vp_he.y * 2.0, aspect, distances[(i == 0 || !overlap) ? i : i - 1], distances[i + 1], false);
 		} else {
@@ -2316,7 +2316,7 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 
 		//obtain the frustum endpoints
 
-		Vector3 endpoints[8]; // frustum plane endpoints
+		Hector3 endpoints[8]; // frustum plane endpoints
 		bool res = camera_matrix.get_endpoints(p_cam_transform, endpoints);
 		ERR_CONTINUE(!res);
 
@@ -2324,9 +2324,9 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 
 		Transform3D transform = light_transform; //discard scale and stabilize light
 
-		Vector3 x_vec = transform.basis.get_column(Vector3::AXIS_X).normalized();
-		Vector3 y_vec = transform.basis.get_column(Vector3::AXIS_Y).normalized();
-		Vector3 z_vec = transform.basis.get_column(Vector3::AXIS_Z).normalized();
+		Hector3 x_vec = transform.basis.get_column(Hector3::AXIS_X).normalized();
+		Hector3 y_vec = transform.basis.get_column(Hector3::AXIS_Y).normalized();
+		Hector3 z_vec = transform.basis.get_column(Hector3::AXIS_Z).normalized();
 		//z_vec points against the camera, like in default opengl
 
 		real_t x_min = 0.f, x_max = 0.f;
@@ -2374,7 +2374,7 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 
 		real_t radius = 0;
 		real_t soft_shadow_expand = 0;
-		Vector3 center;
+		Hector3 center;
 
 		{
 			//camera viewport stuff
@@ -2423,7 +2423,7 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 
 		//now that we know all ranges, we can proceed to make the light frustum planes, for culling octree
 
-		Vector<Plane> light_frustum_planes;
+		Hector<Plane> light_frustum_planes;
 		light_frustum_planes.resize(6);
 
 		//right/left
@@ -2447,7 +2447,7 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 
 			ortho_camera.set_orthogonal(-half_x, half_x, -half_y, half_y, 0, (z_max - z_min_cam));
 
-			Vector2 uv_scale(1.0 / (x_max_cam - x_min_cam), 1.0 / (y_max_cam - y_min_cam));
+			Hector2 uv_scale(1.0 / (x_max_cam - x_min_cam), 1.0 / (y_max_cam - y_min_cam));
 
 			Transform3D ortho_transform;
 			ortho_transform.basis = transform.basis;
@@ -2491,18 +2491,18 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 					real_t radius = RSG::light_storage->light_get_param(p_instance->base, RS::LIGHT_PARAM_RANGE);
 
 					real_t z = i == 0 ? -1 : 1;
-					Vector<Plane> planes;
+					Hector<Plane> planes;
 					planes.resize(6);
-					planes.write[0] = light_transform.xform(Plane(Vector3(0, 0, z), radius));
-					planes.write[1] = light_transform.xform(Plane(Vector3(1, 0, z).normalized(), radius));
-					planes.write[2] = light_transform.xform(Plane(Vector3(-1, 0, z).normalized(), radius));
-					planes.write[3] = light_transform.xform(Plane(Vector3(0, 1, z).normalized(), radius));
-					planes.write[4] = light_transform.xform(Plane(Vector3(0, -1, z).normalized(), radius));
-					planes.write[5] = light_transform.xform(Plane(Vector3(0, 0, -z), 0));
+					planes.write[0] = light_transform.xform(Plane(Hector3(0, 0, z), radius));
+					planes.write[1] = light_transform.xform(Plane(Hector3(1, 0, z).normalized(), radius));
+					planes.write[2] = light_transform.xform(Plane(Hector3(-1, 0, z).normalized(), radius));
+					planes.write[3] = light_transform.xform(Plane(Hector3(0, 1, z).normalized(), radius));
+					planes.write[4] = light_transform.xform(Plane(Hector3(0, -1, z).normalized(), radius));
+					planes.write[5] = light_transform.xform(Plane(Hector3(0, 0, -z), 0));
 
 					instance_shadow_cull_result.clear();
 
-					Vector<Vector3> points = Geometry3D::compute_convex_mesh_points(&planes[0], planes.size());
+					Hector<Hector3> points = Geometry3D::compute_convex_mesh_points(&planes[0], planes.size());
 
 					struct CullConvex {
 						PagedArray<Instance *> *result;
@@ -2561,30 +2561,30 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 					RENDER_TIMESTAMP("Cull OmniLight3D Shadow Cube, Side " + itos(i));
 					//using this one ensures that raster deferred will have it
 
-					static const Vector3 view_normals[6] = {
-						Vector3(+1, 0, 0),
-						Vector3(-1, 0, 0),
-						Vector3(0, -1, 0),
-						Vector3(0, +1, 0),
-						Vector3(0, 0, +1),
-						Vector3(0, 0, -1)
+					static const Hector3 view_normals[6] = {
+						Hector3(+1, 0, 0),
+						Hector3(-1, 0, 0),
+						Hector3(0, -1, 0),
+						Hector3(0, +1, 0),
+						Hector3(0, 0, +1),
+						Hector3(0, 0, -1)
 					};
-					static const Vector3 view_up[6] = {
-						Vector3(0, -1, 0),
-						Vector3(0, -1, 0),
-						Vector3(0, 0, -1),
-						Vector3(0, 0, +1),
-						Vector3(0, -1, 0),
-						Vector3(0, -1, 0)
+					static const Hector3 view_up[6] = {
+						Hector3(0, -1, 0),
+						Hector3(0, -1, 0),
+						Hector3(0, 0, -1),
+						Hector3(0, 0, +1),
+						Hector3(0, -1, 0),
+						Hector3(0, -1, 0)
 					};
 
 					Transform3D xform = light_transform * Transform3D().looking_at(view_normals[i], view_up[i]);
 
-					Vector<Plane> planes = cm.get_projection_planes(xform);
+					Hector<Plane> planes = cm.get_projection_planes(xform);
 
 					instance_shadow_cull_result.clear();
 
-					Vector<Vector3> points = Geometry3D::compute_convex_mesh_points(&planes[0], planes.size());
+					Hector<Hector3> points = Geometry3D::compute_convex_mesh_points(&planes[0], planes.size());
 
 					struct CullConvex {
 						PagedArray<Instance *> *result;
@@ -2647,11 +2647,11 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 			Projection cm;
 			cm.set_perspective(angle * 2.0, 1.0, 0.005f * radius, radius);
 
-			Vector<Plane> planes = cm.get_projection_planes(light_transform);
+			Hector<Plane> planes = cm.get_projection_planes(light_transform);
 
 			instance_shadow_cull_result.clear();
 
-			Vector<Vector3> points = Geometry3D::compute_convex_mesh_points(&planes[0], planes.size());
+			Hector<Hector3> points = Geometry3D::compute_convex_mesh_points(&planes[0], planes.size());
 
 			struct CullConvex {
 				PagedArray<Instance *> *result;
@@ -2707,7 +2707,7 @@ void RendererSceneCull::render_camera(const Ref<RenderSceneBuffers> &p_render_bu
 	Camera *camera = camera_owner.get_or_null(p_camera);
 	ERR_FAIL_NULL(camera);
 
-	Vector2 jitter;
+	Hector2 jitter;
 	float taa_frame_count = 0.0f;
 	if (p_jitter_phase_count > 0) {
 		uint32_t current_jitter_count = camera_jitter_array.size();
@@ -2854,7 +2854,7 @@ void RendererSceneCull::_visibility_cull(const VisibilityCullData &cull_data, ui
 }
 
 template <bool p_fade_check>
-int RendererSceneCull::_visibility_range_check(InstanceVisibilityData &r_vis_data, const Vector3 &p_camera_pos, uint64_t p_viewport_mask) {
+int RendererSceneCull::_visibility_range_check(InstanceVisibilityData &r_vis_data, const Hector3 &p_camera_pos, uint64_t p_viewport_mask) {
 	float dist = p_camera_pos.distance_to(r_vis_data.position);
 	const RS::VisibilityRangeFadeMode &fade_mode = r_vis_data.fade_mode;
 
@@ -3189,7 +3189,7 @@ void RendererSceneCull::_render_scene(const RendererSceneRender::CameraData *p_c
 	light_culler->prepare_camera(p_camera_data->main_transform, p_camera_data->main_projection);
 
 	Scenario *scenario = scenario_owner.get_or_null(p_scenario);
-	Vector3 camera_position = p_camera_data->main_transform.origin;
+	Hector3 camera_position = p_camera_data->main_transform.origin;
 
 	ERR_FAIL_COND(p_render_buffers.is_null());
 
@@ -3237,15 +3237,15 @@ void RendererSceneCull::_render_scene(const RendererSceneRender::CameraData *p_c
 
 	/* STEP 2 - CULL */
 
-	Vector<Plane> planes = p_camera_data->main_projection.get_projection_planes(p_camera_data->main_transform);
+	Hector<Plane> planes = p_camera_data->main_projection.get_projection_planes(p_camera_data->main_transform);
 	cull.frustum = Frustum(planes);
 
-	Vector<RID> directional_lights;
+	Hector<RID> directional_lights;
 	// directional lights
 	{
 		cull.shadow_count = 0;
 
-		Vector<Instance *> lights_with_shadow;
+		Hector<Instance *> lights_with_shadow;
 
 		for (Instance *E : scenario->directional_lights) {
 			if (!E->visible || !(E->layer_mask & p_visible_layers)) {
@@ -3404,14 +3404,14 @@ void RendererSceneCull::_render_scene(const RendererSceneRender::CameraData *p_c
 				Plane p(-cam_xf.basis.get_column(2), cam_xf.origin + cam_xf.basis.get_column(2) * -zn); //camera near plane
 
 				// near plane half width and height
-				Vector2 vp_half_extents = p_camera_data->main_projection.get_viewport_half_extents();
+				Hector2 vp_half_extents = p_camera_data->main_projection.get_viewport_half_extents();
 
 				switch (RSG::light_storage->light_get_type(ins->base)) {
 					case RS::LIGHT_OMNI: {
 						float radius = RSG::light_storage->light_get_param(ins->base, RS::LIGHT_PARAM_RANGE);
 
 						//get two points parallel to near plane
-						Vector3 points[2] = {
+						Hector3 points[2] = {
 							ins->transform.origin,
 							ins->transform.origin + cam_xf.basis.get_column(0) * radius
 						};
@@ -3437,9 +3437,9 @@ void RendererSceneCull::_render_scene(const RendererSceneRender::CameraData *p_c
 						float w = radius * Math::sin(Math::deg_to_rad(angle));
 						float d = radius * Math::cos(Math::deg_to_rad(angle));
 
-						Vector3 base = ins->transform.origin - ins->transform.basis.get_column(2).normalized() * d;
+						Hector3 base = ins->transform.origin - ins->transform.basis.get_column(2).normalized() * d;
 
-						Vector3 points[2] = {
+						Hector3 points[2] = {
 							base,
 							base + cam_xf.basis.get_column(0) * w
 						};
@@ -3658,30 +3658,30 @@ bool RendererSceneCull::_render_reflection_probe_step(Instance *p_instance, int 
 	}
 
 	if (p_step >= 0 && p_step < 6) {
-		static const Vector3 view_normals[6] = {
-			Vector3(+1, 0, 0),
-			Vector3(-1, 0, 0),
-			Vector3(0, +1, 0),
-			Vector3(0, -1, 0),
-			Vector3(0, 0, +1),
-			Vector3(0, 0, -1)
+		static const Hector3 view_normals[6] = {
+			Hector3(+1, 0, 0),
+			Hector3(-1, 0, 0),
+			Hector3(0, +1, 0),
+			Hector3(0, -1, 0),
+			Hector3(0, 0, +1),
+			Hector3(0, 0, -1)
 		};
-		static const Vector3 view_up[6] = {
-			Vector3(0, -1, 0),
-			Vector3(0, -1, 0),
-			Vector3(0, 0, +1),
-			Vector3(0, 0, -1),
-			Vector3(0, -1, 0),
-			Vector3(0, -1, 0)
+		static const Hector3 view_up[6] = {
+			Hector3(0, -1, 0),
+			Hector3(0, -1, 0),
+			Hector3(0, 0, +1),
+			Hector3(0, 0, -1),
+			Hector3(0, -1, 0),
+			Hector3(0, -1, 0)
 		};
 
-		Vector3 probe_size = RSG::light_storage->reflection_probe_get_size(p_instance->base);
-		Vector3 origin_offset = RSG::light_storage->reflection_probe_get_origin_offset(p_instance->base);
+		Hector3 probe_size = RSG::light_storage->reflection_probe_get_size(p_instance->base);
+		Hector3 origin_offset = RSG::light_storage->reflection_probe_get_origin_offset(p_instance->base);
 		float max_distance = RSG::light_storage->reflection_probe_get_origin_max_distance(p_instance->base);
 		float atlas_size = RSG::light_storage->reflection_atlas_get_size(scenario->reflection_atlas);
 		float mesh_lod_threshold = RSG::light_storage->reflection_probe_get_mesh_lod_threshold(p_instance->base) / atlas_size;
 
-		Vector3 edge = view_normals[p_step] * probe_size / 2;
+		Hector3 edge = view_normals[p_step] * probe_size / 2;
 		float distance = ABS(view_normals[p_step].dot(edge) - view_normals[p_step].dot(origin_offset)); //distance from origin offset to actual view distance limit
 
 		max_distance = MAX(max_distance, distance);
@@ -3729,7 +3729,7 @@ void RendererSceneCull::render_probes() {
 	/* REFLECTION PROBES */
 
 	SelfList<InstanceReflectionProbeData> *ref_probe = reflection_probe_render_list.first();
-	Vector<SelfList<InstanceReflectionProbeData> *> done_list;
+	Hector<SelfList<InstanceReflectionProbeData> *> done_list;
 
 	bool busy = false;
 

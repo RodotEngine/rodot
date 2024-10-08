@@ -76,9 +76,9 @@ void AudioStreamPlayer3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo
 	Transform3D gt = player->get_global_transform();
 	Transform3D gi = gt.affine_inverse();
 
-	Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	Vector3 ray_dir = p_camera->project_ray_normal(p_point);
-	Vector3 ray_to = ray_from + ray_dir * 4096;
+	Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	Hector3 ray_dir = p_camera->project_ray_normal(p_point);
+	Hector3 ray_to = ray_from + ray_dir * 4096;
 
 	ray_from = gi.xform(ray_from);
 	ray_to = gi.xform(ray_to);
@@ -90,10 +90,10 @@ void AudioStreamPlayer3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo
 		float a = Math::deg_to_rad((float)i);
 		float an = Math::deg_to_rad((float)(i + 1));
 
-		Vector3 from(Math::sin(a), 0, -Math::cos(a));
-		Vector3 to(Math::sin(an), 0, -Math::cos(an));
+		Hector3 from(Math::sin(a), 0, -Math::cos(a));
+		Hector3 to(Math::sin(an), 0, -Math::cos(an));
 
-		Vector3 r1, r2;
+		Hector3 r1, r2;
 		Geometry3D::get_closest_points_between_segments(from, to, ray_from, ray_to, r1, r2);
 		float d = r1.distance_to(r2);
 		if (d < closest_dist) {
@@ -165,18 +165,18 @@ void AudioStreamPlayer3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			} else {
 				r = player->get_unit_size() * soft_multiplier;
 			}
-			Vector<Vector3> points_billboard;
+			Hector<Hector3> points_billboard;
 
 			for (int i = 0; i < 120; i++) {
 				// Create a circle.
 				const float ra = Math::deg_to_rad((float)(i * 3));
 				const float rb = Math::deg_to_rad((float)((i + 1) * 3));
-				const Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-				const Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+				const Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+				const Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
 				// Draw a billboarded circle.
-				points_billboard.push_back(Vector3(a.x, a.y, 0));
-				points_billboard.push_back(Vector3(b.x, b.y, 0));
+				points_billboard.push_back(Hector3(a.x, a.y, 0));
+				points_billboard.push_back(Hector3(b.x, b.y, 0));
 			}
 
 			Color color;
@@ -215,7 +215,7 @@ void AudioStreamPlayer3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			const float ofs = -Math::cos(Math::deg_to_rad(pc));
 			const float radius = Math::sin(Math::deg_to_rad(pc));
 
-			Vector<Vector3> points_primary;
+			Hector<Hector3> points_primary;
 			points_primary.resize(200);
 
 			real_t step = Math_TAU / 100.0;
@@ -223,8 +223,8 @@ void AudioStreamPlayer3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 				const float a = i * step;
 				const float an = (i + 1) * step;
 
-				const Vector3 from(Math::sin(a) * radius, Math::cos(a) * radius, ofs);
-				const Vector3 to(Math::sin(an) * radius, Math::cos(an) * radius, ofs);
+				const Hector3 from(Math::sin(a) * radius, Math::cos(a) * radius, ofs);
+				const Hector3 to(Math::sin(an) * radius, Math::cos(an) * radius, ofs);
 
 				points_primary.write[i * 2 + 0] = from;
 				points_primary.write[i * 2 + 1] = to;
@@ -233,23 +233,23 @@ void AudioStreamPlayer3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			const Ref<Material> material_primary = get_material("stream_player_3d_material_primary", p_gizmo);
 			p_gizmo->add_lines(points_primary, material_primary);
 
-			Vector<Vector3> points_secondary;
+			Hector<Hector3> points_secondary;
 			points_secondary.resize(16);
 
 			for (int i = 0; i < 8; i++) {
 				const float a = i * (Math_TAU / 8.0);
-				const Vector3 from(Math::sin(a) * radius, Math::cos(a) * radius, ofs);
+				const Hector3 from(Math::sin(a) * radius, Math::cos(a) * radius, ofs);
 
 				points_secondary.write[i * 2 + 0] = from;
-				points_secondary.write[i * 2 + 1] = Vector3();
+				points_secondary.write[i * 2 + 1] = Hector3();
 			}
 
 			const Ref<Material> material_secondary = get_material("stream_player_3d_material_secondary", p_gizmo);
 			p_gizmo->add_lines(points_secondary, material_secondary);
 
-			Vector<Vector3> handles;
+			Hector<Hector3> handles;
 			const float ha = Math::deg_to_rad(player->get_emission_angle());
-			handles.push_back(Vector3(Math::sin(ha), 0, -Math::cos(ha)));
+			handles.push_back(Hector3(Math::sin(ha), 0, -Math::cos(ha)));
 			p_gizmo->add_handles(handles, get_material("handles"));
 		}
 	}

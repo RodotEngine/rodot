@@ -1746,13 +1746,13 @@
                             Int  last,
                             Int  flipped )
   {
-    FT_Vector   v_last;
-    FT_Vector   v_control;
-    FT_Vector   v_start;
+    FT_Hector   v_last;
+    FT_Hector   v_control;
+    FT_Hector   v_start;
 
-    FT_Vector*  points;
-    FT_Vector*  point;
-    FT_Vector*  limit;
+    FT_Hector*  points;
+    FT_Hector*  point;
+    FT_Hector*  limit;
     char*       tags;
 
     UInt        tag;       /* current point's state           */
@@ -1848,7 +1848,7 @@
       Do_Conic:
         if ( point < limit )
         {
-          FT_Vector  v_middle;
+          FT_Hector  v_middle;
           Long       x, y;
 
 
@@ -2962,8 +2962,8 @@
       }
       else
       {
-        FT_Vector*  vec   = outline->points;
-        FT_Vector*  limit = vec + outline->n_points;
+        FT_Hector*  vec   = outline->points;
+        FT_Hector*  limit = vec + outline->n_points;
 
 
         xMin = xMax = vec->x;

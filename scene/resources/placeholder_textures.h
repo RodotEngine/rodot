@@ -60,20 +60,20 @@ class PlaceholderTexture3D : public Texture3D {
 	GDCLASS(PlaceholderTexture3D, Texture3D)
 
 	mutable RID rid;
-	Vector3i size = Vector3i(1, 1, 1);
+	Hector3i size = Hector3i(1, 1, 1);
 
 protected:
 	static void _bind_methods();
 
 public:
-	void set_size(const Vector3i &p_size);
-	Vector3i get_size() const;
+	void set_size(const Hector3i &p_size);
+	Hector3i get_size() const;
 	virtual Image::Format get_format() const override;
 	virtual int get_width() const override;
 	virtual int get_height() const override;
 	virtual int get_depth() const override;
 	virtual bool has_mipmaps() const override;
-	virtual Vector<Ref<Image>> get_data() const override;
+	virtual Hector<Ref<Image>> get_data() const override;
 	virtual RID get_rid() const override;
 
 	PlaceholderTexture3D();

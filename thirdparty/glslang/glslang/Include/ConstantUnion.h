@@ -866,7 +866,7 @@ private:
 // bigger than 0.
 //
 // One convenience is being able to use [] to go inside the array, instead
-// of C++ assuming it as an array of pointers to vectors.
+// of C++ assuming it as an array of pointers to Hectors.
 //
 // General usage is that the size is known up front, and it is
 // created once with the proper size.
@@ -883,12 +883,12 @@ public:
         if (size == 0)
             unionArray = nullptr;
         else
-            unionArray =  new TConstUnionVector(size);
+            unionArray =  new TConstUnionHector(size);
     }
     TConstUnionArray(const TConstUnionArray& a) = default;
     TConstUnionArray(const TConstUnionArray& a, int start, int size)
     {
-        unionArray = new TConstUnionVector(size);
+        unionArray = new TConstUnionHector(size);
         for (int i = 0; i < size; ++i)
             (*unionArray)[i] = a[start + i];
     }
@@ -896,7 +896,7 @@ public:
     // Use this constructor for a smear operation
     TConstUnionArray(int size, const TConstUnion& val)
     {
-        unionArray = new TConstUnionVector(size, val);
+        unionArray = new TConstUnionHector(size, val);
     }
 
     int size() const { return unionArray ? (int)unionArray->size() : 0; }
@@ -929,8 +929,8 @@ public:
     bool empty() const { return unionArray == nullptr; }
 
 protected:
-    typedef TVector<TConstUnion> TConstUnionVector;
-    TConstUnionVector* unionArray;
+    typedef THector<TConstUnion> TConstUnionHector;
+    TConstUnionHector* unionArray;
 };
 
 } // end namespace glslang

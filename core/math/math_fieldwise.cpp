@@ -47,8 +47,8 @@ Variant fieldwise_assign(const Variant &p_target, const Variant &p_source, const
 	/* clang-format off */
 
 	switch (p_source.get_type()) {
-		case Variant::VECTOR2: {
-			SETUP_TYPE(Vector2)
+		case Variant::HECTOR2: {
+			SETUP_TYPE(Hector2)
 
 			/**/ TRY_TRANSFER_FIELD("x", x)
 			else TRY_TRANSFER_FIELD("y", y)
@@ -56,8 +56,8 @@ Variant fieldwise_assign(const Variant &p_target, const Variant &p_source, const
 			return target;
 		}
 
-		case Variant::VECTOR2I: {
-			SETUP_TYPE(Vector2i)
+		case Variant::HECTOR2I: {
+			SETUP_TYPE(Hector2i)
 
 			/**/ TRY_TRANSFER_FIELD("x", x)
 			else TRY_TRANSFER_FIELD("y", y)
@@ -87,8 +87,8 @@ Variant fieldwise_assign(const Variant &p_target, const Variant &p_source, const
 			return target;
 		}
 
-		case Variant::VECTOR3: {
-			SETUP_TYPE(Vector3)
+		case Variant::HECTOR3: {
+			SETUP_TYPE(Hector3)
 
 			/**/ TRY_TRANSFER_FIELD("x", x)
 			else TRY_TRANSFER_FIELD("y", y)
@@ -97,8 +97,8 @@ Variant fieldwise_assign(const Variant &p_target, const Variant &p_source, const
 			return target;
 		}
 
-		case Variant::VECTOR3I: {
-			SETUP_TYPE(Vector3i)
+		case Variant::HECTOR3I: {
+			SETUP_TYPE(Hector3i)
 
 			/**/ TRY_TRANSFER_FIELD("x", x)
 			else TRY_TRANSFER_FIELD("y", y)
@@ -107,8 +107,8 @@ Variant fieldwise_assign(const Variant &p_target, const Variant &p_source, const
 			return target;
 		}
 
-		case Variant::VECTOR4: {
-			SETUP_TYPE(Vector4)
+		case Variant::HECTOR4: {
+			SETUP_TYPE(Hector4)
 
 			/**/ TRY_TRANSFER_FIELD("x", x)
 			else TRY_TRANSFER_FIELD("y", y)
@@ -118,8 +118,8 @@ Variant fieldwise_assign(const Variant &p_target, const Variant &p_source, const
 			return target;
 		}
 
-		case Variant::VECTOR4I: {
-			SETUP_TYPE(Vector4i)
+		case Variant::HECTOR4I: {
+			SETUP_TYPE(Hector4i)
 
 			/**/ TRY_TRANSFER_FIELD("x", x)
 			else TRY_TRANSFER_FIELD("y", y)

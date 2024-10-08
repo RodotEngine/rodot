@@ -35,7 +35,7 @@ const HashMap<StringName, ShaderLanguage::FunctionInfo> &ShaderTypes::get_functi
 	return shader_modes[p_mode].functions;
 }
 
-const Vector<ShaderLanguage::ModeInfo> &ShaderTypes::get_modes(RS::ShaderMode p_mode) const {
+const Hector<ShaderLanguage::ModeInfo> &ShaderTypes::get_modes(RS::ShaderMode p_mode) const {
 	return shader_modes[p_mode].modes;
 }
 

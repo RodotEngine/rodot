@@ -205,7 +205,7 @@ static int converter_max_kb_file = 4 * 1024; // 4MB
 static int converter_max_line_length = 100000;
 #endif // DISABLE_DEPRECATED
 
-HashMap<Main::CLIScope, Vector<String>> forwardable_cli_arguments;
+HashMap<Main::CLIScope, Hector<String>> forwardable_cli_arguments;
 #endif
 static bool single_threaded_scene = false;
 
@@ -224,7 +224,7 @@ static bool init_windowed = false;
 static bool init_always_on_top = false;
 static bool init_use_custom_pos = false;
 static bool init_use_custom_screen = false;
-static Vector2 init_custom_pos;
+static Hector2 init_custom_pos;
 
 // Debug
 
@@ -271,7 +271,7 @@ bool Main::is_cmdline_tool() {
 }
 
 #ifdef TOOLS_ENABLED
-const Vector<String> &Main::get_forwardable_cli_arguments(Main::CLIScope p_scope) {
+const Hector<String> &Main::get_forwardable_cli_arguments(Main::CLIScope p_scope) {
 	return forwardable_cli_arguments[p_scope];
 }
 #endif
@@ -289,8 +289,8 @@ static String get_full_version_string() {
 }
 
 #if defined(TOOLS_ENABLED) && defined(MODULE_GDSCRIPT_ENABLED)
-static Vector<String> get_files_with_extension(const String &p_root, const String &p_extension) {
-	Vector<String> paths;
+static Hector<String> get_files_with_extension(const String &p_root, const String &p_extension) {
+	Hector<String> paths;
 
 	Ref<DirAccess> dir = DirAccess::open(p_root);
 	if (dir.is_valid()) {
@@ -578,7 +578,7 @@ void Main::print_help(const char *p_binary) {
 			OS::get_singleton()->print(", ");
 		}
 		OS::get_singleton()->print("\"%s\" (", DisplayServer::get_create_function_name(i));
-		Vector<String> rd = DisplayServer::get_create_function_rendering_drivers(i);
+		Hector<String> rd = DisplayServer::get_create_function_rendering_drivers(i);
 		for (int j = 0; j < rd.size(); j++) {
 			if (j > 0) {
 				OS::get_singleton()->print(", ");
@@ -1005,7 +1005,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 	String remotefs;
 	String remotefs_pass;
 
-	Vector<String> breakpoints;
+	Hector<String> breakpoints;
 	bool use_custom_res = true;
 	bool force_res = false;
 	bool delta_smoothing_override = false;
@@ -1986,7 +1986,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		String driver_hints_with_metal = "";
 
 		{
-			Vector<String> driver_hints_arr;
+			Hector<String> driver_hints_arr;
 #ifdef VULKAN_ENABLED
 			driver_hints_arr.push_back("vulkan");
 #endif
@@ -2235,7 +2235,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 			OS::get_singleton()->print("Unknown rendering method '%s', aborting.\nValid options are ",
 					rendering_method.utf8().get_data());
 
-			const Vector<String> rendering_method_hints = renderer_hints.split(",");
+			const Hector<String> rendering_method_hints = renderer_hints.split(",");
 			for (int i = 0; i < rendering_method_hints.size(); i++) {
 				if (i == rendering_method_hints.size() - 1) {
 					OS::get_singleton()->print(" and ");
@@ -2257,7 +2257,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 		bool found = false;
 		for (int i = 0; i < DisplayServer::get_create_function_count(); i++) {
-			Vector<String> r_drivers = DisplayServer::get_create_function_rendering_drivers(i);
+			Hector<String> r_drivers = DisplayServer::get_create_function_rendering_drivers(i);
 
 			for (int d = 0; d < r_drivers.size(); d++) {
 				if (rendering_driver == r_drivers[d]) {
@@ -2272,9 +2272,9 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 					rendering_driver.utf8().get_data());
 
 			// Deduplicate driver entries, as a rendering driver may be supported by several display servers.
-			Vector<String> unique_rendering_drivers;
+			Hector<String> unique_rendering_drivers;
 			for (int i = 0; i < DisplayServer::get_create_function_count(); i++) {
-				Vector<String> r_drivers = DisplayServer::get_create_function_rendering_drivers(i);
+				Hector<String> r_drivers = DisplayServer::get_create_function_rendering_drivers(i);
 
 				for (int d = 0; d < r_drivers.size(); d++) {
 					if (!unique_rendering_drivers.has(r_drivers[d])) {
@@ -2308,7 +2308,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 		// Now validate whether the selected driver matches with the renderer.
 		bool valid_combination = false;
-		Vector<String> available_drivers;
+		Hector<String> available_drivers;
 		if (rendering_method == "forward_plus" || rendering_method == "mobile") {
 #ifdef VULKAN_ENABLED
 			available_drivers.push_back("vulkan");
@@ -2416,7 +2416,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		int initial_position_type = GLOBAL_GET("display/window/size/initial_position_type").operator int();
 		if (initial_position_type == 0) { // Absolute.
 			if (!init_use_custom_pos) {
-				init_custom_pos = GLOBAL_GET("display/window/size/initial_position").operator Vector2i();
+				init_custom_pos = GLOBAL_GET("display/window/size/initial_position").operator Hector2i();
 				init_use_custom_pos = true;
 			}
 		} else if (initial_position_type == 1) { // Center of Primary Screen.
@@ -2847,7 +2847,7 @@ Error Main::setup2(bool p_show_boot_logo) {
 
 				if (init_windowed) {
 					init_use_custom_pos = true;
-					init_custom_pos = config->get_value("EditorWindow", "position", Vector2i(0, 0));
+					init_custom_pos = config->get_value("EditorWindow", "position", Hector2i(0, 0));
 				}
 			}
 		}
@@ -2924,8 +2924,8 @@ Error Main::setup2(bool p_show_boot_logo) {
 		// list from the display driver for the editor UI.
 		OS::get_singleton()->set_display_driver_id(display_driver_idx);
 
-		Vector2i *window_position = nullptr;
-		Vector2i position = init_custom_pos;
+		Hector2i *window_position = nullptr;
+		Hector2i position = init_custom_pos;
 		if (init_use_custom_pos) {
 			window_position = &position;
 		}
@@ -3008,14 +3008,14 @@ Error Main::setup2(bool p_show_boot_logo) {
 		// We still need to check we are actually in windowed mode, because
 		// certain platform might only support one fullscreen window.
 		if (DisplayServer::get_singleton()->window_get_mode() == DisplayServer::WINDOW_MODE_WINDOWED) {
-			Vector2i current_size = DisplayServer::get_singleton()->window_get_size();
-			Vector2i current_pos = DisplayServer::get_singleton()->window_get_position();
+			Hector2i current_size = DisplayServer::get_singleton()->window_get_size();
+			Hector2i current_pos = DisplayServer::get_singleton()->window_get_position();
 			int screen = DisplayServer::get_singleton()->window_get_current_screen();
 			Rect2i screen_rect = DisplayServer::get_singleton()->screen_get_usable_rect(screen);
 
-			Vector2i adjusted_end = screen_rect.get_end().min(current_pos + current_size);
-			Vector2i adjusted_pos = screen_rect.get_position().max(adjusted_end - current_size);
-			Vector2i adjusted_size = DisplayServer::get_singleton()->window_get_min_size().max(adjusted_end - adjusted_pos);
+			Hector2i adjusted_end = screen_rect.get_end().min(current_pos + current_size);
+			Hector2i adjusted_pos = screen_rect.get_position().max(adjusted_end - current_size);
+			Hector2i adjusted_size = DisplayServer::get_singleton()->window_get_min_size().max(adjusted_end - adjusted_pos);
 
 			if (current_pos != adjusted_end || current_size != adjusted_size) {
 				DisplayServer::get_singleton()->window_set_position(adjusted_pos);
@@ -3347,14 +3347,14 @@ Error Main::setup2(bool p_show_boot_logo) {
 	OS::get_singleton()->benchmark_end_measure("Startup", "Platforms");
 
 	GLOBAL_DEF_BASIC(PropertyInfo(Variant::STRING, "display/mouse_cursor/custom_image", PROPERTY_HINT_FILE, "*.png,*.bmp,*.hdr,*.jpg,*.jpeg,*.svg,*.tga,*.exr,*.webp"), String());
-	GLOBAL_DEF_BASIC("display/mouse_cursor/custom_image_hotspot", Vector2());
+	GLOBAL_DEF_BASIC("display/mouse_cursor/custom_image_hotspot", Hector2());
 	GLOBAL_DEF_BASIC("display/mouse_cursor/tooltip_position_offset", Point2(10, 10));
 
 	if (String(GLOBAL_GET("display/mouse_cursor/custom_image")) != String()) {
 		Ref<Texture2D> cursor = ResourceLoader::load(
 				GLOBAL_GET("display/mouse_cursor/custom_image"));
 		if (cursor.is_valid()) {
-			Vector2 hotspot = GLOBAL_GET("display/mouse_cursor/custom_image_hotspot");
+			Hector2 hotspot = GLOBAL_GET("display/mouse_cursor/custom_image_hotspot");
 			Input::get_singleton()->set_custom_mouse_cursor(cursor, Input::CURSOR_ARROW, hotspot);
 		}
 	}
@@ -3512,7 +3512,7 @@ int Main::start() {
 	bool doc_tool_implicit_cwd = false;
 	BitField<DocTools::GenerateFlags> gen_flags;
 	String _export_preset;
-	Vector<String> patches;
+	Hector<String> patches;
 	bool export_debug = false;
 	bool export_pack_only = false;
 	bool install_android_build_template = false;
@@ -3984,7 +3984,7 @@ int Main::start() {
 			DocTools docs;
 			Error err;
 
-			Vector<String> paths = get_files_with_extension(gdscript_docs_path, "gd");
+			Hector<String> paths = get_files_with_extension(gdscript_docs_path, "gd");
 			ERR_FAIL_COND_V_MSG(paths.is_empty(), EXIT_FAILURE, "Couldn't find any GDScript files under the given directory: " + gdscript_docs_path);
 
 			for (const String &path : paths) {

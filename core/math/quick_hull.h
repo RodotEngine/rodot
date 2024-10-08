@@ -68,7 +68,7 @@ public:
 	struct Face {
 		Plane plane;
 		uint32_t vertices[3] = { 0 };
-		Vector<int> points_over;
+		Hector<int> points_over;
 
 		bool operator<(const Face &p_face) const {
 			return points_over.size() < p_face.points_over.size();
@@ -89,7 +89,7 @@ private:
 
 public:
 	static uint32_t debug_stop_after;
-	static Error build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_mesh);
+	static Error build(const Hector<Hector3> &p_points, Geometry3D::MeshData &r_mesh);
 };
 
 #endif // QUICK_HULL_H

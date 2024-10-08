@@ -62,7 +62,7 @@ layout(push_constant, std430) uniform Params {
 
 	uint lifetime_split;
 	bool lifetime_reverse;
-	uint motion_vectors_current_offset;
+	uint motion_Hectors_current_offset;
 	uint flags;
 
 	mat4 inv_emission_transform;
@@ -215,7 +215,7 @@ void main() {
 	}
 	txform = transpose(txform);
 
-	uint instance_index = gl_GlobalInvocationID.x + params.motion_vectors_current_offset;
+	uint instance_index = gl_GlobalInvocationID.x + params.motion_Hectors_current_offset;
 	if (bool(params.flags & PARAMS_FLAG_COPY_MODE_2D)) {
 		uint write_offset = instance_index * (2 + 1 + 1); //xform + color + custom
 

@@ -71,11 +71,11 @@ void EditorHTTPServer::_set_internal_certs(Ref<Crypto> p_crypto) {
 }
 
 void EditorHTTPServer::_send_response() {
-	Vector<String> psa = String((char *)req_buf).split("\r\n");
+	Hector<String> psa = String((char *)req_buf).split("\r\n");
 	int len = psa.size();
 	ERR_FAIL_COND_MSG(len < 4, "Not enough response headers, got: " + itos(len) + ", expected >= 4.");
 
-	Vector<String> req = psa[0].split(" ", false);
+	Hector<String> req = psa[0].split(" ", false);
 	ERR_FAIL_COND_MSG(req.size() < 2, "Invalid protocol or status code.");
 
 	// Wrong protocol

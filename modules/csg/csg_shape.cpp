@@ -256,7 +256,7 @@ int CSGShape3D::mikktGetNumVerticesOfFace(const SMikkTSpaceContext *pContext, co
 void CSGShape3D::mikktGetPosition(const SMikkTSpaceContext *pContext, float fvPosOut[], const int iFace, const int iVert) {
 	ShapeUpdateSurface &surface = *((ShapeUpdateSurface *)pContext->m_pUserData);
 
-	Vector3 v = surface.verticesw[iFace * 3 + iVert];
+	Hector3 v = surface.verticesw[iFace * 3 + iVert];
 	fvPosOut[0] = v.x;
 	fvPosOut[1] = v.y;
 	fvPosOut[2] = v.z;
@@ -265,7 +265,7 @@ void CSGShape3D::mikktGetPosition(const SMikkTSpaceContext *pContext, float fvPo
 void CSGShape3D::mikktGetNormal(const SMikkTSpaceContext *pContext, float fvNormOut[], const int iFace, const int iVert) {
 	ShapeUpdateSurface &surface = *((ShapeUpdateSurface *)pContext->m_pUserData);
 
-	Vector3 n = surface.normalsw[iFace * 3 + iVert];
+	Hector3 n = surface.normalsw[iFace * 3 + iVert];
 	fvNormOut[0] = n.x;
 	fvNormOut[1] = n.y;
 	fvNormOut[2] = n.z;
@@ -274,7 +274,7 @@ void CSGShape3D::mikktGetNormal(const SMikkTSpaceContext *pContext, float fvNorm
 void CSGShape3D::mikktGetTexCoord(const SMikkTSpaceContext *pContext, float fvTexcOut[], const int iFace, const int iVert) {
 	ShapeUpdateSurface &surface = *((ShapeUpdateSurface *)pContext->m_pUserData);
 
-	Vector2 t = surface.uvsw[iFace * 3 + iVert];
+	Hector2 t = surface.uvsw[iFace * 3 + iVert];
 	fvTexcOut[0] = t.x;
 	fvTexcOut[1] = t.y;
 }
@@ -284,9 +284,9 @@ void CSGShape3D::mikktSetTSpaceDefault(const SMikkTSpaceContext *pContext, const
 	ShapeUpdateSurface &surface = *((ShapeUpdateSurface *)pContext->m_pUserData);
 
 	int i = iFace * 3 + iVert;
-	Vector3 normal = surface.normalsw[i];
-	Vector3 tangent = Vector3(fvTangent[0], fvTangent[1], fvTangent[2]);
-	Vector3 bitangent = Vector3(-fvBiTangent[0], -fvBiTangent[1], -fvBiTangent[2]); // for some reason these are reversed, something with the coordinate system in Godot
+	Hector3 normal = surface.normalsw[i];
+	Hector3 tangent = Hector3(fvTangent[0], fvTangent[1], fvTangent[2]);
+	Hector3 bitangent = Hector3(-fvBiTangent[0], -fvBiTangent[1], -fvBiTangent[2]); // for some reason these are reversed, something with the coordinate system in Godot
 	float d = bitangent.dot(normal.cross(tangent));
 
 	i *= 4;
@@ -307,9 +307,9 @@ void CSGShape3D::_update_shape() {
 	CSGBrush *n = _get_brush();
 	ERR_FAIL_NULL_MSG(n, "Cannot get CSGBrush.");
 
-	OAHashMap<Vector3, Vector3> vec_map;
+	OAHashMap<Hector3, Hector3> vec_map;
 
-	Vector<int> face_count;
+	Hector<int> face_count;
 	face_count.resize(n->materials.size() + 1);
 	for (int i = 0; i < face_count.size(); i++) {
 		face_count.write[i] = 0;
@@ -324,8 +324,8 @@ void CSGShape3D::_update_shape() {
 			Plane p(n->faces[i].vertices[0], n->faces[i].vertices[1], n->faces[i].vertices[2]);
 
 			for (int j = 0; j < 3; j++) {
-				Vector3 v = n->faces[i].vertices[j];
-				Vector3 add;
+				Hector3 v = n->faces[i].vertices[j];
+				Hector3 add;
 				if (vec_map.lookup(v, add)) {
 					add += p.normal;
 				} else {
@@ -338,7 +338,7 @@ void CSGShape3D::_update_shape() {
 		face_count.write[idx]++;
 	}
 
-	Vector<ShapeUpdateSurface> surfaces;
+	Hector<ShapeUpdateSurface> surfaces;
 
 	surfaces.resize(face_count.size());
 
@@ -382,9 +382,9 @@ void CSGShape3D::_update_shape() {
 			Plane p(n->faces[i].vertices[0], n->faces[i].vertices[1], n->faces[i].vertices[2]);
 
 			for (int j = 0; j < 3; j++) {
-				Vector3 v = n->faces[i].vertices[j];
+				Hector3 v = n->faces[i].vertices[j];
 
-				Vector3 normal = p.normal;
+				Hector3 normal = p.normal;
 
 				if (n->faces[i].smooth && vec_map.lookup(v, normal)) {
 					normal.normalize();
@@ -460,12 +460,12 @@ void CSGShape3D::_update_shape() {
 	_update_collision_faces();
 }
 
-Vector<Vector3> CSGShape3D::_get_brush_collision_faces() {
-	Vector<Vector3> collision_faces;
+Hector<Hector3> CSGShape3D::_get_brush_collision_faces() {
+	Hector<Hector3> collision_faces;
 	CSGBrush *n = _get_brush();
 	ERR_FAIL_NULL_V_MSG(n, collision_faces, "Cannot get CSGBrush.");
 	collision_faces.resize(n->faces.size() * 3);
-	Vector3 *collision_faces_ptrw = collision_faces.ptrw();
+	Hector3 *collision_faces_ptrw = collision_faces.ptrw();
 
 	for (int i = 0; i < n->faces.size(); i++) {
 		int order[3] = { 0, 1, 2 };
@@ -551,18 +551,18 @@ AABB CSGShape3D::get_aabb() const {
 	return node_aabb;
 }
 
-Vector<Vector3> CSGShape3D::get_brush_faces() {
-	ERR_FAIL_COND_V(!is_inside_tree(), Vector<Vector3>());
+Hector<Hector3> CSGShape3D::get_brush_faces() {
+	ERR_FAIL_COND_V(!is_inside_tree(), Hector<Hector3>());
 	CSGBrush *b = _get_brush();
 	if (!b) {
-		return Vector<Vector3>();
+		return Hector<Hector3>();
 	}
 
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	int fc = b->faces.size();
 	faces.resize(fc * 3);
 	{
-		Vector3 *w = faces.ptrw();
+		Hector3 *w = faces.ptrw();
 		for (int i = 0; i < fc; i++) {
 			w[i * 3 + 0] = b->faces[i].vertices[0];
 			w[i * 3 + 1] = b->faces[i].vertices[1];
@@ -763,10 +763,10 @@ CSGCombiner3D::CSGCombiner3D() {
 
 /////////////////////
 
-CSGBrush *CSGPrimitive3D::_create_brush_from_arrays(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uv, const Vector<bool> &p_smooth, const Vector<Ref<Material>> &p_materials) {
+CSGBrush *CSGPrimitive3D::_create_brush_from_arrays(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uv, const Hector<bool> &p_smooth, const Hector<Ref<Material>> &p_materials) {
 	CSGBrush *new_brush = memnew(CSGBrush);
 
-	Vector<bool> invert;
+	Hector<bool> invert;
 	invert.resize(p_vertices.size() / 3);
 	{
 		int ic = invert.size();
@@ -812,10 +812,10 @@ CSGBrush *CSGMesh3D::_build_brush() {
 		return memnew(CSGBrush);
 	}
 
-	Vector<Vector3> vertices;
-	Vector<bool> smooth;
-	Vector<Ref<Material>> materials;
-	Vector<Vector2> uvs;
+	Hector<Hector3> vertices;
+	Hector<bool> smooth;
+	Hector<Ref<Material>> materials;
+	Hector<Hector2> uvs;
 	Ref<Material> base_material = get_material();
 
 	for (int i = 0; i < mesh->get_surface_count(); i++) {
@@ -830,21 +830,21 @@ CSGBrush *CSGMesh3D::_build_brush() {
 			ERR_FAIL_COND_V(arrays.is_empty(), memnew(CSGBrush));
 		}
 
-		Vector<Vector3> avertices = arrays[Mesh::ARRAY_VERTEX];
+		Hector<Hector3> avertices = arrays[Mesh::ARRAY_VERTEX];
 		if (avertices.size() == 0) {
 			continue;
 		}
 
-		const Vector3 *vr = avertices.ptr();
+		const Hector3 *vr = avertices.ptr();
 
-		Vector<Vector3> anormals = arrays[Mesh::ARRAY_NORMAL];
-		const Vector3 *nr = nullptr;
+		Hector<Hector3> anormals = arrays[Mesh::ARRAY_NORMAL];
+		const Hector3 *nr = nullptr;
 		if (anormals.size()) {
 			nr = anormals.ptr();
 		}
 
-		Vector<Vector2> auvs = arrays[Mesh::ARRAY_TEX_UV];
-		const Vector2 *uvr = nullptr;
+		Hector<Hector2> auvs = arrays[Mesh::ARRAY_TEX_UV];
+		const Hector2 *uvr = nullptr;
 		if (auvs.size()) {
 			uvr = auvs.ptr();
 		}
@@ -856,7 +856,7 @@ CSGBrush *CSGMesh3D::_build_brush() {
 			mat = mesh->surface_get_material(i);
 		}
 
-		Vector<int> aindices = arrays[Mesh::ARRAY_INDEX];
+		Hector<int> aindices = arrays[Mesh::ARRAY_INDEX];
 		if (aindices.size()) {
 			int as = vertices.size();
 			int is = aindices.size();
@@ -866,17 +866,17 @@ CSGBrush *CSGMesh3D::_build_brush() {
 			materials.resize((as + is) / 3);
 			uvs.resize(as + is);
 
-			Vector3 *vw = vertices.ptrw();
+			Hector3 *vw = vertices.ptrw();
 			bool *sw = smooth.ptrw();
-			Vector2 *uvw = uvs.ptrw();
+			Hector2 *uvw = uvs.ptrw();
 			Ref<Material> *mw = materials.ptrw();
 
 			const int *ir = aindices.ptr();
 
 			for (int j = 0; j < is; j += 3) {
-				Vector3 vertex[3];
-				Vector3 normal[3];
-				Vector2 uv[3];
+				Hector3 vertex[3];
+				Hector3 normal[3];
+				Hector2 uv[3];
 
 				for (int k = 0; k < 3; k++) {
 					int idx = ir[j + k];
@@ -911,15 +911,15 @@ CSGBrush *CSGMesh3D::_build_brush() {
 			uvs.resize(as + is);
 			materials.resize((as + is) / 3);
 
-			Vector3 *vw = vertices.ptrw();
+			Hector3 *vw = vertices.ptrw();
 			bool *sw = smooth.ptrw();
-			Vector2 *uvw = uvs.ptrw();
+			Hector2 *uvw = uvs.ptrw();
 			Ref<Material> *mw = materials.ptrw();
 
 			for (int j = 0; j < is; j += 3) {
-				Vector3 vertex[3];
-				Vector3 normal[3];
-				Vector2 uv[3];
+				Hector3 vertex[3];
+				Hector3 normal[3];
+				Hector2 uv[3];
 
 				for (int k = 0; k < 3; k++) {
 					vertex[k] = vr[j + k];
@@ -1015,11 +1015,11 @@ CSGBrush *CSGSphere3D::_build_brush() {
 	bool invert_val = get_flip_faces();
 	Ref<Material> base_material = get_material();
 
-	Vector<Vector3> faces;
-	Vector<Vector2> uvs;
-	Vector<bool> smooth;
-	Vector<Ref<Material>> materials;
-	Vector<bool> invert;
+	Hector<Hector3> faces;
+	Hector<Hector2> uvs;
+	Hector<bool> smooth;
+	Hector<Ref<Material>> materials;
+	Hector<bool> invert;
 
 	faces.resize(face_count * 3);
 	uvs.resize(face_count * 3);
@@ -1029,8 +1029,8 @@ CSGBrush *CSGSphere3D::_build_brush() {
 	invert.resize(face_count);
 
 	{
-		Vector3 *facesw = faces.ptrw();
-		Vector2 *uvsw = uvs.ptrw();
+		Hector3 *facesw = faces.ptrw();
+		Hector2 *uvsw = uvs.ptrw();
 		bool *smoothw = smooth.ptrw();
 		Ref<Material> *materialsw = materials.ptrw();
 		bool *invertw = invert.ptrw();
@@ -1068,18 +1068,18 @@ CSGBrush *CSGSphere3D::_build_brush() {
 				double z1 = Math::cos(longitude1);
 				double u1 = double(j + 1) / radial_segments;
 
-				Vector3 v[4] = {
-					Vector3(x0 * cos0, sin0, z0 * cos0) * radius,
-					Vector3(x1 * cos0, sin0, z1 * cos0) * radius,
-					Vector3(x1 * cos1, sin1, z1 * cos1) * radius,
-					Vector3(x0 * cos1, sin1, z0 * cos1) * radius,
+				Hector3 v[4] = {
+					Hector3(x0 * cos0, sin0, z0 * cos0) * radius,
+					Hector3(x1 * cos0, sin0, z1 * cos0) * radius,
+					Hector3(x1 * cos1, sin1, z1 * cos1) * radius,
+					Hector3(x0 * cos1, sin1, z0 * cos1) * radius,
 				};
 
-				Vector2 u[4] = {
-					Vector2(u0, v0),
-					Vector2(u1, v0),
-					Vector2(u1, v1),
-					Vector2(u0, v1),
+				Hector2 u[4] = {
+					Hector2(u0, v0),
+					Hector2(u1, v0),
+					Hector2(u1, v1),
+					Hector2(u0, v1),
 				};
 
 				// Draw the first face, but skip this at the north pole (i == 0).
@@ -1219,11 +1219,11 @@ CSGBrush *CSGBox3D::_build_brush() {
 	bool invert_val = get_flip_faces();
 	Ref<Material> base_material = get_material();
 
-	Vector<Vector3> faces;
-	Vector<Vector2> uvs;
-	Vector<bool> smooth;
-	Vector<Ref<Material>> materials;
-	Vector<bool> invert;
+	Hector<Hector3> faces;
+	Hector<Hector2> uvs;
+	Hector<bool> smooth;
+	Hector<Ref<Material>> materials;
+	Hector<bool> invert;
 
 	faces.resize(face_count * 3);
 	uvs.resize(face_count * 3);
@@ -1233,19 +1233,19 @@ CSGBrush *CSGBox3D::_build_brush() {
 	invert.resize(face_count);
 
 	{
-		Vector3 *facesw = faces.ptrw();
-		Vector2 *uvsw = uvs.ptrw();
+		Hector3 *facesw = faces.ptrw();
+		Hector2 *uvsw = uvs.ptrw();
 		bool *smoothw = smooth.ptrw();
 		Ref<Material> *materialsw = materials.ptrw();
 		bool *invertw = invert.ptrw();
 
 		int face = 0;
 
-		Vector3 vertex_mul = size / 2;
+		Hector3 vertex_mul = size / 2;
 
 		{
 			for (int i = 0; i < 6; i++) {
-				Vector3 face_points[4];
+				Hector3 face_points[4];
 				float uv_points[8] = { 0, 0, 0, 1, 1, 1, 1, 0 };
 
 				for (int j = 0; j < 4; j++) {
@@ -1263,9 +1263,9 @@ CSGBrush *CSGBox3D::_build_brush() {
 					}
 				}
 
-				Vector2 u[4];
+				Hector2 u[4];
 				for (int j = 0; j < 4; j++) {
-					u[j] = Vector2(uv_points[j * 2 + 0], uv_points[j * 2 + 1]);
+					u[j] = Hector2(uv_points[j * 2 + 0], uv_points[j * 2 + 1]);
 				}
 
 				//face 1
@@ -1316,17 +1316,17 @@ void CSGBox3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_material", "material"), &CSGBox3D::set_material);
 	ClassDB::bind_method(D_METHOD("get_material"), &CSGBox3D::get_material);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "material", PROPERTY_HINT_RESOURCE_TYPE, "BaseMaterial3D,ShaderMaterial"), "set_material", "get_material");
 }
 
-void CSGBox3D::set_size(const Vector3 &p_size) {
+void CSGBox3D::set_size(const Hector3 &p_size) {
 	size = p_size;
 	_make_dirty();
 	update_gizmos();
 }
 
-Vector3 CSGBox3D::get_size() const {
+Hector3 CSGBox3D::get_size() const {
 	return size;
 }
 
@@ -1376,11 +1376,11 @@ CSGBrush *CSGCylinder3D::_build_brush() {
 	bool invert_val = get_flip_faces();
 	Ref<Material> base_material = get_material();
 
-	Vector<Vector3> faces;
-	Vector<Vector2> uvs;
-	Vector<bool> smooth;
-	Vector<Ref<Material>> materials;
-	Vector<bool> invert;
+	Hector<Hector3> faces;
+	Hector<Hector2> uvs;
+	Hector<bool> smooth;
+	Hector<Ref<Material>> materials;
+	Hector<bool> invert;
 
 	faces.resize(face_count * 3);
 	uvs.resize(face_count * 3);
@@ -1390,15 +1390,15 @@ CSGBrush *CSGCylinder3D::_build_brush() {
 	invert.resize(face_count);
 
 	{
-		Vector3 *facesw = faces.ptrw();
-		Vector2 *uvsw = uvs.ptrw();
+		Hector3 *facesw = faces.ptrw();
+		Hector2 *uvsw = uvs.ptrw();
 		bool *smoothw = smooth.ptrw();
 		Ref<Material> *materialsw = materials.ptrw();
 		bool *invertw = invert.ptrw();
 
 		int face = 0;
 
-		Vector3 vertex_mul(radius, height * 0.5, radius);
+		Hector3 vertex_mul(radius, height * 0.5, radius);
 
 		{
 			for (int i = 0; i < sides; i++) {
@@ -1411,21 +1411,21 @@ CSGBrush *CSGCylinder3D::_build_brush() {
 				float ang = inc * Math_TAU;
 				float ang_n = inc_n * Math_TAU;
 
-				Vector3 face_base(Math::cos(ang), 0, Math::sin(ang));
-				Vector3 face_base_n(Math::cos(ang_n), 0, Math::sin(ang_n));
+				Hector3 face_base(Math::cos(ang), 0, Math::sin(ang));
+				Hector3 face_base_n(Math::cos(ang_n), 0, Math::sin(ang_n));
 
-				Vector3 face_points[4] = {
-					face_base + Vector3(0, -1, 0),
-					face_base_n + Vector3(0, -1, 0),
-					face_base_n * (cone ? 0.0 : 1.0) + Vector3(0, 1, 0),
-					face_base * (cone ? 0.0 : 1.0) + Vector3(0, 1, 0),
+				Hector3 face_points[4] = {
+					face_base + Hector3(0, -1, 0),
+					face_base_n + Hector3(0, -1, 0),
+					face_base_n * (cone ? 0.0 : 1.0) + Hector3(0, 1, 0),
+					face_base * (cone ? 0.0 : 1.0) + Hector3(0, 1, 0),
 				};
 
-				Vector2 u[4] = {
-					Vector2(inc, 0),
-					Vector2(inc_n, 0),
-					Vector2(inc_n, 1),
-					Vector2(inc, 1),
+				Hector2 u[4] = {
+					Hector2(inc, 0),
+					Hector2(inc_n, 0),
+					Hector2(inc_n, 1),
+					Hector2(inc, 1),
 				};
 
 				//side face 1
@@ -1462,11 +1462,11 @@ CSGBrush *CSGCylinder3D::_build_brush() {
 				//bottom face 1
 				facesw[face * 3 + 0] = face_points[1] * vertex_mul;
 				facesw[face * 3 + 1] = face_points[0] * vertex_mul;
-				facesw[face * 3 + 2] = Vector3(0, -1, 0) * vertex_mul;
+				facesw[face * 3 + 2] = Hector3(0, -1, 0) * vertex_mul;
 
-				uvsw[face * 3 + 0] = Vector2(face_points[1].x, face_points[1].y) * 0.5 + Vector2(0.5, 0.5);
-				uvsw[face * 3 + 1] = Vector2(face_points[0].x, face_points[0].y) * 0.5 + Vector2(0.5, 0.5);
-				uvsw[face * 3 + 2] = Vector2(0.5, 0.5);
+				uvsw[face * 3 + 0] = Hector2(face_points[1].x, face_points[1].y) * 0.5 + Hector2(0.5, 0.5);
+				uvsw[face * 3 + 1] = Hector2(face_points[0].x, face_points[0].y) * 0.5 + Hector2(0.5, 0.5);
+				uvsw[face * 3 + 2] = Hector2(0.5, 0.5);
 
 				smoothw[face] = false;
 				invertw[face] = invert_val;
@@ -1477,11 +1477,11 @@ CSGBrush *CSGCylinder3D::_build_brush() {
 					//top face 1
 					facesw[face * 3 + 0] = face_points[3] * vertex_mul;
 					facesw[face * 3 + 1] = face_points[2] * vertex_mul;
-					facesw[face * 3 + 2] = Vector3(0, 1, 0) * vertex_mul;
+					facesw[face * 3 + 2] = Hector3(0, 1, 0) * vertex_mul;
 
-					uvsw[face * 3 + 0] = Vector2(face_points[1].x, face_points[1].y) * 0.5 + Vector2(0.5, 0.5);
-					uvsw[face * 3 + 1] = Vector2(face_points[0].x, face_points[0].y) * 0.5 + Vector2(0.5, 0.5);
-					uvsw[face * 3 + 2] = Vector2(0.5, 0.5);
+					uvsw[face * 3 + 0] = Hector2(face_points[1].x, face_points[1].y) * 0.5 + Hector2(0.5, 0.5);
+					uvsw[face * 3 + 1] = Hector2(face_points[0].x, face_points[0].y) * 0.5 + Hector2(0.5, 0.5);
+					uvsw[face * 3 + 2] = Hector2(0.5, 0.5);
 
 					smoothw[face] = false;
 					invertw[face] = invert_val;
@@ -1621,11 +1621,11 @@ CSGBrush *CSGTorus3D::_build_brush() {
 	bool invert_val = get_flip_faces();
 	Ref<Material> base_material = get_material();
 
-	Vector<Vector3> faces;
-	Vector<Vector2> uvs;
-	Vector<bool> smooth;
-	Vector<Ref<Material>> materials;
-	Vector<bool> invert;
+	Hector<Hector3> faces;
+	Hector<Hector2> uvs;
+	Hector<bool> smooth;
+	Hector<Ref<Material>> materials;
+	Hector<bool> invert;
 
 	faces.resize(face_count * 3);
 	uvs.resize(face_count * 3);
@@ -1635,8 +1635,8 @@ CSGBrush *CSGTorus3D::_build_brush() {
 	invert.resize(face_count);
 
 	{
-		Vector3 *facesw = faces.ptrw();
-		Vector2 *uvsw = uvs.ptrw();
+		Hector3 *facesw = faces.ptrw();
+		Hector2 *uvsw = uvs.ptrw();
 		bool *smoothw = smooth.ptrw();
 		Ref<Material> *materialsw = materials.ptrw();
 		bool *invertw = invert.ptrw();
@@ -1654,8 +1654,8 @@ CSGBrush *CSGTorus3D::_build_brush() {
 				float angi = inci * Math_TAU;
 				float angi_n = inci_n * Math_TAU;
 
-				Vector3 normali = Vector3(Math::cos(angi), 0, Math::sin(angi));
-				Vector3 normali_n = Vector3(Math::cos(angi_n), 0, Math::sin(angi_n));
+				Hector3 normali = Hector3(Math::cos(angi), 0, Math::sin(angi));
+				Hector3 normali_n = Hector3(Math::cos(angi_n), 0, Math::sin(angi_n));
 
 				for (int j = 0; j < ring_sides; j++) {
 					float incj = float(j) / ring_sides;
@@ -1667,21 +1667,21 @@ CSGBrush *CSGTorus3D::_build_brush() {
 					float angj = incj * Math_TAU;
 					float angj_n = incj_n * Math_TAU;
 
-					Vector2 normalj = Vector2(Math::cos(angj), Math::sin(angj)) * radius + Vector2(min_radius + radius, 0);
-					Vector2 normalj_n = Vector2(Math::cos(angj_n), Math::sin(angj_n)) * radius + Vector2(min_radius + radius, 0);
+					Hector2 normalj = Hector2(Math::cos(angj), Math::sin(angj)) * radius + Hector2(min_radius + radius, 0);
+					Hector2 normalj_n = Hector2(Math::cos(angj_n), Math::sin(angj_n)) * radius + Hector2(min_radius + radius, 0);
 
-					Vector3 face_points[4] = {
-						Vector3(normali.x * normalj.x, normalj.y, normali.z * normalj.x),
-						Vector3(normali.x * normalj_n.x, normalj_n.y, normali.z * normalj_n.x),
-						Vector3(normali_n.x * normalj_n.x, normalj_n.y, normali_n.z * normalj_n.x),
-						Vector3(normali_n.x * normalj.x, normalj.y, normali_n.z * normalj.x)
+					Hector3 face_points[4] = {
+						Hector3(normali.x * normalj.x, normalj.y, normali.z * normalj.x),
+						Hector3(normali.x * normalj_n.x, normalj_n.y, normali.z * normalj_n.x),
+						Hector3(normali_n.x * normalj_n.x, normalj_n.y, normali_n.z * normalj_n.x),
+						Hector3(normali_n.x * normalj.x, normalj.y, normali_n.z * normalj.x)
 					};
 
-					Vector2 u[4] = {
-						Vector2(inci, incj),
-						Vector2(inci, incj_n),
-						Vector2(inci_n, incj_n),
-						Vector2(inci_n, incj),
+					Hector2 u[4] = {
+						Hector2(inci, incj),
+						Hector2(inci, incj_n),
+						Hector2(inci_n, incj_n),
+						Hector2(inci_n, incj),
 					};
 
 					// face 1
@@ -1832,16 +1832,16 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 	}
 
 	// Triangulate polygon shape.
-	Vector<Point2> shape_polygon = polygon;
+	Hector<Point2> shape_polygon = polygon;
 	if (Triangulate::get_area(shape_polygon) > 0) {
 		shape_polygon.reverse();
 	}
 	int shape_sides = shape_polygon.size();
-	Vector<int> shape_faces = Geometry2D::triangulate_polygon(shape_polygon);
+	Hector<int> shape_faces = Geometry2D::triangulate_polygon(shape_polygon);
 	ERR_FAIL_COND_V_MSG(shape_faces.size() < 3, new_brush, "Failed to triangulate CSGPolygon. Make sure the polygon doesn't have any intersecting edges.");
 
 	// Get polygon enclosing Rect2.
-	Rect2 shape_rect(shape_polygon[0], Vector2());
+	Rect2 shape_rect(shape_polygon[0], Hector2());
 	for (int i = 1; i < shape_sides; i++) {
 		shape_rect.expand_to(shape_polygon[i]);
 	}
@@ -1909,11 +1909,11 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 	// Initialize variables used to create the mesh.
 	Ref<Material> base_material = get_material();
 
-	Vector<Vector3> faces;
-	Vector<Vector2> uvs;
-	Vector<bool> smooth;
-	Vector<Ref<Material>> materials;
-	Vector<bool> invert;
+	Hector<Hector3> faces;
+	Hector<Hector2> uvs;
+	Hector<bool> smooth;
+	Hector<Ref<Material>> materials;
+	Hector<bool> invert;
 
 	faces.resize(face_count * 3);
 	uvs.resize(face_count * 3);
@@ -1923,8 +1923,8 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 	int faces_removed = 0;
 
 	{
-		Vector3 *facesw = faces.ptrw();
-		Vector2 *uvsw = uvs.ptrw();
+		Hector3 *facesw = faces.ptrw();
+		Hector2 *uvsw = uvs.ptrw();
 		bool *smoothw = smooth.ptrw();
 		Ref<Material> *materialsw = materials.ptrw();
 		bool *invertw = invert.ptrw();
@@ -1953,24 +1953,24 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 				base_xform = path->get_global_transform();
 			}
 
-			Vector3 current_point = curve->sample_baked(0);
-			Vector3 next_point = curve->sample_baked(extrusion_step);
-			Vector3 current_up = Vector3(0, 1, 0);
-			Vector3 direction = next_point - current_point;
+			Hector3 current_point = curve->sample_baked(0);
+			Hector3 next_point = curve->sample_baked(extrusion_step);
+			Hector3 current_up = Hector3(0, 1, 0);
+			Hector3 direction = next_point - current_point;
 
 			if (path_joined) {
-				Vector3 last_point = curve->sample_baked(curve->get_baked_length());
+				Hector3 last_point = curve->sample_baked(curve->get_baked_length());
 				direction = next_point - last_point;
 			}
 
 			switch (path_rotation) {
 				case PATH_ROTATION_POLYGON:
-					direction = Vector3(0, 0, -1);
+					direction = Hector3(0, 0, -1);
 					break;
 				case PATH_ROTATION_PATH:
 					break;
 				case PATH_ROTATION_PATH_FOLLOW:
-					current_up = curve->sample_baked_up_vector(0, true);
+					current_up = curve->sample_baked_up_Hector(0, true);
 					break;
 			}
 
@@ -1992,7 +1992,7 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 					uv.x = uv.x / 2;
 					uv.y = 1 - (uv.y / 2);
 
-					facesw[face * 3 + face_vertex_idx] = current_xform.xform(Vector3(p.x, p.y, 0));
+					facesw[face * 3 + face_vertex_idx] = current_xform.xform(Hector3(p.x, p.y, 0));
 					uvsw[face * 3 + face_vertex_idx] = uv;
 				}
 
@@ -2004,7 +2004,7 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 		}
 
 		real_t angle_simplify_dot = Math::cos(Math::deg_to_rad(path_simplify_angle));
-		Vector3 previous_simplify_dir = Vector3(0, 0, 0);
+		Hector3 previous_simplify_dir = Hector3(0, 0, 0);
 		int faces_combined = 0;
 
 		// Add extrusion faces.
@@ -2014,10 +2014,10 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 
 			switch (mode) {
 				case MODE_DEPTH: {
-					current_xform.translate_local(Vector3(0, 0, -depth));
+					current_xform.translate_local(Hector3(0, 0, -depth));
 				} break;
 				case MODE_SPIN: {
-					current_xform.rotate(Vector3(0, 1, 0), spin_step);
+					current_xform.rotate(Hector3(0, 1, 0), spin_step);
 				} break;
 				case MODE_PATH: {
 					double previous_offset = x0 * extrusion_step;
@@ -2032,12 +2032,12 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 						}
 					}
 
-					Vector3 previous_point = curve->sample_baked(previous_offset);
-					Vector3 current_point = curve->sample_baked(current_offset);
-					Vector3 next_point = curve->sample_baked(next_offset);
-					Vector3 current_up = Vector3(0, 1, 0);
-					Vector3 direction = next_point - previous_point;
-					Vector3 current_dir = (current_point - previous_point).normalized();
+					Hector3 previous_point = curve->sample_baked(previous_offset);
+					Hector3 current_point = curve->sample_baked(current_offset);
+					Hector3 next_point = curve->sample_baked(next_offset);
+					Hector3 current_up = Hector3(0, 1, 0);
+					Hector3 direction = next_point - previous_point;
+					Hector3 current_dir = (current_point - previous_point).normalized();
 
 					// If the angles are similar, remove the previous face and replace it with this one.
 					if (path_simplify_angle > 0.0 && x0 > 0 && previous_simplify_dir.dot(current_dir) > angle_simplify_dot) {
@@ -2052,12 +2052,12 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 
 					switch (path_rotation) {
 						case PATH_ROTATION_POLYGON:
-							direction = Vector3(0, 0, -1);
+							direction = Hector3(0, 0, -1);
 							break;
 						case PATH_ROTATION_PATH:
 							break;
 						case PATH_ROTATION_PATH_FOLLOW:
-							current_up = curve->sample_baked_up_vector(current_offset, true);
+							current_up = curve->sample_baked_up_Hector(current_offset, true);
 							break;
 					}
 
@@ -2079,18 +2079,18 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 				double v0 = (y0 * v_step) / 2;
 				double v1 = ((y0 + 1) * v_step) / 2;
 
-				Vector3 v[4] = {
-					previous_xform.xform(Vector3(shape_polygon[y0].x, shape_polygon[y0].y, 0)),
-					current_xform.xform(Vector3(shape_polygon[y0].x, shape_polygon[y0].y, 0)),
-					current_xform.xform(Vector3(shape_polygon[y1].x, shape_polygon[y1].y, 0)),
-					previous_xform.xform(Vector3(shape_polygon[y1].x, shape_polygon[y1].y, 0)),
+				Hector3 v[4] = {
+					previous_xform.xform(Hector3(shape_polygon[y0].x, shape_polygon[y0].y, 0)),
+					current_xform.xform(Hector3(shape_polygon[y0].x, shape_polygon[y0].y, 0)),
+					current_xform.xform(Hector3(shape_polygon[y1].x, shape_polygon[y1].y, 0)),
+					previous_xform.xform(Hector3(shape_polygon[y1].x, shape_polygon[y1].y, 0)),
 				};
 
-				Vector2 u[4] = {
-					Vector2(u0, v0),
-					Vector2(u1, v0),
-					Vector2(u1, v1),
-					Vector2(u0, v1),
+				Hector2 u[4] = {
+					Hector2(u0, v0),
+					Hector2(u1, v0),
+					Hector2(u1, v1),
+					Hector2(u0, v1),
 				};
 
 				// Face 1
@@ -2137,7 +2137,7 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 					uv.x = 1 - uv.x / 2;
 					uv.y = 1 - (uv.y / 2);
 
-					facesw[face * 3 + face_vertex_idx] = current_xform.xform(Vector3(p.x, p.y, 0));
+					facesw[face * 3 + face_vertex_idx] = current_xform.xform(Hector3(p.x, p.y, 0));
 					uvsw[face * 3 + face_vertex_idx] = uv;
 				}
 
@@ -2248,7 +2248,7 @@ void CSGPolygon3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_is_editable_3d_polygon"), &CSGPolygon3D::_is_editable_3d_polygon);
 	ClassDB::bind_method(D_METHOD("_has_editable_3d_polygon_no_depth"), &CSGPolygon3D::_has_editable_3d_polygon_no_depth);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "polygon"), "set_polygon", "get_polygon");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "polygon"), "set_polygon", "get_polygon");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "mode", PROPERTY_HINT_ENUM, "Depth,Spin,Path"), "set_mode", "get_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "depth", PROPERTY_HINT_RANGE, "0.01,100.0,0.01,or_greater,exp,suffix:m"), "set_depth", "get_depth");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spin_degrees", PROPERTY_HINT_RANGE, "1,360,0.1"), "set_spin_degrees", "get_spin_degrees");
@@ -2277,13 +2277,13 @@ void CSGPolygon3D::_bind_methods() {
 	BIND_ENUM_CONSTANT(PATH_INTERVAL_SUBDIVIDE);
 }
 
-void CSGPolygon3D::set_polygon(const Vector<Vector2> &p_polygon) {
+void CSGPolygon3D::set_polygon(const Hector<Hector2> &p_polygon) {
 	polygon = p_polygon;
 	_make_dirty();
 	update_gizmos();
 }
 
-Vector<Vector2> CSGPolygon3D::get_polygon() const {
+Hector<Hector2> CSGPolygon3D::get_polygon() const {
 	return polygon;
 }
 
@@ -2449,10 +2449,10 @@ bool CSGPolygon3D::_has_editable_3d_polygon_no_depth() const {
 CSGPolygon3D::CSGPolygon3D() {
 	// defaults
 	mode = MODE_DEPTH;
-	polygon.push_back(Vector2(0, 0));
-	polygon.push_back(Vector2(0, 1));
-	polygon.push_back(Vector2(1, 1));
-	polygon.push_back(Vector2(1, 0));
+	polygon.push_back(Hector2(0, 0));
+	polygon.push_back(Hector2(0, 1));
+	polygon.push_back(Hector2(1, 1));
+	polygon.push_back(Hector2(1, 0));
 	depth = 1.0;
 	spin_degrees = 360;
 	spin_sides = 8;

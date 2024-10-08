@@ -31,7 +31,7 @@
 #ifndef MESH_STORAGE_DUMMY_H
 #define MESH_STORAGE_DUMMY_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/storage/mesh_storage.h"
 
@@ -42,7 +42,7 @@ private:
 	static MeshStorage *singleton;
 
 	struct DummyMesh {
-		Vector<RS::SurfaceData> surfaces;
+		Hector<RS::SurfaceData> surfaces;
 		int blend_shape_count;
 		RS::BlendShapeMode blend_shape_mode;
 		PackedFloat32Array blend_shape_values;
@@ -100,9 +100,9 @@ public:
 	virtual void mesh_set_blend_shape_mode(RID p_mesh, RS::BlendShapeMode p_mode) override {}
 	virtual RS::BlendShapeMode mesh_get_blend_shape_mode(RID p_mesh) const override { return RS::BLEND_SHAPE_MODE_NORMALIZED; }
 
-	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) override {}
-	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) override {}
-	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) override {}
+	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) override {}
+	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) override {}
+	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) override {}
 
 	virtual void mesh_surface_set_material(RID p_mesh, int p_surface, RID p_material) override {}
 	virtual RID mesh_surface_get_material(RID p_mesh, int p_surface) const override { return RID(); }
@@ -169,8 +169,8 @@ public:
 	virtual Transform2D _multimesh_instance_get_transform_2d(RID p_multimesh, int p_index) const override { return Transform2D(); }
 	virtual Color _multimesh_instance_get_color(RID p_multimesh, int p_index) const override { return Color(); }
 	virtual Color _multimesh_instance_get_custom_data(RID p_multimesh, int p_index) const override { return Color(); }
-	virtual void _multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) override;
-	virtual Vector<float> _multimesh_get_buffer(RID p_multimesh) const override;
+	virtual void _multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) override;
+	virtual Hector<float> _multimesh_get_buffer(RID p_multimesh) const override;
 
 	virtual void _multimesh_set_visible_instances(RID p_multimesh, int p_visible) override {}
 	virtual int _multimesh_get_visible_instances(RID p_multimesh) const override { return 0; }
@@ -194,7 +194,7 @@ public:
 
 	/* OCCLUDER */
 
-	void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) {}
+	void occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) {}
 };
 
 } // namespace RendererDummy

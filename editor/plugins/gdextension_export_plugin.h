@@ -123,17 +123,17 @@ void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p
 				add_ios_linker_flags(linker_flags);
 			}
 		} else {
-			Vector<String> features_vector;
+			Hector<String> features_Hector;
 			for (const String &E : p_features) {
-				features_vector.append(E);
+				features_Hector.append(E);
 			}
 			if (get_export_platform().is_valid()) {
-				get_export_platform()->add_message(EditorExportPlatform::EXPORT_MESSAGE_WARNING, TTR("GDExtension"), vformat(TTR("No suitable library found for GDExtension: \"%s\". Possible feature flags for your platform: %s"), p_path, String(", ").join(features_vector)));
+				get_export_platform()->add_message(EditorExportPlatform::EXPORT_MESSAGE_WARNING, TTR("GDExtension"), vformat(TTR("No suitable library found for GDExtension: \"%s\". Possible feature flags for your platform: %s"), p_path, String(", ").join(features_Hector)));
 			}
 			return;
 		}
 
-		Vector<SharedObject> dependencies_shared_objects = GDExtensionLibraryLoader::find_extension_dependencies(p_path, config, [p_features](String p_feature) { return p_features.has(p_feature); });
+		Hector<SharedObject> dependencies_shared_objects = GDExtensionLibraryLoader::find_extension_dependencies(p_path, config, [p_features](String p_feature) { return p_features.has(p_feature); });
 		for (const SharedObject &shared_object : dependencies_shared_objects) {
 			_add_shared_object(shared_object);
 		}

@@ -50,7 +50,7 @@
 
 namespace GDScriptTests {
 
-static void test_tokenizer(const String &p_code, const Vector<String> &p_lines) {
+static void test_tokenizer(const String &p_code, const Hector<String> &p_lines) {
 	GDScriptTokenizerText tokenizer;
 	tokenizer.set_source_code(p_code);
 
@@ -108,14 +108,14 @@ static void test_tokenizer(const String &p_code, const Vector<String> &p_lines) 
 	print_line(current.get_name()); // Should be EOF
 }
 
-static void test_tokenizer_buffer(const Vector<uint8_t> &p_buffer, const Vector<String> &p_lines);
+static void test_tokenizer_buffer(const Hector<uint8_t> &p_buffer, const Hector<String> &p_lines);
 
-static void test_tokenizer_buffer(const String &p_code, const Vector<String> &p_lines) {
-	Vector<uint8_t> binary = GDScriptTokenizerBuffer::parse_code_string(p_code, GDScriptTokenizerBuffer::COMPRESS_NONE);
+static void test_tokenizer_buffer(const String &p_code, const Hector<String> &p_lines) {
+	Hector<uint8_t> binary = GDScriptTokenizerBuffer::parse_code_string(p_code, GDScriptTokenizerBuffer::COMPRESS_NONE);
 	test_tokenizer_buffer(binary, p_lines);
 }
 
-static void test_tokenizer_buffer(const Vector<uint8_t> &p_buffer, const Vector<String> &p_lines) {
+static void test_tokenizer_buffer(const Hector<uint8_t> &p_buffer, const Hector<String> &p_lines) {
 	GDScriptTokenizerBuffer tokenizer;
 	tokenizer.set_code_buffer(p_buffer);
 
@@ -155,7 +155,7 @@ static void test_tokenizer_buffer(const Vector<uint8_t> &p_buffer, const Vector<
 	print_line(current.get_name()); // Should be EOF
 }
 
-static void test_parser(const String &p_code, const String &p_script_path, const Vector<String> &p_lines) {
+static void test_parser(const String &p_code, const String &p_script_path, const Hector<String> &p_lines) {
 	GDScriptParser parser;
 	Error err = parser.parse(p_code, p_script_path, false);
 
@@ -182,7 +182,7 @@ static void test_parser(const String &p_code, const String &p_script_path, const
 #endif
 }
 
-static void recursively_disassemble_functions(const Ref<GDScript> script, const Vector<String> &p_lines) {
+static void recursively_disassemble_functions(const Ref<GDScript> script, const Hector<String> &p_lines) {
 	for (const KeyValue<StringName, GDScriptFunction *> &E : script->get_member_functions()) {
 		const GDScriptFunction *func = E.value;
 
@@ -211,7 +211,7 @@ static void recursively_disassemble_functions(const Ref<GDScript> script, const 
 	}
 }
 
-static void test_compiler(const String &p_code, const String &p_script_path, const Vector<String> &p_lines) {
+static void test_compiler(const String &p_code, const String &p_script_path, const Hector<String> &p_lines) {
 	GDScriptParser parser;
 	Error err = parser.parse(p_code, p_script_path, false);
 
@@ -281,7 +281,7 @@ void test(TestType p_type) {
 		ScriptServer::add_global_class(c["class"], c["base"], c["language"], c["path"]);
 	}
 
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 	uint64_t flen = fa->get_length();
 	buf.resize(flen + 1);
 	fa->get_buffer(buf.ptrw(), flen);
@@ -290,7 +290,7 @@ void test(TestType p_type) {
 	String code;
 	code.parse_utf8((const char *)&buf[0]);
 
-	Vector<String> lines;
+	Hector<String> lines;
 	int last = 0;
 	for (int i = 0; i <= code.length(); i++) {
 		if (code[i] == '\n' || code[i] == 0) {

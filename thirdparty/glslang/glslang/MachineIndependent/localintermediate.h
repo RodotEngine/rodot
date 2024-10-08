@@ -48,7 +48,7 @@
 #include <functional>
 #include <set>
 #include <string>
-#include <vector>
+#include <Vector>
 
 class TInfoSink;
 
@@ -59,7 +59,7 @@ struct TMatrixSelector {
     int coord2;
 };
 
-typedef int TVectorSelector;
+typedef int THectorSelector;
 
 const int MaxSwizzleSelectors = 4;
 
@@ -579,7 +579,7 @@ public:
     TIntermTyped* fold(TIntermAggregate* aggrNode);
     TIntermTyped* foldConstructor(TIntermAggregate* aggrNode);
     TIntermTyped* foldDereference(TIntermTyped* node, int index, const TSourceLoc&);
-    TIntermTyped* foldSwizzle(TIntermTyped* node, TSwizzleSelectors<TVectorSelector>& fields, const TSourceLoc&);
+    TIntermTyped* foldSwizzle(TIntermTyped* node, TSwizzleSelectors<THectorSelector>& fields, const TSourceLoc&);
 
     // Tree ops
     static const TIntermTyped* traverseLValueBase(const TIntermTyped*, bool swizzleOkay, bool bufferReferenceOk = false,
@@ -1062,7 +1062,7 @@ public:
     static int getBaseAlignment(const TType&, int& size, int& stride, TLayoutPacking layoutPacking, bool rowMajor);
     static int getScalarAlignment(const TType&, int& size, int& stride, bool rowMajor);
     static int getMemberAlignment(const TType&, int& size, int& stride, TLayoutPacking layoutPacking, bool rowMajor);
-    static bool improperStraddle(const TType& type, int size, int offset, bool vectorLike);
+    static bool improperStraddle(const TType& type, int size, int offset, bool HectorLike);
     static void updateOffset(const TType& parentType, const TType& memberType, int& offset, int& memberSize);
     static int getOffset(const TType& type, int index);
     static int getBlockSize(const TType& blockType);
@@ -1134,7 +1134,7 @@ protected:
     bool promoteBinary(TIntermBinary&);
     void addSymbolLinkageNode(TIntermAggregate*& linkage, TSymbolTable&, const TString&);
     bool promoteAggregate(TIntermAggregate&);
-    void pushSelector(TIntermSequence&, const TVectorSelector&, const TSourceLoc&);
+    void pushSelector(TIntermSequence&, const THectorSelector&, const TSourceLoc&);
     void pushSelector(TIntermSequence&, const TMatrixSelector&, const TSourceLoc&);
     bool specConstantPropagates(const TIntermTyped&, const TIntermTyped&);
     void performTextureUpgradeAndSamplerRemovalTransformation(TIntermNode* root);

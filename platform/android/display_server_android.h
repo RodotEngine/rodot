@@ -150,7 +150,7 @@ public:
 	void send_input_event(const Ref<InputEvent> &p_event) const;
 	void send_input_text(const String &p_text) const;
 
-	virtual Vector<WindowID> get_window_list() const override;
+	virtual Hector<WindowID> get_window_list() const override;
 	virtual WindowID get_window_at_screen_position(const Point2i &p_position) const override;
 
 	virtual int64_t window_get_native_handle(HandleType p_handle_type, WindowID p_window = MAIN_WINDOW_ID) const override;
@@ -199,21 +199,21 @@ public:
 
 	virtual void process_events() override;
 
-	void process_accelerometer(const Vector3 &p_accelerometer);
-	void process_gravity(const Vector3 &p_gravity);
-	void process_magnetometer(const Vector3 &p_magnetometer);
-	void process_gyroscope(const Vector3 &p_gyroscope);
+	void process_accelerometer(const Hector3 &p_accelerometer);
+	void process_gravity(const Hector3 &p_gravity);
+	void process_magnetometer(const Hector3 &p_magnetometer);
+	void process_gyroscope(const Hector3 &p_gyroscope);
 
 	void _cursor_set_shape_helper(CursorShape p_shape, bool force = false);
 	virtual void cursor_set_shape(CursorShape p_shape) override;
 	virtual CursorShape cursor_get_shape() const override;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2()) override;
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Hector2 &p_hotspot = Hector2()) override;
 
 	virtual void mouse_set_mode(MouseMode p_mode) override;
 	virtual MouseMode mouse_get_mode() const override;
 
-	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
-	static Vector<String> get_rendering_drivers_func();
+	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_rendering_drivers_func();
 	static void register_android_driver();
 
 	void reset_window();
@@ -229,7 +229,7 @@ public:
 	virtual void set_native_icon(const String &p_filename) override;
 	virtual void set_icon(const Ref<Image> &p_icon) override;
 
-	DisplayServerAndroid(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	DisplayServerAndroid(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 	~DisplayServerAndroid();
 };
 

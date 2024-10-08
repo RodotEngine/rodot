@@ -6801,14 +6801,14 @@ msgstr "Int"
 msgid "UInt"
 msgstr "UInt"
 
-msgid "Vector2"
-msgstr "Vector2"
+msgid "Hector2"
+msgstr "Hector2"
 
-msgid "Vector3"
-msgstr "Vector3"
+msgid "Hector3"
+msgstr "Hector3"
 
-msgid "Vector4"
-msgstr "Vector4"
+msgid "Hector4"
+msgstr "Hector4"
 
 msgid "Boolean"
 msgstr "Boolsk"
@@ -6891,25 +6891,25 @@ msgstr "Subtraherar två transformeringar."
 msgid "Transform constant."
 msgstr "Transformera konstant."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "Vektor funktion."
 
 msgid "Returns the distance between two points."
 msgstr "Returnerar distansen mellan två punkter."
 
-msgid "Calculates the length of a vector."
+msgid "Calculates the length of a Hector."
 msgstr "Beräknar längden av en vektor."
 
-msgid "Linear interpolation between two vectors."
+msgid "Linear interpolation between two Hectors."
 msgstr "Linjär interpolering mellan två vektorer."
 
-msgid "1.0 - vector"
+msgid "1.0 - Hector"
 msgstr "1.0 - vektor"
 
-msgid "1.0 / vector"
+msgid "1.0 / Hector"
 msgstr "1.0 / vektor"
 
-msgid "Returns the vector that points in the direction of refraction."
+msgid "Returns the Hector that points in the direction of refraction."
 msgstr "Returnerar vektorn som pekar i ljusbrytningens riktning."
 
 msgid "Select path for VoxelGI Data File"

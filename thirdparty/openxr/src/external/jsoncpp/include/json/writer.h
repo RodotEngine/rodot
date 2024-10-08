@@ -11,7 +11,7 @@
 #endif // if !defined(JSON_IS_AMALGAMATION)
 #include <ostream>
 #include <string>
-#include <vector>
+#include <Vector>
 
 // Disable warning C4251: <data member>: <type> needs to have dll-interface to
 // be used by...

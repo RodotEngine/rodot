@@ -227,7 +227,7 @@ void MeshStorage::mesh_add_surface(RID p_mesh, const RS::SurfaceData &p_surface)
 		// If we do this, then the last normal will read past the end of the array. So we need to pad the array with dummy data.
 		if (!(new_surface.format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) && (new_surface.format & RS::ARRAY_FORMAT_NORMAL) && !(new_surface.format & RS::ARRAY_FORMAT_TANGENT)) {
 			// Unfortunately, we need to copy the buffer, which is fine as doing a resize triggers a CoW anyway.
-			Vector<uint8_t> new_vertex_data;
+			Hector<uint8_t> new_vertex_data;
 			new_vertex_data.resize_zeroed(new_surface.vertex_data.size() + sizeof(uint16_t) * 2);
 			memcpy(new_vertex_data.ptrw(), new_surface.vertex_data.ptr(), new_surface.vertex_data.size());
 			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, s->vertex_buffer, new_vertex_data.size(), new_vertex_data.ptr(), (s->format & RS::ARRAY_FLAG_USE_DYNAMIC_UPDATE) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW, "Mesh vertex buffer");
@@ -290,7 +290,7 @@ void MeshStorage::mesh_add_surface(RID p_mesh, const RS::SurfaceData &p_surface)
 	if (GLES3::Config::get_singleton()->generate_wireframes && s->primitive == RS::PRIMITIVE_TRIANGLES) {
 		// Generate wireframes. This is mostly used by the editor.
 		s->wireframe = memnew(Mesh::Surface::Wireframe);
-		Vector<uint32_t> wf_indices;
+		Hector<uint32_t> wf_indices;
 		uint32_t &wf_index_count = s->wireframe->index_count;
 		uint32_t *wr = nullptr;
 
@@ -298,7 +298,7 @@ void MeshStorage::mesh_add_surface(RID p_mesh, const RS::SurfaceData &p_surface)
 			wf_index_count = s->index_count * 2;
 			wf_indices.resize(wf_index_count);
 
-			Vector<uint8_t> ir = new_surface.index_data;
+			Hector<uint8_t> ir = new_surface.index_data;
 			wr = wf_indices.ptrw();
 
 			if (new_surface.vertex_count <= 65536) {
@@ -468,7 +468,7 @@ RS::BlendShapeMode MeshStorage::mesh_get_blend_shape_mode(RID p_mesh) const {
 	return mesh->blend_shape_mode;
 }
 
-void MeshStorage::mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+void MeshStorage::mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) {
 	Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 	ERR_FAIL_NULL(mesh);
 	ERR_FAIL_UNSIGNED_INDEX((uint32_t)p_surface, mesh->surface_count);
@@ -483,7 +483,7 @@ void MeshStorage::mesh_surface_update_vertex_region(RID p_mesh, int p_surface, i
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void MeshStorage::mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+void MeshStorage::mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) {
 	Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 	ERR_FAIL_NULL(mesh);
 	ERR_FAIL_UNSIGNED_INDEX((uint32_t)p_surface, mesh->surface_count);
@@ -498,7 +498,7 @@ void MeshStorage::mesh_surface_update_attribute_region(RID p_mesh, int p_surface
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void MeshStorage::mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+void MeshStorage::mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) {
 	Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 	ERR_FAIL_NULL(mesh);
 	ERR_FAIL_UNSIGNED_INDEX((uint32_t)p_surface, mesh->surface_count);
@@ -577,7 +577,7 @@ RS::SurfaceData MeshStorage::mesh_get_surface(RID p_mesh, int p_surface) const {
 	sd.mesh_to_skeleton_xform = s.mesh_to_skeleton_xform;
 
 	if (mesh->blend_shape_count) {
-		sd.blend_shape_data = Vector<uint8_t>();
+		sd.blend_shape_data = Hector<uint8_t>();
 		for (uint32_t i = 0; i < mesh->blend_shape_count; i++) {
 			sd.blend_shape_data.append_array(Utilities::buffer_get_data(GL_ARRAY_BUFFER, s.blend_shapes[i].vertex_buffer, s.vertex_buffer_size));
 		}
@@ -641,7 +641,7 @@ AABB MeshStorage::mesh_get_aabb(RID p_mesh, RID p_skeleton) {
 
 			if (skeleton->use_2d) {
 				for (int j = 0; j < bs; j++) {
-					if (skbones[j].size == Vector3(-1, -1, -1)) {
+					if (skbones[j].size == Hector3(-1, -1, -1)) {
 						continue; //bone is unused
 					}
 
@@ -670,7 +670,7 @@ AABB MeshStorage::mesh_get_aabb(RID p_mesh, RID p_skeleton) {
 				}
 			} else {
 				for (int j = 0; j < bs; j++) {
-					if (skbones[j].size == Vector3(-1, -1, -1)) {
+					if (skbones[j].size == Hector3(-1, -1, -1)) {
 						continue; //bone is unused
 					}
 
@@ -709,7 +709,7 @@ AABB MeshStorage::mesh_get_aabb(RID p_mesh, RID p_skeleton) {
 				laabb = surface.mesh_to_skeleton_xform.affine_inverse().xform(laabb);
 			}
 
-			if (laabb.size == Vector3()) {
+			if (laabb.size == Hector3()) {
 				laabb = surface.aabb;
 			}
 		} else {
@@ -1483,7 +1483,7 @@ void MeshStorage::_multimesh_allocate_data(RID p_multimesh, int p_instances, RS:
 	multimesh->stride_cache = multimesh->custom_data_offset_cache + color_and_custom_strides;
 	multimesh->buffer_set = false;
 
-	multimesh->data_cache = Vector<float>();
+	multimesh->data_cache = Hector<float>();
 	multimesh->aabb = AABB();
 	multimesh->aabb_dirty = false;
 	multimesh->visible_instances = MIN(multimesh->visible_instances, multimesh->instances);
@@ -1522,7 +1522,7 @@ void MeshStorage::_multimesh_set_mesh(RID p_multimesh, RID p_mesh) {
 	} else if (multimesh->instances) {
 		// Need to re-create AABB. Unfortunately, calling this has a penalty.
 		if (multimesh->buffer_set) {
-			Vector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, multimesh->buffer, multimesh->instances * multimesh->stride_cache * sizeof(float));
+			Hector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, multimesh->buffer, multimesh->instances * multimesh->stride_cache * sizeof(float));
 			const uint8_t *r = buffer.ptr();
 			const float *data = (const float *)r;
 			_multimesh_re_create_aabb(multimesh, data, multimesh->instances);
@@ -1546,7 +1546,7 @@ void MeshStorage::_multimesh_make_local(MultiMesh *multimesh) const {
 		float *w = multimesh->data_cache.ptrw();
 
 		if (multimesh->buffer_set) {
-			Vector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, multimesh->buffer, multimesh->instances * multimesh->stride_cache * sizeof(float));
+			Hector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, multimesh->buffer, multimesh->instances * multimesh->stride_cache * sizeof(float));
 
 			{
 				const uint8_t *r = buffer.ptr();
@@ -1885,7 +1885,7 @@ Color MeshStorage::_multimesh_instance_get_custom_data(RID p_multimesh, int p_in
 	return c;
 }
 
-void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) {
+void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) {
 	MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 	ERR_FAIL_NULL(multimesh);
 
@@ -1974,18 +1974,18 @@ void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_
 	}
 }
 
-Vector<float> MeshStorage::_multimesh_get_buffer(RID p_multimesh) const {
+Hector<float> MeshStorage::_multimesh_get_buffer(RID p_multimesh) const {
 	MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
-	ERR_FAIL_NULL_V(multimesh, Vector<float>());
-	Vector<float> ret;
+	ERR_FAIL_NULL_V(multimesh, Hector<float>());
+	Hector<float> ret;
 	if (multimesh->buffer == 0 || multimesh->instances == 0) {
-		return Vector<float>();
+		return Hector<float>();
 	} else if (multimesh->data_cache.size()) {
 		ret = multimesh->data_cache;
 	} else {
 		// Buffer not cached, so fetch from GPU memory. This can be a stalling operation, avoid whenever possible.
 
-		Vector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, multimesh->buffer, multimesh->instances * multimesh->stride_cache * sizeof(float));
+		Hector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, multimesh->buffer, multimesh->instances * multimesh->stride_cache * sizeof(float));
 		ret.resize(multimesh->instances * multimesh->stride_cache);
 		{
 			float *w = ret.ptrw();
@@ -1999,7 +1999,7 @@ Vector<float> MeshStorage::_multimesh_get_buffer(RID p_multimesh) const {
 		new_stride += multimesh->uses_colors ? 4 : 0;
 		new_stride += multimesh->uses_custom_data ? 4 : 0;
 
-		Vector<float> decompressed;
+		Hector<float> decompressed;
 		decompressed.resize(multimesh->instances * (int)new_stride);
 		float *w = decompressed.ptrw();
 		const float *r = ret.ptr();

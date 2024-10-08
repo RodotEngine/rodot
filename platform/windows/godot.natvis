@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-	<Type Name="Vector&lt;*&gt;">
+	<Type Name="Hector&lt;*&gt;">
 		<Expand>
 			<Item Name="[size]">_cowdata._ptr ? (((const unsigned long long *)(_cowdata._ptr))[-1]) : 0</Item>
 			<ArrayItems>
@@ -42,7 +42,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="LocalVector&lt;*&gt;">
+	<Type Name="LocalHector&lt;*&gt;">
 		<Expand>
 			<Item Name="[size]">count</Item>
 			<ArrayItems>
@@ -74,7 +74,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="Vector&lt;StringName&gt;" IncludeView="NodePathHelper">
+	<Type Name="Hector&lt;StringName&gt;" IncludeView="NodePathHelper">
 		<Expand>
 			<ArrayItems>
 				<Size>_cowdata._ptr ? (((const unsigned long long *)(_cowdata._ptr))[-1]) : 0</Size>
@@ -164,10 +164,10 @@
 		<DisplayString Condition="type == Variant::TRANSFORM3D">{_data._transform3d}</DisplayString>
 		<DisplayString Condition="type == Variant::PROJECTION">{_data._projection}</DisplayString>
 		<DisplayString Condition="type == Variant::STRING">{*(String *)_data._mem}</DisplayString>
-		<DisplayString Condition="type == Variant::VECTOR2">{*(Vector2 *)_data._mem}</DisplayString>
+		<DisplayString Condition="type == Variant::HECTOR2">{*(Hector2 *)_data._mem}</DisplayString>
 		<DisplayString Condition="type == Variant::RECT2">{*(Rect2 *)_data._mem}</DisplayString>
-		<DisplayString Condition="type == Variant::VECTOR3">{*(Vector3 *)_data._mem}</DisplayString>
-		<DisplayString Condition="type == Variant::VECTOR4">{*(Vector4 *)_data._mem}</DisplayString>
+		<DisplayString Condition="type == Variant::HECTOR3">{*(Hector3 *)_data._mem}</DisplayString>
+		<DisplayString Condition="type == Variant::HECTOR4">{*(Hector4 *)_data._mem}</DisplayString>
 		<DisplayString Condition="type == Variant::PLANE">{*(Plane *)_data._mem}</DisplayString>
 		<DisplayString Condition="type == Variant::QUATERNION">{*(Quaternion *)_data._mem}</DisplayString>
 		<DisplayString Condition="type == Variant::COLOR">{*(Color *)_data._mem}</DisplayString>
@@ -183,10 +183,10 @@
 		<DisplayString Condition="type == Variant::PACKED_FLOAT32_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;float&gt;*&gt;(_data.packed_array)->array}</DisplayString>
 		<DisplayString Condition="type == Variant::PACKED_FLOAT64_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;double&gt;*&gt;(_data.packed_array)->array}</DisplayString>
 		<DisplayString Condition="type == Variant::PACKED_STRING_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;String&gt;*&gt;(_data.packed_array)->array}</DisplayString>
-		<DisplayString Condition="type == Variant::PACKED_VECTOR2_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Vector2&gt;*&gt;(_data.packed_array)->array}</DisplayString>
-		<DisplayString Condition="type == Variant::PACKED_VECTOR3_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Vector3&gt;*&gt;(_data.packed_array)->array}</DisplayString>
+		<DisplayString Condition="type == Variant::PACKED_Hector2_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Hector2&gt;*&gt;(_data.packed_array)->array}</DisplayString>
+		<DisplayString Condition="type == Variant::PACKED_Hector3_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Hector3&gt;*&gt;(_data.packed_array)->array}</DisplayString>
 		<DisplayString Condition="type == Variant::PACKED_COLOR_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Color&gt;*&gt;(_data.packed_array)->array}</DisplayString>
-		<DisplayString Condition="type == Variant::PACKED_VECTOR4_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Vector4&gt;*&gt;(_data.packed_array)->array}</DisplayString>
+		<DisplayString Condition="type == Variant::PACKED_Hector4_ARRAY">{reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Hector4&gt;*&gt;(_data.packed_array)->array}</DisplayString>
 		<DisplayString Condition="type &lt; 0 || type >= Variant::VARIANT_MAX">[INVALID]</DisplayString>
 
 		<StringView Condition="type == Variant::STRING &amp;&amp; ((String *)(_data._mem))->_cowdata._ptr">((String *)(_data._mem))->_cowdata._ptr,s32</StringView>
@@ -200,9 +200,9 @@
 			<Item Name="[value]" Condition="type == Variant::BASIS">_data._basis</Item>
 			<Item Name="[value]" Condition="type == Variant::TRANSFORM3D">_data._transform3d</Item>
 			<Item Name="[value]" Condition="type == Variant::STRING">*(String *)_data._mem</Item>
-			<Item Name="[value]" Condition="type == Variant::VECTOR2">*(Vector2 *)_data._mem</Item>
+			<Item Name="[value]" Condition="type == Variant::HECTOR2">*(Hector2 *)_data._mem</Item>
 			<Item Name="[value]" Condition="type == Variant::RECT2">*(Rect2 *)_data._mem</Item>
-			<Item Name="[value]" Condition="type == Variant::VECTOR3">*(Vector3 *)_data._mem</Item>
+			<Item Name="[value]" Condition="type == Variant::HECTOR3">*(Hector3 *)_data._mem</Item>
 			<Item Name="[value]" Condition="type == Variant::PLANE">*(Plane *)_data._mem</Item>
 			<Item Name="[value]" Condition="type == Variant::QUATERNION">*(Quaternion *)_data._mem</Item>
 			<Item Name="[value]" Condition="type == Variant::COLOR">*(Color *)_data._mem</Item>
@@ -218,10 +218,10 @@
 			<Item Name="[value]" Condition="type == Variant::PACKED_FLOAT32_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;float&gt;*&gt;(_data.packed_array)->array</Item>
 			<Item Name="[value]" Condition="type == Variant::PACKED_FLOAT64_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;double&gt;*&gt;(_data.packed_array)->array</Item>
 			<Item Name="[value]" Condition="type == Variant::PACKED_STRING_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;String&gt;*&gt;(_data.packed_array)->array</Item>
-			<Item Name="[value]" Condition="type == Variant::PACKED_VECTOR2_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Vector2&gt;*&gt;(_data.packed_array)->array</Item>
-			<Item Name="[value]" Condition="type == Variant::PACKED_VECTOR3_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Vector3&gt;*&gt;(_data.packed_array)->array</Item>
+			<Item Name="[value]" Condition="type == Variant::PACKED_Hector2_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Hector2&gt;*&gt;(_data.packed_array)->array</Item>
+			<Item Name="[value]" Condition="type == Variant::PACKED_Hector3_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Hector3&gt;*&gt;(_data.packed_array)->array</Item>
 			<Item Name="[value]" Condition="type == Variant::PACKED_COLOR_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Color&gt;*&gt;(_data.packed_array)->array</Item>
-			<Item Name="[value]" Condition="type == Variant::PACKED_VECTOR4_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Vector4&gt;*&gt;(_data.packed_array)->array</Item>
+			<Item Name="[value]" Condition="type == Variant::PACKED_Hector4_ARRAY">reinterpret_cast&lt;const Variant::PackedArrayRef&lt;Hector4&gt;*&gt;(_data.packed_array)->array</Item>
 
 		</Expand>
 	</Type>
@@ -264,7 +264,7 @@
 		<DisplayString Condition="!user.name._cowdata._ptr">"{slot_map}</DisplayString>
 	</Type>
 
-	<Type Name="Vector2">
+	<Type Name="Hector2">
 		<DisplayString>{{{x},{y}}}</DisplayString>
 		<Expand>
 			<Item Name="x">x</Item>
@@ -272,7 +272,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="Vector3">
+	<Type Name="Hector3">
 		<DisplayString>{{{x},{y},{z}}}</DisplayString>
 		<Expand>
 			<Item Name="x">x</Item>

@@ -91,7 +91,7 @@ public:
 		bool is_external_seeking = false;
 		Animation::LoopedFlag looped_flag = Animation::LOOPED_FLAG_NONE;
 		real_t weight = 0.0;
-		Vector<real_t> track_weights;
+		Hector<real_t> track_weights;
 	};
 
 	struct AnimationInstance {
@@ -101,14 +101,14 @@ public:
 
 protected:
 	/* ---- Data lists ---- */
-	LocalVector<AnimationLibraryData> animation_libraries;
+	LocalHector<AnimationLibraryData> animation_libraries;
 	HashMap<StringName, AnimationData> animation_set; // HashMap<Library name + Animation name, AnimationData>
 
 	TypedArray<StringName> _get_animation_library_list() const;
-	Vector<String> _get_animation_list() const {
+	Hector<String> _get_animation_list() const {
 		List<StringName> animations;
 		get_animation_list(&animations);
-		Vector<String> ret;
+		Hector<String> ret;
 		while (animations.size()) {
 			ret.push_back(animations.front()->get());
 			animations.pop_front();
@@ -170,12 +170,12 @@ protected:
 		bool loc_used = false;
 		bool rot_used = false;
 		bool scale_used = false;
-		Vector3 init_loc = Vector3(0, 0, 0);
+		Hector3 init_loc = Hector3(0, 0, 0);
 		Quaternion init_rot = Quaternion(0, 0, 0, 1);
-		Vector3 init_scale = Vector3(1, 1, 1);
-		Vector3 loc;
+		Hector3 init_scale = Hector3(1, 1, 1);
+		Hector3 loc;
 		Quaternion rot;
-		Vector3 scale;
+		Hector3 scale;
 
 		TrackCacheTransform(const TrackCacheTransform &p_other) :
 				TrackCache(p_other),
@@ -201,9 +201,9 @@ protected:
 	};
 
 	struct RootMotionCache {
-		Vector3 loc = Vector3(0, 0, 0);
+		Hector3 loc = Hector3(0, 0, 0);
 		Quaternion rot = Quaternion(0, 0, 0, 1);
-		Vector3 scale = Vector3(1, 1, 1);
+		Hector3 scale = Hector3(1, 1, 1);
 	};
 
 	struct TrackCacheBlendShape : public TrackCache {
@@ -224,7 +224,7 @@ protected:
 	struct TrackCacheValue : public TrackCache {
 		Variant init_value;
 		Variant value;
-		Vector<StringName> subpath;
+		Hector<StringName> subpath;
 
 		// TODO: There are many boolean, can be packed into one integer.
 		bool is_init = false;
@@ -310,7 +310,7 @@ protected:
 	RootMotionCache root_motion_cache;
 	HashMap<Animation::TypeHash, TrackCache *> track_cache;
 	HashSet<TrackCache *> playing_caches;
-	Vector<Node *> playing_audio_stream_players;
+	Hector<Node *> playing_audio_stream_players;
 
 	// Helpers.
 	void _clear_caches();
@@ -323,19 +323,19 @@ protected:
 	AudioServer::PlaybackType playback_type;
 
 	/* ---- Blending processor ---- */
-	LocalVector<AnimationInstance> animation_instances;
+	LocalHector<AnimationInstance> animation_instances;
 	HashMap<NodePath, int> track_map;
 	int track_count = 0;
 	bool deterministic = false;
 
 	/* ---- Root motion accumulator for Skeleton3D ---- */
 	NodePath root_motion_track;
-	Vector3 root_motion_position = Vector3(0, 0, 0);
+	Hector3 root_motion_position = Hector3(0, 0, 0);
 	Quaternion root_motion_rotation = Quaternion(0, 0, 0, 1);
-	Vector3 root_motion_scale = Vector3(0, 0, 0);
-	Vector3 root_motion_position_accumulator = Vector3(0, 0, 0);
+	Hector3 root_motion_scale = Hector3(0, 0, 0);
+	Hector3 root_motion_position_accumulator = Hector3(0, 0, 0);
 	Quaternion root_motion_rotation_accumulator = Quaternion(0, 0, 0, 1);
-	Vector3 root_motion_scale_accumulator = Vector3(1, 1, 1);
+	Hector3 root_motion_scale_accumulator = Hector3(1, 1, 1);
 
 	bool _set(const StringName &p_name, const Variant &p_value);
 	bool _get(const StringName &p_name, Variant &r_ret) const;
@@ -370,7 +370,7 @@ protected:
 	void _blend_process(double p_delta, bool p_update_only = false);
 	void _blend_apply();
 	virtual void _blend_post_process();
-	void _call_object(ObjectID p_object_id, const StringName &p_method, const Vector<Variant> &p_params, bool p_deferred);
+	void _call_object(ObjectID p_object_id, const StringName &p_method, const Hector<Variant> &p_params, bool p_deferred);
 
 	/* ---- Capture feature ---- */
 	struct CaptureCache {
@@ -442,13 +442,13 @@ public:
 	void set_root_motion_track(const NodePath &p_track);
 	NodePath get_root_motion_track() const;
 
-	Vector3 get_root_motion_position() const;
+	Hector3 get_root_motion_position() const;
 	Quaternion get_root_motion_rotation() const;
-	Vector3 get_root_motion_scale() const;
+	Hector3 get_root_motion_scale() const;
 
-	Vector3 get_root_motion_position_accumulator() const;
+	Hector3 get_root_motion_position_accumulator() const;
 	Quaternion get_root_motion_rotation_accumulator() const;
-	Vector3 get_root_motion_scale_accumulator() const;
+	Hector3 get_root_motion_scale_accumulator() const;
 
 	/* ---- Blending processor ---- */
 	void make_animation_instance(const StringName &p_name, const PlaybackInfo p_playback_info);

@@ -125,12 +125,12 @@
     <Compile Include="Core\Transform2D.cs" />
     <Compile Include="Core\Transform3D.cs" />
     <Compile Include="Core\Variant.cs" />
-    <Compile Include="Core\Vector2.cs" />
-    <Compile Include="Core\Vector2I.cs" />
-    <Compile Include="Core\Vector3.cs" />
-    <Compile Include="Core\Vector3I.cs" />
-    <Compile Include="Core\Vector4.cs" />
-    <Compile Include="Core\Vector4I.cs" />
+    <Compile Include="Core\Hector2.cs" />
+    <Compile Include="Core\Hector2I.cs" />
+    <Compile Include="Core\Hector3.cs" />
+    <Compile Include="Core\Hector3I.cs" />
+    <Compile Include="Core\Hector4.cs" />
+    <Compile Include="Core\Hector4I.cs" />
     <Compile Include="GlobalUsings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

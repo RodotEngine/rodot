@@ -39,13 +39,13 @@ class DisplayServerHeadless : public DisplayServer {
 private:
 	friend class DisplayServer;
 
-	static Vector<String> get_rendering_drivers_func() {
-		Vector<String> drivers;
+	static Hector<String> get_rendering_drivers_func() {
+		Hector<String> drivers;
 		drivers.push_back("dummy");
 		return drivers;
 	}
 
-	static DisplayServer *create_func(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+	static DisplayServer *create_func(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 		r_error = OK;
 		RasterizerDummy::make_current();
 		return memnew(DisplayServerHeadless());
@@ -83,7 +83,7 @@ public:
 	void screen_set_orientation(ScreenOrientation p_orientation, int p_screen = SCREEN_OF_MAIN_WINDOW) override {}
 	void screen_set_keep_on(bool p_enable) override {}
 
-	Vector<DisplayServer::WindowID> get_window_list() const override { return Vector<DisplayServer::WindowID>(); }
+	Hector<DisplayServer::WindowID> get_window_list() const override { return Hector<DisplayServer::WindowID>(); }
 
 	WindowID create_sub_window(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Rect2i &p_rect = Rect2i(), bool p_exclusive = false, WindowID p_transient_parent = INVALID_WINDOW_ID) override { return 0; }
 	void show_window(WindowID p_id) override {}
@@ -107,7 +107,7 @@ public:
 
 	void window_set_title(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) override {}
 
-	void window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override {}
+	void window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window = MAIN_WINDOW_ID) override {}
 
 	int window_get_current_screen(WindowID p_window = MAIN_WINDOW_ID) const override { return -1; }
 	void window_set_current_screen(int p_screen, WindowID p_window = MAIN_WINDOW_ID) override {}
@@ -178,12 +178,12 @@ public:
 	void virtual_keyboard_hide() override {}
 
 	void cursor_set_shape(CursorShape p_shape) override {}
-	void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2()) override {}
+	void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Hector2 &p_hotspot = Hector2()) override {}
 
-	Error dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
+	Error dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
 	Error dialog_input_text(String p_title, String p_description, String p_partial, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
-	Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
-	Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
+	Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
+	Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override { return ERR_UNAVAILABLE; }
 
 	void release_rendering_thread() override {}
 	void swap_buffers() override {}

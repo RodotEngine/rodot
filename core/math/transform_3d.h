@@ -34,11 +34,11 @@
 #include "core/math/aabb.h"
 #include "core/math/basis.h"
 #include "core/math/plane.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 struct [[nodiscard]] Transform3D {
 	Basis basis;
-	Vector3 origin;
+	Hector3 origin;
 
 	void invert();
 	Transform3D inverse() const;
@@ -46,29 +46,29 @@ struct [[nodiscard]] Transform3D {
 	void affine_invert();
 	Transform3D affine_inverse() const;
 
-	Transform3D rotated(const Vector3 &p_axis, real_t p_angle) const;
-	Transform3D rotated_local(const Vector3 &p_axis, real_t p_angle) const;
+	Transform3D rotated(const Hector3 &p_axis, real_t p_angle) const;
+	Transform3D rotated_local(const Hector3 &p_axis, real_t p_angle) const;
 
-	void rotate(const Vector3 &p_axis, real_t p_angle);
-	void rotate_basis(const Vector3 &p_axis, real_t p_angle);
+	void rotate(const Hector3 &p_axis, real_t p_angle);
+	void rotate_basis(const Hector3 &p_axis, real_t p_angle);
 
-	void set_look_at(const Vector3 &p_eye, const Vector3 &p_target, const Vector3 &p_up = Vector3(0, 1, 0), bool p_use_model_front = false);
-	Transform3D looking_at(const Vector3 &p_target, const Vector3 &p_up = Vector3(0, 1, 0), bool p_use_model_front = false) const;
+	void set_look_at(const Hector3 &p_eye, const Hector3 &p_target, const Hector3 &p_up = Hector3(0, 1, 0), bool p_use_model_front = false);
+	Transform3D looking_at(const Hector3 &p_target, const Hector3 &p_up = Hector3(0, 1, 0), bool p_use_model_front = false) const;
 
-	void scale(const Vector3 &p_scale);
-	Transform3D scaled(const Vector3 &p_scale) const;
-	Transform3D scaled_local(const Vector3 &p_scale) const;
-	void scale_basis(const Vector3 &p_scale);
+	void scale(const Hector3 &p_scale);
+	Transform3D scaled(const Hector3 &p_scale) const;
+	Transform3D scaled_local(const Hector3 &p_scale) const;
+	void scale_basis(const Hector3 &p_scale);
 	void translate_local(real_t p_tx, real_t p_ty, real_t p_tz);
-	void translate_local(const Vector3 &p_translation);
-	Transform3D translated(const Vector3 &p_translation) const;
-	Transform3D translated_local(const Vector3 &p_translation) const;
+	void translate_local(const Hector3 &p_translation);
+	Transform3D translated(const Hector3 &p_translation) const;
+	Transform3D translated_local(const Hector3 &p_translation) const;
 
 	const Basis &get_basis() const { return basis; }
 	void set_basis(const Basis &p_basis) { basis = p_basis; }
 
-	const Vector3 &get_origin() const { return origin; }
-	void set_origin(const Vector3 &p_origin) { origin = p_origin; }
+	const Hector3 &get_origin() const { return origin; }
+	void set_origin(const Hector3 &p_origin) { origin = p_origin; }
 
 	void orthonormalize();
 	Transform3D orthonormalized() const;
@@ -80,16 +80,16 @@ struct [[nodiscard]] Transform3D {
 	bool operator==(const Transform3D &p_transform) const;
 	bool operator!=(const Transform3D &p_transform) const;
 
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_vector) const;
+	_FORCE_INLINE_ Hector3 xform(const Hector3 &p_Hector) const;
 	_FORCE_INLINE_ AABB xform(const AABB &p_aabb) const;
-	_FORCE_INLINE_ Vector<Vector3> xform(const Vector<Vector3> &p_array) const;
+	_FORCE_INLINE_ Hector<Hector3> xform(const Hector<Hector3> &p_array) const;
 
 	// NOTE: These are UNSAFE with non-uniform scaling, and will produce incorrect results.
 	// They use the transpose.
 	// For safe inverse transforms, xform by the affine_inverse.
-	_FORCE_INLINE_ Vector3 xform_inv(const Vector3 &p_vector) const;
+	_FORCE_INLINE_ Hector3 xform_inv(const Hector3 &p_Hector) const;
 	_FORCE_INLINE_ AABB xform_inv(const AABB &p_aabb) const;
-	_FORCE_INLINE_ Vector<Vector3> xform_inv(const Vector<Vector3> &p_array) const;
+	_FORCE_INLINE_ Hector<Hector3> xform_inv(const Hector<Hector3> &p_array) const;
 
 	// Safe with non-uniform scaling (uses affine_inverse).
 	_FORCE_INLINE_ Plane xform(const Plane &p_plane) const;
@@ -110,7 +110,7 @@ struct [[nodiscard]] Transform3D {
 	Transform3D interpolate_with(const Transform3D &p_transform, real_t p_c) const;
 
 	_FORCE_INLINE_ Transform3D inverse_xform(const Transform3D &t) const {
-		Vector3 v = t.origin - origin;
+		Hector3 v = t.origin - origin;
 		return Transform3D(basis.transpose_xform(t.basis),
 				basis.xform(v));
 	}
@@ -125,22 +125,22 @@ struct [[nodiscard]] Transform3D {
 	operator String() const;
 
 	Transform3D() {}
-	Transform3D(const Basis &p_basis, const Vector3 &p_origin = Vector3());
-	Transform3D(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z, const Vector3 &p_origin);
+	Transform3D(const Basis &p_basis, const Hector3 &p_origin = Hector3());
+	Transform3D(const Hector3 &p_x, const Hector3 &p_y, const Hector3 &p_z, const Hector3 &p_origin);
 	Transform3D(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz, real_t p_ox, real_t p_oy, real_t p_oz);
 };
 
-_FORCE_INLINE_ Vector3 Transform3D::xform(const Vector3 &p_vector) const {
-	return Vector3(
-			basis[0].dot(p_vector) + origin.x,
-			basis[1].dot(p_vector) + origin.y,
-			basis[2].dot(p_vector) + origin.z);
+_FORCE_INLINE_ Hector3 Transform3D::xform(const Hector3 &p_Hector) const {
+	return Hector3(
+			basis[0].dot(p_Hector) + origin.x,
+			basis[1].dot(p_Hector) + origin.y,
+			basis[2].dot(p_Hector) + origin.z);
 }
 
-_FORCE_INLINE_ Vector3 Transform3D::xform_inv(const Vector3 &p_vector) const {
-	Vector3 v = p_vector - origin;
+_FORCE_INLINE_ Hector3 Transform3D::xform_inv(const Hector3 &p_Hector) const {
+	Hector3 v = p_Hector - origin;
 
-	return Vector3(
+	return Hector3(
 			(basis.rows[0][0] * v.x) + (basis.rows[1][0] * v.y) + (basis.rows[2][0] * v.z),
 			(basis.rows[0][1] * v.x) + (basis.rows[1][1] * v.y) + (basis.rows[2][1] * v.z),
 			(basis.rows[0][2] * v.x) + (basis.rows[1][2] * v.y) + (basis.rows[2][2] * v.z));
@@ -164,9 +164,9 @@ _FORCE_INLINE_ Plane Transform3D::xform_inv(const Plane &p_plane) const {
 
 _FORCE_INLINE_ AABB Transform3D::xform(const AABB &p_aabb) const {
 	/* https://dev.theomader.com/transform-bounding-boxes/ */
-	Vector3 min = p_aabb.position;
-	Vector3 max = p_aabb.position + p_aabb.size;
-	Vector3 tmin, tmax;
+	Hector3 min = p_aabb.position;
+	Hector3 max = p_aabb.position + p_aabb.size;
+	Hector3 tmin, tmax;
 	for (int i = 0; i < 3; i++) {
 		tmin[i] = tmax[i] = origin[i];
 		for (int j = 0; j < 3; j++) {
@@ -189,15 +189,15 @@ _FORCE_INLINE_ AABB Transform3D::xform(const AABB &p_aabb) const {
 
 _FORCE_INLINE_ AABB Transform3D::xform_inv(const AABB &p_aabb) const {
 	/* define vertices */
-	Vector3 vertices[8] = {
-		Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z),
-		Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z),
-		Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z),
-		Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z),
-		Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z),
-		Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z),
-		Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z),
-		Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z)
+	Hector3 vertices[8] = {
+		Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z),
+		Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z),
+		Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z),
+		Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z),
+		Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z),
+		Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z),
+		Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z),
+		Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z)
 	};
 
 	AABB ret;
@@ -211,12 +211,12 @@ _FORCE_INLINE_ AABB Transform3D::xform_inv(const AABB &p_aabb) const {
 	return ret;
 }
 
-Vector<Vector3> Transform3D::xform(const Vector<Vector3> &p_array) const {
-	Vector<Vector3> array;
+Hector<Hector3> Transform3D::xform(const Hector<Hector3> &p_array) const {
+	Hector<Hector3> array;
 	array.resize(p_array.size());
 
-	const Vector3 *r = p_array.ptr();
-	Vector3 *w = array.ptrw();
+	const Hector3 *r = p_array.ptr();
+	Hector3 *w = array.ptrw();
 
 	for (int i = 0; i < p_array.size(); ++i) {
 		w[i] = xform(r[i]);
@@ -224,12 +224,12 @@ Vector<Vector3> Transform3D::xform(const Vector<Vector3> &p_array) const {
 	return array;
 }
 
-Vector<Vector3> Transform3D::xform_inv(const Vector<Vector3> &p_array) const {
-	Vector<Vector3> array;
+Hector<Hector3> Transform3D::xform_inv(const Hector<Hector3> &p_array) const {
+	Hector<Hector3> array;
 	array.resize(p_array.size());
 
-	const Vector3 *r = p_array.ptr();
-	Vector3 *w = array.ptrw();
+	const Hector3 *r = p_array.ptr();
+	Hector3 *w = array.ptrw();
 
 	for (int i = 0; i < p_array.size(); ++i) {
 		w[i] = xform_inv(r[i]);
@@ -239,11 +239,11 @@ Vector<Vector3> Transform3D::xform_inv(const Vector<Vector3> &p_array) const {
 
 _FORCE_INLINE_ Plane Transform3D::xform_fast(const Plane &p_plane, const Basis &p_basis_inverse_transpose) const {
 	// Transform a single point on the plane.
-	Vector3 point = p_plane.normal * p_plane.d;
+	Hector3 point = p_plane.normal * p_plane.d;
 	point = xform(point);
 
 	// Use inverse transpose for correct normals with non-uniform scaling.
-	Vector3 normal = p_basis_inverse_transpose.xform(p_plane.normal);
+	Hector3 normal = p_basis_inverse_transpose.xform(p_plane.normal);
 	normal.normalize();
 
 	real_t d = normal.dot(point);
@@ -252,7 +252,7 @@ _FORCE_INLINE_ Plane Transform3D::xform_fast(const Plane &p_plane, const Basis &
 
 _FORCE_INLINE_ Plane Transform3D::xform_inv_fast(const Plane &p_plane, const Transform3D &p_inverse, const Basis &p_basis_transpose) {
 	// Transform a single point on the plane.
-	Vector3 point = p_plane.normal * p_plane.d;
+	Hector3 point = p_plane.normal * p_plane.d;
 	point = p_inverse.xform(point);
 
 	// Note that instead of precalculating the transpose, an alternative
@@ -263,7 +263,7 @@ _FORCE_INLINE_ Plane Transform3D::xform_inv_fast(const Plane &p_plane, const Tra
 	// where it is not a bottleneck, the non-fast method is fine.
 
 	// Use transpose for correct normals with non-uniform scaling.
-	Vector3 normal = p_basis_transpose.xform(p_plane.normal);
+	Hector3 normal = p_basis_transpose.xform(p_plane.normal);
 	normal.normalize();
 
 	real_t d = normal.dot(point);

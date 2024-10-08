@@ -24,9 +24,9 @@ U_NAMESPACE_BEGIN
  * token is assumed to be an integer. This is needed for iSeries
  */
  
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector32)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UHector32)
 
-UVector32::UVector32(UErrorCode &status) :
+UHector32::UHector32(UErrorCode &status) :
     count(0),
     capacity(0),
     maxCapacity(0),
@@ -35,7 +35,7 @@ UVector32::UVector32(UErrorCode &status) :
     _init(DEFAULT_CAPACITY, status);
 }
 
-UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
+UHector32::UHector32(int32_t initialCapacity, UErrorCode &status) :
     count(0),
     capacity(0),
     maxCapacity(0),
@@ -46,7 +46,7 @@ UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
 
 
 
-void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
+void UHector32::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
     if (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
@@ -65,7 +65,7 @@ void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
     }
 }
 
-UVector32::~UVector32() {
+UHector32::~UHector32() {
     uprv_free(elements);
     elements = nullptr;
 }
@@ -73,7 +73,7 @@ UVector32::~UVector32() {
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector32::assign(const UVector32& other, UErrorCode &ec) {
+void UHector32::assign(const UHector32& other, UErrorCode &ec) {
     if (ensureCapacity(other.count, ec)) {
         setSize(other.count);
         for (int32_t i=0; i<other.count; ++i) {
@@ -83,7 +83,7 @@ void UVector32::assign(const UVector32& other, UErrorCode &ec) {
 }
 
 
-bool UVector32::operator==(const UVector32& other) const {
+bool UHector32::operator==(const UHector32& other) const {
     int32_t i;
     if (count != other.count) return false;
     for (i=0; i<count; ++i) {
@@ -95,14 +95,14 @@ bool UVector32::operator==(const UVector32& other) const {
 }
 
 
-void UVector32::setElementAt(int32_t elem, int32_t index) {
+void UHector32::setElementAt(int32_t elem, int32_t index) {
     if (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
 }
 
-void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
+void UHector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
     if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
         for (int32_t i=count; i>index; --i) {
@@ -114,7 +114,7 @@ void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status)
     /* else index out of range */
 }
 
-UBool UVector32::containsAll(const UVector32& other) const {
+UBool UHector32::containsAll(const UHector32& other) const {
     for (int32_t i=0; i<other.size(); ++i) {
         if (indexOf(other.elements[i]) < 0) {
             return false;
@@ -123,7 +123,7 @@ UBool UVector32::containsAll(const UVector32& other) const {
     return true;
 }
 
-UBool UVector32::containsNone(const UVector32& other) const {
+UBool UHector32::containsNone(const UHector32& other) const {
     for (int32_t i=0; i<other.size(); ++i) {
         if (indexOf(other.elements[i]) >= 0) {
             return false;
@@ -132,7 +132,7 @@ UBool UVector32::containsNone(const UVector32& other) const {
     return true;
 }
 
-UBool UVector32::removeAll(const UVector32& other) {
+UBool UHector32::removeAll(const UHector32& other) {
     UBool changed = false;
     for (int32_t i=0; i<other.size(); ++i) {
         int32_t j = indexOf(other.elements[i]);
@@ -144,7 +144,7 @@ UBool UVector32::removeAll(const UVector32& other) {
     return changed;
 }
 
-UBool UVector32::retainAll(const UVector32& other) {
+UBool UHector32::retainAll(const UHector32& other) {
     UBool changed = false;
     for (int32_t j=size()-1; j>=0; --j) {
         int32_t i = other.indexOf(elements[j]);
@@ -156,7 +156,7 @@ UBool UVector32::retainAll(const UVector32& other) {
     return changed;
 }
 
-void UVector32::removeElementAt(int32_t index) {
+void UHector32::removeElementAt(int32_t index) {
     if (index >= 0) {
         for (int32_t i=index; i<count-1; ++i) {
             elements[i] = elements[i+1];
@@ -165,11 +165,11 @@ void UVector32::removeElementAt(int32_t index) {
     }
 }
 
-void UVector32::removeAllElements() {
+void UHector32::removeAllElements() {
     count = 0;
 }
 
-UBool   UVector32::equals(const UVector32 &other) const {
+UBool   UHector32::equals(const UHector32 &other) const {
     int      i;
 
     if (this->count != other.count) {
@@ -186,7 +186,7 @@ UBool   UVector32::equals(const UVector32 &other) const {
 
 
 
-int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
+int32_t UHector32::indexOf(int32_t key, int32_t startIndex) const {
     int32_t i;
     for (i=startIndex; i<count; ++i) {
         if (key == elements[i]) {
@@ -197,7 +197,7 @@ int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
 }
 
 
-UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
+UBool UHector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return false;
     }
@@ -239,7 +239,7 @@ UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
     return true;
 }
 
-void UVector32::setMaxCapacity(int32_t limit) {
+void UHector32::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
     if (limit < 0) {
         limit = 0;
@@ -270,12 +270,12 @@ void UVector32::setMaxCapacity(int32_t limit) {
 }
 
 /**
- * Change the size of this vector as follows: If newSize is smaller,
+ * Change the size of this Hector as follows: If newSize is smaller,
  * then truncate the array, possibly deleting held elements for i >=
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector32::setSize(int32_t newSize) {
+void UHector32::setSize(int32_t newSize) {
     int32_t i;
     if (newSize < 0) {
         return;
@@ -296,11 +296,11 @@ void UVector32::setSize(int32_t newSize) {
 
 
 /**
- * Insert the given integer into this vector at its sorted position
+ * Insert the given integer into this Hector at its sorted position
  * as defined by 'compare'.  The current elements are assumed to
  * be sorted already.
  */
-void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
+void UHector32::sortedInsert(int32_t tok, UErrorCode& ec) {
     // Perform a binary search for the location to insert tok at.  Tok
     // will be inserted between two elements a and b such that a <=
     // tok && tok < b, where there is a 'virtual' elements[-1] always

@@ -77,7 +77,7 @@ String ShaderWarning::get_name() const {
 	return get_name_from_code(code);
 }
 
-Vector<Variant> ShaderWarning::get_extra_args() const {
+Hector<Variant> ShaderWarning::get_extra_args() const {
 	return extra_args;
 }
 
@@ -144,7 +144,7 @@ ShaderWarning::CodeFlags ShaderWarning::get_flags_from_codemap(const HashMap<Cod
 	return (CodeFlags)result;
 }
 
-ShaderWarning::ShaderWarning(Code p_code, int p_line, const StringName &p_subject, const Vector<Variant> &p_extra_args) :
+ShaderWarning::ShaderWarning(Code p_code, int p_line, const StringName &p_subject, const Hector<Variant> &p_extra_args) :
 		code(p_code), line(p_line), subject(p_subject), extra_args(p_extra_args) {
 }
 

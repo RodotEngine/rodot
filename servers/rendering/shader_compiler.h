@@ -56,7 +56,7 @@ public:
 	};
 
 	struct GeneratedCode {
-		Vector<String> defines;
+		Hector<String> defines;
 		struct Texture {
 			StringName name;
 			ShaderLanguage::DataType type = ShaderLanguage::DataType::TYPE_VOID;
@@ -68,9 +68,9 @@ public:
 			int array_size = 0;
 		};
 
-		Vector<Texture> texture_uniforms;
+		Hector<Texture> texture_uniforms;
 
-		Vector<uint32_t> uniform_offsets;
+		Hector<uint32_t> uniform_offsets;
 		uint32_t uniform_total_size = 0;
 		String uniforms;
 		String stage_globals[STAGE_MAX];

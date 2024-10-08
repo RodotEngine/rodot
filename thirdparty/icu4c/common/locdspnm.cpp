@@ -389,11 +389,11 @@ struct LocaleDisplayNamesImpl::CapitalizationContextSink : public ResourceSink {
             }
 
             int32_t len = 0;
-            const int32_t* intVector = value.getIntVector(len, errorCode);
+            const int32_t* intHector = value.getIntHector(len, errorCode);
             if (U_FAILURE(errorCode)) { return; }
             if (len < 2) { continue; }
 
-            int32_t titlecaseInt = (parent.capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU) ? intVector[0] : intVector[1];
+            int32_t titlecaseInt = (parent.capitalizationContext == UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU) ? intHector[0] : intHector[1];
             if (titlecaseInt == 0) { continue; }
 
             parent.fCapitalization[usageEnum] = true;

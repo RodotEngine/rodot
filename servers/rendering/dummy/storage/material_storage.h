@@ -60,7 +60,7 @@ public:
 
 	virtual void global_shader_parameter_add(const StringName &p_name, RS::GlobalShaderParameterType p_type, const Variant &p_value) override {}
 	virtual void global_shader_parameter_remove(const StringName &p_name) override {}
-	virtual Vector<StringName> global_shader_parameter_get_list() const override { return Vector<StringName>(); }
+	virtual Hector<StringName> global_shader_parameter_get_list() const override { return Hector<StringName>(); }
 
 	virtual void global_shader_parameter_set(const StringName &p_name, const Variant &p_value) override {}
 	virtual void global_shader_parameter_set_override(const StringName &p_name, const Variant &p_value) override {}

@@ -60,7 +60,7 @@ Error jpeg_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 
 	const int dst_bpl = image_width * comps;
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 
 	data.resize(dst_bpl * image_height);
 
@@ -106,7 +106,7 @@ Error jpeg_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 }
 
 Error ImageLoaderJPG::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
-	Vector<uint8_t> src_image;
+	Hector<uint8_t> src_image;
 	uint64_t src_image_len = f->get_length();
 	ERR_FAIL_COND_V(src_image_len == 0, ERR_FILE_CORRUPT);
 	src_image.resize(src_image_len);
@@ -145,7 +145,7 @@ public:
 
 class ImageLoaderJPGOSBuffer : public jpge::output_stream {
 public:
-	Vector<uint8_t> *buffer = nullptr;
+	Hector<uint8_t> *buffer = nullptr;
 	virtual bool put_buf(const void *Pbuf, int len) {
 		uint32_t base = buffer->size();
 		buffer->resize(base + len);
@@ -186,12 +186,12 @@ static Error _jpgd_save_to_output_stream(jpge::output_stream *p_output_stream, c
 	}
 }
 
-static Vector<uint8_t> _jpgd_buffer_save_func(const Ref<Image> &p_img, float p_quality) {
-	Vector<uint8_t> output;
+static Hector<uint8_t> _jpgd_buffer_save_func(const Ref<Image> &p_img, float p_quality) {
+	Hector<uint8_t> output;
 	ImageLoaderJPGOSBuffer ob;
 	ob.buffer = &output;
 	if (_jpgd_save_to_output_stream(&ob, p_img, p_quality) != OK) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 	return output;
 }

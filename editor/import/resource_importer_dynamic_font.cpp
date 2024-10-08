@@ -160,7 +160,7 @@ Error ResourceImporterDynamicFont::import(const String &p_source_file, const Str
 	Array fallbacks = p_options["fallbacks"];
 
 	// Load base font data.
-	Vector<uint8_t> data = FileAccess::get_file_as_bytes(p_source_file);
+	Hector<uint8_t> data = FileAccess::get_file_as_bytes(p_source_file);
 
 	// Create font.
 	Ref<FontFile> font;
@@ -186,7 +186,7 @@ Error ResourceImporterDynamicFont::import(const String &p_source_file, const Str
 		for (int32_t gl : glyphs) {
 			Dictionary ct = TS->font_get_glyph_contours(font->get_rids()[0], 16, gl);
 			PackedInt32Array contours = ct["contours"];
-			PackedVector3Array points = ct["points"];
+			PackedHector3Array points = ct["points"];
 			int prev_start = 0;
 			for (int i = 0; i < contours.size(); i++) {
 				for (int j = prev_start; j <= contours[i]; j++) {
@@ -237,7 +237,7 @@ Error ResourceImporterDynamicFont::import(const String &p_source_file, const Str
 		double embolden = preload_config.has("variation_embolden") ? preload_config["variation_embolden"].operator double() : 0;
 		int face_index = preload_config.has("variation_face_index") ? preload_config["variation_face_index"].operator int() : 0;
 		Transform2D transform = preload_config.has("variation_transform") ? preload_config["variation_transform"].operator Transform2D() : Transform2D();
-		Vector2i size = preload_config.has("size") ? preload_config["size"].operator Vector2i() : Vector2i(16, 0);
+		Hector2i size = preload_config.has("size") ? preload_config["size"].operator Hector2i() : Hector2i(16, 0);
 		String name = preload_config.has("name") ? preload_config["name"].operator String() : vformat("Configuration %d", i);
 
 		RID conf_rid = font->find_variation(variation, face_index, embolden, transform);

@@ -69,24 +69,24 @@ struct TArraySize {
 };
 
 //
-// TSmallArrayVector is used as the container for the set of sizes in TArraySizes.
+// TSmallArrayHector is used as the container for the set of sizes in TArraySizes.
 // It has generic-container semantics, while TArraySizes has array-of-array semantics.
-// That is, TSmallArrayVector should be more focused on mechanism and TArraySizes on policy.
+// That is, TSmallArrayHector should be more focused on mechanism and TArraySizes on policy.
 //
-struct TSmallArrayVector {
+struct TSmallArrayHector {
     //
-    // TODO: memory: TSmallArrayVector is intended to be smaller.
+    // TODO: memory: TSmallArrayHector is intended to be smaller.
     // Almost all arrays could be handled by two sizes each fitting
-    // in 16 bits, needing a real vector only in the cases where there
+    // in 16 bits, needing a real Hector only in the cases where there
     // are more than 3 sizes or a size needing more than 16 bits.
     //
     POOL_ALLOCATOR_NEW_DELETE(GetThreadPoolAllocator())
 
-    TSmallArrayVector() : sizes(nullptr) { }
-    virtual ~TSmallArrayVector() { dealloc(); }
+    TSmallArrayHector() : sizes(nullptr) { }
+    virtual ~TSmallArrayHector() { dealloc(); }
 
     // For breaking into two non-shared copies, independently modifiable.
-    TSmallArrayVector& operator=(const TSmallArrayVector& from)
+    TSmallArrayHector& operator=(const TSmallArrayHector& from)
     {
         if (from.sizes == nullptr)
             sizes = nullptr;
@@ -132,7 +132,7 @@ struct TSmallArrayVector {
         sizes->push_back(pair);
     }
 
-    void push_back(const TSmallArrayVector& newDims)
+    void push_back(const TSmallArrayHector& newDims)
     {
         alloc();
         sizes->insert(sizes->end(), newDims.sizes->begin(), newDims.sizes->end());
@@ -160,7 +160,7 @@ struct TSmallArrayVector {
     // will make it hold a copy of all but the first element of rhs.
     // (This would be useful for making a type that is dereferenced by
     // one dimension.)
-    void copyNonFront(const TSmallArrayVector& rhs)
+    void copyNonFront(const TSmallArrayHector& rhs)
     {
         assert(sizes == nullptr);
         if (rhs.size() > 1) {
@@ -188,7 +188,7 @@ struct TSmallArrayVector {
         return (*sizes)[i].node;
     }
 
-    bool operator==(const TSmallArrayVector& rhs) const
+    bool operator==(const TSmallArrayHector& rhs) const
     {
         if (sizes == nullptr && rhs.sizes == nullptr)
             return true;
@@ -196,15 +196,15 @@ struct TSmallArrayVector {
             return false;
         return *sizes == *rhs.sizes;
     }
-    bool operator!=(const TSmallArrayVector& rhs) const { return ! operator==(rhs); }
+    bool operator!=(const TSmallArrayHector& rhs) const { return ! operator==(rhs); }
 
 protected:
-    TSmallArrayVector(const TSmallArrayVector&);
+    TSmallArrayHector(const TSmallArrayHector&);
 
     void alloc()
     {
         if (sizes == nullptr)
-            sizes = new TVector<TArraySize>;
+            sizes = new THector<TArraySize>;
     }
     void dealloc()
     {
@@ -212,7 +212,7 @@ protected:
         sizes = nullptr;
     }
 
-    TVector<TArraySize>* sizes; // will either hold such a pointer, or in the future, hold the two array sizes
+    THector<TArraySize>* sizes; // will either hold such a pointer, or in the future, hold the two array sizes
 };
 
 //
@@ -344,7 +344,7 @@ struct TArraySizes {
     bool operator!=(const TArraySizes& rhs) const { return sizes != rhs.sizes; }
 
 protected:
-    TSmallArrayVector sizes;
+    TSmallArrayHector sizes;
 
     TArraySizes(const TArraySizes&);
 

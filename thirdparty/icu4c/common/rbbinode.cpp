@@ -27,7 +27,7 @@
 #include "unicode/parsepos.h"
 
 #include "cstr.h"
-#include "uvector.h"
+#include "uHector.h"
 
 #include "rbbirb.h"
 #include "rbbinode.h"
@@ -66,9 +66,9 @@ RBBINode::RBBINode(NodeType t) : UMemory() {
     fPrecedence   = precZero;
 
     UErrorCode     status = U_ZERO_ERROR;
-    fFirstPosSet  = new UVector(status);  // TODO - get a real status from somewhere
-    fLastPosSet   = new UVector(status);
-    fFollowPos    = new UVector(status);
+    fFirstPosSet  = new UHector(status);  // TODO - get a real status from somewhere
+    fLastPosSet   = new UHector(status);
+    fFollowPos    = new UHector(status);
     if      (t==opCat)    {fPrecedence = precOpCat;}
     else if (t==opOr)     {fPrecedence = precOpOr;}
     else if (t==opStart)  {fPrecedence = precStart;}
@@ -95,9 +95,9 @@ RBBINode::RBBINode(const RBBINode &other) : UMemory(other) {
     fRuleRoot    = false;
     fChainIn     = other.fChainIn;
     UErrorCode     status = U_ZERO_ERROR;
-    fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
-    fLastPosSet  = new UVector(status);
-    fFollowPos   = new UVector(status);
+    fFirstPosSet = new UHector(status);   // TODO - get a real status from somewhere
+    fLastPosSet  = new UHector(status);
+    fFollowPos   = new UHector(status);
 }
 
 
@@ -318,7 +318,7 @@ void RBBINode::flattenSets() {
 //                   at the specified root.
 //
 //-------------------------------------------------------------------------
-void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
+void   RBBINode::findNodes(UHector *dest, RBBINode::NodeType kind, UErrorCode &status) {
     /* test for buffer overflows */
     if (U_FAILURE(status)) {
         return;

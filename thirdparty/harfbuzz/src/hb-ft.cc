@@ -596,7 +596,7 @@ hb_ft_get_glyph_h_kerning (hb_font_t *font,
 {
   const hb_ft_font_t *ft_font = (const hb_ft_font_t *) font_data;
   hb_lock_t lock (ft_font->lock);
-  FT_Vector kerningv;
+  FT_Hector kerningv;
 
   FT_Kerning_Mode mode = font->x_ppem ? FT_KERNING_DEFAULT : FT_KERNING_UNFITTED;
   if (FT_Get_Kerning (ft_font->ft_face, left_glyph, right_glyph, mode, &kerningv))
@@ -804,7 +804,7 @@ hb_ft_get_font_h_extents (hb_font_t *font HB_UNUSED,
 #ifndef HB_NO_DRAW
 
 static int
-_hb_ft_move_to (const FT_Vector *to,
+_hb_ft_move_to (const FT_Hector *to,
 		void *arg)
 {
   hb_draw_session_t *drawing = (hb_draw_session_t *) arg;
@@ -813,7 +813,7 @@ _hb_ft_move_to (const FT_Vector *to,
 }
 
 static int
-_hb_ft_line_to (const FT_Vector *to,
+_hb_ft_line_to (const FT_Hector *to,
 		void *arg)
 {
   hb_draw_session_t *drawing = (hb_draw_session_t *) arg;
@@ -822,8 +822,8 @@ _hb_ft_line_to (const FT_Vector *to,
 }
 
 static int
-_hb_ft_conic_to (const FT_Vector *control,
-		 const FT_Vector *to,
+_hb_ft_conic_to (const FT_Hector *control,
+		 const FT_Hector *to,
 		 void *arg)
 {
   hb_draw_session_t *drawing = (hb_draw_session_t *) arg;
@@ -833,9 +833,9 @@ _hb_ft_conic_to (const FT_Vector *control,
 }
 
 static int
-_hb_ft_cubic_to (const FT_Vector *control1,
-		 const FT_Vector *control2,
-		 const FT_Vector *to,
+_hb_ft_cubic_to (const FT_Hector *control1,
+		 const FT_Hector *control2,
+		 const FT_Hector *to,
 		 void *arg)
 {
   hb_draw_session_t *drawing = (hb_draw_session_t *) arg;

@@ -23,7 +23,7 @@
 U_NAMESPACE_BEGIN
 
 class    UnicodeSet;
-class    UVector;
+class    UHector;
 
 class RBBINode : public UMemory {
     public:
@@ -86,9 +86,9 @@ class RBBINode : public UMemory {
         UBool         fChainIn;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
-        UVector       *fFirstPosSet;
-        UVector       *fLastPosSet;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
-        UVector       *fFollowPos;
+        UHector       *fFirstPosSet;
+        UHector       *fLastPosSet;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
+        UHector       *fFollowPos;
 
 
         RBBINode(NodeType t);
@@ -99,7 +99,7 @@ class RBBINode : public UMemory {
         RBBINode    *cloneTree();
         RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
         void         flattenSets();
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        void         findNodes(UHector *dest, RBBINode::NodeType kind, UErrorCode &status);
 
 #ifdef RBBI_DEBUG
         static void printNodeHeader();

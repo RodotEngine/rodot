@@ -65,22 +65,22 @@ protected:
 
 #ifndef DISABLE_DEPRECATED
 	// Kept for compatibility from 3.x to 4.0.
-	void _set_transform_array(const Vector<Vector3> &p_array);
-	Vector<Vector3> _get_transform_array() const;
+	void _set_transform_array(const Hector<Hector3> &p_array);
+	Hector<Hector3> _get_transform_array() const;
 
-	void _set_transform_2d_array(const Vector<Vector2> &p_array);
-	Vector<Vector2> _get_transform_2d_array() const;
+	void _set_transform_2d_array(const Hector<Hector2> &p_array);
+	Hector<Hector2> _get_transform_2d_array() const;
 
-	void _set_color_array(const Vector<Color> &p_array);
-	Vector<Color> _get_color_array() const;
+	void _set_color_array(const Hector<Color> &p_array);
+	Hector<Color> _get_color_array() const;
 
-	void _set_custom_data_array(const Vector<Color> &p_array);
-	Vector<Color> _get_custom_data_array() const;
+	void _set_custom_data_array(const Hector<Color> &p_array);
+	Hector<Color> _get_custom_data_array() const;
 #endif
-	void set_buffer(const Vector<float> &p_buffer);
-	Vector<float> get_buffer() const;
+	void set_buffer(const Hector<float> &p_buffer);
+	Hector<float> get_buffer() const;
 
-	void set_buffer_interpolated(const Vector<float> &p_buffer_curr, const Vector<float> &p_buffer_prev);
+	void set_buffer_interpolated(const Hector<float> &p_buffer_curr, const Hector<float> &p_buffer_prev);
 
 public:
 	void set_mesh(const Ref<Mesh> &p_mesh);

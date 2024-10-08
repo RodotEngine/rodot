@@ -81,7 +81,7 @@ Variant Path3DGizmo::get_handle_value(int p_id, bool p_secondary) const {
 
 	// Secondary handles: in, out, tilt.
 	const HandleInfo info = _secondary_handles_info[p_id];
-	Vector3 ofs;
+	Hector3 ofs;
 	switch (info.type) {
 		case HandleType::HANDLE_TYPE_TILT:
 			return c->get_point_tilt(info.point_idx);
@@ -105,13 +105,13 @@ void Path3DGizmo::set_handle(int p_id, bool p_secondary, Camera3D *p_camera, con
 
 	const Transform3D gt = path->get_global_transform();
 	const Transform3D gi = gt.affine_inverse();
-	const Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	const Vector3 ray_dir = p_camera->project_ray_normal(p_point);
+	const Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	const Hector3 ray_dir = p_camera->project_ray_normal(p_point);
 	const Plane p = Plane(p_camera->get_transform().basis.get_column(2), gt.xform(original));
 
 	// Primary handles: position.
 	if (!p_secondary) {
-		Vector3 inters;
+		Hector3 inters;
 		// Special case for primary handle, the handle id equals control point id.
 		const int idx = p_id;
 		if (p.intersects_ray(ray_from, ray_dir, &inters)) {
@@ -120,7 +120,7 @@ void Path3DGizmo::set_handle(int p_id, bool p_secondary, Camera3D *p_camera, con
 				inters.snapf(snap);
 			}
 
-			Vector3 local = gi.xform(inters);
+			Hector3 local = gi.xform(inters);
 			c->set_point_position(idx, local);
 		}
 
@@ -133,9 +133,9 @@ void Path3DGizmo::set_handle(int p_id, bool p_secondary, Camera3D *p_camera, con
 		case HandleType::HANDLE_TYPE_OUT:
 		case HandleType::HANDLE_TYPE_IN: {
 			const int idx = info.point_idx;
-			const Vector3 base = c->get_point_position(idx);
+			const Hector3 base = c->get_point_position(idx);
 
-			Vector3 inters;
+			Hector3 inters;
 			if (p.intersects_ray(ray_from, ray_dir, &inters)) {
 				if (!Path3DEditorPlugin::singleton->is_handle_clicked()) {
 					orig_in_length = c->get_point_in(idx).length();
@@ -143,7 +143,7 @@ void Path3DGizmo::set_handle(int p_id, bool p_secondary, Camera3D *p_camera, con
 					Path3DEditorPlugin::singleton->set_handle_clicked(true);
 				}
 
-				Vector3 local = gi.xform(inters) - base;
+				Hector3 local = gi.xform(inters) - base;
 				if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 					float snap = Node3DEditor::get_singleton()->get_translate_snap();
 					local.snapf(snap);
@@ -165,16 +165,16 @@ void Path3DGizmo::set_handle(int p_id, bool p_secondary, Camera3D *p_camera, con
 		}
 		case HandleType::HANDLE_TYPE_TILT: {
 			const int idx = info.point_idx;
-			const Vector3 position = c->get_point_position(idx);
+			const Hector3 position = c->get_point_position(idx);
 			const Basis posture = c->get_point_baked_posture(idx);
-			const Vector3 tangent = -posture.get_column(2);
-			const Vector3 up = posture.get_column(1);
+			const Hector3 tangent = -posture.get_column(2);
+			const Hector3 up = posture.get_column(1);
 			const Plane tilt_plane_global = gt.xform(Plane(tangent, position));
 
-			Vector3 intersection;
+			Hector3 intersection;
 
 			if (tilt_plane_global.intersects_ray(ray_from, ray_dir, &intersection)) {
-				Vector3 direction = gi.xform(intersection) - position;
+				Hector3 direction = gi.xform(intersection) - position;
 				real_t tilt_angle = up.signed_angle_to(direction, tangent);
 
 				if (Node3DEditor::get_singleton()->is_snap_enabled()) {
@@ -230,7 +230,7 @@ void Path3DGizmo::commit_handle(int p_id, bool p_secondary, const Variant &p_res
 
 			if (Path3DEditorPlugin::singleton->mirror_angle_enabled()) {
 				ur->add_do_method(c.ptr(), "set_point_in", idx, Path3DEditorPlugin::singleton->mirror_length_enabled() ? -c->get_point_out(idx) : (-c->get_point_out(idx).normalized() * orig_in_length));
-				ur->add_undo_method(c.ptr(), "set_point_in", idx, Path3DEditorPlugin::singleton->mirror_length_enabled() ? -static_cast<Vector3>(p_restore) : (-static_cast<Vector3>(p_restore).normalized() * orig_in_length));
+				ur->add_undo_method(c.ptr(), "set_point_in", idx, Path3DEditorPlugin::singleton->mirror_length_enabled() ? -static_cast<Hector3>(p_restore) : (-static_cast<Hector3>(p_restore).normalized() * orig_in_length));
 			}
 
 			ur->commit_action();
@@ -248,7 +248,7 @@ void Path3DGizmo::commit_handle(int p_id, bool p_secondary, const Variant &p_res
 
 			if (Path3DEditorPlugin::singleton->mirror_angle_enabled()) {
 				ur->add_do_method(c.ptr(), "set_point_out", idx, Path3DEditorPlugin::singleton->mirror_length_enabled() ? -c->get_point_in(idx) : (-c->get_point_in(idx).normalized() * orig_out_length));
-				ur->add_undo_method(c.ptr(), "set_point_out", idx, Path3DEditorPlugin::singleton->mirror_length_enabled() ? -static_cast<Vector3>(p_restore) : (-static_cast<Vector3>(p_restore).normalized() * orig_out_length));
+				ur->add_undo_method(c.ptr(), "set_point_out", idx, Path3DEditorPlugin::singleton->mirror_length_enabled() ? -static_cast<Hector3>(p_restore) : (-static_cast<Hector3>(p_restore).normalized() * orig_out_length));
 			}
 
 			ur->commit_action();
@@ -292,7 +292,7 @@ void Path3DGizmo::redraw() {
 		const int sample_count = int(length / interval) + 2;
 		interval = length / (sample_count - 1); // Recalculate real interval length.
 
-		Vector<Transform3D> frames;
+		Hector<Transform3D> frames;
 		frames.resize(sample_count);
 
 		{
@@ -305,27 +305,27 @@ void Path3DGizmo::redraw() {
 
 		const Transform3D *r = frames.ptr();
 
-		Vector<Vector3> _collision_segments;
+		Hector<Hector3> _collision_segments;
 		_collision_segments.resize((sample_count - 1) * 2);
-		Vector3 *_collisions_ptr = _collision_segments.ptrw();
+		Hector3 *_collisions_ptr = _collision_segments.ptrw();
 
-		Vector<Vector3> bones;
+		Hector<Hector3> bones;
 		bones.resize(sample_count * 4);
-		Vector3 *bones_ptr = bones.ptrw();
+		Hector3 *bones_ptr = bones.ptrw();
 
-		Vector<Vector3> ribbon;
+		Hector<Hector3> ribbon;
 		ribbon.resize(sample_count);
-		Vector3 *ribbon_ptr = ribbon.ptrw();
+		Hector3 *ribbon_ptr = ribbon.ptrw();
 
 		for (int i = 0; i < sample_count; i++) {
-			const Vector3 p1 = r[i].origin;
-			const Vector3 side = r[i].basis.get_column(0);
-			const Vector3 up = r[i].basis.get_column(1);
-			const Vector3 forward = r[i].basis.get_column(2);
+			const Hector3 p1 = r[i].origin;
+			const Hector3 side = r[i].basis.get_column(0);
+			const Hector3 up = r[i].basis.get_column(1);
+			const Hector3 forward = r[i].basis.get_column(2);
 
 			// Collision segments.
 			if (i != sample_count - 1) {
-				const Vector3 p2 = r[i + 1].origin;
+				const Hector3 p2 = r[i + 1].origin;
 				_collisions_ptr[(i * 2)] = p1;
 				_collisions_ptr[(i * 2) + 1] = p2;
 			}
@@ -334,8 +334,8 @@ void Path3DGizmo::redraw() {
 			ribbon_ptr[i] = p1;
 
 			// Fish Bone.
-			const Vector3 p_left = p1 + (side + forward - up * 0.3) * 0.06;
-			const Vector3 p_right = p1 + (-side + forward - up * 0.3) * 0.06;
+			const Hector3 p_left = p1 + (side + forward - up * 0.3) * 0.06;
+			const Hector3 p_right = p1 + (-side + forward - up * 0.3) * 0.06;
 
 			const int bone_idx = i * 4;
 
@@ -352,17 +352,17 @@ void Path3DGizmo::redraw() {
 
 	// 2. Draw handles when selected.
 	if (Path3DEditorPlugin::singleton->get_edited_path() == path) {
-		PackedVector3Array handle_lines;
-		PackedVector3Array tilt_handle_lines;
-		PackedVector3Array primary_handle_points;
-		PackedVector3Array secondary_handle_points;
+		PackedHector3Array handle_lines;
+		PackedHector3Array tilt_handle_lines;
+		PackedHector3Array primary_handle_points;
+		PackedHector3Array secondary_handle_points;
 		PackedInt32Array collected_secondary_handle_ids; // Avoid shadowing member on Node3DEditorGizmo.
 
 		_secondary_handles_info.resize(c->get_point_count() * 3);
 
 		for (int idx = 0; idx < c->get_point_count(); idx++) {
 			// Collect primary-handles.
-			const Vector3 pos = c->get_point_position(idx);
+			const Hector3 pos = c->get_point_position(idx);
 			primary_handle_points.append(pos);
 
 			HandleInfo info;
@@ -370,7 +370,7 @@ void Path3DGizmo::redraw() {
 
 			// Collect in-handles except for the first point.
 			if (idx > 0 && Path3DEditorPlugin::singleton->curve_edit_curve->is_pressed()) {
-				const Vector3 in = c->get_point_in(idx);
+				const Hector3 in = c->get_point_in(idx);
 
 				info.type = HandleType::HANDLE_TYPE_IN;
 				const int handle_idx = idx * 3 + 0;
@@ -384,7 +384,7 @@ void Path3DGizmo::redraw() {
 
 			// Collect out-handles except for the last point.
 			if (idx < c->get_point_count() - 1 && Path3DEditorPlugin::singleton->curve_edit_curve->is_pressed()) {
-				const Vector3 out = c->get_point_out(idx);
+				const Hector3 out = c->get_point_out(idx);
 
 				info.type = HandleType::HANDLE_TYPE_OUT;
 				const int handle_idx = idx * 3 + 1;
@@ -406,7 +406,7 @@ void Path3DGizmo::redraw() {
 					_secondary_handles_info.write[handle_idx] = info;
 
 					const Basis posture = c->get_point_baked_posture(idx, true);
-					const Vector3 up = posture.get_column(1);
+					const Hector3 up = posture.get_column(1);
 					secondary_handle_points.append(pos + up * disk_size);
 					tilt_handle_lines.append(pos);
 					tilt_handle_lines.append(pos + up * disk_size);
@@ -415,16 +415,16 @@ void Path3DGizmo::redraw() {
 				// Tilt disk.
 				{
 					const Basis posture = c->get_point_baked_posture(idx, false);
-					const Vector3 up = posture.get_column(1);
-					const Vector3 side = posture.get_column(0);
+					const Hector3 up = posture.get_column(1);
+					const Hector3 side = posture.get_column(0);
 
-					PackedVector3Array disk;
+					PackedHector3Array disk;
 					disk.append(pos);
 
 					const int n = 36;
 					for (int i = 0; i <= n; i++) {
 						const float a = Math_TAU * i / n;
-						const Vector3 edge = sin(a) * side + cos(a) * up;
+						const Hector3 edge = sin(a) * side + cos(a) * up;
 						disk.append(pos + edge * disk_size);
 					}
 					add_vertices(disk, path_tilt_material, Mesh::PRIMITIVE_LINE_STRIP);
@@ -507,14 +507,14 @@ EditorPlugin::AfterGUIInput Path3DEditorPlugin::forward_3d_gui_input(Camera3D *p
 
 		if (mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT && (curve_create->is_pressed() || (curve_edit->is_pressed() && mb->is_command_or_control_pressed()))) {
 			//click into curve, break it down
-			Vector<Vector3> v3a = c->tessellate();
+			Hector<Hector3> v3a = c->tessellate();
 			int rc = v3a.size();
 			int closest_seg = -1;
-			Vector3 closest_seg_point;
+			Hector3 closest_seg_point;
 
 			if (rc >= 2) {
 				int idx = 0;
-				const Vector3 *r = v3a.ptr();
+				const Hector3 *r = v3a.ptr();
 				float closest_d = 1e20;
 
 				if (viewport->point_to_screen(gt.xform(c->get_point_position(0))).distance_to(mbpos) < click_dist) {
@@ -529,25 +529,25 @@ EditorPlugin::AfterGUIInput Path3DEditorPlugin::forward_3d_gui_input(Camera3D *p
 					}
 
 					while (j < rc && c->get_point_position(i + 1) != r[j]) {
-						Vector3 from = r[j];
-						Vector3 to = r[j + 1];
+						Hector3 from = r[j];
+						Hector3 to = r[j + 1];
 						real_t cdist = from.distance_to(to);
 						from = gt.xform(from);
 						to = gt.xform(to);
 						if (cdist > 0) {
-							Vector2 s[2];
+							Hector2 s[2];
 							s[0] = viewport->point_to_screen(from);
 							s[1] = viewport->point_to_screen(to);
-							Vector2 inters = Geometry2D::get_closest_point_to_segment(mbpos, s);
+							Hector2 inters = Geometry2D::get_closest_point_to_segment(mbpos, s);
 							float d = inters.distance_to(mbpos);
 
 							if (d < 10 && d < closest_d) {
 								closest_d = d;
 								closest_seg = i;
-								Vector3 ray_from = viewport->get_ray_pos(mbpos);
-								Vector3 ray_dir = viewport->get_ray(mbpos);
+								Hector3 ray_from = viewport->get_ray_pos(mbpos);
+								Hector3 ray_dir = viewport->get_ray(mbpos);
 
-								Vector3 ra, rb;
+								Hector3 ra, rb;
 								Geometry3D::get_closest_points_between_segments(ray_from, ray_from + ray_dir * 4096, from, to, ra, rb);
 
 								closest_seg_point = it.xform(rb);
@@ -572,26 +572,26 @@ EditorPlugin::AfterGUIInput Path3DEditorPlugin::forward_3d_gui_input(Camera3D *p
 				//subdivide
 
 				ur->create_action(TTR("Split Path"));
-				ur->add_do_method(c.ptr(), "add_point", closest_seg_point, Vector3(), Vector3(), closest_seg + 1);
+				ur->add_do_method(c.ptr(), "add_point", closest_seg_point, Hector3(), Hector3(), closest_seg + 1);
 				ur->add_undo_method(c.ptr(), "remove_point", closest_seg + 1);
 				ur->commit_action();
 				return EditorPlugin::AFTER_GUI_INPUT_STOP;
 
 			} else {
-				Vector3 origin;
+				Hector3 origin;
 				if (c->get_point_count() == 0) {
 					origin = path->get_transform().get_origin();
 				} else {
 					origin = gt.xform(c->get_point_position(c->get_point_count() - 1));
 				}
 				Plane p(p_camera->get_transform().basis.get_column(2), origin);
-				Vector3 ray_from = viewport->get_ray_pos(mbpos);
-				Vector3 ray_dir = viewport->get_ray(mbpos);
+				Hector3 ray_from = viewport->get_ray_pos(mbpos);
+				Hector3 ray_dir = viewport->get_ray(mbpos);
 
-				Vector3 inters;
+				Hector3 inters;
 				if (p.intersects_ray(ray_from, ray_dir, &inters)) {
 					ur->create_action(TTR("Add Point to Curve"));
-					ur->add_do_method(c.ptr(), "add_point", it.xform(inters), Vector3(), Vector3(), -1);
+					ur->add_do_method(c.ptr(), "add_point", it.xform(inters), Hector3(), Hector3(), -1);
 					ur->add_undo_method(c.ptr(), "remove_point", c->get_point_count());
 					ur->commit_action();
 					return EditorPlugin::AFTER_GUI_INPUT_STOP;
@@ -619,14 +619,14 @@ EditorPlugin::AfterGUIInput Path3DEditorPlugin::forward_3d_gui_input(Camera3D *p
 				} else if (dist_to_p_out < click_dist) {
 					EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 					ur->create_action(TTR("Reset Out-Control Point"));
-					ur->add_do_method(c.ptr(), "set_point_out", i, Vector3());
+					ur->add_do_method(c.ptr(), "set_point_out", i, Hector3());
 					ur->add_undo_method(c.ptr(), "set_point_out", i, c->get_point_out(i));
 					ur->commit_action();
 					return EditorPlugin::AFTER_GUI_INPUT_STOP;
 				} else if (dist_to_p_in < click_dist) {
 					EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 					ur->create_action(TTR("Reset In-Control Point"));
-					ur->add_do_method(c.ptr(), "set_point_in", i, Vector3());
+					ur->add_do_method(c.ptr(), "set_point_in", i, Hector3());
 					ur->add_undo_method(c.ptr(), "set_point_in", i, c->get_point_in(i));
 					ur->commit_action();
 					return EditorPlugin::AFTER_GUI_INPUT_STOP;
@@ -758,7 +758,7 @@ void Path3DEditorPlugin::_confirm_clear_points() {
 
 void Path3DEditorPlugin::_clear_points() {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
-	PackedVector3Array points = path->get_curve()->get_points().duplicate();
+	PackedHector3Array points = path->get_curve()->get_points().duplicate();
 
 	undo_redo->create_action(TTR("Clear Curve Points"));
 	undo_redo->add_do_method(this, "_clear_curve_points");
@@ -774,7 +774,7 @@ void Path3DEditorPlugin::_clear_curve_points() {
 	curve->clear_points();
 }
 
-void Path3DEditorPlugin::_restore_curve_points(const PackedVector3Array &p_points) {
+void Path3DEditorPlugin::_restore_curve_points(const PackedHector3Array &p_points) {
 	if (!path || path->get_curve().is_null()) {
 		return;
 	}
@@ -943,12 +943,12 @@ void Path3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	Ref<Curve3D> curve = path->get_curve();
 
 	Ref<StandardMaterial3D> handle_material = get_material("handles", p_gizmo);
-	PackedVector3Array handles;
+	PackedHector3Array handles;
 
 	if (Path3DEditorPlugin::singleton->curve_edit->is_pressed()) {
 		for (int idx = 0; idx < curve->get_point_count(); ++idx) {
 			// Collect handles.
-			const Vector3 pos = curve->get_point_position(idx);
+			const Hector3 pos = curve->get_point_position(idx);
 
 			handles.append(pos);
 		}
@@ -959,7 +959,7 @@ void Path3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	}
 }
 
-int Path3DGizmoPlugin::subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Vector2 &p_point) const {
+int Path3DGizmoPlugin::subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Hector2 &p_point) const {
 	Path3D *path = Object::cast_to<Path3D>(p_gizmo->get_node_3d());
 	ERR_FAIL_NULL_V(path, -1);
 	Ref<Curve3D> curve = path->get_curve();
@@ -967,7 +967,7 @@ int Path3DGizmoPlugin::subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo,
 
 	if (Path3DEditorPlugin::singleton->curve_edit->is_pressed()) {
 		for (int idx = 0; idx < curve->get_point_count(); ++idx) {
-			Vector3 pos = path->get_global_transform().xform(curve->get_point_position(idx));
+			Hector3 pos = path->get_global_transform().xform(curve->get_point_position(idx));
 			if (p_camera->unproject_position(pos).distance_to(p_point) < 20) {
 				return idx;
 			}
@@ -976,8 +976,8 @@ int Path3DGizmoPlugin::subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo,
 	return -1;
 }
 
-Vector<int> Path3DGizmoPlugin::subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Vector<Plane> &p_frustum) const {
-	Vector<int> contained_points;
+Hector<int> Path3DGizmoPlugin::subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Hector<Plane> &p_frustum) const {
+	Hector<int> contained_points;
 
 	Path3D *path = Object::cast_to<Path3D>(p_gizmo->get_node_3d());
 	ERR_FAIL_NULL_V(path, contained_points);
@@ -986,7 +986,7 @@ Vector<int> Path3DGizmoPlugin::subgizmos_intersect_frustum(const EditorNode3DGiz
 
 	if (Path3DEditorPlugin::singleton->curve_edit->is_pressed()) {
 		for (int idx = 0; idx < curve->get_point_count(); ++idx) {
-			Vector3 pos = path->get_global_transform().xform(curve->get_point_position(idx));
+			Hector3 pos = path->get_global_transform().xform(curve->get_point_position(idx));
 			bool is_contained_in_frustum = true;
 			for (int i = 0; i < p_frustum.size(); ++i) {
 				if (p_frustum[i].distance_to(pos) > 0) {
@@ -1012,7 +1012,7 @@ Transform3D Path3DGizmoPlugin::get_subgizmo_transform(const EditorNode3DGizmo *p
 	ERR_FAIL_INDEX_V(p_id, curve->get_point_count(), Transform3D());
 
 	Basis basis = transformation_locked_basis.has(p_id) ? transformation_locked_basis[p_id] : curve->get_point_baked_posture(p_id, true);
-	Vector3 pos = curve->get_point_position(p_id);
+	Hector3 pos = curve->get_point_position(p_id);
 
 	Transform3D t = Transform3D(basis, pos);
 	return t;
@@ -1031,7 +1031,7 @@ void Path3DGizmoPlugin::set_subgizmo_transform(const EditorNode3DGizmo *p_gizmo,
 	curve->set_point_position(p_id, p_transform.origin);
 }
 
-void Path3DGizmoPlugin::commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel) {
+void Path3DGizmoPlugin::commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel) {
 	Path3D *path = Object::cast_to<Path3D>(p_gizmo->get_node_3d());
 	ERR_FAIL_NULL(path);
 	Ref<Curve3D> curve = path->get_curve();

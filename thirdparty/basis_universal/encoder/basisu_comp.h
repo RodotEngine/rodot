@@ -327,15 +327,15 @@ namespace basisu
 
 		// If m_read_source_images is true, m_source_filenames (and optionally m_source_alpha_filenames) contains the filenames of PNG images to read. 
 		// Otherwise, the compressor processes the images in m_source_images.
-		basisu::vector<std::string> m_source_filenames;
-		basisu::vector<std::string> m_source_alpha_filenames;
+		basisu::Hector<std::string> m_source_filenames;
+		basisu::Hector<std::string> m_source_alpha_filenames;
 		
-		basisu::vector<image> m_source_images;
+		basisu::Hector<image> m_source_images;
 		
 		// Stores mipmaps starting from level 1. Level 0 is still stored in m_source_images, as usual.
 		// If m_source_mipmaps isn't empty, automatic mipmap generation isn't done. m_source_mipmaps.size() MUST equal m_source_images.size() or the compressor returns an error.
 		// The compressor applies the user-provided swizzling (in m_swizzle) to these images.
-		basisu::vector< basisu::vector<image> > m_source_mipmap_images;
+		basisu::Hector< basisu::Hector<image> > m_source_mipmap_images;
 						
 		// Filename of the output basis file
 		std::string m_out_filename;
@@ -489,7 +489,7 @@ namespace basisu
 		// The output .ktx2 file will only be valid if m_create_ktx2_file was true and process() succeeded.
 		const uint8_vec& get_output_ktx2_file() const { return m_output_ktx2_file; }
 
-		const basisu::vector<image_stats> &get_stats() const { return m_stats; }
+		const basisu::Hector<image_stats> &get_stats() const { return m_stats; }
 
 		uint32_t get_basis_file_size() const { return m_basis_file_size; }
 		double get_basis_bits_per_texel() const { return m_basis_bits_per_texel; }
@@ -503,9 +503,9 @@ namespace basisu
 
 		opencl_context_ptr m_pOpenCL_context;
 		
-		basisu::vector<image> m_slice_images;
+		basisu::Hector<image> m_slice_images;
 
-		basisu::vector<image_stats> m_stats;
+		basisu::Hector<image_stats> m_stats;
 
 		uint32_t m_basis_file_size;
 		double m_basis_bits_per_texel;
@@ -517,24 +517,24 @@ namespace basisu
 		basisu_frontend m_frontend;
 		pixel_block_vec m_source_blocks;
 
-		basisu::vector<gpu_image> m_frontend_output_textures;
+		basisu::Hector<gpu_image> m_frontend_output_textures;
 
-		basisu::vector<gpu_image> m_best_etc1s_images;
-		basisu::vector<image> m_best_etc1s_images_unpacked;
+		basisu::Hector<gpu_image> m_best_etc1s_images;
+		basisu::Hector<image> m_best_etc1s_images_unpacked;
 
 		basisu_backend m_backend;
 
 		basisu_file m_basis_file;
 
-		basisu::vector<gpu_image> m_decoded_output_textures;
-		basisu::vector<image> m_decoded_output_textures_unpacked;
-		basisu::vector<gpu_image> m_decoded_output_textures_bc7;
-		basisu::vector<image> m_decoded_output_textures_unpacked_bc7;
+		basisu::Hector<gpu_image> m_decoded_output_textures;
+		basisu::Hector<image> m_decoded_output_textures_unpacked;
+		basisu::Hector<gpu_image> m_decoded_output_textures_bc7;
+		basisu::Hector<image> m_decoded_output_textures_unpacked_bc7;
 
 		uint8_vec m_output_basis_file;
 		uint8_vec m_output_ktx2_file;
 		
-		basisu::vector<gpu_image> m_uastc_slice_textures;
+		basisu::Hector<gpu_image> m_uastc_slice_textures;
 		basisu_backend_output m_uastc_backend_output;
 
 		bool m_any_source_image_has_alpha;
@@ -549,7 +549,7 @@ namespace basisu
 		bool create_basis_file_and_transcode();
 		bool write_output_files_and_compute_stats();
 		error_code encode_slices_to_uastc();
-		bool generate_mipmaps(const image &img, basisu::vector<image> &mips, bool has_alpha);
+		bool generate_mipmaps(const image &img, basisu::Hector<image> &mips, bool has_alpha);
 		bool validate_texture_type_constraints();
 		bool validate_ktx2_constraints();
 		void get_dfd(uint8_vec& dfd, const basist::ktx2_header& hdr);
@@ -602,7 +602,7 @@ namespace basisu
 	// Returns a pointer to the compressed .basis or .ktx2 file data. *pSize is the size of the compressed data. The returned block must be freed using basis_free_data().
 	// basisu_encoder_init() MUST be called first!
 	void* basis_compress(
-		const basisu::vector<image> &source_images,
+		const basisu::Hector<image> &source_images,
 		uint32_t flags_and_quality, float uastc_rdo_quality,
 		size_t* pSize,
 		image_stats* pStats = nullptr);
@@ -630,7 +630,7 @@ namespace basisu
 		basis_compressor::error_code m_error_code;
 		uint8_vec m_basis_file;
 		uint8_vec m_ktx2_file;
-		basisu::vector<image_stats> m_stats;
+		basisu::Hector<image_stats> m_stats;
 		double m_basis_bits_per_texel;
 		bool m_any_source_image_has_alpha;
 
@@ -656,8 +656,8 @@ namespace basisu
 	// total_threads must be >= 1.
 	bool basis_parallel_compress(
 		uint32_t total_threads,
-		const basisu::vector<basis_compressor_params> &params_vec,
-		basisu::vector< parallel_results > &results_vec);
+		const basisu::Hector<basis_compressor_params> &params_vec,
+		basisu::Hector< parallel_results > &results_vec);
 		
 } // namespace basisu
 

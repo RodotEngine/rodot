@@ -56,46 +56,46 @@ void VehicleWheel3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	Vector<Vector3> points;
+	Hector<Hector3> points;
 
 	float r = car_wheel->get_radius();
 	const int skip = 10;
 	for (int i = 0; i <= 360; i += skip) {
 		float ra = Math::deg_to_rad((float)i);
 		float rb = Math::deg_to_rad((float)i + skip);
-		Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-		Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+		Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+		Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
-		points.push_back(Vector3(0, a.x, a.y));
-		points.push_back(Vector3(0, b.x, b.y));
+		points.push_back(Hector3(0, a.x, a.y));
+		points.push_back(Hector3(0, b.x, b.y));
 
 		const int springsec = 4;
 
 		for (int j = 0; j < springsec; j++) {
 			float t = car_wheel->get_suspension_rest_length() * 5;
-			points.push_back(Vector3(a.x, i / 360.0 * t / springsec + j * (t / springsec), a.y) * 0.2);
-			points.push_back(Vector3(b.x, (i + skip) / 360.0 * t / springsec + j * (t / springsec), b.y) * 0.2);
+			points.push_back(Hector3(a.x, i / 360.0 * t / springsec + j * (t / springsec), a.y) * 0.2);
+			points.push_back(Hector3(b.x, (i + skip) / 360.0 * t / springsec + j * (t / springsec), b.y) * 0.2);
 		}
 	}
 
 	//travel
-	points.push_back(Vector3(0, 0, 0));
-	points.push_back(Vector3(0, car_wheel->get_suspension_rest_length(), 0));
+	points.push_back(Hector3(0, 0, 0));
+	points.push_back(Hector3(0, car_wheel->get_suspension_rest_length(), 0));
 
 	//axis
-	points.push_back(Vector3(r * 0.2, car_wheel->get_suspension_rest_length(), 0));
-	points.push_back(Vector3(-r * 0.2, car_wheel->get_suspension_rest_length(), 0));
+	points.push_back(Hector3(r * 0.2, car_wheel->get_suspension_rest_length(), 0));
+	points.push_back(Hector3(-r * 0.2, car_wheel->get_suspension_rest_length(), 0));
 	//axis
-	points.push_back(Vector3(r * 0.2, 0, 0));
-	points.push_back(Vector3(-r * 0.2, 0, 0));
+	points.push_back(Hector3(r * 0.2, 0, 0));
+	points.push_back(Hector3(-r * 0.2, 0, 0));
 
 	//forward line
-	points.push_back(Vector3(0, -r, 0));
-	points.push_back(Vector3(0, -r, r * 2));
-	points.push_back(Vector3(0, -r, r * 2));
-	points.push_back(Vector3(r * 2 * 0.2, -r, r * 2 * 0.8));
-	points.push_back(Vector3(0, -r, r * 2));
-	points.push_back(Vector3(-r * 2 * 0.2, -r, r * 2 * 0.8));
+	points.push_back(Hector3(0, -r, 0));
+	points.push_back(Hector3(0, -r, r * 2));
+	points.push_back(Hector3(0, -r, r * 2));
+	points.push_back(Hector3(r * 2 * 0.2, -r, r * 2 * 0.8));
+	points.push_back(Hector3(0, -r, r * 2));
+	points.push_back(Hector3(-r * 2 * 0.2, -r, r * 2 * 0.8));
 
 	Ref<Material> material = get_material("shape_material", p_gizmo);
 

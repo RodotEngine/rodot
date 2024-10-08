@@ -40,14 +40,14 @@ bool ConvexPolygonShape2D::_edit_is_selected_on_click(const Point2 &p_point, dou
 
 #ifdef DEBUG_ENABLED
 // Check if point p3 is to the left of [p1, p2] segment or on it.
-bool left_test(const Vector2 &p1, const Vector2 &p2, const Vector2 &p3) {
-	Vector2 p12 = p2 - p1;
-	Vector2 p13 = p3 - p1;
+bool left_test(const Hector2 &p1, const Hector2 &p2, const Hector2 &p3) {
+	Hector2 p12 = p2 - p1;
+	Hector2 p13 = p3 - p1;
 	// If the value of the cross product is positive or zero; p3 is to the left or on the segment, respectively.
 	return p12.cross(p13) >= 0;
 }
 
-bool is_convex(const Vector<Vector2> &p_points) {
+bool is_convex(const Hector<Hector2> &p_points) {
 	// Pre-condition: Polygon is in counter-clockwise order.
 	int polygon_size = p_points.size();
 	for (int i = 0; i < polygon_size && polygon_size > 3; i++) {
@@ -64,7 +64,7 @@ bool is_convex(const Vector<Vector2> &p_points) {
 #endif
 
 void ConvexPolygonShape2D::_update_shape() {
-	Vector<Vector2> final_points = points;
+	Hector<Hector2> final_points = points;
 	if (Geometry2D::is_polygon_clockwise(final_points)) { //needs to be counter clockwise
 		final_points.reverse();
 	}
@@ -77,19 +77,19 @@ void ConvexPolygonShape2D::_update_shape() {
 	emit_changed();
 }
 
-void ConvexPolygonShape2D::set_point_cloud(const Vector<Vector2> &p_points) {
-	Vector<Point2> hull = Geometry2D::convex_hull(p_points);
+void ConvexPolygonShape2D::set_point_cloud(const Hector<Hector2> &p_points) {
+	Hector<Point2> hull = Geometry2D::convex_hull(p_points);
 	ERR_FAIL_COND(hull.size() < 3);
 	set_points(hull);
 }
 
-void ConvexPolygonShape2D::set_points(const Vector<Vector2> &p_points) {
+void ConvexPolygonShape2D::set_points(const Hector<Hector2> &p_points) {
 	points = p_points;
 
 	_update_shape();
 }
 
-Vector<Vector2> ConvexPolygonShape2D::get_points() const {
+Hector<Hector2> ConvexPolygonShape2D::get_points() const {
 	return points;
 }
 
@@ -98,7 +98,7 @@ void ConvexPolygonShape2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_points", "points"), &ConvexPolygonShape2D::set_points);
 	ClassDB::bind_method(D_METHOD("get_points"), &ConvexPolygonShape2D::get_points);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "points"), "set_points", "get_points");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "points"), "set_points", "get_points");
 }
 
 void ConvexPolygonShape2D::draw(const RID &p_to_rid, const Color &p_color) {
@@ -106,7 +106,7 @@ void ConvexPolygonShape2D::draw(const RID &p_to_rid, const Color &p_color) {
 		return;
 	}
 
-	Vector<Color> col = { p_color };
+	Hector<Color> col = { p_color };
 	RenderingServer::get_singleton()->canvas_item_add_polygon(p_to_rid, points, col);
 
 	if (is_collision_outline_enabled()) {

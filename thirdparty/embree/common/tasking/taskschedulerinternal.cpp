@@ -13,7 +13,7 @@ namespace embree
   static MutexSys g_mutex;
   size_t TaskScheduler::g_numThreads = 0;
   __thread TaskScheduler* TaskScheduler::g_instance = nullptr;
-  std::vector<Ref<TaskScheduler>> g_instance_vector;
+  std::vector<Ref<TaskScheduler>> g_instance_Hector;
   __thread TaskScheduler::Thread* TaskScheduler::thread_local_thread = nullptr;
   TaskScheduler::ThreadPool* TaskScheduler::threadPool = nullptr;
 
@@ -267,7 +267,7 @@ namespace embree
     if (g_instance == NULL) {
       Lock<MutexSys> lock(g_mutex);
       g_instance = new TaskScheduler;
-      g_instance_vector.push_back(g_instance);
+      g_instance_Hector.push_back(g_instance);
     }
     return g_instance;
   }

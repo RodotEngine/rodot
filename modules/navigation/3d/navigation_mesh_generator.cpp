@@ -55,7 +55,7 @@ void NavigationMeshGenerator::bake(const Ref<NavigationMesh> &p_navigation_mesh,
 void NavigationMeshGenerator::clear(Ref<NavigationMesh> p_navigation_mesh) {
 	if (p_navigation_mesh.is_valid()) {
 		p_navigation_mesh->clear_polygons();
-		p_navigation_mesh->set_vertices(Vector<Vector3>());
+		p_navigation_mesh->set_vertices(Hector<Hector3>());
 	}
 }
 

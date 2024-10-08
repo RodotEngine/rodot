@@ -218,8 +218,8 @@ Error GLManager_X11::open_display(Display *p_display) {
 }
 
 Error GLManager_X11::window_create(DisplayServer::WindowID p_window_id, ::Window p_window, Display *p_display, int p_width, int p_height) {
-	// make sure vector is big enough...
-	// we can mirror the external vector, it is simpler
+	// make sure Hector is big enough...
+	// we can mirror the external Hector, it is simpler
 	// to keep the IDs identical for fast lookup
 	if (p_window_id >= (int)_windows.size()) {
 		_windows.resize(p_window_id + 1);
@@ -378,7 +378,7 @@ void *GLManager_X11::get_glx_context(DisplayServer::WindowID p_window_id) {
 	return (void *)disp.context->glx_context;
 }
 
-GLManager_X11::GLManager_X11(const Vector2i &p_size, ContextType p_context_type) {
+GLManager_X11::GLManager_X11(const Hector2i &p_size, ContextType p_context_type) {
 	context_type = p_context_type;
 
 	double_buffer = false;

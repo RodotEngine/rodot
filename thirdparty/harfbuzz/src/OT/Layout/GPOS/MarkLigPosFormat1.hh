@@ -69,7 +69,7 @@ struct MarkLigPosFormat1_2
     const LigatureArray& lig_array = this+ligatureArray;
     for (const unsigned i : lig_iter)
     {
-      hb_sorted_vector_t<unsigned> lig_indexes;
+      hb_sorted_Hector_t<unsigned> lig_indexes;
       unsigned row_count = lig_array[i].rows;
       for (unsigned row : + hb_range (row_count))
       {

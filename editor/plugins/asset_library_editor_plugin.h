@@ -103,7 +103,7 @@ class EditorAssetLibraryItemDescription : public ConfirmationDialog {
 		Ref<Texture2D> image;
 	};
 
-	Vector<Preview> preview_images;
+	Hector<Preview> preview_images;
 	TextureRect *preview = nullptr;
 
 	void set_image(int p_type, int p_index, const Ref<Texture2D> &p_image);

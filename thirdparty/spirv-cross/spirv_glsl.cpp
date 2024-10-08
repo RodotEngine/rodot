@@ -275,7 +275,7 @@ static uint32_t pls_format_to_components(PlsFormat format)
 	}
 }
 
-const char *CompilerGLSL::vector_swizzle(int vecsize, int index)
+const char *CompilerGLSL::Hector_swizzle(int vecsize, int index)
 {
 	static const char *const swizzle[4][4] = {
 		{ ".x", ".y", ".z", ".w" },
@@ -748,7 +748,7 @@ std::string CompilerGLSL::get_partial_source()
 	return buffer.str();
 }
 
-void CompilerGLSL::build_workgroup_size(SmallVector<string> &arguments, const SpecializationConstant &wg_x,
+void CompilerGLSL::build_workgroup_size(SmallHector<string> &arguments, const SpecializationConstant &wg_x,
                                         const SpecializationConstant &wg_y, const SpecializationConstant &wg_z)
 {
 	auto &execution = get_entry_point();
@@ -1019,8 +1019,8 @@ void CompilerGLSL::emit_header()
 	for (auto &header : header_lines)
 		statement(header);
 
-	SmallVector<string> inputs;
-	SmallVector<string> outputs;
+	SmallHector<string> inputs;
+	SmallHector<string> outputs;
 
 	switch (execution.model)
 	{
@@ -1343,7 +1343,7 @@ string CompilerGLSL::layout_for_member(const SPIRType &type, uint32_t index)
 		return "";
 	auto &dec = memb[index];
 
-	SmallVector<string> attr;
+	SmallHector<string> attr;
 
 	if (has_member_decoration(type.self, index, DecorationPassthroughNV))
 		attr.push_back("passthrough");
@@ -1584,7 +1584,7 @@ uint32_t CompilerGLSL::type_to_packed_alignment(const SPIRType &type, const Bits
 		if (packing_is_scalar(packing))
 			return base_alignment;
 
-		// Vectors are *not* aligned in HLSL, but there's an extra rule where vectors cannot straddle
+		// Hectors are *not* aligned in HLSL, but there's an extra rule where Hectors cannot straddle
 		// a vec4, this is handled outside since that part knows our current offset.
 		if (type.columns == 1 && packing_is_hlsl(packing))
 			return base_alignment;
@@ -1605,7 +1605,7 @@ uint32_t CompilerGLSL::type_to_packed_alignment(const SPIRType &type, const Bits
 		// Rule 4 implied. Alignment does not change in std430.
 
 		// Rule 5. Column-major matrices are stored as arrays of
-		// vectors.
+		// Hectors.
 		if (flags.get(DecorationColMajor) && type.columns > 1)
 		{
 			if (packing_is_vec4_padded(packing))
@@ -1667,8 +1667,8 @@ uint32_t CompilerGLSL::type_to_packed_size(const SPIRType &type, const Bitset &f
 	{
 		uint32_t packed_size = to_array_size_literal(type) * type_to_packed_array_stride(type, flags, packing);
 
-		// For arrays of vectors and matrices in HLSL, the last element has a size which depends on its vector size,
-		// so that it is possible to pack other vectors into the last element.
+		// For arrays of Hectors and matrices in HLSL, the last element has a size which depends on its Hector size,
+		// so that it is possible to pack other Hectors into the last element.
 		if (packing_is_hlsl(packing) && type.basetype != SPIRType::Struct)
 			packed_size -= (4 - type.vecsize) * (type.width / 8);
 
@@ -1733,8 +1733,8 @@ uint32_t CompilerGLSL::type_to_packed_size(const SPIRType &type, const Bitset &f
 					size = type.vecsize * type.columns * base_alignment;
 			}
 
-			// For matrices in HLSL, the last element has a size which depends on its vector size,
-			// so that it is possible to pack other vectors into the last element.
+			// For matrices in HLSL, the last element has a size which depends on its Hector size,
+			// so that it is possible to pack other Hectors into the last element.
 			if (packing_is_hlsl(packing) && type.columns > 1)
 				size -= (4 - type.vecsize) * (type.width / 8);
 		}
@@ -1932,7 +1932,7 @@ string CompilerGLSL::layout_for_variable(const SPIRVariable &var)
 	if (subpass_input_is_framebuffer_fetch(var.self))
 		return "";
 
-	SmallVector<string> attr;
+	SmallHector<string> attr;
 
 	auto &type = get<SPIRType>(var.basetype);
 	auto &flags = get_decoration_bitset(var.self);
@@ -2376,7 +2376,7 @@ void CompilerGLSL::emit_buffer_reference_block(uint32_t type_id, bool forward_de
 
 		if (is_physical_pointer_to_buffer_block(type))
 		{
-			SmallVector<std::string> attributes;
+			SmallHector<std::string> attributes;
 			attributes.push_back("buffer_reference");
 			if (alignment)
 				attributes.push_back(join("buffer_reference_align = ", alignment));
@@ -2529,7 +2529,7 @@ void CompilerGLSL::emit_buffer_block_flattened(const SPIRVariable &var)
 	SPIRType::BaseType basic_type;
 	if (get_common_basic_type(type, basic_type))
 	{
-		SPIRType tmp { OpTypeVector };
+		SPIRType tmp { OpTypeHector };
 		tmp.basetype = basic_type;
 		tmp.vecsize = 4;
 		if (basic_type != SPIRType::Float && basic_type != SPIRType::Int && basic_type != SPIRType::UInt)
@@ -2598,7 +2598,7 @@ const char *CompilerGLSL::to_storage_qualifiers_glsl(const SPIRVariable &var)
 }
 
 void CompilerGLSL::emit_flattened_io_block_member(const std::string &basename, const SPIRType &type, const char *qual,
-                                                  const SmallVector<uint32_t> &indices)
+                                                  const SmallHector<uint32_t> &indices)
 {
 	uint32_t member_type_id = type.self;
 	const SPIRType *member_type = &type;
@@ -2636,7 +2636,7 @@ void CompilerGLSL::emit_flattened_io_block_member(const std::string &basename, c
 }
 
 void CompilerGLSL::emit_flattened_io_block_struct(const std::string &basename, const SPIRType &type, const char *qual,
-                                                  const SmallVector<uint32_t> &indices)
+                                                  const SmallHector<uint32_t> &indices)
 {
 	auto sub_indices = indices;
 	sub_indices.push_back(0);
@@ -2676,7 +2676,7 @@ void CompilerGLSL::emit_flattened_io_block(const SPIRVariable &var, const char *
 
 	type.member_name_cache.clear();
 
-	SmallVector<uint32_t> member_indices;
+	SmallHector<uint32_t> member_indices;
 	member_indices.push_back(0);
 	auto basename = to_name(var.self);
 
@@ -3417,7 +3417,7 @@ void CompilerGLSL::emit_declared_builtin_block(StorageClass storage, ExecutionMo
 
 	if (storage == StorageClassOutput)
 	{
-		SmallVector<string> attr;
+		SmallHector<string> attr;
 		if (have_xfb_buffer_stride && have_any_xfb_offset)
 		{
 			if (!options.es)
@@ -3722,7 +3722,7 @@ void CompilerGLSL::emit_resources()
 
 		if ((wg_x.id != ConstantID(0)) || (wg_y.id != ConstantID(0)) || (wg_z.id != ConstantID(0)))
 		{
-			SmallVector<string> inputs;
+			SmallHector<string> inputs;
 			build_workgroup_size(inputs, wg_x, wg_y, wg_z);
 			statement("layout(", merge(inputs), ") in;");
 			statement("");
@@ -3973,7 +3973,7 @@ void CompilerGLSL::emit_output_variable_initializer(const SPIRVariable &var)
 				array_type.array.push_back(array_size);
 				array_type.array_size_literal.push_back(true);
 
-				SmallVector<string> exprs;
+				SmallHector<string> exprs;
 				exprs.reserve(array_size);
 				auto &c = get<SPIRConstant>(var.initializer);
 				for (uint32_t j = 0; j < array_size; j++)
@@ -5467,7 +5467,7 @@ string CompilerGLSL::to_expression(uint32_t id, bool register_expression_read)
 				int wg_index = get_constant_mapping_to_workgroup_component(c);
 				if (wg_index >= 0)
 				{
-					auto wg_size = join(builtin_to_glsl(BuiltInWorkgroupSize, StorageClassInput), vector_swizzle(1, wg_index));
+					auto wg_size = join(builtin_to_glsl(BuiltInWorkgroupSize, StorageClassInput), Hector_swizzle(1, wg_index));
 					if (type.basetype != SPIRType::UInt)
 						wg_size = bitcast_expression(type, SPIRType::UInt, wg_size);
 					return wg_size;
@@ -5548,7 +5548,7 @@ string CompilerGLSL::to_expression(uint32_t id, bool register_expression_read)
 	}
 }
 
-SmallVector<ConstantID> CompilerGLSL::get_composite_constant_ids(ConstantID const_id)
+SmallHector<ConstantID> CompilerGLSL::get_composite_constant_ids(ConstantID const_id)
 {
 	if (auto *constant = maybe_get<SPIRConstant>(const_id))
 	{
@@ -5556,9 +5556,9 @@ SmallVector<ConstantID> CompilerGLSL::get_composite_constant_ids(ConstantID cons
 		if (is_array(type) || type.basetype == SPIRType::Struct)
 			return constant->subconstants;
 		if (is_matrix(type))
-			return SmallVector<ConstantID>(constant->m.id);
-		if (is_vector(type))
-			return SmallVector<ConstantID>(constant->m.c[0].id);
+			return SmallHector<ConstantID>(constant->m.id);
+		if (is_Hector(type))
+			return SmallHector<ConstantID>(constant->m.c[0].id);
 		SPIRV_CROSS_THROW("Unexpected scalar constant!");
 	}
 	if (!const_composite_insert_ids.count(const_id))
@@ -5567,7 +5567,7 @@ SmallVector<ConstantID> CompilerGLSL::get_composite_constant_ids(ConstantID cons
 }
 
 void CompilerGLSL::fill_composite_constant(SPIRConstant &constant, TypeID type_id,
-                                           const SmallVector<ConstantID> &initializers)
+                                           const SmallHector<ConstantID> &initializers)
 {
 	auto &type = get<SPIRType>(type_id);
 	constant.specialization = true;
@@ -5584,7 +5584,7 @@ void CompilerGLSL::fill_composite_constant(SPIRConstant &constant, TypeID type_i
 			constant.m.c[i].vecsize = type.vecsize;
 		}
 	}
-	else if (is_vector(type))
+	else if (is_Hector(type))
 	{
 		constant.m.c[0].vecsize = type.vecsize;
 		for (uint32_t i = 0; i < type.vecsize; ++i)
@@ -5595,7 +5595,7 @@ void CompilerGLSL::fill_composite_constant(SPIRConstant &constant, TypeID type_i
 }
 
 void CompilerGLSL::set_composite_constant(ConstantID const_id, TypeID type_id,
-                                          const SmallVector<ConstantID> &initializers)
+                                          const SmallHector<ConstantID> &initializers)
 {
 	if (maybe_get<SPIRConstantOp>(const_id))
 	{
@@ -5617,9 +5617,9 @@ TypeID CompilerGLSL::get_composite_member_type(TypeID type_id, uint32_t member_i
 		return type.member_types[member_idx];
 	if (is_matrix(type))
 		return type.parent_type;
-	if (is_vector(type))
+	if (is_Hector(type))
 		return type.parent_type;
-	SPIRV_CROSS_THROW("Shouldn't reach lower than vector handling OpSpecConstantOp CompositeInsert!");
+	SPIRV_CROSS_THROW("Shouldn't reach lower than Hector handling OpSpecConstantOp CompositeInsert!");
 }
 
 string CompilerGLSL::constant_op_expression(const SPIRConstantOp &cop)
@@ -5714,7 +5714,7 @@ string CompilerGLSL::constant_op_expression(const SPIRConstantOp &cop)
 		break;
 	}
 
-	case OpVectorShuffle:
+	case OpHectorShuffle:
 	{
 		string expr = type_to_glsl_constructor(type);
 		expr += "(";
@@ -5759,7 +5759,7 @@ string CompilerGLSL::constant_op_expression(const SPIRConstantOp &cop)
 
 	case OpCompositeInsert:
 	{
-		SmallVector<ConstantID> new_init = get_composite_constant_ids(cop.arguments[1]);
+		SmallHector<ConstantID> new_init = get_composite_constant_ids(cop.arguments[1]);
 		uint32_t idx;
 		uint32_t target_id = cop.self;
 		uint32_t target_type_id = cop.basetype;
@@ -6003,7 +6003,7 @@ string CompilerGLSL::constant_expression(const SPIRConstant &c,
 	}
 	else if (c.columns() == 1)
 	{
-		auto res = constant_expression_vector(c, 0);
+		auto res = constant_expression_Hector(c, 0);
 
 		if (inside_struct_scope &&
 		    backend.boolean_in_struct_remapped_type != SPIRType::Boolean &&
@@ -6024,7 +6024,7 @@ string CompilerGLSL::constant_expression(const SPIRConstant &c,
 			if (c.specialization_constant_id(col) != 0)
 				res += to_name(c.specialization_constant_id(col));
 			else
-				res += constant_expression_vector(c, col);
+				res += constant_expression_Hector(c, col);
 
 			if (col + 1 < c.columns())
 				res += ", ";
@@ -6243,7 +6243,7 @@ std::string CompilerGLSL::convert_double_to_string(const SPIRConstant &c, uint32
 #pragma warning(pop)
 #endif
 
-string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t vector)
+string CompilerGLSL::constant_expression_Hector(const SPIRConstant &c, uint32_t Hector)
 {
 	auto type = get<SPIRType>(c.constant_type);
 	type.columns = 1;
@@ -6252,8 +6252,8 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	scalar_type.vecsize = 1;
 
 	string res;
-	bool splat = backend.use_constructor_splatting && c.vector_size() > 1;
-	bool swizzle_splat = backend.can_swizzle_scalar && c.vector_size() > 1;
+	bool splat = backend.use_constructor_splatting && c.Hector_size() > 1;
+	bool swizzle_splat = backend.can_swizzle_scalar && c.Hector_size() > 1;
 
 	if (!type_is_floating_point(type))
 	{
@@ -6263,10 +6263,10 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 
 	if (splat || swizzle_splat)
 	{
-		// Cannot use constant splatting if we have specialization constants somewhere in the vector.
-		for (uint32_t i = 0; i < c.vector_size(); i++)
+		// Cannot use constant splatting if we have specialization constants somewhere in the Hector.
+		for (uint32_t i = 0; i < c.Hector_size(); i++)
 		{
-			if (c.specialization_constant_id(vector, i) != 0)
+			if (c.specialization_constant_id(Hector, i) != 0)
 			{
 				splat = false;
 				swizzle_splat = false;
@@ -6279,10 +6279,10 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	{
 		if (type.width == 64)
 		{
-			uint64_t ident = c.scalar_u64(vector, 0);
-			for (uint32_t i = 1; i < c.vector_size(); i++)
+			uint64_t ident = c.scalar_u64(Hector, 0);
+			for (uint32_t i = 1; i < c.Hector_size(); i++)
 			{
-				if (ident != c.scalar_u64(vector, i))
+				if (ident != c.scalar_u64(Hector, i))
 				{
 					splat = false;
 					swizzle_splat = false;
@@ -6292,10 +6292,10 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 		}
 		else
 		{
-			uint32_t ident = c.scalar(vector, 0);
-			for (uint32_t i = 1; i < c.vector_size(); i++)
+			uint32_t ident = c.scalar(Hector, 0);
+			for (uint32_t i = 1; i < c.Hector_size(); i++)
 			{
-				if (ident != c.scalar(vector, i))
+				if (ident != c.scalar(Hector, i))
 				{
 					splat = false;
 					swizzle_splat = false;
@@ -6304,7 +6304,7 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 		}
 	}
 
-	if (c.vector_size() > 1 && !swizzle_splat)
+	if (c.Hector_size() > 1 && !swizzle_splat)
 		res += type_to_glsl(type) + "(";
 
 	switch (type.basetype)
@@ -6312,20 +6312,20 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::Half:
 		if (splat || swizzle_splat)
 		{
-			res += convert_half_to_string(c, vector, 0);
+			res += convert_half_to_string(c, Hector, 0);
 			if (swizzle_splat)
 				res = remap_swizzle(get<SPIRType>(c.constant_type), 1, res);
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
-					res += convert_half_to_string(c, vector, i);
+					res += convert_half_to_string(c, Hector, i);
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6334,20 +6334,20 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::Float:
 		if (splat || swizzle_splat)
 		{
-			res += convert_float_to_string(c, vector, 0);
+			res += convert_float_to_string(c, Hector, 0);
 			if (swizzle_splat)
 				res = remap_swizzle(get<SPIRType>(c.constant_type), 1, res);
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
-					res += convert_float_to_string(c, vector, i);
+					res += convert_float_to_string(c, Hector, i);
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6356,20 +6356,20 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::Double:
 		if (splat || swizzle_splat)
 		{
-			res += convert_double_to_string(c, vector, 0);
+			res += convert_double_to_string(c, Hector, 0);
 			if (swizzle_splat)
 				res = remap_swizzle(get<SPIRType>(c.constant_type), 1, res);
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
-					res += convert_double_to_string(c, vector, i);
+					res += convert_double_to_string(c, Hector, i);
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6384,18 +6384,18 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 
 		if (splat)
 		{
-			res += convert_to_string(c.scalar_i64(vector, 0), int64_type, backend.long_long_literal_suffix);
+			res += convert_to_string(c.scalar_i64(Hector, 0), int64_type, backend.long_long_literal_suffix);
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
-					res += convert_to_string(c.scalar_i64(vector, i), int64_type, backend.long_long_literal_suffix);
+					res += convert_to_string(c.scalar_i64(Hector, i), int64_type, backend.long_long_literal_suffix);
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6405,7 +6405,7 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::UInt64:
 		if (splat)
 		{
-			res += convert_to_string(c.scalar_u64(vector, 0));
+			res += convert_to_string(c.scalar_u64(Hector, 0));
 			if (backend.long_long_literal_suffix)
 				res += "ull";
 			else
@@ -6413,20 +6413,20 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
 				{
-					res += convert_to_string(c.scalar_u64(vector, i));
+					res += convert_to_string(c.scalar_u64(Hector, i));
 					if (backend.long_long_literal_suffix)
 						res += "ull";
 					else
 						res += "ul";
 				}
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6435,12 +6435,12 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::UInt:
 		if (splat)
 		{
-			res += convert_to_string(c.scalar(vector, 0));
+			res += convert_to_string(c.scalar(Hector, 0));
 			if (is_legacy())
 			{
 				// Fake unsigned constant literals with signed ones if possible.
 				// Things like array sizes, etc, tend to be unsigned even though they could just as easily be signed.
-				if (c.scalar_i32(vector, 0) < 0)
+				if (c.scalar_i32(Hector, 0) < 0)
 					SPIRV_CROSS_THROW("Tried to convert uint literal into int, but this made the literal negative.");
 			}
 			else if (backend.uint32_t_literal_suffix)
@@ -6448,18 +6448,18 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
 				{
-					res += convert_to_string(c.scalar(vector, i));
+					res += convert_to_string(c.scalar(Hector, i));
 					if (is_legacy())
 					{
 						// Fake unsigned constant literals with signed ones if possible.
 						// Things like array sizes, etc, tend to be unsigned even though they could just as easily be signed.
-						if (c.scalar_i32(vector, i) < 0)
+						if (c.scalar_i32(Hector, i) < 0)
 							SPIRV_CROSS_THROW("Tried to convert uint literal into int, but this made "
 							                  "the literal negative.");
 					}
@@ -6467,7 +6467,7 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 						res += "u";
 				}
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6475,16 +6475,16 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 
 	case SPIRType::Int:
 		if (splat)
-			res += convert_to_string(c.scalar_i32(vector, 0));
+			res += convert_to_string(c.scalar_i32(Hector, 0));
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
-					res += convert_to_string(c.scalar_i32(vector, i));
-				if (i + 1 < c.vector_size())
+					res += convert_to_string(c.scalar_i32(Hector, i));
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6493,19 +6493,19 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::UShort:
 		if (splat)
 		{
-			res += convert_to_string(c.scalar(vector, 0));
+			res += convert_to_string(c.scalar(Hector, 0));
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
 				{
 					if (*backend.uint16_t_literal_suffix)
 					{
-						res += convert_to_string(c.scalar_u16(vector, i));
+						res += convert_to_string(c.scalar_u16(Hector, i));
 						res += backend.uint16_t_literal_suffix;
 					}
 					else
@@ -6513,12 +6513,12 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 						// If backend doesn't have a literal suffix, we need to value cast.
 						res += type_to_glsl(scalar_type);
 						res += "(";
-						res += convert_to_string(c.scalar_u16(vector, i));
+						res += convert_to_string(c.scalar_u16(Hector, i));
 						res += ")";
 					}
 				}
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6527,19 +6527,19 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::Short:
 		if (splat)
 		{
-			res += convert_to_string(c.scalar_i16(vector, 0));
+			res += convert_to_string(c.scalar_i16(Hector, 0));
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
 				{
 					if (*backend.int16_t_literal_suffix)
 					{
-						res += convert_to_string(c.scalar_i16(vector, i));
+						res += convert_to_string(c.scalar_i16(Hector, i));
 						res += backend.int16_t_literal_suffix;
 					}
 					else
@@ -6547,12 +6547,12 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 						// If backend doesn't have a literal suffix, we need to value cast.
 						res += type_to_glsl(scalar_type);
 						res += "(";
-						res += convert_to_string(c.scalar_i16(vector, i));
+						res += convert_to_string(c.scalar_i16(Hector, i));
 						res += ")";
 					}
 				}
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6561,23 +6561,23 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::UByte:
 		if (splat)
 		{
-			res += convert_to_string(c.scalar_u8(vector, 0));
+			res += convert_to_string(c.scalar_u8(Hector, 0));
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
 				{
 					res += type_to_glsl(scalar_type);
 					res += "(";
-					res += convert_to_string(c.scalar_u8(vector, i));
+					res += convert_to_string(c.scalar_u8(Hector, i));
 					res += ")";
 				}
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6586,23 +6586,23 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 	case SPIRType::SByte:
 		if (splat)
 		{
-			res += convert_to_string(c.scalar_i8(vector, 0));
+			res += convert_to_string(c.scalar_i8(Hector, 0));
 		}
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
 				{
 					res += type_to_glsl(scalar_type);
 					res += "(";
-					res += convert_to_string(c.scalar_i8(vector, i));
+					res += convert_to_string(c.scalar_i8(Hector, i));
 					res += ")";
 				}
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6610,17 +6610,17 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 
 	case SPIRType::Boolean:
 		if (splat)
-			res += c.scalar(vector, 0) ? "true" : "false";
+			res += c.scalar(Hector, 0) ? "true" : "false";
 		else
 		{
-			for (uint32_t i = 0; i < c.vector_size(); i++)
+			for (uint32_t i = 0; i < c.Hector_size(); i++)
 			{
-				if (c.vector_size() > 1 && c.specialization_constant_id(vector, i) != 0)
-					res += to_expression(c.specialization_constant_id(vector, i));
+				if (c.Hector_size() > 1 && c.specialization_constant_id(Hector, i) != 0)
+					res += to_expression(c.specialization_constant_id(Hector, i));
 				else
-					res += c.scalar(vector, i) ? "true" : "false";
+					res += c.scalar(Hector, i) ? "true" : "false";
 
-				if (i + 1 < c.vector_size())
+				if (i + 1 < c.Hector_size())
 					res += ", ";
 			}
 		}
@@ -6630,7 +6630,7 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 		SPIRV_CROSS_THROW("Invalid constant expression basetype.");
 	}
 
-	if (c.vector_size() > 1 && !swizzle_splat)
+	if (c.Hector_size() > 1 && !swizzle_splat)
 		res += ")";
 
 	return res;
@@ -7049,7 +7049,7 @@ void CompilerGLSL::emit_unary_func_op_cast(uint32_t result_type, uint32_t result
 }
 
 // Very special case. Handling bitfieldExtract requires us to deal with different bitcasts of different signs
-// and different vector sizes all at once. Need a special purpose method here.
+// and different Hector sizes all at once. Need a special purpose method here.
 void CompilerGLSL::emit_trinary_func_op_bitextract(uint32_t result_type, uint32_t result_id, uint32_t op0, uint32_t op1,
                                                    uint32_t op2, const char *op,
                                                    SPIRType::BaseType expected_result_type,
@@ -7710,7 +7710,7 @@ void CompilerGLSL::emit_texture_op(const Instruction &i, bool sparse)
 	auto *ops = stream(i);
 	auto op = static_cast<Op>(i.op);
 
-	SmallVector<uint32_t> inherited_expressions;
+	SmallHector<uint32_t> inherited_expressions;
 
 	uint32_t result_type_id = ops[0];
 	uint32_t id = ops[1];
@@ -7753,7 +7753,7 @@ void CompilerGLSL::emit_texture_op(const Instruction &i, bool sparse)
 }
 
 std::string CompilerGLSL::to_texture_op(const Instruction &i, bool sparse, bool *forward,
-                                        SmallVector<uint32_t> &inherited_expressions)
+                                        SmallHector<uint32_t> &inherited_expressions)
 {
 	auto *ops = stream(i);
 	auto op = static_cast<Op>(i.op);
@@ -8249,7 +8249,7 @@ string CompilerGLSL::to_function_args(const TextureFunctionArguments &args, bool
 		}
 		else
 		{
-			// Create a composite which merges coord/dref into a single vector.
+			// Create a composite which merges coord/dref into a single Hector.
 			auto type = expression_type(args.coord);
 			type.vecsize = args.coord_components + 1;
 			if (imgtype.image.dim == Dim1D && options.es)
@@ -8918,7 +8918,7 @@ void CompilerGLSL::emit_glsl_op(uint32_t result_type, uint32_t id, uint32_t eop,
 		emit_unary_func_op(result_type, id, args[0], "unpackDouble2x32");
 		break;
 
-	// Vector math
+	// Hector math
 	case GLSLstd450Length:
 		emit_unary_func_op(result_type, id, args[0], "length");
 		break;
@@ -10456,7 +10456,7 @@ string CompilerGLSL::access_chain_internal(uint32_t base, const uint32_t *indice
 			// If the physical type has an unnatural vecsize,
 			// we must assume it's a faked struct where the .data member
 			// is used for the real payload.
-			if (physical_type && (is_vector(*type) || is_scalar(*type)))
+			if (physical_type && (is_Hector(*type) || is_scalar(*type)))
 			{
 				auto &phys = get<SPIRType>(physical_type);
 				if (phys.vecsize > 4)
@@ -10534,7 +10534,7 @@ string CompilerGLSL::access_chain_internal(uint32_t base, const uint32_t *indice
 			row_major_matrix_needs_conversion = member_is_non_native_row_major_matrix(*type, index);
 			type = &get<SPIRType>(type->member_types[index]);
 		}
-		// Matrix -> Vector
+		// Matrix -> Hector
 		else if (type->columns > 1)
 		{
 			// If we have a row-major matrix here, we need to defer any transpose in case this access chain
@@ -10561,7 +10561,7 @@ string CompilerGLSL::access_chain_internal(uint32_t base, const uint32_t *indice
 			type_id = type->parent_type;
 			type = &get<SPIRType>(type_id);
 		}
-		// Vector -> Scalar
+		// Hector -> Scalar
 		else if (type->vecsize > 1)
 		{
 			string deferred_index;
@@ -10615,7 +10615,7 @@ string CompilerGLSL::access_chain_internal(uint32_t base, const uint32_t *indice
 
 			if (!row_major_matrix_needs_conversion && !ignore_potential_sliced_writes)
 			{
-				// On some backends, we might not be able to safely access individual scalars in a vector.
+				// On some backends, we might not be able to safely access individual scalars in a Hector.
 				// To work around this, we might have to cast the access chain reference to something which can,
 				// like a pointer to scalar, which we can then index into.
 				prepare_access_chain_for_scalar_access(expr, get<SPIRType>(type->parent_type), effective_storage,
@@ -10633,7 +10633,7 @@ string CompilerGLSL::access_chain_internal(uint32_t base, const uint32_t *indice
 				}
 				else
 				{
-					// For packed vectors, we can only access them as an array, not by swizzle.
+					// For packed Hectors, we can only access them as an array, not by swizzle.
 					expr += join("[", out_of_bounds ? 0 : index, "]");
 				}
 			}
@@ -10809,7 +10809,7 @@ string CompilerGLSL::access_chain(uint32_t base, const uint32_t *indices, uint32
 				if (physical_stride != requested_stride)
 				{
 					flags |= ACCESS_CHAIN_PTR_CHAIN_POINTER_ARITH_BIT;
-					if (is_vector(pointee_type))
+					if (is_Hector(pointee_type))
 						flags |= ACCESS_CHAIN_PTR_CHAIN_CAST_TO_SCALAR_BIT;
 				}
 			}
@@ -10854,9 +10854,9 @@ std::string CompilerGLSL::to_flattened_access_chain_expression(uint32_t id)
 }
 
 void CompilerGLSL::store_flattened_struct(const string &basename, uint32_t rhs_id, const SPIRType &type,
-                                          const SmallVector<uint32_t> &indices)
+                                          const SmallHector<uint32_t> &indices)
 {
-	SmallVector<uint32_t> sub_indices = indices;
+	SmallHector<uint32_t> sub_indices = indices;
 	sub_indices.push_back(0);
 
 	auto *member_type = &type;
@@ -10899,7 +10899,7 @@ std::string CompilerGLSL::flattened_access_chain(uint32_t base, const uint32_t *
 	else if (target_type.columns > 1)
 		return flattened_access_chain_matrix(base, indices, count, target_type, offset, matrix_stride, need_transpose);
 	else
-		return flattened_access_chain_vector(base, indices, count, target_type, offset, matrix_stride, need_transpose);
+		return flattened_access_chain_Hector(base, indices, count, target_type, offset, matrix_stride, need_transpose);
 }
 
 std::string CompilerGLSL::flattened_access_chain_struct(uint32_t base, const uint32_t *indices, uint32_t count,
@@ -10970,7 +10970,7 @@ std::string CompilerGLSL::flattened_access_chain_matrix(uint32_t base, const uin
 		if (i != 0)
 			expr += ", ";
 
-		expr += flattened_access_chain_vector(base, indices, count, tmp_type, offset + i * matrix_stride, matrix_stride,
+		expr += flattened_access_chain_Hector(base, indices, count, tmp_type, offset + i * matrix_stride, matrix_stride,
 		                                      /* need_transpose= */ false);
 	}
 
@@ -10979,7 +10979,7 @@ std::string CompilerGLSL::flattened_access_chain_matrix(uint32_t base, const uin
 	return expr;
 }
 
-std::string CompilerGLSL::flattened_access_chain_vector(uint32_t base, const uint32_t *indices, uint32_t count,
+std::string CompilerGLSL::flattened_access_chain_Hector(uint32_t base, const uint32_t *indices, uint32_t count,
                                                         const SPIRType &target_type, uint32_t offset,
                                                         uint32_t matrix_stride, bool need_transpose)
 {
@@ -11013,7 +11013,7 @@ std::string CompilerGLSL::flattened_access_chain_vector(uint32_t base, const uin
 			expr += convert_to_string(index / 4);
 			expr += "]";
 
-			expr += vector_swizzle(1, index % 4);
+			expr += Hector_swizzle(1, index % 4);
 		}
 
 		if (target_type.vecsize > 1)
@@ -11036,7 +11036,7 @@ std::string CompilerGLSL::flattened_access_chain_vector(uint32_t base, const uin
 		expr += convert_to_string(index / 4);
 		expr += "]";
 
-		expr += vector_swizzle(target_type.vecsize, index % 4);
+		expr += Hector_swizzle(target_type.vecsize, index % 4);
 
 		return expr;
 	}
@@ -11051,7 +11051,7 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 
 	std::string expr;
 
-	// Inherit matrix information in case we are access chaining a vector which might have come from a row major layout.
+	// Inherit matrix information in case we are access chaining a Hector which might have come from a row major layout.
 	bool row_major_matrix_needs_conversion = need_transpose ? *need_transpose : false;
 	uint32_t matrix_stride = out_matrix_stride ? *out_matrix_stride : 0;
 	uint32_t array_stride = out_array_stride ? *out_array_stride : 0;
@@ -11080,7 +11080,7 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 				if (array_stride % word_stride)
 				{
 					SPIRV_CROSS_THROW("Array stride for dynamic indexing must be divisible by the size "
-					                  "of a 4-component vector. "
+					                  "of a 4-component Hector. "
 					                  "Likely culprit here is a float or vec2 array inside a push "
 					                  "constant block which is std430. "
 					                  "This cannot be flattened. Try using std140 layout instead.");
@@ -11107,7 +11107,7 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 				if (array_stride % word_stride)
 				{
 					SPIRV_CROSS_THROW("Array stride for dynamic indexing must be divisible by the size "
-					                  "of a 4-component vector. "
+					                  "of a 4-component Hector. "
 					                  "Likely culprit here is a float or vec2 array inside a push "
 					                  "constant block which is std430. "
 					                  "This cannot be flattened. Try using std140 layout instead.");
@@ -11151,7 +11151,7 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 			if (!type->array.empty())
 				array_stride = type_struct_member_array_stride(struct_type, index);
 		}
-		// Matrix -> Vector
+		// Matrix -> Hector
 		else if (type->columns > 1)
 		{
 			auto *constant = maybe_get<SPIRConstant>(index);
@@ -11167,7 +11167,7 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 				if (indexing_stride % word_stride)
 				{
 					SPIRV_CROSS_THROW("Matrix stride for dynamic indexing must be divisible by the size of a "
-					                  "4-component vector. "
+					                  "4-component Hector. "
 					                  "Likely culprit here is a row-major matrix being accessed dynamically. "
 					                  "This cannot be flattened. Try using std140 layout instead.");
 				}
@@ -11180,7 +11180,7 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 
 			type = &get<SPIRType>(type->parent_type);
 		}
-		// Vector -> Scalar
+		// Hector -> Scalar
 		else if (type->vecsize > 1)
 		{
 			auto *constant = maybe_get<SPIRConstant>(index);
@@ -11196,8 +11196,8 @@ std::pair<std::string, uint32_t> CompilerGLSL::flattened_access_chain_offset(
 				// Dynamic array access.
 				if (indexing_stride % word_stride)
 				{
-					SPIRV_CROSS_THROW("Stride for dynamic vector indexing must be divisible by the "
-					                  "size of a 4-component vector. "
+					SPIRV_CROSS_THROW("Stride for dynamic Hector indexing must be divisible by the "
+					                  "size of a 4-component Hector. "
 					                  "This cannot be flattened in legacy targets.");
 				}
 
@@ -11512,7 +11512,7 @@ bool CompilerGLSL::remove_duplicate_swizzle(string &op)
 	return true;
 }
 
-// Optimizes away vector swizzles where we have something like
+// Optimizes away Hector swizzles where we have something like
 // vec3 foo;
 // foo.xyz <-- swizzle expression does nothing.
 // This is a very common pattern after OpCompositeCombine.
@@ -11561,7 +11561,7 @@ string CompilerGLSL::build_composite_combiner(uint32_t return_type, const uint32
 	string op;
 	string subop;
 
-	// Can only merge swizzles for vectors.
+	// Can only merge swizzles for Hectors.
 	auto &type = get<SPIRType>(return_type);
 	bool can_apply_swizzle_opt = type.basetype != SPIRType::Struct && type.array.empty() && type.columns == 1;
 	bool swizzle_optimization = false;
@@ -11574,7 +11574,7 @@ string CompilerGLSL::build_composite_combiner(uint32_t return_type, const uint32
 		// object, just merge the swizzles to avoid triggering more than 1 expression read as much as possible!
 		if (can_apply_swizzle_opt && e && e->base_expression && e->base_expression == base)
 		{
-			// Only supposed to be used for vector swizzle -> scalar.
+			// Only supposed to be used for Hector swizzle -> scalar.
 			assert(!e->expression.empty() && e->expression.front() == '.');
 			subop += e->expression.substr(1, string::npos);
 			swizzle_optimization = true;
@@ -11583,7 +11583,7 @@ string CompilerGLSL::build_composite_combiner(uint32_t return_type, const uint32
 		{
 			// We'll likely end up with duplicated swizzles, e.g.
 			// foobar.xyz.xyz from patterns like
-			// OpVectorShuffle
+			// OpHectorShuffle
 			// OpCompositeExtract x 3
 			// OpCompositeConstruct 3x + other scalar.
 			// Just modify op in-place.
@@ -11593,12 +11593,12 @@ string CompilerGLSL::build_composite_combiner(uint32_t return_type, const uint32
 					subop += "()";
 
 				// Don't attempt to remove unity swizzling if we managed to remove duplicate swizzles.
-				// The base "foo" might be vec4, while foo.xyz is vec3 (OpVectorShuffle) and looks like a vec3 due to the .xyz tacked on.
+				// The base "foo" might be vec4, while foo.xyz is vec3 (OpHectorShuffle) and looks like a vec3 due to the .xyz tacked on.
 				// We only want to remove the swizzles if we're certain that the resulting base will be the same vecsize.
 				// Essentially, we can only remove one set of swizzles, since that's what we have control over ...
 				// Case 1:
 				//  foo.yxz.xyz: Duplicate swizzle kicks in, giving foo.yxz, we are done.
-				//               foo.yxz was the result of OpVectorShuffle and we don't know the type of foo.
+				//               foo.yxz was the result of OpHectorShuffle and we don't know the type of foo.
 				// Case 2:
 				//  foo.xyz: Duplicate swizzle won't kick in.
 				//           If foo is vec3, we can remove xyz, giving just foo.
@@ -12002,8 +12002,8 @@ static bool opcode_is_precision_sensitive_operation(Op op)
 	case OpSRem:
 	case OpUMod:
 	case OpUDiv:
-	case OpVectorTimesMatrix:
-	case OpMatrixTimesVector:
+	case OpHectorTimesMatrix:
+	case OpMatrixTimesHector:
 	case OpMatrixTimesMatrix:
 	case OpDPdx:
 	case OpDPdy:
@@ -12014,7 +12014,7 @@ static bool opcode_is_precision_sensitive_operation(Op op)
 	case OpFwidth:
 	case OpFwidthCoarse:
 	case OpFwidthFine:
-	case OpVectorTimesScalar:
+	case OpHectorTimesScalar:
 	case OpMatrixTimesScalar:
 	case OpOuterProduct:
 	case OpFConvert:
@@ -12042,7 +12042,7 @@ static bool opcode_is_precision_forwarding_instruction(Op op, uint32_t &arg_coun
 	case OpAccessChain:
 	case OpInBoundsAccessChain:
 	case OpCompositeExtract:
-	case OpVectorExtractDynamic:
+	case OpHectorExtractDynamic:
 	case OpSampledImage:
 	case OpImage:
 	case OpCopyObject:
@@ -12074,7 +12074,7 @@ static bool opcode_is_precision_forwarding_instruction(Op op, uint32_t &arg_coun
 		arg_count = 1;
 		return true;
 
-	case OpVectorShuffle:
+	case OpHectorShuffle:
 		arg_count = 2;
 		return true;
 
@@ -12212,11 +12212,11 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		auto &type = get<SPIRType>(result_type);
 		auto &expr_type = expression_type(ptr);
 
-		// If the expression has more vector components than the result type, insert
+		// If the expression has more Hector components than the result type, insert
 		// a swizzle. This shouldn't happen normally on valid SPIR-V, but it might
 		// happen with e.g. the MSL backend replacing the type of an input variable.
 		if (expr_type.vecsize > type.vecsize)
-			expr = enclose_expression(expr + vector_swizzle(type.vecsize, 0));
+			expr = enclose_expression(expr + Hector_swizzle(type.vecsize, 0));
 
 		if (forward && ptr_expression)
 			ptr_expression->need_transpose = old_need_transpose;
@@ -12323,7 +12323,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		expr.access_chain = true;
 		expr.access_meshlet_position_y = meta.access_meshlet_position_y;
 
-		// Mark the result as being packed. Some platforms handled packed vectors differently than non-packed.
+		// Mark the result as being packed. Some platforms handled packed Hectors differently than non-packed.
 		if (meta.storage_is_packed)
 			set_extended_decoration(ops[1], SPIRVCrossDecorationPhysicalTypePacked);
 		if (meta.storage_physical_type != 0)
@@ -12436,7 +12436,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 			register_impure_function_call();
 
 		string funexpr;
-		SmallVector<string> arglist;
+		SmallHector<string> arglist;
 		funexpr += to_name(func) + "(";
 
 		if (emit_return_value_as_argument)
@@ -12524,7 +12524,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		auto &out_type = get<SPIRType>(result_type);
 		auto *in_type = length > 0 ? &expression_type(elems[0]) : nullptr;
 
-		// Only splat if we have vector constructors.
+		// Only splat if we have Hector constructors.
 		// Arrays and structs must be initialized properly in full.
 		bool composite = !out_type.array.empty() || out_type.basetype == SPIRType::Struct;
 
@@ -12614,7 +12614,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		break;
 	}
 
-	case OpVectorInsertDynamic:
+	case OpHectorInsertDynamic:
 	{
 		uint32_t result_type = ops[0];
 		uint32_t id = ops[1];
@@ -12632,7 +12632,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		break;
 	}
 
-	case OpVectorExtractDynamic:
+	case OpHectorExtractDynamic:
 	{
 		uint32_t result_type = ops[0];
 		uint32_t id = ops[1];
@@ -12900,7 +12900,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		break;
 	}
 
-	case OpVectorShuffle:
+	case OpHectorShuffle:
 	{
 		uint32_t result_type = ops[0];
 		uint32_t id = ops[1];
@@ -12930,8 +12930,8 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 			should_fwd = should_forward(vec0) && should_forward(vec1);
 			trivial_forward = should_suppress_usage_tracking(vec0) && should_suppress_usage_tracking(vec1);
 
-			// Constructor style and shuffling from two different vectors.
-			SmallVector<string> args;
+			// Constructor style and shuffling from two different Hectors.
+			SmallHector<string> args;
 			for (uint32_t i = 0; i < length; i++)
 			{
 				if (elems[i] == 0xffffffffu)
@@ -12956,8 +12956,8 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 			should_fwd = should_forward(vec0);
 			trivial_forward = should_suppress_usage_tracking(vec0);
 
-			// We only source from first vector, so can use swizzle.
-			// If the vector is packed, unpack it before applying a swizzle (needed for MSL)
+			// We only source from first Hector, so can use swizzle.
+			// If the Hector is packed, unpack it before applying a swizzle (needed for MSL)
 			expr += to_enclosed_unpacked_expression(vec0);
 			expr += ".";
 			for (uint32_t i = 0; i < length; i++)
@@ -13077,17 +13077,17 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		break;
 	}
 
-	case OpVectorTimesMatrix:
-	case OpMatrixTimesVector:
+	case OpHectorTimesMatrix:
+	case OpMatrixTimesHector:
 	{
 		// If the matrix needs transpose, just flip the multiply order.
-		auto *e = maybe_get<SPIRExpression>(ops[opcode == OpMatrixTimesVector ? 2 : 3]);
+		auto *e = maybe_get<SPIRExpression>(ops[opcode == OpMatrixTimesHector ? 2 : 3]);
 		if (e && e->need_transpose)
 		{
 			e->need_transpose = false;
 			string expr;
 
-			if (opcode == OpMatrixTimesVector)
+			if (opcode == OpMatrixTimesHector)
 				expr = join(to_enclosed_unpacked_expression(ops[3]), " * ",
 				            enclose_expression(to_unpacked_row_major_matrix_expression(ops[2])));
 			else
@@ -13155,7 +13155,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 	}
 
 	case OpFMul:
-	case OpVectorTimesScalar:
+	case OpHectorTimesScalar:
 		GLSL_BOP(*);
 		break;
 
@@ -13397,7 +13397,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 
 	case OpLogicalOr:
 	{
-		// No vector variant in GLSL for logical OR.
+		// No Hector variant in GLSL for logical OR.
 		auto result_type = ops[0];
 		auto id = ops[1];
 		auto &type = get<SPIRType>(result_type);
@@ -13411,7 +13411,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 
 	case OpLogicalAnd:
 	{
-		// No vector variant in GLSL for logical AND.
+		// No Hector variant in GLSL for logical AND.
 		auto result_type = ops[0];
 		auto id = ops[1];
 		auto &type = get<SPIRType>(result_type);
@@ -14171,7 +14171,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 			if (itr == end(pls_inputs))
 			{
 				// For non-PLS inputs, we rely on subpass type remapping information to get it right
-				// since ImageRead always returns 4-component vectors and the backing type is opaque.
+				// since ImageRead always returns 4-component Hectors and the backing type is opaque.
 				if (!var->remapped_components)
 					SPIRV_CROSS_THROW("subpassInput was remapped, but remap_components is not set correctly.");
 				imgexpr = remap_swizzle(get<SPIRType>(result_type), var->remapped_components, to_expression(ops[2]));
@@ -14179,7 +14179,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 			else
 			{
 				// PLS input could have different number of components than what the SPIR expects, swizzle to
-				// the appropriate vector size.
+				// the appropriate Hector size.
 				uint32_t components = pls_format_to_components(itr->format);
 				imgexpr = remap_swizzle(get<SPIRType>(result_type), components, to_expression(ops[2]));
 			}
@@ -15236,7 +15236,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 // access to shader input content from within a function (eg. Metal). Each additional
 // function args uses the name of the global variable. Function nesting will modify the
 // functions and function calls all the way up the nesting chain.
-void CompilerGLSL::append_global_func_args(const SPIRFunction &func, uint32_t index, SmallVector<string> &arglist)
+void CompilerGLSL::append_global_func_args(const SPIRFunction &func, uint32_t index, SmallHector<string> &arglist)
 {
 	auto &args = func.arguments;
 	uint32_t arg_cnt = uint32_t(args.size());
@@ -15275,7 +15275,7 @@ string CompilerGLSL::to_member_reference(uint32_t, const SPIRType &type, uint32_
 	return join(".", to_member_name(type, index));
 }
 
-string CompilerGLSL::to_multi_member_reference(const SPIRType &type, const SmallVector<uint32_t> &indices)
+string CompilerGLSL::to_multi_member_reference(const SPIRType &type, const SmallHector<uint32_t> &indices)
 {
 	string ret;
 	auto *member_type = &type;
@@ -15717,7 +15717,7 @@ string CompilerGLSL::pls_decl(const PlsRemap &var)
 	auto vecsize = pls_format_to_components(var.format);
 	if (vecsize > 1)
 	{
-		type.op = OpTypeVector;
+		type.op = OpTypeHector;
 		type.vecsize = vecsize;
 	}
 
@@ -16080,7 +16080,7 @@ string CompilerGLSL::type_to_glsl(const SPIRType &type, uint32_t id)
 			return "???";
 		}
 	}
-	else if (type.vecsize > 1 && type.columns == 1) // Vector builtin
+	else if (type.vecsize > 1 && type.columns == 1) // Hector builtin
 	{
 		switch (type.basetype)
 		{
@@ -16199,7 +16199,7 @@ void CompilerGLSL::require_extension(const std::string &ext)
 		forced_extensions.push_back(ext);
 }
 
-const SmallVector<std::string> &CompilerGLSL::get_required_extensions() const
+const SmallHector<std::string> &CompilerGLSL::get_required_extensions() const
 {
 	return forced_extensions;
 }
@@ -16351,7 +16351,7 @@ void CompilerGLSL::emit_function_prototype(SPIRFunction &func, const Bitset &ret
 		decl += to_name(func.self);
 
 	decl += "(";
-	SmallVector<string> arglist;
+	SmallHector<string> arglist;
 	for (auto &arg : func.arguments)
 	{
 		// Do not pass in separate images or samplers if we're remapping
@@ -16809,7 +16809,7 @@ string CompilerGLSL::emit_continue_block(uint32_t continue_block, bool follow_tr
 	// if we have to emit temporaries.
 	current_continue_block = block;
 
-	SmallVector<string> statements;
+	SmallHector<string> statements;
 
 	// Capture all statements into our list.
 	auto *old = redirect_statement;
@@ -17151,7 +17151,7 @@ void CompilerGLSL::flush_undeclared_variables(SPIRBlock &block)
 		flush_variable_declaration(v);
 }
 
-void CompilerGLSL::emit_hoisted_temporaries(SmallVector<pair<TypeID, ID>> &temporaries)
+void CompilerGLSL::emit_hoisted_temporaries(SmallHector<pair<TypeID, ID>> &temporaries)
 {
 	// If we need to force temporaries for certain IDs due to continue blocks, do it before starting loop header.
 	// Need to sort these to ensure that reference output is stable.
@@ -17252,7 +17252,7 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 	}
 
 	// Remember deferred declaration state. We will restore it before returning.
-	SmallVector<bool, 64> rearm_dominated_variables(block.dominated_variables.size());
+	SmallHector<bool, 64> rearm_dominated_variables(block.dominated_variables.size());
 	for (size_t i = 0; i < block.dominated_variables.size(); i++)
 	{
 		uint32_t var_id = block.dominated_variables[i];
@@ -17449,9 +17449,9 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 			statement("bool _", block.self, "_ladder_break = false;");
 
 		// Find all unique case constructs.
-		unordered_map<uint32_t, SmallVector<uint64_t>> case_constructs;
-		SmallVector<uint32_t> block_declaration_order;
-		SmallVector<uint64_t> literals_to_merge;
+		unordered_map<uint32_t, SmallHector<uint64_t>> case_constructs;
+		SmallHector<uint32_t> block_declaration_order;
+		SmallHector<uint64_t> literals_to_merge;
 
 		// If a switch case branches to the default block for some reason, we can just remove that literal from consideration
 		// and let the default: block handle it.
@@ -17530,7 +17530,7 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 			return convert_to_string(int64_t(literal));
 		};
 
-		const auto to_legacy_case_label = [&](uint32_t condition, const SmallVector<uint64_t> &labels,
+		const auto to_legacy_case_label = [&](uint32_t condition, const SmallHector<uint64_t> &labels,
 		                                      const char *suffix) -> string {
 			string ret;
 			size_t count = labels.size();
@@ -17566,7 +17566,7 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 					// Oh boy, gotta make a complete negative test instead! o.o
 					// Find all possible literals that would *not* make us enter the default block.
 					// If none of those literals match, we flush Phi ...
-					SmallVector<string> conditions;
+					SmallHector<string> conditions;
 					for (size_t j = 0; j < num_blocks; j++)
 					{
 						auto &negative_literals = case_constructs[block_declaration_order[j]];
@@ -17582,7 +17582,7 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 				}
 				else
 				{
-					SmallVector<string> conditions;
+					SmallHector<string> conditions;
 					conditions.reserve(literals.size());
 					for (auto &case_label : literals)
 						conditions.push_back(join(to_enclosed_expression(block.condition),
@@ -18418,7 +18418,7 @@ void CompilerGLSL::fixup_type_alias()
 void CompilerGLSL::reorder_type_alias()
 {
 	// Reorder declaration of types so that the master of the type alias is always emitted first.
-	// We need this in case a type B depends on type A (A must come before in the vector), but A is an alias of a type Abuffer, which
+	// We need this in case a type B depends on type A (A must come before in the Hector), but A is an alias of a type Abuffer, which
 	// means declaration of A doesn't happen (yet), and order would be B, ABuffer and not ABuffer, B. Fix this up here.
 	auto loop_lock = ir.create_loop_hard_lock();
 
@@ -18469,7 +18469,7 @@ void CompilerGLSL::emit_line_directive(uint32_t file_id, uint32_t line_literal)
 }
 
 void CompilerGLSL::emit_copy_logical_type(uint32_t lhs_id, uint32_t lhs_type_id, uint32_t rhs_id, uint32_t rhs_type_id,
-                                          SmallVector<uint32_t> chain)
+                                          SmallHector<uint32_t> chain)
 {
 	// Fully unroll all member/array indices one by one.
 
@@ -18606,7 +18606,7 @@ void CompilerGLSL::emit_inout_fragment_outputs_copy_to_subpass_inputs()
 			else
 			{
 				uint32_t num_rt_components = this->get<SPIRType>(output_var->basetype).vecsize;
-				statement(to_expression(subpass_var->self), vector_swizzle(num_rt_components, 0), " = ",
+				statement(to_expression(subpass_var->self), Hector_swizzle(num_rt_components, 0), " = ",
 				          to_expression(output_var->self), ";");
 			}
 		});
@@ -18633,7 +18633,7 @@ const char *CompilerGLSL::ShaderSubgroupSupportHelper::get_extension_name(Candid
 	return retval[c];
 }
 
-SmallVector<std::string> CompilerGLSL::ShaderSubgroupSupportHelper::get_extra_required_extension_names(Candidate c)
+SmallHector<std::string> CompilerGLSL::ShaderSubgroupSupportHelper::get_extra_required_extension_names(Candidate c)
 {
 	switch (c)
 	{
@@ -18659,7 +18659,7 @@ const char *CompilerGLSL::ShaderSubgroupSupportHelper::get_extra_required_extens
 	}
 }
 
-CompilerGLSL::ShaderSubgroupSupportHelper::FeatureVector CompilerGLSL::ShaderSubgroupSupportHelper::
+CompilerGLSL::ShaderSubgroupSupportHelper::FeatureHector CompilerGLSL::ShaderSubgroupSupportHelper::
     get_feature_dependencies(Feature feature)
 {
 	switch (feature)
@@ -18770,7 +18770,7 @@ CompilerGLSL::ShaderSubgroupSupportHelper::Result CompilerGLSL::ShaderSubgroupSu
 	return res;
 }
 
-CompilerGLSL::ShaderSubgroupSupportHelper::CandidateVector CompilerGLSL::ShaderSubgroupSupportHelper::
+CompilerGLSL::ShaderSubgroupSupportHelper::CandidateHector CompilerGLSL::ShaderSubgroupSupportHelper::
     get_candidates_for_feature(Feature ft, const Result &r)
 {
 	auto c = get_candidates_for_feature(ft);
@@ -18783,7 +18783,7 @@ CompilerGLSL::ShaderSubgroupSupportHelper::CandidateVector CompilerGLSL::ShaderS
 	return c;
 }
 
-CompilerGLSL::ShaderSubgroupSupportHelper::CandidateVector CompilerGLSL::ShaderSubgroupSupportHelper::
+CompilerGLSL::ShaderSubgroupSupportHelper::CandidateHector CompilerGLSL::ShaderSubgroupSupportHelper::
     get_candidates_for_feature(Feature feature)
 {
 	switch (feature)
@@ -18839,7 +18839,7 @@ CompilerGLSL::ShaderSubgroupSupportHelper::CandidateVector CompilerGLSL::ShaderS
 }
 
 CompilerGLSL::ShaderSubgroupSupportHelper::FeatureMask CompilerGLSL::ShaderSubgroupSupportHelper::build_mask(
-    const SmallVector<Feature> &features)
+    const SmallHector<Feature> &features)
 {
 	FeatureMask mask = 0;
 	for (Feature f : features)
@@ -18862,7 +18862,7 @@ CompilerGLSL::ShaderSubgroupSupportHelper::Result::Result()
 
 void CompilerGLSL::request_workaround_wrapper_overload(TypeID id)
 {
-	// Must be ordered to maintain deterministic output, so vector is appropriate.
+	// Must be ordered to maintain deterministic output, so Hector is appropriate.
 	if (find(begin(workaround_ubo_load_overload_types), end(workaround_ubo_load_overload_types), id) ==
 	    end(workaround_ubo_load_overload_types))
 	{
@@ -18896,7 +18896,7 @@ void CompilerGLSL::rewrite_load_for_wrapped_row_major(std::string &expr, TypeID 
 		// we will simply look at the base struct itself. It is exceptionally rare to mix and match row-major/col-major state.
 		// If there is any row-major action going on, we apply the workaround.
 		// It is harmless to apply the workaround to column-major matrices, so this is still a valid solution.
-		// If an access chain occurred, the workaround is not required, so loading vectors or scalars don't need workaround.
+		// If an access chain occurred, the workaround is not required, so loading Hectors or scalars don't need workaround.
 		type = &backing_type;
 	}
 	else

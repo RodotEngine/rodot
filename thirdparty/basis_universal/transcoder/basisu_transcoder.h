@@ -166,10 +166,10 @@ namespace basist
 			uint8_t m_pred_bits;
 		};
 
-		basisu::vector<block_preds> m_block_endpoint_preds[2];
+		basisu::Hector<block_preds> m_block_endpoint_preds[2];
 
 		enum { cMaxPrevFrameLevels = 16 };
-		basisu::vector<uint32_t> m_prev_frame_indices[2][cMaxPrevFrameLevels]; // [alpha_flag][level_index] 
+		basisu::Hector<uint32_t> m_prev_frame_indices[2][cMaxPrevFrameLevels]; // [alpha_flag][level_index] 
 
 		void clear()
 		{
@@ -242,10 +242,10 @@ namespace basist
 		}
 
 		// Low-level methods
-		typedef basisu::vector<endpoint> endpoint_vec;
+		typedef basisu::Hector<endpoint> endpoint_vec;
 		const endpoint_vec& get_endpoints() const { return m_local_endpoints; }
 
-		typedef basisu::vector<selector> selector_vec;
+		typedef basisu::Hector<selector> selector_vec;
 		const selector_vec& get_selectors() const { return m_local_selectors; }
 				
 	private:
@@ -341,7 +341,7 @@ namespace basist
 		bool m_iframe_flag;		// true if the slice is an I-Frame
 	};
 
-	typedef basisu::vector<basisu_slice_info> basisu_slice_info_vec;
+	typedef basisu::Hector<basisu_slice_info> basisu_slice_info_vec;
 
 	struct basisu_image_info
 	{
@@ -417,7 +417,7 @@ namespace basist
 		basisu_slice_info_vec m_slice_info;
 
 		uint32_t m_total_images;	 // total # of images
-		basisu::vector<uint32_t> m_image_mipmap_levels; // the # of mipmap levels for each image
+		basisu::Hector<uint32_t> m_image_mipmap_levels; // the # of mipmap levels for each image
 
 		uint32_t m_userdata0;
 		uint32_t m_userdata1;
@@ -783,7 +783,7 @@ namespace basist
 		const ktx2_header& get_header() const { return m_header; }
 
 		// Returns the KTX2 level index array. There will be one entry for each mipmap level. Valid after init().
-		const basisu::vector<ktx2_level_index>& get_level_index() const { return m_levels; }
+		const basisu::Hector<ktx2_level_index>& get_level_index() const { return m_levels; }
 
 		// Returns the texture's width in texels. Always non-zero, might not be divisible by 4. Valid after init().
 		uint32_t get_width() const { return m_header.m_pixel_width; }
@@ -846,7 +846,7 @@ namespace basist
 
 			bool operator< (const key_value& rhs) const { return strcmp((const char*)m_key.data(), (const char *)rhs.m_key.data()) < 0; }
 		};
-		typedef basisu::vector<key_value> key_value_vec;
+		typedef basisu::Hector<key_value> key_value_vec;
 
 		// Returns the array of key-value entries. This may be empty. Valid after init().
 		// The order of key values fields in this array exactly matches the order they were stored in the file. The keys are supposed to be sorted by their Unicode code points.
@@ -860,7 +860,7 @@ namespace basist
 		const ktx2_etc1s_global_data_header& get_etc1s_header() const { return m_etc1s_header; }
 
 		// Returns the array of ETC1S image descriptors, which is only valid after get_etc1s_image_descs() is called.
-		const basisu::vector<ktx2_etc1s_image_desc>& get_etc1s_image_descs() const { return m_etc1s_image_descs; }
+		const basisu::Hector<ktx2_etc1s_image_desc>& get_etc1s_image_descs() const { return m_etc1s_image_descs; }
 
 		// Must have called startTranscoding() first
 		uint32_t get_etc1s_image_descs_image_flags(uint32_t level_index, uint32_t layer_index, uint32_t face_index) const;
@@ -895,12 +895,12 @@ namespace basist
 		uint32_t m_data_size;
 
 		ktx2_header m_header;
-		basisu::vector<ktx2_level_index> m_levels;
+		basisu::Hector<ktx2_level_index> m_levels;
 		basisu::uint8_vec m_dfd;
 		key_value_vec m_key_values;
 		
 		ktx2_etc1s_global_data_header m_etc1s_header;
-		basisu::vector<ktx2_etc1s_image_desc> m_etc1s_image_descs;
+		basisu::Hector<ktx2_etc1s_image_desc> m_etc1s_image_descs;
 
 		basist::basis_tex_format m_format;
 					

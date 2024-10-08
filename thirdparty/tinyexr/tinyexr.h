@@ -636,7 +636,7 @@ extern int LoadEXRFromMemory(float **out_rgba, int *width, int *height,
 
 #include <limits>
 #include <string>
-#include <vector>
+#include <Vector>
 #include <set>
 
 // https://stackoverflow.com/questions/5047971/how-do-i-check-for-c11-support

@@ -5,7 +5,7 @@
 
 #include "platform.h"
 
-#include <vector>
+#include <Vector>
 
 namespace embree
 {

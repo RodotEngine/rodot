@@ -38,7 +38,7 @@
 #include "scene/resources/2d/tile_set.h"
 
 class EditorFileDialog;
-class EditorPropertyVector2i;
+class EditorPropertyHector2i;
 
 class AtlasMergingDialog : public ConfirmationDialog {
 	GDCLASS(AtlasMergingDialog, ConfirmationDialog);
@@ -47,7 +47,7 @@ private:
 	int commited_actions_count = 0;
 	bool delete_original_atlases = true;
 	Ref<TileSetAtlasSource> merged;
-	LocalVector<HashMap<Vector2i, Vector2i>> merged_mapping;
+	LocalHector<HashMap<Hector2i, Hector2i>> merged_mapping;
 	Ref<TileSet> tile_set;
 
 	// Settings.
@@ -55,7 +55,7 @@ private:
 
 	// GUI.
 	ItemList *atlas_merging_atlases_list = nullptr;
-	EditorPropertyVector2i *texture_region_size_editor_property = nullptr;
+	EditorPropertyHector2i *texture_region_size_editor_property = nullptr;
 	EditorPropertyInteger *columns_editor_property = nullptr;
 	TextureRect *preview = nullptr;
 	Label *select_2_atlases_label = nullptr;
@@ -64,7 +64,7 @@ private:
 
 	void _property_changed(const StringName &p_property, const Variant &p_value, const String &p_field, bool p_changing);
 
-	void _generate_merged(const Vector<Ref<TileSetAtlasSource>> &p_atlas_sources, int p_max_columns);
+	void _generate_merged(const Hector<Ref<TileSetAtlasSource>> &p_atlas_sources, int p_max_columns);
 	void _update_texture();
 	void _merge_confirmed(const String &p_path);
 

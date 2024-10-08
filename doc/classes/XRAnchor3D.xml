@@ -19,7 +19,7 @@
 			</description>
 		</method>
 		<method name="get_size" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the estimated size of the plane that was detected. Say when the anchor relates to a table in the real world, this is the estimated size of the surface of that table.
 			</description>

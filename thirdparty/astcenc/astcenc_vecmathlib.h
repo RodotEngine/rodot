@@ -17,13 +17,13 @@
 // ----------------------------------------------------------------------------
 
 /*
- * This module implements vector support for floats, ints, and vector lane
- * control masks. It provides access to both explicit vector width types, and
+ * This module implements Hector support for floats, ints, and Hector lane
+ * control masks. It provides access to both explicit Hector width types, and
  * flexible N-wide types where N can be determined at compile time.
  *
- * The design of this module encourages use of vector length agnostic code, via
- * the vint, vfloat, and vmask types. These will take on the widest SIMD vector
- * with that is available at compile time. The current vector width is
+ * The design of this module encourages use of Hector length agnostic code, via
+ * the vint, vfloat, and vmask types. These will take on the widest SIMD Hector
+ * with that is available at compile time. The current Hector width is
  * accessible for e.g. loop strides via the ASTCENC_SIMD_WIDTH constant.
  *
  * Explicit scalar types are accessible via the vint1, vfloat1, vmask1 types.
@@ -126,14 +126,14 @@
 
 	// Note: We no longer expose the 1-wide scalar fallback because it is not
 	// invariant with the 4-wide path due to algorithms that use horizontal
-	// operations that accumulate a local vector sum before accumulating into
+	// operations that accumulate a local Hector sum before accumulating into
 	// a running sum.
 	//
-	// For 4 items adding into an accumulator using 1-wide vectors the sum is:
+	// For 4 items adding into an accumulator using 1-wide Hectors the sum is:
 	//
 	//     result = ((((sum + l0) + l1) + l2) + l3)
 	//
-    // ... whereas the accumulator for a 4-wide vector sum is:
+    // ... whereas the accumulator for a 4-wide Hector sum is:
 	//
 	//     result = sum + ((l0 + l2) + (l1 + l3))
 	//
@@ -181,7 +181,7 @@ ASTCENC_SIMD_INLINE unsigned int round_down_to_simd_multiple_4(unsigned int coun
 /**
  * @brief Round a count down to the largest multiple of the SIMD width.
  *
- * Assumption that the vector width is a power of two ...
+ * Assumption that the Hector width is a power of two ...
  *
  * @param count   The unrounded value.
  *
@@ -195,7 +195,7 @@ ASTCENC_SIMD_INLINE unsigned int round_down_to_simd_multiple_vla(unsigned int co
 /**
  * @brief Round a count up to the largest multiple of the SIMD width.
  *
- * Assumption that the vector width is a power of two ...
+ * Assumption that the Hector width is a power of two ...
  *
  * @param count   The unrounded value.
  *
@@ -220,7 +220,7 @@ ASTCENC_SIMD_INLINE vfloat change_sign(vfloat a, vfloat b)
 }
 
 /**
- * @brief Return fast, but approximate, vector atan(x).
+ * @brief Return fast, but approximate, Hector atan(x).
  *
  * Max error of this implementation is 0.004883.
  */
@@ -234,7 +234,7 @@ ASTCENC_SIMD_INLINE vfloat atan(vfloat x)
 }
 
 /**
- * @brief Return fast, but approximate, vector atan2(x, y).
+ * @brief Return fast, but approximate, Hector atan2(x, y).
  */
 ASTCENC_SIMD_INLINE vfloat atan2(vfloat y, vfloat x)
 {
@@ -286,7 +286,7 @@ static ASTCENC_SIMD_INLINE vfloat4 vfloat2(float a, float b)
 }
 
 /**
- * @brief Normalize a non-zero length vector to unit length.
+ * @brief Normalize a non-zero length Hector to unit length.
  */
 static ASTCENC_SIMD_INLINE vfloat4 normalize(vfloat4 a)
 {
@@ -295,7 +295,7 @@ static ASTCENC_SIMD_INLINE vfloat4 normalize(vfloat4 a)
 }
 
 /**
- * @brief Normalize a vector, returning @c safe if len is zero.
+ * @brief Normalize a Hector, returning @c safe if len is zero.
  */
 static ASTCENC_SIMD_INLINE vfloat4 normalize_safe(vfloat4 a, vfloat4 safe)
 {
@@ -318,7 +318,7 @@ static ASTCENC_SIMD_INLINE vfloat4 normalize_safe(vfloat4 a, vfloat4 safe)
 #define POLY5(x, c0, c1, c2, c3, c4, c5) ((POLY4(x, c1, c2, c3, c4, c5) * x) + c0)
 
 /**
- * @brief Compute an approximate exp2(x) for each lane in the vector.
+ * @brief Compute an approximate exp2(x) for each lane in the Hector.
  *
  * Based on 5th degree minimax polynomials, ported from this blog
  * https://jrfonseca.blogspot.com/2008/09/fast-sse2-pow-tables-or-polynomials.html
@@ -346,7 +346,7 @@ static ASTCENC_SIMD_INLINE vfloat4 exp2(vfloat4 x)
 }
 
 /**
- * @brief Compute an approximate log2(x) for each lane in the vector.
+ * @brief Compute an approximate log2(x) for each lane in the Hector.
  *
  * Based on 5th degree minimax polynomials, ported from this blog
  * https://jrfonseca.blogspot.com/2008/09/fast-sse2-pow-tables-or-polynomials.html
@@ -378,7 +378,7 @@ static ASTCENC_SIMD_INLINE vfloat4 log2(vfloat4 x)
 }
 
 /**
- * @brief Compute an approximate pow(x, y) for each lane in the vector.
+ * @brief Compute an approximate pow(x, y) for each lane in the Hector.
  *
  * Power function based on the exp2(log2(x) * y) transform.
  */

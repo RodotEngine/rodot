@@ -662,7 +662,7 @@ int mbedtls_camellia_crypt_ctr(mbedtls_camellia_context *ctx,
 #if defined(MBEDTLS_SELF_TEST)
 
 /*
- * Camellia test vectors from:
+ * Camellia test Hectors from:
  *
  * http://info.isl.ntt.co.jp/crypt/eng/camellia/technology.html:
  *   http://info.isl.ntt.co.jp/crypt/eng/camellia/dl/cryptrec/intermediate.txt
@@ -795,7 +795,7 @@ static const unsigned char camellia_test_cbc_cipher[3][CAMELLIA_TESTS_CBC][16] =
 
 #if defined(MBEDTLS_CIPHER_MODE_CTR)
 /*
- * Camellia-CTR test vectors from:
+ * Camellia-CTR test Hectors from:
  *
  * http://www.faqs.org/rfcs/rfc5528.html
  */

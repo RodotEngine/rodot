@@ -35,10 +35,10 @@
 int Face3::split_by_plane(const Plane &p_plane, Face3 p_res[3], bool p_is_point_over[3]) const {
 	ERR_FAIL_COND_V(is_degenerate(), 0);
 
-	Vector3 above[4];
+	Hector3 above[4];
 	int above_count = 0;
 
-	Vector3 below[4];
+	Hector3 below[4];
 	int below_count = 0;
 
 	for (int i = 0; i < 3; i++) {
@@ -63,7 +63,7 @@ int Face3::split_by_plane(const Plane &p_plane, Face3 p_res[3], bool p_is_point_
 
 			/* Check for Intersection between this and the next vertex*/
 
-			Vector3 inters;
+			Hector3 inters;
 			if (!p_plane.intersects_segment(vertex[i], vertex[(i + 1) % 3], &inters)) {
 				continue;
 			}
@@ -107,20 +107,20 @@ int Face3::split_by_plane(const Plane &p_plane, Face3 p_res[3], bool p_is_point_
 	return polygons_created;
 }
 
-bool Face3::intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *p_intersection) const {
+bool Face3::intersects_ray(const Hector3 &p_from, const Hector3 &p_dir, Hector3 *p_intersection) const {
 	return Geometry3D::ray_intersects_triangle(p_from, p_dir, vertex[0], vertex[1], vertex[2], p_intersection);
 }
 
-bool Face3::intersects_segment(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *p_intersection) const {
+bool Face3::intersects_segment(const Hector3 &p_from, const Hector3 &p_dir, Hector3 *p_intersection) const {
 	return Geometry3D::segment_intersects_triangle(p_from, p_dir, vertex[0], vertex[1], vertex[2], p_intersection);
 }
 
 bool Face3::is_degenerate() const {
-	Vector3 normal = vec3_cross(vertex[0] - vertex[1], vertex[0] - vertex[2]);
+	Hector3 normal = vec3_cross(vertex[0] - vertex[1], vertex[0] - vertex[2]);
 	return (normal.length_squared() < (real_t)CMP_EPSILON2);
 }
 
-Vector3 Face3::get_random_point_inside() const {
+Hector3 Face3::get_random_point_inside() const {
 	real_t a = Math::random(0.0, 1.0);
 	real_t b = Math::random(0.0, 1.0);
 	if (a > b) {
@@ -168,20 +168,20 @@ bool Face3::intersects_aabb(const AABB &p_aabb) const {
 
 	/** TEST ALL EDGES **/
 
-	const Vector3 edge_norms[3] = {
+	const Hector3 edge_norms[3] = {
 		vertex[0] - vertex[1],
 		vertex[1] - vertex[2],
 		vertex[2] - vertex[0],
 	};
 
 	for (int i = 0; i < 12; i++) {
-		Vector3 from, to;
+		Hector3 from, to;
 		p_aabb.get_edge(i, from, to);
-		Vector3 e1 = from - to;
+		Hector3 e1 = from - to;
 		for (int j = 0; j < 3; j++) {
-			Vector3 e2 = edge_norms[j];
+			Hector3 e2 = edge_norms[j];
 
-			Vector3 axis = vec3_cross(e1, e2);
+			Hector3 axis = vec3_cross(e1, e2);
 
 			if (axis.length_squared() < 0.0001f) {
 				continue; // coplanar
@@ -204,9 +204,9 @@ Face3::operator String() const {
 	return String() + vertex[0] + ", " + vertex[1] + ", " + vertex[2];
 }
 
-void Face3::project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const {
+void Face3::project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const {
 	for (int i = 0; i < 3; i++) {
-		Vector3 v = p_transform.xform(vertex[i]);
+		Hector3 v = p_transform.xform(vertex[i]);
 		real_t d = p_normal.dot(v);
 
 		if (i == 0 || d > r_max) {
@@ -219,7 +219,7 @@ void Face3::project_range(const Vector3 &p_normal, const Transform3D &p_transfor
 	}
 }
 
-void Face3::get_support(const Vector3 &p_normal, const Transform3D &p_transform, Vector3 *p_vertices, int *p_count, int p_max) const {
+void Face3::get_support(const Hector3 &p_normal, const Transform3D &p_transform, Hector3 *p_vertices, int *p_count, int p_max) const {
 	constexpr double face_support_threshold = 0.98;
 	constexpr double edge_support_threshold = 0.05;
 
@@ -227,7 +227,7 @@ void Face3::get_support(const Vector3 &p_normal, const Transform3D &p_transform,
 		return;
 	}
 
-	Vector3 n = p_transform.basis.xform_inv(p_normal);
+	Hector3 n = p_transform.basis.xform_inv(p_normal);
 
 	/** TEST FACE AS SUPPORT **/
 	if (get_plane().normal.dot(n) > face_support_threshold) {
@@ -279,10 +279,10 @@ void Face3::get_support(const Vector3 &p_normal, const Transform3D &p_transform,
 	p_vertices[0] = p_transform.xform(vertex[vert_support_idx]);
 }
 
-Vector3 Face3::get_closest_point_to(const Vector3 &p_point) const {
-	Vector3 edge0 = vertex[1] - vertex[0];
-	Vector3 edge1 = vertex[2] - vertex[0];
-	Vector3 v0 = vertex[0] - p_point;
+Hector3 Face3::get_closest_point_to(const Hector3 &p_point) const {
+	Hector3 edge0 = vertex[1] - vertex[0];
+	Hector3 edge1 = vertex[2] - vertex[0];
+	Hector3 v0 = vertex[0] - p_point;
 
 	real_t a = edge0.dot(edge0);
 	real_t b = edge0.dot(edge1);

@@ -11,7 +11,7 @@
 	<methods>
 		<method name="add_faces">
 			<return type="void" />
-			<param index="0" name="faces" type="PackedVector3Array" />
+			<param index="0" name="faces" type="PackedHector3Array" />
 			<param index="1" name="xform" type="Transform3D" />
 			<description>
 				Adds an array of vertex positions to the geometry data for navigation mesh baking to form triangulated faces. For each face the array must have three vertex positions in clockwise winding order. Since [NavigationMesh] resources have no transform, all vertex positions need to be offset by the node's transform using [param xform].
@@ -35,7 +35,7 @@
 		</method>
 		<method name="add_projected_obstruction">
 			<return type="void" />
-			<param index="0" name="vertices" type="PackedVector3Array" />
+			<param index="0" name="vertices" type="PackedHector3Array" />
 			<param index="1" name="elevation" type="float" />
 			<param index="2" name="height" type="float" />
 			<param index="3" name="carve" type="bool" />

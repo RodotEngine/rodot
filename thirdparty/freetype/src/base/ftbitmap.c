@@ -765,9 +765,9 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Bitmap_Blend( FT_Library        library,
                    const FT_Bitmap*  source_,
-                   const FT_Vector   source_offset_,
+                   const FT_Hector   source_offset_,
                    FT_Bitmap*        target,
-                   FT_Vector        *atarget_offset,
+                   FT_Hector        *atarget_offset,
                    FT_Color          color )
   {
     FT_Error   error = FT_Err_Ok;
@@ -776,8 +776,8 @@
     FT_Bitmap         source_bitmap;
     const FT_Bitmap*  source;
 
-    FT_Vector  source_offset;
-    FT_Vector  target_offset;
+    FT_Hector  source_offset;
+    FT_Hector  target_offset;
 
     FT_Bool  free_source_bitmap          = 0;
     FT_Bool  free_target_bitmap_on_error = 0;
@@ -901,7 +901,7 @@
     if ( !( final_width && final_rows ) )
       return FT_Err_Ok;               /* nothing to do */
 
-    /* for blending, set offset vector of final bitmap */
+    /* for blending, set offset Hector of final bitmap */
     /* temporarily to (0,0)                            */
     source_llx -= final_llx;
     source_lly -= final_lly;

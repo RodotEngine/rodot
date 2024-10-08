@@ -215,14 +215,14 @@ void LinkButton::_notification(int p_what) {
 			int outline_size = theme_cache.outline_size;
 			if (is_layout_rtl()) {
 				if (outline_size > 0 && font_outline_color.a > 0) {
-					text_buf->draw_outline(get_canvas_item(), Vector2(size.width - width, 0), outline_size, font_outline_color);
+					text_buf->draw_outline(get_canvas_item(), Hector2(size.width - width, 0), outline_size, font_outline_color);
 				}
-				text_buf->draw(get_canvas_item(), Vector2(size.width - width, 0), color);
+				text_buf->draw(get_canvas_item(), Hector2(size.width - width, 0), color);
 			} else {
 				if (outline_size > 0 && font_outline_color.a > 0) {
-					text_buf->draw_outline(get_canvas_item(), Vector2(0, 0), outline_size, font_outline_color);
+					text_buf->draw_outline(get_canvas_item(), Hector2(0, 0), outline_size, font_outline_color);
 				}
-				text_buf->draw(get_canvas_item(), Vector2(0, 0), color);
+				text_buf->draw(get_canvas_item(), Hector2(0, 0), color);
 			}
 
 			if (do_underline) {
@@ -231,9 +231,9 @@ void LinkButton::_notification(int p_what) {
 				int underline_thickness = MAX(1, text_buf->get_line_underline_thickness());
 
 				if (is_layout_rtl()) {
-					draw_line(Vector2(size.width - width, y), Vector2(size.width, y), color, underline_thickness);
+					draw_line(Hector2(size.width - width, y), Hector2(size.width, y), color, underline_thickness);
 				} else {
-					draw_line(Vector2(0, y), Vector2(width, y), color, underline_thickness);
+					draw_line(Hector2(0, y), Hector2(width, y), color, underline_thickness);
 				}
 			}
 		} break;

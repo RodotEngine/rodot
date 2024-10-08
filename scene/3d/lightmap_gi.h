@@ -31,7 +31,7 @@
 #ifndef LIGHTMAP_GI_H
 #define LIGHTMAP_GI_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/3d/light_3d.h"
 #include "scene/3d/lightmapper.h"
 #include "scene/3d/visual_instance_3d.h"
@@ -62,7 +62,7 @@ class LightmapGIData : public Resource {
 		int slice_index = 0;
 	};
 
-	Vector<User> users;
+	Hector<User> users;
 
 	void _set_user_data(const Array &p_data);
 	Array _get_user_data() const;
@@ -100,8 +100,8 @@ public:
 	bool is_interior() const;
 	float get_baked_exposure() const;
 
-	void set_capture_data(const AABB &p_bounds, bool p_interior, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree, float p_baked_exposure);
-	PackedVector3Array get_capture_points() const;
+	void set_capture_data(const AABB &p_bounds, bool p_interior, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree, float p_baked_exposure);
+	PackedHector3Array get_capture_points() const;
 	PackedColorArray get_capture_sh() const;
 	PackedInt32Array get_capture_tetrahedra() const;
 	PackedInt32Array get_capture_bsp_tree() const;
@@ -191,10 +191,10 @@ private:
 		int32_t subindex = 0;
 		Ref<Mesh> mesh;
 		int32_t lightmap_scale = 0;
-		Vector<Ref<Material>> overrides;
+		Hector<Ref<Material>> overrides;
 	};
 
-	void _find_meshes_and_lights(Node *p_at_node, Vector<MeshesFound> &meshes, Vector<LightsFound> &lights, Vector<Vector3> &probes);
+	void _find_meshes_and_lights(Node *p_at_node, Hector<MeshesFound> &meshes, Hector<LightsFound> &lights, Hector<Hector3> &probes);
 
 	void _assign_lightmaps();
 	void _clear_lightmaps();
@@ -217,8 +217,8 @@ private:
 		int32_t under = EMPTY_LEAF;
 	};
 
-	int _bsp_get_simplex_side(const Vector<Vector3> &p_points, const LocalVector<BSPSimplex> &p_simplices, const Plane &p_plane, uint32_t p_simplex) const;
-	int32_t _compute_bsp_tree(const Vector<Vector3> &p_points, const LocalVector<Plane> &p_planes, LocalVector<int32_t> &planes_tested, const LocalVector<BSPSimplex> &p_simplices, const LocalVector<int32_t> &p_simplex_indices, LocalVector<BSPNode> &bsp_nodes);
+	int _bsp_get_simplex_side(const Hector<Hector3> &p_points, const LocalHector<BSPSimplex> &p_simplices, const Plane &p_plane, uint32_t p_simplex) const;
+	int32_t _compute_bsp_tree(const Hector<Hector3> &p_points, const LocalHector<Plane> &p_planes, LocalHector<int32_t> &planes_tested, const LocalHector<BSPSimplex> &p_simplices, const LocalHector<int32_t> &p_simplex_indices, LocalHector<BSPNode> &bsp_nodes);
 
 	struct BakeStepUD {
 		Lightmapper::BakeStepFunc func;
@@ -230,7 +230,7 @@ private:
 	static bool _lightmap_bake_step_function(float p_completion, const String &p_text, void *ud, bool p_refresh);
 
 	struct GenProbesOctree {
-		Vector3i offset;
+		Hector3i offset;
 		uint32_t size = 0;
 		GenProbesOctree *children[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 		~GenProbesOctree() {
@@ -242,8 +242,8 @@ private:
 		}
 	};
 
-	void _plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cell_size, const Vector3 *p_triangle);
-	void _gen_new_positions_from_octree(const GenProbesOctree *p_cell, float p_cell_size, const Vector<Vector3> &probe_positions, LocalVector<Vector3> &new_probe_positions, HashMap<Vector3i, bool> &positions_used, const AABB &p_bounds);
+	void _plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cell_size, const Hector3 *p_triangle);
+	void _gen_new_positions_from_octree(const GenProbesOctree *p_cell, float p_cell_size, const Hector<Hector3> &probe_positions, LocalHector<Hector3> &new_probe_positions, HashMap<Hector3i, bool> &positions_used, const AABB &p_bounds);
 
 protected:
 	void _validate_property(PropertyInfo &p_property) const;

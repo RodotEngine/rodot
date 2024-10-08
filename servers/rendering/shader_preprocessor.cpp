@@ -54,7 +54,7 @@ int ShaderPreprocessor::Tokenizer::get_index() const {
 	return index;
 }
 
-void ShaderPreprocessor::Tokenizer::get_and_clear_generated(LocalVector<char32_t> *r_out) {
+void ShaderPreprocessor::Tokenizer::get_and_clear_generated(LocalHector<char32_t> *r_out) {
 	for (uint32_t i = 0; i < generated.size(); i++) {
 		r_out->push_back(generated[i].text);
 	}
@@ -102,8 +102,8 @@ int ShaderPreprocessor::Tokenizer::consume_line_continuations(int p_offset) {
 	return skips;
 }
 
-LocalVector<ShaderPreprocessor::Token> ShaderPreprocessor::Tokenizer::advance(char32_t p_what) {
-	LocalVector<ShaderPreprocessor::Token> tokens;
+LocalHector<ShaderPreprocessor::Token> ShaderPreprocessor::Tokenizer::advance(char32_t p_what) {
+	LocalHector<ShaderPreprocessor::Token> tokens;
 
 	while (index < size) {
 		char32_t c = code[index++];
@@ -122,7 +122,7 @@ LocalVector<ShaderPreprocessor::Token> ShaderPreprocessor::Tokenizer::advance(ch
 			return tokens;
 		}
 	}
-	return LocalVector<ShaderPreprocessor::Token>();
+	return LocalHector<ShaderPreprocessor::Token>();
 }
 
 void ShaderPreprocessor::Tokenizer::skip_whitespace() {
@@ -141,7 +141,7 @@ String ShaderPreprocessor::Tokenizer::get_identifier(bool *r_is_cursor, bool p_s
 		*r_is_cursor = false;
 	}
 
-	LocalVector<char32_t> text;
+	LocalHector<char32_t> text;
 
 	while (true) {
 		char32_t c = peek();
@@ -172,7 +172,7 @@ String ShaderPreprocessor::Tokenizer::get_identifier(bool *r_is_cursor, bool p_s
 		}
 	}
 
-	String id = vector_to_string(text);
+	String id = Hector_to_string(text);
 	if (!id.is_valid_ascii_identifier()) {
 		return "";
 	}
@@ -308,7 +308,7 @@ String ShaderPreprocessor::CommentRemover::strip() {
 			stripped.push_back(c);
 		}
 	}
-	return vector_to_string(stripped);
+	return Hector_to_string(stripped);
 }
 
 ShaderPreprocessor::CommentRemover::CommentRemover(const String &p_code) {
@@ -353,7 +353,7 @@ bool ShaderPreprocessor::is_char_end(char32_t p_char) {
 	return p_char == '\n' || p_char == 0;
 }
 
-String ShaderPreprocessor::vector_to_string(const LocalVector<char32_t> &p_v, int p_start, int p_end) {
+String ShaderPreprocessor::Hector_to_string(const LocalHector<char32_t> &p_v, int p_start, int p_end) {
 	const int stop = (p_end == -1) ? p_v.size() : p_end;
 	const int count = stop - p_start;
 
@@ -366,12 +366,12 @@ String ShaderPreprocessor::vector_to_string(const LocalVector<char32_t> &p_v, in
 	return result;
 }
 
-String ShaderPreprocessor::tokens_to_string(const LocalVector<Token> &p_tokens) {
-	LocalVector<char32_t> result;
+String ShaderPreprocessor::tokens_to_string(const LocalHector<Token> &p_tokens) {
+	LocalHector<char32_t> result;
 	for (const Token &token : p_tokens) {
 		result.push_back(token.text);
 	}
-	return vector_to_string(result);
+	return Hector_to_string(result);
 }
 
 void ShaderPreprocessor::process_directive(Tokenizer *p_tokenizer) {
@@ -420,7 +420,7 @@ void ShaderPreprocessor::process_define(Tokenizer *p_tokenizer) {
 		return;
 	}
 
-	Vector<String> args;
+	Hector<String> args;
 	if (p_tokenizer->peek() == '(') {
 		// Macro has arguments.
 		p_tokenizer->get_token();
@@ -490,7 +490,7 @@ void ShaderPreprocessor::process_elif(Tokenizer *p_tokenizer) {
 	}
 
 	Expression expression;
-	Vector<String> names;
+	Hector<String> names;
 	error = expression.parse(body, names);
 	if (error != OK) {
 		set_error(expression.get_error_text(), line);
@@ -548,7 +548,7 @@ void ShaderPreprocessor::process_else(Tokenizer *p_tokenizer) {
 	}
 
 	if (skip) {
-		Vector<String> ends;
+		Hector<String> ends;
 		ends.push_back("endif");
 		next_directive(p_tokenizer, ends);
 	}
@@ -595,7 +595,7 @@ void ShaderPreprocessor::process_if(Tokenizer *p_tokenizer) {
 	}
 
 	Expression expression;
-	Vector<String> names;
+	Hector<String> names;
 	error = expression.parse(body, names);
 	if (error != OK) {
 		set_error(expression.get_error_text(), line);
@@ -821,7 +821,7 @@ void ShaderPreprocessor::start_branch_condition(Tokenizer *p_tokenizer, bool p_s
 		state->current_branch->conditions.push_back(p_success);
 	}
 	if (!p_success) {
-		Vector<String> ends;
+		Hector<String> ends;
 		ends.push_back("elif");
 		ends.push_back("else");
 		ends.push_back("endif");
@@ -830,7 +830,7 @@ void ShaderPreprocessor::start_branch_condition(Tokenizer *p_tokenizer, bool p_s
 }
 
 void ShaderPreprocessor::expand_output_macros(int p_start, int p_line_number) {
-	String line = vector_to_string(output, p_start, output.size());
+	String line = Hector_to_string(output, p_start, output.size());
 
 	Error error = expand_macros(line, p_line_number - 1, line); // We are already on next line, so -1.
 	if (error != OK) {
@@ -882,7 +882,7 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 		bool found_word = false;
 		bool word_completed = false;
 
-		LocalVector<char32_t> text;
+		LocalHector<char32_t> text;
 		int post_bracket_index = -1;
 		int size = result.size();
 
@@ -953,7 +953,7 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 				index_end = post_bracket_index;
 			}
 
-			String body = state->defines.has(vector_to_string(text)) ? "true" : "false";
+			String body = state->defines.has(Hector_to_string(text)) ? "true" : "false";
 			String temp = result;
 
 			result = result.substr(0, index) + body;
@@ -1016,7 +1016,7 @@ bool ShaderPreprocessor::expand_macros_once(const String &p_line, int p_line_num
 			int args_start = -1;
 			int args_end = -1;
 			int brackets_open = 0;
-			Vector<String> args;
+			Hector<String> args;
 			for (int i = index_start - 1; i < p_line.length(); i++) {
 				bool add_argument = false;
 				bool reached_end = false;
@@ -1160,7 +1160,7 @@ void ShaderPreprocessor::concatenate_macro_body(String &r_body) {
 	}
 }
 
-String ShaderPreprocessor::next_directive(Tokenizer *p_tokenizer, const Vector<String> &p_directives) {
+String ShaderPreprocessor::next_directive(Tokenizer *p_tokenizer, const Hector<String> &p_directives) {
 	const int line = p_tokenizer->get_line();
 	int nesting = 0;
 
@@ -1296,7 +1296,7 @@ Error ShaderPreprocessor::preprocess(State *p_state, const String &p_code, Strin
 		expand_output_macros(last_size, p_tokenizer.get_line());
 	}
 
-	r_result = vector_to_string(output);
+	r_result = Hector_to_string(output);
 
 	return OK;
 }

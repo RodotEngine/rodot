@@ -94,13 +94,13 @@ EditorUndoRedoManager *EditorInterface::get_editor_undo_redo() const {
 }
 
 TypedArray<Texture2D> EditorInterface::_make_mesh_previews(const TypedArray<Mesh> &p_meshes, int p_preview_size) {
-	Vector<Ref<Mesh>> meshes;
+	Hector<Ref<Mesh>> meshes;
 
 	for (int i = 0; i < p_meshes.size(); i++) {
 		meshes.push_back(p_meshes[i]);
 	}
 
-	Vector<Ref<Texture2D>> textures = make_mesh_previews(meshes, nullptr, p_preview_size);
+	Hector<Ref<Texture2D>> textures = make_mesh_previews(meshes, nullptr, p_preview_size);
 	TypedArray<Texture2D> ret;
 	for (int i = 0; i < textures.size(); i++) {
 		ret.push_back(textures[i]);
@@ -109,7 +109,7 @@ TypedArray<Texture2D> EditorInterface::_make_mesh_previews(const TypedArray<Mesh
 	return ret;
 }
 
-Vector<Ref<Texture2D>> EditorInterface::make_mesh_previews(const Vector<Ref<Mesh>> &p_meshes, Vector<Transform3D> *p_transforms, int p_preview_size) {
+Hector<Ref<Texture2D>> EditorInterface::make_mesh_previews(const Hector<Ref<Mesh>> &p_meshes, Hector<Transform3D> *p_transforms, int p_preview_size) {
 	int size = p_preview_size;
 
 	RID scenario = RS::get_singleton()->scenario_create();
@@ -134,7 +134,7 @@ Vector<Ref<Texture2D>> EditorInterface::make_mesh_previews(const Vector<Ref<Mesh
 
 	EditorProgress ep("mlib", TTR("Creating Mesh Previews"), p_meshes.size());
 
-	Vector<Ref<Texture2D>> textures;
+	Hector<Ref<Texture2D>> textures;
 
 	for (int i = 0; i < p_meshes.size(); i++) {
 		const Ref<Mesh> &mesh = p_meshes[i];
@@ -152,11 +152,11 @@ Vector<Ref<Texture2D>> EditorInterface::make_mesh_previews(const Vector<Ref<Mesh
 		RS::get_singleton()->instance_set_transform(inst, mesh_xform);
 
 		AABB aabb = mesh->get_aabb();
-		Vector3 ofs = aabb.get_center();
+		Hector3 ofs = aabb.get_center();
 		aabb.position -= ofs;
 		Transform3D xform;
-		xform.basis = Basis().rotated(Vector3(0, 1, 0), -Math_PI / 6);
-		xform.basis = Basis().rotated(Vector3(1, 0, 0), Math_PI / 6) * xform.basis;
+		xform.basis = Basis().rotated(Hector3(0, 1, 0), -Math_PI / 6);
+		xform.basis = Basis().rotated(Hector3(1, 0, 0), Math_PI / 6) * xform.basis;
 		AABB rot_aabb = xform.xform(aabb);
 		float m = MAX(rot_aabb.size.x, rot_aabb.size.y) * 0.5;
 		if (m == 0) {
@@ -168,11 +168,11 @@ Vector<Ref<Texture2D>> EditorInterface::make_mesh_previews(const Vector<Ref<Mesh
 		xform.invert();
 		xform = mesh_xform * xform;
 
-		RS::get_singleton()->camera_set_transform(camera, xform * Transform3D(Basis(), Vector3(0, 0, 3)));
+		RS::get_singleton()->camera_set_transform(camera, xform * Transform3D(Basis(), Hector3(0, 0, 3)));
 		RS::get_singleton()->camera_set_orthogonal(camera, m * 2, 0.01, 1000.0);
 
-		RS::get_singleton()->instance_set_transform(light_instance, xform * Transform3D().looking_at(Vector3(-2, -1, -1), Vector3(0, 1, 0)));
-		RS::get_singleton()->instance_set_transform(light_instance2, xform * Transform3D().looking_at(Vector3(+1, -1, -2), Vector3(0, 1, 0)));
+		RS::get_singleton()->instance_set_transform(light_instance, xform * Transform3D().looking_at(Hector3(-2, -1, -1), Hector3(0, 1, 0)));
+		RS::get_singleton()->instance_set_transform(light_instance2, xform * Transform3D().looking_at(Hector3(+1, -1, -2), Hector3(0, 1, 0)));
 
 		ep.step(TTR("Thumbnail..."), i);
 		DisplayServer::get_singleton()->process_events();
@@ -289,7 +289,7 @@ void EditorInterface::popup_node_selector(const Callable &p_callback, const Type
 	}
 	node_selector = memnew(SceneTreeDialog);
 
-	Vector<StringName> valid_types;
+	Hector<StringName> valid_types;
 	int length = p_valid_types.size();
 	valid_types.resize(length);
 	for (int i = 0; i < length; i++) {
@@ -318,7 +318,7 @@ void EditorInterface::popup_property_selector(Object *p_object, const Callable &
 	}
 	property_selector = memnew(PropertySelector);
 
-	Vector<Variant::Type> type_filter;
+	Hector<Variant::Type> type_filter;
 	int length = p_type_filter.size();
 	type_filter.resize(length);
 	for (int i = 0; i < length; i++) {
@@ -339,7 +339,7 @@ void EditorInterface::popup_property_selector(Object *p_object, const Callable &
 
 void EditorInterface::popup_quick_open(const Callable &p_callback, const TypedArray<StringName> &p_base_types) {
 	StringName required_type = SNAME("Resource");
-	Vector<StringName> base_types;
+	Hector<StringName> base_types;
 	if (p_base_types.is_empty()) {
 		base_types.append(required_type);
 	} else {
@@ -398,7 +398,7 @@ void EditorInterface::select_file(const String &p_file) {
 	FileSystemDock::get_singleton()->select_file(p_file);
 }
 
-Vector<String> EditorInterface::get_selected_paths() const {
+Hector<String> EditorInterface::get_selected_paths() const {
 	return FileSystemDock::get_singleton()->get_selected_paths();
 }
 
@@ -454,7 +454,7 @@ Node *EditorInterface::get_edited_scene_root() const {
 
 PackedStringArray EditorInterface::get_open_scenes() const {
 	PackedStringArray ret;
-	Vector<EditorData::EditedScene> scenes = EditorNode::get_editor_data().get_edited_scenes();
+	Hector<EditorData::EditedScene> scenes = EditorNode::get_editor_data().get_edited_scenes();
 
 	int scns_amount = scenes.size();
 	for (int idx_scn = 0; idx_scn < scns_amount; idx_scn++) {

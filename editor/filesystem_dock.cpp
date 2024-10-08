@@ -105,15 +105,15 @@ bool FileSystemList::edit_selected() {
 
 	Rect2 rect;
 	Rect2 popup_rect;
-	Vector2 ofs;
+	Hector2 ofs;
 
-	Vector2 icon_size = get_item_icon(s)->get_size();
+	Hector2 icon_size = get_item_icon(s)->get_size();
 
 	// Handles the different icon modes (TOP/LEFT).
 	switch (get_icon_mode()) {
 		case ItemList::ICON_MODE_LEFT:
 			rect = get_item_rect(s, true);
-			ofs = Vector2(0, Math::floor((MAX(line_editor->get_minimum_size().height, rect.size.height) - rect.size.height) / 2));
+			ofs = Hector2(0, Math::floor((MAX(line_editor->get_minimum_size().height, rect.size.height) - rect.size.height) / 2));
 			popup_rect.position = get_screen_position() + rect.position - ofs;
 			popup_rect.size = rect.size;
 
@@ -203,7 +203,7 @@ Ref<Texture2D> FileSystemDock::_get_tree_item_icon(bool p_is_valid, const String
 	}
 }
 
-bool FileSystemDock::_create_tree(TreeItem *p_parent, EditorFileSystemDirectory *p_dir, Vector<String> &uncollapsed_paths, bool p_select_in_favorites, bool p_unfold_path) {
+bool FileSystemDock::_create_tree(TreeItem *p_parent, EditorFileSystemDirectory *p_dir, Hector<String> &uncollapsed_paths, bool p_select_in_favorites, bool p_unfold_path) {
 	bool parent_should_expand = false;
 
 	// Create a tree item for the subdirectory.
@@ -359,8 +359,8 @@ bool FileSystemDock::_create_tree(TreeItem *p_parent, EditorFileSystemDirectory 
 	return parent_should_expand;
 }
 
-Vector<String> FileSystemDock::get_uncollapsed_paths() const {
-	Vector<String> uncollapsed_paths;
+Hector<String> FileSystemDock::get_uncollapsed_paths() const {
+	Hector<String> uncollapsed_paths;
 	TreeItem *root = tree->get_root();
 	if (root) {
 		TreeItem *favorites_item = root->get_first_child();
@@ -392,7 +392,7 @@ Vector<String> FileSystemDock::get_uncollapsed_paths() const {
 	return uncollapsed_paths;
 }
 
-void FileSystemDock::_update_tree(const Vector<String> &p_uncollapsed_paths, bool p_uncollapse_root, bool p_select_in_favorites, bool p_unfold_path) {
+void FileSystemDock::_update_tree(const Hector<String> &p_uncollapsed_paths, bool p_uncollapse_root, bool p_select_in_favorites, bool p_unfold_path) {
 	// Recreate the tree.
 	tree->clear();
 	tree_update_id++;
@@ -406,7 +406,7 @@ void FileSystemDock::_update_tree(const Vector<String> &p_uncollapsed_paths, boo
 	favorites_item->set_metadata(0, "Favorites");
 	favorites_item->set_collapsed(!p_uncollapsed_paths.has("Favorites"));
 
-	Vector<String> favorite_paths = EditorSettings::get_singleton()->get_favorites();
+	Hector<String> favorite_paths = EditorSettings::get_singleton()->get_favorites();
 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 	bool fav_changed = false;
@@ -474,7 +474,7 @@ void FileSystemDock::_update_tree(const Vector<String> &p_uncollapsed_paths, boo
 		}
 	}
 
-	Vector<String> uncollapsed_paths = p_uncollapsed_paths;
+	Hector<String> uncollapsed_paths = p_uncollapsed_paths;
 	if (p_uncollapse_root) {
 		uncollapsed_paths.push_back("res://");
 	}
@@ -552,7 +552,7 @@ void FileSystemDock::_notification(int p_what) {
 			if (EditorFileSystem::get_singleton()->is_scanning()) {
 				_set_scanning_mode();
 			} else {
-				_update_tree(Vector<String>(), true);
+				_update_tree(Hector<String>(), true);
 			}
 		} break;
 
@@ -695,11 +695,11 @@ void FileSystemDock::_tree_multi_selected(Object *p_item, int p_column, bool p_s
 	}
 }
 
-Vector<String> FileSystemDock::get_selected_paths() const {
+Hector<String> FileSystemDock::get_selected_paths() const {
 	if (display_mode == DISPLAY_MODE_TREE_ONLY) {
 		return _tree_get_selected(false);
 	} else {
-		Vector<String> selected = _file_list_get_selected();
+		Hector<String> selected = _file_list_get_selected();
 		if (selected.is_empty()) {
 			selected.push_back(get_current_directory());
 		}
@@ -944,7 +944,7 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
 	List<FileInfo> file_list;
 	if (current_path == "Favorites") {
 		// Display the favorites.
-		Vector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
+		Hector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
 		for (const String &favorite : favorites_list) {
 			String text;
 			Ref<Texture2D> icon;
@@ -1150,14 +1150,14 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
 	}
 }
 
-HashSet<String> FileSystemDock::_get_valid_conversions_for_file_paths(const Vector<String> &p_paths) {
+HashSet<String> FileSystemDock::_get_valid_conversions_for_file_paths(const Hector<String> &p_paths) {
 	HashSet<String> all_valid_conversion_to_targets;
 	for (const String &fpath : p_paths) {
 		if (fpath.is_empty() || fpath == "res://" || !FileAccess::exists(fpath) || FileAccess::exists(fpath + ".import")) {
 			return HashSet<String>();
 		}
 
-		Vector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_type_name(EditorFileSystem::get_singleton()->get_file_type(fpath));
+		Hector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_type_name(EditorFileSystem::get_singleton()->get_file_type(fpath));
 
 		if (conversions.is_empty()) {
 			// This resource can't convert to anything, so return an empty list.
@@ -1378,7 +1378,7 @@ void FileSystemDock::_push_to_history() {
 	button_hist_next->set_disabled(history_pos == history.size() - 1);
 }
 
-void FileSystemDock::_get_all_items_in_dir(EditorFileSystemDirectory *p_efsd, Vector<String> &r_files, Vector<String> &r_folders) const {
+void FileSystemDock::_get_all_items_in_dir(EditorFileSystemDirectory *p_efsd, Hector<String> &r_files, Hector<String> &r_folders) const {
 	if (p_efsd == nullptr) {
 		return;
 	}
@@ -1397,7 +1397,7 @@ void FileSystemDock::_find_file_owners(EditorFileSystemDirectory *p_efsd, const 
 		_find_file_owners(p_efsd->get_subdir(i), p_renames, r_file_owners);
 	}
 	for (int i = 0; i < p_efsd->get_file_count(); i++) {
-		Vector<String> deps = p_efsd->get_file_deps(i);
+		Hector<String> deps = p_efsd->get_file_deps(i);
 		for (int j = 0; j < deps.size(); j++) {
 			if (p_renames.has(deps[j])) {
 				r_file_owners.insert(p_efsd->get_file_path(i));
@@ -1425,8 +1425,8 @@ void FileSystemDock::_try_move_item(const FileOrFolder &p_item, const String &p_
 	}
 
 	// Build a list of files which will have new paths as a result of this operation.
-	Vector<String> file_changed_paths;
-	Vector<String> folder_changed_paths;
+	Hector<String> file_changed_paths;
+	Hector<String> folder_changed_paths;
 	if (p_item.is_file) {
 		file_changed_paths.push_back(old_path);
 	} else {
@@ -1696,8 +1696,8 @@ String FileSystemDock::_get_unique_name(const FileOrFolder &p_entry, const Strin
 }
 
 void FileSystemDock::_update_favorites_list_after_move(const HashMap<String, String> &p_files_renames, const HashMap<String, String> &p_folders_renames) const {
-	Vector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
-	Vector<String> new_favorites;
+	Hector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
+	Hector<String> new_favorites;
 
 	for (const String &old_path : favorites_list) {
 		if (p_folders_renames.has(old_path)) {
@@ -1889,17 +1889,17 @@ void FileSystemDock::_overwrite_dialog_action(bool p_overwrite) {
 }
 
 void FileSystemDock::_convert_dialog_action() {
-	Vector<Ref<Resource>> selected_resources;
+	Hector<Ref<Resource>> selected_resources;
 	for (const String &S : to_convert) {
 		Ref<Resource> res = ResourceLoader::load(S);
 		ERR_FAIL_COND(res.is_null());
 		selected_resources.push_back(res);
 	}
 
-	Vector<Ref<Resource>> converted_resources;
+	Hector<Ref<Resource>> converted_resources;
 	HashSet<Ref<Resource>> resources_to_erase_history_for;
 	for (Ref<Resource> res : selected_resources) {
-		Vector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(res);
+		Hector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(res);
 		for (const Ref<EditorResourceConversionPlugin> &conversion : conversions) {
 			int conversion_id = 0;
 			for (const String &target : cached_valid_conversion_targets) {
@@ -1936,8 +1936,8 @@ void FileSystemDock::_convert_dialog_action() {
 	}
 }
 
-Vector<String> FileSystemDock::_check_existing() {
-	Vector<String> conflicting_items;
+Hector<String> FileSystemDock::_check_existing() {
+	Hector<String> conflicting_items;
 	for (const FileOrFolder &item : to_move) {
 		String old_path = item.path.trim_suffix("/");
 		String new_path = to_move_path.path_join(old_path.get_file());
@@ -1954,7 +1954,7 @@ void FileSystemDock::_move_operation_confirm(const String &p_to_path, bool p_cop
 		to_move_path = p_to_path;
 		to_move_or_copy = p_copy;
 
-		Vector<String> conflicting_items = _check_existing();
+		Hector<String> conflicting_items = _check_existing();
 		if (!conflicting_items.is_empty()) {
 			// Ask to do something.
 			overwrite_dialog_header->set_text(vformat(
@@ -1968,7 +1968,7 @@ void FileSystemDock::_move_operation_confirm(const String &p_to_path, bool p_cop
 		}
 	}
 
-	Vector<String> new_paths;
+	Hector<String> new_paths;
 	new_paths.resize(to_move.size());
 	for (int i = 0; i < to_move.size(); i++) {
 		if (p_overwrite == OVERWRITE_RENAME) {
@@ -2071,9 +2071,9 @@ void FileSystemDock::_before_move(HashMap<String, ResourceUID::ID> &r_uids, Hash
 	EditorNode::get_singleton()->save_scene_list(r_file_owners);
 }
 
-Vector<String> FileSystemDock::_tree_get_selected(bool remove_self_inclusion, bool p_include_unselected_cursor) const {
+Hector<String> FileSystemDock::_tree_get_selected(bool remove_self_inclusion, bool p_include_unselected_cursor) const {
 	// Build a list of selected items with the active one at the first position.
-	Vector<String> selected_strings;
+	Hector<String> selected_strings;
 
 	TreeItem *favorites_item = tree->get_root()->get_first_child();
 	TreeItem *cursor_item = tree->get_selected();
@@ -2096,8 +2096,8 @@ Vector<String> FileSystemDock::_tree_get_selected(bool remove_self_inclusion, bo
 	return selected_strings;
 }
 
-Vector<String> FileSystemDock::_file_list_get_selected() const {
-	Vector<String> selected;
+Hector<String> FileSystemDock::_file_list_get_selected() const {
+	Hector<String> selected;
 
 	for (int idx : files->get_selected_items()) {
 		selected.push_back(files->get_item_metadata(idx));
@@ -2105,7 +2105,7 @@ Vector<String> FileSystemDock::_file_list_get_selected() const {
 	return selected;
 }
 
-Vector<String> FileSystemDock::_remove_self_included_paths(Vector<String> selected_strings) {
+Hector<String> FileSystemDock::_remove_self_included_paths(Hector<String> selected_strings) {
 	// Remove paths or files that are included into another.
 	if (selected_strings.size() > 1) {
 		selected_strings.sort_custom<FileNoCaseComparator>();
@@ -2124,7 +2124,7 @@ Vector<String> FileSystemDock::_remove_self_included_paths(Vector<String> select
 }
 
 void FileSystemDock::_tree_rmb_option(int p_option) {
-	Vector<String> selected_strings = _tree_get_selected(false);
+	Hector<String> selected_strings = _tree_get_selected(false);
 
 	// Execute the current option.
 	switch (p_option) {
@@ -2146,8 +2146,8 @@ void FileSystemDock::_tree_rmb_option(int p_option) {
 }
 
 void FileSystemDock::_file_list_rmb_option(int p_option) {
-	Vector<int> selected_id = files->get_selected_items();
-	Vector<String> selected;
+	Hector<int> selected_id = files->get_selected_items();
+	Hector<String> selected;
 	for (int i = 0; i < selected_id.size(); i++) {
 		selected.push_back(files->get_item_metadata(selected_id[i]));
 	}
@@ -2164,7 +2164,7 @@ void FileSystemDock::_generic_rmb_option_selected(int p_option) {
 	}
 }
 
-void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected) {
+void FileSystemDock::_file_option(int p_option, const Hector<String> &p_selected) {
 	// The first one should be the active item.
 
 	switch (p_option) {
@@ -2197,7 +2197,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 				// Binary resources have no meaningful editor outside Godot, so just fallback to something default.
 			} else if (resource_type == "CompressedTexture2D" || resource_type == "Image") {
 				if (extension == "svg" || extension == "svgz") {
-					external_program = EDITOR_GET("filesystem/external_programs/vector_image_editor");
+					external_program = EDITOR_GET("filesystem/external_programs/Hector_image_editor");
 				} else {
 					external_program = EDITOR_GET("filesystem/external_programs/raster_image_editor");
 				}
@@ -2222,7 +2222,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 				fpath = p_selected[0];
 			}
 
-			Vector<String> terminal_emulators;
+			Hector<String> terminal_emulators;
 			const String terminal_emulator_setting = EDITOR_GET("filesystem/external_programs/terminal_emulator");
 			if (terminal_emulator_setting.is_empty()) {
 				// Figure out a default terminal emulator to use.
@@ -2259,7 +2259,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 			String chosen_terminal_emulator;
 			for (const String &terminal_emulator : terminal_emulators) {
 				String pipe;
-				List<String> test_args; // Required for `execute()`, as it doesn't accept `Vector<String>`.
+				List<String> test_args; // Required for `execute()`, as it doesn't accept `Hector<String>`.
 				test_args.push_back("-cr");
 				test_args.push_back("command -v " + terminal_emulator);
 				const Error err = OS::get_singleton()->execute("bash", test_args, &pipe);
@@ -2276,7 +2276,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 			String chosen_terminal_emulator = terminal_emulators[0];
 #endif
 
-			List<String> terminal_emulator_args; // Required for `execute()`, as it doesn't accept `Vector<String>`.
+			List<String> terminal_emulator_args; // Required for `execute()`, as it doesn't accept `Hector<String>`.
 #ifdef LINUXBSD_ENABLED
 			// Prepend default arguments based on the terminal emulator name.
 			// Use `String.ends_with()` so that installations in non-default paths
@@ -2312,7 +2312,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 			}
 #endif
 
-			Vector<String> arguments_array = arguments.split(" ");
+			Hector<String> arguments_array = arguments.split(" ");
 			for (const String &argument : arguments_array) {
 				if (!append_default_args && argument == "{directory}") {
 					// Prevent appending a `{directory}` placeholder twice when using powershell or cmd.
@@ -2386,7 +2386,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 
 		case FILE_INSTANTIATE: {
 			// Instantiate all selected scenes.
-			Vector<String> paths;
+			Hector<String> paths;
 			for (int i = 0; i < p_selected.size(); i++) {
 				const String &fpath = p_selected[i];
 				if (EditorFileSystem::get_singleton()->get_file_type(fpath) == "PackedScene") {
@@ -2400,7 +2400,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 
 		case FILE_ADD_FAVORITE: {
 			// Add the files from favorites.
-			Vector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
+			Hector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
 			for (int i = 0; i < p_selected.size(); i++) {
 				if (!favorites_list.has(p_selected[i])) {
 					favorites_list.push_back(p_selected[i]);
@@ -2412,7 +2412,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 
 		case FILE_REMOVE_FAVORITE: {
 			// Remove the files from favorites.
-			Vector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
+			Hector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
 			for (int i = 0; i < p_selected.size(); i++) {
 				favorites_list.erase(p_selected[i]);
 			}
@@ -2448,7 +2448,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 		case FILE_MOVE: {
 			// Move or copy the files to a given location.
 			to_move.clear();
-			Vector<String> collapsed_paths = _remove_self_included_paths(p_selected);
+			Hector<String> collapsed_paths = _remove_self_included_paths(p_selected);
 			for (int i = collapsed_paths.size() - 1; i >= 0; i--) {
 				const String &fpath = collapsed_paths[i];
 				if (fpath != "res://") {
@@ -2493,9 +2493,9 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 
 		case FILE_REMOVE: {
 			// Remove the selected files.
-			Vector<String> remove_files;
-			Vector<String> remove_folders;
-			Vector<String> collapsed_paths = _remove_self_included_paths(p_selected);
+			Hector<String> remove_files;
+			Hector<String> remove_folders;
+			Hector<String> collapsed_paths = _remove_self_included_paths(p_selected);
 
 			for (int i = 0; i < collapsed_paths.size(); i++) {
 				const String &fpath = collapsed_paths[i];
@@ -2690,12 +2690,12 @@ void FileSystemDock::_search_changed(const String &p_text, const Control *p_from
 	bool unfold_path = (p_text.is_empty() && !current_path.is_empty());
 	switch (display_mode) {
 		case DISPLAY_MODE_TREE_ONLY: {
-			_update_tree(searched_tokens.is_empty() ? uncollapsed_paths_before_search : Vector<String>(), false, false, unfold_path);
+			_update_tree(searched_tokens.is_empty() ? uncollapsed_paths_before_search : Hector<String>(), false, false, unfold_path);
 		} break;
 		case DISPLAY_MODE_HSPLIT:
 		case DISPLAY_MODE_VSPLIT: {
 			_update_file_list(false);
-			_update_tree(searched_tokens.is_empty() ? uncollapsed_paths_before_search : Vector<String>(), false, false, unfold_path);
+			_update_tree(searched_tokens.is_empty() ? uncollapsed_paths_before_search : Hector<String>(), false, false, unfold_path);
 		} break;
 	}
 }
@@ -2830,7 +2830,7 @@ Variant FileSystemDock::get_drag_data_fw(const Point2 &p_point, Control *p_from)
 	bool all_favorites = true;
 	bool all_not_favorites = true;
 
-	Vector<String> paths;
+	Hector<String> paths;
 
 	if (p_from == tree) {
 		// Check if the first selected is in favorite.
@@ -2930,7 +2930,7 @@ bool FileSystemDock::can_drop_data_fw(const Point2 &p_point, const Variant &p_da
 		// Attempting to move a folder into itself will fail later,
 		// rather than bring up a message don't try to do it in the first place.
 		to_dir = to_dir.ends_with("/") ? to_dir : (to_dir + "/");
-		Vector<String> fnames = drag_data["files"];
+		Hector<String> fnames = drag_data["files"];
 		for (int i = 0; i < fnames.size(); ++i) {
 			if (fnames[i].ends_with("/") && to_dir.begins_with(fnames[i])) {
 				return false;
@@ -2957,7 +2957,7 @@ void FileSystemDock::drop_data_fw(const Point2 &p_point, const Variant &p_data, 
 	}
 	Dictionary drag_data = p_data;
 
-	Vector<String> dirs = EditorSettings::get_singleton()->get_favorites();
+	Hector<String> dirs = EditorSettings::get_singleton()->get_favorites();
 
 	if (drag_data.has("favorite")) {
 		if (String(drag_data["favorite"]) != "all") {
@@ -2971,7 +2971,7 @@ void FileSystemDock::drop_data_fw(const Point2 &p_point, const Variant &p_data, 
 		int drop_section = tree->get_drop_section_at_position(p_point);
 
 		int drop_position;
-		Vector<String> drag_files = drag_data["files"];
+		Hector<String> drag_files = drag_data["files"];
 		TreeItem *favorites_item = tree->get_root()->get_first_child();
 		TreeItem *resources_item = favorites_item->get_next();
 
@@ -2990,7 +2990,7 @@ void FileSystemDock::drop_data_fw(const Point2 &p_point, const Variant &p_data, 
 		}
 
 		// Remove dragged favorites.
-		Vector<int> to_remove;
+		Hector<int> to_remove;
 		int offset = 0;
 		for (int i = 0; i < drag_files.size(); i++) {
 			int to_remove_pos = dirs.find(drag_files[i]);
@@ -3043,7 +3043,7 @@ void FileSystemDock::drop_data_fw(const Point2 &p_point, const Variant &p_data, 
 		bool favorite;
 		_get_drag_target_folder(to_dir, favorite, p_point, p_from);
 		if (!to_dir.is_empty()) {
-			Vector<String> fnames = drag_data["files"];
+			Hector<String> fnames = drag_data["files"];
 			to_move.clear();
 			String target_dir = to_dir == "res://" ? to_dir : to_dir.trim_suffix("/");
 
@@ -3061,8 +3061,8 @@ void FileSystemDock::drop_data_fw(const Point2 &p_point, const Variant &p_data, 
 			}
 		} else if (favorite) {
 			// Add the files from favorites.
-			Vector<String> fnames = drag_data["files"];
-			Vector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
+			Hector<String> fnames = drag_data["files"];
+			Hector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
 			for (int i = 0; i < fnames.size(); i++) {
 				if (!favorites_list.has(fnames[i])) {
 					favorites_list.push_back(fnames[i]);
@@ -3155,11 +3155,11 @@ void FileSystemDock::_update_folder_colors_setting() {
 
 void FileSystemDock::_folder_color_index_pressed(int p_index, PopupMenu *p_menu) {
 	Variant chosen_color_name = p_menu->get_item_metadata(p_index);
-	Vector<String> selected;
+	Hector<String> selected;
 
 	// Get all selected folders based on whether the files panel or tree panel is currently focused.
 	if (files->has_focus()) {
-		Vector<int> files_selected_ids = files->get_selected_items();
+		Hector<int> files_selected_ids = files->get_selected_items();
 		for (int i = 0; i < files_selected_ids.size(); i++) {
 			selected.push_back(files->get_item_metadata(files_selected_ids[i]));
 		}
@@ -3189,14 +3189,14 @@ void FileSystemDock::_folder_color_index_pressed(int p_index, PopupMenu *p_menu)
 	emit_signal(SNAME("folder_color_changed"));
 }
 
-void FileSystemDock::_file_and_folders_fill_popup(PopupMenu *p_popup, const Vector<String> &p_paths, bool p_display_path_dependent_options) {
+void FileSystemDock::_file_and_folders_fill_popup(PopupMenu *p_popup, const Hector<String> &p_paths, bool p_display_path_dependent_options) {
 	// Add options for files and folders.
 	ERR_FAIL_COND_MSG(p_paths.is_empty(), "Path cannot be empty.");
 
-	Vector<String> filenames;
-	Vector<String> foldernames;
+	Hector<String> filenames;
+	Hector<String> foldernames;
 
-	Vector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
+	Hector<String> favorites_list = EditorSettings::get_singleton()->get_favorites();
 
 	bool all_files = true;
 	bool all_files_scenes = true;
@@ -3446,14 +3446,14 @@ void FileSystemDock::_file_and_folders_fill_popup(PopupMenu *p_popup, const Vect
 	EditorContextMenuPluginManager::get_singleton()->add_options_from_plugins(p_popup, EditorContextMenuPlugin::CONTEXT_SLOT_FILESYSTEM, p_paths);
 }
 
-void FileSystemDock::_tree_rmb_select(const Vector2 &p_pos, MouseButton p_button) {
+void FileSystemDock::_tree_rmb_select(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
 	tree->grab_focus();
 
 	// Right click is pressed in the tree.
-	Vector<String> paths = _tree_get_selected(false);
+	Hector<String> paths = _tree_get_selected(false);
 
 	tree_popup->clear();
 
@@ -3467,7 +3467,7 @@ void FileSystemDock::_tree_rmb_select(const Vector2 &p_pos, MouseButton p_button
 	}
 }
 
-void FileSystemDock::_tree_empty_click(const Vector2 &p_pos, MouseButton p_button) {
+void FileSystemDock::_tree_empty_click(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
@@ -3496,14 +3496,14 @@ void FileSystemDock::_tree_empty_selected() {
 	tree->deselect_all();
 }
 
-void FileSystemDock::_file_list_item_clicked(int p_item, const Vector2 &p_pos, MouseButton p_mouse_button_index) {
+void FileSystemDock::_file_list_item_clicked(int p_item, const Hector2 &p_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index != MouseButton::RIGHT) {
 		return;
 	}
 	files->grab_focus();
 
 	// Right click is pressed in the file list.
-	Vector<String> paths;
+	Hector<String> paths;
 	for (int i = 0; i < files->get_item_count(); i++) {
 		if (!files->is_selected(i)) {
 			continue;
@@ -3525,7 +3525,7 @@ void FileSystemDock::_file_list_item_clicked(int p_item, const Vector2 &p_pos, M
 	}
 }
 
-void FileSystemDock::_file_list_empty_clicked(const Vector2 &p_pos, MouseButton p_mouse_button_index) {
+void FileSystemDock::_file_list_empty_clicked(const Hector2 &p_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index != MouseButton::RIGHT) {
 		return;
 	}
@@ -3771,7 +3771,7 @@ void FileSystemDock::_file_list_gui_input(Ref<InputEvent> p_event) {
 	}
 }
 
-bool FileSystemDock::_get_imported_files(const String &p_path, String &r_extension, Vector<String> &r_files) const {
+bool FileSystemDock::_get_imported_files(const String &p_path, String &r_extension, Hector<String> &r_files) const {
 	if (!p_path.ends_with("/")) {
 		if (FileAccess::exists(p_path + ".import")) {
 			if (r_extension.is_empty()) {
@@ -3810,7 +3810,7 @@ void FileSystemDock::_update_import_dock() {
 	}
 
 	// List selected.
-	Vector<String> selected;
+	Hector<String> selected;
 	if (display_mode == DISPLAY_MODE_TREE_ONLY) {
 		// Use the tree
 		selected = _tree_get_selected();
@@ -3832,14 +3832,14 @@ void FileSystemDock::_update_import_dock() {
 	}
 
 	// Expand directory selection.
-	Vector<String> efiles;
+	Hector<String> efiles;
 	String extension;
 	for (const String &fpath : selected) {
 		_get_imported_files(fpath, extension, efiles);
 	}
 
 	// Check import.
-	Vector<String> imports;
+	Hector<String> imports;
 	String import_type;
 	for (int i = 0; i < efiles.size(); i++) {
 		const String &fpath = efiles[i];
@@ -3995,7 +3995,7 @@ void FileSystemDock::save_layout_to_config(Ref<ConfigFile> p_layout, const Strin
 	p_layout->set_value(p_section, "dock_filesystem_file_list_display_mode", get_file_list_display_mode());
 	PackedStringArray selected_files = get_selected_paths();
 	p_layout->set_value(p_section, "dock_filesystem_selected_paths", selected_files);
-	Vector<String> uncollapsed_paths = get_uncollapsed_paths();
+	Hector<String> uncollapsed_paths = get_uncollapsed_paths();
 	p_layout->set_value(p_section, "dock_filesystem_uncollapsed_paths", uncollapsed_paths);
 }
 
@@ -4263,7 +4263,7 @@ FileSystemDock::FileSystemDock() {
 
 	overwrite_dialog_scroll = memnew(ScrollContainer);
 	overwrite_dialog_vb->add_child(overwrite_dialog_scroll);
-	overwrite_dialog_scroll->set_custom_minimum_size(Vector2(400, 600) * EDSCALE);
+	overwrite_dialog_scroll->set_custom_minimum_size(Hector2(400, 600) * EDSCALE);
 
 	overwrite_dialog_file_list = memnew(Label);
 	overwrite_dialog_scroll->add_child(overwrite_dialog_file_list);
@@ -4295,7 +4295,7 @@ FileSystemDock::FileSystemDock() {
 	conversion_dialog->set_ok_button_text(TTR("Convert"));
 	conversion_dialog->connect(SceneStringName(confirmed), callable_mp(this, &FileSystemDock::_convert_dialog_action));
 
-	uncollapsed_paths_before_search = Vector<String>();
+	uncollapsed_paths_before_search = Hector<String>();
 
 	tree_update_id = 0;
 

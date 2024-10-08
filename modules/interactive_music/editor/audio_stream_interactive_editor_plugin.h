@@ -50,7 +50,7 @@ class AudioStreamInteractiveTransitionEditor : public AcceptDialog {
 	HSplitContainer *split = nullptr;
 	Tree *tree = nullptr;
 
-	Vector<TreeItem *> rows;
+	Hector<TreeItem *> rows;
 
 	CheckBox *transition_enabled = nullptr;
 	OptionButton *transition_from = nullptr;
@@ -62,9 +62,9 @@ class AudioStreamInteractiveTransitionEditor : public AcceptDialog {
 
 	bool updating_selection = false;
 	int order_counter = 0;
-	HashMap<Vector2i, int> selection_order;
+	HashMap<Hector2i, int> selection_order;
 
-	Vector<Vector2i> selected;
+	Hector<Hector2i> selected;
 	bool updating = false;
 	void _cell_selected(TreeItem *p_item, int p_column, bool p_selected);
 	void _update_transitions();

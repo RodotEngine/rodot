@@ -96,7 +96,7 @@ Error WebSocketPeer::send_text(const String &p_text) {
 	return send((const uint8_t *)cs.ptr(), cs.length(), WRITE_MODE_TEXT);
 }
 
-void WebSocketPeer::set_supported_protocols(const Vector<String> &p_protocols) {
+void WebSocketPeer::set_supported_protocols(const Hector<String> &p_protocols) {
 	// Strip edges from protocols.
 	supported_protocols.resize(p_protocols.size());
 	for (int i = 0; i < p_protocols.size(); i++) {
@@ -104,26 +104,26 @@ void WebSocketPeer::set_supported_protocols(const Vector<String> &p_protocols) {
 	}
 }
 
-const Vector<String> WebSocketPeer::get_supported_protocols() const {
+const Hector<String> WebSocketPeer::get_supported_protocols() const {
 	return supported_protocols;
 }
 
-Vector<String> WebSocketPeer::_get_supported_protocols() const {
-	Vector<String> out;
+Hector<String> WebSocketPeer::_get_supported_protocols() const {
+	Hector<String> out;
 	out.append_array(supported_protocols);
 	return out;
 }
 
-void WebSocketPeer::set_handshake_headers(const Vector<String> &p_headers) {
+void WebSocketPeer::set_handshake_headers(const Hector<String> &p_headers) {
 	handshake_headers = p_headers;
 }
 
-const Vector<String> WebSocketPeer::get_handshake_headers() const {
+const Hector<String> WebSocketPeer::get_handshake_headers() const {
 	return handshake_headers;
 }
 
-Vector<String> WebSocketPeer::_get_handshake_headers() const {
-	Vector<String> out;
+Hector<String> WebSocketPeer::_get_handshake_headers() const {
+	Hector<String> out;
 	out.append_array(handshake_headers);
 	return out;
 }

@@ -79,7 +79,7 @@ Ref<StreamPeer> HTTPClientWeb::get_connection() const {
 	ERR_FAIL_V_MSG(Ref<RefCounted>(), "Accessing an HTTPClientWeb's StreamPeer is not supported for the Web platform.");
 }
 
-Error HTTPClientWeb::request(Method p_method, const String &p_url, const Vector<String> &p_headers, const uint8_t *p_body, int p_body_len) {
+Error HTTPClientWeb::request(Method p_method, const String &p_url, const Hector<String> &p_headers, const uint8_t *p_body, int p_body_len) {
 	ERR_FAIL_INDEX_V(p_method, METHOD_MAX, ERR_INVALID_PARAMETER);
 	ERR_FAIL_COND_V_MSG(p_method == METHOD_TRACE || p_method == METHOD_CONNECT, ERR_UNAVAILABLE, "HTTP methods TRACE and CONNECT are not supported for the Web platform.");
 	ERR_FAIL_COND_V(status != STATUS_CONNECTED, ERR_INVALID_PARAMETER);
@@ -93,8 +93,8 @@ Error HTTPClientWeb::request(Method p_method, const String &p_url, const Vector<
 	}
 
 	String url = (use_tls ? "https://" : "http://") + host + ":" + itos(port) + p_url;
-	Vector<CharString> keeper;
-	Vector<const char *> c_strings;
+	Hector<CharString> keeper;
+	Hector<const char *> c_strings;
 	for (int i = 0; i < p_headers.size(); i++) {
 		keeper.push_back(p_headers[i].utf8());
 		c_strings.push_back(keeper[i].get_data());

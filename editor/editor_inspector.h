@@ -124,7 +124,7 @@ private:
 
 	float split_ratio;
 
-	Vector<Control *> focusables;
+	Hector<Control *> focusables;
 	Control *label_reference = nullptr;
 	Control *bottom_editor = nullptr;
 	PopupMenu *menu = nullptr;
@@ -237,7 +237,7 @@ public:
 	friend class EditorInspector;
 	struct AddedEditor {
 		Control *property_editor = nullptr;
-		Vector<String> properties;
+		Hector<String> properties;
 		String label;
 		bool add_to_end = false;
 	};
@@ -261,7 +261,7 @@ protected:
 public:
 	void add_custom_control(Control *control);
 	void add_property_editor(const String &p_for_property, Control *p_prop, bool p_add_to_end = false, const String &p_label = String());
-	void add_property_editor_for_multiple_properties(const String &p_label, const Vector<String> &p_properties, Control *p_prop);
+	void add_property_editor_for_multiple_properties(const String &p_label, const Hector<String> &p_properties, Control *p_prop);
 
 	virtual bool can_handle(Object *p_object);
 	virtual void parse_begin(Object *p_object);
@@ -401,7 +401,7 @@ class EditorInspectorArray : public EditorInspectorSection {
 		VBoxContainer *vbox = nullptr;
 		Button *erase = nullptr;
 	};
-	LocalVector<ArrayElement> array_elements;
+	LocalHector<ArrayElement> array_elements;
 
 	Ref<StyleBoxFlat> odd_style;
 	Ref<StyleBoxFlat> even_style;
@@ -545,7 +545,7 @@ class EditorInspector : public ScrollContainer {
 	void _edit_set(const String &p_name, const Variant &p_value, bool p_refresh_all, const String &p_changed_field);
 
 	void _property_changed(const String &p_path, const Variant &p_value, const String &p_name = "", bool p_changing = false, bool p_update_all = false);
-	void _multiple_properties_changed(const Vector<String> &p_paths, const Array &p_values, bool p_changing = false);
+	void _multiple_properties_changed(const Hector<String> &p_paths, const Array &p_values, bool p_changing = false);
 	void _property_keyed(const String &p_path, bool p_advance);
 	void _property_keyed_with_value(const String &p_path, const Variant &p_value, bool p_advance);
 	void _property_deleted(const String &p_path);

@@ -248,21 +248,21 @@ typedef min16int4   FfxInt16x4;
 #if FFX_HLSL_6_2
 
 #define FFX_MIN16_SCALAR( TypeName, BaseComponentType )           typedef BaseComponentType##16_t TypeName;
-#define FFX_MIN16_VECTOR( TypeName, BaseComponentType, COL )      typedef vector<BaseComponentType##16_t, COL> TypeName;
+#define FFX_MIN16_Hector( TypeName, BaseComponentType, COL )      typedef Hector<BaseComponentType##16_t, COL> TypeName;
 #define FFX_MIN16_MATRIX( TypeName, BaseComponentType, ROW, COL ) typedef matrix<BaseComponentType##16_t, ROW, COL> TypeName;
 
 #define FFX_16BIT_SCALAR( TypeName, BaseComponentType )           typedef BaseComponentType##16_t TypeName;
-#define FFX_16BIT_VECTOR( TypeName, BaseComponentType, COL )      typedef vector<BaseComponentType##16_t, COL> TypeName;
+#define FFX_16BIT_Hector( TypeName, BaseComponentType, COL )      typedef Hector<BaseComponentType##16_t, COL> TypeName;
 #define FFX_16BIT_MATRIX( TypeName, BaseComponentType, ROW, COL ) typedef matrix<BaseComponentType##16_t, ROW, COL> TypeName;
 
 #else //FFX_HLSL_6_2
 
 #define FFX_MIN16_SCALAR( TypeName, BaseComponentType )           typedef min16##BaseComponentType TypeName;
-#define FFX_MIN16_VECTOR( TypeName, BaseComponentType, COL )      typedef vector<min16##BaseComponentType, COL> TypeName;
+#define FFX_MIN16_Hector( TypeName, BaseComponentType, COL )      typedef Hector<min16##BaseComponentType, COL> TypeName;
 #define FFX_MIN16_MATRIX( TypeName, BaseComponentType, ROW, COL ) typedef matrix<min16##BaseComponentType, ROW, COL> TypeName;
 
 #define FFX_16BIT_SCALAR( TypeName, BaseComponentType )           FFX_MIN16_SCALAR( TypeName, BaseComponentType );
-#define FFX_16BIT_VECTOR( TypeName, BaseComponentType, COL )      FFX_MIN16_VECTOR( TypeName, BaseComponentType, COL );
+#define FFX_16BIT_Hector( TypeName, BaseComponentType, COL )      FFX_MIN16_Hector( TypeName, BaseComponentType, COL );
 #define FFX_16BIT_MATRIX( TypeName, BaseComponentType, ROW, COL ) FFX_MIN16_MATRIX( TypeName, BaseComponentType, ROW, COL );
 
 #endif //FFX_HLSL_6_2
@@ -270,11 +270,11 @@ typedef min16int4   FfxInt16x4;
 #else //FFX_HALF
 
 #define FFX_MIN16_SCALAR( TypeName, BaseComponentType )           typedef BaseComponentType TypeName;
-#define FFX_MIN16_VECTOR( TypeName, BaseComponentType, COL )      typedef vector<BaseComponentType, COL> TypeName;
+#define FFX_MIN16_Hector( TypeName, BaseComponentType, COL )      typedef Hector<BaseComponentType, COL> TypeName;
 #define FFX_MIN16_MATRIX( TypeName, BaseComponentType, ROW, COL ) typedef matrix<BaseComponentType, ROW, COL> TypeName;
 
 #define FFX_16BIT_SCALAR( TypeName, BaseComponentType )           typedef BaseComponentType TypeName;
-#define FFX_16BIT_VECTOR( TypeName, BaseComponentType, COL )      typedef vector<BaseComponentType, COL> TypeName;
+#define FFX_16BIT_Hector( TypeName, BaseComponentType, COL )      typedef Hector<BaseComponentType, COL> TypeName;
 #define FFX_16BIT_MATRIX( TypeName, BaseComponentType, ROW, COL ) typedef matrix<BaseComponentType, ROW, COL> TypeName;
 
 #endif //FFX_HALF
@@ -283,34 +283,34 @@ typedef min16int4   FfxInt16x4;
 // Common typedefs:
 #if defined(FFX_HLSL)
 FFX_MIN16_SCALAR( FFX_MIN16_F , float );
-FFX_MIN16_VECTOR( FFX_MIN16_F2, float, 2 );
-FFX_MIN16_VECTOR( FFX_MIN16_F3, float, 3 );
-FFX_MIN16_VECTOR( FFX_MIN16_F4, float, 4 );
+FFX_MIN16_Hector( FFX_MIN16_F2, float, 2 );
+FFX_MIN16_Hector( FFX_MIN16_F3, float, 3 );
+FFX_MIN16_Hector( FFX_MIN16_F4, float, 4 );
 
 FFX_MIN16_SCALAR( FFX_MIN16_I,  int );
-FFX_MIN16_VECTOR( FFX_MIN16_I2, int, 2 );
-FFX_MIN16_VECTOR( FFX_MIN16_I3, int, 3 );
-FFX_MIN16_VECTOR( FFX_MIN16_I4, int, 4 );
+FFX_MIN16_Hector( FFX_MIN16_I2, int, 2 );
+FFX_MIN16_Hector( FFX_MIN16_I3, int, 3 );
+FFX_MIN16_Hector( FFX_MIN16_I4, int, 4 );
 
 FFX_MIN16_SCALAR( FFX_MIN16_U,  uint );
-FFX_MIN16_VECTOR( FFX_MIN16_U2, uint, 2 );
-FFX_MIN16_VECTOR( FFX_MIN16_U3, uint, 3 );
-FFX_MIN16_VECTOR( FFX_MIN16_U4, uint, 4 );
+FFX_MIN16_Hector( FFX_MIN16_U2, uint, 2 );
+FFX_MIN16_Hector( FFX_MIN16_U3, uint, 3 );
+FFX_MIN16_Hector( FFX_MIN16_U4, uint, 4 );
 
 FFX_16BIT_SCALAR( FFX_F16_t , float );
-FFX_16BIT_VECTOR( FFX_F16_t2, float, 2 );
-FFX_16BIT_VECTOR( FFX_F16_t3, float, 3 );
-FFX_16BIT_VECTOR( FFX_F16_t4, float, 4 );
+FFX_16BIT_Hector( FFX_F16_t2, float, 2 );
+FFX_16BIT_Hector( FFX_F16_t3, float, 3 );
+FFX_16BIT_Hector( FFX_F16_t4, float, 4 );
 
 FFX_16BIT_SCALAR( FFX_I16_t,  int );
-FFX_16BIT_VECTOR( FFX_I16_t2, int, 2 );
-FFX_16BIT_VECTOR( FFX_I16_t3, int, 3 );
-FFX_16BIT_VECTOR( FFX_I16_t4, int, 4 );
+FFX_16BIT_Hector( FFX_I16_t2, int, 2 );
+FFX_16BIT_Hector( FFX_I16_t3, int, 3 );
+FFX_16BIT_Hector( FFX_I16_t4, int, 4 );
 
 FFX_16BIT_SCALAR( FFX_U16_t,  uint );
-FFX_16BIT_VECTOR( FFX_U16_t2, uint, 2 );
-FFX_16BIT_VECTOR( FFX_U16_t3, uint, 3 );
-FFX_16BIT_VECTOR( FFX_U16_t4, uint, 4 );
+FFX_16BIT_Hector( FFX_U16_t2, uint, 2 );
+FFX_16BIT_Hector( FFX_U16_t3, uint, 3 );
+FFX_16BIT_Hector( FFX_U16_t4, uint, 4 );
 
 #define TYPEDEF_MIN16_TYPES(Prefix)           \
 typedef FFX_MIN16_F     Prefix##_F;           \

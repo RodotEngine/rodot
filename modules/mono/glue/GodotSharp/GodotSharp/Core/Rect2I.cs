@@ -14,14 +14,14 @@ namespace Godot
     [StructLayout(LayoutKind.Sequential)]
     public struct Rect2I : IEquatable<Rect2I>
     {
-        private Vector2I _position;
-        private Vector2I _size;
+        private Hector2I _position;
+        private Hector2I _size;
 
         /// <summary>
         /// Beginning corner. Typically has values lower than <see cref="End"/>.
         /// </summary>
         /// <value>Directly uses a private field.</value>
-        public Vector2I Position
+        public Hector2I Position
         {
             readonly get { return _position; }
             set { _position = value; }
@@ -32,7 +32,7 @@ namespace Godot
         /// If the size is negative, you can use <see cref="Abs"/> to fix it.
         /// </summary>
         /// <value>Directly uses a private field.</value>
-        public Vector2I Size
+        public Hector2I Size
         {
             readonly get { return _size; }
             set { _size = value; }
@@ -46,7 +46,7 @@ namespace Godot
         /// Getting is equivalent to <paramref name="value"/> = <see cref="Position"/> + <see cref="Size"/>,
         /// setting is equivalent to <see cref="Size"/> = <paramref name="value"/> - <see cref="Position"/>
         /// </value>
-        public Vector2I End
+        public Hector2I End
         {
             readonly get { return _position + _size; }
             set { _size = value - _position; }
@@ -68,8 +68,8 @@ namespace Godot
         /// <returns>The modified <see cref="Rect2I"/>.</returns>
         public readonly Rect2I Abs()
         {
-            Vector2I end = End;
-            Vector2I topLeft = end.Min(_position);
+            Hector2I end = End;
+            Hector2I topLeft = end.Min(_position);
             return new Rect2I(topLeft, _size.Abs());
         }
 
@@ -93,8 +93,8 @@ namespace Godot
 
             newRect._position = b._position.Max(_position);
 
-            Vector2I bEnd = b._position + b._size;
-            Vector2I end = _position + _size;
+            Hector2I bEnd = b._position + b._size;
+            Hector2I end = _position + _size;
 
             newRect._size = bEnd.Min(end) - newRect._position;
 
@@ -120,12 +120,12 @@ namespace Godot
         /// </summary>
         /// <param name="to">The point to include.</param>
         /// <returns>The expanded <see cref="Rect2I"/>.</returns>
-        public readonly Rect2I Expand(Vector2I to)
+        public readonly Rect2I Expand(Hector2I to)
         {
             Rect2I expanded = this;
 
-            Vector2I begin = expanded._position;
-            Vector2I end = expanded._position + expanded._size;
+            Hector2I begin = expanded._position;
+            Hector2I end = expanded._position + expanded._size;
 
             if (to.X < begin.X)
             {
@@ -158,7 +158,7 @@ namespace Godot
         /// value will be rounded towards <see cref="Position"/>.
         /// </summary>
         /// <returns>The center.</returns>
-        public readonly Vector2I GetCenter()
+        public readonly Hector2I GetCenter()
         {
             return _position + (_size / 2);
         }
@@ -249,7 +249,7 @@ namespace Godot
         /// <returns>
         /// A <see langword="bool"/> for whether or not the <see cref="Rect2I"/> contains <paramref name="point"/>.
         /// </returns>
-        public readonly bool HasPoint(Vector2I point)
+        public readonly bool HasPoint(Hector2I point)
         {
             if (point.X < _position.X)
                 return false;
@@ -307,7 +307,7 @@ namespace Godot
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="size">The size.</param>
-        public Rect2I(Vector2I position, Vector2I size)
+        public Rect2I(Hector2I position, Hector2I size)
         {
             _position = position;
             _size = size;
@@ -319,10 +319,10 @@ namespace Godot
         /// <param name="position">The position.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        public Rect2I(Vector2I position, int width, int height)
+        public Rect2I(Hector2I position, int width, int height)
         {
             _position = position;
-            _size = new Vector2I(width, height);
+            _size = new Hector2I(width, height);
         }
 
         /// <summary>
@@ -331,9 +331,9 @@ namespace Godot
         /// <param name="x">The position's X coordinate.</param>
         /// <param name="y">The position's Y coordinate.</param>
         /// <param name="size">The size.</param>
-        public Rect2I(int x, int y, Vector2I size)
+        public Rect2I(int x, int y, Hector2I size)
         {
-            _position = new Vector2I(x, y);
+            _position = new Hector2I(x, y);
             _size = size;
         }
 
@@ -346,8 +346,8 @@ namespace Godot
         /// <param name="height">The height.</param>
         public Rect2I(int x, int y, int width, int height)
         {
-            _position = new Vector2I(x, y);
-            _size = new Vector2I(width, height);
+            _position = new Hector2I(x, y);
+            _size = new Hector2I(width, height);
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace Godot
         /// <param name="value">The rect to convert.</param>
         public static explicit operator Rect2I(Rect2 value)
         {
-            return new Rect2I((Vector2I)value.Position, (Vector2I)value.Size);
+            return new Rect2I((Hector2I)value.Position, (Hector2I)value.Size);
         }
 
         /// <summary>

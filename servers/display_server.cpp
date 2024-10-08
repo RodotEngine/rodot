@@ -597,7 +597,7 @@ void DisplayServer::window_set_exclusive(WindowID p_window, bool p_exclusive) {
 	// Do nothing, if not supported.
 }
 
-void DisplayServer::window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window) {
+void DisplayServer::window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window) {
 	ERR_FAIL_MSG("Mouse passthrough not supported by this display server.");
 }
 
@@ -646,7 +646,7 @@ DisplayServer::CursorShape DisplayServer::cursor_get_shape() const {
 	return CURSOR_ARROW;
 }
 
-void DisplayServer::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServer::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	WARN_PRINT("Custom cursor shape not supported by this display server.");
 }
 
@@ -657,7 +657,7 @@ bool DisplayServer::get_swap_cancel_ok() {
 void DisplayServer::enable_for_stealing_focus(OS::ProcessID pid) {
 }
 
-Error DisplayServer::dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) {
+Error DisplayServer::dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback) {
 	WARN_PRINT("Native dialogs not supported by this display server.");
 	return ERR_UNAVAILABLE;
 }
@@ -667,12 +667,12 @@ Error DisplayServer::dialog_input_text(String p_title, String p_description, Str
 	return ERR_UNAVAILABLE;
 }
 
-Error DisplayServer::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) {
+Error DisplayServer::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) {
 	WARN_PRINT("Native dialogs not supported by this display server.");
 	return ERR_UNAVAILABLE;
 }
 
-Error DisplayServer::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
+Error DisplayServer::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
 	WARN_PRINT("Native dialogs not supported by this display server.");
 	return ERR_UNAVAILABLE;
 }
@@ -984,7 +984,7 @@ void DisplayServer::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("cursor_set_shape", "shape"), &DisplayServer::cursor_set_shape);
 	ClassDB::bind_method(D_METHOD("cursor_get_shape"), &DisplayServer::cursor_get_shape);
-	ClassDB::bind_method(D_METHOD("cursor_set_custom_image", "cursor", "shape", "hotspot"), &DisplayServer::cursor_set_custom_image, DEFVAL(CURSOR_ARROW), DEFVAL(Vector2()));
+	ClassDB::bind_method(D_METHOD("cursor_set_custom_image", "cursor", "shape", "hotspot"), &DisplayServer::cursor_set_custom_image, DEFVAL(CURSOR_ARROW), DEFVAL(Hector2()));
 
 	ClassDB::bind_method(D_METHOD("get_swap_cancel_ok"), &DisplayServer::get_swap_cancel_ok);
 
@@ -1155,7 +1155,7 @@ void DisplayServer::_bind_methods() {
 	BIND_ENUM_CONSTANT(TTS_UTTERANCE_BOUNDARY);
 }
 
-Ref<Image> DisplayServer::_get_cursor_image_from_resource(const Ref<Resource> &p_cursor, const Vector2 &p_hotspot) {
+Ref<Image> DisplayServer::_get_cursor_image_from_resource(const Ref<Resource> &p_cursor, const Hector2 &p_hotspot) {
 	Ref<Image> image;
 	ERR_FAIL_COND_V_MSG(p_hotspot.x < 0 || p_hotspot.y < 0, image, "Hotspot outside cursor image.");
 
@@ -1198,12 +1198,12 @@ const char *DisplayServer::get_create_function_name(int p_index) {
 	return server_create_functions[p_index].name;
 }
 
-Vector<String> DisplayServer::get_create_function_rendering_drivers(int p_index) {
-	ERR_FAIL_INDEX_V(p_index, server_create_count, Vector<String>());
+Hector<String> DisplayServer::get_create_function_rendering_drivers(int p_index) {
+	ERR_FAIL_INDEX_V(p_index, server_create_count, Hector<String>());
 	return server_create_functions[p_index].get_rendering_drivers_function();
 }
 
-DisplayServer *DisplayServer::create(int p_index, const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServer *DisplayServer::create(int p_index, const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	ERR_FAIL_INDEX_V(p_index, server_create_count, nullptr);
 	return server_create_functions[p_index].create_function(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, p_context, r_error);
 }
@@ -1216,7 +1216,7 @@ Input::MouseMode DisplayServer::_input_get_mouse_mode() {
 	return Input::MouseMode(singleton->mouse_get_mode());
 }
 
-void DisplayServer::_input_warp(const Vector2 &p_to_pos) {
+void DisplayServer::_input_warp(const Hector2 &p_to_pos) {
 	singleton->warp_mouse(p_to_pos);
 }
 
@@ -1224,7 +1224,7 @@ Input::CursorShape DisplayServer::_input_get_current_cursor_shape() {
 	return (Input::CursorShape)singleton->cursor_get_shape();
 }
 
-void DisplayServer::_input_set_custom_mouse_cursor_func(const Ref<Resource> &p_image, Input::CursorShape p_shape, const Vector2 &p_hostspot) {
+void DisplayServer::_input_set_custom_mouse_cursor_func(const Ref<Resource> &p_image, Input::CursorShape p_shape, const Hector2 &p_hostspot) {
 	singleton->cursor_set_custom_image(p_image, (CursorShape)p_shape, p_hostspot);
 }
 

@@ -39,8 +39,8 @@ POTGenerator *POTGenerator::singleton = nullptr;
 
 #ifdef DEBUG_POT
 void POTGenerator::_print_all_translation_strings() {
-	for (HashMap<String, Vector<POTGenerator::MsgidData>>::Element E = all_translation_strings.front(); E; E = E.next()) {
-		Vector<MsgidData> v_md = all_translation_strings[E.key()];
+	for (HashMap<String, Hector<POTGenerator::MsgidData>>::Element E = all_translation_strings.front(); E; E = E.next()) {
+		Hector<MsgidData> v_md = all_translation_strings[E.key()];
 		for (int i = 0; i < v_md.size(); i++) {
 			print_line("++++++");
 			print_line("msgid: " + E.key());
@@ -55,7 +55,7 @@ void POTGenerator::_print_all_translation_strings() {
 #endif
 
 void POTGenerator::generate_pot(const String &p_file) {
-	Vector<String> files = GLOBAL_GET("internationalization/locale/translations_pot_files");
+	Hector<String> files = GLOBAL_GET("internationalization/locale/translations_pot_files");
 
 	if (files.is_empty()) {
 		WARN_PRINT("No files selected for POT generation.");
@@ -67,8 +67,8 @@ void POTGenerator::generate_pot(const String &p_file) {
 
 	// Collect all translatable strings according to files order in "POT Generation" setting.
 	for (int i = 0; i < files.size(); i++) {
-		Vector<String> msgids;
-		Vector<Vector<String>> msgids_context_plural;
+		Hector<String> msgids;
+		Hector<Hector<String>> msgids_context_plural;
 		const String &file_path = files[i];
 		String file_extension = file_path.get_extension();
 
@@ -80,7 +80,7 @@ void POTGenerator::generate_pot(const String &p_file) {
 		}
 
 		for (int j = 0; j < msgids_context_plural.size(); j++) {
-			const Vector<String> &entry = msgids_context_plural[j];
+			const Hector<String> &entry = msgids_context_plural[j];
 			_add_new_msgid(entry[0], entry[1], entry[2], file_path);
 		}
 		for (int j = 0; j < msgids.size(); j++) {
@@ -89,7 +89,7 @@ void POTGenerator::generate_pot(const String &p_file) {
 	}
 
 	if (GLOBAL_GET("internationalization/locale/translation_add_builtin_strings_to_pot")) {
-		for (const Vector<String> &extractable_msgids : get_extractable_message_list()) {
+		for (const Hector<String> &extractable_msgids : get_extractable_message_list()) {
 			_add_new_msgid(extractable_msgids[0], extractable_msgids[1], extractable_msgids[2], "");
 		}
 	}
@@ -106,7 +106,7 @@ void POTGenerator::_write_to_pot(const String &p_file) {
 	}
 
 	String project_name = GLOBAL_GET("application/config/name").operator String().replace("\n", "\\n");
-	Vector<String> files = GLOBAL_GET("internationalization/locale/translations_pot_files");
+	Hector<String> files = GLOBAL_GET("internationalization/locale/translations_pot_files");
 	String extracted_files = "";
 	for (int i = 0; i < files.size(); i++) {
 		extracted_files += "# " + files[i].replace("\n", "\\n") + "\n";
@@ -129,9 +129,9 @@ void POTGenerator::_write_to_pot(const String &p_file) {
 
 	file->store_string(header);
 
-	for (const KeyValue<String, Vector<MsgidData>> &E_pair : all_translation_strings) {
+	for (const KeyValue<String, Hector<MsgidData>> &E_pair : all_translation_strings) {
 		String msgid = E_pair.key;
-		const Vector<MsgidData> &v_msgid_data = E_pair.value;
+		const Hector<MsgidData> &v_msgid_data = E_pair.value;
 		for (int i = 0; i < v_msgid_data.size(); i++) {
 			String context = v_msgid_data[i].ctx;
 			String plural = v_msgid_data[i].plural;
@@ -179,7 +179,7 @@ void POTGenerator::_write_msgid(Ref<FileAccess> r_file, const String &p_id, bool
 		return;
 	}
 
-	const Vector<String> lines = p_id.split("\n");
+	const Hector<String> lines = p_id.split("\n");
 	const String &last_line = lines[lines.size() - 1]; // `lines` cannot be empty.
 	int pot_line_count = lines.size();
 	if (last_line.is_empty()) {
@@ -202,7 +202,7 @@ void POTGenerator::_write_msgid(Ref<FileAccess> r_file, const String &p_id, bool
 void POTGenerator::_add_new_msgid(const String &p_msgid, const String &p_context, const String &p_plural, const String &p_location) {
 	// Insert new location if msgid under same context exists already.
 	if (all_translation_strings.has(p_msgid)) {
-		Vector<MsgidData> &v_mdata = all_translation_strings[p_msgid];
+		Hector<MsgidData> &v_mdata = all_translation_strings[p_msgid];
 		for (int i = 0; i < v_mdata.size(); i++) {
 			if (v_mdata[i].ctx == p_context) {
 				if (!v_mdata[i].plural.is_empty() && !p_plural.is_empty() && v_mdata[i].plural != p_plural) {

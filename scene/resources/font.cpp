@@ -361,7 +361,7 @@ void Font::draw_string(RID p_canvas_item, const Point2 &p_pos, const String &p_t
 		cache.insert(key, buffer);
 	}
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	if (p_orientation == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y -= buffer->get_line_ascent();
 	} else {
@@ -395,7 +395,7 @@ void Font::draw_multiline_string(RID p_canvas_item, const Point2 &p_pos, const S
 		cache_wrap.insert(key, lines_buffer);
 	}
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	if (p_orientation == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y -= lines_buffer->get_line_ascent(0);
 	} else {
@@ -424,7 +424,7 @@ void Font::draw_string_outline(RID p_canvas_item, const Point2 &p_pos, const Str
 		cache.insert(key, buffer);
 	}
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	if (p_orientation == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y -= buffer->get_line_ascent();
 	} else {
@@ -458,7 +458,7 @@ void Font::draw_multiline_string_outline(RID p_canvas_item, const Point2 &p_pos,
 		cache_wrap.insert(key, lines_buffer);
 	}
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	if (p_orientation == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y -= lines_buffer->get_line_ascent(0);
 	} else {
@@ -648,13 +648,13 @@ void FontFile::_convert_packed_8bit(Ref<Image> &p_source, int p_page, int p_sz) 
 		}
 	}
 	Ref<Image> img_r = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_r));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 0, img_r);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 0, img_r);
 	Ref<Image> img_g = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_g));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 1, img_g);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 1, img_g);
 	Ref<Image> img_b = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_b));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 2, img_b);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 2, img_b);
 	Ref<Image> img_a = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_a));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 3, img_a);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 3, img_a);
 }
 
 void FontFile::_convert_packed_4bit(Ref<Image> &p_source, int p_page, int p_sz) {
@@ -739,22 +739,22 @@ void FontFile::_convert_packed_4bit(Ref<Image> &p_source, int p_page, int p_sz) 
 		}
 	}
 	Ref<Image> img_r = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_r));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 0, img_r);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 0, img_r);
 	Ref<Image> img_g = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_g));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 1, img_g);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 1, img_g);
 	Ref<Image> img_b = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_b));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 2, img_b);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 2, img_b);
 	Ref<Image> img_a = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_a));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page * 4 + 3, img_a);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page * 4 + 3, img_a);
 
 	Ref<Image> img_ro = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_ro));
-	set_texture_image(0, Vector2i(p_sz, 1), p_page * 4 + 0, img_ro);
+	set_texture_image(0, Hector2i(p_sz, 1), p_page * 4 + 0, img_ro);
 	Ref<Image> img_go = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_go));
-	set_texture_image(0, Vector2i(p_sz, 1), p_page * 4 + 1, img_go);
+	set_texture_image(0, Hector2i(p_sz, 1), p_page * 4 + 1, img_go);
 	Ref<Image> img_bo = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_bo));
-	set_texture_image(0, Vector2i(p_sz, 1), p_page * 4 + 2, img_bo);
+	set_texture_image(0, Hector2i(p_sz, 1), p_page * 4 + 2, img_bo);
 	Ref<Image> img_ao = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_ao));
-	set_texture_image(0, Vector2i(p_sz, 1), p_page * 4 + 3, img_ao);
+	set_texture_image(0, Hector2i(p_sz, 1), p_page * 4 + 3, img_ao);
 }
 
 void FontFile::_convert_rgba_4bit(Ref<Image> &p_source, int p_page, int p_sz) {
@@ -807,10 +807,10 @@ void FontFile::_convert_rgba_4bit(Ref<Image> &p_source, int p_page, int p_sz) {
 		}
 	}
 	Ref<Image> img_g = memnew(Image(w, h, 0, Image::FORMAT_RGBA8, imgdata_g));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page, img_g);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page, img_g);
 
 	Ref<Image> img_o = memnew(Image(w, h, 0, Image::FORMAT_RGBA8, imgdata_o));
-	set_texture_image(0, Vector2i(p_sz, 1), p_page, img_o);
+	set_texture_image(0, Hector2i(p_sz, 1), p_page, img_o);
 }
 
 void FontFile::_convert_mono_8bit(Ref<Image> &p_source, int p_page, int p_ch, int p_sz, int p_ol) {
@@ -839,7 +839,7 @@ void FontFile::_convert_mono_8bit(Ref<Image> &p_source, int p_page, int p_ch, in
 		}
 	}
 	Ref<Image> img_g = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_g));
-	set_texture_image(0, Vector2i(p_sz, p_ol), p_page, img_g);
+	set_texture_image(0, Hector2i(p_sz, p_ol), p_page, img_g);
 }
 
 void FontFile::_convert_mono_4bit(Ref<Image> &p_source, int p_page, int p_ch, int p_sz, int p_ol) {
@@ -879,10 +879,10 @@ void FontFile::_convert_mono_4bit(Ref<Image> &p_source, int p_page, int p_ch, in
 		}
 	}
 	Ref<Image> img_g = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_g));
-	set_texture_image(0, Vector2i(p_sz, 0), p_page, img_g);
+	set_texture_image(0, Hector2i(p_sz, 0), p_page, img_g);
 
 	Ref<Image> img_o = memnew(Image(w, h, 0, Image::FORMAT_LA8, imgdata_o));
-	set_texture_image(0, Vector2i(p_sz, p_ol), p_page, img_o);
+	set_texture_image(0, Hector2i(p_sz, p_ol), p_page, img_o);
 }
 
 void FontFile::_bind_methods() {
@@ -1063,7 +1063,7 @@ void FontFile::_validate_property(PropertyInfo &p_property) const {
 }
 
 bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
-	Vector<String> tokens = p_name.operator String().split("/");
+	Hector<String> tokens = p_name.operator String().split("/");
 
 #ifndef DISABLE_DEPRECATED
 	if (tokens.size() == 1 && tokens[0] == "font_path") {
@@ -1095,7 +1095,7 @@ bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
 		for (int i = 0; i < textures.size(); i++) {
 			Ref<ImageTexture> tex = textures[i];
 			ERR_CONTINUE(!tex.is_valid());
-			set_texture_image(0, Vector2i(16, 0), i, tex->get_image());
+			set_texture_image(0, Hector2i(16, 0), i, tex->get_image());
 		}
 	} else if (tokens.size() == 1 && tokens[0] == "chars") {
 		// Compatibility, BitmapFont.
@@ -1110,10 +1110,10 @@ bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
 		for (int i = 0; i < chars; i++) {
 			const int32_t *char_data = &arr[i * 9];
 			char32_t c = char_data[0];
-			set_glyph_texture_idx(0, Vector2i(16, 0), c, char_data[1]);
-			set_glyph_uv_rect(0, Vector2i(16, 0), c, Rect2(char_data[2], char_data[3], char_data[4], char_data[5]));
-			set_glyph_offset(0, Vector2i(16, 0), c, Size2(char_data[6], char_data[7]));
-			set_glyph_advance(0, 16, c, Vector2(char_data[8], 0));
+			set_glyph_texture_idx(0, Hector2i(16, 0), c, char_data[1]);
+			set_glyph_uv_rect(0, Hector2i(16, 0), c, Rect2(char_data[2], char_data[3], char_data[4], char_data[5]));
+			set_glyph_offset(0, Hector2i(16, 0), c, Size2(char_data[6], char_data[7]));
+			set_glyph_advance(0, 16, c, Hector2(char_data[8], 0));
 		}
 	} else if (tokens.size() == 1 && tokens[0] == "kernings") {
 		// Compatibility, BitmapFont.
@@ -1126,7 +1126,7 @@ bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
 		}
 		for (int i = 0; i < len / 3; i++) {
 			const int32_t *kern_data = &arr[i * 3];
-			set_kerning(0, 16, Vector2i(kern_data[0], kern_data[1]), Vector2(kern_data[2], 0));
+			set_kerning(0, 16, Hector2i(kern_data[0], kern_data[1]), Hector2(kern_data[2], 0));
 		}
 	} else if (tokens.size() == 1 && tokens[0] == "height") {
 		// Compatibility, BitmapFont.
@@ -1189,7 +1189,7 @@ bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
 			return true;
 		}
 		if (tokens.size() >= 5) {
-			Vector2i sz = Vector2i(tokens[2].to_int(), tokens[3].to_int());
+			Hector2i sz = Hector2i(tokens[2].to_int(), tokens[3].to_int());
 			if (tokens[4] == "ascent") {
 				set_cache_ascent(cache_index, sz.x, p_value);
 				return true;
@@ -1233,7 +1233,7 @@ bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
 					return true;
 				}
 			} else if (tokens.size() == 7 && tokens[4] == "kerning_overrides") {
-				Vector2i gp = Vector2i(tokens[5].to_int(), tokens[6].to_int());
+				Hector2i gp = Hector2i(tokens[5].to_int(), tokens[6].to_int());
 				set_kerning(cache_index, sz.x, gp, p_value);
 				return true;
 			}
@@ -1243,7 +1243,7 @@ bool FontFile::_set(const StringName &p_name, const Variant &p_value) {
 }
 
 bool FontFile::_get(const StringName &p_name, Variant &r_ret) const {
-	Vector<String> tokens = p_name.operator String().split("/");
+	Hector<String> tokens = p_name.operator String().split("/");
 	if (tokens.size() == 2 && tokens[0] == "language_support_override") {
 		const String &lang_code = tokens[1];
 		r_ret = get_language_support_override(lang_code);
@@ -1283,7 +1283,7 @@ bool FontFile::_get(const StringName &p_name, Variant &r_ret) const {
 			return true;
 		}
 		if (tokens.size() >= 5) {
-			Vector2i sz = Vector2i(tokens[2].to_int(), tokens[3].to_int());
+			Hector2i sz = Hector2i(tokens[2].to_int(), tokens[3].to_int());
 			if (tokens[4] == "ascent") {
 				r_ret = get_cache_ascent(cache_index, sz.x);
 				return true;
@@ -1327,7 +1327,7 @@ bool FontFile::_get(const StringName &p_name, Variant &r_ret) const {
 					return true;
 				}
 			} else if (tokens.size() == 7 && tokens[4] == "kerning_overrides") {
-				Vector2i gp = Vector2i(tokens[5].to_int(), tokens[6].to_int());
+				Hector2i gp = Hector2i(tokens[5].to_int(), tokens[6].to_int());
 				r_ret = get_kerning(cache_index, sz.x, gp);
 				return true;
 			}
@@ -1337,17 +1337,17 @@ bool FontFile::_get(const StringName &p_name, Variant &r_ret) const {
 }
 
 void FontFile::_get_property_list(List<PropertyInfo> *p_list) const {
-	Vector<String> lang_over = get_language_support_overrides();
+	Hector<String> lang_over = get_language_support_overrides();
 	for (int i = 0; i < lang_over.size(); i++) {
 		p_list->push_back(PropertyInfo(Variant::BOOL, "language_support_override/" + lang_over[i], PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 	}
-	Vector<String> scr_over = get_script_support_overrides();
+	Hector<String> scr_over = get_script_support_overrides();
 	for (int i = 0; i < scr_over.size(); i++) {
 		p_list->push_back(PropertyInfo(Variant::BOOL, "script_support_override/" + scr_over[i], PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 	}
 	for (int i = 0; i < cache.size(); i++) {
 		String prefix = "cache/" + itos(i) + "/";
-		TypedArray<Vector2i> sizes = get_size_cache_list(i);
+		TypedArray<Hector2i> sizes = get_size_cache_list(i);
 		p_list->push_back(PropertyInfo(Variant::DICTIONARY, prefix + "variation_coordinates", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 		p_list->push_back(PropertyInfo(Variant::INT, prefix + "face_index", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 		p_list->push_back(PropertyInfo(Variant::FLOAT, prefix + "embolden", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
@@ -1359,7 +1359,7 @@ void FontFile::_get_property_list(List<PropertyInfo> *p_list) const {
 		p_list->push_back(PropertyInfo(Variant::FLOAT, prefix + "baseline_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 
 		for (int j = 0; j < sizes.size(); j++) {
-			Vector2i sz = sizes[j];
+			Hector2i sz = sizes[j];
 			String prefix_sz = prefix + itos(sz.x) + "/" + itos(sz.y) + "/";
 			if (sz.y == 0) {
 				p_list->push_back(PropertyInfo(Variant::FLOAT, prefix_sz + "ascent", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
@@ -1378,18 +1378,18 @@ void FontFile::_get_property_list(List<PropertyInfo> *p_list) const {
 			for (int k = 0; k < glyphs.size(); k++) {
 				const int32_t &gl = glyphs[k];
 				if (sz.y == 0) {
-					p_list->push_back(PropertyInfo(Variant::VECTOR2, prefix_sz + "glyphs/" + itos(gl) + "/advance", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
+					p_list->push_back(PropertyInfo(Variant::HECTOR2, prefix_sz + "glyphs/" + itos(gl) + "/advance", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 				}
-				p_list->push_back(PropertyInfo(Variant::VECTOR2, prefix_sz + "glyphs/" + itos(gl) + "/offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
-				p_list->push_back(PropertyInfo(Variant::VECTOR2, prefix_sz + "glyphs/" + itos(gl) + "/size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
+				p_list->push_back(PropertyInfo(Variant::HECTOR2, prefix_sz + "glyphs/" + itos(gl) + "/offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
+				p_list->push_back(PropertyInfo(Variant::HECTOR2, prefix_sz + "glyphs/" + itos(gl) + "/size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 				p_list->push_back(PropertyInfo(Variant::RECT2, prefix_sz + "glyphs/" + itos(gl) + "/uv_rect", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 				p_list->push_back(PropertyInfo(Variant::INT, prefix_sz + "glyphs/" + itos(gl) + "/texture_idx", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 			}
 			if (sz.y == 0) {
-				TypedArray<Vector2i> kerning_map = get_kerning_list(i, sz.x);
+				TypedArray<Hector2i> kerning_map = get_kerning_list(i, sz.x);
 				for (int k = 0; k < kerning_map.size(); k++) {
-					const Vector2i &gl_pair = kerning_map[k];
-					p_list->push_back(PropertyInfo(Variant::VECTOR2, prefix_sz + "kerning_overrides/" + itos(gl_pair.x) + "/" + itos(gl_pair.y), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
+					const Hector2i &gl_pair = kerning_map[k];
+					p_list->push_back(PropertyInfo(Variant::HECTOR2, prefix_sz + "kerning_overrides/" + itos(gl_pair.x) + "/" + itos(gl_pair.y), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE));
 				}
 			}
 		}
@@ -1600,7 +1600,7 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 									if ((ch[0] == 0) && (ch[1] == 0) && (ch[2] == 0) && (ch[3] == 0)) { // RGBA8 color, no outline
 										outline = 0;
 										ERR_FAIL_COND_V_MSG(img->get_format() != Image::FORMAT_RGBA8, ERR_FILE_CANT_READ, "Unsupported BMFont texture format.");
-										set_texture_image(0, Vector2i(base_size, 0), page, img);
+										set_texture_image(0, Hector2i(base_size, 0), page, img);
 									} else if ((ch[0] == 2) && (ch[1] == 2) && (ch[2] == 2) && (ch[3] == 2) && (outline > 0)) { // RGBA4 color, gl + outline
 										ERR_FAIL_COND_V_MSG(img->get_format() != Image::FORMAT_RGBA8, ERR_FILE_CANT_READ, "Unsupported BMFont texture format.");
 										_convert_rgba_4bit(img, page, base_size);
@@ -1631,9 +1631,9 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 				case 4: /* chars */ {
 					int char_count = block_size / 20;
 					for (int i = 0; i < char_count; i++) {
-						Vector2 advance;
-						Vector2 size;
-						Vector2 offset;
+						Hector2 advance;
+						Hector2 size;
+						Hector2 offset;
 						Rect2 uv_rect;
 
 						char32_t idx = f->get_32();
@@ -1682,22 +1682,22 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 							}
 						}
 						set_glyph_advance(0, base_size, idx, advance);
-						set_glyph_offset(0, Vector2i(base_size, 0), idx, offset);
-						set_glyph_size(0, Vector2i(base_size, 0), idx, size);
-						set_glyph_uv_rect(0, Vector2i(base_size, 0), idx, uv_rect);
-						set_glyph_texture_idx(0, Vector2i(base_size, 0), idx, texture_idx * (packed ? 4 : 1) + ch_off);
+						set_glyph_offset(0, Hector2i(base_size, 0), idx, offset);
+						set_glyph_size(0, Hector2i(base_size, 0), idx, size);
+						set_glyph_uv_rect(0, Hector2i(base_size, 0), idx, uv_rect);
+						set_glyph_texture_idx(0, Hector2i(base_size, 0), idx, texture_idx * (packed ? 4 : 1) + ch_off);
 						if (outline > 0) {
-							set_glyph_offset(0, Vector2i(base_size, 1), idx, offset);
-							set_glyph_size(0, Vector2i(base_size, 1), idx, size);
-							set_glyph_uv_rect(0, Vector2i(base_size, 1), idx, uv_rect);
-							set_glyph_texture_idx(0, Vector2i(base_size, 1), idx, texture_idx * (packed ? 4 : 1) + ch_off);
+							set_glyph_offset(0, Hector2i(base_size, 1), idx, offset);
+							set_glyph_size(0, Hector2i(base_size, 1), idx, size);
+							set_glyph_uv_rect(0, Hector2i(base_size, 1), idx, uv_rect);
+							set_glyph_texture_idx(0, Hector2i(base_size, 1), idx, texture_idx * (packed ? 4 : 1) + ch_off);
 						}
 					}
 				} break;
 				case 5: /* kerning */ {
 					int pair_count = block_size / 10;
 					for (int i = 0; i < pair_count; i++) {
-						Vector2i kpk;
+						Hector2i kpk;
 						kpk.x = f->get_32();
 						kpk.y = f->get_32();
 						if (!unicode && encoding < 9) {
@@ -1714,7 +1714,7 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 								kpk.y = 0x00;
 							}
 						}
-						set_kerning(0, base_size, kpk, Vector2((int16_t)f->get_16(), 0));
+						set_kerning(0, base_size, kpk, Hector2((int16_t)f->get_16(), 0));
 					}
 				} break;
 				default: {
@@ -1896,11 +1896,11 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 						} else {
 							if ((ch[3] == 0) && (ch[0] == 4) && (ch[1] == 4) && (ch[2] == 4) && img->get_format() == Image::FORMAT_RGBA8) { // might be RGBA8 color, no outline (color part of the image should be sold white, but some apps designed for Godot 3 generate color fonts with this config)
 								outline = 0;
-								set_texture_image(0, Vector2i(base_size, 0), page, img);
+								set_texture_image(0, Hector2i(base_size, 0), page, img);
 							} else if ((ch[0] == 0) && (ch[1] == 0) && (ch[2] == 0) && (ch[3] == 0)) { // RGBA8 color, no outline
 								outline = 0;
 								ERR_FAIL_COND_V_MSG(img->get_format() != Image::FORMAT_RGBA8, ERR_FILE_CANT_READ, "Unsupported BMFont texture format.");
-								set_texture_image(0, Vector2i(base_size, 0), page, img);
+								set_texture_image(0, Hector2i(base_size, 0), page, img);
 							} else if ((ch[0] == 2) && (ch[1] == 2) && (ch[2] == 2) && (ch[3] == 2) && (outline > 0)) { // RGBA4 color, gl + outline
 								ERR_FAIL_COND_V_MSG(img->get_format() != Image::FORMAT_RGBA8, ERR_FILE_CANT_READ, "Unsupported BMFont texture format.");
 								_convert_rgba_4bit(img, page, base_size);
@@ -1923,9 +1923,9 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 				}
 			} else if (type == "char") {
 				char32_t idx = 0;
-				Vector2 advance;
-				Vector2 size;
-				Vector2 offset;
+				Hector2 advance;
+				Hector2 size;
+				Hector2 offset;
 				Rect2 uv_rect;
 				int texture_idx = -1;
 				uint8_t channel = 15;
@@ -1995,18 +1995,18 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 					}
 				}
 				set_glyph_advance(0, base_size, idx, advance);
-				set_glyph_offset(0, Vector2i(base_size, 0), idx, offset);
-				set_glyph_size(0, Vector2i(base_size, 0), idx, size);
-				set_glyph_uv_rect(0, Vector2i(base_size, 0), idx, uv_rect);
-				set_glyph_texture_idx(0, Vector2i(base_size, 0), idx, texture_idx * (packed ? 4 : 1) + ch_off);
+				set_glyph_offset(0, Hector2i(base_size, 0), idx, offset);
+				set_glyph_size(0, Hector2i(base_size, 0), idx, size);
+				set_glyph_uv_rect(0, Hector2i(base_size, 0), idx, uv_rect);
+				set_glyph_texture_idx(0, Hector2i(base_size, 0), idx, texture_idx * (packed ? 4 : 1) + ch_off);
 				if (outline > 0) {
-					set_glyph_offset(0, Vector2i(base_size, 1), idx, offset);
-					set_glyph_size(0, Vector2i(base_size, 1), idx, size);
-					set_glyph_uv_rect(0, Vector2i(base_size, 1), idx, uv_rect);
-					set_glyph_texture_idx(0, Vector2i(base_size, 1), idx, texture_idx * (packed ? 4 : 1) + ch_off);
+					set_glyph_offset(0, Hector2i(base_size, 1), idx, offset);
+					set_glyph_size(0, Hector2i(base_size, 1), idx, size);
+					set_glyph_uv_rect(0, Hector2i(base_size, 1), idx, uv_rect);
+					set_glyph_texture_idx(0, Hector2i(base_size, 1), idx, texture_idx * (packed ? 4 : 1) + ch_off);
 				}
 			} else if (type == "kerning") {
-				Vector2i kpk;
+				Hector2i kpk;
 				if (keys.has("first")) {
 					kpk.x = keys["first"].to_int();
 				}
@@ -2028,7 +2028,7 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 					}
 				}
 				if (keys.has("amount")) {
-					set_kerning(0, base_size, kpk, Vector2(keys["amount"].to_int(), 0));
+					set_kerning(0, base_size, kpk, Hector2(keys["amount"].to_int(), 0));
 				}
 			}
 
@@ -2052,7 +2052,7 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 Error FontFile::load_dynamic_font(const String &p_path) {
 	reset_state();
 
-	Vector<uint8_t> font_data = FileAccess::get_file_as_bytes(p_path);
+	Hector<uint8_t> font_data = FileAccess::get_file_as_bytes(p_path);
 	set_data(font_data);
 
 	return OK;
@@ -2329,7 +2329,7 @@ RID FontFile::find_variation(const Dictionary &p_variation_coordinates, int p_fa
 			match_linked = match_linked && (TS->font_get_spacing(cache[i], TextServer::SPACING_GLYPH) == p_spacing_glyph);
 			match_linked = match_linked && (TS->font_get_baseline_offset(cache[i]) == p_baseline_offset);
 			for (const Variant *V = supported_coords.next(nullptr); V && match; V = supported_coords.next(V)) {
-				const Vector3 &def = supported_coords[*V];
+				const Hector3 &def = supported_coords[*V];
 
 				real_t c_v = def.z;
 				if (cache_var.has(*V)) {
@@ -2411,7 +2411,7 @@ void FontFile::remove_cache(int p_cache_index) {
 	emit_changed();
 }
 
-TypedArray<Vector2i> FontFile::get_size_cache_list(int p_cache_index) const {
+TypedArray<Hector2i> FontFile::get_size_cache_list(int p_cache_index) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, Array());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_size_cache_list(cache[p_cache_index]);
@@ -2423,7 +2423,7 @@ void FontFile::clear_size_cache(int p_cache_index) {
 	TS->font_clear_size_cache(cache[p_cache_index]);
 }
 
-void FontFile::remove_size_cache(int p_cache_index, const Vector2i &p_size) {
+void FontFile::remove_size_cache(int p_cache_index, const Hector2i &p_size) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_remove_size_cache(cache[p_cache_index], p_size);
@@ -2564,127 +2564,127 @@ real_t FontFile::get_cache_scale(int p_cache_index, int p_size) const {
 	return TS->font_get_scale(cache[p_cache_index], p_size);
 }
 
-int FontFile::get_texture_count(int p_cache_index, const Vector2i &p_size) const {
+int FontFile::get_texture_count(int p_cache_index, const Hector2i &p_size) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, 0);
 	_ensure_rid(p_cache_index);
 	return TS->font_get_texture_count(cache[p_cache_index], p_size);
 }
 
-void FontFile::clear_textures(int p_cache_index, const Vector2i &p_size) {
+void FontFile::clear_textures(int p_cache_index, const Hector2i &p_size) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_clear_textures(cache[p_cache_index], p_size);
 }
 
-void FontFile::remove_texture(int p_cache_index, const Vector2i &p_size, int p_texture_index) {
+void FontFile::remove_texture(int p_cache_index, const Hector2i &p_size, int p_texture_index) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_remove_texture(cache[p_cache_index], p_size, p_texture_index);
 }
 
-void FontFile::set_texture_image(int p_cache_index, const Vector2i &p_size, int p_texture_index, const Ref<Image> &p_image) {
+void FontFile::set_texture_image(int p_cache_index, const Hector2i &p_size, int p_texture_index, const Ref<Image> &p_image) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_texture_image(cache[p_cache_index], p_size, p_texture_index, p_image);
 }
 
-Ref<Image> FontFile::get_texture_image(int p_cache_index, const Vector2i &p_size, int p_texture_index) const {
+Ref<Image> FontFile::get_texture_image(int p_cache_index, const Hector2i &p_size, int p_texture_index) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, Ref<Image>());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_texture_image(cache[p_cache_index], p_size, p_texture_index);
 }
 
-void FontFile::set_texture_offsets(int p_cache_index, const Vector2i &p_size, int p_texture_index, const PackedInt32Array &p_offset) {
+void FontFile::set_texture_offsets(int p_cache_index, const Hector2i &p_size, int p_texture_index, const PackedInt32Array &p_offset) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_texture_offsets(cache[p_cache_index], p_size, p_texture_index, p_offset);
 }
 
-PackedInt32Array FontFile::get_texture_offsets(int p_cache_index, const Vector2i &p_size, int p_texture_index) const {
+PackedInt32Array FontFile::get_texture_offsets(int p_cache_index, const Hector2i &p_size, int p_texture_index) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, PackedInt32Array());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_texture_offsets(cache[p_cache_index], p_size, p_texture_index);
 }
 
-PackedInt32Array FontFile::get_glyph_list(int p_cache_index, const Vector2i &p_size) const {
+PackedInt32Array FontFile::get_glyph_list(int p_cache_index, const Hector2i &p_size) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, PackedInt32Array());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_glyph_list(cache[p_cache_index], p_size);
 }
 
-void FontFile::clear_glyphs(int p_cache_index, const Vector2i &p_size) {
+void FontFile::clear_glyphs(int p_cache_index, const Hector2i &p_size) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_clear_glyphs(cache[p_cache_index], p_size);
 }
 
-void FontFile::remove_glyph(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) {
+void FontFile::remove_glyph(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_remove_glyph(cache[p_cache_index], p_size, p_glyph);
 }
 
-void FontFile::set_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph, const Vector2 &p_advance) {
+void FontFile::set_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph, const Hector2 &p_advance) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_glyph_advance(cache[p_cache_index], p_size, p_glyph, p_advance);
 }
 
-Vector2 FontFile::get_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph) const {
-	ERR_FAIL_COND_V(p_cache_index < 0, Vector2());
+Hector2 FontFile::get_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph) const {
+	ERR_FAIL_COND_V(p_cache_index < 0, Hector2());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_glyph_advance(cache[p_cache_index], p_size, p_glyph);
 }
 
-void FontFile::set_glyph_offset(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, const Vector2 &p_offset) {
+void FontFile::set_glyph_offset(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, const Hector2 &p_offset) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_glyph_offset(cache[p_cache_index], p_size, p_glyph, p_offset);
 }
 
-Vector2 FontFile::get_glyph_offset(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const {
-	ERR_FAIL_COND_V(p_cache_index < 0, Vector2());
+Hector2 FontFile::get_glyph_offset(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const {
+	ERR_FAIL_COND_V(p_cache_index < 0, Hector2());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_glyph_offset(cache[p_cache_index], p_size, p_glyph);
 }
 
-void FontFile::set_glyph_size(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, const Vector2 &p_gl_size) {
+void FontFile::set_glyph_size(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, const Hector2 &p_gl_size) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_glyph_size(cache[p_cache_index], p_size, p_glyph, p_gl_size);
 }
 
-Vector2 FontFile::get_glyph_size(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const {
-	ERR_FAIL_COND_V(p_cache_index < 0, Vector2());
+Hector2 FontFile::get_glyph_size(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const {
+	ERR_FAIL_COND_V(p_cache_index < 0, Hector2());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_glyph_size(cache[p_cache_index], p_size, p_glyph);
 }
 
-void FontFile::set_glyph_uv_rect(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, const Rect2 &p_uv_rect) {
+void FontFile::set_glyph_uv_rect(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, const Rect2 &p_uv_rect) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_glyph_uv_rect(cache[p_cache_index], p_size, p_glyph, p_uv_rect);
 }
 
-Rect2 FontFile::get_glyph_uv_rect(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const {
+Rect2 FontFile::get_glyph_uv_rect(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, Rect2());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_glyph_uv_rect(cache[p_cache_index], p_size, p_glyph);
 }
 
-void FontFile::set_glyph_texture_idx(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, int p_texture_idx) {
+void FontFile::set_glyph_texture_idx(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, int p_texture_idx) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_glyph_texture_idx(cache[p_cache_index], p_size, p_glyph, p_texture_idx);
 }
 
-int FontFile::get_glyph_texture_idx(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const {
+int FontFile::get_glyph_texture_idx(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, 0);
 	_ensure_rid(p_cache_index);
 	return TS->font_get_glyph_texture_idx(cache[p_cache_index], p_size, p_glyph);
 }
 
-TypedArray<Vector2i> FontFile::get_kerning_list(int p_cache_index, int p_size) const {
+TypedArray<Hector2i> FontFile::get_kerning_list(int p_cache_index, int p_size) const {
 	ERR_FAIL_COND_V(p_cache_index < 0, Array());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_kerning_list(cache[p_cache_index], p_size);
@@ -2696,31 +2696,31 @@ void FontFile::clear_kerning_map(int p_cache_index, int p_size) {
 	TS->font_clear_kerning_map(cache[p_cache_index], p_size);
 }
 
-void FontFile::remove_kerning(int p_cache_index, int p_size, const Vector2i &p_glyph_pair) {
+void FontFile::remove_kerning(int p_cache_index, int p_size, const Hector2i &p_glyph_pair) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_remove_kerning(cache[p_cache_index], p_size, p_glyph_pair);
 }
 
-void FontFile::set_kerning(int p_cache_index, int p_size, const Vector2i &p_glyph_pair, const Vector2 &p_kerning) {
+void FontFile::set_kerning(int p_cache_index, int p_size, const Hector2i &p_glyph_pair, const Hector2 &p_kerning) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_set_kerning(cache[p_cache_index], p_size, p_glyph_pair, p_kerning);
 }
 
-Vector2 FontFile::get_kerning(int p_cache_index, int p_size, const Vector2i &p_glyph_pair) const {
-	ERR_FAIL_COND_V(p_cache_index < 0, Vector2());
+Hector2 FontFile::get_kerning(int p_cache_index, int p_size, const Hector2i &p_glyph_pair) const {
+	ERR_FAIL_COND_V(p_cache_index < 0, Hector2());
 	_ensure_rid(p_cache_index);
 	return TS->font_get_kerning(cache[p_cache_index], p_size, p_glyph_pair);
 }
 
-void FontFile::render_range(int p_cache_index, const Vector2i &p_size, char32_t p_start, char32_t p_end) {
+void FontFile::render_range(int p_cache_index, const Hector2i &p_size, char32_t p_start, char32_t p_end) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_render_range(cache[p_cache_index], p_size, p_start, p_end);
 }
 
-void FontFile::render_glyph(int p_cache_index, const Vector2i &p_size, int32_t p_index) {
+void FontFile::render_glyph(int p_cache_index, const Hector2i &p_size, int32_t p_index) {
 	ERR_FAIL_COND(p_cache_index < 0);
 	_ensure_rid(p_cache_index);
 	TS->font_render_glyph(cache[p_cache_index], p_size, p_index);
@@ -2741,7 +2741,7 @@ void FontFile::remove_language_support_override(const String &p_language) {
 	TS->font_remove_language_support_override(cache[0], p_language);
 }
 
-Vector<String> FontFile::get_language_support_overrides() const {
+Hector<String> FontFile::get_language_support_overrides() const {
 	_ensure_rid(0);
 	return TS->font_get_language_support_overrides(cache[0]);
 }
@@ -2761,7 +2761,7 @@ void FontFile::remove_script_support_override(const String &p_script) {
 	TS->font_remove_script_support_override(cache[0], p_script);
 }
 
-Vector<String> FontFile::get_script_support_overrides() const {
+Hector<String> FontFile::get_script_support_overrides() const {
 	_ensure_rid(0);
 	return TS->font_get_script_support_overrides(cache[0]);
 }
@@ -2912,11 +2912,11 @@ Ref<Font> FontVariation::_get_base_font_or_default() const {
 	}
 
 	StringName theme_name = "font";
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	ThemeDB::get_singleton()->get_native_type_dependencies(get_class_name(), theme_types);
 
 	ThemeContext *global_context = ThemeDB::get_singleton()->get_default_theme_context();
-	Vector<Ref<Theme>> themes = global_context->get_themes();
+	Hector<Ref<Theme>> themes = global_context->get_themes();
 	if (Engine::get_singleton()->is_editor_hint()) {
 		themes.insert(0, ThemeDB::get_singleton()->get_project_theme());
 	}
@@ -3280,7 +3280,7 @@ Ref<Font> SystemFont::_get_base_font_or_default() const {
 	}
 
 	StringName theme_name = "font";
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	ThemeDB::get_singleton()->get_native_type_dependencies(get_class_name(), theme_types);
 
 	ThemeContext *global_context = ThemeDB::get_singleton()->get_default_theme_context();

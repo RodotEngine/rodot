@@ -31,7 +31,7 @@
 #ifndef PARTICLES_STORAGE_RD_H
 #define PARTICLES_STORAGE_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/self_list.h"
 #include "servers/rendering/renderer_rd/effects/sort_effects.h"
@@ -79,7 +79,7 @@ private:
 		enum AttractorType {
 			ATTRACTOR_TYPE_SPHERE,
 			ATTRACTOR_TYPE_BOX,
-			ATTRACTOR_TYPE_VECTOR_FIELD,
+			ATTRACTOR_TYPE_HECTOR_FIELD,
 		};
 
 		struct Attractor {
@@ -87,7 +87,7 @@ private:
 			float extents[3]; //exents or radius
 			uint32_t type;
 
-			uint32_t texture_index; //texture index for vector field
+			uint32_t texture_index; //texture index for Hector field
 			float strength;
 			float attenuation;
 			float directionality;
@@ -107,7 +107,7 @@ private:
 			float extents[3]; //exents or radius
 			uint32_t type;
 
-			uint32_t texture_index; //texture index for vector field
+			uint32_t texture_index; //texture index for Hector field
 			float scale;
 			uint32_t pad[2];
 		};
@@ -169,7 +169,7 @@ private:
 		real_t explosiveness = 0.0;
 		real_t randomness = 0.0;
 		bool restart_request = false;
-		AABB custom_aabb = AABB(Vector3(-4, -4, -4), Vector3(8, 8, 8));
+		AABB custom_aabb = AABB(Hector3(-4, -4, -4), Hector3(8, 8, 8));
 		bool use_local_coords = false;
 		bool has_collision_cache = false;
 
@@ -184,8 +184,8 @@ private:
 
 		RS::ParticlesDrawOrder draw_order = RS::PARTICLES_DRAW_ORDER_INDEX;
 
-		Vector<RID> draw_passes;
-		Vector<Transform3D> trail_bind_poses;
+		Hector<RID> draw_passes;
+		Hector<Transform3D> trail_bind_poses;
 		bool trail_bind_poses_dirty = false;
 		RID trail_bind_pose_buffer;
 		RID trail_bind_pose_uniform_set;
@@ -228,21 +228,21 @@ private:
 		double frame_remainder = 0;
 		real_t collision_base_size = 0.01;
 
-		uint32_t instance_motion_vectors_current_offset = 0;
-		uint32_t instance_motion_vectors_previous_offset = 0;
-		uint64_t instance_motion_vectors_last_change = -1;
-		bool instance_motion_vectors_enabled = false;
+		uint32_t instance_motion_Hectors_current_offset = 0;
+		uint32_t instance_motion_Hectors_previous_offset = 0;
+		uint64_t instance_motion_Hectors_last_change = -1;
+		bool instance_motion_Hectors_enabled = false;
 
 		bool clear = true;
 
 		bool force_sub_emit = false;
 
 		Transform3D emission_transform;
-		Vector3 emitter_velocity;
+		Hector3 emitter_velocity;
 		float interp_to_end = 0.0;
 		float amount_ratio = 1.0;
 
-		Vector<uint8_t> emission_buffer_data;
+		Hector<uint8_t> emission_buffer_data;
 
 		ParticleEmissionBuffer *emission_buffer = nullptr;
 		RID emission_storage_buffer;
@@ -255,8 +255,8 @@ private:
 
 		double trail_lifetime = 0.3;
 		bool trails_enabled = false;
-		LocalVector<ParticlesFrameParams> frame_history;
-		LocalVector<ParticlesFrameParams> trail_params;
+		LocalHector<ParticlesFrameParams> frame_history;
+		LocalHector<ParticlesFrameParams> trail_params;
 
 		Particles() :
 				update_list(this) {
@@ -305,7 +305,7 @@ private:
 
 			uint32_t lifetime_split;
 			uint32_t lifetime_reverse;
-			uint32_t motion_vectors_current_offset;
+			uint32_t motion_Hectors_current_offset;
 			struct {
 				uint32_t order_by_lifetime : 1;
 				uint32_t copy_mode_2d : 1;
@@ -328,7 +328,7 @@ private:
 		RID copy_shader_version;
 		RID copy_pipelines[COPY_MODE_MAX * (MAX_USERDATAS + 1)];
 
-		LocalVector<float> pose_update_buffer;
+		LocalHector<float> pose_update_buffer;
 
 	} particles_shader;
 
@@ -343,9 +343,9 @@ private:
 		RID version;
 		bool uses_collision = false;
 
-		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+		Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-		Vector<uint32_t> ubo_offsets;
+		Hector<uint32_t> ubo_offsets;
 		uint32_t ubo_size = 0;
 
 		String code;
@@ -392,7 +392,7 @@ private:
 		RS::ParticlesCollisionType type = RS::PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT;
 		uint32_t cull_mask = 0xFFFFFFFF;
 		float radius = 1.0;
-		Vector3 extents = Vector3(1, 1, 1);
+		Hector3 extents = Hector3(1, 1, 1);
 		float attractor_strength = 1.0;
 		float attractor_attenuation = 1.0;
 		float attractor_directionality = 0.0;
@@ -454,10 +454,10 @@ public:
 	virtual void particles_set_transform_align(RID p_particles, RS::ParticlesTransformAlign p_transform_align) override;
 
 	virtual void particles_set_trails(RID p_particles, bool p_enable, double p_length) override;
-	virtual void particles_set_trail_bind_poses(RID p_particles, const Vector<Transform3D> &p_bind_poses) override;
+	virtual void particles_set_trail_bind_poses(RID p_particles, const Hector<Transform3D> &p_bind_poses) override;
 
 	virtual void particles_restart(RID p_particles) override;
-	virtual void particles_emit(RID p_particles, const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) override;
+	virtual void particles_emit(RID p_particles, const Transform3D &p_transform, const Hector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) override;
 
 	virtual void particles_set_subemitter(RID p_particles, RID p_subemitter_particles) override;
 
@@ -471,14 +471,14 @@ public:
 	virtual AABB particles_get_aabb(RID p_particles) const override;
 
 	virtual void particles_set_emission_transform(RID p_particles, const Transform3D &p_transform) override;
-	virtual void particles_set_emitter_velocity(RID p_particles, const Vector3 &p_velocity) override;
+	virtual void particles_set_emitter_velocity(RID p_particles, const Hector3 &p_velocity) override;
 	virtual void particles_set_interp_to_end(RID p_particles, float p_interp_to_end) override;
 
 	virtual bool particles_get_emitting(RID p_particles) override;
 	virtual int particles_get_draw_passes(RID p_particles) const override;
 	virtual RID particles_get_draw_pass_mesh(RID p_particles, int p_pass) const override;
 
-	virtual void particles_set_view_axis(RID p_particles, const Vector3 &p_axis, const Vector3 &p_up_axis) override;
+	virtual void particles_set_view_axis(RID p_particles, const Hector3 &p_axis, const Hector3 &p_up_axis) override;
 
 	virtual bool particles_is_inactive(RID p_particles) const override;
 
@@ -526,7 +526,7 @@ public:
 		ERR_FAIL_NULL_V(particles, RID());
 		if (particles->particles_transforms_buffer_uniform_set.is_null() || !RD::get_singleton()->uniform_set_is_valid(particles->particles_transforms_buffer_uniform_set)) {
 			_particles_update_buffers(particles);
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 
 			{
 				RD::Uniform u;
@@ -542,7 +542,7 @@ public:
 		return particles->particles_transforms_buffer_uniform_set;
 	}
 
-	void particles_get_instance_buffer_motion_vectors_offsets(RID p_particles, uint32_t &r_current_offset, uint32_t &r_prev_offset);
+	void particles_get_instance_buffer_motion_Hectors_offsets(RID p_particles, uint32_t &r_current_offset, uint32_t &r_prev_offset);
 
 	virtual void particles_add_collision(RID p_particles, RID p_particles_collision_instance) override;
 	virtual void particles_remove_collision(RID p_particles, RID p_particles_collision_instance) override;
@@ -564,15 +564,15 @@ public:
 	virtual void particles_collision_set_collision_type(RID p_particles_collision, RS::ParticlesCollisionType p_type) override;
 	virtual void particles_collision_set_cull_mask(RID p_particles_collision, uint32_t p_cull_mask) override;
 	virtual void particles_collision_set_sphere_radius(RID p_particles_collision, real_t p_radius) override; //for spheres
-	virtual void particles_collision_set_box_extents(RID p_particles_collision, const Vector3 &p_extents) override; //for non-spheres
+	virtual void particles_collision_set_box_extents(RID p_particles_collision, const Hector3 &p_extents) override; //for non-spheres
 	virtual void particles_collision_set_attractor_strength(RID p_particles_collision, real_t p_strength) override;
 	virtual void particles_collision_set_attractor_directionality(RID p_particles_collision, real_t p_directionality) override;
 	virtual void particles_collision_set_attractor_attenuation(RID p_particles_collision, real_t p_curve) override;
-	virtual void particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) override; //for SDF and vector field, heightfield is dynamic
-	virtual void particles_collision_height_field_update(RID p_particles_collision) override; //for SDF and vector field
-	virtual void particles_collision_set_height_field_resolution(RID p_particles_collision, RS::ParticlesCollisionHeightfieldResolution p_resolution) override; //for SDF and vector field
+	virtual void particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) override; //for SDF and Hector field, heightfield is dynamic
+	virtual void particles_collision_height_field_update(RID p_particles_collision) override; //for SDF and Hector field
+	virtual void particles_collision_set_height_field_resolution(RID p_particles_collision, RS::ParticlesCollisionHeightfieldResolution p_resolution) override; //for SDF and Hector field
 	virtual AABB particles_collision_get_aabb(RID p_particles_collision) const override;
-	Vector3 particles_collision_get_extents(RID p_particles_collision) const;
+	Hector3 particles_collision_get_extents(RID p_particles_collision) const;
 	virtual bool particles_collision_is_heightfield(RID p_particles_collision) const override;
 	RID particles_collision_get_heightfield_framebuffer(RID p_particles_collision) const;
 

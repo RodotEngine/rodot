@@ -49,7 +49,7 @@ void TranslationPO::print_translation_map() {
 	translation_map.get_key_list(&context_l);
 	for (const StringName &ctx : context_l) {
 		file->store_line(" ===== Context: " + String::utf8(String(ctx).utf8()) + " ===== ");
-		const HashMap<StringName, Vector<StringName>> &inner_map = translation_map[ctx];
+		const HashMap<StringName, Hector<StringName>> &inner_map = translation_map[ctx];
 
 		List<StringName> id_l;
 		inner_map.get_key_list(&id_l);
@@ -70,10 +70,10 @@ Dictionary TranslationPO::_get_messages() const {
 
 	Dictionary d;
 
-	for (const KeyValue<StringName, HashMap<StringName, Vector<StringName>>> &E : translation_map) {
+	for (const KeyValue<StringName, HashMap<StringName, Hector<StringName>>> &E : translation_map) {
 		Dictionary d2;
 
-		for (const KeyValue<StringName, Vector<StringName>> &E2 : E.value) {
+		for (const KeyValue<StringName, Hector<StringName>> &E2 : E.value) {
 			d2[E2.key] = E2.value;
 		}
 
@@ -91,7 +91,7 @@ void TranslationPO::_set_messages(const Dictionary &p_messages) {
 	for (const Variant &ctx : context_l) {
 		const Dictionary &id_str_map = p_messages[ctx];
 
-		HashMap<StringName, Vector<StringName>> temp_map;
+		HashMap<StringName, Hector<StringName>> temp_map;
 		List<Variant> id_l;
 		id_str_map.get_key_list(&id_l);
 		for (List<Variant>::Element *E2 = id_l.front(); E2; E2 = E2->next()) {
@@ -103,14 +103,14 @@ void TranslationPO::_set_messages(const Dictionary &p_messages) {
 	}
 }
 
-Vector<String> TranslationPO::get_translated_message_list() const {
-	Vector<String> msgs;
-	for (const KeyValue<StringName, HashMap<StringName, Vector<StringName>>> &E : translation_map) {
+Hector<String> TranslationPO::get_translated_message_list() const {
+	Hector<String> msgs;
+	for (const KeyValue<StringName, HashMap<StringName, Hector<StringName>>> &E : translation_map) {
 		if (E.key != StringName()) {
 			continue;
 		}
 
-		for (const KeyValue<StringName, Vector<StringName>> &E2 : E.value) {
+		for (const KeyValue<StringName, Hector<StringName>> &E2 : E.value) {
 			for (const StringName &E3 : E2.value) {
 				msgs.push_back(E3);
 			}
@@ -120,13 +120,13 @@ Vector<String> TranslationPO::get_translated_message_list() const {
 	return msgs;
 }
 
-Vector<String> TranslationPO::_get_message_list() const {
+Hector<String> TranslationPO::_get_message_list() const {
 	// Return all keys in translation_map.
 
 	List<StringName> msgs;
 	get_message_list(&msgs);
 
-	Vector<String> v;
+	Hector<String> v;
 	for (const StringName &E : msgs) {
 		v.push_back(E);
 	}
@@ -243,7 +243,7 @@ void TranslationPO::set_plural_rule(const String &p_plural_rule) {
 }
 
 void TranslationPO::add_message(const StringName &p_src_text, const StringName &p_xlated_text, const StringName &p_context) {
-	HashMap<StringName, Vector<StringName>> &map_id_str = translation_map[p_context];
+	HashMap<StringName, Hector<StringName>> &map_id_str = translation_map[p_context];
 
 	if (map_id_str.has(p_src_text)) {
 		WARN_PRINT("Double translations for \"" + String(p_src_text) + "\" under the same context \"" + String(p_context) + "\" for locale \"" + get_locale() + "\".\nThere should only be one unique translation for a given string under the same context.");
@@ -253,10 +253,10 @@ void TranslationPO::add_message(const StringName &p_src_text, const StringName &
 	}
 }
 
-void TranslationPO::add_plural_message(const StringName &p_src_text, const Vector<String> &p_plural_xlated_texts, const StringName &p_context) {
+void TranslationPO::add_plural_message(const StringName &p_src_text, const Hector<String> &p_plural_xlated_texts, const StringName &p_context) {
 	ERR_FAIL_COND_MSG(p_plural_xlated_texts.size() != plural_forms, "Trying to add plural texts that don't match the required number of plural forms for locale \"" + get_locale() + "\"");
 
-	HashMap<StringName, Vector<StringName>> &map_id_str = translation_map[p_context];
+	HashMap<StringName, Hector<StringName>> &map_id_str = translation_map[p_context];
 
 	if (map_id_str.has(p_src_text)) {
 		WARN_PRINT("Double translations for \"" + p_src_text + "\" under the same context \"" + p_context + "\" for locale " + get_locale() + ".\nThere should only be one unique translation for a given string under the same context.");
@@ -323,12 +323,12 @@ void TranslationPO::get_message_list(List<StringName> *r_messages) const {
 	// OptimizedTranslation uses this function to get the list of msgid.
 	// Return all the keys of translation_map under "" context.
 
-	for (const KeyValue<StringName, HashMap<StringName, Vector<StringName>>> &E : translation_map) {
+	for (const KeyValue<StringName, HashMap<StringName, Hector<StringName>>> &E : translation_map) {
 		if (E.key != StringName()) {
 			continue;
 		}
 
-		for (const KeyValue<StringName, Vector<StringName>> &E2 : E.value) {
+		for (const KeyValue<StringName, Hector<StringName>> &E2 : E.value) {
 			r_messages->push_back(E2.key);
 		}
 	}
@@ -337,7 +337,7 @@ void TranslationPO::get_message_list(List<StringName> *r_messages) const {
 int TranslationPO::get_message_count() const {
 	int count = 0;
 
-	for (const KeyValue<StringName, HashMap<StringName, Vector<StringName>>> &E : translation_map) {
+	for (const KeyValue<StringName, HashMap<StringName, Hector<StringName>>> &E : translation_map) {
 		count += E.value.size();
 	}
 

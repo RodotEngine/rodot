@@ -75,7 +75,7 @@ void PostImportPluginSkeletonTrackOrganizer::internal_process(InternalImportCate
 			for (const StringName &name : anims) {
 				Ref<Animation> anim = ap->get_animation(name);
 				int track_len = anim->get_track_count();
-				Vector<int> remove_indices;
+				Hector<int> remove_indices;
 				for (int i = 0; i < track_len; i++) {
 					String track_path = String(anim->track_get_path(i).get_concatenated_names());
 					Node *node = (ap->get_node(ap->get_root_node()))->get_node(NodePath(track_path));

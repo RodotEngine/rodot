@@ -60,7 +60,7 @@ public:
 			float gpu_time = 0;
 		};
 
-		Vector<Area> areas;
+		Hector<Area> areas;
 	};
 
 	enum DisplayTimeMode {
@@ -74,7 +74,7 @@ private:
 
 	TextureRect *graph = nullptr;
 	Ref<ImageTexture> graph_texture;
-	Vector<uint8_t> graph_image;
+	Hector<uint8_t> graph_image;
 	Tree *variables = nullptr;
 	HSplitContainer *h_split = nullptr;
 	CheckBox *frame_relative = nullptr;
@@ -84,7 +84,7 @@ private:
 
 	SpinBox *cursor_metric_edit = nullptr;
 
-	Vector<Metric> frame_metrics;
+	Hector<Metric> frame_metrics;
 	int last_metric = -1;
 
 	int hover_metric = -1;
@@ -145,7 +145,7 @@ public:
 
 	void clear();
 
-	Vector<Vector<String>> get_data_as_csv() const;
+	Hector<Hector<String>> get_data_as_csv() const;
 
 	EditorVisualProfiler();
 };

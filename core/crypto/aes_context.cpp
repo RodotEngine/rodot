@@ -36,9 +36,9 @@ Error AESContext::start(Mode p_mode, const PackedByteArray &p_key, const PackedB
 	// Key check.
 	int key_bits = p_key.size() << 3;
 	ERR_FAIL_COND_V_MSG(key_bits != 128 && key_bits != 256, ERR_INVALID_PARAMETER, "AES key must be either 16 or 32 bytes");
-	// Initialization vector.
+	// Initialization Hector.
 	if (p_mode == MODE_CBC_ENCRYPT || p_mode == MODE_CBC_DECRYPT) {
-		ERR_FAIL_COND_V_MSG(p_iv.size() != 16, ERR_INVALID_PARAMETER, "The initialization vector (IV) must be exactly 16 bytes.");
+		ERR_FAIL_COND_V_MSG(p_iv.size() != 16, ERR_INVALID_PARAMETER, "The initialization Hector (IV) must be exactly 16 bytes.");
 		iv.resize(0);
 		iv.append_array(p_iv);
 	}

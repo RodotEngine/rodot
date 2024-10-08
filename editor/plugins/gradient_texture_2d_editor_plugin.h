@@ -62,8 +62,8 @@ class GradientTexture2DEdit : public Control {
 	Size2 size;
 
 	Point2 _get_handle_pos(const Handle p_handle);
-	Handle get_handle_at(const Vector2 &p_pos);
-	void set_fill_pos(const Vector2 &p_pos);
+	Handle get_handle_at(const Hector2 &p_pos);
+	void set_fill_pos(const Hector2 &p_pos);
 
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
 

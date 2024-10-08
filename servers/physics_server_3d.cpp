@@ -36,10 +36,10 @@
 #include "core/string/print_string.h"
 #include "core/variant/typed_array.h"
 
-void PhysicsServer3DRenderingServerHandler::set_vertex(int p_vertex_id, const Vector3 &p_vertex) {
+void PhysicsServer3DRenderingServerHandler::set_vertex(int p_vertex_id, const Hector3 &p_vertex) {
 	GDVIRTUAL_CALL(_set_vertex, p_vertex_id, p_vertex);
 }
-void PhysicsServer3DRenderingServerHandler::set_normal(int p_vertex_id, const Vector3 &p_normal) {
+void PhysicsServer3DRenderingServerHandler::set_normal(int p_vertex_id, const Hector3 &p_normal) {
 	GDVIRTUAL_CALL(_set_normal, p_vertex_id, p_normal);
 }
 void PhysicsServer3DRenderingServerHandler::set_aabb(const AABB &p_aabb) {
@@ -60,10 +60,10 @@ PhysicsServer3D *PhysicsServer3D::singleton = nullptr;
 
 void PhysicsDirectBodyState3D::integrate_forces() {
 	real_t step = get_step();
-	Vector3 lv = get_linear_velocity();
+	Hector3 lv = get_linear_velocity();
 	lv += get_total_gravity() * step;
 
-	Vector3 av = get_angular_velocity();
+	Hector3 av = get_angular_velocity();
 
 	real_t linear_damp = 1.0 - step * get_total_linear_damp();
 
@@ -118,16 +118,16 @@ void PhysicsDirectBodyState3D::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_velocity_at_local_position", "local_position"), &PhysicsDirectBodyState3D::get_velocity_at_local_position);
 
-	ClassDB::bind_method(D_METHOD("apply_central_impulse", "impulse"), &PhysicsDirectBodyState3D::apply_central_impulse, Vector3());
-	ClassDB::bind_method(D_METHOD("apply_impulse", "impulse", "position"), &PhysicsDirectBodyState3D::apply_impulse, Vector3());
+	ClassDB::bind_method(D_METHOD("apply_central_impulse", "impulse"), &PhysicsDirectBodyState3D::apply_central_impulse, Hector3());
+	ClassDB::bind_method(D_METHOD("apply_impulse", "impulse", "position"), &PhysicsDirectBodyState3D::apply_impulse, Hector3());
 	ClassDB::bind_method(D_METHOD("apply_torque_impulse", "impulse"), &PhysicsDirectBodyState3D::apply_torque_impulse);
 
-	ClassDB::bind_method(D_METHOD("apply_central_force", "force"), &PhysicsDirectBodyState3D::apply_central_force, Vector3());
-	ClassDB::bind_method(D_METHOD("apply_force", "force", "position"), &PhysicsDirectBodyState3D::apply_force, Vector3());
+	ClassDB::bind_method(D_METHOD("apply_central_force", "force"), &PhysicsDirectBodyState3D::apply_central_force, Hector3());
+	ClassDB::bind_method(D_METHOD("apply_force", "force", "position"), &PhysicsDirectBodyState3D::apply_force, Hector3());
 	ClassDB::bind_method(D_METHOD("apply_torque", "torque"), &PhysicsDirectBodyState3D::apply_torque);
 
-	ClassDB::bind_method(D_METHOD("add_constant_central_force", "force"), &PhysicsDirectBodyState3D::add_constant_central_force, Vector3());
-	ClassDB::bind_method(D_METHOD("add_constant_force", "force", "position"), &PhysicsDirectBodyState3D::add_constant_force, Vector3());
+	ClassDB::bind_method(D_METHOD("add_constant_central_force", "force"), &PhysicsDirectBodyState3D::add_constant_central_force, Hector3());
+	ClassDB::bind_method(D_METHOD("add_constant_force", "force", "position"), &PhysicsDirectBodyState3D::add_constant_force, Hector3());
 	ClassDB::bind_method(D_METHOD("add_constant_torque", "torque"), &PhysicsDirectBodyState3D::add_constant_torque);
 
 	ClassDB::bind_method(D_METHOD("set_constant_force", "force"), &PhysicsDirectBodyState3D::set_constant_force);
@@ -160,14 +160,14 @@ void PhysicsDirectBodyState3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "inverse_mass"), "", "get_inverse_mass");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "total_angular_damp"), "", "get_total_angular_damp");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "total_linear_damp"), "", "get_total_linear_damp");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "inverse_inertia"), "", "get_inverse_inertia");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "inverse_inertia"), "", "get_inverse_inertia");
 	ADD_PROPERTY(PropertyInfo(Variant::BASIS, "inverse_inertia_tensor"), "", "get_inverse_inertia_tensor");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "total_gravity"), "", "get_total_gravity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "center_of_mass"), "", "get_center_of_mass");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "center_of_mass_local"), "", "get_center_of_mass_local");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "total_gravity"), "", "get_total_gravity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "center_of_mass"), "", "get_center_of_mass");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "center_of_mass_local"), "", "get_center_of_mass_local");
 	ADD_PROPERTY(PropertyInfo(Variant::BASIS, "principal_inertia_axes"), "", "get_principal_inertia_axes");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "angular_velocity"), "set_angular_velocity", "get_angular_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "linear_velocity"), "set_linear_velocity", "get_linear_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "angular_velocity"), "set_angular_velocity", "get_angular_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "linear_velocity"), "set_linear_velocity", "get_linear_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sleeping"), "set_sleep_state", "is_sleeping");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "transform"), "set_transform", "get_transform");
 }
@@ -220,8 +220,8 @@ void PhysicsRayQueryParameters3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_hit_back_faces", "enable"), &PhysicsRayQueryParameters3D::set_hit_back_faces);
 	ClassDB::bind_method(D_METHOD("is_hit_back_faces_enabled"), &PhysicsRayQueryParameters3D::is_hit_back_faces_enabled);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "from"), "set_from", "get_from");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "to"), "set_to", "get_to");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "from"), "set_from", "get_from");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "to"), "set_to", "get_to");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "exclude", PROPERTY_HINT_ARRAY_TYPE, "RID"), "set_exclude", "get_exclude");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "collide_with_bodies"), "set_collide_with_bodies", "is_collide_with_bodies_enabled");
@@ -232,7 +232,7 @@ void PhysicsRayQueryParameters3D::_bind_methods() {
 
 ///////////////////////////////////////////////////////
 
-Ref<PhysicsRayQueryParameters3D> PhysicsRayQueryParameters3D::create(Vector3 p_from, Vector3 p_to, uint32_t p_mask, const TypedArray<RID> &p_exclude) {
+Ref<PhysicsRayQueryParameters3D> PhysicsRayQueryParameters3D::create(Hector3 p_from, Hector3 p_to, uint32_t p_mask, const TypedArray<RID> &p_exclude) {
 	Ref<PhysicsRayQueryParameters3D> params;
 	params.instantiate();
 	params->set_from(p_from);
@@ -275,7 +275,7 @@ void PhysicsPointQueryParameters3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_collide_with_areas", "enable"), &PhysicsPointQueryParameters3D::set_collide_with_areas);
 	ClassDB::bind_method(D_METHOD("is_collide_with_areas_enabled"), &PhysicsPointQueryParameters3D::is_collide_with_areas_enabled);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "position"), "set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "position"), "set_position", "get_position");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "exclude", PROPERTY_HINT_ARRAY_TYPE, "RID"), "set_exclude", "get_exclude");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "collide_with_bodies"), "set_collide_with_bodies", "is_collide_with_bodies_enabled");
@@ -345,7 +345,7 @@ void PhysicsShapeQueryParameters3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "exclude", PROPERTY_HINT_ARRAY_TYPE, "RID"), "set_exclude", "get_exclude");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "margin", PROPERTY_HINT_RANGE, "0,100,0.01"), "set_margin", "get_margin");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "motion"), "set_motion", "get_motion");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "motion"), "set_motion", "get_motion");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shape", PROPERTY_HINT_RESOURCE_TYPE, "Shape3D"), "set_shape", "get_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::RID, "shape_rid"), "set_shape_rid", "get_shape_rid");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "transform"), "set_transform", "get_transform");
@@ -380,7 +380,7 @@ Dictionary PhysicsDirectSpaceState3D::_intersect_ray(const Ref<PhysicsRayQueryPa
 TypedArray<Dictionary> PhysicsDirectSpaceState3D::_intersect_point(const Ref<PhysicsPointQueryParameters3D> &p_point_query, int p_max_results) {
 	ERR_FAIL_COND_V(p_point_query.is_null(), TypedArray<Dictionary>());
 
-	Vector<ShapeResult> ret;
+	Hector<ShapeResult> ret;
 	ret.resize(p_max_results);
 
 	int rc = intersect_point(p_point_query->get_parameters(), ret.ptrw(), ret.size());
@@ -405,7 +405,7 @@ TypedArray<Dictionary> PhysicsDirectSpaceState3D::_intersect_point(const Ref<Phy
 TypedArray<Dictionary> PhysicsDirectSpaceState3D::_intersect_shape(const Ref<PhysicsShapeQueryParameters3D> &p_shape_query, int p_max_results) {
 	ERR_FAIL_COND_V(!p_shape_query.is_valid(), TypedArray<Dictionary>());
 
-	Vector<ShapeResult> sr;
+	Hector<ShapeResult> sr;
 	sr.resize(p_max_results);
 	int rc = intersect_shape(p_shape_query->get_parameters(), sr.ptrw(), sr.size());
 	TypedArray<Dictionary> ret;
@@ -422,32 +422,32 @@ TypedArray<Dictionary> PhysicsDirectSpaceState3D::_intersect_shape(const Ref<Phy
 	return ret;
 }
 
-Vector<real_t> PhysicsDirectSpaceState3D::_cast_motion(const Ref<PhysicsShapeQueryParameters3D> &p_shape_query) {
-	ERR_FAIL_COND_V(!p_shape_query.is_valid(), Vector<real_t>());
+Hector<real_t> PhysicsDirectSpaceState3D::_cast_motion(const Ref<PhysicsShapeQueryParameters3D> &p_shape_query) {
+	ERR_FAIL_COND_V(!p_shape_query.is_valid(), Hector<real_t>());
 
 	real_t closest_safe = 1.0f, closest_unsafe = 1.0f;
 	bool res = cast_motion(p_shape_query->get_parameters(), closest_safe, closest_unsafe);
 	if (!res) {
-		return Vector<real_t>();
+		return Hector<real_t>();
 	}
-	Vector<real_t> ret;
+	Hector<real_t> ret;
 	ret.resize(2);
 	ret.write[0] = closest_safe;
 	ret.write[1] = closest_unsafe;
 	return ret;
 }
 
-TypedArray<Vector3> PhysicsDirectSpaceState3D::_collide_shape(const Ref<PhysicsShapeQueryParameters3D> &p_shape_query, int p_max_results) {
-	ERR_FAIL_COND_V(!p_shape_query.is_valid(), TypedArray<Vector3>());
+TypedArray<Hector3> PhysicsDirectSpaceState3D::_collide_shape(const Ref<PhysicsShapeQueryParameters3D> &p_shape_query, int p_max_results) {
+	ERR_FAIL_COND_V(!p_shape_query.is_valid(), TypedArray<Hector3>());
 
-	Vector<Vector3> ret;
+	Hector<Hector3> ret;
 	ret.resize(p_max_results * 2);
 	int rc = 0;
 	bool res = collide_shape(p_shape_query->get_parameters(), ret.ptrw(), p_max_results, rc);
 	if (!res) {
-		return TypedArray<Vector3>();
+		return TypedArray<Hector3>();
 	}
-	TypedArray<Vector3> r;
+	TypedArray<Hector3> r;
 	r.resize(rc * 2);
 	for (int i = 0; i < rc * 2; i++) {
 		r[i] = ret[i];
@@ -556,7 +556,7 @@ void PhysicsTestMotionParameters3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_recovery_as_collision_enabled", "enabled"), &PhysicsTestMotionParameters3D::set_recovery_as_collision_enabled);
 
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "from"), "set_from", "get_from");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "motion"), "set_motion", "get_motion");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "motion"), "set_motion", "get_motion");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "margin"), "set_margin", "get_margin");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_collisions"), "set_max_collisions", "get_max_collisions");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "collide_separation_ray"), "set_collide_separation_ray_enabled", "is_collide_separation_ray_enabled");
@@ -567,11 +567,11 @@ void PhysicsTestMotionParameters3D::_bind_methods() {
 
 ///////////////////////////////
 
-Vector3 PhysicsTestMotionResult3D::get_travel() const {
+Hector3 PhysicsTestMotionResult3D::get_travel() const {
 	return result.travel;
 }
 
-Vector3 PhysicsTestMotionResult3D::get_remainder() const {
+Hector3 PhysicsTestMotionResult3D::get_remainder() const {
 	return result.remainder;
 }
 
@@ -587,18 +587,18 @@ int PhysicsTestMotionResult3D::get_collision_count() const {
 	return result.collision_count;
 }
 
-Vector3 PhysicsTestMotionResult3D::get_collision_point(int p_collision_index) const {
-	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Vector3());
+Hector3 PhysicsTestMotionResult3D::get_collision_point(int p_collision_index) const {
+	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Hector3());
 	return result.collisions[p_collision_index].position;
 }
 
-Vector3 PhysicsTestMotionResult3D::get_collision_normal(int p_collision_index) const {
-	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Vector3());
+Hector3 PhysicsTestMotionResult3D::get_collision_normal(int p_collision_index) const {
+	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Hector3());
 	return result.collisions[p_collision_index].normal;
 }
 
-Vector3 PhysicsTestMotionResult3D::get_collider_velocity(int p_collision_index) const {
-	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Vector3());
+Hector3 PhysicsTestMotionResult3D::get_collider_velocity(int p_collision_index) const {
+	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Hector3());
 	return result.collisions[p_collision_index].collider_velocity;
 }
 
@@ -798,15 +798,15 @@ void PhysicsServer3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("body_get_state", "body", "state"), &PhysicsServer3D::body_get_state);
 
 	ClassDB::bind_method(D_METHOD("body_apply_central_impulse", "body", "impulse"), &PhysicsServer3D::body_apply_central_impulse);
-	ClassDB::bind_method(D_METHOD("body_apply_impulse", "body", "impulse", "position"), &PhysicsServer3D::body_apply_impulse, Vector3());
+	ClassDB::bind_method(D_METHOD("body_apply_impulse", "body", "impulse", "position"), &PhysicsServer3D::body_apply_impulse, Hector3());
 	ClassDB::bind_method(D_METHOD("body_apply_torque_impulse", "body", "impulse"), &PhysicsServer3D::body_apply_torque_impulse);
 
 	ClassDB::bind_method(D_METHOD("body_apply_central_force", "body", "force"), &PhysicsServer3D::body_apply_central_force);
-	ClassDB::bind_method(D_METHOD("body_apply_force", "body", "force", "position"), &PhysicsServer3D::body_apply_force, Vector3());
+	ClassDB::bind_method(D_METHOD("body_apply_force", "body", "force", "position"), &PhysicsServer3D::body_apply_force, Hector3());
 	ClassDB::bind_method(D_METHOD("body_apply_torque", "body", "torque"), &PhysicsServer3D::body_apply_torque);
 
 	ClassDB::bind_method(D_METHOD("body_add_constant_central_force", "body", "force"), &PhysicsServer3D::body_add_constant_central_force);
-	ClassDB::bind_method(D_METHOD("body_add_constant_force", "body", "force", "position"), &PhysicsServer3D::body_add_constant_force, Vector3());
+	ClassDB::bind_method(D_METHOD("body_add_constant_force", "body", "force", "position"), &PhysicsServer3D::body_add_constant_force, Hector3());
 	ClassDB::bind_method(D_METHOD("body_add_constant_torque", "body", "torque"), &PhysicsServer3D::body_add_constant_torque);
 
 	ClassDB::bind_method(D_METHOD("body_set_constant_force", "body", "force"), &PhysicsServer3D::body_set_constant_force);
@@ -1050,7 +1050,7 @@ void PhysicsServer3D::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(AREA_PARAM_GRAVITY_OVERRIDE_MODE);
 	BIND_ENUM_CONSTANT(AREA_PARAM_GRAVITY);
-	BIND_ENUM_CONSTANT(AREA_PARAM_GRAVITY_VECTOR);
+	BIND_ENUM_CONSTANT(AREA_PARAM_GRAVITY_Hector);
 	BIND_ENUM_CONSTANT(AREA_PARAM_GRAVITY_IS_POINT);
 	BIND_ENUM_CONSTANT(AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE);
 	BIND_ENUM_CONSTANT(AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE);
@@ -1126,7 +1126,7 @@ PhysicsServer3D::PhysicsServer3D() {
 
 	// World3D physics space
 	GLOBAL_DEF_BASIC("physics/3d/default_gravity", 9.8);
-	GLOBAL_DEF_BASIC("physics/3d/default_gravity_vector", Vector3(0, -1, 0));
+	GLOBAL_DEF_BASIC("physics/3d/default_gravity_Hector", Hector3(0, -1, 0));
 	GLOBAL_DEF(PropertyInfo(Variant::FLOAT, "physics/3d/default_linear_damp", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), 0.1);
 	GLOBAL_DEF(PropertyInfo(Variant::FLOAT, "physics/3d/default_angular_damp", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), 0.1);
 

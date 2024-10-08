@@ -32,7 +32,7 @@
 
 #include "core/config/engine.h"
 #include "core/object/script_language.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/resources/packed_scene.h"
 
 #ifdef TOOLS_ENABLED
@@ -75,7 +75,7 @@ bool PropertyUtils::is_property_value_different(const Object *p_object, const Va
 	return a != b;
 }
 
-Variant PropertyUtils::get_property_default_value(const Object *p_object, const StringName &p_property, bool *r_is_valid, const Vector<SceneState::PackState> *p_states_stack_cache, bool p_update_exports, const Node *p_owner, bool *r_is_class_default) {
+Variant PropertyUtils::get_property_default_value(const Object *p_object, const StringName &p_property, bool *r_is_valid, const Hector<SceneState::PackState> *p_states_stack_cache, bool p_update_exports, const Node *p_owner, bool *r_is_class_default) {
 	// This function obeys the way property values are set when an object is instantiated,
 	// which is the following (the latter wins):
 	// 1. Default value from builtin class
@@ -93,7 +93,7 @@ Variant PropertyUtils::get_property_default_value(const Object *p_object, const 
 
 	if (const Node *node = Object::cast_to<Node>(p_object)) {
 		// Check inheritance/instantiation ancestors
-		const Vector<SceneState::PackState> &states_stack = p_states_stack_cache ? *p_states_stack_cache : PropertyUtils::get_node_states_stack(node, p_owner);
+		const Hector<SceneState::PackState> &states_stack = p_states_stack_cache ? *p_states_stack_cache : PropertyUtils::get_node_states_stack(node, p_owner);
 		for (int i = 0; i < states_stack.size(); ++i) {
 			const SceneState::PackState &ia = states_stack[i];
 			bool found = false;
@@ -199,10 +199,10 @@ struct _FastPackState {
 };
 } // namespace
 
-static bool _collect_inheritance_chain(const Ref<SceneState> &p_state, const NodePath &p_path, LocalVector<_FastPackState> &r_states_stack) {
+static bool _collect_inheritance_chain(const Ref<SceneState> &p_state, const NodePath &p_path, LocalHector<_FastPackState> &r_states_stack) {
 	bool found = false;
 
-	LocalVector<_FastPackState> inheritance_states;
+	LocalHector<_FastPackState> inheritance_states;
 
 	Ref<SceneState> state = p_state;
 	while (state.is_valid()) {
@@ -224,12 +224,12 @@ static bool _collect_inheritance_chain(const Ref<SceneState> &p_state, const Nod
 	return found;
 }
 
-Vector<SceneState::PackState> PropertyUtils::get_node_states_stack(const Node *p_node, const Node *p_owner, bool *r_instantiated_by_owner) {
+Hector<SceneState::PackState> PropertyUtils::get_node_states_stack(const Node *p_node, const Node *p_owner, bool *r_instantiated_by_owner) {
 	if (r_instantiated_by_owner) {
 		*r_instantiated_by_owner = true;
 	}
 
-	LocalVector<_FastPackState> states_stack;
+	LocalHector<_FastPackState> states_stack;
 	{
 		const Node *owner = p_owner;
 #ifdef TOOLS_ENABLED
@@ -256,9 +256,9 @@ Vector<SceneState::PackState> PropertyUtils::get_node_states_stack(const Node *p
 		}
 	}
 
-	// Convert to the proper type for returning, inverting the vector on the go
-	// (it was more convenient to fill the vector in reverse order)
-	Vector<SceneState::PackState> states_stack_ret;
+	// Convert to the proper type for returning, inverting the Hector on the go
+	// (it was more convenient to fill the Hector in reverse order)
+	Hector<SceneState::PackState> states_stack_ret;
 	{
 		states_stack_ret.resize(states_stack.size());
 		_FastPackState *ps = states_stack.ptr();

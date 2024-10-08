@@ -96,7 +96,7 @@ void MaterialStorage::get_shader_parameter_list(RID p_shader, List<PropertyInfo>
 	ERR_FAIL_NULL(shader);
 
 	SortArray<Pair<StringName, int>, ShaderLanguage::UniformOrderComparator> sorter;
-	LocalVector<Pair<StringName, int>> filtered_uniforms;
+	LocalHector<Pair<StringName, int>> filtered_uniforms;
 
 	for (const KeyValue<StringName, ShaderLanguage::ShaderNode::Uniform> &E : shader->uniforms) {
 		if (E.value.scope != ShaderLanguage::ShaderNode::Uniform::SCOPE_LOCAL) {

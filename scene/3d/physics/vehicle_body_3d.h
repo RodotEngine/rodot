@@ -46,9 +46,9 @@ class VehicleWheel3D : public Node3D {
 	bool engine_traction = false;
 	bool steers = false;
 
-	Vector3 m_chassisConnectionPointCS; //const
-	Vector3 m_wheelDirectionCS; //const
-	Vector3 m_wheelAxleCS; // const or modified by steering
+	Hector3 m_chassisConnectionPointCS; //const
+	Hector3 m_wheelDirectionCS; //const
+	Hector3 m_wheelAxleCS; // const or modified by steering
 
 	real_t m_suspensionRestLength = 0.15;
 	real_t m_maxSuspensionTravel = 0.2;
@@ -63,7 +63,7 @@ class VehicleWheel3D : public Node3D {
 
 	VehicleBody3D *body = nullptr;
 
-	//btVector3	m_wheelAxleCS; // const or modified by steering ?
+	//btHector3	m_wheelAxleCS; // const or modified by steering ?
 
 	real_t m_steering = 0.0;
 	real_t m_rotation = 0.0;
@@ -81,12 +81,12 @@ class VehicleWheel3D : public Node3D {
 
 	struct RaycastInfo {
 		//set by raycaster
-		Vector3 m_contactNormalWS; //contactnormal
-		Vector3 m_contactPointWS; //raycast hitpoint
+		Hector3 m_contactNormalWS; //contactnormal
+		Hector3 m_contactPointWS; //raycast hitpoint
 		real_t m_suspensionLength = 0.0;
-		Vector3 m_hardPointWS; //raycast starting point
-		Vector3 m_wheelDirectionWS; //direction in worldspace
-		Vector3 m_wheelAxleWS; // axle in worldspace
+		Hector3 m_hardPointWS; //raycast starting point
+		Hector3 m_wheelDirectionWS; //direction in worldspace
+		Hector3 m_wheelAxleWS; // axle in worldspace
 		bool m_isInContact = false;
 		PhysicsBody3D *m_groundObject = nullptr; //could be general void* ptr
 	} m_raycastInfo;
@@ -130,9 +130,9 @@ public:
 
 	bool is_in_contact() const;
 
-	Vector3 get_contact_point() const;
+	Hector3 get_contact_point() const;
 
-	Vector3 get_contact_normal() const;
+	Hector3 get_contact_normal() const;
 
 	Node3D *get_contact_body() const;
 
@@ -169,23 +169,23 @@ class VehicleBody3D : public RigidBody3D {
 
 	HashSet<RID> exclude;
 
-	Vector<Vector3> m_forwardWS;
-	Vector<Vector3> m_axle;
-	Vector<real_t> m_forwardImpulse;
-	Vector<real_t> m_sideImpulse;
+	Hector<Hector3> m_forwardWS;
+	Hector<Hector3> m_axle;
+	Hector<real_t> m_forwardImpulse;
+	Hector<real_t> m_sideImpulse;
 
 	struct btVehicleWheelContactPoint {
 		PhysicsDirectBodyState3D *m_s = nullptr;
 		PhysicsBody3D *m_body1 = nullptr;
-		Vector3 m_frictionPositionWorld;
-		Vector3 m_frictionDirectionWorld;
+		Hector3 m_frictionPositionWorld;
+		Hector3 m_frictionDirectionWorld;
 		real_t m_jacDiagABInv = 0.0;
 		real_t m_maxImpulse = 0.0;
 
-		btVehicleWheelContactPoint(PhysicsDirectBodyState3D *s, PhysicsBody3D *body1, const Vector3 &frictionPosWorld, const Vector3 &frictionDirectionWorld, real_t maxImpulse);
+		btVehicleWheelContactPoint(PhysicsDirectBodyState3D *s, PhysicsBody3D *body1, const Hector3 &frictionPosWorld, const Hector3 &frictionDirectionWorld, real_t maxImpulse);
 	};
 
-	void _resolve_single_bilateral(PhysicsDirectBodyState3D *s, const Vector3 &pos1, PhysicsBody3D *body2, const Vector3 &pos2, const Vector3 &normal, real_t &impulse, const real_t p_rollInfluence);
+	void _resolve_single_bilateral(PhysicsDirectBodyState3D *s, const Hector3 &pos1, PhysicsBody3D *body2, const Hector3 &pos2, const Hector3 &normal, real_t &impulse, const real_t p_rollInfluence);
 	real_t _calc_rolling_friction(btVehicleWheelContactPoint &contactPoint);
 
 	void _update_friction(PhysicsDirectBodyState3D *s);
@@ -195,7 +195,7 @@ class VehicleBody3D : public RigidBody3D {
 	void _update_wheel(int p_idx, PhysicsDirectBodyState3D *s);
 
 	friend class VehicleWheel3D;
-	Vector<VehicleWheel3D *> wheels;
+	Hector<VehicleWheel3D *> wheels;
 
 	static void _bind_methods();
 

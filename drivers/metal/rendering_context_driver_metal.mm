@@ -81,8 +81,8 @@ void RenderingContextDriverMetal::driver_free(RenderingDeviceDriver *p_driver) {
 
 class API_AVAILABLE(macos(11.0), ios(14.0)) SurfaceLayer : public RenderingContextDriverMetal::Surface {
 	CAMetalLayer *__unsafe_unretained layer = nil;
-	LocalVector<MDFrameBuffer> frame_buffers;
-	LocalVector<id<MTLDrawable>> drawables;
+	LocalHector<MDFrameBuffer> frame_buffers;
+	LocalHector<id<MTLDrawable>> drawables;
 	uint32_t rear = -1;
 	uint32_t front = 0;
 	uint32_t count = 0;

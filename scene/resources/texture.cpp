@@ -121,7 +121,7 @@ Texture2D::Texture2D() {
 }
 
 TypedArray<Image> Texture3D::_get_datai() const {
-	Vector<Ref<Image>> data = get_data();
+	Hector<Ref<Image>> data = get_data();
 
 	TypedArray<Image> ret;
 	ret.resize(data.size());
@@ -161,10 +161,10 @@ bool Texture3D::has_mipmaps() const {
 	return ret;
 }
 
-Vector<Ref<Image>> Texture3D::get_data() const {
+Hector<Ref<Image>> Texture3D::get_data() const {
 	TypedArray<Image> ret;
 	GDVIRTUAL_CALL(_get_data, ret);
-	Vector<Ref<Image>> data;
+	Hector<Ref<Image>> data;
 	data.resize(ret.size());
 	for (int i = 0; i < data.size(); i++) {
 		data.write[i] = ret[i];
@@ -192,7 +192,7 @@ void Texture3D::_bind_methods() {
 Ref<Resource> Texture3D::create_placeholder() const {
 	Ref<PlaceholderTexture3D> placeholder;
 	placeholder.instantiate();
-	placeholder->set_size(Vector3i(get_width(), get_height(), get_depth()));
+	placeholder->set_size(Hector3i(get_width(), get_height(), get_depth()));
 	return placeholder;
 }
 

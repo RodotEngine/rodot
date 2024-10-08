@@ -65,7 +65,7 @@ class ThemeEditorPreview : public VBoxContainer {
 	void _preview_visibility_changed();
 
 	void _picker_button_cbk();
-	Control *_find_hovered_control(Control *p_parent, Vector2 p_mouse_position);
+	Control *_find_hovered_control(Control *p_parent, Hector2 p_mouse_position);
 
 	void _draw_picker_overlay();
 	void _gui_input_picker_overlay(const Ref<InputEvent> &p_event);

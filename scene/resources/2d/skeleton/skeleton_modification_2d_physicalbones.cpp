@@ -288,7 +288,7 @@ void SkeletonModification2DPhysicalBones::_bind_methods() {
 SkeletonModification2DPhysicalBones::SkeletonModification2DPhysicalBones() {
 	stack = nullptr;
 	is_setup = false;
-	physical_bone_chain = Vector<PhysicalBone_Data2D>();
+	physical_bone_chain = Hector<PhysicalBone_Data2D>();
 	enabled = true;
 	editor_draw_gizmo = false; // Nothing to really show in a gizmo right now.
 }

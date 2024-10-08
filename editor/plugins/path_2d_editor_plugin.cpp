@@ -81,8 +81,8 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 	if (mb.is_valid()) {
 		Transform2D xform = canvas_item_editor->get_canvas_transform() * node->get_global_transform();
 
-		Vector2 gpoint = mb->get_position();
-		Vector2 cpoint = node->to_local(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mb->get_position())));
+		Hector2 gpoint = mb->get_position();
+		Hector2 cpoint = node->to_local(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mb->get_position())));
 
 		if (mb->is_pressed() && action == ACTION_NONE) {
 			Ref<Curve2D> curve = node->get_curve();
@@ -137,7 +137,7 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 						return true;
 					} else if (dist_to_p_out < grab_threshold) {
 						undo_redo->create_action(TTR("Remove Out-Control from Curve"));
-						undo_redo->add_do_method(curve.ptr(), "set_point_out", i, Vector2());
+						undo_redo->add_do_method(curve.ptr(), "set_point_out", i, Hector2());
 						undo_redo->add_undo_method(curve.ptr(), "set_point_out", i, curve->get_point_out(i));
 						undo_redo->add_do_method(canvas_item_editor, "update_viewport");
 						undo_redo->add_undo_method(canvas_item_editor, "update_viewport");
@@ -145,7 +145,7 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 						return true;
 					} else if (dist_to_p_in < grab_threshold) {
 						undo_redo->create_action(TTR("Remove In-Control from Curve"));
-						undo_redo->add_do_method(curve.ptr(), "set_point_in", i, Vector2());
+						undo_redo->add_do_method(curve.ptr(), "set_point_in", i, Hector2());
 						undo_redo->add_undo_method(curve.ptr(), "set_point_in", i, curve->get_point_in(i));
 						undo_redo->add_do_method(canvas_item_editor, "update_viewport");
 						undo_redo->add_undo_method(canvas_item_editor, "update_viewport");
@@ -179,7 +179,7 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 
 		// Check for segment split.
 		if (mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT && mode == MODE_EDIT && on_edge) {
-			Vector2 gpoint2 = mb->get_position();
+			Hector2 gpoint2 = mb->get_position();
 			Ref<Curve2D> curve = node->get_curve();
 
 			int insertion_point = -1;
@@ -195,8 +195,8 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 				insertion_point = curve->get_point_count() - 2;
 			}
 
-			const Vector2 new_point = xform.affine_inverse().xform(gpoint2);
-			curve->add_point(new_point, Vector2(0, 0), Vector2(0, 0), insertion_point + 1);
+			const Hector2 new_point = xform.affine_inverse().xform(gpoint2);
+			curve->add_point(new_point, Hector2(0, 0), Hector2(0, 0), insertion_point + 1);
 
 			action = ACTION_MOVING_NEW_POINT_FROM_SPLIT;
 			action_point = insertion_point + 1;
@@ -215,7 +215,7 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 			Ref<Curve2D> curve = node->get_curve();
 
 			EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
-			Vector2 new_pos = moving_from + xform.affine_inverse().basis_xform(gpoint - moving_screen_from);
+			Hector2 new_pos = moving_from + xform.affine_inverse().basis_xform(gpoint - moving_screen_from);
 			switch (action) {
 				case ACTION_NONE:
 					// N/A, handled in above condition.
@@ -243,7 +243,7 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 
 				case ACTION_MOVING_NEW_POINT_FROM_SPLIT: {
 					undo_redo->create_action(TTR("Split Curve"));
-					undo_redo->add_do_method(curve.ptr(), "add_point", Vector2(), Vector2(), Vector2(), action_point);
+					undo_redo->add_do_method(curve.ptr(), "add_point", Hector2(), Hector2(), Hector2(), action_point);
 					undo_redo->add_do_method(curve.ptr(), "set_point_position", action_point, cpoint);
 					undo_redo->add_undo_method(curve.ptr(), "remove_point", action_point);
 					undo_redo->add_do_method(canvas_item_editor, "update_viewport");
@@ -298,7 +298,7 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 			bool old_edge = on_edge;
 
 			Transform2D xform = canvas_item_editor->get_canvas_transform() * node->get_global_transform();
-			Vector2 gpoint = mm->get_position();
+			Hector2 gpoint = mm->get_position();
 
 			Ref<Curve2D> curve = node->get_curve();
 			if (curve.is_null()) {
@@ -317,8 +317,8 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 			// However, if near a control point or its in-out handles then not on edge
 			int len = curve->get_point_count();
 			for (int i = 0; i < len; i++) {
-				Vector2 pp = curve->get_point_position(i);
-				Vector2 p = xform.xform(pp);
+				Hector2 pp = curve->get_point_position(i);
+				Hector2 p = xform.xform(pp);
 				if (p.distance_to(gpoint) <= grab_threshold) {
 					on_edge = false;
 					break;
@@ -343,12 +343,12 @@ bool Path2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) {
 		if (action != ACTION_NONE) {
 			// Handle point/control movement.
 			Transform2D xform = canvas_item_editor->get_canvas_transform() * node->get_global_transform();
-			Vector2 gpoint = mm->get_position();
-			Vector2 cpoint = node->get_global_transform().affine_inverse().xform(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mm->get_position())));
+			Hector2 gpoint = mm->get_position();
+			Hector2 cpoint = node->get_global_transform().affine_inverse().xform(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mm->get_position())));
 
 			Ref<Curve2D> curve = node->get_curve();
 
-			Vector2 new_pos = moving_from + xform.affine_inverse().basis_xform(gpoint - moving_screen_from);
+			Hector2 new_pos = moving_from + xform.affine_inverse().basis_xform(gpoint - moving_screen_from);
 
 			switch (action) {
 				case ACTION_NONE:
@@ -407,12 +407,12 @@ void Path2DEditor::forward_canvas_draw_over_viewport(Control *p_overlay) {
 	Control *vpc = canvas_item_editor->get_viewport_control();
 
 	for (int i = 0; i < len; i++) {
-		Vector2 point = xform.xform(curve->get_point_position(i));
+		Hector2 point = xform.xform(curve->get_point_position(i));
 		// Determines the point icon to be used
 		bool smooth = false;
 
 		if (i < len - 1) {
-			Vector2 point_out = xform.xform(curve->get_point_position(i) + curve->get_point_out(i));
+			Hector2 point_out = xform.xform(curve->get_point_position(i) + curve->get_point_out(i));
 			if (point != point_out) {
 				smooth = true;
 				// Draw the line with a dark and light color to be visible on all backgrounds
@@ -423,7 +423,7 @@ void Path2DEditor::forward_canvas_draw_over_viewport(Control *p_overlay) {
 		}
 
 		if (i > 0) {
-			Vector2 point_in = xform.xform(curve->get_point_position(i) + curve->get_point_in(i));
+			Hector2 point_in = xform.xform(curve->get_point_position(i) + curve->get_point_in(i));
 			if (point != point_in) {
 				smooth = true;
 				// Draw the line with a dark and light color to be visible on all backgrounds
@@ -524,8 +524,8 @@ void Path2DEditor::_mode_selected(int p_mode) {
 		if (node->get_curve()->get_point_count() < 3) {
 			return;
 		}
-		Vector2 begin = node->get_curve()->get_point_position(0);
-		Vector2 end = node->get_curve()->get_point_position(node->get_curve()->get_point_count() - 1);
+		Hector2 begin = node->get_curve()->get_point_position(0);
+		Hector2 end = node->get_curve()->get_point_position(node->get_curve()->get_point_count() - 1);
 
 		if (begin.is_equal_approx(end)) {
 			return;
@@ -547,7 +547,7 @@ void Path2DEditor::_mode_selected(int p_mode) {
 			return;
 		}
 		EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
-		PackedVector2Array points = node->get_curve()->get_points().duplicate();
+		PackedHector2Array points = node->get_curve()->get_points().duplicate();
 
 		undo_redo->create_action(TTR("Clear Curve Points"), UndoRedo::MERGE_DISABLE, node);
 		undo_redo->add_do_method(this, "_clear_curve_points", node);
@@ -657,7 +657,7 @@ void Path2DEditor::_clear_curve_points(Path2D *p_path2d) {
 	}
 }
 
-void Path2DEditor::_restore_curve_points(Path2D *p_path2d, const PackedVector2Array &p_points) {
+void Path2DEditor::_restore_curve_points(Path2D *p_path2d, const PackedHector2Array &p_points) {
 	if (!p_path2d || p_path2d->get_curve().is_null()) {
 		return;
 	}

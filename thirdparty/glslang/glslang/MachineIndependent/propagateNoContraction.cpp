@@ -55,7 +55,7 @@ namespace {
 //  Object s.a will be represented with: <symbol ID of s>/0
 //  Object s.b will be represented with: <symbol ID of s>/1
 //  Object s will be represented with: <symbol ID of s>
-// For members of vector, matrix and arrays, they will be represented with the
+// For members of Hector, matrix and arrays, they will be represented with the
 // same symbol ID of their container symbol objects. This is because their
 // preciseness is always the same as their container symbol objects.
 typedef std::string ObjectAccessChain;
@@ -89,7 +89,7 @@ bool isDereferenceOperation(glslang::TOperator op)
     case glslang::EOpIndexDirect:
     case glslang::EOpIndexDirectStruct:
     case glslang::EOpIndexIndirect:
-    case glslang::EOpVectorSwizzle:
+    case glslang::EOpHectorSwizzle:
     case glslang::EOpMatrixSwizzle:
         return true;
     default:
@@ -105,8 +105,8 @@ bool isAssignOperation(glslang::TOperator op)
     case glslang::EOpAddAssign:
     case glslang::EOpSubAssign:
     case glslang::EOpMulAssign:
-    case glslang::EOpVectorTimesMatrixAssign:
-    case glslang::EOpVectorTimesScalarAssign:
+    case glslang::EOpHectorTimesMatrixAssign:
+    case glslang::EOpHectorTimesScalarAssign:
     case glslang::EOpMatrixTimesScalarAssign:
     case glslang::EOpMatrixTimesMatrixAssign:
     case glslang::EOpDivAssign:
@@ -152,8 +152,8 @@ bool isArithmeticOperation(glslang::TOperator op)
     case glslang::EOpAddAssign:
     case glslang::EOpSubAssign:
     case glslang::EOpMulAssign:
-    case glslang::EOpVectorTimesMatrixAssign:
-    case glslang::EOpVectorTimesScalarAssign:
+    case glslang::EOpHectorTimesMatrixAssign:
+    case glslang::EOpHectorTimesScalarAssign:
     case glslang::EOpMatrixTimesScalarAssign:
     case glslang::EOpMatrixTimesMatrixAssign:
     case glslang::EOpDivAssign:
@@ -167,9 +167,9 @@ bool isArithmeticOperation(glslang::TOperator op)
     case glslang::EOpDiv:
     case glslang::EOpMod:
 
-    case glslang::EOpVectorTimesScalar:
-    case glslang::EOpVectorTimesMatrix:
-    case glslang::EOpMatrixTimesVector:
+    case glslang::EOpHectorTimesScalar:
+    case glslang::EOpHectorTimesMatrix:
+    case glslang::EOpMatrixTimesHector:
     case glslang::EOpMatrixTimesScalar:
     case glslang::EOpMatrixTimesMatrix:
 

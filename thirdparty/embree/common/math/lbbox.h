@@ -40,7 +40,7 @@ namespace embree
     __forceinline LBBox ( const BBox<T>& bounds0, const BBox<T>& bounds1) 
       : bounds0(bounds0), bounds1(bounds1) { }
 
-    LBBox ( const avector<BBox<T>>& bounds ) 
+    LBBox ( const aHector<BBox<T>>& bounds ) 
     {
       assert(bounds.size());
       BBox<T> b0 = bounds.front();

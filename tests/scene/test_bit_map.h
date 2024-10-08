@@ -429,7 +429,7 @@ TEST_CASE("[BitMap] Convert to image") {
 TEST_CASE("[BitMap] Clip to polygon") {
 	const Size2i dim{ 256, 256 };
 	BitMap bit_map{};
-	Vector<Vector<Vector2>> polygons;
+	Hector<Hector<Hector2>> polygons;
 
 	ERR_PRINT_OFF
 	polygons = bit_map.clip_opaque_to_polygons(Rect2i(0, 0, 128, 128));

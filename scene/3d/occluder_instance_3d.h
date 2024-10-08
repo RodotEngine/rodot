@@ -38,24 +38,24 @@ class Occluder3D : public Resource {
 	RES_BASE_EXTENSION("occ");
 
 	RID occluder;
-	PackedVector3Array vertices;
+	PackedHector3Array vertices;
 	PackedInt32Array indices;
 	AABB aabb;
 
 	mutable Ref<ArrayMesh> debug_mesh;
-	mutable Vector<Vector3> debug_lines;
+	mutable Hector<Hector3> debug_lines;
 
 protected:
 	void _update();
-	virtual void _update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) = 0;
+	virtual void _update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) = 0;
 
 	void _notification(int p_what);
 
 public:
-	PackedVector3Array get_vertices() const;
+	PackedHector3Array get_vertices() const;
 	PackedInt32Array get_indices() const;
 
-	Vector<Vector3> get_debug_lines() const;
+	Hector<Hector3> get_debug_lines() const;
 	Ref<ArrayMesh> get_debug_mesh() const;
 	AABB get_aabb() const;
 
@@ -67,16 +67,16 @@ public:
 class ArrayOccluder3D : public Occluder3D {
 	GDCLASS(ArrayOccluder3D, Occluder3D);
 
-	PackedVector3Array vertices;
+	PackedHector3Array vertices;
 	PackedInt32Array indices;
 
 protected:
-	virtual void _update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) override;
+	virtual void _update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) override;
 	static void _bind_methods();
 
 public:
-	void set_arrays(PackedVector3Array p_vertices, PackedInt32Array p_indices);
-	void set_vertices(PackedVector3Array p_vertices);
+	void set_arrays(PackedHector3Array p_vertices, PackedInt32Array p_indices);
+	void set_vertices(PackedHector3Array p_vertices);
 	void set_indices(PackedInt32Array p_indices);
 
 	ArrayOccluder3D();
@@ -87,10 +87,10 @@ class QuadOccluder3D : public Occluder3D {
 	GDCLASS(QuadOccluder3D, Occluder3D);
 
 private:
-	Size2 size = Vector2(1.0f, 1.0f);
+	Size2 size = Hector2(1.0f, 1.0f);
 
 protected:
-	virtual void _update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) override;
+	virtual void _update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) override;
 	static void _bind_methods();
 
 public:
@@ -105,15 +105,15 @@ class BoxOccluder3D : public Occluder3D {
 	GDCLASS(BoxOccluder3D, Occluder3D);
 
 private:
-	Vector3 size = Vector3(1.0f, 1.0f, 1.0f);
+	Hector3 size = Hector3(1.0f, 1.0f, 1.0f);
 
 protected:
-	virtual void _update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) override;
+	virtual void _update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) override;
 	static void _bind_methods();
 
 public:
-	Vector3 get_size() const;
-	void set_size(const Vector3 &p_size);
+	Hector3 get_size() const;
+	void set_size(const Hector3 &p_size);
 
 	BoxOccluder3D();
 	~BoxOccluder3D();
@@ -128,7 +128,7 @@ private:
 	float radius = 1.0f;
 
 protected:
-	virtual void _update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) override;
+	virtual void _update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) override;
 	static void _bind_methods();
 
 public:
@@ -143,17 +143,17 @@ class PolygonOccluder3D : public Occluder3D {
 	GDCLASS(PolygonOccluder3D, Occluder3D);
 
 private:
-	Vector<Vector2> polygon;
+	Hector<Hector2> polygon;
 
 	bool _has_editable_3d_polygon_no_depth() const;
 
 protected:
-	virtual void _update_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices) override;
+	virtual void _update_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices) override;
 	static void _bind_methods();
 
 public:
-	void set_polygon(const Vector<Vector2> &p_polygon);
-	Vector<Vector2> get_polygon() const;
+	void set_polygon(const Hector<Hector2> &p_polygon);
+	Hector<Hector2> get_polygon() const;
 
 	PolygonOccluder3D();
 	~PolygonOccluder3D();
@@ -170,8 +170,8 @@ private:
 	void _occluder_changed();
 
 	static bool _bake_material_check(Ref<Material> p_material);
-	static void _bake_surface(const Transform3D &p_transform, Array p_surface_arrays, Ref<Material> p_material, float p_simplification_dist, PackedVector3Array &r_vertices, PackedInt32Array &r_indices);
-	void _bake_node(Node *p_node, PackedVector3Array &r_vertices, PackedInt32Array &r_indices);
+	static void _bake_surface(const Transform3D &p_transform, Array p_surface_arrays, Ref<Material> p_material, float p_simplification_dist, PackedHector3Array &r_vertices, PackedInt32Array &r_indices);
+	void _bake_node(Node *p_node, PackedHector3Array &r_vertices, PackedInt32Array &r_indices);
 
 	bool _is_editable_3d_polygon() const;
 	Ref<Resource> _get_editable_3d_polygon_resource() const;
@@ -204,7 +204,7 @@ public:
 	bool get_bake_mask_value(int p_layer_number) const;
 
 	BakeError bake_scene(Node *p_from_node, String p_occluder_path = "");
-	static void bake_single_node(const Node3D *p_node, float p_simplification_distance, PackedVector3Array &r_vertices, PackedInt32Array &r_indices);
+	static void bake_single_node(const Node3D *p_node, float p_simplification_distance, PackedHector3Array &r_vertices, PackedInt32Array &r_indices);
 
 	OccluderInstance3D();
 	~OccluderInstance3D();

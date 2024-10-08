@@ -33,7 +33,7 @@
 
 #include "scene_replication_config.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/variant/typed_array.h"
 #include "scene/main/node.h"
 #include "scene/resources/packed_scene.h"
@@ -52,7 +52,7 @@ private:
 		Ref<PackedScene> cache;
 	};
 
-	LocalVector<SpawnableScene> spawnable_scenes;
+	LocalHector<SpawnableScene> spawnable_scenes;
 
 	HashSet<ResourceUID::ID> spawnable_ids;
 	NodePath spawn_path;
@@ -78,8 +78,8 @@ private:
 	void _node_exit(ObjectID p_id);
 	void _spawn_notify(ObjectID p_id);
 
-	Vector<String> _get_spawnable_scenes() const;
-	void _set_spawnable_scenes(const Vector<String> &p_scenes);
+	Hector<String> _get_spawnable_scenes() const;
+	void _set_spawnable_scenes(const Hector<String> &p_scenes);
 
 protected:
 	static void _bind_methods();

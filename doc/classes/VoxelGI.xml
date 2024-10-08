@@ -39,7 +39,7 @@
 		<member name="data" type="VoxelGIData" setter="set_probe_data" getter="get_probe_data">
 			The [VoxelGIData] resource that holds the data for this [VoxelGI].
 		</member>
-		<member name="size" type="Vector3" setter="set_size" getter="get_size" default="Vector3(20, 20, 20)">
+		<member name="size" type="Hector3" setter="set_size" getter="get_size" default="Hector3(20, 20, 20)">
 			The size of the area covered by the [VoxelGI]. If you make the size larger without increasing the subdivisions with [member subdiv], the size of each cell will increase and result in lower detailed lighting.
 			[b]Note:[/b] Size is clamped to 1.0 unit or more on each axis.
 		</member>

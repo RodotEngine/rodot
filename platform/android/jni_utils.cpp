@@ -87,7 +87,7 @@ jvalret _variant_to_jvalue(JNIEnv *env, Variant::Type p_type, const Variant *p_a
 			v.obj = jStr;
 		} break;
 		case Variant::PACKED_STRING_ARRAY: {
-			Vector<String> sarray = *p_arg;
+			Hector<String> sarray = *p_arg;
 			jobjectArray arr = env->NewObjectArray(sarray.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
 
 			for (int j = 0; j < sarray.size(); j++) {
@@ -143,7 +143,7 @@ jvalret _variant_to_jvalue(JNIEnv *env, Variant::Type p_type, const Variant *p_a
 		} break;
 
 		case Variant::PACKED_INT32_ARRAY: {
-			Vector<int> array = *p_arg;
+			Hector<int> array = *p_arg;
 			jintArray arr = env->NewIntArray(array.size());
 			const int *r = array.ptr();
 			env->SetIntArrayRegion(arr, 0, array.size(), r);
@@ -152,7 +152,7 @@ jvalret _variant_to_jvalue(JNIEnv *env, Variant::Type p_type, const Variant *p_a
 
 		} break;
 		case Variant::PACKED_INT64_ARRAY: {
-			Vector<int64_t> array = *p_arg;
+			Hector<int64_t> array = *p_arg;
 			jlongArray arr = env->NewLongArray(array.size());
 			const int64_t *r = array.ptr();
 			env->SetLongArrayRegion(arr, 0, array.size(), r);
@@ -161,7 +161,7 @@ jvalret _variant_to_jvalue(JNIEnv *env, Variant::Type p_type, const Variant *p_a
 
 		} break;
 		case Variant::PACKED_BYTE_ARRAY: {
-			Vector<uint8_t> array = *p_arg;
+			Hector<uint8_t> array = *p_arg;
 			jbyteArray arr = env->NewByteArray(array.size());
 			const uint8_t *r = array.ptr();
 			env->SetByteArrayRegion(arr, 0, array.size(), reinterpret_cast<const signed char *>(r));
@@ -170,7 +170,7 @@ jvalret _variant_to_jvalue(JNIEnv *env, Variant::Type p_type, const Variant *p_a
 
 		} break;
 		case Variant::PACKED_FLOAT32_ARRAY: {
-			Vector<float> array = *p_arg;
+			Hector<float> array = *p_arg;
 			jfloatArray arr = env->NewFloatArray(array.size());
 			const float *r = array.ptr();
 			env->SetFloatArrayRegion(arr, 0, array.size(), r);
@@ -179,7 +179,7 @@ jvalret _variant_to_jvalue(JNIEnv *env, Variant::Type p_type, const Variant *p_a
 
 		} break;
 		case Variant::PACKED_FLOAT64_ARRAY: {
-			Vector<double> array = *p_arg;
+			Hector<double> array = *p_arg;
 			jdoubleArray arr = env->NewDoubleArray(array.size());
 			const double *r = array.ptr();
 			env->SetDoubleArrayRegion(arr, 0, array.size(), r);
@@ -237,7 +237,7 @@ Variant _jobject_to_variant(JNIEnv *env, jobject obj) {
 	if (name == "[Ljava.lang.String;") {
 		jobjectArray arr = (jobjectArray)obj;
 		int stringCount = env->GetArrayLength(arr);
-		Vector<String> sarr;
+		Hector<String> sarr;
 
 		for (int i = 0; i < stringCount; i++) {
 			jstring string = (jstring)env->GetObjectArrayElement(arr, i);
@@ -264,7 +264,7 @@ Variant _jobject_to_variant(JNIEnv *env, jobject obj) {
 	if (name == "[I") {
 		jintArray arr = (jintArray)obj;
 		int fCount = env->GetArrayLength(arr);
-		Vector<int> sarr;
+		Hector<int> sarr;
 		sarr.resize(fCount);
 
 		int *w = sarr.ptrw();
@@ -275,7 +275,7 @@ Variant _jobject_to_variant(JNIEnv *env, jobject obj) {
 	if (name == "[J") {
 		jlongArray arr = (jlongArray)obj;
 		int fCount = env->GetArrayLength(arr);
-		Vector<int64_t> sarr;
+		Hector<int64_t> sarr;
 		sarr.resize(fCount);
 
 		int64_t *w = sarr.ptrw();
@@ -286,7 +286,7 @@ Variant _jobject_to_variant(JNIEnv *env, jobject obj) {
 	if (name == "[B") {
 		jbyteArray arr = (jbyteArray)obj;
 		int fCount = env->GetArrayLength(arr);
-		Vector<uint8_t> sarr;
+		Hector<uint8_t> sarr;
 		sarr.resize(fCount);
 
 		uint8_t *w = sarr.ptrw();

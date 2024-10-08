@@ -1,7 +1,7 @@
 
 #include "rasterization.h"
 
-#include <vector>
+#include <Vector>
 #include "arithmetics.hpp"
 
 namespace msdfgen {
@@ -96,19 +96,19 @@ void distanceSignCorrection(const BitmapRef<float, 4> &sdf, const Shape &shape, 
 
 // Legacy API
 
-void rasterize(const BitmapRef<float, 1> &output, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule) {
+void rasterize(const BitmapRef<float, 1> &output, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule) {
     rasterize(output, shape, Projection(scale, translate), fillRule);
 }
 
-void distanceSignCorrection(const BitmapRef<float, 1> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule) {
+void distanceSignCorrection(const BitmapRef<float, 1> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule) {
     distanceSignCorrection(sdf, shape, Projection(scale, translate), fillRule);
 }
 
-void distanceSignCorrection(const BitmapRef<float, 3> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule) {
+void distanceSignCorrection(const BitmapRef<float, 3> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule) {
     distanceSignCorrection(sdf, shape, Projection(scale, translate), fillRule);
 }
 
-void distanceSignCorrection(const BitmapRef<float, 4> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule) {
+void distanceSignCorrection(const BitmapRef<float, 4> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule) {
     distanceSignCorrection(sdf, shape, Projection(scale, translate), fillRule);
 }
 

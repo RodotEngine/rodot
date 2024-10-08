@@ -1057,10 +1057,10 @@ msgstr "Desativar Dobragem"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Desdobrar cenas estrangeiras automaticamente"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "Edição Horizontal do Vector2"
+msgid "Horizontal Hector2 Editing"
+msgstr "Edição Horizontal do Hector2"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Edição Horizontal de Tipos de Vetor"
 
 msgid "Open Resources in Current Inspector"
@@ -1144,7 +1144,7 @@ msgstr "Programas Externos"
 msgid "Raster Image Editor"
 msgstr "Editor externo de imagens Rasterizadas"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Editor de Imagens Vetoriais"
 
 msgid "Audio Editor"
@@ -5823,7 +5823,7 @@ msgstr "Quadros Verticais de Animação de Pratículas"
 msgid "Access Resolved Depth"
 msgstr "Acesse a Profundidade Resolvida (Access Resolved Depth)"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "Precisa de vetores de movimento"
 
 msgid "Needs Normal Roughness"

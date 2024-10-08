@@ -42,11 +42,11 @@ void CanvasItem::_draw_dashed_line_bind_compat_84523(const Point2 &p_from, const
 	draw_dashed_line(p_from, p_to, p_color, p_width, p_dash, p_aligned, false);
 }
 
-void CanvasItem::_draw_multiline_bind_compat_84523(const Vector<Point2> &p_points, const Color &p_color, real_t p_width) {
+void CanvasItem::_draw_multiline_bind_compat_84523(const Hector<Point2> &p_points, const Color &p_color, real_t p_width) {
 	draw_multiline(p_points, p_color, p_width, false);
 }
 
-void CanvasItem::_draw_multiline_colors_bind_compat_84523(const Vector<Point2> &p_points, const Vector<Color> &p_colors, real_t p_width) {
+void CanvasItem::_draw_multiline_colors_bind_compat_84523(const Hector<Point2> &p_points, const Hector<Color> &p_colors, real_t p_width) {
 	draw_multiline_colors(p_points, p_colors, p_width, false);
 }
 

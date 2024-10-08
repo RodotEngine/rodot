@@ -39,12 +39,12 @@
 namespace TestRect2 {
 TEST_CASE("[Rect2] Constructor methods") {
 	const Rect2 rect = Rect2(0, 100, 1280, 720);
-	const Rect2 rect_vector = Rect2(Vector2(0, 100), Vector2(1280, 720));
+	const Rect2 rect_Hector = Rect2(Hector2(0, 100), Hector2(1280, 720));
 	const Rect2 rect_copy_rect = Rect2(rect);
 	const Rect2 rect_copy_recti = Rect2(Rect2i(0, 100, 1280, 720));
 
 	CHECK_MESSAGE(
-			rect == rect_vector,
+			rect == rect_Hector,
 			"Rect2s created with the same dimensions but by different methods should be equal.");
 	CHECK_MESSAGE(
 			rect == rect_copy_rect,
@@ -55,7 +55,7 @@ TEST_CASE("[Rect2] Constructor methods") {
 }
 
 TEST_CASE("[Rect2] String conversion") {
-	// Note: This also depends on the Vector2 string representation.
+	// Note: This also depends on the Hector2 string representation.
 	CHECK_MESSAGE(
 			String(Rect2(0, 100, 1280, 720)) == "[P: (0, 100), S: (1280, 720)]",
 			"The string representation should match the expected value.");
@@ -64,37 +64,37 @@ TEST_CASE("[Rect2] String conversion") {
 TEST_CASE("[Rect2] Basic getters") {
 	const Rect2 rect = Rect2(0, 100, 1280, 720);
 	CHECK_MESSAGE(
-			rect.get_position().is_equal_approx(Vector2(0, 100)),
+			rect.get_position().is_equal_approx(Hector2(0, 100)),
 			"get_position() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_size().is_equal_approx(Vector2(1280, 720)),
+			rect.get_size().is_equal_approx(Hector2(1280, 720)),
 			"get_size() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_end().is_equal_approx(Vector2(1280, 820)),
+			rect.get_end().is_equal_approx(Hector2(1280, 820)),
 			"get_end() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_center().is_equal_approx(Vector2(640, 460)),
+			rect.get_center().is_equal_approx(Hector2(640, 460)),
 			"get_center() should return the expected value.");
 	CHECK_MESSAGE(
-			Rect2(0, 100, 1281, 721).get_center().is_equal_approx(Vector2(640.5, 460.5)),
+			Rect2(0, 100, 1281, 721).get_center().is_equal_approx(Hector2(640.5, 460.5)),
 			"get_center() should return the expected value.");
 }
 
 TEST_CASE("[Rect2] Basic setters") {
 	Rect2 rect = Rect2(0, 100, 1280, 720);
-	rect.set_end(Vector2(4000, 4000));
+	rect.set_end(Hector2(4000, 4000));
 	CHECK_MESSAGE(
 			rect.is_equal_approx(Rect2(0, 100, 4000, 3900)),
 			"set_end() should result in the expected Rect2.");
 
 	rect = Rect2(0, 100, 1280, 720);
-	rect.set_position(Vector2(4000, 4000));
+	rect.set_position(Hector2(4000, 4000));
 	CHECK_MESSAGE(
 			rect.is_equal_approx(Rect2(4000, 4000, 1280, 720)),
 			"set_position() should result in the expected Rect2.");
 
 	rect = Rect2(0, 100, 1280, 720);
-	rect.set_size(Vector2(4000, 4000));
+	rect.set_size(Hector2(4000, 4000));
 	CHECK_MESSAGE(
 			rect.is_equal_approx(Rect2(0, 100, 4000, 4000)),
 			"set_size() should result in the expected Rect2.");
@@ -173,33 +173,33 @@ TEST_CASE("[Rect2] Enclosing") {
 
 TEST_CASE("[Rect2] Expanding") {
 	CHECK_MESSAGE(
-			Rect2(0, 100, 1280, 720).expand(Vector2(500, 600)).is_equal_approx(Rect2(0, 100, 1280, 720)),
-			"expand() with contained Vector2 should return the expected result.");
+			Rect2(0, 100, 1280, 720).expand(Hector2(500, 600)).is_equal_approx(Rect2(0, 100, 1280, 720)),
+			"expand() with contained Hector2 should return the expected result.");
 	CHECK_MESSAGE(
-			Rect2(0, 100, 1280, 720).expand(Vector2(0, 0)).is_equal_approx(Rect2(0, 0, 1280, 820)),
-			"expand() with non-contained Vector2 should return the expected result.");
+			Rect2(0, 100, 1280, 720).expand(Hector2(0, 0)).is_equal_approx(Rect2(0, 0, 1280, 820)),
+			"expand() with non-contained Hector2 should return the expected result.");
 }
 
 TEST_CASE("[Rect2] Get support") {
-	const Rect2 rect = Rect2(Vector2(-1.5, 2), Vector2(4, 5));
+	const Rect2 rect = Rect2(Hector2(-1.5, 2), Hector2(4, 5));
 	CHECK_MESSAGE(
-			rect.get_support(Vector2(1, 0)) == Vector2(2.5, 2),
+			rect.get_support(Hector2(1, 0)) == Hector2(2.5, 2),
 			"get_support() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_support(Vector2(0.5, 1)) == Vector2(2.5, 7),
+			rect.get_support(Hector2(0.5, 1)) == Hector2(2.5, 7),
 			"get_support() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_support(Vector2(0.5, 1)) == Vector2(2.5, 7),
+			rect.get_support(Hector2(0.5, 1)) == Hector2(2.5, 7),
 			"get_support() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_support(Vector2(0, -1)) == Vector2(-1.5, 2),
+			rect.get_support(Hector2(0, -1)) == Hector2(-1.5, 2),
 			"get_support() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_support(Vector2(0, -0.1)) == Vector2(-1.5, 2),
+			rect.get_support(Hector2(0, -0.1)) == Hector2(-1.5, 2),
 			"get_support() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_support(Vector2()) == Vector2(-1.5, 2),
-			"get_support() should return the Rect2 position when given a zero vector.");
+			rect.get_support(Hector2()) == Hector2(-1.5, 2),
+			"get_support() should return the Rect2 position when given a zero Hector.");
 }
 
 TEST_CASE("[Rect2] Growing") {
@@ -231,45 +231,45 @@ TEST_CASE("[Rect2] Growing") {
 TEST_CASE("[Rect2] Has point") {
 	Rect2 rect = Rect2(0, 100, 1280, 720);
 	CHECK_MESSAGE(
-			rect.has_point(Vector2(500, 600)),
-			"has_point() with contained Vector2 should return the expected result.");
+			rect.has_point(Hector2(500, 600)),
+			"has_point() with contained Hector2 should return the expected result.");
 	CHECK_MESSAGE(
-			!rect.has_point(Vector2(0, 0)),
-			"has_point() with non-contained Vector2 should return the expected result.");
+			!rect.has_point(Hector2(0, 0)),
+			"has_point() with non-contained Hector2 should return the expected result.");
 
 	CHECK_MESSAGE(
 			rect.has_point(rect.position),
 			"has_point() with positive size should include `position`.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2(1, 1)),
+			rect.has_point(rect.position + Hector2(1, 1)),
 			"has_point() with positive size should include `position + (1, 1)`.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2(1, -1)),
+			!rect.has_point(rect.position + Hector2(1, -1)),
 			"has_point() with positive size should not include `position + (1, -1)`.");
 	CHECK_MESSAGE(
 			!rect.has_point(rect.position + rect.size),
 			"has_point() with positive size should not include `position + size`.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + rect.size + Vector2(1, 1)),
+			!rect.has_point(rect.position + rect.size + Hector2(1, 1)),
 			"has_point() with positive size should not include `position + size + (1, 1)`.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + rect.size + Vector2(-1, -1)),
+			rect.has_point(rect.position + rect.size + Hector2(-1, -1)),
 			"has_point() with positive size should include `position + size + (-1, -1)`.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + rect.size + Vector2(-1, 1)),
+			!rect.has_point(rect.position + rect.size + Hector2(-1, 1)),
 			"has_point() with positive size should not include `position + size + (-1, 1)`.");
 
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2(0, 10)),
+			rect.has_point(rect.position + Hector2(0, 10)),
 			"has_point() with point located on left edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2(rect.size.x, 10)),
+			!rect.has_point(rect.position + Hector2(rect.size.x, 10)),
 			"has_point() with point located on right edge should return false.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2(10, 0)),
+			rect.has_point(rect.position + Hector2(10, 0)),
 			"has_point() with point located on top edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2(10, rect.size.y)),
+			!rect.has_point(rect.position + Hector2(10, rect.size.y)),
 			"has_point() with point located on bottom edge should return false.");
 
 	/*
@@ -286,16 +286,16 @@ TEST_CASE("[Rect2] Has point") {
 
 	rect = Rect2(-4000, -200, 1280, 720);
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2(0, 10)),
+			rect.has_point(rect.position + Hector2(0, 10)),
 			"has_point() with negative position and point located on left edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2(rect.size.x, 10)),
+			!rect.has_point(rect.position + Hector2(rect.size.x, 10)),
 			"has_point() with negative position and point located on right edge should return false.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2(10, 0)),
+			rect.has_point(rect.position + Hector2(10, 0)),
 			"has_point() with negative position and point located on top edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2(10, rect.size.y)),
+			!rect.has_point(rect.position + Hector2(10, rect.size.y)),
 			"has_point() with negative position and point located on bottom edge should return false.");
 }
 
@@ -324,8 +324,8 @@ TEST_CASE("[Rect2] Merging") {
 }
 
 TEST_CASE("[Rect2] Finite number checks") {
-	const Vector2 x(0, 1);
-	const Vector2 infinite(NAN, NAN);
+	const Hector2 x(0, 1);
+	const Hector2 infinite(NAN, NAN);
 
 	CHECK_MESSAGE(
 			Rect2(x, x).is_finite(),

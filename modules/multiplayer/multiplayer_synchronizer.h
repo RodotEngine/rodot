@@ -59,7 +59,7 @@ private:
 	VisibilityUpdateMode visibility_update_mode = VISIBILITY_PROCESS_IDLE;
 	HashSet<Callable> visibility_filters;
 	HashSet<int> peer_visibility;
-	Vector<Watcher> watchers;
+	Hector<Watcher> watchers;
 	uint64_t last_watch_usec = 0;
 
 	ObjectID root_node_cache;
@@ -79,8 +79,8 @@ protected:
 	void _notification(int p_what);
 
 public:
-	static Error get_state(const List<NodePath> &p_properties, Object *p_obj, Vector<Variant> &r_variant, Vector<const Variant *> &r_variant_ptrs);
-	static Error set_state(const List<NodePath> &p_properties, Object *p_obj, const Vector<Variant> &p_state);
+	static Error get_state(const List<NodePath> &p_properties, Object *p_obj, Hector<Variant> &r_variant, Hector<const Variant *> &r_variant_ptrs);
+	static Error set_state(const List<NodePath> &p_properties, Object *p_obj, const Hector<Variant> &p_state);
 
 	void reset();
 	Node *get_root_node();

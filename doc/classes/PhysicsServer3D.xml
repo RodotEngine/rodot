@@ -243,28 +243,28 @@
 		<method name="body_add_constant_central_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
 			<description>
-				Adds a constant directional force without affecting rotation that keeps being applied over time until cleared with [code]body_set_constant_force(body, Vector3(0, 0, 0))[/code].
+				Adds a constant directional force without affecting rotation that keeps being applied over time until cleared with [code]body_set_constant_force(body, Hector3(0, 0, 0))[/code].
 				This is equivalent to using [method body_add_constant_force] at the body's center of mass.
 			</description>
 		</method>
 		<method name="body_add_constant_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
-			<param index="2" name="position" type="Vector3" default="Vector3(0, 0, 0)" />
+			<param index="1" name="force" type="Hector3" />
+			<param index="2" name="position" type="Hector3" default="Hector3(0, 0, 0)" />
 			<description>
-				Adds a constant positioned force to the body that keeps being applied over time until cleared with [code]body_set_constant_force(body, Vector3(0, 0, 0))[/code].
+				Adds a constant positioned force to the body that keeps being applied over time until cleared with [code]body_set_constant_force(body, Hector3(0, 0, 0))[/code].
 				[param position] is the offset from the body origin in global coordinates.
 			</description>
 		</method>
 		<method name="body_add_constant_torque">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="torque" type="Vector3" />
+			<param index="1" name="torque" type="Hector3" />
 			<description>
-				Adds a constant rotational force without affecting position that keeps being applied over time until cleared with [code]body_set_constant_torque(body, Vector3(0, 0, 0))[/code].
+				Adds a constant rotational force without affecting position that keeps being applied over time until cleared with [code]body_set_constant_torque(body, Hector3(0, 0, 0))[/code].
 			</description>
 		</method>
 		<method name="body_add_shape">
@@ -280,7 +280,7 @@
 		<method name="body_apply_central_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
 			<description>
 				Applies a directional force without affecting rotation. A force is time dependent and meant to be applied every physics update.
 				This is equivalent to using [method body_apply_force] at the body's center of mass.
@@ -289,7 +289,7 @@
 		<method name="body_apply_central_impulse">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector3" />
+			<param index="1" name="impulse" type="Hector3" />
 			<description>
 				Applies a directional impulse without affecting rotation.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -299,8 +299,8 @@
 		<method name="body_apply_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
-			<param index="2" name="position" type="Vector3" default="Vector3(0, 0, 0)" />
+			<param index="1" name="force" type="Hector3" />
+			<param index="2" name="position" type="Hector3" default="Hector3(0, 0, 0)" />
 			<description>
 				Applies a positioned force to the body. A force is time dependent and meant to be applied every physics update.
 				[param position] is the offset from the body origin in global coordinates.
@@ -309,8 +309,8 @@
 		<method name="body_apply_impulse">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector3" />
-			<param index="2" name="position" type="Vector3" default="Vector3(0, 0, 0)" />
+			<param index="1" name="impulse" type="Hector3" />
+			<param index="2" name="position" type="Hector3" default="Hector3(0, 0, 0)" />
 			<description>
 				Applies a positioned impulse to the body.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -320,7 +320,7 @@
 		<method name="body_apply_torque">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="torque" type="Vector3" />
+			<param index="1" name="torque" type="Hector3" />
 			<description>
 				Applies a rotational force without affecting position. A force is time dependent and meant to be applied every physics update.
 			</description>
@@ -328,7 +328,7 @@
 		<method name="body_apply_torque_impulse">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector3" />
+			<param index="1" name="impulse" type="Hector3" />
 			<description>
 				Applies a rotational impulse to the body without affecting the position.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -378,7 +378,7 @@
 			</description>
 		</method>
 		<method name="body_get_constant_force" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="body" type="RID" />
 			<description>
 				Returns the body's total constant positional forces applied during each physics update.
@@ -386,7 +386,7 @@
 			</description>
 		</method>
 		<method name="body_get_constant_torque" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="body" type="RID" />
 			<description>
 				Returns the body's total constant rotational forces applied during each physics update.
@@ -523,9 +523,9 @@
 		<method name="body_set_axis_velocity">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="axis_velocity" type="Vector3" />
+			<param index="1" name="axis_velocity" type="Hector3" />
 			<description>
-				Sets an axis velocity. The velocity in the given vector axis will be set as the given vector length. This is useful for jumping behavior.
+				Sets an axis velocity. The velocity in the given Hector axis will be set as the given Hector length. This is useful for jumping behavior.
 			</description>
 		</method>
 		<method name="body_set_collision_layer">
@@ -555,7 +555,7 @@
 		<method name="body_set_constant_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
 			<description>
 				Sets the body's total constant positional forces applied during each physics update.
 				See [method body_add_constant_force] and [method body_add_constant_central_force].
@@ -564,7 +564,7 @@
 		<method name="body_set_constant_torque">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="torque" type="Vector3" />
+			<param index="1" name="torque" type="Hector3" />
 			<description>
 				Sets the body's total constant rotational forces applied during each physics update.
 				See [method body_add_constant_torque].
@@ -695,7 +695,7 @@
 			<param index="1" name="parameters" type="PhysicsTestMotionParameters3D" />
 			<param index="2" name="result" type="PhysicsTestMotionResult3D" default="null" />
 			<description>
-				Returns [code]true[/code] if a collision would result from moving along a motion vector from a given point in space. [PhysicsTestMotionParameters3D] is passed to set motion parameters. [PhysicsTestMotionResult3D] can be passed to return additional information.
+				Returns [code]true[/code] if a collision would result from moving along a motion Hector from a given point in space. [PhysicsTestMotionParameters3D] is passed to set motion parameters. [PhysicsTestMotionResult3D] can be passed to return additional information.
 			</description>
 		</method>
 		<method name="box_shape_create">
@@ -755,7 +755,7 @@
 		<method name="generic_6dof_joint_get_flag" qualifiers="const">
 			<return type="bool" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="flag" type="int" enum="PhysicsServer3D.G6DOFJointAxisFlag" />
 			<description>
 				Returns the value of a generic 6DOF joint flag. See [enum G6DOFJointAxisFlag] for the list of available flags.
@@ -764,7 +764,7 @@
 		<method name="generic_6dof_joint_get_param" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="param" type="int" enum="PhysicsServer3D.G6DOFJointAxisParam" />
 			<description>
 				Returns the value of a generic 6DOF joint parameter. See [enum G6DOFJointAxisParam] for the list of available parameters.
@@ -773,7 +773,7 @@
 		<method name="generic_6dof_joint_set_flag">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="flag" type="int" enum="PhysicsServer3D.G6DOFJointAxisFlag" />
 			<param index="3" name="enable" type="bool" />
 			<description>
@@ -783,7 +783,7 @@
 		<method name="generic_6dof_joint_set_param">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="param" type="int" enum="PhysicsServer3D.G6DOFJointAxisParam" />
 			<param index="3" name="value" type="float" />
 			<description>
@@ -911,9 +911,9 @@
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
 			<param index="1" name="body_A" type="RID" />
-			<param index="2" name="local_A" type="Vector3" />
+			<param index="2" name="local_A" type="Hector3" />
 			<param index="3" name="body_B" type="RID" />
-			<param index="4" name="local_B" type="Vector3" />
+			<param index="4" name="local_B" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -936,14 +936,14 @@
 			</description>
 		</method>
 		<method name="pin_joint_get_local_a" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="joint" type="RID" />
 			<description>
 				Returns position of the joint in the local space of body a of the joint.
 			</description>
 		</method>
 		<method name="pin_joint_get_local_b" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="joint" type="RID" />
 			<description>
 				Returns position of the joint in the local space of body b of the joint.
@@ -960,7 +960,7 @@
 		<method name="pin_joint_set_local_a">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="local_A" type="Vector3" />
+			<param index="1" name="local_A" type="Hector3" />
 			<description>
 				Sets position of the joint in the local space of body a of the joint.
 			</description>
@@ -968,7 +968,7 @@
 		<method name="pin_joint_set_local_b">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="local_B" type="Vector3" />
+			<param index="1" name="local_B" type="Hector3" />
 			<description>
 				Sets position of the joint in the local space of body b of the joint.
 			</description>
@@ -1107,7 +1107,7 @@
 			</description>
 		</method>
 		<method name="soft_body_get_point_global_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="body" type="RID" />
 			<param index="1" name="point_index" type="int" />
 			<description>
@@ -1163,7 +1163,7 @@
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
 			<param index="1" name="point_index" type="int" />
-			<param index="2" name="global_position" type="Vector3" />
+			<param index="2" name="global_position" type="Hector3" />
 			<description>
 				Moves the given soft body point to a position in global coordinates.
 			</description>
@@ -1633,11 +1633,11 @@
 		<constant name="AREA_PARAM_GRAVITY" value="1" enum="AreaParameter">
 			Constant to set/get gravity strength in an area.
 		</constant>
-		<constant name="AREA_PARAM_GRAVITY_VECTOR" value="2" enum="AreaParameter">
-			Constant to set/get gravity vector/center in an area.
+		<constant name="AREA_PARAM_GRAVITY_Hector" value="2" enum="AreaParameter">
+			Constant to set/get gravity Hector/center in an area.
 		</constant>
 		<constant name="AREA_PARAM_GRAVITY_IS_POINT" value="3" enum="AreaParameter">
-			Constant to set/get whether the gravity vector of an area is a direction, or a center point.
+			Constant to set/get whether the gravity Hector of an area is a direction, or a center point.
 		</constant>
 		<constant name="AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE" value="4" enum="AreaParameter">
 			Constant to set/get the distance at which the gravity strength is equal to the gravity controlled by [constant AREA_PARAM_GRAVITY]. For example, on a planet 100 meters in radius with a surface gravity of 4.0 m/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity will have falloff according to the inverse square law, so in the example, at 200 meters from the center the gravity will be 1.0 m/s² (twice the distance, 1/4th the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4x the gravity), and so on.
@@ -1662,10 +1662,10 @@
 			Constant to set/get the magnitude of area-specific wind force. This wind force only applies to [SoftBody3D] nodes. Other physics bodies are currently not affected by wind.
 		</constant>
 		<constant name="AREA_PARAM_WIND_SOURCE" value="11" enum="AreaParameter">
-			Constant to set/get the 3D vector that specifies the origin from which an area-specific wind blows.
+			Constant to set/get the 3D Hector that specifies the origin from which an area-specific wind blows.
 		</constant>
 		<constant name="AREA_PARAM_WIND_DIRECTION" value="12" enum="AreaParameter">
-			Constant to set/get the 3D vector that specifies the direction in which an area-specific wind blows.
+			Constant to set/get the 3D Hector that specifies the direction in which an area-specific wind blows.
 		</constant>
 		<constant name="AREA_PARAM_WIND_ATTENUATION_FACTOR" value="13" enum="AreaParameter">
 			Constant to set/get the exponential rate at which wind force decreases with distance from its origin.

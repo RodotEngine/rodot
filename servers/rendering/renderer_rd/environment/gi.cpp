@@ -40,7 +40,7 @@
 
 using namespace RendererRD;
 
-const Vector3i GI::SDFGI::Cascade::DIRTY_ALL = Vector3i(0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF);
+const Hector3i GI::SDFGI::Cascade::DIRTY_ALL = Hector3i(0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF);
 
 GI *GI::singleton = nullptr;
 
@@ -52,7 +52,7 @@ RID GI::voxel_gi_allocate() {
 }
 
 void GI::voxel_gi_free(RID p_voxel_gi) {
-	voxel_gi_allocate_data(p_voxel_gi, Transform3D(), AABB(), Vector3i(), Vector<uint8_t>(), Vector<uint8_t>(), Vector<uint8_t>(), Vector<int>()); //deallocate
+	voxel_gi_allocate_data(p_voxel_gi, Transform3D(), AABB(), Hector3i(), Hector<uint8_t>(), Hector<uint8_t>(), Hector<uint8_t>(), Hector<int>()); //deallocate
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
 	voxel_gi->dependency.deleted_notify(p_voxel_gi);
 	voxel_gi_owner.free(p_voxel_gi);
@@ -62,7 +62,7 @@ void GI::voxel_gi_initialize(RID p_voxel_gi) {
 	voxel_gi_owner.initialize_rid(p_voxel_gi, VoxelGI());
 }
 
-void GI::voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) {
+void GI::voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3i &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts) {
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
 	ERR_FAIL_NULL(voxel_gi);
 
@@ -107,7 +107,7 @@ void GI::voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xfo
 			tf.depth = voxel_gi->octree_size.z;
 			tf.texture_type = RD::TEXTURE_TYPE_3D;
 			tf.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT | RD::TEXTURE_USAGE_CAN_COPY_FROM_BIT;
-			Vector<Vector<uint8_t>> s;
+			Hector<Hector<uint8_t>> s;
 			s.push_back(p_distance_field);
 			voxel_gi->sdf_texture = RD::get_singleton()->texture_create(tf, RD::TextureView(), s);
 			RD::get_singleton()->set_resource_name(voxel_gi->sdf_texture, "VoxelGI SDF Texture");
@@ -133,7 +133,7 @@ void GI::voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xfo
 				shared_tex = RD::get_singleton()->texture_create_shared(tv, voxel_gi->sdf_texture);
 			}
 			//update SDF texture
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -196,45 +196,45 @@ AABB GI::voxel_gi_get_bounds(RID p_voxel_gi) const {
 	return voxel_gi->bounds;
 }
 
-Vector3i GI::voxel_gi_get_octree_size(RID p_voxel_gi) const {
+Hector3i GI::voxel_gi_get_octree_size(RID p_voxel_gi) const {
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
-	ERR_FAIL_NULL_V(voxel_gi, Vector3i());
+	ERR_FAIL_NULL_V(voxel_gi, Hector3i());
 	return voxel_gi->octree_size;
 }
 
-Vector<uint8_t> GI::voxel_gi_get_octree_cells(RID p_voxel_gi) const {
+Hector<uint8_t> GI::voxel_gi_get_octree_cells(RID p_voxel_gi) const {
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
-	ERR_FAIL_NULL_V(voxel_gi, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(voxel_gi, Hector<uint8_t>());
 
 	if (voxel_gi->octree_buffer.is_valid()) {
 		return RD::get_singleton()->buffer_get_data(voxel_gi->octree_buffer);
 	}
-	return Vector<uint8_t>();
+	return Hector<uint8_t>();
 }
 
-Vector<uint8_t> GI::voxel_gi_get_data_cells(RID p_voxel_gi) const {
+Hector<uint8_t> GI::voxel_gi_get_data_cells(RID p_voxel_gi) const {
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
-	ERR_FAIL_NULL_V(voxel_gi, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(voxel_gi, Hector<uint8_t>());
 
 	if (voxel_gi->data_buffer.is_valid()) {
 		return RD::get_singleton()->buffer_get_data(voxel_gi->data_buffer);
 	}
-	return Vector<uint8_t>();
+	return Hector<uint8_t>();
 }
 
-Vector<uint8_t> GI::voxel_gi_get_distance_field(RID p_voxel_gi) const {
+Hector<uint8_t> GI::voxel_gi_get_distance_field(RID p_voxel_gi) const {
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
-	ERR_FAIL_NULL_V(voxel_gi, Vector<uint8_t>());
+	ERR_FAIL_NULL_V(voxel_gi, Hector<uint8_t>());
 
 	if (voxel_gi->data_buffer.is_valid()) {
 		return RD::get_singleton()->texture_get_data(voxel_gi->sdf_texture, 0);
 	}
-	return Vector<uint8_t>();
+	return Hector<uint8_t>();
 }
 
-Vector<int> GI::voxel_gi_get_level_counts(RID p_voxel_gi) const {
+Hector<int> GI::voxel_gi_get_level_counts(RID p_voxel_gi) const {
 	VoxelGI *voxel_gi = voxel_gi_owner.get_or_null(p_voxel_gi);
-	ERR_FAIL_NULL_V(voxel_gi, Vector<int>());
+	ERR_FAIL_NULL_V(voxel_gi, Hector<int>());
 
 	return voxel_gi->level_counts;
 }
@@ -409,7 +409,7 @@ static RID create_clear_texture(const RD::TextureFormat &p_format, const String 
 	return texture;
 }
 
-void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size, GI *p_gi) {
+void GI::SDFGI::create(RID p_env, const Hector3 &p_world_position, uint32_t p_requested_history_size, GI *p_gi) {
 	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 
@@ -559,11 +559,11 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 		}
 
 		cascade.cell_size = base_cell_size;
-		Vector3 world_position = p_world_position;
+		Hector3 world_position = p_world_position;
 		world_position.y *= y_mult;
 		int32_t probe_cells = cascade_size / SDFGI::PROBE_DIVISOR;
-		Vector3 probe_size = Vector3(1, 1, 1) * cascade.cell_size * probe_cells;
-		Vector3i probe_pos = Vector3i((world_position / probe_size + Vector3(0.5, 0.5, 0.5)).floor());
+		Hector3 probe_size = Hector3(1, 1, 1) * cascade.cell_size * probe_cells;
+		Hector3i probe_pos = Hector3i((world_position / probe_size + Hector3(0.5, 0.5, 0.5)).floor());
 		cascade.position = probe_pos * probe_cells;
 
 		cascade.dirty_regions = SDFGI::Cascade::DIRTY_ALL;
@@ -583,11 +583,11 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 		/* Buffers */
 
 		cascade.solid_cell_buffer = RD::get_singleton()->storage_buffer_create(sizeof(SDFGI::Cascade::SolidCell) * solid_cell_count);
-		cascade.solid_cell_dispatch_buffer_storage = RD::get_singleton()->storage_buffer_create(sizeof(uint32_t) * 4, Vector<uint8_t>());
-		cascade.solid_cell_dispatch_buffer_call = RD::get_singleton()->storage_buffer_create(sizeof(uint32_t) * 4, Vector<uint8_t>(), RD::STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT);
+		cascade.solid_cell_dispatch_buffer_storage = RD::get_singleton()->storage_buffer_create(sizeof(uint32_t) * 4, Hector<uint8_t>());
+		cascade.solid_cell_dispatch_buffer_call = RD::get_singleton()->storage_buffer_create(sizeof(uint32_t) * 4, Hector<uint8_t>(), RD::STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT);
 		cascade.lights_buffer = RD::get_singleton()->storage_buffer_create(sizeof(SDFGIShader::Light) * MAX(SDFGI::MAX_STATIC_LIGHTS, SDFGI::MAX_DYNAMIC_LIGHTS));
 		{
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -666,7 +666,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 		}
 
 		{
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -713,7 +713,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 			cascade.scroll_uniform_set = RD::get_singleton()->uniform_set_create(uniforms, gi->sdfgi_shader.preprocess.version_get_shader(gi->sdfgi_shader.preprocess_shader, SDFGIShader::PRE_PROCESS_SCROLL), 0);
 		}
 		{
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -737,7 +737,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 
 	//direct light
 	for (SDFGI::Cascade &cascade : cascades) {
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.binding = 1;
@@ -828,7 +828,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 
 	//preprocess initialize uniform set
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -848,7 +848,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 	}
 
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -869,7 +869,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 
 	//jump flood uniform set
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -894,7 +894,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 	}
 	//jump flood half uniform set
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -920,7 +920,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 
 	//upscale half size sdf
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -949,7 +949,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 
 	//occlusion uniform set
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
@@ -980,7 +980,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 	for (uint32_t i = 0; i < cascades.size(); i++) {
 		//integrate uniform
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 
 		{
 			RD::Uniform u;
@@ -1180,7 +1180,7 @@ GI::SDFGI::~SDFGI() {
 	}
 }
 
-void GI::SDFGI::update(RID p_env, const Vector3 &p_world_position) {
+void GI::SDFGI::update(RID p_env, const Hector3 &p_world_position) {
 	bounce_feedback = RendererSceneRenderRD::get_singleton()->environment_get_sdfgi_bounce_feedback(p_env);
 	energy = RendererSceneRenderRD::get_singleton()->environment_get_sdfgi_energy(p_env);
 	normal_bias = RendererSceneRenderRD::get_singleton()->environment_get_sdfgi_normal_bias(p_env);
@@ -1190,14 +1190,14 @@ void GI::SDFGI::update(RID p_env, const Vector3 &p_world_position) {
 	int32_t drag_margin = (cascade_size / SDFGI::PROBE_DIVISOR) / 2;
 
 	for (SDFGI::Cascade &cascade : cascades) {
-		cascade.dirty_regions = Vector3i();
+		cascade.dirty_regions = Hector3i();
 
-		Vector3 probe_half_size = Vector3(1, 1, 1) * cascade.cell_size * float(cascade_size / SDFGI::PROBE_DIVISOR) * 0.5;
-		probe_half_size = Vector3(0, 0, 0);
+		Hector3 probe_half_size = Hector3(1, 1, 1) * cascade.cell_size * float(cascade_size / SDFGI::PROBE_DIVISOR) * 0.5;
+		probe_half_size = Hector3(0, 0, 0);
 
-		Vector3 world_position = p_world_position;
+		Hector3 world_position = p_world_position;
 		world_position.y *= y_mult;
-		Vector3i pos_in_cascade = Vector3i((world_position + probe_half_size) / cascade.cell_size);
+		Hector3i pos_in_cascade = Hector3i((world_position + probe_half_size) / cascade.cell_size);
 
 		for (int j = 0; j < 3; j++) {
 			if (pos_in_cascade[j] < cascade.position[j]) {
@@ -1221,7 +1221,7 @@ void GI::SDFGI::update(RID p_env, const Vector3 &p_world_position) {
 			}
 		}
 
-		if (cascade.dirty_regions != Vector3i() && cascade.dirty_regions != SDFGI::Cascade::DIRTY_ALL) {
+		if (cascade.dirty_regions != Hector3i() && cascade.dirty_regions != SDFGI::Cascade::DIRTY_ALL) {
 			//see how much the total dirty volume represents from the total volume
 			uint32_t total_volume = cascade_size * cascade_size * cascade_size;
 			uint32_t safe_volume = 1;
@@ -1329,7 +1329,7 @@ void GI::SDFGI::update_probes(RID p_env, SkyRD::Sky *p_sky) {
 		} else if (RendererSceneRenderRD::get_singleton()->environment_get_background(p_env) == RS::ENV_BG_SKY) {
 			if (p_sky && p_sky->radiance.is_valid()) {
 				if (integrate_sky_uniform_set.is_null() || !RD::get_singleton()->uniform_set_is_valid(integrate_sky_uniform_set)) {
-					Vector<RD::Uniform> uniforms;
+					Hector<RD::Uniform> uniforms;
 
 					{
 						RD::Uniform u;
@@ -1422,18 +1422,18 @@ void GI::SDFGI::store_probes() {
 	RD::get_singleton()->draw_command_end_label();
 }
 
-int GI::SDFGI::get_pending_region_data(int p_region, Vector3i &r_local_offset, Vector3i &r_local_size, AABB &r_bounds) const {
+int GI::SDFGI::get_pending_region_data(int p_region, Hector3i &r_local_offset, Hector3i &r_local_size, AABB &r_bounds) const {
 	int dirty_count = 0;
 	for (uint32_t i = 0; i < cascades.size(); i++) {
 		const SDFGI::Cascade &c = cascades[i];
 
 		if (c.dirty_regions == SDFGI::Cascade::DIRTY_ALL) {
 			if (dirty_count == p_region) {
-				r_local_offset = Vector3i();
-				r_local_size = Vector3i(1, 1, 1) * cascade_size;
+				r_local_offset = Hector3i();
+				r_local_size = Hector3i(1, 1, 1) * cascade_size;
 
-				r_bounds.position = Vector3((Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + c.position)) * c.cell_size * Vector3(1, 1.0 / y_mult, 1);
-				r_bounds.size = Vector3(r_local_size) * c.cell_size * Vector3(1, 1.0 / y_mult, 1);
+				r_bounds.position = Hector3((Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + c.position)) * c.cell_size * Hector3(1, 1.0 / y_mult, 1);
+				r_bounds.size = Hector3(r_local_size) * c.cell_size * Hector3(1, 1.0 / y_mult, 1);
 				return i;
 			}
 			dirty_count++;
@@ -1441,8 +1441,8 @@ int GI::SDFGI::get_pending_region_data(int p_region, Vector3i &r_local_offset, V
 			for (int j = 0; j < 3; j++) {
 				if (c.dirty_regions[j] != 0) {
 					if (dirty_count == p_region) {
-						Vector3i from = Vector3i(0, 0, 0);
-						Vector3i to = Vector3i(1, 1, 1) * cascade_size;
+						Hector3i from = Hector3i(0, 0, 0);
+						Hector3i to = Hector3i(1, 1, 1) * cascade_size;
 
 						if (c.dirty_regions[j] > 0) {
 							//fill from the beginning
@@ -1464,8 +1464,8 @@ int GI::SDFGI::get_pending_region_data(int p_region, Vector3i &r_local_offset, V
 						r_local_offset = from;
 						r_local_size = to - from;
 
-						r_bounds.position = Vector3(from + Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + c.position) * c.cell_size * Vector3(1, 1.0 / y_mult, 1);
-						r_bounds.size = Vector3(r_local_size) * c.cell_size * Vector3(1, 1.0 / y_mult, 1);
+						r_bounds.position = Hector3(from + Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + c.position) * c.cell_size * Hector3(1, 1.0 / y_mult, 1);
+						r_bounds.size = Hector3(r_local_size) * c.cell_size * Hector3(1, 1.0 / y_mult, 1);
 
 						return i;
 					}
@@ -1484,7 +1484,7 @@ void GI::SDFGI::update_cascades() {
 	int32_t probe_divisor = cascade_size / SDFGI::PROBE_DIVISOR;
 
 	for (uint32_t i = 0; i < cascades.size(); i++) {
-		Vector3 pos = Vector3((Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascades[i].position)) * cascades[i].cell_size;
+		Hector3 pos = Hector3((Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascades[i].position)) * cascades[i].cell_size;
 
 		cascade_data[i].offset[0] = pos.x;
 		cascade_data[i].offset[1] = pos.y;
@@ -1499,14 +1499,14 @@ void GI::SDFGI::update_cascades() {
 	RD::get_singleton()->buffer_update(cascades_ubo, 0, sizeof(SDFGI::Cascade::UBO) * SDFGI::MAX_CASCADES, cascade_data);
 }
 
-void GI::SDFGI::debug_draw(uint32_t p_view_count, const Projection *p_projections, const Transform3D &p_transform, int p_width, int p_height, RID p_render_target, RID p_texture, const Vector<RID> &p_texture_views) {
+void GI::SDFGI::debug_draw(uint32_t p_view_count, const Projection *p_projections, const Transform3D &p_transform, int p_width, int p_height, RID p_render_target, RID p_texture, const Hector<RID> &p_texture_views) {
 	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 	RendererRD::CopyEffects *copy_effects = RendererRD::CopyEffects::get_singleton();
 
 	for (uint32_t v = 0; v < p_view_count; v++) {
 		if (!debug_uniform_set[v].is_valid() || !RD::get_singleton()->uniform_set_is_valid(debug_uniform_set[v])) {
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.binding = 1;
@@ -1679,7 +1679,7 @@ void GI::SDFGI::debug_probes(RID p_framebuffer, const uint32_t p_view_count, con
 	push_constant.probe_axis_size = probe_axis_count;
 
 	if (!debug_probes_uniform_set.is_valid() || !RD::get_singleton()->uniform_set_is_valid(debug_probes_uniform_set)) {
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.binding = 1;
@@ -1729,42 +1729,42 @@ void GI::SDFGI::debug_probes(RID p_framebuffer, const uint32_t p_view_count, con
 	RD::get_singleton()->draw_list_set_push_constant(draw_list, &push_constant, sizeof(SDFGIShader::DebugProbesPushConstant));
 	RD::get_singleton()->draw_list_draw(draw_list, false, total_probes, total_points);
 
-	if (gi->sdfgi_debug_probe_dir != Vector3()) {
+	if (gi->sdfgi_debug_probe_dir != Hector3()) {
 		uint32_t cascade = 0;
-		Vector3 offset = Vector3((Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascades[cascade].position)) * cascades[cascade].cell_size * Vector3(1.0, 1.0 / y_mult, 1.0);
-		Vector3 probe_size = cascades[cascade].cell_size * (cascade_size / SDFGI::PROBE_DIVISOR) * Vector3(1.0, 1.0 / y_mult, 1.0);
-		Vector3 ray_from = gi->sdfgi_debug_probe_pos;
-		Vector3 ray_to = gi->sdfgi_debug_probe_pos + gi->sdfgi_debug_probe_dir * cascades[cascade].cell_size * Math::sqrt(3.0) * cascade_size;
+		Hector3 offset = Hector3((Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascades[cascade].position)) * cascades[cascade].cell_size * Hector3(1.0, 1.0 / y_mult, 1.0);
+		Hector3 probe_size = cascades[cascade].cell_size * (cascade_size / SDFGI::PROBE_DIVISOR) * Hector3(1.0, 1.0 / y_mult, 1.0);
+		Hector3 ray_from = gi->sdfgi_debug_probe_pos;
+		Hector3 ray_to = gi->sdfgi_debug_probe_pos + gi->sdfgi_debug_probe_dir * cascades[cascade].cell_size * Math::sqrt(3.0) * cascade_size;
 		float sphere_radius = 0.2;
 		float closest_dist = 1e20;
 		gi->sdfgi_debug_probe_enabled = false;
 
-		Vector3i probe_from = cascades[cascade].position / (cascade_size / SDFGI::PROBE_DIVISOR);
+		Hector3i probe_from = cascades[cascade].position / (cascade_size / SDFGI::PROBE_DIVISOR);
 		for (int i = 0; i < (SDFGI::PROBE_DIVISOR + 1); i++) {
 			for (int j = 0; j < (SDFGI::PROBE_DIVISOR + 1); j++) {
 				for (int k = 0; k < (SDFGI::PROBE_DIVISOR + 1); k++) {
-					Vector3 pos = offset + probe_size * Vector3(i, j, k);
-					Vector3 res;
+					Hector3 pos = offset + probe_size * Hector3(i, j, k);
+					Hector3 res;
 					if (Geometry3D::segment_intersects_sphere(ray_from, ray_to, pos, sphere_radius, &res)) {
 						float d = ray_from.distance_to(res);
 						if (d < closest_dist) {
 							closest_dist = d;
 							gi->sdfgi_debug_probe_enabled = true;
-							gi->sdfgi_debug_probe_index = probe_from + Vector3i(i, j, k);
+							gi->sdfgi_debug_probe_index = probe_from + Hector3i(i, j, k);
 						}
 					}
 				}
 			}
 		}
 
-		gi->sdfgi_debug_probe_dir = Vector3();
+		gi->sdfgi_debug_probe_dir = Hector3();
 	}
 
 	if (gi->sdfgi_debug_probe_enabled) {
 		uint32_t cascade = 0;
 		uint32_t probe_cells = (cascade_size / SDFGI::PROBE_DIVISOR);
-		Vector3i probe_from = cascades[cascade].position / probe_cells;
-		Vector3i ofs = gi->sdfgi_debug_probe_index - probe_from;
+		Hector3i probe_from = cascades[cascade].position / probe_cells;
+		Hector3i ofs = gi->sdfgi_debug_probe_index - probe_from;
 		if (ofs.x < 0 || ofs.y < 0 || ofs.z < 0) {
 			return;
 		}
@@ -1846,8 +1846,8 @@ void GI::SDFGI::pre_process_gi(const Transform3D &p_transform, RenderDataRD *p_r
 
 	for (uint32_t i = 0; i < sdfgi_data.max_cascades; i++) {
 		SDFGIData::ProbeCascadeData &c = sdfgi_data.cascades[i];
-		Vector3 pos = Vector3((Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascades[i].position)) * cascades[i].cell_size;
-		Vector3 cam_origin = p_transform.origin;
+		Hector3 pos = Hector3((Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascades[i].position)) * cascades[i].cell_size;
+		Hector3 cam_origin = p_transform.origin;
 		cam_origin.y *= y_mult;
 		pos -= cam_origin; //make pos local to camera, to reduce numerical error
 		c.position[0] = pos.x;
@@ -1855,7 +1855,7 @@ void GI::SDFGI::pre_process_gi(const Transform3D &p_transform, RenderDataRD *p_r
 		c.position[2] = pos.z;
 		c.to_probe = 1.0 / (float(cascade_size) * cascades[i].cell_size / float(probe_axis_count - 1));
 
-		Vector3i probe_ofs = cascades[i].position / probe_divisor;
+		Hector3i probe_ofs = cascades[i].position / probe_divisor;
 		c.probe_world_offset[0] = probe_ofs.x;
 		c.probe_world_offset[1] = probe_ofs.y;
 		c.probe_world_offset[2] = probe_ofs.z;
@@ -1892,7 +1892,7 @@ void GI::SDFGI::pre_process_gi(const Transform3D &p_transform, RenderDataRD *p_r
 				continue;
 			}
 
-			Vector3 dir = -light_transform.basis.get_column(Vector3::AXIS_Z);
+			Hector3 dir = -light_transform.basis.get_column(Hector3::AXIS_Z);
 			dir.y *= y_mult;
 			dir.normalize();
 			lights[idx].direction[0] = dir.x;
@@ -1919,8 +1919,8 @@ void GI::SDFGI::pre_process_gi(const Transform3D &p_transform, RenderDataRD *p_r
 		}
 
 		AABB cascade_aabb;
-		cascade_aabb.position = Vector3((Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascade.position)) * cascade.cell_size;
-		cascade_aabb.size = Vector3(1, 1, 1) * cascade_size * cascade.cell_size;
+		cascade_aabb.position = Hector3((Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cascade.position)) * cascade.cell_size;
+		cascade_aabb.size = Hector3(1, 1, 1) * cascade_size * cascade.cell_size;
 
 		for (uint32_t j = 0; j < p_render_data->sdfgi_update_data->positional_light_count; j++) {
 			if (idx == SDFGI::MAX_DYNAMIC_LIGHTS) {
@@ -1943,14 +1943,14 @@ void GI::SDFGI::pre_process_gi(const Transform3D &p_transform, RenderDataRD *p_r
 				continue;
 			}
 
-			Vector3 dir = -light_transform.basis.get_column(Vector3::AXIS_Z);
+			Hector3 dir = -light_transform.basis.get_column(Hector3::AXIS_Z);
 			//faster to not do this here
 			//dir.y *= y_mult;
 			//dir.normalize();
 			lights[idx].direction[0] = dir.x;
 			lights[idx].direction[1] = dir.y;
 			lights[idx].direction[2] = dir.z;
-			Vector3 pos = light_transform.origin;
+			Hector3 pos = light_transform.origin;
 			pos.y *= y_mult;
 			lights[idx].position[0] = pos.x;
 			lights[idx].position[1] = pos.y;
@@ -2001,8 +2001,8 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 	//print_line("rendering region " + itos(p_region));
 	ERR_FAIL_COND(p_render_buffers.is_null()); // we wouldn't be here if this failed but...
 	AABB bounds;
-	Vector3i from;
-	Vector3i size;
+	Hector3i from;
+	Hector3i size;
 
 	int cascade_prev = get_pending_region_data(p_region - 1, from, size, bounds);
 	int cascade_next = get_pending_region_data(p_region + 1, from, size, bounds);
@@ -2035,7 +2035,7 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 		//scroll
 		if (cascades[cascade].dirty_regions != SDFGI::Cascade::DIRTY_ALL) {
 			//for scroll
-			Vector3i dirty = cascades[cascade].dirty_regions;
+			Hector3i dirty = cascades[cascade].dirty_regions;
 			push_constant.scroll[0] = dirty.x;
 			push_constant.scroll[1] = dirty.y;
 			push_constant.scroll[2] = dirty.z;
@@ -2068,8 +2068,8 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, gi->sdfgi_shader.preprocess_pipeline[SDFGIShader::PRE_PROCESS_SCROLL_OCCLUSION]);
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, cascades[cascade].scroll_occlusion_uniform_set, 0);
 
-			Vector3i dirty = cascades[cascade].dirty_regions;
-			Vector3i groups;
+			Hector3i dirty = cascades[cascade].dirty_regions;
+			Hector3i groups;
 			groups.x = cascade_size - ABS(dirty.x);
 			groups.y = cascade_size - ABS(dirty.y);
 			groups.z = cascade_size - ABS(dirty.z);
@@ -2282,13 +2282,13 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 		// occlusion
 		{
 			uint32_t probe_size = cascade_size / SDFGI::PROBE_DIVISOR;
-			Vector3i probe_global_pos = cascades[cascade].position / probe_size;
+			Hector3i probe_global_pos = cascades[cascade].position / probe_size;
 
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, gi->sdfgi_shader.preprocess_pipeline[SDFGIShader::PRE_PROCESS_OCCLUSION]);
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, occlusion_uniform_set, 0);
 			for (int i = 0; i < 8; i++) {
 				//dispatch all at once for performance
-				Vector3i offset(i & 1, (i >> 1) & 1, (i >> 2) & 1);
+				Hector3i offset(i & 1, (i >> 1) & 1, (i >> 2) & 1);
 
 				if ((probe_global_pos.x & 1) != 0) {
 					offset.x = (offset.x + 1) & 1;
@@ -2305,7 +2305,7 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 				push_constant.occlusion_index = i;
 				RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(SDFGIShader::PreprocessPushConstant));
 
-				Vector3i groups = Vector3i(probe_size + 1, probe_size + 1, probe_size + 1) - offset; //if offset, it's one less probe per axis to compute
+				Hector3i groups = Hector3i(probe_size + 1, probe_size + 1, probe_size + 1) - offset; //if offset, it's one less probe per axis to compute
 				RD::get_singleton()->compute_list_dispatch(compute_list, groups.x, groups.y, groups.z);
 			}
 			RD::get_singleton()->compute_list_add_barrier(compute_list);
@@ -2327,11 +2327,11 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 		RD::get_singleton()->texture_clear(cascades[cascade].light_aniso_1_tex, Color(0, 0, 0, 0), 0, 1, 0, 1);
 
 #if 0
-		Vector<uint8_t> data = RD::get_singleton()->texture_get_data(cascades[cascade].sdf, 0);
+		Hector<uint8_t> data = RD::get_singleton()->texture_get_data(cascades[cascade].sdf, 0);
 		Ref<Image> img;
 		img.instantiate();
 		for (uint32_t i = 0; i < cascade_size; i++) {
-			Vector<uint8_t> subarr = data.slice(128 * 128 * i, 128 * 128 * (i + 1));
+			Hector<uint8_t> subarr = data.slice(128 * 128 * i, 128 * 128 * (i + 1));
 			img->set_data(cascade_size, cascade_size, false, Image::FORMAT_L8, subarr);
 			img->save_png("res://cascade_sdf_" + itos(cascade) + "_" + itos(i) + ".png");
 		}
@@ -2340,11 +2340,11 @@ void GI::SDFGI::render_region(Ref<RenderSceneBuffersRD> p_render_buffers, int p_
 #endif
 
 #if 0
-		Vector<uint8_t> data = RD::get_singleton()->texture_get_data(render_albedo, 0);
+		Hector<uint8_t> data = RD::get_singleton()->texture_get_data(render_albedo, 0);
 		Ref<Image> img;
 		img.instantiate();
 		for (uint32_t i = 0; i < cascade_size; i++) {
-			Vector<uint8_t> subarr = data.slice(128 * 128 * i * 2, 128 * 128 * (i + 1) * 2);
+			Hector<uint8_t> subarr = data.slice(128 * 128 * i * 2, 128 * 128 * (i + 1) * 2);
 			img->createcascade_size, cascade_size, false, Image::FORMAT_RGB565, subarr);
 			img->convert(Image::FORMAT_RGBA8);
 			img->save_png("res://cascade_" + itos(cascade) + "_" + itos(i) + ".png");
@@ -2378,8 +2378,8 @@ void GI::SDFGI::render_static_lights(RenderDataRD *p_render_data, Ref<RenderScen
 		{ //fill light buffer
 
 			AABB cascade_aabb;
-			cascade_aabb.position = Vector3((Vector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cc.position)) * cc.cell_size;
-			cascade_aabb.size = Vector3(1, 1, 1) * cascade_size * cc.cell_size;
+			cascade_aabb.position = Hector3((Hector3i(1, 1, 1) * -int32_t(cascade_size >> 1) + cc.position)) * cc.cell_size;
+			cascade_aabb.size = Hector3(1, 1, 1) * cascade_size * cc.cell_size;
 
 			int idx = 0;
 
@@ -2406,7 +2406,7 @@ void GI::SDFGI::render_static_lights(RenderDataRD *p_render_data, Ref<RenderScen
 
 				lights[idx].type = RSG::light_storage->light_get_type(light);
 
-				Vector3 dir = -light_transform.basis.get_column(Vector3::AXIS_Z);
+				Hector3 dir = -light_transform.basis.get_column(Hector3::AXIS_Z);
 				if (lights[idx].type == RS::LIGHT_DIRECTIONAL) {
 					dir.y *= y_mult; //only makes sense for directional
 					dir.normalize();
@@ -2414,7 +2414,7 @@ void GI::SDFGI::render_static_lights(RenderDataRD *p_render_data, Ref<RenderScen
 				lights[idx].direction[0] = dir.x;
 				lights[idx].direction[1] = dir.y;
 				lights[idx].direction[2] = dir.z;
-				Vector3 pos = light_transform.origin;
+				Hector3 pos = light_transform.origin;
 				pos.y *= y_mult;
 				lights[idx].position[0] = pos.x;
 				lights[idx].position[1] = pos.y;
@@ -2512,7 +2512,7 @@ void GI::SDFGI::render_static_lights(RenderDataRD *p_render_data, Ref<RenderScen
 ////////////////////////////////////////////////////////////////////////////////
 // VoxelGIInstance
 
-void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
+void GI::VoxelGIInstance::update(bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
 	RendererRD::LightStorage *light_storage = RendererRD::LightStorage::get_singleton();
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 
@@ -2524,11 +2524,11 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 		//need to re-create everything
 		free_resources();
 
-		Vector3i octree_size = gi->voxel_gi_get_octree_size(probe);
+		Hector3i octree_size = gi->voxel_gi_get_octree_size(probe);
 
-		if (octree_size != Vector3i()) {
+		if (octree_size != Hector3i()) {
 			//can create a 3D texture
-			Vector<int> levels = gi->voxel_gi_get_level_counts(probe);
+			Hector<int> levels = gi->voxel_gi_get_level_counts(probe);
 
 			RD::TextureFormat tf;
 			tf.format = RD::DATA_FORMAT_R8G8B8A8_UNORM;
@@ -2564,7 +2564,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 				}
 				mipmap.cell_count = levels[mipmap.level];
 
-				Vector<RD::Uniform> uniforms;
+				Hector<RD::Uniform> uniforms;
 				{
 					RD::Uniform u;
 					u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -2603,7 +2603,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 				}
 
 				{
-					Vector<RD::Uniform> copy_uniforms = uniforms;
+					Hector<RD::Uniform> copy_uniforms = uniforms;
 					if (i == 0) {
 						{
 							RD::Uniform u;
@@ -2699,7 +2699,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 						dmap.orm = RD::get_singleton()->texture_create(dtf, RD::TextureView());
 						RD::get_singleton()->set_resource_name(dmap.orm, "VoxelGI Instance DMap ORM");
 
-						Vector<RID> fb;
+						Hector<RID> fb;
 						fb.push_back(dmap.albedo);
 						fb.push_back(dmap.normal);
 						fb.push_back(dmap.orm);
@@ -2710,7 +2710,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 						dmap.fb = RD::get_singleton()->framebuffer_create(fb);
 
 						{
-							Vector<RD::Uniform> uniforms;
+							Hector<RD::Uniform> uniforms;
 							{
 								RD::Uniform u;
 								u.uniform_type = RD::UNIFORM_TYPE_UNIFORM_BUFFER;
@@ -2782,7 +2782,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 						bool plot = dmap.mipmap >= 0;
 						bool write = dmap.mipmap < (mipmaps.size() - 1);
 
-						Vector<RD::Uniform> uniforms;
+						Hector<RD::Uniform> uniforms;
 
 						{
 							RD::Uniform u;
@@ -2905,7 +2905,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 					}
 				}
 
-				l.radius = to_cell.basis.xform(Vector3(RSG::light_storage->light_get_param(light, RS::LIGHT_PARAM_RANGE), 0, 0)).length();
+				l.radius = to_cell.basis.xform(Hector3(RSG::light_storage->light_get_param(light, RS::LIGHT_PARAM_RANGE), 0, 0)).length();
 				Color color = RSG::light_storage->light_get_color(light).srgb_to_linear();
 				l.color[0] = color.r;
 				l.color[1] = color.g;
@@ -2916,8 +2916,8 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 
 				Transform3D xform = light_storage->light_instance_get_base_transform(light_instance);
 
-				Vector3 pos = to_probe_xform.xform(xform.origin);
-				Vector3 dir = to_probe_xform.basis.xform(-xform.basis.get_column(2)).normalized();
+				Hector3 pos = to_probe_xform.xform(xform.origin);
+				Hector3 dir = to_probe_xform.basis.xform(-xform.basis.get_column(2)).normalized();
 
 				l.position[0] = pos.x;
 				l.position[1] = pos.y;
@@ -2939,7 +2939,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 		if (mipmaps.size()) {
 			//can update mipmaps
 
-			Vector3i probe_size = gi->voxel_gi_get_octree_size(probe);
+			Hector3i probe_size = gi->voxel_gi_get_octree_size(probe);
 
 			VoxelGIPushConstant push_constant;
 
@@ -3028,17 +3028,17 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 	has_dynamic_object_data = false; //clear until dynamic object data is used again
 
 	if (p_dynamic_objects.size() && dynamic_maps.size()) {
-		Vector3i octree_size = gi->voxel_gi_get_octree_size(probe);
+		Hector3i octree_size = gi->voxel_gi_get_octree_size(probe);
 		int multiplier = dynamic_maps[0].size / MAX(MAX(octree_size.x, octree_size.y), octree_size.z);
 
 		Transform3D oversample_scale;
-		oversample_scale.basis.scale(Vector3(multiplier, multiplier, multiplier));
+		oversample_scale.basis.scale(Hector3(multiplier, multiplier, multiplier));
 
 		Transform3D to_cell = oversample_scale * gi->voxel_gi_get_to_cell_xform(probe);
 		Transform3D to_world_xform = transform * to_cell.affine_inverse();
 		Transform3D to_probe_xform = to_world_xform.affine_inverse();
 
-		AABB probe_aabb(Vector3(), octree_size);
+		AABB probe_aabb(Hector3(), octree_size);
 
 		//this could probably be better parallelized in compute..
 		for (int i = 0; i < (int)p_dynamic_objects.size(); i++) {
@@ -3049,8 +3049,8 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 
 			//this needs to wrap to grid resolution to avoid jitter
 			//also extend margin a bit just in case
-			Vector3i begin = aabb.position - Vector3i(1, 1, 1);
-			Vector3i end = aabb.position + aabb.size + Vector3i(1, 1, 1);
+			Hector3i begin = aabb.position - Hector3i(1, 1, 1);
+			Hector3i end = aabb.position + aabb.size + Hector3i(1, 1, 1);
 
 			for (int j = 0; j < 3; j++) {
 				if ((end[j] - begin[j]) & 1) {
@@ -3070,41 +3070,41 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 				//if (j != 0 && j != 3) {
 				//	continue;
 				//}
-				static const Vector3 render_z[6] = {
-					Vector3(1, 0, 0),
-					Vector3(0, 1, 0),
-					Vector3(0, 0, 1),
-					Vector3(-1, 0, 0),
-					Vector3(0, -1, 0),
-					Vector3(0, 0, -1),
+				static const Hector3 render_z[6] = {
+					Hector3(1, 0, 0),
+					Hector3(0, 1, 0),
+					Hector3(0, 0, 1),
+					Hector3(-1, 0, 0),
+					Hector3(0, -1, 0),
+					Hector3(0, 0, -1),
 				};
-				static const Vector3 render_up[6] = {
-					Vector3(0, 1, 0),
-					Vector3(0, 0, 1),
-					Vector3(0, 1, 0),
-					Vector3(0, 1, 0),
-					Vector3(0, 0, 1),
-					Vector3(0, 1, 0),
+				static const Hector3 render_up[6] = {
+					Hector3(0, 1, 0),
+					Hector3(0, 0, 1),
+					Hector3(0, 1, 0),
+					Hector3(0, 1, 0),
+					Hector3(0, 0, 1),
+					Hector3(0, 1, 0),
 				};
 
-				Vector3 render_dir = render_z[j];
-				Vector3 up_dir = render_up[j];
+				Hector3 render_dir = render_z[j];
+				Hector3 up_dir = render_up[j];
 
-				Vector3 center = aabb.get_center();
+				Hector3 center = aabb.get_center();
 				Transform3D xform;
 				xform.set_look_at(center - aabb.size * 0.5 * render_dir, center, up_dir);
 
-				Vector3 x_dir = xform.basis.get_column(0).abs();
-				int x_axis = int(Vector3(0, 1, 2).dot(x_dir));
-				Vector3 y_dir = xform.basis.get_column(1).abs();
-				int y_axis = int(Vector3(0, 1, 2).dot(y_dir));
-				Vector3 z_dir = -xform.basis.get_column(2);
-				int z_axis = int(Vector3(0, 1, 2).dot(z_dir.abs()));
+				Hector3 x_dir = xform.basis.get_column(0).abs();
+				int x_axis = int(Hector3(0, 1, 2).dot(x_dir));
+				Hector3 y_dir = xform.basis.get_column(1).abs();
+				int y_axis = int(Hector3(0, 1, 2).dot(y_dir));
+				Hector3 z_dir = -xform.basis.get_column(2);
+				int z_axis = int(Hector3(0, 1, 2).dot(z_dir.abs()));
 
 				Rect2i rect(aabb.position[x_axis], aabb.position[y_axis], aabb.size[x_axis], aabb.size[y_axis]);
-				bool x_flip = bool(Vector3(1, 1, 1).dot(xform.basis.get_column(0)) < 0);
-				bool y_flip = bool(Vector3(1, 1, 1).dot(xform.basis.get_column(1)) < 0);
-				bool z_flip = bool(Vector3(1, 1, 1).dot(xform.basis.get_column(2)) > 0);
+				bool x_flip = bool(Hector3(1, 1, 1).dot(xform.basis.get_column(0)) < 0);
+				bool y_flip = bool(Hector3(1, 1, 1).dot(xform.basis.get_column(1)) < 0);
+				bool z_flip = bool(Hector3(1, 1, 1).dot(xform.basis.get_column(2)) > 0);
 
 				Projection cm;
 				cm.set_orthogonal(-rect.size.width / 2, rect.size.width / 2, -rect.size.height / 2, rect.size.height / 2, 0.0001, aabb.size[z_axis]);
@@ -3119,7 +3119,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 					exposure_normalization = gi->voxel_gi_get_baked_exposure_normalization(probe);
 				}
 
-				RendererSceneRenderRD::get_singleton()->_render_material(to_world_xform * xform, cm, true, RendererSceneRenderRD::get_singleton()->cull_argument, dynamic_maps[0].fb, Rect2i(Vector2i(), rect.size), exposure_normalization);
+				RendererSceneRenderRD::get_singleton()->_render_material(to_world_xform * xform, cm, true, RendererSceneRenderRD::get_singleton()->cull_argument, dynamic_maps[0].fb, Rect2i(Hector2i(), rect.size), exposure_normalization);
 
 				VoxelGIDynamicPushConstant push_constant;
 				memset(&push_constant, 0, sizeof(VoxelGIDynamicPushConstant));
@@ -3277,7 +3277,7 @@ void GI::VoxelGIInstance::debug(RD::DrawListID p_draw_list, RID p_framebuffer, c
 	Projection cam_transform = (p_camera_with_transform * Projection(transform)) * Projection(gi->voxel_gi_get_to_cell_xform(probe).affine_inverse());
 
 	int level = 0;
-	Vector3i octree_size = gi->voxel_gi_get_octree_size(probe);
+	Hector3i octree_size = gi->voxel_gi_get_octree_size(probe);
 
 	VoxelGIDebugPushConstant push_constant;
 	push_constant.alpha = p_alpha;
@@ -3299,7 +3299,7 @@ void GI::VoxelGIInstance::debug(RD::DrawListID p_draw_list, RID p_framebuffer, c
 	if (gi->voxel_gi_debug_uniform_set.is_valid()) {
 		RD::get_singleton()->free(gi->voxel_gi_debug_uniform_set);
 	}
-	Vector<RD::Uniform> uniforms;
+	Hector<RD::Uniform> uniforms;
 	{
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -3375,7 +3375,7 @@ void GI::init(SkyRD *p_sky) {
 
 		String defines = "\n#define MAX_LIGHTS " + itos(voxel_gi_max_lights) + "\n";
 
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("\n#define MODE_COMPUTE_LIGHT\n");
 		versions.push_back("\n#define MODE_SECOND_BOUNCE\n");
 		versions.push_back("\n#define MODE_UPDATE_MIPMAPS\n");
@@ -3395,7 +3395,7 @@ void GI::init(SkyRD *p_sky) {
 
 	{
 		String defines;
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("\n#define MODE_DEBUG_COLOR\n");
 		versions.push_back("\n#define MODE_DEBUG_LIGHT\n");
 		versions.push_back("\n#define MODE_DEBUG_EMISSION\n");
@@ -3420,7 +3420,7 @@ void GI::init(SkyRD *p_sky) {
 	/* SDGFI */
 
 	{
-		Vector<String> preprocess_modes;
+		Hector<String> preprocess_modes;
 		preprocess_modes.push_back("\n#define MODE_SCROLL\n");
 		preprocess_modes.push_back("\n#define MODE_SCROLL_OCCLUSION\n");
 		preprocess_modes.push_back("\n#define MODE_INITIALIZE_JUMP_FLOOD\n");
@@ -3442,7 +3442,7 @@ void GI::init(SkyRD *p_sky) {
 		//calculate tables
 		String defines = "\n#define OCT_SIZE " + itos(SDFGI::LIGHTPROBE_OCT_SIZE) + "\n";
 
-		Vector<String> direct_light_modes;
+		Hector<String> direct_light_modes;
 		direct_light_modes.push_back("\n#define MODE_PROCESS_STATIC\n");
 		direct_light_modes.push_back("\n#define MODE_PROCESS_DYNAMIC\n");
 		sdfgi_shader.direct_light.initialize(direct_light_modes, defines);
@@ -3460,7 +3460,7 @@ void GI::init(SkyRD *p_sky) {
 			defines += "\n#define USE_CUBEMAP_ARRAY\n";
 		}
 
-		Vector<String> integrate_modes;
+		Hector<String> integrate_modes;
 		integrate_modes.push_back("\n#define MODE_PROCESS\n");
 		integrate_modes.push_back("\n#define MODE_STORE\n");
 		integrate_modes.push_back("\n#define MODE_SCROLL\n");
@@ -3473,7 +3473,7 @@ void GI::init(SkyRD *p_sky) {
 		}
 
 		{
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 
 			{
 				RD::Uniform u;
@@ -3509,7 +3509,7 @@ void GI::init(SkyRD *p_sky) {
 			defines += "\n#define SAMPLE_VOXEL_GI_NEAREST\n";
 		}
 
-		Vector<String> gi_modes;
+		Hector<String> gi_modes;
 
 		gi_modes.push_back("\n#define USE_VOXEL_GI_INSTANCES\n"); // MODE_VOXEL_GI
 		gi_modes.push_back("\n#define USE_SDFGI\n"); // MODE_SDFGI
@@ -3518,7 +3518,7 @@ void GI::init(SkyRD *p_sky) {
 		shader.initialize(gi_modes, defines);
 		shader_version = shader.version_create();
 
-		Vector<RD::PipelineSpecializationConstant> specialization_constants;
+		Hector<RD::PipelineSpecializationConstant> specialization_constants;
 
 		{
 			RD::PipelineSpecializationConstant sc;
@@ -3551,7 +3551,7 @@ void GI::init(SkyRD *p_sky) {
 	}
 	{
 		String defines = "\n#define OCT_SIZE " + itos(SDFGI::LIGHTPROBE_OCT_SIZE) + "\n";
-		Vector<String> debug_modes;
+		Hector<String> debug_modes;
 		debug_modes.push_back("");
 		sdfgi_shader.debug.initialize(debug_modes, defines);
 		sdfgi_shader.debug_shader = sdfgi_shader.debug.version_create();
@@ -3561,7 +3561,7 @@ void GI::init(SkyRD *p_sky) {
 	{
 		String defines = "\n#define OCT_SIZE " + itos(SDFGI::LIGHTPROBE_OCT_SIZE) + "\n";
 
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("\n#define MODE_PROBES\n");
 		versions.push_back("\n#define MODE_PROBES\n#define USE_MULTIVIEW\n");
 		versions.push_back("\n#define MODE_VISIBILITY\n");
@@ -3633,7 +3633,7 @@ void GI::free() {
 	}
 }
 
-Ref<GI::SDFGI> GI::create_sdfgi(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size) {
+Ref<GI::SDFGI> GI::create_sdfgi(RID p_env, const Hector3 &p_world_position, uint32_t p_requested_history_size) {
 	Ref<SDFGI> sdfgi;
 	sdfgi.instantiate();
 
@@ -3691,7 +3691,7 @@ void GI::setup_voxel_gi_instances(RenderDataRD *p_render_data, Ref<RenderSceneBu
 				gipd.xform[14] = to_cell.origin.z;
 				gipd.xform[15] = 1;
 
-				Vector3 bounds = voxel_gi_get_octree_size(base_probe);
+				Hector3 bounds = voxel_gi_get_octree_size(base_probe);
 
 				gipd.bounds[0] = bounds.x;
 				gipd.bounds[1] = bounds.y;
@@ -3772,7 +3772,7 @@ void GI::RenderBuffersGI::free_data() {
 	}
 }
 
-void GI::process_gi(Ref<RenderSceneBuffersRD> p_render_buffers, const RID *p_normal_roughness_slices, RID p_voxel_gi_buffer, RID p_environment, uint32_t p_view_count, const Projection *p_projections, const Vector3 *p_eye_offsets, const Transform3D &p_cam_transform, const PagedArray<RID> &p_voxel_gi_instances) {
+void GI::process_gi(Ref<RenderSceneBuffersRD> p_render_buffers, const RID *p_normal_roughness_slices, RID p_voxel_gi_buffer, RID p_environment, uint32_t p_view_count, const Projection *p_projections, const Hector3 *p_eye_offsets, const Transform3D &p_cam_transform, const PagedArray<RID> &p_voxel_gi_instances) {
 	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 
@@ -3887,7 +3887,7 @@ void GI::process_gi(Ref<RenderSceneBuffersRD> p_render_buffers, const RID *p_nor
 
 		// setup our uniform set
 		if (rbgi->uniform_set[v].is_null() || !RD::get_singleton()->uniform_set_is_valid(rbgi->uniform_set[v])) {
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.binding = 1;
@@ -4099,7 +4099,7 @@ bool GI::voxel_gi_needs_update(RID p_probe) const {
 	return voxel_gi->last_probe_version != voxel_gi_get_version(voxel_gi->probe);
 }
 
-void GI::voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
+void GI::voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
 	VoxelGIInstance *voxel_gi = voxel_gi_instance_owner.get_or_null(p_probe);
 	ERR_FAIL_NULL(voxel_gi);
 

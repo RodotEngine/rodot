@@ -136,16 +136,16 @@ public:
 	RegEx keyword_csharp_mastersync = RegEx("\\[MasterSync(Attribute)?(\\(\\))?\\]");
 
 	// Colors.
-	LocalVector<RegEx *> color_regexes;
-	LocalVector<String> color_renamed;
+	LocalHector<RegEx *> color_regexes;
+	LocalHector<String> color_renamed;
 
 	RegEx color_hexadecimal_short_constructor = RegEx("Color\\(\"#?([a-fA-F0-9]{1})([a-fA-F0-9]{3})\\b");
 	RegEx color_hexadecimal_full_constructor = RegEx("Color\\(\"#?([a-fA-F0-9]{2})([a-fA-F0-9]{6})\\b");
 
 	// Classes.
-	LocalVector<RegEx *> class_tscn_regexes;
-	LocalVector<RegEx *> class_gd_regexes;
-	LocalVector<RegEx *> class_shader_regexes;
+	LocalHector<RegEx *> class_tscn_regexes;
+	LocalHector<RegEx *> class_gd_regexes;
+	LocalHector<RegEx *> class_shader_regexes;
 
 	// Keycode.
 	RegEx input_map_keycode = RegEx("\\b,\"((physical_)?)scancode\":(\\d+)\\b");
@@ -159,30 +159,30 @@ public:
 	int joypad_button_mappings[23] = { 0, 1, 2, 3, 9, 10, -1 /*L2*/, -1 /*R2*/, 7, 8, 4, 6, 11, 12, 13, 14, 5, 15, 16, 17, 18, 19, 20 };
 	// Entries for L2 and R2 are -1 since they match to joypad axes and no longer to joypad buttons in Godot 4.
 
-	LocalVector<RegEx *> class_regexes;
+	LocalHector<RegEx *> class_regexes;
 
 	RegEx class_temp_tscn = RegEx("\\bTEMP_RENAMED_CLASS.tscn\\b");
 	RegEx class_temp_gd = RegEx("\\bTEMP_RENAMED_CLASS.gd\\b");
 	RegEx class_temp_shader = RegEx("\\bTEMP_RENAMED_CLASS.shader\\b");
 
-	LocalVector<String> class_temp_tscn_renames;
-	LocalVector<String> class_temp_gd_renames;
-	LocalVector<String> class_temp_shader_renames;
+	LocalHector<String> class_temp_tscn_renames;
+	LocalHector<String> class_temp_gd_renames;
+	LocalHector<String> class_temp_shader_renames;
 
 	// Common.
-	LocalVector<RegEx *> enum_regexes;
-	LocalVector<RegEx *> gdscript_function_regexes;
-	LocalVector<RegEx *> project_settings_regexes;
-	LocalVector<RegEx *> project_godot_regexes;
-	LocalVector<RegEx *> input_map_regexes;
-	LocalVector<RegEx *> gdscript_properties_regexes;
-	LocalVector<RegEx *> gdscript_signals_regexes;
-	LocalVector<RegEx *> shaders_regexes;
-	LocalVector<RegEx *> builtin_types_regexes;
-	LocalVector<RegEx *> theme_override_regexes;
-	LocalVector<RegEx *> csharp_function_regexes;
-	LocalVector<RegEx *> csharp_properties_regexes;
-	LocalVector<RegEx *> csharp_signal_regexes;
+	LocalHector<RegEx *> enum_regexes;
+	LocalHector<RegEx *> gdscript_function_regexes;
+	LocalHector<RegEx *> project_settings_regexes;
+	LocalHector<RegEx *> project_godot_regexes;
+	LocalHector<RegEx *> input_map_regexes;
+	LocalHector<RegEx *> gdscript_properties_regexes;
+	LocalHector<RegEx *> gdscript_signals_regexes;
+	LocalHector<RegEx *> shaders_regexes;
+	LocalHector<RegEx *> builtin_types_regexes;
+	LocalHector<RegEx *> theme_override_regexes;
+	LocalHector<RegEx *> csharp_function_regexes;
+	LocalHector<RegEx *> csharp_properties_regexes;
+	LocalHector<RegEx *> csharp_signal_regexes;
 
 	RegExContainer() {
 		// Common.
@@ -355,14 +355,14 @@ bool ProjectConverter3To4::convert() {
 		file->store_string(converter_text + "\n" + project_godot_content);
 	}
 
-	Vector<String> collected_files = check_for_files();
+	Hector<String> collected_files = check_for_files();
 
 	uint32_t converted_files = 0;
 
 	// Check file by file.
 	for (int i = 0; i < collected_files.size(); i++) {
 		String file_name = collected_files[i];
-		Vector<SourceLine> source_lines;
+		Hector<SourceLine> source_lines;
 		uint32_t ignored_lines = 0;
 		{
 			Ref<FileAccess> file = FileAccess::open(file_name, FileAccess::READ);
@@ -376,12 +376,12 @@ bool ProjectConverter3To4::convert() {
 				source_lines.append(source_line);
 			}
 		}
-		String file_content_before = collect_string_from_vector(source_lines);
+		String file_content_before = collect_string_from_Hector(source_lines);
 		uint64_t hash_before = file_content_before.hash();
 		uint64_t file_size = file_content_before.size();
 		print_line(vformat("Trying to convert\t%d/%d file - \"%s\" with size - %d KB", i + 1, collected_files.size(), file_name.trim_prefix("res://"), file_size / 1024));
 
-		Vector<String> reason;
+		Hector<String> reason;
 		bool is_ignored = false;
 		uint64_t start_time = Time::get_singleton()->get_ticks_msec();
 
@@ -498,7 +498,7 @@ bool ProjectConverter3To4::convert() {
 			String end_message = vformat("    Checking file took %d ms.", end_time - start_time);
 			print_line(end_message);
 		} else {
-			String file_content_after = collect_string_from_vector(source_lines);
+			String file_content_after = collect_string_from_Hector(source_lines);
 			uint64_t hash_after = file_content_after.hash64();
 			// Don't need to save file without any changes.
 			// Save if this is a shader, because it was renamed.
@@ -555,14 +555,14 @@ bool ProjectConverter3To4::validate_conversion() {
 		ERR_FAIL_COND_V_MSG(project_godot_content.contains(conventer_text), false, "Project already was converted with this tool.");
 	}
 
-	Vector<String> collected_files = check_for_files();
+	Hector<String> collected_files = check_for_files();
 
 	uint32_t converted_files = 0;
 
 	// Check file by file.
 	for (int i = 0; i < collected_files.size(); i++) {
 		const String &file_name = collected_files[i];
-		Vector<String> lines;
+		Hector<String> lines;
 		uint32_t ignored_lines = 0;
 		uint64_t file_size = 0;
 		{
@@ -576,8 +576,8 @@ bool ProjectConverter3To4::validate_conversion() {
 		}
 		print_line(vformat("Checking for conversion - %d/%d file - \"%s\" with size - %d KB", i + 1, collected_files.size(), file_name.trim_prefix("res://"), file_size / 1024));
 
-		Vector<String> changed_elements;
-		Vector<String> reason;
+		Hector<String> changed_elements;
+		Hector<String> reason;
 		bool is_ignored = false;
 		uint64_t start_time = Time::get_singleton()->get_ticks_msec();
 
@@ -690,10 +690,10 @@ bool ProjectConverter3To4::validate_conversion() {
 }
 
 // Collect files which will be checked, excluding ".txt", ".mp4", ".wav" etc. files.
-Vector<String> ProjectConverter3To4::check_for_files() {
-	Vector<String> collected_files = Vector<String>();
+Hector<String> ProjectConverter3To4::check_for_files() {
+	Hector<String> collected_files = Hector<String>();
 
-	Vector<String> directories_to_check = Vector<String>();
+	Hector<String> directories_to_check = Hector<String>();
 	directories_to_check.push_back("res://");
 
 	while (!directories_to_check.is_empty()) {
@@ -732,9 +732,9 @@ Vector<String> ProjectConverter3To4::check_for_files() {
 	return collected_files;
 }
 
-Vector<SourceLine> ProjectConverter3To4::split_lines(const String &text) {
-	Vector<String> lines = text.split("\n");
-	Vector<SourceLine> source_lines;
+Hector<SourceLine> ProjectConverter3To4::split_lines(const String &text) {
+	Hector<String> lines = text.split("\n");
+	Hector<SourceLine> source_lines;
 	for (String &line : lines) {
 		SourceLine source_line;
 		source_line.line = line;
@@ -746,31 +746,31 @@ Vector<SourceLine> ProjectConverter3To4::split_lines(const String &text) {
 }
 
 // Test expected results of gdscript
-bool ProjectConverter3To4::test_conversion_gdscript_builtin(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Vector<SourceLine> &, const RegExContainer &, bool), const String &what, const RegExContainer &reg_container, bool builtin_script) {
-	Vector<SourceLine> got = split_lines(name);
+bool ProjectConverter3To4::test_conversion_gdscript_builtin(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Hector<SourceLine> &, const RegExContainer &, bool), const String &what, const RegExContainer &reg_container, bool builtin_script) {
+	Hector<SourceLine> got = split_lines(name);
 
 	(this->*func)(got, reg_container, builtin_script);
-	String got_str = collect_string_from_vector(got);
+	String got_str = collect_string_from_Hector(got);
 	ERR_FAIL_COND_V_MSG(expected != got_str, false, vformat("Failed to convert %s \"%s\" to \"%s\", got instead \"%s\"", what, name, expected, got_str));
 
 	return true;
 }
 
-bool ProjectConverter3To4::test_conversion_with_regex(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Vector<SourceLine> &, const RegExContainer &), const String &what, const RegExContainer &reg_container) {
-	Vector<SourceLine> got = split_lines(name);
+bool ProjectConverter3To4::test_conversion_with_regex(const String &name, const String &expected, void (ProjectConverter3To4::*func)(Hector<SourceLine> &, const RegExContainer &), const String &what, const RegExContainer &reg_container) {
+	Hector<SourceLine> got = split_lines(name);
 
 	(this->*func)(got, reg_container);
-	String got_str = collect_string_from_vector(got);
+	String got_str = collect_string_from_Hector(got);
 	ERR_FAIL_COND_V_MSG(expected != got_str, false, vformat("Failed to convert %s \"%s\" to \"%s\", got instead \"%s\"", what, name, expected, got_str));
 
 	return true;
 }
 
-bool ProjectConverter3To4::test_conversion_basic(const String &name, const String &expected, const char *array[][2], LocalVector<RegEx *> &regex_cache, const String &what) {
-	Vector<SourceLine> got = split_lines(name);
+bool ProjectConverter3To4::test_conversion_basic(const String &name, const String &expected, const char *array[][2], LocalHector<RegEx *> &regex_cache, const String &what) {
+	Hector<SourceLine> got = split_lines(name);
 
 	rename_common(array, regex_cache, got);
-	String got_str = collect_string_from_vector(got);
+	String got_str = collect_string_from_Hector(got);
 	ERR_FAIL_COND_V_MSG(expected != got_str, false, vformat("Failed to convert %s \"%s\" to \"%s\", got instead \"%s\"", what, name, expected, got_str));
 
 	return true;
@@ -867,8 +867,8 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 
 	valid = valid && test_conversion_gdscript_builtin("\tvar aa = roman(r.move_and_slide( a, b, c, d, e, f )) # Roman", "\tr.set_velocity(a)\n\tr.set_up_direction(b)\n\tr.set_floor_stop_on_slope_enabled(c)\n\tr.set_max_slides(d)\n\tr.set_floor_max_angle(e)\n\t# TODOConverter3To4 infinite_inertia were removed in Godot 4 - previous value `f`\n\tr.move_and_slide()\n\tvar aa = roman(r.velocity) # Roman", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("\tmove_and_slide( a, b, c, d, e, f ) # Roman", "\tset_velocity(a)\n\tset_up_direction(b)\n\tset_floor_stop_on_slope_enabled(c)\n\tset_max_slides(d)\n\tset_floor_max_angle(e)\n\t# TODOConverter3To4 infinite_inertia were removed in Godot 4 - previous value `f`\n\tmove_and_slide() # Roman", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("\tvar aa = roman(r.move_and_slide_with_snap( a, g, b, c, d, e, f )) # Roman", "\tr.set_velocity(a)\n\t# TODOConverter3To4 looks that snap in Godot 4 is float, not vector like in Godot 3 - previous value `g`\n\tr.set_up_direction(b)\n\tr.set_floor_stop_on_slope_enabled(c)\n\tr.set_max_slides(d)\n\tr.set_floor_max_angle(e)\n\t# TODOConverter3To4 infinite_inertia were removed in Godot 4 - previous value `f`\n\tr.move_and_slide()\n\tvar aa = roman(r.velocity) # Roman", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("\tmove_and_slide_with_snap( a, g, b, c, d, e, f ) # Roman", "\tset_velocity(a)\n\t# TODOConverter3To4 looks that snap in Godot 4 is float, not vector like in Godot 3 - previous value `g`\n\tset_up_direction(b)\n\tset_floor_stop_on_slope_enabled(c)\n\tset_max_slides(d)\n\tset_floor_max_angle(e)\n\t# TODOConverter3To4 infinite_inertia were removed in Godot 4 - previous value `f`\n\tmove_and_slide() # Roman", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("\tvar aa = roman(r.move_and_slide_with_snap( a, g, b, c, d, e, f )) # Roman", "\tr.set_velocity(a)\n\t# TODOConverter3To4 looks that snap in Godot 4 is float, not Hector like in Godot 3 - previous value `g`\n\tr.set_up_direction(b)\n\tr.set_floor_stop_on_slope_enabled(c)\n\tr.set_max_slides(d)\n\tr.set_floor_max_angle(e)\n\t# TODOConverter3To4 infinite_inertia were removed in Godot 4 - previous value `f`\n\tr.move_and_slide()\n\tvar aa = roman(r.velocity) # Roman", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("\tmove_and_slide_with_snap( a, g, b, c, d, e, f ) # Roman", "\tset_velocity(a)\n\t# TODOConverter3To4 looks that snap in Godot 4 is float, not Hector like in Godot 3 - previous value `g`\n\tset_up_direction(b)\n\tset_floor_stop_on_slope_enabled(c)\n\tset_max_slides(d)\n\tset_floor_max_angle(e)\n\t# TODOConverter3To4 infinite_inertia were removed in Godot 4 - previous value `f`\n\tmove_and_slide() # Roman", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin("remove_and_slide(a,b,c,d,e,f)", "remove_and_slide(a,b,c,d,e,f)", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
@@ -917,18 +917,18 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	valid = valid && test_conversion_gdscript_builtin("\n\nmaster func", "\n\nThe master and mastersync rpc behavior is not officially supported anymore. Try using another keyword or making custom logic using get_multiplayer().get_remote_sender_id()\n@rpc func", &ProjectConverter3To4::rename_gdscript_keywords, "gdscript keyword", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("\n\nmastersync func", "\n\nThe master and mastersync rpc behavior is not officially supported anymore. Try using another keyword or making custom logic using get_multiplayer().get_remote_sender_id()\n@rpc(\"call_local\") func", &ProjectConverter3To4::rename_gdscript_keywords, "gdscript keyword", reg_container, false);
 
-	valid = valid && test_conversion_gdscript_builtin("var size: Vector2 = Vector2() setget set_function, get_function", "var size: Vector2 = Vector2(): get = get_function, set = set_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("var size: Vector2 = Vector2() setget set_function, ", "var size: Vector2 = Vector2(): set = set_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("var size: Vector2 = Vector2() setget set_function", "var size: Vector2 = Vector2(): set = set_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("var size: Vector2 = Vector2() setget , get_function", "var size: Vector2 = Vector2(): get = get_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("var size: Hector2 = Hector2() setget set_function, get_function", "var size: Hector2 = Hector2(): get = get_function, set = set_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("var size: Hector2 = Hector2() setget set_function, ", "var size: Hector2 = Hector2(): set = set_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("var size: Hector2 = Hector2() setget set_function", "var size: Hector2 = Hector2(): set = set_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("var size: Hector2 = Hector2() setget , get_function", "var size: Hector2 = Hector2(): get = get_function", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin("get_node(@", "get_node(", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin("yield(this, \"timeout\")", "await this.timeout", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("yield(this, \\\"timeout\\\")", "await this.timeout", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, true);
 
-	valid = valid && test_conversion_gdscript_builtin(" Transform.xform(Vector3(a,b,c) + Vector3.UP) ", " Transform * (Vector3(a,b,c) + Vector3.UP) ", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin(" Transform.xform_inv(Vector3(a,b,c) + Vector3.UP) ", " (Vector3(a,b,c) + Vector3.UP) * Transform ", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin(" Transform.xform(Hector3(a,b,c) + Hector3.UP) ", " Transform * (Hector3(a,b,c) + Hector3.UP) ", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin(" Transform.xform_inv(Hector3(a,b,c) + Hector3.UP) ", " (Hector3(a,b,c) + Hector3.UP) * Transform ", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin("export(float) var lifetime = 3.0", "export var lifetime: float = 3.0", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("export (int)var spaces=1", "export var spaces: int=1", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
@@ -996,11 +996,11 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	valid = valid && test_conversion_gdscript_builtin("create_from_image(aa, bb)", "create_from_image(aa) #,bb", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("q_ImageTexture.create_from_image(variable1, variable2)", "q_ImageTexture.create_from_image(variable1) #,variable2", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
-	valid = valid && test_conversion_gdscript_builtin("set_cell_item(a, b, c, d ,e) # AA", "set_cell_item(Vector3(a, b, c), d, e) # AA", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("set_cell_item(a, b, c, d ,e) # AA", "set_cell_item(Hector3(a, b, c), d, e) # AA", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("set_cell_item(a, b)", "set_cell_item(a, b)", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("get_cell_item_orientation(a, b,c)", "get_cell_item_orientation(Vector3i(a, b, c))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("get_cell_item(a, b,c)", "get_cell_item(Vector3i(a, b, c))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("map_to_world(a, b,c)", "map_to_local(Vector3i(a, b, c))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("get_cell_item_orientation(a, b,c)", "get_cell_item_orientation(Hector3i(a, b, c))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("get_cell_item(a, b,c)", "get_cell_item(Hector3i(a, b, c))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("map_to_world(a, b,c)", "map_to_local(Hector3i(a, b, c))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin("PackedStringArray(req_godot).join('.')", "'.'.join(PackedStringArray(req_godot))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("=PackedStringArray(req_godot).join('.')", "='.'.join(PackedStringArray(req_godot))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
@@ -1032,11 +1032,11 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 		String to = "instantiate";
 		String name = "AA.instance()";
 
-		Vector<SourceLine> got = split_lines(name);
+		Hector<SourceLine> got = split_lines(name);
 
 		String expected = "AA.instantiate()";
 		custom_rename(got, from, to);
-		String got_str = collect_string_from_vector(got);
+		String got_str = collect_string_from_Hector(got);
 		if (got_str != expected) {
 			ERR_PRINT(vformat("Failed to convert custom rename \"%s\" to \"%s\", got \"%s\", instead.", name, expected, got_str));
 		}
@@ -1095,10 +1095,10 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	// Parse Arguments
 	{
 		String line = "( )";
-		Vector<String> got_vector = parse_arguments(line);
+		Hector<String> got_Hector = parse_arguments(line);
 		String got = "";
 		String expected = "";
-		for (String &part : got_vector) {
+		for (String &part : got_Hector) {
 			got += part + "|||";
 		}
 		if (got != expected) {
@@ -1108,10 +1108,10 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	}
 	{
 		String line = "(a , b , c)";
-		Vector<String> got_vector = parse_arguments(line);
+		Hector<String> got_Hector = parse_arguments(line);
 		String got = "";
 		String expected = "a|||b|||c|||";
-		for (String &part : got_vector) {
+		for (String &part : got_Hector) {
 			got += part + "|||";
 		}
 		if (got != expected) {
@@ -1121,10 +1121,10 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	}
 	{
 		String line = "(a , \"b,\" , c)";
-		Vector<String> got_vector = parse_arguments(line);
+		Hector<String> got_Hector = parse_arguments(line);
 		String got = "";
 		String expected = "a|||\"b,\"|||c|||";
-		for (String &part : got_vector) {
+		for (String &part : got_Hector) {
 			got += part + "|||";
 		}
 		if (got != expected) {
@@ -1134,10 +1134,10 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	}
 	{
 		String line = "(a , \"(,),,,,\" , c)";
-		Vector<String> got_vector = parse_arguments(line);
+		Hector<String> got_Hector = parse_arguments(line);
 		String got = "";
 		String expected = "a|||\"(,),,,,\"|||c|||";
-		for (String &part : got_vector) {
+		for (String &part : got_Hector) {
 			got += part + "|||";
 		}
 		if (got != expected) {
@@ -1152,7 +1152,7 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 // Validate in all arrays if names don't do cyclic renames "Node" -> "Node2D" | "Node2D" -> "2DNode"
 bool ProjectConverter3To4::test_array_names() {
 	bool valid = true;
-	Vector<String> names = Vector<String>();
+	Hector<String> names = Hector<String>();
 
 	// Validate if all classes are valid.
 	{
@@ -1242,7 +1242,7 @@ bool ProjectConverter3To4::test_array_names() {
 // Also checks if names contain leading or trailing spaces.
 bool ProjectConverter3To4::test_single_array(const char *p_array[][2], bool p_ignore_4_0_name) {
 	bool valid = true;
-	Vector<String> names = Vector<String>();
+	Hector<String> names = Hector<String>();
 
 	for (unsigned int current_index = 0; p_array[current_index][0]; current_index++) {
 		String name_3_x = p_array[current_index][0];
@@ -1274,8 +1274,8 @@ bool ProjectConverter3To4::test_single_array(const char *p_array[][2], bool p_ig
 
 // Returns arguments from given function execution, this cannot be really done as regex.
 // `abc(d,e(f,g),h)` -> [d], [e(f,g)], [h]
-Vector<String> ProjectConverter3To4::parse_arguments(const String &line) {
-	Vector<String> parts;
+Hector<String> ProjectConverter3To4::parse_arguments(const String &line) {
+	Hector<String> parts;
 	int string_size = line.length();
 	int start_part = 0; // Index of beginning of start part.
 	int parts_counter = 0;
@@ -1328,7 +1328,7 @@ Vector<String> ProjectConverter3To4::parse_arguments(const String &line) {
 		previous_character = character;
 	}
 
-	Vector<String> clean_parts;
+	Hector<String> clean_parts;
 	for (String &part : parts) {
 		part = part.strip_edges();
 		if (!part.is_empty()) {
@@ -1360,7 +1360,7 @@ int ProjectConverter3To4::get_end_parenthesis(const String &line) const {
 
 // Merges multiple arguments into a single String.
 // Needed when after processing e.g. 2 arguments, later arguments are not changed in any way.
-String ProjectConverter3To4::connect_arguments(const Vector<String> &arguments, int from, int to) const {
+String ProjectConverter3To4::connect_arguments(const Hector<String> &arguments, int from, int to) const {
 	if (to == -1) {
 		to = arguments.size();
 	}
@@ -1454,7 +1454,7 @@ String ProjectConverter3To4::get_object_of_execution(const String &line) const {
 	return line.substr(variable_start, (end - variable_start));
 }
 
-void ProjectConverter3To4::rename_colors(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::rename_colors(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -1472,7 +1472,7 @@ void ProjectConverter3To4::rename_colors(Vector<SourceLine> &source_lines, const
 };
 
 // Convert hexadecimal colors from ARGB to RGBA
-void ProjectConverter3To4::convert_hexadecimal_colors(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::convert_hexadecimal_colors(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -1488,8 +1488,8 @@ void ProjectConverter3To4::convert_hexadecimal_colors(Vector<SourceLine> &source
 	}
 }
 
-Vector<String> ProjectConverter3To4::check_for_rename_colors(Vector<String> &lines, const RegExContainer &reg_container) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_rename_colors(Hector<String> &lines, const RegExContainer &reg_container) {
+	Hector<String> found_renames;
 
 	int current_line = 1;
 	for (String &line : lines) {
@@ -1509,7 +1509,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_colors(Vector<String> &lin
 	return found_renames;
 }
 
-void ProjectConverter3To4::fix_tool_declaration(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::fix_tool_declaration(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	// In godot4, "tool" became "@tool" and must be located at the top of the file.
 	for (int i = 0; i < source_lines.size(); ++i) {
 		if (source_lines[i].line == "tool") {
@@ -1520,7 +1520,7 @@ void ProjectConverter3To4::fix_tool_declaration(Vector<SourceLine> &source_lines
 	}
 }
 
-void ProjectConverter3To4::fix_pause_mode(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::fix_pause_mode(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	// In Godot 3, the pause_mode 2 equals the PAUSE_MODE_PROCESS value.
 	// In Godot 4, the pause_mode PAUSE_MODE_PROCESS was renamed to PROCESS_MODE_ALWAYS and equals the number 3.
 	// We therefore convert pause_mode = 2 to pause_mode = 3.
@@ -1534,7 +1534,7 @@ void ProjectConverter3To4::fix_pause_mode(Vector<SourceLine> &source_lines, cons
 	}
 }
 
-void ProjectConverter3To4::rename_classes(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::rename_classes(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -1568,8 +1568,8 @@ void ProjectConverter3To4::rename_classes(Vector<SourceLine> &source_lines, cons
 	}
 };
 
-Vector<String> ProjectConverter3To4::check_for_rename_classes(Vector<String> &lines, const RegExContainer &reg_container) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_rename_classes(Hector<String> &lines, const RegExContainer &reg_container) {
+	Hector<String> found_renames;
 
 	int current_line = 1;
 
@@ -1607,7 +1607,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_classes(Vector<String> &li
 	return found_renames;
 }
 
-void ProjectConverter3To4::rename_gdscript_functions(Vector<SourceLine> &source_lines, const RegExContainer &reg_container, bool builtin) {
+void ProjectConverter3To4::rename_gdscript_functions(Hector<SourceLine> &source_lines, const RegExContainer &reg_container, bool builtin) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -1620,10 +1620,10 @@ void ProjectConverter3To4::rename_gdscript_functions(Vector<SourceLine> &source_
 	}
 };
 
-Vector<String> ProjectConverter3To4::check_for_rename_gdscript_functions(Vector<String> &lines, const RegExContainer &reg_container, bool builtin) {
+Hector<String> ProjectConverter3To4::check_for_rename_gdscript_functions(Hector<String> &lines, const RegExContainer &reg_container, bool builtin) {
 	int current_line = 1;
 
-	Vector<String> found_renames;
+	Hector<String> found_renames;
 
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
@@ -1833,7 +1833,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 			String base_obj = get_object_of_execution(line.substr(0, start));
 			String starting_space = get_starting_space(line);
 
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() >= 1) {
 				String line_new;
 
@@ -1884,7 +1884,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 			String base_obj = get_object_of_execution(line.substr(0, start));
 			String starting_space = get_starting_space(line);
 
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() >= 1) {
 				String line_new;
 
@@ -1893,7 +1893,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 
 				// snap
 				if (parts.size() >= 2) {
-					line_new += starting_space + "# TODOConverter3To4 looks that snap in Godot 4 is float, not vector like in Godot 3 - previous value `" + parts[1] + "`\n";
+					line_new += starting_space + "# TODOConverter3To4 looks that snap in Godot 4 is float, not Hector like in Godot 3 - previous value `" + parts[1] + "`\n";
 				}
 
 				// up_direction
@@ -1937,7 +1937,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("sort_custom(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 2) {
 				line = line.substr(0, start) + "sort_custom(Callable(" + parts[0] + ", " + parts[1] + "))" + line.substr(end + start);
 			}
@@ -1958,7 +1958,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("draw_line(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 5) {
 				line = line.substr(0, start) + "draw_line(" + parts[0] + ", " + parts[1] + ", " + parts[2] + ", " + parts[3] + ")" + line.substr(end + start);
 			}
@@ -1971,7 +1971,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		start = line.substr(start).find("(") + start;
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 
 			String start_string = line.substr(0, start) + "(";
 			for (int i = 0; i < parts.size(); i++) {
@@ -1989,7 +1989,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("yield(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 2) {
 				if (builtin) {
 					line = line.substr(0, start) + "await " + parts[0] + "." + parts[1].replace("\\\"", "").replace("\\'", "").replace(" ", "") + line.substr(end + start);
@@ -2005,24 +2005,24 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("parse_json(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			line = line.substr(0, start) + "JSON.new().stringify(" + connect_arguments(parts, 0) + ")" + line.substr(end + start);
 		}
 	}
 
-	// -- .xform(Vector3(a,b,c)) -> * Vector3(a,b,c)            Transform
+	// -- .xform(Hector3(a,b,c)) -> * Hector3(a,b,c)            Transform
 	if (line.contains(".xform(")) {
 		int start = line.find(".xform(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 1) {
 				line = line.substr(0, start) + " * (" + parts[0] + ")" + line.substr(end + start);
 			}
 		}
 	}
 
-	// -- .xform_inv(Vector3(a,b,c)) -> * Vector3(a,b,c)       Transform
+	// -- .xform_inv(Hector3(a,b,c)) -> * Hector3(a,b,c)       Transform
 	if (line.contains(".xform_inv(")) {
 		int start = line.find(".xform_inv(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
@@ -2030,7 +2030,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 			String object_exec = get_object_of_execution(line.substr(0, start));
 			if (line.contains(object_exec + ".xform")) {
 				int start2 = line.find(object_exec + ".xform");
-				Vector<String> parts = parse_arguments(line.substr(start, end));
+				Hector<String> parts = parse_arguments(line.substr(start, end));
 				if (parts.size() == 1) {
 					line = line.substr(0, start2) + "(" + parts[0] + ") * " + object_exec + line.substr(end + start);
 				}
@@ -2043,7 +2043,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("connect(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
 				line = line.substr(0, start) + "connect(" + parts[0] + ", Callable(" + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			} else if (parts.size() >= 4) {
@@ -2056,7 +2056,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("disconnect(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
 				line = line.substr(0, start) + "disconnect(" + parts[0] + ", Callable(" + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			}
@@ -2067,7 +2067,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("is_connected(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
 				line = line.substr(0, start) + "is_connected(" + parts[0] + ", Callable(" + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			}
@@ -2079,7 +2079,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("tween_method(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 5) {
 				line = line.substr(0, start) + "tween_method(Callable(" + parts[0] + ", " + parts[1] + "), " + parts[2] + ", " + parts[3] + ", " + parts[4] + ")" + line.substr(end + start);
 			} else if (parts.size() >= 6) {
@@ -2092,7 +2092,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("tween_callback(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 2) {
 				line = line.substr(0, start) + "tween_callback(Callable(" + parts[0] + ", " + parts[1] + "))" + line.substr(end + start);
 			} else if (parts.size() >= 3) {
@@ -2108,7 +2108,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		// Protection from 'func start'
 		if (!line.begins_with("func ")) {
 			if (end > -1) {
-				Vector<String> parts = parse_arguments(line.substr(start, end));
+				Hector<String> parts = parse_arguments(line.substr(start, end));
 				if (parts.size() == 2) {
 					line = line.substr(0, start) + "start(Callable(" + parts[0] + ", " + parts[1] + "))" + line.substr(end + start);
 				} else if (parts.size() >= 3) {
@@ -2134,42 +2134,42 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("create_from_image(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 2) {
 				line = line.substr(0, start) + "create_from_image(" + parts[0] + ") " + "#," + parts[1] + line.substr(end + start);
 			}
 		}
 	}
-	//  set_cell_item(a, b, c, d ,e)  ->   set_cell_item(Vector3(a, b, c), d ,e)
+	//  set_cell_item(a, b, c, d ,e)  ->   set_cell_item(Hector3(a, b, c), d ,e)
 	if (contains_function_call(line, "set_cell_item(")) {
 		int start = line.find("set_cell_item(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() > 2) {
-				line = line.substr(0, start) + "set_cell_item(Vector3(" + parts[0] + ", " + parts[1] + ", " + parts[2] + ")" + connect_arguments(parts, 3).lstrip(" ") + ")" + line.substr(end + start);
+				line = line.substr(0, start) + "set_cell_item(Hector3(" + parts[0] + ", " + parts[1] + ", " + parts[2] + ")" + connect_arguments(parts, 3).lstrip(" ") + ")" + line.substr(end + start);
 			}
 		}
 	}
-	//  get_cell_item(a, b, c)  ->   get_cell_item(Vector3i(a, b, c))
+	//  get_cell_item(a, b, c)  ->   get_cell_item(Hector3i(a, b, c))
 	if (contains_function_call(line, "get_cell_item(")) {
 		int start = line.find("get_cell_item(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
-				line = line.substr(0, start) + "get_cell_item(Vector3i(" + parts[0] + ", " + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
+				line = line.substr(0, start) + "get_cell_item(Hector3i(" + parts[0] + ", " + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			}
 		}
 	}
-	//  get_cell_item_orientation(a, b, c)  ->   get_cell_item_orientation(Vector3i(a, b, c))
+	//  get_cell_item_orientation(a, b, c)  ->   get_cell_item_orientation(Hector3i(a, b, c))
 	if (contains_function_call(line, "get_cell_item_orientation(")) {
 		int start = line.find("get_cell_item_orientation(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
-				line = line.substr(0, start) + "get_cell_item_orientation(Vector3i(" + parts[0] + ", " + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
+				line = line.substr(0, start) + "get_cell_item_orientation(Hector3i(" + parts[0] + ", " + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			}
 		}
 	}
@@ -2178,7 +2178,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("apply_impulse(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 2) {
 				line = line.substr(0, start) + "apply_impulse(" + parts[1] + ", " + parts[0] + ")" + line.substr(end + start);
 			}
@@ -2189,20 +2189,20 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("apply_force(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 2) {
 				line = line.substr(0, start) + "apply_force(" + parts[1] + ", " + parts[0] + ")" + line.substr(end + start);
 			}
 		}
 	}
-	//  map_to_world(a, b, c)  ->   map_to_local(Vector3i(a, b, c))
+	//  map_to_world(a, b, c)  ->   map_to_local(Hector3i(a, b, c))
 	if (contains_function_call(line, "map_to_world(")) {
 		int start = line.find("map_to_world(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
-				line = line.substr(0, start) + "map_to_local(Vector3i(" + parts[0] + ", " + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
+				line = line.substr(0, start) + "map_to_local(Hector3i(" + parts[0] + ", " + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			} else if (parts.size() == 1) {
 				line = line.substr(0, start) + "map_to_local(" + parts[0] + ")" + line.substr(end + start);
 			}
@@ -2214,7 +2214,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("set_rotating(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 1) {
 				String opposite = parts[0] == "true" ? "false" : "true";
 				line = line.substr(0, start) + "set_ignore_rotation(" + opposite + ")";
@@ -2227,7 +2227,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("OS.get_window_safe_area(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 0) {
 				line = line.substr(0, start) + "DisplayServer.get_display_safe_area()" + line.substr(end + start);
 			}
@@ -2238,7 +2238,7 @@ void ProjectConverter3To4::process_gdscript_line(String &line, const RegExContai
 		int start = line.find("draw_rect(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 5) {
 				line = line.substr(0, start) + "draw_rect(" + parts[0] + ", " + parts[1] + ", " + parts[2] + ", " + parts[3] + ")" + line.substr(end + start) + "# " + parts[4] + ") TODOConverter3To4 Antialiasing argument is missing";
 			}
@@ -2396,7 +2396,7 @@ void ProjectConverter3To4::process_csharp_line(String &line, const RegExContaine
 		if (start == 0 || line.get(start - 1) != 's') {
 			int end = get_end_parenthesis(line.substr(start)) + 1;
 			if (end > -1) {
-				Vector<String> parts = parse_arguments(line.substr(start, end));
+				Hector<String> parts = parse_arguments(line.substr(start, end));
 				if (parts.size() >= 3) {
 					line = line.substr(0, start) + "Connect(" + parts[0] + ", new Callable(" + parts[1] + ", " + parts[2] + ")" + connect_arguments(parts, 3) + ")" + line.substr(end + start);
 				}
@@ -2408,7 +2408,7 @@ void ProjectConverter3To4::process_csharp_line(String &line, const RegExContaine
 		int start = line.find("Disconnect(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
 				line = line.substr(0, start) + "Disconnect(" + parts[0] + ", new Callable(" + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			}
@@ -2419,7 +2419,7 @@ void ProjectConverter3To4::process_csharp_line(String &line, const RegExContaine
 		int start = line.find("IsConnected(");
 		int end = get_end_parenthesis(line.substr(start)) + 1;
 		if (end > -1) {
-			Vector<String> parts = parse_arguments(line.substr(start, end));
+			Hector<String> parts = parse_arguments(line.substr(start, end));
 			if (parts.size() == 3) {
 				line = line.substr(0, start) + "IsConnected(" + parts[0] + ", new Callable(" + parts[1] + ", " + parts[2] + "))" + line.substr(end + start);
 			}
@@ -2427,7 +2427,7 @@ void ProjectConverter3To4::process_csharp_line(String &line, const RegExContaine
 	}
 }
 
-void ProjectConverter3To4::rename_csharp_functions(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::rename_csharp_functions(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -2440,10 +2440,10 @@ void ProjectConverter3To4::rename_csharp_functions(Vector<SourceLine> &source_li
 	}
 };
 
-Vector<String> ProjectConverter3To4::check_for_rename_csharp_functions(Vector<String> &lines, const RegExContainer &reg_container) {
+Hector<String> ProjectConverter3To4::check_for_rename_csharp_functions(Hector<String> &lines, const RegExContainer &reg_container) {
 	int current_line = 1;
 
-	Vector<String> found_renames;
+	Hector<String> found_renames;
 
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
@@ -2458,7 +2458,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_csharp_functions(Vector<St
 	return found_renames;
 }
 
-void ProjectConverter3To4::rename_csharp_attributes(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::rename_csharp_attributes(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	static String error_message = "The master and mastersync rpc behavior is not officially supported anymore. Try using another keyword or making custom logic using Multiplayer.GetRemoteSenderId()\n";
 
 	for (SourceLine &source_line : source_lines) {
@@ -2478,10 +2478,10 @@ void ProjectConverter3To4::rename_csharp_attributes(Vector<SourceLine> &source_l
 	}
 }
 
-Vector<String> ProjectConverter3To4::check_for_rename_csharp_attributes(Vector<String> &lines, const RegExContainer &reg_container) {
+Hector<String> ProjectConverter3To4::check_for_rename_csharp_attributes(Hector<String> &lines, const RegExContainer &reg_container) {
 	int current_line = 1;
 
-	Vector<String> found_renames;
+	Hector<String> found_renames;
 
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
@@ -2536,7 +2536,7 @@ _FORCE_INLINE_ static String builtin_escape(const String &p_str, bool p_builtin)
 	}
 }
 
-void ProjectConverter3To4::rename_gdscript_keywords(Vector<SourceLine> &source_lines, const RegExContainer &reg_container, bool builtin) {
+void ProjectConverter3To4::rename_gdscript_keywords(Hector<SourceLine> &source_lines, const RegExContainer &reg_container, bool builtin) {
 	static String error_message = "The master and mastersync rpc behavior is not officially supported anymore. Try using another keyword or making custom logic using get_multiplayer().get_remote_sender_id()\n";
 
 	for (SourceLine &source_line : source_lines) {
@@ -2583,8 +2583,8 @@ void ProjectConverter3To4::rename_gdscript_keywords(Vector<SourceLine> &source_l
 	}
 }
 
-Vector<String> ProjectConverter3To4::check_for_rename_gdscript_keywords(Vector<String> &lines, const RegExContainer &reg_container, bool builtin) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_rename_gdscript_keywords(Hector<String> &lines, const RegExContainer &reg_container, bool builtin) {
+	Hector<String> found_renames;
 
 	int current_line = 1;
 	for (String &line : lines) {
@@ -2693,7 +2693,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_gdscript_keywords(Vector<S
 	return found_renames;
 }
 
-void ProjectConverter3To4::rename_input_map_scancode(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::rename_input_map_scancode(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	// The old Special Key, now colliding with CMD_OR_CTRL.
 	const int old_spkey = (1 << 24);
 
@@ -2722,7 +2722,7 @@ void ProjectConverter3To4::rename_input_map_scancode(Vector<SourceLine> &source_
 	}
 }
 
-void ProjectConverter3To4::rename_joypad_buttons_and_axes(Vector<SourceLine> &source_lines, const RegExContainer &reg_container) {
+void ProjectConverter3To4::rename_joypad_buttons_and_axes(Hector<SourceLine> &source_lines, const RegExContainer &reg_container) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -2764,8 +2764,8 @@ void ProjectConverter3To4::rename_joypad_buttons_and_axes(Vector<SourceLine> &so
 	}
 }
 
-Vector<String> ProjectConverter3To4::check_for_rename_joypad_buttons_and_axes(Vector<String> &lines, const RegExContainer &reg_container) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_rename_joypad_buttons_and_axes(Hector<String> &lines, const RegExContainer &reg_container) {
+	Hector<String> found_renames;
 	int current_line = 1;
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
@@ -2805,8 +2805,8 @@ Vector<String> ProjectConverter3To4::check_for_rename_joypad_buttons_and_axes(Ve
 	return found_renames;
 }
 
-Vector<String> ProjectConverter3To4::check_for_rename_input_map_scancode(Vector<String> &lines, const RegExContainer &reg_container) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_rename_input_map_scancode(Hector<String> &lines, const RegExContainer &reg_container) {
+	Hector<String> found_renames;
 
 	// The old Special Key, now colliding with CMD_OR_CTRL.
 	const int old_spkey = (1 << 24);
@@ -2834,7 +2834,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_input_map_scancode(Vector<
 	return found_renames;
 }
 
-void ProjectConverter3To4::custom_rename(Vector<SourceLine> &source_lines, const String &from, const String &to) {
+void ProjectConverter3To4::custom_rename(Hector<SourceLine> &source_lines, const String &from, const String &to) {
 	RegEx reg = RegEx(String("\\b") + from + "\\b");
 	CRASH_COND(!reg.is_valid());
 	for (SourceLine &source_line : source_lines) {
@@ -2849,8 +2849,8 @@ void ProjectConverter3To4::custom_rename(Vector<SourceLine> &source_lines, const
 	}
 };
 
-Vector<String> ProjectConverter3To4::check_for_custom_rename(Vector<String> &lines, const String &from, const String &to) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_custom_rename(Hector<String> &lines, const String &from, const String &to) {
+	Hector<String> found_renames;
 
 	RegEx reg = RegEx(String("\\b") + from + "\\b");
 	CRASH_COND(!reg.is_valid());
@@ -2868,7 +2868,7 @@ Vector<String> ProjectConverter3To4::check_for_custom_rename(Vector<String> &lin
 	return found_renames;
 }
 
-void ProjectConverter3To4::rename_common(const char *array[][2], LocalVector<RegEx *> &cached_regexes, Vector<SourceLine> &source_lines) {
+void ProjectConverter3To4::rename_common(const char *array[][2], LocalHector<RegEx *> &cached_regexes, Hector<SourceLine> &source_lines) {
 	for (SourceLine &source_line : source_lines) {
 		if (source_line.is_comment) {
 			continue;
@@ -2885,8 +2885,8 @@ void ProjectConverter3To4::rename_common(const char *array[][2], LocalVector<Reg
 	}
 }
 
-Vector<String> ProjectConverter3To4::check_for_rename_common(const char *array[][2], LocalVector<RegEx *> &cached_regexes, Vector<String> &lines) {
-	Vector<String> found_renames;
+Hector<String> ProjectConverter3To4::check_for_rename_common(const char *array[][2], LocalHector<RegEx *> &cached_regexes, Hector<String> &lines) {
+	Hector<String> found_renames;
 
 	int current_line = 1;
 
@@ -2943,13 +2943,13 @@ String ProjectConverter3To4::simple_line_formatter(int current_line, String old_
 	return vformat("Line (%d) - FULL LINES - \"\"\" %s \"\"\"  =====>  \"\"\" %s \"\"\"", current_line, old_line, new_line);
 }
 
-// Collects string from vector strings
-String ProjectConverter3To4::collect_string_from_vector(Vector<SourceLine> &vector) {
+// Collects string from Hector strings
+String ProjectConverter3To4::collect_string_from_Hector(Hector<SourceLine> &Hector) {
 	String string = "";
-	for (int i = 0; i < vector.size(); i++) {
-		string += vector[i].line;
+	for (int i = 0; i < Hector.size(); i++) {
+		string += Hector[i].line;
 
-		if (i != vector.size() - 1) {
+		if (i != Hector.size() - 1) {
 			string += "\n";
 		}
 	}

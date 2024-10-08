@@ -78,7 +78,7 @@ This file contains expansion macros (X Macros) for OpenXR structures.
     _avail(XrActionStateGetInfo, XR_TYPE_ACTION_STATE_GET_INFO) \
     _avail(XrActionStateBoolean, XR_TYPE_ACTION_STATE_BOOLEAN) \
     _avail(XrActionStateFloat, XR_TYPE_ACTION_STATE_FLOAT) \
-    _avail(XrActionStateVector2f, XR_TYPE_ACTION_STATE_VECTOR2F) \
+    _avail(XrActionStateHector2f, XR_TYPE_ACTION_STATE_HECTOR2F) \
     _avail(XrActionStatePose, XR_TYPE_ACTION_STATE_POSE) \
     _avail(XrActionsSyncInfo, XR_TYPE_ACTIONS_SYNC_INFO) \
     _avail(XrBoundSourcesForActionEnumerateInfo, XR_TYPE_BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO) \

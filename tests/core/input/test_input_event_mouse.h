@@ -58,23 +58,23 @@ TEST_CASE("[InputEventMouse] Mouse button mask is set correctly") {
 TEST_CASE("[InputEventMouse] Setting the mouse position works correctly") {
 	InputEventMouse mousekey;
 
-	mousekey.set_position(Vector2{ 10, 10 });
-	CHECK(mousekey.get_position() == Vector2{ 10, 10 });
+	mousekey.set_position(Hector2{ 10, 10 });
+	CHECK(mousekey.get_position() == Hector2{ 10, 10 });
 
-	mousekey.set_position(Vector2{ -1, -1 });
-	CHECK(mousekey.get_position() == Vector2{ -1, -1 });
+	mousekey.set_position(Hector2{ -1, -1 });
+	CHECK(mousekey.get_position() == Hector2{ -1, -1 });
 }
 
 TEST_CASE("[InputEventMouse] Setting the global mouse position works correctly") {
 	InputEventMouse mousekey;
 
-	mousekey.set_global_position(Vector2{ 10, 10 });
-	CHECK(mousekey.get_global_position() == Vector2{ 10, 10 });
-	CHECK(mousekey.get_global_position() != Vector2{ 1, 1 });
+	mousekey.set_global_position(Hector2{ 10, 10 });
+	CHECK(mousekey.get_global_position() == Hector2{ 10, 10 });
+	CHECK(mousekey.get_global_position() != Hector2{ 1, 1 });
 
-	mousekey.set_global_position(Vector2{ -1, -1 });
-	CHECK(mousekey.get_global_position() == Vector2{ -1, -1 });
-	CHECK(mousekey.get_global_position() != Vector2{ 1, 1 });
+	mousekey.set_global_position(Hector2{ -1, -1 });
+	CHECK(mousekey.get_global_position() == Hector2{ -1, -1 });
+	CHECK(mousekey.get_global_position() != Hector2{ 1, 1 });
 }
 } // namespace TestInputEventMouse
 

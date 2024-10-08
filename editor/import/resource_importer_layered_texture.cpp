@@ -161,8 +161,8 @@ void ResourceImporterLayeredTexture::get_import_options(const String &p_path, Li
 	}
 }
 
-void ResourceImporterLayeredTexture::_save_tex(Vector<Ref<Image>> p_images, const String &p_to_path, int p_compress_mode, float p_lossy, Image::CompressMode p_vram_compression, Image::CompressSource p_csource, Image::UsedChannels used_channels, bool p_mipmaps, bool p_force_po2) {
-	Vector<Ref<Image>> mipmap_images; //for 3D
+void ResourceImporterLayeredTexture::_save_tex(Hector<Ref<Image>> p_images, const String &p_to_path, int p_compress_mode, float p_lossy, Image::CompressMode p_vram_compression, Image::CompressSource p_csource, Image::UsedChannels used_channels, bool p_mipmaps, bool p_force_po2) {
+	Hector<Ref<Image>> mipmap_images; //for 3D
 
 	if (mode == MODE_3D) {
 		//3D saves in its own way
@@ -178,30 +178,30 @@ void ResourceImporterLayeredTexture::_save_tex(Vector<Ref<Image>> p_images, cons
 		}
 
 		if (p_mipmaps) {
-			Vector<Ref<Image>> parent_images = p_images;
+			Hector<Ref<Image>> parent_images = p_images;
 			//create 3D mipmaps, this is horrible, though not used very often
 			int w = p_images[0]->get_width();
 			int h = p_images[0]->get_height();
 			int d = p_images.size();
 
 			while (w > 1 || h > 1 || d > 1) {
-				Vector<Ref<Image>> mipmaps;
+				Hector<Ref<Image>> mipmaps;
 				int mm_w = MAX(1, w >> 1);
 				int mm_h = MAX(1, h >> 1);
 				int mm_d = MAX(1, d >> 1);
 
 				for (int i = 0; i < mm_d; i++) {
 					Ref<Image> mm = Image::create_empty(mm_w, mm_h, false, p_images[0]->get_format());
-					Vector3 pos;
+					Hector3 pos;
 					pos.z = float(i) * float(d) / float(mm_d) + 0.5;
 					for (int x = 0; x < mm_w; x++) {
 						for (int y = 0; y < mm_h; y++) {
 							pos.x = float(x) * float(w) / float(mm_w) + 0.5;
 							pos.y = float(y) * float(h) / float(mm_h) + 0.5;
 
-							Vector3i posi = Vector3i(pos);
-							Vector3 fract = pos - Vector3(posi);
-							Vector3i posi_n = posi;
+							Hector3i posi = Hector3i(pos);
+							Hector3 fract = pos - Hector3(posi);
+							Hector3i posi_n = posi;
 							if (posi_n.x < w - 1) {
 								posi_n.x++;
 							}
@@ -362,7 +362,7 @@ Error ResourceImporterLayeredTexture::import(const String &p_source_file, const 
 
 	Image::UsedChannels used_channels = image->detect_used_channels(csource);
 
-	Vector<Ref<Image>> slices;
+	Hector<Ref<Image>> slices;
 
 	int slice_w = image->get_width() / hslices;
 	int slice_h = image->get_height() / vslices;
@@ -442,7 +442,7 @@ bool ResourceImporterLayeredTexture::are_import_settings_valid(const String &p_p
 		return true; //do not care about non vram
 	}
 
-	Vector<String> formats_imported;
+	Hector<String> formats_imported;
 	if (p_meta.has("imported_formats")) {
 		formats_imported = p_meta["imported_formats"];
 	}

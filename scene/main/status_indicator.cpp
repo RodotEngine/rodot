@@ -82,7 +82,7 @@ void StatusIndicator::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_menu"), &StatusIndicator::get_menu);
 	ClassDB::bind_method(D_METHOD("get_rect"), &StatusIndicator::get_rect);
 
-	ADD_SIGNAL(MethodInfo("pressed", PropertyInfo(Variant::INT, "mouse_button"), PropertyInfo(Variant::VECTOR2I, "mouse_position")));
+	ADD_SIGNAL(MethodInfo("pressed", PropertyInfo(Variant::INT, "mouse_button"), PropertyInfo(Variant::HECTOR2I, "mouse_position")));
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "tooltip", PROPERTY_HINT_MULTILINE_TEXT), "set_tooltip", "get_tooltip");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "icon", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_icon", "get_icon");

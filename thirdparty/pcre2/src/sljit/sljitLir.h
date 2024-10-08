@@ -2024,7 +2024,7 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_s32 sljit_emit_simd_extend(struct sljit_compiler 
 	sljit_s32 src, sljit_sw srcw);
 
 /* Extract the highest bit (usually the sign bit) from
-   each elements of a vector.
+   each elements of a Hector.
 
    If the operation is not supported, it returns with
    SLJIT_ERR_UNSUPPORTED. If SLJIT_SIMD_TEST is passed,

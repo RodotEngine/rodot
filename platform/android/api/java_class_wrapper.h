@@ -69,8 +69,8 @@ class JavaClass : public RefCounted {
 	struct MethodInfo {
 		bool _static = false;
 		bool _constructor = false;
-		Vector<uint32_t> param_types;
-		Vector<StringName> param_sigs;
+		Hector<uint32_t> param_types;
+		Hector<StringName> param_sigs;
 		uint32_t return_type = 0;
 		jmethodID method;
 	};

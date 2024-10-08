@@ -53,7 +53,7 @@ String EditorImportPlugin::get_visible_name() const {
 }
 
 void EditorImportPlugin::get_recognized_extensions(List<String> *p_extensions) const {
-	Vector<String> extensions;
+	Hector<String> extensions;
 
 	if (GDVIRTUAL_CALL(_get_recognized_extensions, extensions)) {
 		for (int i = 0; i < extensions.size(); i++) {

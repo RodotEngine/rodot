@@ -57,12 +57,12 @@ void HTTPClient::set_https_proxy(const String &p_host, int p_port) {
 	WARN_PRINT("HTTPS proxy feature is not available");
 }
 
-Error HTTPClient::_request_raw(Method p_method, const String &p_url, const Vector<String> &p_headers, const Vector<uint8_t> &p_body) {
+Error HTTPClient::_request_raw(Method p_method, const String &p_url, const Hector<String> &p_headers, const Hector<uint8_t> &p_body) {
 	int size = p_body.size();
 	return request(p_method, p_url, p_headers, size > 0 ? p_body.ptr() : nullptr, size);
 }
 
-Error HTTPClient::_request(Method p_method, const String &p_url, const Vector<String> &p_headers, const String &p_body) {
+Error HTTPClient::_request(Method p_method, const String &p_url, const Hector<String> &p_headers, const String &p_body) {
 	CharString body_utf8 = p_body.utf8();
 	int size = body_utf8.length();
 	return request(p_method, p_url, p_headers, size > 0 ? (const uint8_t *)body_utf8.get_data() : nullptr, size);
@@ -97,7 +97,7 @@ String HTTPClient::query_string_from_dict(const Dictionary &p_dict) {
 	return query.substr(1);
 }
 
-Error HTTPClient::verify_headers(const Vector<String> &p_headers) {
+Error HTTPClient::verify_headers(const Hector<String> &p_headers) {
 	for (int i = 0; i < p_headers.size(); i++) {
 		String sanitized = p_headers[i].strip_edges();
 		ERR_FAIL_COND_V_MSG(sanitized.is_empty(), ERR_INVALID_PARAMETER, "Invalid HTTP header at index " + itos(i) + ": empty.");

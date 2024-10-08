@@ -51,7 +51,7 @@
 #define NAVMAP_ITERATION_ZERO_ERROR_MSG()
 #endif // DEBUG_ENABLED
 
-void NavMap::set_up(Vector3 p_up) {
+void NavMap::set_up(Hector3 p_up) {
 	if (up == p_up) {
 		return;
 	}
@@ -110,7 +110,7 @@ void NavMap::set_link_connection_radius(real_t p_link_connection_radius) {
 	regenerate_links = true;
 }
 
-gd::PointKey NavMap::get_point_key(const Vector3 &p_pos) const {
+gd::PointKey NavMap::get_point_key(const Hector3 &p_pos) const {
 	const int x = static_cast<int>(Math::floor(p_pos.x / merge_rasterizer_cell_size));
 	const int y = static_cast<int>(Math::floor(p_pos.y / merge_rasterizer_cell_height));
 	const int z = static_cast<int>(Math::floor(p_pos.z / merge_rasterizer_cell_size));
@@ -123,11 +123,11 @@ gd::PointKey NavMap::get_point_key(const Vector3 &p_pos) const {
 	return p;
 }
 
-Vector<Vector3> NavMap::get_path(Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Vector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Vector<int64_t> *r_path_owners) const {
+Hector<Hector3> NavMap::get_path(Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Hector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Hector<int64_t> *r_path_owners) const {
 	RWLockRead read_lock(map_rwlock);
 	if (iteration_id == 0) {
 		NAVMAP_ITERATION_ZERO_ERROR_MSG();
-		return Vector<Vector3>();
+		return Hector<Hector3>();
 	}
 
 	return NavMeshQueries3D::polygons_get_path(
@@ -135,37 +135,37 @@ Vector<Vector3> NavMap::get_path(Vector3 p_origin, Vector3 p_destination, bool p
 			r_path_types, r_path_rids, r_path_owners, up, link_polygons.size());
 }
 
-Vector3 NavMap::get_closest_point_to_segment(const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision) const {
+Hector3 NavMap::get_closest_point_to_segment(const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision) const {
 	RWLockRead read_lock(map_rwlock);
 	if (iteration_id == 0) {
 		NAVMAP_ITERATION_ZERO_ERROR_MSG();
-		return Vector3();
+		return Hector3();
 	}
 
 	return NavMeshQueries3D::polygons_get_closest_point_to_segment(polygons, p_from, p_to, p_use_collision);
 }
 
-Vector3 NavMap::get_closest_point(const Vector3 &p_point) const {
+Hector3 NavMap::get_closest_point(const Hector3 &p_point) const {
 	RWLockRead read_lock(map_rwlock);
 	if (iteration_id == 0) {
 		NAVMAP_ITERATION_ZERO_ERROR_MSG();
-		return Vector3();
+		return Hector3();
 	}
 
 	return NavMeshQueries3D::polygons_get_closest_point(polygons, p_point);
 }
 
-Vector3 NavMap::get_closest_point_normal(const Vector3 &p_point) const {
+Hector3 NavMap::get_closest_point_normal(const Hector3 &p_point) const {
 	RWLockRead read_lock(map_rwlock);
 	if (iteration_id == 0) {
 		NAVMAP_ITERATION_ZERO_ERROR_MSG();
-		return Vector3();
+		return Hector3();
 	}
 
 	return NavMeshQueries3D::polygons_get_closest_point_normal(polygons, p_point);
 }
 
-RID NavMap::get_closest_point_owner(const Vector3 &p_point) const {
+RID NavMap::get_closest_point_owner(const Hector3 &p_point) const {
 	RWLockRead read_lock(map_rwlock);
 	if (iteration_id == 0) {
 		NAVMAP_ITERATION_ZERO_ERROR_MSG();
@@ -175,7 +175,7 @@ RID NavMap::get_closest_point_owner(const Vector3 &p_point) const {
 	return NavMeshQueries3D::polygons_get_closest_point_owner(polygons, p_point);
 }
 
-gd::ClosestPointQueryResult NavMap::get_closest_point_info(const Vector3 &p_point) const {
+gd::ClosestPointQueryResult NavMap::get_closest_point_info(const Hector3 &p_point) const {
 	RWLockRead read_lock(map_rwlock);
 
 	return NavMeshQueries3D::polygons_get_closest_point_info(polygons, p_point);
@@ -287,16 +287,16 @@ void NavMap::remove_agent_as_controlled(NavAgent *agent) {
 	}
 }
 
-Vector3 NavMap::get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const {
+Hector3 NavMap::get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const {
 	RWLockRead read_lock(map_rwlock);
 
-	const LocalVector<NavRegion *> map_regions = get_regions();
+	const LocalHector<NavRegion *> map_regions = get_regions();
 
 	if (map_regions.is_empty()) {
-		return Vector3();
+		return Hector3();
 	}
 
-	LocalVector<const NavRegion *> accessible_regions;
+	LocalHector<const NavRegion *> accessible_regions;
 
 	for (const NavRegion *region : map_regions) {
 		if (!region->get_enabled() || (p_navigation_layers & region->get_navigation_layers()) == 0) {
@@ -307,7 +307,7 @@ Vector3 NavMap::get_random_point(uint32_t p_navigation_layers, bool p_uniformly)
 
 	if (accessible_regions.is_empty()) {
 		// All existing region polygons are disabled.
-		return Vector3();
+		return Hector3();
 	}
 
 	if (p_uniformly) {
@@ -328,18 +328,18 @@ Vector3 NavMap::get_random_point(uint32_t p_navigation_layers, bool p_uniformly)
 		}
 		if (accessible_regions_area_map.is_empty() || accumulated_region_surface_area == 0) {
 			// All faces have no real surface / no area.
-			return Vector3();
+			return Hector3();
 		}
 
 		real_t random_accessible_regions_area_map = Math::random(real_t(0), accumulated_region_surface_area);
 
 		RBMap<real_t, uint32_t>::Iterator E = accessible_regions_area_map.find_closest(random_accessible_regions_area_map);
-		ERR_FAIL_COND_V(!E, Vector3());
+		ERR_FAIL_COND_V(!E, Hector3());
 		uint32_t random_region_index = E->value;
-		ERR_FAIL_UNSIGNED_INDEX_V(random_region_index, accessible_regions.size(), Vector3());
+		ERR_FAIL_UNSIGNED_INDEX_V(random_region_index, accessible_regions.size(), Hector3());
 
 		const NavRegion *random_region = accessible_regions[random_region_index];
-		ERR_FAIL_NULL_V(random_region, Vector3());
+		ERR_FAIL_NULL_V(random_region, Hector3());
 
 		return random_region->get_random_point(p_navigation_layers, p_uniformly);
 
@@ -347,7 +347,7 @@ Vector3 NavMap::get_random_point(uint32_t p_navigation_layers, bool p_uniformly)
 		uint32_t random_region_index = Math::random(int(0), accessible_regions.size() - 1);
 
 		const NavRegion *random_region = accessible_regions[random_region_index];
-		ERR_FAIL_NULL_V(random_region, Vector3());
+		ERR_FAIL_NULL_V(random_region, Hector3());
 
 		return random_region->get_random_point(p_navigation_layers, p_uniformly);
 	}
@@ -397,7 +397,7 @@ void NavMap::sync() {
 		// Remove regions connections.
 		region_external_connections.clear();
 		for (NavRegion *region : regions) {
-			region_external_connections[region] = LocalVector<gd::Edge::Connection>();
+			region_external_connections[region] = LocalHector<gd::Edge::Connection>();
 		}
 
 		// Resize the polygon count.
@@ -416,7 +416,7 @@ void NavMap::sync() {
 			if (!region->get_enabled()) {
 				continue;
 			}
-			const LocalVector<gd::Polygon> &polygons_source = region->get_polygons();
+			const LocalHector<gd::Polygon> &polygons_source = region->get_polygons();
 			for (uint32_t n = 0; n < polygons_source.size(); n++) {
 				polygons[polygon_count] = polygons_source[n];
 				polygons[polygon_count].id = polygon_count;
@@ -427,15 +427,15 @@ void NavMap::sync() {
 		_new_pm_polygon_count = polygon_count;
 
 		// Group all edges per key.
-		HashMap<gd::EdgeKey, Vector<gd::Edge::Connection>, gd::EdgeKey> connections;
+		HashMap<gd::EdgeKey, Hector<gd::Edge::Connection>, gd::EdgeKey> connections;
 		for (gd::Polygon &poly : polygons) {
 			for (uint32_t p = 0; p < poly.points.size(); p++) {
 				int next_point = (p + 1) % poly.points.size();
 				gd::EdgeKey ek(poly.points[p].key, poly.points[next_point].key);
 
-				HashMap<gd::EdgeKey, Vector<gd::Edge::Connection>, gd::EdgeKey>::Iterator connection = connections.find(ek);
+				HashMap<gd::EdgeKey, Hector<gd::Edge::Connection>, gd::EdgeKey>::Iterator connection = connections.find(ek);
 				if (!connection) {
-					connections[ek] = Vector<gd::Edge::Connection>();
+					connections[ek] = Hector<gd::Edge::Connection>();
 					_new_pm_edge_count += 1;
 				}
 				if (connections[ek].size() <= 1) {
@@ -453,8 +453,8 @@ void NavMap::sync() {
 			}
 		}
 
-		Vector<gd::Edge::Connection> free_edges;
-		for (KeyValue<gd::EdgeKey, Vector<gd::Edge::Connection>> &E : connections) {
+		Hector<gd::Edge::Connection> free_edges;
+		for (KeyValue<gd::EdgeKey, Hector<gd::Edge::Connection>> &E : connections) {
 			if (E.value.size() == 2) {
 				// Connect edge that are shared in different polygons.
 				gd::Edge::Connection &c1 = E.value.write[0];
@@ -482,8 +482,8 @@ void NavMap::sync() {
 
 		for (int i = 0; i < free_edges.size(); i++) {
 			const gd::Edge::Connection &free_edge = free_edges[i];
-			Vector3 edge_p1 = free_edge.polygon->points[free_edge.edge].pos;
-			Vector3 edge_p2 = free_edge.polygon->points[(free_edge.edge + 1) % free_edge.polygon->points.size()].pos;
+			Hector3 edge_p1 = free_edge.polygon->points[free_edge.edge].pos;
+			Hector3 edge_p2 = free_edge.polygon->points[(free_edge.edge + 1) % free_edge.polygon->points.size()].pos;
 
 			for (int j = 0; j < free_edges.size(); j++) {
 				const gd::Edge::Connection &other_edge = free_edges[j];
@@ -491,20 +491,20 @@ void NavMap::sync() {
 					continue;
 				}
 
-				Vector3 other_edge_p1 = other_edge.polygon->points[other_edge.edge].pos;
-				Vector3 other_edge_p2 = other_edge.polygon->points[(other_edge.edge + 1) % other_edge.polygon->points.size()].pos;
+				Hector3 other_edge_p1 = other_edge.polygon->points[other_edge.edge].pos;
+				Hector3 other_edge_p2 = other_edge.polygon->points[(other_edge.edge + 1) % other_edge.polygon->points.size()].pos;
 
 				// Compute the projection of the opposite edge on the current one
-				Vector3 edge_vector = edge_p2 - edge_p1;
-				real_t projected_p1_ratio = edge_vector.dot(other_edge_p1 - edge_p1) / (edge_vector.length_squared());
-				real_t projected_p2_ratio = edge_vector.dot(other_edge_p2 - edge_p1) / (edge_vector.length_squared());
+				Hector3 edge_Hector = edge_p2 - edge_p1;
+				real_t projected_p1_ratio = edge_Hector.dot(other_edge_p1 - edge_p1) / (edge_Hector.length_squared());
+				real_t projected_p2_ratio = edge_Hector.dot(other_edge_p2 - edge_p1) / (edge_Hector.length_squared());
 				if ((projected_p1_ratio < 0.0 && projected_p2_ratio < 0.0) || (projected_p1_ratio > 1.0 && projected_p2_ratio > 1.0)) {
 					continue;
 				}
 
 				// Check if the two edges are close to each other enough and compute a pathway between the two regions.
-				Vector3 self1 = edge_vector * CLAMP(projected_p1_ratio, 0.0, 1.0) + edge_p1;
-				Vector3 other1;
+				Hector3 self1 = edge_Hector * CLAMP(projected_p1_ratio, 0.0, 1.0) + edge_p1;
+				Hector3 other1;
 				if (projected_p1_ratio >= 0.0 && projected_p1_ratio <= 1.0) {
 					other1 = other_edge_p1;
 				} else {
@@ -514,8 +514,8 @@ void NavMap::sync() {
 					continue;
 				}
 
-				Vector3 self2 = edge_vector * CLAMP(projected_p2_ratio, 0.0, 1.0) + edge_p1;
-				Vector3 other2;
+				Hector3 self2 = edge_Hector * CLAMP(projected_p2_ratio, 0.0, 1.0) + edge_p1;
+				Hector3 other2;
 				if (projected_p2_ratio >= 0.0 && projected_p2_ratio <= 1.0) {
 					other2 = other_edge_p2;
 				} else {
@@ -545,16 +545,16 @@ void NavMap::sync() {
 			if (!link->get_enabled()) {
 				continue;
 			}
-			const Vector3 start = link->get_start_position();
-			const Vector3 end = link->get_end_position();
+			const Hector3 start = link->get_start_position();
+			const Hector3 end = link->get_end_position();
 
 			gd::Polygon *closest_start_polygon = nullptr;
 			real_t closest_start_distance = link_connection_radius;
-			Vector3 closest_start_point;
+			Hector3 closest_start_point;
 
 			gd::Polygon *closest_end_polygon = nullptr;
 			real_t closest_end_distance = link_connection_radius;
-			Vector3 closest_end_point;
+			Hector3 closest_end_point;
 
 			// Create link to any polygons within the search radius of the start point.
 			for (uint32_t start_index = 0; start_index < polygons.size(); start_index++) {
@@ -563,7 +563,7 @@ void NavMap::sync() {
 				// For each face check the distance to the start
 				for (uint32_t start_point_id = 2; start_point_id < start_poly.points.size(); start_point_id += 1) {
 					const Face3 start_face(start_poly.points[0].pos, start_poly.points[start_point_id - 1].pos, start_poly.points[start_point_id].pos);
-					const Vector3 start_point = start_face.get_closest_point_to(start);
+					const Hector3 start_point = start_face.get_closest_point_to(start);
 					const real_t start_distance = start_point.distance_to(start);
 
 					// Pick the polygon that is within our radius and is closer than anything we've seen yet.
@@ -580,7 +580,7 @@ void NavMap::sync() {
 				// For each face check the distance to the end
 				for (uint32_t end_point_id = 2; end_point_id < end_poly.points.size(); end_point_id += 1) {
 					const Face3 end_face(end_poly.points[0].pos, end_poly.points[end_point_id - 1].pos, end_poly.points[end_point_id].pos);
-					const Vector3 end_point = end_face.get_closest_point_to(end);
+					const Hector3 end_point = end_face.get_closest_point_to(end);
 					const real_t end_distance = end_point.distance_to(end);
 
 					// Pick the polygon that is within our radius and is closer than anything we've seen yet.
@@ -696,33 +696,33 @@ void NavMap::_update_rvo_obstacles_tree_2d() {
 	}
 	rvo_simulation_2d.obstacles_.clear();
 
-	// Cannot use LocalVector here as RVO library expects std::vector to build KdTree
+	// Cannot use LocalHector here as RVO library expects std::vector to build KdTree
 	std::vector<RVO2D::Obstacle2D *> &raw_obstacles = rvo_simulation_2d.obstacles_;
 	raw_obstacles.reserve(obstacle_vertex_count);
 
 	// The following block is modified copy from RVO2D::AddObstacle()
 	// Obstacles are linked and depend on all other obstacles.
 	for (NavObstacle *obstacle : obstacles) {
-		const Vector3 &_obstacle_position = obstacle->get_position();
-		const Vector<Vector3> &_obstacle_vertices = obstacle->get_vertices();
+		const Hector3 &_obstacle_position = obstacle->get_position();
+		const Hector<Hector3> &_obstacle_vertices = obstacle->get_vertices();
 
 		if (_obstacle_vertices.size() < 2) {
 			continue;
 		}
 
-		std::vector<RVO2D::Vector2> rvo_2d_vertices;
+		std::vector<RVO2D::Hector2> rvo_2d_vertices;
 		rvo_2d_vertices.reserve(_obstacle_vertices.size());
 
 		uint32_t _obstacle_avoidance_layers = obstacle->get_avoidance_layers();
 		real_t _obstacle_height = obstacle->get_height();
 
-		for (const Vector3 &_obstacle_vertex : _obstacle_vertices) {
+		for (const Hector3 &_obstacle_vertex : _obstacle_vertices) {
 #ifdef TOOLS_ENABLED
 			if (_obstacle_vertex.y != 0) {
 				WARN_PRINT_ONCE("Y coordinates of static obstacle vertices are ignored. Please use obstacle position Y to change elevation of obstacle.");
 			}
 #endif
-			rvo_2d_vertices.push_back(RVO2D::Vector2(_obstacle_vertex.x + _obstacle_position.x, _obstacle_vertex.z + _obstacle_position.z));
+			rvo_2d_vertices.push_back(RVO2D::Hector2(_obstacle_vertex.x + _obstacle_position.x, _obstacle_vertex.z + _obstacle_position.z));
 		}
 
 		const size_t obstacleNo = raw_obstacles.size();
@@ -763,7 +763,7 @@ void NavMap::_update_rvo_obstacles_tree_2d() {
 }
 
 void NavMap::_update_rvo_agents_tree_2d() {
-	// Cannot use LocalVector here as RVO library expects std::vector to build KdTree.
+	// Cannot use LocalHector here as RVO library expects std::vector to build KdTree.
 	std::vector<RVO2D::Agent2D *> raw_agents;
 	raw_agents.reserve(active_2d_avoidance_agents.size());
 	for (NavAgent *agent : active_2d_avoidance_agents) {
@@ -773,7 +773,7 @@ void NavMap::_update_rvo_agents_tree_2d() {
 }
 
 void NavMap::_update_rvo_agents_tree_3d() {
-	// Cannot use LocalVector here as RVO library expects std::vector to build KdTree.
+	// Cannot use LocalHector here as RVO library expects std::vector to build KdTree.
 	std::vector<RVO3D::Agent3D *> raw_agents;
 	raw_agents.reserve(active_3d_avoidance_agents.size());
 	for (NavAgent *agent : active_3d_avoidance_agents) {
@@ -859,35 +859,35 @@ void NavMap::_update_merge_rasterizer_cell_dimensions() {
 int NavMap::get_region_connections_count(NavRegion *p_region) const {
 	ERR_FAIL_NULL_V(p_region, 0);
 
-	HashMap<NavRegion *, LocalVector<gd::Edge::Connection>>::ConstIterator found_connections = region_external_connections.find(p_region);
+	HashMap<NavRegion *, LocalHector<gd::Edge::Connection>>::ConstIterator found_connections = region_external_connections.find(p_region);
 	if (found_connections) {
 		return found_connections->value.size();
 	}
 	return 0;
 }
 
-Vector3 NavMap::get_region_connection_pathway_start(NavRegion *p_region, int p_connection_id) const {
-	ERR_FAIL_NULL_V(p_region, Vector3());
+Hector3 NavMap::get_region_connection_pathway_start(NavRegion *p_region, int p_connection_id) const {
+	ERR_FAIL_NULL_V(p_region, Hector3());
 
-	HashMap<NavRegion *, LocalVector<gd::Edge::Connection>>::ConstIterator found_connections = region_external_connections.find(p_region);
+	HashMap<NavRegion *, LocalHector<gd::Edge::Connection>>::ConstIterator found_connections = region_external_connections.find(p_region);
 	if (found_connections) {
-		ERR_FAIL_INDEX_V(p_connection_id, int(found_connections->value.size()), Vector3());
+		ERR_FAIL_INDEX_V(p_connection_id, int(found_connections->value.size()), Hector3());
 		return found_connections->value[p_connection_id].pathway_start;
 	}
 
-	return Vector3();
+	return Hector3();
 }
 
-Vector3 NavMap::get_region_connection_pathway_end(NavRegion *p_region, int p_connection_id) const {
-	ERR_FAIL_NULL_V(p_region, Vector3());
+Hector3 NavMap::get_region_connection_pathway_end(NavRegion *p_region, int p_connection_id) const {
+	ERR_FAIL_NULL_V(p_region, Hector3());
 
-	HashMap<NavRegion *, LocalVector<gd::Edge::Connection>>::ConstIterator found_connections = region_external_connections.find(p_region);
+	HashMap<NavRegion *, LocalHector<gd::Edge::Connection>>::ConstIterator found_connections = region_external_connections.find(p_region);
 	if (found_connections) {
-		ERR_FAIL_INDEX_V(p_connection_id, int(found_connections->value.size()), Vector3());
+		ERR_FAIL_INDEX_V(p_connection_id, int(found_connections->value.size()), Hector3());
 		return found_connections->value[p_connection_id].pathway_end;
 	}
 
-	return Vector3();
+	return Hector3();
 }
 
 NavMap::NavMap() {

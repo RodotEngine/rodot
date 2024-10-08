@@ -40,7 +40,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 #ifdef SPIRV_CROSS_NAMESPACE_OVERRIDE
 #define SPIRV_CROSS_NAMESPACE SPIRV_CROSS_NAMESPACE_OVERRIDE
@@ -91,9 +91,9 @@ public:
 	}
 };
 
-// An immutable version of SmallVector which erases type information about storage.
+// An immutable version of SmallHector which erases type information about storage.
 template <typename T>
-class VectorView
+class HectorView
 {
 public:
 	T &operator[](size_t i) SPIRV_CROSS_NOEXCEPT
@@ -166,7 +166,7 @@ public:
 		return ptr[buffer_size - 1];
 	}
 
-	// Makes it easier to consume SmallVector.
+	// Makes it easier to consume SmallHector.
 #if defined(_MSC_VER) && _MSC_VER < 1900
 	explicit operator std::vector<T>() const
 	{
@@ -174,7 +174,7 @@ public:
 		return std::vector<T>(ptr, ptr + buffer_size);
 	}
 #else
-	// Makes it easier to consume SmallVector.
+	// Makes it easier to consume SmallHector.
 	explicit operator std::vector<T>() const &
 	{
 		return std::vector<T>(ptr, ptr + buffer_size);
@@ -188,31 +188,31 @@ public:
 #endif
 
 	// Avoid sliced copies. Base class should only be read as a reference.
-	VectorView(const VectorView &) = delete;
-	void operator=(const VectorView &) = delete;
+	HectorView(const HectorView &) = delete;
+	void operator=(const HectorView &) = delete;
 
 protected:
-	VectorView() = default;
+	HectorView() = default;
 	T *ptr = nullptr;
 	size_t buffer_size = 0;
 };
 
-// Simple vector which supports up to N elements inline, without malloc/free.
-// We use a lot of throwaway vectors all over the place which triggers allocations.
+// Simple Hector which supports up to N elements inline, without malloc/free.
+// We use a lot of throwaway Hectors all over the place which triggers allocations.
 // This class only implements the subset of std::vector we need in SPIRV-Cross.
 // It is *NOT* a drop-in replacement in general projects.
 template <typename T, size_t N = 8>
-class SmallVector : public VectorView<T>
+class SmallHector : public HectorView<T>
 {
 public:
-	SmallVector() SPIRV_CROSS_NOEXCEPT
+	SmallHector() SPIRV_CROSS_NOEXCEPT
 	{
 		this->ptr = stack_storage.data();
 		buffer_capacity = N;
 	}
 
 	template <typename U>
-	SmallVector(const U *arg_list_begin, const U *arg_list_end) SPIRV_CROSS_NOEXCEPT : SmallVector()
+	SmallHector(const U *arg_list_begin, const U *arg_list_end) SPIRV_CROSS_NOEXCEPT : SmallHector()
 	{
 		auto count = size_t(arg_list_end - arg_list_begin);
 		reserve(count);
@@ -222,21 +222,21 @@ public:
 	}
 
 	template <typename U>
-	SmallVector(std::initializer_list<U> init) SPIRV_CROSS_NOEXCEPT : SmallVector(init.begin(), init.end())
+	SmallHector(std::initializer_list<U> init) SPIRV_CROSS_NOEXCEPT : SmallHector(init.begin(), init.end())
 	{
 	}
 
 	template <typename U, size_t M>
-	explicit SmallVector(const U (&init)[M]) SPIRV_CROSS_NOEXCEPT : SmallVector(init, init + M)
+	explicit SmallHector(const U (&init)[M]) SPIRV_CROSS_NOEXCEPT : SmallHector(init, init + M)
 	{
 	}
 
-	SmallVector(SmallVector &&other) SPIRV_CROSS_NOEXCEPT : SmallVector()
+	SmallHector(SmallHector &&other) SPIRV_CROSS_NOEXCEPT : SmallHector()
 	{
 		*this = std::move(other);
 	}
 
-	SmallVector &operator=(SmallVector &&other) SPIRV_CROSS_NOEXCEPT
+	SmallHector &operator=(SmallHector &&other) SPIRV_CROSS_NOEXCEPT
 	{
 		clear();
 		if (other.ptr != other.stack_storage.data())
@@ -266,12 +266,12 @@ public:
 		return *this;
 	}
 
-	SmallVector(const SmallVector &other) SPIRV_CROSS_NOEXCEPT : SmallVector()
+	SmallHector(const SmallHector &other) SPIRV_CROSS_NOEXCEPT : SmallHector()
 	{
 		*this = other;
 	}
 
-	SmallVector &operator=(const SmallVector &other) SPIRV_CROSS_NOEXCEPT
+	SmallHector &operator=(const SmallHector &other) SPIRV_CROSS_NOEXCEPT
 	{
 		if (this == &other)
 			return *this;
@@ -284,12 +284,12 @@ public:
 		return *this;
 	}
 
-	explicit SmallVector(size_t count) SPIRV_CROSS_NOEXCEPT : SmallVector()
+	explicit SmallHector(size_t count) SPIRV_CROSS_NOEXCEPT : SmallHector()
 	{
 		resize(count);
 	}
 
-	~SmallVector()
+	~SmallHector()
 	{
 		clear();
 		if (this->ptr != stack_storage.data())
@@ -320,7 +320,7 @@ public:
 	void pop_back() SPIRV_CROSS_NOEXCEPT
 	{
 		// Work around false positive warning on GCC 8.3.
-		// Calling pop_back on empty vector is undefined.
+		// Calling pop_back on empty Hector is undefined.
 		if (!this->empty())
 			resize(this->buffer_size - 1);
 	}
@@ -530,20 +530,20 @@ private:
 	AlignedBuffer<T, N> stack_storage;
 };
 
-// A vector without stack storage.
+// A Hector without stack storage.
 // Could also be a typedef-ed to std::vector,
 // but might as well use the one we have.
 template <typename T>
-using Vector = SmallVector<T, 0>;
+using Hector = SmallHector<T, 0>;
 
 #else // SPIRV_CROSS_FORCE_STL_TYPES
 
 template <typename T, size_t N = 8>
-using SmallVector = std::vector<T>;
+using SmallHector = std::vector<T>;
 template <typename T>
-using Vector = std::vector<T>;
+using Hector = std::vector<T>;
 template <typename T>
-using VectorView = std::vector<T>;
+using HectorView = std::vector<T>;
 
 #endif // SPIRV_CROSS_FORCE_STL_TYPES
 
@@ -607,7 +607,7 @@ public:
 	}
 
 protected:
-	Vector<T *> vacants;
+	Hector<T *> vacants;
 
 	struct MallocDeleter
 	{
@@ -617,7 +617,7 @@ protected:
 		}
 	};
 
-	SmallVector<std::unique_ptr<T, MallocDeleter>> memory;
+	SmallHector<std::unique_ptr<T, MallocDeleter>> memory;
 	unsigned start_object_count;
 };
 
@@ -718,7 +718,7 @@ private:
 	};
 	Buffer current_buffer;
 	char stack_buffer[StackSize];
-	SmallVector<Buffer> saved_buffers;
+	SmallHector<Buffer> saved_buffers;
 
 	void append(const char *s, size_t len)
 	{

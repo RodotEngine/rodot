@@ -127,7 +127,7 @@ DynamicBVH::Node *DynamicBVH::_remove_leaf(Node *leaf) {
 	}
 }
 
-void DynamicBVH::_fetch_leaves(Node *p_root, LocalVector<Node *> &r_leaves, int p_depth) {
+void DynamicBVH::_fetch_leaves(Node *p_root, LocalHector<Node *> &r_leaves, int p_depth) {
 	if (p_root->is_internal() && p_depth) {
 		_fetch_leaves(p_root->children[0], r_leaves, p_depth - 1);
 		_fetch_leaves(p_root->children[1], r_leaves, p_depth - 1);
@@ -140,7 +140,7 @@ void DynamicBVH::_fetch_leaves(Node *p_root, LocalVector<Node *> &r_leaves, int 
 // Partitions leaves such that leaves[0, n) are on the
 // left of axis, and leaves[n, count) are on the right
 // of axis. returns N.
-int DynamicBVH::_split(Node **leaves, int p_count, const Vector3 &p_org, const Vector3 &p_axis) {
+int DynamicBVH::_split(Node **leaves, int p_count, const Hector3 &p_org, const Hector3 &p_axis) {
 	int begin = 0;
 	int end = p_count;
 	for (;;) {
@@ -206,20 +206,20 @@ void DynamicBVH::_bottom_up(Node **leaves, int p_count) {
 }
 
 DynamicBVH::Node *DynamicBVH::_top_down(Node **leaves, int p_count, int p_bu_threshold) {
-	static const Vector3 axis[] = { Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1) };
+	static const Hector3 axis[] = { Hector3(1, 0, 0), Hector3(0, 1, 0), Hector3(0, 0, 1) };
 
 	ERR_FAIL_COND_V(p_bu_threshold <= 1, nullptr);
 	if (p_count > 1) {
 		if (p_count > p_bu_threshold) {
 			const Volume vol = _bounds(leaves, p_count);
-			const Vector3 org = vol.get_center();
+			const Hector3 org = vol.get_center();
 			int partition;
 			int bestaxis = -1;
 			int bestmidp = p_count;
 			int splitcount[3][2] = { { 0, 0 }, { 0, 0 }, { 0, 0 } };
 			int i;
 			for (i = 0; i < p_count; ++i) {
-				const Vector3 x = leaves[i]->volume.get_center() - org;
+				const Hector3 x = leaves[i]->volume.get_center() - org;
 				for (int j = 0; j < 3; ++j) {
 					++splitcount[j][x.dot(axis[j]) > 0 ? 1 : 0];
 				}
@@ -293,7 +293,7 @@ void DynamicBVH::clear() {
 
 void DynamicBVH::optimize_bottom_up() {
 	if (bvh_root) {
-		LocalVector<Node *> leaves;
+		LocalHector<Node *> leaves;
 		_fetch_leaves(bvh_root, leaves);
 		_bottom_up(&leaves[0], leaves.size());
 		bvh_root = leaves[0];
@@ -302,7 +302,7 @@ void DynamicBVH::optimize_bottom_up() {
 
 void DynamicBVH::optimize_top_down(int bu_threshold) {
 	if (bvh_root) {
-		LocalVector<Node *> leaves;
+		LocalHector<Node *> leaves;
 		_fetch_leaves(bvh_root, leaves);
 		bvh_root = _top_down(&leaves[0], leaves.size(), bu_threshold);
 	}

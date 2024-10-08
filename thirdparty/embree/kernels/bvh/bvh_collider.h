@@ -34,9 +34,9 @@ namespace embree
         size_t depth1;
       };
 
-      typedef vector_t<CollideJob, aligned_allocator<CollideJob,16>> jobvector;
+      typedef Hector_t<CollideJob, aligned_allocator<CollideJob,16>> jobHector;
 
-      void split(const CollideJob& job, jobvector& jobs);
+      void split(const CollideJob& job, jobHector& jobs);
       
     public:
       __forceinline BVHNCollider (Scene* scene0, Scene* scene1, RTCCollideFunc callback, void* userPtr)

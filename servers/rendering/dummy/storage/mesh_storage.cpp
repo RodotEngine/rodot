@@ -79,7 +79,7 @@ void MeshStorage::_multimesh_free(RID p_rid) {
 	multimesh_owner.free(p_rid);
 }
 
-void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) {
+void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) {
 	DummyMultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 	ERR_FAIL_NULL(multimesh);
 	multimesh->buffer.resize(p_buffer.size());
@@ -87,9 +87,9 @@ void MeshStorage::_multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_
 	memcpy(cache_data, p_buffer.ptr(), p_buffer.size() * sizeof(float));
 }
 
-Vector<float> MeshStorage::_multimesh_get_buffer(RID p_multimesh) const {
+Hector<float> MeshStorage::_multimesh_get_buffer(RID p_multimesh) const {
 	DummyMultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
-	ERR_FAIL_NULL_V(multimesh, Vector<float>());
+	ERR_FAIL_NULL_V(multimesh, Hector<float>());
 
 	return multimesh->buffer;
 }

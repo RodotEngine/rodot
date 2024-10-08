@@ -173,7 +173,7 @@ static void CollectColorRedTransforms_SSE2(const uint32_t* argb, int stride,
 // Note we are adding uint32_t's as *signed* int32's (using _mm_add_epi32). But
 // that's ok since the histogram values are less than 1<<28 (max picture size).
 #define LINE_SIZE 16    // 8 or 16
-static void AddVector_SSE2(const uint32_t* a, const uint32_t* b, uint32_t* out,
+static void AddHector_SSE2(const uint32_t* a, const uint32_t* b, uint32_t* out,
                            int size) {
   int i;
   for (i = 0; i + LINE_SIZE <= size; i += LINE_SIZE) {
@@ -201,7 +201,7 @@ static void AddVector_SSE2(const uint32_t* a, const uint32_t* b, uint32_t* out,
   }
 }
 
-static void AddVectorEq_SSE2(const uint32_t* a, uint32_t* out, int size) {
+static void AddHectorEq_SSE2(const uint32_t* a, uint32_t* out, int size) {
   int i;
   for (i = 0; i + LINE_SIZE <= size; i += LINE_SIZE) {
     const __m128i a0 = _mm_loadu_si128((const __m128i*)&a[i +  0]);
@@ -284,7 +284,7 @@ static float CombinedShannonEntropy_SSE2(const int X[256], const int Y[256]) {
 
 //------------------------------------------------------------------------------
 
-static int VectorMismatch_SSE2(const uint32_t* const array1,
+static int HectorMismatch_SSE2(const uint32_t* const array1,
                                const uint32_t* const array2, int length) {
   int match_len;
 
@@ -636,12 +636,12 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8LEncDspInitSSE2(void) {
   VP8LTransformColor = TransformColor_SSE2;
   VP8LCollectColorBlueTransforms = CollectColorBlueTransforms_SSE2;
   VP8LCollectColorRedTransforms = CollectColorRedTransforms_SSE2;
-  VP8LAddVector = AddVector_SSE2;
-  VP8LAddVectorEq = AddVectorEq_SSE2;
+  VP8LAddHector = AddHector_SSE2;
+  VP8LAddHectorEq = AddHectorEq_SSE2;
 #if !defined(DONT_USE_COMBINED_SHANNON_ENTROPY_SSE2_FUNC)
   VP8LCombinedShannonEntropy = CombinedShannonEntropy_SSE2;
 #endif
-  VP8LVectorMismatch = VectorMismatch_SSE2;
+  VP8LHectorMismatch = HectorMismatch_SSE2;
   VP8LBundleColorMap = BundleColorMap_SSE2;
 
   VP8LPredictorsSub[0] = PredictorSub0_SSE2;

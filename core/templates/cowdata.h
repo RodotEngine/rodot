@@ -39,7 +39,7 @@
 #include <type_traits>
 
 template <typename T>
-class Vector;
+class Hector;
 class String;
 class Char16String;
 class CharString;
@@ -57,7 +57,7 @@ static_assert(std::is_trivially_destructible_v<std::atomic<uint64_t>>);
 template <typename T>
 class CowData {
 	template <typename TV>
-	friend class Vector;
+	friend class Hector;
 	friend class String;
 	friend class Char16String;
 	friend class CharString;

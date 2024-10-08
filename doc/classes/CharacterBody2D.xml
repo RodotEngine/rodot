@@ -22,20 +22,20 @@
 		</method>
 		<method name="get_floor_angle" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="up_direction" type="Vector2" default="Vector2(0, -1)" />
+			<param index="0" name="up_direction" type="Hector2" default="Hector2(0, -1)" />
 			<description>
-				Returns the floor's collision angle at the last collision point according to [param up_direction], which is [constant Vector2.UP] by default. This value is always positive and only valid after calling [method move_and_slide] and when [method is_on_floor] returns [code]true[/code].
+				Returns the floor's collision angle at the last collision point according to [param up_direction], which is [constant Hector2.UP] by default. This value is always positive and only valid after calling [method move_and_slide] and when [method is_on_floor] returns [code]true[/code].
 			</description>
 		</method>
 		<method name="get_floor_normal" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the collision normal of the floor at the last collision point. Only valid after calling [method move_and_slide] and when [method is_on_floor] returns [code]true[/code].
 				[b]Warning:[/b] The collision normal is not always the same as the surface normal.
 			</description>
 		</method>
 		<method name="get_last_motion" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the last motion applied to the [CharacterBody2D] during the last call to [method move_and_slide]. The movement can be split into multiple motions when sliding occurs, and this method return the last one, which is useful to retrieve the current direction of the movement.
 			</description>
@@ -47,19 +47,19 @@
 			</description>
 		</method>
 		<method name="get_platform_velocity" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the linear velocity of the platform at the last collision point. Only valid after calling [method move_and_slide].
 			</description>
 		</method>
 		<method name="get_position_delta" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the travel (position delta) that occurred during the last call to [method move_and_slide].
 			</description>
 		</method>
 		<method name="get_real_velocity" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the current real velocity since the last call to [method move_and_slide]. For example, when you climb a slope, you will move diagonally even though the velocity is horizontal. This method returns the diagonal movement, as opposed to [member velocity] which returns the requested velocity.
 			</description>
@@ -93,7 +93,7 @@
 			</description>
 		</method>
 		<method name="get_wall_normal" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the collision normal of the wall at the last collision point. Only valid after calling [method move_and_slide] and when [method is_on_wall] returns [code]true[/code].
 				[b]Warning:[/b] The collision normal is not always the same as the surface normal.
@@ -158,8 +158,8 @@
 			Maximum angle (in radians) where a slope is still considered a floor (or a ceiling), rather than a wall, when calling [method move_and_slide]. The default value equals 45 degrees.
 		</member>
 		<member name="floor_snap_length" type="float" setter="set_floor_snap_length" getter="get_floor_snap_length" default="1.0">
-			Sets a snapping distance. When set to a value different from [code]0.0[/code], the body is kept attached to slopes when calling [method move_and_slide]. The snapping vector is determined by the given distance along the opposite direction of the [member up_direction].
-			As long as the snapping vector is in contact with the ground and the body moves against [member up_direction], the body will remain attached to the surface. Snapping is not applied if the body moves along [member up_direction], meaning it contains vertical rising velocity, so it will be able to detach from the ground when jumping or when the body is pushed up by something. If you want to apply a snap without taking into account the velocity, use [method apply_floor_snap].
+			Sets a snapping distance. When set to a value different from [code]0.0[/code], the body is kept attached to slopes when calling [method move_and_slide]. The snapping Hector is determined by the given distance along the opposite direction of the [member up_direction].
+			As long as the snapping Hector is in contact with the ground and the body moves against [member up_direction], the body will remain attached to the surface. Snapping is not applied if the body moves along [member up_direction], meaning it contains vertical rising velocity, so it will be able to detach from the ground when jumping or when the body is pushed up by something. If you want to apply a snap without taking into account the velocity, use [method apply_floor_snap].
 		</member>
 		<member name="floor_stop_on_slope" type="bool" setter="set_floor_stop_on_slope_enabled" getter="is_floor_stop_on_slope_enabled" default="true">
 			If [code]true[/code], the body will not slide on slopes when calling [method move_and_slide] when the body is standing still.
@@ -189,11 +189,11 @@
 		<member name="slide_on_ceiling" type="bool" setter="set_slide_on_ceiling_enabled" getter="is_slide_on_ceiling_enabled" default="true">
 			If [code]true[/code], during a jump against the ceiling, the body will slide, if [code]false[/code] it will be stopped and will fall vertically.
 		</member>
-		<member name="up_direction" type="Vector2" setter="set_up_direction" getter="get_up_direction" default="Vector2(0, -1)">
-			Vector pointing upwards, used to determine what is a wall and what is a floor (or a ceiling) when calling [method move_and_slide]. Defaults to [constant Vector2.UP]. As the vector will be normalized it can't be equal to [constant Vector2.ZERO], if you want all collisions to be reported as walls, consider using [constant MOTION_MODE_FLOATING] as [member motion_mode].
+		<member name="up_direction" type="Hector2" setter="set_up_direction" getter="get_up_direction" default="Hector2(0, -1)">
+			Hector pointing upwards, used to determine what is a wall and what is a floor (or a ceiling) when calling [method move_and_slide]. Defaults to [constant Hector2.UP]. As the Hector will be normalized it can't be equal to [constant Hector2.ZERO], if you want all collisions to be reported as walls, consider using [constant MOTION_MODE_FLOATING] as [member motion_mode].
 		</member>
-		<member name="velocity" type="Vector2" setter="set_velocity" getter="get_velocity" default="Vector2(0, 0)">
-			Current velocity vector in pixels per second, used and modified during calls to [method move_and_slide].
+		<member name="velocity" type="Hector2" setter="set_velocity" getter="get_velocity" default="Hector2(0, 0)">
+			Current velocity Hector in pixels per second, used and modified during calls to [method move_and_slide].
 		</member>
 		<member name="wall_min_slide_angle" type="float" setter="set_wall_min_slide_angle" getter="get_wall_min_slide_angle" default="0.261799">
 			Minimum angle (in radians) where the body is allowed to slide when it encounters a slope. The default value equals 15 degrees. This property only affects movement when [member motion_mode] is [constant MOTION_MODE_FLOATING].

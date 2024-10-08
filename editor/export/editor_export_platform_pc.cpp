@@ -190,7 +190,7 @@ Error EditorExportPlatformPC::export_project_data(const Ref<EditorExportPreset> 
 		pck_path = p_path.get_basename() + ".pck";
 	}
 
-	Vector<SharedObject> so_files;
+	Hector<SharedObject> so_files;
 
 	int64_t embedded_pos;
 	int64_t embedded_size;

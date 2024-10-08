@@ -39,7 +39,7 @@
 
 namespace TestShaderPreprocessor {
 
-void erase_all_empty(Vector<String> &p_vec) {
+void erase_all_empty(Hector<String> &p_vec) {
 	int idx = p_vec.find(" ");
 	while (idx >= 0) {
 		p_vec.remove_at(idx);
@@ -90,7 +90,7 @@ String remove_spaces(String &p_str) {
 // The pre-processor changes indentation and inserts spaces when inserting macros.
 // Re-format the code, without changing its meaning, to make it easier to compare.
 String compact_spaces(String &p_str) {
-	Vector<String> lines = p_str.split("\n", false);
+	Hector<String> lines = p_str.split("\n", false);
 	erase_all_empty(lines);
 	for (String &line : lines) {
 		line = remove_spaces(line);

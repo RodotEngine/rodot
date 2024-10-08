@@ -544,25 +544,25 @@ static uint32_t nextPowerOfTwo(uint32_t x)
 	return x + 1;
 }
 
-class Vector2
+class Hector2
 {
 public:
-	Vector2() {}
-	explicit Vector2(float f) : x(f), y(f) {}
-	Vector2(float _x, float _y): x(_x), y(_y) {}
+	Hector2() {}
+	explicit Hector2(float f) : x(f), y(f) {}
+	Hector2(float _x, float _y): x(_x), y(_y) {}
 
-	Vector2 operator-() const
+	Hector2 operator-() const
 	{
-		return Vector2(-x, -y);
+		return Hector2(-x, -y);
 	}
 
-	void operator+=(const Vector2 &v)
+	void operator+=(const Hector2 &v)
 	{
 		x += v.x;
 		y += v.y;
 	}
 
-	void operator-=(const Vector2 &v)
+	void operator-=(const Hector2 &v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -574,7 +574,7 @@ public:
 		y *= s;
 	}
 
-	void operator*=(const Vector2 &v)
+	void operator*=(const Hector2 &v)
 	{
 		x *= v.x;
 		y *= v.y;
@@ -583,63 +583,63 @@ public:
 	float x, y;
 };
 
-static bool operator==(const Vector2 &a, const Vector2 &b)
+static bool operator==(const Hector2 &a, const Hector2 &b)
 {
 	return a.x == b.x && a.y == b.y;
 }
 
-static bool operator!=(const Vector2 &a, const Vector2 &b)
+static bool operator!=(const Hector2 &a, const Hector2 &b)
 {
 	return a.x != b.x || a.y != b.y;
 }
 
-/*static Vector2 operator+(const Vector2 &a, const Vector2 &b)
+/*static Hector2 operator+(const Hector2 &a, const Hector2 &b)
 {
-	return Vector2(a.x + b.x, a.y + b.y);
+	return Hector2(a.x + b.x, a.y + b.y);
 }*/
 
-static Vector2 operator-(const Vector2 &a, const Vector2 &b)
+static Hector2 operator-(const Hector2 &a, const Hector2 &b)
 {
-	return Vector2(a.x - b.x, a.y - b.y);
+	return Hector2(a.x - b.x, a.y - b.y);
 }
 
-static Vector2 operator*(const Vector2 &v, float s)
+static Hector2 operator*(const Hector2 &v, float s)
 {
-	return Vector2(v.x * s, v.y * s);
+	return Hector2(v.x * s, v.y * s);
 }
 
-static float dot(const Vector2 &a, const Vector2 &b)
+static float dot(const Hector2 &a, const Hector2 &b)
 {
 	return a.x * b.x + a.y * b.y;
 }
 
-static float lengthSquared(const Vector2 &v)
+static float lengthSquared(const Hector2 &v)
 {
 	return v.x * v.x + v.y * v.y;
 }
 
-static float length(const Vector2 &v)
+static float length(const Hector2 &v)
 {
 	return sqrtf(lengthSquared(v));
 }
 
 #if XA_DEBUG
-static bool isNormalized(const Vector2 &v, float epsilon = kNormalEpsilon)
+static bool isNormalized(const Hector2 &v, float epsilon = kNormalEpsilon)
 {
 	return equal(length(v), 1, epsilon);
 }
 #endif
 
-static Vector2 normalize(const Vector2 &v)
+static Hector2 normalize(const Hector2 &v)
 {
 	const float l = length(v);
 	XA_DEBUG_ASSERT(l > 0.0f); // Never negative.
-	const Vector2 n = v * (1.0f / l);
+	const Hector2 n = v * (1.0f / l);
 	XA_DEBUG_ASSERT(isNormalized(n));
 	return n;
 }
 
-static Vector2 normalizeSafe(const Vector2 &v, const Vector2 &fallback)
+static Hector2 normalizeSafe(const Hector2 &v, const Hector2 &fallback)
 {
 	const float l = length(v);
 	if (l > 0.0f) // Never negative.
@@ -647,27 +647,27 @@ static Vector2 normalizeSafe(const Vector2 &v, const Vector2 &fallback)
 	return fallback;
 }
 
-static bool equal(const Vector2 &v1, const Vector2 &v2, float epsilon)
+static bool equal(const Hector2 &v1, const Hector2 &v2, float epsilon)
 {
 	return equal(v1.x, v2.x, epsilon) && equal(v1.y, v2.y, epsilon);
 }
 
-static Vector2 min(const Vector2 &a, const Vector2 &b)
+static Hector2 min(const Hector2 &a, const Hector2 &b)
 {
-	return Vector2(min(a.x, b.x), min(a.y, b.y));
+	return Hector2(min(a.x, b.x), min(a.y, b.y));
 }
 
-static Vector2 max(const Vector2 &a, const Vector2 &b)
+static Hector2 max(const Hector2 &a, const Hector2 &b)
 {
-	return Vector2(max(a.x, b.x), max(a.y, b.y));
+	return Hector2(max(a.x, b.x), max(a.y, b.y));
 }
 
-static bool isFinite(const Vector2 &v)
+static bool isFinite(const Hector2 &v)
 {
 	return isFinite(v.x) && isFinite(v.y);
 }
 
-static float triangleArea(const Vector2 &a, const Vector2 &b, const Vector2 &c)
+static float triangleArea(const Hector2 &a, const Hector2 &b, const Hector2 &c)
 {
 	// IC: While it may be appealing to use the following expression:
 	//return (c.x * a.y + a.x * b.y + b.x * c.y - b.x * a.y - c.x * b.y - a.x * c.y) * 0.5f;
@@ -677,15 +677,15 @@ static float triangleArea(const Vector2 &a, const Vector2 &b, const Vector2 &c)
 	// in this case is always much more accurate (as long as the triangle is small) and less dependent of the location of
 	// the triangle.
 	//return ((a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x)) * 0.5f;
-	const Vector2 v0 = a - c;
-	const Vector2 v1 = b - c;
+	const Hector2 v0 = a - c;
+	const Hector2 v1 = b - c;
 	return (v0.x * v1.y - v0.y * v1.x) * 0.5f;
 }
 
-static bool linesIntersect(const Vector2 &a1, const Vector2 &a2, const Vector2 &b1, const Vector2 &b2, float epsilon)
+static bool linesIntersect(const Hector2 &a1, const Hector2 &a2, const Hector2 &b1, const Hector2 &b2, float epsilon)
 {
-	const Vector2 v0 = a2 - a1;
-	const Vector2 v1 = b2 - b1;
+	const Hector2 v0 = a2 - a1;
+	const Hector2 v1 = b2 - b1;
 	const float denom = -v1.x * v0.y + v0.x * v1.y;
 	if (equal(denom, 0.0f, epsilon))
 		return false;
@@ -697,40 +697,40 @@ static bool linesIntersect(const Vector2 &a1, const Vector2 &a2, const Vector2 &
 	return false;
 }
 
-struct Vector2i
+struct Hector2i
 {
-	Vector2i() {}
-	Vector2i(int32_t _x, int32_t _y) : x(_x), y(_y) {}
+	Hector2i() {}
+	Hector2i(int32_t _x, int32_t _y) : x(_x), y(_y) {}
 
 	int32_t x, y;
 };
 
-class Vector3
+class Hector3
 {
 public:
-	Vector3() {}
-	explicit Vector3(float f) : x(f), y(f), z(f) {}
-	Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
-	Vector3(const Vector2 &v, float _z) : x(v.x), y(v.y), z(_z) {}
+	Hector3() {}
+	explicit Hector3(float f) : x(f), y(f), z(f) {}
+	Hector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+	Hector3(const Hector2 &v, float _z) : x(v.x), y(v.y), z(_z) {}
 
-	Vector2 xy() const
+	Hector2 xy() const
 	{
-		return Vector2(x, y);
+		return Hector2(x, y);
 	}
 
-	Vector3 operator-() const
+	Hector3 operator-() const
 	{
-		return Vector3(-x, -y, -z);
+		return Hector3(-x, -y, -z);
 	}
 
-	void operator+=(const Vector3 &v)
+	void operator+=(const Hector3 &v)
 	{
 		x += v.x;
 		y += v.y;
 		z += v.z;
 	}
 
-	void operator-=(const Vector3 &v)
+	void operator-=(const Hector3 &v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -752,14 +752,14 @@ public:
 		z *= is;
 	}
 
-	void operator*=(const Vector3 &v)
+	void operator*=(const Hector3 &v)
 	{
 		x *= v.x;
 		y *= v.y;
 		z *= v.z;
 	}
 
-	void operator/=(const Vector3 &v)
+	void operator/=(const Hector3 &v)
 	{
 		x /= v.x;
 		y /= v.y;
@@ -769,66 +769,66 @@ public:
 	float x, y, z;
 };
 
-static Vector3 operator+(const Vector3 &a, const Vector3 &b)
+static Hector3 operator+(const Hector3 &a, const Hector3 &b)
 {
-	return Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+	return Hector3(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-static Vector3 operator-(const Vector3 &a, const Vector3 &b)
+static Hector3 operator-(const Hector3 &a, const Hector3 &b)
 {
-	return Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
+	return Hector3(a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
-static bool operator==(const Vector3 &a, const Vector3 &b)
+static bool operator==(const Hector3 &a, const Hector3 &b)
 {
 	return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
-static Vector3 cross(const Vector3 &a, const Vector3 &b)
+static Hector3 cross(const Hector3 &a, const Hector3 &b)
 {
-	return Vector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+	return Hector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
 }
 
-static Vector3 operator*(const Vector3 &v, float s)
+static Hector3 operator*(const Hector3 &v, float s)
 {
-	return Vector3(v.x * s, v.y * s, v.z * s);
+	return Hector3(v.x * s, v.y * s, v.z * s);
 }
 
-static Vector3 operator/(const Vector3 &v, float s)
+static Hector3 operator/(const Hector3 &v, float s)
 {
 	return v * (1.0f / s);
 }
 
-static float dot(const Vector3 &a, const Vector3 &b)
+static float dot(const Hector3 &a, const Hector3 &b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-static float lengthSquared(const Vector3 &v)
+static float lengthSquared(const Hector3 &v)
 {
 	return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-static float length(const Vector3 &v)
+static float length(const Hector3 &v)
 {
 	return sqrtf(lengthSquared(v));
 }
 
-static bool isNormalized(const Vector3 &v, float epsilon = kNormalEpsilon)
+static bool isNormalized(const Hector3 &v, float epsilon = kNormalEpsilon)
 {
 	return equal(length(v), 1.0f, epsilon);
 }
 
-static Vector3 normalize(const Vector3 &v)
+static Hector3 normalize(const Hector3 &v)
 {
 	const float l = length(v);
 	XA_DEBUG_ASSERT(l > 0.0f); // Never negative.
-	const Vector3 n = v * (1.0f / l);
+	const Hector3 n = v * (1.0f / l);
 	XA_DEBUG_ASSERT(isNormalized(n));
 	return n;
 }
 
-static Vector3 normalizeSafe(const Vector3 &v, const Vector3 &fallback)
+static Hector3 normalizeSafe(const Hector3 &v, const Hector3 &fallback)
 {
 	const float l = length(v);
 	if (l > 0.0f) // Never negative.
@@ -836,23 +836,23 @@ static Vector3 normalizeSafe(const Vector3 &v, const Vector3 &fallback)
 	return fallback;
 }
 
-static bool equal(const Vector3 &v0, const Vector3 &v1, float epsilon)
+static bool equal(const Hector3 &v0, const Hector3 &v1, float epsilon)
 {
 	return fabs(v0.x - v1.x) <= epsilon && fabs(v0.y - v1.y) <= epsilon && fabs(v0.z - v1.z) <= epsilon;
 }
 
-static Vector3 min(const Vector3 &a, const Vector3 &b)
+static Hector3 min(const Hector3 &a, const Hector3 &b)
 {
-	return Vector3(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z));
+	return Hector3(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z));
 }
 
-static Vector3 max(const Vector3 &a, const Vector3 &b)
+static Hector3 max(const Hector3 &a, const Hector3 &b)
 {
-	return Vector3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
+	return Hector3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
 }
 
 #if XA_DEBUG
-bool isFinite(const Vector3 &v)
+bool isFinite(const Hector3 &v)
 {
 	return isFinite(v.x) && isFinite(v.y) && isFinite(v.z);
 }
@@ -860,11 +860,11 @@ bool isFinite(const Vector3 &v)
 
 struct Extents2
 {
-	Vector2 min, max;
+	Hector2 min, max;
 
 	Extents2() {}
 
-	Extents2(Vector2 p1, Vector2 p2)
+	Extents2(Hector2 p1, Hector2 p2)
 	{
 		min = xatlas::internal::min(p1, p2);
 		max = xatlas::internal::max(p1, p2);
@@ -876,15 +876,15 @@ struct Extents2
 		max.x = max.y = -FLT_MAX;
 	}
 
-	void add(Vector2 p)
+	void add(Hector2 p)
 	{
 		min = xatlas::internal::min(min, p);
 		max = xatlas::internal::max(max, p);
 	}
 
-	Vector2 midpoint() const
+	Hector2 midpoint() const
 	{
-		return Vector2(min.x + (max.x - min.x) * 0.5f, min.y + (max.y - min.y) * 0.5f);
+		return Hector2(min.x + (max.x - min.x) * 0.5f, min.y + (max.y - min.y) * 0.5f);
 	}
 
 	static bool intersect(const Extents2 &e1, const Extents2 &e2)
@@ -897,15 +897,15 @@ struct Extents2
 struct AABB
 {
 	AABB() : min(FLT_MAX, FLT_MAX, FLT_MAX), max(-FLT_MAX, -FLT_MAX, -FLT_MAX) {}
-	AABB(const Vector3 &_min, const Vector3 &_max) : min(_min), max(_max) { }
-	AABB(const Vector3 &p, float radius = 0.0f) : min(p), max(p) { if (radius > 0.0f) expand(radius); }
+	AABB(const Hector3 &_min, const Hector3 &_max) : min(_min), max(_max) { }
+	AABB(const Hector3 &p, float radius = 0.0f) : min(p), max(p) { if (radius > 0.0f) expand(radius); }
 
 	bool intersect(const AABB &other) const
 	{
 		return min.x <= other.max.x && max.x >= other.min.x && min.y <= other.max.y && max.y >= other.min.y && min.z <= other.max.z && max.z >= other.min.z;
 	}
 
-	void expandToInclude(const Vector3 &p)
+	void expandToInclude(const Hector3 &p)
 	{
 		min = internal::min(min, p);
 		max = internal::max(max, p);
@@ -919,18 +919,18 @@ struct AABB
 
 	void expand(float amount)
 	{
-		min -= Vector3(amount);
-		max += Vector3(amount);
+		min -= Hector3(amount);
+		max += Hector3(amount);
 	}
 
-	Vector3 centroid() const
+	Hector3 centroid() const
 	{
 		return min + (max - min) * 0.5f;
 	}
 
 	uint32_t maxDimension() const
 	{
-		const Vector3 extent = max - min;
+		const Hector3 extent = max - min;
 		uint32_t result = 0;
 		if (extent.y > extent.x) {
 			result = 1;
@@ -942,7 +942,7 @@ struct AABB
 		return result;
 	}
 
-	Vector3 min, max;
+	Hector3 min, max;
 };
 
 struct ArrayBase
@@ -1255,34 +1255,34 @@ struct ConstArrayView
 	uint32_t length;
 };
 
-/// Basis class to compute tangent space basis, ortogonalizations and to transform vectors from one space to another.
+/// Basis class to compute tangent space basis, ortogonalizations and to transform Hectors from one space to another.
 struct Basis
 {
-	XA_NODISCARD static Vector3 computeTangent(const Vector3 &normal)
+	XA_NODISCARD static Hector3 computeTangent(const Hector3 &normal)
 	{
 		XA_ASSERT(isNormalized(normal));
 		// Choose minimum axis.
-		Vector3 tangent;
+		Hector3 tangent;
 		if (fabsf(normal.x) < fabsf(normal.y) && fabsf(normal.x) < fabsf(normal.z))
-			tangent = Vector3(1, 0, 0);
+			tangent = Hector3(1, 0, 0);
 		else if (fabsf(normal.y) < fabsf(normal.z))
-			tangent = Vector3(0, 1, 0);
+			tangent = Hector3(0, 1, 0);
 		else
-			tangent = Vector3(0, 0, 1);
+			tangent = Hector3(0, 0, 1);
 		// Ortogonalize
 		tangent -= normal * dot(normal, tangent);
 		tangent = normalize(tangent);
 		return tangent;
 	}
 
-	XA_NODISCARD static Vector3 computeBitangent(const Vector3 &normal, const Vector3 &tangent)
+	XA_NODISCARD static Hector3 computeBitangent(const Hector3 &normal, const Hector3 &tangent)
 	{
 		return cross(normal, tangent);
 	}
 
-	Vector3 tangent = Vector3(0.0f);
-	Vector3 bitangent = Vector3(0.0f);
-	Vector3 normal = Vector3(0.0f);
+	Hector3 tangent = Hector3(0.0f);
+	Hector3 bitangent = Hector3(0.0f);
+	Hector3 normal = Hector3(0.0f);
 };
 
 // Simple bit array.
@@ -1529,7 +1529,7 @@ public:
 			// Partition the list of objects on this split
 			uint32_t mid = start;
 			for (uint32_t i = start; i < end; ++i) {
-				const Vector3 centroid(objectAabbs[m_objectIds[i]].centroid());
+				const Hector3 centroid(objectAabbs[m_objectIds[i]].centroid());
 				if ((&centroid.x)[split_dim] < split_coord) {
 					swap(m_objectIds[i], m_objectIds[mid]);
 					++mid;
@@ -1601,7 +1601,7 @@ private:
 
 struct Fit
 {
-	static bool computeBasis(ConstArrayView<Vector3> points, Basis *basis)
+	static bool computeBasis(ConstArrayView<Hector3> points, Basis *basis)
 	{
 		if (computeLeastSquaresNormal(points, &basis->normal)) {
 			basis->tangent = Basis::computeTangent(basis->normal);
@@ -1616,7 +1616,7 @@ private:
 	// Fast, and accurate to within a few degrees.
 	// Returns None if the points do not span a plane.
 	// https://www.ilikebigbits.com/2015_03_04_plane_from_points.html
-	static bool computeLeastSquaresNormal(ConstArrayView<Vector3> points, Vector3 *normal)
+	static bool computeLeastSquaresNormal(ConstArrayView<Hector3> points, Hector3 *normal)
 	{
 		XA_DEBUG_ASSERT(points.length >= 3);
 		if (points.length == 3) {
@@ -1624,14 +1624,14 @@ private:
 			return true;
 		}
 		const float invN = 1.0f / float(points.length);
-		Vector3 centroid(0.0f);
+		Hector3 centroid(0.0f);
 		for (uint32_t i = 0; i < points.length; i++)
 			centroid += points[i];
 		centroid *= invN;
 		// Calculate full 3x3 covariance matrix, excluding symmetries:
 		float xx = 0.0f, xy = 0.0f, xz = 0.0f, yy = 0.0f, yz = 0.0f, zz = 0.0f;
 		for (uint32_t i = 0; i < points.length; i++) {
-			Vector3 r = points[i] - centroid;
+			Hector3 r = points[i] - centroid;
 			xx += r.x * r.x;
 			xy += r.x * r.y;
 			xz += r.x * r.z;
@@ -1646,10 +1646,10 @@ private:
 		yy *= invN;
 		yz *= invN;
 		zz *= invN;
-		Vector3 weighted_dir(0.0f);
+		Hector3 weighted_dir(0.0f);
 		{
 			float det_x = yy * zz - yz * yz;
-			const Vector3 axis_dir(det_x, xz * yz - xy * zz, xy * yz - xz * yy);
+			const Hector3 axis_dir(det_x, xz * yz - xy * zz, xy * yz - xz * yy);
 			float weight = det_x * det_x;
 			if (dot(weighted_dir, axis_dir) < 0.0f)
 				weight = -weight;
@@ -1657,7 +1657,7 @@ private:
 		}
 		{
 			float det_y = xx * zz - xz * xz;
-			const Vector3 axis_dir(xz * yz - xy * zz, det_y, xy * xz - yz * xx);
+			const Hector3 axis_dir(xz * yz - xy * zz, det_y, xy * xz - yz * xx);
 			float weight = det_y * det_y;
 			if (dot(weighted_dir, axis_dir) < 0.0f)
 				weight = -weight;
@@ -1665,7 +1665,7 @@ private:
 		}
 		{
 			float det_z = xx * yy - xy * xy;
-			const Vector3 axis_dir(xy * yz - xz * yy, xy * xz - yz * xx, det_z);
+			const Hector3 axis_dir(xy * yz - xz * yy, xy * xz - yz * xx, det_z);
 			float weight = det_z * det_z;
 			if (dot(weighted_dir, axis_dir) < 0.0f)
 				weight = -weight;
@@ -1680,13 +1680,13 @@ private:
 		if (det_max <= 0.0f)
 			return false; // The points don't span a plane
 		// Pick path with best conditioning:
-		Vector3 dir(0.0f);
+		Hector3 dir(0.0f);
 		if (det_max == det_x)
-			dir = Vector3(det_x,xz * yz - xy * zz,xy * yz - xz * yy);
+			dir = Hector3(det_x,xz * yz - xy * zz,xy * yz - xz * yy);
 		else if (det_max == det_y)
-			dir = Vector3(xz * yz - xy * zz, det_y, xy * xz - yz * xx);
+			dir = Hector3(xz * yz - xy * zz, det_y, xy * xz - yz * xx);
 		else if (det_max == det_z)
-			dir = Vector3(xy * yz - xz * yy, xy * xz - yz * xx, det_z);
+			dir = Hector3(xy * yz - xz * yy, xy * xz - yz * xx, det_z);
 		const float len = length(dir);
 		if (isZero(len, kEpsilon))
 			return false;
@@ -1695,41 +1695,41 @@ private:
 		return isNormalized(*normal);
 	}
 
-	static bool computeEigen(ConstArrayView<Vector3> points, Basis *basis)
+	static bool computeEigen(ConstArrayView<Hector3> points, Basis *basis)
 	{
 		float matrix[6];
 		computeCovariance(points, matrix);
 		if (matrix[0] == 0 && matrix[3] == 0 && matrix[5] == 0)
 			return false;
 		float eigenValues[3];
-		Vector3 eigenVectors[3];
-		if (!eigenSolveSymmetric3(matrix, eigenValues, eigenVectors))
+		Hector3 eigenHectors[3];
+		if (!eigenSolveSymmetric3(matrix, eigenValues, eigenHectors))
 			return false;
-		basis->normal = normalize(eigenVectors[2]);
-		basis->tangent = normalize(eigenVectors[0]);
-		basis->bitangent = normalize(eigenVectors[1]);
+		basis->normal = normalize(eigenHectors[2]);
+		basis->tangent = normalize(eigenHectors[0]);
+		basis->bitangent = normalize(eigenHectors[1]);
 		return true;
 	}
 
-	static Vector3 computeCentroid(ConstArrayView<Vector3> points)
+	static Hector3 computeCentroid(ConstArrayView<Hector3> points)
 	{
-		Vector3 centroid(0.0f);
+		Hector3 centroid(0.0f);
 		for (uint32_t i = 0; i < points.length; i++)
 			centroid += points[i];
 		centroid /= float(points.length);
 		return centroid;
 	}
 
-	static Vector3 computeCovariance(ConstArrayView<Vector3> points, float * covariance)
+	static Hector3 computeCovariance(ConstArrayView<Hector3> points, float * covariance)
 	{
 		// compute the centroid
-		Vector3 centroid = computeCentroid(points);
+		Hector3 centroid = computeCentroid(points);
 		// compute covariance matrix
 		for (int i = 0; i < 6; i++) {
 			covariance[i] = 0.0f;
 		}
 		for (uint32_t i = 0; i < points.length; i++) {
-			Vector3 v = points[i] - centroid;
+			Hector3 v = points[i] - centroid;
 			covariance[0] += v.x * v.x;
 			covariance[1] += v.x * v.y;
 			covariance[2] += v.x * v.z;
@@ -1743,9 +1743,9 @@ private:
 	// Tridiagonal solver from Charles Bloom.
 	// Householder transforms followed by QL decomposition.
 	// Seems to be based on the code from Numerical Recipes in C.
-	static bool eigenSolveSymmetric3(const float matrix[6], float eigenValues[3], Vector3 eigenVectors[3])
+	static bool eigenSolveSymmetric3(const float matrix[6], float eigenValues[3], Hector3 eigenHectors[3])
 	{
-		XA_DEBUG_ASSERT(matrix != nullptr && eigenValues != nullptr && eigenVectors != nullptr);
+		XA_DEBUG_ASSERT(matrix != nullptr && eigenValues != nullptr && eigenHectors != nullptr);
 		float subd[3];
 		float diag[3];
 		float work[3][3];
@@ -1759,31 +1759,31 @@ private:
 		if (!EigenSolver3_QLAlgorithm(work, diag, subd)) {
 			for (int i = 0; i < 3; i++) {
 				eigenValues[i] = 0;
-				eigenVectors[i] = Vector3(0);
+				eigenHectors[i] = Hector3(0);
 			}
 			return false;
 		}
 		for (int i = 0; i < 3; i++) {
 			eigenValues[i] = (float)diag[i];
 		}
-		// eigenvectors are the columns; make them the rows :
+		// eigenHectors are the columns; make them the rows :
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				(&eigenVectors[j].x)[i] = (float) work[i][j];
+				(&eigenHectors[j].x)[i] = (float) work[i][j];
 			}
 		}
 		// shuffle to sort by singular value :
 		if (eigenValues[2] > eigenValues[0] && eigenValues[2] > eigenValues[1]) {
 			swap(eigenValues[0], eigenValues[2]);
-			swap(eigenVectors[0], eigenVectors[2]);
+			swap(eigenHectors[0], eigenHectors[2]);
 		}
 		if (eigenValues[1] > eigenValues[0]) {
 			swap(eigenValues[0], eigenValues[1]);
-			swap(eigenVectors[0], eigenVectors[1]);
+			swap(eigenHectors[0], eigenHectors[1]);
 		}
 		if (eigenValues[2] > eigenValues[1]) {
 			swap(eigenValues[1], eigenValues[2]);
-			swap(eigenVectors[1], eigenVectors[2]);
+			swap(eigenHectors[1], eigenHectors[2]);
 		}
 		XA_DEBUG_ASSERT(eigenValues[0] >= eigenValues[1] && eigenValues[0] >= eigenValues[2]);
 		XA_DEBUG_ASSERT(eigenValues[1] >= eigenValues[2]);
@@ -2225,21 +2225,21 @@ private:
 class BoundingBox2D
 {
 public:
-	Vector2 majorAxis, minorAxis, minCorner, maxCorner;
+	Hector2 majorAxis, minorAxis, minCorner, maxCorner;
 
 	void clear()
 	{
 		m_boundaryVertices.clear();
 	}
 
-	void appendBoundaryVertex(Vector2 v)
+	void appendBoundaryVertex(Hector2 v)
 	{
 		m_boundaryVertices.push_back(v);
 	}
 
 	// This should compute convex hull and use rotating calipers to find the best box. Currently it uses a brute force method.
 	// If vertices are empty, the boundary vertices are used.
-	void compute(ConstArrayView<Vector2> vertices = ConstArrayView<Vector2>())
+	void compute(ConstArrayView<Hector2> vertices = ConstArrayView<Hector2>())
 	{
 		XA_DEBUG_ASSERT(!m_boundaryVertices.isEmpty());
 		if (vertices.length == 0)
@@ -2247,23 +2247,23 @@ public:
 		convexHull(m_boundaryVertices, m_hull, 0.00001f);
 		// @@ Ideally I should use rotating calipers to find the best box. Using brute force for now.
 		float best_area = FLT_MAX;
-		Vector2 best_min(0);
-		Vector2 best_max(0);
-		Vector2 best_axis(0);
+		Hector2 best_min(0);
+		Hector2 best_max(0);
+		Hector2 best_axis(0);
 		const uint32_t hullCount = m_hull.size();
 		for (uint32_t i = 0, j = hullCount - 1; i < hullCount; j = i, i++) {
 			if (equal(m_hull[i], m_hull[j], kEpsilon))
 				continue;
-			Vector2 axis = normalize(m_hull[i] - m_hull[j]);
+			Hector2 axis = normalize(m_hull[i] - m_hull[j]);
 			XA_DEBUG_ASSERT(isFinite(axis));
 			// Compute bounding box.
-			Vector2 box_min(FLT_MAX, FLT_MAX);
-			Vector2 box_max(-FLT_MAX, -FLT_MAX);
+			Hector2 box_min(FLT_MAX, FLT_MAX);
+			Hector2 box_max(-FLT_MAX, -FLT_MAX);
 			// Consider all points, not only boundary points, in case the input chart is malformed.
 			for (uint32_t v = 0; v < vertices.length; v++) {
-				const Vector2 &point = vertices[v];
+				const Hector2 &point = vertices[v];
 				const float x = dot(axis, point);
-				const float y = dot(Vector2(-axis.y, axis.x), point);
+				const float y = dot(Hector2(-axis.y, axis.x), point);
 				box_min.x = min(box_min.x, x);
 				box_max.x = max(box_max.x, x);
 				box_min.y = min(box_min.y, y);
@@ -2279,7 +2279,7 @@ public:
 			}
 		}
 		majorAxis = best_axis;
-		minorAxis = Vector2(-best_axis.y, best_axis.x);
+		minorAxis = Hector2(-best_axis.y, best_axis.x);
 		minCorner = best_min;
 		maxCorner = best_max;
 		XA_ASSERT(isFinite(majorAxis) && isFinite(minorAxis) && isFinite(minCorner));
@@ -2287,7 +2287,7 @@ public:
 
 private:
 	// Compute the convex hull using Graham Scan.
-	void convexHull(ConstArrayView<Vector2> input, Array<Vector2> &output, float epsilon)
+	void convexHull(ConstArrayView<Hector2> input, Array<Hector2> &output, float epsilon)
 	{
 		m_coords.resize(input.length);
 		for (uint32_t i = 0; i < input.length; i++)
@@ -2298,17 +2298,17 @@ private:
 		m_bottom.clear();
 		m_top.reserve(input.length);
 		m_bottom.reserve(input.length);
-		Vector2 P = input[ranks[0]];
-		Vector2 Q = input[ranks[input.length - 1]];
+		Hector2 P = input[ranks[0]];
+		Hector2 Q = input[ranks[input.length - 1]];
 		float topy = max(P.y, Q.y);
 		float boty = min(P.y, Q.y);
 		for (uint32_t i = 0; i < input.length; i++) {
-			Vector2 p = input[ranks[i]];
+			Hector2 p = input[ranks[i]];
 			if (p.y >= boty)
 				m_top.push_back(p);
 		}
 		for (uint32_t i = 0; i < input.length; i++) {
-			Vector2 p = input[ranks[input.length - 1 - i]];
+			Hector2 p = input[ranks[input.length - 1 - i]];
 			if (p.y <= topy)
 				m_bottom.push_back(p);
 		}
@@ -2318,9 +2318,9 @@ private:
 		output.push_back(m_top[0]);
 		output.push_back(m_top[1]);
 		for (uint32_t i = 2; i < m_top.size(); ) {
-			Vector2 a = output[output.size() - 2];
-			Vector2 b = output[output.size() - 1];
-			Vector2 c = m_top[i];
+			Hector2 a = output[output.size() - 2];
+			Hector2 b = output[output.size() - 1];
+			Hector2 c = m_top[i];
 			float area = triangleArea(a, b, c);
 			if (area >= -epsilon)
 				output.pop_back();
@@ -2334,9 +2334,9 @@ private:
 		output.push_back(m_bottom[1]);
 		// Filter bottom list.
 		for (uint32_t i = 2; i < m_bottom.size(); ) {
-			Vector2 a = output[output.size() - 2];
-			Vector2 b = output[output.size() - 1];
-			Vector2 c = m_bottom[i];
+			Hector2 a = output[output.size() - 2];
+			Hector2 b = output[output.size() - 1];
+			Hector2 c = m_bottom[i];
 			float area = triangleArea(a, b, c);
 			if (area >= -epsilon)
 				output.pop_back();
@@ -2350,9 +2350,9 @@ private:
 		output.pop_back();
 	}
 
-	Array<Vector2> m_boundaryVertices;
+	Array<Hector2> m_boundaryVertices;
 	Array<float> m_coords;
-	Array<Vector2> m_top, m_bottom, m_hull;
+	Array<Hector2> m_top, m_bottom, m_hull;
 	RadixSort m_radix;
 };
 
@@ -2409,7 +2409,7 @@ public:
 	uint32_t flags() const { return m_flags; }
 	uint32_t id() const { return m_id; }
 
-	void addVertex(const Vector3 &pos, const Vector3 &normal = Vector3(0.0f), const Vector2 &texcoord = Vector2(0.0f))
+	void addVertex(const Hector3 &pos, const Hector3 &normal = Hector3(0.0f), const Hector2 &texcoord = Hector2(0.0f))
 	{
 		XA_DEBUG_ASSERT(isFinite(pos));
 		m_positions.push_back(pos);
@@ -2479,7 +2479,7 @@ public:
 	void createColocalsHash()
 	{
 		const uint32_t vertexCount = m_positions.size();
-		HashMap<Vector3> positionToVertexMap(MemTag::Default, vertexCount);
+		HashMap<Hector3> positionToVertexMap(MemTag::Default, vertexCount);
 		for (uint32_t i = 0; i < vertexCount; i++)
 			positionToVertexMap.add(m_positions[i]);
 		Array<uint32_t> colocals(MemTag::MeshColocals);
@@ -2672,15 +2672,15 @@ public:
 
 	float computeFaceArea(uint32_t face) const
 	{
-		const Vector3 &p0 = m_positions[m_indices[face * 3 + 0]];
-		const Vector3 &p1 = m_positions[m_indices[face * 3 + 1]];
-		const Vector3 &p2 = m_positions[m_indices[face * 3 + 2]];
+		const Hector3 &p0 = m_positions[m_indices[face * 3 + 0]];
+		const Hector3 &p1 = m_positions[m_indices[face * 3 + 1]];
+		const Hector3 &p2 = m_positions[m_indices[face * 3 + 2]];
 		return length(cross(p1 - p0, p2 - p0)) * 0.5f;
 	}
 
-	Vector3 computeFaceCentroid(uint32_t face) const
+	Hector3 computeFaceCentroid(uint32_t face) const
 	{
-		Vector3 sum(0.0f);
+		Hector3 sum(0.0f);
 		for (uint32_t i = 0; i < 3; i++)
 			sum += m_positions[m_indices[face * 3 + i]];
 		return sum / 3.0f;
@@ -2688,36 +2688,36 @@ public:
 
 	// Average of the edge midpoints weighted by the edge length.
 	// I want a point inside the triangle, but closer to the cirumcenter.
-	Vector3 computeFaceCenter(uint32_t face) const
+	Hector3 computeFaceCenter(uint32_t face) const
 	{
-		const Vector3 &p0 = m_positions[m_indices[face * 3 + 0]];
-		const Vector3 &p1 = m_positions[m_indices[face * 3 + 1]];
-		const Vector3 &p2 = m_positions[m_indices[face * 3 + 2]];
+		const Hector3 &p0 = m_positions[m_indices[face * 3 + 0]];
+		const Hector3 &p1 = m_positions[m_indices[face * 3 + 1]];
+		const Hector3 &p2 = m_positions[m_indices[face * 3 + 2]];
 		const float l0 = length(p1 - p0);
 		const float l1 = length(p2 - p1);
 		const float l2 = length(p0 - p2);
-		const Vector3 m0 = (p0 + p1) * l0 / (l0 + l1 + l2);
-		const Vector3 m1 = (p1 + p2) * l1 / (l0 + l1 + l2);
-		const Vector3 m2 = (p2 + p0) * l2 / (l0 + l1 + l2);
+		const Hector3 m0 = (p0 + p1) * l0 / (l0 + l1 + l2);
+		const Hector3 m1 = (p1 + p2) * l1 / (l0 + l1 + l2);
+		const Hector3 m2 = (p2 + p0) * l2 / (l0 + l1 + l2);
 		return m0 + m1 + m2;
 	}
 
-	Vector3 computeFaceNormal(uint32_t face) const
+	Hector3 computeFaceNormal(uint32_t face) const
 	{
-		const Vector3 &p0 = m_positions[m_indices[face * 3 + 0]];
-		const Vector3 &p1 = m_positions[m_indices[face * 3 + 1]];
-		const Vector3 &p2 = m_positions[m_indices[face * 3 + 2]];
-		const Vector3 e0 = p2 - p0;
-		const Vector3 e1 = p1 - p0;
-		const Vector3 normalAreaScaled = cross(e0, e1);
-		return normalizeSafe(normalAreaScaled, Vector3(0, 0, 1));
+		const Hector3 &p0 = m_positions[m_indices[face * 3 + 0]];
+		const Hector3 &p1 = m_positions[m_indices[face * 3 + 1]];
+		const Hector3 &p2 = m_positions[m_indices[face * 3 + 2]];
+		const Hector3 e0 = p2 - p0;
+		const Hector3 e1 = p1 - p0;
+		const Hector3 normalAreaScaled = cross(e0, e1);
+		return normalizeSafe(normalAreaScaled, Hector3(0, 0, 1));
 	}
 
 	float computeFaceParametricArea(uint32_t face) const
 	{
-		const Vector2 &t0 = m_texcoords[m_indices[face * 3 + 0]];
-		const Vector2 &t1 = m_texcoords[m_indices[face * 3 + 1]];
-		const Vector2 &t2 = m_texcoords[m_indices[face * 3 + 2]];
+		const Hector2 &t0 = m_texcoords[m_indices[face * 3 + 0]];
+		const Hector2 &t1 = m_texcoords[m_indices[face * 3 + 1]];
+		const Hector2 &t2 = m_texcoords[m_indices[face * 3 + 2]];
 		return triangleArea(t0, t1, t2);
 	}
 
@@ -2760,13 +2760,13 @@ public:
 	XA_INLINE bool isBoundaryVertex(uint32_t vertex) const { return m_isBoundaryVertex.get(vertex); }
 	XA_INLINE uint32_t vertexCount() const { return m_positions.size(); }
 	XA_INLINE uint32_t vertexAt(uint32_t i) const { return m_indices[i]; }
-	XA_INLINE const Vector3 &position(uint32_t vertex) const { return m_positions[vertex]; }
-	XA_INLINE ConstArrayView<Vector3> positions() const { return m_positions; }
-	XA_INLINE const Vector3 &normal(uint32_t vertex) const { XA_DEBUG_ASSERT(m_flags & MeshFlags::HasNormals); return m_normals[vertex]; }
-	XA_INLINE const Vector2 &texcoord(uint32_t vertex) const { return m_texcoords[vertex]; }
-	XA_INLINE Vector2 &texcoord(uint32_t vertex) { return m_texcoords[vertex]; }
-	XA_INLINE const ConstArrayView<Vector2> texcoords() const { return m_texcoords; }
-	XA_INLINE ArrayView<Vector2> texcoords() { return m_texcoords; }
+	XA_INLINE const Hector3 &position(uint32_t vertex) const { return m_positions[vertex]; }
+	XA_INLINE ConstArrayView<Hector3> positions() const { return m_positions; }
+	XA_INLINE const Hector3 &normal(uint32_t vertex) const { XA_DEBUG_ASSERT(m_flags & MeshFlags::HasNormals); return m_normals[vertex]; }
+	XA_INLINE const Hector2 &texcoord(uint32_t vertex) const { return m_texcoords[vertex]; }
+	XA_INLINE Hector2 &texcoord(uint32_t vertex) { return m_texcoords[vertex]; }
+	XA_INLINE const ConstArrayView<Hector2> texcoords() const { return m_texcoords; }
+	XA_INLINE ArrayView<Hector2> texcoords() { return m_texcoords; }
 	XA_INLINE uint32_t faceCount() const { return m_indices.size() / 3; }
 	XA_INLINE ConstArrayView<uint32_t> indices() const { return m_indices; }
 	XA_INLINE uint32_t indexCount() const { return m_indices.size(); }
@@ -2782,9 +2782,9 @@ private:
 	Array<bool> m_faceIgnore;
 	Array<uint32_t> m_faceMaterials;
 	Array<uint32_t> m_indices;
-	Array<Vector3> m_positions;
-	Array<Vector3> m_normals;
-	Array<Vector2> m_texcoords;
+	Array<Hector3> m_positions;
+	Array<Hector3> m_normals;
+	Array<Hector2> m_texcoords;
 
 	// Populated by createColocals
 	Array<uint32_t> m_nextColocalVertex; // In: vertex index. Out: the vertex index of the next colocal position.
@@ -2837,12 +2837,12 @@ public:
 
 		uint32_t vertex0() const { return m_mesh->m_indices[m_face * 3 + m_relativeEdge]; }
 		uint32_t vertex1() const { return m_mesh->m_indices[m_face * 3 + (m_relativeEdge + 1) % 3]; }
-		const Vector3 &position0() const { return m_mesh->m_positions[vertex0()]; }
-		const Vector3 &position1() const { return m_mesh->m_positions[vertex1()]; }
-		const Vector3 &normal0() const { return m_mesh->m_normals[vertex0()]; }
-		const Vector3 &normal1() const { return m_mesh->m_normals[vertex1()]; }
-		const Vector2 &texcoord0() const { return m_mesh->m_texcoords[vertex0()]; }
-		const Vector2 &texcoord1() const { return m_mesh->m_texcoords[vertex1()]; }
+		const Hector3 &position0() const { return m_mesh->m_positions[vertex0()]; }
+		const Hector3 &position1() const { return m_mesh->m_positions[vertex1()]; }
+		const Hector3 &normal0() const { return m_mesh->m_normals[vertex0()]; }
+		const Hector3 &normal1() const { return m_mesh->m_normals[vertex1()]; }
+		const Hector2 &texcoord0() const { return m_mesh->m_texcoords[vertex0()]; }
+		const Hector2 &texcoord1() const { return m_mesh->m_texcoords[vertex1()]; }
 
 	private:
 		const Mesh *m_mesh;
@@ -2963,7 +2963,7 @@ private:
 constexpr MeshFaceGroups::Handle MeshFaceGroups::kInvalid;
 
 #if XA_CHECK_T_JUNCTIONS
-static bool lineIntersectsPoint(const Vector3 &point, const Vector3 &lineStart, const Vector3 &lineEnd, float *t, float epsilon)
+static bool lineIntersectsPoint(const Hector3 &point, const Hector3 &lineStart, const Hector3 &lineEnd, float *t, float epsilon)
 {
 	float tt;
 	if (!t)
@@ -2971,8 +2971,8 @@ static bool lineIntersectsPoint(const Vector3 &point, const Vector3 &lineStart, 
 	*t = 0.0f;
 	if (equal(lineStart, point, epsilon) || equal(lineEnd, point, epsilon))
 		return false; // Vertex lies on either line vertices.
-	const Vector3 v01 = point - lineStart;
-	const Vector3 v21 = lineEnd - lineStart;
+	const Hector3 v01 = point - lineStart;
+	const Hector3 v21 = lineEnd - lineStart;
 	const float l = length(v21);
 	const float d = length(cross(v01, v21)) / l;
 	if (!isZero(d, epsilon))
@@ -2991,12 +2991,12 @@ static int meshCheckTJunctions(const Mesh &inputMesh)
 		if (!inputMesh.isBoundaryVertex(v))
 			continue;
 		// Find edges that this vertex overlaps with.
-		const Vector3 &pos = inputMesh.position(v);
+		const Hector3 &pos = inputMesh.position(v);
 		for (uint32_t e = 0; e < edgeCount; e++) {
 			if (!inputMesh.isBoundaryEdge(e))
 				continue;
-			const Vector3 &edgePos1 = inputMesh.position(inputMesh.vertexAt(meshEdgeIndex0(e)));
-			const Vector3 &edgePos2 = inputMesh.position(inputMesh.vertexAt(meshEdgeIndex1(e)));
+			const Hector3 &edgePos1 = inputMesh.position(inputMesh.vertexAt(meshEdgeIndex0(e)));
+			const Hector3 &edgePos2 = inputMesh.position(inputMesh.vertexAt(meshEdgeIndex1(e)));
 			float t;
 			if (lineIntersectsPoint(pos, edgePos1, edgePos2, &t, inputMesh.epsilon()))
 				count++;
@@ -3459,7 +3459,7 @@ struct Triangulator
 {
 	// This is doing a simple ear-clipping algorithm that skips invalid triangles. Ideally, we should
 	// also sort the ears by angle, start with the ones that have the smallest angle and proceed in order.
-	void triangulatePolygon(ConstArrayView<Vector3> vertices, ConstArrayView<uint32_t> inputIndices, Array<uint32_t> &outputIndices)
+	void triangulatePolygon(ConstArrayView<Hector3> vertices, ConstArrayView<uint32_t> inputIndices, Array<uint32_t> &outputIndices)
 	{
 		m_polygonVertices.clear();
 		m_polygonVertices.reserve(inputIndices.length);
@@ -3485,8 +3485,8 @@ struct Triangulator
 			m_polygonAngles.reserve(edgeCount);
 			for (uint32_t i = 0; i < inputIndices.length; i++) {
 				m_polygonVertices.push_back(inputIndices[i]);
-				const Vector3 &pos = vertices[inputIndices[i]];
-				m_polygonPoints.push_back(Vector2(dot(basis.tangent, pos), dot(basis.bitangent, pos)));
+				const Hector3 &pos = vertices[inputIndices[i]];
+				m_polygonPoints.push_back(Hector2(dot(basis.tangent, pos), dot(basis.bitangent, pos)));
 			}
 			m_polygonAngles.resize(edgeCount);
 			while (m_polygonVertices.size() > 2) {
@@ -3499,9 +3499,9 @@ struct Triangulator
 					uint32_t i0 = i;
 					uint32_t i1 = (i + 1) % size; // Use Sean's polygon interation trick.
 					uint32_t i2 = (i + 2) % size;
-					Vector2 p0 = m_polygonPoints[i0];
-					Vector2 p1 = m_polygonPoints[i1];
-					Vector2 p2 = m_polygonPoints[i2];
+					Hector2 p0 = m_polygonPoints[i0];
+					Hector2 p1 = m_polygonPoints[i1];
+					Hector2 p2 = m_polygonPoints[i2];
 					float d = clamp(dot(p0 - p1, p2 - p1) / (length(p0 - p1) * length(p2 - p1)), -1.0f, 1.0f);
 					float angle = acosf(d);
 					float area = triangleArea(p0, p1, p2);
@@ -3514,7 +3514,7 @@ struct Triangulator
 						for (uint32_t j = 0; j < size; j++) {
 							if (j == i0 || j == i1 || j == i2)
 								continue;
-							Vector2 p = m_polygonPoints[j];
+							Hector2 p = m_polygonPoints[j];
 							if (pointInTriangle(p, p0, p1, p2)) {
 								valid = false;
 								break;
@@ -3542,21 +3542,21 @@ struct Triangulator
 	}
 
 private:
-	static bool pointInTriangle(const Vector2 &p, const Vector2 &a, const Vector2 &b, const Vector2 &c)
+	static bool pointInTriangle(const Hector2 &p, const Hector2 &a, const Hector2 &b, const Hector2 &c)
 	{
 		return triangleArea(a, b, p) >= kAreaEpsilon && triangleArea(b, c, p) >= kAreaEpsilon && triangleArea(c, a, p) >= kAreaEpsilon;
 	}
 
 	Array<int> m_polygonVertices;
 	Array<float> m_polygonAngles;
-	Array<Vector2> m_polygonPoints;
+	Array<Hector2> m_polygonPoints;
 };
 
 class UniformGrid2
 {
 public:
 	// indices are optional.
-	void reset(ConstArrayView<Vector2> positions, ConstArrayView<uint32_t> indices = ConstArrayView<uint32_t>(), uint32_t reserveEdgeCount = 0)
+	void reset(ConstArrayView<Hector2> positions, ConstArrayView<uint32_t> indices = ConstArrayView<uint32_t>(), uint32_t reserveEdgeCount = 0)
 	{
 		m_edges.clear();
 		if (reserveEdgeCount > 0)
@@ -3572,7 +3572,7 @@ public:
 		m_edges.push_back(edge);
 	}
 
-	bool intersect(Vector2 v1, Vector2 v2, float epsilon)
+	bool intersect(Hector2 v1, Hector2 v2, float epsilon)
 	{
 		const uint32_t edgeCount = m_edges.size();
 		bool bruteForce = edgeCount <= 20;
@@ -3621,8 +3621,8 @@ public:
 		for (uint32_t i = 0; i < edges1Count; i++) {
 			const uint32_t edge1 = edges1[i];
 			const uint32_t edge1Vertex[2] = { vertexAt(meshEdgeIndex0(edge1)), vertexAt(meshEdgeIndex1(edge1)) };
-			const Vector2 &edge1Position1 = m_positions[edge1Vertex[0]];
-			const Vector2 &edge1Position2 = m_positions[edge1Vertex[1]];
+			const Hector2 &edge1Position1 = m_positions[edge1Vertex[0]];
+			const Hector2 &edge1Position2 = m_positions[edge1Vertex[1]];
 			const Extents2 edge1Extents(edge1Position1, edge1Position2);
 			uint32_t j = 0;
 			if (bruteForce) {
@@ -3659,8 +3659,8 @@ public:
 				// Ignore connected edges, since they can't intersect (only overlap), and may be detected as false positives.
 				if (edge1Vertex[0] == edge2Vertex[0] || edge1Vertex[0] == edge2Vertex[1] || edge1Vertex[1] == edge2Vertex[0] || edge1Vertex[1] == edge2Vertex[1])
 					continue;
-				const Vector2 &edge2Position1 = m_positions[edge2Vertex[0]];
-				const Vector2 &edge2Position2 = m_positions[edge2Vertex[1]];
+				const Hector2 &edge2Position1 = m_positions[edge2Vertex[0]];
+				const Hector2 &edge2Position2 = m_positions[edge2Vertex[1]];
 				if (!Extents2::intersect(edge1Extents, Extents2(edge2Position1, edge2Position2)))
 					continue;
 				if (linesIntersect(edge1Position1, edge1Position2, edge2Position1, edge2Position2, epsilon))
@@ -3707,7 +3707,7 @@ private:
 		}
 		m_gridOrigin = edgeExtents.min;
 		// Size grid to approximately one edge per cell in the largest dimension.
-		const Vector2 extentsSize(edgeExtents.max - edgeExtents.min);
+		const Hector2 extentsSize(edgeExtents.max - edgeExtents.min);
 		m_cellSize = max(extentsSize.x, extentsSize.y) / (float)clamp(edgeCount, 32u, 512u);
 		if (m_cellSize <= 0.0f)
 			return false;
@@ -3747,7 +3747,7 @@ private:
 		return true;
 	}
 
-	void computePotentialEdges(Vector2 p1, Vector2 p2)
+	void computePotentialEdges(Hector2 p1, Hector2 p2)
 	{
 		m_potentialEdges.clear();
 		traverse(p1, p2);
@@ -3766,10 +3766,10 @@ private:
 	}
 
 	// "A Fast Voxel Traversal Algorithm for Ray Tracing"
-	void traverse(Vector2 p1, Vector2 p2)
+	void traverse(Hector2 p1, Hector2 p2)
 	{
-		const Vector2 dir = p2 - p1;
-		const Vector2 normal = normalizeSafe(dir, Vector2(0.0f));
+		const Hector2 dir = p2 - p1;
+		const Hector2 normal = normalizeSafe(dir, Hector2(0.0f));
 		const int stepX = dir.x >= 0 ? 1 : -1;
 		const int stepY = dir.y >= 0 ? 1 : -1;
 		const uint32_t firstCell[2] = { cellX(p1.x), cellY(p1.y) };
@@ -3832,12 +3832,12 @@ private:
 		return min((uint32_t)max(0.0f, (y - m_gridOrigin.y) / m_cellSize), m_gridHeight - 1u);
 	}
 
-	Vector2 edgePosition0(uint32_t edge) const
+	Hector2 edgePosition0(uint32_t edge) const
 	{
 		return m_positions[vertexAt(meshEdgeIndex0(edge))];
 	}
 
-	Vector2 edgePosition1(uint32_t edge) const
+	Hector2 edgePosition1(uint32_t edge) const
 	{
 		return m_positions[vertexAt(meshEdgeIndex1(edge))];
 	}
@@ -3848,10 +3848,10 @@ private:
 	}
 
 	Array<uint32_t> m_edges;
-	ConstArrayView<Vector2> m_positions;
+	ConstArrayView<Hector2> m_positions;
 	ConstArrayView<uint32_t> m_indices; // Optional. Empty if unused.
 	float m_cellSize;
-	Vector2 m_gridOrigin;
+	Hector2 m_gridOrigin;
 	uint32_t m_gridWidth, m_gridHeight; // in cells
 	Array<uint32_t> m_cellDataOffsets;
 	Array<uint32_t> m_cellData;
@@ -3872,7 +3872,7 @@ struct UvMesh
 	BitArray faceIgnore;
 	Array<uint32_t> faceMaterials;
 	Array<uint32_t> indices;
-	Array<Vector2> texcoords; // Copied from input and never modified, UvMeshInstance::texcoords are. Used to restore UvMeshInstance::texcoords so packing can be run multiple times.
+	Array<Hector2> texcoords; // Copied from input and never modified, UvMeshInstance::texcoords are. Used to restore UvMeshInstance::texcoords so packing can be run multiple times.
 	Array<UvMeshChart *> charts;
 	Array<uint32_t> vertexToChartMap;
 };
@@ -3880,7 +3880,7 @@ struct UvMesh
 struct UvMeshInstance
 {
 	UvMesh *mesh;
-	Array<Vector2> texcoords;
+	Array<Hector2> texcoords;
 };
 
 /*
@@ -3933,13 +3933,13 @@ namespace opennl {
 #define NL_DELETE_ARRAY(x)     XA_FREE(x); x = nullptr
 #define NL_CLEAR(x, T)         memset(x, 0, sizeof(T));
 #define NL_CLEAR_ARRAY(T,x,NB) memset(x, 0, (size_t)(NB)*sizeof(T))
-#define NL_NEW_VECTOR(dim)     XA_ALLOC_ARRAY(MemTag::OpenNL, double, dim)
-#define NL_DELETE_VECTOR(ptr)  XA_FREE(ptr)
+#define NL_NEW_Hector(dim)     XA_ALLOC_ARRAY(MemTag::OpenNL, double, dim)
+#define NL_DELETE_Hector(ptr)  XA_FREE(ptr)
 
 struct NLMatrixStruct;
 typedef NLMatrixStruct * NLMatrix;
 typedef void (*NLDestroyMatrixFunc)(NLMatrix M);
-typedef void (*NLMultMatrixVectorFunc)(NLMatrix M, const double* x, double* y);
+typedef void (*NLMultMatrixHectorFunc)(NLMatrix M, const double* x, double* y);
 
 #define NL_MATRIX_SPARSE_DYNAMIC 0x1001
 #define NL_MATRIX_CRS            0x1002
@@ -3951,7 +3951,7 @@ struct NLMatrixStruct
 	uint32_t n;
 	uint32_t type;
 	NLDestroyMatrixFunc destroy_func;
-	NLMultMatrixVectorFunc mult_func;
+	NLMultMatrixHectorFunc mult_func;
 };
 
 /* Dynamic arrays for sparse row/columns */
@@ -3977,7 +3977,7 @@ struct NLCRSMatrix
 	uint32_t n;
 	uint32_t type;
 	NLDestroyMatrixFunc destroy_func;
-	NLMultMatrixVectorFunc mult_func;
+	NLMultMatrixHectorFunc mult_func;
 	double* val;
 	uint32_t* rowptr;
 	uint32_t* colind;
@@ -3993,7 +3993,7 @@ struct NLSparseMatrix
 	uint32_t n;
 	uint32_t type;
 	NLDestroyMatrixFunc destroy_func;
-	NLMultMatrixVectorFunc mult_func;
+	NLMultMatrixHectorFunc mult_func;
 	uint32_t diag_size;
 	uint32_t diag_capacity;
 	NLRowColumn* row;
@@ -4046,7 +4046,7 @@ static void nlDeleteMatrix(NLMatrix M)
 	NL_DELETE(M);
 }
 
-static void nlMultMatrixVector(NLMatrix M, const double* x, double* y)
+static void nlMultMatrixHector(NLMatrix M, const double* x, double* y)
 {
 	M->mult_func(M, x, y);
 }
@@ -4160,7 +4160,7 @@ static void nlCRSMatrixConstruct(NLCRSMatrix* M, uint32_t m, uint32_t n, uint32_
 	M->n = n;
 	M->type = NL_MATRIX_CRS;
 	M->destroy_func = (NLDestroyMatrixFunc)nlCRSMatrixDestroy;
-	M->mult_func = (NLMultMatrixVectorFunc)nlCRSMatrixMult;
+	M->mult_func = (NLMultMatrixHectorFunc)nlCRSMatrixMult;
 	M->nslices = nslices;
 	M->val = NL_NEW_ARRAY(double, nnz);
 	NL_CLEAR_ARRAY(double, M->val, nnz);
@@ -4212,7 +4212,7 @@ static void nlSparseMatrixSort(NLSparseMatrix* M)
 		nlRowColumnSort(&(M->row[i]));
 }
 
-/* SparseMatrix x Vector routines, internal helper routines */
+/* SparseMatrix x Hector routines, internal helper routines */
 
 static void nlSparseMatrix_mult_rows(NLSparseMatrix* A,	const double* x, double* y)
 {
@@ -4247,7 +4247,7 @@ static void nlSparseMatrixConstruct(NLSparseMatrix* M, uint32_t m, uint32_t n)
 	M->n = n;
 	M->type = NL_MATRIX_SPARSE_DYNAMIC;
 	M->destroy_func = (NLDestroyMatrixFunc)nlSparseMatrixDestroy;
-	M->mult_func = (NLMultMatrixVectorFunc)nlSparseMatrixMult;
+	M->mult_func = (NLMultMatrixHectorFunc)nlSparseMatrixMult;
 	M->row = NL_NEW_ARRAY(NLRowColumn, m);
 	NL_CLEAR_ARRAY(NLRowColumn, M->row, m);
 	M->row_capacity = m;
@@ -4286,7 +4286,7 @@ static NLMatrix nlCRSMatrixNewFromSparseMatrix(NLSparseMatrix* M)
 		}
 	}
 	CRS->rowptr[M->m] = k;
-	/* Create "slices" to be used by parallel sparse matrix vector product */
+	/* Create "slices" to be used by parallel sparse matrix Hector product */
 	if (CRS->sliceptr) {
 		cur_bound = slice_size;
 		cur_NNZ = 0;
@@ -4380,33 +4380,33 @@ static void dscal(int n, double a, double *x)
  * CPU/GPU, dense matrix / sparse matrix etc...
  *  Abstraction is realized through:
   *   - Abstract matrix interface (NLMatrix), that can implement different
- *     versions of matrix x vector product (CPU/GPU, sparse/dense ...)
+ *     versions of matrix x Hector product (CPU/GPU, sparse/dense ...)
  */
 
 static uint32_t nlSolveSystem_PRE_CG(NLMatrix M, NLMatrix P, double* b, double* x, double eps, uint32_t max_iter, double *sq_bnorm, double *sq_rnorm)
 {
 	int     N = (int)M->n;
-	double* r = NL_NEW_VECTOR(N);
-	double* d = NL_NEW_VECTOR(N);
-	double* h = NL_NEW_VECTOR(N);
+	double* r = NL_NEW_Hector(N);
+	double* d = NL_NEW_Hector(N);
+	double* h = NL_NEW_Hector(N);
 	double *Ad = h;
 	uint32_t its = 0;
 	double rh, alpha, beta;
 	double b_square = ddot(N, b, b);
 	double err = eps * eps*b_square;
 	double curr_err;
-	nlMultMatrixVector(M, x, r);
+	nlMultMatrixHector(M, x, r);
 	daxpy(N, -1., b, r);
-	nlMultMatrixVector(P, r, d);
+	nlMultMatrixHector(P, r, d);
 	memcpy(h, d, N * sizeof(double));
 	rh = ddot(N, r, h);
 	curr_err = ddot(N, r, r);
 	while (curr_err > err && its < max_iter) {
-		nlMultMatrixVector(M, d, Ad);
+		nlMultMatrixHector(M, d, Ad);
 		alpha = rh / ddot(N, d, Ad);
 		daxpy(N, -alpha, d, x);
 		daxpy(N, -alpha, Ad, r);
-		nlMultMatrixVector(P, r, h);
+		nlMultMatrixHector(P, r, h);
 		beta = 1. / rh;
 		rh = ddot(N, r, h);
 		beta *= rh;
@@ -4415,9 +4415,9 @@ static uint32_t nlSolveSystem_PRE_CG(NLMatrix M, NLMatrix P, double* b, double* 
 		++its;
 		curr_err = ddot(N, r, r);
 	}
-	NL_DELETE_VECTOR(r);
-	NL_DELETE_VECTOR(d);
-	NL_DELETE_VECTOR(h);
+	NL_DELETE_Hector(r);
+	NL_DELETE_Hector(d);
+	NL_DELETE_Hector(h);
 	*sq_bnorm = b_square;
 	*sq_rnorm = curr_err;
 	return its;
@@ -4465,7 +4465,7 @@ struct NLJacobiPreconditioner
 	uint32_t n;
 	uint32_t type;
 	NLDestroyMatrixFunc destroy_func;
-	NLMultMatrixVectorFunc mult_func;
+	NLMultMatrixHectorFunc mult_func;
 	double* diag_inv;
 };
 
@@ -4493,7 +4493,7 @@ static NLMatrix nlNewJacobiPreconditioner(NLMatrix M_in)
 	result->n = M->n;
 	result->type = NL_MATRIX_OTHER;
 	result->destroy_func = (NLDestroyMatrixFunc)nlJacobiPreconditionerDestroy;
-	result->mult_func = (NLMultMatrixVectorFunc)nlJacobiPreconditionerMult;
+	result->mult_func = (NLMultMatrixHectorFunc)nlJacobiPreconditionerMult;
 	result->diag_inv = NL_NEW_ARRAY(double, M->n);
 	NL_CLEAR_ARRAY(double, result->diag_inv, M->n);
 	for (uint32_t i = 0; i < M->n; ++i)
@@ -4534,7 +4534,7 @@ static void nlLockVariable(NLContext *context, uint32_t index)
 	context->variable_is_locked[index] = true;
 }
 
-static void nlVariablesToVector(NLContext *context)
+static void nlVariablesToHector(NLContext *context)
 {
 	uint32_t n = context->n;
 	XA_DEBUG_ASSERT(context->x);
@@ -4550,7 +4550,7 @@ static void nlVariablesToVector(NLContext *context)
 	}
 }
 
-static void nlVectorToVariables(NLContext *context)
+static void nlHectorToVariables(NLContext *context)
 {
 	uint32_t n = context->n;
 	XA_DEBUG_ASSERT(context->x);
@@ -4627,7 +4627,7 @@ static void nlBegin(NLContext *context, uint32_t prim)
 		NL_CLEAR_ARRAY(double, context->x, n*context->nb_systems);
 		context->b = NL_NEW_ARRAY(double, n*context->nb_systems);
 		NL_CLEAR_ARRAY(double, context->b, n*context->nb_systems);
-		nlVariablesToVector(context);
+		nlVariablesToHector(context);
 		nlRowColumnConstruct(&context->af);
 		nlRowColumnConstruct(&context->al);
 		context->current_row = 0;
@@ -4679,7 +4679,7 @@ static bool nlSolve(NLContext *context)
 	context->P = nlNewJacobiPreconditioner(context->M);
 	nlMatrixCompress(&context->M);
 	bool result = nlSolveIterative(context);
-	nlVectorToVariables(context);
+	nlHectorToVariables(context);
 	return result;
 }
 } // namespace opennl
@@ -4688,7 +4688,7 @@ namespace raster {
 class ClippedTriangle
 {
 public:
-	ClippedTriangle(const Vector2 &a, const Vector2 &b, const Vector2 &c)
+	ClippedTriangle(const Hector2 &a, const Hector2 &b, const Hector2 &c)
 	{
 		m_numVertices = 3;
 		m_activeVertexBuffer = 0;
@@ -4702,9 +4702,9 @@ public:
 
 	void clipHorizontalPlane(float offset, float clipdirection)
 	{
-		Vector2 *v  = m_vertexBuffers[m_activeVertexBuffer];
+		Hector2 *v  = m_vertexBuffers[m_activeVertexBuffer];
 		m_activeVertexBuffer ^= 1;
-		Vector2 *v2 = m_vertexBuffers[m_activeVertexBuffer];
+		Hector2 *v2 = m_vertexBuffers[m_activeVertexBuffer];
 		v[m_numVertices] = v[0];
 		float dy2,   dy1 = offset - v[0].y;
 		int   dy2in, dy1in = clipdirection * dy1 >= 0;
@@ -4716,7 +4716,7 @@ public:
 			if ( dy1in + dy2in == 1 ) { // not both in/out
 				float dx = v[k + 1].x - v[k].x;
 				float dy = v[k + 1].y - v[k].y;
-				v2[p++] = Vector2(v[k].x + dy1 * (dx / dy), offset);
+				v2[p++] = Hector2(v[k].x + dy1 * (dx / dy), offset);
 			}
 			dy1 = dy2;
 			dy1in = dy2in;
@@ -4726,9 +4726,9 @@ public:
 
 	void clipVerticalPlane(float offset, float clipdirection)
 	{
-		Vector2 *v  = m_vertexBuffers[m_activeVertexBuffer];
+		Hector2 *v  = m_vertexBuffers[m_activeVertexBuffer];
 		m_activeVertexBuffer ^= 1;
-		Vector2 *v2 = m_vertexBuffers[m_activeVertexBuffer];
+		Hector2 *v2 = m_vertexBuffers[m_activeVertexBuffer];
 		v[m_numVertices] = v[0];
 		float dx2,   dx1   = offset - v[0].x;
 		int   dx2in, dx1in = clipdirection * dx1 >= 0;
@@ -4740,7 +4740,7 @@ public:
 			if ( dx1in + dx2in == 1 ) { // not both in/out
 				float dx = v[k + 1].x - v[k].x;
 				float dy = v[k + 1].y - v[k].y;
-				v2[p++] = Vector2(offset, v[k].y + dx1 * (dy / dx));
+				v2[p++] = Hector2(offset, v[k].y + dx1 * (dy / dx));
 			}
 			dx1 = dx2;
 			dx1in = dx2in;
@@ -4750,7 +4750,7 @@ public:
 
 	void computeArea()
 	{
-		Vector2 *v  = m_vertexBuffers[m_activeVertexBuffer];
+		Hector2 *v  = m_vertexBuffers[m_activeVertexBuffer];
 		v[m_numVertices] = v[0];
 		m_area = 0;
 		for (uint32_t k = 0; k < m_numVertices; k++) {
@@ -4776,9 +4776,9 @@ public:
 	}
 
 private:
-	Vector2 m_verticesA[7 + 1];
-	Vector2 m_verticesB[7 + 1];
-	Vector2 *m_vertexBuffers[2];
+	Hector2 m_verticesA[7 + 1];
+	Hector2 m_verticesB[7 + 1];
+	Hector2 *m_vertexBuffers[2];
 	uint32_t m_numVertices;
 	uint32_t m_activeVertexBuffer;
 	float m_area;
@@ -4790,7 +4790,7 @@ typedef bool (*SamplingCallback)(void *param, int x, int y);
 /// A triangle for rasterization.
 struct Triangle
 {
-	Triangle(const Vector2 &_v0, const Vector2 &_v1, const Vector2 &_v2) : v1(_v0), v2(_v2), v3(_v1), n1(0.0f), n2(0.0f), n3(0.0f)
+	Triangle(const Hector2 &_v0, const Hector2 &_v1, const Hector2 &_v2) : v1(_v0), v2(_v2), v3(_v1), n1(0.0f), n2(0.0f), n3(0.0f)
 	{
 		// make sure every triangle is front facing.
 		flipBackface();
@@ -4801,14 +4801,14 @@ struct Triangle
 
 	bool isValid()
 	{
-		const Vector2 e0 = v3 - v1;
-		const Vector2 e1 = v2 - v1;
+		const Hector2 e0 = v3 - v1;
+		const Hector2 e1 = v2 - v1;
 		const float area = e0.y * e1.x - e1.y * e0.x;
 		return area != 0.0f;
 	}
 
 	// extents has to be multiple of BK_SIZE!!
-	bool drawAA(const Vector2 &extents, SamplingCallback cb, void *param)
+	bool drawAA(const Hector2 &extents, SamplingCallback cb, void *param)
 	{
 		const float PX_INSIDE = 1.0f/sqrtf(2.0f);
 		const float PX_OUTSIDE = -1.0f/sqrtf(2.0f);
@@ -4867,7 +4867,7 @@ struct Triangle
 									return false;
 							} else if ((CX1 >= PX_OUTSIDE) && (CX2 >= PX_OUTSIDE) && (CX3 >= PX_OUTSIDE)) {
 								// triangle partially covers pixel. do clipping.
-								ClippedTriangle ct(v1 - Vector2(x, y), v2 - Vector2(x, y), v3 - Vector2(x, y));
+								ClippedTriangle ct(v1 - Hector2(x, y), v2 - Hector2(x, y), v3 - Hector2(x, y));
 								ct.clipAABox(-0.5, -0.5, 0.5, 0.5);
 								if (ct.area() > 0.0f) {
 									if (!cb(param, (int)x, (int)y))
@@ -4893,7 +4893,7 @@ private:
 	{
 		// check if triangle is backfacing, if so, swap two vertices
 		if ( ((v3.x - v1.x) * (v2.y - v1.y) - (v3.y - v1.y) * (v2.x - v1.x)) < 0 ) {
-			Vector2 hv = v1;
+			Hector2 hv = v1;
 			v1 = v2;
 			v2 = hv; // swap pos
 		}
@@ -4903,23 +4903,23 @@ private:
 	void computeUnitInwardNormals()
 	{
 		n1 = v1 - v2;
-		n1 = Vector2(-n1.y, n1.x);
+		n1 = Hector2(-n1.y, n1.x);
 		n1 = n1 * (1.0f / sqrtf(dot(n1, n1)));
 		n2 = v2 - v3;
-		n2 = Vector2(-n2.y, n2.x);
+		n2 = Hector2(-n2.y, n2.x);
 		n2 = n2 * (1.0f / sqrtf(dot(n2, n2)));
 		n3 = v3 - v1;
-		n3 = Vector2(-n3.y, n3.x);
+		n3 = Hector2(-n3.y, n3.x);
 		n3 = n3 * (1.0f / sqrtf(dot(n3, n3)));
 	}
 
 	// Vertices.
-	Vector2 v1, v2, v3;
-	Vector2 n1, n2, n3; // unit inward normals
+	Hector2 v1, v2, v3;
+	Hector2 n1, n2, n3; // unit inward normals
 };
 
 // Process the given triangle. Returns false if rasterization was interrupted by the callback.
-static bool drawTriangle(const Vector2 &extents, const Vector2 v[3], SamplingCallback cb, void *param)
+static bool drawTriangle(const Hector2 &extents, const Hector2 v[3], SamplingCallback cb, void *param)
 {
 	Triangle tri(v[0], v[1], v[2]);
 	// @@ It would be nice to have a conservative drawing mode that enlarges the triangle extents by one texel and is able to handle degenerate triangles.
@@ -5005,7 +5005,7 @@ struct AtlasData
 	Array<float> edgeLengths;
 	Array<float> faceAreas;
 	Array<float> faceUvAreas; // Can be negative.
-	Array<Vector3> faceNormals;
+	Array<Hector3> faceNormals;
 	BitArray isFaceInChart;
 
 	AtlasData() : edgeDihedralAngles(MemTag::SegmentAtlasMeshData), edgeLengths(MemTag::SegmentAtlasMeshData), faceAreas(MemTag::SegmentAtlasMeshData), faceNormals(MemTag::SegmentAtlasMeshData) {}
@@ -5025,8 +5025,8 @@ struct AtlasData
 		for (uint32_t f = 0; f < faceCount; f++) {
 			for (uint32_t i = 0; i < 3; i++) {
 				const uint32_t edge = f * 3 + i;
-				const Vector3 &p0 = mesh->position(mesh->vertexAt(meshEdgeIndex0(edge)));
-				const Vector3 &p1 = mesh->position(mesh->vertexAt(meshEdgeIndex1(edge)));
+				const Hector3 &p0 = mesh->position(mesh->vertexAt(meshEdgeIndex0(edge)));
+				const Hector3 &p1 = mesh->position(mesh->vertexAt(meshEdgeIndex1(edge)));
 				edgeLengths[edge] = length(p1 - p0);
 				XA_DEBUG_ASSERT(edgeLengths[edge] > 0.0f);
 			}
@@ -5123,10 +5123,10 @@ private:
 						continue; // Face must have valid UVs.
 					if ((m_data.faceUvAreas[face] < 0.0f) != isFaceAreaNegative)
 						continue; // Face winding is opposite of the first chart face.
-					const Vector2 &uv0 = m_data.mesh->texcoord(edgeIt.vertex0());
-					const Vector2 &uv1 = m_data.mesh->texcoord(edgeIt.vertex1());
-					const Vector2 &ouv0 = m_data.mesh->texcoord(m_data.mesh->vertexAt(meshEdgeIndex0(edgeIt.oppositeEdge())));
-					const Vector2 &ouv1 = m_data.mesh->texcoord(m_data.mesh->vertexAt(meshEdgeIndex1(edgeIt.oppositeEdge())));
+					const Hector2 &uv0 = m_data.mesh->texcoord(edgeIt.vertex0());
+					const Hector2 &uv1 = m_data.mesh->texcoord(edgeIt.vertex1());
+					const Hector2 &ouv0 = m_data.mesh->texcoord(m_data.mesh->vertexAt(meshEdgeIndex0(edgeIt.oppositeEdge())));
+					const Hector2 &ouv1 = m_data.mesh->texcoord(m_data.mesh->vertexAt(meshEdgeIndex1(edgeIt.oppositeEdge())));
 					if (!equal(uv0, ouv1, m_data.mesh->epsilon()) || !equal(uv1, ouv0, m_data.mesh->epsilon()))
 						continue; // UVs must match exactly.
 					m_chartFaces.push_back(face);
@@ -5144,7 +5144,7 @@ private:
 	Array<Chart> m_charts;
 	Array<Basis> m_chartBasis;
 	Array<uint32_t> m_chartFaces;
-	Array<Vector3> m_tempPoints;
+	Array<Hector3> m_tempPoints;
 };
 
 #if XA_DEBUG_EXPORT_OBJ_PLANAR_REGIONS
@@ -5387,8 +5387,8 @@ private:
 		Basis basis; // Best fit normal.
 		float area = 0.0f;
 		float boundaryLength = 0.0f;
-		Vector3 centroidSum = Vector3(0.0f); // Sum of chart face centroids.
-		Vector3 centroid = Vector3(0.0f); // Average centroid of chart faces.
+		Hector3 centroidSum = Hector3(0.0f); // Sum of chart face centroids.
+		Hector3 centroid = Hector3(0.0f); // Average centroid of chart faces.
 		Array<uint32_t> faces;
 		Array<uint32_t> failedPlanarRegions;
 		CostQueue candidates;
@@ -5478,11 +5478,11 @@ private:
 			Chart *chart = m_charts[i];
 			chart->area = 0.0f;
 			chart->boundaryLength = 0.0f;
-			chart->basis.normal = Vector3(0.0f);
-			chart->basis.tangent = Vector3(0.0f);
-			chart->basis.bitangent = Vector3(0.0f);
-			chart->centroidSum = Vector3(0.0f);
-			chart->centroid = Vector3(0.0f);
+			chart->basis.normal = Hector3(0.0f);
+			chart->basis.tangent = Hector3(0.0f);
+			chart->basis.bitangent = Hector3(0.0f);
+			chart->centroidSum = Hector3(0.0f);
+			chart->centroid = Hector3(0.0f);
 			chart->faces.clear();
 			chart->candidates.clear();
 			chart->failedPlanarRegions.clear();
@@ -5675,9 +5675,9 @@ private:
 
 	bool isFaceFlipped(uint32_t face) const
 	{
-		const Vector2 &v1 = m_texcoords[face * 3 + 0];
-		const Vector2 &v2 = m_texcoords[face * 3 + 1];
-		const Vector2 &v3 = m_texcoords[face * 3 + 2];
+		const Hector2 &v1 = m_texcoords[face * 3 + 0];
+		const Hector2 &v2 = m_texcoords[face * 3 + 1];
+		const Hector2 &v3 = m_texcoords[face * 3 + 2];
 		const float parametricArea = ((v2.x - v1.x) * (v3.y - v1.y) - (v3.x - v1.x) * (v2.y - v1.y)) * 0.5f;
 		return parametricArea < 0.0f;
 	}
@@ -5689,8 +5689,8 @@ private:
 			const uint32_t face = chart->faces[i];
 			for (uint32_t j = 0; j < 3; j++) {
 				const uint32_t offset = face * 3 + j;
-				const Vector3 &pos = m_data.mesh->position(m_data.mesh->vertexAt(offset));
-				m_texcoords[offset] = Vector2(dot(chart->basis.tangent, pos), dot(chart->basis.bitangent, pos));
+				const Hector3 &pos = m_data.mesh->position(m_data.mesh->vertexAt(offset));
+				m_texcoords[offset] = Hector2(dot(chart->basis.tangent, pos), dot(chart->basis.bitangent, pos));
 			}
 		}
 	}
@@ -5749,7 +5749,7 @@ private:
 		Basis basis;
 		if (firstFace) {
 			// Use the first face normal.
-			// Use any edge as the tangent vector.
+			// Use any edge as the tangent Hector.
 			basis.normal = m_data.faceNormals[face];
 			basis.tangent = normalize(m_data.mesh->position(m_data.mesh->vertexAt(face * 3 + 0)) - m_data.mesh->position(m_data.mesh->vertexAt(face * 3 + 1)));
 			basis.bitangent = cross(basis.normal, basis.tangent);
@@ -5826,7 +5826,7 @@ private:
 			if (m_bestTriangles.count() == 0)
 				break;
 			const uint32_t face = m_bestTriangles.pop();
-			Vector3 faceCentroid = m_data.mesh->computeFaceCenter(face);
+			Hector3 faceCentroid = m_data.mesh->computeFaceCenter(face);
 			const float distance = length(chart->centroid - faceCentroid);
 			if (distance < minDistance) {
 				minDistance = distance;
@@ -5881,7 +5881,7 @@ private:
 	float computeNormalDeviationMetric(Chart *chart, uint32_t face) const
 	{
 		// All faces in coplanar regions have the same normal, can use any face.
-		const Vector3 faceNormal = m_data.faceNormals[face];
+		const Hector3 faceNormal = m_data.faceNormals[face];
 		// Use plane fitting metric for now:
 		return min(1.0f - dot(faceNormal, chart->basis.normal), 1.0f); // @@ normal deviations should be weighted by face area
 	}
@@ -5962,10 +5962,10 @@ private:
 				if (isNormalSeam(it.edge())) {
 					float d;
 					if (m_data.mesh->flags() & MeshFlags::HasNormals) {
-						const Vector3 &n0 = m_data.mesh->normal(it.vertex0());
-						const Vector3 &n1 = m_data.mesh->normal(it.vertex1());
-						const Vector3 &on0 = m_data.mesh->normal(m_data.mesh->vertexAt(meshEdgeIndex0(it.oppositeEdge())));
-						const Vector3 &on1 = m_data.mesh->normal(m_data.mesh->vertexAt(meshEdgeIndex1(it.oppositeEdge())));
+						const Hector3 &n0 = m_data.mesh->normal(it.vertex0());
+						const Hector3 &n1 = m_data.mesh->normal(it.vertex1());
+						const Hector3 &on0 = m_data.mesh->normal(m_data.mesh->vertexAt(meshEdgeIndex0(it.oppositeEdge())));
+						const Hector3 &on1 = m_data.mesh->normal(m_data.mesh->vertexAt(meshEdgeIndex1(it.oppositeEdge())));
 						const float d0 = clamp(dot(n0, on1), 0.0f, 1.0f);
 						const float d1 = clamp(dot(n1, on0), 0.0f, 1.0f);
 						d = (d0 + d1) * 0.5f;
@@ -6093,12 +6093,12 @@ private:
 private:
 	AtlasData &m_data;
 	const PlanarCharts &m_planarCharts;
-	Array<Vector2> m_texcoords;
+	Array<Hector2> m_texcoords;
 	uint32_t m_facesLeft;
 	Array<int> m_faceCharts;
 	Array<Chart *> m_charts;
 	CostQueue m_bestTriangles;
-	Array<Vector3> m_tempPoints;
+	Array<Hector3> m_tempPoints;
 	UniformGrid2 m_boundaryGrid;
 #if XA_MERGE_CHARTS
 	// mergeCharts
@@ -6238,7 +6238,7 @@ struct ComputeUvMeshChartsTask
 					const uint32_t face = chart->faces[f2];
 					for (uint32_t i = 0; i < 3; i++) {
 						// Add any valid faces with colocal UVs to the chart.
-						const Vector2 &uv = m_mesh->texcoords[m_mesh->indices[face * 3 + i]];
+						const Hector2 &uv = m_mesh->texcoords[m_mesh->indices[face * 3 + i]];
 						uint32_t edge = m_uvToEdgeMap.get(uv);
 						while (edge != UINT32_MAX) {
 							const uint32_t newFace = edge / 3;
@@ -6290,7 +6290,7 @@ private:
 
 	UvMesh * const m_mesh;
 	Progress * const m_progress;
-	HashMap<Vector2> m_uvToEdgeMap; // Face is edge / 3.
+	HashMap<Hector2> m_uvToEdgeMap; // Face is edge / 3.
 	BitArray m_faceAssigned;
 };
 
@@ -6355,7 +6355,7 @@ static bool findApproximateDiameterVertices(Mesh *mesh, uint32_t *a, uint32_t *b
 			// Skip interior vertices.
 			continue;
 		}
-		const Vector3 &pos = mesh->position(v);
+		const Hector3 &pos = mesh->position(v);
 		if (pos.x < mesh->position(minVertex[0]).x)
 			minVertex[0] = v;
 		else if (pos.x > mesh->position(maxVertex[0]).x)
@@ -6388,40 +6388,40 @@ static bool findApproximateDiameterVertices(Mesh *mesh, uint32_t *a, uint32_t *b
 
 // From OpenNL LSCM example.
 // Computes the coordinates of the vertices of a triangle in a local 2D orthonormal basis of the triangle's plane.
-static void projectTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Vector2 *z0, Vector2 *z1, Vector2 *z2)
+static void projectTriangle(Hector3 p0, Hector3 p1, Hector3 p2, Hector2 *z0, Hector2 *z1, Hector2 *z2)
 {
-	Vector3 X = normalize(p1 - p0);
-	Vector3 Z = normalize(cross(X, p2 - p0));
-	Vector3 Y = cross(Z, X);
-	Vector3 &O = p0;
-	*z0 = Vector2(0, 0);
-	*z1 = Vector2(length(p1 - O), 0);
-	*z2 = Vector2(dot(p2 - O, X), dot(p2 - O, Y));
+	Hector3 X = normalize(p1 - p0);
+	Hector3 Z = normalize(cross(X, p2 - p0));
+	Hector3 Y = cross(Z, X);
+	Hector3 &O = p0;
+	*z0 = Hector2(0, 0);
+	*z1 = Hector2(length(p1 - O), 0);
+	*z2 = Hector2(dot(p2 - O, X), dot(p2 - O, Y));
 }
 
 // Conformal relations from Brecht Van Lommel (based on ABF):
 
-static float vec_angle_cos(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3)
+static float vec_angle_cos(const Hector3 &v1, const Hector3 &v2, const Hector3 &v3)
 {
-	Vector3 d1 = v1 - v2;
-	Vector3 d2 = v3 - v2;
+	Hector3 d1 = v1 - v2;
+	Hector3 d2 = v3 - v2;
 	return clamp(dot(d1, d2) / (length(d1) * length(d2)), -1.0f, 1.0f);
 }
 
-static float vec_angle(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3)
+static float vec_angle(const Hector3 &v1, const Hector3 &v2, const Hector3 &v3)
 {
 	float dot = vec_angle_cos(v1, v2, v3);
 	return acosf(dot);
 }
 
-static void triangle_angles(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3, float *a1, float *a2, float *a3)
+static void triangle_angles(const Hector3 &v1, const Hector3 &v2, const Hector3 &v3, float *a1, float *a2, float *a3)
 {
 	*a1 = vec_angle(v3, v1, v2);
 	*a2 = vec_angle(v1, v2, v3);
 	*a3 = kPi - *a2 - *a1;
 }
 
-static bool setup_abf_relations(opennl::NLContext *context, int id0, int id1, int id2, const Vector3 &p0, const Vector3 &p1, const Vector3 &p2)
+static bool setup_abf_relations(opennl::NLContext *context, int id0, int id1, int id2, const Hector3 &p0, const Hector3 &p1, const Hector3 &p2)
 {
 	// @@ IC: Wouldn't it be more accurate to return cos and compute 1-cos^2?
 	// It does indeed seem to be a little bit more robust.
@@ -6491,7 +6491,7 @@ static bool computeLeastSquaresConformalMap(Mesh *mesh)
 	opennl::nlSolverParameteri(context, NL_NB_VARIABLES, int(2 * vertexCount));
 	opennl::nlSolverParameteri(context, NL_MAX_ITERATIONS, int(5 * vertexCount));
 	opennl::nlBegin(context, NL_SYSTEM);
-	ArrayView<Vector2> texcoords = mesh->texcoords();
+	ArrayView<Hector2> texcoords = mesh->texcoords();
 	for (uint32_t i = 0; i < vertexCount; i++) {
 		opennl::nlSetVariable(context, 2 * i, texcoords[i].x);
 		opennl::nlSetVariable(context, 2 * i + 1, texcoords[i].y);
@@ -6502,14 +6502,14 @@ static bool computeLeastSquaresConformalMap(Mesh *mesh)
 	}
 	opennl::nlBegin(context, NL_MATRIX);
 	const uint32_t faceCount = mesh->faceCount();
-	ConstArrayView<Vector3> positions = mesh->positions();
+	ConstArrayView<Hector3> positions = mesh->positions();
 	ConstArrayView<uint32_t> indices = mesh->indices();
 	for (uint32_t f = 0; f < faceCount; f++) {
 		const uint32_t v0 = indices[f * 3 + 0];
 		const uint32_t v1 = indices[f * 3 + 1];
 		const uint32_t v2 = indices[f * 3 + 2];
 		if (!setup_abf_relations(context, v0, v1, v2, positions[v0], positions[v1], positions[v2])) {
-			Vector2 z0, z1, z2;
+			Hector2 z0, z1, z2;
 			projectTriangle(positions[v0], positions[v1], positions[v2], &z0, &z1, &z2);
 			double a = z1.x - z0.x;
 			double b = z1.y - z0.y;
@@ -6552,7 +6552,7 @@ static bool computeLeastSquaresConformalMap(Mesh *mesh)
 	for (uint32_t i = 0; i < vertexCount; i++) {
 		const double u = opennl::nlGetVariable(context, 2 * i);
 		const double v = opennl::nlGetVariable(context, 2 * i + 1);
-		texcoords[i] = Vector2((float)u, (float)v);
+		texcoords[i] = Hector2((float)u, (float)v);
 		XA_DEBUG_ASSERT(!isNan(mesh->texcoord(i).x));
 		XA_DEBUG_ASSERT(!isNan(mesh->texcoord(i).y));
 	}
@@ -6579,7 +6579,7 @@ struct PiecewiseParam
 	}
 
 	ConstArrayView<uint32_t> chartFaces() const { return m_patch; }
-	ConstArrayView<Vector2> texcoords() const { return m_texcoords; }
+	ConstArrayView<Hector2> texcoords() const { return m_texcoords; }
 
 	bool computeChart()
 	{
@@ -6598,7 +6598,7 @@ struct PiecewiseParam
 				continue;
 			seed = f;
 			// Add all 3 vertices.
-			Vector2 texcoords[3];
+			Hector2 texcoords[3];
 			orthoProjectFace(seed, texcoords);
 			for (uint32_t i = 0; i < 3; i++) {
 				const uint32_t vertex = m_mesh->vertexAt(seed * 3 + i);
@@ -6629,7 +6629,7 @@ struct PiecewiseParam
 				break;
 			XA_DEBUG_ASSERT(!bestCandidate->prev); // Must be head of linked candidates.
 			// Compute the position by averaging linked candidates (candidates that share the same free vertex).
-			Vector2 position(0.0f);
+			Hector2 position(0.0f);
 			uint32_t n = 0;
 			for (CandidateIterator it(bestCandidate); !it.isDone(); it.advance()) {
 				position += it.current()->position;
@@ -6653,9 +6653,9 @@ struct PiecewiseParam
 			}
 			// Check for zero area and flipped faces (using area).
 			for (CandidateIterator it(bestCandidate); !it.isDone(); it.advance()) {
-				const Vector2 a = m_texcoords[m_mesh->vertexAt(it.current()->face * 3 + 0)];
-				const Vector2 b = m_texcoords[m_mesh->vertexAt(it.current()->face * 3 + 1)];
-				const Vector2 c = m_texcoords[m_mesh->vertexAt(it.current()->face * 3 + 2)];
+				const Hector2 a = m_texcoords[m_mesh->vertexAt(it.current()->face * 3 + 0)];
+				const Hector2 b = m_texcoords[m_mesh->vertexAt(it.current()->face * 3 + 1)];
+				const Hector2 c = m_texcoords[m_mesh->vertexAt(it.current()->face * 3 + 2)];
 				const float area = triangleArea(a, b, c);
 				if (area <= 0.0f) {
 					invalid = true;
@@ -6715,7 +6715,7 @@ private:
 	{
 		uint32_t face, vertex;
 		Candidate *prev, *next; // The previous/next candidate with the same vertex.
-		Vector2 position;
+		Hector2 position;
 		float cost;
 		float maxCost; // Of all linked candidates.
 		uint32_t patchEdge;
@@ -6734,7 +6734,7 @@ private:
 	};
 
 	const Mesh *m_mesh;
-	Array<Vector2> m_texcoords;
+	Array<Hector2> m_texcoords;
 	BitArray m_faceInAnyPatch; // Face is in a previous chart patch or the current patch.
 	Array<Candidate *> m_candidates; // Incident faces to the patch.
 	Array<Candidate *> m_faceToCandidate;
@@ -6788,7 +6788,7 @@ private:
 	void addCandidateFace(uint32_t patchEdge, float patchVertexOrient, uint32_t face, uint32_t edge, uint32_t freeVertex)
 	{
 		XA_DEBUG_ASSERT(!m_faceToCandidate[face]);
-		Vector2 texcoords[3];
+		Hector2 texcoords[3];
 		orthoProjectFace(face, texcoords);
 		// Find corresponding vertices between the patch edge and candidate edge.
 		const uint32_t vertex0 = m_mesh->vertexAt(meshEdgeIndex0(patchEdge));
@@ -6804,8 +6804,8 @@ private:
 				localFreeVertex = i;
 		}
 		// Scale orthogonal projection to match the patch edge.
-		const Vector2 patchEdgeVec = m_texcoords[vertex1] - m_texcoords[vertex0];
-		const Vector2 localEdgeVec = texcoords[localVertex1] - texcoords[localVertex0];
+		const Hector2 patchEdgeVec = m_texcoords[vertex1] - m_texcoords[vertex0];
+		const Hector2 localEdgeVec = texcoords[localVertex1] - texcoords[localVertex0];
 		const float len1 = length(patchEdgeVec);
 		const float len2 = length(localEdgeVec);
 		if (len1 <= 0.0f || len2 <= 0.0f)
@@ -6814,7 +6814,7 @@ private:
 		for (uint32_t i = 0; i < 3; i++)
 			texcoords[i] *= scale;
 		// Translate to the first vertex on the patch edge.
-		const Vector2 translate = m_texcoords[vertex0] - texcoords[localVertex0];
+		const Hector2 translate = m_texcoords[vertex0] - texcoords[localVertex0];
 		for (uint32_t i = 0; i < 3; i++)
 			texcoords[i] += translate;
 		// Compute the angle between the patch edge and the corresponding local edge.
@@ -6823,7 +6823,7 @@ private:
 		for (uint32_t i = 0; i < 3; i++) {
 			if (i == localVertex0)
 				continue;
-			Vector2 &uv = texcoords[i];
+			Hector2 &uv = texcoords[i];
 			uv -= texcoords[localVertex0]; // Rotate around the first vertex.
 			const float c = cosf(angle);
 			const float s = sinf(angle);
@@ -6918,26 +6918,26 @@ private:
 		}
 	}
 
-	void orthoProjectFace(uint32_t face, Vector2 *texcoords) const
+	void orthoProjectFace(uint32_t face, Hector2 *texcoords) const
 	{
-		const Vector3 normal = -m_mesh->computeFaceNormal(face);
-		const Vector3 tangent = normalize(m_mesh->position(m_mesh->vertexAt(face * 3 + 1)) - m_mesh->position(m_mesh->vertexAt(face * 3 + 0)));
-		const Vector3 bitangent = cross(normal, tangent);
+		const Hector3 normal = -m_mesh->computeFaceNormal(face);
+		const Hector3 tangent = normalize(m_mesh->position(m_mesh->vertexAt(face * 3 + 1)) - m_mesh->position(m_mesh->vertexAt(face * 3 + 0)));
+		const Hector3 bitangent = cross(normal, tangent);
 		for (uint32_t i = 0; i < 3; i++) {
-			const Vector3 &pos = m_mesh->position(m_mesh->vertexAt(face * 3 + i));
-			texcoords[i] = Vector2(dot(tangent, pos), dot(bitangent, pos));
+			const Hector3 &pos = m_mesh->position(m_mesh->vertexAt(face * 3 + i));
+			texcoords[i] = Hector2(dot(tangent, pos), dot(bitangent, pos));
 		}
 	}
 
-	float parametricArea(const Vector2 *texcoords) const
+	float parametricArea(const Hector2 *texcoords) const
 	{
-		const Vector2 &v1 = texcoords[0];
-		const Vector2 &v2 = texcoords[1];
-		const Vector2 &v3 = texcoords[2];
+		const Hector2 &v1 = texcoords[0];
+		const Hector2 &v2 = texcoords[1];
+		const Hector2 &v3 = texcoords[2];
 		return ((v2.x - v1.x) * (v3.y - v1.y) - (v3.x - v1.x) * (v2.y - v1.y)) * 0.5f;
 	}
 
-	float computeStretch(Vector3 p1, Vector3 p2, Vector3 p3, Vector2 t1, Vector2 t2, Vector2 t3) const
+	float computeStretch(Hector3 p1, Hector3 p2, Hector3 p3, Hector2 t1, Hector2 t2, Hector2 t3) const
 	{
 		float parametricArea = ((t2.y - t1.y) * (t3.x - t1.x) - (t3.y - t1.y) * (t2.x - t1.x)) * 0.5f;
 		if (isZero(parametricArea, kAreaEpsilon))
@@ -6952,7 +6952,7 @@ private:
 	}
 
 	// Return value is positive if the point is one side of the edge, negative if on the other side.
-	float orientToEdge(Vector2 edgeVertex0, Vector2 edgeVertex1, Vector2 point) const
+	float orientToEdge(Hector2 edgeVertex0, Hector2 edgeVertex1, Hector2 point) const
 	{
 		return (edgeVertex0.x - point.x) * (edgeVertex1.y - point.y) - (edgeVertex0.y - point.y) * (edgeVertex1.x - point.x);
 	}
@@ -7001,7 +7001,7 @@ struct Quality
 			flippedFaces->clear();
 		const uint32_t faceCount = mesh->faceCount();
 		for (uint32_t f = 0; f < faceCount; f++) {
-			Vector2 texcoord[3];
+			Hector2 texcoord[3];
 			for (int i = 0; i < 3; i++) {
 				const uint32_t v = mesh->vertexAt(f * 3 + i);
 				texcoord[i] = mesh->texcoord(v);
@@ -7060,8 +7060,8 @@ struct Quality
 		stretchMetric = maxStretchMetric = conformalMetric = authalicMetric = 0.0f;
 		const uint32_t faceCount = mesh->faceCount();
 		for (uint32_t f = 0; f < faceCount; f++) {
-			Vector3 pos[3];
-			Vector2 texcoord[3];
+			Hector3 pos[3];
+			Hector2 texcoord[3];
 			for (int i = 0; i < 3; i++) {
 				const uint32_t v = mesh->vertexAt(f * 3 + i);
 				pos[i] = mesh->position(v);
@@ -7082,8 +7082,8 @@ struct Quality
 			if (parametricArea < 0.0f)
 				parametricArea = fabsf(parametricArea);
 			const float geometricArea = length(cross(pos[1] - pos[0], pos[2] - pos[0])) / 2;
-			const Vector3 Ss = (pos[0] * (t2 - t3) + pos[1] * (t3 - t1) + pos[2] * (t1 - t2)) / (2 * parametricArea);
-			const Vector3 St = (pos[0] * (s3 - s2) + pos[1] * (s1 - s3) + pos[2] * (s2 - s1)) / (2 * parametricArea);
+			const Hector3 Ss = (pos[0] * (t2 - t3) + pos[1] * (t3 - t1) + pos[2] * (t1 - t2)) / (2 * parametricArea);
+			const Hector3 St = (pos[0] * (s3 - s2) + pos[1] * (s1 - s3) + pos[2] * (s2 - s1)) / (2 * parametricArea);
 			const float a = dot(Ss, Ss); // E
 			const float b = dot(Ss, St); // F
 			const float c = dot(St, St); // G
@@ -7158,7 +7158,7 @@ public:
 				uint32_t unifiedVertex = sourceVertexToUnifiedVertexMap.get(sourceUnifiedVertex);
 				if (unifiedVertex == UINT32_MAX) {
 					unifiedVertex = sourceVertexToUnifiedVertexMap.add(sourceUnifiedVertex);
-					m_unifiedMesh->addVertex(sourceMesh->position(sourceVertex), Vector3(0.0f), sourceMesh->texcoord(sourceVertex));
+					m_unifiedMesh->addVertex(sourceMesh->position(sourceVertex), Hector3(0.0f), sourceMesh->texcoord(sourceVertex));
 				}
 				if (sourceVertexToChartVertexMap.get(sourceVertex) == UINT32_MAX) {
 					sourceVertexToChartVertexMap.add(sourceVertex);
@@ -7190,7 +7190,7 @@ public:
 #endif
 	}
 
-	Chart(ChartCtorBuffers &buffers, const Chart *parent, const Mesh *parentMesh, ConstArrayView<uint32_t> faces, ConstArrayView<Vector2> texcoords, const Mesh *sourceMesh) : m_unifiedMesh(nullptr), m_type(ChartType::Piecewise), m_generatorType(segment::ChartGeneratorType::Piecewise), m_tjunctionCount(0), m_originalVertexCount(0), m_isInvalid(false)
+	Chart(ChartCtorBuffers &buffers, const Chart *parent, const Mesh *parentMesh, ConstArrayView<uint32_t> faces, ConstArrayView<Hector2> texcoords, const Mesh *sourceMesh) : m_unifiedMesh(nullptr), m_type(ChartType::Piecewise), m_generatorType(segment::ChartGeneratorType::Piecewise), m_tjunctionCount(0), m_originalVertexCount(0), m_isInvalid(false)
 	{
 		const uint32_t faceCount = faces.length;
 		m_faceToSourceFaceMap.resize(faceCount);
@@ -7211,7 +7211,7 @@ public:
 				uint32_t unifiedVertex = sourceVertexToUnifiedVertexMap.get(sourceUnifiedVertex);
 				if (unifiedVertex == UINT32_MAX) {
 					unifiedVertex = sourceVertexToUnifiedVertexMap.add(sourceUnifiedVertex);
-					m_unifiedMesh->addVertex(sourceMesh->position(vertex), Vector3(0.0f), texcoords[parentVertex]);
+					m_unifiedMesh->addVertex(sourceMesh->position(vertex), Hector3(0.0f), texcoords[parentVertex]);
 				}
 				if (chartMeshIndices[vertex] == UINT32_MAX) {
 					chartMeshIndices[vertex] = m_originalVertexCount;
@@ -7275,7 +7275,7 @@ public:
 			// Project vertices to plane.
 			XA_PROFILE_START(parameterizeChartsOrthogonal)
 			for (uint32_t i = 0; i < unifiedVertexCount; i++)
-				m_unifiedMesh->texcoord(i) = Vector2(dot(m_basis.tangent, m_unifiedMesh->position(i)), dot(m_basis.bitangent, m_unifiedMesh->position(i)));
+				m_unifiedMesh->texcoord(i) = Hector2(dot(m_basis.tangent, m_unifiedMesh->position(i)), dot(m_basis.bitangent, m_unifiedMesh->position(i)));
 			XA_PROFILE_END(parameterizeChartsOrthogonal)
 			// Computing charts checks for flipped triangles and boundary intersection. Don't need to do that again here if chart is planar.
 			if (m_type != ChartType::Planar && m_generatorType != segment::ChartGeneratorType::OriginalUv) {
@@ -7335,10 +7335,10 @@ public:
 		backupTexcoords();
 	}
 
-	Vector2 computeParametricBounds() const
+	Hector2 computeParametricBounds() const
 	{
-		Vector2 minCorner(FLT_MAX, FLT_MAX);
-		Vector2 maxCorner(-FLT_MAX, -FLT_MAX);
+		Hector2 minCorner(FLT_MAX, FLT_MAX);
+		Hector2 maxCorner(-FLT_MAX, -FLT_MAX);
 		const uint32_t vertexCount = m_unifiedMesh->vertexCount();
 		for (uint32_t v = 0; v < vertexCount; v++) {
 			minCorner = min(minCorner, m_unifiedMesh->texcoord(v));
@@ -7363,14 +7363,14 @@ public:
 
 	void restoreTexcoords()
 	{
-		memcpy(m_unifiedMesh->texcoords().data, m_backupTexcoords.data(), m_unifiedMesh->vertexCount() * sizeof(Vector2));
+		memcpy(m_unifiedMesh->texcoords().data, m_backupTexcoords.data(), m_unifiedMesh->vertexCount() * sizeof(Hector2));
 	}
 
 private:
 	void backupTexcoords()
 	{
 		m_backupTexcoords.resize(m_unifiedMesh->vertexCount());
-		memcpy(m_backupTexcoords.data(), m_unifiedMesh->texcoords().data, m_unifiedMesh->vertexCount() * sizeof(Vector2));
+		memcpy(m_backupTexcoords.data(), m_unifiedMesh->texcoords().data, m_unifiedMesh->vertexCount() * sizeof(Hector2));
 	}
 
 	Basis m_basis;
@@ -7390,7 +7390,7 @@ private:
 
 	Array<uint32_t> m_chartVertexToUnifiedVertexMap;
 
-	Array<Vector2> m_backupTexcoords;
+	Array<Hector2> m_backupTexcoords;
 
 	Quality m_quality;
 #if XA_DEBUG_EXPORT_OBJ_INVALID_PARAMETERIZATION
@@ -7675,7 +7675,7 @@ private:
 				const uint32_t vertex = m_sourceMesh->vertexAt(face * 3 + i);
 				if (sourceVertexToVertexMap.get(vertex) == UINT32_MAX) {
 					sourceVertexToVertexMap.add(vertex);
-					Vector3 normal(0.0f);
+					Hector3 normal(0.0f);
 					if (m_sourceMesh->flags() & MeshFlags::HasNormals)
 						normal = m_sourceMesh->normal(vertex);
 					mesh->addVertex(m_sourceMesh->position(vertex), normal, m_sourceMesh->texcoord(vertex));
@@ -8078,16 +8078,16 @@ struct Chart
 	ConstArrayView<uint32_t> indices;
 	float parametricArea;
 	float surfaceArea;
-	ArrayView<Vector2> vertices;
+	ArrayView<Hector2> vertices;
 	Array<uint32_t> uniqueVertices;
 	// bounding box
-	Vector2 majorAxis, minorAxis, minCorner, maxCorner;
+	Hector2 majorAxis, minorAxis, minCorner, maxCorner;
 	// Mesh only
 	const Array<uint32_t> *boundaryEdges;
 	// UvMeshChart only
 	Array<uint32_t> faces;
 
-	Vector2 &uniqueVertexAt(uint32_t v) { return uniqueVertices.isEmpty() ? vertices[v] : vertices[uniqueVertices[v]]; }
+	Hector2 &uniqueVertexAt(uint32_t v) { return uniqueVertices.isEmpty() ? vertices[v] : vertices[uniqueVertices[v]]; }
 	uint32_t uniqueVertexCount() const { return uniqueVertices.isEmpty() ? vertices.length : uniqueVertices.size(); }
 };
 
@@ -8114,7 +8114,7 @@ static void runAddChartTask(void *groupUserData, void *taskUserData)
 	chart->parametricArea = mesh->computeParametricArea();
 	if (chart->parametricArea < kAreaEpsilon) {
 		// When the parametric area is too small we use a rough approximation to prevent divisions by very small numbers.
-		const Vector2 bounds = paramChart->computeParametricBounds();
+		const Hector2 bounds = paramChart->computeParametricBounds();
 		chart->parametricArea = bounds.x * bounds.y;
 	}
 	chart->surfaceArea = mesh->computeSurfaceArea();
@@ -8208,7 +8208,7 @@ struct Atlas
 	{
 		// Copy texcoords from mesh.
 		mesh->texcoords.resize(mesh->mesh->texcoords.size());
-		memcpy(mesh->texcoords.data(), mesh->mesh->texcoords.data(), mesh->texcoords.size() * sizeof(Vector2));
+		memcpy(mesh->texcoords.data(), mesh->mesh->texcoords.data(), mesh->texcoords.size() * sizeof(Hector2));
 		BitArray vertexUsed(mesh->texcoords.size());
 		BoundingBox2D boundingBox;
 		for (uint32_t c = 0; c < mesh->mesh->charts.size(); c++) {
@@ -8233,21 +8233,21 @@ struct Atlas
 			// Compute parametric and surface areas.
 			chart->parametricArea = 0.0f;
 			for (uint32_t f = 0; f < chart->indices.length / 3; f++) {
-				const Vector2 &v1 = chart->vertices[chart->indices[f * 3 + 0]];
-				const Vector2 &v2 = chart->vertices[chart->indices[f * 3 + 1]];
-				const Vector2 &v3 = chart->vertices[chart->indices[f * 3 + 2]];
+				const Hector2 &v1 = chart->vertices[chart->indices[f * 3 + 0]];
+				const Hector2 &v2 = chart->vertices[chart->indices[f * 3 + 1]];
+				const Hector2 &v3 = chart->vertices[chart->indices[f * 3 + 2]];
 				chart->parametricArea += fabsf(triangleArea(v1, v2, v3));
 			}
 			chart->parametricArea *= 0.5f;
 			if (chart->parametricArea < kAreaEpsilon) {
 				// When the parametric area is too small we use a rough approximation to prevent divisions by very small numbers.
-				Vector2 minCorner(FLT_MAX, FLT_MAX);
-				Vector2 maxCorner(-FLT_MAX, -FLT_MAX);
+				Hector2 minCorner(FLT_MAX, FLT_MAX);
+				Hector2 maxCorner(-FLT_MAX, -FLT_MAX);
 				for (uint32_t v = 0; v < chart->uniqueVertexCount(); v++) {
 					minCorner = min(minCorner, chart->uniqueVertexAt(v));
 					maxCorner = max(maxCorner, chart->uniqueVertexAt(v));
 				}
-				const Vector2 bounds = (maxCorner - minCorner) * 0.5f;
+				const Hector2 bounds = (maxCorner - minCorner) * 0.5f;
 				chart->parametricArea = bounds.x * bounds.y;
 			}
 			XA_DEBUG_ASSERT(isFinite(chart->parametricArea));
@@ -8307,7 +8307,7 @@ struct Atlas
 		}
 		Array<float> chartOrderArray;
 		chartOrderArray.resize(chartCount);
-		Array<Vector2> chartExtents;
+		Array<Hector2> chartExtents;
 		chartExtents.resize(chartCount);
 		float minChartPerimeter = FLT_MAX, maxChartPerimeter = 0.0f;
 		for (uint32_t c = 0; c < chartCount; c++) {
@@ -8319,14 +8319,14 @@ struct Atlas
 				XA_ASSERT(isFinite(scale));
 			}
 			// Translate, rotate and scale vertices. Compute extents.
-			Vector2 minCorner(FLT_MAX, FLT_MAX);
+			Hector2 minCorner(FLT_MAX, FLT_MAX);
 			if (!options.rotateChartsToAxis) {
 				for (uint32_t i = 0; i < chart->uniqueVertexCount(); i++)
 					minCorner = min(minCorner, chart->uniqueVertexAt(i));
 			}
-			Vector2 extents(0.0f);
+			Hector2 extents(0.0f);
 			for (uint32_t i = 0; i < chart->uniqueVertexCount(); i++) {
-				Vector2 &texcoord = chart->uniqueVertexAt(i);
+				Hector2 &texcoord = chart->uniqueVertexAt(i);
 				if (options.rotateChartsToAxis) {
 					const float x = dot(texcoord, chart->majorAxis);
 					const float y = dot(texcoord, chart->minorAxis);
@@ -8353,7 +8353,7 @@ struct Atlas
 				if (options.blockAlign)
 					height = align(height + blockAlignSizeOffset, 4) - blockAlignSizeOffset;
 				for (uint32_t v = 0; v < chart->uniqueVertexCount(); v++) {
-					Vector2 &texcoord = chart->uniqueVertexAt(v);
+					Hector2 &texcoord = chart->uniqueVertexAt(v);
 					texcoord.x = texcoord.x / extents.x * (float)width;
 					texcoord.y = texcoord.y / extents.y * (float)height;
 				}
@@ -8375,15 +8375,15 @@ struct Atlas
 						XA_PRINT("   Resizing chart %u from %gx%g to %ux%u to fit atlas\n", c, extents.x, extents.y, maxChartSize, maxChartSize);
 					scale = realMaxChartSize / max(extents.x, extents.y);
 					for (uint32_t i = 0; i < chart->uniqueVertexCount(); i++) {
-						Vector2 &texcoord = chart->uniqueVertexAt(i);
-						texcoord = min(texcoord * scale, Vector2(realMaxChartSize));
+						Hector2 &texcoord = chart->uniqueVertexAt(i);
+						texcoord = min(texcoord * scale, Hector2(realMaxChartSize));
 					}
 				}
 			}
 			// Align to texel centers and add padding offset.
 			extents.x = extents.y = 0.0f;
 			for (uint32_t v = 0; v < chart->uniqueVertexCount(); v++) {
-				Vector2 &texcoord = chart->uniqueVertexAt(v);
+				Hector2 &texcoord = chart->uniqueVertexAt(v);
 				texcoord.x += 0.5f + options.padding;
 				texcoord.y += 0.5f + options.padding;
 				extents = max(extents, texcoord);
@@ -8401,8 +8401,8 @@ struct Atlas
 		// Divide chart perimeter range into buckets.
 		const float chartPerimeterBucketSize = (maxChartPerimeter - minChartPerimeter) / 16.0f;
 		uint32_t currentChartBucket = 0;
-		Array<Vector2i> chartStartPositions; // per atlas
-		chartStartPositions.push_back(Vector2i(0, 0));
+		Array<Hector2i> chartStartPositions; // per atlas
+		chartStartPositions.push_back(Hector2i(0, 0));
 		// Pack sorted charts.
 #if XA_DEBUG_EXPORT_ATLAS_IMAGES
 		const bool createImage = true;
@@ -8416,8 +8416,8 @@ struct Atlas
 		BitImage chartImage, chartImageBilinear, chartImagePadding;
 		BitImage chartImageRotated, chartImageBilinearRotated, chartImagePaddingRotated;
 		UniformGrid2 boundaryEdgeGrid;
-		Array<Vector2i> atlasSizes;
-		atlasSizes.push_back(Vector2i(0, 0));
+		Array<Hector2i> atlasSizes;
+		atlasSizes.push_back(Hector2i(0, 0));
 		int progress = 0;
 		for (uint32_t i = 0; i < chartCount; i++) {
 			uint32_t c = ranks[chartCount - i - 1]; // largest chart first
@@ -8448,13 +8448,13 @@ struct Atlas
 			// Rasterize chart faces.
 			const uint32_t faceCount = chart->indices.length / 3;
 			for (uint32_t f = 0; f < faceCount; f++) {
-				Vector2 vertices[3];
+				Hector2 vertices[3];
 				for (uint32_t v = 0; v < 3; v++)
 					vertices[v] = chart->vertices[chart->indices[f * 3 + v]];
 				DrawTriangleCallbackArgs args;
 				args.chartBitImage = &chartImage;
 				args.chartBitImageRotated = options.rotateCharts ? &chartImageRotated : nullptr;
-				raster::drawTriangle(Vector2((float)chartImage.width(), (float)chartImage.height()), vertices, drawTriangleCallback, &args);
+				raster::drawTriangle(Hector2((float)chartImage.width(), (float)chartImage.height()), vertices, drawTriangleCallback, &args);
 			}
 			// Expand chart by pixels sampled by bilinear interpolation.
 			if (options.bilinear)
@@ -8483,7 +8483,7 @@ struct Atlas
 				if (chartOrderArray[c] > minChartPerimeter && chartOrderArray[c] <= maxChartPerimeter - (chartPerimeterBucketSize * (currentChartBucket + 1))) {
 					// Moved to a smaller bucket, reset start location.
 					for (uint32_t j = 0; j < chartStartPositions.size(); j++)
-						chartStartPositions[j] = Vector2i(0, 0);
+						chartStartPositions[j] = Hector2i(0, 0);
 					currentChartBucket++;
 				}
 			}
@@ -8512,14 +8512,14 @@ struct Atlas
 					// Chart doesn't fit in the current bitImage, create a new one.
 					BitImage *bi = XA_NEW_ARGS(MemTag::Default, BitImage, resolution, resolution);
 					m_bitImages.push_back(bi);
-					atlasSizes.push_back(Vector2i(0, 0));
+					atlasSizes.push_back(Hector2i(0, 0));
 #if XA_DEBUG
 					firstChartInBitImage = true;
 #endif
 					if (createImage)
 						m_atlasImages.push_back(XA_NEW_ARGS(MemTag::Default, AtlasImage, resolution, resolution));
 					// Start positions are per-atlas, so create a new one of those too.
-					chartStartPositions.push_back(Vector2i(0, 0));
+					chartStartPositions.push_back(Hector2i(0, 0));
 				}
 				XA_PROFILE_START(packChartsFindLocation)
 				const bool foundLocation = findChartLocation(options, chartStartPositions[currentAtlas], m_bitImages[currentAtlas], chartImageToPack, chartImageToPackRotated, atlasSizes[currentAtlas].x, atlasSizes[currentAtlas].y, &best_x, &best_y, &best_cw, &best_ch, &best_r, maxResolution);
@@ -8539,10 +8539,10 @@ struct Atlas
 				// Reset start location if the chart expanded the atlas.
 				if (best_x + best_cw > atlasSizes[currentAtlas].x || best_y + best_ch > atlasSizes[currentAtlas].y) {
 					for (uint32_t j = 0; j < chartStartPositions.size(); j++)
-						chartStartPositions[j] = Vector2i(0, 0);
+						chartStartPositions[j] = Hector2i(0, 0);
 				}
 				else {
-					chartStartPositions[currentAtlas] = Vector2i(best_x, best_y);
+					chartStartPositions[currentAtlas] = Hector2i(best_x, best_y);
 				}
 			}
 			// Update parametric extents.
@@ -8585,8 +8585,8 @@ struct Atlas
 			//  - translate to chart location
 			//  - translate to remove padding from top and left atlas edges (unless block aligned)
 			for (uint32_t v = 0; v < chart->uniqueVertexCount(); v++) {
-				Vector2 &texcoord = chart->uniqueVertexAt(v);
-				Vector2 t = texcoord;
+				Hector2 &texcoord = chart->uniqueVertexAt(v);
+				Hector2 t = texcoord;
 				if (best_r) {
 					XA_DEBUG_ASSERT(options.rotateCharts);
 					swap(t.x, t.y);
@@ -8649,7 +8649,7 @@ struct Atlas
 	}
 
 private:
-	bool findChartLocation(const PackOptions &options, const Vector2i &startPosition, const BitImage *atlasBitImage, const BitImage *chartBitImage, const BitImage *chartBitImageRotated, int w, int h, int *best_x, int *best_y, int *best_w, int *best_h, int *best_r, uint32_t maxResolution)
+	bool findChartLocation(const PackOptions &options, const Hector2i &startPosition, const BitImage *atlasBitImage, const BitImage *chartBitImage, const BitImage *chartBitImageRotated, int w, int h, int *best_x, int *best_y, int *best_w, int *best_h, int *best_r, uint32_t maxResolution)
 	{
 		const int attempts = 4096;
 		if (options.bruteForce || attempts >= w * h)
@@ -8657,7 +8657,7 @@ private:
 		return findChartLocation_random(options, atlasBitImage, chartBitImage, chartBitImageRotated, w, h, best_x, best_y, best_w, best_h, best_r, attempts, maxResolution);
 	}
 
-	bool findChartLocation_bruteForce(const PackOptions &options, const Vector2i &startPosition, const BitImage *atlasBitImage, const BitImage *chartBitImage, const BitImage *chartBitImageRotated, int w, int h, int *best_x, int *best_y, int *best_w, int *best_h, int *best_r, uint32_t maxResolution)
+	bool findChartLocation_bruteForce(const PackOptions &options, const Hector2i &startPosition, const BitImage *atlasBitImage, const BitImage *chartBitImage, const BitImage *chartBitImageRotated, int w, int h, int *best_x, int *best_y, int *best_w, int *best_h, int *best_r, uint32_t maxResolution)
 	{
 		const int stepSize = options.blockAlign ? 4 : 1;
 		int best_metric = INT_MAX;
@@ -8818,12 +8818,12 @@ private:
 				{
 					// If a 2x2 square centered on the pixels centroid intersects the triangle, this pixel will be sampled by bilinear interpolation.
 					// See "Precomputed Global Illumination in Frostbite (GDC 2018)" page 95
-					const Vector2 centroid((float)x + 0.5f, (float)y + 0.5f);
-					const Vector2 squareVertices[4] = {
-						Vector2(centroid.x - 1.0f, centroid.y - 1.0f),
-						Vector2(centroid.x + 1.0f, centroid.y - 1.0f),
-						Vector2(centroid.x + 1.0f, centroid.y + 1.0f),
-						Vector2(centroid.x - 1.0f, centroid.y + 1.0f)
+					const Hector2 centroid((float)x + 0.5f, (float)y + 0.5f);
+					const Hector2 squareVertices[4] = {
+						Hector2(centroid.x - 1.0f, centroid.y - 1.0f),
+						Hector2(centroid.x + 1.0f, centroid.y - 1.0f),
+						Hector2(centroid.x + 1.0f, centroid.y + 1.0f),
+						Hector2(centroid.x - 1.0f, centroid.y + 1.0f)
 					};
 					for (uint32_t j = 0; j < 4; j++) {
 						if (boundaryEdgeGrid.intersect(squareVertices[j], squareVertices[(j + 1) % 4], 0.0f))
@@ -8990,25 +8990,25 @@ static void runAddMeshTask(void *groupUserData, void *taskUserData)
 	XA_PROFILE_END(addMeshThread)
 }
 
-static internal::Vector3 DecodePosition(const MeshDecl &meshDecl, uint32_t index)
+static internal::Hector3 DecodePosition(const MeshDecl &meshDecl, uint32_t index)
 {
 	XA_DEBUG_ASSERT(meshDecl.vertexPositionData);
 	XA_DEBUG_ASSERT(meshDecl.vertexPositionStride > 0);
-	return *((const internal::Vector3 *)&((const uint8_t *)meshDecl.vertexPositionData)[meshDecl.vertexPositionStride * index]);
+	return *((const internal::Hector3 *)&((const uint8_t *)meshDecl.vertexPositionData)[meshDecl.vertexPositionStride * index]);
 }
 
-static internal::Vector3 DecodeNormal(const MeshDecl &meshDecl, uint32_t index)
+static internal::Hector3 DecodeNormal(const MeshDecl &meshDecl, uint32_t index)
 {
 	XA_DEBUG_ASSERT(meshDecl.vertexNormalData);
 	XA_DEBUG_ASSERT(meshDecl.vertexNormalStride > 0);
-	return *((const internal::Vector3 *)&((const uint8_t *)meshDecl.vertexNormalData)[meshDecl.vertexNormalStride * index]);
+	return *((const internal::Hector3 *)&((const uint8_t *)meshDecl.vertexNormalData)[meshDecl.vertexNormalStride * index]);
 }
 
-static internal::Vector2 DecodeUv(const MeshDecl &meshDecl, uint32_t index)
+static internal::Hector2 DecodeUv(const MeshDecl &meshDecl, uint32_t index)
 {
 	XA_DEBUG_ASSERT(meshDecl.vertexUvData);
 	XA_DEBUG_ASSERT(meshDecl.vertexUvStride > 0);
-	return *((const internal::Vector2 *)&((const uint8_t *)meshDecl.vertexUvData)[meshDecl.vertexUvStride * index]);
+	return *((const internal::Hector2 *)&((const uint8_t *)meshDecl.vertexUvData)[meshDecl.vertexUvStride * index]);
 }
 
 static uint32_t DecodeIndex(IndexFormat format, const void *indexData, int32_t offset, uint32_t i)
@@ -9066,8 +9066,8 @@ AddMeshError AddMesh(Atlas *atlas, const MeshDecl &meshDecl, uint32_t meshCountH
 		meshFlags |= internal::MeshFlags::HasMaterials;
 	internal::Mesh *mesh = XA_NEW_ARGS(internal::MemTag::Mesh, internal::Mesh, meshDecl.epsilon, meshDecl.vertexCount, indexCount / 3, meshFlags, ctx->meshes.size());
 	for (uint32_t i = 0; i < meshDecl.vertexCount; i++) {
-		internal::Vector3 normal(0.0f);
-		internal::Vector2 texcoord(0.0f);
+		internal::Hector3 normal(0.0f);
+		internal::Hector2 texcoord(0.0f);
 		if (meshDecl.vertexNormalData)
 			normal = DecodeNormal(meshDecl, i);
 		if (meshDecl.vertexUvData)
@@ -9115,8 +9115,8 @@ AddMeshError AddMesh(Atlas *atlas, const MeshDecl &meshDecl, uint32_t meshCountH
 					XA_PRINT("   Degenerate edge: index %d, index %d\n", index1, index2);
 				break;
 			}
-			const internal::Vector3 &pos1 = mesh->position(index1);
-			const internal::Vector3 &pos2 = mesh->position(index2);
+			const internal::Hector3 &pos1 = mesh->position(index1);
+			const internal::Hector3 &pos2 = mesh->position(index2);
 			if (internal::length(pos2 - pos1) <= 0.0f) {
 				ignore = true;
 				if (++warningCount <= kMaxWarnings)
@@ -9127,7 +9127,7 @@ AddMeshError AddMesh(Atlas *atlas, const MeshDecl &meshDecl, uint32_t meshCountH
 		// Ignore faces with any nan vertex attributes.
 		if (!ignore) {
 			for (uint32_t i = 0; i < faceVertexCount; i++) {
-				const internal::Vector3 &pos = mesh->position(polygon[i]);
+				const internal::Hector3 &pos = mesh->position(polygon[i]);
 				if (internal::isNan(pos.x) || internal::isNan(pos.y) || internal::isNan(pos.z)) {
 					if (++warningCount <= kMaxWarnings)
 						XA_PRINT("   NAN position in face: %d\n", face);
@@ -9135,7 +9135,7 @@ AddMeshError AddMesh(Atlas *atlas, const MeshDecl &meshDecl, uint32_t meshCountH
 					break;
 				}
 				if (meshDecl.vertexNormalData) {
-					const internal::Vector3 &normal = mesh->normal(polygon[i]);
+					const internal::Hector3 &normal = mesh->normal(polygon[i]);
 					if (internal::isNan(normal.x) || internal::isNan(normal.y) || internal::isNan(normal.z)) {
 						if (++warningCount <= kMaxWarnings)
 							XA_PRINT("   NAN normal in face: %d\n", face);
@@ -9144,7 +9144,7 @@ AddMeshError AddMesh(Atlas *atlas, const MeshDecl &meshDecl, uint32_t meshCountH
 					}
 				}
 				if (meshDecl.vertexUvData) {
-					const internal::Vector2 &uv = mesh->texcoord(polygon[i]);
+					const internal::Hector2 &uv = mesh->texcoord(polygon[i]);
 					if (internal::isNan(uv.x) || internal::isNan(uv.y)) {
 						if (++warningCount <= kMaxWarnings)
 							XA_PRINT("   NAN texture coordinate in face: %d\n", face);
@@ -9166,9 +9166,9 @@ AddMeshError AddMesh(Atlas *atlas, const MeshDecl &meshDecl, uint32_t meshCountH
 		// Check for zero area faces.
 		if (!ignore) {
 			for (uint32_t i = 0; i < triIndices.size(); i += 3) {
-				const internal::Vector3 &a = mesh->position(triIndices[i + 0]);
-				const internal::Vector3 &b = mesh->position(triIndices[i + 1]);
-				const internal::Vector3 &c = mesh->position(triIndices[i + 2]);
+				const internal::Hector3 &a = mesh->position(triIndices[i + 0]);
+				const internal::Hector3 &b = mesh->position(triIndices[i + 1]);
+				const internal::Hector3 &c = mesh->position(triIndices[i + 2]);
 				const float area = internal::length(internal::cross(b - a, c - a)) * 0.5f;
 				if (area <= internal::kAreaEpsilon) {
 					ignore = true;
@@ -9313,7 +9313,7 @@ AddMeshError AddUvMesh(Atlas *atlas, const UvMeshDecl &decl)
 			mesh->indices[i] = hasIndices ? DecodeIndex(decl.indexFormat, decl.indexData, decl.indexOffset, i) : i;
 		mesh->texcoords.resize(decl.vertexCount);
 		for (uint32_t i = 0; i < decl.vertexCount; i++)
-			mesh->texcoords[i] = *((const internal::Vector2 *)&((const uint8_t *)decl.vertexUvData)[decl.vertexStride * i]);
+			mesh->texcoords[i] = *((const internal::Hector2 *)&((const uint8_t *)decl.vertexUvData)[decl.vertexStride * i]);
 		// Validate.
 		mesh->faceIgnore.resize(decl.indexCount / 3);
 		mesh->faceIgnore.zeroOutMemory();
@@ -9336,9 +9336,9 @@ AddMeshError AddUvMesh(Atlas *atlas, const UvMeshDecl &decl)
 			}
 			// Check for zero area faces.
 			if (!ignore) {
-				const internal::Vector2 &v1 = mesh->texcoords[tri[0]];
-				const internal::Vector2 &v2 = mesh->texcoords[tri[1]];
-				const internal::Vector2 &v3 = mesh->texcoords[tri[2]];
+				const internal::Hector2 &v1 = mesh->texcoords[tri[0]];
+				const internal::Hector2 &v2 = mesh->texcoords[tri[1]];
+				const internal::Hector2 &v3 = mesh->texcoords[tri[2]];
 				const float area = fabsf(((v2.x - v1.x) * (v3.y - v1.y) - (v3.x - v1.x) * (v2.y - v1.y)) * 0.5f);
 				if (area <= internal::kAreaEpsilon) {
 					ignore = true;
@@ -9735,7 +9735,7 @@ void PackCharts(Atlas *atlas, PackOptions packOptions)
 						vertex.atlasIndex = packAtlas.getChart(chartIndex)->atlasIndex;
 						XA_DEBUG_ASSERT(vertex.atlasIndex >= 0);
 						vertex.chartIndex = (int32_t)chartIndex;
-						const internal::Vector2 &uv = unifiedMesh->texcoord(chart->originalVertexToUnifiedVertex(v));
+						const internal::Hector2 &uv = unifiedMesh->texcoord(chart->originalVertexToUnifiedVertex(v));
 						vertex.uv[0] = internal::max(0.0f, uv.x);
 						vertex.uv[1] = internal::max(0.0f, uv.y);
 						vertex.xref = chart->mapChartVertexToSourceVertex(v);

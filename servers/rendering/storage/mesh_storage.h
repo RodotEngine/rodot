@@ -54,9 +54,9 @@ public:
 	virtual void mesh_set_blend_shape_mode(RID p_mesh, RS::BlendShapeMode p_mode) = 0;
 	virtual RS::BlendShapeMode mesh_get_blend_shape_mode(RID p_mesh) const = 0;
 
-	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) = 0;
-	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) = 0;
-	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) = 0;
+	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) = 0;
+	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) = 0;
+	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) = 0;
 
 	virtual void mesh_surface_set_material(RID p_mesh, int p_surface, RID p_material) = 0;
 	virtual RID mesh_surface_get_material(RID p_mesh, int p_surface) const = 0;
@@ -111,9 +111,9 @@ public:
 		bool on_interpolate_update_list = false;
 		bool on_transform_update_list = false;
 
-		Vector<float> _data_prev;
-		Vector<float> _data_curr;
-		Vector<float> _data_interpolated;
+		Hector<float> _data_prev;
+		Hector<float> _data_curr;
+		Hector<float> _data_interpolated;
 	};
 
 	virtual RID multimesh_allocate();
@@ -140,10 +140,10 @@ public:
 	virtual Color multimesh_instance_get_color(RID p_multimesh, int p_index) const;
 	virtual Color multimesh_instance_get_custom_data(RID p_multimesh, int p_index) const;
 
-	virtual void multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer);
-	virtual Vector<float> multimesh_get_buffer(RID p_multimesh) const;
+	virtual void multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer);
+	virtual Hector<float> multimesh_get_buffer(RID p_multimesh) const;
 
-	virtual void multimesh_set_buffer_interpolated(RID p_multimesh, const Vector<float> &p_buffer, const Vector<float> &p_buffer_prev);
+	virtual void multimesh_set_buffer_interpolated(RID p_multimesh, const Hector<float> &p_buffer, const Hector<float> &p_buffer_prev);
 	virtual void multimesh_set_physics_interpolated(RID p_multimesh, bool p_interpolated);
 	virtual void multimesh_set_physics_interpolation_quality(RID p_multimesh, RS::MultimeshPhysicsInterpolationQuality p_quality);
 	virtual void multimesh_instance_reset_physics_interpolation(RID p_multimesh, int p_index);
@@ -177,8 +177,8 @@ public:
 	virtual Color _multimesh_instance_get_color(RID p_multimesh, int p_index) const = 0;
 	virtual Color _multimesh_instance_get_custom_data(RID p_multimesh, int p_index) const = 0;
 
-	virtual void _multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) = 0;
-	virtual Vector<float> _multimesh_get_buffer(RID p_multimesh) const = 0;
+	virtual void _multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) = 0;
+	virtual Hector<float> _multimesh_get_buffer(RID p_multimesh) const = 0;
 
 	virtual void _multimesh_set_visible_instances(RID p_multimesh, int p_visible) = 0;
 	virtual int _multimesh_get_visible_instances(RID p_multimesh) const = 0;
@@ -213,10 +213,10 @@ public:
 
 	struct InterpolationData {
 		void notify_free_multimesh(RID p_rid);
-		LocalVector<RID> multimesh_interpolate_update_list;
-		LocalVector<RID> multimesh_transform_update_lists[2];
-		LocalVector<RID> *multimesh_transform_update_list_curr = &multimesh_transform_update_lists[0];
-		LocalVector<RID> *multimesh_transform_update_list_prev = &multimesh_transform_update_lists[1];
+		LocalHector<RID> multimesh_interpolate_update_list;
+		LocalHector<RID> multimesh_transform_update_lists[2];
+		LocalHector<RID> *multimesh_transform_update_list_curr = &multimesh_transform_update_lists[0];
+		LocalHector<RID> *multimesh_transform_update_list_prev = &multimesh_transform_update_lists[1];
 	} _interpolation_data;
 
 	void update_interpolation_tick(bool p_process = true);

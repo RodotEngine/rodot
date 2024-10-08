@@ -11,13 +11,13 @@
 	</tutorials>
 	<methods>
 		<method name="get_global_end_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the [member end_position] that is relative to the link as a global position.
 			</description>
 		</method>
 		<method name="get_global_start_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the [member start_position] that is relative to the link as a global position.
 			</description>
@@ -43,14 +43,14 @@
 		</method>
 		<method name="set_global_end_position">
 			<return type="void" />
-			<param index="0" name="position" type="Vector3" />
+			<param index="0" name="position" type="Hector3" />
 			<description>
 				Sets the [member end_position] that is relative to the link from a global [param position].
 			</description>
 		</method>
 		<method name="set_global_start_position">
 			<return type="void" />
-			<param index="0" name="position" type="Vector3" />
+			<param index="0" name="position" type="Hector3" />
 			<description>
 				Sets the [member start_position] that is relative to the link from a global [param position].
 			</description>
@@ -78,7 +78,7 @@
 		<member name="enabled" type="bool" setter="set_enabled" getter="is_enabled" default="true">
 			Whether this link is currently active. If [code]false[/code], [method NavigationServer3D.map_get_path] will ignore this link.
 		</member>
-		<member name="end_position" type="Vector3" setter="set_end_position" getter="get_end_position" default="Vector3(0, 0, 0)">
+		<member name="end_position" type="Hector3" setter="set_end_position" getter="get_end_position" default="Hector3(0, 0, 0)">
 			Ending position of the link.
 			This position will search out the nearest polygon in the navigation mesh to attach to.
 			The distance the link will search is controlled by [method NavigationServer3D.map_set_link_connection_radius].
@@ -89,7 +89,7 @@
 		<member name="navigation_layers" type="int" setter="set_navigation_layers" getter="get_navigation_layers" default="1">
 			A bitfield determining all navigation layers the link belongs to. These navigation layers will be checked when requesting a path with [method NavigationServer3D.map_get_path].
 		</member>
-		<member name="start_position" type="Vector3" setter="set_start_position" getter="get_start_position" default="Vector3(0, 0, 0)">
+		<member name="start_position" type="Hector3" setter="set_start_position" getter="get_start_position" default="Hector3(0, 0, 0)">
 			Starting position of the link.
 			This position will search out the nearest polygon in the navigation mesh to attach to.
 			The distance the link will search is controlled by [method NavigationServer3D.map_set_link_connection_radius].

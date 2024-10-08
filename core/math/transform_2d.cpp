@@ -53,8 +53,8 @@ void Transform2D::affine_invert() {
 	real_t idet = 1.0f / det;
 
 	SWAP(columns[0][0], columns[1][1]);
-	columns[0] *= Vector2(idet, -idet);
-	columns[1] *= Vector2(-idet, idet);
+	columns[0] *= Hector2(idet, -idet);
+	columns[1] *= Hector2(-idet, idet);
 
 	columns[2] = basis_xform(-columns[2]);
 }
@@ -66,7 +66,7 @@ Transform2D Transform2D::affine_inverse() const {
 }
 
 void Transform2D::rotate(real_t p_angle) {
-	*this = Transform2D(p_angle, Vector2()) * (*this);
+	*this = Transform2D(p_angle, Hector2()) * (*this);
 }
 
 real_t Transform2D::get_skew() const {
@@ -94,7 +94,7 @@ void Transform2D::set_rotation(real_t p_rot) {
 	set_scale(scale);
 }
 
-Transform2D::Transform2D(real_t p_rot, const Vector2 &p_pos) {
+Transform2D::Transform2D(real_t p_rot, const Hector2 &p_pos) {
 	real_t cr = Math::cos(p_rot);
 	real_t sr = Math::sin(p_rot);
 	columns[0][0] = cr;
@@ -104,7 +104,7 @@ Transform2D::Transform2D(real_t p_rot, const Vector2 &p_pos) {
 	columns[2] = p_pos;
 }
 
-Transform2D::Transform2D(real_t p_rot, const Size2 &p_scale, real_t p_skew, const Vector2 &p_pos) {
+Transform2D::Transform2D(real_t p_rot, const Size2 &p_scale, real_t p_skew, const Hector2 &p_pos) {
 	columns[0][0] = Math::cos(p_rot) * p_scale.x;
 	columns[1][1] = Math::cos(p_rot + p_skew) * p_scale.y;
 	columns[1][0] = -Math::sin(p_rot + p_skew) * p_scale.y;
@@ -137,18 +137,18 @@ void Transform2D::scale_basis(const Size2 &p_scale) {
 }
 
 void Transform2D::translate_local(real_t p_tx, real_t p_ty) {
-	translate_local(Vector2(p_tx, p_ty));
+	translate_local(Hector2(p_tx, p_ty));
 }
 
-void Transform2D::translate_local(const Vector2 &p_translation) {
+void Transform2D::translate_local(const Hector2 &p_translation) {
 	columns[2] += basis_xform(p_translation);
 }
 
 void Transform2D::orthonormalize() {
 	// Gram-Schmidt Process
 
-	Vector2 x = columns[0];
-	Vector2 y = columns[1];
+	Hector2 x = columns[0];
+	Hector2 y = columns[1];
 
 	x.normalize();
 	y = y - x * x.dot(y);
@@ -184,9 +184,9 @@ bool Transform2D::is_finite() const {
 	return columns[0].is_finite() && columns[1].is_finite() && columns[2].is_finite();
 }
 
-Transform2D Transform2D::looking_at(const Vector2 &p_target) const {
+Transform2D Transform2D::looking_at(const Hector2 &p_target) const {
 	Transform2D return_trans = Transform2D(get_rotation(), get_origin());
-	Vector2 target_position = affine_inverse().xform(p_target);
+	Hector2 target_position = affine_inverse().xform(p_target);
 	return_trans.set_rotation(return_trans.get_rotation() + (target_position * get_scale()).angle());
 	return return_trans;
 }
@@ -247,28 +247,28 @@ Transform2D Transform2D::scaled_local(const Size2 &p_scale) const {
 
 Transform2D Transform2D::untranslated() const {
 	Transform2D copy = *this;
-	copy.columns[2] = Vector2();
+	copy.columns[2] = Hector2();
 	return copy;
 }
 
-Transform2D Transform2D::translated(const Vector2 &p_offset) const {
+Transform2D Transform2D::translated(const Hector2 &p_offset) const {
 	// Equivalent to left multiplication
 	return Transform2D(columns[0], columns[1], columns[2] + p_offset);
 }
 
-Transform2D Transform2D::translated_local(const Vector2 &p_offset) const {
+Transform2D Transform2D::translated_local(const Hector2 &p_offset) const {
 	// Equivalent to right multiplication
 	return Transform2D(columns[0], columns[1], columns[2] + basis_xform(p_offset));
 }
 
 Transform2D Transform2D::rotated(real_t p_angle) const {
 	// Equivalent to left multiplication
-	return Transform2D(p_angle, Vector2()) * (*this);
+	return Transform2D(p_angle, Hector2()) * (*this);
 }
 
 Transform2D Transform2D::rotated_local(real_t p_angle) const {
 	// Equivalent to right multiplication
-	return (*this) * Transform2D(p_angle, Vector2()); // Could be optimized, because origin transform can be skipped.
+	return (*this) * Transform2D(p_angle, Hector2()); // Could be optimized, because origin transform can be skipped.
 }
 
 real_t Transform2D::determinant() const {

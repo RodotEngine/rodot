@@ -437,7 +437,7 @@ bool ExportTemplateManager::_install_file_selected(const String &p_file, bool p_
 
 		String file = String::utf8(fname);
 		if (file.ends_with("version.txt")) {
-			Vector<uint8_t> uncomp_data;
+			Hector<uint8_t> uncomp_data;
 			uncomp_data.resize(info.uncompressed_size);
 
 			// Read.
@@ -516,7 +516,7 @@ bool ExportTemplateManager::_install_file_selected(const String &p_file, bool p_
 			continue;
 		}
 
-		Vector<uint8_t> uncomp_data;
+		Hector<uint8_t> uncomp_data;
 		uncomp_data.resize(info.uncompressed_size);
 
 		// Read
@@ -842,7 +842,7 @@ Error ExportTemplateManager::install_android_template_from_file(const String &p_
 		String base_dir = path.get_base_dir();
 
 		if (!path.ends_with("/")) {
-			Vector<uint8_t> uncomp_data;
+			Hector<uint8_t> uncomp_data;
 			uncomp_data.resize(info.uncompressed_size);
 
 			// Read.

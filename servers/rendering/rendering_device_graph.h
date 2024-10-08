@@ -192,8 +192,8 @@ public:
 		RDD::CommandPoolID pool;
 
 		// Created internally by RenderingDeviceGraph.
-		LocalVector<RDD::CommandBufferID> buffers;
-		LocalVector<RDD::SemaphoreID> semaphores;
+		LocalHector<RDD::CommandBufferID> buffers;
+		LocalHector<RDD::SemaphoreID> semaphores;
 		uint32_t buffers_used = 0;
 	};
 
@@ -203,9 +203,9 @@ public:
 
 private:
 	struct InstructionList {
-		LocalVector<uint8_t> data;
-		LocalVector<ResourceTracker *> command_trackers;
-		LocalVector<ResourceUsage> command_tracker_usages;
+		LocalHector<uint8_t> data;
+		LocalHector<ResourceTracker *> command_trackers;
+		LocalHector<ResourceUsage> command_tracker_usages;
 		BitField<RDD::PipelineStageBits> stages;
 		int32_t index = 0;
 
@@ -226,7 +226,7 @@ private:
 		RDD::FramebufferID framebuffer;
 		Rect2i region;
 		uint32_t breadcrumb;
-		LocalVector<RDD::RenderPassClearValue> clear_values;
+		LocalHector<RDD::RenderPassClearValue> clear_values;
 	};
 
 	struct RecordedCommandSort {
@@ -554,10 +554,10 @@ private:
 		BitField<RDD::PipelineStageBits> src_stages;
 		BitField<RDD::PipelineStageBits> dst_stages;
 		RDD::MemoryBarrier memory_barrier;
-		LocalVector<RDD::TextureBarrier> normalization_barriers;
-		LocalVector<RDD::TextureBarrier> transition_barriers;
+		LocalHector<RDD::TextureBarrier> normalization_barriers;
+		LocalHector<RDD::TextureBarrier> transition_barriers;
 #if USE_BUFFER_BARRIERS
-		LocalVector<RDD::BufferBarrier> buffer_barriers;
+		LocalHector<RDD::BufferBarrier> buffer_barriers;
 #endif
 
 		void clear() {
@@ -574,7 +574,7 @@ private:
 	};
 
 	struct SecondaryCommandBuffer {
-		LocalVector<uint8_t> instruction_data;
+		LocalHector<uint8_t> instruction_data;
 		RDD::CommandBufferID command_buffer;
 		RDD::CommandPoolID command_pool;
 		RDD::RenderPassID render_pass;
@@ -583,29 +583,29 @@ private:
 	};
 
 	struct Frame {
-		TightLocalVector<SecondaryCommandBuffer> secondary_command_buffers;
+		TightLocalHector<SecondaryCommandBuffer> secondary_command_buffers;
 		uint32_t secondary_command_buffers_used = 0;
 	};
 
 	RDD *driver = nullptr;
 	RenderingContextDriver::Device device;
 	int64_t tracking_frame = 0;
-	LocalVector<uint8_t> command_data;
-	LocalVector<uint32_t> command_data_offsets;
-	LocalVector<RDD::TextureBarrier> command_normalization_barriers;
-	LocalVector<RDD::TextureBarrier> command_transition_barriers;
-	LocalVector<RDD::BufferBarrier> command_buffer_barriers;
-	LocalVector<char> command_label_chars;
-	LocalVector<Color> command_label_colors;
-	LocalVector<uint32_t> command_label_offsets;
+	LocalHector<uint8_t> command_data;
+	LocalHector<uint32_t> command_data_offsets;
+	LocalHector<RDD::TextureBarrier> command_normalization_barriers;
+	LocalHector<RDD::TextureBarrier> command_transition_barriers;
+	LocalHector<RDD::BufferBarrier> command_buffer_barriers;
+	LocalHector<char> command_label_chars;
+	LocalHector<Color> command_label_colors;
+	LocalHector<uint32_t> command_label_offsets;
 	int32_t command_label_index = -1;
 	DrawInstructionList draw_instruction_list;
 	ComputeInstructionList compute_instruction_list;
 	uint32_t command_count = 0;
 	uint32_t command_label_count = 0;
-	LocalVector<RecordedCommandListNode> command_list_nodes;
-	LocalVector<RecordedSliceListNode> read_slice_list_nodes;
-	LocalVector<RecordedSliceListNode> write_slice_list_nodes;
+	LocalHector<RecordedCommandListNode> command_list_nodes;
+	LocalHector<RecordedSliceListNode> read_slice_list_nodes;
+	LocalHector<RecordedSliceListNode> write_slice_list_nodes;
 	int32_t command_timestamp_index = -1;
 	int32_t command_synchronization_index = -1;
 	bool command_synchronization_pending = false;
@@ -613,7 +613,7 @@ private:
 	bool driver_honors_barriers : 1;
 	bool driver_clears_with_copy_engine : 1;
 	WorkaroundsState workarounds_state;
-	TightLocalVector<Frame> frames;
+	TightLocalHector<Frame> frames;
 	uint32_t frame = 0;
 
 #ifdef DEV_ENABLED
@@ -631,7 +631,7 @@ private:
 	DrawListInstruction *_allocate_draw_list_instruction(uint32_t p_instruction_size);
 	ComputeListInstruction *_allocate_compute_list_instruction(uint32_t p_instruction_size);
 	void _add_command_to_graph(ResourceTracker **p_resource_trackers, ResourceUsage *p_resource_usages, uint32_t p_resource_count, int32_t p_command_index, RecordedCommand *r_command);
-	void _add_texture_barrier_to_command(RDD::TextureID p_texture_id, BitField<RDD::BarrierAccessBits> p_src_access, BitField<RDD::BarrierAccessBits> p_dst_access, ResourceUsage p_prev_usage, ResourceUsage p_next_usage, RDD::TextureSubresourceRange p_subresources, LocalVector<RDD::TextureBarrier> &r_barrier_vector, int32_t &r_barrier_index, int32_t &r_barrier_count);
+	void _add_texture_barrier_to_command(RDD::TextureID p_texture_id, BitField<RDD::BarrierAccessBits> p_src_access, BitField<RDD::BarrierAccessBits> p_dst_access, ResourceUsage p_prev_usage, ResourceUsage p_next_usage, RDD::TextureSubresourceRange p_subresources, LocalHector<RDD::TextureBarrier> &r_barrier_Hector, int32_t &r_barrier_index, int32_t &r_barrier_count);
 #if USE_BUFFER_BARRIERS
 	void _add_buffer_barrier_to_command(RDD::BufferID p_buffer_id, BitField<RDD::BarrierAccessBits> p_src_access, BitField<RDD::BarrierAccessBits> p_dst_access, int32_t &r_barrier_index, int32_t &r_barrier_count);
 #endif
@@ -656,7 +656,7 @@ public:
 	void add_buffer_clear(RDD::BufferID p_dst, ResourceTracker *p_dst_tracker, uint32_t p_offset, uint32_t p_size);
 	void add_buffer_copy(RDD::BufferID p_src, ResourceTracker *p_src_tracker, RDD::BufferID p_dst, ResourceTracker *p_dst_tracker, RDD::BufferCopyRegion p_region);
 	void add_buffer_get_data(RDD::BufferID p_src, ResourceTracker *p_src_tracker, RDD::BufferID p_dst, RDD::BufferCopyRegion p_region);
-	void add_buffer_update(RDD::BufferID p_dst, ResourceTracker *p_dst_tracker, VectorView<RecordedBufferCopy> p_buffer_copies);
+	void add_buffer_update(RDD::BufferID p_dst, ResourceTracker *p_dst_tracker, HectorView<RecordedBufferCopy> p_buffer_copies);
 	void add_compute_list_begin(RDD::BreadcrumbMarker p_phase = RDD::BreadcrumbMarker::NONE, uint32_t p_breadcrumb_data = 0);
 	void add_compute_list_bind_pipeline(RDD::PipelineID p_pipeline);
 	void add_compute_list_bind_uniform_set(RDD::ShaderID p_shader, RDD::UniformSetID p_uniform_set, uint32_t set_index);
@@ -665,14 +665,14 @@ public:
 	void add_compute_list_set_push_constant(RDD::ShaderID p_shader, const void *p_data, uint32_t p_data_size);
 	void add_compute_list_uniform_set_prepare_for_use(RDD::ShaderID p_shader, RDD::UniformSetID p_uniform_set, uint32_t set_index);
 	void add_compute_list_usage(ResourceTracker *p_tracker, ResourceUsage p_usage);
-	void add_compute_list_usages(VectorView<ResourceTracker *> p_trackers, VectorView<ResourceUsage> p_usages);
+	void add_compute_list_usages(HectorView<ResourceTracker *> p_trackers, HectorView<ResourceUsage> p_usages);
 	void add_compute_list_end();
-	void add_draw_list_begin(RDD::RenderPassID p_render_pass, RDD::FramebufferID p_framebuffer, Rect2i p_region, VectorView<RDD::RenderPassClearValue> p_clear_values, bool p_uses_color, bool p_uses_depth, uint32_t p_breadcrumb = 0);
+	void add_draw_list_begin(RDD::RenderPassID p_render_pass, RDD::FramebufferID p_framebuffer, Rect2i p_region, HectorView<RDD::RenderPassClearValue> p_clear_values, bool p_uses_color, bool p_uses_depth, uint32_t p_breadcrumb = 0);
 	void add_draw_list_bind_index_buffer(RDD::BufferID p_buffer, RDD::IndexBufferFormat p_format, uint32_t p_offset);
 	void add_draw_list_bind_pipeline(RDD::PipelineID p_pipeline, BitField<RDD::PipelineStageBits> p_pipeline_stage_bits);
 	void add_draw_list_bind_uniform_set(RDD::ShaderID p_shader, RDD::UniformSetID p_uniform_set, uint32_t set_index);
-	void add_draw_list_bind_vertex_buffers(VectorView<RDD::BufferID> p_vertex_buffers, VectorView<uint64_t> p_vertex_buffer_offsets);
-	void add_draw_list_clear_attachments(VectorView<RDD::AttachmentClear> p_attachments_clear, VectorView<Rect2i> p_attachments_clear_rect);
+	void add_draw_list_bind_vertex_buffers(HectorView<RDD::BufferID> p_vertex_buffers, HectorView<uint64_t> p_vertex_buffer_offsets);
+	void add_draw_list_clear_attachments(HectorView<RDD::AttachmentClear> p_attachments_clear, HectorView<Rect2i> p_attachments_clear_rect);
 	void add_draw_list_draw(uint32_t p_vertex_count, uint32_t p_instance_count);
 	void add_draw_list_draw_indexed(uint32_t p_index_count, uint32_t p_instance_count, uint32_t p_first_index);
 	void add_draw_list_execute_commands(RDD::CommandBufferID p_command_buffer);
@@ -684,13 +684,13 @@ public:
 	void add_draw_list_set_viewport(Rect2i p_rect);
 	void add_draw_list_uniform_set_prepare_for_use(RDD::ShaderID p_shader, RDD::UniformSetID p_uniform_set, uint32_t set_index);
 	void add_draw_list_usage(ResourceTracker *p_tracker, ResourceUsage p_usage);
-	void add_draw_list_usages(VectorView<ResourceTracker *> p_trackers, VectorView<ResourceUsage> p_usages);
+	void add_draw_list_usages(HectorView<ResourceTracker *> p_trackers, HectorView<ResourceUsage> p_usages);
 	void add_draw_list_end();
 	void add_texture_clear(RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, const Color &p_color, const RDD::TextureSubresourceRange &p_range);
-	void add_texture_copy(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, VectorView<RDD::TextureCopyRegion> p_texture_copy_regions);
-	void add_texture_get_data(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::BufferID p_dst, VectorView<RDD::BufferTextureCopyRegion> p_buffer_texture_copy_regions, ResourceTracker *p_dst_tracker = nullptr);
+	void add_texture_copy(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, HectorView<RDD::TextureCopyRegion> p_texture_copy_regions);
+	void add_texture_get_data(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::BufferID p_dst, HectorView<RDD::BufferTextureCopyRegion> p_buffer_texture_copy_regions, ResourceTracker *p_dst_tracker = nullptr);
 	void add_texture_resolve(RDD::TextureID p_src, ResourceTracker *p_src_tracker, RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, uint32_t p_src_layer, uint32_t p_src_mipmap, uint32_t p_dst_layer, uint32_t p_dst_mipmap);
-	void add_texture_update(RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, VectorView<RecordedBufferToTextureCopy> p_buffer_copies, VectorView<ResourceTracker *> p_buffer_trackers = VectorView<ResourceTracker *>());
+	void add_texture_update(RDD::TextureID p_dst, ResourceTracker *p_dst_tracker, HectorView<RecordedBufferToTextureCopy> p_buffer_copies, HectorView<ResourceTracker *> p_buffer_trackers = HectorView<ResourceTracker *>());
 	void add_capture_timestamp(RDD::QueryPoolID p_query_pool, uint32_t p_index);
 	void add_synchronization();
 	void begin_label(const String &p_label_name, const Color &p_color);

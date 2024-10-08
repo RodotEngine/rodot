@@ -42,8 +42,8 @@
 #include "core/math/aabb.h"
 #include "core/math/bvh_abb.h"
 #include "core/math/geometry_3d.h"
-#include "core/math/vector3.h"
-#include "core/templates/local_vector.h"
+#include "core/math/Hector3.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/pooled_list.h"
 #include <limits.h>
 
@@ -118,7 +118,7 @@ public:
 	T *stack;
 	//only used in rare occasions when you run out of alloca memory
 	// because tree is too unbalanced.
-	LocalVector<T> aux_stack;
+	LocalHector<T> aux_stack;
 	int32_t get_alloca_stacksize() const { return ALLOCA_STACK_SIZE * sizeof(T); }
 
 	T *get_first() const {
@@ -170,7 +170,7 @@ public:
 	}
 };
 
-template <typename T, int NUM_TREES, int MAX_CHILDREN, int MAX_ITEMS, typename USER_PAIR_TEST_FUNCTION = BVH_DummyPairTestFunction<T>, typename USER_CULL_TEST_FUNCTION = BVH_DummyCullTestFunction<T>, bool USE_PAIRS = false, typename BOUNDS = AABB, typename POINT = Vector3>
+template <typename T, int NUM_TREES, int MAX_CHILDREN, int MAX_ITEMS, typename USER_PAIR_TEST_FUNCTION = BVH_DummyPairTestFunction<T>, typename USER_CULL_TEST_FUNCTION = BVH_DummyCullTestFunction<T>, bool USE_PAIRS = false, typename BOUNDS = AABB, typename POINT = Hector3>
 class BVH_Tree {
 	friend class BVH;
 

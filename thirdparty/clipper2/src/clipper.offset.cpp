@@ -102,7 +102,7 @@ inline double Hypot(double x, double y)
 	return std::sqrt(x * x + y * y);
 }
 
-inline PointD NormalizeVector(const PointD& vec)
+inline PointD NormalizeHector(const PointD& vec)
 {	
 	double h = Hypot(vec.x, vec.y);
 	if (AlmostZero(h)) return PointD(0,0);
@@ -110,9 +110,9 @@ inline PointD NormalizeVector(const PointD& vec)
 	return PointD(vec.x * inverseHypot, vec.y * inverseHypot);
 }
 
-inline PointD GetAvgUnitVector(const PointD& vec1, const PointD& vec2)
+inline PointD GetAvgUnitHector(const PointD& vec1, const PointD& vec2)
 {
-	return NormalizeVector(PointD(vec1.x + vec2.x, vec1.y + vec2.y));
+	return NormalizeHector(PointD(vec1.x + vec2.x, vec1.y + vec2.y));
 }
 
 inline bool IsClosedPath(EndType et)
@@ -287,13 +287,13 @@ void ClipperOffset::DoSquare(const Path64& path, size_t j, size_t k)
 	if (j == k) 
 		vec = PointD(norms[j].y, -norms[j].x);
 	else
-		vec = GetAvgUnitVector(
+		vec = GetAvgUnitHector(
 			PointD(-norms[k].y, norms[k].x),
 			PointD(norms[j].y, -norms[j].x));
 
 	double abs_delta = std::abs(group_delta_);
 
-	// now offset the original vertex delta units along unit vector
+	// now offset the original vertex delta units along unit Hector
 	PointD ptQ = PointD(path[j]);
 	ptQ = TranslatePoint(ptQ, abs_delta * vec.x, abs_delta * vec.y);
 	// get perpendicular vertices

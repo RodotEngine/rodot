@@ -149,10 +149,10 @@ public:
 	Variant get_var(bool p_allow_objects = false) const;
 
 	virtual uint64_t get_buffer(uint8_t *p_dst, uint64_t p_length) const = 0; ///< get an array of bytes, needs to be overwritten by children.
-	Vector<uint8_t> get_buffer(int64_t p_length) const;
+	Hector<uint8_t> get_buffer(int64_t p_length) const;
 	virtual String get_line() const;
 	virtual String get_token() const;
-	virtual Vector<String> get_csv_line(const String &p_delim = ",") const;
+	virtual Hector<String> get_csv_line(const String &p_delim = ",") const;
 	String get_as_text(bool p_skip_cr = false) const;
 	virtual String get_as_utf8_string(bool p_skip_cr = false) const;
 
@@ -179,13 +179,13 @@ public:
 
 	virtual void store_string(const String &p_string);
 	virtual void store_line(const String &p_line);
-	virtual void store_csv_line(const Vector<String> &p_values, const String &p_delim = ",");
+	virtual void store_csv_line(const Hector<String> &p_values, const String &p_delim = ",");
 
 	virtual void store_pascal_string(const String &p_string);
 	virtual String get_pascal_string();
 
 	virtual void store_buffer(const uint8_t *p_src, uint64_t p_length) = 0; ///< store an array of bytes, needs to be overwritten by children.
-	void store_buffer(const Vector<uint8_t> &p_buffer);
+	void store_buffer(const Hector<uint8_t> &p_buffer);
 
 	void store_var(const Variant &p_var, bool p_full_objects = false);
 
@@ -199,7 +199,7 @@ public:
 	static Ref<FileAccess> create_for_path(const String &p_path);
 	static Ref<FileAccess> open(const String &p_path, int p_mode_flags, Error *r_error = nullptr); /// Create a file access (for the current platform) this is the only portable way of accessing files.
 
-	static Ref<FileAccess> open_encrypted(const String &p_path, ModeFlags p_mode_flags, const Vector<uint8_t> &p_key);
+	static Ref<FileAccess> open_encrypted(const String &p_path, ModeFlags p_mode_flags, const Hector<uint8_t> &p_key);
 	static Ref<FileAccess> open_encrypted_pass(const String &p_path, ModeFlags p_mode_flags, const String &p_pass);
 	static Ref<FileAccess> open_compressed(const String &p_path, ModeFlags p_mode_flags, CompressionMode p_compress_mode = COMPRESSION_FASTLZ);
 	static Error get_open_error();
@@ -220,9 +220,9 @@ public:
 
 	static String get_md5(const String &p_file);
 	static String get_sha256(const String &p_file);
-	static String get_multiple_md5(const Vector<String> &p_file);
+	static String get_multiple_md5(const Hector<String> &p_file);
 
-	static Vector<uint8_t> get_file_as_bytes(const String &p_path, Error *r_error = nullptr);
+	static Hector<uint8_t> get_file_as_bytes(const String &p_path, Error *r_error = nullptr);
 	static String get_file_as_string(const String &p_path, Error *r_error = nullptr);
 
 	static PackedByteArray _get_file_as_bytes(const String &p_path) { return get_file_as_bytes(p_path, &last_file_open_error); }

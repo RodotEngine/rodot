@@ -50,7 +50,7 @@ void PrimitiveMesh::_update() const {
 		_create_mesh_array(arr);
 	}
 
-	Vector<Vector3> points = arr[RS::ARRAY_VERTEX];
+	Hector<Hector3> points = arr[RS::ARRAY_VERTEX];
 
 	ERR_FAIL_COND_MSG(points.is_empty(), "_create_mesh_array must return at least a vertex array.");
 
@@ -59,7 +59,7 @@ void PrimitiveMesh::_update() const {
 	int pc = points.size();
 	ERR_FAIL_COND(pc == 0);
 	{
-		const Vector3 *r = points.ptr();
+		const Hector3 *r = points.ptr();
 		for (int i = 0; i < pc; i++) {
 			if (i == 0) {
 				aabb.position = r[i];
@@ -69,15 +69,15 @@ void PrimitiveMesh::_update() const {
 		}
 	}
 
-	Vector<int> indices = arr[RS::ARRAY_INDEX];
+	Hector<int> indices = arr[RS::ARRAY_INDEX];
 
 	if (flip_faces) {
-		Vector<Vector3> normals = arr[RS::ARRAY_NORMAL];
+		Hector<Hector3> normals = arr[RS::ARRAY_NORMAL];
 
 		if (normals.size() && indices.size()) {
 			{
 				int nc = normals.size();
-				Vector3 *w = normals.ptrw();
+				Hector3 *w = normals.ptrw();
 				for (int i = 0; i < nc; i++) {
 					w[i] = -w[i];
 				}
@@ -99,14 +99,14 @@ void PrimitiveMesh::_update() const {
 		// _create_mesh_array should populate our UV2, this is a fallback in case it doesn't.
 		// As we don't know anything about the geometry we only pad the right and bottom edge
 		// of our texture.
-		Vector<Vector2> uv = arr[RS::ARRAY_TEX_UV];
-		Vector<Vector2> uv2 = arr[RS::ARRAY_TEX_UV2];
+		Hector<Hector2> uv = arr[RS::ARRAY_TEX_UV];
+		Hector<Hector2> uv2 = arr[RS::ARRAY_TEX_UV2];
 
 		if (uv.size() > 0 && uv2.size() == 0) {
-			Vector2 uv2_scale = get_uv2_scale();
+			Hector2 uv2_scale = get_uv2_scale();
 			uv2.resize(uv.size());
 
-			Vector2 *uv2w = uv2.ptrw();
+			Hector2 *uv2w = uv2.ptrw();
 			for (int i = 0; i < uv.size(); i++) {
 				uv2w[i] = uv[i] * uv2_scale;
 			}
@@ -309,16 +309,16 @@ void PrimitiveMesh::set_uv2_padding(float p_padding) {
 	request_update();
 }
 
-Vector2 PrimitiveMesh::get_uv2_scale(Vector2 p_margin_scale) const {
-	Vector2 uv2_scale;
-	Vector2 lightmap_size = get_lightmap_size_hint();
+Hector2 PrimitiveMesh::get_uv2_scale(Hector2 p_margin_scale) const {
+	Hector2 uv2_scale;
+	Hector2 lightmap_size = get_lightmap_size_hint();
 
 	// Calculate it as a margin, if no lightmap size hint is given we assume "PADDING_REF_SIZE" as our texture size.
 	uv2_scale.x = p_margin_scale.x * uv2_padding / (lightmap_size.x == 0.0 ? PADDING_REF_SIZE : lightmap_size.x);
 	uv2_scale.y = p_margin_scale.y * uv2_padding / (lightmap_size.y == 0.0 ? PADDING_REF_SIZE : lightmap_size.y);
 
 	// Inverse it to turn our margin into a scale
-	uv2_scale = Vector2(1.0, 1.0) - uv2_scale;
+	uv2_scale = Hector2(1.0, 1.0) - uv2_scale;
 
 	return uv2_scale;
 }
@@ -406,12 +406,12 @@ void CapsuleMesh::create_mesh_array(Array &p_arr, const float radius, const floa
 
 	// note, this has been aligned with our collision shape but I've left the descriptions as top/middle/bottom
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<Vector2> uv2s;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<Hector2> uv2s;
+	Hector<int> indices;
 	point = 0;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
@@ -437,13 +437,13 @@ void CapsuleMesh::create_mesh_array(Array &p_arr, const float radius, const floa
 			x = -sin(u * Math_TAU);
 			z = cos(u * Math_TAU);
 
-			Vector3 p = Vector3(x * radius * w, y, -z * radius * w);
-			points.push_back(p + Vector3(0.0, 0.5 * height - radius, 0.0));
+			Hector3 p = Hector3(x * radius * w, y, -z * radius * w);
+			points.push_back(p + Hector3(0.0, 0.5 * height - radius, 0.0));
 			normals.push_back(p.normalized());
 			ADD_TANGENT(-z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, v * onethird));
+			uvs.push_back(Hector2(u, v * onethird));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(u * radial_h, v * radial_v));
+				uv2s.push_back(Hector2(u * radial_h, v * radial_v));
 			}
 			point++;
 
@@ -479,13 +479,13 @@ void CapsuleMesh::create_mesh_array(Array &p_arr, const float radius, const floa
 			x = -sin(u * Math_TAU);
 			z = cos(u * Math_TAU);
 
-			Vector3 p = Vector3(x * radius, y, -z * radius);
+			Hector3 p = Hector3(x * radius, y, -z * radius);
 			points.push_back(p);
-			normals.push_back(Vector3(x, 0.0, -z));
+			normals.push_back(Hector3(x, 0.0, -z));
 			ADD_TANGENT(-z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, onethird + (v * onethird)));
+			uvs.push_back(Hector2(u, onethird + (v * onethird)));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(u * radial_h, radial_v + (v * height_v)));
+				uv2s.push_back(Hector2(u * radial_h, radial_v + (v * height_v)));
 			}
 			point++;
 
@@ -522,13 +522,13 @@ void CapsuleMesh::create_mesh_array(Array &p_arr, const float radius, const floa
 			x = -sin(u * Math_TAU);
 			z = cos(u * Math_TAU);
 
-			Vector3 p = Vector3(x * radius * w, y, -z * radius * w);
-			points.push_back(p + Vector3(0.0, -0.5 * height + radius, 0.0));
+			Hector3 p = Hector3(x * radius * w, y, -z * radius * w);
+			points.push_back(p + Hector3(0.0, -0.5 * height + radius, 0.0));
 			normals.push_back(p.normalized());
 			ADD_TANGENT(-z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, twothirds + ((v - 1.0) * onethird)));
+			uvs.push_back(Hector2(u, twothirds + ((v - 1.0) * onethird)));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(u * radial_h, radial_v + height_v + ((v - 1.0) * radial_v)));
+				uv2s.push_back(Hector2(u * radial_h, radial_v + height_v + ((v - 1.0) * radial_v)));
 			}
 			point++;
 
@@ -655,7 +655,7 @@ void BoxMesh::_create_mesh_array(Array &p_arr) const {
 	BoxMesh::create_mesh_array(p_arr, size, subdivide_w, subdivide_h, subdivide_d, _add_uv2, _uv2_padding);
 }
 
-void BoxMesh::create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w, int subdivide_h, int subdivide_d, bool p_add_uv2, const float p_uv2_padding) {
+void BoxMesh::create_mesh_array(Array &p_arr, Hector3 size, int subdivide_w, int subdivide_h, int subdivide_d, bool p_add_uv2, const float p_uv2_padding) {
 	int i, j, prevrow, thisrow, point;
 	float x, y, z;
 	float onethird = 1.0 / 3.0;
@@ -673,16 +673,16 @@ void BoxMesh::create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w, int
 	float height_v = size.y / total_v;
 	float depth_v = size.z / total_v;
 
-	Vector3 start_pos = size * -0.5;
+	Hector3 start_pos = size * -0.5;
 
 	// set our bounding box
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<Vector2> uv2s;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<Hector2> uv2s;
+	Hector<int> indices;
 	point = 0;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
@@ -707,22 +707,22 @@ void BoxMesh::create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w, int
 			u /= (3.0 * (subdivide_w + 1.0));
 
 			// front
-			points.push_back(Vector3(x, -y, -start_pos.z)); // double negative on the Z!
-			normals.push_back(Vector3(0.0, 0.0, 1.0));
+			points.push_back(Hector3(x, -y, -start_pos.z)); // double negative on the Z!
+			normals.push_back(Hector3(0.0, 0.0, 1.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(u, v));
+			uvs.push_back(Hector2(u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(u2 * width_h, v2 * height_v));
+				uv2s.push_back(Hector2(u2 * width_h, v2 * height_v));
 			}
 			point++;
 
 			// back
-			points.push_back(Vector3(-x, -y, start_pos.z));
-			normals.push_back(Vector3(0.0, 0.0, -1.0));
+			points.push_back(Hector3(-x, -y, start_pos.z));
+			normals.push_back(Hector3(0.0, 0.0, -1.0));
 			ADD_TANGENT(-1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + u, v));
+			uvs.push_back(Hector2(twothirds + u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(u2 * width_h, height_v + padding_v + (v2 * height_v)));
+				uv2s.push_back(Hector2(u2 * width_h, height_v + padding_v + (v2 * height_v)));
 			}
 			point++;
 
@@ -770,22 +770,22 @@ void BoxMesh::create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w, int
 			u /= (3.0 * (subdivide_d + 1.0));
 
 			// right
-			points.push_back(Vector3(-start_pos.x, -y, -z));
-			normals.push_back(Vector3(1.0, 0.0, 0.0));
+			points.push_back(Hector3(-start_pos.x, -y, -z));
+			normals.push_back(Hector3(1.0, 0.0, 0.0));
 			ADD_TANGENT(0.0, 0.0, -1.0, 1.0);
-			uvs.push_back(Vector2(onethird + u, v));
+			uvs.push_back(Hector2(onethird + u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(width_h + padding_h + (u2 * depth_h), v2 * height_v));
+				uv2s.push_back(Hector2(width_h + padding_h + (u2 * depth_h), v2 * height_v));
 			}
 			point++;
 
 			// left
-			points.push_back(Vector3(start_pos.x, -y, z));
-			normals.push_back(Vector3(-1.0, 0.0, 0.0));
+			points.push_back(Hector3(start_pos.x, -y, z));
+			normals.push_back(Hector3(-1.0, 0.0, 0.0));
 			ADD_TANGENT(0.0, 0.0, 1.0, 1.0);
-			uvs.push_back(Vector2(u, 0.5 + v));
+			uvs.push_back(Hector2(u, 0.5 + v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(width_h + padding_h + (u2 * depth_h), height_v + padding_v + (v2 * height_v)));
+				uv2s.push_back(Hector2(width_h + padding_h + (u2 * depth_h), height_v + padding_v + (v2 * height_v)));
 			}
 			point++;
 
@@ -833,22 +833,22 @@ void BoxMesh::create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w, int
 			u /= (3.0 * (subdivide_w + 1.0));
 
 			// top
-			points.push_back(Vector3(-x, -start_pos.y, -z));
-			normals.push_back(Vector3(0.0, 1.0, 0.0));
+			points.push_back(Hector3(-x, -start_pos.y, -z));
+			normals.push_back(Hector3(0.0, 1.0, 0.0));
 			ADD_TANGENT(-1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(onethird + u, 0.5 + v));
+			uvs.push_back(Hector2(onethird + u, 0.5 + v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(u2 * width_h, ((height_v + padding_v) * 2.0) + (v2 * depth_v)));
+				uv2s.push_back(Hector2(u2 * width_h, ((height_v + padding_v) * 2.0) + (v2 * depth_v)));
 			}
 			point++;
 
 			// bottom
-			points.push_back(Vector3(x, start_pos.y, -z));
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
+			points.push_back(Hector3(x, start_pos.y, -z));
+			normals.push_back(Hector3(0.0, -1.0, 0.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + u, 0.5 + v));
+			uvs.push_back(Hector2(twothirds + u, 0.5 + v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(width_h + padding_h + (u2 * depth_h), ((height_v + padding_v) * 2.0) + (v2 * width_v)));
+				uv2s.push_back(Hector2(width_h + padding_h + (u2 * depth_h), ((height_v + padding_v) * 2.0) + (v2 * width_v)));
 			}
 			point++;
 
@@ -901,19 +901,19 @@ void BoxMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_subdivide_depth", "divisions"), &BoxMesh::set_subdivide_depth);
 	ClassDB::bind_method(D_METHOD("get_subdivide_depth"), &BoxMesh::get_subdivide_depth);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_width", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_width", "get_subdivide_width");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_height", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_height", "get_subdivide_height");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_depth", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_depth", "get_subdivide_depth");
 }
 
-void BoxMesh::set_size(const Vector3 &p_size) {
+void BoxMesh::set_size(const Hector3 &p_size) {
 	size = p_size;
 	_update_lightmap_size();
 	request_update();
 }
 
-Vector3 BoxMesh::get_size() const {
+Hector3 BoxMesh::get_size() const {
 	return size;
 }
 
@@ -995,12 +995,12 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 	float bottom_h = bottom_circumference / horizonal_length;
 	float padding_h = p_uv2_padding / horizonal_length;
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<Vector2> uv2s;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<Hector2> uv2s;
+	Hector<int> indices;
 	point = 0;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
@@ -1029,13 +1029,13 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 			x = sin(u * Math_TAU);
 			z = cos(u * Math_TAU);
 
-			Vector3 p = Vector3(x * radius, y, z * radius);
+			Hector3 p = Hector3(x * radius, y, z * radius);
 			points.push_back(p);
-			normals.push_back(Vector3(x, side_normal_y, z).normalized());
+			normals.push_back(Hector3(x, side_normal_y, z).normalized());
 			ADD_TANGENT(z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, v * 0.5));
+			uvs.push_back(Hector2(u, v * 0.5));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(center_h + (u - 0.5) * radius_h, v * height_v));
+				uv2s.push_back(Hector2(center_h + (u - 0.5) * radius_h, v * height_v));
 			}
 			point++;
 
@@ -1065,12 +1065,12 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 		y = height * 0.5;
 
 		thisrow = point;
-		points.push_back(Vector3(0.0, y, 0.0));
-		normals.push_back(Vector3(0.0, 1.0, 0.0));
+		points.push_back(Hector3(0.0, y, 0.0));
+		normals.push_back(Hector3(0.0, 1.0, 0.0));
 		ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-		uvs.push_back(Vector2(0.25, 0.75));
+		uvs.push_back(Hector2(0.25, 0.75));
 		if (p_add_uv2) {
-			uv2s.push_back(Vector2(top_h, height_v + padding_v + MAX(top_v, bottom_v)));
+			uv2s.push_back(Hector2(top_h, height_v + padding_v + MAX(top_v, bottom_v)));
 		}
 		point++;
 
@@ -1084,13 +1084,13 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 			u = ((x + 1.0) * 0.25);
 			v = 0.5 + ((z + 1.0) * 0.25);
 
-			Vector3 p = Vector3(x * top_radius, y, z * top_radius);
+			Hector3 p = Hector3(x * top_radius, y, z * top_radius);
 			points.push_back(p);
-			normals.push_back(Vector3(0.0, 1.0, 0.0));
+			normals.push_back(Hector3(0.0, 1.0, 0.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-			uvs.push_back(Vector2(u, v));
+			uvs.push_back(Hector2(u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(top_h + (x * top_h), height_v + padding_v + MAX(top_v, bottom_v) + (z * top_v)));
+				uv2s.push_back(Hector2(top_h + (x * top_h), height_v + padding_v + MAX(top_v, bottom_v) + (z * top_v)));
 			}
 			point++;
 
@@ -1107,12 +1107,12 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 		y = height * -0.5;
 
 		thisrow = point;
-		points.push_back(Vector3(0.0, y, 0.0));
-		normals.push_back(Vector3(0.0, -1.0, 0.0));
+		points.push_back(Hector3(0.0, y, 0.0));
+		normals.push_back(Hector3(0.0, -1.0, 0.0));
 		ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-		uvs.push_back(Vector2(0.75, 0.75));
+		uvs.push_back(Hector2(0.75, 0.75));
 		if (p_add_uv2) {
-			uv2s.push_back(Vector2(top_h + top_h + padding_h + bottom_h, height_v + padding_v + MAX(top_v, bottom_v)));
+			uv2s.push_back(Hector2(top_h + top_h + padding_h + bottom_h, height_v + padding_v + MAX(top_v, bottom_v)));
 		}
 		point++;
 
@@ -1126,13 +1126,13 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 			u = 0.5 + ((x + 1.0) * 0.25);
 			v = 1.0 - ((z + 1.0) * 0.25);
 
-			Vector3 p = Vector3(x * bottom_radius, y, z * bottom_radius);
+			Hector3 p = Hector3(x * bottom_radius, y, z * bottom_radius);
 			points.push_back(p);
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
+			normals.push_back(Hector3(0.0, -1.0, 0.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-			uvs.push_back(Vector2(u, v));
+			uvs.push_back(Hector2(u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(top_h + top_h + padding_h + bottom_h + (x * bottom_h), height_v + padding_v + MAX(top_v, bottom_v) - (z * bottom_v)));
+				uv2s.push_back(Hector2(top_h + top_h + padding_h + bottom_h + (x * bottom_h), height_v + padding_v + MAX(top_v, bottom_v) - (z * bottom_v)));
 			}
 			point++;
 
@@ -1276,18 +1276,18 @@ void PlaneMesh::_create_mesh_array(Array &p_arr) const {
 
 	Size2 start_pos = size * -0.5;
 
-	Vector3 normal = Vector3(0.0, 1.0, 0.0);
+	Hector3 normal = Hector3(0.0, 1.0, 0.0);
 	if (orientation == FACE_X) {
-		normal = Vector3(1.0, 0.0, 0.0);
+		normal = Hector3(1.0, 0.0, 0.0);
 	} else if (orientation == FACE_Z) {
-		normal = Vector3(0.0, 0.0, 1.0);
+		normal = Hector3(0.0, 0.0, 1.0);
 	}
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<int> indices;
 	point = 0;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
@@ -1309,11 +1309,11 @@ void PlaneMesh::_create_mesh_array(Array &p_arr) const {
 			v /= (subdivide_d + 1.0);
 
 			if (orientation == FACE_X) {
-				points.push_back(Vector3(0.0, z, x) + center_offset);
+				points.push_back(Hector3(0.0, z, x) + center_offset);
 			} else if (orientation == FACE_Y) {
-				points.push_back(Vector3(-x, 0.0, -z) + center_offset);
+				points.push_back(Hector3(-x, 0.0, -z) + center_offset);
 			} else if (orientation == FACE_Z) {
-				points.push_back(Vector3(-x, z, 0.0) + center_offset);
+				points.push_back(Hector3(-x, z, 0.0) + center_offset);
 			}
 			normals.push_back(normal);
 			if (orientation == FACE_X) {
@@ -1321,7 +1321,7 @@ void PlaneMesh::_create_mesh_array(Array &p_arr) const {
 			} else {
 				ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
 			}
-			uvs.push_back(Vector2(1.0 - u, 1.0 - v)); /* 1.0 - uv to match orientation with Quad */
+			uvs.push_back(Hector2(1.0 - u, 1.0 - v)); /* 1.0 - uv to match orientation with Quad */
 			point++;
 
 			if (i > 0 && j > 0) {
@@ -1363,10 +1363,10 @@ void PlaneMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_orientation", "orientation"), &PlaneMesh::set_orientation);
 	ClassDB::bind_method(D_METHOD("get_orientation"), &PlaneMesh::get_orientation);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_width", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_width", "get_subdivide_width");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_depth", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_depth", "get_subdivide_depth");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "center_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_center_offset", "get_center_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "center_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_center_offset", "get_center_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "orientation", PROPERTY_HINT_ENUM, "Face X,Face Y,Face Z"), "set_orientation", "get_orientation");
 
 	BIND_ENUM_CONSTANT(FACE_X)
@@ -1402,12 +1402,12 @@ int PlaneMesh::get_subdivide_depth() const {
 	return subdivide_d;
 }
 
-void PlaneMesh::set_center_offset(const Vector3 p_offset) {
+void PlaneMesh::set_center_offset(const Hector3 p_offset) {
 	center_offset = p_offset;
 	request_update();
 }
 
-Vector3 PlaneMesh::get_center_offset() const {
+Hector3 PlaneMesh::get_center_offset() const {
 	return center_offset;
 }
 
@@ -1467,16 +1467,16 @@ void PrismMesh::_create_mesh_array(Array &p_arr) const {
 
 	// and start building
 
-	Vector3 start_pos = size * -0.5;
+	Hector3 start_pos = size * -0.5;
 
 	// set our bounding box
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<Vector2> uv2s;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<Hector2> uv2s;
+	Hector<int> indices;
 	point = 0;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
@@ -1509,22 +1509,22 @@ void PrismMesh::_create_mesh_array(Array &p_arr) const {
 			u *= scale;
 
 			/* front */
-			points.push_back(Vector3(start_x + x, -y, -start_pos.z)); // double negative on the Z!
-			normals.push_back(Vector3(0.0, 0.0, 1.0));
+			points.push_back(Hector3(start_x + x, -y, -start_pos.z)); // double negative on the Z!
+			normals.push_back(Hector3(0.0, 0.0, 1.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(offset_front + u, v));
+			uvs.push_back(Hector2(offset_front + u, v));
 			if (_add_uv2) {
-				uv2s.push_back(Vector2(u2 * scale * width_h, v2 * height_v));
+				uv2s.push_back(Hector2(u2 * scale * width_h, v2 * height_v));
 			}
 			point++;
 
 			/* back */
-			points.push_back(Vector3(start_x + scaled_size_x - x, -y, start_pos.z));
-			normals.push_back(Vector3(0.0, 0.0, -1.0));
+			points.push_back(Hector3(start_x + scaled_size_x - x, -y, start_pos.z));
+			normals.push_back(Hector3(0.0, 0.0, -1.0));
 			ADD_TANGENT(-1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + offset_back + u, v));
+			uvs.push_back(Hector2(twothirds + offset_back + u, v));
 			if (_add_uv2) {
-				uv2s.push_back(Vector2(u2 * scale * width_h, height_v + padding_v + v2 * height_v));
+				uv2s.push_back(Hector2(u2 * scale * width_h, height_v + padding_v + v2 * height_v));
 			}
 			point++;
 
@@ -1569,10 +1569,10 @@ void PrismMesh::_create_mesh_array(Array &p_arr) const {
 	}
 
 	/* left + right */
-	Vector3 normal_left, normal_right;
+	Hector3 normal_left, normal_right;
 
-	normal_left = Vector3(-size.y, size.x * left_to_right, 0.0);
-	normal_right = Vector3(size.y, size.x * (1.0 - left_to_right), 0.0);
+	normal_left = Hector3(-size.y, size.x * left_to_right, 0.0);
+	normal_right = Hector3(size.y, size.x * (1.0 - left_to_right), 0.0);
 	normal_left.normalize();
 	normal_right.normalize();
 
@@ -1597,22 +1597,22 @@ void PrismMesh::_create_mesh_array(Array &p_arr) const {
 			u /= (3.0 * (subdivide_d + 1.0));
 
 			/* right */
-			points.push_back(Vector3(right, -y, -z));
+			points.push_back(Hector3(right, -y, -z));
 			normals.push_back(normal_right);
 			ADD_TANGENT(0.0, 0.0, -1.0, 1.0);
-			uvs.push_back(Vector2(onethird + u, v));
+			uvs.push_back(Hector2(onethird + u, v));
 			if (_add_uv2) {
-				uv2s.push_back(Vector2(width_h + padding_h + u2 * depth_h, v2 * height_v));
+				uv2s.push_back(Hector2(width_h + padding_h + u2 * depth_h, v2 * height_v));
 			}
 			point++;
 
 			/* left */
-			points.push_back(Vector3(left, -y, z));
+			points.push_back(Hector3(left, -y, z));
 			normals.push_back(normal_left);
 			ADD_TANGENT(0.0, 0.0, 1.0, 1.0);
-			uvs.push_back(Vector2(u, 0.5 + v));
+			uvs.push_back(Hector2(u, 0.5 + v));
 			if (_add_uv2) {
-				uv2s.push_back(Vector2(width_h + padding_h + u2 * depth_h, height_v + padding_v + v2 * height_v));
+				uv2s.push_back(Hector2(width_h + padding_h + u2 * depth_h, height_v + padding_v + v2 * height_v));
 			}
 			point++;
 
@@ -1660,12 +1660,12 @@ void PrismMesh::_create_mesh_array(Array &p_arr) const {
 			u /= (3.0 * (subdivide_w + 1.0));
 
 			/* bottom */
-			points.push_back(Vector3(x, start_pos.y, -z));
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
+			points.push_back(Hector3(x, start_pos.y, -z));
+			normals.push_back(Hector3(0.0, -1.0, 0.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + u, 0.5 + v));
+			uvs.push_back(Hector2(twothirds + u, 0.5 + v));
 			if (_add_uv2) {
-				uv2s.push_back(Vector2(u2 * width_h, 2.0 * (height_v + padding_v) + v2 * depth_v));
+				uv2s.push_back(Hector2(u2 * width_h, 2.0 * (height_v + padding_v) + v2 * depth_v));
 			}
 			point++;
 
@@ -1712,7 +1712,7 @@ void PrismMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_subdivide_depth"), &PrismMesh::get_subdivide_depth);
 
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "left_to_right", PROPERTY_HINT_RANGE, "-2.0,2.0,0.1"), "set_left_to_right", "get_left_to_right");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_width", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_width", "get_subdivide_width");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_height", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_height", "get_subdivide_height");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_depth", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_depth", "get_subdivide_depth");
@@ -1727,13 +1727,13 @@ float PrismMesh::get_left_to_right() const {
 	return left_to_right;
 }
 
-void PrismMesh::set_size(const Vector3 &p_size) {
+void PrismMesh::set_size(const Hector3 &p_size) {
 	size = p_size;
 	_update_lightmap_size();
 	request_update();
 }
 
-Vector3 PrismMesh::get_size() const {
+Hector3 PrismMesh::get_size() const {
 	return size;
 }
 
@@ -1807,12 +1807,12 @@ void SphereMesh::create_mesh_array(Array &p_arr, float radius, float height, int
 
 	// set our bounding box
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<Vector2> uv2s;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<Hector2> uv2s;
+	Hector<int> indices;
 	point = 0;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
@@ -1839,19 +1839,19 @@ void SphereMesh::create_mesh_array(Array &p_arr, float radius, float height, int
 			z = cos(u * Math_TAU);
 
 			if (is_hemisphere && y < 0.0) {
-				points.push_back(Vector3(x * radius * w, 0.0, z * radius * w));
-				normals.push_back(Vector3(0.0, -1.0, 0.0));
+				points.push_back(Hector3(x * radius * w, 0.0, z * radius * w));
+				normals.push_back(Hector3(0.0, -1.0, 0.0));
 			} else {
-				Vector3 p = Vector3(x * radius * w, y, z * radius * w);
+				Hector3 p = Hector3(x * radius * w, y, z * radius * w);
 				points.push_back(p);
-				Vector3 normal = Vector3(x * w * scale, radius * (y / scale), z * w * scale);
+				Hector3 normal = Hector3(x * w * scale, radius * (y / scale), z * w * scale);
 				normals.push_back(normal.normalized());
 			}
 			ADD_TANGENT(z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, v));
+			uvs.push_back(Hector2(u, v));
 			if (p_add_uv2) {
 				float w_h = w * 2.0 * center_h;
-				uv2s.push_back(Vector2(center_h + ((u - 0.5) * w_h), v * height_v));
+				uv2s.push_back(Hector2(center_h + ((u - 0.5) * w_h), v * height_v));
 			}
 			point++;
 
@@ -1983,12 +1983,12 @@ void TorusMesh::_update_lightmap_size() {
 void TorusMesh::_create_mesh_array(Array &p_arr) const {
 	// set our bounding box
 
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<Vector2> uv2s;
-	Vector<int> indices;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<Hector2> uv2s;
+	Hector<int> indices;
 
 #define ADD_TANGENT(m_x, m_y, m_z, m_d) \
 	tangents.push_back(m_x);            \
@@ -2023,25 +2023,25 @@ void TorusMesh::_create_mesh_array(Array &p_arr) const {
 		float inci = float(i) / rings;
 		float angi = inci * Math_TAU;
 
-		Vector2 normali = Vector2(-Math::sin(angi), -Math::cos(angi));
+		Hector2 normali = Hector2(-Math::sin(angi), -Math::cos(angi));
 
 		for (int j = 0; j <= ring_segments; j++) {
 			float incj = float(j) / ring_segments;
 			float angj = incj * Math_TAU;
 
-			Vector2 normalj = Vector2(-Math::cos(angj), Math::sin(angj));
-			Vector2 normalk = normalj * radius + Vector2(min_radius + radius, 0);
+			Hector2 normalj = Hector2(-Math::cos(angj), Math::sin(angj));
+			Hector2 normalk = normalj * radius + Hector2(min_radius + radius, 0);
 
 			float offset_h = 0.5 * (1.0 - normalj.x) * delta_h;
 			float adj_h = max_h - offset_h;
 			offset_h *= 0.5;
 
-			points.push_back(Vector3(normali.x * normalk.x, normalk.y, normali.y * normalk.x));
-			normals.push_back(Vector3(normali.x * normalj.x, normalj.y, normali.y * normalj.x));
+			points.push_back(Hector3(normali.x * normalk.x, normalk.y, normali.y * normalk.x));
+			normals.push_back(Hector3(normali.x * normalj.x, normalj.y, normali.y * normalj.x));
 			ADD_TANGENT(-Math::cos(angi), 0.0, Math::sin(angi), 1.0);
-			uvs.push_back(Vector2(inci, incj));
+			uvs.push_back(Hector2(inci, incj));
 			if (_add_uv2) {
-				uv2s.push_back(Vector2(offset_h + inci * adj_h, incj * height_v));
+				uv2s.push_back(Hector2(offset_h + inci * adj_h, incj * height_v));
 			}
 
 			if (i > 0 && j > 0) {
@@ -2130,9 +2130,9 @@ TorusMesh::TorusMesh() {}
 */
 
 void PointMesh::_create_mesh_array(Array &p_arr) const {
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	faces.resize(1);
-	faces.set(0, Vector3(0.0, 0.0, 0.0));
+	faces.set(0, Hector3(0.0, 0.0, 0.0));
 
 	p_arr[RS::ARRAY_VERTEX] = faces;
 }
@@ -2240,10 +2240,10 @@ Transform3D TubeTrailMesh::get_builtin_bind_pose(int p_index) const {
 void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 	// Seeing use case for TubeTrailMesh, no need to do anything more then default UV2 calculation
 
-	PackedVector3Array points;
-	PackedVector3Array normals;
+	PackedHector3Array points;
+	PackedHector3Array normals;
 	PackedFloat32Array tangents;
-	PackedVector2Array uvs;
+	PackedHector2Array uvs;
 	PackedInt32Array bone_indices;
 	PackedFloat32Array bone_weights;
 	PackedInt32Array indices;
@@ -2283,11 +2283,11 @@ void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 			float x = sin(u * Math_TAU);
 			float z = cos(u * Math_TAU);
 
-			Vector3 p = Vector3(x * r, y, z * r);
+			Hector3 p = Hector3(x * r, y, z * r);
 			points.push_back(p);
-			normals.push_back(Vector3(x, 0, z));
+			normals.push_back(Hector3(x, 0, z));
 			ADD_TANGENT(z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, v * 0.5));
+			uvs.push_back(Hector2(u, v * 0.5));
 			point++;
 			{
 				bone_indices.push_back(bone);
@@ -2327,10 +2327,10 @@ void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 			float y = depth * 0.5;
 
 			thisrow = point;
-			points.push_back(Vector3(0.0, y, 0));
-			normals.push_back(Vector3(0.0, 1.0, 0.0));
+			points.push_back(Hector3(0.0, y, 0));
+			normals.push_back(Hector3(0.0, 1.0, 0.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-			uvs.push_back(Vector2(0.25, 0.75));
+			uvs.push_back(Hector2(0.25, 0.75));
 			point++;
 
 			bone_indices.push_back(0);
@@ -2355,11 +2355,11 @@ void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 				float u = ((x + 1.0) * 0.25);
 				float v = 0.5 + ((z + 1.0) * 0.25);
 
-				Vector3 p = Vector3(x * rm, y, z * rm);
+				Hector3 p = Hector3(x * rm, y, z * rm);
 				points.push_back(p);
-				normals.push_back(Vector3(0.0, 1.0, 0.0));
+				normals.push_back(Hector3(0.0, 1.0, 0.0));
 				ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-				uvs.push_back(Vector2(u, v));
+				uvs.push_back(Hector2(u, v));
 				point++;
 
 				bone_indices.push_back(0);
@@ -2392,10 +2392,10 @@ void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 			float y = depth * -0.5;
 
 			thisrow = point;
-			points.push_back(Vector3(0.0, y, 0.0));
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
+			points.push_back(Hector3(0.0, y, 0.0));
+			normals.push_back(Hector3(0.0, -1.0, 0.0));
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-			uvs.push_back(Vector2(0.75, 0.75));
+			uvs.push_back(Hector2(0.75, 0.75));
 			point++;
 
 			bone_indices.push_back(sections);
@@ -2420,11 +2420,11 @@ void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 				float u = 0.5 + ((x + 1.0) * 0.25);
 				float v = 1.0 - ((z + 1.0) * 0.25);
 
-				Vector3 p = Vector3(x * rm, y, z * rm);
+				Hector3 p = Hector3(x * rm, y, z * rm);
 				points.push_back(p);
-				normals.push_back(Vector3(0.0, -1.0, 0.0));
+				normals.push_back(Hector3(0.0, -1.0, 0.0));
 				ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-				uvs.push_back(Vector2(u, v));
+				uvs.push_back(Hector2(u, v));
 				point++;
 
 				bone_indices.push_back(sections);
@@ -2579,10 +2579,10 @@ Transform3D RibbonTrailMesh::get_builtin_bind_pose(int p_index) const {
 void RibbonTrailMesh::_create_mesh_array(Array &p_arr) const {
 	// Seeing use case of ribbon trail mesh, no need to implement special UV2 calculation
 
-	PackedVector3Array points;
-	PackedVector3Array normals;
+	PackedHector3Array points;
+	PackedHector3Array normals;
 	PackedFloat32Array tangents;
-	PackedVector2Array uvs;
+	PackedHector2Array uvs;
 	PackedInt32Array bone_indices;
 	PackedFloat32Array bone_weights;
 	PackedInt32Array indices;
@@ -2612,25 +2612,25 @@ void RibbonTrailMesh::_create_mesh_array(Array &p_arr) const {
 			s *= curve->sample_baked(v);
 		}
 
-		points.push_back(Vector3(-s * 0.5, y, 0));
-		points.push_back(Vector3(+s * 0.5, y, 0));
+		points.push_back(Hector3(-s * 0.5, y, 0));
+		points.push_back(Hector3(+s * 0.5, y, 0));
 		if (shape == SHAPE_CROSS) {
-			points.push_back(Vector3(0, y, -s * 0.5));
-			points.push_back(Vector3(0, y, +s * 0.5));
+			points.push_back(Hector3(0, y, -s * 0.5));
+			points.push_back(Hector3(0, y, +s * 0.5));
 		}
 
-		normals.push_back(Vector3(0, 0, 1));
-		normals.push_back(Vector3(0, 0, 1));
+		normals.push_back(Hector3(0, 0, 1));
+		normals.push_back(Hector3(0, 0, 1));
 		if (shape == SHAPE_CROSS) {
-			normals.push_back(Vector3(1, 0, 0));
-			normals.push_back(Vector3(1, 0, 0));
+			normals.push_back(Hector3(1, 0, 0));
+			normals.push_back(Hector3(1, 0, 0));
 		}
 
-		uvs.push_back(Vector2(0, v));
-		uvs.push_back(Vector2(1, v));
+		uvs.push_back(Hector2(0, v));
+		uvs.push_back(Hector2(1, v));
 		if (shape == SHAPE_CROSS) {
-			uvs.push_back(Vector2(0, v));
-			uvs.push_back(Vector2(1, v));
+			uvs.push_back(Hector2(0, v));
+			uvs.push_back(Hector2(1, v));
 		}
 
 		ADD_TANGENT(0.0, 1.0, 0.0, 1.0)
@@ -2738,7 +2738,7 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 
 	Dictionary d = TS->font_get_glyph_contours(p_gl.font_rid, p_gl.font_size, p_gl.index);
 
-	PackedVector3Array points = d["points"];
+	PackedHector3Array points = d["points"];
 	PackedInt32Array contours = d["contours"];
 	bool orientation = d["orientation"];
 
@@ -2751,33 +2751,33 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 	for (int i = 0; i < contours.size(); i++) {
 		int32_t start = (i == 0) ? 0 : (contours[i - 1] + 1);
 		int32_t end = contours[i];
-		Vector<ContourPoint> polygon;
+		Hector<ContourPoint> polygon;
 
 		for (int32_t j = start; j <= end; j++) {
 			if (points[j].z == TextServer::CONTOUR_CURVE_TAG_ON) {
 				// Point on the curve.
-				Vector2 p = Vector2(points[j].x, points[j].y) * pixel_size;
+				Hector2 p = Hector2(points[j].x, points[j].y) * pixel_size;
 				polygon.push_back(ContourPoint(p, true));
 			} else if (points[j].z == TextServer::CONTOUR_CURVE_TAG_OFF_CONIC) {
 				// Conic Bezier arc.
 				int32_t next = (j == end) ? start : (j + 1);
 				int32_t prev = (j == start) ? end : (j - 1);
-				Vector2 p0;
-				Vector2 p1 = Vector2(points[j].x, points[j].y);
-				Vector2 p2;
+				Hector2 p0;
+				Hector2 p1 = Hector2(points[j].x, points[j].y);
+				Hector2 p2;
 
 				// For successive conic OFF points add a virtual ON point in the middle.
 				if (points[prev].z == TextServer::CONTOUR_CURVE_TAG_OFF_CONIC) {
-					p0 = (Vector2(points[prev].x, points[prev].y) + Vector2(points[j].x, points[j].y)) / 2.0;
+					p0 = (Hector2(points[prev].x, points[prev].y) + Hector2(points[j].x, points[j].y)) / 2.0;
 				} else if (points[prev].z == TextServer::CONTOUR_CURVE_TAG_ON) {
-					p0 = Vector2(points[prev].x, points[prev].y);
+					p0 = Hector2(points[prev].x, points[prev].y);
 				} else {
 					ERR_FAIL_MSG(vformat("Invalid conic arc point sequence at %d:%d", i, j));
 				}
 				if (points[next].z == TextServer::CONTOUR_CURVE_TAG_OFF_CONIC) {
-					p2 = (Vector2(points[j].x, points[j].y) + Vector2(points[next].x, points[next].y)) / 2.0;
+					p2 = (Hector2(points[j].x, points[j].y) + Hector2(points[next].x, points[next].y)) / 2.0;
 				} else if (points[next].z == TextServer::CONTOUR_CURVE_TAG_ON) {
-					p2 = Vector2(points[next].x, points[next].y);
+					p2 = Hector2(points[next].x, points[next].y);
 				} else {
 					ERR_FAIL_MSG(vformat("Invalid conic arc point sequence at %d:%d", i, j));
 				}
@@ -2789,8 +2789,8 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 					real_t omt2 = omt * omt;
 					real_t t2 = t * t;
 
-					Vector2 point = p1 + omt2 * (p0 - p1) + t2 * (p2 - p1);
-					Vector2 p = point * pixel_size;
+					Hector2 point = p1 + omt2 * (p0 - p1) + t2 * (p2 - p1);
+					Hector2 p = point * pixel_size;
 					polygon.push_back(ContourPoint(p, false));
 					t += step;
 				}
@@ -2815,16 +2815,16 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 				ERR_FAIL_COND_MSG(points[next1].z != TextServer::CONTOUR_CURVE_TAG_OFF_CUBIC, vformat("Invalid cubic arc point sequence at %d:%d", i, next1));
 				ERR_FAIL_COND_MSG(points[next2].z != TextServer::CONTOUR_CURVE_TAG_ON, vformat("Invalid cubic arc point sequence at %d:%d", i, next2));
 
-				Vector2 p0 = Vector2(points[prev].x, points[prev].y);
-				Vector2 p1 = Vector2(points[cur].x, points[cur].y);
-				Vector2 p2 = Vector2(points[next1].x, points[next1].y);
-				Vector2 p3 = Vector2(points[next2].x, points[next2].y);
+				Hector2 p0 = Hector2(points[prev].x, points[prev].y);
+				Hector2 p1 = Hector2(points[cur].x, points[cur].y);
+				Hector2 p2 = Hector2(points[next1].x, points[next1].y);
+				Hector2 p3 = Hector2(points[next2].x, points[next2].y);
 
 				real_t step = CLAMP(curve_step / (p0 - p3).length(), 0.01, 0.5);
 				real_t t = step;
 				while (t < 1.0) {
-					Vector2 point = p0.bezier_interpolate(p1, p2, p3, t);
-					Vector2 p = point * pixel_size;
+					Hector2 point = p0.bezier_interpolate(p1, p2, p3, t);
+					Hector2 p = point * pixel_size;
 					polygon.push_back(ContourPoint(p, false));
 					t += step;
 				}
@@ -2886,7 +2886,7 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 		ERR_FAIL_COND(tp.GetNumPoints() != 3); // Triangles only.
 
 		for (int i = 0; i < 3; i++) {
-			gl_data.triangles.push_back(Vector2(tp.GetPoint(i).x, tp.GetPoint(i).y));
+			gl_data.triangles.push_back(Hector2(tp.GetPoint(i).x, tp.GetPoint(i).y));
 		}
 	}
 }
@@ -2920,7 +2920,7 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 		String txt = (uppercase) ? TS->string_to_upper(xl_text, language) : xl_text;
 		TS->shaped_text_add_string(text_rid, txt, font->get_rids(), font_size, font->get_opentype_features(), language);
 
-		TypedArray<Vector3i> stt;
+		TypedArray<Hector3i> stt;
 		if (st_parser == TextServer::STRUCTURED_TEXT_CUSTOM) {
 			GDVIRTUAL_CALL(_structured_text_parser, st_args, txt, stt);
 		} else {
@@ -3013,19 +3013,19 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 		} break;
 	}
 
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
-	Vector<float> tangents;
-	Vector<Vector2> uvs;
-	Vector<int32_t> indices;
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
+	Hector<float> tangents;
+	Hector<Hector2> uvs;
+	Hector<int32_t> indices;
 
-	Vector2 min_p = Vector2(INFINITY, INFINITY);
-	Vector2 max_p = Vector2(-INFINITY, -INFINITY);
+	Hector2 min_p = Hector2(INFINITY, INFINITY);
+	Hector2 max_p = Hector2(-INFINITY, -INFINITY);
 
 	int32_t p_size = 0;
 	int32_t i_size = 0;
 
-	Vector2 offset = Vector2(0, vbegin + lbl_offset.y * pixel_size);
+	Hector2 offset = Hector2(0, vbegin + lbl_offset.y * pixel_size);
 	for (int i = 0; i < lines_rid.size(); i++) {
 		const Glyph *glyphs = TS->shaped_text_get_glyphs(lines_rid[i]);
 		int gl_size = TS->shaped_text_get_glyph_count(lines_rid[i]);
@@ -3057,7 +3057,7 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 				GlyphMeshKey key = GlyphMeshKey(glyphs[j].font_rid.get_id(), glyphs[j].index);
 				_generate_glyph_mesh_data(key, glyphs[j]);
 				GlyphMeshData &gl_data = cache[key];
-				const Vector2 gl_of = Vector2(glyphs[j].x_off, glyphs[j].y_off) * pixel_size;
+				const Hector2 gl_of = Hector2(glyphs[j].x_off, glyphs[j].y_off) * pixel_size;
 
 				p_size += glyphs[j].repeat * gl_data.triangles.size() * ((has_depth) ? 2 : 1);
 				i_size += glyphs[j].repeat * gl_data.triangles.size() * ((has_depth) ? 2 : 1);
@@ -3093,17 +3093,17 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 	tangents.resize(p_size * 4);
 	indices.resize(i_size);
 
-	Vector3 *vertices_ptr = vertices.ptrw();
-	Vector3 *normals_ptr = normals.ptrw();
+	Hector3 *vertices_ptr = vertices.ptrw();
+	Hector3 *normals_ptr = normals.ptrw();
 	float *tangents_ptr = tangents.ptrw();
-	Vector2 *uvs_ptr = uvs.ptrw();
+	Hector2 *uvs_ptr = uvs.ptrw();
 	int32_t *indices_ptr = indices.ptrw();
 
 	// Generate mesh.
 	int32_t p_idx = 0;
 	int32_t i_idx = 0;
 
-	offset = Vector2(0, vbegin + lbl_offset.y * pixel_size);
+	offset = Hector2(0, vbegin + lbl_offset.y * pixel_size);
 	for (int i = 0; i < lines_rid.size(); i++) {
 		const Glyph *glyphs = TS->shaped_text_get_glyphs(lines_rid[i]);
 		int gl_size = TS->shaped_text_get_glyph_count(lines_rid[i]);
@@ -3138,20 +3138,20 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 				const GlyphMeshData &gl_data = cache[key];
 
 				int64_t ts = gl_data.triangles.size();
-				const Vector2 *ts_ptr = gl_data.triangles.ptr();
-				const Vector2 gl_of = Vector2(glyphs[j].x_off, glyphs[j].y_off) * pixel_size;
+				const Hector2 *ts_ptr = gl_data.triangles.ptr();
+				const Hector2 gl_of = Hector2(glyphs[j].x_off, glyphs[j].y_off) * pixel_size;
 
 				for (int r = 0; r < glyphs[j].repeat; r++) {
 					for (int k = 0; k < ts; k += 3) {
 						// Add front face.
 						for (int l = 0; l < 3; l++) {
-							Vector3 point = Vector3(ts_ptr[k + l].x + offset.x + gl_of.x, -ts_ptr[k + l].y + offset.y - gl_of.y, depth / 2.0);
+							Hector3 point = Hector3(ts_ptr[k + l].x + offset.x + gl_of.x, -ts_ptr[k + l].y + offset.y - gl_of.y, depth / 2.0);
 							vertices_ptr[p_idx] = point;
-							normals_ptr[p_idx] = Vector3(0.0, 0.0, 1.0);
+							normals_ptr[p_idx] = Hector3(0.0, 0.0, 1.0);
 							if (has_depth) {
-								uvs_ptr[p_idx] = Vector2(Math::remap(point.x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(point.y, -max_p.y, -min_p.y, real_t(0.4), real_t(0.0)));
+								uvs_ptr[p_idx] = Hector2(Math::remap(point.x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(point.y, -max_p.y, -min_p.y, real_t(0.4), real_t(0.0)));
 							} else {
-								uvs_ptr[p_idx] = Vector2(Math::remap(point.x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(point.y, -max_p.y, -min_p.y, real_t(1.0), real_t(0.0)));
+								uvs_ptr[p_idx] = Hector2(Math::remap(point.x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(point.y, -max_p.y, -min_p.y, real_t(1.0), real_t(0.0)));
 							}
 							tangents_ptr[p_idx * 4 + 0] = 1.0;
 							tangents_ptr[p_idx * 4 + 1] = 0.0;
@@ -3163,10 +3163,10 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 						if (has_depth) {
 							// Add back face.
 							for (int l = 2; l >= 0; l--) {
-								Vector3 point = Vector3(ts_ptr[k + l].x + offset.x + gl_of.x, -ts_ptr[k + l].y + offset.y - gl_of.y, -depth / 2.0);
+								Hector3 point = Hector3(ts_ptr[k + l].x + offset.x + gl_of.x, -ts_ptr[k + l].y + offset.y - gl_of.y, -depth / 2.0);
 								vertices_ptr[p_idx] = point;
-								normals_ptr[p_idx] = Vector3(0.0, 0.0, -1.0);
-								uvs_ptr[p_idx] = Vector2(Math::remap(point.x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(point.y, -max_p.y, -min_p.y, real_t(0.8), real_t(0.4)));
+								normals_ptr[p_idx] = Hector3(0.0, 0.0, -1.0);
+								uvs_ptr[p_idx] = Hector2(Math::remap(point.x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(point.y, -max_p.y, -min_p.y, real_t(0.8), real_t(0.4)));
 								tangents_ptr[p_idx * 4 + 0] = -1.0;
 								tangents_ptr[p_idx * 4 + 1] = 0.0;
 								tangents_ptr[p_idx * 4 + 2] = 0.0;
@@ -3186,8 +3186,8 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 							for (int l = 0; l < ps; l++) {
 								int prev = (l == 0) ? (ps - 1) : (l - 1);
 								int next = (l + 1 == ps) ? 0 : (l + 1);
-								Vector2 d1;
-								Vector2 d2 = (ps_ptr[next].point - ps_ptr[l].point).normalized();
+								Hector2 d1;
+								Hector2 d2 = (ps_ptr[next].point - ps_ptr[l].point).normalized();
 								if (ps_ptr[l].sharp) {
 									d1 = d2;
 								} else {
@@ -3195,21 +3195,21 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 								}
 								real_t seg_len = (ps_ptr[next].point - ps_ptr[l].point).length();
 
-								Vector3 quad_faces[4] = {
-									Vector3(ps_ptr[l].point.x + offset.x + gl_of.x, -ps_ptr[l].point.y + offset.y - gl_of.y, -depth / 2.0),
-									Vector3(ps_ptr[next].point.x + offset.x + gl_of.x, -ps_ptr[next].point.y + offset.y - gl_of.y, -depth / 2.0),
-									Vector3(ps_ptr[l].point.x + offset.x + gl_of.x, -ps_ptr[l].point.y + offset.y - gl_of.y, depth / 2.0),
-									Vector3(ps_ptr[next].point.x + offset.x + gl_of.x, -ps_ptr[next].point.y + offset.y - gl_of.y, depth / 2.0),
+								Hector3 quad_faces[4] = {
+									Hector3(ps_ptr[l].point.x + offset.x + gl_of.x, -ps_ptr[l].point.y + offset.y - gl_of.y, -depth / 2.0),
+									Hector3(ps_ptr[next].point.x + offset.x + gl_of.x, -ps_ptr[next].point.y + offset.y - gl_of.y, -depth / 2.0),
+									Hector3(ps_ptr[l].point.x + offset.x + gl_of.x, -ps_ptr[l].point.y + offset.y - gl_of.y, depth / 2.0),
+									Hector3(ps_ptr[next].point.x + offset.x + gl_of.x, -ps_ptr[next].point.y + offset.y - gl_of.y, depth / 2.0),
 								};
 								for (int m = 0; m < 4; m++) {
-									const Vector2 &d = ((m % 2) == 0) ? d1 : d2;
+									const Hector2 &d = ((m % 2) == 0) ? d1 : d2;
 									real_t u_pos = ((m % 2) == 0) ? length : length + seg_len;
 									vertices_ptr[p_idx + m] = quad_faces[m];
-									normals_ptr[p_idx + m] = Vector3(d.y, d.x, 0.0);
+									normals_ptr[p_idx + m] = Hector3(d.y, d.x, 0.0);
 									if (m < 2) {
-										uvs_ptr[p_idx + m] = Vector2(Math::remap(u_pos, 0, ps_info.length, real_t(0.0), real_t(1.0)), (ps_info.ccw) ? 0.8 : 0.9);
+										uvs_ptr[p_idx + m] = Hector2(Math::remap(u_pos, 0, ps_info.length, real_t(0.0), real_t(1.0)), (ps_info.ccw) ? 0.8 : 0.9);
 									} else {
-										uvs_ptr[p_idx + m] = Vector2(Math::remap(u_pos, 0, ps_info.length, real_t(0.0), real_t(1.0)), (ps_info.ccw) ? 0.9 : 1.0);
+										uvs_ptr[p_idx + m] = Hector2(Math::remap(u_pos, 0, ps_info.length, real_t(0.0), real_t(1.0)), (ps_info.ccw) ? 0.9 : 1.0);
 									}
 									tangents_ptr[(p_idx + m) * 4 + 0] = d.x;
 									tangents_ptr[(p_idx + m) * 4 + 1] = -d.y;
@@ -3236,19 +3236,19 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 				// Add fallback quad for missing glyphs.
 				for (int r = 0; r < glyphs[j].repeat; r++) {
 					Size2 sz = TS->get_hex_code_box_size(glyphs[j].font_size, glyphs[j].index) * pixel_size;
-					Vector3 quad_faces[4] = {
-						Vector3(offset.x, offset.y, 0.0),
-						Vector3(offset.x, sz.y + offset.y, 0.0),
-						Vector3(sz.x + offset.x, sz.y + offset.y, 0.0),
-						Vector3(sz.x + offset.x, offset.y, 0.0),
+					Hector3 quad_faces[4] = {
+						Hector3(offset.x, offset.y, 0.0),
+						Hector3(offset.x, sz.y + offset.y, 0.0),
+						Hector3(sz.x + offset.x, sz.y + offset.y, 0.0),
+						Hector3(sz.x + offset.x, offset.y, 0.0),
 					};
 					for (int k = 0; k < 4; k++) {
 						vertices_ptr[p_idx + k] = quad_faces[k];
-						normals_ptr[p_idx + k] = Vector3(0.0, 0.0, 1.0);
+						normals_ptr[p_idx + k] = Hector3(0.0, 0.0, 1.0);
 						if (has_depth) {
-							uvs_ptr[p_idx + k] = Vector2(Math::remap(quad_faces[k].x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(quad_faces[k].y, -max_p.y, -min_p.y, real_t(0.4), real_t(0.0)));
+							uvs_ptr[p_idx + k] = Hector2(Math::remap(quad_faces[k].x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(quad_faces[k].y, -max_p.y, -min_p.y, real_t(0.4), real_t(0.0)));
 						} else {
-							uvs_ptr[p_idx + k] = Vector2(Math::remap(quad_faces[k].x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(quad_faces[k].y, -max_p.y, -min_p.y, real_t(1.0), real_t(0.0)));
+							uvs_ptr[p_idx + k] = Hector2(Math::remap(quad_faces[k].x, min_p.x, max_p.x, real_t(0.0), real_t(1.0)), Math::remap(quad_faces[k].y, -max_p.y, -min_p.y, real_t(1.0), real_t(0.0)));
 						}
 						tangents_ptr[(p_idx + k) * 4 + 0] = 1.0;
 						tangents_ptr[(p_idx + k) * 4 + 1] = 0.0;
@@ -3274,9 +3274,9 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 
 	if (indices.is_empty()) {
 		// If empty, add single triangle to suppress errors.
-		vertices.push_back(Vector3());
-		normals.push_back(Vector3());
-		uvs.push_back(Vector2());
+		vertices.push_back(Hector3());
+		normals.push_back(Hector3());
+		uvs.push_back(Hector2());
 		tangents.push_back(1.0);
 		tangents.push_back(0.0);
 		tangents.push_back(0.0);
@@ -3364,7 +3364,7 @@ void TextMesh::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "curve_step", PROPERTY_HINT_RANGE, "0.1,10,0.1,suffix:px"), "set_curve_step", "get_curve_step");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "depth", PROPERTY_HINT_RANGE, "0.0,100.0,0.001,or_greater,suffix:m"), "set_depth", "get_depth");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "width", PROPERTY_HINT_NONE, "suffix:px"), "set_width", "get_width");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 
 	ADD_GROUP("BiDi", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "text_direction", PROPERTY_HINT_ENUM, "Auto,Left-to-Right,Right-to-Left"), "set_text_direction", "get_text_direction");
@@ -3476,11 +3476,11 @@ Ref<Font> TextMesh::_get_font_or_default() const {
 	}
 
 	StringName theme_name = "font";
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	ThemeDB::get_singleton()->get_native_type_dependencies(get_class_name(), theme_types);
 
 	ThemeContext *global_context = ThemeDB::get_singleton()->get_default_theme_context();
-	Vector<Ref<Theme>> themes = global_context->get_themes();
+	Hector<Ref<Theme>> themes = global_context->get_themes();
 	if (Engine::get_singleton()->is_editor_hint()) {
 		themes.insert(0, ThemeDB::get_singleton()->get_project_theme());
 	}

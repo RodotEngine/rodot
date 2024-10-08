@@ -44,8 +44,8 @@ class LightmapRaycasterEmbree : public LightmapRaycaster {
 
 private:
 	struct AlphaTextureData {
-		Vector<uint8_t> data;
-		Vector2i size;
+		Hector<uint8_t> data;
+		Hector2i size;
 
 		uint8_t sample(float u, float v) const;
 	};
@@ -61,9 +61,9 @@ private:
 public:
 	virtual bool intersect(Ray &p_ray) override;
 
-	virtual void intersect(Vector<Ray> &r_rays) override;
+	virtual void intersect(Hector<Ray> &r_rays) override;
 
-	virtual void add_mesh(const Vector<Vector3> &p_vertices, const Vector<Vector3> &p_normals, const Vector<Vector2> &p_uv2s, unsigned int p_id) override;
+	virtual void add_mesh(const Hector<Hector3> &p_vertices, const Hector<Hector3> &p_normals, const Hector<Hector2> &p_uv2s, unsigned int p_id) override;
 	virtual void set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) override;
 	virtual void commit() override;
 

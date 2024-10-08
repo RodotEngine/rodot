@@ -60,7 +60,7 @@ private:
 	SafeNumeric<float> setplay{ -1.0 };
 	Ref<AudioStreamPlayback> setplayback;
 
-	Vector<AudioFrame> volume_vector;
+	Hector<AudioFrame> volume_Hector;
 
 	uint64_t last_mix_count = -1;
 	bool force_update_panning = false;

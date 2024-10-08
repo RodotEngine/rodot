@@ -60,7 +60,7 @@ bool EditorInspector::_property_path_matches(const String &p_property_path, cons
 		return true;
 	}
 
-	const Vector<String> prop_sections = p_property_path.split("/");
+	const Hector<String> prop_sections = p_property_path.split("/");
 	for (int i = 0; i < prop_sections.size(); i++) {
 		if (p_filter.is_subsequence_ofn(EditorPropertyNameProcessor::get_singleton()->process_name(prop_sections[i], p_style, p_property_path))) {
 			return true;
@@ -258,7 +258,7 @@ void EditorProperty::_notification(int p_what) {
 				size.height = 0;
 			} else {
 				Ref<StyleBox> sb = get_theme_stylebox(selected ? SNAME("bg_selected") : SNAME("bg"));
-				draw_style_box(sb, Rect2(Vector2(), size));
+				draw_style_box(sb, Rect2(Hector2(), size));
 			}
 
 			Ref<StyleBox> bg_stylebox = get_theme_stylebox(SNAME("child_bg"));
@@ -300,7 +300,7 @@ void EditorProperty::_notification(int p_what) {
 				}
 				check_rect = Rect2(ofs, ((size.height - checkbox->get_height()) / 2), checkbox->get_width(), checkbox->get_height());
 				if (rtl) {
-					draw_texture(checkbox, Vector2(size.width - check_rect.position.x - checkbox->get_width(), check_rect.position.y), color2);
+					draw_texture(checkbox, Hector2(size.width - check_rect.position.x - checkbox->get_width(), check_rect.position.y), color2);
 				} else {
 					draw_texture(checkbox, check_rect.position, color2);
 				}
@@ -323,7 +323,7 @@ void EditorProperty::_notification(int p_what) {
 					color2.b *= 1.2;
 				}
 				if (rtl) {
-					draw_texture(reload_icon, Vector2(size.width - revert_rect.position.x - reload_icon->get_width(), revert_rect.position.y), color2);
+					draw_texture(reload_icon, Hector2(size.width - revert_rect.position.x - reload_icon->get_width(), revert_rect.position.y), color2);
 				} else {
 					draw_texture(reload_icon, revert_rect.position, color2);
 				}
@@ -338,9 +338,9 @@ void EditorProperty::_notification(int p_what) {
 				int text_w = font->get_string_size(label, rtl ? HORIZONTAL_ALIGNMENT_RIGHT : HORIZONTAL_ALIGNMENT_LEFT, text_limit - total_icon_w, font_size).x;
 				int y = (size.height - pinned_icon->get_height()) / 2;
 				if (rtl) {
-					draw_texture(pinned_icon, Vector2(size.width - ofs - text_w - total_icon_w, y), color);
+					draw_texture(pinned_icon, Hector2(size.width - ofs - text_w - total_icon_w, y), color);
 				} else {
-					draw_texture(pinned_icon, Vector2(ofs + text_w + margin_w, y), color);
+					draw_texture(pinned_icon, Hector2(ofs + text_w + margin_w, y), color);
 				}
 				text_limit -= total_icon_w;
 			}
@@ -373,7 +373,7 @@ void EditorProperty::_notification(int p_what) {
 				}
 				keying_rect = Rect2(ofs, ((size.height - key->get_height()) / 2), key->get_width(), key->get_height());
 				if (rtl) {
-					draw_texture(key, Vector2(size.width - keying_rect.position.x - key->get_width(), keying_rect.position.y), color2);
+					draw_texture(key, Hector2(size.width - keying_rect.position.x - key->get_width(), keying_rect.position.y), color2);
 				} else {
 					draw_texture(key, keying_rect.position, color2);
 				}
@@ -397,7 +397,7 @@ void EditorProperty::_notification(int p_what) {
 				}
 				delete_rect = Rect2(ofs, ((size.height - close->get_height()) / 2), close->get_width(), close->get_height());
 				if (rtl) {
-					draw_texture(close, Vector2(size.width - delete_rect.position.x - close->get_width(), delete_rect.position.y), color2);
+					draw_texture(close, Hector2(size.width - delete_rect.position.x - close->get_width(), delete_rect.position.y), color2);
 				} else {
 					draw_texture(close, delete_rect.position, color2);
 				}
@@ -717,7 +717,7 @@ void EditorProperty::gui_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouse> me = p_event;
 
 	if (me.is_valid()) {
-		Vector2 mpos = me->get_position();
+		Hector2 mpos = me->get_position();
 		if (is_layout_rtl()) {
 			mpos.x = get_size().x - mpos.x;
 		}
@@ -751,7 +751,7 @@ void EditorProperty::gui_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouseButton> mb = p_event;
 
 	if (mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT) {
-		Vector2 mpos = mb->get_position();
+		Hector2 mpos = mb->get_position();
 		if (is_layout_rtl()) {
 			mpos.x = get_size().x - mpos.x;
 		}
@@ -764,7 +764,7 @@ void EditorProperty::gui_input(const Ref<InputEvent> &p_event) {
 
 			if (use_keying_next()) {
 				if (property == "frame_coords" && (object->is_class("Sprite2D") || object->is_class("Sprite3D"))) {
-					Vector2i new_coords = object->get(property);
+					Hector2i new_coords = object->get(property);
 					new_coords.x++;
 					if (new_coords.x >= int64_t(object->get("hframes"))) {
 						new_coords.x = 0;
@@ -942,7 +942,7 @@ static bool _is_value_potential_override(Node *p_node, const String &p_property)
 	// a) The node is foreign (inheriting or an instance), so the original value may come from another scene.
 	// b) The node belongs to the scene, but the original value comes from somewhere but the builtin class (i.e., a script).
 	Node *edited_scene = EditorNode::get_singleton()->get_edited_scene();
-	Vector<SceneState::PackState> states_stack = PropertyUtils::get_node_states_stack(p_node, edited_scene);
+	Hector<SceneState::PackState> states_stack = PropertyUtils::get_node_states_stack(p_node, edited_scene);
 	if (states_stack.size()) {
 		return true;
 	} else {
@@ -1165,7 +1165,7 @@ void EditorInspectorPlugin::add_property_editor(const String &p_for_property, Co
 	added_editors.push_back(ae);
 }
 
-void EditorInspectorPlugin::add_property_editor_for_multiple_properties(const String &p_label, const Vector<String> &p_properties, Control *p_prop) {
+void EditorInspectorPlugin::add_property_editor_for_multiple_properties(const String &p_label, const Hector<String> &p_properties, Control *p_prop) {
 	AddedEditor ae;
 	ae.properties = p_properties;
 	ae.property_editor = p_prop;
@@ -1226,7 +1226,7 @@ void EditorInspectorCategory::_notification(int p_what) {
 		case NOTIFICATION_DRAW: {
 			Ref<StyleBox> sb = get_theme_stylebox(SNAME("bg"));
 
-			draw_style_box(sb, Rect2(Vector2(), get_size()));
+			draw_style_box(sb, Rect2(Hector2(), get_size()));
 
 			Ref<Font> font = get_theme_font(SNAME("bold"), EditorStringName(EditorFonts));
 			int font_size = get_theme_font_size(SNAME("bold_size"), EditorStringName(EditorFonts));
@@ -1393,9 +1393,9 @@ void EditorInspectorSection::_notification(int p_what) {
 				inspector_margin += section_indent_style->get_margin(SIDE_LEFT) + section_indent_style->get_margin(SIDE_RIGHT);
 			}
 
-			Size2 size = get_size() - Vector2(inspector_margin, 0);
+			Size2 size = get_size() - Hector2(inspector_margin, 0);
 			int header_height = _get_header_height();
-			Vector2 offset = Vector2(is_layout_rtl() ? 0 : inspector_margin, header_height);
+			Hector2 offset = Hector2(is_layout_rtl() ? 0 : inspector_margin, header_height);
 			for (int i = 0; i < get_child_count(); i++) {
 				Control *c = as_sortable_control(get_child(i));
 				if (!c) {
@@ -1425,7 +1425,7 @@ void EditorInspectorSection::_notification(int p_what) {
 
 			// Draw header area.
 			int header_height = _get_header_height();
-			Rect2 header_rect = Rect2(Vector2(header_offset_x, 0.0), Vector2(header_width, header_height));
+			Rect2 header_rect = Rect2(Hector2(header_offset_x, 0.0), Hector2(header_width, header_height));
 			Color c = bg_color;
 			c.a *= 0.4;
 			if (foldable && header_rect.has_point(get_local_mouse_position())) {
@@ -1505,7 +1505,7 @@ void EditorInspectorSection::_notification(int p_what) {
 
 			// Draw section indentation.
 			if (section_indent_style.is_valid() && section_indent > 0) {
-				Rect2 indent_rect = Rect2(Vector2(), Vector2(indent_depth * section_indent_size, get_size().height));
+				Rect2 indent_rect = Rect2(Hector2(), Hector2(indent_depth * section_indent_size, get_size().height));
 				if (rtl) {
 					indent_rect.position.x = get_size().width - section_indent + section_indent_style->get_margin(SIDE_RIGHT);
 				} else {
@@ -1761,17 +1761,17 @@ void EditorInspectorArray::_control_dropping_draw() {
 	int drop_position = _drop_position();
 
 	if (dropping && drop_position >= 0) {
-		Vector2 from;
-		Vector2 to;
+		Hector2 from;
+		Hector2 to;
 		if (drop_position < elements_vbox->get_child_count()) {
 			Transform2D xform = Object::cast_to<Control>(elements_vbox->get_child(drop_position))->get_transform();
-			from = xform.xform(Vector2());
-			to = xform.xform(Vector2(elements_vbox->get_size().x, 0));
+			from = xform.xform(Hector2());
+			to = xform.xform(Hector2(elements_vbox->get_size().x, 0));
 		} else {
 			Control *child = Object::cast_to<Control>(elements_vbox->get_child(drop_position - 1));
 			Transform2D xform = child->get_transform();
-			from = xform.xform(Vector2(0, child->get_size().y));
-			to = xform.xform(Vector2(elements_vbox->get_size().x, child->get_size().y));
+			from = xform.xform(Hector2(0, child->get_size().y));
+			to = xform.xform(Hector2(elements_vbox->get_size().x, child->get_size().y));
 		}
 		Color color = get_theme_color(SNAME("accent_color"), EditorStringName(Editor));
 		control_dropping->draw_line(from, to, color, 2);
@@ -1790,7 +1790,7 @@ void EditorInspectorArray::_panel_draw(int p_index) {
 		return;
 	}
 	if (array_elements[p_index].panel->has_focus()) {
-		array_elements[p_index].panel->draw_style_box(style, Rect2(Vector2(), array_elements[p_index].panel->get_size()));
+		array_elements[p_index].panel->draw_style_box(style, Rect2(Hector2(), array_elements[p_index].panel->get_size()));
 	}
 }
 
@@ -2132,9 +2132,9 @@ int EditorInspectorArray::_drop_position() const {
 		const ArrayElement &ae = array_elements[i];
 
 		Size2 size = ae.panel->get_size();
-		Vector2 mp = ae.panel->get_local_mouse_position();
+		Hector2 mp = ae.panel->get_local_mouse_position();
 
-		if (Rect2(Vector2(), size).has_point(mp)) {
+		if (Rect2(Hector2(), size).has_point(mp)) {
 			if (mp.y < size.y / 2) {
 				return i;
 			} else {
@@ -2863,7 +2863,7 @@ void EditorInspector::update_tree() {
 			// Setup a property sub-group.
 			subgroup = p.name;
 
-			Vector<String> hint_parts = p.hint_string.split(",");
+			Hector<String> hint_parts = p.hint_string.split(",");
 			subgroup_base = hint_parts[0];
 			if (hint_parts.size() > 1) {
 				section_depth = hint_parts[1].to_int();
@@ -2877,7 +2877,7 @@ void EditorInspector::update_tree() {
 			// Setup a property group.
 			group = p.name;
 
-			Vector<String> hint_parts = p.hint_string.split(",");
+			Hector<String> hint_parts = p.hint_string.split(",");
 			group_base = hint_parts[0];
 			if (hint_parts.size() > 1) {
 				section_depth = hint_parts[1].to_int();
@@ -2944,7 +2944,7 @@ void EditorInspector::update_tree() {
 						StringName script_name = EditorNode::get_editor_data().script_class_get_name(scr->get_path());
 
 						// Update the docs reference and the label based on the script.
-						Vector<DocData::ClassDoc> docs = scr->get_documentation();
+						Hector<DocData::ClassDoc> docs = scr->get_documentation();
 						if (!docs.is_empty()) {
 							// The documentation of a GDScript's main class is at the end of the array.
 							// Hacky because this isn't necessarily always guaranteed.
@@ -3155,7 +3155,7 @@ void EditorInspector::update_tree() {
 		String acc_path = "";
 		int level = 1;
 
-		Vector<String> components = path.split("/");
+		Hector<String> components = path.split("/");
 		for (int i = 0; i < components.size(); i++) {
 			const String &component = components[i];
 			acc_path += (i > 0) ? "/" + component : component;
@@ -3220,7 +3220,7 @@ void EditorInspector::update_tree() {
 			Color c = sscolor;
 			c.a /= level;
 
-			Vector<String> class_name_components = String(p.class_name).split(",");
+			Hector<String> class_name_components = String(p.class_name).split(",");
 
 			int page_size = 5;
 			bool movable = true;
@@ -3306,7 +3306,7 @@ void EditorInspector::update_tree() {
 					// Grab the script of this resource to get the evaluated script class.
 					Ref<Script> scr = res->get_script();
 					if (scr.is_valid()) {
-						Vector<DocData::ClassDoc> docs = scr->get_documentation();
+						Hector<DocData::ClassDoc> docs = scr->get_documentation();
 						if (!docs.is_empty()) {
 							// The documentation of a GDScript's main class is at the end of the array.
 							// Hacky because this isn't necessarily always guaranteed.
@@ -3342,7 +3342,7 @@ void EditorInspector::update_tree() {
 
 				HashMap<String, DocData::ClassDoc>::ConstIterator F = dd->class_list.find(classname);
 				while (F) {
-					Vector<String> slices = propname.operator String().split("/");
+					Hector<String> slices = propname.operator String().split("/");
 					// Check if it's a theme item first.
 					if (slices.size() == 2 && slices[0].begins_with("theme_override_")) {
 						for (int i = 0; i < F->value.theme_properties.size(); i++) {
@@ -3377,8 +3377,8 @@ void EditorInspector::update_tree() {
 			}
 		}
 
-		Vector<EditorInspectorPlugin::AddedEditor> editors;
-		Vector<EditorInspectorPlugin::AddedEditor> late_editors;
+		Hector<EditorInspectorPlugin::AddedEditor> editors;
+		Hector<EditorInspectorPlugin::AddedEditor> late_editors;
 
 		// Search for the inspector plugin that will handle the properties. Then add the correct property editor to it.
 		for (Ref<EditorInspectorPlugin> &ped : valid_plugins) {
@@ -3403,7 +3403,7 @@ void EditorInspector::update_tree() {
 
 		for (int i = 0; i < editors.size(); i++) {
 			EditorProperty *ep = Object::cast_to<EditorProperty>(editors[i].property_editor);
-			const Vector<String> &properties = editors[i].properties;
+			const Hector<String> &properties = editors[i].properties;
 
 			if (ep) {
 				// Set all this before the control gets the ENTER_TREE notification.
@@ -3867,7 +3867,7 @@ void EditorInspector::_edit_set(const String &p_name, const Variant &p_value, bo
 		Variant v_undo_redo = undo_redo;
 		Variant v_object = object;
 		Variant v_name = p_name;
-		const Vector<Callable> &callbacks = EditorNode::get_editor_data().get_undo_redo_inspector_hook_callback();
+		const Hector<Callable> &callbacks = EditorNode::get_editor_data().get_undo_redo_inspector_hook_callback();
 		for (int i = 0; i < callbacks.size(); i++) {
 			const Callable &callback = callbacks[i];
 
@@ -3932,7 +3932,7 @@ void EditorInspector::_property_changed(const String &p_path, const Variant &p_v
 	}
 }
 
-void EditorInspector::_multiple_properties_changed(const Vector<String> &p_paths, const Array &p_values, bool p_changing) {
+void EditorInspector::_multiple_properties_changed(const Hector<String> &p_paths, const Array &p_values, bool p_changing) {
 	ERR_FAIL_COND(p_paths.is_empty() || p_values.is_empty());
 	ERR_FAIL_COND(p_paths.size() != p_values.size());
 	String names;

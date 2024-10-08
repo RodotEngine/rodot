@@ -54,7 +54,7 @@ private:
 	mutable ObjectID popup_obj_id;
 	bool use_hidden_tabs_for_min_size = false;
 	bool theme_changing = false;
-	Vector<Control *> children_removing;
+	Hector<Control *> children_removing;
 	bool drag_to_rearrange_enabled = false;
 	// Set the default setup current tab to be an invalid index.
 	int setup_current_tab = -2;
@@ -98,7 +98,7 @@ private:
 	} theme_cache;
 
 	int _get_tab_height() const;
-	Vector<Control *> _get_tab_controls() const;
+	Hector<Control *> _get_tab_controls() const;
 	void _on_theme_changed();
 	void _repaint();
 	void _refresh_tab_indices();
@@ -204,8 +204,8 @@ public:
 	void set_use_hidden_tabs_for_min_size(bool p_use_hidden_tabs);
 	bool get_use_hidden_tabs_for_min_size() const;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	virtual Hector<int> get_allowed_size_flags_horizontal() const override;
+	virtual Hector<int> get_allowed_size_flags_vertical() const override;
 
 	TabContainer();
 };

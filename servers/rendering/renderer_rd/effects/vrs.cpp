@@ -41,7 +41,7 @@ using namespace RendererRD;
 
 VRS::VRS() {
 	{
-		Vector<String> vrs_modes;
+		Hector<String> vrs_modes;
 		vrs_modes.push_back("\n"); // VRS_DEFAULT
 		vrs_modes.push_back("\n#define USE_MULTIVIEW\n"); // VRS_MULTIVIEW
 
@@ -78,7 +78,7 @@ void VRS::copy_vrs(RID p_source_rd_texture, RID p_dest_framebuffer, bool p_multi
 	// setup our uniforms
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_NEAREST, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
 
-	RD::Uniform u_source_rd_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_source_rd_texture }));
+	RD::Uniform u_source_rd_texture(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_source_rd_texture }));
 
 	VRSPushConstant push_constant = {};
 
@@ -94,7 +94,7 @@ void VRS::copy_vrs(RID p_source_rd_texture, RID p_dest_framebuffer, bool p_multi
 	RID shader = vrs_shader.shader.version_get_shader(vrs_shader.shader_version, mode);
 	ERR_FAIL_COND(shader.is_null());
 
-	RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(p_dest_framebuffer, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Vector<Color>());
+	RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(p_dest_framebuffer, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Hector<Color>());
 	RD::get_singleton()->draw_list_bind_render_pipeline(draw_list, vrs_shader.pipelines[mode].get_render_pipeline(RD::INVALID_ID, RD::get_singleton()->framebuffer_get_format(p_dest_framebuffer)));
 	RD::get_singleton()->draw_list_bind_uniform_set(draw_list, uniform_set_cache->get_cache(shader, 0, u_source_rd_texture), 0);
 	RD::get_singleton()->draw_list_set_push_constant(draw_list, &push_constant, sizeof(VRSPushConstant));

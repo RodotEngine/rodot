@@ -80,7 +80,7 @@ void EditorExportPlatformExtension::_bind_methods() {
 }
 
 void EditorExportPlatformExtension::get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const {
-	Vector<String> ret;
+	Hector<String> ret;
 	if (GDVIRTUAL_CALL(_get_preset_features, p_preset, ret) && r_features) {
 		for (const String &E : ret) {
 			r_features->push_back(E);
@@ -256,7 +256,7 @@ bool EditorExportPlatformExtension::has_valid_project_configuration(const Ref<Ed
 
 List<String> EditorExportPlatformExtension::get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const {
 	List<String> ret_list;
-	Vector<String> ret;
+	Hector<String> ret;
 	if (GDVIRTUAL_CALL(_get_binary_extensions, p_preset, ret)) {
 		for (const String &E : ret) {
 			ret_list.push_back(E);
@@ -293,7 +293,7 @@ Error EditorExportPlatformExtension::export_zip(const Ref<EditorExportPreset> &p
 	return save_zip(p_preset, p_debug, p_path);
 }
 
-Error EditorExportPlatformExtension::export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches, BitField<EditorExportPlatform::DebugFlags> p_flags) {
+Error EditorExportPlatformExtension::export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Hector<String> &p_patches, BitField<EditorExportPlatform::DebugFlags> p_flags) {
 	ExportNotifier notifier(*this, p_preset, p_debug, p_path, p_flags);
 
 	Error err = _load_patches(p_patches.is_empty() ? p_preset->get_patches() : p_patches);
@@ -312,7 +312,7 @@ Error EditorExportPlatformExtension::export_pack_patch(const Ref<EditorExportPre
 	return err;
 }
 
-Error EditorExportPlatformExtension::export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches, BitField<EditorExportPlatform::DebugFlags> p_flags) {
+Error EditorExportPlatformExtension::export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Hector<String> &p_patches, BitField<EditorExportPlatform::DebugFlags> p_flags) {
 	ExportNotifier notifier(*this, p_preset, p_debug, p_path, p_flags);
 
 	Error err = _load_patches(p_patches.is_empty() ? p_preset->get_patches() : p_patches);
@@ -332,7 +332,7 @@ Error EditorExportPlatformExtension::export_zip_patch(const Ref<EditorExportPres
 }
 
 void EditorExportPlatformExtension::get_platform_features(List<String> *r_features) const {
-	Vector<String> ret;
+	Hector<String> ret;
 	if (GDVIRTUAL_CALL(_get_platform_features, ret) && r_features) {
 		for (const String &E : ret) {
 			r_features->push_back(E);

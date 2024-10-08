@@ -33,7 +33,7 @@
 
 #include "../util.h"
 
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "openxr_extension_wrapper.h"
 #include "scene/resources/mesh.h"
 
@@ -78,8 +78,8 @@ private:
 	RID mesh;
 
 	struct MeshData {
-		Vector<XrVector2f> vertices;
-		Vector<uint32_t> indices;
+		Hector<XrHector2f> vertices;
+		Hector<uint32_t> indices;
 	};
 
 	uint32_t mesh_count = 0;

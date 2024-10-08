@@ -125,7 +125,7 @@ typedef enum UTraceFunctionNumber {
      *
      * - "string" (a string value was accessed)
      * - "binary" (a binary value was accessed)
-     * - "intvector" (a integer vector value was accessed)
+     * - "intHector" (a integer Hector value was accessed)
      * - "int" (a signed integer value was accessed)
      * - "uint" (a unsigned integer value was accessed)
      * - "get" (a path was loaded, but the value was not accessed)
@@ -390,20 +390,20 @@ utrace_getFunctions(const void **context,
  * - l A 64-bit integer.
  * - p A data pointer.
  *
- * Vectors
+ * Hectors
  * -------
  *
  * If the 'v' is not specified, then one item of the specified type
  * is passed in.
- * If the 'v' (for "vector") is specified, then a vector of items of the
+ * If the 'v' (for "Hector") is specified, then a Hector of items of the
  * specified type is passed in, via a pointer to the first item
- * and an int32_t value for the length of the vector.
- * Length==-1 means zero or NUL termination.  Works for vectors of all types.
+ * and an int32_t value for the length of the Hector.
+ * Length==-1 means zero or NUL termination.  Works for Hectors of all types.
  *
- * Note:  %vS is a vector of (UChar *) strings.  The strings must
+ * Note:  %vS is a Hector of (UChar *) strings.  The strings must
  *        be nul terminated as there is no way to provide a
  *        separate length parameter for each string.  The length
- *        parameter (required for all vectors) is the number of
+ *        parameter (required for all Hectors) is the number of
  *        strings, not the length of the strings.
  *
  * Examples
@@ -423,12 +423,12 @@ utrace_getFunctions(const void **context,
  * ->   There is a character 0x42 'B' in the string "Bravo".
  *
  * UTraceDataFunc(context, fnNumber, level,
- *              "Vector of bytes %vb vector of chars %vc",
+ *              "Hector of bytes %vb Hector of chars %vc",
  *              (const uint8_t *)bytes, (int32_t)bytesLength,
  *              (const char *)chars, (int32_t)charsLength);
- * ->  Vector of bytes
+ * ->  Hector of bytes
  *      42 63 64 3f [4]
- *     vector of chars
+ *     Hector of chars
  *      "Bcd?"[4]
  *
  * UTraceDataFunc(context, fnNumber, level,

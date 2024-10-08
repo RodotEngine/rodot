@@ -92,7 +92,7 @@ void NavObstacle::set_map(NavMap *p_map) {
 	}
 }
 
-void NavObstacle::set_position(const Vector3 p_position) {
+void NavObstacle::set_position(const Hector3 p_position) {
 	if (position == p_position) {
 		return;
 	}
@@ -130,7 +130,7 @@ void NavObstacle::set_height(const real_t p_height) {
 	}
 }
 
-void NavObstacle::set_velocity(const Vector3 p_velocity) {
+void NavObstacle::set_velocity(const Hector3 p_velocity) {
 	velocity = p_velocity;
 
 	if (agent) {
@@ -138,7 +138,7 @@ void NavObstacle::set_velocity(const Vector3 p_velocity) {
 	}
 }
 
-void NavObstacle::set_vertices(const Vector<Vector3> &p_vertices) {
+void NavObstacle::set_vertices(const Hector<Hector3> &p_vertices) {
 	if (vertices == p_vertices) {
 		return;
 	}

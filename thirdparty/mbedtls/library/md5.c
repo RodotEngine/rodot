@@ -343,7 +343,7 @@ exit:
 
 #if defined(MBEDTLS_SELF_TEST)
 /*
- * RFC 1321 test vectors
+ * RFC 1321 test Hectors
  */
 static const unsigned char md5_test_buf[7][81] =
 {

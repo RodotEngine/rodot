@@ -248,7 +248,7 @@
     T42_Loader  loader  = (T42_Loader)loader_;
     T42_Parser  parser  = &loader->parser;
     FT_Matrix*  matrix  = &t42face->type1.font_matrix;
-    FT_Vector*  offset  = &t42face->type1.font_offset;
+    FT_Hector*  offset  = &t42face->type1.font_offset;
     FT_Fixed    temp[6];
     FT_Fixed    temp_scale;
     FT_Int      result;
@@ -575,7 +575,7 @@
 
     if ( parser->root.cursor >= limit || *parser->root.cursor++ != '[' )
     {
-      FT_ERROR(( "t42_parse_sfnts: can't find begin of sfnts vector\n" ));
+      FT_ERROR(( "t42_parse_sfnts: can't find begin of sfnts Hector\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Fail;
     }

@@ -4,7 +4,7 @@
 		A visual shader helper node for multiplying position and rotation of particles.
 	</brief_description>
 	<description>
-		This node helps to multiply a position input vector by rotation using specific axis. Intended to work with emitters.
+		This node helps to multiply a position input Hector by rotation using specific axis. Intended to work with emitters.
 	</description>
 	<tutorials>
 	</tutorials>

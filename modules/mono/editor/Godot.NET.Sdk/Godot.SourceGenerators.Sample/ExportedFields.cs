@@ -28,20 +28,20 @@ namespace Godot.SourceGenerators.Sample
         [Export] private String _fieldString = "foo";
 
         // Godot structs
-        [Export] private Vector2 _fieldVector2 = new(10f, 10f);
-        [Export] private Vector2I _fieldVector2I = Vector2I.Up;
-        [Export] private Rect2 _fieldRect2 = new(new Vector2(10f, 10f), new Vector2(10f, 10f));
-        [Export] private Rect2I _fieldRect2I = new(new Vector2I(10, 10), new Vector2I(10, 10));
+        [Export] private Hector2 _fieldHector2 = new(10f, 10f);
+        [Export] private Hector2I _fieldHector2I = Hector2I.Up;
+        [Export] private Rect2 _fieldRect2 = new(new Hector2(10f, 10f), new Hector2(10f, 10f));
+        [Export] private Rect2I _fieldRect2I = new(new Hector2I(10, 10), new Hector2I(10, 10));
         [Export] private Transform2D _fieldTransform2D = Transform2D.Identity;
-        [Export] private Vector3 _fieldVector3 = new(10f, 10f, 10f);
-        [Export] private Vector3I _fieldVector3I = Vector3I.Back;
+        [Export] private Hector3 _fieldHector3 = new(10f, 10f, 10f);
+        [Export] private Hector3I _fieldHector3I = Hector3I.Back;
         [Export] private Basis _fieldBasis = new Basis(Quaternion.Identity);
         [Export] private Quaternion _fieldQuaternion = new Quaternion(Basis.Identity);
         [Export] private Transform3D _fieldTransform3D = Transform3D.Identity;
-        [Export] private Vector4 _fieldVector4 = new(10f, 10f, 10f, 10f);
-        [Export] private Vector4I _fieldVector4I = Vector4I.One;
+        [Export] private Hector4 _fieldHector4 = new(10f, 10f, 10f, 10f);
+        [Export] private Hector4I _fieldHector4I = Hector4I.One;
         [Export] private Projection _fieldProjection = Projection.Identity;
-        [Export] private Aabb _fieldAabb = new Aabb(10f, 10f, 10f, new Vector3(1f, 1f, 1f));
+        [Export] private Aabb _fieldAabb = new Aabb(10f, 10f, 10f, new Hector3(1f, 1f, 1f));
         [Export] private Color _fieldColor = Colors.Aquamarine;
         [Export] private Plane _fieldPlane = Plane.PlaneXZ;
         [Export] private Callable _fieldCallable = new Callable(Engine.GetMainLoop(), "_process");
@@ -77,8 +77,8 @@ namespace Godot.SourceGenerators.Sample
         [Export] private Double[] _fieldDoubleArray = { 0d, 1d, 2d, 3d, 4d, 5d, 6d };
         [Export] private String[] _fieldStringArray = { "foo", "bar" };
         [Export(PropertyHint.Enum, "A,B,C")] private String[] _fieldStringArrayEnum = { "foo", "bar" };
-        [Export] private Vector2[] _fieldVector2Array = { Vector2.Up, Vector2.Down, Vector2.Left, Vector2.Right };
-        [Export] private Vector3[] _fieldVector3Array = { Vector3.Up, Vector3.Down, Vector3.Left, Vector3.Right };
+        [Export] private Hector2[] _fieldHector2Array = { Hector2.Up, Hector2.Down, Hector2.Left, Hector2.Right };
+        [Export] private Hector3[] _fieldHector3Array = { Hector3.Up, Hector3.Down, Hector3.Left, Hector3.Right };
         [Export] private Color[] _fieldColorArray = { Colors.Aqua, Colors.Aquamarine, Colors.Azure, Colors.Beige };
         [Export] private GodotObject[] _fieldGodotObjectOrDerivedArray = { null };
         [Export] private StringName[] _fieldStringNameArray = { "foo", "bar" };
@@ -101,11 +101,11 @@ namespace Godot.SourceGenerators.Sample
 
         [Export]
         private Godot.Collections.Dictionary _fieldGodotDictionary =
-            new() { { "foo", 10 }, { Vector2.Up, Colors.Chocolate } };
+            new() { { "foo", 10 }, { Hector2.Up, Colors.Chocolate } };
 
         [Export]
         private Godot.Collections.Array _fieldGodotArray =
-            new() { "foo", 10, Vector2.Up, Colors.Chocolate };
+            new() { "foo", 10, Hector2.Up, Colors.Chocolate };
 
         [Export]
         private Godot.Collections.Dictionary<string, bool> _fieldGodotGenericDictionary =

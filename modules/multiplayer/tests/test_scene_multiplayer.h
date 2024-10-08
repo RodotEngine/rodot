@@ -57,7 +57,7 @@ TEST_CASE("[Multiplayer][SceneMultiplayer] Defaults") {
 	REQUIRE_MESSAGE(Object::cast_to<OfflineMultiplayerPeer>(multiplayer_peer.ptr()) != nullptr, "By default it must be an OfflineMultiplayerPeer instance.");
 	CHECK_EQ(scene_multiplayer->poll(), Error::OK);
 	CHECK_EQ(scene_multiplayer->get_unique_id(), MultiplayerPeer::TARGET_PEER_SERVER);
-	CHECK_EQ(scene_multiplayer->get_peer_ids(), Vector<int>());
+	CHECK_EQ(scene_multiplayer->get_peer_ids(), Hector<int>());
 	CHECK_EQ(scene_multiplayer->get_remote_sender_id(), 0);
 	CHECK_EQ(scene_multiplayer->get_root_path(), NodePath());
 	CHECK(scene_multiplayer->get_connected_peers().is_empty());
@@ -180,7 +180,7 @@ TEST_CASE("[Multiplayer][SceneMultiplayer][SceneTree] Send Authentication") {
 
 		CHECK_EQ(scene_multiplayer->send_auth(peer_id, String("It's me").to_ascii_buffer()), Error::OK);
 
-		Vector<int> expected_peer_ids = { peer_id };
+		Hector<int> expected_peer_ids = { peer_id };
 		CHECK_EQ(scene_multiplayer->get_authenticating_peer_ids(), expected_peer_ids);
 
 		SIGNAL_UNWATCH(scene_multiplayer.ptr(), "peer_authenticating");
@@ -225,7 +225,7 @@ TEST_CASE("[Multiplayer][SceneMultiplayer][SceneTree] Send Authentication") {
 		scene_multiplayer->set_multiplayer_peer(nullptr);
 
 		ERR_PRINT_OFF;
-		CHECK_EQ(scene_multiplayer->send_auth(42, Vector<uint8_t>()), Error::ERR_UNCONFIGURED);
+		CHECK_EQ(scene_multiplayer->send_auth(42, Hector<uint8_t>()), Error::ERR_UNCONFIGURED);
 		ERR_PRINT_ON;
 	}
 

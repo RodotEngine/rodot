@@ -104,7 +104,7 @@ public:
 	Ref<EditorSettings> get_editor_settings() const;
 	EditorUndoRedoManager *get_editor_undo_redo() const;
 
-	Vector<Ref<Texture2D>> make_mesh_previews(const Vector<Ref<Mesh>> &p_meshes, Vector<Transform3D> *p_transforms, int p_preview_size);
+	Hector<Ref<Texture2D>> make_mesh_previews(const Hector<Ref<Mesh>> &p_meshes, Hector<Transform3D> *p_transforms, int p_preview_size);
 
 	void set_plugin_enabled(const String &p_plugin, bool p_enabled);
 	bool is_plugin_enabled(const String &p_plugin) const;
@@ -137,7 +137,7 @@ public:
 	// Editor dialogs.
 
 	void popup_node_selector(const Callable &p_callback, const TypedArray<StringName> &p_valid_types = TypedArray<StringName>(), Node *p_current_value = nullptr);
-	// Must use Vector<int> because exposing Vector<Variant::Type> is not supported.
+	// Must use Hector<int> because exposing Hector<Variant::Type> is not supported.
 	void popup_property_selector(Object *p_object, const Callable &p_callback, const PackedInt32Array &p_type_filter = PackedInt32Array(), const String &p_current_value = String());
 	void popup_quick_open(const Callable &p_callback, const TypedArray<StringName> &p_base_types = TypedArray<StringName>());
 
@@ -145,7 +145,7 @@ public:
 
 	FileSystemDock *get_file_system_dock() const;
 	void select_file(const String &p_file);
-	Vector<String> get_selected_paths() const;
+	Hector<String> get_selected_paths() const;
 	String get_current_path() const;
 	String get_current_directory() const;
 

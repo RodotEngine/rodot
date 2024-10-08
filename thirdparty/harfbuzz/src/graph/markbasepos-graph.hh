@@ -211,7 +211,7 @@ struct MarkBasePosFormat1 : public OT::Layout::GPOS_impl::MarkBasePosFormat1_2<S
     return vertex_len >= MarkBasePosFormat1::static_size;
   }
 
-  hb_vector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
+  hb_Hector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
                                          unsigned parent_index,
                                          unsigned this_index)
   {
@@ -224,18 +224,18 @@ struct MarkBasePosFormat1 : public OT::Layout::GPOS_impl::MarkBasePosFormat1_2<S
         AnchorMatrix::min_size +
         c.graph.vertices_[base_coverage_id].table_size ();
 
-    hb_vector_t<class_info_t> class_to_info = get_class_info (c, this_index);
+    hb_Hector_t<class_info_t> class_to_info = get_class_info (c, this_index);
 
     unsigned class_count = classCount;
     auto base_array = c.graph.as_table<AnchorMatrix> (this_index,
                                                       &baseArray,
                                                       class_count);
-    if (!base_array) return hb_vector_t<unsigned> ();
+    if (!base_array) return hb_Hector_t<unsigned> ();
     unsigned base_count = base_array.table->rows;
 
     unsigned partial_coverage_size = 4;
     unsigned accumulated = base_size;
-    hb_vector_t<unsigned> split_points;
+    hb_Hector_t<unsigned> split_points;
 
     for (unsigned klass = 0; klass < class_count; klass++)
     {
@@ -277,14 +277,14 @@ struct MarkBasePosFormat1 : public OT::Layout::GPOS_impl::MarkBasePosFormat1_2<S
 
   struct class_info_t {
     hb_set_t marks;
-    hb_vector_t<unsigned> child_indices;
+    hb_Hector_t<unsigned> child_indices;
   };
 
   struct split_context_t {
     gsubgpos_graph_context_t& c;
     MarkBasePosFormat1* thiz;
     unsigned this_index;
-    hb_vector_t<class_info_t> class_to_info;
+    hb_Hector_t<class_info_t> class_to_info;
     hb_hashmap_t<unsigned, unsigned> mark_array_links;
 
     hb_set_t marks_for (unsigned start, unsigned end)
@@ -315,19 +315,19 @@ struct MarkBasePosFormat1 : public OT::Layout::GPOS_impl::MarkBasePosFormat1_2<S
     }
   };
 
-  hb_vector_t<class_info_t> get_class_info (gsubgpos_graph_context_t& c,
+  hb_Hector_t<class_info_t> get_class_info (gsubgpos_graph_context_t& c,
                                             unsigned this_index)
   {
-    hb_vector_t<class_info_t> class_to_info;
+    hb_Hector_t<class_info_t> class_to_info;
 
     unsigned class_count = classCount;
     if (!class_count) return class_to_info;
 
     if (!class_to_info.resize (class_count))
-      return hb_vector_t<class_info_t>();
+      return hb_Hector_t<class_info_t>();
 
     auto mark_array = c.graph.as_table<MarkArray> (this_index, &markArray);
-    if (!mark_array) return hb_vector_t<class_info_t> ();
+    if (!mark_array) return hb_Hector_t<class_info_t> ();
     unsigned mark_count = mark_array.table->len;
     for (unsigned mark = 0; mark < mark_count; mark++)
     {
@@ -477,7 +477,7 @@ struct MarkBasePosFormat1 : public OT::Layout::GPOS_impl::MarkBasePosFormat1_2<S
 
 struct MarkBasePos : public OT::Layout::GPOS_impl::MarkBasePos
 {
-  hb_vector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
+  hb_Hector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
                                          unsigned parent_index,
                                          unsigned this_index)
   {
@@ -489,7 +489,7 @@ struct MarkBasePos : public OT::Layout::GPOS_impl::MarkBasePos
       // Don't split 24bit MarkBasePos's.
 #endif
     default:
-      return hb_vector_t<unsigned> ();
+      return hb_Hector_t<unsigned> ();
     }
   }
 

@@ -90,7 +90,7 @@ void MeshTexture::draw_rect(RID p_canvas_item, const Rect2 &p_rect, bool p_tile,
 		return;
 	}
 	Transform2D xform;
-	Vector2 origin = p_rect.position;
+	Hector2 origin = p_rect.position;
 	if (p_rect.size.x < 0) {
 		origin.x += size.x;
 	}
@@ -112,7 +112,7 @@ void MeshTexture::draw_rect_region(RID p_canvas_item, const Rect2 &p_rect, const
 		return;
 	}
 	Transform2D xform;
-	Vector2 origin = p_rect.position;
+	Hector2 origin = p_rect.position;
 	if (p_rect.size.x < 0) {
 		origin.x += size.x;
 	}
@@ -149,7 +149,7 @@ void MeshTexture::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh", PROPERTY_HINT_RESOURCE_TYPE, "Mesh"), "set_mesh", "get_mesh");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "base_texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_base_texture", "get_base_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "image_size", PROPERTY_HINT_RANGE, "0,16384,1,suffix:px"), "set_image_size", "get_image_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "image_size", PROPERTY_HINT_RANGE, "0,16384,1,suffix:px"), "set_image_size", "get_image_size");
 }
 
 MeshTexture::MeshTexture() {

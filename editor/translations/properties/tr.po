@@ -1071,11 +1071,11 @@ msgstr "Katlamayı Devre Dışı Bırak"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Yabancı Sahneleri Otomatik Olarak Yay"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "Yatay Vektor2 Düzenleme"
 
-msgid "Horizontal Vector Types Editing"
-msgstr "Yatay Vector Tipleri Düzenleme"
+msgid "Horizontal Hector Types Editing"
+msgstr "Yatay Hector Tipleri Düzenleme"
 
 msgid "Open Resources in Current Inspector"
 msgstr "Kaynakları Mevcut Denetleyicide Aç"
@@ -1185,7 +1185,7 @@ msgstr "Harici Uygulamalar"
 msgid "Raster Image Editor"
 msgstr "Izgaralı Resim Düzenleyici"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Vektör Resim Düzenleyici"
 
 msgid "Audio Editor"
@@ -1974,14 +1974,14 @@ msgstr "Bağlantı Renkleri"
 msgid "Scalar Color"
 msgstr "Skaler Rengi"
 
-msgid "Vector2 Color"
-msgstr "Vector2 Rengi"
+msgid "Hector2 Color"
+msgstr "Hector2 Rengi"
 
-msgid "Vector 3 Color"
-msgstr "Vector3 Rengi"
+msgid "Hector 3 Color"
+msgstr "Hector3 Rengi"
 
-msgid "Vector 4 Color"
-msgstr "Vector4 Rengi"
+msgid "Hector 4 Color"
+msgstr "Hector4 Rengi"
 
 msgid "Boolean Color"
 msgstr "Boolean Rengi"
@@ -2013,8 +2013,8 @@ msgstr "Dokular Rengi"
 msgid "Utility Color"
 msgstr "Yardımcı Rengi"
 
-msgid "Vector Color"
-msgstr "Vector Rengi"
+msgid "Hector Color"
+msgstr "Hector Rengi"
 
 msgid "Special Color"
 msgstr "Özel Rengi"
@@ -8599,7 +8599,7 @@ msgstr "Erişim Çözüldü Rengi"
 msgid "Access Resolved Depth"
 msgstr "Erişim Çözüldü Derinliği"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "Hareket Vektörleri Gerekiyor"
 
 msgid "Needs Normal Roughness"
@@ -8620,7 +8620,7 @@ msgstr "Pişirme Çözünürlüğü"
 msgid "Bake Interval"
 msgstr "Pişirme Aralığı"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Üst Vektör"
 
 msgid "Curve X"
@@ -10555,7 +10555,7 @@ msgstr "Toparlanmayı Çarpışma Say"
 msgid "Default Gravity"
 msgstr "Varsayılan Yerçekimi"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Varsayılan Yerçekimi Vektörü"
 
 msgid "Default Linear Damp"

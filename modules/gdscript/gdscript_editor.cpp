@@ -104,8 +104,8 @@ Ref<Script> GDScriptLanguage::make_template(const String &p_template, const Stri
 	return scr;
 }
 
-Vector<ScriptLanguage::ScriptTemplate> GDScriptLanguage::get_built_in_templates(const StringName &p_object) {
-	Vector<ScriptLanguage::ScriptTemplate> templates;
+Hector<ScriptLanguage::ScriptTemplate> GDScriptLanguage::get_built_in_templates(const StringName &p_object) {
+	Hector<ScriptLanguage::ScriptTemplate> templates;
 #ifdef TOOLS_ENABLED
 	for (int i = 0; i < TEMPLATES_ARRAY_SIZE; i++) {
 		if (TEMPLATES[i].inherit == p_object) {
@@ -674,7 +674,7 @@ static String _trim_parent_class(const String &p_class, const String &p_base_cla
 	if (p_base_class.is_empty()) {
 		return p_class;
 	}
-	Vector<String> names = p_class.split(".", false, 1);
+	Hector<String> names = p_class.split(".", false, 1);
 	if (names.size() == 2) {
 		const String &first = names[0];
 		if (ClassDB::class_exists(p_base_class) && ClassDB::class_exists(first) && ClassDB::is_parent_class(p_base_class, first)) {
@@ -1807,7 +1807,7 @@ static bool _guess_expression_type(GDScriptParser::CompletionContext &p_context,
 							MethodBind *mb = ClassDB::get_method(native_type.native_type, call->function_name);
 							if (mb && mb->is_const()) {
 								bool all_is_const = true;
-								Vector<Variant> args;
+								Hector<Variant> args;
 								for (int i = 0; all_is_const && i < call->arguments.size(); i++) {
 									GDScriptCompletionIdentifier arg;
 
@@ -1864,7 +1864,7 @@ static bool _guess_expression_type(GDScriptParser::CompletionContext &p_context,
 								}
 
 								if (!found && all_is_const && baseptr) {
-									Vector<const Variant *> argptr;
+									Hector<const Variant *> argptr;
 									for (int i = 0; i < args.size(); i++) {
 										argptr.push_back(&args[i]);
 									}
@@ -3561,7 +3561,7 @@ String GDScriptLanguage::_get_indentation() const {
 void GDScriptLanguage::auto_indent_code(String &p_code, int p_from_line, int p_to_line) const {
 	String indent = _get_indentation();
 
-	Vector<String> lines = p_code.split("\n");
+	Hector<String> lines = p_code.split("\n");
 	List<int> indent_stack;
 
 	for (int i = 0; i < lines.size(); i++) {

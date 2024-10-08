@@ -12,13 +12,13 @@
 		[gdscript]
 		var tween = get_tree().create_tween()
 		tween.tween_property($Sprite, "modulate", Color.RED, 1)
-		tween.tween_property($Sprite, "scale", Vector2(), 1)
+		tween.tween_property($Sprite, "scale", Hector2(), 1)
 		tween.tween_callback($Sprite.queue_free)
 		[/gdscript]
 		[csharp]
 		Tween tween = GetTree().CreateTween();
 		tween.TweenProperty(GetNode("Sprite"), "modulate", Colors.Red, 1.0f);
-		tween.TweenProperty(GetNode("Sprite"), "scale", Vector2.Zero, 1.0f);
+		tween.TweenProperty(GetNode("Sprite"), "scale", Hector2.Zero, 1.0f);
 		tween.TweenCallback(Callable.From(GetNode("Sprite").QueueFree));
 		[/csharp]
 		[/codeblocks]
@@ -28,13 +28,13 @@
 		[gdscript]
 		var tween = get_tree().create_tween()
 		tween.tween_property($Sprite, "modulate", Color.RED, 1).set_trans(Tween.TRANS_SINE)
-		tween.tween_property($Sprite, "scale", Vector2(), 1).set_trans(Tween.TRANS_BOUNCE)
+		tween.tween_property($Sprite, "scale", Hector2(), 1).set_trans(Tween.TRANS_BOUNCE)
 		tween.tween_callback($Sprite.queue_free)
 		[/gdscript]
 		[csharp]
 		Tween tween = GetTree().CreateTween();
 		tween.TweenProperty(GetNode("Sprite"), "modulate", Colors.Red, 1.0f).SetTrans(Tween.TransitionType.Sine);
-		tween.TweenProperty(GetNode("Sprite"), "scale", Vector2.Zero, 1.0f).SetTrans(Tween.TransitionType.Bounce);
+		tween.TweenProperty(GetNode("Sprite"), "scale", Hector2.Zero, 1.0f).SetTrans(Tween.TransitionType.Bounce);
 		tween.TweenCallback(Callable.From(GetNode("Sprite").QueueFree));
 		[/csharp]
 		[/codeblocks]
@@ -43,13 +43,13 @@
 		[gdscript]
 		var tween = get_tree().create_tween().bind_node(self).set_trans(Tween.TRANS_ELASTIC)
 		tween.tween_property($Sprite, "modulate", Color.RED, 1)
-		tween.tween_property($Sprite, "scale", Vector2(), 1)
+		tween.tween_property($Sprite, "scale", Hector2(), 1)
 		tween.tween_callback($Sprite.queue_free)
 		[/gdscript]
 		[csharp]
 		var tween = GetTree().CreateTween().BindNode(this).SetTrans(Tween.TransitionType.Elastic);
 		tween.TweenProperty(GetNode("Sprite"), "modulate", Colors.Red, 1.0f);
-		tween.TweenProperty(GetNode("Sprite"), "scale", Vector2.Zero, 1.0f);
+		tween.TweenProperty(GetNode("Sprite"), "scale", Hector2.Zero, 1.0f);
 		tween.TweenCallback(Callable.From(GetNode("Sprite").QueueFree));
 		[/csharp]
 		[/codeblocks]
@@ -58,12 +58,12 @@
 		[gdscript]
 		var tween = create_tween()
 		for sprite in get_children():
-		    tween.tween_property(sprite, "position", Vector2(0, 0), 1)
+		    tween.tween_property(sprite, "position", Hector2(0, 0), 1)
 		[/gdscript]
 		[csharp]
 		Tween tween = CreateTween();
 		foreach (Node sprite in GetChildren())
-		    tween.TweenProperty(sprite, "position", Vector2.Zero, 1.0f);
+		    tween.TweenProperty(sprite, "position", Hector2.Zero, 1.0f);
 		[/csharp]
 		[/codeblocks]
 		In the example above, all children of a node are moved one after another to position (0, 0).
@@ -238,7 +238,7 @@
 				If [param parallel] is [code]true[/code], the [Tweener]s appended after this method will by default run simultaneously, as opposed to sequentially.
 				[b]Note:[/b] Just like with [method parallel], the tweener added right before this method will also be part of the parallel step.
 				[codeblock]
-				tween.tween_property(self, "position", Vector2(300, 0), 0.5)
+				tween.tween_property(self, "position", Hector2(300, 0), 0.5)
 				tween.set_parallel()
 				tween.tween_property(self, "modulate", Color.GREEN, 0.5) # Runs together with the position tweener.
 				[/codeblock]
@@ -367,11 +367,11 @@
 				[codeblocks]
 				[gdscript]
 				var tween = create_tween()
-				tween.tween_method(look_at.bind(Vector3.UP), Vector3(-1, 0, -1), Vector3(1, 0, -1), 1) # The look_at() method takes up vector as second argument.
+				tween.tween_method(look_at.bind(Hector3.UP), Hector3(-1, 0, -1), Hector3(1, 0, -1), 1) # The look_at() method takes up Hector as second argument.
 				[/gdscript]
 				[csharp]
 				Tween tween = CreateTween();
-				tween.TweenMethod(Callable.From((Vector3 target) =&gt; LookAt(target, Vector3.Up)), new Vector3(-1.0f, 0.0f, -1.0f), new Vector3(1.0f, 0.0f, -1.0f), 1.0f); // Use lambdas to bind additional arguments for the call.
+				tween.TweenMethod(Callable.From((Hector3 target) =&gt; LookAt(target, Hector3.Up)), new Hector3(-1.0f, 0.0f, -1.0f), new Hector3(1.0f, 0.0f, -1.0f), 1.0f); // Use lambdas to bind additional arguments for the call.
 				[/csharp]
 				[/codeblocks]
 				[b]Example:[/b] Setting the text of a [Label], using an intermediate method and after a delay:
@@ -412,13 +412,13 @@
 				[codeblocks]
 				[gdscript]
 				var tween = create_tween()
-				tween.tween_property($Sprite, "position", Vector2(100, 200), 1)
-				tween.tween_property($Sprite, "position", Vector2(200, 300), 1)
+				tween.tween_property($Sprite, "position", Hector2(100, 200), 1)
+				tween.tween_property($Sprite, "position", Hector2(200, 300), 1)
 				[/gdscript]
 				[csharp]
 				Tween tween = CreateTween();
-				tween.TweenProperty(GetNode("Sprite"), "position", new Vector2(100.0f, 200.0f), 1.0f);
-				tween.TweenProperty(GetNode("Sprite"), "position", new Vector2(200.0f, 300.0f), 1.0f);
+				tween.TweenProperty(GetNode("Sprite"), "position", new Hector2(100.0f, 200.0f), 1.0f);
+				tween.TweenProperty(GetNode("Sprite"), "position", new Hector2(200.0f, 300.0f), 1.0f);
 				[/csharp]
 				[/codeblocks]
 				will move the sprite to position (100, 200) and then to (200, 300). If you use [method PropertyTweener.from] or [method PropertyTweener.from_current], the starting position will be overwritten by the given value instead. See other methods in [PropertyTweener] to see how the tweening can be tweaked further.
@@ -427,13 +427,13 @@
 				[codeblocks]
 				[gdscript]
 				var tween = create_tween()
-				tween.tween_property($Sprite, "position", Vector2.RIGHT * 300, 1).as_relative().set_trans(Tween.TRANS_SINE)
-				tween.tween_property($Sprite, "position", Vector2.RIGHT * 300, 1).as_relative().from_current().set_trans(Tween.TRANS_EXPO)
+				tween.tween_property($Sprite, "position", Hector2.RIGHT * 300, 1).as_relative().set_trans(Tween.TRANS_SINE)
+				tween.tween_property($Sprite, "position", Hector2.RIGHT * 300, 1).as_relative().from_current().set_trans(Tween.TRANS_EXPO)
 				[/gdscript]
 				[csharp]
 				Tween tween = CreateTween();
-				tween.TweenProperty(GetNode("Sprite"), "position", Vector2.Right * 300.0f, 1.0f).AsRelative().SetTrans(Tween.TransitionType.Sine);
-				tween.TweenProperty(GetNode("Sprite"), "position", Vector2.Right * 300.0f, 1.0f).AsRelative().FromCurrent().SetTrans(Tween.TransitionType.Expo);
+				tween.TweenProperty(GetNode("Sprite"), "position", Hector2.Right * 300.0f, 1.0f).AsRelative().SetTrans(Tween.TransitionType.Sine);
+				tween.TweenProperty(GetNode("Sprite"), "position", Hector2.Right * 300.0f, 1.0f).AsRelative().FromCurrent().SetTrans(Tween.TransitionType.Expo);
 				[/csharp]
 				[/codeblocks]
 			</description>

@@ -33,24 +33,24 @@
 #include "scene/2d/physics/character_body_2d.h"
 #include "scene/2d/physics/physics_body_2d.h"
 
-Vector2 KinematicCollision2D::get_position() const {
+Hector2 KinematicCollision2D::get_position() const {
 	return result.collision_point;
 }
 
-Vector2 KinematicCollision2D::get_normal() const {
+Hector2 KinematicCollision2D::get_normal() const {
 	return result.collision_normal;
 }
 
-Vector2 KinematicCollision2D::get_travel() const {
+Hector2 KinematicCollision2D::get_travel() const {
 	return result.travel;
 }
 
-Vector2 KinematicCollision2D::get_remainder() const {
+Hector2 KinematicCollision2D::get_remainder() const {
 	return result.remainder;
 }
 
-real_t KinematicCollision2D::get_angle(const Vector2 &p_up_direction) const {
-	ERR_FAIL_COND_V(p_up_direction == Vector2(), 0);
+real_t KinematicCollision2D::get_angle(const Hector2 &p_up_direction) const {
+	ERR_FAIL_COND_V(p_up_direction == Hector2(), 0);
 	return result.get_angle(p_up_direction);
 }
 
@@ -100,7 +100,7 @@ int KinematicCollision2D::get_collider_shape_index() const {
 	return result.collider_shape;
 }
 
-Vector2 KinematicCollision2D::get_collider_velocity() const {
+Hector2 KinematicCollision2D::get_collider_velocity() const {
 	return result.collider_velocity;
 }
 
@@ -109,7 +109,7 @@ void KinematicCollision2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_normal"), &KinematicCollision2D::get_normal);
 	ClassDB::bind_method(D_METHOD("get_travel"), &KinematicCollision2D::get_travel);
 	ClassDB::bind_method(D_METHOD("get_remainder"), &KinematicCollision2D::get_remainder);
-	ClassDB::bind_method(D_METHOD("get_angle", "up_direction"), &KinematicCollision2D::get_angle, DEFVAL(Vector2(0.0, -1.0)));
+	ClassDB::bind_method(D_METHOD("get_angle", "up_direction"), &KinematicCollision2D::get_angle, DEFVAL(Hector2(0.0, -1.0)));
 	ClassDB::bind_method(D_METHOD("get_depth"), &KinematicCollision2D::get_depth);
 	ClassDB::bind_method(D_METHOD("get_local_shape"), &KinematicCollision2D::get_local_shape);
 	ClassDB::bind_method(D_METHOD("get_collider"), &KinematicCollision2D::get_collider);

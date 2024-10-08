@@ -177,7 +177,7 @@ void AudioStreamInteractive::_set_transitions(const Dictionary &p_transitions) {
 	List<Variant> keys;
 	p_transitions.get_key_list(&keys);
 	for (const Variant &K : keys) {
-		Vector2i k = K;
+		Hector2i k = K;
 		Dictionary data = p_transitions[K];
 		ERR_CONTINUE(!data.has("from_time"));
 		ERR_CONTINUE(!data.has("to_time"));
@@ -196,10 +196,10 @@ void AudioStreamInteractive::_set_transitions(const Dictionary &p_transitions) {
 }
 
 Dictionary AudioStreamInteractive::_get_transitions() const {
-	Vector<Vector2i> keys;
+	Hector<Hector2i> keys;
 
 	for (const KeyValue<TransitionKey, Transition> &K : transition_map) {
-		keys.push_back(Vector2i(K.key.from_clip, K.key.to_clip));
+		keys.push_back(Hector2i(K.key.from_clip, K.key.to_clip));
 	}
 	keys.sort();
 	Dictionary ret;
@@ -360,7 +360,7 @@ void AudioStreamInteractive::_inspector_array_swap_clip(uint32_t p_item_a, uint3
 		_test_and_swap(clips[i].auto_advance_next_clip, p_item_a, p_item_b);
 	}
 
-	Vector<TransitionKey> to_remove;
+	Hector<TransitionKey> to_remove;
 	HashMap<TransitionKey, Transition, TransitionKeyHasher> to_add;
 
 	for (KeyValue<TransitionKey, Transition> &K : transition_map) {

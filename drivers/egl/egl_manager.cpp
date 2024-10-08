@@ -66,14 +66,14 @@ int EGLManager::_get_gldisplay_id(void *p_display) {
 	new_gldisplay.display = p_display;
 
 	if (GLAD_EGL_VERSION_1_5) {
-		Vector<EGLAttrib> attribs = _get_platform_display_attributes();
+		Hector<EGLAttrib> attribs = _get_platform_display_attributes();
 		new_gldisplay.egl_display = eglGetPlatformDisplay(_get_platform_extension_enum(), new_gldisplay.display, (attribs.size() > 0) ? attribs.ptr() : nullptr);
 	} else if (GLAD_EGL_EXT_platform_base) {
 #ifdef EGL_EXT_platform_base
 		// eglGetPlatformDisplayEXT wants its attributes as EGLint, so we'll truncate
 		// what we already have. It's a bit naughty but I'm really not sure what else
 		// we could do here.
-		Vector<EGLint> attribs;
+		Hector<EGLint> attribs;
 		for (const EGLAttrib &attrib : _get_platform_display_attributes()) {
 			attribs.push_back((EGLint)attrib);
 		}
@@ -191,7 +191,7 @@ Error EGLManager::_gldisplay_create_context(GLDisplay &p_gldisplay) {
 	ERR_FAIL_COND_V(eglGetError() != EGL_SUCCESS, ERR_BUG);
 	ERR_FAIL_COND_V(config_count == 0, ERR_UNCONFIGURED);
 
-	Vector<EGLint> context_attribs = _get_platform_context_attribs();
+	Hector<EGLint> context_attribs = _get_platform_context_attribs();
 	p_gldisplay.egl_context = eglCreateContext(p_gldisplay.egl_display, p_gldisplay.egl_config, EGL_NO_CONTEXT, (context_attribs.size() > 0) ? context_attribs.ptr() : nullptr);
 	ERR_FAIL_COND_V_MSG(p_gldisplay.egl_context == EGL_NO_CONTEXT, ERR_CANT_CREATE, vformat("Can't create an EGL context. Error code: %d", eglGetError()));
 
@@ -229,7 +229,7 @@ Error EGLManager::window_create(DisplayServer::WindowID p_window_id, void *p_dis
 	GLDisplay &gldisplay = displays[gldisplay_id];
 
 	// In order to ensure a fast lookup, make sure we got enough elements in the
-	// windows local vector to use the window id as an index.
+	// windows local Hector to use the window id as an index.
 	if (p_window_id >= (int)windows.size()) {
 		windows.resize(p_window_id + 1);
 	}
@@ -365,7 +365,7 @@ Error EGLManager::initialize(void *p_native_display) {
 	if (GLAD_EGL_EXT_platform_base) {
 #ifdef EGL_EXT_platform_base
 		// eglGetPlatformDisplayEXT wants its attributes as EGLint.
-		Vector<EGLint> attribs;
+		Hector<EGLint> attribs;
 		for (const EGLAttrib &attrib : _get_platform_display_attributes()) {
 			attribs.push_back((EGLint)attrib);
 		}

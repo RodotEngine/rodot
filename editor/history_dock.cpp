@@ -64,7 +64,7 @@ void HistoryDock::refresh_history() {
 	const EditorUndoRedoManager::History &current_scene_history = ur_manager->get_or_create_history(EditorNode::get_editor_data().get_current_edited_scene_history_id());
 	const EditorUndoRedoManager::History &global_history = ur_manager->get_or_create_history(EditorUndoRedoManager::GLOBAL_HISTORY);
 
-	Vector<EditorUndoRedoManager::Action> full_history;
+	Hector<EditorUndoRedoManager::Action> full_history;
 	{
 		int full_size = 0;
 		if (include_scene) {

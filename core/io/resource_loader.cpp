@@ -84,7 +84,7 @@ bool ResourceFormatLoader::handles_type(const String &p_type) const {
 }
 
 void ResourceFormatLoader::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
-	Vector<String> ret;
+	Hector<String> ret;
 	if (GDVIRTUAL_CALL(_get_classes_used, p_path, ret)) {
 		for (int i = 0; i < ret.size(); i++) {
 			r_classes->insert(ret[i]);
@@ -215,7 +215,7 @@ void ResourceFormatLoader::_bind_methods() {
 
 #define PREPARE_FOR_WTP_WAIT                                                   \
 	int load_nesting_backup = ResourceLoader::load_nesting;                    \
-	Vector<String> load_paths_stack_backup = ResourceLoader::load_paths_stack; \
+	Hector<String> load_paths_stack_backup = ResourceLoader::load_paths_stack; \
 	ResourceLoader::load_nesting = 0;                                          \
 	ResourceLoader::load_paths_stack.clear();
 
@@ -1165,7 +1165,7 @@ String ResourceLoader::_path_remap(const String &p_path, bool *r_translation_rem
 		String locale = TranslationServer::get_singleton()->get_locale();
 		ERR_FAIL_COND_V_MSG(locale.length() < 2, p_path, "Could not remap path '" + p_path + "' for translation as configured locale '" + locale + "' is invalid.");
 
-		Vector<String> &res_remaps = *translation_remaps.getptr(new_path);
+		Hector<String> &res_remaps = *translation_remaps.getptr(new_path);
 
 		int best_score = 0;
 		for (int i = 0; i < res_remaps.size(); i++) {
@@ -1282,7 +1282,7 @@ void ResourceLoader::load_translation_remaps() {
 	remaps.get_key_list(&keys);
 	for (const Variant &E : keys) {
 		Array langs = remaps[E];
-		Vector<String> lang_remaps;
+		Hector<String> lang_remaps;
 		lang_remaps.resize(langs.size());
 		String *lang_remaps_ptrw = lang_remaps.ptrw();
 		for (const Variant &lang : langs) {
@@ -1346,7 +1346,7 @@ void ResourceLoader::load_path_remaps() {
 		return;
 	}
 
-	Vector<String> remaps = GLOBAL_GET("path_remap/remapped_paths");
+	Hector<String> remaps = GLOBAL_GET("path_remap/remapped_paths");
 	int rc = remaps.size();
 	ERR_FAIL_COND(rc & 1); //must be even
 	const String *r = remaps.ptr();
@@ -1422,7 +1422,7 @@ void ResourceLoader::add_custom_loaders() {
 }
 
 void ResourceLoader::remove_custom_loaders() {
-	Vector<Ref<ResourceFormatLoader>> custom_loaders;
+	Hector<Ref<ResourceFormatLoader>> custom_loaders;
 	for (int i = 0; i < loader_count; ++i) {
 		if (loader[i]->get_script_instance()) {
 			custom_loaders.push_back(loader[i]);
@@ -1451,7 +1451,7 @@ bool ResourceLoader::abort_on_missing_resource = true;
 bool ResourceLoader::timestamp_on_load = false;
 
 thread_local int ResourceLoader::load_nesting = 0;
-thread_local Vector<String> ResourceLoader::load_paths_stack;
+thread_local Hector<String> ResourceLoader::load_paths_stack;
 thread_local HashMap<int, HashMap<String, Ref<Resource>>> ResourceLoader::res_ref_overrides;
 thread_local ResourceLoader::ThreadLoadTask *ResourceLoader::curr_load_task = nullptr;
 
@@ -1468,7 +1468,7 @@ bool ResourceLoader::cleaning_tasks = false;
 HashMap<String, ResourceLoader::LoadToken *> ResourceLoader::user_load_tokens;
 
 SelfList<Resource>::List ResourceLoader::remapped_list;
-HashMap<String, Vector<String>> ResourceLoader::translation_remaps;
+HashMap<String, Hector<String>> ResourceLoader::translation_remaps;
 HashMap<String, String> ResourceLoader::path_remaps;
 
 ResourceLoaderImport ResourceLoader::import = nullptr;

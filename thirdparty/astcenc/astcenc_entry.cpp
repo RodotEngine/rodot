@@ -729,7 +729,7 @@ astcenc_error astcenc_context_alloc(
 		size_t worksize = sizeof(compression_working_buffers) * thread_count;
 		ctx->working_buffers = aligned_malloc<compression_working_buffers>(worksize, ASTCENC_VECALIGN);
 		static_assert((ASTCENC_VECALIGN == 0) || ((sizeof(compression_working_buffers) % ASTCENC_VECALIGN) == 0),
-		              "compression_working_buffers size must be multiple of vector alignment");
+		              "compression_working_buffers size must be multiple of Hector alignment");
 		if (!ctx->working_buffers)
 		{
 			aligned_free<block_size_descriptor>(ctx->bsd);

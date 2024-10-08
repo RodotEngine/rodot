@@ -108,9 +108,9 @@ void CPUParticles2DEditorPlugin::_generate_emission_mask() {
 	Size2i s = img->get_size();
 	ERR_FAIL_COND(s.width == 0 || s.height == 0);
 
-	Vector<Point2> valid_positions;
-	Vector<Point2> valid_normals;
-	Vector<uint8_t> valid_colors;
+	Hector<Point2> valid_positions;
+	Hector<Point2> valid_normals;
+	Hector<uint8_t> valid_colors;
 
 	valid_positions.resize(s.width * s.height);
 
@@ -129,7 +129,7 @@ void CPUParticles2DEditorPlugin::_generate_emission_mask() {
 	int vpc = 0;
 
 	{
-		Vector<uint8_t> img_data = img->get_data();
+		Hector<uint8_t> img_data = img->get_data();
 		const uint8_t *r = img_data.ptr();
 
 		for (int i = 0; i < s.width; i++) {
@@ -165,7 +165,7 @@ void CPUParticles2DEditorPlugin::_generate_emission_mask() {
 							valid_positions.write[vpc] = Point2(i, j);
 
 							if (emode == EMISSION_MODE_BORDER_DIRECTED) {
-								Vector2 normal;
+								Hector2 normal;
 								for (int x = i - 2; x <= i + 2; x++) {
 									for (int y = j - 2; y <= j + 2; y++) {
 										if (x == i && y == j) {
@@ -173,7 +173,7 @@ void CPUParticles2DEditorPlugin::_generate_emission_mask() {
 										}
 
 										if (x < 0 || y < 0 || x >= s.width || y >= s.height || r[(y * s.width + x) * 4 + 3] <= 128) {
-											normal += Vector2(x - i, y - j).normalized();
+											normal += Hector2(x - i, y - j).normalized();
 										}
 									}
 								}
@@ -221,9 +221,9 @@ void CPUParticles2DEditorPlugin::_generate_emission_mask() {
 
 	if (valid_normals.size()) {
 		particles->set_emission_shape(CPUParticles2D::EMISSION_SHAPE_DIRECTED_POINTS);
-		PackedVector2Array norms;
+		PackedHector2Array norms;
 		norms.resize(valid_normals.size());
-		Vector2 *normsw = norms.ptrw();
+		Hector2 *normsw = norms.ptrw();
 		for (int i = 0; i < valid_normals.size(); i += 1) {
 			normsw[i] = valid_normals[i];
 		}
@@ -233,14 +233,14 @@ void CPUParticles2DEditorPlugin::_generate_emission_mask() {
 	}
 
 	{
-		Vector2 offset;
+		Hector2 offset;
 		if (emission_mask_centered->is_pressed()) {
-			offset = Vector2(-s.width * 0.5, -s.height * 0.5);
+			offset = Hector2(-s.width * 0.5, -s.height * 0.5);
 		}
 
-		PackedVector2Array points;
+		PackedHector2Array points;
 		points.resize(valid_positions.size());
-		Vector2 *pointsw = points.ptrw();
+		Hector2 *pointsw = points.ptrw();
 		for (int i = 0; i < valid_positions.size(); i += 1) {
 			pointsw[i] = valid_positions[i] + offset;
 		}

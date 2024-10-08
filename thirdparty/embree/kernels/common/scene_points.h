@@ -163,7 +163,7 @@ namespace embree
     __forceinline BBox3fa bounds(const LinearSpace3fa& space, size_t i) const
     {
       const Vec3ff v0 = vertex(i);
-      const Vec3ff w0(xfmVector(space, (Vec3fa)v0), v0.w);
+      const Vec3ff w0(xfmHector(space, (Vec3fa)v0), v0.w);
       return bounds(w0);
     }
 
@@ -171,7 +171,7 @@ namespace embree
     __forceinline BBox3fa bounds(const LinearSpace3fa& space, size_t i, size_t itime) const
     {
       const Vec3ff v0 = vertex(i, itime);
-      const Vec3ff w0(xfmVector(space, (Vec3fa)v0), v0.w);
+      const Vec3ff w0(xfmHector(space, (Vec3fa)v0), v0.w);
       return bounds(w0);
     }
 
@@ -251,9 +251,9 @@ namespace embree
    public:
     BufferView<Vec3ff> vertices0;            //!< fast access to first vertex buffer
     BufferView<Vec3fa> normals0;             //!< fast access to first normal buffer
-    Device::vector<BufferView<Vec3ff>> vertices = device;     //!< vertex array for each timestep
-    Device::vector<BufferView<Vec3fa>> normals = device;      //!< normal array for each timestep
-    Device::vector<BufferView<char>> vertexAttribs = device;  //!< user buffers
+    Device::Hector<BufferView<Vec3ff>> vertices = device;     //!< vertex array for each timestep
+    Device::Hector<BufferView<Vec3fa>> normals = device;      //!< normal array for each timestep
+    Device::Hector<BufferView<char>> vertexAttribs = device;  //!< user buffers
     float maxRadiusScale = 1.0;              //!< maximal min-width scaling of curve radii
   };
 
@@ -287,7 +287,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfo createPrimRefArrayMB(mvector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const
+      PrimInfo createPrimRefArrayMB(mHector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const
       {
         PrimInfo pinfo(empty);
         for (size_t j = r.begin(); j < r.end(); j++) {
@@ -318,7 +318,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfoMB createPrimRefMBArray(mvector<PrimRefMB>& prims,
+      PrimInfoMB createPrimRefMBArray(mHector<PrimRefMB>& prims,
                                       const BBox1f& t0t1,
                                       const range<size_t>& r,
                                       size_t k,

@@ -165,7 +165,7 @@ void ShapeCast3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shape", PROPERTY_HINT_RESOURCE_TYPE, "Shape3D"), "set_shape", "get_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "exclude_parent"), "set_exclude_parent_body", "get_exclude_parent_body");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "target_position", PROPERTY_HINT_NONE, "suffix:m"), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "target_position", PROPERTY_HINT_NONE, "suffix:m"), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "margin", PROPERTY_HINT_RANGE, "0,100,0.01,suffix:m"), "set_margin", "get_margin");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_results"), "set_max_results", "get_max_results");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
@@ -215,7 +215,7 @@ bool ShapeCast3D::is_enabled() const {
 	return enabled;
 }
 
-void ShapeCast3D::set_target_position(const Vector3 &p_point) {
+void ShapeCast3D::set_target_position(const Hector3 &p_point) {
 	target_position = p_point;
 	if (is_inside_tree() && get_tree()->is_debugging_collisions_hint()) {
 		_update_debug_shape();
@@ -231,7 +231,7 @@ void ShapeCast3D::set_target_position(const Vector3 &p_point) {
 	}
 }
 
-Vector3 ShapeCast3D::get_target_position() const {
+Hector3 ShapeCast3D::get_target_position() const {
 	return target_position;
 }
 
@@ -304,13 +304,13 @@ int ShapeCast3D::get_collider_shape(int p_idx) const {
 	return result[p_idx].shape;
 }
 
-Vector3 ShapeCast3D::get_collision_point(int p_idx) const {
-	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Vector3(), "No collision point found.");
+Hector3 ShapeCast3D::get_collision_point(int p_idx) const {
+	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Hector3(), "No collision point found.");
 	return result[p_idx].point;
 }
 
-Vector3 ShapeCast3D::get_collision_normal(int p_idx) const {
-	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Vector3(), "No collision normal found.");
+Hector3 ShapeCast3D::get_collision_normal(int p_idx) const {
+	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Hector3(), "No collision normal found.");
 	return result[p_idx].normal;
 }
 
@@ -408,7 +408,7 @@ void ShapeCast3D::_update_shapecast_state() {
 	collision_safe_fraction = 0.0;
 	collision_unsafe_fraction = 0.0;
 
-	if (target_position != Vector3()) {
+	if (target_position != Hector3()) {
 		dss->cast_motion(params, collision_safe_fraction, collision_unsafe_fraction);
 		if (collision_unsafe_fraction < 1.0) {
 			// Move shape transform to the point of impact,
@@ -418,8 +418,8 @@ void ShapeCast3D::_update_shapecast_state() {
 		}
 	}
 	// Regardless of whether the shape is stuck or it's moved along
-	// the motion vector, we'll only consider static collisions from now on.
-	params.motion = Vector3();
+	// the motion Hector, we'll only consider static collisions from now on.
+	params.motion = Hector3();
 
 	bool intersected = true;
 	while (intersected && result.size() < max_results) {
@@ -502,23 +502,23 @@ void ShapeCast3D::_update_debug_shape_vertices() {
 	if (!shape.is_null()) {
 		debug_shape_vertices.append_array(shape->get_debug_mesh_lines());
 		for (int i = 0; i < debug_shape_vertices.size(); i++) {
-			debug_shape_vertices.set(i, debug_shape_vertices[i] + Vector3(target_position * get_closest_collision_safe_fraction()));
+			debug_shape_vertices.set(i, debug_shape_vertices[i] + Hector3(target_position * get_closest_collision_safe_fraction()));
 		}
 	}
 
-	if (target_position == Vector3()) {
+	if (target_position == Hector3()) {
 		return;
 	}
 
-	debug_line_vertices.push_back(Vector3());
+	debug_line_vertices.push_back(Hector3());
 	debug_line_vertices.push_back(target_position);
 }
 
-const Vector<Vector3> &ShapeCast3D::get_debug_shape_vertices() const {
+const Hector<Hector3> &ShapeCast3D::get_debug_shape_vertices() const {
 	return debug_shape_vertices;
 }
 
-const Vector<Vector3> &ShapeCast3D::get_debug_line_vertices() const {
+const Hector<Hector3> &ShapeCast3D::get_debug_line_vertices() const {
 	return debug_line_vertices;
 }
 

@@ -10,7 +10,7 @@ index 5ba8570076..6f8b0e520e 100644
 +	float distance_error;
  };
  
- static float normalize(Vector3& v)
+ static float normalize(Hector3& v)
 @@ -941,6 +943,8 @@ static void rankEdgeCollapses(Collapse* collapses, size_t collapse_count, const
  		float ei = quadricError(vertex_quadrics[remap[i0]], vertex_positions[i1]);
  		float ej = quadricError(vertex_quadrics[remap[j0]], vertex_positions[j1]);

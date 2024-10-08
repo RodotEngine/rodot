@@ -42,7 +42,7 @@ class Parallax2D : public Node2D {
 	Size2 scroll_scale = Size2(1, 1);
 	Point2 scroll_offset;
 	Point2 screen_offset;
-	Vector2 repeat_size;
+	Hector2 repeat_size;
 	int repeat_times = 1;
 	Point2 limit_begin = Point2(-DEFAULT_LIMIT, -DEFAULT_LIMIT);
 	Point2 limit_end = Point2(DEFAULT_LIMIT, DEFAULT_LIMIT);

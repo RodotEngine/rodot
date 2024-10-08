@@ -120,7 +120,7 @@ void TIntermediate::insertSpirvExecutionMode(int executionMode, const TIntermAgg
     if (!spirvExecutionMode)
         spirvExecutionMode = new TSpirvExecutionMode;
 
-    TVector<const TIntermConstantUnion*> extraOperands;
+    THector<const TIntermConstantUnion*> extraOperands;
     if (args) {
         for (auto arg : args->getSequence()) {
             auto extraOperand = arg->getAsConstantUnion();
@@ -137,7 +137,7 @@ void TIntermediate::insertSpirvExecutionModeId(int executionMode, const TIntermA
         spirvExecutionMode = new TSpirvExecutionMode;
 
     assert(args);
-    TVector<const TIntermTyped*> extraOperands;
+    THector<const TIntermTyped*> extraOperands;
 
     for (auto arg : args->getSequence()) {
         auto extraOperand = arg->getAsTyped();
@@ -155,7 +155,7 @@ void TQualifier::setSpirvDecorate(int decoration, const TIntermAggregate* args)
     if (!spirvDecorate)
         spirvDecorate = new TSpirvDecorate;
 
-    TVector<const TIntermConstantUnion*> extraOperands;
+    THector<const TIntermConstantUnion*> extraOperands;
     if (args) {
         for (auto arg : args->getSequence()) {
             auto extraOperand = arg->getAsConstantUnion();
@@ -172,7 +172,7 @@ void TQualifier::setSpirvDecorateId(int decoration, const TIntermAggregate* args
         spirvDecorate = new TSpirvDecorate;
 
     assert(args);
-    TVector<const TIntermTyped*> extraOperands;
+    THector<const TIntermTyped*> extraOperands;
     for (auto arg : args->getSequence()) {
         auto extraOperand = arg->getAsTyped();
         assert(extraOperand != nullptr);
@@ -187,7 +187,7 @@ void TQualifier::setSpirvDecorateString(int decoration, const TIntermAggregate* 
         spirvDecorate = new TSpirvDecorate;
 
     assert(args);
-    TVector<const TIntermConstantUnion*> extraOperands;
+    THector<const TIntermConstantUnion*> extraOperands;
     for (auto arg : args->getSequence()) {
         auto extraOperand = arg->getAsConstantUnion();
         assert(extraOperand != nullptr);

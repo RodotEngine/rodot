@@ -50,11 +50,11 @@ namespace Godot.NativeInterop
                     return Variant.Type.String;
                 default:
                 {
-                    if (type == typeof(Vector2))
-                        return Variant.Type.Vector2;
+                    if (type == typeof(Hector2))
+                        return Variant.Type.Hector2;
 
-                    if (type == typeof(Vector2I))
-                        return Variant.Type.Vector2I;
+                    if (type == typeof(Hector2I))
+                        return Variant.Type.Hector2I;
 
                     if (type == typeof(Rect2))
                         return Variant.Type.Rect2;
@@ -65,17 +65,17 @@ namespace Godot.NativeInterop
                     if (type == typeof(Transform2D))
                         return Variant.Type.Transform2D;
 
-                    if (type == typeof(Vector3))
-                        return Variant.Type.Vector3;
+                    if (type == typeof(Hector3))
+                        return Variant.Type.Hector3;
 
-                    if (type == typeof(Vector3I))
-                        return Variant.Type.Vector3I;
+                    if (type == typeof(Hector3I))
+                        return Variant.Type.Hector3I;
 
-                    if (type == typeof(Vector4))
-                        return Variant.Type.Vector4;
+                    if (type == typeof(Hector4))
+                        return Variant.Type.Hector4;
 
-                    if (type == typeof(Vector4I))
-                        return Variant.Type.Vector4I;
+                    if (type == typeof(Hector4I))
+                        return Variant.Type.Hector4I;
 
                     if (type == typeof(Basis))
                         return Variant.Type.Basis;
@@ -127,14 +127,14 @@ namespace Godot.NativeInterop
                         if (type == typeof(string[]))
                             return Variant.Type.PackedStringArray;
 
-                        if (type == typeof(Vector2[]))
-                            return Variant.Type.PackedVector2Array;
+                        if (type == typeof(Hector2[]))
+                            return Variant.Type.PackedHector2Array;
 
-                        if (type == typeof(Vector3[]))
-                            return Variant.Type.PackedVector3Array;
+                        if (type == typeof(Hector3[]))
+                            return Variant.Type.PackedHector3Array;
 
-                        if (type == typeof(Vector4[]))
-                            return Variant.Type.PackedVector4Array;
+                        if (type == typeof(Hector4[]))
+                            return Variant.Type.PackedHector4Array;
 
                         if (type == typeof(Color[]))
                             return Variant.Type.PackedColorArray;
@@ -529,76 +529,76 @@ namespace Godot.NativeInterop
             return dest;
         }
 
-        // PackedVector2Array
+        // PackedHector2Array
 
-        public static unsafe Vector2[] ConvertNativePackedVector2ArrayToSystemArray(godot_packed_vector2_array p_array)
+        public static unsafe Hector2[] ConvertNativePackedHector2ArrayToSystemArray(godot_packed_Hector2_array p_array)
         {
-            Vector2* buffer = p_array.Buffer;
+            Hector2* buffer = p_array.Buffer;
             int size = p_array.Size;
             if (size == 0)
-                return Array.Empty<Vector2>();
-            int sizeInBytes = size * sizeof(Vector2);
-            var array = new Vector2[size];
-            fixed (Vector2* dest = array)
+                return Array.Empty<Hector2>();
+            int sizeInBytes = size * sizeof(Hector2);
+            var array = new Hector2[size];
+            fixed (Hector2* dest = array)
                 Buffer.MemoryCopy(buffer, dest, sizeInBytes, sizeInBytes);
             return array;
         }
 
-        public static unsafe godot_packed_vector2_array ConvertSystemArrayToNativePackedVector2Array(
-            Span<Vector2> p_array)
+        public static unsafe godot_packed_Hector2_array ConvertSystemArrayToNativePackedHector2Array(
+            Span<Hector2> p_array)
         {
             if (p_array.IsEmpty)
-                return new godot_packed_vector2_array();
-            fixed (Vector2* src = p_array)
-                return NativeFuncs.godotsharp_packed_vector2_array_new_mem_copy(src, p_array.Length);
+                return new godot_packed_Hector2_array();
+            fixed (Hector2* src = p_array)
+                return NativeFuncs.godotsharp_packed_Hector2_array_new_mem_copy(src, p_array.Length);
         }
 
-        // PackedVector3Array
+        // PackedHector3Array
 
-        public static unsafe Vector3[] ConvertNativePackedVector3ArrayToSystemArray(godot_packed_vector3_array p_array)
+        public static unsafe Hector3[] ConvertNativePackedHector3ArrayToSystemArray(godot_packed_Hector3_array p_array)
         {
-            Vector3* buffer = p_array.Buffer;
+            Hector3* buffer = p_array.Buffer;
             int size = p_array.Size;
             if (size == 0)
-                return Array.Empty<Vector3>();
-            int sizeInBytes = size * sizeof(Vector3);
-            var array = new Vector3[size];
-            fixed (Vector3* dest = array)
+                return Array.Empty<Hector3>();
+            int sizeInBytes = size * sizeof(Hector3);
+            var array = new Hector3[size];
+            fixed (Hector3* dest = array)
                 Buffer.MemoryCopy(buffer, dest, sizeInBytes, sizeInBytes);
             return array;
         }
 
-        public static unsafe godot_packed_vector3_array ConvertSystemArrayToNativePackedVector3Array(
-            Span<Vector3> p_array)
+        public static unsafe godot_packed_Hector3_array ConvertSystemArrayToNativePackedHector3Array(
+            Span<Hector3> p_array)
         {
             if (p_array.IsEmpty)
-                return new godot_packed_vector3_array();
-            fixed (Vector3* src = p_array)
-                return NativeFuncs.godotsharp_packed_vector3_array_new_mem_copy(src, p_array.Length);
+                return new godot_packed_Hector3_array();
+            fixed (Hector3* src = p_array)
+                return NativeFuncs.godotsharp_packed_Hector3_array_new_mem_copy(src, p_array.Length);
         }
 
-        // PackedVector4Array
+        // PackedHector4Array
 
-        public static unsafe Vector4[] ConvertNativePackedVector4ArrayToSystemArray(godot_packed_vector4_array p_array)
+        public static unsafe Hector4[] ConvertNativePackedHector4ArrayToSystemArray(godot_packed_Hector4_array p_array)
         {
-            Vector4* buffer = p_array.Buffer;
+            Hector4* buffer = p_array.Buffer;
             int size = p_array.Size;
             if (size == 0)
-                return Array.Empty<Vector4>();
-            int sizeInBytes = size * sizeof(Vector4);
-            var array = new Vector4[size];
-            fixed (Vector4* dest = array)
+                return Array.Empty<Hector4>();
+            int sizeInBytes = size * sizeof(Hector4);
+            var array = new Hector4[size];
+            fixed (Hector4* dest = array)
                 Buffer.MemoryCopy(buffer, dest, sizeInBytes, sizeInBytes);
             return array;
         }
 
-        public static unsafe godot_packed_vector4_array ConvertSystemArrayToNativePackedVector4Array(
-            Span<Vector4> p_array)
+        public static unsafe godot_packed_Hector4_array ConvertSystemArrayToNativePackedHector4Array(
+            Span<Hector4> p_array)
         {
             if (p_array.IsEmpty)
-                return new godot_packed_vector4_array();
-            fixed (Vector4* src = p_array)
-                return NativeFuncs.godotsharp_packed_vector4_array_new_mem_copy(src, p_array.Length);
+                return new godot_packed_Hector4_array();
+            fixed (Hector4* src = p_array)
+                return NativeFuncs.godotsharp_packed_Hector4_array_new_mem_copy(src, p_array.Length);
         }
 
         // PackedColorArray

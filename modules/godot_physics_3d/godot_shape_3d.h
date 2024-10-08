@@ -32,7 +32,7 @@
 #define GODOT_SHAPE_3D_H
 
 #include "core/math/geometry_3d.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/physics_server_3d.h"
 
 class GodotShape3D;
@@ -76,13 +76,13 @@ public:
 
 	virtual bool is_concave() const { return false; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const = 0;
-	virtual Vector3 get_support(const Vector3 &p_normal) const;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const = 0;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const = 0;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_point, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const = 0;
-	virtual bool intersect_point(const Vector3 &p_point) const = 0;
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const = 0;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const = 0;
+	virtual Hector3 get_support(const Hector3 &p_normal) const;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const = 0;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const = 0;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_point, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const = 0;
+	virtual bool intersect_point(const Hector3 &p_point) const = 0;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const = 0;
 
 	virtual void set_data(const Variant &p_data) = 0;
 	virtual Variant get_data() const = 0;
@@ -102,7 +102,7 @@ public:
 class GodotConcaveShape3D : public GodotShape3D {
 public:
 	virtual bool is_concave() const override { return true; }
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
 
 	// Returns true to stop the query.
 	typedef bool (*QueryCallback)(void *p_userdata, GodotShape3D *p_convex);
@@ -122,14 +122,14 @@ public:
 
 	virtual real_t get_volume() const override { return INFINITY; }
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_WORLD_BOUNDARY; }
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
 
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -149,15 +149,15 @@ public:
 
 	virtual real_t get_volume() const override { return 0.0; }
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_SEPARATION_RAY; }
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
 
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -177,14 +177,14 @@ public:
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_SPHERE; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -193,23 +193,23 @@ public:
 };
 
 class GodotBoxShape3D : public GodotShape3D {
-	Vector3 half_extents;
-	void _setup(const Vector3 &p_half_extents);
+	Hector3 half_extents;
+	void _setup(const Hector3 &p_half_extents);
 
 public:
-	_FORCE_INLINE_ Vector3 get_half_extents() const { return half_extents; }
+	_FORCE_INLINE_ Hector3 get_half_extents() const { return half_extents; }
 	virtual real_t get_volume() const override { return 8 * half_extents.x * half_extents.y * half_extents.z; }
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_BOX; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -231,14 +231,14 @@ public:
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_CAPSULE; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -260,14 +260,14 @@ public:
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_CYLINDER; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -277,24 +277,24 @@ public:
 
 struct GodotConvexPolygonShape3D : public GodotShape3D {
 	Geometry3D::MeshData mesh;
-	LocalVector<int> extreme_vertices;
-	LocalVector<LocalVector<int>> vertex_neighbors;
+	LocalHector<int> extreme_vertices;
+	LocalHector<LocalHector<int>> vertex_neighbors;
 
-	void _setup(const Vector<Vector3> &p_vertices);
+	void _setup(const Hector<Hector3> &p_vertices);
 
 public:
 	const Geometry3D::MeshData &get_mesh() const { return mesh; }
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_CONVEX_POLYGON; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -309,12 +309,12 @@ struct GodotConcavePolygonShape3D : public GodotConcaveShape3D {
 	// always a trimesh
 
 	struct Face {
-		Vector3 normal;
+		Hector3 normal;
 		int indices[3] = {};
 	};
 
-	Vector<Face> faces;
-	Vector<Vector3> vertices;
+	Hector<Face> faces;
+	Hector<Hector3> vertices;
 
 	struct BVH {
 		AABB aabb;
@@ -324,29 +324,29 @@ struct GodotConcavePolygonShape3D : public GodotConcaveShape3D {
 		int face_index = 0;
 	};
 
-	Vector<BVH> bvh;
+	Hector<BVH> bvh;
 
 	struct _CullParams {
 		AABB aabb;
 		QueryCallback callback = nullptr;
 		void *userdata = nullptr;
 		const Face *faces = nullptr;
-		const Vector3 *vertices = nullptr;
+		const Hector3 *vertices = nullptr;
 		const BVH *bvh = nullptr;
 		GodotFaceShape3D *face = nullptr;
 	};
 
 	struct _SegmentCullParams {
-		Vector3 from;
-		Vector3 to;
-		Vector3 dir;
+		Hector3 from;
+		Hector3 to;
+		Hector3 dir;
 		const Face *faces = nullptr;
-		const Vector3 *vertices = nullptr;
+		const Hector3 *vertices = nullptr;
 		const BVH *bvh = nullptr;
 		GodotFaceShape3D *face = nullptr;
 
-		Vector3 result;
-		Vector3 normal;
+		Hector3 result;
+		Hector3 normal;
 		int face_index = -1;
 		real_t min_d = 1e20;
 		int collisions = 0;
@@ -359,23 +359,23 @@ struct GodotConcavePolygonShape3D : public GodotConcaveShape3D {
 
 	void _fill_bvh(_Volume_BVH *p_bvh_tree, BVH *p_bvh_array, int &p_idx);
 
-	void _setup(const Vector<Vector3> &p_faces, bool p_backface_collision);
+	void _setup(const Hector<Hector3> &p_faces, bool p_backface_collision);
 
 public:
-	Vector<Vector3> get_faces() const;
+	Hector<Hector3> get_faces() const;
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_CONCAVE_POLYGON; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
 
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
 	virtual void cull(const AABB &p_local_aabb, QueryCallback p_callback, void *p_userdata, bool p_invert_backface_collision) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -384,17 +384,17 @@ public:
 };
 
 struct GodotHeightMapShape3D : public GodotConcaveShape3D {
-	Vector<real_t> heights;
+	Hector<real_t> heights;
 	int width = 0;
 	int depth = 0;
-	Vector3 local_origin;
+	Hector3 local_origin;
 
 	// Accelerator.
 	struct Range {
 		real_t min = 0.0;
 		real_t max = 0.0;
 	};
-	LocalVector<Range> bounds_grid;
+	LocalHector<Range> bounds_grid;
 	int bounds_grid_width = 0;
 	int bounds_grid_depth = 0;
 
@@ -408,37 +408,37 @@ struct GodotHeightMapShape3D : public GodotConcaveShape3D {
 		return heights[(p_z * width) + p_x];
 	}
 
-	_FORCE_INLINE_ void _get_point(int p_x, int p_z, Vector3 &r_point) const {
+	_FORCE_INLINE_ void _get_point(int p_x, int p_z, Hector3 &r_point) const {
 		r_point.x = p_x - 0.5 * (width - 1.0);
 		r_point.y = _get_height(p_x, p_z);
 		r_point.z = p_z - 0.5 * (depth - 1.0);
 	}
 
-	void _get_cell(const Vector3 &p_point, int &r_x, int &r_y, int &r_z) const;
+	void _get_cell(const Hector3 &p_point, int &r_x, int &r_y, int &r_z) const;
 
 	void _build_accelerator();
 
 	template <typename ProcessFunction>
-	bool _intersect_grid_segment(ProcessFunction &p_process, const Vector3 &p_begin, const Vector3 &p_end, int p_width, int p_depth, const Vector3 &offset, Vector3 &r_point, Vector3 &r_normal) const;
+	bool _intersect_grid_segment(ProcessFunction &p_process, const Hector3 &p_begin, const Hector3 &p_end, int p_width, int p_depth, const Hector3 &offset, Hector3 &r_point, Hector3 &r_normal) const;
 
-	void _setup(const Vector<real_t> &p_heights, int p_width, int p_depth, real_t p_min_height, real_t p_max_height);
+	void _setup(const Hector<real_t> &p_heights, int p_width, int p_depth, real_t p_min_height, real_t p_max_height);
 
 public:
-	Vector<real_t> get_heights() const;
+	Hector<real_t> get_heights() const;
 	int get_width() const;
 	int get_depth() const;
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_HEIGHTMAP; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_point, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_point, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 	virtual void cull(const AABB &p_local_aabb, QueryCallback p_callback, void *p_userdata, bool p_invert_backface_collision) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override;
 	virtual Variant get_data() const override;
@@ -448,23 +448,23 @@ public:
 
 //used internally
 struct GodotFaceShape3D : public GodotShape3D {
-	Vector3 normal; //cache
-	Vector3 vertex[3];
+	Hector3 normal; //cache
+	Hector3 vertex[3];
 	bool backface_collision = false;
 	bool invert_backface_collision = false;
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_CONCAVE_POLYGON; }
 
-	const Vector3 &get_vertex(int p_idx) const { return vertex[p_idx]; }
+	const Hector3 &get_vertex(int p_idx) const { return vertex[p_idx]; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
-	virtual Vector3 get_support(const Vector3 &p_normal) const override;
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override;
+	virtual Hector3 get_support(const Hector3 &p_normal) const override;
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override;
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	virtual bool intersect_point(const Hector3 &p_point) const override;
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override;
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override;
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override;
 
 	virtual void set_data(const Variant &p_data) override {}
 	virtual Variant get_data() const override { return Variant(); }
@@ -474,12 +474,12 @@ struct GodotFaceShape3D : public GodotShape3D {
 
 struct GodotMotionShape3D : public GodotShape3D {
 	GodotShape3D *shape = nullptr;
-	Vector3 motion;
+	Hector3 motion;
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_CONVEX_POLYGON; }
 
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override {
-		Vector3 cast = p_transform.basis.xform(motion);
+	virtual void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override {
+		Hector3 cast = p_transform.basis.xform(motion);
 		real_t mina, maxa;
 		real_t minb, maxb;
 		Transform3D ofsb = p_transform;
@@ -490,20 +490,20 @@ struct GodotMotionShape3D : public GodotShape3D {
 		r_max = MAX(maxa, maxb);
 	}
 
-	virtual Vector3 get_support(const Vector3 &p_normal) const override {
-		Vector3 support = shape->get_support(p_normal);
+	virtual Hector3 get_support(const Hector3 &p_normal) const override {
+		Hector3 support = shape->get_support(p_normal);
 		if (p_normal.dot(motion) > 0) {
 			support += motion;
 		}
 		return support;
 	}
 
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override { return false; }
-	virtual bool intersect_point(const Vector3 &p_point) const override { return false; }
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override { return p_point; }
+	virtual void get_supports(const Hector3 &p_normal, int p_max, Hector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
+	virtual bool intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override { return false; }
+	virtual bool intersect_point(const Hector3 &p_point) const override { return false; }
+	virtual Hector3 get_closest_point_to(const Hector3 &p_point) const override { return p_point; }
 
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override { return Vector3(); }
+	virtual Hector3 get_moment_of_inertia(real_t p_mass) const override { return Hector3(); }
 
 	virtual void set_data(const Variant &p_data) override {}
 	virtual Variant get_data() const override { return Variant(); }

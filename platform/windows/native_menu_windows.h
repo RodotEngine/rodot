@@ -81,7 +81,7 @@ public:
 	virtual void free_menu(const RID &p_rid) override;
 
 	virtual Size2 get_size(const RID &p_rid) const override;
-	virtual void popup(const RID &p_rid, const Vector2i &p_position) override;
+	virtual void popup(const RID &p_rid, const Hector2i &p_position) override;
 
 	virtual void set_interface_direction(const RID &p_rid, bool p_is_rtl) override;
 	virtual void set_popup_open_callback(const RID &p_rid, const Callable &p_callback) override;

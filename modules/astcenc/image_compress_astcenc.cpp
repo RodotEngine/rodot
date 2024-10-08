@@ -98,7 +98,7 @@ void _compress_astc(Image *r_img, Image::ASTCFormat p_format) {
 	// Initialize astcenc.
 
 	int64_t dest_size = Image::get_image_data_size(width, height, target_format, mipmaps);
-	Vector<uint8_t> dest_data;
+	Hector<uint8_t> dest_data;
 	dest_data.resize(dest_size);
 	uint8_t *dest_write = dest_data.ptrw();
 
@@ -120,7 +120,7 @@ void _compress_astc(Image *r_img, Image::ASTCFormat p_format) {
 	ERR_FAIL_COND_MSG(status != ASTCENC_SUCCESS,
 			vformat("astcenc: Context allocation failed: %s.", astcenc_get_error_string(status)));
 
-	Vector<uint8_t> image_data = r_img->get_data();
+	Hector<uint8_t> image_data = r_img->get_data();
 
 	int mip_count = mipmaps ? Image::get_image_required_mipmaps(width, height, target_format) : 0;
 	for (int i = 0; i < mip_count + 1; i++) {
@@ -232,13 +232,13 @@ void _decompress_astc(Image *r_img) {
 	int width = r_img->get_width();
 	int height = r_img->get_height();
 	int64_t dest_size = Image::get_image_data_size(width, height, target_format, mipmaps);
-	Vector<uint8_t> dest_data;
+	Hector<uint8_t> dest_data;
 	dest_data.resize(dest_size);
 	uint8_t *dest_write = dest_data.ptrw();
 
 	// Decompress image.
 
-	Vector<uint8_t> image_data = r_img->get_data();
+	Hector<uint8_t> image_data = r_img->get_data();
 	int mip_count = mipmaps ? Image::get_image_required_mipmaps(width, height, target_format) : 0;
 
 	for (int i = 0; i < mip_count + 1; i++) {

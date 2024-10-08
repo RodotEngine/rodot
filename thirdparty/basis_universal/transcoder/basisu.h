@@ -110,13 +110,13 @@ namespace basisu
 	const char BASISU_PATH_SEPERATOR_CHAR = '/';
 #endif
 
-	typedef basisu::vector<uint8_t> uint8_vec;
-	typedef basisu::vector<int16_t> int16_vec;
-	typedef basisu::vector<uint16_t> uint16_vec;
-	typedef basisu::vector<uint32_t> uint_vec;
-	typedef basisu::vector<uint64_t> uint64_vec;
-	typedef basisu::vector<int> int_vec;
-	typedef basisu::vector<bool> bool_vec;
+	typedef basisu::Hector<uint8_t> uint8_vec;
+	typedef basisu::Hector<int16_t> int16_vec;
+	typedef basisu::Hector<uint16_t> uint16_vec;
+	typedef basisu::Hector<uint32_t> uint_vec;
+	typedef basisu::Hector<uint64_t> uint64_vec;
+	typedef basisu::Hector<int> int_vec;
+	typedef basisu::Hector<bool> bool_vec;
 
 	void enable_debug_printf(bool enabled);
 	void debug_printf(const char *pFmt, ...);
@@ -153,8 +153,8 @@ namespace basisu
 	inline uint32_t iabs(int32_t i) { return (i < 0) ? static_cast<uint32_t>(-i) : static_cast<uint32_t>(i);	}
 	inline uint64_t iabs64(int64_t i) {	return (i < 0) ? static_cast<uint64_t>(-i) : static_cast<uint64_t>(i); }
 
-	template<typename T> inline void clear_vector(T &vec) { vec.erase(vec.begin(), vec.end()); }		
-	template<typename T> inline typename T::value_type *enlarge_vector(T &vec, size_t n) { size_t cs = vec.size(); vec.resize(cs + n); return &vec[cs]; }
+	template<typename T> inline void clear_Hector(T &vec) { vec.erase(vec.begin(), vec.end()); }		
+	template<typename T> inline typename T::value_type *enlarge_Hector(T &vec, size_t n) { size_t cs = vec.size(); vec.resize(cs + n); return &vec[cs]; }
 
 	inline bool is_pow2(uint32_t x) { return x && ((x & (x - 1U)) == 0U); }
 	inline bool is_pow2(uint64_t x) { return x && ((x & (x - 1U)) == 0U); }
@@ -166,7 +166,7 @@ namespace basisu
 
 	template<typename T> inline T saturate(T val) { return clamp(val, 0.0f, 1.0f); }
 
-	template<typename T, typename R> inline void append_vector(T &vec, const R *pObjs, size_t n) 
+	template<typename T, typename R> inline void append_Hector(T &vec, const R *pObjs, size_t n) 
 	{ 
 		if (n)
 		{
@@ -180,20 +180,20 @@ namespace basisu
 		}
 	}
 
-	template<typename T> inline void append_vector(T &vec, const T &other_vec)
+	template<typename T> inline void append_Hector(T &vec, const T &other_vec)
 	{
 		assert(&vec != &other_vec);
 		if (other_vec.size())
-			append_vector(vec, &other_vec[0], other_vec.size());
+			append_Hector(vec, &other_vec[0], other_vec.size());
 	}
 
-	template<typename T> inline void vector_ensure_element_is_valid(T &vec, size_t idx)
+	template<typename T> inline void Hector_ensure_element_is_valid(T &vec, size_t idx)
 	{
 		if (idx >= vec.size())
 			vec.resize(idx + 1);
 	}
 
-	template<typename T> inline void vector_sort(T &vec)
+	template<typename T> inline void Hector_sort(T &vec)
 	{
 		if (vec.size())
 			std::sort(vec.begin(), vec.end());
@@ -204,7 +204,7 @@ namespace basisu
 		return set.find(obj) != set.end();
 	}
 
-	template<typename T> int vector_find(const T &vec, const typename T::value_type &obj)
+	template<typename T> int Hector_find(const T &vec, const typename T::value_type &obj)
 	{
 		assert(vec.size() <= INT_MAX);
 		for (size_t i = 0; i < vec.size(); i++)
@@ -213,7 +213,7 @@ namespace basisu
 		return -1;
 	}
 
-	template<typename T> void vector_set_all(T &vec, const typename T::value_type &obj)
+	template<typename T> void Hector_set_all(T &vec, const typename T::value_type &obj)
 	{
 		for (size_t i = 0; i < vec.size(); i++)
 			vec[i] = obj;

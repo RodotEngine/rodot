@@ -147,35 +147,35 @@ namespace basisu
 	{
 		const basisu_backend_slice_desc_vec &slice_descs = encoder_output.m_slice_desc;
 
-		append_vector(m_comp_data, reinterpret_cast<const uint8_t *>(&m_header), sizeof(m_header));
+		append_Hector(m_comp_data, reinterpret_cast<const uint8_t *>(&m_header), sizeof(m_header));
 
 		assert(m_comp_data.size() == m_slice_descs_file_ofs);
-		append_vector(m_comp_data, reinterpret_cast<const uint8_t*>(&m_images_descs[0]), m_images_descs.size() * sizeof(m_images_descs[0]));
+		append_Hector(m_comp_data, reinterpret_cast<const uint8_t*>(&m_images_descs[0]), m_images_descs.size() * sizeof(m_images_descs[0]));
 
 		if (!encoder_output.m_uses_global_codebooks)
 		{
 			if (encoder_output.m_endpoint_palette.size())
 			{
 				assert(m_comp_data.size() == m_endpoint_cb_file_ofs);
-				append_vector(m_comp_data, reinterpret_cast<const uint8_t*>(&encoder_output.m_endpoint_palette[0]), encoder_output.m_endpoint_palette.size());
+				append_Hector(m_comp_data, reinterpret_cast<const uint8_t*>(&encoder_output.m_endpoint_palette[0]), encoder_output.m_endpoint_palette.size());
 			}
 
 			if (encoder_output.m_selector_palette.size())
 			{
 				assert(m_comp_data.size() == m_selector_cb_file_ofs);
-				append_vector(m_comp_data, reinterpret_cast<const uint8_t*>(&encoder_output.m_selector_palette[0]), encoder_output.m_selector_palette.size());
+				append_Hector(m_comp_data, reinterpret_cast<const uint8_t*>(&encoder_output.m_selector_palette[0]), encoder_output.m_selector_palette.size());
 			}
 		}
 
 		if (encoder_output.m_slice_image_tables.size())
 		{
 			assert(m_comp_data.size() == m_tables_file_ofs);
-			append_vector(m_comp_data, reinterpret_cast<const uint8_t*>(&encoder_output.m_slice_image_tables[0]), encoder_output.m_slice_image_tables.size());
+			append_Hector(m_comp_data, reinterpret_cast<const uint8_t*>(&encoder_output.m_slice_image_tables[0]), encoder_output.m_slice_image_tables.size());
 		}
 
 		assert(m_comp_data.size() == m_first_image_file_ofs);
 		for (uint32_t i = 0; i < slice_descs.size(); i++)
-			append_vector(m_comp_data, &encoder_output.m_slice_image_data[i][0], encoder_output.m_slice_image_data[i].size());
+			append_Hector(m_comp_data, &encoder_output.m_slice_image_data[i][0], encoder_output.m_slice_image_data[i].size());
 
 		assert(m_comp_data.size() == m_total_file_size);
 	}

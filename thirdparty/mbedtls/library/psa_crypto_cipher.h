@@ -113,7 +113,7 @@ psa_status_t mbedtls_psa_cipher_decrypt_setup(
 
 /** Set the IV for a symmetric encryption or decryption operation.
  *
- * This function sets the IV (initialization vector), nonce
+ * This function sets the IV (initialization Hector), nonce
  * or initial counter value for the encryption or decryption operation.
  *
  * \note The signature of this function is that of a PSA driver

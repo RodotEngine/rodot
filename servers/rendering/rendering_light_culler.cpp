@@ -131,8 +131,8 @@ bool RenderingLightCuller::cull_directional_light(const RendererSceneCull::Insta
 
 	LightCullPlanes &cull_planes = data.directional_cull_planes[p_directional_light_id];
 
-	Vector3 mins = Vector3(p_bound.bounds[0], p_bound.bounds[1], p_bound.bounds[2]);
-	Vector3 maxs = Vector3(p_bound.bounds[3], p_bound.bounds[4], p_bound.bounds[5]);
+	Hector3 mins = Hector3(p_bound.bounds[0], p_bound.bounds[1], p_bound.bounds[2]);
+	Hector3 maxs = Hector3(p_bound.bounds[3], p_bound.bounds[4], p_bound.bounds[5]);
 	AABB bb(mins, maxs - mins);
 
 	real_t r_min, r_max;
@@ -261,7 +261,7 @@ bool RenderingLightCuller::add_light_camera_planes_directional(LightCullPlanes &
 
 // Each edge forms a plane.
 #ifdef RENDERING_LIGHT_CULLER_CALCULATE_LUT
-	const LocalVector<uint8_t> &entry = _calculated_LUT[lookup];
+	const LocalHector<uint8_t> &entry = _calculated_LUT[lookup];
 
 	// each edge forms a plane
 	int n_edges = entry.size() - 1;
@@ -273,11 +273,11 @@ bool RenderingLightCuller::add_light_camera_planes_directional(LightCullPlanes &
 	for (int e = 0; e < n_edges; e++) {
 		int i0 = entry[e];
 		int i1 = entry[e + 1];
-		const Vector3 &pt0 = data.frustum_points[i0];
-		const Vector3 &pt1 = data.frustum_points[i1];
+		const Hector3 &pt0 = data.frustum_points[i0];
+		const Hector3 &pt1 = data.frustum_points[i1];
 
 		// Create a third point from the light direction.
-		Vector3 pt2 = pt0 - p_light_source.dir;
+		Hector3 pt2 = pt0 - p_light_source.dir;
 
 		if (!_is_colinear_tri(pt0, pt1, pt2)) {
 			// Create plane from 3 points.
@@ -291,11 +291,11 @@ bool RenderingLightCuller::add_light_camera_planes_directional(LightCullPlanes &
 		int i0 = entry[n_edges]; // Last.
 		int i1 = entry[0]; // First.
 
-		const Vector3 &pt0 = data.frustum_points[i0];
-		const Vector3 &pt1 = data.frustum_points[i1];
+		const Hector3 &pt0 = data.frustum_points[i0];
+		const Hector3 &pt1 = data.frustum_points[i1];
 
 		// Create a third point from the light direction.
-		Vector3 pt2 = pt0 - p_light_source.dir;
+		Hector3 pt2 = pt0 - p_light_source.dir;
 
 		if (!_is_colinear_tri(pt0, pt1, pt2)) {
 			// Create plane from 3 points.
@@ -371,7 +371,7 @@ bool RenderingLightCuller::_add_light_camera_planes(LightCullPlanes &r_cull_plan
 		}
 	} else {
 		// SPOTLIGHTs, more complex to cull.
-		Vector3 pos_end = p_light_source.pos + (p_light_source.dir * p_light_source.range);
+		Hector3 pos_end = p_light_source.pos + (p_light_source.dir * p_light_source.range);
 
 		// This is the radius of the cone at distance 1.
 		float radius_at_dist_one = Math::tan(Math::deg_to_rad(p_light_source.angle));
@@ -431,13 +431,13 @@ bool RenderingLightCuller::_add_light_camera_planes(LightCullPlanes &r_cull_plan
 	uint8_t *entry = &data.LUT_entries[lookup][0];
 	int n_edges = data.LUT_entry_sizes[lookup] - 1;
 
-	const Vector3 &pt2 = p_light_source.pos;
+	const Hector3 &pt2 = p_light_source.pos;
 
 	for (int e = 0; e < n_edges; e++) {
 		int i0 = entry[e];
 		int i1 = entry[e + 1];
-		const Vector3 &pt0 = data.frustum_points[i0];
-		const Vector3 &pt1 = data.frustum_points[i1];
+		const Hector3 &pt0 = data.frustum_points[i0];
+		const Hector3 &pt1 = data.frustum_points[i1];
 
 		if (!_is_colinear_tri(pt0, pt1, pt2)) {
 			// Create plane from 3 points.
@@ -451,8 +451,8 @@ bool RenderingLightCuller::_add_light_camera_planes(LightCullPlanes &r_cull_plan
 		int i0 = entry[n_edges]; // Last.
 		int i1 = entry[0]; // First.
 
-		const Vector3 &pt0 = data.frustum_points[i0];
-		const Vector3 &pt1 = data.frustum_points[i1];
+		const Hector3 &pt0 = data.frustum_points[i0];
+		const Hector3 &pt1 = data.frustum_points[i1];
 
 		if (!_is_colinear_tri(pt0, pt1, pt2)) {
 			// Create plane from 3 points.
@@ -679,7 +679,7 @@ void RenderingLightCuller::debug_print_LUT_as_table() {
 	print_line("Copy this to LUT_entry_sizes:\n");
 	String sz = "{";
 	for (int n = 0; n < LUT_SIZE; n++) {
-		const LocalVector<uint8_t> &entry = _calculated_LUT[n];
+		const LocalHector<uint8_t> &entry = _calculated_LUT[n];
 
 		sz += itos(entry.size()) + ", ";
 	}
@@ -688,7 +688,7 @@ void RenderingLightCuller::debug_print_LUT_as_table() {
 	print_line("\nCopy this to LUT_entries:\n");
 
 	for (int n = 0; n < LUT_SIZE; n++) {
-		const LocalVector<uint8_t> &entry = _calculated_LUT[n];
+		const LocalHector<uint8_t> &entry = _calculated_LUT[n];
 
 		String sz = "{";
 
@@ -719,7 +719,7 @@ void RenderingLightCuller::debug_print_LUT() {
 		sz += Data::plane_bitfield_to_string(n);
 		print_line(sz);
 
-		const LocalVector<uint8_t> &entry = _calculated_LUT[n];
+		const LocalHector<uint8_t> &entry = _calculated_LUT[n];
 
 		sz = "\t" + string_LUT_entry(entry);
 
@@ -727,7 +727,7 @@ void RenderingLightCuller::debug_print_LUT() {
 	}
 }
 
-String RenderingLightCuller::string_LUT_entry(const LocalVector<uint8_t> &p_entry) {
+String RenderingLightCuller::string_LUT_entry(const LocalHector<uint8_t> &p_entry) {
 	String string;
 
 	for (uint32_t n = 0; n < p_entry.size(); n++) {
@@ -741,7 +741,7 @@ String RenderingLightCuller::string_LUT_entry(const LocalVector<uint8_t> &p_entr
 	return string;
 }
 
-String RenderingLightCuller::debug_string_LUT_entry(const LocalVector<uint8_t> &p_entry, bool p_pair) {
+String RenderingLightCuller::debug_string_LUT_entry(const LocalHector<uint8_t> &p_entry, bool p_pair) {
 	String string;
 
 	for (uint32_t i = 0; i < p_entry.size(); i++) {
@@ -779,7 +779,7 @@ void RenderingLightCuller::add_LUT(int p_plane_0, int p_plane_1, PointOrder p_pt
 
 void RenderingLightCuller::add_LUT_entry(uint32_t p_entry_id, PointOrder p_pts[2]) {
 	DEV_ASSERT(p_entry_id < LUT_SIZE);
-	LocalVector<uint8_t> &entry = _calculated_LUT[p_entry_id];
+	LocalHector<uint8_t> &entry = _calculated_LUT[p_entry_id];
 
 	entry.push_back(p_pts[0]);
 	entry.push_back(p_pts[1]);
@@ -787,14 +787,14 @@ void RenderingLightCuller::add_LUT_entry(uint32_t p_entry_id, PointOrder p_pts[2
 
 void RenderingLightCuller::compact_LUT_entry(uint32_t p_entry_id) {
 	DEV_ASSERT(p_entry_id < LUT_SIZE);
-	LocalVector<uint8_t> &entry = _calculated_LUT[p_entry_id];
+	LocalHector<uint8_t> &entry = _calculated_LUT[p_entry_id];
 
 	int num_pairs = entry.size() / 2;
 
 	if (num_pairs == 0)
 		return;
 
-	LocalVector<uint8_t> temp;
+	LocalHector<uint8_t> temp;
 
 	String string;
 	string = "Compact LUT" + itos(p_entry_id) + ":\t";

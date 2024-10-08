@@ -164,7 +164,7 @@ Error ConfigFile::save(const String &p_path) {
 	return _internal_save(file);
 }
 
-Error ConfigFile::save_encrypted(const String &p_path, const Vector<uint8_t> &p_key) {
+Error ConfigFile::save_encrypted(const String &p_path, const Hector<uint8_t> &p_key) {
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE, &err);
 
@@ -232,7 +232,7 @@ Error ConfigFile::load(const String &p_path) {
 	return _internal_load(p_path, f);
 }
 
-Error ConfigFile::load_encrypted(const String &p_path, const Vector<uint8_t> &p_key) {
+Error ConfigFile::load_encrypted(const String &p_path, const Hector<uint8_t> &p_key) {
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 

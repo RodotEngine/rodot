@@ -32,28 +32,28 @@
 
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> CylinderShape3D::get_debug_mesh_lines() const {
+Hector<Hector3> CylinderShape3D::get_debug_mesh_lines() const {
 	float c_radius = get_radius();
 	float c_height = get_height();
 
-	Vector<Vector3> points;
+	Hector<Hector3> points;
 
-	Vector3 d(0, c_height * 0.5, 0);
+	Hector3 d(0, c_height * 0.5, 0);
 	for (int i = 0; i < 360; i++) {
 		float ra = Math::deg_to_rad((float)i);
 		float rb = Math::deg_to_rad((float)i + 1);
-		Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * c_radius;
-		Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * c_radius;
+		Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * c_radius;
+		Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * c_radius;
 
-		points.push_back(Vector3(a.x, 0, a.y) + d);
-		points.push_back(Vector3(b.x, 0, b.y) + d);
+		points.push_back(Hector3(a.x, 0, a.y) + d);
+		points.push_back(Hector3(b.x, 0, b.y) + d);
 
-		points.push_back(Vector3(a.x, 0, a.y) - d);
-		points.push_back(Vector3(b.x, 0, b.y) - d);
+		points.push_back(Hector3(a.x, 0, a.y) - d);
+		points.push_back(Hector3(b.x, 0, b.y) - d);
 
 		if (i % 90 == 0) {
-			points.push_back(Vector3(a.x, 0, a.y) + d);
-			points.push_back(Vector3(a.x, 0, a.y) - d);
+			points.push_back(Hector3(a.x, 0, a.y) + d);
+			points.push_back(Hector3(a.x, 0, a.y) - d);
 		}
 	}
 
@@ -61,7 +61,7 @@ Vector<Vector3> CylinderShape3D::get_debug_mesh_lines() const {
 }
 
 real_t CylinderShape3D::get_enclosing_radius() const {
-	return Vector2(radius, height * 0.5).length();
+	return Hector2(radius, height * 0.5).length();
 }
 
 void CylinderShape3D::_update_shape() {

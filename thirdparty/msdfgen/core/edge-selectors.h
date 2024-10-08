@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include "Hector2.hpp"
 #include "SignedDistance.hpp"
 #include "edge-segments.h"
 
@@ -50,7 +50,7 @@ public:
         EdgeCache();
     };
 
-    static bool getPseudoDistance(double &distance, const Vector2 &ep, const Vector2 &edgeDir);
+    static bool getPseudoDistance(double &distance, const Hector2 &ep, const Hector2 &edgeDir);
 
     PseudoDistanceSelectorBase();
     void reset(double delta);

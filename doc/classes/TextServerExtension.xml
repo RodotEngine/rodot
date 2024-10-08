@@ -44,7 +44,7 @@
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="pos" type="Vector2" />
+			<param index="2" name="pos" type="Hector2" />
 			<param index="3" name="index" type="int" />
 			<param index="4" name="color" type="Color" />
 			<description>
@@ -55,7 +55,7 @@
 		<method name="_font_clear_glyphs" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				[b]Required.[/b]
 				Removes all rendered glyph information from the cache entry.
@@ -81,7 +81,7 @@
 		<method name="_font_clear_textures" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				[b]Required.[/b]
 				Removes all textures from font cache entry.
@@ -92,7 +92,7 @@
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="canvas" type="RID" />
 			<param index="2" name="size" type="int" />
-			<param index="3" name="pos" type="Vector2" />
+			<param index="3" name="pos" type="Hector2" />
 			<param index="4" name="index" type="int" />
 			<param index="5" name="color" type="Color" />
 			<description>
@@ -106,7 +106,7 @@
 			<param index="1" name="canvas" type="RID" />
 			<param index="2" name="size" type="int" />
 			<param index="3" name="outline_size" type="int" />
-			<param index="4" name="pos" type="Vector2" />
+			<param index="4" name="pos" type="Hector2" />
 			<param index="5" name="index" type="int" />
 			<param index="6" name="color" type="Color" />
 			<description>
@@ -222,7 +222,7 @@
 			</description>
 		</method>
 		<method name="_font_get_glyph_advance" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="size" type="int" />
 			<param index="2" name="glyph" type="int" />
@@ -255,16 +255,16 @@
 		<method name="_font_get_glyph_list" qualifiers="virtual const">
 			<return type="PackedInt32Array" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				[b]Required.[/b]
 				Returns list of rendered glyphs in the cache entry.
 			</description>
 		</method>
 		<method name="_font_get_glyph_offset" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -272,9 +272,9 @@
 			</description>
 		</method>
 		<method name="_font_get_glyph_size" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -284,7 +284,7 @@
 		<method name="_font_get_glyph_texture_idx" qualifiers="virtual const">
 			<return type="int" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -294,7 +294,7 @@
 		<method name="_font_get_glyph_texture_rid" qualifiers="virtual const">
 			<return type="RID" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -302,9 +302,9 @@
 			</description>
 		</method>
 		<method name="_font_get_glyph_texture_size" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -314,7 +314,7 @@
 		<method name="_font_get_glyph_uv_rect" qualifiers="virtual const">
 			<return type="Rect2" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -330,17 +330,17 @@
 			</description>
 		</method>
 		<method name="_font_get_kerning" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="glyph_pair" type="Vector2i" />
+			<param index="2" name="glyph_pair" type="Hector2i" />
 			<description>
 				[b]Optional.[/b]
 				Returns kerning for the pair of glyphs.
 			</description>
 		</method>
 		<method name="_font_get_kerning_list" qualifiers="virtual const">
-			<return type="Vector2i[]" />
+			<return type="Hector2i[]" />
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="size" type="int" />
 			<description>
@@ -440,11 +440,11 @@
 			</description>
 		</method>
 		<method name="_font_get_size_cache_list" qualifiers="virtual const">
-			<return type="Vector2i[]" />
+			<return type="Hector2i[]" />
 			<param index="0" name="font_rid" type="RID" />
 			<description>
 				[b]Required.[/b]
-				Returns list of the font sizes in the cache. Each size is [Vector2i] with font size and outline size.
+				Returns list of the font sizes in the cache. Each size is [Hector2i] with font size and outline size.
 			</description>
 		</method>
 		<method name="_font_get_spacing" qualifiers="virtual const">
@@ -507,7 +507,7 @@
 		<method name="_font_get_texture_count" qualifiers="virtual const">
 			<return type="int" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				[b]Required.[/b]
 				Returns number of textures used by font cache entry.
@@ -516,7 +516,7 @@
 		<method name="_font_get_texture_image" qualifiers="virtual const">
 			<return type="Image" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -526,7 +526,7 @@
 		<method name="_font_get_texture_offsets" qualifiers="virtual const">
 			<return type="PackedInt32Array" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<description>
 				[b]Optional.[/b]
@@ -614,7 +614,7 @@
 			<param index="0" name="font_rid" type="RID" />
 			<description>
 				[b]Optional.[/b]
-				Returns [code]true[/code] if glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font vector data.
+				Returns [code]true[/code] if glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font Hector data.
 			</description>
 		</method>
 		<method name="_font_is_script_supported" qualifiers="virtual const">
@@ -629,7 +629,7 @@
 		<method name="_font_remove_glyph" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -640,7 +640,7 @@
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="glyph_pair" type="Vector2i" />
+			<param index="2" name="glyph_pair" type="Hector2i" />
 			<description>
 				[b]Optional.[/b]
 				Removes kerning override for the pair of glyphs.
@@ -667,7 +667,7 @@
 		<method name="_font_remove_size_cache" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				[b]Required.[/b]
 				Removes specified font size from the cache entry.
@@ -676,7 +676,7 @@
 		<method name="_font_remove_texture" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<description>
 				[b]Required.[/b]
@@ -686,7 +686,7 @@
 		<method name="_font_render_glyph" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="index" type="int" />
 			<description>
 				[b]Optional.[/b]
@@ -696,7 +696,7 @@
 		<method name="_font_render_range" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="start" type="int" />
 			<param index="3" name="end" type="int" />
 			<description>
@@ -845,7 +845,7 @@
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="size" type="int" />
 			<param index="2" name="glyph" type="int" />
-			<param index="3" name="advance" type="Vector2" />
+			<param index="3" name="advance" type="Hector2" />
 			<description>
 				[b]Required.[/b]
 				Sets glyph advance (offset of the next glyph).
@@ -854,9 +854,9 @@
 		<method name="_font_set_glyph_offset" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
-			<param index="3" name="offset" type="Vector2" />
+			<param index="3" name="offset" type="Hector2" />
 			<description>
 				[b]Required.[/b]
 				Sets glyph offset from the baseline.
@@ -865,9 +865,9 @@
 		<method name="_font_set_glyph_size" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
-			<param index="3" name="gl_size" type="Vector2" />
+			<param index="3" name="gl_size" type="Hector2" />
 			<description>
 				[b]Required.[/b]
 				Sets size of the glyph.
@@ -876,7 +876,7 @@
 		<method name="_font_set_glyph_texture_idx" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<param index="3" name="texture_idx" type="int" />
 			<description>
@@ -887,7 +887,7 @@
 		<method name="_font_set_glyph_uv_rect" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="glyph" type="int" />
 			<param index="3" name="uv_rect" type="Rect2" />
 			<description>
@@ -908,8 +908,8 @@
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
 			<param index="1" name="size" type="int" />
-			<param index="2" name="glyph_pair" type="Vector2i" />
-			<param index="3" name="kerning" type="Vector2" />
+			<param index="2" name="glyph_pair" type="Hector2i" />
+			<param index="3" name="kerning" type="Hector2" />
 			<description>
 				[b]Optional.[/b]
 				Sets kerning for the pair of glyphs.
@@ -949,7 +949,7 @@
 			<param index="1" name="msdf" type="bool" />
 			<description>
 				[b]Optional.[/b]
-				If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font vector data. MSDF rendering allows displaying the font at any scaling factor without blurriness, and without incurring a CPU cost when the font size changes (since the font no longer needs to be rasterized on the CPU). As a downside, font hinting is not available with MSDF. The lack of font hinting may result in less crisp and less readable fonts at small sizes.
+				If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font Hector data. MSDF rendering allows displaying the font at any scaling factor without blurriness, and without incurring a CPU cost when the font size changes (since the font no longer needs to be rasterized on the CPU). As a downside, font hinting is not available with MSDF. The lack of font hinting may result in less crisp and less readable fonts at small sizes.
 			</description>
 		</method>
 		<method name="_font_set_name" qualifiers="virtual">
@@ -1048,7 +1048,7 @@
 		<method name="_font_set_texture_image" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<param index="3" name="image" type="Image" />
 			<description>
@@ -1059,7 +1059,7 @@
 		<method name="_font_set_texture_offsets" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="font_rid" type="RID" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<param index="2" name="texture_index" type="int" />
 			<param index="3" name="offset" type="PackedInt32Array" />
 			<description>
@@ -1155,7 +1155,7 @@
 			</description>
 		</method>
 		<method name="_get_hex_code_box_size" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="size" type="int" />
 			<param index="1" name="index" type="int" />
 			<description>
@@ -1257,7 +1257,7 @@
 			</description>
 		</method>
 		<method name="_parse_structured_text" qualifiers="virtual const">
-			<return type="Vector3i[]" />
+			<return type="Hector3i[]" />
 			<param index="0" name="parser_type" type="int" enum="TextServer.StructuredTextParser" />
 			<param index="1" name="args" type="Array" />
 			<param index="2" name="text" type="String" />
@@ -1315,7 +1315,7 @@
 			<return type="bool" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="key" type="Variant" />
-			<param index="2" name="size" type="Vector2" />
+			<param index="2" name="size" type="Hector2" />
 			<param index="3" name="inline_align" type="int" enum="InlineAlignment" />
 			<param index="4" name="length" type="int" />
 			<param index="5" name="baseline" type="float" />
@@ -1359,7 +1359,7 @@
 			<return type="void" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="canvas" type="RID" />
-			<param index="2" name="pos" type="Vector2" />
+			<param index="2" name="pos" type="Hector2" />
 			<param index="3" name="clip_l" type="float" />
 			<param index="4" name="clip_r" type="float" />
 			<param index="5" name="color" type="Color" />
@@ -1372,7 +1372,7 @@
 			<return type="void" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="canvas" type="RID" />
-			<param index="2" name="pos" type="Vector2" />
+			<param index="2" name="pos" type="Hector2" />
 			<param index="3" name="clip_l" type="float" />
 			<param index="4" name="clip_r" type="float" />
 			<param index="5" name="outline_size" type="int" />
@@ -1501,7 +1501,7 @@
 			</description>
 		</method>
 		<method name="_shaped_text_get_grapheme_bounds" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="pos" type="int" />
 			<description>
@@ -1550,7 +1550,7 @@
 			</description>
 		</method>
 		<method name="_shaped_text_get_object_range" qualifiers="virtual const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="key" type="Variant" />
 			<description>
@@ -1608,7 +1608,7 @@
 			</description>
 		</method>
 		<method name="_shaped_text_get_range" qualifiers="virtual const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="shaped" type="RID" />
 			<description>
 				[b]Required.[/b]
@@ -1616,7 +1616,7 @@
 			</description>
 		</method>
 		<method name="_shaped_text_get_selection" qualifiers="virtual const">
-			<return type="PackedVector2Array" />
+			<return type="PackedHector2Array" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="start" type="int" />
 			<param index="2" name="end" type="int" />
@@ -1626,7 +1626,7 @@
 			</description>
 		</method>
 		<method name="_shaped_text_get_size" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="shaped" type="RID" />
 			<description>
 				[b]Required.[/b]
@@ -1760,7 +1760,7 @@
 			<return type="bool" />
 			<param index="0" name="shaped" type="RID" />
 			<param index="1" name="key" type="Variant" />
-			<param index="2" name="size" type="Vector2" />
+			<param index="2" name="size" type="Hector2" />
 			<param index="3" name="inline_align" type="int" enum="InlineAlignment" />
 			<param index="4" name="baseline" type="float" />
 			<description>

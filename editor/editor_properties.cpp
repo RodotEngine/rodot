@@ -34,7 +34,7 @@
 #include "editor/create_dialog.h"
 #include "editor/editor_node.h"
 #include "editor/editor_properties_array_dict.h"
-#include "editor/editor_properties_vector.h"
+#include "editor/editor_properties_Hector.h"
 #include "editor/editor_resource_picker.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_string_names.h"
@@ -210,7 +210,7 @@ void EditorPropertyMultilineText::_notification(int p_what) {
 				font = get_theme_font(SceneStringName(font), SNAME("TextEdit"));
 				font_size = get_theme_font_size(SceneStringName(font_size), SNAME("TextEdit"));
 			}
-			text->set_custom_minimum_size(Vector2(0, font->get_height(font_size) * 6));
+			text->set_custom_minimum_size(Hector2(0, font->get_height(font_size) * 6));
 		} break;
 	}
 }
@@ -315,7 +315,7 @@ void EditorPropertyTextEnum::update_property() {
 	}
 }
 
-void EditorPropertyTextEnum::setup(const Vector<String> &p_options, bool p_string_name, bool p_loose_mode) {
+void EditorPropertyTextEnum::setup(const Hector<String> &p_options, bool p_string_name, bool p_loose_mode) {
 	string_name = p_string_name;
 	loose_mode = p_loose_mode;
 
@@ -507,7 +507,7 @@ void EditorPropertyPath::update_property() {
 	path->set_tooltip_text(full_path);
 }
 
-void EditorPropertyPath::setup(const Vector<String> &p_extensions, bool p_folder, bool p_global) {
+void EditorPropertyPath::setup(const Hector<String> &p_extensions, bool p_folder, bool p_global) {
 	extensions = p_extensions;
 	folder = p_folder;
 	global = p_global;
@@ -542,7 +542,7 @@ void EditorPropertyPath::_drop_data_fw(const Point2 &p_point, const Variant &p_d
 	if (String(drag_data["type"]) != "files") {
 		return;
 	}
-	const Vector<String> filesPaths = drag_data["files"];
+	const Hector<String> filesPaths = drag_data["files"];
 	if (filesPaths.size() == 0) {
 		return;
 	}
@@ -559,7 +559,7 @@ bool EditorPropertyPath::_can_drop_data_fw(const Point2 &p_point, const Variant 
 	if (String(drag_data["type"]) != "files") {
 		return false;
 	}
-	const Vector<String> filesPaths = drag_data["files"];
+	const Hector<String> filesPaths = drag_data["files"];
 	if (filesPaths.size() == 0) {
 		return false;
 	}
@@ -685,12 +685,12 @@ void EditorPropertyEnum::update_property() {
 	}
 }
 
-void EditorPropertyEnum::setup(const Vector<String> &p_options) {
+void EditorPropertyEnum::setup(const Hector<String> &p_options) {
 	options->clear();
-	HashMap<int64_t, Vector<String>> items;
+	HashMap<int64_t, Hector<String>> items;
 	int64_t current_val = 0;
 	for (const String &option : p_options) {
-		Vector<String> text_split = option.split(":");
+		Hector<String> text_split = option.split(":");
 		if (text_split.size() != 1) {
 			current_val = text_split[1].to_int();
 		}
@@ -698,7 +698,7 @@ void EditorPropertyEnum::setup(const Vector<String> &p_options) {
 		current_val += 1;
 	}
 
-	for (const KeyValue<int64_t, Vector<String>> &K : items) {
+	for (const KeyValue<int64_t, Hector<String>> &K : items) {
 		options->add_item(String(", ").join(K.value));
 		options->set_item_metadata(-1, K.key);
 	}
@@ -745,7 +745,7 @@ void EditorPropertyFlags::update_property() {
 	}
 }
 
-void EditorPropertyFlags::setup(const Vector<String> &p_options) {
+void EditorPropertyFlags::setup(const Hector<String> &p_options) {
 	ERR_FAIL_COND(flags.size());
 
 	bool first = true;
@@ -759,7 +759,7 @@ void EditorPropertyFlags::setup(const Vector<String> &p_options) {
 		const int flag_index = flags.size(); // Index of the next element (added by the code below).
 
 		// Value for a flag can be explicitly overridden.
-		Vector<String> text_split = option.split(":");
+		Hector<String> text_split = option.split(":");
 		if (text_split.size() != 1) {
 			current_val = text_split[1].to_int();
 		} else {
@@ -837,7 +837,7 @@ EditorPropertyLayersGrid::EditorPropertyLayersGrid() {
 Size2 EditorPropertyLayersGrid::get_grid_size() const {
 	Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 	int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
-	return Vector2(0, font->get_height(font_size) * 3);
+	return Hector2(0, font->get_height(font_size) * 3);
 }
 
 void EditorPropertyLayersGrid::set_read_only(bool p_read_only) {
@@ -867,7 +867,7 @@ String EditorPropertyLayersGrid::get_tooltip(const Point2 &p_pos) const {
 	return String();
 }
 
-void EditorPropertyLayersGrid::_update_hovered(const Vector2 &p_position) {
+void EditorPropertyLayersGrid::_update_hovered(const Hector2 &p_position) {
 	bool expand_was_hovered = expand_hovered;
 	expand_hovered = expand_rect.has_point(p_position);
 	if (expand_hovered != expand_was_hovered) {
@@ -1008,7 +1008,7 @@ void EditorPropertyLayersGrid::_notification(int p_what) {
 
 						Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 						int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
-						Vector2 offset;
+						Hector2 offset;
 						offset.y = rect2.size.y * 0.75;
 
 						draw_string(font, rect2.position + offset, itos(layer_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect2.size.x, font_size, on ? text_color_on : text_color);
@@ -1171,8 +1171,8 @@ void EditorPropertyLayers::setup(LayerType p_layer_type) {
 		} break;
 	}
 
-	Vector<String> names;
-	Vector<String> tooltips;
+	Hector<String> names;
+	Hector<String> tooltips;
 	for (int i = 0; i < layer_count; i++) {
 		String name;
 
@@ -1232,7 +1232,7 @@ void EditorPropertyLayers::_button_pressed() {
 
 	Rect2 gp = button->get_screen_rect();
 	layers->reset_size();
-	Vector2 popup_pos = gp.position - Vector2(layers->get_contents_minimum_size().x, 0);
+	Hector2 popup_pos = gp.position - Hector2(layers->get_contents_minimum_size().x, 0);
 	layers->set_position(popup_pos);
 	layers->popup();
 }
@@ -1539,7 +1539,7 @@ void EditorPropertyEasing::_draw_easing() {
 		line_color = get_theme_color(is_read_only() ? SNAME("font_uneditable_color") : SceneStringName(font_color), SNAME("LineEdit")) * Color(1, 1, 1, 0.9);
 	}
 
-	Vector<Point2> points;
+	Hector<Point2> points;
 	for (int i = 0; i <= point_count; i++) {
 		float ifl = i / float(point_count);
 
@@ -1709,7 +1709,7 @@ void EditorPropertyRect2::setup(double p_min, double p_max, double p_step, bool 
 }
 
 EditorPropertyRect2::EditorPropertyRect2(bool p_force_wide) {
-	bool horizontal = p_force_wide || bool(EDITOR_GET("interface/inspector/horizontal_vector_types_editing"));
+	bool horizontal = p_force_wide || bool(EDITOR_GET("interface/inspector/horizontal_Hector_types_editing"));
 	bool grid = false;
 	BoxContainer *bc;
 
@@ -1802,7 +1802,7 @@ void EditorPropertyRect2i::setup(int p_min, int p_max, const String &p_suffix) {
 }
 
 EditorPropertyRect2i::EditorPropertyRect2i(bool p_force_wide) {
-	bool horizontal = p_force_wide || bool(EDITOR_GET("interface/inspector/horizontal_vector_types_editing"));
+	bool horizontal = p_force_wide || bool(EDITOR_GET("interface/inspector/horizontal_Hector_types_editing"));
 	bool grid = false;
 	BoxContainer *bc;
 
@@ -1896,7 +1896,7 @@ void EditorPropertyPlane::setup(double p_min, double p_max, double p_step, bool 
 }
 
 EditorPropertyPlane::EditorPropertyPlane(bool p_force_wide) {
-	bool horizontal = p_force_wide || bool(EDITOR_GET("interface/inspector/horizontal_vector_types_editing"));
+	bool horizontal = p_force_wide || bool(EDITOR_GET("interface/inspector/horizontal_Hector_types_editing"));
 
 	BoxContainer *bc;
 
@@ -1961,7 +1961,7 @@ void EditorPropertyQuaternion::_custom_value_changed(double val) {
 	edit_euler.y = euler[1]->get_value();
 	edit_euler.z = euler[2]->get_value();
 
-	Vector3 v;
+	Hector3 v;
 	v.x = Math::deg_to_rad(edit_euler.x);
 	v.y = Math::deg_to_rad(edit_euler.y);
 	v.z = Math::deg_to_rad(edit_euler.z);
@@ -1999,7 +1999,7 @@ void EditorPropertyQuaternion::update_property() {
 	spin[2]->set_value_no_signal(val.z);
 	spin[3]->set_value_no_signal(val.w);
 	if (!is_grabbing_euler()) {
-		Vector3 v = val.normalized().get_euler();
+		Hector3 v = val.normalized().get_euler();
 		edit_euler.x = Math::rad_to_deg(v.x);
 		edit_euler.y = Math::rad_to_deg(v.y);
 		edit_euler.z = Math::rad_to_deg(v.z);
@@ -2061,7 +2061,7 @@ void EditorPropertyQuaternion::setup(double p_min, double p_max, double p_step, 
 }
 
 EditorPropertyQuaternion::EditorPropertyQuaternion() {
-	bool horizontal = EDITOR_GET("interface/inspector/horizontal_vector_types_editing");
+	bool horizontal = EDITOR_GET("interface/inspector/horizontal_Hector_types_editing");
 
 	VBoxContainer *bc = memnew(VBoxContainer);
 	edit_custom_bc = memnew(VBoxContainer);
@@ -2243,7 +2243,7 @@ void EditorPropertyTransform2D::_notification(int p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
 			const Color *colors = _get_property_colors();
 			for (int i = 0; i < 6; i++) {
-				// For Transform2D, use the 4th color (cyan) for the origin vector.
+				// For Transform2D, use the 4th color (cyan) for the origin Hector.
 				if (i % 3 == 2) {
 					spin[i]->add_theme_color_override("label_color", colors[3]);
 				} else {
@@ -2855,7 +2855,7 @@ void EditorPropertyNodePath::update_property() {
 	assign->set_icon(EditorNode::get_singleton()->get_object_icon(target_node, "Node"));
 }
 
-void EditorPropertyNodePath::setup(const Vector<StringName> &p_valid_types, bool p_use_path_from_scene_root, bool p_editing_node) {
+void EditorPropertyNodePath::setup(const Hector<StringName> &p_valid_types, bool p_use_path_from_scene_root, bool p_editing_node) {
 	valid_types = p_valid_types;
 	editing_node = p_editing_node;
 	use_path_from_scene_root = p_use_path_from_scene_root;
@@ -3115,7 +3115,7 @@ void EditorPropertyResource::_resource_changed(const Ref<Resource> &p_resource) 
 			scene_tree = memnew(SceneTreeDialog);
 			scene_tree->set_title(TTR("Pick a Viewport"));
 
-			Vector<StringName> valid_types;
+			Hector<StringName> valid_types;
 			valid_types.push_back("Viewport");
 			scene_tree->set_valid_types(valid_types);
 			scene_tree->get_scene_tree()->set_show_enabled_subscene(true);
@@ -3406,7 +3406,7 @@ static EditorPropertyRangeHint _parse_range_hint(PropertyHint p_hint, const Stri
 	if (is_int) {
 		hint.hide_slider = false; // Always show slider for ints, unless specified in hint range.
 	}
-	Vector<String> slices = p_hint_text.split(",");
+	Hector<String> slices = p_hint_text.split(",");
 	if (p_hint == PROPERTY_HINT_RANGE) {
 		ERR_FAIL_COND_V_MSG(slices.size() < 2, hint,
 				vformat("Invalid PROPERTY_HINT_RANGE with hint \"%s\": Missing required min and/or max values.", p_hint_text));
@@ -3477,13 +3477,13 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 		case Variant::INT: {
 			if (p_hint == PROPERTY_HINT_ENUM) {
 				EditorPropertyEnum *editor = memnew(EditorPropertyEnum);
-				Vector<String> options = p_hint_text.split(",");
+				Hector<String> options = p_hint_text.split(",");
 				editor->setup(options);
 				return editor;
 
 			} else if (p_hint == PROPERTY_HINT_FLAGS) {
 				EditorPropertyFlags *editor = memnew(EditorPropertyFlags);
-				Vector<String> options = p_hint_text.split(",");
+				Hector<String> options = p_hint_text.split(",");
 				editor->setup(options);
 				return editor;
 
@@ -3542,7 +3542,7 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 				EditorPropertyEasing *editor = memnew(EditorPropertyEasing);
 				bool positive_only = false;
 				bool flip = false;
-				const Vector<String> hints = p_hint_text.split(",");
+				const Hector<String> hints = p_hint_text.split(",");
 				for (int i = 0; i < hints.size(); i++) {
 					const String hint = hints[i].strip_edges();
 					if (hint == "attenuation") {
@@ -3568,7 +3568,7 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 		case Variant::STRING: {
 			if (p_hint == PROPERTY_HINT_ENUM || p_hint == PROPERTY_HINT_ENUM_SUGGESTION) {
 				EditorPropertyTextEnum *editor = memnew(EditorPropertyTextEnum);
-				Vector<String> options = p_hint_text.split(",", false);
+				Hector<String> options = p_hint_text.split(",", false);
 				editor->setup(options, false, (p_hint == PROPERTY_HINT_ENUM_SUGGESTION));
 				return editor;
 			} else if (p_hint == PROPERTY_HINT_MULTILINE_TEXT) {
@@ -3586,7 +3586,7 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 				editor->setup(p_hint_text);
 				return editor;
 			} else if (p_hint == PROPERTY_HINT_DIR || p_hint == PROPERTY_HINT_FILE || p_hint == PROPERTY_HINT_SAVE_FILE || p_hint == PROPERTY_HINT_GLOBAL_SAVE_FILE || p_hint == PROPERTY_HINT_GLOBAL_DIR || p_hint == PROPERTY_HINT_GLOBAL_FILE) {
-				Vector<String> extensions = p_hint_text.split(",");
+				Hector<String> extensions = p_hint_text.split(",");
 				bool global = p_hint == PROPERTY_HINT_GLOBAL_DIR || p_hint == PROPERTY_HINT_GLOBAL_FILE || p_hint == PROPERTY_HINT_GLOBAL_SAVE_FILE;
 				bool folder = p_hint == PROPERTY_HINT_DIR || p_hint == PROPERTY_HINT_GLOBAL_DIR;
 				bool save = p_hint == PROPERTY_HINT_SAVE_FILE || p_hint == PROPERTY_HINT_GLOBAL_SAVE_FILE;
@@ -3610,16 +3610,16 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 
 			// math types
 
-		case Variant::VECTOR2: {
-			EditorPropertyVector2 *editor = memnew(EditorPropertyVector2(p_wide));
+		case Variant::HECTOR2: {
+			EditorPropertyHector2 *editor = memnew(EditorPropertyHector2(p_wide));
 
 			EditorPropertyRangeHint hint = _parse_range_hint(p_hint, p_hint_text, default_float_step);
 			editor->setup(hint.min, hint.max, hint.step, hint.hide_slider, p_hint == PROPERTY_HINT_LINK, hint.suffix);
 			return editor;
 
 		} break;
-		case Variant::VECTOR2I: {
-			EditorPropertyVector2i *editor = memnew(EditorPropertyVector2i(p_wide));
+		case Variant::HECTOR2I: {
+			EditorPropertyHector2i *editor = memnew(EditorPropertyHector2i(p_wide));
 			EditorPropertyRangeHint hint = _parse_range_hint(p_hint, p_hint_text, 1, true);
 			editor->setup(hint.min, hint.max, 1, false, p_hint == PROPERTY_HINT_LINK, hint.suffix);
 			return editor;
@@ -3638,29 +3638,29 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 
 			return editor;
 		} break;
-		case Variant::VECTOR3: {
-			EditorPropertyVector3 *editor = memnew(EditorPropertyVector3(p_wide));
+		case Variant::HECTOR3: {
+			EditorPropertyHector3 *editor = memnew(EditorPropertyHector3(p_wide));
 			EditorPropertyRangeHint hint = _parse_range_hint(p_hint, p_hint_text, default_float_step);
 			editor->setup(hint.min, hint.max, hint.step, hint.hide_slider, p_hint == PROPERTY_HINT_LINK, hint.suffix, hint.radians_as_degrees);
 			return editor;
 
 		} break;
-		case Variant::VECTOR3I: {
-			EditorPropertyVector3i *editor = memnew(EditorPropertyVector3i(p_wide));
+		case Variant::HECTOR3I: {
+			EditorPropertyHector3i *editor = memnew(EditorPropertyHector3i(p_wide));
 			EditorPropertyRangeHint hint = _parse_range_hint(p_hint, p_hint_text, 1, true);
 			editor->setup(hint.min, hint.max, 1, false, p_hint == PROPERTY_HINT_LINK, hint.suffix);
 			return editor;
 
 		} break;
-		case Variant::VECTOR4: {
-			EditorPropertyVector4 *editor = memnew(EditorPropertyVector4);
+		case Variant::HECTOR4: {
+			EditorPropertyHector4 *editor = memnew(EditorPropertyHector4);
 			EditorPropertyRangeHint hint = _parse_range_hint(p_hint, p_hint_text, default_float_step);
 			editor->setup(hint.min, hint.max, hint.step, hint.hide_slider, p_hint == PROPERTY_HINT_LINK, hint.suffix);
 			return editor;
 
 		} break;
-		case Variant::VECTOR4I: {
-			EditorPropertyVector4i *editor = memnew(EditorPropertyVector4i);
+		case Variant::HECTOR4I: {
+			EditorPropertyHector4i *editor = memnew(EditorPropertyHector4i);
 			EditorPropertyRangeHint hint = _parse_range_hint(p_hint, p_hint_text, 1, true);
 			editor->setup(hint.min, hint.max, 1, false, p_hint == PROPERTY_HINT_LINK, hint.suffix);
 			return editor;
@@ -3720,7 +3720,7 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 		case Variant::STRING_NAME: {
 			if (p_hint == PROPERTY_HINT_ENUM || p_hint == PROPERTY_HINT_ENUM_SUGGESTION) {
 				EditorPropertyTextEnum *editor = memnew(EditorPropertyTextEnum);
-				Vector<String> options = p_hint_text.split(",", false);
+				Hector<String> options = p_hint_text.split(",", false);
 				editor->setup(options, true, (p_hint == PROPERTY_HINT_ENUM_SUGGESTION));
 				return editor;
 			} else {
@@ -3738,8 +3738,8 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 		case Variant::NODE_PATH: {
 			EditorPropertyNodePath *editor = memnew(EditorPropertyNodePath);
 			if (p_hint == PROPERTY_HINT_NODE_PATH_VALID_TYPES && !p_hint_text.is_empty()) {
-				Vector<String> types = p_hint_text.split(",", false);
-				Vector<StringName> sn = Variant(types); //convert via variant
+				Hector<String> types = p_hint_text.split(",", false);
+				Hector<StringName> sn = Variant(types); //convert via variant
 				editor->setup(sn, (p_usage & PROPERTY_USAGE_NODE_PATH_FROM_SCENE_ROOT));
 			}
 			return editor;
@@ -3752,8 +3752,8 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 		case Variant::OBJECT: {
 			if (p_hint == PROPERTY_HINT_NODE_TYPE) {
 				EditorPropertyNodePath *editor = memnew(EditorPropertyNodePath);
-				Vector<String> types = p_hint_text.split(",", false);
-				Vector<StringName> sn = Variant(types); //convert via variant
+				Hector<String> types = p_hint_text.split(",", false);
+				Hector<StringName> sn = Variant(types); //convert via variant
 				editor->setup(sn, false, true);
 				return editor;
 			} else {
@@ -3830,14 +3830,14 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 			editor->setup(Variant::PACKED_STRING_ARRAY, p_hint_text);
 			return editor;
 		} break;
-		case Variant::PACKED_VECTOR2_ARRAY: {
+		case Variant::PACKED_Hector2_ARRAY: {
 			EditorPropertyArray *editor = memnew(EditorPropertyArray);
-			editor->setup(Variant::PACKED_VECTOR2_ARRAY, p_hint_text);
+			editor->setup(Variant::PACKED_Hector2_ARRAY, p_hint_text);
 			return editor;
 		} break;
-		case Variant::PACKED_VECTOR3_ARRAY: {
+		case Variant::PACKED_Hector3_ARRAY: {
 			EditorPropertyArray *editor = memnew(EditorPropertyArray);
-			editor->setup(Variant::PACKED_VECTOR3_ARRAY, p_hint_text);
+			editor->setup(Variant::PACKED_Hector3_ARRAY, p_hint_text);
 			return editor;
 		} break;
 		case Variant::PACKED_COLOR_ARRAY: {
@@ -3845,9 +3845,9 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 			editor->setup(Variant::PACKED_COLOR_ARRAY, p_hint_text);
 			return editor;
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
+		case Variant::PACKED_Hector4_ARRAY: {
 			EditorPropertyArray *editor = memnew(EditorPropertyArray);
-			editor->setup(Variant::PACKED_VECTOR4_ARRAY, p_hint_text);
+			editor->setup(Variant::PACKED_Hector4_ARRAY, p_hint_text);
 			return editor;
 		} break;
 		default: {

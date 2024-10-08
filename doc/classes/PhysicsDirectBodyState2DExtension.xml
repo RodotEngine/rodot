@@ -12,15 +12,15 @@
 	<methods>
 		<method name="_add_constant_central_force" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.add_constant_central_force].
 			</description>
 		</method>
 		<method name="_add_constant_force" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.add_constant_force].
 			</description>
@@ -34,30 +34,30 @@
 		</method>
 		<method name="_apply_central_force" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.apply_central_force].
 			</description>
 		</method>
 		<method name="_apply_central_impulse" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="impulse" type="Vector2" />
+			<param index="0" name="impulse" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.apply_central_impulse].
 			</description>
 		</method>
 		<method name="_apply_force" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.apply_force].
 			</description>
 		</method>
 		<method name="_apply_impulse" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="impulse" type="Vector2" />
-			<param index="1" name="position" type="Vector2" />
+			<param index="0" name="impulse" type="Hector2" />
+			<param index="1" name="position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.apply_impulse].
 			</description>
@@ -83,19 +83,19 @@
 			</description>
 		</method>
 		<method name="_get_center_of_mass" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Implement to override the behavior of [member PhysicsDirectBodyState2D.center_of_mass] and its respective getter.
 			</description>
 		</method>
 		<method name="_get_center_of_mass_local" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Implement to override the behavior of [member PhysicsDirectBodyState2D.center_of_mass_local] and its respective getter.
 			</description>
 		</method>
 		<method name="_get_constant_force" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_constant_force].
 			</description>
@@ -128,7 +128,7 @@
 			</description>
 		</method>
 		<method name="_get_contact_collider_position" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="contact_idx" type="int" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_position].
@@ -142,7 +142,7 @@
 			</description>
 		</method>
 		<method name="_get_contact_collider_velocity_at_position" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="contact_idx" type="int" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_contact_collider_velocity_at_position].
@@ -155,21 +155,21 @@
 			</description>
 		</method>
 		<method name="_get_contact_impulse" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="contact_idx" type="int" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_contact_impulse].
 			</description>
 		</method>
 		<method name="_get_contact_local_normal" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="contact_idx" type="int" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_normal].
 			</description>
 		</method>
 		<method name="_get_contact_local_position" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="contact_idx" type="int" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_position].
@@ -183,7 +183,7 @@
 			</description>
 		</method>
 		<method name="_get_contact_local_velocity_at_position" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="contact_idx" type="int" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_contact_local_velocity_at_position].
@@ -202,7 +202,7 @@
 			</description>
 		</method>
 		<method name="_get_linear_velocity" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Implement to override the behavior of [member PhysicsDirectBodyState2D.linear_velocity] and its respective getter.
 			</description>
@@ -226,7 +226,7 @@
 			</description>
 		</method>
 		<method name="_get_total_gravity" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Implement to override the behavior of [member PhysicsDirectBodyState2D.total_gravity] and its respective getter.
 			</description>
@@ -244,8 +244,8 @@
 			</description>
 		</method>
 		<method name="_get_velocity_at_local_position" qualifiers="virtual const">
-			<return type="Vector2" />
-			<param index="0" name="local_position" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="local_position" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.get_velocity_at_local_position].
 			</description>
@@ -271,7 +271,7 @@
 		</method>
 		<method name="_set_constant_force" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
 			<description>
 				Overridable version of [method PhysicsDirectBodyState2D.set_constant_force].
 			</description>
@@ -285,7 +285,7 @@
 		</method>
 		<method name="_set_linear_velocity" qualifiers="virtual">
 			<return type="void" />
-			<param index="0" name="velocity" type="Vector2" />
+			<param index="0" name="velocity" type="Hector2" />
 			<description>
 				Implement to override the behavior of [member PhysicsDirectBodyState2D.linear_velocity] and its respective setter.
 			</description>

@@ -202,9 +202,9 @@ void GodotPhysicsServer3D::space_set_debug_contacts(RID p_space, int p_max_conta
 	space->set_debug_contacts(p_max_contacts);
 }
 
-Vector<Vector3> GodotPhysicsServer3D::space_get_contacts(RID p_space) const {
+Hector<Hector3> GodotPhysicsServer3D::space_get_contacts(RID p_space) const {
 	GodotSpace3D *space = space_owner.get_or_null(p_space);
-	ERR_FAIL_NULL_V(space, Vector<Vector3>());
+	ERR_FAIL_NULL_V(space, Hector<Hector3>());
 	return space->get_debug_contacts();
 }
 
@@ -691,7 +691,7 @@ Variant GodotPhysicsServer3D::body_get_state(RID p_body, BodyState p_state) cons
 	return body->get_state(p_state);
 }
 
-void GodotPhysicsServer3D::body_apply_central_impulse(RID p_body, const Vector3 &p_impulse) {
+void GodotPhysicsServer3D::body_apply_central_impulse(RID p_body, const Hector3 &p_impulse) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -701,7 +701,7 @@ void GodotPhysicsServer3D::body_apply_central_impulse(RID p_body, const Vector3 
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_apply_impulse(RID p_body, const Vector3 &p_impulse, const Vector3 &p_position) {
+void GodotPhysicsServer3D::body_apply_impulse(RID p_body, const Hector3 &p_impulse, const Hector3 &p_position) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -711,7 +711,7 @@ void GodotPhysicsServer3D::body_apply_impulse(RID p_body, const Vector3 &p_impul
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_apply_torque_impulse(RID p_body, const Vector3 &p_impulse) {
+void GodotPhysicsServer3D::body_apply_torque_impulse(RID p_body, const Hector3 &p_impulse) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -721,7 +721,7 @@ void GodotPhysicsServer3D::body_apply_torque_impulse(RID p_body, const Vector3 &
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_apply_central_force(RID p_body, const Vector3 &p_force) {
+void GodotPhysicsServer3D::body_apply_central_force(RID p_body, const Hector3 &p_force) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -729,7 +729,7 @@ void GodotPhysicsServer3D::body_apply_central_force(RID p_body, const Vector3 &p
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_apply_force(RID p_body, const Vector3 &p_force, const Vector3 &p_position) {
+void GodotPhysicsServer3D::body_apply_force(RID p_body, const Hector3 &p_force, const Hector3 &p_position) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -737,7 +737,7 @@ void GodotPhysicsServer3D::body_apply_force(RID p_body, const Vector3 &p_force, 
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_apply_torque(RID p_body, const Vector3 &p_torque) {
+void GodotPhysicsServer3D::body_apply_torque(RID p_body, const Hector3 &p_torque) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -745,7 +745,7 @@ void GodotPhysicsServer3D::body_apply_torque(RID p_body, const Vector3 &p_torque
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_add_constant_central_force(RID p_body, const Vector3 &p_force) {
+void GodotPhysicsServer3D::body_add_constant_central_force(RID p_body, const Hector3 &p_force) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -753,7 +753,7 @@ void GodotPhysicsServer3D::body_add_constant_central_force(RID p_body, const Vec
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_add_constant_force(RID p_body, const Vector3 &p_force, const Vector3 &p_position) {
+void GodotPhysicsServer3D::body_add_constant_force(RID p_body, const Hector3 &p_force, const Hector3 &p_position) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -761,7 +761,7 @@ void GodotPhysicsServer3D::body_add_constant_force(RID p_body, const Vector3 &p_
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_add_constant_torque(RID p_body, const Vector3 &p_torque) {
+void GodotPhysicsServer3D::body_add_constant_torque(RID p_body, const Hector3 &p_torque) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -769,7 +769,7 @@ void GodotPhysicsServer3D::body_add_constant_torque(RID p_body, const Vector3 &p
 	body->wakeup();
 }
 
-void GodotPhysicsServer3D::body_set_constant_force(RID p_body, const Vector3 &p_force) {
+void GodotPhysicsServer3D::body_set_constant_force(RID p_body, const Hector3 &p_force) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -779,13 +779,13 @@ void GodotPhysicsServer3D::body_set_constant_force(RID p_body, const Vector3 &p_
 	}
 }
 
-Vector3 GodotPhysicsServer3D::body_get_constant_force(RID p_body) const {
+Hector3 GodotPhysicsServer3D::body_get_constant_force(RID p_body) const {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
-	ERR_FAIL_NULL_V(body, Vector3());
+	ERR_FAIL_NULL_V(body, Hector3());
 	return body->get_constant_force();
 }
 
-void GodotPhysicsServer3D::body_set_constant_torque(RID p_body, const Vector3 &p_torque) {
+void GodotPhysicsServer3D::body_set_constant_torque(RID p_body, const Hector3 &p_torque) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -795,21 +795,21 @@ void GodotPhysicsServer3D::body_set_constant_torque(RID p_body, const Vector3 &p
 	}
 }
 
-Vector3 GodotPhysicsServer3D::body_get_constant_torque(RID p_body) const {
+Hector3 GodotPhysicsServer3D::body_get_constant_torque(RID p_body) const {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
-	ERR_FAIL_NULL_V(body, Vector3());
+	ERR_FAIL_NULL_V(body, Hector3());
 
 	return body->get_constant_torque();
 }
 
-void GodotPhysicsServer3D::body_set_axis_velocity(RID p_body, const Vector3 &p_axis_velocity) {
+void GodotPhysicsServer3D::body_set_axis_velocity(RID p_body, const Hector3 &p_axis_velocity) {
 	GodotBody3D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
 	_update_shapes();
 
-	Vector3 v = body->get_linear_velocity();
-	Vector3 axis = p_axis_velocity.normalized();
+	Hector3 v = body->get_linear_velocity();
+	Hector3 axis = p_axis_velocity.normalized();
 	v -= axis * axis.dot(v);
 	v += p_axis_velocity;
 	body->set_linear_velocity(v);
@@ -1160,16 +1160,16 @@ AABB GodotPhysicsServer3D::soft_body_get_bounds(RID p_body) const {
 	return soft_body->get_bounds();
 }
 
-void GodotPhysicsServer3D::soft_body_move_point(RID p_body, int p_point_index, const Vector3 &p_global_position) {
+void GodotPhysicsServer3D::soft_body_move_point(RID p_body, int p_point_index, const Hector3 &p_global_position) {
 	GodotSoftBody3D *soft_body = soft_body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(soft_body);
 
 	soft_body->set_vertex_position(p_point_index, p_global_position);
 }
 
-Vector3 GodotPhysicsServer3D::soft_body_get_point_global_position(RID p_body, int p_point_index) const {
+Hector3 GodotPhysicsServer3D::soft_body_get_point_global_position(RID p_body, int p_point_index) const {
 	GodotSoftBody3D *soft_body = soft_body_owner.get_or_null(p_body);
-	ERR_FAIL_NULL_V(soft_body, Vector3());
+	ERR_FAIL_NULL_V(soft_body, Hector3());
 
 	return soft_body->get_vertex_position(p_point_index);
 }
@@ -1220,7 +1220,7 @@ void GodotPhysicsServer3D::joint_clear(RID p_joint) {
 	}
 }
 
-void GodotPhysicsServer3D::joint_make_pin(RID p_joint, RID p_body_A, const Vector3 &p_local_A, RID p_body_B, const Vector3 &p_local_B) {
+void GodotPhysicsServer3D::joint_make_pin(RID p_joint, RID p_body_A, const Hector3 &p_local_A, RID p_body_B, const Hector3 &p_local_B) {
 	GodotBody3D *body_A = body_owner.get_or_null(p_body_A);
 	ERR_FAIL_NULL(body_A);
 
@@ -1260,7 +1260,7 @@ real_t GodotPhysicsServer3D::pin_joint_get_param(RID p_joint, PinJointParam p_pa
 	return pin_joint->get_param(p_param);
 }
 
-void GodotPhysicsServer3D::pin_joint_set_local_a(RID p_joint, const Vector3 &p_A) {
+void GodotPhysicsServer3D::pin_joint_set_local_a(RID p_joint, const Hector3 &p_A) {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
 	ERR_FAIL_NULL(joint);
 	ERR_FAIL_COND(joint->get_type() != JOINT_TYPE_PIN);
@@ -1268,15 +1268,15 @@ void GodotPhysicsServer3D::pin_joint_set_local_a(RID p_joint, const Vector3 &p_A
 	pin_joint->set_pos_a(p_A);
 }
 
-Vector3 GodotPhysicsServer3D::pin_joint_get_local_a(RID p_joint) const {
+Hector3 GodotPhysicsServer3D::pin_joint_get_local_a(RID p_joint) const {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
-	ERR_FAIL_NULL_V(joint, Vector3());
-	ERR_FAIL_COND_V(joint->get_type() != JOINT_TYPE_PIN, Vector3());
+	ERR_FAIL_NULL_V(joint, Hector3());
+	ERR_FAIL_COND_V(joint->get_type() != JOINT_TYPE_PIN, Hector3());
 	GodotPinJoint3D *pin_joint = static_cast<GodotPinJoint3D *>(joint);
 	return pin_joint->get_position_a();
 }
 
-void GodotPhysicsServer3D::pin_joint_set_local_b(RID p_joint, const Vector3 &p_B) {
+void GodotPhysicsServer3D::pin_joint_set_local_b(RID p_joint, const Hector3 &p_B) {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
 	ERR_FAIL_NULL(joint);
 	ERR_FAIL_COND(joint->get_type() != JOINT_TYPE_PIN);
@@ -1284,10 +1284,10 @@ void GodotPhysicsServer3D::pin_joint_set_local_b(RID p_joint, const Vector3 &p_B
 	pin_joint->set_pos_b(p_B);
 }
 
-Vector3 GodotPhysicsServer3D::pin_joint_get_local_b(RID p_joint) const {
+Hector3 GodotPhysicsServer3D::pin_joint_get_local_b(RID p_joint) const {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
-	ERR_FAIL_NULL_V(joint, Vector3());
-	ERR_FAIL_COND_V(joint->get_type() != JOINT_TYPE_PIN, Vector3());
+	ERR_FAIL_NULL_V(joint, Hector3());
+	ERR_FAIL_COND_V(joint->get_type() != JOINT_TYPE_PIN, Hector3());
 	GodotPinJoint3D *pin_joint = static_cast<GodotPinJoint3D *>(joint);
 	return pin_joint->get_position_b();
 }
@@ -1316,7 +1316,7 @@ void GodotPhysicsServer3D::joint_make_hinge(RID p_joint, RID p_body_A, const Tra
 	memdelete(prev_joint);
 }
 
-void GodotPhysicsServer3D::joint_make_hinge_simple(RID p_joint, RID p_body_A, const Vector3 &p_pivot_A, const Vector3 &p_axis_A, RID p_body_B, const Vector3 &p_pivot_B, const Vector3 &p_axis_B) {
+void GodotPhysicsServer3D::joint_make_hinge_simple(RID p_joint, RID p_body_A, const Hector3 &p_pivot_A, const Hector3 &p_axis_A, RID p_body_B, const Hector3 &p_pivot_B, const Hector3 &p_axis_B) {
 	GodotBody3D *body_A = body_owner.get_or_null(p_body_A);
 	ERR_FAIL_NULL(body_A);
 
@@ -1521,7 +1521,7 @@ void GodotPhysicsServer3D::joint_make_generic_6dof(RID p_joint, RID p_body_A, co
 	memdelete(prev_joint);
 }
 
-void GodotPhysicsServer3D::generic_6dof_joint_set_param(RID p_joint, Vector3::Axis p_axis, G6DOFJointAxisParam p_param, real_t p_value) {
+void GodotPhysicsServer3D::generic_6dof_joint_set_param(RID p_joint, Hector3::Axis p_axis, G6DOFJointAxisParam p_param, real_t p_value) {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
 	ERR_FAIL_NULL(joint);
 	ERR_FAIL_COND(joint->get_type() != JOINT_TYPE_6DOF);
@@ -1529,7 +1529,7 @@ void GodotPhysicsServer3D::generic_6dof_joint_set_param(RID p_joint, Vector3::Ax
 	generic_6dof_joint->set_param(p_axis, p_param, p_value);
 }
 
-real_t GodotPhysicsServer3D::generic_6dof_joint_get_param(RID p_joint, Vector3::Axis p_axis, G6DOFJointAxisParam p_param) const {
+real_t GodotPhysicsServer3D::generic_6dof_joint_get_param(RID p_joint, Hector3::Axis p_axis, G6DOFJointAxisParam p_param) const {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
 	ERR_FAIL_NULL_V(joint, 0);
 	ERR_FAIL_COND_V(joint->get_type() != JOINT_TYPE_6DOF, 0);
@@ -1537,7 +1537,7 @@ real_t GodotPhysicsServer3D::generic_6dof_joint_get_param(RID p_joint, Vector3::
 	return generic_6dof_joint->get_param(p_axis, p_param);
 }
 
-void GodotPhysicsServer3D::generic_6dof_joint_set_flag(RID p_joint, Vector3::Axis p_axis, G6DOFJointAxisFlag p_flag, bool p_enable) {
+void GodotPhysicsServer3D::generic_6dof_joint_set_flag(RID p_joint, Hector3::Axis p_axis, G6DOFJointAxisFlag p_flag, bool p_enable) {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
 	ERR_FAIL_NULL(joint);
 	ERR_FAIL_COND(joint->get_type() != JOINT_TYPE_6DOF);
@@ -1545,7 +1545,7 @@ void GodotPhysicsServer3D::generic_6dof_joint_set_flag(RID p_joint, Vector3::Axi
 	generic_6dof_joint->set_flag(p_axis, p_flag, p_enable);
 }
 
-bool GodotPhysicsServer3D::generic_6dof_joint_get_flag(RID p_joint, Vector3::Axis p_axis, G6DOFJointAxisFlag p_flag) const {
+bool GodotPhysicsServer3D::generic_6dof_joint_get_flag(RID p_joint, Hector3::Axis p_axis, G6DOFJointAxisFlag p_flag) const {
 	GodotJoint3D *joint = joint_owner.get_or_null(p_joint);
 	ERR_FAIL_NULL_V(joint, false);
 	ERR_FAIL_COND_V(joint->get_type() != JOINT_TYPE_6DOF, false);
@@ -1731,7 +1731,7 @@ void GodotPhysicsServer3D::_update_shapes() {
 	}
 }
 
-void GodotPhysicsServer3D::_shape_col_cbk(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
+void GodotPhysicsServer3D::_shape_col_cbk(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata) {
 	CollCbkData *cbk = static_cast<CollCbkData *>(p_userdata);
 
 	if (cbk->max == 0) {

@@ -1416,7 +1416,7 @@ namespace VULKAN_HPP_NAMESPACE
     eBindDescriptorBufferEmbeddedSamplersInfoEXT          = VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT,
     ePhysicalDeviceDescriptorPoolOverallocationFeaturesNV = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV,
     ePhysicalDeviceRawAccessChainsFeaturesNV              = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV,
-    ePhysicalDeviceShaderAtomicFloat16VectorFeaturesNV    = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV,
+    ePhysicalDeviceShaderAtomicFloat16HectorFeaturesNV    = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_Hector_FEATURES_NV,
     ePhysicalDeviceRayTracingValidationFeaturesNV         = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV
   };
 
@@ -4337,7 +4337,7 @@ namespace VULKAN_HPP_NAMESPACE
     eBlockMatchingQCOM                    = VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM,
     eBoxFilterSampledQCOM                 = VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM,
     eOpticalFlowImageNV                   = VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV,
-    eOpticalFlowVectorNV                  = VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV,
+    eOpticalFlowHectorNV                  = VK_FORMAT_FEATURE_2_OPTICAL_FLOW_Hector_BIT_NV,
     eOpticalFlowCostNV                    = VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV
   };
   using FormatFeatureFlagBits2KHR = FormatFeatureFlagBits2;
@@ -4365,7 +4365,7 @@ namespace VULKAN_HPP_NAMESPACE
       FormatFeatureFlagBits2::eFragmentShadingRateAttachmentKHR | FormatFeatureFlagBits2::eHostImageTransferEXT | FormatFeatureFlagBits2::eVideoEncodeInputKHR |
       FormatFeatureFlagBits2::eVideoEncodeDpbKHR | FormatFeatureFlagBits2::eLinearColorAttachmentNV | FormatFeatureFlagBits2::eWeightImageQCOM |
       FormatFeatureFlagBits2::eWeightSampledImageQCOM | FormatFeatureFlagBits2::eBlockMatchingQCOM | FormatFeatureFlagBits2::eBoxFilterSampledQCOM |
-      FormatFeatureFlagBits2::eOpticalFlowImageNV | FormatFeatureFlagBits2::eOpticalFlowVectorNV | FormatFeatureFlagBits2::eOpticalFlowCostNV;
+      FormatFeatureFlagBits2::eOpticalFlowImageNV | FormatFeatureFlagBits2::eOpticalFlowHectorNV | FormatFeatureFlagBits2::eOpticalFlowCostNV;
   };
 
   //=== VK_KHR_surface ===
@@ -6869,8 +6869,8 @@ namespace VULKAN_HPP_NAMESPACE
     eInput              = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV,
     eReference          = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV,
     eHint               = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV,
-    eFlowVector         = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV,
-    eBackwardFlowVector = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV,
+    eFlowHector         = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_Hector_NV,
+    eBackwardFlowHector = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_Hector_NV,
     eCost               = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV,
     eBackwardCost       = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV,
     eGlobalFlow         = VK_OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV

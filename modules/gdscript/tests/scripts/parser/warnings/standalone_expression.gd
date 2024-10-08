@@ -3,7 +3,7 @@ func test():
 	1234
 	0.0 + 0.0
 	Color(1, 1, 1)
-	Vector3.ZERO
+	Hector3.ZERO
 	[true, false]
 	float(125)
 	# The following statements should not produce `STANDALONE_EXPRESSION`:

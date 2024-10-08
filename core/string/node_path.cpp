@@ -193,18 +193,18 @@ NodePath::operator String() const {
 	return ret;
 }
 
-Vector<StringName> NodePath::get_names() const {
+Hector<StringName> NodePath::get_names() const {
 	if (data) {
 		return data->path;
 	}
-	return Vector<StringName>();
+	return Hector<StringName>();
 }
 
-Vector<StringName> NodePath::get_subnames() const {
+Hector<StringName> NodePath::get_subnames() const {
 	if (data) {
 		return data->subpath;
 	}
-	return Vector<StringName>();
+	return Hector<StringName>();
 }
 
 StringName NodePath::get_concatenated_names() const {
@@ -258,8 +258,8 @@ NodePath NodePath::slice(int p_begin, int p_end) const {
 	const int sub_begin = MAX(begin - name_count - 1, 0);
 	const int sub_end = MAX(end - name_count, 0);
 
-	const Vector<StringName> names = get_names().slice(begin, end);
-	const Vector<StringName> sub_names = get_subnames().slice(sub_begin, sub_end);
+	const Hector<StringName> names = get_names().slice(begin, end);
+	const Hector<StringName> sub_names = get_subnames().slice(sub_begin, sub_end);
 	const bool absolute = is_absolute() && (begin == 0);
 	return NodePath(names, sub_names, absolute);
 }
@@ -268,8 +268,8 @@ NodePath NodePath::rel_path_to(const NodePath &p_np) const {
 	ERR_FAIL_COND_V(!is_absolute(), NodePath());
 	ERR_FAIL_COND_V(!p_np.is_absolute(), NodePath());
 
-	Vector<StringName> src_dirs = get_names();
-	Vector<StringName> dst_dirs = p_np.get_names();
+	Hector<StringName> src_dirs = get_names();
+	Hector<StringName> dst_dirs = p_np.get_names();
 
 	//find common parent
 	int common_parent = 0;
@@ -289,7 +289,7 @@ NodePath NodePath::rel_path_to(const NodePath &p_np) const {
 
 	common_parent--;
 
-	Vector<StringName> relpath;
+	Hector<StringName> relpath;
 	relpath.resize(src_dirs.size() + dst_dirs.size() + 1);
 
 	StringName *relpath_ptr = relpath.ptrw();
@@ -317,7 +317,7 @@ NodePath NodePath::get_as_property_path() const {
 	if (!data || !data->path.size()) {
 		return *this;
 	} else {
-		Vector<StringName> new_path = data->subpath;
+		Hector<StringName> new_path = data->subpath;
 
 		String initial_subname = data->path[0];
 
@@ -326,7 +326,7 @@ NodePath NodePath::get_as_property_path() const {
 		}
 		new_path.insert(0, initial_subname);
 
-		return NodePath(Vector<StringName>(), new_path, false);
+		return NodePath(Hector<StringName>(), new_path, false);
 	}
 }
 
@@ -365,7 +365,7 @@ NodePath NodePath::simplified() const {
 	return np;
 }
 
-NodePath::NodePath(const Vector<StringName> &p_path, bool p_absolute) {
+NodePath::NodePath(const Hector<StringName> &p_path, bool p_absolute) {
 	if (p_path.size() == 0 && !p_absolute) {
 		return;
 	}
@@ -377,7 +377,7 @@ NodePath::NodePath(const Vector<StringName> &p_path, bool p_absolute) {
 	data->hash_cache_valid = false;
 }
 
-NodePath::NodePath(const Vector<StringName> &p_path, const Vector<StringName> &p_subpath, bool p_absolute) {
+NodePath::NodePath(const Hector<StringName> &p_path, const Hector<StringName> &p_subpath, bool p_absolute) {
 	if (p_path.size() == 0 && p_subpath.size() == 0 && !p_absolute) {
 		return;
 	}
@@ -402,7 +402,7 @@ NodePath::NodePath(const String &p_path) {
 	}
 
 	String path = p_path;
-	Vector<StringName> subpath;
+	Hector<StringName> subpath;
 
 	bool absolute = (path[0] == '/');
 	bool last_is_slash = true;

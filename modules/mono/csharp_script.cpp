@@ -70,7 +70,7 @@
 
 // Types that will be skipped over (in favor of their base types) when setting up instance bindings.
 // This must be a superset of `ignored_types` in bindings_generator.cpp.
-const Vector<String> ignored_types = {};
+const Hector<String> ignored_types = {};
 
 #ifdef TOOLS_ENABLED
 static bool _create_project_solution_if_needed() {
@@ -375,8 +375,8 @@ Ref<Script> CSharpLanguage::make_template(const String &p_template, const String
 	return scr;
 }
 
-Vector<ScriptLanguage::ScriptTemplate> CSharpLanguage::get_built_in_templates(const StringName &p_object) {
-	Vector<ScriptLanguage::ScriptTemplate> templates;
+Hector<ScriptLanguage::ScriptTemplate> CSharpLanguage::get_built_in_templates(const StringName &p_object) {
+	Hector<ScriptLanguage::ScriptTemplate> templates;
 #ifdef TOOLS_ENABLED
 	for (int i = 0; i < TEMPLATES_ARRAY_SIZE; i++) {
 		if (TEMPLATES[i].inherit == p_object) {
@@ -491,12 +491,12 @@ String CSharpLanguage::debug_get_stack_level_source(int p_level) const {
 	return String();
 }
 
-Vector<ScriptLanguage::StackInfo> CSharpLanguage::debug_get_current_stack_info() {
+Hector<ScriptLanguage::StackInfo> CSharpLanguage::debug_get_current_stack_info() {
 #ifdef DEBUG_ENABLED
 	// Printing an error here will result in endless recursion, so we must be careful
 	static thread_local bool _recursion_flag_ = false;
 	if (_recursion_flag_) {
-		return Vector<StackInfo>();
+		return Hector<StackInfo>();
 	}
 	_recursion_flag_ = true;
 	SCOPE_EXIT {
@@ -504,10 +504,10 @@ Vector<ScriptLanguage::StackInfo> CSharpLanguage::debug_get_current_stack_info()
 	};
 
 	if (!gdmono || !gdmono->is_runtime_initialized()) {
-		return Vector<StackInfo>();
+		return Hector<StackInfo>();
 	}
 
-	Vector<StackInfo> si;
+	Hector<StackInfo> si;
 
 	if (GDMonoCache::godot_api_cache_updated) {
 		GDMonoCache::managed_callbacks.DebuggingUtils_GetCurrentStackInfo(&si);
@@ -515,7 +515,7 @@ Vector<ScriptLanguage::StackInfo> CSharpLanguage::debug_get_current_stack_info()
 
 	return si;
 #else
-	return Vector<StackInfo>();
+	return Hector<StackInfo>();
 #endif
 }
 

@@ -32,7 +32,7 @@
 #define IMPORTER_MESH_H
 
 #include "core/io/resource.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/resources/3d/concave_polygon_shape_3d.h"
 #include "scene/resources/3d/convex_polygon_shape_3d.h"
 #include "scene/resources/mesh.h"
@@ -53,12 +53,12 @@ class ImporterMesh : public Resource {
 		struct BlendShape {
 			Array arrays;
 		};
-		Vector<BlendShape> blend_shape_data;
+		Hector<BlendShape> blend_shape_data;
 		struct LOD {
-			Vector<int> indices;
+			Hector<int> indices;
 			float distance = 0.0f;
 		};
-		Vector<LOD> lods;
+		Hector<LOD> lods;
 		Ref<Material> material;
 		String name;
 		uint64_t flags = 0;
@@ -69,11 +69,11 @@ class ImporterMesh : public Resource {
 			}
 		};
 
-		void split_normals(const LocalVector<int> &p_indices, const LocalVector<Vector3> &p_normals);
-		static void _split_normals(Array &r_arrays, const LocalVector<int> &p_indices, const LocalVector<Vector3> &p_normals);
+		void split_normals(const LocalHector<int> &p_indices, const LocalHector<Hector3> &p_normals);
+		static void _split_normals(Array &r_arrays, const LocalHector<int> &p_indices, const LocalHector<Hector3> &p_normals);
 	};
-	Vector<Surface> surfaces;
-	Vector<String> blend_shapes;
+	Hector<Surface> surfaces;
+	Hector<String> blend_shapes;
 	Mesh::BlendShapeMode blend_shape_mode = Mesh::BLEND_SHAPE_MODE_NORMALIZED;
 
 	Ref<ArrayMesh> mesh;
@@ -109,7 +109,7 @@ public:
 	Array get_surface_arrays(int p_surface) const;
 	Array get_surface_blend_shape_arrays(int p_surface, int p_blend_shape) const;
 	int get_surface_lod_count(int p_surface) const;
-	Vector<int> get_surface_lod_indices(int p_surface, int p_lod) const;
+	Hector<int> get_surface_lod_indices(int p_surface, int p_lod) const;
 	float get_surface_lod_size(int p_surface, int p_lod) const;
 	Ref<Material> get_surface_material(int p_surface) const;
 	uint64_t get_surface_format(int p_surface) const;
@@ -123,12 +123,12 @@ public:
 	void create_shadow_mesh();
 	Ref<ImporterMesh> get_shadow_mesh() const;
 
-	Vector<Face3> get_faces() const;
-	Vector<Ref<Shape3D>> convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const;
+	Hector<Face3> get_faces() const;
+	Hector<Ref<Shape3D>> convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const;
 	Ref<ConvexPolygonShape3D> create_convex_shape(bool p_clean = true, bool p_simplify = false) const;
 	Ref<ConcavePolygonShape3D> create_trimesh_shape() const;
 	Ref<NavigationMesh> create_navigation_mesh();
-	Error lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache);
+	Error lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Hector<uint8_t> &p_src_cache, Hector<uint8_t> &r_dst_cache);
 
 	void set_lightmap_size_hint(const Size2i &p_size);
 	Size2i get_lightmap_size_hint() const;

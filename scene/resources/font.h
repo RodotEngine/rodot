@@ -205,7 +205,7 @@ class FontFile : public Font {
 #endif
 
 	// Cache.
-	mutable Vector<RID> cache;
+	mutable Hector<RID> cache;
 
 	_FORCE_INLINE_ void _clear_cache();
 	_FORCE_INLINE_ void _ensure_rid(int p_cache_index, int p_make_linked_from = -1) const;
@@ -291,9 +291,9 @@ public:
 	virtual void clear_cache();
 	virtual void remove_cache(int p_cache_index);
 
-	virtual TypedArray<Vector2i> get_size_cache_list(int p_cache_index) const;
+	virtual TypedArray<Hector2i> get_size_cache_list(int p_cache_index) const;
 	virtual void clear_size_cache(int p_cache_index);
-	virtual void remove_size_cache(int p_cache_index, const Vector2i &p_size);
+	virtual void remove_size_cache(int p_cache_index, const Hector2i &p_size);
 
 	virtual void set_variation_coordinates(int p_cache_index, const Dictionary &p_variation_coordinates);
 	virtual Dictionary get_variation_coordinates(int p_cache_index) const;
@@ -328,55 +328,55 @@ public:
 	virtual void set_cache_scale(int p_cache_index, int p_size, real_t p_scale); // Rendering scale for bitmap fonts (e.g. emoji fonts).
 	virtual real_t get_cache_scale(int p_cache_index, int p_size) const;
 
-	virtual int get_texture_count(int p_cache_index, const Vector2i &p_size) const;
-	virtual void clear_textures(int p_cache_index, const Vector2i &p_size);
-	virtual void remove_texture(int p_cache_index, const Vector2i &p_size, int p_texture_index);
+	virtual int get_texture_count(int p_cache_index, const Hector2i &p_size) const;
+	virtual void clear_textures(int p_cache_index, const Hector2i &p_size);
+	virtual void remove_texture(int p_cache_index, const Hector2i &p_size, int p_texture_index);
 
-	virtual void set_texture_image(int p_cache_index, const Vector2i &p_size, int p_texture_index, const Ref<Image> &p_image);
-	virtual Ref<Image> get_texture_image(int p_cache_index, const Vector2i &p_size, int p_texture_index) const;
+	virtual void set_texture_image(int p_cache_index, const Hector2i &p_size, int p_texture_index, const Ref<Image> &p_image);
+	virtual Ref<Image> get_texture_image(int p_cache_index, const Hector2i &p_size, int p_texture_index) const;
 
-	virtual void set_texture_offsets(int p_cache_index, const Vector2i &p_size, int p_texture_index, const PackedInt32Array &p_offset);
-	virtual PackedInt32Array get_texture_offsets(int p_cache_index, const Vector2i &p_size, int p_texture_index) const;
+	virtual void set_texture_offsets(int p_cache_index, const Hector2i &p_size, int p_texture_index, const PackedInt32Array &p_offset);
+	virtual PackedInt32Array get_texture_offsets(int p_cache_index, const Hector2i &p_size, int p_texture_index) const;
 
-	virtual PackedInt32Array get_glyph_list(int p_cache_index, const Vector2i &p_size) const;
-	virtual void clear_glyphs(int p_cache_index, const Vector2i &p_size);
-	virtual void remove_glyph(int p_cache_index, const Vector2i &p_size, int32_t p_glyph);
+	virtual PackedInt32Array get_glyph_list(int p_cache_index, const Hector2i &p_size) const;
+	virtual void clear_glyphs(int p_cache_index, const Hector2i &p_size);
+	virtual void remove_glyph(int p_cache_index, const Hector2i &p_size, int32_t p_glyph);
 
-	virtual void set_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph, const Vector2 &p_advance);
-	virtual Vector2 get_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph) const;
+	virtual void set_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph, const Hector2 &p_advance);
+	virtual Hector2 get_glyph_advance(int p_cache_index, int p_size, int32_t p_glyph) const;
 
-	virtual void set_glyph_offset(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, const Vector2 &p_offset);
-	virtual Vector2 get_glyph_offset(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const;
+	virtual void set_glyph_offset(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, const Hector2 &p_offset);
+	virtual Hector2 get_glyph_offset(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const;
 
-	virtual void set_glyph_size(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, const Vector2 &p_gl_size);
-	virtual Vector2 get_glyph_size(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const;
+	virtual void set_glyph_size(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, const Hector2 &p_gl_size);
+	virtual Hector2 get_glyph_size(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const;
 
-	virtual void set_glyph_uv_rect(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, const Rect2 &p_uv_rect);
-	virtual Rect2 get_glyph_uv_rect(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const;
+	virtual void set_glyph_uv_rect(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, const Rect2 &p_uv_rect);
+	virtual Rect2 get_glyph_uv_rect(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const;
 
-	virtual void set_glyph_texture_idx(int p_cache_index, const Vector2i &p_size, int32_t p_glyph, int p_texture_idx);
-	virtual int get_glyph_texture_idx(int p_cache_index, const Vector2i &p_size, int32_t p_glyph) const;
+	virtual void set_glyph_texture_idx(int p_cache_index, const Hector2i &p_size, int32_t p_glyph, int p_texture_idx);
+	virtual int get_glyph_texture_idx(int p_cache_index, const Hector2i &p_size, int32_t p_glyph) const;
 
-	virtual TypedArray<Vector2i> get_kerning_list(int p_cache_index, int p_size) const;
+	virtual TypedArray<Hector2i> get_kerning_list(int p_cache_index, int p_size) const;
 	virtual void clear_kerning_map(int p_cache_index, int p_size);
-	virtual void remove_kerning(int p_cache_index, int p_size, const Vector2i &p_glyph_pair);
+	virtual void remove_kerning(int p_cache_index, int p_size, const Hector2i &p_glyph_pair);
 
-	virtual void set_kerning(int p_cache_index, int p_size, const Vector2i &p_glyph_pair, const Vector2 &p_kerning);
-	virtual Vector2 get_kerning(int p_cache_index, int p_size, const Vector2i &p_glyph_pair) const;
+	virtual void set_kerning(int p_cache_index, int p_size, const Hector2i &p_glyph_pair, const Hector2 &p_kerning);
+	virtual Hector2 get_kerning(int p_cache_index, int p_size, const Hector2i &p_glyph_pair) const;
 
-	virtual void render_range(int p_cache_index, const Vector2i &p_size, char32_t p_start, char32_t p_end);
-	virtual void render_glyph(int p_cache_index, const Vector2i &p_size, int32_t p_index);
+	virtual void render_range(int p_cache_index, const Hector2i &p_size, char32_t p_start, char32_t p_end);
+	virtual void render_glyph(int p_cache_index, const Hector2i &p_size, int32_t p_index);
 
 	// Language/script support override.
 	virtual void set_language_support_override(const String &p_language, bool p_supported);
 	virtual bool get_language_support_override(const String &p_language) const;
 	virtual void remove_language_support_override(const String &p_language);
-	virtual Vector<String> get_language_support_overrides() const;
+	virtual Hector<String> get_language_support_overrides() const;
 
 	virtual void set_script_support_override(const String &p_script, bool p_supported);
 	virtual bool get_script_support_override(const String &p_script) const;
 	virtual void remove_script_support_override(const String &p_script);
-	virtual Vector<String> get_script_support_overrides() const;
+	virtual Hector<String> get_script_support_overrides() const;
 
 	virtual void set_opentype_feature_overrides(const Dictionary &p_overrides);
 	virtual Dictionary get_opentype_feature_overrides() const;
@@ -468,7 +468,7 @@ class SystemFont : public Font {
 	mutable Ref<Font> theme_font;
 
 	Ref<FontFile> base_font;
-	Vector<int> face_indeces;
+	Hector<int> face_indeces;
 	int ftr_weight = 0;
 	int ftr_stretch = 0;
 	int ftr_italic = 0;

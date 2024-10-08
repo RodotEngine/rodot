@@ -33,7 +33,7 @@
 
 #include "godot_space_3d.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class GodotStep3D {
 	uint64_t _step = 1;
@@ -41,16 +41,16 @@ class GodotStep3D {
 	int iterations = 0;
 	real_t delta = 0.0;
 
-	LocalVector<LocalVector<GodotBody3D *>> body_islands;
-	LocalVector<LocalVector<GodotConstraint3D *>> constraint_islands;
-	LocalVector<GodotConstraint3D *> all_constraints;
+	LocalHector<LocalHector<GodotBody3D *>> body_islands;
+	LocalHector<LocalHector<GodotConstraint3D *>> constraint_islands;
+	LocalHector<GodotConstraint3D *> all_constraints;
 
-	void _populate_island(GodotBody3D *p_body, LocalVector<GodotBody3D *> &p_body_island, LocalVector<GodotConstraint3D *> &p_constraint_island);
-	void _populate_island_soft_body(GodotSoftBody3D *p_soft_body, LocalVector<GodotBody3D *> &p_body_island, LocalVector<GodotConstraint3D *> &p_constraint_island);
+	void _populate_island(GodotBody3D *p_body, LocalHector<GodotBody3D *> &p_body_island, LocalHector<GodotConstraint3D *> &p_constraint_island);
+	void _populate_island_soft_body(GodotSoftBody3D *p_soft_body, LocalHector<GodotBody3D *> &p_body_island, LocalHector<GodotConstraint3D *> &p_constraint_island);
 	void _setup_constraint(uint32_t p_constraint_index, void *p_userdata = nullptr);
-	void _pre_solve_island(LocalVector<GodotConstraint3D *> &p_constraint_island) const;
+	void _pre_solve_island(LocalHector<GodotConstraint3D *> &p_constraint_island) const;
 	void _solve_island(uint32_t p_island_index, void *p_userdata = nullptr);
-	void _check_suspend(const LocalVector<GodotBody3D *> &p_body_island) const;
+	void _check_suspend(const LocalHector<GodotBody3D *> &p_body_island) const;
 
 public:
 	void step(GodotSpace3D *p_space, real_t p_delta);

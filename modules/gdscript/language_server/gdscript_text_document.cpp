@@ -263,7 +263,7 @@ Array GDScriptTextDocument::references(const Dictionary &p_params) {
 
 	const lsp::DocumentSymbol *symbol = GDScriptLanguageProtocol::get_singleton()->get_workspace()->resolve_symbol(params);
 	if (symbol) {
-		Vector<lsp::Location> usages = GDScriptLanguageProtocol::get_singleton()->get_workspace()->find_all_usages(*symbol);
+		Hector<lsp::Location> usages = GDScriptLanguageProtocol::get_singleton()->get_workspace()->find_all_usages(*symbol);
 		res.resize(usages.size());
 		int declaration_adjustment = 0;
 		for (int i = 0; i < usages.size(); i++) {
@@ -299,7 +299,7 @@ Dictionary GDScriptTextDocument::resolve(const Dictionary &p_params) {
 	} else if (data.is_string()) {
 		String query = data;
 
-		Vector<String> param_symbols = query.split(SYMBOL_SEPERATOR, false);
+		Hector<String> param_symbols = query.split(SYMBOL_SEPERATOR, false);
 
 		if (param_symbols.size() >= 2) {
 			StringName class_name = param_symbols[0];

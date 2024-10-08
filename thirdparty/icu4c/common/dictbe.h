@@ -76,14 +76,14 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
    * that starts from the first character in the range.
    * @param startPos The start of the run within the supplied text.
    * @param endPos The end of the run within the supplied text.
-   * @param foundBreaks vector of int32_t to receive the break positions
+   * @param foundBreaks Hector of int32_t to receive the break positions
    * @param status Information on any errors encountered.
    * @return The number of breaks found.
    */
   virtual int32_t findBreaks( UText *text,
                               int32_t startPos,
                               int32_t endPos,
-                              UVector32 &foundBreaks,
+                              UHector32 &foundBreaks,
                               UBool isPhraseBreaking,
                               UErrorCode& status ) const override;
 
@@ -109,7 +109,7 @@ class DictionaryBreakEngine : public LanguageBreakEngine {
   virtual int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+                                           UHector32 &foundBreaks,
                                            UBool isPhraseBreaking,
                                            UErrorCode& status) const = 0;
 
@@ -168,7 +168,7 @@ class ThaiBreakEngine : public DictionaryBreakEngine {
   virtual int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+                                           UHector32 &foundBreaks,
                                            UBool isPhraseBreaking,
                                            UErrorCode& status) const override;
 
@@ -226,7 +226,7 @@ class LaoBreakEngine : public DictionaryBreakEngine {
   virtual int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+                                           UHector32 &foundBreaks,
                                            UBool isPhraseBreaking,
                                            UErrorCode& status) const override;
 
@@ -284,7 +284,7 @@ class BurmeseBreakEngine : public DictionaryBreakEngine {
   virtual int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+                                           UHector32 &foundBreaks,
                                            UBool isPhraseBreaking,
                                            UErrorCode& status) const override;
 
@@ -342,7 +342,7 @@ class KhmerBreakEngine : public DictionaryBreakEngine {
   virtual int32_t divideUpDictionaryRange( UText *text,
                                            int32_t rangeStart,
                                            int32_t rangeEnd,
-                                           UVector32 &foundBreaks,
+                                           UHector32 &foundBreaks,
                                            UBool isPhraseBreaking,
                                            UErrorCode& status) const override;
 
@@ -420,7 +420,7 @@ class CjkBreakEngine : public DictionaryBreakEngine {
   virtual int32_t divideUpDictionaryRange( UText *text,
           int32_t rangeStart,
           int32_t rangeEnd,
-          UVector32 &foundBreaks,
+          UHector32 &foundBreaks,
           UBool isPhraseBreaking,
           UErrorCode& status) const override;
 

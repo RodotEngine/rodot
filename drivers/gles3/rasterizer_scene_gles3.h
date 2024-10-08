@@ -110,7 +110,7 @@ struct RenderDataGLES3 {
 
 	// For stereo rendering
 	uint32_t view_count = 1;
-	Vector3 view_eye_offset[RendererSceneRender::MAX_RENDER_VIEWS];
+	Hector3 view_eye_offset[RendererSceneRender::MAX_RENDER_VIEWS];
 	Projection view_projection[RendererSceneRender::MAX_RENDER_VIEWS];
 
 	float z_near = 0.0;
@@ -311,18 +311,18 @@ private:
 			bool is_omni = false;
 		};
 
-		LocalVector<LightPass> light_passes;
+		LocalHector<LightPass> light_passes;
 
 		uint32_t paired_omni_light_count = 0;
 		uint32_t paired_spot_light_count = 0;
-		LocalVector<RID> paired_omni_lights;
-		LocalVector<RID> paired_spot_lights;
-		LocalVector<uint32_t> omni_light_gl_cache;
-		LocalVector<uint32_t> spot_light_gl_cache;
+		LocalHector<RID> paired_omni_lights;
+		LocalHector<RID> paired_spot_lights;
+		LocalHector<uint32_t> omni_light_gl_cache;
+		LocalHector<uint32_t> spot_light_gl_cache;
 
-		LocalVector<RID> paired_reflection_probes;
-		LocalVector<RID> reflection_probe_rid_cache;
-		LocalVector<Transform3D> reflection_probes_local_transform_cache;
+		LocalHector<RID> paired_reflection_probes;
+		LocalHector<RID> reflection_probe_rid_cache;
+		LocalHector<Transform3D> reflection_probes_local_transform_cache;
 
 		RID lightmap_instance;
 		Rect2 lightmap_uv_scale;
@@ -570,9 +570,9 @@ private:
 		bool reverse_cull = false;
 		uint64_t spec_constant_base_flags = 0;
 		bool force_wireframe = false;
-		Vector2 uv_offset = Vector2(0, 0);
+		Hector2 uv_offset = Hector2(0, 0);
 
-		RenderListParameters(GeometryInstanceSurface **p_elements, int p_element_count, bool p_reverse_cull, uint64_t p_spec_constant_base_flags, bool p_force_wireframe = false, Vector2 p_uv_offset = Vector2()) {
+		RenderListParameters(GeometryInstanceSurface **p_elements, int p_element_count, bool p_reverse_cull, uint64_t p_spec_constant_base_flags, bool p_force_wireframe = false, Hector2 p_uv_offset = Hector2()) {
 			elements = p_elements;
 			element_count = p_element_count;
 			reverse_cull = p_reverse_cull;
@@ -583,7 +583,7 @@ private:
 	};
 
 	struct RenderList {
-		LocalVector<GeometryInstanceSurface *> elements;
+		LocalHector<GeometryInstanceSurface *> elements;
 
 		void clear() {
 			elements.clear();
@@ -739,7 +739,7 @@ protected:
 
 		//State to track when radiance cubemap needs updating
 		GLES3::SkyMaterialData *prev_material;
-		Vector3 prev_position = Vector3(0.0, 0.0, 0.0);
+		Hector3 prev_position = Hector3(0.0, 0.0, 0.0);
 		float prev_time = 0.0f;
 	};
 
@@ -774,7 +774,7 @@ public:
 
 	/* SDFGI UPDATE */
 
-	void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) override {}
+	void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Hector3 &p_world_position) override {}
 	int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const override {
 		return 0;
 	}
@@ -825,12 +825,12 @@ public:
 	void fog_volume_instance_set_transform(RID p_fog_volume_instance, const Transform3D &p_transform) override;
 	void fog_volume_instance_set_active(RID p_fog_volume_instance, bool p_active) override;
 	RID fog_volume_instance_get_volume(RID p_fog_volume_instance) const override;
-	Vector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const override;
+	Hector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const override;
 
 	RID voxel_gi_instance_create(RID p_voxel_gi) override;
 	void voxel_gi_instance_set_transform_to_data(RID p_probe, const Transform3D &p_xform) override;
 	bool voxel_gi_needs_update(RID p_probe) const override;
-	void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) override;
+	void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) override;
 
 	void voxel_gi_set_quality(RS::VoxelGIQuality) override;
 
@@ -866,7 +866,7 @@ public:
 
 	bool free(RID p_rid) override;
 	void update() override;
-	void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) override;
+	void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) override;
 
 	void decals_set_filter(RS::DecalFilter p_filter) override;
 	void light_projectors_set_filter(RS::LightProjectorFilter p_filter) override;

@@ -255,7 +255,7 @@ void RendererCanvasCull::_cull_canvas_item(Item *p_canvas_item, const Transform2
 	Rect2 rect = ci->get_rect();
 
 	if (ci->visibility_notifier) {
-		if (ci->visibility_notifier->area.size != Vector2()) {
+		if (ci->visibility_notifier->area.size != Hector2()) {
 			rect = rect.merge(ci->visibility_notifier->area);
 		}
 	}
@@ -365,7 +365,7 @@ void RendererCanvasCull::_cull_canvas_item(Item *p_canvas_item, const Transform2
 			child_items = (Item **)alloca(child_item_count * sizeof(Item *));
 
 			ci->ysort_xform = ci->xform_curr.affine_inverse();
-			ci->ysort_pos = Vector2();
+			ci->ysort_pos = Hector2();
 			ci->ysort_modulate = Color(1, 1, 1, 1);
 			ci->ysort_index = 0;
 			ci->ysort_parent_abs_z_index = parent_z;
@@ -643,14 +643,14 @@ void RendererCanvasCull::canvas_item_add_line(RID p_item, const Point2 &p_from, 
 	Item::CommandPrimitive *line = canvas_item->alloc_command<Item::CommandPrimitive>();
 	ERR_FAIL_NULL(line);
 
-	Vector2 diff = (p_from - p_to);
-	Vector2 dir = diff.orthogonal().normalized();
-	Vector2 t = dir * p_width * 0.5;
+	Hector2 diff = (p_from - p_to);
+	Hector2 dir = diff.orthogonal().normalized();
+	Hector2 t = dir * p_width * 0.5;
 
-	Vector2 begin_left;
-	Vector2 begin_right;
-	Vector2 end_left;
-	Vector2 end_right;
+	Hector2 begin_left;
+	Hector2 begin_right;
+	Hector2 end_left;
+	Hector2 end_right;
 
 	if (p_width >= 0.0) {
 		begin_left = p_from + t;
@@ -683,10 +683,10 @@ void RendererCanvasCull::canvas_item_add_line(RID p_item, const Point2 &p_from, 
 		if (0.0f <= p_width && p_width < 1.0f) {
 			border_size *= p_width;
 		}
-		Vector2 dir2 = diff.normalized();
+		Hector2 dir2 = diff.normalized();
 
-		Vector2 border = dir * border_size;
-		Vector2 border2 = dir2 * border_size;
+		Hector2 border = dir * border_size;
+		Hector2 border2 = dir2 * border_size;
 
 		Color transparent = Color(p_color, 0.0);
 
@@ -821,12 +821,12 @@ void RendererCanvasCull::canvas_item_add_line(RID p_item, const Point2 &p_from, 
 	}
 }
 
-static Vector2 compute_polyline_segment_dir(const Vector<Point2> &p_points, int p_index, const Vector2 &p_prev_segment_dir) {
+static Hector2 compute_polyline_segment_dir(const Hector<Point2> &p_points, int p_index, const Hector2 &p_prev_segment_dir) {
 	int point_count = p_points.size();
 
 	bool is_last_point = (p_index == point_count - 1);
 
-	Vector2 segment_dir;
+	Hector2 segment_dir;
 
 	if (is_last_point) {
 		segment_dir = p_prev_segment_dir;
@@ -841,8 +841,8 @@ static Vector2 compute_polyline_segment_dir(const Vector<Point2> &p_points, int 
 	return segment_dir;
 }
 
-static Vector2 compute_polyline_edge_offset_clamped(const Vector2 &p_segment_dir, const Vector2 &p_prev_segment_dir) {
-	Vector2 bisector;
+static Hector2 compute_polyline_edge_offset_clamped(const Hector2 &p_segment_dir, const Hector2 &p_prev_segment_dir) {
+	Hector2 bisector;
 	float length = 1.0f;
 
 	bisector = (p_prev_segment_dir * p_segment_dir.length() - p_segment_dir * p_prev_segment_dir.length()).normalized();
@@ -864,14 +864,14 @@ static Vector2 compute_polyline_edge_offset_clamped(const Vector2 &p_segment_dir
 	return bisector * length;
 }
 
-void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width, bool p_antialiased) {
+void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width, bool p_antialiased) {
 	ERR_FAIL_COND(p_points.size() < 2);
 	Item *canvas_item = canvas_item_owner.get_or_null(p_item);
 	ERR_FAIL_NULL(canvas_item);
 
 	Color color = Color(1, 1, 1, 1);
 
-	Vector<int> indices;
+	Hector<int> indices;
 	int point_count = p_points.size();
 
 	Item::CommandPolygon *pline = canvas_item->alloc_command<Item::CommandPolygon>();
@@ -887,7 +887,7 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 		if (p_colors.size() == 1 || p_colors.size() == point_count) {
 			pline->polygon.create(indices, p_points, p_colors);
 		} else {
-			Vector<Color> colors;
+			Hector<Color> colors;
 			if (p_colors.is_empty()) {
 				colors.push_back(color);
 			} else {
@@ -908,10 +908,10 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 	int polyline_point_count = point_count * 2;
 
 	bool loop = p_points[0].is_equal_approx(p_points[point_count - 1]);
-	Vector2 first_segment_dir;
-	Vector2 last_segment_dir;
+	Hector2 first_segment_dir;
+	Hector2 last_segment_dir;
 
-	// Search for first non-zero vector between two segments.
+	// Search for first non-zero Hector between two segments.
 	for (int i = 1; i < point_count; i++) {
 		first_segment_dir = (p_points[i] - p_points[i - 1]).normalized();
 
@@ -920,7 +920,7 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 		}
 	}
 
-	// Search for last non-zero vector between two segments.
+	// Search for last non-zero Hector between two segments.
 	for (int i = point_count - 1; i >= 1; i--) {
 		last_segment_dir = (p_points[i] - p_points[i - 1]).normalized();
 
@@ -930,13 +930,13 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 	}
 
 	PackedColorArray colors;
-	PackedVector2Array points;
+	PackedHector2Array points;
 
 	// Additional 2+2 vertices to antialias begin+end of the middle triangle strip.
 	colors.resize(polyline_point_count + ((p_antialiased && !loop) ? 4 : 0));
 	points.resize(polyline_point_count + ((p_antialiased && !loop) ? 4 : 0));
 
-	Vector2 *points_ptr = points.ptrw();
+	Hector2 *points_ptr = points.ptrw();
 	Color *colors_ptr = colors.ptrw();
 
 	if (p_antialiased) {
@@ -953,10 +953,10 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 		ERR_FAIL_NULL(pline_right);
 
 		PackedColorArray colors_left;
-		PackedVector2Array points_left;
+		PackedHector2Array points_left;
 
 		PackedColorArray colors_right;
-		PackedVector2Array points_right;
+		PackedHector2Array points_right;
 
 		// 2+2 additional vertices for begin+end corners.
 		// 1 additional vertex to swap the orientation of the triangles within the end corner's quad.
@@ -967,24 +967,24 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 		points_right.resize(polyline_point_count + (loop ? 0 : 5));
 
 		Color *colors_left_ptr = colors_left.ptrw();
-		Vector2 *points_left_ptr = points_left.ptrw();
+		Hector2 *points_left_ptr = points_left.ptrw();
 
-		Vector2 *points_right_ptr = points_right.ptrw();
+		Hector2 *points_right_ptr = points_right.ptrw();
 		Color *colors_right_ptr = colors_right.ptrw();
 
-		Vector2 prev_segment_dir;
+		Hector2 prev_segment_dir;
 		for (int i = 0; i < point_count; i++) {
 			bool is_first_point = (i == 0);
 			bool is_last_point = (i == point_count - 1);
 
-			Vector2 segment_dir = compute_polyline_segment_dir(p_points, i, prev_segment_dir);
+			Hector2 segment_dir = compute_polyline_segment_dir(p_points, i, prev_segment_dir);
 			if (is_first_point && loop) {
 				prev_segment_dir = last_segment_dir;
 			} else if (is_last_point && loop) {
 				prev_segment_dir = first_segment_dir;
 			}
 
-			Vector2 base_edge_offset;
+			Hector2 base_edge_offset;
 			if (is_first_point && !loop) {
 				base_edge_offset = first_segment_dir.orthogonal();
 			} else if (is_last_point && !loop) {
@@ -993,9 +993,9 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 				base_edge_offset = compute_polyline_edge_offset_clamped(segment_dir, prev_segment_dir);
 			}
 
-			Vector2 edge_offset = base_edge_offset * (p_width * 0.5f);
-			Vector2 border = base_edge_offset * border_size;
-			Vector2 pos = p_points[i];
+			Hector2 edge_offset = base_edge_offset * (p_width * 0.5f);
+			Hector2 border = base_edge_offset * border_size;
+			Hector2 pos = p_points[i];
 
 			int j = i * 2 + (loop ? 0 : 2);
 
@@ -1023,7 +1023,7 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 			colors_right_ptr[j + 1] = color2;
 
 			if (is_first_point && !loop) {
-				Vector2 begin_border = -segment_dir * border_size;
+				Hector2 begin_border = -segment_dir * border_size;
 
 				points_ptr[0] = pos + edge_offset + begin_border;
 				points_ptr[1] = pos - edge_offset + begin_border;
@@ -1045,7 +1045,7 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 			}
 
 			if (is_last_point && !loop) {
-				Vector2 end_border = prev_segment_dir * border_size;
+				Hector2 end_border = prev_segment_dir * border_size;
 				int end_index = polyline_point_count + 2;
 
 				points_ptr[end_index + 0] = pos + edge_offset + end_border;
@@ -1085,19 +1085,19 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 	} else {
 		// Makes a single triangle strip for drawing the line.
 
-		Vector2 prev_segment_dir;
+		Hector2 prev_segment_dir;
 		for (int i = 0; i < point_count; i++) {
 			bool is_first_point = (i == 0);
 			bool is_last_point = (i == point_count - 1);
 
-			Vector2 segment_dir = compute_polyline_segment_dir(p_points, i, prev_segment_dir);
+			Hector2 segment_dir = compute_polyline_segment_dir(p_points, i, prev_segment_dir);
 			if (is_first_point && loop) {
 				prev_segment_dir = last_segment_dir;
 			} else if (is_last_point && loop) {
 				prev_segment_dir = first_segment_dir;
 			}
 
-			Vector2 base_edge_offset;
+			Hector2 base_edge_offset;
 			if (is_first_point && !loop) {
 				base_edge_offset = first_segment_dir.orthogonal();
 			} else if (is_last_point && !loop) {
@@ -1106,8 +1106,8 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 				base_edge_offset = compute_polyline_edge_offset_clamped(segment_dir, prev_segment_dir);
 			}
 
-			Vector2 edge_offset = base_edge_offset * (p_width * 0.5f);
-			Vector2 pos = p_points[i];
+			Hector2 edge_offset = base_edge_offset * (p_width * 0.5f);
+			Hector2 pos = p_points[i];
 
 			points_ptr[i * 2 + 0] = pos + edge_offset;
 			points_ptr[i * 2 + 1] = pos - edge_offset;
@@ -1127,7 +1127,7 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 	pline->polygon.create(indices, points, colors);
 }
 
-void RendererCanvasCull::canvas_item_add_multiline(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width, bool p_antialiased) {
+void RendererCanvasCull::canvas_item_add_multiline(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width, bool p_antialiased) {
 	ERR_FAIL_COND(p_points.is_empty() || p_points.size() % 2 != 0);
 	ERR_FAIL_COND(p_colors.size() != 1 && p_colors.size() * 2 != p_points.size());
 
@@ -1139,7 +1139,7 @@ void RendererCanvasCull::canvas_item_add_multiline(RID p_item, const Vector<Poin
 		Item *canvas_item = canvas_item_owner.get_or_null(p_item);
 		ERR_FAIL_NULL(canvas_item);
 
-		Vector<Color> colors;
+		Hector<Color> colors;
 		if (p_colors.size() == 1) {
 			colors = p_colors;
 		} else { //} else if (p_colors.size() << 1 == p_points.size()) {
@@ -1155,21 +1155,21 @@ void RendererCanvasCull::canvas_item_add_multiline(RID p_item, const Vector<Poin
 		Item::CommandPolygon *pline = canvas_item->alloc_command<Item::CommandPolygon>();
 		ERR_FAIL_NULL(pline);
 		pline->primitive = RS::PRIMITIVE_LINES;
-		pline->polygon.create(Vector<int>(), p_points, colors);
+		pline->polygon.create(Hector<int>(), p_points, colors);
 	} else {
 		if (p_colors.size() == 1) {
 			Color color = p_colors[0];
 			for (int i = 0; i < p_points.size() >> 1; i++) {
-				Vector2 from = p_points[i * 2 + 0];
-				Vector2 to = p_points[i * 2 + 1];
+				Hector2 from = p_points[i * 2 + 0];
+				Hector2 to = p_points[i * 2 + 1];
 
 				canvas_item_add_line(p_item, from, to, color, p_width, p_antialiased);
 			}
 		} else { //} else if (p_colors.size() << 1 == p_points.size()) {
 			for (int i = 0; i < p_colors.size(); i++) {
 				Color color = p_colors[i];
-				Vector2 from = p_points[i * 2 + 0];
-				Vector2 to = p_points[i * 2 + 1];
+				Hector2 from = p_points[i * 2 + 0];
+				Hector2 to = p_points[i * 2 + 1];
 
 				canvas_item_add_line(p_item, from, to, color, p_width, p_antialiased);
 			}
@@ -1195,18 +1195,18 @@ void RendererCanvasCull::canvas_item_add_rect(RID p_item, const Rect2 &p_rect, c
 			border_size *= size;
 		}
 
-		const Vector2 vec_down = Vector2(0.0f, p_rect.size.height);
-		const Vector2 vec_right = Vector2(p_rect.size.width, 0.0f);
+		const Hector2 vec_down = Hector2(0.0f, p_rect.size.height);
+		const Hector2 vec_right = Hector2(p_rect.size.width, 0.0f);
 
-		const Vector2 begin_left = p_rect.position;
-		const Vector2 begin_right = p_rect.position + vec_down;
-		const Vector2 end_left = p_rect.position + vec_right;
-		const Vector2 end_right = p_rect.position + p_rect.size;
+		const Hector2 begin_left = p_rect.position;
+		const Hector2 begin_right = p_rect.position + vec_down;
+		const Hector2 end_left = p_rect.position + vec_right;
+		const Hector2 end_right = p_rect.position + p_rect.size;
 
-		const Vector2 dir = Vector2(0.0f, -1.0f);
-		const Vector2 dir2 = Vector2(-1.0f, 0.0f);
-		const Vector2 border = dir * border_size;
-		const Vector2 border2 = dir2 * border_size;
+		const Hector2 dir = Hector2(0.0f, -1.0f);
+		const Hector2 dir2 = Hector2(-1.0f, 0.0f);
+		const Hector2 border = dir * border_size;
+		const Hector2 border2 = dir2 * border_size;
 
 		Color transparent = Color(p_color, 0.0);
 
@@ -1353,11 +1353,11 @@ void RendererCanvasCull::canvas_item_add_circle(RID p_item, const Point2 &p_pos,
 
 		circle->primitive = RS::PRIMITIVE_TRIANGLES;
 
-		Vector<int> indices;
-		Vector<Vector2> points;
+		Hector<int> indices;
+		Hector<Hector2> points;
 
 		points.resize(circle_segments + 2);
-		Vector2 *points_ptr = points.ptrw();
+		Hector2 *points_ptr = points.ptrw();
 
 		// Store circle center in the last point.
 		points_ptr[circle_segments + 1] = p_pos;
@@ -1380,7 +1380,7 @@ void RendererCanvasCull::canvas_item_add_circle(RID p_item, const Point2 &p_pos,
 			indices_ptr[i * 3 + 2] = i + 1;
 		}
 
-		Vector<Color> color;
+		Hector<Color> color;
 		color.push_back(p_color);
 		circle->polygon.create(indices, points, color);
 	}
@@ -1399,16 +1399,16 @@ void RendererCanvasCull::canvas_item_add_circle(RID p_item, const Point2 &p_pos,
 
 		Color transparent = Color(p_color, 0.0);
 
-		Vector<int> indices;
-		Vector<Color> colors;
-		Vector<Vector2> points;
+		Hector<int> indices;
+		Hector<Color> colors;
+		Hector<Hector2> points;
 
 		points.resize(2 * circle_segments + 2);
 		colors.resize(2 * circle_segments + 2);
 
 		const real_t circle_point_step = Math_TAU / circle_segments;
 
-		Vector2 *points_ptr = points.ptrw();
+		Hector2 *points_ptr = points.ptrw();
 		Color *colors_ptr = colors.ptrw();
 
 		for (int i = 0; i < circle_segments + 1; i++) {
@@ -1570,7 +1570,7 @@ void RendererCanvasCull::canvas_item_add_texture_rect_region(RID p_item, const R
 	}
 }
 
-void RendererCanvasCull::canvas_item_add_nine_patch(RID p_item, const Rect2 &p_rect, const Rect2 &p_source, RID p_texture, const Vector2 &p_topleft, const Vector2 &p_bottomright, RS::NinePatchAxisMode p_x_axis_mode, RS::NinePatchAxisMode p_y_axis_mode, bool p_draw_center, const Color &p_modulate) {
+void RendererCanvasCull::canvas_item_add_nine_patch(RID p_item, const Rect2 &p_rect, const Rect2 &p_source, RID p_texture, const Hector2 &p_topleft, const Hector2 &p_bottomright, RS::NinePatchAxisMode p_x_axis_mode, RS::NinePatchAxisMode p_y_axis_mode, bool p_draw_center, const Color &p_modulate) {
 	Item *canvas_item = canvas_item_owner.get_or_null(p_item);
 	ERR_FAIL_NULL(canvas_item);
 
@@ -1591,7 +1591,7 @@ void RendererCanvasCull::canvas_item_add_nine_patch(RID p_item, const Rect2 &p_r
 	style->axis_y = p_y_axis_mode;
 }
 
-void RendererCanvasCull::canvas_item_add_primitive(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, RID p_texture) {
+void RendererCanvasCull::canvas_item_add_primitive(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, RID p_texture) {
 	uint32_t pc = p_points.size();
 	ERR_FAIL_COND(pc == 0 || pc > 4);
 
@@ -1620,7 +1620,7 @@ void RendererCanvasCull::canvas_item_add_primitive(RID p_item, const Vector<Poin
 	prim->texture = p_texture;
 }
 
-void RendererCanvasCull::canvas_item_add_polygon(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, RID p_texture) {
+void RendererCanvasCull::canvas_item_add_polygon(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, RID p_texture) {
 	Item *canvas_item = canvas_item_owner.get_or_null(p_item);
 	ERR_FAIL_NULL(canvas_item);
 #ifdef DEBUG_ENABLED
@@ -1631,7 +1631,7 @@ void RendererCanvasCull::canvas_item_add_polygon(RID p_item, const Vector<Point2
 	ERR_FAIL_COND(color_size != 0 && color_size != 1 && color_size != pointcount);
 	ERR_FAIL_COND(uv_size != 0 && (uv_size != pointcount));
 #endif
-	Vector<int> indices = Geometry2D::triangulate_polygon(p_points);
+	Hector<int> indices = Geometry2D::triangulate_polygon(p_points);
 	ERR_FAIL_COND_MSG(indices.is_empty(), "Invalid polygon data, triangulation failed.");
 
 	Item::CommandPolygon *polygon = canvas_item->alloc_command<Item::CommandPolygon>();
@@ -1641,7 +1641,7 @@ void RendererCanvasCull::canvas_item_add_polygon(RID p_item, const Vector<Point2
 	polygon->polygon.create(indices, p_points, p_colors, p_uvs);
 }
 
-void RendererCanvasCull::canvas_item_add_triangle_array(RID p_item, const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, const Vector<int> &p_bones, const Vector<float> &p_weights, RID p_texture, int p_count) {
+void RendererCanvasCull::canvas_item_add_triangle_array(RID p_item, const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, const Hector<int> &p_bones, const Hector<float> &p_weights, RID p_texture, int p_count) {
 	Item *canvas_item = canvas_item_owner.get_or_null(p_item);
 	ERR_FAIL_NULL(canvas_item);
 
@@ -2023,7 +2023,7 @@ void RendererCanvasCull::canvas_light_set_texture(RID p_light, RID p_texture) {
 	RSG::canvas_render->light_set_texture(clight->light_internal, p_texture);
 }
 
-void RendererCanvasCull::canvas_light_set_texture_offset(RID p_light, const Vector2 &p_offset) {
+void RendererCanvasCull::canvas_light_set_texture_offset(RID p_light, const Hector2 &p_offset) {
 	RendererCanvasRender::Light *clight = canvas_light_owner.get_or_null(p_light);
 	ERR_FAIL_NULL(clight);
 
@@ -2267,7 +2267,7 @@ void RendererCanvasCull::canvas_occluder_polygon_initialize(RID p_rid) {
 	occluder_poly->occluder = RSG::canvas_render->occluder_polygon_create();
 }
 
-void RendererCanvasCull::canvas_occluder_polygon_set_shape(RID p_occluder_polygon, const Vector<Vector2> &p_shape, bool p_closed) {
+void RendererCanvasCull::canvas_occluder_polygon_set_shape(RID p_occluder_polygon, const Hector<Hector2> &p_shape, bool p_closed) {
 	LightOccluderPolygon *occluder_poly = canvas_light_occluder_polygon_owner.get_or_null(p_occluder_polygon);
 	ERR_FAIL_NULL(occluder_poly);
 
@@ -2275,7 +2275,7 @@ void RendererCanvasCull::canvas_occluder_polygon_set_shape(RID p_occluder_polygo
 	ERR_FAIL_COND(pc < 2);
 
 	occluder_poly->aabb = Rect2();
-	const Vector2 *r = p_shape.ptr();
+	const Hector2 *r = p_shape.ptr();
 	for (uint32_t i = 0; i < pc; i++) {
 		if (i == 0) {
 			occluder_poly->aabb.position = r[i];

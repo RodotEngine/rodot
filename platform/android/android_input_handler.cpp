@@ -165,7 +165,7 @@ void AndroidInputHandler::_release_all_touch() {
 	touch.clear();
 }
 
-void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const Vector<TouchPos> &p_points, bool p_double_tap) {
+void AndroidInputHandler::process_touch_event(int p_event, int p_pointer, const Hector<TouchPos> &p_points, bool p_double_tap) {
 	switch (p_event) {
 		case AMOTION_EVENT_ACTION_DOWN: { //gesture begin
 			// Release any remaining touches or mouse event
@@ -298,7 +298,7 @@ void AndroidInputHandler::_release_mouse_event_info(bool p_source_mouse_relative
 	mouse_event_info.valid = false;
 }
 
-void AndroidInputHandler::process_mouse_event(int p_event_action, int p_event_android_buttons_mask, Point2 p_event_pos, Vector2 p_delta, bool p_double_click, bool p_source_mouse_relative, float p_pressure, Vector2 p_tilt) {
+void AndroidInputHandler::process_mouse_event(int p_event_action, int p_event_android_buttons_mask, Point2 p_event_pos, Hector2 p_delta, bool p_double_click, bool p_source_mouse_relative, float p_pressure, Hector2 p_tilt) {
 	BitField<MouseButtonMask> event_buttons_mask = _android_button_mask_to_godot_button_mask(p_event_android_buttons_mask);
 	switch (p_event_action) {
 		case AMOTION_EVENT_ACTION_HOVER_MOVE: // hover move
@@ -413,7 +413,7 @@ void AndroidInputHandler::process_magnify(Point2 p_pos, float p_factor) {
 	Input::get_singleton()->parse_input_event(magnify_event);
 }
 
-void AndroidInputHandler::process_pan(Point2 p_pos, Vector2 p_delta) {
+void AndroidInputHandler::process_pan(Point2 p_pos, Hector2 p_delta) {
 	Ref<InputEventPanGesture> pan_event;
 	pan_event.instantiate();
 	_set_key_modifier_state(pan_event, Key::NONE);

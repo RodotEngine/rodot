@@ -31,7 +31,7 @@
 #ifndef LIGHT_STORAGE_RD_H
 #define LIGHT_STORAGE_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_array.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/self_list.h"
@@ -99,7 +99,7 @@ private:
 			float shadow_texel_size = 0.0;
 			float range_begin = 0.0;
 			Rect2 atlas_rect;
-			Vector2 uv_scale;
+			Hector2 uv_scale;
 		};
 
 		RS::LightType light_type = RS::LIGHT_DIRECTIONAL;
@@ -111,8 +111,8 @@ private:
 		RID light;
 		Transform3D transform;
 
-		Vector3 light_vector;
-		Vector3 spot_vector;
+		Hector3 light_Hector;
+		Hector3 spot_Hector;
 		float linear_att = 0.0;
 
 		uint64_t shadow_pass = 0;
@@ -226,8 +226,8 @@ private:
 		Color ambient_color;
 		float ambient_color_energy = 1.0;
 		float max_distance = 0;
-		Vector3 size = Vector3(20, 20, 20);
-		Vector3 origin_offset;
+		Hector3 size = Hector3(20, 20, 20);
+		Hector3 origin_offset;
 		bool interior = false;
 		bool box_projection = false;
 		bool enable_shadows = false;
@@ -256,7 +256,7 @@ private:
 			RID fbs[6];
 		};
 
-		Vector<Reflection> reflections;
+		Hector<Reflection> reflections;
 
 		Ref<RenderSceneBuffersRD> render_buffers; // Further render buffers used.
 
@@ -330,11 +330,11 @@ private:
 		RID light_texture;
 		bool uses_spherical_harmonics = false;
 		bool interior = false;
-		AABB bounds = AABB(Vector3(), Vector3(1, 1, 1));
+		AABB bounds = AABB(Hector3(), Hector3(1, 1, 1));
 		float baked_exposure = 1.0;
-		Vector2i light_texture_size;
+		Hector2i light_texture_size;
 		int32_t array_index = -1; //unassigned
-		PackedVector3Array points;
+		PackedHector3Array points;
 		PackedColorArray point_sh;
 		PackedInt32Array tetrahedra;
 		PackedInt32Array bsp_tree;
@@ -349,7 +349,7 @@ private:
 	};
 
 	bool using_lightmap_array;
-	Vector<RID> lightmap_textures;
+	Hector<RID> lightmap_textures;
 	uint64_t lightmap_array_version = 0;
 	float lightmap_probe_capture_update_speed = 4;
 
@@ -387,7 +387,7 @@ private:
 				Shadow() {}
 			};
 
-			Vector<Shadow> shadows;
+			Hector<Shadow> shadows;
 
 			Quadrant() {}
 		} quadrants[4];
@@ -593,10 +593,10 @@ public:
 	virtual void light_instance_free(RID p_light) override;
 	virtual void light_instance_set_transform(RID p_light_instance, const Transform3D &p_transform) override;
 	virtual void light_instance_set_aabb(RID p_light_instance, const AABB &p_aabb) override;
-	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Vector2 &p_uv_scale = Vector2()) override;
+	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Hector2 &p_uv_scale = Hector2()) override;
 	virtual void light_instance_mark_visible(RID p_light_instance) override;
 
-	virtual bool light_instance_is_shadow_visible_at_position(RID p_light_instance, const Vector3 &p_position) const override {
+	virtual bool light_instance_is_shadow_visible_at_position(RID p_light_instance, const Hector3 &p_position) const override {
 		const LightInstance *light_instance = light_instance_owner.get_or_null(p_light_instance);
 		ERR_FAIL_NULL_V(light_instance, false);
 		const Light *light = light_owner.get_or_null(light_instance->light);
@@ -644,7 +644,7 @@ public:
 		return li->cull_mask;
 	}
 
-	_FORCE_INLINE_ Rect2 light_instance_get_shadow_atlas_rect(RID p_light_instance, RID p_shadow_atlas, Vector2i &r_omni_offset) {
+	_FORCE_INLINE_ Rect2 light_instance_get_shadow_atlas_rect(RID p_light_instance, RID p_shadow_atlas, Hector2i &r_omni_offset) {
 		ShadowAtlas *shadow_atlas = shadow_atlas_owner.get_or_null(p_shadow_atlas);
 		LightInstance *li = light_instance_owner.get_or_null(p_light_instance);
 		uint32_t key = shadow_atlas->shadow_owners[li->self];
@@ -723,7 +723,7 @@ public:
 		return li->shadow_transform[p_index].range_begin;
 	}
 
-	_FORCE_INLINE_ Vector2 light_instance_get_shadow_uv_scale(RID p_light_instance, int p_index) {
+	_FORCE_INLINE_ Hector2 light_instance_get_shadow_uv_scale(RID p_light_instance, int p_index) {
 		LightInstance *li = light_instance_owner.get_or_null(p_light_instance);
 		return li->shadow_transform[p_index].uv_scale;
 	}
@@ -820,8 +820,8 @@ public:
 	virtual void reflection_probe_set_ambient_color(RID p_probe, const Color &p_color) override;
 	virtual void reflection_probe_set_ambient_energy(RID p_probe, float p_energy) override;
 	virtual void reflection_probe_set_max_distance(RID p_probe, float p_distance) override;
-	virtual void reflection_probe_set_size(RID p_probe, const Vector3 &p_size) override;
-	virtual void reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) override;
+	virtual void reflection_probe_set_size(RID p_probe, const Hector3 &p_size) override;
+	virtual void reflection_probe_set_origin_offset(RID p_probe, const Hector3 &p_offset) override;
 	virtual void reflection_probe_set_as_interior(RID p_probe, bool p_enable) override;
 	virtual void reflection_probe_set_enable_box_projection(RID p_probe, bool p_enable) override;
 	virtual void reflection_probe_set_enable_shadows(RID p_probe, bool p_enable) override;
@@ -836,8 +836,8 @@ public:
 	virtual RS::ReflectionProbeUpdateMode reflection_probe_get_update_mode(RID p_probe) const override;
 	virtual uint32_t reflection_probe_get_cull_mask(RID p_probe) const override;
 	virtual uint32_t reflection_probe_get_reflection_mask(RID p_probe) const override;
-	virtual Vector3 reflection_probe_get_size(RID p_probe) const override;
-	virtual Vector3 reflection_probe_get_origin_offset(RID p_probe) const override;
+	virtual Hector3 reflection_probe_get_size(RID p_probe) const override;
+	virtual Hector3 reflection_probe_get_origin_offset(RID p_probe) const override;
 	virtual float reflection_probe_get_origin_max_distance(RID p_probe) const override;
 	virtual float reflection_probe_get_mesh_lod_threshold(RID p_probe) const override;
 
@@ -959,15 +959,15 @@ public:
 	virtual void lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) override;
 	virtual void lightmap_set_probe_bounds(RID p_lightmap, const AABB &p_bounds) override;
 	virtual void lightmap_set_probe_interior(RID p_lightmap, bool p_interior) override;
-	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) override;
+	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) override;
 	virtual void lightmap_set_baked_exposure_normalization(RID p_lightmap, float p_exposure) override;
-	virtual PackedVector3Array lightmap_get_probe_capture_points(RID p_lightmap) const override;
+	virtual PackedHector3Array lightmap_get_probe_capture_points(RID p_lightmap) const override;
 	virtual PackedColorArray lightmap_get_probe_capture_sh(RID p_lightmap) const override;
 	virtual PackedInt32Array lightmap_get_probe_capture_tetrahedra(RID p_lightmap) const override;
 	virtual PackedInt32Array lightmap_get_probe_capture_bsp_tree(RID p_lightmap) const override;
 	virtual AABB lightmap_get_aabb(RID p_lightmap) const override;
 	virtual bool lightmap_is_interior(RID p_lightmap) const override;
-	virtual void lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) override;
+	virtual void lightmap_tap_sh_light(RID p_lightmap, const Hector3 &p_point, Color *r_sh) override;
 	virtual void lightmap_set_probe_capture_update_speed(float p_speed) override;
 
 	Dependency *lightmap_get_dependency(RID p_lightmap) const;
@@ -995,7 +995,7 @@ public:
 		const Lightmap *lm = lightmap_owner.get_or_null(p_lightmap);
 		return lm->uses_spherical_harmonics;
 	}
-	_FORCE_INLINE_ Vector2i lightmap_get_light_texture_size(RID p_lightmap) const {
+	_FORCE_INLINE_ Hector2i lightmap_get_light_texture_size(RID p_lightmap) const {
 		const Lightmap *lm = lightmap_owner.get_or_null(p_lightmap);
 		return lm->light_texture_size;
 	}
@@ -1009,7 +1009,7 @@ public:
 		return lightmap_textures.size();
 	}
 
-	_FORCE_INLINE_ const Vector<RID> &lightmap_array_get_textures() const {
+	_FORCE_INLINE_ const Hector<RID> &lightmap_array_get_textures() const {
 		ERR_FAIL_COND_V(!using_lightmap_array, lightmap_textures); //only for arrays
 		return lightmap_textures;
 	}

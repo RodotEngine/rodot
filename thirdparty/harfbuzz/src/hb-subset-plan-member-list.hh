@@ -33,9 +33,9 @@
 
 // For each cp that we'd like to retain maps to the corresponding gid.
 HB_SUBSET_PLAN_MEMBER (hb_set_t, unicodes)
-HB_SUBSET_PLAN_MEMBER (hb_sorted_vector_t<hb_codepoint_pair_t>, unicode_to_new_gid_list)
+HB_SUBSET_PLAN_MEMBER (hb_sorted_Hector_t<hb_codepoint_pair_t>, unicode_to_new_gid_list)
 
-HB_SUBSET_PLAN_MEMBER (hb_sorted_vector_t<hb_codepoint_pair_t>, new_to_old_gid_list)
+HB_SUBSET_PLAN_MEMBER (hb_sorted_Hector_t<hb_codepoint_pair_t>, new_to_old_gid_list)
 
 // name_ids we would like to retain
 HB_SUBSET_PLAN_MEMBER (hb_set_t, name_ids)
@@ -103,7 +103,7 @@ HB_SUBSET_PLAN_MEMBER (hb_hashmap_t E(<unsigned, hb_pair_t E(<const void*, const
 HB_SUBSET_PLAN_MEMBER (hb_map_t, colrv1_layers)
 HB_SUBSET_PLAN_MEMBER (hb_map_t, colr_palettes)
 //colrv1 varstore retained varidx mapping
-HB_SUBSET_PLAN_MEMBER (hb_vector_t<hb_inc_bimap_t>, colrv1_varstore_inner_maps)
+HB_SUBSET_PLAN_MEMBER (hb_Hector_t<hb_inc_bimap_t>, colrv1_varstore_inner_maps)
 //colrv1 retained varidx -> (new varidx, delta) mapping
 HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<unsigned, hb_pair_t E(<unsigned, int>)>), colrv1_variation_idx_delta_map)
 //colrv1 retained new delta set index -> new varidx mapping
@@ -113,13 +113,13 @@ HB_SUBSET_PLAN_MEMBER (hb_map_t, colrv1_new_deltaset_idx_varidx_map)
 HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<unsigned, hb_pair_t E(<unsigned, int>)>), layout_variation_idx_delta_map)
 
 //gdef varstore retained varidx mapping
-HB_SUBSET_PLAN_MEMBER (hb_vector_t<hb_inc_bimap_t>, gdef_varstore_inner_maps)
+HB_SUBSET_PLAN_MEMBER (hb_Hector_t<hb_inc_bimap_t>, gdef_varstore_inner_maps)
 
 HB_SUBSET_PLAN_MEMBER (hb_hashmap_t E(<hb_tag_t, hb::unique_ptr<hb_blob_t>>), sanitized_table_cache)
 
 //normalized axes range map
 HB_SUBSET_PLAN_MEMBER (hb_hashmap_t E(<hb_tag_t, Triple>), axes_location)
-HB_SUBSET_PLAN_MEMBER (hb_vector_t<int>, normalized_coords)
+HB_SUBSET_PLAN_MEMBER (hb_Hector_t<int>, normalized_coords)
 
 //user specified axes range map
 HB_SUBSET_PLAN_MEMBER (hb_hashmap_t E(<hb_tag_t, Triple>), user_axes_location)
@@ -131,20 +131,20 @@ HB_SUBSET_PLAN_MEMBER (hb_map_t, axes_index_map)
 
 //axis_index->axis_tag mapping in fvar axis array
 HB_SUBSET_PLAN_MEMBER (hb_map_t, axes_old_index_tag_map)
-//vector of retained axis tags in the order of axes given in the 'fvar' table
-HB_SUBSET_PLAN_MEMBER (hb_vector_t<hb_tag_t>, axis_tags)
+//Hector of retained axis tags in the order of axes given in the 'fvar' table
+HB_SUBSET_PLAN_MEMBER (hb_Hector_t<hb_tag_t>, axis_tags)
 
 //hmtx metrics map: new gid->(advance, lsb)
 HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<hb_codepoint_t, hb_pair_t E(<unsigned, int>)>), hmtx_map)
 //vmtx metrics map: new gid->(advance, lsb)
 HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<hb_codepoint_t, hb_pair_t E(<unsigned, int>)>), vmtx_map)
 //boundsWidth map: new gid->boundsWidth, boundWidth=xMax - xMin
-HB_SUBSET_PLAN_MEMBER (mutable hb_vector_t<unsigned>, bounds_width_vec)
+HB_SUBSET_PLAN_MEMBER (mutable hb_Hector_t<unsigned>, bounds_width_vec)
 //boundsHeight map: new gid->boundsHeight, boundsHeight=yMax - yMin
-HB_SUBSET_PLAN_MEMBER (mutable hb_vector_t<unsigned>, bounds_height_vec)
+HB_SUBSET_PLAN_MEMBER (mutable hb_Hector_t<unsigned>, bounds_height_vec)
 
-//map: new_gid -> contour points vector
-HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<hb_codepoint_t, contour_point_vector_t>), new_gid_contour_points_map)
+//map: new_gid -> contour points Hector
+HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<hb_codepoint_t, contour_point_Hector_t>), new_gid_contour_points_map)
 
 //new gids set for composite glyphs
 HB_SUBSET_PLAN_MEMBER (hb_set_t, composite_new_gids)
@@ -153,7 +153,7 @@ HB_SUBSET_PLAN_MEMBER (hb_set_t, composite_new_gids)
 HB_SUBSET_PLAN_MEMBER (mutable hb_hashmap_t E(<unsigned, hb_pair_t E(<unsigned, int>)>), base_variation_idx_map)
 
 //BASE table varstore retained varidx mapping
-HB_SUBSET_PLAN_MEMBER (hb_vector_t<hb_inc_bimap_t>, base_varstore_inner_maps)
+HB_SUBSET_PLAN_MEMBER (hb_Hector_t<hb_inc_bimap_t>, base_varstore_inner_maps)
 
 #ifdef HB_EXPERIMENTAL_API
 // name table overrides map: hb_ot_name_record_ids_t-> name string new value or

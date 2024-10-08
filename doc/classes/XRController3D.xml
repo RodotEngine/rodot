@@ -33,11 +33,11 @@
 				Returns the hand holding this controller, if known. See [enum XRPositionalTracker.TrackerHand].
 			</description>
 		</method>
-		<method name="get_vector2" qualifiers="const">
-			<return type="Vector2" />
+		<method name="get_Hector2" qualifiers="const">
+			<return type="Hector2" />
 			<param index="0" name="name" type="StringName" />
 			<description>
-				Returns a [Vector2] for the input with the given [param name]. This is used for thumbsticks and thumbpads found on many controllers.
+				Returns a [Hector2] for the input with the given [param name]. This is used for thumbsticks and thumbpads found on many controllers.
 			</description>
 		</method>
 		<method name="is_button_pressed" qualifiers="const">
@@ -68,9 +68,9 @@
 				Emitted when a trigger or similar input on this controller changes value.
 			</description>
 		</signal>
-		<signal name="input_vector2_changed">
+		<signal name="input_Hector2_changed">
 			<param index="0" name="name" type="String" />
-			<param index="1" name="value" type="Vector2" />
+			<param index="1" name="value" type="Hector2" />
 			<description>
 				Emitted when a thumbstick or thumbpad on this controller is moved.
 			</description>

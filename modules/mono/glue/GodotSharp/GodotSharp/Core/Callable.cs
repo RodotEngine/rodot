@@ -21,7 +21,7 @@ namespace Godot
     ///     // This Callable object will call the PrintArgs method defined above.
     ///     Callable callable = new Callable(this, nameof(PrintArgs));
     ///     callable.Call("hello", "world"); // Prints "hello world null".
-    ///     callable.Call(Vector2.Up, 42, callable); // Prints "(0, -1) 42 Node(Node.cs)::PrintArgs".
+    ///     callable.Call(Hector2.Up, 42, callable); // Prints "(0, -1) 42 Node(Node.cs)::PrintArgs".
     ///     callable.Call("invalid"); // Invalid call, should have at least 2 arguments.
     /// }
     /// </code>

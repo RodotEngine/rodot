@@ -474,10 +474,10 @@ namespace basisu
 		}
 	};
 
-	template<uint32_t N, typename VectorType>
-	inline VectorType compute_pca_from_covar(matrix<N, N, float> &cmatrix)
+	template<uint32_t N, typename HectorType>
+	inline HectorType compute_pca_from_covar(matrix<N, N, float> &cmatrix)
 	{
-		VectorType axis;
+		HectorType axis;
 		if (N == 1)
 			axis.set(1.0f);
 		else
@@ -486,12 +486,12 @@ namespace basisu
 				axis[i] = lerp(.75f, 1.25f, i * (1.0f / maximum<int>(N - 1, 1)));
 		}
 
-		VectorType prev_axis(axis);
+		HectorType prev_axis(axis);
 
 		// Power iterations
 		for (uint32_t power_iter = 0; power_iter < 8; power_iter++)
 		{
-			VectorType trial_axis;
+			HectorType trial_axis;
 			double max_sum = 0;
 
 			for (uint32_t i = 0; i < N; i++)
@@ -508,7 +508,7 @@ namespace basisu
 			if (max_sum != 0.0f)
 				trial_axis *= static_cast<float>(1.0f / max_sum);
 
-			VectorType delta_axis(prev_axis - trial_axis);
+			HectorType delta_axis(prev_axis - trial_axis);
 
 			prev_axis = axis;
 			axis = trial_axis;
@@ -931,7 +931,7 @@ namespace basisu
 		static color_rgba comp_max(const color_rgba& a, const color_rgba& b) { return color_rgba(basisu::maximum(a[0], b[0]), basisu::maximum(a[1], b[1]), basisu::maximum(a[2], b[2]), basisu::maximum(a[3], b[3])); }
 	};
 
-	typedef basisu::vector<color_rgba> color_rgba_vec;
+	typedef basisu::Hector<color_rgba> color_rgba_vec;
 
 	const color_rgba g_black_color(0, 0, 0, 255);
 	const color_rgba g_black_trans_color(0, 0, 0, 0);
@@ -1358,7 +1358,7 @@ namespace basisu
 			float m_priority;
 		};
 
-		basisu::vector<entry> m_heap;
+		basisu::Hector<entry> m_heap;
 		uint32_t m_size;
 
 		// Push down entry at index
@@ -1382,35 +1382,35 @@ namespace basisu
 		}
 	};
 
-	// Tree structured vector quantization (TSVQ)
+	// Tree structured Hector quantization (TSVQ)
 
-	template <typename TrainingVectorType>
-	class tree_vector_quant
+	template <typename TrainingHectorType>
+	class tree_Hector_quant
 	{
 	public:
-		typedef TrainingVectorType training_vec_type;
-		typedef std::pair<TrainingVectorType, uint64_t> training_vec_with_weight;
-		typedef basisu::vector< training_vec_with_weight > array_of_weighted_training_vecs;
+		typedef TrainingHectorType training_vec_type;
+		typedef std::pair<TrainingHectorType, uint64_t> training_vec_with_weight;
+		typedef basisu::Hector< training_vec_with_weight > array_of_weighted_training_vecs;
 
-		tree_vector_quant() :
+		tree_Hector_quant() :
 			m_next_codebook_index(0)
 		{
 		}
 
 		void clear()
 		{
-			clear_vector(m_training_vecs);
-			clear_vector(m_nodes);
+			clear_Hector(m_training_vecs);
+			clear_Hector(m_nodes);
 			m_next_codebook_index = 0;
 		}
 
-		void add_training_vec(const TrainingVectorType &v, uint64_t weight) { m_training_vecs.push_back(std::make_pair(v, weight)); }
+		void add_training_vec(const TrainingHectorType &v, uint64_t weight) { m_training_vecs.push_back(std::make_pair(v, weight)); }
 
 		size_t get_total_training_vecs() const { return m_training_vecs.size(); }
 		const array_of_weighted_training_vecs &get_training_vecs() const	{ return m_training_vecs; }
 				array_of_weighted_training_vecs &get_training_vecs()			{ return m_training_vecs; }
 
-		void retrieve(basisu::vector< basisu::vector<uint32_t> > &codebook) const
+		void retrieve(basisu::Hector< basisu::Hector<uint32_t> > &codebook) const
 		{
 			for (uint32_t i = 0; i < m_nodes.size(); i++)
 			{
@@ -1423,7 +1423,7 @@ namespace basisu
 			}
 		}
 
-		void retrieve(basisu::vector<TrainingVectorType> &codebook) const
+		void retrieve(basisu::Hector<TrainingHectorType> &codebook) const
 		{
 			for (uint32_t i = 0; i < m_nodes.size(); i++)
 			{
@@ -1436,7 +1436,7 @@ namespace basisu
 			}
 		}
 
-		void retrieve(uint32_t max_clusters, basisu::vector<uint_vec> &codebook) const
+		void retrieve(uint32_t max_clusters, basisu::Hector<uint_vec> &codebook) const
       {
 			uint_vec node_stack;
          node_stack.reserve(512);
@@ -1475,7 +1475,7 @@ namespace basisu
 
 			m_next_codebook_index = 0;
 
-			clear_vector(m_nodes);
+			clear_Hector(m_nodes);
 			m_nodes.reserve(max_size * 2 + 1);
 
 			m_nodes.push_back(prepare_root());
@@ -1483,7 +1483,7 @@ namespace basisu
 			priority_queue var_heap;
 			var_heap.init(max_size, 0, m_nodes[0].m_var);
 
-			basisu::vector<uint32_t> l_children, r_children;
+			basisu::Hector<uint32_t> l_children, r_children;
 
 			// Now split the worst nodes
 			l_children.reserve(m_training_vecs.size() + 1);
@@ -1514,7 +1514,7 @@ namespace basisu
 				}
 			}
 
-			//debug_printf("tree_vector_quant::generate %u: %3.3f secs\n", TrainingVectorType::num_elements, tm.get_elapsed_secs());
+			//debug_printf("tree_Hector_quant::generate %u: %3.3f secs\n", TrainingHectorType::num_elements, tm.get_elapsed_secs());
 
 			return true;
 		}
@@ -1526,19 +1526,19 @@ namespace basisu
 			inline tsvq_node() : m_weight(0), m_origin(cZero), m_left_index(-1), m_right_index(-1), m_codebook_index(-1) { }
 
 			// vecs is erased
-			inline void set(const TrainingVectorType &org, uint64_t weight, float var, basisu::vector<uint32_t> &vecs) { m_origin = org; m_weight = weight; m_var = var; m_training_vecs.swap(vecs); }
+			inline void set(const TrainingHectorType &org, uint64_t weight, float var, basisu::Hector<uint32_t> &vecs) { m_origin = org; m_weight = weight; m_var = var; m_training_vecs.swap(vecs); }
 
 			inline bool is_leaf() const { return m_left_index < 0; }
 
 			float m_var;
 			uint64_t m_weight;
-			TrainingVectorType m_origin;
+			TrainingHectorType m_origin;
 			int32_t m_left_index, m_right_index;
-			basisu::vector<uint32_t> m_training_vecs;
+			basisu::Hector<uint32_t> m_training_vecs;
 			int m_codebook_index;
 		};
 
-		typedef basisu::vector<tsvq_node> tsvq_node_vec;
+		typedef basisu::Hector<tsvq_node> tsvq_node_vec;
 		tsvq_node_vec m_nodes;
 
 		array_of_weighted_training_vecs m_training_vecs;
@@ -1549,13 +1549,13 @@ namespace basisu
 		{
 			double ttsum = 0.0f;
 
-			// Prepare root node containing all training vectors
+			// Prepare root node containing all training Hectors
 			tsvq_node root;
 			root.m_training_vecs.reserve(m_training_vecs.size());
 
 			for (uint32_t i = 0; i < m_training_vecs.size(); i++)
 			{
-				const TrainingVectorType &v = m_training_vecs[i].first;
+				const TrainingHectorType &v = m_training_vecs[i].first;
 				const uint64_t weight = m_training_vecs[i].second;
 
 				root.m_training_vecs.push_back(i);
@@ -1573,9 +1573,9 @@ namespace basisu
 			return root;
 		}
 
-		bool split_node(uint32_t node_index, priority_queue &var_heap, basisu::vector<uint32_t> &l_children, basisu::vector<uint32_t> &r_children)
+		bool split_node(uint32_t node_index, priority_queue &var_heap, basisu::Hector<uint32_t> &l_children, basisu::Hector<uint32_t> &r_children)
 		{
-			TrainingVectorType l_child_org, r_child_org;
+			TrainingHectorType l_child_org, r_child_org;
 			uint64_t l_weight = 0, r_weight = 0;
 			float l_var = 0.0f, r_var = 0.0f;
 
@@ -1583,7 +1583,7 @@ namespace basisu
 			if (!prep_split(m_nodes[node_index], l_child_org, r_child_org))
 				return false;
 
-			// Use k-means iterations to refine these children vectors
+			// Use k-means iterations to refine these children Hectors
 			if (!refine_split(m_nodes[node_index], l_child_org, l_weight, l_var, l_children, r_child_org, r_weight, r_var, r_children))
 				return false;
 
@@ -1605,7 +1605,7 @@ namespace basisu
 
 			if ((l_child.m_var <= 0.0f) && (l_child.m_training_vecs.size() > 1))
 			{
-				TrainingVectorType v(m_training_vecs[l_child.m_training_vecs[0]].first);
+				TrainingHectorType v(m_training_vecs[l_child.m_training_vecs[0]].first);
 				
 				for (uint32_t i = 1; i < l_child.m_training_vecs.size(); i++)
 				{
@@ -1619,7 +1619,7 @@ namespace basisu
 
 			if ((r_child.m_var <= 0.0f) && (r_child.m_training_vecs.size() > 1))
 			{
-				TrainingVectorType v(m_training_vecs[r_child.m_training_vecs[0]].first);
+				TrainingHectorType v(m_training_vecs[r_child.m_training_vecs[0]].first);
 
 				for (uint32_t i = 1; i < r_child.m_training_vecs.size(); i++)
 				{
@@ -1640,9 +1640,9 @@ namespace basisu
 			return true;
 		}
 
-		TrainingVectorType compute_split_axis(const tsvq_node &node) const
+		TrainingHectorType compute_split_axis(const tsvq_node &node) const
 		{
-			const uint32_t N = TrainingVectorType::num_elements;
+			const uint32_t N = TrainingHectorType::num_elements;
 
 			matrix<N, N, float> cmatrix;
 
@@ -1650,11 +1650,11 @@ namespace basisu
 			{
 				cmatrix.set_zero();
 
-				// Compute covariance matrix from weighted input vectors
+				// Compute covariance matrix from weighted input Hectors
 				for (uint32_t i = 0; i < node.m_training_vecs.size(); i++)
 				{
-					const TrainingVectorType v(m_training_vecs[node.m_training_vecs[i]].first - node.m_origin);
-					const TrainingVectorType w(static_cast<float>(m_training_vecs[node.m_training_vecs[i]].second) * v);
+					const TrainingHectorType v(m_training_vecs[node.m_training_vecs[i]].first - node.m_origin);
+					const TrainingHectorType w(static_cast<float>(m_training_vecs[node.m_training_vecs[i]].second) * v);
 
 					for (uint32_t x = 0; x < N; x++)
 						for (uint32_t y = x; y < N; y++)
@@ -1666,7 +1666,7 @@ namespace basisu
 #if BASISU_SUPPORT_SSE
 				// Specialize the case with 16x16 matrices, which are quite expensive without SIMD.
 				// This SSE function takes pointers to void types, so do some sanity checks.
-				assert(sizeof(TrainingVectorType) == sizeof(float) * 16);
+				assert(sizeof(TrainingHectorType) == sizeof(float) * 16);
 				assert(sizeof(training_vec_with_weight) == sizeof(std::pair<vec16F, uint64_t>));
 				update_covar_matrix_16x16_sse41(node.m_training_vecs.size(), m_training_vecs.data(), &node.m_origin, node.m_training_vecs.data(), &cmatrix);
 #endif
@@ -1683,12 +1683,12 @@ namespace basisu
 				for (uint32_t y = x + 1; y < N; y++)
 					cmatrix[y][x] = cmatrix[x][y];
 
-			return compute_pca_from_covar<N, TrainingVectorType>(cmatrix);
+			return compute_pca_from_covar<N, TrainingHectorType>(cmatrix);
 		}
 
-		bool prep_split(const tsvq_node &node, TrainingVectorType &l_child_result, TrainingVectorType &r_child_result) const
+		bool prep_split(const tsvq_node &node, TrainingHectorType &l_child_result, TrainingHectorType &r_child_result) const
 		{
-			//const uint32_t N = TrainingVectorType::num_elements;
+			//const uint32_t N = TrainingHectorType::num_elements;
 
 			if (2 == node.m_training_vecs.size())
 			{
@@ -1697,7 +1697,7 @@ namespace basisu
 				return true;
 			}
 
-			TrainingVectorType axis(compute_split_axis(node)), l_child(0.0f), r_child(0.0f);
+			TrainingHectorType axis(compute_split_axis(node)), l_child(0.0f), r_child(0.0f);
 			double l_weight = 0.0f, r_weight = 0.0f;
 
 			// Compute initial left/right children
@@ -1705,7 +1705,7 @@ namespace basisu
 			{
 				const float weight = (float)m_training_vecs[node.m_training_vecs[i]].second;
 
-				const TrainingVectorType &v = m_training_vecs[node.m_training_vecs[i]].first;
+				const TrainingHectorType &v = m_training_vecs[node.m_training_vecs[i]].first;
 
 				double t = (v - node.m_origin).dot(axis);
 				if (t >= 0.0f)
@@ -1727,21 +1727,21 @@ namespace basisu
 			}
 			else
 			{
-				TrainingVectorType l(1e+20f);
-				TrainingVectorType h(-1e+20f);
+				TrainingHectorType l(1e+20f);
+				TrainingHectorType h(-1e+20f);
 				for (uint32_t i = 0; i < node.m_training_vecs.size(); i++)
 				{
-					const TrainingVectorType& v = m_training_vecs[node.m_training_vecs[i]].first;
+					const TrainingHectorType& v = m_training_vecs[node.m_training_vecs[i]].first;
 					
-					l = TrainingVectorType::component_min(l, v);
-					h = TrainingVectorType::component_max(h, v);
+					l = TrainingHectorType::component_min(l, v);
+					h = TrainingHectorType::component_max(h, v);
 				}
 
-				TrainingVectorType r(h - l);
+				TrainingHectorType r(h - l);
 
 				float largest_axis_v = 0.0f;
 				int largest_axis_index = -1;
-				for (uint32_t i = 0; i < TrainingVectorType::num_elements; i++)
+				for (uint32_t i = 0; i < TrainingHectorType::num_elements; i++)
 				{
 					if (r[i] > largest_axis_v)
 					{
@@ -1753,7 +1753,7 @@ namespace basisu
 				if (largest_axis_index < 0)
 					return false;
 
-				basisu::vector<float> keys(node.m_training_vecs.size());
+				basisu::Hector<float> keys(node.m_training_vecs.size());
 				for (uint32_t i = 0; i < node.m_training_vecs.size(); i++)
 					keys[i] = m_training_vecs[node.m_training_vecs[i]].first[largest_axis_index];
 
@@ -1771,7 +1771,7 @@ namespace basisu
 				{
 					const float weight = (float)m_training_vecs[node.m_training_vecs[i]].second;
 
-					const TrainingVectorType& v = m_training_vecs[node.m_training_vecs[i]].first;
+					const TrainingHectorType& v = m_training_vecs[node.m_training_vecs[i]].first;
 
 					if (i < half_index)
 					{
@@ -1801,8 +1801,8 @@ namespace basisu
 		}
 
 		bool refine_split(const tsvq_node &node,
-			TrainingVectorType &l_child, uint64_t &l_weight, float &l_var, basisu::vector<uint32_t> &l_children,
-			TrainingVectorType &r_child, uint64_t &r_weight, float &r_var, basisu::vector<uint32_t> &r_children) const
+			TrainingHectorType &l_child, uint64_t &l_weight, float &l_var, basisu::Hector<uint32_t> &l_children,
+			TrainingHectorType &r_child, uint64_t &r_weight, float &r_var, basisu::Hector<uint32_t> &r_children) const
 		{
 			l_children.reserve(node.m_training_vecs.size());
 			r_children.reserve(node.m_training_vecs.size());
@@ -1816,7 +1816,7 @@ namespace basisu
 				l_children.resize(0); 
 				r_children.resize(0); 
 
-				TrainingVectorType new_l_child(cZero), new_r_child(cZero);
+				TrainingHectorType new_l_child(cZero), new_r_child(cZero);
 
 				double l_ttsum = 0.0f, r_ttsum = 0.0f;
 
@@ -1825,7 +1825,7 @@ namespace basisu
 
 				for (uint32_t i = 0; i < node.m_training_vecs.size(); i++)
 				{
-					const TrainingVectorType &v = m_training_vecs[node.m_training_vecs[i]].first;
+					const TrainingHectorType &v = m_training_vecs[node.m_training_vecs[i]].first;
 					const uint64_t weight = m_training_vecs[node.m_training_vecs[i]].second;
 
 					double left_dist2 = l_child.squared_distance_d(v), right_dist2 = r_child.squared_distance_d(v);
@@ -1861,10 +1861,10 @@ namespace basisu
 					r_ttsum = 0.0f;
 					r_weight = 0;
 
-					TrainingVectorType firstVec;
+					TrainingHectorType firstVec;
 					for (uint32_t i = 0; i < node.m_training_vecs.size(); i++)
 					{
-						const TrainingVectorType& v = m_training_vecs[node.m_training_vecs[i]].first;
+						const TrainingHectorType& v = m_training_vecs[node.m_training_vecs[i]].first;
 						const uint64_t weight = m_training_vecs[node.m_training_vecs[i]].second;
 					
 						if ((!i) || (v == firstVec))
@@ -1926,8 +1926,8 @@ namespace basisu
 	template<typename Quantizer>
 	bool generate_hierarchical_codebook_threaded_internal(Quantizer& q,
 		uint32_t max_codebook_size, uint32_t max_parent_codebook_size,
-		basisu::vector<uint_vec>& codebook,
-		basisu::vector<uint_vec>& parent_codebook,
+		basisu::Hector<uint_vec>& codebook,
+		basisu::Hector<uint_vec>& parent_codebook,
 		uint32_t max_threads, bool limit_clusterizers, job_pool *pJob_pool)
 	{
 		codebook.resize(0);
@@ -1953,7 +1953,7 @@ namespace basisu
 		if (!q.generate(max_threads))
 			return false;
 
-		basisu::vector<uint_vec> initial_codebook;
+		basisu::Hector<uint_vec> initial_codebook;
 
 		q.retrieve(initial_codebook);
 
@@ -1972,8 +1972,8 @@ namespace basisu
 		bool success_flags[cMaxThreads];
 		clear_obj(success_flags);
 
-		basisu::vector<uint_vec> local_clusters[cMaxThreads];
-		basisu::vector<uint_vec> local_parent_clusters[cMaxThreads];
+		basisu::Hector<uint_vec> local_clusters[cMaxThreads];
+		basisu::Hector<uint_vec> local_parent_clusters[cMaxThreads];
 
 		for (uint32_t thread_iter = 0; thread_iter < max_threads; thread_iter++)
 		{
@@ -2064,8 +2064,8 @@ namespace basisu
 	template<typename Quantizer>
 	bool generate_hierarchical_codebook_threaded(Quantizer& q,
 		uint32_t max_codebook_size, uint32_t max_parent_codebook_size,
-		basisu::vector<uint_vec>& codebook,
-		basisu::vector<uint_vec>& parent_codebook,
+		basisu::Hector<uint_vec>& codebook,
+		basisu::Hector<uint_vec>& parent_codebook,
 		uint32_t max_threads, job_pool *pJob_pool,
 		bool even_odd_input_pairs_equal)
 	{
@@ -2126,12 +2126,12 @@ namespace basisu
 			}
 		}
 
-		//debug_printf("generate_hierarchical_codebook_threaded: %u training vectors, %u unique training vectors, %3.3f secs\n", q.get_total_training_vecs(), (uint32_t)unique_vecs.size(), tm.get_elapsed_secs());
-		debug_printf("generate_hierarchical_codebook_threaded: %u training vectors, %u unique training vectors\n", q.get_total_training_vecs(), (uint32_t)unique_vecs.size());
+		//debug_printf("generate_hierarchical_codebook_threaded: %u training Hectors, %u unique training Hectors, %3.3f secs\n", q.get_total_training_vecs(), (uint32_t)unique_vecs.size(), tm.get_elapsed_secs());
+		debug_printf("generate_hierarchical_codebook_threaded: %u training Hectors, %u unique training Hectors\n", q.get_total_training_vecs(), (uint32_t)unique_vecs.size());
 
 		Quantizer group_quant;
 		typedef typename group_hash::const_iterator group_hash_const_iter;
-		basisu::vector<group_hash_const_iter> unique_vec_iters;
+		basisu::Hector<group_hash_const_iter> unique_vec_iters;
 		unique_vec_iters.reserve(unique_vecs.size());
 
 		for (auto iter = unique_vecs.begin(); iter != unique_vecs.end(); ++iter)
@@ -2146,7 +2146,7 @@ namespace basisu
 
 		debug_printf("Limit clusterizers: %u\n", limit_clusterizers);
 
-		basisu::vector<uint_vec> group_codebook, group_parent_codebook;
+		basisu::Hector<uint_vec> group_codebook, group_parent_codebook;
 		bool status = generate_hierarchical_codebook_threaded_internal(group_quant,
 			max_codebook_size, max_parent_codebook_size,
 			group_codebook,
@@ -2168,7 +2168,7 @@ namespace basisu
 				typename group_hash::const_iterator group_iter = unique_vec_iters[group_index];
 				const uint_vec& training_vec_indices = group_iter->second.m_indices;
 				
-				append_vector(codebook.back(), training_vec_indices);
+				append_Hector(codebook.back(), training_vec_indices);
 			}
 		}
 
@@ -2184,7 +2184,7 @@ namespace basisu
 				typename group_hash::const_iterator group_iter = unique_vec_iters[group_index];
 				const uint_vec& training_vec_indices = group_iter->second.m_indices;
 
-				append_vector(parent_codebook.back(), training_vec_indices);
+				append_Hector(parent_codebook.back(), training_vec_indices);
 			}
 		}
 
@@ -2195,14 +2195,14 @@ namespace basisu
 
 	class histogram
 	{
-		basisu::vector<uint32_t> m_hist;
+		basisu::Hector<uint32_t> m_hist;
 
 	public:
 		histogram(uint32_t size = 0) { init(size); }
 
 		void clear()
 		{
-			clear_vector(m_hist);
+			clear_Hector(m_hist);
 		}
 
 		void init(uint32_t size)
@@ -2273,8 +2273,8 @@ namespace basisu
 
 		void clear()
 		{
-			clear_vector(m_codes);
-			clear_vector(m_code_sizes);
+			clear_Hector(m_codes);
+			clear_Hector(m_code_sizes);
 		}
 
 		bool init(const histogram &h, uint32_t max_code_size = cHuffmanMaxSupportedCodeSize)
@@ -2313,7 +2313,7 @@ namespace basisu
 
 		inline void clear()
 		{
-			clear_vector(m_bytes);
+			clear_Hector(m_bytes);
 			m_bit_buffer = 0;
 			m_bit_buffer_size = 0;
 			m_total_bits = 0;
@@ -2567,11 +2567,11 @@ namespace basisu
 
 		void clear()
 		{
-			clear_vector(m_hist);
-			clear_vector(m_total_count_to_picked);
-			clear_vector(m_entries_picked);
-			clear_vector(m_entries_to_do);
-			clear_vector(m_remap_table);
+			clear_Hector(m_hist);
+			clear_Hector(m_total_count_to_picked);
+			clear_Hector(m_entries_picked);
+			clear_Hector(m_entries_to_do);
+			clear_Hector(m_remap_table);
 		}
 
 		// returns [0,1] distance of entry i to entry j
@@ -2648,7 +2648,7 @@ namespace basisu
 			m_width = 0; 
 			m_height = 0;
 			m_pitch = 0;
-			clear_vector(m_pixels);
+			clear_Hector(m_pixels);
 			return *this;
 		}
 
@@ -2746,7 +2746,7 @@ namespace basisu
 			return *this;
 		}
 
-		// pPixels MUST have been allocated using malloc() (basisu::vector will eventually use free() on the pointer).
+		// pPixels MUST have been allocated using malloc() (basisu::Hector will eventually use free() on the pointer).
 		image& grant_ownership(color_rgba* pPixels, uint32_t w, uint32_t h, uint32_t p = UINT32_MAX)
 		{
 			if (p == UINT32_MAX)
@@ -2997,7 +2997,7 @@ namespace basisu
 
 	// Float images
 
-	typedef basisu::vector<vec4F> vec4F_vec;
+	typedef basisu::Hector<vec4F> vec4F_vec;
 
 	class imagef
 	{
@@ -3045,7 +3045,7 @@ namespace basisu
 			m_width = 0; 
 			m_height = 0;
 			m_pitch = 0;
-			clear_vector(m_pixels);
+			clear_Hector(m_pixels);
 			return *this;
 		}
 
@@ -3322,33 +3322,33 @@ namespace basisu
 	// 2D array
 
 	template<typename T>
-	class vector2D
+	class Hector2D
 	{
-		typedef basisu::vector<T> TVec;
+		typedef basisu::Hector<T> TVec;
 
 		uint32_t m_width, m_height;
 		TVec m_values;
 
 	public:
-		vector2D() :
+		Hector2D() :
 			m_width(0),
 			m_height(0)
 		{
 		}
 
-		vector2D(uint32_t w, uint32_t h) :
+		Hector2D(uint32_t w, uint32_t h) :
 			m_width(0),
 			m_height(0)
 		{
 			resize(w, h);
 		}
 
-		vector2D(const vector2D &other)
+		Hector2D(const Hector2D &other)
 		{
 			*this = other;
 		}
 
-		vector2D &operator= (const vector2D &other)
+		Hector2D &operator= (const Hector2D &other)
 		{
 			if (this != &other)
 			{
@@ -3359,7 +3359,7 @@ namespace basisu
 			return *this;
 		}
 
-		inline bool operator== (const vector2D &rhs) const
+		inline bool operator== (const Hector2D &rhs) const
 		{
 			return (m_width == rhs.m_width) && (m_height == rhs.m_height) && (m_values == rhs.m_values);
 		}
@@ -3384,13 +3384,13 @@ namespace basisu
 
 		void set_all(const T&val)
 		{
-			vector_set_all(m_values, val);
+			Hector_set_all(m_values, val);
 		}
 
 		inline const T* get_ptr() const { return &m_values[0]; }
 		inline T* get_ptr() { return &m_values[0]; }
 
-		vector2D &resize(uint32_t new_width, uint32_t new_height)
+		Hector2D &resize(uint32_t new_width, uint32_t new_height)
 		{
 			if ((m_width == new_width) && (m_height == new_height))
 				return *this;
@@ -3449,7 +3449,7 @@ namespace basisu
 			return memcmp(m_pixels, rhs.m_pixels, sizeof(m_pixels)) == 0;
 		}
 	};
-	typedef basisu::vector<pixel_block> pixel_block_vec;
+	typedef basisu::Hector<pixel_block> pixel_block_vec;
 		
 } // namespace basisu
 

@@ -13,7 +13,7 @@ namespace embree
 
   template<typename T> struct LinearSpace2
   {
-    typedef T Vector;
+    typedef T Hector;
     typedef typename T::Scalar Scalar;
 
     /*! default matrix constructor */
@@ -24,8 +24,8 @@ namespace embree
 
     template<typename L1> __forceinline LinearSpace2( const LinearSpace2<L1>& s ) : vx(s.vx), vy(s.vy) {}
 
-    /*! matrix construction from column vectors */
-    __forceinline LinearSpace2(const Vector& vx, const Vector& vy)
+    /*! matrix construction from column Hectors */
+    __forceinline LinearSpace2(const Hector& vx, const Hector& vy)
       : vx(vx), vy(vy) {}
 
     /*! matrix construction from row mayor data */
@@ -46,10 +46,10 @@ namespace embree
     __forceinline const LinearSpace2 transposed() const { return LinearSpace2(vx.x,vx.y,vy.x,vy.y); }
 
     /*! returns first row of matrix */
-    __forceinline Vector row0() const { return Vector(vx.x,vy.x); }
+    __forceinline Hector row0() const { return Hector(vx.x,vy.x); }
 
     /*! returns second row of matrix */
-    __forceinline Vector row1() const { return Vector(vx.y,vy.y); }
+    __forceinline Hector row1() const { return Hector(vx.y,vy.y); }
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Constants
@@ -59,7 +59,7 @@ namespace embree
     __forceinline LinearSpace2( OneTy ) : vx(one, zero), vy(zero, one) {}
 
     /*! return matrix for scaling */
-    static __forceinline LinearSpace2 scale(const Vector& s) {
+    static __forceinline LinearSpace2 scale(const Hector& s) {
       return LinearSpace2(s.x,   0,
                           0  , s.y);
     }
@@ -99,8 +99,8 @@ namespace embree
 
   public:
 
-    /*! the column vectors of the matrix */
-    Vector vx,vy;
+    /*! the column Hectors of the matrix */
+    Hector vx,vy;
   };
 
   ////////////////////////////////////////////////////////////////////////////////

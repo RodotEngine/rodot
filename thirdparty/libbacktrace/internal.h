@@ -224,57 +224,57 @@ extern void backtrace_free (struct backtrace_state *state, void *mem,
 			    backtrace_error_callback error_callback,
 			    void *data);
 
-/* A growable vector of some struct.  This is used for more efficient
+/* A growable Hector of some struct.  This is used for more efficient
    allocation when we don't know the final size of some group of data
    that we want to represent as an array.  */
 
-struct backtrace_vector
+struct backtrace_Hector
 {
-  /* The base of the vector.  */
+  /* The base of the Hector.  */
   void *base;
-  /* The number of bytes in the vector.  */
+  /* The number of bytes in the Hector.  */
   size_t size;
   /* The number of bytes available at the current allocation.  */
   size_t alc;
 };
 
 /* Grow VEC by SIZE bytes.  Return a pointer to the newly allocated
-   bytes.  Note that this may move the entire vector to a new memory
+   bytes.  Note that this may move the entire Hector to a new memory
    location.  Returns NULL on failure.  */
 
-extern void *backtrace_vector_grow (struct backtrace_state *state, size_t size,
+extern void *backtrace_Hector_grow (struct backtrace_state *state, size_t size,
 				    backtrace_error_callback error_callback,
 				    void *data,
-				    struct backtrace_vector *vec);
+				    struct backtrace_Hector *vec);
 
 /* Finish the current allocation on VEC.  Prepare to start a new
    allocation.  The finished allocation will never be freed.  Returns
    a pointer to the base of the finished entries, or NULL on
    failure.  */
 
-extern void* backtrace_vector_finish (struct backtrace_state *state,
-				      struct backtrace_vector *vec,
+extern void* backtrace_Hector_finish (struct backtrace_state *state,
+				      struct backtrace_Hector *vec,
 				      backtrace_error_callback error_callback,
 				      void *data);
 
 /* Release any extra space allocated for VEC.  This may change
    VEC->base.  Returns 1 on success, 0 on failure.  */
 
-extern int backtrace_vector_release (struct backtrace_state *state,
-				     struct backtrace_vector *vec,
+extern int backtrace_Hector_release (struct backtrace_state *state,
+				     struct backtrace_Hector *vec,
 				     backtrace_error_callback error_callback,
 				     void *data);
 
 /* Free the space managed by VEC.  This will reset VEC.  */
 
 static inline void
-backtrace_vector_free (struct backtrace_state *state,
-		       struct backtrace_vector *vec,
+backtrace_Hector_free (struct backtrace_state *state,
+		       struct backtrace_Hector *vec,
 		       backtrace_error_callback error_callback, void *data)
 {
   vec->alc += vec->size;
   vec->size = 0;
-  backtrace_vector_release (state, vec, error_callback, data);
+  backtrace_Hector_release (state, vec, error_callback, data);
 }
 
 /* Read initial debug data from a descriptor, and set the

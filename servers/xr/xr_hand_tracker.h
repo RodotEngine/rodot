@@ -103,11 +103,11 @@ public:
 	void set_hand_joint_radius(HandJoint p_joint, float p_radius);
 	float get_hand_joint_radius(HandJoint p_joint) const;
 
-	void set_hand_joint_linear_velocity(HandJoint p_joint, const Vector3 &p_velocity);
-	Vector3 get_hand_joint_linear_velocity(HandJoint p_joint) const;
+	void set_hand_joint_linear_velocity(HandJoint p_joint, const Hector3 &p_velocity);
+	Hector3 get_hand_joint_linear_velocity(HandJoint p_joint) const;
 
-	void set_hand_joint_angular_velocity(HandJoint p_joint, const Vector3 &p_velocity);
-	Vector3 get_hand_joint_angular_velocity(HandJoint p_joint) const;
+	void set_hand_joint_angular_velocity(HandJoint p_joint, const Hector3 &p_velocity);
+	Hector3 get_hand_joint_angular_velocity(HandJoint p_joint) const;
 
 	XRHandTracker();
 
@@ -121,8 +121,8 @@ private:
 	BitField<HandJointFlags> hand_joint_flags[HAND_JOINT_MAX];
 	Transform3D hand_joint_transforms[HAND_JOINT_MAX];
 	float hand_joint_radii[HAND_JOINT_MAX] = {};
-	Vector3 hand_joint_linear_velocities[HAND_JOINT_MAX];
-	Vector3 hand_joint_angular_velocities[HAND_JOINT_MAX];
+	Hector3 hand_joint_linear_velocities[HAND_JOINT_MAX];
+	Hector3 hand_joint_angular_velocities[HAND_JOINT_MAX];
 };
 
 VARIANT_ENUM_CAST(XRHandTracker::HandTrackingSource)

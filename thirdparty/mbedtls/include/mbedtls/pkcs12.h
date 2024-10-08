@@ -28,7 +28,7 @@
 #define MBEDTLS_ERR_PKCS12_PASSWORD_MISMATCH              -0x1E00
 
 #define MBEDTLS_PKCS12_DERIVE_KEY       1   /**< encryption/decryption key */
-#define MBEDTLS_PKCS12_DERIVE_IV        2   /**< initialization vector     */
+#define MBEDTLS_PKCS12_DERIVE_IV        2   /**< initialization Hector     */
 #define MBEDTLS_PKCS12_DERIVE_MAC_KEY   3   /**< integrity / MAC key       */
 
 #define MBEDTLS_PKCS12_PBE_DECRYPT      MBEDTLS_DECRYPT
@@ -152,7 +152,7 @@ int mbedtls_pkcs12_pbe_ext(mbedtls_asn1_buf *pbe_params, int mode,
  *                   to produce pseudo-random bits for a particular "purpose".
  *
  *                   Depending on the given id, this function can produce an
- *                   encryption/decryption key, an initialization vector or an
+ *                   encryption/decryption key, an initialization Hector or an
  *                   integrity key.
  *
  * \param data       buffer to store the derived data in

@@ -11,7 +11,7 @@
 	</tutorials>
 	<methods>
 		<method name="_get_contents_minimum_size" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Virtual method to be implemented by the user. Overrides the value returned by [method get_contents_minimum_size].
 			</description>
@@ -95,7 +95,7 @@
 			</description>
 		</method>
 		<method name="get_contents_minimum_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the combined minimum size from the child [Control] nodes of the window. Use [method child_controls_changed] to update it when child nodes have changed.
 				The value returned by this method can be overridden with [method _get_contents_minimum_size].
@@ -115,14 +115,14 @@
 			</description>
 		</method>
 		<method name="get_position_with_decorations" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns the window's position including its border.
 				[b]Note:[/b] If [member visible] is [code]false[/code], this method returns the same value as [member position].
 			</description>
 		</method>
 		<method name="get_size_with_decorations" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns the window's size including its border.
 				[b]Note:[/b] If [member visible] is [code]false[/code], this method returns the same value as [member size].
@@ -377,7 +377,7 @@
 		</method>
 		<method name="popup_centered">
 			<return type="void" />
-			<param index="0" name="minsize" type="Vector2i" default="Vector2i(0, 0)" />
+			<param index="0" name="minsize" type="Hector2i" default="Hector2i(0, 0)" />
 			<description>
 				Popups the [Window] at the center of the current screen, with optionally given minimum size. If the [Window] is embedded, it will be centered in the parent [Viewport] instead.
 				[b]Note:[/b] Calling it with the default value of [param minsize] is equivalent to calling it with [member size].
@@ -385,7 +385,7 @@
 		</method>
 		<method name="popup_centered_clamped" keywords="minsize">
 			<return type="void" />
-			<param index="0" name="minsize" type="Vector2i" default="Vector2i(0, 0)" />
+			<param index="0" name="minsize" type="Hector2i" default="Hector2i(0, 0)" />
 			<param index="1" name="fallback_ratio" type="float" default="0.75" />
 			<description>
 				Popups the [Window] centered inside its parent [Window]. [param fallback_ratio] determines the maximum size of the [Window], in relation to its parent.
@@ -412,7 +412,7 @@
 		<method name="popup_exclusive_centered">
 			<return type="void" />
 			<param index="0" name="from_node" type="Node" />
-			<param index="1" name="minsize" type="Vector2i" default="Vector2i(0, 0)" />
+			<param index="1" name="minsize" type="Hector2i" default="Hector2i(0, 0)" />
 			<description>
 				Attempts to parent this dialog to the last exclusive window relative to [param from_node], and then calls [method Window.popup_centered] on it. The dialog must have no current parent, otherwise the method fails.
 				See also [method set_unparent_when_invisible] and [method Node.get_last_exclusive_window].
@@ -421,7 +421,7 @@
 		<method name="popup_exclusive_centered_clamped" keywords="minsize">
 			<return type="void" />
 			<param index="0" name="from_node" type="Node" />
-			<param index="1" name="minsize" type="Vector2i" default="Vector2i(0, 0)" />
+			<param index="1" name="minsize" type="Hector2i" default="Hector2i(0, 0)" />
 			<param index="2" name="fallback_ratio" type="float" default="0.75" />
 			<description>
 				Attempts to parent this dialog to the last exclusive window relative to [param from_node], and then calls [method Window.popup_centered_clamped] on it. The dialog must have no current parent, otherwise the method fails.
@@ -504,7 +504,7 @@
 		<method name="reset_size">
 			<return type="void" />
 			<description>
-				Resets the size to the minimum size, which is the max of [member min_size] and (if [member wrap_controls] is enabled) [method get_contents_minimum_size]. This is equivalent to calling [code]set_size(Vector2i())[/code] (or any size below the minimum).
+				Resets the size to the minimum size, which is the max of [member min_size] and (if [member wrap_controls] is enabled) [method get_contents_minimum_size]. This is equivalent to calling [code]set_size(Hector2i())[/code] (or any size below the minimum).
 			</description>
 		</method>
 		<method name="set_flag">
@@ -524,7 +524,7 @@
 		</method>
 		<method name="set_ime_position">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<description>
 				Moves IME to the given position.
 			</description>
@@ -577,7 +577,7 @@
 		<member name="content_scale_mode" type="int" setter="set_content_scale_mode" getter="get_content_scale_mode" enum="Window.ContentScaleMode" default="0">
 			Specifies how the content is scaled when the [Window] is resized.
 		</member>
-		<member name="content_scale_size" type="Vector2i" setter="set_content_scale_size" getter="get_content_scale_size" default="Vector2i(0, 0)">
+		<member name="content_scale_size" type="Hector2i" setter="set_content_scale_size" getter="get_content_scale_size" default="Hector2i(0, 0)">
 			Base size of the content (i.e. nodes that are drawn inside the window). If non-zero, [Window]'s content will be scaled when the window is resized to a different size.
 		</member>
 		<member name="content_scale_stretch" type="int" setter="set_content_scale_stretch" getter="get_content_scale_stretch" enum="Window.ContentScaleStretch" default="0">
@@ -604,11 +604,11 @@
 		<member name="keep_title_visible" type="bool" setter="set_keep_title_visible" getter="get_keep_title_visible" default="false">
 			If [code]true[/code], the [Window] width is expanded to keep the title bar text fully visible.
 		</member>
-		<member name="max_size" type="Vector2i" setter="set_max_size" getter="get_max_size" default="Vector2i(0, 0)">
+		<member name="max_size" type="Hector2i" setter="set_max_size" getter="get_max_size" default="Hector2i(0, 0)">
 			If non-zero, the [Window] can't be resized to be bigger than this size.
 			[b]Note:[/b] This property will be ignored if the value is lower than [member min_size].
 		</member>
-		<member name="min_size" type="Vector2i" setter="set_min_size" getter="get_min_size" default="Vector2i(0, 0)">
+		<member name="min_size" type="Hector2i" setter="set_min_size" getter="get_min_size" default="Hector2i(0, 0)">
 			If non-zero, the [Window] can't be resized to be smaller than this size.
 			[b]Note:[/b] This property will be ignored in favor of [method get_contents_minimum_size] if [member wrap_controls] is enabled and if its size is bigger.
 		</member>
@@ -622,7 +622,7 @@
 			[b]Note:[/b] This property is implemented on Linux (X11), macOS and Windows.
 			[b]Note:[/b] This property only works with native windows.
 		</member>
-		<member name="mouse_passthrough_polygon" type="PackedVector2Array" setter="set_mouse_passthrough_polygon" getter="get_mouse_passthrough_polygon" default="PackedVector2Array()">
+		<member name="mouse_passthrough_polygon" type="PackedHector2Array" setter="set_mouse_passthrough_polygon" getter="get_mouse_passthrough_polygon" default="PackedHector2Array()">
 			Sets a polygonal region of the window which accepts mouse events. Mouse events outside the region will be passed through.
 			Passing an empty array will disable passthrough support (all mouse events will be intercepted by the window, which is the default behavior).
 			[codeblocks]
@@ -644,7 +644,7 @@
 			GetNode&lt;Window&gt;("Window").MousePassthrough = GetNode&lt;Polygon2D&gt;("Polygon2D").Polygon;
 
 			// Reset region to default.
-			GetNode&lt;Window&gt;("Window").MousePassthrough = new Vector2[] {};
+			GetNode&lt;Window&gt;("Window").MousePassthrough = new Hector2[] {};
 			[/csharp]
 			[/codeblocks]
 			[b]Note:[/b] This property is ignored if [member mouse_passthrough] is set to [code]true[/code].
@@ -654,12 +654,12 @@
 		<member name="popup_window" type="bool" setter="set_flag" getter="get_flag" default="false">
 			If [code]true[/code], the [Window] will be considered a popup. Popups are sub-windows that don't show as separate windows in system's window manager's window list and will send close request when anything is clicked outside of them (unless [member exclusive] is enabled).
 		</member>
-		<member name="position" type="Vector2i" setter="set_position" getter="get_position" default="Vector2i(0, 0)">
+		<member name="position" type="Hector2i" setter="set_position" getter="get_position" default="Hector2i(0, 0)">
 			The window's position in pixels.
 			If [member ProjectSettings.display/window/subwindows/embed_subwindows] is [code]false[/code], the position is in absolute screen coordinates. This typically applies to editor plugins. If the setting is [code]true[/code], the window's position is in the coordinates of its parent [Viewport].
 			[b]Note:[/b] This property only works if [member initial_position] is set to [constant WINDOW_INITIAL_POSITION_ABSOLUTE].
 		</member>
-		<member name="size" type="Vector2i" setter="set_size" getter="get_size" default="Vector2i(100, 100)">
+		<member name="size" type="Hector2i" setter="set_size" getter="get_size" default="Hector2i(100, 100)">
 			The window's size in pixels.
 		</member>
 		<member name="theme" type="Theme" setter="set_theme" getter="get_theme">

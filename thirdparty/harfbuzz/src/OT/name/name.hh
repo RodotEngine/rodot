@@ -321,7 +321,7 @@ struct name
 		  Iterator it,
 		  const void *src_string_pool
 #ifdef HB_EXPERIMENTAL_API
-                  , const hb_vector_t<hb_ot_name_record_ids_t>& insert_name_records
+                  , const hb_Hector_t<hb_ot_name_record_ids_t>& insert_name_records
 		  , const hb_hashmap_t<hb_ot_name_record_ids_t, hb_bytes_t> *name_table_overrides
 #endif
 		  )
@@ -431,7 +431,7 @@ struct name
       retained_name_record_ids.set (rec_ids, 1);
     }
 
-    hb_vector_t<hb_ot_name_record_ids_t> insert_name_records;
+    hb_Hector_t<hb_ot_name_record_ids_t> insert_name_records;
     if (!name_table_overrides->is_empty ())
     {
       if (unlikely (!insert_name_records.alloc (name_table_overrides->get_population (), true)))
@@ -561,7 +561,7 @@ struct name
     unsigned int pool_len;
     public:
     hb_blob_ptr_t<name> table;
-    hb_vector_t<hb_ot_name_entry_t> names;
+    hb_Hector_t<hb_ot_name_entry_t> names;
   };
 
   public:

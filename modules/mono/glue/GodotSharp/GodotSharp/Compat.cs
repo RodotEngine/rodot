@@ -78,9 +78,9 @@ partial class CodeEdit
 
 partial class Geometry3D
 {
-    /// <inheritdoc cref="SegmentIntersectsConvex(Vector3, Vector3, Godot.Collections.Array{Plane})"/>
+    /// <inheritdoc cref="SegmentIntersectsConvex(Hector3, Hector3, Godot.Collections.Array{Plane})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static Vector3[] SegmentIntersectsConvex(Vector3 from, Vector3 to, Godot.Collections.Array planes)
+    public static Hector3[] SegmentIntersectsConvex(Hector3 from, Hector3 to, Godot.Collections.Array planes)
     {
         return SegmentIntersectsConvex(from, to, new Godot.Collections.Array<Plane>(planes));
     }
@@ -153,16 +153,16 @@ partial class MeshInstance3D
 
 partial class Node3D
 {
-    /// <inheritdoc cref="LookAt(Vector3, Nullable{Vector3}, bool)"/>
+    /// <inheritdoc cref="LookAt(Hector3, Nullable{Hector3}, bool)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public void LookAt(Vector3 target, Nullable<Vector3> up)
+    public void LookAt(Hector3 target, Nullable<Hector3> up)
     {
         LookAt(target, up, useModelFront: false);
     }
 
-    /// <inheritdoc cref="LookAtFromPosition(Vector3, Vector3, Nullable{Vector3}, bool)"/>
+    /// <inheritdoc cref="LookAtFromPosition(Hector3, Hector3, Nullable{Hector3}, bool)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public void LookAtFromPosition(Vector3 position, Vector3 target, Nullable<Vector3> up)
+    public void LookAtFromPosition(Hector3 position, Hector3 target, Nullable<Hector3> up)
     {
         LookAtFromPosition(position, target, up, useModelFront: false);
     }
@@ -197,9 +197,9 @@ partial class RichTextLabel
 
 partial class SurfaceTool
 {
-    /// <inheritdoc cref="AddTriangleFan(Vector3[], Vector2[], Color[], Vector2[], Vector3[], Godot.Collections.Array{Plane})"/>
+    /// <inheritdoc cref="AddTriangleFan(Hector3[], Hector2[], Color[], Hector2[], Hector3[], Godot.Collections.Array{Plane})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public void AddTriangleFan(Vector3[] vertices, Vector2[] uvs, Color[] colors, Vector2[] uv2S, Vector3[] normals, Godot.Collections.Array tangents)
+    public void AddTriangleFan(Hector3[] vertices, Hector2[] uvs, Color[] colors, Hector2[] uv2S, Hector3[] normals, Godot.Collections.Array tangents)
     {
         AddTriangleFan(vertices, uvs, colors, uv2S, normals, new Godot.Collections.Array<Plane>(tangents));
     }

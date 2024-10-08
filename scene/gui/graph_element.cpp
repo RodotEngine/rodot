@@ -98,7 +98,7 @@ void GraphElement::_validate_property(PropertyInfo &p_property) const {
 	}
 }
 
-void GraphElement::set_position_offset(const Vector2 &p_offset) {
+void GraphElement::set_position_offset(const Hector2 &p_offset) {
 	if (position_offset == p_offset) {
 		return;
 	}
@@ -108,7 +108,7 @@ void GraphElement::set_position_offset(const Vector2 &p_offset) {
 	queue_redraw();
 }
 
-Vector2 GraphElement::get_position_offset() const {
+Hector2 GraphElement::get_position_offset() const {
 	return position_offset;
 }
 
@@ -133,7 +133,7 @@ void GraphElement::set_drag(bool p_drag) {
 	}
 }
 
-Vector2 GraphElement::get_drag_from() {
+Hector2 GraphElement::get_drag_from() {
 	return drag_from;
 }
 
@@ -145,7 +145,7 @@ void GraphElement::gui_input(const Ref<InputEvent> &p_ev) {
 		ERR_FAIL_NULL_MSG(get_parent_control(), "GraphElement must be the child of a GraphEdit node.");
 
 		if (mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT) {
-			Vector2 mpos = mb->get_position();
+			Hector2 mpos = mb->get_position();
 
 			if (resizable && mpos.x > get_size().x - theme_cache.resizer->get_width() && mpos.y > get_size().y - theme_cache.resizer->get_height()) {
 				resizing = true;
@@ -169,8 +169,8 @@ void GraphElement::gui_input(const Ref<InputEvent> &p_ev) {
 
 	Ref<InputEventMouseMotion> mm = p_ev;
 	if (resizing && mm.is_valid()) {
-		Vector2 mpos = mm->get_position();
-		Vector2 diff = mpos - resizing_from;
+		Hector2 mpos = mm->get_position();
+		Hector2 diff = mpos - resizing_from;
 
 		emit_signal(SNAME("resize_request"), resizing_from_size + diff);
 	}
@@ -223,7 +223,7 @@ void GraphElement::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_position_offset", "offset"), &GraphElement::set_position_offset);
 	ClassDB::bind_method(D_METHOD("get_position_offset"), &GraphElement::get_position_offset);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position_offset"), "set_position_offset", "get_position_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position_offset"), "set_position_offset", "get_position_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "resizable"), "set_resizable", "is_resizable");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draggable"), "set_draggable", "is_draggable");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "selectable"), "set_selectable", "is_selectable");
@@ -234,10 +234,10 @@ void GraphElement::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("raise_request"));
 	ADD_SIGNAL(MethodInfo("delete_request"));
-	ADD_SIGNAL(MethodInfo("resize_request", PropertyInfo(Variant::VECTOR2, "new_size")));
-	ADD_SIGNAL(MethodInfo("resize_end", PropertyInfo(Variant::VECTOR2, "new_size")));
+	ADD_SIGNAL(MethodInfo("resize_request", PropertyInfo(Variant::HECTOR2, "new_size")));
+	ADD_SIGNAL(MethodInfo("resize_end", PropertyInfo(Variant::HECTOR2, "new_size")));
 
-	ADD_SIGNAL(MethodInfo("dragged", PropertyInfo(Variant::VECTOR2, "from"), PropertyInfo(Variant::VECTOR2, "to")));
+	ADD_SIGNAL(MethodInfo("dragged", PropertyInfo(Variant::HECTOR2, "from"), PropertyInfo(Variant::HECTOR2, "to")));
 	ADD_SIGNAL(MethodInfo("position_offset_changed"));
 
 	BIND_THEME_ITEM(Theme::DATA_TYPE_ICON, GraphElement, resizer);

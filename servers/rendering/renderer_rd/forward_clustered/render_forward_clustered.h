@@ -188,7 +188,7 @@ private:
 		COLOR_PASS_FLAG_TRANSPARENT = 1 << 0,
 		COLOR_PASS_FLAG_SEPARATE_SPECULAR = 1 << 1,
 		COLOR_PASS_FLAG_MULTIVIEW = 1 << 2,
-		COLOR_PASS_FLAG_MOTION_VECTORS = 1 << 3,
+		COLOR_PASS_FLAG_MOTION_HectorS = 1 << 3,
 	};
 
 	struct GeometryInstanceSurfaceDataCache;
@@ -205,7 +205,7 @@ private:
 		uint32_t view_count = 1;
 		RID render_pass_uniform_set;
 		bool force_wireframe = false;
-		Vector2 uv_offset;
+		Hector2 uv_offset;
 		float lod_distance_multiplier = 0.0;
 		float screen_mesh_lod_threshold = 0.0;
 		RD::FramebufferFormatID framebuffer_format = 0;
@@ -213,7 +213,7 @@ private:
 		bool use_directional_soft_shadow = false;
 		SceneShaderForwardClustered::ShaderSpecialization base_specialization = {};
 
-		RenderListParameters(GeometryInstanceSurfaceDataCache **p_elements, RenderElementInfo *p_element_info, int p_element_count, bool p_reverse_cull, PassMode p_pass_mode, uint32_t p_color_pass_flags, bool p_no_gi, bool p_use_directional_soft_shadows, RID p_render_pass_uniform_set, bool p_force_wireframe = false, const Vector2 &p_uv_offset = Vector2(), float p_lod_distance_multiplier = 0.0, float p_screen_mesh_lod_threshold = 0.0, uint32_t p_view_count = 1, uint32_t p_element_offset = 0, SceneShaderForwardClustered::ShaderSpecialization p_base_specialization = {}) {
+		RenderListParameters(GeometryInstanceSurfaceDataCache **p_elements, RenderElementInfo *p_element_info, int p_element_count, bool p_reverse_cull, PassMode p_pass_mode, uint32_t p_color_pass_flags, bool p_no_gi, bool p_use_directional_soft_shadows, RID p_render_pass_uniform_set, bool p_force_wireframe = false, const Hector2 &p_uv_offset = Hector2(), float p_lod_distance_multiplier = 0.0, float p_screen_mesh_lod_threshold = 0.0, uint32_t p_view_count = 1, uint32_t p_element_offset = 0, SceneShaderForwardClustered::ShaderSpecialization p_base_specialization = {}) {
 			elements = p_elements;
 			element_info = p_element_info;
 			element_count = p_element_count;
@@ -300,8 +300,8 @@ private:
 		struct PushConstant {
 			uint32_t base_index; //
 			uint32_t uv_offset; //packed
-			uint32_t multimesh_motion_vectors_current_offset;
-			uint32_t multimesh_motion_vectors_previous_offset;
+			uint32_t multimesh_motion_Hectors_current_offset;
+			uint32_t multimesh_motion_Hectors_previous_offset;
 			PushConstantUbershader ubershader;
 		};
 
@@ -320,8 +320,8 @@ private:
 
 		UBO ubo;
 
-		LocalVector<RID> uniform_buffers;
-		LocalVector<RID> implementation_uniform_buffers;
+		LocalHector<RID> uniform_buffers;
+		LocalHector<RID> implementation_uniform_buffers;
 
 		LightmapData lightmaps[MAX_LIGHTMAPS];
 		RID lightmap_ids[MAX_LIGHTMAPS];
@@ -332,7 +332,7 @@ private:
 
 		RID instance_buffer[RENDER_LIST_MAX];
 		uint32_t instance_buffer_size[RENDER_LIST_MAX] = { 0, 0, 0 };
-		LocalVector<InstanceData> instance_data[RENDER_LIST_MAX];
+		LocalHector<InstanceData> instance_data[RENDER_LIST_MAX];
 
 		LightmapCaptureData *lightmap_captures = nullptr;
 		uint32_t max_lightmap_captures;
@@ -362,7 +362,7 @@ private:
 			Rect2i rect;
 		};
 
-		LocalVector<ShadowPass> shadow_passes;
+		LocalHector<ShadowPass> shadow_passes;
 
 	} scene_state;
 
@@ -385,7 +385,7 @@ private:
 	template <PassMode p_pass_mode, uint32_t p_color_pass_flags = 0>
 	_FORCE_INLINE_ void _render_list_template(RenderingDevice::DrawListID p_draw_list, RenderingDevice::FramebufferFormatID p_framebuffer_Format, RenderListParameters *p_params, uint32_t p_from_element, uint32_t p_to_element);
 	void _render_list(RenderingDevice::DrawListID p_draw_list, RenderingDevice::FramebufferFormatID p_framebuffer_Format, RenderListParameters *p_params, uint32_t p_from_element, uint32_t p_to_element);
-	void _render_list_with_draw_list(RenderListParameters *p_params, RID p_framebuffer, RD::InitialAction p_initial_color_action, RD::FinalAction p_final_color_action, RD::InitialAction p_initial_depth_action, RD::FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values = Vector<Color>(), float p_clear_depth = 0.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2());
+	void _render_list_with_draw_list(RenderListParameters *p_params, RID p_framebuffer, RD::InitialAction p_initial_color_action, RD::FinalAction p_final_color_action, RD::InitialAction p_initial_depth_action, RD::FinalAction p_final_depth_action, const Hector<Color> &p_clear_color_values = Hector<Color>(), float p_clear_depth = 0.0, uint32_t p_clear_stencil = 0, const Rect2 &p_region = Rect2());
 
 	void _update_instance_data_buffer(RenderListType p_render_list);
 	void _fill_instance_data(RenderListType p_render_list, int *p_render_info = nullptr, uint32_t p_offset = 0, int32_t p_max_elements = -1, bool p_update_buffer = true);
@@ -414,7 +414,7 @@ private:
 			FLAG_USES_NORMAL_TEXTURE = 16384,
 			FLAG_USES_DOUBLE_SIDED_SHADOWS = 32768,
 			FLAG_USES_PARTICLE_TRAILS = 65536,
-			FLAG_USES_MOTION_VECTOR = 131072,
+			FLAG_USES_MOTION_Hector = 131072,
 		};
 
 		union {
@@ -535,7 +535,7 @@ private:
 				uint32_t texture_samples : 3;
 				uint32_t use_reflection_probes : 1;
 				uint32_t use_separate_specular : 1;
-				uint32_t use_motion_vectors : 1;
+				uint32_t use_motion_Hectors : 1;
 				uint32_t use_normal_and_roughness : 1;
 				uint32_t use_lightmaps : 1;
 				uint32_t use_voxelgi : 1;
@@ -562,8 +562,8 @@ private:
 	void _geometry_instance_add_surface_with_material_chain(GeometryInstanceForwardClustered *ginstance, uint32_t p_surface, SceneShaderForwardClustered::MaterialData *p_material, RID p_mat_src, RID p_mesh);
 	void _geometry_instance_add_surface(GeometryInstanceForwardClustered *ginstance, uint32_t p_surface, RID p_material, RID p_mesh);
 	void _geometry_instance_update(RenderGeometryInstance *p_geometry_instance);
-	void _mesh_compile_pipeline_for_surface(SceneShaderForwardClustered::ShaderData *p_shader, void *p_mesh_surface, bool p_ubershader, bool p_instanced_surface, RS::PipelineSource p_source, SceneShaderForwardClustered::ShaderData::PipelineKey &r_pipeline_key, Vector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
-	void _mesh_compile_pipelines_for_surface(const SurfacePipelineData &p_surface, const GlobalPipelineData &p_global, RS::PipelineSource p_source, Vector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
+	void _mesh_compile_pipeline_for_surface(SceneShaderForwardClustered::ShaderData *p_shader, void *p_mesh_surface, bool p_ubershader, bool p_instanced_surface, RS::PipelineSource p_source, SceneShaderForwardClustered::ShaderData::PipelineKey &r_pipeline_key, Hector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
+	void _mesh_compile_pipelines_for_surface(const SurfacePipelineData &p_surface, const GlobalPipelineData &p_global, RS::PipelineSource p_source, Hector<ShaderPipelinePair> *r_pipeline_pairs = nullptr);
 	void _mesh_generate_all_pipelines_for_surface_cache(GeometryInstanceSurfaceDataCache *p_surface_cache, const GlobalPipelineData &p_global);
 	void _update_dirty_geometry_instances();
 	void _update_dirty_geometry_pipelines();
@@ -571,8 +571,8 @@ private:
 	/* Render List */
 
 	struct RenderList {
-		LocalVector<GeometryInstanceSurfaceDataCache *> elements;
-		LocalVector<RenderElementInfo> element_info;
+		LocalHector<GeometryInstanceSurfaceDataCache *> elements;
+		LocalHector<RenderElementInfo> element_info;
 
 		void clear() {
 			elements.clear();
@@ -663,7 +663,7 @@ private:
 	void _process_ssil(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_environment, const RID *p_normal_buffers, const Projection *p_projections, const Transform3D &p_transform);
 	void _copy_framebuffer_to_ssil(Ref<RenderSceneBuffersRD> p_render_buffers);
 	void _pre_opaque_render(RenderDataRD *p_render_data, bool p_use_ssao, bool p_use_ssil, bool p_use_gi, const RID *p_normal_roughness_slices, RID p_voxel_gi_buffer);
-	void _process_ssr(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_dest_framebuffer, const RID *p_normal_buffer_slices, RID p_specular_buffer, const RID *p_metallic_slices, RID p_environment, const Projection *p_projections, const Vector3 *p_eye_offsets, bool p_use_additive);
+	void _process_ssr(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_dest_framebuffer, const RID *p_normal_buffer_slices, RID p_specular_buffer, const RID *p_metallic_slices, RID p_environment, const Projection *p_projections, const Hector3 *p_eye_offsets, bool p_use_additive);
 	void _process_sss(Ref<RenderSceneBuffersRD> p_render_buffers, const Projection &p_camera);
 
 	/* Debug */
@@ -689,7 +689,7 @@ protected:
 
 	virtual void _render_material(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region, float p_exposure_normalization) override;
 	virtual void _render_uv2(const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region) override;
-	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Vector3i &p_from, const Vector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) override;
+	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Hector3i &p_from, const Hector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) override;
 	virtual void _render_particle_collider_heightfield(RID p_fb, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const PagedArray<RenderGeometryInstance *> &p_instances) override;
 
 public:
@@ -699,15 +699,15 @@ public:
 	RendererRD::SSEffects *get_ss_effects() { return ss_effects; }
 
 	/* callback from updating our lighting UBOs, used to populate cluster builder */
-	virtual void setup_added_reflection_probe(const Transform3D &p_transform, const Vector3 &p_half_size) override;
+	virtual void setup_added_reflection_probe(const Transform3D &p_transform, const Hector3 &p_half_size) override;
 	virtual void setup_added_light(const RS::LightType p_type, const Transform3D &p_transform, float p_radius, float p_spot_aperture) override;
-	virtual void setup_added_decal(const Transform3D &p_transform, const Vector3 &p_half_size) override;
+	virtual void setup_added_decal(const Transform3D &p_transform, const Hector3 &p_half_size) override;
 
 	virtual void base_uniforms_changed() override;
 
 	/* SDFGI UPDATE */
 
-	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) override;
+	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Hector3 &p_world_position) override;
 	virtual int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const override;
 	virtual AABB sdfgi_get_pending_region_bounds(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override;
 	virtual uint32_t sdfgi_get_pending_region_cascade(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override;

@@ -77,8 +77,8 @@ void GLTFAccessor::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "count"), "set_count", "get_count"); // int
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "accessor_type"), "set_accessor_type", "get_accessor_type"); // GLTFAccessor::GLTFAccessorType
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_type", "get_type"); // Deprecated, int for GLTFAccessor::GLTFAccessorType
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT64_ARRAY, "min"), "set_min", "get_min"); // Vector<real_t>
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT64_ARRAY, "max"), "set_max", "get_max"); // Vector<real_t>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT64_ARRAY, "min"), "set_min", "get_min"); // Hector<real_t>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT64_ARRAY, "max"), "set_max", "get_max"); // Hector<real_t>
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "sparse_count"), "set_sparse_count", "get_sparse_count"); // int
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "sparse_indices_buffer_view"), "set_sparse_indices_buffer_view", "get_sparse_indices_buffer_view"); // int
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "sparse_indices_byte_offset"), "set_sparse_indices_byte_offset", "get_sparse_indices_byte_offset"); // int
@@ -143,19 +143,19 @@ void GLTFAccessor::set_type(int p_accessor_type) {
 	accessor_type = (GLTFAccessorType)p_accessor_type; // TODO: Register enum
 }
 
-Vector<double> GLTFAccessor::get_min() {
+Hector<double> GLTFAccessor::get_min() {
 	return min;
 }
 
-void GLTFAccessor::set_min(Vector<double> p_min) {
+void GLTFAccessor::set_min(Hector<double> p_min) {
 	min = p_min;
 }
 
-Vector<double> GLTFAccessor::get_max() {
+Hector<double> GLTFAccessor::get_max() {
 	return max;
 }
 
-void GLTFAccessor::set_max(Vector<double> p_max) {
+void GLTFAccessor::set_max(Hector<double> p_max) {
 	max = p_max;
 }
 

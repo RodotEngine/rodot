@@ -6,7 +6,7 @@ index 3a8a6efa83..8c5409bf24 100644
  #include <math.h>
  #include <string.h>
  #include <algorithm>
--#include <vector>
+-#include <Vector>
  
  TPPLPoly::TPPLPoly() {
    hole = false;
@@ -722,7 +722,7 @@ index f163f5d217..b2d905a3ef 100644
  
 -#include <list>
 -#include <set>
-+#include "core/math/vector2.h"
++#include "core/math/Hector2.h"
 +#include "core/templates/list.h"
 +#include "core/templates/set.h"
  
@@ -775,7 +775,7 @@ index f163f5d217..b2d905a3ef 100644
 -    return !((x == p.x) && (y == p.y));
 -  }
 -};
-+typedef Vector2 TPPLPoint;
++typedef Hector2 TPPLPoint;
  
  // Polygon implemented as an array of points with a "hole" flag.
  class TPPLPoly {

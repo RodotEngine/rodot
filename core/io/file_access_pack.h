@@ -91,7 +91,7 @@ private:
 
 		PathMD5() {}
 
-		explicit PathMD5(const Vector<uint8_t> &p_buf) {
+		explicit PathMD5(const Hector<uint8_t> &p_buf) {
 			a = *((uint64_t *)&p_buf[0]);
 			b = *((uint64_t *)&p_buf[8]);
 		}
@@ -99,7 +99,7 @@ private:
 
 	HashMap<PathMD5, PackedFile, PathMD5> files;
 
-	Vector<PackSource *> sources;
+	Hector<PackSource *> sources;
 
 	PackedDir *root = nullptr;
 

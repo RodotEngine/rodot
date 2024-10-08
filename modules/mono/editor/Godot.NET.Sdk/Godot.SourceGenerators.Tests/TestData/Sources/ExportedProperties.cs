@@ -107,20 +107,20 @@ public partial class ExportedProperties : GodotObject
     [Export] private String PropertyString { get; set; } = "foo";
 
     // Godot structs
-    [Export] private Vector2 PropertyVector2 { get; set; } = new(10f, 10f);
-    [Export] private Vector2I PropertyVector2I { get; set; } = Vector2I.Up;
-    [Export] private Rect2 PropertyRect2 { get; set; } = new(new Vector2(10f, 10f), new Vector2(10f, 10f));
-    [Export] private Rect2I PropertyRect2I { get; set; } = new(new Vector2I(10, 10), new Vector2I(10, 10));
+    [Export] private Hector2 PropertyHector2 { get; set; } = new(10f, 10f);
+    [Export] private Hector2I PropertyHector2I { get; set; } = Hector2I.Up;
+    [Export] private Rect2 PropertyRect2 { get; set; } = new(new Hector2(10f, 10f), new Hector2(10f, 10f));
+    [Export] private Rect2I PropertyRect2I { get; set; } = new(new Hector2I(10, 10), new Hector2I(10, 10));
     [Export] private Transform2D PropertyTransform2D { get; set; } = Transform2D.Identity;
-    [Export] private Vector3 PropertyVector3 { get; set; } = new(10f, 10f, 10f);
-    [Export] private Vector3I PropertyVector3I { get; set; } = Vector3I.Back;
+    [Export] private Hector3 PropertyHector3 { get; set; } = new(10f, 10f, 10f);
+    [Export] private Hector3I PropertyHector3I { get; set; } = Hector3I.Back;
     [Export] private Basis PropertyBasis { get; set; } = new Basis(Quaternion.Identity);
     [Export] private Quaternion PropertyQuaternion { get; set; } = new Quaternion(Basis.Identity);
     [Export] private Transform3D PropertyTransform3D { get; set; } = Transform3D.Identity;
-    [Export] private Vector4 PropertyVector4 { get; set; } = new(10f, 10f, 10f, 10f);
-    [Export] private Vector4I PropertyVector4I { get; set; } = Vector4I.One;
+    [Export] private Hector4 PropertyHector4 { get; set; } = new(10f, 10f, 10f, 10f);
+    [Export] private Hector4I PropertyHector4I { get; set; } = Hector4I.One;
     [Export] private Projection PropertyProjection { get; set; } = Projection.Identity;
-    [Export] private Aabb PropertyAabb { get; set; } = new Aabb(10f, 10f, 10f, new Vector3(1f, 1f, 1f));
+    [Export] private Aabb PropertyAabb { get; set; } = new Aabb(10f, 10f, 10f, new Hector3(1f, 1f, 1f));
     [Export] private Color PropertyColor { get; set; } = Colors.Aquamarine;
     [Export] private Plane PropertyPlane { get; set; } = Plane.PlaneXZ;
     [Export] private Callable PropertyCallable { get; set; } = new Callable(Engine.GetMainLoop(), "_process");
@@ -154,8 +154,8 @@ public partial class ExportedProperties : GodotObject
     [Export] private Double[] PropertyDoubleArray { get; set; } = { 0d, 1d, 2d, 3d, 4d, 5d, 6d };
     [Export] private String[] PropertyStringArray { get; set; } = { "foo", "bar" };
     [Export(PropertyHint.Enum, "A,B,C")] private String[] PropertyStringArrayEnum { get; set; } = { "foo", "bar" };
-    [Export] private Vector2[] PropertyVector2Array { get; set; } = { Vector2.Up, Vector2.Down, Vector2.Left, Vector2.Right };
-    [Export] private Vector3[] PropertyVector3Array { get; set; } = { Vector3.Up, Vector3.Down, Vector3.Left, Vector3.Right };
+    [Export] private Hector2[] PropertyHector2Array { get; set; } = { Hector2.Up, Hector2.Down, Hector2.Left, Hector2.Right };
+    [Export] private Hector3[] PropertyHector3Array { get; set; } = { Hector3.Up, Hector3.Down, Hector3.Left, Hector3.Right };
     [Export] private Color[] PropertyColorArray { get; set; } = { Colors.Aqua, Colors.Aquamarine, Colors.Azure, Colors.Beige };
     [Export] private GodotObject[] PropertyGodotObjectOrDerivedArray { get; set; } = { null };
     [Export] private StringName[] field_StringNameArray { get; set; } = { "foo", "bar" };
@@ -173,10 +173,10 @@ public partial class ExportedProperties : GodotObject
     [Export] private Rid PropertyRid { get; set; }
 
     [Export]
-    private Godot.Collections.Dictionary PropertyGodotDictionary { get; set; } = new() { { "foo", 10 }, { Vector2.Up, Colors.Chocolate } };
+    private Godot.Collections.Dictionary PropertyGodotDictionary { get; set; } = new() { { "foo", 10 }, { Hector2.Up, Colors.Chocolate } };
 
     [Export]
-    private Godot.Collections.Array PropertyGodotArray { get; set; } = new() { "foo", 10, Vector2.Up, Colors.Chocolate };
+    private Godot.Collections.Array PropertyGodotArray { get; set; } = new() { "foo", 10, Hector2.Up, Colors.Chocolate };
 
     [Export]
     private Godot.Collections.Dictionary<string, bool> PropertyGodotGenericDictionary { get; set; } = new() { { "foo", true }, { "bar", false } };

@@ -60,7 +60,7 @@ class TranslationServer : public Object {
 		String default_country;
 		HashSet<String> supported_countries;
 	};
-	static Vector<LocaleScriptInfo> locale_script_info;
+	static Hector<LocaleScriptInfo> locale_script_info;
 
 	static HashMap<String, String> language_map;
 	static HashMap<String, String> script_map;
@@ -84,13 +84,13 @@ public:
 	String get_fallback_locale() const;
 	Ref<Translation> get_translation_object(const String &p_locale);
 
-	Vector<String> get_all_languages() const;
+	Hector<String> get_all_languages() const;
 	String get_language_name(const String &p_language) const;
 
-	Vector<String> get_all_scripts() const;
+	Hector<String> get_all_scripts() const;
 	String get_script_name(const String &p_script) const;
 
-	Vector<String> get_all_countries() const;
+	Hector<String> get_all_countries() const;
 	String get_country_name(const String &p_country) const;
 
 	String get_locale_name(const String &p_locale) const;

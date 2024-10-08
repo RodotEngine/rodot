@@ -113,10 +113,10 @@ namespace embree
 
       __forceinline CatmullRomCurveT<Vec3ff> xfm_pr(const LinearSpace3fa& space, const Vec3fa& p) const
       {
-        const Vec3ff q0(xfmVector(space,v0-p), v0.w);
-        const Vec3ff q1(xfmVector(space,v1-p), v1.w);
-        const Vec3ff q2(xfmVector(space,v2-p), v2.w);
-        const Vec3ff q3(xfmVector(space,v3-p), v3.w);
+        const Vec3ff q0(xfmHector(space,v0-p), v0.w);
+        const Vec3ff q1(xfmHector(space,v1-p), v1.w);
+        const Vec3ff q2(xfmHector(space,v2-p), v2.w);
+        const Vec3ff q3(xfmHector(space,v3-p), v3.w);
         return CatmullRomCurveT<Vec3ff>(q0,q1,q2,q3);
       }
       

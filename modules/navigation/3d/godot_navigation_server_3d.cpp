@@ -139,16 +139,16 @@ bool GodotNavigationServer3D::map_is_active(RID p_map) const {
 	return active_maps.has(map);
 }
 
-COMMAND_2(map_set_up, RID, p_map, Vector3, p_up) {
+COMMAND_2(map_set_up, RID, p_map, Hector3, p_up) {
 	NavMap *map = map_owner.get_or_null(p_map);
 	ERR_FAIL_NULL(map);
 
 	map->set_up(p_up);
 }
 
-Vector3 GodotNavigationServer3D::map_get_up(RID p_map) const {
+Hector3 GodotNavigationServer3D::map_get_up(RID p_map) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
-	ERR_FAIL_NULL_V(map, Vector3());
+	ERR_FAIL_NULL_V(map, Hector3());
 
 	return map->get_up();
 }
@@ -237,35 +237,35 @@ real_t GodotNavigationServer3D::map_get_link_connection_radius(RID p_map) const 
 	return map->get_link_connection_radius();
 }
 
-Vector<Vector3> GodotNavigationServer3D::map_get_path(RID p_map, Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers) const {
+Hector<Hector3> GodotNavigationServer3D::map_get_path(RID p_map, Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
-	ERR_FAIL_NULL_V(map, Vector<Vector3>());
+	ERR_FAIL_NULL_V(map, Hector<Hector3>());
 
 	return map->get_path(p_origin, p_destination, p_optimize, p_navigation_layers, nullptr, nullptr, nullptr);
 }
 
-Vector3 GodotNavigationServer3D::map_get_closest_point_to_segment(RID p_map, const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision) const {
+Hector3 GodotNavigationServer3D::map_get_closest_point_to_segment(RID p_map, const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
-	ERR_FAIL_NULL_V(map, Vector3());
+	ERR_FAIL_NULL_V(map, Hector3());
 
 	return map->get_closest_point_to_segment(p_from, p_to, p_use_collision);
 }
 
-Vector3 GodotNavigationServer3D::map_get_closest_point(RID p_map, const Vector3 &p_point) const {
+Hector3 GodotNavigationServer3D::map_get_closest_point(RID p_map, const Hector3 &p_point) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
-	ERR_FAIL_NULL_V(map, Vector3());
+	ERR_FAIL_NULL_V(map, Hector3());
 
 	return map->get_closest_point(p_point);
 }
 
-Vector3 GodotNavigationServer3D::map_get_closest_point_normal(RID p_map, const Vector3 &p_point) const {
+Hector3 GodotNavigationServer3D::map_get_closest_point_normal(RID p_map, const Hector3 &p_point) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
-	ERR_FAIL_NULL_V(map, Vector3());
+	ERR_FAIL_NULL_V(map, Hector3());
 
 	return map->get_closest_point_normal(p_point);
 }
 
-RID GodotNavigationServer3D::map_get_closest_point_owner(RID p_map, const Vector3 &p_point) const {
+RID GodotNavigationServer3D::map_get_closest_point_owner(RID p_map, const Hector3 &p_point) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
 	ERR_FAIL_NULL_V(map, RID());
 
@@ -277,7 +277,7 @@ TypedArray<RID> GodotNavigationServer3D::map_get_links(RID p_map) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
 	ERR_FAIL_NULL_V(map, link_rids);
 
-	const LocalVector<NavLink *> &links = map->get_links();
+	const LocalHector<NavLink *> &links = map->get_links();
 	link_rids.resize(links.size());
 
 	for (uint32_t i = 0; i < links.size(); i++) {
@@ -291,7 +291,7 @@ TypedArray<RID> GodotNavigationServer3D::map_get_regions(RID p_map) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
 	ERR_FAIL_NULL_V(map, regions_rids);
 
-	const LocalVector<NavRegion *> &regions = map->get_regions();
+	const LocalHector<NavRegion *> &regions = map->get_regions();
 	regions_rids.resize(regions.size());
 
 	for (uint32_t i = 0; i < regions.size(); i++) {
@@ -305,7 +305,7 @@ TypedArray<RID> GodotNavigationServer3D::map_get_agents(RID p_map) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
 	ERR_FAIL_NULL_V(map, agents_rids);
 
-	const LocalVector<NavAgent *> &agents = map->get_agents();
+	const LocalHector<NavAgent *> &agents = map->get_agents();
 	agents_rids.resize(agents.size());
 
 	for (uint32_t i = 0; i < agents.size(); i++) {
@@ -318,7 +318,7 @@ TypedArray<RID> GodotNavigationServer3D::map_get_obstacles(RID p_map) const {
 	TypedArray<RID> obstacles_rids;
 	const NavMap *map = map_owner.get_or_null(p_map);
 	ERR_FAIL_NULL_V(map, obstacles_rids);
-	const LocalVector<NavObstacle *> obstacles = map->get_obstacles();
+	const LocalHector<NavObstacle *> obstacles = map->get_obstacles();
 	obstacles_rids.resize(obstacles.size());
 	for (uint32_t i = 0; i < obstacles.size(); i++) {
 		obstacles_rids[i] = obstacles[i]->get_self();
@@ -346,9 +346,9 @@ RID GodotNavigationServer3D::agent_get_map(RID p_agent) const {
 	return RID();
 }
 
-Vector3 GodotNavigationServer3D::map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const {
+Hector3 GodotNavigationServer3D::map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const {
 	const NavMap *map = map_owner.get_or_null(p_map);
-	ERR_FAIL_NULL_V(map, Vector3());
+	ERR_FAIL_NULL_V(map, Hector3());
 
 	return map->get_random_point(p_navigation_layers, p_uniformly);
 }
@@ -457,7 +457,7 @@ ObjectID GodotNavigationServer3D::region_get_owner_id(RID p_region) const {
 	return region->get_owner_id();
 }
 
-bool GodotNavigationServer3D::region_owns_point(RID p_region, const Vector3 &p_point) const {
+bool GodotNavigationServer3D::region_owns_point(RID p_region, const Hector3 &p_point) const {
 	const NavRegion *region = region_owner.get_or_null(p_region);
 	ERR_FAIL_NULL_V(region, false);
 
@@ -516,50 +516,50 @@ int GodotNavigationServer3D::region_get_connections_count(RID p_region) const {
 	return 0;
 }
 
-Vector3 GodotNavigationServer3D::region_get_connection_pathway_start(RID p_region, int p_connection_id) const {
+Hector3 GodotNavigationServer3D::region_get_connection_pathway_start(RID p_region, int p_connection_id) const {
 	NavRegion *region = region_owner.get_or_null(p_region);
-	ERR_FAIL_NULL_V(region, Vector3());
+	ERR_FAIL_NULL_V(region, Hector3());
 	NavMap *map = region->get_map();
 	if (map) {
 		return map->get_region_connection_pathway_start(region, p_connection_id);
 	}
-	return Vector3();
+	return Hector3();
 }
 
-Vector3 GodotNavigationServer3D::region_get_connection_pathway_end(RID p_region, int p_connection_id) const {
+Hector3 GodotNavigationServer3D::region_get_connection_pathway_end(RID p_region, int p_connection_id) const {
 	NavRegion *region = region_owner.get_or_null(p_region);
-	ERR_FAIL_NULL_V(region, Vector3());
+	ERR_FAIL_NULL_V(region, Hector3());
 	NavMap *map = region->get_map();
 	if (map) {
 		return map->get_region_connection_pathway_end(region, p_connection_id);
 	}
-	return Vector3();
+	return Hector3();
 }
 
-Vector3 GodotNavigationServer3D::region_get_closest_point_to_segment(RID p_region, const Vector3 &p_from, const Vector3 &p_to, bool p_use_collision) const {
+Hector3 GodotNavigationServer3D::region_get_closest_point_to_segment(RID p_region, const Hector3 &p_from, const Hector3 &p_to, bool p_use_collision) const {
 	const NavRegion *region = region_owner.get_or_null(p_region);
-	ERR_FAIL_NULL_V(region, Vector3());
+	ERR_FAIL_NULL_V(region, Hector3());
 
 	return region->get_closest_point_to_segment(p_from, p_to, p_use_collision);
 }
 
-Vector3 GodotNavigationServer3D::region_get_closest_point(RID p_region, const Vector3 &p_point) const {
+Hector3 GodotNavigationServer3D::region_get_closest_point(RID p_region, const Hector3 &p_point) const {
 	const NavRegion *region = region_owner.get_or_null(p_region);
-	ERR_FAIL_NULL_V(region, Vector3());
+	ERR_FAIL_NULL_V(region, Hector3());
 
 	return region->get_closest_point_info(p_point).point;
 }
 
-Vector3 GodotNavigationServer3D::region_get_closest_point_normal(RID p_region, const Vector3 &p_point) const {
+Hector3 GodotNavigationServer3D::region_get_closest_point_normal(RID p_region, const Hector3 &p_point) const {
 	const NavRegion *region = region_owner.get_or_null(p_region);
-	ERR_FAIL_NULL_V(region, Vector3());
+	ERR_FAIL_NULL_V(region, Hector3());
 
 	return region->get_closest_point_info(p_point).normal;
 }
 
-Vector3 GodotNavigationServer3D::region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const {
+Hector3 GodotNavigationServer3D::region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const {
 	const NavRegion *region = region_owner.get_or_null(p_region);
-	ERR_FAIL_NULL_V(region, Vector3());
+	ERR_FAIL_NULL_V(region, Hector3());
 
 	return region->get_random_point(p_navigation_layers, p_uniformly);
 }
@@ -634,30 +634,30 @@ uint32_t GodotNavigationServer3D::link_get_navigation_layers(const RID p_link) c
 	return link->get_navigation_layers();
 }
 
-COMMAND_2(link_set_start_position, RID, p_link, Vector3, p_position) {
+COMMAND_2(link_set_start_position, RID, p_link, Hector3, p_position) {
 	NavLink *link = link_owner.get_or_null(p_link);
 	ERR_FAIL_NULL(link);
 
 	link->set_start_position(p_position);
 }
 
-Vector3 GodotNavigationServer3D::link_get_start_position(RID p_link) const {
+Hector3 GodotNavigationServer3D::link_get_start_position(RID p_link) const {
 	const NavLink *link = link_owner.get_or_null(p_link);
-	ERR_FAIL_NULL_V(link, Vector3());
+	ERR_FAIL_NULL_V(link, Hector3());
 
 	return link->get_start_position();
 }
 
-COMMAND_2(link_set_end_position, RID, p_link, Vector3, p_position) {
+COMMAND_2(link_set_end_position, RID, p_link, Hector3, p_position) {
 	NavLink *link = link_owner.get_or_null(p_link);
 	ERR_FAIL_NULL(link);
 
 	link->set_end_position(p_position);
 }
 
-Vector3 GodotNavigationServer3D::link_get_end_position(RID p_link) const {
+Hector3 GodotNavigationServer3D::link_get_end_position(RID p_link) const {
 	const NavLink *link = link_owner.get_or_null(p_link);
-	ERR_FAIL_NULL_V(link, Vector3());
+	ERR_FAIL_NULL_V(link, Hector3());
 
 	return link->get_end_position();
 }
@@ -867,37 +867,37 @@ real_t GodotNavigationServer3D::agent_get_max_speed(RID p_agent) const {
 	return agent->get_max_speed();
 }
 
-COMMAND_2(agent_set_velocity, RID, p_agent, Vector3, p_velocity) {
+COMMAND_2(agent_set_velocity, RID, p_agent, Hector3, p_velocity) {
 	NavAgent *agent = agent_owner.get_or_null(p_agent);
 	ERR_FAIL_NULL(agent);
 
 	agent->set_velocity(p_velocity);
 }
 
-Vector3 GodotNavigationServer3D::agent_get_velocity(RID p_agent) const {
+Hector3 GodotNavigationServer3D::agent_get_velocity(RID p_agent) const {
 	NavAgent *agent = agent_owner.get_or_null(p_agent);
-	ERR_FAIL_NULL_V(agent, Vector3());
+	ERR_FAIL_NULL_V(agent, Hector3());
 
 	return agent->get_velocity();
 }
 
-COMMAND_2(agent_set_velocity_forced, RID, p_agent, Vector3, p_velocity) {
+COMMAND_2(agent_set_velocity_forced, RID, p_agent, Hector3, p_velocity) {
 	NavAgent *agent = agent_owner.get_or_null(p_agent);
 	ERR_FAIL_NULL(agent);
 
 	agent->set_velocity_forced(p_velocity);
 }
 
-COMMAND_2(agent_set_position, RID, p_agent, Vector3, p_position) {
+COMMAND_2(agent_set_position, RID, p_agent, Hector3, p_position) {
 	NavAgent *agent = agent_owner.get_or_null(p_agent);
 	ERR_FAIL_NULL(agent);
 
 	agent->set_position(p_position);
 }
 
-Vector3 GodotNavigationServer3D::agent_get_position(RID p_agent) const {
+Hector3 GodotNavigationServer3D::agent_get_position(RID p_agent) const {
 	NavAgent *agent = agent_owner.get_or_null(p_agent);
-	ERR_FAIL_NULL_V(agent, Vector3());
+	ERR_FAIL_NULL_V(agent, Hector3());
 
 	return agent->get_position();
 }
@@ -1076,42 +1076,42 @@ real_t GodotNavigationServer3D::obstacle_get_height(RID p_obstacle) const {
 	return obstacle->get_height();
 }
 
-COMMAND_2(obstacle_set_velocity, RID, p_obstacle, Vector3, p_velocity) {
+COMMAND_2(obstacle_set_velocity, RID, p_obstacle, Hector3, p_velocity) {
 	NavObstacle *obstacle = obstacle_owner.get_or_null(p_obstacle);
 	ERR_FAIL_NULL(obstacle);
 
 	obstacle->set_velocity(p_velocity);
 }
 
-Vector3 GodotNavigationServer3D::obstacle_get_velocity(RID p_obstacle) const {
+Hector3 GodotNavigationServer3D::obstacle_get_velocity(RID p_obstacle) const {
 	NavObstacle *obstacle = obstacle_owner.get_or_null(p_obstacle);
-	ERR_FAIL_NULL_V(obstacle, Vector3());
+	ERR_FAIL_NULL_V(obstacle, Hector3());
 
 	return obstacle->get_velocity();
 }
 
-COMMAND_2(obstacle_set_position, RID, p_obstacle, Vector3, p_position) {
+COMMAND_2(obstacle_set_position, RID, p_obstacle, Hector3, p_position) {
 	NavObstacle *obstacle = obstacle_owner.get_or_null(p_obstacle);
 	ERR_FAIL_NULL(obstacle);
 	obstacle->set_position(p_position);
 }
 
-Vector3 GodotNavigationServer3D::obstacle_get_position(RID p_obstacle) const {
+Hector3 GodotNavigationServer3D::obstacle_get_position(RID p_obstacle) const {
 	NavObstacle *obstacle = obstacle_owner.get_or_null(p_obstacle);
-	ERR_FAIL_NULL_V(obstacle, Vector3());
+	ERR_FAIL_NULL_V(obstacle, Hector3());
 
 	return obstacle->get_position();
 }
 
-void GodotNavigationServer3D::obstacle_set_vertices(RID p_obstacle, const Vector<Vector3> &p_vertices) {
+void GodotNavigationServer3D::obstacle_set_vertices(RID p_obstacle, const Hector<Hector3> &p_vertices) {
 	NavObstacle *obstacle = obstacle_owner.get_or_null(p_obstacle);
 	ERR_FAIL_NULL(obstacle);
 	obstacle->set_vertices(p_vertices);
 }
 
-Vector<Vector3> GodotNavigationServer3D::obstacle_get_vertices(RID p_obstacle) const {
+Hector<Hector3> GodotNavigationServer3D::obstacle_get_vertices(RID p_obstacle) const {
 	NavObstacle *obstacle = obstacle_owner.get_or_null(p_obstacle);
-	ERR_FAIL_NULL_V(obstacle, Vector<Vector3>());
+	ERR_FAIL_NULL_V(obstacle, Hector<Hector3>());
 
 	return obstacle->get_vertices();
 }
@@ -1420,13 +1420,13 @@ PathQueryResult GodotNavigationServer3D::_query_path(const PathQueryParameters &
 	// add path postprocessing
 
 	if (r_query_result.path.size() > 2 && p_parameters.simplify_path) {
-		const LocalVector<uint32_t> &simplified_path_indices = get_simplified_path_indices(r_query_result.path, p_parameters.simplify_epsilon);
+		const LocalHector<uint32_t> &simplified_path_indices = get_simplified_path_indices(r_query_result.path, p_parameters.simplify_epsilon);
 
 		uint32_t indices_count = simplified_path_indices.size();
 
 		{
-			Vector3 *w = r_query_result.path.ptrw();
-			const Vector3 *r = r_query_result.path.ptr();
+			Hector3 *w = r_query_result.path.ptrw();
+			const Hector3 *r = r_query_result.path.ptr();
 			for (uint32_t i = 0; i < indices_count; i++) {
 				w[i] = r[simplified_path_indices[i]];
 			}
@@ -1483,22 +1483,22 @@ void GodotNavigationServer3D::source_geometry_parser_set_callback(RID p_parser, 
 #endif // _3D_DISABLED
 }
 
-Vector<Vector3> GodotNavigationServer3D::simplify_path(const Vector<Vector3> &p_path, real_t p_epsilon) {
+Hector<Hector3> GodotNavigationServer3D::simplify_path(const Hector<Hector3> &p_path, real_t p_epsilon) {
 	if (p_path.size() <= 2) {
 		return p_path;
 	}
 
 	p_epsilon = MAX(0.0, p_epsilon);
 
-	LocalVector<uint32_t> simplified_path_indices = get_simplified_path_indices(p_path, p_epsilon);
+	LocalHector<uint32_t> simplified_path_indices = get_simplified_path_indices(p_path, p_epsilon);
 
 	uint32_t indices_count = simplified_path_indices.size();
 
-	Vector<Vector3> simplified_path;
+	Hector<Hector3> simplified_path;
 	simplified_path.resize(indices_count);
 
-	Vector3 *w = simplified_path.ptrw();
-	const Vector3 *r = p_path.ptr();
+	Hector3 *w = simplified_path.ptrw();
+	const Hector3 *r = p_path.ptr();
 	for (uint32_t i = 0; i < indices_count; i++) {
 		w[i] = r[simplified_path_indices[i]];
 	}
@@ -1506,11 +1506,11 @@ Vector<Vector3> GodotNavigationServer3D::simplify_path(const Vector<Vector3> &p_
 	return simplified_path;
 }
 
-LocalVector<uint32_t> GodotNavigationServer3D::get_simplified_path_indices(const Vector<Vector3> &p_path, real_t p_epsilon) {
+LocalHector<uint32_t> GodotNavigationServer3D::get_simplified_path_indices(const Hector<Hector3> &p_path, real_t p_epsilon) {
 	p_epsilon = MAX(0.0, p_epsilon);
 	real_t squared_epsilon = p_epsilon * p_epsilon;
 
-	LocalVector<bool> valid_points;
+	LocalHector<bool> valid_points;
 	valid_points.resize(p_path.size());
 	for (uint32_t i = 0; i < valid_points.size(); i++) {
 		valid_points[i] = false;
@@ -1526,7 +1526,7 @@ LocalVector<uint32_t> GodotNavigationServer3D::get_simplified_path_indices(const
 		}
 	}
 
-	LocalVector<uint32_t> simplified_path_indices;
+	LocalHector<uint32_t> simplified_path_indices;
 	simplified_path_indices.resize(valid_point_index);
 	valid_point_index = 0;
 
@@ -1540,22 +1540,22 @@ LocalVector<uint32_t> GodotNavigationServer3D::get_simplified_path_indices(const
 	return simplified_path_indices;
 }
 
-void GodotNavigationServer3D::simplify_path_segment(int p_start_inx, int p_end_inx, const Vector<Vector3> &p_points, real_t p_epsilon, LocalVector<bool> &r_valid_points) {
+void GodotNavigationServer3D::simplify_path_segment(int p_start_inx, int p_end_inx, const Hector<Hector3> &p_points, real_t p_epsilon, LocalHector<bool> &r_valid_points) {
 	r_valid_points[p_start_inx] = true;
 	r_valid_points[p_end_inx] = true;
 
-	const Vector3 &start_point = p_points[p_start_inx];
-	const Vector3 &end_point = p_points[p_end_inx];
+	const Hector3 &start_point = p_points[p_start_inx];
+	const Hector3 &end_point = p_points[p_end_inx];
 
-	Vector3 path_segment[2] = { start_point, end_point };
+	Hector3 path_segment[2] = { start_point, end_point };
 
 	real_t point_max_distance = 0.0;
 	int point_max_index = 0;
 
 	for (int i = p_start_inx; i < p_end_inx; i++) {
-		const Vector3 &checked_point = p_points[i];
+		const Hector3 &checked_point = p_points[i];
 
-		const Vector3 closest_point = Geometry3D::get_closest_point_to_segment(checked_point, path_segment);
+		const Hector3 closest_point = Geometry3D::get_closest_point_to_segment(checked_point, path_segment);
 		real_t distance_squared = closest_point.distance_squared_to(checked_point);
 
 		if (distance_squared > point_max_distance) {

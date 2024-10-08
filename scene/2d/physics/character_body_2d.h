@@ -50,8 +50,8 @@ public:
 	bool move_and_slide();
 	void apply_floor_snap();
 
-	const Vector2 &get_velocity() const;
-	void set_velocity(const Vector2 &p_velocity);
+	const Hector2 &get_velocity() const;
+	void set_velocity(const Hector2 &p_velocity);
 
 	bool is_on_floor() const;
 	bool is_on_floor_only() const;
@@ -59,14 +59,14 @@ public:
 	bool is_on_wall_only() const;
 	bool is_on_ceiling() const;
 	bool is_on_ceiling_only() const;
-	const Vector2 &get_last_motion() const;
-	Vector2 get_position_delta() const;
-	const Vector2 &get_floor_normal() const;
-	const Vector2 &get_wall_normal() const;
-	const Vector2 &get_real_velocity() const;
+	const Hector2 &get_last_motion() const;
+	Hector2 get_position_delta() const;
+	const Hector2 &get_floor_normal() const;
+	const Hector2 &get_wall_normal() const;
+	const Hector2 &get_real_velocity() const;
 
-	real_t get_floor_angle(const Vector2 &p_up_direction = Vector2(0.0, -1.0)) const;
-	const Vector2 &get_platform_velocity() const;
+	real_t get_floor_angle(const Hector2 &p_up_direction = Hector2(0.0, -1.0)) const;
+	const Hector2 &get_platform_velocity() const;
 
 	int get_slide_collision_count() const;
 	PhysicsServer2D::MotionResult get_slide_collision(int p_bounce) const;
@@ -126,17 +126,17 @@ private:
 	real_t floor_max_angle = Math::deg_to_rad((real_t)45.0);
 	real_t floor_snap_length = 1;
 	real_t wall_min_slide_angle = Math::deg_to_rad((real_t)15.0);
-	Vector2 up_direction = Vector2(0.0, -1.0);
+	Hector2 up_direction = Hector2(0.0, -1.0);
 	uint32_t platform_floor_layers = UINT32_MAX;
 	uint32_t platform_wall_layers = 0;
-	Vector2 velocity;
+	Hector2 velocity;
 
-	Vector2 floor_normal;
-	Vector2 platform_velocity;
-	Vector2 wall_normal;
-	Vector2 last_motion;
-	Vector2 previous_position;
-	Vector2 real_velocity;
+	Hector2 floor_normal;
+	Hector2 platform_velocity;
+	Hector2 wall_normal;
+	Hector2 last_motion;
+	Hector2 previous_position;
+	Hector2 real_velocity;
 
 	RID platform_rid;
 	ObjectID platform_object_id;
@@ -144,17 +144,17 @@ private:
 	bool on_ceiling = false;
 	bool on_wall = false;
 
-	Vector<PhysicsServer2D::MotionResult> motion_results;
-	Vector<Ref<KinematicCollision2D>> slide_colliders;
+	Hector<PhysicsServer2D::MotionResult> motion_results;
+	Hector<Ref<KinematicCollision2D>> slide_colliders;
 
 	void _move_and_slide_floating(double p_delta);
 	void _move_and_slide_grounded(double p_delta, bool p_was_on_floor);
 
 	Ref<KinematicCollision2D> _get_slide_collision(int p_bounce);
 	Ref<KinematicCollision2D> _get_last_slide_collision();
-	const Vector2 &get_up_direction() const;
+	const Hector2 &get_up_direction() const;
 	bool _on_floor_if_snapped(bool p_was_on_floor, bool p_vel_dir_facing_up);
-	void set_up_direction(const Vector2 &p_up_direction);
+	void set_up_direction(const Hector2 &p_up_direction);
 	void _set_collision_direction(const PhysicsServer2D::MotionResult &p_result);
 	void _set_platform_data(const PhysicsServer2D::MotionResult &p_result);
 	void _apply_floor_snap(bool p_wall_as_floor = false);

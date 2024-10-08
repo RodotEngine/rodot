@@ -93,16 +93,16 @@ public:
 
 private:
 	struct DeviceQueueFamilies {
-		TightLocalVector<VkQueueFamilyProperties> properties;
+		TightLocalHector<VkQueueFamilyProperties> properties;
 	};
 
 	VkInstance instance = VK_NULL_HANDLE;
 	uint32_t instance_api_version = VK_API_VERSION_1_0;
 	HashMap<CharString, bool> requested_instance_extensions;
 	HashSet<CharString> enabled_instance_extension_names;
-	TightLocalVector<Device> driver_devices;
-	TightLocalVector<VkPhysicalDevice> physical_devices;
-	TightLocalVector<DeviceQueueFamilies> device_queue_families;
+	TightLocalHector<Device> driver_devices;
+	TightLocalHector<VkPhysicalDevice> physical_devices;
+	TightLocalHector<DeviceQueueFamilies> device_queue_families;
 	VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
 	VkDebugReportCallbackEXT debug_report = VK_NULL_HANDLE;
 	Functions functions;
@@ -121,7 +121,7 @@ private:
 	VkDebugReportObjectTypeEXT _convert_to_debug_report_objectType(VkObjectType p_object_type);
 
 protected:
-	Error _find_validation_layers(TightLocalVector<const char *> &r_layer_names) const;
+	Error _find_validation_layers(TightLocalHector<const char *> &r_layer_names) const;
 
 	// Can be overridden by platform-specific drivers.
 	virtual const char *_get_platform_surface_extension() const { return nullptr; }

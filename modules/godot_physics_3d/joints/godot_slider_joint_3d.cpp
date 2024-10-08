@@ -88,7 +88,7 @@ bool GodotSliderJoint3D::setup(real_t p_step) {
 	m_projPivotInW = m_realPivotAInW + m_sliderAxis.dot(m_delta) * m_sliderAxis;
 	m_relPosA = m_projPivotInW - A->get_transform().origin;
 	m_relPosB = m_realPivotBInW - B->get_transform().origin;
-	Vector3 normalWorld;
+	Hector3 normalWorld;
 	int i;
 	//linear part
 	for (i = 0; i < 3; i++) {
@@ -122,7 +122,7 @@ bool GodotSliderJoint3D::setup(real_t p_step) {
 						B->get_inv_inertia()));
 	}
 	testAngLimits();
-	Vector3 axisA = m_calculatedTransformA.basis.get_column(0);
+	Hector3 axisA = m_calculatedTransformA.basis.get_column(0);
 	m_kAngle = real_t(1.0) / (A->compute_angular_impulse_denominator(axisA) + B->compute_angular_impulse_denominator(axisA));
 	// clear accumulator for motors
 	m_accumulatedLinMotorImpulse = real_t(0.0);
@@ -136,11 +136,11 @@ bool GodotSliderJoint3D::setup(real_t p_step) {
 void GodotSliderJoint3D::solve(real_t p_step) {
 	int i;
 	// linear
-	Vector3 velA = A->get_velocity_in_local_point(m_relPosA);
-	Vector3 velB = B->get_velocity_in_local_point(m_relPosB);
-	Vector3 vel = velA - velB;
+	Hector3 velA = A->get_velocity_in_local_point(m_relPosA);
+	Hector3 velB = B->get_velocity_in_local_point(m_relPosB);
+	Hector3 vel = velA - velB;
 	for (i = 0; i < 3; i++) {
-		const Vector3 &normal = m_jacLin[i].m_linearJointAxis;
+		const Hector3 &normal = m_jacLin[i].m_linearJointAxis;
 		real_t rel_vel = normal.dot(vel);
 		// calculate positional error
 		real_t depth = m_depth[i];
@@ -150,12 +150,12 @@ void GodotSliderJoint3D::solve(real_t p_step) {
 		real_t damping = (i) ? m_dampingOrthoLin : (m_solveLinLim ? m_dampingLimLin : m_dampingDirLin);
 		// Calculate and apply impulse.
 		real_t normalImpulse = softness * (restitution * depth / p_step - damping * rel_vel) * m_jacLinDiagABInv[i];
-		Vector3 impulse_vector = normal * normalImpulse;
+		Hector3 impulse_Hector = normal * normalImpulse;
 		if (dynamic_A) {
-			A->apply_impulse(impulse_vector, m_relPosA);
+			A->apply_impulse(impulse_Hector, m_relPosA);
 		}
 		if (dynamic_B) {
-			B->apply_impulse(-impulse_vector, m_relPosB);
+			B->apply_impulse(-impulse_Hector, m_relPosB);
 		}
 		if (m_poweredLinMotor && (!i)) { // apply linear motor
 			if (m_accumulatedLinMotorImpulse < m_maxLinMotorForce) {
@@ -175,42 +175,42 @@ void GodotSliderJoint3D::solve(real_t p_step) {
 				}
 				m_accumulatedLinMotorImpulse = new_acc;
 				// apply clamped impulse
-				impulse_vector = normal * normalImpulse;
+				impulse_Hector = normal * normalImpulse;
 				if (dynamic_A) {
-					A->apply_impulse(impulse_vector, m_relPosA);
+					A->apply_impulse(impulse_Hector, m_relPosA);
 				}
 				if (dynamic_B) {
-					B->apply_impulse(-impulse_vector, m_relPosB);
+					B->apply_impulse(-impulse_Hector, m_relPosB);
 				}
 			}
 		}
 	}
 	// angular
 	// get axes in world space
-	Vector3 axisA = m_calculatedTransformA.basis.get_column(0);
-	Vector3 axisB = m_calculatedTransformB.basis.get_column(0);
+	Hector3 axisA = m_calculatedTransformA.basis.get_column(0);
+	Hector3 axisB = m_calculatedTransformB.basis.get_column(0);
 
-	const Vector3 &angVelA = A->get_angular_velocity();
-	const Vector3 &angVelB = B->get_angular_velocity();
+	const Hector3 &angVelA = A->get_angular_velocity();
+	const Hector3 &angVelB = B->get_angular_velocity();
 
-	Vector3 angVelAroundAxisA = axisA * axisA.dot(angVelA);
-	Vector3 angVelAroundAxisB = axisB * axisB.dot(angVelB);
+	Hector3 angVelAroundAxisA = axisA * axisA.dot(angVelA);
+	Hector3 angVelAroundAxisB = axisB * axisB.dot(angVelB);
 
-	Vector3 angAorthog = angVelA - angVelAroundAxisA;
-	Vector3 angBorthog = angVelB - angVelAroundAxisB;
-	Vector3 velrelOrthog = angAorthog - angBorthog;
+	Hector3 angAorthog = angVelA - angVelAroundAxisA;
+	Hector3 angBorthog = angVelB - angVelAroundAxisB;
+	Hector3 velrelOrthog = angAorthog - angBorthog;
 	//solve orthogonal angular velocity correction
 	real_t len = velrelOrthog.length();
 	if (len > real_t(0.00001)) {
-		Vector3 normal = velrelOrthog.normalized();
+		Hector3 normal = velrelOrthog.normalized();
 		real_t denom = A->compute_angular_impulse_denominator(normal) + B->compute_angular_impulse_denominator(normal);
 		velrelOrthog *= (real_t(1.) / denom) * m_dampingOrthoAng * m_softnessOrthoAng;
 	}
 	//solve angular positional correction
-	Vector3 angularError = axisA.cross(axisB) * (real_t(1.) / p_step);
+	Hector3 angularError = axisA.cross(axisB) * (real_t(1.) / p_step);
 	real_t len2 = angularError.length();
 	if (len2 > real_t(0.00001)) {
-		Vector3 normal2 = angularError.normalized();
+		Hector3 normal2 = angularError.normalized();
 		real_t denom2 = A->compute_angular_impulse_denominator(normal2) + B->compute_angular_impulse_denominator(normal2);
 		angularError *= (real_t(1.) / denom2) * m_restitutionOrthoAng * m_softnessOrthoAng;
 	}
@@ -230,7 +230,7 @@ void GodotSliderJoint3D::solve(real_t p_step) {
 		impulseMag = (angVelB - angVelA).dot(axisA) * m_dampingDirAng + m_angDepth * m_restitutionDirAng / p_step;
 		impulseMag *= m_kAngle * m_softnessDirAng;
 	}
-	Vector3 impulse = axisA * impulseMag;
+	Hector3 impulse = axisA * impulseMag;
 	if (dynamic_A) {
 		A->apply_torque_impulse(impulse);
 	}
@@ -240,7 +240,7 @@ void GodotSliderJoint3D::solve(real_t p_step) {
 	//apply angular motor
 	if (m_poweredAngMotor) {
 		if (m_accumulatedAngMotorImpulse < m_maxAngMotorForce) {
-			Vector3 velrel = angVelAroundAxisA - angVelAroundAxisB;
+			Hector3 velrel = angVelAroundAxisA - angVelAroundAxisB;
 			real_t projRelVel = velrel.dot(axisA);
 
 			real_t desiredMotorVel = m_targetAngMotorVelocity;
@@ -260,7 +260,7 @@ void GodotSliderJoint3D::solve(real_t p_step) {
 			}
 			m_accumulatedAngMotorImpulse = new_acc;
 			// apply clamped impulse
-			Vector3 motorImp = angImpulse * axisA;
+			Hector3 motorImp = angImpulse * axisA;
 			if (dynamic_A) {
 				A->apply_torque_impulse(motorImp);
 			}
@@ -281,7 +281,7 @@ void GodotSliderJoint3D::calculateTransforms() {
 	m_sliderAxis = m_calculatedTransformA.basis.get_column(0); // along X
 	m_delta = m_realPivotBInW - m_realPivotAInW;
 	m_projPivotInW = m_realPivotAInW + m_sliderAxis.dot(m_delta) * m_sliderAxis;
-	Vector3 normalWorld;
+	Hector3 normalWorld;
 	int i;
 	//linear part
 	for (i = 0; i < 3; i++) {
@@ -316,9 +316,9 @@ void GodotSliderJoint3D::testAngLimits() {
 	m_angDepth = real_t(0.);
 	m_solveAngLim = false;
 	if (m_lowerAngLimit <= m_upperAngLimit) {
-		const Vector3 axisA0 = m_calculatedTransformA.basis.get_column(1);
-		const Vector3 axisA1 = m_calculatedTransformA.basis.get_column(2);
-		const Vector3 axisB0 = m_calculatedTransformB.basis.get_column(1);
+		const Hector3 axisA0 = m_calculatedTransformA.basis.get_column(1);
+		const Hector3 axisA1 = m_calculatedTransformA.basis.get_column(2);
+		const Hector3 axisB0 = m_calculatedTransformB.basis.get_column(1);
 		real_t rot = atan2fast(axisB0.dot(axisA1), axisB0.dot(axisA0));
 		if (rot < m_lowerAngLimit) {
 			m_angDepth = rot - m_lowerAngLimit;
@@ -332,8 +332,8 @@ void GodotSliderJoint3D::testAngLimits() {
 
 //-----------------------------------------------------------------------------
 
-Vector3 GodotSliderJoint3D::getAncorInA() {
-	Vector3 ancorInA;
+Hector3 GodotSliderJoint3D::getAncorInA() {
+	Hector3 ancorInA;
 	ancorInA = m_realPivotAInW + (m_lowerLinLimit + m_upperLinLimit) * real_t(0.5) * m_sliderAxis;
 	ancorInA = A->get_transform().inverse().xform(ancorInA);
 	return ancorInA;
@@ -341,8 +341,8 @@ Vector3 GodotSliderJoint3D::getAncorInA() {
 
 //-----------------------------------------------------------------------------
 
-Vector3 GodotSliderJoint3D::getAncorInB() {
-	Vector3 ancorInB;
+Hector3 GodotSliderJoint3D::getAncorInB() {
+	Hector3 ancorInB;
 	ancorInB = m_frameInB.origin;
 	return ancorInB;
 }

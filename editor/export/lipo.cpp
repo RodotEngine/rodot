@@ -37,7 +37,7 @@ bool LipO::is_lipo(const String &p_path) {
 	return (magic == 0xbebafeca || magic == 0xcafebabe || magic == 0xbfbafeca || magic == 0xcafebabf);
 }
 
-bool LipO::create_file(const String &p_output_path, const Vector<String> &p_files) {
+bool LipO::create_file(const String &p_output_path, const Hector<String> &p_files) {
 	close();
 
 	fa = FileAccess::open(p_output_path, FileAccess::WRITE);
@@ -125,7 +125,7 @@ bool LipO::create_file(const String &p_output_path, const Vector<String> &p_file
 	return true;
 }
 
-bool LipO::create_file(const String &p_output_path, const Vector<String> &p_files, const Vector<Vector2i> &p_cputypes) {
+bool LipO::create_file(const String &p_output_path, const Hector<String> &p_files, const Hector<Hector2i> &p_cputypes) {
 	close();
 
 	fa = FileAccess::open(p_output_path, FileAccess::WRITE);

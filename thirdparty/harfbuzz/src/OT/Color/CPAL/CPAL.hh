@@ -232,7 +232,7 @@ struct CPAL
   bool serialize (hb_serialize_context_t *c,
                   const hb_array_t<const HBUINT16> &color_record_indices,
                   const hb_array_t<const BGRAColor> &color_records,
-                  const hb_vector_t<unsigned>& first_color_index_for_layer,
+                  const hb_Hector_t<unsigned>& first_color_index_for_layer,
                   const hb_map_t& first_color_to_layer_index,
                   const hb_set_t &retained_color_indices) const
   {
@@ -290,7 +290,7 @@ struct CPAL
     out->numColors = retained_color_indices.get_population ();
     out->numPalettes = numPalettes;
 
-    hb_vector_t<unsigned> first_color_index_for_layer;
+    hb_Hector_t<unsigned> first_color_index_for_layer;
     hb_map_t first_color_to_layer_index;
 
     const hb_array_t<const HBUINT16> colorRecordIndices = colorRecordIndicesZ.as_array (numPalettes);

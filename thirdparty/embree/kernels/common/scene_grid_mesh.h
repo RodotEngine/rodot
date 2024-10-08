@@ -356,14 +356,14 @@ namespace embree
   public:
     BufferView<Grid> grids;      //!< array of triangles
     BufferView<Vec3fa> vertices0;        //!< fast access to first vertex buffer
-    Device::vector<BufferView<Vec3fa>> vertices = device; //!< vertex array for each timestep
-    Device::vector<RawBufferView> vertexAttribs = device; //!< vertex attributes
+    Device::Hector<BufferView<Vec3fa>> vertices = device; //!< vertex array for each timestep
+    Device::Hector<RawBufferView> vertexAttribs = device; //!< vertex attributes
 
 #if defined(EMBREE_SYCL_SUPPORT)
     
   public:
     struct PrimID_XY { uint32_t primID; uint16_t x,y; };
-    Device::vector<PrimID_XY> quadID_to_primID_xy = device;  //!< maps a quad to the primitive ID and grid coordinates
+    Device::Hector<PrimID_XY> quadID_to_primID_xy = device;  //!< maps a quad to the primitive ID and grid coordinates
 #endif
   };
 
@@ -399,7 +399,7 @@ namespace embree
       }
 #endif
       
-      PrimInfo createPrimRefArray(mvector<PrimRef>& prims, mvector<SubGridBuildData>& sgrids, const range<size_t>& r, size_t k, unsigned int geomID) const override 
+      PrimInfo createPrimRefArray(mHector<PrimRef>& prims, mHector<SubGridBuildData>& sgrids, const range<size_t>& r, size_t k, unsigned int geomID) const override 
       {
         PrimInfo pinfo(empty);
         for (size_t j=r.begin(); j<r.end(); j++)
@@ -440,7 +440,7 @@ namespace embree
       }
 #endif
 
-      PrimInfoMB createPrimRefMBArray(mvector<PrimRefMB>& prims, mvector<SubGridBuildData>& sgrids, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const override
+      PrimInfoMB createPrimRefMBArray(mHector<PrimRefMB>& prims, mHector<SubGridBuildData>& sgrids, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const override
       {
         PrimInfoMB pinfoMB(empty);
         for (size_t j=r.begin(); j<r.end(); j++)

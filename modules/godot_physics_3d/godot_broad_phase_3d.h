@@ -57,8 +57,8 @@ public:
 	virtual bool is_static(ID p_id) const = 0;
 	virtual int get_subindex(ID p_id) const = 0;
 
-	virtual int cull_point(const Vector3 &p_point, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices = nullptr) = 0;
-	virtual int cull_segment(const Vector3 &p_from, const Vector3 &p_to, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices = nullptr) = 0;
+	virtual int cull_point(const Hector3 &p_point, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices = nullptr) = 0;
+	virtual int cull_segment(const Hector3 &p_from, const Hector3 &p_to, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices = nullptr) = 0;
 	virtual int cull_aabb(const AABB &p_aabb, GodotCollisionObject3D **p_results, int p_max_results, int *p_result_indices = nullptr) = 0;
 
 	virtual void set_pair_callback(PairCallback p_pair_callback, void *p_userdata) = 0;

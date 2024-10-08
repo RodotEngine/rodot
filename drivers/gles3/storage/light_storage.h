@@ -36,7 +36,7 @@
 #include "platform_gl.h"
 #include "render_scene_buffers_gles3.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/self_list.h"
 #include "drivers/gles3/storage/texture_storage.h"
@@ -83,7 +83,7 @@ struct LightInstance {
 		float shadow_texel_size;
 		float range_begin;
 		Rect2 atlas_rect;
-		Vector2 uv_scale;
+		Hector2 uv_scale;
 	};
 
 	ShadowTransform shadow_transform[6];
@@ -121,8 +121,8 @@ struct ReflectionProbe {
 	Color ambient_color;
 	float ambient_color_energy = 1.0;
 	float max_distance = 0;
-	Vector3 size = Vector3(20, 20, 20);
-	Vector3 origin_offset;
+	Hector3 size = Hector3(20, 20, 20);
+	Hector3 origin_offset;
 	bool interior = false;
 	bool box_projection = false;
 	bool enable_shadows = false;
@@ -150,7 +150,7 @@ struct ReflectionAtlas {
 		GLuint radiance = 0;
 		GLuint fbos[7];
 	};
-	Vector<Reflection> reflections;
+	Hector<Reflection> reflections;
 
 	Ref<RenderSceneBuffersGLES3> render_buffers; // Further render buffers used.
 };
@@ -178,11 +178,11 @@ struct Lightmap {
 	RID light_texture;
 	bool uses_spherical_harmonics = false;
 	bool interior = false;
-	AABB bounds = AABB(Vector3(), Vector3(1, 1, 1));
+	AABB bounds = AABB(Hector3(), Hector3(1, 1, 1));
 	float baked_exposure = 1.0;
-	Vector2i light_texture_size;
+	Hector2i light_texture_size;
 	int32_t array_index = -1; //unassigned
-	PackedVector3Array points;
+	PackedHector3Array points;
 	PackedColorArray point_sh;
 	PackedInt32Array tetrahedra;
 	PackedInt32Array bsp_tree;
@@ -231,7 +231,7 @@ private:
 
 	/* LIGHTMAP */
 
-	Vector<RID> lightmap_textures;
+	Hector<RID> lightmap_textures;
 	float lightmap_probe_capture_update_speed = 4;
 
 	mutable RID_Owner<Lightmap, true> lightmap_owner;
@@ -259,9 +259,9 @@ private:
 				Shadow() {}
 			};
 
-			Vector<Shadow> shadows;
-			LocalVector<GLuint> textures;
-			LocalVector<GLuint> fbos;
+			Hector<Shadow> shadows;
+			LocalHector<GLuint> textures;
+			LocalHector<GLuint> fbos;
 
 			Quadrant() {}
 		} quadrants[4];
@@ -439,10 +439,10 @@ public:
 
 	virtual void light_instance_set_transform(RID p_light_instance, const Transform3D &p_transform) override;
 	virtual void light_instance_set_aabb(RID p_light_instance, const AABB &p_aabb) override;
-	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Vector2 &p_uv_scale = Vector2()) override;
+	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Hector2 &p_uv_scale = Hector2()) override;
 	virtual void light_instance_mark_visible(RID p_light_instance) override;
 
-	virtual bool light_instance_is_shadow_visible_at_position(RID p_light_instance, const Vector3 &p_position) const override {
+	virtual bool light_instance_is_shadow_visible_at_position(RID p_light_instance, const Hector3 &p_position) const override {
 		const LightInstance *light_instance = light_instance_owner.get_or_null(p_light_instance);
 		ERR_FAIL_NULL_V(light_instance, false);
 		const Light *light = light_owner.get_or_null(light_instance->light);
@@ -558,7 +558,7 @@ public:
 		return li->shadow_transform[p_index].range_begin;
 	}
 
-	_FORCE_INLINE_ Vector2 light_instance_get_shadow_uv_scale(RID p_light_instance, int p_index) {
+	_FORCE_INLINE_ Hector2 light_instance_get_shadow_uv_scale(RID p_light_instance, int p_index) {
 		LightInstance *li = light_instance_owner.get_or_null(p_light_instance);
 		return li->shadow_transform[p_index].uv_scale;
 	}
@@ -643,8 +643,8 @@ public:
 	virtual void reflection_probe_set_ambient_color(RID p_probe, const Color &p_color) override;
 	virtual void reflection_probe_set_ambient_energy(RID p_probe, float p_energy) override;
 	virtual void reflection_probe_set_max_distance(RID p_probe, float p_distance) override;
-	virtual void reflection_probe_set_size(RID p_probe, const Vector3 &p_size) override;
-	virtual void reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) override;
+	virtual void reflection_probe_set_size(RID p_probe, const Hector3 &p_size) override;
+	virtual void reflection_probe_set_origin_offset(RID p_probe, const Hector3 &p_offset) override;
 	virtual void reflection_probe_set_as_interior(RID p_probe, bool p_enable) override;
 	virtual void reflection_probe_set_enable_box_projection(RID p_probe, bool p_enable) override;
 	virtual void reflection_probe_set_enable_shadows(RID p_probe, bool p_enable) override;
@@ -658,8 +658,8 @@ public:
 	virtual RS::ReflectionProbeUpdateMode reflection_probe_get_update_mode(RID p_probe) const override;
 	virtual uint32_t reflection_probe_get_cull_mask(RID p_probe) const override;
 	virtual uint32_t reflection_probe_get_reflection_mask(RID p_probe) const override;
-	virtual Vector3 reflection_probe_get_size(RID p_probe) const override;
-	virtual Vector3 reflection_probe_get_origin_offset(RID p_probe) const override;
+	virtual Hector3 reflection_probe_get_size(RID p_probe) const override;
+	virtual Hector3 reflection_probe_get_origin_offset(RID p_probe) const override;
 	virtual float reflection_probe_get_origin_max_distance(RID p_probe) const override;
 	virtual bool reflection_probe_renders_shadows(RID p_probe) const override;
 
@@ -722,14 +722,14 @@ public:
 	virtual void lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) override;
 	virtual void lightmap_set_probe_bounds(RID p_lightmap, const AABB &p_bounds) override;
 	virtual void lightmap_set_probe_interior(RID p_lightmap, bool p_interior) override;
-	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) override;
+	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) override;
 	virtual void lightmap_set_baked_exposure_normalization(RID p_lightmap, float p_exposure) override;
-	virtual PackedVector3Array lightmap_get_probe_capture_points(RID p_lightmap) const override;
+	virtual PackedHector3Array lightmap_get_probe_capture_points(RID p_lightmap) const override;
 	virtual PackedColorArray lightmap_get_probe_capture_sh(RID p_lightmap) const override;
 	virtual PackedInt32Array lightmap_get_probe_capture_tetrahedra(RID p_lightmap) const override;
 	virtual PackedInt32Array lightmap_get_probe_capture_bsp_tree(RID p_lightmap) const override;
 	virtual AABB lightmap_get_aabb(RID p_lightmap) const override;
-	virtual void lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) override;
+	virtual void lightmap_tap_sh_light(RID p_lightmap, const Hector3 &p_point, Color *r_sh) override;
 	virtual bool lightmap_is_interior(RID p_lightmap) const override;
 	virtual void lightmap_set_probe_capture_update_speed(float p_speed) override;
 	virtual float lightmap_get_probe_capture_update_speed() const override;

@@ -219,7 +219,7 @@ void AudioStreamMP3::clear_data() {
 	data.clear();
 }
 
-void AudioStreamMP3::set_data(const Vector<uint8_t> &p_data) {
+void AudioStreamMP3::set_data(const Hector<uint8_t> &p_data) {
 	int src_data_len = p_data.size();
 
 	mp3dec_ex_t *mp3d = memnew(mp3dec_ex_t);
@@ -240,7 +240,7 @@ void AudioStreamMP3::set_data(const Vector<uint8_t> &p_data) {
 	data_len = src_data_len;
 }
 
-Vector<uint8_t> AudioStreamMP3::get_data() const {
+Hector<uint8_t> AudioStreamMP3::get_data() const {
 	return data;
 }
 

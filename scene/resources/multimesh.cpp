@@ -35,19 +35,19 @@
 #ifndef DISABLE_DEPRECATED
 // Kept for compatibility from 3.x to 4.0.
 
-void MultiMesh::_set_transform_array(const Vector<Vector3> &p_array) {
+void MultiMesh::_set_transform_array(const Hector<Hector3> &p_array) {
 	if (transform_format != TRANSFORM_3D) {
 		return;
 	}
 
-	const Vector<Vector3> &xforms = p_array;
+	const Hector<Hector3> &xforms = p_array;
 	int len = xforms.size();
 	ERR_FAIL_COND((len / 4) != instance_count);
 	if (len == 0) {
 		return;
 	}
 
-	const Vector3 *r = xforms.ptr();
+	const Hector3 *r = xforms.ptr();
 
 	for (int i = 0; i < len / 4; i++) {
 		Transform3D t;
@@ -60,19 +60,19 @@ void MultiMesh::_set_transform_array(const Vector<Vector3> &p_array) {
 	}
 }
 
-Vector<Vector3> MultiMesh::_get_transform_array() const {
+Hector<Hector3> MultiMesh::_get_transform_array() const {
 	if (transform_format != TRANSFORM_3D) {
-		return Vector<Vector3>();
+		return Hector<Hector3>();
 	}
 
 	if (instance_count == 0) {
-		return Vector<Vector3>();
+		return Hector<Hector3>();
 	}
 
-	Vector<Vector3> xforms;
+	Hector<Hector3> xforms;
 	xforms.resize(instance_count * 4);
 
-	Vector3 *w = xforms.ptrw();
+	Hector3 *w = xforms.ptrw();
 
 	for (int i = 0; i < instance_count; i++) {
 		Transform3D t = get_instance_transform(i);
@@ -85,19 +85,19 @@ Vector<Vector3> MultiMesh::_get_transform_array() const {
 	return xforms;
 }
 
-void MultiMesh::_set_transform_2d_array(const Vector<Vector2> &p_array) {
+void MultiMesh::_set_transform_2d_array(const Hector<Hector2> &p_array) {
 	if (transform_format != TRANSFORM_2D) {
 		return;
 	}
 
-	const Vector<Vector2> &xforms = p_array;
+	const Hector<Hector2> &xforms = p_array;
 	int len = xforms.size();
 	ERR_FAIL_COND((len / 3) != instance_count);
 	if (len == 0) {
 		return;
 	}
 
-	const Vector2 *r = xforms.ptr();
+	const Hector2 *r = xforms.ptr();
 
 	for (int i = 0; i < len / 3; i++) {
 		Transform2D t;
@@ -109,19 +109,19 @@ void MultiMesh::_set_transform_2d_array(const Vector<Vector2> &p_array) {
 	}
 }
 
-Vector<Vector2> MultiMesh::_get_transform_2d_array() const {
+Hector<Hector2> MultiMesh::_get_transform_2d_array() const {
 	if (transform_format != TRANSFORM_2D) {
-		return Vector<Vector2>();
+		return Hector<Hector2>();
 	}
 
 	if (instance_count == 0) {
-		return Vector<Vector2>();
+		return Hector<Hector2>();
 	}
 
-	Vector<Vector2> xforms;
+	Hector<Hector2> xforms;
 	xforms.resize(instance_count * 3);
 
-	Vector2 *w = xforms.ptrw();
+	Hector2 *w = xforms.ptrw();
 
 	for (int i = 0; i < instance_count; i++) {
 		Transform2D t = get_instance_transform_2d(i);
@@ -133,8 +133,8 @@ Vector<Vector2> MultiMesh::_get_transform_2d_array() const {
 	return xforms;
 }
 
-void MultiMesh::_set_color_array(const Vector<Color> &p_array) {
-	const Vector<Color> &colors = p_array;
+void MultiMesh::_set_color_array(const Hector<Color> &p_array) {
+	const Hector<Color> &colors = p_array;
 	int len = colors.size();
 	if (len == 0) {
 		return;
@@ -148,12 +148,12 @@ void MultiMesh::_set_color_array(const Vector<Color> &p_array) {
 	}
 }
 
-Vector<Color> MultiMesh::_get_color_array() const {
+Hector<Color> MultiMesh::_get_color_array() const {
 	if (instance_count == 0 || !use_colors) {
-		return Vector<Color>();
+		return Hector<Color>();
 	}
 
-	Vector<Color> colors;
+	Hector<Color> colors;
 	colors.resize(instance_count);
 
 	for (int i = 0; i < instance_count; i++) {
@@ -163,8 +163,8 @@ Vector<Color> MultiMesh::_get_color_array() const {
 	return colors;
 }
 
-void MultiMesh::_set_custom_data_array(const Vector<Color> &p_array) {
-	const Vector<Color> &custom_datas = p_array;
+void MultiMesh::_set_custom_data_array(const Hector<Color> &p_array) {
+	const Hector<Color> &custom_datas = p_array;
 	int len = custom_datas.size();
 	if (len == 0) {
 		return;
@@ -178,12 +178,12 @@ void MultiMesh::_set_custom_data_array(const Vector<Color> &p_array) {
 	}
 }
 
-Vector<Color> MultiMesh::_get_custom_data_array() const {
+Hector<Color> MultiMesh::_get_custom_data_array() const {
 	if (instance_count == 0 || !use_custom_data) {
-		return Vector<Color>();
+		return Hector<Color>();
 	}
 
-	Vector<Color> custom_datas;
+	Hector<Color> custom_datas;
 	custom_datas.resize(instance_count);
 
 	for (int i = 0; i < instance_count; i++) {
@@ -194,15 +194,15 @@ Vector<Color> MultiMesh::_get_custom_data_array() const {
 }
 #endif // DISABLE_DEPRECATED
 
-void MultiMesh::set_buffer(const Vector<float> &p_buffer) {
+void MultiMesh::set_buffer(const Hector<float> &p_buffer) {
 	RS::get_singleton()->multimesh_set_buffer(multimesh, p_buffer);
 }
 
-Vector<float> MultiMesh::get_buffer() const {
+Hector<float> MultiMesh::get_buffer() const {
 	return RS::get_singleton()->multimesh_get_buffer(multimesh);
 }
 
-void MultiMesh::set_buffer_interpolated(const Vector<float> &p_buffer_curr, const Vector<float> &p_buffer_prev) {
+void MultiMesh::set_buffer_interpolated(const Hector<float> &p_buffer_curr, const Hector<float> &p_buffer_prev) {
 	RS::get_singleton()->multimesh_set_buffer_interpolated(multimesh, p_buffer_curr, p_buffer_prev);
 }
 
@@ -385,8 +385,8 @@ void MultiMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_set_custom_data_array", "array"), &MultiMesh::_set_custom_data_array);
 	ClassDB::bind_method(D_METHOD("_get_custom_data_array"), &MultiMesh::_get_custom_data_array);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "transform_array", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_transform_array", "_get_transform_array");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "transform_2d_array", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_transform_2d_array", "_get_transform_2d_array");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "transform_array", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_transform_array", "_get_transform_array");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "transform_2d_array", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_transform_2d_array", "_get_transform_2d_array");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_COLOR_ARRAY, "color_array", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_color_array", "_get_color_array");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_COLOR_ARRAY, "custom_data_array", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_custom_data_array", "_get_custom_data_array");
 #endif

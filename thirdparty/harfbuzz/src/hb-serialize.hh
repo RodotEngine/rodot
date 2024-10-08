@@ -171,8 +171,8 @@ struct hb_serialize_context_t
 
     char *head;
     char *tail;
-    hb_vector_t<link_t> real_links;
-    hb_vector_t<link_t> virtual_links;
+    hb_Hector_t<link_t> real_links;
+    hb_Hector_t<link_t> virtual_links;
     object_t *next;
 
     auto all_links () const HB_AUTO_RETURN
@@ -790,7 +790,7 @@ struct hb_serialize_context_t
 			   (char *) b.arrayZ, hb_free);
   }
 
-  const hb_vector_t<object_t *>& object_graph() const
+  const hb_Hector_t<object_t *>& object_graph() const
   { return packed; }
 
   private:
@@ -823,7 +823,7 @@ struct hb_serialize_context_t
   object_t *current;
 
   /* Stack of packed objects.  Object 0 is always nil object. */
-  hb_vector_t<object_t *> packed;
+  hb_Hector_t<object_t *> packed;
 
   /* Map view of packed objects. */
   hb_hashmap_t<const object_t *, objidx_t> packed_map;

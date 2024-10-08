@@ -44,7 +44,7 @@ enum TileMapLayerDataFormat {
 class TerrainConstraint {
 private:
 	Ref<TileSet> tile_set;
-	Vector2i base_cell_coords;
+	Hector2i base_cell_coords;
 	int bit = -1;
 	int terrain = -1;
 
@@ -62,7 +62,7 @@ public:
 		return vformat("Constraint {pos:%s, bit:%d, terrain:%d, priority:%d}", base_cell_coords, bit, terrain, priority);
 	}
 
-	Vector2i get_base_cell_coords() const {
+	Hector2i get_base_cell_coords() const {
 		return base_cell_coords;
 	}
 
@@ -70,7 +70,7 @@ public:
 		return bit == 0;
 	}
 
-	HashMap<Vector2i, TileSet::CellNeighbor> get_overlapping_coords_and_peering_bits() const;
+	HashMap<Hector2i, TileSet::CellNeighbor> get_overlapping_coords_and_peering_bits() const;
 
 	void set_terrain(int p_terrain) {
 		terrain = p_terrain;
@@ -88,8 +88,8 @@ public:
 		return priority;
 	}
 
-	TerrainConstraint(Ref<TileSet> p_tile_set, const Vector2i &p_position, int p_terrain); // For the center terrain bit
-	TerrainConstraint(Ref<TileSet> p_tile_set, const Vector2i &p_position, const TileSet::CellNeighbor &p_bit, int p_terrain); // For peering bits
+	TerrainConstraint(Ref<TileSet> p_tile_set, const Hector2i &p_position, int p_terrain); // For the center terrain bit
+	TerrainConstraint(Ref<TileSet> p_tile_set, const Hector2i &p_position, const TileSet::CellNeighbor &p_bit, int p_terrain); // For peering bits
 	TerrainConstraint() {}
 };
 
@@ -99,7 +99,7 @@ class DebugQuadrant;
 class RenderingQuadrant;
 
 struct CellData {
-	Vector2i coords;
+	Hector2i coords;
 	TileMapCell cell;
 
 	// Debug.
@@ -108,13 +108,13 @@ struct CellData {
 	// Rendering.
 	Ref<RenderingQuadrant> rendering_quadrant;
 	SelfList<CellData> rendering_quadrant_list_element;
-	LocalVector<LocalVector<RID>> occluders;
+	LocalHector<LocalHector<RID>> occluders;
 
 	// Physics.
-	LocalVector<RID> bodies;
+	LocalHector<RID> bodies;
 
 	// Navigation.
-	LocalVector<RID> navigation_regions;
+	LocalHector<RID> navigation_regions;
 
 	// Scenes.
 	String scene;
@@ -172,7 +172,7 @@ class DebugQuadrant : public RefCounted {
 	GDCLASS(DebugQuadrant, RefCounted);
 
 public:
-	Vector2i quadrant_coords;
+	Hector2i quadrant_coords;
 	SelfList<CellData>::List cells;
 	RID canvas_item;
 
@@ -193,7 +193,7 @@ class RenderingQuadrant : public RefCounted {
 
 public:
 	struct CoordsWorldComparator {
-		_ALWAYS_INLINE_ bool operator()(const Vector2 &p_a, const Vector2 &p_b) const {
+		_ALWAYS_INLINE_ bool operator()(const Hector2 &p_a, const Hector2 &p_b) const {
 			// We sort the cells by their local coords, as it is needed by rendering.
 			if (p_a.y == p_b.y) {
 				return p_a.x > p_b.x;
@@ -203,10 +203,10 @@ public:
 		}
 	};
 
-	Vector2i quadrant_coords;
+	Hector2i quadrant_coords;
 	SelfList<CellData>::List cells;
 	List<RID> canvas_items;
-	Vector2 canvas_items_position;
+	Hector2 canvas_items_position;
 
 	SelfList<RenderingQuadrant> dirty_quadrant_list_element;
 
@@ -274,7 +274,7 @@ private:
 	static constexpr float FP_ADJUST = 0.00001;
 
 	// Properties.
-	HashMap<Vector2i, CellData> tile_map_layer_data;
+	HashMap<Hector2i, CellData> tile_map_layer_data;
 
 	bool enabled = true;
 	Ref<TileSet> tile_set;
@@ -324,14 +324,14 @@ private:
 
 	// Per-system methods.
 #ifdef DEBUG_ENABLED
-	HashMap<Vector2i, Ref<DebugQuadrant>> debug_quadrant_map;
-	Vector2i _coords_to_debug_quadrant_coords(const Vector2i &p_coords) const;
+	HashMap<Hector2i, Ref<DebugQuadrant>> debug_quadrant_map;
+	Hector2i _coords_to_debug_quadrant_coords(const Hector2i &p_coords) const;
 	bool _debug_was_cleaned_up = false;
 	void _debug_update(bool p_force_cleanup);
 	void _debug_quadrants_update_cell(CellData &r_cell_data, SelfList<DebugQuadrant>::List &r_dirty_debug_quadrant_list);
 #endif // DEBUG_ENABLED
 
-	HashMap<Vector2i, Ref<RenderingQuadrant>> rendering_quadrant_map;
+	HashMap<Hector2i, Ref<RenderingQuadrant>> rendering_quadrant_map;
 	bool _rendering_was_cleaned_up = false;
 	void _rendering_update(bool p_force_cleanup);
 	void _rendering_notification(int p_what);
@@ -339,17 +339,17 @@ private:
 	void _rendering_occluders_clear_cell(CellData &r_cell_data);
 	void _rendering_occluders_update_cell(CellData &r_cell_data);
 #ifdef DEBUG_ENABLED
-	void _rendering_draw_cell_debug(const RID &p_canvas_item, const Vector2 &p_quadrant_pos, const CellData &r_cell_data);
+	void _rendering_draw_cell_debug(const RID &p_canvas_item, const Hector2 &p_quadrant_pos, const CellData &r_cell_data);
 #endif // DEBUG_ENABLED
 
-	HashMap<RID, Vector2i> bodies_coords; // Mapping for RID to coords.
+	HashMap<RID, Hector2i> bodies_coords; // Mapping for RID to coords.
 	bool _physics_was_cleaned_up = false;
 	void _physics_update(bool p_force_cleanup);
 	void _physics_notification(int p_what);
 	void _physics_clear_cell(CellData &r_cell_data);
 	void _physics_update_cell(CellData &r_cell_data);
 #ifdef DEBUG_ENABLED
-	void _physics_draw_cell_debug(const RID &p_canvas_item, const Vector2 &p_quadrant_pos, const CellData &r_cell_data);
+	void _physics_draw_cell_debug(const RID &p_canvas_item, const Hector2 &p_quadrant_pos, const CellData &r_cell_data);
 #endif // DEBUG_ENABLED
 
 	bool _navigation_was_cleaned_up = false;
@@ -358,7 +358,7 @@ private:
 	void _navigation_clear_cell(CellData &r_cell_data);
 	void _navigation_update_cell(CellData &r_cell_data);
 #ifdef DEBUG_ENABLED
-	void _navigation_draw_cell_debug(const RID &p_canvas_item, const Vector2 &p_quadrant_pos, const CellData &r_cell_data);
+	void _navigation_draw_cell_debug(const RID &p_canvas_item, const Hector2 &p_quadrant_pos, const CellData &r_cell_data);
 #endif // DEBUG_ENABLED
 
 	bool _scenes_was_cleaned_up = false;
@@ -366,13 +366,13 @@ private:
 	void _scenes_clear_cell(CellData &r_cell_data);
 	void _scenes_update_cell(CellData &r_cell_data);
 #ifdef DEBUG_ENABLED
-	void _scenes_draw_cell_debug(const RID &p_canvas_item, const Vector2 &p_quadrant_pos, const CellData &r_cell_data);
+	void _scenes_draw_cell_debug(const RID &p_canvas_item, const Hector2 &p_quadrant_pos, const CellData &r_cell_data);
 #endif // DEBUG_ENABLED
 
 	// Terrains.
-	TileSet::TerrainsPattern _get_best_terrain_pattern_for_constraints(int p_terrain_set, const Vector2i &p_position, const RBSet<TerrainConstraint> &p_constraints, TileSet::TerrainsPattern p_current_pattern) const;
-	RBSet<TerrainConstraint> _get_terrain_constraints_from_added_pattern(const Vector2i &p_position, int p_terrain_set, TileSet::TerrainsPattern p_terrains_pattern) const;
-	RBSet<TerrainConstraint> _get_terrain_constraints_from_painted_cells_list(const RBSet<Vector2i> &p_painted, int p_terrain_set, bool p_ignore_empty_terrains) const;
+	TileSet::TerrainsPattern _get_best_terrain_pattern_for_constraints(int p_terrain_set, const Hector2i &p_position, const RBSet<TerrainConstraint> &p_constraints, TileSet::TerrainsPattern p_current_pattern) const;
+	RBSet<TerrainConstraint> _get_terrain_constraints_from_added_pattern(const Hector2i &p_position, int p_terrain_set, TileSet::TerrainsPattern p_terrains_pattern) const;
+	RBSet<TerrainConstraint> _get_terrain_constraints_from_painted_cells_list(const RBSet<Hector2i> &p_painted, int p_terrain_set, bool p_ignore_empty_terrains) const;
 
 	void _tile_set_changed();
 
@@ -405,7 +405,7 @@ public:
 	int get_index_in_tile_map() const {
 		return layer_index_in_tile_map_node;
 	}
-	const HashMap<Vector2i, CellData> &get_tile_map_layer_data() const {
+	const HashMap<Hector2i, CellData> &get_tile_map_layer_data() const {
 		return tile_map_layer_data;
 	}
 
@@ -413,66 +413,66 @@ public:
 	Rect2 get_rect(bool &r_changed) const;
 
 	// Terrains.
-	HashMap<Vector2i, TileSet::TerrainsPattern> terrain_fill_constraints(const Vector<Vector2i> &p_to_replace, int p_terrain_set, const RBSet<TerrainConstraint> &p_constraints) const; // Not exposed.
-	HashMap<Vector2i, TileSet::TerrainsPattern> terrain_fill_connect(const Vector<Vector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true) const; // Not exposed.
-	HashMap<Vector2i, TileSet::TerrainsPattern> terrain_fill_path(const Vector<Vector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true) const; // Not exposed.
-	HashMap<Vector2i, TileSet::TerrainsPattern> terrain_fill_pattern(const Vector<Vector2i> &p_coords_array, int p_terrain_set, TileSet::TerrainsPattern p_terrains_pattern, bool p_ignore_empty_terrains = true) const; // Not exposed.
+	HashMap<Hector2i, TileSet::TerrainsPattern> terrain_fill_constraints(const Hector<Hector2i> &p_to_replace, int p_terrain_set, const RBSet<TerrainConstraint> &p_constraints) const; // Not exposed.
+	HashMap<Hector2i, TileSet::TerrainsPattern> terrain_fill_connect(const Hector<Hector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true) const; // Not exposed.
+	HashMap<Hector2i, TileSet::TerrainsPattern> terrain_fill_path(const Hector<Hector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true) const; // Not exposed.
+	HashMap<Hector2i, TileSet::TerrainsPattern> terrain_fill_pattern(const Hector<Hector2i> &p_coords_array, int p_terrain_set, TileSet::TerrainsPattern p_terrains_pattern, bool p_ignore_empty_terrains = true) const; // Not exposed.
 
 	// Not exposed to users.
-	TileMapCell get_cell(const Vector2i &p_coords) const;
+	TileMapCell get_cell(const Hector2i &p_coords) const;
 
-	static void draw_tile(RID p_canvas_item, const Vector2 &p_position, const Ref<TileSet> p_tile_set, int p_atlas_source_id, const Vector2i &p_atlas_coords, int p_alternative_tile, int p_frame = -1, Color p_modulation = Color(1.0, 1.0, 1.0, 1.0), const TileData *p_tile_data_override = nullptr, real_t p_normalized_animation_offset = 0.0);
+	static void draw_tile(RID p_canvas_item, const Hector2 &p_position, const Ref<TileSet> p_tile_set, int p_atlas_source_id, const Hector2i &p_atlas_coords, int p_alternative_tile, int p_frame = -1, Color p_modulation = Color(1.0, 1.0, 1.0, 1.0), const TileData *p_tile_data_override = nullptr, real_t p_normalized_animation_offset = 0.0);
 
 	////////////// Exposed functions //////////////
 
 	// --- Cells manipulation ---
 	// Generic cells manipulations and data access.
-	void set_cell(const Vector2i &p_coords, int p_source_id = TileSet::INVALID_SOURCE, const Vector2i &p_atlas_coords = TileSetSource::INVALID_ATLAS_COORDS, int p_alternative_tile = 0);
-	void erase_cell(const Vector2i &p_coords);
+	void set_cell(const Hector2i &p_coords, int p_source_id = TileSet::INVALID_SOURCE, const Hector2i &p_atlas_coords = TileSetSource::INVALID_ATLAS_COORDS, int p_alternative_tile = 0);
+	void erase_cell(const Hector2i &p_coords);
 	void fix_invalid_tiles();
 	void clear();
 
-	int get_cell_source_id(const Vector2i &p_coords) const;
-	Vector2i get_cell_atlas_coords(const Vector2i &p_coords) const;
-	int get_cell_alternative_tile(const Vector2i &p_coords) const;
-	TileData *get_cell_tile_data(const Vector2i &p_coords) const; // Helper method to make accessing the data easier.
+	int get_cell_source_id(const Hector2i &p_coords) const;
+	Hector2i get_cell_atlas_coords(const Hector2i &p_coords) const;
+	int get_cell_alternative_tile(const Hector2i &p_coords) const;
+	TileData *get_cell_tile_data(const Hector2i &p_coords) const; // Helper method to make accessing the data easier.
 
-	TypedArray<Vector2i> get_used_cells() const;
-	TypedArray<Vector2i> get_used_cells_by_id(int p_source_id = TileSet::INVALID_SOURCE, const Vector2i &p_atlas_coords = TileSetSource::INVALID_ATLAS_COORDS, int p_alternative_tile = TileSetSource::INVALID_TILE_ALTERNATIVE) const;
+	TypedArray<Hector2i> get_used_cells() const;
+	TypedArray<Hector2i> get_used_cells_by_id(int p_source_id = TileSet::INVALID_SOURCE, const Hector2i &p_atlas_coords = TileSetSource::INVALID_ATLAS_COORDS, int p_alternative_tile = TileSetSource::INVALID_TILE_ALTERNATIVE) const;
 	Rect2i get_used_rect() const;
 
-	bool is_cell_flipped_h(const Vector2i &p_coords) const;
-	bool is_cell_flipped_v(const Vector2i &p_coords) const;
-	bool is_cell_transposed(const Vector2i &p_coords) const;
+	bool is_cell_flipped_h(const Hector2i &p_coords) const;
+	bool is_cell_flipped_v(const Hector2i &p_coords) const;
+	bool is_cell_transposed(const Hector2i &p_coords) const;
 
 	// Patterns.
-	Ref<TileMapPattern> get_pattern(TypedArray<Vector2i> p_coords_array);
-	void set_pattern(const Vector2i &p_position, const Ref<TileMapPattern> p_pattern);
+	Ref<TileMapPattern> get_pattern(TypedArray<Hector2i> p_coords_array);
+	void set_pattern(const Hector2i &p_position, const Ref<TileMapPattern> p_pattern);
 
 	// Terrains.
-	void set_cells_terrain_connect(TypedArray<Vector2i> p_cells, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true);
-	void set_cells_terrain_path(TypedArray<Vector2i> p_path, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true);
+	void set_cells_terrain_connect(TypedArray<Hector2i> p_cells, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true);
+	void set_cells_terrain_path(TypedArray<Hector2i> p_path, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains = true);
 
 	// --- Physics helpers ---
 	bool has_body_rid(RID p_physics_body) const;
-	Vector2i get_coords_for_body_rid(RID p_physics_body) const; // For finding tiles from collision.
+	Hector2i get_coords_for_body_rid(RID p_physics_body) const; // For finding tiles from collision.
 
 	// --- Runtime ---
 	void update_internals();
 	void notify_runtime_tile_data_update();
-	GDVIRTUAL1R(bool, _use_tile_data_runtime_update, Vector2i);
-	GDVIRTUAL2(_tile_data_runtime_update, Vector2i, TileData *);
+	GDVIRTUAL1R(bool, _use_tile_data_runtime_update, Hector2i);
+	GDVIRTUAL2(_tile_data_runtime_update, Hector2i, TileData *);
 
 	// --- Shortcuts to methods defined in TileSet ---
-	Vector2i map_pattern(const Vector2i &p_position_in_tilemap, const Vector2i &p_coords_in_pattern, Ref<TileMapPattern> p_pattern);
-	TypedArray<Vector2i> get_surrounding_cells(const Vector2i &p_coords);
-	Vector2i get_neighbor_cell(const Vector2i &p_coords, TileSet::CellNeighbor p_cell_neighbor) const;
-	Vector2 map_to_local(const Vector2i &p_pos) const;
-	Vector2i local_to_map(const Vector2 &p_pos) const;
+	Hector2i map_pattern(const Hector2i &p_position_in_tilemap, const Hector2i &p_coords_in_pattern, Ref<TileMapPattern> p_pattern);
+	TypedArray<Hector2i> get_surrounding_cells(const Hector2i &p_coords);
+	Hector2i get_neighbor_cell(const Hector2i &p_coords, TileSet::CellNeighbor p_cell_neighbor) const;
+	Hector2 map_to_local(const Hector2i &p_pos) const;
+	Hector2i local_to_map(const Hector2 &p_pos) const;
 
 	// --- Accessors ---
-	void set_tile_map_data_from_array(const Vector<uint8_t> &p_data);
-	Vector<uint8_t> get_tile_map_data_as_array() const;
+	void set_tile_map_data_from_array(const Hector<uint8_t> &p_data);
+	Hector<uint8_t> get_tile_map_data_as_array() const;
 
 	void set_enabled(bool p_enabled);
 	bool is_enabled() const;

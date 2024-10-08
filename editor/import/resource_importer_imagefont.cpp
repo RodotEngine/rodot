@@ -60,8 +60,8 @@ bool ResourceImporterImageFont::get_option_visibility(const String &p_path, cons
 }
 
 void ResourceImporterImageFont::get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset) const {
-	r_options->push_back(ImportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "character_ranges"), Vector<String>()));
-	r_options->push_back(ImportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "kerning_pairs"), Vector<String>()));
+	r_options->push_back(ImportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "character_ranges"), Hector<String>()));
+	r_options->push_back(ImportOption(PropertyInfo(Variant::PACKED_STRING_ARRAY, "kerning_pairs"), Hector<String>()));
 	r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "columns", PROPERTY_HINT_RANGE, "1,1024,1,or_greater"), 1));
 	r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "rows", PROPERTY_HINT_RANGE, "1,1024,1,or_greater"), 1));
 	r_options->push_back(ImportOption(PropertyInfo(Variant::RECT2I, "image_margin"), Rect2i()));
@@ -82,8 +82,8 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 	int rows = p_options["rows"];
 	int ascent = p_options["ascent"];
 	int descent = p_options["descent"];
-	Vector<String> ranges = p_options["character_ranges"];
-	Vector<String> kern = p_options["kerning_pairs"];
+	Hector<String> ranges = p_options["character_ranges"];
+	Hector<String> kern = p_options["kerning_pairs"];
 	Array fallbacks = p_options["fallbacks"];
 	Rect2i img_margin = p_options["image_margin"];
 	Rect2i char_margin = p_options["character_margin"];
@@ -117,7 +117,7 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 	font->set_hinting(TextServer::HINTING_NONE);
 	font->set_oversampling(1.0f);
 	font->set_fallbacks(fallbacks);
-	font->set_texture_image(0, Vector2i(chr_height, 0), 0, img);
+	font->set_texture_image(0, Hector2i(chr_height, 0), 0, img);
 	font->set_fixed_size_scale_mode(smode);
 
 	int32_t pos = 0;
@@ -125,7 +125,7 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 		int32_t start = -1;
 		int32_t end = -1;
 		int chr_adv = 0;
-		Vector2i chr_off;
+		Hector2i chr_off;
 
 		{
 			enum RangeParseStep {
@@ -277,16 +277,16 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 			ERR_FAIL_COND_V_MSG(pos >= count, ERR_CANT_CREATE, "Too many characters in range, should be " + itos(columns * rows));
 			int x = pos % columns;
 			int y = pos / columns;
-			font->set_glyph_advance(0, chr_height, idx, Vector2(chr_width + chr_adv, 0));
-			font->set_glyph_offset(0, Vector2i(chr_height, 0), idx, Vector2i(0, -0.5 * chr_height) + chr_off);
-			font->set_glyph_size(0, Vector2i(chr_height, 0), idx, Vector2(chr_width, chr_height));
-			font->set_glyph_uv_rect(0, Vector2i(chr_height, 0), idx, Rect2(img_margin.position.x + chr_cell_width * x + char_margin.position.x, img_margin.position.y + chr_cell_height * y + char_margin.position.y, chr_width, chr_height));
-			font->set_glyph_texture_idx(0, Vector2i(chr_height, 0), idx, 0);
+			font->set_glyph_advance(0, chr_height, idx, Hector2(chr_width + chr_adv, 0));
+			font->set_glyph_offset(0, Hector2i(chr_height, 0), idx, Hector2i(0, -0.5 * chr_height) + chr_off);
+			font->set_glyph_size(0, Hector2i(chr_height, 0), idx, Hector2(chr_width, chr_height));
+			font->set_glyph_uv_rect(0, Hector2i(chr_height, 0), idx, Rect2(img_margin.position.x + chr_cell_width * x + char_margin.position.x, img_margin.position.y + chr_cell_height * y + char_margin.position.y, chr_width, chr_height));
+			font->set_glyph_texture_idx(0, Hector2i(chr_height, 0), idx, 0);
 			pos++;
 		}
 	}
 	for (const String &kp : kern) {
-		const Vector<String> &kp_tokens = kp.split(" ");
+		const Hector<String> &kp_tokens = kp.split(" ");
 		if (kp_tokens.size() != 3) {
 			WARN_PRINT(vformat("Invalid kerning pairs string: \"%s\"", kp));
 			continue;
@@ -315,7 +315,7 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 
 		for (int a = 0; a < from_tokens.length(); a++) {
 			for (int b = 0; b < to_tokens.length(); b++) {
-				font->set_kerning(0, chr_height, Vector2i(from_tokens.unicode_at(a), to_tokens.unicode_at(b)), Vector2(offset, 0));
+				font->set_kerning(0, chr_height, Hector2i(from_tokens.unicode_at(a), to_tokens.unicode_at(b)), Hector2(offset, 0));
 			}
 		}
 	}

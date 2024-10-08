@@ -45,7 +45,7 @@ Point2 GradientTexture2DEdit::_get_handle_pos(const Handle p_handle) {
 	return (p_handle == HANDLE_FROM ? texture->get_fill_from() : texture->get_fill_to()).clampf(0, 1) * size;
 }
 
-GradientTexture2DEdit::Handle GradientTexture2DEdit::get_handle_at(const Vector2 &p_pos) {
+GradientTexture2DEdit::Handle GradientTexture2DEdit::get_handle_at(const Hector2 &p_pos) {
 	Point2 from_pos = _get_handle_pos(HANDLE_FROM);
 	Point2 to_pos = _get_handle_pos(HANDLE_TO);
 	// If both handles are at the position, grab the one that's closer.
@@ -56,7 +56,7 @@ GradientTexture2DEdit::Handle GradientTexture2DEdit::get_handle_at(const Vector2
 	}
 }
 
-void GradientTexture2DEdit::set_fill_pos(const Vector2 &p_pos) {
+void GradientTexture2DEdit::set_fill_pos(const Hector2 &p_pos) {
 	if (p_pos.is_equal_approx(initial_grab_pos)) {
 		return;
 	}
@@ -100,7 +100,7 @@ void GradientTexture2DEdit::gui_input(const Ref<InputEvent> &p_event) {
 	// Move handle.
 	const Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
-		Vector2 mpos = mm->get_position() - offset;
+		Hector2 mpos = mm->get_position() - offset;
 
 		Handle handle_at_mpos = get_handle_at(mpos);
 		if (hovered != handle_at_mpos) {
@@ -112,14 +112,14 @@ void GradientTexture2DEdit::gui_input(const Ref<InputEvent> &p_event) {
 			return;
 		}
 
-		Vector2 new_pos = (mpos / size).clampf(0, 1);
+		Hector2 new_pos = (mpos / size).clampf(0, 1);
 		if (snap_enabled || mm->is_command_or_control_pressed()) {
 			new_pos = new_pos.snappedf(1.0 / snap_count);
 		}
 
 		// Allow to snap to an axis with Shift.
 		if (mm->is_shift_pressed()) {
-			Vector2 initial_mpos = initial_grab_pos * size;
+			Hector2 initial_mpos = initial_grab_pos * size;
 			if (Math::abs(mpos.x - initial_mpos.x) > Math::abs(mpos.y - initial_mpos.y)) {
 				new_pos.y = initial_grab_pos.y;
 			} else {

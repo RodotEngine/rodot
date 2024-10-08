@@ -223,7 +223,7 @@ index 021d658c08..011f51570b 100644
 @@ -3017,16 +3216,58 @@ void cvtt::Internal::BC6HComputer::Pack(uint32_t flags, const PixelBlockF16* inp
          uint16_t modeID = modeInfo.m_modeID;
  
-         PackingVector pv;
+         PackingHector pv;
 +        pv.Init();
  
 -        {
@@ -292,7 +292,7 @@ index 021d658c08..011f51570b 100644
  
  void cvtt::Internal::BC6HComputer::UnpackOne(PixelBlockF16 &output, const uint8_t *pBC, bool isSigned)
  {
-+    UnpackingVector pv;
++    UnpackingHector pv;
 +    pv.Init(pBC);
 +
      int numModeBits = 2;
@@ -323,7 +323,7 @@ index 021d658c08..011f51570b 100644
              for (int ch = 0; ch < 3; ch++)
                  eps[subset][epi][ch] = 0;
  
--    UnpackingVector pv;
+-    UnpackingHector pv;
 -    pv.Init(pBC);
 -
 -    {

@@ -38,14 +38,14 @@
 #define MIN_VELOCITY 0.0001
 #define MAX_BIAS_ROTATION (Math_PI / 8)
 
-void GodotBodyPair3D::_contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
+void GodotBodyPair3D::_contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata) {
 	GodotBodyPair3D *pair = static_cast<GodotBodyPair3D *>(p_userdata);
 	pair->contact_added_callback(p_point_A, p_index_A, p_point_B, p_index_B, normal);
 }
 
-void GodotBodyPair3D::contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal) {
-	Vector3 local_A = A->get_inv_transform().basis.xform(p_point_A);
-	Vector3 local_B = B->get_inv_transform().basis.xform(p_point_B - offset_B);
+void GodotBodyPair3D::contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal) {
+	Hector3 local_A = A->get_inv_transform().basis.xform(p_point_A);
+	Hector3 local_B = B->get_inv_transform().basis.xform(p_point_B - offset_B);
 
 	int new_index = contact_count;
 
@@ -87,19 +87,19 @@ void GodotBodyPair3D::contact_added_callback(const Vector3 &p_point_A, int p_ind
 
 		// Start with depth for new contact.
 		{
-			Vector3 global_A = basis_A.xform(contact.local_A);
-			Vector3 global_B = basis_B.xform(contact.local_B) + offset_B;
+			Hector3 global_A = basis_A.xform(contact.local_A);
+			Hector3 global_B = basis_B.xform(contact.local_B) + offset_B;
 
-			Vector3 axis = global_A - global_B;
+			Hector3 axis = global_A - global_B;
 			min_depth = axis.dot(contact.normal);
 		}
 
 		for (int i = 0; i < contact_count; i++) {
 			const Contact &c = contacts[i];
-			Vector3 global_A = basis_A.xform(c.local_A);
-			Vector3 global_B = basis_B.xform(c.local_B) + offset_B;
+			Hector3 global_A = basis_A.xform(c.local_A);
+			Hector3 global_B = basis_B.xform(c.local_B) + offset_B;
 
-			Vector3 axis = global_A - global_B;
+			Hector3 axis = global_A - global_B;
 			real_t depth = axis.dot(c.normal);
 
 			if (depth < min_depth) {
@@ -138,9 +138,9 @@ void GodotBodyPair3D::validate_contacts() {
 		} else {
 			c.used = false;
 
-			Vector3 global_A = basis_A.xform(c.local_A);
-			Vector3 global_B = basis_B.xform(c.local_B) + offset_B;
-			Vector3 axis = global_A - global_B;
+			Hector3 global_A = basis_A.xform(c.local_A);
+			Hector3 global_B = basis_B.xform(c.local_B) + offset_B;
+			Hector3 axis = global_A - global_B;
 			real_t depth = axis.dot(c.normal);
 
 			if (depth < -max_separation || (global_B + c.normal * depth - global_A).length_squared() > max_separation2) {
@@ -166,18 +166,18 @@ void GodotBodyPair3D::validate_contacts() {
 // WARNING: The way velocity is adjusted down to cause a collision means the momentum will be
 // weaker than it should for a bounce!
 // Process: Only proceed if body A's motion is high relative to its size.
-// Cast forward along motion vector to see if A is going to enter/pass B's collider next frame, only proceed if it does.
+// Cast forward along motion Hector to see if A is going to enter/pass B's collider next frame, only proceed if it does.
 // Adjust the velocity of A down so that it will just slightly intersect the collider instead of blowing right past it.
 bool GodotBodyPair3D::_test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, const Transform3D &p_xform_A, GodotBody3D *p_B, int p_shape_B, const Transform3D &p_xform_B) {
 	GodotShape3D *shape_A_ptr = p_A->get_shape(p_shape_A);
 
-	Vector3 motion = p_A->get_linear_velocity() * p_step;
+	Hector3 motion = p_A->get_linear_velocity() * p_step;
 	real_t mlen = motion.length();
 	if (mlen < CMP_EPSILON) {
 		return false;
 	}
 
-	Vector3 mnormal = motion / mlen;
+	Hector3 mnormal = motion / mlen;
 
 	real_t min = 0.0, max = 0.0;
 	shape_A_ptr->project_range(mnormal, p_xform_A, min, max);
@@ -194,10 +194,10 @@ bool GodotBodyPair3D::_test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, 
 	// Roughly predict body B's position in the next frame (ignoring collisions).
 	Transform3D predicted_xform_B = p_xform_B.translated(p_B->get_linear_velocity() * p_step);
 
-	// Support points are the farthest forward points on A in the direction of the motion vector.
+	// Support points are the farthest forward points on A in the direction of the motion Hector.
 	// i.e. the candidate points of which one should hit B first if any collision does occur.
 	static const int max_supports = 16;
-	Vector3 supports_A[max_supports];
+	Hector3 supports_A[max_supports];
 	int support_count_A;
 	GodotShape3D::FeatureType support_type_A;
 	// Convert mnormal into body A's local xform because get_supports requires (and returns) local coordinates.
@@ -206,22 +206,22 @@ bool GodotBodyPair3D::_test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, 
 	// Cast a segment from each support point of A in the motion direction.
 	int segment_support_idx = -1;
 	float segment_hit_length = FLT_MAX;
-	Vector3 segment_hit_local;
+	Hector3 segment_hit_local;
 	for (int i = 0; i < support_count_A; i++) {
 		supports_A[i] = p_xform_A.xform(supports_A[i]);
 
-		Vector3 from = supports_A[i];
-		Vector3 to = from + motion;
+		Hector3 from = supports_A[i];
+		Hector3 to = from + motion;
 
 		Transform3D from_inv = predicted_xform_B.affine_inverse();
 
 		// Back up 10% of the per-frame motion behind the support point and use that as the beginning of our cast.
 		// At high speeds, this may mean we're actually casting from well behind the body instead of inside it, which is odd.
 		// But it still works out.
-		Vector3 local_from = from_inv.xform(from - motion * 0.1);
-		Vector3 local_to = from_inv.xform(to);
+		Hector3 local_from = from_inv.xform(from - motion * 0.1);
+		Hector3 local_to = from_inv.xform(to);
 
-		Vector3 rpos, rnorm;
+		Hector3 rpos, rnorm;
 		int fi = -1;
 		if (p_B->get_shape(p_shape_B)->intersect_segment(local_from, local_to, rpos, rnorm, fi, true)) {
 			float hit_length = local_from.distance_to(rpos);
@@ -239,7 +239,7 @@ bool GodotBodyPair3D::_test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, 
 		return false;
 	}
 
-	Vector3 hitpos = predicted_xform_B.xform(segment_hit_local);
+	Hector3 hitpos = predicted_xform_B.xform(segment_hit_local);
 
 	real_t newlen = hitpos.distance_to(supports_A[segment_support_idx]);
 	// Adding 1% of body length to the distance between collision and support point
@@ -285,8 +285,8 @@ bool GodotBodyPair3D::setup(real_t p_step) {
 
 	validate_contacts();
 
-	const Vector3 &offset_A = A->get_transform().get_origin();
-	Transform3D xform_Au = Transform3D(A->get_transform().basis, Vector3());
+	const Hector3 &offset_A = A->get_transform().get_origin();
+	Transform3D xform_Au = Transform3D(A->get_transform().basis, Hector3());
 	Transform3D xform_A = xform_Au * A->get_shape_transform(shape_A);
 
 	Transform3D xform_Bu = B->get_transform();
@@ -318,8 +318,8 @@ bool GodotBodyPair3D::setup(real_t p_step) {
 bool GodotBodyPair3D::pre_solve(real_t p_step) {
 	if (!collided) {
 		if (check_ccd) {
-			const Vector3 &offset_A = A->get_transform().get_origin();
-			Transform3D xform_Au = Transform3D(A->get_transform().basis, Vector3());
+			const Hector3 &offset_A = A->get_transform().get_origin();
+			Transform3D xform_Au = Transform3D(A->get_transform().basis, Hector3());
 			Transform3D xform_A = xform_Au * A->get_shape_transform(shape_A);
 
 			Transform3D xform_Bu = B->get_transform();
@@ -359,7 +359,7 @@ bool GodotBodyPair3D::pre_solve(real_t p_step) {
 
 	bool do_process = false;
 
-	const Vector3 &offset_A = A->get_transform().get_origin();
+	const Hector3 &offset_A = A->get_transform().get_origin();
 
 	const Basis &basis_A = A->get_transform().basis;
 	const Basis &basis_B = B->get_transform().basis;
@@ -377,10 +377,10 @@ bool GodotBodyPair3D::pre_solve(real_t p_step) {
 		Contact &c = contacts[i];
 		c.active = false;
 
-		Vector3 global_A = basis_A.xform(c.local_A);
-		Vector3 global_B = basis_B.xform(c.local_B) + offset_B;
+		Hector3 global_A = basis_A.xform(c.local_A);
+		Hector3 global_B = basis_B.xform(c.local_B) + offset_B;
 
-		Vector3 axis = global_A - global_B;
+		Hector3 axis = global_A - global_B;
 		real_t depth = axis.dot(c.normal);
 
 		if (depth <= 0.0) {
@@ -398,8 +398,8 @@ bool GodotBodyPair3D::pre_solve(real_t p_step) {
 		c.rB = global_B - B->get_center_of_mass() - offset_B;
 
 		// Precompute normal mass, tangent mass, and bias.
-		Vector3 inertia_A = inv_inertia_tensor_A.xform(c.rA.cross(c.normal));
-		Vector3 inertia_B = inv_inertia_tensor_B.xform(c.rB.cross(c.normal));
+		Hector3 inertia_A = inv_inertia_tensor_A.xform(c.rA.cross(c.normal));
+		Hector3 inertia_B = inv_inertia_tensor_B.xform(c.rB.cross(c.normal));
 		real_t kNormal = inv_mass_A + inv_mass_B;
 		kNormal += c.normal.dot(inertia_A.cross(c.rA)) + c.normal.dot(inertia_B.cross(c.rB));
 		c.mass_normal = 1.0f / kNormal;
@@ -407,15 +407,15 @@ bool GodotBodyPair3D::pre_solve(real_t p_step) {
 		c.bias = -bias * inv_dt * MIN(0.0f, -depth + max_penetration);
 		c.depth = depth;
 
-		Vector3 j_vec = c.normal * c.acc_normal_impulse + c.acc_tangent_impulse;
+		Hector3 j_vec = c.normal * c.acc_normal_impulse + c.acc_tangent_impulse;
 
 		c.acc_impulse -= j_vec;
 
 		// contact query reporting...
 
 		if (A->can_report_contacts() || B->can_report_contacts()) {
-			Vector3 crB = B->get_angular_velocity().cross(c.rB) + B->get_linear_velocity();
-			Vector3 crA = A->get_angular_velocity().cross(c.rA) + A->get_linear_velocity();
+			Hector3 crB = B->get_angular_velocity().cross(c.rB) + B->get_linear_velocity();
+			Hector3 crA = A->get_angular_velocity().cross(c.rA) + A->get_linear_velocity();
 
 			if (A->can_report_contacts()) {
 				A->add_contact(global_A + offset_A, -c.normal, depth, shape_A, crA, global_B + offset_A, shape_B, B->get_instance_id(), B->get_self(), crB, c.acc_impulse);
@@ -443,9 +443,9 @@ bool GodotBodyPair3D::pre_solve(real_t p_step) {
 
 		c.bounce = combine_bounce(A, B);
 		if (c.bounce) {
-			Vector3 crA = A->get_prev_angular_velocity().cross(c.rA);
-			Vector3 crB = B->get_prev_angular_velocity().cross(c.rB);
-			Vector3 dv = B->get_prev_linear_velocity() + crB - A->get_prev_linear_velocity() - crA;
+			Hector3 crA = A->get_prev_angular_velocity().cross(c.rA);
+			Hector3 crB = B->get_prev_angular_velocity().cross(c.rB);
+			Hector3 dv = B->get_prev_linear_velocity() + crB - A->get_prev_linear_velocity() - crA;
 			c.bounce = c.bounce * dv.dot(c.normal);
 		}
 	}
@@ -479,9 +479,9 @@ void GodotBodyPair3D::solve(real_t p_step) {
 
 		//bias impulse
 
-		Vector3 crbA = A->get_biased_angular_velocity().cross(c.rA);
-		Vector3 crbB = B->get_biased_angular_velocity().cross(c.rB);
-		Vector3 dbv = B->get_biased_linear_velocity() + crbB - A->get_biased_linear_velocity() - crbA;
+		Hector3 crbA = A->get_biased_angular_velocity().cross(c.rA);
+		Hector3 crbB = B->get_biased_angular_velocity().cross(c.rB);
+		Hector3 dbv = B->get_biased_linear_velocity() + crbB - A->get_biased_linear_velocity() - crbA;
 
 		real_t vbn = dbv.dot(c.normal);
 
@@ -490,7 +490,7 @@ void GodotBodyPair3D::solve(real_t p_step) {
 			real_t jbnOld = c.acc_bias_impulse;
 			c.acc_bias_impulse = MAX(jbnOld + jbn, 0.0f);
 
-			Vector3 jb = c.normal * (c.acc_bias_impulse - jbnOld);
+			Hector3 jb = c.normal * (c.acc_bias_impulse - jbnOld);
 
 			if (collide_A) {
 				A->apply_bias_impulse(-jb, c.rA + A->get_center_of_mass(), max_bias_av);
@@ -510,7 +510,7 @@ void GodotBodyPair3D::solve(real_t p_step) {
 				real_t jbnOld_com = c.acc_bias_impulse_center_of_mass;
 				c.acc_bias_impulse_center_of_mass = MAX(jbnOld_com + jbn_com, 0.0f);
 
-				Vector3 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
+				Hector3 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
 
 				if (collide_A) {
 					A->apply_bias_impulse(-jb_com, A->get_center_of_mass(), 0.0f);
@@ -523,9 +523,9 @@ void GodotBodyPair3D::solve(real_t p_step) {
 			c.active = true;
 		}
 
-		Vector3 crA = A->get_angular_velocity().cross(c.rA);
-		Vector3 crB = B->get_angular_velocity().cross(c.rB);
-		Vector3 dv = B->get_linear_velocity() + crB - A->get_linear_velocity() - crA;
+		Hector3 crA = A->get_angular_velocity().cross(c.rA);
+		Hector3 crB = B->get_angular_velocity().cross(c.rB);
+		Hector3 dv = B->get_linear_velocity() + crB - A->get_linear_velocity() - crA;
 
 		//normal impulse
 		real_t vn = dv.dot(c.normal);
@@ -535,7 +535,7 @@ void GodotBodyPair3D::solve(real_t p_step) {
 			real_t jnOld = c.acc_normal_impulse;
 			c.acc_normal_impulse = MAX(jnOld + jn, 0.0f);
 
-			Vector3 j = c.normal * (c.acc_normal_impulse - jnOld);
+			Hector3 j = c.normal * (c.acc_normal_impulse - jnOld);
 
 			if (collide_A) {
 				A->apply_impulse(-j, c.rA + A->get_center_of_mass());
@@ -552,27 +552,27 @@ void GodotBodyPair3D::solve(real_t p_step) {
 
 		real_t friction = combine_friction(A, B);
 
-		Vector3 lvA = A->get_linear_velocity() + A->get_angular_velocity().cross(c.rA);
-		Vector3 lvB = B->get_linear_velocity() + B->get_angular_velocity().cross(c.rB);
+		Hector3 lvA = A->get_linear_velocity() + A->get_angular_velocity().cross(c.rA);
+		Hector3 lvB = B->get_linear_velocity() + B->get_angular_velocity().cross(c.rB);
 
-		Vector3 dtv = lvB - lvA;
+		Hector3 dtv = lvB - lvA;
 		real_t tn = c.normal.dot(dtv);
 
 		// tangential velocity
-		Vector3 tv = dtv - c.normal * tn;
+		Hector3 tv = dtv - c.normal * tn;
 		real_t tvl = tv.length();
 
 		if (tvl > MIN_VELOCITY) {
 			tv /= tvl;
 
-			Vector3 temp1 = inv_inertia_tensor_A.xform(c.rA.cross(tv));
-			Vector3 temp2 = inv_inertia_tensor_B.xform(c.rB.cross(tv));
+			Hector3 temp1 = inv_inertia_tensor_A.xform(c.rA.cross(tv));
+			Hector3 temp2 = inv_inertia_tensor_B.xform(c.rB.cross(tv));
 
 			real_t t = -tvl / (inv_mass_A + inv_mass_B + tv.dot(temp1.cross(c.rA) + temp2.cross(c.rB)));
 
-			Vector3 jt = t * tv;
+			Hector3 jt = t * tv;
 
-			Vector3 jtOld = c.acc_tangent_impulse;
+			Hector3 jtOld = c.acc_tangent_impulse;
 			c.acc_tangent_impulse += jt;
 
 			real_t fi_len = c.acc_tangent_impulse.length();
@@ -613,14 +613,14 @@ GodotBodyPair3D::~GodotBodyPair3D() {
 	B->remove_constraint(this);
 }
 
-void GodotBodySoftBodyPair3D::_contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
+void GodotBodySoftBodyPair3D::_contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata) {
 	GodotBodySoftBodyPair3D *pair = static_cast<GodotBodySoftBodyPair3D *>(p_userdata);
 	pair->contact_added_callback(p_point_A, p_index_A, p_point_B, p_index_B, normal);
 }
 
-void GodotBodySoftBodyPair3D::contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal) {
-	Vector3 local_A = body->get_inv_transform().xform(p_point_A);
-	Vector3 local_B = p_point_B - soft_body->get_node_position(p_index_B);
+void GodotBodySoftBodyPair3D::contact_added_callback(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal) {
+	Hector3 local_A = body->get_inv_transform().xform(p_point_A);
+	Hector3 local_B = p_point_B - soft_body->get_node_position(p_index_B);
 
 	Contact contact;
 	contact.index_A = p_index_A;
@@ -670,9 +670,9 @@ void GodotBodySoftBodyPair3D::validate_contacts() {
 		} else {
 			c.used = false;
 
-			Vector3 global_A = transform_A.xform(c.local_A);
-			Vector3 global_B = soft_body->get_node_position(c.index_B) + c.local_B;
-			Vector3 axis = global_A - global_B;
+			Hector3 global_A = transform_A.xform(c.local_A);
+			Hector3 global_B = soft_body->get_node_position(c.index_B) + c.local_B;
+			Hector3 axis = global_A - global_B;
 			real_t depth = axis.dot(c.normal);
 
 			if (depth < -max_separation || (global_B + c.normal * depth - global_A).length_squared() > max_separation2) {
@@ -767,9 +767,9 @@ bool GodotBodySoftBodyPair3D::pre_solve(real_t p_step) {
 			continue;
 		}
 
-		Vector3 global_A = transform_A.xform(c.local_A);
-		Vector3 global_B = soft_body->get_node_position(c.index_B) + c.local_B;
-		Vector3 axis = global_A - global_B;
+		Hector3 global_A = transform_A.xform(c.local_A);
+		Hector3 global_B = soft_body->get_node_position(c.index_B) + c.local_B;
+		Hector3 axis = global_A - global_B;
 		real_t depth = axis.dot(c.normal);
 
 		if (depth <= 0.0) {
@@ -787,7 +787,7 @@ bool GodotBodySoftBodyPair3D::pre_solve(real_t p_step) {
 		c.rB = global_B;
 
 		// Precompute normal mass, tangent mass, and bias.
-		Vector3 inertia_A = body_inv_inertia_tensor.xform(c.rA.cross(c.normal));
+		Hector3 inertia_A = body_inv_inertia_tensor.xform(c.rA.cross(c.normal));
 		real_t kNormal = body_inv_mass + node_inv_mass;
 		kNormal += c.normal.dot(inertia_A.cross(c.rA));
 		c.mass_normal = 1.0f / kNormal;
@@ -795,7 +795,7 @@ bool GodotBodySoftBodyPair3D::pre_solve(real_t p_step) {
 		c.bias = -bias * inv_dt * MIN(0.0f, -depth + max_penetration);
 		c.depth = depth;
 
-		Vector3 j_vec = c.normal * c.acc_normal_impulse + c.acc_tangent_impulse;
+		Hector3 j_vec = c.normal * c.acc_normal_impulse + c.acc_tangent_impulse;
 		if (body_collides) {
 			body->apply_impulse(-j_vec, c.rA + body->get_center_of_mass());
 		}
@@ -805,8 +805,8 @@ bool GodotBodySoftBodyPair3D::pre_solve(real_t p_step) {
 		c.acc_impulse -= j_vec;
 
 		if (body->can_report_contacts()) {
-			Vector3 crA = body->get_angular_velocity().cross(c.rA) + body->get_linear_velocity();
-			Vector3 crB = soft_body->get_node_velocity(c.index_B);
+			Hector3 crA = body->get_angular_velocity().cross(c.rA) + body->get_linear_velocity();
+			Hector3 crB = soft_body->get_node_velocity(c.index_B);
 			body->add_contact(global_A, -c.normal, depth, body_shape, crA, global_B, 0, soft_body->get_instance_id(), soft_body->get_self(), crB, c.acc_impulse);
 		}
 		if (report_contacts_only) {
@@ -824,8 +824,8 @@ bool GodotBodySoftBodyPair3D::pre_solve(real_t p_step) {
 		c.bounce = body->get_bounce();
 
 		if (c.bounce) {
-			Vector3 crA = body->get_angular_velocity().cross(c.rA);
-			Vector3 dv = soft_body->get_node_velocity(c.index_B) - body->get_linear_velocity() - crA;
+			Hector3 crA = body->get_angular_velocity().cross(c.rA);
+			Hector3 dv = soft_body->get_node_velocity(c.index_B) - body->get_linear_velocity() - crA;
 
 			// Normal impulse.
 			c.bounce = c.bounce * dv.dot(c.normal);
@@ -861,8 +861,8 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 		real_t node_inv_mass = soft_body_collides ? soft_body->get_node_inv_mass(c.index_B) : 0.0;
 
 		// Bias impulse.
-		Vector3 crbA = body->get_biased_angular_velocity().cross(c.rA);
-		Vector3 dbv = soft_body->get_node_biased_velocity(c.index_B) - body->get_biased_linear_velocity() - crbA;
+		Hector3 crbA = body->get_biased_angular_velocity().cross(c.rA);
+		Hector3 dbv = soft_body->get_node_biased_velocity(c.index_B) - body->get_biased_linear_velocity() - crbA;
 
 		real_t vbn = dbv.dot(c.normal);
 
@@ -871,7 +871,7 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 			real_t jbnOld = c.acc_bias_impulse;
 			c.acc_bias_impulse = MAX(jbnOld + jbn, 0.0f);
 
-			Vector3 jb = c.normal * (c.acc_bias_impulse - jbnOld);
+			Hector3 jb = c.normal * (c.acc_bias_impulse - jbnOld);
 
 			if (body_collides) {
 				body->apply_bias_impulse(-jb, c.rA + body->get_center_of_mass(), max_bias_av);
@@ -890,7 +890,7 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 				real_t jbnOld_com = c.acc_bias_impulse_center_of_mass;
 				c.acc_bias_impulse_center_of_mass = MAX(jbnOld_com + jbn_com, 0.0f);
 
-				Vector3 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
+				Hector3 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
 
 				if (body_collides) {
 					body->apply_bias_impulse(-jb_com, body->get_center_of_mass(), 0.0f);
@@ -903,8 +903,8 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 			c.active = true;
 		}
 
-		Vector3 crA = body->get_angular_velocity().cross(c.rA);
-		Vector3 dv = soft_body->get_node_velocity(c.index_B) - body->get_linear_velocity() - crA;
+		Hector3 crA = body->get_angular_velocity().cross(c.rA);
+		Hector3 dv = soft_body->get_node_velocity(c.index_B) - body->get_linear_velocity() - crA;
 
 		// Normal impulse.
 		real_t vn = dv.dot(c.normal);
@@ -914,7 +914,7 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 			real_t jnOld = c.acc_normal_impulse;
 			c.acc_normal_impulse = MAX(jnOld + jn, 0.0f);
 
-			Vector3 j = c.normal * (c.acc_normal_impulse - jnOld);
+			Hector3 j = c.normal * (c.acc_normal_impulse - jnOld);
 
 			if (body_collides) {
 				body->apply_impulse(-j, c.rA + body->get_center_of_mass());
@@ -930,26 +930,26 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 		// Friction impulse.
 		real_t friction = body->get_friction();
 
-		Vector3 lvA = body->get_linear_velocity() + body->get_angular_velocity().cross(c.rA);
-		Vector3 lvB = soft_body->get_node_velocity(c.index_B);
-		Vector3 dtv = lvB - lvA;
+		Hector3 lvA = body->get_linear_velocity() + body->get_angular_velocity().cross(c.rA);
+		Hector3 lvB = soft_body->get_node_velocity(c.index_B);
+		Hector3 dtv = lvB - lvA;
 
 		real_t tn = c.normal.dot(dtv);
 
 		// Tangential velocity.
-		Vector3 tv = dtv - c.normal * tn;
+		Hector3 tv = dtv - c.normal * tn;
 		real_t tvl = tv.length();
 
 		if (tvl > MIN_VELOCITY) {
 			tv /= tvl;
 
-			Vector3 temp1 = body_inv_inertia_tensor.xform(c.rA.cross(tv));
+			Hector3 temp1 = body_inv_inertia_tensor.xform(c.rA.cross(tv));
 
 			real_t t = -tvl / (body_inv_mass + node_inv_mass + tv.dot(temp1.cross(c.rA)));
 
-			Vector3 jt = t * tv;
+			Hector3 jt = t * tv;
 
-			Vector3 jtOld = c.acc_tangent_impulse;
+			Hector3 jtOld = c.acc_tangent_impulse;
 			c.acc_tangent_impulse += jt;
 
 			real_t fi_len = c.acc_tangent_impulse.length();

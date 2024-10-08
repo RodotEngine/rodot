@@ -242,7 +242,7 @@ void PhysicalBoneSimulator3D::physical_bones_stop_simulation() {
 }
 
 #ifndef DISABLE_DEPRECATED
-void _pb_start_simulation_compat(const PhysicalBoneSimulator3D *p_simulator, Node *p_node, const Vector<int> &p_sim_bones) {
+void _pb_start_simulation_compat(const PhysicalBoneSimulator3D *p_simulator, Node *p_node, const Hector<int> &p_sim_bones) {
 	PhysicalBoneSimulator3D *ps = Object::cast_to<PhysicalBoneSimulator3D>(p_node);
 	if (ps) {
 		return; // Prevent conflict.
@@ -266,7 +266,7 @@ void _pb_start_simulation_compat(const PhysicalBoneSimulator3D *p_simulator, Nod
 }
 #endif // _DISABLE_DEPRECATED
 
-void _pb_start_simulation(const PhysicalBoneSimulator3D *p_simulator, Node *p_node, const Vector<int> &p_sim_bones) {
+void _pb_start_simulation(const PhysicalBoneSimulator3D *p_simulator, Node *p_node, const Hector<int> &p_sim_bones) {
 	for (int i = p_node->get_child_count() - 1; i >= 0; --i) {
 		PhysicalBone3D *pb = Object::cast_to<PhysicalBone3D>(p_node->get_child(i));
 		if (!pb) {
@@ -295,7 +295,7 @@ void PhysicalBoneSimulator3D::physical_bones_start_simulation_on(const TypedArra
 	simulating = true;
 	_reset_physical_bones_state();
 
-	Vector<int> sim_bones;
+	Hector<int> sim_bones;
 	if (p_bones.size() > 0) {
 		sim_bones.resize(p_bones.size());
 		int c = 0;

@@ -39,9 +39,9 @@ void Contour::bound(double &l, double &b, double &r, double &t) const {
 void Contour::boundMiters(double &l, double &b, double &r, double &t, double border, double miterLimit, int polarity) const {
     if (edges.empty())
         return;
-    Vector2 prevDir = edges.back()->direction(1).normalize(true);
+    Hector2 prevDir = edges.back()->direction(1).normalize(true);
     for (std::vector<EdgeHolder>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge) {
-        Vector2 dir = -(*edge)->direction(0).normalize(true);
+        Hector2 dir = -(*edge)->direction(0).normalize(true);
         if (polarity*crossProduct(prevDir, dir) >= 0) {
             double miterLength = miterLimit;
             double q = .5*(1-dotProduct(prevDir, dir));

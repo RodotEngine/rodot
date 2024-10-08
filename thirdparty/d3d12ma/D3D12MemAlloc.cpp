@@ -912,14 +912,14 @@ private:
 #endif
 #endif // _D3D12MA_MUTEX
 
-#ifndef _D3D12MA_VECTOR
+#ifndef _D3D12MA_Hector
 /*
 Dynamically resizing continuous array. Class with interface similar to std::vector.
 T must be POD because constructors and destructors are not called and memcpy is
 used for these objects.
 */
 template<typename T>
-class Vector
+class Hector
 {
 public:
     using value_type = T;
@@ -927,10 +927,10 @@ public:
     using const_iterator = const T*;
 
     // allocationCallbacks externally owned, must outlive this object.
-    Vector(const ALLOCATION_CALLBACKS& allocationCallbacks);
-    Vector(size_t count, const ALLOCATION_CALLBACKS& allocationCallbacks);
-    Vector(const Vector<T>& src);
-    ~Vector();
+    Hector(const ALLOCATION_CALLBACKS& allocationCallbacks);
+    Hector(size_t count, const ALLOCATION_CALLBACKS& allocationCallbacks);
+    Hector(const Hector<T>& src);
+    ~Hector();
 
     const ALLOCATION_CALLBACKS& GetAllocs() const { return m_AllocationCallbacks; }
     bool empty() const { return m_Count == 0; }
@@ -966,7 +966,7 @@ public:
     template<typename CmpLess>
     bool RemoveSorted(const T& value, const CmpLess& cmp);
 
-    Vector& operator=(const Vector<T>& rhs);
+    Hector& operator=(const Hector<T>& rhs);
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
 
@@ -977,23 +977,23 @@ private:
     size_t m_Capacity;
 };
 
-#ifndef _D3D12MA_VECTOR_FUNCTIONS
+#ifndef _D3D12MA_Hector_FUNCTIONS
 template<typename T>
-Vector<T>::Vector(const ALLOCATION_CALLBACKS& allocationCallbacks)
+Hector<T>::Hector(const ALLOCATION_CALLBACKS& allocationCallbacks)
     : m_AllocationCallbacks(allocationCallbacks),
     m_pArray(NULL),
     m_Count(0),
     m_Capacity(0) {}
 
 template<typename T>
-Vector<T>::Vector(size_t count, const ALLOCATION_CALLBACKS& allocationCallbacks)
+Hector<T>::Hector(size_t count, const ALLOCATION_CALLBACKS& allocationCallbacks)
     : m_AllocationCallbacks(allocationCallbacks),
     m_pArray(count ? AllocateArray<T>(allocationCallbacks, count) : NULL),
     m_Count(count),
     m_Capacity(count) {}
 
 template<typename T>
-Vector<T>::Vector(const Vector<T>& src)
+Hector<T>::Hector(const Hector<T>& src)
     : m_AllocationCallbacks(src.m_AllocationCallbacks),
     m_pArray(src.m_Count ? AllocateArray<T>(src.m_AllocationCallbacks, src.m_Count) : NULL),
     m_Count(src.m_Count),
@@ -1006,13 +1006,13 @@ Vector<T>::Vector(const Vector<T>& src)
 }
 
 template<typename T>
-Vector<T>::~Vector()
+Hector<T>::~Hector()
 {
     Free(m_AllocationCallbacks, m_pArray);
 }
 
 template<typename T>
-void Vector<T>::push_back(const T& src)
+void Hector<T>::push_back(const T& src)
 {
     const size_t newIndex = size();
     resize(newIndex + 1);
@@ -1020,49 +1020,49 @@ void Vector<T>::push_back(const T& src)
 }
 
 template<typename T>
-void Vector<T>::pop_front()
+void Hector<T>::pop_front()
 {
     D3D12MA_HEAVY_ASSERT(m_Count > 0);
     remove(0);
 }
 
 template<typename T>
-void Vector<T>::pop_back()
+void Hector<T>::pop_back()
 {
     D3D12MA_HEAVY_ASSERT(m_Count > 0);
     resize(size() - 1);
 }
 
 template<typename T>
-T& Vector<T>::front()
+T& Hector<T>::front()
 {
     D3D12MA_HEAVY_ASSERT(m_Count > 0);
     return m_pArray[0];
 }
 
 template<typename T>
-T& Vector<T>::back()
+T& Hector<T>::back()
 {
     D3D12MA_HEAVY_ASSERT(m_Count > 0);
     return m_pArray[m_Count - 1];
 }
 
 template<typename T>
-const T& Vector<T>::front() const
+const T& Hector<T>::front() const
 {
     D3D12MA_HEAVY_ASSERT(m_Count > 0);
     return m_pArray[0];
 }
 
 template<typename T>
-const T& Vector<T>::back() const
+const T& Hector<T>::back() const
 {
     D3D12MA_HEAVY_ASSERT(m_Count > 0);
     return m_pArray[m_Count - 1];
 }
 
 template<typename T>
-void Vector<T>::reserve(size_t newCapacity, bool freeMemory)
+void Hector<T>::reserve(size_t newCapacity, bool freeMemory)
 {
     newCapacity = D3D12MA_MAX(newCapacity, m_Count);
 
@@ -1085,7 +1085,7 @@ void Vector<T>::reserve(size_t newCapacity, bool freeMemory)
 }
 
 template<typename T>
-void Vector<T>::resize(size_t newCount, bool freeMemory)
+void Hector<T>::resize(size_t newCount, bool freeMemory)
 {
     size_t newCapacity = m_Capacity;
     if (newCount > m_Capacity)
@@ -1114,7 +1114,7 @@ void Vector<T>::resize(size_t newCount, bool freeMemory)
 }
 
 template<typename T>
-void Vector<T>::insert(size_t index, const T& src)
+void Hector<T>::insert(size_t index, const T& src)
 {
     D3D12MA_HEAVY_ASSERT(index <= m_Count);
     const size_t oldCount = size();
@@ -1127,7 +1127,7 @@ void Vector<T>::insert(size_t index, const T& src)
 }
 
 template<typename T>
-void Vector<T>::remove(size_t index)
+void Hector<T>::remove(size_t index)
 {
     D3D12MA_HEAVY_ASSERT(index < m_Count);
     const size_t oldCount = size();
@@ -1139,7 +1139,7 @@ void Vector<T>::remove(size_t index)
 }
 
 template<typename T> template<typename CmpLess>
-size_t Vector<T>::InsertSorted(const T& value, const CmpLess& cmp)
+size_t Hector<T>::InsertSorted(const T& value, const CmpLess& cmp)
 {
     const size_t indexToInsert = BinaryFindFirstNotLess<CmpLess, iterator, T>(
         m_pArray,
@@ -1151,7 +1151,7 @@ size_t Vector<T>::InsertSorted(const T& value, const CmpLess& cmp)
 }
 
 template<typename T> template<typename CmpLess>
-bool Vector<T>::RemoveSorted(const T& value, const CmpLess& cmp)
+bool Hector<T>::RemoveSorted(const T& value, const CmpLess& cmp)
 {
     const iterator it = BinaryFindFirstNotLess(
         m_pArray,
@@ -1168,7 +1168,7 @@ bool Vector<T>::RemoveSorted(const T& value, const CmpLess& cmp)
 }
 
 template<typename T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
+Hector<T>& Hector<T>::operator=(const Hector<T>& rhs)
 {
     if (&rhs != this)
     {
@@ -1182,20 +1182,20 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
 }
 
 template<typename T>
-T& Vector<T>::operator[](size_t index)
+T& Hector<T>::operator[](size_t index)
 {
     D3D12MA_HEAVY_ASSERT(index < m_Count);
     return m_pArray[index];
 }
 
 template<typename T>
-const T& Vector<T>::operator[](size_t index) const
+const T& Hector<T>::operator[](size_t index) const
 {
     D3D12MA_HEAVY_ASSERT(index < m_Count);
     return m_pArray[index];
 }
-#endif // _D3D12MA_VECTOR_FUNCTIONS
-#endif // _D3D12MA_VECTOR
+#endif // _D3D12MA_Hector_FUNCTIONS
+#endif // _D3D12MA_Hector
 
 #ifndef _D3D12MA_STRING_BUILDER
 class StringBuilder
@@ -1214,7 +1214,7 @@ public:
     void AddPointer(const void* ptr);
 
 private:
-    Vector<WCHAR> m_Data;
+    Hector<WCHAR> m_Data;
 };
 
 #ifndef _D3D12MA_STRING_BUILDER_FUNCTIONS
@@ -1349,7 +1349,7 @@ private:
     };
 
     StringBuilder& m_SB;
-    Vector<StackItem> m_Stack;
+    Hector<StackItem> m_Stack;
     bool m_InsideString;
 
     void BeginValue(bool isString);
@@ -1714,7 +1714,7 @@ private:
 
     const ALLOCATION_CALLBACKS& m_AllocationCallbacks;
     const UINT m_FirstBlockCapacity;
-    Vector<ItemBlock> m_ItemBlocks;
+    Hector<ItemBlock> m_ItemBlocks;
 
     ItemBlock& CreateNewBlock();
 };
@@ -3156,7 +3156,7 @@ private:
     SuballocationList m_Suballocations;
     // Suballocations that are free and have size greater than certain threshold.
     // Sorted by size, ascending.
-    Vector<SuballocationList::iterator> m_FreeSuballocationsBySize;
+    Hector<SuballocationList::iterator> m_FreeSuballocationsBySize;
     ZeroInitializedRange m_ZeroInitializedRange;
 
     SuballocationList::const_iterator FindAtOffset(UINT64 offset) const;
@@ -3762,13 +3762,13 @@ public:
 
 private:
     /*
-    There are two suballocation vectors, used in ping-pong way.
-    The one with index m_1stVectorIndex is called 1st.
-    The one with index (m_1stVectorIndex ^ 1) is called 2nd.
+    There are two suballocation Hectors, used in ping-pong way.
+    The one with index m_1stHectorIndex is called 1st.
+    The one with index (m_1stHectorIndex ^ 1) is called 2nd.
     2nd can be non-empty only when 1st is not empty.
-    When 2nd is not empty, m_2ndVectorMode indicates its mode of operation.
+    When 2nd is not empty, m_2ndHectorMode indicates its mode of operation.
     */
-    typedef Vector<Suballocation> SuballocationVectorType;
+    typedef Hector<Suballocation> SuballocationHectorType;
 
     enum ALLOC_REQUEST_TYPE
     {
@@ -3777,37 +3777,37 @@ private:
         ALLOC_REQUEST_END_OF_2ND,
     };
 
-    enum SECOND_VECTOR_MODE
+    enum SECOND_Hector_MODE
     {
-        SECOND_VECTOR_EMPTY,
+        SECOND_Hector_EMPTY,
         /*
-        Suballocations in 2nd vector are created later than the ones in 1st, but they
+        Suballocations in 2nd Hector are created later than the ones in 1st, but they
         all have smaller offset.
         */
-        SECOND_VECTOR_RING_BUFFER,
+        SECOND_Hector_RING_BUFFER,
         /*
-        Suballocations in 2nd vector are upper side of double stack.
-        They all have offsets higher than those in 1st vector.
-        Top of this stack means smaller offsets, but higher indices in this vector.
+        Suballocations in 2nd Hector are upper side of double stack.
+        They all have offsets higher than those in 1st Hector.
+        Top of this stack means smaller offsets, but higher indices in this Hector.
         */
-        SECOND_VECTOR_DOUBLE_STACK,
+        SECOND_Hector_DOUBLE_STACK,
     };
 
     UINT64 m_SumFreeSize;
-    SuballocationVectorType m_Suballocations0, m_Suballocations1;
-    UINT32 m_1stVectorIndex;
-    SECOND_VECTOR_MODE m_2ndVectorMode;
-    // Number of items in 1st vector with hAllocation = null at the beginning.
+    SuballocationHectorType m_Suballocations0, m_Suballocations1;
+    UINT32 m_1stHectorIndex;
+    SECOND_Hector_MODE m_2ndHectorMode;
+    // Number of items in 1st Hector with hAllocation = null at the beginning.
     size_t m_1stNullItemsBeginCount;
-    // Number of other items in 1st vector with hAllocation = null somewhere in the middle.
+    // Number of other items in 1st Hector with hAllocation = null somewhere in the middle.
     size_t m_1stNullItemsMiddleCount;
-    // Number of items in 2nd vector with hAllocation = null.
+    // Number of items in 2nd Hector with hAllocation = null.
     size_t m_2ndNullItemsCount;
 
-    SuballocationVectorType& AccessSuballocations1st() { return m_1stVectorIndex ? m_Suballocations1 : m_Suballocations0; }
-    SuballocationVectorType& AccessSuballocations2nd() { return m_1stVectorIndex ? m_Suballocations0 : m_Suballocations1; }
-    const SuballocationVectorType& AccessSuballocations1st() const { return m_1stVectorIndex ? m_Suballocations1 : m_Suballocations0; }
-    const SuballocationVectorType& AccessSuballocations2nd() const { return m_1stVectorIndex ? m_Suballocations0 : m_Suballocations1; }
+    SuballocationHectorType& AccessSuballocations1st() { return m_1stHectorIndex ? m_Suballocations1 : m_Suballocations0; }
+    SuballocationHectorType& AccessSuballocations2nd() { return m_1stHectorIndex ? m_Suballocations0 : m_Suballocations1; }
+    const SuballocationHectorType& AccessSuballocations1st() const { return m_1stHectorIndex ? m_Suballocations1 : m_Suballocations0; }
+    const SuballocationHectorType& AccessSuballocations2nd() const { return m_1stHectorIndex ? m_Suballocations0 : m_Suballocations1; }
 
     Suballocation& FindSuballocation(UINT64 offset) const;
     bool ShouldCompact1st() const;
@@ -3831,8 +3831,8 @@ BlockMetadata_Linear::BlockMetadata_Linear(const ALLOCATION_CALLBACKS* allocatio
     m_SumFreeSize(0),
     m_Suballocations0(*allocationCallbacks),
     m_Suballocations1(*allocationCallbacks),
-    m_1stVectorIndex(0),
-    m_2ndVectorMode(SECOND_VECTOR_EMPTY),
+    m_1stHectorIndex(0),
+    m_2ndHectorMode(SECOND_Hector_EMPTY),
     m_1stNullItemsBeginCount(0),
     m_1stNullItemsMiddleCount(0),
     m_2ndNullItemsCount(0)
@@ -3849,13 +3849,13 @@ void BlockMetadata_Linear::Init(UINT64 size)
 bool BlockMetadata_Linear::Validate() const
 {
     D3D12MA_VALIDATE(GetSumFreeSize() <= GetSize());
-    const SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    const SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    const SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    const SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
 
-    D3D12MA_VALIDATE(suballocations2nd.empty() == (m_2ndVectorMode == SECOND_VECTOR_EMPTY));
+    D3D12MA_VALIDATE(suballocations2nd.empty() == (m_2ndHectorMode == SECOND_Hector_EMPTY));
     D3D12MA_VALIDATE(!suballocations1st.empty() ||
         suballocations2nd.empty() ||
-        m_2ndVectorMode != SECOND_VECTOR_RING_BUFFER);
+        m_2ndHectorMode != SECOND_Hector_RING_BUFFER);
 
     if (!suballocations1st.empty())
     {
@@ -3877,7 +3877,7 @@ bool BlockMetadata_Linear::Validate() const
     const size_t suballoc1stCount = suballocations1st.size();
     UINT64 offset = 0;
 
-    if (m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+    if (m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
     {
         const size_t suballoc2ndCount = suballocations2nd.size();
         size_t nullItem2ndCount = 0;
@@ -3953,7 +3953,7 @@ bool BlockMetadata_Linear::Validate() const
     }
     D3D12MA_VALIDATE(nullItem1stCount == m_1stNullItemsBeginCount + m_1stNullItemsMiddleCount);
 
-    if (m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK)
+    if (m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK)
     {
         const size_t suballoc2ndCount = suballocations2nd.size();
         size_t nullItem2ndCount = 0;
@@ -4046,16 +4046,16 @@ void BlockMetadata_Linear::Alloc(
     {
     case ALLOC_REQUEST_UPPER_ADDRESS:
     {
-        D3D12MA_ASSERT(m_2ndVectorMode != SECOND_VECTOR_RING_BUFFER &&
+        D3D12MA_ASSERT(m_2ndHectorMode != SECOND_Hector_RING_BUFFER &&
             "CRITICAL ERROR: Trying to use linear allocator as double stack while it was already used as ring buffer.");
-        SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+        SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
         suballocations2nd.push_back(newSuballoc);
-        m_2ndVectorMode = SECOND_VECTOR_DOUBLE_STACK;
+        m_2ndHectorMode = SECOND_Hector_DOUBLE_STACK;
         break;
     }
     case ALLOC_REQUEST_END_OF_1ST:
     {
-        SuballocationVectorType& suballocations1st = AccessSuballocations1st();
+        SuballocationHectorType& suballocations1st = AccessSuballocations1st();
 
         D3D12MA_ASSERT(suballocations1st.empty() ||
             offset >= suballocations1st.back().offset + suballocations1st.back().size);
@@ -4067,24 +4067,24 @@ void BlockMetadata_Linear::Alloc(
     }
     case ALLOC_REQUEST_END_OF_2ND:
     {
-        SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-        // New allocation at the end of 2-part ring buffer, so before first allocation from 1st vector.
+        SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+        // New allocation at the end of 2-part ring buffer, so before first allocation from 1st Hector.
         D3D12MA_ASSERT(!suballocations1st.empty() &&
             offset + request.size <= suballocations1st[m_1stNullItemsBeginCount].offset);
-        SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+        SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
 
-        switch (m_2ndVectorMode)
+        switch (m_2ndHectorMode)
         {
-        case SECOND_VECTOR_EMPTY:
+        case SECOND_Hector_EMPTY:
             // First allocation from second part ring buffer.
             D3D12MA_ASSERT(suballocations2nd.empty());
-            m_2ndVectorMode = SECOND_VECTOR_RING_BUFFER;
+            m_2ndHectorMode = SECOND_Hector_RING_BUFFER;
             break;
-        case SECOND_VECTOR_RING_BUFFER:
+        case SECOND_Hector_RING_BUFFER:
             // 2-part ring buffer is already started.
             D3D12MA_ASSERT(!suballocations2nd.empty());
             break;
-        case SECOND_VECTOR_DOUBLE_STACK:
+        case SECOND_Hector_DOUBLE_STACK:
             D3D12MA_ASSERT(0 && "CRITICAL ERROR: Trying to use linear allocator as ring buffer while it was already used as double stack.");
             break;
         default:
@@ -4102,8 +4102,8 @@ void BlockMetadata_Linear::Alloc(
 
 void BlockMetadata_Linear::Free(AllocHandle allocHandle)
 {
-    SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
     UINT64 offset = (UINT64)allocHandle - 1;
 
     if (!suballocations1st.empty())
@@ -4122,8 +4122,8 @@ void BlockMetadata_Linear::Free(AllocHandle allocHandle)
     }
 
     // Last allocation in 2-part ring buffer or top of upper stack (same logic).
-    if (m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER ||
-        m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK)
+    if (m_2ndHectorMode == SECOND_Hector_RING_BUFFER ||
+        m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK)
     {
         Suballocation& lastSuballoc = suballocations2nd.back();
         if (lastSuballoc.offset == offset)
@@ -4134,8 +4134,8 @@ void BlockMetadata_Linear::Free(AllocHandle allocHandle)
             return;
         }
     }
-    // Last allocation in 1st vector.
-    else if (m_2ndVectorMode == SECOND_VECTOR_EMPTY)
+    // Last allocation in 1st Hector.
+    else if (m_2ndHectorMode == SECOND_Hector_EMPTY)
     {
         Suballocation& lastSuballoc = suballocations1st.back();
         if (lastSuballoc.offset == offset)
@@ -4151,9 +4151,9 @@ void BlockMetadata_Linear::Free(AllocHandle allocHandle)
     refSuballoc.offset = offset;
     // Rest of members stays uninitialized intentionally for better performance.
 
-    // Item from the middle of 1st vector.
+    // Item from the middle of 1st Hector.
     {
-        const SuballocationVectorType::iterator it = BinaryFindSorted(
+        const SuballocationHectorType::iterator it = BinaryFindSorted(
             suballocations1st.begin() + m_1stNullItemsBeginCount,
             suballocations1st.end(),
             refSuballoc,
@@ -4169,10 +4169,10 @@ void BlockMetadata_Linear::Free(AllocHandle allocHandle)
         }
     }
 
-    if (m_2ndVectorMode != SECOND_VECTOR_EMPTY)
+    if (m_2ndHectorMode != SECOND_Hector_EMPTY)
     {
-        // Item from the middle of 2nd vector.
-        const SuballocationVectorType::iterator it = m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER ?
+        // Item from the middle of 2nd Hector.
+        const SuballocationHectorType::iterator it = m_2ndHectorMode == SECOND_Hector_RING_BUFFER ?
             BinaryFindSorted(suballocations2nd.begin(), suballocations2nd.end(), refSuballoc, SuballocationOffsetLess()) :
             BinaryFindSorted(suballocations2nd.begin(), suballocations2nd.end(), refSuballoc, SuballocationOffsetGreater());
         if (it != suballocations2nd.end())
@@ -4194,8 +4194,8 @@ void BlockMetadata_Linear::Clear()
     m_SumFreeSize = GetSize();
     m_Suballocations0.clear();
     m_Suballocations1.clear();
-    // Leaving m_1stVectorIndex unchanged - it doesn't matter.
-    m_2ndVectorMode = SECOND_VECTOR_EMPTY;
+    // Leaving m_1stHectorIndex unchanged - it doesn't matter.
+    m_2ndHectorMode = SECOND_Hector_EMPTY;
     m_1stNullItemsBeginCount = 0;
     m_1stNullItemsMiddleCount = 0;
     m_2ndNullItemsCount = 0;
@@ -4247,13 +4247,13 @@ void BlockMetadata_Linear::AddDetailedStatistics(DetailedStatistics& inoutStats)
     inoutStats.Stats.BlockBytes += GetSize();
 
     const UINT64 size = GetSize();
-    const SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    const SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    const SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    const SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
     const size_t suballoc1stCount = suballocations1st.size();
     const size_t suballoc2ndCount = suballocations2nd.size();
 
     UINT64 lastOffset = 0;
-    if (m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+    if (m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
     {
         const UINT64 freeSpace2ndTo1stEnd = suballocations1st[m_1stNullItemsBeginCount].offset;
         size_t nextAlloc2ndIndex = 0;
@@ -4305,7 +4305,7 @@ void BlockMetadata_Linear::AddDetailedStatistics(DetailedStatistics& inoutStats)
 
     size_t nextAlloc1stIndex = m_1stNullItemsBeginCount;
     const UINT64 freeSpace1stTo2ndEnd =
-        m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK ? suballocations2nd.back().offset : size;
+        m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK ? suballocations2nd.back().offset : size;
     while (lastOffset < freeSpace1stTo2ndEnd)
     {
         // Find next non-null allocation or move nextAllocIndex to the end.
@@ -4351,7 +4351,7 @@ void BlockMetadata_Linear::AddDetailedStatistics(DetailedStatistics& inoutStats)
         }
     }
 
-    if (m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK)
+    if (m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK)
     {
         size_t nextAlloc2ndIndex = suballocations2nd.size() - 1;
         while (lastOffset < size)
@@ -4404,8 +4404,8 @@ void BlockMetadata_Linear::AddDetailedStatistics(DetailedStatistics& inoutStats)
 void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
 {
     const UINT64 size = GetSize();
-    const SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    const SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    const SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    const SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
     const size_t suballoc1stCount = suballocations1st.size();
     const size_t suballoc2ndCount = suballocations2nd.size();
 
@@ -4417,7 +4417,7 @@ void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
     UINT64 lastOffset = 0;
 
     size_t alloc2ndCount = 0;
-    if (m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+    if (m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
     {
         const UINT64 freeSpace2ndTo1stEnd = suballocations1st[m_1stNullItemsBeginCount].offset;
         size_t nextAlloc2ndIndex = 0;
@@ -4469,7 +4469,7 @@ void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
     size_t nextAlloc1stIndex = m_1stNullItemsBeginCount;
     size_t alloc1stCount = 0;
     const UINT64 freeSpace1stTo2ndEnd =
-        m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK ? suballocations2nd.back().offset : size;
+        m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK ? suballocations2nd.back().offset : size;
     while (lastOffset < freeSpace1stTo2ndEnd)
     {
         // Find next non-null allocation or move nextAllocIndex to the end.
@@ -4514,7 +4514,7 @@ void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
         }
     }
 
-    if (m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK)
+    if (m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK)
     {
         size_t nextAlloc2ndIndex = suballocations2nd.size() - 1;
         while (lastOffset < size)
@@ -4567,7 +4567,7 @@ void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
 
     // SECOND PASS
     lastOffset = 0;
-    if (m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+    if (m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
     {
         const UINT64 freeSpace2ndTo1stEnd = suballocations1st[m_1stNullItemsBeginCount].offset;
         size_t nextAlloc2ndIndex = 0;
@@ -4663,7 +4663,7 @@ void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
         }
     }
 
-    if (m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK)
+    if (m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK)
     {
         size_t nextAlloc2ndIndex = suballocations2nd.size() - 1;
         while (lastOffset < size)
@@ -4717,12 +4717,12 @@ void BlockMetadata_Linear::WriteAllocationInfoToJson(JsonWriter& json) const
 
 void BlockMetadata_Linear::DebugLogAllAllocations() const
 {
-    const SuballocationVectorType& suballocations1st = AccessSuballocations1st();
+    const SuballocationHectorType& suballocations1st = AccessSuballocations1st();
     for (auto it = suballocations1st.begin() + m_1stNullItemsBeginCount; it != suballocations1st.end(); ++it)
         if (it->type != SUBALLOCATION_TYPE_FREE)
             DebugLogAllocation(it->offset, it->size, it->privateData);
 
-    const SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    const SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
     for (auto it = suballocations2nd.begin(); it != suballocations2nd.end(); ++it)
         if (it->type != SUBALLOCATION_TYPE_FREE)
             DebugLogAllocation(it->offset, it->size, it->privateData);
@@ -4730,16 +4730,16 @@ void BlockMetadata_Linear::DebugLogAllAllocations() const
 
 Suballocation& BlockMetadata_Linear::FindSuballocation(UINT64 offset) const
 {
-    const SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    const SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    const SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    const SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
 
     Suballocation refSuballoc;
     refSuballoc.offset = offset;
     // Rest of members stays uninitialized intentionally for better performance.
 
-    // Item from the 1st vector.
+    // Item from the 1st Hector.
     {
-        const SuballocationVectorType::const_iterator it = BinaryFindSorted(
+        const SuballocationHectorType::const_iterator it = BinaryFindSorted(
             suballocations1st.begin() + m_1stNullItemsBeginCount,
             suballocations1st.end(),
             refSuballoc,
@@ -4750,10 +4750,10 @@ Suballocation& BlockMetadata_Linear::FindSuballocation(UINT64 offset) const
         }
     }
 
-    if (m_2ndVectorMode != SECOND_VECTOR_EMPTY)
+    if (m_2ndHectorMode != SECOND_Hector_EMPTY)
     {
         // Rest of members stays uninitialized intentionally for better performance.
-        const SuballocationVectorType::const_iterator it = m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER ?
+        const SuballocationHectorType::const_iterator it = m_2ndHectorMode == SECOND_Hector_RING_BUFFER ?
             BinaryFindSorted(suballocations2nd.begin(), suballocations2nd.end(), refSuballoc, SuballocationOffsetLess()) :
             BinaryFindSorted(suballocations2nd.begin(), suballocations2nd.end(), refSuballoc, SuballocationOffsetGreater());
         if (it != suballocations2nd.end())
@@ -4775,8 +4775,8 @@ bool BlockMetadata_Linear::ShouldCompact1st() const
 
 void BlockMetadata_Linear::CleanupAfterFree()
 {
-    SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
 
     if (IsEmpty())
     {
@@ -4785,7 +4785,7 @@ void BlockMetadata_Linear::CleanupAfterFree()
         m_1stNullItemsBeginCount = 0;
         m_1stNullItemsMiddleCount = 0;
         m_2ndNullItemsCount = 0;
-        m_2ndVectorMode = SECOND_VECTOR_EMPTY;
+        m_2ndHectorMode = SECOND_Hector_EMPTY;
     }
     else
     {
@@ -4793,7 +4793,7 @@ void BlockMetadata_Linear::CleanupAfterFree()
         const size_t nullItem1stCount = m_1stNullItemsBeginCount + m_1stNullItemsMiddleCount;
         D3D12MA_ASSERT(nullItem1stCount <= suballoc1stCount);
 
-        // Find more null items at the beginning of 1st vector.
+        // Find more null items at the beginning of 1st Hector.
         while (m_1stNullItemsBeginCount < suballoc1stCount &&
             suballocations1st[m_1stNullItemsBeginCount].type == SUBALLOCATION_TYPE_FREE)
         {
@@ -4801,7 +4801,7 @@ void BlockMetadata_Linear::CleanupAfterFree()
             --m_1stNullItemsMiddleCount;
         }
 
-        // Find more null items at the end of 1st vector.
+        // Find more null items at the end of 1st Hector.
         while (m_1stNullItemsMiddleCount > 0 &&
             suballocations1st.back().type == SUBALLOCATION_TYPE_FREE)
         {
@@ -4809,7 +4809,7 @@ void BlockMetadata_Linear::CleanupAfterFree()
             suballocations1st.pop_back();
         }
 
-        // Find more null items at the end of 2nd vector.
+        // Find more null items at the end of 2nd Hector.
         while (m_2ndNullItemsCount > 0 &&
             suballocations2nd.back().type == SUBALLOCATION_TYPE_FREE)
         {
@@ -4817,7 +4817,7 @@ void BlockMetadata_Linear::CleanupAfterFree()
             suballocations2nd.pop_back();
         }
 
-        // Find more null items at the beginning of 2nd vector.
+        // Find more null items at the beginning of 2nd Hector.
         while (m_2ndNullItemsCount > 0 &&
             suballocations2nd[0].type == SUBALLOCATION_TYPE_FREE)
         {
@@ -4846,22 +4846,22 @@ void BlockMetadata_Linear::CleanupAfterFree()
             m_1stNullItemsMiddleCount = 0;
         }
 
-        // 2nd vector became empty.
+        // 2nd Hector became empty.
         if (suballocations2nd.empty())
         {
-            m_2ndVectorMode = SECOND_VECTOR_EMPTY;
+            m_2ndHectorMode = SECOND_Hector_EMPTY;
         }
 
-        // 1st vector became empty.
+        // 1st Hector became empty.
         if (suballocations1st.size() - m_1stNullItemsBeginCount == 0)
         {
             suballocations1st.clear();
             m_1stNullItemsBeginCount = 0;
 
-            if (!suballocations2nd.empty() && m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+            if (!suballocations2nd.empty() && m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
             {
                 // Swap 1st with 2nd. Now 2nd is empty.
-                m_2ndVectorMode = SECOND_VECTOR_EMPTY;
+                m_2ndHectorMode = SECOND_Hector_EMPTY;
                 m_1stNullItemsMiddleCount = m_2ndNullItemsCount;
                 while (m_1stNullItemsBeginCount < suballocations2nd.size() &&
                     suballocations2nd[m_1stNullItemsBeginCount].type == SUBALLOCATION_TYPE_FREE)
@@ -4870,7 +4870,7 @@ void BlockMetadata_Linear::CleanupAfterFree()
                     --m_1stNullItemsMiddleCount;
                 }
                 m_2ndNullItemsCount = 0;
-                m_1stVectorIndex ^= 1;
+                m_1stHectorIndex ^= 1;
             }
         }
     }
@@ -4884,12 +4884,12 @@ bool BlockMetadata_Linear::CreateAllocationRequest_LowerAddress(
     AllocationRequest* pAllocationRequest)
 {
     const UINT64 blockSize = GetSize();
-    SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
 
-    if (m_2ndVectorMode == SECOND_VECTOR_EMPTY || m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK)
+    if (m_2ndHectorMode == SECOND_Hector_EMPTY || m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK)
     {
-        // Try to allocate at the end of 1st vector.
+        // Try to allocate at the end of 1st Hector.
 
         UINT64 resultBaseOffset = 0;
         if (!suballocations1st.empty())
@@ -4903,7 +4903,7 @@ bool BlockMetadata_Linear::CreateAllocationRequest_LowerAddress(
         // Apply alignment.
         resultOffset = AlignUp(resultOffset, allocAlignment);
 
-        const UINT64 freeSpaceEnd = m_2ndVectorMode == SECOND_VECTOR_DOUBLE_STACK ?
+        const UINT64 freeSpaceEnd = m_2ndHectorMode == SECOND_Hector_DOUBLE_STACK ?
             suballocations2nd.back().offset : blockSize;
 
         // There is enough free space at the end after alignment.
@@ -4917,9 +4917,9 @@ bool BlockMetadata_Linear::CreateAllocationRequest_LowerAddress(
         }
     }
 
-    // Wrap-around to end of 2nd vector. Try to allocate there, watching for the
-    // beginning of 1st vector as the end of free space.
-    if (m_2ndVectorMode == SECOND_VECTOR_EMPTY || m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+    // Wrap-around to end of 2nd Hector. Try to allocate there, watching for the
+    // beginning of 1st Hector as the end of free space.
+    if (m_2ndHectorMode == SECOND_Hector_EMPTY || m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
     {
         D3D12MA_ASSERT(!suballocations1st.empty());
 
@@ -4957,10 +4957,10 @@ bool BlockMetadata_Linear::CreateAllocationRequest_UpperAddress(
     AllocationRequest* pAllocationRequest)
 {
     const UINT64 blockSize = GetSize();
-    SuballocationVectorType& suballocations1st = AccessSuballocations1st();
-    SuballocationVectorType& suballocations2nd = AccessSuballocations2nd();
+    SuballocationHectorType& suballocations1st = AccessSuballocations1st();
+    SuballocationHectorType& suballocations2nd = AccessSuballocations2nd();
 
-    if (m_2ndVectorMode == SECOND_VECTOR_RING_BUFFER)
+    if (m_2ndHectorMode == SECOND_Hector_RING_BUFFER)
     {
         D3D12MA_ASSERT(0 && "Trying to use pool with linear algorithm as double stack, while it is already being used as ring buffer.");
         return false;
@@ -5357,7 +5357,7 @@ bool BlockMetadata_TLSF::CreateAllocationRequest(
     else if (strategy & ALLOCATION_FLAG_STRATEGY_MIN_OFFSET)
     {
         // Perform search from the start
-        Vector<Block*> blockList(m_BlocksFreeCount, *GetAllocs());
+        Hector<Block*> blockList(m_BlocksFreeCount, *GetAllocs());
 
         size_t i = m_BlocksFreeCount;
         for (Block* block = m_NullBlock->prevPhysical; block != NULL; block = block->prevPhysical)
@@ -5673,7 +5673,7 @@ void BlockMetadata_TLSF::AddDetailedStatistics(DetailedStatistics& inoutStats) c
 void BlockMetadata_TLSF::WriteAllocationInfoToJson(JsonWriter& json) const
 {
     size_t blockCount = m_AllocCount + m_BlocksFreeCount;
-    Vector<Block*> blockList(blockCount, *GetAllocs());
+    Hector<Block*> blockList(blockCount, *GetAllocs());
 
     size_t i = blockCount;
     if (m_NullBlock->size > 0)
@@ -5920,14 +5920,14 @@ public:
 
     NormalBlock(
         AllocatorPimpl* allocator,
-        BlockVector* blockVector,
+        BlockHector* blockHector,
         const D3D12_HEAP_PROPERTIES& heapProps,
         D3D12_HEAP_FLAGS heapFlags,
         UINT64 size,
         UINT id);
     virtual ~NormalBlock();
 
-    BlockVector* GetBlockVector() const { return m_BlockVector; }
+    BlockHector* GetBlockHector() const { return m_BlockHector; }
 
     // 'algorithm' should be one of the *_ALGORITHM_* flags in enums POOL_FLAGS or VIRTUAL_BLOCK_FLAGS
     HRESULT Init(UINT32 algorithm, ID3D12ProtectedResourceSession* pProtectedSession, bool denyMsaaTextures);
@@ -5936,7 +5936,7 @@ public:
     bool Validate() const;
 
 private:
-    BlockVector* m_BlockVector;
+    BlockHector* m_BlockHector;
 
     D3D12MA_CLASS_NO_COPY(NormalBlock)
 };
@@ -6151,19 +6151,19 @@ private:
 #endif
 };
 
-#ifndef _D3D12MA_BLOCK_VECTOR
+#ifndef _D3D12MA_BLOCK_Hector
 /*
 Sequence of NormalBlock. Represents memory blocks allocated for a specific
 heap type and possibly resource type (if only Tier 1 is supported).
 
 Synchronized internally with a mutex.
 */
-class BlockVector
+class BlockHector
 {
     friend class DefragmentationContextPimpl;
-    D3D12MA_CLASS_NO_COPY(BlockVector)
+    D3D12MA_CLASS_NO_COPY(BlockHector)
 public:
-    BlockVector(
+    BlockHector(
         AllocatorPimpl* hAllocator,
         const D3D12_HEAP_PROPERTIES& heapProps,
         D3D12_HEAP_FLAGS heapFlags,
@@ -6176,7 +6176,7 @@ public:
         bool denyMsaaTextures,
         ID3D12ProtectedResourceSession* pProtectedSession,
         D3D12_RESIDENCY_PRIORITY residencyPriority);
-    ~BlockVector();
+    ~BlockHector();
     D3D12_RESIDENCY_PRIORITY GetResidencyPriority() const { return m_ResidencyPriority; }
 
     const D3D12_HEAP_PROPERTIES& GetHeapProperties() const { return m_HeapProps; }
@@ -6235,7 +6235,7 @@ private:
     bool m_HasEmptyBlock;
     D3D12MA_RW_MUTEX m_Mutex;
     // Incrementally sorted by sumFreeSize, ascending.
-    Vector<NormalBlock*> m_Blocks;
+    Hector<NormalBlock*> m_Blocks;
     UINT m_NextBlockId;
     bool m_IncrementalSort = true;
 
@@ -6245,7 +6245,7 @@ private:
     UINT64 CalcSumBlockSize() const;
     UINT64 CalcMaxBlockSize() const;
 
-    // Finds and removes given block from vector.
+    // Finds and removes given block from Hector.
     void Remove(NormalBlock* pBlock);
 
     // Performs single step in sorting m_Blocks. They may not be fully sorted
@@ -6280,7 +6280,7 @@ private:
         UINT64 blockSize,
         size_t* pNewBlockIndex);
 };
-#endif // _D3D12MA_BLOCK_VECTOR
+#endif // _D3D12MA_BLOCK_Hector
 
 #ifndef _D3D12MA_CURRENT_BUDGET_DATA
 class CurrentBudgetData
@@ -6430,7 +6430,7 @@ public:
     DefragmentationContextPimpl(
         AllocatorPimpl* hAllocator,
         const DEFRAGMENTATION_DESC& desc,
-        BlockVector* poolVector);
+        BlockHector* poolHector);
     ~DefragmentationContextPimpl();
 
     void GetStats(DEFRAGMENTATION_STATS& outStats) { outStats = m_GlobalStats; }
@@ -6465,13 +6465,13 @@ private:
     const UINT64 m_MaxPassBytes;
     const UINT32 m_MaxPassAllocations;
 
-    Vector<DEFRAGMENTATION_MOVE> m_Moves;
+    Hector<DEFRAGMENTATION_MOVE> m_Moves;
 
     UINT8 m_IgnoredAllocs = 0;
     UINT32 m_Algorithm;
-    UINT32 m_BlockVectorCount;
-    BlockVector* m_PoolBlockVector;
-    BlockVector** m_pBlockVectors;
+    UINT32 m_BlockHectorCount;
+    BlockHector* m_PoolBlockHector;
+    BlockHector** m_pBlockHectors;
     size_t m_ImmovableBlockCount = 0;
     DEFRAGMENTATION_STATS m_GlobalStats = { 0 };
     DEFRAGMENTATION_STATS m_PassStats = { 0 };
@@ -6480,15 +6480,15 @@ private:
     static MoveAllocationData GetMoveData(AllocHandle handle, BlockMetadata* metadata);
     CounterStatus CheckCounters(UINT64 bytes);
     bool IncrementCounters(UINT64 bytes);
-    bool ReallocWithinBlock(BlockVector& vector, NormalBlock* block);
-    bool AllocInOtherBlock(size_t start, size_t end, MoveAllocationData& data, BlockVector& vector);
+    bool ReallocWithinBlock(BlockHector& Hector, NormalBlock* block);
+    bool AllocInOtherBlock(size_t start, size_t end, MoveAllocationData& data, BlockHector& Hector);
 
-    bool ComputeDefragmentation(BlockVector& vector, size_t index);
-    bool ComputeDefragmentation_Fast(BlockVector& vector);
-    bool ComputeDefragmentation_Balanced(BlockVector& vector, size_t index, bool update);
-    bool ComputeDefragmentation_Full(BlockVector& vector);
+    bool ComputeDefragmentation(BlockHector& Hector, size_t index);
+    bool ComputeDefragmentation_Fast(BlockHector& Hector);
+    bool ComputeDefragmentation_Balanced(BlockHector& Hector, size_t index, bool update);
+    bool ComputeDefragmentation_Full(BlockHector& Hector);
 
-    void UpdateVectorStatistics(BlockVector& vector, StateBalanced& state);
+    void UpdateHectorStatistics(BlockHector& Hector, StateBalanced& state);
 };
 #endif // _D3D12MA_DEFRAGMENTATION_CONTEXT_PIMPL
 
@@ -6506,7 +6506,7 @@ public:
     bool SupportsCommittedAllocations() const { return m_Desc.BlockSize == 0; }
     LPCWSTR GetName() const { return m_Name; }
 
-    BlockVector* GetBlockVector() { return m_BlockVector; }
+    BlockHector* GetBlockHector() { return m_BlockHector; }
     CommittedAllocationList* GetCommittedAllocationList() { return SupportsCommittedAllocations() ? &m_CommittedAllocations : NULL; }
 
     HRESULT Init();
@@ -6518,7 +6518,7 @@ public:
 private:
     AllocatorPimpl* m_Allocator; // Externally owned object.
     POOL_DESC m_Desc;
-    BlockVector* m_BlockVector; // Owned object.
+    BlockHector* m_BlockHector; // Owned object.
     CommittedAllocationList m_CommittedAllocations;
     wchar_t* m_Name;
     PoolPimpl* m_PrevPool = NULL;
@@ -6586,7 +6586,7 @@ public:
         8: D3D12_HEAP_TYPE_READBACK + texture RT or DS
     */
     UINT GetDefaultPoolCount() const { return SupportsResourceHeapTier2() ? 3 : 9; }
-    BlockVector** GetDefaultPools() { return m_BlockVectors; }
+    BlockHector** GetDefaultPools() { return m_BlockHectors; }
 
     HRESULT Init(const ALLOCATOR_DESC& desc);
     bool HeapFlagsFulfillResourceHeapTier(D3D12_HEAP_FLAGS flags) const;
@@ -6677,7 +6677,7 @@ private:
     D3D12MA_RW_MUTEX m_PoolsMutex[HEAP_TYPE_COUNT];
     PoolList m_Pools[HEAP_TYPE_COUNT];
     // Default pools.
-    BlockVector* m_BlockVectors[DEFAULT_POOL_MAX_COUNT];
+    BlockHector* m_BlockHectors[DEFAULT_POOL_MAX_COUNT];
     CommittedAllocationList m_CommittedAllocations[STANDARD_HEAP_TYPE_COUNT];
 
     /*
@@ -6705,7 +6705,7 @@ private:
     template<typename D3D12_RESOURCE_DESC_T>
     HRESULT CalcAllocationParams(const ALLOCATION_DESC& allocDesc, UINT64 allocSize,
         const D3D12_RESOURCE_DESC_T* resDesc, // Optional
-        BlockVector*& outBlockVector, CommittedAllocationParameters& outCommittedAllocationParams, bool& outPreferCommitted);
+        BlockHector*& outBlockHector, CommittedAllocationParameters& outCommittedAllocationParams, bool& outPreferCommitted);
 
     // Returns UINT32_MAX if index cannot be calculcated.
     UINT CalcDefaultPoolIndex(const ALLOCATION_DESC& allocDesc, ResourceClass resourceClass) const;
@@ -6749,7 +6749,7 @@ AllocatorPimpl::AllocatorPimpl(const ALLOCATION_CALLBACKS& allocationCallbacks, 
     ZeroMemory(&m_D3D12Options, sizeof(m_D3D12Options));
     ZeroMemory(&m_D3D12Architecture, sizeof(m_D3D12Architecture));
 
-    ZeroMemory(m_BlockVectors, sizeof(m_BlockVectors));
+    ZeroMemory(m_BlockHectors, sizeof(m_BlockHectors));
 
     for (UINT i = 0; i < STANDARD_HEAP_TYPE_COUNT; ++i)
     {
@@ -6831,7 +6831,7 @@ HRESULT AllocatorPimpl::Init(const ALLOCATOR_DESC& desc)
         }
 #endif
 
-        m_BlockVectors[i] = D3D12MA_NEW(GetAllocs(), BlockVector)(
+        m_BlockHectors[i] = D3D12MA_NEW(GetAllocs(), BlockHector)(
             this, // hAllocator
             heapProps, // heapType
             heapFlags, // heapFlags
@@ -6844,7 +6844,7 @@ HRESULT AllocatorPimpl::Init(const ALLOCATOR_DESC& desc)
             m_MsaaAlwaysCommitted,
             NULL, // pProtectedSession
             D3D12_RESIDENCY_PRIORITY_NONE); // residencyPriority
-        // No need to call m_pBlockVectors[i]->CreateMinBlocks here, becase minBlockCount is 0.
+        // No need to call m_pBlockHectors[i]->CreateMinBlocks here, becase minBlockCount is 0.
     }
 
 #if D3D12MA_DXGI_1_4
@@ -6876,7 +6876,7 @@ AllocatorPimpl::~AllocatorPimpl()
 
     for (UINT i = DEFAULT_POOL_MAX_COUNT; i--; )
     {
-        D3D12MA_DELETE(GetAllocs(), m_BlockVectors[i]);
+        D3D12MA_DELETE(GetAllocs(), m_BlockHectors[i]);
     }
 
     for (UINT i = HEAP_TYPE_COUNT; i--; )
@@ -7043,7 +7043,7 @@ HRESULT AllocatorPimpl::CreateResource(
     D3D12MA_ASSERT(IsPow2(resAllocInfo.Alignment));
     D3D12MA_ASSERT(resAllocInfo.SizeInBytes > 0);
 
-    BlockVector* blockVector = NULL;
+    BlockHector* blockHector = NULL;
     CommittedAllocationParameters committedAllocationParams = {};
     bool preferCommitted = false;
     
@@ -7053,14 +7053,14 @@ HRESULT AllocatorPimpl::CreateResource(
     {
         hr = CalcAllocationParams<D3D12_RESOURCE_DESC1>(*pAllocDesc, resAllocInfo.SizeInBytes,
             createParams.GetResourceDesc1(),
-            blockVector, committedAllocationParams, preferCommitted);
+            blockHector, committedAllocationParams, preferCommitted);
     }
     else
 #endif
     {
         hr = CalcAllocationParams<D3D12_RESOURCE_DESC>(*pAllocDesc, resAllocInfo.SizeInBytes,
             createParams.GetResourceDesc(),
-            blockVector, committedAllocationParams, preferCommitted);
+            blockHector, committedAllocationParams, preferCommitted);
     }
     if (FAILED(hr))
         return hr;
@@ -7075,9 +7075,9 @@ HRESULT AllocatorPimpl::CreateResource(
         if (SUCCEEDED(hr))
             return hr;
     }
-    if (blockVector != NULL)
+    if (blockHector != NULL)
     {
-        hr = blockVector->CreateResource(resAllocInfo.SizeInBytes, resAllocInfo.Alignment,
+        hr = blockHector->CreateResource(resAllocInfo.SizeInBytes, resAllocInfo.Alignment,
             *pAllocDesc, finalCreateParams,
             ppAllocation, riidResource, ppvResource);
         if (SUCCEEDED(hr))
@@ -7101,12 +7101,12 @@ HRESULT AllocatorPimpl::AllocateMemory(
 {
     *ppAllocation = NULL;
 
-    BlockVector* blockVector = NULL;
+    BlockHector* blockHector = NULL;
     CommittedAllocationParameters committedAllocationParams = {};
     bool preferCommitted = false;
     HRESULT hr = CalcAllocationParams<D3D12_RESOURCE_DESC>(*pAllocDesc, pAllocInfo->SizeInBytes,
         NULL, // pResDesc
-        blockVector, committedAllocationParams, preferCommitted);
+        blockHector, committedAllocationParams, preferCommitted);
     if (FAILED(hr))
         return hr;
 
@@ -7118,9 +7118,9 @@ HRESULT AllocatorPimpl::AllocateMemory(
         if (SUCCEEDED(hr))
             return hr;
     }
-    if (blockVector != NULL)
+    if (blockHector != NULL)
     {
-        hr = blockVector->Allocate(pAllocInfo->SizeInBytes, pAllocInfo->Alignment,
+        hr = blockHector->Allocate(pAllocInfo->SizeInBytes, pAllocInfo->Alignment,
             *pAllocDesc, 1, (Allocation**)ppAllocation);
         if (SUCCEEDED(hr))
             return hr;
@@ -7221,10 +7221,10 @@ void AllocatorPimpl::FreePlacedMemory(Allocation* allocation)
 
     NormalBlock* const block = allocation->m_Placed.block;
     D3D12MA_ASSERT(block);
-    BlockVector* const blockVector = block->GetBlockVector();
-    D3D12MA_ASSERT(blockVector);
+    BlockHector* const blockHector = block->GetBlockHector();
+    D3D12MA_ASSERT(blockHector);
     m_Budget.RemoveAllocation(HeapPropertiesToMemorySegmentGroup(block->GetHeapProperties()), allocation->GetSize());
-    blockVector->Free(allocation);
+    blockHector->Free(allocation);
 }
 
 void AllocatorPimpl::FreeHeapMemory(Allocation* allocation)
@@ -7281,9 +7281,9 @@ void AllocatorPimpl::CalculateStatistics(TotalStatistics& outStats, DetailedStat
         // DEFAULT, UPLOAD, READBACK.
         for (size_t heapTypeIndex = 0; heapTypeIndex < STANDARD_HEAP_TYPE_COUNT; ++heapTypeIndex)
         {
-            BlockVector* const pBlockVector = m_BlockVectors[heapTypeIndex];
-            D3D12MA_ASSERT(pBlockVector);
-            pBlockVector->AddDetailedStatistics(outStats.HeapType[heapTypeIndex]);
+            BlockHector* const pBlockHector = m_BlockHectors[heapTypeIndex];
+            D3D12MA_ASSERT(pBlockHector);
+            pBlockHector->AddDetailedStatistics(outStats.HeapType[heapTypeIndex]);
         }
     }
     else
@@ -7293,9 +7293,9 @@ void AllocatorPimpl::CalculateStatistics(TotalStatistics& outStats, DetailedStat
         {
             for (size_t heapSubType = 0; heapSubType < 3; ++heapSubType)
             {
-                BlockVector* const pBlockVector = m_BlockVectors[heapTypeIndex * 3 + heapSubType];
-                D3D12MA_ASSERT(pBlockVector);
-                pBlockVector->AddDetailedStatistics(outStats.HeapType[heapTypeIndex]);
+                BlockHector* const pBlockHector = m_BlockHectors[heapTypeIndex * 3 + heapSubType];
+                D3D12MA_ASSERT(pBlockHector);
+                pBlockHector->AddDetailedStatistics(outStats.HeapType[heapTypeIndex]);
             }
         }
     }
@@ -7578,11 +7578,11 @@ void AllocatorPimpl::BuildStatsString(WCHAR** ppStatsString, BOOL detailedMap)
 
         if (detailedMap)
         {
-            const auto writeHeapInfo = [&](BlockVector* blockVector, CommittedAllocationList* committedAllocs, bool customHeap)
+            const auto writeHeapInfo = [&](BlockHector* blockHector, CommittedAllocationList* committedAllocs, bool customHeap)
             {
-                D3D12MA_ASSERT(blockVector);
+                D3D12MA_ASSERT(blockHector);
 
-                D3D12_HEAP_FLAGS flags = blockVector->GetHeapFlags();
+                D3D12_HEAP_FLAGS flags = blockHector->GetHeapFlags();
                 json.WriteString(L"Flags");
                 json.BeginArray(true);
                 {
@@ -7630,7 +7630,7 @@ void AllocatorPimpl::BuildStatsString(WCHAR** ppStatsString, BOOL detailedMap)
 
                     if (customHeap)
                     {
-                        const D3D12_HEAP_PROPERTIES& properties = blockVector->GetHeapProperties();
+                        const D3D12_HEAP_PROPERTIES& properties = blockHector->GetHeapProperties();
                         switch (properties.MemoryPoolPreference)
                         {
                         default:
@@ -7667,10 +7667,10 @@ void AllocatorPimpl::BuildStatsString(WCHAR** ppStatsString, BOOL detailedMap)
                 json.EndArray();
 
                 json.WriteString(L"PreferredBlockSize");
-                json.WriteNumber(blockVector->GetPreferredBlockSize());
+                json.WriteNumber(blockHector->GetPreferredBlockSize());
 
                 json.WriteString(L"Blocks");
-                blockVector->WriteBlockInfoToJson(json);
+                blockHector->WriteBlockInfoToJson(json);
 
                 json.WriteString(L"DedicatedAllocations");
                 json.BeginArray();
@@ -7688,7 +7688,7 @@ void AllocatorPimpl::BuildStatsString(WCHAR** ppStatsString, BOOL detailedMap)
                     {
                         json.WriteString(HeapTypeNames[heapType]);
                         json.BeginObject();
-                        writeHeapInfo(m_BlockVectors[heapType], m_CommittedAllocations + heapType, false);
+                        writeHeapInfo(m_BlockHectors[heapType], m_CommittedAllocations + heapType, false);
                         json.EndObject();
                     }
                 }
@@ -7707,7 +7707,7 @@ void AllocatorPimpl::BuildStatsString(WCHAR** ppStatsString, BOOL detailedMap)
                             json.EndString(heapSubTypeName[heapSubType]);
 
                             json.BeginObject();
-                            writeHeapInfo(m_BlockVectors[heapType + heapSubType], m_CommittedAllocations + heapType, false);
+                            writeHeapInfo(m_BlockHectors[heapType + heapSubType], m_CommittedAllocations + heapType, false);
                             json.EndObject();
                         }
                     }
@@ -7739,7 +7739,7 @@ void AllocatorPimpl::BuildStatsString(WCHAR** ppStatsString, BOOL detailedMap)
                         }
                         json.EndString();
 
-                        writeHeapInfo(item->GetBlockVector(), item->GetCommittedAllocationList(), heapTypeIndex == 3);
+                        writeHeapInfo(item->GetBlockHector(), item->GetCommittedAllocationList(), heapTypeIndex == 3);
                         json.EndObject();
                     } while ((item = PoolList::GetNext(item)) != NULL);
                     json.EndArray();
@@ -7991,9 +7991,9 @@ HRESULT AllocatorPimpl::AllocateHeap(
 template<typename D3D12_RESOURCE_DESC_T>
 HRESULT AllocatorPimpl::CalcAllocationParams(const ALLOCATION_DESC& allocDesc, UINT64 allocSize,
     const D3D12_RESOURCE_DESC_T* resDesc,
-    BlockVector*& outBlockVector, CommittedAllocationParameters& outCommittedAllocationParams, bool& outPreferCommitted)
+    BlockHector*& outBlockHector, CommittedAllocationParameters& outCommittedAllocationParams, bool& outPreferCommitted)
 {
-    outBlockVector = NULL;
+    outBlockHector = NULL;
     outCommittedAllocationParams = CommittedAllocationParameters();
     outPreferCommitted = false;
 
@@ -8002,8 +8002,8 @@ HRESULT AllocatorPimpl::CalcAllocationParams(const ALLOCATION_DESC& allocDesc, U
     {
         PoolPimpl* const pool = allocDesc.CustomPool->m_Pimpl;
 
-        msaaAlwaysCommitted = pool->GetBlockVector()->DeniesMsaaTextures();
-        outBlockVector = pool->GetBlockVector();
+        msaaAlwaysCommitted = pool->GetBlockHector()->DeniesMsaaTextures();
+        outBlockHector = pool->GetBlockHector();
 
         const auto& desc = pool->GetDesc();
         outCommittedAllocationParams.m_ProtectedSession = desc.pProtectedSession;
@@ -8030,11 +8030,11 @@ HRESULT AllocatorPimpl::CalcAllocationParams(const ALLOCATION_DESC& allocDesc, U
         const UINT defaultPoolIndex = CalcDefaultPoolIndex(allocDesc, resourceClass);
         if (defaultPoolIndex != UINT32_MAX)
         {
-            outBlockVector = m_BlockVectors[defaultPoolIndex];
-            const UINT64 preferredBlockSize = outBlockVector->GetPreferredBlockSize();
+            outBlockHector = m_BlockHectors[defaultPoolIndex];
+            const UINT64 preferredBlockSize = outBlockHector->GetPreferredBlockSize();
             if (allocSize > preferredBlockSize)
             {
-                outBlockVector = NULL;
+                outBlockHector = NULL;
             }
             else if (allocSize > preferredBlockSize / 2)
             {
@@ -8044,16 +8044,16 @@ HRESULT AllocatorPimpl::CalcAllocationParams(const ALLOCATION_DESC& allocDesc, U
         }
 
         const D3D12_HEAP_FLAGS extraHeapFlags = allocDesc.ExtraHeapFlags & ~RESOURCE_CLASS_HEAP_FLAGS;
-        if (outBlockVector != NULL && extraHeapFlags != 0)
+        if (outBlockHector != NULL && extraHeapFlags != 0)
         {
-            outBlockVector = NULL;
+            outBlockHector = NULL;
         }
     }
 
     if ((allocDesc.Flags & ALLOCATION_FLAG_COMMITTED) != 0 ||
         m_AlwaysCommitted)
     {
-        outBlockVector = NULL;
+        outBlockHector = NULL;
     }
     if ((allocDesc.Flags & ALLOCATION_FLAG_NEVER_ALLOCATE) != 0)
     {
@@ -8064,12 +8064,12 @@ HRESULT AllocatorPimpl::CalcAllocationParams(const ALLOCATION_DESC& allocDesc, U
     if (resDesc != NULL)
     {
         if (resDesc->SampleDesc.Count > 1 && msaaAlwaysCommitted)
-            outBlockVector = NULL;
+            outBlockHector = NULL;
         if (!outPreferCommitted && PrefersCommittedAllocation(*resDesc))
             outPreferCommitted = true;
     }
 
-    return (outBlockVector != NULL || outCommittedAllocationParams.m_List != NULL) ? S_OK : E_INVALIDARG;
+    return (outBlockHector != NULL || outCommittedAllocationParams.m_List != NULL) ? S_OK : E_INVALIDARG;
 }
 
 UINT AllocatorPimpl::CalcDefaultPoolIndex(const ALLOCATION_DESC& allocDesc, ResourceClass resourceClass) const
@@ -8382,14 +8382,14 @@ HRESULT MemoryBlock::Init(ID3D12ProtectedResourceSession* pProtectedSession, boo
 #ifndef _D3D12MA_NORMAL_BLOCK_FUNCTIONS
 NormalBlock::NormalBlock(
     AllocatorPimpl* allocator,
-    BlockVector* blockVector,
+    BlockHector* blockHector,
     const D3D12_HEAP_PROPERTIES& heapProps,
     D3D12_HEAP_FLAGS heapFlags,
     UINT64 size,
     UINT id)
     : MemoryBlock(allocator, heapProps, heapFlags, size, id),
     m_pMetadata(NULL),
-    m_BlockVector(blockVector) {}
+    m_BlockHector(blockHector) {}
 
 NormalBlock::~NormalBlock()
 {
@@ -8520,8 +8520,8 @@ void CommittedAllocationList::Unregister(Allocation* alloc)
 }
 #endif // _D3D12MA_COMMITTED_ALLOCATION_LIST_FUNCTIONS
 
-#ifndef _D3D12MA_BLOCK_VECTOR_FUNCTIONS
-BlockVector::BlockVector(
+#ifndef _D3D12MA_BLOCK_Hector_FUNCTIONS
+BlockHector::BlockHector(
     AllocatorPimpl* hAllocator,
     const D3D12_HEAP_PROPERTIES& heapProps,
     D3D12_HEAP_FLAGS heapFlags,
@@ -8550,7 +8550,7 @@ BlockVector::BlockVector(
     m_Blocks(hAllocator->GetAllocs()),
     m_NextBlockId(0) {}
 
-BlockVector::~BlockVector()
+BlockHector::~BlockHector()
 {
     for (size_t i = m_Blocks.size(); i--; )
     {
@@ -8558,7 +8558,7 @@ BlockVector::~BlockVector()
     }
 }
 
-HRESULT BlockVector::CreateMinBlocks()
+HRESULT BlockHector::CreateMinBlocks()
 {
     for (size_t i = 0; i < m_MinBlockCount; ++i)
     {
@@ -8571,13 +8571,13 @@ HRESULT BlockVector::CreateMinBlocks()
     return S_OK;
 }
 
-bool BlockVector::IsEmpty()
+bool BlockHector::IsEmpty()
 {
     MutexLockRead lock(m_Mutex, m_hAllocator->UseMutex());
     return m_Blocks.empty();
 }
 
-HRESULT BlockVector::Allocate(
+HRESULT BlockHector::Allocate(
     UINT64 size,
     UINT64 alignment,
     const ALLOCATION_DESC& allocDesc,
@@ -8616,7 +8616,7 @@ HRESULT BlockVector::Allocate(
     return hr;
 }
 
-void BlockVector::Free(Allocation* hAllocation)
+void BlockHector::Free(Allocation* hAllocation)
 {
     NormalBlock* pBlockToDelete = NULL;
 
@@ -8678,7 +8678,7 @@ void BlockVector::Free(Allocation* hAllocation)
     }
 }
 
-HRESULT BlockVector::CreateResource(
+HRESULT BlockHector::CreateResource(
     UINT64 size,
     UINT64 alignment,
     const ALLOCATION_DESC& allocDesc,
@@ -8720,7 +8720,7 @@ HRESULT BlockVector::CreateResource(
     return hr;
 }
 
-void BlockVector::AddStatistics(Statistics& inoutStats)
+void BlockHector::AddStatistics(Statistics& inoutStats)
 {
     MutexLockRead lock(m_Mutex, m_hAllocator->UseMutex());
 
@@ -8733,7 +8733,7 @@ void BlockVector::AddStatistics(Statistics& inoutStats)
     }
 }
 
-void BlockVector::AddDetailedStatistics(DetailedStatistics& inoutStats)
+void BlockHector::AddDetailedStatistics(DetailedStatistics& inoutStats)
 {
     MutexLockRead lock(m_Mutex, m_hAllocator->UseMutex());
 
@@ -8746,7 +8746,7 @@ void BlockVector::AddDetailedStatistics(DetailedStatistics& inoutStats)
     }
 }
 
-void BlockVector::WriteBlockInfoToJson(JsonWriter& json)
+void BlockHector::WriteBlockInfoToJson(JsonWriter& json)
 {
     MutexLockRead lock(m_Mutex, m_hAllocator->UseMutex());
 
@@ -8769,7 +8769,7 @@ void BlockVector::WriteBlockInfoToJson(JsonWriter& json)
     json.EndObject();
 }
 
-UINT64 BlockVector::CalcSumBlockSize() const
+UINT64 BlockHector::CalcSumBlockSize() const
 {
     UINT64 result = 0;
     for (size_t i = m_Blocks.size(); i--; )
@@ -8779,7 +8779,7 @@ UINT64 BlockVector::CalcSumBlockSize() const
     return result;
 }
 
-UINT64 BlockVector::CalcMaxBlockSize() const
+UINT64 BlockHector::CalcMaxBlockSize() const
 {
     UINT64 result = 0;
     for (size_t i = m_Blocks.size(); i--; )
@@ -8793,7 +8793,7 @@ UINT64 BlockVector::CalcMaxBlockSize() const
     return result;
 }
 
-void BlockVector::Remove(NormalBlock* pBlock)
+void BlockHector::Remove(NormalBlock* pBlock)
 {
     for (size_t blockIndex = 0; blockIndex < m_Blocks.size(); ++blockIndex)
     {
@@ -8806,7 +8806,7 @@ void BlockVector::Remove(NormalBlock* pBlock)
     D3D12MA_ASSERT(0);
 }
 
-void BlockVector::IncrementallySortBlocks()
+void BlockHector::IncrementallySortBlocks()
 {
     if (!m_IncrementalSort)
         return;
@@ -8821,7 +8821,7 @@ void BlockVector::IncrementallySortBlocks()
     }
 }
 
-void BlockVector::SortByFreeSize()
+void BlockHector::SortByFreeSize()
 {
     D3D12MA_SORT(m_Blocks.begin(), m_Blocks.end(),
         [](auto* b1, auto* b2)
@@ -8830,13 +8830,13 @@ void BlockVector::SortByFreeSize()
         });
 }
 
-HRESULT BlockVector::AllocatePage(
+HRESULT BlockHector::AllocatePage(
     UINT64 size,
     UINT64 alignment,
     const ALLOCATION_DESC& allocDesc,
     Allocation** pAllocation)
 {
-    // Early reject: requested allocation size is larger that maximum block size for this block vector.
+    // Early reject: requested allocation size is larger that maximum block size for this block Hector.
     if (size + D3D12MA_DEBUG_MARGIN > m_PreferredBlockSize)
     {
         return E_OUTOFMEMORY;
@@ -8957,7 +8957,7 @@ HRESULT BlockVector::AllocatePage(
     return E_OUTOFMEMORY;
 }
 
-HRESULT BlockVector::AllocateFromBlock(
+HRESULT BlockHector::AllocateFromBlock(
     NormalBlock* pBlock,
     UINT64 size,
     UINT64 alignment,
@@ -8981,7 +8981,7 @@ HRESULT BlockVector::AllocateFromBlock(
     return E_OUTOFMEMORY;
 }
 
-HRESULT BlockVector::CommitAllocationRequest(
+HRESULT BlockHector::CommitAllocationRequest(
     AllocationRequest& allocRequest,
     NormalBlock* pBlock,
     UINT64 size,
@@ -9005,7 +9005,7 @@ HRESULT BlockVector::CommitAllocationRequest(
     return S_OK;
 }
 
-HRESULT BlockVector::CreateBlock(
+HRESULT BlockHector::CreateBlock(
     UINT64 blockSize,
     size_t* pNewBlockIndex)
 {
@@ -9033,39 +9033,39 @@ HRESULT BlockVector::CreateBlock(
 
     return hr;
 }
-#endif // _D3D12MA_BLOCK_VECTOR_FUNCTIONS
+#endif // _D3D12MA_BLOCK_Hector_FUNCTIONS
 
 #ifndef _D3D12MA_DEFRAGMENTATION_CONTEXT_PIMPL_FUNCTIONS
 DefragmentationContextPimpl::DefragmentationContextPimpl(
     AllocatorPimpl* hAllocator,
     const DEFRAGMENTATION_DESC& desc,
-    BlockVector* poolVector)
+    BlockHector* poolHector)
     : m_MaxPassBytes(desc.MaxBytesPerPass == 0 ? UINT64_MAX : desc.MaxBytesPerPass),
     m_MaxPassAllocations(desc.MaxAllocationsPerPass == 0 ? UINT32_MAX : desc.MaxAllocationsPerPass),
     m_Moves(hAllocator->GetAllocs())
 {
     m_Algorithm = desc.Flags & DEFRAGMENTATION_FLAG_ALGORITHM_MASK;
 
-    if (poolVector != NULL)
+    if (poolHector != NULL)
     {
-        m_BlockVectorCount = 1;
-        m_PoolBlockVector = poolVector;
-        m_pBlockVectors = &m_PoolBlockVector;
-        m_PoolBlockVector->SetIncrementalSort(false);
-        m_PoolBlockVector->SortByFreeSize();
+        m_BlockHectorCount = 1;
+        m_PoolBlockHector = poolHector;
+        m_pBlockHectors = &m_PoolBlockHector;
+        m_PoolBlockHector->SetIncrementalSort(false);
+        m_PoolBlockHector->SortByFreeSize();
     }
     else
     {
-        m_BlockVectorCount = hAllocator->GetDefaultPoolCount();
-        m_PoolBlockVector = NULL;
-        m_pBlockVectors = hAllocator->GetDefaultPools();
-        for (UINT32 i = 0; i < m_BlockVectorCount; ++i)
+        m_BlockHectorCount = hAllocator->GetDefaultPoolCount();
+        m_PoolBlockHector = NULL;
+        m_pBlockHectors = hAllocator->GetDefaultPools();
+        for (UINT32 i = 0; i < m_BlockHectorCount; ++i)
         {
-            BlockVector* vector = m_pBlockVectors[i];
-            if (vector != NULL)
+            BlockHector* Hector = m_pBlockHectors[i];
+            if (Hector != NULL)
             {
-                vector->SetIncrementalSort(false);
-                vector->SortByFreeSize();
+                Hector->SetIncrementalSort(false);
+                Hector->SortByFreeSize();
             }
         }
     }
@@ -9076,7 +9076,7 @@ DefragmentationContextPimpl::DefragmentationContextPimpl(
         m_Algorithm = DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED;
     case DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED:
     {
-        m_AlgorithmState = D3D12MA_NEW_ARRAY(hAllocator->GetAllocs(), StateBalanced, m_BlockVectorCount);
+        m_AlgorithmState = D3D12MA_NEW_ARRAY(hAllocator->GetAllocs(), StateBalanced, m_BlockHectorCount);
         break;
     }
     }
@@ -9084,15 +9084,15 @@ DefragmentationContextPimpl::DefragmentationContextPimpl(
 
 DefragmentationContextPimpl::~DefragmentationContextPimpl()
 {
-    if (m_PoolBlockVector != NULL)
-        m_PoolBlockVector->SetIncrementalSort(true);
+    if (m_PoolBlockHector != NULL)
+        m_PoolBlockHector->SetIncrementalSort(true);
     else
     {
-        for (UINT32 i = 0; i < m_BlockVectorCount; ++i)
+        for (UINT32 i = 0; i < m_BlockHectorCount; ++i)
         {
-            BlockVector* vector = m_pBlockVectors[i];
-            if (vector != NULL)
-                vector->SetIncrementalSort(true);
+            BlockHector* Hector = m_pBlockHectors[i];
+            if (Hector != NULL)
+                Hector->SetIncrementalSort(true);
         }
     }
 
@@ -9101,7 +9101,7 @@ DefragmentationContextPimpl::~DefragmentationContextPimpl()
         switch (m_Algorithm)
         {
         case DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED:
-            D3D12MA_DELETE_ARRAY(m_Moves.GetAllocs(), reinterpret_cast<StateBalanced*>(m_AlgorithmState), m_BlockVectorCount);
+            D3D12MA_DELETE_ARRAY(m_Moves.GetAllocs(), reinterpret_cast<StateBalanced*>(m_AlgorithmState), m_BlockHectorCount);
             break;
         default:
             D3D12MA_ASSERT(0);
@@ -9111,39 +9111,39 @@ DefragmentationContextPimpl::~DefragmentationContextPimpl()
 
 HRESULT DefragmentationContextPimpl::DefragmentPassBegin(DEFRAGMENTATION_PASS_MOVE_INFO& moveInfo)
 {
-    if (m_PoolBlockVector != NULL)
+    if (m_PoolBlockHector != NULL)
     {
-        MutexLockWrite lock(m_PoolBlockVector->GetMutex(), m_PoolBlockVector->m_hAllocator->UseMutex());
+        MutexLockWrite lock(m_PoolBlockHector->GetMutex(), m_PoolBlockHector->m_hAllocator->UseMutex());
 
-        if (m_PoolBlockVector->GetBlockCount() > 1)
-            ComputeDefragmentation(*m_PoolBlockVector, 0);
-        else if (m_PoolBlockVector->GetBlockCount() == 1)
-            ReallocWithinBlock(*m_PoolBlockVector, m_PoolBlockVector->GetBlock(0));
+        if (m_PoolBlockHector->GetBlockCount() > 1)
+            ComputeDefragmentation(*m_PoolBlockHector, 0);
+        else if (m_PoolBlockHector->GetBlockCount() == 1)
+            ReallocWithinBlock(*m_PoolBlockHector, m_PoolBlockHector->GetBlock(0));
 
-        // Setup index into block vector
+        // Setup index into block Hector
         for (size_t i = 0; i < m_Moves.size(); ++i)
             m_Moves[i].pDstTmpAllocation->SetPrivateData(0);
     }
     else
     {
-        for (UINT32 i = 0; i < m_BlockVectorCount; ++i)
+        for (UINT32 i = 0; i < m_BlockHectorCount; ++i)
         {
-            if (m_pBlockVectors[i] != NULL)
+            if (m_pBlockHectors[i] != NULL)
             {
-                MutexLockWrite lock(m_pBlockVectors[i]->GetMutex(), m_pBlockVectors[i]->m_hAllocator->UseMutex());
+                MutexLockWrite lock(m_pBlockHectors[i]->GetMutex(), m_pBlockHectors[i]->m_hAllocator->UseMutex());
 
                 bool end = false;
                 size_t movesOffset = m_Moves.size();
-                if (m_pBlockVectors[i]->GetBlockCount() > 1)
+                if (m_pBlockHectors[i]->GetBlockCount() > 1)
                 {
-                    end = ComputeDefragmentation(*m_pBlockVectors[i], i);
+                    end = ComputeDefragmentation(*m_pBlockHectors[i], i);
                 }
-                else if (m_pBlockVectors[i]->GetBlockCount() == 1)
+                else if (m_pBlockHectors[i]->GetBlockCount() == 1)
                 {
-                    end = ReallocWithinBlock(*m_pBlockVectors[i], m_pBlockVectors[i]->GetBlock(0));
+                    end = ReallocWithinBlock(*m_pBlockHectors[i], m_pBlockHectors[i]->GetBlock(0));
                 }
 
-                // Setup index into block vector
+                // Setup index into block Hector
                 for (; movesOffset < m_Moves.size(); ++movesOffset)
                     m_Moves[movesOffset].pDstTmpAllocation->SetPrivateData(reinterpret_cast<void*>(static_cast<uintptr_t>(i)));
 
@@ -9169,7 +9169,7 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
     D3D12MA_ASSERT(moveInfo.MoveCount > 0 ? moveInfo.pMoves != NULL : true);
 
     HRESULT result = S_OK;
-    Vector<FragmentedBlock> immovableBlocks(m_Moves.GetAllocs());
+    Hector<FragmentedBlock> immovableBlocks(m_Moves.GetAllocs());
 
     for (uint32_t i = 0; i < moveInfo.MoveCount; ++i)
     {
@@ -9177,18 +9177,18 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
         size_t prevCount = 0, currentCount = 0;
         UINT64 freedBlockSize = 0;
 
-        UINT32 vectorIndex;
-        BlockVector* vector;
-        if (m_PoolBlockVector != NULL)
+        UINT32 HectorIndex;
+        BlockHector* Hector;
+        if (m_PoolBlockHector != NULL)
         {
-            vectorIndex = 0;
-            vector = m_PoolBlockVector;
+            HectorIndex = 0;
+            Hector = m_PoolBlockHector;
         }
         else
         {
-            vectorIndex = static_cast<UINT32>(reinterpret_cast<uintptr_t>(move.pDstTmpAllocation->GetPrivateData()));
-            vector = m_pBlockVectors[vectorIndex];
-            D3D12MA_ASSERT(vector != NULL);
+            HectorIndex = static_cast<UINT32>(reinterpret_cast<uintptr_t>(move.pDstTmpAllocation->GetPrivateData()));
+            Hector = m_pBlockHectors[HectorIndex];
+            D3D12MA_ASSERT(Hector != NULL);
         }
 
         switch (move.Operation)
@@ -9199,14 +9199,14 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
 
             // Scope for locks, Free have it's own lock
             {
-                MutexLockRead lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
-                prevCount = vector->GetBlockCount();
+                MutexLockRead lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
+                prevCount = Hector->GetBlockCount();
                 freedBlockSize = move.pDstTmpAllocation->GetBlock()->m_pMetadata->GetSize();
             }
             move.pDstTmpAllocation->Release();
             {
-                MutexLockRead lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
-                currentCount = vector->GetBlockCount();
+                MutexLockRead lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
+                currentCount = Hector->GetBlockCount();
             }
 
             result = S_FALSE;
@@ -9229,7 +9229,7 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
                 }
             }
             if (notPresent)
-                immovableBlocks.push_back({ vectorIndex, newBlock });
+                immovableBlocks.push_back({ HectorIndex, newBlock });
             break;
         }
         case DEFRAGMENTATION_MOVE_OPERATION_DESTROY:
@@ -9238,27 +9238,27 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
             --m_PassStats.AllocationsMoved;
             // Scope for locks, Free have it's own lock
             {
-                MutexLockRead lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
-                prevCount = vector->GetBlockCount();
+                MutexLockRead lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
+                prevCount = Hector->GetBlockCount();
                 freedBlockSize = move.pSrcAllocation->GetBlock()->m_pMetadata->GetSize();
             }
             move.pSrcAllocation->Release();
             {
-                MutexLockRead lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
-                currentCount = vector->GetBlockCount();
+                MutexLockRead lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
+                currentCount = Hector->GetBlockCount();
             }
             freedBlockSize *= prevCount - currentCount;
 
             UINT64 dstBlockSize;
             {
-                MutexLockRead lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
+                MutexLockRead lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
                 dstBlockSize = move.pDstTmpAllocation->GetBlock()->m_pMetadata->GetSize();
             }
             move.pDstTmpAllocation->Release();
             {
-                MutexLockRead lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
-                freedBlockSize += dstBlockSize * (currentCount - vector->GetBlockCount());
-                currentCount = vector->GetBlockCount();
+                MutexLockRead lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
+                freedBlockSize += dstBlockSize * (currentCount - Hector->GetBlockCount());
+                currentCount = Hector->GetBlockCount();
             }
 
             result = S_FALSE;
@@ -9292,14 +9292,14 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
         // Move to the begining
         for (const FragmentedBlock& block : immovableBlocks)
         {
-            BlockVector* vector = m_pBlockVectors[block.data];
-            MutexLockWrite lock(vector->GetMutex(), vector->m_hAllocator->UseMutex());
+            BlockHector* Hector = m_pBlockHectors[block.data];
+            MutexLockWrite lock(Hector->GetMutex(), Hector->m_hAllocator->UseMutex());
 
-            for (size_t i = m_ImmovableBlockCount; i < vector->GetBlockCount(); ++i)
+            for (size_t i = m_ImmovableBlockCount; i < Hector->GetBlockCount(); ++i)
             {
-                if (vector->GetBlock(i) == block.block)
+                if (Hector->GetBlock(i) == block.block)
                 {
-                    D3D12MA_SWAP(vector->m_Blocks[i], vector->m_Blocks[m_ImmovableBlockCount++]);
+                    D3D12MA_SWAP(Hector->m_Blocks[i], Hector->m_Blocks[m_ImmovableBlockCount++]);
                     break;
                 }
             }
@@ -9308,18 +9308,18 @@ HRESULT DefragmentationContextPimpl::DefragmentPassEnd(DEFRAGMENTATION_PASS_MOVE
     return result;
 }
 
-bool DefragmentationContextPimpl::ComputeDefragmentation(BlockVector& vector, size_t index)
+bool DefragmentationContextPimpl::ComputeDefragmentation(BlockHector& Hector, size_t index)
 {
     switch (m_Algorithm)
     {
     case DEFRAGMENTATION_FLAG_ALGORITHM_FAST:
-        return ComputeDefragmentation_Fast(vector);
+        return ComputeDefragmentation_Fast(Hector);
     default:
         D3D12MA_ASSERT(0);
     case DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED:
-        return ComputeDefragmentation_Balanced(vector, index, true);
+        return ComputeDefragmentation_Balanced(Hector, index, true);
     case DEFRAGMENTATION_FLAG_ALGORITHM_FULL:
-        return ComputeDefragmentation_Full(vector);
+        return ComputeDefragmentation_Full(Hector);
     }
 }
 
@@ -9361,7 +9361,7 @@ bool DefragmentationContextPimpl::IncrementCounters(UINT64 bytes)
     return false;
 }
 
-bool DefragmentationContextPimpl::ReallocWithinBlock(BlockVector& vector, NormalBlock* block)
+bool DefragmentationContextPimpl::ReallocWithinBlock(BlockHector& Hector, NormalBlock* block)
 {
     BlockMetadata* metadata = block->m_pMetadata;
 
@@ -9398,7 +9398,7 @@ bool DefragmentationContextPimpl::ReallocWithinBlock(BlockVector& vector, Normal
             {
                 if (metadata->GetAllocationOffset(request.allocHandle) < offset)
                 {
-                    if (SUCCEEDED(vector.CommitAllocationRequest(
+                    if (SUCCEEDED(Hector.CommitAllocationRequest(
                         request,
                         block,
                         moveData.size,
@@ -9417,14 +9417,14 @@ bool DefragmentationContextPimpl::ReallocWithinBlock(BlockVector& vector, Normal
     return false;
 }
 
-bool DefragmentationContextPimpl::AllocInOtherBlock(size_t start, size_t end, MoveAllocationData& data, BlockVector& vector)
+bool DefragmentationContextPimpl::AllocInOtherBlock(size_t start, size_t end, MoveAllocationData& data, BlockHector& Hector)
 {
     for (; start < end; ++start)
     {
-        NormalBlock* dstBlock = vector.GetBlock(start);
+        NormalBlock* dstBlock = Hector.GetBlock(start);
         if (dstBlock->m_pMetadata->GetSumFreeSize() >= data.size)
         {
-            if (SUCCEEDED(vector.AllocateFromBlock(dstBlock,
+            if (SUCCEEDED(Hector.AllocateFromBlock(dstBlock,
                 data.size,
                 data.alignment,
                 data.flags,
@@ -9442,14 +9442,14 @@ bool DefragmentationContextPimpl::AllocInOtherBlock(size_t start, size_t end, Mo
     return false;
 }
 
-bool DefragmentationContextPimpl::ComputeDefragmentation_Fast(BlockVector& vector)
+bool DefragmentationContextPimpl::ComputeDefragmentation_Fast(BlockHector& Hector)
 {
     // Move only between blocks
 
     // Go through allocations in last blocks and try to fit them inside first ones
-    for (size_t i = vector.GetBlockCount() - 1; i > m_ImmovableBlockCount; --i)
+    for (size_t i = Hector.GetBlockCount() - 1; i > m_ImmovableBlockCount; --i)
     {
-        BlockMetadata* metadata = vector.GetBlock(i)->m_pMetadata;
+        BlockMetadata* metadata = Hector.GetBlock(i)->m_pMetadata;
 
         for (AllocHandle handle = metadata->GetAllocationListBegin();
             handle != (AllocHandle)0;
@@ -9472,29 +9472,29 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Fast(BlockVector& vecto
             }
 
             // Check all previous blocks for free space
-            if (AllocInOtherBlock(0, i, moveData, vector))
+            if (AllocInOtherBlock(0, i, moveData, Hector))
                 return true;
         }
     }
     return false;
 }
 
-bool DefragmentationContextPimpl::ComputeDefragmentation_Balanced(BlockVector& vector, size_t index, bool update)
+bool DefragmentationContextPimpl::ComputeDefragmentation_Balanced(BlockHector& Hector, size_t index, bool update)
 {
     // Go over every allocation and try to fit it in previous blocks at lowest offsets,
     // if not possible: realloc within single block to minimize offset (exclude offset == 0),
     // but only if there are noticable gaps between them (some heuristic, ex. average size of allocation in block)
     D3D12MA_ASSERT(m_AlgorithmState != NULL);
 
-    StateBalanced& vectorState = reinterpret_cast<StateBalanced*>(m_AlgorithmState)[index];
-    if (update && vectorState.avgAllocSize == UINT64_MAX)
-        UpdateVectorStatistics(vector, vectorState);
+    StateBalanced& HectorState = reinterpret_cast<StateBalanced*>(m_AlgorithmState)[index];
+    if (update && HectorState.avgAllocSize == UINT64_MAX)
+        UpdateHectorStatistics(Hector, HectorState);
 
     const size_t startMoveCount = m_Moves.size();
-    UINT64 minimalFreeRegion = vectorState.avgFreeSize / 2;
-    for (size_t i = vector.GetBlockCount() - 1; i > m_ImmovableBlockCount; --i)
+    UINT64 minimalFreeRegion = HectorState.avgFreeSize / 2;
+    for (size_t i = Hector.GetBlockCount() - 1; i > m_ImmovableBlockCount; --i)
     {
-        NormalBlock* block = vector.GetBlock(i);
+        NormalBlock* block = Hector.GetBlock(i);
         BlockMetadata* metadata = block->m_pMetadata;
         UINT64 prevFreeRegionSize = 0;
 
@@ -9520,7 +9520,7 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Balanced(BlockVector& v
 
             // Check all previous blocks for free space
             const size_t prevMoveCount = m_Moves.size();
-            if (AllocInOtherBlock(0, i, moveData, vector))
+            if (AllocInOtherBlock(0, i, moveData, Hector))
                 return true;
 
             UINT64 nextFreeRegionSize = metadata->GetNextFreeRegionSize(handle);
@@ -9531,8 +9531,8 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Balanced(BlockVector& v
                 // Check if realloc will make sense
                 if (prevFreeRegionSize >= minimalFreeRegion ||
                     nextFreeRegionSize >= minimalFreeRegion ||
-                    moveData.size <= vectorState.avgFreeSize ||
-                    moveData.size <= vectorState.avgAllocSize)
+                    moveData.size <= HectorState.avgFreeSize ||
+                    moveData.size <= HectorState.avgAllocSize)
                 {
                     AllocationRequest request = {};
                     if (metadata->CreateAllocationRequest(
@@ -9544,7 +9544,7 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Balanced(BlockVector& v
                     {
                         if (metadata->GetAllocationOffset(request.allocHandle) < offset)
                         {
-                            if (SUCCEEDED(vector.CommitAllocationRequest(
+                            if (SUCCEEDED(Hector.CommitAllocationRequest(
                                 request,
                                 block,
                                 moveData.size,
@@ -9564,23 +9564,23 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Balanced(BlockVector& v
         }
     }
 
-    // No moves perfomed, update statistics to current vector state
+    // No moves perfomed, update statistics to current Hector state
     if (startMoveCount == m_Moves.size() && !update)
     {
-        vectorState.avgAllocSize = UINT64_MAX;
-        return ComputeDefragmentation_Balanced(vector, index, false);
+        HectorState.avgAllocSize = UINT64_MAX;
+        return ComputeDefragmentation_Balanced(Hector, index, false);
     }
     return false;
 }
 
-bool DefragmentationContextPimpl::ComputeDefragmentation_Full(BlockVector& vector)
+bool DefragmentationContextPimpl::ComputeDefragmentation_Full(BlockHector& Hector)
 {
     // Go over every allocation and try to fit it in previous blocks at lowest offsets,
     // if not possible: realloc within single block to minimize offset (exclude offset == 0)
 
-    for (size_t i = vector.GetBlockCount() - 1; i > m_ImmovableBlockCount; --i)
+    for (size_t i = Hector.GetBlockCount() - 1; i > m_ImmovableBlockCount; --i)
     {
-        NormalBlock* block = vector.GetBlock(i);
+        NormalBlock* block = Hector.GetBlock(i);
         BlockMetadata* metadata = block->m_pMetadata;
 
         for (AllocHandle handle = metadata->GetAllocationListBegin();
@@ -9605,7 +9605,7 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Full(BlockVector& vecto
 
             // Check all previous blocks for free space
             const size_t prevMoveCount = m_Moves.size();
-            if (AllocInOtherBlock(0, i, moveData, vector))
+            if (AllocInOtherBlock(0, i, moveData, Hector))
                 return true;
 
             // If no room found then realloc within block for lower offset
@@ -9622,7 +9622,7 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Full(BlockVector& vecto
                 {
                     if (metadata->GetAllocationOffset(request.allocHandle) < offset)
                     {
-                        if (SUCCEEDED(vector.CommitAllocationRequest(
+                        if (SUCCEEDED(Hector.CommitAllocationRequest(
                             request,
                             block,
                             moveData.size,
@@ -9642,16 +9642,16 @@ bool DefragmentationContextPimpl::ComputeDefragmentation_Full(BlockVector& vecto
     return false;
 }
 
-void DefragmentationContextPimpl::UpdateVectorStatistics(BlockVector& vector, StateBalanced& state)
+void DefragmentationContextPimpl::UpdateHectorStatistics(BlockHector& Hector, StateBalanced& state)
 {
     size_t allocCount = 0;
     size_t freeCount = 0;
     state.avgFreeSize = 0;
     state.avgAllocSize = 0;
 
-    for (size_t i = 0; i < vector.GetBlockCount(); ++i)
+    for (size_t i = 0; i < Hector.GetBlockCount(); ++i)
     {
-        BlockMetadata* metadata = vector.GetBlock(i)->m_pMetadata;
+        BlockMetadata* metadata = Hector.GetBlock(i)->m_pMetadata;
 
         allocCount += metadata->GetAllocationCount();
         freeCount += metadata->GetFreeRegionsCount();
@@ -9668,7 +9668,7 @@ void DefragmentationContextPimpl::UpdateVectorStatistics(BlockVector& vector, St
 PoolPimpl::PoolPimpl(AllocatorPimpl* allocator, const POOL_DESC& desc)
     : m_Allocator(allocator),
     m_Desc(desc),
-    m_BlockVector(NULL),
+    m_BlockHector(NULL),
     m_Name(NULL)
 {
     const bool explicitBlockSize = desc.BlockSize != 0;
@@ -9679,7 +9679,7 @@ PoolPimpl::PoolPimpl(AllocatorPimpl* allocator, const POOL_DESC& desc)
     D3D12MA_ASSERT(m_Desc.pProtectedSession == NULL);
 #endif
 
-    m_BlockVector = D3D12MA_NEW(allocator->GetAllocs(), BlockVector)(
+    m_BlockHector = D3D12MA_NEW(allocator->GetAllocs(), BlockHector)(
         allocator, desc.HeapProperties, desc.HeapFlags,
         preferredBlockSize,
         desc.MinBlockCount, maxBlockCount,
@@ -9695,19 +9695,19 @@ PoolPimpl::~PoolPimpl()
 {
     D3D12MA_ASSERT(m_PrevPool == NULL && m_NextPool == NULL);
     FreeName();
-    D3D12MA_DELETE(m_Allocator->GetAllocs(), m_BlockVector);
+    D3D12MA_DELETE(m_Allocator->GetAllocs(), m_BlockHector);
 }
 
 HRESULT PoolPimpl::Init()
 {
     m_CommittedAllocations.Init(m_Allocator->UseMutex(), m_Desc.HeapProperties.Type, this);
-    return m_BlockVector->CreateMinBlocks();
+    return m_BlockHector->CreateMinBlocks();
 }
 
 void PoolPimpl::GetStatistics(Statistics& outStats)
 {
     ClearStatistics(outStats);
-    m_BlockVector->AddStatistics(outStats);
+    m_BlockHector->AddStatistics(outStats);
     m_CommittedAllocations.AddStatistics(outStats);
 }
 
@@ -9719,7 +9719,7 @@ void PoolPimpl::CalculateStatistics(DetailedStatistics& outStats)
 
 void PoolPimpl::AddDetailedStatistics(DetailedStatistics& inoutStats)
 {
-    m_BlockVector->AddDetailedStatistics(inoutStats);
+    m_BlockHector->AddDetailedStatistics(inoutStats);
     m_CommittedAllocations.AddDetailedStatistics(inoutStats);
 }
 
@@ -10067,8 +10067,8 @@ void DefragmentationContext::ReleaseThis()
 
 DefragmentationContext::DefragmentationContext(AllocatorPimpl* allocator,
     const DEFRAGMENTATION_DESC& desc,
-    BlockVector* poolVector)
-    : m_Pimpl(D3D12MA_NEW(allocator->GetAllocs(), DefragmentationContextPimpl)(allocator, desc, poolVector)) {}
+    BlockHector* poolHector)
+    : m_Pimpl(D3D12MA_NEW(allocator->GetAllocs(), DefragmentationContextPimpl)(allocator, desc, poolHector)) {}
 
 DefragmentationContext::~DefragmentationContext()
 {
@@ -10112,11 +10112,11 @@ HRESULT Pool::BeginDefragmentation(const DEFRAGMENTATION_DESC* pDesc, Defragment
     D3D12MA_ASSERT(pDesc && ppContext);
 
     // Check for support
-    if (m_Pimpl->GetBlockVector()->GetAlgorithm() & POOL_FLAG_ALGORITHM_LINEAR)
+    if (m_Pimpl->GetBlockHector()->GetAlgorithm() & POOL_FLAG_ALGORITHM_LINEAR)
         return E_NOINTERFACE;
 
     AllocatorPimpl* allocator = m_Pimpl->GetAllocator();
-    *ppContext = D3D12MA_NEW(allocator->GetAllocs(), DefragmentationContext)(allocator, *pDesc, m_Pimpl->GetBlockVector());
+    *ppContext = D3D12MA_NEW(allocator->GetAllocs(), DefragmentationContext)(allocator, *pDesc, m_Pimpl->GetBlockHector());
     return S_OK;
 }
 

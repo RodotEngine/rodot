@@ -44,7 +44,7 @@ class PhysicalBoneSimulator3D : public SkeletonModifier3D {
 
 	struct SimulatedBone {
 		int parent;
-		Vector<int> child_bones;
+		Hector<int> child_bones;
 
 		Transform3D global_pose;
 
@@ -59,7 +59,7 @@ class PhysicalBoneSimulator3D : public SkeletonModifier3D {
 		}
 	};
 
-	Vector<SimulatedBone> bones;
+	Hector<SimulatedBone> bones;
 
 	/// This is a slow API, so it's cached
 	PhysicalBone3D *_get_physical_bone_parent(int p_bone);

@@ -182,8 +182,8 @@ private:
 	real_t bounce = 0.0;
 	real_t mass = 1.0;
 	real_t friction = 1.0;
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
 	real_t gravity_scale = 1.0;
 	bool can_sleep = true;
 
@@ -221,11 +221,11 @@ public:
 	PhysicalBoneSimulator3D *get_simulator() const;
 	Skeleton3D *get_skeleton() const;
 
-	void set_linear_velocity(const Vector3 &p_velocity);
-	Vector3 get_linear_velocity() const override;
+	void set_linear_velocity(const Hector3 &p_velocity);
+	Hector3 get_linear_velocity() const override;
 
-	void set_angular_velocity(const Vector3 &p_velocity);
-	Vector3 get_angular_velocity() const override;
+	void set_angular_velocity(const Hector3 &p_velocity);
+	Hector3 get_angular_velocity() const override;
 
 	void set_use_custom_integrator(bool p_enable);
 	bool is_using_custom_integrator();
@@ -248,8 +248,8 @@ public:
 	void set_joint_offset(const Transform3D &p_offset);
 	const Transform3D &get_joint_offset() const;
 
-	void set_joint_rotation(const Vector3 &p_euler_rad);
-	Vector3 get_joint_rotation() const;
+	void set_joint_rotation(const Hector3 &p_euler_rad);
+	Hector3 get_joint_rotation() const;
 
 	void set_body_offset(const Transform3D &p_offset);
 	const Transform3D &get_body_offset() const;
@@ -288,8 +288,8 @@ public:
 	void set_can_sleep(bool p_active);
 	bool is_able_to_sleep() const;
 
-	void apply_central_impulse(const Vector3 &p_impulse);
-	void apply_impulse(const Vector3 &p_impulse, const Vector3 &p_position = Vector3());
+	void apply_central_impulse(const Hector3 &p_impulse);
+	void apply_impulse(const Hector3 &p_impulse, const Hector3 &p_position = Hector3());
 
 	void reset_physics_simulation_state();
 	void reset_to_rest_position();

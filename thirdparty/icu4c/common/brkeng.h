@@ -20,7 +20,7 @@ U_NAMESPACE_BEGIN
 
 class UnicodeSet;
 class UStack;
-class UVector32;
+class UHector32;
 class DictionaryMatcher;
 class ExternalBreakEngine;
 
@@ -70,14 +70,14 @@ class LanguageBreakEngine : public UObject {
   * is capable of handling.
   * @param startPos The start of the run within the supplied text.
   * @param endPos The end of the run within the supplied text.
-  * @param foundBreaks A Vector of int32_t to receive the breaks.
+  * @param foundBreaks A Hector of int32_t to receive the breaks.
   * @param status Information on any errors encountered.
   * @return The number of breaks found.
   */
   virtual int32_t findBreaks( UText *text,
                               int32_t startPos,
                               int32_t endPos,
-                              UVector32 &foundBreaks,
+                              UHector32 &foundBreaks,
                               UBool isPhraseBreaking,
                               UErrorCode &status) const = 0;
 
@@ -104,7 +104,7 @@ class BreakEngineWrapper : public  LanguageBreakEngine {
   virtual int32_t findBreaks( UText *text,
                               int32_t startPos,
                               int32_t endPos,
-                              UVector32 &foundBreaks,
+                              UHector32 &foundBreaks,
                               UBool isPhraseBreaking,
                               UErrorCode &status) const override;
 
@@ -228,7 +228,7 @@ class UnhandledEngine : public LanguageBreakEngine {
   virtual int32_t findBreaks( UText *text,
                               int32_t startPos,
                               int32_t endPos,
-                              UVector32 &foundBreaks,
+                              UHector32 &foundBreaks,
                               UBool isPhraseBreaking,
                               UErrorCode &status) const override;
 

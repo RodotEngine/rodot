@@ -81,8 +81,8 @@ Arguments:
   match_data      points to a match_data block
   mcontext        points to a match context
 
-Returns:          > 0 => success; value is the number of ovector pairs filled
-                  = 0 => success, but ovector is not big enough
+Returns:          > 0 => success; value is the number of oHector pairs filled
+                  = 0 => success, but oHector is not big enough
                    -1 => failed to match (PCRE_ERROR_NOMATCH)
                  < -1 => some kind of unexpected problem
 */
@@ -188,7 +188,7 @@ match_data->matchedby = PCRE2_MATCHEDBY_JIT;
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
 if (rc > 0)
-  __msan_unpoison(match_data->ovector, 2 * rc * sizeof(match_data->ovector[0]));
+  __msan_unpoison(match_data->oHector, 2 * rc * sizeof(match_data->oHector[0]));
 #endif /* __has_feature(memory_sanitizer) */
 #endif /* defined(__has_feature) */
 

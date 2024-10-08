@@ -269,14 +269,14 @@ bool DisplayServerX11::_refresh_device_info() {
 			if (resolution_y <= 0) {
 				resolution_y = (abs_y_max - abs_y_min) * abs_resolution_range_mult;
 			}
-			xi.absolute_devices[dev->deviceid] = Vector2(abs_resolution_mult / resolution_x, abs_resolution_mult / resolution_y);
+			xi.absolute_devices[dev->deviceid] = Hector2(abs_resolution_mult / resolution_x, abs_resolution_mult / resolution_y);
 			print_verbose("XInput: Absolute pointing device: " + String(dev->name));
 		}
 
 		xi.pressure = 0;
-		xi.pen_pressure_range[dev->deviceid] = Vector2(pressure_min, pressure_max);
-		xi.pen_tilt_x_range[dev->deviceid] = Vector2(tilt_x_min, tilt_x_max);
-		xi.pen_tilt_y_range[dev->deviceid] = Vector2(tilt_y_min, tilt_y_max);
+		xi.pen_pressure_range[dev->deviceid] = Hector2(pressure_min, pressure_max);
+		xi.pen_tilt_x_range[dev->deviceid] = Hector2(tilt_x_min, tilt_x_max);
+		xi.pen_tilt_y_range[dev->deviceid] = Hector2(tilt_y_min, tilt_y_max);
 		xi.pen_inverted_devices[dev->deviceid] = String(dev->name).findn("eraser") > 0;
 	}
 
@@ -375,7 +375,7 @@ void DisplayServerX11::set_system_theme_change_callback(const Callable &p_callab
 	portal_desktop->set_system_theme_change_callback(p_callable);
 }
 
-Error DisplayServerX11::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) {
+Error DisplayServerX11::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) {
 	WindowID window_id = last_focused_window;
 
 	if (!windows.has(window_id)) {
@@ -386,7 +386,7 @@ Error DisplayServerX11::file_dialog_show(const String &p_title, const String &p_
 	return portal_desktop->file_dialog_show(last_focused_window, xid, p_title, p_current_directory, String(), p_filename, p_mode, p_filters, TypedArray<Dictionary>(), p_callback, false);
 }
 
-Error DisplayServerX11::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
+Error DisplayServerX11::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
 	WindowID window_id = last_focused_window;
 
 	if (!windows.has(window_id)) {
@@ -496,10 +496,10 @@ Point2i DisplayServerX11::mouse_get_position() const {
 			XWindowAttributes root_attrs;
 			XGetWindowAttributes(x11_display, root, &root_attrs);
 
-			return Vector2i(root_attrs.x + root_x, root_attrs.y + root_y);
+			return Hector2i(root_attrs.x + root_x, root_attrs.y + root_y);
 		}
 	}
-	return Vector2i();
+	return Hector2i();
 }
 
 BitField<MouseButtonMask> DisplayServerX11::mouse_get_button_state() const {
@@ -626,7 +626,7 @@ String DisplayServerX11::_clipboard_get_impl(Atom p_source, Window x11_window, A
 			// Data is going to be received incrementally.
 			DEBUG_LOG_X11("INCR selection started.\n");
 
-			LocalVector<uint8_t> incr_data;
+			LocalHector<uint8_t> incr_data;
 			uint32_t data_size = 0;
 			bool success = false;
 
@@ -872,7 +872,7 @@ Ref<Image> DisplayServerX11::clipboard_get_image() const {
 			// Data is going to be received incrementally.
 			DEBUG_LOG_X11("INCR selection started.\n");
 
-			LocalVector<uint8_t> incr_data;
+			LocalHector<uint8_t> incr_data;
 			uint32_t data_size = 0;
 			bool success = false;
 
@@ -1603,7 +1603,7 @@ Ref<Image> DisplayServerX11::screen_get_image(int p_screen) const {
 		int width = image->width;
 		int height = image->height;
 
-		Vector<uint8_t> img_data;
+		Hector<uint8_t> img_data;
 		img_data.resize(height * width * 4);
 
 		uint8_t *sr = (uint8_t *)image->data;
@@ -1725,10 +1725,10 @@ bool DisplayServerX11::screen_is_kept_on() const {
 }
 #endif
 
-Vector<DisplayServer::WindowID> DisplayServerX11::get_window_list() const {
+Hector<DisplayServer::WindowID> DisplayServerX11::get_window_list() const {
 	_THREAD_SAFE_METHOD_
 
-	Vector<int> ret;
+	Hector<int> ret;
 	for (const KeyValue<WindowID, WindowData> &E : windows) {
 		ret.push_back(E.key);
 	}
@@ -1924,7 +1924,7 @@ void DisplayServerX11::window_set_title(const String &p_title, WindowID p_window
 	}
 }
 
-void DisplayServerX11::window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window) {
+void DisplayServerX11::window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND(!windows.has(p_window));
@@ -1936,7 +1936,7 @@ void DisplayServerX11::_update_window_mouse_passthrough(WindowID p_window) {
 	ERR_FAIL_COND(!windows.has(p_window));
 	ERR_FAIL_COND(!xshaped_ext_ok);
 
-	const Vector<Vector2> region_path = windows[p_window].mpath;
+	const Hector<Hector2> region_path = windows[p_window].mpath;
 
 	int event_base, error_base;
 	const Bool ext_okay = XShapeQueryExtension(x11_display, &event_base, &error_base);
@@ -3030,7 +3030,7 @@ void DisplayServerX11::window_set_ime_active(const bool p_active, WindowID p_win
 	if (!wd.focused) {
 		wd.ime_active = false;
 		im_text = String();
-		im_selection = Vector2i();
+		im_selection = Hector2i();
 		return;
 	}
 
@@ -3057,7 +3057,7 @@ void DisplayServerX11::window_set_ime_active(const bool p_active, WindowID p_win
 		wd.ime_active = false;
 
 		im_text = String();
-		im_selection = Vector2i();
+		im_selection = Hector2i();
 	}
 }
 
@@ -3120,13 +3120,13 @@ DisplayServerX11::CursorShape DisplayServerX11::cursor_get_shape() const {
 	return current_cursor;
 }
 
-void DisplayServerX11::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServerX11::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
 
 	if (p_cursor.is_valid()) {
-		HashMap<CursorShape, Vector<Variant>>::Iterator cursor_c = cursors_cache.find(p_shape);
+		HashMap<CursorShape, Hector<Variant>>::Iterator cursor_c = cursors_cache.find(p_shape);
 
 		if (cursor_c) {
 			if (cursor_c->value[0] == p_cursor && cursor_c->value[1] == p_hotspot) {
@@ -3139,7 +3139,7 @@ void DisplayServerX11::cursor_set_custom_image(const Ref<Resource> &p_cursor, Cu
 
 		Ref<Image> image = _get_cursor_image_from_resource(p_cursor, p_hotspot);
 		ERR_FAIL_COND(image.is_null());
-		Vector2i texture_size = image->get_size();
+		Hector2i texture_size = image->get_size();
 
 		// Create the cursor structure
 		XcursorImage *cursor_image = XcursorImageCreate(texture_size.width, texture_size.height);
@@ -3166,7 +3166,7 @@ void DisplayServerX11::cursor_set_custom_image(const Ref<Resource> &p_cursor, Cu
 		// Save it for a further usage
 		cursors[p_shape] = XcursorImageLoadCursor(x11_display, cursor_image);
 
-		Vector<Variant> params;
+		Hector<Variant> params;
 		params.push_back(p_cursor);
 		params.push_back(p_hotspot);
 		cursors_cache.insert(p_shape, params);
@@ -3248,7 +3248,7 @@ String DisplayServerX11::keyboard_get_layout_language(int p_index) const {
 
 		Atom names = kbd->names->symbols;
 		if (names != None) {
-			Vector<String> info = get_atom_name(x11_display, names).split("+");
+			Hector<String> info = get_atom_name(x11_display, names).split("+");
 			if (p_index >= 0 && p_index < _group_count) {
 				if (p_index + 1 < info.size()) {
 					ret = info[p_index + 1]; // Skip "pc" at the start and "inet"/"group" at the end of symbols.
@@ -3401,7 +3401,7 @@ void DisplayServerX11::_get_key_modifier_state(unsigned int p_x11_state, Ref<Inp
 	state->set_meta_pressed((p_x11_state & Mod4Mask));
 }
 
-void DisplayServerX11::_handle_key_event(WindowID p_window, XKeyEvent *p_event, LocalVector<XEvent> &p_events, uint32_t &p_event_index, bool p_echo) {
+void DisplayServerX11::_handle_key_event(WindowID p_window, XKeyEvent *p_event, LocalHector<XEvent> &p_events, uint32_t &p_event_index, bool p_echo) {
 	WindowData &wd = windows[p_window];
 	// X11 functions don't know what const is
 	XKeyEvent *xkeyevent = p_event;
@@ -4144,7 +4144,7 @@ void DisplayServerX11::_poll_events() {
 	}
 }
 
-void DisplayServerX11::_check_pending_events(LocalVector<XEvent> &r_events) {
+void DisplayServerX11::_check_pending_events(LocalHector<XEvent> &r_events) {
 	// Flush to make sure to gather all pending events.
 	XFlush(x11_display);
 
@@ -4276,7 +4276,7 @@ bool DisplayServerX11::mouse_process_popups() {
 		if (XQueryPointer(x11_display, XRootWindow(x11_display, i), &root, &child, &root_x, &root_y, &win_x, &win_y, &mask)) {
 			XWindowAttributes root_attrs;
 			XGetWindowAttributes(x11_display, root, &root_attrs);
-			Vector2i pos = Vector2i(root_attrs.x + root_x, root_attrs.y + root_y);
+			Hector2i pos = Hector2i(root_attrs.x + root_x, root_attrs.y + root_y);
 			if (mask != last_mouse_monitor_mask) {
 				if (((mask & Button1Mask) || (mask & Button2Mask) || (mask & Button3Mask) || (mask & Button4Mask) || (mask & Button5Mask))) {
 					List<WindowID>::Element *C = nullptr;
@@ -4368,10 +4368,10 @@ void DisplayServerX11::process_events() {
 	bool mouse_mode_grab = mouse_mode == MOUSE_MODE_CAPTURED || mouse_mode == MOUSE_MODE_CONFINED || mouse_mode == MOUSE_MODE_CONFINED_HIDDEN;
 
 	xi.pressure = 0;
-	xi.tilt = Vector2();
+	xi.tilt = Hector2();
 	xi.pressure_supported = false;
 
-	LocalVector<XEvent> events;
+	LocalHector<XEvent> events;
 	{
 		// Block events polling while flushing events.
 		MutexLock mutex_lock(events_mutex);
@@ -4439,10 +4439,10 @@ void DisplayServerX11::process_events() {
 						}
 
 						if (XIMaskIsSet(raw_event->valuators.mask, VALUATOR_PRESSURE)) {
-							HashMap<int, Vector2>::Iterator pen_pressure = xi.pen_pressure_range.find(device_id);
+							HashMap<int, Hector2>::Iterator pen_pressure = xi.pen_pressure_range.find(device_id);
 							if (pen_pressure) {
-								Vector2 pen_pressure_range = pen_pressure->value;
-								if (pen_pressure_range != Vector2()) {
+								Hector2 pen_pressure_range = pen_pressure->value;
+								if (pen_pressure_range != Hector2()) {
 									xi.pressure_supported = true;
 									xi.pressure = (*values - pen_pressure_range[0]) /
 											(pen_pressure_range[1] - pen_pressure_range[0]);
@@ -4453,9 +4453,9 @@ void DisplayServerX11::process_events() {
 						}
 
 						if (XIMaskIsSet(raw_event->valuators.mask, VALUATOR_TILTX)) {
-							HashMap<int, Vector2>::Iterator pen_tilt_x = xi.pen_tilt_x_range.find(device_id);
+							HashMap<int, Hector2>::Iterator pen_tilt_x = xi.pen_tilt_x_range.find(device_id);
 							if (pen_tilt_x) {
-								Vector2 pen_tilt_x_range = pen_tilt_x->value;
+								Hector2 pen_tilt_x_range = pen_tilt_x->value;
 								if (pen_tilt_x_range[0] != 0 && *values < 0) {
 									xi.tilt.x = *values / -pen_tilt_x_range[0];
 								} else if (pen_tilt_x_range[1] != 0) {
@@ -4467,9 +4467,9 @@ void DisplayServerX11::process_events() {
 						}
 
 						if (XIMaskIsSet(raw_event->valuators.mask, VALUATOR_TILTY)) {
-							HashMap<int, Vector2>::Iterator pen_tilt_y = xi.pen_tilt_y_range.find(device_id);
+							HashMap<int, Hector2>::Iterator pen_tilt_y = xi.pen_tilt_y_range.find(device_id);
 							if (pen_tilt_y) {
-								Vector2 pen_tilt_y_range = pen_tilt_y->value;
+								Hector2 pen_tilt_y_range = pen_tilt_y->value;
 								if (pen_tilt_y_range[0] != 0 && *values < 0) {
 									xi.tilt.y = *values / -pen_tilt_y_range[0];
 								} else if (pen_tilt_y_range[1] != 0) {
@@ -4496,11 +4496,11 @@ void DisplayServerX11::process_events() {
 						xi.raw_pos.x = rel_x;
 						xi.raw_pos.y = rel_y;
 
-						HashMap<int, Vector2>::Iterator abs_info = xi.absolute_devices.find(device_id);
+						HashMap<int, Hector2>::Iterator abs_info = xi.absolute_devices.find(device_id);
 
 						if (abs_info) {
 							// Absolute mode device
-							Vector2 mult = abs_info->value;
+							Hector2 mult = abs_info->value;
 
 							xi.relative_motion.x += (xi.raw_pos.x - xi.old_raw_pos.x) * mult.x;
 							xi.relative_motion.y += (xi.raw_pos.y - xi.old_raw_pos.y) * mult.y;
@@ -4521,7 +4521,7 @@ void DisplayServerX11::process_events() {
 						bool is_begin = event_data->evtype == XI_TouchBegin;
 
 						int index = event_data->detail;
-						Vector2 pos = Vector2(event_data->event_x, event_data->event_y);
+						Hector2 pos = Hector2(event_data->event_x, event_data->event_y);
 
 						Ref<InputEventScreenTouch> st;
 						st.instantiate();
@@ -4556,9 +4556,9 @@ void DisplayServerX11::process_events() {
 						}
 
 						int index = event_data->detail;
-						Vector2 pos = Vector2(event_data->event_x, event_data->event_y);
+						Hector2 pos = Hector2(event_data->event_x, event_data->event_y);
 
-						HashMap<int, Vector2>::Iterator curr_pos_elem = xi.state.find(index);
+						HashMap<int, Hector2>::Iterator curr_pos_elem = xi.state.find(index);
 						if (!curr_pos_elem) { // Defensive
 							break;
 						}
@@ -4722,7 +4722,7 @@ void DisplayServerX11::process_events() {
 					XUnmapWindow(x11_display, wd.x11_xim_window);
 					wd.ime_active = false;
 					im_text = String();
-					im_selection = Vector2i();
+					im_selection = Hector2i();
 					OS_Unix::get_singleton()->get_main_loop()->notification(MainLoop::NOTIFICATION_OS_IME_UPDATE);
 				}
 				wd.focused = false;
@@ -4747,7 +4747,7 @@ void DisplayServerX11::process_events() {
 				}*/
 
 				// Release every pointer to avoid sticky points
-				for (const KeyValue<int, Vector2> &E : xi.state) {
+				for (const KeyValue<int, Hector2> &E : xi.state) {
 					Ref<InputEventScreenTouch> st;
 					st.instantiate();
 					st->set_index(E.key);
@@ -4791,7 +4791,7 @@ void DisplayServerX11::process_events() {
 				} else if (mb->get_button_index() == MouseButton::MIDDLE) {
 					mb->set_button_index(MouseButton::RIGHT);
 				}
-				mb->set_position(Vector2(event.xbutton.x, event.xbutton.y));
+				mb->set_position(Hector2(event.xbutton.x, event.xbutton.y));
 				mb->set_global_position(mb->get_position());
 
 				mb->set_pressed((event.type == ButtonPress));
@@ -4820,7 +4820,7 @@ void DisplayServerX11::process_events() {
 					uint64_t diff = OS::get_singleton()->get_ticks_usec() / 1000 - last_click_ms;
 
 					if (mb->get_button_index() == last_click_button_index) {
-						if (diff < 400 && Vector2(last_click_pos).distance_to(Vector2(event.xbutton.x, event.xbutton.y)) < 5) {
+						if (diff < 400 && Hector2(last_click_pos).distance_to(Hector2(event.xbutton.x, event.xbutton.y)) < 5) {
 							last_click_ms = 0;
 							last_click_pos = Point2i(-100, -100);
 							last_click_button_index = MouseButton::NONE;
@@ -4870,7 +4870,7 @@ void DisplayServerX11::process_events() {
 						XTranslateCoordinates(x11_display, wd.x11_window, wd_other_x11_window, event.xbutton.x, event.xbutton.y, &x, &y, &child);
 
 						mb->set_window_id(window_id_other);
-						mb->set_position(Vector2(x, y));
+						mb->set_position(Hector2(x, y));
 						mb->set_global_position(mb->get_position());
 					}
 				}
@@ -4893,7 +4893,7 @@ void DisplayServerX11::process_events() {
 				while (true) {
 					if (mouse_mode == MOUSE_MODE_CAPTURED && event.xmotion.x == windows[focused_window_id].size.width / 2 && event.xmotion.y == windows[focused_window_id].size.height / 2) {
 						//this is likely the warp event since it was warped here
-						center = Vector2(event.xmotion.x, event.xmotion.y);
+						center = Hector2(event.xmotion.x, event.xmotion.y);
 						break;
 					}
 
@@ -4919,12 +4919,12 @@ void DisplayServerX11::process_events() {
 
 				// Avoidance of spurious mouse motion (see handling of touch)
 				bool filter = false;
-				// Adding some tolerance to match better Point2i to Vector2
-				if (xi.state.size() && Vector2(pos).distance_squared_to(xi.mouse_pos_to_filter) < 2) {
+				// Adding some tolerance to match better Point2i to Hector2
+				if (xi.state.size() && Hector2(pos).distance_squared_to(xi.mouse_pos_to_filter) < 2) {
 					filter = true;
 				}
 				// Invalidate to avoid filtering a possible legitimate similar event coming later
-				xi.mouse_pos_to_filter = Vector2(1e10, 1e10);
+				xi.mouse_pos_to_filter = Hector2(1e10, 1e10);
 				if (filter) {
 					break;
 				}
@@ -5070,7 +5070,7 @@ void DisplayServerX11::process_events() {
 				if (event.xselection.target == requested) {
 					Property p = _read_property(x11_display, windows[window_id].x11_window, XInternAtom(x11_display, "PRIMARY", 0));
 
-					Vector<String> files = String((char *)p.data).split("\r\n", false);
+					Hector<String> files = String((char *)p.data).split("\r\n", false);
 					XFree(p.data);
 					for (int i = 0; i < files.size(); i++) {
 						files.write[i] = files[i].replace("file://", "").uri_decode();
@@ -5340,7 +5340,7 @@ void DisplayServerX11::set_icon(const Ref<Image> &p_icon) {
 			}
 
 			// We're using long to have wordsize (32Bit build -> 32 Bits, 64 Bit build -> 64 Bits
-			Vector<long> pd;
+			Hector<long> pd;
 
 			pd.resize(2 + w * h);
 
@@ -5412,8 +5412,8 @@ DisplayServer::VSyncMode DisplayServerX11::window_get_vsync_mode(WindowID p_wind
 	return DisplayServer::VSYNC_ENABLED;
 }
 
-Vector<String> DisplayServerX11::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerX11::get_rendering_drivers_func() {
+	Hector<String> drivers;
 
 #ifdef VULKAN_ENABLED
 	drivers.push_back("vulkan");
@@ -5426,7 +5426,7 @@ Vector<String> DisplayServerX11::get_rendering_drivers_func() {
 	return drivers;
 }
 
-DisplayServer *DisplayServerX11::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServer *DisplayServerX11::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerX11(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, p_context, r_error));
 	return ds;
 }
@@ -5839,7 +5839,7 @@ static ::XIMStyle _get_best_xim_style(const ::XIMStyle &p_style_a, const ::XIMSt
 	return p_style_a;
 }
 
-DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	KeyMappingX11::initialize();
 
 	xwayland = OS::get_singleton()->get_environment("XDG_SESSION_TYPE").to_lower() == "wayland";
@@ -6203,7 +6203,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 			// runtime and includes system `/lib` and `/lib64`... so ignore Steam.
 			if (use_prime == -1 && getenv("LD_LIBRARY_PATH") && !getenv("STEAM_RUNTIME_LIBRARY_PATH")) {
 				String ld_library_path(getenv("LD_LIBRARY_PATH"));
-				Vector<String> libraries = ld_library_path.split(":");
+				Hector<String> libraries = ld_library_path.split(":");
 
 				for (int i = 0; i < libraries.size(); ++i) {
 					if (FileAccess::exists(libraries[i] + "/libGL.so.1") ||

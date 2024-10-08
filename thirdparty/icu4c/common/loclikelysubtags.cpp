@@ -24,7 +24,7 @@
 #include "uniquecharstr.h"
 #include "uresdata.h"
 #include "uresimp.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -155,7 +155,7 @@ struct LikelySubtagsData {
             }
 
             if (matchTable.findValue("distances", value)) {
-                distanceData.distances = value.getIntVector(length, errorCode);
+                distanceData.distances = value.getIntHector(length, errorCode);
                 if (U_FAILURE(errorCode)) { return; }
                 if (length < 4) {  // LocaleDistance IX_LIMIT
                     errorCode = U_INVALID_FORMAT_ERROR;
@@ -318,7 +318,7 @@ private:
                      LocalMemory<int32_t> &indexes, int32_t &length, UErrorCode &errorCode) {
         if (U_FAILURE(errorCode)) { return false; }
         if (table.findValue(key, value)) {
-            const int32_t* vectors = value.getIntVector(length, errorCode);
+            const int32_t* Hectors = value.getIntHector(length, errorCode);
             if (U_FAILURE(errorCode)) { return false; }
             if (length == 0) { return true; }
             int32_t *rawIndexes = indexes.allocateInsteadAndCopy(length * 3);
@@ -327,10 +327,10 @@ private:
                 return false;
             }
             for (int i = 0; i < length; ++i) {
-                rawIndexes[i*3] = strings.addByValue(toLanguage(vectors[i]), errorCode);
-                rawIndexes[i*3+1] = strings.addByValue(toScript(vectors[i]), errorCode);
+                rawIndexes[i*3] = strings.addByValue(toLanguage(Hectors[i]), errorCode);
+                rawIndexes[i*3+1] = strings.addByValue(toScript(Hectors[i]), errorCode);
                 rawIndexes[i*3+2] = strings.addByValue(
-                    toRegion(m49Array, value, vectors[i], errorCode), errorCode);
+                    toRegion(m49Array, value, Hectors[i], errorCode), errorCode);
                 if (U_FAILURE(errorCode)) { return false; }
             }
             length *= 3;
@@ -342,7 +342,7 @@ private:
 namespace {
 
 LikelySubtags *gLikelySubtags = nullptr;
-UVector *gMacroregions = nullptr;
+UHector *gMacroregions = nullptr;
 UInitOnce gInitOnce {};
 
 UBool U_CALLCONV cleanup() {
@@ -382,7 +382,7 @@ constexpr const char16_t* MACROREGION_HARDCODE[] = {
 };
 
 constexpr char16_t RANGE_MARKER = 0x7E; /* '~' */
-void processMacroregionRange(const UnicodeString& regionName, UVector* newMacroRegions, UErrorCode& status) {
+void processMacroregionRange(const UnicodeString& regionName, UHector* newMacroRegions, UErrorCode& status) {
     if (U_FAILURE(status)) { return; }
     int32_t rangeMarkerLocation = regionName.indexOf(RANGE_MARKER);
     char16_t buf[6];
@@ -402,9 +402,9 @@ void processMacroregionRange(const UnicodeString& regionName, UVector* newMacroR
 }
 
 #if U_DEBUG
-UVector* loadMacroregions(UErrorCode &status) {
+UHector* loadMacroregions(UErrorCode &status) {
     if (U_FAILURE(status)) { return nullptr; }
-    LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
+    LocalPointer<UHector> newMacroRegions(new UHector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
 
     LocalUResourceBundlePointer supplementalData(ures_openDirect(nullptr,"supplementalData",&status));
     LocalUResourceBundlePointer idValidity(ures_getByKey(supplementalData.getAlias(),"idValidity",nullptr,&status));
@@ -427,9 +427,9 @@ UVector* loadMacroregions(UErrorCode &status) {
 }
 #endif // U_DEBUG
 
-UVector* getStaticMacroregions(UErrorCode &status) {
+UHector* getStaticMacroregions(UErrorCode &status) {
     if (U_FAILURE(status)) { return nullptr; }
-    LocalPointer<UVector> newMacroRegions(new UVector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
+    LocalPointer<UHector> newMacroRegions(new UHector(uprv_deleteUObject, uhash_compareUnicodeString, status), status);
 
     if (U_FAILURE(status)) {
         return nullptr;

@@ -131,7 +131,7 @@ void LineEdit::cancel_ime() {
 		return;
 	}
 	ime_text = String();
-	ime_selection = Vector2i();
+	ime_selection = Hector2i();
 	alt_start = false;
 	alt_start_no_hold = false;
 	_close_ime_window();
@@ -627,7 +627,7 @@ void LineEdit::gui_input(const Ref<InputEvent> &p_event) {
 		alt_start = true;
 		alt_code = 0;
 		ime_text = "u";
-		ime_selection = Vector2i(0, -1);
+		ime_selection = Hector2i(0, -1);
 		_shape();
 		queue_redraw();
 		accept_event();
@@ -642,7 +642,7 @@ void LineEdit::gui_input(const Ref<InputEvent> &p_event) {
 		alt_start_no_hold = true;
 		alt_code = 0;
 		ime_text = "u";
-		ime_selection = Vector2i(0, -1);
+		ime_selection = Hector2i(0, -1);
 		_shape();
 		queue_redraw();
 		accept_event();
@@ -681,7 +681,7 @@ void LineEdit::gui_input(const Ref<InputEvent> &p_event) {
 		} else {
 			ime_text = "u";
 		}
-		ime_selection = Vector2i(0, -1);
+		ime_selection = Hector2i(0, -1);
 		_shape();
 		queue_redraw();
 		accept_event();
@@ -694,12 +694,12 @@ void LineEdit::gui_input(const Ref<InputEvent> &p_event) {
 		alt_start_no_hold = false;
 		if ((alt_code > 0x31 && alt_code < 0xd800) || (alt_code > 0xdfff && alt_code <= 0x10ffff)) {
 			ime_text = String();
-			ime_selection = Vector2i();
+			ime_selection = Hector2i();
 			char32_t ucodestr[2] = { (char32_t)alt_code, 0 };
 			insert_text_at_caret(ucodestr);
 		} else {
 			ime_text = String();
-			ime_selection = Vector2i();
+			ime_selection = Hector2i();
 			_shape();
 		}
 		queue_redraw();
@@ -712,7 +712,7 @@ void LineEdit::gui_input(const Ref<InputEvent> &p_event) {
 		alt_start = false;
 		alt_start_no_hold = false;
 		ime_text = String();
-		ime_selection = Vector2i();
+		ime_selection = Hector2i();
 		_shape();
 		queue_redraw();
 		accept_event();
@@ -1176,9 +1176,9 @@ void LineEdit::_notification(int p_what) {
 			}
 
 			// Draw selections rects.
-			Vector2 ofs = Point2(x_ofs + scroll_offset, y_ofs);
+			Hector2 ofs = Point2(x_ofs + scroll_offset, y_ofs);
 			if (selection.enabled) {
-				Vector<Vector2> sel = TS->shaped_text_get_selection(text_rid, selection.begin, selection.end);
+				Hector<Hector2> sel = TS->shaped_text_get_selection(text_rid, selection.begin, selection.end);
 				for (int i = 0; i < sel.size(); i++) {
 					Rect2 rect = Rect2(sel[i].x + ofs.x, ofs.y, sel[i].y - sel[i].x, text_height);
 					if (rect.position.x + rect.size.x <= x_ofs || rect.position.x > ofs_max) {
@@ -1201,12 +1201,12 @@ void LineEdit::_notification(int p_what) {
 			Color font_outline_color = theme_cache.font_outline_color;
 			int outline_size = theme_cache.font_outline_size;
 			if (outline_size > 0 && font_outline_color.a > 0) {
-				Vector2 oofs = ofs;
+				Hector2 oofs = ofs;
 				for (int i = 0; i < gl_size; i++) {
 					for (int j = 0; j < glyphs[i].repeat; j++) {
 						if (ceil(oofs.x) >= x_ofs && (oofs.x + glyphs[i].advance) <= ofs_max) {
 							if (glyphs[i].font_rid != RID()) {
-								TS->font_draw_glyph_outline(glyphs[i].font_rid, ci, glyphs[i].font_size, outline_size, oofs + Vector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, font_outline_color);
+								TS->font_draw_glyph_outline(glyphs[i].font_rid, ci, glyphs[i].font_size, outline_size, oofs + Hector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, font_outline_color);
 							}
 						}
 						oofs.x += glyphs[i].advance;
@@ -1221,9 +1221,9 @@ void LineEdit::_notification(int p_what) {
 				for (int j = 0; j < glyphs[i].repeat; j++) {
 					if (ceil(ofs.x) >= x_ofs && (ofs.x + glyphs[i].advance) <= ofs_max) {
 						if (glyphs[i].font_rid != RID()) {
-							TS->font_draw_glyph(glyphs[i].font_rid, ci, glyphs[i].font_size, ofs + Vector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, selected ? font_selected_color : font_color);
+							TS->font_draw_glyph(glyphs[i].font_rid, ci, glyphs[i].font_size, ofs + Hector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, selected ? font_selected_color : font_color);
 						} else if (((glyphs[i].flags & TextServer::GRAPHEME_IS_VIRTUAL) != TextServer::GRAPHEME_IS_VIRTUAL) && ((glyphs[i].flags & TextServer::GRAPHEME_IS_EMBEDDED_OBJECT) != TextServer::GRAPHEME_IS_EMBEDDED_OBJECT)) {
-							TS->draw_hex_code_box(ci, glyphs[i].font_size, ofs + Vector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, selected ? font_selected_color : font_color);
+							TS->draw_hex_code_box(ci, glyphs[i].font_size, ofs + Hector2(glyphs[i].x_off, glyphs[i].y_off), glyphs[i].index, selected ? font_selected_color : font_color);
 						}
 					}
 					ofs.x += glyphs[i].advance;
@@ -1251,19 +1251,19 @@ void LineEdit::_notification(int p_what) {
 							case HORIZONTAL_ALIGNMENT_FILL:
 							case HORIZONTAL_ALIGNMENT_LEFT: {
 								if (rtl) {
-									caret.l_caret = Rect2(Vector2(ofs_max, y), Size2(caret_width, h));
+									caret.l_caret = Rect2(Hector2(ofs_max, y), Size2(caret_width, h));
 								} else {
-									caret.l_caret = Rect2(Vector2(style->get_offset().x, y), Size2(caret_width, h));
+									caret.l_caret = Rect2(Hector2(style->get_offset().x, y), Size2(caret_width, h));
 								}
 							} break;
 							case HORIZONTAL_ALIGNMENT_CENTER: {
-								caret.l_caret = Rect2(Vector2(size.x / 2, y), Size2(caret_width, h));
+								caret.l_caret = Rect2(Hector2(size.x / 2, y), Size2(caret_width, h));
 							} break;
 							case HORIZONTAL_ALIGNMENT_RIGHT: {
 								if (rtl) {
-									caret.l_caret = Rect2(Vector2(style->get_offset().x, y), Size2(caret_width, h));
+									caret.l_caret = Rect2(Hector2(style->get_offset().x, y), Size2(caret_width, h));
 								} else {
-									caret.l_caret = Rect2(Vector2(ofs_max, y), Size2(caret_width, h));
+									caret.l_caret = Rect2(Hector2(ofs_max, y), Size2(caret_width, h));
 								}
 							} break;
 						}
@@ -1301,7 +1301,7 @@ void LineEdit::_notification(int p_what) {
 				if (!ime_text.is_empty()) {
 					{
 						// IME intermediate text range.
-						Vector<Vector2> sel = TS->shaped_text_get_selection(text_rid, caret_column, caret_column + ime_text.length());
+						Hector<Hector2> sel = TS->shaped_text_get_selection(text_rid, caret_column, caret_column + ime_text.length());
 						for (int i = 0; i < sel.size(); i++) {
 							Rect2 rect = Rect2(sel[i].x + ofs.x, ofs.y, sel[i].y - sel[i].x, text_height);
 							if (rect.position.x + rect.size.x <= x_ofs || rect.position.x > ofs_max) {
@@ -1320,7 +1320,7 @@ void LineEdit::_notification(int p_what) {
 					{
 						// IME caret.
 						if (ime_selection.y > 0) {
-							Vector<Vector2> sel = TS->shaped_text_get_selection(text_rid, caret_column + ime_selection.x, caret_column + ime_selection.x + ime_selection.y);
+							Hector<Hector2> sel = TS->shaped_text_get_selection(text_rid, caret_column + ime_selection.x, caret_column + ime_selection.x + ime_selection.y);
 							for (int i = 0; i < sel.size(); i++) {
 								Rect2 rect = Rect2(sel[i].x + ofs.x, ofs.y, sel[i].y - sel[i].x, text_height);
 								if (rect.position.x + rect.size.x <= x_ofs || rect.position.x > ofs_max) {
@@ -1563,7 +1563,7 @@ void LineEdit::set_caret_at_pixel_pos(int p_x) {
 	set_caret_column(ofs);
 }
 
-Vector2 LineEdit::get_caret_pixel_pos() {
+Hector2 LineEdit::get_caret_pixel_pos() {
 	Ref<StyleBox> style = theme_cache.normal;
 	bool rtl = is_layout_rtl();
 
@@ -1607,7 +1607,7 @@ Vector2 LineEdit::get_caret_pixel_pos() {
 		}
 	}
 
-	Vector2 ret;
+	Hector2 ret;
 	CaretInfo caret;
 	// Get position of the start of caret.
 	if (!ime_text.is_empty() && ime_selection.x != 0) {
@@ -1952,7 +1952,7 @@ void LineEdit::set_caret_column(int p_column) {
 	}
 
 	// Note: Use two coordinates to fit IME input range.
-	Vector2 primary_caret_offset = get_caret_pixel_pos();
+	Hector2 primary_caret_offset = get_caret_pixel_pos();
 
 	if (MIN(primary_caret_offset.x, primary_caret_offset.y) <= x_ofs) {
 		scroll_offset += x_ofs - MIN(primary_caret_offset.x, primary_caret_offset.y);

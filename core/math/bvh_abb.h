@@ -32,13 +32,13 @@
 #define BVH_ABB_H
 
 // special optimized version of axis aligned bounding box
-template <typename BOUNDS = AABB, typename POINT = Vector3>
+template <typename BOUNDS = AABB, typename POINT = Hector3>
 struct BVH_ABB {
 	struct ConvexHull {
 		// convex hulls (optional)
 		const Plane *planes;
 		int num_planes;
-		const Vector3 *points;
+		const Hector3 *points;
 		int num_points;
 	};
 
@@ -118,16 +118,16 @@ struct BVH_ABB {
 	}
 
 	bool intersects_plane(const Plane &p_p) const {
-		Vector3 size = calculate_size();
-		Vector3 half_extents = size * 0.5;
-		Vector3 ofs = min + half_extents;
+		Hector3 size = calculate_size();
+		Hector3 half_extents = size * 0.5;
+		Hector3 ofs = min + half_extents;
 
 		// forward side of plane?
-		Vector3 point_offset(
+		Hector3 point_offset(
 				(p_p.normal.x < 0) ? -half_extents.x : half_extents.x,
 				(p_p.normal.y < 0) ? -half_extents.y : half_extents.y,
 				(p_p.normal.z < 0) ? -half_extents.z : half_extents.z);
-		Vector3 point = point_offset + ofs;
+		Hector3 point = point_offset + ofs;
 
 		if (!p_p.is_point_over(point)) {
 			return false;
@@ -142,13 +142,13 @@ struct BVH_ABB {
 	}
 
 	bool intersects_convex_optimized(const ConvexHull &p_hull, const uint32_t *p_plane_ids, uint32_t p_num_planes) const {
-		Vector3 size = calculate_size();
-		Vector3 half_extents = size * 0.5;
-		Vector3 ofs = min + half_extents;
+		Hector3 size = calculate_size();
+		Hector3 half_extents = size * 0.5;
+		Hector3 ofs = min + half_extents;
 
 		for (unsigned int i = 0; i < p_num_planes; i++) {
 			const Plane &p = p_hull.planes[p_plane_ids[i]];
-			Vector3 point(
+			Hector3 point(
 					(p.normal.x > 0) ? -half_extents.x : half_extents.x,
 					(p.normal.y > 0) ? -half_extents.y : half_extents.y,
 					(p.normal.z > 0) ? -half_extents.z : half_extents.z);
@@ -187,7 +187,7 @@ struct BVH_ABB {
 		return bb.inside_convex_shape(p_hull.planes, p_hull.num_planes);
 	}
 
-	bool is_point_within_hull(const ConvexHull &p_hull, const Vector3 &p_pt) const {
+	bool is_point_within_hull(const ConvexHull &p_hull, const Hector3 &p_pt) const {
 		for (int n = 0; n < p_hull.num_planes; n++) {
 			if (p_hull.planes[n].distance_to(p_pt) > 0.0f) {
 				return false;

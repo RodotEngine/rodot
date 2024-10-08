@@ -143,7 +143,7 @@ public:
 	};
 
 	void ssr_allocate_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, SSRRenderBuffers &p_ssr_buffers, const RenderingDevice::DataFormat p_color_format);
-	void screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffers, SSRRenderBuffers &p_ssr_buffers, const RID *p_normal_roughness_slices, const RID *p_metallic_slices, int p_max_steps, float p_fade_in, float p_fade_out, float p_tolerance, const Projection *p_projections, const Vector3 *p_eye_offsets);
+	void screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffers, SSRRenderBuffers &p_ssr_buffers, const RID *p_normal_roughness_slices, const RID *p_metallic_slices, int p_max_steps, float p_fade_in, float p_fade_out, float p_tolerance, const Projection *p_projections, const Hector3 *p_eye_offsets);
 
 	/* subsurface scattering */
 	void sss_set_quality(RS::SubSurfaceScatteringQuality p_quality);

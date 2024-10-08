@@ -159,7 +159,7 @@ void FreeDesktopPortalDesktop::append_dbus_dict_options(DBusMessageIter *p_iter,
 			continue;
 		}
 		const String &name = item["name"];
-		const Vector<String> &options = item["values"];
+		const Hector<String> &options = item["values"];
 		int default_idx = item["default"];
 
 		DBusMessageIter struct_iter;
@@ -190,7 +190,7 @@ void FreeDesktopPortalDesktop::append_dbus_dict_options(DBusMessageIter *p_iter,
 	dbus_message_iter_close_container(p_iter, &dict_iter);
 }
 
-void FreeDesktopPortalDesktop::append_dbus_dict_filters(DBusMessageIter *p_iter, const Vector<String> &p_filter_names, const Vector<String> &p_filter_exts) {
+void FreeDesktopPortalDesktop::append_dbus_dict_filters(DBusMessageIter *p_iter, const Hector<String> &p_filter_names, const Hector<String> &p_filter_exts) {
 	DBusMessageIter dict_iter;
 	DBusMessageIter var_iter;
 	DBusMessageIter arr_iter;
@@ -279,7 +279,7 @@ void FreeDesktopPortalDesktop::append_dbus_dict_bool(DBusMessageIter *p_iter, co
 	dbus_message_iter_close_container(p_iter, &dict_iter);
 }
 
-bool FreeDesktopPortalDesktop::file_chooser_parse_response(DBusMessageIter *p_iter, const Vector<String> &p_names, bool &r_cancel, Vector<String> &r_urls, int &r_index, Dictionary &r_options) {
+bool FreeDesktopPortalDesktop::file_chooser_parse_response(DBusMessageIter *p_iter, const Hector<String> &p_names, bool &r_cancel, Hector<String> &r_urls, int &r_index, Dictionary &r_options) {
 	ERR_FAIL_COND_V(dbus_message_iter_get_arg_type(p_iter) != DBUS_TYPE_UINT32, false);
 
 	dbus_uint32_t resp_code;
@@ -369,7 +369,7 @@ bool FreeDesktopPortalDesktop::file_chooser_parse_response(DBusMessageIter *p_it
 	return true;
 }
 
-Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_window_id, const String &p_xid, const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, DisplayServer::FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
+Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_window_id, const String &p_xid, const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, DisplayServer::FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
 	if (unsupported) {
 		return FAILED;
 	}
@@ -377,10 +377,10 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 	ERR_FAIL_INDEX_V(int(p_mode), DisplayServer::FILE_DIALOG_MODE_SAVE_MAX, FAILED);
 	ERR_FAIL_NULL_V(monitor_connection, FAILED);
 
-	Vector<String> filter_names;
-	Vector<String> filter_exts;
+	Hector<String> filter_names;
+	Hector<String> filter_exts;
 	for (int i = 0; i < p_filters.size(); i++) {
-		Vector<String> tokens = p_filters[i].split(";");
+		Hector<String> tokens = p_filters[i].split(";");
 		if (tokens.size() >= 1) {
 			String flt = tokens[0].strip_edges();
 			if (!flt.is_empty()) {
@@ -573,7 +573,7 @@ void FreeDesktopPortalDesktop::_thread_monitor(void *p_ud) {
 							DBusMessageIter iter;
 							if (dbus_message_iter_init(msg, &iter)) {
 								bool cancel = false;
-								Vector<String> uris;
+								Hector<String> uris;
 								Dictionary options;
 								int index = 0;
 								file_chooser_parse_response(&iter, fd.filter_names, cancel, uris, index, options);

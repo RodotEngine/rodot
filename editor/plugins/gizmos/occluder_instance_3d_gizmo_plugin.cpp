@@ -108,18 +108,18 @@ void OccluderInstance3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo,
 	Transform3D gt = oi->get_global_transform();
 	Transform3D gi = gt.affine_inverse();
 
-	Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	Vector3 ray_dir = p_camera->project_ray_normal(p_point);
+	Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	Hector3 ray_dir = p_camera->project_ray_normal(p_point);
 
-	Vector3 sg[2] = { gi.xform(ray_from), gi.xform(ray_from + ray_dir * 4096) };
+	Hector3 sg[2] = { gi.xform(ray_from), gi.xform(ray_from + ray_dir * 4096) };
 
 	bool snap_enabled = Node3DEditor::get_singleton()->is_snap_enabled();
 	float snap = Node3DEditor::get_singleton()->get_translate_snap();
 
 	if (Object::cast_to<SphereOccluder3D>(*o)) {
 		Ref<SphereOccluder3D> so = o;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), Vector3(4096, 0, 0), sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), Hector3(4096, 0, 0), sg[0], sg[1], ra, rb);
 		float d = ra.x;
 		if (snap_enabled) {
 			d = Math::snapped(d, snap);
@@ -133,11 +133,11 @@ void OccluderInstance3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo,
 	}
 
 	if (Object::cast_to<BoxOccluder3D>(*o)) {
-		Vector3 axis;
+		Hector3 axis;
 		axis[p_id] = 1.0;
 		Ref<BoxOccluder3D> bo = o;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), axis * 4096, sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), axis * 4096, sg[0], sg[1], ra, rb);
 		float d = ra[p_id] * 2;
 		if (snap_enabled) {
 			d = Math::snapped(d, snap);
@@ -147,21 +147,21 @@ void OccluderInstance3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo,
 			d = 0.001;
 		}
 
-		Vector3 he = bo->get_size();
+		Hector3 he = bo->get_size();
 		he[p_id] = d;
 		bo->set_size(he);
 	}
 
 	if (Object::cast_to<QuadOccluder3D>(*o)) {
 		Ref<QuadOccluder3D> qo = o;
-		Plane p = Plane(Vector3(0.0f, 0.0f, 1.0f), 0.0f);
-		Vector3 intersection;
+		Plane p = Plane(Hector3(0.0f, 0.0f, 1.0f), 0.0f);
+		Hector3 intersection;
 		if (!p.intersects_segment(sg[0], sg[1], &intersection)) {
 			return;
 		}
 
 		if (p_id == 2) {
-			Vector2 s = Vector2(intersection.x, intersection.y) * 2.0f;
+			Hector2 s = Hector2(intersection.x, intersection.y) * 2.0f;
 			if (snap_enabled) {
 				s = s.snappedf(snap);
 			}
@@ -177,7 +177,7 @@ void OccluderInstance3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo,
 				d = 0.001;
 			}
 
-			Vector2 he = qo->get_size();
+			Hector2 he = qo->get_size();
 			he[p_id] = d * 2.0f;
 			qo->set_size(he);
 		}
@@ -246,7 +246,7 @@ void OccluderInstance3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		return;
 	}
 
-	Vector<Vector3> lines = o->get_debug_lines();
+	Hector<Hector3> lines = o->get_debug_lines();
 	if (!lines.is_empty()) {
 		Ref<Material> material = get_material("line_material", p_gizmo);
 		p_gizmo->add_lines(lines, material);
@@ -257,16 +257,16 @@ void OccluderInstance3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	if (Object::cast_to<SphereOccluder3D>(*o)) {
 		Ref<SphereOccluder3D> so = o;
 		float r = so->get_radius();
-		Vector<Vector3> handles = { Vector3(r, 0, 0) };
+		Hector<Hector3> handles = { Hector3(r, 0, 0) };
 		p_gizmo->add_handles(handles, handles_material);
 	}
 
 	if (Object::cast_to<BoxOccluder3D>(*o)) {
 		Ref<BoxOccluder3D> bo = o;
 
-		Vector<Vector3> handles;
+		Hector<Hector3> handles;
 		for (int i = 0; i < 3; i++) {
-			Vector3 ax;
+			Hector3 ax;
 			ax[i] = bo->get_size()[i] / 2;
 			handles.push_back(ax);
 		}
@@ -276,9 +276,9 @@ void OccluderInstance3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	if (Object::cast_to<QuadOccluder3D>(*o)) {
 		Ref<QuadOccluder3D> qo = o;
-		Vector2 size = qo->get_size();
-		Vector3 s = Vector3(size.x, size.y, 0.0f) / 2.0f;
-		Vector<Vector3> handles = { Vector3(s.x, 0.0f, 0.0f), Vector3(0.0f, s.y, 0.0f), Vector3(s.x, s.y, 0.0f) };
+		Hector2 size = qo->get_size();
+		Hector3 s = Hector3(size.x, size.y, 0.0f) / 2.0f;
+		Hector<Hector3> handles = { Hector3(s.x, 0.0f, 0.0f), Hector3(0.0f, s.y, 0.0f), Hector3(s.x, s.y, 0.0f) };
 		p_gizmo->add_handles(handles, handles_material);
 	}
 }

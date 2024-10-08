@@ -36,7 +36,7 @@
 #include "gdscript_parser.h"
 
 #include "core/io/file_access.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 GDScriptParserRef::Status GDScriptParserRef::get_status() const {
 	return status;
@@ -77,7 +77,7 @@ Error GDScriptParserRef::raise_status(Status p_new_status) {
 				status = PARSED;
 				String remapped_path = ResourceLoader::path_remap(path);
 				if (remapped_path.get_extension().to_lower() == "gdc") {
-					Vector<uint8_t> tokens = GDScriptCache::get_binary_tokens(remapped_path);
+					Hector<uint8_t> tokens = GDScriptCache::get_binary_tokens(remapped_path);
 					source_hash = hash_djb2_buffer(tokens.ptr(), tokens.size());
 					result = get_parser()->parse_binary(tokens, path);
 				} else {
@@ -187,7 +187,7 @@ void GDScriptCache::remove_script(const String &p_path) {
 		return;
 	}
 
-	if (HashMap<String, Vector<ObjectID>>::Iterator E = singleton->abandoned_parser_map.find(p_path)) {
+	if (HashMap<String, Hector<ObjectID>>::Iterator E = singleton->abandoned_parser_map.find(p_path)) {
 		for (ObjectID parser_ref_id : E->value) {
 			Ref<GDScriptParserRef> parser_ref{ ObjectDB::get_instance(parser_ref_id) };
 			if (parser_ref.is_valid()) {
@@ -263,7 +263,7 @@ void GDScriptCache::remove_parser(const String &p_path) {
 }
 
 String GDScriptCache::get_source_code(const String &p_path) {
-	Vector<uint8_t> source_file;
+	Hector<uint8_t> source_file;
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 	ERR_FAIL_COND_V(err, "");
@@ -281,8 +281,8 @@ String GDScriptCache::get_source_code(const String &p_path) {
 	return source;
 }
 
-Vector<uint8_t> GDScriptCache::get_binary_tokens(const String &p_path) {
-	Vector<uint8_t> buffer;
+Hector<uint8_t> GDScriptCache::get_binary_tokens(const String &p_path) {
+	Hector<uint8_t> buffer;
 	Error err = OK;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 	ERR_FAIL_COND_V_MSG(err != OK, buffer, "Failed to open binary GDScript file '" + p_path + "'.");
@@ -290,7 +290,7 @@ Vector<uint8_t> GDScriptCache::get_binary_tokens(const String &p_path) {
 	uint64_t len = f->get_length();
 	buffer.resize(len);
 	uint64_t read = f->get_buffer(buffer.ptrw(), buffer.size());
-	ERR_FAIL_COND_V_MSG(read != len, Vector<uint8_t>(), "Failed to read binary GDScript file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(read != len, Hector<uint8_t>(), "Failed to read binary GDScript file '" + p_path + "'.");
 
 	return buffer;
 }
@@ -314,7 +314,7 @@ Ref<GDScript> GDScriptCache::get_shallow_script(const String &p_path, Error &r_e
 	script.instantiate();
 	script->set_path(p_path, true);
 	if (remapped_path.get_extension().to_lower() == "gdc") {
-		Vector<uint8_t> buffer = get_binary_tokens(remapped_path);
+		Hector<uint8_t> buffer = get_binary_tokens(remapped_path);
 		if (buffer.is_empty()) {
 			r_error = ERR_FILE_CANT_READ;
 		}
@@ -365,7 +365,7 @@ Ref<GDScript> GDScriptCache::get_full_script(const String &p_path, Error &r_erro
 
 	if (p_update_from_disk) {
 		if (remapped_path.get_extension().to_lower() == "gdc") {
-			Vector<uint8_t> buffer = get_binary_tokens(remapped_path);
+			Hector<uint8_t> buffer = get_binary_tokens(remapped_path);
 			if (buffer.is_empty()) {
 				r_error = ERR_FILE_CANT_READ;
 				return script;
@@ -458,7 +458,7 @@ void GDScriptCache::clear() {
 
 	singleton->parser_inverse_dependencies.clear();
 
-	for (const KeyValue<String, Vector<ObjectID>> &KV : singleton->abandoned_parser_map) {
+	for (const KeyValue<String, Hector<ObjectID>> &KV : singleton->abandoned_parser_map) {
 		for (ObjectID parser_ref_id : KV.value) {
 			Ref<GDScriptParserRef> parser_ref{ ObjectDB::get_instance(parser_ref_id) };
 			if (parser_ref.is_valid()) {

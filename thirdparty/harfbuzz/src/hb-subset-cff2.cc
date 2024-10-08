@@ -283,7 +283,7 @@ struct cff2_private_blend_encoder_param_t
   bool seen_blend = false;
   unsigned ivs = 0;
   unsigned region_count = 0;
-  hb_vector_t<float> scalars;
+  hb_Hector_t<float> scalars;
   const	 CFF2ItemVariationStore *varStore = nullptr;
   hb_array_t<int> normalized_coords;
 };
@@ -506,13 +506,13 @@ struct cff2_subset_plan
   unsigned int    subset_fdselect_size = 0;
   unsigned int    subset_fdselect_format = 0;
   bool            pinned = false;
-  hb_vector_t<code_pair_t>   subset_fdselect_ranges;
+  hb_Hector_t<code_pair_t>   subset_fdselect_ranges;
 
   hb_inc_bimap_t   fdmap;
 
   str_buff_vec_t	    subset_charstrings;
   str_buff_vec_t	    subset_globalsubrs;
-  hb_vector_t<str_buff_vec_t> subset_localsubrs;
+  hb_Hector_t<str_buff_vec_t> subset_localsubrs;
 
   bool	    drop_hints = false;
   bool	    desubroutinize = false;
@@ -556,7 +556,7 @@ OT::cff2::accelerator_subset_t::serialize (hb_serialize_context_t *c,
     return false;
 
   /* private dicts & local subrs */
-  hb_vector_t<table_info_t>  private_dict_infos;
+  hb_Hector_t<table_info_t>  private_dict_infos;
   if (unlikely (!private_dict_infos.resize (plan.subset_fdcount))) return false;
 
   for (int i = (int)privateDicts.length; --i >= 0 ;)

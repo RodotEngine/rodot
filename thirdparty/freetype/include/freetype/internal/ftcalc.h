@@ -341,25 +341,25 @@ FT_BEGIN_HEADER
 
 
   /*
-   * A variant of FT_Vector_Transform.  See comments for
+   * A variant of FT_Hector_Transform.  See comments for
    * FT_Matrix_Multiply_Scaled.
    */
   FT_BASE( void )
-  FT_Vector_Transform_Scaled( FT_Vector*        vector,
+  FT_Hector_Transform_Scaled( FT_Hector*        Hector,
                               const FT_Matrix*  matrix,
                               FT_Long           scaling );
 
 
   /*
-   * This function normalizes a vector and returns its original length.  The
-   * normalized vector is a 16.16 fixed-point unit vector with length close
+   * This function normalizes a Hector and returns its original length.  The
+   * normalized Hector is a 16.16 fixed-point unit Hector with length close
    * to 0x10000.  The accuracy of the returned length is limited to 16 bits
    * also.  The function utilizes quick inverse square root approximation
    * without divisions and square roots relying on Newton's iterations
    * instead.
    */
   FT_BASE( FT_UInt32 )
-  FT_Vector_NormLen( FT_Vector*  vector );
+  FT_Hector_NormLen( FT_Hector*  Hector );
 
 
   /*
@@ -481,7 +481,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   * Return sqrt(x*x+y*y), which is the same as `FT_Vector_Length' but uses
+   * Return sqrt(x*x+y*y), which is the same as `FT_Hector_Length' but uses
    * two fixed-point arguments instead.
    */
   FT_BASE( FT_Fixed )

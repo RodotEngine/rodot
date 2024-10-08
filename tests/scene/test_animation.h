@@ -94,33 +94,33 @@ TEST_CASE("[Animation] Create 3D position track") {
 	Ref<Animation> animation = memnew(Animation);
 	const int track_index = animation->add_track(Animation::TYPE_POSITION_3D);
 	animation->track_set_path(track_index, NodePath("Enemy:position"));
-	animation->position_track_insert_key(track_index, 0.0, Vector3(0, 1, 2));
-	animation->position_track_insert_key(track_index, 0.5, Vector3(3.5, 4, 5));
+	animation->position_track_insert_key(track_index, 0.0, Hector3(0, 1, 2));
+	animation->position_track_insert_key(track_index, 0.5, Hector3(3.5, 4, 5));
 
 	CHECK(animation->get_track_count() == 1);
 	CHECK(!animation->track_is_compressed(0));
-	CHECK(Vector3(animation->track_get_key_value(0, 0)).is_equal_approx(Vector3(0, 1, 2)));
-	CHECK(Vector3(animation->track_get_key_value(0, 1)).is_equal_approx(Vector3(3.5, 4, 5)));
+	CHECK(Hector3(animation->track_get_key_value(0, 0)).is_equal_approx(Hector3(0, 1, 2)));
+	CHECK(Hector3(animation->track_get_key_value(0, 1)).is_equal_approx(Hector3(3.5, 4, 5)));
 
-	Vector3 r_interpolation;
+	Hector3 r_interpolation;
 
 	CHECK(animation->try_position_track_interpolate(0, -0.2, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(0, 1, 2)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(0, 1, 2)));
 
 	CHECK(animation->try_position_track_interpolate(0, 0.0, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(0, 1, 2)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(0, 1, 2)));
 
 	CHECK(animation->try_position_track_interpolate(0, 0.2, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(1.4, 2.2, 3.2)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(1.4, 2.2, 3.2)));
 
 	CHECK(animation->try_position_track_interpolate(0, 0.4, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(2.8, 3.4, 4.4)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(2.8, 3.4, 4.4)));
 
 	CHECK(animation->try_position_track_interpolate(0, 0.5, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(3.5, 4, 5)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(3.5, 4, 5)));
 
 	CHECK(animation->try_position_track_interpolate(0, 0.6, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(3.5, 4, 5)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(3.5, 4, 5)));
 
 	// 3D position tracks always use linear interpolation for performance reasons.
 	CHECK(animation->track_get_key_transition(0, 0) == doctest::Approx(real_t(1.0)));
@@ -140,13 +140,13 @@ TEST_CASE("[Animation] Create 3D rotation track") {
 	Ref<Animation> animation = memnew(Animation);
 	const int track_index = animation->add_track(Animation::TYPE_ROTATION_3D);
 	animation->track_set_path(track_index, NodePath("Enemy:rotation"));
-	animation->rotation_track_insert_key(track_index, 0.0, Quaternion::from_euler(Vector3(0, 1, 2)));
-	animation->rotation_track_insert_key(track_index, 0.5, Quaternion::from_euler(Vector3(3.5, 4, 5)));
+	animation->rotation_track_insert_key(track_index, 0.0, Quaternion::from_euler(Hector3(0, 1, 2)));
+	animation->rotation_track_insert_key(track_index, 0.5, Quaternion::from_euler(Hector3(3.5, 4, 5)));
 
 	CHECK(animation->get_track_count() == 1);
 	CHECK(!animation->track_is_compressed(0));
-	CHECK(Quaternion(animation->track_get_key_value(0, 0)).is_equal_approx(Quaternion::from_euler(Vector3(0, 1, 2))));
-	CHECK(Quaternion(animation->track_get_key_value(0, 1)).is_equal_approx(Quaternion::from_euler(Vector3(3.5, 4, 5))));
+	CHECK(Quaternion(animation->track_get_key_value(0, 0)).is_equal_approx(Quaternion::from_euler(Hector3(0, 1, 2))));
+	CHECK(Quaternion(animation->track_get_key_value(0, 1)).is_equal_approx(Quaternion::from_euler(Hector3(3.5, 4, 5))));
 
 	Quaternion r_interpolation;
 
@@ -186,33 +186,33 @@ TEST_CASE("[Animation] Create 3D scale track") {
 	Ref<Animation> animation = memnew(Animation);
 	const int track_index = animation->add_track(Animation::TYPE_SCALE_3D);
 	animation->track_set_path(track_index, NodePath("Enemy:scale"));
-	animation->scale_track_insert_key(track_index, 0.0, Vector3(0, 1, 2));
-	animation->scale_track_insert_key(track_index, 0.5, Vector3(3.5, 4, 5));
+	animation->scale_track_insert_key(track_index, 0.0, Hector3(0, 1, 2));
+	animation->scale_track_insert_key(track_index, 0.5, Hector3(3.5, 4, 5));
 
 	CHECK(animation->get_track_count() == 1);
 	CHECK(!animation->track_is_compressed(0));
-	CHECK(Vector3(animation->track_get_key_value(0, 0)).is_equal_approx(Vector3(0, 1, 2)));
-	CHECK(Vector3(animation->track_get_key_value(0, 1)).is_equal_approx(Vector3(3.5, 4, 5)));
+	CHECK(Hector3(animation->track_get_key_value(0, 0)).is_equal_approx(Hector3(0, 1, 2)));
+	CHECK(Hector3(animation->track_get_key_value(0, 1)).is_equal_approx(Hector3(3.5, 4, 5)));
 
-	Vector3 r_interpolation;
+	Hector3 r_interpolation;
 
 	CHECK(animation->try_scale_track_interpolate(0, -0.2, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(0, 1, 2)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(0, 1, 2)));
 
 	CHECK(animation->try_scale_track_interpolate(0, 0.0, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(0, 1, 2)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(0, 1, 2)));
 
 	CHECK(animation->try_scale_track_interpolate(0, 0.2, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(1.4, 2.2, 3.2)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(1.4, 2.2, 3.2)));
 
 	CHECK(animation->try_scale_track_interpolate(0, 0.4, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(2.8, 3.4, 4.4)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(2.8, 3.4, 4.4)));
 
 	CHECK(animation->try_scale_track_interpolate(0, 0.5, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(3.5, 4, 5)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(3.5, 4, 5)));
 
 	CHECK(animation->try_scale_track_interpolate(0, 0.6, &r_interpolation) == OK);
-	CHECK(r_interpolation.is_equal_approx(Vector3(3.5, 4, 5)));
+	CHECK(r_interpolation.is_equal_approx(Hector3(3.5, 4, 5)));
 
 	// 3D scale tracks always use linear interpolation for performance reasons.
 	CHECK(animation->track_get_key_transition(0, 0) == doctest::Approx(1.0));
@@ -283,8 +283,8 @@ TEST_CASE("[Animation] Create Bezier track") {
 	Ref<Animation> animation = memnew(Animation);
 	const int track_index = animation->add_track(Animation::TYPE_BEZIER);
 	animation->track_set_path(track_index, NodePath("Enemy:scale"));
-	animation->bezier_track_insert_key(track_index, 0.0, -1.0, Vector2(-1, -1), Vector2(1, 1));
-	animation->bezier_track_insert_key(track_index, 0.5, 1.0, Vector2(0, 1), Vector2(1, 0.5));
+	animation->bezier_track_insert_key(track_index, 0.0, -1.0, Hector2(-1, -1), Hector2(1, 1));
+	animation->bezier_track_insert_key(track_index, 0.5, 1.0, Hector2(0, 1), Hector2(1, 0.5));
 
 	CHECK(animation->get_track_count() == 1);
 	CHECK(!animation->track_is_compressed(0));

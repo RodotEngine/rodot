@@ -125,7 +125,7 @@ void Label3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("generate_triangle_mesh"), &Label3D::generate_triangle_mesh);
 
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "pixel_size", PROPERTY_HINT_RANGE, "0.0001,128,0.0001,suffix:m"), "set_pixel_size", "get_pixel_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 
 	ADD_GROUP("Flags", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "billboard", PROPERTY_HINT_ENUM, "Disabled,Enabled,Y-Billboard"), "set_billboard_mode", "get_billboard_mode");
@@ -250,9 +250,9 @@ Ref<TriangleMesh> Label3D::generate_triangle_mesh() const {
 		return Ref<TriangleMesh>();
 	}
 
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	faces.resize(6);
-	Vector3 *facesw = faces.ptrw();
+	Hector3 *facesw = faces.ptrw();
 
 	float total_h = 0.0;
 	float max_line_w = 0.0;
@@ -275,7 +275,7 @@ Ref<TriangleMesh> Label3D::generate_triangle_mesh() const {
 		} break;
 	}
 
-	Vector2 offset = Vector2(0, vbegin);
+	Hector2 offset = Hector2(0, vbegin);
 	switch (horizontal_alignment) {
 		case HORIZONTAL_ALIGNMENT_LEFT:
 			break;
@@ -296,11 +296,11 @@ Ref<TriangleMesh> Label3D::generate_triangle_mesh() const {
 
 	real_t px_size = get_pixel_size();
 
-	Vector2 vertices[4] = {
+	Hector2 vertices[4] = {
 
-		(final_rect.position + Vector2(0, -final_rect.size.y)) * px_size,
-		(final_rect.position + Vector2(final_rect.size.x, -final_rect.size.y)) * px_size,
-		(final_rect.position + Vector2(final_rect.size.x, 0)) * px_size,
+		(final_rect.position + Hector2(0, -final_rect.size.y)) * px_size,
+		(final_rect.position + Hector2(final_rect.size.x, -final_rect.size.y)) * px_size,
+		(final_rect.position + Hector2(final_rect.size.x, 0)) * px_size,
 		final_rect.position * px_size,
 
 	};
@@ -312,7 +312,7 @@ Ref<TriangleMesh> Label3D::generate_triangle_mesh() const {
 
 	for (int j = 0; j < 6; j++) {
 		int i = indices[j];
-		Vector3 vtx;
+		Hector3 vtx;
 		vtx[0] = vertices[i][0];
 		vtx[1] = vertices[i][1];
 		facesw[j] = vtx;
@@ -324,29 +324,29 @@ Ref<TriangleMesh> Label3D::generate_triangle_mesh() const {
 	return triangle_mesh;
 }
 
-void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, const Color &p_modulate, int p_priority, int p_outline_size) {
+void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Hector2 &r_offset, const Color &p_modulate, int p_priority, int p_outline_size) {
 	if (p_glyph.index == 0) {
 		r_offset.x += p_glyph.advance * pixel_size * p_glyph.repeat; // Non visual character, skip.
 		return;
 	}
 
-	Vector2 gl_of;
-	Vector2 gl_sz;
+	Hector2 gl_of;
+	Hector2 gl_sz;
 	Rect2 gl_uv;
 	Size2 texs;
 	RID tex;
 
 	if (p_glyph.font_rid.is_valid()) {
-		tex = TS->font_get_glyph_texture_rid(p_glyph.font_rid, Vector2i(p_glyph.font_size, p_outline_size), p_glyph.index);
+		tex = TS->font_get_glyph_texture_rid(p_glyph.font_rid, Hector2i(p_glyph.font_size, p_outline_size), p_glyph.index);
 		if (tex.is_valid()) {
-			gl_of = (TS->font_get_glyph_offset(p_glyph.font_rid, Vector2i(p_glyph.font_size, p_outline_size), p_glyph.index) + Vector2(p_glyph.x_off, p_glyph.y_off)) * pixel_size;
-			gl_sz = TS->font_get_glyph_size(p_glyph.font_rid, Vector2i(p_glyph.font_size, p_outline_size), p_glyph.index) * pixel_size;
-			gl_uv = TS->font_get_glyph_uv_rect(p_glyph.font_rid, Vector2i(p_glyph.font_size, p_outline_size), p_glyph.index);
-			texs = TS->font_get_glyph_texture_size(p_glyph.font_rid, Vector2i(p_glyph.font_size, p_outline_size), p_glyph.index);
+			gl_of = (TS->font_get_glyph_offset(p_glyph.font_rid, Hector2i(p_glyph.font_size, p_outline_size), p_glyph.index) + Hector2(p_glyph.x_off, p_glyph.y_off)) * pixel_size;
+			gl_sz = TS->font_get_glyph_size(p_glyph.font_rid, Hector2i(p_glyph.font_size, p_outline_size), p_glyph.index) * pixel_size;
+			gl_uv = TS->font_get_glyph_uv_rect(p_glyph.font_rid, Hector2i(p_glyph.font_size, p_outline_size), p_glyph.index);
+			texs = TS->font_get_glyph_texture_size(p_glyph.font_rid, Hector2i(p_glyph.font_size, p_outline_size), p_glyph.index);
 		}
 	} else {
 		gl_sz = TS->get_hex_code_box_size(p_glyph.font_size, p_glyph.index) * pixel_size;
-		gl_of = Vector2(0, -gl_sz.y);
+		gl_of = Hector2(0, -gl_sz.y);
 	}
 
 	if (gl_uv.size.x <= 2 || gl_uv.size.y <= 2) {
@@ -366,10 +366,10 @@ void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, 
 			RS::get_singleton()->material_set_param(surf.material, "specular", 0.5);
 			RS::get_singleton()->material_set_param(surf.material, "metallic", 0.0);
 			RS::get_singleton()->material_set_param(surf.material, "roughness", 1.0);
-			RS::get_singleton()->material_set_param(surf.material, "uv1_offset", Vector3(0, 0, 0));
-			RS::get_singleton()->material_set_param(surf.material, "uv1_scale", Vector3(1, 1, 1));
-			RS::get_singleton()->material_set_param(surf.material, "uv2_offset", Vector3(0, 0, 0));
-			RS::get_singleton()->material_set_param(surf.material, "uv2_scale", Vector3(1, 1, 1));
+			RS::get_singleton()->material_set_param(surf.material, "uv1_offset", Hector3(0, 0, 0));
+			RS::get_singleton()->material_set_param(surf.material, "uv1_scale", Hector3(1, 1, 1));
+			RS::get_singleton()->material_set_param(surf.material, "uv2_offset", Hector3(0, 0, 0));
+			RS::get_singleton()->material_set_param(surf.material, "uv2_scale", Hector3(1, 1, 1));
 			RS::get_singleton()->material_set_param(surf.material, "alpha_scissor_threshold", alpha_scissor_threshold);
 			RS::get_singleton()->material_set_param(surf.material, "alpha_hash_scale", alpha_hash_scale);
 			RS::get_singleton()->material_set_param(surf.material, "alpha_antialiasing_edge", alpha_antialiasing_edge);
@@ -408,26 +408,26 @@ void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, 
 		s.mesh_colors.resize((s.offset + 1) * 4);
 		s.mesh_uvs.resize((s.offset + 1) * 4);
 
-		s.mesh_vertices.write[(s.offset * 4) + 3] = Vector3(r_offset.x + gl_of.x, r_offset.y - gl_of.y - gl_sz.y, s.z_shift);
-		s.mesh_vertices.write[(s.offset * 4) + 2] = Vector3(r_offset.x + gl_of.x + gl_sz.x, r_offset.y - gl_of.y - gl_sz.y, s.z_shift);
-		s.mesh_vertices.write[(s.offset * 4) + 1] = Vector3(r_offset.x + gl_of.x + gl_sz.x, r_offset.y - gl_of.y, s.z_shift);
-		s.mesh_vertices.write[(s.offset * 4) + 0] = Vector3(r_offset.x + gl_of.x, r_offset.y - gl_of.y, s.z_shift);
+		s.mesh_vertices.write[(s.offset * 4) + 3] = Hector3(r_offset.x + gl_of.x, r_offset.y - gl_of.y - gl_sz.y, s.z_shift);
+		s.mesh_vertices.write[(s.offset * 4) + 2] = Hector3(r_offset.x + gl_of.x + gl_sz.x, r_offset.y - gl_of.y - gl_sz.y, s.z_shift);
+		s.mesh_vertices.write[(s.offset * 4) + 1] = Hector3(r_offset.x + gl_of.x + gl_sz.x, r_offset.y - gl_of.y, s.z_shift);
+		s.mesh_vertices.write[(s.offset * 4) + 0] = Hector3(r_offset.x + gl_of.x, r_offset.y - gl_of.y, s.z_shift);
 
 		for (int i = 0; i < 4; i++) {
-			s.mesh_normals.write[(s.offset * 4) + i] = Vector3(0.0, 0.0, 1.0);
+			s.mesh_normals.write[(s.offset * 4) + i] = Hector3(0.0, 0.0, 1.0);
 			s.mesh_tangents.write[(s.offset * 16) + (i * 4) + 0] = 1.0;
 			s.mesh_tangents.write[(s.offset * 16) + (i * 4) + 1] = 0.0;
 			s.mesh_tangents.write[(s.offset * 16) + (i * 4) + 2] = 0.0;
 			s.mesh_tangents.write[(s.offset * 16) + (i * 4) + 3] = 1.0;
 			s.mesh_colors.write[(s.offset * 4) + i] = p_modulate;
-			s.mesh_uvs.write[(s.offset * 4) + i] = Vector2();
+			s.mesh_uvs.write[(s.offset * 4) + i] = Hector2();
 		}
 
 		if (tex.is_valid()) {
-			s.mesh_uvs.write[(s.offset * 4) + 3] = Vector2(gl_uv.position.x / texs.x, (gl_uv.position.y + gl_uv.size.y) / texs.y);
-			s.mesh_uvs.write[(s.offset * 4) + 2] = Vector2((gl_uv.position.x + gl_uv.size.x) / texs.x, (gl_uv.position.y + gl_uv.size.y) / texs.y);
-			s.mesh_uvs.write[(s.offset * 4) + 1] = Vector2((gl_uv.position.x + gl_uv.size.x) / texs.x, gl_uv.position.y / texs.y);
-			s.mesh_uvs.write[(s.offset * 4) + 0] = Vector2(gl_uv.position.x / texs.x, gl_uv.position.y / texs.y);
+			s.mesh_uvs.write[(s.offset * 4) + 3] = Hector2(gl_uv.position.x / texs.x, (gl_uv.position.y + gl_uv.size.y) / texs.y);
+			s.mesh_uvs.write[(s.offset * 4) + 2] = Hector2((gl_uv.position.x + gl_uv.size.x) / texs.x, (gl_uv.position.y + gl_uv.size.y) / texs.y);
+			s.mesh_uvs.write[(s.offset * 4) + 1] = Hector2((gl_uv.position.x + gl_uv.size.x) / texs.x, gl_uv.position.y / texs.y);
+			s.mesh_uvs.write[(s.offset * 4) + 0] = Hector2(gl_uv.position.x / texs.x, gl_uv.position.y / texs.y);
 		}
 
 		s.indices.resize((s.offset + 1) * 6);
@@ -477,7 +477,7 @@ void Label3D::_shape() {
 		String txt = (uppercase) ? TS->string_to_upper(xl_text, language) : xl_text;
 		TS->shaped_text_add_string(text_rid, txt, font->get_rids(), font_size, font->get_opentype_features(), language);
 
-		TypedArray<Vector3i> stt;
+		TypedArray<Hector3i> stt;
 		if (st_parser == TextServer::STRUCTURED_TEXT_CUSTOM) {
 			GDVIRTUAL_CALL(_structured_text_parser, st_args, txt, stt);
 		} else {
@@ -572,7 +572,7 @@ void Label3D::_shape() {
 		} break;
 	}
 
-	Vector2 offset = Vector2(0, vbegin + lbl_offset.y * pixel_size);
+	Hector2 offset = Hector2(0, vbegin + lbl_offset.y * pixel_size);
 	for (int i = 0; i < lines_rid.size(); i++) {
 		const Glyph *glyphs = TS->shaped_text_get_glyphs(lines_rid[i]);
 		int gl_size = TS->shaped_text_get_glyph_count(lines_rid[i]);
@@ -592,17 +592,17 @@ void Label3D::_shape() {
 		}
 		offset.x += lbl_offset.x * pixel_size;
 		if (aabb == AABB()) {
-			aabb.position = Vector3(offset.x, offset.y, 0);
-			aabb.expand_to(Vector3(offset.x + line_width, offset.y - (TS->shaped_text_get_size(lines_rid[i]).y + line_spacing) * pixel_size, 0));
+			aabb.position = Hector3(offset.x, offset.y, 0);
+			aabb.expand_to(Hector3(offset.x + line_width, offset.y - (TS->shaped_text_get_size(lines_rid[i]).y + line_spacing) * pixel_size, 0));
 		} else {
-			aabb.expand_to(Vector3(offset.x, offset.y, 0));
-			aabb.expand_to(Vector3(offset.x + line_width, offset.y - (TS->shaped_text_get_size(lines_rid[i]).y + line_spacing) * pixel_size, 0));
+			aabb.expand_to(Hector3(offset.x, offset.y, 0));
+			aabb.expand_to(Hector3(offset.x + line_width, offset.y - (TS->shaped_text_get_size(lines_rid[i]).y + line_spacing) * pixel_size, 0));
 		}
 		offset.y -= TS->shaped_text_get_ascent(lines_rid[i]) * pixel_size;
 
 		if (outline_modulate.a != 0.0 && outline_size > 0) {
 			// Outline surfaces.
-			Vector2 ol_offset = offset;
+			Hector2 ol_offset = offset;
 			for (int j = 0; j < gl_size; j++) {
 				_generate_glyph_surfaces(glyphs[j], ol_offset, outline_modulate, outline_render_priority, outline_size);
 			}
@@ -797,11 +797,11 @@ Ref<Font> Label3D::_get_font_or_default() const {
 	}
 
 	const StringName theme_name = SceneStringName(font);
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	ThemeDB::get_singleton()->get_native_type_dependencies(get_class_name(), theme_types);
 
 	ThemeContext *global_context = ThemeDB::get_singleton()->get_default_theme_context();
-	Vector<Ref<Theme>> themes = global_context->get_themes();
+	Hector<Ref<Theme>> themes = global_context->get_themes();
 	if (Engine::get_singleton()->is_editor_hint()) {
 		themes.insert(0, ThemeDB::get_singleton()->get_project_theme());
 	}

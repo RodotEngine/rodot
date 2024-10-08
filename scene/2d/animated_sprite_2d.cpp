@@ -50,7 +50,7 @@ void AnimatedSprite2D::_edit_set_pivot(const Point2 &p_pivot) {
 }
 
 Point2 AnimatedSprite2D::_edit_get_pivot() const {
-	return Vector2();
+	return Hector2();
 }
 
 bool AnimatedSprite2D::_edit_use_pivot() const {
@@ -279,7 +279,7 @@ void AnimatedSprite2D::_notification(int p_what) {
 				dst_rect.size.y = -dst_rect.size.y;
 			}
 
-			texture->draw_rect_region(ci, dst_rect, Rect2(Vector2(), texture->get_size()), Color(1, 1, 1), false);
+			texture->draw_rect_region(ci, dst_rect, Rect2(Hector2(), texture->get_size()), Color(1, 1, 1), false);
 		} break;
 	}
 }
@@ -660,7 +660,7 @@ void AnimatedSprite2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed_scale"), "set_speed_scale", "get_speed_scale");
 	ADD_GROUP("Offset", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "centered"), "set_centered", "is_centered");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_h"), "set_flip_h", "is_flipped_h");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_v"), "set_flip_v", "is_flipped_v");
 }

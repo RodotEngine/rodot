@@ -85,7 +85,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			// Opaque white.
@@ -96,7 +96,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_WHITE] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -110,7 +110,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_BLACK] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -124,7 +124,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_TRANSPARENT] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -138,7 +138,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_NORMAL] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -152,7 +152,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_ANISO] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -165,7 +165,7 @@ TextureStorage::TextureStorage() {
 			tf.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT | RD::TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			tf.texture_type = RD::TEXTURE_TYPE_2D;
 
-			Vector<uint8_t> sv;
+			Hector<uint8_t> sv;
 			sv.resize(16 * 2);
 			uint16_t *ptr = (uint16_t *)sv.ptrw();
 			for (int i = 0; i < 16; i++) {
@@ -194,7 +194,7 @@ TextureStorage::TextureStorage() {
 
 		{
 			tformat.format = RD::DATA_FORMAT_R8G8B8A8_UINT;
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_2D_UINT] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -210,7 +210,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_CUBE_ARRAY;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 0);
@@ -220,7 +220,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			for (int i = 0; i < 6; i++) {
 				vpv.push_back(pv);
 			}
@@ -238,7 +238,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_CUBE_ARRAY;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 255);
@@ -248,7 +248,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			for (int i = 0; i < 6; i++) {
 				vpv.push_back(pv);
 			}
@@ -266,7 +266,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_CUBE;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 0);
@@ -276,7 +276,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			for (int i = 0; i < 6; i++) {
 				vpv.push_back(pv);
 			}
@@ -294,7 +294,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_CUBE;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 255);
@@ -304,7 +304,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			for (int i = 0; i < 6; i++) {
 				vpv.push_back(pv);
 			}
@@ -322,7 +322,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_3D;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(64 * 4);
 		for (int i = 0; i < 64; i++) {
 			pv.set(i * 4 + 0, 0);
@@ -332,7 +332,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_3D_BLACK] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -344,7 +344,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_3D_WHITE] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -360,7 +360,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D_ARRAY;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 255);
@@ -370,7 +370,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_2D_ARRAY_WHITE] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -386,7 +386,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D_ARRAY;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 0);
@@ -396,7 +396,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_2D_ARRAY_BLACK] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -412,7 +412,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D_ARRAY;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 128);
@@ -422,7 +422,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_2D_ARRAY_NORMAL] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
@@ -438,7 +438,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT | RD::TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D_ARRAY;
 
-		Vector<uint8_t> sv;
+		Hector<uint8_t> sv;
 		sv.resize(16 * 2);
 		uint16_t *ptr = (uint16_t *)sv.ptrw();
 		for (int i = 0; i < 16; i++) {
@@ -459,7 +459,7 @@ TextureStorage::TextureStorage() {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		for (int i = 0; i < 16; i++) {
 			pv.set(i * 4 + 0, 0);
@@ -469,7 +469,7 @@ TextureStorage::TextureStorage() {
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			decal_atlas.texture = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 			decal_atlas.texture_srgb = decal_atlas.texture;
@@ -488,21 +488,21 @@ TextureStorage::TextureStorage() {
 			tformat.usage_bits = RD::TEXTURE_USAGE_COLOR_ATTACHMENT_BIT | RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_UPDATE_BIT;
 		}
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(4 * 4);
 		for (int i = 0; i < 4 * 4; i++) {
 			pv.set(i, 0);
 		}
 
 		{
-			Vector<Vector<uint8_t>> vpv;
+			Hector<Hector<uint8_t>> vpv;
 			vpv.push_back(pv);
 			default_rd_textures[DEFAULT_RD_TEXTURE_VRS] = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 		}
 	}
 
 	{
-		Vector<String> sdf_modes;
+		Hector<String> sdf_modes;
 		sdf_modes.push_back("\n#define MODE_LOAD\n");
 		sdf_modes.push_back("\n#define MODE_LOAD_SHRINK\n");
 		sdf_modes.push_back("\n#define MODE_PROCESS\n");
@@ -787,8 +787,8 @@ void TextureStorage::texture_2d_initialize(RID p_texture, const Ref<Image> &p_im
 		rd_view.swizzle_b = ret_format.swizzle_b;
 		rd_view.swizzle_a = ret_format.swizzle_a;
 	}
-	Vector<uint8_t> data = image->get_data(); //use image data
-	Vector<Vector<uint8_t>> data_slices;
+	Hector<uint8_t> data = image->get_data(); //use image data
+	Hector<Hector<uint8_t>> data_slices;
 	data_slices.push_back(data);
 	texture.rd_texture = RD::get_singleton()->texture_create(rd_format, rd_view, data_slices);
 	ERR_FAIL_COND(texture.rd_texture.is_null());
@@ -811,14 +811,14 @@ void TextureStorage::texture_2d_initialize(RID p_texture, const Ref<Image> &p_im
 	texture_owner.initialize_rid(p_texture, texture);
 }
 
-void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Vector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) {
+void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Hector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) {
 	ERR_FAIL_COND(p_layers.is_empty());
 
 	ERR_FAIL_COND(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP && p_layers.size() != 6);
 	ERR_FAIL_COND(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP_ARRAY && (p_layers.size() < 6 || (p_layers.size() % 6) != 0));
 
 	TextureToRDFormat ret_format;
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	{
 		int valid_width = 0;
 		int valid_height = 0;
@@ -897,9 +897,9 @@ void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Vector<R
 		rd_view.swizzle_b = ret_format.swizzle_b;
 		rd_view.swizzle_a = ret_format.swizzle_a;
 	}
-	Vector<Vector<uint8_t>> data_slices;
+	Hector<Hector<uint8_t>> data_slices;
 	for (int i = 0; i < images.size(); i++) {
-		Vector<uint8_t> data = images[i]->get_data(); //use image data
+		Hector<uint8_t> data = images[i]->get_data(); //use image data
 		data_slices.push_back(data);
 	}
 	texture.rd_texture = RD::get_singleton()->texture_create(rd_format, rd_view, data_slices);
@@ -923,7 +923,7 @@ void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Vector<R
 	texture_owner.initialize_rid(p_texture, texture);
 }
 
-void TextureStorage::texture_3d_initialize(RID p_texture, Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) {
+void TextureStorage::texture_3d_initialize(RID p_texture, Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data) {
 	ERR_FAIL_COND(p_data.is_empty());
 
 	Image::Image3DValidateError verr = Image::validate_3d_image(p_format, p_width, p_height, p_depth, p_mipmaps, p_data);
@@ -933,11 +933,11 @@ void TextureStorage::texture_3d_initialize(RID p_texture, Image::Format p_format
 
 	TextureToRDFormat ret_format;
 	Image::Format validated_format = Image::FORMAT_MAX;
-	Vector<uint8_t> all_data;
+	Hector<uint8_t> all_data;
 	uint32_t mipmap_count = 0;
-	Vector<Texture::BufferSlice3D> slices;
+	Hector<Texture::BufferSlice3D> slices;
 	{
-		Vector<Ref<Image>> images;
+		Hector<Ref<Image>> images;
 		uint32_t all_data_size = 0;
 		images.resize(p_data.size());
 		for (int i = 0; i < p_data.size(); i++) {
@@ -1016,7 +1016,7 @@ void TextureStorage::texture_3d_initialize(RID p_texture, Image::Format p_format
 		rd_view.swizzle_b = ret_format.swizzle_b;
 		rd_view.swizzle_a = ret_format.swizzle_a;
 	}
-	Vector<Vector<uint8_t>> data_slices;
+	Hector<Hector<uint8_t>> data_slices;
 	data_slices.push_back(all_data); //one slice
 
 	texture.rd_texture = RD::get_singleton()->texture_create(rd_format, rd_view, data_slices);
@@ -1279,7 +1279,7 @@ void TextureStorage::texture_2d_update(RID p_texture, const Ref<Image> &p_image,
 	_texture_2d_update(p_texture, p_image, p_layer, false);
 }
 
-void TextureStorage::texture_3d_update(RID p_texture, const Vector<Ref<Image>> &p_data) {
+void TextureStorage::texture_3d_update(RID p_texture, const Hector<Ref<Image>> &p_data) {
 	Texture *tex = texture_owner.get_or_null(p_texture);
 	ERR_FAIL_NULL(tex);
 	ERR_FAIL_COND(tex->type != TextureStorage::TYPE_3D);
@@ -1289,9 +1289,9 @@ void TextureStorage::texture_3d_update(RID p_texture, const Vector<Ref<Image>> &
 		ERR_FAIL_MSG(Image::get_3d_image_validation_error_text(verr));
 	}
 
-	Vector<uint8_t> all_data;
+	Hector<uint8_t> all_data;
 	{
-		Vector<Ref<Image>> images;
+		Hector<Ref<Image>> images;
 		uint32_t all_data_size = 0;
 		images.resize(p_data.size());
 		for (int i = 0; i < p_data.size(); i++) {
@@ -1379,7 +1379,7 @@ void TextureStorage::texture_2d_layered_placeholder_initialize(RID p_texture, RS
 	Ref<Image> image = Image::create_empty(4, 4, false, Image::FORMAT_RGBA8);
 	image->fill(Color(1, 0, 1, 1));
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	if (p_layered_type == RS::TEXTURE_LAYERED_2D_ARRAY) {
 		images.push_back(image);
 	} else {
@@ -1398,7 +1398,7 @@ void TextureStorage::texture_3d_placeholder_initialize(RID p_texture) {
 	Ref<Image> image = Image::create_empty(4, 4, false, Image::FORMAT_RGBA8);
 	image->fill(Color(1, 0, 1, 1));
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	//cube
 	for (int i = 0; i < 4; i++) {
 		images.push_back(image);
@@ -1416,14 +1416,14 @@ Ref<Image> TextureStorage::texture_2d_get(RID p_texture) const {
 		return tex->image_cache_2d;
 	}
 #endif
-	Vector<uint8_t> data = RD::get_singleton()->texture_get_data(tex->rd_texture, 0);
+	Hector<uint8_t> data = RD::get_singleton()->texture_get_data(tex->rd_texture, 0);
 	ERR_FAIL_COND_V(data.is_empty(), Ref<Image>());
 	Ref<Image> image;
 
 	// Expand RGB10_A2 into RGBAH. This is needed for capturing viewport data
 	// when using the mobile renderer with HDR mode on.
 	if (tex->rd_format == RD::DATA_FORMAT_A2B10G10R10_UNORM_PACK32) {
-		Vector<uint8_t> new_data;
+		Hector<uint8_t> new_data;
 		new_data.resize(data.size() * 2);
 		uint16_t *ndp = (uint16_t *)new_data.ptr();
 
@@ -1465,7 +1465,7 @@ Ref<Image> TextureStorage::texture_2d_layer_get(RID p_texture, int p_layer) cons
 	Texture *tex = texture_owner.get_or_null(p_texture);
 	ERR_FAIL_NULL_V(tex, Ref<Image>());
 
-	Vector<uint8_t> data = RD::get_singleton()->texture_get_data(tex->rd_texture, p_layer);
+	Hector<uint8_t> data = RD::get_singleton()->texture_get_data(tex->rd_texture, p_layer);
 	ERR_FAIL_COND_V(data.is_empty(), Ref<Image>());
 	Ref<Image> image = Image::create_from_data(tex->width, tex->height, tex->mipmaps > 1, tex->validated_format, data);
 	ERR_FAIL_COND_V(image->is_empty(), Ref<Image>());
@@ -1476,25 +1476,25 @@ Ref<Image> TextureStorage::texture_2d_layer_get(RID p_texture, int p_layer) cons
 	return image;
 }
 
-Vector<Ref<Image>> TextureStorage::texture_3d_get(RID p_texture) const {
+Hector<Ref<Image>> TextureStorage::texture_3d_get(RID p_texture) const {
 	Texture *tex = texture_owner.get_or_null(p_texture);
-	ERR_FAIL_NULL_V(tex, Vector<Ref<Image>>());
-	ERR_FAIL_COND_V(tex->type != TextureStorage::TYPE_3D, Vector<Ref<Image>>());
+	ERR_FAIL_NULL_V(tex, Hector<Ref<Image>>());
+	ERR_FAIL_COND_V(tex->type != TextureStorage::TYPE_3D, Hector<Ref<Image>>());
 
-	Vector<uint8_t> all_data = RD::get_singleton()->texture_get_data(tex->rd_texture, 0);
+	Hector<uint8_t> all_data = RD::get_singleton()->texture_get_data(tex->rd_texture, 0);
 
-	ERR_FAIL_COND_V(all_data.size() != (int)tex->buffer_size_3d, Vector<Ref<Image>>());
+	ERR_FAIL_COND_V(all_data.size() != (int)tex->buffer_size_3d, Hector<Ref<Image>>());
 
-	Vector<Ref<Image>> ret;
+	Hector<Ref<Image>> ret;
 
 	for (int i = 0; i < tex->buffer_slices_3d.size(); i++) {
 		const Texture::BufferSlice3D &bs = tex->buffer_slices_3d[i];
-		ERR_FAIL_COND_V(bs.offset >= (uint32_t)all_data.size(), Vector<Ref<Image>>());
-		ERR_FAIL_COND_V(bs.offset + bs.buffer_size > (uint32_t)all_data.size(), Vector<Ref<Image>>());
-		Vector<uint8_t> sub_region = all_data.slice(bs.offset, bs.offset + bs.buffer_size);
+		ERR_FAIL_COND_V(bs.offset >= (uint32_t)all_data.size(), Hector<Ref<Image>>());
+		ERR_FAIL_COND_V(bs.offset + bs.buffer_size > (uint32_t)all_data.size(), Hector<Ref<Image>>());
+		Hector<uint8_t> sub_region = all_data.slice(bs.offset, bs.offset + bs.buffer_size);
 
 		Ref<Image> img = Image::create_from_data(bs.size.width, bs.size.height, false, tex->validated_format, sub_region);
-		ERR_FAIL_COND_V(img->is_empty(), Vector<Ref<Image>>());
+		ERR_FAIL_COND_V(img->is_empty(), Hector<Ref<Image>>());
 		if (tex->format != tex->validated_format) {
 			img->convert(tex->format);
 		}
@@ -1527,8 +1527,8 @@ void TextureStorage::texture_replace(RID p_texture, RID p_by_texture) {
 		tex->canvas_texture = nullptr;
 	}
 
-	Vector<RID> proxies_to_update = tex->proxies;
-	Vector<RID> proxies_to_redirect = by_tex->proxies;
+	Hector<RID> proxies_to_update = tex->proxies;
+	Hector<RID> proxies_to_redirect = by_tex->proxies;
 
 	*tex = *by_tex;
 
@@ -2597,7 +2597,7 @@ void TextureStorage::decal_free(RID p_rid) {
 	decal_owner.free(p_rid);
 }
 
-void TextureStorage::decal_set_size(RID p_decal, const Vector3 &p_size) {
+void TextureStorage::decal_set_size(RID p_decal, const Hector3 &p_size) {
 	Decal *decal = decal_owner.get_or_null(p_decal);
 	ERR_FAIL_NULL(decal);
 	decal->size = p_size;
@@ -2731,7 +2731,7 @@ void TextureStorage::update_decal_atlas() {
 
 	if (decal_atlas.textures.size()) {
 		//generate atlas
-		Vector<DecalAtlas::SortItem> itemsv;
+		Hector<DecalAtlas::SortItem> itemsv;
 		itemsv.resize(decal_atlas.textures.size());
 		uint32_t base_size = 8;
 
@@ -2764,7 +2764,7 @@ void TextureStorage::update_decal_atlas() {
 		int atlas_height = 0;
 
 		while (true) {
-			Vector<int> v_offsetsv;
+			Hector<int> v_offsetsv;
 			v_offsetsv.resize(base_size);
 
 			int *v_offsets = v_offsetsv.ptrw();
@@ -2821,7 +2821,7 @@ void TextureStorage::update_decal_atlas() {
 
 		for (int i = 0; i < item_count; i++) {
 			DecalAtlas::Texture *t = decal_atlas.textures.getptr(items[i].texture);
-			t->uv_rect.position = items[i].pos * border + Vector2i(border / 2, border / 2);
+			t->uv_rect.position = items[i].pos * border + Hector2i(border / 2, border / 2);
 			t->uv_rect.size = items[i].pixel_size;
 
 			t->uv_rect.position /= Size2(decal_atlas.size);
@@ -2856,13 +2856,13 @@ void TextureStorage::update_decal_atlas() {
 		for (int i = 0; i < decal_atlas.mipmaps; i++) {
 			DecalAtlas::MipMap mm;
 			mm.texture = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), decal_atlas.texture, 0, i);
-			Vector<RID> fb;
+			Hector<RID> fb;
 			fb.push_back(mm.texture);
 			mm.fb = RD::get_singleton()->framebuffer_create(fb);
 			mm.size = s;
 			decal_atlas.texture_mipmaps.push_back(mm);
 
-			s = Vector2i(s.width >> 1, s.height >> 1).maxi(1);
+			s = Hector2i(s.width >> 1, s.height >> 1).maxi(1);
 		}
 		{
 			//create the SRGB variant
@@ -2880,7 +2880,7 @@ void TextureStorage::update_decal_atlas() {
 
 		if (decal_atlas.textures.size()) {
 			if (i == 0) {
-				Vector<Color> cc;
+				Hector<Color> cc;
 				cc.push_back(clear_color);
 
 				RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(mm.fb, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_DISCARD, RD::FINAL_ACTION_DISCARD, cc);
@@ -2992,8 +2992,8 @@ void TextureStorage::update_decal_buffer(const PagedArray<RID> &p_decals, const 
 	ForwardIDStorage *forward_id_storage = ForwardIDStorage::get_singleton();
 
 	Transform3D uv_xform;
-	uv_xform.basis.scale(Vector3(2.0, 1.0, 2.0));
-	uv_xform.origin = Vector3(-1.0, 0.0, -1.0);
+	uv_xform.basis.scale(Hector3(2.0, 1.0, 2.0));
+	uv_xform.origin = Hector3(-1.0, 0.0, -1.0);
 
 	uint32_t decals_size = p_decals.size();
 
@@ -3062,7 +3062,7 @@ void TextureStorage::update_decal_buffer(const PagedArray<RID> &p_decals, const 
 
 		DecalData &dd = decals[i];
 
-		Vector3 decal_extents = decal->size / 2;
+		Hector3 decal_extents = decal->size / 2;
 
 		Transform3D scale_xform;
 		scale_xform.basis.scale(decal_extents);
@@ -3074,7 +3074,7 @@ void TextureStorage::update_decal_buffer(const PagedArray<RID> &p_decals, const 
 		Transform3D to_decal_xform = (camera_inverse_xform * xform * scale_xform * uv_xform).affine_inverse();
 		MaterialStorage::store_transform(to_decal_xform, dd.xform);
 
-		Vector3 normal = xform.basis.get_column(Vector3::AXIS_Y).normalized();
+		Hector3 normal = xform.basis.get_column(Hector3::AXIS_Y).normalized();
 		normal = camera_inverse_xform.basis.xform(normal); //camera is normalized, so fine
 
 		dd.normal[0] = normal.x;
@@ -3323,7 +3323,7 @@ void TextureStorage::_update_render_target(RenderTarget *rt) {
 		tex->format = rt->image_format;
 		tex->validated_format = rt->use_hdr ? Image::FORMAT_RGBAH : Image::FORMAT_RGBA8;
 
-		Vector<RID> proxies = tex->proxies; //make a copy, since update may change it
+		Hector<RID> proxies = tex->proxies; //make a copy, since update may change it
 		for (int i = 0; i < proxies.size(); i++) {
 			texture_proxy_update(proxies[i], rt->texture);
 		}
@@ -3348,7 +3348,7 @@ void TextureStorage::_create_render_target_backbuffer(RenderTarget *rt) {
 	RD::get_singleton()->set_resource_name(rt->backbuffer_mipmap0, "Back Buffer slice mipmap 0");
 
 	{
-		Vector<RID> fb_tex;
+		Hector<RID> fb_tex;
 		fb_tex.push_back(rt->backbuffer_mipmap0);
 		rt->backbuffer_fb = RD::get_singleton()->framebuffer_create(fb_tex);
 	}
@@ -3679,7 +3679,7 @@ void TextureStorage::render_target_do_clear_request(RID p_render_target) {
 	if (!rt->clear_requested) {
 		return;
 	}
-	Vector<Color> clear_colors;
+	Hector<Color> clear_colors;
 	clear_colors.push_back(rt->use_hdr ? rt->clear_color.srgb_to_linear() : rt->clear_color);
 	RD::get_singleton()->draw_list_begin(rt->get_framebuffer(), RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, clear_colors);
 	RD::get_singleton()->draw_list_end();
@@ -3724,7 +3724,7 @@ Rect2i TextureStorage::_render_target_get_sdf_rect(const RenderTarget *rt) const
 
 	margin = (rt->size * scale / 100) - rt->size;
 
-	Rect2i r(Vector2i(), rt->size);
+	Rect2i r(Hector2i(), rt->size);
 	r.position -= margin;
 	r.size += margin * 2;
 
@@ -3764,10 +3764,10 @@ RID TextureStorage::render_target_get_sdf_texture(RID p_render_target) {
 		tformat.usage_bits = RD::TEXTURE_USAGE_SAMPLING_BIT;
 		tformat.texture_type = RD::TEXTURE_TYPE_2D;
 
-		Vector<uint8_t> pv;
+		Hector<uint8_t> pv;
 		pv.resize(16 * 4);
 		memset(pv.ptrw(), 0, 16 * 4);
-		Vector<Vector<uint8_t>> vpv;
+		Hector<Hector<uint8_t>> vpv;
 
 		rt->sdf_buffer_read = RD::get_singleton()->texture_create(tformat, RD::TextureView(), vpv);
 	}
@@ -3794,7 +3794,7 @@ void TextureStorage::_render_target_allocate_sdf(RenderTarget *rt) {
 	rt->sdf_buffer_write = RD::get_singleton()->texture_create(tformat, RD::TextureView());
 
 	{
-		Vector<RID> write_fb;
+		Hector<RID> write_fb;
 		write_fb.push_back(rt->sdf_buffer_write);
 		rt->sdf_buffer_write_fb = RD::get_singleton()->framebuffer_create(write_fb);
 	}
@@ -3833,7 +3833,7 @@ void TextureStorage::_render_target_allocate_sdf(RenderTarget *rt) {
 	rt->sdf_buffer_read = RD::get_singleton()->texture_create(tformat, RD::TextureView());
 
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_IMAGE;

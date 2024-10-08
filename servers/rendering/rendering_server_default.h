@@ -64,7 +64,7 @@ class RenderingServerDefault : public RenderingServer {
 	static void _changes_changed() {}
 
 	uint64_t frame_profile_frame = 0;
-	Vector<FrameProfileArea> frame_profile;
+	Hector<FrameProfileArea> frame_profile;
 
 	double frame_setup_time = 0;
 
@@ -186,8 +186,8 @@ public:
 
 	//these go pass-through, as they can be called from any thread
 	FUNCRIDTEX1(texture_2d, const Ref<Image> &)
-	FUNCRIDTEX2(texture_2d_layered, const Vector<Ref<Image>> &, TextureLayeredType)
-	FUNCRIDTEX6(texture_3d, Image::Format, int, int, int, bool, const Vector<Ref<Image>> &)
+	FUNCRIDTEX2(texture_2d_layered, const Hector<Ref<Image>> &, TextureLayeredType)
+	FUNCRIDTEX6(texture_3d, Image::Format, int, int, int, bool, const Hector<Ref<Image>> &)
 	FUNCRIDTEX3(texture_external, int, int, uint64_t)
 	FUNCRIDTEX1(texture_proxy, RID)
 
@@ -198,7 +198,7 @@ public:
 
 	//these go through command queue if they are in another thread
 	FUNC3(texture_2d_update, RID, const Ref<Image> &, int)
-	FUNC2(texture_3d_update, RID, const Vector<Ref<Image>> &)
+	FUNC2(texture_3d_update, RID, const Hector<Ref<Image>> &)
 	FUNC4(texture_external_update, RID, int, int, uint64_t)
 	FUNC2(texture_proxy_update, RID, RID)
 
@@ -209,7 +209,7 @@ public:
 
 	FUNC1RC(Ref<Image>, texture_2d_get, RID)
 	FUNC2RC(Ref<Image>, texture_2d_layer_get, RID, int)
-	FUNC1RC(Vector<Ref<Image>>, texture_3d_get, RID)
+	FUNC1RC(Hector<Ref<Image>>, texture_3d_get, RID)
 
 	FUNC2(texture_replace, RID, RID)
 
@@ -320,7 +320,7 @@ public:
 #define ServerName RendererMeshStorage
 #define server_name RSG::mesh_storage
 
-	virtual RID mesh_create_from_surfaces(const Vector<SurfaceData> &p_surfaces, int p_blend_shape_count = 0) override {
+	virtual RID mesh_create_from_surfaces(const Hector<SurfaceData> &p_surfaces, int p_blend_shape_count = 0) override {
 		RID mesh = RSG::mesh_storage->mesh_allocate();
 
 		bool using_server_thread = Thread::get_caller_id() == server_thread;
@@ -357,9 +357,9 @@ public:
 	FUNC2(mesh_set_blend_shape_mode, RID, BlendShapeMode)
 	FUNC1RC(BlendShapeMode, mesh_get_blend_shape_mode, RID)
 
-	FUNC4(mesh_surface_update_vertex_region, RID, int, int, const Vector<uint8_t> &)
-	FUNC4(mesh_surface_update_attribute_region, RID, int, int, const Vector<uint8_t> &)
-	FUNC4(mesh_surface_update_skin_region, RID, int, int, const Vector<uint8_t> &)
+	FUNC4(mesh_surface_update_vertex_region, RID, int, int, const Hector<uint8_t> &)
+	FUNC4(mesh_surface_update_attribute_region, RID, int, int, const Hector<uint8_t> &)
+	FUNC4(mesh_surface_update_skin_region, RID, int, int, const Hector<uint8_t> &)
 
 	FUNC3(mesh_surface_set_material, RID, int, RID)
 	FUNC2RC(RID, mesh_surface_get_material, RID, int)
@@ -402,10 +402,10 @@ public:
 	FUNC2RC(Color, multimesh_instance_get_color, RID, int)
 	FUNC2RC(Color, multimesh_instance_get_custom_data, RID, int)
 
-	FUNC2(multimesh_set_buffer, RID, const Vector<float> &)
-	FUNC1RC(Vector<float>, multimesh_get_buffer, RID)
+	FUNC2(multimesh_set_buffer, RID, const Hector<float> &)
+	FUNC1RC(Hector<float>, multimesh_get_buffer, RID)
 
-	FUNC3(multimesh_set_buffer_interpolated, RID, const Vector<float> &, const Vector<float> &)
+	FUNC3(multimesh_set_buffer_interpolated, RID, const Hector<float> &, const Hector<float> &)
 	FUNC2(multimesh_set_physics_interpolated, RID, bool)
 	FUNC2(multimesh_set_physics_interpolation_quality, RID, MultimeshPhysicsInterpolationQuality)
 	FUNC2(multimesh_instance_reset_physics_interpolation, RID, int)
@@ -462,8 +462,8 @@ public:
 	FUNC2(reflection_probe_set_ambient_energy, RID, float)
 	FUNC2(reflection_probe_set_ambient_mode, RID, ReflectionProbeAmbientMode)
 	FUNC2(reflection_probe_set_max_distance, RID, float)
-	FUNC2(reflection_probe_set_size, RID, const Vector3 &)
-	FUNC2(reflection_probe_set_origin_offset, RID, const Vector3 &)
+	FUNC2(reflection_probe_set_size, RID, const Hector3 &)
+	FUNC2(reflection_probe_set_origin_offset, RID, const Hector3 &)
 	FUNC2(reflection_probe_set_as_interior, RID, bool)
 	FUNC2(reflection_probe_set_enable_box_projection, RID, bool)
 	FUNC2(reflection_probe_set_enable_shadows, RID, bool)
@@ -479,9 +479,9 @@ public:
 	FUNC3(lightmap_set_textures, RID, RID, bool)
 	FUNC2(lightmap_set_probe_bounds, RID, const AABB &)
 	FUNC2(lightmap_set_probe_interior, RID, bool)
-	FUNC5(lightmap_set_probe_capture_data, RID, const PackedVector3Array &, const PackedColorArray &, const PackedInt32Array &, const PackedInt32Array &)
+	FUNC5(lightmap_set_probe_capture_data, RID, const PackedHector3Array &, const PackedColorArray &, const PackedInt32Array &, const PackedInt32Array &)
 	FUNC2(lightmap_set_baked_exposure_normalization, RID, float)
-	FUNC1RC(PackedVector3Array, lightmap_get_probe_capture_points, RID)
+	FUNC1RC(PackedHector3Array, lightmap_get_probe_capture_points, RID)
 	FUNC1RC(PackedColorArray, lightmap_get_probe_capture_sh, RID)
 	FUNC1RC(PackedInt32Array, lightmap_get_probe_capture_tetrahedra, RID)
 	FUNC1RC(PackedInt32Array, lightmap_get_probe_capture_bsp_tree, RID)
@@ -504,7 +504,7 @@ public:
 
 	FUNCRIDSPLIT(decal)
 
-	FUNC2(decal_set_size, RID, const Vector3 &)
+	FUNC2(decal_set_size, RID, const Hector3 &)
 	FUNC3(decal_set_texture, RID, DecalTexture, RID)
 	FUNC2(decal_set_emission_energy, RID, float)
 	FUNC2(decal_set_albedo_mix, RID, float)
@@ -525,14 +525,14 @@ public:
 
 	FUNCRIDSPLIT(voxel_gi)
 
-	FUNC8(voxel_gi_allocate_data, RID, const Transform3D &, const AABB &, const Vector3i &, const Vector<uint8_t> &, const Vector<uint8_t> &, const Vector<uint8_t> &, const Vector<int> &)
+	FUNC8(voxel_gi_allocate_data, RID, const Transform3D &, const AABB &, const Hector3i &, const Hector<uint8_t> &, const Hector<uint8_t> &, const Hector<uint8_t> &, const Hector<int> &)
 
 	FUNC1RC(AABB, voxel_gi_get_bounds, RID)
-	FUNC1RC(Vector3i, voxel_gi_get_octree_size, RID)
-	FUNC1RC(Vector<uint8_t>, voxel_gi_get_octree_cells, RID)
-	FUNC1RC(Vector<uint8_t>, voxel_gi_get_data_cells, RID)
-	FUNC1RC(Vector<uint8_t>, voxel_gi_get_distance_field, RID)
-	FUNC1RC(Vector<int>, voxel_gi_get_level_counts, RID)
+	FUNC1RC(Hector3i, voxel_gi_get_octree_size, RID)
+	FUNC1RC(Hector<uint8_t>, voxel_gi_get_octree_cells, RID)
+	FUNC1RC(Hector<uint8_t>, voxel_gi_get_data_cells, RID)
+	FUNC1RC(Hector<uint8_t>, voxel_gi_get_distance_field, RID)
+	FUNC1RC(Hector<int>, voxel_gi_get_level_counts, RID)
 	FUNC1RC(Transform3D, voxel_gi_get_to_cell_xform, RID)
 
 	FUNC2(voxel_gi_set_dynamic_range, RID, float)
@@ -575,11 +575,11 @@ public:
 	FUNC2(particles_set_fractional_delta, RID, bool)
 	FUNC1R(bool, particles_is_inactive, RID)
 	FUNC3(particles_set_trails, RID, bool, float)
-	FUNC2(particles_set_trail_bind_poses, RID, const Vector<Transform3D> &)
+	FUNC2(particles_set_trail_bind_poses, RID, const Hector<Transform3D> &)
 
 	FUNC1(particles_request_process, RID)
 	FUNC1(particles_restart, RID)
-	FUNC6(particles_emit, RID, const Transform3D &, const Vector3 &, const Color &, const Color &, uint32_t)
+	FUNC6(particles_emit, RID, const Transform3D &, const Hector3 &, const Color &, const Color &, uint32_t)
 	FUNC2(particles_set_subemitter, RID, RID)
 	FUNC2(particles_set_collision_base_size, RID, float)
 
@@ -592,7 +592,7 @@ public:
 
 	FUNC1R(AABB, particles_get_current_aabb, RID)
 	FUNC2(particles_set_emission_transform, RID, const Transform3D &)
-	FUNC2(particles_set_emitter_velocity, RID, const Vector3 &)
+	FUNC2(particles_set_emitter_velocity, RID, const Hector3 &)
 	FUNC2(particles_set_interp_to_end, RID, float)
 
 	/* PARTICLES COLLISION */
@@ -602,7 +602,7 @@ public:
 	FUNC2(particles_collision_set_collision_type, RID, ParticlesCollisionType)
 	FUNC2(particles_collision_set_cull_mask, RID, uint32_t)
 	FUNC2(particles_collision_set_sphere_radius, RID, real_t)
-	FUNC2(particles_collision_set_box_extents, RID, const Vector3 &)
+	FUNC2(particles_collision_set_box_extents, RID, const Hector3 &)
 	FUNC2(particles_collision_set_attractor_strength, RID, real_t)
 	FUNC2(particles_collision_set_attractor_directionality, RID, real_t)
 	FUNC2(particles_collision_set_attractor_attenuation, RID, real_t)
@@ -621,7 +621,7 @@ public:
 	FUNCRIDSPLIT(fog_volume)
 
 	FUNC2(fog_volume_set_shape, RID, FogVolumeShape)
-	FUNC2(fog_volume_set_size, RID, const Vector3 &)
+	FUNC2(fog_volume_set_size, RID, const Hector3 &)
 	FUNC2(fog_volume_set_material, RID, RID)
 
 	/* VISIBILITY_NOTIFIER */
@@ -647,7 +647,7 @@ public:
 	FUNCRIDSPLIT(camera)
 	FUNC4(camera_set_perspective, RID, float, float, float)
 	FUNC4(camera_set_orthogonal, RID, float, float, float)
-	FUNC5(camera_set_frustum, RID, float, Vector2, float, float)
+	FUNC5(camera_set_frustum, RID, float, Hector2, float, float)
 	FUNC2(camera_set_transform, RID, const Transform3D &)
 	FUNC2(camera_set_cull_mask, RID, uint32_t)
 	FUNC2(camera_set_environment, RID, RID)
@@ -657,7 +657,7 @@ public:
 
 	/* OCCLUDER */
 	FUNCRIDSPLIT(occluder)
-	FUNC3(occluder_set_mesh, RID, const PackedVector3Array &, const PackedInt32Array &)
+	FUNC3(occluder_set_mesh, RID, const PackedHector3Array &, const PackedInt32Array &)
 
 #undef server_name
 #undef ServerName
@@ -798,7 +798,7 @@ public:
 	FUNC6(environment_set_ssil, RID, bool, float, float, float, float)
 	FUNC6(environment_set_ssil_quality, EnvironmentSSILQuality, bool, float, int, float, float)
 
-	FUNC13(environment_set_glow, RID, bool, Vector<float>, float, float, float, float, EnvironmentGlowBlendMode, float, float, float, float, RID)
+	FUNC13(environment_set_glow, RID, bool, Hector<float>, float, float, float, float, EnvironmentGlowBlendMode, float, float, float, float, RID)
 	FUNC1(environment_glow_set_use_bicubic_upscale, bool)
 
 	FUNC4(environment_set_tonemap, RID, EnvironmentToneMapper, float, float)
@@ -887,9 +887,9 @@ public:
 	FUNC2(instance_set_ignore_culling, RID, bool)
 
 	// don't use these in a game!
-	FUNC2RC(Vector<ObjectID>, instances_cull_aabb, const AABB &, RID)
-	FUNC3RC(Vector<ObjectID>, instances_cull_ray, const Vector3 &, const Vector3 &, RID)
-	FUNC2RC(Vector<ObjectID>, instances_cull_convex, const Vector<Plane> &, RID)
+	FUNC2RC(Hector<ObjectID>, instances_cull_aabb, const AABB &, RID)
+	FUNC3RC(Hector<ObjectID>, instances_cull_ray, const Hector3 &, const Hector3 &, RID)
+	FUNC2RC(Hector<ObjectID>, instances_cull_convex, const Hector<Plane> &, RID)
 
 	FUNC3(instance_geometry_set_flag, RID, InstanceFlags, bool)
 	FUNC2(instance_geometry_set_cast_shadows_setting, RID, ShadowCastingSetting)
@@ -954,18 +954,18 @@ public:
 	FUNC2(canvas_item_set_draw_behind_parent, RID, bool)
 
 	FUNC6(canvas_item_add_line, RID, const Point2 &, const Point2 &, const Color &, float, bool)
-	FUNC5(canvas_item_add_polyline, RID, const Vector<Point2> &, const Vector<Color> &, float, bool)
-	FUNC5(canvas_item_add_multiline, RID, const Vector<Point2> &, const Vector<Color> &, float, bool)
+	FUNC5(canvas_item_add_polyline, RID, const Hector<Point2> &, const Hector<Color> &, float, bool)
+	FUNC5(canvas_item_add_multiline, RID, const Hector<Point2> &, const Hector<Color> &, float, bool)
 	FUNC4(canvas_item_add_rect, RID, const Rect2 &, const Color &, bool)
 	FUNC5(canvas_item_add_circle, RID, const Point2 &, float, const Color &, bool)
 	FUNC6(canvas_item_add_texture_rect, RID, const Rect2 &, RID, bool, const Color &, bool)
 	FUNC7(canvas_item_add_texture_rect_region, RID, const Rect2 &, RID, const Rect2 &, const Color &, bool, bool)
 	FUNC8(canvas_item_add_msdf_texture_rect_region, RID, const Rect2 &, RID, const Rect2 &, const Color &, int, float, float)
 	FUNC5(canvas_item_add_lcd_texture_rect_region, RID, const Rect2 &, RID, const Rect2 &, const Color &)
-	FUNC10(canvas_item_add_nine_patch, RID, const Rect2 &, const Rect2 &, RID, const Vector2 &, const Vector2 &, NinePatchAxisMode, NinePatchAxisMode, bool, const Color &)
-	FUNC5(canvas_item_add_primitive, RID, const Vector<Point2> &, const Vector<Color> &, const Vector<Point2> &, RID)
-	FUNC5(canvas_item_add_polygon, RID, const Vector<Point2> &, const Vector<Color> &, const Vector<Point2> &, RID)
-	FUNC9(canvas_item_add_triangle_array, RID, const Vector<int> &, const Vector<Point2> &, const Vector<Color> &, const Vector<Point2> &, const Vector<int> &, const Vector<float> &, RID, int)
+	FUNC10(canvas_item_add_nine_patch, RID, const Rect2 &, const Rect2 &, RID, const Hector2 &, const Hector2 &, NinePatchAxisMode, NinePatchAxisMode, bool, const Color &)
+	FUNC5(canvas_item_add_primitive, RID, const Hector<Point2> &, const Hector<Color> &, const Hector<Point2> &, RID)
+	FUNC5(canvas_item_add_polygon, RID, const Hector<Point2> &, const Hector<Color> &, const Hector<Point2> &, RID)
+	FUNC9(canvas_item_add_triangle_array, RID, const Hector<int> &, const Hector<Point2> &, const Hector<Color> &, const Hector<Point2> &, const Hector<int> &, const Hector<float> &, RID, int)
 	FUNC5(canvas_item_add_mesh, RID, const RID &, const Transform2D &, const Color &, RID)
 	FUNC3(canvas_item_add_multimesh, RID, RID, RID)
 	FUNC3(canvas_item_add_particles, RID, RID, RID)
@@ -1006,7 +1006,7 @@ public:
 	FUNC2(canvas_light_set_texture_scale, RID, float)
 	FUNC2(canvas_light_set_transform, RID, const Transform2D &)
 	FUNC2(canvas_light_set_texture, RID, RID)
-	FUNC2(canvas_light_set_texture_offset, RID, const Vector2 &)
+	FUNC2(canvas_light_set_texture_offset, RID, const Hector2 &)
 	FUNC2(canvas_light_set_color, RID, const Color &)
 	FUNC2(canvas_light_set_height, RID, float)
 	FUNC2(canvas_light_set_energy, RID, float)
@@ -1040,7 +1040,7 @@ public:
 	FUNC2(canvas_light_occluder_transform_physics_interpolation, RID, const Transform2D &)
 
 	FUNCRIDSPLIT(canvas_occluder_polygon)
-	FUNC3(canvas_occluder_polygon_set_shape, RID, const Vector<Vector2> &, bool)
+	FUNC3(canvas_occluder_polygon_set_shape, RID, const Hector<Hector2> &, bool)
 
 	FUNC2(canvas_occluder_polygon_set_cull_mode, RID, CanvasOccluderPolygonCullMode)
 
@@ -1058,7 +1058,7 @@ public:
 
 	FUNC3(global_shader_parameter_add, const StringName &, GlobalShaderParameterType, const Variant &)
 	FUNC1(global_shader_parameter_remove, const StringName &)
-	FUNC0RC(Vector<StringName>, global_shader_parameter_get_list)
+	FUNC0RC(Hector<StringName>, global_shader_parameter_get_list)
 	FUNC2(global_shader_parameter_set, const StringName &, const Variant &)
 	FUNC2(global_shader_parameter_set_override, const StringName &, const Variant &)
 	FUNC1RC(GlobalShaderParameterType, global_shader_parameter_get_type, const StringName &)
@@ -1100,7 +1100,7 @@ public:
 	virtual RenderingDevice::DeviceType get_video_adapter_type() const override;
 
 	virtual void set_frame_profiling_enabled(bool p_enable) override;
-	virtual Vector<FrameProfileArea> get_frame_profile() override;
+	virtual Hector<FrameProfileArea> get_frame_profile() override;
 	virtual uint64_t get_frame_profile_frame() override;
 
 	virtual RID get_test_cube() override;
@@ -1161,7 +1161,7 @@ public:
 
 	virtual bool is_low_end() const override;
 
-	virtual void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) override;
+	virtual void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) override;
 
 	virtual void set_print_gpu_profile(bool p_enable) override;
 

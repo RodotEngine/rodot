@@ -117,7 +117,7 @@ FT_BEGIN_HEADER
 #define FT_MODULE_DRIVER_SCALABLE      0x100  /* the driver supports      */
                                               /* scalable fonts           */
 #define FT_MODULE_DRIVER_NO_OUTLINES   0x200  /* the driver does not      */
-                                              /* support vector outlines  */
+                                              /* support Hector outlines  */
 #define FT_MODULE_DRIVER_HAS_HINTER    0x400  /* the driver provides its  */
                                               /* own hinter               */
 #define FT_MODULE_DRIVER_HINTS_LIGHTLY 0x800  /* the driver's hinter      */

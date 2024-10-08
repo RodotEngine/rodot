@@ -132,7 +132,7 @@ class ScriptEditorQuickOpen : public ConfirmationDialog {
 	void _update_search();
 
 	void _sbox_input(const Ref<InputEvent> &p_event);
-	Vector<String> functions;
+	Hector<String> functions;
 
 	void _confirmed();
 	void _text_changed(const String &p_newtext);
@@ -142,7 +142,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void popup_dialog(const Vector<String> &p_functions, bool p_dontclear = false);
+	void popup_dialog(const Hector<String> &p_functions, bool p_dontclear = false);
 	ScriptEditorQuickOpen();
 };
 
@@ -160,7 +160,7 @@ public:
 
 	virtual void apply_code() = 0;
 	virtual Ref<Resource> get_edited_resource() const = 0;
-	virtual Vector<String> get_functions() = 0;
+	virtual Hector<String> get_functions() = 0;
 	virtual void set_edited_resource(const Ref<Resource> &p_res) = 0;
 	virtual void enable_editor(Control *p_shortcut_context = nullptr) = 0;
 	virtual void reload_text() = 0;
@@ -333,14 +333,14 @@ class ScriptEditor : public PanelContainer {
 	static int script_editor_func_count;
 	static CreateScriptEditorFunc script_editor_funcs[SCRIPT_EDITOR_FUNC_MAX];
 
-	Vector<Ref<EditorSyntaxHighlighter>> syntax_highlighters;
+	Hector<Ref<EditorSyntaxHighlighter>> syntax_highlighters;
 
 	struct ScriptHistory {
 		Control *control = nullptr;
 		Variant state;
 	};
 
-	Vector<ScriptHistory> history;
+	Hector<ScriptHistory> history;
 	int history_pos;
 
 	List<String> previous_scripts;
@@ -391,7 +391,7 @@ class ScriptEditor : public PanelContainer {
 	bool pending_auto_reload;
 	bool auto_reload_running_scripts;
 	bool reload_all_scripts = false;
-	Vector<String> script_paths_to_reload;
+	Hector<String> script_paths_to_reload;
 	void _live_auto_reload_running_scripts();
 
 	void _update_selected_editor_menu();
@@ -468,7 +468,7 @@ class ScriptEditor : public PanelContainer {
 	virtual void input(const Ref<InputEvent> &p_event) override;
 	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
 
-	void _script_list_clicked(int p_item, Vector2 p_local_mouse_pos, MouseButton p_mouse_button_index);
+	void _script_list_clicked(int p_item, Hector2 p_local_mouse_pos, MouseButton p_mouse_button_index);
 	void _make_script_list_context_menu();
 
 	void _help_search(const String &p_text);
@@ -539,7 +539,7 @@ public:
 	_FORCE_INLINE_ bool edit(const Ref<Resource> &p_resource, bool p_grab_focus = true) { return edit(p_resource, -1, 0, p_grab_focus); }
 	bool edit(const Ref<Resource> &p_resource, int p_line, int p_col, bool p_grab_focus = true);
 
-	Vector<String> _get_breakpoints();
+	Hector<String> _get_breakpoints();
 	void get_breakpoints(List<String> *p_breakpoints);
 
 	PackedStringArray get_unsaved_scripts() const;
@@ -550,7 +550,7 @@ public:
 	void get_window_layout(Ref<ConfigFile> p_layout);
 
 	void set_scene_root_script(Ref<Script> p_script);
-	Vector<Ref<Script>> get_open_scripts() const;
+	Hector<Ref<Script>> get_open_scripts() const;
 
 	bool script_goto_method(Ref<Script> p_script, const String &p_method);
 

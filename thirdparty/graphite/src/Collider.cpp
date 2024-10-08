@@ -42,7 +42,7 @@ bool ShiftCollider::initSlot(Segment *seg, Slot *aSlot, const Rect &limit, float
         _limit = Rect(limit.bl - currOffset, limit.tr - currOffset);
     else
         _limit = limit;
-    // For a ShiftCollider, these indices indicate which vector we are moving by:
+    // For a ShiftCollider, these indices indicate which Hector we are moving by:
     // each _ranges represents absolute space with respect to the origin of the slot. Thus take into account true origins but subtract the vmin for the slot
     for (i = 0; i < 4; ++i)
     {
@@ -326,7 +326,7 @@ bool ShiftCollider::mergeSlot(Segment *seg, Slot *slot, const SlotCollision *csl
                     cmax = _limit.tr.y - tbb.yi + tbb.ya + torg;
                     lmargin = _margin;
                     break;
-                case 2 :    // sum - moving along the positively-sloped vector, so the boundaries are the
+                case 2 :    // sum - moving along the positively-sloped Hector, so the boundaries are the
                             // negatively-sloped boundaries.
                     vmin = max(max(sb.si - tsb.sa + ss, 2 * (bb.yi - tbb.ya + sy) + td), 2 * (bb.xi - tbb.xa + sx) - td);
                     vmax = min(min(sb.sa - tsb.si + ss, 2 * (bb.ya - tbb.yi + sy) + td), 2 * (bb.xa - tbb.xi + sx) - td);
@@ -339,7 +339,7 @@ bool ShiftCollider::mergeSlot(Segment *seg, Slot *slot, const SlotCollision *csl
                     cmax = _limit.tr.x + _limit.tr.y - tsb.si + tsb.sa + torg;
                     lmargin = _margin / ISQRT2;
                     break;
-                case 3 :    // diff - moving along the negatively-sloped vector, so the boundaries are the
+                case 3 :    // diff - moving along the negatively-sloped Hector, so the boundaries are the
                             // positively-sloped boundaries.
                     vmin = max(max(sb.di - tsb.da + sd, 2 * (bb.xi - tbb.xa + sx) - ts), -2 * (bb.ya - tbb.yi + sy) + ts);
                     vmax = min(min(sb.da - tsb.di + sd, 2 * (bb.xa - tbb.xi + sx) - ts), -2 * (bb.yi - tbb.ya + sy) + ts);
@@ -561,7 +561,7 @@ Position ShiftCollider::resolve(GR_MAYBE_UNUSED Segment *seg, bool &isCol, GR_MA
     if (dbgout)
     {
 		outputJsonDbgStartSlot(dbgout, seg);
-        *dbgout << "vectors" << json::array;
+        *dbgout << "Hectors" << json::array;
     }
 #endif
     isCol = true;
@@ -588,7 +588,7 @@ Position ShiftCollider::resolve(GR_MAYBE_UNUSED Segment *seg, bool &isCol, GR_MA
         bestPos = _ranges[i].closest(0, bestCost) - tbase;     // Get the best relative position
 #if !defined GRAPHITE2_NTRACING
         if (dbgout)
-            outputJsonDbgOneVector(dbgout, seg, i, tbase, bestCost, bestPos) ;
+            outputJsonDbgOneHector(dbgout, seg, i, tbase, bestCost, bestPos) ;
 #endif
         if (bestCost >= 0.0f)
         {
@@ -671,7 +671,7 @@ void ShiftCollider::outputJsonDbgStartSlot(json * const dbgout, Segment *seg)
 void ShiftCollider::outputJsonDbgEndSlot(GR_MAYBE_UNUSED json * const dbgout,
 	 Position resultPos, int bestAxis, bool isCol)
 {
-    *dbgout << json::close // vectors array
+    *dbgout << json::close // Hectors array
     << "result" << resultPos
 	//<< "scraping" << _scraping[bestAxis]
 	<< "bestAxis" << bestAxis
@@ -679,7 +679,7 @@ void ShiftCollider::outputJsonDbgEndSlot(GR_MAYBE_UNUSED json * const dbgout,
     << json::close; // slot object
 }
 
-void ShiftCollider::outputJsonDbgOneVector(json * const dbgout, Segment *seg, int axis,
+void ShiftCollider::outputJsonDbgOneHector(json * const dbgout, Segment *seg, int axis,
 	float tleft, float bestCost, float bestVal)
 {
 	const char * label;
@@ -692,7 +692,7 @@ void ShiftCollider::outputJsonDbgOneVector(json * const dbgout, Segment *seg, in
 		default: label = "???";			break;
 	}
 
-	*dbgout << json::object // vector
+	*dbgout << json::object // Hector
 		<< "direction" << label
 		<< "targetMin" << tleft;
 
@@ -703,7 +703,7 @@ void ShiftCollider::outputJsonDbgOneVector(json * const dbgout, Segment *seg, in
 
     *dbgout << "bestCost" << bestCost
         << "bestVal" << bestVal + tleft
-        << json::close; // vectors object
+        << json::close; // Hectors object
 }
 
 void ShiftCollider::outputJsonDbgRemovals(json * const dbgout, int axis, Segment *seg)
@@ -834,7 +834,7 @@ bool KernCollider::initSlot(Segment *seg, Slot *aSlot, const Rect &limit, float 
                 _edges.insert(_edges.begin(), -numSlices, (dir & 1) ? 1e38f : -1e38f);
             else if ((unsigned)numSlices < _edges.size())    // this shouldn't fire since we always grow the range
             {
-                Vector<float>::iterator e = _edges.begin();
+                Hector<float>::iterator e = _edges.begin();
                 while (numSlices--)
                     ++e;
                 _edges.erase(_edges.begin(), e);
@@ -1033,7 +1033,7 @@ Position KernCollider::resolve(GR_MAYBE_UNUSED Segment *seg, GR_MAYBE_UNUSED Slo
 
 void KernCollider::shift(const Position &mv, int dir)
 {
-    for (Vector<float>::iterator e = _edges.begin(); e != _edges.end(); ++e)
+    for (Hector<float>::iterator e = _edges.begin(); e != _edges.end(); ++e)
         *e += mv.x;
     _xbound += (1 - 2 * (dir & 1)) * mv.x;
 }

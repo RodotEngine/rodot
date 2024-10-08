@@ -146,7 +146,7 @@ String escape_csharp_keyword(const String &p_name) {
 #endif
 
 Error read_all_file_utf8(const String &p_path, String &r_content) {
-	Vector<uint8_t> sourcef;
+	Hector<uint8_t> sourcef;
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 	ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot open file '" + p_path + "'.");

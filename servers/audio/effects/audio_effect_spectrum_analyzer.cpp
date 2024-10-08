@@ -135,8 +135,8 @@ void AudioEffectSpectrumAnalyzerInstance::process(const AudioFrame *p_src_frames
 
 			for (int i = 0; i < fft_size; i++) {
 				//abs(vec)/fft_size normalizes each frequency
-				hw[i].left = Vector2(fftw[i * 2], fftw[i * 2 + 1]).length() / float(fft_size);
-				hw[i].right = Vector2(fftw[fft_size * 4 + i * 2], fftw[fft_size * 4 + i * 2 + 1]).length() / float(fft_size);
+				hw[i].left = Hector2(fftw[i * 2], fftw[i * 2 + 1]).length() / float(fft_size);
+				hw[i].right = Hector2(fftw[fft_size * 4 + i * 2], fftw[fft_size * 4 + i * 2 + 1]).length() / float(fft_size);
 			}
 
 			fft_pos = next; //swap
@@ -155,9 +155,9 @@ void AudioEffectSpectrumAnalyzerInstance::_bind_methods() {
 	BIND_ENUM_CONSTANT(MAGNITUDE_MAX);
 }
 
-Vector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(float p_begin, float p_end, MagnitudeMode p_mode) const {
+Hector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(float p_begin, float p_end, MagnitudeMode p_mode) const {
 	if (last_fft_time == 0) {
-		return Vector2();
+		return Hector2();
 	}
 	uint64_t time = OS::get_singleton()->get_ticks_usec();
 	float diff = double(time - last_fft_time) / 1000000.0 + base->get_tap_back_pos();
@@ -186,17 +186,17 @@ Vector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(f
 	const AudioFrame *r = fft_history[fft_index].ptr();
 
 	if (p_mode == MAGNITUDE_AVERAGE) {
-		Vector2 avg;
+		Hector2 avg;
 
 		for (int i = begin_pos; i <= end_pos; i++) {
-			avg += Vector2(r[i]);
+			avg += Hector2(r[i]);
 		}
 
 		avg /= float(end_pos - begin_pos + 1);
 
 		return avg;
 	} else {
-		Vector2 max;
+		Hector2 max;
 
 		for (int i = begin_pos; i <= end_pos; i++) {
 			max.x = MAX(max.x, r[i].left);

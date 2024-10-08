@@ -5524,7 +5524,7 @@ msgstr "Zobraziť Netienené"
 msgid "Scene Luminance"
 msgstr "Svetelnosť Scény"
 
-msgid "Motion Vectors"
+msgid "Motion Hectors"
 msgstr "Pohybové Vektory"
 
 msgid "Display Advanced..."
@@ -6225,7 +6225,7 @@ msgid "Color parameter."
 msgstr "Parameter farby."
 
 msgid ""
-"A node for help to multiply a position input vector by rotation using "
+"A node for help to multiply a position input Hector by rotation using "
 "specific axis. Intended to work with emitters."
 msgstr ""
 "Node na pomoc pri násobení pozície vstupného vektora rotáciou použitím "
@@ -6273,16 +6273,16 @@ msgstr "Transformačná konštanta."
 msgid "Transform parameter."
 msgstr "Parameter transformácie."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "Vektorová funkcia."
 
-msgid "2D vector constant."
+msgid "2D Hector constant."
 msgstr "2D vektorová konštanta."
 
-msgid "3D vector constant."
+msgid "3D Hector constant."
 msgstr "3D vektorová konštanta."
 
-msgid "4D vector constant."
+msgid "4D Hector constant."
 msgstr "4D vektorová konštanta."
 
 msgctxt "Application"

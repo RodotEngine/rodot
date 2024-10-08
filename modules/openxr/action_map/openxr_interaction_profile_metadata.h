@@ -80,7 +80,7 @@ public:
 		String display_name; // User friendly display name (i.e. Simple controller)
 		String openxr_path; // Path in OpenXR (i.e. /interaction_profiles/khr/simple_controller)
 		String openxr_extension_name; // If set, only available if extension is enabled (i.e. XR_HTCX_vive_tracker_interaction)
-		Vector<IOPath> io_paths; // Inputs and outputs for this device
+		Hector<IOPath> io_paths; // Inputs and outputs for this device
 
 		bool has_io_path(const String p_io_path) const;
 		const IOPath *get_io_path(const String p_io_path) const;
@@ -90,8 +90,8 @@ private:
 	static OpenXRInteractionProfileMetadata *singleton;
 
 	HashMap<String, String> profile_renames;
-	Vector<TopLevelPath> top_level_paths;
-	Vector<InteractionProfile> interaction_profiles;
+	Hector<TopLevelPath> top_level_paths;
+	Hector<InteractionProfile> interaction_profiles;
 
 	void _register_core_metadata();
 

@@ -49,23 +49,23 @@ private:
 	// The "skeleton" property defined in the gltf spec. -1 = Scene Root
 	GLTFNodeIndex skin_root = -1;
 
-	Vector<GLTFNodeIndex> joints_original;
-	Vector<Transform3D> inverse_binds;
+	Hector<GLTFNodeIndex> joints_original;
+	Hector<Transform3D> inverse_binds;
 
 	// Note: joints + non_joints should form a complete subtree, or subtrees
 	// with a common parent
 
 	// All nodes that are skins that are caught in-between the original joints
 	// (inclusive of joints_original)
-	Vector<GLTFNodeIndex> joints;
+	Hector<GLTFNodeIndex> joints;
 
 	// All Nodes that are caught in-between skin joint nodes, and are not
 	// defined as joints by any skin
-	Vector<GLTFNodeIndex> non_joints;
+	Hector<GLTFNodeIndex> non_joints;
 
 	// The roots of the skin. In the case of multiple roots, their parent *must*
 	// be the same (the roots must be siblings)
-	Vector<GLTFNodeIndex> roots;
+	Hector<GLTFNodeIndex> roots;
 
 	// The GLTF Skeleton this Skin points to (after we determine skeletons)
 	GLTFSkeletonIndex skeleton = -1;
@@ -86,20 +86,20 @@ public:
 	GLTFNodeIndex get_skin_root();
 	void set_skin_root(GLTFNodeIndex p_skin_root);
 
-	Vector<GLTFNodeIndex> get_joints_original();
-	void set_joints_original(Vector<GLTFNodeIndex> p_joints_original);
+	Hector<GLTFNodeIndex> get_joints_original();
+	void set_joints_original(Hector<GLTFNodeIndex> p_joints_original);
 
 	TypedArray<Transform3D> get_inverse_binds();
 	void set_inverse_binds(TypedArray<Transform3D> p_inverse_binds);
 
-	Vector<GLTFNodeIndex> get_joints();
-	void set_joints(Vector<GLTFNodeIndex> p_joints);
+	Hector<GLTFNodeIndex> get_joints();
+	void set_joints(Hector<GLTFNodeIndex> p_joints);
 
-	Vector<GLTFNodeIndex> get_non_joints();
-	void set_non_joints(Vector<GLTFNodeIndex> p_non_joints);
+	Hector<GLTFNodeIndex> get_non_joints();
+	void set_non_joints(Hector<GLTFNodeIndex> p_non_joints);
 
-	Vector<GLTFNodeIndex> get_roots();
-	void set_roots(Vector<GLTFNodeIndex> p_roots);
+	Hector<GLTFNodeIndex> get_roots();
+	void set_roots(Hector<GLTFNodeIndex> p_roots);
 
 	int get_skeleton();
 	void set_skeleton(int p_skeleton);

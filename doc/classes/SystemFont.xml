@@ -50,7 +50,7 @@
 			Source font size used to generate MSDF textures. Higher values allow for more precision, but are slower to render and require more memory. Only increase this value if you notice a visible lack of precision in glyph rendering.
 		</member>
 		<member name="multichannel_signed_distance_field" type="bool" setter="set_multichannel_signed_distance_field" getter="is_multichannel_signed_distance_field" default="false">
-			If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font vector data.
+			If set to [code]true[/code], glyphs of all sizes are rendered using single multichannel signed distance field generated from the dynamic font Hector data.
 		</member>
 		<member name="oversampling" type="float" setter="set_oversampling" getter="get_oversampling" default="0.0">
 			Font oversampling factor, if set to [code]0.0[/code] global oversampling factor is used instead.

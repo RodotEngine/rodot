@@ -534,7 +534,7 @@ namespace embree
     private:
       BVH* bvh;
       Mesh* mesh;
-      mvector<BVHBuilderMorton::BuildPrim> morton;
+      mHector<BVHBuilderMorton::BuildPrim> morton;
       BVHBuilderMorton::Settings settings;
       unsigned int geomID_ = std::numeric_limits<unsigned int>::max();
       unsigned int numPreviousPrimitives = 0;

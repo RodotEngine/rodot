@@ -64,7 +64,7 @@ class CollisionShape2DEditor : public Control {
 	CanvasItemEditor *canvas_item_editor = nullptr;
 	CollisionShape2D *node = nullptr;
 
-	Vector<Point2> handles;
+	Hector<Point2> handles;
 
 	int shape_type = -1;
 	int edit_handle = -1;
@@ -72,9 +72,9 @@ class CollisionShape2DEditor : public Control {
 	real_t grab_threshold = 8;
 	Variant original;
 	Transform2D original_transform;
-	Vector2 original_point;
+	Hector2 original_point;
 	Point2 last_point;
-	Vector2 original_mouse_pos;
+	Hector2 original_mouse_pos;
 
 	Ref<Shape2D> current_shape;
 

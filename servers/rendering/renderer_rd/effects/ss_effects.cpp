@@ -53,7 +53,7 @@ SSEffects::SSEffects() {
 
 	// Initialize depth buffer for screen space effects
 	{
-		Vector<String> downsampler_modes;
+		Hector<String> downsampler_modes;
 		downsampler_modes.push_back("\n");
 		downsampler_modes.push_back("\n#define USE_HALF_SIZE\n");
 		downsampler_modes.push_back("\n#define GENERATE_MIPS\n");
@@ -103,7 +103,7 @@ SSEffects::SSEffects() {
 	ssil_set_quality(RS::EnvironmentSSILQuality(int(GLOBAL_GET("rendering/environment/ssil/quality"))), GLOBAL_GET("rendering/environment/ssil/half_size"), GLOBAL_GET("rendering/environment/ssil/adaptive_target"), GLOBAL_GET("rendering/environment/ssil/blur_passes"), GLOBAL_GET("rendering/environment/ssil/fadeout_from"), GLOBAL_GET("rendering/environment/ssil/fadeout_to"));
 
 	{
-		Vector<String> ssil_modes;
+		Hector<String> ssil_modes;
 		ssil_modes.push_back("\n");
 		ssil_modes.push_back("\n#define SSIL_BASE\n");
 		ssil_modes.push_back("\n#define ADAPTIVE\n");
@@ -119,7 +119,7 @@ SSEffects::SSEffects() {
 	}
 
 	{
-		Vector<String> ssil_modes;
+		Hector<String> ssil_modes;
 		ssil_modes.push_back("\n#define GENERATE_MAP\n");
 		ssil_modes.push_back("\n#define PROCESS_MAPA\n");
 		ssil_modes.push_back("\n#define PROCESS_MAPB\n");
@@ -136,7 +136,7 @@ SSEffects::SSEffects() {
 		RD::get_singleton()->buffer_update(ssil.importance_map_load_counter, 0, sizeof(uint32_t), &zero);
 		RD::get_singleton()->set_resource_name(ssil.importance_map_load_counter, "Importance Map Load Counter");
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -149,7 +149,7 @@ SSEffects::SSEffects() {
 	}
 
 	{
-		Vector<String> ssil_modes;
+		Hector<String> ssil_modes;
 		ssil_modes.push_back("\n#define MODE_NON_SMART\n");
 		ssil_modes.push_back("\n#define MODE_SMART\n");
 		ssil_modes.push_back("\n#define MODE_WIDE\n");
@@ -163,7 +163,7 @@ SSEffects::SSEffects() {
 	}
 
 	{
-		Vector<String> ssil_modes;
+		Hector<String> ssil_modes;
 		ssil_modes.push_back("\n#define MODE_NON_SMART\n");
 		ssil_modes.push_back("\n#define MODE_SMART\n");
 		ssil_modes.push_back("\n#define MODE_HALF\n");
@@ -191,7 +191,7 @@ SSEffects::SSEffects() {
 
 		uint32_t pipeline = 0;
 		{
-			Vector<String> ssao_modes;
+			Hector<String> ssao_modes;
 
 			ssao_modes.push_back("\n");
 			ssao_modes.push_back("\n#define SSAO_BASE\n");
@@ -208,7 +208,7 @@ SSEffects::SSEffects() {
 		}
 
 		{
-			Vector<String> ssao_modes;
+			Hector<String> ssao_modes;
 			ssao_modes.push_back("\n#define GENERATE_MAP\n");
 			ssao_modes.push_back("\n#define PROCESS_MAPA\n");
 			ssao_modes.push_back("\n#define PROCESS_MAPB\n");
@@ -228,7 +228,7 @@ SSEffects::SSEffects() {
 			RD::get_singleton()->buffer_update(ssao.importance_map_load_counter, 0, sizeof(uint32_t), &zero);
 			RD::get_singleton()->set_resource_name(ssao.importance_map_load_counter, "Importance Map Load Counter");
 
-			Vector<RD::Uniform> uniforms;
+			Hector<RD::Uniform> uniforms;
 			{
 				RD::Uniform u;
 				u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -241,7 +241,7 @@ SSEffects::SSEffects() {
 		}
 
 		{
-			Vector<String> ssao_modes;
+			Hector<String> ssao_modes;
 			ssao_modes.push_back("\n#define MODE_NON_SMART\n");
 			ssao_modes.push_back("\n#define MODE_SMART\n");
 			ssao_modes.push_back("\n#define MODE_WIDE\n");
@@ -258,7 +258,7 @@ SSEffects::SSEffects() {
 		}
 
 		{
-			Vector<String> ssao_modes;
+			Hector<String> ssao_modes;
 			ssao_modes.push_back("\n#define MODE_NON_SMART\n");
 			ssao_modes.push_back("\n#define MODE_SMART\n");
 			ssao_modes.push_back("\n#define MODE_HALF\n");
@@ -282,7 +282,7 @@ SSEffects::SSEffects() {
 	ssr_roughness_quality = RS::EnvironmentSSRRoughnessQuality(int(GLOBAL_GET("rendering/environment/screen_space_reflection/roughness_quality")));
 
 	{
-		Vector<RD::PipelineSpecializationConstant> specialization_constants;
+		Hector<RD::PipelineSpecializationConstant> specialization_constants;
 
 		{
 			RD::PipelineSpecializationConstant sc;
@@ -293,7 +293,7 @@ SSEffects::SSEffects() {
 		}
 
 		{
-			Vector<String> ssr_scale_modes;
+			Hector<String> ssr_scale_modes;
 			ssr_scale_modes.push_back("\n");
 
 			ssr_scale.shader.initialize(ssr_scale_modes);
@@ -306,7 +306,7 @@ SSEffects::SSEffects() {
 		}
 
 		{
-			Vector<String> ssr_modes;
+			Hector<String> ssr_modes;
 			ssr_modes.push_back("\n"); // SCREEN_SPACE_REFLECTION_NORMAL
 			ssr_modes.push_back("\n#define MODE_ROUGH\n"); // SCREEN_SPACE_REFLECTION_ROUGH
 
@@ -322,7 +322,7 @@ SSEffects::SSEffects() {
 		}
 
 		{
-			Vector<String> ssr_filter_modes;
+			Hector<String> ssr_filter_modes;
 			ssr_filter_modes.push_back("\n"); // SCREEN_SPACE_REFLECTION_FILTER_HORIZONTAL
 			ssr_filter_modes.push_back("\n#define VERTICAL_PASS\n"); // SCREEN_SPACE_REFLECTION_FILTER_VERTICAL
 
@@ -344,7 +344,7 @@ SSEffects::SSEffects() {
 	sss_depth_scale = GLOBAL_GET("rendering/environment/subsurface_scattering/subsurface_scattering_depth_scale");
 
 	{
-		Vector<String> sss_modes;
+		Hector<String> sss_modes;
 		sss_modes.push_back("\n#define USE_11_SAMPLES\n");
 		sss_modes.push_back("\n#define USE_17_SAMPLES\n");
 		sss_modes.push_back("\n#define USE_25_SAMPLES\n");
@@ -464,7 +464,7 @@ void SSEffects::downsample_depth(Ref<RenderSceneBuffersRD> p_render_buffers, uin
 	if (use_mips) {
 		// Grab our downsample uniform set from cache, these are automatically cleaned up if the depth textures are cleared.
 		// This also ensures we can switch between left eye and right eye uniform sets without recreating the uniform twice a frame.
-		Vector<RD::Uniform> u_depths;
+		Hector<RD::Uniform> u_depths;
 
 		// Note, use_full_mips is true if either SSAO or SSIL uses half size, but the other full size and we're using mips.
 		// That means we're filling all 5 levels.
@@ -509,8 +509,8 @@ void SSEffects::downsample_depth(Ref<RenderSceneBuffersRD> p_render_buffers, uin
 	RID depth_texture = p_render_buffers->get_depth_texture(p_view);
 	RID depth_mipmap = p_render_buffers->get_texture_slice(RB_SCOPE_SSDS, RB_LINEAR_DEPTH, p_view * 4, depth_index, 4, 1);
 
-	RD::Uniform u_depth_buffer(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, depth_texture }));
-	RD::Uniform u_depth_mipmap(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ depth_mipmap }));
+	RD::Uniform u_depth_buffer(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, depth_texture }));
+	RD::Uniform u_depth_mipmap(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ depth_mipmap }));
 
 	RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ss_effects.pipelines[downsample_mode]);
 	RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 0, u_depth_buffer), 0);
@@ -563,8 +563,8 @@ void SSEffects::gather_ssil(RD::ComputeListID p_compute_list, const RID *p_ssil_
 			continue;
 		}
 
-		RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ p_ssil_slices[i] }));
-		RD::Uniform u_edges_slice(RD::UNIFORM_TYPE_IMAGE, 1, Vector<RID>({ p_edges_slices[i] }));
+		RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ p_ssil_slices[i] }));
+		RD::Uniform u_edges_slice(RD::UNIFORM_TYPE_IMAGE, 1, Hector<RID>({ p_edges_slices[i] }));
 
 		ssil.gather_push_constant.pass_coord_offset[0] = i % 2;
 		ssil.gather_push_constant.pass_coord_offset[1] = i / 2;
@@ -796,8 +796,8 @@ void SSEffects::screen_space_indirect_lighting(Ref<RenderSceneBuffersRD> p_rende
 
 			//generate importance map
 			RID gen_imp_shader = ssil.importance_map_shader.version_get_shader(ssil.importance_map_shader_version, 0);
-			RD::Uniform u_ssil_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, deinterleaved_pong }));
-			RD::Uniform u_importance_map(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ importance_map }));
+			RD::Uniform u_ssil_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, deinterleaved_pong }));
+			RD::Uniform u_importance_map(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ importance_map }));
 
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssil.pipelines[SSIL_GENERATE_IMPORTANCE_MAP]);
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(gen_imp_shader, 0, u_ssil_pong_with_sampler), 0);
@@ -808,8 +808,8 @@ void SSEffects::screen_space_indirect_lighting(Ref<RenderSceneBuffersRD> p_rende
 
 			// process Importance Map A
 			RID proc_imp_shader_a = ssil.importance_map_shader.version_get_shader(ssil.importance_map_shader_version, 1);
-			RD::Uniform u_importance_map_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, importance_map }));
-			RD::Uniform u_importance_map_pong(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ importance_pong }));
+			RD::Uniform u_importance_map_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, importance_map }));
+			RD::Uniform u_importance_map_pong(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ importance_pong }));
 
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssil.pipelines[SSIL_PROCESS_IMPORTANCE_MAPA]);
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(proc_imp_shader_a, 0, u_importance_map_with_sampler), 0);
@@ -820,7 +820,7 @@ void SSEffects::screen_space_indirect_lighting(Ref<RenderSceneBuffersRD> p_rende
 
 			// process Importance Map B
 			RID proc_imp_shader_b = ssil.importance_map_shader.version_get_shader(ssil.importance_map_shader_version, 2);
-			RD::Uniform u_importance_map_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, importance_pong }));
+			RD::Uniform u_importance_map_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, importance_pong }));
 
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssil.pipelines[SSIL_PROCESS_IMPORTANCE_MAPB]);
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(proc_imp_shader_b, 0, u_importance_map_pong_with_sampler), 0);
@@ -870,29 +870,29 @@ void SSEffects::screen_space_indirect_lighting(Ref<RenderSceneBuffersRD> p_rende
 				RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssil.pipelines[blur_pipeline]);
 				if (pass % 2 == 0) {
 					if (ssil_quality == RS::ENV_SSIL_QUALITY_VERY_LOW) {
-						RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, deinterleaved_slices[i] }));
+						RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, deinterleaved_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ssil_slice), 0);
 					} else {
-						RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ ss_effects.mirror_sampler, deinterleaved_slices[i] }));
+						RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ ss_effects.mirror_sampler, deinterleaved_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ssil_slice), 0);
 					}
 
-					RD::Uniform u_ssil_pong_slice(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ deinterleaved_pong_slices[i] }));
+					RD::Uniform u_ssil_pong_slice(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ deinterleaved_pong_slices[i] }));
 					RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 1, u_ssil_pong_slice), 1);
 				} else {
 					if (ssil_quality == RS::ENV_SSIL_QUALITY_VERY_LOW) {
-						RD::Uniform u_ssil_pong_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, deinterleaved_pong_slices[i] }));
+						RD::Uniform u_ssil_pong_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, deinterleaved_pong_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ssil_pong_slice), 0);
 					} else {
-						RD::Uniform u_ssil_pong_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ ss_effects.mirror_sampler, deinterleaved_pong_slices[i] }));
+						RD::Uniform u_ssil_pong_slice(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ ss_effects.mirror_sampler, deinterleaved_pong_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ssil_pong_slice), 0);
 					}
 
-					RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ deinterleaved_slices[i] }));
+					RD::Uniform u_ssil_slice(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ deinterleaved_slices[i] }));
 					RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 1, u_ssil_slice), 1);
 				}
 
-				RD::Uniform u_edges_slice(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ edges_slices[i] }));
+				RD::Uniform u_edges_slice(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ edges_slices[i] }));
 				RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 2, u_edges_slice), 2);
 
 				RD::get_singleton()->compute_list_set_push_constant(compute_list, &ssil.blur_push_constant, sizeof(SSILBlurPushConstant));
@@ -929,18 +929,18 @@ void SSEffects::screen_space_indirect_lighting(Ref<RenderSceneBuffersRD> p_rende
 		RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssil.pipelines[interleave_pipeline]);
 
 		RID final = p_render_buffers->get_texture_slice(RB_SCOPE_SSIL, RB_FINAL, p_view, 0);
-		RD::Uniform u_destination(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ final }));
+		RD::Uniform u_destination(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ final }));
 		RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 0, u_destination), 0);
 
 		if (ssil_quality > RS::ENV_SSIL_QUALITY_VERY_LOW && ssil_blur_passes % 2 == 0) {
-			RD::Uniform u_ssil(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, deinterleaved }));
+			RD::Uniform u_ssil(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, deinterleaved }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 1, u_ssil), 1);
 		} else {
-			RD::Uniform u_ssil_pong(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, deinterleaved_pong }));
+			RD::Uniform u_ssil_pong(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, deinterleaved_pong }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 1, u_ssil_pong), 1);
 		}
 
-		RD::Uniform u_edges(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ edges }));
+		RD::Uniform u_edges(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ edges }));
 		RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 2, u_edges), 2);
 
 		RD::get_singleton()->compute_list_set_push_constant(compute_list, &ssil.interleave_push_constant, sizeof(SSILInterleavePushConstant));
@@ -985,7 +985,7 @@ void SSEffects::gather_ssao(RD::ComputeListID p_compute_list, const RID *p_ao_sl
 			continue;
 		}
 
-		RD::Uniform u_ao_slice(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ p_ao_slices[i] }));
+		RD::Uniform u_ao_slice(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ p_ao_slices[i] }));
 
 		ssao.gather_push_constant.pass_coord_offset[0] = i % 2;
 		ssao.gather_push_constant.pass_coord_offset[1] = i / 2;
@@ -1182,10 +1182,10 @@ void SSEffects::generate_ssao(Ref<RenderSceneBuffersRD> p_render_buffers, SSAORe
 			RID gen_imp_shader = ssao.importance_map_shader.version_get_shader(ssao.importance_map_shader_version, 0);
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssao.pipelines[SSAO_GENERATE_IMPORTANCE_MAP]);
 
-			RD::Uniform u_ao_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, ao_pong }));
+			RD::Uniform u_ao_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, ao_pong }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(gen_imp_shader, 0, u_ao_pong_with_sampler), 0);
 
-			RD::Uniform u_importance_map(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ importance_map }));
+			RD::Uniform u_importance_map(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ importance_map }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(gen_imp_shader, 1, u_importance_map), 1);
 
 			RD::get_singleton()->compute_list_set_push_constant(compute_list, &ssao.importance_map_push_constant, sizeof(SSAOImportanceMapPushConstant));
@@ -1196,10 +1196,10 @@ void SSEffects::generate_ssao(Ref<RenderSceneBuffersRD> p_render_buffers, SSAORe
 			RID proc_imp_shader_a = ssao.importance_map_shader.version_get_shader(ssao.importance_map_shader_version, 1);
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssao.pipelines[SSAO_PROCESS_IMPORTANCE_MAPA]);
 
-			RD::Uniform u_importance_map_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, importance_map }));
+			RD::Uniform u_importance_map_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, importance_map }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(proc_imp_shader_a, 0, u_importance_map_with_sampler), 0);
 
-			RD::Uniform u_importance_map_pong(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ importance_pong }));
+			RD::Uniform u_importance_map_pong(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ importance_pong }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(proc_imp_shader_a, 1, u_importance_map_pong), 1);
 
 			RD::get_singleton()->compute_list_set_push_constant(compute_list, &ssao.importance_map_push_constant, sizeof(SSAOImportanceMapPushConstant));
@@ -1210,7 +1210,7 @@ void SSEffects::generate_ssao(Ref<RenderSceneBuffersRD> p_render_buffers, SSAORe
 			RID proc_imp_shader_b = ssao.importance_map_shader.version_get_shader(ssao.importance_map_shader_version, 2);
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssao.pipelines[SSAO_PROCESS_IMPORTANCE_MAPB]);
 
-			RD::Uniform u_importance_map_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, importance_pong }));
+			RD::Uniform u_importance_map_pong_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, importance_pong }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(proc_imp_shader_b, 0, u_importance_map_pong_with_sampler), 0);
 
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(proc_imp_shader_b, 1, u_importance_map), 1);
@@ -1261,25 +1261,25 @@ void SSEffects::generate_ssao(Ref<RenderSceneBuffersRD> p_render_buffers, SSAORe
 				RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssao.pipelines[blur_pipeline]);
 				if (pass % 2 == 0) {
 					if (ssao_quality == RS::ENV_SSAO_QUALITY_VERY_LOW) {
-						RD::Uniform u_ao_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, ao_deinterleaved_slices[i] }));
+						RD::Uniform u_ao_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, ao_deinterleaved_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ao_slices_with_sampler), 0);
 					} else {
-						RD::Uniform u_ao_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ ss_effects.mirror_sampler, ao_deinterleaved_slices[i] }));
+						RD::Uniform u_ao_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ ss_effects.mirror_sampler, ao_deinterleaved_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ao_slices_with_sampler), 0);
 					}
 
-					RD::Uniform u_ao_pong_slices(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ ao_pong_slices[i] }));
+					RD::Uniform u_ao_pong_slices(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ ao_pong_slices[i] }));
 					RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 1, u_ao_pong_slices), 1);
 				} else {
 					if (ssao_quality == RS::ENV_SSAO_QUALITY_VERY_LOW) {
-						RD::Uniform u_ao_pong_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, ao_pong_slices[i] }));
+						RD::Uniform u_ao_pong_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, ao_pong_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ao_pong_slices_with_sampler), 0);
 					} else {
-						RD::Uniform u_ao_pong_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ ss_effects.mirror_sampler, ao_pong_slices[i] }));
+						RD::Uniform u_ao_pong_slices_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ ss_effects.mirror_sampler, ao_pong_slices[i] }));
 						RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 0, u_ao_pong_slices_with_sampler), 0);
 					}
 
-					RD::Uniform u_ao_slices(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ ao_deinterleaved_slices[i] }));
+					RD::Uniform u_ao_slices(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ ao_deinterleaved_slices[i] }));
 					RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(blur_shader, 1, u_ao_slices), 1);
 				}
 				RD::get_singleton()->compute_list_set_push_constant(compute_list, &ssao.blur_push_constant, sizeof(SSAOBlurPushConstant));
@@ -1314,14 +1314,14 @@ void SSEffects::generate_ssao(Ref<RenderSceneBuffersRD> p_render_buffers, SSAORe
 		RID interleave_shader = ssao.interleave_shader.version_get_shader(ssao.interleave_shader_version, interleave_pipeline - SSAO_INTERLEAVE);
 		RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssao.pipelines[interleave_pipeline]);
 
-		RD::Uniform u_upscale_buffer(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ ao_final }));
+		RD::Uniform u_upscale_buffer(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ ao_final }));
 		RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(interleave_shader, 0, u_upscale_buffer), 0);
 
 		if (ssao_quality > RS::ENV_SSAO_QUALITY_VERY_LOW && ssao_blur_passes % 2 == 0) {
-			RD::Uniform u_ao(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, ao_deinterleaved }));
+			RD::Uniform u_ao(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, ao_deinterleaved }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(interleave_shader, 1, u_ao), 1);
 		} else {
-			RD::Uniform u_ao(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, ao_pong }));
+			RD::Uniform u_ao(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, ao_pong }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(interleave_shader, 1, u_ao), 1);
 		}
 
@@ -1367,7 +1367,7 @@ void SSEffects::ssr_allocate_buffers(Ref<RenderSceneBuffersRD> p_render_buffers,
 	p_render_buffers->create_texture(RB_SCOPE_SSR, RB_OUTPUT, p_color_format, RD::TEXTURE_USAGE_SAMPLING_BIT | RD::TEXTURE_USAGE_CAN_COPY_TO_BIT | RD::TEXTURE_USAGE_STORAGE_BIT, RD::TEXTURE_SAMPLES_1, p_ssr_buffers.size);
 }
 
-void SSEffects::screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffers, SSRRenderBuffers &p_ssr_buffers, const RID *p_normal_roughness_slices, const RID *p_metallic_slices, int p_max_steps, float p_fade_in, float p_fade_out, float p_tolerance, const Projection *p_projections, const Vector3 *p_eye_offsets) {
+void SSEffects::screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffers, SSRRenderBuffers &p_ssr_buffers, const RID *p_normal_roughness_slices, const RID *p_metallic_slices, int p_max_steps, float p_fade_in, float p_fade_out, float p_tolerance, const Projection *p_projections, const Hector3 *p_eye_offsets) {
 	UniformSetCacheRD *uniform_set_cache = UniformSetCacheRD::get_singleton();
 	ERR_FAIL_NULL(uniform_set_cache);
 	MaterialStorage *material_storage = MaterialStorage::get_singleton();
@@ -1437,18 +1437,18 @@ void SSEffects::screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffe
 
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssr_scale.pipelines[pipeline_specialization]);
 
-			RD::Uniform u_diffuse(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, diffuse_slice }));
+			RD::Uniform u_diffuse(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, diffuse_slice }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 0, u_diffuse), 0);
 
-			RD::Uniform u_depth(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, depth_slice }));
-			RD::Uniform u_normal_roughness(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 1, Vector<RID>({ default_sampler, p_normal_roughness_slices[v] }));
+			RD::Uniform u_depth(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, depth_slice }));
+			RD::Uniform u_normal_roughness(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 1, Hector<RID>({ default_sampler, p_normal_roughness_slices[v] }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 1, u_depth, u_normal_roughness), 1);
 
-			RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ intermediate }));
+			RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ intermediate }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 2, u_intermediate), 2);
 
-			RD::Uniform u_scale_depth(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ depth_scaled }));
-			RD::Uniform u_scale_normal(RD::UNIFORM_TYPE_IMAGE, 1, Vector<RID>({ normal_scaled }));
+			RD::Uniform u_scale_depth(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ depth_scaled }));
+			RD::Uniform u_scale_normal(RD::UNIFORM_TYPE_IMAGE, 1, Hector<RID>({ normal_scaled }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 3, u_scale_depth, u_scale_normal), 3);
 
 			RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(ScreenSpaceReflectionScalePushConstant));
@@ -1488,25 +1488,25 @@ void SSEffects::screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffe
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 4, u_scene_data), 4);
 
 			// read from intermediate
-			RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ intermediate }));
-			RD::Uniform u_scale_depth(RD::UNIFORM_TYPE_IMAGE, 1, Vector<RID>({ depth_scaled }));
+			RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ intermediate }));
+			RD::Uniform u_scale_depth(RD::UNIFORM_TYPE_IMAGE, 1, Hector<RID>({ depth_scaled }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 0, u_intermediate, u_scale_depth), 0);
 
 			if (ssr_roughness_quality != RS::ENV_SSR_ROUGHNESS_QUALITY_DISABLED) {
 				// write to output and blur radius
-				RD::Uniform u_output(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ output }));
-				RD::Uniform u_blur_radius(RD::UNIFORM_TYPE_IMAGE, 1, Vector<RID>({ blur_radius[0] }));
+				RD::Uniform u_output(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ output }));
+				RD::Uniform u_blur_radius(RD::UNIFORM_TYPE_IMAGE, 1, Hector<RID>({ blur_radius[0] }));
 				RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 1, u_output, u_blur_radius), 1);
 			} else {
 				// We are only writing output
-				RD::Uniform u_output(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ output }));
+				RD::Uniform u_output(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ output }));
 				RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 1, u_output), 1);
 			}
 
-			RD::Uniform u_scale_normal(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ normal_scaled }));
+			RD::Uniform u_scale_normal(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ normal_scaled }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 2, u_scale_normal), 2);
 
-			RD::Uniform u_metallic(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_metallic_slices[v] }));
+			RD::Uniform u_metallic(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_metallic_slices[v] }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 3, u_metallic), 3);
 
 			RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(ScreenSpaceReflectionPushConstant));
@@ -1552,18 +1552,18 @@ void SSEffects::screen_space_reflection(Ref<RenderSceneBuffersRD> p_render_buffe
 
 			RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, ssr_filter.pipelines[pipeline_specialization][mode]);
 
-			RD::Uniform u_output(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ output }));
-			RD::Uniform u_blur_radius(RD::UNIFORM_TYPE_IMAGE, 1, Vector<RID>({ blur_radius[0] }));
+			RD::Uniform u_output(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ output }));
+			RD::Uniform u_blur_radius(RD::UNIFORM_TYPE_IMAGE, 1, Hector<RID>({ blur_radius[0] }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 0, u_output, u_blur_radius), 0);
 
-			RD::Uniform u_scale_normal(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ normal_scaled }));
+			RD::Uniform u_scale_normal(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ normal_scaled }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 1, u_scale_normal), 1);
 
-			RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ intermediate }));
-			RD::Uniform u_blur_radius2(RD::UNIFORM_TYPE_IMAGE, 1, Vector<RID>({ blur_radius[1] }));
+			RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ intermediate }));
+			RD::Uniform u_blur_radius2(RD::UNIFORM_TYPE_IMAGE, 1, Hector<RID>({ blur_radius[1] }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 2, u_intermediate, u_blur_radius2), 2);
 
-			RD::Uniform u_scale_depth(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ depth_scaled }));
+			RD::Uniform u_scale_depth(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ depth_scaled }));
 			RD::get_singleton()->compute_list_bind_uniform_set(compute_list, uniform_set_cache->get_cache(shader, 3, u_scale_depth), 3);
 
 			RD::Uniform u_scene_data(RD::UNIFORM_TYPE_UNIFORM_BUFFER, 0, ssr.ubo);
@@ -1654,11 +1654,11 @@ void SSEffects::sub_surface_scattering(Ref<RenderSceneBuffersRD> p_render_buffer
 		RID shader = sss.shader.version_get_shader(sss.shader_version, sss_quality - 1);
 		RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, sss.pipelines[sss_quality - 1]);
 
-		RD::Uniform u_diffuse_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_diffuse }));
-		RD::Uniform u_diffuse(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ p_diffuse }));
-		RD::Uniform u_intermediate_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, intermediate }));
-		RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ intermediate }));
-		RD::Uniform u_depth_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_depth }));
+		RD::Uniform u_diffuse_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_diffuse }));
+		RD::Uniform u_diffuse(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ p_diffuse }));
+		RD::Uniform u_intermediate_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, intermediate }));
+		RD::Uniform u_intermediate(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ intermediate }));
+		RD::Uniform u_depth_with_sampler(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_depth }));
 
 		// horizontal
 

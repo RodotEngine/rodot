@@ -36,7 +36,7 @@
 #include "core/typedefs.h"
 
 template <typename T>
-class Vector;
+class Hector;
 
 class Main {
 	enum CLIOptionAvailability {
@@ -66,7 +66,7 @@ public:
 		CLI_SCOPE_TOOL, // Editor and project manager.
 		CLI_SCOPE_PROJECT,
 	};
-	static const Vector<String> &get_forwardable_cli_arguments(CLIScope p_scope);
+	static const Hector<String> &get_forwardable_cli_arguments(CLIScope p_scope);
 #endif
 
 	static int test_entrypoint(int argc, char *argv[], bool &tests_need_run);

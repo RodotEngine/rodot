@@ -80,15 +80,15 @@ struct PluginConfigAndroid {
 	String binary;
 
 	// Optional dependencies section
-	Vector<String> local_dependencies;
-	Vector<String> remote_dependencies;
-	Vector<String> custom_maven_repos;
+	Hector<String> local_dependencies;
+	Hector<String> remote_dependencies;
+	Hector<String> custom_maven_repos;
 
 	static String resolve_local_dependency_path(String plugin_config_dir, String dependency_path);
 
 	static PluginConfigAndroid resolve_prebuilt_plugin(PluginConfigAndroid prebuilt_plugin, String plugin_config_dir);
 
-	static Vector<PluginConfigAndroid> get_prebuilt_plugins(String plugins_base_dir);
+	static Hector<PluginConfigAndroid> get_prebuilt_plugins(String plugins_base_dir);
 
 	static bool is_plugin_config_valid(PluginConfigAndroid plugin_config);
 
@@ -96,11 +96,11 @@ struct PluginConfigAndroid {
 
 	static PluginConfigAndroid load_plugin_config(Ref<ConfigFile> config_file, const String &path);
 
-	static void get_plugins_binaries(String binary_type, Vector<PluginConfigAndroid> plugins_configs, Vector<String> &r_result);
+	static void get_plugins_binaries(String binary_type, Hector<PluginConfigAndroid> plugins_configs, Hector<String> &r_result);
 
-	static void get_plugins_custom_maven_repos(Vector<PluginConfigAndroid> plugins_configs, Vector<String> &r_result);
+	static void get_plugins_custom_maven_repos(Hector<PluginConfigAndroid> plugins_configs, Hector<String> &r_result);
 
-	static void get_plugins_names(Vector<PluginConfigAndroid> plugins_configs, Vector<String> &r_result);
+	static void get_plugins_names(Hector<PluginConfigAndroid> plugins_configs, Hector<String> &r_result);
 };
 
 #endif // DISABLE_DEPRECATED

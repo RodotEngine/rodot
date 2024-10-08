@@ -133,7 +133,7 @@
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_BLEND
 
-  T1_FIELD_NUM_TABLE( "DesignVector", default_design_vector,
+  T1_FIELD_NUM_TABLE( "DesignHector", default_design_Hector,
                       T1_MAX_MM_DESIGNS, T1_FIELD_DICT_FONTDICT )
 
 

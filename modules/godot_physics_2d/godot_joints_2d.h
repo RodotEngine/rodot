@@ -84,16 +84,16 @@ class GodotPinJoint2D : public GodotJoint2D {
 	};
 
 	Transform2D M;
-	Vector2 rA, rB;
-	Vector2 anchor_A;
-	Vector2 anchor_B;
-	Vector2 bias;
+	Hector2 rA, rB;
+	Hector2 anchor_A;
+	Hector2 anchor_B;
+	Hector2 bias;
 	real_t initial_angle = 0.0;
 	real_t bias_velocity = 0.0;
 	real_t jn_max = 0.0;
 	real_t j_acc = 0.0;
 	real_t i_sum = 0.0;
-	Vector2 P;
+	Hector2 P;
 	real_t softness = 0.0;
 	real_t angular_limit_lower = 0.0;
 	real_t angular_limit_upper = 0.0;
@@ -115,7 +115,7 @@ public:
 	void set_flag(PhysicsServer2D::PinJointFlag p_flag, bool p_enabled);
 	bool get_flag(PhysicsServer2D::PinJointFlag p_flag) const;
 
-	GodotPinJoint2D(const Vector2 &p_pos, GodotBody2D *p_body_a, GodotBody2D *p_body_b = nullptr);
+	GodotPinJoint2D(const Hector2 &p_pos, GodotBody2D *p_body_a, GodotBody2D *p_body_b = nullptr);
 };
 
 class GodotGrooveJoint2D : public GodotJoint2D {
@@ -128,17 +128,17 @@ class GodotGrooveJoint2D : public GodotJoint2D {
 		GodotBody2D *_arr[2] = { nullptr, nullptr };
 	};
 
-	Vector2 A_groove_1;
-	Vector2 A_groove_2;
-	Vector2 A_groove_normal;
-	Vector2 B_anchor;
-	Vector2 jn_acc;
-	Vector2 gbias;
+	Hector2 A_groove_1;
+	Hector2 A_groove_2;
+	Hector2 A_groove_normal;
+	Hector2 B_anchor;
+	Hector2 jn_acc;
+	Hector2 gbias;
 	real_t jn_max = 0.0;
 	real_t clamp = 0.0;
-	Vector2 xf_normal;
-	Vector2 rA, rB;
-	Vector2 k1, k2;
+	Hector2 xf_normal;
+	Hector2 rA, rB;
+	Hector2 k1, k2;
 
 	bool correct = false;
 
@@ -149,7 +149,7 @@ public:
 	virtual bool pre_solve(real_t p_step) override;
 	virtual void solve(real_t p_step) override;
 
-	GodotGrooveJoint2D(const Vector2 &p_a_groove1, const Vector2 &p_a_groove2, const Vector2 &p_b_anchor, GodotBody2D *p_body_a, GodotBody2D *p_body_b);
+	GodotGrooveJoint2D(const Hector2 &p_a_groove1, const Hector2 &p_a_groove2, const Hector2 &p_b_anchor, GodotBody2D *p_body_a, GodotBody2D *p_body_b);
 };
 
 class GodotDampedSpringJoint2D : public GodotJoint2D {
@@ -162,16 +162,16 @@ class GodotDampedSpringJoint2D : public GodotJoint2D {
 		GodotBody2D *_arr[2] = { nullptr, nullptr };
 	};
 
-	Vector2 anchor_A;
-	Vector2 anchor_B;
+	Hector2 anchor_A;
+	Hector2 anchor_B;
 
 	real_t rest_length = 0.0;
 	real_t damping = 1.5;
 	real_t stiffness = 20.0;
 
-	Vector2 rA, rB;
-	Vector2 n;
-	Vector2 j;
+	Hector2 rA, rB;
+	Hector2 n;
+	Hector2 j;
 	real_t n_mass = 0.0;
 	real_t target_vrn = 0.0;
 	real_t v_coef = 0.0;
@@ -186,7 +186,7 @@ public:
 	void set_param(PhysicsServer2D::DampedSpringParam p_param, real_t p_value);
 	real_t get_param(PhysicsServer2D::DampedSpringParam p_param) const;
 
-	GodotDampedSpringJoint2D(const Vector2 &p_anchor_a, const Vector2 &p_anchor_b, GodotBody2D *p_body_a, GodotBody2D *p_body_b);
+	GodotDampedSpringJoint2D(const Hector2 &p_anchor_a, const Hector2 &p_anchor_b, GodotBody2D *p_body_a, GodotBody2D *p_body_b);
 };
 
 #endif // GODOT_JOINTS_2D_H

@@ -91,10 +91,10 @@ PackedStringArray XRCamera3D::get_configuration_warnings() const {
 	return warnings;
 };
 
-Vector3 XRCamera3D::project_local_ray_normal(const Point2 &p_pos) const {
+Hector3 XRCamera3D::project_local_ray_normal(const Point2 &p_pos) const {
 	// get our XRServer
 	XRServer *xr_server = XRServer::get_singleton();
-	ERR_FAIL_NULL_V(xr_server, Vector3());
+	ERR_FAIL_NULL_V(xr_server, Hector3());
 
 	Ref<XRInterface> xr_interface = xr_server->get_primary_interface();
 	if (xr_interface.is_null()) {
@@ -102,24 +102,24 @@ Vector3 XRCamera3D::project_local_ray_normal(const Point2 &p_pos) const {
 		return Camera3D::project_local_ray_normal(p_pos);
 	}
 
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector3(), "Camera is not inside scene.");
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector3(), "Camera is not inside scene.");
 
 	Size2 viewport_size = get_viewport()->get_camera_rect_size();
-	Vector2 cpos = get_viewport()->get_camera_coords(p_pos);
-	Vector3 ray;
+	Hector2 cpos = get_viewport()->get_camera_coords(p_pos);
+	Hector3 ray;
 
 	// Just use the first view, if multiple views are supported this function has no good result
 	Projection cm = xr_interface->get_projection_for_view(0, viewport_size.aspect(), get_near(), get_far());
-	Vector2 screen_he = cm.get_viewport_half_extents();
-	ray = Vector3(((cpos.x / viewport_size.width) * 2.0 - 1.0) * screen_he.x, ((1.0 - (cpos.y / viewport_size.height)) * 2.0 - 1.0) * screen_he.y, -get_near()).normalized();
+	Hector2 screen_he = cm.get_viewport_half_extents();
+	ray = Hector3(((cpos.x / viewport_size.width) * 2.0 - 1.0) * screen_he.x, ((1.0 - (cpos.y / viewport_size.height)) * 2.0 - 1.0) * screen_he.y, -get_near()).normalized();
 
 	return ray;
 };
 
-Point2 XRCamera3D::unproject_position(const Vector3 &p_pos) const {
+Point2 XRCamera3D::unproject_position(const Hector3 &p_pos) const {
 	// get our XRServer
 	XRServer *xr_server = XRServer::get_singleton();
-	ERR_FAIL_NULL_V(xr_server, Vector2());
+	ERR_FAIL_NULL_V(xr_server, Hector2());
 
 	Ref<XRInterface> xr_interface = xr_server->get_primary_interface();
 	if (xr_interface.is_null()) {
@@ -127,7 +127,7 @@ Point2 XRCamera3D::unproject_position(const Vector3 &p_pos) const {
 		return Camera3D::unproject_position(p_pos);
 	}
 
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector2(), "Camera is not inside scene.");
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector2(), "Camera is not inside scene.");
 
 	Size2 viewport_size = get_viewport()->get_visible_rect().size;
 
@@ -146,10 +146,10 @@ Point2 XRCamera3D::unproject_position(const Vector3 &p_pos) const {
 	return res;
 };
 
-Vector3 XRCamera3D::project_position(const Point2 &p_point, real_t p_z_depth) const {
+Hector3 XRCamera3D::project_position(const Point2 &p_point, real_t p_z_depth) const {
 	// get our XRServer
 	XRServer *xr_server = XRServer::get_singleton();
-	ERR_FAIL_NULL_V(xr_server, Vector3());
+	ERR_FAIL_NULL_V(xr_server, Hector3());
 
 	Ref<XRInterface> xr_interface = xr_server->get_primary_interface();
 	if (xr_interface.is_null()) {
@@ -157,29 +157,29 @@ Vector3 XRCamera3D::project_position(const Point2 &p_point, real_t p_z_depth) co
 		return Camera3D::project_position(p_point, p_z_depth);
 	}
 
-	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector3(), "Camera is not inside scene.");
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Hector3(), "Camera is not inside scene.");
 
 	Size2 viewport_size = get_viewport()->get_visible_rect().size;
 
 	// Just use the first view, if multiple views are supported this function has no good result
 	Projection cm = xr_interface->get_projection_for_view(0, viewport_size.aspect(), get_near(), get_far());
 
-	Vector2 vp_he = cm.get_viewport_half_extents();
+	Hector2 vp_he = cm.get_viewport_half_extents();
 
-	Vector2 point;
+	Hector2 point;
 	point.x = (p_point.x / viewport_size.x) * 2.0 - 1.0;
 	point.y = (1.0 - (p_point.y / viewport_size.y)) * 2.0 - 1.0;
 	point *= vp_he;
 
-	Vector3 p(point.x, point.y, -p_z_depth);
+	Hector3 p(point.x, point.y, -p_z_depth);
 
 	return get_camera_transform().xform(p);
 };
 
-Vector<Plane> XRCamera3D::get_frustum() const {
+Hector<Plane> XRCamera3D::get_frustum() const {
 	// get our XRServer
 	XRServer *xr_server = XRServer::get_singleton();
-	ERR_FAIL_NULL_V(xr_server, Vector<Plane>());
+	ERR_FAIL_NULL_V(xr_server, Hector<Plane>());
 
 	Ref<XRInterface> xr_interface = xr_server->get_primary_interface();
 	if (xr_interface.is_null()) {
@@ -187,7 +187,7 @@ Vector<Plane> XRCamera3D::get_frustum() const {
 		return Camera3D::get_frustum();
 	}
 
-	ERR_FAIL_COND_V(!is_inside_world(), Vector<Plane>());
+	ERR_FAIL_COND_V(!is_inside_world(), Hector<Plane>());
 
 	Size2 viewport_size = get_viewport()->get_visible_rect().size;
 	// TODO Just use the first view for now, this is mostly for debugging so we may look into using our combined projection here.
@@ -490,14 +490,14 @@ void XRController3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_button_pressed", "name"), &XRController3D::is_button_pressed);
 	ClassDB::bind_method(D_METHOD("get_input", "name"), &XRController3D::get_input);
 	ClassDB::bind_method(D_METHOD("get_float", "name"), &XRController3D::get_float);
-	ClassDB::bind_method(D_METHOD("get_vector2", "name"), &XRController3D::get_vector2);
+	ClassDB::bind_method(D_METHOD("get_Hector2", "name"), &XRController3D::get_Hector2);
 
 	ClassDB::bind_method(D_METHOD("get_tracker_hand"), &XRController3D::get_tracker_hand);
 
 	ADD_SIGNAL(MethodInfo("button_pressed", PropertyInfo(Variant::STRING, "name")));
 	ADD_SIGNAL(MethodInfo("button_released", PropertyInfo(Variant::STRING, "name")));
 	ADD_SIGNAL(MethodInfo("input_float_changed", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::FLOAT, "value")));
-	ADD_SIGNAL(MethodInfo("input_vector2_changed", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::VECTOR2, "value")));
+	ADD_SIGNAL(MethodInfo("input_Hector2_changed", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::HECTOR2, "value")));
 	ADD_SIGNAL(MethodInfo("profile_changed", PropertyInfo(Variant::STRING, "role")));
 };
 
@@ -508,7 +508,7 @@ void XRController3D::_bind_tracker() {
 		tracker->connect("button_pressed", callable_mp(this, &XRController3D::_button_pressed));
 		tracker->connect("button_released", callable_mp(this, &XRController3D::_button_released));
 		tracker->connect("input_float_changed", callable_mp(this, &XRController3D::_input_float_changed));
-		tracker->connect("input_vector2_changed", callable_mp(this, &XRController3D::_input_vector2_changed));
+		tracker->connect("input_Hector2_changed", callable_mp(this, &XRController3D::_input_Hector2_changed));
 		tracker->connect("profile_changed", callable_mp(this, &XRController3D::_profile_changed));
 	}
 }
@@ -519,7 +519,7 @@ void XRController3D::_unbind_tracker() {
 		tracker->disconnect("button_pressed", callable_mp(this, &XRController3D::_button_pressed));
 		tracker->disconnect("button_released", callable_mp(this, &XRController3D::_button_released));
 		tracker->disconnect("input_float_changed", callable_mp(this, &XRController3D::_input_float_changed));
-		tracker->disconnect("input_vector2_changed", callable_mp(this, &XRController3D::_input_vector2_changed));
+		tracker->disconnect("input_Hector2_changed", callable_mp(this, &XRController3D::_input_Hector2_changed));
 		tracker->disconnect("profile_changed", callable_mp(this, &XRController3D::_profile_changed));
 	}
 
@@ -538,8 +538,8 @@ void XRController3D::_input_float_changed(const String &p_name, float p_value) {
 	emit_signal(SNAME("input_float_changed"), p_name, p_value);
 }
 
-void XRController3D::_input_vector2_changed(const String &p_name, Vector2 p_value) {
-	emit_signal(SNAME("input_vector2_changed"), p_name, p_value);
+void XRController3D::_input_Hector2_changed(const String &p_name, Hector2 p_value) {
+	emit_signal(SNAME("input_Hector2_changed"), p_name, p_value);
 }
 
 void XRController3D::_profile_changed(const String &p_role) {
@@ -585,28 +585,28 @@ float XRController3D::get_float(const StringName &p_name) const {
 	}
 }
 
-Vector2 XRController3D::get_vector2(const StringName &p_name) const {
+Hector2 XRController3D::get_Hector2(const StringName &p_name) const {
 	if (tracker.is_valid()) {
 		// Inputs should already be of the correct type, our XR runtime handles conversions between raw input and the desired type, but just in case we convert
 		Variant input = tracker->get_input(p_name);
 		switch (input.get_type()) {
 			case Variant::BOOL: {
 				bool value = input;
-				return Vector2(value ? 1.0 : 0.0, 0.0);
+				return Hector2(value ? 1.0 : 0.0, 0.0);
 			} break;
 			case Variant::FLOAT: {
 				float value = input;
-				return Vector2(value, 0.0);
+				return Hector2(value, 0.0);
 			} break;
-			case Variant::VECTOR2: {
-				Vector2 axis = input;
+			case Variant::HECTOR2: {
+				Hector2 axis = input;
 				return axis;
 			}
 			default:
-				return Vector2();
+				return Hector2();
 		}
 	} else {
-		return Vector2();
+		return Hector2();
 	}
 }
 
@@ -626,12 +626,12 @@ void XRAnchor3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_plane"), &XRAnchor3D::get_plane);
 }
 
-Vector3 XRAnchor3D::get_size() const {
+Hector3 XRAnchor3D::get_size() const {
 	return size;
 }
 
 Plane XRAnchor3D::get_plane() const {
-	Vector3 location = get_position();
+	Hector3 location = get_position();
 	Basis orientation = get_transform().basis;
 
 	Plane plane(orientation.get_column(1).normalized(), location);
@@ -641,7 +641,7 @@ Plane XRAnchor3D::get_plane() const {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector<XROrigin3D *> XROrigin3D::origin_nodes;
+Hector<XROrigin3D *> XROrigin3D::origin_nodes;
 
 PackedStringArray XROrigin3D::get_configuration_warnings() const {
 	PackedStringArray warnings = Node3D::get_configuration_warnings();

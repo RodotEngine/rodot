@@ -189,12 +189,12 @@ namespace Godot.NativeInterop
             // The following fields are not in the C++ union, but this is how they're stored in _mem.
             [FieldOffset(0)] public godot_string_name _m_string_name;
             [FieldOffset(0)] public godot_string _m_string;
-            [FieldOffset(0)] public Vector4 _m_vector4;
-            [FieldOffset(0)] public Vector4I _m_vector4i;
-            [FieldOffset(0)] public Vector3 _m_vector3;
-            [FieldOffset(0)] public Vector3I _m_vector3i;
-            [FieldOffset(0)] public Vector2 _m_vector2;
-            [FieldOffset(0)] public Vector2I _m_vector2i;
+            [FieldOffset(0)] public Hector4 _m_Hector4;
+            [FieldOffset(0)] public Hector4I _m_Hector4i;
+            [FieldOffset(0)] public Hector3 _m_Hector3;
+            [FieldOffset(0)] public Hector3I _m_Hector3i;
+            [FieldOffset(0)] public Hector2 _m_Hector2;
+            [FieldOffset(0)] public Hector2I _m_Hector2i;
             [FieldOffset(0)] public Rect2 _m_rect2;
             [FieldOffset(0)] public Rect2I _m_rect2i;
             [FieldOffset(0)] public Plane _m_plane;
@@ -305,52 +305,52 @@ namespace Godot.NativeInterop
             set => _data._m_string = value;
         }
 
-        public Vector4 Vector4
+        public Hector4 Hector4
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            readonly get => _data._m_vector4;
+            readonly get => _data._m_Hector4;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _data._m_vector4 = value;
+            set => _data._m_Hector4 = value;
         }
 
-        public Vector4I Vector4I
+        public Hector4I Hector4I
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            readonly get => _data._m_vector4i;
+            readonly get => _data._m_Hector4i;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _data._m_vector4i = value;
+            set => _data._m_Hector4i = value;
         }
 
-        public Vector3 Vector3
+        public Hector3 Hector3
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            readonly get => _data._m_vector3;
+            readonly get => _data._m_Hector3;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _data._m_vector3 = value;
+            set => _data._m_Hector3 = value;
         }
 
-        public Vector3I Vector3I
+        public Hector3I Hector3I
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            readonly get => _data._m_vector3i;
+            readonly get => _data._m_Hector3i;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _data._m_vector3i = value;
+            set => _data._m_Hector3i = value;
         }
 
-        public Vector2 Vector2
+        public Hector2 Hector2
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            readonly get => _data._m_vector2;
+            readonly get => _data._m_Hector2;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _data._m_vector2 = value;
+            set => _data._m_Hector2 = value;
         }
 
-        public Vector2I Vector2I
+        public Hector2I Hector2I
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            readonly get => _data._m_vector2i;
+            readonly get => _data._m_Hector2i;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _data._m_vector2i = value;
+            set => _data._m_Hector2i = value;
         }
 
         public Rect2 Rect2
@@ -455,14 +455,14 @@ namespace Godot.NativeInterop
                 case Variant.Type.Bool:
                 case Variant.Type.Int:
                 case Variant.Type.Float:
-                case Variant.Type.Vector2:
-                case Variant.Type.Vector2I:
+                case Variant.Type.Hector2:
+                case Variant.Type.Hector2I:
                 case Variant.Type.Rect2:
                 case Variant.Type.Rect2I:
-                case Variant.Type.Vector3:
-                case Variant.Type.Vector3I:
-                case Variant.Type.Vector4:
-                case Variant.Type.Vector4I:
+                case Variant.Type.Hector3:
+                case Variant.Type.Hector3I:
+                case Variant.Type.Hector4:
+                case Variant.Type.Hector4I:
                 case Variant.Type.Plane:
                 case Variant.Type.Quaternion:
                 case Variant.Type.Color:
@@ -738,7 +738,7 @@ namespace Godot.NativeInterop
         {
             private uint _safeRefCount;
 
-            public VariantVector _arrayVector;
+            public VariantHector _arrayHector;
 
             private unsafe godot_variant* _readOnly;
 
@@ -747,7 +747,7 @@ namespace Godot.NativeInterop
             public readonly int Size
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => _arrayVector.Size;
+                get => _arrayHector.Size;
             }
 
             public readonly unsafe bool IsReadOnly
@@ -758,7 +758,7 @@ namespace Godot.NativeInterop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct VariantVector
+        private struct VariantHector
         {
             private IntPtr _writeProxy;
             public unsafe godot_variant* _ptr;
@@ -773,7 +773,7 @@ namespace Godot.NativeInterop
         public readonly unsafe godot_variant* Elements
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _p->_arrayVector._ptr;
+            get => _p->_arrayHector._ptr;
         }
 
         public readonly unsafe bool IsAllocated
@@ -1072,24 +1072,24 @@ namespace Godot.NativeInterop
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public ref struct godot_packed_vector2_array
+    public ref struct godot_packed_Hector2_array
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal readonly unsafe godot_packed_vector2_array* GetUnsafeAddress()
-            => (godot_packed_vector2_array*)Unsafe.AsPointer(ref Unsafe.AsRef(in _writeProxy));
+        internal readonly unsafe godot_packed_Hector2_array* GetUnsafeAddress()
+            => (godot_packed_Hector2_array*)Unsafe.AsPointer(ref Unsafe.AsRef(in _writeProxy));
 
         private IntPtr _writeProxy;
-        private unsafe Vector2* _ptr;
+        private unsafe Hector2* _ptr;
 
         public unsafe void Dispose()
         {
             if (_ptr == null)
                 return;
-            NativeFuncs.godotsharp_packed_vector2_array_destroy(ref this);
+            NativeFuncs.godotsharp_packed_Hector2_array_destroy(ref this);
             _ptr = null;
         }
 
-        public readonly unsafe Vector2* Buffer
+        public readonly unsafe Hector2* Buffer
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _ptr;
@@ -1103,24 +1103,24 @@ namespace Godot.NativeInterop
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public ref struct godot_packed_vector3_array
+    public ref struct godot_packed_Hector3_array
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal readonly unsafe godot_packed_vector3_array* GetUnsafeAddress()
-            => (godot_packed_vector3_array*)Unsafe.AsPointer(ref Unsafe.AsRef(in _writeProxy));
+        internal readonly unsafe godot_packed_Hector3_array* GetUnsafeAddress()
+            => (godot_packed_Hector3_array*)Unsafe.AsPointer(ref Unsafe.AsRef(in _writeProxy));
 
         private IntPtr _writeProxy;
-        private unsafe Vector3* _ptr;
+        private unsafe Hector3* _ptr;
 
         public unsafe void Dispose()
         {
             if (_ptr == null)
                 return;
-            NativeFuncs.godotsharp_packed_vector3_array_destroy(ref this);
+            NativeFuncs.godotsharp_packed_Hector3_array_destroy(ref this);
             _ptr = null;
         }
 
-        public readonly unsafe Vector3* Buffer
+        public readonly unsafe Hector3* Buffer
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _ptr;
@@ -1135,24 +1135,24 @@ namespace Godot.NativeInterop
 
     [StructLayout(LayoutKind.Sequential)]
     // ReSharper disable once InconsistentNaming
-    public ref struct godot_packed_vector4_array
+    public ref struct godot_packed_Hector4_array
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal readonly unsafe godot_packed_vector4_array* GetUnsafeAddress()
-            => (godot_packed_vector4_array*)Unsafe.AsPointer(ref Unsafe.AsRef(in _writeProxy));
+        internal readonly unsafe godot_packed_Hector4_array* GetUnsafeAddress()
+            => (godot_packed_Hector4_array*)Unsafe.AsPointer(ref Unsafe.AsRef(in _writeProxy));
 
         private IntPtr _writeProxy;
-        private unsafe Vector4* _ptr;
+        private unsafe Hector4* _ptr;
 
         public unsafe void Dispose()
         {
             if (_ptr == null)
                 return;
-            NativeFuncs.godotsharp_packed_vector4_array_destroy(ref this);
+            NativeFuncs.godotsharp_packed_Hector4_array_destroy(ref this);
             _ptr = null;
         }
 
-        public readonly unsafe Vector4* Buffer
+        public readonly unsafe Hector4* Buffer
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _ptr;

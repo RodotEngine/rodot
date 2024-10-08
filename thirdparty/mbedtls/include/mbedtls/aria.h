@@ -175,7 +175,7 @@ int mbedtls_aria_crypt_ecb(mbedtls_aria_context *ctx,
  *                 #MBEDTLS_ARIA_DECRYPT for decryption.
  * \param length   The length of the input data in Bytes. This must be a
  *                 multiple of the block size (16 Bytes).
- * \param iv       Initialization vector (updated after use).
+ * \param iv       Initialization Hector (updated after use).
  *                 This must be a readable buffer of size 16 Bytes.
  * \param input    The buffer holding the input data. This must
  *                 be a readable buffer of length \p length Bytes.
@@ -225,7 +225,7 @@ int mbedtls_aria_crypt_cbc(mbedtls_aria_context *ctx,
  * \param length   The length of the input data \p input in Bytes.
  * \param iv_off   The offset in IV (updated after use).
  *                 This must not be larger than 15.
- * \param iv       The initialization vector (updated after use).
+ * \param iv       The initialization Hector (updated after use).
  *                 This must be a readable buffer of size 16 Bytes.
  * \param input    The buffer holding the input data. This must
  *                 be a readable buffer of length \p length Bytes.

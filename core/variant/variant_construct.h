@@ -38,7 +38,7 @@
 #include "core/io/compression.h"
 #include "core/object/class_db.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/oa_hash_map.h"
 
 template <typename T>
@@ -56,14 +56,14 @@ MAKE_PTRCONSTRUCT(bool);
 MAKE_PTRCONSTRUCT(int64_t);
 MAKE_PTRCONSTRUCT(double);
 MAKE_PTRCONSTRUCT(String);
-MAKE_PTRCONSTRUCT(Vector2);
-MAKE_PTRCONSTRUCT(Vector2i);
+MAKE_PTRCONSTRUCT(Hector2);
+MAKE_PTRCONSTRUCT(Hector2i);
 MAKE_PTRCONSTRUCT(Rect2);
 MAKE_PTRCONSTRUCT(Rect2i);
-MAKE_PTRCONSTRUCT(Vector3);
-MAKE_PTRCONSTRUCT(Vector3i);
-MAKE_PTRCONSTRUCT(Vector4);
-MAKE_PTRCONSTRUCT(Vector4i);
+MAKE_PTRCONSTRUCT(Hector3);
+MAKE_PTRCONSTRUCT(Hector3i);
+MAKE_PTRCONSTRUCT(Hector4);
+MAKE_PTRCONSTRUCT(Hector4i);
 MAKE_PTRCONSTRUCT(Transform2D);
 MAKE_PTRCONSTRUCT(Plane);
 MAKE_PTRCONSTRUCT(Quaternion);
@@ -93,10 +93,10 @@ MAKE_PTRCONSTRUCT(PackedInt64Array);
 MAKE_PTRCONSTRUCT(PackedFloat32Array);
 MAKE_PTRCONSTRUCT(PackedFloat64Array);
 MAKE_PTRCONSTRUCT(PackedStringArray);
-MAKE_PTRCONSTRUCT(PackedVector2Array);
-MAKE_PTRCONSTRUCT(PackedVector3Array);
+MAKE_PTRCONSTRUCT(PackedHector2Array);
+MAKE_PTRCONSTRUCT(PackedHector3Array);
 MAKE_PTRCONSTRUCT(PackedColorArray);
-MAKE_PTRCONSTRUCT(PackedVector4Array);
+MAKE_PTRCONSTRUCT(PackedHector4Array);
 MAKE_PTRCONSTRUCT(Variant);
 
 template <typename T, typename... P>

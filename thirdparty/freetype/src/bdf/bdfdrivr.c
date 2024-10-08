@@ -852,7 +852,7 @@ THE SOFTWARE.
     slot->metrics.height       = (FT_Pos)( bitmap->rows * 64 );
 
     /*
-     * XXX DWIDTH1 and VVECTOR should be parsed and
+     * XXX DWIDTH1 and VHector should be parsed and
      * used here, provided such fonts do exist.
      */
     ft_synthesize_vertical_metrics( &slot->metrics,

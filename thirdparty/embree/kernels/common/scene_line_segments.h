@@ -388,8 +388,8 @@ namespace embree
       const unsigned int index = segment(i);
       const Vec3ff v0 = vertex(index+0);
       const Vec3ff v1 = vertex(index+1);
-      const Vec3ff w0(xfmVector(space,(Vec3fa)v0),v0.w);
-      const Vec3ff w1(xfmVector(space,(Vec3fa)v1),v1.w);
+      const Vec3ff w0(xfmHector(space,(Vec3fa)v0),v0.w);
+      const Vec3ff w1(xfmHector(space,(Vec3fa)v1),v1.w);
       return bounds(w0,w1);
     }
 
@@ -399,8 +399,8 @@ namespace embree
       const unsigned int index = segment(i);
       const Vec3ff v0 = vertex(index+0,itime);
       const Vec3ff v1 = vertex(index+1,itime);
-      const Vec3ff w0(xfmVector(space,(Vec3fa)v0),v0.w);
-      const Vec3ff w1(xfmVector(space,(Vec3fa)v1),v1.w);
+      const Vec3ff w0(xfmHector(space,(Vec3fa)v0),v0.w);
+      const Vec3ff w1(xfmHector(space,(Vec3fa)v1),v1.w);
       return bounds(w0,w1);
     }
 
@@ -411,8 +411,8 @@ namespace embree
       const unsigned int index = segment(i);
       const Vec3ff v0 = vertex(index+0,itime);
       const Vec3ff v1 = vertex(index+1,itime);
-      const Vec3ff w0(xfmVector(space,(v0-ofs)*Vec3fa(scale)),maxRadiusScale*v0.w*r_scale);
-      const Vec3ff w1(xfmVector(space,(v1-ofs)*Vec3fa(scale)),maxRadiusScale*v1.w*r_scale);
+      const Vec3ff w0(xfmHector(space,(v0-ofs)*Vec3fa(scale)),maxRadiusScale*v0.w*r_scale);
+      const Vec3ff w1(xfmHector(space,(v1-ofs)*Vec3fa(scale)),maxRadiusScale*v1.w*r_scale);
       return bounds(w0,w1);
     }     
 
@@ -494,9 +494,9 @@ namespace embree
     BufferView<Vec3ff> vertices0;           //!< fast access to first vertex buffer
     BufferView<Vec3fa> normals0;            //!< fast access to first normal buffer
     BufferView<char> flags;                 //!< start, end flag per segment
-    Device::vector<BufferView<Vec3ff>> vertices = device;    //!< vertex array for each timestep
-    Device::vector<BufferView<Vec3fa>> normals = device;     //!< normal array for each timestep
-    Device::vector<BufferView<char>> vertexAttribs = device; //!< user buffers
+    Device::Hector<BufferView<Vec3ff>> vertices = device;    //!< vertex array for each timestep
+    Device::Hector<BufferView<Vec3fa>> normals = device;     //!< normal array for each timestep
+    Device::Hector<BufferView<char>> vertexAttribs = device; //!< user buffers
     int tessellationRate;                   //!< tessellation rate for bezier curve
     float maxRadiusScale = 1.0;             //!< maximal min-width scaling of curve radii
   };
@@ -560,7 +560,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfo createPrimRefArrayMB(mvector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const
+      PrimInfo createPrimRefArrayMB(mHector<PrimRef>& prims, size_t itime, const range<size_t>& r, size_t k, unsigned int geomID) const
       {
         PrimInfo pinfo(empty);
         for (size_t j=r.begin(); j<r.end(); j++)
@@ -591,7 +591,7 @@ namespace embree
         return pinfo;
       }
 
-      PrimInfoMB createPrimRefMBArray(mvector<PrimRefMB>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const
+      PrimInfoMB createPrimRefMBArray(mHector<PrimRefMB>& prims, const BBox1f& t0t1, const range<size_t>& r, size_t k, unsigned int geomID) const
       {
         PrimInfoMB pinfo(empty);
         for (size_t j=r.begin(); j<r.end(); j++)

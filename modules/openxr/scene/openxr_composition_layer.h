@@ -88,7 +88,7 @@ protected:
 
 	XrPosef get_openxr_pose();
 
-	static Vector<OpenXRCompositionLayer *> composition_layer_nodes;
+	static Hector<OpenXRCompositionLayer *> composition_layer_nodes;
 	bool is_viewport_in_use(SubViewport *p_viewport);
 
 	OpenXRCompositionLayer(XrCompositionLayerBaseHeader *p_composition_layer);
@@ -117,7 +117,7 @@ public:
 
 	virtual PackedStringArray get_configuration_warnings() const override;
 
-	virtual Vector2 intersects_ray(const Vector3 &p_origin, const Vector3 &p_direction) const;
+	virtual Hector2 intersects_ray(const Hector3 &p_origin, const Hector3 &p_direction) const;
 
 	~OpenXRCompositionLayer();
 };

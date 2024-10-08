@@ -295,7 +295,7 @@ Ref<Resource> ResourceFormatLoaderShader::load(const String &p_path, const Strin
 	}
 
 	Error error = OK;
-	Vector<uint8_t> buffer = FileAccess::get_file_as_bytes(p_path, &error);
+	Hector<uint8_t> buffer = FileAccess::get_file_as_bytes(p_path, &error);
 	ERR_FAIL_COND_V_MSG(error, nullptr, "Cannot load shader: " + p_path);
 
 	String str;

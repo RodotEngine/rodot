@@ -42,7 +42,7 @@ class GDShaderSyntaxHighlighter : public CodeHighlighter {
 	GDCLASS(GDShaderSyntaxHighlighter, CodeHighlighter)
 
 private:
-	Vector<Point2i> disabled_branch_regions;
+	Hector<Point2i> disabled_branch_regions;
 	Color disabled_branch_color;
 
 public:
@@ -182,7 +182,7 @@ class TextShaderEditor : public ShaderEditor {
 protected:
 	void _notification(int p_what);
 	static void _bind_methods();
-	void _make_context_menu(bool p_selection, Vector2 p_position);
+	void _make_context_menu(bool p_selection, Hector2 p_position);
 	void _text_edit_gui_input(const Ref<InputEvent> &p_ev);
 
 	void _update_bookmark_list();

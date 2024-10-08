@@ -10,15 +10,15 @@
 		var st = SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		st.set_color(Color(1, 0, 0))
-		st.set_uv(Vector2(0, 0))
-		st.add_vertex(Vector3(0, 0, 0))
+		st.set_uv(Hector2(0, 0))
+		st.add_vertex(Hector3(0, 0, 0))
 		[/gdscript]
 		[csharp]
 		var st = new SurfaceTool();
 		st.Begin(Mesh.PrimitiveType.Triangles);
 		st.SetColor(new Color(1, 0, 0));
-		st.SetUV(new Vector2(0, 0));
-		st.AddVertex(new Vector3(0, 0, 0));
+		st.SetUV(new Hector2(0, 0));
+		st.AddVertex(new Hector3(0, 0, 0));
 		[/csharp]
 		[/codeblocks]
 		The above [SurfaceTool] now contains one vertex of a triangle which has a UV coordinate and a specified [Color]. If another vertex were added without calling [method set_uv] or [method set_color], then the last values would be used.
@@ -41,11 +41,11 @@
 		</method>
 		<method name="add_triangle_fan">
 			<return type="void" />
-			<param index="0" name="vertices" type="PackedVector3Array" />
-			<param index="1" name="uvs" type="PackedVector2Array" default="PackedVector2Array()" />
+			<param index="0" name="vertices" type="PackedHector3Array" />
+			<param index="1" name="uvs" type="PackedHector2Array" default="PackedHector2Array()" />
 			<param index="2" name="colors" type="PackedColorArray" default="PackedColorArray()" />
-			<param index="3" name="uv2s" type="PackedVector2Array" default="PackedVector2Array()" />
-			<param index="4" name="normals" type="PackedVector3Array" default="PackedVector3Array()" />
+			<param index="3" name="uv2s" type="PackedHector2Array" default="PackedHector2Array()" />
+			<param index="4" name="normals" type="PackedHector3Array" default="PackedHector3Array()" />
 			<param index="5" name="tangents" type="Plane[]" default="[]" />
 			<description>
 				Inserts a triangle fan made of array data into [Mesh] being constructed.
@@ -54,7 +54,7 @@
 		</method>
 		<method name="add_vertex">
 			<return type="void" />
-			<param index="0" name="vertex" type="Vector3" />
+			<param index="0" name="vertex" type="Hector3" />
 			<description>
 				Specifies the position of current vertex. Should be called after specifying other vertex properties (e.g. Color, UV).
 			</description>
@@ -147,7 +147,7 @@
 		<method name="generate_tangents">
 			<return type="void" />
 			<description>
-				Generates a tangent vector for each vertex. Requires that each vertex have UVs and normals set already (see [method generate_normals]).
+				Generates a tangent Hector for each vertex. Requires that each vertex have UVs and normals set already (see [method generate_normals]).
 			</description>
 		</method>
 		<method name="get_aabb" qualifiers="const">
@@ -231,7 +231,7 @@
 		</method>
 		<method name="set_normal">
 			<return type="void" />
-			<param index="0" name="normal" type="Vector3" />
+			<param index="0" name="normal" type="Hector3" />
 			<description>
 				Specifies a normal to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.
 			</description>
@@ -262,14 +262,14 @@
 		</method>
 		<method name="set_uv">
 			<return type="void" />
-			<param index="0" name="uv" type="Vector2" />
+			<param index="0" name="uv" type="Hector2" />
 			<description>
 				Specifies a set of UV coordinates to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.
 			</description>
 		</method>
 		<method name="set_uv2">
 			<return type="void" />
-			<param index="0" name="uv2" type="Vector2" />
+			<param index="0" name="uv2" type="Hector2" />
 			<description>
 				Specifies an optional second set of UV coordinates to use for the [i]next[/i] vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.
 			</description>

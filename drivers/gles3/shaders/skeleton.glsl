@@ -132,8 +132,8 @@ vec2 tang_to_oct(vec4 base) {
 
 // Our original input for normals and tangents is 2 16-bit floats.
 // Transform Feedback has to write out 32-bits per channel.
-// Octahedral compression requires normalized vectors, but we need to store
-// non-normalized vectors until the very end.
+// Octahedral compression requires normalized Hectors, but we need to store
+// non-normalized Hectors until the very end.
 // Therefore, we will compress our normals into 16 bits using signed-normalized
 // fixed point precision. This works well, because we know that each normal
 // is no larger than |1| so we can normalize by dividing by the number of blend

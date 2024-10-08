@@ -261,7 +261,7 @@ namespace embree
             dw = w1-w0
             
           For some t we can compute the potential hit point h = O + t*dO and
-          project it onto the cone vector dP to obtain u = (h*dP)/(dP*dP). In
+          project it onto the cone Hector dP to obtain u = (h*dP)/(dP*dP). In
           case of an intersection, the squared distance from the hit point
           projected onto the cone center line to the hit point should be equal
           to the squared cone radius at u:
@@ -415,13 +415,13 @@ namespace embree
              u = dot(h,dP)/dP^2
            
            Using this value one can now directly calculate the
-           geometry normal by bending the connection vector (h-u*dP)
+           geometry normal by bending the connection Hector (h-u*dP)
            from hit to projected hit with some cone dependent value
            dw/sqrt(dP^2) * normalize(dP):
            
              Ng = normalize(h-u*dP) - dw/length(dP) * normalize(dP)
            
-           The length of the vector (h-u*dP) can also get calculated
+           The length of the Hector (h-u*dP) can also get calculated
            by interpolating the radii as w0+u*dw which yields:
            
              Ng = (h-u*dP)/(w0+u*dw) - dw/dP^2 * dP
@@ -461,7 +461,7 @@ namespace embree
         }
         
         /* compute geometry normal of sphere hit as the difference
-         * vector from hit point to sphere center */
+         * Hector from hit point to sphere center */
         
         __forceinline Vec3vf<M> Ng_sphere1(const vbool<M>& front_hit) const
         {

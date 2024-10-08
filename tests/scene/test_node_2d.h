@@ -113,46 +113,46 @@ TEST_CASE("[SceneTree][Node2D] Utility methods") {
 	test_sibling->set_scale(Size2(2, 1));
 
 	SUBCASE("[Node2D] look_at") {
-		test_node3->look_at(Vector2(1, 1));
+		test_node3->look_at(Hector2(1, 1));
 
 		CHECK(test_node3->get_global_position().is_equal_approx(Point2(98.66026, 105)));
 		CHECK(Math::is_equal_approx(test_node3->get_global_rotation(), real_t(-2.32477)));
-		CHECK(test_node3->get_global_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(test_node3->get_global_scale().is_equal_approx(Hector2(2, 2)));
 
-		CHECK(test_node3->get_position().is_equal_approx(Vector2(0, 10)));
+		CHECK(test_node3->get_position().is_equal_approx(Hector2(0, 10)));
 		CHECK(Math::is_equal_approx(test_node3->get_rotation(), real_t(2.38762)));
-		CHECK(test_node3->get_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(test_node3->get_scale().is_equal_approx(Hector2(2, 2)));
 
-		test_node3->look_at(Vector2(0, 10));
+		test_node3->look_at(Hector2(0, 10));
 
-		CHECK(test_node3->get_global_position().is_equal_approx(Vector2(98.66026, 105)));
+		CHECK(test_node3->get_global_position().is_equal_approx(Hector2(98.66026, 105)));
 		CHECK(Math::is_equal_approx(test_node3->get_global_rotation(), real_t(-2.37509)));
-		CHECK(test_node3->get_global_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(test_node3->get_global_scale().is_equal_approx(Hector2(2, 2)));
 
-		CHECK(test_node3->get_position().is_equal_approx(Vector2(0, 10)));
+		CHECK(test_node3->get_position().is_equal_approx(Hector2(0, 10)));
 		CHECK(Math::is_equal_approx(test_node3->get_rotation(), real_t(2.3373)));
-		CHECK(test_node3->get_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(test_node3->get_scale().is_equal_approx(Hector2(2, 2)));
 
 		// Don't do anything if look_at own position.
 		test_node3->look_at(test_node3->get_global_position());
 
-		CHECK(test_node3->get_global_position().is_equal_approx(Vector2(98.66026, 105)));
+		CHECK(test_node3->get_global_position().is_equal_approx(Hector2(98.66026, 105)));
 		CHECK(Math::is_equal_approx(test_node3->get_global_rotation(), real_t(-2.37509)));
-		CHECK(test_node3->get_global_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(test_node3->get_global_scale().is_equal_approx(Hector2(2, 2)));
 
-		CHECK(test_node3->get_position().is_equal_approx(Vector2(0, 10)));
+		CHECK(test_node3->get_position().is_equal_approx(Hector2(0, 10)));
 		CHECK(Math::is_equal_approx(test_node3->get_rotation(), real_t(2.3373)));
-		CHECK(test_node3->get_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(test_node3->get_scale().is_equal_approx(Hector2(2, 2)));
 
 		// Revert any rotation caused by look_at, must run after look_at tests
 		test_node3->set_rotation(Math::deg_to_rad(0.0));
 	}
 
 	SUBCASE("[Node2D] get_angle_to") {
-		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Vector2(1, 1)), real_t(2.38762)));
-		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Vector2(0, 10)), real_t(2.3373)));
-		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Vector2(2, -5)), real_t(2.42065)));
-		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Vector2(-2, 5)), real_t(2.3529)));
+		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Hector2(1, 1)), real_t(2.38762)));
+		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Hector2(0, 10)), real_t(2.3373)));
+		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Hector2(2, -5)), real_t(2.42065)));
+		CHECK(Math::is_equal_approx(test_node3->get_angle_to(Hector2(-2, 5)), real_t(2.3529)));
 
 		// Return 0 when get_angle_to own position.
 		CHECK(Math::is_equal_approx(test_node3->get_angle_to(test_node3->get_global_position()), real_t(0)));
@@ -188,14 +188,14 @@ TEST_CASE("[SceneTree][Node2D] Utility methods") {
 		CHECK(relative_xform.is_equal_approx(Transform2D()));
 
 		relative_xform = test_node3->get_relative_transform_to_parent(test_node2);
-		CHECK(relative_xform.get_origin().is_equal_approx(Vector2(0, 10)));
+		CHECK(relative_xform.get_origin().is_equal_approx(Hector2(0, 10)));
 		CHECK(Math::is_equal_approx(relative_xform.get_rotation(), real_t(0)));
-		CHECK(relative_xform.get_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(relative_xform.get_scale().is_equal_approx(Hector2(2, 2)));
 
 		relative_xform = test_node3->get_relative_transform_to_parent(test_node1);
-		CHECK(relative_xform.get_origin().is_equal_approx(Vector2(1.339746, 5)));
+		CHECK(relative_xform.get_origin().is_equal_approx(Hector2(1.339746, 5)));
 		CHECK(Math::is_equal_approx(relative_xform.get_rotation(), real_t(1.0472)));
-		CHECK(relative_xform.get_scale().is_equal_approx(Vector2(2, 2)));
+		CHECK(relative_xform.get_scale().is_equal_approx(Hector2(2, 2)));
 
 		ERR_PRINT_OFF;
 		// In case of a sibling all transforms until the root are accumulated.

@@ -123,14 +123,14 @@ protected:
 	Transform3D m_calculatedTransformA;
 	Transform3D m_calculatedTransformB;
 
-	Vector3 m_sliderAxis;
-	Vector3 m_realPivotAInW;
-	Vector3 m_realPivotBInW;
-	Vector3 m_projPivotInW;
-	Vector3 m_delta;
-	Vector3 m_depth;
-	Vector3 m_relPosA;
-	Vector3 m_relPosB;
+	Hector3 m_sliderAxis;
+	Hector3 m_realPivotAInW;
+	Hector3 m_realPivotBInW;
+	Hector3 m_projPivotInW;
+	Hector3 m_delta;
+	Hector3 m_depth;
+	Hector3 m_relPosA;
+	Hector3 m_relPosB;
 
 	real_t m_linPos = 0.0;
 
@@ -231,8 +231,8 @@ public:
 	void testLinLimits();
 	void testAngLimits();
 	// access for PE Solver
-	Vector3 getAncorInA();
-	Vector3 getAncorInB();
+	Hector3 getAncorInA();
+	Hector3 getAncorInB();
 
 	void set_param(PhysicsServer3D::SliderJointParam p_param, real_t p_value);
 	real_t get_param(PhysicsServer3D::SliderJointParam p_param) const;

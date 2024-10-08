@@ -216,7 +216,7 @@ Error CryptoCore::AESContext::decrypt_cfb(size_t p_length, uint8_t p_iv[16], con
 // CryptoCore
 String CryptoCore::b64_encode_str(const uint8_t *p_src, int p_src_len) {
 	int b64len = p_src_len / 3 * 4 + 4 + 1;
-	Vector<uint8_t> b64buff;
+	Hector<uint8_t> b64buff;
 	b64buff.resize(b64len);
 	uint8_t *w64 = b64buff.ptrw();
 	size_t strlen = 0;

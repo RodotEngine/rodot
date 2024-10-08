@@ -61,7 +61,7 @@ public:
 	};
 
 private:
-	Vector<Point> points;
+	Hector<Point> points;
 	bool is_sorted = true;
 	InterpolationMode interpolation_mode = GRADIENT_INTERPOLATE_LINEAR;
 	ColorSpace interpolation_color_space = GRADIENT_COLOR_SPACE_SRGB;
@@ -129,8 +129,8 @@ public:
 
 	void add_point(float p_offset, const Color &p_color);
 	void remove_point(int p_index);
-	void set_points(const Vector<Point> &p_points);
-	Vector<Point> &get_points();
+	void set_points(const Hector<Point> &p_points);
+	Hector<Point> &get_points();
 	void reverse();
 
 	void set_offset(int pos, const float offset);
@@ -139,11 +139,11 @@ public:
 	void set_color(int pos, const Color &color);
 	Color get_color(int pos);
 
-	void set_offsets(const Vector<float> &p_offsets);
-	Vector<float> get_offsets() const;
+	void set_offsets(const Hector<float> &p_offsets);
+	Hector<float> get_offsets() const;
 
-	void set_colors(const Vector<Color> &p_colors);
-	Vector<Color> get_colors() const;
+	void set_colors(const Hector<Color> &p_colors);
+	Hector<Color> get_colors() const;
 
 	void set_interpolation_mode(InterpolationMode p_interp_mode);
 	InterpolationMode get_interpolation_mode();

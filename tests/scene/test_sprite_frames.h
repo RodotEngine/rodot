@@ -50,7 +50,7 @@ TEST_CASE("[SpriteFrames] Constructor methods") {
 
 TEST_CASE("[SpriteFrames] Animation addition, list getter, renaming, removal, and retrieval") {
 	SpriteFrames frames;
-	Vector<String> test_names = { "default", "2", "1", "3" };
+	Hector<String> test_names = { "default", "2", "1", "3" };
 
 	// "default" is there already
 	frames.add_animation("2");
@@ -82,13 +82,13 @@ TEST_CASE("[SpriteFrames] Animation addition, list getter, renaming, removal, an
 	}
 
 	// get_animation_names() sorts the results.
-	Vector<String> string_vector = frames.get_animation_names();
+	Hector<String> string_Hector = frames.get_animation_names();
 	test_names.sort();
 
 	for (int i = 0; i < test_names.size(); i++) {
 		CHECK_MESSAGE(
-				string_vector[i] == test_names[i],
-				"String Vector getter returned expected values");
+				string_Hector[i] == test_names[i],
+				"String Hector getter returned expected values");
 	}
 
 	// These error handling cases should not crash.

@@ -57,7 +57,7 @@ public:
 		StringName method;
 		uint32_t flags = 0;
 		int unbinds = 0;
-		Vector<Variant> binds;
+		Hector<Variant> binds;
 
 		ConnectionData() {}
 
@@ -132,7 +132,7 @@ private:
 	CheckBox *deferred = nullptr;
 	CheckBox *one_shot = nullptr;
 	CheckButton *advanced = nullptr;
-	Vector<Control *> bind_controls;
+	Hector<Control *> bind_controls;
 
 	Label *warning_label = nullptr;
 	Label *error_label = nullptr;
@@ -173,7 +173,7 @@ public:
 	StringName get_dst_method_name() const;
 	void set_dst_method(const StringName &p_method);
 	int get_unbinds() const;
-	Vector<Variant> get_binds() const;
+	Hector<Variant> get_binds() const;
 	String get_signature(const MethodInfo &p_method, PackedStringArray *r_arg_names = nullptr);
 
 	bool get_deferred() const;

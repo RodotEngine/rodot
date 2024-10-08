@@ -37,11 +37,11 @@ void RenderSceneBuffersConfiguration::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_internal_size"), &RenderSceneBuffersConfiguration::get_internal_size);
 	ClassDB::bind_method(D_METHOD("set_internal_size", "internal_size"), &RenderSceneBuffersConfiguration::set_internal_size);
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "internal_size"), "set_internal_size", "get_internal_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "internal_size"), "set_internal_size", "get_internal_size");
 
 	ClassDB::bind_method(D_METHOD("get_target_size"), &RenderSceneBuffersConfiguration::get_target_size);
 	ClassDB::bind_method(D_METHOD("set_target_size", "target_size"), &RenderSceneBuffersConfiguration::set_target_size);
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "target_size"), "set_target_size", "get_target_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "target_size"), "set_target_size", "get_target_size");
 
 	ClassDB::bind_method(D_METHOD("get_view_count"), &RenderSceneBuffersConfiguration::get_view_count);
 	ClassDB::bind_method(D_METHOD("set_view_count", "view_count"), &RenderSceneBuffersConfiguration::set_view_count);

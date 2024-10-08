@@ -299,7 +299,7 @@ void CompilerReflection::emit_types()
 {
 	bool emitted_open_tag = false;
 
-	SmallVector<uint32_t> physical_pointee_types;
+	SmallHector<uint32_t> physical_pointee_types;
 
 	// If we have physical pointers or arrays of physical pointers, it's also helpful to emit the pointee type
 	// and chain the type hierarchy. For POD, arrays can emit the entire type in-place.
@@ -549,7 +549,7 @@ void CompilerReflection::emit_resources()
 	emit_resources("acceleration_structures", res.acceleration_structures);
 }
 
-void CompilerReflection::emit_resources(const char *tag, const SmallVector<Resource> &resources)
+void CompilerReflection::emit_resources(const char *tag, const SmallHector<Resource> &resources)
 {
 	if (resources.empty())
 	{

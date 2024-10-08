@@ -105,24 +105,24 @@ void NavRegion::set_navigation_mesh(Ref<NavigationMesh> p_navigation_mesh) {
 	polygons_dirty = true;
 }
 
-Vector3 NavRegion::get_closest_point_to_segment(const Vector3 &p_from, const Vector3 &p_to, bool p_use_collision) const {
+Hector3 NavRegion::get_closest_point_to_segment(const Hector3 &p_from, const Hector3 &p_to, bool p_use_collision) const {
 	RWLockRead read_lock(region_rwlock);
 
 	return NavMeshQueries3D::polygons_get_closest_point_to_segment(
 			get_polygons(), p_from, p_to, p_use_collision);
 }
 
-gd::ClosestPointQueryResult NavRegion::get_closest_point_info(const Vector3 &p_point) const {
+gd::ClosestPointQueryResult NavRegion::get_closest_point_info(const Hector3 &p_point) const {
 	RWLockRead read_lock(region_rwlock);
 
 	return NavMeshQueries3D::polygons_get_closest_point_info(get_polygons(), p_point);
 }
 
-Vector3 NavRegion::get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const {
+Hector3 NavRegion::get_random_point(uint32_t p_navigation_layers, bool p_uniformly) const {
 	RWLockRead read_lock(region_rwlock);
 
 	if (!get_enabled()) {
-		return Vector3();
+		return Hector3();
 	}
 
 	return NavMeshQueries3D::polygons_get_random_point(get_polygons(), p_navigation_layers, p_uniformly);
@@ -161,7 +161,7 @@ void NavRegion::update_polygons() {
 		return;
 	}
 
-	const Vector3 *vertices_r = pending_navmesh_vertices.ptr();
+	const Hector3 *vertices_r = pending_navmesh_vertices.ptr();
 
 	polygons.resize(pending_navmesh_polygons.size());
 
@@ -173,7 +173,7 @@ void NavRegion::update_polygons() {
 		polygon.owner = this;
 		polygon.surface_area = 0.0;
 
-		Vector<int> navigation_mesh_polygon = pending_navmesh_polygons[navigation_mesh_polygon_index];
+		Hector<int> navigation_mesh_polygon = pending_navmesh_polygons[navigation_mesh_polygon_index];
 		navigation_mesh_polygon_index += 1;
 
 		int navigation_mesh_polygon_size = navigation_mesh_polygon.size();
@@ -208,7 +208,7 @@ void NavRegion::update_polygons() {
 				break;
 			}
 
-			Vector3 point_position = transform.xform(vertices_r[idx]);
+			Hector3 point_position = transform.xform(vertices_r[idx]);
 			polygon.points[j].pos = point_position;
 			polygon.points[j].key = map->get_point_key(point_position);
 		}

@@ -40,11 +40,11 @@
 class ResourceLoaderText {
 public:
 	enum {
-		// Version 2: Changed names for Basis, AABB, Vectors, etc.
+		// Version 2: Changed names for Basis, AABB, Hectors, etc.
 		// Version 3: New string ID for ext/subresources, breaks forward compat.
-		// Version 4: PackedByteArray can be base64 encoded, and PackedVector4Array was added.
+		// Version 4: PackedByteArray can be base64 encoded, and PackedHector4Array was added.
 		FORMAT_VERSION = 4,
-		// For compat, save as version 3 if not using PackedVector4Array or no big PackedByteArray.
+		// For compat, save as version 3 if not using PackedHector4Array or no big PackedByteArray.
 		FORMAT_VERSION_COMPAT = 3,
 	};
 

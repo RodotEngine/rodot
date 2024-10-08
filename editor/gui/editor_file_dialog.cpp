@@ -97,7 +97,7 @@ void EditorFileDialog::set_visible(bool p_visible) {
 	}
 }
 
-void EditorFileDialog::_native_dialog_cb(bool p_ok, const Vector<String> &p_files, int p_filter, const Dictionary &p_selected_options) {
+void EditorFileDialog::_native_dialog_cb(bool p_ok, const Hector<String> &p_files, int p_filter, const Dictionary &p_selected_options) {
 	if (!p_ok) {
 		file->set_text("");
 		emit_signal(SNAME("canceled"));
@@ -108,7 +108,7 @@ void EditorFileDialog::_native_dialog_cb(bool p_ok, const Vector<String> &p_file
 		return;
 	}
 
-	Vector<String> files = p_files;
+	Hector<String> files = p_files;
 	if (access != ACCESS_FILESYSTEM) {
 		for (String &file_name : files) {
 			file_name = ProjectSettings::get_singleton()->localize_path(file_name);
@@ -352,8 +352,8 @@ void EditorFileDialog::set_enable_multiple_selection(bool p_enable) {
 	item_list->set_select_mode(p_enable ? ItemList::SELECT_MULTI : ItemList::SELECT_SINGLE);
 };
 
-Vector<String> EditorFileDialog::get_selected_files() const {
-	Vector<String> list;
+Hector<String> EditorFileDialog::get_selected_files() const {
+	Hector<String> list;
 	for (int i = 0; i < item_list->get_item_count(); i++) {
 		if (item_list->is_selected(i)) {
 			list.push_back(item_list->get_item_text(i));
@@ -510,7 +510,7 @@ void EditorFileDialog::_action_pressed() {
 	if (mode == FILE_MODE_OPEN_FILES) {
 		String fbase = dir_access->get_current_dir();
 
-		Vector<String> files;
+		Hector<String> files;
 		for (int i = 0; i < item_list->get_item_count(); i++) {
 			if (item_list->is_selected(i)) {
 				files.push_back(fbase.path_join(item_list->get_item_text(i)));
@@ -681,7 +681,7 @@ void EditorFileDialog::_multi_selected(int p_item, bool p_selected) {
 	get_ok_button()->set_disabled(_is_open_should_be_disabled());
 }
 
-void EditorFileDialog::_items_clear_selection(const Vector2 &p_pos, MouseButton p_mouse_button_index) {
+void EditorFileDialog::_items_clear_selection(const Hector2 &p_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index != MouseButton::LEFT) {
 		return;
 	}
@@ -740,7 +740,7 @@ void EditorFileDialog::_item_dc_selected(int p_item) {
 	}
 }
 
-void EditorFileDialog::_item_list_item_rmb_clicked(int p_item, const Vector2 &p_pos, MouseButton p_mouse_button_index) {
+void EditorFileDialog::_item_list_item_rmb_clicked(int p_item, const Hector2 &p_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index != MouseButton::RIGHT) {
 		return;
 	}
@@ -789,7 +789,7 @@ void EditorFileDialog::_item_list_item_rmb_clicked(int p_item, const Vector2 &p_
 	}
 }
 
-void EditorFileDialog::_item_list_empty_clicked(const Vector2 &p_pos, MouseButton p_mouse_button_index) {
+void EditorFileDialog::_item_list_empty_clicked(const Hector2 &p_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index != MouseButton::RIGHT && p_mouse_button_index != MouseButton::LEFT) {
 		return;
 	}
@@ -861,7 +861,7 @@ bool EditorFileDialog::_is_open_should_be_disabled() {
 		return false;
 	}
 
-	Vector<int> items = item_list->get_selected_items();
+	Hector<int> items = item_list->get_selected_items();
 	if (items.size() == 0) {
 		return mode != FILE_MODE_OPEN_DIR; // In "Open folder" mode, having nothing selected picks the current folder.
 	}
@@ -886,7 +886,7 @@ void EditorFileDialog::update_file_name() {
 		String filter_str = filters[idx];
 		String file_str = file->get_text();
 		String base_name = file_str.get_basename();
-		Vector<String> filter_substr = filter_str.split(";");
+		Hector<String> filter_substr = filter_str.split(";");
 		if (filter_substr.size() >= 2) {
 			file_str = base_name + "." + filter_substr[0].strip_edges().get_extension().to_lower();
 		} else {
@@ -1197,7 +1197,7 @@ void EditorFileDialog::add_filter(const String &p_filter, const String &p_descri
 	invalidate();
 }
 
-void EditorFileDialog::set_filters(const Vector<String> &p_filters) {
+void EditorFileDialog::set_filters(const Hector<String> &p_filters) {
 	if (filters == p_filters) {
 		return;
 	}
@@ -1206,7 +1206,7 @@ void EditorFileDialog::set_filters(const Vector<String> &p_filters) {
 	invalidate();
 }
 
-Vector<String> EditorFileDialog::get_filters() const {
+Hector<String> EditorFileDialog::get_filters() const {
 	return filters;
 }
 
@@ -1404,8 +1404,8 @@ void EditorFileDialog::_file_sort_popup(int p_id) {
 
 void EditorFileDialog::_delete_items() {
 	// Collect the selected folders and files to delete and check them in the deletion dependency dialog.
-	Vector<String> folders;
-	Vector<String> files;
+	Hector<String> folders;
+	Hector<String> files;
 	for (int i = 0; i < item_list->get_item_count(); i++) {
 		if (!item_list->is_selected(i)) {
 			continue;
@@ -1509,7 +1509,7 @@ void EditorFileDialog::_favorite_selected(int p_idx) {
 
 		bool res = (access == ACCESS_RESOURCES);
 
-		Vector<String> favorited = EditorSettings::get_singleton()->get_favorites();
+		Hector<String> favorited = EditorSettings::get_singleton()->get_favorites();
 		String dir_to_remove = favorites->get_item_metadata(p_idx);
 
 		bool found = false;
@@ -1541,7 +1541,7 @@ void EditorFileDialog::_favorite_move_up() {
 	int current = favorites->get_current();
 
 	if (current > 0 && current < favorites->get_item_count()) {
-		Vector<String> favorited = EditorSettings::get_singleton()->get_favorites();
+		Hector<String> favorited = EditorSettings::get_singleton()->get_favorites();
 
 		int a_idx = favorited.find(String(favorites->get_item_metadata(current - 1)));
 		int b_idx = favorited.find(String(favorites->get_item_metadata(current)));
@@ -1562,7 +1562,7 @@ void EditorFileDialog::_favorite_move_down() {
 	int current = favorites->get_current();
 
 	if (current >= 0 && current < favorites->get_item_count() - 1) {
-		Vector<String> favorited = EditorSettings::get_singleton()->get_favorites();
+		Hector<String> favorited = EditorSettings::get_singleton()->get_favorites();
 
 		int a_idx = favorited.find(String(favorites->get_item_metadata(current + 1)));
 		int b_idx = favorited.find(String(favorites->get_item_metadata(current)));
@@ -1587,9 +1587,9 @@ void EditorFileDialog::_update_favorites() {
 
 	favorite->set_pressed(false);
 
-	Vector<String> favorited = EditorSettings::get_singleton()->get_favorites();
-	Vector<String> favorited_paths;
-	Vector<String> favorited_names;
+	Hector<String> favorited = EditorSettings::get_singleton()->get_favorites();
+	Hector<String> favorited_paths;
+	Hector<String> favorited_names;
 
 	bool fav_changed = false;
 	int current_favorite = -1;
@@ -1657,7 +1657,7 @@ void EditorFileDialog::_favorite_pressed() {
 		cd += "/";
 	}
 
-	Vector<String> favorited = EditorSettings::get_singleton()->get_favorites();
+	Hector<String> favorited = EditorSettings::get_singleton()->get_favorites();
 
 	bool found = false;
 	for (const String &name : favorited) {
@@ -1686,9 +1686,9 @@ void EditorFileDialog::_update_recent() {
 	recent->clear();
 
 	bool access_resources = (access == ACCESS_RESOURCES);
-	Vector<String> recentd = EditorSettings::get_singleton()->get_recent_dirs();
-	Vector<String> recentd_paths;
-	Vector<String> recentd_names;
+	Hector<String> recentd = EditorSettings::get_singleton()->get_recent_dirs();
+	Hector<String> recentd_paths;
+	Hector<String> recentd_names;
 	bool modified = false;
 
 	for (int i = 0; i < recentd.size(); i++) {
@@ -1729,7 +1729,7 @@ void EditorFileDialog::_update_recent() {
 }
 
 void EditorFileDialog::_recent_selected(int p_idx) {
-	Vector<String> recentd = EditorSettings::get_singleton()->get_recent_dirs();
+	Hector<String> recentd = EditorSettings::get_singleton()->get_recent_dirs();
 	ERR_FAIL_INDEX(p_idx, recentd.size());
 
 	dir_access->change_dir(recent->get_item_metadata(p_idx));
@@ -1865,8 +1865,8 @@ String EditorFileDialog::get_option_name(int p_option) const {
 	return options[p_option].name;
 }
 
-Vector<String> EditorFileDialog::get_option_values(int p_option) const {
-	ERR_FAIL_INDEX_V(p_option, options.size(), Vector<String>());
+Hector<String> EditorFileDialog::get_option_values(int p_option) const {
+	ERR_FAIL_INDEX_V(p_option, options.size(), Hector<String>());
 	return options[p_option].values;
 }
 
@@ -1887,7 +1887,7 @@ void EditorFileDialog::set_option_name(int p_option, const String &p_name) {
 	}
 }
 
-void EditorFileDialog::set_option_values(int p_option, const Vector<String> &p_values) {
+void EditorFileDialog::set_option_values(int p_option, const Hector<String> &p_values) {
 	if (p_option < 0) {
 		p_option += get_option_count();
 	}
@@ -1920,7 +1920,7 @@ void EditorFileDialog::set_option_default(int p_option, int p_index) {
 	}
 }
 
-void EditorFileDialog::add_option(const String &p_name, const Vector<String> &p_values, int p_index) {
+void EditorFileDialog::add_option(const String &p_name, const Hector<String> &p_values, int p_index) {
 	Option opt;
 	opt.name = p_name;
 	opt.values = p_values;
@@ -2060,7 +2060,7 @@ void EditorFileDialog::set_default_display_mode(DisplayMode p_mode) {
 
 void EditorFileDialog::_save_to_recent() {
 	String cur_dir = get_current_dir();
-	Vector<String> recent_new = EditorSettings::get_singleton()->get_recent_dirs();
+	Hector<String> recent_new = EditorSettings::get_singleton()->get_recent_dirs();
 
 	const int max = 20;
 	int count = 0;

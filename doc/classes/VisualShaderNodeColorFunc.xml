@@ -25,10 +25,10 @@
 			[/codeblock]
 		</constant>
 		<constant name="FUNC_HSV2RGB" value="1" enum="Function">
-			Converts HSV vector to RGB equivalent.
+			Converts HSV Hector to RGB equivalent.
 		</constant>
 		<constant name="FUNC_RGB2HSV" value="2" enum="Function">
-			Converts RGB vector to HSV equivalent.
+			Converts RGB Hector to HSV equivalent.
 		</constant>
 		<constant name="FUNC_SEPIA" value="3" enum="Function">
 			Applies sepia tone effect using the following formula:

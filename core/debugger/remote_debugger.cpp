@@ -116,7 +116,7 @@ void RemoteDebugger::_err_handler(void *p_this, const char *p_func, const char *
 		return;
 	}
 
-	Vector<ScriptLanguage::StackInfo> si;
+	Hector<ScriptLanguage::StackInfo> si;
 
 	for (int i = 0; i < ScriptServer::get_language_count(); i++) {
 		si = ScriptServer::get_language(i)->debug_get_current_stack_info();
@@ -205,9 +205,9 @@ void RemoteDebugger::flush_output() {
 
 	if (output_strings.size()) {
 		// Join output strings so we generate less messages.
-		Vector<String> joined_log_strings;
-		Vector<String> strings;
-		Vector<int> types;
+		Hector<String> joined_log_strings;
+		Hector<String> strings;
+		Hector<int> types;
 		for (const OutputString &output_string : output_strings) {
 			if (output_string.type == MESSAGE_TYPE_ERROR) {
 				if (!joined_log_strings.is_empty()) {
@@ -545,9 +545,9 @@ void RemoteDebugger::debug(bool p_can_continue, bool p_is_error_breakpoint) {
 				script_debugger->get_break_language()->debug_get_stack_level_locals(frame, &locals, &local_vals);
 				ERR_FAIL_COND(locals.size() != local_vals.size());
 
-				PackedStringArray locals_vector;
+				PackedStringArray locals_Hector;
 				for (const String &S : locals) {
-					locals_vector.append(S);
+					locals_Hector.append(S);
 				}
 
 				Array local_vals_array;
@@ -556,7 +556,7 @@ void RemoteDebugger::debug(bool p_can_continue, bool p_is_error_breakpoint) {
 				}
 
 				Expression expression;
-				expression.parse(expression_str, locals_vector);
+				expression.parse(expression_str, locals_Hector);
 				const Variant return_val = expression.execute(local_vals_array, breaked_instance->get_owner());
 
 				DebuggerMarshalls::ScriptStackVariable stvar;

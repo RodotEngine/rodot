@@ -50,8 +50,8 @@ public:
 	bool move_and_slide();
 	void apply_floor_snap();
 
-	const Vector3 &get_velocity() const;
-	void set_velocity(const Vector3 &p_velocity);
+	const Hector3 &get_velocity() const;
+	void set_velocity(const Hector3 &p_velocity);
 
 	bool is_on_floor() const;
 	bool is_on_floor_only() const;
@@ -59,16 +59,16 @@ public:
 	bool is_on_wall_only() const;
 	bool is_on_ceiling() const;
 	bool is_on_ceiling_only() const;
-	const Vector3 &get_last_motion() const;
-	Vector3 get_position_delta() const;
-	const Vector3 &get_floor_normal() const;
-	const Vector3 &get_wall_normal() const;
-	const Vector3 &get_real_velocity() const;
-	real_t get_floor_angle(const Vector3 &p_up_direction = Vector3(0.0, 1.0, 0.0)) const;
-	const Vector3 &get_platform_velocity() const;
-	const Vector3 &get_platform_angular_velocity() const;
+	const Hector3 &get_last_motion() const;
+	Hector3 get_position_delta() const;
+	const Hector3 &get_floor_normal() const;
+	const Hector3 &get_wall_normal() const;
+	const Hector3 &get_real_velocity() const;
+	real_t get_floor_angle(const Hector3 &p_up_direction = Hector3(0.0, 1.0, 0.0)) const;
+	const Hector3 &get_platform_velocity() const;
+	const Hector3 &get_platform_angular_velocity() const;
 
-	virtual Vector3 get_linear_velocity() const override;
+	virtual Hector3 get_linear_velocity() const override;
 
 	int get_slide_collision_count() const;
 	PhysicsServer3D::MotionResult get_slide_collision(int p_bounce) const;
@@ -150,29 +150,29 @@ private:
 	real_t floor_snap_length = 0.1;
 	real_t floor_max_angle = Math::deg_to_rad((real_t)45.0);
 	real_t wall_min_slide_angle = Math::deg_to_rad((real_t)15.0);
-	Vector3 up_direction = Vector3(0.0, 1.0, 0.0);
-	Vector3 velocity;
-	Vector3 floor_normal;
-	Vector3 wall_normal;
-	Vector3 ceiling_normal;
-	Vector3 last_motion;
-	Vector3 platform_velocity;
-	Vector3 platform_angular_velocity;
-	Vector3 platform_ceiling_velocity;
-	Vector3 previous_position;
-	Vector3 real_velocity;
+	Hector3 up_direction = Hector3(0.0, 1.0, 0.0);
+	Hector3 velocity;
+	Hector3 floor_normal;
+	Hector3 wall_normal;
+	Hector3 ceiling_normal;
+	Hector3 last_motion;
+	Hector3 platform_velocity;
+	Hector3 platform_angular_velocity;
+	Hector3 platform_ceiling_velocity;
+	Hector3 previous_position;
+	Hector3 real_velocity;
 
-	Vector<PhysicsServer3D::MotionResult> motion_results;
-	Vector<Ref<KinematicCollision3D>> slide_colliders;
+	Hector<PhysicsServer3D::MotionResult> motion_results;
+	Hector<Ref<KinematicCollision3D>> slide_colliders;
 
 	void _move_and_slide_floating(double p_delta);
 	void _move_and_slide_grounded(double p_delta, bool p_was_on_floor);
 
 	Ref<KinematicCollision3D> _get_slide_collision(int p_bounce);
 	Ref<KinematicCollision3D> _get_last_slide_collision();
-	const Vector3 &get_up_direction() const;
+	const Hector3 &get_up_direction() const;
 	bool _on_floor_if_snapped(bool p_was_on_floor, bool p_vel_dir_facing_up);
-	void set_up_direction(const Vector3 &p_up_direction);
+	void set_up_direction(const Hector3 &p_up_direction);
 	void _set_collision_direction(const PhysicsServer3D::MotionResult &p_result, CollisionState &r_state, CollisionState p_apply_state = CollisionState(true, true, true));
 	void _set_platform_data(const PhysicsServer3D::MotionCollision &p_collision);
 	void _snap_on_floor(bool p_was_on_floor, bool p_vel_dir_facing_up);

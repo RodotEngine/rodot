@@ -260,7 +260,7 @@ typedef struct{
  * the 'comment' header packet.
  *
  * Meta data is stored as a series of (tag, value) pairs, in
- * length-encoded string vectors. The first occurence of the
+ * length-encoded string Hectors. The first occurence of the
  * '=' character delimits the tag and value. A particular tag
  * may occur more than once. The character set encoding for
  * the strings is always UTF-8, but the tag names are limited
@@ -273,9 +273,9 @@ typedef struct{
  * for their length.
  */
 typedef struct theora_comment{
-  char **user_comments;         /**< An array of comment string vectors */
-  int   *comment_lengths;       /**< An array of corresponding string vector lengths in bytes */
-  int    comments;              /**< The total number of comment string vectors */
+  char **user_comments;         /**< An array of comment string Hectors */
+  int   *comment_lengths;       /**< An array of corresponding string Hector lengths in bytes */
+  int    comments;              /**< The total number of comment string Hectors */
   char  *vendor;                /**< The vendor string identifying the encoder, null terminated */
 
 } theora_comment;

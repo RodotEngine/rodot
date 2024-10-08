@@ -38,7 +38,7 @@
  * replaced by others depending on the context. It transforms one kind of text
  * into another. In comparison, modern displays for Arabic text select
  * appropriate, context-dependent font glyphs for each text element, which means
- * that they transform text into a glyph vector.</p>
+ * that they transform text into a glyph Hector.</p>
  *
  * <p>Text transformations are necessary when modern display technology is not
  * available or when text needs to be transformed to or from legacy formats that

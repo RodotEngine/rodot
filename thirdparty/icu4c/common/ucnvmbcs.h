@@ -346,7 +346,7 @@ enum {
 
 /**
  * Fallbacks to Unicode are stored outside the normal state table and code point structures
- * in a vector of items of this type. They are sorted by offset.
+ * in a Hector of items of this type. They are sorted by offset.
  */
 typedef struct {
     uint32_t offset;

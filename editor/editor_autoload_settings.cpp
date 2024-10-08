@@ -718,7 +718,7 @@ void EditorAutoloadSettings::drop_data_fw(const Point2 &p_point, const Variant &
 	Dictionary drop_data = p_data;
 	PackedStringArray autoloads = drop_data["autoloads"];
 
-	Vector<int> orders;
+	Hector<int> orders;
 	orders.resize(autoload_cache.size());
 
 	for (int i = 0; i < autoloads.size(); i++) {

@@ -123,11 +123,11 @@ void EditorAudioBus::_notification(int p_what) {
 
 		case NOTIFICATION_DRAW: {
 			if (is_master) {
-				draw_style_box(get_theme_stylebox(SNAME("disabled"), SNAME("Button")), Rect2(Vector2(), get_size()));
+				draw_style_box(get_theme_stylebox(SNAME("disabled"), SNAME("Button")), Rect2(Hector2(), get_size()));
 			} else if (has_focus()) {
-				draw_style_box(get_theme_stylebox(SNAME("focus"), SNAME("Button")), Rect2(Vector2(), get_size()));
+				draw_style_box(get_theme_stylebox(SNAME("focus"), SNAME("Button")), Rect2(Hector2(), get_size()));
 			} else {
-				draw_style_box(get_theme_stylebox(SNAME("BottomPanel"), EditorStringName(EditorStyles)), Rect2(Vector2(), get_size()));
+				draw_style_box(get_theme_stylebox(SNAME("BottomPanel"), EditorStringName(EditorStyles)), Rect2(Hector2(), get_size()));
 			}
 
 			if (get_index() != 0 && hovering_drop) {
@@ -386,8 +386,8 @@ float EditorAudioBus::_scaled_db_to_normalized_volume(float db) {
 			 * results of the positive db range in order to get the desired numerical
 			 * value on the negative side. */
 			float positive_x = Math::pow(Math::abs(db) / 45.0f, 1.0f / 3.0f) + 1.0f;
-			Vector2 translation = Vector2(1.0f, 0.0f) - Vector2(positive_x, Math::abs(db));
-			Vector2 reflected_position = Vector2(1.0, 0.0f) + translation;
+			Hector2 translation = Hector2(1.0f, 0.0f) - Hector2(positive_x, Math::abs(db));
+			Hector2 reflected_position = Hector2(1.0, 0.0f) + translation;
 			return reflected_position.x;
 		} else {
 			return Math::pow(db / 45.0f, 1.0f / 3.0f) + 1.0f;
@@ -418,10 +418,10 @@ void EditorAudioBus::_show_value(float slider_value) {
 	// This way, it can be seen when the slider is merely hovered (instead of dragged).
 	slider->set_tooltip_text(text);
 	audio_value_preview_label->set_text(text);
-	const Vector2 slider_size = slider->get_size();
-	const Vector2 slider_position = slider->get_global_position();
+	const Hector2 slider_size = slider->get_size();
+	const Hector2 slider_position = slider->get_global_position();
 	const float vert_padding = 10.0f;
-	const Vector2 box_position = Vector2(slider_size.x, (slider_size.y - vert_padding) * (1.0f - slider->get_value()) - vert_padding);
+	const Hector2 box_position = Hector2(slider_size.x, (slider_size.y - vert_padding) * (1.0f - slider->get_value()) - vert_padding);
 	audio_value_preview_box->set_position(slider_position + box_position);
 	audio_value_preview_box->set_size(audio_value_preview_label->get_size());
 	if (slider->has_focus() && !audio_value_preview_box->is_visible()) {
@@ -521,7 +521,7 @@ void EditorAudioBus::_effect_edited() {
 	if (effect->get_metadata(0) == Variant()) {
 		Rect2 area = effects->get_item_rect(effect);
 
-		effect_options->set_position(effects->get_screen_position() + area.position + Vector2(0, area.size.y));
+		effect_options->set_position(effects->get_screen_position() + area.position + Hector2(0, area.size.y));
 		effect_options->reset_size();
 		effect_options->popup();
 		//add effect
@@ -763,7 +763,7 @@ void EditorAudioBus::_delete_effect_pressed(int p_option) {
 	ur->commit_action();
 }
 
-void EditorAudioBus::_effect_rmb(const Vector2 &p_pos, MouseButton p_button) {
+void EditorAudioBus::_effect_rmb(const Hector2 &p_pos, MouseButton p_button) {
 	if (p_button != MouseButton::RIGHT) {
 		return;
 	}
@@ -995,7 +995,7 @@ EditorAudioBus::EditorAudioBus(EditorAudioBuses *p_buses, bool p_is_master) {
 void EditorAudioBusDrop::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_DRAW: {
-			draw_style_box(get_theme_stylebox(CoreStringName(normal), SNAME("Button")), Rect2(Vector2(), get_size()));
+			draw_style_box(get_theme_stylebox(CoreStringName(normal), SNAME("Button")), Rect2(Hector2(), get_size()));
 
 			if (hovering_drop) {
 				Color accent = get_theme_color(SNAME("accent_color"), EditorStringName(Editor));
@@ -1476,14 +1476,14 @@ void EditorAudioMeterNotches::_draw_audio_notches() {
 	float font_height = theme_cache.font->get_height(theme_cache.font_size);
 
 	for (const AudioNotch &n : notches) {
-		draw_line(Vector2(0, (1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + top_padding),
-				Vector2(line_length * EDSCALE, (1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + top_padding),
+		draw_line(Hector2(0, (1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + top_padding),
+				Hector2(line_length * EDSCALE, (1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + top_padding),
 				theme_cache.notch_color,
 				Math::round(EDSCALE));
 
 		if (n.render_db_value) {
 			draw_string(theme_cache.font,
-					Vector2((line_length + label_space) * EDSCALE,
+					Hector2((line_length + label_space) * EDSCALE,
 							(1.0f - n.relative_position) * (get_size().y - btm_padding - top_padding) + (font_height / 4) + top_padding),
 					String::num(Math::abs(n.db_value)) + "dB",
 					HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.font_size,

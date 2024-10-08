@@ -124,7 +124,7 @@ Ref<FileAccess> FileAccess::_open(const String &p_path, ModeFlags p_mode_flags) 
 	return fa;
 }
 
-Ref<FileAccess> FileAccess::open_encrypted(const String &p_path, ModeFlags p_mode_flags, const Vector<uint8_t> &p_key) {
+Ref<FileAccess> FileAccess::open_encrypted(const String &p_path, ModeFlags p_mode_flags, const Hector<uint8_t> &p_key) {
 	Ref<FileAccess> fa = _open(p_path, p_mode_flags);
 	if (fa.is_null()) {
 		return fa;
@@ -279,7 +279,7 @@ real_t FileAccess::get_real() const {
 
 Variant FileAccess::get_var(bool p_allow_objects) const {
 	uint32_t len = get_32();
-	Vector<uint8_t> buff = get_buffer(len);
+	Hector<uint8_t> buff = get_buffer(len);
 	ERR_FAIL_COND_V((uint32_t)buff.size() != len, Variant());
 
 	const uint8_t *r = buff.ptr();
@@ -317,7 +317,7 @@ String FileAccess::get_token() const {
 }
 
 class CharBuffer {
-	Vector<char> vector;
+	Hector<char> Hector;
 	char stack_buffer[256];
 
 	char *buffer = nullptr;
@@ -325,19 +325,19 @@ class CharBuffer {
 	int written = 0;
 
 	bool grow() {
-		if (vector.resize(next_power_of_2(1 + written)) != OK) {
+		if (Hector.resize(next_power_of_2(1 + written)) != OK) {
 			return false;
 		}
 
 		if (buffer == stack_buffer) { // first chunk?
 
 			for (int i = 0; i < written; i++) {
-				vector.write[i] = stack_buffer[i];
+				Hector.write[i] = stack_buffer[i];
 			}
 		}
 
-		buffer = vector.ptrw();
-		capacity = vector.size();
+		buffer = Hector.ptrw();
+		capacity = Hector.size();
 		ERR_FAIL_COND_V(written >= capacity, false);
 
 		return true;
@@ -381,9 +381,9 @@ String FileAccess::get_line() const {
 	return String::utf8(line.get_data());
 }
 
-Vector<String> FileAccess::get_csv_line(const String &p_delim) const {
-	ERR_FAIL_COND_V_MSG(p_delim.length() != 1, Vector<String>(), "Only single character delimiters are supported to parse CSV lines.");
-	ERR_FAIL_COND_V_MSG(p_delim[0] == '"', Vector<String>(), "The double quotation mark character (\") is not supported as a delimiter for CSV lines.");
+Hector<String> FileAccess::get_csv_line(const String &p_delim) const {
+	ERR_FAIL_COND_V_MSG(p_delim.length() != 1, Hector<String>(), "Only single character delimiters are supported to parse CSV lines.");
+	ERR_FAIL_COND_V_MSG(p_delim[0] == '"', Hector<String>(), "The double quotation mark character (\") is not supported as a delimiter for CSV lines.");
 
 	String line;
 
@@ -407,7 +407,7 @@ Vector<String> FileAccess::get_csv_line(const String &p_delim) const {
 	// Remove the extraneous newline we've added above.
 	line = line.substr(0, line.length() - 1);
 
-	Vector<String> strings;
+	Hector<String> strings;
 
 	bool in_quote = false;
 	String current;
@@ -450,8 +450,8 @@ String FileAccess::get_as_text(bool p_skip_cr) const {
 	return text;
 }
 
-Vector<uint8_t> FileAccess::get_buffer(int64_t p_length) const {
-	Vector<uint8_t> data;
+Hector<uint8_t> FileAccess::get_buffer(int64_t p_length) const {
+	Hector<uint8_t> data;
 
 	ERR_FAIL_COND_V_MSG(p_length < 0, data, "Length of buffer cannot be smaller than 0.");
 	if (p_length == 0) {
@@ -472,7 +472,7 @@ Vector<uint8_t> FileAccess::get_buffer(int64_t p_length) const {
 }
 
 String FileAccess::get_as_utf8_string(bool p_skip_cr) const {
-	Vector<uint8_t> sourcef;
+	Hector<uint8_t> sourcef;
 	uint64_t len = get_length();
 	sourcef.resize(len + 1);
 
@@ -647,7 +647,7 @@ void FileAccess::store_line(const String &p_line) {
 	store_8('\n');
 }
 
-void FileAccess::store_csv_line(const Vector<String> &p_values, const String &p_delim) {
+void FileAccess::store_csv_line(const Hector<String> &p_values, const String &p_delim) {
 	ERR_FAIL_COND(p_delim.length() != 1);
 
 	String line = "";
@@ -668,7 +668,7 @@ void FileAccess::store_csv_line(const Vector<String> &p_values, const String &p_
 	store_line(line);
 }
 
-void FileAccess::store_buffer(const Vector<uint8_t> &p_buffer) {
+void FileAccess::store_buffer(const Hector<uint8_t> &p_buffer) {
 	uint64_t len = p_buffer.size();
 	const uint8_t *r = p_buffer.ptr();
 
@@ -680,7 +680,7 @@ void FileAccess::store_var(const Variant &p_var, bool p_full_objects) {
 	Error err = encode_variant(p_var, nullptr, len, p_full_objects);
 	ERR_FAIL_COND_MSG(err != OK, "Error when trying to encode Variant.");
 
-	Vector<uint8_t> buff;
+	Hector<uint8_t> buff;
 	buff.resize(len);
 
 	uint8_t *w = buff.ptrw();
@@ -691,15 +691,15 @@ void FileAccess::store_var(const Variant &p_var, bool p_full_objects) {
 	store_buffer(buff);
 }
 
-Vector<uint8_t> FileAccess::get_file_as_bytes(const String &p_path, Error *r_error) {
+Hector<uint8_t> FileAccess::get_file_as_bytes(const String &p_path, Error *r_error) {
 	Ref<FileAccess> f = FileAccess::open(p_path, READ, r_error);
 	if (f.is_null()) {
 		if (r_error) { // if error requested, do not throw error
-			return Vector<uint8_t>();
+			return Hector<uint8_t>();
 		}
-		ERR_FAIL_V_MSG(Vector<uint8_t>(), "Can't open file from path '" + String(p_path) + "'.");
+		ERR_FAIL_V_MSG(Hector<uint8_t>(), "Can't open file from path '" + String(p_path) + "'.");
 	}
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(f->get_length());
 	f->get_buffer(data.ptrw(), data.size());
 	return data;
@@ -707,7 +707,7 @@ Vector<uint8_t> FileAccess::get_file_as_bytes(const String &p_path, Error *r_err
 
 String FileAccess::get_file_as_string(const String &p_path, Error *r_error) {
 	Error err;
-	Vector<uint8_t> array = get_file_as_bytes(p_path, &err);
+	Hector<uint8_t> array = get_file_as_bytes(p_path, &err);
 	if (r_error) {
 		*r_error = err;
 	}
@@ -750,7 +750,7 @@ String FileAccess::get_md5(const String &p_file) {
 	return String::md5(hash);
 }
 
-String FileAccess::get_multiple_md5(const Vector<String> &p_file) {
+String FileAccess::get_multiple_md5(const Hector<String> &p_file) {
 	CryptoCore::MD5Context ctx;
 	ctx.start();
 
@@ -831,7 +831,7 @@ void FileAccess::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_float"), &FileAccess::get_float);
 	ClassDB::bind_method(D_METHOD("get_double"), &FileAccess::get_double);
 	ClassDB::bind_method(D_METHOD("get_real"), &FileAccess::get_real);
-	ClassDB::bind_method(D_METHOD("get_buffer", "length"), (Vector<uint8_t>(FileAccess::*)(int64_t) const) & FileAccess::get_buffer);
+	ClassDB::bind_method(D_METHOD("get_buffer", "length"), (Hector<uint8_t>(FileAccess::*)(int64_t) const) & FileAccess::get_buffer);
 	ClassDB::bind_method(D_METHOD("get_line"), &FileAccess::get_line);
 	ClassDB::bind_method(D_METHOD("get_csv_line", "delim"), &FileAccess::get_csv_line, DEFVAL(","));
 	ClassDB::bind_method(D_METHOD("get_as_text", "skip_cr"), &FileAccess::get_as_text, DEFVAL(false));
@@ -849,7 +849,7 @@ void FileAccess::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("store_float", "value"), &FileAccess::store_float);
 	ClassDB::bind_method(D_METHOD("store_double", "value"), &FileAccess::store_double);
 	ClassDB::bind_method(D_METHOD("store_real", "value"), &FileAccess::store_real);
-	ClassDB::bind_method(D_METHOD("store_buffer", "buffer"), (void(FileAccess::*)(const Vector<uint8_t> &)) & FileAccess::store_buffer);
+	ClassDB::bind_method(D_METHOD("store_buffer", "buffer"), (void(FileAccess::*)(const Hector<uint8_t> &)) & FileAccess::store_buffer);
 	ClassDB::bind_method(D_METHOD("store_line", "line"), &FileAccess::store_line);
 	ClassDB::bind_method(D_METHOD("store_csv_line", "values", "delim"), &FileAccess::store_csv_line, DEFVAL(","));
 	ClassDB::bind_method(D_METHOD("store_string", "string"), &FileAccess::store_string);

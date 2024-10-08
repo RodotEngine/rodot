@@ -49,7 +49,7 @@ public:
 	void set_slide_on_slope(bool p_active);
 	bool get_slide_on_slope() const;
 
-	virtual Vector<Vector3> get_debug_mesh_lines() const override;
+	virtual Hector<Hector3> get_debug_mesh_lines() const override;
 	virtual real_t get_enclosing_radius() const override;
 
 	SeparationRayShape3D();

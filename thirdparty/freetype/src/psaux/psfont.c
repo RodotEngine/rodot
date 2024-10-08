@@ -273,7 +273,7 @@
 
     if ( !font->isT1 )
     {
-      /* check for variation vectors */
+      /* check for variation Hectors */
       vstore        = cf2_getVStore( decoder );
       hasVariations = ( vstore->dataCount != 0 );
 
@@ -284,13 +284,13 @@
 
 
         /* check whether Private DICT in this subfont needs to be reparsed */
-        font->error = cf2_getNormalizedVector( decoder,
+        font->error = cf2_getNormalizedHector( decoder,
                                                &lenNormalizedV,
                                                &normalizedV );
         if ( font->error )
           return;
 
-        if ( cffload->blend_check_vector( &subFont->blend,
+        if ( cffload->blend_check_Hector( &subFont->blend,
                                           subFont->private_dict.vsindex,
                                           lenNormalizedV,
                                           normalizedV ) )
@@ -313,7 +313,7 @@
         /* initialize value for charstring */
         font->vsindex = subFont->private_dict.vsindex;
 
-        /* store vector inputs for blends in charstring */
+        /* store Hector inputs for blends in charstring */
         font->lenNDV = lenNormalizedV;
         font->NDV    = normalizedV;
       }
@@ -490,10 +490,10 @@
   {
     FT_Error  lastError = FT_Err_Ok;
 
-    FT_Vector  translation;
+    FT_Hector  translation;
 
 #if 0
-    FT_Vector  advancePoint;
+    FT_Hector  advancePoint;
 #endif
 
     CF2_Fixed  advWidth = 0;

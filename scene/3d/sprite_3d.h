@@ -75,7 +75,7 @@ private:
 	Color modulate = Color(1, 1, 1, 1);
 	int render_priority = 0;
 
-	Vector3::Axis axis = Vector3::AXIS_Z;
+	Hector3::Axis axis = Hector3::AXIS_Z;
 	real_t pixel_size = 0.01;
 	AABB aabb;
 
@@ -141,8 +141,8 @@ public:
 	void set_pixel_size(real_t p_amount);
 	real_t get_pixel_size() const;
 
-	void set_axis(Vector3::Axis p_axis);
-	Vector3::Axis get_axis() const;
+	void set_axis(Hector3::Axis p_axis);
+	Hector3::Axis get_axis() const;
 
 	void set_draw_flag(DrawFlags p_flag, bool p_enable);
 	bool get_draw_flag(DrawFlags p_flag) const;
@@ -209,8 +209,8 @@ public:
 	void set_frame(int p_frame);
 	int get_frame() const;
 
-	void set_frame_coords(const Vector2i &p_coord);
-	Vector2i get_frame_coords() const;
+	void set_frame_coords(const Hector2i &p_coord);
+	Hector2i get_frame_coords() const;
 
 	void set_vframes(int p_amount);
 	int get_vframes() const;

@@ -36,7 +36,7 @@
 // to use less memory, however a separate freelist is probably more cache friendly.
 
 // NOTE : Take great care when using this with non POD types. The construction and destruction
-// is done in the LocalVector, NOT as part of the pool. So requesting a new item does not guarantee
+// is done in the LocalHector, NOT as part of the pool. So requesting a new item does not guarantee
 // a constructor is run, and free does not guarantee a destructor.
 // You should generally handle clearing
 // an item explicitly after a request, as it may contain 'leftovers'.
@@ -53,12 +53,12 @@
 // Compaction can be done but would rely on a more complex method
 // of preferentially giving out lower IDs in the freelist first.
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 template <typename T, typename U = uint32_t, bool force_trivial = false, bool zero_on_first_request = false>
 class PooledList {
-	LocalVector<T, U, force_trivial> list;
-	LocalVector<U, U, true> freelist;
+	LocalHector<T, U, force_trivial> list;
+	LocalHector<U, U, true> freelist;
 
 	// not all list members are necessarily used
 	U _used_size;
@@ -200,12 +200,12 @@ public:
 		}
 	}
 
-	const LocalVector<U, U> &get_active_list() const { return _active_list; }
+	const LocalHector<U, U> &get_active_list() const { return _active_list; }
 
 private:
 	PooledList<T, U, force_trivial, zero_on_first_request> _pool;
-	LocalVector<U, U> _active_map;
-	LocalVector<U, U> _active_list;
+	LocalHector<U, U> _active_map;
+	LocalHector<U, U> _active_list;
 };
 
 #endif // POOLED_LIST_H

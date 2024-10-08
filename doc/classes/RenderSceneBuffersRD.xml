@@ -26,7 +26,7 @@
 			<param index="2" name="data_format" type="int" enum="RenderingDevice.DataFormat" />
 			<param index="3" name="usage_bits" type="int" />
 			<param index="4" name="texture_samples" type="int" enum="RenderingDevice.TextureSamples" />
-			<param index="5" name="size" type="Vector2i" />
+			<param index="5" name="size" type="Hector2i" />
 			<param index="6" name="layers" type="int" />
 			<param index="7" name="mipmaps" type="int" />
 			<param index="8" name="unique" type="bool" />
@@ -96,7 +96,7 @@
 			</description>
 		</method>
 		<method name="get_internal_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns the internal size of the render buffer (size before upscaling) with which textures are created by default.
 			</description>
@@ -126,7 +126,7 @@
 			</description>
 		</method>
 		<method name="get_target_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns the target size of the render buffer (size after upscaling).
 			</description>
@@ -166,7 +166,7 @@
 			</description>
 		</method>
 		<method name="get_texture_slice_size">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<param index="0" name="context" type="StringName" />
 			<param index="1" name="name" type="StringName" />
 			<param index="2" name="mipmap" type="int" />

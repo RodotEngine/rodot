@@ -46,7 +46,7 @@ PhysicsBody2D::PhysicsBody2D(PhysicsServer2D::BodyMode p_mode) :
 	set_pickable(false);
 }
 
-Ref<KinematicCollision2D> PhysicsBody2D::_move(const Vector2 &p_motion, bool p_test_only, real_t p_margin, bool p_recovery_as_collision) {
+Ref<KinematicCollision2D> PhysicsBody2D::_move(const Hector2 &p_motion, bool p_test_only, real_t p_margin, bool p_recovery_as_collision) {
 	PhysicsServer2D::MotionParameters parameters(get_global_transform(), p_motion, p_margin);
 	parameters.recovery_as_collision = p_recovery_as_collision;
 
@@ -92,14 +92,14 @@ bool PhysicsBody2D::move_and_collide(const PhysicsServer2D::MotionParameters &p_
 
 		if (p_cancel_sliding) {
 			// When motion is null, recovery is the resulting motion.
-			Vector2 motion_normal;
+			Hector2 motion_normal;
 			if (motion_length > CMP_EPSILON) {
 				motion_normal = p_parameters.motion / motion_length;
 			}
 
 			// Check depth of recovery.
 			real_t projected_length = r_result.travel.dot(motion_normal);
-			Vector2 recovery = r_result.travel - motion_normal * projected_length;
+			Hector2 recovery = r_result.travel - motion_normal * projected_length;
 			real_t recovery_length = recovery.length();
 			// Fixes cases where canceling slide causes the motion to go too deep into the ground,
 			// because we're only taking rest information into account and not general recovery.
@@ -120,7 +120,7 @@ bool PhysicsBody2D::move_and_collide(const PhysicsServer2D::MotionParameters &p_
 	return colliding;
 }
 
-bool PhysicsBody2D::test_move(const Transform2D &p_from, const Vector2 &p_motion, const Ref<KinematicCollision2D> &r_collision, real_t p_margin, bool p_recovery_as_collision) {
+bool PhysicsBody2D::test_move(const Transform2D &p_from, const Hector2 &p_motion, const Ref<KinematicCollision2D> &r_collision, real_t p_margin, bool p_recovery_as_collision) {
 	ERR_FAIL_COND_V(!is_inside_tree(), false);
 
 	PhysicsServer2D::MotionResult *r = nullptr;
@@ -138,9 +138,9 @@ bool PhysicsBody2D::test_move(const Transform2D &p_from, const Vector2 &p_motion
 	return PhysicsServer2D::get_singleton()->body_test_motion(get_rid(), parameters, r);
 }
 
-Vector2 PhysicsBody2D::get_gravity() const {
+Hector2 PhysicsBody2D::get_gravity() const {
 	PhysicsDirectBodyState2D *state = PhysicsServer2D::get_singleton()->body_get_direct_state(get_rid());
-	ERR_FAIL_NULL_V(state, Vector2());
+	ERR_FAIL_NULL_V(state, Hector2());
 	return state->get_total_gravity();
 }
 

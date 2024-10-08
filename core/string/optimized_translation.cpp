@@ -52,10 +52,10 @@ void OptimizedTranslation::generate(const Ref<Translation> &p_from) {
 
 	int size = Math::larger_prime(keys.size());
 
-	Vector<Vector<Pair<int, CharString>>> buckets;
-	Vector<HashMap<uint32_t, int>> table;
-	Vector<uint32_t> hfunc_table;
-	Vector<CompressedString> compressed;
+	Hector<Hector<Pair<int, CharString>>> buckets;
+	Hector<HashMap<uint32_t, int>> table;
+	Hector<uint32_t> hfunc_table;
+	Hector<CompressedString> compressed;
 
 	table.resize(size);
 	hfunc_table.resize(size);
@@ -107,7 +107,7 @@ void OptimizedTranslation::generate(const Ref<Translation> &p_from) {
 	int bucket_table_size = 0;
 
 	for (int i = 0; i < size; i++) {
-		const Vector<Pair<int, CharString>> &b = buckets[i];
+		const Hector<Pair<int, CharString>> &b = buckets[i];
 		HashMap<uint32_t, int> &t = table.write[i];
 
 		if (b.size() == 0) {
@@ -267,8 +267,8 @@ StringName OptimizedTranslation::get_message(const StringName &p_src_text, const
 	}
 }
 
-Vector<String> OptimizedTranslation::get_translated_message_list() const {
-	Vector<String> msgs;
+Hector<String> OptimizedTranslation::get_translated_message_list() const {
+	Hector<String> msgs;
 
 	const int *htr = hash_table.ptr();
 	const uint32_t *htptr = (const uint32_t *)&htr[0];

@@ -12,10 +12,10 @@
 		<member name="fill" type="int" setter="set_fill" getter="get_fill" enum="GradientTexture2D.Fill" default="0">
 			The gradient fill type, one of the [enum Fill] values. The texture is filled by interpolating colors starting from [member fill_from] to [member fill_to] offsets.
 		</member>
-		<member name="fill_from" type="Vector2" setter="set_fill_from" getter="get_fill_from" default="Vector2(0, 0)">
+		<member name="fill_from" type="Hector2" setter="set_fill_from" getter="get_fill_from" default="Hector2(0, 0)">
 			The initial offset used to fill the texture specified in UV coordinates.
 		</member>
-		<member name="fill_to" type="Vector2" setter="set_fill_to" getter="get_fill_to" default="Vector2(1, 0)">
+		<member name="fill_to" type="Hector2" setter="set_fill_to" getter="get_fill_to" default="Hector2(1, 0)">
 			The final offset used to fill the texture specified in UV coordinates.
 		</member>
 		<member name="gradient" type="Gradient" setter="set_gradient" getter="get_gradient">

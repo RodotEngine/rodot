@@ -38,7 +38,7 @@
 namespace TestTransform3D {
 
 Transform3D create_dummy_transform() {
-	return Transform3D(Basis(Vector3(1, 2, 3), Vector3(4, 5, 6), Vector3(7, 8, 9)), Vector3(10, 11, 12));
+	return Transform3D(Basis(Hector3(1, 2, 3), Hector3(4, 5, 6), Hector3(7, 8, 9)), Hector3(10, 11, 12));
 }
 
 Transform3D identity() {
@@ -46,7 +46,7 @@ Transform3D identity() {
 }
 
 TEST_CASE("[Transform3D] translation") {
-	Vector3 offset = Vector3(1, 2, 3);
+	Hector3 offset = Hector3(1, 2, 3);
 
 	// Both versions should give the same result applied to identity.
 	CHECK(identity().translated(offset) == identity().translated_local(offset));
@@ -59,7 +59,7 @@ TEST_CASE("[Transform3D] translation") {
 }
 
 TEST_CASE("[Transform3D] scaling") {
-	Vector3 scaling = Vector3(1, 2, 3);
+	Hector3 scaling = Hector3(1, 2, 3);
 
 	// Both versions should give the same result applied to identity.
 	CHECK(identity().scaled(scaling) == identity().scaled_local(scaling));
@@ -72,7 +72,7 @@ TEST_CASE("[Transform3D] scaling") {
 }
 
 TEST_CASE("[Transform3D] rotation") {
-	Vector3 axis = Vector3(1, 2, 3).normalized();
+	Hector3 axis = Hector3(1, 2, 3).normalized();
 	real_t phi = 1.0;
 
 	// Both versions should give the same result applied to identity.
@@ -86,8 +86,8 @@ TEST_CASE("[Transform3D] rotation") {
 }
 
 TEST_CASE("[Transform3D] Finite number checks") {
-	const Vector3 y(0, 1, 2);
-	const Vector3 infinite_vec(NAN, NAN, NAN);
+	const Hector3 y(0, 1, 2);
+	const Hector3 infinite_vec(NAN, NAN, NAN);
 	const Basis x(y, y, y);
 	const Basis infinite_basis(infinite_vec, infinite_vec, infinite_vec);
 
@@ -111,14 +111,14 @@ TEST_CASE("[Transform3D] Rotate around global origin") {
 	// Start with the default orientation, but not centered on the origin.
 	// Rotating should rotate both our basis and the origin.
 	Transform3D transform = Transform3D();
-	transform.origin = Vector3(0, 0, 1);
+	transform.origin = Hector3(0, 0, 1);
 
 	Transform3D expected = Transform3D();
-	expected.origin = Vector3(0, 0, -1);
-	expected.basis[0] = Vector3(-1, 0, 0);
-	expected.basis[2] = Vector3(0, 0, -1);
+	expected.origin = Hector3(0, 0, -1);
+	expected.basis[0] = Hector3(-1, 0, 0);
+	expected.basis[2] = Hector3(0, 0, -1);
 
-	const Transform3D rotated_transform = transform.rotated(Vector3(0, 1, 0), Math_PI);
+	const Transform3D rotated_transform = transform.rotated(Hector3(0, 1, 0), Math_PI);
 	CHECK_MESSAGE(rotated_transform.is_equal_approx(expected), "The rotated transform should have a new orientation and basis.");
 }
 
@@ -126,14 +126,14 @@ TEST_CASE("[Transform3D] Rotate in-place (local rotation)") {
 	// Start with the default orientation.
 	// Local rotation should not change the origin, only the basis.
 	Transform3D transform = Transform3D();
-	transform.origin = Vector3(1, 2, 3);
+	transform.origin = Hector3(1, 2, 3);
 
 	Transform3D expected = Transform3D();
-	expected.origin = Vector3(1, 2, 3);
-	expected.basis[0] = Vector3(-1, 0, 0);
-	expected.basis[2] = Vector3(0, 0, -1);
+	expected.origin = Hector3(1, 2, 3);
+	expected.basis[0] = Hector3(-1, 0, 0);
+	expected.basis[2] = Hector3(0, 0, -1);
 
-	const Transform3D rotated_transform = Transform3D(transform.rotated_local(Vector3(0, 1, 0), Math_PI));
+	const Transform3D rotated_transform = Transform3D(transform.rotated_local(Hector3(0, 1, 0), Math_PI));
 	CHECK_MESSAGE(rotated_transform.is_equal_approx(expected), "The rotated transform should have a new orientation but still be based on the same origin.");
 }
 } // namespace TestTransform3D

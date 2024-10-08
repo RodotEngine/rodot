@@ -35,7 +35,7 @@
 
 #define TOKENIZER_VERSION 100
 
-int GDScriptTokenizerBuffer::_token_to_binary(const Token &p_token, Vector<uint8_t> &r_buffer, int p_start, HashMap<StringName, uint32_t> &r_identifiers_map, HashMap<Variant, uint32_t, VariantHasher, VariantComparator> &r_constants_map) {
+int GDScriptTokenizerBuffer::_token_to_binary(const Token &p_token, Hector<uint8_t> &r_buffer, int p_start, HashMap<StringName, uint32_t> &r_identifiers_map, HashMap<Variant, uint32_t, VariantHasher, VariantComparator> &r_constants_map) {
 	int pos = p_start;
 
 	int token_type = p_token.type & TOKEN_MASK;
@@ -138,7 +138,7 @@ GDScriptTokenizer::Token GDScriptTokenizerBuffer::_binary_to_token(const uint8_t
 	return token;
 }
 
-Error GDScriptTokenizerBuffer::set_code_buffer(const Vector<uint8_t> &p_buffer) {
+Error GDScriptTokenizerBuffer::set_code_buffer(const Hector<uint8_t> &p_buffer) {
 	const uint8_t *buf = p_buffer.ptr();
 	ERR_FAIL_COND_V(p_buffer.size() < 12 || p_buffer[0] != 'G' || p_buffer[1] != 'D' || p_buffer[2] != 'S' || p_buffer[3] != 'C', ERR_INVALID_DATA);
 
@@ -147,7 +147,7 @@ Error GDScriptTokenizerBuffer::set_code_buffer(const Vector<uint8_t> &p_buffer) 
 
 	int decompressed_size = decode_uint32(&buf[8]);
 
-	Vector<uint8_t> contents;
+	Hector<uint8_t> contents;
 	if (decompressed_size == 0) {
 		contents = p_buffer.slice(12);
 	} else {
@@ -172,7 +172,7 @@ Error GDScriptTokenizerBuffer::set_code_buffer(const Vector<uint8_t> &p_buffer) 
 		total_len -= 4;
 		ERR_FAIL_COND_V((len * 4u) > (uint32_t)total_len, ERR_INVALID_DATA);
 		b += 4;
-		Vector<uint32_t> cs;
+		Hector<uint32_t> cs;
 		cs.resize(len);
 		for (uint32_t j = 0; j < len; j++) {
 			uint8_t tmp[4];
@@ -239,10 +239,10 @@ Error GDScriptTokenizerBuffer::set_code_buffer(const Vector<uint8_t> &p_buffer) 
 	return OK;
 }
 
-Vector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code, CompressMode p_compress_mode) {
+Hector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code, CompressMode p_compress_mode) {
 	HashMap<StringName, uint32_t> identifier_map;
 	HashMap<Variant, uint32_t, VariantHasher, VariantComparator> constant_map;
-	Vector<uint8_t> token_buffer;
+	Hector<uint8_t> token_buffer;
 	HashMap<uint32_t, uint32_t> token_lines;
 	HashMap<uint32_t, uint32_t> token_columns;
 
@@ -268,12 +268,12 @@ Vector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code,
 	}
 
 	// Reverse maps.
-	Vector<StringName> rev_identifier_map;
+	Hector<StringName> rev_identifier_map;
 	rev_identifier_map.resize(identifier_map.size());
 	for (const KeyValue<StringName, uint32_t> &E : identifier_map) {
 		rev_identifier_map.write[E.value] = E.key;
 	}
-	Vector<Variant> rev_constant_map;
+	Hector<Variant> rev_constant_map;
 	rev_constant_map.resize(constant_map.size());
 	for (const KeyValue<Variant, uint32_t> &E : constant_map) {
 		rev_constant_map.write[E.value] = E.key;
@@ -291,7 +291,7 @@ Vector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code,
 		}
 	}
 
-	Vector<uint8_t> contents;
+	Hector<uint8_t> contents;
 	contents.resize(20);
 	encode_uint32(identifier_map.size(), &contents.write[0]);
 	encode_uint32(constant_map.size(), &contents.write[4]);
@@ -328,7 +328,7 @@ Vector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code,
 		int len;
 		// Objects cannot be constant, never encode objects.
 		Error err = encode_variant(v, nullptr, len, false);
-		ERR_FAIL_COND_V_MSG(err != OK, Vector<uint8_t>(), "Error when trying to encode Variant.");
+		ERR_FAIL_COND_V_MSG(err != OK, Hector<uint8_t>(), "Error when trying to encode Variant.");
 		contents.resize(buf_pos + len);
 		encode_variant(v, &contents.write[buf_pos], len, false);
 		buf_pos += len;
@@ -352,7 +352,7 @@ Vector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code,
 	// Store tokens.
 	contents.append_array(token_buffer);
 
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 
 	// Save header.
 	buf.resize(12);
@@ -370,12 +370,12 @@ Vector<uint8_t> GDScriptTokenizerBuffer::parse_code_string(const String &p_code,
 
 		case COMPRESS_ZSTD: {
 			encode_uint32(contents.size(), &buf.write[8]);
-			Vector<uint8_t> compressed;
+			Hector<uint8_t> compressed;
 			int max_size = Compression::get_max_compressed_buffer_size(contents.size(), Compression::MODE_ZSTD);
 			compressed.resize(max_size);
 
 			int compressed_size = Compression::compress(compressed.ptrw(), contents.ptr(), contents.size(), Compression::MODE_ZSTD);
-			ERR_FAIL_COND_V_MSG(compressed_size < 0, Vector<uint8_t>(), "Error compressing GDScript tokenizer buffer.");
+			ERR_FAIL_COND_V_MSG(compressed_size < 0, Hector<uint8_t>(), "Error compressing GDScript tokenizer buffer.");
 			compressed.resize(compressed_size);
 
 			buf.append_array(compressed);

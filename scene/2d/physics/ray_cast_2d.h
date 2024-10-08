@@ -43,13 +43,13 @@ class RayCast2D : public Node2D {
 	ObjectID against;
 	RID against_rid;
 	int against_shape = 0;
-	Vector2 collision_point;
-	Vector2 collision_normal;
+	Hector2 collision_point;
+	Hector2 collision_normal;
 	HashSet<RID> exclude;
 	uint32_t collision_mask = 1;
 	bool exclude_parent_body = true;
 
-	Vector2 target_position = Vector2(0, 50);
+	Hector2 target_position = Hector2(0, 50);
 
 	bool collide_with_areas = false;
 	bool collide_with_bodies = true;
@@ -76,8 +76,8 @@ public:
 	void set_enabled(bool p_enabled);
 	bool is_enabled() const;
 
-	void set_target_position(const Vector2 &p_point);
-	Vector2 get_target_position() const;
+	void set_target_position(const Hector2 &p_point);
+	Hector2 get_target_position() const;
 
 	void set_collision_mask(uint32_t p_mask);
 	uint32_t get_collision_mask() const;
@@ -94,8 +94,8 @@ public:
 	Object *get_collider() const;
 	RID get_collider_rid() const;
 	int get_collider_shape() const;
-	Vector2 get_collision_point() const;
-	Vector2 get_collision_normal() const;
+	Hector2 get_collision_point() const;
+	Hector2 get_collision_normal() const;
 
 	void add_exception_rid(const RID &p_rid);
 	void add_exception(const CollisionObject2D *p_node);

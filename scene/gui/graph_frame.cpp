@@ -45,7 +45,7 @@ void GraphFrame::gui_input(const Ref<InputEvent> &p_ev) {
 		ERR_FAIL_NULL_MSG(get_parent_control(), "GraphFrame must be the child of a GraphEdit node.");
 
 		if (mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT) {
-			Vector2 mpos = mb->get_position();
+			Hector2 mpos = mb->get_position();
 
 			Ref<Texture2D> resizer = theme_cache.resizer;
 
@@ -73,9 +73,9 @@ void GraphFrame::gui_input(const Ref<InputEvent> &p_ev) {
 
 	// Only resize if the frame is not auto-resizing based on linked nodes.
 	if (resizing && !autoshrink_enabled && mm.is_valid()) {
-		Vector2 mpos = mm->get_position();
+		Hector2 mpos = mm->get_position();
 
-		Vector2 diff = mpos - resizing_from;
+		Hector2 diff = mpos - resizing_from;
 
 		emit_signal(SNAME("resize_request"), resizing_from_size + diff);
 	}

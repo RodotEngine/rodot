@@ -17,7 +17,7 @@
 // D3DX12 Check Feature Support
 //================================================================================================
 
-#include <vector>
+#include <Vector>
 
 class CD3DX12FeatureSupport
 {

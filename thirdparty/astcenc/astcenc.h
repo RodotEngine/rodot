@@ -120,7 +120,7 @@
  * Input images must contain unit-length normalized and should be passed in using a two component
  * swizzle. The astcenc command line tool defaults to an RRRG swizzle, but some developers prefer
  * to use GGGR for compatability with BC5n which will work just as well. The Z component can be
- * recovered programmatically in shader code, using knowledge that the vector is unit length and
+ * recovered programmatically in shader code, using knowledge that the Hector is unit length and
  * that Z must be positive for a tangent-space normal map.
  *
  * Decompress-only usage
@@ -272,7 +272,7 @@ enum astcenc_swz
 	ASTCENC_SWZ_0 = 4,
 	/** @brief Use a constant one component. */
 	ASTCENC_SWZ_1 = 5,
-	/** @brief Use a reconstructed normal vector Z component. */
+	/** @brief Use a reconstructed normal Hector Z component. */
 	ASTCENC_SWZ_Z = 6
 };
 

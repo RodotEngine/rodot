@@ -62,10 +62,10 @@ MAKE_PTRDESTRUCT(PackedInt64Array);
 MAKE_PTRDESTRUCT(PackedFloat32Array);
 MAKE_PTRDESTRUCT(PackedFloat64Array);
 MAKE_PTRDESTRUCT(PackedStringArray);
-MAKE_PTRDESTRUCT(PackedVector2Array);
-MAKE_PTRDESTRUCT(PackedVector3Array);
+MAKE_PTRDESTRUCT(PackedHector2Array);
+MAKE_PTRDESTRUCT(PackedHector3Array);
 MAKE_PTRDESTRUCT(PackedColorArray);
-MAKE_PTRDESTRUCT(PackedVector4Array);
+MAKE_PTRDESTRUCT(PackedHector4Array);
 
 #undef MAKE_PTRDESTRUCT
 

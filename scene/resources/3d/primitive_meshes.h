@@ -75,7 +75,7 @@ protected:
 	virtual void _create_mesh_array(Array &p_arr) const {}
 	GDVIRTUAL0RC(Array, _create_mesh_array)
 
-	Vector2 get_uv2_scale(Vector2 p_margin_scale = Vector2(1.0, 1.0)) const;
+	Hector2 get_uv2_scale(Hector2 p_margin_scale = Hector2(1.0, 1.0)) const;
 	float get_lightmap_texel_size() const;
 	virtual void _update_lightmap_size() {}
 
@@ -164,7 +164,7 @@ class BoxMesh : public PrimitiveMesh {
 	GDCLASS(BoxMesh, PrimitiveMesh);
 
 private:
-	Vector3 size = Vector3(1, 1, 1);
+	Hector3 size = Hector3(1, 1, 1);
 	int subdivide_w = 0;
 	int subdivide_h = 0;
 	int subdivide_d = 0;
@@ -176,10 +176,10 @@ protected:
 	virtual void _update_lightmap_size() override;
 
 public:
-	static void create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w = 0, int subdivide_h = 0, int subdivide_d = 0, bool p_add_uv2 = false, const float p_uv2_padding = 1.0);
+	static void create_mesh_array(Array &p_arr, Hector3 size, int subdivide_w = 0, int subdivide_h = 0, int subdivide_d = 0, bool p_add_uv2 = false, const float p_uv2_padding = 1.0);
 
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_subdivide_width(const int p_divisions);
 	int get_subdivide_width() const;
@@ -259,7 +259,7 @@ private:
 	Size2 size = Size2(2.0, 2.0);
 	int subdivide_w = 0;
 	int subdivide_d = 0;
-	Vector3 center_offset;
+	Hector3 center_offset;
 	Orientation orientation = FACE_Y;
 
 protected:
@@ -278,8 +278,8 @@ public:
 	void set_subdivide_depth(const int p_divisions);
 	int get_subdivide_depth() const;
 
-	void set_center_offset(const Vector3 p_offset);
-	Vector3 get_center_offset() const;
+	void set_center_offset(const Hector3 p_offset);
+	Hector3 get_center_offset() const;
 
 	void set_orientation(const Orientation p_orientation);
 	Orientation get_orientation() const;
@@ -310,7 +310,7 @@ class PrismMesh : public PrimitiveMesh {
 
 private:
 	float left_to_right = 0.5;
-	Vector3 size = Vector3(1.0, 1.0, 1.0);
+	Hector3 size = Hector3(1.0, 1.0, 1.0);
 	int subdivide_w = 0;
 	int subdivide_h = 0;
 	int subdivide_d = 0;
@@ -325,8 +325,8 @@ public:
 	void set_left_to_right(const float p_left_to_right);
 	float get_left_to_right() const;
 
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_subdivide_width(const int p_divisions);
 	int get_subdivide_width() const;
@@ -538,11 +538,11 @@ class TextMesh : public PrimitiveMesh {
 
 private:
 	struct ContourPoint {
-		Vector2 point;
+		Hector2 point;
 		bool sharp = false;
 
 		ContourPoint() {}
-		ContourPoint(const Vector2 &p_pt, bool p_sharp) {
+		ContourPoint(const Hector2 &p_pt, bool p_sharp) {
 			point = p_pt;
 			sharp = p_sharp;
 		};
@@ -579,16 +579,16 @@ private:
 	};
 
 	struct GlyphMeshData {
-		Vector<Vector2> triangles;
-		Vector<Vector<ContourPoint>> contours;
-		Vector<ContourInfo> contours_info;
-		Vector2 min_p = Vector2(INFINITY, INFINITY);
-		Vector2 max_p = Vector2(-INFINITY, -INFINITY);
+		Hector<Hector2> triangles;
+		Hector<Hector<ContourPoint>> contours;
+		Hector<ContourInfo> contours_info;
+		Hector2 min_p = Hector2(INFINITY, INFINITY);
+		Hector2 max_p = Hector2(-INFINITY, -INFINITY);
 	};
 	mutable HashMap<GlyphMeshKey, GlyphMeshData, GlyphMeshKeyHasher> cache;
 
 	RID text_rid;
-	mutable Vector<RID> lines_rid;
+	mutable Hector<RID> lines_rid;
 
 	String text;
 	String xl_text;
@@ -629,7 +629,7 @@ protected:
 	virtual void _create_mesh_array(Array &p_arr) const override;
 
 public:
-	GDVIRTUAL2RC(TypedArray<Vector3i>, _structured_text_parser, Array, String)
+	GDVIRTUAL2RC(TypedArray<Hector3i>, _structured_text_parser, Array, String)
 
 	TextMesh();
 	~TextMesh();

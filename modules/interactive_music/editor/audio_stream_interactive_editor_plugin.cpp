@@ -90,12 +90,12 @@ void AudioStreamInteractiveTransitionEditor::_update_selection() {
 	updating_selection = false;
 	int clip_count = audio_stream_interactive->get_clip_count();
 	selected.clear();
-	Vector2i editing;
+	Hector2i editing;
 	int editing_order = -1;
 	for (int i = 0; i <= clip_count; i++) {
 		for (int j = 0; j <= clip_count; j++) {
 			if (rows[i]->is_selected(j)) {
-				Vector2i meta = rows[i]->get_metadata(j);
+				Hector2i meta = rows[i]->get_metadata(j);
 				if (selection_order.has(meta)) {
 					int order = selection_order[meta];
 					if (order > editing_order) {
@@ -148,7 +148,7 @@ void AudioStreamInteractiveTransitionEditor::_cell_selected(TreeItem *p_item, in
 	int to = p_item->get_meta("to");
 	int from = p_column == audio_stream_interactive->get_clip_count() ? AudioStreamInteractive::CLIP_ANY : p_column;
 	if (p_selected) {
-		selection_order[Vector2i(from, to)] = order_counter++;
+		selection_order[Hector2i(from, to)] = order_counter++;
 	}
 
 	if (!updating_selection) {
@@ -305,7 +305,7 @@ void AudioStreamInteractiveTransitionEditor::edit(Object *p_obj) {
 		row->set_meta("to", clip_i);
 		for (int j = 0; j <= clip_count; j++) {
 			int clip_j = j == clip_count ? AudioStreamInteractive::CLIP_ANY : j;
-			row->set_metadata(j, Vector2i(clip_j, clip_i));
+			row->set_metadata(j, Hector2i(clip_j, clip_i));
 		}
 		rows.push_back(row);
 

@@ -15,8 +15,8 @@
 		<member name="cull_mode" type="int" setter="set_cull_mode" getter="get_cull_mode" enum="OccluderPolygon2D.CullMode" default="0">
 			The culling mode to use.
 		</member>
-		<member name="polygon" type="PackedVector2Array" setter="set_polygon" getter="get_polygon" default="PackedVector2Array()">
-			A [Vector2] array with the index for polygon's vertices positions.
+		<member name="polygon" type="PackedHector2Array" setter="set_polygon" getter="get_polygon" default="PackedHector2Array()">
+			A [Hector2] array with the index for polygon's vertices positions.
 		</member>
 	</members>
 	<constants>

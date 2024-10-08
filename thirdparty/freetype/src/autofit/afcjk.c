@@ -358,7 +358,7 @@
         FT_ULong    glyph_index;
         FT_Pos      best_pos;       /* same as points.y or points.x, resp. */
         FT_Int      best_point;
-        FT_Vector*  points;
+        FT_Hector*  points;
 
         unsigned int  num_idx;
 

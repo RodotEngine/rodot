@@ -36,7 +36,7 @@ using namespace RendererRD;
 
 RoughnessLimiter::RoughnessLimiter() {
 	// Initialize roughness limiter
-	Vector<String> shader_modes;
+	Hector<String> shader_modes;
 	shader_modes.push_back("");
 
 	shader.initialize(shader_modes);
@@ -63,8 +63,8 @@ void RoughnessLimiter::roughness_limit(RID p_source_normal, RID p_roughness, con
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
 	RID rl_shader = shader.version_get_shader(shader_version, 0);
 
-	RD::Uniform u_source_normal(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_source_normal }));
-	RD::Uniform u_roughness(RD::UNIFORM_TYPE_IMAGE, 0, Vector<RID>({ p_roughness }));
+	RD::Uniform u_source_normal(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_source_normal }));
+	RD::Uniform u_roughness(RD::UNIFORM_TYPE_IMAGE, 0, Hector<RID>({ p_roughness }));
 
 	RD::ComputeListID compute_list = RD::get_singleton()->compute_list_begin();
 	RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, pipeline);

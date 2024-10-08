@@ -50,8 +50,8 @@ uint32_t RenderSceneDataRD::get_view_count() const {
 	return view_count;
 }
 
-Vector3 RenderSceneDataRD::get_view_eye_offset(uint32_t p_view) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_view, view_count, Vector3());
+Hector3 RenderSceneDataRD::get_view_eye_offset(uint32_t p_view) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_view, view_count, Hector3());
 
 	return view_eye_offset[p_view];
 }
@@ -129,7 +129,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 	ubo.viewport_size[0] = p_screen_size.x;
 	ubo.viewport_size[1] = p_screen_size.y;
 
-	Size2 screen_pixel_size = Vector2(1.0, 1.0) / Size2(p_screen_size);
+	Size2 screen_pixel_size = Hector2(1.0, 1.0) / Size2(p_screen_size);
 	ubo.screen_pixel_size[0] = screen_pixel_size.x;
 	ubo.screen_pixel_size[1] = screen_pixel_size.y;
 
@@ -260,7 +260,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 	ubo.roughness_limiter_amount = render_scene_render->screen_space_roughness_limiter_get_amount();
 	ubo.roughness_limiter_limit = render_scene_render->screen_space_roughness_limiter_get_limit();
 
-	if (calculate_motion_vectors) {
+	if (calculate_motion_Hectors) {
 		// Q : Should we make a complete copy or should we define a separate UBO with just the components we need?
 		memcpy(&prev_ubo, &ubo, sizeof(UBO));
 

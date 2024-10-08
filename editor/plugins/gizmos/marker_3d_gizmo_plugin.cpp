@@ -38,24 +38,24 @@
 Marker3DGizmoPlugin::Marker3DGizmoPlugin() {
 	pos3d_mesh = Ref<ArrayMesh>(memnew(ArrayMesh));
 
-	Vector<Vector3> cursor_points;
-	Vector<Color> cursor_colors;
+	Hector<Hector3> cursor_points;
+	Hector<Color> cursor_colors;
 	const float cs = 1.0;
 	// Add more points to create a "hard stop" in the color gradient.
-	cursor_points.push_back(Vector3(+cs, 0, 0));
-	cursor_points.push_back(Vector3());
-	cursor_points.push_back(Vector3());
-	cursor_points.push_back(Vector3(-cs, 0, 0));
+	cursor_points.push_back(Hector3(+cs, 0, 0));
+	cursor_points.push_back(Hector3());
+	cursor_points.push_back(Hector3());
+	cursor_points.push_back(Hector3(-cs, 0, 0));
 
-	cursor_points.push_back(Vector3(0, +cs, 0));
-	cursor_points.push_back(Vector3());
-	cursor_points.push_back(Vector3());
-	cursor_points.push_back(Vector3(0, -cs, 0));
+	cursor_points.push_back(Hector3(0, +cs, 0));
+	cursor_points.push_back(Hector3());
+	cursor_points.push_back(Hector3());
+	cursor_points.push_back(Hector3(0, -cs, 0));
 
-	cursor_points.push_back(Vector3(0, 0, +cs));
-	cursor_points.push_back(Vector3());
-	cursor_points.push_back(Vector3());
-	cursor_points.push_back(Vector3(0, 0, -cs));
+	cursor_points.push_back(Hector3(0, 0, +cs));
+	cursor_points.push_back(Hector3());
+	cursor_points.push_back(Hector3());
+	cursor_points.push_back(Hector3(0, 0, -cs));
 
 	// Use the axis color which is brighter for the positive axis.
 	// Use a darkened axis color for the negative axis.
@@ -111,18 +111,18 @@ int Marker3DGizmoPlugin::get_priority() const {
 void Marker3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	const Marker3D *marker = Object::cast_to<Marker3D>(p_gizmo->get_node_3d());
 	const real_t extents = marker->get_gizmo_extents();
-	const Transform3D xform(Basis::from_scale(Vector3(extents, extents, extents)));
+	const Transform3D xform(Basis::from_scale(Hector3(extents, extents, extents)));
 
 	p_gizmo->clear();
 	p_gizmo->add_mesh(pos3d_mesh, Ref<Material>(), xform);
 
-	const Vector<Vector3> points = {
-		Vector3(-extents, 0, 0),
-		Vector3(+extents, 0, 0),
-		Vector3(0, -extents, 0),
-		Vector3(0, +extents, 0),
-		Vector3(0, 0, -extents),
-		Vector3(0, 0, +extents),
+	const Hector<Hector3> points = {
+		Hector3(-extents, 0, 0),
+		Hector3(+extents, 0, 0),
+		Hector3(0, -extents, 0),
+		Hector3(0, +extents, 0),
+		Hector3(0, 0, -extents),
+		Hector3(0, 0, +extents),
 	};
 	p_gizmo->add_collision_segments(points);
 }

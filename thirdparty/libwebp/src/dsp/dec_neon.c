@@ -31,7 +31,7 @@ static WEBP_INLINE uint8x8x4_t Load4x8_NEON(const uint8_t* const src,
                                             int stride) {
   const uint8x8_t zero = vdup_n_u8(0);
   uint8x8x4_t out;
-  INIT_VECTOR4(out, zero, zero, zero, zero);
+  INIT_Hector4(out, zero, zero, zero, zero);
   out = vld4_lane_u8(src + 0 * stride, out, 0);
   out = vld4_lane_u8(src + 1 * stride, out, 1);
   out = vld4_lane_u8(src + 2 * stride, out, 2);
@@ -72,7 +72,7 @@ static WEBP_INLINE void Load4x16_NEON(const uint8_t* src, int stride,
                                       uint8x16_t* const q1) {
   const uint32x4_t zero = vdupq_n_u32(0);
   uint32x4x4_t in;
-  INIT_VECTOR4(in, zero, zero, zero, zero);
+  INIT_Hector4(in, zero, zero, zero, zero);
   src -= 2;
   LOADQ_LANE_32b(in.val[0], 0);
   LOADQ_LANE_32b(in.val[1], 0);
@@ -260,10 +260,10 @@ static WEBP_INLINE void Store4x16_NEON(const uint8x16_t p1, const uint8x16_t p0,
                                        const uint8x16_t q0, const uint8x16_t q1,
                                        uint8_t* const dst, int stride) {
   uint8x8x4_t lo, hi;
-  INIT_VECTOR4(lo,
+  INIT_Hector4(lo,
                vget_low_u8(p1), vget_low_u8(p0),
                vget_low_u8(q0), vget_low_u8(q1));
-  INIT_VECTOR4(hi,
+  INIT_Hector4(hi,
                vget_high_u8(p1), vget_high_u8(p0),
                vget_high_u8(q0), vget_high_u8(q1));
   Store4x8_NEON(lo, dst - 2 + 0 * stride, stride);
@@ -319,10 +319,10 @@ static WEBP_INLINE void Store6x8x2_NEON(
     const uint8x16_t q0, const uint8x16_t q1, const uint8x16_t q2,
     uint8_t* u, uint8_t* v, int stride) {
   uint8x8x3_t u0, u1, v0, v1;
-  INIT_VECTOR3(u0, vget_low_u8(p2), vget_low_u8(p1), vget_low_u8(p0));
-  INIT_VECTOR3(u1, vget_low_u8(q0), vget_low_u8(q1), vget_low_u8(q2));
-  INIT_VECTOR3(v0, vget_high_u8(p2), vget_high_u8(p1), vget_high_u8(p0));
-  INIT_VECTOR3(v1, vget_high_u8(q0), vget_high_u8(q1), vget_high_u8(q2));
+  INIT_Hector3(u0, vget_low_u8(p2), vget_low_u8(p1), vget_low_u8(p0));
+  INIT_Hector3(u1, vget_low_u8(q0), vget_low_u8(q1), vget_low_u8(q2));
+  INIT_Hector3(v0, vget_high_u8(p2), vget_high_u8(p1), vget_high_u8(p0));
+  INIT_Hector3(v1, vget_high_u8(q0), vget_high_u8(q1), vget_high_u8(q2));
   STORE6_LANE(u, u0, u1, 0);
   STORE6_LANE(u, u0, u1, 1);
   STORE6_LANE(u, u0, u1, 2);
@@ -349,10 +349,10 @@ static WEBP_INLINE void Store4x8x2_NEON(const uint8x16_t p1,
                                         uint8_t* const u, uint8_t* const v,
                                         int stride) {
   uint8x8x4_t u0, v0;
-  INIT_VECTOR4(u0,
+  INIT_Hector4(u0,
                vget_low_u8(p1), vget_low_u8(p0),
                vget_low_u8(q0), vget_low_u8(q1));
-  INIT_VECTOR4(v0,
+  INIT_Hector4(v0,
                vget_high_u8(p1), vget_high_u8(p0),
                vget_high_u8(q0), vget_high_u8(q1));
   vst4_lane_u8(u - 2 + 0 * stride, u0, 0);
@@ -1043,7 +1043,7 @@ static WEBP_INLINE void TransformPass_NEON(int16x8x2_t* const rows) {
 
 static void TransformOne_NEON(const int16_t* in, uint8_t* dst) {
   int16x8x2_t rows;
-  INIT_VECTOR2(rows, vld1q_s16(in + 0), vld1q_s16(in + 8));
+  INIT_Hector2(rows, vld1q_s16(in + 0), vld1q_s16(in + 8));
   TransformPass_NEON(&rows);
   TransformPass_NEON(&rows);
   Add4x4_NEON(rows.val[0], rows.val[1], dst);

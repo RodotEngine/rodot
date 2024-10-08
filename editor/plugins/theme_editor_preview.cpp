@@ -92,7 +92,7 @@ void ThemeEditorPreview::_picker_button_cbk() {
 	}
 }
 
-Control *ThemeEditorPreview::_find_hovered_control(Control *p_parent, Vector2 p_mouse_position) {
+Control *ThemeEditorPreview::_find_hovered_control(Control *p_parent, Hector2 p_mouse_position) {
 	Control *found = nullptr;
 
 	for (int i = p_parent->get_child_count() - 1; i >= 0; i--) {
@@ -124,7 +124,7 @@ void ThemeEditorPreview::_draw_picker_overlay() {
 		return;
 	}
 
-	picker_overlay->draw_rect(Rect2(Vector2(0.0, 0.0), picker_overlay->get_size()), theme_cache.preview_picker_overlay_color);
+	picker_overlay->draw_rect(Rect2(Hector2(0.0, 0.0), picker_overlay->get_size()), theme_cache.preview_picker_overlay_color);
 	if (hovered_control) {
 		Rect2 highlight_rect = hovered_control->get_global_rect();
 		highlight_rect.position = picker_overlay->get_global_transform().affine_inverse().xform(highlight_rect.position);
@@ -145,7 +145,7 @@ void ThemeEditorPreview::_draw_picker_overlay() {
 		highlight_label_rect.size.x += margin_left + margin_right;
 		highlight_label_rect.size.y += margin_top + margin_bottom;
 
-		highlight_label_rect.position = highlight_label_rect.position.clamp(Vector2(), picker_overlay->get_size());
+		highlight_label_rect.position = highlight_label_rect.position.clamp(Hector2(), picker_overlay->get_size());
 
 		picker_overlay->draw_style_box(theme_cache.preview_picker_label, highlight_label_rect);
 
@@ -180,7 +180,7 @@ void ThemeEditorPreview::_gui_input_picker_overlay(const Ref<InputEvent> &p_even
 	Ref<InputEventMouseMotion> mm = p_event;
 
 	if (mm.is_valid()) {
-		Vector2 mp = preview_content->get_local_mouse_position();
+		Hector2 mp = preview_content->get_local_mouse_position();
 		hovered_control = _find_hovered_control(preview_content, mp);
 		picker_overlay->queue_redraw();
 	}
@@ -205,7 +205,7 @@ void ThemeEditorPreview::_notification(int p_what) {
 		} break;
 
 		case NOTIFICATION_READY: {
-			Vector<Ref<Theme>> preview_themes;
+			Hector<Ref<Theme>> preview_themes;
 			preview_themes.push_back(ThemeDB::get_singleton()->get_default_theme());
 			ThemeDB::get_singleton()->create_theme_context(preview_root, preview_themes);
 		} break;

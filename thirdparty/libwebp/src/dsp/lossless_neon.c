@@ -97,7 +97,7 @@ static void ConvertBGRAToBGR_NEON(const uint32_t* src,
   const uint8x8_t shuffle2 = vld1_u8(kBGRShuffle[2]);
   for (; src < end; src += 8) {
     uint8x8x4_t pixels;
-    INIT_VECTOR4(pixels,
+    INIT_Hector4(pixels,
                  vld1_u8((const uint8_t*)(src + 0)),
                  vld1_u8((const uint8_t*)(src + 2)),
                  vld1_u8((const uint8_t*)(src + 4)),
@@ -124,7 +124,7 @@ static void ConvertBGRAToRGB_NEON(const uint32_t* src,
   const uint8x8_t shuffle2 = vld1_u8(kRGBShuffle[2]);
   for (; src < end; src += 8) {
     uint8x8x4_t pixels;
-    INIT_VECTOR4(pixels,
+    INIT_Hector4(pixels,
                  vld1_u8((const uint8_t*)(src + 0)),
                  vld1_u8((const uint8_t*)(src + 2)),
                  vld1_u8((const uint8_t*)(src + 4)),

@@ -44,7 +44,7 @@ class ShapeCast2D : public Node2D {
 
 	Ref<Shape2D> shape;
 	RID shape_rid;
-	Vector2 target_position = Vector2(0, 50);
+	Hector2 target_position = Hector2(0, 50);
 
 	HashSet<RID> exclude;
 	real_t margin = 0.0;
@@ -55,7 +55,7 @@ class ShapeCast2D : public Node2D {
 
 	// Result
 	int max_results = 32;
-	Vector<PhysicsDirectSpaceState2D::ShapeRestInfo> result;
+	Hector<PhysicsDirectSpaceState2D::ShapeRestInfo> result;
 	bool collided = false;
 	real_t collision_safe_fraction = 1.0;
 	real_t collision_unsafe_fraction = 1.0;
@@ -80,8 +80,8 @@ public:
 	void set_shape(const Ref<Shape2D> &p_shape);
 	Ref<Shape2D> get_shape() const;
 
-	void set_target_position(const Vector2 &p_point);
-	Vector2 get_target_position() const;
+	void set_target_position(const Hector2 &p_point);
+	Hector2 get_target_position() const;
 
 	void set_margin(real_t p_margin);
 	real_t get_margin() const;
@@ -106,8 +106,8 @@ public:
 	Object *get_collider(int p_idx) const;
 	RID get_collider_rid(int p_idx) const;
 	int get_collider_shape(int p_idx) const;
-	Vector2 get_collision_point(int p_idx) const;
-	Vector2 get_collision_normal(int p_idx) const;
+	Hector2 get_collision_point(int p_idx) const;
+	Hector2 get_collision_normal(int p_idx) const;
 
 	real_t get_closest_collision_safe_fraction() const;
 	real_t get_closest_collision_unsafe_fraction() const;

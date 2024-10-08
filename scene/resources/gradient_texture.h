@@ -94,8 +94,8 @@ private:
 
 	bool use_hdr = false;
 
-	Vector2 fill_from;
-	Vector2 fill_to = Vector2(1, 0);
+	Hector2 fill_from;
+	Hector2 fill_to = Hector2(1, 0);
 
 	Fill fill = FILL_LINEAR;
 	Repeat repeat = REPEAT_NONE;
@@ -123,10 +123,10 @@ public:
 
 	void set_fill(Fill p_fill);
 	Fill get_fill() const;
-	void set_fill_from(Vector2 p_fill_from);
-	Vector2 get_fill_from() const;
-	void set_fill_to(Vector2 p_fill_to);
-	Vector2 get_fill_to() const;
+	void set_fill_from(Hector2 p_fill_from);
+	Hector2 get_fill_from() const;
+	void set_fill_to(Hector2 p_fill_to);
+	Hector2 get_fill_to() const;
 
 	void set_repeat(Repeat p_repeat);
 	Repeat get_repeat() const;

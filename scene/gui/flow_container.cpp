@@ -52,9 +52,9 @@ void FlowContainer::_resort() {
 
 	HashMap<Control *, Size2i> children_minsize_cache;
 
-	Vector<_LineData> lines_data;
+	Hector<_LineData> lines_data;
 
-	Vector2i ofs;
+	Hector2i ofs;
 	int line_height = 0;
 	int line_length = 0;
 	float line_stretch_ratio_total = 0;
@@ -288,8 +288,8 @@ Size2 FlowContainer::get_minimum_size() const {
 	return minimum;
 }
 
-Vector<int> FlowContainer::get_allowed_size_flags_horizontal() const {
-	Vector<int> flags;
+Hector<int> FlowContainer::get_allowed_size_flags_horizontal() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	if (!vertical) {
 		flags.append(SIZE_EXPAND);
@@ -300,8 +300,8 @@ Vector<int> FlowContainer::get_allowed_size_flags_horizontal() const {
 	return flags;
 }
 
-Vector<int> FlowContainer::get_allowed_size_flags_vertical() const {
-	Vector<int> flags;
+Hector<int> FlowContainer::get_allowed_size_flags_vertical() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	if (vertical) {
 		flags.append(SIZE_EXPAND);

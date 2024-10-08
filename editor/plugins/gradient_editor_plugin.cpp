@@ -92,7 +92,7 @@ void GradientEdit::_show_color_picker() {
 	bool show_above = get_global_position().y + get_size().y + minsize.y > viewport_height && get_global_position().y * 2 + get_size().y > viewport_height;
 
 	float v_offset = show_above ? -minsize.y : get_size().y;
-	popup->set_position(get_screen_position() + Vector2(0, v_offset));
+	popup->set_position(get_screen_position() + Hector2(0, v_offset));
 	popup->popup();
 }
 
@@ -492,9 +492,9 @@ void GradientEdit::_redraw() {
 		if (selected_index == i) {
 			// Handle is selected.
 			draw_rect(rect, border_col, false, handle_thickness);
-			draw_line(Vector2(handle_x_pos, 0), Vector2(handle_x_pos, h / 2 - handle_thickness), border_col, handle_thickness);
+			draw_line(Hector2(handle_x_pos, 0), Hector2(handle_x_pos, h / 2 - handle_thickness), border_col, handle_thickness);
 			if (inside_col.a < 1) {
-				draw_line(Vector2(handle_start_x + handle_thickness / 2.0, h * 0.9 - handle_thickness), Vector2(handle_start_x + handle_width - handle_thickness / 2.0, h * 0.9 - handle_thickness), border_col, handle_thickness);
+				draw_line(Hector2(handle_start_x + handle_thickness / 2.0, h * 0.9 - handle_thickness), Hector2(handle_start_x + handle_width - handle_thickness / 2.0, h * 0.9 - handle_thickness), border_col, handle_thickness);
 			}
 			rect = rect.grow(-handle_thickness);
 			const Color focus_col = get_theme_color(SNAME("accent_color"), EditorStringName(Editor));
@@ -505,9 +505,9 @@ void GradientEdit::_redraw() {
 			// Handle isn't selected.
 			border_col.a = 0.9;
 			draw_rect(rect, border_col, false, handle_thickness);
-			draw_line(Vector2(handle_x_pos, 0), Vector2(handle_x_pos, h / 2 - handle_thickness), border_col, handle_thickness);
+			draw_line(Hector2(handle_x_pos, 0), Hector2(handle_x_pos, h / 2 - handle_thickness), border_col, handle_thickness);
 			if (inside_col.a < 1) {
-				draw_line(Vector2(handle_start_x + handle_thickness / 2.0, h * 0.9 - handle_thickness), Vector2(handle_start_x + handle_width - handle_thickness / 2.0, h * 0.9 - handle_thickness), border_col, handle_thickness);
+				draw_line(Hector2(handle_start_x + handle_thickness / 2.0, h * 0.9 - handle_thickness), Hector2(handle_start_x + handle_width - handle_thickness / 2.0, h * 0.9 - handle_thickness), border_col, handle_thickness);
 			}
 			if (hovered_index == i) {
 				// Draw a subtle translucent rect inside the handle if it's being hovered.
@@ -533,8 +533,8 @@ void GradientEdit::_redraw() {
 	} else {
 		// If no color is selected, draw gray color with 'X' on top.
 		draw_rect(Rect2(button_offset, 0, h, h), Color(0.5, 0.5, 0.5, 1));
-		draw_line(Vector2(button_offset, 0), Vector2(button_offset + h, h), Color(0.8, 0.8, 0.8));
-		draw_line(Vector2(button_offset, h), Vector2(button_offset + h, 0), Color(0.8, 0.8, 0.8));
+		draw_line(Hector2(button_offset, 0), Hector2(button_offset + h, h), Color(0.8, 0.8, 0.8));
+		draw_line(Hector2(button_offset, h), Hector2(button_offset + h, 0), Color(0.8, 0.8, 0.8));
 	}
 }
 

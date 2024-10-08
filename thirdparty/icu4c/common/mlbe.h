@@ -44,13 +44,13 @@ class MlBreakEngine : public UMemory {
      * @param rangeEnd The end of the range of the characters
      * @param foundBreaks Output of C array of int32_t break positions, or 0
      * @param inString The normalized string of text ranging from rangeStart to rangeEnd
-     * @param inputMap The vector storing the native index of inText
+     * @param inputMap The Hector storing the native index of inText
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
     int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                          UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+                          UHector32 &foundBreaks, const UnicodeString &inString,
+                          const LocalPointer<UHector32> &inputMap, UErrorCode &status) const;
 
    private:
     /**
@@ -92,12 +92,12 @@ class MlBreakEngine : public UMemory {
      * @param startIdx The start index of the indexList.
      * @param numCodeUnits  The current code unit boundary of the indexList.
      * @param numBreaks The accumulated number of breakpoints.
-     * @param boundary A vector including the index of the breakpoint.
+     * @param boundary A Hector including the index of the breakpoint.
      * @param status Information on any errors encountered.
      * @return The number of breakpoints
      */
     int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
+                               int32_t numCodeUnits, int32_t numBreaks, UHector32 &boundary,
                                UErrorCode &status) const;
 
     void printUnicodeString(const UnicodeString &s) const;

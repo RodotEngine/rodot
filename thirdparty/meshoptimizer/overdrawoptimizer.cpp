@@ -76,9 +76,9 @@ static void calculateSortData(float* sort_data, const unsigned int* indices, siz
 		cluster_normal[1] *= inv_cluster_normal_length;
 		cluster_normal[2] *= inv_cluster_normal_length;
 
-		float centroid_vector[3] = {cluster_centroid[0] - mesh_centroid[0], cluster_centroid[1] - mesh_centroid[1], cluster_centroid[2] - mesh_centroid[2]};
+		float centroid_Hector[3] = {cluster_centroid[0] - mesh_centroid[0], cluster_centroid[1] - mesh_centroid[1], cluster_centroid[2] - mesh_centroid[2]};
 
-		sort_data[cluster] = centroid_vector[0] * cluster_normal[0] + centroid_vector[1] * cluster_normal[1] + centroid_vector[2] * cluster_normal[2];
+		sort_data[cluster] = centroid_Hector[0] * cluster_normal[0] + centroid_Hector[1] * cluster_normal[1] + centroid_Hector[2] * cluster_normal[2];
 	}
 }
 

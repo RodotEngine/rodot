@@ -60,7 +60,7 @@ private:
 	int peer_sock = -1;
 
 	State ready_state = STATE_CLOSED;
-	Vector<uint8_t> packet_buffer;
+	Hector<uint8_t> packet_buffer;
 	PacketBuffer<uint8_t> in_buffer;
 	uint8_t was_string = 0;
 	int close_code = -1;

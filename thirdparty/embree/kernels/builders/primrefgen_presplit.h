@@ -228,7 +228,7 @@ namespace embree
 #if !defined(RTHWIF_STANDALONE)
 
     template<typename Mesh, typename SplitterFactory>    
-      PrimInfo createPrimRefArray_presplit(Geometry* geometry, unsigned int geomID, size_t numPrimRefs, mvector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
+      PrimInfo createPrimRefArray_presplit(Geometry* geometry, unsigned int geomID, size_t numPrimRefs, mHector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
     {
       ParallelPrefixSumState<PrimInfo> pstate;
       
@@ -250,9 +250,9 @@ namespace embree
     }
 #endif
     
-    template<typename SplitPrimitiveFunc, typename ProjectedPrimitiveAreaFunc, typename PrimVector>
+    template<typename SplitPrimitiveFunc, typename ProjectedPrimitiveAreaFunc, typename PrimHector>
     PrimInfo createPrimRefArray_presplit(size_t numPrimRefs,
-                                         PrimVector& prims,
+                                         PrimHector& prims,
                                          const PrimInfo& pinfo,
                                          const SplitPrimitiveFunc& splitPrimitive,
                                          const ProjectedPrimitiveAreaFunc& primitiveArea)
@@ -265,8 +265,8 @@ namespace embree
       const size_t numSplitPrimitivesBudget = numPrimitivesExt - numPrimitives;
 
       /* allocate double buffer presplit items */
-      avector<PresplitItem> preSplitItem0(numPrimitivesExt);
-      avector<PresplitItem> preSplitItem1(numPrimitivesExt);
+      aHector<PresplitItem> preSplitItem0(numPrimitivesExt);
+      aHector<PresplitItem> preSplitItem1(numPrimitivesExt);
 
       /* compute grid */
       SplittingGrid grid(pinfo.geomBounds);
@@ -421,7 +421,7 @@ namespace embree
 #if !defined(RTHWIF_STANDALONE)
     
      template<typename Mesh, typename SplitterFactory>    
-      PrimInfo createPrimRefArray_presplit(Scene* scene, Geometry::GTypeMask types, bool mblur, size_t numPrimRefs, mvector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
+      PrimInfo createPrimRefArray_presplit(Scene* scene, Geometry::GTypeMask types, bool mblur, size_t numPrimRefs, mHector<PrimRef>& prims, BuildProgressMonitor& progressMonitor)
     {
       ParallelForForPrefixSumState<PrimInfo> pstate;
       Scene::Iterator2 iter(scene,types,mblur);

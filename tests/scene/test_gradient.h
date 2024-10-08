@@ -70,7 +70,7 @@ TEST_CASE("[Gradient] Default gradient") {
 TEST_CASE("[Gradient] Custom gradient (points specified in order)") {
 	// Red-yellow-green gradient (with overbright green).
 	Ref<Gradient> gradient = memnew(Gradient);
-	Vector<Gradient::Point> points;
+	Hector<Gradient::Point> points;
 	points.push_back({ 0.0, Color(1, 0, 0) });
 	points.push_back({ 0.5, Color(1, 1, 0) });
 	points.push_back({ 1.0, Color(0, 2, 0) });
@@ -109,7 +109,7 @@ TEST_CASE("[Gradient] Custom gradient (points specified out-of-order)") {
 	// HSL rainbow with points specified out of order.
 	// These should be sorted automatically when adding points.
 	Ref<Gradient> gradient = memnew(Gradient);
-	Vector<Gradient::Point> points;
+	Hector<Gradient::Point> points;
 	points.push_back({ 0.2, Color(1, 0, 0) });
 	points.push_back({ 0.0, Color(1, 1, 0) });
 	points.push_back({ 0.8, Color(0, 1, 0) });

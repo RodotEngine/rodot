@@ -197,12 +197,12 @@ void TextureLayeredEditor::_update_material(bool p_texture_changed) {
 	materials[0]->set_shader_parameter("layer", layer->get_value());
 	materials[2]->set_shader_parameter("layer", layer->get_value());
 
-	Vector3 v(1, 1, 1);
+	Hector3 v(1, 1, 1);
 	v.normalize();
 
 	Basis b;
-	b.rotate(Vector3(1, 0, 0), x_rot);
-	b.rotate(Vector3(0, 1, 0), y_rot);
+	b.rotate(Hector3(1, 0, 0), x_rot);
+	b.rotate(Hector3(0, 1, 0), y_rot);
 
 	materials[1]->set_shader_parameter("normal", v);
 	materials[1]->set_shader_parameter("rot", b);
@@ -251,8 +251,8 @@ void TextureLayeredEditor::_texture_rect_update_area() {
 	int ofs_x = (size.width - tex_width) / 2;
 	int ofs_y = (size.height - tex_height) / 2;
 
-	texture_rect->set_position(Vector2(ofs_x, ofs_y));
-	texture_rect->set_size(Vector2(tex_width, tex_height));
+	texture_rect->set_position(Hector2(ofs_x, ofs_y));
+	texture_rect->set_size(Hector2(tex_width, tex_height));
 }
 
 void TextureLayeredEditor::edit(Ref<TextureLayered> p_texture) {

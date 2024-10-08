@@ -344,7 +344,7 @@ public:
 	virtual ~EditorScriptCodeCompletionCache() {}
 };
 
-void ScriptEditorQuickOpen::popup_dialog(const Vector<String> &p_functions, bool p_dontclear) {
+void ScriptEditorQuickOpen::popup_dialog(const Hector<String> &p_functions, bool p_dontclear) {
 	popup_centered_ratio(0.6);
 	if (p_dontclear) {
 		search_box->select_all();
@@ -1240,7 +1240,7 @@ Ref<Script> ScriptEditor::_get_current_script() {
 
 TypedArray<Script> ScriptEditor::_get_open_scripts() const {
 	TypedArray<Script> ret;
-	Vector<Ref<Script>> scripts = get_open_scripts();
+	Hector<Ref<Script>> scripts = get_open_scripts();
 	int scrits_amount = scripts.size();
 	for (int idx_script = 0; idx_script < scrits_amount; idx_script++) {
 		ret.push_back(scripts[idx_script]);
@@ -1833,8 +1833,8 @@ void ScriptEditor::notify_script_changed(const Ref<Script> &p_script) {
 	emit_signal(SNAME("editor_script_changed"), p_script);
 }
 
-Vector<String> ScriptEditor::_get_breakpoints() {
-	Vector<String> ret;
+Hector<String> ScriptEditor::_get_breakpoints() {
+	Hector<String> ret;
 	HashSet<String> loaded_scripts;
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));
@@ -2037,7 +2037,7 @@ void ScriptEditor::_update_members_overview() {
 		return;
 	}
 
-	Vector<String> functions = se->get_functions();
+	Hector<String> functions = se->get_functions();
 	if (EDITOR_GET("text_editor/script_list/sort_members_outline_alphabetically")) {
 		functions.sort();
 	}
@@ -2097,7 +2097,7 @@ void ScriptEditor::_update_help_overview() {
 		return;
 	}
 
-	Vector<Pair<String, int>> sections = se->get_sections();
+	Hector<Pair<String, int>> sections = se->get_sections();
 	for (int i = 0; i < sections.size(); i++) {
 		help_overview->add_item(sections[i].first);
 		help_overview->set_item_metadata(i, sections[i].second);
@@ -2175,7 +2175,7 @@ void ScriptEditor::_update_script_names() {
 	ScriptSortBy sort_by = (ScriptSortBy)(int)EDITOR_GET("text_editor/script_list/sort_scripts_by");
 	ScriptListName display_as = (ScriptListName)(int)EDITOR_GET("text_editor/script_list/list_script_names_as");
 
-	Vector<_ScriptEditorItemData> sedata;
+	Hector<_ScriptEditorItemData> sedata;
 
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));
@@ -2237,8 +2237,8 @@ void ScriptEditor::_update_script_names() {
 			sedata.push_back(sd);
 		}
 
-		Vector<String> disambiguated_script_names;
-		Vector<String> full_script_paths;
+		Hector<String> disambiguated_script_names;
+		Hector<String> full_script_paths;
 		for (int j = 0; j < sedata.size(); j++) {
 			String name = sedata[j].name.replace("(*)", "");
 			ScriptListName script_display = (ScriptListName)(int)EDITOR_GET("text_editor/script_list/list_script_names_as");
@@ -2316,7 +2316,7 @@ void ScriptEditor::_update_script_names() {
 		_sort_list_on_update = false;
 	}
 
-	Vector<_ScriptEditorItemData> sedata_filtered;
+	Hector<_ScriptEditorItemData> sedata_filtered;
 	for (int i = 0; i < sedata.size(); i++) {
 		String filter = filter_scripts->get_text();
 		if (filter.is_empty() || filter.is_subsequence_ofn(sedata[i].name)) {
@@ -2949,7 +2949,7 @@ void ScriptEditor::_editor_settings_changed() {
 
 void ScriptEditor::_apply_editor_settings() {
 	textfile_extensions.clear();
-	const Vector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
+	const Hector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
 	for (const String &E : textfile_ext) {
 		textfile_extensions.insert(E);
 	}
@@ -3151,7 +3151,7 @@ bool ScriptEditor::can_drop_data_fw(const Point2 &p_point, const Variant &p_data
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		if (files.size() == 0) {
 			return false; //weird
@@ -3230,7 +3230,7 @@ void ScriptEditor::drop_data_fw(const Point2 &p_point, const Variant &p_data, Co
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		int new_index = 0;
 		if (script_list->get_item_count() > 0) {
@@ -3333,7 +3333,7 @@ void ScriptEditor::shortcut_input(const Ref<InputEvent> &p_event) {
 	}
 }
 
-void ScriptEditor::_script_list_clicked(int p_item, Vector2 p_local_mouse_pos, MouseButton p_mouse_button_index) {
+void ScriptEditor::_script_list_clicked(int p_item, Hector2 p_local_mouse_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index == MouseButton::MIDDLE) {
 		script_list->select(p_item);
 		_script_selected(p_item);
@@ -3390,7 +3390,7 @@ void ScriptEditor::_make_script_list_context_menu() {
 	context_menu->set_item_disabled(context_menu->get_item_index(WINDOW_SORT), tab_container->get_tab_count() <= 1);
 
 	// Context menu plugin.
-	Vector<String> selected_paths;
+	Hector<String> selected_paths;
 	if (se) {
 		Ref<Resource> scr = se->get_edited_resource();
 		if (scr.is_valid()) {
@@ -3748,8 +3748,8 @@ void ScriptEditor::_history_back() {
 	}
 }
 
-Vector<Ref<Script>> ScriptEditor::get_open_scripts() const {
-	Vector<Ref<Script>> out_scripts = Vector<Ref<Script>>();
+Hector<Ref<Script>> ScriptEditor::get_open_scripts() const {
+	Hector<Ref<Script>> out_scripts = Hector<Ref<Script>>();
 
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));

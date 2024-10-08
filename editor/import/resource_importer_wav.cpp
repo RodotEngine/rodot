@@ -140,7 +140,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 	int loop_end = 0;
 	int frames = 0;
 
-	Vector<float> data;
+	Hector<float> data;
 
 	while (!file->eof_reached()) {
 		/* chunk */
@@ -322,7 +322,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 		// resample!
 		int new_data_frames = (int)(frames * (float)limit_rate_hz / (float)rate);
 
-		Vector<float> new_data;
+		Hector<float> new_data;
 		new_data.resize(new_data_frames * format_channels);
 		for (int c = 0; c < format_channels; c++) {
 			float frac = .0f;
@@ -404,7 +404,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 		}
 
 		if (first < last) {
-			Vector<float> new_data;
+			Hector<float> new_data;
 			new_data.resize((last - first) * format_channels);
 			for (int i = first; i < last; i++) {
 				float fadeOutMult = 1;
@@ -440,7 +440,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 	bool force_mono = p_options["force/mono"];
 
 	if (force_mono && format_channels == 2) {
-		Vector<float> new_data;
+		Hector<float> new_data;
 		new_data.resize(data.size() / 2);
 		for (int i = 0; i < frames; i++) {
 			new_data.write[i] = (data[i * 2 + 0] + data[i * 2 + 1]) / 2.0;
@@ -455,7 +455,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 		is16 = false;
 	}
 
-	Vector<uint8_t> pcm_data;
+	Hector<uint8_t> pcm_data;
 	AudioStreamWAV::Format dst_format;
 
 	if (compression == 1) {
@@ -464,8 +464,8 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 			_compress_ima_adpcm(data, pcm_data);
 		} else {
 			//byte interleave
-			Vector<float> left;
-			Vector<float> right;
+			Hector<float> left;
+			Hector<float> right;
 
 			int tframes = data.size() / 2;
 			left.resize(tframes);
@@ -476,8 +476,8 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 				right.write[i] = data[i * 2 + 1];
 			}
 
-			Vector<uint8_t> bleft;
-			Vector<uint8_t> bright;
+			Hector<uint8_t> bleft;
+			Hector<uint8_t> bright;
 
 			_compress_ima_adpcm(left, bleft);
 			_compress_ima_adpcm(right, bright);
@@ -515,7 +515,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 		}
 	}
 
-	Vector<uint8_t> dst_data;
+	Hector<uint8_t> dst_data;
 	if (compression == 2) {
 		dst_format = AudioStreamWAV::FORMAT_QOA;
 		qoa_desc desc = {};

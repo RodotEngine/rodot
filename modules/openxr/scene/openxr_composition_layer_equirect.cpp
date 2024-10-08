@@ -76,10 +76,10 @@ Ref<Mesh> OpenXRCompositionLayerEquirect::_create_fallback_mesh() {
 	Array arrays;
 	arrays.resize(ArrayMesh::ARRAY_MAX);
 
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
-	Vector<Vector2> uvs;
-	Vector<int> indices;
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
+	Hector<Hector2> uvs;
+	Hector<int> indices;
 
 	float step_horizontal = central_horizontal_angle / fallback_segments;
 	float step_vertical = (upper_vertical_angle + lower_vertical_angle) / fallback_segments;
@@ -91,14 +91,14 @@ Ref<Mesh> OpenXRCompositionLayerEquirect::_create_fallback_mesh() {
 			float horizontal_angle = start_horizontal_angle + (step_horizontal * i);
 			float vertical_angle = -lower_vertical_angle + (step_vertical * j);
 
-			Vector3 vertex(
+			Hector3 vertex(
 					radius * Math::cos(vertical_angle) * Math::sin(horizontal_angle),
 					radius * Math::sin(vertical_angle),
 					radius * Math::cos(vertical_angle) * Math::cos(horizontal_angle));
 
 			vertices.push_back(vertex);
 			normals.push_back(vertex.normalized());
-			uvs.push_back(Vector2(1.0 - ((float)i / fallback_segments), 1.0 - (float(j) / fallback_segments)));
+			uvs.push_back(Hector2(1.0 - ((float)i / fallback_segments), 1.0 - (float(j) / fallback_segments)));
 		}
 	}
 
@@ -190,17 +190,17 @@ uint32_t OpenXRCompositionLayerEquirect::get_fallback_segments() const {
 	return fallback_segments;
 }
 
-Vector2 OpenXRCompositionLayerEquirect::intersects_ray(const Vector3 &p_origin, const Vector3 &p_direction) const {
+Hector2 OpenXRCompositionLayerEquirect::intersects_ray(const Hector3 &p_origin, const Hector3 &p_direction) const {
 	Transform3D equirect_transform = get_global_transform();
 
-	Vector3 offset = p_origin - equirect_transform.origin;
+	Hector3 offset = p_origin - equirect_transform.origin;
 	float a = p_direction.dot(p_direction);
 	float b = 2.0 * offset.dot(p_direction);
 	float c = offset.dot(offset) - (radius * radius);
 
 	float discriminant = b * b - 4.0 * a * c;
 	if (discriminant < 0.0) {
-		return Vector2(-1.0, -1.0);
+		return Hector2(-1.0, -1.0);
 	}
 
 	float t0 = (-b - Math::sqrt(discriminant)) / (2.0 * a);
@@ -208,26 +208,26 @@ Vector2 OpenXRCompositionLayerEquirect::intersects_ray(const Vector3 &p_origin, 
 	float t = MAX(t0, t1);
 
 	if (t < 0.0) {
-		return Vector2(-1.0, -1.0);
+		return Hector2(-1.0, -1.0);
 	}
-	Vector3 intersection = p_origin + p_direction * t;
+	Hector3 intersection = p_origin + p_direction * t;
 
 	Basis correction = equirect_transform.basis.inverse();
-	correction.rotate(Vector3(0.0, 1.0, 0.0), -Math_PI / 2.0);
-	Vector3 relative_point = correction.xform(intersection - equirect_transform.origin);
+	correction.rotate(Hector3(0.0, 1.0, 0.0), -Math_PI / 2.0);
+	Hector3 relative_point = correction.xform(intersection - equirect_transform.origin);
 
 	float horizontal_intersection_angle = Math::atan2(relative_point.z, relative_point.x);
 	if (Math::abs(horizontal_intersection_angle) > central_horizontal_angle / 2.0) {
-		return Vector2(-1.0, -1.0);
+		return Hector2(-1.0, -1.0);
 	}
 
 	float vertical_intersection_angle = Math::acos(relative_point.y / radius) - (Math_PI / 2.0);
 	if (vertical_intersection_angle < 0) {
 		if (Math::abs(vertical_intersection_angle) > upper_vertical_angle) {
-			return Vector2(-1.0, -1.0);
+			return Hector2(-1.0, -1.0);
 		}
 	} else if (vertical_intersection_angle > lower_vertical_angle) {
-		return Vector2(-1.0, -1.0);
+		return Hector2(-1.0, -1.0);
 	}
 
 	// Re-center the intersection angle if the vertical angle is uneven between upper and lower.
@@ -238,5 +238,5 @@ Vector2 OpenXRCompositionLayerEquirect::intersects_ray(const Vector3 &p_origin, 
 	float u = 0.5 + (horizontal_intersection_angle / central_horizontal_angle);
 	float v = 0.5 + (vertical_intersection_angle / (upper_vertical_angle + lower_vertical_angle));
 
-	return Vector2(u, v);
+	return Hector2(u, v);
 }

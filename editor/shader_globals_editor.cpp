@@ -127,7 +127,7 @@ protected:
 		return r_ret.get_type() != Variant::NIL;
 	}
 	void _get_property_list(List<PropertyInfo> *p_list) const {
-		Vector<StringName> variables;
+		Hector<StringName> variables;
 		variables = RS::get_singleton()->global_shader_parameter_get_list();
 		for (int i = 0; i < variables.size(); i++) {
 			PropertyInfo pinfo;
@@ -156,13 +156,13 @@ protected:
 					pinfo.type = Variant::INT;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_IVEC2: {
-					pinfo.type = Variant::VECTOR2I;
+					pinfo.type = Variant::HECTOR2I;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_IVEC3: {
-					pinfo.type = Variant::VECTOR3I;
+					pinfo.type = Variant::HECTOR3I;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_IVEC4: {
-					pinfo.type = Variant::VECTOR4I;
+					pinfo.type = Variant::HECTOR4I;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_RECT2I: {
 					pinfo.type = Variant::RECT2I;
@@ -171,25 +171,25 @@ protected:
 					pinfo.type = Variant::INT;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_UVEC2: {
-					pinfo.type = Variant::VECTOR2I;
+					pinfo.type = Variant::HECTOR2I;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_UVEC3: {
-					pinfo.type = Variant::VECTOR3I;
+					pinfo.type = Variant::HECTOR3I;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_UVEC4: {
-					pinfo.type = Variant::VECTOR4I;
+					pinfo.type = Variant::HECTOR4I;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_FLOAT: {
 					pinfo.type = Variant::FLOAT;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_VEC2: {
-					pinfo.type = Variant::VECTOR2;
+					pinfo.type = Variant::HECTOR2;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_VEC3: {
-					pinfo.type = Variant::VECTOR3;
+					pinfo.type = Variant::HECTOR3;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_VEC4: {
-					pinfo.type = Variant::VECTOR4;
+					pinfo.type = Variant::HECTOR4;
 				} break;
 				case RS::GLOBAL_VAR_TYPE_RECT2: {
 					pinfo.type = Variant::RECT2;
@@ -265,13 +265,13 @@ static Variant create_var(RS::GlobalShaderParameterType p_type) {
 			return 0; //bits
 		}
 		case RS::GLOBAL_VAR_TYPE_IVEC2: {
-			return Vector2i();
+			return Hector2i();
 		}
 		case RS::GLOBAL_VAR_TYPE_IVEC3: {
-			return Vector3i();
+			return Hector3i();
 		}
 		case RS::GLOBAL_VAR_TYPE_IVEC4: {
-			return Vector4i();
+			return Hector4i();
 		}
 		case RS::GLOBAL_VAR_TYPE_RECT2I: {
 			return Rect2i();
@@ -280,25 +280,25 @@ static Variant create_var(RS::GlobalShaderParameterType p_type) {
 			return 0;
 		}
 		case RS::GLOBAL_VAR_TYPE_UVEC2: {
-			return Vector2i();
+			return Hector2i();
 		}
 		case RS::GLOBAL_VAR_TYPE_UVEC3: {
-			return Vector3i();
+			return Hector3i();
 		}
 		case RS::GLOBAL_VAR_TYPE_UVEC4: {
-			return Vector4i();
+			return Hector4i();
 		}
 		case RS::GLOBAL_VAR_TYPE_FLOAT: {
 			return 0.0;
 		}
 		case RS::GLOBAL_VAR_TYPE_VEC2: {
-			return Vector2();
+			return Hector2();
 		}
 		case RS::GLOBAL_VAR_TYPE_VEC3: {
-			return Vector3();
+			return Hector3();
 		}
 		case RS::GLOBAL_VAR_TYPE_VEC4: {
-			return Vector4();
+			return Hector4();
 		}
 		case RS::GLOBAL_VAR_TYPE_RECT2: {
 			return Rect2();
@@ -307,7 +307,7 @@ static Variant create_var(RS::GlobalShaderParameterType p_type) {
 			return Color();
 		}
 		case RS::GLOBAL_VAR_TYPE_MAT2: {
-			Vector<float> xform;
+			Hector<float> xform;
 			xform.resize(4);
 			xform.write[0] = 1;
 			xform.write[1] = 0;

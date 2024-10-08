@@ -20,7 +20,7 @@
 #include "unicode/umutablecptrie.h"
 #include "unicode/uobject.h"
 #include "rbbirb.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -46,7 +46,7 @@ public:
     int32_t            fNum {0};                 // runtime-mapped input value for this range.
     bool               fIncludesDict {false};    // True if the range includes $dictionary.
     bool               fFirstInGroup {false};    // True if first range in a group with the same fNum.
-    UVector           *fIncludesSets {nullptr};  // vector of the the original
+    UHector           *fIncludesSets {nullptr};  // Hector of the the original
                                                  //   Unicode sets that include this range.
                                                  //    (Contains ptrs to uset nodes)
     RangeDescriptor   *fNext {nullptr};          // Next RangeDescriptor in the linked list.
@@ -86,7 +86,7 @@ public:
 
     void     buildRanges();
     void     buildTrie();
-    void     addValToSets(UVector *sets,      uint32_t val);
+    void     addValToSets(UHector *sets,      uint32_t val);
     void     addValToSet (RBBINode *usetNode, uint32_t val);
     int32_t  getNumCharCategories() const;   // CharCategories are the same as input symbol set to the
                                              //    runtime state machine, which are the same as

@@ -52,7 +52,7 @@ hb_plan_subset_cff_fdselect (const hb_subset_plan_t *plan,
 			     unsigned int &subset_fd_count /* OUT */,
 			     unsigned int &subset_fdselect_size /* OUT */,
 			     unsigned int &subset_fdselect_format /* OUT */,
-			     hb_vector_t<code_pair_t> &fdselect_ranges /* OUT */,
+			     hb_Hector_t<code_pair_t> &fdselect_ranges /* OUT */,
 			     hb_inc_bimap_t &fdmap /* OUT */)
 {
   subset_fd_count = 0;
@@ -161,7 +161,7 @@ serialize_fdselect_3_4 (hb_serialize_context_t *c,
 			const unsigned int num_glyphs,
 			const FDSelect &src,
 			unsigned int size,
-			const hb_vector_t<code_pair_t> &fdselect_ranges)
+			const hb_Hector_t<code_pair_t> &fdselect_ranges)
 {
   TRACE_SERIALIZE (this);
   FDSELECT3_4 *p = c->allocate_size<FDSELECT3_4> (size);
@@ -184,7 +184,7 @@ hb_serialize_cff_fdselect (hb_serialize_context_t *c,
 			   unsigned int fd_count,
 			   unsigned int fdselect_format,
 			   unsigned int size,
-			   const hb_vector_t<code_pair_t> &fdselect_ranges)
+			   const hb_Hector_t<code_pair_t> &fdselect_ranges)
 {
   TRACE_SERIALIZE (this);
   FDSelect *p = c->allocate_min<FDSelect> ();

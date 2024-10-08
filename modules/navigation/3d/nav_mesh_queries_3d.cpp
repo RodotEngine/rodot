@@ -49,11 +49,11 @@
 		r_path_owners->push_back(poly->owner->get_owner_id()); \
 	}
 
-Vector3 NavMeshQueries3D::polygons_get_random_point(const LocalVector<gd::Polygon> &p_polygons, uint32_t p_navigation_layers, bool p_uniformly) {
-	const LocalVector<gd::Polygon> &region_polygons = p_polygons;
+Hector3 NavMeshQueries3D::polygons_get_random_point(const LocalHector<gd::Polygon> &p_polygons, uint32_t p_navigation_layers, bool p_uniformly) {
+	const LocalHector<gd::Polygon> &region_polygons = p_polygons;
 
 	if (region_polygons.is_empty()) {
-		return Vector3();
+		return Hector3();
 	}
 
 	if (p_uniformly) {
@@ -72,15 +72,15 @@ Vector3 NavMeshQueries3D::polygons_get_random_point(const LocalVector<gd::Polygo
 		}
 		if (region_area_map.is_empty() || accumulated_area == 0) {
 			// All polygons have no real surface / no area.
-			return Vector3();
+			return Hector3();
 		}
 
 		real_t region_area_map_pos = Math::random(real_t(0), accumulated_area);
 
 		RBMap<real_t, uint32_t>::Iterator region_E = region_area_map.find_closest(region_area_map_pos);
-		ERR_FAIL_COND_V(!region_E, Vector3());
+		ERR_FAIL_COND_V(!region_E, Hector3());
 		uint32_t rrp_polygon_index = region_E->value;
-		ERR_FAIL_UNSIGNED_INDEX_V(rrp_polygon_index, region_polygons.size(), Vector3());
+		ERR_FAIL_UNSIGNED_INDEX_V(rrp_polygon_index, region_polygons.size(), Hector3());
 
 		const gd::Polygon &rr_polygon = region_polygons[rrp_polygon_index];
 
@@ -98,19 +98,19 @@ Vector3 NavMeshQueries3D::polygons_get_random_point(const LocalVector<gd::Polygo
 		}
 		if (polygon_area_map.is_empty() || accumulated_polygon_area == 0) {
 			// All faces have no real surface / no area.
-			return Vector3();
+			return Hector3();
 		}
 
 		real_t polygon_area_map_pos = Math::random(real_t(0), accumulated_polygon_area);
 
 		RBMap<real_t, uint32_t>::Iterator polygon_E = polygon_area_map.find_closest(polygon_area_map_pos);
-		ERR_FAIL_COND_V(!polygon_E, Vector3());
+		ERR_FAIL_COND_V(!polygon_E, Hector3());
 		uint32_t rrp_face_index = polygon_E->value;
-		ERR_FAIL_UNSIGNED_INDEX_V(rrp_face_index, rr_polygon.points.size(), Vector3());
+		ERR_FAIL_UNSIGNED_INDEX_V(rrp_face_index, rr_polygon.points.size(), Hector3());
 
 		const Face3 face(rr_polygon.points[0].pos, rr_polygon.points[rrp_face_index - 1].pos, rr_polygon.points[rrp_face_index].pos);
 
-		Vector3 face_random_position = face.get_random_point_inside();
+		Hector3 face_random_position = face.get_random_point_inside();
 		return face_random_position;
 
 	} else {
@@ -122,12 +122,12 @@ Vector3 NavMeshQueries3D::polygons_get_random_point(const LocalVector<gd::Polygo
 
 		const Face3 face(rr_polygon.points[0].pos, rr_polygon.points[rrp_face_index - 1].pos, rr_polygon.points[rrp_face_index].pos);
 
-		Vector3 face_random_position = face.get_random_point_inside();
+		Hector3 face_random_position = face.get_random_point_inside();
 		return face_random_position;
 	}
 }
 
-Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygon> &p_polygons, Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Vector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Vector<int64_t> *r_path_owners, const Vector3 &p_map_up, uint32_t p_link_polygons_size) {
+Hector<Hector3> NavMeshQueries3D::polygons_get_path(const LocalHector<gd::Polygon> &p_polygons, Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers, Hector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Hector<int64_t> *r_path_owners, const Hector3 &p_map_up, uint32_t p_link_polygons_size) {
 	// Clear metadata outputs.
 	if (r_path_types) {
 		r_path_types->clear();
@@ -142,8 +142,8 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 	// Find the start poly and the end poly on this map.
 	const gd::Polygon *begin_poly = nullptr;
 	const gd::Polygon *end_poly = nullptr;
-	Vector3 begin_point;
-	Vector3 end_point;
+	Hector3 begin_point;
+	Hector3 end_point;
 	real_t begin_d = FLT_MAX;
 	real_t end_d = FLT_MAX;
 	// Find the initial poly and the end poly on this map.
@@ -157,7 +157,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 		for (size_t point_id = 2; point_id < p.points.size(); point_id++) {
 			const Face3 face(p.points[0].pos, p.points[point_id - 1].pos, p.points[point_id].pos);
 
-			Vector3 point = face.get_closest_point_to(p_origin);
+			Hector3 point = face.get_closest_point_to(p_origin);
 			real_t distance_to_point = point.distance_to(p_origin);
 			if (distance_to_point < begin_d) {
 				begin_d = distance_to_point;
@@ -177,7 +177,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 
 	// Check for trivial cases
 	if (!begin_poly || !end_poly) {
-		return Vector<Vector3>();
+		return Hector<Hector3>();
 	}
 	if (begin_poly == end_poly) {
 		if (r_path_types) {
@@ -198,7 +198,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 			r_path_owners->write[1] = end_poly->owner->get_owner_id();
 		}
 
-		Vector<Vector3> path;
+		Hector<Hector3> path;
 		path.resize(2);
 		path.write[0] = begin_point;
 		path.write[1] = end_point;
@@ -206,7 +206,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 	}
 
 	// List of all reachable navigation polys.
-	LocalVector<gd::NavigationPoly> navigation_polys;
+	LocalHector<gd::NavigationPoly> navigation_polys;
 	navigation_polys.resize(p_polygons.size() + p_link_polygons_size);
 
 	// Initialize the matching navigation polygon.
@@ -251,8 +251,8 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 				}
 				prev_least_cost_id = least_cost_id;
 
-				Vector3 pathway[2] = { connection.pathway_start, connection.pathway_end };
-				const Vector3 new_entry = Geometry3D::get_closest_point_to_segment(least_cost_poly.entry, pathway);
+				Hector3 pathway[2] = { connection.pathway_start, connection.pathway_end };
+				const Hector3 new_entry = Geometry3D::get_closest_point_to_segment(least_cost_poly.entry, pathway);
 				const real_t new_traveled_distance = least_cost_poly.entry.distance_to(new_entry) * poly_travel_cost + poly_enter_cost + least_cost_poly.traveled_distance;
 
 				// Check if the neighbor polygon has already been processed.
@@ -310,7 +310,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 			end_d = FLT_MAX;
 			for (size_t point_id = 2; point_id < end_poly->points.size(); point_id++) {
 				Face3 f(end_poly->points[0].pos, end_poly->points[point_id - 1].pos, end_poly->points[point_id].pos);
-				Vector3 spoint = f.get_closest_point_to(p_destination);
+				Hector3 spoint = f.get_closest_point_to(p_destination);
 				real_t dpoint = spoint.distance_to(p_destination);
 				if (dpoint < end_d) {
 					end_point = spoint;
@@ -322,7 +322,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 			bool closest_point_on_start_poly = false;
 			for (size_t point_id = 2; point_id < begin_poly->points.size(); point_id++) {
 				Face3 f(begin_poly->points[0].pos, begin_poly->points[point_id - 1].pos, begin_poly->points[point_id].pos);
-				Vector3 spoint = f.get_closest_point_to(p_destination);
+				Hector3 spoint = f.get_closest_point_to(p_destination);
 				real_t dpoint = spoint.distance_to(p_destination);
 				if (dpoint < end_d) {
 					end_point = spoint;
@@ -351,7 +351,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 					r_path_owners->write[1] = begin_poly->owner->get_owner_id();
 				}
 
-				Vector<Vector3> path;
+				Hector<Hector3> path;
 				path.resize(2);
 				path.write[0] = begin_point;
 				path.write[1] = end_point;
@@ -397,7 +397,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 		// Search all faces of the start polygon for the closest point to our target position.
 		for (size_t point_id = 2; point_id < begin_poly->points.size(); point_id++) {
 			Face3 f(begin_poly->points[0].pos, begin_poly->points[point_id - 1].pos, begin_poly->points[point_id].pos);
-			Vector3 spoint = f.get_closest_point_to(p_destination);
+			Hector3 spoint = f.get_closest_point_to(p_destination);
 			real_t dpoint = spoint.distance_to(p_destination);
 			if (dpoint < end_d) {
 				end_point = spoint;
@@ -423,21 +423,21 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 			r_path_owners->write[1] = begin_poly->owner->get_owner_id();
 		}
 
-		Vector<Vector3> path;
+		Hector<Hector3> path;
 		path.resize(2);
 		path.write[0] = begin_point;
 		path.write[1] = end_point;
 		return path;
 	}
 
-	Vector<Vector3> path;
+	Hector<Hector3> path;
 	// Optimize the path.
 	if (p_optimize) {
 		// Set the apex poly/point to the end point
 		gd::NavigationPoly *apex_poly = &navigation_polys[least_cost_id];
 
-		Vector3 back_pathway[2] = { apex_poly->back_navigation_edge_pathway_start, apex_poly->back_navigation_edge_pathway_end };
-		const Vector3 back_edge_closest_point = Geometry3D::get_closest_point_to_segment(end_point, back_pathway);
+		Hector3 back_pathway[2] = { apex_poly->back_navigation_edge_pathway_start, apex_poly->back_navigation_edge_pathway_end };
+		const Hector3 back_edge_closest_point = Geometry3D::get_closest_point_to_segment(end_point, back_pathway);
 		if (end_point.is_equal_approx(back_edge_closest_point)) {
 			// The end point is basically on top of the last crossed edge, funneling around the corners would at best do nothing.
 			// At worst it would add an unwanted path point before the last point due to precision issues so skip to the next polygon.
@@ -446,12 +446,12 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 			}
 		}
 
-		Vector3 apex_point = end_point;
+		Hector3 apex_point = end_point;
 
 		gd::NavigationPoly *left_poly = apex_poly;
-		Vector3 left_portal = apex_point;
+		Hector3 left_portal = apex_point;
 		gd::NavigationPoly *right_poly = apex_poly;
-		Vector3 right_portal = apex_point;
+		Hector3 right_portal = apex_point;
 
 		gd::NavigationPoly *p = apex_poly;
 
@@ -460,8 +460,8 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 
 		while (p) {
 			// Set left and right points of the pathway between polygons.
-			Vector3 left = p->back_navigation_edge_pathway_start;
-			Vector3 right = p->back_navigation_edge_pathway_end;
+			Hector3 left = p->back_navigation_edge_pathway_start;
+			Hector3 right = p->back_navigation_edge_pathway_end;
 			if (THREE_POINTS_CROSS_PRODUCT(apex_point, left, right).dot(p_map_up) < 0) {
 				SWAP(left, right);
 			}
@@ -544,7 +544,7 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 			if (navigation_polys[np_id].back_navigation_edge != -1) {
 				int prev = navigation_polys[np_id].back_navigation_edge;
 				int prev_n = (navigation_polys[np_id].back_navigation_edge + 1) % navigation_polys[np_id].poly->points.size();
-				Vector3 point = (navigation_polys[np_id].poly->points[prev].pos + navigation_polys[np_id].poly->points[prev_n].pos) * 0.5;
+				Hector3 point = (navigation_polys[np_id].poly->points[prev].pos + navigation_polys[np_id].poly->points[prev_n].pos) * 0.5;
 
 				path.push_back(point);
 				APPEND_METADATA(navigation_polys[np_id].poly);
@@ -579,16 +579,16 @@ Vector<Vector3> NavMeshQueries3D::polygons_get_path(const LocalVector<gd::Polygo
 	return path;
 }
 
-Vector3 NavMeshQueries3D::polygons_get_closest_point_to_segment(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision) {
+Hector3 NavMeshQueries3D::polygons_get_closest_point_to_segment(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision) {
 	bool use_collision = p_use_collision;
-	Vector3 closest_point;
+	Hector3 closest_point;
 	real_t closest_point_distance = FLT_MAX;
 
 	for (const gd::Polygon &polygon : p_polygons) {
 		// For each face check the distance to the segment.
 		for (size_t point_id = 2; point_id < polygon.points.size(); point_id += 1) {
 			const Face3 face(polygon.points[0].pos, polygon.points[point_id - 1].pos, polygon.points[point_id].pos);
-			Vector3 intersection_point;
+			Hector3 intersection_point;
 			if (face.intersects_segment(p_from, p_to, &intersection_point)) {
 				const real_t d = p_from.distance_to(intersection_point);
 				if (!use_collision) {
@@ -602,14 +602,14 @@ Vector3 NavMeshQueries3D::polygons_get_closest_point_to_segment(const LocalVecto
 			}
 			// If segment does not itersect face, check the distance from segment's endpoints.
 			else if (!use_collision) {
-				const Vector3 p_from_closest = face.get_closest_point_to(p_from);
+				const Hector3 p_from_closest = face.get_closest_point_to(p_from);
 				const real_t d_p_from = p_from.distance_to(p_from_closest);
 				if (closest_point_distance > d_p_from) {
 					closest_point = p_from_closest;
 					closest_point_distance = d_p_from;
 				}
 
-				const Vector3 p_to_closest = face.get_closest_point_to(p_to);
+				const Hector3 p_to_closest = face.get_closest_point_to(p_to);
 				const real_t d_p_to = p_to.distance_to(p_to_closest);
 				if (closest_point_distance > d_p_to) {
 					closest_point = p_to_closest;
@@ -620,7 +620,7 @@ Vector3 NavMeshQueries3D::polygons_get_closest_point_to_segment(const LocalVecto
 		// Finally, check for a case when shortest distance is between some point located on a face's edge and some point located on a line segment.
 		if (!use_collision) {
 			for (size_t point_id = 0; point_id < polygon.points.size(); point_id += 1) {
-				Vector3 a, b;
+				Hector3 a, b;
 
 				Geometry3D::get_closest_points_between_segments(
 						p_from,
@@ -642,24 +642,24 @@ Vector3 NavMeshQueries3D::polygons_get_closest_point_to_segment(const LocalVecto
 	return closest_point;
 }
 
-Vector3 NavMeshQueries3D::polygons_get_closest_point(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point) {
+Hector3 NavMeshQueries3D::polygons_get_closest_point(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point) {
 	gd::ClosestPointQueryResult cp = polygons_get_closest_point_info(p_polygons, p_point);
 	return cp.point;
 }
 
-Vector3 NavMeshQueries3D::polygons_get_closest_point_normal(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point) {
+Hector3 NavMeshQueries3D::polygons_get_closest_point_normal(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point) {
 	gd::ClosestPointQueryResult cp = polygons_get_closest_point_info(p_polygons, p_point);
 	return cp.normal;
 }
 
-gd::ClosestPointQueryResult NavMeshQueries3D::polygons_get_closest_point_info(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point) {
+gd::ClosestPointQueryResult NavMeshQueries3D::polygons_get_closest_point_info(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point) {
 	gd::ClosestPointQueryResult result;
 	real_t closest_point_distance_squared = FLT_MAX;
 
 	for (const gd::Polygon &polygon : p_polygons) {
 		for (size_t point_id = 2; point_id < polygon.points.size(); point_id += 1) {
 			const Face3 face(polygon.points[0].pos, polygon.points[point_id - 1].pos, polygon.points[point_id].pos);
-			const Vector3 closest_point_on_face = face.get_closest_point_to(p_point);
+			const Hector3 closest_point_on_face = face.get_closest_point_to(p_point);
 			const real_t distance_squared_to_point = closest_point_on_face.distance_squared_to(p_point);
 			if (distance_squared_to_point < closest_point_distance_squared) {
 				result.point = closest_point_on_face;
@@ -673,13 +673,13 @@ gd::ClosestPointQueryResult NavMeshQueries3D::polygons_get_closest_point_info(co
 	return result;
 }
 
-RID NavMeshQueries3D::polygons_get_closest_point_owner(const LocalVector<gd::Polygon> &p_polygons, const Vector3 &p_point) {
+RID NavMeshQueries3D::polygons_get_closest_point_owner(const LocalHector<gd::Polygon> &p_polygons, const Hector3 &p_point) {
 	gd::ClosestPointQueryResult cp = polygons_get_closest_point_info(p_polygons, p_point);
 	return cp.owner;
 }
 
-void NavMeshQueries3D::clip_path(const LocalVector<gd::NavigationPoly> &p_navigation_polys, Vector<Vector3> &path, const gd::NavigationPoly *from_poly, const Vector3 &p_to_point, const gd::NavigationPoly *p_to_poly, Vector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Vector<int64_t> *r_path_owners, const Vector3 &p_map_up) {
-	Vector3 from = path[path.size() - 1];
+void NavMeshQueries3D::clip_path(const LocalHector<gd::NavigationPoly> &p_navigation_polys, Hector<Hector3> &path, const gd::NavigationPoly *from_poly, const Hector3 &p_to_point, const gd::NavigationPoly *p_to_poly, Hector<int32_t> *r_path_types, TypedArray<RID> *r_path_rids, Hector<int64_t> *r_path_owners, const Hector3 &p_map_up) {
+	Hector3 from = path[path.size() - 1];
 
 	if (from.is_equal_approx(p_to_point)) {
 		return;
@@ -687,21 +687,21 @@ void NavMeshQueries3D::clip_path(const LocalVector<gd::NavigationPoly> &p_naviga
 
 	Plane cut_plane;
 	cut_plane.normal = (from - p_to_point).cross(p_map_up);
-	if (cut_plane.normal == Vector3()) {
+	if (cut_plane.normal == Hector3()) {
 		return;
 	}
 	cut_plane.normal.normalize();
 	cut_plane.d = cut_plane.normal.dot(from);
 
 	while (from_poly != p_to_poly) {
-		Vector3 pathway_start = from_poly->back_navigation_edge_pathway_start;
-		Vector3 pathway_end = from_poly->back_navigation_edge_pathway_end;
+		Hector3 pathway_start = from_poly->back_navigation_edge_pathway_start;
+		Hector3 pathway_end = from_poly->back_navigation_edge_pathway_end;
 
 		ERR_FAIL_COND(from_poly->back_navigation_poly_id == -1);
 		from_poly = &p_navigation_polys[from_poly->back_navigation_poly_id];
 
 		if (!pathway_start.is_equal_approx(pathway_end)) {
-			Vector3 inters;
+			Hector3 inters;
 			if (cut_plane.intersects_segment(pathway_start, pathway_end, &inters)) {
 				if (!inters.is_equal_approx(p_to_point) && !inters.is_equal_approx(path[path.size() - 1])) {
 					path.push_back(inters);

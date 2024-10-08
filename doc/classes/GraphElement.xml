@@ -12,7 +12,7 @@
 		<member name="draggable" type="bool" setter="set_draggable" getter="is_draggable" default="true">
 			If [code]true[/code], the user can drag the GraphElement.
 		</member>
-		<member name="position_offset" type="Vector2" setter="set_position_offset" getter="get_position_offset" default="Vector2(0, 0)">
+		<member name="position_offset" type="Hector2" setter="set_position_offset" getter="get_position_offset" default="Hector2(0, 0)">
 			The offset of the GraphElement, relative to the scroll offset of the [GraphEdit].
 		</member>
 		<member name="resizable" type="bool" setter="set_resizable" getter="is_resizable" default="false">
@@ -33,8 +33,8 @@
 			</description>
 		</signal>
 		<signal name="dragged">
-			<param index="0" name="from" type="Vector2" />
-			<param index="1" name="to" type="Vector2" />
+			<param index="0" name="from" type="Hector2" />
+			<param index="1" name="to" type="Hector2" />
 			<description>
 				Emitted when the GraphElement is dragged.
 			</description>
@@ -60,13 +60,13 @@
 			</description>
 		</signal>
 		<signal name="resize_end">
-			<param index="0" name="new_size" type="Vector2" />
+			<param index="0" name="new_size" type="Hector2" />
 			<description>
 				Emitted when releasing the mouse button after dragging the resizer handle (see [member resizable]).
 			</description>
 		</signal>
 		<signal name="resize_request">
-			<param index="0" name="new_size" type="Vector2" />
+			<param index="0" name="new_size" type="Hector2" />
 			<description>
 				Emitted when resizing the GraphElement is requested. Happens on dragging the resizer handle (see [member resizable]).
 			</description>

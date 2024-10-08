@@ -64,7 +64,7 @@ void XRServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_hmd_transform"), &XRServer::get_hmd_transform);
 
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "world_scale"), "set_world_scale", "get_world_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "world_origin"), "set_world_origin", "get_world_origin");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "world_origin"), "set_world_origin", "get_world_origin");
 
 	ClassDB::bind_method(D_METHOD("add_interface", "interface"), &XRServer::add_interface);
 	ClassDB::bind_method(D_METHOD("get_interface_count"), &XRServer::get_interface_count);
@@ -196,10 +196,10 @@ void XRServer::center_on_hmd(RotationMode p_rotation_mode, bool p_keep_height) {
 	// remove our tilt
 	if (p_rotation_mode == 1) {
 		// take the Y out of our Z
-		new_reference_frame.basis.set_column(2, Vector3(new_reference_frame.basis.rows[0][2], 0.0, new_reference_frame.basis.rows[2][2]).normalized());
+		new_reference_frame.basis.set_column(2, Hector3(new_reference_frame.basis.rows[0][2], 0.0, new_reference_frame.basis.rows[2][2]).normalized());
 
 		// Y is straight up
-		new_reference_frame.basis.set_column(1, Vector3(0.0, 1.0, 0.0));
+		new_reference_frame.basis.set_column(1, Hector3(0.0, 1.0, 0.0));
 
 		// and X is our cross reference
 		new_reference_frame.basis.set_column(0, new_reference_frame.basis.get_column(1).cross(new_reference_frame.basis.get_column(2)).normalized());

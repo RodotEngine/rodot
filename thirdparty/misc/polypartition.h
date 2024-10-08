@@ -24,7 +24,7 @@
 #ifndef POLYPARTITION_H
 #define POLYPARTITION_H
 
-#include "core/math/vector2.h"
+#include "core/math/Hector2.h"
 #include "core/templates/list.h"
 #include "core/templates/rb_set.h"
 
@@ -45,7 +45,7 @@ enum TPPLVertexType {
 };
 
 // 2D point structure.
-typedef Vector2 TPPLPoint;
+typedef Hector2 TPPLPoint;
 
 // Polygon implemented as an array of points with a "hole" flag.
 class TPPLPoly {

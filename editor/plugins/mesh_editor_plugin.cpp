@@ -66,8 +66,8 @@ void MeshEditor::_notification(int p_what) {
 
 void MeshEditor::_update_rotation() {
 	Transform3D t;
-	t.basis.rotate(Vector3(0, 1, 0), -rot_y);
-	t.basis.rotate(Vector3(1, 0, 0), -rot_x);
+	t.basis.rotate(Hector3(0, 1, 0), -rot_y);
+	t.basis.rotate(Hector3(1, 0, 0), -rot_x);
 	rotation->set_transform(t);
 }
 
@@ -80,13 +80,13 @@ void MeshEditor::edit(Ref<Mesh> p_mesh) {
 	_update_rotation();
 
 	AABB aabb = mesh->get_aabb();
-	Vector3 ofs = aabb.get_center();
+	Hector3 ofs = aabb.get_center();
 	float m = aabb.get_longest_axis_size();
 	if (m != 0) {
 		m = 1.0 / m;
 		m *= 0.5;
 		Transform3D xform;
-		xform.basis.scale(Vector3(m, m, m));
+		xform.basis.scale(Hector3(m, m, m));
 		xform.origin = -xform.basis.xform(ofs); //-ofs*m;
 		//xform.origin.z -= aabb.get_longest_axis_size() * 2;
 		mesh_instance->set_transform(xform);
@@ -111,7 +111,7 @@ MeshEditor::MeshEditor() {
 	viewport->set_msaa_3d(Viewport::MSAA_4X);
 	set_stretch(true);
 	camera = memnew(Camera3D);
-	camera->set_transform(Transform3D(Basis(), Vector3(0, 0, 1.1)));
+	camera->set_transform(Transform3D(Basis(), Hector3(0, 0, 1.1)));
 	camera->set_perspective(45, 0.1, 10);
 	viewport->add_child(camera);
 
@@ -121,11 +121,11 @@ MeshEditor::MeshEditor() {
 	}
 
 	light1 = memnew(DirectionalLight3D);
-	light1->set_transform(Transform3D().looking_at(Vector3(-1, -1, -1), Vector3(0, 1, 0)));
+	light1->set_transform(Transform3D().looking_at(Hector3(-1, -1, -1), Hector3(0, 1, 0)));
 	viewport->add_child(light1);
 
 	light2 = memnew(DirectionalLight3D);
-	light2->set_transform(Transform3D().looking_at(Vector3(0, 1, 0), Vector3(0, 0, 1)));
+	light2->set_transform(Transform3D().looking_at(Hector3(0, 1, 0), Hector3(0, 0, 1)));
 	light2->set_color(Color(0.7, 0.7, 0.7));
 	viewport->add_child(light2);
 

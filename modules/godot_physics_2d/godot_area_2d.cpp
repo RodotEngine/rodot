@@ -125,8 +125,8 @@ void GodotArea2D::set_param(PhysicsServer2D::AreaParameter p_param, const Varian
 		case PhysicsServer2D::AREA_PARAM_GRAVITY:
 			gravity = p_value;
 			break;
-		case PhysicsServer2D::AREA_PARAM_GRAVITY_VECTOR:
-			gravity_vector = p_value;
+		case PhysicsServer2D::AREA_PARAM_GRAVITY_Hector:
+			gravity_Hector = p_value;
 			break;
 		case PhysicsServer2D::AREA_PARAM_GRAVITY_IS_POINT:
 			gravity_is_point = p_value;
@@ -158,8 +158,8 @@ Variant GodotArea2D::get_param(PhysicsServer2D::AreaParameter p_param) const {
 			return gravity_override_mode;
 		case PhysicsServer2D::AREA_PARAM_GRAVITY:
 			return gravity;
-		case PhysicsServer2D::AREA_PARAM_GRAVITY_VECTOR:
-			return gravity_vector;
+		case PhysicsServer2D::AREA_PARAM_GRAVITY_Hector:
+			return gravity_Hector;
 		case PhysicsServer2D::AREA_PARAM_GRAVITY_IS_POINT:
 			return gravity_is_point;
 		case PhysicsServer2D::AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE:
@@ -283,23 +283,23 @@ void GodotArea2D::call_queries() {
 	}
 }
 
-void GodotArea2D::compute_gravity(const Vector2 &p_position, Vector2 &r_gravity) const {
+void GodotArea2D::compute_gravity(const Hector2 &p_position, Hector2 &r_gravity) const {
 	if (is_gravity_point()) {
 		const real_t gr_unit_dist = get_gravity_point_unit_distance();
-		Vector2 v = get_transform().xform(get_gravity_vector()) - p_position;
+		Hector2 v = get_transform().xform(get_gravity_Hector()) - p_position;
 		if (gr_unit_dist > 0) {
 			const real_t v_length_sq = v.length_squared();
 			if (v_length_sq > 0) {
 				const real_t gravity_strength = get_gravity() * gr_unit_dist * gr_unit_dist / v_length_sq;
 				r_gravity = v.normalized() * gravity_strength;
 			} else {
-				r_gravity = Vector2();
+				r_gravity = Hector2();
 			}
 		} else {
 			r_gravity = v.normalized() * get_gravity();
 		}
 	} else {
-		r_gravity = get_gravity_vector() * get_gravity();
+		r_gravity = get_gravity_Hector() * get_gravity();
 	}
 }
 

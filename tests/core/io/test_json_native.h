@@ -120,25 +120,25 @@ TEST_CASE("[JSON][Native][SceneTree] Conversion between native and JSON formats"
 			packed_array.push_back("string1");
 			packed_array.push_back("string2");
 			native_data = packed_array;
-		} else if (type == Variant::Type::PACKED_VECTOR2_ARRAY) {
-			PackedVector2Array packed_array;
-			Vector2 vector(1.0, 2.0);
-			packed_array.push_back(vector);
+		} else if (type == Variant::Type::PACKED_Hector2_ARRAY) {
+			PackedHector2Array packed_array;
+			Hector2 Hector(1.0, 2.0);
+			packed_array.push_back(Hector);
 			native_data = packed_array;
-		} else if (type == Variant::Type::PACKED_VECTOR3_ARRAY) {
-			PackedVector3Array packed_array;
-			Vector3 vector(1.0, 2.0, 3.0);
-			packed_array.push_back(vector);
+		} else if (type == Variant::Type::PACKED_Hector3_ARRAY) {
+			PackedHector3Array packed_array;
+			Hector3 Hector(1.0, 2.0, 3.0);
+			packed_array.push_back(Hector);
 			native_data = packed_array;
 		} else if (type == Variant::Type::PACKED_COLOR_ARRAY) {
 			PackedColorArray packed_array;
 			Color color(1.0, 1.0, 1.0);
 			packed_array.push_back(color);
 			native_data = packed_array;
-		} else if (type == Variant::Type::PACKED_VECTOR4_ARRAY) {
-			PackedVector4Array packed_array;
-			Vector4 vector(1.0, 2.0, 3.0, 4.0);
-			packed_array.push_back(vector);
+		} else if (type == Variant::Type::PACKED_Hector4_ARRAY) {
+			PackedHector4Array packed_array;
+			Hector4 Hector(1.0, 2.0, 3.0, 4.0);
+			packed_array.push_back(Hector);
 			native_data = packed_array;
 		} else {
 			Variant::construct(type, native_data, nullptr, 0, error);

@@ -39,7 +39,7 @@ void OpenXRAction::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_action_type", "action_type"), &OpenXRAction::set_action_type);
 	ClassDB::bind_method(D_METHOD("get_action_type"), &OpenXRAction::get_action_type);
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "action_type", PROPERTY_HINT_ENUM, "bool,float,vector2,pose"), "set_action_type", "get_action_type");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "action_type", PROPERTY_HINT_ENUM, "bool,float,Hector2,pose"), "set_action_type", "get_action_type");
 
 	ClassDB::bind_method(D_METHOD("set_toplevel_paths", "toplevel_paths"), &OpenXRAction::set_toplevel_paths);
 	ClassDB::bind_method(D_METHOD("get_toplevel_paths"), &OpenXRAction::get_toplevel_paths);
@@ -47,7 +47,7 @@ void OpenXRAction::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(OPENXR_ACTION_BOOL);
 	BIND_ENUM_CONSTANT(OPENXR_ACTION_FLOAT);
-	BIND_ENUM_CONSTANT(OPENXR_ACTION_VECTOR2);
+	BIND_ENUM_CONSTANT(OPENXR_ACTION_Hector2);
 	BIND_ENUM_CONSTANT(OPENXR_ACTION_POSE);
 }
 

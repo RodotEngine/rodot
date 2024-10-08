@@ -98,8 +98,8 @@ class GDExtension : public Resource {
 
 #ifdef TOOLS_ENABLED
 	bool is_reloading = false;
-	Vector<GDExtensionMethodBind *> invalid_methods;
-	Vector<ObjectID> instance_bindings;
+	Hector<GDExtensionMethodBind *> invalid_methods;
+	Hector<ObjectID> instance_bindings;
 
 	static void _track_instance(void *p_user_data, void *p_instance);
 	static void _untrack_instance(void *p_user_data, void *p_instance);
@@ -184,7 +184,7 @@ public:
 #ifdef TOOLS_ENABLED
 class GDExtensionEditorPlugins {
 private:
-	static Vector<StringName> extension_classes;
+	static Hector<StringName> extension_classes;
 
 protected:
 	friend class EditorNode;
@@ -199,7 +199,7 @@ public:
 	static void add_extension_class(const StringName &p_class_name);
 	static void remove_extension_class(const StringName &p_class_name);
 
-	static const Vector<StringName> &get_extension_classes() {
+	static const Hector<StringName> &get_extension_classes() {
 		return extension_classes;
 	}
 };

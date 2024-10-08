@@ -708,13 +708,13 @@ int GraphNode::get_output_port_count() {
 	return right_port_cache.size();
 }
 
-Vector2 GraphNode::get_input_port_position(int p_port_idx) {
+Hector2 GraphNode::get_input_port_position(int p_port_idx) {
 	if (port_pos_dirty) {
 		_port_pos_update();
 	}
 
-	ERR_FAIL_INDEX_V(p_port_idx, left_port_cache.size(), Vector2());
-	Vector2 pos = left_port_cache[p_port_idx].pos;
+	ERR_FAIL_INDEX_V(p_port_idx, left_port_cache.size(), Hector2());
+	Hector2 pos = left_port_cache[p_port_idx].pos;
 	return pos;
 }
 
@@ -745,13 +745,13 @@ int GraphNode::get_input_port_slot(int p_port_idx) {
 	return left_port_cache[p_port_idx].slot_index;
 }
 
-Vector2 GraphNode::get_output_port_position(int p_port_idx) {
+Hector2 GraphNode::get_output_port_position(int p_port_idx) {
 	if (port_pos_dirty) {
 		_port_pos_update();
 	}
 
-	ERR_FAIL_INDEX_V(p_port_idx, right_port_cache.size(), Vector2());
-	Vector2 pos = right_port_cache[p_port_idx].pos;
+	ERR_FAIL_INDEX_V(p_port_idx, right_port_cache.size(), Hector2());
+	Hector2 pos = right_port_cache[p_port_idx].pos;
 	return pos;
 }
 
@@ -811,8 +811,8 @@ Control::CursorShape GraphNode::get_cursor_shape(const Point2 &p_pos) const {
 	return Control::get_cursor_shape(p_pos);
 }
 
-Vector<int> GraphNode::get_allowed_size_flags_horizontal() const {
-	Vector<int> flags;
+Hector<int> GraphNode::get_allowed_size_flags_horizontal() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	flags.append(SIZE_SHRINK_BEGIN);
 	flags.append(SIZE_SHRINK_CENTER);
@@ -820,8 +820,8 @@ Vector<int> GraphNode::get_allowed_size_flags_horizontal() const {
 	return flags;
 }
 
-Vector<int> GraphNode::get_allowed_size_flags_vertical() const {
-	Vector<int> flags;
+Hector<int> GraphNode::get_allowed_size_flags_vertical() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	flags.append(SIZE_EXPAND);
 	flags.append(SIZE_SHRINK_BEGIN);

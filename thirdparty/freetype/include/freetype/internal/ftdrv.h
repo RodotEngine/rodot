@@ -71,7 +71,7 @@ FT_BEGIN_HEADER
   (*FT_Face_GetKerningFunc)( FT_Face     face,
                              FT_UInt     left_glyph,
                              FT_UInt     right_glyph,
-                             FT_Vector*  kerning );
+                             FT_Hector*  kerning );
 
 
   typedef FT_Error

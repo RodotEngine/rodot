@@ -315,7 +315,7 @@ StringName ClassDB::get_parent_class_nocheck(const StringName &p_class) {
 	return ti->inherits;
 }
 
-bool ClassDB::get_inheritance_chain_nocheck(const StringName &p_class, Vector<StringName> &r_result) {
+bool ClassDB::get_inheritance_chain_nocheck(const StringName &p_class, Hector<StringName> &r_result) {
 	OBJTYPE_RLOCK;
 
 	ClassInfo *start = classes.getptr(p_class);
@@ -946,8 +946,8 @@ void ClassDB::get_method_list_with_compatibility(const StringName &p_class, List
 		}
 #endif
 
-		for (const KeyValue<StringName, LocalVector<MethodBind *, unsigned int, false, false>> &E : type->method_map_compatibility) {
-			LocalVector<MethodBind *> compat = E.value;
+		for (const KeyValue<StringName, LocalHector<MethodBind *, unsigned int, false, false>> &E : type->method_map_compatibility) {
+			LocalHector<MethodBind *> compat = E.value;
 			for (MethodBind *method : compat) {
 				MethodInfo minfo = info_from_bind(method);
 
@@ -1029,15 +1029,15 @@ MethodBind *ClassDB::get_method(const StringName &p_class, const StringName &p_n
 	return nullptr;
 }
 
-Vector<uint32_t> ClassDB::get_method_compatibility_hashes(const StringName &p_class, const StringName &p_name) {
+Hector<uint32_t> ClassDB::get_method_compatibility_hashes(const StringName &p_class, const StringName &p_name) {
 	OBJTYPE_RLOCK;
 
 	ClassInfo *type = classes.getptr(p_class);
 
 	while (type) {
 		if (type->method_map_compatibility.has(p_name)) {
-			LocalVector<MethodBind *> *c = type->method_map_compatibility.getptr(p_name);
-			Vector<uint32_t> ret;
+			LocalHector<MethodBind *> *c = type->method_map_compatibility.getptr(p_name);
+			Hector<uint32_t> ret;
 			for (uint32_t i = 0; i < c->size(); i++) {
 				ret.push_back((*c)[i]->get_hash());
 			}
@@ -1045,7 +1045,7 @@ Vector<uint32_t> ClassDB::get_method_compatibility_hashes(const StringName &p_cl
 		}
 		type = type->inherits_ptr;
 	}
-	return Vector<uint32_t>();
+	return Hector<uint32_t>();
 }
 
 MethodBind *ClassDB::get_method_with_compatibility(const StringName &p_class, const StringName &p_name, uint64_t p_hash, bool *r_method_exists, bool *r_is_deprecated) {
@@ -1064,7 +1064,7 @@ MethodBind *ClassDB::get_method_with_compatibility(const StringName &p_class, co
 			}
 		}
 
-		LocalVector<MethodBind *> *compat = type->method_map_compatibility.getptr(p_name);
+		LocalHector<MethodBind *> *compat = type->method_map_compatibility.getptr(p_name);
 		if (compat) {
 			if (r_method_exists) {
 				*r_method_exists = true;
@@ -1252,7 +1252,7 @@ void ClassDB::get_enum_constants(const StringName &p_class, const StringName &p_
 	}
 }
 
-void ClassDB::set_method_error_return_values(const StringName &p_class, const StringName &p_method, const Vector<Error> &p_values) {
+void ClassDB::set_method_error_return_values(const StringName &p_class, const StringName &p_method, const Hector<Error> &p_values) {
 #ifdef DEBUG_METHODS_ENABLED
 	OBJTYPE_WLOCK;
 	ClassInfo *type = classes.getptr(p_class);
@@ -1263,19 +1263,19 @@ void ClassDB::set_method_error_return_values(const StringName &p_class, const St
 #endif
 }
 
-Vector<Error> ClassDB::get_method_error_return_values(const StringName &p_class, const StringName &p_method) {
+Hector<Error> ClassDB::get_method_error_return_values(const StringName &p_class, const StringName &p_method) {
 #ifdef DEBUG_METHODS_ENABLED
 	OBJTYPE_RLOCK;
 	ClassInfo *type = classes.getptr(p_class);
 
-	ERR_FAIL_NULL_V(type, Vector<Error>());
+	ERR_FAIL_NULL_V(type, Hector<Error>());
 
 	if (!type->method_error_values.has(p_method)) {
-		return Vector<Error>();
+		return Hector<Error>();
 	}
 	return type->method_error_values[p_method];
 #else
-	return Vector<Error>();
+	return Hector<Error>();
 #endif
 }
 
@@ -1837,7 +1837,7 @@ void ClassDB::bind_compatibility_method_custom(const StringName &p_class, Method
 
 void ClassDB::_bind_compatibility(ClassInfo *type, MethodBind *p_method) {
 	if (!type->method_map_compatibility.has(p_method->get_name())) {
-		type->method_map_compatibility.insert(p_method->get_name(), LocalVector<MethodBind *>());
+		type->method_map_compatibility.insert(p_method->get_name(), LocalHector<MethodBind *>());
 	}
 	type->method_map_compatibility[p_method->get_name()].push_back(p_method);
 }
@@ -1867,7 +1867,7 @@ void ClassDB::_bind_method_custom(const StringName &p_class, MethodBind *p_metho
 	type->method_map[p_method->get_name()] = p_method;
 }
 
-MethodBind *ClassDB::_bind_vararg_method(MethodBind *p_bind, const StringName &p_name, const Vector<Variant> &p_default_args, bool p_compatibility) {
+MethodBind *ClassDB::_bind_vararg_method(MethodBind *p_bind, const StringName &p_name, const Hector<Variant> &p_default_args, bool p_compatibility) {
 	MethodBind *bind = p_bind;
 	bind->set_name(p_name);
 	bind->set_default_arguments(p_default_args);
@@ -1951,7 +1951,7 @@ MethodBind *ClassDB::bind_methodfi(uint32_t p_flags, MethodBind *p_bind, bool p_
 		type->method_map[mdname] = p_bind;
 	}
 
-	Vector<Variant> defvals;
+	Hector<Variant> defvals;
 
 	defvals.resize(p_defcount);
 	for (int i = 0; i < p_defcount; i++) {
@@ -1963,7 +1963,7 @@ MethodBind *ClassDB::bind_methodfi(uint32_t p_flags, MethodBind *p_bind, bool p_
 	return p_bind;
 }
 
-void ClassDB::add_virtual_method(const StringName &p_class, const MethodInfo &p_method, bool p_virtual, const Vector<String> &p_arg_names, bool p_object_core) {
+void ClassDB::add_virtual_method(const StringName &p_class, const MethodInfo &p_method, bool p_virtual, const Hector<String> &p_arg_names, bool p_object_core) {
 	ERR_FAIL_COND_MSG(!classes.has(p_class), "Request for nonexistent class '" + p_class + "'.");
 
 	OBJTYPE_WLOCK;
@@ -2293,7 +2293,7 @@ void ClassDB::cleanup() {
 		for (KeyValue<StringName, MethodBind *> &F : ti.method_map) {
 			memdelete(F.value);
 		}
-		for (KeyValue<StringName, LocalVector<MethodBind *>> &F : ti.method_map_compatibility) {
+		for (KeyValue<StringName, LocalHector<MethodBind *>> &F : ti.method_map_compatibility) {
 			for (uint32_t i = 0; i < F.value.size(); i++) {
 				memdelete(F.value[i]);
 			}

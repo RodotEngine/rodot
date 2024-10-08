@@ -37,7 +37,7 @@
 #include "core/templates/hash_map.h"
 
 class WindowsUtils {
-	static HashMap<String, Vector<String>> temp_pdbs;
+	static HashMap<String, Hector<String>> temp_pdbs;
 
 public:
 	static Error copy_and_rename_pdb(const String &p_dll_path);

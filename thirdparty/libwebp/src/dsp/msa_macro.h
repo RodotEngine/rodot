@@ -212,7 +212,7 @@
   SD(in3, ptmp);                                    \
 } while (0)
 
-/* Description : Load vectors with 16 byte elements with stride
+/* Description : Load Hectors with 16 byte elements with stride
  * Arguments   : Inputs  - psrc, stride
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -248,7 +248,7 @@
 #define LD_UB8(...) LD_B8(v16u8, __VA_ARGS__)
 #define LD_SB8(...) LD_B8(v16i8, __VA_ARGS__)
 
-/* Description : Load vectors with 8 halfword elements with stride
+/* Description : Load Hectors with 8 halfword elements with stride
  * Arguments   : Inputs  - psrc, stride
  *               Outputs - out0, out1
  * Details     : Load 8 halfword elements in 'out0' from (psrc)
@@ -261,7 +261,7 @@
 #define LD_UH2(...) LD_H2(v8u16, __VA_ARGS__)
 #define LD_SH2(...) LD_H2(v8i16, __VA_ARGS__)
 
-/* Description : Load vectors with 4 word elements with stride
+/* Description : Load Hectors with 4 word elements with stride
  * Arguments   : Inputs  - psrc, stride
  *               Outputs - out0, out1, out2, out3
  * Details     : Load 4 word elements in 'out0' from (psrc + 0 * stride)
@@ -290,7 +290,7 @@
 #define LD_UW4(...) LD_W4(v4u32, __VA_ARGS__)
 #define LD_SW4(...) LD_W4(v4i32, __VA_ARGS__)
 
-/* Description : Store vectors of 16 byte elements with stride
+/* Description : Store Hectors of 16 byte elements with stride
  * Arguments   : Inputs - in0, in1, pdst, stride
  * Details     : Store 16 byte elements from 'in0' to (pdst)
  *               Store 16 byte elements from 'in1' to (pdst + stride)
@@ -316,7 +316,7 @@
 } while (0)
 #define ST_UB8(...) ST_B8(v16u8, __VA_ARGS__)
 
-/* Description : Store vectors of 4 word elements with stride
+/* Description : Store Hectors of 4 word elements with stride
  * Arguments   : Inputs - in0, in1, in2, in3, pdst, stride
  * Details     : Store 4 word elements from 'in0' to (pdst + 0 * stride)
  *               Store 4 word elements from 'in1' to (pdst + 1 * stride)
@@ -344,7 +344,7 @@
 #define ST_UW4(...) ST_W4(v4u32, __VA_ARGS__)
 #define ST_SW4(...) ST_W4(v4i32, __VA_ARGS__)
 
-/* Description : Store vectors of 8 halfword elements with stride
+/* Description : Store Hectors of 8 halfword elements with stride
  * Arguments   : Inputs - in0, in1, pdst, stride
  * Details     : Store 8 halfword elements from 'in0' to (pdst)
  *               Store 8 halfword elements from 'in1' to (pdst + stride)
@@ -356,15 +356,15 @@
 #define ST_UH2(...) ST_H2(v8u16, __VA_ARGS__)
 #define ST_SH2(...) ST_H2(v8i16, __VA_ARGS__)
 
-/* Description : Store 2x4 byte block to destination memory from input vector
+/* Description : Store 2x4 byte block to destination memory from input Hector
  * Arguments   : Inputs - in, stidx, pdst, stride
- * Details     : Index 'stidx' halfword element from 'in' vector is copied to
+ * Details     : Index 'stidx' halfword element from 'in' Hector is copied to
  *               the GP register and stored to (pdst)
- *               Index 'stidx+1' halfword element from 'in' vector is copied to
+ *               Index 'stidx+1' halfword element from 'in' Hector is copied to
  *               the GP register and stored to (pdst + stride)
- *               Index 'stidx+2' halfword element from 'in' vector is copied to
+ *               Index 'stidx+2' halfword element from 'in' Hector is copied to
  *               the GP register and stored to (pdst + 2 * stride)
- *               Index 'stidx+3' halfword element from 'in' vector is copied to
+ *               Index 'stidx+3' halfword element from 'in' Hector is copied to
  *               the GP register and stored to (pdst + 3 * stride)
  */
 #define ST2x4_UB(in, stidx, pdst, stride) do {                   \
@@ -382,15 +382,15 @@
   SH(out3_m, pblk_2x4_m);                                        \
 } while (0)
 
-/* Description : Store 4x4 byte block to destination memory from input vector
+/* Description : Store 4x4 byte block to destination memory from input Hector
  * Arguments   : Inputs - in0, in1, pdst, stride
- * Details     : 'Idx0' word element from input vector 'in0' is copied to the
+ * Details     : 'Idx0' word element from input Hector 'in0' is copied to the
  *               GP register and stored to (pdst)
- *               'Idx1' word element from input vector 'in0' is copied to the
+ *               'Idx1' word element from input Hector 'in0' is copied to the
  *               GP register and stored to (pdst + stride)
- *               'Idx2' word element from input vector 'in0' is copied to the
+ *               'Idx2' word element from input Hector 'in0' is copied to the
  *               GP register and stored to (pdst + 2 * stride)
- *               'Idx3' word element from input vector 'in0' is copied to the
+ *               'Idx3' word element from input Hector 'in0' is copied to the
  *               GP register and stored to (pdst + 3 * stride)
  */
 #define ST4x4_UB(in0, in1, idx0, idx1, idx2, idx3, pdst, stride) do {  \
@@ -412,7 +412,7 @@
  * Arguments   : Inputs  - in0, in1, slide_val
  *               Outputs - out
  *               Return Type - as per RTYPE
- * Details     : Byte elements from 'in1' vector are slid into 'in0' by
+ * Details     : Byte elements from 'in1' Hector are slid into 'in0' by
  *               value specified in the 'slide_val'
  */
 #define SLDI_B(RTYPE, in0, in1, slide_val)                      \
@@ -422,12 +422,12 @@
 #define SLDI_SB(...) SLDI_B(v16i8, __VA_ARGS__)
 #define SLDI_SH(...) SLDI_B(v8i16, __VA_ARGS__)
 
-/* Description : Shuffle byte vector elements as per mask vector
+/* Description : Shuffle byte Hector elements as per mask Hector
  * Arguments   : Inputs  - in0, in1, in2, in3, mask0, mask1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
  * Details     : Byte elements from 'in0' & 'in1' are copied selectively to
- *               'out0' as per control vector 'mask0'
+ *               'out0' as per control Hector 'mask0'
  */
 #define VSHF_B(RTYPE, in0, in1, mask)                              \
         (RTYPE)__msa_vshf_b((v16i8)mask, (v16i8)in1, (v16i8)in0)
@@ -446,12 +446,12 @@
 #define VSHF_B2_UH(...) VSHF_B2(v8u16, __VA_ARGS__)
 #define VSHF_B2_SH(...) VSHF_B2(v8i16, __VA_ARGS__)
 
-/* Description : Shuffle halfword vector elements as per mask vector
+/* Description : Shuffle halfword Hector elements as per mask Hector
  * Arguments   : Inputs  - in0, in1, in2, in3, mask0, mask1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
  * Details     : halfword elements from 'in0' & 'in1' are copied selectively to
- *               'out0' as per control vector 'mask0'
+ *               'out0' as per control Hector 'mask0'
  */
 #define VSHF_H2(RTYPE, in0, in1, in2, in3, mask0, mask1, out0, out1) do {  \
   out0 = (RTYPE)__msa_vshf_h((v8i16)mask0, (v8i16)in1, (v8i16)in0);        \
@@ -460,7 +460,7 @@
 #define VSHF_H2_UH(...) VSHF_H2(v8u16, __VA_ARGS__)
 #define VSHF_H2_SH(...) VSHF_H2(v8i16, __VA_ARGS__)
 
-/* Description : Dot product of byte vector elements
+/* Description : Dot product of byte Hector elements
  * Arguments   : Inputs  - mult0, mult1, cnst0, cnst1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -468,7 +468,7 @@
  *               signed byte elements from 'cnst0' producing a result
  *               twice the size of input i.e. signed halfword.
  *               The multiplication result of adjacent odd-even elements
- *               are added together and written to the 'out0' vector
+ *               are added together and written to the 'out0' Hector
 */
 #define DOTP_SB2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1) do {  \
   out0 = (RTYPE)__msa_dotp_s_h((v16i8)mult0, (v16i8)cnst0);           \
@@ -476,7 +476,7 @@
 } while (0)
 #define DOTP_SB2_SH(...) DOTP_SB2(v8i16, __VA_ARGS__)
 
-/* Description : Dot product of halfword vector elements
+/* Description : Dot product of halfword Hector elements
  * Arguments   : Inputs  - mult0, mult1, cnst0, cnst1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -484,7 +484,7 @@
  *               signed halfword elements from 'cnst0' producing a result
  *               twice the size of input i.e. signed word.
  *               The multiplication result of adjacent odd-even elements
- *               are added together and written to the 'out0' vector
+ *               are added together and written to the 'out0' Hector
  */
 #define DOTP_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1) do {  \
   out0 = (RTYPE)__msa_dotp_s_w((v8i16)mult0, (v8i16)cnst0);           \
@@ -492,7 +492,7 @@
 } while (0)
 #define DOTP_SH2_SW(...) DOTP_SH2(v4i32, __VA_ARGS__)
 
-/* Description : Dot product of unsigned word vector elements
+/* Description : Dot product of unsigned word Hector elements
  * Arguments   : Inputs  - mult0, mult1, cnst0, cnst1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -500,7 +500,7 @@
  *               unsigned word elements from 'cnst0' producing a result
  *               twice the size of input i.e. unsigned double word.
  *               The multiplication result of adjacent odd-even elements
- *               are added together and written to the 'out0' vector
+ *               are added together and written to the 'out0' Hector
  */
 #define DOTP_UW2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1) do {  \
   out0 = (RTYPE)__msa_dotp_u_d((v4u32)mult0, (v4u32)cnst0);           \
@@ -508,7 +508,7 @@
 } while (0)
 #define DOTP_UW2_UD(...) DOTP_UW2(v2u64, __VA_ARGS__)
 
-/* Description : Dot product & addition of halfword vector elements
+/* Description : Dot product & addition of halfword Hector elements
  * Arguments   : Inputs  - mult0, mult1, cnst0, cnst1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -516,7 +516,7 @@
  *               signed halfword elements from 'cnst0' producing a result
  *               twice the size of input i.e. signed word.
  *               The multiplication result of adjacent odd-even elements
- *               are added to the 'out0' vector
+ *               are added to the 'out0' Hector
  */
 #define DPADD_SH2(RTYPE, mult0, mult1, cnst0, cnst1, out0, out1) do {      \
   out0 = (RTYPE)__msa_dpadd_s_w((v4i32)out0, (v8i16)mult0, (v8i16)cnst0);  \
@@ -524,7 +524,7 @@
 } while (0)
 #define DPADD_SH2_SW(...) DPADD_SH2(v4i32, __VA_ARGS__)
 
-/* Description : Clips all signed halfword elements of input vector
+/* Description : Clips all signed halfword elements of input Hector
  *               between 0 & 255
  * Arguments   : Input/output  - val
  *               Return Type - signed halfword
@@ -545,7 +545,7 @@
   CLIP_SH2_0_255(in2, in3);                      \
 } while (0)
 
-/* Description : Clips all unsigned halfword elements of input vector
+/* Description : Clips all unsigned halfword elements of input Hector
  *               between 0 & 255
  * Arguments   : Input  - in
  *               Output - out_m
@@ -562,7 +562,7 @@
   CLIP_UH_0_255(in1);                  \
 } while (0)
 
-/* Description : Clips all signed word elements of input vector
+/* Description : Clips all signed word elements of input Hector
  *               between 0 & 255
  * Arguments   : Input/output  - val
  *               Return Type - signed word
@@ -580,11 +580,11 @@
   CLIP_SW_0_255(in3);                             \
 } while (0)
 
-/* Description : Horizontal addition of 4 signed word elements of input vector
- * Arguments   : Input  - in       (signed word vector)
+/* Description : Horizontal addition of 4 signed word elements of input Hector
+ * Arguments   : Input  - in       (signed word Hector)
  *               Output - sum_m    (i32 sum)
  *               Return Type - signed word (GP)
- * Details     : 4 signed word elements of 'in' vector are added together and
+ * Details     : 4 signed word elements of 'in' Hector are added together and
  *               the resulting integer sum is returned
  */
 static WEBP_INLINE int32_t func_hadd_sw_s32(v4i32 in) {
@@ -597,10 +597,10 @@ static WEBP_INLINE int32_t func_hadd_sw_s32(v4i32 in) {
 #define HADD_SW_S32(in) func_hadd_sw_s32(in)
 
 /* Description : Horizontal addition of 8 signed halfword elements
- * Arguments   : Input  - in       (signed halfword vector)
+ * Arguments   : Input  - in       (signed halfword Hector)
  *               Output - sum_m    (s32 sum)
  *               Return Type - signed word
- * Details     : 8 signed halfword elements of input vector are added
+ * Details     : 8 signed halfword elements of input Hector are added
  *               together and the resulting integer sum is returned
  */
 static WEBP_INLINE int32_t func_hadd_sh_s32(v8i16 in) {
@@ -614,10 +614,10 @@ static WEBP_INLINE int32_t func_hadd_sh_s32(v8i16 in) {
 #define HADD_SH_S32(in) func_hadd_sh_s32(in)
 
 /* Description : Horizontal addition of 8 unsigned halfword elements
- * Arguments   : Input  - in       (unsigned halfword vector)
+ * Arguments   : Input  - in       (unsigned halfword Hector)
  *               Output - sum_m    (u32 sum)
  *               Return Type - unsigned word
- * Details     : 8 unsigned halfword elements of input vector are added
+ * Details     : 8 unsigned halfword elements of input Hector are added
  *               together and the resulting integer sum is returned
  */
 static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
@@ -631,7 +631,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 }
 #define HADD_UH_U32(in) func_hadd_uh_u32(in)
 
-/* Description : Horizontal addition of signed half word vector elements
+/* Description : Horizontal addition of signed half word Hector elements
    Arguments   : Inputs  - in0, in1
                  Outputs - out0, out1
                  Return Type - as per RTYPE
@@ -651,7 +651,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 } while (0)
 #define HADD_SH4_SW(...) HADD_SH4(v4i32, __VA_ARGS__)
 
-/* Description : Horizontal subtraction of unsigned byte vector elements
+/* Description : Horizontal subtraction of unsigned byte Hector elements
  * Arguments   : Inputs  - in0, in1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -667,11 +667,11 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define HSUB_UB2_SH(...) HSUB_UB2(v8i16, __VA_ARGS__)
 #define HSUB_UB2_SW(...) HSUB_UB2(v4i32, __VA_ARGS__)
 
-/* Description : Set element n input vector to GPR value
+/* Description : Set element n input Hector to GPR value
  * Arguments   : Inputs - in0, in1, in2, in3
  *               Output - out
  *               Return Type - as per RTYPE
- * Details     : Set element 0 in vector 'out' to value specified in 'in0'
+ * Details     : Set element 0 in Hector 'out' to value specified in 'in0'
  */
 #define INSERT_W2(RTYPE, in0, in1, out) do {        \
   out = (RTYPE)__msa_insert_w((v4i32)out, 0, in0);  \
@@ -690,12 +690,12 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define INSERT_W4_SB(...) INSERT_W4(v16i8, __VA_ARGS__)
 #define INSERT_W4_SW(...) INSERT_W4(v4i32, __VA_ARGS__)
 
-/* Description : Set element n of double word input vector to GPR value
+/* Description : Set element n of double word input Hector to GPR value
  * Arguments   : Inputs - in0, in1
  *               Output - out
  *               Return Type - as per RTYPE
- * Details     : Set element 0 in vector 'out' to GPR value specified in 'in0'
- *               Set element 1 in vector 'out' to GPR value specified in 'in1'
+ * Details     : Set element 0 in Hector 'out' to GPR value specified in 'in0'
+ *               Set element 1 in Hector 'out' to GPR value specified in 'in1'
  */
 #define INSERT_D2(RTYPE, in0, in1, out) do {        \
   out = (RTYPE)__msa_insert_d((v2i64)out, 0, in0);  \
@@ -704,7 +704,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define INSERT_D2_UB(...) INSERT_D2(v16u8, __VA_ARGS__)
 #define INSERT_D2_SB(...) INSERT_D2(v16i8, __VA_ARGS__)
 
-/* Description : Interleave even byte elements from vectors
+/* Description : Interleave even byte elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -721,7 +721,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVEV_B2_SH(...) ILVEV_B2(v8i16, __VA_ARGS__)
 #define ILVEV_B2_SD(...) ILVEV_B2(v2i64, __VA_ARGS__)
 
-/* Description : Interleave odd byte elements from vectors
+/* Description : Interleave odd byte elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -738,7 +738,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVOD_B2_SH(...) ILVOD_B2(v8i16, __VA_ARGS__)
 #define ILVOD_B2_SD(...) ILVOD_B2(v2i64, __VA_ARGS__)
 
-/* Description : Interleave even halfword elements from vectors
+/* Description : Interleave even halfword elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -754,7 +754,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVEV_H2_SH(...) ILVEV_H2(v8i16, __VA_ARGS__)
 #define ILVEV_H2_SW(...) ILVEV_H2(v4i32, __VA_ARGS__)
 
-/* Description : Interleave odd halfword elements from vectors
+/* Description : Interleave odd halfword elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -770,7 +770,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVOD_H2_SH(...) ILVOD_H2(v8i16, __VA_ARGS__)
 #define ILVOD_H2_SW(...) ILVOD_H2(v4i32, __VA_ARGS__)
 
-/* Description : Interleave even word elements from vectors
+/* Description : Interleave even word elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -786,7 +786,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVEV_W2_UH(...) ILVEV_W2(v8u16, __VA_ARGS__)
 #define ILVEV_W2_SD(...) ILVEV_W2(v2i64, __VA_ARGS__)
 
-/* Description : Interleave even-odd word elements from vectors
+/* Description : Interleave even-odd word elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -804,7 +804,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVEVOD_W2_SH(...) ILVEVOD_W2(v8i16, __VA_ARGS__)
 #define ILVEVOD_W2_SW(...) ILVEVOD_W2(v4i32, __VA_ARGS__)
 
-/* Description : Interleave even-odd half-word elements from vectors
+/* Description : Interleave even-odd half-word elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -822,7 +822,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVEVOD_H2_SH(...) ILVEVOD_H2(v8i16, __VA_ARGS__)
 #define ILVEVOD_H2_SW(...) ILVEVOD_H2(v4i32, __VA_ARGS__)
 
-/* Description : Interleave even double word elements from vectors
+/* Description : Interleave even double word elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -838,7 +838,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVEV_D2_SW(...) ILVEV_D2(v4i32, __VA_ARGS__)
 #define ILVEV_D2_SD(...) ILVEV_D2(v2i64, __VA_ARGS__)
 
-/* Description : Interleave left half of byte elements from vectors
+/* Description : Interleave left half of byte elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -855,7 +855,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVL_B2_SH(...) ILVL_B2(v8i16, __VA_ARGS__)
 #define ILVL_B2_SW(...) ILVL_B2(v4i32, __VA_ARGS__)
 
-/* Description : Interleave right half of byte elements from vectors
+/* Description : Interleave right half of byte elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -883,7 +883,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVR_B4_SH(...) ILVR_B4(v8i16, __VA_ARGS__)
 #define ILVR_B4_SW(...) ILVR_B4(v4i32, __VA_ARGS__)
 
-/* Description : Interleave right half of halfword elements from vectors
+/* Description : Interleave right half of halfword elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -907,7 +907,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVR_H4_SH(...) ILVR_H4(v8i16, __VA_ARGS__)
 #define ILVR_H4_SW(...) ILVR_H4(v4i32, __VA_ARGS__)
 
-/* Description : Interleave right half of double word elements from vectors
+/* Description : Interleave right half of double word elements from Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -930,7 +930,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVR_D4_SB(...) ILVR_D4(v16i8, __VA_ARGS__)
 #define ILVR_D4_UB(...) ILVR_D4(v16u8, __VA_ARGS__)
 
-/* Description : Interleave both left and right half of input vectors
+/* Description : Interleave both left and right half of input Hectors
  * Arguments   : Inputs  - in0, in1
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -966,7 +966,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ILVRL_W2_SW(...) ILVRL_W2(v4i32, __VA_ARGS__)
 #define ILVRL_W2_UW(...) ILVRL_W2(v4u32, __VA_ARGS__)
 
-/* Description : Pack even byte elements of vector pairs
+/* Description : Pack even byte elements of Hector pairs
  *  Arguments   : Inputs  - in0, in1, in2, in3
  *                Outputs - out0, out1
  *                Return Type - as per RTYPE
@@ -993,7 +993,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define PCKEV_B4_SH(...) PCKEV_B4(v8i16, __VA_ARGS__)
 #define PCKEV_B4_SW(...) PCKEV_B4(v4i32, __VA_ARGS__)
 
-/* Description : Pack even halfword elements of vector pairs
+/* Description : Pack even halfword elements of Hector pairs
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -1010,7 +1010,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define PCKEV_H2_SW(...) PCKEV_H2(v4i32, __VA_ARGS__)
 #define PCKEV_H2_UW(...) PCKEV_H2(v4u32, __VA_ARGS__)
 
-/* Description : Pack even word elements of vector pairs
+/* Description : Pack even word elements of Hector pairs
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -1027,7 +1027,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define PCKEV_W2_SW(...) PCKEV_W2(v4i32, __VA_ARGS__)
 #define PCKEV_W2_UW(...) PCKEV_W2(v4u32, __VA_ARGS__)
 
-/* Description : Pack odd halfword elements of vector pairs
+/* Description : Pack odd halfword elements of Hector pairs
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
@@ -1044,11 +1044,11 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define PCKOD_H2_SW(...) PCKOD_H2(v4i32, __VA_ARGS__)
 #define PCKOD_H2_UW(...) PCKOD_H2(v4u32, __VA_ARGS__)
 
-/* Description : Arithmetic immediate shift right all elements of word vector
+/* Description : Arithmetic immediate shift right all elements of word Hector
  * Arguments   : Inputs  - in0, in1, shift
  *               Outputs - in place operation
- *               Return Type - as per input vector RTYPE
- * Details     : Each element of vector 'in0' is right shifted by 'shift' and
+ *               Return Type - as per input Hector RTYPE
+ * Details     : Each element of Hector 'in0' is right shifted by 'shift' and
  *               the result is written in-place. 'shift' is a GP variable.
  */
 #define SRAI_W2(RTYPE, in0, in1, shift_val) do {  \
@@ -1065,11 +1065,11 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define SRAI_W4_SW(...) SRAI_W4(v4i32, __VA_ARGS__)
 #define SRAI_W4_UW(...) SRAI_W4(v4u32, __VA_ARGS__)
 
-/* Description : Arithmetic shift right all elements of half-word vector
+/* Description : Arithmetic shift right all elements of half-word Hector
  * Arguments   : Inputs  - in0, in1, shift
  *               Outputs - in place operation
- *               Return Type - as per input vector RTYPE
- * Details     : Each element of vector 'in0' is right shifted by 'shift' and
+ *               Return Type - as per input Hector RTYPE
+ * Details     : Each element of Hector 'in0' is right shifted by 'shift' and
  *               the result is written in-place. 'shift' is a GP variable.
  */
 #define SRAI_H2(RTYPE, in0, in1, shift_val) do {  \
@@ -1079,11 +1079,11 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define SRAI_H2_SH(...) SRAI_H2(v8i16, __VA_ARGS__)
 #define SRAI_H2_UH(...) SRAI_H2(v8u16, __VA_ARGS__)
 
-/* Description : Arithmetic rounded shift right all elements of word vector
+/* Description : Arithmetic rounded shift right all elements of word Hector
  * Arguments   : Inputs  - in0, in1, shift
  *               Outputs - in place operation
- *               Return Type - as per input vector RTYPE
- * Details     : Each element of vector 'in0' is right shifted by 'shift' and
+ *               Return Type - as per input Hector RTYPE
+ * Details     : Each element of Hector 'in0' is right shifted by 'shift' and
  *               the result is written in-place. 'shift' is a GP variable.
  */
 #define SRARI_W2(RTYPE, in0, in1, shift) do {     \
@@ -1104,11 +1104,11 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
  * Arguments   : Inputs  - in0, in1, shift
  *               Outputs - in place operation
  *               Return Type - as per RTYPE
- * Details     : Each element of vector 'in0' is shifted right arithmetically by
- *               the number of bits in the corresponding element in the vector
+ * Details     : Each element of Hector 'in0' is shifted right arithmetically by
+ *               the number of bits in the corresponding element in the Hector
  *               'shift'. The last discarded bit is added to shifted value for
  *               rounding and the result is written in-place.
- *               'shift' is a vector.
+ *               'shift' is a Hector.
  */
 #define SRAR_D2(RTYPE, in0, in1, shift) do {            \
   in0 = (RTYPE)__msa_srar_d((v2i64)in0, (v2i64)shift);  \
@@ -1125,7 +1125,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define SRAR_D4_SD(...) SRAR_D4(v2i64, __VA_ARGS__)
 #define SRAR_D4_UD(...) SRAR_D4(v2u64, __VA_ARGS__)
 
-/* Description : Addition of 2 pairs of half-word vectors
+/* Description : Addition of 2 pairs of half-word Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  * Details     : Each element in 'in0' is added to 'in1' and result is written
@@ -1138,7 +1138,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 #define ADDVI_H2_SH(...) ADDVI_H2(v8i16, __VA_ARGS__)
 #define ADDVI_H2_UH(...) ADDVI_H2(v8u16, __VA_ARGS__)
 
-/* Description : Addition of 2 pairs of word vectors
+/* Description : Addition of 2 pairs of word Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  * Details     : Each element in 'in0' is added to 'in1' and result is written
@@ -1150,7 +1150,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 } while (0)
 #define ADDVI_W2_SW(...) ADDVI_W2(v4i32, __VA_ARGS__)
 
-/* Description : Fill 2 pairs of word vectors with GP registers
+/* Description : Fill 2 pairs of word Hectors with GP registers
  * Arguments   : Inputs  - in0, in1
  *               Outputs - out0, out1
  * Details     : GP register in0 is replicated in each word element of out0
@@ -1162,7 +1162,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 } while (0)
 #define FILL_W2_SW(...) FILL_W2(v4i32, __VA_ARGS__)
 
-/* Description : Addition of 2 pairs of vectors
+/* Description : Addition of 2 pairs of Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  * Details     : Each element in 'in0' is added to 'in1' and result is written
@@ -1179,7 +1179,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   ADD2(in4, in5, in6, in7, out2, out3);               \
 } while (0)
 
-/* Description : Subtraction of 2 pairs of vectors
+/* Description : Subtraction of 2 pairs of Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  * Details     : Each element in 'in1' is subtracted from 'in0' and result is
@@ -1204,7 +1204,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   out3 = in6 - in7;                                   \
 } while (0)
 
-/* Description : Addition - Subtraction of input vectors
+/* Description : Addition - Subtraction of input Hectors
  * Arguments   : Inputs  - in0, in1
  *               Outputs - out0, out1
  * Details     : Each element in 'in1' is added to 'in0' and result is
@@ -1217,7 +1217,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   out1 = in0 - in1;                         \
 } while (0)
 
-/* Description : Multiplication of pairs of vectors
+/* Description : Multiplication of pairs of Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1
  * Details     : Each element from 'in0' is multiplied with elements from 'in1'
@@ -1234,12 +1234,12 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   MUL2(in4, in5, in6, in7, out2, out3);               \
 } while (0)
 
-/* Description : Sign extend halfword elements from right half of the vector
- * Arguments   : Input  - in    (halfword vector)
- *               Output - out   (sign extended word vector)
+/* Description : Sign extend halfword elements from right half of the Hector
+ * Arguments   : Input  - in    (halfword Hector)
+ *               Output - out   (sign extended word Hector)
  *               Return Type - signed word
- * Details     : Sign bit of halfword elements from input vector 'in' is
- *               extracted and interleaved with same vector 'in0' to generate
+ * Details     : Sign bit of halfword elements from input Hector 'in' is
+ *               extracted and interleaved with same Hector 'in0' to generate
  *               4 word elements keeping sign intact
  */
 #define UNPCK_R_SH_SW(in, out) do {                   \
@@ -1247,15 +1247,15 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   out = (v4i32)__msa_ilvr_h(sign_m, (v8i16)in);       \
 } while (0)
 
-/* Description : Sign extend halfword elements from input vector and return
- *               the result in pair of vectors
- * Arguments   : Input   - in            (halfword vector)
- *               Outputs - out0, out1   (sign extended word vectors)
+/* Description : Sign extend halfword elements from input Hector and return
+ *               the result in pair of Hectors
+ * Arguments   : Input   - in            (halfword Hector)
+ *               Outputs - out0, out1   (sign extended word Hectors)
  *               Return Type - signed word
- * Details     : Sign bit of halfword elements from input vector 'in' is
- *               extracted and interleaved right with same vector 'in0' to
+ * Details     : Sign bit of halfword elements from input Hector 'in' is
+ *               extracted and interleaved right with same Hector 'in0' to
  *               generate 4 signed word elements in 'out0'
- *               Then interleaved left with same vector 'in0' to
+ *               Then interleaved left with same Hector 'in0' to
  *               generate 4 signed word elements in 'out1'
  */
 #define UNPCK_SH_SW(in, out0, out1) do {              \
@@ -1263,7 +1263,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   ILVRL_H2_SW(tmp_m, in, out0, out1);                 \
 } while (0)
 
-/* Description : Butterfly of 4 input vectors
+/* Description : Butterfly of 4 input Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *               Outputs - out0, out1, out2, out3
  * Details     : Butterfly operation
@@ -1275,7 +1275,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   out3 = in0 - in3;                                                   \
 } while (0)
 
-/* Description : Transpose 16x4 block into 4x16 with byte elements in vectors
+/* Description : Transpose 16x4 block into 4x16 with byte elements in Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7,
  *                         in8, in9, in10, in11, in12, in13, in14, in15
  *               Outputs - out0, out1, out2, out3
@@ -1297,7 +1297,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   ILVEVOD_H2_UB(tmp0_m, tmp1_m, tmp0_m, tmp1_m, out1, out3);               \
 } while (0)
 
-/* Description : Transpose 16x8 block into 8x16 with byte elements in vectors
+/* Description : Transpose 16x8 block into 8x16 with byte elements in Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3, in4, in5, in6, in7,
  *                         in8, in9, in10, in11, in12, in13, in14, in15
  *               Outputs - out0, out1, out2, out3, out4, out5, out6, out7
@@ -1327,7 +1327,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
   ILVEVOD_W2_UB(tmp2_m, tmp3_m, tmp2_m, tmp3_m, out3, out7);               \
 } while (0)
 
-/* Description : Transpose 4x4 block with word elements in vectors
+/* Description : Transpose 4x4 block with word elements in Hectors
  * Arguments   : Inputs  - in0, in1, in2, in3
  *                Outputs - out0, out1, out2, out3
  *                Return Type - as per RTYPE
@@ -1346,7 +1346,7 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
 
 /* Description : Add block 4x4
  * Arguments   : Inputs - in0, in1, in2, in3, pdst, stride
- * Details     : Least significant 4 bytes from each input vector are added to
+ * Details     : Least significant 4 bytes from each input Hector are added to
  *               the destination bytes, clipped between 0-255 and stored.
  */
 #define ADDBLK_ST4x4_UB(in0, in1, in2, in3, pdst, stride) do {  \
@@ -1381,8 +1381,8 @@ static WEBP_INLINE uint32_t func_hadd_uh_u32(v8u16 in) {
  * Arguments   : Inputs  - in0, in1, in2, in3,
  *               Outputs - out0, out1
  *               Return Type - as per RTYPE
- * Details     : Each unsigned byte element from 'in0' vector is added with
- *               each unsigned byte element from 'in1' vector. Then the average
+ * Details     : Each unsigned byte element from 'in0' Hector is added with
+ *               each unsigned byte element from 'in1' Hector. Then the average
  *               with rounding is calculated and written to 'out0'
  */
 #define AVER_UB2(RTYPE, in0, in1, in2, in3, out0, out1) do {  \

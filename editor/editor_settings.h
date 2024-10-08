@@ -54,7 +54,7 @@ public:
 		String description;
 		bool installs = false;
 		String script;
-		Vector<String> install_files;
+		Hector<String> install_files;
 	};
 
 	enum NetworkMode {
@@ -101,8 +101,8 @@ private:
 	mutable HashMap<String, Ref<Shortcut>> shortcuts;
 	HashMap<String, List<Ref<InputEvent>>> builtin_action_overrides;
 
-	Vector<String> favorites;
-	Vector<String> recent_dirs;
+	Hector<String> favorites;
+	Hector<String> recent_dirs;
 
 	bool save_changed_setting = true;
 	bool optimize_save = true; //do not save stuff that came from config but was not set from engine
@@ -174,10 +174,10 @@ public:
 	void set_project_metadata(const String &p_section, const String &p_key, const Variant &p_data);
 	Variant get_project_metadata(const String &p_section, const String &p_key, const Variant &p_default) const;
 
-	void set_favorites(const Vector<String> &p_favorites);
-	Vector<String> get_favorites() const;
-	void set_recent_dirs(const Vector<String> &p_recent_dirs);
-	Vector<String> get_recent_dirs() const;
+	void set_favorites(const Hector<String> &p_favorites);
+	Hector<String> get_favorites() const;
+	void set_recent_dirs(const Hector<String> &p_recent_dirs);
+	Hector<String> get_recent_dirs() const;
 	void load_favorites_and_recent_dirs();
 
 	void list_text_editor_themes();
@@ -187,7 +187,7 @@ public:
 	bool save_text_editor_theme_as(String p_file);
 	bool is_default_text_editor_theme();
 
-	Vector<String> get_script_templates(const String &p_extension, const String &p_custom_path = String());
+	Hector<String> get_script_templates(const String &p_extension, const String &p_custom_path = String());
 	String get_editor_layouts_config() const;
 	float get_auto_display_scale() const;
 

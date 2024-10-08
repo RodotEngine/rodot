@@ -160,7 +160,7 @@ struct PairPosFormat1_3
     out->valueFormat[0] = newFormats.first;
     out->valueFormat[1] = newFormats.second;
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
 
     + hb_zip (this+coverage, pairSet)
     | hb_filter (glyphset, hb_first)

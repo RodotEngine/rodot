@@ -35,7 +35,7 @@
 
 class ConvexPolygonShape3D : public Shape3D {
 	GDCLASS(ConvexPolygonShape3D, Shape3D);
-	Vector<Vector3> points;
+	Hector<Hector3> points;
 
 protected:
 	static void _bind_methods();
@@ -43,10 +43,10 @@ protected:
 	virtual void _update_shape() override;
 
 public:
-	void set_points(const Vector<Vector3> &p_points);
-	Vector<Vector3> get_points() const;
+	void set_points(const Hector<Hector3> &p_points);
+	Hector<Hector3> get_points() const;
 
-	virtual Vector<Vector3> get_debug_mesh_lines() const override;
+	virtual Hector<Hector3> get_debug_mesh_lines() const override;
 	virtual real_t get_enclosing_radius() const override;
 
 	ConvexPolygonShape3D();

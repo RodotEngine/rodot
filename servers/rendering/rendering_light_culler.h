@@ -32,7 +32,7 @@
 #define RENDERING_LIGHT_CULLER_H
 
 #include "core/math/plane.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 #include "renderer_scene_cull.h"
 
 struct Projection;
@@ -88,8 +88,8 @@ private:
 		}
 
 		// All in world space, culling done in world space.
-		Vector3 pos;
-		Vector3 dir;
+		Hector3 pos;
+		Hector3 dir;
 		SourceType type;
 
 		float angle; // For spotlight.
@@ -166,7 +166,7 @@ private:
 	// Avoid adding extra culling planes derived from near colinear triangles.
 	// The normals derived from these will be inaccurate, and can lead to false
 	// culling of objects that should be within the light volume.
-	bool _is_colinear_tri(const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_c) const {
+	bool _is_colinear_tri(const Hector3 &p_a, const Hector3 &p_b, const Hector3 &p_c) const {
 		// Lengths of sides a, b and c.
 		float la = (p_b - p_a).length();
 		float lb = (p_c - p_b).length();
@@ -211,17 +211,17 @@ private:
 
 	struct Data {
 		// Camera frustum planes (world space) - order ePlane.
-		Vector<Plane> frustum_planes;
+		Hector<Plane> frustum_planes;
 
 		// Camera frustum corners (world space) - order ePoint.
-		Vector3 frustum_points[NUM_CAM_POINTS];
+		Hector3 frustum_points[NUM_CAM_POINTS];
 
 		// Master can have multiple directional lights.
 		// These need to store their own cull planes individually, as master
 		// chops and changes between culling different lights
 		// instead of doing one by one, and we don't want to prepare
 		// lights multiple times per frame.
-		LocalVector<LightCullPlanes> directional_cull_planes;
+		LocalHector<LightCullPlanes> directional_cull_planes;
 
 		// Single threaded cull planes for regular lights
 		// (OMNI, SPOT). These lights reuse the same set of cull plane data.
@@ -270,11 +270,11 @@ private:
 	void debug_print_LUT_as_table();
 	void add_LUT(int p_plane_0, int p_plane_1, PointOrder p_pts[2]);
 	void add_LUT_entry(uint32_t p_entry_id, PointOrder p_pts[2]);
-	String debug_string_LUT_entry(const LocalVector<uint8_t> &p_entry, bool p_pair = false);
-	String string_LUT_entry(const LocalVector<uint8_t> &p_entry);
+	String debug_string_LUT_entry(const LocalHector<uint8_t> &p_entry, bool p_pair = false);
+	String string_LUT_entry(const LocalHector<uint8_t> &p_entry);
 
 	// Contains a list of points for each combination of plane facing directions.
-	LocalVector<uint8_t> _calculated_LUT[LUT_SIZE];
+	LocalHector<uint8_t> _calculated_LUT[LUT_SIZE];
 #endif
 };
 

@@ -84,7 +84,7 @@ void Parallax2D::_camera_moved(const Transform2D &p_transform, const Point2 &p_s
 	if (!ignore_camera_scroll) {
 		if (get_viewport() && get_viewport()->is_snap_2d_transforms_to_pixel_enabled()) {
 			Size2 vps = get_viewport_rect().size;
-			Vector2 offset;
+			Hector2 offset;
 			offset.x = ((int)vps.width % 2) ? 0.0 : 0.5;
 			offset.y = ((int)vps.height % 2) ? 0.0 : 0.5;
 			set_screen_offset((p_adj_screen_pos + offset).floor());
@@ -284,22 +284,22 @@ void Parallax2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ignore_camera_scroll", "ignore"), &Parallax2D::set_ignore_camera_scroll);
 	ClassDB::bind_method(D_METHOD("is_ignore_camera_scroll"), &Parallax2D::is_ignore_camera_scroll);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_scale", PROPERTY_HINT_LINK), "set_scroll_scale", "get_scroll_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_scale", PROPERTY_HINT_LINK), "set_scroll_scale", "get_scroll_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
 
 	ADD_GROUP("Repeat", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "repeat_size"), "set_repeat_size", "get_repeat_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "autoscroll", PROPERTY_HINT_NONE, "suffix:px/s"), "set_autoscroll", "get_autoscroll");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "repeat_size"), "set_repeat_size", "get_repeat_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "autoscroll", PROPERTY_HINT_NONE, "suffix:px/s"), "set_autoscroll", "get_autoscroll");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "repeat_times"), "set_repeat_times", "get_repeat_times");
 
 	ADD_GROUP("Limit", "limit_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "limit_begin", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_begin", "get_limit_begin");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "limit_end", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_end", "get_limit_end");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "limit_begin", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_begin", "get_limit_begin");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "limit_end", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_end", "get_limit_end");
 
 	ADD_GROUP("Override", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_viewport"), "set_follow_viewport", "get_follow_viewport");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ignore_camera_scroll"), "set_ignore_camera_scroll", "is_ignore_camera_scroll");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "screen_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_screen_offset", "get_screen_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "screen_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_screen_offset", "get_screen_offset");
 }
 
 Parallax2D::Parallax2D() {

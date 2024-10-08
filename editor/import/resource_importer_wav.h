@@ -49,7 +49,7 @@ public:
 	virtual void get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset = 0) const override;
 	virtual bool get_option_visibility(const String &p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const override;
 
-	static void _compress_ima_adpcm(const Vector<float> &p_data, Vector<uint8_t> &dst_data) {
+	static void _compress_ima_adpcm(const Hector<float> &p_data, Hector<uint8_t> &dst_data) {
 		static const int16_t _ima_adpcm_step_table[89] = {
 			7, 8, 9, 10, 11, 12, 13, 14, 16, 17,
 			19, 21, 23, 25, 28, 31, 34, 37, 41, 45,

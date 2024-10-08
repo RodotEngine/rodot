@@ -1126,7 +1126,7 @@ struct DoPreprocessing {
             });
 
         parseContext.setPragmaCallback([&lineSync, &outputBuffer](
-            int line, const glslang::TVector<glslang::TString>& ops) {
+            int line, const glslang::THector<glslang::TString>& ops) {
                 lineSync.syncToLine(line);
                 outputBuffer += "#pragma ";
                 for(size_t i = 0; i < ops.size(); ++i) {
@@ -2042,7 +2042,7 @@ bool TProgram::crossStageCheck(EShMessages) {
     //                  all buffer blocks
     //                  all in/out on a stage boundary
 
-    TVector<TIntermediate*> activeStages;
+    THector<TIntermediate*> activeStages;
     for (int s = 0; s < EShLangCount; ++s) {
         if (intermediate[s])
             activeStages.push_back(intermediate[s]);

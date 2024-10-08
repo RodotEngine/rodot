@@ -338,7 +338,7 @@ Table of contents:
 - Fix wrong usage of `parameters_base_path` StringName ([GH-91944](https://github.com/godotengine/godot/pull/91944)).
 - Skeleton rest fixer: Apply orthonormalized scale to anims ([GH-92012](https://github.com/godotengine/godot/pull/92012)).
 - Fix Deterministic blending with Dominant/Recessive doesn't have initial value even if there is no Discrete track ([GH-92126](https://github.com/godotengine/godot/pull/92126)).
-- Replace List with LocalVector on Skeleton3D's bone transform update ([GH-92164](https://github.com/godotengine/godot/pull/92164)).
+- Replace List with LocalHector on Skeleton3D's bone transform update ([GH-92164](https://github.com/godotengine/godot/pull/92164)).
 - Support Import As Skeleton Bones on glTF and AnimationLibrary import ([GH-92196](https://github.com/godotengine/godot/pull/92196)).
 - Fix mesh instance not updated when changing blend shape values ([GH-92244](https://github.com/godotengine/godot/pull/92244)).
 - Add `bake_fps` for FBXDocument, GLTFDocument and both import-export ([GH-92284](https://github.com/godotengine/godot/pull/92284)).
@@ -370,7 +370,7 @@ Table of contents:
 - Fix AnimationPlayer `blend_times` sorting ([GH-93876](https://github.com/godotengine/godot/pull/93876)).
 - Clamp bezier handle length to half the length of animation ([GH-93930](https://github.com/godotengine/godot/pull/93930)).
 - Fix broken sync between animation TrackEditor and PlayerEditor ([GH-93980](https://github.com/godotengine/godot/pull/93980)).
-- Fix property type of Sprite3D `frame_coords` to Vector2i from Vector2 ([GH-93982](https://github.com/godotengine/godot/pull/93982)).
+- Fix property type of Sprite3D `frame_coords` to Hector2i from Hector2 ([GH-93982](https://github.com/godotengine/godot/pull/93982)).
 - Fix focus shortcut when in the bezier curve editor ([GH-94054](https://github.com/godotengine/godot/pull/94054)).
 - Re-add `Skeleton3D::animate_physical_bones` property ([GH-94291](https://github.com/godotengine/godot/pull/94291)).
 - Fix the behavior of after selecting animation on AnimationPlayerEditor to reset position to `0` ([GH-94302](https://github.com/godotengine/godot/pull/94302)).
@@ -750,8 +750,8 @@ Table of contents:
 
 - Move 2D and 3D resources to their own folders ([GH-50148](https://github.com/godotengine/godot/pull/50148)).
 - Add const lvalue ref to container parameters ([GH-51156](https://github.com/godotengine/godot/pull/51156)).
-- Use `Packed*Array` over `Vector<T>` in Variant ([GH-67220](https://github.com/godotengine/godot/pull/67220)).
-- Use `Packed*Array` over `Vector<T>` in TypedArray ([GH-67226](https://github.com/godotengine/godot/pull/67226)).
+- Use `Packed*Array` over `Hector<T>` in Variant ([GH-67220](https://github.com/godotengine/godot/pull/67220)).
+- Use `Packed*Array` over `Hector<T>` in TypedArray ([GH-67226](https://github.com/godotengine/godot/pull/67226)).
 - Add shorthand for using singleton string names ([GH-81303](https://github.com/godotengine/godot/pull/81303)).
 - Add deprecation notice to a duplicate method of class `Window` ([GH-83014](https://github.com/godotengine/godot/pull/83014)).
 - Move 2D-only and 3D-only navigation code to its own subfolder ([GH-83133](https://github.com/godotengine/godot/pull/83133)).
@@ -781,7 +781,7 @@ Table of contents:
 - Use `ED_IS_SHORTCUT` macro instead of `matches_event` ([GH-88547](https://github.com/godotengine/godot/pull/88547)).
 - Remove word duplicates in comments and strings, and fix casing and punctuation ([GH-88733](https://github.com/godotengine/godot/pull/88733)).
 - Remove self includes in some files ([GH-88918](https://github.com/godotengine/godot/pull/88918)).
-- Use `Vector*` component-wise `min/max/clamp` functions where applicable ([GH-89111](https://github.com/godotengine/godot/pull/89111)).
+- Use `Hector*` component-wise `min/max/clamp` functions where applicable ([GH-89111](https://github.com/godotengine/godot/pull/89111)).
 - Core: Move `#includes` from `project_settings.h` into `project_settings.cpp` ([GH-89113](https://github.com/godotengine/godot/pull/89113)).
 - Enforce template syntax `typename` over `class` ([GH-89270](https://github.com/godotengine/godot/pull/89270)).
 - Refactor how file cache entries are stored ([GH-89301](https://github.com/godotengine/godot/pull/89301)).
@@ -827,14 +827,14 @@ Table of contents:
 - Fix crash caused by stale owner ([GH-78997](https://github.com/godotengine/godot/pull/78997)).
 - TextServer: Fix `get_word_breaks` and its uses ([GH-79054](https://github.com/godotengine/godot/pull/79054)).
 - Add `--no-header` option ([GH-79179](https://github.com/godotengine/godot/pull/79179)).
-- Expose `Vector*` component-wise and scalar `min/max` to scripting ([GH-80223](https://github.com/godotengine/godot/pull/80223)).
+- Expose `Hector*` component-wise and scalar `min/max` to scripting ([GH-80223](https://github.com/godotengine/godot/pull/80223)).
 - Expose `Script.get_global_name()` ([GH-80487](https://github.com/godotengine/godot/pull/80487)).
 - Fix `reparent()` losing owner ([GH-81506](https://github.com/godotengine/godot/pull/81506)).
 - Add `is_valid_letter()` to `TextServer` ([GH-81639](https://github.com/godotengine/godot/pull/81639)).
 - Add `NodePath::slice` method ([GH-81822](https://github.com/godotengine/godot/pull/81822)).
 - Merge `uid_cache.bin` and `global_script_class_cache.cfg` after mounting PCKs ([GH-82084](https://github.com/godotengine/godot/pull/82084)).
 - Help compilers optimize `Object::cast_to()` ([GH-82903](https://github.com/godotengine/godot/pull/82903)).
-- Implement `Vector2i/3i/4i` methods: `distance_to` and `distance_squared_to` ([GH-83163](https://github.com/godotengine/godot/pull/83163)).
+- Implement `Hector2i/3i/4i` methods: `distance_to` and `distance_squared_to` ([GH-83163](https://github.com/godotengine/godot/pull/83163)).
 - Fix Basis `is_orthogonal` and `is_rotation` methods, add `is_orthonormal` ([GH-83229](https://github.com/godotengine/godot/pull/83229)).
 - Add `const char *` overloads to String class ([GH-84379](https://github.com/godotengine/godot/pull/84379)).
 - Add const references detected by clang-tidy ([GH-84445](https://github.com/godotengine/godot/pull/84445)).
@@ -848,7 +848,7 @@ Table of contents:
 - Fix crash when hashing empty `CharString` ([GH-85389](https://github.com/godotengine/godot/pull/85389)).
 - UndoRedo: Fix `MERGE_ALL` commit from repeating actions ([GH-85390](https://github.com/godotengine/godot/pull/85390)).
 - Prevent infinite recursion when printing errors ([GH-85397](https://github.com/godotengine/godot/pull/85397)).
-- Add `PackedVector4Array` Variant type ([GH-85474](https://github.com/godotengine/godot/pull/85474)).
+- Add `PackedHector4Array` Variant type ([GH-85474](https://github.com/godotengine/godot/pull/85474)).
 - Fix property groups overriding real properties ([GH-85486](https://github.com/godotengine/godot/pull/85486)).
 - Issue template: Change version field to "Tested versions", asking to test earlier versions ([GH-85554](https://github.com/godotengine/godot/pull/85554)).
 - Fix RegEx `search_all` for zero length matches/lookahead ([GH-85783](https://github.com/godotengine/godot/pull/85783)).
@@ -856,7 +856,7 @@ Table of contents:
 - Fix `FileAccessPack::get_buffer` updating position past the length of file ([GH-85991](https://github.com/godotengine/godot/pull/85991)).
 - Fix `RegEx.sub` truncating string when `end` is used ([GH-86052](https://github.com/godotengine/godot/pull/86052)).
 - Include `name` field in MethodInfo operator == ([GH-86259](https://github.com/godotengine/godot/pull/86259)).
-- Add `PackedRealArray` as an alias for `Vector<real_t>` ([GH-86324](https://github.com/godotengine/godot/pull/86324)).
+- Add `PackedRealArray` as an alias for `Hector<real_t>` ([GH-86324](https://github.com/godotengine/godot/pull/86324)).
 - Improve error message in text resource format parser ([GH-86350](https://github.com/godotengine/godot/pull/86350)).
 - Add and expose Basis/Transform2D/3D division by float operator ([GH-86364](https://github.com/godotengine/godot/pull/86364)).
 - Suggest `--headless` CLI argument in DisplayServer not found error message ([GH-86409](https://github.com/godotengine/godot/pull/86409)).
@@ -882,7 +882,7 @@ Table of contents:
 - Fix inaccuracies in the report of leaked objects ([GH-87222](https://github.com/godotengine/godot/pull/87222)).
 - Fix renaming a node to the name of its siblings breaking NodePath ([GH-87252](https://github.com/godotengine/godot/pull/87252)).
 - Fix `resource_local_to_scene` in arrays and dictionaries ([GH-87268](https://github.com/godotengine/godot/pull/87268)).
-- Display values in vector/quaternion math function errors ([GH-87300](https://github.com/godotengine/godot/pull/87300)).
+- Display values in Hector/quaternion math function errors ([GH-87300](https://github.com/godotengine/godot/pull/87300)).
 - Implement maximum undo steps in UndoRedo ([GH-87353](https://github.com/godotengine/godot/pull/87353)).
 - Add `--log-file` command line argument to write output log to a file ([GH-87373](https://github.com/godotengine/godot/pull/87373)).
 - Fix property of type Node duplication when script is attached to a child node ([GH-87387](https://github.com/godotengine/godot/pull/87387)).
@@ -918,7 +918,7 @@ Table of contents:
 - Do overflow check in when generating NoiseTexture3D ([GH-88823](https://github.com/godotengine/godot/pull/88823)).
 - Add `RandomNumberGenerator::rand_weighted` method ([GH-88883](https://github.com/godotengine/godot/pull/88883)).
 - Fix `RandomNumberGenerator::rand_weighted` return type ([GH-89104](https://github.com/godotengine/godot/pull/89104)).
-- Add scalar versions of `Vector*` `min/max/clamp/snap(ped)` ([GH-89114](https://github.com/godotengine/godot/pull/89114)).
+- Add scalar versions of `Hector*` `min/max/clamp/snap(ped)` ([GH-89114](https://github.com/godotengine/godot/pull/89114)).
 - Save PackedByteArrays as base64 encoded ([GH-89186](https://github.com/godotengine/godot/pull/89186)).
 - Fix `String::begins_with` when both strings are empty ([GH-89194](https://github.com/godotengine/godot/pull/89194)).
 - Fix sharing of typed arrays from constructor ([GH-89197](https://github.com/godotengine/godot/pull/89197)).
@@ -974,7 +974,7 @@ Table of contents:
 - Revert premul alpha to spell without the T ([GH-91399](https://github.com/godotengine/godot/pull/91399)).
 - Fix crash when executing `Image.save_jpg_to_buffer` ([GH-91590](https://github.com/godotengine/godot/pull/91590)).
 - Add case-insensitive `String::containsn` ([GH-91611](https://github.com/godotengine/godot/pull/91611)).
-- Add `LocalVector::has` for convenience ([GH-91621](https://github.com/godotengine/godot/pull/91621)).
+- Add `LocalHector::has` for convenience ([GH-91621](https://github.com/godotengine/godot/pull/91621)).
 - Let materials' shaders update happen on loader threads ([GH-91630](https://github.com/godotengine/godot/pull/91630)).
 - Fix crash when adding a child while duplicating a node ([GH-91677](https://github.com/godotengine/godot/pull/91677)).
 - CommandQueueMT: Fix sync command awaiters missing the chance ([GH-91725](https://github.com/godotengine/godot/pull/91725)).
@@ -1051,7 +1051,7 @@ Table of contents:
 - Document Bounce = 1.0 not being sufficient for infinite energy conservation ([GH-82968](https://github.com/godotengine/godot/pull/82968)).
 - Clarify that some `ParticleProcessMaterial` properties have effect over the lifetime ([GH-83606](https://github.com/godotengine/godot/pull/83606)).
 - Clarify emitting behavior of GPU particles ([GH-83622](https://github.com/godotengine/godot/pull/83622)).
-- Expanded documentation for vector slide and project ([GH-83691](https://github.com/godotengine/godot/pull/83691)).
+- Expanded documentation for Hector slide and project ([GH-83691](https://github.com/godotengine/godot/pull/83691)).
 - Add instructions to get shape of `RayCast2D/3D` ([GH-83735](https://github.com/godotengine/godot/pull/83735)).
 - Improve and clarify texture filtering documentation ([GH-83907](https://github.com/godotengine/godot/pull/83907)).
 - Clarify behavior of RayCast when `get_collision_point()` is used inside a collision shape ([GH-84085](https://github.com/godotengine/godot/pull/84085)).
@@ -1181,7 +1181,7 @@ Table of contents:
 - Add reference to InputEventJoypadButton in `_shortcut_input` doc ([GH-89838](https://github.com/godotengine/godot/pull/89838)).
 - Fix wrong return type mention in `AStarGrid2D` docs ([GH-89862](https://github.com/godotengine/godot/pull/89862)).
 - Doc: Document loading behavior with relative paths ([GH-90039](https://github.com/godotengine/godot/pull/90039)).
-- Doc: Clarify the behavior of `Vector2/3.cross` and mention parallel vectors ([GH-90072](https://github.com/godotengine/godot/pull/90072)).
+- Doc: Clarify the behavior of `Hector2/3.cross` and mention parallel Hectors ([GH-90072](https://github.com/godotengine/godot/pull/90072)).
 - Fix small error in Variant doc ([GH-90088](https://github.com/godotengine/godot/pull/90088)).
 - Doc: Improve description of `y_sort_enabled` ([GH-90096](https://github.com/godotengine/godot/pull/90096)).
 - Clarify `UndoRedo` `MergeMode` and `add_*_reference` docs ([GH-90263](https://github.com/godotengine/godot/pull/90263)).
@@ -1209,7 +1209,7 @@ Table of contents:
 - Update Variant documentation comment about `class_name` ([GH-91313](https://github.com/godotengine/godot/pull/91313)).
 - Document 0, 90, 180, and 270 degree TileMap cell rotations ([GH-91330](https://github.com/godotengine/godot/pull/91330)).
 - Update CryptoKey documentation to mention ECC ([GH-91348](https://github.com/godotengine/godot/pull/91348)).
-- Update the description and parameter name for Vector3 reflect to correct how the plane is constructed ([GH-91376](https://github.com/godotengine/godot/pull/91376)).
+- Update the description and parameter name for Hector3 reflect to correct how the plane is constructed ([GH-91376](https://github.com/godotengine/godot/pull/91376)).
 - Remove text saying low processor mode only works on desktop ([GH-91393](https://github.com/godotengine/godot/pull/91393)).
 - Minor `PackedScene` documentation improvements ([GH-91415](https://github.com/godotengine/godot/pull/91415)).
 - Fix outdated `AudioEffectSpectrumAnalyzer` documentation ([GH-91423](https://github.com/godotengine/godot/pull/91423)).
@@ -1225,7 +1225,7 @@ Table of contents:
 - Fix hashing context example ([GH-91920](https://github.com/godotengine/godot/pull/91920)).
 - TextServer: Add notes about high level text/font classes and getting active server instance ([GH-91974](https://github.com/godotengine/godot/pull/91974)).
 - Improve documentation on TreeItem's cell modes ([GH-92112](https://github.com/godotengine/godot/pull/92112)).
-- Fix example for Basis * Vector3 in documentation ([GH-92117](https://github.com/godotengine/godot/pull/92117)).
+- Fix example for Basis * Hector3 in documentation ([GH-92117](https://github.com/godotengine/godot/pull/92117)).
 - Clarify `is_polygon_clockwise()` coordinate system ([GH-92154](https://github.com/godotengine/godot/pull/92154)).
 - Fix confusing descriptions of ConfirmationDialog ([GH-92242](https://github.com/godotengine/godot/pull/92242)).
 - Explain `add_to_end` parameter of `add_property_editor()` ([GH-92272](https://github.com/godotengine/godot/pull/92272)).
@@ -1238,13 +1238,13 @@ Table of contents:
 - RTL: Add references to cell and column configuration methods ([GH-92508](https://github.com/godotengine/godot/pull/92508)).
 - Fix mismatched parentheses in class reference ([GH-92535](https://github.com/godotengine/godot/pull/92535)).
 - Improve `AudioStreamPlaylist` class reference ([GH-92674](https://github.com/godotengine/godot/pull/92674)).
-- Clarify the results of `VectorN.normalized()` in the docs ([GH-92707](https://github.com/godotengine/godot/pull/92707)).
+- Clarify the results of `HectorN.normalized()` in the docs ([GH-92707](https://github.com/godotengine/godot/pull/92707)).
 - Correct documentation for Omni and Spot light distance attenuation ([GH-92716](https://github.com/godotengine/godot/pull/92716)).
 - Remove note about night sky in PhysicalSkyMaterial ([GH-92758](https://github.com/godotengine/godot/pull/92758)).
 - Fix description for `Input.vibrate_handheld()` ([GH-92860](https://github.com/godotengine/godot/pull/92860)).
 - Update Node docs to change iOS to Android for `NOTIFICATION_WM_GO_BACK_REQUEST` ([GH-93189](https://github.com/godotengine/godot/pull/93189)).
 - Doc: Clarify the session-specific nature of `RID` and `ObjectID` ([GH-93190](https://github.com/godotengine/godot/pull/93190)).
-- Fix description of `Vector2/3.dot` ([GH-93195](https://github.com/godotengine/godot/pull/93195)).
+- Fix description of `Hector2/3.dot` ([GH-93195](https://github.com/godotengine/godot/pull/93195)).
 - Mention inverse of hex functions in `Color` ([GH-93218](https://github.com/godotengine/godot/pull/93218)).
 - Animation: Document frame duration units in `SpriteFrames` ([GH-93233](https://github.com/godotengine/godot/pull/93233)).
 - Clarify lightmap rebaking being required for LightmapProbe changes ([GH-93373](https://github.com/godotengine/godot/pull/93373)).
@@ -1290,7 +1290,7 @@ Table of contents:
 - Add link to notification docs in SceneTree docs ([GH-94719](https://github.com/godotengine/godot/pull/94719)).
 - Update documentation for places to receive InputEventShortcut ([GH-94745](https://github.com/godotengine/godot/pull/94745)).
 - Fix typo in Array's `sort()` method description ([GH-94842](https://github.com/godotengine/godot/pull/94842)).
-- Fix doc on Vector2.cs's `/` operator ([GH-94850](https://github.com/godotengine/godot/pull/94850)).
+- Fix doc on Hector2.cs's `/` operator ([GH-94850](https://github.com/godotengine/godot/pull/94850)).
 - Document alternatives to some static Color methods ([GH-94879](https://github.com/godotengine/godot/pull/94879)).
 - Mention Multimesh custom data will be compressed to half in Compatibility ([GH-94942](https://github.com/godotengine/godot/pull/94942)).
 - Fix type-o in `MobileVRInterface` sample code in docs: `xr` -> `use_xr` ([GH-94994](https://github.com/godotengine/godot/pull/94994)).
@@ -1467,7 +1467,7 @@ Table of contents:
 - Change scene drag-and-drop modifier behavior in the 2D and 3D editors ([GH-87623](https://github.com/godotengine/godot/pull/87623)).
 - Generate script resource preview without parsing ([GH-87625](https://github.com/godotengine/godot/pull/87625)).
 - Fix editor profiler script function sort order ([GH-87661](https://github.com/godotengine/godot/pull/87661)).
-- Fix editor properties vector ratio breaking when an element is set to zero ([GH-87740](https://github.com/godotengine/godot/pull/87740)).
+- Fix editor properties Hector ratio breaking when an element is set to zero ([GH-87740](https://github.com/godotengine/godot/pull/87740)).
 - Some editor code cleanup ([GH-87755](https://github.com/godotengine/godot/pull/87755)).
 - Extract BottomPanel from EditorNode ([GH-87760](https://github.com/godotengine/godot/pull/87760)).
 - Remove duplicated callings `set()` from SceneTreeDock ([GH-87834](https://github.com/godotengine/godot/pull/87834)).
@@ -1658,7 +1658,7 @@ Table of contents:
 - Fix crash when switching main screen from a disabled plugin main screen if code editor is floating ([GH-91396](https://github.com/godotengine/godot/pull/91396)).
 - Ensure `--doctool` is run from root directory ([GH-91407](https://github.com/godotengine/godot/pull/91407)).
 - Fix selecting root when opening scene ([GH-91435](https://github.com/godotengine/godot/pull/91435)).
-- DAP: Fix typo in parsing of PackedVector3Array ([GH-91468](https://github.com/godotengine/godot/pull/91468)).
+- DAP: Fix typo in parsing of PackedHector3Array ([GH-91468](https://github.com/godotengine/godot/pull/91468)).
 - Fix `FileSystemDock` thumbnails sometimes not displaying ([GH-91471](https://github.com/godotengine/godot/pull/91471)).
 - Keep docks menu open when opening dock ([GH-91484](https://github.com/godotengine/godot/pull/91484)).
 - Prevent some shortcut errors when generating docs ([GH-91515](https://github.com/godotengine/godot/pull/91515)).
@@ -1969,7 +1969,7 @@ Table of contents:
 - Add module description in markdown ([GH-81345](https://github.com/godotengine/godot/pull/81345)).
 - Documentation: Add support for deprecated/experimental messages ([GH-81458](https://github.com/godotengine/godot/pull/81458)).
 - Include lambda dependencies ([GH-81629](https://github.com/godotengine/godot/pull/81629)).
-- Change GDScriptDataType `container_element_type` to vector container ([GH-81662](https://github.com/godotengine/godot/pull/81662)).
+- Change GDScriptDataType `container_element_type` to Hector container ([GH-81662](https://github.com/godotengine/godot/pull/81662)).
 - Add `@export_storage` annotation ([GH-82122](https://github.com/godotengine/godot/pull/82122)).
 - Core: Allow methods of built-in `Variant` types to be used as Callables ([GH-82264](https://github.com/godotengine/godot/pull/82264)).
 - Improve error messages for invalid indexing ([GH-82639](https://github.com/godotengine/godot/pull/82639)).
@@ -2766,7 +2766,7 @@ Table of contents:
 - Replace confusing code in `GodotCapsuleShape2D::get_supports` ([GH-83655](https://github.com/godotengine/godot/pull/83655)).
 - Fix CollisionObject3D Gizmo not updated after calling `shape_owner_*` functions ([GH-84610](https://github.com/godotengine/godot/pull/84610)).
 - Expose a method to get gravity for any physics body ([GH-84640](https://github.com/godotengine/godot/pull/84640)).
-- Fix `PhysicsShapeQueryParameters3D.motion` type wrongly set to Vector2 ([GH-85393](https://github.com/godotengine/godot/pull/85393)).
+- Fix `PhysicsShapeQueryParameters3D.motion` type wrongly set to Hector2 ([GH-85393](https://github.com/godotengine/godot/pull/85393)).
 - Improve visualization of WorldBoundary2D editor ([GH-86208](https://github.com/godotengine/godot/pull/86208)).
 - Check skeleton RID when using cached AABB ([GH-86245](https://github.com/godotengine/godot/pull/86245)).
 - Add warning for using concave shape on CharacterBody3D ([GH-86576](https://github.com/godotengine/godot/pull/86576)).
@@ -3070,7 +3070,7 @@ Table of contents:
 - Stabilize snapping 2D transforms to pixel ([GH-87297](https://github.com/godotengine/godot/pull/87297)).
 - D3D12 RDD: Fix wrong argument when resolving timestamp queries ([GH-87298](https://github.com/godotengine/godot/pull/87298)).
 - Finish splitting functionality of the `RenderingDevice` backends into `RenderingDeviceDriver` ([GH-87340](https://github.com/godotengine/godot/pull/87340)).
-- Fix memory leak from not clearing the buffer barrier vector properly on the render graph ([GH-87349](https://github.com/godotengine/godot/pull/87349)).
+- Fix memory leak from not clearing the buffer barrier Hector properly on the render graph ([GH-87349](https://github.com/godotengine/godot/pull/87349)).
 - Fix Compatibility Rendering (GLES3) on old and low budget devices ([GH-87352](https://github.com/godotengine/godot/pull/87352)).
 - Implement glow/bloom on compatibility renderer ([GH-87360](https://github.com/godotengine/godot/pull/87360)).
 - Add GLES3 infrastructure for lightmap baking in the compatibility backend ([GH-87386](https://github.com/godotengine/godot/pull/87386)).
@@ -3218,9 +3218,9 @@ Table of contents:
 - Fix glsl shader for Android Mali-GXXx GPUs and Vulkan API 1.3.xxx ([GH-92817](https://github.com/godotengine/godot/pull/92817)).
 - Make query for `GL_MAX_VIEWPORT_DIMS` compatible with web exports ([GH-92851](https://github.com/godotengine/godot/pull/92851)).
 - Fix depth clear value for uv2 baking in compatibility renderer ([GH-92887](https://github.com/godotengine/godot/pull/92887)).
-- Ensure Motion Vectors are enabled by particles and skeletons when using the Motion Vector debug draw option ([GH-93055](https://github.com/godotengine/godot/pull/93055)).
+- Ensure Motion Hectors are enabled by particles and skeletons when using the Motion Hector debug draw option ([GH-93055](https://github.com/godotengine/godot/pull/93055)).
 - Ensure post processing happens when adjustments are enabled in the Compatibility renderer ([GH-93060](https://github.com/godotengine/godot/pull/93060)).
-- Track compositor effects that use motion vectors ([GH-93068](https://github.com/godotengine/godot/pull/93068)).
+- Track compositor effects that use motion Hectors ([GH-93068](https://github.com/godotengine/godot/pull/93068)).
 - Ensure sky reflection is updated when ambient mode is set to background ([GH-93107](https://github.com/godotengine/godot/pull/93107)).
 - Add Parallax2D repeats in ysort child collection ([GH-93182](https://github.com/godotengine/godot/pull/93182)).
 - Fix `TileMapLayer` not respecting physics interpolation mode ([GH-93279](https://github.com/godotengine/godot/pull/93279)).
@@ -3231,7 +3231,7 @@ Table of contents:
 - Fix incorrect enabling of post process in OpenGL ([GH-93530](https://github.com/godotengine/godot/pull/93530)).
 - Add safety check when setting several rendering effect quality ([GH-93617](https://github.com/godotengine/godot/pull/93617)).
 - Make RenderSceneData take projection correction into account ([GH-93630](https://github.com/godotengine/godot/pull/93630)).
-- Use `PackedVector4Array` instead of float array for vec4 array uniform ([GH-93635](https://github.com/godotengine/godot/pull/93635)).
+- Use `PackedHector4Array` instead of float array for vec4 array uniform ([GH-93635](https://github.com/godotengine/godot/pull/93635)).
 - Remove warning when project setting requests a larger global shader uniform buffer than the hardware supports ([GH-93645](https://github.com/godotengine/godot/pull/93645)).
 - Remove useless instantiation in `RDShaderFile::parse_versions_from_text` ([GH-93649](https://github.com/godotengine/godot/pull/93649)).
 - Improve handling of rendering startup errors ([GH-93706](https://github.com/godotengine/godot/pull/93706)).
@@ -3313,8 +3313,8 @@ Table of contents:
 - Warn users when assigning `VERTEX` directly to `POSITION` due to compatibility breakage from Reverse Z changes ([GH-90587](https://github.com/godotengine/godot/pull/90587)).
 - Fix incorrect behavior at expanding an output port in visual shader node ([GH-90787](https://github.com/godotengine/godot/pull/90787)).
 - Fix editor crash when shader has incorrect global array declaration ([GH-90792](https://github.com/godotengine/godot/pull/90792)).
-- Fix shader crash on zero vector and negative x vector in particles processing ([GH-90810](https://github.com/godotengine/godot/pull/90810)).
-- Handle Vector4 default input values in visual shaders ([GH-90850](https://github.com/godotengine/godot/pull/90850)).
+- Fix shader crash on zero Hector and negative x Hector in particles processing ([GH-90810](https://github.com/godotengine/godot/pull/90810)).
+- Handle Hector4 default input values in visual shaders ([GH-90850](https://github.com/godotengine/godot/pull/90850)).
 - Prevent expanding output port in visual shader expression ([GH-90892](https://github.com/godotengine/godot/pull/90892)).
 - Allow compressed texture array and cubemap types in shader globals editor ([GH-91164](https://github.com/godotengine/godot/pull/91164)).
 - Don't run Shader doc comments logic outside the editor ([GH-91307](https://github.com/godotengine/godot/pull/91307)).
@@ -3335,10 +3335,10 @@ Table of contents:
 - Forbid calling of derivative functions in incorrect functions ([GH-93358](https://github.com/godotengine/godot/pull/93358)).
 - Fix visual shader not being updated when switching tabs ([GH-93385](https://github.com/godotengine/godot/pull/93385)).
 - Fix crash on shader constant initialization on MinGW compiler ([GH-93469](https://github.com/godotengine/godot/pull/93469)).
-- Prevent shader crash when doing invalid operation on boolean vector ([GH-93793](https://github.com/godotengine/godot/pull/93793)).
+- Prevent shader crash when doing invalid operation on boolean Hector ([GH-93793](https://github.com/godotengine/godot/pull/93793)).
 - Fix orphan StringName's in ShaderLanguage ([GH-93849](https://github.com/godotengine/godot/pull/93849)).
 - Improve code for setup of `global_func_set` in `ShaderLanguage` ([GH-93866](https://github.com/godotengine/godot/pull/93866)).
-- Add `SwitchVector4D` shortcut to visual shader members ([GH-94272](https://github.com/godotengine/godot/pull/94272)).
+- Add `SwitchHector4D` shortcut to visual shader members ([GH-94272](https://github.com/godotengine/godot/pull/94272)).
 - Make ShaderLanguage's parser recognize sampler passed in from array ([GH-94462](https://github.com/godotengine/godot/pull/94462)).
 - Few fixes for `VisualShaderNodeRotationByAxis` ([GH-94497](https://github.com/godotengine/godot/pull/94497)).
 - Fix internal connection count decreased if visual shader node removed ([GH-94498](https://github.com/godotengine/godot/pull/94498)).
@@ -3366,7 +3366,7 @@ Table of contents:
 - Add unit tests for Camera2D ([GH-88614](https://github.com/godotengine/godot/pull/88614)).
 - Add unit tests for CryptoKey ([GH-89021](https://github.com/godotengine/godot/pull/89021)).
 - Add unit tests for JSONRPC ([GH-89124](https://github.com/godotengine/godot/pull/89124)).
-- Add unit test for Vector2 `plane_project` ([GH-89617](https://github.com/godotengine/godot/pull/89617)).
+- Add unit test for Hector2 `plane_project` ([GH-89617](https://github.com/godotengine/godot/pull/89617)).
 - Add unit tests for `OAHashMap` ([GH-90313](https://github.com/godotengine/godot/pull/90313)).
 - Add more unit tests for Transform2D ([GH-90506](https://github.com/godotengine/godot/pull/90506)).
 - Exit with an error if using `--test` on binary without unit tests compiled ([GH-90507](https://github.com/godotengine/godot/pull/90507)).
@@ -3381,7 +3381,7 @@ Table of contents:
 - Fix unit tests in template builds ([GH-93745](https://github.com/godotengine/godot/pull/93745)).
 - CI: Run unit tests on desktop release templates ([GH-93780](https://github.com/godotengine/godot/pull/93780)).
 - Fix compilation failure in `test_graph_node.h` with `disable_exceptions=false` ([GH-94834](https://github.com/godotengine/godot/pull/94834)).
-- Fix Vector4, Vector4i, and Projection missing from ClassDB tests ([GH-95517](https://github.com/godotengine/godot/pull/95517)).
+- Fix Hector4, Hector4i, and Projection missing from ClassDB tests ([GH-95517](https://github.com/godotengine/godot/pull/95517)).
 
 #### Thirdparty
 

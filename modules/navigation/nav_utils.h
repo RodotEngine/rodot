@@ -31,10 +31,10 @@
 #ifndef NAV_UTILS_H
 #define NAV_UTILS_H
 
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 #include "core/templates/hash_map.h"
 #include "core/templates/hashfuncs.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class NavBase;
 
@@ -73,7 +73,7 @@ struct EdgeKey {
 };
 
 struct Point {
-	Vector3 pos;
+	Hector3 pos;
 	PointKey key;
 };
 
@@ -87,14 +87,14 @@ struct Edge {
 		int edge = -1;
 
 		/// Point on the edge where the gateway leading to the poly starts.
-		Vector3 pathway_start;
+		Hector3 pathway_start;
 
 		/// Point on the edge where the gateway leading to the poly ends.
-		Vector3 pathway_end;
+		Hector3 pathway_end;
 	};
 
 	/// Connections from this edge to other polygons.
-	Vector<Connection> connections;
+	Hector<Connection> connections;
 };
 
 struct Polygon {
@@ -105,10 +105,10 @@ struct Polygon {
 	const NavBase *owner = nullptr;
 
 	/// The points of this `Polygon`
-	LocalVector<Point> points;
+	LocalHector<Point> points;
 
 	/// The edges of this `Polygon`
-	LocalVector<Edge> edges;
+	LocalHector<Edge> edges;
 
 	real_t surface_area = 0.0;
 };
@@ -123,11 +123,11 @@ struct NavigationPoly {
 	/// Those 4 variables are used to travel the path backwards.
 	int back_navigation_poly_id = -1;
 	int back_navigation_edge = -1;
-	Vector3 back_navigation_edge_pathway_start;
-	Vector3 back_navigation_edge_pathway_end;
+	Hector3 back_navigation_edge_pathway_start;
+	Hector3 back_navigation_edge_pathway_end;
 
 	/// The entry position of this poly.
-	Vector3 entry;
+	Hector3 entry;
 	/// The distance traveled until now (g cost).
 	real_t traveled_distance = 0.0;
 	/// The distance to the destination (h cost).
@@ -170,8 +170,8 @@ struct NavPolyHeapIndexer {
 };
 
 struct ClosestPointQueryResult {
-	Vector3 point;
-	Vector3 normal;
+	Hector3 point;
+	Hector3 normal;
 	RID owner;
 };
 
@@ -185,7 +185,7 @@ struct NoopIndexer {
  */
 template <typename T, typename LessThan = Comparator<T>, typename Indexer = NoopIndexer<T>>
 class Heap {
-	LocalVector<T> _buffer;
+	LocalHector<T> _buffer;
 
 	LessThan _less_than;
 	Indexer _indexer;

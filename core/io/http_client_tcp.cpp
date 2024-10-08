@@ -147,7 +147,7 @@ static bool _check_request_url(HTTPClientTCP::Method p_method, const String &p_u
 	}
 }
 
-Error HTTPClientTCP::request(Method p_method, const String &p_url, const Vector<String> &p_headers, const uint8_t *p_body, int p_body_size) {
+Error HTTPClientTCP::request(Method p_method, const String &p_url, const Hector<String> &p_headers, const uint8_t *p_body, int p_body_size) {
 	ERR_FAIL_INDEX_V(p_method, METHOD_MAX, ERR_INVALID_PARAMETER);
 	ERR_FAIL_COND_V(!_check_request_url(p_method, p_url), ERR_INVALID_PARAMETER);
 	ERR_FAIL_COND_V(status != STATUS_CONNECTED, ERR_INVALID_PARAMETER);
@@ -323,7 +323,7 @@ Error HTTPClientTCP::poll() {
 						Error err = proxy_client->poll();
 						if (err == ERR_UNCONFIGURED) {
 							proxy_client->set_connection(tcp_connection);
-							const Vector<String> headers;
+							const Hector<String> headers;
 							err = proxy_client->request(METHOD_CONNECT, vformat("%s:%d", conn_host, conn_port), headers, nullptr, 0);
 							if (err != OK) {
 								status = STATUS_CANT_CONNECT;
@@ -441,7 +441,7 @@ Error HTTPClientTCP::poll() {
 			if (request_buffer->get_available_bytes()) {
 				int avail = request_buffer->get_available_bytes();
 				int pos = request_buffer->get_position();
-				const Vector<uint8_t> data = request_buffer->get_data_array();
+				const Hector<uint8_t> data = request_buffer->get_data_array();
 				int wrote = 0;
 				Error err;
 				if (blocking) {
@@ -485,7 +485,7 @@ Error HTTPClientTCP::poll() {
 					response_str.push_back(0);
 					String response;
 					response.parse_utf8((const char *)response_str.ptr());
-					Vector<String> responses = response.split("\n");
+					Hector<String> responses = response.split("\n");
 					body_size = -1;
 					chunked = false;
 					body_left = 0;

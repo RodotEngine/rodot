@@ -58,8 +58,8 @@
 void png_read_filter_row_up_vsx(png_row_infop row_info, png_bytep row,
                                 png_const_bytep prev_row)
 {
-   vector unsigned char rp_vec;
-   vector unsigned char pp_vec;
+   Hector unsigned char rp_vec;
+   Hector unsigned char pp_vec;
    vsx_declare_common_vars(row_info,row,prev_row,0)
 
    /* Altivec operations require 16-byte aligned data
@@ -101,69 +101,69 @@ void png_read_filter_row_up_vsx(png_row_infop row_info, png_bytep row,
 
 }
 
-static const vector unsigned char VSX_LEFTSHIFTED1_4 = {16,16,16,16, 0, 1, 2, 3,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_LEFTSHIFTED2_4 = {16,16,16,16,16,16,16,16, 4, 5, 6, 7,16,16,16,16};
-static const vector unsigned char VSX_LEFTSHIFTED3_4 = {16,16,16,16,16,16,16,16,16,16,16,16, 8, 9,10,11};
+static const Hector unsigned char VSX_LEFTSHIFTED1_4 = {16,16,16,16, 0, 1, 2, 3,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_LEFTSHIFTED2_4 = {16,16,16,16,16,16,16,16, 4, 5, 6, 7,16,16,16,16};
+static const Hector unsigned char VSX_LEFTSHIFTED3_4 = {16,16,16,16,16,16,16,16,16,16,16,16, 8, 9,10,11};
 
-static const vector unsigned char VSX_LEFTSHIFTED1_3 = {16,16,16, 0, 1, 2,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_LEFTSHIFTED2_3 = {16,16,16,16,16,16, 3, 4, 5,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_LEFTSHIFTED3_3 = {16,16,16,16,16,16,16,16,16, 6, 7, 8,16,16,16,16};
-static const vector unsigned char VSX_LEFTSHIFTED4_3 = {16,16,16,16,16,16,16,16,16,16,16,16, 9,10,11,16};
+static const Hector unsigned char VSX_LEFTSHIFTED1_3 = {16,16,16, 0, 1, 2,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_LEFTSHIFTED2_3 = {16,16,16,16,16,16, 3, 4, 5,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_LEFTSHIFTED3_3 = {16,16,16,16,16,16,16,16,16, 6, 7, 8,16,16,16,16};
+static const Hector unsigned char VSX_LEFTSHIFTED4_3 = {16,16,16,16,16,16,16,16,16,16,16,16, 9,10,11,16};
 
-static const vector unsigned char VSX_NOT_SHIFTED1_4 = {16,16,16,16, 4, 5, 6, 7,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_NOT_SHIFTED2_4 = {16,16,16,16,16,16,16,16, 8, 9,10,11,16,16,16,16};
-static const vector unsigned char VSX_NOT_SHIFTED3_4 = {16,16,16,16,16,16,16,16,16,16,16,16,12,13,14,15};
+static const Hector unsigned char VSX_NOT_SHIFTED1_4 = {16,16,16,16, 4, 5, 6, 7,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_NOT_SHIFTED2_4 = {16,16,16,16,16,16,16,16, 8, 9,10,11,16,16,16,16};
+static const Hector unsigned char VSX_NOT_SHIFTED3_4 = {16,16,16,16,16,16,16,16,16,16,16,16,12,13,14,15};
 
-static const vector unsigned char VSX_NOT_SHIFTED1_3 = {16,16,16, 3, 4, 5,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_NOT_SHIFTED2_3 = {16,16,16,16,16,16, 6, 7, 8,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_NOT_SHIFTED3_3 = {16,16,16,16,16,16,16,16,16, 9,10,11,16,16,16,16};
-static const vector unsigned char VSX_NOT_SHIFTED4_3 = {16,16,16,16,16,16,16,16,16,16,16,16,12,13,14,16};
+static const Hector unsigned char VSX_NOT_SHIFTED1_3 = {16,16,16, 3, 4, 5,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_NOT_SHIFTED2_3 = {16,16,16,16,16,16, 6, 7, 8,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_NOT_SHIFTED3_3 = {16,16,16,16,16,16,16,16,16, 9,10,11,16,16,16,16};
+static const Hector unsigned char VSX_NOT_SHIFTED4_3 = {16,16,16,16,16,16,16,16,16,16,16,16,12,13,14,16};
 
-static const vector unsigned char VSX_CHAR_ZERO = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+static const Hector unsigned char VSX_CHAR_ZERO = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 #ifdef __LITTLE_ENDIAN__
 
-static const vector unsigned char VSX_CHAR_TO_SHORT1_4 = { 4,16, 5,16, 6,16, 7,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT2_4 = { 8,16, 9,16,10,16,11,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT3_4 = {12,16,13,16,14,16,15,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT1_4 = { 4,16, 5,16, 6,16, 7,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT2_4 = { 8,16, 9,16,10,16,11,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT3_4 = {12,16,13,16,14,16,15,16,16,16,16,16,16,16,16,16};
 
-static const vector unsigned char VSX_SHORT_TO_CHAR1_4 = {16,16,16,16, 0, 2, 4, 6,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR2_4 = {16,16,16,16,16,16,16,16, 0, 2, 4, 6,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR3_4 = {16,16,16,16,16,16,16,16,16,16,16,16, 0, 2, 4, 6};
+static const Hector unsigned char VSX_SHORT_TO_CHAR1_4 = {16,16,16,16, 0, 2, 4, 6,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR2_4 = {16,16,16,16,16,16,16,16, 0, 2, 4, 6,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR3_4 = {16,16,16,16,16,16,16,16,16,16,16,16, 0, 2, 4, 6};
 
-static const vector unsigned char VSX_CHAR_TO_SHORT1_3 = { 3,16, 4,16, 5,16,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT2_3 = { 6,16, 7,16, 8,16,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT3_3 = { 9,16,10,16,11,16,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT4_3 = {12,16,13,16,14,16,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT1_3 = { 3,16, 4,16, 5,16,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT2_3 = { 6,16, 7,16, 8,16,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT3_3 = { 9,16,10,16,11,16,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT4_3 = {12,16,13,16,14,16,16,16,16,16,16,16,16,16,16,16};
 
-static const vector unsigned char VSX_SHORT_TO_CHAR1_3 = {16,16,16, 0, 2, 4,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR2_3 = {16,16,16,16,16,16, 0, 2, 4,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR3_3 = {16,16,16,16,16,16,16,16,16, 0, 2, 4,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR4_3 = {16,16,16,16,16,16,16,16,16,16,16,16, 0, 2, 4,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR1_3 = {16,16,16, 0, 2, 4,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR2_3 = {16,16,16,16,16,16, 0, 2, 4,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR3_3 = {16,16,16,16,16,16,16,16,16, 0, 2, 4,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR4_3 = {16,16,16,16,16,16,16,16,16,16,16,16, 0, 2, 4,16};
 
 #elif defined(__BIG_ENDIAN__)
 
-static const vector unsigned char VSX_CHAR_TO_SHORT1_4 = {16, 4,16, 5,16, 6,16, 7,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT2_4 = {16, 8,16, 9,16,10,16,11,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT3_4 = {16,12,16,13,16,14,16,15,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT1_4 = {16, 4,16, 5,16, 6,16, 7,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT2_4 = {16, 8,16, 9,16,10,16,11,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT3_4 = {16,12,16,13,16,14,16,15,16,16,16,16,16,16,16,16};
 
-static const vector unsigned char VSX_SHORT_TO_CHAR1_4 = {16,16,16,16, 1, 3, 5, 7,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR2_4 = {16,16,16,16,16,16,16,16, 1, 3, 5, 7,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR3_4 = {16,16,16,16,16,16,16,16,16,16,16,16, 1, 3, 5, 7};
+static const Hector unsigned char VSX_SHORT_TO_CHAR1_4 = {16,16,16,16, 1, 3, 5, 7,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR2_4 = {16,16,16,16,16,16,16,16, 1, 3, 5, 7,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR3_4 = {16,16,16,16,16,16,16,16,16,16,16,16, 1, 3, 5, 7};
 
-static const vector unsigned char VSX_CHAR_TO_SHORT1_3 = {16, 3,16, 4,16, 5,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT2_3 = {16, 6,16, 7,16, 8,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT3_3 = {16, 9,16,10,16,11,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_CHAR_TO_SHORT4_3 = {16,12,16,13,16,14,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT1_3 = {16, 3,16, 4,16, 5,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT2_3 = {16, 6,16, 7,16, 8,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT3_3 = {16, 9,16,10,16,11,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_CHAR_TO_SHORT4_3 = {16,12,16,13,16,14,16,16,16,16,16,16,16,16,16,16};
 
-static const vector unsigned char VSX_SHORT_TO_CHAR1_3 = {16,16,16, 1, 3, 5,16,16,16,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR2_3 = {16,16,16,16,16,16, 1, 3, 5,16,16,16,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR3_3 = {16,16,16,16,16,16,16,16,16, 1, 3, 5,16,16,16,16};
-static const vector unsigned char VSX_SHORT_TO_CHAR4_3 = {16,16,16,16,16,16,16,16,16,16,16,16, 1, 3, 5,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR1_3 = {16,16,16, 1, 3, 5,16,16,16,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR2_3 = {16,16,16,16,16,16, 1, 3, 5,16,16,16,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR3_3 = {16,16,16,16,16,16,16,16,16, 1, 3, 5,16,16,16,16};
+static const Hector unsigned char VSX_SHORT_TO_CHAR4_3 = {16,16,16,16,16,16,16,16,16,16,16,16, 1, 3, 5,16};
 
 #endif
 
-#define vsx_char_to_short(vec,offset,bpp) (vector unsigned short)vec_perm((vec),VSX_CHAR_ZERO,VSX_CHAR_TO_SHORT##offset##_##bpp)
-#define vsx_short_to_char(vec,offset,bpp) vec_perm(((vector unsigned char)(vec)),VSX_CHAR_ZERO,VSX_SHORT_TO_CHAR##offset##_##bpp)
+#define vsx_char_to_short(vec,offset,bpp) (Hector unsigned short)vec_perm((vec),VSX_CHAR_ZERO,VSX_CHAR_TO_SHORT##offset##_##bpp)
+#define vsx_short_to_char(vec,offset,bpp) vec_perm(((Hector unsigned char)(vec)),VSX_CHAR_ZERO,VSX_SHORT_TO_CHAR##offset##_##bpp)
 
 #ifdef PNG_USE_ABS
 #  define vsx_abs(number) abs(number)
@@ -176,8 +176,8 @@ void png_read_filter_row_sub4_vsx(png_row_infop row_info, png_bytep row,
 {
    png_byte bpp = 4;
 
-   vector unsigned char rp_vec;
-   vector unsigned char part_vec;
+   Hector unsigned char rp_vec;
+   Hector unsigned char part_vec;
 
    vsx_declare_common_vars(row_info,row,prev_row,bpp)
 
@@ -233,8 +233,8 @@ void png_read_filter_row_sub3_vsx(png_row_infop row_info, png_bytep row,
 {
    png_byte bpp = 3;
 
-   vector unsigned char rp_vec;
-   vector unsigned char part_vec;
+   Hector unsigned char rp_vec;
+   Hector unsigned char part_vec;
 
    vsx_declare_common_vars(row_info,row,prev_row,bpp)
 
@@ -297,11 +297,11 @@ void png_read_filter_row_avg4_vsx(png_row_infop row_info, png_bytep row,
 {
    png_byte bpp = 4;
 
-   vector unsigned char rp_vec;
-   vector unsigned char pp_vec;
-   vector unsigned char pp_part_vec;
-   vector unsigned char rp_part_vec;
-   vector unsigned char avg_vec;
+   Hector unsigned char rp_vec;
+   Hector unsigned char pp_vec;
+   Hector unsigned char pp_part_vec;
+   Hector unsigned char rp_part_vec;
+   Hector unsigned char avg_vec;
 
    vsx_declare_common_vars(row_info,row,prev_row,bpp)
    rp -= bpp;
@@ -384,11 +384,11 @@ void png_read_filter_row_avg3_vsx(png_row_infop row_info, png_bytep row,
 {
   png_byte bpp = 3;
 
-  vector unsigned char rp_vec;
-  vector unsigned char pp_vec;
-  vector unsigned char pp_part_vec;
-  vector unsigned char rp_part_vec;
-  vector unsigned char avg_vec;
+  Hector unsigned char rp_vec;
+  Hector unsigned char pp_vec;
+  Hector unsigned char pp_part_vec;
+  Hector unsigned char rp_part_vec;
+  Hector unsigned char avg_vec;
 
   vsx_declare_common_vars(row_info,row,prev_row,bpp)
   rp -= bpp;
@@ -503,10 +503,10 @@ void png_read_filter_row_paeth4_vsx(png_row_infop row_info, png_bytep row,
    png_byte bpp = 4;
 
    int a, b, c, pa, pb, pc, p;
-   vector unsigned char rp_vec;
-   vector unsigned char pp_vec;
-   vector unsigned short a_vec,b_vec,c_vec,nearest_vec;
-   vector signed short pa_vec,pb_vec,pc_vec,smallest_vec;
+   Hector unsigned char rp_vec;
+   Hector unsigned char pp_vec;
+   Hector unsigned short a_vec,b_vec,c_vec,nearest_vec;
+   Hector signed short pa_vec,pb_vec,pc_vec,smallest_vec;
 
    vsx_declare_common_vars(row_info,row,prev_row,bpp)
    rp -= bpp;
@@ -543,8 +543,8 @@ void png_read_filter_row_paeth4_vsx(png_row_infop row_info, png_bytep row,
       a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED1_4),1,4);
       b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED1_4),1,4);
       c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED1_4),1,4);
-      pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-      pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+      pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+      pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
       pc_vec = vec_add(pa_vec,pb_vec);
       pa_vec = vec_abs(pa_vec);
       pb_vec = vec_abs(pb_vec);
@@ -564,8 +564,8 @@ void png_read_filter_row_paeth4_vsx(png_row_infop row_info, png_bytep row,
       a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED2_4),2,4);
       b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED2_4),2,4);
       c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED2_4),2,4);
-      pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-      pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+      pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+      pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
       pc_vec = vec_add(pa_vec,pb_vec);
       pa_vec = vec_abs(pa_vec);
       pb_vec = vec_abs(pb_vec);
@@ -585,8 +585,8 @@ void png_read_filter_row_paeth4_vsx(png_row_infop row_info, png_bytep row,
       a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED3_4),3,4);
       b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED3_4),3,4);
       c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED3_4),3,4);
-      pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-      pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+      pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+      pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
       pc_vec = vec_add(pa_vec,pb_vec);
       pa_vec = vec_abs(pa_vec);
       pb_vec = vec_abs(pb_vec);
@@ -623,10 +623,10 @@ void png_read_filter_row_paeth3_vsx(png_row_infop row_info, png_bytep row,
   png_byte bpp = 3;
 
   int a, b, c, pa, pb, pc, p;
-  vector unsigned char rp_vec;
-  vector unsigned char pp_vec;
-  vector unsigned short a_vec,b_vec,c_vec,nearest_vec;
-  vector signed short pa_vec,pb_vec,pc_vec,smallest_vec;
+  Hector unsigned char rp_vec;
+  Hector unsigned char pp_vec;
+  Hector unsigned short a_vec,b_vec,c_vec,nearest_vec;
+  Hector signed short pa_vec,pb_vec,pc_vec,smallest_vec;
 
   vsx_declare_common_vars(row_info,row,prev_row,bpp)
   rp -= bpp;
@@ -663,8 +663,8 @@ void png_read_filter_row_paeth3_vsx(png_row_infop row_info, png_bytep row,
      a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED1_3),1,3);
      b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED1_3),1,3);
      c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED1_3),1,3);
-     pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-     pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+     pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+     pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
      pc_vec = vec_add(pa_vec,pb_vec);
      pa_vec = vec_abs(pa_vec);
      pb_vec = vec_abs(pb_vec);
@@ -684,8 +684,8 @@ void png_read_filter_row_paeth3_vsx(png_row_infop row_info, png_bytep row,
      a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED2_3),2,3);
      b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED2_3),2,3);
      c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED2_3),2,3);
-     pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-     pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+     pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+     pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
      pc_vec = vec_add(pa_vec,pb_vec);
      pa_vec = vec_abs(pa_vec);
      pb_vec = vec_abs(pb_vec);
@@ -705,8 +705,8 @@ void png_read_filter_row_paeth3_vsx(png_row_infop row_info, png_bytep row,
      a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED3_3),3,3);
      b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED3_3),3,3);
      c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED3_3),3,3);
-     pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-     pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+     pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+     pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
      pc_vec = vec_add(pa_vec,pb_vec);
      pa_vec = vec_abs(pa_vec);
      pb_vec = vec_abs(pb_vec);
@@ -726,8 +726,8 @@ void png_read_filter_row_paeth3_vsx(png_row_infop row_info, png_bytep row,
      a_vec = vsx_char_to_short(vec_perm(rp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED4_3),4,3);
      b_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_NOT_SHIFTED4_3),4,3);
      c_vec = vsx_char_to_short(vec_perm(pp_vec , VSX_CHAR_ZERO , VSX_LEFTSHIFTED4_3),4,3);
-     pa_vec = (vector signed short) vec_sub(b_vec,c_vec);
-     pb_vec = (vector signed short) vec_sub(a_vec , c_vec);
+     pa_vec = (Hector signed short) vec_sub(b_vec,c_vec);
+     pb_vec = (Hector signed short) vec_sub(a_vec , c_vec);
      pc_vec = vec_add(pa_vec,pb_vec);
      pa_vec = vec_abs(pa_vec);
      pb_vec = vec_abs(pb_vec);

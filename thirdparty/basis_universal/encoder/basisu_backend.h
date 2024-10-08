@@ -95,7 +95,7 @@ namespace basisu
 		uint8_t m_selectors[16];
 	};
 
-	typedef basisu::vector<etc1_selector_palette_entry> etc1_selector_palette_entry_vec;
+	typedef basisu::Hector<etc1_selector_palette_entry> etc1_selector_palette_entry_vec;
 
 	struct encoder_block
 	{
@@ -124,8 +124,8 @@ namespace basisu
 		}
 	};
 
-	typedef basisu::vector<encoder_block> encoder_block_vec;
-	typedef vector2D<encoder_block> encoder_block_vec2D;
+	typedef basisu::Hector<encoder_block> encoder_block_vec;
+	typedef Hector2D<encoder_block> encoder_block_vec2D;
 
 	struct etc1_endpoint_palette_entry
 	{
@@ -144,7 +144,7 @@ namespace basisu
 		}
 	};
 
-	typedef basisu::vector<etc1_endpoint_palette_entry> etc1_endpoint_palette_entry_vec;
+	typedef basisu::Hector<etc1_endpoint_palette_entry> etc1_endpoint_palette_entry_vec;
 
 	struct basisu_backend_params
 	{
@@ -208,7 +208,7 @@ namespace basisu
 		bool m_iframe;
 	};
 
-	typedef basisu::vector<basisu_backend_slice_desc> basisu_backend_slice_desc_vec;
+	typedef basisu::Hector<basisu_backend_slice_desc> basisu_backend_slice_desc_vec;
 
 	struct basisu_backend_output
 	{
@@ -227,7 +227,7 @@ namespace basisu
 		basisu_backend_slice_desc_vec m_slice_desc;
 
 		uint8_vec m_slice_image_tables;
-		basisu::vector<uint8_vec> m_slice_image_data;
+		basisu::Hector<uint8_vec> m_slice_image_data;
 		uint16_vec m_slice_image_crcs;
 
 		basisu_backend_output()
@@ -296,11 +296,11 @@ namespace basisu
 			bool m_was_used;
 		};
 
-		typedef basisu::vector<etc1_global_selector_cb_entry_desc> etc1_global_selector_cb_entry_desc_vec;
+		typedef basisu::Hector<etc1_global_selector_cb_entry_desc> etc1_global_selector_cb_entry_desc_vec;
 
 		etc1_global_selector_cb_entry_desc_vec m_global_selector_palette_desc;
 
-		basisu::vector<encoder_block_vec2D> m_slice_encoder_blocks;
+		basisu::Hector<encoder_block_vec2D> m_slice_encoder_blocks;
 
 		// Maps OLD to NEW endpoint/selector indices
 		uint_vec m_endpoint_remap_table_old_to_new;

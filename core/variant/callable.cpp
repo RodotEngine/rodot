@@ -123,7 +123,7 @@ Error Callable::rpcp(int p_id, const Variant **p_arguments, int p_argcount, Call
 }
 
 Callable Callable::bindp(const Variant **p_arguments, int p_argcount) const {
-	Vector<Variant> args;
+	Hector<Variant> args;
 	args.resize(p_argcount);
 	for (int i = 0; i < p_argcount; i++) {
 		args.write[i] = *p_arguments[i];
@@ -136,7 +136,7 @@ Callable Callable::bindv(const Array &p_arguments) {
 		return *this; // No point in creating a new callable if nothing is bound.
 	}
 
-	Vector<Variant> args;
+	Hector<Variant> args;
 	args.resize(p_arguments.size());
 	for (int i = 0; i < p_arguments.size(); i++) {
 		args.write[i] = p_arguments[i];
@@ -206,7 +206,7 @@ int Callable::get_bound_arguments_count() const {
 	}
 }
 
-void Callable::get_bound_arguments_ref(Vector<Variant> &r_arguments, int &r_argcount) const {
+void Callable::get_bound_arguments_ref(Hector<Variant> &r_arguments, int &r_argcount) const {
 	if (!is_null() && is_custom()) {
 		custom->get_bound_arguments(r_arguments, r_argcount);
 	} else {
@@ -216,7 +216,7 @@ void Callable::get_bound_arguments_ref(Vector<Variant> &r_arguments, int &r_argc
 }
 
 Array Callable::get_bound_arguments() const {
-	Vector<Variant> arr;
+	Hector<Variant> arr;
 	int ac;
 	get_bound_arguments_ref(arr, ac);
 	Array ret;
@@ -464,8 +464,8 @@ int CallableCustom::get_bound_arguments_count() const {
 	return 0;
 }
 
-void CallableCustom::get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const {
-	r_arguments = Vector<Variant>();
+void CallableCustom::get_bound_arguments(Hector<Variant> &r_arguments, int &r_argcount) const {
+	r_arguments = Hector<Variant>();
 	r_argcount = 0;
 }
 

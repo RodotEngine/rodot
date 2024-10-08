@@ -105,7 +105,7 @@ public:
 	bool has_clipboard();
 	bool request_permission(const String &p_name);
 	bool request_permissions();
-	Vector<String> get_granted_permissions() const;
+	Hector<String> get_granted_permissions() const;
 	String get_ca_certificates() const;
 	void init_input_devices();
 	void vibrate(int p_duration_ms, float p_amplitude = -1.0);
@@ -116,7 +116,7 @@ public:
 	void dump_benchmark(const String &benchmark_file);
 
 	// Return the list of gdextensions config file.
-	Vector<String> get_gdextension_list_config_file() const;
+	Hector<String> get_gdextension_list_config_file() const;
 
 	// Return true if the given feature is supported.
 	bool has_feature(const String &p_feature) const;

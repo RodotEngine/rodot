@@ -338,29 +338,29 @@ Id Builder::makeStructResultType(Id type0, Id type1)
     return makeStructType(members, "ResType");
 }
 
-Id Builder::makeVectorType(Id component, int size)
+Id Builder::makeHectorType(Id component, int size)
 {
     // try to find it
     Instruction* type;
-    for (int t = 0; t < (int)groupedTypes[OpTypeVector].size(); ++t) {
-        type = groupedTypes[OpTypeVector][t];
+    for (int t = 0; t < (int)groupedTypes[OpTypeHector].size(); ++t) {
+        type = groupedTypes[OpTypeHector][t];
         if (type->getIdOperand(0) == component &&
             type->getImmediateOperand(1) == (unsigned)size)
             return type->getResultId();
     }
 
     // not found, make it
-    type = new Instruction(getUniqueId(), NoType, OpTypeVector);
+    type = new Instruction(getUniqueId(), NoType, OpTypeHector);
     type->reserveOperands(2);
     type->addIdOperand(component);
     type->addImmediateOperand(size);
-    groupedTypes[OpTypeVector].push_back(type);
+    groupedTypes[OpTypeHector].push_back(type);
     constantsTypesGlobals.push_back(std::unique_ptr<Instruction>(type));
     module.mapInstruction(type);
 
     if (emitNonSemanticShaderDebugInfo)
     {
-        auto const debugResultId = makeVectorDebugType(component, size);
+        auto const debugResultId = makeHectorDebugType(component, size);
         debugId[type->getResultId()] = debugResultId;
     }
 
@@ -371,7 +371,7 @@ Id Builder::makeMatrixType(Id component, int cols, int rows)
 {
     assert(cols <= maxMatrixSize && rows <= maxMatrixSize);
 
-    Id column = makeVectorType(component, rows);
+    Id column = makeHectorType(component, rows);
 
     // try to find it
     Instruction* type;
@@ -878,7 +878,7 @@ Id Builder::makeFloatDebugType(int const width)
 Id Builder::makeSequentialDebugType(Id const baseType, Id const componentCount, NonSemanticShaderDebugInfo100Instructions const sequenceType)
 {
     assert(sequenceType == NonSemanticShaderDebugInfo100DebugTypeArray ||
-        sequenceType == NonSemanticShaderDebugInfo100DebugTypeVector);
+        sequenceType == NonSemanticShaderDebugInfo100DebugTypeHector);
 
     // try to find it
     Instruction* type;
@@ -909,19 +909,19 @@ Id Builder::makeArrayDebugType(Id const baseType, Id const componentCount)
     return makeSequentialDebugType(baseType, componentCount, NonSemanticShaderDebugInfo100DebugTypeArray);
 }
 
-Id Builder::makeVectorDebugType(Id const baseType, int const componentCount)
+Id Builder::makeHectorDebugType(Id const baseType, int const componentCount)
 {
-    return makeSequentialDebugType(baseType, makeUintConstant(componentCount), NonSemanticShaderDebugInfo100DebugTypeVector);
+    return makeSequentialDebugType(baseType, makeUintConstant(componentCount), NonSemanticShaderDebugInfo100DebugTypeHector);
 }
 
-Id Builder::makeMatrixDebugType(Id const vectorType, int const vectorCount, bool columnMajor)
+Id Builder::makeMatrixDebugType(Id const HectorType, int const HectorCount, bool columnMajor)
 {
     // try to find it
     Instruction* type;
     for (int t = 0; t < (int)groupedDebugTypes[NonSemanticShaderDebugInfo100DebugTypeMatrix].size(); ++t) {
         type = groupedDebugTypes[NonSemanticShaderDebugInfo100DebugTypeMatrix][t];
-        if (type->getIdOperand(0) == vectorType &&
-            type->getIdOperand(1) == makeUintConstant(vectorCount))
+        if (type->getIdOperand(0) == HectorType &&
+            type->getIdOperand(1) == makeUintConstant(HectorCount))
             return type->getResultId();
     }
 
@@ -930,8 +930,8 @@ Id Builder::makeMatrixDebugType(Id const vectorType, int const vectorCount, bool
     type->reserveOperands(5);
     type->addIdOperand(nonSemanticShaderDebugInfo);
     type->addImmediateOperand(NonSemanticShaderDebugInfo100DebugTypeMatrix);
-    type->addIdOperand(debugId[vectorType]); // vector type id
-    type->addIdOperand(makeUintConstant(vectorCount)); // component count id
+    type->addIdOperand(debugId[HectorType]); // Hector type id
+    type->addIdOperand(makeUintConstant(HectorCount)); // component count id
     type->addIdOperand(makeBoolConstant(columnMajor)); // column-major id
 
     groupedDebugTypes[NonSemanticShaderDebugInfo100DebugTypeMatrix].push_back(type);
@@ -1264,7 +1264,7 @@ Op Builder::getMostBasicTypeClass(Id typeId) const
     Op typeClass = instr->getOpCode();
     switch (typeClass)
     {
-    case OpTypeVector:
+    case OpTypeHector:
     case OpTypeMatrix:
     case OpTypeArray:
     case OpTypeRuntimeArray:
@@ -1287,7 +1287,7 @@ int Builder::getNumTypeConstituents(Id typeId) const
     case OpTypeFloat:
     case OpTypePointer:
         return 1;
-    case OpTypeVector:
+    case OpTypeHector:
     case OpTypeMatrix:
         return instr->getImmediateOperand(1);
     case OpTypeArray:
@@ -1323,7 +1323,7 @@ Id Builder::getScalarTypeId(Id typeId) const
     case OpTypeFloat:
     case OpTypeStruct:
         return instr->getResultId();
-    case OpTypeVector:
+    case OpTypeHector:
     case OpTypeMatrix:
     case OpTypeArray:
     case OpTypeRuntimeArray:
@@ -1343,7 +1343,7 @@ Id Builder::getContainedTypeId(Id typeId, int member) const
     Op typeClass = instr->getOpCode();
     switch (typeClass)
     {
-    case OpTypeVector:
+    case OpTypeHector:
     case OpTypeMatrix:
     case OpTypeArray:
     case OpTypeRuntimeArray:
@@ -1407,7 +1407,7 @@ bool Builder::containsType(Id typeId, spv::Op typeOp, unsigned int width) const
         return false;
     case OpTypePointer:
         return false;
-    case OpTypeVector:
+    case OpTypeHector:
     case OpTypeMatrix:
     case OpTypeArray:
     case OpTypeRuntimeArray:
@@ -1787,7 +1787,7 @@ Id Builder::makeCompositeConstant(Id typeId, const std::vector<Id>& members, boo
     Op typeClass = getTypeClass(typeId);
 
     switch (typeClass) {
-    case OpTypeVector:
+    case OpTypeHector:
     case OpTypeArray:
     case OpTypeMatrix:
     case OpTypeCooperativeMatrixKHR:
@@ -2634,22 +2634,22 @@ Id Builder::createCompositeInsert(Id object, Id composite, Id typeId, const std:
     return insert->getResultId();
 }
 
-Id Builder::createVectorExtractDynamic(Id vector, Id typeId, Id componentIndex)
+Id Builder::createHectorExtractDynamic(Id Hector, Id typeId, Id componentIndex)
 {
-    Instruction* extract = new Instruction(getUniqueId(), typeId, OpVectorExtractDynamic);
+    Instruction* extract = new Instruction(getUniqueId(), typeId, OpHectorExtractDynamic);
     extract->reserveOperands(2);
-    extract->addIdOperand(vector);
+    extract->addIdOperand(Hector);
     extract->addIdOperand(componentIndex);
     addInstruction(std::unique_ptr<Instruction>(extract));
 
     return extract->getResultId();
 }
 
-Id Builder::createVectorInsertDynamic(Id vector, Id typeId, Id component, Id componentIndex)
+Id Builder::createHectorInsertDynamic(Id Hector, Id typeId, Id component, Id componentIndex)
 {
-    Instruction* insert = new Instruction(getUniqueId(), typeId, OpVectorInsertDynamic);
+    Instruction* insert = new Instruction(getUniqueId(), typeId, OpHectorInsertDynamic);
     insert->reserveOperands(3);
-    insert->addIdOperand(vector);
+    insert->addIdOperand(Hector);
     insert->addIdOperand(component);
     insert->addIdOperand(componentIndex);
     addInstruction(std::unique_ptr<Instruction>(insert));
@@ -2842,10 +2842,10 @@ Id Builder::createRvalueSwizzle(Decoration precision, Id typeId, Id source, cons
     if (generatingOpCodeForSpecConst) {
         std::vector<Id> operands(2);
         operands[0] = operands[1] = source;
-        return setPrecision(createSpecConstantOp(OpVectorShuffle, typeId, operands, channels), precision);
+        return setPrecision(createSpecConstantOp(OpHectorShuffle, typeId, operands, channels), precision);
     }
-    Instruction* swizzle = new Instruction(getUniqueId(), typeId, OpVectorShuffle);
-    assert(isVector(source));
+    Instruction* swizzle = new Instruction(getUniqueId(), typeId, OpHectorShuffle);
+    assert(isHector(source));
     swizzle->reserveOperands(channels.size() + 2);
     swizzle->addIdOperand(source);
     swizzle->addIdOperand(source);
@@ -2862,14 +2862,14 @@ Id Builder::createLvalueSwizzle(Id typeId, Id target, Id source, const std::vect
     if (channels.size() == 1 && getNumComponents(source) == 1)
         return createCompositeInsert(source, target, typeId, channels.front());
 
-    Instruction* swizzle = new Instruction(getUniqueId(), typeId, OpVectorShuffle);
+    Instruction* swizzle = new Instruction(getUniqueId(), typeId, OpHectorShuffle);
 
-    assert(isVector(target));
+    assert(isHector(target));
     swizzle->reserveOperands(2);
     swizzle->addIdOperand(target);
 
     assert(getNumComponents(source) == (int)channels.size());
-    assert(isVector(source));
+    assert(isHector(source));
     swizzle->addIdOperand(source);
 
     // Set up an identity shuffle from the base value to the result value
@@ -2897,38 +2897,38 @@ void Builder::promoteScalar(Decoration precision, Id& left, Id& right)
     int direction = getNumComponents(right) - getNumComponents(left);
 
     if (direction > 0)
-        left = smearScalar(precision, left, makeVectorType(getTypeId(left), getNumComponents(right)));
+        left = smearScalar(precision, left, makeHectorType(getTypeId(left), getNumComponents(right)));
     else if (direction < 0)
-        right = smearScalar(precision, right, makeVectorType(getTypeId(right), getNumComponents(left)));
+        right = smearScalar(precision, right, makeHectorType(getTypeId(right), getNumComponents(left)));
 
     return;
 }
 
 // Comments in header
-Id Builder::smearScalar(Decoration precision, Id scalar, Id vectorType)
+Id Builder::smearScalar(Decoration precision, Id scalar, Id HectorType)
 {
     assert(getNumComponents(scalar) == 1);
-    assert(getTypeId(scalar) == getScalarTypeId(vectorType));
+    assert(getTypeId(scalar) == getScalarTypeId(HectorType));
 
-    int numComponents = getNumTypeComponents(vectorType);
+    int numComponents = getNumTypeComponents(HectorType);
     if (numComponents == 1)
         return scalar;
 
     Instruction* smear = nullptr;
     if (generatingOpCodeForSpecConst) {
         auto members = std::vector<spv::Id>(numComponents, scalar);
-        // Sometime even in spec-constant-op mode, the temporary vector created by
+        // Sometime even in spec-constant-op mode, the temporary Hector created by
         // promoting a scalar might not be a spec constant. This should depend on
         // the scalar.
         // e.g.:
         //  const vec2 spec_const_result = a_spec_const_vec2 + a_front_end_const_scalar;
-        // In such cases, the temporary vector created from a_front_end_const_scalar
-        // is not a spec constant vector, even though the binary operation node is marked
+        // In such cases, the temporary Hector created from a_front_end_const_scalar
+        // is not a spec constant Hector, even though the binary operation node is marked
         // as 'specConstant' and we are in spec-constant-op mode.
-        auto result_id = makeCompositeConstant(vectorType, members, isSpecConstant(scalar));
+        auto result_id = makeCompositeConstant(HectorType, members, isSpecConstant(scalar));
         smear = module.getInstruction(result_id);
     } else {
-        smear = new Instruction(getUniqueId(), vectorType, OpCompositeConstruct);
+        smear = new Instruction(getUniqueId(), HectorType, OpCompositeConstruct);
         smear->reserveOperands(numComponents);
         for (int c = 0; c < numComponents; ++c)
             smear->addIdOperand(scalar);
@@ -3203,12 +3203,12 @@ Id Builder::createTextureQueryCall(Op opCode, const TextureParameters& parameter
         if (numComponents == 1)
             resultType = intType;
         else
-            resultType = makeVectorType(intType, numComponents);
+            resultType = makeHectorType(intType, numComponents);
 
         break;
     }
     case OpImageQueryLod:
-        resultType = makeVectorType(getScalarTypeId(getTypeId(parameters.coords)), 2);
+        resultType = makeHectorType(getScalarTypeId(getTypeId(parameters.coords)), 2);
         break;
     case OpImageQueryLevels:
     case OpImageQuerySamples:
@@ -3242,9 +3242,9 @@ Id Builder::createCompositeCompare(Decoration precision, Id value1, Id value2, b
 
     int numConstituents = getNumTypeConstituents(valueType);
 
-    // Scalars and Vectors
+    // Scalars and Hectors
 
-    if (isScalarType(valueType) || isVectorType(valueType)) {
+    if (isScalarType(valueType) || isHectorType(valueType)) {
         assert(valueType == getTypeId(value2));
         // These just need a single comparison, just have
         // to figure out what it is.
@@ -3267,10 +3267,10 @@ Id Builder::createCompositeCompare(Decoration precision, Id value1, Id value2, b
             // scalar
             resultId = createBinOp(op, boolType, value1, value2);
         } else {
-            // vector
-            resultId = createBinOp(op, makeVectorType(boolType, numConstituents), value1, value2);
+            // Hector
+            resultId = createBinOp(op, makeHectorType(boolType, numConstituents), value1, value2);
             setPrecision(resultId, precision);
-            // reduce vector compares...
+            // reduce Hector compares...
             resultId = createUnaryOp(equal ? OpAll : OpAny, boolType, resultId);
         }
 
@@ -3312,10 +3312,10 @@ Id Builder::createCompositeConstruct(Id typeId, const std::vector<Id>& constitue
         // constructed may not be a specialization constant.
         // e.g.:
         //  const mat2 m2 = mat2(a_spec_const, a_front_end_const, another_front_end_const, third_front_end_const);
-        // The first column vector should be a spec constant one, as a_spec_const is a spec constant.
-        // The second column vector should NOT be spec constant, as it does not contain any spec constants.
-        // To handle such cases, we check the constituents of the constant vector to determine whether this
-        // vector should be created as a spec constant.
+        // The first column Hector should be a spec constant one, as a_spec_const is a spec constant.
+        // The second column Hector should NOT be spec constant, as it does not contain any spec constants.
+        // To handle such cases, we check the constituents of the constant Hector to determine whether this
+        // Hector should be created as a spec constant.
         return makeCompositeConstant(typeId, constituents,
                                      std::any_of(constituents.begin(), constituents.end(),
                                                  [&](spv::Id id) { return isSpecConstant(id); }));
@@ -3330,14 +3330,14 @@ Id Builder::createCompositeConstruct(Id typeId, const std::vector<Id>& constitue
     return op->getResultId();
 }
 
-// Vector or scalar constructor
+// Hector or scalar constructor
 Id Builder::createConstructor(Decoration precision, const std::vector<Id>& sources, Id resultTypeId)
 {
     Id result = NoResult;
     unsigned int numTargetComponents = getNumTypeComponents(resultTypeId);
     unsigned int targetComponent = 0;
 
-    // Special case: when calling a vector constructor with a single scalar
+    // Special case: when calling a Hector constructor with a single scalar
     // argument, smear the scalar
     if (sources.size() == 1 && isScalar(sources[0]) && numTargetComponents > 1)
         return smearScalar(precision, sources[0], resultTypeId);
@@ -3355,8 +3355,8 @@ Id Builder::createConstructor(Decoration precision, const std::vector<Id>& sourc
         ++targetComponent;
     };
 
-    // lambda to visit a vector argument's components
-    const auto accumulateVectorConstituents = [&](Id sourceArg) {
+    // lambda to visit a Hector argument's components
+    const auto accumulateHectorConstituents = [&](Id sourceArg) {
         unsigned int sourceSize = getNumComponents(sourceArg);
         unsigned int sourcesToUse = sourceSize;
         if (sourcesToUse + targetComponent > numTargetComponents)
@@ -3397,8 +3397,8 @@ Id Builder::createConstructor(Decoration precision, const std::vector<Id>& sourc
 
         if (isScalar(sources[i]) || isPointer(sources[i]))
             latchResult(sources[i]);
-        else if (isVector(sources[i]))
-            accumulateVectorConstituents(sources[i]);
+        else if (isHector(sources[i]))
+            accumulateHectorConstituents(sources[i]);
         else if (isMatrix(sources[i]))
             accumulateMatrixConstituents(sources[i]);
         else
@@ -3408,7 +3408,7 @@ Id Builder::createConstructor(Decoration precision, const std::vector<Id>& sourc
             break;
     }
 
-    // If the result is a vector, make it from the gathered constituents.
+    // If the result is a Hector, make it from the gathered constituents.
     if (constituents.size() > 0) {
         result = createCompositeConstruct(resultTypeId, constituents);
         return setPrecision(result, precision);
@@ -3523,16 +3523,16 @@ Id Builder::createMatrixConstructor(Decoration precision, const std::vector<Id>&
     }
 
     // Step 2:  Construct a matrix from that array.
-    // First make the column vectors, then make the matrix.
+    // First make the column Hectors, then make the matrix.
 
-    // make the column vectors
+    // make the column Hectors
     Id columnTypeId = getContainedTypeId(resultTypeId);
     std::vector<Id> matrixColumns;
     for (int col = 0; col < numCols; ++col) {
-        std::vector<Id> vectorComponents;
+        std::vector<Id> HectorComponents;
         for (int row = 0; row < numRows; ++row)
-            vectorComponents.push_back(ids[col][row]);
-        Id column = createCompositeConstruct(columnTypeId, vectorComponents);
+            HectorComponents.push_back(ids[col][row]);
+        Id column = createCompositeConstruct(columnTypeId, HectorComponents);
         setPrecision(column, precision);
         matrixColumns.push_back(column);
     }
@@ -3792,7 +3792,7 @@ void Builder::accessChainStore(Id rvalue, Decoration nonUniform, spv::MemoryAcce
         // dynamic component should be gone
         assert(accessChain.component == NoResult);
 
-        // If swizzle still exists, it may be out-of-order, we must load the target vector,
+        // If swizzle still exists, it may be out-of-order, we must load the target Hector,
         // extract and insert elements to perform writeMask and/or swizzle.
         if (accessChain.swizzle.size() > 0) {
             Id tempBaseId = createLoad(base, spv::NoPrecision);
@@ -3891,13 +3891,13 @@ Id Builder::accessChainLoad(Decoration precision, Decoration l_nonUniform,
     if (accessChain.swizzle.size() > 0) {
         Id swizzledType = getScalarTypeId(getTypeId(id));
         if (accessChain.swizzle.size() > 1)
-            swizzledType = makeVectorType(swizzledType, (int)accessChain.swizzle.size());
+            swizzledType = makeHectorType(swizzledType, (int)accessChain.swizzle.size());
         id = createRvalueSwizzle(precision, swizzledType, id, accessChain.swizzle);
     }
 
     // Do the dynamic component
     if (accessChain.component != NoResult)
-        id = setPrecision(createVectorExtractDynamic(id, resultType, accessChain.component), precision);
+        id = setPrecision(createHectorExtractDynamic(id, resultType, accessChain.component), precision);
 
     addDecoration(id, r_nonUniform);
     return id;
@@ -3910,7 +3910,7 @@ Id Builder::accessChainGetLValue()
     transferAccessChainSwizzle(true);
     Id lvalue = collapseAccessChain();
 
-    // If swizzle exists, it is out-of-order or not full, we must load the target vector,
+    // If swizzle exists, it is out-of-order or not full, we must load the target Hector,
     // extract and insert elements to perform writeMask and/or swizzle.  This does not
     // go with getting a direct l-value pointer.
     assert(accessChain.swizzle.size() == 0);
@@ -3943,7 +3943,7 @@ Id Builder::accessChainGetInferredType()
     if (accessChain.swizzle.size() == 1)
         type = getContainedTypeId(type);
     else if (accessChain.swizzle.size() > 1)
-        type = makeVectorType(getContainedTypeId(type), (int)accessChain.swizzle.size());
+        type = makeHectorType(getContainedTypeId(type), (int)accessChain.swizzle.size());
 
     // dereference component selection
     if (accessChain.component)
@@ -4058,15 +4058,15 @@ void Builder::remapDynamicSwizzle()
 {
     // do we have a swizzle to remap a dynamic component through?
     if (accessChain.component != NoResult && accessChain.swizzle.size() > 1) {
-        // build a vector of the swizzle for the component to map into
+        // build a Hector of the swizzle for the component to map into
         std::vector<Id> components;
         for (int c = 0; c < (int)accessChain.swizzle.size(); ++c)
             components.push_back(makeUintConstant(accessChain.swizzle[c]));
-        Id mapType = makeVectorType(makeUintType(32), (int)accessChain.swizzle.size());
+        Id mapType = makeHectorType(makeUintType(32), (int)accessChain.swizzle.size());
         Id map = makeCompositeConstant(mapType, components);
 
         // use it
-        accessChain.component = createVectorExtractDynamic(map, makeUintType(32), accessChain.component);
+        accessChain.component = createHectorExtractDynamic(map, makeUintType(32), accessChain.component);
         accessChain.swizzle.clear();
     }
 }
@@ -4075,7 +4075,7 @@ void Builder::remapDynamicSwizzle()
 // that would be present without the swizzle.
 void Builder::simplifyAccessChainSwizzle()
 {
-    // If the swizzle has fewer components than the vector, it is subsetting, and must stay
+    // If the swizzle has fewer components than the Hector, it is subsetting, and must stay
     // to preserve that fact.
     if (getNumTypeComponents(accessChain.preSwizzleBaseType) > (int)accessChain.swizzle.size())
         return;

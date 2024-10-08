@@ -23,7 +23,7 @@
 #include "ubrkimpl.h"
 #include "utracimp.h"
 #include "uvectr32.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "uassert.h"
 #include "unicode/normlzr.h"
 #include "cmemory.h"
@@ -50,7 +50,7 @@ int32_t
 DictionaryBreakEngine::findBreaks( UText *text,
                                  int32_t startPos,
                                  int32_t endPos,
-                                 UVector32 &foundBreaks,
+                                 UHector32 &foundBreaks,
                                  UBool isPhraseBreaking,
                                  UErrorCode& status) const {
     if (U_FAILURE(status)) return 0;
@@ -233,7 +233,7 @@ int32_t
 ThaiBreakEngine::divideUpDictionaryRange( UText *text,
                                                 int32_t rangeStart,
                                                 int32_t rangeEnd,
-                                                UVector32 &foundBreaks,
+                                                UHector32 &foundBreaks,
                                                 UBool /* isPhraseBreaking */,
                                                 UErrorCode& status) const {
     if (U_FAILURE(status)) return 0;
@@ -473,7 +473,7 @@ int32_t
 LaoBreakEngine::divideUpDictionaryRange( UText *text,
                                                 int32_t rangeStart,
                                                 int32_t rangeEnd,
-                                                UVector32 &foundBreaks,
+                                                UHector32 &foundBreaks,
                                                 UBool /* isPhraseBreaking */,
                                                 UErrorCode& status) const {
     if (U_FAILURE(status)) return 0;
@@ -666,7 +666,7 @@ int32_t
 BurmeseBreakEngine::divideUpDictionaryRange( UText *text,
                                                 int32_t rangeStart,
                                                 int32_t rangeEnd,
-                                                UVector32 &foundBreaks,
+                                                UHector32 &foundBreaks,
                                                 UBool /* isPhraseBreaking */,
                                                 UErrorCode& status ) const {
     if (U_FAILURE(status)) return 0;
@@ -872,7 +872,7 @@ int32_t
 KhmerBreakEngine::divideUpDictionaryRange( UText *text,
                                                 int32_t rangeStart,
                                                 int32_t rangeEnd,
-                                                UVector32 &foundBreaks,
+                                                UHector32 &foundBreaks,
                                                 UBool /* isPhraseBreaking */,
                                                 UErrorCode& status ) const {
     if (U_FAILURE(status)) return 0;
@@ -1127,14 +1127,14 @@ static inline int32_t utext_i32_flag(int32_t bitIndex) {
  * @param text A UText representing the text
  * @param rangeStart The start of the range of dictionary characters
  * @param rangeEnd The end of the range of dictionary characters
- * @param foundBreaks vector<int32> to receive the break positions
+ * @param foundBreaks Hector<int32> to receive the break positions
  * @return The number of breaks found
  */
 int32_t 
 CjkBreakEngine::divideUpDictionaryRange( UText *inText,
         int32_t rangeStart,
         int32_t rangeEnd,
-        UVector32 &foundBreaks,
+        UHector32 &foundBreaks,
         UBool isPhraseBreaking,
         UErrorCode& status) const {
     if (U_FAILURE(status)) return 0;
@@ -1147,7 +1147,7 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
 
     // inputMap[inStringIndex] = corresponding native index from UText inText.
     // If nullptr then mapping is 1:1
-    LocalPointer<UVector32>     inputMap;
+    LocalPointer<UHector32>     inputMap;
 
     // if UText has the input string as one contiguous UTF-16 chunk
     if ((inText->providerProperties & utext_i32_flag(UTEXT_PROVIDER_STABLE_CHUNKS)) &&
@@ -1169,7 +1169,7 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
         if (limit > utext_nativeLength(inText)) {
             limit = (int32_t)utext_nativeLength(inText);
         }
-        inputMap.adoptInsteadAndCheckErrorCode(new UVector32(status), status);
+        inputMap.adoptInsteadAndCheckErrorCode(new UHector32(status), status);
         if (U_FAILURE(status)) {
             return 0;
         }
@@ -1189,7 +1189,7 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
     if (!nfkcNorm2->isNormalized(inString, status)) {
         UnicodeString normalizedInput;
         //  normalizedMap[normalizedInput position] ==  original UText position.
-        LocalPointer<UVector32> normalizedMap(new UVector32(status), status);
+        LocalPointer<UHector32> normalizedMap(new UHector32(status), status);
         if (U_FAILURE(status)) {
             return 0;
         }
@@ -1243,7 +1243,7 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
         //    from normalization and/or UTF-8 input.
         UBool hadExistingMap = inputMap.isValid();
         if (!hadExistingMap) {
-            inputMap.adoptInsteadAndCheckErrorCode(new UVector32(status), status);
+            inputMap.adoptInsteadAndCheckErrorCode(new UHector32(status), status);
             if (U_FAILURE(status)) {
                 return 0;
             }
@@ -1273,7 +1273,7 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
 
     // bestSnlp[i] is the snlp of the best segmentation of the first i
     // code points in the range to be matched.
-    UVector32 bestSnlp(numCodePts + 1, status);
+    UHector32 bestSnlp(numCodePts + 1, status);
     bestSnlp.addElement(0, status);
     for(int32_t i = 1; i <= numCodePts; i++) {
         bestSnlp.addElement(kuint32max, status);
@@ -1282,15 +1282,15 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
 
     // prev[i] is the index of the last CJK code point in the previous word in 
     // the best segmentation of the first i characters.
-    UVector32 prev(numCodePts + 1, status);
+    UHector32 prev(numCodePts + 1, status);
     for(int32_t i = 0; i <= numCodePts; i++){
         prev.addElement(-1, status);
     }
 
     const int32_t maxWordSize = 20;
-    UVector32 values(numCodePts, status);
+    UHector32 values(numCodePts, status);
     values.setSize(numCodePts);
-    UVector32 lengths(numCodePts, status);
+    UHector32 lengths(numCodePts, status);
     lengths.setSize(numCodePts);
 
     UText fu = UTEXT_INITIALIZER;
@@ -1367,7 +1367,7 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
     // prev[numCodePts] is guaranteed to be meaningful.
     // We'll first push in the reverse order, i.e.,
     // t_boundary[0] = numCodePts, and afterwards do a swap.
-    UVector32 t_boundary(numCodePts+1, status);
+    UHector32 t_boundary(numCodePts+1, status);
 
     int32_t numBreaks = 0;
     // No segmentation found, set boundary to end of range

@@ -41,7 +41,7 @@ TEST_CASE("[XMLParser] End-to-end") {
 <top attr=\"attr value\">\
   Text&lt;&#65;&#x42;&gt;\
 </top>";
-	Vector<uint8_t> buff = source.to_utf8_buffer();
+	Hector<uint8_t> buff = source.to_utf8_buffer();
 
 	XMLParser parser;
 	parser.open_buffer(buff);

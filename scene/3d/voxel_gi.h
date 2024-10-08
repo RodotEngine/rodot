@@ -45,7 +45,7 @@ class VoxelGIData : public Resource {
 
 	Transform3D to_cell_xform;
 	AABB bounds;
-	Vector3 octree_size;
+	Hector3 octree_size;
 
 	float dynamic_range = 2.0;
 	float energy = 1.0;
@@ -59,13 +59,13 @@ protected:
 	static void _bind_methods();
 
 public:
-	void allocate(const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3 &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts);
+	void allocate(const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3 &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts);
 	AABB get_bounds() const;
-	Vector3 get_octree_size() const;
-	Vector<uint8_t> get_octree_cells() const;
-	Vector<uint8_t> get_data_cells() const;
-	Vector<uint8_t> get_distance_field() const;
-	Vector<int> get_level_counts() const;
+	Hector3 get_octree_size() const;
+	Hector<uint8_t> get_octree_cells() const;
+	Hector<uint8_t> get_data_cells() const;
+	Hector<uint8_t> get_distance_field() const;
+	Hector<int> get_level_counts() const;
 	Transform3D get_to_cell_xform() const;
 
 	void set_dynamic_range(float p_range);
@@ -118,12 +118,12 @@ private:
 	RID voxel_gi;
 
 	Subdiv subdiv = SUBDIV_128;
-	Vector3 size = Vector3(20, 20, 20);
+	Hector3 size = Hector3(20, 20, 20);
 	Ref<CameraAttributes> camera_attributes;
 
 	struct PlotMesh {
 		Ref<Material> override_material;
-		Vector<Ref<Material>> instance_materials;
+		Hector<Ref<Material>> instance_materials;
 		Ref<Mesh> mesh;
 		Transform3D local_xform;
 	};
@@ -151,13 +151,13 @@ public:
 	void set_subdiv(Subdiv p_subdiv);
 	Subdiv get_subdiv() const;
 
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_camera_attributes(const Ref<CameraAttributes> &p_camera_attributes);
 	Ref<CameraAttributes> get_camera_attributes() const;
 
-	Vector3i get_estimated_cell_size() const;
+	Hector3i get_estimated_cell_size() const;
 
 	void bake(Node *p_from_node = nullptr, bool p_create_visual_debug = false);
 

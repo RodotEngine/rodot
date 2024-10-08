@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// The general goal of these vectorized estimated math functions is scalability/performance.
+// The general goal of these Hectorized estimated math functions is scalability/performance.
 // There are explictly no checks NaN's/Inf's on the input arguments. There are no assertions either. 
 // These are fast estimate functions - if you need more than that, use stdlib. Please do a proper 
 // engineering analysis before relying on them.
@@ -48,7 +48,7 @@ CPPSPMD_FORCE_INLINE vfloat safe_div(vfloat a, vfloat b, float fDivThresh = 1e-7
 	avg abs err: 0.0000007535452724
 	avg rel err: 0.0000000235117843
 
-	XMVectorLog2():
+	XMHectorLog2():
 	max abs err: 0.0000023329709933
 	max rel err: 0.0000000826961046
 	avg abs err: 0.0000007564889684
@@ -165,7 +165,7 @@ CPPSPMD_FORCE_INLINE void spmd_kernel::reduce_expb(vfloat& arg, vfloat& two_int_
 	avg abs err: 10793794.4007573910057545
 	avg rel err: 0.0000003890893282
 	 
-	XMVectorExp2():
+	XMHectorExp2():
 	Total passed near-zero check: 16777216
 	Total sign diffs: 0
 	max abs err: 1665552836.8750000000000000
@@ -433,7 +433,7 @@ CPPSPMD_FORCE_INLINE vfloat spmd_kernel::atan2_est(vfloat y, vfloat x)
 	max rel err: 0.1459155900188041
 	avg rel err: 0.0000054659502568
 
-	XMVectorTan() precise:
+	XMHectorTan() precise:
 	Total near-zero: 144, output above near-zero tresh: 18
 	Total near-zero avg: 0.0000067641216186 max: 0.0000133524126795
 	Total near-zero sign diffs: 0

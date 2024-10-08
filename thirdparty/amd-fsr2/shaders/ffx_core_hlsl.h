@@ -69,122 +69,122 @@
 /// @ingroup GPU
 #define FFX_NOT_EQUAL(x, y) x != y
 
-/// Broadcast a scalar value to a 1-dimensional floating point vector.
+/// Broadcast a scalar value to a 1-dimensional floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_FLOAT32(x) FfxFloat32(x)
 
-/// Broadcast a scalar value to a 2-dimensional floating point vector.
+/// Broadcast a scalar value to a 2-dimensional floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_FLOAT32X2(x) FfxFloat32(x)
 
-/// Broadcast a scalar value to a 3-dimensional floating point vector.
+/// Broadcast a scalar value to a 3-dimensional floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_FLOAT32X3(x) FfxFloat32(x)
 
-/// Broadcast a scalar value to a 4-dimensional floating point vector.
+/// Broadcast a scalar value to a 4-dimensional floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_FLOAT32X4(x) FfxFloat32(x)
 
-/// Broadcast a scalar value to a 1-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 1-dimensional unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_UINT32(x) FfxUInt32(x)
 
-/// Broadcast a scalar value to a 2-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 2-dimensional unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_UINT32X2(x) FfxUInt32(x)
 
-/// Broadcast a scalar value to a 4-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 4-dimensional unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_UINT32X3(x) FfxUInt32(x)
 
-/// Broadcast a scalar value to a 4-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 4-dimensional unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_UINT32X4(x) FfxUInt32(x)
 
-/// Broadcast a scalar value to a 1-dimensional signed integer vector.
+/// Broadcast a scalar value to a 1-dimensional signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_INT32(x) FfxInt32(x)
 
-/// Broadcast a scalar value to a 2-dimensional signed integer vector.
+/// Broadcast a scalar value to a 2-dimensional signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_INT32X2(x) FfxInt32(x)
 
-/// Broadcast a scalar value to a 3-dimensional signed integer vector.
+/// Broadcast a scalar value to a 3-dimensional signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_INT32X3(x) FfxInt32(x)
 
-/// Broadcast a scalar value to a 4-dimensional signed integer vector.
+/// Broadcast a scalar value to a 4-dimensional signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_INT32X4(x) FfxInt32(x)
 
-/// Broadcast a scalar value to a 1-dimensional half-precision floating point vector.
+/// Broadcast a scalar value to a 1-dimensional half-precision floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_FLOAT16(a)   FFX_MIN16_F(a)
 
-/// Broadcast a scalar value to a 2-dimensional half-precision floating point vector.
+/// Broadcast a scalar value to a 2-dimensional half-precision floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_FLOAT16X2(a) FFX_MIN16_F(a)
 
-/// Broadcast a scalar value to a 3-dimensional half-precision floating point vector.
+/// Broadcast a scalar value to a 3-dimensional half-precision floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_FLOAT16X3(a) FFX_MIN16_F(a)
 
-/// Broadcast a scalar value to a 4-dimensional half-precision floating point vector.
+/// Broadcast a scalar value to a 4-dimensional half-precision floating point Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_FLOAT16X4(a) FFX_MIN16_F(a)
 
-/// Broadcast a scalar value to a 1-dimensional half-precision unsigned integer vector.
+/// Broadcast a scalar value to a 1-dimensional half-precision unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_UINT16(a)   FFX_MIN16_U(a)
 
-/// Broadcast a scalar value to a 2-dimensional half-precision unsigned integer vector.
+/// Broadcast a scalar value to a 2-dimensional half-precision unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_UINT16X2(a) FFX_MIN16_U(a)
 
-/// Broadcast a scalar value to a 3-dimensional half-precision unsigned integer vector.
+/// Broadcast a scalar value to a 3-dimensional half-precision unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_UINT16X3(a) FFX_MIN16_U(a)
 
-/// Broadcast a scalar value to a 4-dimensional half-precision unsigned integer vector.
+/// Broadcast a scalar value to a 4-dimensional half-precision unsigned integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_UINT16X4(a) FFX_MIN16_U(a)
 
-/// Broadcast a scalar value to a 1-dimensional half-precision signed integer vector.
+/// Broadcast a scalar value to a 1-dimensional half-precision signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_INT16(a)   FFX_MIN16_I(a)
 
-/// Broadcast a scalar value to a 2-dimensional half-precision signed integer vector.
+/// Broadcast a scalar value to a 2-dimensional half-precision signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_INT16X2(a) FFX_MIN16_I(a)
 
-/// Broadcast a scalar value to a 3-dimensional half-precision signed integer vector.
+/// Broadcast a scalar value to a 3-dimensional half-precision signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_INT16X3(a) FFX_MIN16_I(a)
 
-/// Broadcast a scalar value to a 4-dimensional half-precision signed integer vector.
+/// Broadcast a scalar value to a 4-dimensional half-precision signed integer Hector.
 ///
 /// @ingroup GPU
 #define FFX_BROADCAST_MIN_INT16X4(a) FFX_MIN16_I(a)
@@ -206,12 +206,12 @@ FfxUInt32 packHalf2x16(FfxFloat32x2 value)
     return f32tof16(value.x) | (f32tof16(value.y) << 16);
 }
 
-/// Broadcast a scalar value to a 2-dimensional floating point vector.
+/// Broadcast a scalar value to a 2-dimensional floating point Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 2-dimensional floating point vector with <c><i>value</i></c> in each component.
+/// A 2-dimensional floating point Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxFloat32x2 ffxBroadcast2(FfxFloat32 value)
@@ -219,12 +219,12 @@ FfxFloat32x2 ffxBroadcast2(FfxFloat32 value)
     return FfxFloat32x2(value, value);
 }
 
-/// Broadcast a scalar value to a 3-dimensional floating point vector.
+/// Broadcast a scalar value to a 3-dimensional floating point Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 3-dimensional floating point vector with <c><i>value</i></c> in each component.
+/// A 3-dimensional floating point Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxFloat32x3 ffxBroadcast3(FfxFloat32 value)
@@ -232,12 +232,12 @@ FfxFloat32x3 ffxBroadcast3(FfxFloat32 value)
     return FfxFloat32x3(value, value, value);
 }
 
-/// Broadcast a scalar value to a 4-dimensional floating point vector.
+/// Broadcast a scalar value to a 4-dimensional floating point Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 4-dimensional floating point vector with <c><i>value</i></c> in each component.
+/// A 4-dimensional floating point Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxFloat32x4 ffxBroadcast4(FfxFloat32 value)
@@ -245,12 +245,12 @@ FfxFloat32x4 ffxBroadcast4(FfxFloat32 value)
     return FfxFloat32x4(value, value, value, value);
 }
 
-/// Broadcast a scalar value to a 2-dimensional signed integer vector.
+/// Broadcast a scalar value to a 2-dimensional signed integer Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 2-dimensional signed integer vector with <c><i>value</i></c> in each component.
+/// A 2-dimensional signed integer Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxInt32x2 ffxBroadcast2(FfxInt32 value)
@@ -258,12 +258,12 @@ FfxInt32x2 ffxBroadcast2(FfxInt32 value)
     return FfxInt32x2(value, value);
 }
 
-/// Broadcast a scalar value to a 3-dimensional signed integer vector.
+/// Broadcast a scalar value to a 3-dimensional signed integer Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 3-dimensional signed integer vector with <c><i>value</i></c> in each component.
+/// A 3-dimensional signed integer Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxUInt32x3 ffxBroadcast3(FfxInt32 value)
@@ -271,12 +271,12 @@ FfxUInt32x3 ffxBroadcast3(FfxInt32 value)
     return FfxUInt32x3(value, value, value);
 }
 
-/// Broadcast a scalar value to a 4-dimensional signed integer vector.
+/// Broadcast a scalar value to a 4-dimensional signed integer Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 4-dimensional signed integer vector with <c><i>value</i></c> in each component.
+/// A 4-dimensional signed integer Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxInt32x4 ffxBroadcast4(FfxInt32 value)
@@ -284,12 +284,12 @@ FfxInt32x4 ffxBroadcast4(FfxInt32 value)
     return FfxInt32x4(value, value, value, value);
 }
 
-/// Broadcast a scalar value to a 2-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 2-dimensional unsigned integer Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 2-dimensional unsigned integer vector with <c><i>value</i></c> in each component.
+/// A 2-dimensional unsigned integer Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxUInt32x2 ffxBroadcast2(FfxUInt32 value)
@@ -297,12 +297,12 @@ FfxUInt32x2 ffxBroadcast2(FfxUInt32 value)
     return FfxUInt32x2(value, value);
 }
 
-/// Broadcast a scalar value to a 3-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 3-dimensional unsigned integer Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 3-dimensional unsigned integer vector with <c><i>value</i></c> in each component.
+/// A 3-dimensional unsigned integer Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxUInt32x3 ffxBroadcast3(FfxUInt32 value)
@@ -310,12 +310,12 @@ FfxUInt32x3 ffxBroadcast3(FfxUInt32 value)
     return FfxUInt32x3(value, value, value);
 }
 
-/// Broadcast a scalar value to a 4-dimensional unsigned integer vector.
+/// Broadcast a scalar value to a 4-dimensional unsigned integer Hector.
 ///
 /// @param [in] value               The value to to broadcast.
 ///
 /// @returns
-/// A 4-dimensional unsigned integer vector with <c><i>value</i></c> in each component.
+/// A 4-dimensional unsigned integer Hector with <c><i>value</i></c> in each component.
 ///
 /// @ingroup HLSL
 FfxUInt32x4 ffxBroadcast4(FfxUInt32 value)

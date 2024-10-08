@@ -170,7 +170,7 @@ void GodotCollisionObject3D::_update_shapes() {
 		shape_aabb.grow_by((s.aabb_cache.size.x + s.aabb_cache.size.y) * 0.5 * 0.05);
 		s.aabb_cache = shape_aabb;
 
-		Vector3 scale = xform.get_basis().get_scale();
+		Hector3 scale = xform.get_basis().get_scale();
 		s.area_cache = s.shape->get_volume() * scale.x * scale.y * scale.z;
 
 		if (s.bpid == 0) {
@@ -182,7 +182,7 @@ void GodotCollisionObject3D::_update_shapes() {
 	}
 }
 
-void GodotCollisionObject3D::_update_shapes_with_motion(const Vector3 &p_motion) {
+void GodotCollisionObject3D::_update_shapes_with_motion(const Hector3 &p_motion) {
 	if (!space) {
 		return;
 	}

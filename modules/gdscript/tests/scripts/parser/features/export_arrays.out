@@ -119,12 +119,12 @@ var test_weak_packed_float64_array: PackedFloat64Array
   hint=TYPE_STRING hint_string="<float>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
 var test_weak_packed_color_array: PackedColorArray
   hint=TYPE_STRING hint_string="<Color>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
-var test_weak_packed_vector2_array: PackedVector2Array
-  hint=TYPE_STRING hint_string="<Vector2>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
-var test_weak_packed_vector3_array: PackedVector3Array
-  hint=TYPE_STRING hint_string="<Vector3>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
-var test_weak_packed_vector4_array: PackedVector4Array
-  hint=TYPE_STRING hint_string="<Vector4>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
+var test_weak_packed_Hector2_array: PackedHector2Array
+  hint=TYPE_STRING hint_string="<Hector2>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
+var test_weak_packed_Hector3_array: PackedHector3Array
+  hint=TYPE_STRING hint_string="<Hector3>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
+var test_weak_packed_Hector4_array: PackedHector4Array
+  hint=TYPE_STRING hint_string="<Hector4>:" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
 var test_range_weak_packed_byte_array: PackedByteArray
   hint=TYPE_STRING hint_string="<int>/<RANGE>:1,10" usage=DEFAULT|SCRIPT_VARIABLE class_name=&""
 var test_range_weak_packed_int32_array: PackedInt32Array

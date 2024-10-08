@@ -63,8 +63,8 @@ class AudioDriverPulseAudio : public AudioDriver {
 	String new_input_device;
 	String default_input_device;
 
-	Vector<int32_t> samples_in;
-	Vector<int16_t> samples_out;
+	Hector<int32_t> samples_in;
+	Hector<int16_t> samples_out;
 
 	unsigned int mix_rate = 0;
 	unsigned int buffer_frames = 0;

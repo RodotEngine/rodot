@@ -12,11 +12,11 @@
 #define HAS_MALLOC_USABLE_SIZE 1
 #endif
 
-// Set to 1 to always check vector operator[], front(), and back() even in release.
-#define BASISU_VECTOR_FORCE_CHECKING 0
+// Set to 1 to always check Hector operator[], front(), and back() even in release.
+#define BASISU_Hector_FORCE_CHECKING 0
 
-// If 1, the vector container will not query the CRT to get the size of resized memory blocks.
-#define BASISU_VECTOR_DETERMINISTIC 1
+// If 1, the Hector container will not query the CRT to get the size of resized memory blocks.
+#define BASISU_Hector_DETERMINISTIC 1
 
 #ifdef _MSC_VER
 #define BASISU_FORCE_INLINE __forceinline
@@ -235,7 +235,7 @@ namespace basisu
       friend bool operator>=(const T& x, const T& y) { return (!(x < y)); }
    };
 
-   struct elemental_vector
+   struct elemental_Hector
    {
       void* m_p;
       uint32_t m_size;
@@ -247,7 +247,7 @@ namespace basisu
    };
 
    template<typename T>
-   class vector : public rel_ops< vector<T> >
+   class Hector : public rel_ops< Hector<T> >
    {
    public:
       typedef T* iterator;
@@ -258,14 +258,14 @@ namespace basisu
       typedef T* pointer;
       typedef const T* const_pointer;
 
-      inline vector() :
+      inline Hector() :
          m_p(NULL),
          m_size(0),
          m_capacity(0)
       {
       }
 
-      inline vector(uint32_t n, const T& init) :
+      inline Hector(uint32_t n, const T& init) :
          m_p(NULL),
          m_size(0),
          m_capacity(0)
@@ -275,7 +275,7 @@ namespace basisu
          m_size = n;
       }
 
-      inline vector(const vector& other) :
+      inline Hector(const Hector& other) :
          m_p(NULL),
          m_size(0),
          m_capacity(0)
@@ -298,7 +298,7 @@ namespace basisu
          }
       }
 
-      inline explicit vector(size_t size) :
+      inline explicit Hector(size_t size) :
          m_p(NULL),
          m_size(0),
          m_capacity(0)
@@ -306,7 +306,7 @@ namespace basisu
          resize(size);
       }
 
-      inline ~vector()
+      inline ~Hector()
       {
          if (m_p)
          {
@@ -315,7 +315,7 @@ namespace basisu
          }
       }
 
-      inline vector& operator= (const vector& other)
+      inline Hector& operator= (const Hector& other)
       {
          if (this == &other)
             return *this;
@@ -361,7 +361,7 @@ namespace basisu
       //BASISU_FORCE_INLINE const T& operator[] (uint32_t i) const { assert(i < m_size); return m_p[i]; }
       //BASISU_FORCE_INLINE T& operator[] (uint32_t i) { assert(i < m_size); return m_p[i]; }
             
-#if !BASISU_VECTOR_FORCE_CHECKING
+#if !BASISU_Hector_FORCE_CHECKING
       BASISU_FORCE_INLINE const T& operator[] (size_t i) const { assert(i < m_size); return m_p[i]; }
       BASISU_FORCE_INLINE T& operator[] (size_t i) { assert(i < m_size); return m_p[i]; }
 #else
@@ -390,7 +390,7 @@ namespace basisu
       BASISU_FORCE_INLINE const T& at(size_t i) const { assert(i < m_size); return (i >= m_size) ? m_p[0] : m_p[i]; }
       BASISU_FORCE_INLINE T& at(size_t i) { assert(i < m_size); return (i >= m_size) ? m_p[0] : m_p[i]; }
             
-#if !BASISU_VECTOR_FORCE_CHECKING
+#if !BASISU_Hector_FORCE_CHECKING
       BASISU_FORCE_INLINE const T& front() const { assert(m_size); return m_p[0]; }
       BASISU_FORCE_INLINE T& front() { assert(m_size); return m_p[0]; }
 
@@ -401,7 +401,7 @@ namespace basisu
       { 
           if (!m_size)
           {
-              fprintf(stderr, "front: vector is empty, type size %u\n", (uint32_t)sizeof(T));
+              fprintf(stderr, "front: Hector is empty, type size %u\n", (uint32_t)sizeof(T));
               abort();
           }
           return m_p[0]; 
@@ -410,7 +410,7 @@ namespace basisu
       { 
           if (!m_size)
           {
-              fprintf(stderr, "front: vector is empty, type size %u\n", (uint32_t)sizeof(T));
+              fprintf(stderr, "front: Hector is empty, type size %u\n", (uint32_t)sizeof(T));
               abort();
           }
           return m_p[0]; 
@@ -420,7 +420,7 @@ namespace basisu
       { 
           if(!m_size)
           {
-              fprintf(stderr, "back: vector is empty, type size %u\n", (uint32_t)sizeof(T));
+              fprintf(stderr, "back: Hector is empty, type size %u\n", (uint32_t)sizeof(T));
               abort();
           }
           return m_p[m_size - 1]; 
@@ -429,7 +429,7 @@ namespace basisu
       { 
           if (!m_size)
           {
-              fprintf(stderr, "back: vector is empty, type size %u\n", (uint32_t)sizeof(T));
+              fprintf(stderr, "back: Hector is empty, type size %u\n", (uint32_t)sizeof(T));
               abort();
           }
           return m_p[m_size - 1]; 
@@ -482,7 +482,7 @@ namespace basisu
          {
             // Must work around the lack of a "decrease_capacity()" method.
             // This case is rare enough in practice that it's probably not worth implementing an optimized in-place resize.
-            vector tmp;
+            Hector tmp;
             tmp.increase_capacity(helpers::maximum(m_size, new_capacity), false);
             tmp = *this;
             swap(tmp);
@@ -508,7 +508,7 @@ namespace basisu
          {
             // Must work around the lack of a "decrease_capacity()" method.
             // This case is rare enough in practice that it's probably not worth implementing an optimized in-place resize.
-            vector tmp;
+            Hector tmp;
             tmp.increase_capacity(helpers::maximum(m_size, new_capacity), false);
             tmp = *this;
             swap(tmp);
@@ -710,14 +710,14 @@ namespace basisu
          insert(0, &obj, 1);
       }
 
-      vector& append(const vector& other)
+      Hector& append(const Hector& other)
       {
          if (other.m_size)
             insert(m_size, &other[0], other.m_size);
          return *this;
       }
 
-      vector& append(const T* p, uint32_t n)
+      Hector& append(const T* p, uint32_t n)
       {
          if (n)
             insert(m_size, p, n);
@@ -810,7 +810,7 @@ namespace basisu
          pop_back();
       }
 
-      inline bool operator== (const vector& rhs) const
+      inline bool operator== (const Hector& rhs) const
       {
          if (m_size != rhs.m_size)
             return false;
@@ -831,7 +831,7 @@ namespace basisu
          return true;
       }
 
-      inline bool operator< (const vector& rhs) const
+      inline bool operator< (const Hector& rhs) const
       {
          const uint32_t min_size = helpers::minimum(m_size, rhs.m_size);
 
@@ -851,7 +851,7 @@ namespace basisu
          return m_size < rhs.m_size;
       }
 
-      inline void swap(vector& other)
+      inline void swap(Hector& other)
       {
          std::swap(m_p, other.m_p);
          std::swap(m_size, other.m_size);
@@ -1069,8 +1069,8 @@ namespace basisu
       uint32_t m_size;
       uint32_t m_capacity;
 
-      template<typename Q> struct is_vector { enum { cFlag = false }; };
-      template<typename Q> struct is_vector< vector<Q> > { enum { cFlag = true }; };
+      template<typename Q> struct is_Hector { enum { cFlag = false }; };
+      template<typename Q> struct is_Hector< Hector<Q> > { enum { cFlag = true }; };
 
       static void object_mover(void* pDst_void, void* pSrc_void, uint32_t num)
       {
@@ -1090,13 +1090,13 @@ namespace basisu
 
       inline bool increase_capacity(uint32_t min_new_capacity, bool grow_hint, bool nofail = false)
       {
-         return reinterpret_cast<elemental_vector*>(this)->increase_capacity(
+         return reinterpret_cast<elemental_Hector*>(this)->increase_capacity(
             min_new_capacity, grow_hint, sizeof(T),
-            (BASISU_IS_BITWISE_COPYABLE_OR_MOVABLE(T) || (is_vector<T>::cFlag)) ? NULL : object_mover, nofail);
+            (BASISU_IS_BITWISE_COPYABLE_OR_MOVABLE(T) || (is_Hector<T>::cFlag)) ? NULL : object_mover, nofail);
       }
    };
 
-   template<typename T> struct bitwise_movable< vector<T> > { enum { cFlag = true }; };
+   template<typename T> struct bitwise_movable< Hector<T> > { enum { cFlag = true }; };
 
    // Hash map
 
@@ -1694,9 +1694,9 @@ namespace basisu
          uint8_t m_bits[sizeof(node)];
       };
 
-      typedef basisu::vector<raw_node> node_vector;
+      typedef basisu::Hector<raw_node> node_Hector;
 
-      node_vector    m_values;
+      node_Hector    m_values;
       uint32_t       m_hash_shift;
 
       Hasher         m_hasher;
@@ -1969,7 +1969,7 @@ namespace basisu
 namespace std
 {
    template<typename T>
-   inline void swap(basisu::vector<T>& a, basisu::vector<T>& b)
+   inline void swap(basisu::Hector<T>& a, basisu::Hector<T>& b)
    {
       a.swap(b);
    }

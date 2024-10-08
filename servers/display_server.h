@@ -53,7 +53,7 @@ class DisplayServer : public Object {
 	RID _get_rid_from_name(NativeMenu *p_nmenu, const String &p_menu_root) const;
 #endif
 
-	LocalVector<ObjectID> additional_outputs;
+	LocalHector<ObjectID> additional_outputs;
 
 public:
 	_FORCE_INLINE_ static DisplayServer *get_singleton() {
@@ -91,19 +91,19 @@ public:
 	};
 
 	typedef DisplayServer *(*CreateFunction)(const String &, WindowMode, VSyncMode, uint32_t, const Point2i *, const Size2i &, int p_screen, Context, Error &r_error);
-	typedef Vector<String> (*GetRenderingDriversFunction)();
+	typedef Hector<String> (*GetRenderingDriversFunction)();
 
 private:
 	static void _input_set_mouse_mode(Input::MouseMode p_mode);
 	static Input::MouseMode _input_get_mouse_mode();
-	static void _input_warp(const Vector2 &p_to_pos);
+	static void _input_warp(const Hector2 &p_to_pos);
 	static Input::CursorShape _input_get_current_cursor_shape();
-	static void _input_set_custom_mouse_cursor_func(const Ref<Resource> &, Input::CursorShape, const Vector2 &p_hostspot);
+	static void _input_set_custom_mouse_cursor_func(const Ref<Resource> &, Input::CursorShape, const Hector2 &p_hostspot);
 
 protected:
 	static void _bind_methods();
 
-	static Ref<Image> _get_cursor_image_from_resource(const Ref<Resource> &p_cursor, const Vector2 &p_hotspot);
+	static Ref<Image> _get_cursor_image_from_resource(const Ref<Resource> &p_cursor, const Hector2 &p_hotspot);
 
 	enum {
 		MAX_SERVERS = 64
@@ -304,7 +304,7 @@ public:
 	int _get_screen_index(int p_screen) const {
 		switch (p_screen) {
 			case SCREEN_WITH_MOUSE_FOCUS: {
-				const Rect2i rect = Rect2i(mouse_get_position(), Vector2i(1, 1));
+				const Rect2i rect = Rect2i(mouse_get_position(), Hector2i(1, 1));
 				return get_screen_from_rect(rect);
 			} break;
 			case SCREEN_WITH_KEYBOARD_FOCUS: {
@@ -370,7 +370,7 @@ public:
 	typedef int WindowID;
 	typedef int IndicatorID;
 
-	virtual Vector<DisplayServer::WindowID> get_window_list() const = 0;
+	virtual Hector<DisplayServer::WindowID> get_window_list() const = 0;
 
 	enum WindowFlags {
 		WINDOW_FLAG_RESIZE_DISABLED,
@@ -432,7 +432,7 @@ public:
 	virtual void window_set_title(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) = 0;
 	virtual Size2i window_get_title_size(const String &p_title, WindowID p_window = MAIN_WINDOW_ID) const { return Size2i(); }
 
-	virtual void window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window = MAIN_WINDOW_ID);
+	virtual void window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window = MAIN_WINDOW_ID);
 
 	virtual int window_get_current_screen(WindowID p_window = MAIN_WINDOW_ID) const = 0;
 	virtual void window_set_current_screen(int p_screen, WindowID p_window = MAIN_WINDOW_ID) = 0;
@@ -471,8 +471,8 @@ public:
 
 	virtual WindowID get_focused_window() const;
 
-	virtual void window_set_window_buttons_offset(const Vector2i &p_offset, WindowID p_window = MAIN_WINDOW_ID) {}
-	virtual Vector3i window_get_safe_title_margins(WindowID p_window = MAIN_WINDOW_ID) const { return Vector3i(); }
+	virtual void window_set_window_buttons_offset(const Hector2i &p_offset, WindowID p_window = MAIN_WINDOW_ID) {}
+	virtual Hector3i window_get_safe_title_margins(WindowID p_window = MAIN_WINDOW_ID) const { return Hector3i(); }
 
 	virtual bool window_can_draw(WindowID p_window = MAIN_WINDOW_ID) const = 0;
 
@@ -531,13 +531,13 @@ public:
 	};
 	virtual void cursor_set_shape(CursorShape p_shape);
 	virtual CursorShape cursor_get_shape() const;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2());
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Hector2 &p_hotspot = Hector2());
 
 	virtual bool get_swap_cancel_ok();
 
 	virtual void enable_for_stealing_focus(OS::ProcessID pid);
 
-	virtual Error dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback);
+	virtual Error dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback);
 	virtual Error dialog_input_text(String p_title, String p_description, String p_partial, const Callable &p_callback);
 
 	enum FileDialogMode {
@@ -548,8 +548,8 @@ public:
 		FILE_DIALOG_MODE_SAVE_FILE,
 		FILE_DIALOG_MODE_SAVE_MAX
 	};
-	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback);
-	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback);
+	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback);
+	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback);
 
 	virtual int keyboard_get_layout_count() const;
 	virtual int keyboard_get_current_layout() const;
@@ -593,8 +593,8 @@ public:
 	static void register_create_function(const char *p_name, CreateFunction p_function, GetRenderingDriversFunction p_get_drivers);
 	static int get_create_function_count();
 	static const char *get_create_function_name(int p_index);
-	static Vector<String> get_create_function_rendering_drivers(int p_index);
-	static DisplayServer *create(int p_index, const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_create_function_rendering_drivers(int p_index);
+	static DisplayServer *create(int p_index, const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 
 	enum RenderingDeviceCreationStatus {
 		UNKNOWN,

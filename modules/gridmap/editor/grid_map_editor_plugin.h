@@ -82,7 +82,7 @@ class GridMapEditor : public VBoxContainer {
 	Label *spin_box_label = nullptr;
 
 	struct SetItem {
-		Vector3i position;
+		Hector3i position;
 		int new_value = 0;
 		int new_orientation = 0;
 		int old_value = 0;
@@ -96,9 +96,9 @@ class GridMapEditor : public VBoxContainer {
 
 	Transform3D grid_xform;
 	Transform3D edit_grid_xform;
-	Vector3::Axis edit_axis;
+	Hector3::Axis edit_axis;
 	int edit_floor[3];
-	Vector3 grid_ofs;
+	Hector3 grid_ofs;
 
 	RID grid[3];
 	RID grid_instance[3];
@@ -112,7 +112,7 @@ class GridMapEditor : public VBoxContainer {
 
 	struct ClipboardItem {
 		int cell_item = 0;
-		Vector3 grid_offset;
+		Hector3 grid_offset;
 		int orientation = 0;
 		RID instance;
 	};
@@ -127,19 +127,19 @@ class GridMapEditor : public VBoxContainer {
 	bool updating = false;
 
 	struct Selection {
-		Vector3 click;
-		Vector3 current;
-		Vector3 begin;
-		Vector3 end;
+		Hector3 click;
+		Hector3 current;
+		Hector3 begin;
+		Hector3 end;
 		bool active = false;
 	} selection;
 	Selection last_selection;
 
 	struct PasteIndicator {
-		Vector3 click;
-		Vector3 current;
-		Vector3 begin;
-		Vector3 end;
+		Hector3 click;
+		Hector3 current;
+		Hector3 begin;
+		Hector3 end;
 		int orientation = 0;
 	};
 	PasteIndicator paste_indicator;
@@ -147,7 +147,7 @@ class GridMapEditor : public VBoxContainer {
 	bool cursor_visible = false;
 	Transform3D cursor_transform;
 
-	Vector3 cursor_origin;
+	Hector3 cursor_origin;
 
 	int display_mode = DISPLAY_THUMBNAIL;
 	int selected_palette = -1;
@@ -187,7 +187,7 @@ class GridMapEditor : public VBoxContainer {
 	Label *info_message = nullptr;
 
 	void update_grid(); // Change which and where the grid is displayed
-	void _draw_grids(const Vector3 &cell_size);
+	void _draw_grids(const Hector3 &cell_size);
 	void _configure();
 	void _menu_option(int);
 	void update_palette();
@@ -210,7 +210,7 @@ class GridMapEditor : public VBoxContainer {
 	void _do_paste();
 	void _update_selection_transform();
 	void _validate_selection();
-	void _set_selection(bool p_active, const Vector3 &p_begin = Vector3(), const Vector3 &p_end = Vector3());
+	void _set_selection(bool p_active, const Hector3 &p_begin = Hector3(), const Hector3 &p_end = Hector3());
 
 	void _floor_changed(float p_value);
 	void _floor_mouse_exited();

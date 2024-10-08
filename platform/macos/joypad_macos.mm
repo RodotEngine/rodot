@@ -593,7 +593,7 @@ void JoypadMacOS::process_joypads() {
 				uint64_t timestamp = input->get_joy_vibration_timestamp(id);
 
 				if (timestamp > (unsigned)joypad.ff_effect_timestamp) {
-					Vector2 strength = input->get_joy_vibration_strength(id);
+					Hector2 strength = input->get_joy_vibration_strength(id);
 					float duration = input->get_joy_vibration_duration(id);
 					if (duration == 0) {
 						duration = GCHapticDurationInfinite;

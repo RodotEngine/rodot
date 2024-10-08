@@ -81,7 +81,7 @@ int GodotG6DOFRotationalLimitMotor3D::testLimitValue(real_t test_value) {
 }
 
 real_t GodotG6DOFRotationalLimitMotor3D::solveAngularLimits(
-		real_t timeStep, Vector3 &axis, real_t jacDiagABInv,
+		real_t timeStep, Hector3 &axis, real_t jacDiagABInv,
 		GodotBody3D *body0, GodotBody3D *body1, bool p_body0_dynamic, bool p_body1_dynamic) {
 	if (!needApplyTorques()) {
 		return 0.0f;
@@ -99,7 +99,7 @@ real_t GodotG6DOFRotationalLimitMotor3D::solveAngularLimits(
 	maxMotorForce *= timeStep;
 
 	// current velocity difference
-	Vector3 vel_diff = body0->get_angular_velocity();
+	Hector3 vel_diff = body0->get_angular_velocity();
 	if (body1) {
 		vel_diff -= body1->get_angular_velocity();
 	}
@@ -136,7 +136,7 @@ real_t GodotG6DOFRotationalLimitMotor3D::solveAngularLimits(
 
 	clippedMotorImpulse = m_accumulatedImpulse - oldaccumImpulse;
 
-	Vector3 motorImp = clippedMotorImpulse * axis;
+	Hector3 motorImp = clippedMotorImpulse * axis;
 
 	if (p_body0_dynamic) {
 		body0->apply_torque_impulse(motorImp);
@@ -153,21 +153,21 @@ real_t GodotG6DOFRotationalLimitMotor3D::solveAngularLimits(
 real_t GodotG6DOFTranslationalLimitMotor3D::solveLinearAxis(
 		real_t timeStep,
 		real_t jacDiagABInv,
-		GodotBody3D *body1, const Vector3 &pointInA,
-		GodotBody3D *body2, const Vector3 &pointInB,
+		GodotBody3D *body1, const Hector3 &pointInA,
+		GodotBody3D *body2, const Hector3 &pointInB,
 		bool p_body1_dynamic, bool p_body2_dynamic,
 		int limit_index,
-		const Vector3 &axis_normal_on_a,
-		const Vector3 &anchorPos) {
+		const Hector3 &axis_normal_on_a,
+		const Hector3 &anchorPos) {
 	///find relative velocity
-	//    Vector3 rel_pos1 = pointInA - body1->get_transform().origin;
-	//    Vector3 rel_pos2 = pointInB - body2->get_transform().origin;
-	Vector3 rel_pos1 = anchorPos - body1->get_transform().origin;
-	Vector3 rel_pos2 = anchorPos - body2->get_transform().origin;
+	//    Hector3 rel_pos1 = pointInA - body1->get_transform().origin;
+	//    Hector3 rel_pos2 = pointInB - body2->get_transform().origin;
+	Hector3 rel_pos1 = anchorPos - body1->get_transform().origin;
+	Hector3 rel_pos2 = anchorPos - body2->get_transform().origin;
 
-	Vector3 vel1 = body1->get_velocity_in_local_point(rel_pos1);
-	Vector3 vel2 = body2->get_velocity_in_local_point(rel_pos2);
-	Vector3 vel = vel1 - vel2;
+	Hector3 vel1 = body1->get_velocity_in_local_point(rel_pos1);
+	Hector3 vel2 = body2->get_velocity_in_local_point(rel_pos2);
+	Hector3 vel = vel1 - vel2;
 
 	real_t rel_vel = axis_normal_on_a.dot(vel);
 
@@ -206,12 +206,12 @@ real_t GodotG6DOFTranslationalLimitMotor3D::solveLinearAxis(
 	m_accumulatedImpulse[limit_index] = sum > hi ? real_t(0.) : (sum < lo ? real_t(0.) : sum);
 	normalImpulse = m_accumulatedImpulse[limit_index] - oldNormalImpulse;
 
-	Vector3 impulse_vector = axis_normal_on_a * normalImpulse;
+	Hector3 impulse_Hector = axis_normal_on_a * normalImpulse;
 	if (p_body1_dynamic) {
-		body1->apply_impulse(impulse_vector, rel_pos1);
+		body1->apply_impulse(impulse_Hector, rel_pos1);
 	}
 	if (p_body2_dynamic) {
-		body2->apply_impulse(-impulse_vector, rel_pos2);
+		body2->apply_impulse(-impulse_Hector, rel_pos2);
 	}
 	return normalImpulse;
 }
@@ -249,8 +249,8 @@ void GodotGeneric6DOFJoint3D::calculateAngleInfo() {
 	// easier to take the euler rate expression for d(angle[2])/dt with respect
 	// to the components of w and set that to 0.
 
-	Vector3 axis0 = m_calculatedTransformB.basis.get_column(0);
-	Vector3 axis2 = m_calculatedTransformA.basis.get_column(2);
+	Hector3 axis0 = m_calculatedTransformB.basis.get_column(0);
+	Hector3 axis2 = m_calculatedTransformA.basis.get_column(2);
 
 	m_calculatedAxis[1] = axis2.cross(axis0);
 	m_calculatedAxis[0] = m_calculatedAxis[1].cross(axis2);
@@ -277,8 +277,8 @@ void GodotGeneric6DOFJoint3D::calculateTransforms() {
 }
 
 void GodotGeneric6DOFJoint3D::buildLinearJacobian(
-		GodotJacobianEntry3D &jacLinear, const Vector3 &normalWorld,
-		const Vector3 &pivotAInW, const Vector3 &pivotBInW) {
+		GodotJacobianEntry3D &jacLinear, const Hector3 &normalWorld,
+		const Hector3 &pivotAInW, const Hector3 &pivotBInW) {
 	memnew_placement(
 			&jacLinear,
 			GodotJacobianEntry3D(
@@ -294,7 +294,7 @@ void GodotGeneric6DOFJoint3D::buildLinearJacobian(
 }
 
 void GodotGeneric6DOFJoint3D::buildAngularJacobian(
-		GodotJacobianEntry3D &jacAngular, const Vector3 &jointAxisW) {
+		GodotJacobianEntry3D &jacAngular, const Hector3 &jointAxisW) {
 	memnew_placement(
 			&jacAngular,
 			GodotJacobianEntry3D(
@@ -322,7 +322,7 @@ bool GodotGeneric6DOFJoint3D::setup(real_t p_timestep) {
 	}
 
 	// Clear accumulated impulses for the next simulation step
-	m_linearLimits.m_accumulatedImpulse = Vector3(real_t(0.), real_t(0.), real_t(0.));
+	m_linearLimits.m_accumulatedImpulse = Hector3(real_t(0.), real_t(0.), real_t(0.));
 	int i;
 	for (i = 0; i < 3; i++) {
 		m_angularLimits[i].m_accumulatedImpulse = real_t(0.);
@@ -330,17 +330,17 @@ bool GodotGeneric6DOFJoint3D::setup(real_t p_timestep) {
 	//calculates transform
 	calculateTransforms();
 
-	//  const Vector3& pivotAInW = m_calculatedTransformA.origin;
-	//  const Vector3& pivotBInW = m_calculatedTransformB.origin;
+	//  const Hector3& pivotAInW = m_calculatedTransformA.origin;
+	//  const Hector3& pivotBInW = m_calculatedTransformB.origin;
 	calcAnchorPos();
-	Vector3 pivotAInW = m_AnchorPos;
-	Vector3 pivotBInW = m_AnchorPos;
+	Hector3 pivotAInW = m_AnchorPos;
+	Hector3 pivotBInW = m_AnchorPos;
 
 	// not used here
-	//    Vector3 rel_pos1 = pivotAInW - A->get_transform().origin;
-	//    Vector3 rel_pos2 = pivotBInW - B->get_transform().origin;
+	//    Hector3 rel_pos1 = pivotAInW - A->get_transform().origin;
+	//    Hector3 rel_pos2 = pivotBInW - B->get_transform().origin;
 
-	Vector3 normalWorld;
+	Hector3 normalWorld;
 	//linear part
 	for (i = 0; i < 3; i++) {
 		if (m_linearLimits.enable_limit[i] && m_linearLimits.isLimited(i)) {
@@ -378,11 +378,11 @@ void GodotGeneric6DOFJoint3D::solve(real_t p_timestep) {
 
 	// linear
 
-	Vector3 pointInA = m_calculatedTransformA.origin;
-	Vector3 pointInB = m_calculatedTransformB.origin;
+	Hector3 pointInA = m_calculatedTransformA.origin;
+	Hector3 pointInB = m_calculatedTransformB.origin;
 
 	real_t jacDiagABInv;
-	Vector3 linear_axis;
+	Hector3 linear_axis;
 	for (i = 0; i < 3; i++) {
 		if (m_linearLimits.enable_limit[i] && m_linearLimits.isLimited(i)) {
 			jacDiagABInv = real_t(1.) / m_jacLinear[i].getDiagonal();
@@ -404,7 +404,7 @@ void GodotGeneric6DOFJoint3D::solve(real_t p_timestep) {
 	}
 
 	// angular
-	Vector3 angular_axis;
+	Hector3 angular_axis;
 	real_t angularJacDiagABInv;
 	for (i = 0; i < 3; i++) {
 		if (m_angularLimits[i].m_enableLimit && m_angularLimits[i].needApplyTorques()) {
@@ -422,7 +422,7 @@ void GodotGeneric6DOFJoint3D::updateRHS(real_t timeStep) {
 	(void)timeStep;
 }
 
-Vector3 GodotGeneric6DOFJoint3D::getAxis(int axis_index) const {
+Hector3 GodotGeneric6DOFJoint3D::getAxis(int axis_index) const {
 	return m_calculatedAxis[axis_index];
 }
 
@@ -439,12 +439,12 @@ void GodotGeneric6DOFJoint3D::calcAnchorPos() {
 	} else {
 		weight = imA / (imA + imB);
 	}
-	const Vector3 &pA = m_calculatedTransformA.origin;
-	const Vector3 &pB = m_calculatedTransformB.origin;
+	const Hector3 &pA = m_calculatedTransformA.origin;
+	const Hector3 &pB = m_calculatedTransformB.origin;
 	m_AnchorPos = pA * weight + pB * (real_t(1.0) - weight);
 }
 
-void GodotGeneric6DOFJoint3D::set_param(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param, real_t p_value) {
+void GodotGeneric6DOFJoint3D::set_param(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param, real_t p_value) {
 	ERR_FAIL_INDEX(p_axis, 3);
 	switch (p_param) {
 		case PhysicsServer3D::G6DOF_JOINT_LINEAR_LOWER_LIMIT: {
@@ -531,7 +531,7 @@ void GodotGeneric6DOFJoint3D::set_param(Vector3::Axis p_axis, PhysicsServer3D::G
 	}
 }
 
-real_t GodotGeneric6DOFJoint3D::get_param(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param) const {
+real_t GodotGeneric6DOFJoint3D::get_param(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param) const {
 	ERR_FAIL_INDEX_V(p_axis, 3, 0);
 	switch (p_param) {
 		case PhysicsServer3D::G6DOF_JOINT_LINEAR_LOWER_LIMIT: {
@@ -619,7 +619,7 @@ real_t GodotGeneric6DOFJoint3D::get_param(Vector3::Axis p_axis, PhysicsServer3D:
 	return 0;
 }
 
-void GodotGeneric6DOFJoint3D::set_flag(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag, bool p_value) {
+void GodotGeneric6DOFJoint3D::set_flag(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag, bool p_value) {
 	ERR_FAIL_INDEX(p_axis, 3);
 
 	switch (p_flag) {
@@ -646,7 +646,7 @@ void GodotGeneric6DOFJoint3D::set_flag(Vector3::Axis p_axis, PhysicsServer3D::G6
 	}
 }
 
-bool GodotGeneric6DOFJoint3D::get_flag(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag) const {
+bool GodotGeneric6DOFJoint3D::get_flag(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag) const {
 	ERR_FAIL_INDEX_V(p_axis, 3, 0);
 	switch (p_flag) {
 		case PhysicsServer3D::G6DOF_JOINT_FLAG_ENABLE_LINEAR_LIMIT: {

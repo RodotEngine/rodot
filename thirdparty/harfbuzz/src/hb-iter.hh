@@ -547,7 +547,7 @@ struct hb_zip_iter_t :
    *   513762849a683914fc266a17ddf38f133cccf072
    *   4d3cf2adb669c345cc43832d11689271995e160a
    *
-   * However, that was not enough, since hb_sorted_array_t, hb_sorted_vector_t,
+   * However, that was not enough, since hb_sorted_array_t, hb_sorted_Hector_t,
    * SortedArrayOf, etc all needed to be updated to add more variants.  At that
    * point I saw it not worth the effort, and instead we now deem all sorted
    * collections as essentially strictly-sorted for the purposes of zip.

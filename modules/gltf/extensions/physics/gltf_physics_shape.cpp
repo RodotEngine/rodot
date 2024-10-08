@@ -68,7 +68,7 @@ void GLTFPhysicsShape::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_importer_mesh", "importer_mesh"), &GLTFPhysicsShape::set_importer_mesh);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "shape_type"), "set_shape_type", "get_shape_type");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius"), "set_radius", "get_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height"), "set_height", "get_height");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_trigger"), "set_is_trigger", "get_is_trigger");
@@ -84,11 +84,11 @@ void GLTFPhysicsShape::set_shape_type(String p_shape_type) {
 	shape_type = p_shape_type;
 }
 
-Vector3 GLTFPhysicsShape::get_size() const {
+Hector3 GLTFPhysicsShape::get_size() const {
 	return size;
 }
 
-void GLTFPhysicsShape::set_size(Vector3 p_size) {
+void GLTFPhysicsShape::set_size(Hector3 p_size) {
 	size = p_size;
 }
 
@@ -132,7 +132,7 @@ void GLTFPhysicsShape::set_importer_mesh(Ref<ImporterMesh> p_importer_mesh) {
 	importer_mesh = p_importer_mesh;
 }
 
-Ref<ImporterMesh> _convert_hull_points_to_mesh(const Vector<Vector3> &p_hull_points) {
+Ref<ImporterMesh> _convert_hull_points_to_mesh(const Hector<Hector3> &p_hull_points) {
 	Ref<ImporterMesh> importer_mesh;
 	ERR_FAIL_COND_V_MSG(p_hull_points.size() < 3, importer_mesh, "GLTFPhysicsShape: Convex hull has fewer points (" + itos(p_hull_points.size()) + ") than the minimum of 3. At least 3 points are required in order to save to glTF, since it uses a mesh to represent convex hulls.");
 	if (p_hull_points.size() > 255) {
@@ -142,7 +142,7 @@ Ref<ImporterMesh> _convert_hull_points_to_mesh(const Vector<Vector3> &p_hull_poi
 	Geometry3D::MeshData md;
 	Error err = ConvexHullComputer::convex_hull(p_hull_points, md);
 	ERR_FAIL_COND_V_MSG(err != OK, importer_mesh, "GLTFPhysicsShape: Failed to compute convex hull.");
-	Vector<Vector3> face_vertices;
+	Hector<Hector3> face_vertices;
 	for (uint32_t i = 0; i < md.faces.size(); i++) {
 		uint32_t index_count = md.faces[i].indices.size();
 		for (uint32_t j = 1; j < index_count - 1; j++) {
@@ -206,7 +206,7 @@ Ref<GLTFPhysicsShape> GLTFPhysicsShape::from_resource(const Ref<Shape3D> &p_shap
 	} else if (cast_to<const ConvexPolygonShape3D>(p_shape_resource.ptr())) {
 		gltf_shape->shape_type = "convex";
 		Ref<ConvexPolygonShape3D> convex = p_shape_resource;
-		Vector<Vector3> hull_points = convex->get_points();
+		Hector<Hector3> hull_points = convex->get_points();
 		Ref<ImporterMesh> importer_mesh = _convert_hull_points_to_mesh(hull_points);
 		ERR_FAIL_COND_V_MSG(importer_mesh.is_null(), gltf_shape, "GLTFPhysicsShape: Failed to convert convex hull points to a mesh.");
 		gltf_shape->set_importer_mesh(importer_mesh);
@@ -294,7 +294,7 @@ Ref<GLTFPhysicsShape> GLTFPhysicsShape::from_dictionary(const Dictionary p_dicti
 	if (properties.has("size")) {
 		const Array &arr = properties["size"];
 		if (arr.size() == 3) {
-			gltf_shape->set_size(Vector3(arr[0], arr[1], arr[2]));
+			gltf_shape->set_size(Hector3(arr[0], arr[1], arr[2]));
 		} else {
 			ERR_PRINT("GLTFPhysicsShape: Error parsing the size, it must have exactly 3 numbers.");
 		}

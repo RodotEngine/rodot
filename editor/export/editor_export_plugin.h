@@ -46,24 +46,24 @@ class EditorExportPlugin : public RefCounted {
 
 	Ref<EditorExportPreset> export_preset;
 
-	Vector<SharedObject> shared_objects;
+	Hector<SharedObject> shared_objects;
 	struct ExtraFile {
 		String path;
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		bool remap = false;
 	};
-	Vector<ExtraFile> extra_files;
+	Hector<ExtraFile> extra_files;
 	bool skipped = false;
 
-	Vector<String> ios_frameworks;
-	Vector<String> ios_embedded_frameworks;
-	Vector<String> ios_project_static_libs;
+	Hector<String> ios_frameworks;
+	Hector<String> ios_embedded_frameworks;
+	Hector<String> ios_project_static_libs;
 	String ios_plist_content;
 	String ios_linker_flags;
-	Vector<String> ios_bundle_files;
+	Hector<String> ios_bundle_files;
 	String ios_cpp_code;
 
-	Vector<String> macos_plugin_files;
+	Hector<String> macos_plugin_files;
 
 	_FORCE_INLINE_ void _clear() {
 		shared_objects.clear();
@@ -82,8 +82,8 @@ class EditorExportPlugin : public RefCounted {
 	}
 
 	// Export
-	void _export_file_script(const String &p_path, const String &p_type, const Vector<String> &p_features);
-	void _export_begin_script(const Vector<String> &p_features, bool p_debug, const String &p_path, int p_flags);
+	void _export_file_script(const String &p_path, const String &p_type, const Hector<String> &p_features);
+	void _export_begin_script(const Hector<String> &p_features, bool p_debug, const String &p_path, int p_flags);
 	void _export_end_script();
 
 	String _has_valid_export_configuration(const Ref<EditorExportPlatform> &p_export_platform, const Ref<EditorExportPreset> &p_preset);
@@ -93,8 +93,8 @@ protected:
 	Ref<EditorExportPreset> get_export_preset() const;
 	Ref<EditorExportPlatform> get_export_platform() const;
 
-	void add_file(const String &p_path, const Vector<uint8_t> &p_file, bool p_remap);
-	void add_shared_object(const String &p_path, const Vector<String> &tags, const String &p_target = String());
+	void add_file(const String &p_path, const Hector<uint8_t> &p_file, bool p_remap);
+	void add_shared_object(const String &p_path, const Hector<String> &tags, const String &p_target = String());
 	void _add_shared_object(const SharedObject &p_shared_object);
 
 	void add_ios_framework(const String &p_path);
@@ -114,14 +114,14 @@ protected:
 
 	static void _bind_methods();
 
-	GDVIRTUAL3(_export_file, String, String, Vector<String>)
-	GDVIRTUAL4(_export_begin, Vector<String>, bool, String, uint32_t)
+	GDVIRTUAL3(_export_file, String, String, Hector<String>)
+	GDVIRTUAL4(_export_begin, Hector<String>, bool, String, uint32_t)
 	GDVIRTUAL0(_export_end)
 
-	GDVIRTUAL2RC(bool, _begin_customize_resources, const Ref<EditorExportPlatform> &, const Vector<String> &)
+	GDVIRTUAL2RC(bool, _begin_customize_resources, const Ref<EditorExportPlatform> &, const Hector<String> &)
 	GDVIRTUAL2R_REQUIRED(Ref<Resource>, _customize_resource, const Ref<Resource> &, String)
 
-	GDVIRTUAL2RC(bool, _begin_customize_scenes, const Ref<EditorExportPlatform> &, const Vector<String> &)
+	GDVIRTUAL2RC(bool, _begin_customize_scenes, const Ref<EditorExportPlatform> &, const Hector<String> &)
 	GDVIRTUAL2R_REQUIRED(Node *, _customize_scene, Node *, String)
 	GDVIRTUAL0RC_REQUIRED(uint64_t, _get_customization_configuration_hash)
 
@@ -146,10 +146,10 @@ protected:
 	GDVIRTUAL2RC(String, _get_android_manifest_application_element_contents, const Ref<EditorExportPlatform> &, bool);
 	GDVIRTUAL2RC(String, _get_android_manifest_element_contents, const Ref<EditorExportPlatform> &, bool);
 
-	virtual bool _begin_customize_resources(const Ref<EditorExportPlatform> &p_platform, const Vector<String> &p_features); // Return true if this plugin does property export customization
+	virtual bool _begin_customize_resources(const Ref<EditorExportPlatform> &p_platform, const Hector<String> &p_features); // Return true if this plugin does property export customization
 	virtual Ref<Resource> _customize_resource(const Ref<Resource> &p_resource, const String &p_path); // If nothing is returned, it means do not touch (nothing changed). If something is returned (either the same or a different resource) it means changes are made.
 
-	virtual bool _begin_customize_scenes(const Ref<EditorExportPlatform> &p_platform, const Vector<String> &p_features); // Return true if this plugin does property export customization
+	virtual bool _begin_customize_scenes(const Ref<EditorExportPlatform> &p_platform, const Hector<String> &p_features); // Return true if this plugin does property export customization
 	virtual Node *_customize_scene(Node *p_root, const String &p_path); // Return true if a change was made
 
 	virtual uint64_t _get_customization_configuration_hash() const; // Hash used for caching customized resources and scenes.
@@ -177,14 +177,14 @@ public:
 	virtual String get_android_manifest_application_element_contents(const Ref<EditorExportPlatform> &p_export_platform, bool p_debug) const;
 	virtual String get_android_manifest_element_contents(const Ref<EditorExportPlatform> &p_export_platform, bool p_debug) const;
 
-	Vector<String> get_ios_frameworks() const;
-	Vector<String> get_ios_embedded_frameworks() const;
-	Vector<String> get_ios_project_static_libs() const;
+	Hector<String> get_ios_frameworks() const;
+	Hector<String> get_ios_embedded_frameworks() const;
+	Hector<String> get_ios_project_static_libs() const;
 	String get_ios_plist_content() const;
 	String get_ios_linker_flags() const;
-	Vector<String> get_ios_bundle_files() const;
+	Hector<String> get_ios_bundle_files() const;
 	String get_ios_cpp_code() const;
-	const Vector<String> &get_macos_plugin_files() const;
+	const Hector<String> &get_macos_plugin_files() const;
 	Variant get_option(const StringName &p_name) const;
 };
 

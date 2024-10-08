@@ -260,7 +260,7 @@ Error EditorImportBlendRunner::do_import_rpc(const Dictionary &p_options) {
 
 	// Send XML request.
 	PackedByteArray xml_buffer = xml_body.to_utf8_buffer();
-	Error err = client->request(HTTPClient::METHOD_POST, "/", Vector<String>(), xml_buffer.ptr(), xml_buffer.size());
+	Error err = client->request(HTTPClient::METHOD_POST, "/", Hector<String>(), xml_buffer.ptr(), xml_buffer.size());
 	if (err != OK) {
 		ERR_FAIL_V_MSG(err, vformat("Unable to send RPC request: %d", err));
 	}
@@ -317,7 +317,7 @@ Error EditorImportBlendRunner::do_import_rpc(const Dictionary &p_options) {
 	return OK;
 }
 
-bool EditorImportBlendRunner::_extract_error_message_xml(const Vector<uint8_t> &p_response_data, String &r_error_message) {
+bool EditorImportBlendRunner::_extract_error_message_xml(const Hector<uint8_t> &p_response_data, String &r_error_message) {
 	// Based on RPC Xml spec from: https://xmlrpc.com/spec.md
 	Ref<XMLParser> parser = memnew(XMLParser);
 	Error err = parser->open_buffer(p_response_data);

@@ -219,7 +219,7 @@ void *OpenXRVulkanExtension::set_session_create_and_get_next_pointer(void *p_nex
 	return &graphics_binding_vulkan;
 }
 
-void OpenXRVulkanExtension::get_usable_swapchain_formats(Vector<int64_t> &p_usable_swap_chains) {
+void OpenXRVulkanExtension::get_usable_swapchain_formats(Hector<int64_t> &p_usable_swap_chains) {
 	// We might want to do more here especially if we keep things in linear color space
 	// Possibly add in R10G10B10A2 as an option if we're using the mobile renderer.
 	p_usable_swap_chains.push_back(VK_FORMAT_R8G8B8A8_SRGB);
@@ -228,7 +228,7 @@ void OpenXRVulkanExtension::get_usable_swapchain_formats(Vector<int64_t> &p_usab
 	p_usable_swap_chains.push_back(VK_FORMAT_B8G8R8A8_UINT);
 }
 
-void OpenXRVulkanExtension::get_usable_depth_formats(Vector<int64_t> &p_usable_swap_chains) {
+void OpenXRVulkanExtension::get_usable_depth_formats(Hector<int64_t> &p_usable_swap_chains) {
 	// Note, it is very likely we do NOT support any of depth formats where we can combine our stencil support (e.g. _S8_UINT).
 	// Right now this isn't a problem but once stencil support becomes an issue, we need to check for this in the rendering engine
 	// and create a separate buffer for the stencil.
@@ -354,7 +354,7 @@ bool OpenXRVulkanExtension::get_swapchain_image_data(XrSwapchain p_swapchain, in
 			break;
 	}
 
-	Vector<RID> texture_rids;
+	Hector<RID> texture_rids;
 
 	// create Godot texture objects for each entry in our swapchain
 	for (uint64_t i = 0; i < swapchain_length; i++) {

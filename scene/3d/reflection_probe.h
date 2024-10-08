@@ -52,8 +52,8 @@ private:
 	RID probe;
 	float intensity = 1.0;
 	float max_distance = 0.0;
-	Vector3 size = Vector3(20, 20, 20);
-	Vector3 origin_offset = Vector3(0, 0, 0);
+	Hector3 size = Hector3(20, 20, 20);
+	Hector3 origin_offset = Hector3(0, 0, 0);
 	bool box_projection = false;
 	bool enable_shadows = false;
 	bool interior = false;
@@ -96,11 +96,11 @@ public:
 	void set_mesh_lod_threshold(float p_pixels);
 	float get_mesh_lod_threshold() const;
 
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
-	void set_origin_offset(const Vector3 &p_offset);
-	Vector3 get_origin_offset() const;
+	void set_origin_offset(const Hector3 &p_offset);
+	Hector3 get_origin_offset() const;
 
 	void set_as_interior(bool p_enable);
 	bool is_set_as_interior() const;

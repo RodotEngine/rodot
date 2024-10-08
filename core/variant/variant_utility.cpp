@@ -117,29 +117,29 @@ Variant VariantUtilityFunctions::floor(const Variant &x, Callable::CallError &r_
 		case Variant::FLOAT: {
 			return Math::floor(VariantInternalAccessor<double>::get(&x));
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&x).floor();
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&x).floor();
 		} break;
-		case Variant::VECTOR2I: {
-			return VariantInternalAccessor<Vector2i>::get(&x);
+		case Variant::HECTOR2I: {
+			return VariantInternalAccessor<Hector2i>::get(&x);
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&x).floor();
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&x).floor();
 		} break;
-		case Variant::VECTOR3I: {
-			return VariantInternalAccessor<Vector3i>::get(&x);
+		case Variant::HECTOR3I: {
+			return VariantInternalAccessor<Hector3i>::get(&x);
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&x).floor();
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&x).floor();
 		} break;
-		case Variant::VECTOR4I: {
-			return VariantInternalAccessor<Vector4i>::get(&x);
+		case Variant::HECTOR4I: {
+			return VariantInternalAccessor<Hector4i>::get(&x);
 		} break;
 		default: {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "x" must be "int", "float", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", or "Vector4i".)";
+			return R"(Argument "x" must be "int", "float", "Hector2", "Hector2i", "Hector3", "Hector3i", "Hector4", or "Hector4i".)";
 		} break;
 	}
 }
@@ -161,29 +161,29 @@ Variant VariantUtilityFunctions::ceil(const Variant &x, Callable::CallError &r_e
 		case Variant::FLOAT: {
 			return Math::ceil(VariantInternalAccessor<double>::get(&x));
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&x).ceil();
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&x).ceil();
 		} break;
-		case Variant::VECTOR2I: {
-			return VariantInternalAccessor<Vector2i>::get(&x);
+		case Variant::HECTOR2I: {
+			return VariantInternalAccessor<Hector2i>::get(&x);
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&x).ceil();
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&x).ceil();
 		} break;
-		case Variant::VECTOR3I: {
-			return VariantInternalAccessor<Vector3i>::get(&x);
+		case Variant::HECTOR3I: {
+			return VariantInternalAccessor<Hector3i>::get(&x);
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&x).ceil();
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&x).ceil();
 		} break;
-		case Variant::VECTOR4I: {
-			return VariantInternalAccessor<Vector4i>::get(&x);
+		case Variant::HECTOR4I: {
+			return VariantInternalAccessor<Hector4i>::get(&x);
 		} break;
 		default: {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "x" must be "int", "float", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", or "Vector4i".)";
+			return R"(Argument "x" must be "int", "float", "Hector2", "Hector2i", "Hector3", "Hector3i", "Hector4", or "Hector4i".)";
 		} break;
 	}
 }
@@ -205,29 +205,29 @@ Variant VariantUtilityFunctions::round(const Variant &x, Callable::CallError &r_
 		case Variant::FLOAT: {
 			return Math::round(VariantInternalAccessor<double>::get(&x));
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&x).round();
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&x).round();
 		} break;
-		case Variant::VECTOR2I: {
-			return VariantInternalAccessor<Vector2i>::get(&x);
+		case Variant::HECTOR2I: {
+			return VariantInternalAccessor<Hector2i>::get(&x);
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&x).round();
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&x).round();
 		} break;
-		case Variant::VECTOR3I: {
-			return VariantInternalAccessor<Vector3i>::get(&x);
+		case Variant::HECTOR3I: {
+			return VariantInternalAccessor<Hector3i>::get(&x);
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&x).round();
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&x).round();
 		} break;
-		case Variant::VECTOR4I: {
-			return VariantInternalAccessor<Vector4i>::get(&x);
+		case Variant::HECTOR4I: {
+			return VariantInternalAccessor<Hector4i>::get(&x);
 		} break;
 		default: {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "x" must be "int", "float", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", or "Vector4i".)";
+			return R"(Argument "x" must be "int", "float", "Hector2", "Hector2i", "Hector3", "Hector3i", "Hector4", or "Hector4i".)";
 		} break;
 	}
 }
@@ -249,29 +249,29 @@ Variant VariantUtilityFunctions::abs(const Variant &x, Callable::CallError &r_er
 		case Variant::FLOAT: {
 			return Math::absd(VariantInternalAccessor<double>::get(&x));
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&x).abs();
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&x).abs();
 		} break;
-		case Variant::VECTOR2I: {
-			return VariantInternalAccessor<Vector2i>::get(&x).abs();
+		case Variant::HECTOR2I: {
+			return VariantInternalAccessor<Hector2i>::get(&x).abs();
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&x).abs();
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&x).abs();
 		} break;
-		case Variant::VECTOR3I: {
-			return VariantInternalAccessor<Vector3i>::get(&x).abs();
+		case Variant::HECTOR3I: {
+			return VariantInternalAccessor<Hector3i>::get(&x).abs();
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&x).abs();
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&x).abs();
 		} break;
-		case Variant::VECTOR4I: {
-			return VariantInternalAccessor<Vector4i>::get(&x).abs();
+		case Variant::HECTOR4I: {
+			return VariantInternalAccessor<Hector4i>::get(&x).abs();
 		} break;
 		default: {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "x" must be "int", "float", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", or "Vector4i".)";
+			return R"(Argument "x" must be "int", "float", "Hector2", "Hector2i", "Hector3", "Hector3i", "Hector4", or "Hector4i".)";
 		} break;
 	}
 }
@@ -293,29 +293,29 @@ Variant VariantUtilityFunctions::sign(const Variant &x, Callable::CallError &r_e
 		case Variant::FLOAT: {
 			return SIGN(VariantInternalAccessor<double>::get(&x));
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&x).sign();
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&x).sign();
 		} break;
-		case Variant::VECTOR2I: {
-			return VariantInternalAccessor<Vector2i>::get(&x).sign();
+		case Variant::HECTOR2I: {
+			return VariantInternalAccessor<Hector2i>::get(&x).sign();
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&x).sign();
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&x).sign();
 		} break;
-		case Variant::VECTOR3I: {
-			return VariantInternalAccessor<Vector3i>::get(&x).sign();
+		case Variant::HECTOR3I: {
+			return VariantInternalAccessor<Hector3i>::get(&x).sign();
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&x).sign();
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&x).sign();
 		} break;
-		case Variant::VECTOR4I: {
-			return VariantInternalAccessor<Vector4i>::get(&x).sign();
+		case Variant::HECTOR4I: {
+			return VariantInternalAccessor<Hector4i>::get(&x).sign();
 		} break;
 		default: {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "x" must be "int", "float", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", or "Vector4i".)";
+			return R"(Argument "x" must be "int", "float", "Hector2", "Hector2i", "Hector3", "Hector3i", "Hector4", or "Hector4i".)";
 		} break;
 	}
 }
@@ -372,18 +372,18 @@ Variant VariantUtilityFunctions::snapped(const Variant &x, const Variant &step, 
 	switch (x.get_type()) {
 		case Variant::INT:
 		case Variant::FLOAT:
-		case Variant::VECTOR2:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3:
-		case Variant::VECTOR3I:
-		case Variant::VECTOR4:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR2:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3:
+		case Variant::HECTOR3I:
+		case Variant::HECTOR4:
+		case Variant::HECTOR4I:
 			break;
 		default:
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "x" must be "int", "float", "Vector2", "Vector2i", "Vector3", "Vector3i", "Vector4", or "Vector4i".)";
+			return R"(Argument "x" must be "int", "float", "Hector2", "Hector2i", "Hector3", "Hector3i", "Hector4", or "Hector4i".)";
 	}
 
 	if (x.get_type() != step.get_type()) {
@@ -410,23 +410,23 @@ Variant VariantUtilityFunctions::snapped(const Variant &x, const Variant &step, 
 		case Variant::FLOAT: {
 			return snappedf(x, VariantInternalAccessor<double>::get(&step));
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&x).snapped(VariantInternalAccessor<Vector2>::get(&step));
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&x).snapped(VariantInternalAccessor<Hector2>::get(&step));
 		} break;
-		case Variant::VECTOR2I: {
-			return VariantInternalAccessor<Vector2i>::get(&x).snapped(VariantInternalAccessor<Vector2i>::get(&step));
+		case Variant::HECTOR2I: {
+			return VariantInternalAccessor<Hector2i>::get(&x).snapped(VariantInternalAccessor<Hector2i>::get(&step));
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&x).snapped(VariantInternalAccessor<Vector3>::get(&step));
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&x).snapped(VariantInternalAccessor<Hector3>::get(&step));
 		} break;
-		case Variant::VECTOR3I: {
-			return VariantInternalAccessor<Vector3i>::get(&x).snapped(VariantInternalAccessor<Vector3i>::get(&step));
+		case Variant::HECTOR3I: {
+			return VariantInternalAccessor<Hector3i>::get(&x).snapped(VariantInternalAccessor<Hector3i>::get(&step));
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&x).snapped(VariantInternalAccessor<Vector4>::get(&step));
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&x).snapped(VariantInternalAccessor<Hector4>::get(&step));
 		} break;
-		case Variant::VECTOR4I: {
-			return VariantInternalAccessor<Vector4i>::get(&x).snapped(VariantInternalAccessor<Vector4i>::get(&step));
+		case Variant::HECTOR4I: {
+			return VariantInternalAccessor<Hector4i>::get(&x).snapped(VariantInternalAccessor<Hector4i>::get(&step));
 		} break;
 		default: {
 			return Variant(); // Already handled.
@@ -446,9 +446,9 @@ Variant VariantUtilityFunctions::lerp(const Variant &from, const Variant &to, do
 	switch (from.get_type()) {
 		case Variant::INT:
 		case Variant::FLOAT:
-		case Variant::VECTOR2:
-		case Variant::VECTOR3:
-		case Variant::VECTOR4:
+		case Variant::HECTOR2:
+		case Variant::HECTOR3:
+		case Variant::HECTOR4:
 		case Variant::QUATERNION:
 		case Variant::BASIS:
 		case Variant::COLOR:
@@ -459,7 +459,7 @@ Variant VariantUtilityFunctions::lerp(const Variant &from, const Variant &to, do
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
 			r_error.expected = Variant::NIL;
-			return R"(Argument "from" must be "int", "float", "Vector2", "Vector3", "Vector4", "Color", "Quaternion", "Basis", "Transform2D", or "Transform3D".)";
+			return R"(Argument "from" must be "int", "float", "Hector2", "Hector3", "Hector4", "Color", "Quaternion", "Basis", "Transform2D", or "Transform3D".)";
 	}
 
 	if (from.get_type() != to.get_type()) {
@@ -477,14 +477,14 @@ Variant VariantUtilityFunctions::lerp(const Variant &from, const Variant &to, do
 		case Variant::FLOAT: {
 			return lerpf(VariantInternalAccessor<double>::get(&from), to, weight);
 		} break;
-		case Variant::VECTOR2: {
-			return VariantInternalAccessor<Vector2>::get(&from).lerp(VariantInternalAccessor<Vector2>::get(&to), weight);
+		case Variant::HECTOR2: {
+			return VariantInternalAccessor<Hector2>::get(&from).lerp(VariantInternalAccessor<Hector2>::get(&to), weight);
 		} break;
-		case Variant::VECTOR3: {
-			return VariantInternalAccessor<Vector3>::get(&from).lerp(VariantInternalAccessor<Vector3>::get(&to), weight);
+		case Variant::HECTOR3: {
+			return VariantInternalAccessor<Hector3>::get(&from).lerp(VariantInternalAccessor<Hector3>::get(&to), weight);
 		} break;
-		case Variant::VECTOR4: {
-			return VariantInternalAccessor<Vector4>::get(&from).lerp(VariantInternalAccessor<Vector4>::get(&to), weight);
+		case Variant::HECTOR4: {
+			return VariantInternalAccessor<Hector4>::get(&from).lerp(VariantInternalAccessor<Hector4>::get(&to), weight);
 		} break;
 		case Variant::QUATERNION: {
 			return VariantInternalAccessor<Quaternion>::get(&from).slerp(VariantInternalAccessor<Quaternion>::get(&to), weight);
@@ -858,24 +858,24 @@ Variant VariantUtilityFunctions::type_convert(const Variant &p_variant, const Va
 			return p_variant.operator double();
 		case Variant::Type::STRING:
 			return p_variant.operator String();
-		case Variant::Type::VECTOR2:
-			return p_variant.operator Vector2();
-		case Variant::Type::VECTOR2I:
-			return p_variant.operator Vector2i();
+		case Variant::Type::HECTOR2:
+			return p_variant.operator Hector2();
+		case Variant::Type::HECTOR2I:
+			return p_variant.operator Hector2i();
 		case Variant::Type::RECT2:
 			return p_variant.operator Rect2();
 		case Variant::Type::RECT2I:
 			return p_variant.operator Rect2i();
-		case Variant::Type::VECTOR3:
-			return p_variant.operator Vector3();
-		case Variant::Type::VECTOR3I:
-			return p_variant.operator Vector3i();
+		case Variant::Type::HECTOR3:
+			return p_variant.operator Hector3();
+		case Variant::Type::HECTOR3I:
+			return p_variant.operator Hector3i();
 		case Variant::Type::TRANSFORM2D:
 			return p_variant.operator Transform2D();
-		case Variant::Type::VECTOR4:
-			return p_variant.operator Vector4();
-		case Variant::Type::VECTOR4I:
-			return p_variant.operator Vector4i();
+		case Variant::Type::HECTOR4:
+			return p_variant.operator Hector4();
+		case Variant::Type::HECTOR4I:
+			return p_variant.operator Hector4i();
 		case Variant::Type::PLANE:
 			return p_variant.operator Plane();
 		case Variant::Type::QUATERNION:
@@ -918,14 +918,14 @@ Variant VariantUtilityFunctions::type_convert(const Variant &p_variant, const Va
 			return p_variant.operator PackedFloat64Array();
 		case Variant::Type::PACKED_STRING_ARRAY:
 			return p_variant.operator PackedStringArray();
-		case Variant::Type::PACKED_VECTOR2_ARRAY:
-			return p_variant.operator PackedVector2Array();
-		case Variant::Type::PACKED_VECTOR3_ARRAY:
-			return p_variant.operator PackedVector3Array();
+		case Variant::Type::PACKED_Hector2_ARRAY:
+			return p_variant.operator PackedHector2Array();
+		case Variant::Type::PACKED_Hector3_ARRAY:
+			return p_variant.operator PackedHector3Array();
 		case Variant::Type::PACKED_COLOR_ARRAY:
 			return p_variant.operator PackedColorArray();
-		case Variant::Type::PACKED_VECTOR4_ARRAY:
-			return p_variant.operator PackedVector4Array();
+		case Variant::Type::PACKED_Hector4_ARRAY:
+			return p_variant.operator PackedHector4Array();
 		case Variant::Type::VARIANT_MAX:
 			ERR_PRINT("Invalid type argument to type_convert(), use the TYPE_* constants. Returning the unconverted Variant.");
 	}
@@ -1487,11 +1487,11 @@ static _FORCE_INLINE_ Variant::Type get_ret_type_helper(void (*p_func)(P...)) {
 			*r_ret = VariantUtilityFunctions::m_func(p_args, p_argcount, c);                                     \
 		}                                                                                                        \
 		static void ptrcall(void *ret, const void **p_args, int p_argcount) {                                    \
-			Vector<Variant> args;                                                                                \
+			Hector<Variant> args;                                                                                \
 			for (int i = 0; i < p_argcount; i++) {                                                               \
 				args.push_back(PtrToArg<Variant>::convert(p_args[i]));                                           \
 			}                                                                                                    \
-			Vector<const Variant *> argsp;                                                                       \
+			Hector<const Variant *> argsp;                                                                       \
 			for (int i = 0; i < p_argcount; i++) {                                                               \
 				argsp.push_back(&args[i]);                                                                       \
 			}                                                                                                    \
@@ -1532,11 +1532,11 @@ static _FORCE_INLINE_ Variant::Type get_ret_type_helper(void (*p_func)(P...)) {
 			*r_ret = VariantUtilityFunctions::m_func(p_args, p_argcount, c);                                     \
 		}                                                                                                        \
 		static void ptrcall(void *ret, const void **p_args, int p_argcount) {                                    \
-			Vector<Variant> args;                                                                                \
+			Hector<Variant> args;                                                                                \
 			for (int i = 0; i < p_argcount; i++) {                                                               \
 				args.push_back(PtrToArg<Variant>::convert(p_args[i]));                                           \
 			}                                                                                                    \
-			Vector<const Variant *> argsp;                                                                       \
+			Hector<const Variant *> argsp;                                                                       \
 			for (int i = 0; i < p_argcount; i++) {                                                               \
 				argsp.push_back(&args[i]);                                                                       \
 			}                                                                                                    \
@@ -1577,11 +1577,11 @@ static _FORCE_INLINE_ Variant::Type get_ret_type_helper(void (*p_func)(P...)) {
 			VariantUtilityFunctions::m_func(p_args, p_argcount, c);                                              \
 		}                                                                                                        \
 		static void ptrcall(void *ret, const void **p_args, int p_argcount) {                                    \
-			Vector<Variant> args;                                                                                \
+			Hector<Variant> args;                                                                                \
 			for (int i = 0; i < p_argcount; i++) {                                                               \
 				args.push_back(PtrToArg<Variant>::convert(p_args[i]));                                           \
 			}                                                                                                    \
-			Vector<const Variant *> argsp;                                                                       \
+			Hector<const Variant *> argsp;                                                                       \
 			for (int i = 0; i < p_argcount; i++) {                                                               \
 				argsp.push_back(&args[i]);                                                                       \
 			}                                                                                                    \
@@ -1642,7 +1642,7 @@ struct VariantUtilityFunctionInfo {
 	void (*call_utility)(Variant *r_ret, const Variant **p_args, int p_argcount, Callable::CallError &r_error) = nullptr;
 	Variant::ValidatedUtilityFunction validated_call_utility = nullptr;
 	Variant::PTRUtilityFunction ptr_call_utility = nullptr;
-	Vector<String> argnames;
+	Hector<String> argnames;
 	bool is_vararg = false;
 	bool returns_value = false;
 	int argcount = 0;
@@ -1655,7 +1655,7 @@ static OAHashMap<StringName, VariantUtilityFunctionInfo> utility_function_table;
 static List<StringName> utility_function_name_table;
 
 template <typename T>
-static void register_utility_function(const String &p_name, const Vector<String> &argnames) {
+static void register_utility_function(const String &p_name, const Hector<String> &argnames) {
 	String name = p_name;
 	if (name.begins_with("_")) {
 		name = name.substr(1, name.length() - 1);
@@ -1831,7 +1831,7 @@ void Variant::_register_variant_utility_functions() {
 	FUNCBINDR(is_instance_id_valid, sarray("id"), Variant::UTILITY_FUNC_TYPE_GENERAL);
 	FUNCBINDR(is_instance_valid, sarray("instance"), Variant::UTILITY_FUNC_TYPE_GENERAL);
 
-	FUNCBINDR(rid_allocate_id, Vector<String>(), Variant::UTILITY_FUNC_TYPE_GENERAL);
+	FUNCBINDR(rid_allocate_id, Hector<String>(), Variant::UTILITY_FUNC_TYPE_GENERAL);
 	FUNCBINDR(rid_from_int64, sarray("base"), Variant::UTILITY_FUNC_TYPE_GENERAL);
 
 	FUNCBINDR(is_same, sarray("a", "b"), Variant::UTILITY_FUNC_TYPE_GENERAL);

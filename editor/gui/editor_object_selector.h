@@ -49,7 +49,7 @@ class EditorObjectSelector : public Button {
 	TextureRect *sub_objects_icon = nullptr;
 	PopupMenu *sub_objects_menu = nullptr;
 
-	Vector<ObjectID> objects;
+	Hector<ObjectID> objects;
 
 	void _show_popup();
 	void _id_pressed(int p_idx);

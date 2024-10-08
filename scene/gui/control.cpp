@@ -161,8 +161,8 @@ bool Control::_edit_use_rotation() const {
 }
 
 void Control::_edit_set_pivot(const Point2 &p_pivot) {
-	Vector2 delta_pivot = p_pivot - get_pivot_offset();
-	Vector2 move = Vector2((cos(data.rotation) - 1.0) * delta_pivot.x - sin(data.rotation) * delta_pivot.y, sin(data.rotation) * delta_pivot.x + (cos(data.rotation) - 1.0) * delta_pivot.y);
+	Hector2 delta_pivot = p_pivot - get_pivot_offset();
+	Hector2 move = Hector2((cos(data.rotation) - 1.0) * delta_pivot.x - sin(data.rotation) * delta_pivot.y, sin(data.rotation) * delta_pivot.x + (cos(data.rotation) - 1.0) * delta_pivot.y);
 	set_position(get_position() + move);
 	set_pivot_offset(p_pivot);
 }
@@ -452,7 +452,7 @@ void Control::_validate_property(PropertyInfo &p_property) const {
 		}
 		names.sort_custom<StringName::AlphCompare>();
 
-		Vector<StringName> unique_names;
+		Hector<StringName> unique_names;
 		String hint_string;
 		for (const StringName &E : names) {
 			// Skip duplicate values.
@@ -507,7 +507,7 @@ void Control::_validate_property(PropertyInfo &p_property) const {
 		} else if (p_property.name == "size_flags_horizontal" || p_property.name == "size_flags_vertical") {
 			// Filter allowed size flags based on the parent container configuration.
 			Container *parent_container = Object::cast_to<Container>(parent_node);
-			Vector<int> size_flags;
+			Hector<int> size_flags;
 			if (p_property.name == "size_flags_horizontal") {
 				size_flags = parent_container->get_allowed_size_flags_horizontal();
 			} else if (p_property.name == "size_flags_vertical") {
@@ -689,7 +689,7 @@ void Control::_update_canvas_item_transform() {
 
 	// We use a little workaround to avoid flickering when moving the pivot with _edit_set_pivot()
 	if (is_inside_tree() && Math::abs(Math::sin(data.rotation * 4.0f)) < 0.00001f && get_viewport()->is_snap_controls_to_pixels_enabled()) {
-		xform[2] = (xform[2] + Vector2(0.5, 0.5)).floor();
+		xform[2] = (xform[2] + Hector2(0.5, 0.5)).floor();
 	}
 
 	RenderingServer::get_singleton()->canvas_item_set_transform(get_canvas_item(), xform);
@@ -791,7 +791,7 @@ void Control::set_begin(const Point2 &p_point) {
 }
 
 Point2 Control::get_begin() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	return Point2(data.offset[0], data.offset[1]);
 }
 
@@ -1519,7 +1519,7 @@ Rect2 Control::get_anchorable_rect() const {
 	return Rect2(Point2(), get_size());
 }
 
-void Control::set_scale(const Vector2 &p_scale) {
+void Control::set_scale(const Hector2 &p_scale) {
 	ERR_MAIN_THREAD_GUARD;
 	if (data.scale == p_scale) {
 		return;
@@ -1537,8 +1537,8 @@ void Control::set_scale(const Vector2 &p_scale) {
 	_notify_transform();
 }
 
-Vector2 Control::get_scale() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+Hector2 Control::get_scale() const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	return data.scale;
 }
 
@@ -1568,7 +1568,7 @@ real_t Control::get_rotation_degrees() const {
 	return Math::rad_to_deg(get_rotation());
 }
 
-void Control::set_pivot_offset(const Vector2 &p_pivot) {
+void Control::set_pivot_offset(const Hector2 &p_pivot) {
 	ERR_MAIN_THREAD_GUARD;
 	if (data.pivot_offset == p_pivot) {
 		return;
@@ -1579,8 +1579,8 @@ void Control::set_pivot_offset(const Vector2 &p_pivot) {
 	_notify_transform();
 }
 
-Vector2 Control::get_pivot_offset() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+Hector2 Control::get_pivot_offset() const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	return data.pivot_offset;
 }
 
@@ -1644,7 +1644,7 @@ void Control::set_block_minimum_size_adjust(bool p_block) {
 
 Size2 Control::get_minimum_size() const {
 	ERR_READ_THREAD_GUARD_V(Size2());
-	Vector2 ms;
+	Hector2 ms;
 	GDVIRTUAL_CALL(_get_minimum_size, ms);
 	return ms;
 }
@@ -2291,14 +2291,14 @@ Control *Control::_get_focus_neighbor(Side p_side, int p_count) {
 	points[2] = xform.xform(get_size());
 	points[3] = xform.xform(Point2(0, get_size().y));
 
-	const Vector2 dir[4] = {
-		Vector2(-1, 0),
-		Vector2(0, -1),
-		Vector2(1, 0),
-		Vector2(0, 1)
+	const Hector2 dir[4] = {
+		Hector2(-1, 0),
+		Hector2(0, -1),
+		Hector2(1, 0),
+		Hector2(0, 1)
 	};
 
-	Vector2 vdir = dir[p_side];
+	Hector2 vdir = dir[p_side];
 
 	real_t maxd = -1e7;
 
@@ -2334,7 +2334,7 @@ Control *Control::find_valid_focus_neighbor(Side p_side) const {
 	return const_cast<Control *>(this)->_get_focus_neighbor(p_side);
 }
 
-void Control::_window_find_focus_neighbor(const Vector2 &p_dir, Node *p_at, const Point2 *p_points, real_t p_min, real_t &r_closest_dist, Control **r_closest) {
+void Control::_window_find_focus_neighbor(const Hector2 &p_dir, Node *p_at, const Point2 *p_points, real_t p_min, real_t &r_closest_dist, Control **r_closest) {
 	if (Object::cast_to<Viewport>(p_at)) {
 		return; //bye
 	}
@@ -2380,14 +2380,14 @@ void Control::_window_find_focus_neighbor(const Vector2 &p_dir, Node *p_at, cons
 
 		if (min > (p_min - CMP_EPSILON)) {
 			for (int i = 0; i < 4; i++) {
-				Vector2 la = p_points[i];
-				Vector2 lb = p_points[(i + 1) % 4];
+				Hector2 la = p_points[i];
+				Hector2 lb = p_points[(i + 1) % 4];
 
 				for (int j = 0; j < 4; j++) {
-					Vector2 fa = points[j];
-					Vector2 fb = points[(j + 1) % 4];
+					Hector2 fa = points[j];
+					Hector2 fb = points[(j + 1) % 4];
 
-					Vector2 pa, pb;
+					Hector2 pa, pb;
 					real_t d = Geometry2D::get_closest_points_between_segments(la, lb, fa, fb, pa, pb);
 					if (d < r_closest_dist) {
 						r_closest_dist = d;
@@ -2593,7 +2593,7 @@ Ref<Texture2D> Control::get_theme_icon(const StringName &p_name, const StringNam
 		return data.theme_icon_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Ref<Texture2D> icon = data.theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_ICON, p_name, theme_types);
 	data.theme_icon_cache[p_theme_type][p_name] = icon;
@@ -2617,7 +2617,7 @@ Ref<StyleBox> Control::get_theme_stylebox(const StringName &p_name, const String
 		return data.theme_style_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Ref<StyleBox> style = data.theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_STYLEBOX, p_name, theme_types);
 	data.theme_style_cache[p_theme_type][p_name] = style;
@@ -2641,7 +2641,7 @@ Ref<Font> Control::get_theme_font(const StringName &p_name, const StringName &p_
 		return data.theme_font_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Ref<Font> font = data.theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_FONT, p_name, theme_types);
 	data.theme_font_cache[p_theme_type][p_name] = font;
@@ -2665,7 +2665,7 @@ int Control::get_theme_font_size(const StringName &p_name, const StringName &p_t
 		return data.theme_font_size_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	int font_size = data.theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_FONT_SIZE, p_name, theme_types);
 	data.theme_font_size_cache[p_theme_type][p_name] = font_size;
@@ -2689,7 +2689,7 @@ Color Control::get_theme_color(const StringName &p_name, const StringName &p_the
 		return data.theme_color_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	Color color = data.theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_COLOR, p_name, theme_types);
 	data.theme_color_cache[p_theme_type][p_name] = color;
@@ -2713,7 +2713,7 @@ int Control::get_theme_constant(const StringName &p_name, const StringName &p_th
 		return data.theme_constant_cache[p_theme_type][p_name];
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	int constant = data.theme_owner->get_theme_item_in_types(Theme::DATA_TYPE_CONSTANT, p_name, theme_types);
 	data.theme_constant_cache[p_theme_type][p_name] = constant;
@@ -2759,7 +2759,7 @@ bool Control::has_theme_icon(const StringName &p_name, const StringName &p_theme
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return data.theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_ICON, p_name, theme_types);
 }
@@ -2776,7 +2776,7 @@ bool Control::has_theme_stylebox(const StringName &p_name, const StringName &p_t
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return data.theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_STYLEBOX, p_name, theme_types);
 }
@@ -2793,7 +2793,7 @@ bool Control::has_theme_font(const StringName &p_name, const StringName &p_theme
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return data.theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_FONT, p_name, theme_types);
 }
@@ -2810,7 +2810,7 @@ bool Control::has_theme_font_size(const StringName &p_name, const StringName &p_
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return data.theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_FONT_SIZE, p_name, theme_types);
 }
@@ -2827,7 +2827,7 @@ bool Control::has_theme_color(const StringName &p_name, const StringName &p_them
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return data.theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_COLOR, p_name, theme_types);
 }
@@ -2844,7 +2844,7 @@ bool Control::has_theme_constant(const StringName &p_name, const StringName &p_t
 		}
 	}
 
-	Vector<StringName> theme_types;
+	Hector<StringName> theme_types;
 	data.theme_owner->get_theme_type_dependencies(this, p_theme_type, theme_types);
 	return data.theme_owner->has_theme_item_in_types(Theme::DATA_TYPE_CONSTANT, p_name, theme_types);
 }
@@ -3026,10 +3026,10 @@ void Control::end_bulk_theme_override() {
 
 // Internationalization.
 
-TypedArray<Vector3i> Control::structured_text_parser(TextServer::StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const {
-	ERR_READ_THREAD_GUARD_V(TypedArray<Vector3i>());
+TypedArray<Hector3i> Control::structured_text_parser(TextServer::StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const {
+	ERR_READ_THREAD_GUARD_V(TypedArray<Hector3i>());
 	if (p_parser_type == TextServer::STRUCTURED_TEXT_CUSTOM) {
-		TypedArray<Vector3i> ret;
+		TypedArray<Hector3i> ret;
 		GDVIRTUAL_CALL(_structured_text_parser, p_args, p_text, ret);
 		return ret;
 	} else {
@@ -3573,7 +3573,7 @@ void Control::_bind_methods() {
 
 	ADD_GROUP("Layout", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "clip_contents"), "set_clip_contents", "is_clipping_contents");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "custom_minimum_size", PROPERTY_HINT_NONE, "suffix:px"), "set_custom_minimum_size", "get_custom_minimum_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "custom_minimum_size", PROPERTY_HINT_NONE, "suffix:px"), "set_custom_minimum_size", "get_custom_minimum_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "layout_direction", PROPERTY_HINT_ENUM, "Inherited,Based on Locale,Left-to-Right,Right-to-Left"), "set_layout_direction", "get_layout_direction");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "layout_mode", PROPERTY_HINT_ENUM, "Position,Anchors,Container,Uncontrolled", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_INTERNAL), "_set_layout_mode", "_get_layout_mode");
 	ADD_PROPERTY_DEFAULT("layout_mode", LayoutMode::LAYOUT_MODE_POSITION);
@@ -3603,13 +3603,13 @@ void Control::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "grow_vertical", PROPERTY_HINT_ENUM, "Top,Bottom,Both"), "set_v_grow_direction", "get_v_grow_direction");
 
 	ADD_SUBGROUP("Transform", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "size", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_EDITOR), "_set_size", "get_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_EDITOR), "_set_position", "get_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "global_position", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_NONE), "_set_global_position", "get_global_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "size", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_EDITOR), "_set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "position", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_EDITOR), "_set_position", "get_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "global_position", PROPERTY_HINT_NONE, "suffix:px", PROPERTY_USAGE_NONE), "_set_global_position", "get_global_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_rotation", "get_rotation");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation_degrees", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_rotation_degrees", "get_rotation_degrees");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scale"), "set_scale", "get_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pivot_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_pivot_offset", "get_pivot_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scale"), "set_scale", "get_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "pivot_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_pivot_offset", "get_pivot_offset");
 
 	ADD_SUBGROUP("Container Sizing", "size_flags_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "size_flags_horizontal", PROPERTY_HINT_FLAGS, "Fill:1,Expand:2,Shrink Center:4,Shrink End:8"), "set_h_size_flags", "get_h_size_flags");

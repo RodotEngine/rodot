@@ -190,16 +190,16 @@ String WebXRInterfaceJS::get_visibility_state() const {
 	return String();
 }
 
-PackedVector3Array WebXRInterfaceJS::get_play_area() const {
-	PackedVector3Array ret;
+PackedHector3Array WebXRInterfaceJS::get_play_area() const {
+	PackedHector3Array ret;
 
 	float *points;
 	int point_count = godot_webxr_get_bounds_geometry(&points);
 	if (point_count > 0) {
 		ret.resize(point_count);
 		for (int i = 0; i < point_count; i++) {
-			float *js_vector3 = points + (i * 3);
-			ret.set(i, Vector3(js_vector3[0], js_vector3[1], js_vector3[2]));
+			float *js_Hector3 = points + (i * 3);
+			ret.set(i, Hector3(js_Hector3[0], js_Hector3[1], js_Hector3[2]));
 		}
 		free(points);
 	}
@@ -302,7 +302,7 @@ bool WebXRInterfaceJS::initialize() {
 
 		// We must create a tracker for our head.
 		head_transform.basis = Basis();
-		head_transform.origin = Vector3();
+		head_transform.origin = Hector3();
 		head_tracker.instantiate();
 		head_tracker->set_tracker_type(XRServer::TRACKER_HEAD);
 		head_tracker->set_tracker_name("head");
@@ -516,8 +516,8 @@ bool WebXRInterfaceJS::pre_draw_viewport(RID p_render_target) {
 	return true;
 }
 
-Vector<BlitToScreen> WebXRInterfaceJS::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
-	Vector<BlitToScreen> blit_to_screen;
+Hector<BlitToScreen> WebXRInterfaceJS::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
+	Hector<BlitToScreen> blit_to_screen;
 
 	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
 	if (texture_storage == nullptr) {
@@ -600,7 +600,7 @@ void WebXRInterfaceJS::process() {
 			head_transform = _js_matrix_to_transform(js_matrix);
 		}
 		if (head_tracker.is_valid()) {
-			head_tracker->set_pose("default", head_transform, Vector3(), Vector3());
+			head_tracker->set_pose("default", head_transform, Hector3(), Hector3());
 		}
 
 		// Update all input sources.
@@ -682,10 +682,10 @@ void WebXRInterfaceJS::_update_input_source(int p_input_source_id) {
 	}
 
 	Transform3D aim_transform = _js_matrix_to_transform(target_pose);
-	tracker->set_pose(SceneStringName(default_), aim_transform, Vector3(), Vector3());
-	tracker->set_pose(SNAME("aim"), aim_transform, Vector3(), Vector3());
+	tracker->set_pose(SceneStringName(default_), aim_transform, Hector3(), Hector3());
+	tracker->set_pose(SNAME("aim"), aim_transform, Hector3(), Hector3());
 	if (has_grip_pose) {
-		tracker->set_pose(SNAME("grip"), _js_matrix_to_transform(grip_pose), Vector3(), Vector3());
+		tracker->set_pose(SNAME("grip"), _js_matrix_to_transform(grip_pose), Hector3(), Hector3());
 	}
 
 	for (int i = 0; i < button_count; i++) {
@@ -708,24 +708,24 @@ void WebXRInterfaceJS::_update_input_source(int p_input_source_id) {
 		tracker->set_input(axis_name, value);
 	}
 
-	// Also create Vector2's for the thumbstick and trackpad when we have the
+	// Also create Hector2's for the thumbstick and trackpad when we have the
 	// standard mapping.
 	if (has_standard_mapping) {
 		if (axes_count >= 2) {
-			tracker->set_input(standard_vector_names[0], Vector2(axes[0], -axes[1]));
+			tracker->set_input(standard_Hector_names[0], Hector2(axes[0], -axes[1]));
 		}
 		if (axes_count >= 4) {
-			tracker->set_input(standard_vector_names[1], Vector2(axes[2], -axes[3]));
+			tracker->set_input(standard_Hector_names[1], Hector2(axes[2], -axes[3]));
 		}
 	}
 
 	if (input_source.target_ray_mode == WebXRInterface::TARGET_RAY_MODE_SCREEN) {
 		if (touch_index < 5 && axes_count >= 2) {
-			Vector2 joy_vector = Vector2(axes[0], axes[1]);
-			Vector2 position = _get_screen_position_from_joy_vector(joy_vector);
+			Hector2 joy_Hector = Hector2(axes[0], axes[1]);
+			Hector2 position = _get_screen_position_from_joy_Hector(joy_Hector);
 
 			if (touches[touch_index].is_touching) {
-				Vector2 delta = position - touches[touch_index].position;
+				Hector2 delta = position - touches[touch_index].position;
 
 				// If position has changed by at least 1 pixel, generate a drag event.
 				if (abs(delta.x) >= 1.0 || abs(delta.y) >= 1.0) {
@@ -748,9 +748,9 @@ void WebXRInterfaceJS::_update_input_source(int p_input_source_id) {
 		if (has_hand_data) {
 			// Transform orientations to match Godot Humanoid skeleton.
 			const Basis bone_adjustment(
-					Vector3(-1.0, 0.0, 0.0),
-					Vector3(0.0, 0.0, -1.0),
-					Vector3(0.0, -1.0, 0.0));
+					Hector3(-1.0, 0.0, 0.0),
+					Hector3(0.0, 0.0, -1.0),
+					Hector3(0.0, -1.0, 0.0));
 
 			if (unlikely(hand_tracker.is_null())) {
 				hand_tracker.instantiate();
@@ -788,14 +788,14 @@ void WebXRInterfaceJS::_update_input_source(int p_input_source_id) {
 				// Get the middle finger phalanx position.
 				// Note: 11 is the WebXR middle finger phalanx proximal joint and 12 is the origin offset.
 				const float *phalanx_pos = hand_joints + (11 * 16) + 12;
-				Vector3 phalanx(phalanx_pos[0], phalanx_pos[1], phalanx_pos[2]);
+				Hector3 phalanx(phalanx_pos[0], phalanx_pos[1], phalanx_pos[2]);
 
 				// Offset the palm half-way towards the phalanx joint.
 				palm_transform.origin = (palm_transform.origin + phalanx) / 2.0;
 
 				// Set the palm joint and the pose.
 				hand_tracker->set_hand_joint_transform(XRHandTracker::HAND_JOINT_PALM, palm_transform);
-				hand_tracker->set_pose("default", palm_transform, Vector3(), Vector3());
+				hand_tracker->set_pose("default", palm_transform, Hector3(), Hector3());
 			}
 
 		} else if (hand_tracker.is_valid()) {
@@ -853,16 +853,16 @@ void WebXRInterfaceJS::_on_input_event(int p_event_type, int p_input_source_id) 
 	}
 }
 
-Vector2 WebXRInterfaceJS::_get_screen_position_from_joy_vector(const Vector2 &p_joy_vector) {
+Hector2 WebXRInterfaceJS::_get_screen_position_from_joy_Hector(const Hector2 &p_joy_Hector) {
 	SceneTree *scene_tree = Object::cast_to<SceneTree>(OS::get_singleton()->get_main_loop());
 	if (!scene_tree) {
-		return Vector2();
+		return Hector2();
 	}
 
 	Window *viewport = scene_tree->get_root();
 
-	Vector2 position_percentage((p_joy_vector.x + 1.0f) / 2.0f, ((p_joy_vector.y) + 1.0f) / 2.0f);
-	Vector2 position = (Size2)viewport->get_size() * position_percentage;
+	Hector2 position_percentage((p_joy_Hector.x + 1.0f) / 2.0f, ((p_joy_Hector.y) + 1.0f) / 2.0f);
+	Hector2 position = (Size2)viewport->get_size() * position_percentage;
 
 	return position;
 }

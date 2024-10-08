@@ -288,7 +288,7 @@ void CollisionObject3D::_apply_enabled() {
 	}
 }
 
-void CollisionObject3D::_input_event_call(Camera3D *p_camera, const Ref<InputEvent> &p_input_event, const Vector3 &p_pos, const Vector3 &p_normal, int p_shape) {
+void CollisionObject3D::_input_event_call(Camera3D *p_camera, const Ref<InputEvent> &p_input_event, const Hector3 &p_pos, const Hector3 &p_normal, int p_shape) {
 	GDVIRTUAL_CALL(_input_event, p_camera, p_input_event, p_pos, p_normal, p_shape);
 	emit_signal(SceneStringName(input_event), p_camera, p_input_event, p_pos, p_normal, p_shape);
 }
@@ -495,7 +495,7 @@ void CollisionObject3D::_bind_methods() {
 	GDVIRTUAL_BIND(_mouse_enter);
 	GDVIRTUAL_BIND(_mouse_exit);
 
-	ADD_SIGNAL(MethodInfo("input_event", PropertyInfo(Variant::OBJECT, "camera", PROPERTY_HINT_RESOURCE_TYPE, "Node"), PropertyInfo(Variant::OBJECT, "event", PROPERTY_HINT_RESOURCE_TYPE, "InputEvent"), PropertyInfo(Variant::VECTOR3, "event_position"), PropertyInfo(Variant::VECTOR3, "normal"), PropertyInfo(Variant::INT, "shape_idx")));
+	ADD_SIGNAL(MethodInfo("input_event", PropertyInfo(Variant::OBJECT, "camera", PROPERTY_HINT_RESOURCE_TYPE, "Node"), PropertyInfo(Variant::OBJECT, "event", PROPERTY_HINT_RESOURCE_TYPE, "InputEvent"), PropertyInfo(Variant::HECTOR3, "event_position"), PropertyInfo(Variant::HECTOR3, "normal"), PropertyInfo(Variant::INT, "shape_idx")));
 	ADD_SIGNAL(MethodInfo("mouse_entered"));
 	ADD_SIGNAL(MethodInfo("mouse_exited"));
 
@@ -737,7 +737,7 @@ PackedStringArray CollisionObject3D::get_configuration_warnings() const {
 		warnings.push_back(RTR("This node has no shape, so it can't collide or interact with other objects.\nConsider adding a CollisionShape3D or CollisionPolygon3D as a child to define its shape."));
 	}
 
-	Vector3 scale = get_transform().get_basis().get_scale();
+	Hector3 scale = get_transform().get_basis().get_scale();
 	if (!(Math::is_zero_approx(scale.x - scale.y) && Math::is_zero_approx(scale.y - scale.z))) {
 		warnings.push_back(RTR("With a non-uniform scale this node will probably not function as expected.\nPlease make its scale uniform (i.e. the same on all axes), and change the size in children collision shapes instead."));
 	}

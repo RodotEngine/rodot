@@ -24,7 +24,7 @@ namespace GodotTools.Inspector
             {
                 Text = "This inspector might be out of date. Please build the C# project.".TTR(),
                 AutowrapMode = TextServer.AutowrapMode.WordSmart,
-                CustomMinimumSize = new Vector2(100f, 0f),
+                CustomMinimumSize = new Hector2(100f, 0f),
             };
 
             label.AddThemeColorOverride("font_color", GetThemeColor("warning_color", "Editor"));

@@ -39,12 +39,12 @@
 namespace TestRect2i {
 TEST_CASE("[Rect2i] Constructor methods") {
 	Rect2i recti = Rect2i(0, 100, 1280, 720);
-	Rect2i recti_vector = Rect2i(Vector2i(0, 100), Vector2i(1280, 720));
+	Rect2i recti_Hector = Rect2i(Hector2i(0, 100), Hector2i(1280, 720));
 	Rect2i recti_copy_recti = Rect2i(recti);
 	Rect2i recti_copy_rect = Rect2i(Rect2(0, 100, 1280, 720));
 
 	CHECK_MESSAGE(
-			recti == recti_vector,
+			recti == recti_Hector,
 			"Rect2is created with the same dimensions but by different methods should be equal.");
 	CHECK_MESSAGE(
 			recti == recti_copy_recti,
@@ -55,7 +55,7 @@ TEST_CASE("[Rect2i] Constructor methods") {
 }
 
 TEST_CASE("[Rect2i] String conversion") {
-	// Note: This also depends on the Vector2 string representation.
+	// Note: This also depends on the Hector2 string representation.
 	CHECK_MESSAGE(
 			String(Rect2i(0, 100, 1280, 720)) == "[P: (0, 100), S: (1280, 720)]",
 			"The string representation should match the expected value.");
@@ -64,37 +64,37 @@ TEST_CASE("[Rect2i] String conversion") {
 TEST_CASE("[Rect2i] Basic getters") {
 	const Rect2i rect = Rect2i(0, 100, 1280, 720);
 	CHECK_MESSAGE(
-			rect.get_position() == Vector2i(0, 100),
+			rect.get_position() == Hector2i(0, 100),
 			"get_position() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_size() == Vector2i(1280, 720),
+			rect.get_size() == Hector2i(1280, 720),
 			"get_size() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_end() == Vector2i(1280, 820),
+			rect.get_end() == Hector2i(1280, 820),
 			"get_end() should return the expected value.");
 	CHECK_MESSAGE(
-			rect.get_center() == Vector2i(640, 460),
+			rect.get_center() == Hector2i(640, 460),
 			"get_center() should return the expected value.");
 	CHECK_MESSAGE(
-			Rect2i(0, 100, 1281, 721).get_center() == Vector2i(640, 460),
+			Rect2i(0, 100, 1281, 721).get_center() == Hector2i(640, 460),
 			"get_center() should return the expected value.");
 }
 
 TEST_CASE("[Rect2i] Basic setters") {
 	Rect2i rect = Rect2i(0, 100, 1280, 720);
-	rect.set_end(Vector2i(4000, 4000));
+	rect.set_end(Hector2i(4000, 4000));
 	CHECK_MESSAGE(
 			rect == Rect2i(0, 100, 4000, 3900),
 			"set_end() should result in the expected Rect2i.");
 
 	rect = Rect2i(0, 100, 1280, 720);
-	rect.set_position(Vector2i(4000, 4000));
+	rect.set_position(Hector2i(4000, 4000));
 	CHECK_MESSAGE(
 			rect == Rect2i(4000, 4000, 1280, 720),
 			"set_position() should result in the expected Rect2i.");
 
 	rect = Rect2i(0, 100, 1280, 720);
-	rect.set_size(Vector2i(4000, 4000));
+	rect.set_size(Hector2i(4000, 4000));
 	CHECK_MESSAGE(
 			rect == Rect2i(0, 100, 4000, 4000),
 			"set_size() should result in the expected Rect2i.");
@@ -176,11 +176,11 @@ TEST_CASE("[Rect2i] Enclosing") {
 
 TEST_CASE("[Rect2i] Expanding") {
 	CHECK_MESSAGE(
-			Rect2i(0, 100, 1280, 720).expand(Vector2i(500, 600)) == Rect2i(0, 100, 1280, 720),
-			"expand() with contained Vector2i should return the expected result.");
+			Rect2i(0, 100, 1280, 720).expand(Hector2i(500, 600)) == Rect2i(0, 100, 1280, 720),
+			"expand() with contained Hector2i should return the expected result.");
 	CHECK_MESSAGE(
-			Rect2i(0, 100, 1280, 720).expand(Vector2i(0, 0)) == Rect2i(0, 0, 1280, 820),
-			"expand() with non-contained Vector2i should return the expected result.");
+			Rect2i(0, 100, 1280, 720).expand(Hector2i(0, 0)) == Rect2i(0, 0, 1280, 820),
+			"expand() with non-contained Hector2i should return the expected result.");
 }
 
 TEST_CASE("[Rect2i] Growing") {
@@ -212,45 +212,45 @@ TEST_CASE("[Rect2i] Growing") {
 TEST_CASE("[Rect2i] Has point") {
 	Rect2i rect = Rect2i(0, 100, 1280, 720);
 	CHECK_MESSAGE(
-			rect.has_point(Vector2i(500, 600)),
-			"has_point() with contained Vector2i should return the expected result.");
+			rect.has_point(Hector2i(500, 600)),
+			"has_point() with contained Hector2i should return the expected result.");
 	CHECK_MESSAGE(
-			!rect.has_point(Vector2i(0, 0)),
-			"has_point() with non-contained Vector2i should return the expected result.");
+			!rect.has_point(Hector2i(0, 0)),
+			"has_point() with non-contained Hector2i should return the expected result.");
 
 	CHECK_MESSAGE(
 			rect.has_point(rect.position),
 			"has_point() with positive size should include `position`.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2i(1, 1)),
+			rect.has_point(rect.position + Hector2i(1, 1)),
 			"has_point() with positive size should include `position + (1, 1)`.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2i(1, -1)),
+			!rect.has_point(rect.position + Hector2i(1, -1)),
 			"has_point() with positive size should not include `position + (1, -1)`.");
 	CHECK_MESSAGE(
 			!rect.has_point(rect.position + rect.size),
 			"has_point() with positive size should not include `position + size`.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + rect.size + Vector2i(1, 1)),
+			!rect.has_point(rect.position + rect.size + Hector2i(1, 1)),
 			"has_point() with positive size should not include `position + size + (1, 1)`.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + rect.size + Vector2i(-1, -1)),
+			rect.has_point(rect.position + rect.size + Hector2i(-1, -1)),
 			"has_point() with positive size should include `position + size + (-1, -1)`.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + rect.size + Vector2i(-1, 1)),
+			!rect.has_point(rect.position + rect.size + Hector2i(-1, 1)),
 			"has_point() with positive size should not include `position + size + (-1, 1)`.");
 
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2i(0, 10)),
+			rect.has_point(rect.position + Hector2i(0, 10)),
 			"has_point() with point located on left edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2i(rect.size.x, 10)),
+			!rect.has_point(rect.position + Hector2i(rect.size.x, 10)),
 			"has_point() with point located on right edge should return false.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2i(10, 0)),
+			rect.has_point(rect.position + Hector2i(10, 0)),
 			"has_point() with point located on top edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2i(10, rect.size.y)),
+			!rect.has_point(rect.position + Hector2i(10, rect.size.y)),
 			"has_point() with point located on bottom edge should return false.");
 
 	/*
@@ -267,16 +267,16 @@ TEST_CASE("[Rect2i] Has point") {
 
 	rect = Rect2i(-4000, -200, 1280, 720);
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2i(0, 10)),
+			rect.has_point(rect.position + Hector2i(0, 10)),
 			"has_point() with negative position and point located on left edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2i(rect.size.x, 10)),
+			!rect.has_point(rect.position + Hector2i(rect.size.x, 10)),
 			"has_point() with negative position and point located on right edge should return false.");
 	CHECK_MESSAGE(
-			rect.has_point(rect.position + Vector2i(10, 0)),
+			rect.has_point(rect.position + Hector2i(10, 0)),
 			"has_point() with negative position and point located on top edge should return true.");
 	CHECK_MESSAGE(
-			!rect.has_point(rect.position + Vector2i(10, rect.size.y)),
+			!rect.has_point(rect.position + Hector2i(10, rect.size.y)),
 			"has_point() with negative position and point located on bottom edge should return false.");
 }
 

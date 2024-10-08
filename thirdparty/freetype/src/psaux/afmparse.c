@@ -271,7 +271,7 @@
     AFM_TOKEN_UNDERLINEPOSITION,
     AFM_TOKEN_UNDERLINETHICKNESS,
     AFM_TOKEN_VV,
-    AFM_TOKEN_VVECTOR,
+    AFM_TOKEN_VHector,
     AFM_TOKEN_VERSION,
     AFM_TOKEN_W,
     AFM_TOKEN_W0,
@@ -283,7 +283,7 @@
     AFM_TOKEN_WX,
     AFM_TOKEN_WY,
     AFM_TOKEN_WEIGHT,
-    AFM_TOKEN_WEIGHTVECTOR,
+    AFM_TOKEN_WEIGHTHector,
     AFM_TOKEN_XHEIGHT,
     N_AFM_TOKENS,
     AFM_TOKEN_UNKNOWN
@@ -353,7 +353,7 @@
     "UnderlinePosition",
     "UnderlineThickness",
     "VV",
-    "VVector",
+    "VHector",
     "Version",
     "W",
     "W0",
@@ -365,7 +365,7 @@
     "WX",
     "WY",
     "Weight",
-    "WeightVector",
+    "WeightHector",
     "XHeight"
   };
 

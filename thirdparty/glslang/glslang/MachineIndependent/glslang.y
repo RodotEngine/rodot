@@ -1804,65 +1804,65 @@ type_specifier_nonarray
     | VEC2 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | VEC3 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | VEC4 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | BVEC2 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtBool;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | BVEC3 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtBool;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | BVEC4 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtBool;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | IVEC2 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | IVEC3 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | IVEC4 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | UVEC2 {
-        parseContext.fullIntegerCheck($1.loc, "unsigned integer vector");
+        parseContext.fullIntegerCheck($1.loc, "unsigned integer Hector");
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | UVEC3 {
-        parseContext.fullIntegerCheck($1.loc, "unsigned integer vector");
+        parseContext.fullIntegerCheck($1.loc, "unsigned integer Hector");
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | UVEC4 {
-        parseContext.fullIntegerCheck($1.loc, "unsigned integer vector");
+        parseContext.fullIntegerCheck($1.loc, "unsigned integer Hector");
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | MAT2 {
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
@@ -1932,7 +1932,7 @@ type_specifier_nonarray
         $$.basicType = EbtDouble;
     }
     | FLOAT16_T {
-        parseContext.float16ScalarVectorCheck($1.loc, "float16_t", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck($1.loc, "float16_t", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat16;
     }
@@ -1947,22 +1947,22 @@ type_specifier_nonarray
         $$.basicType = EbtDouble;
     }
     | INT8_T {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt8;
     }
     | UINT8_T {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint8;
     }
     | INT16_T {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt16;
     }
     | UINT16_T {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint16;
     }
@@ -1987,226 +1987,226 @@ type_specifier_nonarray
         $$.basicType = EbtUint64;
     }
     | DVEC2 {
-        parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double vector");
+        parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double Hector");
         if (! parseContext.symbolTable.atBuiltInLevel())
-            parseContext.doubleCheck($1.loc, "double vector");
+            parseContext.doubleCheck($1.loc, "double Hector");
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtDouble;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | DVEC3 {
-        parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double vector");
+        parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double Hector");
         if (! parseContext.symbolTable.atBuiltInLevel())
-            parseContext.doubleCheck($1.loc, "double vector");
+            parseContext.doubleCheck($1.loc, "double Hector");
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtDouble;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | DVEC4 {
-        parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double vector");
+        parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double Hector");
         if (! parseContext.symbolTable.atBuiltInLevel())
-            parseContext.doubleCheck($1.loc, "double vector");
+            parseContext.doubleCheck($1.loc, "double Hector");
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtDouble;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | F16VEC2 {
-        parseContext.float16ScalarVectorCheck($1.loc, "half float vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck($1.loc, "half float Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat16;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | F16VEC3 {
-        parseContext.float16ScalarVectorCheck($1.loc, "half float vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck($1.loc, "half float Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat16;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | F16VEC4 {
-        parseContext.float16ScalarVectorCheck($1.loc, "half float vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck($1.loc, "half float Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat16;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | F32VEC2 {
-        parseContext.explicitFloat32Check($1.loc, "float32_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat32Check($1.loc, "float32_t Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | F32VEC3 {
-        parseContext.explicitFloat32Check($1.loc, "float32_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat32Check($1.loc, "float32_t Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | F32VEC4 {
-        parseContext.explicitFloat32Check($1.loc, "float32_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat32Check($1.loc, "float32_t Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtFloat;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | F64VEC2 {
-        parseContext.explicitFloat64Check($1.loc, "float64_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat64Check($1.loc, "float64_t Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtDouble;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | F64VEC3 {
-        parseContext.explicitFloat64Check($1.loc, "float64_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat64Check($1.loc, "float64_t Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtDouble;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | F64VEC4 {
-        parseContext.explicitFloat64Check($1.loc, "float64_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat64Check($1.loc, "float64_t Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtDouble;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | I8VEC2 {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt8;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | I8VEC3 {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt8;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | I8VEC4 {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt8;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | I16VEC2 {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt16;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | I16VEC3 {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt16;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | I16VEC4 {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt16;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | I32VEC2 {
-        parseContext.explicitInt32Check($1.loc, "32-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check($1.loc, "32-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | I32VEC3 {
-        parseContext.explicitInt32Check($1.loc, "32-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check($1.loc, "32-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | I32VEC4 {
-        parseContext.explicitInt32Check($1.loc, "32-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check($1.loc, "32-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | I64VEC2 {
-        parseContext.int64Check($1.loc, "64-bit integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check($1.loc, "64-bit integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt64;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | I64VEC3 {
-        parseContext.int64Check($1.loc, "64-bit integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check($1.loc, "64-bit integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt64;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | I64VEC4 {
-        parseContext.int64Check($1.loc, "64-bit integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check($1.loc, "64-bit integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtInt64;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | U8VEC2 {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint8;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | U8VEC3 {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint8;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | U8VEC4 {
-        parseContext.int8ScalarVectorCheck($1.loc, "8-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck($1.loc, "8-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint8;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | U16VEC2 {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint16;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | U16VEC3 {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint16;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | U16VEC4 {
-        parseContext.int16ScalarVectorCheck($1.loc, "16-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck($1.loc, "16-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint16;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | U32VEC2 {
-        parseContext.explicitInt32Check($1.loc, "32-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check($1.loc, "32-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | U32VEC3 {
-        parseContext.explicitInt32Check($1.loc, "32-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check($1.loc, "32-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | U32VEC4 {
-        parseContext.explicitInt32Check($1.loc, "32-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check($1.loc, "32-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | U64VEC2 {
-        parseContext.int64Check($1.loc, "64-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check($1.loc, "64-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint64;
-        $$.setVector(2);
+        $$.setHector(2);
     }
     | U64VEC3 {
-        parseContext.int64Check($1.loc, "64-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check($1.loc, "64-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint64;
-        $$.setVector(3);
+        $$.setHector(3);
     }
     | U64VEC4 {
-        parseContext.int64Check($1.loc, "64-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check($1.loc, "64-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         $$.init($1.loc, parseContext.symbolTable.atGlobalLevel());
         $$.basicType = EbtUint64;
-        $$.setVector(4);
+        $$.setHector(4);
     }
     | DMAT2 {
         parseContext.requireProfile($1.loc, ECoreProfile | ECompatibilityProfile, "double matrix");

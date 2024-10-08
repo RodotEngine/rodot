@@ -7,7 +7,7 @@
 
 namespace basisu
 {
-   bool elemental_vector::increase_capacity(uint32_t min_new_capacity, bool grow_hint, uint32_t element_size, object_mover pMover, bool nofail)
+   bool elemental_Hector::increase_capacity(uint32_t min_new_capacity, bool grow_hint, uint32_t element_size, object_mover pMover, bool nofail)
    {
       assert(m_size <= m_capacity);
 
@@ -30,7 +30,7 @@ namespace basisu
          {
             if (nofail)
                return false;
-            fprintf(stderr, "vector too large\n");
+            fprintf(stderr, "Hector too large\n");
             abort();
          }
       }
@@ -47,15 +47,15 @@ namespace basisu
 
             char buf[256];
 #ifdef _MSC_VER
-            sprintf_s(buf, sizeof(buf), "vector: realloc() failed allocating %u bytes", (uint32_t)desired_size);
+            sprintf_s(buf, sizeof(buf), "Hector: realloc() failed allocating %u bytes", (uint32_t)desired_size);
 #else
-            sprintf(buf, "vector: realloc() failed allocating %u bytes", (uint32_t)desired_size);
+            sprintf(buf, "Hector: realloc() failed allocating %u bytes", (uint32_t)desired_size);
 #endif
             fprintf(stderr, "%s", buf);
             abort();
          }
 
-#if BASISU_VECTOR_DETERMINISTIC
+#if BASISU_Hector_DETERMINISTIC
          actual_size = desired_size;
 #elif defined(_MSC_VER)
          actual_size = _msize(new_p);
@@ -76,15 +76,15 @@ namespace basisu
 
             char buf[256];
 #ifdef _MSC_VER
-            sprintf_s(buf, sizeof(buf), "vector: malloc() failed allocating %u bytes", (uint32_t)desired_size);
+            sprintf_s(buf, sizeof(buf), "Hector: malloc() failed allocating %u bytes", (uint32_t)desired_size);
 #else
-            sprintf(buf, "vector: malloc() failed allocating %u bytes", (uint32_t)desired_size);
+            sprintf(buf, "Hector: malloc() failed allocating %u bytes", (uint32_t)desired_size);
 #endif
             fprintf(stderr, "%s", buf);
             abort();
          }
 
-#if BASISU_VECTOR_DETERMINISTIC
+#if BASISU_Hector_DETERMINISTIC
          actual_size = desired_size;
 #elif defined(_MSC_VER)
          actual_size = _msize(new_p);
@@ -218,7 +218,7 @@ namespace basisu
 
          srand(seed); // r1.seed(seed);
 
-         basisu::vector<int> q;
+         basisu::Hector<int> q;
 
          uint32_t count = 0;
          for (uint32_t i = 0; i < n; i++)

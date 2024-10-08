@@ -71,8 +71,8 @@ private:
 	bool use_tls = false;
 
 	int polled_response_code = 0;
-	Vector<String> response_headers;
-	Vector<uint8_t> response_buffer;
+	Hector<String> response_headers;
+	Hector<uint8_t> response_buffer;
 
 #ifdef DEBUG_ENABLED
 	uint64_t last_polling_frame = 0;
@@ -83,7 +83,7 @@ private:
 public:
 	static HTTPClient *_create_func(bool p_notify_postinitialize);
 
-	Error request(Method p_method, const String &p_url, const Vector<String> &p_headers, const uint8_t *p_body, int p_body_size) override;
+	Error request(Method p_method, const String &p_url, const Hector<String> &p_headers, const uint8_t *p_body, int p_body_size) override;
 
 	Error connect_to_host(const String &p_host, int p_port = -1, Ref<TLSOptions> p_tls_options = Ref<TLSOptions>()) override;
 	void set_connection(const Ref<StreamPeer> &p_connection) override;

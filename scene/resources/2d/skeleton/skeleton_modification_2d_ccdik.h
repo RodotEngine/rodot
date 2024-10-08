@@ -57,7 +57,7 @@ private:
 		bool editor_draw_gizmo = true;
 	};
 
-	Vector<CCDIK_Joint_Data2D> ccdik_data_chain;
+	Hector<CCDIK_Joint_Data2D> ccdik_data_chain;
 
 	NodePath target_node;
 	ObjectID target_node_cache;

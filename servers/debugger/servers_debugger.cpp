@@ -199,8 +199,8 @@ class ServersDebugger::ScriptsProfiler : public EngineProfiler {
 			return A->total_time > B->total_time;
 		}
 	};
-	Vector<ScriptLanguage::ProfilingInfo> info;
-	Vector<ScriptLanguage::ProfilingInfo *> ptrs;
+	Hector<ScriptLanguage::ProfilingInfo> info;
+	Hector<ScriptLanguage::ProfilingInfo *> ptrs;
 	HashMap<StringName, int> sig_map;
 	int max_frame_functions = 16;
 
@@ -224,7 +224,7 @@ public:
 		}
 	}
 
-	void write_frame_data(Vector<FunctionInfo> &r_funcs, uint64_t &r_total, bool p_accumulated) {
+	void write_frame_data(Hector<FunctionInfo> &r_funcs, uint64_t &r_total, bool p_accumulated) {
 		int ofs = 0;
 		for (int i = 0; i < ScriptServer::get_language_count(); i++) {
 			if (p_accumulated) {
@@ -375,7 +375,7 @@ public:
 	void add(const Array &p_data) {}
 
 	void tick(double p_frame_time, double p_process_time, double p_physics_time, double p_physics_frame_time) {
-		Vector<RS::FrameProfileArea> profile_areas = RS::get_singleton()->get_frame_profile();
+		Hector<RS::FrameProfileArea> profile_areas = RS::get_singleton()->get_frame_profile();
 		ServersDebugger::VisualProfilerFrame frame;
 		if (!profile_areas.size()) {
 			return;

@@ -35,7 +35,7 @@
 #if !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/uniset.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "uassert.h"
 #include "cmemory.h"
 #include "cstring.h"
@@ -365,7 +365,7 @@ void RBBISetBuilder::serializeTrie(uint8_t *where) {
 //                   or-ing together of all of the symbols that go into the set.
 //
 //------------------------------------------------------------------------
-void  RBBISetBuilder::addValToSets(UVector *sets, uint32_t val) {
+void  RBBISetBuilder::addValToSets(UHector *sets, uint32_t val) {
     int32_t       ix;
 
     for (ix=0; ix<sets->size(); ix++) {
@@ -591,7 +591,7 @@ RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &statu
     if (U_FAILURE(status)) {
         return;
     }
-    fIncludesSets = new UVector(status);
+    fIncludesSets = new UHector(status);
     if (this->fIncludesSets == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -614,7 +614,7 @@ RangeDescriptor::RangeDescriptor(UErrorCode &status) {
     if (U_FAILURE(status)) {
         return;
     }
-    fIncludesSets = new UVector(status);
+    fIncludesSets = new UHector(status);
     if (fIncludesSets == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }

@@ -304,7 +304,7 @@ extern void*  af_debug_hints_;
    * Usually, a font contains more glyphs than can be addressed by its
    * character map.
    *
-   * In the PostScript font world, encoding vectors specific to a given
+   * In the PostScript font world, encoding Hectors specific to a given
    * task are used to select such glyphs, and these glyphs can be often
    * recognized by having a suffix in its glyph names.  For example, a
    * superscript glyph `A' might be called `A.sup'.  Unfortunately, this

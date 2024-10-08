@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cmath>
-#include <vector>
+#include <Vector>
 #include <string>
 #include <iostream>
 #include <algorithm>
@@ -572,7 +572,7 @@ namespace Clipper2Lib
   template<typename T>
   inline void StripDuplicates( Path<T>& path, bool is_closed_path)
   {
-    //https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector#:~:text=Let%27s%20compare%20three%20approaches%3A
+    //https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-Hector#:~:text=Let%27s%20compare%20three%20approaches%3A
     path.erase(std::unique(path.begin(), path.end()), path.end());
     if (is_closed_path)
       while (path.size() > 1 && path.back() == path.front()) path.pop_back();

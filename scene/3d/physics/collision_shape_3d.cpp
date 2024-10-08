@@ -44,7 +44,7 @@ void CollisionShape3D::make_convex_from_siblings() {
 		return;
 	}
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 
 	for (int i = 0; i < p->get_child_count(); i++) {
 		Node *n = p->get_child(i);
@@ -55,7 +55,7 @@ void CollisionShape3D::make_convex_from_siblings() {
 				for (int j = 0; j < m->get_surface_count(); j++) {
 					Array a = m->surface_get_arrays(j);
 					if (!a.is_empty()) {
-						Vector<Vector3> v = a[RenderingServer::ARRAY_VERTEX];
+						Hector<Hector3> v = a[RenderingServer::ARRAY_VERTEX];
 						for (int k = 0; k < v.size(); k++) {
 							vertices.append(mi->get_transform().xform(v[k]));
 						}
@@ -150,7 +150,7 @@ PackedStringArray CollisionShape3D::get_configuration_warnings() const {
 		}
 	}
 
-	Vector3 scale = get_transform().get_basis().get_scale();
+	Hector3 scale = get_transform().get_basis().get_scale();
 	if (!(Math::is_zero_approx(scale.x - scale.y) && Math::is_zero_approx(scale.y - scale.z))) {
 		warnings.push_back(RTR("A non-uniformly scaled CollisionShape3D node will probably not function as expected.\nPlease make its scale uniform (i.e. the same on all axes), and change the size of its shape resource instead."));
 	}

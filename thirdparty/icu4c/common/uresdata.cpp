@@ -298,7 +298,7 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
     URES_NONE,
     URES_NONE,
-    URES_INT_VECTOR,
+    URES_INT_Hector,
     URES_NONE
 };
 
@@ -456,11 +456,11 @@ res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLengt
 
 
 U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
+res_getIntHectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
     const int32_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
+    if(RES_GET_TYPE(res)==URES_INT_Hector) {
         p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
         length=*p++;
     } else {
@@ -482,7 +482,7 @@ res_countArrayItems(const ResourceData *pResData, Resource res) {
     case URES_BINARY:
     case URES_ALIAS:
     case URES_INT:
-    case URES_INT_VECTOR:
+    case URES_INT_Hector:
         return 1;
     case URES_ARRAY:
     case URES_TABLE32:
@@ -547,11 +547,11 @@ uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
     return res_getUInt(fTraceInfo, res);
 }
 
-const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
+const int32_t *ResourceDataValue::getIntHector(int32_t &length, UErrorCode &errorCode) const {
     if(U_FAILURE(errorCode)) {
         return nullptr;
     }
-    const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
+    const int32_t *iv = res_getIntHector(fTraceInfo, &getData(), res, &length);
     if(iv == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
@@ -1313,7 +1313,7 @@ ures_swapResource(const UDataSwapper *ds,
             ds->swapArray32(ds, p, 4*count, q, pErrorCode);
         }
         break;
-    case URES_INT_VECTOR:
+    case URES_INT_Hector:
         count=udata_readInt32(ds, (int32_t)*p);
         /* swap length and each integer */
         ds->swapArray32(ds, p, 4*(1+count), q, pErrorCode);

@@ -33,15 +33,15 @@
 #include "core/io/image.h"
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> HeightMapShape3D::get_debug_mesh_lines() const {
-	Vector<Vector3> points;
+Hector<Hector3> HeightMapShape3D::get_debug_mesh_lines() const {
+	Hector<Hector3> points;
 
 	if ((map_width != 0) && (map_depth != 0)) {
 		// This will be slow for large maps...
 		// also we'll have to figure out how well bullet centers this shape...
 
-		Vector2 size(map_width - 1, map_depth - 1);
-		Vector2 start = size * -0.5;
+		Hector2 size(map_width - 1, map_depth - 1);
+		Hector2 start = size * -0.5;
 
 		const real_t *r = map_data.ptr();
 
@@ -52,24 +52,24 @@ Vector<Vector3> HeightMapShape3D::get_debug_mesh_lines() const {
 		int r_offset = 0;
 		int w_offset = 0;
 		for (int d = 0; d < map_depth; d++) {
-			Vector3 height(start.x, 0.0, start.y);
+			Hector3 height(start.x, 0.0, start.y);
 
 			for (int w = 0; w < map_width; w++) {
 				height.y = r[r_offset++];
 
 				if (w != map_width - 1) {
 					points.write[w_offset++] = height;
-					points.write[w_offset++] = Vector3(height.x + 1.0, r[r_offset], height.z);
+					points.write[w_offset++] = Hector3(height.x + 1.0, r[r_offset], height.z);
 				}
 
 				if (d != map_depth - 1) {
 					points.write[w_offset++] = height;
-					points.write[w_offset++] = Vector3(height.x, r[r_offset + map_width - 1], height.z + 1.0);
+					points.write[w_offset++] = Hector3(height.x, r[r_offset + map_width - 1], height.z + 1.0);
 				}
 
 				if ((w != map_width - 1) && (d != map_depth - 1)) {
-					points.write[w_offset++] = Vector3(height.x + 1.0, r[r_offset], height.z);
-					points.write[w_offset++] = Vector3(height.x, r[r_offset + map_width - 1], height.z + 1.0);
+					points.write[w_offset++] = Hector3(height.x + 1.0, r[r_offset], height.z);
+					points.write[w_offset++] = Hector3(height.x, r[r_offset + map_width - 1], height.z + 1.0);
 				}
 
 				height.x += 1.0;
@@ -83,7 +83,7 @@ Vector<Vector3> HeightMapShape3D::get_debug_mesh_lines() const {
 }
 
 real_t HeightMapShape3D::get_enclosing_radius() const {
-	return Vector3(real_t(map_width), max_height - min_height, real_t(map_depth)).length();
+	return Hector3(real_t(map_width), max_height - min_height, real_t(map_depth)).length();
 }
 
 void HeightMapShape3D::_update_shape() {
@@ -145,7 +145,7 @@ int HeightMapShape3D::get_map_depth() const {
 	return map_depth;
 }
 
-void HeightMapShape3D::set_map_data(Vector<real_t> p_new) {
+void HeightMapShape3D::set_map_data(Hector<real_t> p_new) {
 	int size = (map_width * map_depth);
 	if (p_new.size() != size) {
 		// fail
@@ -176,7 +176,7 @@ void HeightMapShape3D::set_map_data(Vector<real_t> p_new) {
 	emit_changed();
 }
 
-Vector<real_t> HeightMapShape3D::get_map_data() const {
+Hector<real_t> HeightMapShape3D::get_map_data() const {
 	return map_data;
 }
 

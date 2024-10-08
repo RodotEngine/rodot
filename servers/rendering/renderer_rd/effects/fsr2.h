@@ -61,12 +61,12 @@ public:
 	};
 
 	struct Resources {
-		LocalVector<RID> rids;
-		LocalVector<LocalVector<RID>> mip_slice_rids;
-		LocalVector<uint32_t> ids;
-		LocalVector<FfxResourceDescription> descriptions;
-		LocalVector<uint32_t> dynamic_list;
-		LocalVector<uint32_t> free_list;
+		LocalHector<RID> rids;
+		LocalHector<LocalHector<RID>> mip_slice_rids;
+		LocalHector<uint32_t> ids;
+		LocalHector<FfxResourceDescription> descriptions;
+		LocalHector<uint32_t> dynamic_list;
+		LocalHector<uint32_t> free_list;
 
 		uint32_t add(RID p_rid, bool p_dynamic, uint32_t p_id, FfxResourceDescription p_description) {
 			uint32_t ret_index;
@@ -112,7 +112,7 @@ public:
 
 	struct Scratch {
 		Resources resources;
-		LocalVector<FfxGpuJobDescription> gpu_jobs;
+		LocalHector<FfxGpuJobDescription> gpu_jobs;
 		RID ubo_ring_buffer[FSR2_UBO_RING_BUFFER_SIZE];
 		uint32_t ubo_ring_buffer_index = 0;
 		FfxDevice device = nullptr;
@@ -142,9 +142,9 @@ public:
 		RootSignature root_signature;
 		uint32_t shader_variant = 0;
 		Pipeline pipeline;
-		Vector<FfxResourceBinding> sampled_bindings;
-		Vector<FfxResourceBinding> storage_bindings;
-		Vector<FfxResourceBinding> uniform_bindings;
+		Hector<FfxResourceBinding> sampled_bindings;
+		Hector<FfxResourceBinding> storage_bindings;
+		Hector<FfxResourceBinding> uniform_bindings;
 	};
 
 	struct Device {
@@ -166,7 +166,7 @@ public:
 		float z_near = 0.0f;
 		float z_far = 0.0f;
 		float fovy = 0.0f;
-		Vector2 jitter;
+		Hector2 jitter;
 		float delta_time = 0.0f;
 		float sharpness = 0.0f;
 		bool reset_accumulation = false;

@@ -110,13 +110,13 @@ public:
 
 	class DropFilesEventMessage : public Message {
 	public:
-		Vector<String> files;
+		Hector<String> files;
 	};
 
 	class IMEUpdateEventMessage : public Message {
 	public:
 		String text;
-		Vector2i selection;
+		Hector2i selection;
 	};
 
 	class IMECommitEventMessage : public Message {
@@ -299,7 +299,7 @@ public:
 		uint32_t motion_time = 0;
 
 		// Relative motion has its own optional event and so needs its own time.
-		Vector2 relative_motion;
+		Hector2 relative_motion;
 		uint32_t relative_motion_time = 0;
 
 		BitField<MouseButtonMask> pressed_button_mask;
@@ -316,17 +316,17 @@ public:
 		uint32_t scroll_type = WL_POINTER_AXIS_SOURCE_WHEEL;
 
 		// The amount "scrolled" in pixels, in each direction.
-		Vector2 scroll_vector;
+		Hector2 scroll_Hector;
 
 		// The amount of scroll "clicks" in each direction, in fractions of 120.
-		Vector2i discrete_scroll_vector_120;
+		Hector2i discrete_scroll_Hector_120;
 
 		uint32_t pinch_scale = 1;
 	};
 
 	struct TabletToolData {
 		Point2 position;
-		Vector2 tilt;
+		Hector2 tilt;
 		uint32_t pressure = 0;
 
 		BitField<MouseButtonMask> pressed_button_mask;
@@ -437,7 +437,7 @@ public:
 
 		// Clipboard.
 		struct wl_data_source *wl_data_source_selection = nullptr;
-		Vector<uint8_t> selection_data;
+		Hector<uint8_t> selection_data;
 
 		struct wl_data_offer *wl_data_offer_selection = nullptr;
 
@@ -445,7 +445,7 @@ public:
 		struct zwp_primary_selection_device_v1 *wp_primary_selection_device = nullptr;
 
 		struct zwp_primary_selection_source_v1 *wp_primary_selection_source = nullptr;
-		Vector<uint8_t> primary_data;
+		Hector<uint8_t> primary_data;
 
 		struct zwp_primary_selection_offer_v1 *wp_primary_selection_offer = nullptr;
 
@@ -460,7 +460,7 @@ public:
 		bool ime_active = false;
 		String ime_text;
 		String ime_text_commit;
-		Vector2i ime_cursor;
+		Hector2i ime_cursor;
 		Rect2i ime_rect;
 	};
 
@@ -873,11 +873,11 @@ private:
 	};
 #endif // LIBDECOR_ENABLED
 
-	static Vector<uint8_t> _read_fd(int fd);
+	static Hector<uint8_t> _read_fd(int fd);
 	static int _allocate_shm_file(size_t size);
 
-	static Vector<uint8_t> _wl_data_offer_read(struct wl_display *wl_display, const char *p_mime, struct wl_data_offer *wl_data_offer);
-	static Vector<uint8_t> _wp_primary_selection_offer_read(struct wl_display *wl_display, const char *p_mime, struct zwp_primary_selection_offer_v1 *wp_primary_selection_offer);
+	static Hector<uint8_t> _wl_data_offer_read(struct wl_display *wl_display, const char *p_mime, struct wl_data_offer *wl_data_offer);
+	static Hector<uint8_t> _wp_primary_selection_offer_read(struct wl_display *wl_display, const char *p_mime, struct zwp_primary_selection_offer_v1 *wp_primary_selection_offer);
 
 	static void _seat_state_set_current(WaylandThread::SeatState &p_ss);
 	static bool _seat_state_configure_key_event(WaylandThread::SeatState &p_seat, Ref<InputEventKey> p_event, xkb_keycode_t p_keycode, bool p_pressed);
@@ -920,7 +920,7 @@ public:
 	static double window_state_get_scale_factor(WindowState *p_ws);
 	static void window_state_update_size(WindowState *p_ws, int p_width, int p_height);
 
-	static Vector2i scale_vector2i(const Vector2i &p_vector, double p_amount);
+	static Hector2i scale_Hector2i(const Hector2i &p_Hector, double p_amount);
 
 	void push_message(Ref<Message> message);
 	bool has_message();
@@ -979,13 +979,13 @@ public:
 	void keyboard_echo_keys();
 
 	bool selection_has_mime(const String &p_mime) const;
-	Vector<uint8_t> selection_get_mime(const String &p_mime) const;
+	Hector<uint8_t> selection_get_mime(const String &p_mime) const;
 
 	void selection_set_text(const String &p_text);
 
 	// Optional primary support - requires wp_primary_selection_unstable_v1
 	bool primary_has_mime(const String &p_mime) const;
-	Vector<uint8_t> primary_get_mime(const String &p_mime) const;
+	Hector<uint8_t> primary_get_mime(const String &p_mime) const;
 
 	void primary_set_text(const String &p_text);
 

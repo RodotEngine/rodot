@@ -36,7 +36,7 @@ Error RemoteDebuggerPeerWebSocket::connect_to_host(const String &p_uri) {
 	ws_peer = Ref<WebSocketPeer>(WebSocketPeer::create());
 	ERR_FAIL_COND_V(ws_peer.is_null(), ERR_BUG);
 
-	Vector<String> protocols;
+	Hector<String> protocols;
 	protocols.push_back("binary"); // Compatibility for emscripten TCP-to-WebSocket.
 
 	ws_peer->set_supported_protocols(protocols);

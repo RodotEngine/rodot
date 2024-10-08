@@ -130,7 +130,7 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 	static AnimationNodeStateMachineEditor *singleton;
 
 	void _state_machine_gui_input(const Ref<InputEvent> &p_event);
-	void _connection_draw(const Vector2 &p_from, const Vector2 &p_to, AnimationNodeStateMachineTransition::SwitchMode p_mode, bool p_enabled, bool p_selected, bool p_travel, float p_fade_ratio, bool p_auto_advance, bool p_is_across_group);
+	void _connection_draw(const Hector2 &p_from, const Hector2 &p_to, AnimationNodeStateMachineTransition::SwitchMode p_mode, bool p_enabled, bool p_selected, bool p_travel, float p_fade_ratio, bool p_auto_advance, bool p_is_across_group);
 
 	void _state_machine_draw();
 
@@ -144,10 +144,10 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 	PopupMenu *state_machine_menu = nullptr;
 	PopupMenu *end_menu = nullptr;
 	PopupMenu *animations_menu = nullptr;
-	Vector<String> animations_to_add;
-	Vector<String> nodes_to_connect;
+	Hector<String> animations_to_add;
+	Hector<String> nodes_to_connect;
 
-	Vector2 add_node_pos;
+	Hector2 add_node_pos;
 
 	ConfirmationDialog *delete_window = nullptr;
 	Tree *delete_tree = nullptr;
@@ -160,15 +160,15 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 
 	bool dragging_selected_attempt = false;
 	bool dragging_selected = false;
-	Vector2 drag_from;
-	Vector2 drag_ofs;
+	Hector2 drag_from;
+	Hector2 drag_ofs;
 	StringName snap_x;
 	StringName snap_y;
 
 	bool connecting = false;
 	bool connection_follows_cursor = false;
 	StringName connecting_from;
-	Vector2 connecting_to;
+	Hector2 connecting_to;
 	StringName connecting_to_node;
 
 	void _add_menu_type(int p_index);
@@ -184,13 +184,13 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 		bool can_edit;
 	};
 
-	Vector<NodeRect> node_rects;
+	Hector<NodeRect> node_rects;
 
 	struct TransitionLine {
 		StringName from_node;
 		StringName to_node;
-		Vector2 from;
-		Vector2 to;
+		Hector2 from;
+		Hector2 to;
 		AnimationNodeStateMachineTransition::SwitchMode mode;
 		StringName advance_condition_name;
 		bool advance_condition_state = false;
@@ -205,12 +205,12 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 		bool is_across_group = false;
 	};
 
-	Vector<TransitionLine> transition_lines;
+	Hector<TransitionLine> transition_lines;
 
 	struct NodeUR {
 		StringName name;
 		Ref<AnimationNode> node;
-		Vector2 position;
+		Hector2 position;
 	};
 
 	struct TransitionUR {
@@ -243,12 +243,12 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 
 	String _get_root_playback_path(String &r_node_directory);
 
-	void _clip_src_line_to_rect(Vector2 &r_from, const Vector2 &p_to, const Rect2 &p_rect);
-	void _clip_dst_line_to_rect(const Vector2 &p_from, Vector2 &r_to, const Rect2 &p_rect);
+	void _clip_src_line_to_rect(Hector2 &r_from, const Hector2 &p_to, const Rect2 &p_rect);
+	void _clip_dst_line_to_rect(const Hector2 &p_from, Hector2 &r_to, const Rect2 &p_rect);
 
 	void _erase_selected(const bool p_nested_action = false);
 	void _update_mode();
-	void _open_menu(const Vector2 &p_position);
+	void _open_menu(const Hector2 &p_position);
 	bool _create_submenu(PopupMenu *p_menu, Ref<AnimationNodeStateMachine> p_nodesm, const StringName &p_name, const StringName &p_path);
 	void _stop_connecting();
 
@@ -259,7 +259,7 @@ class AnimationNodeStateMachineEditor : public AnimationTreeNodeEditorPlugin {
 	bool last_active = false;
 	StringName last_fading_from_node;
 	StringName last_current_node;
-	Vector<StringName> last_travel_path;
+	Hector<StringName> last_travel_path;
 
 	float fade_from_last_play_pos = 0.0f;
 	float fade_from_current_play_pos = 0.0f;
@@ -312,7 +312,7 @@ class EditorAnimationMultiTransitionEdit : public RefCounted {
 		Ref<AnimationNodeStateMachineTransition> transition;
 	};
 
-	Vector<Transition> transitions;
+	Hector<Transition> transitions;
 
 protected:
 	bool _set(const StringName &p_name, const Variant &p_property);

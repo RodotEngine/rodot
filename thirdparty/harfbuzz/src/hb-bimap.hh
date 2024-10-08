@@ -175,7 +175,7 @@ struct hb_inc_bimap_t
   void sort ()
   {
     hb_codepoint_t  count = get_population ();
-    hb_vector_t <hb_codepoint_t> work;
+    hb_Hector_t <hb_codepoint_t> work;
     if (unlikely (!work.resize (count, false))) return;
 
     for (hb_codepoint_t rhs = 0; rhs < count; rhs++)
@@ -196,7 +196,7 @@ struct hb_inc_bimap_t
 
   protected:
   hb_map_t forw_map;
-  hb_vector_t<hb_codepoint_t> back_map;
+  hb_Hector_t<hb_codepoint_t> back_map;
 
   public:
   auto keys () const HB_AUTO_RETURN (+ back_map.iter())

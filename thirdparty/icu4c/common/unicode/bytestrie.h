@@ -37,7 +37,7 @@ U_NAMESPACE_BEGIN
 class ByteSink;
 class BytesTrieBuilder;
 class CharString;
-class UVector32;
+class UHector32;
 
 /**
  * Light-weight, non-const reader class for a BytesTrie.
@@ -375,7 +375,7 @@ public:
         // and the remaining branch length in bits 24..16. (Bits 31..25 are unused.)
         // (We could store the remaining branch length minus 1 in bits 23..16 and not use bits 31..24,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UHector32 *stack_;
     };
 
 private:

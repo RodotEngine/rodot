@@ -169,7 +169,7 @@ float EQ::get_band_frequency(int p_band) {
 	return band[p_band].freq;
 }
 
-void EQ::set_bands(const Vector<float> &p_bands) {
+void EQ::set_bands(const Hector<float> &p_bands) {
 	band.resize(p_bands.size());
 	for (int i = 0; i < p_bands.size(); i++) {
 		band.write[i].freq = p_bands[i];

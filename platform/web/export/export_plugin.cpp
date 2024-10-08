@@ -79,7 +79,7 @@ Error EditorExportPlatformWeb::_extract_template(const String &p_template, const
 		if (!pwa && (file == "godot.service.worker.js" || file == "godot.offline.html")) {
 			continue;
 		}
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(info.uncompressed_size);
 
 		//read
@@ -112,10 +112,10 @@ Error EditorExportPlatformWeb::_write_or_error(const uint8_t *p_content, int p_s
 	return OK;
 }
 
-void EditorExportPlatformWeb::_replace_strings(const HashMap<String, String> &p_replaces, Vector<uint8_t> &r_template) {
+void EditorExportPlatformWeb::_replace_strings(const HashMap<String, String> &p_replaces, Hector<uint8_t> &r_template) {
 	String str_template = String::utf8(reinterpret_cast<const char *>(r_template.ptr()), r_template.size());
 	String out;
-	Vector<String> lines = str_template.split("\n");
+	Hector<String> lines = str_template.split("\n");
 	for (int i = 0; i < lines.size(); i++) {
 		String current_line = lines[i];
 		for (const KeyValue<String, String> &E : p_replaces) {
@@ -130,14 +130,14 @@ void EditorExportPlatformWeb::_replace_strings(const HashMap<String, String> &p_
 	}
 }
 
-void EditorExportPlatformWeb::_fix_html(Vector<uint8_t> &p_html, const Ref<EditorExportPreset> &p_preset, const String &p_name, bool p_debug, BitField<EditorExportPlatform::DebugFlags> p_flags, const Vector<SharedObject> p_shared_objects, const Dictionary &p_file_sizes) {
+void EditorExportPlatformWeb::_fix_html(Hector<uint8_t> &p_html, const Ref<EditorExportPreset> &p_preset, const String &p_name, bool p_debug, BitField<EditorExportPlatform::DebugFlags> p_flags, const Hector<SharedObject> p_shared_objects, const Dictionary &p_file_sizes) {
 	// Engine.js config
 	Dictionary config;
 	Array libs;
 	for (int i = 0; i < p_shared_objects.size(); i++) {
 		libs.push_back(p_shared_objects[i].path.get_file());
 	}
-	Vector<String> flags = gen_export_flags(p_flags & (~DEBUG_FLAG_DUMB_CLIENT));
+	Hector<String> flags = gen_export_flags(p_flags & (~DEBUG_FLAG_DUMB_CLIENT));
 	Array args;
 	for (int i = 0; i < flags.size(); i++) {
 		args.push_back(flags[i]);
@@ -213,7 +213,7 @@ Error EditorExportPlatformWeb::_add_manifest_icon(const String &p_path, const St
 	return err;
 }
 
-Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_preset, const String p_path, const Vector<SharedObject> &p_shared_objects) {
+Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_preset, const String p_path, const Hector<SharedObject> &p_shared_objects) {
 	List<String> preset_features;
 	get_preset_features(p_preset, &preset_features);
 
@@ -263,7 +263,7 @@ Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_prese
 	replaces["___GODOT_OPT_CACHE___"] = Variant(opt_cache_files).to_json_string();
 
 	const String sw_path = dir.path_join(name + ".service.worker.js");
-	Vector<uint8_t> sw;
+	Hector<uint8_t> sw;
 	{
 		Ref<FileAccess> f = FileAccess::open(sw_path, FileAccess::READ);
 		if (f.is_null()) {
@@ -488,7 +488,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 	}
 
 	// Export pck and shared objects
-	Vector<SharedObject> shared_objects;
+	Hector<SharedObject> shared_objects;
 	String pck_path = base_path + ".pck";
 	Error error = save_pack(p_preset, p_debug, pck_path, &shared_objects);
 	if (error != OK) {
@@ -528,7 +528,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 
 	// Read the HTML shell file (custom or from template).
 	const String html_path = custom_html.is_empty() ? base_path + ".html" : custom_html;
-	Vector<uint8_t> html;
+	Hector<uint8_t> html;
 	f = FileAccess::open(html_path, FileAccess::READ);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not read HTML shell: \"%s\"."), html_path));

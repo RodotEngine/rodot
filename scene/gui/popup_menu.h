@@ -112,7 +112,7 @@ class PopupMenu : public Popup {
 	Timer *minimum_lifetime_timer = nullptr;
 	Timer *submenu_timer = nullptr;
 	List<Rect2> autohide_areas;
-	Vector<Item> items;
+	Hector<Item> items;
 	BitField<MouseButtonMask> initial_button_mask;
 	bool during_grabbed_click = false;
 	bool is_scrolling = false;
@@ -136,7 +136,7 @@ class PopupMenu : public Popup {
 	bool hide_on_item_selection = true;
 	bool hide_on_checkable_item_selection = true;
 	bool hide_on_multistate_item_selection = false;
-	Vector2 moved;
+	Hector2 moved;
 
 	HashMap<Ref<Shortcut>, int> shortcut_refcount;
 

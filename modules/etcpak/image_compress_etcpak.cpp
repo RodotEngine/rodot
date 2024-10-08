@@ -193,14 +193,14 @@ void _compress_etcpak(EtcpakType p_compress_type, Image *r_img) {
 	// Hence, we allow Nx1 and Nx2 images through without forcing to multiple-of-4.
 
 	// Create the buffer for compressed image data.
-	Vector<uint8_t> dest_data;
+	Hector<uint8_t> dest_data;
 	dest_data.resize(Image::get_image_data_size(width, height, target_format, has_mipmaps));
 	uint8_t *dest_write = dest_data.ptrw();
 
 	const uint8_t *src_read = r_img->get_data().ptr();
 
 	const int mip_count = has_mipmaps ? Image::get_image_required_mipmaps(width, height, target_format) : 0;
-	Vector<uint32_t> padded_src;
+	Hector<uint32_t> padded_src;
 
 	for (int i = 0; i < mip_count + 1; i++) {
 		// Get write mip metrics for target image.
@@ -249,7 +249,7 @@ void _compress_etcpak(EtcpakType p_compress_type, Image *r_img) {
 				}
 			}
 
-			// Override the src_mip_read pointer to our temporary Vector.
+			// Override the src_mip_read pointer to our temporary Hector.
 			src_mip_read = padded_src.ptr();
 		}
 

@@ -379,7 +379,7 @@ exit:
 
 #if defined(MBEDTLS_SELF_TEST)
 /*
- * FIPS-180-1 test vectors
+ * FIPS-180-1 test Hectors
  */
 static const unsigned char sha1_test_buf[3][57] =
 {

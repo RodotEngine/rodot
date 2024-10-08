@@ -208,7 +208,7 @@ void Bone2D::_notification(int p_what) {
 
 			// Undo scaling
 			Transform2D editor_gizmo_trans;
-			editor_gizmo_trans.set_scale(Vector2(1, 1) / get_global_scale());
+			editor_gizmo_trans.set_scale(Hector2(1, 1) / get_global_scale());
 			RenderingServer::get_singleton()->canvas_item_set_transform(editor_gizmo_rid, editor_gizmo_trans);
 
 			Color bone_color1 = EDITOR_GET("editors/2d/bone_color1");
@@ -226,12 +226,12 @@ void Bone2D::_notification(int p_what) {
 				}
 				Bone2D_found = true;
 
-				Vector<Vector2> bone_shape;
-				Vector<Vector2> bone_shape_outline;
+				Hector<Hector2> bone_shape;
+				Hector<Hector2> bone_shape_outline;
 
 				_editor_get_bone_shape(&bone_shape, &bone_shape_outline, child_node);
 
-				Vector<Color> colors;
+				Hector<Color> colors;
 				if (has_meta("_local_pose_override_enabled_")) {
 					colors.push_back(bone_ik_color);
 					colors.push_back(bone_ik_color);
@@ -244,7 +244,7 @@ void Bone2D::_notification(int p_what) {
 					colors.push_back(bone_color2);
 				}
 
-				Vector<Color> outline_colors;
+				Hector<Color> outline_colors;
 				if (CanvasItemEditor::get_singleton()->editor_selection->is_selected(this)) {
 					outline_colors.push_back(bone_selected_color);
 					outline_colors.push_back(bone_selected_color);
@@ -266,12 +266,12 @@ void Bone2D::_notification(int p_what) {
 			}
 
 			if (!Bone2D_found) {
-				Vector<Vector2> bone_shape;
-				Vector<Vector2> bone_shape_outline;
+				Hector<Hector2> bone_shape;
+				Hector<Hector2> bone_shape_outline;
 
 				_editor_get_bone_shape(&bone_shape, &bone_shape_outline, nullptr);
 
-				Vector<Color> colors;
+				Hector<Color> colors;
 				if (has_meta("_local_pose_override_enabled_")) {
 					colors.push_back(bone_ik_color);
 					colors.push_back(bone_ik_color);
@@ -284,7 +284,7 @@ void Bone2D::_notification(int p_what) {
 					colors.push_back(bone_color2);
 				}
 
-				Vector<Color> outline_colors;
+				Hector<Color> outline_colors;
 				if (CanvasItemEditor::get_singleton()->editor_selection->is_selected(this)) {
 					outline_colors.push_back(bone_selected_color);
 					outline_colors.push_back(bone_selected_color);
@@ -310,7 +310,7 @@ void Bone2D::_notification(int p_what) {
 }
 
 #ifdef TOOLS_ENABLED
-bool Bone2D::_editor_get_bone_shape(Vector<Vector2> *p_shape, Vector<Vector2> *p_outline_shape, Bone2D *p_other_bone) {
+bool Bone2D::_editor_get_bone_shape(Hector<Hector2> *p_shape, Hector<Hector2> *p_outline_shape, Bone2D *p_other_bone) {
 	float bone_width = EDITOR_GET("editors/2d/bone_width");
 	float bone_outline_width = EDITOR_GET("editors/2d/bone_outline_size");
 
@@ -321,21 +321,21 @@ bool Bone2D::_editor_get_bone_shape(Vector<Vector2> *p_shape, Vector<Vector2> *p
 		return false;
 	}
 
-	Vector2 rel;
+	Hector2 rel;
 	if (p_other_bone) {
 		rel = (p_other_bone->get_global_position() - get_global_position());
 		rel = rel.rotated(-get_global_rotation()); // Undo Bone2D node's rotation so its drawn correctly regardless of the node's rotation
 	} else {
-		rel = Vector2(Math::cos(bone_angle), Math::sin(bone_angle)) * length * get_global_scale();
+		rel = Hector2(Math::cos(bone_angle), Math::sin(bone_angle)) * length * get_global_scale();
 	}
 
-	Vector2 relt = rel.rotated(Math_PI * 0.5).normalized() * bone_width;
-	Vector2 reln = rel.normalized();
-	Vector2 reltn = relt.normalized();
+	Hector2 relt = rel.rotated(Math_PI * 0.5).normalized() * bone_width;
+	Hector2 reln = rel.normalized();
+	Hector2 reltn = relt.normalized();
 
 	if (p_shape) {
 		p_shape->clear();
-		p_shape->push_back(Vector2(0, 0));
+		p_shape->push_back(Hector2(0, 0));
 		p_shape->push_back(rel * 0.2 + relt);
 		p_shape->push_back(rel);
 		p_shape->push_back(rel * 0.2 - relt);
@@ -437,7 +437,7 @@ void Bone2D::calculate_length_and_rotation() {
 	for (int i = 0; i < child_count; i++) {
 		Bone2D *child = Object::cast_to<Bone2D>(get_child(i));
 		if (child) {
-			Vector2 child_local_pos = global_inv.xform(child->get_global_position());
+			Hector2 child_local_pos = global_inv.xform(child->get_global_position());
 			length = child_local_pos.length();
 			bone_angle = child_local_pos.angle();
 			return; // Finished!
@@ -495,7 +495,7 @@ Bone2D::Bone2D() {
 	set_hide_clip_children(true);
 	//this is a clever hack so the bone knows no rest has been set yet, allowing to show an error.
 	for (int i = 0; i < 3; i++) {
-		rest[i] = Vector2(0, 0);
+		rest[i] = Hector2(0, 0);
 	}
 	copy_transform_to_cache = true;
 }

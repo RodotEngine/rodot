@@ -126,7 +126,7 @@ void SceneCacheInterface::process_simplify_path(int p_from, const uint8_t *p_pac
 	cache.recv_ids.insert(p_from, id);
 
 	// Send ack.
-	Vector<uint8_t> packet;
+	Hector<uint8_t> packet;
 	packet.resize(1 + 1 + 4);
 	packet.write[0] = SceneMultiplayer::NETWORK_COMMAND_CONFIRM_PATH;
 	packet.write[1] = valid_rpc_checksum;
@@ -176,7 +176,7 @@ Error SceneCacheInterface::_send_confirm_path(Node *p_node, NodeCache &p_cache, 
 	const String methods_md5 = multiplayer->get_rpc_md5(p_node);
 	const int methods_md5_len = 33; // 32 + 1 for the `0` that is added by the encoder.
 
-	Vector<uint8_t> packet;
+	Hector<uint8_t> packet;
 	packet.resize(1 + 4 + path_len + methods_md5_len);
 	int ofs = 0;
 

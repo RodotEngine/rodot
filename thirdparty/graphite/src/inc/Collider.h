@@ -101,7 +101,7 @@ class ShiftCollider
 {
 public:
     typedef std::pair<float, float> fpair;
-    typedef Vector<fpair> vfpairs;
+    typedef Hector<fpair> vfpairs;
     typedef vfpairs::iterator ivfpairs;
 
     ShiftCollider(json *dbgout);
@@ -121,7 +121,7 @@ public:
 	void outputJsonDbg(json * const dbgout, Segment *seg, int axis);
 	void outputJsonDbgStartSlot(json * const dbgout, Segment *seg);
 	void outputJsonDbgEndSlot(json * const dbgout, Position resultPos, int bestAxis, bool isCol);
-	void outputJsonDbgOneVector(json * const dbgout, Segment *seg, int axis, float tleft, float bestCost, float bestVal);
+	void outputJsonDbgOneHector(json * const dbgout, Segment *seg, int axis, float tleft, float bestCost, float bestVal);
 	void outputJsonDbgRawRanges(json * const dbgout, int axis);
 	void outputJsonDbgRemovals(json * const dbgout, int axis, Segment *seg);
 #endif
@@ -183,7 +183,7 @@ private:
     Position _currShift;    // NOT USED??
     float _miny;	        // y-coordinates offset by global slot position
     float _maxy;
-    Vector<float> _edges;   // edges of horizontal slices
+    Hector<float> _edges;   // edges of horizontal slices
     float _sliceWidth;      // width of each slice
     float _mingap;
     float _xbound;        // max or min edge
@@ -192,8 +192,8 @@ private:
 #if !defined GRAPHITE2_NTRACING
     // Debugging
     Segment * _seg;
-    Vector<float> _nearEdges; // closest potential collision in each slice
-    Vector<Slot*> _slotNear;
+    Hector<float> _nearEdges; // closest potential collision in each slice
+    Hector<Slot*> _slotNear;
 #endif
 };	// end of class KernCollider
 

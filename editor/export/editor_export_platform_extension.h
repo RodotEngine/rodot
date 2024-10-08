@@ -45,7 +45,7 @@ protected:
 
 public:
 	virtual void get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const override;
-	GDVIRTUAL1RC_REQUIRED(Vector<String>, _get_preset_features, Ref<EditorExportPreset>);
+	GDVIRTUAL1RC_REQUIRED(Hector<String>, _get_preset_features, Ref<EditorExportPreset>);
 
 	virtual bool is_executable(const String &p_path) const override;
 	GDVIRTUAL1RC(bool, _is_executable, const String &);
@@ -125,7 +125,7 @@ public:
 	GDVIRTUAL1RC_REQUIRED(bool, _has_valid_project_configuration, Ref<EditorExportPreset>);
 
 	virtual List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override;
-	GDVIRTUAL1RC_REQUIRED(Vector<String>, _get_binary_extensions, Ref<EditorExportPreset>);
+	GDVIRTUAL1RC_REQUIRED(Hector<String>, _get_binary_extensions, Ref<EditorExportPreset>);
 
 	virtual Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
 	GDVIRTUAL4R_REQUIRED(Error, _export_project, Ref<EditorExportPreset>, bool, const String &, BitField<EditorExportPlatform::DebugFlags>);
@@ -136,14 +136,14 @@ public:
 	virtual Error export_zip(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
 	GDVIRTUAL4R(Error, _export_zip, Ref<EditorExportPreset>, bool, const String &, BitField<EditorExportPlatform::DebugFlags>);
 
-	virtual Error export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches = Vector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
-	GDVIRTUAL5R(Error, _export_pack_patch, Ref<EditorExportPreset>, bool, const String &, const Vector<String> &, BitField<EditorExportPlatform::DebugFlags>);
+	virtual Error export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Hector<String> &p_patches = Hector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
+	GDVIRTUAL5R(Error, _export_pack_patch, Ref<EditorExportPreset>, bool, const String &, const Hector<String> &, BitField<EditorExportPlatform::DebugFlags>);
 
-	virtual Error export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches = Vector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
-	GDVIRTUAL5R(Error, _export_zip_patch, Ref<EditorExportPreset>, bool, const String &, const Vector<String> &, BitField<EditorExportPlatform::DebugFlags>);
+	virtual Error export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Hector<String> &p_patches = Hector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0) override;
+	GDVIRTUAL5R(Error, _export_zip_patch, Ref<EditorExportPreset>, bool, const String &, const Hector<String> &, BitField<EditorExportPlatform::DebugFlags>);
 
 	virtual void get_platform_features(List<String> *r_features) const override;
-	GDVIRTUAL0RC_REQUIRED(Vector<String>, _get_platform_features);
+	GDVIRTUAL0RC_REQUIRED(Hector<String>, _get_platform_features);
 
 	virtual String get_debug_protocol() const override;
 	GDVIRTUAL0RC(String, _get_debug_protocol);

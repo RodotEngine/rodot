@@ -53,8 +53,8 @@ class GodotStringPrinter:
         return "string"
 
 
-# Printer for Godot Vector variables.
-class GodotVectorPrinter:
+# Printer for Godot Hector variables.
+class GodotHectorPrinter:
     def __init__(self, value):
         self.value = value
 
@@ -66,7 +66,7 @@ class GodotVectorPrinter:
     SIZE_OFFSET = 8
     DATA_OFFSET = 16
 
-    # Figures out the number of elements in the vector.
+    # Figures out the number of elements in the Hector.
     def get_size(self):
         cowdata = self.value["_cowdata"]
         if cowdata["_ptr"] == 0:
@@ -80,7 +80,7 @@ class GodotVectorPrinter:
             ptr = cowdata["_ptr"].cast(gdb.lookup_type("uint8_t").pointer())
             return int((ptr - self.DATA_OFFSET + self.SIZE_OFFSET).dereference())
 
-    # Lists children of the value, in this case the vector's items.
+    # Lists children of the value, in this case the Hector's items.
     def children(self):
         # Return nothing if ptr is null.
         ptr = self.value["_cowdata"]["_ptr"]
@@ -98,7 +98,7 @@ class GodotVectorPrinter:
         return "array"
 
 
-VECTOR_REGEX = re.compile("^Vector<.*$")
+Hector_REGEX = re.compile("^Hector<.*$")
 
 
 # Tries to find a pretty printer for a debugger value.
@@ -107,8 +107,8 @@ def lookup_pretty_printer(value):
         return GodotStringNamePrinter(value)
     if value.type.name == "String":
         return GodotStringPrinter(value)
-    if value.type.name and VECTOR_REGEX.match(value.type.name):
-        return GodotVectorPrinter(value)
+    if value.type.name and Hector_REGEX.match(value.type.name):
+        return GodotHectorPrinter(value)
     return None
 
 

@@ -10,17 +10,17 @@
 		[gdscript]
 		var mesh = ImmediateMesh.new()
 		mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
-		mesh.surface_add_vertex(Vector3.LEFT)
-		mesh.surface_add_vertex(Vector3.FORWARD)
-		mesh.surface_add_vertex(Vector3.ZERO)
+		mesh.surface_add_vertex(Hector3.LEFT)
+		mesh.surface_add_vertex(Hector3.FORWARD)
+		mesh.surface_add_vertex(Hector3.ZERO)
 		mesh.surface_end()
 		[/gdscript]
 		[csharp]
 		var mesh = new ImmediateMesh();
 		mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles);
-		mesh.SurfaceAddVertex(Vector3.Left);
-		mesh.SurfaceAddVertex(Vector3.Forward);
-		mesh.SurfaceAddVertex(Vector3.Zero);
+		mesh.SurfaceAddVertex(Hector3.Left);
+		mesh.SurfaceAddVertex(Hector3.Forward);
+		mesh.SurfaceAddVertex(Hector3.Zero);
 		mesh.SurfaceEnd();
 		[/csharp]
 		[/codeblocks]
@@ -38,14 +38,14 @@
 		</method>
 		<method name="surface_add_vertex">
 			<return type="void" />
-			<param index="0" name="vertex" type="Vector3" />
+			<param index="0" name="vertex" type="Hector3" />
 			<description>
 				Add a 3D vertex using the current attributes previously set.
 			</description>
 		</method>
 		<method name="surface_add_vertex_2d">
 			<return type="void" />
-			<param index="0" name="vertex" type="Vector2" />
+			<param index="0" name="vertex" type="Hector2" />
 			<description>
 				Add a 2D vertex using the current attributes previously set.
 			</description>
@@ -73,7 +73,7 @@
 		</method>
 		<method name="surface_set_normal">
 			<return type="void" />
-			<param index="0" name="normal" type="Vector3" />
+			<param index="0" name="normal" type="Hector3" />
 			<description>
 				Set the normal attribute that will be pushed with the next vertex.
 			</description>
@@ -87,14 +87,14 @@
 		</method>
 		<method name="surface_set_uv">
 			<return type="void" />
-			<param index="0" name="uv" type="Vector2" />
+			<param index="0" name="uv" type="Hector2" />
 			<description>
 				Set the UV attribute that will be pushed with the next vertex.
 			</description>
 		</method>
 		<method name="surface_set_uv2">
 			<return type="void" />
-			<param index="0" name="uv2" type="Vector2" />
+			<param index="0" name="uv2" type="Hector2" />
 			<description>
 				Set the UV2 attribute that will be pushed with the next vertex.
 			</description>

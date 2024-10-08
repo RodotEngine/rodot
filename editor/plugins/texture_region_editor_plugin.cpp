@@ -51,7 +51,7 @@
 Transform2D TextureRegionEditor::_get_offset_transform() const {
 	Transform2D mtx;
 	mtx.columns[2] = -draw_ofs * draw_zoom;
-	mtx.scale_basis(Vector2(draw_zoom, draw_zoom));
+	mtx.scale_basis(Hector2(draw_zoom, draw_zoom));
 
 	return mtx;
 }
@@ -87,7 +87,7 @@ void TextureRegionEditor::_texture_overlay_draw() {
 		if (snap_step.x != 0) {
 			if (snap_separation.x == 0) {
 				for (int i = 0; i < s.width; i++) {
-					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Vector2(i, 0)).x - snap_offset.x) / snap_step.x));
+					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Hector2(i, 0)).x - snap_offset.x) / snap_step.x));
 					if (i == 0) {
 						last_cell = cell;
 					}
@@ -98,7 +98,7 @@ void TextureRegionEditor::_texture_overlay_draw() {
 				}
 			} else {
 				for (int i = 0; i < s.width + snap_separation.x; i++) {
-					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Vector2(i, 0)).x - snap_offset.x) / (snap_step.x + snap_separation.x)));
+					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Hector2(i, 0)).x - snap_offset.x) / (snap_step.x + snap_separation.x)));
 					if (i == 0) {
 						last_cell = cell;
 					}
@@ -113,7 +113,7 @@ void TextureRegionEditor::_texture_overlay_draw() {
 		if (snap_step.y != 0) {
 			if (snap_separation.y == 0) {
 				for (int i = 0; i < s.height; i++) {
-					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Vector2(0, i)).y - snap_offset.y) / snap_step.y));
+					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Hector2(0, i)).y - snap_offset.y) / snap_step.y));
 					if (i == 0) {
 						last_cell = cell;
 					}
@@ -124,7 +124,7 @@ void TextureRegionEditor::_texture_overlay_draw() {
 				}
 			} else {
 				for (int i = 0; i < s.height + snap_separation.y; i++) {
-					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Vector2(0, i)).y - snap_offset.y) / (snap_step.y + snap_separation.y)));
+					int cell = Math::fast_ftoi(Math::floor((mtx.affine_inverse().xform(Hector2(0, i)).y - snap_offset.y) / (snap_step.y + snap_separation.y)));
 					if (i == 0) {
 						last_cell = cell;
 					}
@@ -137,11 +137,11 @@ void TextureRegionEditor::_texture_overlay_draw() {
 		}
 	} else if (snap_mode == SNAP_AUTOSLICE) {
 		for (const Rect2 &r : autoslice_cache) {
-			const Vector2 endpoints[4] = {
+			const Hector2 endpoints[4] = {
 				mtx.basis_xform(r.position),
-				mtx.basis_xform(r.position + Vector2(r.size.x, 0)),
+				mtx.basis_xform(r.position + Hector2(r.size.x, 0)),
 				mtx.basis_xform(r.position + r.size),
-				mtx.basis_xform(r.position + Vector2(0, r.size.y))
+				mtx.basis_xform(r.position + Hector2(0, r.size.y))
 			};
 			for (int i = 0; i < 4; i++) {
 				int next = (i + 1) % 4;
@@ -154,13 +154,13 @@ void TextureRegionEditor::_texture_overlay_draw() {
 
 	Rect2 scroll_rect(Point2(), object_texture->get_size());
 
-	const Vector2 raw_endpoints[4] = {
+	const Hector2 raw_endpoints[4] = {
 		rect.position,
-		rect.position + Vector2(rect.size.x, 0),
+		rect.position + Hector2(rect.size.x, 0),
 		rect.position + rect.size,
-		rect.position + Vector2(0, rect.size.y)
+		rect.position + Hector2(0, rect.size.y)
 	};
-	const Vector2 endpoints[4] = {
+	const Hector2 endpoints[4] = {
 		mtx.basis_xform(raw_endpoints[0]),
 		mtx.basis_xform(raw_endpoints[1]),
 		mtx.basis_xform(raw_endpoints[2]),
@@ -170,7 +170,7 @@ void TextureRegionEditor::_texture_overlay_draw() {
 		int prev = (i + 3) % 4;
 		int next = (i + 1) % 4;
 
-		Vector2 ofs = ((endpoints[i] - endpoints[prev]).normalized() + ((endpoints[i] - endpoints[next]).normalized())).normalized();
+		Hector2 ofs = ((endpoints[i] - endpoints[prev]).normalized() + ((endpoints[i] - endpoints[next]).normalized())).normalized();
 		ofs *= Math_SQRT2 * (select_handle->get_size().width / 2);
 
 		texture_overlay->draw_line(endpoints[i] - draw_ofs * draw_zoom, endpoints[next] - draw_ofs * draw_zoom, color, 2);
@@ -229,7 +229,7 @@ void TextureRegionEditor::_texture_overlay_draw() {
 		hscroll->set_value((hscroll->get_min() + hscroll->get_max() - hscroll->get_page()) / 2);
 		vscroll->set_value((vscroll->get_min() + vscroll->get_max() - vscroll->get_page()) / 2);
 		// This ensures that the view is updated correctly.
-		callable_mp(this, &TextureRegionEditor::_pan_callback).call_deferred(Vector2(1, 0), Ref<InputEvent>());
+		callable_mp(this, &TextureRegionEditor::_pan_callback).call_deferred(Hector2(1, 0), Ref<InputEvent>());
 		callable_mp(this, &TextureRegionEditor::_scroll_changed).call_deferred(0.0);
 		request_center = false;
 	}
@@ -248,25 +248,25 @@ void TextureRegionEditor::_texture_overlay_draw() {
 			margins[3] = res_stylebox->get_texture_margin(SIDE_RIGHT);
 		}
 
-		Vector2 pos[4] = {
-			mtx.basis_xform(Vector2(0, margins[0])) + Vector2(0, endpoints[0].y - draw_ofs.y * draw_zoom),
-			-mtx.basis_xform(Vector2(0, margins[1])) + Vector2(0, endpoints[2].y - draw_ofs.y * draw_zoom),
-			mtx.basis_xform(Vector2(margins[2], 0)) + Vector2(endpoints[0].x - draw_ofs.x * draw_zoom, 0),
-			-mtx.basis_xform(Vector2(margins[3], 0)) + Vector2(endpoints[2].x - draw_ofs.x * draw_zoom, 0)
+		Hector2 pos[4] = {
+			mtx.basis_xform(Hector2(0, margins[0])) + Hector2(0, endpoints[0].y - draw_ofs.y * draw_zoom),
+			-mtx.basis_xform(Hector2(0, margins[1])) + Hector2(0, endpoints[2].y - draw_ofs.y * draw_zoom),
+			mtx.basis_xform(Hector2(margins[2], 0)) + Hector2(endpoints[0].x - draw_ofs.x * draw_zoom, 0),
+			-mtx.basis_xform(Hector2(margins[3], 0)) + Hector2(endpoints[2].x - draw_ofs.x * draw_zoom, 0)
 		};
 
-		_draw_margin_line(pos[0], pos[0] + Vector2(texture_overlay->get_size().x, 0));
-		_draw_margin_line(pos[1], pos[1] + Vector2(texture_overlay->get_size().x, 0));
-		_draw_margin_line(pos[2], pos[2] + Vector2(0, texture_overlay->get_size().y));
-		_draw_margin_line(pos[3], pos[3] + Vector2(0, texture_overlay->get_size().y));
+		_draw_margin_line(pos[0], pos[0] + Hector2(texture_overlay->get_size().x, 0));
+		_draw_margin_line(pos[1], pos[1] + Hector2(texture_overlay->get_size().x, 0));
+		_draw_margin_line(pos[2], pos[2] + Hector2(0, texture_overlay->get_size().y));
+		_draw_margin_line(pos[3], pos[3] + Hector2(0, texture_overlay->get_size().y));
 	}
 }
 
-void TextureRegionEditor::_draw_margin_line(Vector2 p_from, Vector2 p_to) {
+void TextureRegionEditor::_draw_margin_line(Hector2 p_from, Hector2 p_to) {
 	// Margin line is a dashed line with a normalized dash length. This method works
 	// for both vertical and horizontal lines.
 
-	Vector2 dash_size = (p_to - p_from).normalized() * 10;
+	Hector2 dash_size = (p_to - p_from).normalized() * 10;
 	const int dash_thickness = Math::round(2 * EDSCALE);
 	const Color dash_color = get_theme_color(SNAME("mono_color"), EditorStringName(Editor));
 	const Color dash_bg_color = dash_color.inverted() * Color(1, 1, 1, 0.5);
@@ -275,7 +275,7 @@ void TextureRegionEditor::_draw_margin_line(Vector2 p_from, Vector2 p_to) {
 	// Draw a translucent background line to make the foreground line visible on any background.
 	texture_overlay->draw_line(p_from, p_to, dash_bg_color, dash_thickness);
 
-	Vector2 dash_start = p_from;
+	Hector2 dash_start = p_from;
 	while (dash_start.distance_squared_to(p_to) > line_threshold) {
 		texture_overlay->draw_line(dash_start, dash_start + dash_size, dash_color, dash_thickness);
 
@@ -302,7 +302,7 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 
 	Transform2D mtx;
 	mtx.columns[2] = -draw_ofs * draw_zoom;
-	mtx.scale_basis(Vector2(draw_zoom, draw_zoom));
+	mtx.scale_basis(Hector2(draw_zoom, draw_zoom));
 
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	Ref<InputEventMouseButton> mb = p_input;
@@ -315,15 +315,15 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 					const real_t handle_offset = 8 * EDSCALE;
 
 					// Position of selection handles.
-					const Vector2 endpoints[8] = {
-						mtx.xform(rect.position) + Vector2(-handle_offset, -handle_offset),
-						mtx.xform(rect.position + Vector2(rect.size.x / 2, 0)) + Vector2(0, -handle_offset),
-						mtx.xform(rect.position + Vector2(rect.size.x, 0)) + Vector2(handle_offset, -handle_offset),
-						mtx.xform(rect.position + Vector2(rect.size.x, rect.size.y / 2)) + Vector2(handle_offset, 0),
-						mtx.xform(rect.position + rect.size) + Vector2(handle_offset, handle_offset),
-						mtx.xform(rect.position + Vector2(rect.size.x / 2, rect.size.y)) + Vector2(0, handle_offset),
-						mtx.xform(rect.position + Vector2(0, rect.size.y)) + Vector2(-handle_offset, handle_offset),
-						mtx.xform(rect.position + Vector2(0, rect.size.y / 2)) + Vector2(-handle_offset, 0)
+					const Hector2 endpoints[8] = {
+						mtx.xform(rect.position) + Hector2(-handle_offset, -handle_offset),
+						mtx.xform(rect.position + Hector2(rect.size.x / 2, 0)) + Hector2(0, -handle_offset),
+						mtx.xform(rect.position + Hector2(rect.size.x, 0)) + Hector2(handle_offset, -handle_offset),
+						mtx.xform(rect.position + Hector2(rect.size.x, rect.size.y / 2)) + Hector2(handle_offset, 0),
+						mtx.xform(rect.position + rect.size) + Hector2(handle_offset, handle_offset),
+						mtx.xform(rect.position + Hector2(rect.size.x / 2, rect.size.y)) + Hector2(0, handle_offset),
+						mtx.xform(rect.position + Hector2(0, rect.size.y)) + Hector2(-handle_offset, handle_offset),
+						mtx.xform(rect.position + Hector2(0, rect.size.y / 2)) + Hector2(-handle_offset, 0)
 					};
 
 					drag_from = mtx.affine_inverse().xform(mb->get_position());
@@ -337,7 +337,7 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 					rect_prev = _get_edited_object_region();
 
 					for (int i = 0; i < 8; i++) {
-						Vector2 tuv = endpoints[i];
+						Hector2 tuv = endpoints[i];
 						if (tuv.distance_to(mb->get_position()) < handle_radius) {
 							drag_index = i;
 						}
@@ -363,11 +363,11 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 							margins[3] = res_stylebox->get_texture_margin(SIDE_RIGHT);
 						}
 
-						Vector2 pos[4] = {
-							mtx.basis_xform(rect.position + Vector2(0, margins[0])) - draw_ofs * draw_zoom,
-							mtx.basis_xform(rect.position + rect.size - Vector2(0, margins[1])) - draw_ofs * draw_zoom,
-							mtx.basis_xform(rect.position + Vector2(margins[2], 0)) - draw_ofs * draw_zoom,
-							mtx.basis_xform(rect.position + rect.size - Vector2(margins[3], 0)) - draw_ofs * draw_zoom
+						Hector2 pos[4] = {
+							mtx.basis_xform(rect.position + Hector2(0, margins[0])) - draw_ofs * draw_zoom,
+							mtx.basis_xform(rect.position + rect.size - Hector2(0, margins[1])) - draw_ofs * draw_zoom,
+							mtx.basis_xform(rect.position + Hector2(margins[2], 0)) - draw_ofs * draw_zoom,
+							mtx.basis_xform(rect.position + rect.size - Hector2(margins[3], 0)) - draw_ofs * draw_zoom
 						};
 						if (Math::abs(mb->get_position().y - pos[0].y) < 8) {
 							edited_margin = 0;
@@ -391,7 +391,7 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 					if (edited_margin < 0 && snap_mode == SNAP_AUTOSLICE) {
 						// We didn't hit anything, but we're in the autoslice mode. Handle it.
 
-						Vector2 point = mtx.affine_inverse().xform(mb->get_position());
+						Hector2 point = mtx.affine_inverse().xform(mb->get_position());
 						for (const Rect2 &E : autoslice_cache) {
 							if (E.has_point(point)) {
 								rect = E;
@@ -537,7 +537,7 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 						new_margin = Math::round(new_margin);
 					}
 				} else {
-					Vector2 pos_snapped = snap_point(mtx.affine_inverse().xform(mm->get_position()));
+					Hector2 pos_snapped = snap_point(mtx.affine_inverse().xform(mm->get_position()));
 					Rect2 rect_rounded = Rect2(rect.position.round(), rect.size.round());
 
 					if (edited_margin == 0) {
@@ -564,7 +564,7 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 					res_stylebox->set_texture_margin(side[edited_margin], new_margin);
 				}
 			} else {
-				Vector2 new_pos = mtx.affine_inverse().xform(mm->get_position());
+				Hector2 new_pos = mtx.affine_inverse().xform(mm->get_position());
 				if (snap_mode == SNAP_PIXEL) {
 					new_pos = new_pos.snappedf(1);
 				} else if (snap_mode == SNAP_GRID) {
@@ -582,49 +582,49 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 
 				switch (drag_index) {
 					case 0: {
-						Vector2 p = rect_prev.get_end();
+						Hector2 p = rect_prev.get_end();
 						rect = Rect2(p, Size2());
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 1: {
-						Vector2 p = rect_prev.position + Vector2(0, rect_prev.size.y);
+						Hector2 p = rect_prev.position + Hector2(0, rect_prev.size.y);
 						rect = Rect2(p, Size2(rect_prev.size.x, 0));
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 2: {
-						Vector2 p = rect_prev.position + Vector2(0, rect_prev.size.y);
+						Hector2 p = rect_prev.position + Hector2(0, rect_prev.size.y);
 						rect = Rect2(p, Size2());
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 3: {
-						Vector2 p = rect_prev.position;
+						Hector2 p = rect_prev.position;
 						rect = Rect2(p, Size2(0, rect_prev.size.y));
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 4: {
-						Vector2 p = rect_prev.position;
+						Hector2 p = rect_prev.position;
 						rect = Rect2(p, Size2());
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 5: {
-						Vector2 p = rect_prev.position;
+						Hector2 p = rect_prev.position;
 						rect = Rect2(p, Size2(rect_prev.size.x, 0));
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 6: {
-						Vector2 p = rect_prev.position + Vector2(rect_prev.size.x, 0);
+						Hector2 p = rect_prev.position + Hector2(rect_prev.size.x, 0);
 						rect = Rect2(p, Size2());
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
 					} break;
 					case 7: {
-						Vector2 p = rect_prev.position + Vector2(rect_prev.size.x, 0);
+						Hector2 p = rect_prev.position + Hector2(rect_prev.size.x, 0);
 						rect = Rect2(p, Size2(0, rect_prev.size.y));
 						rect.expand_to(new_pos);
 						_apply_rect(rect);
@@ -648,13 +648,13 @@ void TextureRegionEditor::_texture_overlay_input(const Ref<InputEvent> &p_input)
 	}
 }
 
-void TextureRegionEditor::_pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event) {
+void TextureRegionEditor::_pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event) {
 	p_scroll_vec /= draw_zoom;
 	hscroll->set_value(hscroll->get_value() - p_scroll_vec.x);
 	vscroll->set_value(vscroll->get_value() - p_scroll_vec.y);
 }
 
-void TextureRegionEditor::_zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event) {
+void TextureRegionEditor::_zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event) {
 	_zoom_on_position(draw_zoom * p_zoom_factor, p_origin);
 }
 
@@ -972,7 +972,7 @@ Rect2 TextureRegionEditor::_get_edited_object_region() const {
 
 	const Ref<Texture2D> object_texture = _get_edited_object_texture();
 	if (region == Rect2() && object_texture.is_valid()) {
-		region = Rect2(Vector2(), object_texture->get_size());
+		region = Rect2(Hector2(), object_texture->get_size());
 	}
 
 	return region;
@@ -1098,7 +1098,7 @@ void TextureRegionEditor::_edit_region() {
 	texture_overlay->queue_redraw();
 }
 
-Vector2 TextureRegionEditor::snap_point(Vector2 p_target) const {
+Hector2 TextureRegionEditor::snap_point(Hector2 p_target) const {
 	if (snap_mode == SNAP_GRID) {
 		p_target.x = Math::snap_scalar_separation(snap_offset.x, snap_step.x, p_target.x, snap_separation.x);
 		p_target.y = Math::snap_scalar_separation(snap_offset.y, snap_step.y, p_target.y, snap_separation.y);
@@ -1116,9 +1116,9 @@ TextureRegionEditor::TextureRegionEditor() {
 	set_ok_button_text(TTR("Close"));
 
 	// A power-of-two value works better as a default grid size.
-	snap_offset = EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_offset", Vector2());
-	snap_step = EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_step", Vector2(8, 8));
-	snap_separation = EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_separation", Vector2());
+	snap_offset = EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_offset", Hector2());
+	snap_step = EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_step", Hector2(8, 8));
+	snap_separation = EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_separation", Hector2());
 	snap_mode = (SnapMode)(int)EditorSettings::get_singleton()->get_project_metadata("texture_region_editor", "snap_mode", SNAP_NONE);
 
 	panner.instantiate();

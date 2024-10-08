@@ -35,7 +35,7 @@ class ParsePosition;
 class RBBIRuleScanner;
 class SymbolTable;
 class UnicodeSetStringSpan;
-class UVector;
+class UHector;
 class RuleCharacterIterator;
 
 /**
@@ -313,7 +313,7 @@ private:
     char16_t *pat = nullptr;
     int32_t patLen = 0;
 
-    UVector* strings = nullptr; // maintained in sorted order
+    UHector* strings = nullptr; // maintained in sorted order
     UnicodeSetStringSpan *stringSpan = nullptr;
 
     /**

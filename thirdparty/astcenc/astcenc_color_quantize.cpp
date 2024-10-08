@@ -1006,7 +1006,7 @@ static void quantize_hdr_rgbo(
 			continue;
 		}
 
-		// Encode the mode into a 4-bit vector
+		// Encode the mode into a 4-bit Hector
 		int mode_enc = mode < 4 ? (mode | (majcomp << 2)) : (majcomp | 0xC);
 
 		float mode_scale = mode_scales[mode];
@@ -1998,7 +1998,7 @@ uint8_t pack_color_endpoints(
 			}
 		}
 
-		// TODO: Can we vectorize this?
+		// TODO: Can we Hectorize this?
 		output[0] = static_cast<uint8_t>(color0_out.lane<0>());
 		output[1] = static_cast<uint8_t>(color1_out.lane<0>());
 		output[2] = static_cast<uint8_t>(color0_out.lane<1>());
@@ -2072,7 +2072,7 @@ uint8_t pack_color_endpoints(
 			}
 		}
 
-		// TODO: Can we vectorize this?
+		// TODO: Can we Hectorize this?
 		output[0] = static_cast<uint8_t>(color0_out.lane<0>());
 		output[1] = static_cast<uint8_t>(color1_out.lane<0>());
 		output[2] = static_cast<uint8_t>(color0_out.lane<1>());

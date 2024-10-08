@@ -47,62 +47,62 @@ protected:
 public:
 	// The warning is valid, but unavoidable. If the function is not overridden it will error anyway.
 
-	EXBIND0RC(Vector3, get_total_gravity)
+	EXBIND0RC(Hector3, get_total_gravity)
 	EXBIND0RC(real_t, get_total_angular_damp)
 	EXBIND0RC(real_t, get_total_linear_damp)
 
-	EXBIND0RC(Vector3, get_center_of_mass)
-	EXBIND0RC(Vector3, get_center_of_mass_local)
+	EXBIND0RC(Hector3, get_center_of_mass)
+	EXBIND0RC(Hector3, get_center_of_mass_local)
 	EXBIND0RC(Basis, get_principal_inertia_axes)
 	EXBIND0RC(real_t, get_inverse_mass)
-	EXBIND0RC(Vector3, get_inverse_inertia)
+	EXBIND0RC(Hector3, get_inverse_inertia)
 	EXBIND0RC(Basis, get_inverse_inertia_tensor)
 
-	EXBIND1(set_linear_velocity, const Vector3 &)
-	EXBIND0RC(Vector3, get_linear_velocity)
+	EXBIND1(set_linear_velocity, const Hector3 &)
+	EXBIND0RC(Hector3, get_linear_velocity)
 
-	EXBIND1(set_angular_velocity, const Vector3 &)
-	EXBIND0RC(Vector3, get_angular_velocity)
+	EXBIND1(set_angular_velocity, const Hector3 &)
+	EXBIND0RC(Hector3, get_angular_velocity)
 
 	EXBIND1(set_transform, const Transform3D &)
 	EXBIND0RC(Transform3D, get_transform)
 
-	EXBIND1RC(Vector3, get_velocity_at_local_position, const Vector3 &)
+	EXBIND1RC(Hector3, get_velocity_at_local_position, const Hector3 &)
 
-	EXBIND1(apply_central_impulse, const Vector3 &)
-	EXBIND2(apply_impulse, const Vector3 &, const Vector3 &)
-	EXBIND1(apply_torque_impulse, const Vector3 &)
+	EXBIND1(apply_central_impulse, const Hector3 &)
+	EXBIND2(apply_impulse, const Hector3 &, const Hector3 &)
+	EXBIND1(apply_torque_impulse, const Hector3 &)
 
-	EXBIND1(apply_central_force, const Vector3 &)
-	EXBIND2(apply_force, const Vector3 &, const Vector3 &)
-	EXBIND1(apply_torque, const Vector3 &)
+	EXBIND1(apply_central_force, const Hector3 &)
+	EXBIND2(apply_force, const Hector3 &, const Hector3 &)
+	EXBIND1(apply_torque, const Hector3 &)
 
-	EXBIND1(add_constant_central_force, const Vector3 &)
-	EXBIND2(add_constant_force, const Vector3 &, const Vector3 &)
-	EXBIND1(add_constant_torque, const Vector3 &)
+	EXBIND1(add_constant_central_force, const Hector3 &)
+	EXBIND2(add_constant_force, const Hector3 &, const Hector3 &)
+	EXBIND1(add_constant_torque, const Hector3 &)
 
-	EXBIND1(set_constant_force, const Vector3 &)
-	EXBIND0RC(Vector3, get_constant_force)
+	EXBIND1(set_constant_force, const Hector3 &)
+	EXBIND0RC(Hector3, get_constant_force)
 
-	EXBIND1(set_constant_torque, const Vector3 &)
-	EXBIND0RC(Vector3, get_constant_torque)
+	EXBIND1(set_constant_torque, const Hector3 &)
+	EXBIND0RC(Hector3, get_constant_torque)
 
 	EXBIND1(set_sleep_state, bool)
 	EXBIND0RC(bool, is_sleeping)
 
 	EXBIND0RC(int, get_contact_count)
 
-	EXBIND1RC(Vector3, get_contact_local_position, int)
-	EXBIND1RC(Vector3, get_contact_local_normal, int)
-	EXBIND1RC(Vector3, get_contact_impulse, int)
+	EXBIND1RC(Hector3, get_contact_local_position, int)
+	EXBIND1RC(Hector3, get_contact_local_normal, int)
+	EXBIND1RC(Hector3, get_contact_impulse, int)
 	EXBIND1RC(int, get_contact_local_shape, int)
-	EXBIND1RC(Vector3, get_contact_local_velocity_at_position, int)
+	EXBIND1RC(Hector3, get_contact_local_velocity_at_position, int)
 	EXBIND1RC(RID, get_contact_collider, int)
-	EXBIND1RC(Vector3, get_contact_collider_position, int)
+	EXBIND1RC(Hector3, get_contact_collider_position, int)
 	EXBIND1RC(ObjectID, get_contact_collider_id, int)
 	EXBIND1RC(Object *, get_contact_collider_object, int)
 	EXBIND1RC(int, get_contact_collider_shape, int)
-	EXBIND1RC(Vector3, get_contact_collider_velocity_at_position, int)
+	EXBIND1RC(Hector3, get_contact_collider_velocity_at_position, int)
 
 	EXBIND0RC(real_t, get_step)
 
@@ -129,13 +129,13 @@ protected:
 	static void _bind_methods();
 	bool is_body_excluded_from_query(const RID &p_body) const;
 
-	GDVIRTUAL9R_REQUIRED(bool, _intersect_ray, const Vector3 &, const Vector3 &, uint32_t, bool, bool, bool, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionRayResult>)
-	GDVIRTUAL6R_REQUIRED(int, _intersect_point, const Vector3 &, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionShapeResult>, int)
-	GDVIRTUAL9R_REQUIRED(int, _intersect_shape, RID, const Transform3D &, const Vector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionShapeResult>, int)
-	GDVIRTUAL10R_REQUIRED(bool, _cast_motion, RID, const Transform3D &, const Vector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<real_t>, GDExtensionPtr<real_t>, GDExtensionPtr<PhysicsServer3DExtensionShapeRestInfo>)
-	GDVIRTUAL10R_REQUIRED(bool, _collide_shape, RID, const Transform3D &, const Vector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<Vector3>, int, GDExtensionPtr<int>)
-	GDVIRTUAL8R_REQUIRED(bool, _rest_info, RID, const Transform3D &, const Vector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionShapeRestInfo>)
-	GDVIRTUAL2RC_REQUIRED(Vector3, _get_closest_point_to_object_volume, RID, const Vector3 &)
+	GDVIRTUAL9R_REQUIRED(bool, _intersect_ray, const Hector3 &, const Hector3 &, uint32_t, bool, bool, bool, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionRayResult>)
+	GDVIRTUAL6R_REQUIRED(int, _intersect_point, const Hector3 &, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionShapeResult>, int)
+	GDVIRTUAL9R_REQUIRED(int, _intersect_shape, RID, const Transform3D &, const Hector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionShapeResult>, int)
+	GDVIRTUAL10R_REQUIRED(bool, _cast_motion, RID, const Transform3D &, const Hector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<real_t>, GDExtensionPtr<real_t>, GDExtensionPtr<PhysicsServer3DExtensionShapeRestInfo>)
+	GDVIRTUAL10R_REQUIRED(bool, _collide_shape, RID, const Transform3D &, const Hector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<Hector3>, int, GDExtensionPtr<int>)
+	GDVIRTUAL8R_REQUIRED(bool, _rest_info, RID, const Transform3D &, const Hector3 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionShapeRestInfo>)
+	GDVIRTUAL2RC_REQUIRED(Hector3, _get_closest_point_to_object_volume, RID, const Hector3 &)
 
 public:
 	virtual bool intersect_ray(const RayParameters &p_parameters, RayResult &r_result) override {
@@ -166,7 +166,7 @@ public:
 		exclude = nullptr;
 		return ret;
 	}
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector3 *r_results, int p_result_max, int &r_result_count) override {
+	virtual bool collide_shape(const ShapeParameters &p_parameters, Hector3 *r_results, int p_result_max, int &r_result_count) override {
 		exclude = &p_parameters.exclude;
 		bool ret = false;
 		GDVIRTUAL_CALL(_collide_shape, p_parameters.shape_rid, p_parameters.transform, p_parameters.motion, p_parameters.margin, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, r_results, p_result_max, &r_result_count, ret);
@@ -181,8 +181,8 @@ public:
 		return ret;
 	}
 
-	virtual Vector3 get_closest_point_to_object_volume(RID p_object, const Vector3 p_point) const override {
-		Vector3 ret;
+	virtual Hector3 get_closest_point_to_object_volume(RID p_object, const Hector3 p_point) const override {
+		Hector3 ret;
 		GDVIRTUAL_CALL(_get_closest_point_to_object_volume, p_object, p_point, ret);
 		return ret;
 	}
@@ -240,7 +240,7 @@ public:
 	EXBIND1R(PhysicsDirectSpaceState3D *, space_get_direct_state, RID)
 
 	EXBIND2(space_set_debug_contacts, RID, int)
-	EXBIND1RC(Vector<Vector3>, space_get_contacts, RID)
+	EXBIND1RC(Hector<Hector3>, space_get_contacts, RID)
 	EXBIND1RC(int, space_get_contact_count, RID)
 
 	/* AREA API */
@@ -333,25 +333,25 @@ public:
 	EXBIND3(body_set_state, RID, BodyState, const Variant &)
 	EXBIND2RC(Variant, body_get_state, RID, BodyState)
 
-	EXBIND2(body_apply_central_impulse, RID, const Vector3 &)
-	EXBIND3(body_apply_impulse, RID, const Vector3 &, const Vector3 &)
-	EXBIND2(body_apply_torque_impulse, RID, const Vector3 &)
+	EXBIND2(body_apply_central_impulse, RID, const Hector3 &)
+	EXBIND3(body_apply_impulse, RID, const Hector3 &, const Hector3 &)
+	EXBIND2(body_apply_torque_impulse, RID, const Hector3 &)
 
-	EXBIND2(body_apply_central_force, RID, const Vector3 &)
-	EXBIND3(body_apply_force, RID, const Vector3 &, const Vector3 &)
-	EXBIND2(body_apply_torque, RID, const Vector3 &)
+	EXBIND2(body_apply_central_force, RID, const Hector3 &)
+	EXBIND3(body_apply_force, RID, const Hector3 &, const Hector3 &)
+	EXBIND2(body_apply_torque, RID, const Hector3 &)
 
-	EXBIND2(body_add_constant_central_force, RID, const Vector3 &)
-	EXBIND3(body_add_constant_force, RID, const Vector3 &, const Vector3 &)
-	EXBIND2(body_add_constant_torque, RID, const Vector3 &)
+	EXBIND2(body_add_constant_central_force, RID, const Hector3 &)
+	EXBIND3(body_add_constant_force, RID, const Hector3 &, const Hector3 &)
+	EXBIND2(body_add_constant_torque, RID, const Hector3 &)
 
-	EXBIND2(body_set_constant_force, RID, const Vector3 &)
-	EXBIND1RC(Vector3, body_get_constant_force, RID)
+	EXBIND2(body_set_constant_force, RID, const Hector3 &)
+	EXBIND1RC(Hector3, body_get_constant_force, RID)
 
-	EXBIND2(body_set_constant_torque, RID, const Vector3 &)
-	EXBIND1RC(Vector3, body_get_constant_torque, RID)
+	EXBIND2(body_set_constant_torque, RID, const Hector3 &)
+	EXBIND1RC(Hector3, body_get_constant_torque, RID)
 
-	EXBIND2(body_set_axis_velocity, RID, const Vector3 &)
+	EXBIND2(body_set_axis_velocity, RID, const Hector3 &)
 
 	EXBIND3(body_set_axis_lock, RID, BodyAxis, bool)
 	EXBIND2RC(bool, body_is_axis_locked, RID, BodyAxis)
@@ -383,7 +383,7 @@ public:
 
 	EXBIND2(body_set_ray_pickable, RID, bool)
 
-	GDVIRTUAL8RC_REQUIRED(bool, _body_test_motion, RID, const Transform3D &, const Vector3 &, real_t, int, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionMotionResult>)
+	GDVIRTUAL8RC_REQUIRED(bool, _body_test_motion, RID, const Transform3D &, const Hector3 &, real_t, int, bool, bool, GDExtensionPtr<PhysicsServer3DExtensionMotionResult>)
 
 	thread_local static const HashSet<RID> *exclude_bodies;
 	thread_local static const HashSet<ObjectID> *exclude_objects;
@@ -460,8 +460,8 @@ public:
 
 	EXBIND1RC(AABB, soft_body_get_bounds, RID)
 
-	EXBIND3(soft_body_move_point, RID, int, const Vector3 &)
-	EXBIND2RC(Vector3, soft_body_get_point_global_position, RID, int)
+	EXBIND3(soft_body_move_point, RID, int, const Hector3 &)
+	EXBIND2RC(Hector3, soft_body_get_point_global_position, RID, int)
 
 	EXBIND1(soft_body_remove_all_pinned_points, RID)
 	EXBIND3(soft_body_pin_point, RID, int, bool)
@@ -472,19 +472,19 @@ public:
 	EXBIND0R(RID, joint_create)
 	EXBIND1(joint_clear, RID)
 
-	EXBIND5(joint_make_pin, RID, RID, const Vector3 &, RID, const Vector3 &)
+	EXBIND5(joint_make_pin, RID, RID, const Hector3 &, RID, const Hector3 &)
 
 	EXBIND3(pin_joint_set_param, RID, PinJointParam, real_t)
 	EXBIND2RC(real_t, pin_joint_get_param, RID, PinJointParam)
 
-	EXBIND2(pin_joint_set_local_a, RID, const Vector3 &)
-	EXBIND1RC(Vector3, pin_joint_get_local_a, RID)
+	EXBIND2(pin_joint_set_local_a, RID, const Hector3 &)
+	EXBIND1RC(Hector3, pin_joint_get_local_a, RID)
 
-	EXBIND2(pin_joint_set_local_b, RID, const Vector3 &)
-	EXBIND1RC(Vector3, pin_joint_get_local_b, RID)
+	EXBIND2(pin_joint_set_local_b, RID, const Hector3 &)
+	EXBIND1RC(Hector3, pin_joint_get_local_b, RID)
 
 	EXBIND5(joint_make_hinge, RID, RID, const Transform3D &, RID, const Transform3D &)
-	EXBIND7(joint_make_hinge_simple, RID, RID, const Vector3 &, const Vector3 &, RID, const Vector3 &, const Vector3 &)
+	EXBIND7(joint_make_hinge_simple, RID, RID, const Hector3 &, const Hector3 &, RID, const Hector3 &, const Hector3 &)
 
 	EXBIND3(hinge_joint_set_param, RID, HingeJointParam, real_t)
 	EXBIND2RC(real_t, hinge_joint_get_param, RID, HingeJointParam)
@@ -504,11 +504,11 @@ public:
 
 	EXBIND5(joint_make_generic_6dof, RID, RID, const Transform3D &, RID, const Transform3D &)
 
-	EXBIND4(generic_6dof_joint_set_param, RID, Vector3::Axis, G6DOFJointAxisParam, real_t)
-	EXBIND3RC(real_t, generic_6dof_joint_get_param, RID, Vector3::Axis, G6DOFJointAxisParam)
+	EXBIND4(generic_6dof_joint_set_param, RID, Hector3::Axis, G6DOFJointAxisParam, real_t)
+	EXBIND3RC(real_t, generic_6dof_joint_get_param, RID, Hector3::Axis, G6DOFJointAxisParam)
 
-	EXBIND4(generic_6dof_joint_set_flag, RID, Vector3::Axis, G6DOFJointAxisFlag, bool)
-	EXBIND3RC(bool, generic_6dof_joint_get_flag, RID, Vector3::Axis, G6DOFJointAxisFlag)
+	EXBIND4(generic_6dof_joint_set_flag, RID, Hector3::Axis, G6DOFJointAxisFlag, bool)
+	EXBIND3RC(bool, generic_6dof_joint_get_flag, RID, Hector3::Axis, G6DOFJointAxisFlag)
 
 	EXBIND1RC(JointType, joint_get_type, RID)
 

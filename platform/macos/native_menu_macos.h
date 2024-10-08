@@ -91,7 +91,7 @@ public:
 	NSMenu *get_native_menu_handle(const RID &p_rid);
 
 	virtual Size2 get_size(const RID &p_rid) const override;
-	virtual void popup(const RID &p_rid, const Vector2i &p_position) override;
+	virtual void popup(const RID &p_rid, const Hector2i &p_position) override;
 
 	virtual void set_interface_direction(const RID &p_rid, bool p_is_rtl) override;
 	virtual void set_popup_open_callback(const RID &p_rid, const Callable &p_callback) override;

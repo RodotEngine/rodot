@@ -68,7 +68,7 @@ private:
 			int index = 0;
 		};
 
-		Vector<Shape> shapes;
+		Hector<Shape> shapes;
 
 		bool disabled = false;
 		bool one_way_collision = false;

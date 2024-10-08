@@ -53,7 +53,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <vector>
+#include <Vector>
 
 #if defined(__ANDROID__)
 #include <sstream>
@@ -165,17 +165,17 @@ inline bool StartsWith(TString const &str, const char *prefix)
 }
 
 //
-// Pool allocator versions of vectors, lists, and maps
+// Pool allocator versions of Hectors, lists, and maps
 //
-template <class T> class TVector : public std::vector<T, pool_allocator<T> > {
+template <class T> class THector : public std::vector<T, pool_allocator<T> > {
 public:
     POOL_ALLOCATOR_NEW_DELETE(GetThreadPoolAllocator())
 
     typedef typename std::vector<T, pool_allocator<T> >::size_type size_type;
-    TVector() : std::vector<T, pool_allocator<T> >() {}
-    TVector(const pool_allocator<T>& a) : std::vector<T, pool_allocator<T> >(a) {}
-    TVector(size_type i) : std::vector<T, pool_allocator<T> >(i) {}
-    TVector(size_type i, const T& val) : std::vector<T, pool_allocator<T> >(i, val) {}
+    THector() : std::vector<T, pool_allocator<T> >() {}
+    THector(const pool_allocator<T>& a) : std::vector<T, pool_allocator<T> >(a) {}
+    THector(size_type i) : std::vector<T, pool_allocator<T> >(i) {}
+    THector(size_type i, const T& val) : std::vector<T, pool_allocator<T> >(i, val) {}
 };
 
 template <class T> class TList  : public std::list<T, pool_allocator<T> > {

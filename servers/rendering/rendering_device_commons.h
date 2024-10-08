@@ -371,7 +371,7 @@ public:
 		TextureType texture_type = TEXTURE_TYPE_2D;
 		TextureSamples samples = TEXTURE_SAMPLES_1;
 		uint32_t usage_bits = 0;
-		Vector<DataFormat> shareable_formats;
+		Hector<DataFormat> shareable_formats;
 		bool is_resolve_buffer = false;
 
 		bool operator==(const TextureFormat &b) const {
@@ -514,7 +514,7 @@ public:
 
 	struct ShaderStageSPIRVData {
 		ShaderStage shader_stage = SHADER_STAGE_MAX;
-		Vector<uint8_t> spirv;
+		Hector<uint8_t> spirv;
 	};
 
 	/*********************/
@@ -672,7 +672,7 @@ public:
 		TextureSamples sample_count = TEXTURE_SAMPLES_1;
 		bool enable_sample_shading = false;
 		float min_sample_shading = 0.0f;
-		Vector<uint32_t> sample_mask;
+		Hector<uint32_t> sample_mask;
 		bool enable_alpha_to_coverage = false;
 		bool enable_alpha_to_one = false;
 	};
@@ -741,7 +741,7 @@ public:
 			return bs;
 		}
 
-		Vector<Attachment> attachments; // One per render target texture.
+		Hector<Attachment> attachments; // One per render target texture.
 		Color blend_constant;
 	};
 
@@ -963,9 +963,9 @@ public:
 		uint32_t compute_local_size[3] = {};
 		uint32_t push_constant_size = 0;
 
-		Vector<Vector<ShaderUniform>> uniform_sets;
-		Vector<ShaderSpecializationConstant> specialization_constants;
-		Vector<ShaderStage> stages;
+		Hector<Hector<ShaderUniform>> uniform_sets;
+		Hector<ShaderSpecializationConstant> specialization_constants;
+		Hector<ShaderStage> stages;
 	};
 
 protected:

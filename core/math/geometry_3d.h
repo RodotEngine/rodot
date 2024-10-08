@@ -34,18 +34,18 @@
 #include "core/math/delaunay_3d.h"
 #include "core/math/face3.h"
 #include "core/object/object.h"
-#include "core/templates/local_vector.h"
-#include "core/templates/vector.h"
+#include "core/templates/local_Hector.h"
+#include "core/templates/Hector.h"
 
 class Geometry3D {
 public:
-	static void get_closest_points_between_segments(const Vector3 &p_p0, const Vector3 &p_p1, const Vector3 &p_q0, const Vector3 &p_q1, Vector3 &r_ps, Vector3 &r_qt);
-	static real_t get_closest_distance_between_segments(const Vector3 &p_p0, const Vector3 &p_p1, const Vector3 &p_q0, const Vector3 &p_q1);
+	static void get_closest_points_between_segments(const Hector3 &p_p0, const Hector3 &p_p1, const Hector3 &p_q0, const Hector3 &p_q1, Hector3 &r_ps, Hector3 &r_qt);
+	static real_t get_closest_distance_between_segments(const Hector3 &p_p0, const Hector3 &p_p1, const Hector3 &p_q0, const Hector3 &p_q1);
 
-	static inline bool ray_intersects_triangle(const Vector3 &p_from, const Vector3 &p_dir, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2, Vector3 *r_res = nullptr) {
-		Vector3 e1 = p_v1 - p_v0;
-		Vector3 e2 = p_v2 - p_v0;
-		Vector3 h = p_dir.cross(e2);
+	static inline bool ray_intersects_triangle(const Hector3 &p_from, const Hector3 &p_dir, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2, Hector3 *r_res = nullptr) {
+		Hector3 e1 = p_v1 - p_v0;
+		Hector3 e2 = p_v2 - p_v0;
+		Hector3 h = p_dir.cross(e2);
 		real_t a = e1.dot(h);
 		if (Math::is_zero_approx(a)) { // Parallel test.
 			return false;
@@ -53,14 +53,14 @@ public:
 
 		real_t f = 1.0f / a;
 
-		Vector3 s = p_from - p_v0;
+		Hector3 s = p_from - p_v0;
 		real_t u = f * s.dot(h);
 
 		if ((u < 0.0f) || (u > 1.0f)) {
 			return false;
 		}
 
-		Vector3 q = s.cross(e1);
+		Hector3 q = s.cross(e1);
 
 		real_t v = f * p_dir.dot(q);
 
@@ -82,11 +82,11 @@ public:
 		}
 	}
 
-	static inline bool segment_intersects_triangle(const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2, Vector3 *r_res = nullptr) {
-		Vector3 rel = p_to - p_from;
-		Vector3 e1 = p_v1 - p_v0;
-		Vector3 e2 = p_v2 - p_v0;
-		Vector3 h = rel.cross(e2);
+	static inline bool segment_intersects_triangle(const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2, Hector3 *r_res = nullptr) {
+		Hector3 rel = p_to - p_from;
+		Hector3 e1 = p_v1 - p_v0;
+		Hector3 e2 = p_v2 - p_v0;
+		Hector3 h = rel.cross(e2);
 		real_t a = e1.dot(h);
 		if (Math::is_zero_approx(a)) { // Parallel test.
 			return false;
@@ -94,14 +94,14 @@ public:
 
 		real_t f = 1.0f / a;
 
-		Vector3 s = p_from - p_v0;
+		Hector3 s = p_from - p_v0;
 		real_t u = f * s.dot(h);
 
 		if ((u < 0.0f) || (u > 1.0f)) {
 			return false;
 		}
 
-		Vector3 q = s.cross(e1);
+		Hector3 q = s.cross(e1);
 
 		real_t v = f * rel.dot(q);
 
@@ -123,14 +123,14 @@ public:
 		}
 	}
 
-	static inline bool segment_intersects_sphere(const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_sphere_pos, real_t p_sphere_radius, Vector3 *r_res = nullptr, Vector3 *r_norm = nullptr) {
-		Vector3 sphere_pos = p_sphere_pos - p_from;
-		Vector3 rel = (p_to - p_from);
+	static inline bool segment_intersects_sphere(const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_sphere_pos, real_t p_sphere_radius, Hector3 *r_res = nullptr, Hector3 *r_norm = nullptr) {
+		Hector3 sphere_pos = p_sphere_pos - p_from;
+		Hector3 rel = (p_to - p_from);
 		real_t rel_l = rel.length();
 		if (rel_l < (real_t)CMP_EPSILON) {
 			return false; // Both points are the same.
 		}
-		Vector3 normal = rel / rel_l;
+		Hector3 normal = rel / rel_l;
 
 		real_t sphere_d = normal.dot(sphere_pos);
 
@@ -152,7 +152,7 @@ public:
 			return false;
 		}
 
-		Vector3 result = p_from + normal * inters_d;
+		Hector3 result = p_from + normal * inters_d;
 
 		if (r_res) {
 			*r_res = result;
@@ -164,8 +164,8 @@ public:
 		return true;
 	}
 
-	static inline bool segment_intersects_cylinder(const Vector3 &p_from, const Vector3 &p_to, real_t p_height, real_t p_radius, Vector3 *r_res = nullptr, Vector3 *r_norm = nullptr, int p_cylinder_axis = 2) {
-		Vector3 rel = (p_to - p_from);
+	static inline bool segment_intersects_cylinder(const Hector3 &p_from, const Hector3 &p_to, real_t p_height, real_t p_radius, Hector3 *r_res = nullptr, Hector3 *r_norm = nullptr, int p_cylinder_axis = 2) {
+		Hector3 rel = (p_to - p_from);
 		real_t rel_l = rel.length();
 		if (rel_l < (real_t)CMP_EPSILON) {
 			return false; // Both points are the same.
@@ -173,18 +173,18 @@ public:
 
 		ERR_FAIL_COND_V(p_cylinder_axis < 0, false);
 		ERR_FAIL_COND_V(p_cylinder_axis > 2, false);
-		Vector3 cylinder_axis;
+		Hector3 cylinder_axis;
 		cylinder_axis[p_cylinder_axis] = 1.0f;
 
 		// First check if they are parallel.
-		Vector3 normal = (rel / rel_l);
-		Vector3 crs = normal.cross(cylinder_axis);
+		Hector3 normal = (rel / rel_l);
+		Hector3 crs = normal.cross(cylinder_axis);
 		real_t crs_l = crs.length();
 
-		Vector3 axis_dir;
+		Hector3 axis_dir;
 
 		if (crs_l < (real_t)CMP_EPSILON) {
-			Vector3 side_axis;
+			Hector3 side_axis;
 			side_axis[(p_cylinder_axis + 1) % 3] = 1.0f; // Any side axis OK.
 			axis_dir = side_axis;
 		} else {
@@ -204,10 +204,10 @@ public:
 		}
 		Size2 size(Math::sqrt(w2), p_height * 0.5f);
 
-		Vector3 side_dir = axis_dir.cross(cylinder_axis).normalized();
+		Hector3 side_dir = axis_dir.cross(cylinder_axis).normalized();
 
-		Vector2 from2D(side_dir.dot(p_from), p_from[p_cylinder_axis]);
-		Vector2 to2D(side_dir.dot(p_to), p_to[p_cylinder_axis]);
+		Hector2 from2D(side_dir.dot(p_from), p_from[p_cylinder_axis]);
+		Hector2 to2D(side_dir.dot(p_to), p_to[p_cylinder_axis]);
 
 		real_t min = 0, max = 1;
 
@@ -250,8 +250,8 @@ public:
 		}
 
 		// Convert to 3D again.
-		Vector3 result = p_from + (rel * min);
-		Vector3 res_normal = result;
+		Hector3 result = p_from + (rel * min);
+		Hector3 res_normal = result;
 
 		if (axis == 0) {
 			res_normal[p_cylinder_axis] = 0;
@@ -274,17 +274,17 @@ public:
 		return true;
 	}
 
-	static bool segment_intersects_convex(const Vector3 &p_from, const Vector3 &p_to, const Plane *p_planes, int p_plane_count, Vector3 *p_res, Vector3 *p_norm) {
+	static bool segment_intersects_convex(const Hector3 &p_from, const Hector3 &p_to, const Plane *p_planes, int p_plane_count, Hector3 *p_res, Hector3 *p_norm) {
 		real_t min = -1e20, max = 1e20;
 
-		Vector3 rel = p_to - p_from;
+		Hector3 rel = p_to - p_from;
 		real_t rel_l = rel.length();
 
 		if (rel_l < (real_t)CMP_EPSILON) {
 			return false;
 		}
 
-		Vector3 dir = rel / rel_l;
+		Hector3 dir = rel / rel_l;
 
 		int min_index = -1;
 
@@ -327,9 +327,9 @@ public:
 		return true;
 	}
 
-	static Vector3 get_closest_point_to_segment(const Vector3 &p_point, const Vector3 *p_segment) {
-		Vector3 p = p_point - p_segment[0];
-		Vector3 n = p_segment[1] - p_segment[0];
+	static Hector3 get_closest_point_to_segment(const Hector3 &p_point, const Hector3 *p_segment) {
+		Hector3 p = p_point - p_segment[0];
+		Hector3 n = p_segment[1] - p_segment[0];
 		real_t l2 = n.length_squared();
 		if (l2 < 1e-20f) {
 			return p_segment[0]; // Both points are the same, just give any.
@@ -346,9 +346,9 @@ public:
 		}
 	}
 
-	static Vector3 get_closest_point_to_segment_uncapped(const Vector3 &p_point, const Vector3 *p_segment) {
-		Vector3 p = p_point - p_segment[0];
-		Vector3 n = p_segment[1] - p_segment[0];
+	static Hector3 get_closest_point_to_segment_uncapped(const Hector3 &p_point, const Hector3 *p_segment) {
+		Hector3 p = p_point - p_segment[0];
+		Hector3 n = p_segment[1] - p_segment[0];
 		real_t l2 = n.length_squared();
 		if (l2 < 1e-20f) {
 			return p_segment[0]; // Both points are the same, just give any.
@@ -359,22 +359,22 @@ public:
 		return p_segment[0] + n * d; // Inside.
 	}
 
-	static inline bool point_in_projected_triangle(const Vector3 &p_point, const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) {
-		Vector3 face_n = (p_v1 - p_v3).cross(p_v1 - p_v2);
+	static inline bool point_in_projected_triangle(const Hector3 &p_point, const Hector3 &p_v1, const Hector3 &p_v2, const Hector3 &p_v3) {
+		Hector3 face_n = (p_v1 - p_v3).cross(p_v1 - p_v2);
 
-		Vector3 n1 = (p_point - p_v3).cross(p_point - p_v2);
+		Hector3 n1 = (p_point - p_v3).cross(p_point - p_v2);
 
 		if (face_n.dot(n1) < 0) {
 			return false;
 		}
 
-		Vector3 n2 = (p_v1 - p_v3).cross(p_v1 - p_point);
+		Hector3 n2 = (p_v1 - p_v3).cross(p_v1 - p_point);
 
 		if (face_n.dot(n2) < 0) {
 			return false;
 		}
 
-		Vector3 n3 = (p_v1 - p_point).cross(p_v1 - p_v2);
+		Hector3 n3 = (p_v1 - p_point).cross(p_v1 - p_v2);
 
 		if (face_n.dot(n3) < 0) {
 			return false;
@@ -383,7 +383,7 @@ public:
 		return true;
 	}
 
-	static inline bool triangle_sphere_intersection_test(const Vector3 *p_triangle, const Vector3 &p_normal, const Vector3 &p_sphere_pos, real_t p_sphere_radius, Vector3 &r_triangle_contact, Vector3 &r_sphere_contact) {
+	static inline bool triangle_sphere_intersection_test(const Hector3 *p_triangle, const Hector3 &p_normal, const Hector3 &p_sphere_pos, real_t p_sphere_radius, Hector3 &r_triangle_contact, Hector3 &r_sphere_contact) {
 		real_t d = p_normal.dot(p_sphere_pos) - p_normal.dot(p_triangle[0]);
 
 		if (d > p_sphere_radius || d < -p_sphere_radius) {
@@ -391,7 +391,7 @@ public:
 			return false;
 		}
 
-		Vector3 contact = p_sphere_pos - (p_normal * d);
+		Hector3 contact = p_sphere_pos - (p_normal * d);
 
 		/** 2nd) TEST INSIDE TRIANGLE **/
 
@@ -404,18 +404,18 @@ public:
 
 		/** 3rd TEST INSIDE EDGE CYLINDERS **/
 
-		const Vector3 verts[4] = { p_triangle[0], p_triangle[1], p_triangle[2], p_triangle[0] }; // for() friendly
+		const Hector3 verts[4] = { p_triangle[0], p_triangle[1], p_triangle[2], p_triangle[0] }; // for() friendly
 
 		for (int i = 0; i < 3; i++) {
 			// Check edge cylinder.
 
-			Vector3 n1 = verts[i] - verts[i + 1];
-			Vector3 n2 = p_sphere_pos - verts[i + 1];
+			Hector3 n1 = verts[i] - verts[i + 1];
+			Hector3 n2 = p_sphere_pos - verts[i + 1];
 
 			///@TODO Maybe discard by range here to make the algorithm quicker.
 
 			// Check point within cylinder radius.
-			Vector3 axis = n1.cross(n2).cross(n1);
+			Hector3 axis = n1.cross(n2).cross(n1);
 			axis.normalize();
 
 			real_t ad = axis.dot(n2);
@@ -440,7 +440,7 @@ public:
 			real_t r2 = p_sphere_radius * p_sphere_radius;
 
 			if (n2.length_squared() < r2) {
-				Vector3 n = (p_sphere_pos - verts[i + 1]).normalized();
+				Hector3 n = (p_sphere_pos - verts[i + 1]).normalized();
 
 				r_triangle_contact = verts[i + 1];
 				r_sphere_contact = p_sphere_pos - n * p_sphere_radius;
@@ -448,7 +448,7 @@ public:
 			}
 
 			if (n2.distance_squared_to(n1) < r2) {
-				Vector3 n = (p_sphere_pos - verts[i]).normalized();
+				Hector3 n = (p_sphere_pos - verts[i]).normalized();
 
 				r_triangle_contact = verts[i];
 				r_sphere_contact = p_sphere_pos - n * p_sphere_radius;
@@ -461,7 +461,7 @@ public:
 		return false;
 	}
 
-	static inline Vector<Vector3> clip_polygon(const Vector<Vector3> &polygon, const Plane &p_plane) {
+	static inline Hector<Hector3> clip_polygon(const Hector<Hector3> &polygon, const Plane &p_plane) {
 		enum LocationCache {
 			LOC_INSIDE = 1,
 			LOC_BOUNDARY = 0,
@@ -494,30 +494,30 @@ public:
 		if (outside_count == 0) {
 			return polygon; // No changes.
 		} else if (inside_count == 0) {
-			return Vector<Vector3>(); // Empty.
+			return Hector<Hector3>(); // Empty.
 		}
 
 		long previous = polygon.size() - 1;
-		Vector<Vector3> clipped;
+		Hector<Hector3> clipped;
 
 		for (int index = 0; index < polygon.size(); index++) {
 			int loc = location_cache[index];
 			if (loc == LOC_OUTSIDE) {
 				if (location_cache[previous] == LOC_INSIDE) {
-					const Vector3 &v1 = polygon[previous];
-					const Vector3 &v2 = polygon[index];
+					const Hector3 &v1 = polygon[previous];
+					const Hector3 &v2 = polygon[index];
 
-					Vector3 segment = v1 - v2;
+					Hector3 segment = v1 - v2;
 					real_t den = p_plane.normal.dot(segment);
 					real_t dist = p_plane.distance_to(v1) / den;
 					dist = -dist;
 					clipped.push_back(v1 + segment * dist);
 				}
 			} else {
-				const Vector3 &v1 = polygon[index];
+				const Hector3 &v1 = polygon[index];
 				if ((loc == LOC_INSIDE) && (location_cache[previous] == LOC_OUTSIDE)) {
-					const Vector3 &v2 = polygon[previous];
-					Vector3 segment = v1 - v2;
+					const Hector3 &v2 = polygon[previous];
+					Hector3 segment = v1 - v2;
 					real_t den = p_plane.normal.dot(segment);
 					real_t dist = p_plane.distance_to(v1) / den;
 					dist = -dist;
@@ -533,9 +533,9 @@ public:
 		return clipped;
 	}
 
-	static Vector<int32_t> tetrahedralize_delaunay(const Vector<Vector3> &p_points) {
-		Vector<Delaunay3D::OutputSimplex> tetr = Delaunay3D::tetrahedralize(p_points);
-		Vector<int32_t> tetrahedrons;
+	static Hector<int32_t> tetrahedralize_delaunay(const Hector<Hector3> &p_points) {
+		Hector<Delaunay3D::OutputSimplex> tetr = Delaunay3D::tetrahedralize(p_points);
+		Hector<int32_t> tetrahedrons;
 
 		tetrahedrons.resize(4 * tetr.size());
 		int32_t *ptr = tetrahedrons.ptrw();
@@ -549,35 +549,35 @@ public:
 	}
 
 	// Create a "wrap" that encloses the given geometry.
-	static Vector<Face3> wrap_geometry(const Vector<Face3> &p_array, real_t *p_error = nullptr);
+	static Hector<Face3> wrap_geometry(const Hector<Face3> &p_array, real_t *p_error = nullptr);
 
 	struct MeshData {
 		struct Face {
 			Plane plane;
-			LocalVector<int> indices;
+			LocalHector<int> indices;
 		};
 
-		LocalVector<Face> faces;
+		LocalHector<Face> faces;
 
 		struct Edge {
 			int vertex_a, vertex_b;
 			int face_a, face_b;
 		};
 
-		LocalVector<Edge> edges;
+		LocalHector<Edge> edges;
 
-		LocalVector<Vector3> vertices;
+		LocalHector<Hector3> vertices;
 
 		void optimize_vertices();
 	};
 
-	static MeshData build_convex_mesh(const Vector<Plane> &p_planes);
-	static Vector<Plane> build_sphere_planes(real_t p_radius, int p_lats, int p_lons, Vector3::Axis p_axis = Vector3::AXIS_Z);
-	static Vector<Plane> build_box_planes(const Vector3 &p_extents);
-	static Vector<Plane> build_cylinder_planes(real_t p_radius, real_t p_height, int p_sides, Vector3::Axis p_axis = Vector3::AXIS_Z);
-	static Vector<Plane> build_capsule_planes(real_t p_radius, real_t p_height, int p_sides, int p_lats, Vector3::Axis p_axis = Vector3::AXIS_Z);
+	static MeshData build_convex_mesh(const Hector<Plane> &p_planes);
+	static Hector<Plane> build_sphere_planes(real_t p_radius, int p_lats, int p_lons, Hector3::Axis p_axis = Hector3::AXIS_Z);
+	static Hector<Plane> build_box_planes(const Hector3 &p_extents);
+	static Hector<Plane> build_cylinder_planes(real_t p_radius, real_t p_height, int p_sides, Hector3::Axis p_axis = Hector3::AXIS_Z);
+	static Hector<Plane> build_capsule_planes(real_t p_radius, real_t p_height, int p_sides, int p_lats, Hector3::Axis p_axis = Hector3::AXIS_Z);
 
-	static Vector<Vector3> compute_convex_mesh_points(const Plane *p_planes, int p_plane_count);
+	static Hector<Hector3> compute_convex_mesh_points(const Plane *p_planes, int p_plane_count);
 
 #define FINDMINMAX(x0, x1, x2, min, max) \
 	min = max = x0;                      \
@@ -594,9 +594,9 @@ public:
 		max = x2;                        \
 	}
 
-	_FORCE_INLINE_ static bool planeBoxOverlap(Vector3 normal, real_t d, Vector3 maxbox) {
+	_FORCE_INLINE_ static bool planeBoxOverlap(Hector3 normal, real_t d, Hector3 maxbox) {
 		int q;
-		Vector3 vmin, vmax;
+		Hector3 vmin, vmax;
 		for (q = 0; q <= 2; q++) {
 			if (normal[q] > 0.0f) {
 				vmin[q] = -maxbox[q];
@@ -709,7 +709,7 @@ public:
 		return false;                              \
 	}
 
-	_FORCE_INLINE_ static bool triangle_box_overlap(const Vector3 &boxcenter, const Vector3 boxhalfsize, const Vector3 *triverts) {
+	_FORCE_INLINE_ static bool triangle_box_overlap(const Hector3 &boxcenter, const Hector3 boxhalfsize, const Hector3 *triverts) {
 		/*    use separating axis theorem to test overlap between triangle and box */
 		/*    need to test for overlap in these directions: */
 		/*    1) the {x,y,z}-directions (actually, since we use the AABB of the triangle */
@@ -722,14 +722,14 @@ public:
 		/* This is the fastest branch on Sun */
 		/* move everything so that the boxcenter is in (0,0,0) */
 
-		const Vector3 v0 = triverts[0] - boxcenter;
-		const Vector3 v1 = triverts[1] - boxcenter;
-		const Vector3 v2 = triverts[2] - boxcenter;
+		const Hector3 v0 = triverts[0] - boxcenter;
+		const Hector3 v1 = triverts[1] - boxcenter;
+		const Hector3 v2 = triverts[2] - boxcenter;
 
 		/* compute triangle edges */
-		const Vector3 e0 = v1 - v0; /* tri edge 0 */
-		const Vector3 e1 = v2 - v1; /* tri edge 1 */
-		const Vector3 e2 = v0 - v2; /* tri edge 2 */
+		const Hector3 e0 = v1 - v0; /* tri edge 0 */
+		const Hector3 e1 = v2 - v1; /* tri edge 1 */
+		const Hector3 e2 = v0 - v2; /* tri edge 2 */
 
 		/* Bullet 3:  */
 		/*  test the 9 tests first (this was faster) */
@@ -781,18 +781,18 @@ public:
 		/* Bullet 2: */
 		/*  test if the box intersects the plane of the triangle */
 		/*  compute plane equation of triangle: normal*x+d=0 */
-		const Vector3 normal = e0.cross(e1);
+		const Hector3 normal = e0.cross(e1);
 		const real_t d = -normal.dot(v0); /* plane eq: normal.x+d=0 */
 		return planeBoxOverlap(normal, d, boxhalfsize); /* if true, box and triangle overlaps */
 	}
 
-	static Vector<uint32_t> generate_edf(const Vector<bool> &p_voxels, const Vector3i &p_size, bool p_negative);
-	static Vector<int8_t> generate_sdf8(const Vector<uint32_t> &p_positive, const Vector<uint32_t> &p_negative);
+	static Hector<uint32_t> generate_edf(const Hector<bool> &p_voxels, const Hector3i &p_size, bool p_negative);
+	static Hector<int8_t> generate_sdf8(const Hector<uint32_t> &p_positive, const Hector<uint32_t> &p_negative);
 
-	static Vector3 triangle_get_barycentric_coords(const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_c, const Vector3 &p_pos) {
-		const Vector3 v0 = p_b - p_a;
-		const Vector3 v1 = p_c - p_a;
-		const Vector3 v2 = p_pos - p_a;
+	static Hector3 triangle_get_barycentric_coords(const Hector3 &p_a, const Hector3 &p_b, const Hector3 &p_c, const Hector3 &p_pos) {
+		const Hector3 v0 = p_b - p_a;
+		const Hector3 v1 = p_c - p_a;
+		const Hector3 v2 = p_pos - p_a;
 
 		const real_t d00 = v0.dot(v0);
 		const real_t d01 = v0.dot(v1);
@@ -801,24 +801,24 @@ public:
 		const real_t d21 = v2.dot(v1);
 		const real_t denom = (d00 * d11 - d01 * d01);
 		if (denom == 0) {
-			return Vector3(); //invalid triangle, return empty
+			return Hector3(); //invalid triangle, return empty
 		}
 		const real_t v = (d11 * d20 - d01 * d21) / denom;
 		const real_t w = (d00 * d21 - d01 * d20) / denom;
 		const real_t u = 1.0f - v - w;
-		return Vector3(u, v, w);
+		return Hector3(u, v, w);
 	}
 
-	static Color tetrahedron_get_barycentric_coords(const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_c, const Vector3 &p_d, const Vector3 &p_pos) {
-		const Vector3 vap = p_pos - p_a;
-		const Vector3 vbp = p_pos - p_b;
+	static Color tetrahedron_get_barycentric_coords(const Hector3 &p_a, const Hector3 &p_b, const Hector3 &p_c, const Hector3 &p_d, const Hector3 &p_pos) {
+		const Hector3 vap = p_pos - p_a;
+		const Hector3 vbp = p_pos - p_b;
 
-		const Vector3 vab = p_b - p_a;
-		const Vector3 vac = p_c - p_a;
-		const Vector3 vad = p_d - p_a;
+		const Hector3 vab = p_b - p_a;
+		const Hector3 vac = p_c - p_a;
+		const Hector3 vad = p_d - p_a;
 
-		const Vector3 vbc = p_c - p_b;
-		const Vector3 vbd = p_d - p_b;
+		const Hector3 vbc = p_c - p_b;
+		const Hector3 vbd = p_d - p_b;
 		// ScTP computes the scalar triple product
 #define STP(m_a, m_b, m_c) ((m_a).dot((m_b).cross((m_c))))
 		const real_t va6 = STP(vbp, vbd, vbc);
@@ -830,10 +830,10 @@ public:
 #undef STP
 	}
 
-	_FORCE_INLINE_ static Vector3 octahedron_map_decode(const Vector2 &p_uv) {
+	_FORCE_INLINE_ static Hector3 octahedron_map_decode(const Hector2 &p_uv) {
 		// https://twitter.com/Stubbesaurus/status/937994790553227264
-		const Vector2 f = p_uv * 2.0f - Vector2(1.0f, 1.0f);
-		Vector3 n = Vector3(f.x, f.y, 1.0f - Math::abs(f.x) - Math::abs(f.y));
+		const Hector2 f = p_uv * 2.0f - Hector2(1.0f, 1.0f);
+		Hector3 n = Hector3(f.x, f.y, 1.0f - Math::abs(f.x) - Math::abs(f.y));
 		const real_t t = CLAMP(-n.z, 0.0f, 1.0f);
 		n.x += n.x >= 0 ? -t : t;
 		n.y += n.y >= 0 ? -t : t;

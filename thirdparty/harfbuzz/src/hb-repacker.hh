@@ -29,7 +29,7 @@
 
 #include "hb-open-type.hh"
 #include "hb-map.hh"
-#include "hb-vector.hh"
+#include "hb-Hector.hh"
 #include "graph/graph.hh"
 #include "graph/gsubgpos-graph.hh"
 #include "graph/serialize.hh"
@@ -120,7 +120,7 @@ bool _promote_extensions_if_needed (graph::gsubgpos_graph_context_t& ext_context
   if (!ext_context.lookups) return true;
 
   unsigned total_lookup_table_sizes = 0;
-  hb_vector_t<lookup_size_t> lookup_sizes;
+  hb_Hector_t<lookup_size_t> lookup_sizes;
   lookup_sizes.alloc (ext_context.lookups.get_population (), true);
 
   for (unsigned lookup_index : ext_context.lookups.keys ())
@@ -189,7 +189,7 @@ bool _promote_extensions_if_needed (graph::gsubgpos_graph_context_t& ext_context
 }
 
 static inline
-bool _try_isolating_subgraphs (const hb_vector_t<graph::overflow_record_t>& overflows,
+bool _try_isolating_subgraphs (const hb_Hector_t<graph::overflow_record_t>& overflows,
                                graph_t& sorted_graph)
 {
   unsigned space = 0;
@@ -239,7 +239,7 @@ bool _try_isolating_subgraphs (const hb_vector_t<graph::overflow_record_t>& over
 }
 
 static inline
-bool _resolve_shared_overflow(const hb_vector_t<graph::overflow_record_t>& overflows,
+bool _resolve_shared_overflow(const hb_Hector_t<graph::overflow_record_t>& overflows,
                               int overflow_index,
                               graph_t& sorted_graph)
 {
@@ -287,7 +287,7 @@ bool _resolve_shared_overflow(const hb_vector_t<graph::overflow_record_t>& overf
 }
 
 static inline
-bool _process_overflows (const hb_vector_t<graph::overflow_record_t>& overflows,
+bool _process_overflows (const hb_Hector_t<graph::overflow_record_t>& overflows,
                          hb_set_t& priority_bumped_parents,
                          graph_t& sorted_graph)
 {
@@ -380,7 +380,7 @@ hb_resolve_graph_overflows (hb_tag_t table_tag,
   }
 
   unsigned round = 0;
-  hb_vector_t<graph::overflow_record_t> overflows;
+  hb_Hector_t<graph::overflow_record_t> overflows;
   // TODO(garretrieger): select a good limit for max rounds.
   while (!sorted_graph.in_error ()
          && graph::will_overflow (sorted_graph, &overflows)

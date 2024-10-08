@@ -258,10 +258,10 @@ void register_server_types() {
 	GDREGISTER_VIRTUAL_CLASS(PhysicsDirectBodyState2DExtension);
 	GDREGISTER_VIRTUAL_CLASS(PhysicsDirectSpaceState2DExtension);
 
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionRayResult, "Vector2 position;Vector2 normal;RID rid;ObjectID collider_id;Object *collider;int shape");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionRayResult, "Hector2 position;Hector2 normal;RID rid;ObjectID collider_id;Object *collider;int shape");
 	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionShapeResult, "RID rid;ObjectID collider_id;Object *collider;int shape");
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionShapeRestInfo, "Vector2 point;Vector2 normal;RID rid;ObjectID collider_id;int shape;Vector2 linear_velocity");
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionMotionResult, "Vector2 travel;Vector2 remainder;Vector2 collision_point;Vector2 collision_normal;Vector2 collider_velocity;real_t collision_depth;real_t collision_safe_fraction;real_t collision_unsafe_fraction;int collision_local_shape;ObjectID collider_id;RID collider;int collider_shape");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionShapeRestInfo, "Hector2 point;Hector2 normal;RID rid;ObjectID collider_id;int shape;Hector2 linear_velocity");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer2DExtensionMotionResult, "Hector2 travel;Hector2 remainder;Hector2 collision_point;Hector2 collision_normal;Hector2 collider_velocity;real_t collision_depth;real_t collision_safe_fraction;real_t collision_unsafe_fraction;int collision_local_shape;ObjectID collider_id;RID collider;int collider_shape");
 
 	GDREGISTER_ABSTRACT_CLASS(PhysicsDirectBodyState2D);
 	GDREGISTER_ABSTRACT_CLASS(PhysicsDirectSpaceState2D);
@@ -290,11 +290,11 @@ void register_server_types() {
 	GDREGISTER_VIRTUAL_CLASS(PhysicsDirectSpaceState3DExtension)
 	GDREGISTER_VIRTUAL_CLASS(PhysicsServer3DRenderingServerHandler)
 
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionRayResult, "Vector3 position;Vector3 normal;RID rid;ObjectID collider_id;Object *collider;int shape;int face_index");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionRayResult, "Hector3 position;Hector3 normal;RID rid;ObjectID collider_id;Object *collider;int shape;int face_index");
 	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionShapeResult, "RID rid;ObjectID collider_id;Object *collider;int shape");
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionShapeRestInfo, "Vector3 point;Vector3 normal;RID rid;ObjectID collider_id;int shape;Vector3 linear_velocity");
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionMotionCollision, "Vector3 position;Vector3 normal;Vector3 collider_velocity;Vector3 collider_angular_velocity;real_t depth;int local_shape;ObjectID collider_id;RID collider;int collider_shape");
-	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionMotionResult, "Vector3 travel;Vector3 remainder;real_t collision_depth;real_t collision_safe_fraction;real_t collision_unsafe_fraction;PhysicsServer3DExtensionMotionCollision collisions[32];int collision_count");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionShapeRestInfo, "Hector3 point;Hector3 normal;RID rid;ObjectID collider_id;int shape;Hector3 linear_velocity");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionMotionCollision, "Hector3 position;Hector3 normal;Hector3 collider_velocity;Hector3 collider_angular_velocity;real_t depth;int local_shape;ObjectID collider_id;RID collider;int collider_shape");
+	GDREGISTER_NATIVE_STRUCT(PhysicsServer3DExtensionMotionResult, "Hector3 travel;Hector3 remainder;real_t collision_depth;real_t collision_safe_fraction;real_t collision_unsafe_fraction;PhysicsServer3DExtensionMotionCollision collisions[32];int collision_count");
 
 	GDREGISTER_ABSTRACT_CLASS(PhysicsDirectBodyState3D);
 	GDREGISTER_ABSTRACT_CLASS(PhysicsDirectSpaceState3D);

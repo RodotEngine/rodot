@@ -151,11 +151,11 @@ Error WSLPeer::accept_stream(Ref<StreamPeer> p_stream) {
 }
 
 bool WSLPeer::_parse_client_request() {
-	Vector<String> psa = String((const char *)handshake_buffer->get_data_array().ptr(), handshake_buffer->get_position() - 4).split("\r\n");
+	Hector<String> psa = String((const char *)handshake_buffer->get_data_array().ptr(), handshake_buffer->get_position() - 4).split("\r\n");
 	int len = psa.size();
 	ERR_FAIL_COND_V_MSG(len < 4, false, "Not enough response headers, got: " + itos(len) + ", expected >= 4.");
 
-	Vector<String> req = psa[0].split(" ", false);
+	Hector<String> req = psa[0].split(" ", false);
 	ERR_FAIL_COND_V_MSG(req.size() < 2, false, "Invalid protocol or status code.");
 
 	// Wrong protocol
@@ -163,7 +163,7 @@ bool WSLPeer::_parse_client_request() {
 
 	HashMap<String, String> headers;
 	for (int i = 1; i < len; i++) {
-		Vector<String> header = psa[i].split(":", false, 1);
+		Hector<String> header = psa[i].split(":", false, 1);
 		ERR_FAIL_COND_V_MSG(header.size() != 2, false, "Invalid header -> " + psa[i]);
 		String name = header[0].to_lower();
 		String value = header[1].strip_edges();
@@ -188,7 +188,7 @@ bool WSLPeer::_parse_client_request() {
 #undef WSL_CHECK
 	session_key = headers["sec-websocket-key"];
 	if (headers.has("sec-websocket-protocol")) {
-		Vector<String> protos = headers["sec-websocket-protocol"].split(",");
+		Hector<String> protos = headers["sec-websocket-protocol"].split(",");
 		for (int i = 0; i < protos.size(); i++) {
 			String proto = protos[i].strip_edges();
 			// Check if we have the given protocol
@@ -280,7 +280,7 @@ Error WSLPeer::_do_server_handshake() {
 
 	int left = handshake_buffer->get_available_bytes();
 	if (left) {
-		Vector<uint8_t> data = handshake_buffer->get_data_array();
+		Hector<uint8_t> data = handshake_buffer->get_data_array();
 		int pos = handshake_buffer->get_position();
 		int sent = 0;
 		Error err = connection->put_partial_data(data.ptr() + pos, left, sent);
@@ -355,7 +355,7 @@ void WSLPeer::_do_client_handshake() {
 	if (pending_request) {
 		int left = handshake_buffer->get_available_bytes();
 		int pos = handshake_buffer->get_position();
-		const Vector<uint8_t> data = handshake_buffer->get_data_array();
+		const Hector<uint8_t> data = handshake_buffer->get_data_array();
 		int sent = 0;
 		Error err = connection->put_partial_data(data.ptr() + pos, left, sent);
 		// Sending handshake failed
@@ -414,11 +414,11 @@ void WSLPeer::_do_client_handshake() {
 }
 
 bool WSLPeer::_verify_server_response() {
-	Vector<String> psa = String((const char *)handshake_buffer->get_data_array().ptr(), handshake_buffer->get_position() - 4).split("\r\n");
+	Hector<String> psa = String((const char *)handshake_buffer->get_data_array().ptr(), handshake_buffer->get_position() - 4).split("\r\n");
 	int len = psa.size();
 	ERR_FAIL_COND_V_MSG(len < 4, false, "Not enough response headers. Got: " + itos(len) + ", expected >= 4.");
 
-	Vector<String> req = psa[0].split(" ", false);
+	Hector<String> req = psa[0].split(" ", false);
 	ERR_FAIL_COND_V_MSG(req.size() < 2, false, "Invalid protocol or status code. Got '" + psa[0] + "', expected 'HTTP/1.1 101'.");
 
 	// Wrong protocol
@@ -427,7 +427,7 @@ bool WSLPeer::_verify_server_response() {
 
 	HashMap<String, String> headers;
 	for (int i = 1; i < len; i++) {
-		Vector<String> header = psa[i].split(":", false, 1);
+		Hector<String> header = psa[i].split(":", false, 1);
 		ERR_FAIL_COND_V_MSG(header.size() != 2, false, "Invalid header -> " + psa[i] + ".");
 		String name = header[0].to_lower();
 		String value = header[1].strip_edges();
@@ -651,7 +651,7 @@ wslay_event_callbacks WSLPeer::_wsl_callbacks = {
 
 String WSLPeer::_generate_key() {
 	// Random key
-	Vector<uint8_t> bkey;
+	Hector<uint8_t> bkey;
 	int len = 16; // 16 bytes, as per RFC
 	bkey.resize(len);
 	_wsl_genmask_callback(nullptr, bkey.ptrw(), len, nullptr);
@@ -660,7 +660,7 @@ String WSLPeer::_generate_key() {
 
 String WSLPeer::_compute_key_response(String p_key) {
 	String key = p_key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"; // Magic UUID as per RFC
-	Vector<uint8_t> sha = key.sha1_buffer();
+	Hector<uint8_t> sha = key.sha1_buffer();
 	return CryptoCore::b64_encode_str(sha.ptr(), sha.size());
 }
 

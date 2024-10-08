@@ -226,7 +226,7 @@ int rc;
 int subs;
 int forcecase = 0;
 int forcecasereset = 0;
-uint32_t ovector_count;
+uint32_t oHector_count;
 uint32_t goptions = 0;
 uint32_t suboptions;
 pcre2_match_data *internal_match_data = NULL;
@@ -243,7 +243,7 @@ PCRE2_SPTR ptr;
 PCRE2_SPTR repend;
 PCRE2_SIZE extra_needed = 0;
 PCRE2_SIZE buff_offset, buff_length, lengthleft, fraglength;
-PCRE2_SIZE *ovector;
+PCRE2_SIZE *oHector;
 PCRE2_SIZE ovecsave[3];
 pcre2_substitute_callout_block scb;
 
@@ -308,24 +308,24 @@ else if (use_existing_match)
   internal_match_data = pcre2_match_data_create(match_data->oveccount,
     gcontext);
   if (internal_match_data == NULL) return PCRE2_ERROR_NOMEMORY;
-  memcpy(internal_match_data, match_data, offsetof(pcre2_match_data, ovector)
+  memcpy(internal_match_data, match_data, offsetof(pcre2_match_data, oHector)
     + 2*pairs*sizeof(PCRE2_SIZE));
   internal_match_data->heapframes = NULL;
   internal_match_data->heapframes_size = 0;
   match_data = internal_match_data;
   }
 
-/* Remember ovector details */
+/* Remember oHector details */
 
-ovector = pcre2_get_ovector_pointer(match_data);
-ovector_count = pcre2_get_ovector_count(match_data);
+oHector = pcre2_get_oHector_pointer(match_data);
+oHector_count = pcre2_get_oHector_count(match_data);
 
 /* Fixed things in the callout block */
 
 scb.version = 0;
 scb.input = subject;
 scb.output = (PCRE2_SPTR)buffer;
-scb.ovector = ovector;
+scb.oHector = oHector;
 
 /* A NULL subject of zero length is treated as an empty string. */
 
@@ -444,7 +444,7 @@ do
   /* Handle a successful match. Matches that use \K to end before they start
   or start before the current point in the subject are not supported. */
 
-  if (ovector[1] < ovector[0] || ovector[0] < start_offset)
+  if (oHector[1] < oHector[0] || oHector[0] < start_offset)
     {
     rc = PCRE2_ERROR_BADSUBSPATTERN;
     goto EXIT;
@@ -458,9 +458,9 @@ do
   pattern, so we now do the empty string magic. In all other cases, a repeat
   match should never occur. */
 
-  if (ovecsave[0] == ovector[0] && ovecsave[1] == ovector[1])
+  if (ovecsave[0] == oHector[0] && ovecsave[1] == oHector[1])
     {
-    if (ovector[0] == ovector[1] && ovecsave[2] != start_offset)
+    if (oHector[0] == oHector[1] && ovecsave[2] != start_offset)
       {
       goptions = PCRE2_NOTEMPTY_ATSTART | PCRE2_ANCHORED;
       ovecsave[2] = start_offset;
@@ -481,10 +481,10 @@ do
   subs++;
 
   /* Copy the text leading up to the match (unless not required), and remember
-  where the insert begins and how many ovector pairs are set. */
+  where the insert begins and how many oHector pairs are set. */
 
-  if (rc == 0) rc = ovector_count;
-  fraglength = ovector[0] - start_offset;
+  if (rc == 0) rc = oHector_count;
+  fraglength = oHector[0] - start_offset;
   if (!replacement_only) CHECKMEMCPY(subject + start_offset, fraglength);
   scb.output_offsets[0] = buff_offset;
   scb.oveccount = rc;
@@ -699,10 +699,10 @@ do
             for (entry = first; entry <= last; entry += rc)
               {
               uint32_t ng = GET2(entry, 0);
-              if (ng < ovector_count)
+              if (ng < oHector_count)
                 {
-                if (group < 0) group = ng;          /* First in ovector */
-                if (ovector[ng*2] != PCRE2_UNSET)
+                if (group < 0) group = ng;          /* First in oHector */
+                if (oHector[ng*2] != PCRE2_UNSET)
                   {
                   group = ng;                       /* First that is set */
                   break;
@@ -711,7 +711,7 @@ do
               }
 
             /* If group is still negative, it means we did not find a group
-            that is in the ovector. Just set the first group. */
+            that is in the oHector. Just set the first group. */
 
             if (group < 0) group = GET2(first, 0);
             }
@@ -770,8 +770,8 @@ do
         /* Otherwise we have a literal substitution of a group's contents. */
 
         LITERAL_SUBSTITUTE:
-        subptr = subject + ovector[group*2];
-        subptrend = subject + ovector[group*2 + 1];
+        subptr = subject + oHector[group*2];
+        subptrend = subject + oHector[group*2 + 1];
 
         /* Substitute a literal string, possibly forcing alphabetic case. */
 
@@ -928,11 +928,11 @@ do
     if (rc != 0)
       {
       PCRE2_SIZE newlength = scb.output_offsets[1] - scb.output_offsets[0];
-      PCRE2_SIZE oldlength = ovector[1] - ovector[0];
+      PCRE2_SIZE oldlength = oHector[1] - oHector[0];
 
       buff_offset -= newlength;
       lengthleft += newlength;
-      if (!replacement_only) CHECKMEMCPY(subject + ovector[0], oldlength);
+      if (!replacement_only) CHECKMEMCPY(subject + oHector[0], oldlength);
 
       /* A negative return means do not do any more. */
 
@@ -945,13 +945,13 @@ do
   offset to point to the rest of the subject string. If we re-used an existing
   match for the first match, switch to the internal match data block. */
 
-  ovecsave[0] = ovector[0];
-  ovecsave[1] = ovector[1];
+  ovecsave[0] = oHector[0];
+  ovecsave[1] = oHector[1];
   ovecsave[2] = start_offset;
 
-  goptions = (ovector[0] != ovector[1] || ovector[0] > start_offset)? 0 :
+  goptions = (oHector[0] != oHector[1] || oHector[0] > start_offset)? 0 :
     PCRE2_ANCHORED|PCRE2_NOTEMPTY_ATSTART;
-  start_offset = ovector[1];
+  start_offset = oHector[1];
   } while ((suboptions & PCRE2_SUBSTITUTE_GLOBAL) != 0);  /* Repeat "do" loop */
 
 /* Copy the rest of the subject unless not required, and terminate the output

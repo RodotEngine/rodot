@@ -189,7 +189,7 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_gui_input(const Ref<InputEven
 		//then try to see if a triangle can be selected
 		if (!blend_space->get_auto_triangles()) { //if autotriangles use, disable this
 			for (int i = 0; i < blend_space->get_triangle_count(); i++) {
-				Vector<Vector2> triangle;
+				Hector<Hector2> triangle;
 
 				for (int j = 0; j < 3; j++) {
 					int idx = blend_space->get_triangle_point(i, j);
@@ -245,7 +245,7 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_gui_input(const Ref<InputEven
 	if (mb.is_valid() && !mb->is_pressed() && dragging_selected_attempt && mb->get_button_index() == MouseButton::LEFT) {
 		if (dragging_selected) {
 			//move
-			Vector2 point = blend_space->get_blend_point_position(selected_point);
+			Hector2 point = blend_space->get_blend_point_position(selected_point);
 			point += drag_ofs;
 			if (snap->is_pressed()) {
 				point = point.snapped(blend_space->get_snap());
@@ -272,7 +272,7 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_gui_input(const Ref<InputEven
 	}
 
 	if (mb.is_valid() && mb->is_pressed() && tool_blend->is_pressed() && mb->get_button_index() == MouseButton::LEFT) {
-		Vector2 blend_pos = (mb->get_position() / blend_space_draw->get_size());
+		Hector2 blend_pos = (mb->get_position() / blend_space_draw->get_size());
 		blend_pos.y = 1.0 - blend_pos.y;
 		blend_pos *= (blend_space->get_max_space() - blend_space->get_min_space());
 		blend_pos += blend_space->get_min_space();
@@ -292,7 +292,7 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_gui_input(const Ref<InputEven
 	if (mm.is_valid() && dragging_selected_attempt) {
 		dragging_selected = true;
 		if (!read_only) {
-			drag_ofs = ((mm->get_position() - drag_from) / blend_space_draw->get_size()) * (blend_space->get_max_space() - blend_space->get_min_space()) * Vector2(1, -1);
+			drag_ofs = ((mm->get_position() - drag_from) / blend_space_draw->get_size()) * (blend_space->get_max_space() - blend_space->get_min_space()) * Hector2(1, -1);
 		}
 		blend_space_draw->queue_redraw();
 		_update_edited_point_pos();
@@ -308,7 +308,7 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_gui_input(const Ref<InputEven
 	}
 
 	if (mm.is_valid() && tool_blend->is_pressed() && (mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
-		Vector2 blend_pos = (mm->get_position() / blend_space_draw->get_size());
+		Hector2 blend_pos = (mm->get_position() / blend_space_draw->get_size());
 		blend_pos.y = 1.0 - blend_pos.y;
 		blend_pos *= (blend_space->get_max_space() - blend_space->get_min_space());
 		blend_pos += blend_space->get_min_space();
@@ -418,11 +418,11 @@ void AnimationNodeBlendSpace2DEditor::_tool_switch(int p_tool) {
 	making_triangle.clear();
 
 	if (p_tool == 2) {
-		Vector<Vector2> bl_points;
+		Hector<Hector2> bl_points;
 		for (int i = 0; i < blend_space->get_blend_point_count(); i++) {
 			bl_points.push_back(blend_space->get_blend_point_position(i));
 		}
-		Vector<Delaunay2D::Triangle> tr = Delaunay2D::triangulate(bl_points);
+		Hector<Delaunay2D::Triangle> tr = Delaunay2D::triangulate(bl_points);
 		for (int i = 0; i < tr.size(); i++) {
 			blend_space->add_triangle(tr[i].points[0], tr[i].points[1], tr[i].points[2]);
 		}
@@ -511,12 +511,12 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_draw() {
 
 	//triangles first
 	for (int i = 0; i < blend_space->get_triangle_count(); i++) {
-		Vector<Vector2> bl_points;
+		Hector<Hector2> bl_points;
 		bl_points.resize(3);
 
 		for (int j = 0; j < 3; j++) {
 			int point_idx = blend_space->get_triangle_point(i, j);
-			Vector2 point = blend_space->get_blend_point_position(point_idx);
+			Hector2 point = blend_space->get_blend_point_position(point_idx);
 			if (dragging_selected && selected_point == point_idx) {
 				point += drag_ofs;
 				if (snap->is_pressed()) {
@@ -542,17 +542,17 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_draw() {
 			color.a *= 0.2;
 		}
 
-		Vector<Color> colors = {
+		Hector<Color> colors = {
 			color,
 			color,
 			color
 		};
-		blend_space_draw->draw_primitive(bl_points, colors, Vector<Vector2>());
+		blend_space_draw->draw_primitive(bl_points, colors, Hector<Hector2>());
 	}
 
 	points.clear();
 	for (int i = 0; i < blend_space->get_blend_point_count(); i++) {
-		Vector2 point = blend_space->get_blend_point_position(i);
+		Hector2 point = blend_space->get_blend_point_position(i);
 		if (!read_only) {
 			if (dragging_selected && selected_point == i) {
 				point += drag_ofs;
@@ -577,9 +577,9 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_draw() {
 	}
 
 	if (making_triangle.size()) {
-		Vector<Vector2> bl_points;
+		Hector<Hector2> bl_points;
 		for (int i = 0; i < making_triangle.size(); i++) {
-			Vector2 point = blend_space->get_blend_point_position(making_triangle[i]);
+			Hector2 point = blend_space->get_blend_point_position(making_triangle[i]);
 			point = (point - blend_space->get_min_space()) / (blend_space->get_max_space() - blend_space->get_min_space());
 			point *= s;
 			point.y = s.height - point.y;
@@ -603,15 +603,15 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_draw() {
 			color.a *= 0.5;
 		}
 
-		Vector2 blend_pos = tree->get(get_blend_position_path());
-		Vector2 point = blend_pos;
+		Hector2 blend_pos = tree->get(get_blend_position_path());
+		Hector2 point = blend_pos;
 
 		point = (point - blend_space->get_min_space()) / (blend_space->get_max_space() - blend_space->get_min_space());
 		point *= s;
 		point.y = s.height - point.y;
 
 		if (blend_space->get_triangle_count()) {
-			Vector2 closest = blend_space->get_closest_point(blend_pos);
+			Hector2 closest = blend_space->get_closest_point(blend_pos);
 			closest = (closest - blend_space->get_min_space()) / (blend_space->get_max_space() - blend_space->get_min_space());
 			closest *= s;
 			closest.y = s.height - closest.y;
@@ -623,10 +623,10 @@ void AnimationNodeBlendSpace2DEditor::_blend_space_draw() {
 
 		float mind = 5 * EDSCALE;
 		float maxd = 15 * EDSCALE;
-		blend_space_draw->draw_line(point + Vector2(mind, 0), point + Vector2(maxd, 0), color, Math::round(2 * EDSCALE));
-		blend_space_draw->draw_line(point + Vector2(-mind, 0), point + Vector2(-maxd, 0), color, Math::round(2 * EDSCALE));
-		blend_space_draw->draw_line(point + Vector2(0, mind), point + Vector2(0, maxd), color, Math::round(2 * EDSCALE));
-		blend_space_draw->draw_line(point + Vector2(0, -mind), point + Vector2(0, -maxd), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(point + Hector2(mind, 0), point + Hector2(maxd, 0), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(point + Hector2(-mind, 0), point + Hector2(-maxd, 0), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(point + Hector2(0, mind), point + Hector2(0, maxd), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(point + Hector2(0, -mind), point + Hector2(0, -maxd), color, Math::round(2 * EDSCALE));
 	}
 }
 
@@ -677,11 +677,11 @@ void AnimationNodeBlendSpace2DEditor::_config_changed(double) {
 	updating = true;
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	undo_redo->create_action(TTR("Change BlendSpace2D Config"));
-	undo_redo->add_do_method(blend_space.ptr(), "set_max_space", Vector2(max_x_value->get_value(), max_y_value->get_value()));
+	undo_redo->add_do_method(blend_space.ptr(), "set_max_space", Hector2(max_x_value->get_value(), max_y_value->get_value()));
 	undo_redo->add_undo_method(blend_space.ptr(), "set_max_space", blend_space->get_max_space());
-	undo_redo->add_do_method(blend_space.ptr(), "set_min_space", Vector2(min_x_value->get_value(), min_y_value->get_value()));
+	undo_redo->add_do_method(blend_space.ptr(), "set_min_space", Hector2(min_x_value->get_value(), min_y_value->get_value()));
 	undo_redo->add_undo_method(blend_space.ptr(), "set_min_space", blend_space->get_min_space());
-	undo_redo->add_do_method(blend_space.ptr(), "set_snap", Vector2(snap_x->get_value(), snap_y->get_value()));
+	undo_redo->add_do_method(blend_space.ptr(), "set_snap", Hector2(snap_x->get_value(), snap_y->get_value()));
 	undo_redo->add_undo_method(blend_space.ptr(), "set_snap", blend_space->get_snap());
 	undo_redo->add_do_method(blend_space.ptr(), "set_use_sync", sync->is_pressed());
 	undo_redo->add_undo_method(blend_space.ptr(), "set_use_sync", blend_space->is_using_sync());
@@ -758,7 +758,7 @@ void AnimationNodeBlendSpace2DEditor::_update_edited_point_pos() {
 	}
 
 	if (selected_point >= 0 && selected_point < blend_space->get_blend_point_count()) {
-		Vector2 pos = blend_space->get_blend_point_position(selected_point);
+		Hector2 pos = blend_space->get_blend_point_position(selected_point);
 		if (dragging_selected) {
 			pos += drag_ofs;
 			if (snap->is_pressed()) {
@@ -779,7 +779,7 @@ void AnimationNodeBlendSpace2DEditor::_edit_point_pos(double) {
 	updating = true;
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	undo_redo->create_action(TTR("Move Node Point"));
-	undo_redo->add_do_method(blend_space.ptr(), "set_blend_point_position", selected_point, Vector2(edit_x->get_value(), edit_y->get_value()));
+	undo_redo->add_do_method(blend_space.ptr(), "set_blend_point_position", selected_point, Hector2(edit_x->get_value(), edit_y->get_value()));
 	undo_redo->add_undo_method(blend_space.ptr(), "set_blend_point_position", selected_point, blend_space->get_blend_point_position(selected_point));
 	undo_redo->add_do_method(this, "_update_space");
 	undo_redo->add_undo_method(this, "_update_space");

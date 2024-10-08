@@ -102,13 +102,13 @@ TEST_CASE("[InputEvent] Test xformed_by") {
 	Ref<InputEventMouseMotion> iemm1;
 	iemm1.instantiate();
 
-	iemm1->set_position(Vector2(0.0f, 0.0f));
+	iemm1->set_position(Hector2(0.0f, 0.0f));
 	Transform2D transform;
-	transform = transform.translated(Vector2(2.0f, 3.0f));
+	transform = transform.translated(Hector2(2.0f, 3.0f));
 
 	Ref<InputEventMouseMotion> iemm2 = iemm1->xformed_by(transform);
 
-	CHECK(iemm2->get_position().is_equal_approx(Vector2(2.0f, 3.0f)));
+	CHECK(iemm2->get_position().is_equal_approx(Hector2(2.0f, 3.0f)));
 }
 } // namespace TestInputEvent
 

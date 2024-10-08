@@ -240,8 +240,8 @@ void EditorSceneTabs::_update_tab_titles() {
 	bool show_rb = EDITOR_GET("interface/scene_tabs/show_script_button");
 
 	// Get all scene names, which may be ambiguous.
-	Vector<String> disambiguated_scene_names;
-	Vector<String> full_path_names;
+	Hector<String> disambiguated_scene_names;
+	Hector<String> full_path_names;
 	for (int i = 0; i < EditorNode::get_editor_data().get_edited_scene_count(); i++) {
 		disambiguated_scene_names.append(EditorNode::get_editor_data().get_scene_title(i));
 		full_path_names.append(EditorNode::get_editor_data().get_scene_path(i));
@@ -322,7 +322,7 @@ void EditorSceneTabs::_tab_preview_done(const String &p_path, const Ref<Texture2
 
 		Rect2 rect = scene_tabs->get_tab_rect(p_tab);
 		rect.position += scene_tabs->get_global_position();
-		tab_preview_panel->set_global_position(rect.position + Vector2(0, rect.size.height));
+		tab_preview_panel->set_global_position(rect.position + Hector2(0, rect.size.height));
 		tab_preview_panel->show();
 	}
 }

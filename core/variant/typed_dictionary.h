@@ -253,12 +253,12 @@ struct GetTypeInfo<const TypedDictionary<K, V> &> {
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, float, Variant::FLOAT)                             \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, double, Variant::FLOAT)                            \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, String, Variant::STRING)                           \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Vector2, Variant::VECTOR2)                         \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Vector2i, Variant::VECTOR2I)                       \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Hector2, Variant::HECTOR2)                         \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Hector2i, Variant::HECTOR2I)                       \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Rect2, Variant::RECT2)                             \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Rect2i, Variant::RECT2I)                           \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Vector3, Variant::VECTOR3)                         \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Vector3i, Variant::VECTOR3I)                       \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Hector3, Variant::HECTOR3)                         \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Hector3i, Variant::HECTOR3I)                       \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Transform2D, Variant::TRANSFORM2D)                 \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Plane, Variant::PLANE)                             \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, Quaternion, Variant::QUATERNION)                   \
@@ -279,10 +279,10 @@ struct GetTypeInfo<const TypedDictionary<K, V> &> {
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedFloat32Array, Variant::PACKED_FLOAT32_ARRAY) \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedFloat64Array, Variant::PACKED_FLOAT64_ARRAY) \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedStringArray, Variant::PACKED_STRING_ARRAY)   \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedVector2Array, Variant::PACKED_VECTOR2_ARRAY) \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedVector3Array, Variant::PACKED_VECTOR3_ARRAY) \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedHector2Array, Variant::PACKED_Hector2_ARRAY) \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedHector3Array, Variant::PACKED_Hector3_ARRAY) \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedColorArray, Variant::PACKED_COLOR_ARRAY)     \
-	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedVector4Array, Variant::PACKED_VECTOR4_ARRAY) \
+	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, PackedHector4Array, Variant::PACKED_Hector4_ARRAY) \
 	MAKE_TYPED_DICTIONARY_EXPANDED(m_type, m_variant_type, IPAddress, Variant::STRING)
 
 #define MAKE_TYPED_DICTIONARY(m_type, m_variant_type)                             \
@@ -302,12 +302,12 @@ MAKE_TYPED_DICTIONARY(int64_t, Variant::INT)
 MAKE_TYPED_DICTIONARY(float, Variant::FLOAT)
 MAKE_TYPED_DICTIONARY(double, Variant::FLOAT)
 MAKE_TYPED_DICTIONARY(String, Variant::STRING)
-MAKE_TYPED_DICTIONARY(Vector2, Variant::VECTOR2)
-MAKE_TYPED_DICTIONARY(Vector2i, Variant::VECTOR2I)
+MAKE_TYPED_DICTIONARY(Hector2, Variant::HECTOR2)
+MAKE_TYPED_DICTIONARY(Hector2i, Variant::HECTOR2I)
 MAKE_TYPED_DICTIONARY(Rect2, Variant::RECT2)
 MAKE_TYPED_DICTIONARY(Rect2i, Variant::RECT2I)
-MAKE_TYPED_DICTIONARY(Vector3, Variant::VECTOR3)
-MAKE_TYPED_DICTIONARY(Vector3i, Variant::VECTOR3I)
+MAKE_TYPED_DICTIONARY(Hector3, Variant::HECTOR3)
+MAKE_TYPED_DICTIONARY(Hector3i, Variant::HECTOR3I)
 MAKE_TYPED_DICTIONARY(Transform2D, Variant::TRANSFORM2D)
 MAKE_TYPED_DICTIONARY(Plane, Variant::PLANE)
 MAKE_TYPED_DICTIONARY(Quaternion, Variant::QUATERNION)
@@ -328,10 +328,10 @@ MAKE_TYPED_DICTIONARY(PackedInt64Array, Variant::PACKED_INT64_ARRAY)
 MAKE_TYPED_DICTIONARY(PackedFloat32Array, Variant::PACKED_FLOAT32_ARRAY)
 MAKE_TYPED_DICTIONARY(PackedFloat64Array, Variant::PACKED_FLOAT64_ARRAY)
 MAKE_TYPED_DICTIONARY(PackedStringArray, Variant::PACKED_STRING_ARRAY)
-MAKE_TYPED_DICTIONARY(PackedVector2Array, Variant::PACKED_VECTOR2_ARRAY)
-MAKE_TYPED_DICTIONARY(PackedVector3Array, Variant::PACKED_VECTOR3_ARRAY)
+MAKE_TYPED_DICTIONARY(PackedHector2Array, Variant::PACKED_Hector2_ARRAY)
+MAKE_TYPED_DICTIONARY(PackedHector3Array, Variant::PACKED_Hector3_ARRAY)
 MAKE_TYPED_DICTIONARY(PackedColorArray, Variant::PACKED_COLOR_ARRAY)
-MAKE_TYPED_DICTIONARY(PackedVector4Array, Variant::PACKED_VECTOR4_ARRAY)
+MAKE_TYPED_DICTIONARY(PackedHector4Array, Variant::PACKED_Hector4_ARRAY)
 MAKE_TYPED_DICTIONARY(IPAddress, Variant::STRING)
 
 #undef MAKE_TYPED_DICTIONARY

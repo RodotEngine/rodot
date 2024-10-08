@@ -12,7 +12,7 @@ namespace cvtt
     {
         static const int NumEndpointSelectorPasses = 3;
 
-        template<int TVectorSize, int TIterationCount>
+        template<int THectorSize, int TIterationCount>
         class EndpointSelector
         {
         public:
@@ -20,7 +20,7 @@ namespace cvtt
 
             EndpointSelector()
             {
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     m_centroid[ch] = ParallelMath::MakeFloatZero();
                     m_direction[ch] = ParallelMath::MakeFloatZero();
@@ -48,12 +48,12 @@ namespace cvtt
                     FinishDirection();
             }
 
-            UnfinishedEndpoints<TVectorSize> GetEndpoints(const float channelWeights[TVectorSize]) const
+            UnfinishedEndpoints<THectorSize> GetEndpoints(const float channelWeights[THectorSize]) const
             {
-                MFloat unweightedBase[TVectorSize];
-                MFloat unweightedOffset[TVectorSize];
+                MFloat unweightedBase[THectorSize];
+                MFloat unweightedOffset[THectorSize];
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MFloat min = m_centroid[ch] + m_direction[ch] * m_minDist;
                     MFloat max = m_centroid[ch] + m_direction[ch] * m_maxDist;
@@ -66,13 +66,13 @@ namespace cvtt
                     unweightedOffset[ch] = (max - min) / channelWeights[ch];
                 }
 
-                return UnfinishedEndpoints<TVectorSize>(unweightedBase, unweightedOffset);
+                return UnfinishedEndpoints<THectorSize>(unweightedBase, unweightedOffset);
             }
 
         private:
             void ContributeCentroid(const MFloat *value, const MFloat &weight)
             {
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_centroid[ch] = m_centroid[ch] + value[ch] * weight;
                 m_weightTotal = m_weightTotal + weight;
             }
@@ -82,14 +82,14 @@ namespace cvtt
                 MFloat denom = m_weightTotal;
                 ParallelMath::MakeSafeDenominator(denom);
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_centroid[ch] = m_centroid[ch] / denom;
             }
 
             void ContributeDirection(const MFloat *value, const MFloat &weight)
             {
-                MFloat diff[TVectorSize];
-                for (int ch = 0; ch < TVectorSize; ch++)
+                MFloat diff[THectorSize];
+                for (int ch = 0; ch < THectorSize; ch++)
                     diff[ch] = value[ch] - m_centroid[ch];
 
                 m_covarianceMatrix.Add(diff, weight);
@@ -97,51 +97,51 @@ namespace cvtt
 
             void FinishDirection()
             {
-                MFloat approx[TVectorSize];
-                for (int ch = 0; ch < TVectorSize; ch++)
+                MFloat approx[THectorSize];
+                for (int ch = 0; ch < THectorSize; ch++)
                     approx[ch] = ParallelMath::MakeFloat(1.0f);
 
                 for (int i = 0; i < TIterationCount; i++)
                 {
-                    MFloat product[TVectorSize];
+                    MFloat product[THectorSize];
                     m_covarianceMatrix.Product(product, approx);
 
                     MFloat largestComponent = product[0];
-                    for (int ch = 1; ch < TVectorSize; ch++)
+                    for (int ch = 1; ch < THectorSize; ch++)
                         largestComponent = ParallelMath::Max(largestComponent, product[ch]);
 
                     // product = largestComponent*newApprox
                     ParallelMath::MakeSafeDenominator(largestComponent);
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         approx[ch] = product[ch] / largestComponent;
                 }
 
                 // Normalize
                 MFloat approxLen = ParallelMath::MakeFloatZero();
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     approxLen = approxLen + approx[ch] * approx[ch];
 
                 approxLen = ParallelMath::Sqrt(approxLen);
 
                 ParallelMath::MakeSafeDenominator(approxLen);
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     m_direction[ch] = approx[ch] / approxLen;
             }
 
             void ContributeMinMax(const MFloat *value)
             {
                 MFloat dist = ParallelMath::MakeFloatZero();
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                     dist = dist + m_direction[ch] * (value[ch] - m_centroid[ch]);
 
                 m_minDist = ParallelMath::Min(m_minDist, dist);
                 m_maxDist = ParallelMath::Max(m_maxDist, dist);
             }
 
-            ParallelMath::Float m_centroid[TVectorSize];
-            ParallelMath::Float m_direction[TVectorSize];
-            PackedCovarianceMatrix<TVectorSize> m_covarianceMatrix;
+            ParallelMath::Float m_centroid[THectorSize];
+            ParallelMath::Float m_direction[THectorSize];
+            PackedCovarianceMatrix<THectorSize> m_covarianceMatrix;
             ParallelMath::Float m_weightTotal;
 
             ParallelMath::Float m_minDist;

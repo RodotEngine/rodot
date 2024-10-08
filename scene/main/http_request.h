@@ -67,11 +67,11 @@ private:
 	String request_string;
 	String url;
 	int port = 80;
-	Vector<String> headers;
+	Hector<String> headers;
 	bool use_tls = false;
 	Ref<TLSOptions> tls_options;
 	HTTPClient::Method method;
-	Vector<uint8_t> request_data;
+	Hector<uint8_t> request_data;
 
 	bool request_sent = false;
 	Ref<HTTPClient> client;
@@ -81,7 +81,7 @@ private:
 
 	bool got_response = false;
 	int response_code = 0;
-	Vector<String> response_headers;
+	Hector<String> response_headers;
 
 	String download_to_file;
 
@@ -125,8 +125,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	Error request(const String &p_url, const Vector<String> &p_custom_headers = Vector<String>(), HTTPClient::Method p_method = HTTPClient::METHOD_GET, const String &p_request_data = ""); //connects to a full url and perform request
-	Error request_raw(const String &p_url, const Vector<String> &p_custom_headers = Vector<String>(), HTTPClient::Method p_method = HTTPClient::METHOD_GET, const Vector<uint8_t> &p_request_data_raw = Vector<uint8_t>()); //connects to a full url and perform request
+	Error request(const String &p_url, const Hector<String> &p_custom_headers = Hector<String>(), HTTPClient::Method p_method = HTTPClient::METHOD_GET, const String &p_request_data = ""); //connects to a full url and perform request
+	Error request_raw(const String &p_url, const Hector<String> &p_custom_headers = Hector<String>(), HTTPClient::Method p_method = HTTPClient::METHOD_GET, const Hector<uint8_t> &p_request_data_raw = Hector<uint8_t>()); //connects to a full url and perform request
 	void cancel_request();
 	HTTPClient::Status get_http_client_status() const;
 

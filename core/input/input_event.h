@@ -81,7 +81,7 @@ public:
 
 	virtual String as_text() const = 0;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const;
 
 	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const;
 	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const;
@@ -211,8 +211,8 @@ class InputEventMouse : public InputEventWithModifiers {
 
 	BitField<MouseButtonMask> button_mask;
 
-	Vector2 pos;
-	Vector2 global_pos;
+	Hector2 pos;
+	Hector2 global_pos;
 
 protected:
 	static void _bind_methods();
@@ -221,11 +221,11 @@ public:
 	void set_button_mask(BitField<MouseButtonMask> p_mask);
 	BitField<MouseButtonMask> get_button_mask() const;
 
-	void set_position(const Vector2 &p_pos);
-	Vector2 get_position() const;
+	void set_position(const Hector2 &p_pos);
+	Hector2 get_position() const;
 
-	void set_global_position(const Vector2 &p_global_pos);
-	Vector2 get_global_position() const;
+	void set_global_position(const Hector2 &p_global_pos);
+	Hector2 get_global_position() const;
 
 	InputEventMouse() {}
 };
@@ -253,7 +253,7 @@ public:
 	void set_double_click(bool p_double_click);
 	bool is_double_click() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const override;
 
 	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
 	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
@@ -268,20 +268,20 @@ public:
 class InputEventMouseMotion : public InputEventMouse {
 	GDCLASS(InputEventMouseMotion, InputEventMouse);
 
-	Vector2 tilt;
+	Hector2 tilt;
 	float pressure = 0;
-	Vector2 relative;
-	Vector2 screen_relative;
-	Vector2 velocity;
-	Vector2 screen_velocity;
+	Hector2 relative;
+	Hector2 screen_relative;
+	Hector2 velocity;
+	Hector2 screen_velocity;
 	bool pen_inverted = false;
 
 protected:
 	static void _bind_methods();
 
 public:
-	void set_tilt(const Vector2 &p_tilt);
-	Vector2 get_tilt() const;
+	void set_tilt(const Hector2 &p_tilt);
+	Hector2 get_tilt() const;
 
 	void set_pressure(float p_pressure);
 	float get_pressure() const;
@@ -289,19 +289,19 @@ public:
 	void set_pen_inverted(bool p_inverted);
 	bool get_pen_inverted() const;
 
-	void set_relative(const Vector2 &p_relative);
-	Vector2 get_relative() const;
+	void set_relative(const Hector2 &p_relative);
+	Hector2 get_relative() const;
 
-	void set_relative_screen_position(const Vector2 &p_relative);
-	Vector2 get_relative_screen_position() const;
+	void set_relative_screen_position(const Hector2 &p_relative);
+	Hector2 get_relative_screen_position() const;
 
-	void set_velocity(const Vector2 &p_velocity);
-	Vector2 get_velocity() const;
+	void set_velocity(const Hector2 &p_velocity);
+	Hector2 get_velocity() const;
 
-	void set_screen_velocity(const Vector2 &p_velocity);
-	Vector2 get_screen_velocity() const;
+	void set_screen_velocity(const Hector2 &p_velocity);
+	Hector2 get_screen_velocity() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const override;
 	virtual String as_text() const override;
 	virtual String to_string() override;
 
@@ -370,7 +370,7 @@ public:
 class InputEventScreenTouch : public InputEventFromWindow {
 	GDCLASS(InputEventScreenTouch, InputEventFromWindow);
 	int index = 0;
-	Vector2 pos;
+	Hector2 pos;
 	bool double_tap = false;
 
 protected:
@@ -380,8 +380,8 @@ public:
 	void set_index(int p_index);
 	int get_index() const;
 
-	void set_position(const Vector2 &p_pos);
-	Vector2 get_position() const;
+	void set_position(const Hector2 &p_pos);
+	Hector2 get_position() const;
 
 	void set_pressed(bool p_pressed);
 	void set_canceled(bool p_canceled);
@@ -389,7 +389,7 @@ public:
 	void set_double_tap(bool p_double_tap);
 	bool is_double_tap() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const override;
 	virtual String as_text() const override;
 	virtual String to_string() override;
 
@@ -399,12 +399,12 @@ public:
 class InputEventScreenDrag : public InputEventFromWindow {
 	GDCLASS(InputEventScreenDrag, InputEventFromWindow);
 	int index = 0;
-	Vector2 pos;
-	Vector2 relative;
-	Vector2 screen_relative;
-	Vector2 velocity;
-	Vector2 screen_velocity;
-	Vector2 tilt;
+	Hector2 pos;
+	Hector2 relative;
+	Hector2 screen_relative;
+	Hector2 velocity;
+	Hector2 screen_velocity;
+	Hector2 tilt;
 	float pressure = 0;
 	bool pen_inverted = false;
 
@@ -415,8 +415,8 @@ public:
 	void set_index(int p_index);
 	int get_index() const;
 
-	void set_tilt(const Vector2 &p_tilt);
-	Vector2 get_tilt() const;
+	void set_tilt(const Hector2 &p_tilt);
+	Hector2 get_tilt() const;
 
 	void set_pressure(float p_pressure);
 	float get_pressure() const;
@@ -424,22 +424,22 @@ public:
 	void set_pen_inverted(bool p_inverted);
 	bool get_pen_inverted() const;
 
-	void set_position(const Vector2 &p_pos);
-	Vector2 get_position() const;
+	void set_position(const Hector2 &p_pos);
+	Hector2 get_position() const;
 
-	void set_relative(const Vector2 &p_relative);
-	Vector2 get_relative() const;
+	void set_relative(const Hector2 &p_relative);
+	Hector2 get_relative() const;
 
-	void set_relative_screen_position(const Vector2 &p_relative);
-	Vector2 get_relative_screen_position() const;
+	void set_relative_screen_position(const Hector2 &p_relative);
+	Hector2 get_relative_screen_position() const;
 
-	void set_velocity(const Vector2 &p_velocity);
-	Vector2 get_velocity() const;
+	void set_velocity(const Hector2 &p_velocity);
+	Hector2 get_velocity() const;
 
-	void set_screen_velocity(const Vector2 &p_velocity);
-	Vector2 get_screen_velocity() const;
+	void set_screen_velocity(const Hector2 &p_velocity);
+	Hector2 get_screen_velocity() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const override;
 	virtual String as_text() const override;
 	virtual String to_string() override;
 
@@ -486,14 +486,14 @@ public:
 class InputEventGesture : public InputEventWithModifiers {
 	GDCLASS(InputEventGesture, InputEventWithModifiers);
 
-	Vector2 pos;
+	Hector2 pos;
 
 protected:
 	static void _bind_methods();
 
 public:
-	void set_position(const Vector2 &p_pos);
-	Vector2 get_position() const;
+	void set_position(const Hector2 &p_pos);
+	Hector2 get_position() const;
 };
 
 class InputEventMagnifyGesture : public InputEventGesture {
@@ -507,7 +507,7 @@ public:
 	void set_factor(real_t p_factor);
 	real_t get_factor() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const override;
 	virtual String as_text() const override;
 	virtual String to_string() override;
 
@@ -516,16 +516,16 @@ public:
 
 class InputEventPanGesture : public InputEventGesture {
 	GDCLASS(InputEventPanGesture, InputEventGesture);
-	Vector2 delta;
+	Hector2 delta;
 
 protected:
 	static void _bind_methods();
 
 public:
-	void set_delta(const Vector2 &p_delta);
-	Vector2 get_delta() const;
+	void set_delta(const Hector2 &p_delta);
+	Hector2 get_delta() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Hector2 &p_local_ofs = Hector2()) const override;
 	virtual String as_text() const override;
 	virtual String to_string() override;
 

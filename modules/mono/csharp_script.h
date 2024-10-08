@@ -181,8 +181,8 @@ private:
 		MethodInfo method_info;
 	};
 
-	Vector<EventSignalInfo> event_signals;
-	Vector<CSharpMethodInfo> methods;
+	Hector<EventSignalInfo> event_signals;
+	Hector<CSharpMethodInfo> methods;
 
 #ifdef TOOLS_ENABLED
 	List<PropertyInfo> exported_members_cache; // members_cache
@@ -238,9 +238,9 @@ public:
 	void set_source_code(const String &p_code) override;
 
 #ifdef TOOLS_ENABLED
-	virtual Vector<DocData::ClassDoc> get_documentation() const override {
+	virtual Hector<DocData::ClassDoc> get_documentation() const override {
 		// TODO
-		Vector<DocData::ClassDoc> docs;
+		Hector<DocData::ClassDoc> docs;
 		return docs;
 	}
 	virtual String get_class_icon_path() const override {
@@ -501,7 +501,7 @@ public:
 	void get_string_delimiters(List<String> *p_delimiters) const override;
 	bool is_using_templates() override;
 	virtual Ref<Script> make_template(const String &p_template, const String &p_class_name, const String &p_base_class_name) const override;
-	virtual Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override;
+	virtual Hector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override;
 	/* TODO */ bool validate(const String &p_script, const String &p_path, List<String> *r_functions,
 			List<ScriptLanguage::ScriptError> *r_errors = nullptr, List<ScriptLanguage::Warning> *r_warnings = nullptr, HashSet<int> *r_safe_lines = nullptr) const override {
 		return true;
@@ -538,7 +538,7 @@ public:
 	/* TODO */ String debug_parse_stack_level_expression(int p_level, const String &p_expression, int p_max_subitems, int p_max_depth) override {
 		return "";
 	}
-	Vector<StackInfo> debug_get_current_stack_info() override;
+	Hector<StackInfo> debug_get_current_stack_info() override;
 
 	/* PROFILING FUNCTIONS */
 	/* TODO */ void profiling_start() override {}

@@ -73,8 +73,8 @@ static String _get_parent_class_of_script(const String &p_path) {
 	return _get_parent_class_of_script(base->get_path());
 }
 
-static Vector<String> _get_hierarchy(const String &p_class_name) {
-	Vector<String> hierarchy;
+static Hector<String> _get_hierarchy(const String &p_class_name) {
+	Hector<String> hierarchy;
 
 	String class_name = p_class_name;
 	while (true) {
@@ -515,13 +515,13 @@ void ScriptCreateDialog::_update_template_menu() {
 
 		// Get all ancestor node for selected base node.
 		// There templates will also fit the base node.
-		Vector<String> hierarchy = _get_hierarchy(inherits_base_type);
+		Hector<String> hierarchy = _get_hierarchy(inherits_base_type);
 		int last_used_template = -1;
 		int preselected_template = -1;
 		int previous_ancestor_level = -1;
 
 		// Templates can be stored in tree different locations.
-		Vector<ScriptLanguage::TemplateLocation> template_locations;
+		Hector<ScriptLanguage::TemplateLocation> template_locations;
 		template_locations.append(ScriptLanguage::TEMPLATE_PROJECT);
 		template_locations.append(ScriptLanguage::TEMPLATE_EDITOR);
 		template_locations.append(ScriptLanguage::TEMPLATE_BUILT_IN);
@@ -531,7 +531,7 @@ void ScriptCreateDialog::_update_template_menu() {
 			bool separator = false;
 			int ancestor_level = 0;
 			for (const String &current_node : hierarchy) {
-				Vector<ScriptLanguage::ScriptTemplate> templates_found;
+				Hector<ScriptLanguage::ScriptTemplate> templates_found;
 				if (template_location == ScriptLanguage::TEMPLATE_BUILT_IN) {
 					templates_found = language->get_built_in_templates(current_node);
 				} else {
@@ -696,8 +696,8 @@ ScriptLanguage::ScriptTemplate ScriptCreateDialog::_get_current_template() const
 	return ScriptLanguage::ScriptTemplate();
 }
 
-Vector<ScriptLanguage::ScriptTemplate> ScriptCreateDialog::_get_user_templates(const ScriptLanguage *p_language, const StringName &p_object, const String &p_dir, const ScriptLanguage::TemplateLocation &p_origin) const {
-	Vector<ScriptLanguage::ScriptTemplate> user_templates;
+Hector<ScriptLanguage::ScriptTemplate> ScriptCreateDialog::_get_user_templates(const ScriptLanguage *p_language, const StringName &p_object, const String &p_dir, const ScriptLanguage::TemplateLocation &p_origin) const {
+	Hector<ScriptLanguage::ScriptTemplate> user_templates;
 	String extension = p_language->get_extension();
 
 	String dir_path = p_dir.path_join(p_object);

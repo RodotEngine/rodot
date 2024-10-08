@@ -38,7 +38,7 @@
 
 Error ImageLoaderPNG::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	const uint64_t buffer_size = f->get_length();
-	Vector<uint8_t> file_buffer;
+	Hector<uint8_t> file_buffer;
 	Error err = file_buffer.resize(buffer_size);
 	if (err) {
 		return err;
@@ -72,16 +72,16 @@ Ref<Image> ImageLoaderPNG::unpack_mem_png(const uint8_t *p_png, int p_size) {
 	return load_mem_png(&p_png[4], p_size - 4);
 }
 
-Ref<Image> ImageLoaderPNG::lossless_unpack_png(const Vector<uint8_t> &p_data) {
+Ref<Image> ImageLoaderPNG::lossless_unpack_png(const Hector<uint8_t> &p_data) {
 	return unpack_mem_png(p_data.ptr(), p_data.size());
 }
 
-Vector<uint8_t> ImageLoaderPNG::lossless_pack_png(const Ref<Image> &p_image) {
-	Vector<uint8_t> out_buffer;
+Hector<uint8_t> ImageLoaderPNG::lossless_pack_png(const Ref<Image> &p_image) {
+	Hector<uint8_t> out_buffer;
 
 	// add Godot's own "PNG " prefix
 	if (out_buffer.resize(4) != OK) {
-		ERR_FAIL_V(Vector<uint8_t>());
+		ERR_FAIL_V(Hector<uint8_t>());
 	}
 
 	// scope for writer lifetime
@@ -93,7 +93,7 @@ Vector<uint8_t> ImageLoaderPNG::lossless_pack_png(const Ref<Image> &p_image) {
 
 	Error err = PNGDriverCommon::image_to_png(p_image, out_buffer);
 	if (err) {
-		ERR_FAIL_V(Vector<uint8_t>());
+		ERR_FAIL_V(Hector<uint8_t>());
 	}
 
 	return out_buffer;

@@ -35,7 +35,7 @@
 
 #include "core/error/error_list.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/display_server.h"
 
 #import <AppKit/AppKit.h>

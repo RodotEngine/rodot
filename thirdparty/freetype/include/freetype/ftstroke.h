@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
    *    Generating bordered and stroked glyphs.
    *
    * @description:
-   *    This component generates stroked outlines of a given vectorial glyph.
+   *    This component generates stroked outlines of a given Hectorial glyph.
    *    It also allows you to retrieve the 'outside' and/or the 'inside'
    *    borders of the stroke.
    *
@@ -384,7 +384,7 @@ FT_BEGIN_HEADER
    *     The target stroker handle.
    *
    *   to ::
-   *     A pointer to the start vector.
+   *     A pointer to the start Hector.
    *
    *   open ::
    *     A boolean.  If~1, the sub-path is treated as an open one.
@@ -398,7 +398,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_BeginSubPath( FT_Stroker  stroker,
-                           FT_Vector*  to,
+                           FT_Hector*  to,
                            FT_Bool     open );
 
 
@@ -451,7 +451,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_LineTo( FT_Stroker  stroker,
-                     FT_Vector*  to );
+                     FT_Hector*  to );
 
 
   /**************************************************************************
@@ -482,8 +482,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_ConicTo( FT_Stroker  stroker,
-                      FT_Vector*  control,
-                      FT_Vector*  to );
+                      FT_Hector*  control,
+                      FT_Hector*  to );
 
 
   /**************************************************************************
@@ -517,9 +517,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_CubicTo( FT_Stroker  stroker,
-                      FT_Vector*  control1,
-                      FT_Vector*  control2,
-                      FT_Vector*  to );
+                      FT_Hector*  control1,
+                      FT_Hector*  control2,
+                      FT_Hector*  to );
 
 
   /**************************************************************************

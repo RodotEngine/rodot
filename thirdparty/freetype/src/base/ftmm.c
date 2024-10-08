@@ -209,9 +209,9 @@
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Set_MM_WeightVector( FT_Face    face,
+  FT_Set_MM_WeightHector( FT_Face    face,
                           FT_UInt    len,
-                          FT_Fixed*  weightvector )
+                          FT_Fixed*  weightHector )
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
@@ -219,15 +219,15 @@
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
-    if ( len && !weightvector )
+    if ( len && !weightHector )
       return FT_THROW( Invalid_Argument );
 
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
       error = FT_ERR( Invalid_Argument );
-      if ( service->set_mm_weightvector )
-        error = service->set_mm_weightvector( face, len, weightvector );
+      if ( service->set_mm_weightHector )
+        error = service->set_mm_weightHector( face, len, weightHector );
 
       if ( !error )
       {
@@ -250,9 +250,9 @@
 
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Get_MM_WeightVector( FT_Face    face,
+  FT_Get_MM_WeightHector( FT_Face    face,
                           FT_UInt*   len,
-                          FT_Fixed*  weightvector )
+                          FT_Fixed*  weightHector )
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
@@ -260,15 +260,15 @@
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
-    if ( len && !weightvector )
+    if ( len && !weightHector )
       return FT_THROW( Invalid_Argument );
 
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
       error = FT_ERR( Invalid_Argument );
-      if ( service->get_mm_weightvector )
-        error = service->get_mm_weightvector( face, len, weightvector );
+      if ( service->get_mm_weightHector )
+        error = service->get_mm_weightHector( face, len, weightHector );
     }
 
     return error;

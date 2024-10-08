@@ -74,7 +74,7 @@ String GPUParticlesCollision3DGizmoPlugin::get_handle_name(const EditorNode3DGiz
 		return "Radius";
 	}
 
-	if (Object::cast_to<GPUParticlesCollisionBox3D>(cs) || Object::cast_to<GPUParticlesAttractorBox3D>(cs) || Object::cast_to<GPUParticlesAttractorVectorField3D>(cs) || Object::cast_to<GPUParticlesCollisionSDF3D>(cs) || Object::cast_to<GPUParticlesCollisionHeightField3D>(cs)) {
+	if (Object::cast_to<GPUParticlesCollisionBox3D>(cs) || Object::cast_to<GPUParticlesAttractorBox3D>(cs) || Object::cast_to<GPUParticlesAttractorHectorField3D>(cs) || Object::cast_to<GPUParticlesCollisionSDF3D>(cs) || Object::cast_to<GPUParticlesCollisionHeightField3D>(cs)) {
 		return helper->box_get_handle_name(p_id);
 	}
 
@@ -88,8 +88,8 @@ Variant GPUParticlesCollision3DGizmoPlugin::get_handle_value(const EditorNode3DG
 		return p_gizmo->get_node_3d()->call("get_radius");
 	}
 
-	if (Object::cast_to<GPUParticlesCollisionBox3D>(cs) || Object::cast_to<GPUParticlesAttractorBox3D>(cs) || Object::cast_to<GPUParticlesAttractorVectorField3D>(cs) || Object::cast_to<GPUParticlesCollisionSDF3D>(cs) || Object::cast_to<GPUParticlesCollisionHeightField3D>(cs)) {
-		return Vector3(p_gizmo->get_node_3d()->call("get_size"));
+	if (Object::cast_to<GPUParticlesCollisionBox3D>(cs) || Object::cast_to<GPUParticlesAttractorBox3D>(cs) || Object::cast_to<GPUParticlesAttractorHectorField3D>(cs) || Object::cast_to<GPUParticlesCollisionSDF3D>(cs) || Object::cast_to<GPUParticlesCollisionHeightField3D>(cs)) {
+		return Hector3(p_gizmo->get_node_3d()->call("get_size"));
 	}
 
 	return Variant();
@@ -102,12 +102,12 @@ void GPUParticlesCollision3DGizmoPlugin::begin_handle_action(const EditorNode3DG
 void GPUParticlesCollision3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point) {
 	Node3D *sn = p_gizmo->get_node_3d();
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
 	if (Object::cast_to<GPUParticlesCollisionSphere3D>(sn) || Object::cast_to<GPUParticlesAttractorSphere3D>(sn)) {
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), Vector3(4096, 0, 0), sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), Hector3(4096, 0, 0), sg[0], sg[1], ra, rb);
 		float d = ra.x;
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -120,9 +120,9 @@ void GPUParticlesCollision3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_g
 		sn->call("set_radius", d);
 	}
 
-	if (Object::cast_to<GPUParticlesCollisionBox3D>(sn) || Object::cast_to<GPUParticlesAttractorBox3D>(sn) || Object::cast_to<GPUParticlesAttractorVectorField3D>(sn) || Object::cast_to<GPUParticlesCollisionSDF3D>(sn) || Object::cast_to<GPUParticlesCollisionHeightField3D>(sn)) {
-		Vector3 size = sn->call("get_size");
-		Vector3 position;
+	if (Object::cast_to<GPUParticlesCollisionBox3D>(sn) || Object::cast_to<GPUParticlesAttractorBox3D>(sn) || Object::cast_to<GPUParticlesAttractorHectorField3D>(sn) || Object::cast_to<GPUParticlesCollisionSDF3D>(sn) || Object::cast_to<GPUParticlesCollisionHeightField3D>(sn)) {
+		Hector3 size = sn->call("get_size");
+		Hector3 position;
 		helper->box_set_handle(sg, p_id, size, position);
 		sn->call("set_size", size);
 		sn->set_global_position(position);
@@ -145,7 +145,7 @@ void GPUParticlesCollision3DGizmoPlugin::commit_handle(const EditorNode3DGizmo *
 		ur->commit_action();
 	}
 
-	if (Object::cast_to<GPUParticlesCollisionBox3D>(sn) || Object::cast_to<GPUParticlesAttractorBox3D>(sn) || Object::cast_to<GPUParticlesAttractorVectorField3D>(sn) || Object::cast_to<GPUParticlesCollisionSDF3D>(sn) || Object::cast_to<GPUParticlesCollisionHeightField3D>(sn)) {
+	if (Object::cast_to<GPUParticlesCollisionBox3D>(sn) || Object::cast_to<GPUParticlesAttractorBox3D>(sn) || Object::cast_to<GPUParticlesAttractorHectorField3D>(sn) || Object::cast_to<GPUParticlesCollisionSDF3D>(sn) || Object::cast_to<GPUParticlesCollisionHeightField3D>(sn)) {
 		helper->box_commit_handle("Change Box Shape Size", p_cancel, sn);
 	}
 }
@@ -170,59 +170,59 @@ void GPUParticlesCollision3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	if (Object::cast_to<GPUParticlesCollisionSphere3D>(cs) || Object::cast_to<GPUParticlesAttractorSphere3D>(cs)) {
 		float r = cs->call("get_radius");
 
-		Vector<Vector3> points;
+		Hector<Hector3> points;
 
 		for (int i = 0; i <= 360; i++) {
 			float ra = Math::deg_to_rad((float)i);
 			float rb = Math::deg_to_rad((float)i + 1);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
-			points.push_back(Vector3(a.x, 0, a.y));
-			points.push_back(Vector3(b.x, 0, b.y));
-			points.push_back(Vector3(0, a.x, a.y));
-			points.push_back(Vector3(0, b.x, b.y));
-			points.push_back(Vector3(a.x, a.y, 0));
-			points.push_back(Vector3(b.x, b.y, 0));
+			points.push_back(Hector3(a.x, 0, a.y));
+			points.push_back(Hector3(b.x, 0, b.y));
+			points.push_back(Hector3(0, a.x, a.y));
+			points.push_back(Hector3(0, b.x, b.y));
+			points.push_back(Hector3(a.x, a.y, 0));
+			points.push_back(Hector3(b.x, b.y, 0));
 		}
 
-		Vector<Vector3> collision_segments;
+		Hector<Hector3> collision_segments;
 
 		for (int i = 0; i < 64; i++) {
 			float ra = i * (Math_TAU / 64.0);
 			float rb = (i + 1) * (Math_TAU / 64.0);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
-			collision_segments.push_back(Vector3(a.x, 0, a.y));
-			collision_segments.push_back(Vector3(b.x, 0, b.y));
-			collision_segments.push_back(Vector3(0, a.x, a.y));
-			collision_segments.push_back(Vector3(0, b.x, b.y));
-			collision_segments.push_back(Vector3(a.x, a.y, 0));
-			collision_segments.push_back(Vector3(b.x, b.y, 0));
+			collision_segments.push_back(Hector3(a.x, 0, a.y));
+			collision_segments.push_back(Hector3(b.x, 0, b.y));
+			collision_segments.push_back(Hector3(0, a.x, a.y));
+			collision_segments.push_back(Hector3(0, b.x, b.y));
+			collision_segments.push_back(Hector3(a.x, a.y, 0));
+			collision_segments.push_back(Hector3(b.x, b.y, 0));
 		}
 
 		p_gizmo->add_lines(points, material);
 		p_gizmo->add_collision_segments(collision_segments);
-		Vector<Vector3> handles;
-		handles.push_back(Vector3(r, 0, 0));
+		Hector<Hector3> handles;
+		handles.push_back(Hector3(r, 0, 0));
 		p_gizmo->add_handles(handles, handles_material);
 	}
 
-	if (Object::cast_to<GPUParticlesCollisionBox3D>(cs) || Object::cast_to<GPUParticlesAttractorBox3D>(cs) || Object::cast_to<GPUParticlesAttractorVectorField3D>(cs) || Object::cast_to<GPUParticlesCollisionSDF3D>(cs) || Object::cast_to<GPUParticlesCollisionHeightField3D>(cs)) {
-		Vector<Vector3> lines;
+	if (Object::cast_to<GPUParticlesCollisionBox3D>(cs) || Object::cast_to<GPUParticlesAttractorBox3D>(cs) || Object::cast_to<GPUParticlesAttractorHectorField3D>(cs) || Object::cast_to<GPUParticlesCollisionSDF3D>(cs) || Object::cast_to<GPUParticlesCollisionHeightField3D>(cs)) {
+		Hector<Hector3> lines;
 		AABB aabb;
-		aabb.size = cs->call("get_size").operator Vector3();
+		aabb.size = cs->call("get_size").operator Hector3();
 		aabb.position = aabb.size / -2;
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			aabb.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
 		}
 
-		Vector<Vector3> handles = helper->box_get_handles(aabb.size);
+		Hector<Hector3> handles = helper->box_get_handles(aabb.size);
 
 		p_gizmo->add_lines(lines, material);
 		p_gizmo->add_collision_segments(lines);
@@ -246,7 +246,7 @@ void GPUParticlesCollision3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 					int j_n2 = (j + 2) % 3;
 
 					for (int k = 0; k < 4; k++) {
-						Vector3 from = aabb.position, to = aabb.position;
+						Hector3 from = aabb.position, to = aabb.position;
 						from[j] += cell_size * i;
 						to[j] += cell_size * i;
 

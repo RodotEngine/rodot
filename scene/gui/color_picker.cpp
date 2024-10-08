@@ -508,8 +508,8 @@ HSlider *ColorPicker::get_slider(int p_idx) {
 	return alpha_slider;
 }
 
-Vector<float> ColorPicker::get_active_slider_values() {
-	Vector<float> cur_values;
+Hector<float> ColorPicker::get_active_slider_values() {
+	Hector<float> cur_values;
 	for (int i = 0; i < current_slider_count; i++) {
 		cur_values.push_back(sliders[i]->get_value());
 	}
@@ -1146,11 +1146,11 @@ void ColorPicker::_hsv_draw(int p_which, Control *c) {
 
 	PickerShapeType actual_shape = _get_actual_shape();
 	if (p_which == 0) {
-		Vector<Point2> points;
-		Vector<Color> colors;
-		Vector<Color> colors2;
+		Hector<Point2> points;
+		Hector<Color> colors;
+		Hector<Color> colors2;
 		Color col = color;
-		Vector2 center = c->get_size() / 2.0;
+		Hector2 center = c->get_size() / 2.0;
 
 		switch (actual_shape) {
 			case SHAPE_HSV_WHEEL: {
@@ -1160,10 +1160,10 @@ void ColorPicker::_hsv_draw(int p_which, Control *c) {
 				real_t ring_radius_x = Math_SQRT12 * c->get_size().width * 0.42;
 				real_t ring_radius_y = Math_SQRT12 * c->get_size().height * 0.42;
 
-				points.set(0, center - Vector2(ring_radius_x, ring_radius_y));
-				points.set(1, center + Vector2(ring_radius_x, -ring_radius_y));
-				points.set(2, center + Vector2(ring_radius_x, ring_radius_y));
-				points.set(3, center + Vector2(-ring_radius_x, ring_radius_y));
+				points.set(0, center - Hector2(ring_radius_x, ring_radius_y));
+				points.set(1, center + Hector2(ring_radius_x, -ring_radius_y));
+				points.set(2, center + Hector2(ring_radius_x, ring_radius_y));
+				points.set(3, center + Hector2(-ring_radius_x, ring_radius_y));
 				colors.set(0, Color(1, 1, 1, 1));
 				colors.set(1, Color(1, 1, 1, 1));
 				colors.set(2, Color(0, 0, 0, 1));
@@ -1186,10 +1186,10 @@ void ColorPicker::_hsv_draw(int p_which, Control *c) {
 				points.resize(4);
 				colors.resize(4);
 				colors2.resize(4);
-				points.set(0, Vector2());
-				points.set(1, Vector2(c->get_size().x, 0));
+				points.set(0, Hector2());
+				points.set(1, Hector2(c->get_size().x, 0));
 				points.set(2, c->get_size());
-				points.set(3, Vector2(0, c->get_size().y));
+				points.set(3, Hector2(0, c->get_size().y));
 				colors.set(0, Color(1, 1, 1, 1));
 				colors.set(1, Color(1, 1, 1, 1));
 				colors.set(2, Color(0, 0, 0, 1));
@@ -1249,8 +1249,8 @@ void ColorPicker::_hsv_draw(int p_which, Control *c) {
 			col.set_hsv(h, 1, 1);
 			c->draw_line(Point2(0, y), Point2(c->get_size().x, y), col.inverted());
 		} else if (actual_shape == SHAPE_OKHSL_CIRCLE) {
-			Vector<Point2> points;
-			Vector<Color> colors;
+			Hector<Point2> points;
+			Hector<Color> colors;
 			Color col;
 			col.set_ok_hsl(h, s, 1);
 			Color col2;
@@ -1259,12 +1259,12 @@ void ColorPicker::_hsv_draw(int p_which, Control *c) {
 			col3.set_ok_hsl(h, s, 0);
 			points.resize(6);
 			colors.resize(6);
-			points.set(0, Vector2(c->get_size().x, 0));
-			points.set(1, Vector2(c->get_size().x, c->get_size().y * 0.5));
+			points.set(0, Hector2(c->get_size().x, 0));
+			points.set(1, Hector2(c->get_size().x, c->get_size().y * 0.5));
 			points.set(2, c->get_size());
-			points.set(3, Vector2(0, c->get_size().y));
-			points.set(4, Vector2(0, c->get_size().y * 0.5));
-			points.set(5, Vector2());
+			points.set(3, Hector2(0, c->get_size().y));
+			points.set(4, Hector2(0, c->get_size().y * 0.5));
+			points.set(5, Hector2());
 			colors.set(0, col);
 			colors.set(1, col2);
 			colors.set(2, col3);
@@ -1276,16 +1276,16 @@ void ColorPicker::_hsv_draw(int p_which, Control *c) {
 			col.set_ok_hsl(h, 1, v);
 			c->draw_line(Point2(0, y), Point2(c->get_size().x, y), col.inverted());
 		} else if (actual_shape == SHAPE_VHS_CIRCLE) {
-			Vector<Point2> points;
-			Vector<Color> colors;
+			Hector<Point2> points;
+			Hector<Color> colors;
 			Color col;
 			col.set_hsv(h, s, 1);
 			points.resize(4);
 			colors.resize(4);
-			points.set(0, Vector2());
-			points.set(1, Vector2(c->get_size().x, 0));
+			points.set(0, Hector2());
+			points.set(1, Hector2(c->get_size().x, 0));
 			points.set(2, c->get_size());
-			points.set(3, Vector2(0, c->get_size().y));
+			points.set(3, Hector2(0, c->get_size().y));
 			colors.set(0, col);
 			colors.set(1, col);
 			colors.set(2, Color(0, 0, 0));
@@ -1315,7 +1315,7 @@ void ColorPicker::_uv_input(const Ref<InputEvent> &p_event, Control *c) {
 
 	if (bev.is_valid()) {
 		if (bev->is_pressed() && bev->get_button_index() == MouseButton::LEFT) {
-			Vector2 center = c->get_size() / 2.0;
+			Hector2 center = c->get_size() / 2.0;
 			if (actual_shape == SHAPE_VHS_CIRCLE || actual_shape == SHAPE_OKHSL_CIRCLE) {
 				real_t dist = center.distance_to(bev->get_position());
 				if (dist <= center.x) {
@@ -1383,7 +1383,7 @@ void ColorPicker::_uv_input(const Ref<InputEvent> &p_event, Control *c) {
 			return;
 		}
 
-		Vector2 center = c->get_size() / 2.0;
+		Hector2 center = c->get_size() / 2.0;
 		if (actual_shape == SHAPE_VHS_CIRCLE || actual_shape == SHAPE_OKHSL_CIRCLE) {
 			real_t dist = center.distance_to(mev->get_position());
 			real_t rad = center.angle_to_point(mev->get_position());
@@ -1532,7 +1532,7 @@ void ColorPicker::_pick_button_pressed() {
 
 	if (!picker_window) {
 		picker_window = memnew(Popup);
-		picker_window->set_size(Vector2i(1, 1));
+		picker_window->set_size(Hector2i(1, 1));
 		picker_window->connect(SceneStringName(visibility_changed), callable_mp(this, &ColorPicker::_pick_finished));
 		add_child(picker_window, false, INTERNAL_MODE_FRONT);
 	}
@@ -1599,7 +1599,7 @@ void ColorPicker::_pick_button_pressed_legacy() {
 		DisplayServer *ds = DisplayServer::get_singleton();
 
 		// Add the Texture of each Window to the Image.
-		Vector<DisplayServer::WindowID> wl = ds->get_window_list();
+		Hector<DisplayServer::WindowID> wl = ds->get_window_list();
 		// FIXME: sort windows by visibility.
 		for (int index = 0; index < wl.size(); index++) {
 			DisplayServer::WindowID wid = wl[index];
@@ -1645,7 +1645,7 @@ void ColorPicker::_picker_texture_input(const Ref<InputEvent> &p_event) {
 	if (mev.is_valid()) {
 		Ref<Image> img = picker_texture_rect->get_texture()->get_image();
 		if (img.is_valid() && !img->is_empty()) {
-			Vector2 ofs = mev->get_position();
+			Hector2 ofs = mev->get_position();
 			picker_color = img->get_pixel(ofs.x, ofs.y);
 			picker_preview_style_box->set_bg_color(picker_color);
 			picker_preview_label->set_self_modulate(picker_color.get_luminance() < 0.5 ? Color(1.0f, 1.0f, 1.0f) : Color(0.0f, 0.0f, 0.0f));
@@ -2101,7 +2101,7 @@ void ColorPickerButton::pressed() {
 
 	float h_offset = (get_size().x - minsize.x) / 2;
 	float v_offset = show_above ? -minsize.y : get_size().y;
-	popup->set_position(get_screen_position() + Vector2(h_offset, v_offset));
+	popup->set_position(get_screen_position() + Hector2(h_offset, v_offset));
 	popup->popup();
 	picker->set_focus_on_line_edit();
 }
@@ -2263,7 +2263,7 @@ void ColorPresetButton::_notification(int p_what) {
 			}
 			if (preset_color.r > 1 || preset_color.g > 1 || preset_color.b > 1) {
 				// Draw an indicator to denote that the color is "overbright" and can't be displayed accurately in the preview
-				draw_texture(theme_cache.overbright_indicator, Vector2(0, 0));
+				draw_texture(theme_cache.overbright_indicator, Hector2(0, 0));
 			}
 
 		} break;

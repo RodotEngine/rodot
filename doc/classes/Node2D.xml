@@ -13,14 +13,14 @@
 	<methods>
 		<method name="apply_scale">
 			<return type="void" />
-			<param index="0" name="ratio" type="Vector2" />
+			<param index="0" name="ratio" type="Hector2" />
 			<description>
-				Multiplies the current scale by the [param ratio] vector.
+				Multiplies the current scale by the [param ratio] Hector.
 			</description>
 		</method>
 		<method name="get_angle_to" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="point" type="Vector2" />
+			<param index="0" name="point" type="Hector2" />
 			<description>
 				Returns the angle between the node and the [param point] in radians.
 				[url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/node2d_get_angle_to.png]Illustration of the returned angle.[/url]
@@ -35,14 +35,14 @@
 		</method>
 		<method name="global_translate">
 			<return type="void" />
-			<param index="0" name="offset" type="Vector2" />
+			<param index="0" name="offset" type="Hector2" />
 			<description>
-				Adds the [param offset] vector to the node's global position.
+				Adds the [param offset] Hector to the node's global position.
 			</description>
 		</method>
 		<method name="look_at">
 			<return type="void" />
-			<param index="0" name="point" type="Vector2" />
+			<param index="0" name="point" type="Hector2" />
 			<description>
 				Rotates the node so that its local +X axis points towards the [param point], which is expected to use global coordinates.
 				[param point] should not be the same as the node's position, otherwise the node always looks to the right.
@@ -72,29 +72,29 @@
 			</description>
 		</method>
 		<method name="to_global" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="local_point" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="local_point" type="Hector2" />
 			<description>
 				Transforms the provided local position into a position in global coordinate space. The input is expected to be local relative to the [Node2D] it is called on. e.g. Applying this method to the positions of child nodes will correctly transform their positions into the global coordinate space, but applying it to a node's own position will give an incorrect result, as it will incorporate the node's own transformation into its global position.
 			</description>
 		</method>
 		<method name="to_local" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="global_point" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="global_point" type="Hector2" />
 			<description>
 				Transforms the provided global position into a position in local coordinate space. The output will be local relative to the [Node2D] it is called on. e.g. It is appropriate for determining the positions of child nodes, but it is not appropriate for determining its own position relative to its parent.
 			</description>
 		</method>
 		<method name="translate">
 			<return type="void" />
-			<param index="0" name="offset" type="Vector2" />
+			<param index="0" name="offset" type="Hector2" />
 			<description>
 				Translates the node by the given [param offset] in local coordinates.
 			</description>
 		</method>
 	</methods>
 	<members>
-		<member name="global_position" type="Vector2" setter="set_global_position" getter="get_global_position">
+		<member name="global_position" type="Hector2" setter="set_global_position" getter="get_global_position">
 			Global position. See also [member position].
 		</member>
 		<member name="global_rotation" type="float" setter="set_global_rotation" getter="get_global_rotation">
@@ -103,7 +103,7 @@
 		<member name="global_rotation_degrees" type="float" setter="set_global_rotation_degrees" getter="get_global_rotation_degrees">
 			Helper property to access [member global_rotation] in degrees instead of radians. See also [member rotation_degrees].
 		</member>
-		<member name="global_scale" type="Vector2" setter="set_global_scale" getter="get_global_scale">
+		<member name="global_scale" type="Hector2" setter="set_global_scale" getter="get_global_scale">
 			Global scale. See also [member scale].
 		</member>
 		<member name="global_skew" type="float" setter="set_global_skew" getter="get_global_skew">
@@ -112,7 +112,7 @@
 		<member name="global_transform" type="Transform2D" setter="set_global_transform" getter="get_global_transform">
 			Global [Transform2D]. See also [member transform].
 		</member>
-		<member name="position" type="Vector2" setter="set_position" getter="get_position" default="Vector2(0, 0)">
+		<member name="position" type="Hector2" setter="set_position" getter="get_position" default="Hector2(0, 0)">
 			Position, relative to the node's parent. See also [member global_position].
 		</member>
 		<member name="rotation" type="float" setter="set_rotation" getter="get_rotation" default="0.0">
@@ -122,7 +122,7 @@
 		<member name="rotation_degrees" type="float" setter="set_rotation_degrees" getter="get_rotation_degrees">
 			Helper property to access [member rotation] in degrees instead of radians. See also [member global_rotation_degrees].
 		</member>
-		<member name="scale" type="Vector2" setter="set_scale" getter="get_scale" default="Vector2(1, 1)">
+		<member name="scale" type="Hector2" setter="set_scale" getter="get_scale" default="Hector2(1, 1)">
 			The node's scale, relative to the node's parent. Unscaled value: [code](1, 1)[/code]. See also [member global_scale].
 			[b]Note:[/b] Negative X scales in 2D are not decomposable from the transformation matrix. Due to the way scale is represented with transformation matrices in Godot, negative scales on the X axis will be changed to negative scales on the Y axis and a rotation of 180 degrees when decomposed.
 		</member>

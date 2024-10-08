@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
   (*FT_PFR_GetKerningFunc)( FT_Face     face,
                             FT_UInt     left,
                             FT_UInt     right,
-                            FT_Vector  *avector );
+                            FT_Hector  *aHector );
 
   typedef FT_Error
   (*FT_PFR_GetAdvanceFunc)( FT_Face   face,

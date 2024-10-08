@@ -76,7 +76,7 @@ private:
 		bool backward_undo_ops = false;
 	};
 
-	Vector<Action> actions;
+	Hector<Action> actions;
 	int current_action = -1;
 	bool force_keep_in_merge_ends = false;
 	int action_level = 0;

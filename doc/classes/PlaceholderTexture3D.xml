@@ -12,7 +12,7 @@
 	<tutorials>
 	</tutorials>
 	<members>
-		<member name="size" type="Vector3i" setter="set_size" getter="get_size" default="Vector3i(1, 1, 1)">
+		<member name="size" type="Hector3i" setter="set_size" getter="get_size" default="Hector3i(1, 1, 1)">
 			The texture's size (in pixels).
 		</member>
 	</members>

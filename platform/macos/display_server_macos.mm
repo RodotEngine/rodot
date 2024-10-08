@@ -908,7 +908,7 @@ void DisplayServerMacOS::emit_system_theme_changed() {
 	}
 }
 
-Error DisplayServerMacOS::dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) {
+Error DisplayServerMacOS::dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback) {
 	_THREAD_SAFE_METHOD_
 
 	NSAlert *window = [[NSAlert alloc] init];
@@ -949,15 +949,15 @@ Error DisplayServerMacOS::dialog_show(String p_title, String p_description, Vect
 	return OK;
 }
 
-Error DisplayServerMacOS::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) {
+Error DisplayServerMacOS::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) {
 	return _file_dialog_with_options_show(p_title, p_current_directory, String(), p_filename, p_show_hidden, p_mode, p_filters, TypedArray<Dictionary>(), p_callback, false);
 }
 
-Error DisplayServerMacOS::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
+Error DisplayServerMacOS::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
 	return _file_dialog_with_options_show(p_title, p_current_directory, p_root, p_filename, p_show_hidden, p_mode, p_filters, p_options, p_callback, true);
 }
 
-Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
+Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_INDEX_V(int(p_mode), FILE_DIALOG_MODE_SAVE_MAX, FAILED);
@@ -1011,7 +1011,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 								  }
 							  }
 							  // Callback.
-							  Vector<String> files;
+							  Hector<String> files;
 							  String url;
 							  url.parse_utf8([[[panel URL] path] UTF8String]);
 							  files.push_back(url);
@@ -1047,7 +1047,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 							  if (callback.is_valid()) {
 								  if (p_options_in_cb) {
 									  Variant v_result = false;
-									  Variant v_files = Vector<String>();
+									  Variant v_files = Hector<String>();
 									  Variant v_index = [panel_delegate getIndex];
 									  Variant v_opt = [panel_delegate getSelection];
 									  Variant ret;
@@ -1060,7 +1060,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 									  }
 								  } else {
 									  Variant v_result = false;
-									  Variant v_files = Vector<String>();
+									  Variant v_files = Hector<String>();
 									  Variant v_index = [panel_delegate getIndex];
 									  Variant ret;
 									  Callable::CallError ce;
@@ -1125,7 +1125,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 								  [[NSUserDefaults standardUserDefaults] setObject:new_bookmarks forKey:@"sec_bookmarks"];
 							  }
 							  // Callback.
-							  Vector<String> files;
+							  Hector<String> files;
 							  for (NSUInteger i = 0; i != [urls count]; ++i) {
 								  String url;
 								  url.parse_utf8([[[urls objectAtIndex:i] path] UTF8String]);
@@ -1163,7 +1163,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 							  if (callback.is_valid()) {
 								  if (p_options_in_cb) {
 									  Variant v_result = false;
-									  Variant v_files = Vector<String>();
+									  Variant v_files = Hector<String>();
 									  Variant v_index = [panel_delegate getIndex];
 									  Variant v_opt = [panel_delegate getSelection];
 									  Variant ret;
@@ -1176,7 +1176,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 									  }
 								  } else {
 									  Variant v_result = false;
-									  Variant v_files = Vector<String>();
+									  Variant v_files = Hector<String>();
 									  Variant v_index = [panel_delegate getIndex];
 									  Variant ret;
 									  Callable::CallError ce;
@@ -1403,14 +1403,14 @@ Point2i DisplayServerMacOS::mouse_get_position() const {
 	for (NSScreen *screen in [NSScreen screens]) {
 		NSRect frame = [screen frame];
 		if (NSMouseInRect(mouse_pos, frame, NO)) {
-			Vector2i pos = Vector2i((int)mouse_pos.x, (int)mouse_pos.y);
+			Hector2i pos = Hector2i((int)mouse_pos.x, (int)mouse_pos.y);
 			pos *= scale;
 			pos -= _get_screens_origin();
 			pos.y *= -1;
 			return pos;
 		}
 	}
-	return Vector2i();
+	return Hector2i();
 }
 
 BitField<MouseButtonMask> DisplayServerMacOS::mouse_get_button_state() const {
@@ -1663,7 +1663,7 @@ Ref<Image> DisplayServerMacOS::screen_get_image(int p_screen) const {
 				NSUInteger width = CGImageGetWidth(image);
 				NSUInteger height = CGImageGetHeight(image);
 
-				Vector<uint8_t> img_data;
+				Hector<uint8_t> img_data;
 				img_data.resize(height * width * 4);
 				CGContextRef context = CGBitmapContextCreate(img_data.ptrw(), width, height, 8, 4 * width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 				if (context) {
@@ -1712,10 +1712,10 @@ void DisplayServerMacOS::screen_set_keep_on(bool p_enable) {
 	}
 }
 
-Vector<DisplayServer::WindowID> DisplayServerMacOS::get_window_list() const {
+Hector<DisplayServer::WindowID> DisplayServerMacOS::get_window_list() const {
 	_THREAD_SAFE_METHOD_
 
-	Vector<int> ret;
+	Hector<int> ret;
 	for (const KeyValue<WindowID, WindowData> &E : windows) {
 		ret.push_back(E.key);
 	}
@@ -1858,7 +1858,7 @@ Size2i DisplayServerMacOS::window_get_title_size(const String &p_title, WindowID
 	return size * scale;
 }
 
-void DisplayServerMacOS::window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window) {
+void DisplayServerMacOS::window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND(!windows.has(p_window));
@@ -2341,7 +2341,7 @@ bool DisplayServerMacOS::window_minimize_on_title_dbl_click() const {
 	return false;
 }
 
-void DisplayServerMacOS::window_set_window_buttons_offset(const Vector2i &p_offset, WindowID p_window) {
+void DisplayServerMacOS::window_set_window_buttons_offset(const Hector2i &p_offset, WindowID p_window) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND(!windows.has(p_window));
@@ -2354,14 +2354,14 @@ void DisplayServerMacOS::window_set_window_buttons_offset(const Vector2i &p_offs
 	}
 }
 
-Vector3i DisplayServerMacOS::window_get_safe_title_margins(WindowID p_window) const {
+Hector3i DisplayServerMacOS::window_get_safe_title_margins(WindowID p_window) const {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_COND_V(!windows.has(p_window), Vector3i());
+	ERR_FAIL_COND_V(!windows.has(p_window), Hector3i());
 	const WindowData &wd = windows[p_window];
 
 	if (!wd.window_button_view) {
-		return Vector3i();
+		return Hector3i();
 	}
 
 	float scale = screen_get_max_scale();
@@ -2369,9 +2369,9 @@ Vector3i DisplayServerMacOS::window_get_safe_title_margins(WindowID p_window) co
 	float max_y = [wd.window_button_view getOffset].y + [wd.window_button_view frame].size.height;
 
 	if ([wd.window_object windowTitlebarLayoutDirection] == NSUserInterfaceLayoutDirectionRightToLeft) {
-		return Vector3i(0, max_x * scale, max_y * scale);
+		return Hector3i(0, max_x * scale, max_y * scale);
 	} else {
-		return Vector3i(max_x * scale, 0, max_y * scale);
+		return Hector3i(max_x * scale, 0, max_y * scale);
 	}
 }
 
@@ -2837,13 +2837,13 @@ DisplayServerMacOS::CursorShape DisplayServerMacOS::cursor_get_shape() const {
 	return cursor_shape;
 }
 
-void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
 
 	if (p_cursor.is_valid()) {
-		HashMap<CursorShape, Vector<Variant>>::Iterator cursor_c = cursors_cache.find(p_shape);
+		HashMap<CursorShape, Hector<Variant>>::Iterator cursor_c = cursors_cache.find(p_shape);
 
 		if (cursor_c) {
 			if (cursor_c->value[0] == p_cursor && cursor_c->value[1] == p_hotspot) {
@@ -2855,7 +2855,7 @@ void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, 
 
 		Ref<Image> image = _get_cursor_image_from_resource(p_cursor, p_hotspot);
 		ERR_FAIL_COND(image.is_null());
-		Vector2i texture_size = image->get_size();
+		Hector2i texture_size = image->get_size();
 
 		NSBitmapImageRep *imgrep = [[NSBitmapImageRep alloc]
 				initWithBitmapDataPlanes:nullptr
@@ -2894,7 +2894,7 @@ void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, 
 
 		cursors[p_shape] = cursor;
 
-		Vector<Variant> params;
+		Hector<Variant> params;
 		params.push_back(p_cursor);
 		params.push_back(p_hotspot);
 		cursors_cache.insert(p_shape, params);
@@ -3107,7 +3107,7 @@ void DisplayServerMacOS::set_native_icon(const String &p_filename) {
 	Ref<FileAccess> f = FileAccess::open(p_filename, FileAccess::READ);
 	ERR_FAIL_COND(f.is_null());
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	uint64_t len = f->get_length();
 	ERR_FAIL_COND_MSG(len < 8, "Error reading icon data."); // "icns" + 32-bit length
 
@@ -3286,7 +3286,7 @@ bool DisplayServerMacOS::is_window_transparency_available() const {
 	return OS::get_singleton()->is_layered_allowed();
 }
 
-DisplayServer *DisplayServerMacOS::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServer *DisplayServerMacOS::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerMacOS(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, p_context, r_error));
 	if (r_error != OK) {
 		if (p_rendering_driver == "vulkan") {
@@ -3313,8 +3313,8 @@ DisplayServer *DisplayServerMacOS::create_func(const String &p_rendering_driver,
 	return ds;
 }
 
-Vector<String> DisplayServerMacOS::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerMacOS::get_rendering_drivers_func() {
+	Hector<String> drivers;
 
 #if defined(VULKAN_ENABLED)
 	drivers.push_back("vulkan");
@@ -3481,7 +3481,7 @@ bool DisplayServerMacOS::mouse_process_popups(bool p_close) {
 	return closed;
 }
 
-DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	KeyMappingMacOS::initialize();
 
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);

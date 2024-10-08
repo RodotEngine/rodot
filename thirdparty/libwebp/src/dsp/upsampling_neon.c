@@ -51,8 +51,8 @@
   const uint8x8_t D = vrhadd_u8(d, diag1);                              \
                                                                         \
   uint8x8x2_t A_B, C_D;                                                 \
-  INIT_VECTOR2(A_B, A, B);                                              \
-  INIT_VECTOR2(C_D, C, D);                                              \
+  INIT_Hector2(A_B, A, B);                                              \
+  INIT_Hector2(C_D, C, D);                                              \
   vst2_u8(out +  0, A_B);                                               \
   vst2_u8(out + 32, C_D);                                               \
 } while (0)
@@ -83,31 +83,31 @@ static const int16_t kCoeffs1[4] = { 19077, 26149, 6419, 13320 };
 
 #define STORE_Rgb(out, r, g, b) do {                                    \
   uint8x8x3_t r_g_b;                                                    \
-  INIT_VECTOR3(r_g_b, r, g, b);                                         \
+  INIT_Hector3(r_g_b, r, g, b);                                         \
   vst3_u8(out, r_g_b);                                                  \
 } while (0)
 
 #define STORE_Bgr(out, r, g, b) do {                                    \
   uint8x8x3_t b_g_r;                                                    \
-  INIT_VECTOR3(b_g_r, b, g, r);                                         \
+  INIT_Hector3(b_g_r, b, g, r);                                         \
   vst3_u8(out, b_g_r);                                                  \
 } while (0)
 
 #define STORE_Rgba(out, r, g, b) do {                                   \
   uint8x8x4_t r_g_b_v255;                                               \
-  INIT_VECTOR4(r_g_b_v255, r, g, b, v255);                              \
+  INIT_Hector4(r_g_b_v255, r, g, b, v255);                              \
   vst4_u8(out, r_g_b_v255);                                             \
 } while (0)
 
 #define STORE_Bgra(out, r, g, b) do {                                   \
   uint8x8x4_t b_g_r_v255;                                               \
-  INIT_VECTOR4(b_g_r_v255, b, g, r, v255);                              \
+  INIT_Hector4(b_g_r_v255, b, g, r, v255);                              \
   vst4_u8(out, b_g_r_v255);                                             \
 } while (0)
 
 #define STORE_Argb(out, r, g, b) do {                                   \
   uint8x8x4_t v255_r_g_b;                                               \
-  INIT_VECTOR4(v255_r_g_b, v255, r, g, b);                              \
+  INIT_Hector4(v255_r_g_b, v255, r, g, b);                              \
   vst4_u8(out, v255_r_g_b);                                             \
 } while (0)
 

@@ -42,7 +42,7 @@
 #include "scene/resources/immediate_mesh.h"
 
 class EditorInspectorPluginSkeleton;
-class EditorPropertyVector3;
+class EditorPropertyHector3;
 class Joint;
 class PhysicalBone3D;
 class Skeleton3DEditorPlugin;
@@ -57,9 +57,9 @@ class BonePropertiesEditor : public VBoxContainer {
 	EditorInspectorSection *section = nullptr;
 
 	EditorPropertyCheck *enabled_checkbox = nullptr;
-	EditorPropertyVector3 *position_property = nullptr;
+	EditorPropertyHector3 *position_property = nullptr;
 	EditorPropertyQuaternion *rotation_property = nullptr;
-	EditorPropertyVector3 *scale_property = nullptr;
+	EditorPropertyHector3 *scale_property = nullptr;
 
 	EditorInspectorSection *rest_section = nullptr;
 	EditorPropertyTransform3D *rest_matrix = nullptr;
@@ -177,7 +177,7 @@ class Skeleton3DEditor : public VBoxContainer {
 	void insert_keys(const bool p_all_bones);
 
 	void create_physical_skeleton();
-	PhysicalBone3D *create_physical_bone(int bone_id, int bone_child_id, const Vector<BoneInfo> &bones_infos);
+	PhysicalBone3D *create_physical_bone(int bone_id, int bone_child_id, const Hector<BoneInfo> &bones_infos);
 
 	void export_skeleton_profile();
 
@@ -194,9 +194,9 @@ class Skeleton3DEditor : public VBoxContainer {
 	Ref<ShaderMaterial> handle_material;
 	Ref<Shader> handle_shader;
 
-	Vector3 bone_original_position;
+	Hector3 bone_original_position;
 	Quaternion bone_original_rotation;
-	Vector3 bone_original_scale;
+	Hector3 bone_original_scale;
 
 	void _update_gizmo_visible();
 	void _bone_enabled_changed(const int p_bone_id);
@@ -207,7 +207,7 @@ class Skeleton3DEditor : public VBoxContainer {
 	void _draw_handles();
 
 	void _joint_tree_selection_changed();
-	void _joint_tree_rmb_select(const Vector2 &p_pos, MouseButton p_button);
+	void _joint_tree_rmb_select(const Hector2 &p_pos, MouseButton p_button);
 	void _joint_tree_button_clicked(Object *p_item, int p_column, int p_id, MouseButton p_button);
 	void _update_properties();
 
@@ -233,9 +233,9 @@ public:
 	bool is_edit_mode() const { return edit_mode; }
 
 	void update_bone_original();
-	Vector3 get_bone_original_position() const { return bone_original_position; };
+	Hector3 get_bone_original_position() const { return bone_original_position; };
 	Quaternion get_bone_original_rotation() const { return bone_original_rotation; };
-	Vector3 get_bone_original_scale() const { return bone_original_scale; };
+	Hector3 get_bone_original_scale() const { return bone_original_scale; };
 
 	Skeleton3DEditor(EditorInspectorPluginSkeleton *e_plugin, Skeleton3D *skeleton);
 	~Skeleton3DEditor();
@@ -285,10 +285,10 @@ public:
 	String get_gizmo_name() const override;
 	int get_priority() const override;
 
-	int subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Vector2 &p_point) const override;
+	int subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Hector2 &p_point) const override;
 	Transform3D get_subgizmo_transform(const EditorNode3DGizmo *p_gizmo, int p_id) const override;
 	void set_subgizmo_transform(const EditorNode3DGizmo *p_gizmo, int p_id, Transform3D p_transform) override;
-	void commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel) override;
+	void commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel) override;
 
 	void redraw(EditorNode3DGizmo *p_gizmo) override;
 

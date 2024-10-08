@@ -1572,7 +1572,7 @@ TEST_CASE("[SceneTree][Viewport] Physics Picking 2D") {
 	SEND_GUI_MOUSE_MOTION_EVENT(on_background, MouseButtonMask::NONE, Key::NONE);
 	tree->physics_process(1);
 
-	Vector<PickingCollider> v;
+	Hector<PickingCollider> v;
 	for (int i = 0; i < 4; i++) {
 		PickingCollider pc;
 		pc.a = memnew(TestArea2D);

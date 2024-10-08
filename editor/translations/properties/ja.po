@@ -958,10 +958,10 @@ msgstr "折りたたみを無効化"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "外部シーンの自動展開"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "水平ベクトル2編集"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "水平ベクトルタイプ編集"
 
 msgid "Open Resources in Current Inspector"
@@ -1072,7 +1072,7 @@ msgstr "外部のプログラム"
 msgid "Raster Image Editor"
 msgstr "ラスター画像エディター"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "ベクター画像エディター"
 
 msgid "Audio Editor"
@@ -1768,14 +1768,14 @@ msgstr "コネクションの色"
 msgid "Scalar Color"
 msgstr "スカラー型の色"
 
-msgid "Vector2 Color"
-msgstr "Vector2型の色"
+msgid "Hector2 Color"
+msgstr "Hector2型の色"
 
-msgid "Vector 3 Color"
-msgstr "Vector3型の色"
+msgid "Hector 3 Color"
+msgstr "Hector3型の色"
 
-msgid "Vector 4 Color"
-msgstr "Vector4型の色"
+msgid "Hector 4 Color"
+msgstr "Hector4型の色"
 
 msgid "Boolean Color"
 msgstr "Boolean型の色"
@@ -1807,8 +1807,8 @@ msgstr "Texture系の色"
 msgid "Utility Color"
 msgstr "Utility系の色"
 
-msgid "Vector Color"
-msgstr "Vector系の色"
+msgid "Hector Color"
+msgstr "Hector系の色"
 
 msgid "Special Color"
 msgstr "Spacial系の色"

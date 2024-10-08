@@ -440,7 +440,7 @@ void DynamicFontImportSettingsDialog::_add_glyph_range_item(int32_t p_start, int
 		item->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
 		item->set_text(0, _pad_zeros(String::num_int64(start, 16)) + " - " + _pad_zeros(String::num_int64(start + page_size, 16)));
 		item->set_text(1, p_name);
-		item->set_metadata(0, Vector2i(start, start + page_size));
+		item->set_metadata(0, Hector2i(start, start + page_size));
 		start += page_size;
 	}
 	if (remain > 0) {
@@ -449,7 +449,7 @@ void DynamicFontImportSettingsDialog::_add_glyph_range_item(int32_t p_start, int
 		item->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
 		item->set_text(0, _pad_zeros(String::num_int64(start, 16)) + " - " + _pad_zeros(String::num_int64(p_end, 16)));
 		item->set_text(1, p_name);
-		item->set_metadata(0, Vector2i(start, p_end));
+		item->set_metadata(0, Hector2i(start, p_end));
 	}
 }
 
@@ -748,7 +748,7 @@ void DynamicFontImportSettingsDialog::_glyph_selected() {
 
 	item = glyph_tree->get_selected();
 	ERR_FAIL_NULL(item);
-	Vector2i range = item->get_metadata(0);
+	Hector2i range = item->get_metadata(0);
 
 	int total_chars = range.y - range.x;
 	int selected_count = 0;
@@ -774,14 +774,14 @@ void DynamicFontImportSettingsDialog::_glyph_selected() {
 void DynamicFontImportSettingsDialog::_range_edited() {
 	TreeItem *item = glyph_tree->get_selected();
 	ERR_FAIL_NULL(item);
-	Vector2i range = item->get_metadata(0);
+	Hector2i range = item->get_metadata(0);
 	_range_update(range.x, range.y);
 }
 
 void DynamicFontImportSettingsDialog::_range_selected() {
 	TreeItem *item = glyph_tree->get_selected();
 	if (item) {
-		Vector2i range = item->get_metadata(0);
+		Hector2i range = item->get_metadata(0);
 		_edit_range(range.x, range.y);
 	}
 }
@@ -961,7 +961,7 @@ void DynamicFontImportSettingsDialog::_re_import() {
 		Dictionary preload_config;
 		preload_config["name"] = vars_item->get_text(0);
 
-		Size2i conf_size = Vector2i(16, 0);
+		Size2i conf_size = Hector2i(16, 0);
 		for (const KeyValue<StringName, Variant> &E : import_variation_data->settings) {
 			if (E.key == "size") {
 				conf_size.x = E.value;
@@ -1027,7 +1027,7 @@ void DynamicFontImportSettingsDialog::_process_locales() {
 				String locale = item->get_text(0);
 				Ref<Translation> tr = ResourceLoader::load(locale);
 				if (tr.is_valid()) {
-					Vector<String> messages = tr->get_translated_message_list();
+					Hector<String> messages = tr->get_translated_message_list();
 					for (const String &E : messages) {
 						RID text_rid = TS->create_shaped_text();
 						if (text_rid.is_valid()) {
@@ -1055,14 +1055,14 @@ void DynamicFontImportSettingsDialog::_process_locales() {
 
 void DynamicFontImportSettingsDialog::open_settings(const String &p_path) {
 	// Load base font data.
-	Vector<uint8_t> font_data = FileAccess::get_file_as_bytes(p_path);
+	Hector<uint8_t> font_data = FileAccess::get_file_as_bytes(p_path);
 
 	// Load project locale list.
 	locale_tree->clear();
 	locale_root = locale_tree->create_item();
 	ERR_FAIL_NULL(locale_root);
 
-	Vector<String> translations = GLOBAL_GET("internationalization/locale/translations");
+	Hector<String> translations = GLOBAL_GET("internationalization/locale/translations");
 	for (const String &E : translations) {
 		TreeItem *item = locale_tree->create_item(locale_root);
 		ERR_FAIL_NULL(item);
@@ -1156,7 +1156,7 @@ void DynamicFontImportSettingsDialog::open_settings(const String &p_path) {
 					double embolden = preload_config.has("variation_embolden") ? preload_config["variation_embolden"].operator double() : 0;
 					int face_index = preload_config.has("variation_face_index") ? preload_config["variation_face_index"].operator int() : 0;
 					Transform2D transform = preload_config.has("variation_transform") ? preload_config["variation_transform"].operator Transform2D() : Transform2D();
-					Vector2i font_size = preload_config.has("size") ? preload_config["size"].operator Vector2i() : Vector2i(16, 0);
+					Hector2i font_size = preload_config.has("size") ? preload_config["size"].operator Hector2i() : Hector2i(16, 0);
 					String cfg_name = preload_config.has("name") ? preload_config["name"].operator String() : vformat("Configuration %d", i);
 
 					TreeItem *vars_item = vars_list->create_item(vars_list_root);

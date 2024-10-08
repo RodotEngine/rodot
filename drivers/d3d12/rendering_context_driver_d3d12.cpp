@@ -33,7 +33,7 @@
 #include "core/config/engine.h"
 #include "core/config/project_settings.h"
 #include "core/string/ustring.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/version.h"
 #include "servers/rendering/rendering_device.h"
 
@@ -159,7 +159,7 @@ Error RenderingContextDriverD3D12::_initialize_devices() {
 	ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
 
 	// Enumerate all possible adapters.
-	LocalVector<IDXGIAdapter1 *> adapters;
+	LocalHector<IDXGIAdapter1 *> adapters;
 	IDXGIAdapter1 *adapter = nullptr;
 	do {
 		adapter = create_adapter(adapters.size());

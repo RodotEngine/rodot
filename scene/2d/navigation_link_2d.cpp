@@ -74,8 +74,8 @@ void NavigationLink2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "bidirectional"), "set_bidirectional", "is_bidirectional");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "navigation_layers", PROPERTY_HINT_LAYERS_2D_NAVIGATION), "set_navigation_layers", "get_navigation_layers");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "start_position"), "set_start_position", "get_start_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "end_position"), "set_end_position", "get_end_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "start_position"), "set_start_position", "get_start_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "end_position"), "set_end_position", "get_end_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "enter_cost"), "set_enter_cost", "get_enter_cost");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "travel_cost"), "set_travel_cost", "get_travel_cost");
 }
@@ -149,7 +149,7 @@ Rect2 NavigationLink2D::_edit_get_rect() const {
 bool NavigationLink2D::_edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const {
 	Point2 segment[2] = { get_start_position(), get_end_position() };
 
-	Vector2 closest_point = Geometry2D::get_closest_point_to_segment(p_point, segment);
+	Hector2 closest_point = Geometry2D::get_closest_point_to_segment(p_point, segment);
 	return p_point.distance_to(closest_point) < p_tolerance;
 }
 #endif // TOOLS_ENABLED
@@ -233,7 +233,7 @@ bool NavigationLink2D::get_navigation_layer_value(int p_layer_number) const {
 	return get_navigation_layers() & (1 << (p_layer_number - 1));
 }
 
-void NavigationLink2D::set_start_position(Vector2 p_position) {
+void NavigationLink2D::set_start_position(Hector2 p_position) {
 	if (start_position.is_equal_approx(p_position)) {
 		return;
 	}
@@ -253,7 +253,7 @@ void NavigationLink2D::set_start_position(Vector2 p_position) {
 #endif // DEBUG_ENABLED
 }
 
-void NavigationLink2D::set_end_position(Vector2 p_position) {
+void NavigationLink2D::set_end_position(Hector2 p_position) {
 	if (end_position.is_equal_approx(p_position)) {
 		return;
 	}
@@ -273,7 +273,7 @@ void NavigationLink2D::set_end_position(Vector2 p_position) {
 #endif // DEBUG_ENABLED
 }
 
-void NavigationLink2D::set_global_start_position(Vector2 p_position) {
+void NavigationLink2D::set_global_start_position(Hector2 p_position) {
 	if (is_inside_tree()) {
 		set_start_position(to_local(p_position));
 	} else {
@@ -281,7 +281,7 @@ void NavigationLink2D::set_global_start_position(Vector2 p_position) {
 	}
 }
 
-Vector2 NavigationLink2D::get_global_start_position() const {
+Hector2 NavigationLink2D::get_global_start_position() const {
 	if (is_inside_tree()) {
 		return to_global(start_position);
 	} else {
@@ -289,7 +289,7 @@ Vector2 NavigationLink2D::get_global_start_position() const {
 	}
 }
 
-void NavigationLink2D::set_global_end_position(Vector2 p_position) {
+void NavigationLink2D::set_global_end_position(Hector2 p_position) {
 	if (is_inside_tree()) {
 		set_end_position(to_local(p_position));
 	} else {
@@ -297,7 +297,7 @@ void NavigationLink2D::set_global_end_position(Vector2 p_position) {
 	}
 }
 
-Vector2 NavigationLink2D::get_global_end_position() const {
+Hector2 NavigationLink2D::get_global_end_position() const {
 	if (is_inside_tree()) {
 		return to_global(end_position);
 	} else {

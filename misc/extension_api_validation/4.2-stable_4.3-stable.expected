@@ -13,7 +13,7 @@ Added optional argument to get_navigation_polygon and get_occluder to specify a 
 
 GH-85393
 --------
-Validate extension JSON: Error: Field 'classes/PhysicsShapeQueryParameters3D/properties/motion': type changed value in new API, from "Vector2" to "Vector3".
+Validate extension JSON: Error: Field 'classes/PhysicsShapeQueryParameters3D/properties/motion': type changed value in new API, from "Hector2" to "Hector3".
 
 The type was registered wrongly, this was a bug.
 
@@ -364,9 +364,9 @@ Optional arguments added. Compatibility methods registered.
 
 GH-93982
 --------
-Validate extension JSON: Error: Field 'classes/Sprite3D/properties/frame_coords': type changed value in new API, from "Vector2" to "Vector2i".
+Validate extension JSON: Error: Field 'classes/Sprite3D/properties/frame_coords': type changed value in new API, from "Hector2" to "Hector2i".
 
-The type was wrong to begin with and has been corrected. Vector2 and Vector2i are convertible, so it should be compatible.
+The type was wrong to begin with and has been corrected. Hector2 and Hector2i are convertible, so it should be compatible.
 
 
 GH-94243

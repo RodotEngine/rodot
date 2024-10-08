@@ -3316,8 +3316,8 @@ msgstr "Funcție de transformare."
 msgid "Transform constant."
 msgstr "Transformare constantă."
 
-msgid "Vector function."
-msgstr "Funcție vectorială."
+msgid "Hector function."
+msgstr "Funcție Hectorială."
 
 msgctxt "Application"
 msgid "Project Manager"

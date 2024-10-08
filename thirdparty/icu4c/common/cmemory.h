@@ -326,7 +326,7 @@ inline T *LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity, int32_t le
  * destructors, consider:
  *
  * - LocalArray in localpointer.h if you know the length ahead of time
- * - MaybeStackVector if you know the length at runtime
+ * - MaybeStackHector if you know the length at runtime
  */
 template<typename T, int32_t stackCapacity>
 class MaybeStackArray {
@@ -828,27 +828,27 @@ protected:
 };
 
 /**
- * An internal Vector-like implementation based on MemoryPool.
+ * An internal Hector-like implementation based on MemoryPool.
  *
  * Heap-allocates each element and stores pointers.
  *
- * To append an item to the vector, use emplaceBack.
+ * To append an item to the Hector, use emplaceBack.
  *
- *     MaybeStackVector<MyType> vector;
- *     MyType* element = vector.emplaceBack();
+ *     MaybeStackHector<MyType> Hector;
+ *     MyType* element = Hector.emplaceBack();
  *     if (!element) {
  *         status = U_MEMORY_ALLOCATION_ERROR;
  *     }
  *     // do stuff with element
  *
- * To loop over the vector, use a for loop with indices:
+ * To loop over the Hector, use a for loop with indices:
  *
- *     for (int32_t i = 0; i < vector.length(); i++) {
- *         MyType* element = vector[i];
+ *     for (int32_t i = 0; i < Hector.length(); i++) {
+ *         MyType* element = Hector[i];
  *     }
  */
 template<typename T, int32_t stackCapacity = 8>
-class MaybeStackVector : protected MemoryPool<T, stackCapacity> {
+class MaybeStackHector : protected MemoryPool<T, stackCapacity> {
 public:
     template<typename... Args>
     T* emplaceBack(Args&&... args) {

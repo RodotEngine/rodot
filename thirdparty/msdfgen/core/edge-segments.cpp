@@ -8,8 +8,8 @@ namespace msdfgen {
 
 void EdgeSegment::distanceToPseudoDistance(SignedDistance &distance, Point2 origin, double param) const {
     if (param < 0) {
-        Vector2 dir = direction(0).normalize();
-        Vector2 aq = origin-point(0);
+        Hector2 dir = direction(0).normalize();
+        Hector2 aq = origin-point(0);
         double ts = dotProduct(aq, dir);
         if (ts < 0) {
             double pseudoDistance = crossProduct(aq, dir);
@@ -19,8 +19,8 @@ void EdgeSegment::distanceToPseudoDistance(SignedDistance &distance, Point2 orig
             }
         }
     } else if (param > 1) {
-        Vector2 dir = direction(1).normalize();
-        Vector2 bq = origin-point(1);
+        Hector2 dir = direction(1).normalize();
+        Hector2 bq = origin-point(1);
         double ts = dotProduct(bq, dir);
         if (ts > 0) {
             double pseudoDistance = crossProduct(bq, dir);
@@ -101,23 +101,23 @@ Point2 QuadraticSegment::point(double param) const {
 }
 
 Point2 CubicSegment::point(double param) const {
-    Vector2 p12 = mix(p[1], p[2], param);
+    Hector2 p12 = mix(p[1], p[2], param);
     return mix(mix(mix(p[0], p[1], param), p12, param), mix(p12, mix(p[2], p[3], param), param), param);
 }
 
-Vector2 LinearSegment::direction(double param) const {
+Hector2 LinearSegment::direction(double param) const {
     return p[1]-p[0];
 }
 
-Vector2 QuadraticSegment::direction(double param) const {
-    Vector2 tangent = mix(p[1]-p[0], p[2]-p[1], param);
+Hector2 QuadraticSegment::direction(double param) const {
+    Hector2 tangent = mix(p[1]-p[0], p[2]-p[1], param);
     if (!tangent)
         return p[2]-p[0];
     return tangent;
 }
 
-Vector2 CubicSegment::direction(double param) const {
-    Vector2 tangent = mix(mix(p[1]-p[0], p[2]-p[1], param), mix(p[2]-p[1], p[3]-p[2], param), param);
+Hector2 CubicSegment::direction(double param) const {
+    Hector2 tangent = mix(mix(p[1]-p[0], p[2]-p[1], param), mix(p[2]-p[1], p[3]-p[2], param), param);
     if (!tangent) {
         if (param == 0) return p[2]-p[0];
         if (param == 1) return p[3]-p[1];
@@ -125,15 +125,15 @@ Vector2 CubicSegment::direction(double param) const {
     return tangent;
 }
 
-Vector2 LinearSegment::directionChange(double param) const {
-    return Vector2();
+Hector2 LinearSegment::directionChange(double param) const {
+    return Hector2();
 }
 
-Vector2 QuadraticSegment::directionChange(double param) const {
+Hector2 QuadraticSegment::directionChange(double param) const {
     return (p[2]-p[1])-(p[1]-p[0]);
 }
 
-Vector2 CubicSegment::directionChange(double param) const {
+Hector2 CubicSegment::directionChange(double param) const {
     return mix((p[2]-p[1])-(p[1]-p[0]), (p[3]-p[2])-(p[2]-p[1]), param);
 }
 
@@ -142,8 +142,8 @@ double LinearSegment::length() const {
 }
 
 double QuadraticSegment::length() const {
-    Vector2 ab = p[1]-p[0];
-    Vector2 br = p[2]-p[1]-ab;
+    Hector2 ab = p[1]-p[0];
+    Hector2 br = p[2]-p[1]-ab;
     double abab = dotProduct(ab, ab);
     double abbr = dotProduct(ab, br);
     double brbr = dotProduct(br, br);
@@ -158,10 +158,10 @@ double QuadraticSegment::length() const {
 }
 
 SignedDistance LinearSegment::signedDistance(Point2 origin, double &param) const {
-    Vector2 aq = origin-p[0];
-    Vector2 ab = p[1]-p[0];
+    Hector2 aq = origin-p[0];
+    Hector2 ab = p[1]-p[0];
     param = dotProduct(aq, ab)/dotProduct(ab, ab);
-    Vector2 eq = p[param > .5]-origin;
+    Hector2 eq = p[param > .5]-origin;
     double endpointDistance = eq.length();
     if (param > 0 && param < 1) {
         double orthoDistance = dotProduct(ab.getOrthonormal(false), aq);
@@ -172,9 +172,9 @@ SignedDistance LinearSegment::signedDistance(Point2 origin, double &param) const
 }
 
 SignedDistance QuadraticSegment::signedDistance(Point2 origin, double &param) const {
-    Vector2 qa = p[0]-origin;
-    Vector2 ab = p[1]-p[0];
-    Vector2 br = p[2]-p[1]-ab;
+    Hector2 qa = p[0]-origin;
+    Hector2 ab = p[1]-p[0];
+    Hector2 br = p[2]-p[1]-ab;
     double a = dotProduct(br, br);
     double b = 3*dotProduct(ab, br);
     double c = 2*dotProduct(ab, ab)+dotProduct(qa, br);
@@ -182,7 +182,7 @@ SignedDistance QuadraticSegment::signedDistance(Point2 origin, double &param) co
     double t[3];
     int solutions = solveCubic(t, a, b, c, d);
 
-    Vector2 epDir = direction(0);
+    Hector2 epDir = direction(0);
     double minDistance = nonZeroSign(crossProduct(epDir, qa))*qa.length(); // distance from A
     param = -dotProduct(qa, epDir)/dotProduct(epDir, epDir);
     {
@@ -213,12 +213,12 @@ SignedDistance QuadraticSegment::signedDistance(Point2 origin, double &param) co
 }
 
 SignedDistance CubicSegment::signedDistance(Point2 origin, double &param) const {
-    Vector2 qa = p[0]-origin;
-    Vector2 ab = p[1]-p[0];
-    Vector2 br = p[2]-p[1]-ab;
-    Vector2 as = (p[3]-p[2])-(p[2]-p[1])-br;
+    Hector2 qa = p[0]-origin;
+    Hector2 ab = p[1]-p[0];
+    Hector2 br = p[2]-p[1]-ab;
+    Hector2 as = (p[3]-p[2])-(p[2]-p[1])-br;
 
-    Vector2 epDir = direction(0);
+    Hector2 epDir = direction(0);
     double minDistance = nonZeroSign(crossProduct(epDir, qa))*qa.length(); // distance from A
     param = -dotProduct(qa, epDir)/dotProduct(epDir, epDir);
     {
@@ -232,11 +232,11 @@ SignedDistance CubicSegment::signedDistance(Point2 origin, double &param) const 
     // Iterative minimum distance search
     for (int i = 0; i <= MSDFGEN_CUBIC_SEARCH_STARTS; ++i) {
         double t = (double) i/MSDFGEN_CUBIC_SEARCH_STARTS;
-        Vector2 qe = qa+3*t*ab+3*t*t*br+t*t*t*as;
+        Hector2 qe = qa+3*t*ab+3*t*t*br+t*t*t*as;
         for (int step = 0; step < MSDFGEN_CUBIC_SEARCH_STEPS; ++step) {
             // Improve t
-            Vector2 d1 = 3*ab+6*t*br+3*t*t*as;
-            Vector2 d2 = 6*br+6*t*as;
+            Hector2 d1 = 3*ab+6*t*br+3*t*t*as;
+            Hector2 d2 = 6*br+6*t*as;
             t -= dotProduct(qe, d1)/(dotProduct(d1, d1)+dotProduct(qe, d2));
             if (t <= 0 || t >= 1)
                 break;
@@ -278,8 +278,8 @@ int QuadraticSegment::scanlineIntersections(double x[3], int dy[3], double y) co
             nextDY = 1;
     }
     {
-        Vector2 ab = p[1]-p[0];
-        Vector2 br = p[2]-p[1]-ab;
+        Hector2 ab = p[1]-p[0];
+        Hector2 br = p[2]-p[1]-ab;
         double t[2];
         int solutions = solveQuadratic(t, br.y, 2*ab.y, p[0].y-y);
         // Sort solutions
@@ -332,9 +332,9 @@ int CubicSegment::scanlineIntersections(double x[3], int dy[3], double y) const 
             nextDY = 1;
     }
     {
-        Vector2 ab = p[1]-p[0];
-        Vector2 br = p[2]-p[1]-ab;
-        Vector2 as = (p[3]-p[2])-(p[2]-p[1])-br;
+        Hector2 ab = p[1]-p[0];
+        Hector2 br = p[2]-p[1]-ab;
+        Hector2 as = (p[3]-p[2])-(p[2]-p[1])-br;
         double t[3];
         int solutions = solveCubic(t, as.y, 3*br.y, 3*ab.y, p[0].y-y);
         // Sort solutions
@@ -398,7 +398,7 @@ void LinearSegment::bound(double &l, double &b, double &r, double &t) const {
 void QuadraticSegment::bound(double &l, double &b, double &r, double &t) const {
     pointBounds(p[0], l, b, r, t);
     pointBounds(p[2], l, b, r, t);
-    Vector2 bot = (p[1]-p[0])-(p[2]-p[1]);
+    Hector2 bot = (p[1]-p[0])-(p[2]-p[1]);
     if (bot.x) {
         double param = (p[1].x-p[0].x)/bot.x;
         if (param > 0 && param < 1)
@@ -414,9 +414,9 @@ void QuadraticSegment::bound(double &l, double &b, double &r, double &t) const {
 void CubicSegment::bound(double &l, double &b, double &r, double &t) const {
     pointBounds(p[0], l, b, r, t);
     pointBounds(p[3], l, b, r, t);
-    Vector2 a0 = p[1]-p[0];
-    Vector2 a1 = 2*(p[2]-p[1]-a0);
-    Vector2 a2 = p[3]-3*p[2]+3*p[1]-p[0];
+    Hector2 a0 = p[1]-p[0];
+    Hector2 a1 = 2*(p[2]-p[1]-a0);
+    Hector2 a2 = p[3]-3*p[2]+3*p[1]-p[0];
     double params[2];
     int solutions;
     solutions = solveQuadratic(params, a2.x, a1.x, a0.x);
@@ -455,7 +455,7 @@ void LinearSegment::moveStartPoint(Point2 to) {
 }
 
 void QuadraticSegment::moveStartPoint(Point2 to) {
-    Vector2 origSDir = p[0]-p[1];
+    Hector2 origSDir = p[0]-p[1];
     Point2 origP1 = p[1];
     p[1] += crossProduct(p[0]-p[1], to-p[0])/crossProduct(p[0]-p[1], p[2]-p[1])*(p[2]-p[1]);
     p[0] = to;
@@ -473,7 +473,7 @@ void LinearSegment::moveEndPoint(Point2 to) {
 }
 
 void QuadraticSegment::moveEndPoint(Point2 to) {
-    Vector2 origEDir = p[2]-p[1];
+    Hector2 origEDir = p[2]-p[1];
     Point2 origP1 = p[1];
     p[1] += crossProduct(p[2]-p[1], to-p[2])/crossProduct(p[2]-p[1], p[0]-p[1])*(p[0]-p[1]);
     p[2] = to;
@@ -512,8 +512,8 @@ EdgeSegment *QuadraticSegment::convertToCubic() const {
 }
 
 void CubicSegment::deconverge(int param, double amount) {
-    Vector2 dir = direction(param);
-    Vector2 normal = dir.getOrthonormal();
+    Hector2 dir = direction(param);
+    Hector2 normal = dir.getOrthonormal();
     double h = dotProduct(directionChange(param)-dir, normal);
     switch (param) {
         case 0:

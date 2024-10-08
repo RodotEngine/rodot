@@ -214,11 +214,11 @@ namespace embree
       return device;
     }
 
-    void share(mvector<PrimRef>& primrefarray_i) {
+    void share(mHector<PrimRef>& primrefarray_i) {
       primrefarray = std::move(primrefarray_i);
     }
 
-    void unshare(mvector<PrimRef>& primrefarray_o)
+    void unshare(mHector<PrimRef>& primrefarray_o)
     {
       reset(); // this removes blocks that are allocated inside the shared primref array
       primrefarray_o = std::move(primrefarray);
@@ -1010,6 +1010,6 @@ namespace embree
     std::vector<ThreadLocal2*> thread_local_allocators;
     AllocationType atype;
 
-    mvector<PrimRef> primrefarray;     //!< primrefarray used to allocate nodes
+    mHector<PrimRef> primrefarray;     //!< primrefarray used to allocate nodes
   };
 }

@@ -44,9 +44,9 @@ subject to the following restrictions:
 */
 
 #include "core/math/geometry_3d.h"
-#include "core/math/vector3.h"
-#include "core/templates/local_vector.h"
-#include "core/templates/vector.h"
+#include "core/math/Hector3.h"
+#include "core/templates/local_Hector.h"
+#include "core/templates/Hector.h"
 
 /// Convex hull implementation based on Preparata and Hong
 /// See https://code.google.com/archive/p/bullet/issues/275
@@ -90,13 +90,13 @@ public:
 	};
 
 	// Vertices of the output hull
-	LocalVector<Vector3> vertices;
+	LocalHector<Hector3> vertices;
 
 	// Edges of the output hull
-	LocalVector<Edge> edges;
+	LocalHector<Edge> edges;
 
 	// Faces of the convex hull. Each entry is an index into the "edges" array pointing to an edge of the face. Faces are planar n-gons
-	LocalVector<int32_t> faces;
+	LocalHector<int32_t> faces;
 
 	/*
 		Compute convex hull of "count" vertices stored in "coords".
@@ -108,9 +108,9 @@ public:
 		that the resulting convex hull is empty.
 		The output convex hull can be found in the member variables "vertices", "edges", "faces".
 		*/
-	real_t compute(const Vector3 *p_coords, int32_t p_count, real_t p_shrink, real_t p_shrink_clamp);
+	real_t compute(const Hector3 *p_coords, int32_t p_count, real_t p_shrink, real_t p_shrink_clamp);
 
-	static Error convex_hull(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_mesh);
+	static Error convex_hull(const Hector<Hector3> &p_points, Geometry3D::MeshData &r_mesh);
 };
 
 #endif // CONVEX_HULL_H

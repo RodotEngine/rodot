@@ -52,18 +52,18 @@ private:
 		float mass = 0.75;
 		float damping = 0.75;
 		bool use_gravity = false;
-		Vector2 gravity = Vector2(0, 6.0);
+		Hector2 gravity = Hector2(0, 6.0);
 
-		Vector2 force = Vector2(0, 0);
-		Vector2 acceleration = Vector2(0, 0);
-		Vector2 velocity = Vector2(0, 0);
-		Vector2 last_position = Vector2(0, 0);
-		Vector2 dynamic_position = Vector2(0, 0);
+		Hector2 force = Hector2(0, 0);
+		Hector2 acceleration = Hector2(0, 0);
+		Hector2 velocity = Hector2(0, 0);
+		Hector2 last_position = Hector2(0, 0);
+		Hector2 dynamic_position = Hector2(0, 0);
 
-		Vector2 last_noncollision_position = Vector2(0, 0);
+		Hector2 last_noncollision_position = Hector2(0, 0);
 	};
 
-	Vector<Jiggle_Joint_Data2D> jiggle_data_chain;
+	Hector<Jiggle_Joint_Data2D> jiggle_data_chain;
 
 	NodePath target_node;
 	ObjectID target_node_cache;
@@ -73,7 +73,7 @@ private:
 	float mass = 0.75;
 	float damping = 0.75;
 	bool use_gravity = false;
-	Vector2 gravity = Vector2(0, 6);
+	Hector2 gravity = Hector2(0, 6);
 
 	bool use_colliders = false;
 	uint32_t collision_mask = 1;
@@ -103,8 +103,8 @@ public:
 	float get_damping() const;
 	void set_use_gravity(bool p_use_gravity);
 	bool get_use_gravity() const;
-	void set_gravity(Vector2 p_gravity);
-	Vector2 get_gravity() const;
+	void set_gravity(Hector2 p_gravity);
+	Hector2 get_gravity() const;
 
 	void set_use_colliders(bool p_use_colliders);
 	bool get_use_colliders() const;
@@ -129,8 +129,8 @@ public:
 	float get_jiggle_joint_damping(int p_joint_idx) const;
 	void set_jiggle_joint_use_gravity(int p_joint_idx, bool p_use_gravity);
 	bool get_jiggle_joint_use_gravity(int p_joint_idx) const;
-	void set_jiggle_joint_gravity(int p_joint_idx, Vector2 p_gravity);
-	Vector2 get_jiggle_joint_gravity(int p_joint_idx) const;
+	void set_jiggle_joint_gravity(int p_joint_idx, Hector2 p_gravity);
+	Hector2 get_jiggle_joint_gravity(int p_joint_idx) const;
 
 	SkeletonModification2DJiggle();
 	~SkeletonModification2DJiggle();

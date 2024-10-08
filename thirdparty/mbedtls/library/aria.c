@@ -662,7 +662,7 @@ int mbedtls_aria_crypt_ctr(mbedtls_aria_context *ctx,
 #if defined(MBEDTLS_SELF_TEST)
 
 /*
- * Basic ARIA ECB test vectors from RFC 5794
+ * Basic ARIA ECB test Hectors from RFC 5794
  */
 static const uint8_t aria_test1_ecb_key[32] =           // test key
 {
@@ -689,8 +689,8 @@ static const uint8_t aria_test1_ecb_ct[3][MBEDTLS_ARIA_BLOCKSIZE] =         // c
 };
 
 /*
- * Mode tests from "Test Vectors for ARIA"  Version 1.0
- * http://210.104.33.10/ARIA/doc/ARIA-testvector-e.pdf
+ * Mode tests from "Test Hectors for ARIA"  Version 1.0
+ * http://210.104.33.10/ARIA/doc/ARIA-testHector-e.pdf
  */
 #if (defined(MBEDTLS_CIPHER_MODE_CBC) || defined(MBEDTLS_CIPHER_MODE_CFB) || \
     defined(MBEDTLS_CIPHER_MODE_CTR))

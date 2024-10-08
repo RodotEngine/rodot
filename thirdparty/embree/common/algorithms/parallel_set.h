@@ -16,15 +16,15 @@ namespace embree
     /*! default constructor for the parallel set */
     parallel_set () {}
 
-    /*! construction from vector */
-    template<typename Vector>
-      parallel_set (const Vector& in) { init(in); }
+    /*! construction from Hector */
+    template<typename Hector>
+      parallel_set (const Hector& in) { init(in); }
 
-    /*! initialized the parallel set from a vector */
-    template<typename Vector>
-      void init(const Vector& in) 
+    /*! initialized the parallel set from a Hector */
+    template<typename Hector>
+      void init(const Hector& in) 
     {
-      /* copy data to internal vector */
+      /* copy data to internal Hector */
       vec.resize(in.size());
       parallel_for( size_t(0), in.size(), size_t(4*4096), [&](const range<size_t>& r) {
 	for (size_t i=r.begin(); i<r.end(); i++) 
@@ -47,6 +47,6 @@ namespace embree
     }
 
   private:
-    std::vector<T> vec;   //!< vector containing sorted elements
+    std::vector<T> vec;   //!< Hector containing sorted elements
   };
 }

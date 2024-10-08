@@ -37,9 +37,9 @@
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/SPIRV/GlslangToSpv.h>
 
-static Vector<uint8_t> _compile_shader_glsl(RenderingDevice::ShaderStage p_stage, const String &p_source_code, RenderingDevice::ShaderLanguage p_language, String *r_error, const RenderingDevice *p_render_device) {
+static Hector<uint8_t> _compile_shader_glsl(RenderingDevice::ShaderStage p_stage, const String &p_source_code, RenderingDevice::ShaderLanguage p_language, String *r_error, const RenderingDevice *p_render_device) {
 	const RDD::Capabilities &capabilities = p_render_device->get_device_capabilities();
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 
 	ERR_FAIL_COND_V(p_language == RenderingDevice::SHADER_LANGUAGE_HLSL, ret);
 

@@ -92,7 +92,7 @@ public:
 	PList::PLNodeType data_type = PList::PLNodeType::PL_NODE_TYPE_NIL;
 
 	CharString data_string;
-	Vector<Ref<PListNode>> data_array;
+	Hector<Ref<PListNode>> data_array;
 	HashMap<String, Ref<PListNode>> data_dict;
 	union {
 		int64_t data_int;

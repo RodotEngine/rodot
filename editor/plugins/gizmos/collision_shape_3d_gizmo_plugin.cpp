@@ -123,7 +123,7 @@ Variant CollisionShape3DGizmoPlugin::get_handle_value(const EditorNode3DGizmo *p
 
 	if (Object::cast_to<CapsuleShape3D>(*s)) {
 		Ref<CapsuleShape3D> cs2 = s;
-		return Vector2(cs2->get_radius(), cs2->get_height());
+		return Hector2(cs2->get_radius(), cs2->get_height());
 	}
 
 	if (Object::cast_to<CylinderShape3D>(*s)) {
@@ -151,13 +151,13 @@ void CollisionShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, i
 		return;
 	}
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
 	if (Object::cast_to<SphereShape3D>(*s)) {
 		Ref<SphereShape3D> ss = s;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), Vector3(4096, 0, 0), sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), Hector3(4096, 0, 0), sg[0], sg[1], ra, rb);
 		float d = ra.x;
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -172,8 +172,8 @@ void CollisionShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, i
 
 	if (Object::cast_to<SeparationRayShape3D>(*s)) {
 		Ref<SeparationRayShape3D> rs = s;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), Vector3(0, 0, 4096), sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), Hector3(0, 0, 4096), sg[0], sg[1], ra, rb);
 		float d = ra.z;
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -188,19 +188,19 @@ void CollisionShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, i
 
 	if (Object::cast_to<BoxShape3D>(*s)) {
 		Ref<BoxShape3D> bs = s;
-		Vector3 size = bs->get_size();
-		Vector3 position;
+		Hector3 size = bs->get_size();
+		Hector3 position;
 		helper->box_set_handle(sg, p_id, size, position);
 		bs->set_size(size);
 		cs->set_global_position(position);
 	}
 
 	if (Object::cast_to<CapsuleShape3D>(*s)) {
-		Vector3 axis;
+		Hector3 axis;
 		axis[p_id == 0 ? 0 : 1] = 1.0;
 		Ref<CapsuleShape3D> cs2 = s;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), axis * 4096, sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), axis * 4096, sg[0], sg[1], ra, rb);
 		float d = axis.dot(ra);
 
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
@@ -219,11 +219,11 @@ void CollisionShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, i
 	}
 
 	if (Object::cast_to<CylinderShape3D>(*s)) {
-		Vector3 axis;
+		Hector3 axis;
 		axis[p_id == 0 ? 0 : 1] = 1.0;
 		Ref<CylinderShape3D> cs2 = s;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), axis * 4096, sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), axis * 4096, sg[0], sg[1], ra, rb);
 		float d = axis.dot(ra);
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -269,7 +269,7 @@ void CollisionShape3DGizmoPlugin::commit_handle(const EditorNode3DGizmo *p_gizmo
 
 	if (Object::cast_to<CapsuleShape3D>(*s)) {
 		Ref<CapsuleShape3D> ss = s;
-		Vector2 values = p_restore;
+		Hector2 values = p_restore;
 
 		if (p_cancel) {
 			ss->set_radius(values[0]);
@@ -353,60 +353,60 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		Ref<SphereShape3D> sp = s;
 		float r = sp->get_radius();
 
-		Vector<Vector3> points;
+		Hector<Hector3> points;
 
 		for (int i = 0; i <= 360; i++) {
 			float ra = Math::deg_to_rad((float)i);
 			float rb = Math::deg_to_rad((float)i + 1);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
-			points.push_back(Vector3(a.x, 0, a.y));
-			points.push_back(Vector3(b.x, 0, b.y));
-			points.push_back(Vector3(0, a.x, a.y));
-			points.push_back(Vector3(0, b.x, b.y));
-			points.push_back(Vector3(a.x, a.y, 0));
-			points.push_back(Vector3(b.x, b.y, 0));
+			points.push_back(Hector3(a.x, 0, a.y));
+			points.push_back(Hector3(b.x, 0, b.y));
+			points.push_back(Hector3(0, a.x, a.y));
+			points.push_back(Hector3(0, b.x, b.y));
+			points.push_back(Hector3(a.x, a.y, 0));
+			points.push_back(Hector3(b.x, b.y, 0));
 		}
 
-		Vector<Vector3> collision_segments;
+		Hector<Hector3> collision_segments;
 
 		for (int i = 0; i < 64; i++) {
 			float ra = i * (Math_TAU / 64.0);
 			float rb = (i + 1) * (Math_TAU / 64.0);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
-			collision_segments.push_back(Vector3(a.x, 0, a.y));
-			collision_segments.push_back(Vector3(b.x, 0, b.y));
-			collision_segments.push_back(Vector3(0, a.x, a.y));
-			collision_segments.push_back(Vector3(0, b.x, b.y));
-			collision_segments.push_back(Vector3(a.x, a.y, 0));
-			collision_segments.push_back(Vector3(b.x, b.y, 0));
+			collision_segments.push_back(Hector3(a.x, 0, a.y));
+			collision_segments.push_back(Hector3(b.x, 0, b.y));
+			collision_segments.push_back(Hector3(0, a.x, a.y));
+			collision_segments.push_back(Hector3(0, b.x, b.y));
+			collision_segments.push_back(Hector3(a.x, a.y, 0));
+			collision_segments.push_back(Hector3(b.x, b.y, 0));
 		}
 
 		p_gizmo->add_lines(points, material);
 		p_gizmo->add_collision_segments(collision_segments);
-		Vector<Vector3> handles;
-		handles.push_back(Vector3(r, 0, 0));
+		Hector<Hector3> handles;
+		handles.push_back(Hector3(r, 0, 0));
 		p_gizmo->add_handles(handles, handles_material);
 	}
 
 	if (Object::cast_to<BoxShape3D>(*s)) {
 		Ref<BoxShape3D> bs = s;
-		Vector<Vector3> lines;
+		Hector<Hector3> lines;
 		AABB aabb;
 		aabb.position = -bs->get_size() / 2;
 		aabb.size = bs->get_size();
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			aabb.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
 		}
 
-		const Vector<Vector3> handles = helper->box_get_handles(bs->get_size());
+		const Hector<Hector3> handles = helper->box_get_handles(bs->get_size());
 
 		p_gizmo->add_lines(lines, material);
 		p_gizmo->add_collision_segments(lines);
@@ -418,68 +418,68 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		float radius = cs2->get_radius();
 		float height = cs2->get_height();
 
-		Vector<Vector3> points;
+		Hector<Hector3> points;
 
-		Vector3 d(0, height * 0.5 - radius, 0);
+		Hector3 d(0, height * 0.5 - radius, 0);
 		for (int i = 0; i < 360; i++) {
 			float ra = Math::deg_to_rad((float)i);
 			float rb = Math::deg_to_rad((float)i + 1);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * radius;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * radius;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * radius;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * radius;
 
-			points.push_back(Vector3(a.x, 0, a.y) + d);
-			points.push_back(Vector3(b.x, 0, b.y) + d);
+			points.push_back(Hector3(a.x, 0, a.y) + d);
+			points.push_back(Hector3(b.x, 0, b.y) + d);
 
-			points.push_back(Vector3(a.x, 0, a.y) - d);
-			points.push_back(Vector3(b.x, 0, b.y) - d);
+			points.push_back(Hector3(a.x, 0, a.y) - d);
+			points.push_back(Hector3(b.x, 0, b.y) - d);
 
 			if (i % 90 == 0) {
-				points.push_back(Vector3(a.x, 0, a.y) + d);
-				points.push_back(Vector3(a.x, 0, a.y) - d);
+				points.push_back(Hector3(a.x, 0, a.y) + d);
+				points.push_back(Hector3(a.x, 0, a.y) - d);
 			}
 
-			Vector3 dud = i < 180 ? d : -d;
+			Hector3 dud = i < 180 ? d : -d;
 
-			points.push_back(Vector3(0, a.x, a.y) + dud);
-			points.push_back(Vector3(0, b.x, b.y) + dud);
-			points.push_back(Vector3(a.y, a.x, 0) + dud);
-			points.push_back(Vector3(b.y, b.x, 0) + dud);
+			points.push_back(Hector3(0, a.x, a.y) + dud);
+			points.push_back(Hector3(0, b.x, b.y) + dud);
+			points.push_back(Hector3(a.y, a.x, 0) + dud);
+			points.push_back(Hector3(b.y, b.x, 0) + dud);
 		}
 
 		p_gizmo->add_lines(points, material);
 
-		Vector<Vector3> collision_segments;
+		Hector<Hector3> collision_segments;
 
 		for (int i = 0; i < 64; i++) {
 			float ra = i * (Math_TAU / 64.0);
 			float rb = (i + 1) * (Math_TAU / 64.0);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * radius;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * radius;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * radius;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * radius;
 
-			collision_segments.push_back(Vector3(a.x, 0, a.y) + d);
-			collision_segments.push_back(Vector3(b.x, 0, b.y) + d);
+			collision_segments.push_back(Hector3(a.x, 0, a.y) + d);
+			collision_segments.push_back(Hector3(b.x, 0, b.y) + d);
 
-			collision_segments.push_back(Vector3(a.x, 0, a.y) - d);
-			collision_segments.push_back(Vector3(b.x, 0, b.y) - d);
+			collision_segments.push_back(Hector3(a.x, 0, a.y) - d);
+			collision_segments.push_back(Hector3(b.x, 0, b.y) - d);
 
 			if (i % 16 == 0) {
-				collision_segments.push_back(Vector3(a.x, 0, a.y) + d);
-				collision_segments.push_back(Vector3(a.x, 0, a.y) - d);
+				collision_segments.push_back(Hector3(a.x, 0, a.y) + d);
+				collision_segments.push_back(Hector3(a.x, 0, a.y) - d);
 			}
 
-			Vector3 dud = i < 32 ? d : -d;
+			Hector3 dud = i < 32 ? d : -d;
 
-			collision_segments.push_back(Vector3(0, a.x, a.y) + dud);
-			collision_segments.push_back(Vector3(0, b.x, b.y) + dud);
-			collision_segments.push_back(Vector3(a.y, a.x, 0) + dud);
-			collision_segments.push_back(Vector3(b.y, b.x, 0) + dud);
+			collision_segments.push_back(Hector3(0, a.x, a.y) + dud);
+			collision_segments.push_back(Hector3(0, b.x, b.y) + dud);
+			collision_segments.push_back(Hector3(a.y, a.x, 0) + dud);
+			collision_segments.push_back(Hector3(b.y, b.x, 0) + dud);
 		}
 
 		p_gizmo->add_collision_segments(collision_segments);
 
-		Vector<Vector3> handles = {
-			Vector3(cs2->get_radius(), 0, 0),
-			Vector3(0, cs2->get_height() * 0.5, 0)
+		Hector<Hector3> handles = {
+			Hector3(cs2->get_radius(), 0, 0),
+			Hector3(0, cs2->get_height() * 0.5, 0)
 		};
 		p_gizmo->add_handles(handles, handles_material);
 	}
@@ -489,54 +489,54 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		float radius = cs2->get_radius();
 		float height = cs2->get_height();
 
-		Vector<Vector3> points;
+		Hector<Hector3> points;
 
-		Vector3 d(0, height * 0.5, 0);
+		Hector3 d(0, height * 0.5, 0);
 		for (int i = 0; i < 360; i++) {
 			float ra = Math::deg_to_rad((float)i);
 			float rb = Math::deg_to_rad((float)i + 1);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * radius;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * radius;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * radius;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * radius;
 
-			points.push_back(Vector3(a.x, 0, a.y) + d);
-			points.push_back(Vector3(b.x, 0, b.y) + d);
+			points.push_back(Hector3(a.x, 0, a.y) + d);
+			points.push_back(Hector3(b.x, 0, b.y) + d);
 
-			points.push_back(Vector3(a.x, 0, a.y) - d);
-			points.push_back(Vector3(b.x, 0, b.y) - d);
+			points.push_back(Hector3(a.x, 0, a.y) - d);
+			points.push_back(Hector3(b.x, 0, b.y) - d);
 
 			if (i % 90 == 0) {
-				points.push_back(Vector3(a.x, 0, a.y) + d);
-				points.push_back(Vector3(a.x, 0, a.y) - d);
+				points.push_back(Hector3(a.x, 0, a.y) + d);
+				points.push_back(Hector3(a.x, 0, a.y) - d);
 			}
 		}
 
 		p_gizmo->add_lines(points, material);
 
-		Vector<Vector3> collision_segments;
+		Hector<Hector3> collision_segments;
 
 		for (int i = 0; i < 64; i++) {
 			float ra = i * (Math_TAU / 64.0);
 			float rb = (i + 1) * (Math_TAU / 64.0);
-			Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * radius;
-			Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * radius;
+			Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * radius;
+			Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * radius;
 
-			collision_segments.push_back(Vector3(a.x, 0, a.y) + d);
-			collision_segments.push_back(Vector3(b.x, 0, b.y) + d);
+			collision_segments.push_back(Hector3(a.x, 0, a.y) + d);
+			collision_segments.push_back(Hector3(b.x, 0, b.y) + d);
 
-			collision_segments.push_back(Vector3(a.x, 0, a.y) - d);
-			collision_segments.push_back(Vector3(b.x, 0, b.y) - d);
+			collision_segments.push_back(Hector3(a.x, 0, a.y) - d);
+			collision_segments.push_back(Hector3(b.x, 0, b.y) - d);
 
 			if (i % 16 == 0) {
-				collision_segments.push_back(Vector3(a.x, 0, a.y) + d);
-				collision_segments.push_back(Vector3(a.x, 0, a.y) - d);
+				collision_segments.push_back(Hector3(a.x, 0, a.y) + d);
+				collision_segments.push_back(Hector3(a.x, 0, a.y) - d);
 			}
 		}
 
 		p_gizmo->add_collision_segments(collision_segments);
 
-		Vector<Vector3> handles = {
-			Vector3(cs2->get_radius(), 0, 0),
-			Vector3(0, cs2->get_height() * 0.5, 0)
+		Hector<Hector3> handles = {
+			Hector3(cs2->get_radius(), 0, 0),
+			Hector3(0, cs2->get_height() * 0.5, 0)
 		};
 		p_gizmo->add_handles(handles, handles_material);
 	}
@@ -545,17 +545,17 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		Ref<WorldBoundaryShape3D> wbs = s;
 		const Plane &p = wbs->get_plane();
 
-		Vector3 n1 = p.get_any_perpendicular_normal();
-		Vector3 n2 = p.normal.cross(n1).normalized();
+		Hector3 n1 = p.get_any_perpendicular_normal();
+		Hector3 n2 = p.normal.cross(n1).normalized();
 
-		Vector3 pface[4] = {
+		Hector3 pface[4] = {
 			p.normal * p.d + n1 * 10.0 + n2 * 10.0,
 			p.normal * p.d + n1 * 10.0 + n2 * -10.0,
 			p.normal * p.d + n1 * -10.0 + n2 * -10.0,
 			p.normal * p.d + n1 * -10.0 + n2 * 10.0,
 		};
 
-		Vector<Vector3> points = {
+		Hector<Hector3> points = {
 			pface[0],
 			pface[1],
 			pface[1],
@@ -573,14 +573,14 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	}
 
 	if (Object::cast_to<ConvexPolygonShape3D>(*s)) {
-		Vector<Vector3> points = Object::cast_to<ConvexPolygonShape3D>(*s)->get_points();
+		Hector<Hector3> points = Object::cast_to<ConvexPolygonShape3D>(*s)->get_points();
 
 		if (points.size() > 3) {
-			Vector<Vector3> varr = Variant(points);
+			Hector<Hector3> varr = Variant(points);
 			Geometry3D::MeshData md;
 			Error err = ConvexHullComputer::convex_hull(varr, md);
 			if (err == OK) {
-				Vector<Vector3> points2;
+				Hector<Hector3> points2;
 				points2.resize(md.edges.size() * 2);
 				for (uint32_t i = 0; i < md.edges.size(); i++) {
 					points2.write[i * 2 + 0] = md.vertices[md.edges[i].vertex_a];
@@ -603,14 +603,14 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	if (Object::cast_to<SeparationRayShape3D>(*s)) {
 		Ref<SeparationRayShape3D> rs = s;
 
-		Vector<Vector3> points = {
-			Vector3(),
-			Vector3(0, 0, rs->get_length())
+		Hector<Hector3> points = {
+			Hector3(),
+			Hector3(0, 0, rs->get_length())
 		};
 		p_gizmo->add_lines(points, material);
 		p_gizmo->add_collision_segments(points);
-		Vector<Vector3> handles;
-		handles.push_back(Vector3(0, 0, rs->get_length()));
+		Hector<Hector3> handles;
+		handles.push_back(Hector3(0, 0, rs->get_length()));
 		p_gizmo->add_handles(handles, handles_material);
 	}
 

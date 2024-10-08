@@ -63,17 +63,17 @@ public:
 
 	Line2D();
 
-	void set_points(const Vector<Vector2> &p_points);
-	Vector<Vector2> get_points() const;
+	void set_points(const Hector<Hector2> &p_points);
+	Hector<Hector2> get_points() const;
 
-	void set_point_position(int i, Vector2 pos);
-	Vector2 get_point_position(int i) const;
+	void set_point_position(int i, Hector2 pos);
+	Hector2 get_point_position(int i) const;
 
 	int get_point_count() const;
 
 	void clear_points();
 
-	void add_point(Vector2 pos, int atpos = -1);
+	void add_point(Hector2 pos, int atpos = -1);
 	void remove_point(int i);
 
 	void set_closed(bool p_closed);
@@ -126,7 +126,7 @@ private:
 	void _curve_changed();
 
 private:
-	Vector<Vector2> _points;
+	Hector<Hector2> _points;
 	LineJointMode _joint_mode = LINE_JOINT_SHARP;
 	LineCapMode _begin_cap_mode = LINE_CAP_NONE;
 	LineCapMode _end_cap_mode = LINE_CAP_NONE;

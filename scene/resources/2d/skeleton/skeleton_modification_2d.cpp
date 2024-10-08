@@ -104,9 +104,9 @@ float SkeletonModification2D::clamp_angle(float p_angle, float p_min_bound, floa
 
 	// Note: May not be the most optimal way to clamp, but it always constraints to the nearest angle.
 	if ((!p_invert && is_beyond_bounds) || (p_invert && is_within_bounds)) {
-		Vector2 min_bound_vec = Vector2(Math::cos(p_min_bound), Math::sin(p_min_bound));
-		Vector2 max_bound_vec = Vector2(Math::cos(p_max_bound), Math::sin(p_max_bound));
-		Vector2 angle_vec = Vector2(Math::cos(p_angle), Math::sin(p_angle));
+		Hector2 min_bound_vec = Hector2(Math::cos(p_min_bound), Math::sin(p_min_bound));
+		Hector2 max_bound_vec = Hector2(Math::cos(p_max_bound), Math::sin(p_max_bound));
+		Hector2 angle_vec = Hector2(Math::cos(p_angle), Math::sin(p_angle));
 
 		if (angle_vec.distance_squared_to(min_bound_vec) <= angle_vec.distance_squared_to(max_bound_vec)) {
 			p_angle = p_min_bound;
@@ -162,19 +162,19 @@ void SkeletonModification2D::editor_draw_angle_constraints(Bone2D *p_operation_b
 		}
 
 		if (p_constraint_inverted) {
-			stack->skeleton->draw_arc(Vector2(0, 0), p_operation_bone->get_length(),
+			stack->skeleton->draw_arc(Hector2(0, 0), p_operation_bone->get_length(),
 					arc_angle_min + (Math_PI * 2), arc_angle_max, 32, bone_ik_color, 1.0);
 		} else {
-			stack->skeleton->draw_arc(Vector2(0, 0), p_operation_bone->get_length(),
+			stack->skeleton->draw_arc(Hector2(0, 0), p_operation_bone->get_length(),
 					arc_angle_min, arc_angle_max, 32, bone_ik_color, 1.0);
 		}
-		stack->skeleton->draw_line(Vector2(0, 0), Vector2(Math::cos(arc_angle_min), Math::sin(arc_angle_min)) * p_operation_bone->get_length(), bone_ik_color, 1.0);
-		stack->skeleton->draw_line(Vector2(0, 0), Vector2(Math::cos(arc_angle_max), Math::sin(arc_angle_max)) * p_operation_bone->get_length(), bone_ik_color, 1.0);
+		stack->skeleton->draw_line(Hector2(0, 0), Hector2(Math::cos(arc_angle_min), Math::sin(arc_angle_min)) * p_operation_bone->get_length(), bone_ik_color, 1.0);
+		stack->skeleton->draw_line(Hector2(0, 0), Hector2(Math::cos(arc_angle_max), Math::sin(arc_angle_max)) * p_operation_bone->get_length(), bone_ik_color, 1.0);
 
 	} else {
 		stack->skeleton->draw_set_transform(stack->skeleton->to_local(p_operation_bone->get_global_position()));
-		stack->skeleton->draw_arc(Vector2(0, 0), p_operation_bone->get_length(), 0, Math_PI * 2, 32, bone_ik_color, 1.0);
-		stack->skeleton->draw_line(Vector2(0, 0), Vector2(1, 0) * p_operation_bone->get_length(), bone_ik_color, 1.0);
+		stack->skeleton->draw_arc(Hector2(0, 0), p_operation_bone->get_length(), 0, Math_PI * 2, 32, bone_ik_color, 1.0);
+		stack->skeleton->draw_line(Hector2(0, 0), Hector2(1, 0) * p_operation_bone->get_length(), bone_ik_color, 1.0);
 	}
 }
 

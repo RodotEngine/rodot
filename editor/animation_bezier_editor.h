@@ -63,7 +63,7 @@ class AnimationBezierTrackEdit : public Control {
 	bool read_only = false;
 	int selected_track = 0;
 
-	Vector<Rect2> view_rects;
+	Hector<Rect2> view_rects;
 
 	Ref<Texture2D> bezier_icon;
 	Ref<Texture2D> bezier_handle_icon;
@@ -104,7 +104,7 @@ class AnimationBezierTrackEdit : public Control {
 	bool _is_track_displayed(int p_track_index);
 	bool _is_track_curves_displayed(int p_track_index);
 
-	Vector2 insert_at_pos;
+	Hector2 insert_at_pos;
 
 	typedef Pair<int, int> IntPair;
 
@@ -115,19 +115,19 @@ class AnimationBezierTrackEdit : public Control {
 	int moving_selection_from_key = 0;
 	int moving_selection_from_track = 0;
 
-	Vector2 moving_selection_offset;
+	Hector2 moving_selection_offset;
 
 	bool box_selecting_attempt = false;
 	bool box_selecting = false;
 	bool box_selecting_add = false;
-	Vector2 box_selection_from;
-	Vector2 box_selection_to;
+	Hector2 box_selection_from;
+	Hector2 box_selection_to;
 
 	int moving_handle = 0; //0 no move -1 or +1 out, 2 both (drawing only)
 	int moving_handle_key = 0;
 	int moving_handle_track = 0;
-	Vector2 moving_handle_left;
-	Vector2 moving_handle_right;
+	Hector2 moving_handle_left;
+	Hector2 moving_handle_right;
 	int moving_handle_mode = 0; // value from Animation::HandleMode
 
 	struct PairHasher {
@@ -139,8 +139,8 @@ class AnimationBezierTrackEdit : public Control {
 		}
 	};
 
-	HashMap<Pair<int, int>, Vector2, PairHasher> additional_moving_handle_lefts;
-	HashMap<Pair<int, int>, Vector2, PairHasher> additional_moving_handle_rights;
+	HashMap<Pair<int, int>, Hector2, PairHasher> additional_moving_handle_lefts;
+	HashMap<Pair<int, int>, Hector2, PairHasher> additional_moving_handle_rights;
 
 	void _clear_selection();
 	void _clear_selection_for_anim(const Ref<Animation> &p_anim);
@@ -148,7 +148,7 @@ class AnimationBezierTrackEdit : public Control {
 	bool _try_select_at_ui_pos(const Point2 &p_pos, bool p_aggregate, bool p_deselectable);
 	void _change_selected_keys_handle_mode(Animation::HandleMode p_mode, bool p_auto = false);
 
-	Vector2 menu_insert_key;
+	Hector2 menu_insert_key;
 
 	struct AnimMoveRestore {
 		int track = 0;
@@ -167,7 +167,7 @@ class AnimationBezierTrackEdit : public Control {
 		int key = 0;
 	};
 
-	Vector<EditPoint> edit_points;
+	Hector<EditPoint> edit_points;
 
 	struct PairCompare {
 		bool operator()(const IntPair &lh, const IntPair &rh) {
@@ -184,10 +184,10 @@ class AnimationBezierTrackEdit : public Control {
 	SelectionSet selection;
 
 	Ref<ViewPanner> panner;
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
-	void _draw_line_clipped(const Vector2 &p_from, const Vector2 &p_to, const Color &p_color, int p_clip_left, int p_clip_right);
+	void _draw_line_clipped(const Hector2 &p_from, const Hector2 &p_to, const Color &p_color, int p_clip_left, int p_clip_right);
 	void _draw_track(int p_track, const Color &p_color);
 
 	float _bezier_h_to_pixel(float p_h);
@@ -221,7 +221,7 @@ public:
 	void paste_keys(real_t p_ofs, bool p_ofs_valid);
 	void delete_selection();
 
-	void _bezier_track_insert_key_at_anim(const Ref<Animation> &p_anim, int p_track, double p_time, real_t p_value, const Vector2 &p_in_handle, const Vector2 &p_out_handle, const Animation::HandleMode p_handle_mode);
+	void _bezier_track_insert_key_at_anim(const Ref<Animation> &p_anim, int p_track, double p_time, real_t p_value, const Hector2 &p_in_handle, const Hector2 &p_out_handle, const Animation::HandleMode p_handle_mode);
 
 	AnimationBezierTrackEdit();
 };

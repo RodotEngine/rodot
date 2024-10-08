@@ -745,7 +745,7 @@
 #endif /* !FT_DEBUG_AUTOFIT */
 
 
-  /* Compute the direction value of a given vector. */
+  /* Compute the direction value of a given Hector. */
 
   FT_LOCAL_DEF( AF_Direction )
   af_direction_compute( FT_Pos  dx,
@@ -978,7 +978,7 @@
 
       /* compute coordinates & Bezier flags, next and prev */
       {
-        FT_Vector*  vec           = outline->points;
+        FT_Hector*  vec           = outline->points;
         char*       tag           = outline->tags;
         FT_Short    endpoint      = outline->contours[0];
         AF_Point    end           = points + endpoint;
@@ -1061,13 +1061,13 @@
 
       {
         /*
-         * Compute directions of `in' and `out' vectors.
+         * Compute directions of `in' and `out' Hectors.
          *
          * Note that distances between points that are very near to each
          * other are accumulated.  In other words, the auto-hinter either
-         * prepends the small vectors between near points to the first
-         * non-near vector, or the sum of small vector lengths exceeds a
-         * threshold, thus `grouping' the small vectors.  All intermediate
+         * prepends the small Hectors between near points to the first
+         * non-near Hector, or the sum of small Hector lengths exceeds a
+         * threshold, thus `grouping' the small Hectors.  All intermediate
          * points are tagged as weak; the directions are adjusted also to
          * be equal to the accumulated one.
          */
@@ -1099,7 +1099,7 @@
             out_y = point->fy - prev->fy;
 
             /*
-             * We use Taxicab metrics to measure the vector length.
+             * We use Taxicab metrics to measure the Hector length.
              *
              * Note that the accumulated distances so far could have the
              * opposite direction of the distance measured here.  For this
@@ -1117,7 +1117,7 @@
           first = point;
 
           /* now loop over all points of the contour to get */
-          /* `in' and `out' vector directions               */
+          /* `in' and `out' Hector directions               */
 
           curr = first;
 
@@ -1180,8 +1180,8 @@
         /*
          * The next step is to `simplify' an outline's topology so that we
          * can identify local extrema more reliably: A series of
-         * non-horizontal or non-vertical vectors pointing into the same
-         * quadrant are handled as a single, long vector.  From a
+         * non-horizontal or non-vertical Hectors pointing into the same
+         * quadrant are handled as a single, long Hector.  From a
          * topological point of the view, the intermediate points are of no
          * interest and thus tagged as weak.
          */
@@ -1194,7 +1194,7 @@
           if ( point->in_dir  == AF_DIR_NONE &&
                point->out_dir == AF_DIR_NONE )
           {
-            /* check whether both vectors point into the same quadrant */
+            /* check whether both Hectors point into the same quadrant */
 
             FT_Pos  in_x, in_y;
             FT_Pos  out_x, out_y;
@@ -1258,7 +1258,7 @@
                                       next_u->fx - point->fx,
                                       next_u->fy - point->fy ) )
               {
-                /* either the `in' or the `out' vector is much more  */
+                /* either the `in' or the `out' Hector is much more  */
                 /* dominant than the other one, so tag current point */
                 /* as weak and update index deltas                   */
 
@@ -1291,7 +1291,7 @@
   {
     AF_Point    point = hints->points;
     AF_Point    limit = point + hints->num_points;
-    FT_Vector*  vec   = outline->points;
+    FT_Hector*  vec   = outline->points;
     char*       tag   = outline->tags;
 
 

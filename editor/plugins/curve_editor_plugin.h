@@ -78,14 +78,14 @@ private:
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
 	void _curve_changed();
 
-	int get_point_at(Vector2 p_pos) const;
-	TangentIndex get_tangent_at(Vector2 p_pos) const;
+	int get_point_at(Hector2 p_pos) const;
+	TangentIndex get_tangent_at(Hector2 p_pos) const;
 
 	float get_offset_without_collision(int p_current_index, float p_offset, bool p_prioritize_right = true);
 
-	void add_point(Vector2 p_pos);
+	void add_point(Hector2 p_pos);
 	void remove_point(int p_index);
-	void set_point_position(int p_index, Vector2 p_pos);
+	void set_point_position(int p_index, Hector2 p_pos);
 
 	void set_point_tangents(int p_index, float p_left, float p_right);
 	void set_point_left_tangent(int p_index, float p_tangent);
@@ -97,9 +97,9 @@ private:
 	void set_selected_index(int p_index);
 	void set_selected_tangent_index(TangentIndex p_tangent);
 
-	Vector2 get_tangent_view_pos(int p_index, TangentIndex p_tangent) const;
-	Vector2 get_view_pos(Vector2 p_world_pos) const;
-	Vector2 get_world_pos(Vector2 p_view_pos) const;
+	Hector2 get_tangent_view_pos(int p_index, TangentIndex p_tangent) const;
+	Hector2 get_view_pos(Hector2 p_world_pos) const;
+	Hector2 get_world_pos(Hector2 p_view_pos) const;
 
 	void _redraw();
 
@@ -135,7 +135,7 @@ private:
 		GRAB_MOVE
 	};
 	GrabMode grabbing = GRAB_NONE;
-	Vector2 initial_grab_pos;
+	Hector2 initial_grab_pos;
 	int initial_grab_index;
 	float initial_grab_left_tangent;
 	float initial_grab_right_tangent;

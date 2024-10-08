@@ -534,7 +534,7 @@ void EditorDockManager::load_docks_from_config(Ref<ConfigFile> p_layout, const S
 			continue;
 		}
 
-		Vector<String> names = String(p_layout->get_value(p_section, "dock_" + itos(i + 1))).split(",");
+		Hector<String> names = String(p_layout->get_value(p_section, "dock_" + itos(i + 1))).split(",");
 
 		for (int j = names.size() - 1; j >= 0; j--) {
 			String name = names[j];
@@ -618,7 +618,7 @@ void EditorDockManager::bottom_dock_show_placement_popup(const Rect2i &p_positio
 
 	dock_context_popup->set_dock(p_dock);
 
-	Vector2 popup_pos = p_position.position;
+	Hector2 popup_pos = p_position.position;
 	popup_pos.y += p_position.size.height;
 
 	if (!EditorNode::get_singleton()->get_gui_base()->is_layout_rtl()) {
@@ -913,7 +913,7 @@ void DockContextPopup::_dock_select_input(const Ref<InputEvent> &p_input) {
 	Ref<InputEventMouse> me = p_input;
 
 	if (me.is_valid()) {
-		Vector2 point = me->get_position();
+		Hector2 point = me->get_position();
 
 		int over_dock_slot = -1;
 		for (int i = 0; i < EditorDockManager::DOCK_SLOT_MAX; i++) {

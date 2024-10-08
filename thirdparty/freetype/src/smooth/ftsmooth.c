@@ -42,7 +42,7 @@
   ft_smooth_transform( FT_Renderer       render,
                        FT_GlyphSlot      slot,
                        const FT_Matrix*  matrix,
-                       const FT_Vector*  delta )
+                       const FT_Hector*  delta )
   {
     FT_Error  error = FT_Err_Ok;
 
@@ -91,7 +91,7 @@
   {
     FT_Renderer  render = (FT_Renderer)module;
 
-    FT_Vector*  sub = render->root.library->lcd_geometry;
+    FT_Hector*  sub = render->root.library->lcd_geometry;
 
 
     /* set up default subpixel geometry for striped RGB panels. */
@@ -134,7 +134,7 @@
                         FT_Bitmap*   bitmap )
   {
     FT_Error      error = FT_Err_Ok;
-    FT_Vector*    sub   = render->root.library->lcd_geometry;
+    FT_Hector*    sub   = render->root.library->lcd_geometry;
     FT_Pos        x, y;
 
     FT_Raster_Params   params;
@@ -202,7 +202,7 @@
   {
     FT_Error     error = FT_Err_Ok;
     int          pitch = bitmap->pitch;
-    FT_Vector*   sub   = render->root.library->lcd_geometry;
+    FT_Hector*   sub   = render->root.library->lcd_geometry;
     FT_Pos       x, y;
 
     FT_Raster_Params  params;
@@ -213,7 +213,7 @@
     params.flags  = FT_RASTER_FLAG_AA;
 
     /* Render 3 separate coverage bitmaps, shifting the outline. */
-    /* Notice that the subpixel geometry vectors are rotated.    */
+    /* Notice that the subpixel geometry Hectors are rotated.    */
     /* Triple the pitch to render on each third row.            */
     bitmap->pitch *= 3;
     bitmap->rows  /= 3;
@@ -280,9 +280,9 @@
                         FT_Bitmap*   bitmap )
   {
     FT_Error    error      = FT_Err_Ok;
-    FT_Vector*  points     = outline->points;
-    FT_Vector*  points_end = FT_OFFSET( points, outline->n_points );
-    FT_Vector*  vec;
+    FT_Hector*  points     = outline->points;
+    FT_Hector*  points_end = FT_OFFSET( points, outline->n_points );
+    FT_Hector*  vec;
 
     FT_Raster_Params  params;
 
@@ -312,9 +312,9 @@
                          FT_Bitmap*   bitmap )
   {
     FT_Error    error      = FT_Err_Ok;
-    FT_Vector*  points     = outline->points;
-    FT_Vector*  points_end = FT_OFFSET( points, outline->n_points );
-    FT_Vector*  vec;
+    FT_Hector*  points     = outline->points;
+    FT_Hector*  points_end = FT_OFFSET( points, outline->n_points );
+    FT_Hector*  vec;
 
     FT_Raster_Params  params;
 
@@ -380,9 +380,9 @@
                             FT_Bitmap*   bitmap )
   {
     FT_Error    error      = FT_Err_Ok;
-    FT_Vector*  points     = outline->points;
-    FT_Vector*  points_end = FT_OFFSET( points, outline->n_points );
-    FT_Vector*  vec;
+    FT_Hector*  points     = outline->points;
+    FT_Hector*  points_end = FT_OFFSET( points, outline->n_points );
+    FT_Hector*  vec;
 
     FT_Raster_Params   params;
     TOrigin            target;
@@ -438,7 +438,7 @@
   ft_smooth_render( FT_Renderer       render,
                     FT_GlyphSlot      slot,
                     FT_Render_Mode    mode,
-                    const FT_Vector*  origin )
+                    const FT_Hector*  origin )
   {
     FT_Error     error   = FT_Err_Ok;
     FT_Outline*  outline = &slot->outline;

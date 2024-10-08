@@ -71,10 +71,10 @@ class ScrollBar : public Range {
 	NodePath drag_node_path;
 	bool drag_node_enabled = true;
 
-	Vector2 drag_node_speed;
-	Vector2 drag_node_accum;
-	Vector2 drag_node_from;
-	Vector2 last_drag_node_accum;
+	Hector2 drag_node_speed;
+	Hector2 drag_node_accum;
+	Hector2 drag_node_from;
+	Hector2 last_drag_node_accum;
 	float last_drag_node_time = 0.0;
 	float time_since_motion = 0.0;
 	bool drag_node_touching = false;

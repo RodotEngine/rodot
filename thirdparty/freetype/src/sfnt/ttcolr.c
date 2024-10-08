@@ -1368,7 +1368,7 @@
     FT_Byte    format;
 
     const FT_Byte  num_corners = 4;
-    FT_Vector      corners[4];
+    FT_Hector      corners[4];
     FT_Byte        j;
     FT_BBox        font_clip_box;
 
@@ -1490,7 +1490,7 @@
         for ( j = 0; j < num_corners; ++j )
         {
           if ( face->root.internal->transform_flags & 1 )
-            FT_Vector_Transform( &corners[j],
+            FT_Hector_Transform( &corners[j],
                                  &face->root.internal->transform_matrix );
 
           if ( face->root.internal->transform_flags & 2 )

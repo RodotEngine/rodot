@@ -34,7 +34,7 @@
 #ifdef WINMIDI_ENABLED
 
 #include "core/os/midi_driver.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 #include <stdio.h>
 #define WIN32_LEAN_AND_MEAN
@@ -43,7 +43,7 @@
 #include <mmsystem.h>
 
 class MIDIDriverWinMidi : public MIDIDriver {
-	Vector<HMIDIIN> connected_sources;
+	Hector<HMIDIIN> connected_sources;
 
 	static void CALLBACK read(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 

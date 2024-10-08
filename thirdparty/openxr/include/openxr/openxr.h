@@ -292,7 +292,7 @@ typedef enum XrStructureType {
     XR_TYPE_EVENT_DATA_SESSION_STATE_CHANGED = 18,
     XR_TYPE_ACTION_STATE_BOOLEAN = 23,
     XR_TYPE_ACTION_STATE_FLOAT = 24,
-    XR_TYPE_ACTION_STATE_VECTOR2F = 25,
+    XR_TYPE_ACTION_STATE_HECTOR2F = 25,
     XR_TYPE_ACTION_STATE_POSE = 27,
     XR_TYPE_ACTION_SET_CREATE_INFO = 28,
     XR_TYPE_ACTION_CREATE_INFO = 29,
@@ -710,7 +710,7 @@ typedef enum XrReferenceSpaceType {
 typedef enum XrActionType {
     XR_ACTION_TYPE_BOOLEAN_INPUT = 1,
     XR_ACTION_TYPE_FLOAT_INPUT = 2,
-    XR_ACTION_TYPE_VECTOR2F_INPUT = 3,
+    XR_ACTION_TYPE_HECTOR2F_INPUT = 3,
     XR_ACTION_TYPE_POSE_INPUT = 4,
     XR_ACTION_TYPE_VIBRATION_OUTPUT = 100,
     XR_ACTION_TYPE_MAX_ENUM = 0x7FFFFFFF
@@ -922,19 +922,19 @@ typedef struct XrSessionCreateInfo {
     XrSystemId                  systemId;
 } XrSessionCreateInfo;
 
-typedef struct XrVector3f {
+typedef struct XrHector3f {
     float    x;
     float    y;
     float    z;
-} XrVector3f;
+} XrHector3f;
 
 // XrSpaceVelocity extends XrSpaceLocation
 typedef struct XrSpaceVelocity {
     XrStructureType         type;
     void* XR_MAY_ALIAS      next;
     XrSpaceVelocityFlags    velocityFlags;
-    XrVector3f              linearVelocity;
-    XrVector3f              angularVelocity;
+    XrHector3f              linearVelocity;
+    XrHector3f              angularVelocity;
 } XrSpaceVelocity;
 
 typedef struct XrQuaternionf {
@@ -946,7 +946,7 @@ typedef struct XrQuaternionf {
 
 typedef struct XrPosef {
     XrQuaternionf    orientation;
-    XrVector3f       position;
+    XrHector3f       position;
 } XrPosef;
 
 typedef struct XrReferenceSpaceCreateInfo {
@@ -1166,19 +1166,19 @@ typedef struct XrActionStateFloat {
     XrBool32              isActive;
 } XrActionStateFloat;
 
-typedef struct XrVector2f {
+typedef struct XrHector2f {
     float    x;
     float    y;
-} XrVector2f;
+} XrHector2f;
 
-typedef struct XrActionStateVector2f {
+typedef struct XrActionStateHector2f {
     XrStructureType       type;
     void* XR_MAY_ALIAS    next;
-    XrVector2f            currentState;
+    XrHector2f            currentState;
     XrBool32              changedSinceLastSync;
     XrTime                lastChangeTime;
     XrBool32              isActive;
-} XrActionStateVector2f;
+} XrActionStateHector2f;
 
 typedef struct XrActionStatePose {
     XrStructureType       type;
@@ -1341,12 +1341,12 @@ typedef struct XrRect2Df {
     XrExtent2Df    extent;
 } XrRect2Df;
 
-typedef struct XrVector4f {
+typedef struct XrHector4f {
     float    x;
     float    y;
     float    z;
     float    w;
-} XrVector4f;
+} XrHector4f;
 
 typedef struct XrColor4f {
     float    r;
@@ -1403,7 +1403,7 @@ typedef XrResult (XRAPI_PTR *PFN_xrAttachSessionActionSets)(XrSession session, c
 typedef XrResult (XRAPI_PTR *PFN_xrGetCurrentInteractionProfile)(XrSession session, XrPath topLevelUserPath, XrInteractionProfileState* interactionProfile);
 typedef XrResult (XRAPI_PTR *PFN_xrGetActionStateBoolean)(XrSession session, const XrActionStateGetInfo* getInfo, XrActionStateBoolean* state);
 typedef XrResult (XRAPI_PTR *PFN_xrGetActionStateFloat)(XrSession session, const XrActionStateGetInfo* getInfo, XrActionStateFloat* state);
-typedef XrResult (XRAPI_PTR *PFN_xrGetActionStateVector2f)(XrSession session, const XrActionStateGetInfo* getInfo, XrActionStateVector2f* state);
+typedef XrResult (XRAPI_PTR *PFN_xrGetActionStateHector2f)(XrSession session, const XrActionStateGetInfo* getInfo, XrActionStateHector2f* state);
 typedef XrResult (XRAPI_PTR *PFN_xrGetActionStatePose)(XrSession session, const XrActionStateGetInfo* getInfo, XrActionStatePose* state);
 typedef XrResult (XRAPI_PTR *PFN_xrSyncActions)(XrSession session, const XrActionsSyncInfo* syncInfo);
 typedef XrResult (XRAPI_PTR *PFN_xrEnumerateBoundSourcesForAction)(XrSession session, const XrBoundSourcesForActionEnumerateInfo* enumerateInfo, uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources);
@@ -1645,10 +1645,10 @@ XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateFloat(
     const XrActionStateGetInfo*                 getInfo,
     XrActionStateFloat*                         state);
 
-XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateVector2f(
+XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStateHector2f(
     XrSession                                   session,
     const XrActionStateGetInfo*                 getInfo,
-    XrActionStateVector2f*                      state);
+    XrActionStateHector2f*                      state);
 
 XRAPI_ATTR XrResult XRAPI_CALL xrGetActionStatePose(
     XrSession                                   session,
@@ -1746,8 +1746,8 @@ typedef struct XrSpaceLocations {
 
 typedef struct XrSpaceVelocityData {
     XrSpaceVelocityFlags    velocityFlags;
-    XrVector3f              linearVelocity;
-    XrVector3f              angularVelocity;
+    XrHector3f              linearVelocity;
+    XrHector3f              angularVelocity;
 } XrSpaceVelocityData;
 
 // XrSpaceVelocities extends XrSpaceLocations
@@ -1834,8 +1834,8 @@ typedef struct XrCompositionLayerEquirectKHR {
     XrSwapchainSubImage         subImage;
     XrPosef                     pose;
     float                       radius;
-    XrVector2f                  scale;
-    XrVector2f                  bias;
+    XrHector2f                  scale;
+    XrHector2f                  bias;
 } XrCompositionLayerEquirectKHR;
 
 
@@ -1856,7 +1856,7 @@ typedef struct XrVisibilityMaskKHR {
     void* XR_MAY_ALIAS    next;
     uint32_t              vertexCapacityInput;
     uint32_t              vertexCountOutput;
-    XrVector2f*           vertices;
+    XrHector2f*           vertices;
     uint32_t              indexCapacityInput;
     uint32_t              indexCountOutput;
     uint32_t*             indices;
@@ -2364,7 +2364,7 @@ typedef struct XrViewConfigurationDepthRangeEXT {
 typedef XrResult (XRAPI_PTR *PFN_xrSetInputDeviceActiveEXT)(XrSession session, XrPath interactionProfile, XrPath topLevelPath, XrBool32 isActive);
 typedef XrResult (XRAPI_PTR *PFN_xrSetInputDeviceStateBoolEXT)(XrSession session, XrPath topLevelPath, XrPath inputSourcePath, XrBool32 state);
 typedef XrResult (XRAPI_PTR *PFN_xrSetInputDeviceStateFloatEXT)(XrSession session, XrPath topLevelPath, XrPath inputSourcePath, float state);
-typedef XrResult (XRAPI_PTR *PFN_xrSetInputDeviceStateVector2fEXT)(XrSession session, XrPath topLevelPath, XrPath inputSourcePath, XrVector2f state);
+typedef XrResult (XRAPI_PTR *PFN_xrSetInputDeviceStateHector2fEXT)(XrSession session, XrPath topLevelPath, XrPath inputSourcePath, XrHector2f state);
 typedef XrResult (XRAPI_PTR *PFN_xrSetInputDeviceLocationEXT)(XrSession session, XrPath topLevelPath, XrPath inputSourcePath, XrSpace space, XrPosef pose);
 
 #ifndef XR_NO_PROTOTYPES
@@ -2387,11 +2387,11 @@ XRAPI_ATTR XrResult XRAPI_CALL xrSetInputDeviceStateFloatEXT(
     XrPath                                      inputSourcePath,
     float                                       state);
 
-XRAPI_ATTR XrResult XRAPI_CALL xrSetInputDeviceStateVector2fEXT(
+XRAPI_ATTR XrResult XRAPI_CALL xrSetInputDeviceStateHector2fEXT(
     XrSession                                   session,
     XrPath                                      topLevelPath,
     XrPath                                      inputSourcePath,
-    XrVector2f                                  state);
+    XrHector2f                                  state);
 
 XRAPI_ATTR XrResult XRAPI_CALL xrSetInputDeviceLocationEXT(
     XrSession                                   session,
@@ -2556,8 +2556,8 @@ typedef struct XrHandJointLocationEXT {
 
 typedef struct XrHandJointVelocityEXT {
     XrSpaceVelocityFlags    velocityFlags;
-    XrVector3f              linearVelocity;
-    XrVector3f              angularVelocity;
+    XrHector3f              linearVelocity;
+    XrHector3f              angularVelocity;
 } XrHandJointVelocityEXT;
 
 typedef struct XrHandJointLocationsEXT {
@@ -2639,8 +2639,8 @@ typedef struct XrHandMeshIndexBufferMSFT {
 } XrHandMeshIndexBufferMSFT;
 
 typedef struct XrHandMeshVertexMSFT {
-    XrVector3f    position;
-    XrVector3f    normal;
+    XrHector3f    position;
+    XrHector3f    normal;
 } XrHandMeshVertexMSFT;
 
 typedef struct XrHandMeshVertexBufferMSFT {
@@ -2863,9 +2863,9 @@ typedef struct XrCompositionLayerReprojectionInfoMSFT {
 typedef struct XrCompositionLayerReprojectionPlaneOverrideMSFT {
     XrStructureType             type;
     const void* XR_MAY_ALIAS    next;
-    XrVector3f                  position;
-    XrVector3f                  normal;
-    XrVector3f                  velocity;
+    XrHector3f                  position;
+    XrHector3f                  normal;
+    XrHector3f                  velocity;
 } XrCompositionLayerReprojectionPlaneOverrideMSFT;
 
 typedef XrResult (XRAPI_PTR *PFN_xrEnumerateReprojectionModesMSFT)(XrInstance instance, XrSystemId systemId, XrViewConfigurationType viewConfigurationType, uint32_t modeCapacityInput, uint32_t* modeCountOutput, XrReprojectionModeMSFT* modes);
@@ -3256,13 +3256,13 @@ typedef struct XrSceneCreateInfoMSFT {
 } XrSceneCreateInfoMSFT;
 
 typedef struct XrSceneSphereBoundMSFT {
-    XrVector3f    center;
+    XrHector3f    center;
     float         radius;
 } XrSceneSphereBoundMSFT;
 
 typedef struct XrSceneOrientedBoxBoundMSFT {
     XrPosef       pose;
-    XrVector3f    extents;
+    XrHector3f    extents;
 } XrSceneOrientedBoxBoundMSFT;
 
 typedef struct XrSceneFrustumBoundMSFT {
@@ -3419,7 +3419,7 @@ typedef struct XrSceneMeshVertexBufferMSFT {
     void* XR_MAY_ALIAS    next;
     uint32_t              vertexCapacityInput;
     uint32_t              vertexCountOutput;
-    XrVector3f*           vertices;
+    XrHector3f*           vertices;
 } XrSceneMeshVertexBufferMSFT;
 
 typedef struct XrSceneMeshIndicesUint32MSFT {
@@ -3794,12 +3794,12 @@ XRAPI_ATTR XrResult XRAPI_CALL xrSetColorSpaceFB(
 #define XR_FB_hand_tracking_mesh 1
 #define XR_FB_hand_tracking_mesh_SPEC_VERSION 3
 #define XR_FB_HAND_TRACKING_MESH_EXTENSION_NAME "XR_FB_hand_tracking_mesh"
-typedef struct XrVector4sFB {
+typedef struct XrHector4sFB {
     int16_t    x;
     int16_t    y;
     int16_t    z;
     int16_t    w;
-} XrVector4sFB;
+} XrHector4sFB;
 
 typedef struct XrHandTrackingMeshFB {
     XrStructureType       type;
@@ -3811,11 +3811,11 @@ typedef struct XrHandTrackingMeshFB {
     XrHandJointEXT*       jointParents;
     uint32_t              vertexCapacityInput;
     uint32_t              vertexCountOutput;
-    XrVector3f*           vertexPositions;
-    XrVector3f*           vertexNormals;
-    XrVector2f*           vertexUVs;
-    XrVector4sFB*         vertexBlendIndices;
-    XrVector4f*           vertexBlendWeights;
+    XrHector3f*           vertexPositions;
+    XrHector3f*           vertexNormals;
+    XrHector2f*           vertexUVs;
+    XrHector4sFB*         vertexBlendIndices;
+    XrHector4f*           vertexBlendWeights;
     uint32_t              indexCapacityInput;
     uint32_t              indexCountOutput;
     int16_t*              indices;
@@ -3882,7 +3882,7 @@ typedef struct XrHandTrackingAimStateFB {
 #define XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB
 #define XR_FB_HAND_TRACKING_CAPSULE_COUNT XR_HAND_TRACKING_CAPSULE_COUNT_FB
 typedef struct XrHandCapsuleFB {
-    XrVector3f        points[XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB];
+    XrHector3f        points[XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB];
     float             radius;
     XrHandJointEXT    joint;
 } XrHandCapsuleFB;
@@ -4109,7 +4109,7 @@ typedef struct XrSystemKeyboardTrackingPropertiesFB {
 
 typedef struct XrKeyboardTrackingDescriptionFB {
     uint64_t                     trackedKeyboardId;
-    XrVector3f                   size;
+    XrHector3f                   size;
     XrKeyboardTrackingFlagsFB    flags;
     char                         name[XR_MAX_KEYBOARD_TRACKING_NAME_SIZE_FB];
 } XrKeyboardTrackingDescriptionFB;
@@ -4167,14 +4167,14 @@ typedef struct XrTriangleMeshCreateInfoFB {
     XrTriangleMeshFlagsFB       flags;
     XrWindingOrderFB            windingOrder;
     uint32_t                    vertexCount;
-    const XrVector3f*           vertexBuffer;
+    const XrHector3f*           vertexBuffer;
     uint32_t                    triangleCount;
     const uint32_t*             indexBuffer;
 } XrTriangleMeshCreateInfoFB;
 
 typedef XrResult (XRAPI_PTR *PFN_xrCreateTriangleMeshFB)(XrSession session, const XrTriangleMeshCreateInfoFB* createInfo, XrTriangleMeshFB* outTriangleMesh);
 typedef XrResult (XRAPI_PTR *PFN_xrDestroyTriangleMeshFB)(XrTriangleMeshFB mesh);
-typedef XrResult (XRAPI_PTR *PFN_xrTriangleMeshGetVertexBufferFB)(XrTriangleMeshFB mesh, XrVector3f** outVertexBuffer);
+typedef XrResult (XRAPI_PTR *PFN_xrTriangleMeshGetVertexBufferFB)(XrTriangleMeshFB mesh, XrHector3f** outVertexBuffer);
 typedef XrResult (XRAPI_PTR *PFN_xrTriangleMeshGetIndexBufferFB)(XrTriangleMeshFB mesh, uint32_t** outIndexBuffer);
 typedef XrResult (XRAPI_PTR *PFN_xrTriangleMeshBeginUpdateFB)(XrTriangleMeshFB mesh);
 typedef XrResult (XRAPI_PTR *PFN_xrTriangleMeshEndUpdateFB)(XrTriangleMeshFB mesh, uint32_t vertexCount, uint32_t triangleCount);
@@ -4193,7 +4193,7 @@ XRAPI_ATTR XrResult XRAPI_CALL xrDestroyTriangleMeshFB(
 
 XRAPI_ATTR XrResult XRAPI_CALL xrTriangleMeshGetVertexBufferFB(
     XrTriangleMeshFB                            mesh,
-    XrVector3f**                                outVertexBuffer);
+    XrHector3f**                                outVertexBuffer);
 
 XRAPI_ATTR XrResult XRAPI_CALL xrTriangleMeshGetIndexBufferFB(
     XrTriangleMeshFB                            mesh,
@@ -4297,7 +4297,7 @@ typedef struct XrGeometryInstanceCreateInfoFB {
     XrTriangleMeshFB            mesh;
     XrSpace                     baseSpace;
     XrPosef                     pose;
-    XrVector3f                  scale;
+    XrHector3f                  scale;
 } XrGeometryInstanceCreateInfoFB;
 
 typedef struct XrGeometryInstanceTransformFB {
@@ -4306,7 +4306,7 @@ typedef struct XrGeometryInstanceTransformFB {
     XrSpace                     baseSpace;
     XrTime                      time;
     XrPosef                     pose;
-    XrVector3f                  scale;
+    XrHector3f                  scale;
 } XrGeometryInstanceTransformFB;
 
 typedef struct XrPassthroughStyleFB {
@@ -5112,7 +5112,7 @@ typedef struct XrSpatialAnchorsQueryInfoRadiusML {
     XrStructureType             type;
     const void* XR_MAY_ALIAS    next;
     XrSpace                     baseSpace;
-    XrVector3f                  center;
+    XrHector3f                  center;
     XrTime                      time;
     float                       radius;
 } XrSpatialAnchorsQueryInfoRadiusML;
@@ -5665,7 +5665,7 @@ typedef struct XrCompositionLayerSpaceWarpInfoFB {
     XrStructureType                           type;
     const void* XR_MAY_ALIAS                  next;
     XrCompositionLayerSpaceWarpInfoFlagsFB    layerFlags;
-    XrSwapchainSubImage                       motionVectorSubImage;
+    XrSwapchainSubImage                       motionHectorSubImage;
     XrPosef                                   appSpaceDeltaPose;
     XrSwapchainSubImage                       depthSubImage;
     float                                     minDepth;
@@ -5678,8 +5678,8 @@ typedef struct XrCompositionLayerSpaceWarpInfoFB {
 typedef struct XrSystemSpaceWarpPropertiesFB {
     XrStructureType       type;
     void* XR_MAY_ALIAS    next;
-    uint32_t              recommendedMotionVectorImageRectWidth;
-    uint32_t              recommendedMotionVectorImageRectHeight;
+    uint32_t              recommendedMotionHectorImageRectWidth;
+    uint32_t              recommendedMotionHectorImageRectHeight;
 } XrSystemSpaceWarpPropertiesFB;
 
 
@@ -5748,7 +5748,7 @@ typedef struct XrBoundary2DFB {
     const void* XR_MAY_ALIAS    next;
     uint32_t                    vertexCapacityInput;
     uint32_t                    vertexCountOutput;
-    XrVector2f*                 vertices;
+    XrHector2f*                 vertices;
 } XrBoundary2DFB;
 
 typedef struct XrSemanticLabelsSupportInfoFB {
@@ -5904,7 +5904,7 @@ typedef struct XrFoveationEyeTrackedProfileCreateInfoMETA {
 typedef struct XrFoveationEyeTrackedStateMETA {
     XrStructureType                        type;
     void* XR_MAY_ALIAS                     next;
-    XrVector2f                             foveationCenter[XR_FOVEATION_CENTER_SIZE_META];
+    XrHector2f                             foveationCenter[XR_FOVEATION_CENTER_SIZE_META];
     XrFoveationEyeTrackedStateFlagsMETA    flags;
 } XrFoveationEyeTrackedStateMETA;
 
@@ -6815,7 +6815,7 @@ typedef struct XrSpaceTriangleMeshMETA {
     void* XR_MAY_ALIAS    next;
     uint32_t              vertexCapacityInput;
     uint32_t              vertexCountOutput;
-    XrVector3f*           vertices;
+    XrHector3f*           vertices;
     uint32_t              indexCapacityInput;
     uint32_t              indexCountOutput;
     uint32_t*             indices;
@@ -7198,13 +7198,13 @@ typedef struct XrPassthroughMeshTransformInfoHTC {
     XrStructureType             type;
     const void* XR_MAY_ALIAS    next;
     uint32_t                    vertexCount;
-    const XrVector3f*           vertices;
+    const XrHector3f*           vertices;
     uint32_t                    indexCount;
     const uint32_t*             indices;
     XrSpace                     baseSpace;
     XrTime                      time;
     XrPosef                     pose;
-    XrVector3f                  scale;
+    XrHector3f                  scale;
 } XrPassthroughMeshTransformInfoHTC;
 
 typedef struct XrCompositionLayerPassthroughHTC {
@@ -7270,7 +7270,7 @@ typedef struct XrFoveationApplyInfoHTC {
 typedef struct XrFoveationConfigurationHTC {
     XrFoveationLevelHTC    level;
     float                  clearFovDegree;
-    XrVector2f             focalCenterOffset;
+    XrHector2f             focalCenterOffset;
 } XrFoveationConfigurationHTC;
 
 // XrFoveationDynamicModeInfoHTC extends XrFoveationApplyInfoHTC
@@ -7676,7 +7676,7 @@ typedef struct XrPlaneDetectorPolygonBufferEXT {
     void* XR_MAY_ALIAS    next;
     uint32_t              vertexCapacityInput;
     uint32_t              vertexCountOutput;
-    XrVector2f*           vertices;
+    XrHector2f*           vertices;
 } XrPlaneDetectorPolygonBufferEXT;
 
 typedef XrResult (XRAPI_PTR *PFN_xrCreatePlaneDetectorEXT)(XrSession                            session, const XrPlaneDetectorCreateInfoEXT*  createInfo, XrPlaneDetectorEXT*                  planeDetector);
@@ -7991,9 +7991,9 @@ typedef struct XrWorldMeshBlockML {
     uint32_t                      indexCount;
     uint16_t*                     indexBuffer;
     uint32_t                      vertexCount;
-    XrVector3f*                   vertexBuffer;
+    XrHector3f*                   vertexBuffer;
     uint32_t                      normalCount;
-    XrVector3f*                   normalBuffer;
+    XrHector3f*                   normalBuffer;
     uint32_t                      confidenceCount;
     float*                        confidenceBuffer;
 } XrWorldMeshBlockML;

@@ -175,7 +175,7 @@ XR_ENUM_STR(XrResult);
     _(XR_TYPE_EVENT_DATA_SESSION_STATE_CHANGED, 18) \
     _(XR_TYPE_ACTION_STATE_BOOLEAN, 23) \
     _(XR_TYPE_ACTION_STATE_FLOAT, 24) \
-    _(XR_TYPE_ACTION_STATE_VECTOR2F, 25) \
+    _(XR_TYPE_ACTION_STATE_HECTOR2F, 25) \
     _(XR_TYPE_ACTION_STATE_POSE, 27) \
     _(XR_TYPE_ACTION_SET_CREATE_INFO, 28) \
     _(XR_TYPE_ACTION_CREATE_INFO, 29) \
@@ -579,7 +579,7 @@ XR_ENUM_STR(XrResult);
 #define XR_LIST_ENUM_XrActionType(_) \
     _(XR_ACTION_TYPE_BOOLEAN_INPUT, 1) \
     _(XR_ACTION_TYPE_FLOAT_INPUT, 2) \
-    _(XR_ACTION_TYPE_VECTOR2F_INPUT, 3) \
+    _(XR_ACTION_TYPE_HECTOR2F_INPUT, 3) \
     _(XR_ACTION_TYPE_POSE_INPUT, 4) \
     _(XR_ACTION_TYPE_VIBRATION_OUTPUT, 100) \
     _(XR_ACTION_TYPE_MAX_ENUM, 0x7FFFFFFF)
@@ -1826,8 +1826,8 @@ XR_ENUM_STR(XrResult);
     _(createFlags) \
     _(systemId) \
 
-/// Calls your macro with the name of each member of XrVector3f, in order.
-#define XR_LIST_STRUCT_XrVector3f(_) \
+/// Calls your macro with the name of each member of XrHector3f, in order.
+#define XR_LIST_STRUCT_XrHector3f(_) \
     _(x) \
     _(y) \
     _(z) \
@@ -2069,13 +2069,13 @@ XR_ENUM_STR(XrResult);
     _(lastChangeTime) \
     _(isActive) \
 
-/// Calls your macro with the name of each member of XrVector2f, in order.
-#define XR_LIST_STRUCT_XrVector2f(_) \
+/// Calls your macro with the name of each member of XrHector2f, in order.
+#define XR_LIST_STRUCT_XrHector2f(_) \
     _(x) \
     _(y) \
 
-/// Calls your macro with the name of each member of XrActionStateVector2f, in order.
-#define XR_LIST_STRUCT_XrActionStateVector2f(_) \
+/// Calls your macro with the name of each member of XrActionStateHector2f, in order.
+#define XR_LIST_STRUCT_XrActionStateHector2f(_) \
     _(type) \
     _(next) \
     _(currentState) \
@@ -2244,8 +2244,8 @@ XR_ENUM_STR(XrResult);
     _(offset) \
     _(extent) \
 
-/// Calls your macro with the name of each member of XrVector4f, in order.
-#define XR_LIST_STRUCT_XrVector4f(_) \
+/// Calls your macro with the name of each member of XrHector4f, in order.
+#define XR_LIST_STRUCT_XrHector4f(_) \
     _(x) \
     _(y) \
     _(z) \
@@ -3382,8 +3382,8 @@ XR_ENUM_STR(XrResult);
     _(next) \
     _(colorSpace) \
 
-/// Calls your macro with the name of each member of XrVector4sFB, in order.
-#define XR_LIST_STRUCT_XrVector4sFB(_) \
+/// Calls your macro with the name of each member of XrHector4sFB, in order.
+#define XR_LIST_STRUCT_XrHector4sFB(_) \
     _(x) \
     _(y) \
     _(z) \
@@ -4201,7 +4201,7 @@ XR_ENUM_STR(XrResult);
     _(type) \
     _(next) \
     _(layerFlags) \
-    _(motionVectorSubImage) \
+    _(motionHectorSubImage) \
     _(appSpaceDeltaPose) \
     _(depthSubImage) \
     _(minDepth) \
@@ -4213,8 +4213,8 @@ XR_ENUM_STR(XrResult);
 #define XR_LIST_STRUCT_XrSystemSpaceWarpPropertiesFB(_) \
     _(type) \
     _(next) \
-    _(recommendedMotionVectorImageRectWidth) \
-    _(recommendedMotionVectorImageRectHeight) \
+    _(recommendedMotionHectorImageRectWidth) \
+    _(recommendedMotionHectorImageRectHeight) \
 
 /// Calls your macro with the name of each member of XrHapticAmplitudeEnvelopeVibrationFB, in order.
 #define XR_LIST_STRUCT_XrHapticAmplitudeEnvelopeVibrationFB(_) \
@@ -5223,7 +5223,7 @@ XR_ENUM_STR(XrResult);
     _(XrActionStateGetInfo, XR_TYPE_ACTION_STATE_GET_INFO) \
     _(XrActionStateBoolean, XR_TYPE_ACTION_STATE_BOOLEAN) \
     _(XrActionStateFloat, XR_TYPE_ACTION_STATE_FLOAT) \
-    _(XrActionStateVector2f, XR_TYPE_ACTION_STATE_VECTOR2F) \
+    _(XrActionStateHector2f, XR_TYPE_ACTION_STATE_HECTOR2F) \
     _(XrActionStatePose, XR_TYPE_ACTION_STATE_POSE) \
     _(XrActionsSyncInfo, XR_TYPE_ACTIONS_SYNC_INFO) \
     _(XrBoundSourcesForActionEnumerateInfo, XR_TYPE_BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO) \
@@ -5939,7 +5939,7 @@ XR_ENUM_STR(XrResult);
     _(GetCurrentInteractionProfile, VERSION_1_0) \
     _(GetActionStateBoolean, VERSION_1_0) \
     _(GetActionStateFloat, VERSION_1_0) \
-    _(GetActionStateVector2f, VERSION_1_0) \
+    _(GetActionStateHector2f, VERSION_1_0) \
     _(GetActionStatePose, VERSION_1_0) \
     _(SyncActions, VERSION_1_0) \
     _(EnumerateBoundSourcesForAction, VERSION_1_0) \
@@ -6125,7 +6125,7 @@ XR_ENUM_STR(XrResult);
     _(SetInputDeviceActiveEXT, EXT_conformance_automation) \
     _(SetInputDeviceStateBoolEXT, EXT_conformance_automation) \
     _(SetInputDeviceStateFloatEXT, EXT_conformance_automation) \
-    _(SetInputDeviceStateVector2fEXT, EXT_conformance_automation) \
+    _(SetInputDeviceStateHector2fEXT, EXT_conformance_automation) \
     _(SetInputDeviceLocationEXT, EXT_conformance_automation) \
 
 

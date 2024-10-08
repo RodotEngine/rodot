@@ -109,7 +109,7 @@ private:
 	EaseType default_ease = EaseType::EASE_IN_OUT;
 	ObjectID bound_node;
 
-	Vector<List<Ref<Tweener>>> tweeners;
+	Hector<List<Ref<Tweener>>> tweeners;
 	double total_time = 0;
 	int current_step = -1;
 	int loops = 1;
@@ -207,7 +207,7 @@ public:
 	void start() override;
 	bool step(double &r_delta) override;
 
-	PropertyTweener(const Object *p_target, const Vector<StringName> &p_property, const Variant &p_to, double p_duration);
+	PropertyTweener(const Object *p_target, const Hector<StringName> &p_property, const Variant &p_to, double p_duration);
 	PropertyTweener();
 
 protected:
@@ -215,7 +215,7 @@ protected:
 
 private:
 	ObjectID target;
-	Vector<StringName> property;
+	Hector<StringName> property;
 	Variant initial_val;
 	Variant base_final_val;
 	Variant final_val;

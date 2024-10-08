@@ -26,7 +26,7 @@ struct coord_setter_t
   hb_array_t<int> get_coords ()
   { return coords.as_array (); }
 
-  hb_vector_t<int> coords;
+  hb_Hector_t<int> coords;
 };
 
 

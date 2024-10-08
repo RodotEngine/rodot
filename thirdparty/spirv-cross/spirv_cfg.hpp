@@ -75,22 +75,22 @@ public:
 
 	uint32_t find_common_dominator(uint32_t a, uint32_t b) const;
 
-	const SmallVector<uint32_t> &get_preceding_edges(uint32_t block) const
+	const SmallHector<uint32_t> &get_preceding_edges(uint32_t block) const
 	{
 		auto itr = preceding_edges.find(block);
 		if (itr != std::end(preceding_edges))
 			return itr->second;
 		else
-			return empty_vector;
+			return empty_Hector;
 	}
 
-	const SmallVector<uint32_t> &get_succeeding_edges(uint32_t block) const
+	const SmallHector<uint32_t> &get_succeeding_edges(uint32_t block) const
 	{
 		auto itr = succeeding_edges.find(block);
 		if (itr != std::end(succeeding_edges))
 			return itr->second;
 		else
-			return empty_vector;
+			return empty_Hector;
 	}
 
 	template <typename Op>
@@ -129,12 +129,12 @@ private:
 
 	Compiler &compiler;
 	const SPIRFunction &func;
-	std::unordered_map<uint32_t, SmallVector<uint32_t>> preceding_edges;
-	std::unordered_map<uint32_t, SmallVector<uint32_t>> succeeding_edges;
+	std::unordered_map<uint32_t, SmallHector<uint32_t>> preceding_edges;
+	std::unordered_map<uint32_t, SmallHector<uint32_t>> succeeding_edges;
 	std::unordered_map<uint32_t, uint32_t> immediate_dominators;
 	std::unordered_map<uint32_t, VisitOrder> visit_order;
-	SmallVector<uint32_t> post_order;
-	SmallVector<uint32_t> empty_vector;
+	SmallHector<uint32_t> post_order;
+	SmallHector<uint32_t> empty_Hector;
 
 	void add_branch(uint32_t from, uint32_t to);
 	void build_post_order_visit_order();

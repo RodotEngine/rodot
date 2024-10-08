@@ -188,7 +188,7 @@ void EditorResourcePicker::_update_menu() {
 	Rect2 gt = edit_button->get_screen_rect();
 	edit_menu->reset_size();
 	int ms = edit_menu->get_contents_minimum_size().width;
-	Vector2 popup_pos = gt.get_end() - Vector2(ms, 0);
+	Hector2 popup_pos = gt.get_end() - Hector2(ms, 0);
 	edit_menu->set_position(popup_pos);
 	edit_menu->popup();
 }
@@ -286,7 +286,7 @@ void EditorResourcePicker::_update_menu_items() {
 
 	// Add options to convert existing resource to another type of resource.
 	if (is_editable() && edited_resource.is_valid()) {
-		Vector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(edited_resource);
+		Hector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(edited_resource);
 		if (!conversions.is_empty()) {
 			edit_menu->add_separator();
 		}
@@ -339,9 +339,9 @@ void EditorResourcePicker::_edit_menu_cbk(int p_which) {
 		} break;
 
 		case OBJ_MENU_QUICKLOAD: {
-			const Vector<String> &base_types_string = base_type.split(",");
+			const Hector<String> &base_types_string = base_type.split(",");
 
-			Vector<StringName> base_types;
+			Hector<StringName> base_types;
 			for (const String &type : base_types_string) {
 				base_types.push_back(type);
 			}
@@ -401,7 +401,7 @@ void EditorResourcePicker::_edit_menu_cbk(int p_which) {
 			_gather_resources_to_duplicate(edited_resource, root);
 
 			duplicate_resources_dialog->reset_size();
-			duplicate_resources_dialog->popup_centered(Vector2(500, 400) * EDSCALE);
+			duplicate_resources_dialog->popup_centered(Hector2(500, 400) * EDSCALE);
 		} break;
 
 		case OBJ_MENU_SAVE: {
@@ -449,7 +449,7 @@ void EditorResourcePicker::_edit_menu_cbk(int p_which) {
 
 			if (p_which >= CONVERT_BASE_ID) {
 				int to_type = p_which - CONVERT_BASE_ID;
-				Vector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(edited_resource);
+				Hector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(edited_resource);
 				ERR_FAIL_INDEX(to_type, conversions.size());
 
 				edited_resource = conversions[to_type]->convert(edited_resource);
@@ -549,7 +549,7 @@ void EditorResourcePicker::_button_input(const Ref<InputEvent> &p_event) {
 		if (edited_resource.is_valid() || is_editable()) {
 			_update_menu_items();
 
-			Vector2 pos = get_screen_position() + mb->get_position();
+			Hector2 pos = get_screen_position() + mb->get_position();
 			edit_menu->reset_size();
 			edit_menu->set_position(pos);
 			edit_menu->popup();
@@ -576,8 +576,8 @@ String EditorResourcePicker::_get_resource_type(const Ref<Resource> &p_resource)
 	return res_type;
 }
 
-static void _add_allowed_type(const StringName &p_type, HashSet<StringName> *p_vector) {
-	if (p_vector->has(p_type)) {
+static void _add_allowed_type(const StringName &p_type, HashSet<StringName> *p_Hector) {
+	if (p_Hector->has(p_type)) {
 		// Already added
 		return;
 	}
@@ -586,23 +586,23 @@ static void _add_allowed_type(const StringName &p_type, HashSet<StringName> *p_v
 		// Engine class,
 
 		if (!ClassDB::is_virtual(p_type)) {
-			p_vector->insert(p_type);
+			p_Hector->insert(p_type);
 		}
 
 		List<StringName> inheriters;
 		ClassDB::get_inheriters_from_class(p_type, &inheriters);
 		for (const StringName &S : inheriters) {
-			_add_allowed_type(S, p_vector);
+			_add_allowed_type(S, p_Hector);
 		}
 	} else {
 		// Script class.
-		p_vector->insert(p_type);
+		p_Hector->insert(p_type);
 	}
 
 	List<StringName> inheriters;
 	ScriptServer::get_inheriters_list(p_type, &inheriters);
 	for (const StringName &S : inheriters) {
-		_add_allowed_type(S, p_vector);
+		_add_allowed_type(S, p_Hector);
 	}
 }
 
@@ -611,7 +611,7 @@ void EditorResourcePicker::_ensure_allowed_types() const {
 		return;
 	}
 
-	Vector<String> allowed_types = base_type.split(",");
+	Hector<String> allowed_types = base_type.split(",");
 	int size = allowed_types.size();
 
 	for (int i = 0; i < size; i++) {
@@ -656,7 +656,7 @@ bool EditorResourcePicker::_is_drop_valid(const Dictionary &p_drag_data) const {
 	} else if (drag_data.has("type") && String(drag_data["type"]) == "resource") {
 		res = drag_data["resource"];
 	} else if (drag_data.has("type") && String(drag_data["type"]) == "files") {
-		Vector<String> files = drag_data["files"];
+		Hector<String> files = drag_data["files"];
 
 		// TODO: Extract the typename of the dropped filepath's resource in a more performant way, without fully loading it.
 		if (files.size() == 1) {
@@ -724,7 +724,7 @@ void EditorResourcePicker::drop_data_fw(const Point2 &p_point, const Variant &p_
 	}
 
 	if (!dropped_resource.is_valid() && drag_data.has("type") && String(drag_data["type"]) == "files") {
-		Vector<String> files = drag_data["files"];
+		Hector<String> files = drag_data["files"];
 
 		if (files.size() == 1) {
 			dropped_resource = ResourceLoader::load(files[0]);
@@ -881,11 +881,11 @@ String EditorResourcePicker::get_base_type() const {
 	return base_type;
 }
 
-Vector<String> EditorResourcePicker::get_allowed_types() const {
+Hector<String> EditorResourcePicker::get_allowed_types() const {
 	_ensure_allowed_types();
 	HashSet<StringName> allowed_types = allowed_types_without_convert;
 
-	Vector<String> types;
+	Hector<String> types;
 	types.resize(allowed_types.size());
 
 	int i = 0;
@@ -999,7 +999,7 @@ void EditorResourcePicker::_gather_resources_to_duplicate(const Ref<Resource> p_
 		p_item->set_text(1, p_property_name);
 	}
 
-	static Vector<String> unique_exceptions = { "Image", "Shader", "Mesh", "FontFile" };
+	static Hector<String> unique_exceptions = { "Image", "Shader", "Mesh", "FontFile" };
 	if (!unique_exceptions.has(p_resource->get_class())) {
 		// Automatically select resource, unless it's something that shouldn't be duplicated.
 		p_item->set_checked(0, true);
@@ -1287,7 +1287,7 @@ void EditorAudioStreamPicker::_preview_draw() {
 		Ref<AudioStreamPreview> preview = AudioStreamPreviewGenerator::get_singleton()->generate_preview(audio_stream);
 		float preview_len = preview->get_length();
 
-		Vector<Vector2> points;
+		Hector<Hector2> points;
 		points.resize(size.width * 2);
 
 		for (int i = 0; i < size.width; i++) {
@@ -1297,11 +1297,11 @@ void EditorAudioStreamPicker::_preview_draw() {
 			float min = preview->get_min(ofs, ofs_n) * 0.5 + 0.5;
 
 			int idx = i;
-			points.write[idx * 2 + 0] = Vector2(i + 1, rect.position.y + min * rect.size.y);
-			points.write[idx * 2 + 1] = Vector2(i + 1, rect.position.y + max * rect.size.y);
+			points.write[idx * 2 + 0] = Hector2(i + 1, rect.position.y + min * rect.size.y);
+			points.write[idx * 2 + 1] = Hector2(i + 1, rect.position.y + max * rect.size.y);
 		}
 
-		Vector<Color> colors = { get_theme_color(SNAME("contrast_color_2"), EditorStringName(Editor)) };
+		Hector<Color> colors = { get_theme_color(SNAME("contrast_color_2"), EditorStringName(Editor)) };
 
 		RS::get_singleton()->canvas_item_add_multiline(stream_preview_rect->get_canvas_item(), points, colors);
 

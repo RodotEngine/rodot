@@ -45,7 +45,7 @@
 			If [code]true[/code], the tilt property of [Curve3D] takes effect.
 		</member>
 		<member name="use_model_front" type="bool" setter="set_use_model_front" getter="is_using_model_front" default="false">
-			If [code]true[/code], the node moves on the travel path with orienting the +Z axis as forward. See also [constant Vector3.FORWARD] and [constant Vector3.MODEL_FRONT].
+			If [code]true[/code], the node moves on the travel path with orienting the +Z axis as forward. See also [constant Hector3.FORWARD] and [constant Hector3.MODEL_FRONT].
 		</member>
 		<member name="v_offset" type="float" setter="set_v_offset" getter="get_v_offset" default="0.0">
 			The node's offset perpendicular to the curve.
@@ -65,7 +65,7 @@
 			Allows the PathFollow3D to rotate in any axis.
 		</constant>
 		<constant name="ROTATION_ORIENTED" value="4" enum="RotationMode">
-			Uses the up vector information in a [Curve3D] to enforce orientation. This rotation mode requires the [Path3D]'s [member Curve3D.up_vector_enabled] property to be set to [code]true[/code].
+			Uses the up Hector information in a [Curve3D] to enforce orientation. This rotation mode requires the [Path3D]'s [member Curve3D.up_Hector_enabled] property to be set to [code]true[/code].
 		</constant>
 	</constants>
 </class>

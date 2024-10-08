@@ -33,14 +33,14 @@
 #include "scene/2d/physics/collision_object_2d.h"
 #include "scene/resources/world_2d.h"
 
-void RayCast2D::set_target_position(const Vector2 &p_point) {
+void RayCast2D::set_target_position(const Hector2 &p_point) {
 	target_position = p_point;
 	if (is_inside_tree() && (Engine::get_singleton()->is_editor_hint() || get_tree()->is_debugging_collisions_hint())) {
 		queue_redraw();
 	}
 }
 
-Vector2 RayCast2D::get_target_position() const {
+Hector2 RayCast2D::get_target_position() const {
 	return target_position;
 }
 
@@ -90,11 +90,11 @@ int RayCast2D::get_collider_shape() const {
 	return against_shape;
 }
 
-Vector2 RayCast2D::get_collision_point() const {
+Hector2 RayCast2D::get_collision_point() const {
 	return collision_point;
 }
 
-Vector2 RayCast2D::get_collision_normal() const {
+Hector2 RayCast2D::get_collision_normal() const {
 	return collision_normal;
 }
 
@@ -187,9 +187,9 @@ void RayCast2D::_update_raycast_state() {
 
 	Transform2D gt = get_global_transform();
 
-	Vector2 to = target_position;
-	if (to == Vector2()) {
-		to = Vector2(0, 0.01);
+	Hector2 to = target_position;
+	if (to == Hector2()) {
+		to = Hector2(0, 0.01);
 	}
 
 	PhysicsDirectSpaceState2D::RayResult rr;
@@ -241,22 +241,22 @@ void RayCast2D::_draw_debug_shape() {
 	if (no_line) {
 		arrow_size = target_position.length();
 	} else {
-		draw_line(Vector2(), target_position - target_position.normalized() * arrow_size, draw_col, line_width);
+		draw_line(Hector2(), target_position - target_position.normalized() * arrow_size, draw_col, line_width);
 	}
 
 	Transform2D xf;
 	xf.rotate(target_position.angle());
-	xf.translate_local(Vector2(no_line ? 0 : target_position.length() - arrow_size, 0));
+	xf.translate_local(Hector2(no_line ? 0 : target_position.length() - arrow_size, 0));
 
-	Vector<Vector2> pts = {
-		xf.xform(Vector2(arrow_size, 0)),
-		xf.xform(Vector2(0, 0.5 * arrow_size)),
-		xf.xform(Vector2(0, -0.5 * arrow_size))
+	Hector<Hector2> pts = {
+		xf.xform(Hector2(arrow_size, 0)),
+		xf.xform(Hector2(0, 0.5 * arrow_size)),
+		xf.xform(Hector2(0, -0.5 * arrow_size))
 	};
 
-	Vector<Color> cols = { draw_col, draw_col, draw_col };
+	Hector<Color> cols = { draw_col, draw_col, draw_col };
 
-	draw_primitive(pts, cols, Vector<Vector2>());
+	draw_primitive(pts, cols, Hector<Hector2>());
 }
 
 void RayCast2D::force_raycast_update() {
@@ -360,7 +360,7 @@ void RayCast2D::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "exclude_parent"), "set_exclude_parent_body", "get_exclude_parent_body");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "target_position", PROPERTY_HINT_NONE, "suffix:px"), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "target_position", PROPERTY_HINT_NONE, "suffix:px"), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_2D_PHYSICS), "set_collision_mask", "get_collision_mask");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "hit_from_inside"), "set_hit_from_inside", "is_hit_from_inside_enabled");
 

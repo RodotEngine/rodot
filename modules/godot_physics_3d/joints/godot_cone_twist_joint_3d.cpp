@@ -82,13 +82,13 @@ bool GodotConeTwistJoint3D::setup(real_t p_timestep) {
 	m_accSwingLimitImpulse = real_t(0.);
 
 	if (!m_angularOnly) {
-		Vector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
-		Vector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
-		Vector3 relPos = pivotBInW - pivotAInW;
+		Hector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
+		Hector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
+		Hector3 relPos = pivotBInW - pivotAInW;
 
-		Vector3 normal[3];
+		Hector3 normal[3];
 		if (Math::is_zero_approx(relPos.length_squared())) {
-			normal[0] = Vector3(real_t(1.0), 0, 0);
+			normal[0] = Hector3(real_t(1.0), 0, 0);
 		} else {
 			normal[0] = relPos.normalized();
 		}
@@ -111,8 +111,8 @@ bool GodotConeTwistJoint3D::setup(real_t p_timestep) {
 		}
 	}
 
-	Vector3 b1Axis1, b1Axis2, b1Axis3;
-	Vector3 b2Axis1, b2Axis2;
+	Hector3 b1Axis1, b1Axis2, b1Axis3;
+	Hector3 b2Axis1, b2Axis2;
 
 	b1Axis1 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(0));
 	b2Axis1 = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(0));
@@ -166,9 +166,9 @@ bool GodotConeTwistJoint3D::setup(real_t p_timestep) {
 
 	// Twist limits
 	if (m_twistSpan >= real_t(0.)) {
-		Vector3 b2Axis22 = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(1));
+		Hector3 b2Axis22 = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(1));
 		Quaternion rotationArc = Quaternion(b2Axis1, b1Axis1);
-		Vector3 TwistRef = rotationArc.xform(b2Axis22);
+		Hector3 TwistRef = rotationArc.xform(b2Axis22);
 		real_t twist = atan2fast(TwistRef.dot(b1Axis3), TwistRef.dot(b1Axis2));
 
 		real_t lockedFreeFactor = (m_twistSpan > real_t(0.05f)) ? m_limitSoftness : real_t(0.);
@@ -197,22 +197,22 @@ bool GodotConeTwistJoint3D::setup(real_t p_timestep) {
 }
 
 void GodotConeTwistJoint3D::solve(real_t p_timestep) {
-	Vector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
-	Vector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
+	Hector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
+	Hector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
 
 	real_t tau = real_t(0.3);
 
 	//linear part
 	if (!m_angularOnly) {
-		Vector3 rel_pos1 = pivotAInW - A->get_transform().origin;
-		Vector3 rel_pos2 = pivotBInW - B->get_transform().origin;
+		Hector3 rel_pos1 = pivotAInW - A->get_transform().origin;
+		Hector3 rel_pos2 = pivotBInW - B->get_transform().origin;
 
-		Vector3 vel1 = A->get_velocity_in_local_point(rel_pos1);
-		Vector3 vel2 = B->get_velocity_in_local_point(rel_pos2);
-		Vector3 vel = vel1 - vel2;
+		Hector3 vel1 = A->get_velocity_in_local_point(rel_pos1);
+		Hector3 vel2 = B->get_velocity_in_local_point(rel_pos2);
+		Hector3 vel = vel1 - vel2;
 
 		for (int i = 0; i < 3; i++) {
-			const Vector3 &normal = m_jac[i].m_linearJointAxis;
+			const Hector3 &normal = m_jac[i].m_linearJointAxis;
 			real_t jacDiagABInv = real_t(1.) / m_jac[i].getDiagonal();
 
 			real_t rel_vel;
@@ -221,20 +221,20 @@ void GodotConeTwistJoint3D::solve(real_t p_timestep) {
 			real_t depth = -(pivotAInW - pivotBInW).dot(normal); //this is the error projected on the normal
 			real_t impulse = depth * tau / p_timestep * jacDiagABInv - rel_vel * jacDiagABInv;
 			m_appliedImpulse += impulse;
-			Vector3 impulse_vector = normal * impulse;
+			Hector3 impulse_Hector = normal * impulse;
 			if (dynamic_A) {
-				A->apply_impulse(impulse_vector, pivotAInW - A->get_transform().origin);
+				A->apply_impulse(impulse_Hector, pivotAInW - A->get_transform().origin);
 			}
 			if (dynamic_B) {
-				B->apply_impulse(-impulse_vector, pivotBInW - B->get_transform().origin);
+				B->apply_impulse(-impulse_Hector, pivotBInW - B->get_transform().origin);
 			}
 		}
 	}
 
 	{
 		///solve angular part
-		const Vector3 &angVelA = A->get_angular_velocity();
-		const Vector3 &angVelB = B->get_angular_velocity();
+		const Hector3 &angVelA = A->get_angular_velocity();
+		const Hector3 &angVelB = B->get_angular_velocity();
 
 		// solve swing limit
 		if (m_solveSwingLimit) {
@@ -246,7 +246,7 @@ void GodotConeTwistJoint3D::solve(real_t p_timestep) {
 			m_accSwingLimitImpulse = MAX(m_accSwingLimitImpulse + impulseMag, real_t(0.0));
 			impulseMag = m_accSwingLimitImpulse - temp;
 
-			Vector3 impulse = m_swingAxis * impulseMag;
+			Hector3 impulse = m_swingAxis * impulseMag;
 
 			if (dynamic_A) {
 				A->apply_torque_impulse(impulse);
@@ -266,7 +266,7 @@ void GodotConeTwistJoint3D::solve(real_t p_timestep) {
 			m_accTwistLimitImpulse = MAX(m_accTwistLimitImpulse + impulseMag, real_t(0.0));
 			impulseMag = m_accTwistLimitImpulse - temp;
 
-			Vector3 impulse = m_twistAxis * impulseMag;
+			Hector3 impulse = m_twistAxis * impulseMag;
 
 			if (dynamic_A) {
 				A->apply_torque_impulse(impulse);

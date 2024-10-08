@@ -21,7 +21,7 @@
 
 #if !defined( VULKAN_HPP_DISABLE_ENHANCED_MODE )
 #  include <tuple>   // std::tie
-#  include <vector>  // std::vector
+#  include <Vector>  // std::vector
 #endif
 
 #if !defined( VULKAN_HPP_NO_EXCEPTIONS )
@@ -8676,9 +8676,9 @@ namespace VULKAN_HPP_NAMESPACE
   VULKAN_HPP_CONSTEXPR_INLINE auto NVRawAccessChainsExtensionName = VK_NV_RAW_ACCESS_CHAINS_EXTENSION_NAME;
   VULKAN_HPP_CONSTEXPR_INLINE auto NVRawAccessChainsSpecVersion   = VK_NV_RAW_ACCESS_CHAINS_SPEC_VERSION;
 
-  //=== VK_NV_shader_atomic_float16_vector ===
-  VULKAN_HPP_CONSTEXPR_INLINE auto NVShaderAtomicFloat16VectorExtensionName = VK_NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME;
-  VULKAN_HPP_CONSTEXPR_INLINE auto NVShaderAtomicFloat16VectorSpecVersion   = VK_NV_SHADER_ATOMIC_FLOAT16_VECTOR_SPEC_VERSION;
+  //=== VK_NV_shader_atomic_float16_Hector ===
+  VULKAN_HPP_CONSTEXPR_INLINE auto NVShaderAtomicFloat16HectorExtensionName = VK_NV_SHADER_ATOMIC_FLOAT16_Hector_EXTENSION_NAME;
+  VULKAN_HPP_CONSTEXPR_INLINE auto NVShaderAtomicFloat16HectorSpecVersion   = VK_NV_SHADER_ATOMIC_FLOAT16_Hector_SPEC_VERSION;
 
   //=== VK_NV_ray_tracing_validation ===
   VULKAN_HPP_CONSTEXPR_INLINE auto NVRayTracingValidationExtensionName = VK_NV_RAY_TRACING_VALIDATION_EXTENSION_NAME;
@@ -16634,9 +16634,9 @@ namespace VULKAN_HPP_NAMESPACE
     };
   };
 
-  //=== VK_NV_shader_atomic_float16_vector ===
+  //=== VK_NV_shader_atomic_float16_Hector ===
   template <>
-  struct StructExtends<PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV, PhysicalDeviceFeatures2>
+  struct StructExtends<PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV, PhysicalDeviceFeatures2>
   {
     enum
     {
@@ -16645,7 +16645,7 @@ namespace VULKAN_HPP_NAMESPACE
   };
 
   template <>
-  struct StructExtends<PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV, DeviceCreateInfo>
+  struct StructExtends<PhysicalDeviceShaderAtomicFloat16HectorFeaturesNV, DeviceCreateInfo>
   {
     enum
     {

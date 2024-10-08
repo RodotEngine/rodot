@@ -68,7 +68,7 @@ uint32_t EditorSceneFormatImporter::get_import_flags() const {
 }
 
 void EditorSceneFormatImporter::get_extensions(List<String> *r_extensions) const {
-	Vector<String> arr;
+	Hector<String> arr;
 	if (GDVIRTUAL_CALL(_get_extensions, arr)) {
 		for (int i = 0; i < arr.size(); i++) {
 			r_extensions->push_back(arr[i]);
@@ -383,7 +383,7 @@ void ResourceImporterScene::_pre_fix_global(Node *p_scene, const HashMap<StringN
 				}
 			}
 			for (int bone_i = 0; bone_i < skeleton->get_bone_count(); bone_i++) {
-				NodePath bone_path(skeleton_path.get_names(), Vector<StringName>{ skeleton->get_bone_name(bone_i) }, false);
+				NodePath bone_path(skeleton_path.get_names(), Hector<StringName>{ skeleton->get_bone_name(bone_i) }, false);
 				if (!existing_pos_tracks.has(bone_path)) {
 					int pos_t = reset_anim->add_track(Animation::TYPE_POSITION_3D);
 					reset_anim->track_set_path(pos_t, bone_path);
@@ -445,13 +445,13 @@ static String _fixstr(const String &p_what, const String &p_str) {
 	return what;
 }
 
-static void _pre_gen_shape_list(Ref<ImporterMesh> &mesh, Vector<Ref<Shape3D>> &r_shape_list, bool p_convex) {
+static void _pre_gen_shape_list(Ref<ImporterMesh> &mesh, Hector<Ref<Shape3D>> &r_shape_list, bool p_convex) {
 	ERR_FAIL_COND_MSG(mesh.is_null(), "Cannot generate shape list with null mesh value.");
 	if (!p_convex) {
 		Ref<ConcavePolygonShape3D> shape = mesh->create_trimesh_shape();
 		r_shape_list.push_back(shape);
 	} else {
-		Vector<Ref<Shape3D>> cd;
+		Hector<Ref<Shape3D>> cd;
 		cd.push_back(mesh->create_convex_shape(true, /*Passing false, otherwise VHACD will be used to simplify (Decompose) the Mesh.*/ false));
 		if (cd.size()) {
 			for (int i = 0; i < cd.size(); i++) {
@@ -468,7 +468,7 @@ struct ScalableNodeCollection {
 	HashSet<Ref<Animation>> animations;
 };
 
-void _rescale_importer_mesh(Vector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_shadow = false) {
+void _rescale_importer_mesh(Hector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_shadow = false) {
 	// MESH and SKIN data divide, to compensate for object position multiplying.
 
 	const int surf_count = p_mesh->get_surface_count();
@@ -483,9 +483,9 @@ void _rescale_importer_mesh(Vector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_s
 		uint64_t fmt_compress_flags = 0;
 	};
 
-	Vector<LocalSurfData> surf_data_by_mesh;
+	Hector<LocalSurfData> surf_data_by_mesh;
 
-	Vector<String> blendshape_names;
+	Hector<String> blendshape_names;
 	for (int bsidx = 0; bsidx < blendshape_count; bsidx++) {
 		blendshape_names.append(p_mesh->get_blend_shape_name(bsidx));
 	}
@@ -498,7 +498,7 @@ void _rescale_importer_mesh(Vector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_s
 		Dictionary lods;
 		Ref<Material> mat = p_mesh->get_surface_material(surf_idx);
 		{
-			Vector<Vector3> vertex_array = arr[ArrayMesh::ARRAY_VERTEX];
+			Hector<Hector3> vertex_array = arr[ArrayMesh::ARRAY_VERTEX];
 			for (int vert_arr_i = 0; vert_arr_i < vertex_array.size(); vert_arr_i++) {
 				vertex_array.write[vert_arr_i] = vertex_array[vert_arr_i] * p_scale;
 			}
@@ -507,7 +507,7 @@ void _rescale_importer_mesh(Vector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_s
 		Array blendshapes;
 		for (int bsidx = 0; bsidx < blendshape_count; bsidx++) {
 			Array current_bsarr = p_mesh->get_surface_blend_shape_arrays(surf_idx, bsidx);
-			Vector<Vector3> current_bs_vertex_array = current_bsarr[ArrayMesh::ARRAY_VERTEX];
+			Hector<Hector3> current_bs_vertex_array = current_bsarr[ArrayMesh::ARRAY_VERTEX];
 			int current_bs_vert_arr_len = current_bs_vertex_array.size();
 			for (int32_t bs_vert_arr_i = 0; bs_vert_arr_i < current_bs_vert_arr_len; bs_vert_arr_i++) {
 				current_bs_vertex_array.write[bs_vert_arr_i] = current_bs_vertex_array[bs_vert_arr_i] * p_scale;
@@ -551,7 +551,7 @@ void _rescale_importer_mesh(Vector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_s
 	}
 }
 
-void _rescale_skin(Vector3 p_scale, Ref<Skin> p_skin) {
+void _rescale_skin(Hector3 p_scale, Ref<Skin> p_skin) {
 	// MESH and SKIN data divide, to compensate for object position multiplying.
 	for (int i = 0; i < p_skin->get_bind_count(); i++) {
 		Transform3D transform = p_skin->get_bind_pose(i);
@@ -559,11 +559,11 @@ void _rescale_skin(Vector3 p_scale, Ref<Skin> p_skin) {
 	}
 }
 
-void _rescale_animation(Vector3 p_scale, Ref<Animation> p_animation) {
+void _rescale_animation(Hector3 p_scale, Ref<Animation> p_animation) {
 	for (int track_idx = 0; track_idx < p_animation->get_track_count(); track_idx++) {
 		if (p_animation->track_get_type(track_idx) == Animation::TYPE_POSITION_3D) {
 			for (int key_idx = 0; key_idx < p_animation->track_get_key_count(track_idx); key_idx++) {
-				Vector3 value = p_animation->track_get_key_value(track_idx, key_idx);
+				Hector3 value = p_animation->track_get_key_value(track_idx, key_idx);
 				value = p_scale * value;
 				p_animation->track_set_key_value(track_idx, key_idx, value);
 			}
@@ -571,14 +571,14 @@ void _rescale_animation(Vector3 p_scale, Ref<Animation> p_animation) {
 	}
 }
 
-void _apply_scale_to_scalable_node_collection(ScalableNodeCollection &p_collection, Vector3 p_scale) {
+void _apply_scale_to_scalable_node_collection(ScalableNodeCollection &p_collection, Hector3 p_scale) {
 	for (Node3D *node_3d : p_collection.node_3ds) {
 		node_3d->set_position(p_scale * node_3d->get_position());
 		Skeleton3D *skeleton_3d = Object::cast_to<Skeleton3D>(node_3d);
 		if (skeleton_3d) {
 			for (int i = 0; i < skeleton_3d->get_bone_count(); i++) {
 				Transform3D rest = skeleton_3d->get_bone_rest(i);
-				Vector3 position = skeleton_3d->get_bone_pose_position(i);
+				Hector3 position = skeleton_3d->get_bone_pose_position(i);
 				skeleton_3d->set_bone_rest(i, Transform3D(rest.basis, p_scale * rest.origin));
 				skeleton_3d->set_bone_pose_position(i, p_scale * position);
 			}
@@ -631,13 +631,13 @@ void _populate_scalable_nodes_collection(Node *p_node, ScalableNodeCollection &p
 	}
 }
 
-void _apply_permanent_scale_to_descendants(Node *p_root_node, Vector3 p_scale) {
+void _apply_permanent_scale_to_descendants(Node *p_root_node, Hector3 p_scale) {
 	ScalableNodeCollection scalable_node_collection;
 	_populate_scalable_nodes_collection(p_root_node, scalable_node_collection);
 	_apply_scale_to_scalable_node_collection(scalable_node_collection, p_scale);
 }
 
-Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> &r_collision_map, Pair<PackedVector3Array, PackedInt32Array> *r_occluder_arrays, List<Pair<NodePath, Node *>> &r_node_renames, const HashMap<StringName, Variant> &p_options) {
+Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Hector<Ref<Shape3D>>> &r_collision_map, Pair<PackedHector3Array, PackedInt32Array> *r_occluder_arrays, List<Pair<NodePath, Node *>> &r_node_renames, const HashMap<StringName, Variant> &p_options) {
 	// Children first.
 	for (int i = 0; i < p_node->get_child_count(); i++) {
 		Node *r = _pre_fix_node(p_node->get_child(i), p_root, r_collision_map, r_occluder_arrays, r_node_renames, p_options);
@@ -719,7 +719,7 @@ Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<R
 				for (int i = 0; i < anim->get_track_count(); i++) {
 					NodePath path = anim->track_get_path(i);
 					// Convert track path to absolute node path without subnames (some manual work because we are not in the scene tree).
-					Vector<StringName> absolute_path_names = path_prefix.get_names();
+					Hector<StringName> absolute_path_names = path_prefix.get_names();
 					absolute_path_names.append_array(path.get_names());
 					NodePath absolute_path(absolute_path_names, false);
 					absolute_path.simplify();
@@ -781,7 +781,7 @@ Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<R
 			Ref<ImporterMesh> mesh = mi->get_mesh();
 
 			if (mesh.is_valid()) {
-				Vector<Ref<Shape3D>> shapes;
+				Hector<Ref<Shape3D>> shapes;
 				if (r_collision_map.has(mesh)) {
 					shapes = r_collision_map[mesh];
 				} else if (_teststr(name, "colonly")) {
@@ -819,7 +819,7 @@ Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<R
 			CollisionShape3D *colshape = memnew(CollisionShape3D);
 			if (empty_draw_type == "CUBE") {
 				BoxShape3D *boxShape = memnew(BoxShape3D);
-				boxShape->set_size(Vector3(2, 2, 2));
+				boxShape->set_size(Hector3(2, 2, 2));
 				colshape->set_shape(boxShape);
 			} else if (empty_draw_type == "SINGLE_ARROW") {
 				SeparationRayShape3D *rayShape = memnew(SeparationRayShape3D);
@@ -847,7 +847,7 @@ Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<R
 		Ref<ImporterMesh> mesh = mi->get_mesh();
 
 		if (mesh.is_valid()) {
-			Vector<Ref<Shape3D>> shapes;
+			Hector<Ref<Shape3D>> shapes;
 			if (r_collision_map.has(mesh)) {
 				shapes = r_collision_map[mesh];
 			} else {
@@ -873,7 +873,7 @@ Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<R
 		Ref<ImporterMesh> mesh = mi->get_mesh();
 
 		if (mesh.is_valid()) {
-			Vector<Ref<Shape3D>> shapes;
+			Hector<Ref<Shape3D>> shapes;
 			String fixed_name;
 			if (r_collision_map.has(mesh)) {
 				shapes = r_collision_map[mesh];
@@ -999,7 +999,7 @@ Node *ResourceImporterScene::_pre_fix_node(Node *p_node, Node *p_root, HashMap<R
 
 		Ref<ImporterMesh> mesh = mi->get_mesh();
 		if (!mesh.is_null()) {
-			Vector<Ref<Shape3D>> shapes;
+			Hector<Ref<Shape3D>> shapes;
 			if (r_collision_map.has(mesh)) {
 				shapes = r_collision_map[mesh];
 			} else if (_teststr(mesh->get_name(), "col")) {
@@ -1133,7 +1133,7 @@ Node *ResourceImporterScene::_post_fix_animations(Node *p_node, Node *p_root, co
 			for (const StringName &name : anims) {
 				Ref<Animation> anim = ap->get_animation(name);
 				int track_count = anim->get_track_count();
-				LocalVector<int> tracks_to_keep;
+				LocalHector<int> tracks_to_keep;
 				for (int track_i = 0; track_i < track_count; track_i++) {
 					tracks_to_keep.push_back(track_i);
 					int track_channel_type = 0;
@@ -1156,9 +1156,9 @@ Node *ResourceImporterScene::_post_fix_animations(Node *p_node, Node *p_root, co
 					Node3D *n3d = Object::cast_to<Node3D>(n);
 					Skeleton3D *skel = Object::cast_to<Skeleton3D>(n);
 					bool keep_track = false;
-					Vector3 loc;
+					Hector3 loc;
 					Quaternion rot;
-					Vector3 scale;
+					Hector3 scale;
 					if (skel && path.get_subname_count() > 0) {
 						StringName bone = path.get_subname(0);
 						int bone_idx = skel->find_bone(bone);
@@ -1191,7 +1191,7 @@ Node *ResourceImporterScene::_post_fix_animations(Node *p_node, Node *p_root, co
 					for (int key_i = 0; key_i < anim->track_get_key_count(track_i) && !keep_track; key_i++) {
 						switch (track_channel_type) {
 							case TRACK_CHANNEL_POSITION: {
-								Vector3 key_pos;
+								Hector3 key_pos;
 								anim->position_track_get_key(track_i, key_i, &key_pos);
 								if (!key_pos.is_equal_approx(loc)) {
 									keep_track = true;
@@ -1211,7 +1211,7 @@ Node *ResourceImporterScene::_post_fix_animations(Node *p_node, Node *p_root, co
 								}
 							} break;
 							case TRACK_CHANNEL_SCALE: {
-								Vector3 key_scl;
+								Hector3 key_scl;
 								anim->scale_track_get_key(track_i, key_i, &key_scl);
 								if (!key_scl.is_equal_approx(scale)) {
 									keep_track = true;
@@ -1241,7 +1241,7 @@ Node *ResourceImporterScene::_post_fix_animations(Node *p_node, Node *p_root, co
 			for (const StringName &name : anims) {
 				Ref<Animation> anim = ap->get_animation(name);
 				int track_count = anim->get_track_count();
-				LocalVector<int> tracks_to_keep;
+				LocalHector<int> tracks_to_keep;
 				for (int track_i = 0; track_i < track_count; track_i++) {
 					tracks_to_keep.push_back(track_i);
 					int track_channel_type = 0;
@@ -1355,7 +1355,7 @@ Node *ResourceImporterScene::_post_fix_animations(Node *p_node, Node *p_root, co
 	return p_node;
 }
 
-Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> &collision_map, Pair<PackedVector3Array, PackedInt32Array> &r_occluder_arrays, HashSet<Ref<ImporterMesh>> &r_scanned_meshes, const Dictionary &p_node_data, const Dictionary &p_material_data, const Dictionary &p_animation_data, float p_animation_fps, float p_applied_root_scale) {
+Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Hector<Ref<Shape3D>>> &collision_map, Pair<PackedHector3Array, PackedInt32Array> &r_occluder_arrays, HashSet<Ref<ImporterMesh>> &r_scanned_meshes, const Dictionary &p_node_data, const Dictionary &p_material_data, const Dictionary &p_animation_data, float p_animation_fps, float p_applied_root_scale) {
 	// children first
 	for (int i = 0; i < p_node->get_child_count(); i++) {
 		Node *r = _post_fix_node(p_node->get_child(i), p_root, collision_map, r_occluder_arrays, r_scanned_meshes, p_node_data, p_material_data, p_animation_data, p_animation_fps, p_applied_root_scale);
@@ -1474,7 +1474,7 @@ Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<
 					}
 					switch (rest_animation->track_get_type(track_i)) {
 						case Animation::TYPE_POSITION_3D: {
-							Vector3 bone_position = rest_animation->position_track_interpolate(track_i, rest_animation_timestamp);
+							Hector3 bone_position = rest_animation->position_track_interpolate(track_i, rest_animation_timestamp);
 							skeleton->set_bone_rest(bone_idx, Transform3D(skeleton->get_bone_rest(bone_idx).basis, bone_position));
 						} break;
 						case Animation::TYPE_ROTATION_3D: {
@@ -1564,7 +1564,7 @@ Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<
 				}
 
 				if (mesh_physics_mode != MeshPhysicsMode::MESH_PHYSICS_DISABLED) {
-					Vector<Ref<Shape3D>> shapes;
+					Hector<Ref<Shape3D>> shapes;
 					if (collision_map.has(m)) {
 						shapes = collision_map[m];
 					} else {
@@ -1846,7 +1846,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 
 						if (kt > (from + 0.01) && k > 0) {
 							if (anim->track_get_type(j) == Animation::TYPE_POSITION_3D) {
-								Vector3 p;
+								Hector3 p;
 								anim->try_position_track_interpolate(j, from, &p);
 								new_anim->position_track_insert_key(dtrack, 0, p);
 							} else if (anim->track_get_type(j) == Animation::TYPE_ROTATION_3D) {
@@ -1854,7 +1854,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 								anim->try_rotation_track_interpolate(j, from, &r);
 								new_anim->rotation_track_insert_key(dtrack, 0, r);
 							} else if (anim->track_get_type(j) == Animation::TYPE_SCALE_3D) {
-								Vector3 s;
+								Hector3 s;
 								anim->try_scale_track_interpolate(j, from, &s);
 								new_anim->scale_track_insert_key(dtrack, 0, s);
 							} else if (anim->track_get_type(j) == Animation::TYPE_VALUE) {
@@ -1869,7 +1869,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 					}
 
 					if (anim->track_get_type(j) == Animation::TYPE_POSITION_3D) {
-						Vector3 p;
+						Hector3 p;
 						anim->position_track_get_key(j, k, &p);
 						new_anim->position_track_insert_key(dtrack, kt - from, p);
 					} else if (anim->track_get_type(j) == Animation::TYPE_ROTATION_3D) {
@@ -1877,7 +1877,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 						anim->rotation_track_get_key(j, k, &r);
 						new_anim->rotation_track_insert_key(dtrack, kt - from, r);
 					} else if (anim->track_get_type(j) == Animation::TYPE_SCALE_3D) {
-						Vector3 s;
+						Hector3 s;
 						anim->scale_track_get_key(j, k, &s);
 						new_anim->scale_track_insert_key(dtrack, kt - from, s);
 					} else if (anim->track_get_type(j) == Animation::TYPE_VALUE) {
@@ -1892,7 +1892,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 
 				if (dtrack != -1 && kt >= to) {
 					if (anim->track_get_type(j) == Animation::TYPE_POSITION_3D) {
-						Vector3 p;
+						Hector3 p;
 						anim->try_position_track_interpolate(j, to, &p);
 						new_anim->position_track_insert_key(dtrack, to - from, p);
 					} else if (anim->track_get_type(j) == Animation::TYPE_ROTATION_3D) {
@@ -1900,7 +1900,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 						anim->try_rotation_track_interpolate(j, to, &r);
 						new_anim->rotation_track_insert_key(dtrack, to - from, r);
 					} else if (anim->track_get_type(j) == Animation::TYPE_SCALE_3D) {
-						Vector3 s;
+						Hector3 s;
 						anim->try_scale_track_interpolate(j, to, &s);
 						new_anim->scale_track_insert_key(dtrack, to - from, s);
 					} else if (anim->track_get_type(j) == Animation::TYPE_VALUE) {
@@ -1920,7 +1920,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 				new_anim->track_set_path(dtrack, anim->track_get_path(j));
 				new_anim->track_set_imported(dtrack, true);
 				if (anim->track_get_type(j) == Animation::TYPE_POSITION_3D) {
-					Vector3 p;
+					Hector3 p;
 					anim->try_position_track_interpolate(j, from, &p);
 					new_anim->position_track_insert_key(dtrack, 0, p);
 					anim->try_position_track_interpolate(j, to, &p);
@@ -1932,7 +1932,7 @@ void ResourceImporterScene::_create_slices(AnimationPlayer *ap, Ref<Animation> a
 					anim->try_rotation_track_interpolate(j, to, &r);
 					new_anim->rotation_track_insert_key(dtrack, to - from, r);
 				} else if (anim->track_get_type(j) == Animation::TYPE_SCALE_3D) {
-					Vector3 s;
+					Hector3 s;
 					anim->try_scale_track_interpolate(j, from, &s);
 					new_anim->scale_track_insert_key(dtrack, 0, s);
 					anim->try_scale_track_interpolate(j, to, &s);
@@ -2028,11 +2028,11 @@ void ResourceImporterScene::get_internal_import_options(InternalImportCategory p
 			r_options->push_back(ImportOption(PropertyInfo(Variant::BOOL, "decomposition/project_hull_vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), decomposition_default->get_project_hull_vertices()));
 
 			// Primitives: Box, Sphere, Cylinder, Capsule.
-			r_options->push_back(ImportOption(PropertyInfo(Variant::VECTOR3, "primitive/size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), Vector3(2.0, 2.0, 2.0)));
+			r_options->push_back(ImportOption(PropertyInfo(Variant::HECTOR3, "primitive/size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), Hector3(2.0, 2.0, 2.0)));
 			r_options->push_back(ImportOption(PropertyInfo(Variant::FLOAT, "primitive/height", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), 1.0));
 			r_options->push_back(ImportOption(PropertyInfo(Variant::FLOAT, "primitive/radius", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), 1.0));
-			r_options->push_back(ImportOption(PropertyInfo(Variant::VECTOR3, "primitive/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), Vector3()));
-			r_options->push_back(ImportOption(PropertyInfo(Variant::VECTOR3, "primitive/rotation", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), Vector3()));
+			r_options->push_back(ImportOption(PropertyInfo(Variant::HECTOR3, "primitive/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), Hector3()));
+			r_options->push_back(ImportOption(PropertyInfo(Variant::HECTOR3, "primitive/rotation", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), Hector3()));
 
 			r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "generate/occluder", PROPERTY_HINT_ENUM, "Disabled,Mesh + Occluder,Occluder Only", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), 0));
 			r_options->push_back(ImportOption(PropertyInfo(Variant::FLOAT, "occluder/simplification_distance", PROPERTY_HINT_RANGE, "0.0,2.0,0.01", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), 0.1f));
@@ -2457,7 +2457,7 @@ Array ResourceImporterScene::_get_skinned_pose_transforms(ImporterMeshInstance3D
 	return skin_pose_transform_array;
 }
 
-Node *ResourceImporterScene::_generate_meshes(Node *p_node, const Dictionary &p_mesh_data, bool p_generate_lods, bool p_create_shadow_meshes, LightBakeMode p_light_bake_mode, float p_lightmap_texel_size, const Vector<uint8_t> &p_src_lightmap_cache, Vector<Vector<uint8_t>> &r_lightmap_caches) {
+Node *ResourceImporterScene::_generate_meshes(Node *p_node, const Dictionary &p_mesh_data, bool p_generate_lods, bool p_create_shadow_meshes, LightBakeMode p_light_bake_mode, float p_lightmap_texel_size, const Hector<uint8_t> &p_src_lightmap_cache, Hector<Hector<uint8_t>> &r_lightmap_caches) {
 	ImporterMeshInstance3D *src_mesh_node = Object::cast_to<ImporterMeshInstance3D>(p_node);
 	if (src_mesh_node) {
 		//is mesh
@@ -2555,7 +2555,7 @@ Node *ResourceImporterScene::_generate_meshes(Node *p_node, const Dictionary &p_
 						n = n->get_parent_node_3d();
 					}
 
-					Vector<uint8_t> lightmap_cache;
+					Hector<uint8_t> lightmap_cache;
 					src_mesh_node->get_mesh()->lightmap_unwrap_cached(xf, p_lightmap_texel_size, p_src_lightmap_cache, lightmap_cache);
 
 					if (!lightmap_cache.is_empty()) {
@@ -2655,7 +2655,7 @@ Node *ResourceImporterScene::_generate_meshes(Node *p_node, const Dictionary &p_
 	return p_node;
 }
 
-void ResourceImporterScene::_add_shapes(Node *p_node, const Vector<Ref<Shape3D>> &p_shapes) {
+void ResourceImporterScene::_add_shapes(Node *p_node, const Hector<Ref<Shape3D>> &p_shapes) {
 	for (const Ref<Shape3D> &E : p_shapes) {
 		CollisionShape3D *cshape = memnew(CollisionShape3D);
 		cshape->set_shape(E);
@@ -2757,9 +2757,9 @@ void ResourceImporterScene::_optimize_track_usage(AnimationPlayer *p_player, Ani
 				} else {
 					Skeleton3D *skel = Object::cast_to<Skeleton3D>(n);
 					Node3D *n3d = Object::cast_to<Node3D>(n);
-					Vector3 loc;
+					Hector3 loc;
 					Quaternion rot;
-					Vector3 scale;
+					Hector3 scale;
 					if (skel && path.get_subname_count() > 0) {
 						StringName bone = path.get_subname(0);
 						int bone_idx = skel->find_bone(bone);
@@ -2861,7 +2861,7 @@ Node *ResourceImporterScene::pre_import(const String &p_source_file, const HashM
 
 	_pre_fix_global(scene, p_options);
 
-	HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> collision_map;
+	HashMap<Ref<ImporterMesh>, Hector<Ref<Shape3D>>> collision_map;
 	List<Pair<NodePath, Node *>> node_renames;
 	_pre_fix_node(scene, scene, collision_map, nullptr, node_renames, p_options);
 
@@ -2986,7 +2986,7 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 	}
 	if (Object::cast_to<Node3D>(scene)) {
 		Node3D *scene_3d = Object::cast_to<Node3D>(scene);
-		Vector3 scale = Vector3(root_scale, root_scale, root_scale);
+		Hector3 scale = Hector3(root_scale, root_scale, root_scale);
 		if (apply_root) {
 			_apply_permanent_scale_to_descendants(scene, scale);
 		} else {
@@ -2997,8 +2997,8 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 	_pre_fix_global(scene, p_options);
 
 	HashSet<Ref<ImporterMesh>> scanned_meshes;
-	HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> collision_map;
-	Pair<PackedVector3Array, PackedInt32Array> occluder_arrays;
+	HashMap<Ref<ImporterMesh>, Hector<Ref<Shape3D>>> collision_map;
+	Pair<PackedHector3Array, PackedInt32Array> occluder_arrays;
 	List<Pair<NodePath, Node *>> node_renames;
 
 	_pre_fix_node(scene, scene, collision_map, &occluder_arrays, node_renames, p_options);
@@ -3065,8 +3065,8 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 	float texel_size = p_options["meshes/lightmap_texel_size"];
 	float lightmap_texel_size = MAX(0.001, texel_size);
 
-	Vector<uint8_t> src_lightmap_cache;
-	Vector<Vector<uint8_t>> mesh_lightmap_caches;
+	Hector<uint8_t> src_lightmap_cache;
+	Hector<Hector<uint8_t>> mesh_lightmap_caches;
 
 	{
 		src_lightmap_cache = FileAccess::get_file_as_bytes(p_source_file + ".unwrap_cache", &err);
@@ -3190,8 +3190,8 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 ResourceImporterScene *ResourceImporterScene::scene_singleton = nullptr;
 ResourceImporterScene *ResourceImporterScene::animation_singleton = nullptr;
 
-Vector<Ref<EditorSceneFormatImporter>> ResourceImporterScene::scene_importers;
-Vector<Ref<EditorScenePostImportPlugin>> ResourceImporterScene::post_importer_plugins;
+Hector<Ref<EditorSceneFormatImporter>> ResourceImporterScene::scene_importers;
+Hector<Ref<EditorScenePostImportPlugin>> ResourceImporterScene::post_importer_plugins;
 
 bool ResourceImporterScene::has_advanced_options() const {
 	return true;

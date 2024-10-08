@@ -60,7 +60,7 @@ private:
 	CompressionMode compression_mode = COMPRESSION_MODE_LOSSLESS;
 	static bool keep_all_compressed_buffers;
 	bool keep_compressed_buffer = false;
-	Vector<uint8_t> compressed_buffer;
+	Hector<uint8_t> compressed_buffer;
 	Size2 size;
 	Size2 size_override;
 	bool mipmaps = false;
@@ -72,8 +72,8 @@ private:
 	bool image_stored = false;
 
 protected:
-	Vector<uint8_t> _get_data() const;
-	void _set_data(const Vector<uint8_t> &p_data);
+	Hector<uint8_t> _get_data() const;
+	void _set_data(const Hector<uint8_t> &p_data);
 
 	static void _bind_methods();
 

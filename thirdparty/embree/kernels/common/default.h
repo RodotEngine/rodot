@@ -11,11 +11,11 @@
 #include "../../common/sys/intrinsics.h"
 #include "../../common/sys/atomic.h"
 #include "../../common/sys/mutex.h"
-#include "../../common/sys/vector.h"
+#include "../../common/sys/Hector.h"
 #include "../../common/sys/array.h"
 #include "../../common/sys/estring.h"
 #include "../../common/sys/regression.h"
-#include "../../common/sys/vector.h"
+#include "../../common/sys/Hector.h"
 
 #include "../../common/math/emath.h"
 #include "../../common/math/transcendental.h"
@@ -42,11 +42,11 @@
 #include "stat.h"
 #include "profile.h"
 #include "rtcore.h"
-#include "vector.h"
+#include "Hector.h"
 #include "state.h"
 #include "instance_stack.h"
 
-#include <vector>
+#include <Vector>
 #include <map>
 #include <algorithm>
 #include <functional>

@@ -45,7 +45,7 @@ class MovieWriterMJPEG : public MovieWriter {
 
 	uint32_t audio_block_size = 0;
 
-	Vector<uint32_t> jpg_frame_sizes;
+	Hector<uint32_t> jpg_frame_sizes;
 
 	uint64_t total_frames_ofs = 0;
 	uint64_t total_frames_ofs2 = 0;

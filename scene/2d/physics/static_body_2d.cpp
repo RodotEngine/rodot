@@ -30,7 +30,7 @@
 
 #include "static_body_2d.h"
 
-void StaticBody2D::set_constant_linear_velocity(const Vector2 &p_vel) {
+void StaticBody2D::set_constant_linear_velocity(const Hector2 &p_vel) {
 	constant_linear_velocity = p_vel;
 
 	PhysicsServer2D::get_singleton()->body_set_state(get_rid(), PhysicsServer2D::BODY_STATE_LINEAR_VELOCITY, constant_linear_velocity);
@@ -42,7 +42,7 @@ void StaticBody2D::set_constant_angular_velocity(real_t p_vel) {
 	PhysicsServer2D::get_singleton()->body_set_state(get_rid(), PhysicsServer2D::BODY_STATE_ANGULAR_VELOCITY, constant_angular_velocity);
 }
 
-Vector2 StaticBody2D::get_constant_linear_velocity() const {
+Hector2 StaticBody2D::get_constant_linear_velocity() const {
 	return constant_linear_velocity;
 }
 
@@ -87,7 +87,7 @@ void StaticBody2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_physics_material_override"), &StaticBody2D::get_physics_material_override);
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "physics_material_override", PROPERTY_HINT_RESOURCE_TYPE, "PhysicsMaterial"), "set_physics_material_override", "get_physics_material_override");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "constant_linear_velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_constant_linear_velocity", "get_constant_linear_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "constant_linear_velocity", PROPERTY_HINT_NONE, "suffix:px/s"), "set_constant_linear_velocity", "get_constant_linear_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "constant_angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_constant_angular_velocity", "get_constant_angular_velocity");
 }
 

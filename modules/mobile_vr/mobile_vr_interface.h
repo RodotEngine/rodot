@@ -80,18 +80,18 @@ private:
 		that doesn't make sense in hindsight. It only makes marginally more sense to park it here for now,
 		this probably deserves an object of its own
 	*/
-	Vector3 scale_magneto(const Vector3 &p_magnetometer);
-	Basis combine_acc_mag(const Vector3 &p_grav, const Vector3 &p_magneto);
+	Hector3 scale_magneto(const Hector3 &p_magnetometer);
+	Basis combine_acc_mag(const Hector3 &p_grav, const Hector3 &p_magneto);
 
 	int mag_count = 0;
 	bool has_gyro = false;
 	bool sensor_first = false;
-	Vector3 last_accerometer_data;
-	Vector3 last_magnetometer_data;
-	Vector3 mag_current_min;
-	Vector3 mag_current_max;
-	Vector3 mag_next_min;
-	Vector3 mag_next_max;
+	Hector3 last_accerometer_data;
+	Hector3 last_magnetometer_data;
+	Hector3 mag_current_min;
+	Hector3 mag_current_max;
+	Hector3 mag_next_min;
+	Hector3 mag_next_max;
 
 	///@TODO a few support functions for trackers, most are math related and should likely be moved elsewhere
 	float floor_decimals(const float p_value, const float p_decimals) {
@@ -99,16 +99,16 @@ private:
 		return floor(p_value * power_of_10) / power_of_10;
 	};
 
-	Vector3 floor_decimals(const Vector3 &p_vector, const float p_decimals) {
-		return Vector3(floor_decimals(p_vector.x, p_decimals), floor_decimals(p_vector.y, p_decimals), floor_decimals(p_vector.z, p_decimals));
+	Hector3 floor_decimals(const Hector3 &p_Hector, const float p_decimals) {
+		return Hector3(floor_decimals(p_Hector.x, p_decimals), floor_decimals(p_Hector.y, p_decimals), floor_decimals(p_Hector.z, p_decimals));
 	};
 
-	Vector3 low_pass(const Vector3 &p_vector, const Vector3 &p_last_vector, const float p_factor) {
-		return p_vector + (p_factor * (p_last_vector - p_vector));
+	Hector3 low_pass(const Hector3 &p_Hector, const Hector3 &p_last_Hector, const float p_factor) {
+		return p_Hector + (p_factor * (p_last_Hector - p_Hector));
 	};
 
-	Vector3 scrub(const Vector3 &p_vector, const Vector3 &p_last_vector, const float p_decimals, const float p_factor) {
-		return low_pass(floor_decimals(p_vector, p_decimals), p_last_vector, p_factor);
+	Hector3 scrub(const Hector3 &p_Hector, const Hector3 &p_last_Hector, const float p_decimals, const float p_factor) {
+		return low_pass(floor_decimals(p_Hector, p_decimals), p_last_Hector, p_factor);
 	};
 
 	void set_position_from_sensors();
@@ -166,7 +166,7 @@ public:
 	virtual Transform3D get_camera_transform() override;
 	virtual Transform3D get_transform_for_view(uint32_t p_view, const Transform3D &p_cam_transform) override;
 	virtual Projection get_projection_for_view(uint32_t p_view, double p_aspect, double p_z_near, double p_z_far) override;
-	virtual Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
+	virtual Hector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
 
 	virtual void process() override;
 

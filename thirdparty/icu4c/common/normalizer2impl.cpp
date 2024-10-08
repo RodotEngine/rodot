@@ -40,7 +40,7 @@
 #include "uassert.h"
 #include "ucptrie_impl.h"
 #include "uset_imp.h"
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -419,7 +419,7 @@ struct CanonIterData : public UMemory {
     void addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode);
     UMutableCPTrie *mutableTrie;
     UCPTrie *trie;
-    UVector canonStartSets;  // contains UnicodeSet *
+    UHector canonStartSets;  // contains UnicodeSet *
 };
 
 Normalizer2Impl::~Normalizer2Impl() {

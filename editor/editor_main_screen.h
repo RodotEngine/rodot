@@ -55,8 +55,8 @@ private:
 	EditorPlugin *selected_plugin = nullptr;
 
 	HBoxContainer *button_hb = nullptr;
-	Vector<Button *> buttons;
-	Vector<EditorPlugin *> editor_table;
+	Hector<Button *> buttons;
+	Hector<EditorPlugin *> editor_table;
 
 	int _get_current_main_editor() const;
 

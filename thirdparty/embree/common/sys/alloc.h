@@ -4,7 +4,7 @@
 #pragma once
 
 #include "platform.h"
-#include <vector>
+#include <Vector>
 #include <set>
 
 namespace embree
@@ -241,7 +241,7 @@ namespace embree
 
     private:
       std::set<T> IDs;   //!< stores deallocated IDs to be reused
-      T nextID;          //!< next ID to use when IDs vector is empty
+      T nextID;          //!< next ID to use when IDs Hector is empty
     };
 }
 

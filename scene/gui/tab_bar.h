@@ -93,7 +93,7 @@ private:
 	int highlight_arrow = -1;
 	bool buttons_visible = false;
 	bool missing_right = false;
-	Vector<Tab> tabs;
+	Hector<Tab> tabs;
 	int current = -1;
 	int previous = -1;
 	AlignmentMode tab_alignment = ALIGNMENT_LEFT;

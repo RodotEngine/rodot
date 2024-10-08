@@ -130,7 +130,7 @@ private:
 
 	int line_limit = 10000;
 
-	Vector<LogMessage> messages;
+	Hector<LogMessage> messages;
 	// Maps MessageTypes to LogFilters for convenient access and storage (don't need 1 member per filter).
 	HashMap<MessageType, LogFilter *> type_filter_map;
 

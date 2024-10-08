@@ -35,7 +35,7 @@
 
 #include "core/string/string_name.h"
 #include "core/templates/hash_map.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class GDExtensionCompatHashes {
 	struct Mapping {
@@ -44,7 +44,7 @@ class GDExtensionCompatHashes {
 		uint32_t current_hash;
 	};
 
-	static HashMap<StringName, LocalVector<Mapping>> mappings;
+	static HashMap<StringName, LocalHector<Mapping>> mappings;
 
 public:
 	static void initialize();

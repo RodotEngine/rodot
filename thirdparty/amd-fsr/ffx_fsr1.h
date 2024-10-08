@@ -682,7 +682,7 @@ AF1 sharpness){
  void FsrRcasInputF(inout AF1 r,inout AF1 g,inout AF1 b);
 //------------------------------------------------------------------------------------------------------------------------------
  void FsrRcasF(
- out AF1 pixR, // Output values, non-vector so port between RcasFilter() and RcasFilterH() is easy.
+ out AF1 pixR, // Output values, non-Hector so port between RcasFilter() and RcasFilterH() is easy.
  out AF1 pixG,
  out AF1 pixB,
  #ifdef FSR_RCAS_PASSTHROUGH_ALPHA
@@ -780,7 +780,7 @@ AF1 sharpness){
  void FsrRcasInputH(inout AH1 r,inout AH1 g,inout AH1 b);
 //------------------------------------------------------------------------------------------------------------------------------
  void FsrRcasH(
- out AH1 pixR, // Output values, non-vector so port between RcasFilter() and RcasFilterH() is easy.
+ out AH1 pixR, // Output values, non-Hector so port between RcasFilter() and RcasFilterH() is easy.
  out AH1 pixG,
  out AH1 pixB,
  #ifdef FSR_RCAS_PASSTHROUGH_ALPHA

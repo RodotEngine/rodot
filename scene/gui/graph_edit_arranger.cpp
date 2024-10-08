@@ -60,7 +60,7 @@ void GraphEditArranger::arrange_nodes() {
 
 	HashMap<StringName, HashSet<StringName>> upper_neighbours;
 	HashMap<StringName, Pair<int, int>> port_info;
-	Vector2 origin(FLT_MAX, FLT_MAX);
+	Hector2 origin(FLT_MAX, FLT_MAX);
 
 	float gap_v = 100.0f;
 	float gap_h = 100.0f;
@@ -98,14 +98,14 @@ void GraphEditArranger::arrange_nodes() {
 		return;
 	}
 
-	HashMap<int, Vector<StringName>> layers = _layering(selected_nodes, upper_neighbours);
+	HashMap<int, Hector<StringName>> layers = _layering(selected_nodes, upper_neighbours);
 	_crossing_minimisation(layers, upper_neighbours);
 
 	Dictionary root, align, sink, shift;
 	_horizontal_alignment(root, align, layers, upper_neighbours, selected_nodes);
 
-	HashMap<StringName, Vector2> new_positions;
-	Vector2 default_position(FLT_MAX, FLT_MAX);
+	HashMap<StringName, Hector2> new_positions;
+	Hector2 default_position(FLT_MAX, FLT_MAX);
 	Dictionary inner_shift;
 	HashSet<StringName> block_heads;
 
@@ -131,7 +131,7 @@ void GraphEditArranger::arrange_nodes() {
 		StringName u = E;
 		float start_from = origin.y + new_positions[E].y;
 		do {
-			Vector2 cal_pos;
+			Hector2 cal_pos;
 			cal_pos.y = start_from + (real_t)inner_shift[u];
 			new_positions.insert(u, cal_pos);
 			u = align[u];
@@ -143,7 +143,7 @@ void GraphEditArranger::arrange_nodes() {
 	float largest_node_size = 0.0f;
 
 	for (unsigned int i = 0; i < layers.size(); i++) {
-		Vector<StringName> layer = layers[i];
+		Hector<StringName> layer = layers[i];
 		for (int j = 0; j < layer.size(); j++) {
 			float current_node_size = Object::cast_to<GraphNode>(node_names[layer[j]])->get_size().x;
 			largest_node_size = MAX(largest_node_size, current_node_size);
@@ -151,7 +151,7 @@ void GraphEditArranger::arrange_nodes() {
 
 		for (int j = 0; j < layer.size(); j++) {
 			float current_node_size = Object::cast_to<GraphNode>(node_names[layer[j]])->get_size().x;
-			Vector2 cal_pos = new_positions[layer[j]];
+			Hector2 cal_pos = new_positions[layer[j]];
 
 			if (current_node_size == largest_node_size) {
 				cal_pos.x = start_from;
@@ -176,7 +176,7 @@ void GraphEditArranger::arrange_nodes() {
 	for (const StringName &E : selected_nodes) {
 		GraphNode *graph_node = Object::cast_to<GraphNode>(node_names[E]);
 		graph_node->set_drag(true);
-		Vector2 pos = (new_positions[E]);
+		Hector2 pos = (new_positions[E]);
 
 		if (graph_edit->is_snapping_enabled()) {
 			float snapping_distance = graph_edit->get_snapping_distance();
@@ -211,7 +211,7 @@ int GraphEditArranger::_set_operations(SET_OPERATIONS p_operation, HashSet<Strin
 			return 1;
 		} break;
 		case GraphEditArranger::DIFFERENCE: {
-			Vector<StringName> common;
+			Hector<StringName> common;
 			for (const StringName &E : r_u) {
 				if (r_v.has(E)) {
 					common.append(E);
@@ -236,8 +236,8 @@ int GraphEditArranger::_set_operations(SET_OPERATIONS p_operation, HashSet<Strin
 	return -1;
 }
 
-HashMap<int, Vector<StringName>> GraphEditArranger::_layering(const HashSet<StringName> &r_selected_nodes, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours) {
-	HashMap<int, Vector<StringName>> l;
+HashMap<int, Hector<StringName>> GraphEditArranger::_layering(const HashSet<StringName> &r_selected_nodes, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours) {
+	HashMap<int, Hector<StringName>> l;
 
 	HashSet<StringName> p = r_selected_nodes, q = r_selected_nodes, u, z;
 	int current_layer = 0;
@@ -248,10 +248,10 @@ HashMap<int, Vector<StringName>> GraphEditArranger::_layering(const HashSet<Stri
 		for (const StringName &E : p) {
 			HashSet<StringName> n = r_upper_neighbours[E];
 			if (_set_operations(GraphEditArranger::IS_SUBSET, n, z)) {
-				Vector<StringName> t;
+				Hector<StringName> t;
 				t.push_back(E);
 				if (!l.has(current_layer)) {
-					l.insert(current_layer, Vector<StringName>{});
+					l.insert(current_layer, Hector<StringName>{});
 				}
 				selected = true;
 				t.append_array(l[current_layer]);
@@ -265,7 +265,7 @@ HashMap<int, Vector<StringName>> GraphEditArranger::_layering(const HashSet<Stri
 			_set_operations(GraphEditArranger::UNION, z, u);
 			if (z.size() == previous_size_z) {
 				WARN_PRINT("Graph contains cycle(s). The cycle(s) will not be rearranged accurately.");
-				Vector<StringName> t;
+				Hector<StringName> t;
 				if (l.has(0)) {
 					t.append_array(l[0]);
 				}
@@ -282,14 +282,14 @@ HashMap<int, Vector<StringName>> GraphEditArranger::_layering(const HashSet<Stri
 	return l;
 }
 
-Vector<StringName> GraphEditArranger::_split(const Vector<StringName> &r_layer, const HashMap<StringName, Dictionary> &r_crossings) {
+Hector<StringName> GraphEditArranger::_split(const Hector<StringName> &r_layer, const HashMap<StringName, Dictionary> &r_crossings) {
 	if (!r_layer.size()) {
-		return Vector<StringName>();
+		return Hector<StringName>();
 	}
 
 	const StringName &p = r_layer[Math::random(0, r_layer.size() - 1)];
-	Vector<StringName> left;
-	Vector<StringName> right;
+	Hector<StringName> left;
+	Hector<StringName> right;
 
 	for (int i = 0; i < r_layer.size(); i++) {
 		if (p != r_layer[i]) {
@@ -309,7 +309,7 @@ Vector<StringName> GraphEditArranger::_split(const Vector<StringName> &r_layer, 
 	return left;
 }
 
-void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_align, const HashMap<int, Vector<StringName>> &r_layers, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours, const HashSet<StringName> &r_selected_nodes) {
+void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_align, const HashMap<int, Hector<StringName>> &r_layers, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours, const HashSet<StringName> &r_selected_nodes) {
 	for (const StringName &E : r_selected_nodes) {
 		r_root[E] = E;
 		r_align[E] = E;
@@ -320,12 +320,12 @@ void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_
 	}
 
 	for (unsigned int i = 1; i < r_layers.size(); i++) {
-		Vector<StringName> lower_layer = r_layers[i];
-		Vector<StringName> upper_layer = r_layers[i - 1];
+		Hector<StringName> lower_layer = r_layers[i];
+		Hector<StringName> upper_layer = r_layers[i - 1];
 		int r = -1;
 
 		for (int j = 0; j < lower_layer.size(); j++) {
-			Vector<Pair<int, StringName>> up;
+			Hector<Pair<int, StringName>> up;
 			const StringName &current_node = lower_layer[j];
 			for (int k = 0; k < upper_layer.size(); k++) {
 				const StringName &adjacent_neighbour = upper_layer[k];
@@ -349,14 +349,14 @@ void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_
 	}
 }
 
-void GraphEditArranger::_crossing_minimisation(HashMap<int, Vector<StringName>> &r_layers, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours) {
+void GraphEditArranger::_crossing_minimisation(HashMap<int, Hector<StringName>> &r_layers, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours) {
 	if (r_layers.size() == 1) {
 		return;
 	}
 
 	for (unsigned int i = 1; i < r_layers.size(); i++) {
-		Vector<StringName> upper_layer = r_layers[i - 1];
-		Vector<StringName> lower_layer = r_layers[i];
+		Hector<StringName> upper_layer = r_layers[i - 1];
+		Hector<StringName> lower_layer = r_layers[i];
 		HashMap<StringName, Dictionary> c;
 
 		for (int j = 0; j < lower_layer.size(); j++) {
@@ -402,8 +402,8 @@ void GraphEditArranger::_calculate_inner_shifts(Dictionary &r_inner_shifts, cons
 			int port_from = ports.first;
 			int port_to = ports.second;
 
-			Vector2 pos_from = gnode_from->get_output_port_position(port_from) * graph_edit->get_zoom();
-			Vector2 pos_to = gnode_to->get_input_port_position(port_to) * graph_edit->get_zoom();
+			Hector2 pos_from = gnode_from->get_output_port_position(port_from) * graph_edit->get_zoom();
+			Hector2 pos_to = gnode_to->get_input_port_position(port_to) * graph_edit->get_zoom();
 
 			real_t s = (real_t)r_inner_shifts[u] + (pos_from.y - pos_to.y) / graph_edit->get_zoom();
 			r_inner_shifts[v] = s;
@@ -421,7 +421,7 @@ void GraphEditArranger::_calculate_inner_shifts(Dictionary &r_inner_shifts, cons
 	}
 }
 
-float GraphEditArranger::_calculate_threshold(const StringName &p_v, const StringName &p_w, const Dictionary &r_node_names, const HashMap<int, Vector<StringName>> &r_layers, const Dictionary &r_root, const Dictionary &r_align, const Dictionary &r_inner_shift, real_t p_current_threshold, const HashMap<StringName, Vector2> &r_node_positions) {
+float GraphEditArranger::_calculate_threshold(const StringName &p_v, const StringName &p_w, const Dictionary &r_node_names, const HashMap<int, Hector<StringName>> &r_layers, const Dictionary &r_root, const Dictionary &r_align, const Dictionary &r_inner_shift, real_t p_current_threshold, const HashMap<StringName, Hector2> &r_node_positions) {
 #define MAX_ORDER 2147483647
 #define ORDER(node, layers)                            \
 	for (unsigned int i = 0; i < layers.size(); i++) { \
@@ -452,12 +452,12 @@ float GraphEditArranger::_calculate_threshold(const StringName &p_v, const Strin
 		if (incoming.is_valid()) {
 			GraphNode *gnode_from = Object::cast_to<GraphNode>(r_node_names[incoming->from_node]);
 			GraphNode *gnode_to = Object::cast_to<GraphNode>(r_node_names[p_w]);
-			Vector2 pos_from = gnode_from->get_output_port_position(incoming->from_port) * graph_edit->get_zoom();
-			Vector2 pos_to = gnode_to->get_input_port_position(incoming->to_port) * graph_edit->get_zoom();
+			Hector2 pos_from = gnode_from->get_output_port_position(incoming->from_port) * graph_edit->get_zoom();
+			Hector2 pos_to = gnode_to->get_input_port_position(incoming->to_port) * graph_edit->get_zoom();
 
 			// If connected block node is selected, calculate thershold or add current block to list.
 			if (gnode_from->is_selected()) {
-				Vector2 connected_block_pos = r_node_positions[r_root[incoming->from_node]];
+				Hector2 connected_block_pos = r_node_positions[r_root[incoming->from_node]];
 				if (connected_block_pos.y != FLT_MAX) {
 					//Connected block is placed, calculate threshold.
 					threshold = connected_block_pos.y + (real_t)r_inner_shift[incoming->from_node] - (real_t)r_inner_shift[p_w] + pos_from.y - pos_to.y;
@@ -483,12 +483,12 @@ float GraphEditArranger::_calculate_threshold(const StringName &p_v, const Strin
 		if (outgoing.is_valid()) {
 			GraphNode *gnode_from = Object::cast_to<GraphNode>(r_node_names[p_w]);
 			GraphNode *gnode_to = Object::cast_to<GraphNode>(r_node_names[outgoing->to_node]);
-			Vector2 pos_from = gnode_from->get_output_port_position(outgoing->from_port) * graph_edit->get_zoom();
-			Vector2 pos_to = gnode_to->get_input_port_position(outgoing->to_port) * graph_edit->get_zoom();
+			Hector2 pos_from = gnode_from->get_output_port_position(outgoing->from_port) * graph_edit->get_zoom();
+			Hector2 pos_to = gnode_to->get_input_port_position(outgoing->to_port) * graph_edit->get_zoom();
 
 			// If connected block node is selected, calculate thershold or add current block to list.
 			if (gnode_to->is_selected()) {
-				Vector2 connected_block_pos = r_node_positions[r_root[outgoing->to_node]];
+				Hector2 connected_block_pos = r_node_positions[r_root[outgoing->to_node]];
 				if (connected_block_pos.y != FLT_MAX) {
 					//Connected block is placed. Calculate threshold
 					threshold = connected_block_pos.y + (real_t)r_inner_shift[outgoing->to_node] - (real_t)r_inner_shift[p_w] + pos_from.y - pos_to.y;
@@ -501,7 +501,7 @@ float GraphEditArranger::_calculate_threshold(const StringName &p_v, const Strin
 	return threshold;
 }
 
-void GraphEditArranger::_place_block(const StringName &p_v, float p_delta, const HashMap<int, Vector<StringName>> &r_layers, const Dictionary &r_root, const Dictionary &r_align, const Dictionary &r_node_name, const Dictionary &r_inner_shift, Dictionary &r_sink, Dictionary &r_shift, HashMap<StringName, Vector2> &r_node_positions) {
+void GraphEditArranger::_place_block(const StringName &p_v, float p_delta, const HashMap<int, Hector<StringName>> &r_layers, const Dictionary &r_root, const Dictionary &r_align, const Dictionary &r_node_name, const Dictionary &r_inner_shift, Dictionary &r_sink, Dictionary &r_shift, HashMap<StringName, Hector2> &r_node_positions) {
 #define PRED(node, layers)                             \
 	for (unsigned int i = 0; i < layers.size(); i++) { \
 		int index = layers[i].find(node);              \
@@ -514,7 +514,7 @@ void GraphEditArranger::_place_block(const StringName &p_v, float p_delta, const
 
 	StringName predecessor;
 	StringName successor;
-	Vector2 pos = r_node_positions[p_v];
+	Hector2 pos = r_node_positions[p_v];
 
 	if (pos.y == FLT_MAX) {
 		pos.y = 0;
@@ -531,8 +531,8 @@ void GraphEditArranger::_place_block(const StringName &p_v, float p_delta, const
 					r_sink[p_v] = r_sink[u];
 				}
 
-				Vector2 predecessor_root_pos = r_node_positions[u];
-				Vector2 predecessor_node_size = Object::cast_to<GraphNode>(r_node_name[predecessor])->get_size();
+				Hector2 predecessor_root_pos = r_node_positions[u];
+				Hector2 predecessor_node_size = Object::cast_to<GraphNode>(r_node_name[predecessor])->get_size();
 				if (r_sink[p_v] != r_sink[u]) {
 					real_t sc = pos.y + (real_t)r_inner_shift[w] - predecessor_root_pos.y - (real_t)r_inner_shift[predecessor] - predecessor_node_size.y - p_delta;
 					r_shift[r_sink[u]] = MIN(sc, (real_t)r_shift[r_sink[u]]);

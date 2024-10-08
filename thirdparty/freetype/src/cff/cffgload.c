@@ -215,7 +215,7 @@
     const CFF_Decoder_Funcs  decoder_funcs = psaux->cff_decoder_funcs;
 
     FT_Matrix  font_matrix;
-    FT_Vector  font_offset;
+    FT_Hector  font_offset;
 
 
     force_scaling = FALSE;
@@ -712,7 +712,7 @@
           /* scale the outline and the metrics */
           FT_Int       n;
           FT_Outline*  cur     = &glyph->root.outline;
-          FT_Vector*   vec     = cur->points;
+          FT_Hector*   vec     = cur->points;
           FT_Fixed     x_scale = glyph->x_scale;
           FT_Fixed     y_scale = glyph->y_scale;
 

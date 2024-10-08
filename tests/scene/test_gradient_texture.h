@@ -72,11 +72,11 @@ TEST_CASE("[SceneTree][GradientTexture2D] Create GradientTexture2D") {
 	gradient_texture->set_fill(GradientTexture2D::Fill::FILL_SQUARE);
 	CHECK(gradient_texture->get_fill() == GradientTexture2D::Fill::FILL_SQUARE);
 
-	gradient_texture->set_fill_from(Vector2(0.2, 0.25));
-	CHECK(gradient_texture->get_fill_from() == Vector2(0.2, 0.25));
+	gradient_texture->set_fill_from(Hector2(0.2, 0.25));
+	CHECK(gradient_texture->get_fill_from() == Hector2(0.2, 0.25));
 
-	gradient_texture->set_fill_to(Vector2(0.35, 0.5));
-	CHECK(gradient_texture->get_fill_to() == Vector2(0.35, 0.5));
+	gradient_texture->set_fill_to(Hector2(0.35, 0.5));
+	CHECK(gradient_texture->get_fill_to() == Hector2(0.35, 0.5));
 
 	gradient_texture->set_repeat(GradientTexture2D::Repeat::REPEAT);
 	CHECK(gradient_texture->get_repeat() == GradientTexture2D::Repeat::REPEAT);

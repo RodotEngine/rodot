@@ -35,7 +35,7 @@
 #include "core/math/projection.h"
 #include "core/object/object.h"
 #include "core/object/ref_counted.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "scene/resources/mesh.h"
 #include "servers/rendering/renderer_scene_occlusion_cull.h"
@@ -54,11 +54,11 @@ public:
 			int thread_count;
 			float z_near;
 			float z_far;
-			Vector3 camera_dir;
-			Vector3 camera_pos;
-			Vector3 pixel_corner;
-			Vector3 pixel_u_interp;
-			Vector3 pixel_v_interp;
+			Hector3 camera_dir;
+			Hector3 camera_pos;
+			Hector3 pixel_corner;
+			Hector3 pixel_u_interp;
+			Hector3 pixel_v_interp;
 			bool camera_orthogonal;
 			Size2i buffer_size;
 		};
@@ -70,12 +70,12 @@ public:
 		unsigned int camera_rays_tile_count = 0;
 		uint8_t *camera_rays_unaligned_buffer = nullptr;
 		CameraRayTile *camera_rays = nullptr;
-		LocalVector<uint32_t> camera_ray_masks;
+		LocalHector<uint32_t> camera_ray_masks;
 		RID scenario_rid;
 
 		virtual void clear() override;
 		virtual void resize(const Size2i &p_size) override;
-		void sort_rays(const Vector3 &p_camera_dir, bool p_orthogonal);
+		void sort_rays(const Hector3 &p_camera_dir, bool p_orthogonal);
 		void update_camera_rays(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal);
 
 		~RaycastHZBuffer();
@@ -101,15 +101,15 @@ private:
 	};
 
 	struct Occluder {
-		PackedVector3Array vertices;
+		PackedHector3Array vertices;
 		PackedInt32Array indices;
 		HashSet<InstanceID, InstanceID> users;
 	};
 
 	struct OccluderInstance {
 		RID occluder;
-		LocalVector<uint32_t> indices;
-		LocalVector<Vector3> xformed_vertices;
+		LocalHector<uint32_t> indices;
+		LocalHector<Hector3> xformed_vertices;
 		Transform3D xform;
 		bool enabled = true;
 		bool removed = false;
@@ -125,8 +125,8 @@ private:
 			uint32_t thread_count;
 			uint32_t vertex_count;
 			Transform3D xform;
-			const Vector3 *read;
-			Vector3 *write = nullptr;
+			const Hector3 *read;
+			Hector3 *write = nullptr;
 		};
 
 		Thread *commit_thread = nullptr;
@@ -138,13 +138,13 @@ private:
 
 		HashMap<RID, OccluderInstance> instances;
 		HashSet<RID> dirty_instances; // To avoid duplicates
-		LocalVector<RID> dirty_instances_array; // To iterate and split into threads
-		LocalVector<RID> removed_instances;
+		LocalHector<RID> dirty_instances_array; // To iterate and split into threads
+		LocalHector<RID> removed_instances;
 
 		void _update_dirty_instance_thread(int p_idx, RID *p_instances);
 		void _update_dirty_instance(int p_idx, RID *p_instances);
 		void _transform_vertices_thread(uint32_t p_thread, TransformThreadData *p_data);
-		void _transform_vertices_range(const Vector3 *p_read, Vector3 *p_write, const Transform3D &p_xform, int p_from, int p_to);
+		void _transform_vertices_range(const Hector3 *p_read, Hector3 *p_write, const Transform3D &p_xform, int p_from, int p_to);
 		static void _commit_scene(void *p_ud);
 		void free();
 		void update();
@@ -172,7 +172,7 @@ public:
 	virtual bool is_occluder(RID p_rid) override;
 	virtual RID occluder_allocate() override;
 	virtual void occluder_initialize(RID p_occluder) override;
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) override;
+	virtual void occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) override;
 	virtual void free_occluder(RID p_occluder) override;
 
 	virtual void add_scenario(RID p_scenario) override;
@@ -184,7 +184,7 @@ public:
 	virtual void remove_buffer(RID p_buffer) override;
 	virtual HZBuffer *buffer_get_ptr(RID p_buffer) override;
 	virtual void buffer_set_scenario(RID p_buffer, RID p_scenario) override;
-	virtual void buffer_set_size(RID p_buffer, const Vector2i &p_size) override;
+	virtual void buffer_set_size(RID p_buffer, const Hector2i &p_size) override;
 	virtual void buffer_update(RID p_buffer, const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal) override;
 
 	virtual RID buffer_get_debug_texture(RID p_buffer) override;

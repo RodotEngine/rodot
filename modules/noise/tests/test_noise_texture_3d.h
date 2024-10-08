@@ -62,7 +62,7 @@ public:
 	}
 
 	void check_mip_and_color_ramp() {
-		const Vector<Ref<Image>> noise_data = texture->get_data();
+		const Hector<Ref<Image>> noise_data = texture->get_data();
 
 		for (int i = 0; i < noise_data.size(); i++) {
 			const Ref<Image> noise_image = noise_data[i];
@@ -84,7 +84,7 @@ public:
 	}
 
 	void check_seamless_texture_grayscale() {
-		const Vector<Ref<Image>> noise_data = texture->get_data();
+		const Hector<Ref<Image>> noise_data = texture->get_data();
 
 		for (int i = 0; i < noise_data.size(); i++) {
 			const Ref<Image> noise_image = noise_data[i];
@@ -104,7 +104,7 @@ public:
 	}
 
 	void check_seamless_texture_rgba() {
-		const Vector<Ref<Image>> noise_data = texture->get_data();
+		const Hector<Ref<Image>> noise_data = texture->get_data();
 
 		for (int i = 0; i < noise_data.size(); i++) {
 			const Ref<Image> noise_image = noise_data[i];
@@ -184,7 +184,7 @@ TEST_CASE("[NoiseTexture3D][SceneTree] Generating a basic noise texture with mip
 	noise_texture->set_noise(noise);
 
 	Ref<Gradient> gradient = memnew(Gradient);
-	Vector<Gradient::Point> points;
+	Hector<Gradient::Point> points;
 	points.push_back({ 0.0, Color(1, 0, 0) });
 	points.push_back({ 1.0, Color(0, 0, 1) });
 	gradient->set_points(points);
@@ -219,7 +219,7 @@ TEST_CASE("[NoiseTexture3D][SceneTree] Generating a seamless noise texture") {
 
 	SUBCASE("16x16x16 modulated with default (transparent)black and white gradient (RGBA8), with seamless blend skirt of 1.0") {
 		Ref<Gradient> gradient = memnew(Gradient);
-		Vector<Gradient::Point> points;
+		Hector<Gradient::Point> points;
 		points.push_back({ 0.0, Color(0, 0, 0, 0) });
 		points.push_back({ 1.0, Color(1, 1, 1, 1) });
 		gradient->set_points(points);

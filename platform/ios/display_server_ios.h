@@ -84,7 +84,7 @@ class DisplayServerIOS : public DisplayServer {
 
 	void perform_event(const Ref<InputEvent> &p_event);
 
-	DisplayServerIOS(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	DisplayServerIOS(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
 	~DisplayServerIOS();
 
 public:
@@ -93,8 +93,8 @@ public:
 	static DisplayServerIOS *get_singleton();
 
 	static void register_ios_driver();
-	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
-	static Vector<String> get_rendering_drivers_func();
+	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error);
+	static Hector<String> get_rendering_drivers_func();
 
 	// MARK: - Events
 
@@ -119,7 +119,7 @@ public:
 	// MARK: Touches and Apple Pencil
 
 	void touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_double_click);
-	void touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Vector2 p_tilt);
+	void touch_drag(int p_idx, int p_prev_x, int p_prev_y, int p_x, int p_y, float p_pressure, Hector2 p_tilt);
 	void touches_canceled(int p_idx);
 
 	// MARK: Keyboard
@@ -129,10 +129,10 @@ public:
 
 	// MARK: Motion
 
-	void update_gravity(const Vector3 &p_gravity);
-	void update_accelerometer(const Vector3 &p_accelerometer);
-	void update_magnetometer(const Vector3 &p_magnetometer);
-	void update_gyroscope(const Vector3 &p_gyroscope);
+	void update_gravity(const Hector3 &p_gravity);
+	void update_accelerometer(const Hector3 &p_accelerometer);
+	void update_magnetometer(const Hector3 &p_magnetometer);
+	void update_gyroscope(const Hector3 &p_gyroscope);
 
 	// MARK: -
 
@@ -163,7 +163,7 @@ public:
 	virtual float screen_get_scale(int p_screen = SCREEN_OF_MAIN_WINDOW) const override;
 	virtual float screen_get_refresh_rate(int p_screen = SCREEN_OF_MAIN_WINDOW) const override;
 
-	virtual Vector<DisplayServer::WindowID> get_window_list() const override;
+	virtual Hector<DisplayServer::WindowID> get_window_list() const override;
 
 	virtual WindowID get_window_at_screen_position(const Point2i &p_position) const override;
 

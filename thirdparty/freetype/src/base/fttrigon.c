@@ -21,11 +21,11 @@
    * functions as well as transformations between Cartesian and polar
    * coordinates.  The angles are represented as 16.16 fixed-point values
    * in degrees, i.e., the angular resolution is 2^-16 degrees.  Note that
-   * only vectors longer than 2^16*180/pi (or at least 22 bits) on a
+   * only Hectors longer than 2^16*180/pi (or at least 22 bits) on a
    * discrete Cartesian grid can have the same or better angular
    * resolution.  Therefore, to maintain this precision, some functions
-   * require an interim upscaling of the vectors, whereas others operate
-   * with 24-bit long vectors directly.
+   * require an interim upscaling of the Hectors, whereas others operate
+   * with 24-bit long Hectors directly.
    *
    */
 
@@ -37,7 +37,7 @@
   /* the Cordic shrink factor 0.858785336480436 * 2^32 */
 #define FT_TRIG_SCALE      0xDBD95B16UL
 
-  /* the highest bit in overflow-safe vector components, */
+  /* the highest bit in overflow-safe Hector components, */
   /* MSB of 0.858785336480436 * sqrt(0.5) * 2^30         */
 #define FT_TRIG_SAFE_MSB   29
 
@@ -128,9 +128,9 @@
 #endif /* !FT_INT64 */
 
 
-  /* undefined and never called for zero vector */
+  /* undefined and never called for zero Hector */
   static FT_Int
-  ft_trig_prenorm( FT_Vector*  vec )
+  ft_trig_prenorm( FT_Hector*  vec )
   {
     FT_Pos  x, y;
     FT_Int  shift;
@@ -160,7 +160,7 @@
 
 
   static void
-  ft_trig_pseudo_rotate( FT_Vector*  vec,
+  ft_trig_pseudo_rotate( FT_Hector*  vec,
                          FT_Angle    theta )
   {
     FT_Int           i;
@@ -215,7 +215,7 @@
 
 
   static void
-  ft_trig_pseudo_polarize( FT_Vector*  vec )
+  ft_trig_pseudo_polarize( FT_Hector*  vec )
   {
     FT_Angle         theta;
     FT_Int           i;
@@ -226,7 +226,7 @@
     x = vec->x;
     y = vec->y;
 
-    /* Get the vector into [-PI/4,PI/4] sector */
+    /* Get the Hector into [-PI/4,PI/4] sector */
     if ( y > x )
     {
       if ( y > -x )
@@ -296,10 +296,10 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_Cos( FT_Angle  angle )
   {
-    FT_Vector  v;
+    FT_Hector  v;
 
 
-    FT_Vector_Unit( &v, angle );
+    FT_Hector_Unit( &v, angle );
 
     return v.x;
   }
@@ -310,10 +310,10 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_Sin( FT_Angle  angle )
   {
-    FT_Vector  v;
+    FT_Hector  v;
 
 
-    FT_Vector_Unit( &v, angle );
+    FT_Hector_Unit( &v, angle );
 
     return v.y;
   }
@@ -324,7 +324,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_Tan( FT_Angle  angle )
   {
-    FT_Vector  v = { 1 << 24, 0 };
+    FT_Hector  v = { 1 << 24, 0 };
 
 
     ft_trig_pseudo_rotate( &v, angle );
@@ -339,7 +339,7 @@
   FT_Atan2( FT_Fixed  dx,
             FT_Fixed  dy )
   {
-    FT_Vector  v;
+    FT_Hector  v;
 
 
     if ( dx == 0 && dy == 0 )
@@ -357,7 +357,7 @@
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
-  FT_Vector_Unit( FT_Vector*  vec,
+  FT_Hector_Unit( FT_Hector*  vec,
                   FT_Angle    angle )
   {
     if ( !vec )
@@ -374,11 +374,11 @@
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
-  FT_Vector_Rotate( FT_Vector*  vec,
+  FT_Hector_Rotate( FT_Hector*  vec,
                     FT_Angle    angle )
   {
     FT_Int     shift;
-    FT_Vector  v;
+    FT_Hector  v;
 
 
     if ( !vec || !angle )
@@ -414,10 +414,10 @@
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
-  FT_Vector_Length( FT_Vector*  vec )
+  FT_Hector_Length( FT_Hector*  vec )
   {
     FT_Int     shift;
-    FT_Vector  v;
+    FT_Hector  v;
 
 
     if ( !vec )
@@ -451,12 +451,12 @@
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
-  FT_Vector_Polarize( FT_Vector*  vec,
+  FT_Hector_Polarize( FT_Hector*  vec,
                       FT_Fixed   *length,
                       FT_Angle   *angle )
   {
     FT_Int     shift;
-    FT_Vector  v;
+    FT_Hector  v;
 
 
     if ( !vec || !length || !angle )
@@ -481,7 +481,7 @@
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
-  FT_Vector_From_Polar( FT_Vector*  vec,
+  FT_Hector_From_Polar( FT_Hector*  vec,
                         FT_Fixed    length,
                         FT_Angle    angle )
   {
@@ -491,7 +491,7 @@
     vec->x = length;
     vec->y = 0;
 
-    FT_Vector_Rotate( vec, angle );
+    FT_Hector_Rotate( vec, angle );
   }
 
 

@@ -41,7 +41,7 @@
 // - We try to back opaque ids with the native ones or memory addresses.
 // - When using bookkeeping structures because the actual API id of a resource is not enough, we use a PagedAllocator.
 // - Every struct has default initializers.
-// - Using VectorView to take array-like arguments. Vector<uint8_t> is an exception (an indiom for "BLOB").
+// - Using HectorView to take array-like arguments. Hector<uint8_t> is an exception (an indiom for "BLOB").
 // - If a driver needs some higher-level information (the kind of info RenderingDevice keeps), it shall store a copy of what it needs.
 //   There's no backwards communication from the driver to query data from RenderingDevice.
 // ***********************************************************************************
@@ -54,10 +54,10 @@
 
 #include <algorithm>
 
-// This may one day be used in Godot for interoperability between C arrays, Vector and LocalVector.
+// This may one day be used in Godot for interoperability between C arrays, Hector and LocalHector.
 // (See https://github.com/godotengine/godot-proposals/issues/5144.)
 template <typename T>
-class VectorView {
+class HectorView {
 	const T *_ptr = nullptr;
 	const uint32_t _size = 0;
 
@@ -70,16 +70,16 @@ public:
 	_ALWAYS_INLINE_ const T *ptr() const { return _ptr; }
 	_ALWAYS_INLINE_ uint32_t size() const { return _size; }
 
-	VectorView() = default;
-	VectorView(const T &p_ptr) :
+	HectorView() = default;
+	HectorView(const T &p_ptr) :
 			// With this one you can pass a single element very conveniently!
 			_ptr(&p_ptr),
 			_size(1) {}
-	VectorView(const T *p_ptr, uint32_t p_size) :
+	HectorView(const T *p_ptr, uint32_t p_size) :
 			_ptr(p_ptr), _size(p_size) {}
-	VectorView(const Vector<T> &p_lv) :
+	HectorView(const Hector<T> &p_lv) :
 			_ptr(p_lv.ptr()), _size(p_lv.size()) {}
-	VectorView(const LocalVector<T> &p_lv) :
+	HectorView(const LocalHector<T> &p_lv) :
 			_ptr(p_lv.ptr()), _size(p_lv.size()) {}
 };
 
@@ -300,7 +300,7 @@ public:
 	/**** VERTEX ARRAY ****/
 	/**********************/
 
-	virtual VertexFormatID vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) = 0;
+	virtual VertexFormatID vertex_format_create(HectorView<VertexAttribute> p_vertex_attribs) = 0;
 	virtual void vertex_format_free(VertexFormatID p_vertex_format) = 0;
 
 	/******************/
@@ -378,9 +378,9 @@ public:
 			CommandBufferID p_cmd_buffer,
 			BitField<PipelineStageBits> p_src_stages,
 			BitField<PipelineStageBits> p_dst_stages,
-			VectorView<MemoryBarrier> p_memory_barriers,
-			VectorView<BufferBarrier> p_buffer_barriers,
-			VectorView<TextureBarrier> p_texture_barriers) = 0;
+			HectorView<MemoryBarrier> p_memory_barriers,
+			HectorView<BufferBarrier> p_buffer_barriers,
+			HectorView<TextureBarrier> p_texture_barriers) = 0;
 
 	/****************/
 	/**** FENCES ****/
@@ -416,7 +416,7 @@ public:
 	// ----- QUEUE -----
 
 	virtual CommandQueueID command_queue_create(CommandQueueFamilyID p_cmd_queue_family, bool p_identify_as_main_queue = false) = 0;
-	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) = 0;
+	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, HectorView<SemaphoreID> p_wait_semaphores, HectorView<CommandBufferID> p_cmd_buffers, HectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, HectorView<SwapChainID> p_swap_chains) = 0;
 	virtual void command_queue_free(CommandQueueID p_cmd_queue) = 0;
 
 	// ----- POOL -----
@@ -435,7 +435,7 @@ public:
 	virtual bool command_buffer_begin(CommandBufferID p_cmd_buffer) = 0;
 	virtual bool command_buffer_begin_secondary(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, uint32_t p_subpass, FramebufferID p_framebuffer) = 0;
 	virtual void command_buffer_end(CommandBufferID p_cmd_buffer) = 0;
-	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) = 0;
+	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, HectorView<CommandBufferID> p_secondary_cmd_buffers) = 0;
 
 	/********************/
 	/**** SWAP CHAIN ****/
@@ -463,7 +463,7 @@ public:
 	/**** FRAMEBUFFER ****/
 	/*********************/
 
-	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) = 0;
+	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) = 0;
 	virtual void framebuffer_free(FramebufferID p_framebuffer) = 0;
 
 	/****************/
@@ -471,8 +471,8 @@ public:
 	/****************/
 
 	virtual String shader_get_binary_cache_key() = 0;
-	virtual Vector<uint8_t> shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) = 0;
-	virtual ShaderID shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) = 0;
+	virtual Hector<uint8_t> shader_compile_binary_from_spirv(HectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) = 0;
+	virtual ShaderID shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) = 0;
 	// Only meaningful if API_TRAIT_SHADER_CHANGE_INVALIDATION is SHADER_CHANGE_INVALIDATION_ALL_OR_NONE_ACCORDING_TO_LAYOUT_HASH.
 	virtual uint32_t shader_get_layout_hash(ShaderID p_shader) { return 0; }
 	virtual void shader_free(ShaderID p_shader) = 0;
@@ -480,7 +480,7 @@ public:
 
 protected:
 	// An optional service to implementations.
-	Error _reflect_spirv(VectorView<ShaderStageSPIRVData> p_spirv, ShaderReflection &r_reflection);
+	Error _reflect_spirv(HectorView<ShaderStageSPIRVData> p_spirv, ShaderReflection &r_reflection);
 
 public:
 	/*********************/
@@ -490,10 +490,10 @@ public:
 	struct BoundUniform {
 		UniformType type = UNIFORM_TYPE_MAX;
 		uint32_t binding = 0xffffffff; // Binding index as specified in shader.
-		LocalVector<ID> ids;
+		LocalHector<ID> ids;
 	};
 
-	virtual UniformSetID uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) = 0;
+	virtual UniformSetID uniform_set_create(HectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) = 0;
 	virtual void uniform_set_free(UniformSetID p_uniform_set) = 0;
 
 	// ----- COMMANDS -----
@@ -512,28 +512,28 @@ public:
 
 	struct TextureCopyRegion {
 		TextureSubresourceLayers src_subresources;
-		Vector3i src_offset;
+		Hector3i src_offset;
 		TextureSubresourceLayers dst_subresources;
-		Vector3i dst_offset;
-		Vector3i size;
+		Hector3i dst_offset;
+		Hector3i size;
 	};
 
 	struct BufferTextureCopyRegion {
 		uint64_t buffer_offset = 0;
 		TextureSubresourceLayers texture_subresources;
-		Vector3i texture_offset;
-		Vector3i texture_region_size;
+		Hector3i texture_offset;
+		Hector3i texture_region_size;
 	};
 
 	virtual void command_clear_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, uint64_t p_offset, uint64_t p_size) = 0;
-	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) = 0;
+	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, HectorView<BufferCopyRegion> p_regions) = 0;
 
-	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) = 0;
+	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<TextureCopyRegion> p_regions) = 0;
 	virtual void command_resolve_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, uint32_t p_src_layer, uint32_t p_src_mipmap, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, uint32_t p_dst_layer, uint32_t p_dst_mipmap) = 0;
 	virtual void command_clear_color_texture(CommandBufferID p_cmd_buffer, TextureID p_texture, TextureLayout p_texture_layout, const Color &p_color, const TextureSubresourceRange &p_subresources) = 0;
 
-	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) = 0;
-	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) = 0;
+	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<BufferTextureCopyRegion> p_regions) = 0;
+	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, HectorView<BufferTextureCopyRegion> p_regions) = 0;
 
 	/******************/
 	/**** PIPELINE ****/
@@ -543,14 +543,14 @@ public:
 
 	// ----- BINDING -----
 
-	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_first_index, VectorView<uint32_t> p_data) = 0;
+	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_first_index, HectorView<uint32_t> p_data) = 0;
 
 	// ----- CACHE -----
 
-	virtual bool pipeline_cache_create(const Vector<uint8_t> &p_data) = 0;
+	virtual bool pipeline_cache_create(const Hector<uint8_t> &p_data) = 0;
 	virtual void pipeline_cache_free() = 0;
 	virtual size_t pipeline_cache_query_size() = 0;
-	virtual Vector<uint8_t> pipeline_cache_serialize() = 0;
+	virtual Hector<uint8_t> pipeline_cache_serialize() = 0;
 
 	/*******************/
 	/**** RENDERING ****/
@@ -588,11 +588,11 @@ public:
 	};
 
 	struct Subpass {
-		LocalVector<AttachmentReference> input_references;
-		LocalVector<AttachmentReference> color_references;
+		LocalHector<AttachmentReference> input_references;
+		LocalHector<AttachmentReference> color_references;
 		AttachmentReference depth_stencil_reference;
-		LocalVector<AttachmentReference> resolve_references;
-		LocalVector<uint32_t> preserve_attachments;
+		LocalHector<AttachmentReference> resolve_references;
+		LocalHector<uint32_t> preserve_attachments;
 		AttachmentReference vrs_reference;
 	};
 
@@ -605,7 +605,7 @@ public:
 		BitField<BarrierAccessBits> dst_access;
 	};
 
-	virtual RenderPassID render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) = 0;
+	virtual RenderPassID render_pass_create(HectorView<Attachment> p_attachments, HectorView<Subpass> p_subpasses, HectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) = 0;
 	virtual void render_pass_free(RenderPassID p_render_pass) = 0;
 
 	// ----- COMMANDS -----
@@ -626,12 +626,12 @@ public:
 		RenderPassClearValue value;
 	};
 
-	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) = 0;
+	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RenderPassClearValue> p_clear_values) = 0;
 	virtual void command_end_render_pass(CommandBufferID p_cmd_buffer) = 0;
 	virtual void command_next_render_subpass(CommandBufferID p_cmd_buffer, CommandBufferType p_cmd_buffer_type) = 0;
-	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) = 0;
-	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) = 0;
-	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) = 0;
+	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_viewports) = 0;
+	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_scissors) = 0;
+	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, HectorView<AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) = 0;
 
 	// Binding.
 	virtual void command_bind_render_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) = 0;
@@ -663,11 +663,11 @@ public:
 			PipelineMultisampleState p_multisample_state,
 			PipelineDepthStencilState p_depth_stencil_state,
 			PipelineColorBlendState p_blend_state,
-			VectorView<int32_t> p_color_attachments,
+			HectorView<int32_t> p_color_attachments,
 			BitField<PipelineDynamicStateFlags> p_dynamic_state,
 			RenderPassID p_render_pass,
 			uint32_t p_render_subpass,
-			VectorView<PipelineSpecializationConstant> p_specialization_constants) = 0;
+			HectorView<PipelineSpecializationConstant> p_specialization_constants) = 0;
 
 	/*****************/
 	/**** COMPUTE ****/
@@ -685,7 +685,7 @@ public:
 
 	// ----- PIPELINE -----
 
-	virtual PipelineID compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) = 0;
+	virtual PipelineID compute_pipeline_create(ShaderID p_shader, HectorView<PipelineSpecializationConstant> p_specialization_constants) = 0;
 
 	/*****************/
 	/**** QUERIES ****/

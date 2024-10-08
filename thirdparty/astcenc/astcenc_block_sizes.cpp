@@ -335,7 +335,7 @@ static void init_decimation_info_2d(
 			di.texel_weights_tr[j][i] = wb.grid_weights_of_texel[i][j];
 		}
 
-		// Init all 4 entries so we can rely on zeros for vectorization
+		// Init all 4 entries so we can rely on zeros for Hectorization
 		for (unsigned int j = wb.weight_count_of_texel[i]; j < 4; j++)
 		{
 			di.texel_weight_contribs_int_tr[j][i] = 0;
@@ -355,7 +355,7 @@ static void init_decimation_info_2d(
 		{
 			uint8_t texel = wb.texels_of_weight[i][j];
 
-			// Create transposed versions of these for better vectorization
+			// Create transposed versions of these for better Hectorization
 			di.weight_texels_tr[j][i] = texel;
 			di.weights_texel_contribs_tr[j][i] = static_cast<float>(wb.texel_weights_of_weight[i][j]);
 
@@ -584,7 +584,7 @@ static void init_decimation_info_3d(
 		di.texel_weight_count[i] = wb.weight_count_of_texel[i];
 		max_texel_weight_count = astc::max(max_texel_weight_count, di.texel_weight_count[i]);
 
-		// Init all 4 entries so we can rely on zeros for vectorization
+		// Init all 4 entries so we can rely on zeros for Hectorization
 		for (unsigned int j = 0; j < 4; j++)
 		{
 			di.texel_weight_contribs_int_tr[j][i] = 0;
@@ -611,7 +611,7 @@ static void init_decimation_info_3d(
 		{
 			unsigned int texel = wb.texels_of_weight[i][j];
 
-			// Create transposed versions of these for better vectorization
+			// Create transposed versions of these for better Hectorization
 			di.weight_texels_tr[j][i] = static_cast<uint8_t>(texel);
 			di.weights_texel_contribs_tr[j][i] = static_cast<float>(wb.texel_weights_of_weight[i][j]);
 

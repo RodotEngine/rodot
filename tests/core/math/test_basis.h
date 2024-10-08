@@ -38,11 +38,11 @@
 
 namespace TestBasis {
 
-Vector3 deg_to_rad(const Vector3 &p_rotation) {
+Hector3 deg_to_rad(const Hector3 &p_rotation) {
 	return p_rotation / 180.0 * Math_PI;
 }
 
-Vector3 rad2deg(const Vector3 &p_rotation) {
+Hector3 rad2deg(const Hector3 &p_rotation) {
 	return p_rotation / Math_PI * 180.0;
 }
 
@@ -65,9 +65,9 @@ String get_rot_order_name(EulerOrder ro) {
 	}
 }
 
-void test_rotation(Vector3 deg_original_euler, EulerOrder rot_order) {
+void test_rotation(Hector3 deg_original_euler, EulerOrder rot_order) {
 	// This test:
-	// 1. Converts the rotation vector from deg to rad.
+	// 1. Converts the rotation Hector from deg to rad.
 	// 2. Converts euler to basis.
 	// 3. Converts the above basis back into euler.
 	// 4. Converts the above euler into basis again.
@@ -84,28 +84,28 @@ void test_rotation(Vector3 deg_original_euler, EulerOrder rot_order) {
 	// are correct.
 
 	// Euler to rotation
-	const Vector3 original_euler = deg_to_rad(deg_original_euler);
+	const Hector3 original_euler = deg_to_rad(deg_original_euler);
 	const Basis to_rotation = Basis::from_euler(original_euler, rot_order);
 
 	// Euler from rotation
-	const Vector3 euler_from_rotation = to_rotation.get_euler(rot_order);
+	const Hector3 euler_from_rotation = to_rotation.get_euler(rot_order);
 	const Basis rotation_from_computed_euler = Basis::from_euler(euler_from_rotation, rot_order);
 
 	Basis res = to_rotation.inverse() * rotation_from_computed_euler;
 
-	CHECK_MESSAGE((res.get_column(0) - Vector3(1.0, 0.0, 0.0)).length() <= 0.1, vformat("Fail due to X %s\n", String(res.get_column(0))));
-	CHECK_MESSAGE((res.get_column(1) - Vector3(0.0, 1.0, 0.0)).length() <= 0.1, vformat("Fail due to Y %s\n", String(res.get_column(1))));
-	CHECK_MESSAGE((res.get_column(2) - Vector3(0.0, 0.0, 1.0)).length() <= 0.1, vformat("Fail due to Z %s\n", String(res.get_column(2))));
+	CHECK_MESSAGE((res.get_column(0) - Hector3(1.0, 0.0, 0.0)).length() <= 0.1, vformat("Fail due to X %s\n", String(res.get_column(0))));
+	CHECK_MESSAGE((res.get_column(1) - Hector3(0.0, 1.0, 0.0)).length() <= 0.1, vformat("Fail due to Y %s\n", String(res.get_column(1))));
+	CHECK_MESSAGE((res.get_column(2) - Hector3(0.0, 0.0, 1.0)).length() <= 0.1, vformat("Fail due to Z %s\n", String(res.get_column(2))));
 
 	// Double check `to_rotation` decomposing with XYZ rotation order.
-	const Vector3 euler_xyz_from_rotation = to_rotation.get_euler(EulerOrder::XYZ);
+	const Hector3 euler_xyz_from_rotation = to_rotation.get_euler(EulerOrder::XYZ);
 	Basis rotation_from_xyz_computed_euler = Basis::from_euler(euler_xyz_from_rotation, EulerOrder::XYZ);
 
 	res = to_rotation.inverse() * rotation_from_xyz_computed_euler;
 
-	CHECK_MESSAGE((res.get_column(0) - Vector3(1.0, 0.0, 0.0)).length() <= 0.1, vformat("Double check with XYZ rot order failed, due to X %s\n", String(res.get_column(0))));
-	CHECK_MESSAGE((res.get_column(1) - Vector3(0.0, 1.0, 0.0)).length() <= 0.1, vformat("Double check with XYZ rot order failed, due to Y %s\n", String(res.get_column(1))));
-	CHECK_MESSAGE((res.get_column(2) - Vector3(0.0, 0.0, 1.0)).length() <= 0.1, vformat("Double check with XYZ rot order failed, due to Z %s\n", String(res.get_column(2))));
+	CHECK_MESSAGE((res.get_column(0) - Hector3(1.0, 0.0, 0.0)).length() <= 0.1, vformat("Double check with XYZ rot order failed, due to X %s\n", String(res.get_column(0))));
+	CHECK_MESSAGE((res.get_column(1) - Hector3(0.0, 1.0, 0.0)).length() <= 0.1, vformat("Double check with XYZ rot order failed, due to Y %s\n", String(res.get_column(1))));
+	CHECK_MESSAGE((res.get_column(2) - Hector3(0.0, 0.0, 1.0)).length() <= 0.1, vformat("Double check with XYZ rot order failed, due to Z %s\n", String(res.get_column(2))));
 
 	INFO(vformat("Rotation order: %s\n.", get_rot_order_name(rot_order)));
 	INFO(vformat("Original Rotation: %s\n", String(deg_original_euler)));
@@ -113,7 +113,7 @@ void test_rotation(Vector3 deg_original_euler, EulerOrder rot_order) {
 }
 
 TEST_CASE("[Basis] Euler conversions") {
-	Vector<EulerOrder> euler_order_to_test;
+	Hector<EulerOrder> euler_order_to_test;
 	euler_order_to_test.push_back(EulerOrder::XYZ);
 	euler_order_to_test.push_back(EulerOrder::XZY);
 	euler_order_to_test.push_back(EulerOrder::YZX);
@@ -121,71 +121,71 @@ TEST_CASE("[Basis] Euler conversions") {
 	euler_order_to_test.push_back(EulerOrder::ZXY);
 	euler_order_to_test.push_back(EulerOrder::ZYX);
 
-	Vector<Vector3> vectors_to_test;
+	Hector<Hector3> Hectors_to_test;
 
 	// Test the special cases.
-	vectors_to_test.push_back(Vector3(0.0, 0.0, 0.0));
-	vectors_to_test.push_back(Vector3(0.5, 0.5, 0.5));
-	vectors_to_test.push_back(Vector3(-0.5, -0.5, -0.5));
-	vectors_to_test.push_back(Vector3(40.0, 40.0, 40.0));
-	vectors_to_test.push_back(Vector3(-40.0, -40.0, -40.0));
-	vectors_to_test.push_back(Vector3(0.0, 0.0, -90.0));
-	vectors_to_test.push_back(Vector3(0.0, -90.0, 0.0));
-	vectors_to_test.push_back(Vector3(-90.0, 0.0, 0.0));
-	vectors_to_test.push_back(Vector3(0.0, 0.0, 90.0));
-	vectors_to_test.push_back(Vector3(0.0, 90.0, 0.0));
-	vectors_to_test.push_back(Vector3(90.0, 0.0, 0.0));
-	vectors_to_test.push_back(Vector3(0.0, 0.0, -30.0));
-	vectors_to_test.push_back(Vector3(0.0, -30.0, 0.0));
-	vectors_to_test.push_back(Vector3(-30.0, 0.0, 0.0));
-	vectors_to_test.push_back(Vector3(0.0, 0.0, 30.0));
-	vectors_to_test.push_back(Vector3(0.0, 30.0, 0.0));
-	vectors_to_test.push_back(Vector3(30.0, 0.0, 0.0));
-	vectors_to_test.push_back(Vector3(0.5, 50.0, 20.0));
-	vectors_to_test.push_back(Vector3(-0.5, -50.0, -20.0));
-	vectors_to_test.push_back(Vector3(0.5, 0.0, 90.0));
-	vectors_to_test.push_back(Vector3(0.5, 0.0, -90.0));
-	vectors_to_test.push_back(Vector3(360.0, 360.0, 360.0));
-	vectors_to_test.push_back(Vector3(-360.0, -360.0, -360.0));
-	vectors_to_test.push_back(Vector3(-90.0, 60.0, -90.0));
-	vectors_to_test.push_back(Vector3(90.0, 60.0, -90.0));
-	vectors_to_test.push_back(Vector3(90.0, -60.0, -90.0));
-	vectors_to_test.push_back(Vector3(-90.0, -60.0, -90.0));
-	vectors_to_test.push_back(Vector3(-90.0, 60.0, 90.0));
-	vectors_to_test.push_back(Vector3(90.0, 60.0, 90.0));
-	vectors_to_test.push_back(Vector3(90.0, -60.0, 90.0));
-	vectors_to_test.push_back(Vector3(-90.0, -60.0, 90.0));
-	vectors_to_test.push_back(Vector3(60.0, 90.0, -40.0));
-	vectors_to_test.push_back(Vector3(60.0, -90.0, -40.0));
-	vectors_to_test.push_back(Vector3(-60.0, -90.0, -40.0));
-	vectors_to_test.push_back(Vector3(-60.0, 90.0, 40.0));
-	vectors_to_test.push_back(Vector3(60.0, 90.0, 40.0));
-	vectors_to_test.push_back(Vector3(60.0, -90.0, 40.0));
-	vectors_to_test.push_back(Vector3(-60.0, -90.0, 40.0));
-	vectors_to_test.push_back(Vector3(-90.0, 90.0, -90.0));
-	vectors_to_test.push_back(Vector3(90.0, 90.0, -90.0));
-	vectors_to_test.push_back(Vector3(90.0, -90.0, -90.0));
-	vectors_to_test.push_back(Vector3(-90.0, -90.0, -90.0));
-	vectors_to_test.push_back(Vector3(-90.0, 90.0, 90.0));
-	vectors_to_test.push_back(Vector3(90.0, 90.0, 90.0));
-	vectors_to_test.push_back(Vector3(90.0, -90.0, 90.0));
-	vectors_to_test.push_back(Vector3(20.0, 150.0, 30.0));
-	vectors_to_test.push_back(Vector3(20.0, -150.0, 30.0));
-	vectors_to_test.push_back(Vector3(-120.0, -150.0, 30.0));
-	vectors_to_test.push_back(Vector3(-120.0, -150.0, -130.0));
-	vectors_to_test.push_back(Vector3(120.0, -150.0, -130.0));
-	vectors_to_test.push_back(Vector3(120.0, 150.0, -130.0));
-	vectors_to_test.push_back(Vector3(120.0, 150.0, 130.0));
+	Hectors_to_test.push_back(Hector3(0.0, 0.0, 0.0));
+	Hectors_to_test.push_back(Hector3(0.5, 0.5, 0.5));
+	Hectors_to_test.push_back(Hector3(-0.5, -0.5, -0.5));
+	Hectors_to_test.push_back(Hector3(40.0, 40.0, 40.0));
+	Hectors_to_test.push_back(Hector3(-40.0, -40.0, -40.0));
+	Hectors_to_test.push_back(Hector3(0.0, 0.0, -90.0));
+	Hectors_to_test.push_back(Hector3(0.0, -90.0, 0.0));
+	Hectors_to_test.push_back(Hector3(-90.0, 0.0, 0.0));
+	Hectors_to_test.push_back(Hector3(0.0, 0.0, 90.0));
+	Hectors_to_test.push_back(Hector3(0.0, 90.0, 0.0));
+	Hectors_to_test.push_back(Hector3(90.0, 0.0, 0.0));
+	Hectors_to_test.push_back(Hector3(0.0, 0.0, -30.0));
+	Hectors_to_test.push_back(Hector3(0.0, -30.0, 0.0));
+	Hectors_to_test.push_back(Hector3(-30.0, 0.0, 0.0));
+	Hectors_to_test.push_back(Hector3(0.0, 0.0, 30.0));
+	Hectors_to_test.push_back(Hector3(0.0, 30.0, 0.0));
+	Hectors_to_test.push_back(Hector3(30.0, 0.0, 0.0));
+	Hectors_to_test.push_back(Hector3(0.5, 50.0, 20.0));
+	Hectors_to_test.push_back(Hector3(-0.5, -50.0, -20.0));
+	Hectors_to_test.push_back(Hector3(0.5, 0.0, 90.0));
+	Hectors_to_test.push_back(Hector3(0.5, 0.0, -90.0));
+	Hectors_to_test.push_back(Hector3(360.0, 360.0, 360.0));
+	Hectors_to_test.push_back(Hector3(-360.0, -360.0, -360.0));
+	Hectors_to_test.push_back(Hector3(-90.0, 60.0, -90.0));
+	Hectors_to_test.push_back(Hector3(90.0, 60.0, -90.0));
+	Hectors_to_test.push_back(Hector3(90.0, -60.0, -90.0));
+	Hectors_to_test.push_back(Hector3(-90.0, -60.0, -90.0));
+	Hectors_to_test.push_back(Hector3(-90.0, 60.0, 90.0));
+	Hectors_to_test.push_back(Hector3(90.0, 60.0, 90.0));
+	Hectors_to_test.push_back(Hector3(90.0, -60.0, 90.0));
+	Hectors_to_test.push_back(Hector3(-90.0, -60.0, 90.0));
+	Hectors_to_test.push_back(Hector3(60.0, 90.0, -40.0));
+	Hectors_to_test.push_back(Hector3(60.0, -90.0, -40.0));
+	Hectors_to_test.push_back(Hector3(-60.0, -90.0, -40.0));
+	Hectors_to_test.push_back(Hector3(-60.0, 90.0, 40.0));
+	Hectors_to_test.push_back(Hector3(60.0, 90.0, 40.0));
+	Hectors_to_test.push_back(Hector3(60.0, -90.0, 40.0));
+	Hectors_to_test.push_back(Hector3(-60.0, -90.0, 40.0));
+	Hectors_to_test.push_back(Hector3(-90.0, 90.0, -90.0));
+	Hectors_to_test.push_back(Hector3(90.0, 90.0, -90.0));
+	Hectors_to_test.push_back(Hector3(90.0, -90.0, -90.0));
+	Hectors_to_test.push_back(Hector3(-90.0, -90.0, -90.0));
+	Hectors_to_test.push_back(Hector3(-90.0, 90.0, 90.0));
+	Hectors_to_test.push_back(Hector3(90.0, 90.0, 90.0));
+	Hectors_to_test.push_back(Hector3(90.0, -90.0, 90.0));
+	Hectors_to_test.push_back(Hector3(20.0, 150.0, 30.0));
+	Hectors_to_test.push_back(Hector3(20.0, -150.0, 30.0));
+	Hectors_to_test.push_back(Hector3(-120.0, -150.0, 30.0));
+	Hectors_to_test.push_back(Hector3(-120.0, -150.0, -130.0));
+	Hectors_to_test.push_back(Hector3(120.0, -150.0, -130.0));
+	Hectors_to_test.push_back(Hector3(120.0, 150.0, -130.0));
+	Hectors_to_test.push_back(Hector3(120.0, 150.0, 130.0));
 
 	for (int h = 0; h < euler_order_to_test.size(); h += 1) {
-		for (int i = 0; i < vectors_to_test.size(); i += 1) {
-			test_rotation(vectors_to_test[i], euler_order_to_test[h]);
+		for (int i = 0; i < Hectors_to_test.size(); i += 1) {
+			test_rotation(Hectors_to_test[i], euler_order_to_test[h]);
 		}
 	}
 }
 
 TEST_CASE("[Stress][Basis] Euler conversions") {
-	Vector<EulerOrder> euler_order_to_test;
+	Hector<EulerOrder> euler_order_to_test;
 	euler_order_to_test.push_back(EulerOrder::XYZ);
 	euler_order_to_test.push_back(EulerOrder::XZY);
 	euler_order_to_test.push_back(EulerOrder::YZX);
@@ -193,25 +193,25 @@ TEST_CASE("[Stress][Basis] Euler conversions") {
 	euler_order_to_test.push_back(EulerOrder::ZXY);
 	euler_order_to_test.push_back(EulerOrder::ZYX);
 
-	Vector<Vector3> vectors_to_test;
-	// Add 1000 random vectors with weirds numbers.
+	Hector<Hector3> Hectors_to_test;
+	// Add 1000 random Hectors with weirds numbers.
 	RandomNumberGenerator rng;
 	for (int _ = 0; _ < 1000; _ += 1) {
-		vectors_to_test.push_back(Vector3(
+		Hectors_to_test.push_back(Hector3(
 				rng.randf_range(-1800, 1800),
 				rng.randf_range(-1800, 1800),
 				rng.randf_range(-1800, 1800)));
 	}
 
 	for (int h = 0; h < euler_order_to_test.size(); h += 1) {
-		for (int i = 0; i < vectors_to_test.size(); i += 1) {
-			test_rotation(vectors_to_test[i], euler_order_to_test[h]);
+		for (int i = 0; i < Hectors_to_test.size(); i += 1) {
+			test_rotation(Hectors_to_test[i], euler_order_to_test[h]);
 		}
 	}
 }
 
 TEST_CASE("[Basis] Set axis angle") {
-	Vector3 axis;
+	Hector3 axis;
 	real_t angle;
 	real_t pi = (real_t)Math_PI;
 
@@ -232,25 +232,25 @@ TEST_CASE("[Basis] Set axis angle") {
 
 	z_positive.get_axis_angle(axis, angle);
 	CHECK(angle == doctest::Approx(Math::deg_to_rad((real_t)30.0)));
-	CHECK(axis == Vector3(0, 0, 1));
+	CHECK(axis == Hector3(0, 0, 1));
 
 	z_negative.get_axis_angle(axis, angle);
 	CHECK(angle == doctest::Approx(Math::deg_to_rad((real_t)30.0)));
-	CHECK(axis == Vector3(0, 0, -1));
+	CHECK(axis == Hector3(0, 0, -1));
 
 	// Testing a rotation of 90° on x-y-z.
 	Basis x90deg(1, 0, 0, 0, 0, -1, 0, 1, 0);
 	x90deg.get_axis_angle(axis, angle);
 	CHECK(angle == doctest::Approx(pi / (real_t)2));
-	CHECK(axis == Vector3(1, 0, 0));
+	CHECK(axis == Hector3(1, 0, 0));
 
 	Basis y90deg(0, 0, 1, 0, 1, 0, -1, 0, 0);
 	y90deg.get_axis_angle(axis, angle);
-	CHECK(axis == Vector3(0, 1, 0));
+	CHECK(axis == Hector3(0, 1, 0));
 
 	Basis z90deg(0, -1, 0, 1, 0, 0, 0, 0, 1);
 	z90deg.get_axis_angle(axis, angle);
-	CHECK(axis == Vector3(0, 0, 1));
+	CHECK(axis == Hector3(0, 0, 1));
 
 	// Regression test: checks that the method returns a small angle (not 0).
 	Basis tiny(1, 0, 0, 0, 0.9999995, -0.001, 0, 001, 0.9999995); // The min angle possible with float is 0.001rad.
@@ -264,8 +264,8 @@ TEST_CASE("[Basis] Set axis angle") {
 }
 
 TEST_CASE("[Basis] Finite number checks") {
-	const Vector3 x(0, 1, 2);
-	const Vector3 infinite(NAN, NAN, NAN);
+	const Hector3 x(0, 1, 2);
+	const Hector3 infinite(NAN, NAN, NAN);
 
 	CHECK_MESSAGE(
 			Basis(x, x, x).is_finite(),
@@ -302,27 +302,27 @@ TEST_CASE("[Basis] Is conformal checks") {
 			"Identity Basis should be conformal.");
 
 	CHECK_MESSAGE(
-			Basis::from_euler(Vector3(1.2, 3.4, 5.6)).is_conformal(),
+			Basis::from_euler(Hector3(1.2, 3.4, 5.6)).is_conformal(),
 			"Basis with only rotation should be conformal.");
 
 	CHECK_MESSAGE(
-			Basis::from_scale(Vector3(-1, -1, -1)).is_conformal(),
+			Basis::from_scale(Hector3(-1, -1, -1)).is_conformal(),
 			"Basis with only a flip should be conformal.");
 
 	CHECK_MESSAGE(
-			Basis::from_scale(Vector3(1.2, 1.2, 1.2)).is_conformal(),
+			Basis::from_scale(Hector3(1.2, 1.2, 1.2)).is_conformal(),
 			"Basis with only uniform scale should be conformal.");
 
 	CHECK_MESSAGE(
-			Basis(Vector3(3, 4, 0), Vector3(4, -3, 0.0), Vector3(0, 0, 5)).is_conformal(),
+			Basis(Hector3(3, 4, 0), Hector3(4, -3, 0.0), Hector3(0, 0, 5)).is_conformal(),
 			"Basis with a flip, rotation, and uniform scale should be conformal.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis::from_scale(Vector3(1.2, 3.4, 5.6)).is_conformal(),
+			Basis::from_scale(Hector3(1.2, 3.4, 5.6)).is_conformal(),
 			"Basis with non-uniform scale should not be conformal.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis(Vector3(Math_SQRT12, Math_SQRT12, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)).is_conformal(),
+			Basis(Hector3(Math_SQRT12, Math_SQRT12, 0), Hector3(0, 1, 0), Hector3(0, 0, 1)).is_conformal(),
 			"Basis with the X axis skewed 45 degrees should not be conformal.");
 
 	CHECK_MESSAGE(
@@ -336,28 +336,28 @@ TEST_CASE("[Basis] Is orthogonal checks") {
 			"Identity Basis should be orthogonal.");
 
 	CHECK_MESSAGE(
-			Basis::from_euler(Vector3(1.2, 3.4, 5.6)).is_orthogonal(),
+			Basis::from_euler(Hector3(1.2, 3.4, 5.6)).is_orthogonal(),
 			"Basis with only rotation should be orthogonal.");
 
 	CHECK_MESSAGE(
-			Basis::from_scale(Vector3(-1, -1, -1)).is_orthogonal(),
+			Basis::from_scale(Hector3(-1, -1, -1)).is_orthogonal(),
 			"Basis with only a flip should be orthogonal.");
 
 	CHECK_MESSAGE(
-			Basis::from_scale(Vector3(1.2, 3.4, 5.6)).is_orthogonal(),
+			Basis::from_scale(Hector3(1.2, 3.4, 5.6)).is_orthogonal(),
 			"Basis with only scale should be orthogonal.");
 
 	CHECK_MESSAGE(
-			Basis(Vector3(3, 4, 0), Vector3(4, -3, 0), Vector3(0, 0, 5)).is_orthogonal(),
+			Basis(Hector3(3, 4, 0), Hector3(4, -3, 0), Hector3(0, 0, 5)).is_orthogonal(),
 			"Basis with a flip, rotation, and uniform scale should be orthogonal.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis(Vector3(Math_SQRT12, Math_SQRT12, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)).is_orthogonal(),
+			Basis(Hector3(Math_SQRT12, Math_SQRT12, 0), Hector3(0, 1, 0), Hector3(0, 0, 1)).is_orthogonal(),
 			"Basis with the X axis skewed 45 degrees should not be orthogonal.");
 
 	CHECK_MESSAGE(
 			Basis(0, 0, 0, 0, 0, 0, 0, 0, 0).is_orthogonal(),
-			"Edge case: Basis with all zeroes should return true for is_orthogonal, since zero vectors are orthogonal to all vectors.");
+			"Edge case: Basis with all zeroes should return true for is_orthogonal, since zero Hectors are orthogonal to all Hectors.");
 }
 
 TEST_CASE("[Basis] Is orthonormal checks") {
@@ -366,28 +366,28 @@ TEST_CASE("[Basis] Is orthonormal checks") {
 			"Identity Basis should be orthonormal.");
 
 	CHECK_MESSAGE(
-			Basis::from_euler(Vector3(1.2, 3.4, 5.6)).is_orthonormal(),
+			Basis::from_euler(Hector3(1.2, 3.4, 5.6)).is_orthonormal(),
 			"Basis with only rotation should be orthonormal.");
 
 	CHECK_MESSAGE(
-			Basis::from_scale(Vector3(-1, -1, -1)).is_orthonormal(),
+			Basis::from_scale(Hector3(-1, -1, -1)).is_orthonormal(),
 			"Basis with only a flip should be orthonormal.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis::from_scale(Vector3(1.2, 3.4, 5.6)).is_orthonormal(),
+			Basis::from_scale(Hector3(1.2, 3.4, 5.6)).is_orthonormal(),
 			"Basis with only scale should not be orthonormal.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis(Vector3(3, 4, 0), Vector3(4, -3, 0), Vector3(0, 0, 5)).is_orthonormal(),
+			Basis(Hector3(3, 4, 0), Hector3(4, -3, 0), Hector3(0, 0, 5)).is_orthonormal(),
 			"Basis with a flip, rotation, and uniform scale should not be orthonormal.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis(Vector3(Math_SQRT12, Math_SQRT12, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)).is_orthonormal(),
+			Basis(Hector3(Math_SQRT12, Math_SQRT12, 0), Hector3(0, 1, 0), Hector3(0, 0, 1)).is_orthonormal(),
 			"Basis with the X axis skewed 45 degrees should not be orthonormal.");
 
 	CHECK_FALSE_MESSAGE(
 			Basis(0, 0, 0, 0, 0, 0, 0, 0, 0).is_orthonormal(),
-			"Edge case: Basis with all zeroes should return false for is_orthonormal, since the vectors do not have a length of 1.");
+			"Edge case: Basis with all zeroes should return false for is_orthonormal, since the Hectors do not have a length of 1.");
 }
 
 TEST_CASE("[Basis] Is rotation checks") {
@@ -396,23 +396,23 @@ TEST_CASE("[Basis] Is rotation checks") {
 			"Identity Basis should be a rotation (a rotation of zero).");
 
 	CHECK_MESSAGE(
-			Basis::from_euler(Vector3(1.2, 3.4, 5.6)).is_rotation(),
+			Basis::from_euler(Hector3(1.2, 3.4, 5.6)).is_rotation(),
 			"Basis with only rotation should be a rotation.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis::from_scale(Vector3(-1, -1, -1)).is_rotation(),
+			Basis::from_scale(Hector3(-1, -1, -1)).is_rotation(),
 			"Basis with only a flip should not be a rotation.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis::from_scale(Vector3(1.2, 3.4, 5.6)).is_rotation(),
+			Basis::from_scale(Hector3(1.2, 3.4, 5.6)).is_rotation(),
 			"Basis with only scale should not be a rotation.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis(Vector3(2, 0, 0), Vector3(0, 0.5, 0), Vector3(0, 0, 1)).is_rotation(),
+			Basis(Hector3(2, 0, 0), Hector3(0, 0.5, 0), Hector3(0, 0, 1)).is_rotation(),
 			"Basis with a squeeze should not be a rotation.");
 
 	CHECK_FALSE_MESSAGE(
-			Basis(Vector3(Math_SQRT12, Math_SQRT12, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)).is_rotation(),
+			Basis(Hector3(Math_SQRT12, Math_SQRT12, 0), Hector3(0, 1, 0), Hector3(0, 0, 1)).is_rotation(),
 			"Basis with the X axis skewed 45 degrees should not be a rotation.");
 
 	CHECK_FALSE_MESSAGE(

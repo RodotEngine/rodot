@@ -32,15 +32,15 @@
 #include "core/math/convex_hull.h"
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> ConvexPolygonShape3D::get_debug_mesh_lines() const {
-	Vector<Vector3> poly_points = get_points();
+Hector<Hector3> ConvexPolygonShape3D::get_debug_mesh_lines() const {
+	Hector<Hector3> poly_points = get_points();
 
 	if (poly_points.size() > 3) {
-		Vector<Vector3> varr = Variant(poly_points);
+		Hector<Hector3> varr = Variant(poly_points);
 		Geometry3D::MeshData md;
 		Error err = ConvexHullComputer::convex_hull(varr, md);
 		if (err == OK) {
-			Vector<Vector3> lines;
+			Hector<Hector3> lines;
 			lines.resize(md.edges.size() * 2);
 			for (uint32_t i = 0; i < md.edges.size(); i++) {
 				lines.write[i * 2 + 0] = md.vertices[md.edges[i].vertex_a];
@@ -50,12 +50,12 @@ Vector<Vector3> ConvexPolygonShape3D::get_debug_mesh_lines() const {
 		}
 	}
 
-	return Vector<Vector3>();
+	return Hector<Hector3>();
 }
 
 real_t ConvexPolygonShape3D::get_enclosing_radius() const {
-	Vector<Vector3> data = get_points();
-	const Vector3 *read = data.ptr();
+	Hector<Hector3> data = get_points();
+	const Hector3 *read = data.ptr();
 	real_t r = 0.0;
 	for (int i(0); i < data.size(); i++) {
 		r = MAX(read[i].length_squared(), r);
@@ -68,13 +68,13 @@ void ConvexPolygonShape3D::_update_shape() {
 	Shape3D::_update_shape();
 }
 
-void ConvexPolygonShape3D::set_points(const Vector<Vector3> &p_points) {
+void ConvexPolygonShape3D::set_points(const Hector<Hector3> &p_points) {
 	points = p_points;
 	_update_shape();
 	emit_changed();
 }
 
-Vector<Vector3> ConvexPolygonShape3D::get_points() const {
+Hector<Hector3> ConvexPolygonShape3D::get_points() const {
 	return points;
 }
 

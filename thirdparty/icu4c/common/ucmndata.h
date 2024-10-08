@@ -107,7 +107,7 @@ typedef struct {
  *     a recognizable header and table of contents a Common Data Format
  *
  *     If a valid header and TOC are found,
- *         set the CommonDataFuncs function dispatch vector in the UDataMemory
+ *         set the CommonDataFuncs function dispatch Hector in the UDataMemory
  *             to point to the right functions for the TOC type.
  *     otherwise
  *         set an errorcode.

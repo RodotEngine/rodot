@@ -36,7 +36,7 @@
 #define GLSLANG_SPIRV_LOGGER_H
 
 #include <string>
-#include <vector>
+#include <Vector>
 
 namespace spv {
 

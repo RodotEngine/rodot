@@ -28,7 +28,7 @@ U_NAMESPACE_BEGIN
  *                 or any other non-dictionary characters. The main BreakCache may end
  *                 up with boundaries from multiple dictionary based runs.
  *
- *                 The boundaries are stored in a simple ArrayList (vector), with the
+ *                 The boundaries are stored in a simple ArrayList (Hector), with the
  *                 assumption that they will be accessed sequentially.
  */                 
 class RuleBasedBreakIterator::DictionaryCache: public UMemory {
@@ -56,7 +56,7 @@ class RuleBasedBreakIterator::DictionaryCache: public UMemory {
 
     RuleBasedBreakIterator *fBI;
     
-    UVector32           fBreaks;                // A vector containing the boundaries.
+    UHector32           fBreaks;                // A Hector containing the boundaries.
     int32_t             fPositionInCache;       // Index in fBreaks of last boundary returned by following()
                                                 //    or preceding(). Optimizes sequential access.
     int32_t             fStart;                 // Text position of first boundary in cache.
@@ -193,7 +193,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
     int32_t                 fBoundaries[CACHE_SIZE];
     uint16_t                fStatuses[CACHE_SIZE];
 
-    UVector32               fSideBuffer;
+    UHector32               fSideBuffer;
 };
 
 U_NAMESPACE_END

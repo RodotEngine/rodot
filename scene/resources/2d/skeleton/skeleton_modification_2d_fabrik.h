@@ -47,19 +47,19 @@ private:
 		NodePath bone2d_node;
 		ObjectID bone2d_node_cache;
 
-		Vector2 magnet_position = Vector2(0, 0);
+		Hector2 magnet_position = Hector2(0, 0);
 		bool use_target_rotation = false;
 
 		bool editor_draw_gizmo = true;
 	};
 
-	Vector<FABRIK_Joint_Data2D> fabrik_data_chain;
+	Hector<FABRIK_Joint_Data2D> fabrik_data_chain;
 
-	// Unlike in 3D, we need a vector of Transform2D objects to perform FABRIK.
+	// Unlike in 3D, we need a Hector of Transform2D objects to perform FABRIK.
 	// This is because FABRIK (unlike CCDIK) needs to operate on transforms that are NOT
 	// affected by each other, making the transforms stored in Bone2D unusable, as well as those in Skeleton2D.
-	// For this reason, this modification stores a vector of Transform2Ds used for the calculations, which are then applied at the end.
-	Vector<Transform2D> fabrik_transform_chain;
+	// For this reason, this modification stores a Hector of Transform2Ds used for the calculations, which are then applied at the end.
+	Hector<Transform2D> fabrik_transform_chain;
 
 	NodePath target_node;
 	ObjectID target_node_cache;
@@ -96,8 +96,8 @@ public:
 	void set_fabrik_joint_bone_index(int p_joint_idx, int p_bone_idx);
 	int get_fabrik_joint_bone_index(int p_joint_idx) const;
 
-	void set_fabrik_joint_magnet_position(int p_joint_idx, Vector2 p_magnet_position);
-	Vector2 get_fabrik_joint_magnet_position(int p_joint_idx) const;
+	void set_fabrik_joint_magnet_position(int p_joint_idx, Hector2 p_magnet_position);
+	Hector2 get_fabrik_joint_magnet_position(int p_joint_idx) const;
 	void set_fabrik_joint_use_target_rotation(int p_joint_idx, bool p_use_target_rotation);
 	bool get_fabrik_joint_use_target_rotation(int p_joint_idx) const;
 

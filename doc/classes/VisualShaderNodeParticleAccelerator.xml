@@ -21,7 +21,7 @@
 			The particles will be accelerated towards or away from the center.
 		</constant>
 		<constant name="MODE_TANGENTIAL" value="2" enum="Mode">
-			The particles will be accelerated tangentially to the radius vector from center to their position.
+			The particles will be accelerated tangentially to the radius Hector from center to their position.
 		</constant>
 		<constant name="MODE_MAX" value="3" enum="Mode">
 			Represents the size of the [enum Mode] enum.

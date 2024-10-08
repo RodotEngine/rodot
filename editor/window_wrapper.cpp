@@ -243,7 +243,7 @@ void WindowWrapper::restore_window_from_saved_position(const Rect2 p_window_rect
 	}
 
 	// Adjust the window rect size in case the resolution changes.
-	Vector2 screen_ratio = Vector2(real_screen_rect.size) / Vector2(restored_screen_rect.size);
+	Hector2 screen_ratio = Hector2(real_screen_rect.size) / Hector2(restored_screen_rect.size);
 
 	// The screen positioning may change, so remove the original screen position.
 	window_rect.position -= restored_screen_rect.position;
@@ -272,7 +272,7 @@ void WindowWrapper::enable_window_on_screen(int p_screen, bool p_auto_scale) {
 		Rect2i dest_screen_rect = DisplayServer::get_singleton()->screen_get_usable_rect(screen);
 
 		// Adjust the window rect size in case the resolution changes.
-		Vector2 screen_ratio = Vector2(source_screen_rect.size) / Vector2(dest_screen_rect.size);
+		Hector2 screen_ratio = Hector2(source_screen_rect.size) / Hector2(dest_screen_rect.size);
 
 		// The screen positioning may change, so remove the original screen position.
 		control_rect.position -= source_screen_rect.position;

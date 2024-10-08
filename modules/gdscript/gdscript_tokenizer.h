@@ -34,7 +34,7 @@
 #include "core/templates/hash_map.h"
 #include "core/templates/hash_set.h"
 #include "core/templates/list.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/variant/variant.h"
 
 #ifdef MINGW_ENABLED
@@ -248,9 +248,9 @@ class GDScriptTokenizerText : public GDScriptTokenizer {
 	char32_t indent_char = '\0';
 	int position = 0;
 	int length = 0;
-	Vector<int> continuation_lines;
+	Hector<int> continuation_lines;
 #ifdef DEBUG_ENABLED
-	Vector<String> keyword_list;
+	Hector<String> keyword_list;
 #endif // DEBUG_ENABLED
 
 #ifdef TOOLS_ENABLED
@@ -291,7 +291,7 @@ class GDScriptTokenizerText : public GDScriptTokenizer {
 public:
 	void set_source_code(const String &p_source_code);
 
-	const Vector<int> &get_continuation_lines() const { return continuation_lines; }
+	const Hector<int> &get_continuation_lines() const { return continuation_lines; }
 
 	virtual int get_cursor_line() const override;
 	virtual int get_cursor_column() const override;

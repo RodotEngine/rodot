@@ -37,7 +37,7 @@ FT_BEGIN_HEADER
   T1_Get_Kerning( AFM_FontInfo  fi,
                   FT_UInt       glyph1,
                   FT_UInt       glyph2,
-                  FT_Vector*    kerning );
+                  FT_Hector*    kerning );
 
   FT_LOCAL( FT_Error )
   T1_Get_Track_Kerning( FT_Face    face,

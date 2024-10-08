@@ -88,7 +88,7 @@ Error MultiplayerDebugger::_capture(void *p_user, const String &p_msg, const Arr
 
 // BandwidthProfiler
 
-int MultiplayerDebugger::BandwidthProfiler::bandwidth_usage(const Vector<BandwidthFrame> &p_buffer, int p_pointer) {
+int MultiplayerDebugger::BandwidthProfiler::bandwidth_usage(const Hector<BandwidthFrame> &p_buffer, int p_pointer) {
 	ERR_FAIL_COND_V(p_buffer.is_empty(), 0);
 	int total_bandwidth = 0;
 

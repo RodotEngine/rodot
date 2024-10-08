@@ -40,7 +40,7 @@ class EditorPropertyNameProcessor : public Node {
 
 	mutable HashMap<String, String> capitalize_string_cache;
 	HashMap<String, String> capitalize_string_remaps;
-	LocalVector<String> stop_words; // Exceptions that shouldn't be capitalized.
+	LocalHector<String> stop_words; // Exceptions that shouldn't be capitalized.
 
 	HashMap<String, HashMap<String, StringName>> translation_contexts;
 

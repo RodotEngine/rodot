@@ -79,7 +79,7 @@ public:
 	~Utilities();
 
 	// Buffer size is specified in bytes
-	static Vector<uint8_t> buffer_get_data(GLenum p_target, GLuint p_buffer, uint32_t p_buffer_size);
+	static Hector<uint8_t> buffer_get_data(GLenum p_target, GLuint p_buffer, uint32_t p_buffer_size);
 
 	// Allocate memory with glBufferData. Does not handle resizing.
 	_FORCE_INLINE_ void buffer_allocate_data(GLenum p_target, GLuint p_id, uint32_t p_size, const void *p_data, GLenum p_usage, String p_name = "") {
@@ -185,12 +185,12 @@ public:
 
 	struct Frame {
 		GLuint queries[MAX_QUERIES];
-		TightLocalVector<String> timestamp_names;
-		TightLocalVector<uint64_t> timestamp_cpu_values;
+		TightLocalHector<String> timestamp_names;
+		TightLocalHector<uint64_t> timestamp_cpu_values;
 		uint32_t timestamp_count = 0;
-		TightLocalVector<String> timestamp_result_names;
-		TightLocalVector<uint64_t> timestamp_cpu_result_values;
-		TightLocalVector<uint64_t> timestamp_result_values;
+		TightLocalHector<String> timestamp_result_names;
+		TightLocalHector<uint64_t> timestamp_cpu_result_values;
+		TightLocalHector<uint64_t> timestamp_result_values;
 		uint32_t timestamp_result_count = 0;
 		uint64_t index = 0;
 	};

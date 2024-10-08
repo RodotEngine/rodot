@@ -94,10 +94,10 @@ Variant GodotSoftBody3D::get_state(PhysicsServer3D::BodyState p_state) const {
 			return get_transform();
 		} break;
 		case PhysicsServer3D::BODY_STATE_LINEAR_VELOCITY: {
-			ERR_FAIL_V_MSG(Vector3(), "Linear velocity is not supported for Soft bodies.");
+			ERR_FAIL_V_MSG(Hector3(), "Linear velocity is not supported for Soft bodies.");
 		} break;
 		case PhysicsServer3D::BODY_STATE_ANGULAR_VELOCITY: {
-			ERR_FAIL_V_MSG(Vector3(), "Angular velocity is not supported for Soft bodies.");
+			ERR_FAIL_V_MSG(Hector3(), "Angular velocity is not supported for Soft bodies.");
 		} break;
 		case PhysicsServer3D::BODY_STATE_SLEEPING: {
 			ERR_FAIL_V_MSG(false, "Sleeping state is not supported for Soft bodies.");
@@ -140,8 +140,8 @@ void GodotSoftBody3D::set_mesh(RID p_mesh) {
 	Array arrays = RenderingServer::get_singleton()->mesh_surface_get_arrays(soft_mesh, 0);
 	ERR_FAIL_COND(arrays.is_empty());
 
-	const Vector<int> &indices = arrays[RenderingServer::ARRAY_INDEX];
-	const Vector<Vector3> &vertices = arrays[RenderingServer::ARRAY_VERTEX];
+	const Hector<int> &indices = arrays[RenderingServer::ARRAY_INDEX];
+	const Hector<Hector3> &vertices = arrays[RenderingServer::ARRAY_VERTEX];
 	ERR_FAIL_COND_MSG(indices.is_empty(), "Soft body's mesh needs to have indices");
 	ERR_FAIL_COND_MSG(vertices.is_empty(), "Soft body's mesh needs to have vertices");
 
@@ -170,11 +170,11 @@ void GodotSoftBody3D::update_rendering_server(PhysicsServer3DRenderingServerHand
 
 void GodotSoftBody3D::update_normals_and_centroids() {
 	for (Node &node : nodes) {
-		node.n = Vector3();
+		node.n = Hector3();
 	}
 
 	for (Face &face : faces) {
-		const Vector3 n = vec3_cross(face.n[0]->x - face.n[2]->x, face.n[0]->x - face.n[1]->x);
+		const Hector3 n = vec3_cross(face.n[0]->x - face.n[2]->x, face.n[0]->x - face.n[1]->x);
 		face.n[0]->n += n;
 		face.n[1]->n += n;
 		face.n[2]->n += n;
@@ -234,18 +234,18 @@ void GodotSoftBody3D::update_area() {
 
 	// Face area.
 	for (Face &face : faces) {
-		const Vector3 &x0 = face.n[0]->x;
-		const Vector3 &x1 = face.n[1]->x;
-		const Vector3 &x2 = face.n[2]->x;
+		const Hector3 &x0 = face.n[0]->x;
+		const Hector3 &x1 = face.n[1]->x;
+		const Hector3 &x2 = face.n[2]->x;
 
-		const Vector3 a = x1 - x0;
-		const Vector3 b = x2 - x0;
-		const Vector3 cr = vec3_cross(a, b);
+		const Hector3 a = x1 - x0;
+		const Hector3 b = x2 - x0;
+		const Hector3 cr = vec3_cross(a, b);
 		face.ra = cr.length() * 0.5;
 	}
 
 	// Node area.
-	LocalVector<int> counts;
+	LocalHector<int> counts;
 	if (nodes.size() > 0) {
 		counts.resize(nodes.size());
 		memset(counts.ptr(), 0, counts.size() * sizeof(int));
@@ -292,14 +292,14 @@ void GodotSoftBody3D::apply_nodes_transform(const Transform3D &p_transform) {
 	}
 
 	uint32_t node_count = nodes.size();
-	Vector3 leaf_size = Vector3(collision_margin, collision_margin, collision_margin) * 2.0;
+	Hector3 leaf_size = Hector3(collision_margin, collision_margin, collision_margin) * 2.0;
 	for (uint32_t node_index = 0; node_index < node_count; ++node_index) {
 		Node &node = nodes[node_index];
 
 		node.x = p_transform.xform(node.x);
 		node.q = node.x;
-		node.v = Vector3();
-		node.bv = Vector3();
+		node.v = Hector3();
+		node.bv = Hector3();
 
 		AABB node_aabb(node.x, leaf_size);
 		node_tree.update(node.leaf, node_aabb);
@@ -312,21 +312,21 @@ void GodotSoftBody3D::apply_nodes_transform(const Transform3D &p_transform) {
 	update_constants();
 }
 
-Vector3 GodotSoftBody3D::get_vertex_position(int p_index) const {
-	ERR_FAIL_COND_V(p_index < 0, Vector3());
+Hector3 GodotSoftBody3D::get_vertex_position(int p_index) const {
+	ERR_FAIL_COND_V(p_index < 0, Hector3());
 
 	if (soft_mesh.is_null()) {
-		return Vector3();
+		return Hector3();
 	}
 
-	ERR_FAIL_COND_V(p_index >= (int)map_visual_to_physics.size(), Vector3());
+	ERR_FAIL_COND_V(p_index >= (int)map_visual_to_physics.size(), Hector3());
 	uint32_t node_index = map_visual_to_physics[p_index];
 
-	ERR_FAIL_COND_V(node_index >= nodes.size(), Vector3());
+	ERR_FAIL_COND_V(node_index >= nodes.size(), Hector3());
 	return nodes[node_index].x;
 }
 
-void GodotSoftBody3D::set_vertex_position(int p_index, const Vector3 &p_position) {
+void GodotSoftBody3D::set_vertex_position(int p_index, const Hector3 &p_position) {
 	ERR_FAIL_COND(p_index < 0);
 
 	if (soft_mesh.is_null()) {
@@ -426,28 +426,28 @@ real_t GodotSoftBody3D::get_node_inv_mass(uint32_t p_node_index) const {
 	return nodes[p_node_index].im;
 }
 
-Vector3 GodotSoftBody3D::get_node_position(uint32_t p_node_index) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_node_index, nodes.size(), Vector3());
+Hector3 GodotSoftBody3D::get_node_position(uint32_t p_node_index) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_node_index, nodes.size(), Hector3());
 	return nodes[p_node_index].x;
 }
 
-Vector3 GodotSoftBody3D::get_node_velocity(uint32_t p_node_index) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_node_index, nodes.size(), Vector3());
+Hector3 GodotSoftBody3D::get_node_velocity(uint32_t p_node_index) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_node_index, nodes.size(), Hector3());
 	return nodes[p_node_index].v;
 }
 
-Vector3 GodotSoftBody3D::get_node_biased_velocity(uint32_t p_node_index) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_node_index, nodes.size(), Vector3());
+Hector3 GodotSoftBody3D::get_node_biased_velocity(uint32_t p_node_index) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_node_index, nodes.size(), Hector3());
 	return nodes[p_node_index].bv;
 }
 
-void GodotSoftBody3D::apply_node_impulse(uint32_t p_node_index, const Vector3 &p_impulse) {
+void GodotSoftBody3D::apply_node_impulse(uint32_t p_node_index, const Hector3 &p_impulse) {
 	ERR_FAIL_UNSIGNED_INDEX(p_node_index, nodes.size());
 	Node &node = nodes[p_node_index];
 	node.v += p_impulse * node.im;
 }
 
-void GodotSoftBody3D::apply_node_bias_impulse(uint32_t p_node_index, const Vector3 &p_impulse) {
+void GodotSoftBody3D::apply_node_bias_impulse(uint32_t p_node_index, const Hector3 &p_impulse) {
 	ERR_FAIL_UNSIGNED_INDEX(p_node_index, nodes.size());
 	Node &node = nodes[p_node_index];
 	node.bv += p_impulse * node.im;
@@ -457,7 +457,7 @@ uint32_t GodotSoftBody3D::get_face_count() const {
 	return faces.size();
 }
 
-void GodotSoftBody3D::get_face_points(uint32_t p_face_index, Vector3 &r_point_1, Vector3 &r_point_2, Vector3 &r_point_3) const {
+void GodotSoftBody3D::get_face_points(uint32_t p_face_index, Hector3 &r_point_1, Hector3 &r_point_2, Hector3 &r_point_3) const {
 	ERR_FAIL_UNSIGNED_INDEX(p_face_index, faces.size());
 	const Face &face = faces[p_face_index];
 	r_point_1 = face.n[0]->x;
@@ -465,20 +465,20 @@ void GodotSoftBody3D::get_face_points(uint32_t p_face_index, Vector3 &r_point_1,
 	r_point_3 = face.n[2]->x;
 }
 
-Vector3 GodotSoftBody3D::get_face_normal(uint32_t p_face_index) const {
-	ERR_FAIL_UNSIGNED_INDEX_V(p_face_index, faces.size(), Vector3());
+Hector3 GodotSoftBody3D::get_face_normal(uint32_t p_face_index) const {
+	ERR_FAIL_UNSIGNED_INDEX_V(p_face_index, faces.size(), Hector3());
 	return faces[p_face_index].normal;
 }
 
-bool GodotSoftBody3D::create_from_trimesh(const Vector<int> &p_indices, const Vector<Vector3> &p_vertices) {
+bool GodotSoftBody3D::create_from_trimesh(const Hector<int> &p_indices, const Hector<Hector3> &p_vertices) {
 	ERR_FAIL_COND_V(p_indices.is_empty(), false);
 	ERR_FAIL_COND_V(p_vertices.is_empty(), false);
 
 	uint32_t node_count = 0;
-	LocalVector<Vector3> vertices;
+	LocalHector<Hector3> vertices;
 	const int visual_vertex_count(p_vertices.size());
 
-	LocalVector<int> triangles;
+	LocalHector<int> triangles;
 	const uint32_t triangle_count(p_indices.size() / 3);
 	triangles.resize(triangle_count * 3);
 
@@ -487,15 +487,15 @@ bool GodotSoftBody3D::create_from_trimesh(const Vector<int> &p_indices, const Ve
 		// Process vertices.
 		{
 			uint32_t vertex_count = 0;
-			HashMap<Vector3, uint32_t> unique_vertices;
+			HashMap<Hector3, uint32_t> unique_vertices;
 
 			vertices.resize(visual_vertex_count);
 			map_visual_to_physics.resize(visual_vertex_count);
 
 			for (int visual_vertex_index = 0; visual_vertex_index < visual_vertex_count; ++visual_vertex_index) {
-				const Vector3 &vertex = p_vertices[visual_vertex_index];
+				const Hector3 &vertex = p_vertices[visual_vertex_index];
 
-				HashMap<Vector3, uint32_t>::Iterator e = unique_vertices.find(vertex);
+				HashMap<Hector3, uint32_t>::Iterator e = unique_vertices.find(vertex);
 				uint32_t vertex_id;
 				if (e) {
 					// Already existing.
@@ -531,7 +531,7 @@ bool GodotSoftBody3D::create_from_trimesh(const Vector<int> &p_indices, const Ve
 	// Create nodes from vertices.
 	nodes.resize(node_count);
 	real_t inv_node_mass = node_count * inv_total_mass;
-	Vector3 leaf_size = Vector3(collision_margin, collision_margin, collision_margin) * 2.0;
+	Hector3 leaf_size = Hector3(collision_margin, collision_margin, collision_margin) * 2.0;
 	for (uint32_t i = 0; i < node_count; ++i) {
 		Node &node = nodes[i];
 		node.s = vertices[i];
@@ -546,7 +546,7 @@ bool GodotSoftBody3D::create_from_trimesh(const Vector<int> &p_indices, const Ve
 	}
 
 	// Create links and faces from triangles.
-	LocalVector<bool> chks;
+	LocalHector<bool> chks;
 	chks.resize(node_count * node_count);
 	memset(chks.ptr(), 0, chks.size() * sizeof(bool));
 
@@ -623,7 +623,7 @@ void GodotSoftBody3D::generate_bending_constraints(int p_distance) {
 
 		// Special optimized case for distance == 2.
 		if (p_distance == 2) {
-			LocalVector<LocalVector<int>> node_links;
+			LocalHector<LocalHector<int>> node_links;
 
 			// Build node links.
 			node_links.resize(nodes.size());
@@ -907,7 +907,7 @@ void GodotSoftBody3D::set_drag_coefficient(real_t p_val) {
 	drag_coefficient = p_val;
 }
 
-void GodotSoftBody3D::add_velocity(const Vector3 &p_velocity) {
+void GodotSoftBody3D::add_velocity(const Hector3 &p_velocity) {
 	for (Node &node : nodes) {
 		if (node.im > 0) {
 			node.v += p_velocity;
@@ -915,7 +915,7 @@ void GodotSoftBody3D::add_velocity(const Vector3 &p_velocity) {
 	}
 }
 
-void GodotSoftBody3D::apply_forces(const LocalVector<GodotArea3D *> &p_wind_areas) {
+void GodotSoftBody3D::apply_forces(const LocalHector<GodotArea3D *> &p_wind_areas) {
 	if (nodes.is_empty()) {
 		return;
 	}
@@ -923,11 +923,11 @@ void GodotSoftBody3D::apply_forces(const LocalVector<GodotArea3D *> &p_wind_area
 	int32_t j;
 
 	real_t volume = 0.0;
-	const Vector3 &org = nodes[0].x;
+	const Hector3 &org = nodes[0].x;
 
 	// Iterate over faces (try not to iterate elsewhere if possible).
 	for (const Face &face : faces) {
-		Vector3 wind_force(0, 0, 0);
+		Hector3 wind_force(0, 0, 0);
 
 		// Compute volume.
 		volume += vec3_dot(face.n[0]->x - org, vec3_cross(face.n[1]->x - org, face.n[2]->x - org));
@@ -957,11 +957,11 @@ void GodotSoftBody3D::apply_forces(const LocalVector<GodotArea3D *> &p_wind_area
 	}
 }
 
-Vector3 GodotSoftBody3D::_compute_area_windforce(const GodotArea3D *p_area, const Face *p_face) {
+Hector3 GodotSoftBody3D::_compute_area_windforce(const GodotArea3D *p_area, const Face *p_face) {
 	real_t wfm = p_area->get_wind_force_magnitude();
 	real_t waf = p_area->get_wind_attenuation_factor();
-	const Vector3 &wd = p_area->get_wind_direction();
-	const Vector3 &ws = p_area->get_wind_source();
+	const Hector3 &wd = p_area->get_wind_direction();
+	const Hector3 &ws = p_area->get_wind_source();
 	real_t projection_on_tri_normal = vec3_dot(p_face->normal, wd);
 	real_t projection_toward_centroid = vec3_dot(p_face->centroid - ws, wd);
 	real_t attenuation_over_distance = pow(projection_toward_centroid, -waf);
@@ -975,9 +975,9 @@ void GodotSoftBody3D::predict_motion(real_t p_delta) {
 	ERR_FAIL_NULL(get_space());
 
 	bool gravity_done = false;
-	Vector3 gravity;
+	Hector3 gravity;
 
-	LocalVector<GodotArea3D *> wind_areas;
+	LocalHector<GodotArea3D *> wind_areas;
 
 	int ac = areas.size();
 	if (ac) {
@@ -987,7 +987,7 @@ void GodotSoftBody3D::predict_motion(real_t p_delta) {
 			if (!gravity_done) {
 				PhysicsServer3D::AreaSpaceOverrideMode area_gravity_mode = (PhysicsServer3D::AreaSpaceOverrideMode)(int)aa[i].area->get_param(PhysicsServer3D::AREA_PARAM_GRAVITY_OVERRIDE_MODE);
 				if (area_gravity_mode != PhysicsServer3D::AREA_SPACE_OVERRIDE_DISABLED) {
-					Vector3 area_gravity;
+					Hector3 area_gravity;
 					aa[i].area->compute_gravity(get_transform().get_origin(), area_gravity);
 					switch (area_gravity_mode) {
 						case PhysicsServer3D::AREA_SPACE_OVERRIDE_COMBINE:
@@ -1017,7 +1017,7 @@ void GodotSoftBody3D::predict_motion(real_t p_delta) {
 		GodotArea3D *default_area = get_space()->get_default_area();
 		ERR_FAIL_NULL(default_area);
 
-		Vector3 default_gravity;
+		Hector3 default_gravity;
 		default_area->compute_gravity(get_transform().get_origin(), default_gravity);
 		gravity += default_gravity;
 	}
@@ -1036,13 +1036,13 @@ void GodotSoftBody3D::predict_motion(real_t p_delta) {
 	// Integrate.
 	for (Node &node : nodes) {
 		node.q = node.x;
-		Vector3 delta_v = node.f * node.im * p_delta;
+		Hector3 delta_v = node.f * node.im * p_delta;
 		for (int c = 0; c < 3; c++) {
 			delta_v[c] = CLAMP(delta_v[c], -clamp_delta_v, clamp_delta_v);
 		}
 		node.v += delta_v;
 		node.x += node.v * p_delta;
-		node.f = Vector3();
+		node.f = Hector3();
 	}
 
 	// Bounds and tree update.
@@ -1050,7 +1050,7 @@ void GodotSoftBody3D::predict_motion(real_t p_delta) {
 
 	// Node tree update.
 	for (const Node &node : nodes) {
-		AABB node_aabb(node.x, Vector3());
+		AABB node_aabb(node.x, Hector3());
 		node_aabb.expand_to(node.x + node.v * p_delta);
 		node_aabb.grow_by(collision_margin);
 
@@ -1088,7 +1088,7 @@ void GodotSoftBody3D::solve_constraints(real_t p_delta) {
 	const real_t vc = (1.0 - damping_coefficient) * inv_delta;
 	for (Node &node : nodes) {
 		node.x += node.bv * p_delta;
-		node.bv = Vector3();
+		node.bv = Hector3();
 
 		node.v = (node.x - node.q) * vc;
 
@@ -1103,7 +1103,7 @@ void GodotSoftBody3D::solve_links(real_t kst, real_t ti) {
 		if (link.c0 > 0) {
 			Node &node_a = *link.n[0];
 			Node &node_b = *link.n[1];
-			const Vector3 del = node_b.x - node_a.x;
+			const Hector3 del = node_b.x - node_a.x;
 			const real_t len = del.length_squared();
 			if (link.c1 + len > CMP_EPSILON) {
 				const real_t k = ((link.c1 - len) / (link.c0 * (link.c1 + len))) * kst;
@@ -1143,7 +1143,7 @@ struct RayQueryResult {
 	};
 };
 
-void GodotSoftBody3D::query_ray(const Vector3 &p_from, const Vector3 &p_to, GodotSoftBody3D::QueryResultCallback p_result_callback, void *p_userdata) {
+void GodotSoftBody3D::query_ray(const Hector3 &p_from, const Hector3 &p_to, GodotSoftBody3D::QueryResultCallback p_result_callback, void *p_userdata) {
 	if (face_tree.is_empty()) {
 		initialize_face_tree();
 	}
@@ -1242,19 +1242,19 @@ GodotSoftBodyShape3D::GodotSoftBodyShape3D(GodotSoftBody3D *p_soft_body) {
 
 struct _SoftBodyIntersectSegmentInfo {
 	const GodotSoftBody3D *soft_body = nullptr;
-	Vector3 from;
-	Vector3 dir;
-	Vector3 hit_position;
+	Hector3 from;
+	Hector3 dir;
+	Hector3 hit_position;
 	uint32_t hit_face_index = -1;
 	real_t hit_dist_sq = INFINITY;
 
 	static bool process_hit(uint32_t p_face_index, void *p_userdata) {
 		_SoftBodyIntersectSegmentInfo &query_info = *(static_cast<_SoftBodyIntersectSegmentInfo *>(p_userdata));
 
-		Vector3 points[3];
+		Hector3 points[3];
 		query_info.soft_body->get_face_points(p_face_index, points[0], points[1], points[2]);
 
-		Vector3 result;
+		Hector3 result;
 		if (Geometry3D::ray_intersects_triangle(query_info.from, query_info.dir, points[0], points[1], points[2], &result)) {
 			real_t dist_sq = query_info.from.distance_squared_to(result);
 			if (dist_sq < query_info.hit_dist_sq) {
@@ -1269,7 +1269,7 @@ struct _SoftBodyIntersectSegmentInfo {
 	}
 };
 
-bool GodotSoftBodyShape3D::intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const {
+bool GodotSoftBodyShape3D::intersect_segment(const Hector3 &p_begin, const Hector3 &p_end, Hector3 &r_result, Hector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const {
 	_SoftBodyIntersectSegmentInfo query_info;
 	query_info.soft_body = soft_body;
 	query_info.from = p_begin;
@@ -1286,10 +1286,10 @@ bool GodotSoftBodyShape3D::intersect_segment(const Vector3 &p_begin, const Vecto
 	return false;
 }
 
-bool GodotSoftBodyShape3D::intersect_point(const Vector3 &p_point) const {
+bool GodotSoftBodyShape3D::intersect_point(const Hector3 &p_point) const {
 	return false;
 }
 
-Vector3 GodotSoftBodyShape3D::get_closest_point_to(const Vector3 &p_point) const {
-	ERR_FAIL_V_MSG(Vector3(), "Get closest point is not supported for soft bodies.");
+Hector3 GodotSoftBodyShape3D::get_closest_point_to(const Hector3 &p_point) const {
+	ERR_FAIL_V_MSG(Hector3(), "Get closest point is not supported for soft bodies.");
 }

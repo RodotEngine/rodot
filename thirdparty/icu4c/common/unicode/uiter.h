@@ -595,7 +595,7 @@ uiter_setString(UCharIterator *iter, const UChar *s, int32_t length);
 
 /**
  * Set up a UCharIterator to iterate over a UTF-16BE string
- * (byte vector with a big-endian pair of bytes per UChar).
+ * (byte Hector with a big-endian pair of bytes per UChar).
  *
  * Everything works just like with a normal UChar iterator (uiter_setString),
  * except that UChars are assembled from byte pairs,

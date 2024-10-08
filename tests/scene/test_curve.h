@@ -58,10 +58,10 @@ TEST_CASE("[Curve] Default curve") {
 TEST_CASE("[Curve] Custom curve with free tangents") {
 	Ref<Curve> curve = memnew(Curve);
 	// "Sawtooth" curve with an open ending towards the 1.0 offset.
-	curve->add_point(Vector2(0, 0));
-	curve->add_point(Vector2(0.25, 1));
-	curve->add_point(Vector2(0.5, 0));
-	curve->add_point(Vector2(0.75, 1));
+	curve->add_point(Hector2(0, 0));
+	curve->add_point(Hector2(0.25, 1));
+	curve->add_point(Hector2(0.5, 0));
+	curve->add_point(Hector2(0.75, 1));
 	curve->set_bake_resolution(11);
 
 	CHECK_MESSAGE(
@@ -139,10 +139,10 @@ TEST_CASE("[Curve] Custom curve with free tangents") {
 TEST_CASE("[Curve] Custom curve with linear tangents") {
 	Ref<Curve> curve = memnew(Curve);
 	// "Sawtooth" curve with an open ending towards the 1.0 offset.
-	curve->add_point(Vector2(0, 0), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
-	curve->add_point(Vector2(0.25, 1), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
-	curve->add_point(Vector2(0.5, 0), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
-	curve->add_point(Vector2(0.75, 1), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
+	curve->add_point(Hector2(0, 0), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
+	curve->add_point(Hector2(0.25, 1), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
+	curve->add_point(Hector2(0.5, 0), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
+	curve->add_point(Hector2(0.75, 1), 0, 0, Curve::TangentMode::TANGENT_LINEAR, Curve::TangentMode::TANGENT_LINEAR);
 
 	CHECK_MESSAGE(
 			curve->get_point_left_tangent(3) == doctest::Approx(4),
@@ -221,8 +221,8 @@ TEST_CASE("[Curve] Custom curve with linear tangents") {
 
 TEST_CASE("[Curve] Straight line offset test") {
 	Ref<Curve> curve = memnew(Curve);
-	curve->add_point(Vector2(0, 0));
-	curve->add_point(Vector2(1, 1));
+	curve->add_point(Hector2(0, 0));
+	curve->add_point(Hector2(1, 1));
 
 	CHECK_MESSAGE(
 			curve->sample_baked(1.0 - (0.5 / curve->get_bake_resolution())) != curve->sample_baked(1),
@@ -233,14 +233,14 @@ TEST_CASE("[Curve2D] Linear sampling should return exact value") {
 	Ref<Curve2D> curve = memnew(Curve2D);
 	real_t len = 2048.0;
 
-	curve->add_point(Vector2(0, 0));
-	curve->add_point(Vector2(len, 0));
+	curve->add_point(Hector2(0, 0));
+	curve->add_point(Hector2(len, 0));
 
 	real_t baked_length = curve->get_baked_length();
 	CHECK(len == baked_length);
 
 	for (int i = 0; i < len; i++) {
-		Vector2 pos = curve->sample_baked(i);
+		Hector2 pos = curve->sample_baked(i);
 		CHECK_MESSAGE(Math::is_equal_approx(pos.x, i), "sample_baked should return exact value");
 	}
 }
@@ -249,15 +249,15 @@ TEST_CASE("[Curve3D] Linear sampling should return exact value") {
 	Ref<Curve3D> curve = memnew(Curve3D);
 	real_t len = 2048.0;
 
-	curve->add_point(Vector3(0, 0, 0));
-	curve->add_point(Vector3(len, 0, 0));
+	curve->add_point(Hector3(0, 0, 0));
+	curve->add_point(Hector3(len, 0, 0));
 	ERR_PRINT_OFF
 	real_t baked_length = curve->get_baked_length();
 	ERR_PRINT_ON
 	CHECK(len == baked_length);
 
 	for (int i = 0; i < len; i++) {
-		Vector3 pos = curve->sample_baked(i);
+		Hector3 pos = curve->sample_baked(i);
 		CHECK_MESSAGE(Math::is_equal_approx(pos.x, i), "sample_baked should return exact value");
 	}
 }

@@ -237,12 +237,12 @@ void SceneTreeDock::_scene_tree_gui_input(Ref<InputEvent> p_event) {
 }
 
 void SceneTreeDock::instantiate(const String &p_file) {
-	Vector<String> scenes;
+	Hector<String> scenes;
 	scenes.push_back(p_file);
 	instantiate_scenes(scenes, scene_tree->get_selected());
 }
 
-void SceneTreeDock::instantiate_scenes(const Vector<String> &p_files, Node *p_parent) {
+void SceneTreeDock::instantiate_scenes(const Hector<String> &p_files, Node *p_parent) {
 	Node *parent = p_parent;
 
 	if (!parent) {
@@ -266,10 +266,10 @@ void SceneTreeDock::instantiate_scenes(const Vector<String> &p_files, Node *p_pa
 	_perform_instantiate_scenes(p_files, parent, -1);
 }
 
-void SceneTreeDock::_perform_instantiate_scenes(const Vector<String> &p_files, Node *p_parent, int p_pos) {
+void SceneTreeDock::_perform_instantiate_scenes(const Hector<String> &p_files, Node *p_parent, int p_pos) {
 	ERR_FAIL_NULL(p_parent);
 
-	Vector<Node *> instances;
+	Hector<Node *> instances;
 
 	bool error = false;
 
@@ -342,7 +342,7 @@ void SceneTreeDock::_perform_instantiate_scenes(const Vector<String> &p_files, N
 	}
 }
 
-void SceneTreeDock::_perform_create_audio_stream_players(const Vector<String> &p_files, Node *p_parent, int p_pos) {
+void SceneTreeDock::_perform_create_audio_stream_players(const Hector<String> &p_files, Node *p_parent, int p_pos) {
 	ERR_FAIL_NULL(p_parent);
 
 	StringName node_type = "AudioStreamPlayer";
@@ -354,7 +354,7 @@ void SceneTreeDock::_perform_create_audio_stream_players(const Vector<String> &p
 		}
 	}
 
-	Vector<Node *> nodes;
+	Hector<Node *> nodes;
 	bool error = false;
 
 	for (const String &path : p_files) {
@@ -501,7 +501,7 @@ bool SceneTreeDock::_cyclical_dependency_exists(const String &p_target_scene_pat
 bool SceneTreeDock::_track_inherit(const String &p_target_scene_path, Node *p_desired_node) {
 	Node *p = p_desired_node;
 	bool result = false;
-	Vector<Node *> instances;
+	Hector<Node *> instances;
 	while (true) {
 		if (p->get_scene_file_path() == p_target_scene_path) {
 			result = true;
@@ -579,7 +579,7 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			Node *current_edited_scene_root = EditorNode::get_singleton()->get_edited_scene();
 			if (current_edited_scene_root) {
 				String root_class = current_edited_scene_root->get_class_name();
-				static Vector<String> preferred_types;
+				static Hector<String> preferred_types;
 				if (preferred_types.is_empty()) {
 					preferred_types.push_back("Control");
 					preferred_types.push_back("Node2D");
@@ -1403,9 +1403,9 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 
 			if (enabling) {
-				Vector<Node *> new_unique_nodes;
-				Vector<StringName> new_unique_names;
-				Vector<StringName> cant_be_set_unique_names;
+				Hector<Node *> new_unique_nodes;
+				Hector<StringName> new_unique_names;
+				Hector<StringName> cant_be_set_unique_names;
 
 				for (Node *node : full_selection) {
 					if (node->is_unique_name_in_owner()) {
@@ -1844,7 +1844,7 @@ void SceneTreeDock::_set_owners(Node *p_owner, const Array &p_nodes) {
 	}
 }
 
-void SceneTreeDock::_fill_path_renames(Vector<StringName> base_path, Vector<StringName> new_base_path, Node *p_node, HashMap<Node *, NodePath> *p_renames) {
+void SceneTreeDock::_fill_path_renames(Hector<StringName> base_path, Hector<StringName> new_base_path, Node *p_node, HashMap<Node *, NodePath> *p_renames) {
 	base_path.push_back(p_node->get_name());
 
 	NodePath new_path;
@@ -1908,7 +1908,7 @@ bool SceneTreeDock::_has_tracks_to_delete(Node *p_node, List<Node *> &p_to_delet
 }
 
 void SceneTreeDock::fill_path_renames(Node *p_node, Node *p_new_parent, HashMap<Node *, NodePath> *p_renames) {
-	Vector<StringName> base_path;
+	Hector<StringName> base_path;
 	Node *n = p_node->get_parent();
 	while (n) {
 		base_path.push_back(n->get_name());
@@ -1916,7 +1916,7 @@ void SceneTreeDock::fill_path_renames(Node *p_node, Node *p_new_parent, HashMap<
 	}
 	base_path.reverse();
 
-	Vector<StringName> new_base_path;
+	Hector<StringName> new_base_path;
 	if (p_new_parent) {
 		n = p_new_parent;
 		while (n) {
@@ -2195,7 +2195,7 @@ void SceneTreeDock::perform_node_renames(Node *p_base, HashMap<Node *, NodePath>
 void SceneTreeDock::_node_prerenamed(Node *p_node, const String &p_new_name) {
 	HashMap<Node *, NodePath> path_renames;
 
-	Vector<StringName> base_path;
+	Hector<StringName> base_path;
 	Node *n = p_node->get_parent();
 	while (n) {
 		base_path.push_back(n->get_name());
@@ -2203,7 +2203,7 @@ void SceneTreeDock::_node_prerenamed(Node *p_node, const String &p_new_name) {
 	}
 	base_path.reverse();
 
-	Vector<StringName> new_base_path = base_path;
+	Hector<StringName> new_base_path = base_path;
 	base_path.push_back(p_node->get_name());
 
 	new_base_path.push_back(p_new_name);
@@ -2272,7 +2272,7 @@ void SceneTreeDock::_node_reparent(NodePath p_path, bool p_keep_global_xform) {
 		return; // Nothing to reparent.
 	}
 
-	Vector<Node *> nodes;
+	Hector<Node *> nodes;
 
 	for (Node *E : selection) {
 		nodes.push_back(E);
@@ -2285,7 +2285,7 @@ void SceneTreeDock::_node_reparent(NodePath p_path, bool p_keep_global_xform) {
 	}
 }
 
-void SceneTreeDock::_do_reparent(Node *p_new_parent, int p_position_in_parent, Vector<Node *> p_nodes, bool p_keep_global_xform) {
+void SceneTreeDock::_do_reparent(Node *p_new_parent, int p_position_in_parent, Hector<Node *> p_nodes, bool p_keep_global_xform) {
 	ERR_FAIL_NULL(p_new_parent);
 
 	if (p_nodes.size() == 0) {
@@ -2339,7 +2339,7 @@ void SceneTreeDock::_do_reparent(Node *p_new_parent, int p_position_in_parent, V
 	undo_redo->create_action(TTR("Reparent Node"), UndoRedo::MERGE_DISABLE, p_nodes[0]);
 
 	HashMap<Node *, NodePath> path_renames;
-	Vector<StringName> former_names;
+	Hector<StringName> former_names;
 
 	int inc = 0;
 	bool need_edit = false;
@@ -2388,8 +2388,8 @@ void SceneTreeDock::_do_reparent(Node *p_new_parent, int p_position_in_parent, V
 			if (found_path) {
 				NodePath old_new_name = found_path->value;
 
-				Vector<StringName> unfixed_new_names = old_new_name.get_names();
-				Vector<StringName> fixed_new_names;
+				Hector<StringName> unfixed_new_names = old_new_name.get_names();
+				Hector<StringName> fixed_new_names;
 
 				// Get last name and replace with fixed new name.
 				for (int a = 0; a < (unfixed_new_names.size() - 1); a++) {
@@ -2880,7 +2880,7 @@ void SceneTreeDock::_post_do_create(Node *p_child) {
 			ms.height = 40;
 		}
 		if (control->is_layout_rtl()) {
-			control->set_position(control->get_position() - Vector2(ms.x, 0));
+			control->set_position(control->get_position() - Hector2(ms.x, 0));
 		}
 		control->set_size(ms);
 	}
@@ -2939,7 +2939,7 @@ void SceneTreeDock::_create() {
 		Node *top_node = first;
 
 		bool center_parent = EDITOR_GET("docks/scene_tree/center_node_on_reparent");
-		Vector<Node *> top_level_nodes;
+		Hector<Node *> top_level_nodes;
 
 		for (List<Node *>::Element *E = selection.front()->next(); E; E = E->next()) {
 			Node *n = E->get();
@@ -2981,7 +2981,7 @@ void SceneTreeDock::_create() {
 
 		Node *last_created = _do_create(parent);
 
-		Vector<Node *> nodes;
+		Hector<Node *> nodes;
 		for (Node *E : selection) {
 			nodes.push_back(E);
 		}
@@ -2990,7 +2990,7 @@ void SceneTreeDock::_create() {
 			// Find parent type and only average positions of relevant nodes.
 			Node3D *parent_node_3d = Object::cast_to<Node3D>(last_created);
 			if (parent_node_3d) {
-				Vector3 position;
+				Hector3 position;
 				uint32_t node_count = 0;
 				for (const Node *node : nodes) {
 					const Node3D *node_3d = Object::cast_to<Node3D>(node);
@@ -3007,7 +3007,7 @@ void SceneTreeDock::_create() {
 
 			Node2D *parent_node_2d = Object::cast_to<Node2D>(last_created);
 			if (parent_node_2d) {
-				Vector2 position;
+				Hector2 position;
 				uint32_t node_count = 0;
 				for (const Node *node : nodes) {
 					const Node2D *node_2d = Object::cast_to<Node2D>(node);
@@ -3226,7 +3226,7 @@ void SceneTreeDock::set_edited_scene(Node *p_scene) {
 	edited_scene = p_scene;
 }
 
-static bool _is_same_selection(const Vector<Node *> &p_first, const List<Node *> &p_second) {
+static bool _is_same_selection(const Hector<Node *> &p_first, const List<Node *> &p_second) {
 	if (p_first.size() != p_second.size()) {
 		return false;
 	}
@@ -3238,7 +3238,7 @@ static bool _is_same_selection(const Vector<Node *> &p_first, const List<Node *>
 	return true;
 }
 
-void SceneTreeDock::set_selection(const Vector<Node *> &p_nodes) {
+void SceneTreeDock::set_selection(const Hector<Node *> &p_nodes) {
 	// If the nodes selected are the same independently of order then return early.
 	if (_is_same_selection(p_nodes, editor_selection->get_full_selected_node_list())) {
 		return;
@@ -3294,7 +3294,7 @@ void SceneTreeDock::_new_scene_from(const String &p_file) {
 		Node2D *copy_2d = Object::cast_to<Node2D>(copy);
 		if (copy_2d != nullptr) {
 			if (reset_position) {
-				copy_2d->set_position(Vector2(0, 0));
+				copy_2d->set_position(Hector2(0, 0));
 			}
 			if (reset_rotation) {
 				copy_2d->set_rotation(0);
@@ -3306,13 +3306,13 @@ void SceneTreeDock::_new_scene_from(const String &p_file) {
 		Node3D *copy_3d = Object::cast_to<Node3D>(copy);
 		if (copy_3d != nullptr) {
 			if (reset_position) {
-				copy_3d->set_position(Vector3(0, 0, 0));
+				copy_3d->set_position(Hector3(0, 0, 0));
 			}
 			if (reset_rotation) {
-				copy_3d->set_rotation(Vector3(0, 0, 0));
+				copy_3d->set_rotation(Hector3(0, 0, 0));
 			}
 			if (reset_scale) {
-				copy_3d->set_scale(Vector3(0, 0, 0));
+				copy_3d->set_scale(Hector3(0, 0, 0));
 			}
 		}
 
@@ -3443,7 +3443,7 @@ Array SceneTreeDock::_get_selection_array() {
 	return array;
 }
 
-void SceneTreeDock::_files_dropped(const Vector<String> &p_files, NodePath p_to, int p_type) {
+void SceneTreeDock::_files_dropped(const Hector<String> &p_files, NodePath p_to, int p_type) {
 	Node *node = get_node(p_to);
 	ERR_FAIL_NULL(node);
 	ERR_FAIL_COND(p_files.is_empty());
@@ -3463,7 +3463,7 @@ void SceneTreeDock::_files_dropped(const Vector<String> &p_files, NodePath p_to,
 			if (!(p.usage & PROPERTY_USAGE_EDITOR) || !(p.usage & PROPERTY_USAGE_STORAGE) || p.hint != PROPERTY_HINT_RESOURCE_TYPE) {
 				continue;
 			}
-			Vector<String> valid_types = p.hint_string.split(",");
+			Hector<String> valid_types = p.hint_string.split(",");
 
 			for (const String &prop_type : valid_types) {
 				if (res_type == prop_type || ClassDB::is_parent_class(res_type, prop_type) || EditorNode::get_editor_data().script_class_is_parent(res_type, prop_type)) {
@@ -3572,7 +3572,7 @@ void SceneTreeDock::_nodes_dragged(const Array &p_nodes, NodePath p_to, int p_ty
 		return;
 	}
 
-	Vector<Node *> nodes;
+	Hector<Node *> nodes;
 	for (Node *E : selection) {
 		nodes.push_back(E);
 	}
@@ -3624,7 +3624,7 @@ void SceneTreeDock::_add_children_to_popup(Object *p_obj, int p_depth) {
 	}
 }
 
-void SceneTreeDock::_tree_rmb(const Vector2 &p_menu_pos) {
+void SceneTreeDock::_tree_rmb(const Hector2 &p_menu_pos) {
 	if (!EditorNode::get_singleton()->get_edited_scene()) {
 		menu->clear(false);
 		if (profile_allow_editing) {
@@ -3837,7 +3837,7 @@ void SceneTreeDock::_tree_rmb(const Vector2 &p_menu_pos) {
 		menu->add_icon_shortcut(get_editor_theme_icon(SNAME("Remove")), ED_GET_SHORTCUT("scene_tree/delete"), TOOL_ERASE);
 	}
 
-	Vector<String> p_paths;
+	Hector<String> p_paths;
 	Node *root = EditorNode::get_singleton()->get_edited_scene();
 	for (List<Node *>::Element *E = selection.front(); E; E = E->next()) {
 		String node_path = root->get_path().rel_path_to(E->get()->get_path());
@@ -4331,7 +4331,7 @@ void SceneTreeDock::_create_remap_for_node(Node *p_node, HashMap<Ref<Resource>, 
 	List<PropertyInfo> props;
 	p_node->get_property_list(&props);
 
-	Vector<SceneState::PackState> states_stack;
+	Hector<SceneState::PackState> states_stack;
 	bool states_stack_ready = false;
 
 	for (const PropertyInfo &E : props) {
@@ -4720,9 +4720,9 @@ SceneTreeDock::SceneTreeDock(Node *p_scene_root, EditorSelection *p_editor_selec
 
 	new_scene_from_dialog = memnew(EditorFileDialog);
 	new_scene_from_dialog->set_file_mode(EditorFileDialog::FILE_MODE_SAVE_FILE);
-	new_scene_from_dialog->add_option(TTR("Reset Position"), Vector<String>(), true);
-	new_scene_from_dialog->add_option(TTR("Reset Rotation"), Vector<String>(), false);
-	new_scene_from_dialog->add_option(TTR("Reset Scale"), Vector<String>(), false);
+	new_scene_from_dialog->add_option(TTR("Reset Position"), Hector<String>(), true);
+	new_scene_from_dialog->add_option(TTR("Reset Rotation"), Hector<String>(), false);
+	new_scene_from_dialog->add_option(TTR("Reset Scale"), Hector<String>(), false);
 	add_child(new_scene_from_dialog);
 	new_scene_from_dialog->connect("file_selected", callable_mp(this, &SceneTreeDock::_new_scene_from));
 

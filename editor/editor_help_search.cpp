@@ -39,7 +39,7 @@
 #include "editor/themes/editor_scale.h"
 #include "editor/themes/editor_theme_manager.h"
 
-bool EditorHelpSearch::_all_terms_in_name(const Vector<String> &p_terms, const String &p_name) const {
+bool EditorHelpSearch::_all_terms_in_name(const Hector<String> &p_terms, const String &p_name) const {
 	for (int i = 0; i < p_terms.size(); i++) {
 		if (!p_name.containsn(p_terms[i])) {
 			return false;
@@ -48,7 +48,7 @@ bool EditorHelpSearch::_all_terms_in_name(const Vector<String> &p_terms, const S
 	return true;
 }
 
-void EditorHelpSearch::_match_method_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::MethodDoc> &p_methods, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
+void EditorHelpSearch::_match_method_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::MethodDoc> &p_methods, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
 	// Constructors, Methods, Operators...
 	for (int i = 0; i < p_methods.size(); i++) {
 		String method_name = p_methods[i].name.to_lower();
@@ -61,7 +61,7 @@ void EditorHelpSearch::_match_method_name_and_push_back(const String &p_term, co
 	}
 }
 
-void EditorHelpSearch::_match_const_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::ConstantDoc> &p_constants, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
+void EditorHelpSearch::_match_const_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::ConstantDoc> &p_constants, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
 	for (int i = 0; i < p_constants.size(); i++) {
 		String method_name = p_constants[i].name.to_lower();
 		if (_all_terms_in_name(p_terms, method_name) ||
@@ -73,7 +73,7 @@ void EditorHelpSearch::_match_const_name_and_push_back(const String &p_term, con
 	}
 }
 
-void EditorHelpSearch::_match_property_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::PropertyDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
+void EditorHelpSearch::_match_property_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::PropertyDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
 	for (int i = 0; i < p_properties.size(); i++) {
 		String method_name = p_properties[i].name.to_lower();
 		if (_all_terms_in_name(p_terms, method_name) ||
@@ -85,7 +85,7 @@ void EditorHelpSearch::_match_property_name_and_push_back(const String &p_term, 
 	}
 }
 
-void EditorHelpSearch::_match_theme_property_name_and_push_back(const String &p_term, const Vector<String> &p_terms, Vector<DocData::ThemeItemDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
+void EditorHelpSearch::_match_theme_property_name_and_push_back(const String &p_term, const Hector<String> &p_terms, Hector<DocData::ThemeItemDoc> &p_properties, const String &p_type, const String &p_metatype, const String &p_class_name, Dictionary &r_result) const {
 	for (int i = 0; i < p_properties.size(); i++) {
 		String method_name = p_properties[i].name.to_lower();
 		if (_all_terms_in_name(p_terms, method_name) ||
@@ -100,7 +100,7 @@ void EditorHelpSearch::_match_theme_property_name_and_push_back(const String &p_
 Dictionary EditorHelpSearch::_native_search_cb(const String &p_search_string, int p_result_limit) {
 	Dictionary ret;
 	const String &term = p_search_string.strip_edges().to_lower();
-	Vector<String> terms = term.split_spaces();
+	Hector<String> terms = term.split_spaces();
 	if (terms.is_empty()) {
 		terms.append(term);
 	}
@@ -831,7 +831,7 @@ void EditorHelpSearch::Runner::_populate_cache() {
 	root_item = results_tree->get_root();
 
 	if (root_item) {
-		LocalVector<TreeItem *> stack;
+		LocalHector<TreeItem *> stack;
 
 		// Add children of root item to stack.
 		for (TreeItem *child = root_item->get_first_child(); child; child = child->get_next()) {
@@ -945,7 +945,7 @@ bool EditorHelpSearch::Runner::_phase_select_match() {
 	return true;
 }
 
-void EditorHelpSearch::Runner::_match_method_name_and_push_back(Vector<DocData::MethodDoc> &p_methods, LocalVector<MemberMatch<DocData::MethodDoc>> *r_match_methods) {
+void EditorHelpSearch::Runner::_match_method_name_and_push_back(Hector<DocData::MethodDoc> &p_methods, LocalHector<MemberMatch<DocData::MethodDoc>> *r_match_methods) {
 	// Constructors, Methods, Operators...
 	for (int i = 0; i < p_methods.size(); i++) {
 		String method_name = (search_flags & SEARCH_CASE_SENSITIVE) ? p_methods[i].name : p_methods[i].name.to_lower();

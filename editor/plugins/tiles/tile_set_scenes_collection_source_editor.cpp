@@ -244,7 +244,7 @@ void TileSetScenesCollectionSourceEditor::_source_add_pressed() {
 		scene_select_dialog->set_file_mode(EditorFileDialog::FILE_MODE_OPEN_FILE);
 		scene_select_dialog->connect("file_selected", callable_mp(this, &TileSetScenesCollectionSourceEditor::_scene_file_selected));
 
-		for (const String &E : Vector<String>{ "tscn", "scn" }) {
+		for (const String &E : Hector<String>{ "tscn", "scn" }) {
 			scene_select_dialog->add_filter("*." + E, E.to_upper());
 		}
 	}
@@ -266,7 +266,7 @@ void TileSetScenesCollectionSourceEditor::_scene_file_selected(const String &p_p
 }
 
 void TileSetScenesCollectionSourceEditor::_source_delete_pressed() {
-	Vector<int> selected_indices = scene_tiles_list->get_selected_items();
+	Hector<int> selected_indices = scene_tiles_list->get_selected_items();
 	ERR_FAIL_COND(selected_indices.is_empty());
 	int scene_id = scene_tiles_list->get_item_metadata(selected_indices[0]);
 
@@ -286,7 +286,7 @@ void TileSetScenesCollectionSourceEditor::_update_source_inspector() {
 }
 
 void TileSetScenesCollectionSourceEditor::_update_tile_inspector() {
-	Vector<int> selected_indices = scene_tiles_list->get_selected_items();
+	Hector<int> selected_indices = scene_tiles_list->get_selected_items();
 	bool has_atlas_tile_selected = (selected_indices.size() > 0);
 
 	// Update the proxy object.
@@ -301,7 +301,7 @@ void TileSetScenesCollectionSourceEditor::_update_tile_inspector() {
 }
 
 void TileSetScenesCollectionSourceEditor::_update_action_buttons() {
-	Vector<int> selected_indices = scene_tiles_list->get_selected_items();
+	Hector<int> selected_indices = scene_tiles_list->get_selected_items();
 	scene_tile_delete_button->set_disabled(selected_indices.size() <= 0 || read_only);
 }
 
@@ -311,7 +311,7 @@ void TileSetScenesCollectionSourceEditor::_update_scenes_list() {
 	}
 
 	// Get the previously selected id.
-	Vector<int> selected_indices = scene_tiles_list->get_selected_items();
+	Hector<int> selected_indices = scene_tiles_list->get_selected_items();
 	int old_selected_scene_id = (selected_indices.size() > 0) ? int(scene_tiles_list->get_item_metadata(selected_indices[0])) : -1;
 
 	// Clear the list.
@@ -350,7 +350,7 @@ void TileSetScenesCollectionSourceEditor::_update_scenes_list() {
 
 	// Icon size update.
 	int int_size = int(EDITOR_GET("filesystem/file_dialog/thumbnail_size")) * EDSCALE;
-	scene_tiles_list->set_fixed_icon_size(Vector2(int_size, int_size));
+	scene_tiles_list->set_fixed_icon_size(Hector2(int_size, int_size));
 }
 
 void TileSetScenesCollectionSourceEditor::_notification(int p_what) {
@@ -452,7 +452,7 @@ void TileSetScenesCollectionSourceEditor::_drop_data_fw(const Point2 &p_point, c
 	if (p_from == scene_tiles_list) {
 		// Handle dropping a texture in the list of atlas resources.
 		Dictionary d = p_data;
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 		for (int i = 0; i < files.size(); i++) {
 			Ref<PackedScene> resource = ResourceLoader::load(files[i]);
 			if (resource.is_valid()) {
@@ -481,7 +481,7 @@ bool TileSetScenesCollectionSourceEditor::_can_drop_data_fw(const Point2 &p_poin
 
 		// Check if we have a Texture2D.
 		if (String(d["type"]) == "files") {
-			Vector<String> files = d["files"];
+			Hector<String> files = d["files"];
 
 			if (files.size() == 0) {
 				return false;

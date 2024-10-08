@@ -615,9 +615,9 @@ void CanvasItem::draw_dashed_line(const Point2 &p_from, const Point2 &p_to, cons
 	ERR_FAIL_COND(p_dash <= 0.0);
 
 	float length = (p_to - p_from).length();
-	Vector2 step = p_dash * (p_to - p_from).normalized();
+	Hector2 step = p_dash * (p_to - p_from).normalized();
 
-	if (length < p_dash || step == Vector2()) {
+	if (length < p_dash || step == Hector2()) {
 		RenderingServer::get_singleton()->canvas_item_add_line(canvas_item, p_from, p_to, p_color, p_width, p_antialiased);
 		return;
 	}
@@ -632,7 +632,7 @@ void CanvasItem::draw_dashed_line(const Point2 &p_from, const Point2 &p_to, cons
 		off += (p_to - p_from).normalized() * (length - steps * p_dash) / 2.0;
 	}
 
-	Vector<Vector2> points;
+	Hector<Hector2> points;
 	points.resize(steps + 1);
 	for (int i = 0; i < steps; i += 2) {
 		points.write[i] = (i == 0) ? p_from : off;
@@ -640,7 +640,7 @@ void CanvasItem::draw_dashed_line(const Point2 &p_from, const Point2 &p_to, cons
 		off += step * 2;
 	}
 
-	Vector<Color> colors = { p_color };
+	Hector<Color> colors = { p_color };
 
 	RenderingServer::get_singleton()->canvas_item_add_multiline(canvas_item, points, colors, p_width, p_antialiased);
 }
@@ -652,24 +652,24 @@ void CanvasItem::draw_line(const Point2 &p_from, const Point2 &p_to, const Color
 	RenderingServer::get_singleton()->canvas_item_add_line(canvas_item, p_from, p_to, p_color, p_width, p_antialiased);
 }
 
-void CanvasItem::draw_polyline(const Vector<Point2> &p_points, const Color &p_color, real_t p_width, bool p_antialiased) {
+void CanvasItem::draw_polyline(const Hector<Point2> &p_points, const Color &p_color, real_t p_width, bool p_antialiased) {
 	ERR_THREAD_GUARD;
 	ERR_DRAW_GUARD;
 
-	Vector<Color> colors = { p_color };
+	Hector<Color> colors = { p_color };
 	RenderingServer::get_singleton()->canvas_item_add_polyline(canvas_item, p_points, colors, p_width, p_antialiased);
 }
 
-void CanvasItem::draw_polyline_colors(const Vector<Point2> &p_points, const Vector<Color> &p_colors, real_t p_width, bool p_antialiased) {
+void CanvasItem::draw_polyline_colors(const Hector<Point2> &p_points, const Hector<Color> &p_colors, real_t p_width, bool p_antialiased) {
 	ERR_THREAD_GUARD;
 	ERR_DRAW_GUARD;
 
 	RenderingServer::get_singleton()->canvas_item_add_polyline(canvas_item, p_points, p_colors, p_width, p_antialiased);
 }
 
-void CanvasItem::draw_arc(const Vector2 &p_center, real_t p_radius, real_t p_start_angle, real_t p_end_angle, int p_point_count, const Color &p_color, real_t p_width, bool p_antialiased) {
+void CanvasItem::draw_arc(const Hector2 &p_center, real_t p_radius, real_t p_start_angle, real_t p_end_angle, int p_point_count, const Color &p_color, real_t p_width, bool p_antialiased) {
 	ERR_THREAD_GUARD;
-	Vector<Point2> points;
+	Hector<Point2> points;
 	points.resize(p_point_count);
 	Point2 *points_ptr = points.ptrw();
 
@@ -677,21 +677,21 @@ void CanvasItem::draw_arc(const Vector2 &p_center, real_t p_radius, real_t p_sta
 	const real_t delta_angle = CLAMP(p_end_angle - p_start_angle, -Math_TAU, Math_TAU);
 	for (int i = 0; i < p_point_count; i++) {
 		real_t theta = (i / (p_point_count - 1.0f)) * delta_angle + p_start_angle;
-		points_ptr[i] = p_center + Vector2(Math::cos(theta), Math::sin(theta)) * p_radius;
+		points_ptr[i] = p_center + Hector2(Math::cos(theta), Math::sin(theta)) * p_radius;
 	}
 
 	draw_polyline(points, p_color, p_width, p_antialiased);
 }
 
-void CanvasItem::draw_multiline(const Vector<Point2> &p_points, const Color &p_color, real_t p_width, bool p_antialiased) {
+void CanvasItem::draw_multiline(const Hector<Point2> &p_points, const Color &p_color, real_t p_width, bool p_antialiased) {
 	ERR_THREAD_GUARD;
 	ERR_DRAW_GUARD;
 
-	Vector<Color> colors = { p_color };
+	Hector<Color> colors = { p_color };
 	RenderingServer::get_singleton()->canvas_item_add_multiline(canvas_item, p_points, colors, p_width, p_antialiased);
 }
 
-void CanvasItem::draw_multiline_colors(const Vector<Point2> &p_points, const Vector<Color> &p_colors, real_t p_width, bool p_antialiased) {
+void CanvasItem::draw_multiline_colors(const Hector<Point2> &p_points, const Hector<Color> &p_colors, real_t p_width, bool p_antialiased) {
 	ERR_THREAD_GUARD;
 	ERR_DRAW_GUARD;
 
@@ -713,15 +713,15 @@ void CanvasItem::draw_rect(const Rect2 &p_rect, const Color &p_color, bool p_fil
 	} else if (p_width >= rect.size.width || p_width >= rect.size.height) {
 		RenderingServer::get_singleton()->canvas_item_add_rect(canvas_item, rect.grow(0.5f * p_width), p_color, p_antialiased);
 	} else {
-		Vector<Vector2> points;
+		Hector<Hector2> points;
 		points.resize(5);
 		points.write[0] = rect.position;
-		points.write[1] = rect.position + Vector2(rect.size.x, 0);
+		points.write[1] = rect.position + Hector2(rect.size.x, 0);
 		points.write[2] = rect.position + rect.size;
-		points.write[3] = rect.position + Vector2(0, rect.size.y);
+		points.write[3] = rect.position + Hector2(0, rect.size.y);
 		points.write[4] = rect.position;
 
-		Vector<Color> colors = { p_color };
+		Hector<Color> colors = { p_color };
 
 		RenderingServer::get_singleton()->canvas_item_add_polyline(canvas_item, points, colors, p_width, p_antialiased);
 	}
@@ -743,10 +743,10 @@ void CanvasItem::draw_circle(const Point2 &p_pos, real_t p_radius, const Color &
 		// Tessellation count is hardcoded. Keep in sync with the same variable in `RendererCanvasCull::canvas_item_add_circle()`.
 		const int circle_segments = 64;
 
-		Vector<Vector2> points;
+		Hector<Hector2> points;
 		points.resize(circle_segments + 1);
 
-		Vector2 *points_ptr = points.ptrw();
+		Hector2 *points_ptr = points.ptrw();
 		const real_t circle_point_step = Math_TAU / circle_segments;
 
 		for (int i = 0; i < circle_segments; i++) {
@@ -757,7 +757,7 @@ void CanvasItem::draw_circle(const Point2 &p_pos, real_t p_radius, const Color &
 		}
 		points_ptr[circle_segments] = points_ptr[0];
 
-		Vector<Color> colors = { p_color };
+		Hector<Color> colors = { p_color };
 
 		RenderingServer::get_singleton()->canvas_item_add_polyline(canvas_item, points, colors, p_width, p_antialiased);
 	}
@@ -810,7 +810,7 @@ void CanvasItem::draw_style_box(const Ref<StyleBox> &p_style_box, const Rect2 &p
 	p_style_box->draw(canvas_item, p_rect);
 }
 
-void CanvasItem::draw_primitive(const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, Ref<Texture2D> p_texture) {
+void CanvasItem::draw_primitive(const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, Ref<Texture2D> p_texture) {
 	ERR_THREAD_GUARD;
 	ERR_DRAW_GUARD;
 
@@ -847,20 +847,20 @@ void CanvasItem::draw_end_animation() {
 	RenderingServer::get_singleton()->canvas_item_add_animation_slice(canvas_item, 1, 0, 2, 0);
 }
 
-void CanvasItem::draw_polygon(const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, Ref<Texture2D> p_texture) {
+void CanvasItem::draw_polygon(const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, Ref<Texture2D> p_texture) {
 	ERR_THREAD_GUARD;
 	ERR_DRAW_GUARD;
 
 	const Ref<AtlasTexture> atlas = p_texture;
 	if (atlas.is_valid() && atlas->get_atlas().is_valid()) {
 		const Ref<Texture2D> &texture = atlas->get_atlas();
-		const Vector2 atlas_size = texture->get_size();
+		const Hector2 atlas_size = texture->get_size();
 
-		const Vector2 remap_min = atlas->get_region().position / atlas_size;
-		const Vector2 remap_max = atlas->get_region().get_end() / atlas_size;
+		const Hector2 remap_min = atlas->get_region().position / atlas_size;
+		const Hector2 remap_max = atlas->get_region().get_end() / atlas_size;
 
-		PackedVector2Array uvs = p_uvs;
-		for (Vector2 &p : uvs) {
+		PackedHector2Array uvs = p_uvs;
+		for (Hector2 &p : uvs) {
 			p.x = Math::remap(p.x, 0, 1, remap_min.x, remap_max.x);
 			p.y = Math::remap(p.y, 0, 1, remap_min.y, remap_max.y);
 		}
@@ -871,7 +871,7 @@ void CanvasItem::draw_polygon(const Vector<Point2> &p_points, const Vector<Color
 	}
 }
 
-void CanvasItem::draw_colored_polygon(const Vector<Point2> &p_points, const Color &p_color, const Vector<Point2> &p_uvs, Ref<Texture2D> p_texture) {
+void CanvasItem::draw_colored_polygon(const Hector<Point2> &p_points, const Color &p_color, const Hector<Point2> &p_uvs, Ref<Texture2D> p_texture) {
 	draw_polygon(p_points, { p_color }, p_uvs, p_texture);
 }
 
@@ -1090,8 +1090,8 @@ Ref<Material> CanvasItem::get_material() const {
 	return material;
 }
 
-Vector2 CanvasItem::make_canvas_position_local(const Vector2 &screen_point) const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+Hector2 CanvasItem::make_canvas_position_local(const Hector2 &screen_point) const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	ERR_FAIL_COND_V(!is_inside_tree(), screen_point);
 
 	Transform2D local_matrix = (get_canvas_transform() * get_global_transform()).affine_inverse();
@@ -1107,15 +1107,15 @@ Ref<InputEvent> CanvasItem::make_input_local(const Ref<InputEvent> &p_event) con
 	return p_event->xformed_by((get_canvas_transform() * get_global_transform()).affine_inverse());
 }
 
-Vector2 CanvasItem::get_global_mouse_position() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
-	ERR_FAIL_NULL_V(get_viewport(), Vector2());
+Hector2 CanvasItem::get_global_mouse_position() const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
+	ERR_FAIL_NULL_V(get_viewport(), Hector2());
 	return get_canvas_transform().affine_inverse().xform(get_viewport()->get_mouse_position());
 }
 
-Vector2 CanvasItem::get_local_mouse_position() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
-	ERR_FAIL_NULL_V(get_viewport(), Vector2());
+Hector2 CanvasItem::get_local_mouse_position() const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
+	ERR_FAIL_NULL_V(get_viewport(), Hector2());
 
 	return get_global_transform().affine_inverse().xform(get_global_mouse_position());
 }
@@ -1211,8 +1211,8 @@ void CanvasItem::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("draw_lcd_texture_rect_region", "texture", "rect", "src_rect", "modulate"), &CanvasItem::draw_lcd_texture_rect_region, DEFVAL(Color(1, 1, 1, 1)));
 	ClassDB::bind_method(D_METHOD("draw_style_box", "style_box", "rect"), &CanvasItem::draw_style_box);
 	ClassDB::bind_method(D_METHOD("draw_primitive", "points", "colors", "uvs", "texture"), &CanvasItem::draw_primitive, DEFVAL(Ref<Texture2D>()));
-	ClassDB::bind_method(D_METHOD("draw_polygon", "points", "colors", "uvs", "texture"), &CanvasItem::draw_polygon, DEFVAL(PackedVector2Array()), DEFVAL(Ref<Texture2D>()));
-	ClassDB::bind_method(D_METHOD("draw_colored_polygon", "points", "color", "uvs", "texture"), &CanvasItem::draw_colored_polygon, DEFVAL(PackedVector2Array()), DEFVAL(Ref<Texture2D>()));
+	ClassDB::bind_method(D_METHOD("draw_polygon", "points", "colors", "uvs", "texture"), &CanvasItem::draw_polygon, DEFVAL(PackedHector2Array()), DEFVAL(Ref<Texture2D>()));
+	ClassDB::bind_method(D_METHOD("draw_colored_polygon", "points", "color", "uvs", "texture"), &CanvasItem::draw_colored_polygon, DEFVAL(PackedHector2Array()), DEFVAL(Ref<Texture2D>()));
 	ClassDB::bind_method(D_METHOD("draw_string", "font", "pos", "text", "alignment", "width", "font_size", "modulate", "justification_flags", "direction", "orientation"), &CanvasItem::draw_string, DEFVAL(HORIZONTAL_ALIGNMENT_LEFT), DEFVAL(-1), DEFVAL(Font::DEFAULT_FONT_SIZE), DEFVAL(Color(1.0, 1.0, 1.0)), DEFVAL(TextServer::JUSTIFICATION_KASHIDA | TextServer::JUSTIFICATION_WORD_BOUND), DEFVAL(TextServer::DIRECTION_AUTO), DEFVAL(TextServer::ORIENTATION_HORIZONTAL));
 	ClassDB::bind_method(D_METHOD("draw_multiline_string", "font", "pos", "text", "alignment", "width", "font_size", "max_lines", "modulate", "brk_flags", "justification_flags", "direction", "orientation"), &CanvasItem::draw_multiline_string, DEFVAL(HORIZONTAL_ALIGNMENT_LEFT), DEFVAL(-1), DEFVAL(Font::DEFAULT_FONT_SIZE), DEFVAL(-1), DEFVAL(Color(1.0, 1.0, 1.0)), DEFVAL(TextServer::BREAK_MANDATORY | TextServer::BREAK_WORD_BOUND), DEFVAL(TextServer::JUSTIFICATION_KASHIDA | TextServer::JUSTIFICATION_WORD_BOUND), DEFVAL(TextServer::DIRECTION_AUTO), DEFVAL(TextServer::ORIENTATION_HORIZONTAL));
 	ClassDB::bind_method(D_METHOD("draw_string_outline", "font", "pos", "text", "alignment", "width", "font_size", "size", "modulate", "justification_flags", "direction", "orientation"), &CanvasItem::draw_string_outline, DEFVAL(HORIZONTAL_ALIGNMENT_LEFT), DEFVAL(-1), DEFVAL(Font::DEFAULT_FONT_SIZE), DEFVAL(1), DEFVAL(Color(1.0, 1.0, 1.0)), DEFVAL(TextServer::JUSTIFICATION_KASHIDA | TextServer::JUSTIFICATION_WORD_BOUND), DEFVAL(TextServer::DIRECTION_AUTO), DEFVAL(TextServer::ORIENTATION_HORIZONTAL));

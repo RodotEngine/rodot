@@ -403,7 +403,7 @@ hb_buffer_t::verify (hb_buffer_t        *text_buffer,
   {
 #ifndef HB_NO_BUFFER_SERIALIZE
     unsigned len = text_buffer->len;
-    hb_vector_t<char> bytes;
+    hb_Hector_t<char> bytes;
     if (likely (bytes.resize (len * 10 + 16)))
     {
       hb_buffer_serialize_unicode (text_buffer,

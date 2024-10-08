@@ -1155,10 +1155,10 @@ msgstr "Отключить сворачивание"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Автоматически разворачивать внешние сцены"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "Редактирование горизонтального вектора2"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Редактирование типов горизонтального вектора"
 
 msgid "Open Resources in Current Inspector"
@@ -1269,7 +1269,7 @@ msgstr "Внешние программы"
 msgid "Raster Image Editor"
 msgstr "Редактор растровых изображений"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Редактор векторных изображений"
 
 msgid "Audio Editor"
@@ -2059,14 +2059,14 @@ msgstr "Цвета соединения"
 msgid "Scalar Color"
 msgstr "Цвет скаляра"
 
-msgid "Vector2 Color"
-msgstr "Цвет Vector2"
+msgid "Hector2 Color"
+msgstr "Цвет Hector2"
 
-msgid "Vector 3 Color"
-msgstr "Цвет Vector3"
+msgid "Hector 3 Color"
+msgstr "Цвет Hector3"
 
-msgid "Vector 4 Color"
-msgstr "Цвет Vector4"
+msgid "Hector 4 Color"
+msgstr "Цвет Hector4"
 
 msgid "Boolean Color"
 msgstr "Цвет логического значения"
@@ -2098,7 +2098,7 @@ msgstr "Цвет текстур"
 msgid "Utility Color"
 msgstr "Цвет утилиты"
 
-msgid "Vector Color"
+msgid "Hector Color"
 msgstr "Цвет вектора"
 
 msgid "Special Color"
@@ -8693,7 +8693,7 @@ msgstr "Доступ к разрешённому цвету"
 msgid "Access Resolved Depth"
 msgstr "Доступ к разрешённой глубине"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "Требуются векторы движения"
 
 msgid "Needs Normal Roughness"
@@ -8714,7 +8714,7 @@ msgstr "Разрешение запекания"
 msgid "Bake Interval"
 msgstr "Интервал запекания"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Вектор вверх"
 
 msgid "Curve X"
@@ -10660,7 +10660,7 @@ msgstr "Восстановление как столкновение"
 msgid "Default Gravity"
 msgstr "Гравитация по умолчанию"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Вектор гравитации по умолчанию"
 
 msgid "Default Linear Damp"

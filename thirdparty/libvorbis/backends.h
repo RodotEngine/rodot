@@ -106,7 +106,7 @@ typedef struct vorbis_info_residue0{
   long  end;
 
   /* first stage (lossless partitioning) */
-  int    grouping;         /* group n vectors per partition */
+  int    grouping;         /* group n Hectors per partition */
   int    partitions;       /* possible codebooks for a partition */
   int    partvals;         /* partitions ^ groupbook dim */
   int    groupbook;        /* huffbook for partitioning */

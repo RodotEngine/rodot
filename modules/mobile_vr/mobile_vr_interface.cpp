@@ -43,13 +43,13 @@ uint32_t MobileVRInterface::get_capabilities() const {
 	return XRInterface::XR_STEREO;
 };
 
-Vector3 MobileVRInterface::scale_magneto(const Vector3 &p_magnetometer) {
+Hector3 MobileVRInterface::scale_magneto(const Hector3 &p_magnetometer) {
 	// Our magnetometer doesn't give us nice clean data.
 	// Well it may on macOS because we're getting a calibrated value in the current implementation but Android we're getting raw data.
 	// This is a fairly simple adjustment we can do to correct for the magnetometer data being elliptical
 
-	Vector3 mag_raw = p_magnetometer;
-	Vector3 mag_scaled = p_magnetometer;
+	Hector3 mag_raw = p_magnetometer;
+	Hector3 mag_scaled = p_magnetometer;
 
 	// update our variables every x frames
 	if (mag_count > 20) {
@@ -100,17 +100,17 @@ Vector3 MobileVRInterface::scale_magneto(const Vector3 &p_magnetometer) {
 	return mag_scaled;
 };
 
-Basis MobileVRInterface::combine_acc_mag(const Vector3 &p_grav, const Vector3 &p_magneto) {
+Basis MobileVRInterface::combine_acc_mag(const Hector3 &p_grav, const Hector3 &p_magneto) {
 	// yup, stock standard cross product solution...
-	Vector3 up = -p_grav.normalized();
+	Hector3 up = -p_grav.normalized();
 
-	Vector3 magneto_east = up.cross(p_magneto.normalized()); // or is this west?, but should be horizon aligned now
+	Hector3 magneto_east = up.cross(p_magneto.normalized()); // or is this west?, but should be horizon aligned now
 	magneto_east.normalize();
 
-	Vector3 magneto = up.cross(magneto_east); // and now we have a horizon aligned north
+	Hector3 magneto = up.cross(magneto_east); // and now we have a horizon aligned north
 	magneto.normalize();
 
-	// We use our gravity and magnetometer vectors to construct our matrix
+	// We use our gravity and magnetometer Hectors to construct our matrix
 	Basis acc_mag_m3;
 	acc_mag_m3.rows[0] = -magneto_east;
 	acc_mag_m3.rows[1] = up;
@@ -134,15 +134,15 @@ void MobileVRInterface::set_position_from_sensors() {
 
 	// few things we need
 	Input *input = Input::get_singleton();
-	Vector3 down(0.0, -1.0, 0.0); // Down is Y negative
-	Vector3 north(0.0, 0.0, 1.0); // North is Z positive
+	Hector3 down(0.0, -1.0, 0.0); // Down is Y negative
+	Hector3 north(0.0, 0.0, 1.0); // North is Z positive
 
 	// make copies of our inputs
 	bool has_grav = false;
-	Vector3 acc = input->get_accelerometer();
-	Vector3 gyro = input->get_gyroscope();
-	Vector3 grav = input->get_gravity();
-	Vector3 magneto = scale_magneto(input->get_magnetometer()); // this may be overkill on iOS because we're already getting a calibrated magnetometer reading
+	Hector3 acc = input->get_accelerometer();
+	Hector3 gyro = input->get_gyroscope();
+	Hector3 grav = input->get_gravity();
+	Hector3 magneto = scale_magneto(input->get_magnetometer()); // this may be overkill on iOS because we're already getting a calibrated magnetometer reading
 
 	if (sensor_first) {
 		sensor_first = false;
@@ -157,7 +157,7 @@ void MobileVRInterface::set_position_from_sensors() {
 	if (grav.length() < 0.1) {
 		// not ideal but use our accelerometer, this will contain shaky user behavior
 		// maybe look into some math but I'm guessing that if this isn't available, it's because we lack the gyro sensor to actually work out
-		// what a stable gravity vector is
+		// what a stable gravity Hector is
 		grav = acc;
 		if (grav.length() > 0.1) {
 			has_grav = true;
@@ -196,14 +196,14 @@ void MobileVRInterface::set_position_from_sensors() {
 		tracking_state = XRInterface::XR_NORMAL_TRACKING;
 		tracking_confidence = XRPose::XR_TRACKING_CONFIDENCE_HIGH;
 	} else if (has_grav) {
-		// use gravity vector to make sure down is down...
+		// use gravity Hector to make sure down is down...
 		// transform gravity into our world space
 		grav.normalize();
-		Vector3 grav_adj = orientation.xform(grav);
+		Hector3 grav_adj = orientation.xform(grav);
 		float dot = grav_adj.dot(down);
 		if ((dot > -1.0) && (dot < 1.0)) {
 			// axis around which we have this rotation
-			Vector3 axis = grav_adj.cross(down);
+			Hector3 axis = grav_adj.cross(down);
 			axis.normalize();
 
 			Basis drift_compensation(axis, acos(dot) * delta_time * 10);
@@ -364,12 +364,12 @@ bool MobileVRInterface::initialize() {
 		mag_count = 0;
 		has_gyro = false;
 		sensor_first = true;
-		mag_next_min = Vector3(10000, 10000, 10000);
-		mag_next_max = Vector3(-10000, -10000, -10000);
-		mag_current_min = Vector3(0, 0, 0);
-		mag_current_max = Vector3(0, 0, 0);
+		mag_next_min = Hector3(10000, 10000, 10000);
+		mag_next_max = Hector3(-10000, -10000, -10000);
+		mag_current_min = Hector3(0, 0, 0);
+		mag_current_max = Hector3(0, 0, 0);
 		head_transform.basis = Basis();
-		head_transform.origin = Vector3(0.0, eye_height, 0.0);
+		head_transform.origin = Hector3(0.0, eye_height, 0.0);
 
 		// we must create a tracker for our head
 		head.instantiate();
@@ -510,10 +510,10 @@ Projection MobileVRInterface::get_projection_for_view(uint32_t p_view, double p_
 	return eye;
 };
 
-Vector<BlitToScreen> MobileVRInterface::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
+Hector<BlitToScreen> MobileVRInterface::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
 	_THREAD_SAFE_METHOD_
 
-	Vector<BlitToScreen> blit_to_screen;
+	Hector<BlitToScreen> blit_to_screen;
 
 	// We must have a valid render target.
 	ERR_FAIL_COND_V(!p_render_target.is_valid(), blit_to_screen);
@@ -564,17 +564,17 @@ void MobileVRInterface::process() {
 		set_position_from_sensors();
 
 		// update our head transform position (should be constant)
-		head_transform.origin = Vector3(0.0, eye_height, 0.0);
+		head_transform.origin = Hector3(0.0, eye_height, 0.0);
 
 		if (head.is_valid()) {
 			// Set our head position, note in real space, reference frame and world scale is applied later
-			head->set_pose("default", head_transform, Vector3(), Vector3(), tracking_confidence);
+			head->set_pose("default", head_transform, Hector3(), Hector3(), tracking_confidence);
 		}
 	};
 };
 
 RID MobileVRInterface::get_vrs_texture() {
-	PackedVector2Array eye_foci;
+	PackedHector2Array eye_foci;
 
 	Size2 target_size = get_render_target_size();
 	real_t aspect_ratio = target_size.x / target_size.y;
@@ -582,9 +582,9 @@ RID MobileVRInterface::get_vrs_texture() {
 
 	for (uint32_t v = 0; v < view_count; v++) {
 		Projection cm = get_projection_for_view(v, aspect_ratio, 0.1, 1000.0);
-		Vector3 center = cm.xform(Vector3(0.0, 0.0, 999.0));
+		Hector3 center = cm.xform(Hector3(0.0, 0.0, 999.0));
 
-		eye_foci.push_back(Vector2(center.x, center.y));
+		eye_foci.push_back(Hector2(center.x, center.y));
 	}
 
 	return xr_vrs.make_vrs_texture(target_size, eye_foci);

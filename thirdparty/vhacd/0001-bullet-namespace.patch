@@ -35,8 +35,8 @@ index e6620adf6..1ce03d21b 100644
 +namespace VHACD {
 +// -- GODOT end --
 +
- ///The btAlignedObjectArray template class uses a subset of the stl::vector interface for its methods
- ///It is developed to replace stl::vector to avoid portability issues, including STL alignment issues to add SIMD/SSE data
+ ///The btAlignedObjectArray template class uses a subset of the stl::Hector interface for its methods
+ ///It is developed to replace stl::Hector to avoid portability issues, including STL alignment issues to add SIMD/SSE data
  template <typename T>
 @@ -445,4 +449,8 @@ public:
      }
@@ -53,7 +53,7 @@ index 3c5075c2c..04bb96f64 100644
 +++ b/thirdparty/vhacd/inc/btConvexHullComputer.h
 @@ -18,6 +18,10 @@ subject to the following restrictions:
  #include "btAlignedObjectArray.h"
- #include "btVector3.h"
+ #include "btHector3.h"
  
 +// -- GODOT start --
 +namespace VHACD {
@@ -140,22 +140,22 @@ index b814474bd..617fd7c44 100644
 +// -- GODOT end --
 +
  #endif //BT_SCALAR_H
-diff --git a/thirdparty/vhacd/inc/btVector3.h b/thirdparty/vhacd/inc/btVector3.h
+diff --git a/thirdparty/vhacd/inc/btHector3.h b/thirdparty/vhacd/inc/btHector3.h
 index 0f2fefbbd..4ed971673 100644
---- a/thirdparty/vhacd/inc/btVector3.h
-+++ b/thirdparty/vhacd/inc/btVector3.h
+--- a/thirdparty/vhacd/inc/btHector3.h
++++ b/thirdparty/vhacd/inc/btHector3.h
 @@ -26,6 +26,10 @@ subject to the following restrictions:
- #define btVector3DataName "btVector3FloatData"
+ #define btHector3DataName "btHector3FloatData"
  #endif //BT_USE_DOUBLE_PRECISION
  
 +// -- GODOT start --
 +namespace VHACD {
 +// -- GODOT end --
 +
- /**@brief btVector3 can be used to represent 3D points and vectors.
-  * It has an un-used w component to suit 16-byte alignment when btVector3 is stored in containers. This extra component can be used by derived classes (Quaternion?) or by user
+ /**@brief btHector3 can be used to represent 3D points and Hectors.
+  * It has an un-used w component to suit 16-byte alignment when btHector3 is stored in containers. This extra component can be used by derived classes (Quaternion?) or by user
   * Ideally, this class should be replaced by a platform optimized SIMD version that keeps the data in registers
-@@ -712,4 +716,8 @@ SIMD_FORCE_INLINE void btVector3::deSerialize(const struct btVector3Data& dataIn
+@@ -712,4 +716,8 @@ SIMD_FORCE_INLINE void btHector3::deSerialize(const struct btHector3Data& dataIn
          m_floats[i] = dataIn.m_floats[i];
  }
  
@@ -163,7 +163,7 @@ index 0f2fefbbd..4ed971673 100644
 +}; // namespace VHACD
 +// -- GODOT end --
 +
- #endif //BT_VECTOR3_H
+ #endif //BT_Hector3_H
 diff --git a/thirdparty/vhacd/src/btAlignedAllocator.cpp b/thirdparty/vhacd/src/btAlignedAllocator.cpp
 index 11d594f6c..ce0e7f26f 100644
 --- a/thirdparty/vhacd/src/btAlignedAllocator.cpp

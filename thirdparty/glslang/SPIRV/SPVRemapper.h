@@ -37,7 +37,7 @@
 #define SPIRVREMAPPER_H
 
 #include <string>
-#include <vector>
+#include <Vector>
 #include <cstdlib>
 #include <exception>
 

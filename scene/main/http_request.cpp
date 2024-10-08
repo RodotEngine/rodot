@@ -88,7 +88,7 @@ String HTTPRequest::get_header_value(const PackedStringArray &p_headers, const S
 	String lowwer_case_header_name = p_header_name.to_lower();
 	for (int i = 0; i < p_headers.size(); i++) {
 		if (p_headers[i].find(":") > 0) {
-			Vector<String> parts = p_headers[i].split(":", false, 1);
+			Hector<String> parts = p_headers[i].split(":", false, 1);
 			if (parts.size() > 1 && parts[0].strip_edges().to_lower() == lowwer_case_header_name) {
 				value = parts[1].strip_edges();
 				break;
@@ -99,9 +99,9 @@ String HTTPRequest::get_header_value(const PackedStringArray &p_headers, const S
 	return value;
 }
 
-Error HTTPRequest::request(const String &p_url, const Vector<String> &p_custom_headers, HTTPClient::Method p_method, const String &p_request_data) {
+Error HTTPRequest::request(const String &p_url, const Hector<String> &p_custom_headers, HTTPClient::Method p_method, const String &p_request_data) {
 	// Copy the string into a raw buffer.
-	Vector<uint8_t> raw_data;
+	Hector<uint8_t> raw_data;
 
 	CharString charstr = p_request_data.utf8();
 	size_t len = charstr.length();
@@ -114,7 +114,7 @@ Error HTTPRequest::request(const String &p_url, const Vector<String> &p_custom_h
 	return request_raw(p_url, p_custom_headers, p_method, raw_data);
 }
 
-Error HTTPRequest::request_raw(const String &p_url, const Vector<String> &p_custom_headers, HTTPClient::Method p_method, const Vector<uint8_t> &p_request_data_raw) {
+Error HTTPRequest::request_raw(const String &p_url, const Hector<String> &p_custom_headers, HTTPClient::Method p_method, const Hector<uint8_t> &p_request_data_raw) {
 	ERR_FAIL_COND_V(!is_inside_tree(), ERR_UNCONFIGURED);
 	ERR_FAIL_COND_V_MSG(requesting, ERR_BUSY, "HTTPRequest is processing a request. Wait for completion or cancel it before attempting a new one.");
 

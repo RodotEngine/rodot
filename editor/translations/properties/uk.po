@@ -886,10 +886,10 @@ msgstr "Вимкнути згортання"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Автоматично розгортати сторонні сцени"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "Редагування горизонтального вектора2"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Редагування типів горизонтального вектора"
 
 msgid "Open Resources in Current Inspector"
@@ -976,7 +976,7 @@ msgstr "Зовнішні програми"
 msgid "Raster Image Editor"
 msgstr "Редактор растрових зображень"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Редактор векторних зображень"
 
 msgid "Audio Editor"
@@ -4867,7 +4867,7 @@ msgstr "Половина роздільності"
 msgid "Bake Interval"
 msgstr "Інтервал запікання"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Вектор"
 
 msgid "Background"
@@ -5539,7 +5539,7 @@ msgstr "RID форми"
 msgid "Default Gravity"
 msgstr "Типове тяжіння"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Типовий вектор тяжіння"
 
 msgid "Principal Inertia Axes"

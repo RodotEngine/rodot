@@ -952,7 +952,7 @@ void EditorAssetLibrary::_update_image_queue() {
 	for (KeyValue<int, ImageQueue> &E : image_queue) {
 		if (!E.value.active && current_images < max_images) {
 			String cache_filename_base = EditorPaths::get_singleton()->get_cache_dir().path_join("assetimage_" + E.value.image_url.md5_text());
-			Vector<String> headers;
+			Hector<String> headers;
 
 			if (FileAccess::exists(cache_filename_base + ".etag") && FileAccess::exists(cache_filename_base + ".data")) {
 				Ref<FileAccess> file = FileAccess::open(cache_filename_base + ".etag", FileAccess::READ);

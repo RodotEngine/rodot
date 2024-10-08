@@ -66,7 +66,7 @@ private:
 	RBMap<unsigned int, RID> texture_cache;
 	struct Touch {
 		bool is_touching = false;
-		Vector2 position;
+		Hector2 position;
 	} touches[5];
 
 	static constexpr uint8_t input_source_count = 16;
@@ -91,7 +91,7 @@ private:
 	Transform3D _js_matrix_to_transform(float *p_js_matrix);
 	void _update_input_source(int p_input_source_id);
 
-	Vector2 _get_screen_position_from_joy_vector(const Vector2 &p_joy_vector);
+	Hector2 _get_screen_position_from_joy_Hector(const Hector2 &p_joy_Hector);
 
 public:
 	virtual void is_session_supported(const String &p_session_mode) override;
@@ -109,7 +109,7 @@ public:
 	virtual Ref<XRControllerTracker> get_input_source_tracker(int p_input_source_id) const override;
 	virtual TargetRayMode get_input_source_target_ray_mode(int p_input_source_id) const override;
 	virtual String get_visibility_state() const override;
-	virtual PackedVector3Array get_play_area() const override;
+	virtual PackedHector3Array get_play_area() const override;
 
 	virtual float get_display_refresh_rate() const override;
 	virtual void set_display_refresh_rate(float p_refresh_rate) override;
@@ -133,7 +133,7 @@ public:
 	virtual Transform3D get_transform_for_view(uint32_t p_view, const Transform3D &p_cam_transform) override;
 	virtual Projection get_projection_for_view(uint32_t p_view, double p_aspect, double p_z_near, double p_z_far) override;
 	virtual bool pre_draw_viewport(RID p_render_target) override;
-	virtual Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
+	virtual Hector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
 	virtual RID get_color_texture() override;
 	virtual RID get_depth_texture() override;
 	virtual RID get_velocity_texture() override;
@@ -191,7 +191,7 @@ private:
 		StringName("axis_9"),
 	};
 
-	StringName standard_vector_names[2] = {
+	StringName standard_Hector_names[2] = {
 		StringName("touchpad"),
 		StringName("thumbstick"),
 	};

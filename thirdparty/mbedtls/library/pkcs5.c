@@ -12,7 +12,7 @@
  * PKCS#5 includes PBKDF2 and more
  *
  * http://tools.ietf.org/html/rfc2898 (Specification)
- * http://tools.ietf.org/html/rfc6070 (Test vectors)
+ * http://tools.ietf.org/html/rfc6070 (Test Hectors)
  */
 
 #include "common.h"

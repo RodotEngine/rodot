@@ -58,7 +58,7 @@ class CanvasItemEditorSelectedItem : public Object {
 public:
 	Transform2D prev_xform;
 	Rect2 prev_rect;
-	Vector2 prev_pivot;
+	Hector2 prev_pivot;
 	real_t prev_anchors[4] = { (real_t)0.0 };
 
 	Transform2D pre_drag_xform;
@@ -228,7 +228,7 @@ private:
 	// Defaults are defined in clear().
 	Point2 grid_offset;
 	Point2 grid_step;
-	Vector2i primary_grid_step;
+	Hector2i primary_grid_step;
 	int grid_step_multiplier = 0;
 
 	real_t snap_rotation_step = 0.0;
@@ -255,7 +255,7 @@ private:
 	bool key_scale = false;
 
 	bool pan_pressed = false;
-	Vector2 temp_pivot = Vector2(INFINITY, INFINITY);
+	Hector2 temp_pivot = Hector2(INFINITY, INFINITY);
 
 	bool ruler_tool_active = false;
 	Point2 ruler_tool_origin;
@@ -271,15 +271,15 @@ private:
 			return has_z && p_rr.has_z ? p_rr.z_index < z_index : p_rr.has_z;
 		}
 	};
-	Vector<_SelectResult> selection_results;
-	Vector<_SelectResult> selection_results_menu;
+	Hector<_SelectResult> selection_results;
+	Hector<_SelectResult> selection_results_menu;
 
 	struct _HoverResult {
 		Point2 position;
 		Ref<Texture2D> icon;
 		String name;
 	};
-	Vector<_HoverResult> hovering_results;
+	Hector<_HoverResult> hovering_results;
 
 	struct BoneList {
 		Transform2D xform;
@@ -305,8 +305,8 @@ private:
 	MenuButton *skeleton_menu = nullptr;
 
 	struct PoseClipboard {
-		Vector2 pos;
-		Vector2 scale;
+		Hector2 pos;
+		Hector2 scale;
 		real_t rot = 0;
 		ObjectID id;
 	};
@@ -382,13 +382,13 @@ private:
 
 	Ref<ViewPanner> panner;
 	bool warped_panning = true;
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
 	bool _is_node_locked(const Node *p_node) const;
 	bool _is_node_movable(const Node *p_node, bool p_popup_warning = false);
-	void _find_canvas_items_at_pos(const Point2 &p_pos, Node *p_node, Vector<_SelectResult> &r_items, const Transform2D &p_parent_xform = Transform2D(), const Transform2D &p_canvas_xform = Transform2D());
-	void _get_canvas_items_at_pos(const Point2 &p_pos, Vector<_SelectResult> &r_items, bool p_allow_locked = false);
+	void _find_canvas_items_at_pos(const Point2 &p_pos, Node *p_node, Hector<_SelectResult> &r_items, const Transform2D &p_parent_xform = Transform2D(), const Transform2D &p_canvas_xform = Transform2D());
+	void _get_canvas_items_at_pos(const Point2 &p_pos, Hector<_SelectResult> &r_items, bool p_allow_locked = false);
 
 	void _find_canvas_items_in_rect(const Rect2 &p_rect, Node *p_node, List<CanvasItem *> *r_items, const Transform2D &p_parent_xform = Transform2D(), const Transform2D &p_canvas_xform = Transform2D());
 	bool _select_click_on_item(CanvasItem *item, Point2 p_click_pos, bool p_append);
@@ -401,8 +401,8 @@ private:
 	void _restore_canvas_item_state(const List<CanvasItem *> &p_canvas_items, bool restore_bones = false);
 	void _commit_canvas_item_state(const List<CanvasItem *> &p_canvas_items, const String &action_name, bool commit_bones = false);
 
-	Vector2 _anchor_to_position(const Control *p_control, Vector2 anchor);
-	Vector2 _position_to_anchor(const Control *p_control, Vector2 position);
+	Hector2 _anchor_to_position(const Control *p_control, Hector2 anchor);
+	Hector2 _position_to_anchor(const Control *p_control, Hector2 position);
 
 	void _popup_callback(int p_op);
 	bool updating_scroll = false;
@@ -628,9 +628,9 @@ class CanvasItemEditorViewport : public Control {
 	// The type of node that will be created when dropping texture into the viewport.
 	String default_texture_node_type;
 	// Node types that are available to select from when dropping texture into viewport.
-	Vector<String> texture_node_types;
+	Hector<String> texture_node_types;
 
-	Vector<String> selected_files;
+	Hector<String> selected_files;
 	Node *target_node = nullptr;
 	Point2 drop_pos;
 
@@ -647,7 +647,7 @@ class CanvasItemEditorViewport : public Control {
 	void _on_change_type_confirmed();
 	void _on_change_type_closed();
 
-	void _create_preview(const Vector<String> &files) const;
+	void _create_preview(const Hector<String> &files) const;
 	void _remove_preview();
 
 	bool _cyclical_dependency_exists(const String &p_target_scene_path, Node *p_desired_node) const;

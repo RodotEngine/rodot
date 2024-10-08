@@ -37,7 +37,7 @@
 HBITMAP NativeMenuWindows::_make_bitmap(const Ref<Image> &p_img) const {
 	p_img->convert(Image::FORMAT_RGBA8);
 
-	Vector2i texture_size = p_img->get_size();
+	Hector2i texture_size = p_img->get_size();
 	UINT image_size = texture_size.width * texture_size.height;
 
 	COLORREF *buffer = nullptr;
@@ -166,7 +166,7 @@ Size2 NativeMenuWindows::get_size(const RID &p_rid) const {
 	return size;
 }
 
-void NativeMenuWindows::popup(const RID &p_rid, const Vector2i &p_position) {
+void NativeMenuWindows::popup(const RID &p_rid, const Hector2i &p_position) {
 	const MenuData *md = menus.get_or_null(p_rid);
 	ERR_FAIL_NULL(md);
 

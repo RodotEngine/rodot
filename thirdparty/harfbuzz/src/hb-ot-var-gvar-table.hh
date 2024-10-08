@@ -45,14 +45,14 @@ struct GlyphVariationData : TupleVariationData
 struct glyph_variations_t
 {
   using tuple_variations_t = TupleVariationData::tuple_variations_t;
-  hb_vector_t<tuple_variations_t> glyph_variations;
+  hb_Hector_t<tuple_variations_t> glyph_variations;
 
-  hb_vector_t<char> compiled_shared_tuples;
+  hb_Hector_t<char> compiled_shared_tuples;
   private:
   unsigned shared_tuples_count = 0;
 
   /* shared coords-> index map after instantiation */
-  hb_hashmap_t<const hb_vector_t<char>*, unsigned> shared_tuples_idx_map;
+  hb_hashmap_t<const hb_Hector_t<char>*, unsigned> shared_tuples_idx_map;
 
   public:
   unsigned compiled_shared_tuples_count () const
@@ -79,19 +79,19 @@ struct glyph_variations_t
     for (auto &_ : it)
     {
       hb_codepoint_t new_gid = _.first;
-      contour_point_vector_t *all_contour_points;
+      contour_point_Hector_t *all_contour_points;
       if (!new_gid_var_data_map.has (new_gid) ||
           !plan->new_gid_contour_points_map.has (new_gid, &all_contour_points))
         return false;
       hb_bytes_t var_data = new_gid_var_data_map.get (new_gid);
 
       const GlyphVariationData* p = reinterpret_cast<const GlyphVariationData*> (var_data.arrayZ);
-      hb_vector_t<unsigned> shared_indices;
+      hb_Hector_t<unsigned> shared_indices;
       GlyphVariationData::tuple_iterator_t iterator;
       tuple_variations_t tuple_vars;
 
-      /* in case variation data is empty, push an empty struct into the vector,
-       * keep the vector in sync with the new_to_old_gid_list */
+      /* in case variation data is empty, push an empty struct into the Hector,
+       * keep the Hector in sync with the new_to_old_gid_list */
       if (!var_data || ! p->has_data () || !all_contour_points->length ||
           !GlyphVariationData::get_tuple_iterator (var_data, axis_count,
                                                    var_data.arrayZ,
@@ -123,7 +123,7 @@ struct glyph_variations_t
     for (unsigned i = 0; i < count; i++)
     {
       hb_codepoint_t new_gid = plan->new_to_old_gid_list[i].first;
-      contour_point_vector_t *all_points;
+      contour_point_Hector_t *all_points;
       if (!plan->new_gid_contour_points_map.has (new_gid, &all_points))
         return false;
       if (!glyph_variations[i].instantiate (plan->axes_location, plan->axes_triple_distances, all_points, iup_optimize))
@@ -151,7 +151,7 @@ struct glyph_variations_t
   {
     /* key is pointer to compiled_peak_coords inside each tuple, hashing
      * function will always deref pointers first */
-    hb_hashmap_t<const hb_vector_t<char>*, unsigned> coords_count_map;
+    hb_hashmap_t<const hb_Hector_t<char>*, unsigned> coords_count_map;
 
     /* count the num of shared coords */
     for (tuple_variations_t& vars: glyph_variations)
@@ -171,8 +171,8 @@ struct glyph_variations_t
     if (!coords_count_map || coords_count_map.in_error ())
       return false;
 
-    /* add only those coords that are used more than once into the vector and sort */
-    hb_vector_t<const hb_vector_t<char>*> shared_coords;
+    /* add only those coords that are used more than once into the Hector and sort */
+    hb_Hector_t<const hb_Hector_t<char>*> shared_coords;
     if (unlikely (!shared_coords.alloc (coords_count_map.get_population ())))
       return false;
 
@@ -186,7 +186,7 @@ struct glyph_variations_t
     if (!shared_coords) return true;
     /* sorting based on the coords frequency first (high to low), then compare
      * the coords bytes */
-    hb_qsort (shared_coords.arrayZ, shared_coords.length, sizeof (hb_vector_t<char>*), _cmp_coords, (void *) (&coords_count_map));
+    hb_qsort (shared_coords.arrayZ, shared_coords.length, sizeof (hb_Hector_t<char>*), _cmp_coords, (void *) (&coords_count_map));
 
     /* build shared_coords->idx map and shared tuples byte array */
 
@@ -198,7 +198,7 @@ struct glyph_variations_t
     for (unsigned i = 0; i < shared_tuples_count; i++)
     {
       shared_tuples_idx_map.set (shared_coords[i], i);
-      /* add a concat() in hb_vector_t? */
+      /* add a concat() in hb_Hector_t? */
       for (char c : shared_coords[i]->iter ())
         compiled_shared_tuples.push (c);
     }
@@ -208,13 +208,13 @@ struct glyph_variations_t
 
   static int _cmp_coords (const void *pa, const void *pb, void *arg)
   {
-    const hb_hashmap_t<const hb_vector_t<char>*, unsigned>* coords_count_map =
-        reinterpret_cast<const hb_hashmap_t<const hb_vector_t<char>*, unsigned>*> (arg);
+    const hb_hashmap_t<const hb_Hector_t<char>*, unsigned>* coords_count_map =
+        reinterpret_cast<const hb_hashmap_t<const hb_Hector_t<char>*, unsigned>*> (arg);
 
-    /* shared_coords is hb_vector_t<const hb_vector_t<char>*> so casting pa/pb
+    /* shared_coords is hb_Hector_t<const hb_Hector_t<char>*> so casting pa/pb
      * to be a pointer to a pointer */
-    const hb_vector_t<char>** a = reinterpret_cast<const hb_vector_t<char>**> (const_cast<void*>(pa));
-    const hb_vector_t<char>** b = reinterpret_cast<const hb_vector_t<char>**> (const_cast<void*>(pb));
+    const hb_Hector_t<char>** a = reinterpret_cast<const hb_Hector_t<char>**> (const_cast<void*>(pa));
+    const hb_Hector_t<char>** b = reinterpret_cast<const hb_Hector_t<char>**> (const_cast<void*>(pb));
 
     bool has_a = coords_count_map->has (*a);
     bool has_b = coords_count_map->has (*b);
@@ -632,7 +632,7 @@ struct gvar
 
       hb_bytes_t var_data_bytes = table->get_glyph_var_data_bytes (table.get_blob (), glyphCount, glyph);
       if (!var_data_bytes.as<GlyphVariationData> ()->has_data ()) return true;
-      hb_vector_t<unsigned int> shared_indices;
+      hb_Hector_t<unsigned int> shared_indices;
       GlyphVariationData::tuple_iterator_t iterator;
       if (!GlyphVariationData::get_tuple_iterator (var_data_bytes, table->axisCount,
 						   var_data_bytes.arrayZ,
@@ -640,21 +640,21 @@ struct gvar
 	return true; /* so isn't applied at all */
 
       /* Save original points for inferred delta calculation */
-      contour_point_vector_t orig_points_vec; // Populated lazily
+      contour_point_Hector_t orig_points_vec; // Populated lazily
       auto orig_points = orig_points_vec.as_array ();
 
       /* flag is used to indicate referenced point */
-      contour_point_vector_t deltas_vec; // Populated lazily
+      contour_point_Hector_t deltas_vec; // Populated lazily
       auto deltas = deltas_vec.as_array ();
 
-      hb_vector_t<unsigned> end_points; // Populated lazily
+      hb_Hector_t<unsigned> end_points; // Populated lazily
 
       unsigned num_coords = table->axisCount;
       hb_array_t<const F2DOT14> shared_tuples = (table+table->sharedTuples).as_array (table->sharedTupleCount * num_coords);
 
-      hb_vector_t<unsigned int> private_indices;
-      hb_vector_t<int> x_deltas;
-      hb_vector_t<int> y_deltas;
+      hb_Hector_t<unsigned int> private_indices;
+      hb_Hector_t<int> x_deltas;
+      hb_Hector_t<int> y_deltas;
       unsigned count = points.length;
       bool flush = false;
       do
@@ -856,7 +856,7 @@ struct gvar
     private:
     hb_blob_ptr_t<gvar> table;
     unsigned glyphCount;
-    hb_vector_t<hb_pair_t<int, int>> shared_tuple_active_idx;
+    hb_Hector_t<hb_pair_t<int, int>> shared_tuple_active_idx;
   };
 
   protected:

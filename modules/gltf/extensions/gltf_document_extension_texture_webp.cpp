@@ -31,15 +31,15 @@
 #include "gltf_document_extension_texture_webp.h"
 
 // Import process.
-Error GLTFDocumentExtensionTextureWebP::import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions) {
+Error GLTFDocumentExtensionTextureWebP::import_preflight(Ref<GLTFState> p_state, Hector<String> p_extensions) {
 	if (!p_extensions.has("EXT_texture_webp")) {
 		return ERR_SKIP;
 	}
 	return OK;
 }
 
-Vector<String> GLTFDocumentExtensionTextureWebP::get_supported_extensions() {
-	Vector<String> ret;
+Hector<String> GLTFDocumentExtensionTextureWebP::get_supported_extensions() {
+	Hector<String> ret;
 	ret.push_back("EXT_texture_webp");
 	return ret;
 }
@@ -69,8 +69,8 @@ Error GLTFDocumentExtensionTextureWebP::parse_texture_json(Ref<GLTFState> p_stat
 	return OK;
 }
 
-Vector<String> GLTFDocumentExtensionTextureWebP::get_saveable_image_formats() {
-	Vector<String> ret;
+Hector<String> GLTFDocumentExtensionTextureWebP::get_saveable_image_formats() {
+	Hector<String> ret;
 	ret.push_back("Lossless WebP");
 	ret.push_back("Lossy WebP");
 	return ret;

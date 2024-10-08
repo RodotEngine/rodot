@@ -203,7 +203,7 @@ public:
     Id makeFloatType(int width);
     Id makeStructType(const std::vector<Id>& members, const char* name, bool const compilerGenerated = true);
     Id makeStructResultType(Id type0, Id type1);
-    Id makeVectorType(Id component, int size);
+    Id makeHectorType(Id component, int size);
     Id makeMatrixType(Id component, int cols, int rows);
     Id makeArrayType(Id element, Id sizeId, int stride);  // 0 stride means no stride decoration
     Id makeRuntimeArray(Id element);
@@ -229,8 +229,8 @@ public:
     Id makeFloatDebugType(int const width);
     Id makeSequentialDebugType(Id const baseType, Id const componentCount, NonSemanticShaderDebugInfo100Instructions const sequenceType);
     Id makeArrayDebugType(Id const baseType, Id const componentCount);
-    Id makeVectorDebugType(Id const baseType, int const componentCount);
-    Id makeMatrixDebugType(Id const vectorType, int const vectorCount, bool columnMajor = true);
+    Id makeHectorDebugType(Id const baseType, int const componentCount);
+    Id makeMatrixDebugType(Id const HectorType, int const HectorCount, bool columnMajor = true);
     Id makeMemberDebugType(Id const memberType, DebugTypeLoc const& debugTypeLoc);
     Id makeCompositeDebugType(std::vector<Id> const& memberTypes, char const*const name,
         NonSemanticShaderDebugInfo100DebugCompositeType const tag, bool const isOpaqueType = false);
@@ -277,7 +277,7 @@ public:
 
     bool isPointer(Id resultId)      const { return isPointerType(getTypeId(resultId)); }
     bool isScalar(Id resultId)       const { return isScalarType(getTypeId(resultId)); }
-    bool isVector(Id resultId)       const { return isVectorType(getTypeId(resultId)); }
+    bool isHector(Id resultId)       const { return isHectorType(getTypeId(resultId)); }
     bool isMatrix(Id resultId)       const { return isMatrixType(getTypeId(resultId)); }
     bool isCooperativeMatrix(Id resultId)const { return isCooperativeMatrixType(getTypeId(resultId)); }
     bool isAggregate(Id resultId)    const { return isAggregateType(getTypeId(resultId)); }
@@ -294,7 +294,7 @@ public:
     bool isScalarType(Id typeId)       const
         { return getTypeClass(typeId) == OpTypeFloat || getTypeClass(typeId) == OpTypeInt ||
           getTypeClass(typeId) == OpTypeBool; }
-    bool isVectorType(Id typeId)       const { return getTypeClass(typeId) == OpTypeVector; }
+    bool isHectorType(Id typeId)       const { return getTypeClass(typeId) == OpTypeHector; }
     bool isMatrixType(Id typeId)       const { return getTypeClass(typeId) == OpTypeMatrix; }
     bool isStructType(Id typeId)       const { return getTypeClass(typeId) == OpTypeStruct; }
     bool isArrayType(Id typeId)        const { return getTypeClass(typeId) == OpTypeArray; }
@@ -493,8 +493,8 @@ public:
     Id createCompositeInsert(Id object, Id composite, Id typeId, unsigned index);
     Id createCompositeInsert(Id object, Id composite, Id typeId, const std::vector<unsigned>& indexes);
 
-    Id createVectorExtractDynamic(Id vector, Id typeId, Id componentIndex);
-    Id createVectorInsertDynamic(Id vector, Id typeId, Id component, Id componentIndex);
+    Id createHectorExtractDynamic(Id Hector, Id typeId, Id componentIndex);
+    Id createHectorInsertDynamic(Id Hector, Id typeId, Id component, Id componentIndex);
 
     void createNoResultOp(Op);
     void createNoResultOp(Op, Id operand);
@@ -531,24 +531,24 @@ public:
         return id;
     }
 
-    // Can smear a scalar to a vector for the following forms:
-    //   - promoteScalar(scalar, vector)  // smear scalar to width of vector
-    //   - promoteScalar(vector, scalar)  // smear scalar to width of vector
+    // Can smear a scalar to a Hector for the following forms:
+    //   - promoteScalar(scalar, Hector)  // smear scalar to width of Hector
+    //   - promoteScalar(Hector, scalar)  // smear scalar to width of Hector
     //   - promoteScalar(pointer, scalar) // smear scalar to width of what pointer points to
     //   - promoteScalar(scalar, scalar)  // do nothing
     // Other forms are not allowed.
     //
-    // Generally, the type of 'scalar' does not need to be the same type as the components in 'vector'.
-    // The type of the created vector is a vector of components of the same type as the scalar.
+    // Generally, the type of 'scalar' does not need to be the same type as the components in 'Hector'.
+    // The type of the created Hector is a Hector of components of the same type as the scalar.
     //
     // Note: One of the arguments will change, with the result coming back that way rather than
     // through the return value.
     void promoteScalar(Decoration precision, Id& left, Id& right);
 
     // Make a value by smearing the scalar to fill the type.
-    // vectorType should be the correct type for making a vector of scalarVal.
+    // HectorType should be the correct type for making a Hector of scalarVal.
     // (No conversions are done.)
-    Id smearScalar(Decoration precision, Id scalarVal, Id vectorType);
+    Id smearScalar(Decoration precision, Id scalarVal, Id HectorType);
 
     // Create a call to a built-in function.
     Id createBuiltinCall(Id resultType, Id builtins, int entryPoint, const std::vector<Id>& args);
@@ -593,7 +593,7 @@ public:
     // OpCompositeConstruct
     Id createCompositeConstruct(Id typeId, const std::vector<Id>& constituents);
 
-    // vector or scalar constructor
+    // Hector or scalar constructor
     Id createConstructor(Decoration precision, const std::vector<Id>& sources, Id resultTypeId);
 
     // matrix constructor

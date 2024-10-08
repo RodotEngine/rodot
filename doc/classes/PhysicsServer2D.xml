@@ -253,19 +253,19 @@
 		<method name="body_add_constant_central_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
 			<description>
-				Adds a constant directional force to the body. The force does not affect rotation. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_force(body, Vector2(0, 0))[/code].
+				Adds a constant directional force to the body. The force does not affect rotation. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_force(body, Hector2(0, 0))[/code].
 				This is equivalent to using [method body_add_constant_force] at the body's center of mass.
 			</description>
 		</method>
 		<method name="body_add_constant_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
-			<param index="2" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="1" name="force" type="Hector2" />
+			<param index="2" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
-				Adds a constant positioned force to the body. The force can affect rotation if [param position] is different from the body's center of mass. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_force(body, Vector2(0, 0))[/code].
+				Adds a constant positioned force to the body. The force can affect rotation if [param position] is different from the body's center of mass. The force remains applied over time until cleared with [code]PhysicsServer2D.body_set_constant_force(body, Hector2(0, 0))[/code].
 				[param position] is the offset from the body origin in global coordinates.
 			</description>
 		</method>
@@ -290,7 +290,7 @@
 		<method name="body_apply_central_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
 			<description>
 				Applies a directional force to the body, at the body's center of mass. The force does not affect rotation. A force is time dependent and meant to be applied every physics update.
 				This is equivalent to using [method body_apply_force] at the body's center of mass.
@@ -299,7 +299,7 @@
 		<method name="body_apply_central_impulse">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector2" />
+			<param index="1" name="impulse" type="Hector2" />
 			<description>
 				Applies a directional impulse to the body, at the body's center of mass. The impulse does not affect rotation.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -309,8 +309,8 @@
 		<method name="body_apply_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
-			<param index="2" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="1" name="force" type="Hector2" />
+			<param index="2" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Applies a positioned force to the body. The force can affect rotation if [param position] is different from the body's center of mass. A force is time dependent and meant to be applied every physics update.
 				[param position] is the offset from the body origin in global coordinates.
@@ -319,8 +319,8 @@
 		<method name="body_apply_impulse">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector2" />
-			<param index="2" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="1" name="impulse" type="Hector2" />
+			<param index="2" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Applies a positioned impulse to the body. The impulse can affect rotation if [param position] is different from the body's center of mass.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -403,7 +403,7 @@
 			</description>
 		</method>
 		<method name="body_get_constant_force" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="body" type="RID" />
 			<description>
 				Returns the body's total constant positional force applied during each physics update.
@@ -532,7 +532,7 @@
 		<method name="body_set_axis_velocity">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="axis_velocity" type="Vector2" />
+			<param index="1" name="axis_velocity" type="Hector2" />
 			<description>
 				Modifies the body's linear velocity so that its projection to the axis [code]axis_velocity.normalized()[/code] is exactly [code]axis_velocity.length()[/code]. This is useful for jumping behavior.
 			</description>
@@ -564,7 +564,7 @@
 		<method name="body_set_constant_force">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector2" />
+			<param index="1" name="force" type="Hector2" />
 			<description>
 				Sets the body's total constant positional force applied during each physics update.
 				See [method body_add_constant_force] and [method body_add_constant_central_force].
@@ -711,7 +711,7 @@
 			<param index="1" name="parameters" type="PhysicsTestMotionParameters2D" />
 			<param index="2" name="result" type="PhysicsTestMotionResult2D" default="null" />
 			<description>
-				Returns [code]true[/code] if a collision would result from moving the body along a motion vector from a given point in space. See [PhysicsTestMotionParameters2D] for the available motion parameters. Optionally a [PhysicsTestMotionResult2D] object can be passed, which will be used to store the information about the resulting collision.
+				Returns [code]true[/code] if a collision would result from moving the body along a motion Hector from a given point in space. See [PhysicsTestMotionParameters2D] for the available motion parameters. Optionally a [PhysicsTestMotionResult2D] object can be passed, which will be used to store the information about the resulting collision.
 			</description>
 		</method>
 		<method name="capsule_shape_create">
@@ -815,8 +815,8 @@
 		<method name="joint_make_damped_spring">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="anchor_a" type="Vector2" />
-			<param index="2" name="anchor_b" type="Vector2" />
+			<param index="1" name="anchor_a" type="Hector2" />
+			<param index="2" name="anchor_b" type="Hector2" />
 			<param index="3" name="body_a" type="RID" />
 			<param index="4" name="body_b" type="RID" default="RID()" />
 			<description>
@@ -826,9 +826,9 @@
 		<method name="joint_make_groove">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="groove1_a" type="Vector2" />
-			<param index="2" name="groove2_a" type="Vector2" />
-			<param index="3" name="anchor_b" type="Vector2" />
+			<param index="1" name="groove1_a" type="Hector2" />
+			<param index="2" name="groove2_a" type="Hector2" />
+			<param index="3" name="anchor_b" type="Hector2" />
 			<param index="4" name="body_a" type="RID" default="RID()" />
 			<param index="5" name="body_b" type="RID" default="RID()" />
 			<description>
@@ -838,7 +838,7 @@
 		<method name="joint_make_pin">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="anchor" type="Vector2" />
+			<param index="1" name="anchor" type="Hector2" />
 			<param index="2" name="body_a" type="RID" />
 			<param index="3" name="body_b" type="RID" default="RID()" />
 			<description>
@@ -933,14 +933,14 @@
 			<param index="1" name="data" type="Variant" />
 			<description>
 				Sets the shape data that defines the configuration of the shape. The [param data] to be passed depends on the shape's type (see [method shape_get_type]):
-				- [constant SHAPE_WORLD_BOUNDARY]: an array of length two containing a [Vector2] [code]normal[/code] direction and a [float] distance [code]d[/code],
+				- [constant SHAPE_WORLD_BOUNDARY]: an array of length two containing a [Hector2] [code]normal[/code] direction and a [float] distance [code]d[/code],
 				- [constant SHAPE_SEPARATION_RAY]: a dictionary containing the key [code]length[/code] with a [float] value and the key [code]slide_on_slope[/code] with a [bool] value,
 				- [constant SHAPE_SEGMENT]: a [Rect2] [code]rect[/code] containing the first point of the segment in [code]rect.position[/code] and the second point of the segment in [code]rect.size[/code],
 				- [constant SHAPE_CIRCLE]: a [float] [code]radius[/code],
-				- [constant SHAPE_RECTANGLE]: a [Vector2] [code]half_extents[/code],
-				- [constant SHAPE_CAPSULE]: an array of length two (or a [Vector2]) containing a [float] [code]height[/code] and a [float] [code]radius[/code],
-				- [constant SHAPE_CONVEX_POLYGON]: either a [PackedVector2Array] of points defining a convex polygon in counterclockwise order (the clockwise outward normal of each segment formed by consecutive points is calculated internally), or a [PackedFloat32Array] of length divisible by four so that every 4-tuple of [float]s contains the coordinates of a point followed by the coordinates of the clockwise outward normal vector to the segment between the current point and the next point,
-				- [constant SHAPE_CONCAVE_POLYGON]: a [PackedVector2Array] of length divisible by two (each pair of points forms one segment).
+				- [constant SHAPE_RECTANGLE]: a [Hector2] [code]half_extents[/code],
+				- [constant SHAPE_CAPSULE]: an array of length two (or a [Hector2]) containing a [float] [code]height[/code] and a [float] [code]radius[/code],
+				- [constant SHAPE_CONVEX_POLYGON]: either a [PackedHector2Array] of points defining a convex polygon in counterclockwise order (the clockwise outward normal of each segment formed by consecutive points is calculated internally), or a [PackedFloat32Array] of length divisible by four so that every 4-tuple of [float]s contains the coordinates of a point followed by the coordinates of the clockwise outward normal Hector to the segment between the current point and the next point,
+				- [constant SHAPE_CONCAVE_POLYGON]: a [PackedHector2Array] of length divisible by two (each pair of points forms one segment).
 				[b]Warning:[/b] In the case of [constant SHAPE_CONVEX_POLYGON], this method does not check if the points supplied actually form a convex polygon (unlike the [member CollisionPolygon2D.polygon] property).
 			</description>
 		</method>
@@ -1057,11 +1057,11 @@
 		<constant name="AREA_PARAM_GRAVITY" value="1" enum="AreaParameter">
 			Constant to set/get gravity strength in an area. The default value of this parameter is [code]9.80665[/code].
 		</constant>
-		<constant name="AREA_PARAM_GRAVITY_VECTOR" value="2" enum="AreaParameter">
-			Constant to set/get gravity vector/center in an area. The default value of this parameter is [code]Vector2(0, -1)[/code].
+		<constant name="AREA_PARAM_GRAVITY_Hector" value="2" enum="AreaParameter">
+			Constant to set/get gravity Hector/center in an area. The default value of this parameter is [code]Hector2(0, -1)[/code].
 		</constant>
 		<constant name="AREA_PARAM_GRAVITY_IS_POINT" value="3" enum="AreaParameter">
-			Constant to set/get whether the gravity vector of an area is a direction, or a center point. The default value of this parameter is [code]false[/code].
+			Constant to set/get whether the gravity Hector of an area is a direction, or a center point. The default value of this parameter is [code]false[/code].
 		</constant>
 		<constant name="AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE" value="4" enum="AreaParameter">
 			Constant to set/get the distance at which the gravity strength is equal to the gravity controlled by [constant AREA_PARAM_GRAVITY]. For example, on a planet 100 pixels in radius with a surface gravity of 4.0 px/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity will have falloff according to the inverse square law, so in the example, at 200 pixels from the center the gravity will be 1.0 px/s² (twice the distance, 1/4th the gravity), at 50 pixels it will be 16.0 px/s² (half the distance, 4x the gravity), and so on.
@@ -1124,7 +1124,7 @@
 			Constant to set/get a body's inertia. The default value of this parameter is [code]0.0[/code]. If the body's inertia is set to a value [code]&lt;= 0.0[/code], then the inertia will be recalculated based on the body's shapes, mass, and center of mass.
 		</constant>
 		<constant name="BODY_PARAM_CENTER_OF_MASS" value="4" enum="BodyParameter">
-			Constant to set/get a body's center of mass position in the body's local coordinate system. The default value of this parameter is [code]Vector2(0,0)[/code]. If this parameter is never set explicitly, then it is recalculated based on the body's shapes when setting the parameter [constant BODY_PARAM_MASS] or when calling [method body_set_space].
+			Constant to set/get a body's center of mass position in the body's local coordinate system. The default value of this parameter is [code]Hector2(0,0)[/code]. If this parameter is never set explicitly, then it is recalculated based on the body's shapes when setting the parameter [constant BODY_PARAM_MASS] or when calling [method body_set_space].
 		</constant>
 		<constant name="BODY_PARAM_GRAVITY_SCALE" value="5" enum="BodyParameter">
 			Constant to set/get a body's gravity multiplier. The default value of this parameter is [code]1.0[/code].

@@ -38,7 +38,7 @@
 #include "core/os/os.h"
 #include "core/string/print_string.h"
 #include "core/string/translation_server.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/variant/typed_array.h"
 
 #ifdef DEBUG_ENABLED
@@ -384,7 +384,7 @@ Variant Object::get(const StringName &p_name, bool *r_valid) const {
 	}
 }
 
-void Object::set_indexed(const Vector<StringName> &p_names, const Variant &p_value, bool *r_valid) {
+void Object::set_indexed(const Hector<StringName> &p_names, const Variant &p_value, bool *r_valid) {
 	if (p_names.is_empty()) {
 		if (r_valid) {
 			*r_valid = false;
@@ -443,7 +443,7 @@ void Object::set_indexed(const Vector<StringName> &p_names, const Variant &p_val
 	ERR_FAIL_COND(!value_stack.is_empty());
 }
 
-Variant Object::get_indexed(const Vector<StringName> &p_names, bool *r_valid) const {
+Variant Object::get_indexed(const Hector<StringName> &p_names, bool *r_valid) const {
 	if (p_names.is_empty()) {
 		if (r_valid) {
 			*r_valid = false;
@@ -1737,7 +1737,7 @@ void Object::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("property_list_changed"));
 
 #define BIND_OBJ_CORE_METHOD(m_method) \
-	::ClassDB::add_virtual_method(get_class_static(), m_method, true, Vector<String>(), true);
+	::ClassDB::add_virtual_method(get_class_static(), m_method, true, Hector<String>(), true);
 
 	BIND_OBJ_CORE_METHOD(MethodInfo("_init"));
 
@@ -1841,7 +1841,7 @@ Variant::Type Object::get_static_property_type(const StringName &p_property, boo
 	return Variant::NIL;
 }
 
-Variant::Type Object::get_static_property_type_indexed(const Vector<StringName> &p_path, bool *r_valid) const {
+Variant::Type Object::get_static_property_type_indexed(const Hector<StringName> &p_path, bool *r_valid) const {
 	if (p_path.size() == 0) {
 		if (r_valid) {
 			*r_valid = false;

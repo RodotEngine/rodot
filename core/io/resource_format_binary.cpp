@@ -49,9 +49,9 @@ enum {
 	VARIANT_INT = 3,
 	VARIANT_FLOAT = 4,
 	VARIANT_STRING = 5,
-	VARIANT_VECTOR2 = 10,
+	VARIANT_HECTOR2 = 10,
 	VARIANT_RECT2 = 11,
-	VARIANT_VECTOR3 = 12,
+	VARIANT_HECTOR3 = 12,
 	VARIANT_PLANE = 13,
 	VARIANT_QUATERNION = 14,
 	VARIANT_AABB = 15,
@@ -69,23 +69,23 @@ enum {
 	VARIANT_PACKED_INT32_ARRAY = 32,
 	VARIANT_PACKED_FLOAT32_ARRAY = 33,
 	VARIANT_PACKED_STRING_ARRAY = 34,
-	VARIANT_PACKED_VECTOR3_ARRAY = 35,
+	VARIANT_PACKED_Hector3_ARRAY = 35,
 	VARIANT_PACKED_COLOR_ARRAY = 36,
-	VARIANT_PACKED_VECTOR2_ARRAY = 37,
+	VARIANT_PACKED_Hector2_ARRAY = 37,
 	VARIANT_INT64 = 40,
 	VARIANT_DOUBLE = 41,
 	VARIANT_CALLABLE = 42,
 	VARIANT_SIGNAL = 43,
 	VARIANT_STRING_NAME = 44,
-	VARIANT_VECTOR2I = 45,
+	VARIANT_HECTOR2I = 45,
 	VARIANT_RECT2I = 46,
-	VARIANT_VECTOR3I = 47,
+	VARIANT_HECTOR3I = 47,
 	VARIANT_PACKED_INT64_ARRAY = 48,
 	VARIANT_PACKED_FLOAT64_ARRAY = 49,
-	VARIANT_VECTOR4 = 50,
-	VARIANT_VECTOR4I = 51,
+	VARIANT_HECTOR4 = 50,
+	VARIANT_HECTOR4I = 51,
 	VARIANT_PROJECTION = 52,
-	VARIANT_PACKED_VECTOR4_ARRAY = 53,
+	VARIANT_PACKED_Hector4_ARRAY = 53,
 	OBJECT_EMPTY = 0,
 	OBJECT_EXTERNAL_RESOURCE = 1,
 	OBJECT_INTERNAL_RESOURCE = 2,
@@ -94,7 +94,7 @@ enum {
 	// Version 3: Changed NodePath encoding.
 	// Version 4: New string ID for ext/subresources, breaks forward compat.
 	// Version 5: Ability to store script class in the header.
-	// Version 6: Added PackedVector4Array Variant type.
+	// Version 6: Added PackedHector4Array Variant type.
 	FORMAT_VERSION = 6,
 	FORMAT_VERSION_CAN_RENAME_DEPS = 1,
 	FORMAT_VERSION_NO_NODEPATH_PROPERTY = 3,
@@ -198,15 +198,15 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_STRING: {
 			r_v = get_unicode_string();
 		} break;
-		case VARIANT_VECTOR2: {
-			Vector2 v;
+		case VARIANT_HECTOR2: {
+			Hector2 v;
 			v.x = f->get_real();
 			v.y = f->get_real();
 			r_v = v;
 
 		} break;
-		case VARIANT_VECTOR2I: {
-			Vector2i v;
+		case VARIANT_HECTOR2I: {
+			Hector2i v;
 			v.x = f->get_32();
 			v.y = f->get_32();
 			r_v = v;
@@ -230,30 +230,30 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			r_v = v;
 
 		} break;
-		case VARIANT_VECTOR3: {
-			Vector3 v;
+		case VARIANT_HECTOR3: {
+			Hector3 v;
 			v.x = f->get_real();
 			v.y = f->get_real();
 			v.z = f->get_real();
 			r_v = v;
 		} break;
-		case VARIANT_VECTOR3I: {
-			Vector3i v;
+		case VARIANT_HECTOR3I: {
+			Hector3i v;
 			v.x = f->get_32();
 			v.y = f->get_32();
 			v.z = f->get_32();
 			r_v = v;
 		} break;
-		case VARIANT_VECTOR4: {
-			Vector4 v;
+		case VARIANT_HECTOR4: {
+			Hector4 v;
 			v.x = f->get_real();
 			v.y = f->get_real();
 			v.z = f->get_real();
 			v.w = f->get_real();
 			r_v = v;
 		} break;
-		case VARIANT_VECTOR4I: {
-			Vector4i v;
+		case VARIANT_HECTOR4I: {
+			Hector4i v;
 			v.x = f->get_32();
 			v.y = f->get_32();
 			v.z = f->get_32();
@@ -363,8 +363,8 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		} break;
 
 		case VARIANT_NODE_PATH: {
-			Vector<StringName> names;
-			Vector<StringName> subnames;
+			Hector<StringName> names;
+			Hector<StringName> subnames;
 			bool absolute;
 
 			int name_count = f->get_16();
@@ -511,7 +511,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_PACKED_BYTE_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<uint8_t> array;
+			Hector<uint8_t> array;
 			array.resize(len);
 			uint8_t *w = array.ptrw();
 			f->get_buffer(w, len);
@@ -523,7 +523,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_PACKED_INT32_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<int32_t> array;
+			Hector<int32_t> array;
 			array.resize(len);
 			int32_t *w = array.ptrw();
 			f->get_buffer((uint8_t *)w, len * sizeof(int32_t));
@@ -542,7 +542,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_PACKED_INT64_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<int64_t> array;
+			Hector<int64_t> array;
 			array.resize(len);
 			int64_t *w = array.ptrw();
 			f->get_buffer((uint8_t *)w, len * sizeof(int64_t));
@@ -561,7 +561,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_PACKED_FLOAT32_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<float> array;
+			Hector<float> array;
 			array.resize(len);
 			float *w = array.ptrw();
 			f->get_buffer((uint8_t *)w, len * sizeof(float));
@@ -580,7 +580,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_PACKED_FLOAT64_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<double> array;
+			Hector<double> array;
 			array.resize(len);
 			double *w = array.ptrw();
 			f->get_buffer((uint8_t *)w, len * sizeof(double));
@@ -598,7 +598,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		} break;
 		case VARIANT_PACKED_STRING_ARRAY: {
 			uint32_t len = f->get_32();
-			Vector<String> array;
+			Hector<String> array;
 			array.resize(len);
 			String *w = array.ptrw();
 			for (uint32_t i = 0; i < len; i++) {
@@ -608,26 +608,26 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			r_v = array;
 
 		} break;
-		case VARIANT_PACKED_VECTOR2_ARRAY: {
+		case VARIANT_PACKED_Hector2_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<Vector2> array;
+			Hector<Hector2> array;
 			array.resize(len);
-			Vector2 *w = array.ptrw();
-			static_assert(sizeof(Vector2) == 2 * sizeof(real_t));
+			Hector2 *w = array.ptrw();
+			static_assert(sizeof(Hector2) == 2 * sizeof(real_t));
 			const Error err = read_reals(reinterpret_cast<real_t *>(w), f, len * 2);
 			ERR_FAIL_COND_V(err != OK, err);
 
 			r_v = array;
 
 		} break;
-		case VARIANT_PACKED_VECTOR3_ARRAY: {
+		case VARIANT_PACKED_Hector3_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<Vector3> array;
+			Hector<Hector3> array;
 			array.resize(len);
-			Vector3 *w = array.ptrw();
-			static_assert(sizeof(Vector3) == 3 * sizeof(real_t));
+			Hector3 *w = array.ptrw();
+			static_assert(sizeof(Hector3) == 3 * sizeof(real_t));
 			const Error err = read_reals(reinterpret_cast<real_t *>(w), f, len * 3);
 			ERR_FAIL_COND_V(err != OK, err);
 
@@ -637,7 +637,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_PACKED_COLOR_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<Color> array;
+			Hector<Color> array;
 			array.resize(len);
 			Color *w = array.ptrw();
 			// Colors always use `float` even with double-precision support enabled
@@ -655,13 +655,13 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 
 			r_v = array;
 		} break;
-		case VARIANT_PACKED_VECTOR4_ARRAY: {
+		case VARIANT_PACKED_Hector4_ARRAY: {
 			uint32_t len = f->get_32();
 
-			Vector<Vector4> array;
+			Hector<Hector4> array;
 			array.resize(len);
-			Vector4 *w = array.ptrw();
-			static_assert(sizeof(Vector4) == 4 * sizeof(real_t));
+			Hector4 *w = array.ptrw();
+			static_assert(sizeof(Hector4) == 4 * sizeof(real_t));
 			const Error err = read_reals(reinterpret_cast<real_t *>(w), f, len * 4);
 			ERR_FAIL_COND_V(err != OK, err);
 
@@ -917,7 +917,7 @@ static void save_ustring(Ref<FileAccess> f, const String &p_string) {
 
 static String get_ustring(Ref<FileAccess> f) {
 	int len = f->get_32();
-	Vector<char> str_buf;
+	Hector<char> str_buf;
 	str_buf.resize(len);
 	f->get_buffer((uint8_t *)&str_buf[0], len);
 	String s;
@@ -1626,16 +1626,16 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 			save_unicode_string(f, val);
 
 		} break;
-		case Variant::VECTOR2: {
-			f->store_32(VARIANT_VECTOR2);
-			Vector2 val = p_property;
+		case Variant::HECTOR2: {
+			f->store_32(VARIANT_HECTOR2);
+			Hector2 val = p_property;
 			f->store_real(val.x);
 			f->store_real(val.y);
 
 		} break;
-		case Variant::VECTOR2I: {
-			f->store_32(VARIANT_VECTOR2I);
-			Vector2i val = p_property;
+		case Variant::HECTOR2I: {
+			f->store_32(VARIANT_HECTOR2I);
+			Hector2i val = p_property;
 			f->store_32(val.x);
 			f->store_32(val.y);
 
@@ -1658,34 +1658,34 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 			f->store_32(val.size.y);
 
 		} break;
-		case Variant::VECTOR3: {
-			f->store_32(VARIANT_VECTOR3);
-			Vector3 val = p_property;
+		case Variant::HECTOR3: {
+			f->store_32(VARIANT_HECTOR3);
+			Hector3 val = p_property;
 			f->store_real(val.x);
 			f->store_real(val.y);
 			f->store_real(val.z);
 
 		} break;
-		case Variant::VECTOR3I: {
-			f->store_32(VARIANT_VECTOR3I);
-			Vector3i val = p_property;
+		case Variant::HECTOR3I: {
+			f->store_32(VARIANT_HECTOR3I);
+			Hector3i val = p_property;
 			f->store_32(val.x);
 			f->store_32(val.y);
 			f->store_32(val.z);
 
 		} break;
-		case Variant::VECTOR4: {
-			f->store_32(VARIANT_VECTOR4);
-			Vector4 val = p_property;
+		case Variant::HECTOR4: {
+			f->store_32(VARIANT_HECTOR4);
+			Hector4 val = p_property;
 			f->store_real(val.x);
 			f->store_real(val.y);
 			f->store_real(val.z);
 			f->store_real(val.w);
 
 		} break;
-		case Variant::VECTOR4I: {
-			f->store_32(VARIANT_VECTOR4I);
-			Vector4i val = p_property;
+		case Variant::HECTOR4I: {
+			f->store_32(VARIANT_HECTOR4I);
+			Hector4i val = p_property;
 			f->store_32(val.x);
 			f->store_32(val.y);
 			f->store_32(val.z);
@@ -1889,7 +1889,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 		} break;
 		case Variant::PACKED_BYTE_ARRAY: {
 			f->store_32(VARIANT_PACKED_BYTE_ARRAY);
-			Vector<uint8_t> arr = p_property;
+			Hector<uint8_t> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const uint8_t *r = arr.ptr();
@@ -1899,7 +1899,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 		} break;
 		case Variant::PACKED_INT32_ARRAY: {
 			f->store_32(VARIANT_PACKED_INT32_ARRAY);
-			Vector<int32_t> arr = p_property;
+			Hector<int32_t> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const int32_t *r = arr.ptr();
@@ -1910,7 +1910,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 		} break;
 		case Variant::PACKED_INT64_ARRAY: {
 			f->store_32(VARIANT_PACKED_INT64_ARRAY);
-			Vector<int64_t> arr = p_property;
+			Hector<int64_t> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const int64_t *r = arr.ptr();
@@ -1921,7 +1921,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 		} break;
 		case Variant::PACKED_FLOAT32_ARRAY: {
 			f->store_32(VARIANT_PACKED_FLOAT32_ARRAY);
-			Vector<float> arr = p_property;
+			Hector<float> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const float *r = arr.ptr();
@@ -1932,7 +1932,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 		} break;
 		case Variant::PACKED_FLOAT64_ARRAY: {
 			f->store_32(VARIANT_PACKED_FLOAT64_ARRAY);
-			Vector<double> arr = p_property;
+			Hector<double> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const double *r = arr.ptr();
@@ -1943,7 +1943,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 		} break;
 		case Variant::PACKED_STRING_ARRAY: {
 			f->store_32(VARIANT_PACKED_STRING_ARRAY);
-			Vector<String> arr = p_property;
+			Hector<String> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const String *r = arr.ptr();
@@ -1952,24 +1952,24 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 			}
 		} break;
 
-		case Variant::PACKED_VECTOR2_ARRAY: {
-			f->store_32(VARIANT_PACKED_VECTOR2_ARRAY);
-			Vector<Vector2> arr = p_property;
+		case Variant::PACKED_Hector2_ARRAY: {
+			f->store_32(VARIANT_PACKED_Hector2_ARRAY);
+			Hector<Hector2> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
-			const Vector2 *r = arr.ptr();
+			const Hector2 *r = arr.ptr();
 			for (int i = 0; i < len; i++) {
 				f->store_real(r[i].x);
 				f->store_real(r[i].y);
 			}
 		} break;
 
-		case Variant::PACKED_VECTOR3_ARRAY: {
-			f->store_32(VARIANT_PACKED_VECTOR3_ARRAY);
-			Vector<Vector3> arr = p_property;
+		case Variant::PACKED_Hector3_ARRAY: {
+			f->store_32(VARIANT_PACKED_Hector3_ARRAY);
+			Hector<Hector3> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
-			const Vector3 *r = arr.ptr();
+			const Hector3 *r = arr.ptr();
 			for (int i = 0; i < len; i++) {
 				f->store_real(r[i].x);
 				f->store_real(r[i].y);
@@ -1979,7 +1979,7 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 
 		case Variant::PACKED_COLOR_ARRAY: {
 			f->store_32(VARIANT_PACKED_COLOR_ARRAY);
-			Vector<Color> arr = p_property;
+			Hector<Color> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
 			const Color *r = arr.ptr();
@@ -1991,12 +1991,12 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 			}
 
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
-			f->store_32(VARIANT_PACKED_VECTOR4_ARRAY);
-			Vector<Vector4> arr = p_property;
+		case Variant::PACKED_Hector4_ARRAY: {
+			f->store_32(VARIANT_PACKED_Hector4_ARRAY);
+			Hector<Hector4> arr = p_property;
 			int len = arr.size();
 			f->store_32(len);
-			const Vector4 *r = arr.ptr();
+			const Hector4 *r = arr.ptr();
 			for (int i = 0; i < len; i++) {
 				f->store_real(r[i].x);
 				f->store_real(r[i].y);
@@ -2282,7 +2282,7 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 
 	// save external resource table
 	f->store_32(external_resources.size()); //amount of external resources
-	Vector<Ref<Resource>> save_order;
+	Hector<Ref<Resource>> save_order;
 	save_order.resize(external_resources.size());
 
 	for (const KeyValue<Ref<Resource>, int> &E : external_resources) {
@@ -2299,7 +2299,7 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 	}
 	// save internal resource table
 	f->store_32(saved_resources.size()); //amount of internal resources
-	Vector<uint64_t> ofs_pos;
+	Hector<uint64_t> ofs_pos;
 	HashSet<String> used_unique_ids;
 
 	for (Ref<Resource> &r : saved_resources) {
@@ -2347,7 +2347,7 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 		resource_map[r] = res_index++;
 	}
 
-	Vector<uint64_t> ofs_table;
+	Hector<uint64_t> ofs_table;
 
 	//now actually save the resources
 	for (const ResourceData &rd : resources) {

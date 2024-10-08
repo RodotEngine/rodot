@@ -47,7 +47,7 @@ func no_exec_test():
 	print(Callable(variant, "test"))
 
 	print(Dictionary(variant))
-	print(Vector2(variant))
+	print(Hector2(variant))
 	print(int(variant))
 
 func test():

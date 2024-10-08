@@ -31,7 +31,7 @@
 #ifndef AUDIO_STREAM_POLYPHONIC_H
 #define AUDIO_STREAM_POLYPHONIC_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/scene_string_names.h"
 #include "servers/audio/audio_stream.h"
 #include "servers/audio_server.h"
@@ -78,7 +78,7 @@ class AudioStreamPlaybackPolyphonic : public AudioStreamPlayback {
 				active(false), pending_play(false), finish_request(false) {}
 	};
 
-	LocalVector<Stream> streams;
+	LocalHector<Stream> streams;
 	AudioFrame internal_buffer[INTERNAL_BUFFER_LEN];
 
 	bool active = false;

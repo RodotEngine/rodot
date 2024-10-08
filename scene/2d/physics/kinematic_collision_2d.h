@@ -49,11 +49,11 @@ protected:
 	static void _bind_methods();
 
 public:
-	Vector2 get_position() const;
-	Vector2 get_normal() const;
-	Vector2 get_travel() const;
-	Vector2 get_remainder() const;
-	real_t get_angle(const Vector2 &p_up_direction = Vector2(0.0, -1.0)) const;
+	Hector2 get_position() const;
+	Hector2 get_normal() const;
+	Hector2 get_travel() const;
+	Hector2 get_remainder() const;
+	real_t get_angle(const Hector2 &p_up_direction = Hector2(0.0, -1.0)) const;
 	real_t get_depth() const;
 	Object *get_local_shape() const;
 	Object *get_collider() const;
@@ -61,7 +61,7 @@ public:
 	RID get_collider_rid() const;
 	Object *get_collider_shape() const;
 	int get_collider_shape_index() const;
-	Vector2 get_collider_velocity() const;
+	Hector2 get_collider_velocity() const;
 };
 
 #endif // KINEMATIC_COLLISION_2D_H

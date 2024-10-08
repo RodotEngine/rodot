@@ -22,14 +22,14 @@
 #ifndef FFX_FSR2_ACCUMULATE_H
 #define FFX_FSR2_ACCUMULATE_H
 
-FfxFloat32 GetPxHrVelocity(FfxFloat32x2 fMotionVector)
+FfxFloat32 GetPxHrVelocity(FfxFloat32x2 fMotionHector)
 {
-    return length(fMotionVector * DisplaySize());
+    return length(fMotionHector * DisplaySize());
 }
 #if FFX_HALF
-FFX_MIN16_F GetPxHrVelocity(FFX_MIN16_F2 fMotionVector)
+FFX_MIN16_F GetPxHrVelocity(FFX_MIN16_F2 fMotionHector)
 {
-    return length(fMotionVector * FFX_MIN16_F2(DisplaySize()));
+    return length(fMotionHector * FFX_MIN16_F2(DisplaySize()));
 }
 #endif
 
@@ -106,7 +106,7 @@ void FinalizeLockStatus(const AccumulationPassCommonParams params, FfxFloat32x2 
 {
     // we expect similar motion for next frame
     // kill lock if that location is outside screen, avoid locks to be clamped to screen borders
-    FfxFloat32x2 fEstimatedUvNextFrame = params.fHrUv - params.fMotionVector;
+    FfxFloat32x2 fEstimatedUvNextFrame = params.fHrUv - params.fMotionHector;
     if (IsUvInside(fEstimatedUvNextFrame) == false) {
         KillLock(fLockStatus);
     }
@@ -219,8 +219,8 @@ AccumulationPassCommonParams InitParams(FfxInt32x2 iPxHrPos)
     const FfxFloat32x2 fLrUvJittered = fHrUv + Jitter() / RenderSize();
     params.fLrUv_HwSampler = ClampUv(fLrUvJittered, RenderSize(), MaxRenderSize());
 
-    params.fMotionVector = GetMotionVector(iPxHrPos, fHrUv);
-    params.fHrVelocity = GetPxHrVelocity(params.fMotionVector);
+    params.fMotionHector = GetMotionHector(iPxHrPos, fHrUv);
+    params.fHrVelocity = GetPxHrVelocity(params.fMotionHector);
 
     ComputeReprojectedUVs(params, params.fReprojectedHrUv, params.bIsExistingSample);
 

@@ -39,7 +39,7 @@ class XRInterfaceExtension : public XRInterface {
 public:
 private:
 	bool can_add_blits = false;
-	Vector<BlitToScreen> blits;
+	Hector<BlitToScreen> blits;
 
 protected:
 	_THREAD_SAFE_CLASS_
@@ -80,12 +80,12 @@ public:
 	virtual bool supports_play_area_mode(XRInterface::PlayAreaMode p_mode) override; /* query if this interface supports this play area mode */
 	virtual XRInterface::PlayAreaMode get_play_area_mode() const override; /* get the current play area mode */
 	virtual bool set_play_area_mode(XRInterface::PlayAreaMode p_mode) override; /* change the play area mode, note that this should return false if the mode is not available */
-	virtual PackedVector3Array get_play_area() const override; /* if available, returns an array of vectors denoting the play area the player can move around in */
+	virtual PackedHector3Array get_play_area() const override; /* if available, returns an array of Hectors denoting the play area the player can move around in */
 
 	GDVIRTUAL1RC(bool, _supports_play_area_mode, XRInterface::PlayAreaMode);
 	GDVIRTUAL0RC(XRInterface::PlayAreaMode, _get_play_area_mode);
 	GDVIRTUAL1RC(bool, _set_play_area_mode, XRInterface::PlayAreaMode);
-	GDVIRTUAL0RC(PackedVector3Array, _get_play_area);
+	GDVIRTUAL0RC(PackedHector3Array, _get_play_area);
 
 	/** specific to AR **/
 	virtual bool get_anchor_detection_is_enabled() const override;
@@ -118,12 +118,12 @@ public:
 	GDVIRTUAL0R(RID, _get_depth_texture);
 	GDVIRTUAL0R(RID, _get_velocity_texture);
 
-	void add_blit(RID p_render_target, Rect2 p_src_rect, Rect2i p_dst_rect, bool p_use_layer = false, uint32_t p_layer = 0, bool p_apply_lens_distortion = false, Vector2 p_eye_center = Vector2(), double p_k1 = 0.0, double p_k2 = 0.0, double p_upscale = 1.0, double p_aspect_ratio = 1.0);
+	void add_blit(RID p_render_target, Rect2 p_src_rect, Rect2i p_dst_rect, bool p_use_layer = false, uint32_t p_layer = 0, bool p_apply_lens_distortion = false, Hector2 p_eye_center = Hector2(), double p_k1 = 0.0, double p_k2 = 0.0, double p_upscale = 1.0, double p_aspect_ratio = 1.0);
 
 	virtual void process() override;
 	virtual void pre_render() override;
 	virtual bool pre_draw_viewport(RID p_render_target) override;
-	virtual Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
+	virtual Hector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
 	virtual void end_frame() override;
 
 	GDVIRTUAL0(_process);

@@ -32,7 +32,7 @@
 
 #include "core/config/project_settings.h"
 #include "core/object/worker_thread_pool.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 #ifdef __SSE2__
 #include <pmmintrin.h>
@@ -91,17 +91,17 @@ void RaycastOcclusionCull::RaycastHZBuffer::update_camera_rays(const Transform3D
 	td.camera_orthogonal = p_cam_orthogonal;
 
 	Projection inv_camera_matrix = p_cam_projection.inverse();
-	Vector3 camera_corner_proj = Vector3(-1.0f, -1.0f, -1.0f);
-	Vector3 camera_corner_view = inv_camera_matrix.xform(camera_corner_proj);
+	Hector3 camera_corner_proj = Hector3(-1.0f, -1.0f, -1.0f);
+	Hector3 camera_corner_view = inv_camera_matrix.xform(camera_corner_proj);
 	td.pixel_corner = p_cam_transform.xform(camera_corner_view);
 
-	Vector3 top_corner_proj = Vector3(-1.0f, 1.0f, -1.0f);
-	Vector3 top_corner_view = inv_camera_matrix.xform(top_corner_proj);
-	Vector3 top_corner_world = p_cam_transform.xform(top_corner_view);
+	Hector3 top_corner_proj = Hector3(-1.0f, 1.0f, -1.0f);
+	Hector3 top_corner_view = inv_camera_matrix.xform(top_corner_proj);
+	Hector3 top_corner_world = p_cam_transform.xform(top_corner_view);
 
-	Vector3 left_corner_proj = Vector3(1.0f, -1.0f, -1.0f);
-	Vector3 left_corner_view = inv_camera_matrix.xform(left_corner_proj);
-	Vector3 left_corner_world = p_cam_transform.xform(left_corner_view);
+	Hector3 left_corner_proj = Hector3(1.0f, -1.0f, -1.0f);
+	Hector3 left_corner_view = inv_camera_matrix.xform(left_corner_proj);
+	Hector3 left_corner_world = p_cam_transform.xform(left_corner_view);
 
 	td.pixel_u_interp = left_corner_world - td.pixel_corner;
 	td.pixel_v_interp = top_corner_world - td.pixel_corner;
@@ -134,11 +134,11 @@ void RaycastOcclusionCull::RaycastHZBuffer::_generate_camera_rays(const CameraRa
 
 			float u = (float(x) + 0.5f) / buffer_size.x;
 			float v = (float(y) + 0.5f) / buffer_size.y;
-			Vector3 pixel_pos = p_data->pixel_corner + u * p_data->pixel_u_interp + v * p_data->pixel_v_interp;
+			Hector3 pixel_pos = p_data->pixel_corner + u * p_data->pixel_u_interp + v * p_data->pixel_v_interp;
 
 			tile.ray.tnear[j] = p_data->z_near;
 
-			Vector3 dir;
+			Hector3 dir;
 			if (p_data->camera_orthogonal) {
 				dir = -p_data->camera_dir;
 				tile.ray.org_x[j] = pixel_pos.x - dir.x * p_data->z_near;
@@ -166,7 +166,7 @@ void RaycastOcclusionCull::RaycastHZBuffer::_generate_camera_rays(const CameraRa
 	}
 }
 
-void RaycastOcclusionCull::RaycastHZBuffer::sort_rays(const Vector3 &p_camera_dir, bool p_orthogonal) {
+void RaycastOcclusionCull::RaycastHZBuffer::sort_rays(const Hector3 &p_camera_dir, bool p_orthogonal) {
 	ERR_FAIL_COND(is_empty());
 
 	Size2i buffer_size = sizes[0];
@@ -219,7 +219,7 @@ void RaycastOcclusionCull::occluder_initialize(RID p_occluder) {
 	occluder_owner.initialize_rid(p_occluder, occluder);
 }
 
-void RaycastOcclusionCull::occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) {
+void RaycastOcclusionCull::occluder_set_mesh(RID p_occluder, const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices) {
 	Occluder *occluder = occluder_owner.get_or_null(p_occluder);
 	ERR_FAIL_NULL(occluder);
 
@@ -353,8 +353,8 @@ void RaycastOcclusionCull::Scenario::_update_dirty_instance(int p_idx, RID *p_in
 	// Embree requires the last element to be readable by a 16-byte SSE load instruction, so we add padding to be safe.
 	occ_inst->xformed_vertices.resize(vertices_size + 1);
 
-	const Vector3 *read_ptr = occ->vertices.ptr();
-	Vector3 *write_ptr = occ_inst->xformed_vertices.ptr();
+	const Hector3 *read_ptr = occ->vertices.ptr();
+	Hector3 *write_ptr = occ_inst->xformed_vertices.ptr();
 
 	if (vertices_size > 1024) {
 		TransformThreadData td;
@@ -382,7 +382,7 @@ void RaycastOcclusionCull::Scenario::_transform_vertices_thread(uint32_t p_threa
 	_transform_vertices_range(p_data->read, p_data->write, p_data->xform, from, to);
 }
 
-void RaycastOcclusionCull::Scenario::_transform_vertices_range(const Vector3 *p_read, Vector3 *p_write, const Transform3D &p_xform, int p_from, int p_to) {
+void RaycastOcclusionCull::Scenario::_transform_vertices_range(const Hector3 *p_read, Hector3 *p_write, const Transform3D &p_xform, int p_from, int p_to) {
 	for (int i = p_from; i < p_to; i++) {
 		p_write[i] = p_xform.xform(p_read[i]);
 	}
@@ -475,7 +475,7 @@ void RaycastOcclusionCull::Scenario::update() {
 		}
 
 		RTCGeometry geom = rtcNewGeometry(raycast_singleton->ebr_device, RTC_GEOMETRY_TYPE_TRIANGLE);
-		rtcSetSharedGeometryBuffer(geom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, occ_inst->xformed_vertices.ptr(), 0, sizeof(Vector3), occ_inst->xformed_vertices.size());
+		rtcSetSharedGeometryBuffer(geom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, occ_inst->xformed_vertices.ptr(), 0, sizeof(Hector3), occ_inst->xformed_vertices.size());
 		rtcSetSharedGeometryBuffer(geom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, occ_inst->indices.ptr(), 0, sizeof(uint32_t) * 3, occ_inst->indices.size() / 3);
 		rtcCommitGeometry(geom);
 		rtcAttachGeometry(next_scene, geom);
@@ -533,7 +533,7 @@ void RaycastOcclusionCull::buffer_set_scenario(RID p_buffer, RID p_scenario) {
 	buffers[p_buffer].scenario_rid = p_scenario;
 }
 
-void RaycastOcclusionCull::buffer_set_size(RID p_buffer, const Vector2i &p_size) {
+void RaycastOcclusionCull::buffer_set_size(RID p_buffer, const Hector2i &p_size) {
 	ERR_FAIL_COND(!buffers.has(p_buffer));
 	buffers[p_buffer].resize(p_size);
 }
@@ -553,34 +553,34 @@ Projection RaycastOcclusionCull::_jitter_projection(const Projection &p_cam_proj
 	int32_t frame = Engine::get_singleton()->get_frames_drawn();
 	frame %= 9;
 
-	Vector2 jitter;
+	Hector2 jitter;
 
 	switch (frame) {
 		default:
 			break;
 		case 1: {
-			jitter = Vector2(-1, -1);
+			jitter = Hector2(-1, -1);
 		} break;
 		case 2: {
-			jitter = Vector2(1, -1);
+			jitter = Hector2(1, -1);
 		} break;
 		case 3: {
-			jitter = Vector2(-1, 1);
+			jitter = Hector2(-1, 1);
 		} break;
 		case 4: {
-			jitter = Vector2(1, 1);
+			jitter = Hector2(1, 1);
 		} break;
 		case 5: {
-			jitter = Vector2(-0.5f, -0.5f);
+			jitter = Hector2(-0.5f, -0.5f);
 		} break;
 		case 6: {
-			jitter = Vector2(0.5f, -0.5f);
+			jitter = Hector2(0.5f, -0.5f);
 		} break;
 		case 7: {
-			jitter = Vector2(-0.5f, 0.5f);
+			jitter = Hector2(-0.5f, 0.5f);
 		} break;
 		case 8: {
-			jitter = Vector2(0.5f, 0.5f);
+			jitter = Hector2(0.5f, 0.5f);
 		} break;
 	}
 
@@ -589,7 +589,7 @@ Projection RaycastOcclusionCull::_jitter_projection(const Projection &p_cam_proj
 	// Higher divergence gives fewer false hidden, but more false shown.
 	// False hidden is obvious to viewer, false shown is not.
 	// False shown can lower percentage that are occluded, and therefore performance.
-	jitter *= Vector2(1 / (float)p_viewport_size.x, 1 / (float)p_viewport_size.y) * 0.05f;
+	jitter *= Hector2(1 / (float)p_viewport_size.x, 1 / (float)p_viewport_size.y) * 0.05f;
 
 	p.add_jitter_offset(jitter);
 

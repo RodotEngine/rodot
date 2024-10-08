@@ -88,7 +88,7 @@ void CodeEdit::_notification(int p_what) {
 				if (draw_code_hint) {
 					const int font_height = theme_cache.font->get_height(theme_cache.font_size);
 
-					Vector<String> code_hint_lines = code_hint.split("\n");
+					Hector<String> code_hint_lines = code_hint.split("\n");
 					int line_count = code_hint_lines.size();
 
 					int max_width = 0;
@@ -101,7 +101,7 @@ void CodeEdit::_notification(int p_what) {
 					if (code_hint_xpos == -0xFFFF) {
 						code_hint_xpos = get_caret_draw_pos().x - offset;
 					}
-					Point2 hint_ofs = Vector2(code_hint_xpos, get_caret_draw_pos().y);
+					Point2 hint_ofs = Hector2(code_hint_xpos, get_caret_draw_pos().y);
 					if (code_hint_draw_below) {
 						hint_ofs.y += theme_cache.line_spacing / 2.0f;
 					} else {
@@ -121,18 +121,18 @@ void CodeEdit::_notification(int p_what) {
 							end = theme_cache.font->get_string_size(line.substr(0, line.rfind(String::chr(0xFFFF))), HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.font_size).x;
 						}
 
-						Point2 round_ofs = hint_ofs + theme_cache.code_hint_style->get_offset() + Vector2(0, theme_cache.font->get_ascent(theme_cache.font_size) + font_height * i + yofs);
+						Point2 round_ofs = hint_ofs + theme_cache.code_hint_style->get_offset() + Hector2(0, theme_cache.font->get_ascent(theme_cache.font_size) + font_height * i + yofs);
 						round_ofs = round_ofs.round();
 						draw_string(theme_cache.font, round_ofs, line.replace(String::chr(0xFFFF), ""), HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.font_size, theme_cache.code_hint_color);
 						if (end > 0) {
 							// Draw an underline for the currently edited function parameter.
-							const Vector2 b = hint_ofs + theme_cache.code_hint_style->get_offset() + Vector2(begin, font_height + font_height * i + yofs);
-							draw_line(b, b + Vector2(end - begin, 0), theme_cache.code_hint_color, 2);
+							const Hector2 b = hint_ofs + theme_cache.code_hint_style->get_offset() + Hector2(begin, font_height + font_height * i + yofs);
+							draw_line(b, b + Hector2(end - begin, 0), theme_cache.code_hint_color, 2);
 
 							// Draw a translucent text highlight as well.
 							const Rect2 highlight_rect = Rect2(
-									b - Vector2(0, font_height),
-									Vector2(end - begin, font_height));
+									b - Hector2(0, font_height),
+									Hector2(end - begin, font_height));
 							draw_rect(highlight_rect, theme_cache.code_hint_color * Color(1, 1, 1, 0.2));
 						}
 						yofs += theme_cache.line_spacing;
@@ -187,8 +187,8 @@ void CodeEdit::_notification(int p_what) {
 						RenderingServer::get_singleton()->canvas_item_add_rect(ci, Rect2(code_completion_rect.position, code_completion_rect.size + Size2(scroll_width, 0)), theme_cache.code_completion_background_color);
 					}
 
-					code_completion_scroll_rect.position = code_completion_rect.position + Vector2(code_completion_rect.size.width, 0);
-					code_completion_scroll_rect.size = Vector2(scroll_width, code_completion_rect.size.height);
+					code_completion_scroll_rect.position = code_completion_rect.position + Hector2(code_completion_rect.size.width, 0);
+					code_completion_scroll_rect.size = Hector2(scroll_width, code_completion_rect.size.height);
 
 					code_completion_line_ofs = CLAMP((code_completion_force_item_center < 0 ? code_completion_current_selected : code_completion_force_item_center) - lines / 2, 0, code_completion_options_count - lines);
 					RenderingServer::get_singleton()->canvas_item_add_rect(ci, Rect2(Point2(code_completion_rect.position.x, code_completion_rect.position.y + (code_completion_current_selected - code_completion_line_ofs) * row_height), Size2(code_completion_rect.size.width, row_height)), theme_cache.code_completion_selected_color);
@@ -374,7 +374,7 @@ void CodeEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 		set_code_hint("");
 
 		if (mb->is_pressed()) {
-			Vector2i mpos = mb->get_position();
+			Hector2i mpos = mb->get_position();
 			if (is_layout_rtl()) {
 				mpos.x = get_size().x - mpos.x;
 			}
@@ -399,7 +399,7 @@ void CodeEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 		} else {
 			if (mb->get_button_index() == MouseButton::LEFT) {
 				if (mb->is_command_or_control_pressed() && !symbol_lookup_word.is_empty()) {
-					Vector2i mpos = mb->get_position();
+					Hector2i mpos = mb->get_position();
 					if (is_layout_rtl()) {
 						mpos.x = get_size().x - mpos.x;
 					}
@@ -419,7 +419,7 @@ void CodeEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 
 	Ref<InputEventMouseMotion> mm = p_gui_input;
 	if (mm.is_valid()) {
-		Vector2i mpos = mm->get_position();
+		Hector2i mpos = mm->get_position();
 		if (is_layout_rtl()) {
 			mpos.x = get_size().x - mpos.x;
 		}
@@ -937,7 +937,7 @@ void CodeEdit::indent_lines() {
 	begin_complex_operation();
 	begin_multicaret_edit();
 
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets();
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets();
 	for (Point2i line_range : line_ranges) {
 		for (int i = line_range.x; i <= line_range.y; i++) {
 			const String line_text = get_line(i);
@@ -967,7 +967,7 @@ void CodeEdit::unindent_lines() {
 	begin_complex_operation();
 	begin_multicaret_edit();
 
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets();
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets();
 	for (Point2i line_range : line_ranges) {
 		for (int i = line_range.x; i <= line_range.y; i++) {
 			const String line_text = get_line(i);
@@ -1300,7 +1300,7 @@ bool CodeEdit::is_drawing_executing_lines_gutter() const {
 }
 
 void CodeEdit::_main_gutter_draw_callback(int p_line, int p_gutter, const Rect2 &p_region) {
-	bool hovering = get_hovered_gutter() == Vector2i(main_gutter, p_line);
+	bool hovering = get_hovered_gutter() == Hector2i(main_gutter, p_line);
 	if (draw_breakpoints && theme_cache.breakpoint_icon.is_valid()) {
 		bool breakpointed = is_line_breakpointed(p_line);
 		bool shift_pressed = Input::get_singleton()->is_key_pressed(Key::SHIFT);
@@ -1469,7 +1469,7 @@ bool CodeEdit::is_line_numbers_zero_padded() const {
 }
 
 void CodeEdit::_line_number_draw_callback(int p_line, int p_gutter, const Rect2 &p_region) {
-	if (!Rect2(Vector2(0, 0), get_size()).intersects(p_region)) {
+	if (!Rect2(Hector2(0, 0), get_size()).intersects(p_region)) {
 		return;
 	}
 
@@ -1760,7 +1760,7 @@ void CodeEdit::toggle_foldable_line(int p_line) {
 void CodeEdit::toggle_foldable_lines_at_carets() {
 	begin_multicaret_edit();
 	int previous_line = -1;
-	Vector<int> sorted = get_sorted_carets();
+	Hector<int> sorted = get_sorted_carets();
 	for (int caret_idx : sorted) {
 		if (multicaret_edit_ignore_caret(caret_idx)) {
 			continue;
@@ -1804,7 +1804,7 @@ void CodeEdit::create_code_region() {
 
 	begin_complex_operation();
 	begin_multicaret_edit();
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets(true, false);
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets(true, false);
 
 	// Add start and end region tags.
 	int line_offset = 0;
@@ -2416,7 +2416,7 @@ void CodeEdit::move_lines_up() {
 	begin_multicaret_edit();
 
 	// Move lines up by swapping each line with the one above it.
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets();
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets();
 	for (Point2i line_range : line_ranges) {
 		if (line_range.x == 0) {
 			continue;
@@ -2449,7 +2449,7 @@ void CodeEdit::move_lines_down() {
 	begin_multicaret_edit();
 
 	// Move lines down by swapping each line with the one below it.
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets();
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets();
 	// Reverse in case line ranges are adjacent, if the first ends at column 0.
 	line_ranges.reverse();
 	for (Point2i line_range : line_ranges) {
@@ -2492,7 +2492,7 @@ void CodeEdit::delete_lines() {
 	begin_complex_operation();
 	begin_multicaret_edit();
 
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets();
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets();
 	int line_offset = 0;
 	for (Point2i line_range : line_ranges) {
 		// Remove last line of range separately to preserve carets.
@@ -2553,7 +2553,7 @@ void CodeEdit::duplicate_lines() {
 	begin_complex_operation();
 	begin_multicaret_edit();
 
-	Vector<Point2i> line_ranges = get_line_ranges_from_carets(false, false);
+	Hector<Point2i> line_ranges = get_line_ranges_from_carets(false, false);
 	int line_offset = 0;
 	for (Point2i line_range : line_ranges) {
 		// The text that will be inserted. All lines in one string.
@@ -3347,7 +3347,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 	int line_height = get_line_height();
 
 	if (GDVIRTUAL_IS_OVERRIDDEN(_filter_code_completion_candidates)) {
-		Vector<ScriptLanguage::CodeCompletionOption> code_completion_options_new;
+		Hector<ScriptLanguage::CodeCompletionOption> code_completion_options_new;
 		code_completion_base = "";
 
 		/* Build options argument. */
@@ -3481,7 +3481,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 	/* For now handle only traditional quoted strings. */
 	bool single_quote = in_string != -1 && first_quote_col > 0 && delimiters[in_string].start_key == "'";
 
-	Vector<ScriptLanguage::CodeCompletionOption> code_completion_options_new;
+	Hector<ScriptLanguage::CodeCompletionOption> code_completion_options_new;
 	code_completion_base = string_to_complete;
 
 	/* Don't autocomplete setting numerical values. */
@@ -3533,7 +3533,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 		const char32_t *string_to_complete_char_lower = &string_to_complete_lower[0];
 		const char32_t *target_char_lower = &target_lower[0];
 
-		Vector<Vector<Pair<int, int>>> all_possible_subsequence_matches;
+		Hector<Hector<Pair<int, int>>> all_possible_subsequence_matches;
 		for (int i = 0; *target_char_lower; i++, target_char_lower++) {
 			if (*target_char_lower == *string_to_complete_char_lower) {
 				all_possible_subsequence_matches.push_back({ { i, 1 } });
@@ -3543,7 +3543,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 
 		for (int i = 1; *string_to_complete_char_lower && (all_possible_subsequence_matches.size() > 0); i++, string_to_complete_char_lower++) {
 			// find all occurrences of ssq_lower to avoid looking everywhere each time
-			Vector<int> all_ocurence;
+			Hector<int> all_ocurence;
 			if (long_option) {
 				all_ocurence.push_back(target_lower.find_char(*string_to_complete_char_lower));
 			} else {
@@ -3553,14 +3553,14 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 					}
 				}
 			}
-			Vector<Vector<Pair<int, int>>> next_subsequence_matches;
-			for (Vector<Pair<int, int>> &subsequence_match : all_possible_subsequence_matches) {
+			Hector<Hector<Pair<int, int>>> next_subsequence_matches;
+			for (Hector<Pair<int, int>> &subsequence_match : all_possible_subsequence_matches) {
 				Pair<int, int> match_last_segment = subsequence_match[subsequence_match.size() - 1];
 				int next_index = match_last_segment.first + match_last_segment.second;
 				// get the last index from current sequence
 				// and look for next char starting from that index
 				if (target_lower[next_index] == *string_to_complete_char_lower) {
-					Vector<Pair<int, int>> new_match = subsequence_match;
+					Hector<Pair<int, int>> new_match = subsequence_match;
 					new_match.write[new_match.size() - 1].second++;
 					next_subsequence_matches.push_back(new_match);
 					if (long_option) {
@@ -3569,7 +3569,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 				}
 				for (int index : all_ocurence) {
 					if (index > next_index) {
-						Vector<Pair<int, int>> new_match = subsequence_match;
+						Hector<Pair<int, int>> new_match = subsequence_match;
 						new_match.push_back({ index, 1 });
 						next_subsequence_matches.push_back(new_match);
 					}
@@ -3586,7 +3586,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 				CodeCompletionOptionCompare compare;
 				ScriptLanguage::CodeCompletionOption compared_option = option;
 				compared_option.clear_characteristics();
-				for (Vector<Pair<int, int>> &matches : all_possible_subsequence_matches) {
+				for (Hector<Pair<int, int>> &matches : all_possible_subsequence_matches) {
 					compared_option.matches = matches;
 					compared_option.get_option_characteristics(string_to_complete);
 					if (compare(compared_option, option)) {
@@ -3629,7 +3629,7 @@ void CodeEdit::_filter_code_completion_candidates_impl() {
 }
 
 // Assumes both the new_options and the code_completion_options are sorted.
-bool CodeEdit::_should_reset_selected_option_for_new_options(const Vector<ScriptLanguage::CodeCompletionOption> &p_new_options) {
+bool CodeEdit::_should_reset_selected_option_for_new_options(const Hector<ScriptLanguage::CodeCompletionOption> &p_new_options) {
 	if (code_completion_current_selected >= p_new_options.size()) {
 		return true;
 	}

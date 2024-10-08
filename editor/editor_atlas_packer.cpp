@@ -31,12 +31,12 @@
 #include "editor_atlas_packer.h"
 
 #include "core/math/geometry_2d.h"
-#include "core/math/vector2.h"
-#include "core/math/vector2i.h"
+#include "core/math/Hector2.h"
+#include "core/math/Hector2i.h"
 
-void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_height, int p_atlas_max_size, int p_cell_resolution) {
+void EditorAtlasPacker::chart_pack(Hector<Chart> &charts, int &r_width, int &r_height, int p_atlas_max_size, int p_cell_resolution) {
 	int divide_by = MIN(64, p_cell_resolution);
-	Vector<PlottedBitmap> bitmaps;
+	Hector<PlottedBitmap> bitmaps;
 
 	int max_w = 0;
 
@@ -47,7 +47,7 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 
 		Rect2i aabb;
 		int vertex_count = chart.vertices.size();
-		const Vector2 *vertices = chart.vertices.ptr();
+		const Hector2 *vertices = chart.vertices.ptr();
 
 		for (int j = 0; j < vertex_count; j++) {
 			if (j == 0) {
@@ -59,7 +59,7 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 
 		Ref<BitMap> src_bitmap;
 		src_bitmap.instantiate();
-		src_bitmap->create((aabb.size + Vector2(divide_by - 1, divide_by - 1)) / divide_by);
+		src_bitmap->create((aabb.size + Hector2(divide_by - 1, divide_by - 1)) / divide_by);
 
 		int w = src_bitmap->get_size().width;
 		int h = src_bitmap->get_size().height;
@@ -67,18 +67,18 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 		//plot triangles, using divisor
 
 		for (int j = 0; j < chart.faces.size(); j++) {
-			Vector2i v[3];
+			Hector2i v[3];
 			for (int k = 0; k < 3; k++) {
-				Vector2 vtx = chart.vertices[chart.faces[j].vertex[k]];
+				Hector2 vtx = chart.vertices[chart.faces[j].vertex[k]];
 				vtx -= aabb.position;
 				vtx /= divide_by;
-				vtx = vtx.min(Vector2(w - 1, h - 1));
+				vtx = vtx.min(Hector2(w - 1, h - 1));
 				v[k] = vtx;
 			}
 
 			for (int k = 0; k < 3; k++) {
 				int l = k == 0 ? 2 : k - 1;
-				Vector<Point2i> points = Geometry2D::bresenham_line(v[k], v[l]);
+				Hector<Point2i> points = Geometry2D::bresenham_line(v[k], v[l]);
 				for (Point2i point : points) {
 					src_bitmap->set_bitv(point, true);
 				}
@@ -103,8 +103,8 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 
 		max_w = MAX(max_w, heights_size);
 
-		Vector<int> top_heights;
-		Vector<int> bottom_heights;
+		Hector<int> top_heights;
+		Hector<int> bottom_heights;
 		top_heights.resize(heights_size);
 		bottom_heights.resize(heights_size);
 
@@ -177,7 +177,7 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 		atlas_h = 0;
 
 		//do a tetris
-		Vector<int> heights;
+		Hector<int> heights;
 		heights.resize(atlas_w);
 		for (int i = 0; i < atlas_w; i++) {
 			heights.write[i] = 0;
@@ -224,12 +224,12 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 			}
 
 			// set
-			Vector2 offset = bitmaps[i].offset;
+			Hector2 offset = bitmaps[i].offset;
 			if (bitmaps[i].transposed) {
 				SWAP(offset.x, offset.y);
 			}
 
-			Vector2 final_pos = Vector2(best_height_offset * divide_by, best_height * divide_by) + Vector2(divide_by, divide_by) - offset;
+			Hector2 final_pos = Hector2(best_height_offset * divide_by, best_height * divide_by) + Hector2(divide_by, divide_by) - offset;
 			charts.write[bitmaps[i].chart_index].final_offset = final_pos;
 			charts.write[bitmaps[i].chart_index].transposed = bitmaps[i].transposed;
 		}

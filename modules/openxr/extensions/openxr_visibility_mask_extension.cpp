@@ -226,7 +226,7 @@ void OpenXRVisibilityMaskExtension::_update_mesh() {
 		ERR_FAIL_NULL(openxr_api);
 
 		// Combine all vertex and index buffers into one.
-		PackedVector3Array vertices;
+		PackedHector3Array vertices;
 		PackedInt32Array indices;
 
 		uint64_t vertice_count = 0;
@@ -241,11 +241,11 @@ void OpenXRVisibilityMaskExtension::_update_mesh() {
 		indices.resize(index_count);
 		uint64_t offset = 0;
 
-		Vector3 *v_out = vertices.ptrw();
+		Hector3 *v_out = vertices.ptrw();
 		int32_t *i_out = indices.ptrw();
 
 		for (uint32_t i = 0; i < mesh_count; i++) {
-			const XrVector2f *v_in = mesh_data[i].vertices.ptr();
+			const XrHector2f *v_in = mesh_data[i].vertices.ptr();
 			for (uint32_t j = 0; j < mesh_data[i].vertices.size(); j++) {
 				v_out->x = v_in->x;
 				v_out->y = v_in->y;

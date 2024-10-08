@@ -53,14 +53,14 @@ FT_BEGIN_HEADER
                     FT_F26Dot6      distance,
                     FT_Int          color );
 
-  /* Point displacement along the freedom vector routine */
+  /* Point displacement along the freedom Hector routine */
   typedef void
   (*TT_Move_Func)( TT_ExecContext  exc,
                    TT_GlyphZone    zone,
                    FT_UShort       point,
                    FT_F26Dot6      distance );
 
-  /* Distance projection along one of the projection vectors */
+  /* Distance projection along one of the projection Hectors */
   typedef FT_F26Dot6
   (*TT_Project_Func)( TT_ExecContext  exc,
                       FT_Pos          dx,
@@ -197,7 +197,7 @@ FT_BEGIN_HEADER
     /* latest interpreter additions */
 
     FT_Long            F_dot_P;    /* dot product of freedom and projection */
-                                   /* vectors                               */
+                                   /* Hectors                               */
     TT_Round_Func      func_round; /* current rounding function             */
 
     TT_Project_Func    func_project,   /* current projection function */

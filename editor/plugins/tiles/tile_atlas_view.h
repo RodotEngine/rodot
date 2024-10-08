@@ -58,17 +58,17 @@ private:
 	EditorZoomWidget *zoom_widget = nullptr;
 	Button *button_center_view = nullptr;
 	CenterContainer *center_container = nullptr;
-	Vector2 panning;
+	Hector2 panning;
 	void _update_zoom_and_panning(bool p_zoom_on_mouse_pos = false);
 	void _zoom_widget_changed();
 	void _center_view();
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
 
 	Ref<ViewPanner> panner;
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
-	HashMap<Vector2, HashMap<int, Rect2i>> alternative_tiles_rect_cache;
+	HashMap<Hector2, HashMap<int, Rect2i>> alternative_tiles_rect_cache;
 	void _update_alternative_tiles_rect_cache();
 
 	MarginContainer *margin_container = nullptr;
@@ -130,7 +130,7 @@ public:
 	void set_atlas_source(TileSet *p_tile_set, TileSetAtlasSource *p_tile_set_atlas_source, int p_source_id);
 
 	float get_zoom() const;
-	void set_transform(float p_zoom, Vector2i p_panning);
+	void set_transform(float p_zoom, Hector2i p_panning);
 
 	void set_padding(Side p_side, int p_padding);
 
@@ -138,7 +138,7 @@ public:
 	void set_texture_grid_visible(bool p_visible) { base_tiles_texture_grid->set_visible(p_visible); };
 	void set_tile_shape_grid_visible(bool p_visible) { base_tiles_shape_grid->set_visible(p_visible); };
 
-	Vector2i get_atlas_tile_coords_at_pos(const Vector2 p_pos, bool p_clamp = false) const;
+	Hector2i get_atlas_tile_coords_at_pos(const Hector2 p_pos, bool p_clamp = false) const;
 
 	void add_control_over_atlas_tiles(Control *p_control, bool scaled = true) {
 		if (scaled) {
@@ -151,8 +151,8 @@ public:
 	};
 
 	// Right side.
-	Vector3i get_alternative_tile_at_pos(const Vector2 p_pos) const;
-	Rect2i get_alternative_tile_rect(const Vector2i p_coords, int p_alternative_tile);
+	Hector3i get_alternative_tile_at_pos(const Hector2 p_pos) const;
+	Rect2i get_alternative_tile_rect(const Hector2i p_coords, int p_alternative_tile);
 
 	void add_control_over_alternative_tiles(Control *p_control, bool scaled = true) {
 		if (scaled) {

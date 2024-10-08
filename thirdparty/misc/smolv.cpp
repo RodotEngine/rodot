@@ -5,7 +5,7 @@
 
 #include "smolv.h"
 #include <stdint.h>
-#include <vector>
+#include <Vector>
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
@@ -33,7 +33,7 @@ enum SpvOp
 	SpvOpExtension = 10,
 	SpvOpExtInstImport = 11,
 	SpvOpExtInst = 12,
-	SpvOpVectorShuffleCompact = 13, // not in SPIR-V, added for SMOL-V!
+	SpvOpHectorShuffleCompact = 13, // not in SPIR-V, added for SMOL-V!
 	SpvOpMemoryModel = 14,
 	SpvOpEntryPoint = 15,
 	SpvOpExecutionMode = 16,
@@ -42,7 +42,7 @@ enum SpvOp
 	SpvOpTypeBool = 20,
 	SpvOpTypeInt = 21,
 	SpvOpTypeFloat = 22,
-	SpvOpTypeVector = 23,
+	SpvOpTypeHector = 23,
 	SpvOpTypeMatrix = 24,
 	SpvOpTypeImage = 25,
 	SpvOpTypeSampler = 26,
@@ -91,9 +91,9 @@ enum SpvOp
 	SpvOpDecorationGroup = 73,
 	SpvOpGroupDecorate = 74,
 	SpvOpGroupMemberDecorate = 75,
-	SpvOpVectorExtractDynamic = 77,
-	SpvOpVectorInsertDynamic = 78,
-	SpvOpVectorShuffle = 79,
+	SpvOpHectorExtractDynamic = 77,
+	SpvOpHectorInsertDynamic = 78,
+	SpvOpHectorShuffle = 79,
 	SpvOpCompositeConstruct = 80,
 	SpvOpCompositeExtract = 81,
 	SpvOpCompositeInsert = 82,
@@ -153,10 +153,10 @@ enum SpvOp
 	SpvOpSMod = 139,
 	SpvOpFRem = 140,
 	SpvOpFMod = 141,
-	SpvOpVectorTimesScalar = 142,
+	SpvOpHectorTimesScalar = 142,
 	SpvOpMatrixTimesScalar = 143,
-	SpvOpVectorTimesMatrix = 144,
-	SpvOpMatrixTimesVector = 145,
+	SpvOpHectorTimesMatrix = 144,
+	SpvOpMatrixTimesHector = 145,
 	SpvOpMatrixTimesMatrix = 146,
 	SpvOpOuterProduct = 147,
 	SpvOpDot = 148,
@@ -381,7 +381,7 @@ static const char* kSpirvOpNames[] =
 	"Extension",
 	"ExtInstImport",
 	"ExtInst",
-	"VectorShuffleCompact",
+	"HectorShuffleCompact",
 	"MemoryModel",
 	"EntryPoint",
 	"ExecutionMode",
@@ -391,7 +391,7 @@ static const char* kSpirvOpNames[] =
 	"TypeBool",
 	"TypeInt",
 	"TypeFloat",
-	"TypeVector",
+	"TypeHector",
 	"TypeMatrix",
 	"TypeImage",
 	"TypeSampler",
@@ -445,9 +445,9 @@ static const char* kSpirvOpNames[] =
 	"GroupDecorate",
 	"GroupMemberDecorate",
 	"#76",
-	"VectorExtractDynamic",
-	"VectorInsertDynamic",
-	"VectorShuffle",
+	"HectorExtractDynamic",
+	"HectorInsertDynamic",
+	"HectorShuffle",
 	"CompositeConstruct",
 	"CompositeExtract",
 	"CompositeInsert",
@@ -510,10 +510,10 @@ static const char* kSpirvOpNames[] =
 	"SMod",
 	"FRem",
 	"FMod",
-	"VectorTimesScalar",
+	"HectorTimesScalar",
 	"MatrixTimesScalar",
-	"VectorTimesMatrix",
-	"MatrixTimesVector",
+	"HectorTimesMatrix",
+	"MatrixTimesHector",
 	"MatrixTimesMatrix",
 	"OuterProduct",
 	"Dot",
@@ -761,7 +761,7 @@ static const OpData kSpirvOpData[] =
 	{0, 0, 0, 0}, // Extension
 	{1, 0, 0, 0}, // ExtInstImport
 	{1, 1, 0, 1}, // ExtInst
-	{1, 1, 2, 1}, // VectorShuffleCompact - new in SMOLV
+	{1, 1, 2, 1}, // HectorShuffleCompact - new in SMOLV
 	{0, 0, 0, 1}, // MemoryModel
 	{0, 0, 0, 1}, // EntryPoint
 	{0, 0, 0, 1}, // ExecutionMode
@@ -771,7 +771,7 @@ static const OpData kSpirvOpData[] =
 	{1, 0, 0, 1}, // TypeBool
 	{1, 0, 0, 1}, // TypeInt
 	{1, 0, 0, 1}, // TypeFloat
-	{1, 0, 0, 1}, // TypeVector
+	{1, 0, 0, 1}, // TypeHector
 	{1, 0, 0, 1}, // TypeMatrix
 	{1, 0, 0, 1}, // TypeImage
 	{1, 0, 0, 1}, // TypeSampler
@@ -825,9 +825,9 @@ static const OpData kSpirvOpData[] =
 	{0, 0, 0, 0}, // GroupDecorate
 	{0, 0, 0, 0}, // GroupMemberDecorate
 	{1, 1, 0, 0}, // #76
-	{1, 1, 1, 1}, // VectorExtractDynamic
-	{1, 1, 2, 1}, // VectorInsertDynamic
-	{1, 1, 2, 1}, // VectorShuffle
+	{1, 1, 1, 1}, // HectorExtractDynamic
+	{1, 1, 2, 1}, // HectorInsertDynamic
+	{1, 1, 2, 1}, // HectorShuffle
 	{1, 1, 9, 0}, // CompositeConstruct
 	{1, 1, 1, 1}, // CompositeExtract
 	{1, 1, 2, 1}, // CompositeInsert
@@ -890,10 +890,10 @@ static const OpData kSpirvOpData[] =
 	{1, 1, 2, 0}, // SMod
 	{1, 1, 2, 0}, // FRem
 	{1, 1, 2, 0}, // FMod
-	{1, 1, 2, 0}, // VectorTimesScalar
+	{1, 1, 2, 0}, // HectorTimesScalar
 	{1, 1, 2, 0}, // MatrixTimesScalar
-	{1, 1, 2, 0}, // VectorTimesMatrix
-	{1, 1, 2, 0}, // MatrixTimesVector
+	{1, 1, 2, 0}, // HectorTimesMatrix
+	{1, 1, 2, 0}, // MatrixTimesHector
 	{1, 1, 2, 0}, // MatrixTimesMatrix
 	{1, 1, 2, 0}, // OuterProduct
 	{1, 1, 2, 0}, // Dot
@@ -1298,7 +1298,7 @@ static int32_t smolv_ZigDecode(uint32_t u)
 }
 
 
-// Remap most common Op codes (Load, Store, Decorate, VectorShuffle etc.) to be in < 16 range, for
+// Remap most common Op codes (Load, Store, Decorate, HectorShuffle etc.) to be in < 16 range, for
 // more compact varint encoding. This basically swaps rarely used op values that are < 16 with the
 // ones that are common.
 
@@ -1309,7 +1309,7 @@ static SpvOp smolv_RemapOp(SpvOp op)
 	_SMOLV_SWAP_OP(SpvOpLoad,SpvOpUndef); // 1: 17%
 	_SMOLV_SWAP_OP(SpvOpStore,SpvOpSourceContinued); // 2: 9%
 	_SMOLV_SWAP_OP(SpvOpAccessChain,SpvOpSource); // 3: 7.2%
-	_SMOLV_SWAP_OP(SpvOpVectorShuffle,SpvOpSourceExtension); // 4: 5.0%
+	_SMOLV_SWAP_OP(SpvOpHectorShuffle,SpvOpSourceExtension); // 4: 5.0%
 	// Name - already small enum value - 5: 4.4%
 	// MemberName - already small enum value - 6: 2.9%
 	_SMOLV_SWAP_OP(SpvOpMemberDecorate,SpvOpString); // 7: 4.0%
@@ -1318,7 +1318,7 @@ static SpvOp smolv_RemapOp(SpvOp op)
 	_SMOLV_SWAP_OP(SpvOpFMul,SpvOpExtension); // 10: 3.9%
 	_SMOLV_SWAP_OP(SpvOpFAdd,SpvOpExtInstImport); // 11: 2.5%
 	// ExtInst - already small enum value - 12: 1.2%
-	// VectorShuffleCompact - already small enum value - used for compact shuffle encoding
+	// HectorShuffleCompact - already small enum value - used for compact shuffle encoding
 	_SMOLV_SWAP_OP(SpvOpTypePointer,SpvOpMemoryModel); // 14: 2.2%
 	_SMOLV_SWAP_OP(SpvOpFNegate,SpvOpEntryPoint); // 15: 1.1%
 #	undef _SMOLV_SWAP_OP
@@ -1334,8 +1334,8 @@ static SpvOp smolv_RemapOp(SpvOp op)
 static uint32_t smolv_EncodeLen(SpvOp op, uint32_t len)
 {
 	len--;
-	if (op == SpvOpVectorShuffle)			len -= 4;
-	if (op == SpvOpVectorShuffleCompact)	len -= 4;
+	if (op == SpvOpHectorShuffle)			len -= 4;
+	if (op == SpvOpHectorShuffleCompact)	len -= 4;
 	if (op == SpvOpDecorate)				len -= 2;
 	if (op == SpvOpLoad)					len -= 3;
 	if (op == SpvOpAccessChain)				len -= 3;
@@ -1345,8 +1345,8 @@ static uint32_t smolv_EncodeLen(SpvOp op, uint32_t len)
 static uint32_t smolv_DecodeLen(SpvOp op, uint32_t len)
 {
 	len++;
-	if (op == SpvOpVectorShuffle)			len += 4;
-	if (op == SpvOpVectorShuffleCompact)	len += 4;
+	if (op == SpvOpHectorShuffle)			len += 4;
+	if (op == SpvOpHectorShuffleCompact)	len += 4;
 	if (op == SpvOpDecorate)				len += 2;
 	if (op == SpvOpLoad)					len += 3;
 	if (op == SpvOpAccessChain)				len += 3;
@@ -1362,7 +1362,7 @@ static bool smolv_WriteLengthOp(smolv::ByteArray& arr, uint32_t len, SpvOp op)
 {
 	len = smolv_EncodeLen(op, len);
 	// SPIR-V length field is 16 bits; if we get a larger value that means something
-	// was wrong, e.g. a vector shuffle instruction with less than 4 words (and our
+	// was wrong, e.g. a Hector shuffle instruction with less than 4 words (and our
 	// adjustment to common lengths in smolv_EncodeLen wrapped around)
 	if (len > 0xFFFF)
 		return false;
@@ -1438,11 +1438,11 @@ bool smolv::Encode(const void* spirvData, size_t spirvSize, ByteArray& outSmolv,
 			}
 		}
 
-		// A usual case of vector shuffle, with less than 4 components, each with a value
+		// A usual case of Hector shuffle, with less than 4 components, each with a value
 		// in [0..3] range: encode it in a more compact form, with the swizzle pattern in one byte.
-		// Turn this into a VectorShuffleCompact instruction, that takes up unused slot in Ops.
+		// Turn this into a HectorShuffleCompact instruction, that takes up unused slot in Ops.
 		uint32_t swizzle = 0;
-		if (op == SpvOpVectorShuffle && instrLen <= 9)
+		if (op == SpvOpHectorShuffle && instrLen <= 9)
 		{
 			uint32_t swz0 = instrLen > 5 ? words[5] : 0;
 			uint32_t swz1 = instrLen > 6 ? words[6] : 0;
@@ -1450,7 +1450,7 @@ bool smolv::Encode(const void* spirvData, size_t spirvSize, ByteArray& outSmolv,
 			uint32_t swz3 = instrLen > 8 ? words[8] : 0;
 			if (swz0 < 4 && swz1 < 4 && swz2 < 4 && swz3 < 4)
 			{
-				op = SpvOpVectorShuffleCompact;
+				op = SpvOpHectorShuffleCompact;
 				swizzle = (swz0 << 6) | (swz1 << 4) | (swz2 << 2) | (swz3);
 			}
 		}
@@ -1563,9 +1563,9 @@ bool smolv::Encode(const void* spirvData, size_t spirvSize, ByteArray& outSmolv,
 			smolv_WriteVarint(outSmolv, smolv_ZigEncode(delta));
 		}
 
-		if (op == SpvOpVectorShuffleCompact)
+		if (op == SpvOpHectorShuffleCompact)
 		{
-			// compact vector shuffle, just write out single swizzle byte
+			// compact Hector shuffle, just write out single swizzle byte
 			outSmolv.push_back(uint8_t(swizzle));
 			ioffs = instrLen;
 		}
@@ -1648,9 +1648,9 @@ bool smolv::Decode(const void* smolvData, size_t smolvSize, void* spirvOutputBuf
 		SpvOp op;
 		if (!smolv_ReadLengthOp(bytes, bytesEnd, instrLen, op))
 			return false;
-		const bool wasSwizzle = (op == SpvOpVectorShuffleCompact);
+		const bool wasSwizzle = (op == SpvOpHectorShuffleCompact);
 		if (wasSwizzle)
-			op = SpvOpVectorShuffle;
+			op = SpvOpHectorShuffle;
 		smolv_Write4(outSpirv, (instrLen << 16) | op);
 
 		size_t ioffs = 1;
@@ -1904,9 +1904,9 @@ bool smolv::StatsCalculateSmol(smolv::Stats* stats, const void* smolvData, size_
 		varBegin = bytes;
 		if (!smolv_ReadLengthOp(bytes, bytesEnd, instrLen, op))
 			return false;
-		const bool wasSwizzle = (op == SpvOpVectorShuffleCompact);
+		const bool wasSwizzle = (op == SpvOpHectorShuffleCompact);
 		if (wasSwizzle)
-			op = SpvOpVectorShuffle;
+			op = SpvOpHectorShuffle;
 		stats->varintCountsOp[bytes-varBegin]++;
 		
 		size_t ioffs = 1;

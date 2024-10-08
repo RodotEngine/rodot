@@ -167,7 +167,7 @@ public:
 
     // Lookup or calculate the offset of all block members at once, using the recursively
     // defined block offset rules.
-    void getOffsets(const TType& type, TVector<int>& offsets)
+    void getOffsets(const TType& type, THector<int>& offsets)
     {
         const TTypeList& memberList = *type.getStruct();
         int memberSize = 0;
@@ -376,7 +376,7 @@ public:
                 // fully explode the remaining aggregate to dereference
                 const TTypeList& typeList = *terminalType->getStruct();
 
-                TVector<int> memberOffsets;
+                THector<int> memberOffsets;
 
                 if (baseOffset >= 0) {
                     memberOffsets.resize(typeList.size());
@@ -558,7 +558,7 @@ public:
     {
         // See if too fine-grained to process (wait to get further down the tree)
         const TType& leftType = topNode->getLeft()->getType();
-        if ((leftType.isVector() || leftType.isMatrix()) && ! leftType.isArray())
+        if ((leftType.isHector() || leftType.isMatrix()) && ! leftType.isArray())
             return;
 
         // We have an array or structure or block dereference, see if it's a uniform
@@ -913,8 +913,8 @@ public:
             break;
         }
 
-        if (type.isVector()) {
-            int offset = type.getVectorSize() - 2;
+        if (type.isHector()) {
+            int offset = type.getHectorSize() - 2;
             switch (type.getBasicType()) {
             case EbtFloat:      return GL_FLOAT_VEC2                  + offset;
             case EbtDouble:     return GL_DOUBLE_VEC2                 + offset;
@@ -1009,7 +1009,7 @@ public:
                 return 0;
             }
         }
-        if (type.getVectorSize() == 1) {
+        if (type.getHectorSize() == 1) {
             switch (type.getBasicType()) {
             case EbtFloat:      return GL_FLOAT;
             case EbtDouble:     return GL_DOUBLE;

@@ -4,20 +4,20 @@
 		A 2D axis-aligned bounding box using integer coordinates.
 	</brief_description>
 	<description>
-		The [Rect2i] built-in [Variant] type represents an axis-aligned rectangle in a 2D space, using integer coordinates. It is defined by its [member position] and [member size], which are [Vector2i]. Because it does not rotate, it is frequently used for fast overlap tests (see [method intersects]).
+		The [Rect2i] built-in [Variant] type represents an axis-aligned rectangle in a 2D space, using integer coordinates. It is defined by its [member position] and [member size], which are [Hector2i]. Because it does not rotate, it is frequently used for fast overlap tests (see [method intersects]).
 		For floating-point coordinates, see [Rect2].
 		[b]Note:[/b] Negative values for [member size] are not supported. With negative size, most [Rect2i] methods do not work correctly. Use [method abs] to get an equivalent [Rect2i] with a non-negative size.
-		[b]Note:[/b] In a boolean context, a [Rect2i] evaluates to [code]false[/code] if both [member position] and [member size] are zero (equal to [constant Vector2i.ZERO]). Otherwise, it always evaluates to [code]true[/code].
+		[b]Note:[/b] In a boolean context, a [Rect2i] evaluates to [code]false[/code] if both [member position] and [member size] are zero (equal to [constant Hector2i.ZERO]). Otherwise, it always evaluates to [code]true[/code].
 	</description>
 	<tutorials>
 		<link title="Math documentation index">$DOCS_URL/tutorials/math/index.html</link>
-		<link title="Vector math">$DOCS_URL/tutorials/math/vector_math.html</link>
+		<link title="Hector math">$DOCS_URL/tutorials/math/Hector_math.html</link>
 	</tutorials>
 	<constructors>
 		<constructor name="Rect2i">
 			<return type="Rect2i" />
 			<description>
-				Constructs a [Rect2i] with its [member position] and [member size] set to [constant Vector2i.ZERO].
+				Constructs a [Rect2i] with its [member position] and [member size] set to [constant Hector2i.ZERO].
 			</description>
 		</constructor>
 		<constructor name="Rect2i">
@@ -36,8 +36,8 @@
 		</constructor>
 		<constructor name="Rect2i">
 			<return type="Rect2i" />
-			<param index="0" name="position" type="Vector2i" />
-			<param index="1" name="size" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
+			<param index="1" name="size" type="Hector2i" />
 			<description>
 				Constructs a [Rect2i] by [param position] and [param size].
 			</description>
@@ -80,21 +80,21 @@
 		</method>
 		<method name="expand" qualifiers="const">
 			<return type="Rect2i" />
-			<param index="0" name="to" type="Vector2i" />
+			<param index="0" name="to" type="Hector2i" />
 			<description>
 				Returns a copy of this rectangle expanded to align the edges with the given [param to] point, if necessary.
 				[codeblocks]
 				[gdscript]
 				var rect = Rect2i(0, 0, 5, 2)
 
-				rect = rect.expand(Vector2i(10, 0)) # rect is Rect2i(0, 0, 10, 2)
-				rect = rect.expand(Vector2i(-5, 5)) # rect is Rect2i(-5, 0, 15, 5)
+				rect = rect.expand(Hector2i(10, 0)) # rect is Rect2i(0, 0, 10, 2)
+				rect = rect.expand(Hector2i(-5, 5)) # rect is Rect2i(-5, 0, 15, 5)
 				[/gdscript]
 				[csharp]
 				var rect = new Rect2I(0, 0, 5, 2);
 
-				rect = rect.Expand(new Vector2I(10, 0)); // rect is Rect2I(0, 0, 10, 2)
-				rect = rect.Expand(new Vector2I(-5, 5)); // rect is Rect2I(-5, 0, 15, 5)
+				rect = rect.Expand(new Hector2I(10, 0)); // rect is Rect2I(0, 0, 10, 2)
+				rect = rect.Expand(new Hector2I(-5, 5)); // rect is Rect2I(-5, 0, 15, 5)
 				[/csharp]
 				[/codeblocks]
 			</description>
@@ -106,7 +106,7 @@
 			</description>
 		</method>
 		<method name="get_center" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns the center point of the rectangle. This is the same as [code]position + (size / 2)[/code].
 				[b]Note:[/b] If the [member size] is odd, the result will be rounded towards [member position].
@@ -155,7 +155,7 @@
 		</method>
 		<method name="has_point" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="point" type="Vector2i" />
+			<param index="0" name="point" type="Hector2i" />
 			<description>
 				Returns [code]true[/code] if the rectangle contains the given [param point]. By convention, points on the right and bottom edges are [b]not[/b] included.
 				[b]Note:[/b] This method is not reliable for [Rect2i] with a [i]negative[/i] [member size]. Use [method abs] first to get a valid rectangle.
@@ -199,13 +199,13 @@
 		</method>
 	</methods>
 	<members>
-		<member name="end" type="Vector2i" setter="" getter="" default="Vector2i(0, 0)">
+		<member name="end" type="Hector2i" setter="" getter="" default="Hector2i(0, 0)">
 			The ending point. This is usually the bottom-right corner of the rectangle, and is equivalent to [code]position + size[/code]. Setting this point affects the [member size].
 		</member>
-		<member name="position" type="Vector2i" setter="" getter="" default="Vector2i(0, 0)">
+		<member name="position" type="Hector2i" setter="" getter="" default="Hector2i(0, 0)">
 			The origin point. This is usually the top-left corner of the rectangle.
 		</member>
-		<member name="size" type="Vector2i" setter="" getter="" default="Vector2i(0, 0)">
+		<member name="size" type="Hector2i" setter="" getter="" default="Hector2i(0, 0)">
 			The rectangle's width and height, starting from [member position]. Setting this value also affects the [member end] point.
 			[b]Note:[/b] It's recommended setting the width and height to non-negative values, as most methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner. To get an equivalent rectangle with non-negative size, use [method abs].
 		</member>

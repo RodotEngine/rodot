@@ -17,7 +17,7 @@
 		</method>
 		<method name="create">
 			<return type="void" />
-			<param index="0" name="size" type="Vector2i" />
+			<param index="0" name="size" type="Hector2i" />
 			<description>
 				Creates a bitmap with the specified size, filled with [code]false[/code].
 			</description>
@@ -40,13 +40,13 @@
 		</method>
 		<method name="get_bitv" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<description>
 				Returns bitmap's value at the specified position.
 			</description>
 		</method>
 		<method name="get_size" qualifiers="const">
-			<return type="Vector2i" />
+			<return type="Hector2i" />
 			<description>
 				Returns bitmap's dimensions.
 			</description>
@@ -66,21 +66,21 @@
 			</description>
 		</method>
 		<method name="opaque_to_polygons" qualifiers="const">
-			<return type="PackedVector2Array[]" />
+			<return type="PackedHector2Array[]" />
 			<param index="0" name="rect" type="Rect2i" />
 			<param index="1" name="epsilon" type="float" default="2.0" />
 			<description>
-				Creates an [Array] of polygons covering a rectangular portion of the bitmap. It uses a marching squares algorithm, followed by Ramer-Douglas-Peucker (RDP) reduction of the number of vertices. Each polygon is described as a [PackedVector2Array] of its vertices.
+				Creates an [Array] of polygons covering a rectangular portion of the bitmap. It uses a marching squares algorithm, followed by Ramer-Douglas-Peucker (RDP) reduction of the number of vertices. Each polygon is described as a [PackedHector2Array] of its vertices.
 				To get polygons covering the whole bitmap, pass:
 				[codeblock]
-				Rect2(Vector2(), get_size())
+				Rect2(Hector2(), get_size())
 				[/codeblock]
 				[param epsilon] is passed to RDP to control how accurately the polygons cover the bitmap: a lower [param epsilon] corresponds to more points in the polygons.
 			</description>
 		</method>
 		<method name="resize">
 			<return type="void" />
-			<param index="0" name="new_size" type="Vector2i" />
+			<param index="0" name="new_size" type="Hector2i" />
 			<description>
 				Resizes the image to [param new_size].
 			</description>
@@ -104,7 +104,7 @@
 		</method>
 		<method name="set_bitv">
 			<return type="void" />
-			<param index="0" name="position" type="Vector2i" />
+			<param index="0" name="position" type="Hector2i" />
 			<param index="1" name="bit" type="bool" />
 			<description>
 				Sets the bitmap's element at the specified position, to the specified value.

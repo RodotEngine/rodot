@@ -370,7 +370,7 @@ void ShaderEditorPlugin::_shader_selected(int p_index) {
 	shader_list->select(p_index);
 }
 
-void ShaderEditorPlugin::_shader_list_clicked(int p_item, Vector2 p_local_mouse_pos, MouseButton p_mouse_button_index) {
+void ShaderEditorPlugin::_shader_list_clicked(int p_item, Hector2 p_local_mouse_pos, MouseButton p_mouse_button_index) {
 	if (p_mouse_button_index == MouseButton::MIDDLE) {
 		_close_shader(p_item);
 	}
@@ -636,7 +636,7 @@ bool ShaderEditorPlugin::can_drop_data_fw(const Point2 &p_point, const Variant &
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		if (files.size() == 0) {
 			return false;
@@ -681,7 +681,7 @@ void ShaderEditorPlugin::drop_data_fw(const Point2 &p_point, const Variant &p_da
 	}
 
 	if (String(d["type"]) == "files") {
-		Vector<String> files = d["files"];
+		Hector<String> files = d["files"];
 
 		for (int i = 0; i < files.size(); i++) {
 			const String &file = files[i];

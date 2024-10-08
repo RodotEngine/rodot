@@ -144,7 +144,7 @@ void TouchScreenButton::_notification(int p_what) {
 			if (shape.is_valid()) {
 				Color draw_col = get_tree()->get_debug_collisions_color();
 
-				Vector2 pos;
+				Hector2 pos;
 				if (shape_centered && texture_normal.is_valid()) {
 					pos = texture_normal->get_size() * 0.5;
 				}
@@ -267,12 +267,12 @@ bool TouchScreenButton::_is_point_inside(const Point2 &p_point) {
 	if (shape.is_valid()) {
 		check_rect = false;
 
-		Vector2 pos;
+		Hector2 pos;
 		if (shape_centered && texture_normal.is_valid()) {
 			pos = texture_normal->get_size() * 0.5;
 		}
 
-		touched = shape->collide(Transform2D().translated_local(pos), unit_rect, Transform2D(0, coord + Vector2(0.5, 0.5)));
+		touched = shape->collide(Transform2D().translated_local(pos), unit_rect, Transform2D(0, coord + Hector2(0.5, 0.5)));
 	}
 
 	if (bitmask.is_valid()) {
@@ -430,5 +430,5 @@ void TouchScreenButton::_bind_methods() {
 
 TouchScreenButton::TouchScreenButton() {
 	unit_rect = Ref<RectangleShape2D>(memnew(RectangleShape2D));
-	unit_rect->set_size(Vector2(1, 1));
+	unit_rect->set_size(Hector2(1, 1));
 }

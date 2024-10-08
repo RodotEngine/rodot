@@ -123,7 +123,7 @@ bool EditorPropertyFontOTObject::_property_can_revert(const StringName &p_name) 
 		int key = name.get_slicec('/', 1).to_int();
 		if (defaults_dict.has(key) && dict.has(key)) {
 			int value = dict[key];
-			Vector3i range = defaults_dict[key];
+			Hector3i range = defaults_dict[key];
 			return range.z != value;
 		}
 	}
@@ -137,7 +137,7 @@ bool EditorPropertyFontOTObject::_property_get_revert(const StringName &p_name, 
 	if (name.begins_with("keys")) {
 		int key = name.get_slicec('/', 1).to_int();
 		if (defaults_dict.has(key)) {
-			Vector3i range = defaults_dict[key];
+			Hector3i range = defaults_dict[key];
 			r_property = range.z;
 			return true;
 		}
@@ -415,7 +415,7 @@ void EditorPropertyOTVariation::update_property() {
 
 	for (int i = 0; i < supported.size(); i++) {
 		int name_tag = supported.get_key_at_index(i);
-		Vector3i range = supported.get_value_at_index(i);
+		Hector3i range = supported.get_value_at_index(i);
 		if ((dict.has(name_tag) && dict[name_tag].get_type() == Variant::NIL) || !dict.has(name_tag)) {
 			dict[name_tag] = range.z;
 		}
@@ -473,7 +473,7 @@ void EditorPropertyOTVariation::update_property() {
 
 		for (int i = 0; i < amount; i++) {
 			int name_tag = supported.get_key_at_index(i);
-			Vector3i range = supported.get_value_at_index(i);
+			Hector3i range = supported.get_value_at_index(i);
 
 			EditorPropertyInteger *prop = memnew(EditorPropertyInteger);
 			prop->setup(range.x, range.y, false, 1, false, false);
@@ -961,7 +961,7 @@ void FontPreview::_notification(int p_what) {
 void FontPreview::_bind_methods() {}
 
 Size2 FontPreview::get_minimum_size() const {
-	return Vector2(64, 64) * EDSCALE;
+	return Hector2(64, 64) * EDSCALE;
 }
 
 void FontPreview::set_data(const Ref<Font> &p_f) {
@@ -1041,7 +1041,7 @@ EditorPropertyFontNamesArray::EditorPropertyFontNamesArray() {
 	menu->add_separator();
 
 	if (OS::get_singleton()) {
-		Vector<String> fonts = OS::get_singleton()->get_system_fonts();
+		Hector<String> fonts = OS::get_singleton()->get_system_fonts();
 		fonts.sort();
 		for (int i = 0; i < fonts.size(); i++) {
 			menu->add_item(fonts[i], i + 6);

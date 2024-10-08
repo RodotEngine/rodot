@@ -204,8 +204,8 @@ long _book_maptype1_quantvals(const static_codebook *b){
 
 /* unpack the quantized list of values for encode/decode ***********/
 /* we need to deal with two map types: in map type 1, the values are
-   generated algorithmically (each column of the vector counts through
-   the values in the quant vector). in map type 2, all the values came
+   generated algorithmically (each column of the Hector counts through
+   the values in the quant Hector). in map type 2, all the values came
    in in an explicit list.  Both value lists must be unpacked */
 float *_book_unquantize(const static_codebook *b,int n,int *sparsemap){
   long j,k,count=0;
@@ -215,7 +215,7 @@ float *_book_unquantize(const static_codebook *b,int n,int *sparsemap){
     float delta=_float32_unpack(b->q_delta);
     float *r=_ogg_calloc(n*b->dim,sizeof(*r));
 
-    /* maptype 1 and 2 both use a quantized value vector, but
+    /* maptype 1 and 2 both use a quantized value Hector, but
        different sizes */
     switch(b->maptype){
     case 1:
@@ -347,7 +347,7 @@ int vorbis_book_init_decode(codebook *c,const static_codebook *s){
     indexed as map-valueless books are used to encode original entry
     positions as integers.
 
-    Second, we reorder all vectors, including the entry index above,
+    Second, we reorder all Hectors, including the entry index above,
     by sorted bitreversed codeword to allow treeless decode. */
 
     /* perform sort */

@@ -57,7 +57,7 @@ private:
 
 	bool access_resolved_color = false;
 	bool access_resolved_depth = false;
-	bool needs_motion_vectors = false;
+	bool needs_motion_Hectors = false;
 	bool needs_normal_roughness = false;
 	bool needs_separate_specular = false;
 
@@ -82,8 +82,8 @@ public:
 	void set_access_resolved_depth(bool p_enabled);
 	bool get_access_resolved_depth() const;
 
-	void set_needs_motion_vectors(bool p_enabled);
-	bool get_needs_motion_vectors() const;
+	void set_needs_motion_Hectors(bool p_enabled);
+	bool get_needs_motion_Hectors() const;
 
 	void set_needs_normal_roughness(bool p_enabled);
 	bool get_needs_normal_roughness() const;
@@ -106,7 +106,7 @@ private:
 	RID compositor;
 
 	// Compositor effects
-	LocalVector<Ref<CompositorEffect>> effects;
+	LocalHector<Ref<CompositorEffect>> effects;
 
 protected:
 	static void _bind_methods();

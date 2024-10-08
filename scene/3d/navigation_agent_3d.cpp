@@ -137,7 +137,7 @@ void NavigationAgent3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_avoidance_priority"), &NavigationAgent3D::get_avoidance_priority);
 
 	ADD_GROUP("Pathfinding", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "target_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "target_position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "path_desired_distance", PROPERTY_HINT_RANGE, "0.1,100,0.01,or_greater,suffix:m"), "set_path_desired_distance", "get_path_desired_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "target_desired_distance", PROPERTY_HINT_RANGE, "0.1,100,0.01,or_greater,suffix:m"), "set_target_desired_distance", "get_target_desired_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "path_height_offset", PROPERTY_HINT_RANGE, "-100.0,100,0.01,or_greater,suffix:m"), "set_path_height_offset", "get_path_height_offset");
@@ -151,7 +151,7 @@ void NavigationAgent3D::_bind_methods() {
 
 	ADD_GROUP("Avoidance", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "avoidance_enabled"), "set_avoidance_enabled", "get_avoidance_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PROPERTY_HINT_RANGE, "0.01,100,0.01,or_greater,suffix:m"), "set_height", "get_height");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius", PROPERTY_HINT_RANGE, "0.01,100,0.01,or_greater,suffix:m"), "set_radius", "get_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "neighbor_distance", PROPERTY_HINT_RANGE, "0.1,10000,0.01,or_greater,suffix:m"), "set_neighbor_distance", "get_neighbor_distance");
@@ -170,7 +170,7 @@ void NavigationAgent3D::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("waypoint_reached", PropertyInfo(Variant::DICTIONARY, "details")));
 	ADD_SIGNAL(MethodInfo("link_reached", PropertyInfo(Variant::DICTIONARY, "details")));
 	ADD_SIGNAL(MethodInfo("navigation_finished"));
-	ADD_SIGNAL(MethodInfo("velocity_computed", PropertyInfo(Variant::VECTOR3, "safe_velocity")));
+	ADD_SIGNAL(MethodInfo("velocity_computed", PropertyInfo(Variant::HECTOR3, "safe_velocity")));
 
 	ClassDB::bind_method(D_METHOD("set_debug_enabled", "enabled"), &NavigationAgent3D::set_debug_enabled);
 	ClassDB::bind_method(D_METHOD("get_debug_enabled"), &NavigationAgent3D::get_debug_enabled);
@@ -632,7 +632,7 @@ real_t NavigationAgent3D::get_path_max_distance() {
 	return path_max_distance;
 }
 
-void NavigationAgent3D::set_target_position(Vector3 p_position) {
+void NavigationAgent3D::set_target_position(Hector3 p_position) {
 	// Intentionally not checking for equality of the parameter, as we want to update the path even if the target position is the same in case the world changed.
 	// Revisit later when the navigation server can update the path without requesting a new path.
 
@@ -642,19 +642,19 @@ void NavigationAgent3D::set_target_position(Vector3 p_position) {
 	_request_repath();
 }
 
-Vector3 NavigationAgent3D::get_target_position() const {
+Hector3 NavigationAgent3D::get_target_position() const {
 	return target_position;
 }
 
-Vector3 NavigationAgent3D::get_next_path_position() {
+Hector3 NavigationAgent3D::get_next_path_position() {
 	_update_navigation();
 
-	const Vector<Vector3> &navigation_path = navigation_result->get_path();
+	const Hector<Hector3> &navigation_path = navigation_result->get_path();
 	if (navigation_path.size() == 0) {
-		ERR_FAIL_NULL_V_MSG(agent_parent, Vector3(), "The agent has no parent.");
+		ERR_FAIL_NULL_V_MSG(agent_parent, Hector3(), "The agent has no parent.");
 		return agent_parent->get_global_position();
 	} else {
-		return navigation_path[navigation_path_index] - Vector3(0, path_height_offset, 0);
+		return navigation_path[navigation_path_index] - Hector3(0, path_height_offset, 0);
 	}
 }
 
@@ -681,20 +681,20 @@ bool NavigationAgent3D::is_navigation_finished() {
 	return navigation_finished;
 }
 
-Vector3 NavigationAgent3D::get_final_position() {
+Hector3 NavigationAgent3D::get_final_position() {
 	_update_navigation();
 	return _get_final_position();
 }
 
-Vector3 NavigationAgent3D::_get_final_position() const {
-	const Vector<Vector3> &navigation_path = navigation_result->get_path();
+Hector3 NavigationAgent3D::_get_final_position() const {
+	const Hector<Hector3> &navigation_path = navigation_result->get_path();
 	if (navigation_path.size() == 0) {
-		return Vector3();
+		return Hector3();
 	}
-	return navigation_path[navigation_path.size() - 1] - Vector3(0, path_height_offset, 0);
+	return navigation_path[navigation_path.size() - 1] - Hector3(0, path_height_offset, 0);
 }
 
-void NavigationAgent3D::set_velocity_forced(Vector3 p_velocity) {
+void NavigationAgent3D::set_velocity_forced(Hector3 p_velocity) {
 	// Intentionally not checking for equality of the parameter.
 	// We need to always submit the velocity to the navigation server, even when it is the same, in order to run avoidance every frame.
 	// Revisit later when the navigation server can update avoidance without users resubmitting the velocity.
@@ -703,12 +703,12 @@ void NavigationAgent3D::set_velocity_forced(Vector3 p_velocity) {
 	velocity_forced_submitted = true;
 }
 
-void NavigationAgent3D::set_velocity(const Vector3 p_velocity) {
+void NavigationAgent3D::set_velocity(const Hector3 p_velocity) {
 	velocity = p_velocity;
 	velocity_submitted = true;
 }
 
-void NavigationAgent3D::_avoidance_done(Vector3 p_new_velocity) {
+void NavigationAgent3D::_avoidance_done(Hector3 p_new_velocity) {
 	safe_velocity = p_new_velocity;
 	if (!use_3d_avoidance) {
 		safe_velocity.y = stored_y_velocity;
@@ -737,7 +737,7 @@ void NavigationAgent3D::_update_navigation() {
 		return;
 	}
 
-	Vector3 origin = agent_parent->get_global_position();
+	Hector3 origin = agent_parent->get_global_position();
 
 	bool reload_path = false;
 
@@ -748,14 +748,14 @@ void NavigationAgent3D::_update_navigation() {
 	} else {
 		// Check if too far from the navigation path
 		if (navigation_path_index > 0) {
-			const Vector<Vector3> &navigation_path = navigation_result->get_path();
+			const Hector<Hector3> &navigation_path = navigation_result->get_path();
 
-			Vector3 segment[2];
+			Hector3 segment[2];
 			segment[0] = navigation_path[navigation_path_index - 1];
 			segment[1] = navigation_path[navigation_path_index];
 			segment[0].y -= path_height_offset;
 			segment[1].y -= path_height_offset;
-			Vector3 p = Geometry3D::get_closest_point_to_segment(origin, segment);
+			Hector3 p = Geometry3D::get_closest_point_to_segment(origin, segment);
 			if (origin.distance_to(p) >= path_max_distance) {
 				// To faraway, reload path
 				reload_path = true;
@@ -810,7 +810,7 @@ void NavigationAgent3D::_update_navigation() {
 	}
 }
 
-void NavigationAgent3D::_advance_waypoints(const Vector3 &p_origin) {
+void NavigationAgent3D::_advance_waypoints(const Hector3 &p_origin) {
 	if (last_waypoint_reached) {
 		return;
 	}
@@ -843,25 +843,25 @@ void NavigationAgent3D::_move_to_next_waypoint() {
 	navigation_path_index += 1;
 }
 
-bool NavigationAgent3D::_is_within_waypoint_distance(const Vector3 &p_origin) const {
-	const Vector<Vector3> &navigation_path = navigation_result->get_path();
-	Vector3 waypoint = navigation_path[navigation_path_index] - Vector3(0, path_height_offset, 0);
+bool NavigationAgent3D::_is_within_waypoint_distance(const Hector3 &p_origin) const {
+	const Hector<Hector3> &navigation_path = navigation_result->get_path();
+	Hector3 waypoint = navigation_path[navigation_path_index] - Hector3(0, path_height_offset, 0);
 	return p_origin.distance_to(waypoint) < path_desired_distance;
 }
 
-bool NavigationAgent3D::_is_within_target_distance(const Vector3 &p_origin) const {
+bool NavigationAgent3D::_is_within_target_distance(const Hector3 &p_origin) const {
 	return p_origin.distance_to(target_position) < target_desired_distance;
 }
 
 void NavigationAgent3D::_trigger_waypoint_reached() {
-	const Vector<Vector3> &navigation_path = navigation_result->get_path();
-	const Vector<int32_t> &navigation_path_types = navigation_result->get_path_types();
+	const Hector<Hector3> &navigation_path = navigation_result->get_path();
+	const Hector<int32_t> &navigation_path_types = navigation_result->get_path_types();
 	const TypedArray<RID> &navigation_path_rids = navigation_result->get_path_rids();
-	const Vector<int64_t> &navigation_path_owners = navigation_result->get_path_owner_ids();
+	const Hector<int64_t> &navigation_path_owners = navigation_result->get_path_owner_ids();
 
 	Dictionary details;
 
-	const Vector3 waypoint = navigation_path[navigation_path_index];
+	const Hector3 waypoint = navigation_path[navigation_path_index];
 	details[CoreStringName(position)] = waypoint;
 
 	int waypoint_type = -1;
@@ -890,8 +890,8 @@ void NavigationAgent3D::_trigger_waypoint_reached() {
 		if (waypoint_type == NavigationPathQueryResult3D::PATH_SEGMENT_TYPE_LINK) {
 			const NavigationLink3D *navlink = Object::cast_to<NavigationLink3D>(owner);
 			if (navlink) {
-				Vector3 link_global_start_position = navlink->get_global_start_position();
-				Vector3 link_global_end_position = navlink->get_global_end_position();
+				Hector3 link_global_start_position = navlink->get_global_start_position();
+				Hector3 link_global_end_position = navlink->get_global_end_position();
 				if (waypoint.distance_to(link_global_start_position) < waypoint.distance_to(link_global_end_position)) {
 					details[SNAME("link_entry_position")] = link_global_start_position;
 					details[SNAME("link_exit_position")] = link_global_end_position;
@@ -918,8 +918,8 @@ void NavigationAgent3D::_transition_to_navigation_finished() {
 
 	if (avoidance_enabled) {
 		NavigationServer3D::get_singleton()->agent_set_position(agent, agent_parent->get_global_transform().origin);
-		NavigationServer3D::get_singleton()->agent_set_velocity(agent, Vector3(0.0, 0.0, 0.0));
-		NavigationServer3D::get_singleton()->agent_set_velocity_forced(agent, Vector3(0.0, 0.0, 0.0));
+		NavigationServer3D::get_singleton()->agent_set_velocity(agent, Hector3(0.0, 0.0, 0.0));
+		NavigationServer3D::get_singleton()->agent_set_velocity_forced(agent, Hector3(0.0, 0.0, 0.0));
 		stored_y_velocity = 0.0;
 	}
 
@@ -1087,13 +1087,13 @@ void NavigationAgent3D::_update_debug_path() {
 		return;
 	}
 
-	const Vector<Vector3> &navigation_path = navigation_result->get_path();
+	const Hector<Hector3> &navigation_path = navigation_result->get_path();
 
 	if (navigation_path.size() <= 1) {
 		return;
 	}
 
-	Vector<Vector3> debug_path_lines_vertex_array;
+	Hector<Hector3> debug_path_lines_vertex_array;
 
 	for (int i = 0; i < navigation_path.size() - 1; i++) {
 		debug_path_lines_vertex_array.push_back(navigation_path[i]);
@@ -1118,7 +1118,7 @@ void NavigationAgent3D::_update_debug_path() {
 	}
 
 	if (debug_path_custom_point_size > 0.0) {
-		Vector<Vector3> debug_path_points_vertex_array;
+		Hector<Hector3> debug_path_points_vertex_array;
 
 		for (int i = 0; i < navigation_path.size(); i++) {
 			debug_path_points_vertex_array.push_back(navigation_path[i]);

@@ -204,12 +204,12 @@ EditorProgress::~EditorProgress() {
 	}
 }
 
-void EditorNode::disambiguate_filenames(const Vector<String> p_full_paths, Vector<String> &r_filenames) {
-	ERR_FAIL_COND_MSG(p_full_paths.size() != r_filenames.size(), vformat("disambiguate_filenames requires two string vectors of same length (%d != %d).", p_full_paths.size(), r_filenames.size()));
+void EditorNode::disambiguate_filenames(const Hector<String> p_full_paths, Hector<String> &r_filenames) {
+	ERR_FAIL_COND_MSG(p_full_paths.size() != r_filenames.size(), vformat("disambiguate_filenames requires two string Hectors of same length (%d != %d).", p_full_paths.size(), r_filenames.size()));
 
 	// Keep track of a list of "index sets," i.e. sets of indices
 	// within disambiguated_scene_names which contain the same name.
-	Vector<RBSet<int>> index_sets;
+	Hector<RBSet<int>> index_sets;
 	HashMap<String, int> scene_name_to_set_index;
 	for (int i = 0; i < r_filenames.size(); i++) {
 		const String &scene_name = r_filenames[i];
@@ -498,7 +498,7 @@ void EditorNode::_update_theme(bool p_skip_creation) {
 		DisplayServer::set_early_window_clear_color_override(true, theme->get_color(SNAME("background"), EditorStringName(Editor)));
 	}
 
-	Vector<Ref<Theme>> editor_themes;
+	Hector<Ref<Theme>> editor_themes;
 	editor_themes.push_back(theme);
 	editor_themes.push_back(ThemeDB::get_singleton()->get_default_theme());
 
@@ -555,7 +555,7 @@ void EditorNode::update_preview_themes(int p_mode) {
 		return; // Too early.
 	}
 
-	Vector<Ref<Theme>> preview_themes;
+	Hector<Ref<Theme>> preview_themes;
 
 	switch (p_mode) {
 		case CanvasItemEditor::THEME_PREVIEW_PROJECT:
@@ -796,14 +796,14 @@ void EditorNode::_notification(int p_what) {
 				HashSet<String> updated_textfile_extensions;
 				HashSet<String> updated_other_file_extensions;
 				bool extensions_match = true;
-				const Vector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
+				const Hector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
 				for (const String &E : textfile_ext) {
 					updated_textfile_extensions.insert(E);
 					if (extensions_match && !textfile_extensions.has(E)) {
 						extensions_match = false;
 					}
 				}
-				const Vector<String> other_file_ext = ((String)(EDITOR_GET("docks/filesystem/other_file_extensions"))).split(",", false);
+				const Hector<String> other_file_ext = ((String)(EDITOR_GET("docks/filesystem/other_file_extensions"))).split(",", false);
 				for (const String &E : other_file_ext) {
 					updated_other_file_extensions.insert(E);
 					if (extensions_match && !other_file_extensions.has(E)) {
@@ -860,7 +860,7 @@ void EditorNode::_update_update_spinner() {
 
 void EditorNode::init_plugins() {
 	_initializing_plugins = true;
-	Vector<String> addons;
+	Hector<String> addons;
 	if (ProjectSettings::get_singleton()->has_setting("editor_plugins/enabled")) {
 		addons = GLOBAL_GET("editor_plugins/enabled");
 	}
@@ -916,7 +916,7 @@ void EditorNode::_plugin_over_self_own(EditorPlugin *p_plugin) {
 	active_plugins[p_plugin->get_instance_id()].insert(p_plugin);
 }
 
-void EditorNode::_resources_changed(const Vector<String> &p_resources) {
+void EditorNode::_resources_changed(const Hector<String> &p_resources) {
 	List<Ref<Resource>> changed;
 
 	int rc = p_resources.size();
@@ -1057,7 +1057,7 @@ void EditorNode::_fs_changed() {
 	}
 }
 
-void EditorNode::_resources_reimporting(const Vector<String> &p_resources) {
+void EditorNode::_resources_reimporting(const Hector<String> &p_resources) {
 	// This will copy all the modified properties of the nodes into 'scenes_modification_table'
 	// before they are actually reimported. It's important to do this before the reimportation
 	// because if a mesh is present in an inherited scene, the resource will be modified in
@@ -1086,7 +1086,7 @@ void EditorNode::_resources_reimporting(const Vector<String> &p_resources) {
 	}
 }
 
-void EditorNode::_resources_reimported(const Vector<String> &p_resources) {
+void EditorNode::_resources_reimported(const Hector<String> &p_resources) {
 	int current_tab = scene_tabs->get_current_tab();
 
 	for (const String &res_path : resources_reimported) {
@@ -1239,8 +1239,8 @@ void EditorNode::_viewport_resized() {
 }
 
 void EditorNode::_titlebar_resized() {
-	DisplayServer::get_singleton()->window_set_window_buttons_offset(Vector2i(title_bar->get_global_position().y + title_bar->get_size().y / 2, title_bar->get_global_position().y + title_bar->get_size().y / 2), DisplayServer::MAIN_WINDOW_ID);
-	const Vector3i &margin = DisplayServer::get_singleton()->window_get_safe_title_margins(DisplayServer::MAIN_WINDOW_ID);
+	DisplayServer::get_singleton()->window_set_window_buttons_offset(Hector2i(title_bar->get_global_position().y + title_bar->get_size().y / 2, title_bar->get_global_position().y + title_bar->get_size().y / 2), DisplayServer::MAIN_WINDOW_ID);
+	const Hector3i &margin = DisplayServer::get_singleton()->window_get_safe_title_margins(DisplayServer::MAIN_WINDOW_ID);
 	if (left_menu_spacer) {
 		int w = (gui_base->is_layout_rtl()) ? margin.y : margin.x;
 		left_menu_spacer->set_custom_minimum_size(Size2(w, 0));
@@ -1287,7 +1287,7 @@ Error EditorNode::load_resource(const String &p_resource, bool p_ignore_broken_d
 	ERR_FAIL_COND_V(!res.is_valid(), ERR_CANT_OPEN);
 
 	if (!p_ignore_broken_deps && dependency_errors.has(p_resource)) {
-		Vector<String> errors;
+		Hector<String> errors;
 		for (const String &E : dependency_errors[p_resource]) {
 			errors.push_back(E);
 		}
@@ -2272,7 +2272,7 @@ void EditorNode::edit_item(Object *p_object, Object *p_editing_owner) {
 	}
 
 	// Get a list of editor plugins that can handle this type of object.
-	Vector<EditorPlugin *> available_plugins = editor_data.get_handling_sub_editors(p_object);
+	Hector<EditorPlugin *> available_plugins = editor_data.get_handling_sub_editors(p_object);
 	if (available_plugins.is_empty()) {
 		// None, clean up the owner context and return.
 		hide_unused_editors(p_editing_owner);
@@ -2551,7 +2551,7 @@ void EditorNode::_edit_current(bool p_skip_foreign, bool p_skip_inspector_update
 	} else {
 		Node *selected_node = nullptr;
 
-		Vector<Node *> multi_nodes;
+		Hector<Node *> multi_nodes;
 		if (current_obj->is_class("MultiNodeEdit")) {
 			Node *scene = get_edited_scene();
 			if (scene) {
@@ -3422,7 +3422,7 @@ void EditorNode::_update_file_menu_closed() {
 	file_menu->set_item_disabled(file_menu->get_item_index(FILE_OPEN_PREV), false);
 }
 
-void EditorNode::replace_resources_in_object(Object *p_object, const Vector<Ref<Resource>> &p_source_resources, const Vector<Ref<Resource>> &p_target_resource) {
+void EditorNode::replace_resources_in_object(Object *p_object, const Hector<Ref<Resource>> &p_source_resources, const Hector<Ref<Resource>> &p_target_resource) {
 	List<PropertyInfo> pi;
 	p_object->get_property_list(&pi);
 
@@ -3505,7 +3505,7 @@ void EditorNode::replace_resources_in_object(Object *p_object, const Vector<Ref<
 	}
 }
 
-void EditorNode::replace_resources_in_scenes(const Vector<Ref<Resource>> &p_source_resources, const Vector<Ref<Resource>> &p_target_resource) {
+void EditorNode::replace_resources_in_scenes(const Hector<Ref<Resource>> &p_source_resources, const Hector<Ref<Resource>> &p_target_resource) {
 	for (int i = 0; i < editor_data.get_edited_scene_count(); i++) {
 		Node *edited_scene_root = editor_data.get_edited_scene_root(i);
 		if (edited_scene_root) {
@@ -3574,7 +3574,7 @@ void EditorNode::_update_addon_config() {
 		return;
 	}
 
-	Vector<String> enabled_addons;
+	Hector<String> enabled_addons;
 
 	for (const KeyValue<String, EditorPlugin *> &E : addon_name_to_plugin) {
 		enabled_addons.push_back(E.key);
@@ -3974,7 +3974,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 
 	if (!p_ignore_broken_deps && dependency_errors.has(lpath)) {
 		current_menu_option = -1;
-		Vector<String> errors;
+		Hector<String> errors;
 		for (const String &E : dependency_errors[lpath]) {
 			errors.push_back(E);
 		}
@@ -4500,7 +4500,7 @@ void EditorNode::request_instantiate_scene(const String &p_path) {
 	SceneTreeDock::get_singleton()->instantiate(p_path);
 }
 
-void EditorNode::request_instantiate_scenes(const Vector<String> &p_files) {
+void EditorNode::request_instantiate_scenes(const Hector<String> &p_files) {
 	SceneTreeDock::get_singleton()->instantiate_scenes(p_files);
 }
 
@@ -4523,7 +4523,7 @@ void EditorNode::_inherit_request(String p_file) {
 	_dialog_action(p_file);
 }
 
-void EditorNode::_instantiate_request(const Vector<String> &p_files) {
+void EditorNode::_instantiate_request(const Hector<String> &p_files) {
 	request_instantiate_scenes(p_files);
 }
 
@@ -4684,7 +4684,7 @@ Ref<Script> EditorNode::get_object_custom_type_base(const Object *p_object) cons
 		// TODO: Should probably be deprecated in 4.x
 		StringName base = scr->get_instance_base_type();
 		if (base != StringName() && EditorNode::get_editor_data().get_custom_types().has(base)) {
-			const Vector<EditorData::CustomType> &types = EditorNode::get_editor_data().get_custom_types()[base];
+			const Hector<EditorData::CustomType> &types = EditorNode::get_editor_data().get_custom_types()[base];
 
 			Ref<Script> base_scr = scr;
 			while (base_scr.is_valid()) {
@@ -4720,7 +4720,7 @@ StringName EditorNode::get_object_custom_type_name(const Object *p_object) const
 			// TODO: Should probably be deprecated in 4.x.
 			StringName base = base_scr->get_instance_base_type();
 			if (base != StringName() && EditorNode::get_editor_data().get_custom_types().has(base)) {
-				const Vector<EditorData::CustomType> &types = EditorNode::get_editor_data().get_custom_types()[base];
+				const Hector<EditorData::CustomType> &types = EditorNode::get_editor_data().get_custom_types()[base];
 				for (int i = 0; i < types.size(); ++i) {
 					if (types[i].script == base_scr) {
 						return types[i].name;
@@ -4968,7 +4968,7 @@ String EditorNode::_get_system_info() const {
 			break; // Can't happen, but silences warning for DEVICE_TYPE_MAX
 	}
 
-	const Vector<String> video_adapter_driver_info = OS::get_singleton()->get_video_adapter_driver_info();
+	const Hector<String> video_adapter_driver_info = OS::get_singleton()->get_video_adapter_driver_info();
 
 	const String processor_name = OS::get_singleton()->get_processor_name();
 	const int processor_count = OS::get_singleton()->get_processor_count();
@@ -5000,7 +5000,7 @@ String EditorNode::_get_system_info() const {
 	}
 
 	// Join info.
-	Vector<String> info;
+	Hector<String> info;
 	info.push_back(godot_version);
 	String distribution_display_session_type = distribution_name;
 	if (!distribution_version.is_empty()) {
@@ -5036,7 +5036,7 @@ String EditorNode::_get_system_info() const {
 		graphics = device_type_string + " ";
 	}
 	graphics += rendering_device_name;
-	if (video_adapter_driver_info.size() == 2) { // This vector is always either of length 0 or 2.
+	if (video_adapter_driver_info.size() == 2) { // This Hector is always either of length 0 or 2.
 		const String &vad_name = video_adapter_driver_info[0];
 		const String &vad_version = video_adapter_driver_info[1]; // Version could be potentially empty on Linux/BSD.
 		if (!vad_version.is_empty()) {
@@ -5116,7 +5116,7 @@ void EditorNode::_editor_file_dialog_unregister(EditorFileDialog *p_dialog) {
 	singleton->editor_file_dialogs.erase(p_dialog);
 }
 
-Vector<EditorNodeInitCallback> EditorNode::_init_callbacks;
+Hector<EditorNodeInitCallback> EditorNode::_init_callbacks;
 
 void EditorNode::_begin_first_scan() {
 	// In headless mode, scan right away.
@@ -5133,7 +5133,7 @@ void EditorNode::_begin_first_scan() {
 	requested_first_scan = true;
 }
 
-Error EditorNode::export_preset(const String &p_preset, const String &p_path, bool p_debug, bool p_pack_only, bool p_android_build_template, bool p_patch, const Vector<String> &p_patches) {
+Error EditorNode::export_preset(const String &p_preset, const String &p_path, bool p_debug, bool p_pack_only, bool p_android_build_template, bool p_patch, const Hector<String> &p_patches) {
 	export_defer.preset = p_preset;
 	export_defer.path = p_path;
 	export_defer.debug = p_debug;
@@ -5705,7 +5705,7 @@ Dictionary EditorNode::drag_resource(const Ref<Resource> &p_res, Control *p_from
 	return drag_data;
 }
 
-Dictionary EditorNode::drag_files_and_dirs(const Vector<String> &p_paths, Control *p_from) {
+Dictionary EditorNode::drag_files_and_dirs(const Hector<String> &p_paths, Control *p_from) {
 	bool has_folder = false;
 	bool has_file = false;
 	for (int i = 0; i < p_paths.size(); i++) {
@@ -5792,7 +5792,7 @@ PopupMenu *EditorNode::get_export_as_menu() {
 	return export_as_menu;
 }
 
-void EditorNode::_dropped_files(const Vector<String> &p_files) {
+void EditorNode::_dropped_files(const Hector<String> &p_files) {
 	String to_path = ProjectSettings::get_singleton()->globalize_path(FileSystemDock::get_singleton()->get_current_directory());
 
 	_add_dropped_files_recursive(p_files, to_path);
@@ -5800,7 +5800,7 @@ void EditorNode::_dropped_files(const Vector<String> &p_files) {
 	EditorFileSystem::get_singleton()->scan_changes();
 }
 
-void EditorNode::_add_dropped_files_recursive(const Vector<String> &p_files, String to_path) {
+void EditorNode::_add_dropped_files_recursive(const Hector<String> &p_files, String to_path) {
 	Ref<DirAccess> dir = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	ERR_FAIL_COND(dir.is_null());
 
@@ -5809,7 +5809,7 @@ void EditorNode::_add_dropped_files_recursive(const Vector<String> &p_files, Str
 		String to = to_path.path_join(from.get_file());
 
 		if (dir->dir_exists(from)) {
-			Vector<String> sub_files;
+			Hector<String> sub_files;
 
 			Ref<DirAccess> sub_dir = DirAccess::open(from);
 			ERR_FAIL_COND(sub_dir.is_null());
@@ -6370,7 +6370,7 @@ void EditorNode::reload_instances_with_path_in_edited_scenes() {
 }
 
 void EditorNode::_remove_all_not_owned_children(Node *p_node, Node *p_owner) {
-	Vector<Node *> nodes_to_remove;
+	Hector<Node *> nodes_to_remove;
 	if (p_node != p_owner && p_node->get_owner() != p_owner) {
 		nodes_to_remove.push_back(p_node);
 	}
@@ -6453,12 +6453,12 @@ void EditorNode::remove_resource_conversion_plugin(const Ref<EditorResourceConve
 	resource_conversion_plugins.erase(p_plugin);
 }
 
-Vector<Ref<EditorResourceConversionPlugin>> EditorNode::find_resource_conversion_plugin_for_resource(const Ref<Resource> &p_for_resource) {
+Hector<Ref<EditorResourceConversionPlugin>> EditorNode::find_resource_conversion_plugin_for_resource(const Ref<Resource> &p_for_resource) {
 	if (p_for_resource.is_null()) {
-		return Vector<Ref<EditorResourceConversionPlugin>>();
+		return Hector<Ref<EditorResourceConversionPlugin>>();
 	}
 
-	Vector<Ref<EditorResourceConversionPlugin>> ret;
+	Hector<Ref<EditorResourceConversionPlugin>> ret;
 	for (Ref<EditorResourceConversionPlugin> resource_conversion_plugin : resource_conversion_plugins) {
 		if (resource_conversion_plugin.is_valid() && resource_conversion_plugin->handles(p_for_resource)) {
 			ret.push_back(resource_conversion_plugin);
@@ -6468,8 +6468,8 @@ Vector<Ref<EditorResourceConversionPlugin>> EditorNode::find_resource_conversion
 	return ret;
 }
 
-Vector<Ref<EditorResourceConversionPlugin>> EditorNode::find_resource_conversion_plugin_for_type_name(const String &p_type) {
-	Vector<Ref<EditorResourceConversionPlugin>> ret;
+Hector<Ref<EditorResourceConversionPlugin>> EditorNode::find_resource_conversion_plugin_for_type_name(const String &p_type) {
+	Hector<Ref<EditorResourceConversionPlugin>> ret;
 
 	if (ClassDB::can_instantiate(p_type)) {
 		Ref<Resource> temp = Object::cast_to<Resource>(ClassDB::instantiate(p_type));
@@ -6953,11 +6953,11 @@ EditorNode::EditorNode() {
 
 	ED_SHORTCUT("canvas_item_editor/pan_view", TTR("Pan View"), Key::SPACE);
 
-	const Vector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
+	const Hector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
 	for (const String &E : textfile_ext) {
 		textfile_extensions.insert(E);
 	}
-	const Vector<String> other_file_ext = ((String)(EDITOR_GET("docks/filesystem/other_file_extensions"))).split(",", false);
+	const Hector<String> other_file_ext = ((String)(EDITOR_GET("docks/filesystem/other_file_extensions"))).split(",", false);
 	for (const String &E : other_file_ext) {
 		other_file_extensions.insert(E);
 	}
@@ -7149,7 +7149,7 @@ EditorNode::EditorNode() {
 
 	accept = memnew(AcceptDialog);
 	accept->set_autowrap(true);
-	accept->set_min_size(Vector2i(600, 0));
+	accept->set_min_size(Hector2i(600, 0));
 	accept->set_unparent_when_invisible(true);
 
 	save_accept = memnew(AcceptDialog);
@@ -7579,7 +7579,7 @@ EditorNode::EditorNode() {
 	save_confirmation = memnew(ConfirmationDialog);
 	save_confirmation->add_button(TTR("Don't Save"), DisplayServer::get_singleton()->get_swap_cancel_ok(), "discard");
 	gui_base->add_child(save_confirmation);
-	save_confirmation->set_min_size(Vector2(450.0 * EDSCALE, 0));
+	save_confirmation->set_min_size(Hector2(450.0 * EDSCALE, 0));
 	save_confirmation->connect(SceneStringName(confirmed), callable_mp(this, &EditorNode::_menu_confirm_current));
 	save_confirmation->connect("custom_action", callable_mp(this, &EditorNode::_discard_changes));
 	save_confirmation->connect("canceled", callable_mp(this, &EditorNode::_cancel_close_scene_tab));
@@ -7614,7 +7614,7 @@ EditorNode::EditorNode() {
 		install_android_build_template->set_ok_button_text(TTR("Install"));
 		install_android_build_template->connect(SceneStringName(confirmed), callable_mp(this, &EditorNode::_menu_confirm_current));
 		install_android_build_template->add_child(vbox);
-		install_android_build_template->set_min_size(Vector2(500.0 * EDSCALE, 0));
+		install_android_build_template->set_min_size(Hector2(500.0 * EDSCALE, 0));
 		gui_base->add_child(install_android_build_template);
 	}
 
@@ -7641,8 +7641,8 @@ EditorNode::EditorNode() {
 	file_export_lib->set_title(TTR("Export Library"));
 	file_export_lib->set_file_mode(EditorFileDialog::FILE_MODE_SAVE_FILE);
 	file_export_lib->connect("file_selected", callable_mp(this, &EditorNode::_dialog_action));
-	file_export_lib->add_option(TTR("Merge With Existing"), Vector<String>(), true);
-	file_export_lib->add_option(TTR("Apply MeshInstance Transforms"), Vector<String>(), false);
+	file_export_lib->add_option(TTR("Merge With Existing"), Hector<String>(), true);
+	file_export_lib->add_option(TTR("Apply MeshInstance Transforms"), Hector<String>(), false);
 	gui_base->add_child(file_export_lib);
 
 	file_script = memnew(EditorFileDialog);

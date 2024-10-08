@@ -39,7 +39,7 @@ void PackedSceneEditorTranslationParserPlugin::get_recognized_extensions(List<St
 	ResourceLoader::get_recognized_extensions_for_type("PackedScene", r_extensions);
 }
 
-Error PackedSceneEditorTranslationParserPlugin::parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) {
+Error PackedSceneEditorTranslationParserPlugin::parse_file(const String &p_path, Hector<String> *r_ids, Hector<Hector<String>> *r_ids_ctx_plural) {
 	// Parse specific scene Node's properties (see in constructor) that are auto-translated by the engine when set. E.g Label's text property.
 	// These properties are translated with the tr() function in the C++ code when being set or updated.
 
@@ -51,9 +51,9 @@ Error PackedSceneEditorTranslationParserPlugin::parse_file(const String &p_path,
 	}
 	Ref<SceneState> state = Ref<PackedScene>(loaded_res)->get_state();
 
-	Vector<String> parsed_strings;
-	Vector<Pair<NodePath, bool>> atr_owners;
-	Vector<String> tabcontainer_paths;
+	Hector<String> parsed_strings;
+	Hector<Pair<NodePath, bool>> atr_owners;
+	Hector<String> tabcontainer_paths;
 	for (int i = 0; i < state->get_node_count(); i++) {
 		String node_type = state->get_node_type(i);
 		String parent_path = state->get_node_path(i, true);
@@ -150,15 +150,15 @@ Error PackedSceneEditorTranslationParserPlugin::parse_file(const String &p_path,
 
 				String extension = s->get_language()->get_extension();
 				if (EditorTranslationParser::get_singleton()->can_parse(extension)) {
-					Vector<String> temp;
-					Vector<Vector<String>> ids_context_plural;
+					Hector<String> temp;
+					Hector<Hector<String>> ids_context_plural;
 					EditorTranslationParser::get_singleton()->get_parser(extension)->parse_file(s->get_path(), &temp, &ids_context_plural);
 					parsed_strings.append_array(temp);
 					r_ids_ctx_plural->append_array(ids_context_plural);
 				}
 			} else if (node_type == "FileDialog" && property_name == "filters") {
 				// Extract FileDialog's filters property with values in format "*.png ; PNG Images","*.gd ; GDScript Files".
-				Vector<String> str_values = property_value;
+				Hector<String> str_values = property_value;
 				for (int k = 0; k < str_values.size(); k++) {
 					String desc = str_values[k].get_slice(";", 1).strip_edges();
 					if (!desc.is_empty()) {
@@ -181,10 +181,10 @@ Error PackedSceneEditorTranslationParserPlugin::parse_file(const String &p_path,
 }
 
 bool PackedSceneEditorTranslationParserPlugin::match_property(const String &p_property_name, const String &p_node_type) {
-	for (const KeyValue<String, Vector<String>> &exception : exception_list) {
+	for (const KeyValue<String, Hector<String>> &exception : exception_list) {
 		const String &exception_node_type = exception.key;
 		if (ClassDB::is_parent_class(p_node_type, exception_node_type)) {
-			const Vector<String> &exception_properties = exception.value;
+			const Hector<String> &exception_properties = exception.value;
 			for (const String &exception_property : exception_properties) {
 				if (p_property_name.match(exception_property)) {
 					return false;

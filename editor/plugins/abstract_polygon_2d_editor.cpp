@@ -62,7 +62,7 @@ bool AbstractPolygon2DEditor::_is_empty() const {
 	const int n = _get_polygon_count();
 
 	for (int i = 0; i < n; i++) {
-		Vector<Vector2> vertices = _get_polygon(i);
+		Hector<Hector2> vertices = _get_polygon(i);
 
 		if (vertices.size() != 0) {
 			return false;
@@ -99,8 +99,8 @@ void AbstractPolygon2DEditor::_action_set_polygon(int p_idx, const Variant &p_pr
 	undo_redo->add_undo_method(node, "set_polygon", p_previous);
 }
 
-Vector2 AbstractPolygon2DEditor::_get_offset(int p_idx) const {
-	return Vector2(0, 0);
+Hector2 AbstractPolygon2DEditor::_get_offset(int p_idx) const {
+	return Hector2(0, 0);
 }
 
 void AbstractPolygon2DEditor::_commit_action() {
@@ -115,7 +115,7 @@ void AbstractPolygon2DEditor::_action_add_polygon(const Variant &p_polygon) {
 }
 
 void AbstractPolygon2DEditor::_action_remove_polygon(int p_idx) {
-	_action_set_polygon(p_idx, _get_polygon(p_idx), Vector<Vector2>());
+	_action_set_polygon(p_idx, _get_polygon(p_idx), Hector<Hector2>());
 }
 
 void AbstractPolygon2DEditor::_action_set_polygon(int p_idx, const Variant &p_polygon) {
@@ -212,7 +212,7 @@ void AbstractPolygon2DEditor::_wip_close() {
 		undo_redo->create_action(TTR("Create Polygon"));
 		_action_add_polygon(wip);
 		if (_has_uv()) {
-			undo_redo->add_do_method(_get_node(), "set_uv", Vector<Vector2>());
+			undo_redo->add_do_method(_get_node(), "set_uv", Hector<Hector2>());
 			undo_redo->add_undo_method(_get_node(), "set_uv", _get_node()->get("uv"));
 		}
 		_commit_action();
@@ -279,8 +279,8 @@ bool AbstractPolygon2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) 
 	if (mb.is_valid()) {
 		Transform2D xform = canvas_item_editor->get_canvas_transform() * _get_node()->get_global_transform();
 
-		Vector2 gpoint = mb->get_position();
-		Vector2 cpoint = _get_node()->to_local(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mb->get_position())));
+		Hector2 gpoint = mb->get_position();
+		Hector2 cpoint = _get_node()->to_local(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mb->get_position())));
 
 		if (mode == MODE_EDIT || (_is_line() && mode == MODE_CREATE)) {
 			if (mb->get_button_index() == MouseButton::LEFT) {
@@ -303,7 +303,7 @@ bool AbstractPolygon2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) 
 
 						const PosVertex insert = closest_edge_point(gpoint);
 						if (insert.valid()) {
-							Vector<Vector2> vertices = _get_polygon(insert.polygon);
+							Hector<Hector2> vertices = _get_polygon(insert.polygon);
 
 							if (vertices.size() < (_is_line() ? 2 : 3)) {
 								vertices.push_back(cpoint);
@@ -329,7 +329,7 @@ bool AbstractPolygon2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) 
 				} else {
 					if (edited_point.valid()) {
 						if (original_mouse_pos != gpoint) {
-							Vector<Vector2> vertices = _get_polygon(edited_point.polygon);
+							Hector<Hector2> vertices = _get_polygon(edited_point.polygon);
 							ERR_FAIL_INDEX_V(edited_point.vertex, vertices.size(), false);
 							vertices.write[edited_point.vertex] = edited_point.pos - _get_offset(edited_point.polygon);
 
@@ -365,7 +365,7 @@ bool AbstractPolygon2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) 
 			if (mb->get_button_index() == MouseButton::LEFT && mb->is_pressed()) {
 				if (_is_line()) {
 					// for lines, we don't have a wip mode, and we can undo each single add point.
-					Vector<Vector2> vertices = _get_polygon(0);
+					Hector<Hector2> vertices = _get_polygon(0);
 					vertices.push_back(cpoint);
 					undo_redo->create_action(TTR("Insert Point"));
 					_action_set_polygon(0, vertices);
@@ -409,14 +409,14 @@ bool AbstractPolygon2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) 
 	Ref<InputEventMouseMotion> mm = p_event;
 
 	if (mm.is_valid()) {
-		Vector2 gpoint = mm->get_position();
+		Hector2 gpoint = mm->get_position();
 
 		if (edited_point.valid() && (wip_active || mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
-			Vector2 cpoint = _get_node()->to_local(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(gpoint)));
+			Hector2 cpoint = _get_node()->to_local(canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(gpoint)));
 
 			//Move the point in a single axis. Should only work when editing a polygon and while holding shift.
 			if (mode == MODE_EDIT && mm->is_shift_pressed()) {
-				Vector2 old_point = pre_move_edit.get(selected_point.vertex);
+				Hector2 old_point = pre_move_edit.get(selected_point.vertex);
 				if (ABS(cpoint.x - old_point.x) > ABS(cpoint.y - old_point.y)) {
 					cpoint.y = old_point.y;
 				} else {
@@ -427,7 +427,7 @@ bool AbstractPolygon2DEditor::forward_gui_input(const Ref<InputEvent> &p_event) 
 			edited_point = PosVertex(edited_point, cpoint);
 
 			if (!wip_active) {
-				Vector<Vector2> vertices = _get_polygon(edited_point.polygon);
+				Hector<Hector2> vertices = _get_polygon(edited_point.polygon);
 				ERR_FAIL_INDEX_V(edited_point.vertex, vertices.size(), false);
 				vertices.write[edited_point.vertex] = cpoint - _get_offset(edited_point.polygon);
 				_set_polygon(edited_point.polygon, vertices);
@@ -512,12 +512,12 @@ void AbstractPolygon2DEditor::forward_canvas_draw_over_viewport(Control *p_overl
 			continue;
 		}
 
-		Vector<Vector2> points;
-		Vector2 offset;
+		Hector<Hector2> points;
+		Hector2 offset;
 
 		if (wip_active && j == edited_point.polygon) {
 			points = Variant(wip);
-			offset = Vector2(0, 0);
+			offset = Hector2(0, 0);
 		} else {
 			if (j == -1) {
 				continue;
@@ -530,12 +530,12 @@ void AbstractPolygon2DEditor::forward_canvas_draw_over_viewport(Control *p_overl
 			const Color col = Color(0.5, 0.5, 0.5); // FIXME polygon->get_outline_color();
 			const int n = pre_move_edit.size();
 			for (int i = 0; i < n - (is_closed ? 0 : 1); i++) {
-				Vector2 p, p2;
+				Hector2 p, p2;
 				p = pre_move_edit[i] + offset;
 				p2 = pre_move_edit[(i + 1) % n] + offset;
 
-				Vector2 point = xform.xform(p);
-				Vector2 next_point = xform.xform(p2);
+				Hector2 point = xform.xform(p);
+				Hector2 next_point = xform.xform(p2);
 
 				p_overlay->draw_line(point, next_point, col, Math::round(2 * EDSCALE));
 			}
@@ -547,11 +547,11 @@ void AbstractPolygon2DEditor::forward_canvas_draw_over_viewport(Control *p_overl
 		for (int i = 0; i < n_points; i++) {
 			const Vertex vertex(j, i);
 
-			const Vector2 p = (vertex == edited_point) ? edited_point.pos : (points[i] + offset);
-			const Vector2 point = xform.xform(p);
+			const Hector2 p = (vertex == edited_point) ? edited_point.pos : (points[i] + offset);
+			const Hector2 point = xform.xform(p);
 
 			if (is_closed || i < n_points - 1) {
-				Vector2 p2;
+				Hector2 p2;
 				if (j == edited_point.polygon &&
 						((wip_active && i == n_points - 1) || (((i + 1) % n_points) == edited_point.vertex))) {
 					p2 = edited_point.pos;
@@ -559,7 +559,7 @@ void AbstractPolygon2DEditor::forward_canvas_draw_over_viewport(Control *p_overl
 					p2 = points[(i + 1) % n_points] + offset;
 				}
 
-				const Vector2 next_point = xform.xform(p2);
+				const Hector2 next_point = xform.xform(p2);
 				p_overlay->draw_line(point, next_point, col, Math::round(2 * EDSCALE));
 			}
 		}
@@ -567,8 +567,8 @@ void AbstractPolygon2DEditor::forward_canvas_draw_over_viewport(Control *p_overl
 		for (int i = 0; i < n_points; i++) {
 			const Vertex vertex(j, i);
 
-			const Vector2 p = (vertex == edited_point) ? edited_point.pos : (points[i] + offset);
-			const Vector2 point = xform.xform(p);
+			const Hector2 p = (vertex == edited_point) ? edited_point.pos : (points[i] + offset);
+			const Hector2 point = xform.xform(p);
 
 			const Color overlay_modulate = vertex == active_point ? Color(0.4, 1, 1) : Color(1, 1, 1);
 			p_overlay->draw_texture(handle, point - handle->get_size() * 0.5, overlay_modulate);
@@ -622,7 +622,7 @@ void AbstractPolygon2DEditor::edit(Node *p_polygon) {
 
 void AbstractPolygon2DEditor::remove_point(const Vertex &p_vertex) {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
-	Vector<Vector2> vertices = _get_polygon(p_vertex.polygon);
+	Hector<Hector2> vertices = _get_polygon(p_vertex.polygon);
 
 	if (vertices.size() > (_is_line() ? 2 : 3)) {
 		vertices.remove_at(p_vertex.vertex);
@@ -650,7 +650,7 @@ AbstractPolygon2DEditor::Vertex AbstractPolygon2DEditor::get_active_point() cons
 	return hover_point.valid() ? hover_point : selected_point;
 }
 
-AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_point(const Vector2 &p_pos) const {
+AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_point(const Hector2 &p_pos) const {
 	const real_t grab_threshold = EDITOR_GET("editors/polygon_editor/point_grab_radius");
 
 	const int n_polygons = _get_polygon_count();
@@ -660,12 +660,12 @@ AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_point(const 
 	real_t closest_dist = 1e10;
 
 	for (int j = 0; j < n_polygons; j++) {
-		Vector<Vector2> points = _get_polygon(j);
-		const Vector2 offset = _get_offset(j);
+		Hector<Hector2> points = _get_polygon(j);
+		const Hector2 offset = _get_offset(j);
 		const int n_points = points.size();
 
 		for (int i = 0; i < n_points; i++) {
-			Vector2 cp = xform.xform(points[i] + offset);
+			Hector2 cp = xform.xform(points[i] + offset);
 
 			real_t d = cp.distance_to(p_pos);
 			if (d < closest_dist && d < grab_threshold) {
@@ -678,7 +678,7 @@ AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_point(const 
 	return closest;
 }
 
-AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_edge_point(const Vector2 &p_pos) const {
+AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_edge_point(const Hector2 &p_pos) const {
 	const real_t grab_threshold = EDITOR_GET("editors/polygon_editor/point_grab_radius");
 	const real_t eps = grab_threshold * 2;
 	const real_t eps2 = eps * eps;
@@ -690,16 +690,16 @@ AbstractPolygon2DEditor::PosVertex AbstractPolygon2DEditor::closest_edge_point(c
 	real_t closest_dist = 1e10;
 
 	for (int j = 0; j < n_polygons; j++) {
-		Vector<Vector2> points = _get_polygon(j);
-		const Vector2 offset = _get_offset(j);
+		Hector<Hector2> points = _get_polygon(j);
+		const Hector2 offset = _get_offset(j);
 		const int n_points = points.size();
 		const int n_segments = n_points - (_is_line() ? 1 : 0);
 
 		for (int i = 0; i < n_segments; i++) {
-			Vector2 segment[2] = { xform.xform(points[i] + offset),
+			Hector2 segment[2] = { xform.xform(points[i] + offset),
 				xform.xform(points[(i + 1) % n_points] + offset) };
 
-			Vector2 cp = Geometry2D::get_closest_point_to_segment(p_pos, segment);
+			Hector2 cp = Geometry2D::get_closest_point_to_segment(p_pos, segment);
 
 			if (cp.distance_squared_to(segment[0]) < eps2 || cp.distance_squared_to(segment[1]) < eps2) {
 				continue; //not valid to reuse point

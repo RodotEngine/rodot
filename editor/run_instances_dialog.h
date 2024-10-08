@@ -62,7 +62,7 @@ class RunInstancesDialog : public AcceptDialog {
 	inline static RunInstancesDialog *singleton = nullptr;
 
 	TypedArray<Dictionary> stored_data;
-	Vector<InstanceData> instances_data;
+	Hector<InstanceData> instances_data;
 
 	Timer *main_apply_timer = nullptr;
 	Timer *instance_apply_timer = nullptr;
@@ -83,7 +83,7 @@ class RunInstancesDialog : public AcceptDialog {
 	void _save_main_args();
 	void _save_arguments();
 	// Separates command line arguments without splitting up quoted strings.
-	Vector<String> _split_cmdline_args(const String &p_arg_string) const;
+	Hector<String> _split_cmdline_args(const String &p_arg_string) const;
 
 public:
 	void popup_dialog();

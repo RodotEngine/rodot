@@ -89,7 +89,7 @@ struct XrGeneratedDispatchTableCore {
     PFN_xrGetCurrentInteractionProfile GetCurrentInteractionProfile;
     PFN_xrGetActionStateBoolean GetActionStateBoolean;
     PFN_xrGetActionStateFloat GetActionStateFloat;
-    PFN_xrGetActionStateVector2f GetActionStateVector2f;
+    PFN_xrGetActionStateHector2f GetActionStateHector2f;
     PFN_xrGetActionStatePose GetActionStatePose;
     PFN_xrSyncActions SyncActions;
     PFN_xrEnumerateBoundSourcesForAction EnumerateBoundSourcesForAction;

@@ -80,8 +80,8 @@ struct GodotPosition {
 	GodotPosition(int p_line, int p_column) :
 			line(p_line), column(p_column) {}
 
-	lsp::Position to_lsp(const Vector<String> &p_lines) const;
-	static GodotPosition from_lsp(const lsp::Position p_pos, const Vector<String> &p_lines);
+	lsp::Position to_lsp(const Hector<String> &p_lines) const;
+	static GodotPosition from_lsp(const lsp::Position p_pos, const Hector<String> &p_lines);
 
 	bool operator==(const GodotPosition &p_other) const {
 		return line == p_other.line && column == p_other.column;
@@ -99,8 +99,8 @@ struct GodotRange {
 	GodotRange(GodotPosition p_start, GodotPosition p_end) :
 			start(p_start), end(p_end) {}
 
-	lsp::Range to_lsp(const Vector<String> &p_lines) const;
-	static GodotRange from_lsp(const lsp::Range &p_range, const Vector<String> &p_lines);
+	lsp::Range to_lsp(const Hector<String> &p_lines) const;
+	static GodotRange from_lsp(const lsp::Range &p_range, const Hector<String> &p_lines);
 
 	bool operator==(const GodotRange &p_other) const {
 		return start == p_other.start && end == p_other.end;
@@ -113,10 +113,10 @@ struct GodotRange {
 
 class ExtendGDScriptParser : public GDScriptParser {
 	String path;
-	Vector<String> lines;
+	Hector<String> lines;
 
 	lsp::DocumentSymbol class_symbol;
-	Vector<lsp::Diagnostic> diagnostics;
+	Hector<lsp::Diagnostic> diagnostics;
 	List<lsp::DocumentLink> document_links;
 	ClassMembers members;
 	HashMap<String, ClassMembers> inner_classes;
@@ -139,9 +139,9 @@ class ExtendGDScriptParser : public GDScriptParser {
 
 public:
 	_FORCE_INLINE_ const String &get_path() const { return path; }
-	_FORCE_INLINE_ const Vector<String> &get_lines() const { return lines; }
+	_FORCE_INLINE_ const Hector<String> &get_lines() const { return lines; }
 	_FORCE_INLINE_ const lsp::DocumentSymbol &get_symbols() const { return class_symbol; }
-	_FORCE_INLINE_ const Vector<lsp::Diagnostic> &get_diagnostics() const { return diagnostics; }
+	_FORCE_INLINE_ const Hector<lsp::Diagnostic> &get_diagnostics() const { return diagnostics; }
 	_FORCE_INLINE_ const ClassMembers &get_members() const { return members; }
 	_FORCE_INLINE_ const HashMap<String, ClassMembers> &get_inner_classes() const { return inner_classes; }
 

@@ -86,8 +86,8 @@ typedef enum FfxFsr2QualityMode {
 typedef enum FfxFsr2InitializationFlagBits {
 
     FFX_FSR2_ENABLE_HIGH_DYNAMIC_RANGE                  = (1<<0),   ///< A bit indicating if the input color data provided is using a high-dynamic range.
-    FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_VECTORS   = (1<<1),   ///< A bit indicating if the motion vectors are rendered at display resolution.
-    FFX_FSR2_ENABLE_MOTION_VECTORS_JITTER_CANCELLATION  = (1<<2),   ///< A bit indicating that the motion vectors have the jittering pattern applied to them.
+    FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_HectorS   = (1<<1),   ///< A bit indicating if the motion Hectors are rendered at display resolution.
+    FFX_FSR2_ENABLE_MOTION_HectorS_JITTER_CANCELLATION  = (1<<2),   ///< A bit indicating that the motion Hectors have the jittering pattern applied to them.
     FFX_FSR2_ENABLE_DEPTH_INVERTED                      = (1<<3),   ///< A bit indicating that the input depth buffer data provided is inverted [1..0].
     FFX_FSR2_ENABLE_DEPTH_INFINITE                      = (1<<4),   ///< A bit indicating that the input depth buffer data provided is using an infinite far plane.
     FFX_FSR2_ENABLE_AUTO_EXPOSURE                       = (1<<5),   ///< A bit indicating if automatic exposure should be applied to input color data.
@@ -120,13 +120,13 @@ typedef struct FfxFsr2DispatchDescription {
     FfxCommandList              commandList;                        ///< The <c><i>FfxCommandList</i></c> to record FSR2 rendering commands into.
     FfxResource                 color;                              ///< A <c><i>FfxResource</i></c> containing the color buffer for the current frame (at render resolution).
     FfxResource                 depth;                              ///< A <c><i>FfxResource</i></c> containing 32bit depth values for the current frame (at render resolution).
-    FfxResource                 motionVectors;                      ///< A <c><i>FfxResource</i></c> containing 2-dimensional motion vectors (at render resolution if <c><i>FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_VECTORS</i></c> is not set).
+    FfxResource                 motionHectors;                      ///< A <c><i>FfxResource</i></c> containing 2-dimensional motion Hectors (at render resolution if <c><i>FFX_FSR2_ENABLE_DISPLAY_RESOLUTION_MOTION_HectorS</i></c> is not set).
     FfxResource                 exposure;                           ///< A optional <c><i>FfxResource</i></c> containing a 1x1 exposure value.
     FfxResource                 reactive;                           ///< A optional <c><i>FfxResource</i></c> containing alpha value of reactive objects in the scene.
     FfxResource                 transparencyAndComposition;         ///< A optional <c><i>FfxResource</i></c> containing alpha value of special objects in the scene.
     FfxResource                 output;                             ///< A <c><i>FfxResource</i></c> containing the output color buffer for the current frame (at presentation resolution).
     FfxFloatCoords2D            jitterOffset;                       ///< The subpixel jitter offset applied to the camera.
-    FfxFloatCoords2D            motionVectorScale;                  ///< The scale factor to apply to motion vectors.
+    FfxFloatCoords2D            motionHectorScale;                  ///< The scale factor to apply to motion Hectors.
     FfxDimensions2D             renderSize;                         ///< The resolution that was used for rendering the input resources.
     bool                        enableSharpening;                   ///< Enable an additional sharpening pass.
     float                       sharpness;                          ///< The sharpness value between 0 and 1, where 0 is no additional sharpness and 1 is maximum additional sharpness.
@@ -147,7 +147,7 @@ typedef struct FfxFsr2DispatchDescription {
     float                       autoReactiveMax;                    ///< A value to clamp the reactive mask
 
     // -- GODOT start --
-    float                       reprojectionMatrix[16];             ///< The matrix used for reprojecting pixels with invalid motion vectors by using the depth.
+    float                       reprojectionMatrix[16];             ///< The matrix used for reprojecting pixels with invalid motion Hectors by using the depth.
 	// -- GODOT end --
 
 } FfxFsr2DispatchDescription;
@@ -404,7 +404,7 @@ FFX_API int32_t ffxFsr2GetJitterPhaseCount(int32_t renderWidth, int32_t displayW
 /// 
 ///     const float jitterX = 2.0f * jitterX / (float)renderWidth;
 ///     const float jitterY = -2.0f * jitterY / (float)renderHeight;
-///     const Matrix4 jitterTranslationMatrix = translateMatrix(Matrix3::identity, Vector3(jitterX, jitterY, 0));
+///     const Matrix4 jitterTranslationMatrix = translateMatrix(Matrix3::identity, Hector3(jitterX, jitterY, 0));
 ///     const Matrix4 jitteredProjectionMatrix = jitterTranslationMatrix * projectionMatrix;
 /// 
 /// Jitter should be applied to all rendering. This includes opaque, alpha
@@ -422,7 +422,7 @@ FFX_API int32_t ffxFsr2GetJitterPhaseCount(int32_t renderWidth, int32_t displayW
 /// of the jitter offset that has been applied in order to render each frame.
 /// 
 /// If not using the recommended <c><i>ffxFsr2GetJitterOffset</i></c> function,
-/// care should be taken that your jitter sequence never generates a null vector;
+/// care should be taken that your jitter sequence never generates a null Hector;
 /// that is value of 0 in both the X and Y dimensions.
 ///
 /// @param [out] outX                   A pointer to a <c>float</c> which will contain the subpixel jitter offset for the x dimension.

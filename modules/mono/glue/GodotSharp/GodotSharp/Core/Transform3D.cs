@@ -11,7 +11,7 @@ namespace Godot
     /// 3×4 matrix (3 rows, 4 columns) used for 3D linear transformations.
     /// It can represent transformations such as translation, rotation, or scaling.
     /// It consists of a <see cref="Godot.Basis"/> (first 3 columns) and a
-    /// <see cref="Vector3"/> for the origin (last column).
+    /// <see cref="Hector3"/> for the origin (last column).
     ///
     /// For more information, read this documentation article:
     /// https://docs.godotengine.org/en/latest/tutorials/math/matrices_and_transforms.html
@@ -22,24 +22,24 @@ namespace Godot
     {
         /// <summary>
         /// The <see cref="Godot.Basis"/> of this transform. Contains the X, Y, and Z basis
-        /// vectors (columns 0 to 2) and is responsible for rotation and scale.
+        /// Hectors (columns 0 to 2) and is responsible for rotation and scale.
         /// </summary>
         public Basis Basis;
 
         /// <summary>
-        /// The origin vector (column 3, the fourth column). Equivalent to array index <c>[3]</c>.
+        /// The origin Hector (column 3, the fourth column). Equivalent to array index <c>[3]</c>.
         /// </summary>
-        public Vector3 Origin;
+        public Hector3 Origin;
 
         /// <summary>
-        /// Access whole columns in the form of <see cref="Vector3"/>.
-        /// The fourth column is the <see cref="Origin"/> vector.
+        /// Access whole columns in the form of <see cref="Hector3"/>.
+        /// The fourth column is the <see cref="Origin"/> Hector.
         /// </summary>
-        /// <param name="column">Which column vector.</param>
+        /// <param name="column">Which column Hector.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="column"/> is not 0, 1, 2 or 3.
         /// </exception>
-        public Vector3 this[int column]
+        public Hector3 this[int column]
         {
             readonly get
             {
@@ -81,7 +81,7 @@ namespace Godot
 
         /// <summary>
         /// Access matrix elements in column-major order.
-        /// The fourth column is the <see cref="Origin"/> vector.
+        /// The fourth column is the <see cref="Origin"/> Hector.
         /// </summary>
         /// <param name="column">Which column, the matrix horizontal position.</param>
         /// <param name="row">Which row, the matrix vertical position.</param>
@@ -128,17 +128,17 @@ namespace Godot
         /// <returns>The interpolated transform.</returns>
         public readonly Transform3D InterpolateWith(Transform3D transform, real_t weight)
         {
-            Vector3 sourceScale = Basis.Scale;
+            Hector3 sourceScale = Basis.Scale;
             Quaternion sourceRotation = Basis.GetRotationQuaternion();
-            Vector3 sourceLocation = Origin;
+            Hector3 sourceLocation = Origin;
 
-            Vector3 destinationScale = transform.Basis.Scale;
+            Hector3 destinationScale = transform.Basis.Scale;
             Quaternion destinationRotation = transform.Basis.GetRotationQuaternion();
-            Vector3 destinationLocation = transform.Origin;
+            Hector3 destinationLocation = transform.Origin;
 
             var interpolated = new Transform3D();
             Quaternion quaternion = sourceRotation.Slerp(destinationRotation, weight).Normalized();
-            Vector3 scale = sourceScale.Lerp(destinationScale, weight);
+            Hector3 scale = sourceScale.Lerp(destinationScale, weight);
             interpolated.Basis.SetQuaternionScale(quaternion, scale);
             interpolated.Origin = sourceLocation.Lerp(destinationLocation, weight);
 
@@ -162,7 +162,7 @@ namespace Godot
         /// Returns <see langword="true"/> if this transform is finite, by calling
         /// <see cref="Mathf.IsFinite(real_t)"/> on each component.
         /// </summary>
-        /// <returns>Whether this vector is finite or not.</returns>
+        /// <returns>Whether this Hector is finite or not.</returns>
         public readonly bool IsFinite()
         {
             return Basis.IsFinite() && Origin.IsFinite();
@@ -171,38 +171,38 @@ namespace Godot
         /// <summary>
         /// Returns a copy of the transform rotated such that the forward axis (-Z)
         /// points towards the <paramref name="target"/> position.
-        /// The up axis (+Y) points as close to the <paramref name="up"/> vector
+        /// The up axis (+Y) points as close to the <paramref name="up"/> Hector
         /// as possible while staying perpendicular to the forward axis.
         /// The resulting transform is orthonormalized.
         /// The existing rotation, scale, and skew information from the original transform is discarded.
-        /// The <paramref name="target"/> and <paramref name="up"/> vectors cannot be zero,
+        /// The <paramref name="target"/> and <paramref name="up"/> Hectors cannot be zero,
         /// cannot be parallel to each other, and are defined in global/parent space.
         /// </summary>
         /// <param name="target">The object to look at.</param>
         /// <param name="up">The relative up direction.</param>
         /// <param name="useModelFront">
         /// If true, then the model is oriented in reverse,
-        /// towards the model front axis (+Z, Vector3.ModelFront),
+        /// towards the model front axis (+Z, Hector3.ModelFront),
         /// which is more useful for orienting 3D models.
         /// </param>
         /// <returns>The resulting transform.</returns>
-        public readonly Transform3D LookingAt(Vector3 target, Vector3? up = null, bool useModelFront = false)
+        public readonly Transform3D LookingAt(Hector3 target, Hector3? up = null, bool useModelFront = false)
         {
             Transform3D t = this;
-            t.SetLookAt(Origin, target, up ?? Vector3.Up, useModelFront);
+            t.SetLookAt(Origin, target, up ?? Hector3.Up, useModelFront);
             return t;
         }
 
-        /// <inheritdoc cref="LookingAt(Vector3, Nullable{Vector3}, bool)"/>
+        /// <inheritdoc cref="LookingAt(Hector3, Nullable{Hector3}, bool)"/>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public readonly Transform3D LookingAt(Vector3 target, Vector3 up)
+        public readonly Transform3D LookingAt(Hector3 target, Hector3 up)
         {
             return LookingAt(target, up, false);
         }
 
         /// <summary>
         /// Returns the transform with the basis orthogonal (90 degrees),
-        /// and normalized axis vectors (scale of 1 or -1).
+        /// and normalized axis Hectors (scale of 1 or -1).
         /// </summary>
         /// <returns>The orthonormalized transform.</returns>
         public readonly Transform3D Orthonormalized()
@@ -212,28 +212,28 @@ namespace Godot
 
         /// <summary>
         /// Rotates the transform around the given <paramref name="axis"/> by <paramref name="angle"/> (in radians).
-        /// The axis must be a normalized vector.
+        /// The axis must be a normalized Hector.
         /// The operation is done in the parent/global frame, equivalent to
         /// multiplying the matrix from the left.
         /// </summary>
         /// <param name="axis">The axis to rotate around. Must be normalized.</param>
         /// <param name="angle">The angle to rotate, in radians.</param>
         /// <returns>The rotated transformation matrix.</returns>
-        public readonly Transform3D Rotated(Vector3 axis, real_t angle)
+        public readonly Transform3D Rotated(Hector3 axis, real_t angle)
         {
-            return new Transform3D(new Basis(axis, angle), new Vector3()) * this;
+            return new Transform3D(new Basis(axis, angle), new Hector3()) * this;
         }
 
         /// <summary>
         /// Rotates the transform around the given <paramref name="axis"/> by <paramref name="angle"/> (in radians).
-        /// The axis must be a normalized vector.
+        /// The axis must be a normalized Hector.
         /// The operation is done in the local frame, equivalent to
         /// multiplying the matrix from the right.
         /// </summary>
         /// <param name="axis">The axis to rotate around. Must be normalized.</param>
         /// <param name="angle">The angle to rotate, in radians.</param>
         /// <returns>The rotated transformation matrix.</returns>
-        public readonly Transform3D RotatedLocal(Vector3 axis, real_t angle)
+        public readonly Transform3D RotatedLocal(Hector3 axis, real_t angle)
         {
             Basis tmpBasis = new Basis(axis, angle);
             return new Transform3D(Basis * tmpBasis, Origin);
@@ -246,7 +246,7 @@ namespace Godot
         /// </summary>
         /// <param name="scale">The scale to introduce.</param>
         /// <returns>The scaled transformation matrix.</returns>
-        public readonly Transform3D Scaled(Vector3 scale)
+        public readonly Transform3D Scaled(Hector3 scale)
         {
             return new Transform3D(Basis.Scaled(scale), Origin * scale);
         }
@@ -258,13 +258,13 @@ namespace Godot
         /// </summary>
         /// <param name="scale">The scale to introduce.</param>
         /// <returns>The scaled transformation matrix.</returns>
-        public readonly Transform3D ScaledLocal(Vector3 scale)
+        public readonly Transform3D ScaledLocal(Hector3 scale)
         {
             Basis tmpBasis = Basis.FromScale(scale);
             return new Transform3D(Basis * tmpBasis, Origin);
         }
 
-        private void SetLookAt(Vector3 eye, Vector3 target, Vector3 up, bool useModelFront = false)
+        private void SetLookAt(Hector3 eye, Hector3 target, Hector3 up, bool useModelFront = false)
         {
             Basis = Basis.LookingAt(target - eye, up, useModelFront);
             Origin = eye;
@@ -277,7 +277,7 @@ namespace Godot
         /// </summary>
         /// <param name="offset">The offset to translate by.</param>
         /// <returns>The translated matrix.</returns>
-        public readonly Transform3D Translated(Vector3 offset)
+        public readonly Transform3D Translated(Hector3 offset)
         {
             return new Transform3D(Basis, Origin + offset);
         }
@@ -289,9 +289,9 @@ namespace Godot
         /// </summary>
         /// <param name="offset">The offset to translate by.</param>
         /// <returns>The translated matrix.</returns>
-        public readonly Transform3D TranslatedLocal(Vector3 offset)
+        public readonly Transform3D TranslatedLocal(Hector3 offset)
         {
-            return new Transform3D(Basis, new Vector3
+            return new Transform3D(Basis, new Hector3
             (
                 Origin[0] + Basis.Row0.Dot(offset),
                 Origin[1] + Basis.Row1.Dot(offset),
@@ -300,42 +300,42 @@ namespace Godot
         }
 
         // Constants
-        private static readonly Transform3D _identity = new Transform3D(Basis.Identity, Vector3.Zero);
-        private static readonly Transform3D _flipX = new Transform3D(new Basis(-1, 0, 0, 0, 1, 0, 0, 0, 1), Vector3.Zero);
-        private static readonly Transform3D _flipY = new Transform3D(new Basis(1, 0, 0, 0, -1, 0, 0, 0, 1), Vector3.Zero);
-        private static readonly Transform3D _flipZ = new Transform3D(new Basis(1, 0, 0, 0, 1, 0, 0, 0, -1), Vector3.Zero);
+        private static readonly Transform3D _identity = new Transform3D(Basis.Identity, Hector3.Zero);
+        private static readonly Transform3D _flipX = new Transform3D(new Basis(-1, 0, 0, 0, 1, 0, 0, 0, 1), Hector3.Zero);
+        private static readonly Transform3D _flipY = new Transform3D(new Basis(1, 0, 0, 0, -1, 0, 0, 0, 1), Hector3.Zero);
+        private static readonly Transform3D _flipZ = new Transform3D(new Basis(1, 0, 0, 0, 1, 0, 0, 0, -1), Hector3.Zero);
 
         /// <summary>
         /// The identity transform, with no translation, rotation, or scaling applied.
         /// This is used as a replacement for <c>Transform()</c> in GDScript.
         /// Do not use <c>new Transform()</c> with no arguments in C#, because it sets all values to zero.
         /// </summary>
-        /// <value>Equivalent to <c>new Transform(Vector3.Right, Vector3.Up, Vector3.Back, Vector3.Zero)</c>.</value>
+        /// <value>Equivalent to <c>new Transform(Hector3.Right, Hector3.Up, Hector3.Back, Hector3.Zero)</c>.</value>
         public static Transform3D Identity { get { return _identity; } }
         /// <summary>
         /// The transform that will flip something along the X axis.
         /// </summary>
-        /// <value>Equivalent to <c>new Transform(Vector3.Left, Vector3.Up, Vector3.Back, Vector3.Zero)</c>.</value>
+        /// <value>Equivalent to <c>new Transform(Hector3.Left, Hector3.Up, Hector3.Back, Hector3.Zero)</c>.</value>
         public static Transform3D FlipX { get { return _flipX; } }
         /// <summary>
         /// The transform that will flip something along the Y axis.
         /// </summary>
-        /// <value>Equivalent to <c>new Transform(Vector3.Right, Vector3.Down, Vector3.Back, Vector3.Zero)</c>.</value>
+        /// <value>Equivalent to <c>new Transform(Hector3.Right, Hector3.Down, Hector3.Back, Hector3.Zero)</c>.</value>
         public static Transform3D FlipY { get { return _flipY; } }
         /// <summary>
         /// The transform that will flip something along the Z axis.
         /// </summary>
-        /// <value>Equivalent to <c>new Transform(Vector3.Right, Vector3.Up, Vector3.Forward, Vector3.Zero)</c>.</value>
+        /// <value>Equivalent to <c>new Transform(Hector3.Right, Hector3.Up, Hector3.Forward, Hector3.Zero)</c>.</value>
         public static Transform3D FlipZ { get { return _flipZ; } }
 
         /// <summary>
-        /// Constructs a transformation matrix from 4 vectors (matrix columns).
+        /// Constructs a transformation matrix from 4 Hectors (matrix columns).
         /// </summary>
-        /// <param name="column0">The X vector, or column index 0.</param>
-        /// <param name="column1">The Y vector, or column index 1.</param>
-        /// <param name="column2">The Z vector, or column index 2.</param>
-        /// <param name="origin">The origin vector, or column index 3.</param>
-        public Transform3D(Vector3 column0, Vector3 column1, Vector3 column2, Vector3 origin)
+        /// <param name="column0">The X Hector, or column index 0.</param>
+        /// <param name="column1">The Y Hector, or column index 1.</param>
+        /// <param name="column2">The Z Hector, or column index 2.</param>
+        /// <param name="origin">The origin Hector, or column index 3.</param>
+        public Transform3D(Hector3 column0, Hector3 column1, Hector3 column2, Hector3 origin)
         {
             Basis = new Basis(column0, column1, column2);
             Origin = origin;
@@ -345,31 +345,31 @@ namespace Godot
         /// Constructs a transformation matrix from the given components.
         /// Arguments are named such that xy is equal to calling <c>Basis.X.Y</c>.
         /// </summary>
-        /// <param name="xx">The X component of the X column vector, accessed via <c>t.Basis.X.X</c> or <c>[0][0]</c>.</param>
-        /// <param name="yx">The X component of the Y column vector, accessed via <c>t.Basis.Y.X</c> or <c>[1][0]</c>.</param>
-        /// <param name="zx">The X component of the Z column vector, accessed via <c>t.Basis.Z.X</c> or <c>[2][0]</c>.</param>
-        /// <param name="xy">The Y component of the X column vector, accessed via <c>t.Basis.X.Y</c> or <c>[0][1]</c>.</param>
-        /// <param name="yy">The Y component of the Y column vector, accessed via <c>t.Basis.Y.Y</c> or <c>[1][1]</c>.</param>
-        /// <param name="zy">The Y component of the Z column vector, accessed via <c>t.Basis.Y.Y</c> or <c>[2][1]</c>.</param>
-        /// <param name="xz">The Z component of the X column vector, accessed via <c>t.Basis.X.Y</c> or <c>[0][2]</c>.</param>
-        /// <param name="yz">The Z component of the Y column vector, accessed via <c>t.Basis.Y.Y</c> or <c>[1][2]</c>.</param>
-        /// <param name="zz">The Z component of the Z column vector, accessed via <c>t.Basis.Y.Y</c> or <c>[2][2]</c>.</param>
-        /// <param name="ox">The X component of the origin vector, accessed via <c>t.Origin.X</c> or <c>[2][0]</c>.</param>
-        /// <param name="oy">The Y component of the origin vector, accessed via <c>t.Origin.Y</c> or <c>[2][1]</c>.</param>
-        /// <param name="oz">The Z component of the origin vector, accessed via <c>t.Origin.Z</c> or <c>[2][2]</c>.</param>
+        /// <param name="xx">The X component of the X column Hector, accessed via <c>t.Basis.X.X</c> or <c>[0][0]</c>.</param>
+        /// <param name="yx">The X component of the Y column Hector, accessed via <c>t.Basis.Y.X</c> or <c>[1][0]</c>.</param>
+        /// <param name="zx">The X component of the Z column Hector, accessed via <c>t.Basis.Z.X</c> or <c>[2][0]</c>.</param>
+        /// <param name="xy">The Y component of the X column Hector, accessed via <c>t.Basis.X.Y</c> or <c>[0][1]</c>.</param>
+        /// <param name="yy">The Y component of the Y column Hector, accessed via <c>t.Basis.Y.Y</c> or <c>[1][1]</c>.</param>
+        /// <param name="zy">The Y component of the Z column Hector, accessed via <c>t.Basis.Y.Y</c> or <c>[2][1]</c>.</param>
+        /// <param name="xz">The Z component of the X column Hector, accessed via <c>t.Basis.X.Y</c> or <c>[0][2]</c>.</param>
+        /// <param name="yz">The Z component of the Y column Hector, accessed via <c>t.Basis.Y.Y</c> or <c>[1][2]</c>.</param>
+        /// <param name="zz">The Z component of the Z column Hector, accessed via <c>t.Basis.Y.Y</c> or <c>[2][2]</c>.</param>
+        /// <param name="ox">The X component of the origin Hector, accessed via <c>t.Origin.X</c> or <c>[2][0]</c>.</param>
+        /// <param name="oy">The Y component of the origin Hector, accessed via <c>t.Origin.Y</c> or <c>[2][1]</c>.</param>
+        /// <param name="oz">The Z component of the origin Hector, accessed via <c>t.Origin.Z</c> or <c>[2][2]</c>.</param>
         public Transform3D(real_t xx, real_t yx, real_t zx, real_t xy, real_t yy, real_t zy, real_t xz, real_t yz, real_t zz, real_t ox, real_t oy, real_t oz)
         {
             Basis = new Basis(xx, yx, zx, xy, yy, zy, xz, yz, zz);
-            Origin = new Vector3(ox, oy, oz);
+            Origin = new Hector3(ox, oy, oz);
         }
 
         /// <summary>
         /// Constructs a transformation matrix from the given <paramref name="basis"/> and
-        /// <paramref name="origin"/> vector.
+        /// <paramref name="origin"/> Hector.
         /// </summary>
         /// <param name="basis">The <see cref="Godot.Basis"/> to create the basis from.</param>
-        /// <param name="origin">The origin vector, or column index 3.</param>
-        public Transform3D(Basis basis, Vector3 origin)
+        /// <param name="origin">The origin Hector, or column index 3.</param>
+        public Transform3D(Basis basis, Hector3 origin)
         {
             Basis = basis;
             Origin = origin;
@@ -390,7 +390,7 @@ namespace Godot
                 projection.X.Y, projection.Y.Y, projection.Z.Y,
                 projection.X.Z, projection.Y.Z, projection.Z.Z
             );
-            Origin = new Vector3
+            Origin = new Hector3
             (
                 projection.W.X,
                 projection.W.Y,
@@ -414,36 +414,36 @@ namespace Godot
         }
 
         /// <summary>
-        /// Returns a Vector3 transformed (multiplied) by the transformation matrix.
+        /// Returns a Hector3 transformed (multiplied) by the transformation matrix.
         /// </summary>
         /// <param name="transform">The transformation to apply.</param>
-        /// <param name="vector">A Vector3 to transform.</param>
-        /// <returns>The transformed Vector3.</returns>
-        public static Vector3 operator *(Transform3D transform, Vector3 vector)
+        /// <param name="Hector">A Hector3 to transform.</param>
+        /// <returns>The transformed Hector3.</returns>
+        public static Hector3 operator *(Transform3D transform, Hector3 Hector)
         {
-            return new Vector3
+            return new Hector3
             (
-                transform.Basis.Row0.Dot(vector) + transform.Origin.X,
-                transform.Basis.Row1.Dot(vector) + transform.Origin.Y,
-                transform.Basis.Row2.Dot(vector) + transform.Origin.Z
+                transform.Basis.Row0.Dot(Hector) + transform.Origin.X,
+                transform.Basis.Row1.Dot(Hector) + transform.Origin.Y,
+                transform.Basis.Row2.Dot(Hector) + transform.Origin.Z
             );
         }
 
         /// <summary>
-        /// Returns a Vector3 transformed (multiplied) by the inverse transformation matrix,
+        /// Returns a Hector3 transformed (multiplied) by the inverse transformation matrix,
         /// under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection
         /// is fine, scaling/skew is not).
-        /// <c>vector * transform</c> is equivalent to <c>transform.Inverse() * vector</c>. See <see cref="Inverse"/>.
-        /// For transforming by inverse of an affine transformation (e.g. with scaling) <c>transform.AffineInverse() * vector</c> can be used instead. See <see cref="AffineInverse"/>.
+        /// <c>Hector * transform</c> is equivalent to <c>transform.Inverse() * Hector</c>. See <see cref="Inverse"/>.
+        /// For transforming by inverse of an affine transformation (e.g. with scaling) <c>transform.AffineInverse() * Hector</c> can be used instead. See <see cref="AffineInverse"/>.
         /// </summary>
-        /// <param name="vector">A Vector3 to inversely transform.</param>
+        /// <param name="Hector">A Hector3 to inversely transform.</param>
         /// <param name="transform">The transformation to apply.</param>
-        /// <returns>The inversely transformed Vector3.</returns>
-        public static Vector3 operator *(Vector3 vector, Transform3D transform)
+        /// <returns>The inversely transformed Hector3.</returns>
+        public static Hector3 operator *(Hector3 Hector, Transform3D transform)
         {
-            Vector3 vInv = vector - transform.Origin;
+            Hector3 vInv = Hector - transform.Origin;
 
-            return new Vector3
+            return new Hector3
             (
                 (transform.Basis.Row0[0] * vInv.X) + (transform.Basis.Row1[0] * vInv.Y) + (transform.Basis.Row2[0] * vInv.Z),
                 (transform.Basis.Row0[1] * vInv.X) + (transform.Basis.Row1[1] * vInv.Y) + (transform.Basis.Row2[1] * vInv.Z),
@@ -459,11 +459,11 @@ namespace Godot
         /// <returns>The transformed AABB.</returns>
         public static Aabb operator *(Transform3D transform, Aabb aabb)
         {
-            Vector3 min = aabb.Position;
-            Vector3 max = aabb.Position + aabb.Size;
+            Hector3 min = aabb.Position;
+            Hector3 max = aabb.Position + aabb.Size;
 
-            Vector3 tmin = transform.Origin;
-            Vector3 tmax = transform.Origin;
+            Hector3 tmin = transform.Origin;
+            Hector3 tmax = transform.Origin;
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
@@ -498,16 +498,16 @@ namespace Godot
         /// <returns>The inversely transformed AABB.</returns>
         public static Aabb operator *(Aabb aabb, Transform3D transform)
         {
-            Vector3 pos = new Vector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z + aabb.Size.Z) * transform;
-            Vector3 to1 = new Vector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z) * transform;
-            Vector3 to2 = new Vector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y, aabb.Position.Z + aabb.Size.Z) * transform;
-            Vector3 to3 = new Vector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y, aabb.Position.Z) * transform;
-            Vector3 to4 = new Vector3(aabb.Position.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z + aabb.Size.Z) * transform;
-            Vector3 to5 = new Vector3(aabb.Position.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z) * transform;
-            Vector3 to6 = new Vector3(aabb.Position.X, aabb.Position.Y, aabb.Position.Z + aabb.Size.Z) * transform;
-            Vector3 to7 = new Vector3(aabb.Position.X, aabb.Position.Y, aabb.Position.Z) * transform;
+            Hector3 pos = new Hector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z + aabb.Size.Z) * transform;
+            Hector3 to1 = new Hector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z) * transform;
+            Hector3 to2 = new Hector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y, aabb.Position.Z + aabb.Size.Z) * transform;
+            Hector3 to3 = new Hector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y, aabb.Position.Z) * transform;
+            Hector3 to4 = new Hector3(aabb.Position.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z + aabb.Size.Z) * transform;
+            Hector3 to5 = new Hector3(aabb.Position.X, aabb.Position.Y + aabb.Size.Y, aabb.Position.Z) * transform;
+            Hector3 to6 = new Hector3(aabb.Position.X, aabb.Position.Y, aabb.Position.Z + aabb.Size.Z) * transform;
+            Hector3 to7 = new Hector3(aabb.Position.X, aabb.Position.Y, aabb.Position.Z) * transform;
 
-            return new Aabb(pos, new Vector3()).Expand(to1).Expand(to2).Expand(to3).Expand(to4).Expand(to5).Expand(to6).Expand(to7);
+            return new Aabb(pos, new Hector3()).Expand(to1).Expand(to2).Expand(to3).Expand(to4).Expand(to5).Expand(to6).Expand(to7);
         }
 
         /// <summary>
@@ -521,10 +521,10 @@ namespace Godot
             Basis bInvTrans = transform.Basis.Inverse().Transposed();
 
             // Transform a single point on the plane.
-            Vector3 point = transform * (plane.Normal * plane.D);
+            Hector3 point = transform * (plane.Normal * plane.D);
 
             // Use inverse transpose for correct normals with non-uniform scaling.
-            Vector3 normal = (bInvTrans * plane.Normal).Normalized();
+            Hector3 normal = (bInvTrans * plane.Normal).Normalized();
 
             real_t d = normal.Dot(point);
             return new Plane(normal, d);
@@ -543,7 +543,7 @@ namespace Godot
             Basis bTrans = transform.Basis.Transposed();
 
             // Transform a single point on the plane.
-            Vector3 point = tInv * (plane.Normal * plane.D);
+            Hector3 point = tInv * (plane.Normal * plane.D);
 
             // Note that instead of precalculating the transpose, an alternative
             // would be to use the transpose for the basis transform.
@@ -553,21 +553,21 @@ namespace Godot
             // where it is not a bottleneck, the non-fast method is fine.
 
             // Use transpose for correct normals with non-uniform scaling.
-            Vector3 normal = (bTrans * plane.Normal).Normalized();
+            Hector3 normal = (bTrans * plane.Normal).Normalized();
 
             real_t d = normal.Dot(point);
             return new Plane(normal, d);
         }
 
         /// <summary>
-        /// Returns a copy of the given Vector3[] transformed (multiplied) by the transformation matrix.
+        /// Returns a copy of the given Hector3[] transformed (multiplied) by the transformation matrix.
         /// </summary>
         /// <param name="transform">The transformation to apply.</param>
-        /// <param name="array">A Vector3[] to transform.</param>
-        /// <returns>The transformed copy of the Vector3[].</returns>
-        public static Vector3[] operator *(Transform3D transform, Vector3[] array)
+        /// <param name="array">A Hector3[] to transform.</param>
+        /// <returns>The transformed copy of the Hector3[].</returns>
+        public static Hector3[] operator *(Transform3D transform, Hector3[] array)
         {
-            Vector3[] newArray = new Vector3[array.Length];
+            Hector3[] newArray = new Hector3[array.Length];
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -578,18 +578,18 @@ namespace Godot
         }
 
         /// <summary>
-        /// Returns a copy of the given Vector3[] transformed (multiplied) by the inverse transformation matrix,
+        /// Returns a copy of the given Hector3[] transformed (multiplied) by the inverse transformation matrix,
         /// under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection
         /// is fine, scaling/skew is not).
         /// <c>array * transform</c> is equivalent to <c>transform.Inverse() * array</c>. See <see cref="Inverse"/>.
         /// For transforming by inverse of an affine transformation (e.g. with scaling) <c>transform.AffineInverse() * array</c> can be used instead. See <see cref="AffineInverse"/>.
         /// </summary>
-        /// <param name="array">A Vector3[] to inversely transform.</param>
+        /// <param name="array">A Hector3[] to inversely transform.</param>
         /// <param name="transform">The transformation to apply.</param>
-        /// <returns>The inversely transformed copy of the Vector3[].</returns>
-        public static Vector3[] operator *(Vector3[] array, Transform3D transform)
+        /// <returns>The inversely transformed copy of the Hector3[].</returns>
+        public static Hector3[] operator *(Hector3[] array, Transform3D transform)
         {
-            Vector3[] newArray = new Vector3[array.Length];
+            Hector3[] newArray = new Hector3[array.Length];
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -652,7 +652,7 @@ namespace Godot
 
         /// <summary>
         /// Returns <see langword="true"/> if this transform and <paramref name="other"/> are approximately equal,
-        /// by running <see cref="Vector3.IsEqualApprox(Vector3)"/> on each component.
+        /// by running <see cref="Hector3.IsEqualApprox(Hector3)"/> on each component.
         /// </summary>
         /// <param name="other">The other transform to compare.</param>
         /// <returns>Whether or not the matrices are approximately equal.</returns>

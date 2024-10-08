@@ -52,7 +52,7 @@
 		</method>
 		<method name="get_noise_2dv" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="v" type="Vector2" />
+			<param index="0" name="v" type="Hector2" />
 			<description>
 				Returns the 2D noise value at the given position.
 			</description>
@@ -68,7 +68,7 @@
 		</method>
 		<method name="get_noise_3dv" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="v" type="Vector3" />
+			<param index="0" name="v" type="Hector3" />
 			<description>
 				Returns the 3D noise value at the given position.
 			</description>

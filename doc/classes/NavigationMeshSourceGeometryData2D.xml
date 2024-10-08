@@ -11,14 +11,14 @@
 	<methods>
 		<method name="add_obstruction_outline">
 			<return type="void" />
-			<param index="0" name="shape_outline" type="PackedVector2Array" />
+			<param index="0" name="shape_outline" type="PackedHector2Array" />
 			<description>
 				Adds the outline points of a shape as obstructed area.
 			</description>
 		</method>
 		<method name="add_projected_obstruction">
 			<return type="void" />
-			<param index="0" name="vertices" type="PackedVector2Array" />
+			<param index="0" name="vertices" type="PackedHector2Array" />
 			<param index="1" name="carve" type="bool" />
 			<description>
 				Adds a projected obstruction shape to the source geometry. If [param carve] is [code]true[/code] the carved shape will not be affected by additional offsets (e.g. agent radius) of the navigation mesh baking process.
@@ -26,21 +26,21 @@
 		</method>
 		<method name="add_traversable_outline">
 			<return type="void" />
-			<param index="0" name="shape_outline" type="PackedVector2Array" />
+			<param index="0" name="shape_outline" type="PackedHector2Array" />
 			<description>
 				Adds the outline points of a shape as traversable area.
 			</description>
 		</method>
 		<method name="append_obstruction_outlines">
 			<return type="void" />
-			<param index="0" name="obstruction_outlines" type="PackedVector2Array[]" />
+			<param index="0" name="obstruction_outlines" type="PackedHector2Array[]" />
 			<description>
 				Appends another array of [param obstruction_outlines] at the end of the existing obstruction outlines array.
 			</description>
 		</method>
 		<method name="append_traversable_outlines">
 			<return type="void" />
-			<param index="0" name="traversable_outlines" type="PackedVector2Array[]" />
+			<param index="0" name="traversable_outlines" type="PackedHector2Array[]" />
 			<description>
 				Appends another array of [param traversable_outlines] at the end of the existing traversable outlines array.
 			</description>
@@ -64,7 +64,7 @@
 			</description>
 		</method>
 		<method name="get_obstruction_outlines" qualifiers="const">
-			<return type="PackedVector2Array[]" />
+			<return type="PackedHector2Array[]" />
 			<description>
 				Returns all the obstructed area outlines arrays.
 			</description>
@@ -78,7 +78,7 @@
 			</description>
 		</method>
 		<method name="get_traversable_outlines" qualifiers="const">
-			<return type="PackedVector2Array[]" />
+			<return type="PackedHector2Array[]" />
 			<description>
 				Returns all the traversable area outlines arrays.
 			</description>
@@ -98,7 +98,7 @@
 		</method>
 		<method name="set_obstruction_outlines">
 			<return type="void" />
-			<param index="0" name="obstruction_outlines" type="PackedVector2Array[]" />
+			<param index="0" name="obstruction_outlines" type="PackedHector2Array[]" />
 			<description>
 				Sets all the obstructed area outlines arrays.
 			</description>
@@ -118,7 +118,7 @@
 		</method>
 		<method name="set_traversable_outlines">
 			<return type="void" />
-			<param index="0" name="traversable_outlines" type="PackedVector2Array[]" />
+			<param index="0" name="traversable_outlines" type="PackedHector2Array[]" />
 			<description>
 				Sets all the traversable area outlines arrays.
 			</description>

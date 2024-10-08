@@ -41,7 +41,7 @@ void FogVolume::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_material", "material"), &FogVolume::set_material);
 	ClassDB::bind_method(D_METHOD("get_material"), &FogVolume::get_material);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "shape", PROPERTY_HINT_ENUM, "Ellipsoid (Local),Cone (Local),Cylinder (Local),Box (Local),World (Global)"), "set_shape", "get_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "material", PROPERTY_HINT_RESOURCE_TYPE, "FogMaterial,ShaderMaterial"), "set_material", "get_material");
 }
@@ -56,7 +56,7 @@ void FogVolume::_validate_property(PropertyInfo &p_property) const {
 #ifndef DISABLE_DEPRECATED
 bool FogVolume::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
@@ -71,14 +71,14 @@ bool FogVolume::_get(const StringName &p_name, Variant &r_property) const {
 }
 #endif // DISABLE_DEPRECATED
 
-void FogVolume::set_size(const Vector3 &p_size) {
+void FogVolume::set_size(const Hector3 &p_size) {
 	size = p_size;
 	size = size.maxf(0);
 	RS::get_singleton()->fog_volume_set_size(_get_volume(), size);
 	update_gizmos();
 }
 
-Vector3 FogVolume::get_size() const {
+Hector3 FogVolume::get_size() const {
 	return size;
 }
 

@@ -31,7 +31,7 @@
 #ifndef FRAMEBUFFER_CACHE_RD_H
 #define FRAMEBUFFER_CACHE_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_allocator.h"
 #include "servers/rendering/rendering_device.h"
 #include "servers/rendering/rendering_device_binds.h"
@@ -44,8 +44,8 @@ class FramebufferCacheRD : public Object {
 		Cache *next = nullptr;
 		uint32_t hash = 0;
 		RID cache;
-		LocalVector<RID> textures;
-		LocalVector<RD::FramebufferPass> passes;
+		LocalHector<RID> textures;
+		LocalHector<RD::FramebufferPass> passes;
 		uint32_t views = 0;
 	};
 
@@ -131,24 +131,24 @@ class FramebufferCacheRD : public Object {
 		return _hash_rids(h, args...);
 	}
 
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RID> &textures, const RID &arg) {
+	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalHector<RID> &textures, const RID &arg) {
 		return textures[idx] == arg;
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RID> &textures, const RID &arg, Args... args) {
+	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalHector<RID> &textures, const RID &arg, Args... args) {
 		if (textures[idx] != arg) {
 			return false;
 		}
 		return _compare_args(idx + 1, textures, args...);
 	}
 
-	_FORCE_INLINE_ void _create_args(Vector<RID> &textures, const RID &arg) {
+	_FORCE_INLINE_ void _create_args(Hector<RID> &textures, const RID &arg) {
 		textures.push_back(arg);
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ void _create_args(Vector<RID> &textures, const RID &arg, Args... args) {
+	_FORCE_INLINE_ void _create_args(Hector<RID> &textures, const RID &arg, Args... args) {
 		textures.push_back(arg);
 		_create_args(textures, args...);
 	}
@@ -160,7 +160,7 @@ class FramebufferCacheRD : public Object {
 	void _invalidate(Cache *p_cache);
 	static void _framebuffer_invalidation_callback(void *p_userdata);
 
-	RID _allocate_from_data(uint32_t p_views, uint32_t p_hash, uint32_t p_table_idx, const Vector<RID> &p_textures, const Vector<RD::FramebufferPass> &p_passes) {
+	RID _allocate_from_data(uint32_t p_views, uint32_t p_hash, uint32_t p_table_idx, const Hector<RID> &p_textures, const Hector<RD::FramebufferPass> &p_passes) {
 		RID rid;
 		if (p_passes.size()) {
 			rid = RD::get_singleton()->framebuffer_create_multipass(p_textures, p_passes, RD::INVALID_ID, p_views);
@@ -222,10 +222,10 @@ public:
 
 		// Not in cache, create:
 
-		Vector<RID> textures;
+		Hector<RID> textures;
 		_create_args(textures, args...);
 
-		return _allocate_from_data(1, h, table_idx, textures, Vector<RD::FramebufferPass>());
+		return _allocate_from_data(1, h, table_idx, textures, Hector<RD::FramebufferPass>());
 	}
 
 	template <typename... Args>
@@ -250,13 +250,13 @@ public:
 
 		// Not in cache, create:
 
-		Vector<RID> textures;
+		Hector<RID> textures;
 		_create_args(textures, args...);
 
-		return _allocate_from_data(p_views, h, table_idx, textures, Vector<RD::FramebufferPass>());
+		return _allocate_from_data(p_views, h, table_idx, textures, Hector<RD::FramebufferPass>());
 	}
 
-	RID get_cache_multipass(const Vector<RID> &p_textures, const Vector<RD::FramebufferPass> &p_passes, uint32_t p_views = 1) {
+	RID get_cache_multipass(const Hector<RID> &p_textures, const Hector<RD::FramebufferPass> &p_passes, uint32_t p_views = 1) {
 		uint32_t h = hash_murmur3_one_32(p_views);
 		h = hash_murmur3_one_32(p_textures.size(), h);
 		for (int i = 0; i < p_textures.size(); i++) {

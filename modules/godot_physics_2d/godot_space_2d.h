@@ -52,7 +52,7 @@ public:
 	virtual bool intersect_ray(const RayParameters &p_parameters, RayResult &r_result) override;
 	virtual int intersect_shape(const ShapeParameters &p_parameters, ShapeResult *r_results, int p_result_max) override;
 	virtual bool cast_motion(const ShapeParameters &p_parameters, real_t &p_closest_safe, real_t &p_closest_unsafe) override;
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector2 *r_results, int p_result_max, int &r_result_count) override;
+	virtual bool collide_shape(const ShapeParameters &p_parameters, Hector2 *r_results, int p_result_max, int &r_result_count) override;
 	virtual bool rest_info(const ShapeParameters &p_parameters, ShapeRestInfo *r_info) override;
 
 	GodotPhysicsDirectSpaceState2D() {}
@@ -125,7 +125,7 @@ private:
 
 	int _cull_aabb_for_body(GodotBody2D *p_body, const Rect2 &p_aabb);
 
-	Vector<Vector2> contact_debug;
+	Hector<Hector2> contact_debug;
 	int contact_debug_count = 0;
 
 	friend class GodotPhysicsDirectSpaceState2D;
@@ -194,12 +194,12 @@ public:
 
 	void set_debug_contacts(int p_amount) { contact_debug.resize(p_amount); }
 	_FORCE_INLINE_ bool is_debugging_contacts() const { return !contact_debug.is_empty(); }
-	_FORCE_INLINE_ void add_debug_contact(const Vector2 &p_contact) {
+	_FORCE_INLINE_ void add_debug_contact(const Hector2 &p_contact) {
 		if (contact_debug_count < contact_debug.size()) {
 			contact_debug.write[contact_debug_count++] = p_contact;
 		}
 	}
-	_FORCE_INLINE_ Vector<Vector2> get_debug_contacts() { return contact_debug; }
+	_FORCE_INLINE_ Hector<Hector2> get_debug_contacts() { return contact_debug; }
 	_FORCE_INLINE_ int get_debug_contact_count() { return contact_debug_count; }
 
 	GodotPhysicsDirectSpaceState2D *get_direct_state();

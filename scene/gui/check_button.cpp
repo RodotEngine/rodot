@@ -123,7 +123,7 @@ void CheckButton::_notification(int p_what) {
 				}
 			}
 
-			Vector2 ofs;
+			Hector2 ofs;
 			Size2 tex_size = get_icon_size();
 
 			if (rtl) {

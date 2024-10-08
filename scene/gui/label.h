@@ -61,7 +61,7 @@ private:
 	bool dirty = true;
 	bool font_dirty = true;
 	RID text_rid;
-	Vector<RID> lines_rid;
+	Hector<RID> lines_rid;
 
 	String language;
 	TextDirection text_direction = TEXT_DIRECTION_AUTO;

@@ -624,7 +624,7 @@
   {
     CFF_FontRecDict  dict   = (CFF_FontRecDict)parser->object;
     FT_Matrix*       matrix = &dict->font_matrix;
-    FT_Vector*       offset = &dict->font_offset;
+    FT_Hector*       offset = &dict->font_offset;
     FT_ULong*        upm    = &dict->units_per_em;
     FT_Byte**        data   = parser->stack;
 
@@ -958,12 +958,12 @@
     subFont = priv->subfont;
     blend   = &subFont->blend;
 
-    if ( cff_blend_check_vector( blend,
+    if ( cff_blend_check_Hector( blend,
                                  priv->vsindex,
                                  subFont->lenNDV,
                                  subFont->NDV ) )
     {
-      error = cff_blend_build_vector( blend,
+      error = cff_blend_build_Hector( blend,
                                       priv->vsindex,
                                       subFont->lenNDV,
                                       subFont->NDV );

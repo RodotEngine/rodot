@@ -106,7 +106,7 @@ Control *EditorTextureTooltipPlugin::make_tooltip_for_path(const String &p_resou
 	DEV_ASSERT(vb);
 	vb->set_alignment(BoxContainer::ALIGNMENT_CENTER);
 
-	Vector2 dimensions = p_metadata.get("dimensions", Vector2());
+	Hector2 dimensions = p_metadata.get("dimensions", Hector2());
 	Label *label = memnew(Label(vformat(TTR(U"Dimensions: %d × %d"), dimensions.x, dimensions.y)));
 	vb->add_child(label);
 

@@ -31,10 +31,10 @@ namespace graph {
 
 template<typename Context>
 HB_INTERNAL
-hb_vector_t<unsigned> actuate_subtable_split (Context& split_context,
-                                              const hb_vector_t<unsigned>& split_points)
+hb_Hector_t<unsigned> actuate_subtable_split (Context& split_context,
+                                              const hb_Hector_t<unsigned>& split_points)
 {
-  hb_vector_t<unsigned> new_objects;
+  hb_Hector_t<unsigned> new_objects;
   if (!split_points)
     return new_objects;
 

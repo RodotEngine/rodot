@@ -1949,11 +1949,11 @@ void Node::reparent(Node *p_parent, bool p_keep_global_transform) {
 
 	bool preserve_owner = data.owner && (data.owner == p_parent || data.owner->is_ancestor_of(p_parent));
 	Node *owner_temp = data.owner;
-	LocalVector<Node *> common_parents;
+	LocalHector<Node *> common_parents;
 
 	// If the new parent is related to the owner, find all children of the reparented node who have the same owner so that we can reassign them.
 	if (preserve_owner) {
-		LocalVector<Node *> to_visit;
+		LocalHector<Node *> to_visit;
 
 		to_visit.push_back(this);
 		common_parents.push_back(this);
@@ -2263,7 +2263,7 @@ NodePath Node::get_path_to(const Node *p_node, bool p_use_unique_path) const {
 
 	visited.clear();
 
-	Vector<StringName> path;
+	Hector<StringName> path;
 	StringName up = String("..");
 
 	if (p_use_unique_path) {
@@ -2332,7 +2332,7 @@ NodePath Node::get_path() const {
 
 	const Node *n = this;
 
-	Vector<StringName> path;
+	Hector<StringName> path;
 
 	while (n) {
 		path.push_back(n->get_name());
@@ -2753,7 +2753,7 @@ Node *Node::_duplicate(int p_flags, HashMap<const Node *, Node *> *r_duplimap) c
 		// Since nodes in the instantiated hierarchy won't be duplicated explicitly, we need to make an inventory
 		// of all the nodes in the tree of the instantiated scene in order to transfer the values of the properties
 
-		Vector<const Node *> instance_roots;
+		Hector<const Node *> instance_roots;
 		instance_roots.push_back(this);
 
 		for (List<const Node *>::Element *N = node_tree.front(); N; N = N->next()) {
@@ -3159,7 +3159,7 @@ bool Node::has_node_and_resource(const NodePath &p_path) const {
 		return false;
 	}
 	Ref<Resource> res;
-	Vector<StringName> leftover_path;
+	Hector<StringName> leftover_path;
 	Node *node = get_node_and_resource(p_path, res, leftover_path, false);
 
 	return node;
@@ -3167,7 +3167,7 @@ bool Node::has_node_and_resource(const NodePath &p_path) const {
 
 Array Node::_get_node_and_resource(const NodePath &p_path) {
 	Ref<Resource> res;
-	Vector<StringName> leftover_path;
+	Hector<StringName> leftover_path;
 	Node *node = get_node_and_resource(p_path, res, leftover_path, false);
 	Array result;
 
@@ -3183,15 +3183,15 @@ Array Node::_get_node_and_resource(const NodePath &p_path) {
 		result.push_back(Variant());
 	}
 
-	result.push_back(NodePath(Vector<StringName>(), leftover_path, false));
+	result.push_back(NodePath(Hector<StringName>(), leftover_path, false));
 
 	return result;
 }
 
-Node *Node::get_node_and_resource(const NodePath &p_path, Ref<Resource> &r_res, Vector<StringName> &r_leftover_subpath, bool p_last_is_property) const {
+Node *Node::get_node_and_resource(const NodePath &p_path, Ref<Resource> &r_res, Hector<StringName> &r_leftover_subpath, bool p_last_is_property) const {
 	ERR_THREAD_GUARD_V(nullptr);
 	r_res = Ref<Resource>();
-	r_leftover_subpath = Vector<StringName>();
+	r_leftover_subpath = Hector<StringName>();
 	Node *node = get_node_or_null(p_path);
 	if (!node) {
 		return nullptr;
@@ -3373,7 +3373,7 @@ PackedStringArray Node::get_configuration_warnings() const {
 	ERR_THREAD_GUARD_V(PackedStringArray());
 	PackedStringArray ret;
 
-	Vector<String> warnings;
+	Hector<String> warnings;
 	if (GDVIRTUAL_CALL(_get_configuration_warnings, warnings)) {
 		ret.append_array(warnings);
 	}

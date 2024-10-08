@@ -56,7 +56,7 @@ private:
 	// For synchronization.
 	int atlas_sources_lists_current = 0;
 	float atlas_view_zoom = 1.0;
-	Vector2 atlas_view_scroll;
+	Hector2 atlas_view_scroll;
 
 	// Source sorting.
 	int source_sort = SOURCE_SORT_ID;
@@ -94,7 +94,7 @@ public:
 	void set_sources_lists_current(int p_current);
 	void synchronize_sources_list(Object *p_current_list, Object *p_current_sort_button);
 
-	void set_atlas_view_transform(float p_zoom, Vector2 p_scroll);
+	void set_atlas_view_transform(float p_zoom, Hector2 p_scroll);
 	void synchronize_atlas_view(Object *p_current);
 
 	// Sorting.

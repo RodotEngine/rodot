@@ -308,29 +308,29 @@ void Label::_update_visible() {
 	}
 }
 
-inline void draw_glyph(const Glyph &p_gl, const RID &p_canvas, const Color &p_font_color, const Vector2 &p_ofs) {
+inline void draw_glyph(const Glyph &p_gl, const RID &p_canvas, const Color &p_font_color, const Hector2 &p_ofs) {
 	if (p_gl.font_rid != RID()) {
-		TS->font_draw_glyph(p_gl.font_rid, p_canvas, p_gl.font_size, p_ofs + Vector2(p_gl.x_off, p_gl.y_off), p_gl.index, p_font_color);
+		TS->font_draw_glyph(p_gl.font_rid, p_canvas, p_gl.font_size, p_ofs + Hector2(p_gl.x_off, p_gl.y_off), p_gl.index, p_font_color);
 	} else {
-		TS->draw_hex_code_box(p_canvas, p_gl.font_size, p_ofs + Vector2(p_gl.x_off, p_gl.y_off), p_gl.index, p_font_color);
+		TS->draw_hex_code_box(p_canvas, p_gl.font_size, p_ofs + Hector2(p_gl.x_off, p_gl.y_off), p_gl.index, p_font_color);
 	}
 }
 
-inline void draw_glyph_shadow(const Glyph &p_gl, const RID &p_canvas, const Color &p_font_shadow_color, int p_shadow_outline_size, const Vector2 &p_ofs, const Vector2 &shadow_ofs) {
+inline void draw_glyph_shadow(const Glyph &p_gl, const RID &p_canvas, const Color &p_font_shadow_color, int p_shadow_outline_size, const Hector2 &p_ofs, const Hector2 &shadow_ofs) {
 	if (p_gl.font_rid != RID()) {
 		if (p_font_shadow_color.a > 0) {
-			TS->font_draw_glyph(p_gl.font_rid, p_canvas, p_gl.font_size, p_ofs + Vector2(p_gl.x_off, p_gl.y_off) + shadow_ofs, p_gl.index, p_font_shadow_color);
+			TS->font_draw_glyph(p_gl.font_rid, p_canvas, p_gl.font_size, p_ofs + Hector2(p_gl.x_off, p_gl.y_off) + shadow_ofs, p_gl.index, p_font_shadow_color);
 		}
 		if (p_font_shadow_color.a > 0 && p_shadow_outline_size > 0) {
-			TS->font_draw_glyph_outline(p_gl.font_rid, p_canvas, p_gl.font_size, p_shadow_outline_size, p_ofs + Vector2(p_gl.x_off, p_gl.y_off) + shadow_ofs, p_gl.index, p_font_shadow_color);
+			TS->font_draw_glyph_outline(p_gl.font_rid, p_canvas, p_gl.font_size, p_shadow_outline_size, p_ofs + Hector2(p_gl.x_off, p_gl.y_off) + shadow_ofs, p_gl.index, p_font_shadow_color);
 		}
 	}
 }
 
-inline void draw_glyph_outline(const Glyph &p_gl, const RID &p_canvas, const Color &p_font_outline_color, int p_outline_size, const Vector2 &p_ofs) {
+inline void draw_glyph_outline(const Glyph &p_gl, const RID &p_canvas, const Color &p_font_outline_color, int p_outline_size, const Hector2 &p_ofs) {
 	if (p_gl.font_rid != RID()) {
 		if (p_font_outline_color.a != 0.0 && p_outline_size > 0) {
-			TS->font_draw_glyph_outline(p_gl.font_rid, p_canvas, p_gl.font_size, p_outline_size, p_ofs + Vector2(p_gl.x_off, p_gl.y_off), p_gl.index, p_font_outline_color);
+			TS->font_draw_glyph_outline(p_gl.font_rid, p_canvas, p_gl.font_size, p_outline_size, p_ofs + Hector2(p_gl.x_off, p_gl.y_off), p_gl.index, p_font_outline_color);
 		}
 	}
 }
@@ -500,7 +500,7 @@ void Label::_notification(int p_what) {
 				}
 			}
 
-			Vector2 ofs;
+			Hector2 ofs;
 			ofs.y = style->get_offset().y + vbegin;
 			for (int i = lines_skipped; i < last_line; i++) {
 				Size2 line_size = TS->shaped_text_get_size(lines_rid[i]);
@@ -552,7 +552,7 @@ void Label::_notification(int p_what) {
 					}
 
 					int processed_glyphs_step = processed_glyphs;
-					Vector2 offset_step = ofs;
+					Hector2 offset_step = ofs;
 					// Draw RTL ellipsis string when necessary.
 					if (rtl && ellipsis_pos >= 0) {
 						for (int gl_idx = ellipsis_gl_size - 1; gl_idx >= 0; gl_idx--) {
@@ -702,7 +702,7 @@ Rect2 Label::get_character_bounds(int p_pos) const {
 		}
 	}
 
-	Vector2 ofs;
+	Hector2 ofs;
 	ofs.y = style->get_offset().y + vbegin;
 	for (int i = lines_skipped; i < last_line; i++) {
 		Size2 line_size = TS->shaped_text_get_size(lines_rid[i]);
@@ -745,8 +745,8 @@ Rect2 Label::get_character_bounds(int p_pos) const {
 						advance += glyphs[j + k].advance;
 					}
 					Rect2 rect;
-					rect.position = ofs + Vector2(gl_off, 0);
-					rect.size = Vector2(advance, TS->shaped_text_get_size(lines_rid[i]).y);
+					rect.position = ofs + Hector2(gl_off, 0);
+					rect.size = Hector2(advance, TS->shaped_text_get_size(lines_rid[i]).y);
 					return rect;
 				}
 			}

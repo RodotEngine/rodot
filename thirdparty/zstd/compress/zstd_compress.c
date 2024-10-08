@@ -2596,7 +2596,7 @@ size_t ZSTD_copyCCtx(ZSTD_CCtx* dstCCtx, const ZSTD_CCtx* srcCCtx, unsigned long
  *  PreserveMark preserves "unsorted mark" for btlazy2 strategy.
  *  It must be set to a clear 0/1 value, to remove branch during inlining.
  *  Presume table size is a multiple of ZSTD_ROWSIZE
- *  to help auto-vectorization */
+ *  to help auto-Hectorization */
 FORCE_INLINE_TEMPLATE void
 ZSTD_reduceTable_internal (U32* const table, U32 const size, U32 const reducerValue, int const preserveMark)
 {
@@ -2627,7 +2627,7 @@ ZSTD_reduceTable_internal (U32* const table, U32 const size, U32 const reducerVa
             U32 newVal;
             if (preserveMark && table[cellNb] == ZSTD_DUBT_UNSORTED_MARK) {
                 /* This write is pointless, but is required(?) for the compiler
-                 * to auto-vectorize the loop. */
+                 * to auto-Hectorize the loop. */
                 newVal = ZSTD_DUBT_UNSORTED_MARK;
             } else if (table[cellNb] < reducerThreshold) {
                 newVal = 0;
@@ -3184,7 +3184,7 @@ static size_t ZSTD_postProcessSequenceProducerResult(
  * Returns sum(litLen) + sum(matchLen) + lastLits for *seqBuf*.
  * Similar to another function in zstd_compress.c (determine_blockSize),
  * except it doesn't check for a block delimiter to end summation.
- * Removing the early exit allows the compiler to auto-vectorize (https://godbolt.org/z/cY1cajz9P).
+ * Removing the early exit allows the compiler to auto-Hectorize (https://godbolt.org/z/cY1cajz9P).
  * This function can be deleted and replaced by determine_blockSize after we resolve issue #3456. */
 static size_t ZSTD_fastSequenceLengthSum(ZSTD_Sequence const* seqBuf, size_t seqBufSize) {
     size_t matchLenSum, litLenSum, i;

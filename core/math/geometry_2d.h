@@ -34,18 +34,18 @@
 #include "core/math/delaunay_2d.h"
 #include "core/math/math_funcs.h"
 #include "core/math/triangulate.h"
-#include "core/math/vector2.h"
-#include "core/math/vector2i.h"
-#include "core/math/vector3.h"
-#include "core/math/vector3i.h"
-#include "core/templates/vector.h"
+#include "core/math/Hector2.h"
+#include "core/math/Hector2i.h"
+#include "core/math/Hector3.h"
+#include "core/math/Hector3i.h"
+#include "core/templates/Hector.h"
 
 class Geometry2D {
 public:
-	static real_t get_closest_points_between_segments(const Vector2 &p1, const Vector2 &q1, const Vector2 &p2, const Vector2 &q2, Vector2 &c1, Vector2 &c2) {
-		Vector2 d1 = q1 - p1; // Direction vector of segment S1.
-		Vector2 d2 = q2 - p2; // Direction vector of segment S2.
-		Vector2 r = p1 - p2;
+	static real_t get_closest_points_between_segments(const Hector2 &p1, const Hector2 &q1, const Hector2 &p2, const Hector2 &q2, Hector2 &c1, Hector2 &c2) {
+		Hector2 d1 = q1 - p1; // Direction Hector of segment S1.
+		Hector2 d2 = q2 - p2; // Direction Hector of segment S2.
+		Hector2 r = p1 - p2;
 		real_t a = d1.dot(d1); // Squared length of segment S1, always nonnegative.
 		real_t e = d2.dot(d2); // Squared length of segment S2, always nonnegative.
 		real_t f = d2.dot(r);
@@ -100,9 +100,9 @@ public:
 		return Math::sqrt((c1 - c2).dot(c1 - c2));
 	}
 
-	static Vector2 get_closest_point_to_segment(const Vector2 &p_point, const Vector2 *p_segment) {
-		Vector2 p = p_point - p_segment[0];
-		Vector2 n = p_segment[1] - p_segment[0];
+	static Hector2 get_closest_point_to_segment(const Hector2 &p_point, const Hector2 *p_segment) {
+		Hector2 p = p_point - p_segment[0];
+		Hector2 n = p_segment[1] - p_segment[0];
 		real_t l2 = n.length_squared();
 		if (l2 < 1e-20f) {
 			return p_segment[0]; // Both points are the same, just give any.
@@ -119,14 +119,14 @@ public:
 		}
 	}
 
-	static real_t get_distance_to_segment(const Vector2 &p_point, const Vector2 *p_segment) {
+	static real_t get_distance_to_segment(const Hector2 &p_point, const Hector2 *p_segment) {
 		return p_point.distance_to(get_closest_point_to_segment(p_point, p_segment));
 	}
 
-	static bool is_point_in_triangle(const Vector2 &s, const Vector2 &a, const Vector2 &b, const Vector2 &c) {
-		Vector2 an = a - s;
-		Vector2 bn = b - s;
-		Vector2 cn = c - s;
+	static bool is_point_in_triangle(const Hector2 &s, const Hector2 &a, const Hector2 &b, const Hector2 &c) {
+		Hector2 an = a - s;
+		Hector2 bn = b - s;
+		Hector2 cn = c - s;
 
 		bool orientation = an.cross(bn) > 0;
 
@@ -137,9 +137,9 @@ public:
 		return (cn.cross(an) > 0) == orientation;
 	}
 
-	static Vector2 get_closest_point_to_segment_uncapped(const Vector2 &p_point, const Vector2 *p_segment) {
-		Vector2 p = p_point - p_segment[0];
-		Vector2 n = p_segment[1] - p_segment[0];
+	static Hector2 get_closest_point_to_segment_uncapped(const Hector2 &p_point, const Hector2 *p_segment) {
+		Hector2 p = p_point - p_segment[0];
+		Hector2 n = p_segment[1] - p_segment[0];
 		real_t l2 = n.length_squared();
 		if (l2 < 1e-20f) {
 			return p_segment[0]; // Both points are the same, just give any.
@@ -156,7 +156,7 @@ public:
 #pragma warning(disable : 4723)
 #endif
 
-	static bool line_intersects_line(const Vector2 &p_from_a, const Vector2 &p_dir_a, const Vector2 &p_from_b, const Vector2 &p_dir_b, Vector2 &r_result) {
+	static bool line_intersects_line(const Hector2 &p_from_a, const Hector2 &p_dir_a, const Hector2 &p_from_b, const Hector2 &p_dir_b, Hector2 &r_result) {
 		// See http://paulbourke.net/geometry/pointlineplane/
 
 		const real_t denom = p_dir_b.y * p_dir_a.x - p_dir_b.x * p_dir_a.y;
@@ -164,7 +164,7 @@ public:
 			return false;
 		}
 
-		const Vector2 v = p_from_a - p_from_b;
+		const Hector2 v = p_from_a - p_from_b;
 		const real_t t = (p_dir_b.x * v.y - p_dir_b.y * v.x) / denom;
 		r_result = p_from_a + t * p_dir_a;
 		return true;
@@ -175,18 +175,18 @@ public:
 #pragma warning(default : 4723)
 #endif
 
-	static bool segment_intersects_segment(const Vector2 &p_from_a, const Vector2 &p_to_a, const Vector2 &p_from_b, const Vector2 &p_to_b, Vector2 *r_result) {
-		Vector2 B = p_to_a - p_from_a;
-		Vector2 C = p_from_b - p_from_a;
-		Vector2 D = p_to_b - p_from_a;
+	static bool segment_intersects_segment(const Hector2 &p_from_a, const Hector2 &p_to_a, const Hector2 &p_from_b, const Hector2 &p_to_b, Hector2 *r_result) {
+		Hector2 B = p_to_a - p_from_a;
+		Hector2 C = p_from_b - p_from_a;
+		Hector2 D = p_to_b - p_from_a;
 
 		real_t ABlen = B.dot(B);
 		if (ABlen <= 0) {
 			return false;
 		}
-		Vector2 Bn = B / ABlen;
-		C = Vector2(C.x * Bn.x + C.y * Bn.y, C.y * Bn.x - C.x * Bn.y);
-		D = Vector2(D.x * Bn.x + D.y * Bn.y, D.y * Bn.x - D.x * Bn.y);
+		Hector2 Bn = B / ABlen;
+		C = Hector2(C.x * Bn.x + C.y * Bn.y, C.y * Bn.x - C.x * Bn.y);
+		D = Hector2(D.x * Bn.x + D.y * Bn.y, D.y * Bn.x - D.x * Bn.y);
 
 		// Fail if C x B and D x B have the same sign (segments don't intersect).
 		if ((C.y < (real_t)-CMP_EPSILON && D.y < (real_t)-CMP_EPSILON) || (C.y > (real_t)CMP_EPSILON && D.y > (real_t)CMP_EPSILON)) {
@@ -214,13 +214,13 @@ public:
 		return true;
 	}
 
-	static inline bool is_point_in_circle(const Vector2 &p_point, const Vector2 &p_circle_pos, real_t p_circle_radius) {
+	static inline bool is_point_in_circle(const Hector2 &p_point, const Hector2 &p_circle_pos, real_t p_circle_radius) {
 		return p_point.distance_squared_to(p_circle_pos) <= p_circle_radius * p_circle_radius;
 	}
 
-	static real_t segment_intersects_circle(const Vector2 &p_from, const Vector2 &p_to, const Vector2 &p_circle_pos, real_t p_circle_radius) {
-		Vector2 line_vec = p_to - p_from;
-		Vector2 vec_to_line = p_from - p_circle_pos;
+	static real_t segment_intersects_circle(const Hector2 &p_from, const Hector2 &p_to, const Hector2 &p_circle_pos, real_t p_circle_radius) {
+		Hector2 line_vec = p_to - p_from;
+		Hector2 vec_to_line = p_from - p_circle_pos;
 
 		// Create a quadratic formula of the form ax^2 + bx + c = 0
 		real_t a, b, c;
@@ -253,16 +253,16 @@ public:
 		return -1;
 	}
 
-	static bool segment_intersects_rect(const Vector2 &p_from, const Vector2 &p_to, const Rect2 &p_rect) {
+	static bool segment_intersects_rect(const Hector2 &p_from, const Hector2 &p_to, const Rect2 &p_rect) {
 		if (p_rect.has_point(p_from) || p_rect.has_point(p_to)) {
 			return true;
 		}
 
-		const Vector2 rect_points[4] = {
+		const Hector2 rect_points[4] = {
 			p_rect.position,
-			p_rect.position + Vector2(p_rect.size.x, 0),
+			p_rect.position + Hector2(p_rect.size.x, 0),
 			p_rect.position + p_rect.size,
-			p_rect.position + Vector2(0, p_rect.size.y)
+			p_rect.position + Hector2(0, p_rect.size.y)
 		};
 
 		// Check if any of the rect's edges intersect the segment.
@@ -294,43 +294,43 @@ public:
 		END_ROUND
 	};
 
-	static Vector<Vector<Point2>> merge_polygons(const Vector<Point2> &p_polygon_a, const Vector<Point2> &p_polygon_b) {
+	static Hector<Hector<Point2>> merge_polygons(const Hector<Point2> &p_polygon_a, const Hector<Point2> &p_polygon_b) {
 		return _polypaths_do_operation(OPERATION_UNION, p_polygon_a, p_polygon_b);
 	}
 
-	static Vector<Vector<Point2>> clip_polygons(const Vector<Point2> &p_polygon_a, const Vector<Point2> &p_polygon_b) {
+	static Hector<Hector<Point2>> clip_polygons(const Hector<Point2> &p_polygon_a, const Hector<Point2> &p_polygon_b) {
 		return _polypaths_do_operation(OPERATION_DIFFERENCE, p_polygon_a, p_polygon_b);
 	}
 
-	static Vector<Vector<Point2>> intersect_polygons(const Vector<Point2> &p_polygon_a, const Vector<Point2> &p_polygon_b) {
+	static Hector<Hector<Point2>> intersect_polygons(const Hector<Point2> &p_polygon_a, const Hector<Point2> &p_polygon_b) {
 		return _polypaths_do_operation(OPERATION_INTERSECTION, p_polygon_a, p_polygon_b);
 	}
 
-	static Vector<Vector<Point2>> exclude_polygons(const Vector<Point2> &p_polygon_a, const Vector<Point2> &p_polygon_b) {
+	static Hector<Hector<Point2>> exclude_polygons(const Hector<Point2> &p_polygon_a, const Hector<Point2> &p_polygon_b) {
 		return _polypaths_do_operation(OPERATION_XOR, p_polygon_a, p_polygon_b);
 	}
 
-	static Vector<Vector<Point2>> clip_polyline_with_polygon(const Vector<Vector2> &p_polyline, const Vector<Vector2> &p_polygon) {
+	static Hector<Hector<Point2>> clip_polyline_with_polygon(const Hector<Hector2> &p_polyline, const Hector<Hector2> &p_polygon) {
 		return _polypaths_do_operation(OPERATION_DIFFERENCE, p_polyline, p_polygon, true);
 	}
 
-	static Vector<Vector<Point2>> intersect_polyline_with_polygon(const Vector<Vector2> &p_polyline, const Vector<Vector2> &p_polygon) {
+	static Hector<Hector<Point2>> intersect_polyline_with_polygon(const Hector<Hector2> &p_polyline, const Hector<Hector2> &p_polygon) {
 		return _polypaths_do_operation(OPERATION_INTERSECTION, p_polyline, p_polygon, true);
 	}
 
-	static Vector<Vector<Point2>> offset_polygon(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type) {
+	static Hector<Hector<Point2>> offset_polygon(const Hector<Hector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type) {
 		return _polypath_offset(p_polygon, p_delta, p_join_type, END_POLYGON);
 	}
 
-	static Vector<Vector<Point2>> offset_polyline(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type) {
-		ERR_FAIL_COND_V_MSG(p_end_type == END_POLYGON, Vector<Vector<Point2>>(), "Attempt to offset a polyline like a polygon (use offset_polygon instead).");
+	static Hector<Hector<Point2>> offset_polyline(const Hector<Hector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type) {
+		ERR_FAIL_COND_V_MSG(p_end_type == END_POLYGON, Hector<Hector<Point2>>(), "Attempt to offset a polyline like a polygon (use offset_polygon instead).");
 
 		return _polypath_offset(p_polygon, p_delta, p_join_type, p_end_type);
 	}
 
-	static Vector<int> triangulate_delaunay(const Vector<Vector2> &p_points) {
-		Vector<Delaunay2D::Triangle> tr = Delaunay2D::triangulate(p_points);
-		Vector<int> triangles;
+	static Hector<int> triangulate_delaunay(const Hector<Hector2> &p_points) {
+		Hector<Delaunay2D::Triangle> tr = Delaunay2D::triangulate(p_points);
+		Hector<int> triangles;
 
 		triangles.resize(3 * tr.size());
 		int *ptr = triangles.ptrw();
@@ -342,26 +342,26 @@ public:
 		return triangles;
 	}
 
-	static Vector<int> triangulate_polygon(const Vector<Vector2> &p_polygon) {
-		Vector<int> triangles;
+	static Hector<int> triangulate_polygon(const Hector<Hector2> &p_polygon) {
+		Hector<int> triangles;
 		if (!Triangulate::triangulate(p_polygon, triangles)) {
-			return Vector<int>(); //fail
+			return Hector<int>(); //fail
 		}
 		return triangles;
 	}
 
 	// Assumes cartesian coordinate system with +x to the right, +y up.
 	// If using screen coordinates (+x to the right, +y down) the result will need to be flipped.
-	static bool is_polygon_clockwise(const Vector<Vector2> &p_polygon) {
+	static bool is_polygon_clockwise(const Hector<Hector2> &p_polygon) {
 		int c = p_polygon.size();
 		if (c < 3) {
 			return false;
 		}
-		const Vector2 *p = p_polygon.ptr();
+		const Hector2 *p = p_polygon.ptr();
 		real_t sum = 0;
 		for (int i = 0; i < c; i++) {
-			const Vector2 &v1 = p[i];
-			const Vector2 &v2 = p[(i + 1) % c];
+			const Hector2 &v1 = p[i];
+			const Hector2 &v2 = p[(i + 1) % c];
 			sum += (v2.x - v1.x) * (v2.y + v1.y);
 		}
 
@@ -369,14 +369,14 @@ public:
 	}
 
 	// Alternate implementation that should be faster.
-	static bool is_point_in_polygon(const Vector2 &p_point, const Vector<Vector2> &p_polygon) {
+	static bool is_point_in_polygon(const Hector2 &p_point, const Hector<Hector2> &p_polygon) {
 		int c = p_polygon.size();
 		if (c < 3) {
 			return false;
 		}
-		const Vector2 *p = p_polygon.ptr();
-		Vector2 further_away(-1e20, -1e20);
-		Vector2 further_away_opposite(1e20, 1e20);
+		const Hector2 *p = p_polygon.ptr();
+		Hector2 further_away(-1e20, -1e20);
+		Hector2 further_away_opposite(1e20, 1e20);
 
 		for (int i = 0; i < c; i++) {
 			further_away = further_away.max(p[i]);
@@ -384,14 +384,14 @@ public:
 		}
 
 		// Make point outside that won't intersect with points in segment from p_point.
-		further_away += (further_away - further_away_opposite) * Vector2(1.221313, 1.512312);
+		further_away += (further_away - further_away_opposite) * Hector2(1.221313, 1.512312);
 
 		int intersections = 0;
 		for (int i = 0; i < c; i++) {
-			const Vector2 &v1 = p[i];
-			const Vector2 &v2 = p[(i + 1) % c];
+			const Hector2 &v1 = p[i];
+			const Hector2 &v2 = p[(i + 1) % c];
 
-			Vector2 res;
+			Hector2 res;
 			if (segment_intersects_segment(v1, v2, p_point, further_away, &res)) {
 				intersections++;
 				if (res.is_equal_approx(p_point)) {
@@ -404,12 +404,12 @@ public:
 		return (intersections & 1);
 	}
 
-	static bool is_segment_intersecting_polygon(const Vector2 &p_from, const Vector2 &p_to, const Vector<Vector2> &p_polygon) {
+	static bool is_segment_intersecting_polygon(const Hector2 &p_from, const Hector2 &p_to, const Hector<Hector2> &p_polygon) {
 		int c = p_polygon.size();
-		const Vector2 *p = p_polygon.ptr();
+		const Hector2 *p = p_polygon.ptr();
 		for (int i = 0; i < c; i++) {
-			const Vector2 &v1 = p[i];
-			const Vector2 &v2 = p[(i + 1) % c];
+			const Hector2 &v1 = p[i];
+			const Hector2 &v2 = p[(i + 1) % c];
 			if (segment_intersects_segment(p_from, p_to, v1, v2, nullptr)) {
 				return true;
 			}
@@ -423,9 +423,9 @@ public:
 
 	// Returns a list of points on the convex hull in counter-clockwise order.
 	// Note: the last point in the returned list is the same as the first one.
-	static Vector<Point2> convex_hull(Vector<Point2> P) {
+	static Hector<Point2> convex_hull(Hector<Point2> P) {
 		int n = P.size(), k = 0;
-		Vector<Point2> H;
+		Hector<Point2> H;
 		H.resize(2 * n);
 
 		// Sort points lexicographically.
@@ -451,12 +451,12 @@ public:
 		return H;
 	}
 
-	static Vector<Point2i> bresenham_line(const Point2i &p_start, const Point2i &p_end) {
-		Vector<Point2i> points;
+	static Hector<Point2i> bresenham_line(const Point2i &p_start, const Point2i &p_end) {
+		Hector<Point2i> points;
 
-		Vector2i delta = (p_end - p_start).abs() * 2;
-		Vector2i step = (p_end - p_start).sign();
-		Vector2i current = p_start;
+		Hector2i delta = (p_end - p_start).abs() * 2;
+		Hector2i step = (p_end - p_start).sign();
+		Hector2i current = p_start;
 
 		if (delta.x > delta.y) {
 			int err = delta.x / 2;
@@ -489,14 +489,14 @@ public:
 		return points;
 	}
 
-	static Vector<Vector<Vector2>> decompose_polygon_in_convex(const Vector<Point2> &polygon);
+	static Hector<Hector<Hector2>> decompose_polygon_in_convex(const Hector<Point2> &polygon);
 
-	static void make_atlas(const Vector<Size2i> &p_rects, Vector<Point2i> &r_result, Size2i &r_size);
-	static Vector<Vector3i> partial_pack_rects(const Vector<Vector2i> &p_sizes, const Size2i &p_atlas_size);
+	static void make_atlas(const Hector<Size2i> &p_rects, Hector<Point2i> &r_result, Size2i &r_size);
+	static Hector<Hector3i> partial_pack_rects(const Hector<Hector2i> &p_sizes, const Size2i &p_atlas_size);
 
 private:
-	static Vector<Vector<Point2>> _polypaths_do_operation(PolyBooleanOperation p_op, const Vector<Point2> &p_polypath_a, const Vector<Point2> &p_polypath_b, bool is_a_open = false);
-	static Vector<Vector<Point2>> _polypath_offset(const Vector<Point2> &p_polypath, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type);
+	static Hector<Hector<Point2>> _polypaths_do_operation(PolyBooleanOperation p_op, const Hector<Point2> &p_polypath_a, const Hector<Point2> &p_polypath_b, bool is_a_open = false);
+	static Hector<Hector<Point2>> _polypath_offset(const Hector<Point2> &p_polypath, real_t p_delta, PolyJoinType p_join_type, PolyEndType p_end_type);
 };
 
 #endif // GEOMETRY_2D_H

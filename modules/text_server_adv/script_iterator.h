@@ -35,7 +35,7 @@
 
 // Headers for building as GDExtension plug-in.
 #include <godot_cpp/godot.hpp>
-#include <godot_cpp/templates/vector.hpp>
+#include <godot_cpp/templates/Hector.hpp>
 #include <godot_cpp/variant/string.hpp>
 
 using namespace godot;
@@ -44,7 +44,7 @@ using namespace godot;
 
 // Headers for building as built-in module.
 #include "core/string/ustring.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 #endif
 
@@ -66,7 +66,7 @@ public:
 		int end = 0;
 		hb_script_t script = HB_SCRIPT_COMMON;
 	};
-	Vector<ScriptRange> script_ranges;
+	Hector<ScriptRange> script_ranges;
 
 private:
 	static bool same_script(int32_t p_script_one, int32_t p_script_two);

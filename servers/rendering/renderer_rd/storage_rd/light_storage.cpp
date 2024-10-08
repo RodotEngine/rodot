@@ -410,11 +410,11 @@ AABB LightStorage::light_get_aabb(RID p_light) const {
 		case RS::LIGHT_SPOT: {
 			float len = light->param[RS::LIGHT_PARAM_RANGE];
 			float size = Math::tan(Math::deg_to_rad(light->param[RS::LIGHT_PARAM_SPOT_ANGLE])) * len;
-			return AABB(Vector3(-size, -size, -len), Vector3(size * 2, size * 2, len));
+			return AABB(Hector3(-size, -size, -len), Hector3(size * 2, size * 2, len));
 		};
 		case RS::LIGHT_OMNI: {
 			float r = light->param[RS::LIGHT_PARAM_RANGE];
-			return AABB(-Vector3(r, r, r), Vector3(r, r, r) * 2);
+			return AABB(-Hector3(r, r, r), Hector3(r, r, r) * 2);
 		};
 		case RS::LIGHT_DIRECTIONAL: {
 			return AABB();
@@ -489,7 +489,7 @@ void LightStorage::light_instance_set_aabb(RID p_light_instance, const AABB &p_a
 	light_instance->aabb = p_aabb;
 }
 
-void LightStorage::light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale, float p_range_begin, const Vector2 &p_uv_scale) {
+void LightStorage::light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale, float p_range_begin, const Hector2 &p_uv_scale) {
 	LightInstance *light_instance = light_instance_owner.get_or_null(p_light_instance);
 	ERR_FAIL_NULL(light_instance);
 
@@ -607,7 +607,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 
 				Transform3D light_transform = light_instance->transform;
 
-				Vector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Vector3(0, 0, 1))).normalized();
+				Hector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Hector3(0, 0, 1))).normalized();
 
 				light_data.direction[0] = direction.x;
 				light_data.direction[1] = direction.y;
@@ -696,7 +696,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 						light_data.shadow_range_begin[j] = light_instance->shadow_transform[j].range_begin;
 						RendererRD::MaterialStorage::store_camera(shadow_mtx, light_data.shadow_matrices[j]);
 
-						Vector2 uv_scale = light_instance->shadow_transform[j].uv_scale;
+						Hector2 uv_scale = light_instance->shadow_transform[j].uv_scale;
 						uv_scale *= atlas_rect.size; //adapt to atlas size
 						switch (j) {
 							case 0: {
@@ -864,13 +864,13 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 		float radius = MAX(0.001, light->param[RS::LIGHT_PARAM_RANGE]);
 		light_data.inv_radius = 1.0 / radius;
 
-		Vector3 pos = inverse_transform.xform(light_transform.origin);
+		Hector3 pos = inverse_transform.xform(light_transform.origin);
 
 		light_data.position[0] = pos.x;
 		light_data.position[1] = pos.y;
 		light_data.position[2] = pos.z;
 
-		Vector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Vector3(0, 0, -1))).normalized();
+		Hector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Hector3(0, 0, -1))).normalized();
 
 		light_data.direction[0] = direction.x;
 		light_data.direction[1] = direction.y;
@@ -944,7 +944,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 
 			light_data.transmittance_bias = light->param[RS::LIGHT_PARAM_TRANSMITTANCE_BIAS];
 
-			Vector2i omni_offset;
+			Hector2i omni_offset;
 			Rect2 rect = light_instance_get_shadow_atlas_rect(light_instance->self, p_shadow_atlas, omni_offset);
 
 			light_data.atlas_rect[0] = rect.position.x;
@@ -1079,7 +1079,7 @@ void LightStorage::reflection_probe_set_max_distance(RID p_probe, float p_distan
 	reflection_probe->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_REFLECTION_PROBE);
 }
 
-void LightStorage::reflection_probe_set_size(RID p_probe, const Vector3 &p_size) {
+void LightStorage::reflection_probe_set_size(RID p_probe, const Hector3 &p_size) {
 	ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
 	ERR_FAIL_NULL(reflection_probe);
 
@@ -1090,7 +1090,7 @@ void LightStorage::reflection_probe_set_size(RID p_probe, const Vector3 &p_size)
 	reflection_probe->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_REFLECTION_PROBE);
 }
 
-void LightStorage::reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) {
+void LightStorage::reflection_probe_set_origin_offset(RID p_probe, const Hector3 &p_offset) {
 	ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
 	ERR_FAIL_NULL(reflection_probe);
 
@@ -1193,16 +1193,16 @@ uint32_t LightStorage::reflection_probe_get_reflection_mask(RID p_probe) const {
 	return reflection_probe->reflection_mask;
 }
 
-Vector3 LightStorage::reflection_probe_get_size(RID p_probe) const {
+Hector3 LightStorage::reflection_probe_get_size(RID p_probe) const {
 	const ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
-	ERR_FAIL_NULL_V(reflection_probe, Vector3());
+	ERR_FAIL_NULL_V(reflection_probe, Hector3());
 
 	return reflection_probe->size;
 }
 
-Vector3 LightStorage::reflection_probe_get_origin_offset(RID p_probe) const {
+Hector3 LightStorage::reflection_probe_get_origin_offset(RID p_probe) const {
 	const ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
-	ERR_FAIL_NULL_V(reflection_probe, Vector3());
+	ERR_FAIL_NULL_V(reflection_probe, Hector3());
 
 	return reflection_probe->origin_offset;
 }
@@ -1508,7 +1508,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 			}
 		}
 
-		Vector<RID> fb;
+		Hector<RID> fb;
 		fb.push_back(atlas->depth_buffer);
 		atlas->depth_fb = RD::get_singleton()->framebuffer_create(fb);
 
@@ -1721,7 +1721,7 @@ void LightStorage::update_reflection_probe_buffer(RenderDataRD *p_render_data, c
 
 		ReflectionData &reflection_ubo = reflections[i];
 
-		Vector3 extents = probe->size / 2;
+		Hector3 extents = probe->size / 2;
 
 		rpi->cull_mask = probe->reflection_mask;
 
@@ -1730,7 +1730,7 @@ void LightStorage::update_reflection_probe_buffer(RenderDataRD *p_render_data, c
 		reflection_ubo.box_extents[2] = extents.z;
 		reflection_ubo.index = rpi->atlas_index;
 
-		Vector3 origin_offset = probe->origin_offset;
+		Hector3 origin_offset = probe->origin_offset;
 
 		reflection_ubo.box_offset[0] = origin_offset.x;
 		reflection_ubo.box_offset[1] = origin_offset.y;
@@ -1834,7 +1834,7 @@ void LightStorage::lightmap_set_textures(RID p_lightmap, RID p_light, bool p_use
 	}
 
 	t->lightmap_users.insert(p_lightmap);
-	lm->light_texture_size = Vector2i(t->width, t->height);
+	lm->light_texture_size = Hector2i(t->width, t->height);
 
 	if (using_lightmap_array) {
 		if (lm->array_index < 0) {
@@ -1864,7 +1864,7 @@ void LightStorage::lightmap_set_probe_interior(RID p_lightmap, bool p_interior) 
 	lm->interior = p_interior;
 }
 
-void LightStorage::lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) {
+void LightStorage::lightmap_set_probe_capture_data(RID p_lightmap, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) {
 	Lightmap *lm = lightmap_owner.get_or_null(p_lightmap);
 	ERR_FAIL_NULL(lm);
 
@@ -1887,9 +1887,9 @@ void LightStorage::lightmap_set_baked_exposure_normalization(RID p_lightmap, flo
 	lm->baked_exposure = p_exposure;
 }
 
-PackedVector3Array LightStorage::lightmap_get_probe_capture_points(RID p_lightmap) const {
+PackedHector3Array LightStorage::lightmap_get_probe_capture_points(RID p_lightmap) const {
 	Lightmap *lm = lightmap_owner.get_or_null(p_lightmap);
-	ERR_FAIL_NULL_V(lm, PackedVector3Array());
+	ERR_FAIL_NULL_V(lm, PackedHector3Array());
 
 	return lm->points;
 }
@@ -1923,7 +1923,7 @@ Dependency *LightStorage::lightmap_get_dependency(RID p_lightmap) const {
 	return &lm->dependency;
 }
 
-void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) {
+void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Hector3 &p_point, Color *r_sh) {
 	Lightmap *lm = lightmap_owner.get_or_null(p_lightmap);
 	ERR_FAIL_NULL(lm);
 
@@ -1961,7 +1961,7 @@ void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point,
 	node = ABS(node) - 1;
 
 	uint32_t *tetrahedron = (uint32_t *)&lm->tetrahedra[node * 4];
-	Vector3 points[4] = { lm->points[tetrahedron[0]], lm->points[tetrahedron[1]], lm->points[tetrahedron[2]], lm->points[tetrahedron[3]] };
+	Hector3 points[4] = { lm->points[tetrahedron[0]], lm->points[tetrahedron[1]], lm->points[tetrahedron[2]], lm->points[tetrahedron[3]] };
 	const Color *sh_colors[4]{ &lm->point_sh[tetrahedron[0] * 9], &lm->point_sh[tetrahedron[1] * 9], &lm->point_sh[tetrahedron[2] * 9], &lm->point_sh[tetrahedron[3] * 9] };
 	Color barycentric = Geometry3D::tetrahedron_get_barycentric_coords(points[0], points[1], points[2], points[3], p_point);
 
@@ -2023,7 +2023,7 @@ void LightStorage::_update_shadow_atlas(ShadowAtlas *shadow_atlas) {
 		tf.usage_bits = get_shadow_atlas_depth_usage_bits();
 
 		shadow_atlas->depth = RD::get_singleton()->texture_create(tf, RD::TextureView());
-		Vector<RID> fb_tex;
+		Hector<RID> fb_tex;
 		fb_tex.push_back(shadow_atlas->depth);
 		shadow_atlas->fb = RD::get_singleton()->framebuffer_create(fb_tex);
 	}
@@ -2424,7 +2424,7 @@ void LightStorage::update_directional_shadow_atlas() {
 		tf.usage_bits = get_shadow_atlas_depth_usage_bits();
 
 		directional_shadow.depth = RD::get_singleton()->texture_create(tf, RD::TextureView());
-		Vector<RID> fb_tex;
+		Hector<RID> fb_tex;
 		fb_tex.push_back(directional_shadow.depth);
 		directional_shadow.fb = RD::get_singleton()->framebuffer_create(fb_tex);
 	}
@@ -2517,7 +2517,7 @@ LightStorage::ShadowCubemap *LightStorage::_get_shadow_cubemap(int p_size) {
 
 		for (int i = 0; i < 6; i++) {
 			RID side_texture = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), sc.cubemap, i, 0);
-			Vector<RID> fbtex;
+			Hector<RID> fbtex;
 			fbtex.push_back(side_texture);
 			sc.side_fb[i] = RD::get_singleton()->framebuffer_create(fbtex);
 		}

@@ -229,7 +229,7 @@ void EditorProfiler::_update_plot() {
 		highest *= 1.2; //leave some upper room
 		graph_height = highest;
 
-		Vector<int> columnv;
+		Hector<int> columnv;
 		columnv.resize(h * 4);
 
 		int *column = columnv.ptrw();
@@ -449,11 +449,11 @@ void EditorProfiler::_graph_tex_draw() {
 	if (seeking) {
 		int frame = cursor_metric_edit->get_value() - _get_frame_metric(0).frame_number;
 		int cur_x = (2 * frame + 1) * graph->get_size().x / (2 * frame_metrics.size()) + 1;
-		graph->draw_line(Vector2(cur_x, 0), Vector2(cur_x, graph->get_size().y), theme_cache.seek_line_color);
+		graph->draw_line(Hector2(cur_x, 0), Hector2(cur_x, graph->get_size().y), theme_cache.seek_line_color);
 	}
 	if (hover_metric > -1 && hover_metric < total_metrics) {
 		int cur_x = (2 * hover_metric + 1) * graph->get_size().x / (2 * frame_metrics.size()) + 1;
-		graph->draw_line(Vector2(cur_x, 0), Vector2(cur_x, graph->get_size().y), theme_cache.seek_line_hover_color);
+		graph->draw_line(Hector2(cur_x, 0), Hector2(cur_x, graph->get_size().y), theme_cache.seek_line_hover_color);
 	}
 }
 
@@ -554,8 +554,8 @@ bool EditorProfiler::is_profiling() {
 	return activate->is_pressed();
 }
 
-Vector<Vector<String>> EditorProfiler::get_data_as_csv() const {
-	Vector<Vector<String>> res;
+Hector<Hector<String>> EditorProfiler::get_data_as_csv() const {
+	Hector<Hector<String>> res;
 
 	if (frame_metrics.is_empty()) {
 		return res;
@@ -578,7 +578,7 @@ Vector<Vector<String>> EditorProfiler::get_data_as_csv() const {
 
 	// Generate CSV header and cache indices.
 	HashMap<StringName, int> sig_map;
-	Vector<String> signatures;
+	Hector<String> signatures;
 	signatures.resize(possible_signatures.size());
 	int sig_index = 0;
 	for (const StringName &E : possible_signatures) {
@@ -589,7 +589,7 @@ Vector<Vector<String>> EditorProfiler::get_data_as_csv() const {
 	res.push_back(signatures);
 
 	// values
-	Vector<String> values;
+	Hector<String> values;
 
 	int index = last_metric;
 

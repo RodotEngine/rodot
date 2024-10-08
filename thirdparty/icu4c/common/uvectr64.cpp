@@ -21,9 +21,9 @@ U_NAMESPACE_BEGIN
  * token is assumed to be an integer. This is needed for iSeries
  */
  
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UVector64)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UHector64)
 
-UVector64::UVector64(UErrorCode &status) :
+UHector64::UHector64(UErrorCode &status) :
     count(0),
     capacity(0),
     maxCapacity(0),
@@ -32,7 +32,7 @@ UVector64::UVector64(UErrorCode &status) :
     _init(DEFAULT_CAPACITY, status);
 }
 
-UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
+UHector64::UHector64(int32_t initialCapacity, UErrorCode &status) :
     count(0),
     capacity(0),
     maxCapacity(0),
@@ -43,7 +43,7 @@ UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
 
 
 
-void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
+void UHector64::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
     if (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
@@ -62,7 +62,7 @@ void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
     }
 }
 
-UVector64::~UVector64() {
+UHector64::~UHector64() {
     uprv_free(elements);
     elements = nullptr;
 }
@@ -70,7 +70,7 @@ UVector64::~UVector64() {
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector64::assign(const UVector64& other, UErrorCode &ec) {
+void UHector64::assign(const UHector64& other, UErrorCode &ec) {
     if (ensureCapacity(other.count, ec)) {
         setSize(other.count);
         for (int32_t i=0; i<other.count; ++i) {
@@ -80,7 +80,7 @@ void UVector64::assign(const UVector64& other, UErrorCode &ec) {
 }
 
 
-bool UVector64::operator==(const UVector64& other) {
+bool UHector64::operator==(const UHector64& other) {
     int32_t i;
     if (count != other.count) return false;
     for (i=0; i<count; ++i) {
@@ -92,14 +92,14 @@ bool UVector64::operator==(const UVector64& other) {
 }
 
 
-void UVector64::setElementAt(int64_t elem, int32_t index) {
+void UHector64::setElementAt(int64_t elem, int32_t index) {
     if (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
 }
 
-void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
+void UHector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
     if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
         for (int32_t i=count; i>index; --i) {
@@ -111,11 +111,11 @@ void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status)
     /* else index out of range */
 }
 
-void UVector64::removeAllElements() {
+void UHector64::removeAllElements() {
     count = 0;
 }
 
-UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
+UBool UHector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return false;
     }
@@ -157,7 +157,7 @@ UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
     return true;
 }
 
-void UVector64::setMaxCapacity(int32_t limit) {
+void UHector64::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
     if (limit < 0) {
         limit = 0;
@@ -188,12 +188,12 @@ void UVector64::setMaxCapacity(int32_t limit) {
 }
 
 /**
- * Change the size of this vector as follows: If newSize is smaller,
+ * Change the size of this Hector as follows: If newSize is smaller,
  * then truncate the array, possibly deleting held elements for i >=
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector64::setSize(int32_t newSize) {
+void UHector64::setSize(int32_t newSize) {
     int32_t i;
     if (newSize < 0) {
         return;

@@ -92,7 +92,7 @@ public:
 	FUNC1RC(real_t, shape_get_custom_solver_bias, RID);
 
 	//these work well, but should be used from the main thread only
-	bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Vector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Vector2 &p_motion_B, Vector2 *r_results, int p_result_max, int &r_result_count) override {
+	bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Hector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Hector2 &p_motion_B, Hector2 *r_results, int p_result_max, int &r_result_count) override {
 		ERR_FAIL_COND_V(!Thread::is_main_thread(), false);
 		return physics_server_2d->shape_collide(p_shape_A, p_xform_A, p_motion_A, p_shape_B, p_xform_B, p_motion_B, r_results, p_result_max, r_result_count);
 	}
@@ -113,8 +113,8 @@ public:
 	}
 
 	FUNC2(space_set_debug_contacts, RID, int);
-	virtual Vector<Vector2> space_get_contacts(RID p_space) const override {
-		ERR_FAIL_COND_V(!Thread::is_main_thread(), Vector<Vector2>());
+	virtual Hector<Hector2> space_get_contacts(RID p_space) const override {
+		ERR_FAIL_COND_V(!Thread::is_main_thread(), Hector<Hector2>());
 		return physics_server_2d->space_get_contacts(p_space);
 	}
 
@@ -217,25 +217,25 @@ public:
 	FUNC3(body_set_state, RID, BodyState, const Variant &);
 	FUNC2RC(Variant, body_get_state, RID, BodyState);
 
-	FUNC2(body_apply_central_impulse, RID, const Vector2 &);
+	FUNC2(body_apply_central_impulse, RID, const Hector2 &);
 	FUNC2(body_apply_torque_impulse, RID, real_t);
-	FUNC3(body_apply_impulse, RID, const Vector2 &, const Vector2 &);
+	FUNC3(body_apply_impulse, RID, const Hector2 &, const Hector2 &);
 
-	FUNC2(body_apply_central_force, RID, const Vector2 &);
-	FUNC3(body_apply_force, RID, const Vector2 &, const Vector2 &);
+	FUNC2(body_apply_central_force, RID, const Hector2 &);
+	FUNC3(body_apply_force, RID, const Hector2 &, const Hector2 &);
 	FUNC2(body_apply_torque, RID, real_t);
 
-	FUNC2(body_add_constant_central_force, RID, const Vector2 &);
-	FUNC3(body_add_constant_force, RID, const Vector2 &, const Vector2 &);
+	FUNC2(body_add_constant_central_force, RID, const Hector2 &);
+	FUNC3(body_add_constant_force, RID, const Hector2 &, const Hector2 &);
 	FUNC2(body_add_constant_torque, RID, real_t);
 
-	FUNC2(body_set_constant_force, RID, const Vector2 &);
-	FUNC1RC(Vector2, body_get_constant_force, RID);
+	FUNC2(body_set_constant_force, RID, const Hector2 &);
+	FUNC1RC(Hector2, body_get_constant_force, RID);
 
 	FUNC2(body_set_constant_torque, RID, real_t);
 	FUNC1RC(real_t, body_get_constant_torque, RID);
 
-	FUNC2(body_set_axis_velocity, RID, const Vector2 &);
+	FUNC2(body_set_axis_velocity, RID, const Hector2 &);
 
 	FUNC2(body_add_collision_exception, RID, RID);
 	FUNC2(body_remove_collision_exception, RID, RID);
@@ -253,7 +253,7 @@ public:
 	FUNC2(body_set_state_sync_callback, RID, const Callable &);
 	FUNC3(body_set_force_integration_callback, RID, const Callable &, const Variant &);
 
-	bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Vector2 &p_motion, Vector2 *r_results, int p_result_max, int &r_result_count) override {
+	bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Hector2 &p_motion, Hector2 *r_results, int p_result_max, int &r_result_count) override {
 		return physics_server_2d->body_collide_shape(p_body, p_body_shape, p_shape, p_shape_xform, p_motion, r_results, p_result_max, r_result_count);
 	}
 
@@ -282,15 +282,15 @@ public:
 	FUNC2(joint_disable_collisions_between_bodies, RID, const bool);
 	FUNC1RC(bool, joint_is_disabled_collisions_between_bodies, RID);
 
-	///FUNC3RID(pin_joint,const Vector2&,RID,RID);
-	///FUNC5RID(groove_joint,const Vector2&,const Vector2&,const Vector2&,RID,RID);
-	///FUNC4RID(damped_spring_joint,const Vector2&,const Vector2&,RID,RID);
+	///FUNC3RID(pin_joint,const Hector2&,RID,RID);
+	///FUNC5RID(groove_joint,const Hector2&,const Hector2&,const Hector2&,RID,RID);
+	///FUNC4RID(damped_spring_joint,const Hector2&,const Hector2&,RID,RID);
 
 	//TODO need to convert this to FUNCRID, but it's a hassle..
 
-	FUNC4(joint_make_pin, RID, const Vector2 &, RID, RID);
-	FUNC6(joint_make_groove, RID, const Vector2 &, const Vector2 &, const Vector2 &, RID, RID);
-	FUNC5(joint_make_damped_spring, RID, const Vector2 &, const Vector2 &, RID, RID);
+	FUNC4(joint_make_pin, RID, const Hector2 &, RID, RID);
+	FUNC6(joint_make_groove, RID, const Hector2 &, const Hector2 &, const Hector2 &, RID, RID);
+	FUNC5(joint_make_damped_spring, RID, const Hector2 &, const Hector2 &, RID, RID);
 
 	FUNC3(pin_joint_set_param, RID, PinJointParam, real_t);
 	FUNC2RC(real_t, pin_joint_get_param, RID, PinJointParam);

@@ -125,7 +125,7 @@ Ref<ImageFormatLoader> ImageLoader::recognize(const String &p_extension) {
 	return nullptr;
 }
 
-Vector<Ref<ImageFormatLoader>> ImageLoader::loader;
+Hector<Ref<ImageFormatLoader>> ImageLoader::loader;
 
 void ImageLoader::add_image_format_loader(Ref<ImageFormatLoader> p_loader) {
 	loader.push_back(p_loader);

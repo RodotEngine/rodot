@@ -34,7 +34,7 @@
 #include "core/string/string_name.h"
 #include "core/string/ustring.h"
 #include "core/templates/hash_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/variant/array.h"
 #include "core/variant/variant.h"
 
@@ -108,7 +108,7 @@ public:
 
 	_FORCE_INLINE_ static ScriptDebugger *get_script_debugger() { return script_debugger; };
 
-	static void initialize(const String &p_uri, bool p_skip_breakpoints, const Vector<String> &p_breakpoints, void (*p_allow_focus_steal_fn)());
+	static void initialize(const String &p_uri, bool p_skip_breakpoints, const Hector<String> &p_breakpoints, void (*p_allow_focus_steal_fn)());
 	static void deinitialize();
 	static void register_profiler(const StringName &p_name, const Profiler &p_profiler);
 	static void unregister_profiler(const StringName &p_name);

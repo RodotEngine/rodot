@@ -217,8 +217,8 @@ struct SegmentMaps : Array16Of<AxisValueMap>
 
     Triple unmapped_range = unmap_axis_range (*axis_range);
 
-    /* create a vector of retained mappings and sort */
-    hb_vector_t<AxisValueMap> value_mappings;
+    /* create a Hector of retained mappings and sort */
+    hb_Hector_t<AxisValueMap> value_mappings;
     for (const auto& _ : as_array ())
     {
       if (_.is_outside_axis_range (unmapped_range))
@@ -329,7 +329,7 @@ struct avar
     const auto &var_store = this+v2.varStore;
     auto *var_store_cache = var_store.create_cache ();
 
-    hb_vector_t<int> out;
+    hb_Hector_t<int> out;
     out.alloc (coords_length);
     for (unsigned i = 0; i < coords_length; i++)
     {

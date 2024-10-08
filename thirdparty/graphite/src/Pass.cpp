@@ -801,7 +801,7 @@ bool Pass::collisionShift(Segment *seg, int dir, json * const dbgout) const
                 // glyphs from their current adjusted position, which has the effect of gradually minimizing the
                 // resulting adjustment; ie, the final result will be gradually closer to the original location.
                 // Also it allows more flexibility in the final adjustment, since it is moving along the
-                // possible 8 vectors from successively different starting locations.
+                // possible 8 Hectors from successively different starting locations.
                 if (moved)
                 {
                     moved = false;

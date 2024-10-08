@@ -32,10 +32,10 @@
 
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> SeparationRayShape3D::get_debug_mesh_lines() const {
-	Vector<Vector3> points = {
-		Vector3(),
-		Vector3(0, 0, get_length())
+Hector<Hector3> SeparationRayShape3D::get_debug_mesh_lines() const {
+	Hector<Hector3> points = {
+		Hector3(),
+		Hector3(0, 0, get_length())
 	};
 
 	return points;

@@ -73,7 +73,7 @@ class SpinBox : public Range {
 		double base_val = 0.0;
 		bool allowed = false;
 		bool enabled = false;
-		Vector2 capture_pos;
+		Hector2 capture_pos;
 		double diff_y = 0.0;
 	} drag;
 

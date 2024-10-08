@@ -91,7 +91,7 @@ public:
 		double physics_frame_time = 0;
 		double script_time = 0;
 		List<ServerInfo> servers;
-		Vector<ScriptFunctionInfo> script_functions;
+		Hector<ScriptFunctionInfo> script_functions;
 
 		Array serialize();
 		bool deserialize(const Array &p_arr);
@@ -100,7 +100,7 @@ public:
 	// Visual Profiler
 	struct VisualProfilerFrame {
 		uint64_t frame_number = 0;
-		Vector<RS::FrameProfileArea> areas;
+		Hector<RS::FrameProfileArea> areas;
 
 		Array serialize();
 		bool deserialize(const Array &p_arr);

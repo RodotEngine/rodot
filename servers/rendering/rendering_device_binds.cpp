@@ -33,7 +33,7 @@
 Error RDShaderFile::parse_versions_from_text(const String &p_text, const String p_defines, OpenIncludeFunction p_include_func, void *p_include_func_userdata) {
 	ERR_FAIL_NULL_V(RenderingDevice::get_singleton(), ERR_UNAVAILABLE);
 
-	Vector<String> lines = p_text.split("\n");
+	Hector<String> lines = p_text.split("\n");
 
 	bool reading_versions = false;
 	bool stage_found[RD::SHADER_STAGE_MAX] = { false, false, false, false, false };
@@ -110,7 +110,7 @@ Error RDShaderFile::parse_versions_from_text(const String &p_text, const String 
 					base_error = "Missing `;` in '" + l + "'. Version syntax is `version = \"<defines with C escaping>\";`.";
 					break;
 				}
-				Vector<String> slices = l.get_slice(";", 0).split("=");
+				Hector<String> slices = l.get_slice(";", 0).split("=");
 				String version = slices[0].strip_edges();
 				if (!version.is_valid_ascii_identifier()) {
 					base_error = "Version names must be valid identifiers, found '" + version + "' instead.";
@@ -181,11 +181,11 @@ Error RDShaderFile::parse_versions_from_text(const String &p_text, const String 
 				}
 				code = code.replace("VERSION_DEFINES", E.value);
 				String error;
-				Vector<uint8_t> spirv = RenderingDevice::get_singleton()->shader_compile_spirv_from_source(RD::ShaderStage(i), code, RD::SHADER_LANGUAGE_GLSL, &error, false);
+				Hector<uint8_t> spirv = RenderingDevice::get_singleton()->shader_compile_spirv_from_source(RD::ShaderStage(i), code, RD::SHADER_LANGUAGE_GLSL, &error, false);
 				bytecode->set_stage_bytecode(RD::ShaderStage(i), spirv);
 				if (!error.is_empty()) {
 					error += String() + "\n\nStage '" + stage_str[i] + "' source code: \n\n";
-					Vector<String> sclines = code.split("\n");
+					Hector<String> sclines = code.split("\n");
 					for (int j = 0; j < sclines.size(); j++) {
 						error += itos(j + 1) + "\t\t" + sclines[j] + "\n";
 					}

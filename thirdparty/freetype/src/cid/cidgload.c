@@ -436,7 +436,7 @@
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
     FT_Matrix      font_matrix;
-    FT_Vector      font_offset;
+    FT_Hector      font_offset;
     FT_Bool        must_finish_decoder = FALSE;
 
 
@@ -571,7 +571,7 @@
         /* scale the outline and the metrics */
         FT_Int       n;
         FT_Outline*  cur = decoder.builder.base;
-        FT_Vector*   vec = cur->points;
+        FT_Hector*   vec = cur->points;
         FT_Fixed     x_scale = glyph->x_scale;
         FT_Fixed     y_scale = glyph->y_scale;
 

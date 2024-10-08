@@ -42,8 +42,8 @@ struct VariantSetterGetterInfo {
 	Variant::Type member_type;
 };
 
-static LocalVector<VariantSetterGetterInfo> variant_setters_getters[Variant::VARIANT_MAX];
-static LocalVector<StringName> variant_setters_getters_names[Variant::VARIANT_MAX]; //one next to another to make it cache friendly
+static LocalHector<VariantSetterGetterInfo> variant_setters_getters[Variant::VARIANT_MAX];
+static LocalHector<StringName> variant_setters_getters_names[Variant::VARIANT_MAX]; //one next to another to make it cache friendly
 
 template <typename T>
 static void register_member(Variant::Type p_type, const StringName &p_member) {
@@ -65,29 +65,29 @@ static void register_member(Variant::Type p_type, const StringName &p_member) {
 void register_named_setters_getters() {
 #define REGISTER_MEMBER(m_base_type, m_member) register_member<VariantSetGet_##m_base_type##_##m_member>(GetTypeInfo<m_base_type>::VARIANT_TYPE, #m_member)
 
-	REGISTER_MEMBER(Vector2, x);
-	REGISTER_MEMBER(Vector2, y);
+	REGISTER_MEMBER(Hector2, x);
+	REGISTER_MEMBER(Hector2, y);
 
-	REGISTER_MEMBER(Vector2i, x);
-	REGISTER_MEMBER(Vector2i, y);
+	REGISTER_MEMBER(Hector2i, x);
+	REGISTER_MEMBER(Hector2i, y);
 
-	REGISTER_MEMBER(Vector3, x);
-	REGISTER_MEMBER(Vector3, y);
-	REGISTER_MEMBER(Vector3, z);
+	REGISTER_MEMBER(Hector3, x);
+	REGISTER_MEMBER(Hector3, y);
+	REGISTER_MEMBER(Hector3, z);
 
-	REGISTER_MEMBER(Vector3i, x);
-	REGISTER_MEMBER(Vector3i, y);
-	REGISTER_MEMBER(Vector3i, z);
+	REGISTER_MEMBER(Hector3i, x);
+	REGISTER_MEMBER(Hector3i, y);
+	REGISTER_MEMBER(Hector3i, z);
 
-	REGISTER_MEMBER(Vector4, x);
-	REGISTER_MEMBER(Vector4, y);
-	REGISTER_MEMBER(Vector4, z);
-	REGISTER_MEMBER(Vector4, w);
+	REGISTER_MEMBER(Hector4, x);
+	REGISTER_MEMBER(Hector4, y);
+	REGISTER_MEMBER(Hector4, z);
+	REGISTER_MEMBER(Hector4, w);
 
-	REGISTER_MEMBER(Vector4i, x);
-	REGISTER_MEMBER(Vector4i, y);
-	REGISTER_MEMBER(Vector4i, z);
-	REGISTER_MEMBER(Vector4i, w);
+	REGISTER_MEMBER(Hector4i, x);
+	REGISTER_MEMBER(Hector4i, y);
+	REGISTER_MEMBER(Hector4i, z);
+	REGISTER_MEMBER(Hector4i, w);
 
 	REGISTER_MEMBER(Rect2, position);
 	REGISTER_MEMBER(Rect2, size);
@@ -810,29 +810,29 @@ struct VariantIndexedSetGet_String {
 	static uint64_t get_indexed_size(const Variant *base) { return VariantInternal::get_string(base)->length(); }
 };
 
-INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Vector2, double, real_t, 2)
-INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Vector2i, int64_t, int32_t, 2)
-INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Vector3, double, real_t, 3)
-INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Vector3i, int64_t, int32_t, 3)
-INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Vector4, double, real_t, 4)
-INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Vector4i, int64_t, int32_t, 4)
+INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Hector2, double, real_t, 2)
+INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Hector2i, int64_t, int32_t, 2)
+INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Hector3, double, real_t, 3)
+INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Hector3i, int64_t, int32_t, 3)
+INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Hector4, double, real_t, 4)
+INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Hector4i, int64_t, int32_t, 4)
 INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Quaternion, double, real_t, 4)
 INDEXED_SETGET_STRUCT_BULTIN_NUMERIC(Color, double, float, 4)
 
-INDEXED_SETGET_STRUCT_BULTIN_ACCESSOR(Transform2D, Vector2, .columns, 3)
-INDEXED_SETGET_STRUCT_BULTIN_FUNC(Basis, Vector3, set_column, get_column, 3)
-INDEXED_SETGET_STRUCT_BULTIN_ACCESSOR(Projection, Vector4, .columns, 4)
+INDEXED_SETGET_STRUCT_BULTIN_ACCESSOR(Transform2D, Hector2, .columns, 3)
+INDEXED_SETGET_STRUCT_BULTIN_FUNC(Basis, Hector3, set_column, get_column, 3)
+INDEXED_SETGET_STRUCT_BULTIN_ACCESSOR(Projection, Hector4, .columns, 4)
 
 INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedByteArray, int64_t, uint8_t)
 INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedInt32Array, int64_t, int32_t)
 INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedInt64Array, int64_t, int64_t)
 INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedFloat32Array, double, float)
 INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedFloat64Array, double, double)
-INDEXED_SETGET_STRUCT_TYPED(PackedVector2Array, Vector2)
-INDEXED_SETGET_STRUCT_TYPED(PackedVector3Array, Vector3)
+INDEXED_SETGET_STRUCT_TYPED(PackedHector2Array, Hector2)
+INDEXED_SETGET_STRUCT_TYPED(PackedHector3Array, Hector3)
 INDEXED_SETGET_STRUCT_TYPED(PackedStringArray, String)
 INDEXED_SETGET_STRUCT_TYPED(PackedColorArray, Color)
-INDEXED_SETGET_STRUCT_TYPED(PackedVector4Array, Vector4)
+INDEXED_SETGET_STRUCT_TYPED(PackedHector4Array, Hector4)
 
 struct VariantIndexedSetterGetterInfo {
 	void (*setter)(Variant *base, int64_t index, const Variant *value, bool *valid, bool *oob) = nullptr;
@@ -877,12 +877,12 @@ void register_indexed_setters_getters() {
 #define REGISTER_INDEXED_MEMBER(m_base_type) register_indexed_member<VariantIndexedSetGet_##m_base_type>(GetTypeInfo<m_base_type>::VARIANT_TYPE)
 
 	REGISTER_INDEXED_MEMBER(String);
-	REGISTER_INDEXED_MEMBER(Vector2);
-	REGISTER_INDEXED_MEMBER(Vector2i);
-	REGISTER_INDEXED_MEMBER(Vector3);
-	REGISTER_INDEXED_MEMBER(Vector3i);
-	REGISTER_INDEXED_MEMBER(Vector4);
-	REGISTER_INDEXED_MEMBER(Vector4i);
+	REGISTER_INDEXED_MEMBER(Hector2);
+	REGISTER_INDEXED_MEMBER(Hector2i);
+	REGISTER_INDEXED_MEMBER(Hector3);
+	REGISTER_INDEXED_MEMBER(Hector3i);
+	REGISTER_INDEXED_MEMBER(Hector4);
+	REGISTER_INDEXED_MEMBER(Hector4i);
 	REGISTER_INDEXED_MEMBER(Quaternion);
 	REGISTER_INDEXED_MEMBER(Color);
 	REGISTER_INDEXED_MEMBER(Transform2D);
@@ -894,11 +894,11 @@ void register_indexed_setters_getters() {
 	REGISTER_INDEXED_MEMBER(PackedInt64Array);
 	REGISTER_INDEXED_MEMBER(PackedFloat32Array);
 	REGISTER_INDEXED_MEMBER(PackedFloat64Array);
-	REGISTER_INDEXED_MEMBER(PackedVector2Array);
-	REGISTER_INDEXED_MEMBER(PackedVector3Array);
+	REGISTER_INDEXED_MEMBER(PackedHector2Array);
+	REGISTER_INDEXED_MEMBER(PackedHector3Array);
 	REGISTER_INDEXED_MEMBER(PackedStringArray);
 	REGISTER_INDEXED_MEMBER(PackedColorArray);
-	REGISTER_INDEXED_MEMBER(PackedVector4Array);
+	REGISTER_INDEXED_MEMBER(PackedHector4Array);
 
 	REGISTER_INDEXED_MEMBER(Array);
 	REGISTER_INDEXED_MEMBER(Dictionary);
@@ -1289,26 +1289,26 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0.0;
 			return _data._float > 0.0;
 		} break;
-		case VECTOR2: {
-			double from = reinterpret_cast<const Vector2 *>(_data._mem)->x;
-			double to = reinterpret_cast<const Vector2 *>(_data._mem)->y;
+		case HECTOR2: {
+			double from = reinterpret_cast<const Hector2 *>(_data._mem)->x;
+			double to = reinterpret_cast<const Hector2 *>(_data._mem)->y;
 
 			r_iter = from;
 
 			return from < to;
 		} break;
-		case VECTOR2I: {
-			int64_t from = reinterpret_cast<const Vector2i *>(_data._mem)->x;
-			int64_t to = reinterpret_cast<const Vector2i *>(_data._mem)->y;
+		case HECTOR2I: {
+			int64_t from = reinterpret_cast<const Hector2i *>(_data._mem)->x;
+			int64_t to = reinterpret_cast<const Hector2i *>(_data._mem)->y;
 
 			r_iter = from;
 
 			return from < to;
 		} break;
-		case VECTOR3: {
-			double from = reinterpret_cast<const Vector3 *>(_data._mem)->x;
-			double to = reinterpret_cast<const Vector3 *>(_data._mem)->y;
-			double step = reinterpret_cast<const Vector3 *>(_data._mem)->z;
+		case HECTOR3: {
+			double from = reinterpret_cast<const Hector3 *>(_data._mem)->x;
+			double to = reinterpret_cast<const Hector3 *>(_data._mem)->y;
+			double step = reinterpret_cast<const Hector3 *>(_data._mem)->z;
 
 			r_iter = from;
 
@@ -1319,10 +1319,10 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			}
 			return step < 0;
 		} break;
-		case VECTOR3I: {
-			int64_t from = reinterpret_cast<const Vector3i *>(_data._mem)->x;
-			int64_t to = reinterpret_cast<const Vector3i *>(_data._mem)->y;
-			int64_t step = reinterpret_cast<const Vector3i *>(_data._mem)->z;
+		case HECTOR3I: {
+			int64_t from = reinterpret_cast<const Hector3i *>(_data._mem)->x;
+			int64_t to = reinterpret_cast<const Hector3i *>(_data._mem)->y;
+			int64_t step = reinterpret_cast<const Hector3i *>(_data._mem)->z;
 
 			r_iter = from;
 
@@ -1392,7 +1392,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 		} break;
 		case PACKED_BYTE_ARRAY: {
-			const Vector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
+			const Hector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1401,7 +1401,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_INT32_ARRAY: {
-			const Vector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
+			const Hector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1410,7 +1410,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_INT64_ARRAY: {
-			const Vector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
+			const Hector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1419,7 +1419,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_FLOAT32_ARRAY: {
-			const Vector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
+			const Hector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1428,7 +1428,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_FLOAT64_ARRAY: {
-			const Vector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
+			const Hector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1437,23 +1437,23 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_STRING_ARRAY: {
-			const Vector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
+			const Hector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
 			r_iter = 0;
 			return true;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
-			const Vector<Vector2> *arr = &PackedArrayRef<Vector2>::get_array(_data.packed_array);
+		case PACKED_Hector2_ARRAY: {
+			const Hector<Hector2> *arr = &PackedArrayRef<Hector2>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
 			r_iter = 0;
 			return true;
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
-			const Vector<Vector3> *arr = &PackedArrayRef<Vector3>::get_array(_data.packed_array);
+		case PACKED_Hector3_ARRAY: {
+			const Hector<Hector3> *arr = &PackedArrayRef<Hector3>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1461,7 +1461,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 		} break;
 		case PACKED_COLOR_ARRAY: {
-			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
+			const Hector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1469,8 +1469,8 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
-			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
+		case PACKED_Hector4_ARRAY: {
+			const Hector<Hector4> *arr = &PackedArrayRef<Hector4>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
 			}
@@ -1506,8 +1506,8 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR2: {
-			double to = reinterpret_cast<const Vector2 *>(_data._mem)->y;
+		case HECTOR2: {
+			double to = reinterpret_cast<const Hector2 *>(_data._mem)->y;
 
 			double idx = r_iter;
 			idx++;
@@ -1519,8 +1519,8 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR2I: {
-			int64_t to = reinterpret_cast<const Vector2i *>(_data._mem)->y;
+		case HECTOR2I: {
+			int64_t to = reinterpret_cast<const Hector2i *>(_data._mem)->y;
 
 			int64_t idx = r_iter;
 			idx++;
@@ -1532,9 +1532,9 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR3: {
-			double to = reinterpret_cast<const Vector3 *>(_data._mem)->y;
-			double step = reinterpret_cast<const Vector3 *>(_data._mem)->z;
+		case HECTOR3: {
+			double to = reinterpret_cast<const Hector3 *>(_data._mem)->y;
+			double step = reinterpret_cast<const Hector3 *>(_data._mem)->z;
 
 			double idx = r_iter;
 			idx += step;
@@ -1550,9 +1550,9 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR3I: {
-			int64_t to = reinterpret_cast<const Vector3i *>(_data._mem)->y;
-			int64_t step = reinterpret_cast<const Vector3i *>(_data._mem)->z;
+		case HECTOR3I: {
+			int64_t to = reinterpret_cast<const Hector3i *>(_data._mem)->y;
+			int64_t step = reinterpret_cast<const Hector3i *>(_data._mem)->z;
 
 			int64_t idx = r_iter;
 			idx += step;
@@ -1632,7 +1632,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 		} break;
 		case PACKED_BYTE_ARRAY: {
-			const Vector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
+			const Hector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1643,7 +1643,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_INT32_ARRAY: {
-			const Vector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
+			const Hector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
 			int32_t idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1654,7 +1654,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_INT64_ARRAY: {
-			const Vector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
+			const Hector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
 			int64_t idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1665,7 +1665,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_FLOAT32_ARRAY: {
-			const Vector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
+			const Hector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1676,7 +1676,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_FLOAT64_ARRAY: {
-			const Vector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
+			const Hector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1687,7 +1687,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 
 		} break;
 		case PACKED_STRING_ARRAY: {
-			const Vector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
+			const Hector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1696,8 +1696,8 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
-			const Vector<Vector2> *arr = &PackedArrayRef<Vector2>::get_array(_data.packed_array);
+		case PACKED_Hector2_ARRAY: {
+			const Hector<Hector2> *arr = &PackedArrayRef<Hector2>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1706,8 +1706,8 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
-			const Vector<Vector3> *arr = &PackedArrayRef<Vector3>::get_array(_data.packed_array);
+		case PACKED_Hector3_ARRAY: {
+			const Hector<Hector3> *arr = &PackedArrayRef<Hector3>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1717,7 +1717,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 		} break;
 		case PACKED_COLOR_ARRAY: {
-			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
+			const Hector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1726,8 +1726,8 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
-			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
+		case PACKED_Hector4_ARRAY: {
+			const Hector<Hector4> *arr = &PackedArrayRef<Hector4>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
 			if (idx >= arr->size()) {
@@ -1753,16 +1753,16 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 		case FLOAT: {
 			return r_iter;
 		} break;
-		case VECTOR2: {
+		case HECTOR2: {
 			return r_iter;
 		} break;
-		case VECTOR2I: {
+		case HECTOR2I: {
 			return r_iter;
 		} break;
-		case VECTOR3: {
+		case HECTOR3: {
 			return r_iter;
 		} break;
-		case VECTOR3I: {
+		case HECTOR3I: {
 			return r_iter;
 		} break;
 		case OBJECT: {
@@ -1812,7 +1812,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_BYTE_ARRAY: {
-			const Vector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
+			const Hector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1823,7 +1823,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_INT32_ARRAY: {
-			const Vector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
+			const Hector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
 			int32_t idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1834,7 +1834,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_INT64_ARRAY: {
-			const Vector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
+			const Hector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
 			int64_t idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1845,7 +1845,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_FLOAT32_ARRAY: {
-			const Vector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
+			const Hector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1856,7 +1856,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_FLOAT64_ARRAY: {
-			const Vector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
+			const Hector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1867,7 +1867,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_STRING_ARRAY: {
-			const Vector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
+			const Hector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1877,8 +1877,8 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
-			const Vector<Vector2> *arr = &PackedArrayRef<Vector2>::get_array(_data.packed_array);
+		case PACKED_Hector2_ARRAY: {
+			const Hector<Hector2> *arr = &PackedArrayRef<Hector2>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1888,8 +1888,8 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
-			const Vector<Vector3> *arr = &PackedArrayRef<Vector3>::get_array(_data.packed_array);
+		case PACKED_Hector3_ARRAY: {
+			const Hector<Hector3> *arr = &PackedArrayRef<Hector3>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1900,7 +1900,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return arr->get(idx);
 		} break;
 		case PACKED_COLOR_ARRAY: {
-			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
+			const Hector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1910,8 +1910,8 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
-			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
+		case PACKED_Hector4_ARRAY: {
+			const Hector<Hector4> *arr = &PackedArrayRef<Hector4>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
 			if (idx < 0 || idx >= arr->size()) {
@@ -1951,25 +1951,25 @@ Variant Variant::recursive_duplicate(bool p_deep, int recursion_count) const {
 		case ARRAY:
 			return operator Array().recursive_duplicate(p_deep, recursion_count);
 		case PACKED_BYTE_ARRAY:
-			return operator Vector<uint8_t>().duplicate();
+			return operator Hector<uint8_t>().duplicate();
 		case PACKED_INT32_ARRAY:
-			return operator Vector<int32_t>().duplicate();
+			return operator Hector<int32_t>().duplicate();
 		case PACKED_INT64_ARRAY:
-			return operator Vector<int64_t>().duplicate();
+			return operator Hector<int64_t>().duplicate();
 		case PACKED_FLOAT32_ARRAY:
-			return operator Vector<float>().duplicate();
+			return operator Hector<float>().duplicate();
 		case PACKED_FLOAT64_ARRAY:
-			return operator Vector<double>().duplicate();
+			return operator Hector<double>().duplicate();
 		case PACKED_STRING_ARRAY:
-			return operator Vector<String>().duplicate();
-		case PACKED_VECTOR2_ARRAY:
-			return operator Vector<Vector2>().duplicate();
-		case PACKED_VECTOR3_ARRAY:
-			return operator Vector<Vector3>().duplicate();
+			return operator Hector<String>().duplicate();
+		case PACKED_Hector2_ARRAY:
+			return operator Hector<Hector2>().duplicate();
+		case PACKED_Hector3_ARRAY:
+			return operator Hector<Hector3>().duplicate();
 		case PACKED_COLOR_ARRAY:
-			return operator Vector<Color>().duplicate();
-		case PACKED_VECTOR4_ARRAY:
-			return operator Vector<Vector4>().duplicate();
+			return operator Hector<Color>().duplicate();
+		case PACKED_Hector4_ARRAY:
+			return operator Hector<Hector4>().duplicate();
 		default:
 			return *this;
 	}

@@ -39,7 +39,7 @@ class Node2D : public CanvasItem {
 	mutable MTFlag xform_dirty;
 	mutable Point2 position;
 	mutable real_t rotation = 0.0;
-	mutable Size2 scale = Vector2(1, 1);
+	mutable Size2 scale = Hector2(1, 1);
 	mutable real_t skew = 0.0;
 
 	Transform2D transform;
@@ -83,8 +83,8 @@ public:
 	void rotate(real_t p_radians);
 	void move_x(real_t p_delta, bool p_scaled = false);
 	void move_y(real_t p_delta, bool p_scaled = false);
-	void translate(const Vector2 &p_amount);
-	void global_translate(const Vector2 &p_amount);
+	void translate(const Hector2 &p_amount);
+	void global_translate(const Hector2 &p_amount);
 	void apply_scale(const Size2 &p_amount);
 
 	Point2 get_position() const;
@@ -107,8 +107,8 @@ public:
 	void set_global_skew(const real_t p_radians);
 	void set_global_scale(const Size2 &p_scale);
 
-	void look_at(const Vector2 &p_pos);
-	real_t get_angle_to(const Vector2 &p_pos) const;
+	void look_at(const Hector2 &p_pos);
+	real_t get_angle_to(const Hector2 &p_pos) const;
 
 	Point2 to_local(Point2 p_global) const;
 	Point2 to_global(Point2 p_local) const;

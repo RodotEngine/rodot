@@ -67,7 +67,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 		} else if (l.begins_with("Kd ")) {
 			//normal
 			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() < 4, ERR_INVALID_DATA);
 			Color c = current->get_albedo();
 			c.r = v[1].to_float();
@@ -77,7 +77,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 		} else if (l.begins_with("Ks ")) {
 			//normal
 			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() < 4, ERR_INVALID_DATA);
 			float r = v[1].to_float();
 			float g = v[2].to_float();
@@ -87,14 +87,14 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 		} else if (l.begins_with("Ns ")) {
 			//normal
 			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() != 2, ERR_INVALID_DATA);
 			float s = v[1].to_float();
 			current->set_metallic((1000.0 - s) / 1000.0);
 		} else if (l.begins_with("d ")) {
 			//normal
 			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() != 2, ERR_INVALID_DATA);
 			float d = v[1].to_float();
 			Color c = current->get_albedo();
@@ -106,7 +106,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 		} else if (l.begins_with("Tr ")) {
 			//normal
 			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() != 2, ERR_INVALID_DATA);
 			float d = v[1].to_float();
 			Color c = current->get_albedo();
@@ -202,7 +202,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 	return OK;
 }
 
-static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes, bool p_single_mesh, bool p_generate_tangents, Vector3 p_scale_mesh, Vector3 p_offset_mesh, bool p_disable_compression, List<String> *r_missing_deps) {
+static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes, bool p_single_mesh, bool p_generate_tangents, Hector3 p_scale_mesh, Hector3 p_offset_mesh, bool p_disable_compression, List<String> *r_missing_deps) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, vformat("Couldn't open OBJ file '%s', it may not exist or not be readable.", p_path));
 
@@ -210,7 +210,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 	// This should only match, if it's indeed a COFF file header
 	// https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#machine-types
 	const int first_bytes = f->get_16();
-	static const Vector<int> coff_header_machines{
+	static const Hector<int> coff_header_machines{
 		0x0, // IMAGE_FILE_MACHINE_UNKNOWN
 		0x8664, // IMAGE_FILE_MACHINE_AMD64
 		0x1c0, // IMAGE_FILE_MACHINE_ARM
@@ -224,13 +224,13 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 	mesh.instantiate();
 
 	bool generate_tangents = p_generate_tangents;
-	Vector3 scale_mesh = p_scale_mesh;
-	Vector3 offset_mesh = p_offset_mesh;
+	Hector3 scale_mesh = p_scale_mesh;
+	Hector3 offset_mesh = p_offset_mesh;
 
-	Vector<Vector3> vertices;
-	Vector<Vector3> normals;
-	Vector<Vector2> uvs;
-	Vector<Color> colors;
+	Hector<Hector3> vertices;
+	Hector<Hector3> normals;
+	Hector<Hector2> uvs;
+	Hector<Color> colors;
 	const String default_name = "Mesh";
 	String name = default_name;
 
@@ -260,9 +260,9 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 
 		if (l.begins_with("v ")) {
 			//vertex
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() < 4, ERR_FILE_CORRUPT);
-			Vector3 vtx;
+			Hector3 vtx;
 			vtx.x = v[1].to_float() * scale_mesh.x + offset_mesh.x;
 			vtx.y = v[2].to_float() * scale_mesh.y + offset_mesh.y;
 			vtx.z = v[3].to_float() * scale_mesh.z + offset_mesh.z;
@@ -282,17 +282,17 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 			}
 		} else if (l.begins_with("vt ")) {
 			//uv
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() < 3, ERR_FILE_CORRUPT);
-			Vector2 uv;
+			Hector2 uv;
 			uv.x = v[1].to_float();
 			uv.y = 1.0 - v[2].to_float();
 			uvs.push_back(uv);
 		} else if (l.begins_with("vn ")) {
 			//normal
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() < 4, ERR_FILE_CORRUPT);
-			Vector3 nrm;
+			Hector3 nrm;
 			nrm.x = v[1].to_float();
 			nrm.y = v[2].to_float();
 			nrm.z = v[3].to_float();
@@ -300,12 +300,12 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 		} else if (l.begins_with("f ")) {
 			//vertex
 
-			Vector<String> v = l.split(" ", false);
+			Hector<String> v = l.split(" ", false);
 			ERR_FAIL_COND_V(v.size() < 4, ERR_FILE_CORRUPT);
 
 			//not very fast, could be sped up
 
-			Vector<String> face[3];
+			Hector<String> face[3];
 			face[0] = v[1].split("/");
 			face[1] = v[2].split("/");
 			ERR_FAIL_COND_V(face[0].is_empty(), ERR_FILE_CORRUPT);
@@ -342,7 +342,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 						surf_tool->set_normal(normals[norm]);
 						if (generate_tangents && !uses_uvs) {
 							// We can't generate tangents without UVs, so create dummy tangents.
-							Vector3 tan = Vector3(normals[norm].z, -normals[norm].x, normals[norm].y).cross(normals[norm].normalized()).normalized();
+							Hector3 tan = Hector3(normals[norm].z, -normals[norm].x, normals[norm].y).cross(normals[norm].normalized()).normalized();
 							surf_tool->set_tangent(Plane(tan.x, tan.y, tan.z, 1.0));
 						}
 					} else {
@@ -359,7 +359,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 					}
 					ERR_FAIL_INDEX_V(vtx, vertices.size(), ERR_FILE_CORRUPT);
 
-					Vector3 vertex = vertices[vtx];
+					Hector3 vertex = vertices[vtx];
 					if (!colors.is_empty()) {
 						surf_tool->set_color(colors[vtx]);
 					}
@@ -432,11 +432,11 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 
 				if (mesh_flags & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES && generate_tangents && uses_uvs) {
 					// Compression is enabled, so let's validate that the normals and generated tangents are correct.
-					Vector<Vector3> norms = array[Mesh::ARRAY_NORMAL];
-					Vector<float> tangents = array[Mesh::ARRAY_TANGENT];
+					Hector<Hector3> norms = array[Mesh::ARRAY_NORMAL];
+					Hector<float> tangents = array[Mesh::ARRAY_TANGENT];
 					ERR_FAIL_COND_V(tangents.is_empty(), ERR_FILE_CORRUPT);
 					for (int vert = 0; vert < norms.size(); vert++) {
-						Vector3 tan = Vector3(tangents[vert * 4 + 0], tangents[vert * 4 + 1], tangents[vert * 4 + 2]);
+						Hector3 tan = Hector3(tangents[vert * 4 + 0], tangents[vert * 4 + 1], tangents[vert * 4 + 2]);
 						if (abs(tan.dot(norms[vert])) > 0.0001) {
 							// Tangent is not perpendicular to the normal, so we can't use compression.
 							mesh_flags &= ~RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES;
@@ -518,7 +518,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 Node *EditorOBJImporter::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err) {
 	List<Ref<ImporterMesh>> meshes;
 
-	Error err = _parse_obj(p_path, meshes, false, p_flags & IMPORT_GENERATE_TANGENT_ARRAYS, Vector3(1, 1, 1), Vector3(0, 0, 0), p_flags & IMPORT_FORCE_DISABLE_MESH_COMPRESSION, r_missing_deps);
+	Error err = _parse_obj(p_path, meshes, false, p_flags & IMPORT_GENERATE_TANGENT_ARRAYS, Hector3(1, 1, 1), Hector3(0, 0, 0), p_flags & IMPORT_FORCE_DISABLE_MESH_COMPRESSION, r_missing_deps);
 
 	if (err != OK) {
 		if (r_err) {
@@ -587,8 +587,8 @@ String ResourceImporterOBJ::get_preset_name(int p_idx) const {
 
 void ResourceImporterOBJ::get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset) const {
 	r_options->push_back(ImportOption(PropertyInfo(Variant::BOOL, "generate_tangents"), true));
-	r_options->push_back(ImportOption(PropertyInfo(Variant::VECTOR3, "scale_mesh"), Vector3(1, 1, 1)));
-	r_options->push_back(ImportOption(PropertyInfo(Variant::VECTOR3, "offset_mesh"), Vector3(0, 0, 0)));
+	r_options->push_back(ImportOption(PropertyInfo(Variant::HECTOR3, "scale_mesh"), Hector3(1, 1, 1)));
+	r_options->push_back(ImportOption(PropertyInfo(Variant::HECTOR3, "offset_mesh"), Hector3(0, 0, 0)));
 	r_options->push_back(ImportOption(PropertyInfo(Variant::BOOL, "force_disable_mesh_compression"), false));
 }
 

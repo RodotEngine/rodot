@@ -44,10 +44,10 @@ enum BasisDecompressFormat {
 void basis_universal_init();
 
 #ifdef TOOLS_ENABLED
-Vector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedChannels p_channels);
+Hector<uint8_t> basis_universal_packer(const Ref<Image> &p_image, Image::UsedChannels p_channels);
 #endif
 
 Ref<Image> basis_universal_unpacker_ptr(const uint8_t *p_data, int p_size);
-Ref<Image> basis_universal_unpacker(const Vector<uint8_t> &p_buffer);
+Ref<Image> basis_universal_unpacker(const Hector<uint8_t> &p_buffer);
 
 #endif // IMAGE_COMPRESS_BASISU_H

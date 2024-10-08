@@ -56,13 +56,13 @@ class Path3DGizmo : public EditorNode3DGizmo {
 	};
 
 	Path3D *path = nullptr;
-	mutable Vector3 original;
+	mutable Hector3 original;
 	mutable float orig_in_length;
 	mutable float orig_out_length;
 	mutable float disk_size = 0.8;
 
 	// Cache information of secondary handles.
-	Vector<HandleInfo> _secondary_handles_info;
+	Hector<HandleInfo> _secondary_handles_info;
 
 	void _update_transform_gizmo();
 
@@ -94,11 +94,11 @@ public:
 
 	virtual void redraw(EditorNode3DGizmo *p_gizmo) override;
 
-	virtual int subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Vector2 &p_point) const override;
-	virtual Vector<int> subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Vector<Plane> &p_frustum) const override;
+	virtual int subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Hector2 &p_point) const override;
+	virtual Hector<int> subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Hector<Plane> &p_frustum) const override;
 	virtual Transform3D get_subgizmo_transform(const EditorNode3DGizmo *p_gizmo, int p_id) const override;
 	virtual void set_subgizmo_transform(const EditorNode3DGizmo *p_gizmo, int p_id, Transform3D p_transform) override;
-	virtual void commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel = false) override;
+	virtual void commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel = false) override;
 
 	int get_priority() const override;
 	Path3DGizmoPlugin(float p_disk_size);
@@ -154,7 +154,7 @@ class Path3DEditorPlugin : public EditorPlugin {
 	void _confirm_clear_points();
 	void _clear_points();
 	void _clear_curve_points();
-	void _restore_curve_points(const PackedVector3Array &p_points);
+	void _restore_curve_points(const PackedHector3Array &p_points);
 
 	enum HandleOption {
 		HANDLE_OPTION_ANGLE,

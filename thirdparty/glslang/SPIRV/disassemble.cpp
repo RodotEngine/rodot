@@ -383,7 +383,7 @@ void SpirvStream::disassembleInstruction(Id resultId, Id /*typeId*/, Op opCode, 
             case OpTypePointer:
                 idDescriptor[resultId] = "ptr";
                 break;
-            case OpTypeVector:
+            case OpTypeHector:
                 if (idDescriptor[stream[word]].size() > 0) {
                     idDescriptor[resultId].append(idDescriptor[stream[word]].begin(), idDescriptor[stream[word]].begin() + 1);
                     if (strstr(idDescriptor[stream[word]].c_str(), "8")) {
@@ -772,7 +772,7 @@ static const char* NonSemanticShaderDebugInfo100GetDebugNames(unsigned entrypoin
         case NonSemanticShaderDebugInfo100DebugTypePointer:                     return "DebugTypePointer";
         case NonSemanticShaderDebugInfo100DebugTypeQualifier:                   return "DebugTypeQualifier";
         case NonSemanticShaderDebugInfo100DebugTypeArray:                       return "DebugTypeArray";
-        case NonSemanticShaderDebugInfo100DebugTypeVector:                      return "DebugTypeVector";
+        case NonSemanticShaderDebugInfo100DebugTypeHector:                      return "DebugTypeHector";
         case NonSemanticShaderDebugInfo100DebugTypedef:                         return "DebugTypedef";
         case NonSemanticShaderDebugInfo100DebugTypeFunction:                    return "DebugTypeFunction";
         case NonSemanticShaderDebugInfo100DebugTypeEnum:                        return "DebugTypeEnum";

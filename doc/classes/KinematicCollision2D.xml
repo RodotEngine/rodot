@@ -12,9 +12,9 @@
 	<methods>
 		<method name="get_angle" qualifiers="const">
 			<return type="float" />
-			<param index="0" name="up_direction" type="Vector2" default="Vector2(0, -1)" />
+			<param index="0" name="up_direction" type="Hector2" default="Hector2(0, -1)" />
 			<description>
-				Returns the collision angle according to [param up_direction], which is [constant Vector2.UP] by default. This value is always positive.
+				Returns the collision angle according to [param up_direction], which is [constant Hector2.UP] by default. This value is always positive.
 			</description>
 		</method>
 		<method name="get_collider" qualifiers="const">
@@ -48,7 +48,7 @@
 			</description>
 		</method>
 		<method name="get_collider_velocity" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the colliding body's velocity.
 			</description>
@@ -66,25 +66,25 @@
 			</description>
 		</method>
 		<method name="get_normal" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the colliding body's shape's normal at the point of collision.
 			</description>
 		</method>
 		<method name="get_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the point of collision in global coordinates.
 			</description>
 		</method>
 		<method name="get_remainder" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
-				Returns the moving object's remaining movement vector.
+				Returns the moving object's remaining movement Hector.
 			</description>
 		</method>
 		<method name="get_travel" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the moving object's travel before collision.
 			</description>

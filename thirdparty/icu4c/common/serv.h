@@ -31,7 +31,7 @@ U_NAMESPACE_END
 #include "unicode/umisc.h"
 
 #include "hash.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "servnotf.h"
 
 class ICUServiceTest;
@@ -540,7 +540,7 @@ class U_COMMON_API ICUService : public ICUNotifier {
     /**
      * All the factories registered with this service.
      */
-    UVector* factories;
+    UHector* factories;
 
     /**
      * The service cache.
@@ -659,11 +659,11 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * <p>Convenience override for getVisibleIDs(String) that passes null
      * as the fallback, thus returning all visible IDs.</p>
      *
-     * @param result a vector to hold the returned IDs.
+     * @param result a Hector to hold the returned IDs.
      * @param status the error code status.
-     * @return the result vector.
+     * @return the result Hector.
      */
-    UVector& getVisibleIDs(UVector& result, UErrorCode& status) const;
+    UHector& getVisibleIDs(UHector& result, UErrorCode& status) const;
 
     /**
      * <p>Return a snapshot of the visible IDs for this service.  This
@@ -680,12 +680,12 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * is not nullptr, its isFallbackOf method is used to filter out IDs
      * that don't match the key or have it as a fallback.</p>
      *
-     * @param result a vector to hold the returned IDs.
+     * @param result a Hector to hold the returned IDs.
      * @param matchID an ID used to filter the result, or nullptr if all IDs are desired.
      * @param status the error code status.
-     * @return the result vector.
+     * @return the result Hector.
      */
-    UVector& getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const;
+    UHector& getVisibleIDs(UHector& result, const UnicodeString* matchID, UErrorCode& status) const;
 
     /**
      * <p>Convenience override for getDisplayName(const UnicodeString&, const Locale&, UnicodeString&) that
@@ -714,22 +714,22 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * uses the current default Locale as the locale and nullptr for
      * the matchID.</p>
      *
-     * @param result a vector to hold the returned displayName/id StringPairs.
+     * @param result a Hector to hold the returned displayName/id StringPairs.
      * @param status the error code status.
-     * @return the modified result vector.
+     * @return the modified result Hector.
      */
-    UVector& getDisplayNames(UVector& result, UErrorCode& status) const;
+    UHector& getDisplayNames(UHector& result, UErrorCode& status) const;
 
     /**
      * <p>Convenience override of getDisplayNames(const Locale&, const UnicodeString*) that 
      * uses nullptr for the matchID.</p>
      *
-     * @param result a vector to hold the returned displayName/id StringPairs.
+     * @param result a Hector to hold the returned displayName/id StringPairs.
      * @param locale the locale in which to localize the ID.
      * @param status the error code status.
-     * @return the modified result vector.
+     * @return the modified result Hector.
      */
-    UVector& getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const;
+    UHector& getDisplayNames(UHector& result, const Locale& locale, UErrorCode& status) const;
 
     /**
      * <p>Return a snapshot of the mapping from display names to visible
@@ -749,12 +749,12 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * is not nullptr, its isFallbackOf method is used to filter out IDs
      * that don't match the key or have it as a fallback.</p>
      *
-     * @param result a vector to hold the returned displayName/id StringPairs.
+     * @param result a Hector to hold the returned displayName/id StringPairs.
      * @param locale the locale in which to localize the ID.
      * @param matchID an ID used to filter the result, or nullptr if all IDs are desired.
      * @param status the error code status.
-     * @return the result vector.  */
-    UVector& getDisplayNames(UVector& result,
+     * @return the result Hector.  */
+    UHector& getDisplayNames(UHector& result,
                              const Locale& locale, 
                              const UnicodeString* matchID, 
                              UErrorCode& status) const;

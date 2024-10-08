@@ -198,7 +198,7 @@ Ref<StyleBox> ThemeDB::get_fallback_stylebox() {
 	return fallback_stylebox;
 }
 
-void ThemeDB::get_native_type_dependencies(const StringName &p_base_type, Vector<StringName> &r_result) {
+void ThemeDB::get_native_type_dependencies(const StringName &p_base_type, Hector<StringName> &r_result) {
 	if (p_base_type == StringName()) {
 		return;
 	}
@@ -212,7 +212,7 @@ void ThemeDB::get_native_type_dependencies(const StringName &p_base_type, Vector
 
 // Global theme contexts.
 
-ThemeContext *ThemeDB::create_theme_context(Node *p_node, Vector<Ref<Theme>> &p_themes) {
+ThemeContext *ThemeDB::create_theme_context(Node *p_node, Hector<Ref<Theme>> &p_themes) {
 	ERR_FAIL_COND_V(!p_node->is_inside_tree(), nullptr);
 	ERR_FAIL_COND_V(theme_contexts.has(p_node), nullptr);
 	ERR_FAIL_COND_V(p_themes.is_empty(), nullptr);
@@ -270,7 +270,7 @@ void ThemeDB::_propagate_theme_context(Node *p_from_node, ThemeContext *p_contex
 void ThemeDB::_init_default_theme_context() {
 	default_theme_context = memnew(ThemeContext);
 
-	Vector<Ref<Theme>> themes;
+	Hector<Ref<Theme>> themes;
 
 	// Only add the project theme to the default context when running projects.
 
@@ -475,7 +475,7 @@ void ThemeContext::_emit_changed() {
 	emit_signal(CoreStringName(changed));
 }
 
-void ThemeContext::set_themes(Vector<Ref<Theme>> &p_themes) {
+void ThemeContext::set_themes(Hector<Ref<Theme>> &p_themes) {
 	for (const Ref<Theme> &theme : themes) {
 		theme->disconnect_changed(callable_mp(this, &ThemeContext::_emit_changed));
 	}
@@ -494,7 +494,7 @@ void ThemeContext::set_themes(Vector<Ref<Theme>> &p_themes) {
 	_emit_changed();
 }
 
-const Vector<Ref<Theme>> ThemeContext::get_themes() const {
+const Hector<Ref<Theme>> ThemeContext::get_themes() const {
 	return themes;
 }
 

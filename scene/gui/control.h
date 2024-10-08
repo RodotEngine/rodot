@@ -190,8 +190,8 @@ private:
 		GrowDirection v_grow = GROW_DIRECTION_END;
 
 		real_t rotation = 0.0;
-		Vector2 scale = Vector2(1, 1);
-		Vector2 pivot_offset;
+		Hector2 scale = Hector2(1, 1);
+		Hector2 pivot_offset;
 
 		Point2 pos_cache;
 		Size2 size_cache;
@@ -309,7 +309,7 @@ private:
 
 	// Focus.
 
-	void _window_find_focus_neighbor(const Vector2 &p_dir, Node *p_at, const Point2 *p_points, real_t p_min, real_t &r_closest_dist, Control **r_closest);
+	void _window_find_focus_neighbor(const Hector2 &p_dir, Node *p_at, const Point2 *p_points, real_t p_min, real_t &r_closest_dist, Control **r_closest);
 	Control *_get_focus_neighbor(Side p_side, int p_count = 0);
 
 	// Theming.
@@ -341,7 +341,7 @@ protected:
 
 	// Internationalization.
 
-	virtual TypedArray<Vector3i> structured_text_parser(TextServer::StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const;
+	virtual TypedArray<Hector3i> structured_text_parser(TextServer::StructuredTextParser p_parser_type, const Array &p_args, const String &p_text) const;
 
 	// Base object overrides.
 
@@ -350,14 +350,14 @@ protected:
 
 	// Exposed virtual methods.
 
-	GDVIRTUAL1RC(bool, _has_point, Vector2)
-	GDVIRTUAL2RC(TypedArray<Vector3i>, _structured_text_parser, Array, String)
-	GDVIRTUAL0RC(Vector2, _get_minimum_size)
-	GDVIRTUAL1RC(String, _get_tooltip, Vector2)
+	GDVIRTUAL1RC(bool, _has_point, Hector2)
+	GDVIRTUAL2RC(TypedArray<Hector3i>, _structured_text_parser, Array, String)
+	GDVIRTUAL0RC(Hector2, _get_minimum_size)
+	GDVIRTUAL1RC(String, _get_tooltip, Hector2)
 
-	GDVIRTUAL1R(Variant, _get_drag_data, Vector2)
-	GDVIRTUAL2RC(bool, _can_drop_data, Vector2, Variant)
-	GDVIRTUAL2(_drop_data, Vector2, Variant)
+	GDVIRTUAL1R(Variant, _get_drag_data, Hector2)
+	GDVIRTUAL2RC(bool, _can_drop_data, Hector2, Variant)
+	GDVIRTUAL2(_drop_data, Hector2, Variant)
 	GDVIRTUAL1RC(Object *, _make_custom_tooltip, String)
 
 	GDVIRTUAL1(_gui_input, Ref<InputEvent>)
@@ -470,14 +470,14 @@ public:
 	Rect2 get_screen_rect() const;
 	Rect2 get_anchorable_rect() const override;
 
-	void set_scale(const Vector2 &p_scale);
-	Vector2 get_scale() const;
+	void set_scale(const Hector2 &p_scale);
+	Hector2 get_scale() const;
 	void set_rotation(real_t p_radians);
 	void set_rotation_degrees(real_t p_degrees);
 	real_t get_rotation() const;
 	real_t get_rotation_degrees() const;
-	void set_pivot_offset(const Vector2 &p_pivot);
-	Vector2 get_pivot_offset() const;
+	void set_pivot_offset(const Hector2 &p_pivot);
+	Hector2 get_pivot_offset() const;
 
 	void update_minimum_size();
 

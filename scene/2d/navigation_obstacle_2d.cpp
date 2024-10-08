@@ -66,13 +66,13 @@ void NavigationObstacle2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_carve_navigation_mesh"), &NavigationObstacle2D::get_carve_navigation_mesh);
 
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius", PROPERTY_HINT_RANGE, "0.0,500,0.01,suffix:px"), "set_radius", "get_radius");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "vertices"), "set_vertices", "get_vertices");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "vertices"), "set_vertices", "get_vertices");
 	ADD_GROUP("NavigationMesh", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "affect_navigation_mesh"), "set_affect_navigation_mesh", "get_affect_navigation_mesh");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "carve_navigation_mesh"), "set_carve_navigation_mesh", "get_carve_navigation_mesh");
 	ADD_GROUP("Avoidance", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "avoidance_enabled"), "set_avoidance_enabled", "get_avoidance_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "avoidance_layers", PROPERTY_HINT_LAYERS_AVOIDANCE), "set_avoidance_layers", "get_avoidance_layers");
 }
 
@@ -197,7 +197,7 @@ NavigationObstacle2D::~NavigationObstacle2D() {
 #endif // DEBUG_ENABLED
 }
 
-void NavigationObstacle2D::set_vertices(const Vector<Vector2> &p_vertices) {
+void NavigationObstacle2D::set_vertices(const Hector<Hector2> &p_vertices) {
 	vertices = p_vertices;
 	NavigationServer2D::get_singleton()->obstacle_set_vertices(obstacle, vertices);
 #ifdef DEBUG_ENABLED
@@ -282,7 +282,7 @@ bool NavigationObstacle2D::get_avoidance_enabled() const {
 	return avoidance_enabled;
 }
 
-void NavigationObstacle2D::set_velocity(const Vector2 p_velocity) {
+void NavigationObstacle2D::set_velocity(const Hector2 p_velocity) {
 	velocity = p_velocity;
 	velocity_submitted = true;
 }
@@ -308,7 +308,7 @@ void NavigationObstacle2D::_update_map(RID p_map) {
 	NavigationServer2D::get_singleton()->obstacle_set_map(obstacle, p_map);
 }
 
-void NavigationObstacle2D::_update_position(const Vector2 p_position) {
+void NavigationObstacle2D::_update_position(const Hector2 p_position) {
 	NavigationServer2D::get_singleton()->obstacle_set_position(obstacle, p_position);
 #ifdef DEBUG_ENABLED
 	queue_redraw();
@@ -320,7 +320,7 @@ void NavigationObstacle2D::_update_fake_agent_radius_debug() {
 	if (radius > 0.0 && NavigationServer2D::get_singleton()->get_debug_navigation_avoidance_enable_obstacles_radius()) {
 		Color debug_radius_color = NavigationServer2D::get_singleton()->get_debug_navigation_avoidance_obstacles_radius_color();
 
-		RS::get_singleton()->canvas_item_add_circle(debug_canvas_item, Vector2(), radius, debug_radius_color);
+		RS::get_singleton()->canvas_item_add_circle(debug_canvas_item, Hector2(), radius, debug_radius_color);
 	}
 }
 #endif // DEBUG_ENABLED
@@ -338,9 +338,9 @@ void NavigationObstacle2D::_update_static_obstacle_debug() {
 			debug_static_obstacle_face_color = NavigationServer2D::get_singleton()->get_debug_navigation_avoidance_static_obstacle_pushout_face_color();
 		}
 
-		Vector<Vector2> debug_obstacle_polygon_vertices = get_vertices();
+		Hector<Hector2> debug_obstacle_polygon_vertices = get_vertices();
 
-		Vector<Color> debug_obstacle_polygon_colors;
+		Hector<Color> debug_obstacle_polygon_colors;
 		debug_obstacle_polygon_colors.resize(debug_obstacle_polygon_vertices.size());
 		debug_obstacle_polygon_colors.fill(debug_static_obstacle_face_color);
 
@@ -354,11 +354,11 @@ void NavigationObstacle2D::_update_static_obstacle_debug() {
 			debug_static_obstacle_edge_color = NavigationServer2D::get_singleton()->get_debug_navigation_avoidance_static_obstacle_pushout_edge_color();
 		}
 
-		Vector<Vector2> debug_obstacle_line_vertices = get_vertices();
+		Hector<Hector2> debug_obstacle_line_vertices = get_vertices();
 		debug_obstacle_line_vertices.push_back(debug_obstacle_line_vertices[0]);
 		debug_obstacle_line_vertices.resize(debug_obstacle_line_vertices.size());
 
-		Vector<Color> debug_obstacle_line_colors;
+		Hector<Color> debug_obstacle_line_colors;
 		debug_obstacle_line_colors.resize(debug_obstacle_line_vertices.size());
 		debug_obstacle_line_colors.fill(debug_static_obstacle_edge_color);
 

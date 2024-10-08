@@ -44,7 +44,7 @@ class NavigationObstacle3D : public Node3D {
 	real_t height = 1.0;
 	real_t radius = 0.0;
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 
 	bool avoidance_enabled = true;
 	uint32_t avoidance_layers = 1;
@@ -53,8 +53,8 @@ class NavigationObstacle3D : public Node3D {
 
 	Transform3D previous_transform;
 
-	Vector3 velocity;
-	Vector3 previous_velocity;
+	Hector3 velocity;
+	Hector3 previous_velocity;
 	bool velocity_submitted = false;
 
 	bool affect_navigation_mesh = false;
@@ -94,8 +94,8 @@ public:
 	void set_height(real_t p_height);
 	real_t get_height() const { return height; }
 
-	void set_vertices(const Vector<Vector3> &p_vertices);
-	const Vector<Vector3> &get_vertices() const { return vertices; };
+	void set_vertices(const Hector<Hector3> &p_vertices);
+	const Hector<Hector3> &get_vertices() const { return vertices; };
 
 	void set_avoidance_layers(uint32_t p_layers);
 	uint32_t get_avoidance_layers() const;
@@ -106,10 +106,10 @@ public:
 	void set_use_3d_avoidance(bool p_use_3d_avoidance);
 	bool get_use_3d_avoidance() const { return use_3d_avoidance; }
 
-	void set_velocity(const Vector3 p_velocity);
-	Vector3 get_velocity() const { return velocity; };
+	void set_velocity(const Hector3 p_velocity);
+	Hector3 get_velocity() const { return velocity; };
 
-	void _avoidance_done(Vector3 p_new_velocity); // Dummy
+	void _avoidance_done(Hector3 p_new_velocity); // Dummy
 
 	void set_affect_navigation_mesh(bool p_enabled);
 	bool get_affect_navigation_mesh() const;
@@ -119,7 +119,7 @@ public:
 
 private:
 	void _update_map(RID p_map);
-	void _update_position(const Vector3 p_position);
+	void _update_position(const Hector3 p_position);
 	void _update_use_3d_avoidance(bool p_use_3d_avoidance);
 };
 

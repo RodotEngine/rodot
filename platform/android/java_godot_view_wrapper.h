@@ -33,7 +33,7 @@
 
 #include "string_android.h"
 
-#include "core/math/vector2.h"
+#include "core/math/Hector2.h"
 
 #include <android/log.h>
 #include <jni.h>
@@ -61,7 +61,7 @@ public:
 	void request_pointer_capture();
 	void release_pointer_capture();
 
-	void configure_pointer_icon(int pointer_type, const String &image_path, const Vector2 &p_hotspot);
+	void configure_pointer_icon(int pointer_type, const String &image_path, const Hector2 &p_hotspot);
 	void set_pointer_icon(int pointer_type);
 
 	~GodotJavaViewWrapper();

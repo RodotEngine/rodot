@@ -308,7 +308,7 @@ void TParseVersions::initializeExtensionBehavior()
     extensionBehavior[E_GL_NV_integer_cooperative_matrix]            = EBhDisable;
     extensionBehavior[E_GL_NV_shader_invocation_reorder]             = EBhDisable;
     extensionBehavior[E_GL_NV_displacement_micromap]                 = EBhDisable;
-    extensionBehavior[E_GL_NV_shader_atomic_fp16_vector]             = EBhDisable;
+    extensionBehavior[E_GL_NV_shader_atomic_fp16_Hector]             = EBhDisable;
 
     // ARM
     extensionBehavior[E_GL_ARM_shader_core_builtins]                 = EBhDisable;
@@ -1239,7 +1239,7 @@ void TParseVersions::requireInt8Arithmetic(const TSourceLoc& loc, const char* op
     requireExtensions(loc, sizeof(extensions)/sizeof(extensions[0]), extensions, combined.c_str());
 }
 
-void TParseVersions::float16ScalarVectorCheck(const TSourceLoc& loc, const char* op, bool builtIn)
+void TParseVersions::float16ScalarHectorCheck(const TSourceLoc& loc, const char* op, bool builtIn)
 {
     if (!builtIn) {
         const char* const extensions[] = {
@@ -1305,7 +1305,7 @@ void TParseVersions::explicitInt16Check(const TSourceLoc& loc, const char* op, b
     }
 }
 
-void TParseVersions::int16ScalarVectorCheck(const TSourceLoc& loc, const char* op, bool builtIn)
+void TParseVersions::int16ScalarHectorCheck(const TSourceLoc& loc, const char* op, bool builtIn)
 {
     if (! builtIn) {
     	const char* const extensions[] = {
@@ -1317,7 +1317,7 @@ void TParseVersions::int16ScalarVectorCheck(const TSourceLoc& loc, const char* o
     }
 }
 
-void TParseVersions::int8ScalarVectorCheck(const TSourceLoc& loc, const char* op, bool builtIn)
+void TParseVersions::int8ScalarHectorCheck(const TSourceLoc& loc, const char* op, bool builtIn)
 {
     if (! builtIn) {
     	const char* const extensions[] = {

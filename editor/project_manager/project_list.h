@@ -164,7 +164,7 @@ private:
 	String _config_path;
 	ConfigFile _config;
 
-	Vector<Item> _projects;
+	Hector<Item> _projects;
 
 	int _icon_load_index = 0;
 	bool project_opening_initiated = false;
@@ -246,7 +246,7 @@ public:
 
 	void select_project(int p_index);
 	void select_first_visible_project();
-	Vector<Item> get_selected_projects() const;
+	Hector<Item> get_selected_projects() const;
 	const HashSet<String> &get_selected_project_keys() const;
 	int get_single_selected_index() const;
 	void erase_selected_projects(bool p_delete_project_contents);

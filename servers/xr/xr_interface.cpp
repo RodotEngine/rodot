@@ -149,12 +149,12 @@ bool XRInterface::set_play_area_mode(XRInterface::PlayAreaMode p_mode) {
 	return p_mode == XR_PLAY_AREA_UNKNOWN;
 }
 
-// if available, returns an array of vectors denoting the play area the player can move around in
-PackedVector3Array XRInterface::get_play_area() const {
+// if available, returns an array of Hectors denoting the play area the player can move around in
+PackedHector3Array XRInterface::get_play_area() const {
 	// Return an empty array by default.
 	// Note implementation is responsible for applying our reference frame and world scale to the raw data.
 	// `play_area_changed` should be emitted if play area data is available and either the reference frame or world scale changes.
-	return PackedVector3Array();
+	return PackedHector3Array();
 };
 
 /** these will only be implemented on AR interfaces, so we want dummies for VR **/

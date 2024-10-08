@@ -532,7 +532,7 @@ FT_BEGIN_HEADER
    *     The left side bearing point.
    *
    *   advance ::
-   *     The horizontal advance vector.
+   *     The horizontal advance Hector.
    *
    *   bbox ::
    *     Unused.
@@ -568,8 +568,8 @@ FT_BEGIN_HEADER
     FT_Pos*  pos_x;
     FT_Pos*  pos_y;
 
-    FT_Vector*  left_bearing;
-    FT_Vector*  advance;
+    FT_Hector*  left_bearing;
+    FT_Hector*  advance;
 
     FT_BBox*  bbox;          /* bounding box */
     FT_Bool   path_begun;
@@ -634,8 +634,8 @@ FT_BEGIN_HEADER
     PS_Decoder_Zone*  zone;
 
     FT_Int     flex_state;
-    FT_Int     num_flex_vectors;
-    FT_Vector  flex_vectors[7];
+    FT_Int     num_flex_Hectors;
+    FT_Hector  flex_Hectors[7];
 
     CFF_Font     cff;
     CFF_SubFont  current_subfont; /* for current glyph_index */
@@ -672,7 +672,7 @@ FT_BEGIN_HEADER
     FT_Hash   locals_hash;   /* used if `num_subrs' was massaged */
 
     FT_Matrix  font_matrix;
-    FT_Vector  font_offset;
+    FT_Hector  font_offset;
 
     PS_Blend  blend;         /* for multiple master support */
 
@@ -799,7 +799,7 @@ FT_BEGIN_HEADER
    *     The left side bearing point.
    *
    *   advance ::
-   *     The horizontal advance vector.
+   *     The horizontal advance Hector.
    *
    *   bbox ::
    *     Unused.
@@ -832,8 +832,8 @@ FT_BEGIN_HEADER
     FT_Pos          pos_x;
     FT_Pos          pos_y;
 
-    FT_Vector       left_bearing;
-    FT_Vector       advance;
+    FT_Hector       left_bearing;
+    FT_Hector       advance;
 
     FT_BBox         bbox;          /* bounding box */
     T1_ParseState   parse_state;
@@ -954,11 +954,11 @@ FT_BEGIN_HEADER
     FT_Hash              subrs_hash;   /* used if `num_subrs' was massaged */
 
     FT_Matrix            font_matrix;
-    FT_Vector            font_offset;
+    FT_Hector            font_offset;
 
     FT_Int               flex_state;
-    FT_Int               num_flex_vectors;
-    FT_Vector            flex_vectors[7];
+    FT_Int               num_flex_Hectors;
+    FT_Hector            flex_Hectors[7];
 
     PS_Blend             blend;       /* for multiple master support */
 
@@ -1073,7 +1073,7 @@ FT_BEGIN_HEADER
    *     The left side bearing point.
    *
    *   advance ::
-   *     The horizontal advance vector.
+   *     The horizontal advance Hector.
    *
    *   bbox ::
    *     Unused.
@@ -1112,8 +1112,8 @@ FT_BEGIN_HEADER
     FT_Pos  pos_x;
     FT_Pos  pos_y;
 
-    FT_Vector  left_bearing;
-    FT_Vector  advance;
+    FT_Hector  left_bearing;
+    FT_Hector  advance;
 
     FT_BBox  bbox;          /* bounding box */
 
@@ -1171,8 +1171,8 @@ FT_BEGIN_HEADER
     CFF_Decoder_Zone*  zone;
 
     FT_Int     flex_state;
-    FT_Int     num_flex_vectors;
-    FT_Vector  flex_vectors[7];
+    FT_Int     num_flex_Hectors;
+    FT_Hector  flex_Hectors[7];
 
     FT_Pos  glyph_width;
     FT_Pos  nominal_width;

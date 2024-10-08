@@ -14,7 +14,7 @@
 			<return type="bool" />
 			<param index="0" name="shape_rid" type="RID" />
 			<param index="1" name="transform" type="Transform2D" />
-			<param index="2" name="motion" type="Vector2" />
+			<param index="2" name="motion" type="Hector2" />
 			<param index="3" name="margin" type="float" />
 			<param index="4" name="collision_mask" type="int" />
 			<param index="5" name="collide_with_bodies" type="bool" />
@@ -28,7 +28,7 @@
 			<return type="bool" />
 			<param index="0" name="shape_rid" type="RID" />
 			<param index="1" name="transform" type="Transform2D" />
-			<param index="2" name="motion" type="Vector2" />
+			<param index="2" name="motion" type="Hector2" />
 			<param index="3" name="margin" type="float" />
 			<param index="4" name="collision_mask" type="int" />
 			<param index="5" name="collide_with_bodies" type="bool" />
@@ -41,7 +41,7 @@
 		</method>
 		<method name="_intersect_point" qualifiers="virtual">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<param index="1" name="canvas_instance_id" type="int" />
 			<param index="2" name="collision_mask" type="int" />
 			<param index="3" name="collide_with_bodies" type="bool" />
@@ -53,8 +53,8 @@
 		</method>
 		<method name="_intersect_ray" qualifiers="virtual">
 			<return type="bool" />
-			<param index="0" name="from" type="Vector2" />
-			<param index="1" name="to" type="Vector2" />
+			<param index="0" name="from" type="Hector2" />
+			<param index="1" name="to" type="Hector2" />
 			<param index="2" name="collision_mask" type="int" />
 			<param index="3" name="collide_with_bodies" type="bool" />
 			<param index="4" name="collide_with_areas" type="bool" />
@@ -67,7 +67,7 @@
 			<return type="int" />
 			<param index="0" name="shape_rid" type="RID" />
 			<param index="1" name="transform" type="Transform2D" />
-			<param index="2" name="motion" type="Vector2" />
+			<param index="2" name="motion" type="Hector2" />
 			<param index="3" name="margin" type="float" />
 			<param index="4" name="collision_mask" type="int" />
 			<param index="5" name="collide_with_bodies" type="bool" />
@@ -81,7 +81,7 @@
 			<return type="bool" />
 			<param index="0" name="shape_rid" type="RID" />
 			<param index="1" name="transform" type="Transform2D" />
-			<param index="2" name="motion" type="Vector2" />
+			<param index="2" name="motion" type="Hector2" />
 			<param index="3" name="margin" type="float" />
 			<param index="4" name="collision_mask" type="int" />
 			<param index="5" name="collide_with_bodies" type="bool" />

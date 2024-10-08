@@ -943,7 +943,7 @@ void main() {
 	// Controls how much the albedo color distance of the pixels influences the denoising weight.
 	const float SIGMA_ALBEDO = denoise_params.albedo_bandwidth;
 
-	// Controls how much the normal vector distance of the pixels influences the denoising weight.
+	// Controls how much the normal Hector distance of the pixels influences the denoising weight.
 	const float SIGMA_NORMAL = denoise_params.normal_bandwidth;
 
 	// Strength of the filter. The original paper recommends values around 10 to 15 times the Sigma parameter.

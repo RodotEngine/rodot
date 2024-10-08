@@ -60,7 +60,7 @@ struct UConverterSelector {
 };
 
 static void generateSelectorData(UConverterSelector* result,
-                                 UPropsVectors *upvec,
+                                 UPropsHectors *upvec,
                                  const USet* excludedCodePoints,
                                  const UConverterUnicodeSet whichSet,
                                  UErrorCode* status) {
@@ -214,7 +214,7 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
 
   newSelector->ownEncodingStrings = true;
   newSelector->encodingsCount = converterListSize;
-  UPropsVectors *upvec = upvec_open((converterListSize+31)/32, status);
+  UPropsHectors *upvec = upvec_open((converterListSize+31)/32, status);
   generateSelectorData(newSelector.getAlias(), upvec, excludedCodePoints, whichSet, status);
   upvec_close(upvec);
 
@@ -259,7 +259,7 @@ static const UDataInfo dataInfo = {
 
 enum {
   UCNVSEL_INDEX_TRIE_SIZE,      // trie size in bytes
-  UCNVSEL_INDEX_PV_COUNT,       // number of uint32_t in the bit vectors
+  UCNVSEL_INDEX_PV_COUNT,       // number of uint32_t in the bit Hectors
   UCNVSEL_INDEX_NAMES_COUNT,    // number of encoding names
   UCNVSEL_INDEX_NAMES_LENGTH,   // number of encoding name bytes including padding
   UCNVSEL_INDEX_SIZE = 15,      // bytes following the DataHeader
@@ -274,7 +274,7 @@ enum {
  * This is followed by:
  *   int32_t indexes[UCNVSEL_INDEX_COUNT];          // see index entry constants above
  *   serialized UTrie2;                             // indexes[UCNVSEL_INDEX_TRIE_SIZE] bytes
- *   uint32_t pv[indexes[UCNVSEL_INDEX_PV_COUNT]];  // bit vectors
+ *   uint32_t pv[indexes[UCNVSEL_INDEX_PV_COUNT]];  // bit Hectors
  *   char* encodingNames[indexes[UCNVSEL_INDEX_NAMES_LENGTH]];  // NUL-terminated strings + padding
  */
 
@@ -574,7 +574,7 @@ ucnvsel_openFromSerialized(const void* buffer, int32_t length, UErrorCode* statu
     ucnvsel_close(sel);
     return nullptr;
   }
-  // bit vectors
+  // bit Hectors
   sel->pv = (uint32_t *)p;
   p += sel->pvCount * 4;
   // encoding names

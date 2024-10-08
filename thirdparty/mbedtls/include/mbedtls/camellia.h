@@ -137,7 +137,7 @@ int mbedtls_camellia_crypt_ecb(mbedtls_camellia_context *ctx,
  *                 #MBEDTLS_CAMELLIA_ENCRYPT or #MBEDTLS_CAMELLIA_DECRYPT.
  * \param length   The length in Bytes of the input data \p input.
  *                 This must be a multiple of \c 16 Bytes.
- * \param iv       The initialization vector. This must be a read/write buffer
+ * \param iv       The initialization Hector. This must be a read/write buffer
  *                 of length \c 16 Bytes. It is updated to allow streaming
  *                 use as explained above.
  * \param input    The buffer holding the input data. This must point to a
@@ -183,7 +183,7 @@ int mbedtls_camellia_crypt_cbc(mbedtls_camellia_context *ctx,
  * \param iv_off   The current offset in the IV. This must be smaller
  *                 than \c 16 Bytes. It is updated after this call to allow
  *                 the aforementioned streaming usage.
- * \param iv       The initialization vector. This must be a read/write buffer
+ * \param iv       The initialization Hector. This must be a read/write buffer
  *                 of length \c 16 Bytes. It is updated after this call to
  *                 allow the aforementioned streaming usage.
  * \param input    The buffer holding the input data. This must be a readable

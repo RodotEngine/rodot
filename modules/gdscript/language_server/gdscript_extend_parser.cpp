@@ -44,7 +44,7 @@ int get_indent_size() {
 	}
 }
 
-lsp::Position GodotPosition::to_lsp(const Vector<String> &p_lines) const {
+lsp::Position GodotPosition::to_lsp(const Hector<String> &p_lines) const {
 	lsp::Position res;
 
 	// Special case: `line = 0` -> root class (range covers everything).
@@ -83,7 +83,7 @@ lsp::Position GodotPosition::to_lsp(const Vector<String> &p_lines) const {
 	return res;
 }
 
-GodotPosition GodotPosition::from_lsp(const lsp::Position p_pos, const Vector<String> &p_lines) {
+GodotPosition GodotPosition::from_lsp(const lsp::Position p_pos, const Hector<String> &p_lines) {
 	GodotPosition res(p_pos.line + 1, p_pos.character + 1);
 
 	// Line outside of actual text is valid (-> pos/cursor at end of text).
@@ -107,14 +107,14 @@ GodotPosition GodotPosition::from_lsp(const lsp::Position p_pos, const Vector<St
 	return res;
 }
 
-lsp::Range GodotRange::to_lsp(const Vector<String> &p_lines) const {
+lsp::Range GodotRange::to_lsp(const Hector<String> &p_lines) const {
 	lsp::Range res;
 	res.start = start.to_lsp(p_lines);
 	res.end = end.to_lsp(p_lines);
 	return res;
 }
 
-GodotRange GodotRange::from_lsp(const lsp::Range &p_range, const Vector<String> &p_lines) {
+GodotRange GodotRange::from_lsp(const lsp::Range &p_range, const Hector<String> &p_lines) {
 	GodotPosition start = GodotPosition::from_lsp(p_range.start, p_lines);
 	GodotPosition end = GodotPosition::from_lsp(p_range.end, p_lines);
 	return GodotRange(start, end);

@@ -106,14 +106,14 @@ FT_BEGIN_HEADER
   T1_Done_Blend( FT_Face  face );
 
   FT_LOCAL( FT_Error )
-  T1_Set_MM_WeightVector( FT_Face    face,
+  T1_Set_MM_WeightHector( FT_Face    face,
                           FT_UInt    len,
-                          FT_Fixed*  weightvector );
+                          FT_Fixed*  weightHector );
 
   FT_LOCAL( FT_Error )
-  T1_Get_MM_WeightVector( FT_Face    face,
+  T1_Get_MM_WeightHector( FT_Face    face,
                           FT_UInt*   len,
-                          FT_Fixed*  weightvector );
+                          FT_Fixed*  weightHector );
 
 #endif /* !T1_CONFIG_OPTION_NO_MM_SUPPORT */
 

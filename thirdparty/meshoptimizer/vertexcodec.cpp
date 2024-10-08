@@ -418,7 +418,7 @@ static unsigned char kDecodeBytesGroupShuffle[256][8];
 static unsigned char kDecodeBytesGroupCount[256];
 
 #ifdef __wasm__
-__attribute__((cold)) // this saves 500 bytes in the output binary - we don't need to vectorize this loop!
+__attribute__((cold)) // this saves 500 bytes in the output binary - we don't need to Hectorize this loop!
 #endif
 static bool
 decodeBytesGroupBuildTables()

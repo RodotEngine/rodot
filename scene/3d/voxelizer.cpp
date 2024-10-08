@@ -32,7 +32,7 @@
 
 #include "core/config/project_settings.h"
 
-static _FORCE_INLINE_ void get_uv_and_normal(const Vector3 &p_pos, const Vector3 *p_vtx, const Vector2 *p_uv, const Vector3 *p_normal, Vector2 &r_uv, Vector3 &r_normal) {
+static _FORCE_INLINE_ void get_uv_and_normal(const Hector3 &p_pos, const Hector3 *p_vtx, const Hector2 *p_uv, const Hector3 *p_normal, Hector2 &r_uv, Hector3 &r_normal) {
 	if (p_pos.is_equal_approx(p_vtx[0])) {
 		r_uv = p_uv[0];
 		r_normal = p_normal[0];
@@ -49,9 +49,9 @@ static _FORCE_INLINE_ void get_uv_and_normal(const Vector3 &p_pos, const Vector3
 		return;
 	}
 
-	Vector3 v0 = p_vtx[1] - p_vtx[0];
-	Vector3 v1 = p_vtx[2] - p_vtx[0];
-	Vector3 v2 = p_pos - p_vtx[0];
+	Hector3 v0 = p_vtx[1] - p_vtx[0];
+	Hector3 v1 = p_vtx[2] - p_vtx[0];
+	Hector3 v2 = p_pos - p_vtx[0];
 
 	real_t d00 = v0.dot(v0);
 	real_t d01 = v0.dot(v1);
@@ -72,7 +72,7 @@ static _FORCE_INLINE_ void get_uv_and_normal(const Vector3 &p_pos, const Vector3
 	r_normal = (p_normal[0] * u + p_normal[1] * v + p_normal[2] * w).normalized();
 }
 
-void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, const Vector3 *p_vtx, const Vector3 *p_normal, const Vector2 *p_uv, const MaterialCache &p_material, const AABB &p_aabb) {
+void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, const Hector3 *p_vtx, const Hector3 *p_normal, const Hector2 *p_uv, const MaterialCache &p_material, const AABB &p_aabb) {
 	if (p_level == cell_subdiv) {
 		//plot the face by guessing its albedo and emission value
 
@@ -81,10 +81,10 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 		real_t closest_dot = 0;
 
 		Plane plane = Plane(p_vtx[0], p_vtx[1], p_vtx[2]);
-		Vector3 normal = plane.normal;
+		Hector3 normal = plane.normal;
 
 		for (int i = 0; i < 3; i++) {
-			Vector3 axis;
+			Hector3 axis;
 			axis[i] = 1.0;
 			real_t dot = ABS(normal.dot(axis));
 			if (i == 0 || dot > closest_dot) {
@@ -93,11 +93,11 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 			}
 		}
 
-		Vector3 axis;
+		Hector3 axis;
 		axis[closest_axis] = 1.0;
-		Vector3 t1;
+		Hector3 t1;
 		t1[(closest_axis + 1) % 3] = 1.0;
-		Vector3 t2;
+		Hector3 t2;
 		t2[(closest_axis + 2) % 3] = 1.0;
 
 		t1 *= p_aabb.size[(closest_axis + 1) % 3] / real_t(color_scan_cell_width);
@@ -105,20 +105,20 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 
 		Color albedo_accum;
 		Color emission_accum;
-		Vector3 normal_accum;
+		Hector3 normal_accum;
 
 		float alpha = 0.0;
 
 		//map to a grid average in the best axis for this face
 		for (int i = 0; i < color_scan_cell_width; i++) {
-			Vector3 ofs_i = real_t(i) * t1;
+			Hector3 ofs_i = real_t(i) * t1;
 
 			for (int j = 0; j < color_scan_cell_width; j++) {
-				Vector3 ofs_j = real_t(j) * t2;
+				Hector3 ofs_j = real_t(j) * t2;
 
-				Vector3 from = p_aabb.position + ofs_i + ofs_j;
-				Vector3 to = from + t1 + t2 + axis * p_aabb.size[closest_axis];
-				Vector3 half = (to - from) * 0.5;
+				Hector3 from = p_aabb.position + ofs_i + ofs_j;
+				Hector3 to = from + t1 + t2 + axis * p_aabb.size[closest_axis];
+				Hector3 half = (to - from) * 0.5;
 
 				//is in this cell?
 				if (!Geometry3D::triangle_box_overlap(from + half, half, p_vtx)) {
@@ -126,14 +126,14 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 				}
 
 				//go from -size to +size*2 to avoid skipping collisions
-				Vector3 ray_from = from + (t1 + t2) * 0.5 - axis * p_aabb.size[closest_axis];
-				Vector3 ray_to = ray_from + axis * p_aabb.size[closest_axis] * 2;
+				Hector3 ray_from = from + (t1 + t2) * 0.5 - axis * p_aabb.size[closest_axis];
+				Hector3 ray_to = ray_from + axis * p_aabb.size[closest_axis] * 2;
 
 				if (normal.dot(ray_from - ray_to) < 0) {
 					SWAP(ray_from, ray_to);
 				}
 
-				Vector3 intersection;
+				Hector3 intersection;
 
 				if (!plane.intersects_segment(ray_from, ray_to, &intersection)) {
 					if (ABS(plane.distance_to(ray_from)) < ABS(plane.distance_to(ray_to))) {
@@ -145,10 +145,10 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 
 				intersection = Face3(p_vtx[0], p_vtx[1], p_vtx[2]).get_closest_point_to(intersection);
 
-				Vector2 uv;
-				Vector3 lnormal;
+				Hector2 uv;
+				Hector3 lnormal;
 				get_uv_and_normal(intersection, p_vtx, p_uv, p_normal, uv, lnormal);
-				if (lnormal == Vector3()) { //just in case normal is not provided
+				if (lnormal == Hector3()) { //just in case normal is not provided
 					lnormal = normal;
 				}
 
@@ -175,12 +175,12 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 			//could not in any way get texture information.. so use closest point to center
 
 			Face3 f(p_vtx[0], p_vtx[1], p_vtx[2]);
-			Vector3 inters = f.get_closest_point_to(p_aabb.get_center());
+			Hector3 inters = f.get_closest_point_to(p_aabb.get_center());
 
-			Vector3 lnormal;
-			Vector2 uv;
+			Hector3 lnormal;
+			Hector2 uv;
 			get_uv_and_normal(inters, p_vtx, p_uv, p_normal, uv, normal);
-			if (lnormal == Vector3()) { //just in case normal is not provided
+			if (lnormal == Hector3()) { //just in case normal is not provided
 				lnormal = normal;
 			}
 
@@ -262,7 +262,7 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 			{
 				AABB test_aabb = aabb;
 				//test_aabb.grow_by(test_aabb.get_longest_axis_size()*0.05); //grow a bit to avoid numerical error in real-time
-				Vector3 qsize = test_aabb.size * 0.5; //quarter size, for fast aabb test
+				Hector3 qsize = test_aabb.size * 0.5; //quarter size, for fast aabb test
 
 				if (!Geometry3D::triangle_box_overlap(test_aabb.position + qsize, qsize, p_vtx)) {
 					//if (!Face3(p_vtx[0],p_vtx[1],p_vtx[2]).intersects_aabb2(aabb)) {
@@ -288,8 +288,8 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 	}
 }
 
-Vector<Color> Voxelizer::_get_bake_texture(Ref<Image> p_image, const Color &p_color_mul, const Color &p_color_add) {
-	Vector<Color> ret;
+Hector<Color> Voxelizer::_get_bake_texture(Ref<Image> p_image, const Color &p_color_mul, const Color &p_color_add) {
+	Hector<Color> ret;
 
 	if (p_image.is_null() || p_image->is_empty()) {
 		ret.resize(bake_texture_size * bake_texture_size);
@@ -382,7 +382,7 @@ Voxelizer::MaterialCache Voxelizer::_get_material_cache(Ref<Material> p_material
 	return mc;
 }
 
-void Voxelizer::plot_mesh(const Transform3D &p_xform, Ref<Mesh> &p_mesh, const Vector<Ref<Material>> &p_materials, const Ref<Material> &p_override_material) {
+void Voxelizer::plot_mesh(const Transform3D &p_xform, Ref<Mesh> &p_mesh, const Hector<Ref<Material>> &p_materials, const Ref<Material> &p_override_material) {
 	ERR_FAIL_COND_MSG(!p_xform.is_finite(), "Invalid mesh bake transform.");
 
 	for (int i = 0; i < p_mesh->get_surface_count(); i++) {
@@ -403,13 +403,13 @@ void Voxelizer::plot_mesh(const Transform3D &p_xform, Ref<Mesh> &p_mesh, const V
 
 		Array a = p_mesh->surface_get_arrays(i);
 
-		Vector<Vector3> vertices = a[Mesh::ARRAY_VERTEX];
-		const Vector3 *vr = vertices.ptr();
-		Vector<Vector2> uv = a[Mesh::ARRAY_TEX_UV];
-		const Vector2 *uvr = nullptr;
-		Vector<Vector3> normals = a[Mesh::ARRAY_NORMAL];
-		const Vector3 *nr = nullptr;
-		Vector<int> index = a[Mesh::ARRAY_INDEX];
+		Hector<Hector3> vertices = a[Mesh::ARRAY_VERTEX];
+		const Hector3 *vr = vertices.ptr();
+		Hector<Hector2> uv = a[Mesh::ARRAY_TEX_UV];
+		const Hector2 *uvr = nullptr;
+		Hector<Hector3> normals = a[Mesh::ARRAY_NORMAL];
+		const Hector3 *nr = nullptr;
+		Hector<int> index = a[Mesh::ARRAY_INDEX];
 
 		if (uv.size()) {
 			uvr = uv.ptr();
@@ -424,9 +424,9 @@ void Voxelizer::plot_mesh(const Transform3D &p_xform, Ref<Mesh> &p_mesh, const V
 			const int *ir = index.ptr();
 
 			for (int j = 0; j < facecount; j++) {
-				Vector3 vtxs[3];
-				Vector2 uvs[3];
-				Vector3 normal[3];
+				Hector3 vtxs[3];
+				Hector2 uvs[3];
+				Hector3 normal[3];
 
 				for (int k = 0; k < 3; k++) {
 					vtxs[k] = p_xform.xform(vr[ir[j * 3 + k]]);
@@ -456,9 +456,9 @@ void Voxelizer::plot_mesh(const Transform3D &p_xform, Ref<Mesh> &p_mesh, const V
 			int facecount = vertices.size() / 3;
 
 			for (int j = 0; j < facecount; j++) {
-				Vector3 vtxs[3];
-				Vector2 uvs[3];
-				Vector3 normal[3];
+				Hector3 vtxs[3];
+				Hector2 uvs[3];
+				Hector3 normal[3];
 
 				for (int k = 0; k < 3; k++) {
 					vtxs[k] = p_xform.xform(vr[j * 3 + k]);
@@ -494,7 +494,7 @@ void Voxelizer::_sort() {
 	// it is important that level has more priority (for compute), and that Z has the least,
 	// given it may aid older implementations plot using GPU
 
-	Vector<CellSort> sorted_cells;
+	Hector<CellSort> sorted_cells;
 	uint32_t cell_count = bake_cells.size();
 	sorted_cells.resize(cell_count);
 	{
@@ -515,9 +515,9 @@ void Voxelizer::_sort() {
 	//verify just in case, index 0 must be level 0
 	ERR_FAIL_COND(sorted_cells[0].level != 0);
 
-	Vector<Cell> new_bake_cells;
+	Hector<Cell> new_bake_cells;
 	new_bake_cells.resize(cell_count);
-	Vector<uint32_t> reverse_map;
+	Hector<uint32_t> reverse_map;
 
 	{
 		reverse_map.resize(cell_count);
@@ -569,7 +569,7 @@ void Voxelizer::_fixup_plot(int p_idx, int p_level) {
 		bake_cells.write[p_idx].normal[1] /= alpha;
 		bake_cells.write[p_idx].normal[2] /= alpha;
 
-		Vector3 n(bake_cells[p_idx].normal[0], bake_cells[p_idx].normal[1], bake_cells[p_idx].normal[2]);
+		Hector3 n(bake_cells[p_idx].normal[0], bake_cells[p_idx].normal[1], bake_cells[p_idx].normal[2]);
 		if (n.length() < 0.01) {
 			//too much fight over normal, zero it
 			bake_cells.write[p_idx].normal[0] = 0;
@@ -651,11 +651,11 @@ void Voxelizer::begin_bake(int p_subdiv, const AABB &p_bounds, float p_exposure_
 	}
 
 	Transform3D to_bounds;
-	to_bounds.basis.scale(Vector3(po2_bounds.size[longest_axis], po2_bounds.size[longest_axis], po2_bounds.size[longest_axis]));
+	to_bounds.basis.scale(Hector3(po2_bounds.size[longest_axis], po2_bounds.size[longest_axis], po2_bounds.size[longest_axis]));
 	to_bounds.origin = po2_bounds.position;
 
 	Transform3D to_grid;
-	to_grid.basis.scale(Vector3(axis_cell_size[longest_axis], axis_cell_size[longest_axis], axis_cell_size[longest_axis]));
+	to_grid.basis.scale(Hector3(axis_cell_size[longest_axis], axis_cell_size[longest_axis], axis_cell_size[longest_axis]));
 
 	to_cell_space = to_grid * to_bounds.affine_inverse();
 
@@ -675,16 +675,16 @@ int Voxelizer::get_voxel_gi_octree_depth() const {
 	return cell_subdiv;
 }
 
-Vector3i Voxelizer::get_voxel_gi_octree_size() const {
-	return Vector3i(axis_cell_size[0], axis_cell_size[1], axis_cell_size[2]);
+Hector3i Voxelizer::get_voxel_gi_octree_size() const {
+	return Hector3i(axis_cell_size[0], axis_cell_size[1], axis_cell_size[2]);
 }
 
 int Voxelizer::get_voxel_gi_cell_count() const {
 	return bake_cells.size();
 }
 
-Vector<uint8_t> Voxelizer::get_voxel_gi_octree_cells() const {
-	Vector<uint8_t> data;
+Hector<uint8_t> Voxelizer::get_voxel_gi_octree_cells() const {
+	Hector<uint8_t> data;
 	data.resize((8 * 4) * bake_cells.size()); //8 uint32t values
 	{
 		uint8_t *w = data.ptrw();
@@ -703,8 +703,8 @@ Vector<uint8_t> Voxelizer::get_voxel_gi_octree_cells() const {
 	return data;
 }
 
-Vector<uint8_t> Voxelizer::get_voxel_gi_data_cells() const {
-	Vector<uint8_t> data;
+Hector<uint8_t> Voxelizer::get_voxel_gi_data_cells() const {
+	Hector<uint8_t> data;
 	data.resize((4 * 4) * bake_cells.size()); //8 uint32t values
 	{
 		uint8_t *w = data.ptrw();
@@ -743,7 +743,7 @@ Vector<uint8_t> Voxelizer::get_voxel_gi_data_cells() const {
 
 			{ //normal
 
-				Vector3 n(bake_cells[i].normal[0], bake_cells[i].normal[1], bake_cells[i].normal[2]);
+				Hector3 n(bake_cells[i].normal[0], bake_cells[i].normal[1], bake_cells[i].normal[2]);
 				n.normalize();
 
 				uint32_t normal = uint32_t(uint8_t(int8_t(CLAMP(n.x * 127.0, -128, 127))));
@@ -758,10 +758,10 @@ Vector<uint8_t> Voxelizer::get_voxel_gi_data_cells() const {
 	return data;
 }
 
-Vector<int> Voxelizer::get_voxel_gi_level_cell_count() const {
+Hector<int> Voxelizer::get_voxel_gi_level_cell_count() const {
 	uint32_t cell_count = bake_cells.size();
 	const Cell *cells = bake_cells.ptr();
-	Vector<int> level_count;
+	Hector<int> level_count;
 	level_count.resize(cell_subdiv + 1); //remember, always x+1 levels for x subdivisions
 	{
 		int *w = level_count.ptrw();
@@ -821,8 +821,8 @@ static void edt(float *f, int stride, int n) {
 
 #undef square
 
-Vector<uint8_t> Voxelizer::get_sdf_3d_image() const {
-	Vector3i octree_size = get_voxel_gi_octree_size();
+Hector<uint8_t> Voxelizer::get_sdf_3d_image() const {
+	Hector3i octree_size = get_voxel_gi_octree_size();
 
 	uint32_t float_count = octree_size.x * octree_size.y * octree_size.z;
 	float *work_memory = memnew_arr(float, float_count);
@@ -872,7 +872,7 @@ Vector<uint8_t> Voxelizer::get_sdf_3d_image() const {
 		}
 	}
 
-	Vector<uint8_t> image3d;
+	Hector<uint8_t> image3d;
 	image3d.resize(float_count);
 	{
 		uint8_t *w = image3d.ptrw();
@@ -895,7 +895,7 @@ Vector<uint8_t> Voxelizer::get_sdf_3d_image() const {
 
 void Voxelizer::_debug_mesh(int p_idx, int p_level, const AABB &p_aabb, Ref<MultiMesh> &p_multimesh, int &idx) {
 	if (p_level == cell_subdiv - 1) {
-		Vector3 center = p_aabb.get_center();
+		Hector3 center = p_aabb.get_center();
 		Transform3D xform;
 		xform.origin = center;
 		xform.basis.scale(p_aabb.size * 0.5);
@@ -949,14 +949,14 @@ Ref<MultiMesh> Voxelizer::create_debug_multimesh() {
 		Array arr;
 		arr.resize(Mesh::ARRAY_MAX);
 
-		Vector<Vector3> vertices;
-		Vector<Color> colors;
+		Hector<Hector3> vertices;
+		Hector<Color> colors;
 #define ADD_VTX(m_idx)                      \
 	vertices.push_back(face_points[m_idx]); \
 	colors.push_back(Color(1, 1, 1, 1));
 
 		for (int i = 0; i < 6; i++) {
-			Vector3 face_points[4];
+			Hector3 face_points[4];
 
 			for (int j = 0; j < 4; j++) {
 				real_t v[3];

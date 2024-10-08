@@ -310,7 +310,7 @@ load_assembly_and_get_function_pointer_fn initialize_hostfxr_self_contained(
 	List<String> cmdline_args = OS::get_singleton()->get_cmdline_args();
 
 	List<HostFxrCharString> argv_store;
-	Vector<const char_t *> argv;
+	Hector<const char_t *> argv;
 	argv.resize(cmdline_args.size() + 1);
 
 	argv.write[0] = p_main_assembly_path;

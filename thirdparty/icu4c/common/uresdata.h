@@ -291,7 +291,7 @@ enum {
  * The values of these pairs are either Resource handles or
  * offsets into the 16-bit-units array, depending on the table type.
  *
- * Array items are simple vectors of Resource handles,
+ * Array items are simple Hectors of Resource handles,
  * or of offsets into the 16-bit-units array, depending on the array type.
  *
  * Table key string offsets: -------
@@ -370,14 +370,14 @@ enum {
  * 8  Array:            int32_t count, Resource[count]
  * 9  Array16:          uint16_t count, Resource16[count]
  *                      (stored in the 16-bit-units array; new in formatVersion 2/ICU 4.4)
- * 14 Integer Vector:   int32_t length, int32_t[length]
+ * 14 Integer Hector:   int32_t length, int32_t[length]
  * 15 Reserved:         This value denotes special purpose resources and is for internal use.
  *
- * Note that there are 3 types with data vector values:
- * - Vectors of 8-bit bytes stored as type Binary.
- * - Vectors of 16-bit words stored as type Unicode String or Unicode String-v2
+ * Note that there are 3 types with data Hector values:
+ * - Hectors of 8-bit bytes stored as type Binary.
+ * - Hectors of 16-bit words stored as type Unicode String or Unicode String-v2
  *                     (no value restrictions, all values 0..ffff allowed!).
- * - Vectors of 32-bit words stored as type Integer Vector.
+ * - Hectors of 32-bit words stored as type Integer Hector.
  */
 
 /*
@@ -443,7 +443,7 @@ U_CAPI const uint8_t * U_EXPORT2
 res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
 
 U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+res_getIntHectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
 
 U_CAPI const UChar * U_EXPORT2
 res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
@@ -494,10 +494,10 @@ inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
     return res_getBinaryNoTrace(pResData, res, pLength);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
+inline const int32_t* res_getIntHector(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
-    traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    traceInfo.trace("intHector");
+    return res_getIntHectorNoTrace(pResData, res, pLength);
 }
 
 inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
@@ -540,7 +540,7 @@ public:
     virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
     virtual int32_t getInt(UErrorCode &errorCode) const override;
     virtual uint32_t getUInt(UErrorCode &errorCode) const override;
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const override;
+    virtual const int32_t *getIntHector(int32_t &length, UErrorCode &errorCode) const override;
     virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const override;
     virtual ResourceArray getArray(UErrorCode &errorCode) const override;
     virtual ResourceTable getTable(UErrorCode &errorCode) const override;

@@ -65,8 +65,8 @@ GodotHingeJoint3D::GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const T
 	B->add_constraint(this, 1);
 }
 
-GodotHingeJoint3D::GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const Vector3 &pivotInA, const Vector3 &pivotInB,
-		const Vector3 &axisInA, const Vector3 &axisInB) :
+GodotHingeJoint3D::GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const Hector3 &pivotInA, const Hector3 &pivotInB,
+		const Hector3 &axisInA, const Hector3 &axisInB) :
 		GodotJoint3D(_arr, 2) {
 	A = rbA;
 	B = rbB;
@@ -74,9 +74,9 @@ GodotHingeJoint3D::GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const V
 	m_rbAFrame.origin = pivotInA;
 
 	// since no frame is given, assume this to be zero angle and just pick rb transform axis
-	Vector3 rbAxisA1 = rbA->get_transform().basis.get_column(0);
+	Hector3 rbAxisA1 = rbA->get_transform().basis.get_column(0);
 
-	Vector3 rbAxisA2;
+	Hector3 rbAxisA2;
 	real_t projection = axisInA.dot(rbAxisA1);
 	if (projection >= 1.0f - CMP_EPSILON) {
 		rbAxisA1 = -rbA->get_transform().basis.get_column(2);
@@ -94,8 +94,8 @@ GodotHingeJoint3D::GodotHingeJoint3D(GodotBody3D *rbA, GodotBody3D *rbB, const V
 			rbAxisA1.z, rbAxisA2.z, axisInA.z);
 
 	Quaternion rotationArc = Quaternion(axisInA, axisInB);
-	Vector3 rbAxisB1 = rotationArc.xform(rbAxisA1);
-	Vector3 rbAxisB2 = axisInB.cross(rbAxisB1);
+	Hector3 rbAxisB1 = rotationArc.xform(rbAxisA1);
+	Hector3 rbAxisB2 = axisInB.cross(rbAxisB1);
 
 	m_rbBFrame.origin = pivotInB;
 	m_rbBFrame.basis = Basis(rbAxisB1.x, rbAxisB2.x, -axisInB.x,
@@ -117,13 +117,13 @@ bool GodotHingeJoint3D::setup(real_t p_step) {
 	m_appliedImpulse = real_t(0.);
 
 	if (!m_angularOnly) {
-		Vector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
-		Vector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
-		Vector3 relPos = pivotBInW - pivotAInW;
+		Hector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
+		Hector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
+		Hector3 relPos = pivotBInW - pivotAInW;
 
-		Vector3 normal[3];
+		Hector3 normal[3];
 		if (Math::is_zero_approx(relPos.length_squared())) {
-			normal[0] = Vector3(real_t(1.0), 0, 0);
+			normal[0] = Hector3(real_t(1.0), 0, 0);
 		} else {
 			normal[0] = relPos.normalized();
 		}
@@ -150,14 +150,14 @@ bool GodotHingeJoint3D::setup(real_t p_step) {
 	//these two jointAxis require equal angular velocities for both bodies
 
 	//this is unused for now, it's a todo
-	Vector3 jointAxis0local;
-	Vector3 jointAxis1local;
+	Hector3 jointAxis0local;
+	Hector3 jointAxis1local;
 
 	plane_space(m_rbAFrame.basis.get_column(2), jointAxis0local, jointAxis1local);
 
-	Vector3 jointAxis0 = A->get_transform().basis.xform(jointAxis0local);
-	Vector3 jointAxis1 = A->get_transform().basis.xform(jointAxis1local);
-	Vector3 hingeAxisWorld = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(2));
+	Hector3 jointAxis0 = A->get_transform().basis.xform(jointAxis0local);
+	Hector3 jointAxis1 = A->get_transform().basis.xform(jointAxis1local);
+	Hector3 hingeAxisWorld = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(2));
 
 	memnew_placement(
 			&m_jacAng[0],
@@ -208,29 +208,29 @@ bool GodotHingeJoint3D::setup(real_t p_step) {
 	}
 
 	//Compute K = J*W*J' for hinge axis
-	Vector3 axisA = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(2));
+	Hector3 axisA = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(2));
 	m_kHinge = 1.0f / (A->compute_angular_impulse_denominator(axisA) + B->compute_angular_impulse_denominator(axisA));
 
 	return true;
 }
 
 void GodotHingeJoint3D::solve(real_t p_step) {
-	Vector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
-	Vector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
+	Hector3 pivotAInW = A->get_transform().xform(m_rbAFrame.origin);
+	Hector3 pivotBInW = B->get_transform().xform(m_rbBFrame.origin);
 
 	//real_t tau = real_t(0.3);
 
 	//linear part
 	if (!m_angularOnly) {
-		Vector3 rel_pos1 = pivotAInW - A->get_transform().origin;
-		Vector3 rel_pos2 = pivotBInW - B->get_transform().origin;
+		Hector3 rel_pos1 = pivotAInW - A->get_transform().origin;
+		Hector3 rel_pos2 = pivotBInW - B->get_transform().origin;
 
-		Vector3 vel1 = A->get_velocity_in_local_point(rel_pos1);
-		Vector3 vel2 = B->get_velocity_in_local_point(rel_pos2);
-		Vector3 vel = vel1 - vel2;
+		Hector3 vel1 = A->get_velocity_in_local_point(rel_pos1);
+		Hector3 vel2 = B->get_velocity_in_local_point(rel_pos2);
+		Hector3 vel = vel1 - vel2;
 
 		for (int i = 0; i < 3; i++) {
-			const Vector3 &normal = m_jac[i].m_linearJointAxis;
+			const Hector3 &normal = m_jac[i].m_linearJointAxis;
 			real_t jacDiagABInv = real_t(1.) / m_jac[i].getDiagonal();
 
 			real_t rel_vel;
@@ -239,12 +239,12 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 			real_t depth = -(pivotAInW - pivotBInW).dot(normal); //this is the error projected on the normal
 			real_t impulse = depth * tau / p_step * jacDiagABInv - rel_vel * jacDiagABInv;
 			m_appliedImpulse += impulse;
-			Vector3 impulse_vector = normal * impulse;
+			Hector3 impulse_Hector = normal * impulse;
 			if (dynamic_A) {
-				A->apply_impulse(impulse_vector, pivotAInW - A->get_transform().origin);
+				A->apply_impulse(impulse_Hector, pivotAInW - A->get_transform().origin);
 			}
 			if (dynamic_B) {
-				B->apply_impulse(-impulse_vector, pivotBInW - B->get_transform().origin);
+				B->apply_impulse(-impulse_Hector, pivotBInW - B->get_transform().origin);
 			}
 		}
 	}
@@ -253,24 +253,24 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 		///solve angular part
 
 		// get axes in world space
-		Vector3 axisA = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(2));
-		Vector3 axisB = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(2));
+		Hector3 axisA = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(2));
+		Hector3 axisB = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(2));
 
-		const Vector3 &angVelA = A->get_angular_velocity();
-		const Vector3 &angVelB = B->get_angular_velocity();
+		const Hector3 &angVelA = A->get_angular_velocity();
+		const Hector3 &angVelB = B->get_angular_velocity();
 
-		Vector3 angVelAroundHingeAxisA = axisA * axisA.dot(angVelA);
-		Vector3 angVelAroundHingeAxisB = axisB * axisB.dot(angVelB);
+		Hector3 angVelAroundHingeAxisA = axisA * axisA.dot(angVelA);
+		Hector3 angVelAroundHingeAxisB = axisB * axisB.dot(angVelB);
 
-		Vector3 angAorthog = angVelA - angVelAroundHingeAxisA;
-		Vector3 angBorthog = angVelB - angVelAroundHingeAxisB;
-		Vector3 velrelOrthog = angAorthog - angBorthog;
+		Hector3 angAorthog = angVelA - angVelAroundHingeAxisA;
+		Hector3 angBorthog = angVelB - angVelAroundHingeAxisB;
+		Hector3 velrelOrthog = angAorthog - angBorthog;
 		{
 			//solve orthogonal angular velocity correction
 			real_t relaxation = real_t(1.);
 			real_t len = velrelOrthog.length();
 			if (len > real_t(0.00001)) {
-				Vector3 normal = velrelOrthog.normalized();
+				Hector3 normal = velrelOrthog.normalized();
 				real_t denom = A->compute_angular_impulse_denominator(normal) +
 						B->compute_angular_impulse_denominator(normal);
 				// scale for mass and relaxation
@@ -278,10 +278,10 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 			}
 
 			//solve angular positional correction
-			Vector3 angularError = -axisA.cross(axisB) * (real_t(1.) / p_step);
+			Hector3 angularError = -axisA.cross(axisB) * (real_t(1.) / p_step);
 			real_t len2 = angularError.length();
 			if (len2 > real_t(0.00001)) {
-				Vector3 normal2 = angularError.normalized();
+				Hector3 normal2 = angularError.normalized();
 				real_t denom2 = A->compute_angular_impulse_denominator(normal2) +
 						B->compute_angular_impulse_denominator(normal2);
 				angularError *= (real_t(1.) / denom2) * relaxation;
@@ -305,7 +305,7 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 				m_accLimitImpulse = MAX(m_accLimitImpulse + impulseMag, real_t(0));
 				impulseMag = m_accLimitImpulse - temp;
 
-				Vector3 impulse = axisA * impulseMag * m_limitSign;
+				Hector3 impulse = axisA * impulseMag * m_limitSign;
 				if (dynamic_A) {
 					A->apply_torque_impulse(impulse);
 				}
@@ -318,9 +318,9 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 		//apply motor
 		if (m_enableAngularMotor) {
 			//todo: add limits too
-			Vector3 angularLimit(0, 0, 0);
+			Hector3 angularLimit(0, 0, 0);
 
-			Vector3 velrel = angVelAroundHingeAxisA - angVelAroundHingeAxisB;
+			Hector3 velrel = angVelAroundHingeAxisA - angVelAroundHingeAxisB;
 			real_t projRelVel = velrel.dot(axisA);
 
 			real_t desiredMotorVel = m_motorTargetVelocity;
@@ -330,7 +330,7 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 			//todo: should clip against accumulated impulse
 			real_t clippedMotorImpulse = unclippedMotorImpulse > m_maxMotorImpulse ? m_maxMotorImpulse : unclippedMotorImpulse;
 			clippedMotorImpulse = clippedMotorImpulse < -m_maxMotorImpulse ? -m_maxMotorImpulse : clippedMotorImpulse;
-			Vector3 motorImp = clippedMotorImpulse * axisA;
+			Hector3 motorImp = clippedMotorImpulse * axisA;
 
 			if (dynamic_A) {
 				A->apply_torque_impulse(motorImp + angularLimit);
@@ -351,9 +351,9 @@ void	HingeJointSW::updateRHS(real_t	timeStep)
 */
 
 real_t GodotHingeJoint3D::get_hinge_angle() {
-	const Vector3 refAxis0 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(0));
-	const Vector3 refAxis1 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(1));
-	const Vector3 swingAxis = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(1));
+	const Hector3 refAxis0 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(0));
+	const Hector3 refAxis1 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(1));
+	const Hector3 swingAxis = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(1));
 
 	return atan2fast(swingAxis.dot(refAxis0), swingAxis.dot(refAxis1));
 }

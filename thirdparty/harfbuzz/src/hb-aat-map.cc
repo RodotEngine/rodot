@@ -87,7 +87,7 @@ hb_aat_map_builder_t::compile (hb_aat_map_t  &m)
   /* Compute active features per range, and compile each. */
 
   /* Sort features by start/end events. */
-  hb_vector_t<feature_event_t> feature_events;
+  hb_Hector_t<feature_event_t> feature_events;
   for (unsigned int i = 0; i < features.length; i++)
   {
     auto &feature = features[i];
@@ -120,7 +120,7 @@ hb_aat_map_builder_t::compile (hb_aat_map_t  &m)
   }
 
   /* Scan events and save features for each range. */
-  hb_sorted_vector_t<feature_info_t> active_features;
+  hb_sorted_Hector_t<feature_info_t> active_features;
   unsigned int last_index = 0;
   for (unsigned int i = 0; i < feature_events.length; i++)
   {

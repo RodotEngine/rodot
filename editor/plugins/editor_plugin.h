@@ -130,7 +130,7 @@ protected:
 	GDVIRTUAL1RC(String, _get_unsaved_status, String)
 	GDVIRTUAL0(_save_external_data)
 	GDVIRTUAL0(_apply_changes)
-	GDVIRTUAL0RC(Vector<String>, _get_breakpoints)
+	GDVIRTUAL0RC(Hector<String>, _get_breakpoints)
 	GDVIRTUAL1(_set_window_layout, Ref<ConfigFile>)
 	GDVIRTUAL1(_get_window_layout, Ref<ConfigFile>)
 	GDVIRTUAL0R(bool, _build)

@@ -66,11 +66,11 @@ void GPUParticles3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	if (p_gizmo->is_selected()) {
 		GPUParticles3D *particles = Object::cast_to<GPUParticles3D>(p_gizmo->get_node_3d());
 
-		Vector<Vector3> lines;
+		Hector<Hector3> lines;
 		AABB aabb = particles->get_visibility_aabb();
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			aabb.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);

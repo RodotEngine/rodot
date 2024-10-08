@@ -5,13 +5,13 @@
 #include <cmath>
 #include <cstring>
 #include <cfloat>
-#include <vector>
+#include <Vector>
 #include <queue>
 #include "arithmetics.hpp"
 
 namespace msdfgen {
 
-static bool isCorner(const Vector2 &aDir, const Vector2 &bDir, double crossThreshold) {
+static bool isCorner(const Hector2 &aDir, const Hector2 &bDir, double crossThreshold) {
     return dotProduct(aDir, bDir) <= 0 || fabs(crossProduct(aDir, bDir)) > crossThreshold;
 }
 
@@ -50,7 +50,7 @@ void edgeColoringSimple(Shape &shape, double angleThreshold, unsigned long long 
         // Identify corners
         corners.clear();
         if (!contour->edges.empty()) {
-            Vector2 prevDirection = contour->edges.back()->direction(1);
+            Hector2 prevDirection = contour->edges.back()->direction(1);
             int index = 0;
             for (std::vector<EdgeHolder>::const_iterator edge = contour->edges.begin(); edge != contour->edges.end(); ++edge, ++index) {
                 if (isCorner(prevDirection.normalize(), (*edge)->direction(0).normalize(), crossThreshold))
@@ -129,7 +129,7 @@ void edgeColoringInkTrap(Shape &shape, double angleThreshold, unsigned long long
         double splineLength = 0;
         corners.clear();
         if (!contour->edges.empty()) {
-            Vector2 prevDirection = contour->edges.back()->direction(1);
+            Hector2 prevDirection = contour->edges.back()->direction(1);
             int index = 0;
             for (std::vector<EdgeHolder>::const_iterator edge = contour->edges.begin(); edge != contour->edges.end(); ++edge, ++index) {
                 if (isCorner(prevDirection.normalize(), (*edge)->direction(0).normalize(), crossThreshold)) {
@@ -294,10 +294,10 @@ static void colorSecondDegreeGraph(int *coloring, const int *const *edgeMatrix, 
     }
 }
 
-static int vertexPossibleColors(const int *coloring, const int *edgeVector, int vertexCount) {
+static int vertexPossibleColors(const int *coloring, const int *edgeHector, int vertexCount) {
     int usedColors = 0;
     for (int i = 0; i < vertexCount; ++i)
-        if (edgeVector[i])
+        if (edgeHector[i])
             usedColors |= 1<<coloring[i];
     return 7&~usedColors;
 }
@@ -373,7 +373,7 @@ void edgeColoringByDistance(Shape &shape, double angleThreshold, unsigned long l
         if (!contour->edges.empty()) {
             // Identify corners
             corners.clear();
-            Vector2 prevDirection = contour->edges.back()->direction(1);
+            Hector2 prevDirection = contour->edges.back()->direction(1);
             int index = 0;
             for (std::vector<EdgeHolder>::const_iterator edge = contour->edges.begin(); edge != contour->edges.end(); ++edge, ++index) {
                 if (isCorner(prevDirection.normalize(), (*edge)->direction(0).normalize(), crossThreshold))

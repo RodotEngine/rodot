@@ -246,14 +246,14 @@ void CSGShape3DGizmoPlugin::begin_handle_action(const EditorNode3DGizmo *p_gizmo
 void CSGShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point) {
 	CSGShape3D *cs = Object::cast_to<CSGShape3D>(p_gizmo->get_node_3d());
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
 	if (Object::cast_to<CSGSphere3D>(cs)) {
 		CSGSphere3D *s = Object::cast_to<CSGSphere3D>(cs);
 
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), Vector3(4096, 0, 0), sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), Hector3(4096, 0, 0), sg[0], sg[1], ra, rb);
 		float d = ra.x;
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -268,8 +268,8 @@ void CSGShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_i
 
 	if (Object::cast_to<CSGBox3D>(cs)) {
 		CSGBox3D *s = Object::cast_to<CSGBox3D>(cs);
-		Vector3 size = s->get_size();
-		Vector3 position;
+		Hector3 size = s->get_size();
+		Hector3 position;
 		helper->box_set_handle(sg, p_id, size, position);
 		s->set_size(size);
 		s->set_global_position(position);
@@ -278,10 +278,10 @@ void CSGShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_i
 	if (Object::cast_to<CSGCylinder3D>(cs)) {
 		CSGCylinder3D *s = Object::cast_to<CSGCylinder3D>(cs);
 
-		Vector3 axis;
+		Hector3 axis;
 		axis[p_id == 0 ? 0 : 1] = 1.0;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), axis * 4096, sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), axis * 4096, sg[0], sg[1], ra, rb);
 		float d = axis.dot(ra);
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -301,10 +301,10 @@ void CSGShape3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_i
 	if (Object::cast_to<CSGTorus3D>(cs)) {
 		CSGTorus3D *s = Object::cast_to<CSGTorus3D>(cs);
 
-		Vector3 axis;
+		Hector3 axis;
 		axis[0] = 1.0;
-		Vector3 ra, rb;
-		Geometry3D::get_closest_points_between_segments(Vector3(), axis * 4096, sg[0], sg[1], ra, rb);
+		Hector3 ra, rb;
+		Geometry3D::get_closest_points_between_segments(Hector3(), axis * 4096, sg[0], sg[1], ra, rb);
 		float d = axis.dot(ra);
 		if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
@@ -415,16 +415,16 @@ void CSGShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	CSGShape3D *cs = Object::cast_to<CSGShape3D>(p_gizmo->get_node_3d());
 
-	Vector<Vector3> faces = cs->get_brush_faces();
+	Hector<Hector3> faces = cs->get_brush_faces();
 
 	if (faces.size() == 0) {
 		return;
 	}
 
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 	lines.resize(faces.size() * 2);
 	{
-		const Vector3 *r = faces.ptr();
+		const Hector3 *r = faces.ptr();
 
 		for (int i = 0; i < lines.size(); i += 6) {
 			int f = i / 6;
@@ -492,32 +492,32 @@ void CSGShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		CSGSphere3D *s = Object::cast_to<CSGSphere3D>(cs);
 
 		float r = s->get_radius();
-		Vector<Vector3> handles;
-		handles.push_back(Vector3(r, 0, 0));
+		Hector<Hector3> handles;
+		handles.push_back(Hector3(r, 0, 0));
 		p_gizmo->add_handles(handles, handles_material);
 	}
 
 	if (Object::cast_to<CSGBox3D>(cs)) {
 		CSGBox3D *s = Object::cast_to<CSGBox3D>(cs);
-		Vector<Vector3> handles = helper->box_get_handles(s->get_size());
+		Hector<Hector3> handles = helper->box_get_handles(s->get_size());
 		p_gizmo->add_handles(handles, handles_material);
 	}
 
 	if (Object::cast_to<CSGCylinder3D>(cs)) {
 		CSGCylinder3D *s = Object::cast_to<CSGCylinder3D>(cs);
 
-		Vector<Vector3> handles;
-		handles.push_back(Vector3(s->get_radius(), 0, 0));
-		handles.push_back(Vector3(0, s->get_height() * 0.5, 0));
+		Hector<Hector3> handles;
+		handles.push_back(Hector3(s->get_radius(), 0, 0));
+		handles.push_back(Hector3(0, s->get_height() * 0.5, 0));
 		p_gizmo->add_handles(handles, handles_material);
 	}
 
 	if (Object::cast_to<CSGTorus3D>(cs)) {
 		CSGTorus3D *s = Object::cast_to<CSGTorus3D>(cs);
 
-		Vector<Vector3> handles;
-		handles.push_back(Vector3(s->get_inner_radius(), 0, 0));
-		handles.push_back(Vector3(s->get_outer_radius(), 0, 0));
+		Hector<Hector3> handles;
+		handles.push_back(Hector3(s->get_inner_radius(), 0, 0));
+		handles.push_back(Hector3(s->get_outer_radius(), 0, 0));
 		p_gizmo->add_handles(handles, handles_material);
 	}
 }

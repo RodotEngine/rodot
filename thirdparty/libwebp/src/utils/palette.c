@@ -320,7 +320,7 @@ static int PaletteSortModifiedZeng(const WebPPicture* const pic,
   CoOccurrenceFindMax(cooccurrence, num_colors, &remapping[0], &remapping[1]);
 
   // We need to append and prepend to the list of remapping. To this end, we
-  // actually define the next start/end of the list as indices in a vector (with
+  // actually define the next start/end of the list as indices in a Hector (with
   // a wrap around when the end is reached).
   first = 0;
   last = 1;

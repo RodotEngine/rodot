@@ -335,11 +335,11 @@ AABB LightStorage::light_get_aabb(RID p_light) const {
 		case RS::LIGHT_SPOT: {
 			float len = light->param[RS::LIGHT_PARAM_RANGE];
 			float size = Math::tan(Math::deg_to_rad(light->param[RS::LIGHT_PARAM_SPOT_ANGLE])) * len;
-			return AABB(Vector3(-size, -size, -len), Vector3(size * 2, size * 2, len));
+			return AABB(Hector3(-size, -size, -len), Hector3(size * 2, size * 2, len));
 		};
 		case RS::LIGHT_OMNI: {
 			float r = light->param[RS::LIGHT_PARAM_RANGE];
-			return AABB(-Vector3(r, r, r), Vector3(r, r, r) * 2);
+			return AABB(-Hector3(r, r, r), Hector3(r, r, r) * 2);
 		};
 		case RS::LIGHT_DIRECTIONAL: {
 			return AABB();
@@ -397,7 +397,7 @@ void LightStorage::light_instance_set_aabb(RID p_light_instance, const AABB &p_a
 	light_instance->aabb = p_aabb;
 }
 
-void LightStorage::light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale, float p_range_begin, const Vector2 &p_uv_scale) {
+void LightStorage::light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale, float p_range_begin, const Hector2 &p_uv_scale) {
 	LightInstance *light_instance = light_instance_owner.get_or_null(p_light_instance);
 	ERR_FAIL_NULL(light_instance);
 
@@ -483,7 +483,7 @@ void LightStorage::reflection_probe_set_max_distance(RID p_probe, float p_distan
 	reflection_probe->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_REFLECTION_PROBE);
 }
 
-void LightStorage::reflection_probe_set_size(RID p_probe, const Vector3 &p_size) {
+void LightStorage::reflection_probe_set_size(RID p_probe, const Hector3 &p_size) {
 	ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
 	ERR_FAIL_NULL(reflection_probe);
 
@@ -491,7 +491,7 @@ void LightStorage::reflection_probe_set_size(RID p_probe, const Vector3 &p_size)
 	reflection_probe->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_REFLECTION_PROBE);
 }
 
-void LightStorage::reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) {
+void LightStorage::reflection_probe_set_origin_offset(RID p_probe, const Hector3 &p_offset) {
 	ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
 	ERR_FAIL_NULL(reflection_probe);
 
@@ -577,16 +577,16 @@ uint32_t LightStorage::reflection_probe_get_reflection_mask(RID p_probe) const {
 	return reflection_probe->reflection_mask;
 }
 
-Vector3 LightStorage::reflection_probe_get_size(RID p_probe) const {
+Hector3 LightStorage::reflection_probe_get_size(RID p_probe) const {
 	const ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
-	ERR_FAIL_NULL_V(reflection_probe, Vector3());
+	ERR_FAIL_NULL_V(reflection_probe, Hector3());
 
 	return reflection_probe->size;
 }
 
-Vector3 LightStorage::reflection_probe_get_origin_offset(RID p_probe) const {
+Hector3 LightStorage::reflection_probe_get_origin_offset(RID p_probe) const {
 	const ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
-	ERR_FAIL_NULL_V(reflection_probe, Vector3());
+	ERR_FAIL_NULL_V(reflection_probe, Hector3());
 
 	return reflection_probe->origin_offset;
 }
@@ -1046,8 +1046,8 @@ void LightStorage::lightmap_set_textures(RID p_lightmap, RID p_light, bool p_use
 	lightmap->light_texture = p_light;
 	lightmap->uses_spherical_harmonics = p_uses_spherical_haromics;
 
-	Vector3i light_texture_size = GLES3::TextureStorage::get_singleton()->texture_get_size(lightmap->light_texture);
-	lightmap->light_texture_size = Vector2i(light_texture_size.x, light_texture_size.y);
+	Hector3i light_texture_size = GLES3::TextureStorage::get_singleton()->texture_get_size(lightmap->light_texture);
+	lightmap->light_texture_size = Hector2i(light_texture_size.x, light_texture_size.y);
 
 	GLuint tex = GLES3::TextureStorage::get_singleton()->texture_get_texid(lightmap->light_texture);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
@@ -1070,7 +1070,7 @@ void LightStorage::lightmap_set_probe_interior(RID p_lightmap, bool p_interior) 
 	lightmap->interior = p_interior;
 }
 
-void LightStorage::lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) {
+void LightStorage::lightmap_set_probe_capture_data(RID p_lightmap, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) {
 	Lightmap *lightmap = lightmap_owner.get_or_null(p_lightmap);
 	ERR_FAIL_NULL(lightmap);
 
@@ -1093,9 +1093,9 @@ void LightStorage::lightmap_set_baked_exposure_normalization(RID p_lightmap, flo
 	lightmap->baked_exposure = p_exposure;
 }
 
-PackedVector3Array LightStorage::lightmap_get_probe_capture_points(RID p_lightmap) const {
+PackedHector3Array LightStorage::lightmap_get_probe_capture_points(RID p_lightmap) const {
 	Lightmap *lightmap = lightmap_owner.get_or_null(p_lightmap);
-	ERR_FAIL_NULL_V(lightmap, PackedVector3Array());
+	ERR_FAIL_NULL_V(lightmap, PackedHector3Array());
 	return lightmap->points;
 }
 
@@ -1123,7 +1123,7 @@ AABB LightStorage::lightmap_get_aabb(RID p_lightmap) const {
 	return lightmap->bounds;
 }
 
-void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) {
+void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Hector3 &p_point, Color *r_sh) {
 	Lightmap *lm = lightmap_owner.get_or_null(p_lightmap);
 	ERR_FAIL_NULL(lm);
 
@@ -1161,7 +1161,7 @@ void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point,
 	node = ABS(node) - 1;
 
 	uint32_t *tetrahedron = (uint32_t *)&lm->tetrahedra[node * 4];
-	Vector3 points[4] = { lm->points[tetrahedron[0]], lm->points[tetrahedron[1]], lm->points[tetrahedron[2]], lm->points[tetrahedron[3]] };
+	Hector3 points[4] = { lm->points[tetrahedron[0]], lm->points[tetrahedron[1]], lm->points[tetrahedron[2]], lm->points[tetrahedron[3]] };
 	const Color *sh_colors[4]{ &lm->point_sh[tetrahedron[0] * 9], &lm->point_sh[tetrahedron[1] * 9], &lm->point_sh[tetrahedron[2] * 9], &lm->point_sh[tetrahedron[3] * 9] };
 	Color barycentric = Geometry3D::tetrahedron_get_barycentric_coords(points[0], points[1], points[2], points[3], p_point);
 

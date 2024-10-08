@@ -7592,7 +7592,7 @@ yyreduce:
            {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 7598 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7602,7 +7602,7 @@ yyreduce:
            {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 7608 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7612,7 +7612,7 @@ yyreduce:
            {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 7618 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7622,7 +7622,7 @@ yyreduce:
             {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtBool;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 7628 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7632,7 +7632,7 @@ yyreduce:
             {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtBool;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 7638 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7642,7 +7642,7 @@ yyreduce:
             {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtBool;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 7648 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7652,7 +7652,7 @@ yyreduce:
             {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 7658 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7662,7 +7662,7 @@ yyreduce:
             {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 7668 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7672,7 +7672,7 @@ yyreduce:
             {
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 7678 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7680,10 +7680,10 @@ yyreduce:
   case 235: /* type_specifier_nonarray: UVEC2  */
 #line 1849 "MachineIndependent/glslang.y"
             {
-        parseContext.fullIntegerCheck((yyvsp[0].lex).loc, "unsigned integer vector");
+        parseContext.fullIntegerCheck((yyvsp[0].lex).loc, "unsigned integer Hector");
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 7689 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7691,10 +7691,10 @@ yyreduce:
   case 236: /* type_specifier_nonarray: UVEC3  */
 #line 1855 "MachineIndependent/glslang.y"
             {
-        parseContext.fullIntegerCheck((yyvsp[0].lex).loc, "unsigned integer vector");
+        parseContext.fullIntegerCheck((yyvsp[0].lex).loc, "unsigned integer Hector");
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 7700 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7702,10 +7702,10 @@ yyreduce:
   case 237: /* type_specifier_nonarray: UVEC4  */
 #line 1861 "MachineIndependent/glslang.y"
             {
-        parseContext.fullIntegerCheck((yyvsp[0].lex).loc, "unsigned integer vector");
+        parseContext.fullIntegerCheck((yyvsp[0].lex).loc, "unsigned integer Hector");
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 7711 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7845,7 +7845,7 @@ yyreduce:
   case 251: /* type_specifier_nonarray: FLOAT16_T  */
 #line 1934 "MachineIndependent/glslang.y"
                 {
-        parseContext.float16ScalarVectorCheck((yyvsp[0].lex).loc, "float16_t", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck((yyvsp[0].lex).loc, "float16_t", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat16;
     }
@@ -7875,7 +7875,7 @@ yyreduce:
   case 254: /* type_specifier_nonarray: INT8_T  */
 #line 1949 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt8;
     }
@@ -7885,7 +7885,7 @@ yyreduce:
   case 255: /* type_specifier_nonarray: UINT8_T  */
 #line 1954 "MachineIndependent/glslang.y"
               {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint8;
     }
@@ -7895,7 +7895,7 @@ yyreduce:
   case 256: /* type_specifier_nonarray: INT16_T  */
 #line 1959 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit signed integer", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt16;
     }
@@ -7905,7 +7905,7 @@ yyreduce:
   case 257: /* type_specifier_nonarray: UINT16_T  */
 #line 1964 "MachineIndependent/glslang.y"
                {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint16;
     }
@@ -7955,12 +7955,12 @@ yyreduce:
   case 262: /* type_specifier_nonarray: DVEC2  */
 #line 1989 "MachineIndependent/glslang.y"
             {
-        parseContext.requireProfile((yyvsp[0].lex).loc, ECoreProfile | ECompatibilityProfile, "double vector");
+        parseContext.requireProfile((yyvsp[0].lex).loc, ECoreProfile | ECompatibilityProfile, "double Hector");
         if (! parseContext.symbolTable.atBuiltInLevel())
-            parseContext.doubleCheck((yyvsp[0].lex).loc, "double vector");
+            parseContext.doubleCheck((yyvsp[0].lex).loc, "double Hector");
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtDouble;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 7966 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7968,12 +7968,12 @@ yyreduce:
   case 263: /* type_specifier_nonarray: DVEC3  */
 #line 1997 "MachineIndependent/glslang.y"
             {
-        parseContext.requireProfile((yyvsp[0].lex).loc, ECoreProfile | ECompatibilityProfile, "double vector");
+        parseContext.requireProfile((yyvsp[0].lex).loc, ECoreProfile | ECompatibilityProfile, "double Hector");
         if (! parseContext.symbolTable.atBuiltInLevel())
-            parseContext.doubleCheck((yyvsp[0].lex).loc, "double vector");
+            parseContext.doubleCheck((yyvsp[0].lex).loc, "double Hector");
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtDouble;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 7979 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7981,12 +7981,12 @@ yyreduce:
   case 264: /* type_specifier_nonarray: DVEC4  */
 #line 2005 "MachineIndependent/glslang.y"
             {
-        parseContext.requireProfile((yyvsp[0].lex).loc, ECoreProfile | ECompatibilityProfile, "double vector");
+        parseContext.requireProfile((yyvsp[0].lex).loc, ECoreProfile | ECompatibilityProfile, "double Hector");
         if (! parseContext.symbolTable.atBuiltInLevel())
-            parseContext.doubleCheck((yyvsp[0].lex).loc, "double vector");
+            parseContext.doubleCheck((yyvsp[0].lex).loc, "double Hector");
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtDouble;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 7992 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -7994,10 +7994,10 @@ yyreduce:
   case 265: /* type_specifier_nonarray: F16VEC2  */
 #line 2013 "MachineIndependent/glslang.y"
               {
-        parseContext.float16ScalarVectorCheck((yyvsp[0].lex).loc, "half float vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck((yyvsp[0].lex).loc, "half float Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat16;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8003 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8005,10 +8005,10 @@ yyreduce:
   case 266: /* type_specifier_nonarray: F16VEC3  */
 #line 2019 "MachineIndependent/glslang.y"
               {
-        parseContext.float16ScalarVectorCheck((yyvsp[0].lex).loc, "half float vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck((yyvsp[0].lex).loc, "half float Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat16;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8014 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8016,10 +8016,10 @@ yyreduce:
   case 267: /* type_specifier_nonarray: F16VEC4  */
 #line 2025 "MachineIndependent/glslang.y"
               {
-        parseContext.float16ScalarVectorCheck((yyvsp[0].lex).loc, "half float vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.float16ScalarHectorCheck((yyvsp[0].lex).loc, "half float Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat16;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8025 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8027,10 +8027,10 @@ yyreduce:
   case 268: /* type_specifier_nonarray: F32VEC2  */
 #line 2031 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitFloat32Check((yyvsp[0].lex).loc, "float32_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat32Check((yyvsp[0].lex).loc, "float32_t Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8036 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8038,10 +8038,10 @@ yyreduce:
   case 269: /* type_specifier_nonarray: F32VEC3  */
 #line 2037 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitFloat32Check((yyvsp[0].lex).loc, "float32_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat32Check((yyvsp[0].lex).loc, "float32_t Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8047 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8049,10 +8049,10 @@ yyreduce:
   case 270: /* type_specifier_nonarray: F32VEC4  */
 #line 2043 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitFloat32Check((yyvsp[0].lex).loc, "float32_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat32Check((yyvsp[0].lex).loc, "float32_t Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtFloat;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8058 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8060,10 +8060,10 @@ yyreduce:
   case 271: /* type_specifier_nonarray: F64VEC2  */
 #line 2049 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitFloat64Check((yyvsp[0].lex).loc, "float64_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat64Check((yyvsp[0].lex).loc, "float64_t Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtDouble;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8069 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8071,10 +8071,10 @@ yyreduce:
   case 272: /* type_specifier_nonarray: F64VEC3  */
 #line 2055 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitFloat64Check((yyvsp[0].lex).loc, "float64_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat64Check((yyvsp[0].lex).loc, "float64_t Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtDouble;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8080 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8082,10 +8082,10 @@ yyreduce:
   case 273: /* type_specifier_nonarray: F64VEC4  */
 #line 2061 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitFloat64Check((yyvsp[0].lex).loc, "float64_t vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitFloat64Check((yyvsp[0].lex).loc, "float64_t Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtDouble;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8091 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8093,10 +8093,10 @@ yyreduce:
   case 274: /* type_specifier_nonarray: I8VEC2  */
 #line 2067 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt8;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8102 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8104,10 +8104,10 @@ yyreduce:
   case 275: /* type_specifier_nonarray: I8VEC3  */
 #line 2073 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt8;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8113 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8115,10 +8115,10 @@ yyreduce:
   case 276: /* type_specifier_nonarray: I8VEC4  */
 #line 2079 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt8;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8124 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8126,10 +8126,10 @@ yyreduce:
   case 277: /* type_specifier_nonarray: I16VEC2  */
 #line 2085 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt16;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8135 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8137,10 +8137,10 @@ yyreduce:
   case 278: /* type_specifier_nonarray: I16VEC3  */
 #line 2091 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt16;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8146 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8148,10 +8148,10 @@ yyreduce:
   case 279: /* type_specifier_nonarray: I16VEC4  */
 #line 2097 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt16;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8157 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8159,10 +8159,10 @@ yyreduce:
   case 280: /* type_specifier_nonarray: I32VEC2  */
 #line 2103 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8168 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8170,10 +8170,10 @@ yyreduce:
   case 281: /* type_specifier_nonarray: I32VEC3  */
 #line 2109 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8179 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8181,10 +8181,10 @@ yyreduce:
   case 282: /* type_specifier_nonarray: I32VEC4  */
 #line 2115 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit signed integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit signed integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8190 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8192,10 +8192,10 @@ yyreduce:
   case 283: /* type_specifier_nonarray: I64VEC2  */
 #line 2121 "MachineIndependent/glslang.y"
               {
-        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt64;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8201 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8203,10 +8203,10 @@ yyreduce:
   case 284: /* type_specifier_nonarray: I64VEC3  */
 #line 2127 "MachineIndependent/glslang.y"
               {
-        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt64;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8212 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8214,10 +8214,10 @@ yyreduce:
   case 285: /* type_specifier_nonarray: I64VEC4  */
 #line 2133 "MachineIndependent/glslang.y"
               {
-        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtInt64;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8223 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8225,10 +8225,10 @@ yyreduce:
   case 286: /* type_specifier_nonarray: U8VEC2  */
 #line 2139 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint8;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8234 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8236,10 +8236,10 @@ yyreduce:
   case 287: /* type_specifier_nonarray: U8VEC3  */
 #line 2145 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint8;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8245 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8247,10 +8247,10 @@ yyreduce:
   case 288: /* type_specifier_nonarray: U8VEC4  */
 #line 2151 "MachineIndependent/glslang.y"
              {
-        parseContext.int8ScalarVectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int8ScalarHectorCheck((yyvsp[0].lex).loc, "8-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint8;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8256 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8258,10 +8258,10 @@ yyreduce:
   case 289: /* type_specifier_nonarray: U16VEC2  */
 #line 2157 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint16;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8267 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8269,10 +8269,10 @@ yyreduce:
   case 290: /* type_specifier_nonarray: U16VEC3  */
 #line 2163 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint16;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8278 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8280,10 +8280,10 @@ yyreduce:
   case 291: /* type_specifier_nonarray: U16VEC4  */
 #line 2169 "MachineIndependent/glslang.y"
               {
-        parseContext.int16ScalarVectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int16ScalarHectorCheck((yyvsp[0].lex).loc, "16-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint16;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8289 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8291,10 +8291,10 @@ yyreduce:
   case 292: /* type_specifier_nonarray: U32VEC2  */
 #line 2175 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8300 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8302,10 +8302,10 @@ yyreduce:
   case 293: /* type_specifier_nonarray: U32VEC3  */
 #line 2181 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8311 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8313,10 +8313,10 @@ yyreduce:
   case 294: /* type_specifier_nonarray: U32VEC4  */
 #line 2187 "MachineIndependent/glslang.y"
               {
-        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.explicitInt32Check((yyvsp[0].lex).loc, "32-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8322 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8324,10 +8324,10 @@ yyreduce:
   case 295: /* type_specifier_nonarray: U64VEC2  */
 #line 2193 "MachineIndependent/glslang.y"
               {
-        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint64;
-        (yyval.interm.type).setVector(2);
+        (yyval.interm.type).setHector(2);
     }
 #line 8333 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8335,10 +8335,10 @@ yyreduce:
   case 296: /* type_specifier_nonarray: U64VEC3  */
 #line 2199 "MachineIndependent/glslang.y"
               {
-        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint64;
-        (yyval.interm.type).setVector(3);
+        (yyval.interm.type).setHector(3);
     }
 #line 8344 "MachineIndependent/glslang_tab.cpp"
     break;
@@ -8346,10 +8346,10 @@ yyreduce:
   case 297: /* type_specifier_nonarray: U64VEC4  */
 #line 2205 "MachineIndependent/glslang.y"
               {
-        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit unsigned integer vector", parseContext.symbolTable.atBuiltInLevel());
+        parseContext.int64Check((yyvsp[0].lex).loc, "64-bit unsigned integer Hector", parseContext.symbolTable.atBuiltInLevel());
         (yyval.interm.type).init((yyvsp[0].lex).loc, parseContext.symbolTable.atGlobalLevel());
         (yyval.interm.type).basicType = EbtUint64;
-        (yyval.interm.type).setVector(4);
+        (yyval.interm.type).setHector(4);
     }
 #line 8355 "MachineIndependent/glslang_tab.cpp"
     break;

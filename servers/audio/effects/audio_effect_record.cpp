@@ -201,7 +201,7 @@ Ref<AudioStreamWAV> AudioEffectRecord::get_recording() const {
 	AudioStreamWAV::Format dst_format = format;
 	bool stereo = true; //forcing mono is not implemented
 
-	Vector<uint8_t> dst_data;
+	Hector<uint8_t> dst_data;
 
 	ERR_FAIL_COND_V(current_instance.is_null(), nullptr);
 	ERR_FAIL_COND_V(current_instance->recording_data.is_empty(), nullptr);
@@ -226,8 +226,8 @@ Ref<AudioStreamWAV> AudioEffectRecord::get_recording() const {
 		}
 	} else if (dst_format == AudioStreamWAV::FORMAT_IMA_ADPCM) {
 		//byte interleave
-		Vector<float> left;
-		Vector<float> right;
+		Hector<float> left;
+		Hector<float> right;
 
 		int tframes = current_instance->recording_data.size() / 2;
 		left.resize(tframes);
@@ -238,8 +238,8 @@ Ref<AudioStreamWAV> AudioEffectRecord::get_recording() const {
 			right.set(i, current_instance->recording_data[i * 2 + 1]);
 		}
 
-		Vector<uint8_t> bleft;
-		Vector<uint8_t> bright;
+		Hector<uint8_t> bleft;
+		Hector<uint8_t> bright;
 
 #ifdef TOOLS_ENABLED
 		ResourceImporterWAV::_compress_ima_adpcm(left, bleft);

@@ -55,7 +55,7 @@
    *
    * Note, however, that this is a _very_ different implementation
    * compared to Raph's.  Coverage information is stored in a very
-   * different way, and I don't use sorted vector paths.  Also, it doesn't
+   * different way, and I don't use sorted Hector paths.  Also, it doesn't
    * use floating point values.
    *
    * Bézier segments are flattened by splitting them until their deviation
@@ -1045,10 +1045,10 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_render_conic( RAS_ARG_ const FT_Vector*  control,
-                              const FT_Vector*  to )
+  gray_render_conic( RAS_ARG_ const FT_Hector*  control,
+                              const FT_Hector*  to )
   {
-    FT_Vector  p0, p1, p2;
+    FT_Hector  p0, p1, p2;
     TPos       ax, ay, bx, by, dx, dy;
     int        shift;
 
@@ -1238,7 +1238,7 @@ typedef ptrdiff_t  FT_PtrDist;
    * out to be slower than the non-SIMD code below.
    */
   static void
-  gray_split_conic( FT_Vector*  base )
+  gray_split_conic( FT_Hector*  base )
   {
     TPos  a, b;
 
@@ -1260,11 +1260,11 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_render_conic( RAS_ARG_ const FT_Vector*  control,
-                              const FT_Vector*  to )
+  gray_render_conic( RAS_ARG_ const FT_Hector*  control,
+                              const FT_Hector*  to )
   {
-    FT_Vector   bez_stack[16 * 2 + 1];  /* enough to accommodate bisections */
-    FT_Vector*  arc = bez_stack;
+    FT_Hector   bez_stack[16 * 2 + 1];  /* enough to accommodate bisections */
+    FT_Hector*  arc = bez_stack;
     TPos        dx, dy;
     int         draw;
 
@@ -1336,7 +1336,7 @@ typedef ptrdiff_t  FT_PtrDist;
    * `gray_split_cubic`, though.
    */
   static void
-  gray_split_cubic( FT_Vector*  base )
+  gray_split_cubic( FT_Hector*  base )
   {
     TPos  a, b, c;
 
@@ -1368,12 +1368,12 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_render_cubic( RAS_ARG_ const FT_Vector*  control1,
-                              const FT_Vector*  control2,
-                              const FT_Vector*  to )
+  gray_render_cubic( RAS_ARG_ const FT_Hector*  control1,
+                              const FT_Hector*  control2,
+                              const FT_Hector*  to )
   {
-    FT_Vector   bez_stack[16 * 3 + 1];  /* enough to accommodate bisections */
-    FT_Vector*  arc = bez_stack;
+    FT_Hector   bez_stack[16 * 3 + 1];  /* enough to accommodate bisections */
+    FT_Hector*  arc = bez_stack;
 
 
     arc[0].x = UPSCALE( to->x );
@@ -1427,7 +1427,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_move_to( const FT_Vector*  to,
+  gray_move_to( const FT_Hector*  to,
                 void*             worker_ )  /* gray_PWorker */
   {
     gray_PWorker  worker = (gray_PWorker)worker_;
@@ -1448,7 +1448,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_line_to( const FT_Vector*  to,
+  gray_line_to( const FT_Hector*  to,
                 void*             worker_ )   /* gray_PWorker */
   {
     gray_PWorker  worker = (gray_PWorker)worker_;
@@ -1460,8 +1460,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_conic_to( const FT_Vector*  control,
-                 const FT_Vector*  to,
+  gray_conic_to( const FT_Hector*  control,
+                 const FT_Hector*  to,
                  void*             worker_ )   /* gray_PWorker */
   {
     gray_PWorker  worker = (gray_PWorker)worker_;
@@ -1473,9 +1473,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_cubic_to( const FT_Vector*  control1,
-                 const FT_Vector*  control2,
-                 const FT_Vector*  to,
+  gray_cubic_to( const FT_Hector*  control1,
+                 const FT_Hector*  control2,
+                 const FT_Hector*  to,
                  void*             worker_ )   /* gray_PWorker */
   {
     gray_PWorker  worker = (gray_PWorker)worker_;
@@ -1666,12 +1666,12 @@ typedef ptrdiff_t  FT_PtrDist;
 #undef SCALED
 #define SCALED( x )  ( (x) * ( 1L << shift ) - delta )
 
-    FT_Vector   v_last;
-    FT_Vector   v_control;
-    FT_Vector   v_start;
+    FT_Hector   v_last;
+    FT_Hector   v_control;
+    FT_Hector   v_start;
 
-    FT_Vector*  point;
-    FT_Vector*  limit;
+    FT_Hector*  point;
+    FT_Hector*  limit;
     char*       tags;
 
     int         error;
@@ -1765,7 +1765,7 @@ typedef ptrdiff_t  FT_PtrDist;
         {
         case FT_CURVE_TAG_ON:  /* emit a single line_to */
           {
-            FT_Vector  vec;
+            FT_Hector  vec;
 
 
             vec.x = SCALED( point->x );
@@ -1786,8 +1786,8 @@ typedef ptrdiff_t  FT_PtrDist;
         Do_Conic:
           if ( point < limit )
           {
-            FT_Vector  vec;
-            FT_Vector  v_middle;
+            FT_Hector  vec;
+            FT_Hector  v_middle;
 
 
             point++;
@@ -1836,7 +1836,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
         default:  /* FT_CURVE_TAG_CUBIC */
           {
-            FT_Vector  vec1, vec2;
+            FT_Hector  vec1, vec2;
 
 
             if ( point + 1 > limit                             ||
@@ -1854,7 +1854,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
             if ( point <= limit )
             {
-              FT_Vector  vec;
+              FT_Hector  vec;
 
 
               vec.x = SCALED( point->x );

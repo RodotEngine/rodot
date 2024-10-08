@@ -1080,10 +1080,10 @@ msgstr "Einklappen deaktivieren"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Fremde Szenen automatisch ausklappen"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "Horizontales Vector2-Bearbeiten"
+msgid "Horizontal Hector2 Editing"
+msgstr "Horizontales Hector2-Bearbeiten"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Horizontales Vektortyp-Bearbeiten"
 
 msgid "Open Resources in Current Inspector"
@@ -1194,7 +1194,7 @@ msgstr "Externe Programme"
 msgid "Raster Image Editor"
 msgstr "Rasterbild-Editor"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Vektorbild-Editor"
 
 msgid "Audio Editor"
@@ -1983,14 +1983,14 @@ msgstr "Verbindungs-Farben"
 msgid "Scalar Color"
 msgstr "Skalar-Farbe"
 
-msgid "Vector2 Color"
-msgstr "Vector2-Farbe"
+msgid "Hector2 Color"
+msgstr "Hector2-Farbe"
 
-msgid "Vector 3 Color"
-msgstr "Vector3-Farbe"
+msgid "Hector 3 Color"
+msgstr "Hector3-Farbe"
 
-msgid "Vector 4 Color"
-msgstr "Vector4-Farbe"
+msgid "Hector 4 Color"
+msgstr "Hector4-Farbe"
 
 msgid "Boolean Color"
 msgstr "Bool-Farbe"
@@ -2022,7 +2022,7 @@ msgstr "Texturen-Farbe"
 msgid "Utility Color"
 msgstr "Hilfprogramm-Farbe"
 
-msgid "Vector Color"
+msgid "Hector Color"
 msgstr "Vektor-Farbe"
 
 msgid "Special Color"
@@ -8602,7 +8602,7 @@ msgstr "Zugang aufgelöste Farbe"
 msgid "Access Resolved Depth"
 msgstr "Zugang aufgelöste Tiefe"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "Benötigt Bewegungsvektoren"
 
 msgid "Needs Normal Roughness"
@@ -8623,7 +8623,7 @@ msgstr "Backauflösung"
 msgid "Bake Interval"
 msgstr "Backintervall"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Hoch-Vektor"
 
 msgid "Curve X"
@@ -10558,7 +10558,7 @@ msgstr "Als Kollision wiederherstellen"
 msgid "Default Gravity"
 msgstr "Default-Gravitation"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Default-Gravitationsvektor"
 
 msgid "Default Linear Damp"

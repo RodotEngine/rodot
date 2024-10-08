@@ -34,9 +34,9 @@ typedef struct Fsr2Constants {
     
     float                       deviceToViewDepth[4];
     float                       jitterOffset[2];
-    float                       motionVectorScale[2];
+    float                       motionHectorScale[2];
     float                       downscaleFactor[2];
-    float                       motionVectorJitterCancellation[2];
+    float                       motionHectorJitterCancellation[2];
     float                       preExposure;
     float                       previousFramePreExposure;
     float                       tanHalfFOV;

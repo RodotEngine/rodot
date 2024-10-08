@@ -58,7 +58,7 @@ class ResourceFormatImporter : public ResourceFormatLoader {
 		bool operator()(const Ref<ResourceImporter> &p_a, const Ref<ResourceImporter> &p_b) const;
 	};
 
-	Vector<Ref<ResourceImporter>> importers;
+	Hector<Ref<ResourceImporter>> importers;
 
 public:
 	static ResourceFormatImporter *get_singleton() { return singleton; }

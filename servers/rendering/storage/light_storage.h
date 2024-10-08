@@ -93,12 +93,12 @@ public:
 	virtual void light_instance_free(RID p_light_instance) = 0;
 	virtual void light_instance_set_transform(RID p_light_instance, const Transform3D &p_transform) = 0;
 	virtual void light_instance_set_aabb(RID p_light_instance, const AABB &p_aabb) = 0;
-	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Vector2 &p_uv_scale = Vector2()) = 0;
+	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Hector2 &p_uv_scale = Hector2()) = 0;
 	virtual void light_instance_mark_visible(RID p_light_instance) = 0;
 	virtual bool light_instances_can_render_shadow_cube() const {
 		return true;
 	}
-	virtual bool light_instance_is_shadow_visible_at_position(RID p_light, const Vector3 &p_position) const = 0;
+	virtual bool light_instance_is_shadow_visible_at_position(RID p_light, const Hector3 &p_position) const = 0;
 
 	/* PROBE API */
 
@@ -113,8 +113,8 @@ public:
 	virtual void reflection_probe_set_ambient_color(RID p_probe, const Color &p_color) = 0;
 	virtual void reflection_probe_set_ambient_energy(RID p_probe, float p_energy) = 0;
 	virtual void reflection_probe_set_max_distance(RID p_probe, float p_distance) = 0;
-	virtual void reflection_probe_set_size(RID p_probe, const Vector3 &p_size) = 0;
-	virtual void reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) = 0;
+	virtual void reflection_probe_set_size(RID p_probe, const Hector3 &p_size) = 0;
+	virtual void reflection_probe_set_origin_offset(RID p_probe, const Hector3 &p_offset) = 0;
 	virtual void reflection_probe_set_as_interior(RID p_probe, bool p_enable) = 0;
 	virtual void reflection_probe_set_enable_box_projection(RID p_probe, bool p_enable) = 0;
 	virtual void reflection_probe_set_enable_shadows(RID p_probe, bool p_enable) = 0;
@@ -126,8 +126,8 @@ public:
 	virtual RS::ReflectionProbeUpdateMode reflection_probe_get_update_mode(RID p_probe) const = 0;
 	virtual uint32_t reflection_probe_get_cull_mask(RID p_probe) const = 0;
 	virtual uint32_t reflection_probe_get_reflection_mask(RID p_probe) const = 0;
-	virtual Vector3 reflection_probe_get_size(RID p_probe) const = 0;
-	virtual Vector3 reflection_probe_get_origin_offset(RID p_probe) const = 0;
+	virtual Hector3 reflection_probe_get_size(RID p_probe) const = 0;
+	virtual Hector3 reflection_probe_get_origin_offset(RID p_probe) const = 0;
 	virtual float reflection_probe_get_origin_max_distance(RID p_probe) const = 0;
 	virtual bool reflection_probe_renders_shadows(RID p_probe) const = 0;
 	virtual float reflection_probe_get_mesh_lod_threshold(RID p_probe) const = 0;
@@ -161,14 +161,14 @@ public:
 	virtual void lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) = 0;
 	virtual void lightmap_set_probe_bounds(RID p_lightmap, const AABB &p_bounds) = 0;
 	virtual void lightmap_set_probe_interior(RID p_lightmap, bool p_interior) = 0;
-	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) = 0;
+	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedHector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) = 0;
 	virtual void lightmap_set_baked_exposure_normalization(RID p_lightmap, float p_exposure) = 0;
-	virtual PackedVector3Array lightmap_get_probe_capture_points(RID p_lightmap) const = 0;
+	virtual PackedHector3Array lightmap_get_probe_capture_points(RID p_lightmap) const = 0;
 	virtual PackedColorArray lightmap_get_probe_capture_sh(RID p_lightmap) const = 0;
 	virtual PackedInt32Array lightmap_get_probe_capture_tetrahedra(RID p_lightmap) const = 0;
 	virtual PackedInt32Array lightmap_get_probe_capture_bsp_tree(RID p_lightmap) const = 0;
 	virtual AABB lightmap_get_aabb(RID p_lightmap) const = 0;
-	virtual void lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) = 0;
+	virtual void lightmap_tap_sh_light(RID p_lightmap, const Hector3 &p_point, Color *r_sh) = 0;
 	virtual bool lightmap_is_interior(RID p_lightmap) const = 0;
 	virtual void lightmap_set_probe_capture_update_speed(float p_speed) = 0;
 	virtual float lightmap_get_probe_capture_update_speed() const = 0;

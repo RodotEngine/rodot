@@ -86,7 +86,7 @@ AudioStreamGenerator::AudioStreamGenerator() {
 
 ////////////////
 
-bool AudioStreamGeneratorPlayback::push_frame(const Vector2 &p_frame) {
+bool AudioStreamGeneratorPlayback::push_frame(const Hector2 &p_frame) {
 	if (buffer.space_left() < 1) {
 		return false;
 	}
@@ -101,13 +101,13 @@ bool AudioStreamGeneratorPlayback::can_push_buffer(int p_frames) const {
 	return buffer.space_left() >= p_frames;
 }
 
-bool AudioStreamGeneratorPlayback::push_buffer(const PackedVector2Array &p_frames) {
+bool AudioStreamGeneratorPlayback::push_buffer(const PackedHector2Array &p_frames) {
 	int to_write = p_frames.size();
 	if (buffer.space_left() < to_write) {
 		return false;
 	}
 
-	const Vector2 *r = p_frames.ptr();
+	const Hector2 *r = p_frames.ptr();
 	if constexpr (sizeof(real_t) == 4) {
 		//write directly
 		buffer.write((const AudioFrame *)r, to_write);

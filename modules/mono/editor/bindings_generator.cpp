@@ -92,7 +92,7 @@ StringBuilder &operator<<(StringBuilder &r_sb, const char *p_cstring) {
 #define CS_METHOD_HAS_GODOT_CLASS_METHOD "HasGodotClassMethod"
 #define CS_METHOD_HAS_GODOT_CLASS_SIGNAL "HasGodotClassSignal"
 
-#define CS_STATIC_FIELD_NATIVE_CTOR "NativeCtor"
+#define CS_STATIC_FIELD_NATIVE_CTOR "NatiHector"
 #define CS_STATIC_FIELD_METHOD_BIND_PREFIX "MethodBind"
 #define CS_STATIC_FIELD_METHOD_PROXY_NAME_PREFIX "MethodProxyName_"
 #define CS_STATIC_FIELD_SIGNAL_PROXY_NAME_PREFIX "SignalProxyName_"
@@ -123,16 +123,16 @@ StringBuilder &operator<<(StringBuilder &r_sb, const char *p_cstring) {
 
 // Types that will be ignored by the generator and won't be available in C#.
 // This must be kept in sync with `ignored_types` in csharp_script.cpp
-const Vector<String> ignored_types = {};
+const Hector<String> ignored_types = {};
 
 // Special [code] keywords to wrap with <see langword="code"/> instead of <c>code</c>.
 // Don't check against all C# reserved words, as many cases are GDScript-specific.
-const Vector<String> langword_check = { "true", "false", "null" };
+const Hector<String> langword_check = { "true", "false", "null" };
 
 // The following properties currently need to be defined with `new` to avoid warnings. We treat
 // them as a special case instead of silencing the warnings altogether, to be warned if more
 // shadowing appears.
-const Vector<String> prop_allowed_inherited_member_hiding = {
+const Hector<String> prop_allowed_inherited_member_hiding = {
 	"ArrayMesh.BlendShapeMode",
 	"Button.TextDirection",
 	"Label.TextDirection",
@@ -243,7 +243,7 @@ String BindingsGenerator::bbcode_to_text(const String &p_bbcode, const TypeInter
 			const String link_tag = tag.substr(0, tag_end);
 			const String link_target = tag.substr(tag_end + 1, tag.length()).lstrip(" ");
 
-			const Vector<String> link_target_parts = link_target.split(".");
+			const Hector<String> link_target_parts = link_target.split(".");
 
 			if (link_target_parts.size() <= 0 || link_target_parts.size() > 2) {
 				ERR_PRINT("Invalid reference format: '" + tag + "'.");
@@ -328,14 +328,14 @@ String BindingsGenerator::bbcode_to_text(const String &p_bbcode, const TypeInter
 				output.append("double[]");
 			} else if (tag == "PackedStringArray") {
 				output.append("string[]");
-			} else if (tag == "PackedVector2Array") {
-				output.append("'" BINDINGS_NAMESPACE ".Vector2[]'");
-			} else if (tag == "PackedVector3Array") {
-				output.append("'" BINDINGS_NAMESPACE ".Vector3[]'");
+			} else if (tag == "PackedHector2Array") {
+				output.append("'" BINDINGS_NAMESPACE ".Hector2[]'");
+			} else if (tag == "PackedHector3Array") {
+				output.append("'" BINDINGS_NAMESPACE ".Hector3[]'");
 			} else if (tag == "PackedColorArray") {
 				output.append("'" BINDINGS_NAMESPACE ".Color[]'");
-			} else if (tag == "PackedVector4Array") {
-				output.append("'" BINDINGS_NAMESPACE ".Vector4[]'");
+			} else if (tag == "PackedHector4Array") {
+				output.append("'" BINDINGS_NAMESPACE ".Hector4[]'");
 			} else {
 				const TypeInterface *target_itype = _get_type_or_null(TypeReference(tag));
 
@@ -467,7 +467,7 @@ String BindingsGenerator::bbcode_to_xml(const String &p_bbcode, const TypeInterf
 				if (code_tag || tag_stack.size() > 0) {
 					xml_output.append(text.xml_escape());
 				} else {
-					Vector<String> lines = text.split("\n");
+					Hector<String> lines = text.split("\n");
 					for (int i = 0; i < lines.size(); i++) {
 						if (i != 0) {
 							xml_output.append("<para>");
@@ -496,7 +496,7 @@ String BindingsGenerator::bbcode_to_xml(const String &p_bbcode, const TypeInterf
 				if (code_tag || tag_stack.size() > 0) {
 					xml_output.append(text.xml_escape());
 				} else {
-					Vector<String> lines = text.split("\n");
+					Hector<String> lines = text.split("\n");
 					for (int i = 0; i < lines.size(); i++) {
 						if (i != 0) {
 							xml_output.append("<para>");
@@ -555,7 +555,7 @@ String BindingsGenerator::bbcode_to_xml(const String &p_bbcode, const TypeInterf
 			const String link_tag = tag.substr(0, tag_end);
 			const String link_target = tag.substr(tag_end + 1, tag.length()).lstrip(" ");
 
-			const Vector<String> link_target_parts = link_target.split(".");
+			const Hector<String> link_target_parts = link_target.split(".");
 
 			if (link_target_parts.size() <= 0 || link_target_parts.size() > 2) {
 				ERR_PRINT("Invalid reference format: '" + tag + "'.");
@@ -646,14 +646,14 @@ String BindingsGenerator::bbcode_to_xml(const String &p_bbcode, const TypeInterf
 				xml_output.append("<see cref=\"double\"/>[]");
 			} else if (tag == "PackedStringArray") {
 				xml_output.append("<see cref=\"string\"/>[]");
-			} else if (tag == "PackedVector2Array") {
-				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Vector2\"/>[]");
-			} else if (tag == "PackedVector3Array") {
-				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Vector3\"/>[]");
+			} else if (tag == "PackedHector2Array") {
+				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Hector2\"/>[]");
+			} else if (tag == "PackedHector3Array") {
+				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Hector3\"/>[]");
 			} else if (tag == "PackedColorArray") {
 				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Color\"/>[]");
-			} else if (tag == "PackedVector4Array") {
-				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Vector4\"/>[]");
+			} else if (tag == "PackedHector4Array") {
+				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE ".Hector4\"/>[]");
 			} else {
 				const TypeInterface *target_itype = _get_type_or_null(TypeReference(tag));
 
@@ -807,7 +807,7 @@ String BindingsGenerator::bbcode_to_xml(const String &p_bbcode, const TypeInterf
 	return xml_output.as_string();
 }
 
-void BindingsGenerator::_append_text_method(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_text_method(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (p_link_target_parts[0] == name_cache.type_at_GlobalScope) {
 		if (OS::get_singleton()->is_stdout_verbose()) {
 			OS::get_singleton()->print("Cannot resolve @GlobalScope method reference in documentation: %s\n", p_link_target.utf8().get_data());
@@ -876,7 +876,7 @@ void BindingsGenerator::_append_text_method(StringBuilder &p_output, const TypeI
 	}
 }
 
-void BindingsGenerator::_append_text_member(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_text_member(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (p_link_target.contains("/")) {
 		// Properties with '/' (slash) in the name are not declared in C#, so there is nothing to reference.
 		_append_text_undeclared(p_output, p_link_target);
@@ -918,7 +918,7 @@ void BindingsGenerator::_append_text_member(StringBuilder &p_output, const TypeI
 	}
 }
 
-void BindingsGenerator::_append_text_signal(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_text_signal(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (!p_target_itype || !p_target_itype->is_object_type) {
 		if (OS::get_singleton()->is_stdout_verbose()) {
 			if (p_target_itype) {
@@ -949,7 +949,7 @@ void BindingsGenerator::_append_text_signal(StringBuilder &p_output, const TypeI
 	}
 }
 
-void BindingsGenerator::_append_text_enum(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_text_enum(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	const StringName search_cname = !p_target_itype ? p_target_cname : StringName(p_target_itype->name + "." + (String)p_target_cname);
 
 	HashMap<StringName, TypeInterface>::ConstIterator enum_match = enum_types.find(search_cname);
@@ -973,7 +973,7 @@ void BindingsGenerator::_append_text_enum(StringBuilder &p_output, const TypeInt
 	}
 }
 
-void BindingsGenerator::_append_text_constant(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_text_constant(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (p_link_target_parts[0] == name_cache.type_at_GlobalScope) {
 		_append_text_constant_in_global_scope(p_output, p_target_cname, p_link_target);
 	} else if (!p_target_itype || !p_target_itype->is_object_type) {
@@ -1086,7 +1086,7 @@ void BindingsGenerator::_append_text_undeclared(StringBuilder &p_output, const S
 	p_output.append("'" + p_link_target + "'");
 }
 
-void BindingsGenerator::_append_xml_method(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_xml_method(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (p_link_target_parts[0] == name_cache.type_at_GlobalScope) {
 		if (OS::get_singleton()->is_stdout_verbose()) {
 			OS::get_singleton()->print("Cannot resolve @GlobalScope method reference in documentation: %s\n", p_link_target.utf8().get_data());
@@ -1157,7 +1157,7 @@ void BindingsGenerator::_append_xml_method(StringBuilder &p_xml_output, const Ty
 	}
 }
 
-void BindingsGenerator::_append_xml_member(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_xml_member(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (p_link_target.contains("/")) {
 		// Properties with '/' (slash) in the name are not declared in C#, so there is nothing to reference.
 		_append_xml_undeclared(p_xml_output, p_link_target);
@@ -1199,7 +1199,7 @@ void BindingsGenerator::_append_xml_member(StringBuilder &p_xml_output, const Ty
 	}
 }
 
-void BindingsGenerator::_append_xml_signal(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_xml_signal(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (!p_target_itype || !p_target_itype->is_object_type) {
 		if (OS::get_singleton()->is_stdout_verbose()) {
 			if (p_target_itype) {
@@ -1230,7 +1230,7 @@ void BindingsGenerator::_append_xml_signal(StringBuilder &p_xml_output, const Ty
 	}
 }
 
-void BindingsGenerator::_append_xml_enum(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_xml_enum(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	const StringName search_cname = !p_target_itype ? p_target_cname : StringName(p_target_itype->name + "." + (String)p_target_cname);
 
 	HashMap<StringName, TypeInterface>::ConstIterator enum_match = enum_types.find(search_cname);
@@ -1254,7 +1254,7 @@ void BindingsGenerator::_append_xml_enum(StringBuilder &p_xml_output, const Type
 	}
 }
 
-void BindingsGenerator::_append_xml_constant(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts) {
+void BindingsGenerator::_append_xml_constant(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts) {
 	if (p_link_target_parts[0] == name_cache.type_at_GlobalScope) {
 		_append_xml_constant_in_global_scope(p_xml_output, p_target_cname, p_link_target);
 	} else if (!p_target_itype || !p_target_itype->is_object_type) {
@@ -1383,7 +1383,7 @@ int BindingsGenerator::_determine_enum_prefix(const EnumInterface &p_ienum) {
 	CRASH_COND(p_ienum.constants.is_empty());
 
 	const ConstantInterface &front_iconstant = p_ienum.constants.front()->get();
-	Vector<String> front_parts = front_iconstant.name.split("_", /* p_allow_empty: */ true);
+	Hector<String> front_parts = front_iconstant.name.split("_", /* p_allow_empty: */ true);
 	int candidate_len = front_parts.size() - 1;
 
 	if (candidate_len == 0) {
@@ -1391,7 +1391,7 @@ int BindingsGenerator::_determine_enum_prefix(const EnumInterface &p_ienum) {
 	}
 
 	for (const ConstantInterface &iconstant : p_ienum.constants) {
-		Vector<String> parts = iconstant.name.split("_", /* p_allow_empty: */ true);
+		Hector<String> parts = iconstant.name.split("_", /* p_allow_empty: */ true);
 
 		int i;
 		for (i = 0; i < candidate_len && i < parts.size(); i++) {
@@ -1420,7 +1420,7 @@ void BindingsGenerator::_apply_prefix_to_enum_constants(BindingsGenerator::EnumI
 
 			String constant_name = iconstant.name;
 
-			Vector<String> parts = constant_name.split("_", /* p_allow_empty: */ true);
+			Hector<String> parts = constant_name.split("_", /* p_allow_empty: */ true);
 
 			if (parts.size() <= curr_prefix_length) {
 				continue;
@@ -1557,12 +1557,12 @@ void BindingsGenerator::_generate_array_extensions(StringBuilder &p_output) {
 	ARRAY_ALL(double);
 	ARRAY_ALL(string);
 	ARRAY_ALL(Color);
-	ARRAY_ALL(Vector2);
-	ARRAY_ALL(Vector2I);
-	ARRAY_ALL(Vector3);
-	ARRAY_ALL(Vector3I);
-	ARRAY_ALL(Vector4);
-	ARRAY_ALL(Vector4I);
+	ARRAY_ALL(Hector2);
+	ARRAY_ALL(Hector2I);
+	ARRAY_ALL(Hector3);
+	ARRAY_ALL(Hector3I);
+	ARRAY_ALL(Hector4);
+	ARRAY_ALL(Hector4I);
 
 #undef ARRAY_ALL
 #undef ARRAY_IS_EMPTY
@@ -1582,7 +1582,7 @@ void BindingsGenerator::_generate_global_constants(StringBuilder &p_output) {
 	for (const ConstantInterface &iconstant : global_constants) {
 		if (iconstant.const_doc && iconstant.const_doc->description.size()) {
 			String xml_summary = bbcode_to_xml(fix_doc_description(iconstant.const_doc->description), nullptr);
-			Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+			Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 			if (summary_lines.size()) {
 				p_output.append(MEMBER_BEGIN "/// <summary>\n");
@@ -1646,7 +1646,7 @@ void BindingsGenerator::_generate_global_constants(StringBuilder &p_output) {
 		for (const ConstantInterface &iconstant : ienum.constants) {
 			if (iconstant.const_doc && iconstant.const_doc->description.size()) {
 				String xml_summary = bbcode_to_xml(fix_doc_description(iconstant.const_doc->description), nullptr);
-				Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+				Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 				if (summary_lines.size()) {
 					p_output << maybe_indent << INDENT1 "/// <summary>\n";
@@ -1692,7 +1692,7 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 	String base_gen_dir = path::join(p_proj_dir, "Generated");
 	String godot_objects_gen_dir = path::join(base_gen_dir, "GodotObjects");
 
-	Vector<String> compile_items;
+	Hector<String> compile_items;
 
 	// Generate source file for global scope constants and enums
 	{
@@ -1888,7 +1888,7 @@ Error BindingsGenerator::generate_cs_editor_project(const String &p_proj_dir) {
 	String base_gen_dir = path::join(p_proj_dir, "Generated");
 	String godot_objects_gen_dir = path::join(base_gen_dir, "GodotObjects");
 
-	Vector<String> compile_items;
+	Hector<String> compile_items;
 
 	for (const KeyValue<StringName, TypeInterface> &E : obj_types) {
 		const TypeInterface &itype = E.value;
@@ -2108,7 +2108,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 
 	if (class_doc && class_doc->description.size()) {
 		String xml_summary = bbcode_to_xml(fix_doc_description(class_doc->description), &itype);
-		Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+		Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 		if (summary_lines.size()) {
 			output.append("/// <summary>\n");
@@ -2170,7 +2170,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 	for (const ConstantInterface &iconstant : itype.constants) {
 		if (iconstant.const_doc && iconstant.const_doc->description.size()) {
 			String xml_summary = bbcode_to_xml(fix_doc_description(iconstant.const_doc->description), &itype);
-			Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+			Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 			if (summary_lines.size()) {
 				output.append(MEMBER_BEGIN "/// <summary>\n");
@@ -2220,7 +2220,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 		for (const ConstantInterface &iconstant : ienum.constants) {
 			if (iconstant.const_doc && iconstant.const_doc->description.size()) {
 				String xml_summary = bbcode_to_xml(fix_doc_description(iconstant.const_doc->description), &itype);
-				Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+				Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 				if (summary_lines.size()) {
 					output.append(INDENT2 "/// <summary>\n");
@@ -2692,7 +2692,7 @@ Error BindingsGenerator::_generate_cs_property(const BindingsGenerator::TypeInte
 
 	if (p_iprop.prop_doc && p_iprop.prop_doc->description.size()) {
 		String xml_summary = bbcode_to_xml(fix_doc_description(p_iprop.prop_doc->description), &p_itype);
-		Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+		Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 		if (summary_lines.size()) {
 			p_output.append(MEMBER_BEGIN "/// <summary>\n");
@@ -2951,7 +2951,7 @@ Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterf
 
 		if (p_imethod.method_doc && p_imethod.method_doc->description.size()) {
 			String xml_summary = bbcode_to_xml(fix_doc_description(p_imethod.method_doc->description), &p_itype);
-			Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+			Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 			if (summary_lines.size()) {
 				p_output.append(MEMBER_BEGIN "/// <summary>\n");
@@ -3155,7 +3155,7 @@ Error BindingsGenerator::_generate_cs_signal(const BindingsGenerator::TypeInterf
 
 		if (p_isignal.method_doc && p_isignal.method_doc->description.size()) {
 			String xml_summary = bbcode_to_xml(fix_doc_description(p_isignal.method_doc->description), &p_itype, true);
-			Vector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Vector<String>();
+			Hector<String> summary_lines = xml_summary.length() ? xml_summary.split("\n") : Hector<String>();
 
 			if (summary_lines.size()) {
 				p_output.append(MEMBER_BEGIN "/// <summary>\n");
@@ -3678,9 +3678,9 @@ bool BindingsGenerator::_arg_default_value_is_assignable_to_type(const Variant &
 		case Variant::PLANE:
 		case Variant::AABB:
 		case Variant::COLOR:
-		case Variant::VECTOR2:
+		case Variant::HECTOR2:
 		case Variant::RECT2:
-		case Variant::VECTOR3:
+		case Variant::HECTOR3:
 		case Variant::RID:
 		case Variant::PACKED_BYTE_ARRAY:
 		case Variant::PACKED_INT32_ARRAY:
@@ -3688,9 +3688,9 @@ bool BindingsGenerator::_arg_default_value_is_assignable_to_type(const Variant &
 		case Variant::PACKED_FLOAT32_ARRAY:
 		case Variant::PACKED_FLOAT64_ARRAY:
 		case Variant::PACKED_STRING_ARRAY:
-		case Variant::PACKED_VECTOR2_ARRAY:
-		case Variant::PACKED_VECTOR3_ARRAY:
-		case Variant::PACKED_VECTOR4_ARRAY:
+		case Variant::PACKED_Hector2_ARRAY:
+		case Variant::PACKED_Hector3_ARRAY:
+		case Variant::PACKED_Hector4_ARRAY:
 		case Variant::PACKED_COLOR_ARRAY:
 		case Variant::CALLABLE:
 		case Variant::SIGNAL:
@@ -3701,14 +3701,14 @@ bool BindingsGenerator::_arg_default_value_is_assignable_to_type(const Variant &
 			return p_arg_type.name == Variant::get_type_name(p_val.get_type()) || p_arg_type.cname == name_cache.type_Dictionary_generic;
 		case Variant::OBJECT:
 			return p_arg_type.is_object_type;
-		case Variant::VECTOR2I:
-			return p_arg_type.name == name_cache.type_Vector2 ||
+		case Variant::HECTOR2I:
+			return p_arg_type.name == name_cache.type_Hector2 ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
 		case Variant::RECT2I:
 			return p_arg_type.name == name_cache.type_Rect2 ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
-		case Variant::VECTOR3I:
-			return p_arg_type.name == name_cache.type_Vector3 ||
+		case Variant::HECTOR3I:
+			return p_arg_type.name == name_cache.type_Hector3 ||
 					p_arg_type.name == Variant::get_type_name(p_val.get_type());
 		default:
 			CRASH_NOW_MSG("Unexpected Variant type: " + itos(p_val.get_type()));
@@ -3980,7 +3980,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 				imethod.return_type.generic_type_parameters.push_back(TypeReference(return_info.hint_string));
 			} else if (return_info.type == Variant::DICTIONARY && return_info.hint == PROPERTY_HINT_DICTIONARY_TYPE) {
 				imethod.return_type.cname = Variant::get_type_name(return_info.type) + "_@generic";
-				Vector<String> split = return_info.hint_string.split(";");
+				Hector<String> split = return_info.hint_string.split(";");
 				imethod.return_type.generic_type_parameters.push_back(TypeReference(split.get(0)));
 				imethod.return_type.generic_type_parameters.push_back(TypeReference(split.get(1)));
 			} else if (return_info.hint == PROPERTY_HINT_RESOURCE_TYPE) {
@@ -4012,7 +4012,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 					iarg.type.generic_type_parameters.push_back(TypeReference(arginfo.hint_string));
 				} else if (arginfo.type == Variant::DICTIONARY && arginfo.hint == PROPERTY_HINT_DICTIONARY_TYPE) {
 					iarg.type.cname = Variant::get_type_name(arginfo.type) + "_@generic";
-					Vector<String> split = arginfo.hint_string.split(";");
+					Hector<String> split = arginfo.hint_string.split(";");
 					iarg.type.generic_type_parameters.push_back(TypeReference(split.get(0)));
 					iarg.type.generic_type_parameters.push_back(TypeReference(split.get(1)));
 				} else if (arginfo.hint == PROPERTY_HINT_RESOURCE_TYPE) {
@@ -4144,7 +4144,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 					iarg.type.generic_type_parameters.push_back(TypeReference(arginfo.hint_string));
 				} else if (arginfo.type == Variant::DICTIONARY && arginfo.hint == PROPERTY_HINT_DICTIONARY_TYPE) {
 					iarg.type.cname = Variant::get_type_name(arginfo.type) + "_@generic";
-					Vector<String> split = arginfo.hint_string.split(";");
+					Hector<String> split = arginfo.hint_string.split(";");
 					iarg.type.generic_type_parameters.push_back(TypeReference(split.get(0)));
 					iarg.type.generic_type_parameters.push_back(TypeReference(split.get(1)));
 				} else if (arginfo.hint == PROPERTY_HINT_RESOURCE_TYPE) {
@@ -4366,34 +4366,34 @@ bool BindingsGenerator::_arg_default_value_from_variant(const Variant &p_val, Ar
 			break;
 		case Variant::PLANE: {
 			Plane plane = p_val.operator Plane();
-			r_iarg.default_argument = "new Plane(new Vector3" + plane.normal.operator String() + ", " + rtos(plane.d) + ")";
+			r_iarg.default_argument = "new Plane(new Hector3" + plane.normal.operator String() + ", " + rtos(plane.d) + ")";
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
 		case Variant::AABB: {
 			AABB aabb = p_val.operator ::AABB();
-			r_iarg.default_argument = "new Aabb(new Vector3" + aabb.position.operator String() + ", new Vector3" + aabb.size.operator String() + ")";
+			r_iarg.default_argument = "new Aabb(new Hector3" + aabb.position.operator String() + ", new Hector3" + aabb.size.operator String() + ")";
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
 		case Variant::RECT2: {
 			Rect2 rect = p_val.operator Rect2();
-			r_iarg.default_argument = "new Rect2(new Vector2" + rect.position.operator String() + ", new Vector2" + rect.size.operator String() + ")";
+			r_iarg.default_argument = "new Rect2(new Hector2" + rect.position.operator String() + ", new Hector2" + rect.size.operator String() + ")";
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
 		case Variant::RECT2I: {
 			Rect2i rect = p_val.operator Rect2i();
-			r_iarg.default_argument = "new Rect2I(new Vector2I" + rect.position.operator String() + ", new Vector2I" + rect.size.operator String() + ")";
+			r_iarg.default_argument = "new Rect2I(new Hector2I" + rect.position.operator String() + ", new Hector2I" + rect.size.operator String() + ")";
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
 		case Variant::COLOR:
-		case Variant::VECTOR2:
-		case Variant::VECTOR2I:
-		case Variant::VECTOR3:
-		case Variant::VECTOR3I:
+		case Variant::HECTOR2:
+		case Variant::HECTOR2I:
+		case Variant::HECTOR3:
+		case Variant::HECTOR3I:
 			r_iarg.default_argument = "new %s" + r_iarg.default_argument;
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 			break;
-		case Variant::VECTOR4:
-		case Variant::VECTOR4I:
+		case Variant::HECTOR4:
+		case Variant::HECTOR4I:
 			r_iarg.default_argument = "new %s" + r_iarg.default_argument;
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 			break;
@@ -4432,9 +4432,9 @@ bool BindingsGenerator::_arg_default_value_from_variant(const Variant &p_val, Ar
 		case Variant::PACKED_FLOAT32_ARRAY:
 		case Variant::PACKED_FLOAT64_ARRAY:
 		case Variant::PACKED_STRING_ARRAY:
-		case Variant::PACKED_VECTOR2_ARRAY:
-		case Variant::PACKED_VECTOR3_ARRAY:
-		case Variant::PACKED_VECTOR4_ARRAY:
+		case Variant::PACKED_Hector2_ARRAY:
+		case Variant::PACKED_Hector3_ARRAY:
+		case Variant::PACKED_Hector4_ARRAY:
 		case Variant::PACKED_COLOR_ARRAY:
 			r_iarg.default_argument = "Array.Empty<%s>()";
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_REF;
@@ -4444,7 +4444,7 @@ bool BindingsGenerator::_arg_default_value_from_variant(const Variant &p_val, Ar
 			if (transform == Transform2D()) {
 				r_iarg.default_argument = "Transform2D.Identity";
 			} else {
-				r_iarg.default_argument = "new Transform2D(new Vector2" + transform.columns[0].operator String() + ", new Vector2" + transform.columns[1].operator String() + ", new Vector2" + transform.columns[2].operator String() + ")";
+				r_iarg.default_argument = "new Transform2D(new Hector2" + transform.columns[0].operator String() + ", new Hector2" + transform.columns[1].operator String() + ", new Hector2" + transform.columns[2].operator String() + ")";
 			}
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
@@ -4454,7 +4454,7 @@ bool BindingsGenerator::_arg_default_value_from_variant(const Variant &p_val, Ar
 				r_iarg.default_argument = "Transform3D.Identity";
 			} else {
 				Basis basis = transform.basis;
-				r_iarg.default_argument = "new Transform3D(new Vector3" + basis.get_column(0).operator String() + ", new Vector3" + basis.get_column(1).operator String() + ", new Vector3" + basis.get_column(2).operator String() + ", new Vector3" + transform.origin.operator String() + ")";
+				r_iarg.default_argument = "new Transform3D(new Hector3" + basis.get_column(0).operator String() + ", new Hector3" + basis.get_column(1).operator String() + ", new Hector3" + basis.get_column(2).operator String() + ", new Hector3" + transform.origin.operator String() + ")";
 			}
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
@@ -4463,7 +4463,7 @@ bool BindingsGenerator::_arg_default_value_from_variant(const Variant &p_val, Ar
 			if (projection == Projection()) {
 				r_iarg.default_argument = "Projection.Identity";
 			} else {
-				r_iarg.default_argument = "new Projection(new Vector4" + projection.columns[0].operator String() + ", new Vector4" + projection.columns[1].operator String() + ", new Vector4" + projection.columns[2].operator String() + ", new Vector4" + projection.columns[3].operator String() + ")";
+				r_iarg.default_argument = "new Projection(new Hector4" + projection.columns[0].operator String() + ", new Hector4" + projection.columns[1].operator String() + ", new Hector4" + projection.columns[2].operator String() + ", new Hector4" + projection.columns[3].operator String() + ")";
 			}
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
@@ -4472,7 +4472,7 @@ bool BindingsGenerator::_arg_default_value_from_variant(const Variant &p_val, Ar
 			if (basis == Basis()) {
 				r_iarg.default_argument = "Basis.Identity";
 			} else {
-				r_iarg.default_argument = "new Basis(new Vector3" + basis.get_column(0).operator String() + ", new Vector3" + basis.get_column(1).operator String() + ", new Vector3" + basis.get_column(2).operator String() + ")";
+				r_iarg.default_argument = "new Basis(new Hector3" + basis.get_column(0).operator String() + ", new Hector3" + basis.get_column(1).operator String() + ", new Hector3" + basis.get_column(2).operator String() + ")";
 			}
 			r_iarg.def_param_mode = ArgumentInterface::NULLABLE_VAL;
 		} break;
@@ -4524,21 +4524,21 @@ void BindingsGenerator::_populate_builtin_type_interfaces() {
 		builtin_types.insert(itype.cname, itype);                                         \
 	}
 
-	INSERT_STRUCT_TYPE(Vector2, Vector2)
-	INSERT_STRUCT_TYPE(Vector2i, Vector2I)
+	INSERT_STRUCT_TYPE(Hector2, Hector2)
+	INSERT_STRUCT_TYPE(Hector2i, Hector2I)
 	INSERT_STRUCT_TYPE(Rect2, Rect2)
 	INSERT_STRUCT_TYPE(Rect2i, Rect2I)
 	INSERT_STRUCT_TYPE(Transform2D, Transform2D)
-	INSERT_STRUCT_TYPE(Vector3, Vector3)
-	INSERT_STRUCT_TYPE(Vector3i, Vector3I)
+	INSERT_STRUCT_TYPE(Hector3, Hector3)
+	INSERT_STRUCT_TYPE(Hector3i, Hector3I)
 	INSERT_STRUCT_TYPE(Basis, Basis)
 	INSERT_STRUCT_TYPE(Quaternion, Quaternion)
 	INSERT_STRUCT_TYPE(Transform3D, Transform3D)
 	INSERT_STRUCT_TYPE(AABB, Aabb)
 	INSERT_STRUCT_TYPE(Color, Color)
 	INSERT_STRUCT_TYPE(Plane, Plane)
-	INSERT_STRUCT_TYPE(Vector4, Vector4)
-	INSERT_STRUCT_TYPE(Vector4i, Vector4I)
+	INSERT_STRUCT_TYPE(Hector4, Hector4)
+	INSERT_STRUCT_TYPE(Hector4i, Hector4I)
 	INSERT_STRUCT_TYPE(Projection, Projection)
 
 #undef INSERT_STRUCT_TYPE
@@ -4772,9 +4772,9 @@ void BindingsGenerator::_populate_builtin_type_interfaces() {
 	INSERT_ARRAY(PackedStringArray, godot_packed_string_array, string);
 
 	INSERT_ARRAY(PackedColorArray, godot_packed_color_array, Color);
-	INSERT_ARRAY(PackedVector2Array, godot_packed_vector2_array, Vector2);
-	INSERT_ARRAY(PackedVector3Array, godot_packed_vector3_array, Vector3);
-	INSERT_ARRAY(PackedVector4Array, godot_packed_vector4_array, Vector4);
+	INSERT_ARRAY(PackedHector2Array, godot_packed_Hector2_array, Hector2);
+	INSERT_ARRAY(PackedHector3Array, godot_packed_Hector3_array, Hector3);
+	INSERT_ARRAY(PackedHector4Array, godot_packed_Hector4_array, Hector4);
 
 #undef INSERT_ARRAY
 
@@ -4913,12 +4913,12 @@ void BindingsGenerator::_populate_global_constants() {
 
 	// HARDCODED
 	List<StringName> hardcoded_enums;
-	hardcoded_enums.push_back("Vector2.Axis");
-	hardcoded_enums.push_back("Vector2I.Axis");
-	hardcoded_enums.push_back("Vector3.Axis");
-	hardcoded_enums.push_back("Vector3I.Axis");
+	hardcoded_enums.push_back("Hector2.Axis");
+	hardcoded_enums.push_back("Hector2I.Axis");
+	hardcoded_enums.push_back("Hector3.Axis");
+	hardcoded_enums.push_back("Hector3I.Axis");
 	for (const StringName &enum_cname : hardcoded_enums) {
-		// These enums are not generated and must be written manually (e.g.: Vector3.Axis)
+		// These enums are not generated and must be written manually (e.g.: Hector3.Axis)
 		// Here, we assume core types do not begin with underscore
 		TypeInterface enum_itype;
 		enum_itype.is_enum = true;

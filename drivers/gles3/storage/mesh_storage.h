@@ -33,7 +33,7 @@
 
 #ifdef GLES3_ENABLED
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/self_list.h"
 #include "drivers/gles3/shaders/skeleton.glsl.gen.h"
@@ -104,13 +104,13 @@ struct Mesh {
 
 		AABB aabb;
 
-		Vector<AABB> bone_aabbs;
+		Hector<AABB> bone_aabbs;
 
 		// Transform used in runtime bone AABBs compute.
 		// As bone AABBs are saved in Mesh space, but bones animation is in Skeleton space.
 		Transform3D mesh_to_skeleton_xform;
 
-		Vector4 uv_scale;
+		Hector4 uv_scale;
 
 		struct BlendShape {
 			GLuint vertex_buffer = 0;
@@ -135,7 +135,7 @@ struct Mesh {
 	AABB custom_aabb;
 	uint64_t skeleton_aabb_version = 0;
 
-	Vector<RID> material_cache;
+	Hector<RID> material_cache;
 
 	List<MeshInstance *> instances;
 
@@ -165,8 +165,8 @@ struct MeshInstance {
 		Mesh::Surface::Version *versions = nullptr; //allocated on demand
 		uint32_t version_count = 0;
 	};
-	LocalVector<Surface> surfaces;
-	LocalVector<float> blend_weights;
+	LocalHector<Surface> surfaces;
+	LocalHector<float> blend_weights;
 
 	List<MeshInstance *>::Element *I = nullptr; //used to erase itself
 	uint64_t skeleton_version = 0;
@@ -196,7 +196,7 @@ struct MultiMesh {
 	uint32_t color_offset_cache = 0;
 	uint32_t custom_data_offset_cache = 0;
 
-	Vector<float> data_cache; //used if individual setting is used
+	Hector<float> data_cache; //used if individual setting is used
 	bool *data_cache_dirty_regions = nullptr;
 	uint32_t data_cache_used_dirty_regions = 0;
 
@@ -214,7 +214,7 @@ struct Skeleton {
 	bool use_2d = false;
 	int size = 0;
 	int height = 0;
-	Vector<float> data;
+	Hector<float> data;
 
 	bool dirty = false;
 	Skeleton *dirty_list = nullptr;
@@ -297,9 +297,9 @@ public:
 	virtual void mesh_set_blend_shape_mode(RID p_mesh, RS::BlendShapeMode p_mode) override;
 	virtual RS::BlendShapeMode mesh_get_blend_shape_mode(RID p_mesh) const override;
 
-	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) override;
-	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) override;
-	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Vector<uint8_t> &p_data) override;
+	virtual void mesh_surface_update_vertex_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) override;
+	virtual void mesh_surface_update_attribute_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) override;
+	virtual void mesh_surface_update_skin_region(RID p_mesh, int p_surface, int p_offset, const Hector<uint8_t> &p_data) override;
 
 	virtual void mesh_surface_set_material(RID p_mesh, int p_surface, RID p_material) override;
 	virtual RID mesh_surface_get_material(RID p_mesh, int p_surface) const override;
@@ -516,8 +516,8 @@ public:
 	virtual Transform2D _multimesh_instance_get_transform_2d(RID p_multimesh, int p_index) const override;
 	virtual Color _multimesh_instance_get_color(RID p_multimesh, int p_index) const override;
 	virtual Color _multimesh_instance_get_custom_data(RID p_multimesh, int p_index) const override;
-	virtual void _multimesh_set_buffer(RID p_multimesh, const Vector<float> &p_buffer) override;
-	virtual Vector<float> _multimesh_get_buffer(RID p_multimesh) const override;
+	virtual void _multimesh_set_buffer(RID p_multimesh, const Hector<float> &p_buffer) override;
+	virtual Hector<float> _multimesh_get_buffer(RID p_multimesh) const override;
 
 	virtual void _multimesh_set_visible_instances(RID p_multimesh, int p_visible) override;
 	virtual int _multimesh_get_visible_instances(RID p_multimesh) const override;

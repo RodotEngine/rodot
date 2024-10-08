@@ -42,7 +42,7 @@
 		</method>
 		<method name="_write_begin" qualifiers="virtual">
 			<return type="int" enum="Error" />
-			<param index="0" name="movie_size" type="Vector2i" />
+			<param index="0" name="movie_size" type="Hector2i" />
 			<param index="1" name="fps" type="int" />
 			<param index="2" name="base_path" type="String" />
 			<description>

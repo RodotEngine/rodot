@@ -268,7 +268,7 @@ Error SceneMultiplayer::send_command(int p_to, const uint8_t *p_packet, int p_pa
 		relay_buffer->put_32(p_to); // Set the destination.
 		relay_buffer->put_data(p_packet, p_packet_len);
 		multiplayer_peer->set_target_peer(1);
-		const Vector<uint8_t> data = relay_buffer->get_data_array();
+		const Hector<uint8_t> data = relay_buffer->get_data_array();
 		return _send(data.ptr(), relay_buffer->get_position());
 	}
 	if (p_to > 0) {
@@ -317,7 +317,7 @@ void SceneMultiplayer::_process_sys(int p_from, const uint8_t *p_packet, int p_p
 				relay_buffer->put_u8(SYS_COMMAND_RELAY);
 				relay_buffer->put_32(p_from); // Set the source.
 				relay_buffer->put_data(packet, len);
-				const Vector<uint8_t> data = relay_buffer->get_data_array();
+				const Hector<uint8_t> data = relay_buffer->get_data_array();
 				multiplayer_peer->set_transfer_mode(p_mode);
 				multiplayer_peer->set_transfer_channel(p_channel);
 				if (peer > 0) {
@@ -438,7 +438,7 @@ void SceneMultiplayer::disconnect_peer(int p_id) {
 	multiplayer_peer->disconnect_peer(p_id);
 }
 
-Error SceneMultiplayer::send_bytes(Vector<uint8_t> p_data, int p_to, MultiplayerPeer::TransferMode p_mode, int p_channel) {
+Error SceneMultiplayer::send_bytes(Hector<uint8_t> p_data, int p_to, MultiplayerPeer::TransferMode p_mode, int p_channel) {
 	ERR_FAIL_COND_V_MSG(p_data.is_empty(), ERR_INVALID_DATA, "Trying to send an empty raw packet.");
 	ERR_FAIL_COND_V_MSG(!multiplayer_peer.is_valid(), ERR_UNCONFIGURED, "Trying to send a raw packet while no multiplayer peer is active.");
 	ERR_FAIL_COND_V_MSG(multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, ERR_UNCONFIGURED, "Trying to send a raw packet via a multiplayer peer which is not connected.");
@@ -456,7 +456,7 @@ Error SceneMultiplayer::send_bytes(Vector<uint8_t> p_data, int p_to, Multiplayer
 	return send_command(p_to, packet_cache.ptr(), p_data.size() + 1);
 }
 
-Error SceneMultiplayer::send_auth(int p_to, Vector<uint8_t> p_data) {
+Error SceneMultiplayer::send_auth(int p_to, Hector<uint8_t> p_data) {
 	ERR_FAIL_COND_V(multiplayer_peer.is_null() || multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, ERR_UNCONFIGURED);
 	ERR_FAIL_COND_V(!pending_peers.has(p_to), ERR_INVALID_PARAMETER);
 	ERR_FAIL_COND_V(p_data.is_empty(), ERR_INVALID_PARAMETER);
@@ -519,7 +519,7 @@ double SceneMultiplayer::get_auth_timeout() const {
 void SceneMultiplayer::_process_raw(int p_from, const uint8_t *p_packet, int p_packet_len) {
 	ERR_FAIL_COND_MSG(p_packet_len < 2, "Invalid packet received. Size too small.");
 
-	Vector<uint8_t> out;
+	Hector<uint8_t> out;
 	int len = p_packet_len - 1;
 	out.resize(len);
 	{
@@ -544,10 +544,10 @@ bool SceneMultiplayer::is_refusing_new_connections() const {
 	return multiplayer_peer->is_refusing_new_connections();
 }
 
-Vector<int> SceneMultiplayer::get_peer_ids() {
-	ERR_FAIL_COND_V_MSG(!multiplayer_peer.is_valid(), Vector<int>(), "No multiplayer peer is assigned. Assume no peers are connected.");
+Hector<int> SceneMultiplayer::get_peer_ids() {
+	ERR_FAIL_COND_V_MSG(!multiplayer_peer.is_valid(), Hector<int>(), "No multiplayer peer is assigned. Assume no peers are connected.");
 
-	Vector<int> ret;
+	Hector<int> ret;
 	for (const int &E : connected_peers) {
 		ret.push_back(E);
 	}
@@ -555,8 +555,8 @@ Vector<int> SceneMultiplayer::get_peer_ids() {
 	return ret;
 }
 
-Vector<int> SceneMultiplayer::get_authenticating_peer_ids() {
-	Vector<int> out;
+Hector<int> SceneMultiplayer::get_authenticating_peer_ids() {
+	Hector<int> out;
 	out.resize(pending_peers.size());
 	int idx = 0;
 	for (const KeyValue<int, PendingPeer> &E : pending_peers) {

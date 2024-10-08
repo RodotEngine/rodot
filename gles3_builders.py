@@ -338,7 +338,7 @@ def build_gles3_header(
                 + ") { _FU GLfloat col[4]={p_color.r,p_color.g,p_color.b,p_color.a}; glUniform4fv(version_get_uniform(p_uniform,p_version,p_variant,p_specialization),1,col); }\n\n"
             )
             fd.write(
-                "\t_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Vector2& p_vec2,RID p_version,ShaderVariant p_variant"
+                "\t_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Hector2& p_vec2,RID p_version,ShaderVariant p_variant"
                 + defvariant
                 + ",uint64_t p_specialization="
                 + str(defspec)
@@ -352,14 +352,14 @@ def build_gles3_header(
                 + ") { _FU GLint vec2[2]={GLint(p_vec2.x),GLint(p_vec2.y)}; glUniform2iv(version_get_uniform(p_uniform,p_version,p_variant,p_specialization),1,vec2); }\n\n"
             )
             fd.write(
-                "\t_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Vector3& p_vec3,RID p_version,ShaderVariant p_variant"
+                "\t_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Hector3& p_vec3,RID p_version,ShaderVariant p_variant"
                 + defvariant
                 + ",uint64_t p_specialization="
                 + str(defspec)
                 + ") { _FU GLfloat vec3[3]={float(p_vec3.x),float(p_vec3.y),float(p_vec3.z)}; glUniform3fv(version_get_uniform(p_uniform,p_version,p_variant,p_specialization),1,vec3); }\n\n"
             )
             fd.write(
-                "\t_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Vector4& p_vec4,RID p_version,ShaderVariant p_variant"
+                "\t_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Hector4& p_vec4,RID p_version,ShaderVariant p_variant"
                 + defvariant
                 + ",uint64_t p_specialization="
                 + str(defspec)

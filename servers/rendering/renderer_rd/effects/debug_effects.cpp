@@ -39,7 +39,7 @@ using namespace RendererRD;
 DebugEffects::DebugEffects() {
 	{
 		// Shadow Frustum debug shader
-		Vector<String> modes;
+		Hector<String> modes;
 		modes.push_back("");
 
 		shadow_frustum.shader.initialize(modes);
@@ -53,24 +53,24 @@ DebugEffects::DebugEffects() {
 	}
 
 	{
-		// Motion Vectors debug shader.
-		Vector<String> modes;
+		// Motion Hectors debug shader.
+		Hector<String> modes;
 		modes.push_back("");
 
-		motion_vectors.shader.initialize(modes);
-		motion_vectors.shader_version = motion_vectors.shader.version_create();
+		motion_Hectors.shader.initialize(modes);
+		motion_Hectors.shader_version = motion_Hectors.shader.version_create();
 
-		motion_vectors.pipeline.setup(motion_vectors.shader.version_get_shader(motion_vectors.shader_version, 0), RD::RENDER_PRIMITIVE_TRIANGLES, RD::PipelineRasterizationState(), RD::PipelineMultisampleState(), RD::PipelineDepthStencilState(), RD::PipelineColorBlendState::create_blend(), 0);
+		motion_Hectors.pipeline.setup(motion_Hectors.shader.version_get_shader(motion_Hectors.shader_version, 0), RD::RENDER_PRIMITIVE_TRIANGLES, RD::PipelineRasterizationState(), RD::PipelineMultisampleState(), RD::PipelineDepthStencilState(), RD::PipelineColorBlendState::create_blend(), 0);
 	}
 }
 
 void DebugEffects::_create_frustum_arrays() {
 	if (frustum.vertex_buffer.is_null()) {
 		// Create vertex buffer, but don't put data in it yet
-		frustum.vertex_buffer = RD::get_singleton()->vertex_buffer_create(8 * sizeof(float) * 3, Vector<uint8_t>(), false);
+		frustum.vertex_buffer = RD::get_singleton()->vertex_buffer_create(8 * sizeof(float) * 3, Hector<uint8_t>(), false);
 
-		Vector<RD::VertexAttribute> attributes;
-		Vector<RID> buffers;
+		Hector<RD::VertexAttribute> attributes;
+		Hector<RID> buffers;
 		RD::VertexAttribute vd;
 
 		vd.location = 0;
@@ -175,7 +175,7 @@ DebugEffects::~DebugEffects() {
 		RD::get_singleton()->free(frustum.lines_buffer); // Array gets freed as dependency.
 	}
 
-	motion_vectors.shader.version_free(motion_vectors.shader_version);
+	motion_Hectors.shader.version_free(motion_Hectors.shader_version);
 }
 
 void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_projection, const Transform3D &p_cam_transform, RID p_dest_fb, const Rect2 p_rect) {
@@ -205,7 +205,7 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 	bool is_orthogonal = p_cam_projection.is_orthogonal();
 	real_t aspect = p_cam_projection.get_aspect();
 	real_t fov = 0.0;
-	Vector2 vp_he;
+	Hector2 vp_he;
 	if (is_orthogonal) {
 		vp_he = p_cam_projection.get_viewport_half_extents();
 	} else {
@@ -240,7 +240,7 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 	for (int split = 0; split < splits; split++) {
 		// Load frustum points into vertex buffer.
 		uint8_t *w = points.ptrw();
-		Vector3 *vw = (Vector3 *)w;
+		Hector3 *vw = (Hector3 *)w;
 
 		Projection projection;
 
@@ -282,7 +282,7 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 		// And draw our frustum.
 		RD::FramebufferFormatID fb_format_id = RD::get_singleton()->framebuffer_get_format(p_dest_fb);
 
-		RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(p_dest_fb, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Vector<Color>(), 0.0, 0, rect);
+		RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(p_dest_fb, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Hector<Color>(), 0.0, 0, rect);
 
 		RID pipeline = shadow_frustum.pipelines[SFP_TRANSPARENT].get_render_pipeline(frustum.vertex_format, fb_format_id);
 		RD::get_singleton()->draw_list_bind_render_pipeline(draw_list, pipeline);
@@ -326,7 +326,7 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 			rect.size.x *= atlas_rect_norm.size.x;
 			rect.size.y *= atlas_rect_norm.size.y;
 
-			draw_list = RD::get_singleton()->draw_list_begin(p_dest_fb, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Vector<Color>(), 0.0, 0, rect);
+			draw_list = RD::get_singleton()->draw_list_begin(p_dest_fb, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Hector<Color>(), 0.0, 0, rect);
 
 			pipeline = shadow_frustum.pipelines[SFP_TRANSPARENT].get_render_pipeline(frustum.vertex_format, fb_format_id);
 			RD::get_singleton()->draw_list_bind_render_pipeline(draw_list, pipeline);
@@ -340,7 +340,7 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 	}
 }
 
-void DebugEffects::draw_motion_vectors(RID p_velocity, RID p_depth, RID p_dest_fb, const Projection &p_current_projection, const Transform3D &p_current_transform, const Projection &p_previous_projection, const Transform3D &p_previous_transform, Size2i p_resolution) {
+void DebugEffects::draw_motion_Hectors(RID p_velocity, RID p_depth, RID p_dest_fb, const Projection &p_current_projection, const Transform3D &p_current_transform, const Projection &p_previous_projection, const Transform3D &p_previous_transform, Size2i p_resolution) {
 	MaterialStorage *material_storage = MaterialStorage::get_singleton();
 	ERR_FAIL_NULL(material_storage);
 
@@ -348,30 +348,30 @@ void DebugEffects::draw_motion_vectors(RID p_velocity, RID p_depth, RID p_dest_f
 	ERR_FAIL_NULL(uniform_set_cache);
 
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_NEAREST, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
-	RD::Uniform u_source_velocity(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Vector<RID>({ default_sampler, p_velocity }));
-	RD::Uniform u_source_depth(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 1, Vector<RID>({ default_sampler, p_depth }));
+	RD::Uniform u_source_velocity(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 0, Hector<RID>({ default_sampler, p_velocity }));
+	RD::Uniform u_source_depth(RD::UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 1, Hector<RID>({ default_sampler, p_depth }));
 
 	RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(p_dest_fb, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_DISCARD, RD::FINAL_ACTION_DISCARD);
-	RD::get_singleton()->draw_list_bind_render_pipeline(draw_list, motion_vectors.pipeline.get_render_pipeline(RD::INVALID_ID, RD::get_singleton()->framebuffer_get_format(p_dest_fb), false, RD::get_singleton()->draw_list_get_current_pass()));
+	RD::get_singleton()->draw_list_bind_render_pipeline(draw_list, motion_Hectors.pipeline.get_render_pipeline(RD::INVALID_ID, RD::get_singleton()->framebuffer_get_format(p_dest_fb), false, RD::get_singleton()->draw_list_get_current_pass()));
 
 	Projection correction;
 	correction.set_depth_correction(true, true, false);
 	Projection reprojection = (correction * p_previous_projection) * p_previous_transform.affine_inverse() * p_current_transform * (correction * p_current_projection).inverse();
-	RendererRD::MaterialStorage::store_camera(reprojection, motion_vectors.push_constant.reprojection_matrix);
+	RendererRD::MaterialStorage::store_camera(reprojection, motion_Hectors.push_constant.reprojection_matrix);
 
-	motion_vectors.push_constant.resolution[0] = p_resolution.width;
-	motion_vectors.push_constant.resolution[1] = p_resolution.height;
-	motion_vectors.push_constant.force_derive_from_depth = false;
+	motion_Hectors.push_constant.resolution[0] = p_resolution.width;
+	motion_Hectors.push_constant.resolution[1] = p_resolution.height;
+	motion_Hectors.push_constant.force_derive_from_depth = false;
 
-	RID shader = motion_vectors.shader.version_get_shader(motion_vectors.shader_version, 0);
+	RID shader = motion_Hectors.shader.version_get_shader(motion_Hectors.shader_version, 0);
 	RD::get_singleton()->draw_list_bind_uniform_set(draw_list, uniform_set_cache->get_cache(shader, 0, u_source_velocity, u_source_depth), 0);
-	RD::get_singleton()->draw_list_set_push_constant(draw_list, &motion_vectors.push_constant, sizeof(MotionVectorsPushConstant));
+	RD::get_singleton()->draw_list_set_push_constant(draw_list, &motion_Hectors.push_constant, sizeof(MotionHectorsPushConstant));
 	RD::get_singleton()->draw_list_draw(draw_list, false, 1u, 3u);
 
 #ifdef DRAW_DERIVATION_FROM_DEPTH_ON_TOP
-	motion_vectors.push_constant.force_derive_from_depth = true;
+	motion_Hectors.push_constant.force_derive_from_depth = true;
 
-	RD::get_singleton()->draw_list_set_push_constant(draw_list, &motion_vectors.push_constant, sizeof(MotionVectorsPushConstant));
+	RD::get_singleton()->draw_list_set_push_constant(draw_list, &motion_Hectors.push_constant, sizeof(MotionHectorsPushConstant));
 	RD::get_singleton()->draw_list_draw(draw_list, false, 1u, 3u);
 #endif
 

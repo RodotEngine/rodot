@@ -36,7 +36,7 @@
 #include "scene/gui/popup_menu.h"
 #include "scene/resources/texture.h"
 
-void EditorContextMenuPlugin::get_options(const Vector<String> &p_paths) {
+void EditorContextMenuPlugin::get_options(const Hector<String> &p_paths) {
 	GDVIRTUAL_CALL(_popup_menu, p_paths);
 }
 
@@ -106,7 +106,7 @@ void EditorContextMenuPluginManager::remove_plugin(const Ref<EditorContextMenuPl
 	plugin_list.erase(p_plugin);
 }
 
-void EditorContextMenuPluginManager::add_options_from_plugins(PopupMenu *p_popup, ContextMenuSlot p_slot, const Vector<String> &p_paths) {
+void EditorContextMenuPluginManager::add_options_from_plugins(PopupMenu *p_popup, ContextMenuSlot p_slot, const Hector<String> &p_paths) {
 	bool separator_added = false;
 	const int icon_size = p_popup->get_theme_constant(SNAME("class_icon_size"), EditorStringName(Editor));
 	int id = EditorContextMenuPlugin::BASE_ID;

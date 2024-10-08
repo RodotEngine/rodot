@@ -21,12 +21,12 @@ func test():
 	value = ""
 	print(value == null)
 
-	# Vector2
-	value = Vector2()
+	# Hector2
+	value = Hector2()
 	print(value == null)
 
-	# Vector2i
-	value = Vector2i()
+	# Hector2i
+	value = Hector2i()
 	print(value == null)
 
 	# Rect2
@@ -37,12 +37,12 @@ func test():
 	value = Rect2i()
 	print(value == null)
 
-	# Vector3
-	value = Vector3()
+	# Hector3
+	value = Hector3()
 	print(value == null)
 
-	# Vector3i
-	value = Vector3i()
+	# Hector3i
+	value = Hector3i()
 	print(value == null)
 
 	# Transform2D
@@ -129,18 +129,18 @@ func test():
 	value = PackedStringArray()
 	print(value == null)
 
-	# PackedVector2Array
-	value = PackedVector2Array()
+	# PackedHector2Array
+	value = PackedHector2Array()
 	print(value == null)
 
-	# PackedVector3Array
-	value = PackedVector3Array()
+	# PackedHector3Array
+	value = PackedHector3Array()
 	print(value == null)
 
 	# PackedColorArray
 	value = PackedColorArray()
 	print(value == null)
 
-	# PackedVector4Array
-	value = PackedVector4Array()
+	# PackedHector4Array
+	value = PackedHector4Array()
 	print(value == null)

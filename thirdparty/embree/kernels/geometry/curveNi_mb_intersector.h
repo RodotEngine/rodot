@@ -42,7 +42,7 @@ namespace embree
                                     vfloat<M>::load(prim.bounds_vy_x(N)), vfloat<M>::load(prim.bounds_vy_y(N)), vfloat<M>::load(prim.bounds_vy_z(N)),
                                     vfloat<M>::load(prim.bounds_vz_x(N)), vfloat<M>::load(prim.bounds_vz_y(N)), vfloat<M>::load(prim.bounds_vz_z(N)));
 
-        const Vec3vfM dir2 = xfmVector(space,Vec3vfM(dir1));
+        const Vec3vfM dir2 = xfmHector(space,Vec3vfM(dir1));
         const Vec3vfM org2 = xfmPoint (space,Vec3vfM(org1));
         const Vec3vfM rcp_dir2 = rcp_safe(dir2);
 
@@ -295,7 +295,7 @@ namespace embree
                                     vfloat<M>::load(prim.bounds_vy_x(N)), vfloat<M>::load(prim.bounds_vy_y(N)), vfloat<M>::load(prim.bounds_vy_z(N)),
                                     vfloat<M>::load(prim.bounds_vz_x(N)), vfloat<M>::load(prim.bounds_vz_y(N)), vfloat<M>::load(prim.bounds_vz_z(N)));
 
-        const Vec3vfM dir2 = xfmVector(space,Vec3vfM(dir1));
+        const Vec3vfM dir2 = xfmHector(space,Vec3vfM(dir1));
         const Vec3vfM org2 = xfmPoint (space,Vec3vfM(org1));
         const Vec3vfM rcp_dir2 = rcp_safe(dir2);
 

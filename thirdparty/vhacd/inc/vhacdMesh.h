@@ -16,7 +16,7 @@
 #ifndef VHACD_MESH_H
 #define VHACD_MESH_H
 #include "vhacdSArray.h"
-#include "vhacdVector.h"
+#include "vhacdHector.h"
 
 #define VHACD_DEBUG_MESH
 

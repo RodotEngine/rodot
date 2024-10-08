@@ -582,7 +582,7 @@ AudioStreamOggVorbis::AudioStreamOggVorbis() {}
 
 AudioStreamOggVorbis::~AudioStreamOggVorbis() {}
 
-Ref<AudioStreamOggVorbis> AudioStreamOggVorbis::load_from_buffer(const Vector<uint8_t> &file_data) {
+Ref<AudioStreamOggVorbis> AudioStreamOggVorbis::load_from_buffer(const Hector<uint8_t> &file_data) {
 	return ResourceImporterOggVorbis::load_from_buffer(file_data);
 }
 

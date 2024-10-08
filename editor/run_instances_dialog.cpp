@@ -119,8 +119,8 @@ void RunInstancesDialog::_save_arguments() {
 	EditorSettings::get_singleton()->set_project_metadata("debug_options", "run_instances_config", stored_data);
 }
 
-Vector<String> RunInstancesDialog::_split_cmdline_args(const String &p_arg_string) const {
-	Vector<String> split_args;
+Hector<String> RunInstancesDialog::_split_cmdline_args(const String &p_arg_string) const {
+	Hector<String> split_args;
 	int arg_start = 0;
 	bool is_quoted = false;
 	char32_t quote_char = '-';
@@ -156,7 +156,7 @@ Vector<String> RunInstancesDialog::_split_cmdline_args(const String &p_arg_strin
 }
 
 void RunInstancesDialog::popup_dialog() {
-	popup_centered(Vector2i(1200, 600) * EDSCALE);
+	popup_centered(Hector2i(1200, 600) * EDSCALE);
 }
 
 int RunInstancesDialog::get_instance_count() const {
@@ -192,12 +192,12 @@ void RunInstancesDialog::get_argument_list_for_instance(int p_idx, List<String> 
 		// Example: `prime-run %command% --time-scale 0.5`
 		const int placeholder_pos = raw_custom_args.find("%command%");
 
-		Vector<String> custom_args;
+		Hector<String> custom_args;
 
 		if (placeholder_pos != -1) {
 			// Prepend executable-specific custom arguments.
 			// If nothing is placed before `%command%`, behave as if no placeholder was specified.
-			Vector<String> exec_args = _split_cmdline_args(raw_custom_args.substr(0, placeholder_pos));
+			Hector<String> exec_args = _split_cmdline_args(raw_custom_args.substr(0, placeholder_pos));
 			if (exec_args.size() > 0) {
 				exec = exec_args[0];
 				exec_args.remove_at(0);
@@ -241,8 +241,8 @@ void RunInstancesDialog::apply_custom_features(int p_instance_idx) {
 		raw_text = main_features_edit->get_text();
 	}
 
-	const Vector<String> raw_list = raw_text.split(",");
-	Vector<String> stripped_features;
+	const Hector<String> raw_list = raw_text.split(",");
+	Hector<String> stripped_features;
 
 	for (int i = 0; i < raw_list.size(); i++) {
 		String f = raw_list[i].strip_edges();

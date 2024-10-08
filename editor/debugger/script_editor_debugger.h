@@ -219,8 +219,8 @@ private:
 
 	void _clear_errors_list();
 
-	void _breakpoints_item_rmb_selected(const Vector2 &p_pos, MouseButton p_button);
-	void _error_tree_item_rmb_selected(const Vector2 &p_pos, MouseButton p_button);
+	void _breakpoints_item_rmb_selected(const Hector2 &p_pos, MouseButton p_button);
+	void _error_tree_item_rmb_selected(const Hector2 &p_pos, MouseButton p_button);
 	void _item_menu_id_pressed(int p_option);
 	void _tab_changed(int p_tab);
 
@@ -305,7 +305,7 @@ public:
 	void update_live_edit_root();
 
 	void reload_all_scripts();
-	void reload_scripts(const Vector<String> &p_script_paths);
+	void reload_scripts(const Hector<String> &p_script_paths);
 
 	bool is_skip_breakpoints();
 

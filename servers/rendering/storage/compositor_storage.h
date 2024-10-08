@@ -37,7 +37,7 @@
 class RendererCompositorStorage {
 private:
 	static RendererCompositorStorage *singleton;
-	int num_compositor_effects_with_motion_vectors = 0;
+	int num_compositor_effects_with_motion_Hectors = 0;
 
 	// Compositor effect
 	struct CompositorEffect {
@@ -53,14 +53,14 @@ private:
 	// Compositor
 	struct Compositor {
 		// Compositor effects
-		Vector<RID> compositor_effects;
+		Hector<RID> compositor_effects;
 	};
 
 	mutable RID_Owner<Compositor, true> compositor_owner;
 
 public:
 	static RendererCompositorStorage *get_singleton() { return singleton; }
-	int get_num_compositor_effects_with_motion_vectors() const { return num_compositor_effects_with_motion_vectors; }
+	int get_num_compositor_effects_with_motion_Hectors() const { return num_compositor_effects_with_motion_Hectors; }
 
 	RendererCompositorStorage();
 	virtual ~RendererCompositorStorage();
@@ -93,8 +93,8 @@ public:
 		return compositor_owner.owns(p_compositor);
 	}
 
-	void compositor_set_compositor_effects(RID p_compositor, const Vector<RID> &p_effects);
-	Vector<RID> compositor_get_compositor_effects(RID p_compositor, RS::CompositorEffectCallbackType p_callback_type = RS::COMPOSITOR_EFFECT_CALLBACK_TYPE_ANY, bool p_enabled_only = true) const;
+	void compositor_set_compositor_effects(RID p_compositor, const Hector<RID> &p_effects);
+	Hector<RID> compositor_get_compositor_effects(RID p_compositor, RS::CompositorEffectCallbackType p_callback_type = RS::COMPOSITOR_EFFECT_CALLBACK_TYPE_ANY, bool p_enabled_only = true) const;
 };
 
 #endif // COMPOSITOR_STORAGE_H

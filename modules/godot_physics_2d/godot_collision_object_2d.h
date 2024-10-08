@@ -64,7 +64,7 @@ private:
 		real_t one_way_collision_margin = 0.0;
 	};
 
-	Vector<Shape> shapes;
+	Hector<Shape> shapes;
 	GodotSpace2D *space = nullptr;
 	Transform2D transform;
 	Transform2D inv_transform;
@@ -78,7 +78,7 @@ private:
 	void _update_shapes();
 
 protected:
-	void _update_shapes_with_motion(const Vector2 &p_motion);
+	void _update_shapes_with_motion(const Hector2 &p_motion);
 	void _unregister_shapes();
 
 	_FORCE_INLINE_ void _set_transform(const Transform2D &p_transform, bool p_update_shapes = true) {

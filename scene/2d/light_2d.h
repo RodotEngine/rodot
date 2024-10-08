@@ -67,7 +67,7 @@ private:
 	int item_shadow_mask = 1;
 	real_t shadow_smooth = 0.0;
 	Ref<Texture2D> texture;
-	Vector2 texture_offset;
+	Hector2 texture_offset;
 	ShadowFilter shadow_filter = SHADOW_FILTER_NONE;
 	BlendMode blend_mode = BLEND_MODE_ADD;
 
@@ -144,7 +144,7 @@ class PointLight2D : public Light2D {
 private:
 	real_t _scale = 1.0;
 	Ref<Texture2D> texture;
-	Vector2 texture_offset;
+	Hector2 texture_offset;
 
 protected:
 #ifndef DISABLE_DEPRECATED
@@ -169,8 +169,8 @@ public:
 	void set_texture(const Ref<Texture2D> &p_texture);
 	Ref<Texture2D> get_texture() const;
 
-	void set_texture_offset(const Vector2 &p_offset);
-	Vector2 get_texture_offset() const;
+	void set_texture_offset(const Hector2 &p_offset);
+	Hector2 get_texture_offset() const;
 
 	void set_texture_scale(real_t p_scale);
 	real_t get_texture_scale() const;

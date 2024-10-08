@@ -10,17 +10,17 @@ func test():
 	i *= sf
 	i *= 2.0
 	print(i)
-	var v2 := Vector2i(1, 2)
+	var v2 := Hector2i(1, 2)
 	v2 *= hf
 	v2 *= sf
 	v2 *= 2.0
 	print(v2)
-	var v3 := Vector3i(1, 2, 3)
+	var v3 := Hector3i(1, 2, 3)
 	v3 *= hf
 	v3 *= sf
 	v3 *= 2.0
 	print(v3)
-	var v4 := Vector4i(1, 2, 3, 4)
+	var v4 := Hector4i(1, 2, 3, 4)
 	v4 *= hf
 	v4 *= sf
 	v4 *= 2.0

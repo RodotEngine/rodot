@@ -498,7 +498,7 @@ void NavigationRegion3D::_update_debug_mesh() {
 
 	debug_mesh->clear_surfaces();
 
-	Vector<Vector3> vertices = navigation_mesh->get_vertices();
+	Hector<Hector3> vertices = navigation_mesh->get_vertices();
 	if (vertices.size() == 0) {
 		return;
 	}
@@ -515,7 +515,7 @@ void NavigationRegion3D::_update_debug_mesh() {
 	int line_count = 0;
 
 	for (int i = 0; i < polygon_count; i++) {
-		const Vector<int> &polygon = navigation_mesh->get_polygon(i);
+		const Hector<int> &polygon = navigation_mesh->get_polygon(i);
 		int polygon_size = polygon.size();
 		if (polygon_size < 3) {
 			continue;
@@ -524,15 +524,15 @@ void NavigationRegion3D::_update_debug_mesh() {
 		vertex_count += (polygon_size - 2) * 3;
 	}
 
-	Vector<Vector3> face_vertex_array;
+	Hector<Hector3> face_vertex_array;
 	face_vertex_array.resize(vertex_count);
 
-	Vector<Color> face_color_array;
+	Hector<Color> face_color_array;
 	if (enabled_geometry_face_random_color) {
 		face_color_array.resize(vertex_count);
 	}
 
-	Vector<Vector3> line_vertex_array;
+	Hector<Hector3> line_vertex_array;
 	if (enabled_edge_lines) {
 		line_vertex_array.resize(line_count);
 	}
@@ -545,12 +545,12 @@ void NavigationRegion3D::_update_debug_mesh() {
 	int face_vertex_index = 0;
 	int line_vertex_index = 0;
 
-	Vector3 *face_vertex_array_ptrw = face_vertex_array.ptrw();
+	Hector3 *face_vertex_array_ptrw = face_vertex_array.ptrw();
 	Color *face_color_array_ptrw = face_color_array.ptrw();
-	Vector3 *line_vertex_array_ptrw = line_vertex_array.ptrw();
+	Hector3 *line_vertex_array_ptrw = line_vertex_array.ptrw();
 
 	for (int polygon_index = 0; polygon_index < polygon_count; polygon_index++) {
-		const Vector<int> &polygon_indices = navigation_mesh->get_polygon(polygon_index);
+		const Hector<int> &polygon_indices = navigation_mesh->get_polygon(polygon_index);
 		int polygon_indices_size = polygon_indices.size();
 		if (polygon_indices_size < 3) {
 			continue;
@@ -684,28 +684,28 @@ void NavigationRegion3D::_update_debug_edge_connections_mesh() {
 		return;
 	}
 
-	Vector<Vector3> vertex_array;
+	Hector<Hector3> vertex_array;
 	vertex_array.resize(connections_count * 6);
-	Vector3 *vertex_array_ptrw = vertex_array.ptrw();
+	Hector3 *vertex_array_ptrw = vertex_array.ptrw();
 	int vertex_array_index = 0;
 
 	for (int i = 0; i < connections_count; i++) {
-		Vector3 connection_pathway_start = NavigationServer3D::get_singleton()->region_get_connection_pathway_start(region, i);
-		Vector3 connection_pathway_end = NavigationServer3D::get_singleton()->region_get_connection_pathway_end(region, i);
+		Hector3 connection_pathway_start = NavigationServer3D::get_singleton()->region_get_connection_pathway_start(region, i);
+		Hector3 connection_pathway_end = NavigationServer3D::get_singleton()->region_get_connection_pathway_end(region, i);
 
-		Vector3 direction_start_end = connection_pathway_start.direction_to(connection_pathway_end);
-		Vector3 direction_end_start = connection_pathway_end.direction_to(connection_pathway_start);
+		Hector3 direction_start_end = connection_pathway_start.direction_to(connection_pathway_end);
+		Hector3 direction_end_start = connection_pathway_end.direction_to(connection_pathway_start);
 
-		Vector3 start_right_dir = direction_start_end.cross(Vector3(0, 1, 0));
-		Vector3 start_left_dir = -start_right_dir;
+		Hector3 start_right_dir = direction_start_end.cross(Hector3(0, 1, 0));
+		Hector3 start_left_dir = -start_right_dir;
 
-		Vector3 end_right_dir = direction_end_start.cross(Vector3(0, 1, 0));
-		Vector3 end_left_dir = -end_right_dir;
+		Hector3 end_right_dir = direction_end_start.cross(Hector3(0, 1, 0));
+		Hector3 end_left_dir = -end_right_dir;
 
-		Vector3 left_start_pos = connection_pathway_start + (start_left_dir * half_edge_connection_margin);
-		Vector3 right_start_pos = connection_pathway_start + (start_right_dir * half_edge_connection_margin);
-		Vector3 left_end_pos = connection_pathway_end + (end_right_dir * half_edge_connection_margin);
-		Vector3 right_end_pos = connection_pathway_end + (end_left_dir * half_edge_connection_margin);
+		Hector3 left_start_pos = connection_pathway_start + (start_left_dir * half_edge_connection_margin);
+		Hector3 right_start_pos = connection_pathway_start + (start_right_dir * half_edge_connection_margin);
+		Hector3 left_end_pos = connection_pathway_end + (end_right_dir * half_edge_connection_margin);
+		Hector3 right_end_pos = connection_pathway_end + (end_left_dir * half_edge_connection_margin);
 
 		vertex_array_ptrw[vertex_array_index++] = connection_pathway_start;
 		vertex_array_ptrw[vertex_array_index++] = connection_pathway_end;

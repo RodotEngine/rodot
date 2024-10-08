@@ -231,7 +231,7 @@ FORCE_INLINE void _sse2neon_smp_mb(void)
 #define HAS__builtin_shuffle 0
 #endif
 
-#define HAS__builtin_shufflevector 0
+#define HAS__builtin_shuffleHector 0
 #define HAS__builtin_nontemporal_store 0
 #else
 #define __has_builtin(x) 0
@@ -257,9 +257,9 @@ FORCE_INLINE void _sse2neon_smp_mb(void)
 #define _MM_SHUFFLE(fp3, fp2, fp1, fp0) \
     (((fp3) << 6) | ((fp2) << 4) | ((fp1) << 2) | ((fp0)))
 
-#if __has_builtin(__builtin_shufflevector)
+#if __has_builtin(__builtin_shuffleHector)
 #define _sse2neon_shuffle(type, a, b, ...) \
-    __builtin_shufflevector(a, b, __VA_ARGS__)
+    __builtin_shuffleHector(a, b, __VA_ARGS__)
 #elif __has_builtin(__builtin_shuffle)
 #define _sse2neon_shuffle(type, a, b, ...) \
     __extension__({                        \
@@ -309,21 +309,21 @@ FORCE_INLINE void _sse2neon_smp_mb(void)
 
 /* A few intrinsics accept traditional data types like ints or floats, but
  * most operate on data types that are specific to SSE.
- * If a vector type ends in d, it contains doubles, and if it does not have
- * a suffix, it contains floats. An integer vector type can contain any type
+ * If a Hector type ends in d, it contains doubles, and if it does not have
+ * a suffix, it contains floats. An integer Hector type can contain any type
  * of integer, from chars to shorts to unsigned long longs.
  */
 typedef int64x1_t __m64;
-typedef float32x4_t __m128; /* 128-bit vector containing 4 floats */
+typedef float32x4_t __m128; /* 128-bit Hector containing 4 floats */
 // On ARM 32-bit architecture, the float64x2_t is not supported.
 // The data type __m128d should be represented in a different way for related
 // intrinsic conversion.
 #if defined(__aarch64__)
-typedef float64x2_t __m128d; /* 128-bit vector containing 2 doubles */
+typedef float64x2_t __m128d; /* 128-bit Hector containing 2 doubles */
 #else
 typedef float32x4_t __m128d;
 #endif
-typedef int64x2_t __m128i; /* 128-bit vector containing integers */
+typedef int64x2_t __m128i; /* 128-bit Hector containing integers */
 
 // __int64 is defined in the Intrinsics Guide which maps to different datatype
 // in different data model
@@ -460,11 +460,11 @@ typedef int64x2_t __m128i; /* 128-bit vector containing integers */
 //
 // union intended to allow direct access to an __m128 variable using the names
 // that the MSVC compiler provides.  This union should really only be used when
-// trying to access the members of the vector as integer values.  GCC/clang
+// trying to access the members of the Hector as integer values.  GCC/clang
 // allow native access to the float members through a simple array access
 // operator (in C since 4.6, in C++ since 4.8).
 //
-// Ideally direct accesses to SIMD vectors should not be used since it can cause
+// Ideally direct accesses to SIMD Hectors should not be used since it can cause
 // a performance hit.  If it really is needed however, the original __m128
 // variable can be aliased with a pointer to this union and used to access
 // individual components.  The use of this union should be hidden behind a macro
@@ -608,18 +608,18 @@ FORCE_INLINE uint16_t _sse2neon_vaddvq_u16(uint16x8_t a)
  *
  * This last part, <data_type>, is a little complicated. It identifies the
  * content of the input values, and can be set to any of the following values:
- * + ps - vectors contain floats (ps stands for packed single-precision)
- * + pd - vectors cantain doubles (pd stands for packed double-precision)
- * + epi8/epi16/epi32/epi64 - vectors contain 8-bit/16-bit/32-bit/64-bit
+ * + ps - Hectors contain floats (ps stands for packed single-precision)
+ * + pd - Hectors cantain doubles (pd stands for packed double-precision)
+ * + epi8/epi16/epi32/epi64 - Hectors contain 8-bit/16-bit/32-bit/64-bit
  *                            signed integers
- * + epu8/epu16/epu32/epu64 - vectors contain 8-bit/16-bit/32-bit/64-bit
+ * + epu8/epu16/epu32/epu64 - Hectors contain 8-bit/16-bit/32-bit/64-bit
  *                            unsigned integers
- * + si128 - unspecified 128-bit vector or 256-bit vector
- * + m128/m128i/m128d - identifies input vector types when they are different
- *                      than the type of the returned vector
+ * + si128 - unspecified 128-bit Hector or 256-bit Hector
+ * + m128/m128i/m128d - identifies input Hector types when they are different
+ *                      than the type of the returned Hector
  *
  * For example, _mm_setzero_ps. The _mm implies that the function returns
- * a 128-bit vector. The _ps at the end implies that the argument vectors
+ * a 128-bit Hector. The _ps at the end implies that the argument Hectors
  * contain floats.
  *
  * A complete example: Byte Shuffle - pshufb (_mm_shuffle_epi8)
@@ -3006,7 +3006,7 @@ FORCE_INLINE __m128 _mm_sub_ss(__m128 a, __m128 b)
 
 // Macro: Transpose the 4x4 matrix formed by the 4 rows of single-precision
 // (32-bit) floating-point elements in row0, row1, row2, and row3, and store the
-// transposed matrix in these vectors (row0 now contains column 0, etc.).
+// transposed matrix in these Hectors (row0 now contains column 0, etc.).
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=MM_TRANSPOSE4_PS
 #define _MM_TRANSPOSE4_PS(row0, row1, row2, row3)         \
     do {                                                  \
@@ -3031,7 +3031,7 @@ FORCE_INLINE __m128 _mm_sub_ss(__m128 a, __m128 b)
 #define _mm_ucomilt_ss _mm_comilt_ss
 #define _mm_ucomineq_ss _mm_comineq_ss
 
-// Return vector of type __m128i with undefined elements.
+// Return Hector of type __m128i with undefined elements.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=mm_undefined_si128
 FORCE_INLINE __m128i _mm_undefined_si128(void)
 {
@@ -3046,7 +3046,7 @@ FORCE_INLINE __m128i _mm_undefined_si128(void)
 #endif
 }
 
-// Return vector of type __m128 with undefined elements.
+// Return Hector of type __m128 with undefined elements.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_undefined_ps
 FORCE_INLINE __m128 _mm_undefined_ps(void)
 {
@@ -3353,7 +3353,7 @@ FORCE_INLINE __m128i _mm_avg_epu8(__m128i a, __m128i b)
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_bsrli_si128
 #define _mm_bsrli_si128(a, imm) _mm_srli_si128(a, imm)
 
-// Cast vector of type __m128d to type __m128. This intrinsic is only used for
+// Cast Hector of type __m128d to type __m128. This intrinsic is only used for
 // compilation and does not generate any instructions, thus it has zero latency.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_castpd_ps
 FORCE_INLINE __m128 _mm_castpd_ps(__m128d a)
@@ -3361,7 +3361,7 @@ FORCE_INLINE __m128 _mm_castpd_ps(__m128d a)
     return vreinterpretq_m128_s64(vreinterpretq_s64_m128d(a));
 }
 
-// Cast vector of type __m128d to type __m128i. This intrinsic is only used for
+// Cast Hector of type __m128d to type __m128i. This intrinsic is only used for
 // compilation and does not generate any instructions, thus it has zero latency.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_castpd_si128
 FORCE_INLINE __m128i _mm_castpd_si128(__m128d a)
@@ -3369,7 +3369,7 @@ FORCE_INLINE __m128i _mm_castpd_si128(__m128d a)
     return vreinterpretq_m128i_s64(vreinterpretq_s64_m128d(a));
 }
 
-// Cast vector of type __m128 to type __m128d. This intrinsic is only used for
+// Cast Hector of type __m128 to type __m128d. This intrinsic is only used for
 // compilation and does not generate any instructions, thus it has zero latency.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_castps_pd
 FORCE_INLINE __m128d _mm_castps_pd(__m128 a)
@@ -3385,7 +3385,7 @@ FORCE_INLINE __m128i _mm_castps_si128(__m128 a)
     return vreinterpretq_m128i_s32(vreinterpretq_s32_m128(a));
 }
 
-// Cast vector of type __m128i to type __m128d. This intrinsic is only used for
+// Cast Hector of type __m128i to type __m128d. This intrinsic is only used for
 // compilation and does not generate any instructions, thus it has zero latency.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_castsi128_pd
 FORCE_INLINE __m128d _mm_castsi128_pd(__m128i a)
@@ -4974,7 +4974,7 @@ FORCE_INLINE int _mm_movemask_epi8(__m128i a)
 
     // Shift out everything but the sign bits with an unsigned shift right.
     //
-    // Bytes of the vector::
+    // Bytes of the Hector::
     // 89 ff 1d c0 00 10 99 33
     // \  \  \  \  \  \  \  \    high_bits = (uint16x4_t)(input >> 7)
     //  |  |  |  |  |  |  |  |
@@ -5513,7 +5513,7 @@ FORCE_INLINE __m128d _mm_setr_pd(double e1, double e0)
     return _mm_set_pd(e0, e1);
 }
 
-// Return vector of type __m128d with all elements set to zero.
+// Return Hector of type __m128d with all elements set to zero.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_setzero_pd
 FORCE_INLINE __m128d _mm_setzero_pd(void)
 {
@@ -6413,7 +6413,7 @@ FORCE_INLINE __m128i _mm_subs_epu8(__m128i a, __m128i b)
 #define _mm_ucomilt_sd _mm_comilt_sd
 #define _mm_ucomineq_sd _mm_comineq_sd
 
-// Return vector of type __m128d with undefined elements.
+// Return Hector of type __m128d with undefined elements.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_undefined_pd
 FORCE_INLINE __m128d _mm_undefined_pd(void)
 {
@@ -8516,7 +8516,7 @@ FORCE_INLINE __m128i _mm_stream_load_si128(__m128i *p)
 #endif
 }
 
-// Compute the bitwise NOT of a and then AND with a 128-bit vector containing
+// Compute the bitwise NOT of a and then AND with a 128-bit Hector containing
 // all 1's, and return 1 if the result is zero, otherwise return 0.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_test_all_ones
 FORCE_INLINE int _mm_test_all_ones(__m128i a)

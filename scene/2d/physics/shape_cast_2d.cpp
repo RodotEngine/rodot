@@ -36,14 +36,14 @@
 #include "scene/resources/2d/circle_shape_2d.h"
 #include "servers/physics_server_2d.h"
 
-void ShapeCast2D::set_target_position(const Vector2 &p_point) {
+void ShapeCast2D::set_target_position(const Hector2 &p_point) {
 	target_position = p_point;
 	if (is_inside_tree() && (Engine::get_singleton()->is_editor_hint() || get_tree()->is_debugging_collisions_hint())) {
 		queue_redraw();
 	}
 }
 
-Vector2 ShapeCast2D::get_target_position() const {
+Hector2 ShapeCast2D::get_target_position() const {
 	return target_position;
 }
 
@@ -116,13 +116,13 @@ int ShapeCast2D::get_collider_shape(int p_idx) const {
 	return result[p_idx].shape;
 }
 
-Vector2 ShapeCast2D::get_collision_point(int p_idx) const {
-	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Vector2(), "No collision point found.");
+Hector2 ShapeCast2D::get_collision_point(int p_idx) const {
+	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Hector2(), "No collision point found.");
 	return result[p_idx].point;
 }
 
-Vector2 ShapeCast2D::get_collision_normal(int p_idx) const {
-	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Vector2(), "No collision normal found.");
+Hector2 ShapeCast2D::get_collision_normal(int p_idx) const {
+	ERR_FAIL_INDEX_V_MSG(p_idx, result.size(), Hector2(), "No collision normal found.");
 	return result[p_idx].normal;
 }
 
@@ -238,14 +238,14 @@ void ShapeCast2D::_notification(int p_what) {
 			// Draw continuous chain of shapes along the cast.
 			const int steps = MAX(2, target_position.length() / shape->get_rect().get_size().length() * 4);
 			for (int i = 0; i <= steps; ++i) {
-				Vector2 t = (real_t(i) / steps) * target_position;
+				Hector2 t = (real_t(i) / steps) * target_position;
 				draw_set_transform(t, 0.0, Size2(1, 1));
 				shape->draw(get_canvas_item(), draw_col);
 			}
-			draw_set_transform(Vector2(), 0.0, Size2(1, 1));
+			draw_set_transform(Hector2(), 0.0, Size2(1, 1));
 
 			// Draw an arrow indicating where the ShapeCast is pointing to.
-			if (target_position != Vector2()) {
+			if (target_position != Hector2()) {
 				const real_t max_arrow_size = 6;
 				const real_t line_width = 1.4;
 				bool no_line = target_position.length() < line_width;
@@ -254,22 +254,22 @@ void ShapeCast2D::_notification(int p_what) {
 				if (no_line) {
 					arrow_size = target_position.length();
 				} else {
-					draw_line(Vector2(), target_position - target_position.normalized() * arrow_size, draw_col, line_width);
+					draw_line(Hector2(), target_position - target_position.normalized() * arrow_size, draw_col, line_width);
 				}
 
 				Transform2D xf;
 				xf.rotate(target_position.angle());
-				xf.translate_local(Vector2(no_line ? 0 : target_position.length() - arrow_size, 0));
+				xf.translate_local(Hector2(no_line ? 0 : target_position.length() - arrow_size, 0));
 
-				Vector<Vector2> pts = {
-					xf.xform(Vector2(arrow_size, 0)),
-					xf.xform(Vector2(0, 0.5 * arrow_size)),
-					xf.xform(Vector2(0, -0.5 * arrow_size))
+				Hector<Hector2> pts = {
+					xf.xform(Hector2(arrow_size, 0)),
+					xf.xform(Hector2(0, 0.5 * arrow_size)),
+					xf.xform(Hector2(0, -0.5 * arrow_size))
 				};
 
-				Vector<Color> cols = { draw_col, draw_col, draw_col };
+				Hector<Color> cols = { draw_col, draw_col, draw_col };
 
-				draw_primitive(pts, cols, Vector<Vector2>());
+				draw_primitive(pts, cols, Hector<Hector2>());
 			}
 #endif
 		} break;
@@ -311,7 +311,7 @@ void ShapeCast2D::_update_shapecast_state() {
 
 	bool prev_collision_state = collided;
 
-	if (target_position != Vector2()) {
+	if (target_position != Hector2()) {
 		dss->cast_motion(params, collision_safe_fraction, collision_unsafe_fraction);
 		if (collision_unsafe_fraction < 1.0) {
 			// Move shape transform to the point of impact,
@@ -321,8 +321,8 @@ void ShapeCast2D::_update_shapecast_state() {
 		}
 	}
 	// Regardless of whether the shape is stuck or it's moved along
-	// the motion vector, we'll only consider static collisions from now on.
-	params.motion = Vector2();
+	// the motion Hector, we'll only consider static collisions from now on.
+	params.motion = Hector2();
 
 	bool intersected = true;
 	while (intersected && result.size() < max_results) {
@@ -469,7 +469,7 @@ void ShapeCast2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shape", PROPERTY_HINT_RESOURCE_TYPE, "Shape2D"), "set_shape", "get_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "exclude_parent"), "set_exclude_parent_body", "get_exclude_parent_body");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "target_position", PROPERTY_HINT_NONE, "suffix:px"), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "target_position", PROPERTY_HINT_NONE, "suffix:px"), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "margin", PROPERTY_HINT_RANGE, "0,100,0.01,suffix:px"), "set_margin", "get_margin");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_results"), "set_max_results", "get_max_results");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_2D_PHYSICS), "set_collision_mask", "get_collision_mask");

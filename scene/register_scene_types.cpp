@@ -585,7 +585,7 @@ void register_scene_types() {
 	GDREGISTER_ABSTRACT_CLASS(GPUParticlesAttractor3D);
 	GDREGISTER_CLASS(GPUParticlesAttractorBox3D);
 	GDREGISTER_CLASS(GPUParticlesAttractorSphere3D);
-	GDREGISTER_CLASS(GPUParticlesAttractorVectorField3D);
+	GDREGISTER_CLASS(GPUParticlesAttractorHectorField3D);
 	GDREGISTER_CLASS(CPUParticles3D);
 	GDREGISTER_CLASS(Marker3D);
 	GDREGISTER_CLASS(RootMotionView);
@@ -655,7 +655,7 @@ void register_scene_types() {
 	GDREGISTER_ABSTRACT_CLASS(VisualShaderNodeResizableBase);
 	GDREGISTER_ABSTRACT_CLASS(VisualShaderNodeGroupBase);
 	GDREGISTER_ABSTRACT_CLASS(VisualShaderNodeConstant);
-	GDREGISTER_ABSTRACT_CLASS(VisualShaderNodeVectorBase);
+	GDREGISTER_ABSTRACT_CLASS(VisualShaderNodeHectorBase);
 	GDREGISTER_CLASS(VisualShaderNodeFrame);
 #ifndef DISABLE_DEPRECATED
 	GDREGISTER_CLASS(VisualShaderNodeComment); // Deprecated, just for compatibility.
@@ -672,20 +672,20 @@ void register_scene_types() {
 	GDREGISTER_CLASS(VisualShaderNodeFloatOp);
 	GDREGISTER_CLASS(VisualShaderNodeIntOp);
 	GDREGISTER_CLASS(VisualShaderNodeUIntOp);
-	GDREGISTER_CLASS(VisualShaderNodeVectorOp);
+	GDREGISTER_CLASS(VisualShaderNodeHectorOp);
 	GDREGISTER_CLASS(VisualShaderNodeColorOp);
 	GDREGISTER_CLASS(VisualShaderNodeTransformOp);
 	GDREGISTER_CLASS(VisualShaderNodeTransformVecMult);
 	GDREGISTER_CLASS(VisualShaderNodeFloatFunc);
 	GDREGISTER_CLASS(VisualShaderNodeIntFunc);
 	GDREGISTER_CLASS(VisualShaderNodeUIntFunc);
-	GDREGISTER_CLASS(VisualShaderNodeVectorFunc);
+	GDREGISTER_CLASS(VisualShaderNodeHectorFunc);
 	GDREGISTER_CLASS(VisualShaderNodeColorFunc);
 	GDREGISTER_CLASS(VisualShaderNodeTransformFunc);
 	GDREGISTER_CLASS(VisualShaderNodeUVFunc);
 	GDREGISTER_CLASS(VisualShaderNodeUVPolarCoord);
 	GDREGISTER_CLASS(VisualShaderNodeDotProduct);
-	GDREGISTER_CLASS(VisualShaderNodeVectorLen);
+	GDREGISTER_CLASS(VisualShaderNodeHectorLen);
 	GDREGISTER_CLASS(VisualShaderNodeDeterminant);
 	GDREGISTER_CLASS(VisualShaderNodeDerivativeFunc);
 	GDREGISTER_CLASS(VisualShaderNodeClamp);
@@ -693,12 +693,12 @@ void register_scene_types() {
 	GDREGISTER_CLASS(VisualShaderNodeOuterProduct);
 	GDREGISTER_CLASS(VisualShaderNodeSmoothStep);
 	GDREGISTER_CLASS(VisualShaderNodeStep);
-	GDREGISTER_CLASS(VisualShaderNodeVectorDistance);
-	GDREGISTER_CLASS(VisualShaderNodeVectorRefract);
+	GDREGISTER_CLASS(VisualShaderNodeHectorDistance);
+	GDREGISTER_CLASS(VisualShaderNodeHectorRefract);
 	GDREGISTER_CLASS(VisualShaderNodeMix);
-	GDREGISTER_CLASS(VisualShaderNodeVectorCompose);
+	GDREGISTER_CLASS(VisualShaderNodeHectorCompose);
 	GDREGISTER_CLASS(VisualShaderNodeTransformCompose);
-	GDREGISTER_CLASS(VisualShaderNodeVectorDecompose);
+	GDREGISTER_CLASS(VisualShaderNodeHectorDecompose);
 	GDREGISTER_CLASS(VisualShaderNodeTransformDecompose);
 	GDREGISTER_CLASS(VisualShaderNodeTexture);
 	GDREGISTER_CLASS(VisualShaderNodeCurveTexture);
@@ -1171,18 +1171,18 @@ void register_scene_types() {
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarFunc", "VisualShaderNodeFloatFunc");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarOp", "VisualShaderNodeFloatOp");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarClamp", "VisualShaderNodeClamp");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorClamp", "VisualShaderNodeClamp");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorClamp", "VisualShaderNodeClamp");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarInterp", "VisualShaderNodeMix");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorInterp", "VisualShaderNodeMix");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorScalarMix", "VisualShaderNodeMix");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorInterp", "VisualShaderNodeMix");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorScalarMix", "VisualShaderNodeMix");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarSmoothStep", "VisualShaderNodeSmoothStep");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorSmoothStep", "VisualShaderNodeSmoothStep");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorScalarSmoothStep", "VisualShaderNodeSmoothStep");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorScalarStep", "VisualShaderNodeStep");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorSmoothStep", "VisualShaderNodeSmoothStep");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorScalarSmoothStep", "VisualShaderNodeSmoothStep");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorScalarStep", "VisualShaderNodeStep");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarSwitch", "VisualShaderNodeSwitch");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarTransformMult", "VisualShaderNodeTransformOp");
 	ClassDB::add_compatibility_class("VisualShaderNodeScalarDerivativeFunc", "VisualShaderNodeDerivativeFunc");
-	ClassDB::add_compatibility_class("VisualShaderNodeVectorDerivativeFunc", "VisualShaderNodeDerivativeFunc");
+	ClassDB::add_compatibility_class("VisualShaderNodeHectorDerivativeFunc", "VisualShaderNodeDerivativeFunc");
 
 	ClassDB::add_compatibility_class("VisualShaderNodeBooleanUniform", "VisualShaderNodeBooleanParameter");
 	ClassDB::add_compatibility_class("VisualShaderNodeColorUniform", "VisualShaderNodeColorParameter");

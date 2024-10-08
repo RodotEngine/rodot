@@ -560,7 +560,7 @@ namespace embree
 
 #if !defined(__AVX__)
       /* SSE: some ray members must be loaded with scalar instructions to ensure that we don't cause memory faults,
-         because the SSE masked loads always access the entire vector */
+         because the SSE masked loads always access the entire Hector */
       if (unlikely(!all(valid)))
       {
         ray.mask  = zero;
@@ -609,7 +609,7 @@ namespace embree
 
 #if !defined(__AVX__)
         /* SSE: some ray members must be stored with scalar instructions to ensure that we don't cause memory faults,
-           because the SSE masked stores always access the entire vector */
+           because the SSE masked stores always access the entire Hector */
         if (unlikely(!all(valid_i)))
         {
           for (size_t k = 0; k < K; k++)

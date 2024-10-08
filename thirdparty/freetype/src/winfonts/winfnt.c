@@ -255,7 +255,7 @@
 
     if ( header->file_type & 1 )
     {
-      FT_TRACE2(( "[can't handle vector FNT fonts]\n" ));
+      FT_TRACE2(( "[can't handle Hector FNT fonts]\n" ));
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }

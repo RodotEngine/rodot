@@ -12,7 +12,7 @@
 	<methods>
 		<method name="add_point">
 			<return type="int" />
-			<param index="0" name="position" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
 			<param index="1" name="left_tangent" type="float" default="0" />
 			<param index="2" name="right_tangent" type="float" default="0" />
 			<param index="3" name="left_mode" type="int" enum="Curve.TangentMode" default="0" />
@@ -54,7 +54,7 @@
 			</description>
 		</method>
 		<method name="get_point_position" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="index" type="int" />
 			<description>
 				Returns the curve coordinates for the point at [param index].

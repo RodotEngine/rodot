@@ -17,7 +17,7 @@
 #include "ubrkimpl.h"
 #include "uresimp.h"
 #include "uvectr32.h"
-#include "uvector.h"
+#include "uHector.h"
 
 #include "unicode/brkiter.h"
 #include "unicode/resbund.h"
@@ -30,7 +30,7 @@ U_NAMESPACE_BEGIN
 
 // Uncomment the following #define to debug.
 // #define LSTM_DEBUG 1
-// #define LSTM_VECTORIZER_DEBUG 1
+// #define LSTM_HectorIZER_DEBUG 1
 
 /**
  * Interface for reading 1D array.
@@ -405,7 +405,7 @@ LSTMData::LSTMData(UResourceBundle* rb, UErrorCode &status)
     LocalUResourceBundlePointer dataRes(ures_getByKey(rb, "data", nullptr, &status));
     if (U_FAILURE(status)) return;
     int32_t data_len = 0;
-    const int32_t* data = ures_getIntVector(dataRes.getAlias(), &data_len, &status);
+    const int32_t* data = ures_getIntHector(dataRes.getAlias(), &data_len, &status);
     fDict = uhash_open(uhash_hashUChars, uhash_compareUChars, nullptr, &status);
 
     StackUResourceBundle stackTempBundle;
@@ -422,7 +422,7 @@ LSTMData::LSTMData(UResourceBundle* rb, UErrorCode &status)
         const char16_t* str = value.getString(stringLength, status);
         uhash_putiAllowZero(fDict, (void*)str, idx, &status);
         if (U_FAILURE(status)) return;
-#ifdef LSTM_VECTORIZER_DEBUG
+#ifdef LSTM_HectorIZER_DEBUG
         printf("Assign [");
         while (*str != 0x0000) {
             printf("U+%04x ", *str);
@@ -469,12 +469,12 @@ LSTMData::~LSTMData() {
     ures_close(fBundle);
 }
 
-class Vectorizer : public UMemory {
+class Hectorizer : public UMemory {
 public:
-    Vectorizer(UHashtable* dict) : fDict(dict) {}
-    virtual ~Vectorizer();
-    virtual void vectorize(UText *text, int32_t startPos, int32_t endPos,
-                           UVector32 &offsets, UVector32 &indices,
+    Hectorizer(UHashtable* dict) : fDict(dict) {}
+    virtual ~Hectorizer();
+    virtual void Hectorize(UText *text, int32_t startPos, int32_t endPos,
+                           UHector32 &offsets, UHector32 &indices,
                            UErrorCode &status) const = 0;
 protected:
     int32_t stringToIndex(const char16_t* str) const {
@@ -483,7 +483,7 @@ protected:
         if (!found) {
             ret = fDict->count;
         }
-#ifdef LSTM_VECTORIZER_DEBUG
+#ifdef LSTM_HectorIZER_DEBUG
         printf("[");
         while (*str != 0x0000) {
             printf("U+%04x ", *str);
@@ -498,26 +498,26 @@ private:
     UHashtable* fDict;
 };
 
-Vectorizer::~Vectorizer()
+Hectorizer::~Hectorizer()
 {
 }
 
-class CodePointsVectorizer : public Vectorizer {
+class CodePointsHectorizer : public Hectorizer {
 public:
-    CodePointsVectorizer(UHashtable* dict) : Vectorizer(dict) {}
-    virtual ~CodePointsVectorizer();
-    virtual void vectorize(UText *text, int32_t startPos, int32_t endPos,
-                           UVector32 &offsets, UVector32 &indices,
+    CodePointsHectorizer(UHashtable* dict) : Hectorizer(dict) {}
+    virtual ~CodePointsHectorizer();
+    virtual void Hectorize(UText *text, int32_t startPos, int32_t endPos,
+                           UHector32 &offsets, UHector32 &indices,
                            UErrorCode &status) const override;
 };
 
-CodePointsVectorizer::~CodePointsVectorizer()
+CodePointsHectorizer::~CodePointsHectorizer()
 {
 }
 
-void CodePointsVectorizer::vectorize(
+void CodePointsHectorizer::Hectorize(
     UText *text, int32_t startPos, int32_t endPos,
-    UVector32 &offsets, UVector32 &indices, UErrorCode &status) const
+    UHector32 &offsets, UHector32 &indices, UErrorCode &status) const
 {
     if (offsets.ensureCapacity(endPos - startPos, status) &&
             indices.ensureCapacity(endPos - startPos, status)) {
@@ -538,27 +538,27 @@ void CodePointsVectorizer::vectorize(
     }
 }
 
-class GraphemeClusterVectorizer : public Vectorizer {
+class GraphemeClusterHectorizer : public Hectorizer {
 public:
-    GraphemeClusterVectorizer(UHashtable* dict)
-        : Vectorizer(dict)
+    GraphemeClusterHectorizer(UHashtable* dict)
+        : Hectorizer(dict)
     {
     }
-    virtual ~GraphemeClusterVectorizer();
-    virtual void vectorize(UText *text, int32_t startPos, int32_t endPos,
-                           UVector32 &offsets, UVector32 &indices,
+    virtual ~GraphemeClusterHectorizer();
+    virtual void Hectorize(UText *text, int32_t startPos, int32_t endPos,
+                           UHector32 &offsets, UHector32 &indices,
                            UErrorCode &status) const override;
 };
 
-GraphemeClusterVectorizer::~GraphemeClusterVectorizer()
+GraphemeClusterHectorizer::~GraphemeClusterHectorizer()
 {
 }
 
 constexpr int32_t MAX_GRAPHEME_CLSTER_LENGTH = 10;
 
-void GraphemeClusterVectorizer::vectorize(
+void GraphemeClusterHectorizer::Hectorize(
     UText *text, int32_t startPos, int32_t endPos,
-    UVector32 &offsets, UVector32 &indices, UErrorCode &status) const
+    UHector32 &offsets, UHector32 &indices, UErrorCode &status) const
 {
     if (U_FAILURE(status)) return;
     if (!offsets.ensureCapacity(endPos - startPos, status) ||
@@ -638,7 +638,7 @@ int32_t
 LSTMBreakEngine::divideUpDictionaryRange( UText *text,
                                                 int32_t startPos,
                                                 int32_t endPos,
-                                                UVector32 &foundBreaks,
+                                                UHector32 &foundBreaks,
                                                 UBool /* isPhraseBreaking */,
                                                 UErrorCode& status) const {
     if (U_FAILURE(status)) return 0;
@@ -650,10 +650,10 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
     }
     utext_setNativeIndex(text, startPos);
 
-    UVector32 offsets(status);
-    UVector32 indices(status);
+    UHector32 offsets(status);
+    UHector32 indices(status);
     if (U_FAILURE(status)) return 0;
-    fVectorizer->vectorize(text, startPos, endPos, offsets, indices, status);
+    fHectorizer->Hectorize(text, startPos, endPos, offsets, indices, status);
     if (U_FAILURE(status)) return 0;
     int32_t* offsetsBuf = offsets.getBuffer();
     int32_t* indicesBuf = indices.getBuffer();
@@ -745,16 +745,16 @@ LSTMBreakEngine::divideUpDictionaryRange( UText *text,
     return foundBreaks.size() - beginFoundBreakSize;
 }
 
-Vectorizer* createVectorizer(const LSTMData* data, UErrorCode &status) {
+Hectorizer* createHectorizer(const LSTMData* data, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return nullptr;
     }
     switch (data->fType) {
         case CODE_POINTS:
-            return new CodePointsVectorizer(data->fDict);
+            return new CodePointsHectorizer(data->fDict);
             break;
         case GRAPHEME_CLUSTER:
-            return new GraphemeClusterVectorizer(data->fDict);
+            return new GraphemeClusterHectorizer(data->fDict);
             break;
         default:
             break;
@@ -763,7 +763,7 @@ Vectorizer* createVectorizer(const LSTMData* data, UErrorCode &status) {
 }
 
 LSTMBreakEngine::LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status)
-    : DictionaryBreakEngine(), fData(data), fVectorizer(createVectorizer(fData, status))
+    : DictionaryBreakEngine(), fData(data), fHectorizer(createHectorizer(fData, status))
 {
     if (U_FAILURE(status)) {
       fData = nullptr;  // If failure, we should not delete fData in destructor because the caller will do so.
@@ -774,7 +774,7 @@ LSTMBreakEngine::LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UE
 
 LSTMBreakEngine::~LSTMBreakEngine() {
     delete fData;
-    delete fVectorizer;
+    delete fHectorizer;
 }
 
 const char16_t* LSTMBreakEngine::name() const {

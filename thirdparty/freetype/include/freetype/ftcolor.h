@@ -860,15 +860,15 @@ FT_BEGIN_HEADER
    *
    *   p0 ::
    *     The starting point of the gradient definition in font units
-   *     represented as a 16.16 fixed-point `FT_Vector`.
+   *     represented as a 16.16 fixed-point `FT_Hector`.
    *
    *   p1 ::
    *     The end point of the gradient definition in font units
-   *     represented as a 16.16 fixed-point `FT_Vector`.
+   *     represented as a 16.16 fixed-point `FT_Hector`.
    *
    *   p2 ::
    *     Optional point~p2 to rotate the gradient in font units
-   *     represented as a 16.16 fixed-point `FT_Vector`.
+   *     represented as a 16.16 fixed-point `FT_Hector`.
    *     Otherwise equal to~p0.
    *
    * @since:
@@ -879,9 +879,9 @@ FT_BEGIN_HEADER
     FT_ColorLine  colorline;
 
     /* TODO: Potentially expose those as x0, y0 etc. */
-    FT_Vector  p0;
-    FT_Vector  p1;
-    FT_Vector  p2;
+    FT_Hector  p0;
+    FT_Hector  p1;
+    FT_Hector  p2;
 
   } FT_PaintLinearGradient;
 
@@ -904,7 +904,7 @@ FT_BEGIN_HEADER
    *
    *   c0 ::
    *     The center of the starting point of the radial gradient in font
-   *     units represented as a 16.16 fixed-point `FT_Vector`.
+   *     units represented as a 16.16 fixed-point `FT_Hector`.
    *
    *   r0 ::
    *     The radius of the starting circle of the radial gradient in font
@@ -912,7 +912,7 @@ FT_BEGIN_HEADER
    *
    *   c1 ::
    *     The center of the end point of the radial gradient in font units
-   *     represented as a 16.16 fixed-point `FT_Vector`.
+   *     represented as a 16.16 fixed-point `FT_Hector`.
    *
    *   r1 ::
    *     The radius of the end circle of the radial gradient in font
@@ -925,9 +925,9 @@ FT_BEGIN_HEADER
   {
     FT_ColorLine  colorline;
 
-    FT_Vector  c0;
+    FT_Hector  c0;
     FT_Pos     r0;
-    FT_Vector  c1;
+    FT_Hector  c1;
     FT_Pos     r1;
 
   } FT_PaintRadialGradient;
@@ -952,7 +952,7 @@ FT_BEGIN_HEADER
    *
    *   center ::
    *     The center of the sweep gradient in font units represented as a
-   *     vector of 16.16 fixed-point values.
+   *     Hector of 16.16 fixed-point values.
    *
    *   start_angle ::
    *     The start angle of the sweep gradient in 16.16 fixed-point
@@ -973,7 +973,7 @@ FT_BEGIN_HEADER
   {
     FT_ColorLine  colorline;
 
-    FT_Vector  center;
+    FT_Hector  center;
     FT_Fixed   start_angle;
     FT_Fixed   end_angle;
 
@@ -1374,19 +1374,19 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   bottom_left ::
-   *     The bottom left corner of the clip box as an @FT_Vector with
+   *     The bottom left corner of the clip box as an @FT_Hector with
    *     fixed-point coordinates in 26.6 format.
    *
    *   top_left ::
-   *     The top left corner of the clip box as an @FT_Vector with
+   *     The top left corner of the clip box as an @FT_Hector with
    *     fixed-point coordinates in 26.6 format.
    *
    *   top_right ::
-   *     The top right corner of the clip box as an @FT_Vector with
+   *     The top right corner of the clip box as an @FT_Hector with
    *     fixed-point coordinates in 26.6 format.
    *
    *   bottom_right ::
-   *     The bottom right corner of the clip box as an @FT_Vector with
+   *     The bottom right corner of the clip box as an @FT_Hector with
    *     fixed-point coordinates in 26.6 format.
    *
    * @since:
@@ -1394,10 +1394,10 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_ClipBox_
   {
-    FT_Vector  bottom_left;
-    FT_Vector  top_left;
-    FT_Vector  top_right;
-    FT_Vector  bottom_right;
+    FT_Hector  bottom_left;
+    FT_Hector  top_left;
+    FT_Hector  top_right;
+    FT_Hector  bottom_right;
 
   } FT_ClipBox;
 
@@ -1513,7 +1513,7 @@ FT_BEGIN_HEADER
    *   clip_box ::
    *     The clip box for the requested `base_glyph` if one is found.  The
    *     clip box is computed taking scale and transformations configured on
-   *     the @FT_Face into account.  @FT_ClipBox contains @FT_Vector values
+   *     the @FT_Face into account.  @FT_ClipBox contains @FT_Hector values
    *     in 26.6 format.
    *
    * @return:

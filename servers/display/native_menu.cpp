@@ -176,7 +176,7 @@ Size2 NativeMenu::get_size(const RID &p_rid) const {
 	return Size2();
 }
 
-void NativeMenu::popup(const RID &p_rid, const Vector2i &p_position) {
+void NativeMenu::popup(const RID &p_rid, const Hector2i &p_position) {
 	WARN_PRINT("Global menus are not supported on this platform.");
 }
 

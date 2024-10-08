@@ -44,7 +44,7 @@ class EditorFileServer : public Object {
 	String password;
 	int port = 0;
 	bool active = false;
-	void _scan_files_changed(EditorFileSystemDirectory *efd, const Vector<String> &p_tags, HashMap<String, uint64_t> &files_to_send, HashMap<String, uint64_t> &cached_files);
+	void _scan_files_changed(EditorFileSystemDirectory *efd, const Hector<String> &p_tags, HashMap<String, uint64_t> &files_to_send, HashMap<String, uint64_t> &cached_files);
 
 public:
 	void poll();

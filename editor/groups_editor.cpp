@@ -445,7 +445,7 @@ void GroupsEditor::_menu_id_pressed(int p_id) {
 	}
 }
 
-void GroupsEditor::_item_mouse_selected(const Vector2 &p_pos, MouseButton p_mouse_button) {
+void GroupsEditor::_item_mouse_selected(const Hector2 &p_pos, MouseButton p_mouse_button) {
 	TreeItem *ti = tree->get_selected();
 	if (!ti) {
 		return;

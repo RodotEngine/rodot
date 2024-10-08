@@ -82,7 +82,7 @@ private:
 	SceneCacheInterface *multiplayer_cache = nullptr;
 	SceneReplicationInterface *multiplayer_replicator = nullptr;
 
-	Vector<uint8_t> packet_cache;
+	Hector<uint8_t> packet_cache;
 
 	HashMap<ObjectID, RPCConfigCache> rpc_cache;
 

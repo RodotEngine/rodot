@@ -143,16 +143,16 @@ real_t GodotPhysicsServer2D::shape_get_custom_solver_bias(RID p_shape) const {
 	return shape->get_custom_bias();
 }
 
-void GodotPhysicsServer2D::_shape_col_cbk(const Vector2 &p_point_A, const Vector2 &p_point_B, void *p_userdata) {
+void GodotPhysicsServer2D::_shape_col_cbk(const Hector2 &p_point_A, const Hector2 &p_point_B, void *p_userdata) {
 	CollCbkData *cbk = static_cast<CollCbkData *>(p_userdata);
 
 	if (cbk->max == 0) {
 		return;
 	}
 
-	Vector2 rel_dir = (p_point_A - p_point_B);
+	Hector2 rel_dir = (p_point_A - p_point_B);
 	real_t rel_length2 = rel_dir.length_squared();
-	if (cbk->valid_dir != Vector2()) {
+	if (cbk->valid_dir != Hector2()) {
 		if (cbk->valid_depth < 10e20) {
 			if (rel_length2 > cbk->valid_depth * cbk->valid_depth ||
 					(rel_length2 > CMP_EPSILON && cbk->valid_dir.dot(rel_dir.normalized()) < CMP_EPSILON)) {
@@ -193,7 +193,7 @@ void GodotPhysicsServer2D::_shape_col_cbk(const Vector2 &p_point_A, const Vector
 	}
 }
 
-bool GodotPhysicsServer2D::shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Vector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Vector2 &p_motion_B, Vector2 *r_results, int p_result_max, int &r_result_count) {
+bool GodotPhysicsServer2D::shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Hector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Hector2 &p_motion_B, Hector2 *r_results, int p_result_max, int &r_result_count) {
 	GodotShape2D *shape_A = shape_owner.get_or_null(p_shape_A);
 	ERR_FAIL_NULL_V(shape_A, false);
 	GodotShape2D *shape_B = shape_owner.get_or_null(p_shape_B);
@@ -264,9 +264,9 @@ void GodotPhysicsServer2D::space_set_debug_contacts(RID p_space, int p_max_conta
 	space->set_debug_contacts(p_max_contacts);
 }
 
-Vector<Vector2> GodotPhysicsServer2D::space_get_contacts(RID p_space) const {
+Hector<Hector2> GodotPhysicsServer2D::space_get_contacts(RID p_space) const {
 	GodotSpace2D *space = space_owner.get_or_null(p_space);
-	ERR_FAIL_NULL_V(space, Vector<Vector2>());
+	ERR_FAIL_NULL_V(space, Hector<Hector2>());
 	return space->get_debug_contacts();
 }
 
@@ -781,7 +781,7 @@ Variant GodotPhysicsServer2D::body_get_state(RID p_body, BodyState p_state) cons
 	return body->get_state(p_state);
 }
 
-void GodotPhysicsServer2D::body_apply_central_impulse(RID p_body, const Vector2 &p_impulse) {
+void GodotPhysicsServer2D::body_apply_central_impulse(RID p_body, const Hector2 &p_impulse) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -799,7 +799,7 @@ void GodotPhysicsServer2D::body_apply_torque_impulse(RID p_body, real_t p_torque
 	body->wakeup();
 }
 
-void GodotPhysicsServer2D::body_apply_impulse(RID p_body, const Vector2 &p_impulse, const Vector2 &p_position) {
+void GodotPhysicsServer2D::body_apply_impulse(RID p_body, const Hector2 &p_impulse, const Hector2 &p_position) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -809,7 +809,7 @@ void GodotPhysicsServer2D::body_apply_impulse(RID p_body, const Vector2 &p_impul
 	body->wakeup();
 }
 
-void GodotPhysicsServer2D::body_apply_central_force(RID p_body, const Vector2 &p_force) {
+void GodotPhysicsServer2D::body_apply_central_force(RID p_body, const Hector2 &p_force) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -817,7 +817,7 @@ void GodotPhysicsServer2D::body_apply_central_force(RID p_body, const Vector2 &p
 	body->wakeup();
 }
 
-void GodotPhysicsServer2D::body_apply_force(RID p_body, const Vector2 &p_force, const Vector2 &p_position) {
+void GodotPhysicsServer2D::body_apply_force(RID p_body, const Hector2 &p_force, const Hector2 &p_position) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -833,7 +833,7 @@ void GodotPhysicsServer2D::body_apply_torque(RID p_body, real_t p_torque) {
 	body->wakeup();
 }
 
-void GodotPhysicsServer2D::body_add_constant_central_force(RID p_body, const Vector2 &p_force) {
+void GodotPhysicsServer2D::body_add_constant_central_force(RID p_body, const Hector2 &p_force) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -841,7 +841,7 @@ void GodotPhysicsServer2D::body_add_constant_central_force(RID p_body, const Vec
 	body->wakeup();
 }
 
-void GodotPhysicsServer2D::body_add_constant_force(RID p_body, const Vector2 &p_force, const Vector2 &p_position) {
+void GodotPhysicsServer2D::body_add_constant_force(RID p_body, const Hector2 &p_force, const Hector2 &p_position) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -857,7 +857,7 @@ void GodotPhysicsServer2D::body_add_constant_torque(RID p_body, real_t p_torque)
 	body->wakeup();
 }
 
-void GodotPhysicsServer2D::body_set_constant_force(RID p_body, const Vector2 &p_force) {
+void GodotPhysicsServer2D::body_set_constant_force(RID p_body, const Hector2 &p_force) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
@@ -867,9 +867,9 @@ void GodotPhysicsServer2D::body_set_constant_force(RID p_body, const Vector2 &p_
 	}
 }
 
-Vector2 GodotPhysicsServer2D::body_get_constant_force(RID p_body) const {
+Hector2 GodotPhysicsServer2D::body_get_constant_force(RID p_body) const {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
-	ERR_FAIL_NULL_V(body, Vector2());
+	ERR_FAIL_NULL_V(body, Hector2());
 	return body->get_constant_force();
 }
 
@@ -890,14 +890,14 @@ real_t GodotPhysicsServer2D::body_get_constant_torque(RID p_body) const {
 	return body->get_constant_torque();
 }
 
-void GodotPhysicsServer2D::body_set_axis_velocity(RID p_body, const Vector2 &p_axis_velocity) {
+void GodotPhysicsServer2D::body_set_axis_velocity(RID p_body, const Hector2 &p_axis_velocity) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL(body);
 
 	_update_shapes();
 
-	Vector2 v = body->get_linear_velocity();
-	Vector2 axis = p_axis_velocity.normalized();
+	Hector2 v = body->get_linear_velocity();
+	Hector2 axis = p_axis_velocity.normalized();
 	v -= axis * axis.dot(v);
 	v += p_axis_velocity;
 	body->set_linear_velocity(v);
@@ -977,12 +977,12 @@ void GodotPhysicsServer2D::body_set_force_integration_callback(RID p_body, const
 	body->set_force_integration_callback(p_callable, p_udata);
 }
 
-bool GodotPhysicsServer2D::body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Vector2 &p_motion, Vector2 *r_results, int p_result_max, int &r_result_count) {
+bool GodotPhysicsServer2D::body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Hector2 &p_motion, Hector2 *r_results, int p_result_max, int &r_result_count) {
 	GodotBody2D *body = body_owner.get_or_null(p_body);
 	ERR_FAIL_NULL_V(body, false);
 	ERR_FAIL_INDEX_V(p_body_shape, body->get_shape_count(), false);
 
-	return shape_collide(body->get_shape(p_body_shape)->get_self(), body->get_transform() * body->get_shape_transform(p_body_shape), Vector2(), p_shape, p_shape_xform, p_motion, r_results, p_result_max, r_result_count);
+	return shape_collide(body->get_shape(p_body_shape)->get_self(), body->get_transform() * body->get_shape_transform(p_body_shape), Hector2(), p_shape, p_shape_xform, p_motion, r_results, p_result_max, r_result_count);
 }
 
 void GodotPhysicsServer2D::body_set_pickable(RID p_body, bool p_pickable) {
@@ -1105,7 +1105,7 @@ bool GodotPhysicsServer2D::joint_is_disabled_collisions_between_bodies(RID p_joi
 	return joint->is_disabled_collisions_between_bodies();
 }
 
-void GodotPhysicsServer2D::joint_make_pin(RID p_joint, const Vector2 &p_pos, RID p_body_a, RID p_body_b) {
+void GodotPhysicsServer2D::joint_make_pin(RID p_joint, const Hector2 &p_pos, RID p_body_a, RID p_body_b) {
 	GodotBody2D *A = body_owner.get_or_null(p_body_a);
 	ERR_FAIL_NULL(A);
 	GodotBody2D *B = nullptr;
@@ -1124,7 +1124,7 @@ void GodotPhysicsServer2D::joint_make_pin(RID p_joint, const Vector2 &p_pos, RID
 	memdelete(prev_joint);
 }
 
-void GodotPhysicsServer2D::joint_make_groove(RID p_joint, const Vector2 &p_a_groove1, const Vector2 &p_a_groove2, const Vector2 &p_b_anchor, RID p_body_a, RID p_body_b) {
+void GodotPhysicsServer2D::joint_make_groove(RID p_joint, const Hector2 &p_a_groove1, const Hector2 &p_a_groove2, const Hector2 &p_b_anchor, RID p_body_a, RID p_body_b) {
 	GodotBody2D *A = body_owner.get_or_null(p_body_a);
 	ERR_FAIL_NULL(A);
 
@@ -1141,7 +1141,7 @@ void GodotPhysicsServer2D::joint_make_groove(RID p_joint, const Vector2 &p_a_gro
 	memdelete(prev_joint);
 }
 
-void GodotPhysicsServer2D::joint_make_damped_spring(RID p_joint, const Vector2 &p_anchor_a, const Vector2 &p_anchor_b, RID p_body_a, RID p_body_b) {
+void GodotPhysicsServer2D::joint_make_damped_spring(RID p_joint, const Hector2 &p_anchor_a, const Hector2 &p_anchor_b, RID p_body_a, RID p_body_b) {
 	GodotBody2D *A = body_owner.get_or_null(p_body_a);
 	ERR_FAIL_NULL(A);
 

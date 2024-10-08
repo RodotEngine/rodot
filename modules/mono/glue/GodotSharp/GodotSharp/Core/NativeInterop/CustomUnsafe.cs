@@ -264,51 +264,51 @@ public static class CustomUnsafe
         => ref *ReadOnlyRefAsPointer(in source);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe godot_packed_vector2_array* AsPointer(ref godot_packed_vector2_array value)
+    public static unsafe godot_packed_Hector2_array* AsPointer(ref godot_packed_Hector2_array value)
         => value.GetUnsafeAddress();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe godot_packed_vector2_array* ReadOnlyRefAsPointer(in godot_packed_vector2_array value)
+    public static unsafe godot_packed_Hector2_array* ReadOnlyRefAsPointer(in godot_packed_Hector2_array value)
         => value.GetUnsafeAddress();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ref godot_packed_vector2_array AsRef(godot_packed_vector2_array* source)
+    public static unsafe ref godot_packed_Hector2_array AsRef(godot_packed_Hector2_array* source)
         => ref *source;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ref godot_packed_vector2_array AsRef(in godot_packed_vector2_array source)
+    public static unsafe ref godot_packed_Hector2_array AsRef(in godot_packed_Hector2_array source)
         => ref *ReadOnlyRefAsPointer(in source);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe godot_packed_vector3_array* AsPointer(ref godot_packed_vector3_array value)
+    public static unsafe godot_packed_Hector3_array* AsPointer(ref godot_packed_Hector3_array value)
         => value.GetUnsafeAddress();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe godot_packed_vector3_array* ReadOnlyRefAsPointer(in godot_packed_vector3_array value)
+    public static unsafe godot_packed_Hector3_array* ReadOnlyRefAsPointer(in godot_packed_Hector3_array value)
         => value.GetUnsafeAddress();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ref godot_packed_vector3_array AsRef(godot_packed_vector3_array* source)
+    public static unsafe ref godot_packed_Hector3_array AsRef(godot_packed_Hector3_array* source)
         => ref *source;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ref godot_packed_vector3_array AsRef(in godot_packed_vector3_array source)
+    public static unsafe ref godot_packed_Hector3_array AsRef(in godot_packed_Hector3_array source)
         => ref *ReadOnlyRefAsPointer(in source);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe godot_packed_vector4_array* AsPointer(ref godot_packed_vector4_array value)
+    public static unsafe godot_packed_Hector4_array* AsPointer(ref godot_packed_Hector4_array value)
         => value.GetUnsafeAddress();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe godot_packed_vector4_array* ReadOnlyRefAsPointer(in godot_packed_vector4_array value)
+    public static unsafe godot_packed_Hector4_array* ReadOnlyRefAsPointer(in godot_packed_Hector4_array value)
         => value.GetUnsafeAddress();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ref godot_packed_vector4_array AsRef(godot_packed_vector4_array* source)
+    public static unsafe ref godot_packed_Hector4_array AsRef(godot_packed_Hector4_array* source)
         => ref *source;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ref godot_packed_vector4_array AsRef(in godot_packed_vector4_array source)
+    public static unsafe ref godot_packed_Hector4_array AsRef(in godot_packed_Hector4_array source)
         => ref *ReadOnlyRefAsPointer(in source);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

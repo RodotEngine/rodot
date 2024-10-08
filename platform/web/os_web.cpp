@@ -282,7 +282,7 @@ OS_Web::OS_Web() {
 
 	idb_available = godot_js_os_fs_is_persistent();
 
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(StdLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 

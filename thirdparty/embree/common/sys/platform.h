@@ -278,7 +278,7 @@ __forceinline std::string toString(long long value) {
 //#pragma warning(disable:177 ) // label was declared but never referenced
 //#pragma warning(disable:114 ) // function was referenced but not defined
 //#pragma warning(disable:819 ) // template nesting depth does not match the previous declaration of function
-#pragma warning(disable:15335)  // was not vectorized: vectorization possible but seems inefficient
+#pragma warning(disable:15335)  // was not Hectorized: Hectorization possible but seems inefficient
 #endif
 
 #if defined(_MSC_VER)
@@ -522,7 +522,7 @@ namespace embree
 
 #if defined(EMBREE_SYCL_SUPPORT)
 
-  /* printing out sycle vector types */
+  /* printing out sycle Hector types */
   __forceinline embree_ostream operator<<(embree_ostream out, const sycl::float4& v) {
     return out << "(" << v.x() << "," << v.y() << "," << v.z() << "," << v.w() << ")";
   }

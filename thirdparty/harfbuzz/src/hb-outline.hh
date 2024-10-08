@@ -47,7 +47,7 @@ struct hb_outline_point_t
   type_t type;
 };
 
-struct hb_outline_vector_t
+struct hb_outline_Hector_t
 {
   float normalize_len ()
   {
@@ -72,8 +72,8 @@ struct hb_outline_t
   HB_INTERNAL void embolden (float x_strength, float y_strength,
 			     float x_shift, float y_shift);
 
-  hb_vector_t<hb_outline_point_t> points;
-  hb_vector_t<unsigned> contours;
+  hb_Hector_t<hb_outline_point_t> points;
+  hb_Hector_t<unsigned> contours;
 };
 
 HB_INTERNAL hb_draw_funcs_t *

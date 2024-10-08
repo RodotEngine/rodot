@@ -110,9 +110,9 @@ private:
 		RID version;
 
 		PipelineCacheRD pipelines[SKY_VERSION_MAX];
-		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+		Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-		Vector<uint32_t> ubo_offsets;
+		Hector<uint32_t> ubo_offsets;
 		uint32_t ubo_size = 0;
 
 		String code;
@@ -132,7 +132,7 @@ private:
 		virtual ~SkyShaderData();
 	};
 
-	void _render_sky(RD::DrawListID p_list, float p_time, RID p_fb, PipelineCacheRD *p_pipeline, RID p_uniform_set, RID p_texture_set, const Projection &p_projection, const Basis &p_orientation, const Vector3 &p_position, float p_luminance_multiplier);
+	void _render_sky(RD::DrawListID p_list, float p_time, RID p_fb, PipelineCacheRD *p_pipeline, RID p_uniform_set, RID p_texture_set, const Projection &p_projection, const Basis &p_orientation, const Hector3 &p_position, float p_luminance_multiplier);
 
 public:
 	struct SkySceneState {
@@ -188,8 +188,8 @@ public:
 				RID views[6];
 				Size2i size;
 			};
-			Vector<Mipmap> mipmaps; //per-face view
-			Vector<RID> views; // per-cubemap view
+			Hector<Mipmap> mipmaps; //per-face view
+			Hector<RID> views; // per-cubemap view
 		};
 
 		struct DownsampleLayer {
@@ -201,7 +201,7 @@ public:
 				RID views[6];
 				RID framebuffers[6];
 			};
-			Vector<Mipmap> mipmaps;
+			Hector<Mipmap> mipmaps;
 		};
 
 		RID radiance_base_cubemap; //cubemap for first layer, first cubemap
@@ -211,7 +211,7 @@ public:
 
 		bool dirty = true;
 
-		Vector<Layer> layers;
+		Hector<Layer> layers;
 
 		void clear_reflection_data();
 		void update_reflection_data(int p_size, int p_mipmaps, bool p_use_array, RID p_base_cube, int p_base_layer, bool p_low_quality, int p_roughness_layers, RD::DataFormat p_texture_format);
@@ -265,7 +265,7 @@ public:
 
 		//State to track when radiance cubemap needs updating
 		SkyMaterialData *prev_material = nullptr;
-		Vector3 prev_position;
+		Hector3 prev_position;
 		float prev_time;
 
 		void free();
@@ -294,8 +294,8 @@ public:
 	void set_texture_format(RD::DataFormat p_texture_format);
 	~SkyRD();
 
-	void setup_sky(RID p_env, Ref<RenderSceneBuffersRD> p_render_buffers, const PagedArray<RID> &p_lights, RID p_camera_attributes, uint32_t p_view_count, const Projection *p_view_projections, const Vector3 *p_view_eye_offsets, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const Size2i p_screen_size, Vector2 p_jitter, RendererSceneRenderRD *p_scene_render);
-	void update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_env, const Vector3 &p_global_pos, double p_time, float p_luminance_multiplier = 1.0);
+	void setup_sky(RID p_env, Ref<RenderSceneBuffersRD> p_render_buffers, const PagedArray<RID> &p_lights, RID p_camera_attributes, uint32_t p_view_count, const Projection *p_view_projections, const Hector3 *p_view_eye_offsets, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const Size2i p_screen_size, Hector2 p_jitter, RendererSceneRenderRD *p_scene_render);
+	void update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_env, const Hector3 &p_global_pos, double p_time, float p_luminance_multiplier = 1.0);
 	void update_res_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_env, double p_time, float p_luminance_multiplier = 1.0);
 	void draw_sky(RD::DrawListID p_draw_list, Ref<RenderSceneBuffersRD> p_render_buffers, RID p_env, RID p_fb, double p_time, float p_luminance_multiplier = 1.0);
 

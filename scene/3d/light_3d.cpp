@@ -148,10 +148,10 @@ bool Light3D::get_shadow_reverse_cull_face() const {
 
 AABB Light3D::get_aabb() const {
 	if (type == RenderingServer::LIGHT_DIRECTIONAL) {
-		return AABB(Vector3(-1, -1, -1), Vector3(2, 2, 2));
+		return AABB(Hector3(-1, -1, -1), Hector3(2, 2, 2));
 
 	} else if (type == RenderingServer::LIGHT_OMNI) {
-		return AABB(Vector3(-1, -1, -1) * param[PARAM_RANGE], Vector3(2, 2, 2) * param[PARAM_RANGE]);
+		return AABB(Hector3(-1, -1, -1) * param[PARAM_RANGE], Hector3(2, 2, 2) * param[PARAM_RANGE]);
 
 	} else if (type == RenderingServer::LIGHT_SPOT) {
 		real_t cone_slant_height = param[PARAM_RANGE];
@@ -159,11 +159,11 @@ AABB Light3D::get_aabb() const {
 
 		if (cone_angle_rad > Math_PI / 2.0) {
 			// Just return the AABB of an omni light if the spot angle is above 90 degrees.
-			return AABB(Vector3(-1, -1, -1) * cone_slant_height, Vector3(2, 2, 2) * cone_slant_height);
+			return AABB(Hector3(-1, -1, -1) * cone_slant_height, Hector3(2, 2, 2) * cone_slant_height);
 		}
 
 		real_t size = Math::sin(cone_angle_rad) * cone_slant_height;
-		return AABB(Vector3(-size, -size, -cone_slant_height), Vector3(2 * size, 2 * size, cone_slant_height));
+		return AABB(Hector3(-size, -size, -cone_slant_height), Hector3(2 * size, 2 * size, cone_slant_height));
 	}
 
 	return AABB();
@@ -172,7 +172,7 @@ AABB Light3D::get_aabb() const {
 PackedStringArray Light3D::get_configuration_warnings() const {
 	PackedStringArray warnings = VisualInstance3D::get_configuration_warnings();
 
-	if (!get_scale().is_equal_approx(Vector3(1, 1, 1))) {
+	if (!get_scale().is_equal_approx(Hector3(1, 1, 1))) {
 		warnings.push_back(RTR("A light's scale does not affect the visual size of the light."));
 	}
 
@@ -221,10 +221,10 @@ Color _color_from_temperature(float p_temperature) {
 
 	// Convert to XYZ space
 	const float a = 1.0 / MAX(y, 1e-5f);
-	Vector3 xyz = Vector3(x * a, 1.0, (1.0f - x - y) * a);
+	Hector3 xyz = Hector3(x * a, 1.0, (1.0f - x - y) * a);
 
 	// Convert from XYZ to sRGB(linear)
-	Vector3 linear = Vector3(3.2404542f * xyz.x - 1.5371385f * xyz.y - 0.4985314f * xyz.z,
+	Hector3 linear = Hector3(3.2404542f * xyz.x - 1.5371385f * xyz.y - 0.4985314f * xyz.z,
 			-0.9692660f * xyz.x + 1.8760108f * xyz.y + 0.0415560f * xyz.z,
 			0.0556434f * xyz.x - 0.2040259f * xyz.y + 1.0572252f * xyz.z);
 	linear /= MAX(1e-5f, linear[linear.max_axis_index()]);

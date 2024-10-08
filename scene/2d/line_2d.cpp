@@ -41,7 +41,7 @@ Rect2 Line2D::_edit_get_rect() const {
 	if (_points.size() == 0) {
 		return Rect2(0, 0, 0, 0);
 	}
-	Vector2 d = Vector2(_width, _width);
+	Hector2 d = Hector2(_width, _width);
 	Rect2 bounding_rect = Rect2(_points[0] - d, 2 * d);
 	for (int i = 1; i < _points.size(); i++) {
 		bounding_rect.expand_to(_points[i] - d);
@@ -56,16 +56,16 @@ bool Line2D::_edit_use_rect() const {
 
 bool Line2D::_edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const {
 	const real_t d = _width / 2 + p_tolerance;
-	const Vector2 *points = _points.ptr();
+	const Hector2 *points = _points.ptr();
 	for (int i = 0; i < _points.size() - 1; i++) {
-		Vector2 p = Geometry2D::get_closest_point_to_segment(p_point, &points[i]);
+		Hector2 p = Geometry2D::get_closest_point_to_segment(p_point, &points[i]);
 		if (p_point.distance_to(p) <= d) {
 			return true;
 		}
 	}
 	if (_closed && _points.size() > 2) {
-		const Vector2 closing_segment[2] = { points[0], points[_points.size() - 1] };
-		Vector2 p = Geometry2D::get_closest_point_to_segment(p_point, closing_segment);
+		const Hector2 closing_segment[2] = { points[0], points[_points.size() - 1] };
+		Hector2 p = Geometry2D::get_closest_point_to_segment(p_point, closing_segment);
 		if (p_point.distance_to(p) <= d) {
 			return true;
 		}
@@ -75,7 +75,7 @@ bool Line2D::_edit_is_selected_on_click(const Point2 &p_point, double p_toleranc
 }
 #endif
 
-void Line2D::set_points(const Vector<Vector2> &p_points) {
+void Line2D::set_points(const Hector<Hector2> &p_points) {
 	_points = p_points;
 	queue_redraw();
 }
@@ -119,18 +119,18 @@ Ref<Curve> Line2D::get_curve() const {
 	return _curve;
 }
 
-Vector<Vector2> Line2D::get_points() const {
+Hector<Hector2> Line2D::get_points() const {
 	return _points;
 }
 
-void Line2D::set_point_position(int i, Vector2 p_pos) {
+void Line2D::set_point_position(int i, Hector2 p_pos) {
 	ERR_FAIL_INDEX(i, _points.size());
 	_points.set(i, p_pos);
 	queue_redraw();
 }
 
-Vector2 Line2D::get_point_position(int i) const {
-	ERR_FAIL_INDEX_V(i, _points.size(), Vector2());
+Hector2 Line2D::get_point_position(int i) const {
+	ERR_FAIL_INDEX_V(i, _points.size(), Hector2());
 	return _points.get(i);
 }
 
@@ -146,7 +146,7 @@ void Line2D::clear_points() {
 	}
 }
 
-void Line2D::add_point(Vector2 p_pos, int p_atpos) {
+void Line2D::add_point(Hector2 p_pos, int p_atpos) {
 	if (p_atpos < 0 || _points.size() < p_atpos) {
 		_points.push_back(p_pos);
 	} else {
@@ -305,22 +305,22 @@ void Line2D::_draw() {
 			lb.indices,
 			lb.vertices,
 			lb.colors,
-			lb.uvs, Vector<int>(), Vector<float>(),
+			lb.uvs, Hector<int>(), Hector<float>(),
 			texture_rid);
 
 	// DEBUG: Draw wireframe
 	//	if (lb.indices.size() % 3 == 0) {
 	//		Color col(0, 0, 0);
 	//		for (int i = 0; i < lb.indices.size(); i += 3) {
-	//			Vector2 a = lb.vertices[lb.indices[i]];
-	//			Vector2 b = lb.vertices[lb.indices[i+1]];
-	//			Vector2 c = lb.vertices[lb.indices[i+2]];
+	//			Hector2 a = lb.vertices[lb.indices[i]];
+	//			Hector2 b = lb.vertices[lb.indices[i+1]];
+	//			Hector2 c = lb.vertices[lb.indices[i+2]];
 	//			draw_line(a, b, col);
 	//			draw_line(b, c, col);
 	//			draw_line(c, a, col);
 	//		}
 	//		for (int i = 0; i < lb.vertices.size(); ++i) {
-	//			Vector2 p = lb.vertices[i];
+	//			Hector2 p = lb.vertices[i];
 	//			draw_rect(Rect2(p.x - 1, p.y - 1, 2, 2), Color(0, 0, 0, 0.5));
 	//		}
 	//	}
@@ -388,7 +388,7 @@ void Line2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_antialiased", "antialiased"), &Line2D::set_antialiased);
 	ClassDB::bind_method(D_METHOD("get_antialiased"), &Line2D::get_antialiased);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "points"), "set_points", "get_points");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "points"), "set_points", "get_points");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "is_closed");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "width", PROPERTY_HINT_NONE, "suffix:px"), "set_width", "get_width");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "width_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_curve", "get_curve");

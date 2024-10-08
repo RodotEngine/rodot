@@ -85,9 +85,9 @@ void MeshLibraryEditor::_import_scene(Node *p_scene, Ref<MeshLibrary> p_library,
 	//generate previews!
 
 	if (true) {
-		Vector<Ref<Mesh>> meshes;
-		Vector<Transform3D> transforms;
-		Vector<int> ids = p_library->get_item_list();
+		Hector<Ref<Mesh>> meshes;
+		Hector<Transform3D> transforms;
+		Hector<int> ids = p_library->get_item_list();
 		for (int i = 0; i < ids.size(); i++) {
 			if (mesh_instances.find(ids[i])) {
 				meshes.push_back(p_library->get_item_mesh(ids[i]));
@@ -95,7 +95,7 @@ void MeshLibraryEditor::_import_scene(Node *p_scene, Ref<MeshLibrary> p_library,
 			}
 		}
 
-		Vector<Ref<Texture2D>> textures = EditorInterface::get_singleton()->make_mesh_previews(meshes, &transforms, EDITOR_GET("editors/grid_map/preview_size"));
+		Hector<Ref<Texture2D>> textures = EditorInterface::get_singleton()->make_mesh_previews(meshes, &transforms, EDITOR_GET("editors/grid_map/preview_size"));
 		int j = 0;
 		for (int i = 0; i < ids.size(); i++) {
 			if (mesh_instances.find(ids[i])) {
@@ -162,7 +162,7 @@ void MeshLibraryEditor::_import_scene_parse_node(Ref<MeshLibrary> p_library, Has
 	}
 	p_library->set_item_mesh_transform(item_id, item_mesh_transform);
 
-	Vector<MeshLibrary::ShapeData> collisions;
+	Hector<MeshLibrary::ShapeData> collisions;
 	for (int i = 0; i < mesh_instance_node->get_child_count(); i++) {
 		StaticBody3D *static_body_node = Object::cast_to<StaticBody3D>(mesh_instance_node->get_child(i));
 		if (!static_body_node) {

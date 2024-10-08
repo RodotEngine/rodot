@@ -163,7 +163,7 @@ struct hb_closure_context_t :
   hb_face_t *face;
   hb_set_t *glyphs;
   hb_set_t output[1];
-  hb_vector_t<hb_set_t> active_glyphs_stack;
+  hb_Hector_t<hb_set_t> active_glyphs_stack;
   recurse_func_t recurse_func = nullptr;
   unsigned int nesting_level_left;
 
@@ -2447,7 +2447,7 @@ struct ContextFormat1_4
     out->format = format;
 
     const hb_map_t *lookup_map = c->table_tag == HB_OT_TAG_GSUB ? &c->plan->gsub_lookups : &c->plan->gpos_lookups;
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+coverage, ruleSet)
     | hb_filter (glyphset, hb_first)
     | hb_filter (subset_offset_array (c, out->ruleSet, this, lookup_map), hb_second)
@@ -3667,7 +3667,7 @@ struct ChainContextFormat1_4
     out->format = format;
 
     const hb_map_t *lookup_map = c->table_tag == HB_OT_TAG_GSUB ? &c->plan->gsub_lookups : &c->plan->gpos_lookups;
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+coverage, ruleSet)
     | hb_filter (glyphset, hb_first)
     | hb_filter (subset_offset_array (c, out->ruleSet, this, lookup_map), hb_second)

@@ -33,7 +33,7 @@
 
 #include "core/math/rect2.h"
 #include "core/math/transform_3d.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 #include "core/templates/rid.h"
 #include "storage/utilities.h"
 
@@ -47,7 +47,7 @@ public:
 	virtual void set_skeleton(RID p_skeleton) = 0;
 	virtual void set_material_override(RID p_override) = 0;
 	virtual void set_material_overlay(RID p_overlay) = 0;
-	virtual void set_surface_materials(const Vector<RID> &p_materials) = 0;
+	virtual void set_surface_materials(const Hector<RID> &p_materials) = 0;
 	virtual void set_mesh_instance(RID p_mesh_instance) = 0;
 	virtual void set_transform(const Transform3D &p_transform, const AABB &p_aabb, const AABB &p_transformed_aabb) = 0;
 	virtual void set_pivot_data(float p_sorting_offset, bool p_use_aabb_center) = 0;
@@ -115,7 +115,7 @@ public:
 		RS::InstanceType base_type;
 
 		RID skeleton;
-		Vector<RID> surface_materials;
+		Hector<RID> surface_materials;
 		RID material_override;
 		RID material_overlay;
 		AABB aabb;
@@ -133,7 +133,7 @@ public:
 	virtual void set_skeleton(RID p_skeleton) override;
 	virtual void set_material_override(RID p_override) override;
 	virtual void set_material_overlay(RID p_overlay) override;
-	virtual void set_surface_materials(const Vector<RID> &p_materials) override;
+	virtual void set_surface_materials(const Hector<RID> &p_materials) override;
 	virtual void set_mesh_instance(RID p_mesh_instance) override;
 	virtual void set_transform(const Transform3D &p_transform, const AABB &p_aabb, const AABB &p_transformed_aabb) override;
 	virtual void set_pivot_data(float p_sorting_offset, bool p_use_aabb_center) override;

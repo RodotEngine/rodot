@@ -79,9 +79,9 @@ public:
 		VARYING_TYPE_FLOAT,
 		VARYING_TYPE_INT,
 		VARYING_TYPE_UINT,
-		VARYING_TYPE_VECTOR_2D,
-		VARYING_TYPE_VECTOR_3D,
-		VARYING_TYPE_VECTOR_4D,
+		VARYING_TYPE_HECTOR_2D,
+		VARYING_TYPE_HECTOR_3D,
+		VARYING_TYPE_HECTOR_4D,
 		VARYING_TYPE_BOOLEAN,
 		VARYING_TYPE_TRANSFORM,
 		VARYING_TYPE_MAX,
@@ -98,7 +98,7 @@ public:
 				name(p_name), mode(p_mode), type(p_type) {}
 
 		bool from_string(const String &p_str) {
-			Vector<String> arr = p_str.split(",");
+			Hector<String> arr = p_str.split(",");
 			if (arr.size() != 2) {
 				return false;
 			}
@@ -119,9 +119,9 @@ private:
 
 	struct Node {
 		Ref<VisualShaderNode> node;
-		Vector2 position;
-		LocalVector<int> prev_connected_nodes;
-		LocalVector<int> next_connected_nodes;
+		Hector2 position;
+		LocalHector<int> prev_connected_nodes;
+		LocalHector<int> next_connected_nodes;
 	};
 
 	struct Graph {
@@ -134,7 +134,7 @@ private:
 
 	TypedArray<Dictionary> _get_node_connections(Type p_type) const;
 
-	Vector2 graph_offset;
+	Hector2 graph_offset;
 
 	HashMap<String, int> modes;
 	HashSet<StringName> flags;
@@ -159,7 +159,7 @@ private:
 		}
 	};
 
-	Error _write_node(Type p_type, StringBuilder *p_global_code, StringBuilder *p_global_code_per_node, HashMap<Type, StringBuilder> *p_global_code_per_func, StringBuilder &r_code, Vector<DefaultTextureParam> &r_def_tex_params, const VMap<ConnectionKey, const List<Connection>::Element *> &p_input_connections, const VMap<ConnectionKey, const List<Connection>::Element *> &p_output_connections, int p_node, HashSet<int> &r_processed, bool p_for_preview, HashSet<StringName> &r_classes) const;
+	Error _write_node(Type p_type, StringBuilder *p_global_code, StringBuilder *p_global_code_per_node, HashMap<Type, StringBuilder> *p_global_code_per_func, StringBuilder &r_code, Hector<DefaultTextureParam> &r_def_tex_params, const VMap<ConnectionKey, const List<Connection>::Element *> &p_input_connections, const VMap<ConnectionKey, const List<Connection>::Element *> &p_output_connections, int p_node, HashSet<int> &r_processed, bool p_for_preview, HashSet<StringName> &r_classes) const;
 
 	void _input_type_changed(Type p_type, int p_id);
 	bool has_func_name(RenderingServer::ShaderMode p_mode, const String &p_func_name) const;
@@ -185,8 +185,8 @@ public: // internal methods
 		NODE_ID_OUTPUT = 0,
 	};
 
-	void add_node(Type p_type, const Ref<VisualShaderNode> &p_node, const Vector2 &p_position, int p_id);
-	void set_node_position(Type p_type, int p_id, const Vector2 &p_position);
+	void add_node(Type p_type, const Ref<VisualShaderNode> &p_node, const Hector2 &p_position, int p_id);
+	void set_node_position(Type p_type, int p_id, const Hector2 &p_position);
 
 	void add_varying(const String &p_name, VaryingMode p_mode, VaryingType p_type);
 	void remove_varying(const String &p_name);
@@ -204,20 +204,20 @@ public: // internal methods
 	Variant _get_preview_shader_parameter(const String &p_name) const;
 	bool _has_preview_shader_parameter(const String &p_name) const;
 
-	Vector2 get_node_position(Type p_type, int p_id) const;
+	Hector2 get_node_position(Type p_type, int p_id) const;
 	Ref<VisualShaderNode> get_node(Type p_type, int p_id) const;
 
 	_FORCE_INLINE_ Ref<VisualShaderNode> get_node_unchecked(Type p_type, int p_id) const {
 		return graph[p_type].nodes[p_id].node;
 	}
-	_FORCE_INLINE_ const LocalVector<int> &get_next_connected_nodes(Type p_type, int p_id) const {
+	_FORCE_INLINE_ const LocalHector<int> &get_next_connected_nodes(Type p_type, int p_id) const {
 		return graph[p_type].nodes[p_id].next_connected_nodes;
 	}
-	_FORCE_INLINE_ const LocalVector<int> &get_prev_connected_nodes(Type p_type, int p_id) const {
+	_FORCE_INLINE_ const LocalHector<int> &get_prev_connected_nodes(Type p_type, int p_id) const {
 		return graph[p_type].nodes[p_id].prev_connected_nodes;
 	}
 
-	Vector<int> get_node_list(Type p_type) const;
+	Hector<int> get_node_list(Type p_type) const;
 	int get_valid_node_id(Type p_type) const;
 
 	int find_node_id(Type p_type, const Ref<VisualShaderNode> &p_node) const;
@@ -246,10 +246,10 @@ public: // internal methods
 
 	virtual bool is_text_shader() const override;
 
-	void set_graph_offset(const Vector2 &p_offset);
-	Vector2 get_graph_offset() const;
+	void set_graph_offset(const Hector2 &p_offset);
+	Hector2 get_graph_offset() const;
 
-	String generate_preview_shader(Type p_type, int p_node, int p_port, Vector<DefaultTextureParam> &r_default_tex_params) const;
+	String generate_preview_shader(Type p_type, int p_node, int p_port, Hector<DefaultTextureParam> &r_default_tex_params) const;
 
 	String validate_port_name(const String &p_port_name, VisualShaderNode *p_node, int p_port_id, bool p_output) const;
 	String validate_parameter_name(const String &p_name, const Ref<VisualShaderNodeParameter> &p_parameter) const;
@@ -272,9 +272,9 @@ public:
 		PORT_TYPE_SCALAR,
 		PORT_TYPE_SCALAR_INT,
 		PORT_TYPE_SCALAR_UINT,
-		PORT_TYPE_VECTOR_2D,
-		PORT_TYPE_VECTOR_3D,
-		PORT_TYPE_VECTOR_4D,
+		PORT_TYPE_HECTOR_2D,
+		PORT_TYPE_HECTOR_3D,
+		PORT_TYPE_HECTOR_4D,
 		PORT_TYPE_BOOLEAN,
 		PORT_TYPE_TRANSFORM,
 		PORT_TYPE_SAMPLER,
@@ -291,7 +291,7 @@ public:
 		CATEGORY_TEXTURES,
 		CATEGORY_TRANSFORM,
 		CATEGORY_UTILITY,
-		CATEGORY_VECTOR,
+		CATEGORY_Hector,
 		CATEGORY_SPECIAL,
 		CATEGORY_PARTICLE,
 		CATEGORY_MAX
@@ -370,10 +370,10 @@ public:
 	void set_frame(int p_node);
 	int get_frame() const;
 
-	virtual Vector<StringName> get_editable_properties() const;
+	virtual Hector<StringName> get_editable_properties() const;
 	virtual HashMap<StringName, String> get_editable_properties_names() const;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const;
 	virtual String generate_global_per_node(Shader::Mode p_mode, int p_id) const;
 	virtual String generate_global_per_func(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const;
@@ -404,7 +404,7 @@ class VisualShaderNodeCustom : public VisualShaderNode {
 		String name;
 	};
 	struct DropDownListProperty : public Property {
-		Vector<String> options;
+		Hector<String> options;
 	};
 	HashMap<int, int> dp_selected_cache;
 	HashMap<int, int> dp_default_cache;
@@ -446,7 +446,7 @@ protected:
 	GDVIRTUAL0RC(int, _get_property_count)
 	GDVIRTUAL1RC(String, _get_property_name, int)
 	GDVIRTUAL1RC(int, _get_property_default_index, int)
-	GDVIRTUAL1RC(Vector<String>, _get_property_options, int)
+	GDVIRTUAL1RC(Hector<String>, _get_property_options, int)
 	GDVIRTUAL4RC(String, _get_code, TypedArray<String>, TypedArray<String>, Shader::Mode, VisualShader::Type)
 	GDVIRTUAL2RC(String, _get_func_code, Shader::Mode, VisualShader::Type)
 	GDVIRTUAL1RC(String, _get_global_code, Shader::Mode)
@@ -541,7 +541,7 @@ public:
 
 	PortType get_input_type_by_name(String p_name) const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_INPUT; }
 
@@ -626,7 +626,7 @@ public:
 	virtual bool is_qualifier_supported(Qualifier p_qual) const = 0;
 	virtual bool is_convertible_to_constant() const = 0;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 	virtual String get_warning(Shader::Mode p_mode, VisualShader::Type p_type) const override;
 
 	virtual Category get_category() const override { return CATEGORY_INPUT; }
@@ -645,9 +645,9 @@ public:
 		PARAMETER_TYPE_INT,
 		PARAMETER_TYPE_UINT,
 		PARAMETER_TYPE_BOOLEAN,
-		PARAMETER_TYPE_VECTOR2,
-		PARAMETER_TYPE_VECTOR3,
-		PARAMETER_TYPE_VECTOR4,
+		PARAMETER_TYPE_HECTOR2,
+		PARAMETER_TYPE_HECTOR3,
+		PARAMETER_TYPE_HECTOR4,
 		PARAMETER_TYPE_TRANSFORM,
 		PARAMETER_TYPE_COLOR,
 		UNIFORM_TYPE_SAMPLER,
@@ -699,7 +699,7 @@ public:
 	ParameterType get_parameter_type_by_index(int p_idx) const;
 	PortType get_port_type_by_index(int p_idx) const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -873,7 +873,7 @@ class VisualShaderNodeExpression : public VisualShaderNodeGroupBase {
 
 private:
 	bool _is_valid_identifier_char(char32_t p_c) const;
-	String _replace_port_names(const Vector<Pair<String, String>> &p_pairs, const String &p_expression) const;
+	String _replace_port_names(const Hector<Pair<String, String>> &p_pairs, const String &p_expression) const;
 
 protected:
 	String expression = "";

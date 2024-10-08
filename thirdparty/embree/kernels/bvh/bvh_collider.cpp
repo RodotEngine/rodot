@@ -215,7 +215,7 @@ namespace embree
     }
 
     template<int N>
-    void BVHNCollider<N>::split(const CollideJob& job, jobvector& jobs)
+    void BVHNCollider<N>::split(const CollideJob& job, jobHector& jobs)
     {
       if (unlikely(job.ref0.isLeaf())) {
         if (unlikely(job.ref1.isLeaf())) {
@@ -272,7 +272,7 @@ namespace embree
       collide_recurse(ref0,bounds0,ref1,bounds1,0,0);
 #else
       const int M = 2048;
-      jobvector jobs[2];
+      jobHector jobs[2];
       jobs[0].reserve(M);
       jobs[1].reserve(M);
       jobs[0].push_back(CollideJob(ref0,bounds0,0,ref1,bounds1,0));

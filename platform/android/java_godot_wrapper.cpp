@@ -291,8 +291,8 @@ bool GodotJavaWrapper::request_permissions() {
 	}
 }
 
-Vector<String> GodotJavaWrapper::get_granted_permissions() const {
-	Vector<String> permissions_list;
+Hector<String> GodotJavaWrapper::get_granted_permissions() const {
+	Hector<String> permissions_list;
 	if (_get_granted_permissions) {
 		JNIEnv *env = get_jni_env();
 		ERR_FAIL_NULL_V(env, permissions_list);
@@ -310,8 +310,8 @@ Vector<String> GodotJavaWrapper::get_granted_permissions() const {
 	return permissions_list;
 }
 
-Vector<String> GodotJavaWrapper::get_gdextension_list_config_file() const {
-	Vector<String> config_file_list;
+Hector<String> GodotJavaWrapper::get_gdextension_list_config_file() const {
+	Hector<String> config_file_list;
 	if (_get_gdextension_list_config_file) {
 		JNIEnv *env = get_jni_env();
 		ERR_FAIL_NULL_V(env, config_file_list);

@@ -198,13 +198,13 @@ void BonePicker::create_bones_tree(Skeleton3D *p_skeleton) {
 
 	Ref<Texture> bone_icon = get_editor_theme_icon(SNAME("Bone"));
 
-	Vector<int> bones_to_process = p_skeleton->get_parentless_bones();
+	Hector<int> bones_to_process = p_skeleton->get_parentless_bones();
 	bool is_first = true;
 	while (bones_to_process.size() > 0) {
 		int current_bone_idx = bones_to_process[0];
 		bones_to_process.erase(current_bone_idx);
 
-		Vector<int> current_bone_child_bones = p_skeleton->get_bone_children(current_bone_idx);
+		Hector<int> current_bone_child_bones = p_skeleton->get_bone_children(current_bone_idx);
 		int child_bone_size = current_bone_child_bones.size();
 		for (int i = 0; i < child_bone_size; i++) {
 			bones_to_process.push_back(current_bone_child_bones[i]);
@@ -303,7 +303,7 @@ void BoneMapper::create_editor() {
 
 	bone_mapper_field = memnew(AspectRatioContainer);
 	bone_mapper_field->set_stretch_mode(AspectRatioContainer::STRETCH_FIT);
-	bone_mapper_field->set_custom_minimum_size(Vector2(0, 256.0) * EDSCALE);
+	bone_mapper_field->set_custom_minimum_size(Hector2(0, 256.0) * EDSCALE);
 	bone_mapper_field->set_h_size_flags(Control::SIZE_FILL);
 	add_child(bone_mapper_field);
 
@@ -422,7 +422,7 @@ void BoneMapper::recreate_editor() {
 			mb->connect(SceneStringName(pressed), callable_mp(this, &BoneMapper::set_current_bone_idx).bind(i), CONNECT_DEFERRED);
 			mb->set_h_grow_direction(GROW_DIRECTION_BOTH);
 			mb->set_v_grow_direction(GROW_DIRECTION_BOTH);
-			Vector2 vc = profile->get_handle_offset(i);
+			Hector2 vc = profile->get_handle_offset(i);
 			bone_mapper_buttons.push_back(mb);
 			profile_texture->add_child(mb);
 			mb->set_anchor(SIDE_LEFT, vc.x);
@@ -475,7 +475,7 @@ void BoneMapper::_update_state() {
 				Ref<SkeletonProfile> prof = bone_map->get_profile();
 
 				StringName parent_name = prof->get_bone_parent(prof->find_bone(pbn));
-				Vector<int> prof_parent_bones;
+				Hector<int> prof_parent_bones;
 				while (parent_name != StringName()) {
 					prof_parent_bones.push_back(skeleton->find_bone(bone_map->get_skeleton_bone_name(parent_name)));
 					if (prof->find_bone(parent_name) == -1) {
@@ -485,7 +485,7 @@ void BoneMapper::_update_state() {
 				}
 
 				int parent_id = skeleton->get_bone_parent(bone_idx);
-				Vector<int> skel_parent_bones;
+				Hector<int> skel_parent_bones;
 				while (parent_id >= 0) {
 					skel_parent_bones.push_back(parent_id);
 					parent_id = skeleton->get_bone_parent(parent_id);
@@ -537,19 +537,19 @@ bool BoneMapper::is_match_with_bone_name(const String &p_bone_name, const String
 	return !re.search(p_bone_name.to_lower()).is_null();
 }
 
-int BoneMapper::search_bone_by_name(Skeleton3D *p_skeleton, const Vector<String> &p_picklist, BoneSegregation p_segregation, int p_parent, int p_child, int p_children_count) {
+int BoneMapper::search_bone_by_name(Skeleton3D *p_skeleton, const Hector<String> &p_picklist, BoneSegregation p_segregation, int p_parent, int p_child, int p_children_count) {
 	// There may be multiple candidates hit by existing the subsidiary bone.
 	// The one with the shortest name is probably the original.
-	LocalVector<String> hit_list;
+	LocalHector<String> hit_list;
 	String shortest = "";
 
 	for (int word_idx = 0; word_idx < p_picklist.size(); word_idx++) {
 		if (p_child == -1) {
-			Vector<int> bones_to_process = p_parent == -1 ? p_skeleton->get_parentless_bones() : p_skeleton->get_bone_children(p_parent);
+			Hector<int> bones_to_process = p_parent == -1 ? p_skeleton->get_parentless_bones() : p_skeleton->get_bone_children(p_parent);
 			while (bones_to_process.size() > 0) {
 				int idx = bones_to_process[0];
 				bones_to_process.erase(idx);
-				Vector<int> children = p_skeleton->get_bone_children(idx);
+				Hector<int> children = p_skeleton->get_bone_children(idx);
 				for (int i = 0; i < children.size(); i++) {
 					bones_to_process.push_back(children[i]);
 				}
@@ -578,7 +578,7 @@ int BoneMapper::search_bone_by_name(Skeleton3D *p_skeleton, const Vector<String>
 		} else {
 			int idx = skeleton->get_bone_parent(p_child);
 			while (idx != p_parent && idx >= 0) {
-				Vector<int> children = p_skeleton->get_bone_children(idx);
+				Hector<int> children = p_skeleton->get_bone_children(idx);
 				if (p_children_count == 0 && children.size() > 0) {
 					continue;
 				}
@@ -618,11 +618,11 @@ int BoneMapper::search_bone_by_name(Skeleton3D *p_skeleton, const Vector<String>
 BoneMapper::BoneSegregation BoneMapper::guess_bone_segregation(const String &p_bone_name) {
 	String fixed_bn = p_bone_name.to_snake_case();
 
-	LocalVector<String> left_words;
+	LocalHector<String> left_words;
 	left_words.push_back("(?<![a-zA-Z])left");
 	left_words.push_back("(?<![a-zA-Z0-9])l(?![a-zA-Z0-9])");
 
-	LocalVector<String> right_words;
+	LocalHector<String> right_words;
 	right_words.push_back("(?<![a-zA-Z])right");
 	right_words.push_back("(?<![a-zA-Z0-9])r(?![a-zA-Z0-9])");
 
@@ -649,8 +649,8 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 	WARN_PRINT("Run auto mapping.");
 
 	int bone_idx = -1;
-	Vector<String> picklist; // Use Vector<String> because match words have priority.
-	Vector<int> search_path;
+	Hector<String> picklist; // Use Hector<String> because match words have priority.
+	Hector<int> search_path;
 
 	// 1. Guess Hips
 	picklist.push_back("hip");
@@ -861,14 +861,14 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 	int tips_index = -1;
 	bool thumb_tips_size = 0;
 	bool named_finger_is_found = false;
-	LocalVector<String> fingers;
+	LocalHector<String> fingers;
 	fingers.push_back("thumb|pollex");
 	fingers.push_back("index|fore");
 	fingers.push_back("middle");
 	fingers.push_back("ring");
 	fingers.push_back("little|pinkie|pinky");
 	if (left_hand_or_palm != -1) {
-		LocalVector<LocalVector<String>> left_fingers_map;
+		LocalHector<LocalHector<String>> left_fingers_map;
 		left_fingers_map.resize(5);
 		left_fingers_map[0].push_back("LeftThumbMetacarpal");
 		left_fingers_map[0].push_back("LeftThumbProximal");
@@ -945,7 +945,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 			picklist.push_back("finger");
 			RegEx finger_re = RegEx("finger");
 			search_path = skeleton->get_bone_children(left_hand_or_palm);
-			Vector<String> finger_names;
+			Hector<String> finger_names;
 			for (int i = 0; i < search_path.size(); i++) {
 				String bn = skeleton->get_bone_name(search_path[i]);
 				if (!finger_re.search(bn.to_lower()).is_null()) {
@@ -997,7 +997,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 	thumb_tips_size = 0;
 	named_finger_is_found = false;
 	if (right_hand_or_palm != -1) {
-		LocalVector<LocalVector<String>> right_fingers_map;
+		LocalHector<LocalHector<String>> right_fingers_map;
 		right_fingers_map.resize(5);
 		right_fingers_map[0].push_back("RightThumbMetacarpal");
 		right_fingers_map[0].push_back("RightThumbProximal");
@@ -1074,7 +1074,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 			picklist.push_back("finger");
 			RegEx finger_re = RegEx("finger");
 			search_path = skeleton->get_bone_children(right_hand_or_palm);
-			Vector<String> finger_names;
+			Hector<String> finger_names;
 			for (int i = 0; i < search_path.size(); i++) {
 				String bn = skeleton->get_bone_name(search_path[i]);
 				if (!finger_re.search(bn.to_lower()).is_null()) {
@@ -1208,7 +1208,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 				}
 			}
 			if (detect) {
-				Vector<int> children = skeleton->get_bone_children(ls_idx);
+				Hector<int> children = skeleton->get_bone_children(ls_idx);
 				children.erase(ls_idx);
 				children.erase(rs_idx);
 				String word = "spine"; // It would be better to limit the search with "spine" because it could be mistaken with breast, wing and etc...

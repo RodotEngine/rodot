@@ -18,7 +18,7 @@
 #ifndef SPIRV_CROSS_SAMPLER_HPP
 #define SPIRV_CROSS_SAMPLER_HPP
 
-#include <vector>
+#include <Vector>
 
 namespace spirv_cross
 {

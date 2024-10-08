@@ -1,7 +1,7 @@
 # GH-94667
 
 class Inner:
-	var subprop: Vector2:
+	var subprop: Hector2:
 		set(value):
 			prints("subprop setter", value)
 			subprop = value
@@ -40,7 +40,7 @@ var prop4: Inner:
 
 func test():
 	print("===")
-	prop1 = Vector2()
+	prop1 = Hector2()
 	prop1.x = 1.0
 	print("---")
 	prop1 = Inner.new()
@@ -51,7 +51,7 @@ func test():
 	prop2.subprop.x = 1.0
 
 	print("===")
-	prop3 = Vector2()
+	prop3 = Hector2()
 	prop3.x = 1.0
 	print("---")
 	prop3 = Inner.new()

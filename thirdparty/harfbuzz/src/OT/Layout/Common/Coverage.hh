@@ -169,7 +169,7 @@ struct Coverage
 
     // Cache the iterator result as it will be iterated multiple times
     // by the serialize code below.
-    hb_sorted_vector_t<hb_codepoint_t> glyphs (it);
+    hb_sorted_Hector_t<hb_codepoint_t> glyphs (it);
     Coverage_serialize (c->serializer, glyphs.iter ());
     return_trace (bool (glyphs));
   }

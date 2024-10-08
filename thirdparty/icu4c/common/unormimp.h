@@ -278,7 +278,7 @@ enum {
  * It is variable-length data. It is only present, and only those parts
  * of it are, as needed for a given character.
  * The norm32 extra data index is added to the beginning of extraData[]
- * to get to a vector of 16-bit words with data at the following offsets:
+ * to get to a Hector of 16-bit words with data at the following offsets:
  *
  * [-1]     Combining index for composition.
  *              Stored only if norm32&_NORM_COMBINES_ANY .

@@ -44,7 +44,7 @@
 	Ref<CameraFeed> feed;
 	size_t width[2];
 	size_t height[2];
-	Vector<uint8_t> img_data[2];
+	Hector<uint8_t> img_data[2];
 
 	AVCaptureDeviceInput *input;
 	AVCaptureVideoDataOutput *output;

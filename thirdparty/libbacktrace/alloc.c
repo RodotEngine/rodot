@@ -77,9 +77,9 @@ backtrace_free (struct backtrace_state *state ATTRIBUTE_UNUSED,
 /* Grow VEC by SIZE bytes.  */
 
 void *
-backtrace_vector_grow (struct backtrace_state *state ATTRIBUTE_UNUSED,
+backtrace_Hector_grow (struct backtrace_state *state ATTRIBUTE_UNUSED,
 		       size_t size, backtrace_error_callback error_callback,
-		       void *data, struct backtrace_vector *vec)
+		       void *data, struct backtrace_Hector *vec)
 {
   void *ret;
 
@@ -118,17 +118,17 @@ backtrace_vector_grow (struct backtrace_state *state ATTRIBUTE_UNUSED,
 /* Finish the current allocation on VEC.  */
 
 void *
-backtrace_vector_finish (struct backtrace_state *state,
-			 struct backtrace_vector *vec,
+backtrace_Hector_finish (struct backtrace_state *state,
+			 struct backtrace_Hector *vec,
 			 backtrace_error_callback error_callback,
 			 void *data)
 {
   void *ret;
 
-  /* With this allocator we call realloc in backtrace_vector_grow,
+  /* With this allocator we call realloc in backtrace_Hector_grow,
      which means we can't easily reuse the memory here.  So just
      release it.  */
-  if (!backtrace_vector_release (state, vec, error_callback, data))
+  if (!backtrace_Hector_release (state, vec, error_callback, data))
     return NULL;
   ret = vec->base;
   vec->base = NULL;
@@ -140,8 +140,8 @@ backtrace_vector_finish (struct backtrace_state *state,
 /* Release any extra space allocated for VEC.  */
 
 int
-backtrace_vector_release (struct backtrace_state *state ATTRIBUTE_UNUSED,
-			  struct backtrace_vector *vec,
+backtrace_Hector_release (struct backtrace_state *state ATTRIBUTE_UNUSED,
+			  struct backtrace_Hector *vec,
 			  backtrace_error_callback error_callback,
 			  void *data)
 {

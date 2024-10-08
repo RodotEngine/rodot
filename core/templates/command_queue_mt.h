@@ -36,7 +36,7 @@
 #include "core/os/memory.h"
 #include "core/os/mutex.h"
 #include "core/string/print_string.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/simple_type.h"
 #include "core/typedefs.h"
 
@@ -328,7 +328,7 @@ class CommandQueueMT {
 	static const uint32_t DEFAULT_COMMAND_MEM_SIZE_KB = 64;
 
 	BinaryMutex mutex;
-	LocalVector<uint8_t> command_mem;
+	LocalHector<uint8_t> command_mem;
 	ConditionVariable sync_cond_var;
 	uint32_t sync_head = 0;
 	uint32_t sync_tail = 0;

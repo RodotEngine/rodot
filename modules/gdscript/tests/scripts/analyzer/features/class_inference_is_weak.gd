@@ -8,4 +8,4 @@ func test():
 
 
 func _init():
-	test_var = Vector3()
+	test_var = Hector3()

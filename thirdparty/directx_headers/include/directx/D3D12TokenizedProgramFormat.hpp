@@ -33,8 +33,8 @@
 // - Opcode token is generally a single DWORD, though there is a bit indicating
 //   if extended information (extra DWORD(s)) are present
 // - Operand tokens are a completely self contained, extensible format,
-//   with scalar and 4-vector data types as first class citizens, but
-//   allowance for extension to n-component vectors.
+//   with scalar and 4-Hector data types as first class citizens, but
+//   allowance for extension to n-component Hectors.
 // - Initial operand token identifies register type, register file
 //   structure/dimensionality and mode of indexing for each dimension,
 //   and choice of component selection mechanism (i.e. mask vs. swizzle etc).
@@ -745,7 +745,7 @@ typedef enum D3D10_SB_CUSTOMDATA_CLASS
 //
 // ----------------------------------------------------------------------------
 
-// Number of components in data vector referred to by operand.
+// Number of components in data Hector referred to by operand.
 typedef enum D3D10_SB_OPERAND_NUM_COMPONENTS
 {
     D3D10_SB_OPERAND_0_COMPONENT = 0,
@@ -756,12 +756,12 @@ typedef enum D3D10_SB_OPERAND_NUM_COMPONENTS
 #define D3D10_SB_OPERAND_NUM_COMPONENTS_MASK 0x00000003
 
 // DECODER MACRO: Extract from OperandToken0 how many components
-// the data vector referred to by the operand contains.
+// the data Hector referred to by the operand contains.
 // (D3D10_SB_OPERAND_NUM_COMPONENTS enum)
 #define DECODE_D3D10_SB_OPERAND_NUM_COMPONENTS(OperandToken0) ((D3D10_SB_OPERAND_NUM_COMPONENTS)((OperandToken0)&D3D10_SB_OPERAND_NUM_COMPONENTS_MASK))
 
 // ENCODER MACRO: Define in OperandToken0 how many components
-// the data vector referred to by the operand contains.
+// the data Hector referred to by the operand contains.
 // (D3D10_SB_OPERAND_NUM_COMPONENTS enum).
 #define ENCODE_D3D10_SB_OPERAND_NUM_COMPONENTS(NumComp) ((NumComp)&D3D10_SB_OPERAND_NUM_COMPONENTS_MASK)
 
@@ -1681,10 +1681,10 @@ typedef enum D3D10_SB_SAMPLER_MODE
 //     As opposed to when the cb#[] is used in shader instructions: (cb<id>[<idx>][<loc>])
 //       1 <id>:  variable ID being used (matches dcl)
 //       2 <idx>: absolute index of constant buffer within space (may be dynamically indexed)
-//       3 <loc>: location of vector within constant buffer being referenced,
+//       3 <loc>: location of Hector within constant buffer being referenced,
 //          which may also be dynamically indexed, with no access pattern flag required.
-// (2) a DWORD indicating the size of the constant buffer as a count of 16-byte vectors.
-//     Each vector is 32-bit*4 elements == 128-bits == 16 bytes.
+// (2) a DWORD indicating the size of the constant buffer as a count of 16-byte Hectors.
+//     Each Hector is 32-bit*4 elements == 128-bits == 16 bytes.
 //     If the size is specified as 0, the CB size is not known (any size CB
 //     can be bound to the slot).
 // (3) a DWORD indicating the space index.

@@ -47,17 +47,17 @@ protected:
 public:
 	// The warning is valid, but unavoidable. If the function is not overridden it will error anyway.
 
-	EXBIND0RC(Vector2, get_total_gravity)
+	EXBIND0RC(Hector2, get_total_gravity)
 	EXBIND0RC(real_t, get_total_angular_damp)
 	EXBIND0RC(real_t, get_total_linear_damp)
 
-	EXBIND0RC(Vector2, get_center_of_mass)
-	EXBIND0RC(Vector2, get_center_of_mass_local)
+	EXBIND0RC(Hector2, get_center_of_mass)
+	EXBIND0RC(Hector2, get_center_of_mass_local)
 	EXBIND0RC(real_t, get_inverse_mass)
 	EXBIND0RC(real_t, get_inverse_inertia)
 
-	EXBIND1(set_linear_velocity, const Vector2 &)
-	EXBIND0RC(Vector2, get_linear_velocity)
+	EXBIND1(set_linear_velocity, const Hector2 &)
+	EXBIND0RC(Hector2, get_linear_velocity)
 
 	EXBIND1(set_angular_velocity, real_t)
 	EXBIND0RC(real_t, get_angular_velocity)
@@ -65,22 +65,22 @@ public:
 	EXBIND1(set_transform, const Transform2D &)
 	EXBIND0RC(Transform2D, get_transform)
 
-	EXBIND1RC(Vector2, get_velocity_at_local_position, const Vector2 &)
+	EXBIND1RC(Hector2, get_velocity_at_local_position, const Hector2 &)
 
-	EXBIND1(apply_central_impulse, const Vector2 &)
+	EXBIND1(apply_central_impulse, const Hector2 &)
 	EXBIND1(apply_torque_impulse, real_t)
-	EXBIND2(apply_impulse, const Vector2 &, const Vector2 &)
+	EXBIND2(apply_impulse, const Hector2 &, const Hector2 &)
 
-	EXBIND1(apply_central_force, const Vector2 &)
-	EXBIND2(apply_force, const Vector2 &, const Vector2 &)
+	EXBIND1(apply_central_force, const Hector2 &)
+	EXBIND2(apply_force, const Hector2 &, const Hector2 &)
 	EXBIND1(apply_torque, real_t)
 
-	EXBIND1(add_constant_central_force, const Vector2 &)
-	EXBIND2(add_constant_force, const Vector2 &, const Vector2 &)
+	EXBIND1(add_constant_central_force, const Hector2 &)
+	EXBIND2(add_constant_force, const Hector2 &, const Hector2 &)
 	EXBIND1(add_constant_torque, real_t)
 
-	EXBIND1(set_constant_force, const Vector2 &)
-	EXBIND0RC(Vector2, get_constant_force)
+	EXBIND1(set_constant_force, const Hector2 &)
+	EXBIND0RC(Hector2, get_constant_force)
 
 	EXBIND1(set_constant_torque, real_t)
 	EXBIND0RC(real_t, get_constant_torque)
@@ -90,17 +90,17 @@ public:
 
 	EXBIND0RC(int, get_contact_count)
 
-	EXBIND1RC(Vector2, get_contact_local_position, int)
-	EXBIND1RC(Vector2, get_contact_local_normal, int)
-	EXBIND1RC(Vector2, get_contact_local_velocity_at_position, int)
+	EXBIND1RC(Hector2, get_contact_local_position, int)
+	EXBIND1RC(Hector2, get_contact_local_normal, int)
+	EXBIND1RC(Hector2, get_contact_local_velocity_at_position, int)
 	EXBIND1RC(int, get_contact_local_shape, int)
 	EXBIND1RC(RID, get_contact_collider, int)
-	EXBIND1RC(Vector2, get_contact_collider_position, int)
+	EXBIND1RC(Hector2, get_contact_collider_position, int)
 	EXBIND1RC(ObjectID, get_contact_collider_id, int)
 	EXBIND1RC(Object *, get_contact_collider_object, int)
 	EXBIND1RC(int, get_contact_collider_shape, int)
-	EXBIND1RC(Vector2, get_contact_collider_velocity_at_position, int)
-	EXBIND1RC(Vector2, get_contact_impulse, int)
+	EXBIND1RC(Hector2, get_contact_collider_velocity_at_position, int)
+	EXBIND1RC(Hector2, get_contact_impulse, int)
 
 	EXBIND0RC(real_t, get_step)
 	EXBIND0(integrate_forces)
@@ -127,12 +127,12 @@ protected:
 	static void _bind_methods();
 	bool is_body_excluded_from_query(const RID &p_body) const;
 
-	GDVIRTUAL7R_REQUIRED(bool, _intersect_ray, const Vector2 &, const Vector2 &, uint32_t, bool, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionRayResult>)
-	GDVIRTUAL7R_REQUIRED(int, _intersect_point, const Vector2 &, ObjectID, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionShapeResult>, int)
-	GDVIRTUAL9R_REQUIRED(int, _intersect_shape, RID, const Transform2D &, const Vector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionShapeResult>, int)
-	GDVIRTUAL9R_REQUIRED(bool, _cast_motion, RID, const Transform2D &, const Vector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<real_t>, GDExtensionPtr<real_t>)
-	GDVIRTUAL10R_REQUIRED(bool, _collide_shape, RID, const Transform2D &, const Vector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<Vector2>, int, GDExtensionPtr<int>)
-	GDVIRTUAL8R_REQUIRED(bool, _rest_info, RID, const Transform2D &, const Vector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionShapeRestInfo>)
+	GDVIRTUAL7R_REQUIRED(bool, _intersect_ray, const Hector2 &, const Hector2 &, uint32_t, bool, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionRayResult>)
+	GDVIRTUAL7R_REQUIRED(int, _intersect_point, const Hector2 &, ObjectID, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionShapeResult>, int)
+	GDVIRTUAL9R_REQUIRED(int, _intersect_shape, RID, const Transform2D &, const Hector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionShapeResult>, int)
+	GDVIRTUAL9R_REQUIRED(bool, _cast_motion, RID, const Transform2D &, const Hector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<real_t>, GDExtensionPtr<real_t>)
+	GDVIRTUAL10R_REQUIRED(bool, _collide_shape, RID, const Transform2D &, const Hector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<Hector2>, int, GDExtensionPtr<int>)
+	GDVIRTUAL8R_REQUIRED(bool, _rest_info, RID, const Transform2D &, const Hector2 &, real_t, uint32_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionShapeRestInfo>)
 
 public:
 	virtual bool intersect_ray(const RayParameters &p_parameters, RayResult &r_result) override {
@@ -163,7 +163,7 @@ public:
 		exclude = nullptr;
 		return ret;
 	}
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector2 *r_results, int p_result_max, int &r_result_count) override {
+	virtual bool collide_shape(const ShapeParameters &p_parameters, Hector2 *r_results, int p_result_max, int &r_result_count) override {
 		exclude = &p_parameters.exclude;
 		bool ret = false;
 		GDVIRTUAL_CALL(_collide_shape, p_parameters.shape_rid, p_parameters.transform, p_parameters.motion, p_parameters.margin, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, r_results, p_result_max, &r_result_count, ret);
@@ -191,9 +191,9 @@ class PhysicsServer2DExtension : public PhysicsServer2D {
 protected:
 	static void _bind_methods();
 
-	GDVIRTUAL9R_REQUIRED(bool, _shape_collide, RID, const Transform2D &, const Vector2 &, RID, const Transform2D &, const Vector2 &, GDExtensionPtr<Vector2>, int, GDExtensionPtr<int>)
+	GDVIRTUAL9R_REQUIRED(bool, _shape_collide, RID, const Transform2D &, const Hector2 &, RID, const Transform2D &, const Hector2 &, GDExtensionPtr<Hector2>, int, GDExtensionPtr<int>)
 
-	GDVIRTUAL8R_REQUIRED(bool, _body_collide_shape, RID, int, RID, const Transform2D &, const Vector2 &, GDExtensionPtr<Vector2>, int, GDExtensionPtr<int>)
+	GDVIRTUAL8R_REQUIRED(bool, _body_collide_shape, RID, int, RID, const Transform2D &, const Hector2 &, GDExtensionPtr<Hector2>, int, GDExtensionPtr<int>)
 
 public:
 	// The warning is valid, but unavoidable. If the function is not overridden it will error anyway.
@@ -216,7 +216,7 @@ public:
 	EXBIND1RC(Variant, shape_get_data, RID)
 	EXBIND1RC(real_t, shape_get_custom_solver_bias, RID)
 
-	virtual bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Vector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Vector2 &p_motion_B, Vector2 *r_results, int p_result_max, int &r_result_count) override {
+	virtual bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Hector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Hector2 &p_motion_B, Hector2 *r_results, int p_result_max, int &r_result_count) override {
 		bool ret = false;
 		GDVIRTUAL_CALL(_shape_collide, p_shape_A, p_xform_A, p_motion_A, p_shape_B, p_xform_B, p_motion_B, r_results, p_result_max, &r_result_count, ret);
 		return ret;
@@ -234,7 +234,7 @@ public:
 	EXBIND1R(PhysicsDirectSpaceState2D *, space_get_direct_state, RID)
 
 	EXBIND2(space_set_debug_contacts, RID, int)
-	EXBIND1RC(Vector<Vector2>, space_get_contacts, RID)
+	EXBIND1RC(Hector<Hector2>, space_get_contacts, RID)
 	EXBIND1RC(int, space_get_contact_count, RID)
 
 	/* AREA API */
@@ -332,25 +332,25 @@ public:
 	EXBIND3(body_set_state, RID, BodyState, const Variant &)
 	EXBIND2RC(Variant, body_get_state, RID, BodyState)
 
-	EXBIND2(body_apply_central_impulse, RID, const Vector2 &)
+	EXBIND2(body_apply_central_impulse, RID, const Hector2 &)
 	EXBIND2(body_apply_torque_impulse, RID, real_t)
-	EXBIND3(body_apply_impulse, RID, const Vector2 &, const Vector2 &)
+	EXBIND3(body_apply_impulse, RID, const Hector2 &, const Hector2 &)
 
-	EXBIND2(body_apply_central_force, RID, const Vector2 &)
-	EXBIND3(body_apply_force, RID, const Vector2 &, const Vector2 &)
+	EXBIND2(body_apply_central_force, RID, const Hector2 &)
+	EXBIND3(body_apply_force, RID, const Hector2 &, const Hector2 &)
 	EXBIND2(body_apply_torque, RID, real_t)
 
-	EXBIND2(body_add_constant_central_force, RID, const Vector2 &)
-	EXBIND3(body_add_constant_force, RID, const Vector2 &, const Vector2 &)
+	EXBIND2(body_add_constant_central_force, RID, const Hector2 &)
+	EXBIND3(body_add_constant_force, RID, const Hector2 &, const Hector2 &)
 	EXBIND2(body_add_constant_torque, RID, real_t)
 
-	EXBIND2(body_set_constant_force, RID, const Vector2 &)
-	EXBIND1RC(Vector2, body_get_constant_force, RID)
+	EXBIND2(body_set_constant_force, RID, const Hector2 &)
+	EXBIND1RC(Hector2, body_get_constant_force, RID)
 
 	EXBIND2(body_set_constant_torque, RID, real_t)
 	EXBIND1RC(real_t, body_get_constant_torque, RID)
 
-	EXBIND2(body_set_axis_velocity, RID, const Vector2 &)
+	EXBIND2(body_set_axis_velocity, RID, const Hector2 &)
 
 	EXBIND2(body_add_collision_exception, RID, RID)
 	EXBIND2(body_remove_collision_exception, RID, RID)
@@ -376,7 +376,7 @@ public:
 	EXBIND2(body_set_state_sync_callback, RID, const Callable &)
 	EXBIND3(body_set_force_integration_callback, RID, const Callable &, const Variant &)
 
-	virtual bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Vector2 &p_motion, Vector2 *r_results, int p_result_max, int &r_result_count) override {
+	virtual bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Hector2 &p_motion, Hector2 *r_results, int p_result_max, int &r_result_count) override {
 		bool ret = false;
 		GDVIRTUAL_CALL(_body_collide_shape, p_body, p_body_shape, p_shape, p_shape_xform, p_motion, r_results, p_result_max, &r_result_count, ret);
 		return ret;
@@ -386,7 +386,7 @@ public:
 
 	EXBIND1R(PhysicsDirectBodyState2D *, body_get_direct_state, RID)
 
-	GDVIRTUAL7RC_REQUIRED(bool, _body_test_motion, RID, const Transform2D &, const Vector2 &, real_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionMotionResult>)
+	GDVIRTUAL7RC_REQUIRED(bool, _body_test_motion, RID, const Transform2D &, const Hector2 &, real_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionMotionResult>)
 
 	thread_local static const HashSet<RID> *exclude_bodies;
 	thread_local static const HashSet<ObjectID> *exclude_objects;
@@ -415,9 +415,9 @@ public:
 	EXBIND2(joint_disable_collisions_between_bodies, RID, bool)
 	EXBIND1RC(bool, joint_is_disabled_collisions_between_bodies, RID)
 
-	EXBIND4(joint_make_pin, RID, const Vector2 &, RID, RID)
-	EXBIND6(joint_make_groove, RID, const Vector2 &, const Vector2 &, const Vector2 &, RID, RID)
-	EXBIND5(joint_make_damped_spring, RID, const Vector2 &, const Vector2 &, RID, RID)
+	EXBIND4(joint_make_pin, RID, const Hector2 &, RID, RID)
+	EXBIND6(joint_make_groove, RID, const Hector2 &, const Hector2 &, const Hector2 &, RID, RID)
+	EXBIND5(joint_make_damped_spring, RID, const Hector2 &, const Hector2 &, RID, RID)
 
 	EXBIND3(pin_joint_set_flag, RID, PinJointFlag, bool)
 	EXBIND2RC(bool, pin_joint_get_flag, RID, PinJointFlag)

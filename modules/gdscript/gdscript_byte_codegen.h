@@ -39,7 +39,7 @@ class GDScriptByteCodeGenerator : public GDScriptCodeGenerator {
 	struct StackSlot {
 		Variant::Type type = Variant::NIL;
 		bool can_contain_object = true;
-		Vector<int> bytecode_indices;
+		Hector<int> bytecode_indices;
 
 		StackSlot() = default;
 		StackSlot(Variant::Type p_type, bool p_can_contain_object) :
@@ -77,16 +77,16 @@ class GDScriptByteCodeGenerator : public GDScriptCodeGenerator {
 	GDScriptFunction *function = nullptr;
 	bool debug_stack = false;
 
-	Vector<int> opcodes;
+	Hector<int> opcodes;
 	List<RBMap<StringName, int>> stack_id_stack;
 	RBMap<StringName, int> stack_identifiers;
 	List<int> stack_identifiers_counts;
 	RBMap<StringName, int> local_constants;
 
-	Vector<StackSlot> locals;
+	Hector<StackSlot> locals;
 	HashSet<int> dirty_locals;
 
-	Vector<StackSlot> temporaries;
+	Hector<StackSlot> temporaries;
 	List<int> used_temporaries;
 	HashSet<int> temporaries_pending_clear;
 	RBMap<Variant::Type, List<int>> temporaries_pool;
@@ -106,7 +106,7 @@ class GDScriptByteCodeGenerator : public GDScriptCodeGenerator {
 	HashMap<Variant, int, VariantHasher, VariantComparator> constant_map;
 	RBMap<StringName, int> name_map;
 #ifdef TOOLS_ENABLED
-	Vector<StringName> named_globals;
+	Hector<StringName> named_globals;
 #endif
 	RBMap<Variant::ValidatedOperatorEvaluator, int> operator_func_map;
 	RBMap<Variant::ValidatedSetter, int> setters_map;
@@ -125,18 +125,18 @@ class GDScriptByteCodeGenerator : public GDScriptCodeGenerator {
 #ifdef DEBUG_ENABLED
 	// Keep method and property names for pointer and validated operations.
 	// Used when disassembling the bytecode.
-	Vector<String> operator_names;
-	Vector<String> setter_names;
-	Vector<String> getter_names;
-	Vector<String> builtin_methods_names;
-	Vector<String> constructors_names;
-	Vector<String> utilities_names;
-	Vector<String> gds_utilities_names;
-	void add_debug_name(Vector<String> &vector, int index, const String &name) {
-		if (index >= vector.size()) {
-			vector.resize(index + 1);
+	Hector<String> operator_names;
+	Hector<String> setter_names;
+	Hector<String> getter_names;
+	Hector<String> builtin_methods_names;
+	Hector<String> constructors_names;
+	Hector<String> utilities_names;
+	Hector<String> gds_utilities_names;
+	void add_debug_name(Hector<String> &Hector, int index, const String &name) {
+		if (index >= Hector.size()) {
+			Hector.resize(index + 1);
 		}
-		vector.write[index] = name;
+		Hector.write[index] = name;
 	}
 #endif
 
@@ -509,27 +509,27 @@ public:
 	virtual void write_store_global(const Address &p_dst, int p_global_index) override;
 	virtual void write_store_named_global(const Address &p_dst, const StringName &p_global) override;
 	virtual void write_cast(const Address &p_target, const Address &p_source, const GDScriptDataType &p_type) override;
-	virtual void write_call(const Address &p_target, const Address &p_base, const StringName &p_function_name, const Vector<Address> &p_arguments) override;
-	virtual void write_super_call(const Address &p_target, const StringName &p_function_name, const Vector<Address> &p_arguments) override;
-	virtual void write_call_async(const Address &p_target, const Address &p_base, const StringName &p_function_name, const Vector<Address> &p_arguments) override;
-	virtual void write_call_utility(const Address &p_target, const StringName &p_function, const Vector<Address> &p_arguments) override;
-	void write_call_builtin_type(const Address &p_target, const Address &p_base, Variant::Type p_type, const StringName &p_method, bool p_is_static, const Vector<Address> &p_arguments);
-	virtual void write_call_gdscript_utility(const Address &p_target, const StringName &p_function, const Vector<Address> &p_arguments) override;
-	virtual void write_call_builtin_type(const Address &p_target, const Address &p_base, Variant::Type p_type, const StringName &p_method, const Vector<Address> &p_arguments) override;
-	virtual void write_call_builtin_type_static(const Address &p_target, Variant::Type p_type, const StringName &p_method, const Vector<Address> &p_arguments) override;
-	virtual void write_call_native_static(const Address &p_target, const StringName &p_class, const StringName &p_method, const Vector<Address> &p_arguments) override;
-	virtual void write_call_native_static_validated(const Address &p_target, MethodBind *p_method, const Vector<Address> &p_arguments) override;
-	virtual void write_call_method_bind(const Address &p_target, const Address &p_base, MethodBind *p_method, const Vector<Address> &p_arguments) override;
-	virtual void write_call_method_bind_validated(const Address &p_target, const Address &p_base, MethodBind *p_method, const Vector<Address> &p_arguments) override;
-	virtual void write_call_self(const Address &p_target, const StringName &p_function_name, const Vector<Address> &p_arguments) override;
-	virtual void write_call_self_async(const Address &p_target, const StringName &p_function_name, const Vector<Address> &p_arguments) override;
-	virtual void write_call_script_function(const Address &p_target, const Address &p_base, const StringName &p_function_name, const Vector<Address> &p_arguments) override;
-	virtual void write_lambda(const Address &p_target, GDScriptFunction *p_function, const Vector<Address> &p_captures, bool p_use_self) override;
-	virtual void write_construct(const Address &p_target, Variant::Type p_type, const Vector<Address> &p_arguments) override;
-	virtual void write_construct_array(const Address &p_target, const Vector<Address> &p_arguments) override;
-	virtual void write_construct_typed_array(const Address &p_target, const GDScriptDataType &p_element_type, const Vector<Address> &p_arguments) override;
-	virtual void write_construct_dictionary(const Address &p_target, const Vector<Address> &p_arguments) override;
-	virtual void write_construct_typed_dictionary(const Address &p_target, const GDScriptDataType &p_key_type, const GDScriptDataType &p_value_type, const Vector<Address> &p_arguments) override;
+	virtual void write_call(const Address &p_target, const Address &p_base, const StringName &p_function_name, const Hector<Address> &p_arguments) override;
+	virtual void write_super_call(const Address &p_target, const StringName &p_function_name, const Hector<Address> &p_arguments) override;
+	virtual void write_call_async(const Address &p_target, const Address &p_base, const StringName &p_function_name, const Hector<Address> &p_arguments) override;
+	virtual void write_call_utility(const Address &p_target, const StringName &p_function, const Hector<Address> &p_arguments) override;
+	void write_call_builtin_type(const Address &p_target, const Address &p_base, Variant::Type p_type, const StringName &p_method, bool p_is_static, const Hector<Address> &p_arguments);
+	virtual void write_call_gdscript_utility(const Address &p_target, const StringName &p_function, const Hector<Address> &p_arguments) override;
+	virtual void write_call_builtin_type(const Address &p_target, const Address &p_base, Variant::Type p_type, const StringName &p_method, const Hector<Address> &p_arguments) override;
+	virtual void write_call_builtin_type_static(const Address &p_target, Variant::Type p_type, const StringName &p_method, const Hector<Address> &p_arguments) override;
+	virtual void write_call_native_static(const Address &p_target, const StringName &p_class, const StringName &p_method, const Hector<Address> &p_arguments) override;
+	virtual void write_call_native_static_validated(const Address &p_target, MethodBind *p_method, const Hector<Address> &p_arguments) override;
+	virtual void write_call_method_bind(const Address &p_target, const Address &p_base, MethodBind *p_method, const Hector<Address> &p_arguments) override;
+	virtual void write_call_method_bind_validated(const Address &p_target, const Address &p_base, MethodBind *p_method, const Hector<Address> &p_arguments) override;
+	virtual void write_call_self(const Address &p_target, const StringName &p_function_name, const Hector<Address> &p_arguments) override;
+	virtual void write_call_self_async(const Address &p_target, const StringName &p_function_name, const Hector<Address> &p_arguments) override;
+	virtual void write_call_script_function(const Address &p_target, const Address &p_base, const StringName &p_function_name, const Hector<Address> &p_arguments) override;
+	virtual void write_lambda(const Address &p_target, GDScriptFunction *p_function, const Hector<Address> &p_captures, bool p_use_self) override;
+	virtual void write_construct(const Address &p_target, Variant::Type p_type, const Hector<Address> &p_arguments) override;
+	virtual void write_construct_array(const Address &p_target, const Hector<Address> &p_arguments) override;
+	virtual void write_construct_typed_array(const Address &p_target, const GDScriptDataType &p_element_type, const Hector<Address> &p_arguments) override;
+	virtual void write_construct_dictionary(const Address &p_target, const Hector<Address> &p_arguments) override;
+	virtual void write_construct_typed_dictionary(const Address &p_target, const GDScriptDataType &p_key_type, const GDScriptDataType &p_value_type, const Hector<Address> &p_arguments) override;
 	virtual void write_await(const Address &p_target, const Address &p_operand) override;
 	virtual void write_if(const Address &p_condition) override;
 	virtual void write_else() override;

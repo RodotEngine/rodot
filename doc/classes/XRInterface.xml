@@ -30,9 +30,9 @@
 			</description>
 		</method>
 		<method name="get_play_area" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
-				Returns an array of vectors that represent the physical play area mapped to the virtual space around the [XROrigin3D] point. The points form a convex polygon that can be used to react to or visualize the play area. This returns an empty array if this feature is not supported or if the information is not yet available.
+				Returns an array of Hectors that represent the physical play area mapped to the virtual space around the [XROrigin3D] point. The points form a convex polygon that can be used to react to or visualize the play area. This returns an empty array if this feature is not supported or if the information is not yet available.
 			</description>
 		</method>
 		<method name="get_projection_for_view">
@@ -46,7 +46,7 @@
 			</description>
 		</method>
 		<method name="get_render_target_size">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the resolution at which we should render our intermediate results before things like lens distortion are applied by the VR platform.
 			</description>

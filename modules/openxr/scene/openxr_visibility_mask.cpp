@@ -81,8 +81,8 @@ AABB OpenXRVisibilityMask::get_aabb() const {
 	AABB ret;
 
 	// Make sure it's always visible, this is positioned through its shader.
-	ret.position = Vector3(-1000.0, -1000.0, -1000.0);
-	ret.size = Vector3(2000.0, 2000.0, 2000.0);
+	ret.position = Hector3(-1000.0, -1000.0, -1000.0);
+	ret.size = Hector3(2000.0, 2000.0, 2000.0);
 
 	return ret;
 }

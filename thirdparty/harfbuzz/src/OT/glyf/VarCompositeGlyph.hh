@@ -207,7 +207,7 @@ struct VarCompositeGlyphRecord
     transform (matrix, trans, other);
   }
 
-  bool get_points (contour_point_vector_t &points) const
+  bool get_points (contour_point_Hector_t &points) const
   {
     unsigned num_points = get_num_points ();
 

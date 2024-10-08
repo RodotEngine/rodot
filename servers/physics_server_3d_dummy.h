@@ -39,63 +39,63 @@ class PhysicsDirectBodyState3DDummy : public PhysicsDirectBodyState3D {
 	PhysicsDirectSpaceState3D *space_state_dummy = nullptr;
 
 public:
-	virtual Vector3 get_total_gravity() const override { return Vector3(); }
+	virtual Hector3 get_total_gravity() const override { return Hector3(); }
 	virtual real_t get_total_angular_damp() const override { return 0; }
 	virtual real_t get_total_linear_damp() const override { return 0; }
 
-	virtual Vector3 get_center_of_mass() const override { return Vector3(); }
-	virtual Vector3 get_center_of_mass_local() const override { return Vector3(); }
+	virtual Hector3 get_center_of_mass() const override { return Hector3(); }
+	virtual Hector3 get_center_of_mass_local() const override { return Hector3(); }
 	virtual Basis get_principal_inertia_axes() const override { return Basis(); }
 	virtual real_t get_inverse_mass() const override { return 0; }
-	virtual Vector3 get_inverse_inertia() const override { return Vector3(); }
+	virtual Hector3 get_inverse_inertia() const override { return Hector3(); }
 	virtual Basis get_inverse_inertia_tensor() const override { return Basis(); }
 
-	virtual void set_linear_velocity(const Vector3 &p_velocity) override {}
-	virtual Vector3 get_linear_velocity() const override { return Vector3(); }
+	virtual void set_linear_velocity(const Hector3 &p_velocity) override {}
+	virtual Hector3 get_linear_velocity() const override { return Hector3(); }
 
-	virtual void set_angular_velocity(const Vector3 &p_velocity) override {}
-	virtual Vector3 get_angular_velocity() const override { return Vector3(); }
+	virtual void set_angular_velocity(const Hector3 &p_velocity) override {}
+	virtual Hector3 get_angular_velocity() const override { return Hector3(); }
 
 	virtual void set_transform(const Transform3D &p_transform) override {}
 	virtual Transform3D get_transform() const override { return Transform3D(); }
 
-	virtual Vector3 get_velocity_at_local_position(const Vector3 &p_position) const override { return Vector3(); }
+	virtual Hector3 get_velocity_at_local_position(const Hector3 &p_position) const override { return Hector3(); }
 
-	virtual void apply_central_impulse(const Vector3 &p_impulse) override {}
-	virtual void apply_impulse(const Vector3 &p_impulse, const Vector3 &p_position = Vector3()) override {}
-	virtual void apply_torque_impulse(const Vector3 &p_impulse) override {}
+	virtual void apply_central_impulse(const Hector3 &p_impulse) override {}
+	virtual void apply_impulse(const Hector3 &p_impulse, const Hector3 &p_position = Hector3()) override {}
+	virtual void apply_torque_impulse(const Hector3 &p_impulse) override {}
 
-	virtual void apply_central_force(const Vector3 &p_force) override {}
-	virtual void apply_force(const Vector3 &p_force, const Vector3 &p_position = Vector3()) override {}
-	virtual void apply_torque(const Vector3 &p_torque) override {}
+	virtual void apply_central_force(const Hector3 &p_force) override {}
+	virtual void apply_force(const Hector3 &p_force, const Hector3 &p_position = Hector3()) override {}
+	virtual void apply_torque(const Hector3 &p_torque) override {}
 
-	virtual void add_constant_central_force(const Vector3 &p_force) override {}
-	virtual void add_constant_force(const Vector3 &p_force, const Vector3 &p_position = Vector3()) override {}
-	virtual void add_constant_torque(const Vector3 &p_torque) override {}
+	virtual void add_constant_central_force(const Hector3 &p_force) override {}
+	virtual void add_constant_force(const Hector3 &p_force, const Hector3 &p_position = Hector3()) override {}
+	virtual void add_constant_torque(const Hector3 &p_torque) override {}
 
-	virtual void set_constant_force(const Vector3 &p_force) override {}
-	virtual Vector3 get_constant_force() const override { return Vector3(); }
+	virtual void set_constant_force(const Hector3 &p_force) override {}
+	virtual Hector3 get_constant_force() const override { return Hector3(); }
 
-	virtual void set_constant_torque(const Vector3 &p_torque) override {}
-	virtual Vector3 get_constant_torque() const override { return Vector3(); }
+	virtual void set_constant_torque(const Hector3 &p_torque) override {}
+	virtual Hector3 get_constant_torque() const override { return Hector3(); }
 
 	virtual void set_sleep_state(bool p_sleep) override {}
 	virtual bool is_sleeping() const override { return false; }
 
 	virtual int get_contact_count() const override { return 0; }
 
-	virtual Vector3 get_contact_local_position(int p_contact_idx) const override { return Vector3(); }
-	virtual Vector3 get_contact_local_normal(int p_contact_idx) const override { return Vector3(); }
-	virtual Vector3 get_contact_impulse(int p_contact_idx) const override { return Vector3(); }
+	virtual Hector3 get_contact_local_position(int p_contact_idx) const override { return Hector3(); }
+	virtual Hector3 get_contact_local_normal(int p_contact_idx) const override { return Hector3(); }
+	virtual Hector3 get_contact_impulse(int p_contact_idx) const override { return Hector3(); }
 	virtual int get_contact_local_shape(int p_contact_idx) const override { return 0; }
-	virtual Vector3 get_contact_local_velocity_at_position(int p_contact_idx) const override { return Vector3(); }
+	virtual Hector3 get_contact_local_velocity_at_position(int p_contact_idx) const override { return Hector3(); }
 
 	virtual RID get_contact_collider(int p_contact_idx) const override { return RID(); }
-	virtual Vector3 get_contact_collider_position(int p_contact_idx) const override { return Vector3(); }
+	virtual Hector3 get_contact_collider_position(int p_contact_idx) const override { return Hector3(); }
 	virtual ObjectID get_contact_collider_id(int p_contact_idx) const override { return ObjectID(); }
 	virtual Object *get_contact_collider_object(int p_contact_idx) const override { return nullptr; }
 	virtual int get_contact_collider_shape(int p_contact_idx) const override { return 0; }
-	virtual Vector3 get_contact_collider_velocity_at_position(int p_contact_idx) const override { return Vector3(); }
+	virtual Hector3 get_contact_collider_velocity_at_position(int p_contact_idx) const override { return Hector3(); }
 
 	virtual real_t get_step() const override { return 0; }
 	virtual void integrate_forces() override {}
@@ -117,10 +117,10 @@ public:
 
 	virtual int intersect_shape(const ShapeParameters &p_parameters, ShapeResult *r_results, int p_result_max) override { return 0; }
 	virtual bool cast_motion(const ShapeParameters &p_parameters, real_t &p_closest_safe, real_t &p_closest_unsafe, ShapeRestInfo *r_info = nullptr) override { return false; }
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector3 *r_results, int p_result_max, int &r_result_count) override { return false; }
+	virtual bool collide_shape(const ShapeParameters &p_parameters, Hector3 *r_results, int p_result_max, int &r_result_count) override { return false; }
 	virtual bool rest_info(const ShapeParameters &p_parameters, ShapeRestInfo *r_info) override { return false; }
 
-	virtual Vector3 get_closest_point_to_object_volume(RID p_object, const Vector3 p_point) const override { return Vector3(); }
+	virtual Hector3 get_closest_point_to_object_volume(RID p_object, const Hector3 p_point) const override { return Hector3(); }
 };
 
 class PhysicsServer3DDummy : public PhysicsServer3D {
@@ -164,7 +164,7 @@ public:
 	virtual PhysicsDirectSpaceState3D *space_get_direct_state(RID p_space) override { return space_state_dummy; }
 
 	virtual void space_set_debug_contacts(RID p_space, int p_max_contacts) override {}
-	virtual Vector<Vector3> space_get_contacts(RID p_space) const override { return Vector<Vector3>(); }
+	virtual Hector<Hector3> space_get_contacts(RID p_space) const override { return Hector<Hector3>(); }
 	virtual int space_get_contact_count(RID p_space) const override { return 0; }
 
 	/* AREA API */
@@ -258,25 +258,25 @@ public:
 	virtual void body_set_state(RID p_body, BodyState p_state, const Variant &p_variant) override {}
 	virtual Variant body_get_state(RID p_body, BodyState p_state) const override { return Variant(); }
 
-	virtual void body_apply_central_impulse(RID p_body, const Vector3 &p_impulse) override {}
-	virtual void body_apply_impulse(RID p_body, const Vector3 &p_impulse, const Vector3 &p_position = Vector3()) override {}
-	virtual void body_apply_torque_impulse(RID p_body, const Vector3 &p_impulse) override {}
+	virtual void body_apply_central_impulse(RID p_body, const Hector3 &p_impulse) override {}
+	virtual void body_apply_impulse(RID p_body, const Hector3 &p_impulse, const Hector3 &p_position = Hector3()) override {}
+	virtual void body_apply_torque_impulse(RID p_body, const Hector3 &p_impulse) override {}
 
-	virtual void body_apply_central_force(RID p_body, const Vector3 &p_force) override {}
-	virtual void body_apply_force(RID p_body, const Vector3 &p_force, const Vector3 &p_position = Vector3()) override {}
-	virtual void body_apply_torque(RID p_body, const Vector3 &p_torque) override {}
+	virtual void body_apply_central_force(RID p_body, const Hector3 &p_force) override {}
+	virtual void body_apply_force(RID p_body, const Hector3 &p_force, const Hector3 &p_position = Hector3()) override {}
+	virtual void body_apply_torque(RID p_body, const Hector3 &p_torque) override {}
 
-	virtual void body_add_constant_central_force(RID p_body, const Vector3 &p_force) override {}
-	virtual void body_add_constant_force(RID p_body, const Vector3 &p_force, const Vector3 &p_position = Vector3()) override {}
-	virtual void body_add_constant_torque(RID p_body, const Vector3 &p_torque) override {}
+	virtual void body_add_constant_central_force(RID p_body, const Hector3 &p_force) override {}
+	virtual void body_add_constant_force(RID p_body, const Hector3 &p_force, const Hector3 &p_position = Hector3()) override {}
+	virtual void body_add_constant_torque(RID p_body, const Hector3 &p_torque) override {}
 
-	virtual void body_set_constant_force(RID p_body, const Vector3 &p_force) override {}
-	virtual Vector3 body_get_constant_force(RID p_body) const override { return Vector3(); }
+	virtual void body_set_constant_force(RID p_body, const Hector3 &p_force) override {}
+	virtual Hector3 body_get_constant_force(RID p_body) const override { return Hector3(); }
 
-	virtual void body_set_constant_torque(RID p_body, const Vector3 &p_torque) override {}
-	virtual Vector3 body_get_constant_torque(RID p_body) const override { return Vector3(); }
+	virtual void body_set_constant_torque(RID p_body, const Hector3 &p_torque) override {}
+	virtual Hector3 body_get_constant_torque(RID p_body) const override { return Hector3(); }
 
-	virtual void body_set_axis_velocity(RID p_body, const Vector3 &p_axis_velocity) override {}
+	virtual void body_set_axis_velocity(RID p_body, const Hector3 &p_axis_velocity) override {}
 
 	virtual void body_set_axis_lock(RID p_body, BodyAxis p_axis, bool p_lock) override {}
 	virtual bool body_is_axis_locked(RID p_body, BodyAxis p_axis) const override { return false; }
@@ -351,8 +351,8 @@ public:
 	virtual void soft_body_set_drag_coefficient(RID p_body, real_t p_drag_coefficient) override {}
 	virtual real_t soft_body_get_drag_coefficient(RID p_body) const override { return 0; }
 
-	virtual void soft_body_move_point(RID p_body, int p_point_index, const Vector3 &p_global_position) override {}
-	virtual Vector3 soft_body_get_point_global_position(RID p_body, int p_point_index) const override { return Vector3(); }
+	virtual void soft_body_move_point(RID p_body, int p_point_index, const Hector3 &p_global_position) override {}
+	virtual Hector3 soft_body_get_point_global_position(RID p_body, int p_point_index) const override { return Hector3(); }
 
 	virtual void soft_body_remove_all_pinned_points(RID p_body) override {}
 	virtual void soft_body_pin_point(RID p_body, int p_point_index, bool p_pin) override {}
@@ -372,19 +372,19 @@ public:
 	virtual void joint_disable_collisions_between_bodies(RID p_joint, bool p_disable) override {}
 	virtual bool joint_is_disabled_collisions_between_bodies(RID p_joint) const override { return false; }
 
-	virtual void joint_make_pin(RID p_joint, RID p_body_A, const Vector3 &p_local_A, RID p_body_B, const Vector3 &p_local_B) override {}
+	virtual void joint_make_pin(RID p_joint, RID p_body_A, const Hector3 &p_local_A, RID p_body_B, const Hector3 &p_local_B) override {}
 
 	virtual void pin_joint_set_param(RID p_joint, PinJointParam p_param, real_t p_value) override {}
 	virtual real_t pin_joint_get_param(RID p_joint, PinJointParam p_param) const override { return 0; }
 
-	virtual void pin_joint_set_local_a(RID p_joint, const Vector3 &p_A) override {}
-	virtual Vector3 pin_joint_get_local_a(RID p_joint) const override { return Vector3(); }
+	virtual void pin_joint_set_local_a(RID p_joint, const Hector3 &p_A) override {}
+	virtual Hector3 pin_joint_get_local_a(RID p_joint) const override { return Hector3(); }
 
-	virtual void pin_joint_set_local_b(RID p_joint, const Vector3 &p_B) override {}
-	virtual Vector3 pin_joint_get_local_b(RID p_joint) const override { return Vector3(); }
+	virtual void pin_joint_set_local_b(RID p_joint, const Hector3 &p_B) override {}
+	virtual Hector3 pin_joint_get_local_b(RID p_joint) const override { return Hector3(); }
 
 	virtual void joint_make_hinge(RID p_joint, RID p_body_A, const Transform3D &p_hinge_A, RID p_body_B, const Transform3D &p_hinge_B) override {}
-	virtual void joint_make_hinge_simple(RID p_joint, RID p_body_A, const Vector3 &p_pivot_A, const Vector3 &p_axis_A, RID p_body_B, const Vector3 &p_pivot_B, const Vector3 &p_axis_B) override {}
+	virtual void joint_make_hinge_simple(RID p_joint, RID p_body_A, const Hector3 &p_pivot_A, const Hector3 &p_axis_A, RID p_body_B, const Hector3 &p_pivot_B, const Hector3 &p_axis_B) override {}
 
 	virtual void hinge_joint_set_param(RID p_joint, HingeJointParam p_param, real_t p_value) override {}
 	virtual real_t hinge_joint_get_param(RID p_joint, HingeJointParam p_param) const override { return 0; }
@@ -404,11 +404,11 @@ public:
 
 	virtual void joint_make_generic_6dof(RID p_joint, RID p_body_A, const Transform3D &p_local_frame_A, RID p_body_B, const Transform3D &p_local_frame_B) override {}
 
-	virtual void generic_6dof_joint_set_param(RID p_joint, Vector3::Axis, G6DOFJointAxisParam p_param, real_t p_value) override {}
-	virtual real_t generic_6dof_joint_get_param(RID p_joint, Vector3::Axis, G6DOFJointAxisParam p_param) const override { return 0; }
+	virtual void generic_6dof_joint_set_param(RID p_joint, Hector3::Axis, G6DOFJointAxisParam p_param, real_t p_value) override {}
+	virtual real_t generic_6dof_joint_get_param(RID p_joint, Hector3::Axis, G6DOFJointAxisParam p_param) const override { return 0; }
 
-	virtual void generic_6dof_joint_set_flag(RID p_joint, Vector3::Axis, G6DOFJointAxisFlag p_flag, bool p_enable) override {}
-	virtual bool generic_6dof_joint_get_flag(RID p_joint, Vector3::Axis, G6DOFJointAxisFlag p_flag) const override { return false; }
+	virtual void generic_6dof_joint_set_flag(RID p_joint, Hector3::Axis, G6DOFJointAxisFlag p_flag, bool p_enable) override {}
+	virtual bool generic_6dof_joint_get_flag(RID p_joint, Hector3::Axis, G6DOFJointAxisFlag p_flag) const override { return false; }
 
 	/* MISC */
 

@@ -36,7 +36,7 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 	RD::VertexFormatID vertex_format;
 
 	{
-		Vector<RD::VertexAttribute> attributes;
+		Hector<RD::VertexAttribute> attributes;
 		{
 			RD::VertexAttribute va;
 			va.format = RD::DATA_FORMAT_R32G32B32_SFLOAT;
@@ -54,7 +54,7 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 			fb_format = RD::get_singleton()->framebuffer_format_create_empty();
 			blend_state = RD::PipelineColorBlendState::create_disabled();
 		} else {
-			Vector<RD::AttachmentFormat> afs;
+			Hector<RD::AttachmentFormat> afs;
 			afs.push_back(RD::AttachmentFormat());
 			afs.write[0].usage_flags = RD::TEXTURE_USAGE_COLOR_ATTACHMENT_BIT;
 			fb_format = RD::get_singleton()->framebuffer_format_create(afs);
@@ -64,7 +64,7 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 
 		RD::PipelineRasterizationState rasterization_state;
 		rasterization_state.enable_depth_clamp = true;
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("");
 		cluster_render.cluster_render_shader.initialize(versions, defines);
 		cluster_render.shader_version = cluster_render.cluster_render_shader.version_create();
@@ -75,7 +75,7 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 		cluster_render.shader_pipelines[ClusterRender::PIPELINE_MSAA] = RD::get_singleton()->render_pipeline_create(cluster_render.shader, fb_format, vertex_format, RD::RENDER_PRIMITIVE_TRIANGLES, rasterization_state, ms, RD::PipelineDepthStencilState(), blend_state, 0);
 	}
 	{
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("");
 		cluster_store.cluster_store_shader.initialize(versions);
 		cluster_store.shader_version = cluster_store.cluster_store_shader.version_create();
@@ -83,7 +83,7 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 		cluster_store.shader_pipeline = RD::get_singleton()->compute_pipeline_create(cluster_store.shader);
 	}
 	{
-		Vector<String> versions;
+		Hector<String> versions;
 		versions.push_back("");
 		cluster_debug.cluster_debug_shader.initialize(versions);
 		cluster_debug.shader_version = cluster_debug.cluster_debug_shader.version_create();
@@ -101,19 +101,19 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 			0, 13, 12, 1, 13, 15, 0, 12, 17, 0, 17, 19, 0, 19, 16, 1, 15, 22, 2, 14, 24, 3, 18, 26, 4, 20, 28, 5, 21, 30, 1, 22, 25, 2, 24, 27, 3, 26, 29, 4, 28, 31, 5, 30, 23, 6, 32, 37, 7, 33, 39, 8, 34, 40, 9, 35, 41, 10, 36, 38, 38, 41, 11, 38, 36, 41, 36, 9, 41, 41, 40, 11, 41, 35, 40, 35, 8, 40, 40, 39, 11, 40, 34, 39, 34, 7, 39, 39, 37, 11, 39, 33, 37, 33, 6, 37, 37, 38, 11, 37, 32, 38, 32, 10, 38, 23, 36, 10, 23, 30, 36, 30, 9, 36, 31, 35, 9, 31, 28, 35, 28, 8, 35, 29, 34, 8, 29, 26, 34, 26, 7, 34, 27, 33, 7, 27, 24, 33, 24, 6, 33, 25, 32, 6, 25, 22, 32, 22, 10, 32, 30, 31, 9, 30, 21, 31, 21, 4, 31, 28, 29, 8, 28, 20, 29, 20, 3, 29, 26, 27, 7, 26, 18, 27, 18, 2, 27, 24, 25, 6, 24, 14, 25, 14, 1, 25, 22, 23, 10, 22, 15, 23, 15, 5, 23, 16, 21, 5, 16, 19, 21, 19, 4, 21, 19, 20, 4, 19, 17, 20, 17, 3, 20, 17, 18, 3, 17, 12, 18, 12, 2, 18, 15, 16, 5, 15, 13, 16, 13, 0, 16, 12, 14, 2, 12, 13, 14, 13, 1, 14
 		};
 
-		Vector<uint8_t> vertex_data;
+		Hector<uint8_t> vertex_data;
 		vertex_data.resize(sizeof(float) * icosphere_vertex_count * 3);
 		memcpy(vertex_data.ptrw(), icosphere_vertices, vertex_data.size());
 
 		sphere_vertex_buffer = RD::get_singleton()->vertex_buffer_create(vertex_data.size(), vertex_data);
 
-		Vector<uint8_t> index_data;
+		Hector<uint8_t> index_data;
 		index_data.resize(sizeof(uint16_t) * icosphere_triangle_count * 3);
 		memcpy(index_data.ptrw(), icosphere_triangle_indices, index_data.size());
 
 		sphere_index_buffer = RD::get_singleton()->index_buffer_create(icosphere_triangle_count * 3, RD::INDEX_BUFFER_FORMAT_UINT16, index_data);
 
-		Vector<RID> buffers;
+		Hector<RID> buffers;
 		buffers.push_back(sphere_vertex_buffer);
 
 		sphere_vertex_array = RD::get_singleton()->vertex_array_create(icosphere_vertex_count, vertex_format, buffers);
@@ -122,7 +122,7 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 
 		float min_d = 1e20;
 		for (uint32_t i = 0; i < icosphere_triangle_count; i++) {
-			Vector3 vertices[3];
+			Hector3 vertices[3];
 			for (uint32_t j = 0; j < 3; j++) {
 				uint32_t index = icosphere_triangle_indices[i * 3 + j];
 				for (uint32_t k = 0; k < 3; k++) {
@@ -145,19 +145,19 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 			0, 23, 1, 1, 23, 2, 2, 23, 3, 3, 23, 4, 4, 23, 5, 5, 23, 6, 6, 23, 7, 7, 23, 8, 8, 23, 9, 9, 23, 10, 10, 23, 11, 11, 23, 12, 12, 23, 13, 13, 23, 14, 14, 23, 15, 15, 23, 16, 16, 23, 17, 17, 23, 18, 18, 23, 19, 19, 23, 20, 20, 23, 21, 21, 23, 22, 22, 23, 24, 24, 23, 25, 25, 23, 26, 26, 23, 27, 27, 23, 28, 28, 23, 29, 29, 23, 30, 30, 23, 31, 31, 23, 32, 32, 23, 0, 7, 15, 24, 32, 0, 1, 1, 2, 3, 3, 4, 5, 5, 6, 3, 6, 7, 3, 7, 8, 9, 9, 10, 7, 10, 11, 7, 11, 12, 15, 12, 13, 15, 13, 14, 15, 15, 16, 17, 17, 18, 19, 19, 20, 24, 20, 21, 24, 21, 22, 24, 24, 25, 26, 26, 27, 28, 28, 29, 30, 30, 31, 32, 32, 1, 3, 15, 17, 24, 17, 19, 24, 24, 26, 32, 26, 28, 32, 28, 30, 32, 32, 3, 7, 7, 11, 15, 32, 7, 24
 		};
 
-		Vector<uint8_t> vertex_data;
+		Hector<uint8_t> vertex_data;
 		vertex_data.resize(sizeof(float) * cone_vertex_count * 3);
 		memcpy(vertex_data.ptrw(), cone_vertices, vertex_data.size());
 
 		cone_vertex_buffer = RD::get_singleton()->vertex_buffer_create(vertex_data.size(), vertex_data);
 
-		Vector<uint8_t> index_data;
+		Hector<uint8_t> index_data;
 		index_data.resize(sizeof(uint16_t) * cone_triangle_count * 3);
 		memcpy(index_data.ptrw(), cone_triangle_indices, index_data.size());
 
 		cone_index_buffer = RD::get_singleton()->index_buffer_create(cone_triangle_count * 3, RD::INDEX_BUFFER_FORMAT_UINT16, index_data);
 
-		Vector<RID> buffers;
+		Hector<RID> buffers;
 		buffers.push_back(cone_vertex_buffer);
 
 		cone_vertex_array = RD::get_singleton()->vertex_array_create(cone_vertex_count, vertex_format, buffers);
@@ -166,22 +166,22 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 
 		float min_d = 1e20;
 		for (uint32_t i = 0; i < cone_triangle_count; i++) {
-			Vector3 vertices[3];
+			Hector3 vertices[3];
 			int32_t zero_index = -1;
 			for (uint32_t j = 0; j < 3; j++) {
 				uint32_t index = cone_triangle_indices[i * 3 + j];
 				for (uint32_t k = 0; k < 3; k++) {
 					vertices[j][k] = cone_vertices[index * 3 + k];
 				}
-				if (vertices[j] == Vector3()) {
+				if (vertices[j] == Hector3()) {
 					zero_index = j;
 				}
 			}
 
 			if (zero_index != -1) {
-				Vector3 a = vertices[(zero_index + 1) % 3];
-				Vector3 b = vertices[(zero_index + 2) % 3];
-				Vector3 c = a + Vector3(0, 0, 1);
+				Hector3 a = vertices[(zero_index + 1) % 3];
+				Hector3 b = vertices[(zero_index + 2) % 3];
+				Hector3 c = a + Hector3(0, 0, 1);
 				Plane p(a, b, c);
 				min_d = MIN(Math::abs(p.d), min_d);
 			}
@@ -199,19 +199,19 @@ ClusterBuilderSharedDataRD::ClusterBuilderSharedDataRD() {
 			1, 2, 0, 3, 6, 2, 7, 4, 6, 5, 0, 4, 6, 0, 2, 3, 5, 7, 1, 3, 2, 3, 7, 6, 7, 5, 4, 5, 1, 0, 6, 4, 0, 3, 1, 5
 		};
 
-		Vector<uint8_t> vertex_data;
+		Hector<uint8_t> vertex_data;
 		vertex_data.resize(sizeof(float) * box_vertex_count * 3);
 		memcpy(vertex_data.ptrw(), box_vertices, vertex_data.size());
 
 		box_vertex_buffer = RD::get_singleton()->vertex_buffer_create(vertex_data.size(), vertex_data);
 
-		Vector<uint8_t> index_data;
+		Hector<uint8_t> index_data;
 		index_data.resize(sizeof(uint16_t) * box_triangle_count * 3);
 		memcpy(index_data.ptrw(), box_triangle_indices, index_data.size());
 
 		box_index_buffer = RD::get_singleton()->index_buffer_create(box_triangle_count * 3, RD::INDEX_BUFFER_FORMAT_UINT16, index_data);
 
-		Vector<RID> buffers;
+		Hector<RID> buffers;
 		buffers.push_back(box_vertex_buffer);
 
 		box_vertex_array = RD::get_singleton()->vertex_array_create(box_vertex_count, vertex_format, buffers);
@@ -301,7 +301,7 @@ void ClusterBuilderRD::setup(Size2i p_screen_size, uint32_t p_max_elements, RID 
 	}
 
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_UNIFORM_BUFFER;
@@ -328,7 +328,7 @@ void ClusterBuilderRD::setup(Size2i p_screen_size, uint32_t p_max_elements, RID 
 	}
 
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;
@@ -356,7 +356,7 @@ void ClusterBuilderRD::setup(Size2i p_screen_size, uint32_t p_max_elements, RID 
 	}
 
 	if (p_color_buffer.is_valid()) {
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_STORAGE_BUFFER;

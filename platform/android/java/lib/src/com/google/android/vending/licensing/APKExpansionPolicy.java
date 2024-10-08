@@ -28,7 +28,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.Hector;
 
 /**
  * Default policy. All policy decisions are based off of response data received
@@ -69,9 +69,9 @@ public class APKExpansionPolicy implements Policy {
     private int mLastResponse;
     private String mLicensingUrl;
     private PreferenceObfuscator mPreferences;
-    private Vector<String> mExpansionURLs = new Vector<String>();
-    private Vector<String> mExpansionFileNames = new Vector<String>();
-    private Vector<Long> mExpansionFileSizes = new Vector<Long>();
+    private Hector<String> mExpansionURLs = new Hector<String>();
+    private Hector<String> mExpansionFileNames = new Hector<String>();
+    private Hector<Long> mExpansionFileSizes = new Hector<Long>();
 
     /**
      * The design of the protocol supports n files. Currently the market can

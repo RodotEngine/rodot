@@ -1281,7 +1281,7 @@ void CodeTextEditor::toggle_inline_comment(const String &delimiter) {
 	text_editor->begin_complex_operation();
 	text_editor->begin_multicaret_edit();
 
-	Vector<Point2i> line_ranges = text_editor->get_line_ranges_from_carets();
+	Hector<Point2i> line_ranges = text_editor->get_line_ranges_from_carets();
 	int folded_to = 0;
 	for (Point2i line_range : line_ranges) {
 		int from_line = line_range.x;
@@ -1413,7 +1413,7 @@ void CodeTextEditor::set_edit_state(const Variant &p_state) {
 	}
 
 	if (state.has("folded_lines")) {
-		Vector<int> folded_lines = state["folded_lines"];
+		Hector<int> folded_lines = state["folded_lines"];
 		for (int i = 0; i < folded_lines.size(); i++) {
 			text_editor->fold_line(folded_lines[i]);
 		}
@@ -1530,10 +1530,10 @@ void CodeTextEditor::_update_font_ligatures() {
 				fc->set_opentype_features(ftrs);
 			} break;
 			case 2: { // Custom.
-				Vector<String> subtag = String(EDITOR_GET("interface/editor/code_font_custom_opentype_features")).split(",");
+				Hector<String> subtag = String(EDITOR_GET("interface/editor/code_font_custom_opentype_features")).split(",");
 				Dictionary ftrs;
 				for (int i = 0; i < subtag.size(); i++) {
-					Vector<String> subtag_a = subtag[i].split("=");
+					Hector<String> subtag_a = subtag[i].split("=");
 					if (subtag_a.size() == 2) {
 						ftrs[TS->name_to_tag(subtag_a[0])] = subtag_a[1].to_int();
 					} else if (subtag_a.size() == 1) {
@@ -1638,7 +1638,7 @@ void CodeTextEditor::set_warning_count(int p_warning_count) {
 }
 
 void CodeTextEditor::toggle_bookmark() {
-	Vector<int> sorted_carets = text_editor->get_sorted_carets();
+	Hector<int> sorted_carets = text_editor->get_sorted_carets();
 	int last_line = -1;
 	for (const int &c : sorted_carets) {
 		int from = text_editor->get_selection_from_line(c);

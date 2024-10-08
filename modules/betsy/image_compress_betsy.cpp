@@ -357,7 +357,7 @@ Error BetsyCompressor::_compress(BetsyFormat p_format, Image *r_img) {
 
 	// Encoding table setup.
 	if (dest_format == Image::FORMAT_DXT1 && dxt1_encoding_table_buffer.is_null()) {
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(1024 * 4);
 		memcpy(data.ptrw(), dxt1_encoding_table, 1024 * 4);
 
@@ -367,13 +367,13 @@ Error BetsyCompressor::_compress(BetsyFormat p_format, Image *r_img) {
 	const int mip_count = r_img->get_mipmap_count() + 1;
 
 	// Container for the compressed data.
-	Vector<uint8_t> dst_data;
+	Hector<uint8_t> dst_data;
 	dst_data.resize(Image::get_image_data_size(r_img->get_width(), r_img->get_height(), dest_format, r_img->has_mipmaps()));
 	uint8_t *dst_data_ptr = dst_data.ptrw();
 
-	Vector<Vector<uint8_t>> src_images;
-	src_images.push_back(Vector<uint8_t>());
-	Vector<uint8_t> *src_image_ptr = src_images.ptrw();
+	Hector<Hector<uint8_t>> src_images;
+	src_images.push_back(Hector<uint8_t>());
+	Hector<uint8_t> *src_image_ptr = src_images.ptrw();
 
 	// Compress each mipmap.
 	for (int i = 0; i < mip_count; i++) {
@@ -397,7 +397,7 @@ Error BetsyCompressor::_compress(BetsyFormat p_format, Image *r_img) {
 		RID src_texture = compress_rd->texture_create(src_texture_format, RD::TextureView(), src_images);
 		RID dst_texture = compress_rd->texture_create(dst_texture_format, RD::TextureView());
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			{
 				RD::Uniform u;
@@ -456,7 +456,7 @@ Error BetsyCompressor::_compress(BetsyFormat p_format, Image *r_img) {
 		compress_rd->sync();
 
 		// Copy data from the GPU to the buffer.
-		const Vector<uint8_t> texture_data = compress_rd->texture_get_data(dst_texture, 0);
+		const Hector<uint8_t> texture_data = compress_rd->texture_get_data(dst_texture, 0);
 		int64_t dst_ofs = Image::get_image_mipmap_offset(r_img->get_width(), r_img->get_height(), dest_format, i);
 
 		memcpy(dst_data_ptr + dst_ofs, texture_data.ptr(), texture_data.size());

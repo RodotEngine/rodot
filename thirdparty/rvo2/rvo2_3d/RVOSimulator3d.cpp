@@ -45,7 +45,7 @@ namespace RVO3D {
 		kdTree_ = new KdTree3D(this);
 	}
 
-	RVOSimulator3D::RVOSimulator3D(float timeStep, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Vector3 &velocity) : defaultAgent_(NULL), kdTree_(NULL), globalTime_(0.0f), timeStep_(timeStep)
+	RVOSimulator3D::RVOSimulator3D(float timeStep, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Hector3 &velocity) : defaultAgent_(NULL), kdTree_(NULL), globalTime_(0.0f), timeStep_(timeStep)
 	{
 		kdTree_ = new KdTree3D(this);
 		defaultAgent_ = new Agent3D();
@@ -100,7 +100,7 @@ namespace RVO3D {
 		agents_.pop_back();
 	}
 
-	size_t RVOSimulator3D::addAgent(const Vector3 &position)
+	size_t RVOSimulator3D::addAgent(const Hector3 &position)
 	{
 		if (defaultAgent_ == NULL) {
 			return RVO3D_ERROR;
@@ -123,7 +123,7 @@ namespace RVO3D {
 		return agents_.size() - 1;
 	}
 
-	size_t RVOSimulator3D::addAgent(const Vector3 &position, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Vector3 &velocity)
+	size_t RVOSimulator3D::addAgent(const Hector3 &position, float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Hector3 &velocity)
 	{
 		Agent3D *agent = new Agent3D();
 
@@ -173,12 +173,12 @@ namespace RVO3D {
 		return agents_[agentNo]->neighborDist_;
 	}
 
-	const Vector3 &RVOSimulator3D::getAgentPosition(size_t agentNo) const
+	const Hector3 &RVOSimulator3D::getAgentPosition(size_t agentNo) const
 	{
 		return agents_[agentNo]->position_;
 	}
 
-	const Vector3 &RVOSimulator3D::getAgentPrefVelocity(size_t agentNo) const
+	const Hector3 &RVOSimulator3D::getAgentPrefVelocity(size_t agentNo) const
 	{
 		return agents_[agentNo]->prefVelocity_;
 	}
@@ -193,7 +193,7 @@ namespace RVO3D {
 		return agents_[agentNo]->timeHorizon_;
 	}
 
-	const Vector3 &RVOSimulator3D::getAgentVelocity(size_t agentNo) const
+	const Hector3 &RVOSimulator3D::getAgentVelocity(size_t agentNo) const
 	{
 		return agents_[agentNo]->velocity_;
 	}
@@ -213,7 +213,7 @@ namespace RVO3D {
 		return timeStep_;
 	}
 
-	void RVOSimulator3D::setAgentDefaults(float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Vector3 &velocity)
+	void RVOSimulator3D::setAgentDefaults(float neighborDist, size_t maxNeighbors, float timeHorizon, float radius, float maxSpeed, const Hector3 &velocity)
 	{
 		if (defaultAgent_ == NULL) {
 			defaultAgent_ = new Agent3D();
@@ -242,12 +242,12 @@ namespace RVO3D {
 		agents_[agentNo]->neighborDist_ = neighborDist;
 	}
 
-	void RVOSimulator3D::setAgentPosition(size_t agentNo, const Vector3 &position)
+	void RVOSimulator3D::setAgentPosition(size_t agentNo, const Hector3 &position)
 	{
 		agents_[agentNo]->position_ = position;
 	}
 
-	void RVOSimulator3D::setAgentPrefVelocity(size_t agentNo, const Vector3 &prefVelocity)
+	void RVOSimulator3D::setAgentPrefVelocity(size_t agentNo, const Hector3 &prefVelocity)
 	{
 		agents_[agentNo]->prefVelocity_ = prefVelocity;
 	}
@@ -262,7 +262,7 @@ namespace RVO3D {
 		agents_[agentNo]->timeHorizon_ = timeHorizon;
 	}
 
-	void RVOSimulator3D::setAgentVelocity(size_t agentNo, const Vector3 &velocity)
+	void RVOSimulator3D::setAgentVelocity(size_t agentNo, const Hector3 &velocity)
 	{
 		agents_[agentNo]->velocity_ = velocity;
 	}

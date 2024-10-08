@@ -22,7 +22,7 @@
 #include "unicode/utf8.h"
 #include "unicode/utf16.h"
 #include "cmemory.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "unisetspan.h"
 
 U_NAMESPACE_BEGIN
@@ -202,7 +202,7 @@ makeSpanLengthByte(int32_t spanLength) {
 // Construct for all variants of span(), or only for any one variant.
 // Initialize as little as possible, for single use.
 UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
-                                           const UVector &setStrings,
+                                           const UHector &setStrings,
                                            uint32_t which)
         : spanSet(0, 0x10ffff), pSpanNotSet(nullptr), strings(setStrings),
           utf8Lengths(nullptr), spanLengths(nullptr), utf8(nullptr),
@@ -394,7 +394,7 @@ UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSet &set,
 
 // Copy constructor. Assumes which==ALL for a frozen set.
 UnicodeSetStringSpan::UnicodeSetStringSpan(const UnicodeSetStringSpan &otherStringSpan,
-                                           const UVector &newParentSetStrings)
+                                           const UHector &newParentSetStrings)
         : spanSet(otherStringSpan.spanSet), pSpanNotSet(nullptr), strings(newParentSetStrings),
           utf8Lengths(nullptr), spanLengths(nullptr), utf8(nullptr),
           utf8Length(otherStringSpan.utf8Length),

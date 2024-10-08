@@ -67,7 +67,7 @@ private:
 	real_t mass = 1.0;
 	real_t inertia = 0.0;
 	CenterOfMassMode center_of_mass_mode = CENTER_OF_MASS_MODE_AUTO;
-	Vector2 center_of_mass;
+	Hector2 center_of_mass;
 
 	Ref<PhysicsMaterial> physics_material_override;
 	real_t gravity_scale = 1.0;
@@ -78,7 +78,7 @@ private:
 	real_t linear_damp = 0.0;
 	real_t angular_damp = 0.0;
 
-	Vector2 linear_velocity;
+	Hector2 linear_velocity;
 	real_t angular_velocity = 0.0;
 	bool sleeping = false;
 
@@ -164,8 +164,8 @@ public:
 	void set_center_of_mass_mode(CenterOfMassMode p_mode);
 	CenterOfMassMode get_center_of_mass_mode() const;
 
-	void set_center_of_mass(const Vector2 &p_center_of_mass);
-	const Vector2 &get_center_of_mass() const;
+	void set_center_of_mass(const Hector2 &p_center_of_mass);
+	const Hector2 &get_center_of_mass() const;
 
 	void set_physics_material_override(const Ref<PhysicsMaterial> &p_physics_material_override);
 	Ref<PhysicsMaterial> get_physics_material_override() const;
@@ -185,10 +185,10 @@ public:
 	void set_angular_damp(real_t p_angular_damp);
 	real_t get_angular_damp() const;
 
-	void set_linear_velocity(const Vector2 &p_velocity);
-	Vector2 get_linear_velocity() const;
+	void set_linear_velocity(const Hector2 &p_velocity);
+	Hector2 get_linear_velocity() const;
 
-	void set_axis_velocity(const Vector2 &p_axis);
+	void set_axis_velocity(const Hector2 &p_axis);
 
 	void set_angular_velocity(real_t p_velocity);
 	real_t get_angular_velocity() const;
@@ -212,20 +212,20 @@ public:
 	void set_continuous_collision_detection_mode(CCDMode p_mode);
 	CCDMode get_continuous_collision_detection_mode() const;
 
-	void apply_central_impulse(const Vector2 &p_impulse);
-	void apply_impulse(const Vector2 &p_impulse, const Vector2 &p_position = Vector2());
+	void apply_central_impulse(const Hector2 &p_impulse);
+	void apply_impulse(const Hector2 &p_impulse, const Hector2 &p_position = Hector2());
 	void apply_torque_impulse(real_t p_torque);
 
-	void apply_central_force(const Vector2 &p_force);
-	void apply_force(const Vector2 &p_force, const Vector2 &p_position = Vector2());
+	void apply_central_force(const Hector2 &p_force);
+	void apply_force(const Hector2 &p_force, const Hector2 &p_position = Hector2());
 	void apply_torque(real_t p_torque);
 
-	void add_constant_central_force(const Vector2 &p_force);
-	void add_constant_force(const Vector2 &p_force, const Vector2 &p_position = Vector2());
+	void add_constant_central_force(const Hector2 &p_force);
+	void add_constant_force(const Hector2 &p_force, const Hector2 &p_position = Hector2());
 	void add_constant_torque(real_t p_torque);
 
-	void set_constant_force(const Vector2 &p_force);
-	Vector2 get_constant_force() const;
+	void set_constant_force(const Hector2 &p_force);
+	Hector2 get_constant_force() const;
 
 	void set_constant_torque(real_t p_torque);
 	real_t get_constant_torque() const;

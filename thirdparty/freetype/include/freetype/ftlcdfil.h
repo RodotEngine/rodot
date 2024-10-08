@@ -279,7 +279,7 @@ FT_BEGIN_HEADER
    *     A handle to the target library instance.
    *
    *   sub ::
-   *     A pointer to an array of 3 vectors in 26.6 fractional pixel format;
+   *     A pointer to an array of 3 Hectors in 26.6 fractional pixel format;
    *     the function modifies the default values, see the note below.
    *
    * @return:
@@ -310,7 +310,7 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Library_SetLcdGeometry( FT_Library  library,
-                             FT_Vector   sub[3] );
+                             FT_Hector   sub[3] );
 
   /* */
 

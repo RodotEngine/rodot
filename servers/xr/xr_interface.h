@@ -114,7 +114,7 @@ public:
 	virtual bool supports_play_area_mode(XRInterface::PlayAreaMode p_mode); /* query if this interface supports this play area mode */
 	virtual XRInterface::PlayAreaMode get_play_area_mode() const; /* get the current play area mode */
 	virtual bool set_play_area_mode(XRInterface::PlayAreaMode p_mode); /* change the play area mode, note that this should return false if the mode is not available */
-	virtual PackedVector3Array get_play_area() const; /* if available, returns an array of vectors denoting the play area the player can move around in */
+	virtual PackedHector3Array get_play_area() const; /* if available, returns an array of Hectors denoting the play area the player can move around in */
 
 	/** specific to AR **/
 	virtual bool get_anchor_detection_is_enabled() const;
@@ -139,7 +139,7 @@ public:
 	virtual RID get_velocity_texture(); /* obtain velocity output texture (if applicable, used for spacewarp) */
 	virtual void pre_render() {}
 	virtual bool pre_draw_viewport(RID p_render_target) { return true; }; /* inform XR interface we are about to start our viewport draw process */
-	virtual Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) = 0; /* inform XR interface we finished our viewport draw process */
+	virtual Hector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) = 0; /* inform XR interface we finished our viewport draw process */
 	virtual void end_frame() {}
 
 	/** passthrough **/

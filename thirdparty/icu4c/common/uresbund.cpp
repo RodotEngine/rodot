@@ -1627,7 +1627,7 @@ U_CAPI const uint8_t* U_EXPORT2 ures_getBinary(const UResourceBundle* resB, int3
   return p;
 }
 
-U_CAPI const int32_t* U_EXPORT2 ures_getIntVector(const UResourceBundle* resB, int32_t* len, 
+U_CAPI const int32_t* U_EXPORT2 ures_getIntHector(const UResourceBundle* resB, int32_t* len, 
                                                    UErrorCode*               status) {
   const int32_t *p;
   if (status==nullptr || U_FAILURE(*status)) {
@@ -1637,7 +1637,7 @@ U_CAPI const int32_t* U_EXPORT2 ures_getIntVector(const UResourceBundle* resB, i
     *status = U_ILLEGAL_ARGUMENT_ERROR;
     return nullptr;
   }
-  p = res_getIntVector({resB}, &resB->getResData(), resB->fRes, len);
+  p = res_getIntHector({resB}, &resB->getResData(), resB->fRes, len);
   if (p == nullptr) {
     *status = U_RESOURCE_TYPE_MISMATCH;
   }
@@ -1771,7 +1771,7 @@ U_CAPI const char16_t* U_EXPORT2 ures_getNextString(UResourceBundle *resB, int32
       return ures_getStringWithAlias(resB, resB->fRes, resB->fIndex, len, status);
     case URES_INT:
     case URES_BINARY:
-    case URES_INT_VECTOR:
+    case URES_INT_Hector:
         *status = U_RESOURCE_TYPE_MISMATCH;
         U_FALLTHROUGH;
     default:
@@ -1806,7 +1806,7 @@ U_CAPI UResourceBundle* U_EXPORT2 ures_getNextResource(UResourceBundle *resB, UR
         case URES_BINARY:
         case URES_STRING:
         case URES_STRING_V2:
-        case URES_INT_VECTOR:
+        case URES_INT_Hector:
             return ures_copyResb(fillIn, resB, status);
         case URES_TABLE:
         case URES_TABLE16:
@@ -1852,7 +1852,7 @@ U_CAPI UResourceBundle* U_EXPORT2 ures_getByIndex(const UResourceBundle *resB, i
         case URES_BINARY:
         case URES_STRING:
         case URES_STRING_V2:
-        case URES_INT_VECTOR:
+        case URES_INT_Hector:
             return ures_copyResb(fillIn, resB, status);
         case URES_TABLE:
         case URES_TABLE16:
@@ -1916,7 +1916,7 @@ U_CAPI const char16_t* U_EXPORT2 ures_getStringByIndex(const UResourceBundle *re
             return ures_getStringWithAlias(resB, resB->fRes, indexS, len, status);
         case URES_INT:
         case URES_BINARY:
-        case URES_INT_VECTOR:
+        case URES_INT_Hector:
             *status = U_RESOURCE_TYPE_MISMATCH;
             break;
         default:

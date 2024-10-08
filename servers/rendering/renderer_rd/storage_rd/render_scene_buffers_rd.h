@@ -154,7 +154,7 @@ private:
 		// Our texture objects, slices are lazy (i.e. only created when requested).
 		RID texture;
 		mutable HashMap<NTSliceKey, RID, NTSliceKey> slices;
-		Vector<Size2i> sizes;
+		Hector<Size2i> sizes;
 	};
 
 	mutable HashMap<NTKey, NamedTexture, NTKey> named_textures;

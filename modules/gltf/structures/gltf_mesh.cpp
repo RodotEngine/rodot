@@ -46,7 +46,7 @@ void GLTFMesh::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "original_name"), "set_original_name", "get_original_name");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh"), "set_mesh", "get_mesh");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT32_ARRAY, "blend_weights"), "set_blend_weights", "get_blend_weights"); // Vector<float>
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT32_ARRAY, "blend_weights"), "set_blend_weights", "get_blend_weights"); // Hector<float>
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "instance_materials"), "set_instance_materials", "get_instance_materials");
 }
 
@@ -74,11 +74,11 @@ void GLTFMesh::set_instance_materials(TypedArray<Material> p_instance_materials)
 	instance_materials = p_instance_materials;
 }
 
-Vector<float> GLTFMesh::get_blend_weights() {
+Hector<float> GLTFMesh::get_blend_weights() {
 	return blend_weights;
 }
 
-void GLTFMesh::set_blend_weights(Vector<float> p_blend_weights) {
+void GLTFMesh::set_blend_weights(Hector<float> p_blend_weights) {
 	blend_weights = p_blend_weights;
 }
 

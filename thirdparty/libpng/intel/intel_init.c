@@ -44,7 +44,7 @@ png_init_filter_functions_sse2(png_structp pp, unsigned int bpp)
    }
 
    /* No need optimize PNG_FILTER_VALUE_UP.  The compiler should
-    * autovectorize.
+    * autoHectorize.
     */
 }
 

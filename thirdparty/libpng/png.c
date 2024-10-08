@@ -1240,7 +1240,7 @@ png_xy_from_XYZ(png_xy *xy, const png_XYZ *XYZ)
    whiteX += XYZ->blue_X;
    whiteY += XYZ->blue_Y;
 
-   /* The reference white is simply the sum of the end-point (X,Y,Z) vectors,
+   /* The reference white is simply the sum of the end-point (X,Y,Z) Hectors,
     * thus:
     */
    if (png_muldiv(&xy->whitex, whiteX, PNG_FP_1, dwhite) == 0)
@@ -1294,7 +1294,7 @@ png_XYZ_from_xy(png_XYZ *XYZ, const png_xy *xy)
     * This describes the plane in (X,Y,Z) space that intersects each axis at the
     * value 1.0; call this the chromaticity plane.  Thus the chromaticity
     * calculation has scaled each end-point so that it is on the x+y+z=1 plane
-    * and chromaticity is the intersection of the vector from the origin to the
+    * and chromaticity is the intersection of the Hector from the origin to the
     * (X,Y,Z) value with the chromaticity plane.
     *
     * To fully invert the chromaticity calculation we would need the three

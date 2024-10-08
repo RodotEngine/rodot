@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		Shape casting allows to detect collision objects by sweeping its [member shape] along the cast direction determined by [member target_position]. This is similar to [RayCast2D], but it allows for sweeping a region of space, rather than just a straight line. [ShapeCast2D] can detect multiple collision objects. It is useful for things like wide laser beams or snapping a simple shape to a floor.
-		Immediate collision overlaps can be done with the [member target_position] set to [code]Vector2(0, 0)[/code] and by calling [method force_shapecast_update] within the same physics frame. This helps to overcome some limitations of [Area2D] when used as an instantaneous detection area, as collision information isn't immediately available to it.
+		Immediate collision overlaps can be done with the [member target_position] set to [code]Hector2(0, 0)[/code] and by calling [method force_shapecast_update] within the same physics frame. This helps to overcome some limitations of [Area2D] when used as an instantaneous detection area, as collision information isn't immediately available to it.
 		[b]Note:[/b] Shape casting is more computationally expensive than ray casting.
 	</description>
 	<tutorials>
@@ -86,14 +86,14 @@
 			</description>
 		</method>
 		<method name="get_collision_normal" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="index" type="int" />
 			<description>
 				Returns the normal of one of the multiple collisions at [param index] of the intersecting object.
 			</description>
 		</method>
 		<method name="get_collision_point" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="index" type="int" />
 			<description>
 				Returns the collision point of one of the multiple collisions at [param index] where the shape intersects the colliding object.
@@ -103,7 +103,7 @@
 		<method name="is_colliding" qualifiers="const">
 			<return type="bool" />
 			<description>
-				Returns whether any object is intersecting with the shape's vector (considering the vector length).
+				Returns whether any object is intersecting with the shape's Hector (considering the Hector length).
 			</description>
 		</method>
 		<method name="remove_exception">
@@ -157,7 +157,7 @@
 		<member name="shape" type="Shape2D" setter="set_shape" getter="get_shape">
 			The shape to be used for collision queries.
 		</member>
-		<member name="target_position" type="Vector2" setter="set_target_position" getter="get_target_position" default="Vector2(0, 50)">
+		<member name="target_position" type="Hector2" setter="set_target_position" getter="get_target_position" default="Hector2(0, 50)">
 			The shape's destination point, relative to this node's [member Node2D.position].
 		</member>
 	</members>

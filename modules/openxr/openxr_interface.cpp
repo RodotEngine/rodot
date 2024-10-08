@@ -254,7 +254,7 @@ void OpenXRInterface::_load_action_map() {
 				Ref<OpenXRAction> xr_action = actions[j];
 
 				PackedStringArray toplevel_paths = xr_action->get_toplevel_paths();
-				Vector<Tracker *> trackers_for_action;
+				Hector<Tracker *> trackers_for_action;
 
 				for (int k = 0; k < toplevel_paths.size(); k++) {
 					// Only check for our tracker if our path is supported.
@@ -353,7 +353,7 @@ void OpenXRInterface::free_action_sets() {
 	action_sets.clear();
 }
 
-OpenXRInterface::Action *OpenXRInterface::create_action(ActionSet *p_action_set, const String &p_action_name, const String &p_localized_name, OpenXRAction::ActionType p_action_type, const Vector<Tracker *> p_trackers) {
+OpenXRInterface::Action *OpenXRInterface::create_action(ActionSet *p_action_set, const String &p_action_name, const String &p_localized_name, OpenXRAction::ActionType p_action_type, const Hector<Tracker *> p_trackers) {
 	ERR_FAIL_NULL_V(openxr_api, nullptr);
 
 	for (int i = 0; i < p_action_set->actions.size(); i++) {
@@ -363,7 +363,7 @@ OpenXRInterface::Action *OpenXRInterface::create_action(ActionSet *p_action_set,
 		}
 	}
 
-	Vector<RID> tracker_rids;
+	Hector<RID> tracker_rids;
 	for (int i = 0; i < p_trackers.size(); i++) {
 		tracker_rids.push_back(p_trackers[i]->tracker_rid);
 	}
@@ -530,13 +530,13 @@ void OpenXRInterface::handle_tracker(Tracker *p_tracker) {
 				real_t value = openxr_api->get_action_float(action->action_rid, p_tracker->tracker_rid);
 				p_tracker->controller_tracker->set_input(action->action_name, Variant(value));
 			} break;
-			case OpenXRAction::OPENXR_ACTION_VECTOR2: {
-				Vector2 value = openxr_api->get_action_vector2(action->action_rid, p_tracker->tracker_rid);
+			case OpenXRAction::OPENXR_ACTION_Hector2: {
+				Hector2 value = openxr_api->get_action_Hector2(action->action_rid, p_tracker->tracker_rid);
 				p_tracker->controller_tracker->set_input(action->action_name, Variant(value));
 			} break;
 			case OpenXRAction::OPENXR_ACTION_POSE: {
 				Transform3D transform;
-				Vector3 linear, angular;
+				Hector3 linear, angular;
 
 				XRPose::TrackingConfidence confidence = openxr_api->get_action_pose(action->action_rid, p_tracker->tracker_rid, transform, linear, angular);
 
@@ -643,7 +643,7 @@ bool OpenXRInterface::initialize() {
 	xr_server->add_tracker(head);
 
 	// attach action sets
-	Vector<RID> loaded_action_sets;
+	Hector<RID> loaded_action_sets;
 	for (int i = 0; i < action_sets.size(); i++) {
 		loaded_action_sets.append(action_sets[i]->action_set_rid);
 	}
@@ -746,16 +746,16 @@ bool OpenXRInterface::set_play_area_mode(XRInterface::PlayAreaMode p_mode) {
 	return false;
 }
 
-PackedVector3Array OpenXRInterface::get_play_area() const {
+PackedHector3Array OpenXRInterface::get_play_area() const {
 	XRServer *xr_server = XRServer::get_singleton();
-	ERR_FAIL_NULL_V(xr_server, PackedVector3Array());
-	PackedVector3Array arr;
+	ERR_FAIL_NULL_V(xr_server, PackedHector3Array());
+	PackedHector3Array arr;
 
-	Vector3 sides[4] = {
-		Vector3(-0.5f, 0.0f, -0.5f),
-		Vector3(0.5f, 0.0f, -0.5f),
-		Vector3(0.5f, 0.0f, 0.5f),
-		Vector3(-0.5f, 0.0f, 0.5f),
+	Hector3 sides[4] = {
+		Hector3(-0.5f, 0.0f, -0.5f),
+		Hector3(0.5f, 0.0f, -0.5f),
+		Hector3(0.5f, 0.0f, 0.5f),
+		Hector3(-0.5f, 0.0f, 0.5f),
 	};
 
 	if (openxr_api != nullptr && openxr_api->is_initialized()) {
@@ -764,14 +764,14 @@ PackedVector3Array OpenXRInterface::get_play_area() const {
 			Transform3D reference_frame = xr_server->get_reference_frame();
 
 			for (int i = 0; i < 4; i++) {
-				Vector3 coord = sides[i];
+				Hector3 coord = sides[i];
 
 				// Scale it up.
 				coord.x *= extents.width;
 				coord.z *= extents.height;
 
 				// Now apply our reference.
-				Vector3 out = reference_frame.xform(coord);
+				Hector3 out = reference_frame.xform(coord);
 				arr.push_back(out);
 			}
 		} else {
@@ -1067,8 +1067,8 @@ void OpenXRInterface::handle_hand_tracking(const String &p_path, OpenXRHandTrack
 				static const XrSpaceLocationFlags all_location_flags = XR_SPACE_LOCATION_ORIENTATION_VALID_BIT + XR_SPACE_LOCATION_POSITION_VALID_BIT + XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT + XR_SPACE_LOCATION_POSITION_TRACKED_BIT;
 				XRPose::TrackingConfidence confidence = XRPose::XR_TRACKING_CONFIDENCE_LOW;
 				Transform3D transform;
-				Vector3 linear_velocity;
-				Vector3 angular_velocity;
+				Hector3 linear_velocity;
+				Hector3 angular_velocity;
 
 				if ((location_flags & all_location_flags) == all_location_flags) {
 					// All flags set? confidence is high!
@@ -1103,8 +1103,8 @@ void OpenXRInterface::process() {
 		// do our normal process
 		if (openxr_api->process()) {
 			Transform3D t;
-			Vector3 linear_velocity;
-			Vector3 angular_velocity;
+			Hector3 linear_velocity;
+			Hector3 angular_velocity;
 			head_confidence = openxr_api->get_head_center(t, linear_velocity, angular_velocity);
 			if (head_confidence != XRPose::XR_TRACKING_CONFIDENCE_NONE) {
 				// Only update our transform if we have one to update it with
@@ -1116,7 +1116,7 @@ void OpenXRInterface::process() {
 		}
 
 		// handle our action sets....
-		Vector<RID> active_sets;
+		Hector<RID> active_sets;
 		for (int i = 0; i < action_sets.size(); i++) {
 			if (action_sets[i]->is_active) {
 				active_sets.push_back(action_sets[i]->action_set_rid);
@@ -1154,8 +1154,8 @@ bool OpenXRInterface::pre_draw_viewport(RID p_render_target) {
 	}
 }
 
-Vector<BlitToScreen> OpenXRInterface::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
-	Vector<BlitToScreen> blit_to_screen;
+Hector<BlitToScreen> OpenXRInterface::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
+	Hector<BlitToScreen> blit_to_screen;
 
 #ifndef ANDROID_ENABLED
 	// If separate HMD we should output one eye to screen
@@ -1432,13 +1432,13 @@ Quaternion OpenXRInterface::get_hand_joint_rotation(Hand p_hand, HandJoints p_jo
 	return Quaternion();
 }
 
-Vector3 OpenXRInterface::get_hand_joint_position(Hand p_hand, HandJoints p_joint) const {
+Hector3 OpenXRInterface::get_hand_joint_position(Hand p_hand, HandJoints p_joint) const {
 	OpenXRHandTrackingExtension *hand_tracking_ext = OpenXRHandTrackingExtension::get_singleton();
 	if (hand_tracking_ext && hand_tracking_ext->get_active()) {
 		return hand_tracking_ext->get_hand_joint_position(OpenXRHandTrackingExtension::HandTrackedHands(p_hand), XrHandJointEXT(p_joint));
 	}
 
-	return Vector3();
+	return Hector3();
 }
 
 float OpenXRInterface::get_hand_joint_radius(Hand p_hand, HandJoints p_joint) const {
@@ -1450,22 +1450,22 @@ float OpenXRInterface::get_hand_joint_radius(Hand p_hand, HandJoints p_joint) co
 	return 0.0;
 }
 
-Vector3 OpenXRInterface::get_hand_joint_linear_velocity(Hand p_hand, HandJoints p_joint) const {
+Hector3 OpenXRInterface::get_hand_joint_linear_velocity(Hand p_hand, HandJoints p_joint) const {
 	OpenXRHandTrackingExtension *hand_tracking_ext = OpenXRHandTrackingExtension::get_singleton();
 	if (hand_tracking_ext && hand_tracking_ext->get_active()) {
 		return hand_tracking_ext->get_hand_joint_linear_velocity(OpenXRHandTrackingExtension::HandTrackedHands(p_hand), XrHandJointEXT(p_joint));
 	}
 
-	return Vector3();
+	return Hector3();
 }
 
-Vector3 OpenXRInterface::get_hand_joint_angular_velocity(Hand p_hand, HandJoints p_joint) const {
+Hector3 OpenXRInterface::get_hand_joint_angular_velocity(Hand p_hand, HandJoints p_joint) const {
 	OpenXRHandTrackingExtension *hand_tracking_ext = OpenXRHandTrackingExtension::get_singleton();
 	if (hand_tracking_ext && hand_tracking_ext->get_active()) {
 		return hand_tracking_ext->get_hand_joint_angular_velocity(OpenXRHandTrackingExtension::HandTrackedHands(p_hand), XrHandJointEXT(p_joint));
 	}
 
-	return Vector3();
+	return Hector3();
 }
 
 RID OpenXRInterface::get_vrs_texture() {
@@ -1473,7 +1473,7 @@ RID OpenXRInterface::get_vrs_texture() {
 		return RID();
 	}
 
-	PackedVector2Array eye_foci;
+	PackedHector2Array eye_foci;
 
 	Size2 target_size = get_render_target_size();
 	real_t aspect_ratio = target_size.x / target_size.y;

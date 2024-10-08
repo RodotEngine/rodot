@@ -45,7 +45,7 @@ class PipelineCacheRD {
 	RD::PipelineDepthStencilState depth_stencil_state;
 	RD::PipelineColorBlendState blend_state;
 	int dynamic_state_flags = 0;
-	Vector<RD::PipelineSpecializationConstant> base_specialization_constants;
+	Hector<RD::PipelineSpecializationConstant> base_specialization_constants;
 
 	struct Version {
 		RD::VertexFormatID vertex_id;
@@ -64,8 +64,8 @@ class PipelineCacheRD {
 	void _clear();
 
 public:
-	void setup(RID p_shader, RD::RenderPrimitive p_primitive, const RD::PipelineRasterizationState &p_rasterization_state, RD::PipelineMultisampleState p_multisample, const RD::PipelineDepthStencilState &p_depth_stencil_state, const RD::PipelineColorBlendState &p_blend_state, int p_dynamic_state_flags = 0, const Vector<RD::PipelineSpecializationConstant> &p_base_specialization_constants = Vector<RD::PipelineSpecializationConstant>());
-	void update_specialization_constants(const Vector<RD::PipelineSpecializationConstant> &p_base_specialization_constants);
+	void setup(RID p_shader, RD::RenderPrimitive p_primitive, const RD::PipelineRasterizationState &p_rasterization_state, RD::PipelineMultisampleState p_multisample, const RD::PipelineDepthStencilState &p_depth_stencil_state, const RD::PipelineColorBlendState &p_blend_state, int p_dynamic_state_flags = 0, const Hector<RD::PipelineSpecializationConstant> &p_base_specialization_constants = Hector<RD::PipelineSpecializationConstant>());
+	void update_specialization_constants(const Hector<RD::PipelineSpecializationConstant> &p_base_specialization_constants);
 	void update_shader(RID p_shader);
 
 	_FORCE_INLINE_ RID get_render_pipeline(RD::VertexFormatID p_vertex_format_id, RD::FramebufferFormatID p_framebuffer_format_id, bool p_wireframe = false, uint32_t p_render_pass = 0, uint32_t p_bool_specializations = 0) {

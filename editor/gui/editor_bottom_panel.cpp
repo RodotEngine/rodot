@@ -105,7 +105,7 @@ void EditorBottomPanel::_expand_button_toggled(bool p_pressed) {
 	EditorNode::get_top_split()->set_visible(!p_pressed);
 }
 
-bool EditorBottomPanel::_button_drag_hover(const Vector2 &, const Variant &, Button *p_button, Control *p_control) {
+bool EditorBottomPanel::_button_drag_hover(const Hector2 &, const Variant &, Button *p_button, Control *p_control) {
 	if (!p_button->is_pressed()) {
 		_switch_by_control(true, p_control);
 	}

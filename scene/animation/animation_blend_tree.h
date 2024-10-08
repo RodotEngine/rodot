@@ -57,7 +57,7 @@ public:
 
 	virtual NodeTimeInfo get_node_time_info() const override; // Wrapper of get_parameter().
 
-	static Vector<String> (*get_editable_animation_list)();
+	static Hector<String> (*get_editable_animation_list)();
 
 	virtual String get_caption() const override;
 	virtual NodeTimeInfo process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
@@ -317,7 +317,7 @@ class AnimationNodeTransition : public AnimationNodeSync {
 		bool break_loop_at_end = false;
 		bool reset = true;
 	};
-	Vector<InputData> input_data;
+	Hector<InputData> input_data;
 
 	StringName prev_xfading = "prev_xfading";
 	StringName prev_index = "prev_index";
@@ -392,13 +392,13 @@ class AnimationNodeBlendTree : public AnimationRootNode {
 
 	struct Node {
 		Ref<AnimationNode> node;
-		Vector2 position;
-		Vector<StringName> connections;
+		Hector2 position;
+		Hector<StringName> connections;
 	};
 
 	RBMap<StringName, Node, StringName::AlphCompare> nodes;
 
-	Vector2 graph_offset;
+	Hector2 graph_offset;
 
 	void _node_changed(const StringName &p_node);
 
@@ -427,16 +427,16 @@ public:
 		//no need to check for cycles due to tree topology
 	};
 
-	void add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Vector2 &p_position = Vector2());
+	void add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Hector2 &p_position = Hector2());
 	Ref<AnimationNode> get_node(const StringName &p_name) const;
 	void remove_node(const StringName &p_name);
 	void rename_node(const StringName &p_name, const StringName &p_new_name);
 	bool has_node(const StringName &p_name) const;
 	StringName get_node_name(const Ref<AnimationNode> &p_node) const;
-	Vector<StringName> get_node_connection_array(const StringName &p_name) const;
+	Hector<StringName> get_node_connection_array(const StringName &p_name) const;
 
-	void set_node_position(const StringName &p_node, const Vector2 &p_position);
-	Vector2 get_node_position(const StringName &p_node) const;
+	void set_node_position(const StringName &p_node, const Hector2 &p_position);
+	Hector2 get_node_position(const StringName &p_node) const;
 
 	virtual void get_child_nodes(List<ChildNode> *r_child_nodes) override;
 
@@ -457,8 +457,8 @@ public:
 
 	void get_node_list(List<StringName> *r_list);
 
-	void set_graph_offset(const Vector2 &p_graph_offset);
-	Vector2 get_graph_offset() const;
+	void set_graph_offset(const Hector2 &p_graph_offset);
+	Hector2 get_graph_offset() const;
 
 	virtual Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
 

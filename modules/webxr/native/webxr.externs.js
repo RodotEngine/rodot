@@ -854,7 +854,7 @@ XRWebGLSubImage.prototype.depthStencilTexture;
 /**
  * @type {?WebGLTexture}
  */
-XRWebGLSubImage.prototype.motionVectorTexture;
+XRWebGLSubImage.prototype.motionHectorTexture;
 
 /**
  * @type {?number}
@@ -885,12 +885,12 @@ XRWebGLSubImage.prototype.depthStencilTextureHeight;
  * @type {?number}
  */
 
-XRWebGLSubImage.prototype.motionVectorTextureWidth;
+XRWebGLSubImage.prototype.motionHectorTextureWidth;
 
 /**
  * @type {?number}
  */
-XRWebGLSubImage.prototype.motionVectorTextureHeight;
+XRWebGLSubImage.prototype.motionHectorTextureHeight;
 
 /**
  * @constructor XRProjectionLayerInit

@@ -51,7 +51,7 @@ class EditorFileSystemDirectory : public Object {
 	bool verified = false; //used for checking changes
 
 	EditorFileSystemDirectory *parent = nullptr;
-	Vector<EditorFileSystemDirectory *> subdirs;
+	Hector<EditorFileSystemDirectory *> subdirs;
 
 	struct FileInfo {
 		String file;
@@ -61,10 +61,10 @@ class EditorFileSystemDirectory : public Object {
 		uint64_t modified_time = 0;
 		uint64_t import_modified_time = 0;
 		String import_md5;
-		Vector<String> import_dest_paths;
+		Hector<String> import_dest_paths;
 		bool import_valid = false;
 		String import_group_file;
-		Vector<String> deps;
+		Hector<String> deps;
 		bool verified = false; //used for checking changes
 		// These are for script resources only.
 		String script_class_name;
@@ -73,7 +73,7 @@ class EditorFileSystemDirectory : public Object {
 		String icon_path;
 	};
 
-	Vector<FileInfo *> files;
+	Hector<FileInfo *> files;
 
 	static void _bind_methods();
 
@@ -90,7 +90,7 @@ public:
 	String get_file_path(int p_idx) const;
 	StringName get_file_type(int p_idx) const;
 	StringName get_file_resource_script_class(int p_idx) const;
-	Vector<String> get_file_deps(int p_idx) const;
+	Hector<String> get_file_deps(int p_idx) const;
 	bool get_file_import_is_valid(int p_idx) const;
 	uint64_t get_file_modified_time(int p_idx) const;
 	uint64_t get_file_import_modified_time(int p_idx) const;
@@ -115,7 +115,7 @@ class EditorFileSystemImportFormatSupportQuery : public RefCounted {
 
 protected:
 	GDVIRTUAL0RC_REQUIRED(bool, _is_active)
-	GDVIRTUAL0RC_REQUIRED(Vector<String>, _get_file_extensions)
+	GDVIRTUAL0RC_REQUIRED(Hector<String>, _get_file_extensions)
 	GDVIRTUAL0RC_REQUIRED(bool, _query)
 	static void _bind_methods() {
 		GDVIRTUAL_BIND(_is_active);
@@ -129,8 +129,8 @@ public:
 		GDVIRTUAL_CALL(_is_active, ret);
 		return ret;
 	}
-	virtual Vector<String> get_file_extensions() const {
-		Vector<String> ret;
+	virtual Hector<String> get_file_extensions() const {
+		Hector<String> ret;
 		GDVIRTUAL_CALL(_get_file_extensions, ret);
 		return ret;
 	}
@@ -167,7 +167,7 @@ class EditorFileSystem : public Node {
 	struct ScannedDirectory {
 		String name;
 		String full_path;
-		Vector<ScannedDirectory *> subdirs;
+		Hector<ScannedDirectory *> subdirs;
 		List<String> files;
 
 		~ScannedDirectory();
@@ -209,8 +209,8 @@ class EditorFileSystem : public Node {
 		uint64_t modification_time = 0;
 		uint64_t import_modification_time = 0;
 		String import_md5;
-		Vector<String> import_dest_paths;
-		Vector<String> deps;
+		Hector<String> import_dest_paths;
+		Hector<String> deps;
 		bool import_valid = false;
 		String import_group_file;
 		String script_class_name;
@@ -266,15 +266,15 @@ class EditorFileSystem : public Node {
 	void _update_extensions();
 
 	Error _reimport_file(const String &p_file, const HashMap<StringName, Variant> &p_custom_options = HashMap<StringName, Variant>(), const String &p_custom_importer = String(), Variant *generator_parameters = nullptr, bool p_update_file_system = true);
-	Error _reimport_group(const String &p_group_file, const Vector<String> &p_files);
+	Error _reimport_group(const String &p_group_file, const Hector<String> &p_files);
 
 	bool _test_for_reimport(const String &p_path, const String &p_expected_import_md5);
-	bool _is_test_for_reimport_needed(const String &p_path, uint64_t p_last_modification_time, uint64_t p_modification_time, uint64_t p_last_import_modification_time, uint64_t p_import_modification_time, const Vector<String> &p_import_dest_paths);
-	Vector<String> _get_import_dest_paths(const String &p_path);
+	bool _is_test_for_reimport_needed(const String &p_path, uint64_t p_last_modification_time, uint64_t p_modification_time, uint64_t p_last_import_modification_time, uint64_t p_import_modification_time, const Hector<String> &p_import_dest_paths);
+	Hector<String> _get_import_dest_paths(const String &p_path);
 
 	bool reimport_on_missing_imported_files;
 
-	Vector<String> _get_dependencies(const String &p_path);
+	Hector<String> _get_dependencies(const String &p_path);
 
 	struct ImportFile {
 		String path;
@@ -317,7 +317,7 @@ class EditorFileSystem : public Node {
 
 	bool using_fat32_or_exfat; // Workaround for projects in FAT32 or exFAT filesystem (pendrives, most of the time)
 
-	void _find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Vector<String>> &group_files, HashSet<String> &groups_to_reimport);
+	void _find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Hector<String>> &group_files, HashSet<String> &groups_to_reimport);
 
 	void _move_group_files(EditorFileSystemDirectory *efd, const String &p_group_file, const String &p_new_location);
 
@@ -335,9 +335,9 @@ class EditorFileSystem : public Node {
 	static ResourceUID::ID _resource_saver_get_resource_id_for_path(const String &p_path, bool p_generate);
 
 	bool _scan_extensions();
-	bool _scan_import_support(const Vector<String> &reimports);
+	bool _scan_import_support(const Hector<String> &reimports);
 
-	Vector<Ref<EditorFileSystemImportFormatSupportQuery>> import_support_queries;
+	Hector<Ref<EditorFileSystemImportFormatSupportQuery>> import_support_queries;
 
 	void _update_file_icon_path(EditorFileSystemDirectory::FileInfo *file_info);
 	void _update_files_icon_path(EditorFileSystemDirectory *edp = nullptr);
@@ -361,7 +361,7 @@ public:
 	void scan();
 	void scan_changes();
 	void update_file(const String &p_file);
-	void update_files(const Vector<String> &p_script_paths);
+	void update_files(const Hector<String> &p_script_paths);
 	HashSet<String> get_valid_extensions() const;
 	void register_global_class_script(const String &p_search_path, const String &p_target_path);
 
@@ -369,7 +369,7 @@ public:
 	String get_file_type(const String &p_file) const;
 	EditorFileSystemDirectory *find_file(const String &p_file, int *r_index) const;
 
-	void reimport_files(const Vector<String> &p_files);
+	void reimport_files(const Hector<String> &p_files);
 	Error reimport_append(const String &p_file, const HashMap<StringName, Variant> &p_custom_options, const String &p_custom_importer, Variant p_generator_parameters);
 
 	void reimport_file_with_custom_parameters(const String &p_file, const String &p_importer, const HashMap<StringName, Variant> &p_custom_params);

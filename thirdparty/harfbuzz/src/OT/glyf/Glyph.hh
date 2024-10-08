@@ -81,7 +81,7 @@ struct Glyph
   { return type == COMPOSITE; }
 
   bool get_all_points_without_var (const hb_face_t *face,
-                                   contour_point_vector_t &points /* OUT */) const
+                                   contour_point_Hector_t &points /* OUT */) const
   {
     switch (type) {
     case SIMPLE:
@@ -132,7 +132,7 @@ struct Glyph
   void update_mtx (const hb_subset_plan_t *plan,
                    int xMin, int xMax,
                    int yMin, int yMax,
-                   const contour_point_vector_t &all_points) const
+                   const contour_point_Hector_t &all_points) const
   {
     hb_codepoint_t new_gid = 0;
     if (!plan->new_gid_for_old_gid (gid, &new_gid))
@@ -167,7 +167,7 @@ struct Glyph
   }
 
   bool compile_header_bytes (const hb_subset_plan_t *plan,
-                             const contour_point_vector_t &all_points,
+                             const contour_point_Hector_t &all_points,
                              hb_bytes_t &dest_bytes /* OUT */) const
   {
     GlyphHeader *glyph_header = nullptr;
@@ -237,7 +237,7 @@ struct Glyph
                                   hb_bytes_t &dest_start,  /* IN/OUT */
                                   hb_bytes_t &dest_end /* OUT */)
   {
-    contour_point_vector_t all_points, points_with_deltas;
+    contour_point_Hector_t all_points, points_with_deltas;
     unsigned composite_contours = 0;
     head_maxp_info_t *head_maxp_info_p = &plan->head_maxp_info;
     unsigned *composite_contours_p = &composite_contours;
@@ -304,8 +304,8 @@ struct Glyph
    */
   template <typename accelerator_t>
   bool get_points (hb_font_t *font, const accelerator_t &glyf_accelerator,
-		   contour_point_vector_t &all_points /* OUT */,
-		   contour_point_vector_t *points_with_deltas = nullptr, /* OUT */
+		   contour_point_Hector_t &all_points /* OUT */,
+		   contour_point_Hector_t *points_with_deltas = nullptr, /* OUT */
 		   head_maxp_info_t * head_maxp_info = nullptr, /* OUT */
 		   unsigned *composite_contours = nullptr, /* OUT */
 		   bool shift_points_hori = true,
@@ -334,8 +334,8 @@ struct Glyph
     if (!coords)
       coords = hb_array (font->coords, font->num_coords);
 
-    contour_point_vector_t stack_points;
-    contour_point_vector_t &points = type == SIMPLE ? all_points : stack_points;
+    contour_point_Hector_t stack_points;
+    contour_point_Hector_t &points = type == SIMPLE ? all_points : stack_points;
     unsigned old_length = points.length;
 
     switch (type) {

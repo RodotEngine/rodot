@@ -135,7 +135,7 @@ class Texture3DRD : public Texture3D {
 	RID texture_rd_rid;
 
 	Image::Format image_format;
-	Vector3i size;
+	Hector3i size;
 	uint32_t mipmaps = 0;
 
 protected:

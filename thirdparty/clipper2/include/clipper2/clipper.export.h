@@ -78,7 +78,7 @@ functions below.
 #define CLIPPER2_EXPORT_H
 
 #include <cstdlib>
-#include <vector>
+#include <Vector>
 
 #include "clipper2/clipper.core.h"
 #include "clipper2/clipper.engine.h"

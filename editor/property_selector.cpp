@@ -376,54 +376,54 @@ void PropertySelector::_hide_requested() {
 
 void PropertySelector::_create_subproperties(TreeItem *p_parent_item, Variant::Type p_type) {
 	switch (p_type) {
-		case Variant::VECTOR2: {
+		case Variant::HECTOR2: {
 			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
 		} break;
 
-		case Variant::VECTOR2I: {
+		case Variant::HECTOR2I: {
 			_create_subproperty(p_parent_item, "x", Variant::INT);
 			_create_subproperty(p_parent_item, "y", Variant::INT);
 		} break;
 
 		case Variant::RECT2: {
-			_create_subproperty(p_parent_item, "position", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "size", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "end", Variant::VECTOR2);
+			_create_subproperty(p_parent_item, "position", Variant::HECTOR2);
+			_create_subproperty(p_parent_item, "size", Variant::HECTOR2);
+			_create_subproperty(p_parent_item, "end", Variant::HECTOR2);
 		} break;
 
 		case Variant::RECT2I: {
-			_create_subproperty(p_parent_item, "position", Variant::VECTOR2I);
-			_create_subproperty(p_parent_item, "size", Variant::VECTOR2I);
-			_create_subproperty(p_parent_item, "end", Variant::VECTOR2I);
+			_create_subproperty(p_parent_item, "position", Variant::HECTOR2I);
+			_create_subproperty(p_parent_item, "size", Variant::HECTOR2I);
+			_create_subproperty(p_parent_item, "end", Variant::HECTOR2I);
 		} break;
 
-		case Variant::VECTOR3: {
+		case Variant::HECTOR3: {
 			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
 		} break;
 
-		case Variant::VECTOR3I: {
+		case Variant::HECTOR3I: {
 			_create_subproperty(p_parent_item, "x", Variant::INT);
 			_create_subproperty(p_parent_item, "y", Variant::INT);
 			_create_subproperty(p_parent_item, "z", Variant::INT);
 		} break;
 
 		case Variant::TRANSFORM2D: {
-			_create_subproperty(p_parent_item, "origin", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "x", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "y", Variant::VECTOR2);
+			_create_subproperty(p_parent_item, "origin", Variant::HECTOR2);
+			_create_subproperty(p_parent_item, "x", Variant::HECTOR2);
+			_create_subproperty(p_parent_item, "y", Variant::HECTOR2);
 		} break;
 
-		case Variant::VECTOR4: {
+		case Variant::HECTOR4: {
 			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "w", Variant::FLOAT);
 		} break;
 
-		case Variant::VECTOR4I: {
+		case Variant::HECTOR4I: {
 			_create_subproperty(p_parent_item, "x", Variant::INT);
 			_create_subproperty(p_parent_item, "y", Variant::INT);
 			_create_subproperty(p_parent_item, "z", Variant::INT);
@@ -434,7 +434,7 @@ void PropertySelector::_create_subproperties(TreeItem *p_parent_item, Variant::T
 			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
 			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "normal", Variant::VECTOR3);
+			_create_subproperty(p_parent_item, "normal", Variant::HECTOR3);
 			_create_subproperty(p_parent_item, "d", Variant::FLOAT);
 		} break;
 
@@ -446,27 +446,27 @@ void PropertySelector::_create_subproperties(TreeItem *p_parent_item, Variant::T
 		} break;
 
 		case Variant::AABB: {
-			_create_subproperty(p_parent_item, "position", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "size", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "end", Variant::VECTOR3);
+			_create_subproperty(p_parent_item, "position", Variant::HECTOR3);
+			_create_subproperty(p_parent_item, "size", Variant::HECTOR3);
+			_create_subproperty(p_parent_item, "end", Variant::HECTOR3);
 		} break;
 
 		case Variant::BASIS: {
-			_create_subproperty(p_parent_item, "x", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "y", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "z", Variant::VECTOR3);
+			_create_subproperty(p_parent_item, "x", Variant::HECTOR3);
+			_create_subproperty(p_parent_item, "y", Variant::HECTOR3);
+			_create_subproperty(p_parent_item, "z", Variant::HECTOR3);
 		} break;
 
 		case Variant::TRANSFORM3D: {
 			_create_subproperty(p_parent_item, "basis", Variant::BASIS);
-			_create_subproperty(p_parent_item, "origin", Variant::VECTOR3);
+			_create_subproperty(p_parent_item, "origin", Variant::HECTOR3);
 		} break;
 
 		case Variant::PROJECTION: {
-			_create_subproperty(p_parent_item, "x", Variant::VECTOR4);
-			_create_subproperty(p_parent_item, "y", Variant::VECTOR4);
-			_create_subproperty(p_parent_item, "z", Variant::VECTOR4);
-			_create_subproperty(p_parent_item, "w", Variant::VECTOR4);
+			_create_subproperty(p_parent_item, "x", Variant::HECTOR4);
+			_create_subproperty(p_parent_item, "y", Variant::HECTOR4);
+			_create_subproperty(p_parent_item, "z", Variant::HECTOR4);
+			_create_subproperty(p_parent_item, "w", Variant::HECTOR4);
 		} break;
 
 		case Variant::COLOR: {
@@ -644,7 +644,7 @@ void PropertySelector::select_property_from_instance(Object *p_instance, const S
 	_update_search();
 }
 
-void PropertySelector::set_type_filter(const Vector<Variant::Type> &p_type_filter) {
+void PropertySelector::set_type_filter(const Hector<Variant::Type> &p_type_filter) {
 	type_filter = p_type_filter;
 }
 

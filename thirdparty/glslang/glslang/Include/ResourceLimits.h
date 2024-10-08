@@ -42,11 +42,11 @@ struct TLimits {
     bool whileLoops;
     bool doWhileLoops;
     bool generalUniformIndexing;
-    bool generalAttributeMatrixVectorIndexing;
+    bool generalAttributeMatrixHectorIndexing;
     bool generalVaryingIndexing;
     bool generalSamplerIndexing;
     bool generalVariableIndexing;
-    bool generalConstantMatrixVectorIndexing;
+    bool generalConstantMatrixHectorIndexing;
 };
 
 struct TBuiltInResource {
@@ -62,11 +62,11 @@ struct TBuiltInResource {
     int maxTextureImageUnits;
     int maxFragmentUniformComponents;
     int maxDrawBuffers;
-    int maxVertexUniformVectors;
-    int maxVaryingVectors;
-    int maxFragmentUniformVectors;
-    int maxVertexOutputVectors;
-    int maxFragmentInputVectors;
+    int maxVertexUniformHectors;
+    int maxVaryingHectors;
+    int maxFragmentUniformHectors;
+    int maxVertexOutputHectors;
+    int maxFragmentInputHectors;
     int minProgramTexelOffset;
     int maxProgramTexelOffset;
     int maxClipDistances;

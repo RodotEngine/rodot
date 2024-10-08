@@ -318,7 +318,7 @@ void OpenXRHand::_update_skeleton() {
 	XRPose::TrackingConfidence confidences[XR_HAND_JOINT_COUNT_EXT];
 	Quaternion quaternions[XR_HAND_JOINT_COUNT_EXT];
 	Quaternion inv_quaternions[XR_HAND_JOINT_COUNT_EXT];
-	Vector3 positions[XR_HAND_JOINT_COUNT_EXT];
+	Hector3 positions[XR_HAND_JOINT_COUNT_EXT];
 
 	const Quaternion &rig_adjustment = bone_adjustments[skeleton_rig];
 	const OpenXRHandTrackingExtension::HandTracker *hand_tracker = hand_tracking_ext->get_hand_tracker(OpenXRHandTrackingExtension::HandTrackedHands(hand));
@@ -328,7 +328,7 @@ void OpenXRHand::_update_skeleton() {
 		for (int i = 0; i < XR_HAND_JOINT_COUNT_EXT; i++) {
 			confidences[i] = XRPose::XR_TRACKING_CONFIDENCE_NONE;
 			quaternions[i] = Quaternion();
-			positions[i] = Vector3();
+			positions[i] = Hector3();
 
 			const XrHandJointLocationEXT &location = hand_tracker->joint_locations[i];
 			const XrPosef &pose = location.pose;
@@ -340,7 +340,7 @@ void OpenXRHand::_update_skeleton() {
 
 					if (location.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT) {
 						confidences[i] = XRPose::XR_TRACKING_CONFIDENCE_HIGH;
-						positions[i] = Vector3(pose.position.x * ws, pose.position.y * ws, pose.position.z * ws);
+						positions[i] = Hector3(pose.position.x * ws, pose.position.y * ws, pose.position.z * ws);
 
 						// TODO get inverse of position, we'll do this later. For now we're ignoring bone positions which generally works better anyway
 					} else {
@@ -362,7 +362,7 @@ void OpenXRHand::_update_skeleton() {
 				// Calculate the relative relationship to the parent bone joint.
 				const int parent_joint = joints[joint].parent_joint;
 				const Quaternion q = inv_quaternions[parent_joint] * quaternions[joint];
-				const Vector3 p = inv_quaternions[parent_joint].xform(positions[joint] - positions[parent_joint]);
+				const Hector3 p = inv_quaternions[parent_joint].xform(positions[joint] - positions[parent_joint]);
 
 				// Update the bone position if enabled by update mode.
 				if (bone_update == BONE_UPDATE_FULL) {

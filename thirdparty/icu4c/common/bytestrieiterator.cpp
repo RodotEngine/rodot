@@ -35,10 +35,10 @@ BytesTrie::Iterator::Iterator(const void *trieBytes, int32_t maxStringLength,
     // a public API header for which we would want it to depend only on
     // other public headers.
     // Unlike BytesTrie itself, its Iterator performs memory allocations anyway
-    // via the CharString and UVector32 implementations, so this additional
+    // via the CharString and UHector32 implementations, so this additional
     // cost is minimal.
     str_=new CharString();
-    stack_=new UVector32(errorCode);
+    stack_=new UHector32(errorCode);
     if(U_SUCCESS(errorCode) && (str_==nullptr || stack_==nullptr)) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
@@ -54,7 +54,7 @@ BytesTrie::Iterator::Iterator(const BytesTrie &trie, int32_t maxStringLength,
         return;
     }
     str_=new CharString();
-    stack_=new UVector32(errorCode);
+    stack_=new UHector32(errorCode);
     if(U_FAILURE(errorCode)) {
         return;
     }

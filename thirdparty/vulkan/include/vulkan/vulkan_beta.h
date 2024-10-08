@@ -191,11 +191,11 @@ typedef struct VkAccelerationStructureTrianglesDisplacementMicromapNV {
     VkStructureType                     sType;
     void*                               pNext;
     VkFormat                            displacementBiasAndScaleFormat;
-    VkFormat                            displacementVectorFormat;
+    VkFormat                            displacementHectorFormat;
     VkDeviceOrHostAddressConstKHR       displacementBiasAndScaleBuffer;
     VkDeviceSize                        displacementBiasAndScaleStride;
-    VkDeviceOrHostAddressConstKHR       displacementVectorBuffer;
-    VkDeviceSize                        displacementVectorStride;
+    VkDeviceOrHostAddressConstKHR       displacementHectorBuffer;
+    VkDeviceSize                        displacementHectorStride;
     VkDeviceOrHostAddressConstKHR       displacedMicromapPrimitiveFlags;
     VkDeviceSize                        displacedMicromapPrimitiveFlagsStride;
     VkIndexType                         indexType;

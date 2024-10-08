@@ -74,7 +74,7 @@
 		<member name="shape_type" type="String" setter="set_shape_type" getter="get_shape_type" default="&quot;&quot;">
 			The type of shape this shape represents. Valid values are "box", "capsule", "cylinder", "sphere", "hull", and "trimesh".
 		</member>
-		<member name="size" type="Vector3" setter="set_size" getter="get_size" default="Vector3(1, 1, 1)">
+		<member name="size" type="Hector3" setter="set_size" getter="get_size" default="Hector3(1, 1, 1)">
 			The size of the shape, in meters. This is only used when the shape type is "box", and it represents the "diameter" of the box. This value should not be negative.
 		</member>
 	</members>

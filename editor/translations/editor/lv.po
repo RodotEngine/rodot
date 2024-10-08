@@ -3253,7 +3253,7 @@ msgstr "Transformēšanas funkcija."
 msgid "Transform constant."
 msgstr "Transformēt konstanti."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "Vektora funkcija."
 
 msgid "Remove this project from the list?"

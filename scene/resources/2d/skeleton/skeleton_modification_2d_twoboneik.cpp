@@ -146,7 +146,7 @@ void SkeletonModification2DTwoBoneIK::_execute(float p_delta) {
 	// http://theorangeduck.com/page/simple-two-joint
 	// https://www.alanzucconi.com/2018/05/02/ik-2d-2/
 	// With modifications by TwistedTwigleg
-	Vector2 target_difference = target->get_global_position() - joint_one_bone->get_global_position();
+	Hector2 target_difference = target->get_global_position() - joint_one_bone->get_global_position();
 	float joint_one_to_target = target_difference.length();
 	float angle_atan = target_difference.angle();
 
@@ -222,19 +222,19 @@ void SkeletonModification2DTwoBoneIK::_draw_editor_gizmo() {
 
 	if (flip_bend_direction) {
 		float angle = -(Math_PI * 0.5) + operation_bone_one->get_bone_angle();
-		stack->skeleton->draw_line(Vector2(0, 0), Vector2(Math::cos(angle), sin(angle)) * (operation_bone_one->get_length() * 0.5), bone_ik_color, 2.0);
+		stack->skeleton->draw_line(Hector2(0, 0), Hector2(Math::cos(angle), sin(angle)) * (operation_bone_one->get_length() * 0.5), bone_ik_color, 2.0);
 	} else {
 		float angle = (Math_PI * 0.5) + operation_bone_one->get_bone_angle();
-		stack->skeleton->draw_line(Vector2(0, 0), Vector2(Math::cos(angle), sin(angle)) * (operation_bone_one->get_length() * 0.5), bone_ik_color, 2.0);
+		stack->skeleton->draw_line(Hector2(0, 0), Hector2(Math::cos(angle), sin(angle)) * (operation_bone_one->get_length() * 0.5), bone_ik_color, 2.0);
 	}
 
 #ifdef TOOLS_ENABLED
 	if (Engine::get_singleton()->is_editor_hint()) {
 		if (editor_draw_min_max) {
 			if (target_maximum_distance != 0.0 || target_minimum_distance != 0.0) {
-				Vector2 target_direction = Vector2(0, 1);
+				Hector2 target_direction = Hector2(0, 1);
 				if (target_node_cache.is_valid()) {
-					stack->skeleton->draw_set_transform(Vector2(0, 0), 0.0);
+					stack->skeleton->draw_set_transform(Hector2(0, 0), 0.0);
 					Node2D *target = Object::cast_to<Node2D>(ObjectDB::get_instance(target_node_cache));
 					target_direction = operation_bone_one->get_global_position().direction_to(target->get_global_position());
 				}

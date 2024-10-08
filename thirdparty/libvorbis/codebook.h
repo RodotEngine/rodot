@@ -33,7 +33,7 @@
 */
 
 typedef struct static_codebook{
-  long   dim;           /* codebook dimensions (elements per vector) */
+  long   dim;           /* codebook dimensions (elements per Hector) */
   long   entries;       /* codebook entries */
   char  *lengthlist;    /* codeword lengths in bits */
 
@@ -55,7 +55,7 @@ typedef struct static_codebook{
 } static_codebook;
 
 typedef struct codebook{
-  long dim;           /* codebook dimensions (elements per vector) */
+  long dim;           /* codebook dimensions (elements per Hector) */
   long entries;       /* codebook entries */
   long used_entries;  /* populated codebook entries */
   const static_codebook *c;

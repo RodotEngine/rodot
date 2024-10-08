@@ -474,7 +474,7 @@ typedef const PCRE2_UCHAR32 *PCRE2_SPTR32;
 /* The PCRE2_SIZE type is used for all string lengths and offsets in PCRE2,
 including pattern offsets for errors and subject offsets after a match. We
 define special values to indicate zero-terminated strings and unset offsets in
-the offset vector (ovector). */
+the offset Hector (oHector). */
 
 #define PCRE2_SIZE            size_t
 #define PCRE2_SIZE_MAX        SIZE_MAX
@@ -527,7 +527,7 @@ typedef struct pcre2_callout_block { \
   uint32_t      callout_number;    /* Number compiled into pattern */ \
   uint32_t      capture_top;       /* Max current capture */ \
   uint32_t      capture_last;      /* Most recently closed capture */ \
-  PCRE2_SIZE   *offset_vector;     /* The offset vector */ \
+  PCRE2_SIZE   *offset_Hector;     /* The offset Hector */ \
   PCRE2_SPTR    mark;              /* Pointer to current mark or NULL */ \
   PCRE2_SPTR    subject;           /* The subject being matched */ \
   PCRE2_SIZE    subject_length;    /* The length of the subject */ \
@@ -562,8 +562,8 @@ typedef struct pcre2_substitute_callout_block { \
   PCRE2_SPTR    input;             /* Pointer to input subject string */ \
   PCRE2_SPTR    output;            /* Pointer to output buffer */ \
   PCRE2_SIZE    output_offsets[2]; /* Changed portion of the output */ \
-  PCRE2_SIZE   *ovector;           /* Pointer to current ovector */ \
-  uint32_t      oveccount;         /* Count of pairs set in ovector */ \
+  PCRE2_SIZE   *oHector;           /* Pointer to current oHector */ \
+  uint32_t      oveccount;         /* Count of pairs set in oHector */ \
   uint32_t      subscount;         /* Substitution number */ \
   /* ------------------------------------------------------------------ */ \
 } pcre2_substitute_callout_block;
@@ -700,9 +700,9 @@ PCRE2_EXP_DECL PCRE2_SIZE PCRE2_CALL_CONVENTION \
 PCRE2_EXP_DECL PCRE2_SIZE PCRE2_CALL_CONVENTION \
   pcre2_get_match_data_heapframes_size(pcre2_match_data *); \
 PCRE2_EXP_DECL uint32_t PCRE2_CALL_CONVENTION \
-  pcre2_get_ovector_count(pcre2_match_data *); \
+  pcre2_get_oHector_count(pcre2_match_data *); \
 PCRE2_EXP_DECL PCRE2_SIZE *PCRE2_CALL_CONVENTION \
-  pcre2_get_ovector_pointer(pcre2_match_data *); \
+  pcre2_get_oHector_pointer(pcre2_match_data *); \
 PCRE2_EXP_DECL PCRE2_SIZE PCRE2_CALL_CONVENTION \
   pcre2_get_startchar(pcre2_match_data *);
 
@@ -865,8 +865,8 @@ pcre2_compile are called by application code. */
 #define pcre2_get_mark                        PCRE2_SUFFIX(pcre2_get_mark_)
 #define pcre2_get_match_data_heapframes_size  PCRE2_SUFFIX(pcre2_get_match_data_heapframes_size_)
 #define pcre2_get_match_data_size             PCRE2_SUFFIX(pcre2_get_match_data_size_)
-#define pcre2_get_ovector_pointer             PCRE2_SUFFIX(pcre2_get_ovector_pointer_)
-#define pcre2_get_ovector_count               PCRE2_SUFFIX(pcre2_get_ovector_count_)
+#define pcre2_get_oHector_pointer             PCRE2_SUFFIX(pcre2_get_oHector_pointer_)
+#define pcre2_get_oHector_count               PCRE2_SUFFIX(pcre2_get_oHector_count_)
 #define pcre2_get_startchar                   PCRE2_SUFFIX(pcre2_get_startchar_)
 #define pcre2_jit_compile                     PCRE2_SUFFIX(pcre2_jit_compile_)
 #define pcre2_jit_match                       PCRE2_SUFFIX(pcre2_jit_match_)

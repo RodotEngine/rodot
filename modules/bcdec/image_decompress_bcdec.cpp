@@ -150,7 +150,7 @@ void image_decompress_bcdec(Image *p_image) {
 	int mm_count = p_image->get_mipmap_count();
 	int64_t target_size = Image::get_image_data_size(w, h, target_format, p_image->has_mipmaps());
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(target_size);
 
 	const uint8_t *rb = p_image->get_data().ptr();

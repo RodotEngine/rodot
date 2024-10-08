@@ -68,7 +68,7 @@ class AudioDriverWASAPI : public AudioDriver {
 	Mutex mutex;
 	Thread thread;
 
-	Vector<int32_t> samples_in;
+	Hector<int32_t> samples_in;
 
 	unsigned int channels = 0;
 	int mix_rate = 0;

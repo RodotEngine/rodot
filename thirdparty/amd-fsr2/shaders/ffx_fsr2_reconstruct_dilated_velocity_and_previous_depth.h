@@ -22,12 +22,12 @@
 #ifndef FFX_FSR2_RECONSTRUCT_DILATED_VELOCITY_AND_PREVIOUS_DEPTH_H
 #define FFX_FSR2_RECONSTRUCT_DILATED_VELOCITY_AND_PREVIOUS_DEPTH_H
 
-void ReconstructPrevDepth(FfxInt32x2 iPxPos, FfxFloat32 fDepth, FfxFloat32x2 fMotionVector, FfxInt32x2 iPxDepthSize)
+void ReconstructPrevDepth(FfxInt32x2 iPxPos, FfxFloat32 fDepth, FfxFloat32x2 fMotionHector, FfxInt32x2 iPxDepthSize)
 {
-    fMotionVector *= FfxFloat32(length(fMotionVector * DisplaySize()) > 0.1f);
+    fMotionHector *= FfxFloat32(length(fMotionHector * DisplaySize()) > 0.1f);
 
     FfxFloat32x2 fUv = (iPxPos + FfxFloat32(0.5)) / iPxDepthSize;
-    FfxFloat32x2 fReprojectedUv = fUv + fMotionVector;
+    FfxFloat32x2 fReprojectedUv = fUv + fMotionHector;
  
     BilinearSamplingData bilinearInfo = GetBilinearSamplingData(fReprojectedUv, RenderSize());
 
@@ -122,20 +122,20 @@ void ReconstructAndDilate(FfxInt32x2 iPxLrPos)
 
     FindNearestDepth(iPxLrPos, RenderSize(), fDilatedDepth, iNearestDepthCoord);
 
-#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_VECTORS
+#if FFX_FSR2_OPTION_LOW_RESOLUTION_MOTION_HectorS
     FfxInt32x2 iSamplePos = iPxLrPos;
-    FfxInt32x2 iMotionVectorPos = iNearestDepthCoord;
+    FfxInt32x2 iMotionHectorPos = iNearestDepthCoord;
 #else
     FfxInt32x2 iSamplePos = ComputeHrPosFromLrPos(iPxLrPos);
-    FfxInt32x2 iMotionVectorPos = ComputeHrPosFromLrPos(iNearestDepthCoord);
+    FfxInt32x2 iMotionHectorPos = ComputeHrPosFromLrPos(iNearestDepthCoord);
 #endif
 
-    FfxFloat32x2 fDilatedMotionVector = LoadInputMotionVector(iMotionVectorPos);
+    FfxFloat32x2 fDilatedMotionHector = LoadInputMotionHector(iMotionHectorPos);
 
     StoreDilatedDepth(iPxLrPos, fDilatedDepth);
-    StoreDilatedMotionVector(iPxLrPos, fDilatedMotionVector);
+    StoreDilatedMotionHector(iPxLrPos, fDilatedMotionHector);
 
-    ReconstructPrevDepth(iPxLrPos, fDilatedDepth, fDilatedMotionVector, RenderSize());
+    ReconstructPrevDepth(iPxLrPos, fDilatedDepth, fDilatedMotionHector, RenderSize());
 
     FfxFloat32 fLockInputLuma = ComputeLockInputLuma(iPxLrPos);
     StoreLockInputLuma(iPxLrPos, fLockInputLuma);

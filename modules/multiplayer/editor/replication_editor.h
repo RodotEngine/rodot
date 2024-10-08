@@ -80,7 +80,7 @@ private:
 	void _add_property(const NodePath &p_property, bool p_spawn, SceneReplicationConfig::ReplicationMode p_mode);
 
 	void _pick_node_filter_text_changed(const String &p_newtext);
-	void _pick_node_select_recursive(TreeItem *p_item, const String &p_filter, Vector<Node *> &p_select_candidates);
+	void _pick_node_select_recursive(TreeItem *p_item, const String &p_filter, Hector<Node *> &p_select_candidates);
 	void _pick_node_selected(NodePath p_path);
 
 	void _pick_new_property();

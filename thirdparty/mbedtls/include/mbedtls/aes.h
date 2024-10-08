@@ -280,7 +280,7 @@ int mbedtls_aes_crypt_ecb(mbedtls_aes_context *ctx,
  *                 #MBEDTLS_AES_DECRYPT.
  * \param length   The length of the input data in Bytes. This must be a
  *                 multiple of the block size (\c 16 Bytes).
- * \param iv       Initialization vector (updated after use).
+ * \param iv       Initialization Hector (updated after use).
  *                 It must be a readable and writeable buffer of \c 16 Bytes.
  * \param input    The buffer holding the input data.
  *                 It must be readable and of size \p length Bytes.
@@ -376,7 +376,7 @@ int mbedtls_aes_crypt_xts(mbedtls_aes_xts_context *ctx,
  * \param length   The length of the input data in Bytes.
  * \param iv_off   The offset in IV (updated after use).
  *                 It must point to a valid \c size_t.
- * \param iv       The initialization vector (updated after use).
+ * \param iv       The initialization Hector (updated after use).
  *                 It must be a readable and writeable buffer of \c 16 Bytes.
  * \param input    The buffer holding the input data.
  *                 It must be readable and of size \p length Bytes.
@@ -421,7 +421,7 @@ int mbedtls_aes_crypt_cfb128(mbedtls_aes_context *ctx,
  * \param mode     The AES operation: #MBEDTLS_AES_ENCRYPT or
  *                 #MBEDTLS_AES_DECRYPT
  * \param length   The length of the input data.
- * \param iv       The initialization vector (updated after use).
+ * \param iv       The initialization Hector (updated after use).
  *                 It must be a readable and writeable buffer of \c 16 Bytes.
  * \param input    The buffer holding the input data.
  *                 It must be readable and of size \p length Bytes.
@@ -453,7 +453,7 @@ int mbedtls_aes_crypt_cfb8(mbedtls_aes_context *ctx,
  *              The OFB operation is identical for encryption or decryption,
  *              therefore no operation mode needs to be specified.
  *
- * \note        Upon exit, the content of iv, the Initialisation Vector, is
+ * \note        Upon exit, the content of iv, the Initialisation Hector, is
  *              updated so that you can call the same function again on the next
  *              block(s) of data and get the same result as if it was encrypted
  *              in one call. This allows a "streaming" usage, by initialising
@@ -463,12 +463,12 @@ int mbedtls_aes_crypt_cfb8(mbedtls_aes_context *ctx,
  *              For non-streaming use, the iv should be initialised on each call
  *              to a unique value, and iv_off set to 0 on each call.
  *
- *              If you need to retain the contents of the initialisation vector,
+ *              If you need to retain the contents of the initialisation Hector,
  *              you must either save it manually or use the cipher module
  *              instead.
  *
- * \warning     For the OFB mode, the initialisation vector must be unique
- *              every encryption operation. Reuse of an initialisation vector
+ * \warning     For the OFB mode, the initialisation Hector must be unique
+ *              every encryption operation. Reuse of an initialisation Hector
  *              will compromise security.
  *
  * \param ctx      The AES context to use for encryption or decryption.
@@ -476,7 +476,7 @@ int mbedtls_aes_crypt_cfb8(mbedtls_aes_context *ctx,
  * \param length   The length of the input data.
  * \param iv_off   The offset in IV (updated after use).
  *                 It must point to a valid \c size_t.
- * \param iv       The initialization vector (updated after use).
+ * \param iv       The initialization Hector (updated after use).
  *                 It must be a readable and writeable buffer of \c 16 Bytes.
  * \param input    The buffer holding the input data.
  *                 It must be readable and of size \p length Bytes.

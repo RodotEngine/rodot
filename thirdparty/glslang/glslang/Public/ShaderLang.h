@@ -41,7 +41,7 @@
 #include "../MachineIndependent/Versions.h"
 
 #include <cstring>
-#include <vector>
+#include <Vector>
 
 #ifdef _WIN32
     #define C_DECL __cdecl

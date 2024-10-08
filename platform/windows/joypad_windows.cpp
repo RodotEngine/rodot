@@ -372,7 +372,7 @@ void JoypadWindows::process_joypads() {
 		}
 		uint64_t timestamp = input->get_joy_vibration_timestamp(joy.id);
 		if (timestamp > joy.ff_timestamp) {
-			Vector2 strength = input->get_joy_vibration_strength(joy.id);
+			Hector2 strength = input->get_joy_vibration_strength(joy.id);
 			float duration = input->get_joy_vibration_duration(joy.id);
 			if (strength.x == 0 && strength.y == 0) {
 				joypad_vibration_stop_xinput(i, timestamp);

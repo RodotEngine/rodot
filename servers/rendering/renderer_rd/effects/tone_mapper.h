@@ -119,7 +119,7 @@ public:
 		float glow_intensity = 1.0;
 		float glow_map_strength = 0.0f;
 		float glow_levels[7] = { 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0 };
-		Vector2i glow_texture_size;
+		Hector2i glow_texture_size;
 		bool glow_use_bicubic_upscale = false;
 		RID glow_texture;
 		RID glow_map;
@@ -144,7 +144,7 @@ public:
 
 		bool use_fxaa = false;
 		bool use_debanding = false;
-		Vector2i texture_size;
+		Hector2i texture_size;
 		uint32_t view_count = 1;
 
 		bool convert_to_srgb = false;

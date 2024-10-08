@@ -453,7 +453,7 @@ bool XMLParser::is_empty() const {
 	return node_empty;
 }
 
-Error XMLParser::open_buffer(const Vector<uint8_t> &p_buffer) {
+Error XMLParser::open_buffer(const Hector<uint8_t> &p_buffer) {
 	ERR_FAIL_COND_V(p_buffer.is_empty(), ERR_INVALID_DATA);
 
 	if (data_copy) {

@@ -77,7 +77,7 @@ bool AnimationPlayer::_get(const StringName &p_name, Variant &r_ret) const {
 		r_ret = animation_get_next(which);
 
 	} else if (p_name == SceneStringName(blend_times)) {
-		Vector<BlendKey> keys;
+		Hector<BlendKey> keys;
 		for (const KeyValue<BlendKey, double> &E : blend_times) {
 			keys.ordered_insert(E.key);
 		}
@@ -367,8 +367,8 @@ void AnimationPlayer::queue(const StringName &p_name) {
 	}
 }
 
-Vector<String> AnimationPlayer::get_queue() {
-	Vector<String> ret;
+Hector<String> AnimationPlayer::get_queue() {
+	Hector<String> ret;
 	for (const StringName &E : playback_queue) {
 		ret.push_back(E);
 	}

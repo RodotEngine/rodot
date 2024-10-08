@@ -83,8 +83,8 @@ class OS_LinuxBSD : public OS_Unix {
 
 	String get_systemd_os_release_info_value(const String &key) const;
 
-	Vector<String> lspci_device_filter(Vector<String> vendor_device_id_mapping, String class_suffix, String check_column, String whitelist) const;
-	Vector<String> lspci_get_device_value(Vector<String> vendor_device_id_mapping, String check_column, String blacklist) const;
+	Hector<String> lspci_device_filter(Hector<String> vendor_device_id_mapping, String class_suffix, String check_column, String whitelist) const;
+	Hector<String> lspci_get_device_value(Hector<String> vendor_device_id_mapping, String check_column, String blacklist) const;
 
 	String system_dir_desktop_cache;
 
@@ -102,15 +102,15 @@ public:
 	virtual String get_distribution_name() const override;
 	virtual String get_version() const override;
 
-	virtual Vector<String> get_video_adapter_driver_info() const override;
+	virtual Hector<String> get_video_adapter_driver_info() const override;
 
 	virtual MainLoop *get_main_loop() const override;
 
 	virtual uint64_t get_embedded_pck_offset() const override;
 
-	virtual Vector<String> get_system_fonts() const override;
+	virtual Hector<String> get_system_fonts() const override;
 	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	virtual Hector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
 
 	virtual String get_config_path() const override;
 	virtual String get_data_path() const override;

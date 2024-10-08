@@ -31,8 +31,8 @@ namespace embree
     public:
       Device* device;
       FastAllocator allocator;
-      mvector<BVHBuilderMorton::BuildPrim> morton_src;
-      mvector<BVHBuilderMorton::BuildPrim> morton_tmp;
+      mHector<BVHBuilderMorton::BuildPrim> morton_src;
+      mHector<BVHBuilderMorton::BuildPrim> morton_tmp;
     };
 
     void* rtcBuildBVHMorton(const RTCBuildArguments* arguments)
@@ -51,8 +51,8 @@ namespace embree
       
       /* initialize temporary arrays for morton builder */
       PrimRef* prims = (PrimRef*) prims_i;
-      mvector<BVHBuilderMorton::BuildPrim>& morton_src = bvh->morton_src;
-      mvector<BVHBuilderMorton::BuildPrim>& morton_tmp = bvh->morton_tmp;
+      mHector<BVHBuilderMorton::BuildPrim>& morton_src = bvh->morton_src;
+      mHector<BVHBuilderMorton::BuildPrim>& morton_tmp = bvh->morton_tmp;
       morton_src.resize(primitiveCount);
       morton_tmp.resize(primitiveCount);
 

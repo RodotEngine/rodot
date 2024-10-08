@@ -35,10 +35,10 @@
 #include "core/object/class_db.h"
 #include "core/variant/variant.h"
 
-HashMap<StringName, LocalVector<GDExtensionCompatHashes::Mapping>> GDExtensionCompatHashes::mappings;
+HashMap<StringName, LocalHector<GDExtensionCompatHashes::Mapping>> GDExtensionCompatHashes::mappings;
 
 bool GDExtensionCompatHashes::lookup_current_hash(const StringName &p_class, const StringName &p_method, uint32_t p_legacy_hash, uint32_t *r_current_hash) {
-	LocalVector<Mapping> *methods = mappings.getptr(p_class);
+	LocalHector<Mapping> *methods = mappings.getptr(p_class);
 	if (!methods) {
 		return false;
 	}
@@ -54,7 +54,7 @@ bool GDExtensionCompatHashes::lookup_current_hash(const StringName &p_class, con
 }
 
 bool GDExtensionCompatHashes::get_legacy_hashes(const StringName &p_class, const StringName &p_method, Array &r_hashes, bool p_check_valid) {
-	LocalVector<Mapping> *methods = mappings.getptr(p_class);
+	LocalHector<Mapping> *methods = mappings.getptr(p_class);
 	if (!methods) {
 		return false;
 	}
@@ -442,7 +442,7 @@ void GDExtensionCompatHashes::initialize() {
 		{ "add_surface", 4122361985, 1740448849 },
 	});
 	mappings.insert("Input", {
-		{ "get_vector", 1517139831, 2479607902 },
+		{ "get_Hector", 1517139831, 2479607902 },
 		{ "start_joy_vibration", 1890603622, 2576575033 },
 		{ "action_press", 573731101, 1713091165 },
 #ifdef REAL_T_IS_DOUBLE

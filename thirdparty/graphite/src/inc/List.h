@@ -21,7 +21,7 @@ ptrdiff_t distance(T* first, T* last) { return last-first; }
 
 
 template <typename T>
-class Vector
+class Hector
 {
     T * m_first, *m_last, *m_end;
 public:
@@ -30,12 +30,12 @@ public:
     typedef       T *   iterator;
     typedef const T *   const_iterator;
 
-    Vector() : m_first(0), m_last(0), m_end(0) {}
-    Vector(size_t n, const T& value = T())      : m_first(0), m_last(0), m_end(0) { insert(begin(), n, value); }
-    Vector(const Vector<T> &rhs)                : m_first(0), m_last(0), m_end(0) { insert(begin(), rhs.begin(), rhs.end()); }
+    Hector() : m_first(0), m_last(0), m_end(0) {}
+    Hector(size_t n, const T& value = T())      : m_first(0), m_last(0), m_end(0) { insert(begin(), n, value); }
+    Hector(const Hector<T> &rhs)                : m_first(0), m_last(0), m_end(0) { insert(begin(), rhs.begin(), rhs.end()); }
     template <typename I>
-    Vector(I first, const I last)               : m_first(0), m_last(0), m_end(0) { insert(begin(), first, last); }
-    ~Vector() { clear(); free(m_first); }
+    Hector(I first, const I last)               : m_first(0), m_last(0), m_end(0) { insert(begin(), first, last); }
+    ~Hector() { clear(); free(m_first); }
 
     iterator            begin()         { return m_first; }
     const_iterator      begin() const   { return m_first; }
@@ -55,7 +55,7 @@ public:
     reference           back()          { assert(size() > 0); return *(end()-1); }
     const_reference     back() const    { assert(size() > 0); return *(end()-1); }
 
-    Vector<T>         & operator = (const Vector<T> & rhs) { assign(rhs.begin(), rhs.end()); return *this; }
+    Hector<T>         & operator = (const Hector<T> & rhs) { assign(rhs.begin(), rhs.end()); return *this; }
     reference           operator [] (size_t n)          { assert(size() > n); return m_first[n]; }
     const_reference     operator [] (size_t n) const    { assert(size() > n); return m_first[n]; }
 
@@ -77,7 +77,7 @@ private:
 
 template <typename T>
 inline
-void Vector<T>::reserve(size_t n)
+void Hector<T>::reserve(size_t n)
 {
     if (n > capacity())
     {
@@ -93,7 +93,7 @@ void Vector<T>::reserve(size_t n)
 
 template <typename T>
 inline
-void Vector<T>::resize(size_t n, const T & v) {
+void Hector<T>::resize(size_t n, const T & v) {
     const ptrdiff_t d = n-size();
     if (d < 0)      erase(end()+d, end());
     else if (d > 0) insert(end(), d, v);
@@ -101,7 +101,7 @@ void Vector<T>::resize(size_t n, const T & v) {
 
 template<typename T>
 inline
-typename Vector<T>::iterator Vector<T>::_insert_default(iterator p, size_t n)
+typename Hector<T>::iterator Hector<T>::_insert_default(iterator p, size_t n)
 {
     assert(begin() <= p && p <= end());
     const ptrdiff_t i = p - begin();
@@ -115,7 +115,7 @@ typename Vector<T>::iterator Vector<T>::_insert_default(iterator p, size_t n)
 
 template<typename T>
 inline
-void Vector<T>::insert(iterator p, size_t n, const T & x)
+void Hector<T>::insert(iterator p, size_t n, const T & x)
 {
     p = _insert_default(p, n);
     // Copy in elements
@@ -124,7 +124,7 @@ void Vector<T>::insert(iterator p, size_t n, const T & x)
 
 template<typename T>
 inline
-void Vector<T>::insert(iterator p, const_iterator first, const_iterator last)
+void Hector<T>::insert(iterator p, const_iterator first, const_iterator last)
 {
     p = _insert_default(p, distance(first, last));
     // Copy in elements
@@ -133,7 +133,7 @@ void Vector<T>::insert(iterator p, const_iterator first, const_iterator last)
 
 template<typename T>
 inline
-typename Vector<T>::iterator Vector<T>::erase(iterator first, iterator last)
+typename Hector<T>::iterator Hector<T>::erase(iterator first, iterator last)
 {
     for (iterator e = first; e != last; ++e) e->~T();
     const size_t sz = distance(first, last);

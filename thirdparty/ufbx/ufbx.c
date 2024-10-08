@@ -285,11 +285,11 @@
 #endif
 
 #if !defined(UFBX_STANDARD_C) && defined(__clang__)
-	#define ufbxi_nounroll _Pragma("clang loop unroll(disable)") _Pragma("clang loop vectorize(disable)")
+	#define ufbxi_nounroll _Pragma("clang loop unroll(disable)") _Pragma("clang loop Hectorize(disable)")
 #elif !defined(UFBX_STANDARD_C) && UFBXI_GNUC >= 8
 	#define ufbxi_nounroll _Pragma("GCC unroll 0")
 #elif !defined(UFBX_STANDARD_C) && defined(_MSC_VER)
-	#define ufbxi_nounroll __pragma(loop(no_vector))
+	#define ufbxi_nounroll __pragma(loop(no_Hector))
 #else
 	#define ufbxi_nounroll
 #endif
@@ -4877,9 +4877,9 @@ static const char ufbxi_KeyCount[] = "KeyCount";
 static const char ufbxi_KeyTime[] = "KeyTime";
 static const char ufbxi_KeyValueFloat[] = "KeyValueFloat";
 static const char ufbxi_Key[] = "Key";
-static const char ufbxi_KnotVectorU[] = "KnotVectorU";
-static const char ufbxi_KnotVectorV[] = "KnotVectorV";
-static const char ufbxi_KnotVector[] = "KnotVector";
+static const char ufbxi_KnotHectorU[] = "KnotHectorU";
+static const char ufbxi_KnotHectorV[] = "KnotHectorV";
+static const char ufbxi_KnotHector[] = "KnotHector";
 static const char ufbxi_LayerElementBinormal[] = "LayerElementBinormal";
 static const char ufbxi_LayerElementColor[] = "LayerElementColor";
 static const char ufbxi_LayerElementEdgeCrease[] = "LayerElementEdgeCrease";
@@ -5172,9 +5172,9 @@ static const ufbx_string ufbxi_strings[] = {
 	{ ufbxi_KeyCount, 8 },
 	{ ufbxi_KeyTime, 7 },
 	{ ufbxi_KeyValueFloat, 13 },
-	{ ufbxi_KnotVector, 10 },
-	{ ufbxi_KnotVectorU, 11 },
-	{ ufbxi_KnotVectorV, 11 },
+	{ ufbxi_KnotHector, 10 },
+	{ ufbxi_KnotHectorU, 11 },
+	{ ufbxi_KnotHectorV, 11 },
 	{ ufbxi_Layer, 5 },
 	{ ufbxi_LayerElement, 12 },
 	{ ufbxi_LayerElementBinormal, 20 },
@@ -7418,15 +7418,15 @@ static bool ufbxi_is_array_node(ufbxi_context *uc, ufbxi_parse_state parent, con
 			info->type = uc->opts.ignore_geometry ? '-' : 'r';
 			info->flags = UFBXI_ARRAY_FLAG_RESULT;
 			return true;
-		} else if (name == ufbxi_KnotVector) {
+		} else if (name == ufbxi_KnotHector) {
 			info->type = uc->opts.ignore_geometry ? '-' : 'r';
 			info->flags = UFBXI_ARRAY_FLAG_RESULT;
 			return true;
-		} else if (name == ufbxi_KnotVectorU) {
+		} else if (name == ufbxi_KnotHectorU) {
 			info->type = uc->opts.ignore_geometry ? '-' : 'r';
 			info->flags = UFBXI_ARRAY_FLAG_RESULT;
 			return true;
-		} else if (name == ufbxi_KnotVectorV) {
+		} else if (name == ufbxi_KnotHectorV) {
 			info->type = uc->opts.ignore_geometry ? '-' : 'r';
 			info->flags = UFBXI_ARRAY_FLAG_RESULT;
 			return true;
@@ -10666,8 +10666,8 @@ static const ufbxi_prop_type_name ufbxi_prop_type_names[] = {
 	{ "Real", UFBX_PROP_NUMBER },
 	{ "Float", UFBX_PROP_NUMBER },
 	{ "Intensity", UFBX_PROP_NUMBER },
-	{ "Vector", UFBX_PROP_VECTOR },
-	{ "Vector3D", UFBX_PROP_VECTOR },
+	{ "Hector", UFBX_PROP_Hector },
+	{ "Hector3D", UFBX_PROP_Hector },
 	{ "Color", UFBX_PROP_COLOR },
 	{ "ColorAndAlpha", UFBX_PROP_COLOR_WITH_ALPHA },
 	{ "ColorRGB", UFBX_PROP_COLOR },
@@ -10918,7 +10918,7 @@ static const char *const ufbxi_node_prop_names[] = {
 	"TranslationMinX",
 	"TranslationMinY",
 	"TranslationMinZ",
-	"UpVectorProperty",
+	"UpHectorProperty",
 	"Visibility Inheritance",
 	"Visibility",
 	"notes",
@@ -13028,15 +13028,15 @@ ufbxi_nodiscard ufbxi_noinline static int ufbxi_read_nurbs_curve(ufbxi_context *
 
 	if (!uc->opts.ignore_geometry) {
 		ufbxi_value_array *points = ufbxi_find_array(node, ufbxi_Points, 'r');
-		ufbxi_value_array *knot = ufbxi_find_array(node, ufbxi_KnotVector, 'r');
+		ufbxi_value_array *knot = ufbxi_find_array(node, ufbxi_KnotHector, 'r');
 		ufbxi_check(points);
 		ufbxi_check(knot);
 		ufbxi_check(points->size % 4 == 0);
 
 		nurbs->control_points.count = points->size / 4;
 		nurbs->control_points.data = (ufbx_vec4*)points->data;
-		nurbs->basis.knot_vector.data = (ufbx_real*)knot->data;
-		nurbs->basis.knot_vector.count = knot->size;
+		nurbs->basis.knot_Hector.data = (ufbx_real*)knot->data;
+		nurbs->basis.knot_Hector.count = knot->size;
 	}
 
 	return 1;
@@ -13064,8 +13064,8 @@ ufbxi_nodiscard ufbxi_noinline static int ufbxi_read_nurbs_surface(ufbxi_context
 
 	if (!uc->opts.ignore_geometry) {
 		ufbxi_value_array *points = ufbxi_find_array(node, ufbxi_Points, 'r');
-		ufbxi_value_array *knot_u = ufbxi_find_array(node, ufbxi_KnotVectorU, 'r');
-		ufbxi_value_array *knot_v = ufbxi_find_array(node, ufbxi_KnotVectorV, 'r');
+		ufbxi_value_array *knot_u = ufbxi_find_array(node, ufbxi_KnotHectorU, 'r');
+		ufbxi_value_array *knot_v = ufbxi_find_array(node, ufbxi_KnotHectorV, 'r');
 		ufbxi_check(points);
 		ufbxi_check(knot_u);
 		ufbxi_check(knot_v);
@@ -13074,10 +13074,10 @@ ufbxi_nodiscard ufbxi_noinline static int ufbxi_read_nurbs_surface(ufbxi_context
 
 		nurbs->control_points.count = points->size / 4;
 		nurbs->control_points.data = (ufbx_vec4*)points->data;
-		nurbs->basis_u.knot_vector.data = (ufbx_real*)knot_u->data;
-		nurbs->basis_u.knot_vector.count = knot_u->size;
-		nurbs->basis_v.knot_vector.data = (ufbx_real*)knot_v->data;
-		nurbs->basis_v.knot_vector.count = knot_v->size;
+		nurbs->basis_u.knot_Hector.data = (ufbx_real*)knot_u->data;
+		nurbs->basis_u.knot_Hector.count = knot_u->size;
+		nurbs->basis_v.knot_Hector.data = (ufbx_real*)knot_v->data;
+		nurbs->basis_v.knot_Hector.count = knot_v->size;
 	}
 
 	return 1;
@@ -14049,11 +14049,11 @@ ufbxi_nodiscard ufbxi_noinline static int ufbxi_read_synthetic_attribute(ufbxi_c
 	} else if (sub_type == ufbxi_Null || sub_type == ufbxi_Marker) {
 		ufbxi_check(ufbxi_read_element(uc, node, &attrib_info, sizeof(ufbx_empty), UFBX_ELEMENT_EMPTY));
 	} else if (sub_type == ufbxi_NurbsCurve) {
-		if (!ufbxi_find_child(node, ufbxi_KnotVector)) return 1;
+		if (!ufbxi_find_child(node, ufbxi_KnotHector)) return 1;
 		ufbxi_check(ufbxi_read_nurbs_curve(uc, node, &attrib_info));
 	} else if (sub_type == ufbxi_NurbsSurface) {
-		if (!ufbxi_find_child(node, ufbxi_KnotVectorU)) return 1;
-		if (!ufbxi_find_child(node, ufbxi_KnotVectorV)) return 1;
+		if (!ufbxi_find_child(node, ufbxi_KnotHectorU)) return 1;
+		if (!ufbxi_find_child(node, ufbxi_KnotHectorV)) return 1;
 		ufbxi_check(ufbxi_read_nurbs_surface(uc, node, &attrib_info));
 	} else if (sub_type == ufbxi_Line) {
 		if (!ufbxi_find_child(node, ufbxi_Points)) return 1;
@@ -17436,9 +17436,9 @@ ufbxi_nodiscard ufbxi_noinline static int ufbxi_pre_finalize_scene(ufbxi_context
 					geometric_translation.z -= rotation_pivot.z;
 
 					ufbx_prop *dst = new_props + num_props;
-					ufbxi_init_synthetic_vec3_prop(&dst[0], ufbxi_RotationPivot, &ufbx_zero_vec3, UFBX_PROP_VECTOR);
-					ufbxi_init_synthetic_vec3_prop(&dst[1], ufbxi_ScalingPivot, &ufbx_zero_vec3, UFBX_PROP_VECTOR);
-					ufbxi_init_synthetic_vec3_prop(&dst[2], ufbxi_GeometricTranslation, &geometric_translation, UFBX_PROP_VECTOR);
+					ufbxi_init_synthetic_vec3_prop(&dst[0], ufbxi_RotationPivot, &ufbx_zero_vec3, UFBX_PROP_Hector);
+					ufbxi_init_synthetic_vec3_prop(&dst[1], ufbxi_ScalingPivot, &ufbx_zero_vec3, UFBX_PROP_Hector);
+					ufbxi_init_synthetic_vec3_prop(&dst[2], ufbxi_GeometricTranslation, &geometric_translation, UFBX_PROP_Hector);
 
 					node->props.props.data = new_props;
 					node->props.props.count = num_props + 3;
@@ -18466,8 +18466,8 @@ static const ufbxi_shader_mapping ufbxi_base_fbx_mapping[] = {
 	{ UFBX_MATERIAL_FBX_BUMP_FACTOR, 0, 0, ufbxi_mat_string("BumpFactor") },
 	{ UFBX_MATERIAL_FBX_DISPLACEMENT, 0, 0, ufbxi_mat_string("Displacement") },
 	{ UFBX_MATERIAL_FBX_DISPLACEMENT_FACTOR, 0, 0, ufbxi_mat_string("DisplacementFactor") },
-	{ UFBX_MATERIAL_FBX_VECTOR_DISPLACEMENT, 0, 0, ufbxi_mat_string("VectorDisplacement") },
-	{ UFBX_MATERIAL_FBX_VECTOR_DISPLACEMENT_FACTOR, 0, 0, ufbxi_mat_string("VectorDisplacementFactor") },
+	{ UFBX_MATERIAL_FBX_Hector_DISPLACEMENT, 0, 0, ufbxi_mat_string("HectorDisplacement") },
+	{ UFBX_MATERIAL_FBX_Hector_DISPLACEMENT_FACTOR, 0, 0, ufbxi_mat_string("HectorDisplacementFactor") },
 };
 
 static const ufbxi_shader_mapping ufbxi_obj_fbx_mapping[] = {
@@ -19166,7 +19166,7 @@ static const ufbxi_constraint_prop ufbxi_constraint_props[] = {
 	{ UFBXI_CONSTRAINT_PROP_TARGET, "Source" },
 	{ UFBXI_CONSTRAINT_PROP_TARGET, "Source (Parent)" },
 	{ UFBXI_CONSTRAINT_PROP_TARGET, "Aim At Object" },
-	{ UFBXI_CONSTRAINT_PROP_TARGET, "Pole Vector Object" },
+	{ UFBXI_CONSTRAINT_PROP_TARGET, "Pole Hector Object" },
 	{ UFBXI_CONSTRAINT_PROP_IK_EFFECTOR, "Effector" },
 	{ UFBXI_CONSTRAINT_PROP_IK_END_NODE, "End Joint" },
 	{ UFBXI_CONSTRAINT_PROP_AIM_UP, "World Up Object" },
@@ -19208,7 +19208,7 @@ ufbxi_nodiscard ufbxi_noinline static int ufbxi_finalize_nurbs_basis(ufbxi_conte
 
 	if (basis->order > 1) {
 		size_t degree = basis->order - 1;
-		ufbx_real_list knots = basis->knot_vector;
+		ufbx_real_list knots = basis->knot_Hector;
 		if (knots.count >= 2*degree + 1) {
 			basis->t_min = knots.data[degree];
 			basis->t_max = knots.data[knots.count - degree - 1];
@@ -22356,8 +22356,8 @@ ufbxi_noinline static void ufbxi_update_constraint(ufbx_constraint *constraint)
 		if (up_type >= 0 && up_type < UFBX_CONSTRAINT_AIM_UP_NONE) {
 			constraint->aim_up_type = (ufbx_constraint_aim_up_type)up_type;
 		}
-		constraint->aim_vector = ufbx_find_vec3(props, "AimVector", default_aim);
-		constraint->aim_up_vector = ufbx_find_vec3(props, "UpVector", default_up);
+		constraint->aim_Hector = ufbx_find_vec3(props, "AimHector", default_aim);
+		constraint->aim_up_Hector = ufbx_find_vec3(props, "UpHector", default_up);
 
 	} else if (constraint_type == UFBX_CONSTRAINT_PARENT) {
 		ufbxi_find_bool3(constraint->constrain_translation, props, "AffectTranslation", 1);
@@ -22373,7 +22373,7 @@ ufbxi_noinline static void ufbxi_update_constraint(ufbx_constraint *constraint)
 		constraint->constrain_rotation[0] = true;
 		constraint->constrain_rotation[1] = true;
 		constraint->constrain_rotation[2] = true;
-		constraint->ik_pole_vector = ufbx_find_vec3(props, "PoleVectorType", ufbx_zero_vec3);
+		constraint->ik_pole_Hector = ufbx_find_vec3(props, "PoleHectorType", ufbx_zero_vec3);
 	}
 }
 
@@ -30849,14 +30849,14 @@ ufbx_abi size_t ufbx_evaluate_nurbs_basis(const ufbx_nurbs_basis *basis, ufbx_re
 	ufbx_assert(degree >= 1);
 
 	// Binary search for the knot span `[min_u, max_u]` where `min_u <= u < max_u`
-	ufbx_real_list knots = basis->knot_vector;
+	ufbx_real_list knots = basis->knot_Hector;
 	size_t knot = SIZE_MAX;
 
 	if (u <= basis->t_min) {
 		knot = degree;
 		u = basis->t_min;
 	} else if (u >= basis->t_max) {
-		knot = basis->knot_vector.count - degree - 2;
+		knot = basis->knot_Hector.count - degree - 2;
 		u = basis->t_max;
 	} else {
 		ufbxi_macro_lower_bound_eq(ufbx_real, 8, &knot, knots.data, 0, knots.count - 1,

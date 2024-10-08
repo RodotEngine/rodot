@@ -517,7 +517,7 @@ Error VariantParser::get_token(Stream *p_stream, Token &r_token, int &line, Stri
 	return ERR_PARSE_ERROR;
 }
 
-Error VariantParser::_parse_enginecfg(Stream *p_stream, Vector<String> &strings, int &line, String &r_err_str) {
+Error VariantParser::_parse_enginecfg(Stream *p_stream, Hector<String> &strings, int &line, String &r_err_str) {
 	Token token;
 	get_token(p_stream, token, line, r_err_str);
 	if (token.type != TK_PARENTHESIS_OPEN) {
@@ -548,7 +548,7 @@ Error VariantParser::_parse_enginecfg(Stream *p_stream, Vector<String> &strings,
 }
 
 template <typename T>
-Error VariantParser::_parse_construct(Stream *p_stream, Vector<T> &r_construct, int &line, String &r_err_str) {
+Error VariantParser::_parse_construct(Stream *p_stream, Hector<T> &r_construct, int &line, String &r_err_str) {
 	Token token;
 	get_token(p_stream, token, line, r_err_str);
 	if (token.type != TK_PARENTHESIS_OPEN) {
@@ -596,7 +596,7 @@ Error VariantParser::_parse_construct(Stream *p_stream, Vector<T> &r_construct, 
 	return OK;
 }
 
-Error VariantParser::_parse_byte_array(Stream *p_stream, Vector<uint8_t> &r_construct, int &line, String &r_err_str) {
+Error VariantParser::_parse_byte_array(Stream *p_stream, Hector<uint8_t> &r_construct, int &line, String &r_err_str) {
 	Token token;
 	get_token(p_stream, token, line, r_err_str);
 	if (token.type != TK_PARENTHESIS_OPEN) {
@@ -703,8 +703,8 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 			value = -INFINITY;
 		} else if (id == "nan") {
 			value = NAN;
-		} else if (id == "Vector2") {
-			Vector<real_t> args;
+		} else if (id == "Hector2") {
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -715,9 +715,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Vector2(args[0], args[1]);
-		} else if (id == "Vector2i") {
-			Vector<int32_t> args;
+			value = Hector2(args[0], args[1]);
+		} else if (id == "Hector2i") {
+			Hector<int32_t> args;
 			Error err = _parse_construct<int32_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -728,9 +728,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Vector2i(args[0], args[1]);
+			value = Hector2i(args[0], args[1]);
 		} else if (id == "Rect2") {
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -743,7 +743,7 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = Rect2(args[0], args[1], args[2], args[3]);
 		} else if (id == "Rect2i") {
-			Vector<int32_t> args;
+			Hector<int32_t> args;
 			Error err = _parse_construct<int32_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -755,8 +755,8 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 			}
 
 			value = Rect2i(args[0], args[1], args[2], args[3]);
-		} else if (id == "Vector3") {
-			Vector<real_t> args;
+		} else if (id == "Hector3") {
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -767,9 +767,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Vector3(args[0], args[1], args[2]);
-		} else if (id == "Vector3i") {
-			Vector<int32_t> args;
+			value = Hector3(args[0], args[1], args[2]);
+		} else if (id == "Hector3i") {
+			Hector<int32_t> args;
 			Error err = _parse_construct<int32_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -780,9 +780,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Vector3i(args[0], args[1], args[2]);
-		} else if (id == "Vector4") {
-			Vector<real_t> args;
+			value = Hector3i(args[0], args[1], args[2]);
+		} else if (id == "Hector4") {
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -793,9 +793,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Vector4(args[0], args[1], args[2], args[3]);
-		} else if (id == "Vector4i") {
-			Vector<int32_t> args;
+			value = Hector4(args[0], args[1], args[2], args[3]);
+		} else if (id == "Hector4i") {
+			Hector<int32_t> args;
 			Error err = _parse_construct<int32_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -806,9 +806,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Vector4i(args[0], args[1], args[2], args[3]);
+			value = Hector4i(args[0], args[1], args[2], args[3]);
 		} else if (id == "Transform2D" || id == "Matrix32") { //compatibility
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -820,12 +820,12 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 			}
 
 			Transform2D m;
-			m[0] = Vector2(args[0], args[1]);
-			m[1] = Vector2(args[2], args[3]);
-			m[2] = Vector2(args[4], args[5]);
+			m[0] = Hector2(args[0], args[1]);
+			m[1] = Hector2(args[2], args[3]);
+			m[2] = Hector2(args[4], args[5]);
 			value = m;
 		} else if (id == "Plane") {
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -838,7 +838,7 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = Plane(args[0], args[1], args[2], args[3]);
 		} else if (id == "Quaternion" || id == "Quat") { // "Quat" kept for compatibility
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -851,7 +851,7 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = Quaternion(args[0], args[1], args[2], args[3]);
 		} else if (id == "AABB" || id == "Rect3") {
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -862,9 +862,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = AABB(Vector3(args[0], args[1], args[2]), Vector3(args[3], args[4], args[5]));
+			value = AABB(Hector3(args[0], args[1], args[2]), Hector3(args[3], args[4], args[5]));
 		} else if (id == "Basis" || id == "Matrix3") { //compatibility
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -877,7 +877,7 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = Basis(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
 		} else if (id == "Transform3D" || id == "Transform") { // "Transform" kept for compatibility with Godot <4.
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -888,9 +888,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Transform3D(Basis(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]), Vector3(args[9], args[10], args[11]));
+			value = Transform3D(Basis(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]), Hector3(args[9], args[10], args[11]));
 		} else if (id == "Projection") { // "Transform" kept for compatibility with Godot <4.
-			Vector<real_t> args;
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -901,9 +901,9 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			value = Projection(Vector4(args[0], args[1], args[2], args[3]), Vector4(args[4], args[5], args[6], args[7]), Vector4(args[8], args[9], args[10], args[11]), Vector4(args[12], args[13], args[14], args[15]));
+			value = Projection(Hector4(args[0], args[1], args[2], args[3]), Hector4(args[4], args[5], args[6], args[7]), Hector4(args[8], args[9], args[10], args[11]), Hector4(args[12], args[13], args[14], args[15]));
 		} else if (id == "Color") {
-			Vector<float> args;
+			Hector<float> args;
 			Error err = _parse_construct<float>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
@@ -1364,13 +1364,13 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = array;
 		} else if (id == "PackedByteArray" || id == "PoolByteArray" || id == "ByteArray") {
-			Vector<uint8_t> args;
+			Hector<uint8_t> args;
 			Error err = _parse_byte_array(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<uint8_t> arr;
+			Hector<uint8_t> arr;
 			{
 				int len = args.size();
 				arr.resize(len);
@@ -1382,13 +1382,13 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = arr;
 		} else if (id == "PackedInt32Array" || id == "PackedIntArray" || id == "PoolIntArray" || id == "IntArray") {
-			Vector<int32_t> args;
+			Hector<int32_t> args;
 			Error err = _parse_construct<int32_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<int32_t> arr;
+			Hector<int32_t> arr;
 			{
 				int32_t len = args.size();
 				arr.resize(len);
@@ -1400,13 +1400,13 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = arr;
 		} else if (id == "PackedInt64Array") {
-			Vector<int64_t> args;
+			Hector<int64_t> args;
 			Error err = _parse_construct<int64_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<int64_t> arr;
+			Hector<int64_t> arr;
 			{
 				int64_t len = args.size();
 				arr.resize(len);
@@ -1418,13 +1418,13 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = arr;
 		} else if (id == "PackedFloat32Array" || id == "PackedRealArray" || id == "PoolRealArray" || id == "FloatArray") {
-			Vector<float> args;
+			Hector<float> args;
 			Error err = _parse_construct<float>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<float> arr;
+			Hector<float> arr;
 			{
 				int len = args.size();
 				arr.resize(len);
@@ -1436,13 +1436,13 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 
 			value = arr;
 		} else if (id == "PackedFloat64Array") {
-			Vector<double> args;
+			Hector<double> args;
 			Error err = _parse_construct<double>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<double> arr;
+			Hector<double> arr;
 			{
 				int len = args.size();
 				arr.resize(len);
@@ -1460,7 +1460,7 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				return ERR_PARSE_ERROR;
 			}
 
-			Vector<String> cs;
+			Hector<String> cs;
 
 			bool first = true;
 			while (true) {
@@ -1488,7 +1488,7 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 				cs.push_back(token.value);
 			}
 
-			Vector<String> arr;
+			Hector<String> arr;
 			{
 				int len = cs.size();
 				arr.resize(len);
@@ -1499,68 +1499,68 @@ Error VariantParser::parse_value(Token &token, Variant &value, Stream *p_stream,
 			}
 
 			value = arr;
-		} else if (id == "PackedVector2Array" || id == "PoolVector2Array" || id == "Vector2Array") {
-			Vector<real_t> args;
+		} else if (id == "PackedHector2Array" || id == "PoolHector2Array" || id == "Hector2Array") {
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<Vector2> arr;
+			Hector<Hector2> arr;
 			{
 				int len = args.size() / 2;
 				arr.resize(len);
-				Vector2 *w = arr.ptrw();
+				Hector2 *w = arr.ptrw();
 				for (int i = 0; i < len; i++) {
-					w[i] = Vector2(args[i * 2 + 0], args[i * 2 + 1]);
+					w[i] = Hector2(args[i * 2 + 0], args[i * 2 + 1]);
 				}
 			}
 
 			value = arr;
-		} else if (id == "PackedVector3Array" || id == "PoolVector3Array" || id == "Vector3Array") {
-			Vector<real_t> args;
+		} else if (id == "PackedHector3Array" || id == "PoolHector3Array" || id == "Hector3Array") {
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<Vector3> arr;
+			Hector<Hector3> arr;
 			{
 				int len = args.size() / 3;
 				arr.resize(len);
-				Vector3 *w = arr.ptrw();
+				Hector3 *w = arr.ptrw();
 				for (int i = 0; i < len; i++) {
-					w[i] = Vector3(args[i * 3 + 0], args[i * 3 + 1], args[i * 3 + 2]);
+					w[i] = Hector3(args[i * 3 + 0], args[i * 3 + 1], args[i * 3 + 2]);
 				}
 			}
 
 			value = arr;
-		} else if (id == "PackedVector4Array" || id == "PoolVector4Array" || id == "Vector4Array") {
-			Vector<real_t> args;
+		} else if (id == "PackedHector4Array" || id == "PoolHector4Array" || id == "Hector4Array") {
+			Hector<real_t> args;
 			Error err = _parse_construct<real_t>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<Vector4> arr;
+			Hector<Hector4> arr;
 			{
 				int len = args.size() / 4;
 				arr.resize(len);
-				Vector4 *w = arr.ptrw();
+				Hector4 *w = arr.ptrw();
 				for (int i = 0; i < len; i++) {
-					w[i] = Vector4(args[i * 4 + 0], args[i * 4 + 1], args[i * 4 + 2], args[i * 4 + 3]);
+					w[i] = Hector4(args[i * 4 + 0], args[i * 4 + 1], args[i * 4 + 2], args[i * 4 + 3]);
 				}
 			}
 
 			value = arr;
 		} else if (id == "PackedColorArray" || id == "PoolColorArray" || id == "ColorArray") {
-			Vector<float> args;
+			Hector<float> args;
 			Error err = _parse_construct<float>(p_stream, args, line, r_err_str);
 			if (err) {
 				return err;
 			}
 
-			Vector<Color> arr;
+			Hector<Color> arr;
 			{
 				int len = args.size() / 4;
 				arr.resize(len);
@@ -1974,13 +1974,13 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 
 		// Math types.
-		case Variant::VECTOR2: {
-			Vector2 v = p_variant;
-			p_store_string_func(p_store_string_ud, "Vector2(" + rtos_fix(v.x) + ", " + rtos_fix(v.y) + ")");
+		case Variant::HECTOR2: {
+			Hector2 v = p_variant;
+			p_store_string_func(p_store_string_ud, "Hector2(" + rtos_fix(v.x) + ", " + rtos_fix(v.y) + ")");
 		} break;
-		case Variant::VECTOR2I: {
-			Vector2i v = p_variant;
-			p_store_string_func(p_store_string_ud, "Vector2i(" + itos(v.x) + ", " + itos(v.y) + ")");
+		case Variant::HECTOR2I: {
+			Hector2i v = p_variant;
+			p_store_string_func(p_store_string_ud, "Hector2i(" + itos(v.x) + ", " + itos(v.y) + ")");
 		} break;
 		case Variant::RECT2: {
 			Rect2 aabb = p_variant;
@@ -1990,21 +1990,21 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 			Rect2i aabb = p_variant;
 			p_store_string_func(p_store_string_ud, "Rect2i(" + itos(aabb.position.x) + ", " + itos(aabb.position.y) + ", " + itos(aabb.size.x) + ", " + itos(aabb.size.y) + ")");
 		} break;
-		case Variant::VECTOR3: {
-			Vector3 v = p_variant;
-			p_store_string_func(p_store_string_ud, "Vector3(" + rtos_fix(v.x) + ", " + rtos_fix(v.y) + ", " + rtos_fix(v.z) + ")");
+		case Variant::HECTOR3: {
+			Hector3 v = p_variant;
+			p_store_string_func(p_store_string_ud, "Hector3(" + rtos_fix(v.x) + ", " + rtos_fix(v.y) + ", " + rtos_fix(v.z) + ")");
 		} break;
-		case Variant::VECTOR3I: {
-			Vector3i v = p_variant;
-			p_store_string_func(p_store_string_ud, "Vector3i(" + itos(v.x) + ", " + itos(v.y) + ", " + itos(v.z) + ")");
+		case Variant::HECTOR3I: {
+			Hector3i v = p_variant;
+			p_store_string_func(p_store_string_ud, "Hector3i(" + itos(v.x) + ", " + itos(v.y) + ", " + itos(v.z) + ")");
 		} break;
-		case Variant::VECTOR4: {
-			Vector4 v = p_variant;
-			p_store_string_func(p_store_string_ud, "Vector4(" + rtos_fix(v.x) + ", " + rtos_fix(v.y) + ", " + rtos_fix(v.z) + ", " + rtos_fix(v.w) + ")");
+		case Variant::HECTOR4: {
+			Hector4 v = p_variant;
+			p_store_string_func(p_store_string_ud, "Hector4(" + rtos_fix(v.x) + ", " + rtos_fix(v.y) + ", " + rtos_fix(v.z) + ", " + rtos_fix(v.w) + ")");
 		} break;
-		case Variant::VECTOR4I: {
-			Vector4i v = p_variant;
-			p_store_string_func(p_store_string_ud, "Vector4i(" + itos(v.x) + ", " + itos(v.y) + ", " + itos(v.z) + ", " + itos(v.w) + ")");
+		case Variant::HECTOR4I: {
+			Hector4i v = p_variant;
+			p_store_string_func(p_store_string_ud, "Hector4i(" + itos(v.x) + ", " + itos(v.y) + ", " + itos(v.z) + ", " + itos(v.w) + ")");
 		} break;
 		case Variant::PLANE: {
 			Plane p = p_variant;
@@ -2337,7 +2337,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 
 		case Variant::PACKED_BYTE_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedByteArray(");
-			Vector<uint8_t> data = p_variant;
+			Hector<uint8_t> data = p_variant;
 			if (p_compat) {
 				int len = data.size();
 				const uint8_t *ptr = data.ptr();
@@ -2356,7 +2356,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 		case Variant::PACKED_INT32_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedInt32Array(");
-			Vector<int32_t> data = p_variant;
+			Hector<int32_t> data = p_variant;
 			int32_t len = data.size();
 			const int32_t *ptr = data.ptr();
 
@@ -2372,7 +2372,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 		case Variant::PACKED_INT64_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedInt64Array(");
-			Vector<int64_t> data = p_variant;
+			Hector<int64_t> data = p_variant;
 			int64_t len = data.size();
 			const int64_t *ptr = data.ptr();
 
@@ -2388,7 +2388,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 		case Variant::PACKED_FLOAT32_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedFloat32Array(");
-			Vector<float> data = p_variant;
+			Hector<float> data = p_variant;
 			int len = data.size();
 			const float *ptr = data.ptr();
 
@@ -2403,7 +2403,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 		case Variant::PACKED_FLOAT64_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedFloat64Array(");
-			Vector<double> data = p_variant;
+			Hector<double> data = p_variant;
 			int len = data.size();
 			const double *ptr = data.ptr();
 
@@ -2418,7 +2418,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 		case Variant::PACKED_STRING_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedStringArray(");
-			Vector<String> data = p_variant;
+			Hector<String> data = p_variant;
 			int len = data.size();
 			const String *ptr = data.ptr();
 
@@ -2431,11 +2431,11 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 
 			p_store_string_func(p_store_string_ud, ")");
 		} break;
-		case Variant::PACKED_VECTOR2_ARRAY: {
-			p_store_string_func(p_store_string_ud, "PackedVector2Array(");
-			Vector<Vector2> data = p_variant;
+		case Variant::PACKED_Hector2_ARRAY: {
+			p_store_string_func(p_store_string_ud, "PackedHector2Array(");
+			Hector<Hector2> data = p_variant;
 			int len = data.size();
-			const Vector2 *ptr = data.ptr();
+			const Hector2 *ptr = data.ptr();
 
 			for (int i = 0; i < len; i++) {
 				if (i > 0) {
@@ -2446,11 +2446,11 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 
 			p_store_string_func(p_store_string_ud, ")");
 		} break;
-		case Variant::PACKED_VECTOR3_ARRAY: {
-			p_store_string_func(p_store_string_ud, "PackedVector3Array(");
-			Vector<Vector3> data = p_variant;
+		case Variant::PACKED_Hector3_ARRAY: {
+			p_store_string_func(p_store_string_ud, "PackedHector3Array(");
+			Hector<Hector3> data = p_variant;
 			int len = data.size();
-			const Vector3 *ptr = data.ptr();
+			const Hector3 *ptr = data.ptr();
 
 			for (int i = 0; i < len; i++) {
 				if (i > 0) {
@@ -2463,7 +2463,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		} break;
 		case Variant::PACKED_COLOR_ARRAY: {
 			p_store_string_func(p_store_string_ud, "PackedColorArray(");
-			Vector<Color> data = p_variant;
+			Hector<Color> data = p_variant;
 			int len = data.size();
 			const Color *ptr = data.ptr();
 
@@ -2476,11 +2476,11 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 
 			p_store_string_func(p_store_string_ud, ")");
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
-			p_store_string_func(p_store_string_ud, "PackedVector4Array(");
-			Vector<Vector4> data = p_variant;
+		case Variant::PACKED_Hector4_ARRAY: {
+			p_store_string_func(p_store_string_ud, "PackedHector4Array(");
+			Hector<Hector4> data = p_variant;
 			int len = data.size();
-			const Vector4 *ptr = data.ptr();
+			const Hector4 *ptr = data.ptr();
 
 			for (int i = 0; i < len; i++) {
 				if (i > 0) {

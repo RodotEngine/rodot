@@ -108,7 +108,7 @@ namespace embree
           /*! checks if all primitives are from the same geometry */
           __forceinline bool sameGeometry(const SetMB& set)
           {
-            mvector<PrimRefMB>& prims = *set.prims;
+            mHector<PrimRefMB>& prims = *set.prims;
             unsigned int firstGeomID = prims[set.begin()].geomID();
             for (size_t i=set.begin()+1; i<set.end(); i++) {
               if (prims[i].geomID() != firstGeomID){
@@ -121,7 +121,7 @@ namespace embree
           /*! performs some split if SAH approaches fail */
           void splitFallback(const SetMB& set, SetMB& lset, SetMB& rset)
           {
-            mvector<PrimRefMB>& prims = *set.prims;
+            mHector<PrimRefMB>& prims = *set.prims;
 
             const size_t begin = set.begin();
             const size_t end   = set.end();
@@ -169,7 +169,7 @@ namespace embree
               BBox1f c = empty;
               BBox1f p = current.prims.time_range;
               for (size_t i=current.prims.begin(); i<current.prims.end(); i++) {
-                mvector<PrimRefMB>& prims = *current.prims.prims;
+                mHector<PrimRefMB>& prims = *current.prims.prims;
                 c.extend(prims[i].time_range);
               }
               
@@ -213,7 +213,7 @@ namespace embree
               } else {
                 splitFallback(children[bestChild].prims,left.prims,right.prims);
               }
-              children.split(bestChild,left,right,std::unique_ptr<mvector<PrimRefMB>>());
+              children.split(bestChild,left,right,std::unique_ptr<mHector<PrimRefMB>>());
 
             } while (children.size() < cfg.branchingFactor);
 
@@ -244,7 +244,7 @@ namespace embree
           }
 
           /*! performs split */
-          std::unique_ptr<mvector<PrimRefMB>> split(const BuildRecord& current, BuildRecord& lrecord, BuildRecord& rrecord, bool& aligned, bool& timesplit)
+          std::unique_ptr<mHector<PrimRefMB>> split(const BuildRecord& current, BuildRecord& lrecord, BuildRecord& rrecord, bool& aligned, bool& timesplit)
           {
             /* variable to track the SAH of the best splitting approach */
             float bestSAH = inf;
@@ -300,7 +300,7 @@ namespace embree
             else
               assert(false);
 
-            return std::unique_ptr<mvector<PrimRefMB>>();
+            return std::unique_ptr<mHector<PrimRefMB>>();
           }
 
           /*! recursive build */
@@ -349,8 +349,8 @@ namespace embree
               /*! split best child into left and right child */
               BuildRecord left(current.depth+1);
               BuildRecord right(current.depth+1);
-              std::unique_ptr<mvector<PrimRefMB>> new_vector = split(children[bestChild],left,right,aligned,timesplit);
-              children.split(bestChild,left,right,std::move(new_vector));
+              std::unique_ptr<mHector<PrimRefMB>> new_Hector = split(children[bestChild],left,right,aligned,timesplit);
+              children.split(bestChild,left,right,std::move(new_Hector));
 
             } while (children.size() < cfg.branchingFactor);
 
@@ -462,7 +462,7 @@ namespace embree
         public:
 
           /*! entry point into builder */
-          NodeRecordMB4D operator() (mvector<PrimRefMB>& prims, const PrimInfoMB& pinfo)
+          NodeRecordMB4D operator() (mHector<PrimRefMB>& prims, const PrimInfoMB& pinfo)
           {
             BuildRecord record(SetMB(pinfo,&prims),1);
             auto root = recurse(record,nullptr,true);
@@ -498,7 +498,7 @@ namespace embree
         typename CreateLeafFunc,
         typename ProgressMonitor>
 
-        static BVHNodeRecordMB4D<NodeRef> build (Scene* scene, mvector<PrimRefMB>& prims, const PrimInfoMB& pinfo,
+        static BVHNodeRecordMB4D<NodeRef> build (Scene* scene, mHector<PrimRefMB>& prims, const PrimInfoMB& pinfo,
                                                const RecalculatePrimRef& recalculatePrimRef,
                                                const CreateAllocFunc& createAlloc,
                                                const CreateAABBNodeMBFunc& createAABBNodeMB,

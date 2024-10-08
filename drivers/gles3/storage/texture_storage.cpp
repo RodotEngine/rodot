@@ -71,7 +71,7 @@ TextureStorage::TextureStorage() {
 			default_gl_textures[DEFAULT_GL_TEXTURE_WHITE] = texture_allocate();
 			texture_2d_initialize(default_gl_textures[DEFAULT_GL_TEXTURE_WHITE], image);
 
-			Vector<Ref<Image>> images;
+			Hector<Ref<Image>> images;
 			images.push_back(image);
 
 			default_gl_textures[DEFAULT_GL_TEXTURE_2D_ARRAY_WHITE] = texture_allocate();
@@ -89,7 +89,7 @@ TextureStorage::TextureStorage() {
 			Ref<Image> image = Image::create_empty(4, 4, false, Image::FORMAT_RGBA8);
 			image->fill(Color(1, 1, 1, 1));
 
-			Vector<Ref<Image>> images;
+			Hector<Ref<Image>> images;
 			for (int i = 0; i < 4; i++) {
 				images.push_back(image);
 			}
@@ -105,7 +105,7 @@ TextureStorage::TextureStorage() {
 			default_gl_textures[DEFAULT_GL_TEXTURE_BLACK] = texture_allocate();
 			texture_2d_initialize(default_gl_textures[DEFAULT_GL_TEXTURE_BLACK], image);
 
-			Vector<Ref<Image>> images;
+			Hector<Ref<Image>> images;
 			for (int i = 0; i < 6; i++) {
 				images.push_back(image);
 			}
@@ -117,7 +117,7 @@ TextureStorage::TextureStorage() {
 			Ref<Image> image = Image::create_empty(4, 4, false, Image::FORMAT_RGBA8);
 			image->fill(Color());
 
-			Vector<Ref<Image>> images;
+			Hector<Ref<Image>> images;
 			for (int i = 0; i < 4; i++) {
 				images.push_back(image);
 			}
@@ -811,7 +811,7 @@ void TextureStorage::texture_external_initialize(RID p_texture, int p_width, int
 	glBindTexture(texture.target, 0);
 }
 
-void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Vector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) {
+void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Hector<Ref<Image>> &p_layers, RS::TextureLayeredType p_layered_type) {
 	ERR_FAIL_COND(p_layers.is_empty());
 
 	ERR_FAIL_COND(p_layered_type == RS::TEXTURE_LAYERED_CUBEMAP && p_layers.size() != 6);
@@ -863,7 +863,7 @@ void TextureStorage::texture_2d_layered_initialize(RID p_texture, const Vector<R
 	}
 }
 
-void TextureStorage::texture_3d_initialize(RID p_texture, Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) {
+void TextureStorage::texture_3d_initialize(RID p_texture, Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_data) {
 	ERR_FAIL_COND(p_data.is_empty());
 
 	Image::Image3DValidateError verr = Image::validate_3d_image(p_format, p_width, p_height, p_depth, p_mipmaps, p_data);
@@ -959,7 +959,7 @@ void TextureStorage::texture_2d_update(RID p_texture, const Ref<Image> &p_image,
 #endif
 }
 
-void TextureStorage::texture_3d_update(RID p_texture, const Vector<Ref<Image>> &p_data) {
+void TextureStorage::texture_3d_update(RID p_texture, const Hector<Ref<Image>> &p_data) {
 	Texture *tex = texture_owner.get_or_null(p_texture);
 	ERR_FAIL_NULL(tex);
 	ERR_FAIL_COND(tex->type != Texture::TYPE_3D);
@@ -1028,7 +1028,7 @@ void TextureStorage::texture_2d_layered_placeholder_initialize(RID p_texture, Re
 	Ref<Image> image = Image::create_empty(4, 4, false, Image::FORMAT_RGBA8);
 	image->fill(Color(1, 0, 1, 1));
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	if (p_layered_type == RS::TEXTURE_LAYERED_2D_ARRAY) {
 		images.push_back(image);
 	} else {
@@ -1047,7 +1047,7 @@ void TextureStorage::texture_3d_placeholder_initialize(RID p_texture) {
 	Ref<Image> image = Image::create_empty(4, 4, false, Image::FORMAT_RGBA8);
 	image->fill(Color(1, 0, 1, 1));
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	//cube
 	for (int i = 0; i < 4; i++) {
 		images.push_back(image);
@@ -1071,7 +1071,7 @@ Ref<Image> TextureStorage::texture_2d_get(RID p_texture) const {
 	if (RasterizerGLES3::is_gles_over_gl()) {
 		// OpenGL 3.3 supports glGetTexImage which is faster and simpler than glReadPixels.
 		// It also allows for reading compressed textures, mipmaps, and more formats.
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 
 		int data_size = Image::get_image_data_size(texture->alloc_width, texture->alloc_height, texture->real_format, texture->mipmaps > 1);
 
@@ -1108,7 +1108,7 @@ Ref<Image> TextureStorage::texture_2d_get(RID p_texture) const {
 #endif // GL_API_ENABLED
 #ifdef GLES_API_ENABLED
 	if (!RasterizerGLES3::is_gles_over_gl()) {
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 
 		// On web and mobile we always read an RGBA8 image with no mipmaps.
 		int data_size = Image::get_image_data_size(texture->alloc_width, texture->alloc_height, Image::FORMAT_RGBA8, false);
@@ -1181,7 +1181,7 @@ Ref<Image> TextureStorage::texture_2d_layer_get(RID p_texture, int p_layer) cons
 	Texture *texture = texture_owner.get_or_null(p_texture);
 	ERR_FAIL_NULL_V(texture, Ref<Image>());
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 
 	int data_size = Image::get_image_data_size(texture->alloc_width, texture->alloc_height, Image::FORMAT_RGBA8, false);
 
@@ -1241,11 +1241,11 @@ Ref<Image> TextureStorage::texture_2d_layer_get(RID p_texture, int p_layer) cons
 	return image;
 }
 
-Vector<Ref<Image>> TextureStorage::_texture_3d_read_framebuffer(GLES3::Texture *p_texture) const {
-	ERR_FAIL_NULL_V(p_texture, Vector<Ref<Image>>());
+Hector<Ref<Image>> TextureStorage::_texture_3d_read_framebuffer(GLES3::Texture *p_texture) const {
+	ERR_FAIL_NULL_V(p_texture, Hector<Ref<Image>>());
 
-	Vector<Ref<Image>> ret;
-	Vector<uint8_t> data;
+	Hector<Ref<Image>> ret;
+	Hector<uint8_t> data;
 
 	int width = p_texture->width;
 	int height = p_texture->height;
@@ -1266,10 +1266,10 @@ Vector<Ref<Image>> TextureStorage::_texture_3d_read_framebuffer(GLES3::Texture *
 			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, &w[0]);
 
 			data.resize(data_size);
-			ERR_FAIL_COND_V(data.is_empty(), Vector<Ref<Image>>());
+			ERR_FAIL_COND_V(data.is_empty(), Hector<Ref<Image>>());
 
 			Ref<Image> img = Image::create_from_data(width, height, false, Image::FORMAT_RGBA8, data);
-			ERR_FAIL_COND_V(img->is_empty(), Vector<Ref<Image>>());
+			ERR_FAIL_COND_V(img->is_empty(), Hector<Ref<Image>>());
 
 			if (p_texture->format != Image::FORMAT_RGBA8) {
 				img->convert(p_texture->format);
@@ -1286,10 +1286,10 @@ Vector<Ref<Image>> TextureStorage::_texture_3d_read_framebuffer(GLES3::Texture *
 	return ret;
 }
 
-Vector<Ref<Image>> TextureStorage::texture_3d_get(RID p_texture) const {
+Hector<Ref<Image>> TextureStorage::texture_3d_get(RID p_texture) const {
 	Texture *texture = texture_owner.get_or_null(p_texture);
-	ERR_FAIL_NULL_V(texture, Vector<Ref<Image>>());
-	ERR_FAIL_COND_V(texture->type != Texture::TYPE_3D, Vector<Ref<Image>>());
+	ERR_FAIL_NULL_V(texture, Hector<Ref<Image>>());
+	ERR_FAIL_COND_V(texture->type != Texture::TYPE_3D, Hector<Ref<Image>>());
 
 #ifdef TOOLS_ENABLED
 	if (!texture->image_cache_3d.is_empty() && !texture->is_render_target) {
@@ -1321,7 +1321,7 @@ Vector<Ref<Image>> TextureStorage::texture_3d_get(RID p_texture) const {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_3D, texture->tex_id);
 
-	Vector<Ref<Image>> ret = _texture_3d_read_framebuffer(texture);
+	Hector<Ref<Image>> ret = _texture_3d_read_framebuffer(texture);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
 	glDeleteTextures(1, &temp_color_texture);
@@ -1358,8 +1358,8 @@ void TextureStorage::texture_replace(RID p_texture, RID p_by_texture) {
 		tex_to->tex_id = 0;
 	}
 
-	Vector<RID> proxies_to_update = tex_to->proxies;
-	Vector<RID> proxies_to_redirect = tex_from->proxies;
+	Hector<RID> proxies_to_update = tex_to->proxies;
+	Hector<RID> proxies_to_redirect = tex_from->proxies;
 
 	*tex_to = *tex_from;
 
@@ -1542,7 +1542,7 @@ void TextureStorage::_texture_set_data(RID p_texture, const Ref<Image> &p_image,
 
 	GLenum blit_target = (texture->target == GL_TEXTURE_CUBE_MAP) ? _cube_side_enum[p_layer] : texture->target;
 
-	Vector<uint8_t> read = img->get_data();
+	Hector<uint8_t> read = img->get_data();
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(texture->target, texture->tex_id);
@@ -1606,7 +1606,7 @@ void TextureStorage::_texture_set_data(RID p_texture, const Ref<Image> &p_image,
 	texture->mipmaps = mipmaps;
 }
 
-void TextureStorage::_texture_set_3d_data(RID p_texture, const Vector<Ref<Image>> &p_data, bool p_initialize) {
+void TextureStorage::_texture_set_3d_data(RID p_texture, const Hector<Ref<Image>> &p_data, bool p_initialize) {
 	Texture *texture = texture_owner.get_or_null(p_texture);
 
 	ERR_FAIL_NULL(texture);
@@ -1639,7 +1639,7 @@ void TextureStorage::_texture_set_3d_data(RID p_texture, const Vector<Ref<Image>
 
 	texture->gl_set_repeat(RS::CANVAS_ITEM_TEXTURE_REPEAT_ENABLED);
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 	images.resize(p_data.size());
 	for (int i = 0; i < p_data.size(); i++) {
 		Ref<Image> image = p_data[i];
@@ -1756,12 +1756,12 @@ uint32_t TextureStorage::texture_get_texid(RID p_texture) const {
 	return texture->tex_id;
 }
 
-Vector3i TextureStorage::texture_get_size(RID p_texture) const {
+Hector3i TextureStorage::texture_get_size(RID p_texture) const {
 	Texture *texture = texture_owner.get_or_null(p_texture);
 
-	ERR_FAIL_NULL_V(texture, Vector3i(0, 0, 0));
+	ERR_FAIL_NULL_V(texture, Hector3i(0, 0, 0));
 
-	return Vector3i(texture->width, texture->height, texture->depth);
+	return Hector3i(texture->width, texture->height, texture->depth);
 }
 
 uint32_t TextureStorage::texture_get_width(RID p_texture) const {
@@ -1859,7 +1859,7 @@ void TextureStorage::update_texture_atlas() {
 
 	if (texture_atlas.textures.size()) {
 		//generate atlas
-		Vector<TextureAtlas::SortItem> itemsv;
+		Hector<TextureAtlas::SortItem> itemsv;
 		itemsv.resize(texture_atlas.textures.size());
 		uint32_t base_size = 8;
 
@@ -1892,7 +1892,7 @@ void TextureStorage::update_texture_atlas() {
 		int atlas_height = 0;
 
 		while (true) {
-			Vector<int> v_offsetsv;
+			Hector<int> v_offsetsv;
 			v_offsetsv.resize(base_size);
 
 			int *v_offsets = v_offsetsv.ptrw();
@@ -1949,7 +1949,7 @@ void TextureStorage::update_texture_atlas() {
 
 		for (int i = 0; i < item_count; i++) {
 			TextureAtlas::Texture *t = texture_atlas.textures.getptr(items[i].texture);
-			t->uv_rect.position = items[i].pos * border + Vector2i(border / 2, border / 2);
+			t->uv_rect.position = items[i].pos * border + Hector2i(border / 2, border / 2);
 			t->uv_rect.size = items[i].pixel_size;
 
 			t->uv_rect.position /= Size2(texture_atlas.size);
@@ -2018,7 +2018,7 @@ RID TextureStorage::decal_allocate() {
 void TextureStorage::decal_initialize(RID p_rid) {
 }
 
-void TextureStorage::decal_set_size(RID p_decal, const Vector3 &p_size) {
+void TextureStorage::decal_set_size(RID p_decal, const Hector3 &p_size) {
 }
 
 void TextureStorage::decal_set_texture(RID p_decal, RS::DecalTexture p_type, RID p_texture) {
@@ -2822,7 +2822,7 @@ Rect2i TextureStorage::_render_target_get_sdf_rect(const RenderTarget *rt) const
 
 	margin = (rt->size * scale / 100) - rt->size;
 
-	Rect2i r(Vector2i(), rt->size);
+	Rect2i r(Hector2i(), rt->size);
 	r.position -= margin;
 	r.size += margin * 2;
 

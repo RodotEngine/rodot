@@ -197,37 +197,37 @@ namespace embree
 
        __forceinline CubicBezierCurve<Vec3fa> xfm(const LinearSpace3fa& space) const
       {
-        const Vec3fa q0 = xfmVector(space,v0);
-        const Vec3fa q1 = xfmVector(space,v1);
-        const Vec3fa q2 = xfmVector(space,v2);
-        const Vec3fa q3 = xfmVector(space,v3);
+        const Vec3fa q0 = xfmHector(space,v0);
+        const Vec3fa q1 = xfmHector(space,v1);
+        const Vec3fa q2 = xfmHector(space,v2);
+        const Vec3fa q3 = xfmHector(space,v3);
         return CubicBezierCurve<Vec3fa>(q0,q1,q2,q3);
       }
       
       __forceinline CubicBezierCurve<Vec3fa> xfm(const LinearSpace3fa& space, const Vec3fa& p) const
       {
-        const Vec3fa q0 = xfmVector(space,v0-p);
-        const Vec3fa q1 = xfmVector(space,v1-p);
-        const Vec3fa q2 = xfmVector(space,v2-p);
-        const Vec3fa q3 = xfmVector(space,v3-p);
+        const Vec3fa q0 = xfmHector(space,v0-p);
+        const Vec3fa q1 = xfmHector(space,v1-p);
+        const Vec3fa q2 = xfmHector(space,v2-p);
+        const Vec3fa q3 = xfmHector(space,v3-p);
         return CubicBezierCurve<Vec3fa>(q0,q1,q2,q3);
       }
 
       __forceinline CubicBezierCurve<Vec3ff> xfm_pr(const LinearSpace3fa& space, const Vec3fa& p) const
       {
-        const Vec3ff q0(xfmVector(space,(Vec3fa)v0-p), v0.w);
-        const Vec3ff q1(xfmVector(space,(Vec3fa)v1-p), v1.w);
-        const Vec3ff q2(xfmVector(space,(Vec3fa)v2-p), v2.w);
-        const Vec3ff q3(xfmVector(space,(Vec3fa)v3-p), v3.w);
+        const Vec3ff q0(xfmHector(space,(Vec3fa)v0-p), v0.w);
+        const Vec3ff q1(xfmHector(space,(Vec3fa)v1-p), v1.w);
+        const Vec3ff q2(xfmHector(space,(Vec3fa)v2-p), v2.w);
+        const Vec3ff q3(xfmHector(space,(Vec3fa)v3-p), v3.w);
         return CubicBezierCurve<Vec3ff>(q0,q1,q2,q3);
       }
 
       __forceinline CubicBezierCurve<Vec3fa> xfm(const LinearSpace3fa& space, const Vec3fa& p, const float s) const
       {
-        const Vec3fa q0 = xfmVector(space,s*(v0-p));
-        const Vec3fa q1 = xfmVector(space,s*(v1-p));
-        const Vec3fa q2 = xfmVector(space,s*(v2-p));
-        const Vec3fa q3 = xfmVector(space,s*(v3-p));
+        const Vec3fa q0 = xfmHector(space,s*(v0-p));
+        const Vec3fa q1 = xfmHector(space,s*(v1-p));
+        const Vec3fa q2 = xfmHector(space,s*(v2-p));
+        const Vec3fa q3 = xfmHector(space,s*(v3-p));
         return CubicBezierCurve<Vec3fa>(q0,q1,q2,q3);
       }
       

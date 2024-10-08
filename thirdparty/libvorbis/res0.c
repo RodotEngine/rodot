@@ -164,7 +164,7 @@ void res0_pack(vorbis_info_residue *vr,oggpack_buffer *opb){
   oggpack_write(opb,info->begin,24);
   oggpack_write(opb,info->end,24);
 
-  oggpack_write(opb,info->grouping-1,24);  /* residue vectors to group and
+  oggpack_write(opb,info->grouping-1,24);  /* residue Hectors to group and
                                              code with a partitioned book */
   oggpack_write(opb,info->partitions-1,6); /* possible partition choices */
   oggpack_write(opb,info->groupbook,8);  /* group huffman book */
@@ -768,14 +768,14 @@ long **res2_class(vorbis_block *vb,vorbis_look_residue *vl,
 }
 
 /* res2 is slightly more different; all the channels are interleaved
-   into a single vector and encoded. */
+   into a single Hector and encoded. */
 
 int res2_forward(oggpack_buffer *opb,
                  vorbis_block *vb,vorbis_look_residue *vl,
                  int **in,int *nonzero,int ch, long **partword,int submap){
   long i,j,k,n=vb->pcmend/2,used=0;
 
-  /* don't duplicate the code; use a working vector hack for now and
+  /* don't duplicate the code; use a working Hector hack for now and
      reshape ourselves into a single channel res1 */
   /* ugly; reallocs for each coupling pass :-( */
   int *work=_vorbis_block_alloc(vb,ch*n*sizeof(*work));
@@ -818,7 +818,7 @@ int res2_inverse(vorbis_block *vb,vorbis_look_residue *vl,
     int **partword=_vorbis_block_alloc(vb,partwords*sizeof(*partword));
 
     for(i=0;i<ch;i++)if(nonzero[i])break;
-    if(i==ch)return(0); /* no nonzero vectors */
+    if(i==ch)return(0); /* no nonzero Hectors */
 
     for(s=0;s<look->stages;s++){
       for(i=0,l=0;i<partvals;l++){

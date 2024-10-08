@@ -95,7 +95,7 @@ private:
 	BGMode bg_mode = BG_CLEAR_COLOR;
 	Ref<Sky> bg_sky;
 	float bg_sky_custom_fov = 0.0;
-	Vector3 bg_sky_rotation;
+	Hector3 bg_sky_rotation;
 	Color bg_color;
 	int bg_canvas_max_layer = 0;
 	int bg_camera_feed_id = 1;
@@ -161,7 +161,7 @@ private:
 
 	// Glow
 	bool glow_enabled = false;
-	Vector<float> glow_levels;
+	Hector<float> glow_levels;
 	bool glow_normalize_levels = false;
 	float glow_intensity = 0.8;
 	float glow_strength = 1.0;
@@ -239,8 +239,8 @@ public:
 	Ref<Sky> get_sky() const;
 	void set_sky_custom_fov(float p_scale);
 	float get_sky_custom_fov() const;
-	void set_sky_rotation(const Vector3 &p_rotation);
-	Vector3 get_sky_rotation() const;
+	void set_sky_rotation(const Hector3 &p_rotation);
+	Hector3 get_sky_rotation() const;
 	void set_bg_color(const Color &p_color);
 	Color get_bg_color() const;
 	void set_bg_energy_multiplier(float p_energy);

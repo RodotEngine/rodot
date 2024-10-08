@@ -200,7 +200,7 @@ public:
     ResourceBundle *clone() const;
 
     /**
-     * Returns the size of a resource. Size for scalar types is always 1, and for vector/table types is
+     * Returns the size of a resource. Size for scalar types is always 1, and for Hector/table types is
      * the number of child resources.
      * @warning Integer array is treated as a scalar type. There are no
      *          APIs to access individual members of an integer array. It
@@ -241,18 +241,18 @@ public:
 
 
     /**
-     * returns an integer vector from a resource.
+     * returns an integer Hector from a resource.
      *
-     * @param len     fills in the length of resulting integer vector
+     * @param len     fills in the length of resulting integer Hector
      * @param status  fills in the outgoing error code
      *                could be <TT>U_MISSING_RESOURCE_ERROR</TT> if the key is not found
      *                could be a warning
      *                e.g.: <TT>U_USING_FALLBACK_WARNING</TT>,<TT>U_USING_DEFAULT_WARNING </TT>
-     * @return a pointer to a vector of integers that lives in a memory mapped/DLL file.
+     * @return a pointer to a Hector of integers that lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
     const int32_t*
-      getIntVector(int32_t& len, UErrorCode& status) const;
+      getIntHector(int32_t& len, UErrorCode& status) const;
 
     /**
      * returns an unsigned integer from a resource.

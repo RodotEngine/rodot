@@ -16,7 +16,7 @@ subject to the following restrictions:
 #define BT_CONVEX_HULL_COMPUTER_H
 
 #include "btAlignedObjectArray.h"
-#include "btVector3.h"
+#include "btHector3.h"
 
 // -- GODOT start --
 namespace VHACD {
@@ -66,7 +66,7 @@ public:
     };
 
     // Vertices of the output hull
-    btAlignedObjectArray<btVector3> vertices;
+    btAlignedObjectArray<btHector3> vertices;
 
     // Edges of the output hull
     btAlignedObjectArray<Edge> edges;

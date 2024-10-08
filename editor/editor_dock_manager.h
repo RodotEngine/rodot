@@ -94,17 +94,17 @@ private:
 	static EditorDockManager *singleton;
 
 	// To access splits easily by index.
-	Vector<DockSplitContainer *> vsplits;
-	Vector<DockSplitContainer *> hsplits;
+	Hector<DockSplitContainer *> vsplits;
+	Hector<DockSplitContainer *> hsplits;
 
-	Vector<WindowWrapper *> dock_windows;
+	Hector<WindowWrapper *> dock_windows;
 	TabContainer *dock_slot[DOCK_SLOT_MAX];
 	HashMap<Control *, DockInfo> all_docks;
 	bool docks_visible = true;
 
 	DockContextPopup *dock_context_popup = nullptr;
 	PopupMenu *docks_menu = nullptr;
-	Vector<Control *> docks_menu_docks;
+	Hector<Control *> docks_menu_docks;
 	Control *closed_dock_parent = nullptr;
 
 	void _dock_split_dragged(int p_offset);

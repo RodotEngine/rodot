@@ -412,7 +412,7 @@ static int mapping0_forward(vorbis_block *vb){
          give us curves from which we can decide how much resolution
          to give noise parts of the spectrum, it also implicitly hands
          us a tonality estimate (the larger the value in the
-         'noise_depth' vector, the more tonal that area is) */
+         'noise_depth' Hector, the more tonal that area is) */
 
       _vp_noisemask(psy_look,
                     logmdct,
@@ -431,7 +431,7 @@ static int mapping0_forward(vorbis_block *vb){
 
       /* second step: 'all the other crap'; all the stuff that isn't
          computed/fit for bitrate management goes in the second psy
-         vector.  This includes tone masking, peak limiting and ATH */
+         Hector.  This includes tone masking, peak limiting and ATH */
 
       _vp_tonemask(psy_look,
                    logfft,
@@ -450,7 +450,7 @@ static int mapping0_forward(vorbis_block *vb){
       }
 #endif
 
-      /* third step; we offset the noise vectors, overlay tone
+      /* third step; we offset the noise Hectors, overlay tone
          masking.  We then do a floor1-specific line fit.  If we're
          performing bitrate management, the line fit is performed
          multiple times for up/down tweakage on demand. */
@@ -583,7 +583,7 @@ static int mapping0_forward(vorbis_block *vb){
     2) encode the floor for each channel, compute coded mask curve/res
     3) normalize and couple.
     4) encode residue
-    5) save packet bytes to the packetblob vector
+    5) save packet bytes to the packetblob Hector
 
   */
 
@@ -711,7 +711,7 @@ static int mapping0_inverse(vorbis_block *vb,vorbis_info_mapping *l){
   int   *nonzero  =alloca(sizeof(*nonzero)*vi->channels);
   void **floormemo=alloca(sizeof(*floormemo)*vi->channels);
 
-  /* recover the spectral envelope; store it in the PCM vector for now */
+  /* recover the spectral envelope; store it in the PCM Hector for now */
   for(i=0;i<vi->channels;i++){
     int submap=info->chmuxlist[i];
     floormemo[i]=_floor_P[ci->floor_type[info->floorsubmap[submap]]]->
@@ -732,7 +732,7 @@ static int mapping0_inverse(vorbis_block *vb,vorbis_info_mapping *l){
     }
   }
 
-  /* recover the residue into our working vectors */
+  /* recover the residue into our working Hectors */
   for(i=0;i<info->submaps;i++){
     int ch_in_bundle=0;
     for(j=0;j<vi->channels;j++){
@@ -787,7 +787,7 @@ static int mapping0_inverse(vorbis_block *vb,vorbis_info_mapping *l){
                floormemo[i],pcm);
   }
 
-  /* transform the PCM data; takes PCM vector, vb; modifies PCM vector */
+  /* transform the PCM data; takes PCM Hector, vb; modifies PCM Hector */
   /* only MDCT right now.... */
   for(i=0;i<vi->channels;i++){
     float *pcm=vb->pcm[i];

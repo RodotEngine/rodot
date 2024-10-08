@@ -34,7 +34,7 @@ void RenderingServer::_environment_set_fog_bind_compat_84792(RID p_env, bool p_e
 	environment_set_fog(p_env, p_enable, p_light_color, p_light_energy, p_sun_scatter, p_density, p_height, p_height_density, p_aerial_perspective, p_sky_affect, RS::EnvironmentFogMode::ENV_FOG_MODE_EXPONENTIAL);
 }
 
-void RenderingServer::_canvas_item_add_multiline_bind_compat_84523(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width) {
+void RenderingServer::_canvas_item_add_multiline_bind_compat_84523(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width) {
 	canvas_item_add_multiline(p_item, p_points, p_colors, p_width, false);
 }
 

@@ -57,13 +57,13 @@ class EditorSelectionHistory {
 	struct HistoryElement {
 		// The sub-resources of the parent object (first in the path) that have been edited.
 		// For example, Node2D -> nested resource -> nested resource, if edited each individually in their own inspector.
-		Vector<_Object> path;
+		Hector<_Object> path;
 		// The current point in the path. This is always equal to the last item in the path - it is never decremented.
 		int level = 0;
 	};
 	friend class EditorData;
 
-	Vector<HistoryElement> history;
+	Hector<HistoryElement> history;
 	int current_elem_idx; // The current history element being edited.
 
 public:
@@ -116,7 +116,7 @@ public:
 		uint64_t file_modified_time = 0;
 		Dictionary editor_states;
 		List<Node *> selection;
-		Vector<EditorSelectionHistory::HistoryElement> history_stored;
+		Hector<EditorSelectionHistory::HistoryElement> history_stored;
 		int history_current = 0;
 		Dictionary custom_state;
 		NodePath live_edit_root;
@@ -125,21 +125,21 @@ public:
 	};
 
 private:
-	Vector<EditorPlugin *> editor_plugins;
+	Hector<EditorPlugin *> editor_plugins;
 	HashMap<StringName, EditorPlugin *> extension_editor_plugins;
 
 	struct PropertyData {
 		String name;
 		Variant value;
 	};
-	HashMap<String, Vector<CustomType>> custom_types;
+	HashMap<String, Hector<CustomType>> custom_types;
 
 	List<PropertyData> clipboard;
 	EditorUndoRedoManager *undo_redo_manager;
-	Vector<Callable> undo_redo_callbacks;
+	Hector<Callable> undo_redo_callbacks;
 	HashMap<StringName, Callable> move_element_functions;
 
-	Vector<EditedScene> edited_scene;
+	Hector<EditedScene> edited_scene;
 	int current_edited_scene = -1;
 	int last_created_scene = 1;
 
@@ -153,7 +153,7 @@ private:
 
 public:
 	EditorPlugin *get_handling_main_editor(Object *p_object);
-	Vector<EditorPlugin *> get_handling_sub_editors(Object *p_object);
+	Hector<EditorPlugin *> get_handling_sub_editors(Object *p_object);
 	EditorPlugin *get_editor_by_name(const String &p_name);
 
 	void copy_object_params(Object *p_object);
@@ -180,7 +180,7 @@ public:
 
 	void add_undo_redo_inspector_hook_callback(Callable p_callable); // Callbacks should have this signature: void (Object* undo_redo, Object *modified_object, String property, Variant new_value)
 	void remove_undo_redo_inspector_hook_callback(Callable p_callable);
-	const Vector<Callable> get_undo_redo_inspector_hook_callback();
+	const Hector<Callable> get_undo_redo_inspector_hook_callback();
 
 	void add_move_array_element_function(const StringName &p_class, Callable p_callable); // Function should have this signature: void (Object* undo_redo, Object *modified_object, String array_prefix, int element_index, int new_position)
 	void remove_move_array_element_function(const StringName &p_class);
@@ -191,7 +191,7 @@ public:
 	void add_custom_type(const String &p_type, const String &p_inherits, const Ref<Script> &p_script, const Ref<Texture2D> &p_icon);
 	Variant instantiate_custom_type(const String &p_type, const String &p_inherits);
 	void remove_custom_type(const String &p_type);
-	const HashMap<String, Vector<CustomType>> &get_custom_types() const { return custom_types; }
+	const HashMap<String, Hector<CustomType>> &get_custom_types() const { return custom_types; }
 	const CustomType *get_custom_type_by_name(const String &p_name) const;
 	const CustomType *get_custom_type_by_path(const String &p_path) const;
 	bool is_type_recognized(const String &p_type) const;
@@ -207,7 +207,7 @@ public:
 	int get_edited_scene_from_path(const String &p_path) const;
 	Node *get_edited_scene_root(int p_idx = -1);
 	int get_edited_scene_count() const;
-	Vector<EditedScene> get_edited_scenes() const;
+	Hector<EditedScene> get_edited_scenes() const;
 
 	String get_scene_title(int p_idx, bool p_always_strip_extension = false) const;
 	String get_scene_path(int p_idx) const;

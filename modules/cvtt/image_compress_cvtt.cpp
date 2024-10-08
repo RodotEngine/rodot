@@ -182,7 +182,7 @@ void image_compress_cvtt(Image *p_image, Image::UsedChannels p_channels) {
 
 	const uint8_t *rb = p_image->get_data().ptr();
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	int64_t target_size = Image::get_image_data_size(w, h, target_format, p_image->has_mipmaps());
 	int mm_count = p_image->has_mipmaps() ? Image::get_image_required_mipmaps(w, h, target_format) : 0;
 	data.resize(target_size);
@@ -206,7 +206,7 @@ void image_compress_cvtt(Image *p_image, Image::UsedChannels p_channels) {
 	//
 	// The number of executions with different inputs can be increased while the latency is the same.
 
-	Vector<CVTTCompressionRowTask> tasks;
+	Hector<CVTTCompressionRowTask> tasks;
 
 	for (int i = 0; i <= mm_count; i++) {
 		int bw = w % 4 != 0 ? w + (4 - w % 4) : w;
@@ -273,7 +273,7 @@ void image_decompress_cvtt(Image *p_image) {
 
 	const uint8_t *rb = p_image->get_data().ptr();
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	int64_t target_size = Image::get_image_data_size(w, h, target_format, p_image->has_mipmaps());
 	int mm_count = p_image->get_mipmap_count();
 	data.resize(target_size);

@@ -135,8 +135,8 @@ void MultiplayerSpawner::clear_spawnable_scenes() {
 	}
 }
 
-Vector<String> MultiplayerSpawner::_get_spawnable_scenes() const {
-	Vector<String> ss;
+Hector<String> MultiplayerSpawner::_get_spawnable_scenes() const {
+	Hector<String> ss;
 	ss.resize(spawnable_scenes.size());
 	for (int i = 0; i < ss.size(); i++) {
 		ss.write[i] = spawnable_scenes[i].path;
@@ -144,7 +144,7 @@ Vector<String> MultiplayerSpawner::_get_spawnable_scenes() const {
 	return ss;
 }
 
-void MultiplayerSpawner::_set_spawnable_scenes(const Vector<String> &p_scenes) {
+void MultiplayerSpawner::_set_spawnable_scenes(const Hector<String> &p_scenes) {
 	clear_spawnable_scenes();
 	for (int i = 0; i < p_scenes.size(); i++) {
 		add_spawnable_scene(p_scenes[i]);

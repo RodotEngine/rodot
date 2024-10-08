@@ -47,12 +47,12 @@
 #undef  SCALED
 #define SCALED( x )  ( (x) * ( 1L << shift ) - delta )
 
-    FT_Vector   v_last;
-    FT_Vector   v_control;
-    FT_Vector   v_start;
+    FT_Hector   v_last;
+    FT_Hector   v_control;
+    FT_Hector   v_start;
 
-    FT_Vector*  point;
-    FT_Vector*  limit;
+    FT_Hector*  point;
+    FT_Hector*  limit;
     char*       tags;
 
     FT_Error    error;
@@ -146,7 +146,7 @@
         {
         case FT_CURVE_TAG_ON:  /* emit a single line_to */
           {
-            FT_Vector  vec;
+            FT_Hector  vec;
 
 
             vec.x = SCALED( point->x );
@@ -167,8 +167,8 @@
         Do_Conic:
           if ( point < limit )
           {
-            FT_Vector  vec;
-            FT_Vector  v_middle;
+            FT_Hector  vec;
+            FT_Hector  v_middle;
 
 
             point++;
@@ -223,7 +223,7 @@
 
         default:  /* FT_CURVE_TAG_CUBIC */
           {
-            FT_Vector  vec1, vec2;
+            FT_Hector  vec1, vec2;
 
 
             if ( point + 1 > limit                             ||
@@ -241,7 +241,7 @@
 
             if ( point <= limit )
             {
-              FT_Vector  vec;
+              FT_Hector  vec;
 
 
               vec.x = SCALED( point->x );
@@ -482,8 +482,8 @@
       }
       else
       {
-        FT_Vector*  vec   = outline->points;
-        FT_Vector*  limit = vec + outline->n_points;
+        FT_Hector*  vec   = outline->points;
+        FT_Hector*  limit = vec + outline->n_points;
 
 
         xMin = xMax = vec->x;
@@ -520,7 +520,7 @@
                         FT_Pos             yOffset )
   {
     FT_UShort   n;
-    FT_Vector*  vec;
+    FT_Hector*  vec;
 
 
     if ( !outline )
@@ -559,9 +559,9 @@
 
       /* reverse point table */
       {
-        FT_Vector*  p = outline->points + first;
-        FT_Vector*  q = outline->points + last;
-        FT_Vector   swap;
+        FT_Hector*  p = outline->points + first;
+        FT_Hector*  q = outline->points + last;
+        FT_Hector   swap;
 
 
         while ( p < q )
@@ -691,23 +691,23 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( void )
-  FT_Vector_Transform( FT_Vector*        vector,
+  FT_Hector_Transform( FT_Hector*        Hector,
                        const FT_Matrix*  matrix )
   {
     FT_Pos  xz, yz;
 
 
-    if ( !vector || !matrix )
+    if ( !Hector || !matrix )
       return;
 
-    xz = FT_MulFix( vector->x, matrix->xx ) +
-         FT_MulFix( vector->y, matrix->xy );
+    xz = FT_MulFix( Hector->x, matrix->xx ) +
+         FT_MulFix( Hector->y, matrix->xy );
 
-    yz = FT_MulFix( vector->x, matrix->yx ) +
-         FT_MulFix( vector->y, matrix->yy );
+    yz = FT_MulFix( Hector->x, matrix->yx ) +
+         FT_MulFix( Hector->y, matrix->yy );
 
-    vector->x = xz;
-    vector->y = yz;
+    Hector->x = xz;
+    Hector->y = yz;
   }
 
 
@@ -717,8 +717,8 @@
   FT_Outline_Transform( const FT_Outline*  outline,
                         const FT_Matrix*   matrix )
   {
-    FT_Vector*  vec;
-    FT_Vector*  limit;
+    FT_Hector*  vec;
+    FT_Hector*  limit;
 
 
     if ( !outline || !matrix || !outline->points )
@@ -728,7 +728,7 @@
     limit = vec + outline->n_points;
 
     for ( ; vec < limit; vec++ )
-      FT_Vector_Transform( vec, matrix );
+      FT_Hector_Transform( vec, matrix );
   }
 
 
@@ -752,12 +752,12 @@
   static FT_Bool
   ft_contour_has( FT_Outline*  outline,
                   FT_Short     c,
-                  FT_Vector*   point )
+                  FT_Hector*   point )
   {
-    FT_Vector*  first;
-    FT_Vector*  last;
-    FT_Vector*  a;
-    FT_Vector*  b;
+    FT_Hector*  first;
+    FT_Hector*  last;
+    FT_Hector*  a;
+    FT_Hector*  b;
     FT_UInt     n = 0;
 
 
@@ -802,8 +802,8 @@
   ft_contour_enclosed( FT_Outline*  outline,
                        FT_UShort    c )
   {
-    FT_Vector*  first;
-    FT_Vector*  last;
+    FT_Hector*  first;
+    FT_Hector*  last;
     FT_Short    i;
 
 
@@ -813,7 +813,7 @@
     {
       if ( i != c && ft_contour_has( outline, i, first ) )
       {
-        FT_Vector*  pt;
+        FT_Hector*  pt;
 
 
         for ( pt = first + 1; pt <= last; pt++ )
@@ -836,16 +836,16 @@
   ft_outline_get_orientation( FT_Outline*  outline )
   {
     FT_Short        i;
-    FT_Vector*      first;
-    FT_Vector*      last;
+    FT_Hector*      first;
+    FT_Hector*      last;
     FT_Orientation  orient = FT_ORIENTATION_NONE;
 
 
     first = outline->points;
     for ( i = 0; i < outline->n_contours; i++, first = last + 1 )
     {
-      FT_Vector*  point;
-      FT_Vector*  xmin_point;
+      FT_Hector*  point;
+      FT_Hector*  xmin_point;
       FT_Pos      xmin;
 
 
@@ -872,8 +872,8 @@
 
       /* check the orientation of the contour */
       {
-        FT_Vector*      prev;
-        FT_Vector*      next;
+        FT_Hector*      prev;
+        FT_Hector*      next;
         FT_Orientation  o;
 
 
@@ -916,7 +916,7 @@
                          FT_Pos       xstrength,
                          FT_Pos       ystrength )
   {
-    FT_Vector*      points;
+    FT_Hector*      points;
     FT_Int          c, first, last;
     FT_Orientation  orientation;
 
@@ -943,7 +943,7 @@
     last = -1;
     for ( c = 0; c < outline->n_contours; c++ )
     {
-      FT_Vector  in, out, anchor, shift;
+      FT_Hector  in, out, anchor, shift;
       FT_Fixed   l_in, l_out, l_anchor = 0, l, q, d;
       FT_Int     i, j, k;
 
@@ -965,7 +965,7 @@
         {
           out.x = points[j].x - points[i].x;
           out.y = points[j].y - points[i].y;
-          l_out = (FT_Fixed)FT_Vector_NormLen( &out );
+          l_out = (FT_Fixed)FT_Hector_NormLen( &out );
 
           if ( l_out == 0 )
             continue;
@@ -1050,8 +1050,8 @@
   {
     FT_BBox     cbox = { 0, 0, 0, 0 };
     FT_Int      xshift, yshift;
-    FT_Vector*  points;
-    FT_Vector   v_prev, v_cur;
+    FT_Hector*  points;
+    FT_Hector   v_prev, v_cur;
     FT_Int      c, n, first, last;
     FT_Pos      area = 0;
 

@@ -101,19 +101,19 @@ Transform3D XRPose::get_adjusted_transform() const {
 	return adjusted_transform;
 }
 
-void XRPose::set_linear_velocity(const Vector3 p_velocity) {
+void XRPose::set_linear_velocity(const Hector3 p_velocity) {
 	linear_velocity = p_velocity;
 }
 
-Vector3 XRPose::get_linear_velocity() const {
+Hector3 XRPose::get_linear_velocity() const {
 	return linear_velocity;
 }
 
-void XRPose::set_angular_velocity(const Vector3 p_velocity) {
+void XRPose::set_angular_velocity(const Hector3 p_velocity) {
 	angular_velocity = p_velocity;
 }
 
-Vector3 XRPose::get_angular_velocity() const {
+Hector3 XRPose::get_angular_velocity() const {
 	return angular_velocity;
 }
 

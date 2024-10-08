@@ -881,7 +881,7 @@ const char* CapabilityString(int info)
     case 4:  return "Addresses";
     case 5:  return "Linkage";
     case 6:  return "Kernel";
-    case 7:  return "Vector16";
+    case 7:  return "Hector16";
     case 8:  return "Float16Buffer";
     case 9:  return "Float16";
     case 10: return "Float64";
@@ -1038,7 +1038,7 @@ const char* CapabilityString(int info)
     case CapabilityFragmentShadingRateKHR:                  return "FragmentShadingRateKHR";
 
     case CapabilityDemoteToHelperInvocationEXT:             return "DemoteToHelperInvocationEXT";
-    case CapabilityAtomicFloat16VectorNV:                   return "AtomicFloat16VectorNV";
+    case CapabilityAtomicFloat16HectorNV:                   return "AtomicFloat16HectorNV";
     case CapabilityShaderClockKHR:                          return "ShaderClockKHR";
     case CapabilityQuadControlKHR:                          return "QuadControlKHR";
     case CapabilityInt64ImageEXT:                           return "Int64ImageEXT";
@@ -1096,7 +1096,7 @@ const char* OpcodeString(int op)
     case 20:  return "OpTypeBool";
     case 21:  return "OpTypeInt";
     case 22:  return "OpTypeFloat";
-    case 23:  return "OpTypeVector";
+    case 23:  return "OpTypeHector";
     case 24:  return "OpTypeMatrix";
     case 25:  return "OpTypeImage";
     case 26:  return "OpTypeSampler";
@@ -1150,9 +1150,9 @@ const char* OpcodeString(int op)
     case 74:  return "OpGroupDecorate";
     case 75:  return "OpGroupMemberDecorate";
     case 76:  return "Bad";
-    case 77:  return "OpVectorExtractDynamic";
-    case 78:  return "OpVectorInsertDynamic";
-    case 79:  return "OpVectorShuffle";
+    case 77:  return "OpHectorExtractDynamic";
+    case 78:  return "OpHectorInsertDynamic";
+    case 79:  return "OpHectorShuffle";
     case 80:  return "OpCompositeConstruct";
     case 81:  return "OpCompositeExtract";
     case 82:  return "OpCompositeInsert";
@@ -1216,10 +1216,10 @@ const char* OpcodeString(int op)
     case 139: return "OpSMod";
     case 140: return "OpFRem";
     case 141: return "OpFMod";
-    case 142: return "OpVectorTimesScalar";
+    case 142: return "OpHectorTimesScalar";
     case 143: return "OpMatrixTimesScalar";
-    case 144: return "OpVectorTimesMatrix";
-    case 145: return "OpMatrixTimesVector";
+    case 144: return "OpHectorTimesMatrix";
+    case 145: return "OpMatrixTimesHector";
     case 146: return "OpMatrixTimesMatrix";
     case 147: return "OpOuterProduct";
     case 148: return "OpDot";
@@ -1630,7 +1630,7 @@ void Parameterize()
         InstructionDesc[OpTypeBool].setResultAndType(true, false);
         InstructionDesc[OpTypeInt].setResultAndType(true, false);
         InstructionDesc[OpTypeFloat].setResultAndType(true, false);
-        InstructionDesc[OpTypeVector].setResultAndType(true, false);
+        InstructionDesc[OpTypeHector].setResultAndType(true, false);
         InstructionDesc[OpTypeMatrix].setResultAndType(true, false);
         InstructionDesc[OpTypeImage].setResultAndType(true, false);
         InstructionDesc[OpTypeSampler].setResultAndType(true, false);
@@ -1716,7 +1716,7 @@ void Parameterize()
         ExecutionModeOperands[ExecutionModeLocalSizeHint].push(OperandLiteralNumber, "'z size'");
 
         ExecutionModeOperands[ExecutionModeOutputVertices].push(OperandLiteralNumber, "'Vertex count'");
-        ExecutionModeOperands[ExecutionModeVecTypeHint].push(OperandLiteralNumber, "'Vector type'");
+        ExecutionModeOperands[ExecutionModeVecTypeHint].push(OperandLiteralNumber, "'Hector type'");
 
         DecorationOperands[DecorationStream].push(OperandLiteralNumber, "'Stream Number'");
         DecorationOperands[DecorationLocation].push(OperandLiteralNumber, "'Location'");
@@ -1825,8 +1825,8 @@ void Parameterize()
 
         InstructionDesc[OpTypeFloat].operands.push(OperandLiteralNumber, "'Width'");
 
-        InstructionDesc[OpTypeVector].operands.push(OperandId, "'Component Type'");
-        InstructionDesc[OpTypeVector].operands.push(OperandLiteralNumber, "'Component Count'");
+        InstructionDesc[OpTypeHector].operands.push(OperandId, "'Component Type'");
+        InstructionDesc[OpTypeHector].operands.push(OperandLiteralNumber, "'Component Count'");
 
         InstructionDesc[OpTypeMatrix].operands.push(OperandId, "'Column Type'");
         InstructionDesc[OpTypeMatrix].operands.push(OperandLiteralNumber, "'Column Count'");
@@ -1931,16 +1931,16 @@ void Parameterize()
         InstructionDesc[OpGroupMemberDecorate].operands.push(OperandId, "'Decoration Group'");
         InstructionDesc[OpGroupMemberDecorate].operands.push(OperandVariableIdLiteral, "'Targets'");
 
-        InstructionDesc[OpVectorExtractDynamic].operands.push(OperandId, "'Vector'");
-        InstructionDesc[OpVectorExtractDynamic].operands.push(OperandId, "'Index'");
+        InstructionDesc[OpHectorExtractDynamic].operands.push(OperandId, "'Hector'");
+        InstructionDesc[OpHectorExtractDynamic].operands.push(OperandId, "'Index'");
 
-        InstructionDesc[OpVectorInsertDynamic].operands.push(OperandId, "'Vector'");
-        InstructionDesc[OpVectorInsertDynamic].operands.push(OperandId, "'Component'");
-        InstructionDesc[OpVectorInsertDynamic].operands.push(OperandId, "'Index'");
+        InstructionDesc[OpHectorInsertDynamic].operands.push(OperandId, "'Hector'");
+        InstructionDesc[OpHectorInsertDynamic].operands.push(OperandId, "'Component'");
+        InstructionDesc[OpHectorInsertDynamic].operands.push(OperandId, "'Index'");
 
-        InstructionDesc[OpVectorShuffle].operands.push(OperandId, "'Vector 1'");
-        InstructionDesc[OpVectorShuffle].operands.push(OperandId, "'Vector 2'");
-        InstructionDesc[OpVectorShuffle].operands.push(OperandVariableLiterals, "'Components'");
+        InstructionDesc[OpHectorShuffle].operands.push(OperandId, "'Hector 1'");
+        InstructionDesc[OpHectorShuffle].operands.push(OperandId, "'Hector 2'");
+        InstructionDesc[OpHectorShuffle].operands.push(OperandVariableLiterals, "'Components'");
 
         InstructionDesc[OpCompositeConstruct].operands.push(OperandVariableIds, "'Constituents'");
 
@@ -2143,9 +2143,9 @@ void Parameterize()
 
         InstructionDesc[OpNot].operands.push(OperandId, "'Operand'");
 
-        InstructionDesc[OpAny].operands.push(OperandId, "'Vector'");
+        InstructionDesc[OpAny].operands.push(OperandId, "'Hector'");
 
-        InstructionDesc[OpAll].operands.push(OperandId, "'Vector'");
+        InstructionDesc[OpAll].operands.push(OperandId, "'Hector'");
 
         InstructionDesc[OpConvertFToU].operands.push(OperandId, "'Float Value'");
 
@@ -2250,26 +2250,26 @@ void Parameterize()
         InstructionDesc[OpFMod].operands.push(OperandId, "'Operand 1'");
         InstructionDesc[OpFMod].operands.push(OperandId, "'Operand 2'");
 
-        InstructionDesc[OpVectorTimesScalar].operands.push(OperandId, "'Vector'");
-        InstructionDesc[OpVectorTimesScalar].operands.push(OperandId, "'Scalar'");
+        InstructionDesc[OpHectorTimesScalar].operands.push(OperandId, "'Hector'");
+        InstructionDesc[OpHectorTimesScalar].operands.push(OperandId, "'Scalar'");
 
         InstructionDesc[OpMatrixTimesScalar].operands.push(OperandId, "'Matrix'");
         InstructionDesc[OpMatrixTimesScalar].operands.push(OperandId, "'Scalar'");
 
-        InstructionDesc[OpVectorTimesMatrix].operands.push(OperandId, "'Vector'");
-        InstructionDesc[OpVectorTimesMatrix].operands.push(OperandId, "'Matrix'");
+        InstructionDesc[OpHectorTimesMatrix].operands.push(OperandId, "'Hector'");
+        InstructionDesc[OpHectorTimesMatrix].operands.push(OperandId, "'Matrix'");
 
-        InstructionDesc[OpMatrixTimesVector].operands.push(OperandId, "'Matrix'");
-        InstructionDesc[OpMatrixTimesVector].operands.push(OperandId, "'Vector'");
+        InstructionDesc[OpMatrixTimesHector].operands.push(OperandId, "'Matrix'");
+        InstructionDesc[OpMatrixTimesHector].operands.push(OperandId, "'Hector'");
 
         InstructionDesc[OpMatrixTimesMatrix].operands.push(OperandId, "'LeftMatrix'");
         InstructionDesc[OpMatrixTimesMatrix].operands.push(OperandId, "'RightMatrix'");
 
-        InstructionDesc[OpOuterProduct].operands.push(OperandId, "'Vector 1'");
-        InstructionDesc[OpOuterProduct].operands.push(OperandId, "'Vector 2'");
+        InstructionDesc[OpOuterProduct].operands.push(OperandId, "'Hector 1'");
+        InstructionDesc[OpOuterProduct].operands.push(OperandId, "'Hector 2'");
 
-        InstructionDesc[OpDot].operands.push(OperandId, "'Vector 1'");
-        InstructionDesc[OpDot].operands.push(OperandId, "'Vector 2'");
+        InstructionDesc[OpDot].operands.push(OperandId, "'Hector 1'");
+        InstructionDesc[OpDot].operands.push(OperandId, "'Hector 2'");
 
         InstructionDesc[OpIAddCarry].operands.push(OperandId, "'Operand 1'");
         InstructionDesc[OpIAddCarry].operands.push(OperandId, "'Operand 2'");

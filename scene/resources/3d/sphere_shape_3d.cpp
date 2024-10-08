@@ -32,23 +32,23 @@
 
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> SphereShape3D::get_debug_mesh_lines() const {
+Hector<Hector3> SphereShape3D::get_debug_mesh_lines() const {
 	float r = get_radius();
 
-	Vector<Vector3> points;
+	Hector<Hector3> points;
 
 	for (int i = 0; i <= 360; i++) {
 		float ra = Math::deg_to_rad((float)i);
 		float rb = Math::deg_to_rad((float)i + 1);
-		Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * r;
-		Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * r;
+		Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * r;
+		Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * r;
 
-		points.push_back(Vector3(a.x, 0, a.y));
-		points.push_back(Vector3(b.x, 0, b.y));
-		points.push_back(Vector3(0, a.x, a.y));
-		points.push_back(Vector3(0, b.x, b.y));
-		points.push_back(Vector3(a.x, a.y, 0));
-		points.push_back(Vector3(b.x, b.y, 0));
+		points.push_back(Hector3(a.x, 0, a.y));
+		points.push_back(Hector3(b.x, 0, b.y));
+		points.push_back(Hector3(0, a.x, a.y));
+		points.push_back(Hector3(0, b.x, b.y));
+		points.push_back(Hector3(a.x, a.y, 0));
+		points.push_back(Hector3(b.x, b.y, 0));
 	}
 
 	return points;

@@ -28,7 +28,7 @@
 #define HB_PRIORITY_QUEUE_HH
 
 #include "hb.hh"
-#include "hb-vector.hh"
+#include "hb-Hector.hh"
 
 /*
  * hb_priority_queue_t
@@ -47,7 +47,7 @@ struct hb_priority_queue_t
 {
  private:
   typedef hb_pair_t<K, unsigned> item_t;
-  hb_vector_t<item_t> heap;
+  hb_Hector_t<item_t> heap;
 
  public:
 

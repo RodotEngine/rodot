@@ -68,12 +68,12 @@ class GraphEditMinimap : public Control {
 
 	GraphEdit *ge = nullptr;
 
-	Vector2 minimap_padding;
-	Vector2 minimap_offset;
-	Vector2 graph_proportions = Vector2(1, 1);
-	Vector2 graph_padding = Vector2(0, 0);
-	Vector2 camera_position = Vector2(100, 50);
-	Vector2 camera_size = Vector2(200, 200);
+	Hector2 minimap_padding;
+	Hector2 minimap_offset;
+	Hector2 graph_proportions = Hector2(1, 1);
+	Hector2 graph_padding = Hector2(0, 0);
+	Hector2 camera_position = Hector2(100, 50);
+	Hector2 camera_size = Hector2(200, 200);
 
 	bool is_pressing = false;
 	bool is_resizing = false;
@@ -87,16 +87,16 @@ class GraphEditMinimap : public Control {
 		Color resizer_color;
 	} theme_cache;
 
-	Vector2 _get_render_size();
-	Vector2 _get_graph_offset();
-	Vector2 _get_graph_size();
+	Hector2 _get_render_size();
+	Hector2 _get_graph_offset();
+	Hector2 _get_graph_size();
 
-	Vector2 _convert_from_graph_position(const Vector2 &p_position);
-	Vector2 _convert_to_graph_position(const Vector2 &p_position);
+	Hector2 _convert_from_graph_position(const Hector2 &p_position);
+	Hector2 _convert_to_graph_position(const Hector2 &p_position);
 
 	virtual void gui_input(const Ref<InputEvent> &p_ev) override;
 
-	void _adjust_graph_scroll(const Vector2 &p_offset);
+	void _adjust_graph_scroll(const Hector2 &p_offset);
 
 protected:
 	static void _bind_methods();
@@ -124,8 +124,8 @@ public:
 	private:
 		struct Cache {
 			bool dirty = true;
-			Vector2 from_pos; // In graph space.
-			Vector2 to_pos; // In graph space.
+			Hector2 from_pos; // In graph space.
+			Hector2 to_pos; // In graph space.
 			Color from_color;
 			Color to_color;
 			Rect2 aabb; // In local screen space.
@@ -203,7 +203,7 @@ private:
 	bool connecting_from_output = false;
 	int connecting_type = 0;
 	Color connecting_color;
-	Vector2 connecting_to_point; // In local screen space.
+	Hector2 connecting_to_point; // In local screen space.
 	bool connecting_target_valid = false;
 	StringName connecting_target_node;
 	int connecting_from_port_index = 0;
@@ -212,13 +212,13 @@ private:
 	bool just_disconnected = false;
 	bool connecting_valid = false;
 
-	Vector2 click_pos;
+	Hector2 click_pos;
 
 	PanningScheme panning_scheme = SCROLL_ZOOMS;
 	bool dragging = false;
 	bool just_selected = false;
 	bool moving_selection = false;
-	Vector2 drag_accum;
+	Hector2 drag_accum;
 
 	float zoom = 1.0;
 	float zoom_step = 1.2;
@@ -302,8 +302,8 @@ private:
 	HashMap<StringName, HashSet<StringName>> frame_attached_nodes;
 	HashMap<StringName, StringName> linked_parent_map;
 
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
 	void _zoom_minus();
 	void _zoom_reset();
@@ -312,8 +312,8 @@ private:
 
 	void _graph_element_selected(Node *p_node);
 	void _graph_element_deselected(Node *p_node);
-	void _graph_element_resize_request(const Vector2 &p_new_minsize, Node *p_node);
-	void _graph_frame_autoshrink_changed(const Vector2 &p_new_minsize, GraphFrame *p_frame);
+	void _graph_element_resize_request(const Hector2 &p_new_minsize, Node *p_node);
+	void _graph_frame_autoshrink_changed(const Hector2 &p_new_minsize, GraphFrame *p_frame);
 	void _graph_element_moved(Node *p_node);
 	void _graph_node_slot_updated(int p_index, Node *p_node);
 	void _graph_node_rect_changed(GraphNode *p_node);
@@ -328,7 +328,7 @@ private:
 	void _top_connection_layer_input(const Ref<InputEvent> &p_ev);
 
 	float _get_shader_line_width();
-	void _draw_minimap_connection_line(const Vector2 &p_from_graph_position, const Vector2 &p_to_graph_position, const Color &p_from_color, const Color &p_to_color);
+	void _draw_minimap_connection_line(const Hector2 &p_from_graph_position, const Hector2 &p_to_graph_position, const Color &p_from_color, const Color &p_to_color);
 	void _invalidate_connection_line_cache();
 	void _update_top_connection_layer();
 	void _update_connections();
@@ -337,15 +337,15 @@ private:
 	void _minimap_draw();
 	void _draw_grid();
 
-	bool is_in_port_hotzone(const Vector2 &p_pos, const Vector2 &p_mouse_pos, const Vector2i &p_port_size, bool p_left);
+	bool is_in_port_hotzone(const Hector2 &p_pos, const Hector2 &p_mouse_pos, const Hector2i &p_port_size, bool p_left);
 
 	TypedArray<Dictionary> _get_connection_list() const;
-	Dictionary _get_closest_connection_at_point(const Vector2 &p_point, float p_max_distance = 4.0) const;
+	Dictionary _get_closest_connection_at_point(const Hector2 &p_point, float p_max_distance = 4.0) const;
 	TypedArray<Dictionary> _get_connections_intersecting_with_rect(const Rect2 &p_rect) const;
 
 	Rect2 _compute_shrinked_frame_rect(const GraphFrame *p_frame);
 	void _set_drag_frame_attached_nodes(GraphFrame *p_frame, bool p_drag);
-	void _set_position_of_frame_attached_nodes(GraphFrame *p_frame, const Vector2 &p_pos);
+	void _set_position_of_frame_attached_nodes(GraphFrame *p_frame, const Hector2 &p_pos);
 
 	friend class GraphEditFilter;
 	bool _filter_input(const Point2 &p_point);
@@ -356,12 +356,12 @@ private:
 	friend class GraphEditMinimap;
 	void _minimap_toggled();
 
-	bool _check_clickable_control(Control *p_control, const Vector2 &r_mouse_pos, const Vector2 &p_offset);
+	bool _check_clickable_control(Control *p_control, const Hector2 &r_mouse_pos, const Hector2 &p_offset);
 
 #ifndef DISABLE_DEPRECATED
 	bool _is_arrange_nodes_button_hidden_bind_compat_81582() const;
 	void _set_arrange_nodes_button_hidden_bind_compat_81582(bool p_enable);
-	PackedVector2Array _get_connection_line_bind_compat_86158(const Vector2 &p_from, const Vector2 &p_to);
+	PackedHector2Array _get_connection_line_bind_compat_86158(const Hector2 &p_from, const Hector2 &p_to);
 #endif
 
 protected:
@@ -376,12 +376,12 @@ protected:
 	static void _bind_compatibility_methods();
 #endif
 
-	virtual bool is_in_input_hotzone(GraphNode *p_graph_node, int p_port_idx, const Vector2 &p_mouse_pos, const Vector2i &p_port_size);
-	virtual bool is_in_output_hotzone(GraphNode *p_graph_node, int p_port_idx, const Vector2 &p_mouse_pos, const Vector2i &p_port_size);
+	virtual bool is_in_input_hotzone(GraphNode *p_graph_node, int p_port_idx, const Hector2 &p_mouse_pos, const Hector2i &p_port_size);
+	virtual bool is_in_output_hotzone(GraphNode *p_graph_node, int p_port_idx, const Hector2 &p_mouse_pos, const Hector2i &p_port_size);
 
-	GDVIRTUAL2RC(Vector<Vector2>, _get_connection_line, Vector2, Vector2)
-	GDVIRTUAL3R(bool, _is_in_input_hotzone, Object *, int, Vector2)
-	GDVIRTUAL3R(bool, _is_in_output_hotzone, Object *, int, Vector2)
+	GDVIRTUAL2RC(Hector<Hector2>, _get_connection_line, Hector2, Hector2)
+	GDVIRTUAL3R(bool, _is_in_input_hotzone, Object *, int, Hector2)
+	GDVIRTUAL3R(bool, _is_in_output_hotzone, Object *, int, Hector2)
 	GDVIRTUAL4R(bool, _is_node_hover_valid, StringName, int, StringName, int);
 
 public:
@@ -404,8 +404,8 @@ public:
 
 	void force_connection_drag_end();
 	const List<Ref<Connection>> &get_connection_list() const;
-	virtual PackedVector2Array get_connection_line(const Vector2 &p_from, const Vector2 &p_to) const;
-	Ref<Connection> get_closest_connection_at_point(const Vector2 &p_point, float p_max_distance = 4.0) const;
+	virtual PackedHector2Array get_connection_line(const Hector2 &p_from, const Hector2 &p_to) const;
+	Ref<Connection> get_closest_connection_at_point(const Hector2 &p_point, float p_max_distance = 4.0) const;
 	List<Ref<Connection>> get_connections_intersecting_with_rect(const Rect2 &p_rect) const;
 
 	virtual bool is_node_hover_valid(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port);
@@ -427,7 +427,7 @@ public:
 	PanningScheme get_panning_scheme() const;
 
 	void set_zoom(float p_zoom);
-	void set_zoom_custom(float p_zoom, const Vector2 &p_center);
+	void set_zoom_custom(float p_zoom, const Hector2 &p_center);
 	float get_zoom() const;
 
 	void set_zoom_min(float p_zoom_min);
@@ -439,8 +439,8 @@ public:
 	void set_zoom_step(float p_zoom_step);
 	float get_zoom_step() const;
 
-	void set_minimap_size(Vector2 p_size);
-	Vector2 get_minimap_size() const;
+	void set_minimap_size(Hector2 p_size);
+	Hector2 get_minimap_size() const;
 	void set_minimap_opacity(float p_opacity);
 	float get_minimap_opacity() const;
 
@@ -474,8 +474,8 @@ public:
 	void add_valid_left_disconnect_type(int p_type);
 	void remove_valid_left_disconnect_type(int p_type);
 
-	void set_scroll_offset(const Vector2 &p_ofs);
-	Vector2 get_scroll_offset() const;
+	void set_scroll_offset(const Hector2 &p_ofs);
+	Hector2 get_scroll_offset() const;
 
 	void set_selected(Node *p_child);
 

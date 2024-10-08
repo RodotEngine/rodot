@@ -181,10 +181,10 @@ namespace RVO2D {
 		 * \return     True if q1 and q2 are mutually visible within the radius;
 		 *             false otherwise.
 		 */
-		bool queryVisibility(const Vector2 &q1, const Vector2 &q2,
+		bool queryVisibility(const Hector2 &q1, const Hector2 &q2,
 							 float radius) const;
 
-		bool queryVisibilityRecursive(const Vector2 &q1, const Vector2 &q2,
+		bool queryVisibilityRecursive(const Hector2 &q1, const Hector2 &q2,
 									  float radius,
 									  const ObstacleTreeNode *node) const;
 

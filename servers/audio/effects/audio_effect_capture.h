@@ -35,7 +35,7 @@
 #include "core/math/audio_frame.h"
 #include "core/object/ref_counted.h"
 #include "core/templates/ring_buffer.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "servers/audio/audio_effect.h"
 #include "servers/audio_server.h"
 
@@ -71,7 +71,7 @@ public:
 	float get_buffer_length();
 
 	bool can_get_buffer(int p_frames) const;
-	PackedVector2Array get_buffer(int p_len);
+	PackedHector2Array get_buffer(int p_len);
 	void clear_buffer();
 
 	int get_frames_available() const;

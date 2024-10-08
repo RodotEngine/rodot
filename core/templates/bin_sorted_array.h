@@ -31,13 +31,13 @@
 #ifndef BIN_SORTED_ARRAY_H
 #define BIN_SORTED_ARRAY_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_array.h"
 
 template <typename T>
 class BinSortedArray {
 	PagedArray<T> array;
-	LocalVector<uint64_t> bin_limits;
+	LocalHector<uint64_t> bin_limits;
 
 	// Implement if elements need to keep track of their own index in the array.
 	_FORCE_INLINE_ virtual void _update_idx(T &r_element, uint64_t p_idx) {}

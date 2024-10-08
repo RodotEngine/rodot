@@ -57,7 +57,7 @@ public:
 		Ref<Texture2D> texture;
 		float duration;
 	};
-	Vector<Frame> frames;
+	Hector<Frame> frames;
 };
 
 class SpriteFramesEditor : public HSplitContainer {
@@ -118,7 +118,7 @@ class SpriteFramesEditor : public HSplitContainer {
 	SpinBox *frame_duration = nullptr;
 	ItemList *frame_list = nullptr;
 	bool loading_scene;
-	Vector<int> selection;
+	Hector<int> selection;
 
 	Button *add_anim = nullptr;
 	Button *duplicate_anim = nullptr;
@@ -163,7 +163,7 @@ class SpriteFramesEditor : public HSplitContainer {
 	EditorFileDialog *file_split_sheet = nullptr;
 	HashMap<int, int> frames_selected; // Key is frame index. Value is selection order.
 	HashSet<int> frames_toggled_by_mouse_hover;
-	Vector<Pair<int, int>> frames_ordered; // First is the index to be ordered by. Second is the actual frame index.
+	Hector<Pair<int, int>> frames_ordered; // First is the index to be ordered by. Second is the actual frame index.
 	int selected_count = 0;
 	bool frames_need_sort = false;
 	int last_frame_selected = 0;
@@ -185,7 +185,7 @@ class SpriteFramesEditor : public HSplitContainer {
 	Size2i _get_separation() const;
 
 	void _load_pressed();
-	void _file_load_request(const Vector<String> &p_path, int p_at_pos = -1);
+	void _file_load_request(const Hector<String> &p_path, int p_at_pos = -1);
 	void _copy_pressed();
 	void _paste_pressed();
 	void _paste_frame_array(const Ref<ClipboardSpriteFrames> &p_clipboard_frames);
@@ -240,13 +240,13 @@ class SpriteFramesEditor : public HSplitContainer {
 	bool _matches_background_color(const Color &p_background_color, const Color &p_pixel_color);
 	Size2i _estimate_sprite_sheet_size(const Ref<Texture2D> p_texture);
 	void _prepare_sprite_sheet(const String &p_file);
-	int _sheet_preview_position_to_frame_index(const Vector2 &p_position);
+	int _sheet_preview_position_to_frame_index(const Hector2 &p_position);
 	void _sheet_preview_draw();
 	void _sheet_spin_changed(double p_value, int p_dominant_param);
 	void _sheet_preview_input(const Ref<InputEvent> &p_event);
 	void _sheet_scroll_input(const Ref<InputEvent> &p_event);
 	void _sheet_add_frames();
-	void _sheet_zoom_on_position(float p_zoom, const Vector2 &p_position);
+	void _sheet_zoom_on_position(float p_zoom, const Hector2 &p_position);
 	void _sheet_zoom_in();
 	void _sheet_zoom_out();
 	void _sheet_zoom_reset();

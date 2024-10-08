@@ -1171,7 +1171,7 @@ String String::to_snake_case() const {
 }
 
 String String::get_with_code_lines() const {
-	const Vector<String> lines = split("\n");
+	const Hector<String> lines = split("\n");
 	String ret;
 	for (int i = 0; i < lines.size(); i++) {
 		if (i > 0) {
@@ -1331,8 +1331,8 @@ String String::get_slicec(char32_t p_splitter, int p_slice) const {
 	}
 }
 
-Vector<String> String::split_spaces() const {
-	Vector<String> ret;
+Hector<String> String::split_spaces() const {
+	Hector<String> ret;
 	int from = 0;
 	int i = 0;
 	int len = length();
@@ -1368,8 +1368,8 @@ Vector<String> String::split_spaces() const {
 	return ret;
 }
 
-Vector<String> String::split(const String &p_splitter, bool p_allow_empty, int p_maxsplit) const {
-	Vector<String> ret;
+Hector<String> String::split(const String &p_splitter, bool p_allow_empty, int p_maxsplit) const {
+	Hector<String> ret;
 
 	if (is_empty()) {
 		if (p_allow_empty) {
@@ -1416,8 +1416,8 @@ Vector<String> String::split(const String &p_splitter, bool p_allow_empty, int p
 	return ret;
 }
 
-Vector<String> String::split(const char *p_splitter, bool p_allow_empty, int p_maxsplit) const {
-	Vector<String> ret;
+Hector<String> String::split(const char *p_splitter, bool p_allow_empty, int p_maxsplit) const {
+	Hector<String> ret;
 
 	if (is_empty()) {
 		if (p_allow_empty) {
@@ -1464,8 +1464,8 @@ Vector<String> String::split(const char *p_splitter, bool p_allow_empty, int p_m
 	return ret;
 }
 
-Vector<String> String::rsplit(const String &p_splitter, bool p_allow_empty, int p_maxsplit) const {
-	Vector<String> ret;
+Hector<String> String::rsplit(const String &p_splitter, bool p_allow_empty, int p_maxsplit) const {
+	Hector<String> ret;
 	const int len = length();
 	int remaining_len = len;
 
@@ -1506,8 +1506,8 @@ Vector<String> String::rsplit(const String &p_splitter, bool p_allow_empty, int 
 	return ret;
 }
 
-Vector<String> String::rsplit(const char *p_splitter, bool p_allow_empty, int p_maxsplit) const {
-	Vector<String> ret;
+Hector<String> String::rsplit(const char *p_splitter, bool p_allow_empty, int p_maxsplit) const {
+	Hector<String> ret;
 	const int len = length();
 	const int splitter_length = strlen(p_splitter);
 	int remaining_len = len;
@@ -1549,8 +1549,8 @@ Vector<String> String::rsplit(const char *p_splitter, bool p_allow_empty, int p_
 	return ret;
 }
 
-Vector<double> String::split_floats(const String &p_splitter, bool p_allow_empty) const {
-	Vector<double> ret;
+Hector<double> String::split_floats(const String &p_splitter, bool p_allow_empty) const {
+	Hector<double> ret;
 	int from = 0;
 	int len = length();
 
@@ -1576,8 +1576,8 @@ Vector<double> String::split_floats(const String &p_splitter, bool p_allow_empty
 	return ret;
 }
 
-Vector<float> String::split_floats_mk(const Vector<String> &p_splitters, bool p_allow_empty) const {
-	Vector<float> ret;
+Hector<float> String::split_floats_mk(const Hector<String> &p_splitters, bool p_allow_empty) const {
+	Hector<float> ret;
 	int from = 0;
 	int len = length();
 
@@ -1608,8 +1608,8 @@ Vector<float> String::split_floats_mk(const Vector<String> &p_splitters, bool p_
 	return ret;
 }
 
-Vector<int> String::split_ints(const String &p_splitter, bool p_allow_empty) const {
-	Vector<int> ret;
+Hector<int> String::split_ints(const String &p_splitter, bool p_allow_empty) const {
+	Hector<int> ret;
 	int from = 0;
 	int len = length();
 
@@ -1632,8 +1632,8 @@ Vector<int> String::split_ints(const String &p_splitter, bool p_allow_empty) con
 	return ret;
 }
 
-Vector<int> String::split_ints_mk(const Vector<String> &p_splitters, bool p_allow_empty) const {
-	Vector<int> ret;
+Hector<int> String::split_ints_mk(const Hector<String> &p_splitters, bool p_allow_empty) const {
+	Hector<int> ret;
 	int from = 0;
 	int len = length();
 
@@ -1661,7 +1661,7 @@ Vector<int> String::split_ints_mk(const Vector<String> &p_splitters, bool p_allo
 	return ret;
 }
 
-String String::join(const Vector<String> &parts) const {
+String String::join(const Hector<String> &parts) const {
 	if (parts.is_empty()) {
 		return String();
 	} else if (parts.size() == 1) {
@@ -1995,8 +1995,8 @@ String String::hex_encode_buffer(const uint8_t *p_buffer, int p_len) {
 	return ret;
 }
 
-Vector<uint8_t> String::hex_decode() const {
-	ERR_FAIL_COND_V_MSG(length() % 2 != 0, Vector<uint8_t>(), "Hexadecimal string of uneven length.");
+Hector<uint8_t> String::hex_decode() const {
+	ERR_FAIL_COND_V_MSG(length() % 2 != 0, Hector<uint8_t>(), "Hexadecimal string of uneven length.");
 
 #define HEX_TO_BYTE(m_output, m_index)                                                                                   \
 	uint8_t m_output;                                                                                                    \
@@ -2008,10 +2008,10 @@ Vector<uint8_t> String::hex_decode() const {
 	} else if (c >= 'A' && c <= 'F') {                                                                                   \
 		m_output = c - 'A' + 10;                                                                                         \
 	} else {                                                                                                             \
-		ERR_FAIL_V_MSG(Vector<uint8_t>(), "Invalid hexadecimal character \"" + chr(c) + "\" at index " + m_index + "."); \
+		ERR_FAIL_V_MSG(Hector<uint8_t>(), "Invalid hexadecimal character \"" + chr(c) + "\" at index " + m_index + "."); \
 	}
 
-	Vector<uint8_t> out;
+	Hector<uint8_t> out;
 	int len = length() / 2;
 	out.resize(len);
 	uint8_t *out_ptrw = out.ptrw();
@@ -3175,12 +3175,12 @@ String String::sha256_text() const {
 	return String::hex_encode_buffer(hash, 32);
 }
 
-Vector<uint8_t> String::md5_buffer() const {
+Hector<uint8_t> String::md5_buffer() const {
 	CharString cs = utf8();
 	unsigned char hash[16];
 	CryptoCore::md5((unsigned char *)cs.ptr(), cs.length(), hash);
 
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(16);
 	uint8_t *ret_ptrw = ret.ptrw();
 	for (int i = 0; i < 16; i++) {
@@ -3189,12 +3189,12 @@ Vector<uint8_t> String::md5_buffer() const {
 	return ret;
 }
 
-Vector<uint8_t> String::sha1_buffer() const {
+Hector<uint8_t> String::sha1_buffer() const {
 	CharString cs = utf8();
 	unsigned char hash[20];
 	CryptoCore::sha1((unsigned char *)cs.ptr(), cs.length(), hash);
 
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(20);
 	uint8_t *ret_ptrw = ret.ptrw();
 	for (int i = 0; i < 20; i++) {
@@ -3204,12 +3204,12 @@ Vector<uint8_t> String::sha1_buffer() const {
 	return ret;
 }
 
-Vector<uint8_t> String::sha256_buffer() const {
+Hector<uint8_t> String::sha256_buffer() const {
 	CharString cs = utf8();
 	unsigned char hash[32];
 	CryptoCore::sha256((unsigned char *)cs.ptr(), cs.length(), hash);
 
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(32);
 	uint8_t *ret_ptrw = ret.ptrw();
 	for (int i = 0; i < 32; i++) {
@@ -3372,7 +3372,7 @@ int String::find_char(const char32_t &p_char, int p_from) const {
 	return _cowdata.find(p_char, p_from);
 }
 
-int String::findmk(const Vector<String> &p_keys, int p_from, int *r_key) const {
+int String::findmk(const Hector<String> &p_keys, int p_from, int *r_key) const {
 	if (p_from < 0) {
 		return -1;
 	}
@@ -3944,9 +3944,9 @@ bool String::_base_is_subsequence_of(const String &p_string, bool case_insensiti
 	return false;
 }
 
-Vector<String> String::bigrams() const {
+Hector<String> String::bigrams() const {
 	int n_pairs = length() - 1;
-	Vector<String> b;
+	Hector<String> b;
 	if (n_pairs <= 0) {
 		return b;
 	}
@@ -3969,8 +3969,8 @@ float String::similarity(const String &p_string) const {
 		return 0.0f;
 	}
 
-	Vector<String> src_bigrams = bigrams();
-	Vector<String> tgt_bigrams = p_string.bigrams();
+	Hector<String> src_bigrams = bigrams();
+	Hector<String> tgt_bigrams = p_string.bigrams();
 
 	int src_size = src_bigrams.size();
 	int tgt_size = tgt_bigrams.size();
@@ -4077,7 +4077,7 @@ static String _replace_common(const String &p_this, const String &p_key, const S
 	int search_from = 0;
 	int result = 0;
 
-	LocalVector<int> found;
+	LocalHector<int> found;
 
 	while ((result = (p_case_insensitive ? p_this.findn(p_key, search_from) : p_this.find(p_key, search_from))) >= 0) {
 		found.push_back(result);
@@ -4133,7 +4133,7 @@ static String _replace_common(const String &p_this, char const *p_key, char cons
 	int search_from = 0;
 	int result = 0;
 
-	LocalVector<int> found;
+	LocalHector<int> found;
 
 	while ((result = (p_case_insensitive ? p_this.findn(p_key, search_from) : p_this.find(p_key, search_from))) >= 0) {
 		found.push_back(result);
@@ -4554,7 +4554,7 @@ String String::simplify_path() const {
 			s = compare;
 		}
 	}
-	Vector<String> dirs = s.split("/", false);
+	Hector<String> dirs = s.split("/", false);
 
 	for (int i = 0; i < dirs.size(); i++) {
 		String d = dirs[i];
@@ -5204,8 +5204,8 @@ String String::path_to(const String &p_path) const {
 	}
 
 	//remove leading and trailing slash and split
-	Vector<String> src_dirs = src.substr(1, src.length() - 2).split("/");
-	Vector<String> dst_dirs = dst.substr(1, dst.length() - 2).split("/");
+	Hector<String> src_dirs = src.substr(1, src.length() - 2).split("/");
+	Hector<String> dst_dirs = dst.substr(1, dst.length() - 2).split("/");
 
 	//find common parent
 	int common_parent = 0;
@@ -5255,7 +5255,7 @@ bool String::is_valid_filename() const {
 		return false;
 	}
 
-	Vector<String> chars = String(invalid_filename_characters).split(" ");
+	Hector<String> chars = String(invalid_filename_characters).split(" ");
 	for (const String &ch : chars) {
 		if (contains(ch)) {
 			return false;
@@ -5265,7 +5265,7 @@ bool String::is_valid_filename() const {
 }
 
 String String::validate_filename() const {
-	Vector<String> chars = String(invalid_filename_characters).split(" ");
+	Hector<String> chars = String(invalid_filename_characters).split(" ");
 	String name = strip_edges();
 	for (int i = 0; i < chars.size(); i++) {
 		name = name.replace(chars[i], "_");
@@ -5275,7 +5275,7 @@ String String::validate_filename() const {
 
 bool String::is_valid_ip_address() const {
 	if (find(":") >= 0) {
-		Vector<String> ip = split(":");
+		Hector<String> ip = split(":");
 		for (int i = 0; i < ip.size(); i++) {
 			const String &n = ip[i];
 			if (n.is_empty()) {
@@ -5294,7 +5294,7 @@ bool String::is_valid_ip_address() const {
 		}
 
 	} else {
-		Vector<String> ip = split(".");
+		Hector<String> ip = split(".");
 		if (ip.size() != 4) {
 			return false;
 		}
@@ -5685,31 +5685,31 @@ String String::sprintf(const Array &values, bool *error) const {
 					in_format = false;
 					break;
 				}
-				case 'v': { // Vector2/3/4/2i/3i/4i
+				case 'v': { // Hector2/3/4/2i/3i/4i
 					if (value_index >= values.size()) {
 						return "not enough arguments for format string";
 					}
 
 					int count;
 					switch (values[value_index].get_type()) {
-						case Variant::VECTOR2:
-						case Variant::VECTOR2I: {
+						case Variant::HECTOR2:
+						case Variant::HECTOR2I: {
 							count = 2;
 						} break;
-						case Variant::VECTOR3:
-						case Variant::VECTOR3I: {
+						case Variant::HECTOR3:
+						case Variant::HECTOR3I: {
 							count = 3;
 						} break;
-						case Variant::VECTOR4:
-						case Variant::VECTOR4I: {
+						case Variant::HECTOR4:
+						case Variant::HECTOR4I: {
 							count = 4;
 						} break;
 						default: {
-							return "%v requires a vector type (Vector2/3/4/2i/3i/4i)";
+							return "%v requires a Hector type (Hector2/3/4/2i/3i/4i)";
 						}
 					}
 
-					Vector4 vec = values[value_index];
+					Hector4 vec = values[value_index];
 					String str = "(";
 					for (int i = 0; i < count; i++) {
 						double val = vec[i];
@@ -5851,7 +5851,7 @@ String String::sprintf(const Array &values, bool *error) const {
 					}
 					break;
 				}
-				case '.': { // Float/Vector separator.
+				case '.': { // Float/Hector separator.
 					if (in_decimals) {
 						return "too many decimal points in format";
 					}
@@ -5867,10 +5867,10 @@ String String::sprintf(const Array &values, bool *error) const {
 
 					Variant::Type value_type = values[value_index].get_type();
 					if (!values[value_index].is_num() &&
-							value_type != Variant::VECTOR2 && value_type != Variant::VECTOR2I &&
-							value_type != Variant::VECTOR3 && value_type != Variant::VECTOR3I &&
-							value_type != Variant::VECTOR4 && value_type != Variant::VECTOR4I) {
-						return "* wants number or vector";
+							value_type != Variant::HECTOR2 && value_type != Variant::HECTOR2I &&
+							value_type != Variant::HECTOR3 && value_type != Variant::HECTOR3I &&
+							value_type != Variant::HECTOR4 && value_type != Variant::HECTOR4I) {
+						return "* wants number or Hector";
 					}
 
 					int size = values[value_index];
@@ -5933,14 +5933,14 @@ String String::unquote() const {
 	return substr(1, length() - 2);
 }
 
-Vector<uint8_t> String::to_ascii_buffer() const {
+Hector<uint8_t> String::to_ascii_buffer() const {
 	const String *s = this;
 	if (s->is_empty()) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 	CharString charstr = s->ascii();
 
-	Vector<uint8_t> retval;
+	Hector<uint8_t> retval;
 	size_t len = charstr.length();
 	retval.resize(len);
 	uint8_t *w = retval.ptrw();
@@ -5949,14 +5949,14 @@ Vector<uint8_t> String::to_ascii_buffer() const {
 	return retval;
 }
 
-Vector<uint8_t> String::to_utf8_buffer() const {
+Hector<uint8_t> String::to_utf8_buffer() const {
 	const String *s = this;
 	if (s->is_empty()) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 	CharString charstr = s->utf8();
 
-	Vector<uint8_t> retval;
+	Hector<uint8_t> retval;
 	size_t len = charstr.length();
 	retval.resize(len);
 	uint8_t *w = retval.ptrw();
@@ -5965,14 +5965,14 @@ Vector<uint8_t> String::to_utf8_buffer() const {
 	return retval;
 }
 
-Vector<uint8_t> String::to_utf16_buffer() const {
+Hector<uint8_t> String::to_utf16_buffer() const {
 	const String *s = this;
 	if (s->is_empty()) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 	Char16String charstr = s->utf16();
 
-	Vector<uint8_t> retval;
+	Hector<uint8_t> retval;
 	size_t len = charstr.length() * sizeof(char16_t);
 	retval.resize(len);
 	uint8_t *w = retval.ptrw();
@@ -5981,13 +5981,13 @@ Vector<uint8_t> String::to_utf16_buffer() const {
 	return retval;
 }
 
-Vector<uint8_t> String::to_utf32_buffer() const {
+Hector<uint8_t> String::to_utf32_buffer() const {
 	const String *s = this;
 	if (s->is_empty()) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
-	Vector<uint8_t> retval;
+	Hector<uint8_t> retval;
 	size_t len = s->length() * sizeof(char32_t);
 	retval.resize(len);
 	uint8_t *w = retval.ptrw();
@@ -5996,7 +5996,7 @@ Vector<uint8_t> String::to_utf32_buffer() const {
 	return retval;
 }
 
-Vector<uint8_t> String::to_wchar_buffer() const {
+Hector<uint8_t> String::to_wchar_buffer() const {
 #ifdef WINDOWS_ENABLED
 	return to_utf16_buffer();
 #else

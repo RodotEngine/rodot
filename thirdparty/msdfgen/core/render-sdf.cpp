@@ -14,7 +14,7 @@ static float distVal(float dist, double pxRange, float midValue) {
 }
 
 void renderSDF(const BitmapRef<float, 1> &output, const BitmapConstRef<float, 1> &sdf, double pxRange, float midValue) {
-    Vector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
+    Hector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
     pxRange *= (double) (output.width+output.height)/(sdf.width+sdf.height);
     for (int y = 0; y < output.height; ++y)
         for (int x = 0; x < output.width; ++x) {
@@ -25,7 +25,7 @@ void renderSDF(const BitmapRef<float, 1> &output, const BitmapConstRef<float, 1>
 }
 
 void renderSDF(const BitmapRef<float, 3> &output, const BitmapConstRef<float, 1> &sdf, double pxRange, float midValue) {
-    Vector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
+    Hector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
     pxRange *= (double) (output.width+output.height)/(sdf.width+sdf.height);
     for (int y = 0; y < output.height; ++y)
         for (int x = 0; x < output.width; ++x) {
@@ -39,7 +39,7 @@ void renderSDF(const BitmapRef<float, 3> &output, const BitmapConstRef<float, 1>
 }
 
 void renderSDF(const BitmapRef<float, 1> &output, const BitmapConstRef<float, 3> &sdf, double pxRange, float midValue) {
-    Vector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
+    Hector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
     pxRange *= (double) (output.width+output.height)/(sdf.width+sdf.height);
     for (int y = 0; y < output.height; ++y)
         for (int x = 0; x < output.width; ++x) {
@@ -50,7 +50,7 @@ void renderSDF(const BitmapRef<float, 1> &output, const BitmapConstRef<float, 3>
 }
 
 void renderSDF(const BitmapRef<float, 3> &output, const BitmapConstRef<float, 3> &sdf, double pxRange, float midValue) {
-    Vector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
+    Hector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
     pxRange *= (double) (output.width+output.height)/(sdf.width+sdf.height);
     for (int y = 0; y < output.height; ++y)
         for (int x = 0; x < output.width; ++x) {
@@ -63,7 +63,7 @@ void renderSDF(const BitmapRef<float, 3> &output, const BitmapConstRef<float, 3>
 }
 
 void renderSDF(const BitmapRef<float, 1> &output, const BitmapConstRef<float, 4> &sdf, double pxRange, float midValue) {
-    Vector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
+    Hector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
     pxRange *= (double) (output.width+output.height)/(sdf.width+sdf.height);
     for (int y = 0; y < output.height; ++y)
         for (int x = 0; x < output.width; ++x) {
@@ -74,7 +74,7 @@ void renderSDF(const BitmapRef<float, 1> &output, const BitmapConstRef<float, 4>
 }
 
 void renderSDF(const BitmapRef<float, 4> &output, const BitmapConstRef<float, 4> &sdf, double pxRange, float midValue) {
-    Vector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
+    Hector2 scale((double) sdf.width/output.width, (double) sdf.height/output.height);
     pxRange *= (double) (output.width+output.height)/(sdf.width+sdf.height);
     for (int y = 0; y < output.height; ++y)
         for (int x = 0; x < output.width; ++x) {

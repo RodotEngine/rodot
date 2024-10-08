@@ -158,8 +158,8 @@ class AnimationPlayerEditor : public VBoxContainer {
 		int64_t last_frame = 0;
 		int can_overlay = 0;
 		Size2 capture_size;
-		LocalVector<RID> captures;
-		LocalVector<bool> captures_valid;
+		LocalHector<RID> captures;
+		LocalHector<bool> captures_valid;
 		struct {
 			RID canvas;
 			RID canvas_item;

@@ -50,7 +50,7 @@ static void _add_file(String f, const uint64_t &p_modified_time, HashMap<String,
 	files_to_send.insert(f, p_modified_time);
 }
 
-void EditorFileServer::_scan_files_changed(EditorFileSystemDirectory *efd, const Vector<String> &p_tags, HashMap<String, uint64_t> &files_to_send, HashMap<String, uint64_t> &cached_files) {
+void EditorFileServer::_scan_files_changed(EditorFileSystemDirectory *efd, const Hector<String> &p_tags, HashMap<String, uint64_t> &files_to_send, HashMap<String, uint64_t> &cached_files) {
 	for (int i = 0; i < efd->get_file_count(); i++) {
 		String f = efd->get_file_path(i);
 		if (FileAccess::exists(f + ".import")) {
@@ -144,7 +144,7 @@ void EditorFileServer::poll() {
 	print_verbose("EFS: Getting tags: " + itos(tag_count));
 
 	ERR_FAIL_COND(tcp_peer->get_status() != StreamPeerTCP::STATUS_CONNECTED);
-	Vector<String> tags;
+	Hector<String> tags;
 	for (uint32_t i = 0; i < tag_count; i++) {
 		String tag = tcp_peer->get_utf8_string();
 		print_verbose("EFS: tag #" + itos(i) + ": " + tag);
@@ -164,9 +164,9 @@ void EditorFileServer::poll() {
 
 		ERR_FAIL_COND(tcp_peer->get_status() != StreamPeerTCP::STATUS_CONNECTED);
 		ERR_FAIL_COND(file_buffer_size > MAX_FILE_BUFFER_SIZE);
-		LocalVector<uint8_t> file_buffer;
+		LocalHector<uint8_t> file_buffer;
 		file_buffer.resize(file_buffer_size);
-		LocalVector<uint8_t> file_buffer_decompressed;
+		LocalHector<uint8_t> file_buffer_decompressed;
 		file_buffer_decompressed.resize(file_buffer_decompressed_size);
 
 		err = tcp_peer->get_data(file_buffer.ptr(), file_buffer_size);
@@ -177,7 +177,7 @@ void EditorFileServer::poll() {
 		// Decompress the text with all the files
 		Compression::decompress(file_buffer_decompressed.ptr(), file_buffer_decompressed.size(), file_buffer.ptr(), file_buffer.size(), Compression::MODE_ZSTD);
 		String files_text = String::utf8((const char *)file_buffer_decompressed.ptr(), file_buffer_decompressed.size());
-		Vector<String> files = files_text.split("\n");
+		Hector<String> files = files_text.split("\n");
 
 		print_verbose("EFS: Total cached files received: " + itos(files.size()));
 		for (int i = 0; i < files.size(); i++) {
@@ -201,7 +201,7 @@ void EditorFileServer::poll() {
 	// Scan files to send.
 	_scan_files_changed(EditorFileSystem::get_singleton()->get_filesystem(), tags, files_to_send, cached_files);
 	// Add forced export files
-	Vector<String> forced_export = EditorExportPlatform::get_forced_export_files();
+	Hector<String> forced_export = EditorExportPlatform::get_forced_export_files();
 	for (int i = 0; i < forced_export.size(); i++) {
 		_add_custom_file(forced_export[i], files_to_send, cached_files);
 	}
@@ -236,7 +236,7 @@ void EditorFileServer::poll() {
 			continue;
 		}
 
-		Vector<uint8_t> array = FileAccess::_get_file_as_bytes("res://" + K.key);
+		Hector<uint8_t> array = FileAccess::_get_file_as_bytes("res://" + K.key);
 		tcp_peer->put_64(array.size());
 		tcp_peer->put_data(array.ptr(), array.size());
 		ERR_FAIL_COND(tcp_peer->get_status() != StreamPeerTCP::STATUS_CONNECTED);

@@ -802,10 +802,10 @@ msgstr "تعطيل الطي"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "إكشف المشاهد الأجنبية تلقائيا"
 
-msgid "Horizontal Vector2 Editing"
-msgstr "تحرير Vector2 الأفقي"
+msgid "Horizontal Hector2 Editing"
+msgstr "تحرير Hector2 الأفقي"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "تحرير أنواع المتجهات الأفقية"
 
 msgid "Open Resources in Current Inspector"
@@ -880,7 +880,7 @@ msgstr "البرامج الخارجية"
 msgid "Raster Image Editor"
 msgstr "محرر الصور النقطية (العادية)"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "محرر الصور المتجهة"
 
 msgid "Audio Editor"

@@ -697,12 +697,12 @@ class BindingsGenerator {
 		StringName type_float = StaticCString::create("float");
 		StringName type_double = StaticCString::create("double");
 
-		StringName type_Vector2 = StaticCString::create("Vector2");
+		StringName type_Hector2 = StaticCString::create("Hector2");
 		StringName type_Rect2 = StaticCString::create("Rect2");
-		StringName type_Vector3 = StaticCString::create("Vector3");
-		StringName type_Vector3i = StaticCString::create("Vector3i");
-		StringName type_Vector4 = StaticCString::create("Vector4");
-		StringName type_Vector4i = StaticCString::create("Vector4i");
+		StringName type_Hector3 = StaticCString::create("Hector3");
+		StringName type_Hector3i = StaticCString::create("Hector3i");
+		StringName type_Hector4 = StaticCString::create("Hector4");
+		StringName type_Hector4i = StaticCString::create("Hector4i");
 
 		// Object not included as it must be checked for all derived classes
 		static constexpr int nullable_types_count = 19;
@@ -724,10 +724,10 @@ class BindingsGenerator {
 			StaticCString::create(_STR(PackedFloat32Array)),
 			StaticCString::create(_STR(PackedFloat64Array)),
 			StaticCString::create(_STR(PackedStringArray)),
-			StaticCString::create(_STR(PackedVector2Array)),
-			StaticCString::create(_STR(PackedVector3Array)),
+			StaticCString::create(_STR(PackedHector2Array)),
+			StaticCString::create(_STR(PackedHector3Array)),
 			StaticCString::create(_STR(PackedColorArray)),
-			StaticCString::create(_STR(PackedVector4Array)),
+			StaticCString::create(_STR(PackedHector4Array)),
 		};
 
 		bool is_nullable_type(const StringName &p_type) const {
@@ -794,20 +794,20 @@ class BindingsGenerator {
 	String bbcode_to_text(const String &p_bbcode, const TypeInterface *p_itype);
 	String bbcode_to_xml(const String &p_bbcode, const TypeInterface *p_itype, bool p_is_signal = false);
 
-	void _append_text_method(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_text_member(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_text_signal(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_text_enum(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_text_constant(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
+	void _append_text_method(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_text_member(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_text_signal(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_text_enum(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_text_constant(StringBuilder &p_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
 	void _append_text_constant_in_global_scope(StringBuilder &p_output, const String &p_target_cname, const String &p_link_target);
 	void _append_text_param(StringBuilder &p_output, const String &p_link_target);
 	void _append_text_undeclared(StringBuilder &p_output, const String &p_link_target);
 
-	void _append_xml_method(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_xml_member(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_xml_signal(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_xml_enum(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
-	void _append_xml_constant(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Vector<String> &p_link_target_parts);
+	void _append_xml_method(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_xml_member(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_xml_signal(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_xml_enum(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
+	void _append_xml_constant(StringBuilder &p_xml_output, const TypeInterface *p_target_itype, const StringName &p_target_cname, const String &p_link_target, const Hector<String> &p_link_target_parts);
 	void _append_xml_constant_in_global_scope(StringBuilder &p_xml_output, const String &p_target_cname, const String &p_link_target);
 	void _append_xml_param(StringBuilder &p_xml_output, const String &p_link_target, bool p_is_signal);
 	void _append_xml_undeclared(StringBuilder &p_xml_output, const String &p_link_target);

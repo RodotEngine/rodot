@@ -94,7 +94,7 @@ namespace basisu
 		assert(odd_filter_width && (odd_filter_width & 1));
 		odd_filter_width |= 1;
 
-		vector2D<float> kernel(odd_filter_width, odd_filter_width);
+		Hector2D<float> kernel(odd_filter_width, odd_filter_width);
 		compute_gaussian_kernel(kernel.get_ptr(), odd_filter_width, odd_filter_width, sigma_sqr, cComputeGaussianFlagNormalize);
 
 		const int dst_width = orig_img.get_width() / width_divisor;

@@ -93,7 +93,7 @@ class EditorPropertyFontMetaOverride : public EditorProperty {
 	PopupMenu *menu = nullptr;
 	EditorLocaleDialog *locale_select = nullptr;
 
-	Vector<String> script_codes;
+	Hector<String> script_codes;
 
 	bool script_editor = false;
 	bool updating = false;

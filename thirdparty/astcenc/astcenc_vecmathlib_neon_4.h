@@ -16,17 +16,17 @@
 // ----------------------------------------------------------------------------
 
 /**
- * @brief 4x32-bit vectors, implemented using Armv8-A NEON.
+ * @brief 4x32-bit Hectors, implemented using Armv8-A NEON.
  *
- * This module implements 4-wide 32-bit float, int, and mask vectors for
+ * This module implements 4-wide 32-bit float, int, and mask Hectors for
  * Armv8-A NEON.
  *
- * There is a baseline level of functionality provided by all vector widths and
+ * There is a baseline level of functionality provided by all Hector widths and
  * implementations. This is implemented using identical function signatures,
  * modulo data type, so we can use them as substitutable implementations in VLA
  * code.
  *
- * The 4-wide vectors are also used as a fixed-width type, and significantly
+ * The 4-wide Hectors are also used as a fixed-width type, and significantly
  * extend the functionality above that available to VLA code.
  */
 
@@ -57,8 +57,8 @@ struct vfloat4
 	/**
 	 * @brief Construct from 4 values loaded from an unaligned address.
 	 *
-	 * Consider using loada() which is better with vectors if data is aligned
-	 * to vector length.
+	 * Consider using loada() which is better with Hectors if data is aligned
+	 * to Hector length.
 	 */
 	ASTCENC_SIMD_INLINE explicit vfloat4(const float *p)
 	{
@@ -111,7 +111,7 @@ struct vfloat4
 	}
 
 	/**
-	 * @brief Factory that returns a vector of zeros.
+	 * @brief Factory that returns a Hector of zeros.
 	 */
 	static ASTCENC_SIMD_INLINE vfloat4 zero()
 	{
@@ -127,7 +127,7 @@ struct vfloat4
 	}
 
 	/**
-	 * @brief Factory that returns a vector loaded from 16B aligned memory.
+	 * @brief Factory that returns a Hector loaded from 16B aligned memory.
 	 */
 	static ASTCENC_SIMD_INLINE vfloat4 loada(const float* p)
 	{
@@ -135,7 +135,7 @@ struct vfloat4
 	}
 
 	/**
-	 * @brief Factory that returns a vector containing the lane IDs.
+	 * @brief Factory that returns a Hector containing the lane IDs.
 	 */
 	static ASTCENC_SIMD_INLINE vfloat4 lane_id()
 	{
@@ -168,7 +168,7 @@ struct vfloat4
 	}
 
 	/**
-	 * @brief The vector ...
+	 * @brief The Hector ...
 	 */
 	float32x4_t m;
 };
@@ -190,8 +190,8 @@ struct vint4
 	/**
 	 * @brief Construct from 4 values loaded from an unaligned address.
 	 *
-	 * Consider using loada() which is better with vectors if data is aligned
-	 * to vector length.
+	 * Consider using loada() which is better with Hectors if data is aligned
+	 * to Hector length.
 	 */
 	ASTCENC_SIMD_INLINE explicit vint4(const int *p)
 	{
@@ -255,7 +255,7 @@ struct vint4
 	}
 
 	/**
-	 * @brief Factory that returns a vector of zeros.
+	 * @brief Factory that returns a Hector of zeros.
 	 */
 	static ASTCENC_SIMD_INLINE vint4 zero()
 	{
@@ -271,7 +271,7 @@ struct vint4
 	}
 
 	/**
-	 * @brief Factory that returns a vector loaded from unaligned memory.
+	 * @brief Factory that returns a Hector loaded from unaligned memory.
 	 */
 	static ASTCENC_SIMD_INLINE vint4 load(const uint8_t* p)
 	{
@@ -281,7 +281,7 @@ struct vint4
 	}
 
 	/**
-	 * @brief Factory that returns a vector loaded from 16B aligned memory.
+	 * @brief Factory that returns a Hector loaded from 16B aligned memory.
 	 */
 	static ASTCENC_SIMD_INLINE vint4 loada(const int* p)
 	{
@@ -289,7 +289,7 @@ struct vint4
 	}
 
 	/**
-	 * @brief Factory that returns a vector containing the lane IDs.
+	 * @brief Factory that returns a Hector containing the lane IDs.
 	 */
 	static ASTCENC_SIMD_INLINE vint4 lane_id()
 	{
@@ -298,7 +298,7 @@ struct vint4
 	}
 
 	/**
-	 * @brief The vector ...
+	 * @brief The Hector ...
 	 */
 	int32x4_t m;
 };
@@ -365,7 +365,7 @@ struct vmask4
 	}
 
 	/**
-	 * @brief The vector ...
+	 * @brief The Hector ...
 	 */
 	uint32x4_t m;
 };
@@ -425,7 +425,7 @@ ASTCENC_SIMD_INLINE unsigned int mask(vmask4 a)
 // ============================================================================
 
 /**
- * @brief Overload: vector by vector addition.
+ * @brief Overload: Hector by Hector addition.
  */
 ASTCENC_SIMD_INLINE vint4 operator+(vint4 a, vint4 b)
 {
@@ -433,7 +433,7 @@ ASTCENC_SIMD_INLINE vint4 operator+(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector subtraction.
+ * @brief Overload: Hector by Hector subtraction.
  */
 ASTCENC_SIMD_INLINE vint4 operator-(vint4 a, vint4 b)
 {
@@ -441,7 +441,7 @@ ASTCENC_SIMD_INLINE vint4 operator-(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector multiplication.
+ * @brief Overload: Hector by Hector multiplication.
  */
 ASTCENC_SIMD_INLINE vint4 operator*(vint4 a, vint4 b)
 {
@@ -449,7 +449,7 @@ ASTCENC_SIMD_INLINE vint4 operator*(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector bit invert.
+ * @brief Overload: Hector bit invert.
  */
 ASTCENC_SIMD_INLINE vint4 operator~(vint4 a)
 {
@@ -457,7 +457,7 @@ ASTCENC_SIMD_INLINE vint4 operator~(vint4 a)
 }
 
 /**
- * @brief Overload: vector by vector bitwise or.
+ * @brief Overload: Hector by Hector bitwise or.
  */
 ASTCENC_SIMD_INLINE vint4 operator|(vint4 a, vint4 b)
 {
@@ -465,7 +465,7 @@ ASTCENC_SIMD_INLINE vint4 operator|(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector bitwise and.
+ * @brief Overload: Hector by Hector bitwise and.
  */
 ASTCENC_SIMD_INLINE vint4 operator&(vint4 a, vint4 b)
 {
@@ -473,7 +473,7 @@ ASTCENC_SIMD_INLINE vint4 operator&(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector bitwise xor.
+ * @brief Overload: Hector by Hector bitwise xor.
  */
 ASTCENC_SIMD_INLINE vint4 operator^(vint4 a, vint4 b)
 {
@@ -481,7 +481,7 @@ ASTCENC_SIMD_INLINE vint4 operator^(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector equality.
+ * @brief Overload: Hector by Hector equality.
  */
 ASTCENC_SIMD_INLINE vmask4 operator==(vint4 a, vint4 b)
 {
@@ -489,7 +489,7 @@ ASTCENC_SIMD_INLINE vmask4 operator==(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector inequality.
+ * @brief Overload: Hector by Hector inequality.
  */
 ASTCENC_SIMD_INLINE vmask4 operator!=(vint4 a, vint4 b)
 {
@@ -497,7 +497,7 @@ ASTCENC_SIMD_INLINE vmask4 operator!=(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector less than.
+ * @brief Overload: Hector by Hector less than.
  */
 ASTCENC_SIMD_INLINE vmask4 operator<(vint4 a, vint4 b)
 {
@@ -505,7 +505,7 @@ ASTCENC_SIMD_INLINE vmask4 operator<(vint4 a, vint4 b)
 }
 
 /**
- * @brief Overload: vector by vector greater than.
+ * @brief Overload: Hector by Hector greater than.
  */
 ASTCENC_SIMD_INLINE vmask4 operator>(vint4 a, vint4 b)
 {
@@ -539,7 +539,7 @@ template <int s> ASTCENC_SIMD_INLINE vint4 asr(vint4 a)
 }
 
 /**
- * @brief Return the min vector of two vectors.
+ * @brief Return the min Hector of two Hectors.
  */
 ASTCENC_SIMD_INLINE vint4 min(vint4 a, vint4 b)
 {
@@ -547,7 +547,7 @@ ASTCENC_SIMD_INLINE vint4 min(vint4 a, vint4 b)
 }
 
 /**
- * @brief Return the max vector of two vectors.
+ * @brief Return the max Hector of two Hectors.
  */
 ASTCENC_SIMD_INLINE vint4 max(vint4 a, vint4 b)
 {
@@ -555,7 +555,7 @@ ASTCENC_SIMD_INLINE vint4 max(vint4 a, vint4 b)
 }
 
 /**
- * @brief Return the horizontal minimum of a vector.
+ * @brief Return the horizontal minimum of a Hector.
  */
 ASTCENC_SIMD_INLINE vint4 hmin(vint4 a)
 {
@@ -563,7 +563,7 @@ ASTCENC_SIMD_INLINE vint4 hmin(vint4 a)
 }
 
 /**
- * @brief Return the horizontal maximum of a vector.
+ * @brief Return the horizontal maximum of a Hector.
  */
 ASTCENC_SIMD_INLINE vint4 hmax(vint4 a)
 {
@@ -571,7 +571,7 @@ ASTCENC_SIMD_INLINE vint4 hmax(vint4 a)
 }
 
 /**
- * @brief Return the horizontal sum of a vector.
+ * @brief Return the horizontal sum of a Hector.
  */
 ASTCENC_SIMD_INLINE int hadd_s(vint4 a)
 {
@@ -580,7 +580,7 @@ ASTCENC_SIMD_INLINE int hadd_s(vint4 a)
 }
 
 /**
- * @brief Store a vector to a 16B aligned memory address.
+ * @brief Store a Hector to a 16B aligned memory address.
  */
 ASTCENC_SIMD_INLINE void storea(vint4 a, int* p)
 {
@@ -588,7 +588,7 @@ ASTCENC_SIMD_INLINE void storea(vint4 a, int* p)
 }
 
 /**
- * @brief Store a vector to an unaligned memory address.
+ * @brief Store a Hector to an unaligned memory address.
  */
 ASTCENC_SIMD_INLINE void store(vint4 a, int* p)
 {
@@ -596,7 +596,7 @@ ASTCENC_SIMD_INLINE void store(vint4 a, int* p)
 }
 
 /**
- * @brief Store a vector to an unaligned memory address.
+ * @brief Store a Hector to an unaligned memory address.
  */
 ASTCENC_SIMD_INLINE void store(vint4 a, uint8_t* p)
 {
@@ -604,7 +604,7 @@ ASTCENC_SIMD_INLINE void store(vint4 a, uint8_t* p)
 }
 
 /**
- * @brief Store lowest N (vector width) bytes into an unaligned address.
+ * @brief Store lowest N (Hector width) bytes into an unaligned address.
  */
 ASTCENC_SIMD_INLINE void store_nbytes(vint4 a, uint8_t* p)
 {
@@ -612,7 +612,7 @@ ASTCENC_SIMD_INLINE void store_nbytes(vint4 a, uint8_t* p)
 }
 
 /**
- * @brief Gather N (vector width) indices from the array.
+ * @brief Gather N (Hector width) indices from the array.
  */
 ASTCENC_SIMD_INLINE vint4 gatheri(const int* base, vint4 indices)
 {
@@ -627,7 +627,7 @@ ASTCENC_SIMD_INLINE vint4 gatheri(const int* base, vint4 indices)
 }
 
 /**
- * @brief Pack low 8 bits of N (vector width) lanes into bottom of vector.
+ * @brief Pack low 8 bits of N (Hector width) lanes into bottom of Hector.
  */
 ASTCENC_SIMD_INLINE vint4 pack_low_bytes(vint4 a)
 {
@@ -652,7 +652,7 @@ ASTCENC_SIMD_INLINE vint4 select(vint4 a, vint4 b, vmask4 cond)
 // ============================================================================
 
 /**
- * @brief Overload: vector by vector addition.
+ * @brief Overload: Hector by Hector addition.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator+(vfloat4 a, vfloat4 b)
 {
@@ -660,7 +660,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator+(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector subtraction.
+ * @brief Overload: Hector by Hector subtraction.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator-(vfloat4 a, vfloat4 b)
 {
@@ -668,7 +668,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator-(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector multiplication.
+ * @brief Overload: Hector by Hector multiplication.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator*(vfloat4 a, vfloat4 b)
 {
@@ -676,7 +676,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator*(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector division.
+ * @brief Overload: Hector by Hector division.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator/(vfloat4 a, vfloat4 b)
 {
@@ -684,7 +684,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator/(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector equality.
+ * @brief Overload: Hector by Hector equality.
  */
 ASTCENC_SIMD_INLINE vmask4 operator==(vfloat4 a, vfloat4 b)
 {
@@ -692,7 +692,7 @@ ASTCENC_SIMD_INLINE vmask4 operator==(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector inequality.
+ * @brief Overload: Hector by Hector inequality.
  */
 ASTCENC_SIMD_INLINE vmask4 operator!=(vfloat4 a, vfloat4 b)
 {
@@ -700,7 +700,7 @@ ASTCENC_SIMD_INLINE vmask4 operator!=(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector less than.
+ * @brief Overload: Hector by Hector less than.
  */
 ASTCENC_SIMD_INLINE vmask4 operator<(vfloat4 a, vfloat4 b)
 {
@@ -708,7 +708,7 @@ ASTCENC_SIMD_INLINE vmask4 operator<(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector greater than.
+ * @brief Overload: Hector by Hector greater than.
  */
 ASTCENC_SIMD_INLINE vmask4 operator>(vfloat4 a, vfloat4 b)
 {
@@ -716,7 +716,7 @@ ASTCENC_SIMD_INLINE vmask4 operator>(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector less than or equal.
+ * @brief Overload: Hector by Hector less than or equal.
  */
 ASTCENC_SIMD_INLINE vmask4 operator<=(vfloat4 a, vfloat4 b)
 {
@@ -724,7 +724,7 @@ ASTCENC_SIMD_INLINE vmask4 operator<=(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by vector greater than or equal.
+ * @brief Overload: Hector by Hector greater than or equal.
  */
 ASTCENC_SIMD_INLINE vmask4 operator>=(vfloat4 a, vfloat4 b)
 {
@@ -732,7 +732,7 @@ ASTCENC_SIMD_INLINE vmask4 operator>=(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Return the min vector of two vectors.
+ * @brief Return the min Hector of two Hectors.
  *
  * If either lane value is NaN, @c b will be returned for that lane.
  */
@@ -743,7 +743,7 @@ ASTCENC_SIMD_INLINE vfloat4 min(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Return the max vector of two vectors.
+ * @brief Return the max Hector of two Hectors.
  *
  * If either lane value is NaN, @c b will be returned for that lane.
  */
@@ -754,7 +754,7 @@ ASTCENC_SIMD_INLINE vfloat4 max(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Return the absolute value of the float vector.
+ * @brief Return the absolute value of the float Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 abs(vfloat4 a)
 {
@@ -772,7 +772,7 @@ ASTCENC_SIMD_INLINE vfloat4 round(vfloat4 a)
 }
 
 /**
- * @brief Return the horizontal minimum of a vector.
+ * @brief Return the horizontal minimum of a Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 hmin(vfloat4 a)
 {
@@ -780,7 +780,7 @@ ASTCENC_SIMD_INLINE vfloat4 hmin(vfloat4 a)
 }
 
 /**
- * @brief Return the horizontal maximum of a vector.
+ * @brief Return the horizontal maximum of a Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 hmax(vfloat4 a)
 {
@@ -788,7 +788,7 @@ ASTCENC_SIMD_INLINE vfloat4 hmax(vfloat4 a)
 }
 
 /**
- * @brief Return the horizontal sum of a vector.
+ * @brief Return the horizontal sum of a Hector.
  */
 ASTCENC_SIMD_INLINE float hadd_s(vfloat4 a)
 {
@@ -799,7 +799,7 @@ ASTCENC_SIMD_INLINE float hadd_s(vfloat4 a)
 }
 
 /**
- * @brief Return the sqrt of the lanes in the vector.
+ * @brief Return the sqrt of the lanes in the Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 sqrt(vfloat4 a)
 {
@@ -825,7 +825,7 @@ ASTCENC_SIMD_INLINE vfloat4 select_msb(vfloat4 a, vfloat4 b, vmask4 cond)
 }
 
 /**
- * @brief Load a vector of gathered results from an array;
+ * @brief Load a Hector of gathered results from an array;
  */
 ASTCENC_SIMD_INLINE vfloat4 gatherf(const float* base, vint4 indices)
 {
@@ -840,7 +840,7 @@ ASTCENC_SIMD_INLINE vfloat4 gatherf(const float* base, vint4 indices)
 }
 
 /**
- * @brief Store a vector to an unaligned memory address.
+ * @brief Store a Hector to an unaligned memory address.
  */
 ASTCENC_SIMD_INLINE void store(vfloat4 a, float* p)
 {
@@ -848,7 +848,7 @@ ASTCENC_SIMD_INLINE void store(vfloat4 a, float* p)
 }
 
 /**
- * @brief Store a vector to a 16B aligned memory address.
+ * @brief Store a Hector to a 16B aligned memory address.
  */
 ASTCENC_SIMD_INLINE void storea(vfloat4 a, float* p)
 {
@@ -856,7 +856,7 @@ ASTCENC_SIMD_INLINE void storea(vfloat4 a, float* p)
 }
 
 /**
- * @brief Return a integer value for a float vector, using truncation.
+ * @brief Return a integer value for a float Hector, using truncation.
  */
 ASTCENC_SIMD_INLINE vint4 float_to_int(vfloat4 a)
 {
@@ -864,7 +864,7 @@ ASTCENC_SIMD_INLINE vint4 float_to_int(vfloat4 a)
 }
 
 /**
- * @brief Return a integer value for a float vector, using round-to-nearest.
+ * @brief Return a integer value for a float Hector, using round-to-nearest.
  */
 ASTCENC_SIMD_INLINE vint4 float_to_int_rtn(vfloat4 a)
 {
@@ -873,7 +873,7 @@ ASTCENC_SIMD_INLINE vint4 float_to_int_rtn(vfloat4 a)
 }
 
 /**
- * @brief Return a float value for an integer vector.
+ * @brief Return a float value for an integer Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 int_to_float(vint4 a)
 {
@@ -881,7 +881,7 @@ ASTCENC_SIMD_INLINE vfloat4 int_to_float(vint4 a)
 }
 
 /**
- * @brief Return a float16 value for a float vector, using round-to-nearest.
+ * @brief Return a float16 value for a float Hector, using round-to-nearest.
  */
 ASTCENC_SIMD_INLINE vint4 float_to_float16(vfloat4 a)
 {
@@ -904,7 +904,7 @@ static inline uint16_t float_to_float16(float a)
 }
 
 /**
- * @brief Return a float value for a float16 vector.
+ * @brief Return a float value for a float16 Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 float16_to_float(vint4 a)
 {
@@ -1034,12 +1034,12 @@ ASTCENC_SIMD_INLINE vint4 vtable_8bt_32bi(vint4 t0, vint4 t1, vint4 t2, vint4 t3
 }
 
 /**
- * @brief Return a vector of interleaved RGBA data.
+ * @brief Return a Hector of interleaved RGBA data.
  *
- * Input vectors have the value stored in the bottom 8 bits of each lane,
+ * Input Hectors have the value stored in the bottom 8 bits of each lane,
  * with high  bits set to zero.
  *
- * Output vector stores a single RGBA texel packed in each lane.
+ * Output Hector stores a single RGBA texel packed in each lane.
  */
 ASTCENC_SIMD_INLINE vint4 interleave_rgba8(vint4 r, vint4 g, vint4 b, vint4 a)
 {
@@ -1047,7 +1047,7 @@ ASTCENC_SIMD_INLINE vint4 interleave_rgba8(vint4 r, vint4 g, vint4 b, vint4 a)
 }
 
 /**
- * @brief Store a single vector lane to an unaligned address.
+ * @brief Store a single Hector lane to an unaligned address.
  */
 ASTCENC_SIMD_INLINE void store_lane(uint8_t* base, int data)
 {
@@ -1055,9 +1055,9 @@ ASTCENC_SIMD_INLINE void store_lane(uint8_t* base, int data)
 }
 
 /**
- * @brief Store a vector, skipping masked lanes.
+ * @brief Store a Hector, skipping masked lanes.
  *
- * All masked lanes must be at the end of vector, after all non-masked lanes.
+ * All masked lanes must be at the end of Hector, after all non-masked lanes.
  */
 ASTCENC_SIMD_INLINE void store_lanes_masked(uint8_t* base, vint4 data, vmask4 mask)
 {

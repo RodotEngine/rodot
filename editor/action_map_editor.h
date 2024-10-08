@@ -65,7 +65,7 @@ private:
 		BUTTON_REVERT_ACTION,
 	};
 
-	Vector<ActionInfo> actions_cache;
+	Hector<ActionInfo> actions_cache;
 	Tree *action_tree = nullptr;
 
 	// Storing which action/event is currently being edited in the InputEventConfigurationDialog.
@@ -123,7 +123,7 @@ public:
 	InputEventConfigurationDialog *get_configuration_dialog();
 
 	// Dictionary represents an Action with "events" (Array) and "deadzone" (float) items. Pass with no param to update list from cached action map.
-	void update_action_list(const Vector<ActionInfo> &p_action_infos = Vector<ActionInfo>());
+	void update_action_list(const Hector<ActionInfo> &p_action_infos = Hector<ActionInfo>());
 	void show_message(const String &p_message);
 
 	void set_show_builtin_actions(bool p_show);

@@ -56,7 +56,7 @@ Ref<EditorExportPlatform> EditorExportPlugin::get_export_platform() const {
 	}
 }
 
-void EditorExportPlugin::add_file(const String &p_path, const Vector<uint8_t> &p_file, bool p_remap) {
+void EditorExportPlugin::add_file(const String &p_path, const Hector<uint8_t> &p_file, bool p_remap) {
 	ExtraFile ef;
 	ef.data = p_file;
 	ef.path = p_path;
@@ -64,7 +64,7 @@ void EditorExportPlugin::add_file(const String &p_path, const Vector<uint8_t> &p
 	extra_files.push_back(ef);
 }
 
-void EditorExportPlugin::add_shared_object(const String &p_path, const Vector<String> &p_tags, const String &p_target) {
+void EditorExportPlugin::add_shared_object(const String &p_path, const Hector<String> &p_tags, const String &p_target) {
 	shared_objects.push_back(SharedObject(p_path, p_tags, p_target));
 }
 
@@ -80,11 +80,11 @@ void EditorExportPlugin::add_ios_embedded_framework(const String &p_path) {
 	ios_embedded_frameworks.push_back(p_path);
 }
 
-Vector<String> EditorExportPlugin::get_ios_frameworks() const {
+Hector<String> EditorExportPlugin::get_ios_frameworks() const {
 	return ios_frameworks;
 }
 
-Vector<String> EditorExportPlugin::get_ios_embedded_frameworks() const {
+Hector<String> EditorExportPlugin::get_ios_embedded_frameworks() const {
 	return ios_embedded_frameworks;
 }
 
@@ -111,7 +111,7 @@ void EditorExportPlugin::add_ios_bundle_file(const String &p_path) {
 	ios_bundle_files.push_back(p_path);
 }
 
-Vector<String> EditorExportPlugin::get_ios_bundle_files() const {
+Hector<String> EditorExportPlugin::get_ios_bundle_files() const {
 	return ios_bundle_files;
 }
 
@@ -127,7 +127,7 @@ void EditorExportPlugin::add_macos_plugin_file(const String &p_path) {
 	macos_plugin_files.push_back(p_path);
 }
 
-const Vector<String> &EditorExportPlugin::get_macos_plugin_files() const {
+const Hector<String> &EditorExportPlugin::get_macos_plugin_files() const {
 	return macos_plugin_files;
 }
 
@@ -135,7 +135,7 @@ void EditorExportPlugin::add_ios_project_static_lib(const String &p_path) {
 	ios_project_static_libs.push_back(p_path);
 }
 
-Vector<String> EditorExportPlugin::get_ios_project_static_libs() const {
+Hector<String> EditorExportPlugin::get_ios_project_static_libs() const {
 	return ios_project_static_libs;
 }
 
@@ -165,11 +165,11 @@ String EditorExportPlugin::_has_valid_export_configuration(const Ref<EditorExpor
 	return warning;
 }
 
-void EditorExportPlugin::_export_file_script(const String &p_path, const String &p_type, const Vector<String> &p_features) {
+void EditorExportPlugin::_export_file_script(const String &p_path, const String &p_type, const Hector<String> &p_features) {
 	GDVIRTUAL_CALL(_export_file, p_path, p_type, p_features);
 }
 
-void EditorExportPlugin::_export_begin_script(const Vector<String> &p_features, bool p_debug, const String &p_path, int p_flags) {
+void EditorExportPlugin::_export_begin_script(const Hector<String> &p_features, bool p_debug, const String &p_path, int p_flags) {
 	GDVIRTUAL_CALL(_export_begin, p_features, p_debug, p_path, p_flags);
 }
 
@@ -179,7 +179,7 @@ void EditorExportPlugin::_export_end_script() {
 
 // Customization
 
-bool EditorExportPlugin::_begin_customize_resources(const Ref<EditorExportPlatform> &p_platform, const Vector<String> &p_features) {
+bool EditorExportPlugin::_begin_customize_resources(const Ref<EditorExportPlatform> &p_platform, const Hector<String> &p_features) {
 	bool ret = false;
 	GDVIRTUAL_CALL(_begin_customize_resources, p_platform, p_features, ret);
 	return ret;
@@ -191,7 +191,7 @@ Ref<Resource> EditorExportPlugin::_customize_resource(const Ref<Resource> &p_res
 	return ret;
 }
 
-bool EditorExportPlugin::_begin_customize_scenes(const Ref<EditorExportPlatform> &p_platform, const Vector<String> &p_features) {
+bool EditorExportPlugin::_begin_customize_scenes(const Ref<EditorExportPlatform> &p_platform, const Hector<String> &p_features) {
 	bool ret = false;
 	GDVIRTUAL_CALL(_begin_customize_scenes, p_platform, p_features, ret);
 	return ret;

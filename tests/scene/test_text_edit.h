@@ -6780,7 +6780,7 @@ TEST_CASE("[SceneTree][TextEdit] multicaret") {
 	}
 
 	SUBCASE("[TextEdit] sort carets") {
-		Vector<int> sorted_carets = { 0, 1, 2 };
+		Hector<int> sorted_carets = { 0, 1, 2 };
 
 		// Ascending order.
 		text_edit->remove_secondary_carets();

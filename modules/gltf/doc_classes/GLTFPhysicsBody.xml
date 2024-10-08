@@ -39,16 +39,16 @@
 		</method>
 	</methods>
 	<members>
-		<member name="angular_velocity" type="Vector3" setter="set_angular_velocity" getter="get_angular_velocity" default="Vector3(0, 0, 0)">
+		<member name="angular_velocity" type="Hector3" setter="set_angular_velocity" getter="get_angular_velocity" default="Hector3(0, 0, 0)">
 			The angular velocity of the physics body, in radians per second. This is only used when the body type is "rigid" or "vehicle".
 		</member>
 		<member name="body_type" type="String" setter="set_body_type" getter="get_body_type" default="&quot;rigid&quot;">
 			The type of the body. When importing, this controls what type of [CollisionObject3D] node Godot should generate. Valid values are "static", "animatable", "character", "rigid", "vehicle", and "trigger". When exporting, this will be squashed down to one of "static", "kinematic", or "dynamic" motion types, or the "trigger" property.
 		</member>
-		<member name="center_of_mass" type="Vector3" setter="set_center_of_mass" getter="get_center_of_mass" default="Vector3(0, 0, 0)">
+		<member name="center_of_mass" type="Hector3" setter="set_center_of_mass" getter="get_center_of_mass" default="Hector3(0, 0, 0)">
 			The center of mass of the body, in meters. This is in local space relative to the body. By default, the center of the mass is the body's origin.
 		</member>
-		<member name="inertia_diagonal" type="Vector3" setter="set_inertia_diagonal" getter="get_inertia_diagonal" default="Vector3(0, 0, 0)">
+		<member name="inertia_diagonal" type="Hector3" setter="set_inertia_diagonal" getter="get_inertia_diagonal" default="Hector3(0, 0, 0)">
 			The inertia strength of the physics body, in kilogram meter squared (kg⋅m²). This represents the inertia around the principle axes, the diagonal of the inertia tensor matrix. This is only used when the body type is "rigid" or "vehicle".
 			When converted to a Godot [RigidBody3D] node, if this value is zero, then the inertia will be calculated automatically.
 		</member>
@@ -59,7 +59,7 @@
 			The inertia tensor of the physics body, in kilogram meter squared (kg⋅m²). This is only used when the body type is "rigid" or "vehicle".
 			When converted to a Godot [RigidBody3D] node, if this value is zero, then the inertia will be calculated automatically.
 		</member>
-		<member name="linear_velocity" type="Vector3" setter="set_linear_velocity" getter="get_linear_velocity" default="Vector3(0, 0, 0)">
+		<member name="linear_velocity" type="Hector3" setter="set_linear_velocity" getter="get_linear_velocity" default="Hector3(0, 0, 0)">
 			The linear velocity of the physics body, in meters per second. This is only used when the body type is "rigid" or "vehicle".
 		</member>
 		<member name="mass" type="float" setter="set_mass" getter="get_mass" default="1.0">

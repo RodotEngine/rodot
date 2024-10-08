@@ -183,7 +183,7 @@ void ShaderFileEditor::_update_options() {
 	int first_valid = -1;
 	int current = -1;
 	for (int i = 0; i < RD::SHADER_STAGE_MAX; i++) {
-		Vector<uint8_t> bc = bytecode->get_stage_bytecode(RD::ShaderStage(i));
+		Hector<uint8_t> bc = bytecode->get_stage_bytecode(RD::ShaderStage(i));
 		String error = bytecode->get_stage_compile_error(RD::ShaderStage(i));
 		bool disable = error.is_empty() && bc.is_empty();
 		stages[i]->set_disabled(disable);

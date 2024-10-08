@@ -448,7 +448,7 @@ Size2i RenderSceneBuffersRD::get_texture_slice_size(const StringName &p_context,
 }
 
 void RenderSceneBuffersRD::clear_context(const StringName &p_context) {
-	Vector<NTKey> to_free; // free these
+	Hector<NTKey> to_free; // free these
 
 	// Find all entries for our context, we don't want to free them yet or our loop fails.
 	for (KeyValue<NTKey, NamedTexture> &E : named_textures) {
@@ -521,7 +521,7 @@ void RenderSceneBuffersRD::allocate_blur_textures() {
 			weight_buffers[i].weight = RD::get_singleton()->texture_create(tf, RD::TextureView());
 
 			// create frame buffer
-			Vector<RID> fb;
+			Hector<RID> fb;
 			if (i != 0) {
 				fb.push_back(texture);
 			}

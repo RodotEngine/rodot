@@ -163,7 +163,7 @@ void RasterizerCanvasGLES3::canvas_render_items(RID p_to_render_target, Item *p_
 				ERR_CONTINUE(!clight);
 			}
 
-			Vector2 canvas_light_dir = l->xform_cache.columns[1].normalized();
+			Hector2 canvas_light_dir = l->xform_cache.columns[1].normalized();
 
 			state.light_uniforms[index].position[0] = -canvas_light_dir.x;
 			state.light_uniforms[index].position[1] = -canvas_light_dir.y;
@@ -235,7 +235,7 @@ void RasterizerCanvasGLES3::canvas_render_items(RID p_to_render_target, Item *p_
 				TransformInterpolator::interpolate_transform_2d(l->xform_prev, l->xform_curr, final_xform, f);
 			}
 			// Convert light position to canvas coordinates, as all computation is done in canvas coordinates to avoid precision loss.
-			Vector2 canvas_light_pos = p_canvas_transform.xform(final_xform.get_origin());
+			Hector2 canvas_light_pos = p_canvas_transform.xform(final_xform.get_origin());
 			state.light_uniforms[index].position[0] = canvas_light_pos.x;
 			state.light_uniforms[index].position[1] = canvas_light_pos.y;
 
@@ -331,14 +331,14 @@ void RasterizerCanvasGLES3::canvas_render_items(RID p_to_render_target, Item *p_
 
 		Transform3D screen_transform;
 		screen_transform.translate_local(-(ssize.width / 2.0f), -(ssize.height / 2.0f), 0.0f);
-		screen_transform.scale(Vector3(2.0f / ssize.width, y_scale / ssize.height, 1.0f));
+		screen_transform.scale(Hector3(2.0f / ssize.width, y_scale / ssize.height, 1.0f));
 		_update_transform_to_mat4(screen_transform, state_buffer.screen_transform);
 		_update_transform_2d_to_mat4(p_canvas_transform, state_buffer.canvas_transform);
 
 		Transform2D normal_transform = p_canvas_transform;
 		normal_transform.columns[0].normalize();
 		normal_transform.columns[1].normalize();
-		normal_transform.columns[2] = Vector2();
+		normal_transform.columns[2] = Hector2();
 		_update_transform_2d_to_mat4(normal_transform, state_buffer.canvas_normal_transform);
 
 		state_buffer.canvas_modulate[0] = p_modulate.r;
@@ -355,7 +355,7 @@ void RasterizerCanvasGLES3::canvas_render_items(RID p_to_render_target, Item *p_
 
 		state_buffer.directional_light_count = directional_light_count;
 
-		Vector2 canvas_scale = p_canvas_transform.get_scale();
+		Hector2 canvas_scale = p_canvas_transform.get_scale();
 
 		state_buffer.sdf_to_screen[0] = render_target_size.width / canvas_scale.x;
 		state_buffer.sdf_to_screen[1] = render_target_size.height / canvas_scale.y;
@@ -1203,7 +1203,7 @@ void RasterizerCanvasGLES3::_record_item_commands(const Item *p_item, RID p_rend
 						{
 							Rect2 sdf_rect = texture_storage->render_target_get_sdf_rect(p_render_target);
 
-							to_screen.size = Vector2(1.0 / sdf_rect.size.width, 1.0 / sdf_rect.size.height);
+							to_screen.size = Hector2(1.0 / sdf_rect.size.width, 1.0 / sdf_rect.size.height);
 							to_screen.position = -sdf_rect.position * to_screen.size;
 						}
 
@@ -1672,12 +1672,12 @@ void RasterizerCanvasGLES3::light_update_shadow(RID p_rid, int p_shadow_index, c
 			projection.set_frustum(xmin, xmax, ymin, ymax, nearp, farp);
 		}
 
-		Vector3 cam_target = Basis::from_euler(Vector3(0, 0, Math_TAU * ((i + 3) / 4.0))).xform(Vector3(0, 1, 0));
+		Hector3 cam_target = Basis::from_euler(Hector3(0, 0, Math_TAU * ((i + 3) / 4.0))).xform(Hector3(0, 1, 0));
 
-		projection = projection * Projection(Transform3D().looking_at(cam_target, Vector3(0, 0, -1)).affine_inverse());
+		projection = projection * Projection(Transform3D().looking_at(cam_target, Hector3(0, 0, -1)).affine_inverse());
 		shadow_render.shader.version_set_uniform(CanvasOcclusionShaderGLES3::PROJECTION, projection, shadow_render.shader_version, variant);
 
-		static const Vector2 directions[4] = { Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1) };
+		static const Hector2 directions[4] = { Hector2(1, 0), Hector2(0, 1), Hector2(-1, 0), Hector2(0, -1) };
 		shadow_render.shader.version_set_uniform(CanvasOcclusionShaderGLES3::DIRECTION, directions[i].x, directions[i].y, shadow_render.shader_version, variant);
 		shadow_render.shader.version_set_uniform(CanvasOcclusionShaderGLES3::Z_FAR, p_far, shadow_render.shader_version, variant);
 
@@ -1730,13 +1730,13 @@ void RasterizerCanvasGLES3::light_update_directional_shadow(RID p_rid, int p_sha
 
 	_update_shadow_atlas();
 
-	Vector2 light_dir = p_light_xform.columns[1].normalized();
+	Hector2 light_dir = p_light_xform.columns[1].normalized();
 
-	Vector2 center = p_clip_rect.get_center();
+	Hector2 center = p_clip_rect.get_center();
 
 	float to_edge_distance = ABS(light_dir.dot(p_clip_rect.get_support(-light_dir)) - light_dir.dot(center));
 
-	Vector2 from_pos = center - light_dir * (to_edge_distance + p_cull_distance);
+	Hector2 from_pos = center - light_dir * (to_edge_distance + p_cull_distance);
 	float distance = to_edge_distance * 2.0 + p_cull_distance;
 	float half_size = p_clip_rect.size.length() * 0.5; //shadow length, must keep this no matter the angle
 
@@ -1778,7 +1778,7 @@ void RasterizerCanvasGLES3::light_update_directional_shadow(RID p_rid, int p_sha
 
 	Projection projection;
 	projection.set_orthogonal(-half_size, half_size, -0.5, 0.5, 0.0, distance);
-	projection = projection * Projection(Transform3D().looking_at(Vector3(0, 1, 0), Vector3(0, 0, -1)).affine_inverse());
+	projection = projection * Projection(Transform3D().looking_at(Hector3(0, 1, 0), Hector3(0, 0, -1)).affine_inverse());
 
 	shadow_render.shader.version_set_uniform(CanvasOcclusionShaderGLES3::PROJECTION, projection, shadow_render.shader_version, variant);
 	shadow_render.shader.version_set_uniform(CanvasOcclusionShaderGLES3::DIRECTION, 0.0, 1.0, shadow_render.shader_version, variant);
@@ -1890,7 +1890,7 @@ void RasterizerCanvasGLES3::render_sdf(RID p_render_target, LightOccluderInstanc
 	Transform2D to_clip;
 	to_clip.columns[0] *= 2.0;
 	to_clip.columns[1] *= 2.0;
-	to_clip.columns[2] = -Vector2(1.0, 1.0);
+	to_clip.columns[2] = -Hector2(1.0, 1.0);
 
 	to_clip = to_clip * to_sdf.affine_inverse();
 
@@ -1947,27 +1947,27 @@ RID RasterizerCanvasGLES3::occluder_polygon_create() {
 	return occluder_polygon_owner.make_rid(occluder);
 }
 
-void RasterizerCanvasGLES3::occluder_polygon_set_shape(RID p_occluder, const Vector<Vector2> &p_points, bool p_closed) {
+void RasterizerCanvasGLES3::occluder_polygon_set_shape(RID p_occluder, const Hector<Hector2> &p_points, bool p_closed) {
 	OccluderPolygon *oc = occluder_polygon_owner.get_or_null(p_occluder);
 	ERR_FAIL_NULL(oc);
 
-	Vector<Vector2> lines;
+	Hector<Hector2> lines;
 
 	if (p_points.size()) {
 		int lc = p_points.size() * 2;
 
 		lines.resize(lc - (p_closed ? 0 : 2));
 		{
-			Vector2 *w = lines.ptrw();
-			const Vector2 *r = p_points.ptr();
+			Hector2 *w = lines.ptrw();
+			const Hector2 *r = p_points.ptr();
 
 			int max = lc / 2;
 			if (!p_closed) {
 				max--;
 			}
 			for (int i = 0; i < max; i++) {
-				Vector2 a = r[i];
-				Vector2 b = r[(i + 1) % (lc / 2)];
+				Hector2 a = r[i];
+				Hector2 b = r[(i + 1) % (lc / 2)];
 				w[i * 2 + 0] = a;
 				w[i * 2 + 1] = b;
 			}
@@ -1985,8 +1985,8 @@ void RasterizerCanvasGLES3::occluder_polygon_set_shape(RID p_occluder, const Vec
 	}
 
 	if (lines.size()) {
-		Vector<uint8_t> geometry;
-		Vector<uint8_t> indices;
+		Hector<uint8_t> geometry;
+		Hector<uint8_t> indices;
 		int lc = lines.size();
 
 		geometry.resize(lc * 6 * sizeof(float));
@@ -1998,7 +1998,7 @@ void RasterizerCanvasGLES3::occluder_polygon_set_shape(RID p_occluder, const Vec
 			uint8_t *iw = indices.ptrw();
 			uint16_t *iwptr = (uint16_t *)iw;
 
-			const Vector2 *lr = lines.ptr();
+			const Hector2 *lr = lines.ptr();
 
 			const int POLY_HEIGHT = 16384;
 
@@ -2058,7 +2058,7 @@ void RasterizerCanvasGLES3::occluder_polygon_set_shape(RID p_occluder, const Vec
 
 	// sdf
 
-	Vector<int> sdf_indices;
+	Hector<int> sdf_indices;
 
 	if (p_points.size()) {
 		if (p_closed) {
@@ -2157,7 +2157,7 @@ bool RasterizerCanvasGLES3::free(RID p_rid) {
 		ERR_FAIL_NULL_V(cl, false);
 		canvas_light_owner.free(p_rid);
 	} else if (occluder_polygon_owner.owns(p_rid)) {
-		occluder_polygon_set_shape(p_rid, Vector<Vector2>(), false);
+		occluder_polygon_set_shape(p_rid, Hector<Hector2>(), false);
 		occluder_polygon_owner.free(p_rid);
 	} else {
 		return false;
@@ -2388,10 +2388,10 @@ void RasterizerCanvasGLES3::reset_canvas() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void RasterizerCanvasGLES3::draw_lens_distortion_rect(const Rect2 &p_rect, float p_k1, float p_k2, const Vector2 &p_eye_center, float p_oversample) {
+void RasterizerCanvasGLES3::draw_lens_distortion_rect(const Rect2 &p_rect, float p_k1, float p_k2, const Hector2 &p_eye_center, float p_oversample) {
 }
 
-RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, const Vector<int> &p_bones, const Vector<float> &p_weights) {
+RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, const Hector<int> &p_bones, const Hector<float> &p_weights) {
 	// We interleave the vertex data into one big VBO to improve cache coherence
 	uint32_t vertex_count = p_points.size();
 	uint32_t stride = 2;
@@ -2414,7 +2414,7 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 
 	uint32_t buffer_size = stride * p_points.size();
 
-	Vector<uint8_t> polygon_buffer;
+	Hector<uint8_t> polygon_buffer;
 	polygon_buffer.resize(buffer_size * sizeof(float));
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, pb.vertex_buffer);
@@ -2426,7 +2426,7 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 			// Always uses vertex positions
 			glEnableVertexAttribArray(RS::ARRAY_VERTEX);
 			glVertexAttribPointer(RS::ARRAY_VERTEX, 2, GL_FLOAT, GL_FALSE, stride * sizeof(float), nullptr);
-			const Vector2 *points_ptr = p_points.ptr();
+			const Hector2 *points_ptr = p_points.ptr();
 
 			for (uint32_t i = 0; i < vertex_count; i++) {
 				fptr[base_offset + i * stride + 0] = points_ptr[i].x;
@@ -2460,7 +2460,7 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 			glEnableVertexAttribArray(RS::ARRAY_TEX_UV);
 			glVertexAttribPointer(RS::ARRAY_TEX_UV, 2, GL_FLOAT, GL_FALSE, stride * sizeof(float), CAST_INT_TO_UCHAR_PTR(base_offset * sizeof(float)));
 
-			const Vector2 *uv_ptr = p_uvs.ptr();
+			const Hector2 *uv_ptr = p_uvs.ptr();
 
 			for (uint32_t i = 0; i < vertex_count; i++) {
 				fptr[base_offset + i * stride + 0] = uv_ptr[i].x;
@@ -2518,7 +2518,7 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 
 	if (p_indices.size()) {
 		//create indices, as indices were requested
-		Vector<uint8_t> index_buffer;
+		Hector<uint8_t> index_buffer;
 		index_buffer.resize(p_indices.size() * sizeof(int32_t));
 		{
 			uint8_t *w = index_buffer.ptrw();

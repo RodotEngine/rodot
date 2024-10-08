@@ -39,21 +39,21 @@ void Gizmo3DHelper::initialize_handle_action(const Variant &p_initial_value, con
 	initial_transform = p_initial_transform;
 }
 
-void Gizmo3DHelper::get_segment(Camera3D *p_camera, const Point2 &p_point, Vector3 *r_segment) {
+void Gizmo3DHelper::get_segment(Camera3D *p_camera, const Point2 &p_point, Hector3 *r_segment) {
 	Transform3D gt = initial_transform;
 	Transform3D gi = gt.affine_inverse();
 
-	Vector3 ray_from = p_camera->project_ray_origin(p_point);
-	Vector3 ray_dir = p_camera->project_ray_normal(p_point);
+	Hector3 ray_from = p_camera->project_ray_origin(p_point);
+	Hector3 ray_dir = p_camera->project_ray_normal(p_point);
 
 	r_segment[0] = gi.xform(ray_from);
 	r_segment[1] = gi.xform(ray_from + ray_dir * 4096);
 }
 
-Vector<Vector3> Gizmo3DHelper::box_get_handles(const Vector3 &p_box_size) {
-	Vector<Vector3> handles;
+Hector<Hector3> Gizmo3DHelper::box_get_handles(const Hector3 &p_box_size) {
+	Hector<Hector3> handles;
 	for (int i = 0; i < 3; i++) {
-		Vector3 ax;
+		Hector3 ax;
 		ax[i] = p_box_size[i] / 2;
 		handles.push_back(ax);
 		handles.push_back(-ax);
@@ -76,18 +76,18 @@ String Gizmo3DHelper::box_get_handle_name(int p_id) const {
 	return "";
 }
 
-void Gizmo3DHelper::box_set_handle(const Vector3 p_segment[2], int p_id, Vector3 &r_box_size, Vector3 &r_box_position) {
+void Gizmo3DHelper::box_set_handle(const Hector3 p_segment[2], int p_id, Hector3 &r_box_size, Hector3 &r_box_position) {
 	int axis = p_id / 2;
 	int sign = p_id % 2 * -2 + 1;
 
-	Vector3 initial_size = initial_value;
+	Hector3 initial_size = initial_value;
 	float neg_end = initial_size[axis] * -0.5;
 	float pos_end = initial_size[axis] * 0.5;
 
-	Vector3 axis_segment[2] = { Vector3(), Vector3() };
+	Hector3 axis_segment[2] = { Hector3(), Hector3() };
 	axis_segment[0][axis] = 4096.0;
 	axis_segment[1][axis] = -4096.0;
-	Vector3 ra, rb;
+	Hector3 ra, rb;
 	Geometry3D::get_closest_points_between_segments(axis_segment[0], axis_segment[1], p_segment[0], p_segment[1], ra, rb);
 
 	// Calculate new size.
@@ -114,7 +114,7 @@ void Gizmo3DHelper::box_set_handle(const Vector3 p_segment[2], int p_id, Vector3
 			neg_end = pos_end - r_box_size[axis];
 		}
 
-		Vector3 offset;
+		Hector3 offset;
 		offset[axis] = (pos_end + neg_end) * 0.5;
 		r_box_position = initial_transform.xform(offset);
 	}

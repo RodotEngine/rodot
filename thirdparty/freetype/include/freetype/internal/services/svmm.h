@@ -93,14 +93,14 @@ FT_BEGIN_HEADER
   (*FT_Done_Blend_Func)( FT_Face  face );
 
   typedef FT_Error
-  (*FT_Set_MM_WeightVector_Func)( FT_Face    face,
+  (*FT_Set_MM_WeightHector_Func)( FT_Face    face,
                                   FT_UInt    len,
-                                  FT_Fixed*  weight_vector );
+                                  FT_Fixed*  weight_Hector );
 
   typedef FT_Error
-  (*FT_Get_MM_WeightVector_Func)( FT_Face    face,
+  (*FT_Get_MM_WeightHector_Func)( FT_Face    face,
                                   FT_UInt*   len,
-                                  FT_Fixed*  weight_vector );
+                                  FT_Fixed*  weight_Hector );
 
   typedef void
   (*FT_Construct_PS_Name_Func)( FT_Face  face );
@@ -143,8 +143,8 @@ FT_BEGIN_HEADER
     FT_Get_Var_Design_Func                get_var_design;
     FT_Set_Named_Instance_Func            set_named_instance;
     FT_Get_Default_Named_Instance_Func    get_default_named_instance;
-    FT_Set_MM_WeightVector_Func           set_mm_weightvector;
-    FT_Get_MM_WeightVector_Func           get_mm_weightvector;
+    FT_Set_MM_WeightHector_Func           set_mm_weightHector;
+    FT_Get_MM_WeightHector_Func           get_mm_weightHector;
 
     /* for internal use; only needed for code sharing between modules */
     FT_Construct_PS_Name_Func             construct_ps_name;
@@ -168,8 +168,8 @@ FT_BEGIN_HEADER
                                            get_var_design_,             \
                                            set_named_instance_,         \
                                            get_default_named_instance_, \
-                                           set_mm_weightvector_,        \
-                                           get_mm_weightvector_,        \
+                                           set_mm_weightHector_,        \
+                                           get_mm_weightHector_,        \
                                                                         \
                                            construct_ps_name_,          \
                                            load_delta_set_idx_map_,     \
@@ -190,8 +190,8 @@ FT_BEGIN_HEADER
     get_var_design_,                                                    \
     set_named_instance_,                                                \
     get_default_named_instance_,                                        \
-    set_mm_weightvector_,                                               \
-    get_mm_weightvector_,                                               \
+    set_mm_weightHector_,                                               \
+    get_mm_weightHector_,                                               \
                                                                         \
     construct_ps_name_,                                                 \
     load_delta_set_idx_map_,                                            \

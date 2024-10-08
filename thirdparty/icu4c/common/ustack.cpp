@@ -7,29 +7,29 @@
 **********************************************************************
 */
 
-#include "uvector.h"
+#include "uHector.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UStack)
 
 UStack::UStack(UErrorCode &status) :
-    UVector(status)
+    UHector(status)
 {
 }
 
 UStack::UStack(int32_t initialCapacity, UErrorCode &status) :
-    UVector(initialCapacity, status)
+    UHector(initialCapacity, status)
 {
 }
 
 UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, UErrorCode &status) :
-    UVector(d, c, status)
+    UHector(d, c, status)
 {
 }
 
 UStack::UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status) :
-    UVector(d, c, initialCapacity, status)
+    UHector(d, c, initialCapacity, status)
 {
 }
 

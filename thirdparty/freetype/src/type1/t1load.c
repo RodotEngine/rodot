@@ -117,9 +117,9 @@
       if ( FT_NEW( blend ) )
         goto Exit;
 
-      blend->num_default_design_vector = 0;
-      blend->weight_vector             = NULL;
-      blend->default_weight_vector     = NULL;
+      blend->num_default_design_Hector = 0;
+      blend->weight_Hector             = NULL;
+      blend->default_weight_Hector     = NULL;
       blend->design_pos[0]             = NULL;
 
       face->blend = blend;
@@ -241,7 +241,7 @@
 
   /**************************************************************************
    *
-   * Given a vector of weights, one for each design, figure out the
+   * Given a Hector of weights, one for each design, figure out the
    * normalized axis coordinates which gave rise to those weights.
    */
   static void
@@ -364,7 +364,7 @@
         mmvar->axis[i].tag = FT_MAKE_TAG( 'i', 't', 'a', 'l' );
     }
 
-    mm_weights_unmap( blend->default_weight_vector,
+    mm_weights_unmap( blend->default_weight_Hector,
                       axiscoords,
                       blend->num_axis );
 
@@ -396,7 +396,7 @@
     if ( num_coords > blend->num_axis )
       num_coords = blend->num_axis;
 
-    /* recompute the weight vector from the blend coordinates */
+    /* recompute the weight Hector from the blend coordinates */
     for ( n = 0; n < blend->num_designs; n++ )
     {
       FT_Fixed  result = 0x10000L;  /* 1.0 fixed */
@@ -428,9 +428,9 @@
         result = FT_MulFix( result, factor );
       }
 
-      if ( blend->weight_vector[n] != result )
+      if ( blend->weight_Hector[n] != result )
       {
-        blend->weight_vector[n] = result;
+        blend->weight_Hector[n] = result;
         have_diff               = 1;
       }
     }
@@ -464,7 +464,7 @@
     if ( !blend )
       return FT_THROW( Invalid_Argument );
 
-    mm_weights_unmap( blend->weight_vector,
+    mm_weights_unmap( blend->weight_Hector,
                       axiscoords,
                       blend->num_axis );
 
@@ -486,9 +486,9 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Set_MM_WeightVector( FT_Face    face,          /* T1_Face */
+  T1_Set_MM_WeightHector( FT_Face    face,          /* T1_Face */
                           FT_UInt    len,
-                          FT_Fixed*  weightvector )
+                          FT_Fixed*  weightHector )
   {
     T1_Face   t1face = (T1_Face)face;
     PS_Blend  blend  = t1face->blend;
@@ -498,23 +498,23 @@
     if ( !blend )
      return FT_THROW( Invalid_Argument );
 
-    if ( !len && !weightvector )
+    if ( !len && !weightHector )
     {
       for ( i = 0; i < blend->num_designs; i++ )
-        blend->weight_vector[i] = blend->default_weight_vector[i];
+        blend->weight_Hector[i] = blend->default_weight_Hector[i];
     }
     else
     {
-      if ( !weightvector )
+      if ( !weightHector )
         return FT_THROW( Invalid_Argument );
 
       n = len < blend->num_designs ? len : blend->num_designs;
 
       for ( i = 0; i < n; i++ )
-        blend->weight_vector[i] = weightvector[i];
+        blend->weight_Hector[i] = weightHector[i];
 
       for ( ; i < blend->num_designs; i++ )
-        blend->weight_vector[i] = (FT_Fixed)0;
+        blend->weight_Hector[i] = (FT_Fixed)0;
     }
 
     return FT_Err_Ok;
@@ -522,9 +522,9 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Get_MM_WeightVector( FT_Face    face,          /* T1_Face */
+  T1_Get_MM_WeightHector( FT_Face    face,          /* T1_Face */
                           FT_UInt*   len,
-                          FT_Fixed*  weightvector )
+                          FT_Fixed*  weightHector )
   {
     T1_Face   t1face = (T1_Face)face;
     PS_Blend  blend  = t1face->blend;
@@ -541,9 +541,9 @@
     }
 
     for ( i = 0; i < blend->num_designs; i++ )
-      weightvector[i] = blend->weight_vector[i];
+      weightHector[i] = blend->weight_Hector[i];
     for ( ; i < *len; i++ )
-      weightvector[i] = (FT_Fixed)0;
+      weightHector[i] = (FT_Fixed)0;
 
     *len = blend->num_designs;
 
@@ -683,7 +683,7 @@
     if ( !blend )
       return FT_THROW( Invalid_Argument );
 
-    mm_weights_unmap( blend->weight_vector,
+    mm_weights_unmap( blend->weight_Hector,
                       axiscoords,
                       blend->num_axis );
 
@@ -737,9 +737,9 @@
         blend->bboxes    [n] = NULL;
       }
 
-      /* release weight vectors */
-      FT_FREE( blend->weight_vector );
-      blend->default_weight_vector = NULL;
+      /* release weight Hectors */
+      FT_FREE( blend->weight_Hector );
+      blend->default_weight_Hector = NULL;
 
       /* release axis names */
       for ( n = 0; n < num_axis; n++ )
@@ -1081,7 +1081,7 @@
 
 
   static void
-  parse_weight_vector( FT_Face  face,     /* T1_Face */
+  parse_weight_Hector( FT_Face  face,     /* T1_Face */
                        void*    loader_ )
   {
     T1_Face      t1face = (T1_Face)face;
@@ -1107,7 +1107,7 @@
     }
     if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
     {
-      FT_ERROR(( "parse_weight_vector:"
+      FT_ERROR(( "parse_weight_Hector:"
                  " incorrect number of designs: %d\n",
                  num_designs ));
       error = FT_THROW( Invalid_File_Format );
@@ -1123,19 +1123,19 @@
     }
     else if ( blend->num_designs != (FT_UInt)num_designs )
     {
-      FT_ERROR(( "parse_weight_vector:"
-                 " /BlendDesignPosition and /WeightVector have\n" ));
+      FT_ERROR(( "parse_weight_Hector:"
+                 " /BlendDesignPosition and /WeightHector have\n" ));
       FT_ERROR(( "                    "
                  " different number of elements\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
-    if ( !blend->weight_vector )
-      if ( FT_QNEW_ARRAY( blend->weight_vector, num_designs * 2 ) )
+    if ( !blend->weight_Hector )
+      if ( FT_QNEW_ARRAY( blend->weight_Hector, num_designs * 2 ) )
         goto Exit;
 
-    blend->default_weight_vector = blend->weight_vector + num_designs;
+    blend->default_weight_Hector = blend->weight_Hector + num_designs;
 
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
@@ -1148,10 +1148,10 @@
       parser->root.cursor = token->start;
       parser->root.limit  = token->limit;
 
-      blend->default_weight_vector[n] =
-      blend->weight_vector[n]         = T1_ToFixed( parser, 0 );
+      blend->default_weight_Hector[n] =
+      blend->weight_Hector[n]         = T1_ToFixed( parser, 0 );
 
-      FT_TRACE4(( " %f", (double)blend->weight_vector[n] / 65536 ));
+      FT_TRACE4(( " %f", (double)blend->weight_Hector[n] / 65536 ));
     }
 
     FT_TRACE4(( "]\n" ));
@@ -1407,7 +1407,7 @@
     T1_Loader   loader = (T1_Loader)loader_;
     T1_Parser   parser = &loader->parser;
     FT_Matrix*  matrix = &t1face->type1.font_matrix;
-    FT_Vector*  offset = &t1face->type1.font_offset;
+    FT_Hector*  offset = &t1face->type1.font_offset;
     FT_Fixed    temp[6];
     FT_Fixed    temp_scale;
     FT_Int      result;
@@ -1672,7 +1672,7 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
       FT_TRACE4(( " [" ));
 
-      /* XXX show encoding vector */
+      /* XXX show encoding Hector */
       FT_TRACE4(( "..." ));
 
       FT_TRACE4(( "]\n" ));
@@ -2278,7 +2278,7 @@
                        T1_FIELD_DICT_FONTDICT )
     T1_FIELD_CALLBACK( "BlendAxisTypes",       parse_blend_axis_types,
                        T1_FIELD_DICT_FONTDICT )
-    T1_FIELD_CALLBACK( "WeightVector",         parse_weight_vector,
+    T1_FIELD_CALLBACK( "WeightHector",         parse_weight_Hector,
                        T1_FIELD_DICT_FONTDICT )
     T1_FIELD_CALLBACK( "BuildCharArray",       parse_buildchar,
                        T1_FIELD_DICT_PRIVATE )
@@ -2584,16 +2584,16 @@
     }
 
     if ( face->blend                                                     &&
-         face->blend->num_default_design_vector != 0                     &&
-         face->blend->num_default_design_vector != face->blend->num_axis )
+         face->blend->num_default_design_Hector != 0                     &&
+         face->blend->num_default_design_Hector != face->blend->num_axis )
     {
       /* we don't use it currently so just warn, reset, and ignore */
-      FT_ERROR(( "T1_Open_Face(): /DesignVector contains %u entries "
+      FT_ERROR(( "T1_Open_Face(): /DesignHector contains %u entries "
                  "while there are %u axes.\n",
-                 face->blend->num_default_design_vector,
+                 face->blend->num_default_design_Hector,
                  face->blend->num_axis ));
 
-      face->blend->num_default_design_vector = 0;
+      face->blend->num_default_design_Hector = 0;
     }
 
     /* the following can happen for MM instances; we then treat the */
@@ -2602,8 +2602,8 @@
          ( !face->blend->num_designs || !face->blend->num_axis ) )
       T1_Done_Blend( FT_FACE( face ) );
 
-    /* the font may have no valid WeightVector */
-    if ( face->blend && !face->blend->weight_vector )
+    /* the font may have no valid WeightHector */
+    if ( face->blend && !face->blend->weight_Hector )
       T1_Done_Blend( FT_FACE( face ) );
 
     /* the font may have no valid BlendDesignPositions */

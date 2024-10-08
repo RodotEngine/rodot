@@ -40,7 +40,7 @@
 #include "core/crypto/crypto_core.h"
 #include "core/io/dir_access.h"
 #include "core/io/file_access.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/display_server.h"
 
 class EGLManager {
@@ -65,8 +65,8 @@ private:
 		EGLSurface egl_surface = EGL_NO_SURFACE;
 	};
 
-	LocalVector<GLDisplay> displays;
-	LocalVector<GLWindow> windows;
+	LocalHector<GLDisplay> displays;
+	LocalHector<GLWindow> windows;
 
 	GLWindow *current_window = nullptr;
 
@@ -76,8 +76,8 @@ private:
 	virtual const char *_get_platform_extension_name() const = 0;
 	virtual EGLenum _get_platform_extension_enum() const = 0;
 	virtual EGLenum _get_platform_api_enum() const = 0;
-	virtual Vector<EGLAttrib> _get_platform_display_attributes() const = 0;
-	virtual Vector<EGLint> _get_platform_context_attribs() const = 0;
+	virtual Hector<EGLAttrib> _get_platform_display_attributes() const = 0;
+	virtual Hector<EGLint> _get_platform_context_attribs() const = 0;
 
 #ifdef EGL_ANDROID_blob_cache
 	static String shader_cache_dir;

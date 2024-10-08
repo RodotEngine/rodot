@@ -34,7 +34,7 @@
 #include "core/io/marshalls.h"
 #include "scene/resources/bit_map.h"
 
-void PortableCompressedTexture2D::_set_data(const Vector<uint8_t> &p_data) {
+void PortableCompressedTexture2D::_set_data(const Hector<uint8_t> &p_data) {
 	if (p_data.size() == 0) {
 		return; //nothing to do
 	}
@@ -68,7 +68,7 @@ void PortableCompressedTexture2D::_set_data(const Vector<uint8_t> &p_data) {
 			} else {
 				ERR_FAIL();
 			}
-			Vector<uint8_t> image_data;
+			Hector<uint8_t> image_data;
 
 			ERR_FAIL_COND(data_size < 4);
 			for (uint32_t i = 0; i < mipmap_count; i++) {
@@ -127,14 +127,14 @@ void PortableCompressedTexture2D::_set_data(const Vector<uint8_t> &p_data) {
 PortableCompressedTexture2D::CompressionMode PortableCompressedTexture2D::get_compression_mode() const {
 	return compression_mode;
 }
-Vector<uint8_t> PortableCompressedTexture2D::_get_data() const {
+Hector<uint8_t> PortableCompressedTexture2D::_get_data() const {
 	return compressed_buffer;
 }
 
 void PortableCompressedTexture2D::create_from_image(const Ref<Image> &p_image, CompressionMode p_compression_mode, bool p_normal_map, float p_lossy_quality) {
 	ERR_FAIL_COND(p_image.is_null() || p_image->is_empty());
 
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 
 	buffer.resize(20);
 	encode_uint16(p_compression_mode, buffer.ptrw());
@@ -151,7 +151,7 @@ void PortableCompressedTexture2D::create_from_image(const Ref<Image> &p_image, C
 					!Image::_webp_mem_loader_func; // WebP module disabled.
 			bool use_webp = !lossless_force_png && p_image->get_width() <= 16383 && p_image->get_height() <= 16383; // WebP has a size limit.
 			for (int i = 0; i < p_image->get_mipmap_count() + 1; i++) {
-				Vector<uint8_t> data;
+				Hector<uint8_t> data;
 				if (p_compression_mode == COMPRESSION_MODE_LOSSY) {
 					data = Image::webp_lossy_packer(i ? p_image->get_image_from_mipmap(i) : p_image, p_lossy_quality);
 					encode_uint16(DATA_FORMAT_WEBP, buffer.ptrw() + 2);
@@ -173,7 +173,7 @@ void PortableCompressedTexture2D::create_from_image(const Ref<Image> &p_image, C
 		case COMPRESSION_MODE_BASIS_UNIVERSAL: {
 			encode_uint16(DATA_FORMAT_BASIS_UNIVERSAL, buffer.ptrw() + 2);
 			Image::UsedChannels uc = p_image->detect_used_channels(p_normal_map ? Image::COMPRESS_SOURCE_NORMAL : Image::COMPRESS_SOURCE_GENERIC);
-			Vector<uint8_t> budata = Image::basis_universal_packer(p_image, uc);
+			Hector<uint8_t> budata = Image::basis_universal_packer(p_image, uc);
 			buffer.append_array(budata);
 
 		} break;
@@ -346,7 +346,7 @@ void PortableCompressedTexture2D::_bind_methods() {
 	ClassDB::bind_static_method("PortableCompressedTexture2D", D_METHOD("is_keeping_all_compressed_buffers"), &PortableCompressedTexture2D::is_keeping_all_compressed_buffers);
 
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_BYTE_ARRAY, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "size_override", PROPERTY_HINT_NONE, "suffix:px"), "set_size_override", "get_size_override");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "size_override", PROPERTY_HINT_NONE, "suffix:px"), "set_size_override", "get_size_override");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "keep_compressed_buffer"), "set_keep_compressed_buffer", "is_keeping_compressed_buffer");
 
 	BIND_ENUM_CONSTANT(COMPRESSION_MODE_LOSSLESS);

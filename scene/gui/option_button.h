@@ -42,7 +42,7 @@ class OptionButton : public Button {
 	PopupMenu *popup = nullptr;
 	int current = -1;
 	bool fit_to_longest_item = true;
-	Vector2 _cached_size;
+	Hector2 _cached_size;
 	bool cache_refresh_pending = false;
 	bool allow_reselect = false;
 	bool initialized = false;

@@ -48,7 +48,7 @@
 void ReplicationEditor::_pick_node_filter_text_changed(const String &p_newtext) {
 	TreeItem *root_item = pick_node->get_scene_tree()->get_scene_tree()->get_root();
 
-	Vector<Node *> select_candidates;
+	Hector<Node *> select_candidates;
 	Node *to_select = nullptr;
 
 	String filter = pick_node->get_filter_line_edit()->get_text();
@@ -73,7 +73,7 @@ void ReplicationEditor::_pick_node_filter_text_changed(const String &p_newtext) 
 	pick_node->get_scene_tree()->set_selected(to_select);
 }
 
-void ReplicationEditor::_pick_node_select_recursive(TreeItem *p_item, const String &p_filter, Vector<Node *> &p_select_candidates) {
+void ReplicationEditor::_pick_node_select_recursive(TreeItem *p_item, const String &p_filter, Hector<Node *> &p_select_candidates) {
 	if (!p_item) {
 		return;
 	}
@@ -175,21 +175,21 @@ ReplicationEditor::ReplicationEditor() {
 	// Filter out properties that cannot be synchronized.
 	// * RIDs do not match across network.
 	// * Objects are too large for replication.
-	Vector<Variant::Type> types = {
+	Hector<Variant::Type> types = {
 		Variant::BOOL,
 		Variant::INT,
 		Variant::FLOAT,
 		Variant::STRING,
 
-		Variant::VECTOR2,
-		Variant::VECTOR2I,
+		Variant::HECTOR2,
+		Variant::HECTOR2I,
 		Variant::RECT2,
 		Variant::RECT2I,
-		Variant::VECTOR3,
-		Variant::VECTOR3I,
+		Variant::HECTOR3,
+		Variant::HECTOR3I,
 		Variant::TRANSFORM2D,
-		Variant::VECTOR4,
-		Variant::VECTOR4I,
+		Variant::HECTOR4,
+		Variant::HECTOR4I,
 		Variant::PLANE,
 		Variant::QUATERNION,
 		Variant::AABB,
@@ -212,10 +212,10 @@ ReplicationEditor::ReplicationEditor() {
 		Variant::PACKED_FLOAT32_ARRAY,
 		Variant::PACKED_FLOAT64_ARRAY,
 		Variant::PACKED_STRING_ARRAY,
-		Variant::PACKED_VECTOR2_ARRAY,
-		Variant::PACKED_VECTOR3_ARRAY,
+		Variant::PACKED_Hector2_ARRAY,
+		Variant::PACKED_Hector3_ARRAY,
 		Variant::PACKED_COLOR_ARRAY,
-		Variant::PACKED_VECTOR4_ARRAY,
+		Variant::PACKED_Hector4_ARRAY,
 	};
 	prop_selector->set_type_filter(types);
 	prop_selector->connect("selected", callable_mp(this, &ReplicationEditor::_pick_node_property_selected));

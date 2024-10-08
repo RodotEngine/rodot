@@ -108,8 +108,8 @@ int GodotPhysicsDirectSpaceState3D::intersect_point(const PointParameters &p_par
 bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parameters, RayResult &r_result) {
 	ERR_FAIL_COND_V(space->locked, false);
 
-	Vector3 begin, end;
-	Vector3 normal;
+	Hector3 begin, end;
+	Hector3 normal;
 	begin = p_parameters.from;
 	end = p_parameters.to;
 	normal = (end - begin).normalized();
@@ -119,7 +119,7 @@ bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parame
 	//todo, create another array that references results, compute AABBs and check closest point to ray origin, sort, and stop evaluating results when beyond first collision
 
 	bool collided = false;
-	Vector3 res_point, res_normal;
+	Hector3 res_point, res_normal;
 	int res_face_index = -1;
 	int res_shape = -1;
 	const GodotCollisionObject3D *res_obj = nullptr;
@@ -143,12 +143,12 @@ bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parame
 		int shape_idx = space->intersection_query_subindex_results[i];
 		Transform3D inv_xform = col_obj->get_shape_inv_transform(shape_idx) * col_obj->get_inv_transform();
 
-		Vector3 local_from = inv_xform.xform(begin);
-		Vector3 local_to = inv_xform.xform(end);
+		Hector3 local_from = inv_xform.xform(begin);
+		Hector3 local_to = inv_xform.xform(end);
 
 		const GodotShape3D *shape = col_obj->get_shape(shape_idx);
 
-		Vector3 shape_point, shape_normal;
+		Hector3 shape_point, shape_normal;
 		int shape_face_index = -1;
 
 		if (shape->intersect_point(local_from)) {
@@ -156,7 +156,7 @@ bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parame
 				// Hit shape at starting point.
 				min_d = 0;
 				res_point = begin;
-				res_normal = Vector3();
+				res_normal = Hector3();
 				res_shape = shape_idx;
 				res_obj = col_obj;
 				collided = true;
@@ -280,9 +280,9 @@ bool GodotPhysicsDirectSpaceState3D::cast_motion(const ShapeParameters &p_parame
 
 	bool best_first = true;
 
-	Vector3 motion_normal = p_parameters.motion.normalized();
+	Hector3 motion_normal = p_parameters.motion.normalized();
 
-	Vector3 closest_A, closest_B;
+	Hector3 closest_A, closest_B;
 
 	for (int i = 0; i < amount; i++) {
 		if (!_can_collide_with(space->intersection_query_results[i], p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas)) {
@@ -296,8 +296,8 @@ bool GodotPhysicsDirectSpaceState3D::cast_motion(const ShapeParameters &p_parame
 		const GodotCollisionObject3D *col_obj = space->intersection_query_results[i];
 		int shape_idx = space->intersection_query_subindex_results[i];
 
-		Vector3 point_A, point_B;
-		Vector3 sep_axis = motion_normal;
+		Hector3 point_A, point_B;
+		Hector3 sep_axis = motion_normal;
 
 		Transform3D col_obj_xform = col_obj->get_transform() * col_obj->get_shape_transform(shape_idx);
 		//test initial overlap, does it collide if going all the way?
@@ -321,8 +321,8 @@ bool GodotPhysicsDirectSpaceState3D::cast_motion(const ShapeParameters &p_parame
 
 			mshape.motion = xform_inv.basis.xform(p_parameters.motion * fraction);
 
-			Vector3 lA, lB;
-			Vector3 sep = motion_normal; //important optimization for this to work fast enough
+			Hector3 lA, lB;
+			Hector3 sep = motion_normal; //important optimization for this to work fast enough
 			bool collided = !GodotCollisionSolver3D::solve_distance(&mshape, p_parameters.transform, col_obj->get_shape(shape_idx), col_obj_xform, lA, lB, aabb, &sep);
 
 			if (collided) {
@@ -367,7 +367,7 @@ bool GodotPhysicsDirectSpaceState3D::cast_motion(const ShapeParameters &p_parame
 			best_first = false;
 			if (col_obj->get_type() == GodotCollisionObject3D::TYPE_BODY) {
 				const GodotBody3D *body = static_cast<const GodotBody3D *>(col_obj);
-				Vector3 rel_vec = closest_B - (body->get_transform().origin + body->get_center_of_mass());
+				Hector3 rel_vec = closest_B - (body->get_transform().origin + body->get_center_of_mass());
 				r_info->linear_velocity = body->get_linear_velocity() + (body->get_angular_velocity()).cross(rel_vec);
 			}
 		}
@@ -379,7 +379,7 @@ bool GodotPhysicsDirectSpaceState3D::cast_motion(const ShapeParameters &p_parame
 	return true;
 }
 
-bool GodotPhysicsDirectSpaceState3D::collide_shape(const ShapeParameters &p_parameters, Vector3 *r_results, int p_result_max, int &r_result_count) {
+bool GodotPhysicsDirectSpaceState3D::collide_shape(const ShapeParameters &p_parameters, Hector3 *r_results, int p_result_max, int &r_result_count) {
 	if (p_result_max <= 0) {
 		return false;
 	}
@@ -430,8 +430,8 @@ struct _RestResultData {
 	const GodotCollisionObject3D *object = nullptr;
 	int local_shape = 0;
 	int shape = 0;
-	Vector3 contact;
-	Vector3 normal;
+	Hector3 contact;
+	Hector3 normal;
 	real_t len = 0.0;
 };
 
@@ -449,10 +449,10 @@ struct _RestCallbackData {
 	_RestResultData *other_results = nullptr;
 };
 
-static void _rest_cbk_result(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
+static void _rest_cbk_result(const Hector3 &p_point_A, int p_index_A, const Hector3 &p_point_B, int p_index_B, const Hector3 &normal, void *p_userdata) {
 	_RestCallbackData *rd = static_cast<_RestCallbackData *>(p_userdata);
 
-	Vector3 contact_rel = p_point_B - p_point_A;
+	Hector3 contact_rel = p_point_B - p_point_A;
 	real_t len = contact_rel.length();
 	if (len < rd->min_allowed_depth) {
 		return;
@@ -559,27 +559,27 @@ bool GodotPhysicsDirectSpaceState3D::rest_info(const ShapeParameters &p_paramete
 	r_info->rid = rcd.best_result.object->get_self();
 	if (rcd.best_result.object->get_type() == GodotCollisionObject3D::TYPE_BODY) {
 		const GodotBody3D *body = static_cast<const GodotBody3D *>(rcd.best_result.object);
-		Vector3 rel_vec = rcd.best_result.contact - (body->get_transform().origin + body->get_center_of_mass());
+		Hector3 rel_vec = rcd.best_result.contact - (body->get_transform().origin + body->get_center_of_mass());
 		r_info->linear_velocity = body->get_linear_velocity() + (body->get_angular_velocity()).cross(rel_vec);
 
 	} else {
-		r_info->linear_velocity = Vector3();
+		r_info->linear_velocity = Hector3();
 	}
 
 	return true;
 }
 
-Vector3 GodotPhysicsDirectSpaceState3D::get_closest_point_to_object_volume(RID p_object, const Vector3 p_point) const {
+Hector3 GodotPhysicsDirectSpaceState3D::get_closest_point_to_object_volume(RID p_object, const Hector3 p_point) const {
 	GodotCollisionObject3D *obj = GodotPhysicsServer3D::godot_singleton->area_owner.get_or_null(p_object);
 	if (!obj) {
 		obj = GodotPhysicsServer3D::godot_singleton->body_owner.get_or_null(p_object);
 	}
-	ERR_FAIL_NULL_V(obj, Vector3());
+	ERR_FAIL_NULL_V(obj, Hector3());
 
-	ERR_FAIL_COND_V(obj->get_space() != space, Vector3());
+	ERR_FAIL_COND_V(obj->get_space() != space, Hector3());
 
 	real_t min_distance = 1e20;
-	Vector3 min_point;
+	Hector3 min_point;
 
 	bool shapes_found = false;
 
@@ -591,7 +591,7 @@ Vector3 GodotPhysicsDirectSpaceState3D::get_closest_point_to_object_volume(RID p
 		Transform3D shape_xform = obj->get_transform() * obj->get_shape_transform(i);
 		GodotShape3D *shape = obj->get_shape(i);
 
-		Vector3 point = shape->get_closest_point_to(shape_xform.affine_inverse().xform(p_point));
+		Hector3 point = shape->get_closest_point_to(shape_xform.affine_inverse().xform(p_point));
 		point = shape_xform.xform(point);
 
 		real_t dist = point.distance_to(p_point);
@@ -694,7 +694,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 	real_t min_contact_depth = margin * TEST_MOTION_MIN_CONTACT_DEPTH_FACTOR;
 
 	real_t motion_length = p_parameters.motion.length();
-	Vector3 motion_normal = p_parameters.motion / motion_length;
+	Hector3 motion_normal = p_parameters.motion / motion_length;
 
 	Transform3D body_transform = p_parameters.from;
 
@@ -705,7 +705,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 
 		const int max_results = 32;
 		int recover_attempts = 4;
-		Vector3 sr[max_results * 2];
+		Hector3 sr[max_results * 2];
 		real_t priorities[max_results];
 
 		do {
@@ -763,13 +763,13 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 
 			recovered = true;
 
-			Vector3 recover_motion;
+			Hector3 recover_motion;
 			for (int i = 0; i < cbk.amount; i++) {
-				Vector3 a = sr[i * 2 + 0];
-				Vector3 b = sr[i * 2 + 1];
+				Hector3 a = sr[i * 2 + 0];
+				Hector3 b = sr[i * 2 + 1];
 
 				// Compute plane on b towards a.
-				Vector3 n = (a - b).normalized();
+				Hector3 n = (a - b).normalized();
 				real_t d = n.dot(b);
 
 				// Compute depth on recovered motion.
@@ -780,7 +780,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 				}
 			}
 
-			if (recover_motion == Vector3()) {
+			if (recover_motion == Hector3()) {
 				collided = false;
 				break;
 			}
@@ -846,8 +846,8 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 				int shape_idx = intersection_query_subindex_results[i];
 
 				//test initial overlap, does it collide if going all the way?
-				Vector3 point_A, point_B;
-				Vector3 sep_axis = motion_normal;
+				Hector3 point_A, point_B;
+				Hector3 sep_axis = motion_normal;
 
 				Transform3D col_obj_xform = col_obj->get_transform() * col_obj->get_shape_transform(shape_idx);
 				//test initial overlap, does it collide if going all the way?
@@ -870,8 +870,8 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 
 					mshape.motion = body_shape_xform_inv.basis.xform(p_parameters.motion * fraction);
 
-					Vector3 lA, lB;
-					Vector3 sep = motion_normal; //important optimization for this to work fast enough
+					Hector3 lA, lB;
+					Hector3 sep = motion_normal; //important optimization for this to work fast enough
 					bool collided = !GodotCollisionSolver3D::solve_distance(&mshape, body_shape_xform, col_obj->get_shape(shape_idx), col_obj_xform, lA, lB, motion_aabb, &sep);
 
 					if (collided) {
@@ -994,7 +994,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 
 					const GodotBody3D *body = static_cast<const GodotBody3D *>(result.object);
 
-					Vector3 rel_vec = result.contact - (body->get_transform().origin + body->get_center_of_mass());
+					Hector3 rel_vec = result.contact - (body->get_transform().origin + body->get_center_of_mass());
 					collision.collider_velocity = body->get_linear_velocity() + (body->get_angular_velocity()).cross(rel_vec);
 					collision.collider_angular_velocity = body->get_angular_velocity();
 				}
@@ -1016,7 +1016,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 
 	if (!collided && r_result) {
 		r_result->travel = p_parameters.motion;
-		r_result->remainder = Vector3();
+		r_result->remainder = Hector3();
 		r_result->travel += (body_transform.get_origin() - p_parameters.from.get_origin());
 
 		r_result->collision_safe_fraction = 1.0;

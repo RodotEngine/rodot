@@ -1344,8 +1344,8 @@ namespace basist
 		uint32_t m_base;
 		uint32_t m_table;
 		uint32_t m_multiplier;
-		basisu::vector<uint8_t> m_selectors;
-		basisu::vector<uint8_t> m_selectors_temp;
+		basisu::Hector<uint8_t> m_selectors;
+		basisu::Hector<uint8_t> m_selectors_temp;
 	};
 
 	static uint64_t pack_eac_a8_exhaustive(pack_eac_a8_results& results, const uint8_t* pPixels, uint32_t num_pixels)
@@ -1741,8 +1741,8 @@ namespace basist
 		uint32_t m_base;
 		uint32_t m_table;
 		uint32_t m_multiplier;
-		basisu::vector<uint8_t> m_selectors;
-		basisu::vector<uint8_t> m_selectors_temp;
+		basisu::Hector<uint8_t> m_selectors;
+		basisu::Hector<uint8_t> m_selectors_temp;
 	};
 
 	static uint64_t pack_eac_r11_exhaustive(pack_eac_r11_results& results, const uint8_t* pPixels, uint32_t num_pixels)
@@ -7156,7 +7156,7 @@ namespace basist
 				(block_cols[low_selector].c[2] == 0) || (block_cols[high_selector].c[2] == 255) ||
 				(block_cols[alpha_selectors.m_lo_selector].c[3] == 0) || (block_cols[alpha_selectors.m_hi_selector].c[3] == 255))
 		{
-			// Find principle component of RGBA colors treated as 4D vectors.
+			// Find principle component of RGBA colors treated as 4D Hectors.
 			color32 pixels[16];
 
 			uint32_t sum_r = 0, sum_g = 0, sum_b = 0, sum_a = 0;
@@ -7240,7 +7240,7 @@ namespace basist
 		else
 		{
 			// We know the RGB axis is luma, because it's an ETC1S block and none of the block colors got clamped. So we only need to use 2D PCA.
-			// We project each LA vector onto two 2D lines with axes (1,1) and (1,-1) and find the largest projection to determine if axis A is flipped relative to L.
+			// We project each LA Hector onto two 2D lines with axes (1,1) and (1,-1) and find the largest projection to determine if axis A is flipped relative to L.
 			uint32_t block_cols_l[4], block_cols_a[4];
 			for (uint32_t i = 0; i < 4; i++)
 			{
@@ -7817,7 +7817,7 @@ namespace basist
 				output_rows_in_pixels = orig_height;
 		}
 		
-		basisu::vector<uint32_t>* pPrev_frame_indices = nullptr;
+		basisu::Hector<uint32_t>* pPrev_frame_indices = nullptr;
 		if (is_video)
 		{
 			// TODO: Add check to make sure the caller hasn't tried skipping past p-frames
@@ -8788,7 +8788,7 @@ namespace basist
 			assert(alpha_length);
 
 			// Temp buffer to hold alpha block endpoint/selector indices
-			basisu::vector<uint32_t> temp_block_indices(total_slice_blocks);
+			basisu::Hector<uint32_t> temp_block_indices(total_slice_blocks);
 
 			// First transcode alpha data to temp buffer
 			//status = transcode_slice(pData, data_size, slice_index + 1, &temp_block_indices[0], total_slice_blocks, block_format::cIndices, sizeof(uint32_t), decode_flags, pSlice_descs[slice_index].m_num_blocks_x, pState);
@@ -14972,7 +14972,7 @@ namespace basist
 			
 #if 0
 			// Seems silly to use full PCA to choose 2 colors. The diff in avg. PSNR between using PCA vs. not is small (~.025 difference).
-			// TODO: Try 2 or 3 different normalized diagonal vectors, choose the one that results in the largest dot delta
+			// TODO: Try 2 or 3 different normalized diagonal Hectors, choose the one that results in the largest dot delta
 			int saxis_r = max_r - min_r;
 			int saxis_g = max_g - min_g;
 			int saxis_b = max_b - min_b;
@@ -15203,7 +15203,7 @@ namespace basist
 				avg_g = (total_g + 8) >> 4;
 				avg_b = (total_b + 8) >> 4;
 
-				// Find the shortest vector from a AABB corner to the block's average color.
+				// Find the shortest Hector from a AABB corner to the block's average color.
 				// This is to help avoid outliers.
 
 				uint32_t dist[3][2];
@@ -15243,8 +15243,8 @@ namespace basist
 				if ((delta_r | delta_g | delta_b) != 0)
 				{
 					// Now we have a smaller AABB going from the block's average color to a cornerpoint of the larger AABB.
-					// Project all pixels colors along the 4 vectors going from a smaller AABB cornerpoint to the opposite cornerpoint, find largest projection.
-					// One of these vectors will be a decent approximation of the block's PCA.
+					// Project all pixels colors along the 4 Hectors going from a smaller AABB cornerpoint to the opposite cornerpoint, find largest projection.
+					// One of these Hectors will be a decent approximation of the block's PCA.
 					const int saxis0_r = delta_r, saxis0_g = delta_g, saxis0_b = delta_b;
 
 					int low_dot0 = INT_MAX, high_dot0 = INT_MIN;
@@ -16407,7 +16407,7 @@ namespace basist
 		if (!basisu::is_pow2(width) || !basisu::is_pow2(height))
 			return false;
 
-		basisu::vector<uint32_t> temp_endpoints(num_blocks_x * num_blocks_y);
+		basisu::Hector<uint32_t> temp_endpoints(num_blocks_x * num_blocks_y);
 
 		for (uint32_t y = 0; y < num_blocks_y; y++)
 		{
@@ -16466,7 +16466,7 @@ namespace basist
 		if (!basisu::is_pow2(width) || !basisu::is_pow2(height))
 			return false;
 
-		basisu::vector<uint32_t> temp_endpoints(num_blocks_x * num_blocks_y);
+		basisu::Hector<uint32_t> temp_endpoints(num_blocks_x * num_blocks_y);
 
 		for (uint32_t y = 0; y < num_blocks_y; y++)
 		{

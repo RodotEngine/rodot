@@ -635,7 +635,7 @@ static void _cubicTo(RleWorker& rw, const SwPoint& ctrl1, const SwPoint& ctrl2, 
     /* http://www.cis.southalabama.edu/~hain/general/Publications/Bezier/Camera-ready%20CISST02%202.pdf */
     while (true) {
         {
-            //diff is the P0 - P3 chord vector
+            //diff is the P0 - P3 chord Hector
             auto diff = arc[3] - arc[0];
             auto L = HYPOT(diff);
 

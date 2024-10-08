@@ -37,7 +37,7 @@
 #include "core/os/mutex.h"
 #include "core/os/thread.h"
 #include "core/templates/safe_refcount.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 #ifdef SOWRAP_ENABLED
 #include "../alsa/asound-so_wrap.h"
@@ -62,7 +62,7 @@ class MIDIDriverALSAMidi : public MIDIDriver {
 		void read();
 	};
 
-	Vector<InputConnection> connected_inputs;
+	Hector<InputConnection> connected_inputs;
 
 	SafeFlag exit_thread;
 

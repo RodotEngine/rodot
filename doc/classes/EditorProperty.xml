@@ -36,7 +36,7 @@
 			<param index="2" name="field" type="StringName" default="&amp;&quot;&quot;" />
 			<param index="3" name="changing" type="bool" default="false" />
 			<description>
-				If one or several properties have changed, this must be called. [param field] is used in case your editor can modify fields separately (as an example, Vector3.x). The [param changing] argument avoids the editor requesting this property to be refreshed (leave as [code]false[/code] if unsure).
+				If one or several properties have changed, this must be called. [param field] is used in case your editor can modify fields separately (as an example, Hector3.x). The [param changing] argument avoids the editor requesting this property to be refreshed (leave as [code]false[/code] if unsure).
 			</description>
 		</method>
 		<method name="get_edited_object">

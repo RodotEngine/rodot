@@ -140,7 +140,7 @@ public:
 	};
 
 private:
-	Error _load_data(const String &p_path, Vector<Ref<Image>> &images, int &mipmap_limit, int p_size_limit = 0);
+	Error _load_data(const String &p_path, Hector<Ref<Image>> &images, int &mipmap_limit, int p_size_limit = 0);
 	String path_to_file;
 	mutable RID texture;
 	Image::Format format = Image::FORMAT_L8;
@@ -228,7 +228,7 @@ public:
 	};
 
 private:
-	Error _load_data(const String &p_path, Vector<Ref<Image>> &r_data, Image::Format &r_format, int &r_width, int &r_height, int &r_depth, bool &r_mipmaps);
+	Error _load_data(const String &p_path, Hector<Ref<Image>> &r_data, Image::Format &r_format, int &r_width, int &r_height, int &r_depth, bool &r_mipmaps);
 	String path_to_file;
 	mutable RID texture;
 	Image::Format format = Image::FORMAT_L8;
@@ -256,7 +256,7 @@ public:
 
 	virtual void set_path(const String &p_path, bool p_take_over) override;
 
-	virtual Vector<Ref<Image>> get_data() const override;
+	virtual Hector<Ref<Image>> get_data() const override;
 
 	CompressedTexture3D();
 	~CompressedTexture3D();

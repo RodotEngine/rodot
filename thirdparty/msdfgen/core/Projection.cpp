@@ -5,7 +5,7 @@ namespace msdfgen {
 
 Projection::Projection() : scale(1), translate(0) { }
 
-Projection::Projection(const Vector2 &scale, const Vector2 &translate) : scale(scale), translate(translate) { }
+Projection::Projection(const Hector2 &scale, const Hector2 &translate) : scale(scale), translate(translate) { }
 
 Point2 Projection::project(const Point2 &coord) const {
     return scale*(coord+translate);
@@ -15,12 +15,12 @@ Point2 Projection::unproject(const Point2 &coord) const {
     return coord/scale-translate;
 }
 
-Vector2 Projection::projectVector(const Vector2 &vector) const {
-    return scale*vector;
+Hector2 Projection::projectHector(const Hector2 &Hector) const {
+    return scale*Hector;
 }
 
-Vector2 Projection::unprojectVector(const Vector2 &vector) const {
-    return vector/scale;
+Hector2 Projection::unprojectHector(const Hector2 &Hector) const {
+    return Hector/scale;
 }
 
 double Projection::projectX(double x) const {

@@ -91,7 +91,7 @@ Transform2D CanvasLayer::get_transform() const {
 Transform2D CanvasLayer::get_final_transform() const {
 	if (is_following_viewport()) {
 		Transform2D follow;
-		follow.scale(Vector2(get_follow_viewport_scale(), get_follow_viewport_scale()));
+		follow.scale(Hector2(get_follow_viewport_scale(), get_follow_viewport_scale()));
 		if (vp) {
 			follow = vp->get_canvas_transform() * follow;
 		}
@@ -115,7 +115,7 @@ void CanvasLayer::_update_locrotscale() {
 	locrotscale_dirty = false;
 }
 
-void CanvasLayer::set_offset(const Vector2 &p_offset) {
+void CanvasLayer::set_offset(const Hector2 &p_offset) {
 	if (locrotscale_dirty) {
 		_update_locrotscale();
 	}
@@ -124,7 +124,7 @@ void CanvasLayer::set_offset(const Vector2 &p_offset) {
 	_update_xform();
 }
 
-Vector2 CanvasLayer::get_offset() const {
+Hector2 CanvasLayer::get_offset() const {
 	if (locrotscale_dirty) {
 		const_cast<CanvasLayer *>(this)->_update_locrotscale();
 	}
@@ -149,7 +149,7 @@ real_t CanvasLayer::get_rotation() const {
 	return rot;
 }
 
-void CanvasLayer::set_scale(const Vector2 &p_scale) {
+void CanvasLayer::set_scale(const Hector2 &p_scale) {
 	if (locrotscale_dirty) {
 		_update_locrotscale();
 	}
@@ -158,7 +158,7 @@ void CanvasLayer::set_scale(const Vector2 &p_scale) {
 	_update_xform();
 }
 
-Vector2 CanvasLayer::get_scale() const {
+Hector2 CanvasLayer::get_scale() const {
 	if (locrotscale_dirty) {
 		const_cast<CanvasLayer *>(this)->_update_locrotscale();
 	}
@@ -347,9 +347,9 @@ void CanvasLayer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "layer", PROPERTY_HINT_RANGE, "-128,128,1"), "set_layer", "get_layer");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "visible"), "set_visible", "is_visible");
 	ADD_GROUP("Transform", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation", PROPERTY_HINT_RANGE, "-1080,1080,0.1,or_less,or_greater,radians_as_degrees"), "set_rotation", "get_rotation");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scale", PROPERTY_HINT_LINK), "set_scale", "get_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scale", PROPERTY_HINT_LINK), "set_scale", "get_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM2D, "transform", PROPERTY_HINT_NONE, "suffix:px"), "set_transform", "get_transform");
 	ADD_GROUP("", "");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "custom_viewport", PROPERTY_HINT_RESOURCE_TYPE, "Viewport", PROPERTY_USAGE_NONE), "set_custom_viewport", "get_custom_viewport");

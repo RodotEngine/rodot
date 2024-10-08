@@ -136,9 +136,9 @@ void RootMotionView::_notification(int p_what) {
 
 			for (int i = -cells_in_radius; i < cells_in_radius; i++) {
 				for (int j = -cells_in_radius; j < cells_in_radius; j++) {
-					Vector3 from(i * cell_size, 0, j * cell_size);
-					Vector3 from_i((i + 1) * cell_size, 0, j * cell_size);
-					Vector3 from_j(i * cell_size, 0, (j + 1) * cell_size);
+					Hector3 from(i * cell_size, 0, j * cell_size);
+					Hector3 from_i((i + 1) * cell_size, 0, j * cell_size);
+					Hector3 from_j(i * cell_size, 0, (j + 1) * cell_size);
 					from = accumulated.xform_inv(from);
 					from_i = accumulated.xform_inv(from_i);
 					from_j = accumulated.xform_inv(from_j);
@@ -168,7 +168,7 @@ void RootMotionView::_notification(int p_what) {
 }
 
 AABB RootMotionView::get_aabb() const {
-	return AABB(Vector3(-radius, 0, -radius), Vector3(radius * 2, 0.001, radius * 2));
+	return AABB(Hector3(-radius, 0, -radius), Hector3(radius * 2, 0.001, radius * 2));
 }
 
 void RootMotionView::_bind_methods() {

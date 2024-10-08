@@ -35,7 +35,7 @@
 
 #include "core/string/char_utils.h"
 #include "core/templates/cowdata.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/typedefs.h"
 #include "core/variant/array.h"
 
@@ -294,7 +294,7 @@ public:
 	int rfind(const char *p_str, int p_from = -1) const; ///< return <0 if failed
 	int rfindn(const String &p_str, int p_from = -1) const; ///< return <0 if failed, case insensitive
 	int rfindn(const char *p_str, int p_from = -1) const; ///< return <0 if failed
-	int findmk(const Vector<String> &p_keys, int p_from = 0, int *r_key = nullptr) const; ///< return <0 if failed
+	int findmk(const Hector<String> &p_keys, int p_from = 0, int *r_key = nullptr) const; ///< return <0 if failed
 	bool match(const String &p_wildcard) const;
 	bool matchn(const String &p_wildcard) const;
 	bool begins_with(const String &p_string) const;
@@ -305,7 +305,7 @@ public:
 	bool is_subsequence_of(const String &p_string) const;
 	bool is_subsequence_ofn(const String &p_string) const;
 	bool is_quoted() const;
-	Vector<String> bigrams() const;
+	Hector<String> bigrams() const;
 	float similarity(const String &p_string) const;
 	String format(const Variant &values, const String &placeholder = "{_}") const;
 	String replace_first(const String &p_key, const String &p_with) const;
@@ -337,7 +337,7 @@ public:
 	static String chr(char32_t p_char);
 	static String md5(const uint8_t *p_md5);
 	static String hex_encode_buffer(const uint8_t *p_buffer, int p_len);
-	Vector<uint8_t> hex_decode() const;
+	Hector<uint8_t> hex_decode() const;
 
 	bool is_numeric() const;
 
@@ -367,17 +367,17 @@ public:
 	String get_slice(const char *p_splitter, int p_slice) const;
 	String get_slicec(char32_t p_splitter, int p_slice) const;
 
-	Vector<String> split(const String &p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
-	Vector<String> split(const char *p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
-	Vector<String> rsplit(const String &p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
-	Vector<String> rsplit(const char *p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
-	Vector<String> split_spaces() const;
-	Vector<double> split_floats(const String &p_splitter, bool p_allow_empty = true) const;
-	Vector<float> split_floats_mk(const Vector<String> &p_splitters, bool p_allow_empty = true) const;
-	Vector<int> split_ints(const String &p_splitter, bool p_allow_empty = true) const;
-	Vector<int> split_ints_mk(const Vector<String> &p_splitters, bool p_allow_empty = true) const;
+	Hector<String> split(const String &p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
+	Hector<String> split(const char *p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
+	Hector<String> rsplit(const String &p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
+	Hector<String> rsplit(const char *p_splitter = "", bool p_allow_empty = true, int p_maxsplit = 0) const;
+	Hector<String> split_spaces() const;
+	Hector<double> split_floats(const String &p_splitter, bool p_allow_empty = true) const;
+	Hector<float> split_floats_mk(const Hector<String> &p_splitters, bool p_allow_empty = true) const;
+	Hector<int> split_ints(const String &p_splitter, bool p_allow_empty = true) const;
+	Hector<int> split_ints_mk(const Hector<String> &p_splitters, bool p_allow_empty = true) const;
 
-	String join(const Vector<String> &parts) const;
+	String join(const Hector<String> &parts) const;
 
 	static char32_t char_uppercase(char32_t p_char);
 	static char32_t char_lowercase(char32_t p_char);
@@ -422,9 +422,9 @@ public:
 	String md5_text() const;
 	String sha1_text() const;
 	String sha256_text() const;
-	Vector<uint8_t> md5_buffer() const;
-	Vector<uint8_t> sha1_buffer() const;
-	Vector<uint8_t> sha256_buffer() const;
+	Hector<uint8_t> md5_buffer() const;
+	Hector<uint8_t> sha1_buffer() const;
+	Hector<uint8_t> sha256_buffer() const;
 
 	_FORCE_INLINE_ bool is_empty() const { return length() == 0; }
 	_FORCE_INLINE_ bool contains(const char *p_str) const { return find(p_str) != -1; }
@@ -483,11 +483,11 @@ public:
 	_FORCE_INLINE_ String(const String &p_str) { _cowdata._ref(p_str._cowdata); }
 	_FORCE_INLINE_ void operator=(const String &p_str) { _cowdata._ref(p_str._cowdata); }
 
-	Vector<uint8_t> to_ascii_buffer() const;
-	Vector<uint8_t> to_utf8_buffer() const;
-	Vector<uint8_t> to_utf16_buffer() const;
-	Vector<uint8_t> to_utf32_buffer() const;
-	Vector<uint8_t> to_wchar_buffer() const;
+	Hector<uint8_t> to_ascii_buffer() const;
+	Hector<uint8_t> to_utf8_buffer() const;
+	Hector<uint8_t> to_utf16_buffer() const;
+	Hector<uint8_t> to_utf32_buffer() const;
+	Hector<uint8_t> to_wchar_buffer() const;
 
 	String(const char *p_str);
 	String(const wchar_t *p_str);
@@ -626,22 +626,22 @@ _FORCE_INLINE_ String ETRN(const String &p_text, const String &p_text_plural, in
 
 bool select_word(const String &p_s, int p_col, int &r_beg, int &r_end);
 
-_FORCE_INLINE_ void sarray_add_str(Vector<String> &arr) {
+_FORCE_INLINE_ void sarray_add_str(Hector<String> &arr) {
 }
 
-_FORCE_INLINE_ void sarray_add_str(Vector<String> &arr, const String &p_str) {
+_FORCE_INLINE_ void sarray_add_str(Hector<String> &arr, const String &p_str) {
 	arr.push_back(p_str);
 }
 
 template <typename... P>
-_FORCE_INLINE_ void sarray_add_str(Vector<String> &arr, const String &p_str, P... p_args) {
+_FORCE_INLINE_ void sarray_add_str(Hector<String> &arr, const String &p_str, P... p_args) {
 	arr.push_back(p_str);
 	sarray_add_str(arr, p_args...);
 }
 
 template <typename... P>
-_FORCE_INLINE_ Vector<String> sarray(P... p_args) {
-	Vector<String> arr;
+_FORCE_INLINE_ Hector<String> sarray(P... p_args) {
+	Hector<String> arr;
 	sarray_add_str(arr, p_args...);
 	return arr;
 }

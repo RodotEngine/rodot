@@ -56,12 +56,12 @@
 #define DEBUG_LOG_WAYLAND_THREAD(...)
 #endif
 
-// Read the content pointed by fd into a Vector<uint8_t>.
-Vector<uint8_t> WaylandThread::_read_fd(int fd) {
+// Read the content pointed by fd into a Hector<uint8_t>.
+Hector<uint8_t> WaylandThread::_read_fd(int fd) {
 	// This is pretty much an arbitrary size.
 	uint32_t chunk_size = 2048;
 
-	LocalVector<uint8_t> data;
+	LocalHector<uint8_t> data;
 	data.resize(chunk_size);
 
 	uint32_t bytes_read = 0;
@@ -135,9 +135,9 @@ int WaylandThread::_allocate_shm_file(size_t size) {
 }
 
 // Return the content of a wl_data_offer.
-Vector<uint8_t> WaylandThread::_wl_data_offer_read(struct wl_display *p_display, const char *p_mime, struct wl_data_offer *p_offer) {
+Hector<uint8_t> WaylandThread::_wl_data_offer_read(struct wl_display *p_display, const char *p_mime, struct wl_data_offer *p_offer) {
 	if (!p_offer) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	int fds[2];
@@ -158,13 +158,13 @@ Vector<uint8_t> WaylandThread::_wl_data_offer_read(struct wl_display *p_display,
 		return _read_fd(fds[0]);
 	}
 
-	return Vector<uint8_t>();
+	return Hector<uint8_t>();
 }
 
 // Read the content of a wp_primary_selection_offer.
-Vector<uint8_t> WaylandThread::_wp_primary_selection_offer_read(struct wl_display *p_display, const char *p_mime, struct zwp_primary_selection_offer_v1 *p_offer) {
+Hector<uint8_t> WaylandThread::_wp_primary_selection_offer_read(struct wl_display *p_display, const char *p_mime, struct zwp_primary_selection_offer_v1 *p_offer) {
 	if (!p_offer) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	int fds[2];
@@ -184,7 +184,7 @@ Vector<uint8_t> WaylandThread::_wp_primary_selection_offer_read(struct wl_displa
 		return _read_fd(fds[0]);
 	}
 
-	return Vector<uint8_t>();
+	return Hector<uint8_t>();
 }
 
 // Sets up an `InputEventKey` and returns whether it has any meaningful value.
@@ -1495,11 +1495,11 @@ void WaylandThread::_wl_pointer_on_axis(void *data, struct wl_pointer *wl_pointe
 
 	switch (axis) {
 		case WL_POINTER_AXIS_VERTICAL_SCROLL: {
-			pd.scroll_vector.y = wl_fixed_to_double(value);
+			pd.scroll_Hector.y = wl_fixed_to_double(value);
 		} break;
 
 		case WL_POINTER_AXIS_HORIZONTAL_SCROLL: {
-			pd.scroll_vector.x = wl_fixed_to_double(value);
+			pd.scroll_Hector.x = wl_fixed_to_double(value);
 		} break;
 	}
 
@@ -1538,13 +1538,13 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 		mm->set_position(pd.position);
 		mm->set_global_position(pd.position);
 
-		Vector2 pos_delta = pd.position - old_pd.position;
+		Hector2 pos_delta = pd.position - old_pd.position;
 
 		if (old_pd.relative_motion_time != pd.relative_motion_time) {
 			uint32_t time_delta = pd.relative_motion_time - old_pd.relative_motion_time;
 
 			mm->set_relative(pd.relative_motion);
-			mm->set_velocity((Vector2)pos_delta / time_delta);
+			mm->set_velocity((Hector2)pos_delta / time_delta);
 		} else {
 			// The spec includes the possibility of having motion events without an
 			// associated relative motion event. If that's the case, fallback to a
@@ -1553,7 +1553,7 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 			uint32_t time_delta = pd.motion_time - old_pd.motion_time;
 
 			mm->set_relative(pd.position - old_pd.position);
-			mm->set_velocity((Vector2)pos_delta / time_delta);
+			mm->set_velocity((Hector2)pos_delta / time_delta);
 		}
 		mm->set_relative_screen_position(mm->get_relative());
 		mm->set_screen_velocity(mm->get_velocity());
@@ -1566,20 +1566,20 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 		wayland_thread->push_message(msg);
 	}
 
-	if (pd.discrete_scroll_vector_120 - old_pd.discrete_scroll_vector_120 != Vector2i()) {
+	if (pd.discrete_scroll_Hector_120 - old_pd.discrete_scroll_Hector_120 != Hector2i()) {
 		// This is a discrete scroll (eg. from a scroll wheel), so we'll just emit
 		// scroll wheel buttons.
-		if (pd.scroll_vector.y != 0) {
-			MouseButton button = pd.scroll_vector.y > 0 ? MouseButton::WHEEL_DOWN : MouseButton::WHEEL_UP;
+		if (pd.scroll_Hector.y != 0) {
+			MouseButton button = pd.scroll_Hector.y > 0 ? MouseButton::WHEEL_DOWN : MouseButton::WHEEL_UP;
 			pd.pressed_button_mask.set_flag(mouse_button_to_mask(button));
 		}
 
-		if (pd.scroll_vector.x != 0) {
-			MouseButton button = pd.scroll_vector.x > 0 ? MouseButton::WHEEL_RIGHT : MouseButton::WHEEL_LEFT;
+		if (pd.scroll_Hector.x != 0) {
+			MouseButton button = pd.scroll_Hector.x > 0 ? MouseButton::WHEEL_RIGHT : MouseButton::WHEEL_LEFT;
 			pd.pressed_button_mask.set_flag(mouse_button_to_mask(button));
 		}
 	} else {
-		if (pd.scroll_vector - old_pd.scroll_vector != Vector2()) {
+		if (pd.scroll_Hector - old_pd.scroll_Hector != Hector2()) {
 			// This is a continuous scroll, so we'll emit a pan gesture.
 			Ref<InputEventPanGesture> pg;
 			pg.instantiate();
@@ -1594,7 +1594,7 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 
 			pg->set_window_id(DisplayServer::MAIN_WINDOW_ID);
 
-			pg->set_delta(pd.scroll_vector);
+			pg->set_delta(pd.scroll_Hector);
 
 			Ref<InputEventMessage> msg;
 			msg.instantiate();
@@ -1639,13 +1639,13 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 				if (test_button == MouseButton::WHEEL_UP || test_button == MouseButton::WHEEL_DOWN) {
 					// If this is a discrete scroll, specify how many "clicks" it did for this
 					// pointer frame.
-					mb->set_factor(Math::abs(pd.discrete_scroll_vector_120.y / (float)120));
+					mb->set_factor(Math::abs(pd.discrete_scroll_Hector_120.y / (float)120));
 				}
 
 				if (test_button == MouseButton::WHEEL_RIGHT || test_button == MouseButton::WHEEL_LEFT) {
 					// If this is a discrete scroll, specify how many "clicks" it did for this
 					// pointer frame.
-					mb->set_factor(fabs(pd.discrete_scroll_vector_120.x / (float)120));
+					mb->set_factor(fabs(pd.discrete_scroll_Hector_120.x / (float)120));
 				}
 
 				mb->set_button_mask(pd.pressed_button_mask);
@@ -1660,7 +1660,7 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 					pd.last_pressed_position = pd.position;
 				}
 
-				if (old_pd.double_click_begun && mb->is_pressed() && pd.last_button_pressed == old_pd.last_button_pressed && (pd.button_time - old_pd.button_time) < 400 && Vector2(old_pd.last_pressed_position).distance_to(Vector2(pd.last_pressed_position)) < 5) {
+				if (old_pd.double_click_begun && mb->is_pressed() && pd.last_button_pressed == old_pd.last_button_pressed && (pd.button_time - old_pd.button_time) < 400 && Hector2(old_pd.last_pressed_position).distance_to(Hector2(pd.last_pressed_position)) < 5) {
 					pd.double_click_begun = false;
 					mb->set_double_click(true);
 				}
@@ -1702,9 +1702,9 @@ void WaylandThread::_wl_pointer_on_frame(void *data, struct wl_pointer *wl_point
 		}
 	}
 
-	// Reset the scroll vectors as we already handled them.
-	pd.scroll_vector = Vector2();
-	pd.discrete_scroll_vector_120 = Vector2i();
+	// Reset the scroll Hectors as we already handled them.
+	pd.scroll_Hector = Hector2();
+	pd.discrete_scroll_Hector_120 = Hector2i();
 
 	// Update the data all getters read. Wayland's specification requires us to do
 	// this, since all pointer actions are sent in individual events.
@@ -1744,11 +1744,11 @@ void WaylandThread::_wl_pointer_on_axis_discrete(void *data, struct wl_pointer *
 	// assign it) as the spec guarantees only one event per axis type.
 
 	if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-		pd.discrete_scroll_vector_120.y = discrete * 120;
+		pd.discrete_scroll_Hector_120.y = discrete * 120;
 	}
 
 	if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-		pd.discrete_scroll_vector_120.x = discrete * 120;
+		pd.discrete_scroll_Hector_120.x = discrete * 120;
 	}
 }
 
@@ -1765,11 +1765,11 @@ void WaylandThread::_wl_pointer_on_axis_value120(void *data, struct wl_pointer *
 	PointerData &pd = ss->pointer_data_buffer;
 
 	if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-		pd.discrete_scroll_vector_120.y += value120;
+		pd.discrete_scroll_Hector_120.y += value120;
 	}
 
 	if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-		pd.discrete_scroll_vector_120.x += value120;
+		pd.discrete_scroll_Hector_120.x += value120;
 	}
 }
 
@@ -1935,7 +1935,7 @@ void WaylandThread::_wl_data_device_on_drop(void *data, struct wl_data_device *w
 		Ref<DropFilesEventMessage> msg;
 		msg.instantiate();
 
-		Vector<uint8_t> list_data = _wl_data_offer_read(wayland_thread->wl_display, "text/uri-list", ss->wl_data_offer_dnd);
+		Hector<uint8_t> list_data = _wl_data_offer_read(wayland_thread->wl_display, "text/uri-list", ss->wl_data_offer_dnd);
 
 		msg->files = String::utf8((const char *)list_data.ptr(), list_data.size()).split("\r\n", false);
 		for (int i = 0; i < msg->files.size(); i++) {
@@ -1986,7 +1986,7 @@ void WaylandThread::_wl_data_source_on_send(void *data, struct wl_data_source *w
 	SeatState *ss = (SeatState *)data;
 	ERR_FAIL_NULL(ss);
 
-	Vector<uint8_t> *data_to_send = nullptr;
+	Hector<uint8_t> *data_to_send = nullptr;
 
 	if (wl_data_source == ss->wl_data_source_selection) {
 		data_to_send = &ss->selection_data;
@@ -2131,7 +2131,7 @@ void WaylandThread::_wp_pointer_gesture_pinch_on_update(void *data, struct zwp_p
 		pg->set_meta_pressed(ss->meta_pressed);
 
 		pg->set_position(pd.position);
-		pg->set_delta(Vector2(wl_fixed_to_double(dx), wl_fixed_to_double(dy)));
+		pg->set_delta(Hector2(wl_fixed_to_double(dx), wl_fixed_to_double(dy)));
 
 		Ref<InputEventMessage> pan_msg;
 		pan_msg.instantiate();
@@ -2182,7 +2182,7 @@ void WaylandThread::_wp_primary_selection_source_on_send(void *data, struct zwp_
 	SeatState *ss = (SeatState *)data;
 	ERR_FAIL_NULL(ss);
 
-	Vector<uint8_t> *data_to_send = nullptr;
+	Hector<uint8_t> *data_to_send = nullptr;
 
 	if (wp_primary_selection_source_v1 == ss->wp_primary_selection_source) {
 		data_to_send = &ss->primary_data;
@@ -2526,9 +2526,9 @@ void WaylandThread::_wp_tablet_tool_on_frame(void *data, struct zwp_tablet_tool_
 		mm->set_relative(td.position - old_td.position);
 		mm->set_relative_screen_position(mm->get_relative());
 
-		Vector2 pos_delta = td.position - old_td.position;
+		Hector2 pos_delta = td.position - old_td.position;
 		uint32_t time_delta = td.motion_time - old_td.motion_time;
-		mm->set_velocity((Vector2)pos_delta / time_delta);
+		mm->set_velocity((Hector2)pos_delta / time_delta);
 
 		Ref<InputEventMessage> inputev_msg;
 		inputev_msg.instantiate();
@@ -2569,7 +2569,7 @@ void WaylandThread::_wp_tablet_tool_on_frame(void *data, struct zwp_tablet_tool_
 					td.last_pressed_position = td.position;
 				}
 
-				if (old_td.double_click_begun && mb->is_pressed() && td.last_button_pressed == old_td.last_button_pressed && (td.button_time - old_td.button_time) < 400 && Vector2(td.last_pressed_position).distance_to(Vector2(old_td.last_pressed_position)) < 5) {
+				if (old_td.double_click_begun && mb->is_pressed() && td.last_button_pressed == old_td.last_button_pressed && (td.button_time - old_td.button_time) < 400 && Hector2(td.last_pressed_position).distance_to(Hector2(old_td.last_pressed_position)) < 5) {
 					td.double_click_begun = false;
 					mb->set_double_click(true);
 				}
@@ -2606,12 +2606,12 @@ void WaylandThread::_wp_text_input_on_leave(void *data, struct zwp_text_input_v3
 	ss->ime_active = false;
 	ss->ime_text = String();
 	ss->ime_text_commit = String();
-	ss->ime_cursor = Vector2i();
+	ss->ime_cursor = Hector2i();
 
 	Ref<IMEUpdateEventMessage> msg;
 	msg.instantiate();
 	msg->text = String();
-	msg->selection = Vector2i();
+	msg->selection = Hector2i();
 	ss->wayland_thread->push_message(msg);
 }
 
@@ -2660,7 +2660,7 @@ void WaylandThread::_wp_text_input_on_preedit_string(void *data, struct zwp_text
 			break;
 		}
 	}
-	ss->ime_cursor = Vector2i(cursor_begin_utf32, cursor_end_utf32 - cursor_begin_utf32);
+	ss->ime_cursor = Hector2i(cursor_begin_utf32, cursor_end_utf32 - cursor_begin_utf32);
 }
 
 void WaylandThread::_wp_text_input_on_commit_string(void *data, struct zwp_text_input_v3 *wp_text_input_v3, const char *text) {
@@ -2696,7 +2696,7 @@ void WaylandThread::_wp_text_input_on_done(void *data, struct zwp_text_input_v3 
 	}
 	ss->ime_text = String();
 	ss->ime_text_commit = String();
-	ss->ime_cursor = Vector2i();
+	ss->ime_cursor = Hector2i();
 }
 
 void WaylandThread::_xdg_activation_token_on_done(void *data, struct xdg_activation_token_v1 *xdg_activation_token, const char *token) {
@@ -2965,7 +2965,7 @@ void WaylandThread::window_state_update_size(WindowState *p_ws, int p_width, int
 #endif
 
 	if (size_changed || scale_changed) {
-		Size2i scaled_size = scale_vector2i(p_ws->rect.size, window_state_get_scale_factor(p_ws));
+		Size2i scaled_size = scale_Hector2i(p_ws->rect.size, window_state_get_scale_factor(p_ws));
 
 		if (using_fractional) {
 			DEBUG_LOG_WAYLAND_THREAD(vformat("Resizing the window from %s to %s (fractional scale x%f).", p_ws->rect.size, scaled_size, p_ws->fractional_scale));
@@ -2991,14 +2991,14 @@ void WaylandThread::window_state_update_size(WindowState *p_ws, int p_width, int
 	}
 }
 
-// Scales a vector according to wp_fractional_scale's rules, where coordinates
+// Scales a Hector according to wp_fractional_scale's rules, where coordinates
 // must be scaled with away from zero half-rounding.
-Vector2i WaylandThread::scale_vector2i(const Vector2i &p_vector, double p_amount) {
+Hector2i WaylandThread::scale_Hector2i(const Hector2i &p_Hector, double p_amount) {
 	// This snippet is tiny, I know, but this is done a lot.
-	int x = round(p_vector.x * p_amount);
-	int y = round(p_vector.y * p_amount);
+	int x = round(p_Hector.x * p_amount);
+	int y = round(p_Hector.y * p_amount);
 
-	return Vector2i(x, y);
+	return Hector2i(x, y);
 }
 
 void WaylandThread::seat_state_unlock_pointer(SeatState *p_ss) {
@@ -3286,7 +3286,7 @@ void WaylandThread::window_set_max_size(DisplayServer::WindowID p_window_id, con
 	// TODO: Use window IDs for multiwindow support.
 	WindowState &ws = main_window;
 
-	Vector2i logical_max_size = p_size / window_state_get_scale_factor(&ws);
+	Hector2i logical_max_size = p_size / window_state_get_scale_factor(&ws);
 
 	if (ws.wl_surface && ws.xdg_toplevel) {
 		xdg_toplevel_set_max_size(ws.xdg_toplevel, logical_max_size.width, logical_max_size.height);
@@ -3888,7 +3888,7 @@ void WaylandThread::window_set_ime_active(const bool p_active, DisplayServer::Wi
 			ss->ime_active = false;
 			ss->ime_text = String();
 			ss->ime_text_commit = String();
-			ss->ime_cursor = Vector2i();
+			ss->ime_cursor = Hector2i();
 			zwp_text_input_v3_disable(ss->wp_text_input);
 		}
 		zwp_text_input_v3_commit(ss->wp_text_input);
@@ -4014,11 +4014,11 @@ bool WaylandThread::selection_has_mime(const String &p_mime) const {
 	return os->mime_types.has(p_mime);
 }
 
-Vector<uint8_t> WaylandThread::selection_get_mime(const String &p_mime) const {
+Hector<uint8_t> WaylandThread::selection_get_mime(const String &p_mime) const {
 	SeatState *ss = wl_seat_get_seat_state(wl_seat_current);
 	if (ss == nullptr) {
 		DEBUG_LOG_WAYLAND_THREAD("Couldn't get selection, current seat not set.");
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	if (ss->wl_data_source_selection) {
@@ -4027,7 +4027,7 @@ Vector<uint8_t> WaylandThread::selection_get_mime(const String &p_mime) const {
 		// data :P
 
 		OfferState *os = wl_data_offer_get_offer_state(ss->wl_data_offer_selection);
-		ERR_FAIL_NULL_V(os, Vector<uint8_t>());
+		ERR_FAIL_NULL_V(os, Hector<uint8_t>());
 
 		if (os->mime_types.has(p_mime)) {
 			// All righty, we're offering this type. Let's just return the data as is.
@@ -4035,7 +4035,7 @@ Vector<uint8_t> WaylandThread::selection_get_mime(const String &p_mime) const {
 		}
 
 		// ... we don't offer that type. Oh well.
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	return _wl_data_offer_read(wl_display, p_mime.utf8(), ss->wl_data_offer_selection);
@@ -4057,11 +4057,11 @@ bool WaylandThread::primary_has_mime(const String &p_mime) const {
 	return os->mime_types.has(p_mime);
 }
 
-Vector<uint8_t> WaylandThread::primary_get_mime(const String &p_mime) const {
+Hector<uint8_t> WaylandThread::primary_get_mime(const String &p_mime) const {
 	SeatState *ss = wl_seat_get_seat_state(wl_seat_current);
 	if (ss == nullptr) {
 		DEBUG_LOG_WAYLAND_THREAD("Couldn't get primary, current seat not set.");
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	if (ss->wp_primary_selection_source) {
@@ -4070,7 +4070,7 @@ Vector<uint8_t> WaylandThread::primary_get_mime(const String &p_mime) const {
 		// data :P
 
 		OfferState *os = wp_primary_selection_offer_get_offer_state(ss->wp_primary_selection_offer);
-		ERR_FAIL_NULL_V(os, Vector<uint8_t>());
+		ERR_FAIL_NULL_V(os, Hector<uint8_t>());
 
 		if (os->mime_types.has(p_mime)) {
 			// All righty, we're offering this type. Let's just return the data as is.
@@ -4078,7 +4078,7 @@ Vector<uint8_t> WaylandThread::primary_get_mime(const String &p_mime) const {
 		}
 
 		// ... we don't offer that type. Oh well.
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	return _wp_primary_selection_offer_read(wl_display, p_mime.utf8(), ss->wp_primary_selection_offer);

@@ -120,14 +120,14 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 				}
 				pr = pr->get_parent();
 			}
-			global_transform.origin = Vector3(); // Translation by a Node is not a bone animation, so the retargeted model should be at the origin.
+			global_transform.origin = Hector3(); // Translation by a Node is not a bone animation, so the retargeted model should be at the origin.
 		}
 
 		// Apply node transforms.
 		if (bool(p_options["retarget/rest_fixer/apply_node_transforms"])) {
-			Vector3 scl = global_transform.basis.get_scale_global();
+			Hector3 scl = global_transform.basis.get_scale_global();
 
-			Vector<int> bones_to_process = src_skeleton->get_parentless_bones();
+			Hector<int> bones_to_process = src_skeleton->get_parentless_bones();
 			for (int i = 0; i < bones_to_process.size(); i++) {
 				src_skeleton->set_bone_rest(bones_to_process[i], global_transform.orthonormalized() * src_skeleton->get_bone_rest(bones_to_process[i]));
 
@@ -139,7 +139,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 			while (bones_to_process.size() > 0) {
 				int src_idx = bones_to_process[0];
 				bones_to_process.erase(src_idx);
-				Vector<int> src_children = src_skeleton->get_bone_children(src_idx);
+				Hector<int> src_children = src_skeleton->get_bone_children(src_idx);
 				for (int i = 0; i < src_children.size(); i++) {
 					bones_to_process.push_back(src_children[i]);
 				}
@@ -186,12 +186,12 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 							if (anim->track_get_type(i) == Animation::TYPE_POSITION_3D) {
 								if (bones_to_process.has(bone_idx)) {
 									for (int j = 0; j < key_len; j++) {
-										Vector3 ps = static_cast<Vector3>(anim->track_get_key_value(i, j));
+										Hector3 ps = static_cast<Hector3>(anim->track_get_key_value(i, j));
 										anim->track_set_key_value(i, j, global_transform.basis.xform(ps) + global_transform.origin);
 									}
 								} else {
 									for (int j = 0; j < key_len; j++) {
-										Vector3 ps = static_cast<Vector3>(anim->track_get_key_value(i, j));
+										Hector3 ps = static_cast<Hector3>(anim->track_get_key_value(i, j));
 										anim->track_set_key_value(i, j, ps * scl);
 									}
 								}
@@ -203,7 +203,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 									}
 								} else {
 									for (int j = 0; j < key_len; j++) {
-										Basis sc = Basis().scaled(static_cast<Vector3>(anim->track_get_key_value(i, j)));
+										Basis sc = Basis().scaled(static_cast<Hector3>(anim->track_get_key_value(i, j)));
 										anim->track_set_key_value(i, j, (global_transform.orthonormalized().basis * sc).get_scale());
 									}
 								}
@@ -273,19 +273,19 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 		}
 
 		// Fix silhouette.
-		Vector<Transform3D> silhouette_diff; // Transform values to be ignored when overwrite axis.
+		Hector<Transform3D> silhouette_diff; // Transform values to be ignored when overwrite axis.
 		silhouette_diff.resize(src_skeleton->get_bone_count());
 		Transform3D *silhouette_diff_w = silhouette_diff.ptrw();
-		LocalVector<Transform3D> pre_silhouette_skeleton_global_rest;
+		LocalHector<Transform3D> pre_silhouette_skeleton_global_rest;
 		for (int i = 0; i < src_skeleton->get_bone_count(); i++) {
 			pre_silhouette_skeleton_global_rest.push_back(src_skeleton->get_bone_global_rest(i));
 		}
 		if (bool(p_options["retarget/rest_fixer/fix_silhouette/enable"])) {
-			Vector<int> bones_to_process = prof_skeleton->get_parentless_bones();
+			Hector<int> bones_to_process = prof_skeleton->get_parentless_bones();
 			while (bones_to_process.size() > 0) {
 				int prof_idx = bones_to_process[0];
 				bones_to_process.erase(prof_idx);
-				Vector<int> prof_children = prof_skeleton->get_bone_children(prof_idx);
+				Hector<int> prof_children = prof_skeleton->get_bone_children(prof_idx);
 				for (int i = 0; i < prof_children.size(); i++) {
 					bones_to_process.push_back(prof_children[i]);
 				}
@@ -306,8 +306,8 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 				if (src_idx < 0 || profile->get_tail_direction(prof_idx) == SkeletonProfile::TAIL_DIRECTION_END) {
 					continue;
 				}
-				Vector3 prof_tail;
-				Vector3 src_tail;
+				Hector3 prof_tail;
+				Hector3 src_tail;
 				if (profile->get_tail_direction(prof_idx) == SkeletonProfile::TAIL_DIRECTION_AVERAGE_CHILDREN) {
 					PackedInt32Array prof_bone_children = prof_skeleton->get_bone_children(prof_idx);
 					int children_size = prof_bone_children.size();
@@ -344,25 +344,25 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 					src_tail = src_skeleton->get_bone_global_rest(src_tail_idx).origin;
 				}
 
-				Vector3 prof_head = prof_skeleton->get_bone_global_rest(prof_idx).origin;
-				Vector3 src_head = src_skeleton->get_bone_global_rest(src_idx).origin;
+				Hector3 prof_head = prof_skeleton->get_bone_global_rest(prof_idx).origin;
+				Hector3 src_head = src_skeleton->get_bone_global_rest(src_idx).origin;
 
-				Vector3 prof_dir = prof_tail - prof_head;
-				Vector3 src_dir = src_tail - src_head;
+				Hector3 prof_dir = prof_tail - prof_head;
+				Hector3 src_dir = src_tail - src_head;
 
 				// Rotate rest.
 				if (Math::abs(Math::rad_to_deg(src_dir.angle_to(prof_dir))) > float(p_options["retarget/rest_fixer/fix_silhouette/threshold"])) {
 					// Get rotation difference.
-					Vector3 up_vec; // Need to rotate other than roll axis.
-					switch (Vector3(abs(src_dir.x), abs(src_dir.y), abs(src_dir.z)).min_axis_index()) {
-						case Vector3::AXIS_X: {
-							up_vec = Vector3(1, 0, 0);
+					Hector3 up_vec; // Need to rotate other than roll axis.
+					switch (Hector3(abs(src_dir.x), abs(src_dir.y), abs(src_dir.z)).min_axis_index()) {
+						case Hector3::AXIS_X: {
+							up_vec = Hector3(1, 0, 0);
 						} break;
-						case Vector3::AXIS_Y: {
-							up_vec = Vector3(0, 1, 0);
+						case Hector3::AXIS_Y: {
+							up_vec = Hector3(0, 1, 0);
 						} break;
-						case Vector3::AXIS_Z: {
-							up_vec = Vector3(0, 0, 1);
+						case Hector3::AXIS_Z: {
+							up_vec = Hector3(0, 0, 1);
 						} break;
 					}
 					Basis src_b;
@@ -391,7 +391,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 				StringName scale_base_bone_name = profile->get_scale_base_bone();
 				int src_bone_idx = src_skeleton->find_bone(scale_base_bone_name);
 				Transform3D src_rest = src_skeleton->get_bone_rest(src_bone_idx);
-				src_skeleton->set_bone_rest(src_bone_idx, Transform3D(src_rest.basis, Vector3(src_rest.origin.x, src_rest.origin.y + base_adjustment, src_rest.origin.z)));
+				src_skeleton->set_bone_rest(src_bone_idx, Transform3D(src_rest.basis, Hector3(src_rest.origin.x, src_rest.origin.y + base_adjustment, src_rest.origin.z)));
 
 				TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 				while (nodes.size()) {
@@ -426,7 +426,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 
 							int key_len = anim->track_get_key_count(i);
 							for (int j = 0; j < key_len; j++) {
-								Vector3 pos = static_cast<Vector3>(anim->track_get_key_value(i, j));
+								Hector3 pos = static_cast<Hector3>(anim->track_get_key_value(i, j));
 								pos.y += base_adjustment;
 								anim->track_set_key_value(i, j, pos);
 							}
@@ -456,8 +456,8 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 
 		// Overwrite axis.
 		if (bool(p_options["retarget/rest_fixer/overwrite_axis"])) {
-			LocalVector<Transform3D> old_skeleton_rest;
-			LocalVector<Transform3D> old_skeleton_global_rest;
+			LocalHector<Transform3D> old_skeleton_rest;
+			LocalHector<Transform3D> old_skeleton_global_rest;
 			for (int i = 0; i < src_skeleton->get_bone_count(); i++) {
 				old_skeleton_rest.push_back(src_skeleton->get_bone_rest(i));
 				old_skeleton_global_rest.push_back(src_skeleton->get_bone_global_rest(i));
@@ -466,13 +466,13 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 			bool keep_global_rest_leftovers = bool(p_options["retarget/rest_fixer/keep_global_rest_on_leftovers"]);
 
 			// Scan hierarchy and populate a whitelist of unmapped bones without mapped descendants.
-			Vector<int> keep_bone_rest;
+			Hector<int> keep_bone_rest;
 			if (keep_global_rest_leftovers) {
-				Vector<int> bones_to_process = src_skeleton->get_parentless_bones();
+				Hector<int> bones_to_process = src_skeleton->get_parentless_bones();
 				while (bones_to_process.size() > 0) {
 					int src_idx = bones_to_process[0];
 					bones_to_process.erase(src_idx);
-					Vector<int> src_children = src_skeleton->get_bone_children(src_idx);
+					Hector<int> src_children = src_skeleton->get_bone_children(src_idx);
 					for (const int &src_child : src_children) {
 						bones_to_process.push_back(src_child);
 					}
@@ -482,11 +482,11 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 						// Scan descendants for mapped bones.
 						bool found_mapped = false;
 
-						Vector<int> decendants_to_process = src_skeleton->get_bone_children(src_idx);
+						Hector<int> decendants_to_process = src_skeleton->get_bone_children(src_idx);
 						while (decendants_to_process.size() > 0) {
 							int desc_idx = decendants_to_process[0];
 							decendants_to_process.erase(desc_idx);
-							Vector<int> desc_children = src_skeleton->get_bone_children(desc_idx);
+							Hector<int> desc_children = src_skeleton->get_bone_children(desc_idx);
 							for (const int &desc_child : desc_children) {
 								decendants_to_process.push_back(desc_child);
 							}
@@ -505,15 +505,15 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 				}
 			}
 
-			Vector<Basis> diffs;
+			Hector<Basis> diffs;
 			diffs.resize(src_skeleton->get_bone_count());
 			Basis *diffs_w = diffs.ptrw();
 
-			Vector<int> bones_to_process = src_skeleton->get_parentless_bones();
+			Hector<int> bones_to_process = src_skeleton->get_parentless_bones();
 			while (bones_to_process.size() > 0) {
 				int src_idx = bones_to_process[0];
 				bones_to_process.erase(src_idx);
-				Vector<int> src_children = src_skeleton->get_bone_children(src_idx);
+				Hector<int> src_children = src_skeleton->get_bone_children(src_idx);
 				for (int i = 0; i < src_children.size(); i++) {
 					bones_to_process.push_back(src_children[i]);
 				}
@@ -612,16 +612,16 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 								Basis old_pg_b_inv = old_pg.basis.inverse();
 								Basis new_pg_b_inv = new_pg.basis.inverse();
 								for (int j = 0; j < key_len; j++) {
-									Basis sc = Basis().scaled(static_cast<Vector3>(anim->track_get_key_value(i, j)));
+									Basis sc = Basis().scaled(static_cast<Hector3>(anim->track_get_key_value(i, j)));
 									anim->track_set_key_value(i, j, (new_pg_b_inv * old_pg_b * sc * old_rest_b_inv * old_pg_b_inv * new_pg_b * new_rest_b).get_scale());
 								}
 							} else {
-								Vector3 old_rest_o = old_rest.origin;
-								Vector3 new_rest_o = new_rest.origin;
+								Hector3 old_rest_o = old_rest.origin;
+								Hector3 new_rest_o = new_rest.origin;
 								Basis old_pg_b = old_pg.basis;
 								Basis new_pg_b = new_pg.basis;
 								for (int j = 0; j < key_len; j++) {
-									Vector3 ps = static_cast<Vector3>(anim->track_get_key_value(i, j));
+									Hector3 ps = static_cast<Hector3>(anim->track_get_key_value(i, j));
 									anim->track_set_key_value(i, j, new_pg_b.xform_inv(old_pg_b.xform(ps - old_rest_o)) + new_rest_o);
 								}
 							}
@@ -649,7 +649,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 
 					Basis sc = Basis().scaled(src_skeleton->get_bone_pose_scale(bone_idx));
 					src_skeleton->set_bone_pose_scale(bone_idx, (new_pg.basis.inverse() * old_pg.basis * sc * old_rest.basis.inverse() * old_pg.basis.inverse() * new_pg.basis * new_rest.basis).get_scale());
-					Vector3 ps = src_skeleton->get_bone_pose_position(bone_idx);
+					Hector3 ps = src_skeleton->get_bone_pose_position(bone_idx);
 					src_skeleton->set_bone_pose_position(bone_idx, new_pg_q.xform_inv(old_pg_q.xform(ps - old_rest.origin)) + new_rest.origin);
 				}
 			}
@@ -688,7 +688,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 						real_t mlt = 1 / src_skeleton->get_motion_scale();
 						int key_len = anim->track_get_key_count(i);
 						for (int j = 0; j < key_len; j++) {
-							Vector3 pos = static_cast<Vector3>(anim->track_get_key_value(i, j));
+							Hector3 pos = static_cast<Hector3>(anim->track_get_key_value(i, j));
 							anim->track_set_key_value(i, j, pos * mlt);
 						}
 					}

@@ -31,7 +31,7 @@
 #ifndef UNIFORM_SET_CACHE_RD_H
 #define UNIFORM_SET_CACHE_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_allocator.h"
 #include "servers/rendering/rendering_device.h"
 #include "servers/rendering/rendering_device_binds.h"
@@ -46,7 +46,7 @@ class UniformSetCacheRD : public Object {
 		RID shader;
 		uint32_t set = 0;
 		RID cache;
-		LocalVector<RD::Uniform> uniforms;
+		LocalHector<RD::Uniform> uniforms;
 	};
 
 	PagedAllocator<Cache> cache_allocator;
@@ -96,24 +96,24 @@ class UniformSetCacheRD : public Object {
 		return _hash_args(h, args...);
 	}
 
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
+	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalHector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
 		return _compare_uniform(uniforms[idx], arg);
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
+	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalHector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
 		if (!_compare_uniform(uniforms[idx], arg)) {
 			return false;
 		}
 		return _compare_args(idx + 1, uniforms, args...);
 	}
 
-	_FORCE_INLINE_ void _create_args(Vector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
+	_FORCE_INLINE_ void _create_args(Hector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
 		uniforms.push_back(arg);
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ void _create_args(Vector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
+	_FORCE_INLINE_ void _create_args(Hector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
 		uniforms.push_back(arg);
 		_create_args(uniforms, args...);
 	}
@@ -125,7 +125,7 @@ class UniformSetCacheRD : public Object {
 	void _invalidate(Cache *p_cache);
 	static void _uniform_set_invalidation_callback(void *p_userdata);
 
-	RID _allocate_from_uniforms(RID p_shader, uint32_t p_set, uint32_t p_hash, uint32_t p_table_idx, const Vector<RD::Uniform> &p_uniforms) {
+	RID _allocate_from_uniforms(RID p_shader, uint32_t p_set, uint32_t p_hash, uint32_t p_table_idx, const Hector<RD::Uniform> &p_uniforms) {
 		RID rid = RD::get_singleton()->uniform_set_create(p_uniforms, p_shader, p_set);
 		ERR_FAIL_COND_V(rid.is_null(), rid);
 
@@ -176,14 +176,14 @@ public:
 
 		// Not in cache, create:
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		_create_args(uniforms, args...);
 
 		return _allocate_from_uniforms(p_shader, p_set, h, table_idx, uniforms);
 	}
 
 	template <typename... Args>
-	RID get_cache_vec(RID p_shader, uint32_t p_set, const Vector<RD::Uniform> &p_uniforms) {
+	RID get_cache_vec(RID p_shader, uint32_t p_set, const Hector<RD::Uniform> &p_uniforms) {
 		uint32_t h = hash_murmur3_one_64(p_shader.get_id());
 		h = hash_murmur3_one_32(p_set, h);
 		for (int i = 0; i < p_uniforms.size(); i++) {

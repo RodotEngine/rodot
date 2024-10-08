@@ -550,7 +550,7 @@ static_assert ((sizeof (hb_var_int_t) == 4), "");
 #include "hb-iter.hh"	// Requires: hb-algs hb-meta
 #include "hb-debug.hh"	// Requires: hb-algs hb-atomic
 #include "hb-array.hh"	// Requires: hb-algs hb-iter hb-null
-#include "hb-vector.hh"	// Requires: hb-array hb-null
-#include "hb-object.hh"	// Requires: hb-atomic hb-mutex hb-vector
+#include "hb-Hector.hh"	// Requires: hb-array hb-null
+#include "hb-object.hh"	// Requires: hb-atomic hb-mutex hb-Hector
 
 #endif /* HB_HH */

@@ -55,7 +55,7 @@
 			</description>
 		</method>
 		<method name="get_handle_offset" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="bone_idx" type="int" />
 			<description>
 				Returns the offset of the bone at [param bone_idx] that will be the button position in the [BoneMap] editor.
@@ -135,7 +135,7 @@
 		<method name="set_handle_offset">
 			<return type="void" />
 			<param index="0" name="bone_idx" type="int" />
-			<param index="1" name="handle_offset" type="Vector2" />
+			<param index="1" name="handle_offset" type="Hector2" />
 			<description>
 				Sets the offset of the bone at [param bone_idx] that will be the button position in the [BoneMap] editor.
 				This is the offset with origin at the top left corner of the square.

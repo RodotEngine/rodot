@@ -32,7 +32,7 @@
 
 #include "core/os/os.h"
 #include "core/string/print_string.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/rendering/renderer_compositor.h"
 #include "servers/rendering_server.h"
 #include "shader_types.h"
@@ -655,7 +655,7 @@ ShaderLanguage::Token ShaderLanguage::_get_token() {
 				if (GETCHAR(0) == '@' && GETCHAR(1) == '>') {
 					char_idx += 2;
 
-					LocalVector<char32_t> incp;
+					LocalHector<char32_t> incp;
 					while (GETCHAR(0) != '\n') {
 						incp.push_back(GETCHAR(0));
 						char_idx++;
@@ -678,7 +678,7 @@ ShaderLanguage::Token ShaderLanguage::_get_token() {
 				} else if (GETCHAR(0) == '@' && GETCHAR(1) == '<') {
 					char_idx += 2;
 
-					LocalVector<char32_t> incp;
+					LocalHector<char32_t> incp;
 					while (GETCHAR(0) != '\n') {
 						incp.push_back(GETCHAR(0));
 						char_idx++;
@@ -1366,7 +1366,7 @@ void ShaderLanguage::_parse_used_identifier(const StringName &p_identifier, Iden
 }
 #endif // DEBUG_ENABLED
 
-bool ShaderLanguage::_find_identifier(const BlockNode *p_block, bool p_allow_reassign, const FunctionInfo &p_function_info, const StringName &p_identifier, DataType *r_data_type, IdentifierType *r_type, bool *r_is_const, int *r_array_size, StringName *r_struct_name, Vector<Scalar> *r_constant_values) {
+bool ShaderLanguage::_find_identifier(const BlockNode *p_block, bool p_allow_reassign, const FunctionInfo &p_function_info, const StringName &p_identifier, DataType *r_data_type, IdentifierType *r_type, bool *r_is_const, int *r_array_size, StringName *r_struct_name, Hector<Scalar> *r_constant_values) {
 	if (is_shader_inc) {
 		for (int i = 0; i < RenderingServer::SHADER_MAX; i++) {
 			for (const KeyValue<StringName, FunctionInfo> &E : ShaderTypes::get_singleton()->get_functions(RenderingServer::ShaderMode(i))) {
@@ -1681,10 +1681,10 @@ bool ShaderLanguage::_validate_operator(const BlockNode *p_block, OperatorNode *
 		case OP_ASSIGN_MOD:
 		case OP_MOD: {
 			/*
-			 * The operator modulus (%) operates on signed or unsigned integers or integer vectors. The operand
-			 * types must both be signed or both be unsigned. The operands cannot be vectors of differing size. If
-			 * one operand is a scalar and the other vector, then the scalar is applied component-wise to the vector,
-			 * resulting in the same type as the vector. If both are vectors of the same size, the result is computed
+			 * The operator modulus (%) operates on signed or unsigned integers or integer Hectors. The operand
+			 * types must both be signed or both be unsigned. The operands cannot be Hectors of differing size. If
+			 * one operand is a scalar and the other Hector, then the scalar is applied component-wise to the Hector,
+			 * resulting in the same type as the Hector. If both are Hectors of the same size, the result is computed
 			 * component-wise.
 			 */
 
@@ -1895,9 +1895,9 @@ bool ShaderLanguage::_validate_operator(const BlockNode *p_block, OperatorNode *
 		case OP_BIT_XOR: {
 			/*
 			 * The bitwise operators and (&), exclusive-or (^), and inclusive-or (|). The operands must be of type
-			 * signed or unsigned integers or integer vectors. The operands cannot be vectors of differing size. If
-			 * one operand is a scalar and the other a vector, the scalar is applied component-wise to the vector,
-			 * resulting in the same type as the vector. The fundamental types of the operands (signed or unsigned)
+			 * signed or unsigned integers or integer Hectors. The operands cannot be Hectors of differing size. If
+			 * one operand is a scalar and the other a Hector, the scalar is applied component-wise to the Hector,
+			 * resulting in the same type as the Hector. The fundamental types of the operands (signed or unsigned)
 			 * must match.
 			 */
 
@@ -2016,8 +2016,8 @@ bool ShaderLanguage::_validate_operator(const BlockNode *p_block, OperatorNode *
 	return valid;
 }
 
-Vector<ShaderLanguage::Scalar> ShaderLanguage::_get_node_values(const BlockNode *p_block, Node *p_node) {
-	Vector<Scalar> result;
+Hector<ShaderLanguage::Scalar> ShaderLanguage::_get_node_values(const BlockNode *p_block, Node *p_node) {
+	Hector<Scalar> result;
 
 	switch (p_node->type) {
 		case Node::NODE_TYPE_VARIABLE: {
@@ -2073,19 +2073,19 @@ bool ShaderLanguage::_eval_operator(const BlockNode *p_block, OperatorNode *p_op
 				}
 			}
 
-			Vector<Scalar> va = _get_node_values(p_block, p_op->arguments[0]);
-			Vector<Scalar> vb = _get_node_values(p_block, p_op->arguments[1]);
+			Hector<Scalar> va = _get_node_values(p_block, p_op->arguments[0]);
+			Hector<Scalar> vb = _get_node_values(p_block, p_op->arguments[1]);
 
 			if (is_op_vec_transform) {
-				p_op->values = _eval_vector_transform(va, vb, a, b, p_op->get_datatype());
+				p_op->values = _eval_Hector_transform(va, vb, a, b, p_op->get_datatype());
 			} else {
-				p_op->values = _eval_vector(va, vb, a, b, p_op->get_datatype(), p_op->op, is_valid);
+				p_op->values = _eval_Hector(va, vb, a, b, p_op->get_datatype(), p_op->op, is_valid);
 			}
 		} break;
 		case OP_NOT:
 		case OP_NEGATE:
 		case OP_BIT_INVERT: {
-			p_op->values = _eval_unary_vector(_get_node_values(p_block, p_op->arguments[0]), p_op->get_datatype(), p_op->op);
+			p_op->values = _eval_unary_Hector(_get_node_values(p_block, p_op->arguments[0]), p_op->get_datatype(), p_op->op);
 		} break;
 		default: {
 		} break;
@@ -2282,12 +2282,12 @@ ShaderLanguage::Scalar ShaderLanguage::_eval_scalar(const Scalar &p_a, const Sca
 	return scalar;
 }
 
-Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_unary_vector(const Vector<Scalar> &p_va, DataType p_ret_type, Operator p_op) {
+Hector<ShaderLanguage::Scalar> ShaderLanguage::_eval_unary_Hector(const Hector<Scalar> &p_va, DataType p_ret_type, Operator p_op) {
 	uint32_t size = get_datatype_component_count(p_ret_type);
 	if (p_va.size() != p_ret_type) {
-		return Vector<Scalar>(); // Non-evaluable values should not be parsed further.
+		return Hector<Scalar>(); // Non-evaluable values should not be parsed further.
 	}
-	Vector<Scalar> value;
+	Hector<Scalar> value;
 	value.resize(size);
 
 	Scalar *w = value.ptrw();
@@ -2297,16 +2297,16 @@ Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_unary_vector(const Vector<S
 	return value;
 }
 
-Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_vector(const Vector<Scalar> &p_va, const Vector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type, Operator p_op, bool &r_is_valid) {
+Hector<ShaderLanguage::Scalar> ShaderLanguage::_eval_Hector(const Hector<Scalar> &p_va, const Hector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type, Operator p_op, bool &r_is_valid) {
 	uint32_t left_size = get_datatype_component_count(p_left_type);
 	uint32_t right_size = get_datatype_component_count(p_right_type);
 
 	if (p_va.size() != left_size || p_vb.size() != right_size) {
-		return Vector<Scalar>(); // Non-evaluable values should not be parsed further.
+		return Hector<Scalar>(); // Non-evaluable values should not be parsed further.
 	}
 
 	uint32_t ret_size = get_datatype_component_count(p_ret_type);
-	Vector<Scalar> value;
+	Hector<Scalar> value;
 	value.resize(ret_size);
 
 	Scalar *w = value.ptrw();
@@ -2319,28 +2319,28 @@ Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_vector(const Vector<Scalar>
 	return value;
 }
 
-Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_vector_transform(const Vector<Scalar> &p_va, const Vector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type) {
+Hector<ShaderLanguage::Scalar> ShaderLanguage::_eval_Hector_transform(const Hector<Scalar> &p_va, const Hector<Scalar> &p_vb, DataType p_left_type, DataType p_right_type, DataType p_ret_type) {
 	uint32_t left_size = get_datatype_component_count(p_left_type);
 	uint32_t right_size = get_datatype_component_count(p_right_type);
 
 	if (p_va.size() != left_size || p_vb.size() != right_size) {
-		return Vector<Scalar>(); // Non-evaluable values should not be parsed further.
+		return Hector<Scalar>(); // Non-evaluable values should not be parsed further.
 	}
 
 	uint32_t ret_size = get_datatype_component_count(p_ret_type);
-	Vector<Scalar> value;
+	Hector<Scalar> value;
 	value.resize_zeroed(ret_size);
 
 	Scalar *w = value.ptrw();
 	switch (p_ret_type) {
 		case TYPE_VEC2: {
 			if (left_size == 2) { // v * m
-				Vector2 v = Vector2(p_va[0].real, p_va[1].real);
+				Hector2 v = Hector2(p_va[0].real, p_va[1].real);
 
 				w[0].real = (p_vb[0].real * v.x + p_vb[1].real * v.y);
 				w[1].real = (p_vb[2].real * v.x + p_vb[3].real * v.y);
 			} else { // m * v
-				Vector2 v = Vector2(p_vb[0].real, p_vb[1].real);
+				Hector2 v = Hector2(p_vb[0].real, p_vb[1].real);
 
 				w[0].real = (p_va[0].real * v.x + p_va[2].real * v.y);
 				w[1].real = (p_va[1].real * v.x + p_va[3].real * v.y);
@@ -2348,13 +2348,13 @@ Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_vector_transform(const Vect
 		} break;
 		case TYPE_VEC3: {
 			if (left_size == 3) { // v * m
-				Vector3 v = Vector3(p_va[0].real, p_va[1].real, p_va[2].real);
+				Hector3 v = Hector3(p_va[0].real, p_va[1].real, p_va[2].real);
 
 				w[0].real = (p_vb[0].real * v.x + p_vb[1].real * v.y + p_vb[2].real * v.z);
 				w[1].real = (p_vb[3].real * v.x + p_vb[4].real * v.y + p_vb[5].real * v.z);
 				w[2].real = (p_vb[6].real * v.x + p_vb[7].real * v.y + p_vb[8].real * v.z);
 			} else { // m * v
-				Vector3 v = Vector3(p_vb[0].real, p_vb[1].real, p_vb[2].real);
+				Hector3 v = Hector3(p_vb[0].real, p_vb[1].real, p_vb[2].real);
 
 				w[0].real = (p_va[0].real * v.x + p_va[3].real * v.y + p_va[6].real * v.z);
 				w[1].real = (p_va[1].real * v.x + p_va[4].real * v.y + p_va[7].real * v.z);
@@ -2363,14 +2363,14 @@ Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_vector_transform(const Vect
 		} break;
 		case TYPE_VEC4: {
 			if (left_size == 4) { // v * m
-				Vector4 v = Vector4(p_va[0].real, p_va[1].real, p_va[2].real, p_va[3].real);
+				Hector4 v = Hector4(p_va[0].real, p_va[1].real, p_va[2].real, p_va[3].real);
 
 				w[0].real = (p_vb[0].real * v.x + p_vb[1].real * v.y + p_vb[2].real * v.z + p_vb[3].real * v.w);
 				w[1].real = (p_vb[4].real * v.x + p_vb[5].real * v.y + p_vb[6].real * v.z + p_vb[7].real * v.w);
 				w[2].real = (p_vb[8].real * v.x + p_vb[9].real * v.y + p_vb[10].real * v.z + p_vb[11].real * v.w);
 				w[3].real = (p_vb[12].real * v.x + p_vb[13].real * v.y + p_vb[14].real * v.z + p_vb[15].real * v.w);
 			} else { // m * v
-				Vector4 v = Vector4(p_vb[0].real, p_vb[1].real, p_vb[2].real, p_vb[3].real);
+				Hector4 v = Hector4(p_vb[0].real, p_vb[1].real, p_vb[2].real, p_vb[3].real);
 
 				w[0].real = (p_vb[0].real * v.x + p_vb[4].real * v.y + p_vb[8].real * v.z + p_vb[12].real * v.w);
 				w[1].real = (p_vb[1].real * v.x + p_vb[5].real * v.y + p_vb[9].real * v.z + p_vb[13].real * v.w);
@@ -2482,7 +2482,7 @@ const ShaderLanguage::BuiltinFuncDef ShaderLanguage::builtin_func_defs[] = {
 	{ "bool", TYPE_BOOL, { TYPE_UINT, TYPE_VOID }, { "" }, TAG_GLOBAL, false },
 	{ "bool", TYPE_BOOL, { TYPE_FLOAT, TYPE_VOID }, { "" }, TAG_GLOBAL, false },
 
-	// Conversion vectors.
+	// Conversion Hectors.
 
 	{ "ivec2", TYPE_IVEC2, { TYPE_BVEC2, TYPE_VOID }, { "" }, TAG_GLOBAL, false },
 	{ "ivec2", TYPE_IVEC2, { TYPE_IVEC2, TYPE_VOID }, { "" }, TAG_GLOBAL, false },
@@ -3547,9 +3547,9 @@ bool ShaderLanguage::is_const_suffix_lut_initialized = false;
 bool ShaderLanguage::_validate_function_call(BlockNode *p_block, const FunctionInfo &p_function_info, OperatorNode *p_func, DataType *r_ret_type, StringName *r_ret_type_str, bool *r_is_custom_function) {
 	ERR_FAIL_COND_V(p_func->op != OP_CALL && p_func->op != OP_CONSTRUCT, false);
 
-	Vector<DataType> args;
-	Vector<StringName> args2;
-	Vector<int> args3;
+	Hector<DataType> args;
+	Hector<StringName> args2;
+	Hector<int> args3;
 
 	ERR_FAIL_COND_V(p_func->arguments[0]->type != Node::NODE_TYPE_VARIABLE, false);
 
@@ -3648,7 +3648,7 @@ bool ShaderLanguage::_validate_function_call(BlockNode *p_block, const FunctionI
 								int max = builtin_func_const_args[constarg_idx].max;
 
 								bool error = false;
-								Vector<Scalar> values = _get_node_values(p_block, p_func->arguments[arg]);
+								Hector<Scalar> values = _get_node_values(p_block, p_func->arguments[arg]);
 								if (p_func->arguments[arg]->get_datatype() == TYPE_INT && !values.is_empty()) {
 									if (values[0].sint < min || values[0].sint > max) {
 										error = true;
@@ -4186,7 +4186,7 @@ bool ShaderLanguage::is_sampler_type(DataType p_type) {
 	return p_type > TYPE_MAT4 && p_type < TYPE_STRUCT;
 }
 
-Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value, DataType p_type, int p_array_size, ShaderLanguage::ShaderNode::Uniform::Hint p_hint) {
+Variant ShaderLanguage::constant_value_to_variant(const Hector<Scalar> &p_value, DataType p_type, int p_array_size, ShaderLanguage::ShaderNode::Uniform::Hint p_hint) {
 	int array_size = p_array_size;
 
 	if (p_value.size() > 0) {
@@ -4263,7 +4263,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector2i(p_value[0].sint, p_value[1].sint));
+					value = Variant(Hector2i(p_value[0].sint, p_value[1].sint));
 				}
 				break;
 			case ShaderLanguage::TYPE_IVEC3:
@@ -4276,7 +4276,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector3i(p_value[0].sint, p_value[1].sint, p_value[2].sint));
+					value = Variant(Hector3i(p_value[0].sint, p_value[1].sint, p_value[2].sint));
 				}
 				break;
 			case ShaderLanguage::TYPE_IVEC4:
@@ -4289,7 +4289,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector4i(p_value[0].sint, p_value[1].sint, p_value[2].sint, p_value[3].sint));
+					value = Variant(Hector4i(p_value[0].sint, p_value[1].sint, p_value[2].sint, p_value[3].sint));
 				}
 				break;
 			case ShaderLanguage::TYPE_UINT:
@@ -4313,7 +4313,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector2i(p_value[0].uint, p_value[1].uint));
+					value = Variant(Hector2i(p_value[0].uint, p_value[1].uint));
 				}
 				break;
 			case ShaderLanguage::TYPE_UVEC3:
@@ -4326,7 +4326,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector3i(p_value[0].uint, p_value[1].uint, p_value[2].uint));
+					value = Variant(Hector3i(p_value[0].uint, p_value[1].uint, p_value[2].uint));
 				}
 				break;
 			case ShaderLanguage::TYPE_UVEC4:
@@ -4339,7 +4339,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector4i(p_value[0].uint, p_value[1].uint, p_value[2].uint, p_value[3].uint));
+					value = Variant(Hector4i(p_value[0].uint, p_value[1].uint, p_value[2].uint, p_value[3].uint));
 				}
 				break;
 			case ShaderLanguage::TYPE_FLOAT:
@@ -4357,13 +4357,13 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 				if (array_size > 0) {
 					array_size *= 2;
 
-					PackedVector2Array array;
+					PackedHector2Array array;
 					for (int i = 0; i < array_size; i += 2) {
-						array.push_back(Vector2(p_value[i].real, p_value[i + 1].real));
+						array.push_back(Hector2(p_value[i].real, p_value[i + 1].real));
 					}
 					value = Variant(array);
 				} else {
-					value = Variant(Vector2(p_value[0].real, p_value[1].real));
+					value = Variant(Hector2(p_value[0].real, p_value[1].real));
 				}
 				break;
 			case ShaderLanguage::TYPE_VEC3:
@@ -4377,9 +4377,9 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 						}
 						value = Variant(array);
 					} else {
-						PackedVector3Array array;
+						PackedHector3Array array;
 						for (int i = 0; i < array_size; i += 3) {
-							array.push_back(Vector3(p_value[i].real, p_value[i + 1].real, p_value[i + 2].real));
+							array.push_back(Hector3(p_value[i].real, p_value[i + 1].real, p_value[i + 2].real));
 						}
 						value = Variant(array);
 					}
@@ -4387,7 +4387,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					if (p_hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
 						value = Variant(Color(p_value[0].real, p_value[1].real, p_value[2].real));
 					} else {
-						value = Variant(Vector3(p_value[0].real, p_value[1].real, p_value[2].real));
+						value = Variant(Hector3(p_value[0].real, p_value[1].real, p_value[2].real));
 					}
 				}
 				break;
@@ -4402,9 +4402,9 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 						}
 						value = Variant(array);
 					} else {
-						PackedVector4Array array;
+						PackedHector4Array array;
 						for (int i = 0; i < array_size; i += 4) {
-							array.push_back(Vector4(p_value[i].real, p_value[i + 1].real, p_value[i + 2].real, p_value[i + 3].real));
+							array.push_back(Hector4(p_value[i].real, p_value[i + 1].real, p_value[i + 2].real, p_value[i + 3].real));
 						}
 						value = Variant(array);
 					}
@@ -4412,7 +4412,7 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					if (p_hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
 						value = Variant(Color(p_value[0].real, p_value[1].real, p_value[2].real, p_value[3].real));
 					} else {
-						value = Variant(Vector4(p_value[0].real, p_value[1].real, p_value[2].real, p_value[3].real));
+						value = Variant(Hector4(p_value[0].real, p_value[1].real, p_value[2].real, p_value[3].real));
 					}
 				}
 				break;
@@ -4470,10 +4470,10 @@ Variant ShaderLanguage::constant_value_to_variant(const Vector<Scalar> &p_value,
 					}
 					value = Variant(array);
 				} else {
-					Projection p = Projection(Vector4(p_value[0].real, p_value[1].real, p_value[2].real, p_value[3].real),
-							Vector4(p_value[4].real, p_value[5].real, p_value[6].real, p_value[7].real),
-							Vector4(p_value[8].real, p_value[9].real, p_value[10].real, p_value[11].real),
-							Vector4(p_value[12].real, p_value[13].real, p_value[14].real, p_value[15].real));
+					Projection p = Projection(Hector4(p_value[0].real, p_value[1].real, p_value[2].real, p_value[3].real),
+							Hector4(p_value[4].real, p_value[5].real, p_value[6].real, p_value[7].real),
+							Hector4(p_value[8].real, p_value[9].real, p_value[10].real, p_value[11].real),
+							Hector4(p_value[12].real, p_value[13].real, p_value[14].real, p_value[15].real));
 					value = Variant(p);
 				}
 				break;
@@ -4579,27 +4579,27 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 		case ShaderLanguage::TYPE_IVEC2: {
 			if (p_uniform.array_size > 0) {
 				pi.type = Variant::PACKED_INT32_ARRAY;
-				// TODO: Handle vector pairs?
+				// TODO: Handle Hector pairs?
 			} else {
-				pi.type = Variant::VECTOR2I;
+				pi.type = Variant::HECTOR2I;
 			}
 		} break;
 		case ShaderLanguage::TYPE_UVEC3:
 		case ShaderLanguage::TYPE_IVEC3: {
 			if (p_uniform.array_size > 0) {
 				pi.type = Variant::PACKED_INT32_ARRAY;
-				// TODO: Handle vector pairs?
+				// TODO: Handle Hector pairs?
 			} else {
-				pi.type = Variant::VECTOR3I;
+				pi.type = Variant::HECTOR3I;
 			}
 		} break;
 		case ShaderLanguage::TYPE_UVEC4:
 		case ShaderLanguage::TYPE_IVEC4: {
 			if (p_uniform.array_size > 0) {
 				pi.type = Variant::PACKED_INT32_ARRAY;
-				// TODO: Handle vector pairs?
+				// TODO: Handle Hector pairs?
 			} else {
-				pi.type = Variant::VECTOR4I;
+				pi.type = Variant::HECTOR4I;
 			}
 		} break;
 		case ShaderLanguage::TYPE_FLOAT: {
@@ -4615,9 +4615,9 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 		} break;
 		case ShaderLanguage::TYPE_VEC2:
 			if (p_uniform.array_size > 0) {
-				pi.type = Variant::PACKED_VECTOR2_ARRAY;
+				pi.type = Variant::PACKED_Hector2_ARRAY;
 			} else {
-				pi.type = Variant::VECTOR2;
+				pi.type = Variant::HECTOR2;
 			}
 			break;
 		case ShaderLanguage::TYPE_VEC3:
@@ -4626,14 +4626,14 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 					pi.hint = PROPERTY_HINT_COLOR_NO_ALPHA;
 					pi.type = Variant::PACKED_COLOR_ARRAY;
 				} else {
-					pi.type = Variant::PACKED_VECTOR3_ARRAY;
+					pi.type = Variant::PACKED_Hector3_ARRAY;
 				}
 			} else {
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
 					pi.hint = PROPERTY_HINT_COLOR_NO_ALPHA;
 					pi.type = Variant::COLOR;
 				} else {
-					pi.type = Variant::VECTOR3;
+					pi.type = Variant::HECTOR3;
 				}
 			}
 			break;
@@ -4642,13 +4642,13 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
 					pi.type = Variant::PACKED_COLOR_ARRAY;
 				} else {
-					pi.type = Variant::PACKED_VECTOR4_ARRAY;
+					pi.type = Variant::PACKED_Hector4_ARRAY;
 				}
 			} else {
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
 					pi.type = Variant::COLOR;
 				} else {
-					pi.type = Variant::VECTOR4;
+					pi.type = Variant::HECTOR4;
 				}
 			}
 		} break;
@@ -5355,7 +5355,7 @@ Error ShaderLanguage::_parse_array_size(BlockNode *p_block, const FunctionInfo &
 		Node *expr = _parse_and_reduce_expression(p_block, p_function_info);
 
 		if (expr) {
-			Vector<Scalar> values = _get_node_values(p_block, expr);
+			Hector<Scalar> values = _get_node_values(p_block, expr);
 
 			if (!values.is_empty()) {
 				switch (expr->get_datatype()) {
@@ -5602,9 +5602,9 @@ ShaderLanguage::Node *ShaderLanguage::_parse_array_constructor(BlockNode *p_bloc
 }
 
 ShaderLanguage::Node *ShaderLanguage::_parse_expression(BlockNode *p_block, const FunctionInfo &p_function_info, const ExpressionInfo *p_previous_expression_info) {
-	Vector<Expression> expression;
+	Hector<Expression> expression;
 
-	//Vector<TokenType> operators;
+	//Hector<TokenType> operators;
 #ifdef DEBUG_ENABLED
 	bool check_position_write = check_warnings && HAS_WARNING(ShaderWarning::MAGIC_POSITION_WRITE_FLAG);
 	check_position_write = check_position_write && String(shader_type_identifier) == "spatial" && current_function == "vertex";
@@ -6057,7 +6057,7 @@ ShaderLanguage::Node *ShaderLanguage::_parse_expression(BlockNode *p_block, cons
 												ShaderNode::Uniform::Hint hint = u->hint;
 
 												if (hint == ShaderNode::Uniform::HINT_DEPTH_TEXTURE || hint == ShaderNode::Uniform::HINT_SCREEN_TEXTURE || hint == ShaderNode::Uniform::HINT_NORMAL_ROUGHNESS_TEXTURE) {
-													_set_error(vformat(RTR("Unable to pass a multiview texture sampler as a parameter to custom function. Consider to sample it in the main function and then pass the vector result to it."), get_uniform_hint_name(hint)));
+													_set_error(vformat(RTR("Unable to pass a multiview texture sampler as a parameter to custom function. Consider to sample it in the main function and then pass the Hector result to it."), get_uniform_hint_name(hint)));
 													return nullptr;
 												}
 											}
@@ -7446,7 +7446,7 @@ ShaderLanguage::Node *ShaderLanguage::_reduce_expression(BlockNode *p_block, Sha
 		DataType base = get_scalar_type(type);
 		int cardinality = get_cardinality(type);
 
-		Vector<Scalar> values;
+		Hector<Scalar> values;
 
 		for (int i = 1; i < op->arguments.size(); i++) {
 			op->arguments.write[i] = _reduce_expression(p_block, op->arguments[i]);
@@ -7507,7 +7507,7 @@ ShaderLanguage::Node *ShaderLanguage::_reduce_expression(BlockNode *p_block, Sha
 
 			DataType base = get_scalar_type(cn->datatype);
 
-			Vector<Scalar> values;
+			Hector<Scalar> values;
 
 			for (int i = 0; i < cn->values.size(); i++) {
 				Scalar nv;
@@ -8201,7 +8201,7 @@ Error ShaderLanguage::_parse_block(BlockNode *p_block, const FunctionInfo &p_fun
 				VariableNode *vn = alloc_node<VariableNode>();
 				vn->name = tk.text;
 				{
-					Vector<Scalar> v;
+					Hector<Scalar> v;
 					DataType data_type;
 
 					_find_identifier(p_block, false, p_function_info, vn->name, &data_type, nullptr, nullptr, nullptr, nullptr, &v);
@@ -8715,7 +8715,7 @@ Error ShaderLanguage::_validate_precision(DataType p_type, DataPrecision p_preci
 	return OK;
 }
 
-Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Vector<ModeInfo> &p_render_modes, const HashSet<String> &p_shader_types) {
+Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Hector<ModeInfo> &p_render_modes, const HashSet<String> &p_shader_types) {
 	Token tk;
 	TkPos prev_pos;
 	Token next;
@@ -8813,7 +8813,7 @@ Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_f
 
 					if (is_shader_inc) {
 						for (int i = 0; i < RenderingServer::SHADER_MAX; i++) {
-							const Vector<ModeInfo> modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(i));
+							const Hector<ModeInfo> modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(i));
 
 							for (int j = 0; j < modes.size(); j++) {
 								const ModeInfo &info = modes[j];
@@ -9377,7 +9377,7 @@ Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_f
 							}
 
 							if (uniform.array_size > 0) {
-								static Vector<int> supported_hints = {
+								static Hector<int> supported_hints = {
 									TK_HINT_SOURCE_COLOR, TK_REPEAT_DISABLE, TK_REPEAT_ENABLE,
 									TK_FILTER_LINEAR, TK_FILTER_LINEAR_MIPMAP, TK_FILTER_LINEAR_MIPMAP_ANISOTROPIC,
 									TK_FILTER_NEAREST, TK_FILTER_NEAREST_MIPMAP, TK_FILTER_NEAREST_MIPMAP_ANISOTROPIC
@@ -10844,7 +10844,7 @@ Error ShaderLanguage::complete(const String &p_code, const ShaderCompileInfo &p_
 		case COMPLETION_RENDER_MODE: {
 			if (is_shader_inc) {
 				for (int i = 0; i < RenderingServer::SHADER_MAX; i++) {
-					const Vector<ModeInfo> modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(i));
+					const Hector<ModeInfo> modes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(i));
 
 					for (int j = 0; j < modes.size(); j++) {
 						const ModeInfo &info = modes[j];
@@ -11360,7 +11360,7 @@ Error ShaderLanguage::complete(const String &p_code, const ShaderCompileInfo &p_
 				}
 			} else if ((completion_base == DataType::TYPE_INT || completion_base == DataType::TYPE_FLOAT) && !completion_base_array) {
 				if (current_uniform_hint == ShaderNode::Uniform::HINT_NONE) {
-					Vector<String> options;
+					Hector<String> options;
 
 					if (completion_base == DataType::TYPE_INT) {
 						options.push_back("hint_range(0, 100, 1)");
@@ -11377,7 +11377,7 @@ Error ShaderLanguage::complete(const String &p_code, const ShaderCompileInfo &p_
 					}
 				}
 			} else if ((int(completion_base) > int(TYPE_MAT4) && int(completion_base) < int(TYPE_STRUCT))) {
-				Vector<String> options;
+				Hector<String> options;
 				if (current_uniform_filter == FILTER_DEFAULT) {
 					options.push_back("filter_linear");
 					options.push_back("filter_linear_mipmap");
@@ -11434,7 +11434,7 @@ String ShaderLanguage::get_error_text() {
 	return error_str;
 }
 
-Vector<ShaderLanguage::FilePosition> ShaderLanguage::get_include_positions() {
+Hector<ShaderLanguage::FilePosition> ShaderLanguage::get_include_positions() {
 	return include_positions;
 }
 

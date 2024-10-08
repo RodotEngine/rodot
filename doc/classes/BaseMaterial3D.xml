@@ -126,7 +126,7 @@
 		<member name="billboard_mode" type="int" setter="set_billboard_mode" getter="get_billboard_mode" enum="BaseMaterial3D.BillboardMode" default="0">
 			Controls how the object faces the camera. See [enum BillboardMode].
 			[b]Note:[/b] When billboarding is enabled and the material also casts shadows, billboards will face [b]the[/b] camera in the scene when rendering shadows. In scenes with multiple cameras, the intended shadow cannot be determined and this will result in undefined behavior. See [url=https://github.com/godotengine/godot/pull/72638]GitHub Pull Request #72638[/url] for details.
-			[b]Note:[/b] Billboard mode is not suitable for VR because the left-right vector of the camera is not horizontal when the screen is attached to your head instead of on the table. See [url=https://github.com/godotengine/godot/issues/41567]GitHub issue #41567[/url] for details.
+			[b]Note:[/b] Billboard mode is not suitable for VR because the left-right Hector of the camera is not horizontal when the screen is attached to your head instead of on the table. See [url=https://github.com/godotengine/godot/issues/41567]GitHub issue #41567[/url] for details.
 		</member>
 		<member name="blend_mode" type="int" setter="set_blend_mode" getter="get_blend_mode" enum="BaseMaterial3D.BlendMode" default="0">
 			The material's blend mode.
@@ -233,10 +233,10 @@
 			[b]Note:[/b] Height mapping is not supported if triplanar mapping is used on the same material. The value of [member heightmap_enabled] will be ignored if [member uv1_triplanar] is enabled.
 		</member>
 		<member name="heightmap_flip_binormal" type="bool" setter="set_heightmap_deep_parallax_flip_binormal" getter="get_heightmap_deep_parallax_flip_binormal" default="false">
-			If [code]true[/code], flips the mesh's binormal vectors when interpreting the height map. If the heightmap effect looks strange when the camera moves (even with a reasonable [member heightmap_scale]), try setting this to [code]true[/code].
+			If [code]true[/code], flips the mesh's binormal Hectors when interpreting the height map. If the heightmap effect looks strange when the camera moves (even with a reasonable [member heightmap_scale]), try setting this to [code]true[/code].
 		</member>
 		<member name="heightmap_flip_tangent" type="bool" setter="set_heightmap_deep_parallax_flip_tangent" getter="get_heightmap_deep_parallax_flip_tangent" default="false">
-			If [code]true[/code], flips the mesh's tangent vectors when interpreting the height map. If the heightmap effect looks strange when the camera moves (even with a reasonable [member heightmap_scale]), try setting this to [code]true[/code].
+			If [code]true[/code], flips the mesh's tangent Hectors when interpreting the height map. If the heightmap effect looks strange when the camera moves (even with a reasonable [member heightmap_scale]), try setting this to [code]true[/code].
 		</member>
 		<member name="heightmap_flip_texture" type="bool" setter="set_flag" getter="get_flag" default="false">
 			If [code]true[/code], interprets the height map texture as a depth map, with brighter values appearing to be "lower" in altitude compared to darker values.
@@ -403,10 +403,10 @@
 			If [code]true[/code], render point size can be changed.
 			[b]Note:[/b] This is only effective for objects whose geometry is point-based rather than triangle-based. See also [member point_size].
 		</member>
-		<member name="uv1_offset" type="Vector3" setter="set_uv1_offset" getter="get_uv1_offset" default="Vector3(0, 0, 0)">
+		<member name="uv1_offset" type="Hector3" setter="set_uv1_offset" getter="get_uv1_offset" default="Hector3(0, 0, 0)">
 			How much to offset the [code]UV[/code] coordinates. This amount will be added to [code]UV[/code] in the vertex function. This can be used to offset a texture. The Z component is used when [member uv1_triplanar] is enabled, but it is not used anywhere else.
 		</member>
-		<member name="uv1_scale" type="Vector3" setter="set_uv1_scale" getter="get_uv1_scale" default="Vector3(1, 1, 1)">
+		<member name="uv1_scale" type="Hector3" setter="set_uv1_scale" getter="get_uv1_scale" default="Hector3(1, 1, 1)">
 			How much to scale the [code]UV[/code] coordinates. This is multiplied by [code]UV[/code] in the vertex function. The Z component is used when [member uv1_triplanar] is enabled, but it is not used anywhere else.
 		</member>
 		<member name="uv1_triplanar" type="bool" setter="set_flag" getter="get_flag" default="false">
@@ -419,10 +419,10 @@
 		<member name="uv1_world_triplanar" type="bool" setter="set_flag" getter="get_flag" default="false">
 			If [code]true[/code], triplanar mapping for [code]UV[/code] is calculated in world space rather than object local space. See also [member uv1_triplanar].
 		</member>
-		<member name="uv2_offset" type="Vector3" setter="set_uv2_offset" getter="get_uv2_offset" default="Vector3(0, 0, 0)">
+		<member name="uv2_offset" type="Hector3" setter="set_uv2_offset" getter="get_uv2_offset" default="Hector3(0, 0, 0)">
 			How much to offset the [code]UV2[/code] coordinates. This amount will be added to [code]UV2[/code] in the vertex function. This can be used to offset a texture. The Z component is used when [member uv2_triplanar] is enabled, but it is not used anywhere else.
 		</member>
-		<member name="uv2_scale" type="Vector3" setter="set_uv2_scale" getter="get_uv2_scale" default="Vector3(1, 1, 1)">
+		<member name="uv2_scale" type="Hector3" setter="set_uv2_scale" getter="get_uv2_scale" default="Hector3(1, 1, 1)">
 			How much to scale the [code]UV2[/code] coordinates. This is multiplied by [code]UV2[/code] in the vertex function. The Z component is used when [member uv2_triplanar] is enabled, but it is not used anywhere else.
 		</member>
 		<member name="uv2_triplanar" type="bool" setter="set_flag" getter="get_flag" default="false">
@@ -457,7 +457,7 @@
 			Texture specifying per-pixel emission color.
 		</constant>
 		<constant name="TEXTURE_NORMAL" value="4" enum="TextureParam">
-			Texture specifying per-pixel normal vector.
+			Texture specifying per-pixel normal Hector.
 		</constant>
 		<constant name="TEXTURE_RIM" value="5" enum="TextureParam">
 			Texture specifying per-pixel rim value.

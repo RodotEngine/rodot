@@ -40,7 +40,7 @@
 
 template <typename T>
 struct VariantConverterStd140 {
-	// Generic base template for all Vector2/3/4(i) classes.
+	// Generic base template for all Hector2/3/4(i) classes.
 	static constexpr int Elements = T::AXIS_COUNT;
 
 	template <typename P>
@@ -179,50 +179,50 @@ struct VariantConverterStd140<Projection> {
 };
 
 template <typename T, typename P>
-T construct_vector(const std::initializer_list<P> &values) {
-	T vector{};
+T construct_Hector(const std::initializer_list<P> &values) {
+	T Hector{};
 	int index = 0;
 	for (P v : values) {
-		vector[index++] = v;
+		Hector[index++] = v;
 		if (index >= T::AXIS_COUNT) {
 			break;
 		}
 	}
-	return vector;
+	return Hector;
 }
 
-// Compatibility converter, tries to convert certain Variant types into a Vector2/3/4(i).
+// Compatibility converter, tries to convert certain Variant types into a Hector2/3/4(i).
 
 template <typename T>
-T convert_to_vector(const Variant &p_variant, bool p_linear_color = false) {
+T convert_to_Hector(const Variant &p_variant, bool p_linear_color = false) {
 	const Variant::Type type = p_variant.get_type();
 
 	if (type == Variant::QUATERNION) {
 		Quaternion quat = p_variant;
-		return construct_vector<T>({ quat.x, quat.y, quat.z, quat.w });
+		return construct_Hector<T>({ quat.x, quat.y, quat.z, quat.w });
 	} else if (type == Variant::PLANE) {
 		Plane p = p_variant;
-		return construct_vector<T>({ p.normal.x, p.normal.y, p.normal.z, p.d });
+		return construct_Hector<T>({ p.normal.x, p.normal.y, p.normal.z, p.d });
 	} else if (type == Variant::RECT2 || type == Variant::RECT2I) {
 		Rect2 r = p_variant;
-		return construct_vector<T>({ r.position.x, r.position.y, r.size.x, r.size.y });
+		return construct_Hector<T>({ r.position.x, r.position.y, r.size.x, r.size.y });
 	} else if (type == Variant::COLOR) {
 		Color c = p_variant;
 		if (p_linear_color) {
 			c = c.srgb_to_linear();
 		}
-		return construct_vector<T>({ c.r, c.g, c.b, c.a });
+		return construct_Hector<T>({ c.r, c.g, c.b, c.a });
 	} else if (p_variant.is_array()) {
 		const Array &array = p_variant;
 		const int size = MIN(array.size(), T::AXIS_COUNT);
-		T vector{};
+		T Hector{};
 		for (int i = 0; i < size; i++) {
-			vector[i] = array.get(i);
+			Hector[i] = array.get(i);
 		}
-		return vector;
+		return Hector;
 	}
 
-	return p_variant; // Default Variant conversion, covers all Vector2/3/4(i) types.
+	return p_variant; // Default Variant conversion, covers all Hector2/3/4(i) types.
 }
 
 inline bool is_number_array(const Array &p_array) {
@@ -237,17 +237,17 @@ inline bool is_number_array(const Array &p_array) {
 
 inline bool is_convertible_array(Variant::Type type) {
 	return type == Variant::ARRAY ||
-			type == Variant::PACKED_VECTOR2_ARRAY ||
-			type == Variant::PACKED_VECTOR3_ARRAY ||
+			type == Variant::PACKED_Hector2_ARRAY ||
+			type == Variant::PACKED_Hector3_ARRAY ||
 			type == Variant::PACKED_COLOR_ARRAY ||
-			type == Variant::PACKED_VECTOR4_ARRAY;
+			type == Variant::PACKED_Hector4_ARRAY;
 }
 
 template <typename, typename = void>
-inline constexpr bool is_vector_type_v = false;
+inline constexpr bool is_Hector_type_v = false;
 
 template <typename T>
-inline constexpr bool is_vector_type_v<T, std::void_t<decltype(T::AXIS_COUNT)>> = true;
+inline constexpr bool is_Hector_type_v<T, std::void_t<decltype(T::AXIS_COUNT)>> = true;
 
 template <typename T, typename P>
 void convert_item_std140(const T &p_item, P *p_write, bool p_compact = false) {
@@ -255,7 +255,7 @@ void convert_item_std140(const T &p_item, P *p_write, bool p_compact = false) {
 }
 
 template <typename T, typename P>
-Vector<P> convert_array_std140(const Variant &p_variant, [[maybe_unused]] bool p_linear_color = false) {
+Hector<P> convert_array_std140(const Variant &p_variant, [[maybe_unused]] bool p_linear_color = false) {
 	if (is_convertible_array(p_variant.get_type())) {
 		// Slow path, convert Variant arrays and some packed arrays manually into primitive types.
 		const Array &array = p_variant;
@@ -267,7 +267,7 @@ Vector<P> convert_array_std140(const Variant &p_variant, [[maybe_unused]] bool p
 		const int items = array.size();
 		constexpr int elements = VariantConverterStd140<T>::Elements;
 
-		Vector<P> result;
+		Hector<P> result;
 		result.resize(items * elements);
 		P *write = result.ptrw();
 
@@ -275,8 +275,8 @@ Vector<P> convert_array_std140(const Variant &p_variant, [[maybe_unused]] bool p
 			const Variant &item = array.get(i);
 			P *offset = write + (i * elements);
 
-			if constexpr (is_vector_type_v<T>) {
-				const T &vec = convert_to_vector<T>(item, p_linear_color);
+			if constexpr (is_Hector_type_v<T>) {
+				const T &vec = convert_to_Hector<T>(item, p_linear_color);
 				convert_item_std140<T, P>(vec, offset, true);
 			} else {
 				convert_item_std140<T, P>(item.operator T(), offset, true);
@@ -292,11 +292,11 @@ Vector<P> convert_array_std140(const Variant &p_variant, [[maybe_unused]] bool p
 	// Not an array type. Usually happens with uninitialized null shader resource parameters.
 	// Just return an empty array, uniforms will be default initialized later.
 
-	return Vector<P>();
+	return Hector<P>();
 }
 
 template <typename T, typename From, typename To>
-void write_array_std140(const Vector<From> &p_values, To *p_write, int p_array_size, int p_stride) {
+void write_array_std140(const Hector<From> &p_values, To *p_write, int p_array_size, int p_stride) {
 	constexpr int elements = VariantConverterStd140<T>::Elements;
 	const int src_count = p_values.size();
 	const int dst_count = elements * p_array_size;

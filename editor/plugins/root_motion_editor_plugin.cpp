@@ -130,12 +130,12 @@ void EditorPropertyRootMotion::_node_assign() {
 			HashMap<int, TreeItem *> items;
 			items.insert(-1, ti);
 			Ref<Texture> bone_icon = get_editor_theme_icon(SNAME("Bone"));
-			Vector<int> bones_to_process = skeleton->get_parentless_bones();
+			Hector<int> bones_to_process = skeleton->get_parentless_bones();
 			while (bones_to_process.size() > 0) {
 				int current_bone_idx = bones_to_process[0];
 				bones_to_process.erase(current_bone_idx);
 
-				Vector<int> current_bone_child_bones = skeleton->get_bone_children(current_bone_idx);
+				Hector<int> current_bone_child_bones = skeleton->get_bone_children(current_bone_idx);
 				int child_bone_size = current_bone_child_bones.size();
 				for (int i = 0; i < child_bone_size; i++) {
 					bones_to_process.push_back(current_bone_child_bones[i]);

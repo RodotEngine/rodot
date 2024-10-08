@@ -174,8 +174,8 @@ cell_quadrant_size/quadrant_size of the TileMap API was renamed to rendering_qua
 
 GH-81298
 --------
-Validate extension JSON: Error: Field 'classes/PhysicsServer3DRenderingServerHandler/methods/_set_vertex/arguments/1': type changed value in new API, from "const void*" to "Vector3".
-Validate extension JSON: Error: Field 'classes/PhysicsServer3DRenderingServerHandler/methods/_set_normal/arguments/1': type changed value in new API, from "const void*" to "Vector3".
+Validate extension JSON: Error: Field 'classes/PhysicsServer3DRenderingServerHandler/methods/_set_vertex/arguments/1': type changed value in new API, from "const void*" to "Hector3".
+Validate extension JSON: Error: Field 'classes/PhysicsServer3DRenderingServerHandler/methods/_set_normal/arguments/1': type changed value in new API, from "const void*" to "Hector3".
 
 Intentional compatibility breakage to be consistent with the new non-virtual set_vertex/set_normal.
 
@@ -194,7 +194,7 @@ Added optional argument. Compatibility method registered.
 
 GH-82403
 --------
-Validate extension JSON: Error: Field 'native_structures/PhysicsServer3DExtensionRayResult': format changed value in new API, from "Vector3 position;Vector3 normal;RID rid;ObjectID collider_id;Object *collider;int shape" to "Vector3 position;Vector3 normal;RID rid;ObjectID collider_id;Object *collider;int shape;int face_index".
+Validate extension JSON: Error: Field 'native_structures/PhysicsServer3DExtensionRayResult': format changed value in new API, from "Hector3 position;Hector3 normal;RID rid;ObjectID collider_id;Object *collider;int shape" to "Hector3 position;Hector3 normal;RID rid;ObjectID collider_id;Object *collider;int shape;int face_index".
 
 Added/moved face_index field (introduced in GH-71233) to end of struct. Should still be compatible with 4.1.
 

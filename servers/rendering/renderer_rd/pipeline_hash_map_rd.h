@@ -44,13 +44,13 @@ private:
 	Mutex *compilations_mutex = nullptr;
 	uint32_t *compilations = nullptr;
 	RBMap<uint32_t, RID> hash_map;
-	LocalVector<Pair<uint32_t, RID>> compiled_queue;
+	LocalHector<Pair<uint32_t, RID>> compiled_queue;
 	Mutex compiled_queue_mutex;
 	HashMap<uint32_t, WorkerThreadPool::TaskID> compilation_tasks;
 	Mutex local_mutex;
 
 	bool _add_new_pipelines_to_map() {
-		thread_local Vector<uint32_t> hashes_added;
+		thread_local Hector<uint32_t> hashes_added;
 		hashes_added.clear();
 
 		{

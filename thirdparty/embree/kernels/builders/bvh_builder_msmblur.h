@@ -16,11 +16,11 @@ namespace embree
   namespace isa
   {
     template<typename T>
-      struct SharedVector
+      struct SharedHector
       {
-        __forceinline SharedVector() {}
+        __forceinline SharedHector() {}
 
-        __forceinline SharedVector(T* ptr, size_t refCount = 1)
+        __forceinline SharedHector(T* ptr, size_t refCount = 1)
           : prims(ptr), refCount(refCount) {}
 
         __forceinline void incRef() {
@@ -40,14 +40,14 @@ namespace embree
     template<typename BuildRecord, int MAX_BRANCHING_FACTOR>
       struct LocalChildListT
       {
-        typedef SharedVector<mvector<PrimRefMB>> SharedPrimRefVector;
+        typedef SharedHector<mHector<PrimRefMB>> SharedPrimRefHector;
 
         __forceinline LocalChildListT (const BuildRecord& record)
           : numChildren(1), numSharedPrimVecs(1)
         {
           /* the local root will be freed in the ancestor where it was created (thus refCount is 2) */
           children[0] = record;
-          primvecs[0] = new (&sharedPrimVecs[0]) SharedPrimRefVector(record.prims.prims, 2);
+          primvecs[0] = new (&sharedPrimVecs[0]) SharedPrimRefHector(record.prims.prims, 2);
         }
 
         __forceinline ~LocalChildListT()
@@ -64,15 +64,15 @@ namespace embree
           return numChildren;
         }
 
-        __forceinline void split(ssize_t bestChild, const BuildRecord& lrecord, const BuildRecord& rrecord, std::unique_ptr<mvector<PrimRefMB>> new_vector)
+        __forceinline void split(ssize_t bestChild, const BuildRecord& lrecord, const BuildRecord& rrecord, std::unique_ptr<mHector<PrimRefMB>> new_Hector)
         {
-          SharedPrimRefVector* bsharedPrimVec = primvecs[bestChild];
+          SharedPrimRefHector* bsharedPrimVec = primvecs[bestChild];
           if (lrecord.prims.prims == bsharedPrimVec->prims) {
             primvecs[bestChild] = bsharedPrimVec;
             bsharedPrimVec->incRef();
           }
           else {
-            primvecs[bestChild] = new (&sharedPrimVecs[numSharedPrimVecs++]) SharedPrimRefVector(lrecord.prims.prims);
+            primvecs[bestChild] = new (&sharedPrimVecs[numSharedPrimVecs++]) SharedPrimRefHector(lrecord.prims.prims);
           }
 
           if (rrecord.prims.prims == bsharedPrimVec->prims) {
@@ -80,10 +80,10 @@ namespace embree
             bsharedPrimVec->incRef();
           }
           else {
-            primvecs[numChildren] = new (&sharedPrimVecs[numSharedPrimVecs++]) SharedPrimRefVector(rrecord.prims.prims);
+            primvecs[numChildren] = new (&sharedPrimVecs[numSharedPrimVecs++]) SharedPrimRefHector(rrecord.prims.prims);
           }
           bsharedPrimVec->decRef();
-          new_vector.release();
+          new_Hector.release();
 
           children[bestChild] = lrecord;
           children[numChildren] = rrecord;
@@ -92,10 +92,10 @@ namespace embree
 
       public:
         array_t<BuildRecord,MAX_BRANCHING_FACTOR> children;
-        array_t<SharedPrimRefVector*,MAX_BRANCHING_FACTOR> primvecs;
+        array_t<SharedPrimRefHector*,MAX_BRANCHING_FACTOR> primvecs;
         size_t numChildren;
 
-        array_t<SharedPrimRefVector,2*MAX_BRANCHING_FACTOR> sharedPrimVecs;
+        array_t<SharedPrimRefHector,2*MAX_BRANCHING_FACTOR> sharedPrimVecs;
         size_t numSharedPrimVecs;
       };
 
@@ -261,8 +261,8 @@ namespace embree
 
           typedef BVHNodeRecordMB4D<NodeRef> NodeRecordMB4D;
           typedef BinSplit<MBLUR_NUM_OBJECT_BINS> Split;
-          typedef mvector<PrimRefMB>* PrimRefVector;
-          typedef SharedVector<mvector<PrimRefMB>> SharedPrimRefVector;
+          typedef mHector<PrimRefMB>* PrimRefHector;
+          typedef SharedHector<mHector<PrimRefMB>> SharedPrimRefHector;
           typedef LocalChildListT<BuildRecord,MAX_BRANCHING_FACTOR> LocalChildList;
           typedef LocalChildListT<BuildRecordSplit,MAX_BRANCHING_FACTOR> LocalChildListSplit;
 
@@ -313,7 +313,7 @@ namespace embree
           }
 
           /*! array partitioning */
-          __forceinline std::unique_ptr<mvector<PrimRefMB>> split(const Split& split, const SetMB& set, SetMB& lset, SetMB& rset)
+          __forceinline std::unique_ptr<mHector<PrimRefMB>> split(const Split& split, const SetMB& set, SetMB& lset, SetMB& rset)
           {
             /* perform object split */
             if (likely(split.data == Split::SPLIT_OBJECT)) {
@@ -336,7 +336,7 @@ namespace embree
             else
               assert(false);
 
-            return std::unique_ptr<mvector<PrimRefMB>>();
+            return std::unique_ptr<mHector<PrimRefMB>>();
           }
 
           /*! finds the best fallback split */
@@ -371,7 +371,7 @@ namespace embree
           /*! performs fallback split */
           void splitFallback(const SetMB& set, SetMB& lset, SetMB& rset)
           {
-            mvector<PrimRefMB>& prims = *set.prims;
+            mHector<PrimRefMB>& prims = *set.prims;
 
             const size_t begin = set.begin();
             const size_t end   = set.end();
@@ -393,7 +393,7 @@ namespace embree
           __forceinline bool sameGeometry(const SetMB& set)
           {
             if (set.size() == 0) return true;
-            mvector<PrimRefMB>& prims = *set.prims;
+            mHector<PrimRefMB>& prims = *set.prims;
             const size_t begin = set.begin();
             const size_t end   = set.end();
             unsigned int firstGeomID = prims[begin].geomID();
@@ -410,7 +410,7 @@ namespace embree
           {
             assert(set.size() > 1);
 
-            mvector<PrimRefMB>& prims = *set.prims;
+            mHector<PrimRefMB>& prims = *set.prims;
             const size_t begin = set.begin();
             const size_t end   = set.end();
             
@@ -441,7 +441,7 @@ namespace embree
               BBox1f c = empty;
               BBox1f p = current.prims.time_range;
               for (size_t i=current.prims.begin(); i<current.prims.end(); i++) {
-                mvector<PrimRefMB>& prims = *current.prims.prims;
+                mHector<PrimRefMB>& prims = *current.prims.prims;
                 c.extend(prims[i].time_range);
               }
               
@@ -481,13 +481,13 @@ namespace embree
               BuildRecordSplit& brecord = children[bestChild];
               BuildRecordSplit lrecord(current.depth+1);
               BuildRecordSplit rrecord(current.depth+1);
-              std::unique_ptr<mvector<PrimRefMB>> new_vector = split(brecord.split,brecord.prims,lrecord.prims,rrecord.prims);
-              hasTimeSplits |= new_vector != nullptr;
+              std::unique_ptr<mHector<PrimRefMB>> new_Hector = split(brecord.split,brecord.prims,lrecord.prims,rrecord.prims);
+              hasTimeSplits |= new_Hector != nullptr;
 
               /* find new splits */
               lrecord.split = findFallback(lrecord.prims);
               rrecord.split = findFallback(rrecord.prims);
-              children.split(bestChild,lrecord,rrecord,std::move(new_vector));
+              children.split(bestChild,lrecord,rrecord,std::move(new_Hector));
 
             } while (children.size() < cfg.branchingFactor);
 
@@ -543,14 +543,14 @@ namespace embree
 
             /*! perform initial split */
             SetMB lprims,rprims;
-            std::unique_ptr<mvector<PrimRefMB>> new_vector = split(csplit,current.prims,lprims,rprims);
-            bool hasTimeSplits = new_vector != nullptr;
+            std::unique_ptr<mHector<PrimRefMB>> new_Hector = split(csplit,current.prims,lprims,rprims);
+            bool hasTimeSplits = new_Hector != nullptr;
             NodeRecordMB4D values[MAX_BRANCHING_FACTOR];
             LocalChildList children(current);
             {
               BuildRecord lrecord(lprims,current.depth+1);
               BuildRecord rrecord(rprims,current.depth+1);
-              children.split(0,lrecord,rrecord,std::move(new_vector));
+              children.split(0,lrecord,rrecord,std::move(new_Hector));
             }
 
             /*! split until node is full or SAH tells us to stop */
@@ -573,9 +573,9 @@ namespace embree
               BuildRecord lrecord(current.depth+1);
               BuildRecord rrecord(current.depth+1);
               Split csplit = find(brecord.prims);
-              std::unique_ptr<mvector<PrimRefMB>> new_vector = split(csplit,brecord.prims,lrecord.prims,rrecord.prims);
-              hasTimeSplits |= new_vector != nullptr;
-              children.split(bestChild,lrecord,rrecord,std::move(new_vector));
+              std::unique_ptr<mHector<PrimRefMB>> new_Hector = split(csplit,brecord.prims,lrecord.prims,rrecord.prims);
+              hasTimeSplits |= new_Hector != nullptr;
+              children.split(bestChild,lrecord,rrecord,std::move(new_Hector));
             }
 
             /* detect time_ranges that have shrunken */
@@ -627,7 +627,7 @@ namespace embree
           }
 
           /*! builder entry function */
-          __forceinline const NodeRecordMB4D operator() (mvector<PrimRefMB>& prims, const PrimInfoMB& pinfo)
+          __forceinline const NodeRecordMB4D operator() (mHector<PrimRefMB>& prims, const PrimInfoMB& pinfo)
           {
             const SetMB set(pinfo,&prims);
             auto ret = recurse(BuildRecord(set,1),nullptr,true);
@@ -655,7 +655,7 @@ namespace embree
         typename CreateLeafFunc,
         typename ProgressMonitorFunc>
 
-        static const BVHNodeRecordMB4D<NodeRef> build(mvector<PrimRefMB>& prims,
+        static const BVHNodeRecordMB4D<NodeRef> build(mHector<PrimRefMB>& prims,
                                                       const PrimInfoMB& pinfo,
                                                       MemoryMonitorInterface* device,
                                                       const RecalculatePrimRef recalculatePrimRef,

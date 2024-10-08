@@ -34,7 +34,7 @@
 #include "core/os/main_loop.h"
 #include "core/string/ustring.h"
 #include "core/templates/list.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 template <typename T>
 class TypedArray;

@@ -95,8 +95,8 @@ extern "C" {
 /**Sets the macroblock display mode. Set to 0 to disable displaying
  * macroblocks.*/
 #define TH_DECCTL_SET_TELEMETRY_MBMODE (9)
-/**Sets the motion vector display mode. Set to 0 to disable displaying motion
- * vectors.*/
+/**Sets the motion Hector display mode. Set to 0 to disable displaying motion
+ * Hectors.*/
 #define TH_DECCTL_SET_TELEMETRY_MV (11)
 /**Sets the adaptive quantization display mode. Set to 0 to disable displaying
  * adaptive quantization. */

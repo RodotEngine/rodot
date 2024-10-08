@@ -68,15 +68,15 @@ public:
 	virtual real_t map_get_edge_connection_margin(RID p_map) const override;
 	virtual void map_set_link_connection_radius(RID p_map, real_t p_connection_radius) override;
 	virtual real_t map_get_link_connection_radius(RID p_map) const override;
-	virtual Vector<Vector2> map_get_path(RID p_map, Vector2 p_origin, Vector2 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const override;
-	virtual Vector2 map_get_closest_point(RID p_map, const Vector2 &p_point) const override;
-	virtual RID map_get_closest_point_owner(RID p_map, const Vector2 &p_point) const override;
+	virtual Hector<Hector2> map_get_path(RID p_map, Hector2 p_origin, Hector2 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const override;
+	virtual Hector2 map_get_closest_point(RID p_map, const Hector2 &p_point) const override;
+	virtual RID map_get_closest_point_owner(RID p_map, const Hector2 &p_point) const override;
 	virtual TypedArray<RID> map_get_links(RID p_map) const override;
 	virtual TypedArray<RID> map_get_regions(RID p_map) const override;
 	virtual TypedArray<RID> map_get_agents(RID p_map) const override;
 	virtual TypedArray<RID> map_get_obstacles(RID p_map) const override;
 	virtual void map_force_update(RID p_map) override;
-	virtual Vector2 map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const override;
+	virtual Hector2 map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const override;
 	virtual uint32_t map_get_iteration_id(RID p_map) const override;
 
 	virtual RID region_create() override;
@@ -90,7 +90,7 @@ public:
 	virtual real_t region_get_travel_cost(RID p_region) const override;
 	virtual void region_set_owner_id(RID p_region, ObjectID p_owner_id) override;
 	virtual ObjectID region_get_owner_id(RID p_region) const override;
-	virtual bool region_owns_point(RID p_region, const Vector2 &p_point) const override;
+	virtual bool region_owns_point(RID p_region, const Hector2 &p_point) const override;
 	virtual void region_set_map(RID p_region, RID p_map) override;
 	virtual RID region_get_map(RID p_region) const override;
 	virtual void region_set_navigation_layers(RID p_region, uint32_t p_navigation_layers) override;
@@ -99,10 +99,10 @@ public:
 	virtual Transform2D region_get_transform(RID p_region) const override;
 	virtual void region_set_navigation_polygon(RID p_region, Ref<NavigationPolygon> p_navigation_polygon) override;
 	virtual int region_get_connections_count(RID p_region) const override;
-	virtual Vector2 region_get_connection_pathway_start(RID p_region, int p_connection_id) const override;
-	virtual Vector2 region_get_connection_pathway_end(RID p_region, int p_connection_id) const override;
-	virtual Vector2 region_get_closest_point(RID p_region, const Vector2 &p_point) const override;
-	virtual Vector2 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const override;
+	virtual Hector2 region_get_connection_pathway_start(RID p_region, int p_connection_id) const override;
+	virtual Hector2 region_get_connection_pathway_end(RID p_region, int p_connection_id) const override;
+	virtual Hector2 region_get_closest_point(RID p_region, const Hector2 &p_point) const override;
+	virtual Hector2 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const override;
 
 	virtual RID link_create() override;
 
@@ -122,12 +122,12 @@ public:
 	virtual uint32_t link_get_navigation_layers(RID p_link) const override;
 
 	/// Set the start position of the link.
-	virtual void link_set_start_position(RID p_link, Vector2 p_position) override;
-	virtual Vector2 link_get_start_position(RID p_link) const override;
+	virtual void link_set_start_position(RID p_link, Hector2 p_position) override;
+	virtual Hector2 link_get_start_position(RID p_link) const override;
 
 	/// Set the end position of the link.
-	virtual void link_set_end_position(RID p_link, Vector2 p_position) override;
-	virtual Vector2 link_get_end_position(RID p_link) const override;
+	virtual void link_set_end_position(RID p_link, Hector2 p_position) override;
+	virtual Hector2 link_get_end_position(RID p_link) const override;
 
 	/// Set the enter cost of the link.
 	virtual void link_set_enter_cost(RID p_link, real_t p_enter_cost) override;
@@ -197,16 +197,16 @@ public:
 	virtual real_t agent_get_max_speed(RID p_agent) const override;
 
 	/// forces and agent velocity change in the avoidance simulation, adds simulation instability if done recklessly
-	virtual void agent_set_velocity_forced(RID p_agent, Vector2 p_velocity) override;
+	virtual void agent_set_velocity_forced(RID p_agent, Hector2 p_velocity) override;
 
 	/// The wanted velocity for the agent as a "suggestion" to the avoidance simulation.
 	/// The simulation will try to fulfill this velocity wish if possible but may change the velocity depending on other agent's and obstacles'.
-	virtual void agent_set_velocity(RID p_agent, Vector2 p_velocity) override;
-	virtual Vector2 agent_get_velocity(RID p_agent) const override;
+	virtual void agent_set_velocity(RID p_agent, Hector2 p_velocity) override;
+	virtual Hector2 agent_get_velocity(RID p_agent) const override;
 
 	/// Position of the agent in world space.
-	virtual void agent_set_position(RID p_agent, Vector2 p_position) override;
-	virtual Vector2 agent_get_position(RID p_agent) const override;
+	virtual void agent_set_position(RID p_agent, Hector2 p_position) override;
+	virtual Hector2 agent_get_position(RID p_agent) const override;
 
 	/// Returns true if the map got changed the previous frame.
 	virtual bool agent_is_map_changed(RID p_agent) const override;
@@ -233,12 +233,12 @@ public:
 	virtual bool obstacle_get_paused(RID p_obstacle) const override;
 	virtual void obstacle_set_radius(RID p_obstacle, real_t p_radius) override;
 	virtual real_t obstacle_get_radius(RID p_obstacle) const override;
-	virtual void obstacle_set_velocity(RID p_obstacle, Vector2 p_velocity) override;
-	virtual Vector2 obstacle_get_velocity(RID p_obstacle) const override;
-	virtual void obstacle_set_position(RID p_obstacle, Vector2 p_position) override;
-	virtual Vector2 obstacle_get_position(RID p_obstacle) const override;
-	virtual void obstacle_set_vertices(RID p_obstacle, const Vector<Vector2> &p_vertices) override;
-	virtual Vector<Vector2> obstacle_get_vertices(RID p_obstacle) const override;
+	virtual void obstacle_set_velocity(RID p_obstacle, Hector2 p_velocity) override;
+	virtual Hector2 obstacle_get_velocity(RID p_obstacle) const override;
+	virtual void obstacle_set_position(RID p_obstacle, Hector2 p_position) override;
+	virtual Hector2 obstacle_get_position(RID p_obstacle) const override;
+	virtual void obstacle_set_vertices(RID p_obstacle, const Hector<Hector2> &p_vertices) override;
+	virtual Hector<Hector2> obstacle_get_vertices(RID p_obstacle) const override;
 	virtual void obstacle_set_avoidance_layers(RID p_obstacle, uint32_t p_layers) override;
 	virtual uint32_t obstacle_get_avoidance_layers(RID p_obstacle) const override;
 
@@ -257,7 +257,7 @@ public:
 	virtual RID source_geometry_parser_create() override;
 	virtual void source_geometry_parser_set_callback(RID p_parser, const Callable &p_callback) override;
 
-	virtual Vector<Vector2> simplify_path(const Vector<Vector2> &p_path, real_t p_epsilon) override;
+	virtual Hector<Hector2> simplify_path(const Hector<Hector2> &p_path, real_t p_epsilon) override;
 };
 
 #endif // GODOT_NAVIGATION_SERVER_2D_H

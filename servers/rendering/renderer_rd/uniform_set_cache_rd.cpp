@@ -37,7 +37,7 @@ void UniformSetCacheRD::_bind_methods() {
 }
 
 RID UniformSetCacheRD::get_cache_array(RID p_shader, uint32_t p_set, const TypedArray<RDUniform> &p_uniforms) {
-	Vector<RD::Uniform> uniforms;
+	Hector<RD::Uniform> uniforms;
 
 	for (int i = 0; i < p_uniforms.size(); i++) {
 		Ref<RDUniform> uniform = p_uniforms[i];

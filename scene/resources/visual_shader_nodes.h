@@ -39,22 +39,22 @@ class Cubemap;
 class Texture2DArray;
 
 ///////////////////////////////////////
-/// Vector Base Node
+/// Hector Base Node
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorBase : public VisualShaderNode {
-	GDCLASS(VisualShaderNodeVectorBase, VisualShaderNode);
+class VisualShaderNodeHectorBase : public VisualShaderNode {
+	GDCLASS(VisualShaderNodeHectorBase, VisualShaderNode);
 
 public:
 	enum OpType {
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_4D,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_4D,
 		OP_TYPE_MAX,
 	};
 
 protected:
-	OpType op_type = OP_TYPE_VECTOR_3D;
+	OpType op_type = OP_TYPE_HECTOR_3D;
 
 protected:
 	static void _bind_methods();
@@ -75,14 +75,14 @@ public:
 	virtual void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
-	virtual Category get_category() const override { return CATEGORY_VECTOR; }
+	virtual Category get_category() const override { return CATEGORY_Hector; }
 
-	VisualShaderNodeVectorBase();
+	VisualShaderNodeHectorBase();
 };
 
-VARIANT_ENUM_CAST(VisualShaderNodeVectorBase::OpType)
+VARIANT_ENUM_CAST(VisualShaderNodeHectorBase::OpType)
 
 ///////////////////////////////////////
 /// CONSTANTS
@@ -132,7 +132,7 @@ public:
 	void set_constant(float p_constant);
 	float get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeFloatConstant();
 };
@@ -162,7 +162,7 @@ public:
 	void set_constant(int p_constant);
 	int get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeIntConstant();
 };
@@ -192,7 +192,7 @@ public:
 	void set_constant(int p_constant);
 	int get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeUIntConstant();
 };
@@ -222,7 +222,7 @@ public:
 	void set_constant(bool p_constant);
 	bool get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeBooleanConstant();
 };
@@ -252,7 +252,7 @@ public:
 	void set_constant(const Color &p_constant);
 	Color get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeColorConstant();
 };
@@ -261,7 +261,7 @@ public:
 
 class VisualShaderNodeVec2Constant : public VisualShaderNodeConstant {
 	GDCLASS(VisualShaderNodeVec2Constant, VisualShaderNodeConstant);
-	Vector2 constant;
+	Hector2 constant;
 
 protected:
 	static void _bind_methods();
@@ -279,10 +279,10 @@ public:
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	void set_constant(const Vector2 &p_constant);
-	Vector2 get_constant() const;
+	void set_constant(const Hector2 &p_constant);
+	Hector2 get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeVec2Constant();
 };
@@ -291,7 +291,7 @@ public:
 
 class VisualShaderNodeVec3Constant : public VisualShaderNodeConstant {
 	GDCLASS(VisualShaderNodeVec3Constant, VisualShaderNodeConstant);
-	Vector3 constant;
+	Hector3 constant;
 
 protected:
 	static void _bind_methods();
@@ -309,10 +309,10 @@ public:
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	void set_constant(const Vector3 &p_constant);
-	Vector3 get_constant() const;
+	void set_constant(const Hector3 &p_constant);
+	Hector3 get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeVec3Constant();
 };
@@ -342,7 +342,7 @@ public:
 	void set_constant(const Quaternion &p_constant);
 	Quaternion get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeVec4Constant();
 };
@@ -372,7 +372,7 @@ public:
 	void set_constant(const Transform3D &p_constant);
 	Transform3D get_constant() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeTransformConstant();
 };
@@ -425,7 +425,7 @@ public:
 
 	virtual bool is_input_port_default(int p_port, Shader::Mode p_mode) const override;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -438,7 +438,7 @@ public:
 	void set_texture_type(TextureType p_texture_type);
 	TextureType get_texture_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String get_warning(Shader::Mode p_mode, VisualShader::Type p_type) const override;
 
@@ -470,14 +470,14 @@ public:
 	virtual PortType get_output_port_type(int p_port) const override;
 	virtual String get_output_port_name(int p_port) const override;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
 	void set_texture(Ref<CurveTexture> p_texture);
 	Ref<CurveTexture> get_texture() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 	virtual bool is_use_prop_slots() const override;
 
 	virtual Category get_category() const override { return CATEGORY_TEXTURES; }
@@ -505,14 +505,14 @@ public:
 	virtual PortType get_output_port_type(int p_port) const override;
 	virtual String get_output_port_name(int p_port) const override;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
 	void set_texture(Ref<CurveXYZTexture> p_texture);
 	Ref<CurveXYZTexture> get_texture() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 	virtual bool is_use_prop_slots() const override;
 
 	virtual Category get_category() const override { return CATEGORY_TEXTURES; }
@@ -579,13 +579,13 @@ public:
 
 	virtual String get_input_port_name(int p_port) const override;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const override;
 
 	void set_texture_array(Ref<TextureLayered> p_texture_array);
 	Ref<TextureLayered> get_texture_array() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeTexture2DArray();
 };
@@ -602,13 +602,13 @@ public:
 
 	virtual String get_input_port_name(int p_port) const override;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const override;
 
 	void set_texture(Ref<Texture3D> p_texture);
 	Ref<Texture3D> get_texture() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeTexture3D();
 };
@@ -656,7 +656,7 @@ public:
 	virtual PortType get_output_port_type(int p_port) const override;
 	virtual String get_output_port_name(int p_port) const override;
 
-	virtual Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	virtual Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_global(Shader::Mode p_mode, VisualShader::Type p_type, int p_id) const override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -669,7 +669,7 @@ public:
 	void set_texture_type(TextureType p_texture_type);
 	TextureType get_texture_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 	virtual String get_warning(Shader::Mode p_mode, VisualShader::Type p_type) const override;
 
 	virtual Category get_category() const override { return CATEGORY_TEXTURES; }
@@ -797,7 +797,7 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_SCALAR; }
 
@@ -847,7 +847,7 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_SCALAR; }
 
@@ -897,7 +897,7 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_SCALAR; }
 
@@ -906,8 +906,8 @@ public:
 
 VARIANT_ENUM_CAST(VisualShaderNodeUIntOp::Operator)
 
-class VisualShaderNodeVectorOp : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorOp, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorOp : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorOp, VisualShaderNodeHectorBase);
 
 public:
 	enum Operator {
@@ -947,13 +947,13 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 	String get_warning(Shader::Mode p_mode, VisualShader::Type p_type) const override;
 
-	VisualShaderNodeVectorOp();
+	VisualShaderNodeHectorOp();
 };
 
-VARIANT_ENUM_CAST(VisualShaderNodeVectorOp::Operator)
+VARIANT_ENUM_CAST(VisualShaderNodeHectorOp::Operator)
 
 ///////////////////////////////////////
 
@@ -995,7 +995,7 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_COLOR; }
 
@@ -1046,7 +1046,7 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_TRANSFORM; }
 
@@ -1056,7 +1056,7 @@ public:
 VARIANT_ENUM_CAST(VisualShaderNodeTransformOp::Operator)
 
 ///////////////////////////////////////
-/// TRANSFORM-VECTOR MULTIPLICATION
+/// TRANSFORM-Hector MULTIPLICATION
 ///////////////////////////////////////
 
 class VisualShaderNodeTransformVecMult : public VisualShaderNode {
@@ -1092,7 +1092,7 @@ public:
 	void set_operator(Operator p_op);
 	Operator get_operator() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_TRANSFORM; }
 
@@ -1166,7 +1166,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_SCALAR; }
 
@@ -1212,7 +1212,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_SCALAR; }
 
@@ -1256,7 +1256,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_SCALAR; }
 
@@ -1266,11 +1266,11 @@ public:
 VARIANT_ENUM_CAST(VisualShaderNodeUIntFunc::Function)
 
 ///////////////////////////////////////
-/// VECTOR FUNC
+/// Hector FUNC
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorFunc : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorFunc, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorFunc : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorFunc, VisualShaderNodeHectorBase);
 
 	void _update_default_input_values();
 
@@ -1333,12 +1333,12 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
-	VisualShaderNodeVectorFunc();
+	VisualShaderNodeHectorFunc();
 };
 
-VARIANT_ENUM_CAST(VisualShaderNodeVectorFunc::Function)
+VARIANT_ENUM_CAST(VisualShaderNodeHectorFunc::Function)
 
 ///////////////////////////////////////
 /// COLOR FUNC
@@ -1377,7 +1377,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_COLOR; }
 
@@ -1421,7 +1421,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_TRANSFORM; }
 
@@ -1468,7 +1468,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_TEXTURES; }
 
@@ -1523,7 +1523,7 @@ public:
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	virtual Category get_category() const override { return CATEGORY_VECTOR; }
+	virtual Category get_category() const override { return CATEGORY_Hector; }
 
 	VisualShaderNodeDotProduct();
 };
@@ -1532,8 +1532,8 @@ public:
 /// LENGTH
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorLen : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorLen, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorLen : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorLen, VisualShaderNodeHectorBase);
 
 public:
 	virtual String get_caption() const override;
@@ -1548,7 +1548,7 @@ public:
 	virtual void set_op_type(OpType p_op_type) override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	VisualShaderNodeVectorLen();
+	VisualShaderNodeHectorLen();
 };
 
 ///////////////////////////////////////
@@ -1571,7 +1571,7 @@ public:
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	virtual Category get_category() const override { return CATEGORY_VECTOR; }
+	virtual Category get_category() const override { return CATEGORY_Hector; }
 
 	VisualShaderNodeDeterminant();
 };
@@ -1588,9 +1588,9 @@ public:
 		OP_TYPE_FLOAT,
 		OP_TYPE_INT,
 		OP_TYPE_UINT,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_4D,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_4D,
 		OP_TYPE_MAX,
 	};
 
@@ -1612,7 +1612,7 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -1620,7 +1620,7 @@ public:
 		if (op_type == OP_TYPE_FLOAT || op_type == OP_TYPE_INT || op_type == OP_TYPE_UINT) {
 			return CATEGORY_SCALAR;
 		} else {
-			return CATEGORY_VECTOR;
+			return CATEGORY_Hector;
 		}
 	}
 
@@ -1639,9 +1639,9 @@ class VisualShaderNodeDerivativeFunc : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_4D,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_4D,
 		OP_TYPE_MAX,
 	};
 
@@ -1690,7 +1690,7 @@ public:
 	void set_precision(Precision p_precision);
 	Precision get_precision() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_UTILITY; }
 
@@ -1705,8 +1705,8 @@ VARIANT_ENUM_CAST(VisualShaderNodeDerivativeFunc::Precision)
 /// FACEFORWARD
 ///////////////////////////////////////
 
-class VisualShaderNodeFaceForward : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeFaceForward, VisualShaderNodeVectorBase);
+class VisualShaderNodeFaceForward : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeFaceForward, VisualShaderNodeHectorBase);
 
 public:
 	virtual String get_caption() const override;
@@ -1758,12 +1758,12 @@ class VisualShaderNodeStep : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_2D_SCALAR,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_3D_SCALAR,
-		OP_TYPE_VECTOR_4D,
-		OP_TYPE_VECTOR_4D_SCALAR,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_2D_SCALAR,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_3D_SCALAR,
+		OP_TYPE_HECTOR_4D,
+		OP_TYPE_HECTOR_4D_SCALAR,
 		OP_TYPE_MAX,
 	};
 
@@ -1786,7 +1786,7 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -1794,7 +1794,7 @@ public:
 		if (op_type == OP_TYPE_SCALAR) {
 			return CATEGORY_SCALAR;
 		} else {
-			return CATEGORY_VECTOR;
+			return CATEGORY_Hector;
 		}
 	}
 
@@ -1813,12 +1813,12 @@ class VisualShaderNodeSmoothStep : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_2D_SCALAR,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_3D_SCALAR,
-		OP_TYPE_VECTOR_4D,
-		OP_TYPE_VECTOR_4D_SCALAR,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_2D_SCALAR,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_3D_SCALAR,
+		OP_TYPE_HECTOR_4D,
+		OP_TYPE_HECTOR_4D_SCALAR,
 		OP_TYPE_MAX,
 	};
 
@@ -1841,7 +1841,7 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -1849,7 +1849,7 @@ public:
 		if (op_type == OP_TYPE_SCALAR) {
 			return CATEGORY_SCALAR;
 		} else {
-			return CATEGORY_VECTOR;
+			return CATEGORY_Hector;
 		}
 	}
 
@@ -1862,8 +1862,8 @@ VARIANT_ENUM_CAST(VisualShaderNodeSmoothStep::OpType)
 /// DISTANCE
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorDistance : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorDistance, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorDistance : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorDistance, VisualShaderNodeHectorBase);
 
 public:
 	virtual String get_caption() const override;
@@ -1878,15 +1878,15 @@ public:
 	virtual void set_op_type(OpType p_op_type) override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	VisualShaderNodeVectorDistance();
+	VisualShaderNodeHectorDistance();
 };
 
 ///////////////////////////////////////
 /// REFRACT
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorRefract : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorRefract, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorRefract : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorRefract, VisualShaderNodeHectorBase);
 
 public:
 	virtual String get_caption() const override;
@@ -1900,7 +1900,7 @@ public:
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 	virtual void set_op_type(OpType p_op_type) override;
 
-	VisualShaderNodeVectorRefract();
+	VisualShaderNodeHectorRefract();
 };
 
 ///////////////////////////////////////
@@ -1913,12 +1913,12 @@ class VisualShaderNodeMix : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_2D_SCALAR,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_3D_SCALAR,
-		OP_TYPE_VECTOR_4D,
-		OP_TYPE_VECTOR_4D_SCALAR,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_2D_SCALAR,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_3D_SCALAR,
+		OP_TYPE_HECTOR_4D,
+		OP_TYPE_HECTOR_4D_SCALAR,
 		OP_TYPE_MAX,
 	};
 
@@ -1940,7 +1940,7 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -1948,7 +1948,7 @@ public:
 		if (op_type == OP_TYPE_SCALAR) {
 			return CATEGORY_SCALAR;
 		} else {
-			return CATEGORY_VECTOR;
+			return CATEGORY_Hector;
 		}
 	}
 
@@ -1961,8 +1961,8 @@ VARIANT_ENUM_CAST(VisualShaderNodeMix::OpType)
 /// COMPOSE
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorCompose : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorCompose, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorCompose : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorCompose, VisualShaderNodeHectorBase);
 
 public:
 	virtual String get_caption() const override;
@@ -1977,7 +1977,7 @@ public:
 	virtual void set_op_type(OpType p_op_type) override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	VisualShaderNodeVectorCompose();
+	VisualShaderNodeHectorCompose();
 };
 
 ///////////////////////////////////////
@@ -2007,8 +2007,8 @@ public:
 /// DECOMPOSE
 ///////////////////////////////////////
 
-class VisualShaderNodeVectorDecompose : public VisualShaderNodeVectorBase {
-	GDCLASS(VisualShaderNodeVectorDecompose, VisualShaderNodeVectorBase);
+class VisualShaderNodeHectorDecompose : public VisualShaderNodeHectorBase {
+	GDCLASS(VisualShaderNodeHectorDecompose, VisualShaderNodeHectorBase);
 
 public:
 	virtual String get_caption() const override;
@@ -2023,7 +2023,7 @@ public:
 	virtual void set_op_type(OpType p_op_type) override;
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
-	VisualShaderNodeVectorDecompose();
+	VisualShaderNodeHectorDecompose();
 };
 
 ///////////////////////////////////////
@@ -2113,7 +2113,7 @@ public:
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeFloatParameter();
 };
@@ -2185,7 +2185,7 @@ public:
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeIntParameter();
 };
@@ -2230,7 +2230,7 @@ public:
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeUIntParameter();
 };
@@ -2273,7 +2273,7 @@ public:
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeBooleanParameter();
 };
@@ -2315,7 +2315,7 @@ public:
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeColorParameter();
 };
@@ -2327,7 +2327,7 @@ class VisualShaderNodeVec2Parameter : public VisualShaderNodeParameter {
 
 private:
 	bool default_value_enabled = false;
-	Vector2 default_value;
+	Hector2 default_value;
 
 protected:
 	static void _bind_methods();
@@ -2352,13 +2352,13 @@ public:
 	void set_default_value_enabled(bool p_enabled);
 	bool is_default_value_enabled() const;
 
-	void set_default_value(const Vector2 &p_value);
-	Vector2 get_default_value() const;
+	void set_default_value(const Hector2 &p_value);
+	Hector2 get_default_value() const;
 
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeVec2Parameter();
 };
@@ -2370,7 +2370,7 @@ class VisualShaderNodeVec3Parameter : public VisualShaderNodeParameter {
 
 private:
 	bool default_value_enabled = false;
-	Vector3 default_value;
+	Hector3 default_value;
 
 protected:
 	static void _bind_methods();
@@ -2395,13 +2395,13 @@ public:
 	void set_default_value_enabled(bool p_enabled);
 	bool is_default_value_enabled() const;
 
-	void set_default_value(const Vector3 &p_value);
-	Vector3 get_default_value() const;
+	void set_default_value(const Hector3 &p_value);
+	Hector3 get_default_value() const;
 
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeVec3Parameter();
 };
@@ -2413,7 +2413,7 @@ class VisualShaderNodeVec4Parameter : public VisualShaderNodeParameter {
 
 private:
 	bool default_value_enabled = false;
-	Vector4 default_value;
+	Hector4 default_value;
 
 protected:
 	static void _bind_methods();
@@ -2438,13 +2438,13 @@ public:
 	void set_default_value_enabled(bool p_enabled);
 	bool is_default_value_enabled() const;
 
-	void set_default_value(const Vector4 &p_value);
-	Vector4 get_default_value() const;
+	void set_default_value(const Hector4 &p_value);
+	Hector4 get_default_value() const;
 
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeVec4Parameter();
 };
@@ -2487,7 +2487,7 @@ public:
 	bool is_qualifier_supported(Qualifier p_qual) const override;
 	bool is_convertible_to_constant() const override;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	VisualShaderNodeTransformParameter();
 };
@@ -2563,7 +2563,7 @@ public:
 	virtual bool is_show_prop_names() const override;
 	virtual String get_warning(Shader::Mode p_mode, VisualShader::Type p_type) const override;
 
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 
 	void set_texture_type(TextureType p_type);
 	TextureType get_texture_type() const;
@@ -2711,9 +2711,9 @@ public:
 		OP_TYPE_FLOAT,
 		OP_TYPE_INT,
 		OP_TYPE_UINT,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_4D,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_4D,
 		OP_TYPE_BOOLEAN,
 		OP_TYPE_TRANSFORM,
 		OP_TYPE_MAX,
@@ -2738,7 +2738,7 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -2812,7 +2812,7 @@ public:
 	void set_function(Function p_func);
 	Function get_function() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_CONDITIONAL; }
 
@@ -2833,9 +2833,9 @@ public:
 		CTYPE_SCALAR,
 		CTYPE_SCALAR_INT,
 		CTYPE_SCALAR_UINT,
-		CTYPE_VECTOR_2D,
-		CTYPE_VECTOR_3D,
-		CTYPE_VECTOR_4D,
+		CTYPE_HECTOR_2D,
+		CTYPE_HECTOR_3D,
+		CTYPE_HECTOR_4D,
 		CTYPE_BOOLEAN,
 		CTYPE_TRANSFORM,
 		CTYPE_MAX,
@@ -2887,7 +2887,7 @@ public:
 	void set_condition(Condition p_cond);
 	Condition get_condition() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 	virtual String get_warning(Shader::Mode p_mode, VisualShader::Type p_type) const override;
 
 	virtual Category get_category() const override { return CATEGORY_CONDITIONAL; }
@@ -2905,9 +2905,9 @@ class VisualShaderNodeMultiplyAdd : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_4D,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_4D,
 		OP_TYPE_MAX,
 	};
 
@@ -2933,13 +2933,13 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override {
 		if (op_type == OP_TYPE_SCALAR) {
 			return CATEGORY_SCALAR;
 		} else {
-			return CATEGORY_VECTOR;
+			return CATEGORY_Hector;
 		}
 	}
 
@@ -2988,7 +2988,7 @@ public:
 	void set_keep_scale_enabled(bool p_enabled);
 	bool is_keep_scale_enabled() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_UTILITY; }
 
@@ -3078,12 +3078,12 @@ class VisualShaderNodeRemap : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_2D_SCALAR,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_3D_SCALAR,
-		OP_TYPE_VECTOR_4D,
-		OP_TYPE_VECTOR_4D_SCALAR,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_2D_SCALAR,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_3D_SCALAR,
+		OP_TYPE_HECTOR_4D,
+		OP_TYPE_HECTOR_4D_SCALAR,
 		OP_TYPE_MAX,
 	};
 
@@ -3105,7 +3105,7 @@ public:
 	void set_op_type(OpType p_op_type);
 	OpType get_op_type() const;
 
-	virtual Vector<StringName> get_editable_properties() const override;
+	virtual Hector<StringName> get_editable_properties() const override;
 
 	virtual String generate_code(Shader::Mode p_mode, VisualShader::Type p_type, int p_id, const String *p_input_vars, const String *p_output_vars, bool p_for_preview = false) const override;
 
@@ -3113,7 +3113,7 @@ public:
 		if (op_type == OP_TYPE_SCALAR) {
 			return CATEGORY_SCALAR;
 		} else {
-			return CATEGORY_VECTOR;
+			return CATEGORY_Hector;
 		}
 	}
 

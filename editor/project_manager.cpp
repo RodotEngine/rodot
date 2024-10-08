@@ -170,9 +170,9 @@ void ProjectManager::_update_size_limits() {
 	}
 
 	Rect2i screen_rect = DisplayServer::get_singleton()->screen_get_usable_rect(DisplayServer::get_singleton()->window_get_current_screen());
-	if (screen_rect.size != Vector2i()) {
+	if (screen_rect.size != Hector2i()) {
 		// Center the window on the screen.
-		Vector2i window_position;
+		Hector2i window_position;
 		window_position.x = screen_rect.position.x + (screen_rect.size.x - default_size.x) / 2;
 		window_position.y = screen_rect.position.y + (screen_rect.size.y - default_size.y) / 2;
 		DisplayServer::get_singleton()->window_set_position(window_position);
@@ -191,7 +191,7 @@ void ProjectManager::_update_theme(bool p_skip_creation) {
 		DisplayServer::set_early_window_clear_color_override(true, theme->get_color(SNAME("background"), EditorStringName(Editor)));
 	}
 
-	Vector<Ref<Theme>> editor_themes;
+	Hector<Ref<Theme>> editor_themes;
 	editor_themes.push_back(theme);
 	editor_themes.push_back(ThemeDB::get_singleton()->get_default_theme());
 
@@ -440,7 +440,7 @@ void ProjectManager::_run_project() {
 }
 
 void ProjectManager::_run_project_confirm() {
-	Vector<ProjectList::Item> selected_list = project_list->get_selected_projects();
+	Hector<ProjectList::Item> selected_list = project_list->get_selected_projects();
 
 	for (int i = 0; i < selected_list.size(); ++i) {
 		const String &selected_main = selected_list[i].main_scene;
@@ -633,7 +633,7 @@ void ProjectManager::_new_project() {
 }
 
 void ProjectManager::_rename_project() {
-	const Vector<ProjectList::Item> &selected_list = project_list->get_selected_projects();
+	const Hector<ProjectList::Item> &selected_list = project_list->get_selected_projects();
 
 	if (selected_list.size() == 0) {
 		return;
@@ -684,7 +684,7 @@ void ProjectManager::_erase_missing_projects_confirm() {
 }
 
 void ProjectManager::_update_project_buttons() {
-	Vector<ProjectList::Item> selected_projects = project_list->get_selected_projects();
+	Hector<ProjectList::Item> selected_projects = project_list->get_selected_projects();
 	bool empty_selection = selected_projects.is_empty();
 
 	bool is_missing_project_selected = false;
@@ -705,7 +705,7 @@ void ProjectManager::_update_project_buttons() {
 }
 
 void ProjectManager::_on_projects_updated() {
-	Vector<ProjectList::Item> selected_projects = project_list->get_selected_projects();
+	Hector<ProjectList::Item> selected_projects = project_list->get_selected_projects();
 	int index = 0;
 	for (int i = 0; i < selected_projects.size(); ++i) {
 		index = project_list->refresh_project(selected_projects[i].path);
@@ -774,7 +774,7 @@ void ProjectManager::_manage_project_tags() {
 	}
 
 	tag_edit_error->hide();
-	tag_manage_dialog->popup_centered(Vector2i(500, 0) * EDSCALE);
+	tag_manage_dialog->popup_centered(Hector2i(500, 0) * EDSCALE);
 }
 
 void ProjectManager::_add_project_tag(const String &p_tag) {
@@ -917,7 +917,7 @@ void ProjectManager::_full_convert_button_pressed() {
 }
 
 void ProjectManager::_perform_full_project_conversion() {
-	Vector<ProjectList::Item> selected_list = project_list->get_selected_projects();
+	Hector<ProjectList::Item> selected_list = project_list->get_selected_projects();
 	if (selected_list.is_empty()) {
 		return;
 	}
@@ -1053,8 +1053,8 @@ void ProjectManager::_files_dropped(PackedStringArray p_files) {
 }
 
 void ProjectManager::_titlebar_resized() {
-	DisplayServer::get_singleton()->window_set_window_buttons_offset(Vector2i(title_bar->get_global_position().y + title_bar->get_size().y / 2, title_bar->get_global_position().y + title_bar->get_size().y / 2), DisplayServer::MAIN_WINDOW_ID);
-	const Vector3i &margin = DisplayServer::get_singleton()->window_get_safe_title_margins(DisplayServer::MAIN_WINDOW_ID);
+	DisplayServer::get_singleton()->window_set_window_buttons_offset(Hector2i(title_bar->get_global_position().y + title_bar->get_size().y / 2, title_bar->get_global_position().y + title_bar->get_size().y / 2), DisplayServer::MAIN_WINDOW_ID);
+	const Hector3i &margin = DisplayServer::get_singleton()->window_get_safe_title_margins(DisplayServer::MAIN_WINDOW_ID);
 	if (left_menu_spacer) {
 		int w = (root_container->is_layout_rtl()) ? margin.y : margin.x;
 		left_menu_spacer->set_custom_minimum_size(Size2(w, 0));
@@ -1300,7 +1300,7 @@ ProjectManager::ProjectManager() {
 			filter_option->connect(SceneStringName(item_selected), callable_mp(this, &ProjectManager::_on_order_option_changed));
 			hb->add_child(filter_option);
 
-			Vector<String> sort_filter_titles;
+			Hector<String> sort_filter_titles;
 			sort_filter_titles.push_back(TTR("Last Edited"));
 			sort_filter_titles.push_back(TTR("Name"));
 			sort_filter_titles.push_back(TTR("Path"));
@@ -1554,7 +1554,7 @@ ProjectManager::ProjectManager() {
 
 		project_tags = memnew(HFlowContainer);
 		tag_vb->add_child(project_tags);
-		project_tags->set_custom_minimum_size(Vector2(0, 100) * EDSCALE);
+		project_tags->set_custom_minimum_size(Hector2(0, 100) * EDSCALE);
 
 		tag_vb->add_child(memnew(HSeparator));
 
@@ -1569,7 +1569,7 @@ ProjectManager::ProjectManager() {
 
 		all_tags = memnew(HFlowContainer);
 		tag_vb->add_child(all_tags);
-		all_tags->set_custom_minimum_size(Vector2(0, 100) * EDSCALE);
+		all_tags->set_custom_minimum_size(Hector2(0, 100) * EDSCALE);
 
 		tag_edit_error = memnew(Label);
 		tag_vb->add_child(tag_edit_error);
@@ -1598,7 +1598,7 @@ ProjectManager::ProjectManager() {
 
 		create_tag_btn = memnew(Button);
 		all_tags->add_child(create_tag_btn);
-		create_tag_btn->connect(SceneStringName(pressed), callable_mp((Window *)create_tag_dialog, &Window::popup_centered).bind(Vector2i(500, 0) * EDSCALE));
+		create_tag_btn->connect(SceneStringName(pressed), callable_mp((Window *)create_tag_dialog, &Window::popup_centered).bind(Hector2i(500, 0) * EDSCALE));
 	}
 
 	// Initialize project list.

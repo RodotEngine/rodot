@@ -33,7 +33,7 @@
 
 #include "core/math/aabb.h"
 #include "core/templates/list.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/paged_allocator.h"
 #include "core/typedefs.h"
 
@@ -70,10 +70,10 @@ public:
 
 private:
 	struct Volume {
-		Vector3 min, max;
+		Hector3 min, max;
 
-		_FORCE_INLINE_ Vector3 get_center() const { return ((min + max) / 2); }
-		_FORCE_INLINE_ Vector3 get_length() const { return (max - min); }
+		_FORCE_INLINE_ Hector3 get_center() const { return ((min + max) / 2); }
+		_FORCE_INLINE_ Hector3 get_length() const { return (max - min); }
 
 		_FORCE_INLINE_ bool contains(const Volume &a) const {
 			return ((min.x <= a.min.x) &&
@@ -102,7 +102,7 @@ private:
 		}
 
 		_FORCE_INLINE_ real_t get_size() const {
-			const Vector3 edges = get_length();
+			const Hector3 edges = get_length();
 			return (edges.x * edges.y * edges.z +
 					edges.x + edges.y + edges.z);
 		}
@@ -117,7 +117,7 @@ private:
 		}
 
 		_FORCE_INLINE_ real_t get_proximity_to(const Volume &b) const {
-			const Vector3 d = (min + max) - (b.min + b.max);
+			const Hector3 d = (min + max) - (b.min + b.max);
 			return (Math::abs(d.x) + Math::abs(d.y) + Math::abs(d.z));
 		}
 
@@ -135,13 +135,13 @@ private:
 					(max.z >= b.min.z));
 		}
 
-		_FORCE_INLINE_ bool intersects_convex(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count) const {
-			Vector3 half_extents = (max - min) * 0.5;
-			Vector3 ofs = min + half_extents;
+		_FORCE_INLINE_ bool intersects_convex(const Plane *p_planes, int p_plane_count, const Hector3 *p_points, int p_point_count) const {
+			Hector3 half_extents = (max - min) * 0.5;
+			Hector3 ofs = min + half_extents;
 
 			for (int i = 0; i < p_plane_count; i++) {
 				const Plane &p = p_planes[i];
-				Vector3 point(
+				Hector3 point(
 						(p.normal.x > 0) ? -half_extents.x : half_extents.x,
 						(p.normal.y > 0) ? -half_extents.y : half_extents.y,
 						(p.normal.z > 0) ? -half_extents.z : half_extents.z);
@@ -211,7 +211,7 @@ private:
 			}
 		}
 
-		bool is_left_of_axis(const Vector3 &org, const Vector3 &axis) const {
+		bool is_left_of_axis(const Hector3 &org, const Hector3 &axis) const {
 			return axis.dot(volume.get_center() - org) <= 0;
 		}
 
@@ -239,8 +239,8 @@ private:
 	_FORCE_INLINE_ DynamicBVH::Node *_create_node_with_volume(Node *p_parent, const Volume &p_volume, void *p_data);
 	_FORCE_INLINE_ void _insert_leaf(Node *p_root, Node *p_leaf);
 	_FORCE_INLINE_ Node *_remove_leaf(Node *leaf);
-	void _fetch_leaves(Node *p_root, LocalVector<Node *> &r_leaves, int p_depth = -1);
-	static int _split(Node **leaves, int p_count, const Vector3 &p_org, const Vector3 &p_axis);
+	void _fetch_leaves(Node *p_root, LocalHector<Node *> &r_leaves, int p_depth = -1);
+	static int _split(Node **leaves, int p_count, const Hector3 &p_org, const Hector3 &p_axis);
 	static Volume _bounds(Node **leaves, int p_count);
 	void _bottom_up(Node **leaves, int p_count);
 	Node *_top_down(Node **leaves, int p_count, int p_bu_threshold);
@@ -250,7 +250,7 @@ private:
 
 	void _extract_leaves(Node *p_node, List<ID> *r_elements);
 
-	_FORCE_INLINE_ bool _ray_aabb(const Vector3 &rayFrom, const Vector3 &rayInvDirection, const unsigned int raySign[3], const Vector3 bounds[2], real_t &tmin, real_t lambda_min, real_t lambda_max) {
+	_FORCE_INLINE_ bool _ray_aabb(const Hector3 &rayFrom, const Hector3 &rayInvDirection, const unsigned int raySign[3], const Hector3 bounds[2], real_t &tmin, real_t lambda_min, real_t lambda_max) {
 		real_t tmax, tymin, tymax, tzmin, tzmax;
 		tmin = (bounds[raySign[0]].x - rayFrom.x) * rayInvDirection.x;
 		tmax = (bounds[1 - raySign[0]].x - rayFrom.x) * rayInvDirection.x;
@@ -308,9 +308,9 @@ public:
 	template <typename QueryResult>
 	_FORCE_INLINE_ void aabb_query(const AABB &p_aabb, QueryResult &r_result);
 	template <typename QueryResult>
-	_FORCE_INLINE_ void convex_query(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count, QueryResult &r_result);
+	_FORCE_INLINE_ void convex_query(const Plane *p_planes, int p_plane_count, const Hector3 *p_points, int p_point_count, QueryResult &r_result);
 	template <typename QueryResult>
-	_FORCE_INLINE_ void ray_query(const Vector3 &p_from, const Vector3 &p_to, QueryResult &r_result);
+	_FORCE_INLINE_ void ray_query(const Hector3 &p_from, const Hector3 &p_to, QueryResult &r_result);
 
 	void set_index(uint32_t p_index);
 	uint32_t get_index() const;
@@ -334,7 +334,7 @@ void DynamicBVH::aabb_query(const AABB &p_box, QueryResult &r_result) {
 	int32_t depth = 1;
 	int32_t threshold = ALLOCA_STACK_SIZE - 2;
 
-	LocalVector<const Node *> aux_stack; //only used in rare occasions when you run out of alloca memory because tree is too unbalanced. Should correct itself over time.
+	LocalHector<const Node *> aux_stack; //only used in rare occasions when you run out of alloca memory because tree is too unbalanced. Should correct itself over time.
 
 	do {
 		depth--;
@@ -364,7 +364,7 @@ void DynamicBVH::aabb_query(const AABB &p_box, QueryResult &r_result) {
 }
 
 template <typename QueryResult>
-void DynamicBVH::convex_query(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count, QueryResult &r_result) {
+void DynamicBVH::convex_query(const Plane *p_planes, int p_plane_count, const Hector3 *p_points, int p_point_count, QueryResult &r_result) {
 	if (!bvh_root) {
 		return;
 	}
@@ -387,7 +387,7 @@ void DynamicBVH::convex_query(const Plane *p_planes, int p_plane_count, const Ve
 	int32_t depth = 1;
 	int32_t threshold = ALLOCA_STACK_SIZE - 2;
 
-	LocalVector<const Node *> aux_stack; //only used in rare occasions when you run out of alloca memory because tree is too unbalanced. Should correct itself over time.
+	LocalHector<const Node *> aux_stack; //only used in rare occasions when you run out of alloca memory because tree is too unbalanced. Should correct itself over time.
 
 	do {
 		depth--;
@@ -416,16 +416,16 @@ void DynamicBVH::convex_query(const Plane *p_planes, int p_plane_count, const Ve
 	} while (depth > 0);
 }
 template <typename QueryResult>
-void DynamicBVH::ray_query(const Vector3 &p_from, const Vector3 &p_to, QueryResult &r_result) {
+void DynamicBVH::ray_query(const Hector3 &p_from, const Hector3 &p_to, QueryResult &r_result) {
 	if (!bvh_root) {
 		return;
 	}
 
-	Vector3 ray_dir = (p_to - p_from);
+	Hector3 ray_dir = (p_to - p_from);
 	ray_dir.normalize();
 
 	///what about division by zero? --> just set rayDirection[i] to INF/B3_LARGE_FLOAT
-	Vector3 inv_dir;
+	Hector3 inv_dir;
 	inv_dir[0] = ray_dir[0] == real_t(0.0) ? real_t(1e20) : real_t(1.0) / ray_dir[0];
 	inv_dir[1] = ray_dir[1] == real_t(0.0) ? real_t(1e20) : real_t(1.0) / ray_dir[1];
 	inv_dir[2] = ray_dir[2] == real_t(0.0) ? real_t(1e20) : real_t(1.0) / ray_dir[2];
@@ -433,7 +433,7 @@ void DynamicBVH::ray_query(const Vector3 &p_from, const Vector3 &p_to, QueryResu
 
 	real_t lambda_max = ray_dir.dot(p_to - p_from);
 
-	Vector3 bounds[2];
+	Hector3 bounds[2];
 
 	const Node **alloca_stack = (const Node **)alloca(ALLOCA_STACK_SIZE * sizeof(const Node *));
 	const Node **stack = alloca_stack;
@@ -441,7 +441,7 @@ void DynamicBVH::ray_query(const Vector3 &p_from, const Vector3 &p_to, QueryResu
 	int32_t depth = 1;
 	int32_t threshold = ALLOCA_STACK_SIZE - 2;
 
-	LocalVector<const Node *> aux_stack; //only used in rare occasions when you run out of alloca memory because tree is too unbalanced. Should correct itself over time.
+	LocalHector<const Node *> aux_stack; //only used in rare occasions when you run out of alloca memory because tree is too unbalanced. Should correct itself over time.
 
 	do {
 		depth--;

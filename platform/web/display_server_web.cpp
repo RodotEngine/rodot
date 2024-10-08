@@ -89,7 +89,7 @@ void DisplayServerWeb::_fullscreen_change_callback(int p_fullscreen) {
 
 // Drag and drop callback.
 void DisplayServerWeb::drop_files_js_callback(const char **p_filev, int p_filec) {
-	Vector<String> files;
+	Hector<String> files;
 	for (int i = 0; i < p_filec; i++) {
 		files.push_back(String::utf8(p_filev[i]));
 	}
@@ -104,7 +104,7 @@ void DisplayServerWeb::drop_files_js_callback(const char **p_filev, int p_filec)
 	_drop_files_js_callback(files);
 }
 
-void DisplayServerWeb::_drop_files_js_callback(const Vector<String> &p_files) {
+void DisplayServerWeb::_drop_files_js_callback(const Hector<String> &p_files) {
 	DisplayServerWeb *ds = get_singleton();
 	if (!ds) {
 		ERR_FAIL_MSG("Unable to drop files because the DisplayServer is not active");
@@ -333,7 +333,7 @@ void DisplayServerWeb::_mouse_move_callback(double p_x, double p_y, double p_rel
 	ev->set_position(pos);
 	ev->set_global_position(pos);
 
-	ev->set_relative(Vector2(p_rel_x, p_rel_y));
+	ev->set_relative(Hector2(p_rel_x, p_rel_y));
 	ev->set_relative_screen_position(ev->get_relative());
 	ev->set_velocity(Input::get_singleton()->get_last_mouse_velocity());
 	ev->set_screen_velocity(ev->get_velocity());
@@ -394,7 +394,7 @@ bool DisplayServerWeb::tts_is_paused() const {
 }
 
 void DisplayServerWeb::update_voices_callback(int p_size, const char **p_voice) {
-	Vector<String> voices;
+	Hector<String> voices;
 	for (int i = 0; i < p_size; i++) {
 		voices.append(String::utf8(p_voice[i]));
 	}
@@ -409,10 +409,10 @@ void DisplayServerWeb::update_voices_callback(int p_size, const char **p_voice) 
 	_update_voices_callback(voices);
 }
 
-void DisplayServerWeb::_update_voices_callback(const Vector<String> &p_voices) {
+void DisplayServerWeb::_update_voices_callback(const Hector<String> &p_voices) {
 	get_singleton()->voices.clear();
 	for (int i = 0; i < p_voices.size(); i++) {
-		Vector<String> tokens = p_voices[i].split(";", true, 2);
+		Hector<String> tokens = p_voices[i].split(";", true, 2);
 		if (tokens.size() == 2) {
 			Dictionary voice_d;
 			voice_d["name"] = tokens[1];
@@ -514,12 +514,12 @@ DisplayServer::CursorShape DisplayServerWeb::cursor_get_shape() const {
 	return cursor_shape;
 }
 
-void DisplayServerWeb::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServerWeb::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
 	if (p_cursor.is_valid()) {
 		Ref<Image> image = _get_cursor_image_from_resource(p_cursor, p_hotspot);
 		ERR_FAIL_COND(image.is_null());
-		Vector2i texture_size = image->get_size();
+		Hector2i texture_size = image->get_size();
 
 		if (image->get_format() != Image::FORMAT_RGBA8) {
 			image->convert(Image::FORMAT_RGBA8);
@@ -812,7 +812,7 @@ void DisplayServerWeb::_ime_callback(int p_type, const String &p_text) {
 		case 0: {
 			// IME start.
 			ds->ime_text = String();
-			ds->ime_selection = Vector2i();
+			ds->ime_selection = Hector2i();
 			for (int i = ds->key_event_pos - 1; i >= 0; i--) {
 				// Delete last raw keydown event from query.
 				if (ds->key_event_buffer[i].pressed && ds->key_event_buffer[i].raw) {
@@ -828,7 +828,7 @@ void DisplayServerWeb::_ime_callback(int p_type, const String &p_text) {
 			// IME update.
 			if (ds->ime_active && ds->ime_started) {
 				ds->ime_text = p_text;
-				ds->ime_selection = Vector2i(ds->ime_text.length(), ds->ime_text.length());
+				ds->ime_selection = Hector2i(ds->ime_text.length(), ds->ime_text.length());
 				OS::get_singleton()->get_main_loop()->notification(MainLoop::NOTIFICATION_OS_IME_UPDATE);
 			}
 		} break;
@@ -838,7 +838,7 @@ void DisplayServerWeb::_ime_callback(int p_type, const String &p_text) {
 				ds->ime_started = false;
 
 				ds->ime_text = String();
-				ds->ime_selection = Vector2i();
+				ds->ime_selection = Hector2i();
 				OS::get_singleton()->get_main_loop()->notification(MainLoop::NOTIFICATION_OS_IME_UPDATE);
 
 				String text = p_text;
@@ -916,8 +916,8 @@ void DisplayServerWeb::process_joypads() {
 	}
 }
 
-Vector<String> DisplayServerWeb::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerWeb::get_rendering_drivers_func() {
+	Hector<String> drivers;
 #ifdef GLES3_ENABLED
 	drivers.push_back("opengl3");
 #endif
@@ -1193,8 +1193,8 @@ float DisplayServerWeb::screen_get_refresh_rate(int p_screen) const {
 	return SCREEN_REFRESH_RATE_FALLBACK; // Web doesn't have much of a need for the screen refresh rate, and there's no native way to do so.
 }
 
-Vector<DisplayServer::WindowID> DisplayServerWeb::get_window_list() const {
-	Vector<WindowID> ret;
+Hector<DisplayServer::WindowID> DisplayServerWeb::get_window_list() const {
+	Hector<WindowID> ret;
 	ret.push_back(MAIN_WINDOW_ID);
 	return ret;
 }

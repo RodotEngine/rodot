@@ -34,7 +34,7 @@
 #include "core/config/project_settings.h"
 #include "core/io/missing_resource.h"
 #include "core/io/resource_loader.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/2d/node_2d.h"
 #ifndef _3D_DISABLED
 #include "scene/3d/node_3d.h"
@@ -153,7 +153,7 @@ Node *SceneState::instantiate(GenEditState p_edit_state) const {
 		props = &variants[0];
 	}
 
-	//Vector<Variant> properties;
+	//Hector<Variant> properties;
 
 	const NodeData *nd = &nodes[0];
 
@@ -163,7 +163,7 @@ Node *SceneState::instantiate(GenEditState p_edit_state) const {
 
 	HashMap<Ref<Resource>, Ref<Resource>> resources_local_to_scene;
 
-	LocalVector<DeferredNodePathProperties> deferred_node_paths;
+	LocalHector<DeferredNodePathProperties> deferred_node_paths;
 
 	for (int i = 0; i < nc; i++) {
 		const NodeData &n = nd[i];
@@ -591,7 +591,7 @@ Node *SceneState::instantiate(GenEditState p_edit_state) const {
 		if (c.unbinds > 0) {
 			callable = callable.unbind(c.unbinds);
 		} else if (!c.binds.is_empty()) {
-			Vector<Variant> binds;
+			Hector<Variant> binds;
 			if (c.binds.size()) {
 				binds.resize(c.binds.size());
 				for (int j = 0; j < c.binds.size(); j++) {
@@ -758,7 +758,7 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 	// and only save what has changed
 
 	bool instantiated_by_owner = false;
-	Vector<SceneState::PackState> states_stack = PropertyUtils::get_node_states_stack(p_node, p_owner, &instantiated_by_owner);
+	Hector<SceneState::PackState> states_stack = PropertyUtils::get_node_states_stack(p_node, p_owner, &instantiated_by_owner);
 
 	if (!p_node->get_scene_file_path().is_empty() && p_node->get_owner() == p_owner && instantiated_by_owner) {
 		if (p_node->get_scene_instance_load_placeholder()) {
@@ -1067,7 +1067,7 @@ Error SceneState::_parse_connections(Node *p_owner, Node *p_node, HashMap<String
 				continue;
 			}
 
-			Vector<Variant> binds;
+			Hector<Variant> binds;
 			int unbinds = 0;
 			Callable base_callable;
 
@@ -1501,14 +1501,14 @@ void SceneState::set_bundled_scene(const Dictionary &p_dictionary) {
 	ERR_FAIL_COND_MSG(version > PACKED_SCENE_VERSION, "Save format version too new.");
 
 	const int node_count = p_dictionary["node_count"];
-	const Vector<int> snodes = p_dictionary["nodes"];
+	const Hector<int> snodes = p_dictionary["nodes"];
 	ERR_FAIL_COND(snodes.size() < node_count);
 
 	const int conn_count = p_dictionary["conn_count"];
-	const Vector<int> sconns = p_dictionary["conns"];
+	const Hector<int> sconns = p_dictionary["conns"];
 	ERR_FAIL_COND(sconns.size() < conn_count);
 
-	Vector<String> snames = p_dictionary["names"];
+	Hector<String> snames = p_dictionary["names"];
 	if (snames.size()) {
 		int namecount = snames.size();
 		names.resize(namecount);
@@ -1606,7 +1606,7 @@ void SceneState::set_bundled_scene(const Dictionary &p_dictionary) {
 }
 
 Dictionary SceneState::get_bundled_scene() const {
-	Vector<String> rnames;
+	Hector<String> rnames;
 	rnames.resize(names.size());
 
 	if (names.size()) {
@@ -1621,7 +1621,7 @@ Dictionary SceneState::get_bundled_scene() const {
 	d["names"] = rnames;
 	d["variants"] = variants;
 
-	Vector<int> rnodes;
+	Hector<int> rnodes;
 	d["node_count"] = nodes.size();
 
 	for (int i = 0; i < nodes.size(); i++) {
@@ -1648,7 +1648,7 @@ Dictionary SceneState::get_bundled_scene() const {
 
 	d["nodes"] = rnodes;
 
-	Vector<int> rconns;
+	Hector<int> rconns;
 	d["conn_count"] = connections.size();
 
 	for (int i = 0; i < connections.size(); i++) {
@@ -1745,9 +1745,9 @@ String SceneState::get_node_instance_placeholder(int p_idx) const {
 	return String();
 }
 
-Vector<StringName> SceneState::get_node_groups(int p_idx) const {
-	ERR_FAIL_INDEX_V(p_idx, nodes.size(), Vector<StringName>());
-	Vector<StringName> groups;
+Hector<StringName> SceneState::get_node_groups(int p_idx) const {
+	ERR_FAIL_INDEX_V(p_idx, nodes.size(), Hector<StringName>());
+	Hector<StringName> groups;
 	for (int i = 0; i < nodes[p_idx].groups.size(); i++) {
 		groups.push_back(names[nodes[p_idx].groups[i]]);
 	}
@@ -1765,7 +1765,7 @@ NodePath SceneState::get_node_path(int p_idx, bool p_for_parent) const {
 		}
 	}
 
-	Vector<StringName> sub_path;
+	Hector<StringName> sub_path;
 	NodePath base_path;
 	int nidx = p_idx;
 	while (true) {
@@ -1808,8 +1808,8 @@ StringName SceneState::get_node_property_name(int p_idx, int p_prop) const {
 	return names[nodes[p_idx].properties[p_prop].name & FLAG_PROP_NAME_MASK];
 }
 
-Vector<String> SceneState::get_node_deferred_nodepath_properties(int p_idx) const {
-	Vector<String> ret;
+Hector<String> SceneState::get_node_deferred_nodepath_properties(int p_idx) const {
+	Hector<String> ret;
 	ERR_FAIL_COND_V(p_idx < 0, ret);
 
 	if (p_idx < nodes.size()) {
@@ -1944,7 +1944,7 @@ bool SceneState::has_connection(const NodePath &p_node_from, const StringName &p
 	return false;
 }
 
-Vector<NodePath> SceneState::get_editable_instances() const {
+Hector<NodePath> SceneState::get_editable_instances() const {
 	return editable_instances;
 }
 
@@ -2014,7 +2014,7 @@ void SceneState::set_base_scene(int p_idx) {
 	base_scene_idx = p_idx;
 }
 
-void SceneState::add_connection(int p_from, int p_to, int p_signal, int p_method, int p_flags, int p_unbinds, const Vector<int> &p_binds) {
+void SceneState::add_connection(int p_from, int p_to, int p_signal, int p_method, int p_flags, int p_unbinds, const Hector<int> &p_binds) {
 	ERR_FAIL_INDEX(p_signal, names.size());
 	ERR_FAIL_INDEX(p_method, names.size());
 
@@ -2074,9 +2074,9 @@ HashSet<StringName> SceneState::get_all_groups() {
 	return ret;
 }
 
-Vector<String> SceneState::_get_node_groups(int p_idx) const {
-	Vector<StringName> groups = get_node_groups(p_idx);
-	Vector<String> ret;
+Hector<String> SceneState::_get_node_groups(int p_idx) const {
+	Hector<StringName> groups = get_node_groups(p_idx);
+	Hector<String> ret;
 
 	for (int i = 0; i < groups.size(); i++) {
 		ret.push_back(groups[i]);

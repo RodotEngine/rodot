@@ -14,7 +14,7 @@
 
 #include "platform.h"
 
-/* define isa namespace and ISA bitvector */
+/* define isa namespace and ISA bitHector */
 #if defined (__AVX512VL__)
 #  define isa avx512
 #  define ISA AVX512
@@ -164,7 +164,7 @@ namespace embree
   static const int NEON = CPU_FEATURE_NEON | CPU_FEATURE_SSE | CPU_FEATURE_SSE2;
   static const int NEON_2X = CPU_FEATURE_NEON_2X | AVX2;
 
-  /*! converts ISA bitvector into a string */
+  /*! converts ISA bitHector into a string */
   std::string stringOfISA(int features);
 
   /*! return the number of logical threads of the system */

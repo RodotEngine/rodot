@@ -57,10 +57,10 @@ protected:
 public:
 	PackedStringArray get_configuration_warnings() const override;
 
-	virtual Vector3 project_local_ray_normal(const Point2 &p_pos) const override;
-	virtual Point2 unproject_position(const Vector3 &p_pos) const override;
-	virtual Vector3 project_position(const Point2 &p_point, real_t p_z_depth) const override;
-	virtual Vector<Plane> get_frustum() const override;
+	virtual Hector3 project_local_ray_normal(const Point2 &p_pos) const override;
+	virtual Point2 unproject_position(const Hector3 &p_pos) const override;
+	virtual Hector3 project_position(const Point2 &p_point, real_t p_z_depth) const override;
+	virtual Hector<Plane> get_frustum() const override;
 
 	XRCamera3D();
 	~XRCamera3D();
@@ -140,14 +140,14 @@ protected:
 	void _button_pressed(const String &p_name);
 	void _button_released(const String &p_name);
 	void _input_float_changed(const String &p_name, float p_value);
-	void _input_vector2_changed(const String &p_name, Vector2 p_value);
+	void _input_Hector2_changed(const String &p_name, Hector2 p_value);
 	void _profile_changed(const String &p_role);
 
 public:
 	bool is_button_pressed(const StringName &p_name) const;
 	Variant get_input(const StringName &p_name) const;
 	float get_float(const StringName &p_name) const;
-	Vector2 get_vector2(const StringName &p_name) const;
+	Hector2 get_Hector2(const StringName &p_name) const;
 
 	XRPositionalTracker::TrackerHand get_tracker_hand() const;
 
@@ -164,13 +164,13 @@ class XRAnchor3D : public XRNode3D {
 	GDCLASS(XRAnchor3D, XRNode3D);
 
 private:
-	Vector3 size;
+	Hector3 size;
 
 protected:
 	static void _bind_methods();
 
 public:
-	Vector3 get_size() const;
+	Hector3 get_size() const;
 	Plane get_plane() const;
 
 	XRAnchor3D() {}
@@ -191,7 +191,7 @@ class XROrigin3D : public Node3D {
 
 private:
 	bool current = false;
-	static Vector<XROrigin3D *> origin_nodes; // all origin nodes in tree
+	static Hector<XROrigin3D *> origin_nodes; // all origin nodes in tree
 
 	void _set_current(bool p_enabled, bool p_update_others);
 

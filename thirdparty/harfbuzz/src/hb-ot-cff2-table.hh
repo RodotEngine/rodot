@@ -483,7 +483,7 @@ struct cff2
       blob = nullptr;
     }
 
-    hb_vector_t<uint16_t> *create_glyph_to_sid_map () const
+    hb_Hector_t<uint16_t> *create_glyph_to_sid_map () const
     {
       return nullptr;
     }
@@ -505,8 +505,8 @@ struct cff2
     const CFF2FDSelect		*fdSelect = nullptr;
     unsigned int		fdCount = 0;
 
-    hb_vector_t<cff2_font_dict_values_t>     fontDicts;
-    hb_vector_t<PRIVDICTVAL>  privateDicts;
+    hb_Hector_t<cff2_font_dict_values_t>     fontDicts;
+    hb_Hector_t<PRIVDICTVAL>  privateDicts;
 
     unsigned int	      num_glyphs = 0;
   };

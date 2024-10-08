@@ -31,7 +31,7 @@
 #ifndef MESH_INSTANCE_3D_H
 #define MESH_INSTANCE_3D_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/3d/visual_instance_3d.h"
 class Skin;
 class SkinReference;
@@ -46,9 +46,9 @@ protected:
 	Ref<SkinReference> skin_ref;
 	NodePath skeleton_path = NodePath("..");
 
-	LocalVector<float> blend_shape_tracks;
+	LocalHector<float> blend_shape_tracks;
 	HashMap<StringName, int> blend_shape_properties;
-	Vector<Ref<Material>> surface_override_materials;
+	Hector<Ref<Material>> surface_override_materials;
 
 	void _mesh_changed();
 	void _resolve_skeleton_path();

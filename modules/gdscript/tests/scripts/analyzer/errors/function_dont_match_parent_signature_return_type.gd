@@ -6,5 +6,5 @@ class Parent:
 		return 0
 
 class Child extends Parent:
-	func my_function() -> Vector2:
-		return Vector2()
+	func my_function() -> Hector2:
+		return Hector2()

@@ -14,7 +14,7 @@ namespace embree
 
   template<typename T> struct LinearSpace3
   {
-    typedef T Vector;
+    typedef T Hector;
     typedef typename T::Scalar Scalar;
 
     /*! default matrix constructor */
@@ -25,8 +25,8 @@ namespace embree
 
     template<typename L1> __forceinline LinearSpace3( const LinearSpace3<L1>& s ) : vx(s.vx), vy(s.vy), vz(s.vz) {}
 
-    /*! matrix construction from column vectors */
-    __forceinline LinearSpace3(const Vector& vx, const Vector& vy, const Vector& vz)
+    /*! matrix construction from column Hectors */
+    __forceinline LinearSpace3(const Hector& vx, const Hector& vy, const Hector& vz)
       : vx(vx), vy(vy), vz(vz) {}
 
     /*! construction from quaternion */
@@ -54,13 +54,13 @@ namespace embree
     __forceinline const LinearSpace3 transposed() const { return LinearSpace3(vx.x,vx.y,vx.z,vy.x,vy.y,vy.z,vz.x,vz.y,vz.z); }
 
     /*! returns first row of matrix */
-    __forceinline Vector row0() const { return Vector(vx.x,vy.x,vz.x); }
+    __forceinline Hector row0() const { return Hector(vx.x,vy.x,vz.x); }
 
     /*! returns second row of matrix */
-    __forceinline Vector row1() const { return Vector(vx.y,vy.y,vz.y); }
+    __forceinline Hector row1() const { return Hector(vx.y,vy.y,vz.y); }
 
     /*! returns third row of matrix */
-    __forceinline Vector row2() const { return Vector(vx.z,vy.z,vz.z); }
+    __forceinline Hector row2() const { return Hector(vx.z,vy.z,vz.z); }
 
     ////////////////////////////////////////////////////////////////////////////////
     /// Constants
@@ -70,15 +70,15 @@ namespace embree
     __forceinline LinearSpace3( OneTy ) : vx(one, zero, zero), vy(zero, one, zero), vz(zero, zero, one) {}
 
     /*! return matrix for scaling */
-    static __forceinline LinearSpace3 scale(const Vector& s) {
+    static __forceinline LinearSpace3 scale(const Hector& s) {
       return LinearSpace3(s.x,   0,   0,
                           0  , s.y,   0,
                           0  ,   0, s.z);
     }
 
     /*! return matrix for rotation around arbitrary axis */
-    static __forceinline LinearSpace3 rotate(const Vector& _u, const Scalar& r) {
-      Vector u = normalize(_u);
+    static __forceinline LinearSpace3 rotate(const Hector& _u, const Scalar& r) {
+      Hector u = normalize(_u);
       Scalar s = sin(r), c = cos(r);
       return LinearSpace3(u.x*u.x+(1-u.x*u.x)*c,  u.x*u.y*(1-c)-u.z*s,    u.x*u.z*(1-c)+u.y*s,
                           u.x*u.y*(1-c)+u.z*s,    u.y*u.y+(1-u.y*u.y)*c,  u.y*u.z*(1-c)-u.x*s,
@@ -87,8 +87,8 @@ namespace embree
 
   public:
 
-    /*! the column vectors of the matrix */
-    Vector vx,vy,vz;
+    /*! the column Hectors of the matrix */
+    Hector vx,vy,vz;
   };
 
 #if !defined(__SYCL_DEVICE_ONLY__)
@@ -157,8 +157,8 @@ namespace embree
   template<typename T> __forceinline LinearSpace3<T>& operator /=( LinearSpace3<T>& a, const LinearSpace3<T>& b ) { return a = a / b; }
 
   template<typename T> __forceinline T       xfmPoint (const LinearSpace3<T>& s, const T      & a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z)*s.vz)); }
-  template<typename T> __forceinline T       xfmVector(const LinearSpace3<T>& s, const T      & a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z)*s.vz)); }
-  template<typename T> __forceinline T       xfmNormal(const LinearSpace3<T>& s, const T      & a) { return xfmVector(s.inverse().transposed(),a); }
+  template<typename T> __forceinline T       xfmHector(const LinearSpace3<T>& s, const T      & a) { return madd(T(a.x),s.vx,madd(T(a.y),s.vy,T(a.z)*s.vz)); }
+  template<typename T> __forceinline T       xfmNormal(const LinearSpace3<T>& s, const T      & a) { return xfmHector(s.inverse().transposed(),a); }
 
   ////////////////////////////////////////////////////////////////////////////////
   /// Comparison Operators

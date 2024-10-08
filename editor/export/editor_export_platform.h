@@ -53,7 +53,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	typedef Error (*EditorExportSaveFunction)(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	typedef Error (*EditorExportSaveFunction)(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 	typedef Error (*EditorExportSaveSharedObject)(void *p_userdata, const SharedObject &p_so);
 
 	enum DebugFlags {
@@ -82,7 +82,7 @@ private:
 		uint64_t ofs = 0;
 		uint64_t size = 0;
 		bool encrypted = false;
-		Vector<uint8_t> md5;
+		Hector<uint8_t> md5;
 		CharString path_utf8;
 
 		bool operator<(const SavedData &p_data) const {
@@ -92,32 +92,32 @@ private:
 
 	struct PackData {
 		Ref<FileAccess> f;
-		Vector<SavedData> file_ofs;
+		Hector<SavedData> file_ofs;
 		EditorProgress *ep = nullptr;
-		Vector<SharedObject> *so_files = nullptr;
+		Hector<SharedObject> *so_files = nullptr;
 	};
 
 	struct ZipData {
 		void *zip = nullptr;
 		EditorProgress *ep = nullptr;
-		Vector<SharedObject> *so_files = nullptr;
+		Hector<SharedObject> *so_files = nullptr;
 		int file_count = 0;
 	};
 
-	Vector<ExportMessage> messages;
+	Hector<ExportMessage> messages;
 
 	void _export_find_resources(EditorFileSystemDirectory *p_dir, HashSet<String> &p_paths);
 	void _export_find_customized_resources(const Ref<EditorExportPreset> &p_preset, EditorFileSystemDirectory *p_dir, EditorExportPreset::FileExportMode p_mode, HashSet<String> &p_paths);
 	void _export_find_dependencies(const String &p_path, HashSet<String> &p_paths);
 
-	static bool _check_hash(const uint8_t *p_hash, const Vector<uint8_t> &p_data);
+	static bool _check_hash(const uint8_t *p_hash, const Hector<uint8_t> &p_data);
 
-	static Error _save_pack_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
-	static Error _save_pack_patch_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	static Error _save_pack_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
+	static Error _save_pack_patch_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 	static Error _pack_add_shared_object(void *p_userdata, const SharedObject &p_so);
 
-	static Error _save_zip_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
-	static Error _save_zip_patch_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	static Error _save_zip_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
+	static Error _save_zip_patch_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 	static Error _zip_add_shared_object(void *p_userdata, const SharedObject &p_so);
 
 	struct ScriptCallbackData {
@@ -125,10 +125,10 @@ private:
 		Callable so_cb;
 	};
 
-	static Error _script_save_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	static Error _script_save_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key);
 	static Error _script_add_shared_object(void *p_userdata, const SharedObject &p_so);
 
-	void _edit_files_with_filter(Ref<DirAccess> &da, const Vector<String> &p_filters, HashSet<String> &r_list, bool exclude);
+	void _edit_files_with_filter(Ref<DirAccess> &da, const Hector<String> &p_filters, HashSet<String> &r_list, bool exclude);
 	void _edit_filter_list(HashSet<String> &r_list, const String &p_filter, bool exclude);
 
 	struct FileExportCache {
@@ -138,13 +138,13 @@ private:
 		bool used = false;
 	};
 
-	bool _export_customize_dictionary(Dictionary &dict, LocalVector<Ref<EditorExportPlugin>> &customize_resources_plugins);
-	bool _export_customize_array(Array &array, LocalVector<Ref<EditorExportPlugin>> &customize_resources_plugins);
-	bool _export_customize_object(Object *p_object, LocalVector<Ref<EditorExportPlugin>> &customize_resources_plugins);
-	bool _export_customize_scene_resources(Node *p_root, Node *p_node, LocalVector<Ref<EditorExportPlugin>> &customize_resources_plugins);
+	bool _export_customize_dictionary(Dictionary &dict, LocalHector<Ref<EditorExportPlugin>> &customize_resources_plugins);
+	bool _export_customize_array(Array &array, LocalHector<Ref<EditorExportPlugin>> &customize_resources_plugins);
+	bool _export_customize_object(Object *p_object, LocalHector<Ref<EditorExportPlugin>> &customize_resources_plugins);
+	bool _export_customize_scene_resources(Node *p_root, Node *p_node, LocalHector<Ref<EditorExportPlugin>> &customize_resources_plugins);
 	bool _is_editable_ancestor(Node *p_root, Node *p_node);
 
-	String _export_customize(const String &p_path, LocalVector<Ref<EditorExportPlugin>> &customize_resources_plugins, LocalVector<Ref<EditorExportPlugin>> &customize_scenes_plugins, HashMap<String, FileExportCache> &export_cache, const String &export_base_path, bool p_force_save);
+	String _export_customize(const String &p_path, LocalHector<Ref<EditorExportPlugin>> &customize_resources_plugins, LocalHector<Ref<EditorExportPlugin>> &customize_scenes_plugins, HashMap<String, FileExportCache> &export_cache, const String &export_base_path, bool p_force_save);
 	String _get_script_encryption_key(const Ref<EditorExportPreset> &p_preset) const;
 
 protected:
@@ -169,17 +169,17 @@ protected:
 
 	bool exists_export_template(const String &p_template_file_name, String *r_err) const;
 	String find_export_template(const String &p_template_file_name, String *r_err = nullptr) const;
-	Vector<String> gen_export_flags(BitField<EditorExportPlatform::DebugFlags> p_flags);
+	Hector<String> gen_export_flags(BitField<EditorExportPlatform::DebugFlags> p_flags);
 
 	virtual void zip_folder_recursive(zipFile &p_zip, const String &p_root_path, const String &p_folder, const String &p_pkg_name);
 
-	Error _ssh_run_on_remote(const String &p_host, const String &p_port, const Vector<String> &p_ssh_args, const String &p_cmd_args, Array r_output = Array(), int p_port_fwd = -1) const {
+	Error _ssh_run_on_remote(const String &p_host, const String &p_port, const Hector<String> &p_ssh_args, const String &p_cmd_args, Array r_output = Array(), int p_port_fwd = -1) const {
 		String pipe;
 		Error err = ssh_run_on_remote(p_host, p_port, p_ssh_args, p_cmd_args, &pipe, p_port_fwd);
 		r_output.push_back(pipe);
 		return err;
 	}
-	OS::ProcessID _ssh_run_on_remote_no_wait(const String &p_host, const String &p_port, const Vector<String> &p_ssh_args, const String &p_cmd_args, int p_port_fwd = -1) const {
+	OS::ProcessID _ssh_run_on_remote_no_wait(const String &p_host, const String &p_port, const Hector<String> &p_ssh_args, const String &p_cmd_args, int p_port_fwd = -1) const {
 		OS::ProcessID pid = 0;
 		Error err = ssh_run_on_remote_no_wait(p_host, p_port, p_ssh_args, p_cmd_args, &pid, p_port_fwd);
 		if (err != OK) {
@@ -189,11 +189,11 @@ protected:
 		}
 	}
 
-	Error ssh_run_on_remote(const String &p_host, const String &p_port, const Vector<String> &p_ssh_args, const String &p_cmd_args, String *r_out = nullptr, int p_port_fwd = -1) const;
-	Error ssh_run_on_remote_no_wait(const String &p_host, const String &p_port, const Vector<String> &p_ssh_args, const String &p_cmd_args, OS::ProcessID *r_pid = nullptr, int p_port_fwd = -1) const;
-	Error ssh_push_to_remote(const String &p_host, const String &p_port, const Vector<String> &p_scp_args, const String &p_src_file, const String &p_dst_file) const;
+	Error ssh_run_on_remote(const String &p_host, const String &p_port, const Hector<String> &p_ssh_args, const String &p_cmd_args, String *r_out = nullptr, int p_port_fwd = -1) const;
+	Error ssh_run_on_remote_no_wait(const String &p_host, const String &p_port, const Hector<String> &p_ssh_args, const String &p_cmd_args, OS::ProcessID *r_pid = nullptr, int p_port_fwd = -1) const;
+	Error ssh_push_to_remote(const String &p_host, const String &p_port, const Hector<String> &p_scp_args, const String &p_src_file, const String &p_dst_file) const;
 
-	Error _load_patches(const Vector<String> &p_patches);
+	Error _load_patches(const Hector<String> &p_patches);
 	void _unload_patches();
 
 public:
@@ -271,7 +271,7 @@ public:
 		return worst_type;
 	}
 
-	static Vector<String> get_forced_export_files();
+	static Hector<String> get_forced_export_files();
 
 	virtual bool fill_log_messages(RichTextLabel *p_log, Error p_err);
 
@@ -295,11 +295,11 @@ public:
 	Dictionary _save_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path);
 	Dictionary _save_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path);
 
-	Error save_pack(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Vector<SharedObject> *p_so_files = nullptr, EditorExportSaveFunction p_save_func = nullptr, bool p_embed = false, int64_t *r_embedded_start = nullptr, int64_t *r_embedded_size = nullptr);
-	Error save_zip(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Vector<SharedObject> *p_so_files = nullptr, EditorExportSaveFunction p_save_func = nullptr);
+	Error save_pack(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Hector<SharedObject> *p_so_files = nullptr, EditorExportSaveFunction p_save_func = nullptr, bool p_embed = false, int64_t *r_embedded_start = nullptr, int64_t *r_embedded_size = nullptr);
+	Error save_zip(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Hector<SharedObject> *p_so_files = nullptr, EditorExportSaveFunction p_save_func = nullptr);
 
-	Error save_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Vector<SharedObject> *p_so_files = nullptr, bool p_embed = false, int64_t *r_embedded_start = nullptr, int64_t *r_embedded_size = nullptr);
-	Error save_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Vector<SharedObject> *p_so_files = nullptr);
+	Error save_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Hector<SharedObject> *p_so_files = nullptr, bool p_embed = false, int64_t *r_embedded_start = nullptr, int64_t *r_embedded_size = nullptr);
+	Error save_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, Hector<SharedObject> *p_so_files = nullptr);
 
 	virtual bool poll_export() { return false; }
 	virtual int get_options_count() const { return 0; }
@@ -321,8 +321,8 @@ public:
 	virtual Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags = 0) = 0;
 	virtual Error export_pack(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
 	virtual Error export_zip(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
-	virtual Error export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches = Vector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
-	virtual Error export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches = Vector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
+	virtual Error export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Hector<String> &p_patches = Hector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
+	virtual Error export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Hector<String> &p_patches = Hector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
 	virtual void get_platform_features(List<String> *r_features) const = 0;
 	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) {}
 	virtual String get_debug_protocol() const { return "tcp://"; }

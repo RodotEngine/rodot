@@ -79,7 +79,7 @@ public:
 	virtual void free_menu(const RID &p_rid);
 
 	virtual Size2 get_size(const RID &p_rid) const;
-	virtual void popup(const RID &p_rid, const Vector2i &p_position);
+	virtual void popup(const RID &p_rid, const Hector2i &p_position);
 
 	virtual void set_interface_direction(const RID &p_rid, bool p_is_rtl);
 

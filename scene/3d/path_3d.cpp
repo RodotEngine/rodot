@@ -112,28 +112,28 @@ void Path3D::_update_debug_mesh() {
 	const int sample_count = int(length / interval) + 2;
 	interval = length / (sample_count - 1);
 
-	Vector<Vector3> ribbon;
+	Hector<Hector3> ribbon;
 	ribbon.resize(sample_count);
-	Vector3 *ribbon_ptr = ribbon.ptrw();
+	Hector3 *ribbon_ptr = ribbon.ptrw();
 
-	Vector<Vector3> bones;
+	Hector<Hector3> bones;
 	bones.resize(sample_count * 4);
-	Vector3 *bones_ptr = bones.ptrw();
+	Hector3 *bones_ptr = bones.ptrw();
 
 	for (int i = 0; i < sample_count; i++) {
 		const Transform3D r = curve->sample_baked_with_rotation(i * interval, true, true);
 
-		const Vector3 p1 = r.origin;
-		const Vector3 side = r.basis.get_column(0);
-		const Vector3 up = r.basis.get_column(1);
-		const Vector3 forward = r.basis.get_column(2);
+		const Hector3 p1 = r.origin;
+		const Hector3 side = r.basis.get_column(0);
+		const Hector3 up = r.basis.get_column(1);
+		const Hector3 forward = r.basis.get_column(2);
 
 		// Path3D as a ribbon.
 		ribbon_ptr[i] = p1;
 
 		// Fish Bone.
-		const Vector3 p_left = p1 + (side + forward - up * 0.3) * 0.06;
-		const Vector3 p_right = p1 + (-side + forward - up * 0.3) * 0.06;
+		const Hector3 p_left = p1 + (side + forward - up * 0.3) * 0.06;
+		const Hector3 p_right = p1 + (-side + forward - up * 0.3) * 0.06;
 
 		const int bone_idx = i * 4;
 
@@ -234,16 +234,16 @@ void PathFollow3D::update_transform() {
 	Transform3D t;
 
 	if (rotation_mode == ROTATION_NONE) {
-		Vector3 pos = c->sample_baked(progress, cubic);
+		Hector3 pos = c->sample_baked(progress, cubic);
 		t.origin = pos;
 	} else {
 		t = c->sample_baked_with_rotation(progress, cubic, false);
-		Vector3 tangent = -t.basis.get_column(2); // Retain tangent for applying tilt.
+		Hector3 tangent = -t.basis.get_column(2); // Retain tangent for applying tilt.
 		t = PathFollow3D::correct_posture(t, rotation_mode);
 
 		// Switch Z+ and Z- if necessary.
 		if (use_model_front) {
-			t.basis *= Basis::from_scale(Vector3(-1.0, 1.0, -1.0));
+			t.basis *= Basis::from_scale(Hector3(-1.0, 1.0, -1.0));
 		}
 
 		// Apply tilt *after* correct_posture().
@@ -256,8 +256,8 @@ void PathFollow3D::update_transform() {
 	}
 
 	// Apply offset and scale.
-	Vector3 scale = get_transform().basis.get_scale();
-	t.translate_local(Vector3(h_offset, v_offset, 0));
+	Hector3 scale = get_transform().basis.get_scale();
+	t.translate_local(Hector3(h_offset, v_offset, 0));
 	t.basis.scale_local(scale);
 
 	set_transform(t);
@@ -306,8 +306,8 @@ PackedStringArray PathFollow3D::get_configuration_warnings() const {
 			warnings.push_back(RTR("PathFollow3D only works when set as a child of a Path3D node."));
 		} else {
 			Path3D *p = Object::cast_to<Path3D>(get_parent());
-			if (p->get_curve().is_valid() && !p->get_curve()->is_up_vector_enabled() && rotation_mode == ROTATION_ORIENTED) {
-				warnings.push_back(RTR("PathFollow3D's ROTATION_ORIENTED requires \"Up Vector\" to be enabled in its parent Path3D's Curve resource."));
+			if (p->get_curve().is_valid() && !p->get_curve()->is_up_Hector_enabled() && rotation_mode == ROTATION_ORIENTED) {
+				warnings.push_back(RTR("PathFollow3D's ROTATION_ORIENTED requires \"Up Hector\" to be enabled in its parent Path3D's Curve resource."));
 			}
 		}
 	}
@@ -323,13 +323,13 @@ Transform3D PathFollow3D::correct_posture(Transform3D p_transform, PathFollow3D:
 		// Clear rotation.
 		t.basis = Basis();
 	} else if (p_rotation_mode == PathFollow3D::ROTATION_ORIENTED) {
-		Vector3 tangent = -t.basis.get_column(2);
+		Hector3 tangent = -t.basis.get_column(2);
 
 		// Y-axis points up by default.
 		t.basis = Basis::looking_at(tangent);
 	} else {
 		// Lock some euler axes.
-		Vector3 euler = t.basis.get_euler_normalized(EulerOrder::YXZ);
+		Hector3 euler = t.basis.get_euler_normalized(EulerOrder::YXZ);
 		if (p_rotation_mode == PathFollow3D::ROTATION_Y) {
 			// Only Y-axis allowed.
 			euler[0] = 0;

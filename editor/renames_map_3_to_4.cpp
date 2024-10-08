@@ -64,8 +64,8 @@ const char *RenamesMap3To4::enum_renames[][2] = {
 	{ "TYPE_REAL_ARRAY", "TYPE_PACKED_FLOAT32_ARRAY" },
 	{ "TYPE_STRING_ARRAY", "TYPE_PACKED_STRING_ARRAY" },
 	{ "TYPE_TRANSFORM", "TYPE_TRANSFORM3D" },
-	{ "TYPE_VECTOR2_ARRAY", "TYPE_PACKED_VECTOR2_ARRAY" },
-	{ "TYPE_VECTOR3_ARRAY", "TYPE_PACKED_VECTOR3_ARRAY" },
+	{ "TYPE_HECTOR2_ARRAY", "TYPE_PACKED_Hector2_ARRAY" },
+	{ "TYPE_HECTOR3_ARRAY", "TYPE_PACKED_Hector3_ARRAY" },
 
 	// { "FLAG_MAX", "PARTICLE_FLAG_MAX" }, // CPUParticles2D -- Used in more classes.
 	{ "ALIGN_BEGIN", "ALIGNMENT_BEGIN" }, // AspectRatioContainer
@@ -105,7 +105,7 @@ const char *RenamesMap3To4::enum_renames[][2] = {
 	{ "FORMAT_PVRTC2A", "FORMAT_PVRTC1_2A" }, // Image
 	{ "FORMAT_PVRTC4", "FORMAT_PVRTC1_4" }, // Image
 	{ "FORMAT_PVRTC4A", "FORMAT_PVRTC1_4A" }, // Image
-	{ "FUNC_FRAC", "FUNC_FRACT" }, // VisualShaderNodeVectorFunc
+	{ "FUNC_FRAC", "FUNC_FRACT" }, // VisualShaderNodeHectorFunc
 	{ "INSTANCE_LIGHTMAP_CAPTURE", "INSTANCE_LIGHTMAP" }, // RenderingServer
 	{ "JOINT_6DOF", "JOINT_TYPE_6DOF" }, // PhysicsServer3D
 	{ "JOINT_CONE_TWIST", "JOINT_TYPE_CONE_TWIST" }, // PhysicsServer3D
@@ -166,7 +166,7 @@ const char *RenamesMap3To4::gdscript_function_renames[][2] = {
 	// { "add_animation", "add_animation_library" }, // AnimationPlayer -- Breaks SpriteFrames (and isn't a correct conversion).
 	// { "create_gizmo", "_create_gizmo" }, // EditorNode3DGizmoPlugin -- May be used.
 	// { "get_dependencies", "_get_dependencies" }, // ResourceFormatLoader -- Breaks ResourceLoader.
-	// { "get_extents", "get_size" }, // BoxShape, RectangleShape -- Breaks Decal, VoxelGI, GPUParticlesCollisionBox, GPUParticlesCollisionSDF, GPUParticlesCollisionHeightField, GPUParticlesAttractorBox, GPUParticlesAttractorVectorField, FogVolume
+	// { "get_extents", "get_size" }, // BoxShape, RectangleShape -- Breaks Decal, VoxelGI, GPUParticlesCollisionBox, GPUParticlesCollisionSDF, GPUParticlesCollisionHeightField, GPUParticlesAttractorBox, GPUParticlesAttractorHectorField, FogVolume
 	// { "get_h_offset", "get_drag_horizontal_offset" }, // Camera2D -- Breaks PathFollow, Camera.
 	// { "get_mode", "get_file_mode" }, // FileDialog -- Breaks Panel, Shader, CSGPolygon, TileMap.
 	// { "get_motion", "get_travel" }, // PhysicsTestMotionResult2D -- Breaks ParallaxLayer.
@@ -316,7 +316,7 @@ const char *RenamesMap3To4::gdscript_function_renames[][2] = {
 	{ "get_frame_color", "get_color" }, // ColorRect
 	{ "get_global_rate_scale", "get_playback_speed_scale" }, // AudioServer
 	{ "get_gravity_distance_scale", "get_gravity_point_unit_distance" }, // Area2D, Area3D
-	{ "get_gravity_vector", "get_gravity_direction" }, // Area(2D/3D)
+	{ "get_gravity_Hector", "get_gravity_direction" }, // Area(2D/3D)
 	{ "get_h_scrollbar", "get_h_scroll_bar" }, //ScrollContainer
 	{ "get_hand", "get_tracker_hand" }, // XRPositionalTracker
 	{ "get_handle_name", "_get_handle_name" }, // EditorNode3DGizmo
@@ -525,7 +525,7 @@ const char *RenamesMap3To4::gdscript_function_renames[][2] = {
 	{ "set_frame_color", "set_color" }, // ColorRect
 	{ "set_global_rate_scale", "set_playback_speed_scale" }, // AudioServer
 	{ "set_gravity_distance_scale", "set_gravity_point_unit_distance" }, // Area2D, Area3D
-	{ "set_gravity_vector", "set_gravity_direction" }, // Area2D, Area3D
+	{ "set_gravity_Hector", "set_gravity_direction" }, // Area2D, Area3D
 	{ "set_h_drag_enabled", "set_drag_horizontal_enabled" }, // Camera2D
 	{ "set_icon_align", "set_icon_alignment" }, // Button
 	{ "set_interior_ambient", "set_ambient_color" }, // ReflectionProbe
@@ -599,7 +599,7 @@ const char *RenamesMap3To4::gdscript_function_renames[][2] = {
 	// { "empty", "is_empty" }, // Array -- Used as custom rule. Be careful, this will be used everywhere.
 	// { "invert", "reverse" }, // Array -- Give it a check. Be careful, this will be used everywhere.
 	// { "remove", "remove_at" }, // Array -- Breaks Directory and several more.
-	{ "clamped", "limit_length" }, // Vector2
+	{ "clamped", "limit_length" }, // Hector2
 	{ "get_rotation_quat", "get_rotation_quaternion" }, // Basis
 	{ "grow_margin", "grow_side" }, // Rect2
 	{ "is_abs_path", "is_absolute_path" }, // String
@@ -738,7 +738,7 @@ const char *RenamesMap3To4::csharp_function_renames[][2] = {
 	{ "GetFrameColor", "GetColor" }, // ColorRect
 	{ "GetGlobalRateScale", "GetPlaybackSpeedScale" }, // AudioServer
 	{ "GetGravityDistanceScale", "GetGravityPointDistanceScale" }, // Area2D
-	{ "GetGravityVector", "GetGravityDirection" }, // Area2D
+	{ "GetGravityHector", "GetGravityDirection" }, // Area2D
 	{ "GetHScrollbar", "GetHScrollBar" }, // ScrollContainer
 	{ "GetHand", "GetTrackerHand" }, // XRPositionalTracker
 	{ "GetHandleName", "_GetHandleName" }, // EditorNode3DGizmo
@@ -937,7 +937,7 @@ const char *RenamesMap3To4::csharp_function_renames[][2] = {
 	{ "SetFrameColor", "SetColor" }, // ColorRect
 	{ "SetGlobalRateScale", "SetPlaybackSpeedScale" }, // AudioServer
 	{ "SetGravityDistanceScale", "SetGravityPointDistanceScale" }, // Area2D
-	{ "SetGravityVector", "SetGravityDirection" }, // Area2D
+	{ "SetGravityHector", "SetGravityDirection" }, // Area2D
 	{ "SetHDragEnabled", "SetDragHorizontalEnabled" }, // Camera2D
 	{ "SetIconAlign", "SetIconAlignment" }, // Button
 	{ "SetInteriorAmbient", "SetAmbientColor" }, // ReflectionProbe
@@ -1007,7 +1007,7 @@ const char *RenamesMap3To4::csharp_function_renames[][2] = {
 	{ "WorldToMap", "LocalToMap" }, // TileMap, GridMap
 
 	// Builtin types
-	{ "Clamped", "LimitLength" }, // Vector2
+	{ "Clamped", "LimitLength" }, // Hector2
 	{ "GetRotationQuat", "GetRotationQuaternion" }, // Basis
 	{ "GrowMargin", "GrowSide" }, // Rect2
 	{ "IsAbsPath", "IsAbsolutePath" }, // String
@@ -1162,7 +1162,7 @@ const char *RenamesMap3To4::gdscript_properties_renames[][2] = {
 	{ "tab_align", "tab_alignment" }, // TabContainer
 	{ "table_hseparation", "table_h_separation" }, // Theme
 	{ "table_vseparation", "table_v_separation" }, // Theme
-	{ "tangent", "orthogonal" }, // Vector2
+	{ "tangent", "orthogonal" }, // Hector2
 	{ "target_location", "target_position" }, // NavigationAgent2D, NavigationAgent3D
 	{ "toplevel", "top_level" }, // Node
 	{ "translation", "position" }, // Node3D
@@ -1229,7 +1229,7 @@ const char *RenamesMap3To4::csharp_properties_renames[][2] = {
 	{ "Oneshot", "OneShot" }, // AnimatedTexture
 	{ "OutOfRangeMode", "MaxPolyphony" }, // AudioStreamPlayer3D
 	{ "PauseMode", "ProcessMode" }, // Node
-	{ "Perpendicular", "Orthogonal" }, // Vector2 - Only exists in C#
+	{ "Perpendicular", "Orthogonal" }, // Hector2 - Only exists in C#
 	{ "PhysicalScancode", "PhysicalKeycode" }, // InputEventKey
 	{ "PopupExclusive", "Exclusive" }, // Window
 	{ "ProximityFadeEnable", "ProximityFadeEnabled" }, // Material
@@ -1260,7 +1260,7 @@ const char *RenamesMap3To4::csharp_properties_renames[][2] = {
 	{ "TabAlign", "TabAlignment" }, // TabContainer
 	{ "TableHseparation", "TableHSeparation" }, // Theme
 	{ "TableVseparation", "TableVSeparation" }, // Theme
-	{ "Tangent", "Orthogonal" }, // Vector2
+	{ "Tangent", "Orthogonal" }, // Hector2
 	{ "TargetLocation", "TargetPosition" }, // NavigationAgent2D, NavigationAgent3D
 	{ "Toplevel", "TopLevel" }, // Node
 	{ "Translation", "Position" }, // Node3D
@@ -1429,8 +1429,8 @@ const char *RenamesMap3To4::builtin_types_renames[][2] = {
 	{ "PoolIntArray", "PackedInt32Array" },
 	{ "PoolRealArray", "PackedFloat32Array" },
 	{ "PoolStringArray", "PackedStringArray" },
-	{ "PoolVector2Array", "PackedVector2Array" },
-	{ "PoolVector3Array", "PackedVector3Array" },
+	{ "PoolHector2Array", "PackedHector2Array" },
+	{ "PoolHector3Array", "PackedHector3Array" },
 	{ "Quat", "Quaternion" },
 	{ "Transform", "Transform3D" },
 
@@ -1636,12 +1636,12 @@ const char *RenamesMap3To4::class_renames[][2] = {
 	{ "VisualShaderNodeScalarSwitch", "VisualShaderNodeSwitch" },
 	{ "VisualShaderNodeScalarTransformMult", "VisualShaderNodeTransformOp" },
 	{ "VisualShaderNodeTransformMult", "VisualShaderNode" },
-	{ "VisualShaderNodeVectorClamp", "VisualShaderNodeClamp" },
-	{ "VisualShaderNodeVectorInterp", "VisualShaderNodeMix" },
-	{ "VisualShaderNodeVectorScalarMix", "VisualShaderNodeMix" },
-	{ "VisualShaderNodeVectorScalarSmoothStep", "VisualShaderNodeSmoothStep" },
-	{ "VisualShaderNodeVectorScalarStep", "VisualShaderNodeStep" },
-	{ "VisualShaderNodeVectorSmoothStep", "VisualShaderNodeSmoothStep" },
+	{ "VisualShaderNodeHectorClamp", "VisualShaderNodeClamp" },
+	{ "VisualShaderNodeHectorInterp", "VisualShaderNodeMix" },
+	{ "VisualShaderNodeHectorScalarMix", "VisualShaderNodeMix" },
+	{ "VisualShaderNodeHectorScalarSmoothStep", "VisualShaderNodeSmoothStep" },
+	{ "VisualShaderNodeHectorScalarStep", "VisualShaderNodeStep" },
+	{ "VisualShaderNodeHectorSmoothStep", "VisualShaderNodeSmoothStep" },
 	{ "VisualShaderNodeBooleanUniform", "VisualShaderNodeBooleanParameter" },
 	{ "VisualShaderNodeColorUniform", "VisualShaderNodeColorParameter" },
 	{ "VisualShaderNodeScalarUniform", "VisualShaderNodeFloatParameter" },

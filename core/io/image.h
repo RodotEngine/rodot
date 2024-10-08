@@ -44,16 +44,16 @@
 class Image;
 
 typedef Error (*SavePNGFunc)(const String &p_path, const Ref<Image> &p_img);
-typedef Vector<uint8_t> (*SavePNGBufferFunc)(const Ref<Image> &p_img);
+typedef Hector<uint8_t> (*SavePNGBufferFunc)(const Ref<Image> &p_img);
 typedef Error (*SaveJPGFunc)(const String &p_path, const Ref<Image> &p_img, float p_quality);
-typedef Vector<uint8_t> (*SaveJPGBufferFunc)(const Ref<Image> &p_img, float p_quality);
+typedef Hector<uint8_t> (*SaveJPGBufferFunc)(const Ref<Image> &p_img, float p_quality);
 typedef Ref<Image> (*ImageMemLoadFunc)(const uint8_t *p_png, int p_size);
 typedef Ref<Image> (*ScalableImageMemLoadFunc)(const uint8_t *p_data, int p_size, float p_scale);
 typedef Error (*SaveWebPFunc)(const String &p_path, const Ref<Image> &p_img, const bool p_lossy, const float p_quality);
-typedef Vector<uint8_t> (*SaveWebPBufferFunc)(const Ref<Image> &p_img, const bool p_lossy, const float p_quality);
+typedef Hector<uint8_t> (*SaveWebPBufferFunc)(const Ref<Image> &p_img, const bool p_lossy, const float p_quality);
 
 typedef Error (*SaveEXRFunc)(const String &p_path, const Ref<Image> &p_img, bool p_grayscale);
-typedef Vector<uint8_t> (*SaveEXRBufferFunc)(const Ref<Image> &p_img, bool p_grayscale);
+typedef Hector<uint8_t> (*SaveEXRBufferFunc)(const Ref<Image> &p_img, bool p_grayscale);
 
 class Image : public Resource {
 	GDCLASS(Image, Resource);
@@ -168,13 +168,13 @@ public:
 	static void (*_image_decompress_etc2)(Image *);
 	static void (*_image_decompress_astc)(Image *);
 
-	static Vector<uint8_t> (*webp_lossy_packer)(const Ref<Image> &p_image, float p_quality);
-	static Vector<uint8_t> (*webp_lossless_packer)(const Ref<Image> &p_image);
-	static Ref<Image> (*webp_unpacker)(const Vector<uint8_t> &p_buffer);
-	static Vector<uint8_t> (*png_packer)(const Ref<Image> &p_image);
-	static Ref<Image> (*png_unpacker)(const Vector<uint8_t> &p_buffer);
-	static Vector<uint8_t> (*basis_universal_packer)(const Ref<Image> &p_image, UsedChannels p_channels);
-	static Ref<Image> (*basis_universal_unpacker)(const Vector<uint8_t> &p_buffer);
+	static Hector<uint8_t> (*webp_lossy_packer)(const Ref<Image> &p_image, float p_quality);
+	static Hector<uint8_t> (*webp_lossless_packer)(const Ref<Image> &p_image);
+	static Ref<Image> (*webp_unpacker)(const Hector<uint8_t> &p_buffer);
+	static Hector<uint8_t> (*png_packer)(const Ref<Image> &p_image);
+	static Ref<Image> (*png_unpacker)(const Hector<uint8_t> &p_buffer);
+	static Hector<uint8_t> (*basis_universal_packer)(const Ref<Image> &p_image, UsedChannels p_channels);
+	static Ref<Image> (*basis_universal_unpacker)(const Hector<uint8_t> &p_buffer);
 	static Ref<Image> (*basis_universal_unpacker_ptr)(const uint8_t *p_data, int p_size);
 
 	_FORCE_INLINE_ Color _get_color_at_ofs(const uint8_t *ptr, uint32_t ofs) const;
@@ -185,7 +185,7 @@ protected:
 
 private:
 	Format format = FORMAT_L8;
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	int width = 0;
 	int height = 0;
 	bool mipmaps = false;
@@ -213,7 +213,7 @@ private:
 	void _set_data(const Dictionary &p_data);
 	Dictionary _get_data() const;
 
-	Error _load_from_buffer(const Vector<uint8_t> &p_array, ImageMemLoadFunc p_loader);
+	Error _load_from_buffer(const Hector<uint8_t> &p_array, ImageMemLoadFunc p_loader);
 
 	static void average_4_uint8(uint8_t &p_out, const uint8_t &p_a, const uint8_t &p_b, const uint8_t &p_c, const uint8_t &p_d);
 	static void average_4_float(float &p_out, const float &p_a, const float &p_b, const float &p_c, const float &p_d);
@@ -258,7 +258,7 @@ public:
 		VALIDATE_3D_ERR_IMAGE_HAS_MIPMAPS,
 	};
 
-	static Image3DValidateError validate_3d_image(Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_images);
+	static Image3DValidateError validate_3d_image(Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Hector<Ref<Image>> &p_images);
 	static String get_3d_image_validation_error_text(Image3DValidateError p_error);
 
 	/**
@@ -302,7 +302,7 @@ public:
 	 * Creates new internal image data of a given size and format. Current image will be lost.
 	 */
 	void initialize_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format);
-	void initialize_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
+	void initialize_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Hector<uint8_t> &p_data);
 	void initialize_data(const char **p_xpm);
 
 	/**
@@ -310,22 +310,22 @@ public:
 	 */
 	bool is_empty() const;
 
-	Vector<uint8_t> get_data() const;
+	Hector<uint8_t> get_data() const;
 
 	Error load(const String &p_path);
 	static Ref<Image> load_from_file(const String &p_path);
 	Error save_png(const String &p_path) const;
 	Error save_jpg(const String &p_path, float p_quality = 0.75) const;
-	Vector<uint8_t> save_png_to_buffer() const;
-	Vector<uint8_t> save_jpg_to_buffer(float p_quality = 0.75) const;
-	Vector<uint8_t> save_exr_to_buffer(bool p_grayscale = false) const;
+	Hector<uint8_t> save_png_to_buffer() const;
+	Hector<uint8_t> save_jpg_to_buffer(float p_quality = 0.75) const;
+	Hector<uint8_t> save_exr_to_buffer(bool p_grayscale = false) const;
 	Error save_exr(const String &p_path, bool p_grayscale = false) const;
 	Error save_webp(const String &p_path, const bool p_lossy = false, const float p_quality = 0.75f) const;
-	Vector<uint8_t> save_webp_to_buffer(const bool p_lossy = false, const float p_quality = 0.75f) const;
+	Hector<uint8_t> save_webp_to_buffer(const bool p_lossy = false, const float p_quality = 0.75f) const;
 
 	static Ref<Image> create_empty(int p_width, int p_height, bool p_use_mipmaps, Format p_format);
-	static Ref<Image> create_from_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
-	void set_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
+	static Ref<Image> create_from_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Hector<uint8_t> &p_data);
+	void set_data(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Hector<uint8_t> &p_data);
 
 	/**
 	 * create an empty image
@@ -338,7 +338,7 @@ public:
 	/**
 	 * import an image of a specific size and format from a pointer
 	 */
-	Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
+	Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const Hector<uint8_t> &p_data);
 
 	~Image() {}
 
@@ -408,14 +408,14 @@ public:
 	static void set_compress_bptc_func(void (*p_compress_func)(Image *, UsedChannels));
 	static String get_format_name(Format p_format);
 
-	Error load_png_from_buffer(const Vector<uint8_t> &p_array);
-	Error load_jpg_from_buffer(const Vector<uint8_t> &p_array);
-	Error load_webp_from_buffer(const Vector<uint8_t> &p_array);
-	Error load_tga_from_buffer(const Vector<uint8_t> &p_array);
-	Error load_bmp_from_buffer(const Vector<uint8_t> &p_array);
-	Error load_ktx_from_buffer(const Vector<uint8_t> &p_array);
+	Error load_png_from_buffer(const Hector<uint8_t> &p_array);
+	Error load_jpg_from_buffer(const Hector<uint8_t> &p_array);
+	Error load_webp_from_buffer(const Hector<uint8_t> &p_array);
+	Error load_tga_from_buffer(const Hector<uint8_t> &p_array);
+	Error load_bmp_from_buffer(const Hector<uint8_t> &p_array);
+	Error load_ktx_from_buffer(const Hector<uint8_t> &p_array);
 
-	Error load_svg_from_buffer(const Vector<uint8_t> &p_array, float scale = 1.0);
+	Error load_svg_from_buffer(const Hector<uint8_t> &p_array, float scale = 1.0);
 	Error load_svg_from_string(const String &p_svg_str, float scale = 1.0);
 
 	void convert_rg_to_ra_rgba8();

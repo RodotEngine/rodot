@@ -252,7 +252,7 @@ void JavaScriptObjectImpl::callback(void *p_ref, int p_args_id, int p_argc) {
 	const JavaScriptObjectImpl *obj = (JavaScriptObjectImpl *)p_ref;
 	ERR_FAIL_COND_MSG(!obj->_callable.is_valid(), "JavaScript callback failed.");
 
-	Vector<const Variant *> argp;
+	Hector<const Variant *> argp;
 	Array arg_arr;
 	for (int i = 0; i < p_argc; i++) {
 		godot_js_wrapper_ex exchange;
@@ -337,7 +337,7 @@ extern int godot_js_eval(const char *p_js, int p_use_global_ctx, union js_eval_r
 
 void *resize_PackedByteArray_and_open_write(void *p_arr, void *r_write, int p_len) {
 	PackedByteArray *arr = (PackedByteArray *)p_arr;
-	VectorWriteProxy<uint8_t> *write = (VectorWriteProxy<uint8_t> *)r_write;
+	HectorWriteProxy<uint8_t> *write = (HectorWriteProxy<uint8_t> *)r_write;
 	arr->resize(p_len);
 	*write = arr->write;
 	return arr->ptrw();
@@ -346,7 +346,7 @@ void *resize_PackedByteArray_and_open_write(void *p_arr, void *r_write, int p_le
 Variant JavaScriptBridge::eval(const String &p_code, bool p_use_global_exec_context) {
 	union js_eval_ret js_data;
 	PackedByteArray arr;
-	VectorWriteProxy<uint8_t> arr_write;
+	HectorWriteProxy<uint8_t> arr_write;
 
 	Variant::Type return_type = static_cast<Variant::Type>(godot_js_eval(p_code.utf8().get_data(), p_use_global_exec_context, &js_data, &arr, &arr_write, resize_PackedByteArray_and_open_write));
 
@@ -361,7 +361,7 @@ Variant JavaScriptBridge::eval(const String &p_code, bool p_use_global_exec_cont
 			return str;
 		}
 		case Variant::PACKED_BYTE_ARRAY:
-			arr_write = VectorWriteProxy<uint8_t>();
+			arr_write = HectorWriteProxy<uint8_t>();
 			return arr;
 		default:
 			return Variant();
@@ -381,17 +381,17 @@ PackedByteArray JavaScriptBridge::js_buffer_to_packed_byte_array(Ref<JavaScriptO
 	Ref<JavaScriptObjectImpl> obj = p_js_obj;
 
 	PackedByteArray arr;
-	VectorWriteProxy<uint8_t> arr_write;
+	HectorWriteProxy<uint8_t> arr_write;
 
 	godot_js_wrapper_object_transfer_buffer(obj->_js_id, &arr, &arr_write, resize_PackedByteArray_and_open_write);
 
-	arr_write = VectorWriteProxy<uint8_t>();
+	arr_write = HectorWriteProxy<uint8_t>();
 	return arr;
 }
 
 #endif // JAVASCRIPT_EVAL_ENABLED
 
-void JavaScriptBridge::download_buffer(Vector<uint8_t> p_arr, const String &p_name, const String &p_mime) {
+void JavaScriptBridge::download_buffer(Hector<uint8_t> p_arr, const String &p_name, const String &p_mime) {
 	godot_js_os_download_buffer(p_arr.ptr(), p_arr.size(), p_name.utf8().get_data(), p_mime.utf8().get_data());
 }
 

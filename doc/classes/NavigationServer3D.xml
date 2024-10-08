@@ -95,7 +95,7 @@
 			</description>
 		</method>
 		<method name="agent_get_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="agent" type="RID" />
 			<description>
 				Returns the position of the specified [param agent] in world space.
@@ -126,11 +126,11 @@
 			<return type="bool" />
 			<param index="0" name="agent" type="RID" />
 			<description>
-				Returns [code]true[/code] if the provided [param agent] uses avoidance in 3D space Vector3(x,y,z) instead of horizontal 2D Vector2(x,y) / Vector3(x,0.0,z).
+				Returns [code]true[/code] if the provided [param agent] uses avoidance in 3D space Hector3(x,y,z) instead of horizontal 2D Hector2(x,y) / Hector3(x,0.0,z).
 			</description>
 		</method>
 		<method name="agent_get_velocity" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="agent" type="RID" />
 			<description>
 				Returns the velocity of the specified [param agent].
@@ -243,7 +243,7 @@
 		<method name="agent_set_position">
 			<return type="void" />
 			<param index="0" name="agent" type="RID" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Sets the position of the agent in world space.
 			</description>
@@ -285,7 +285,7 @@
 		<method name="agent_set_velocity">
 			<return type="void" />
 			<param index="0" name="agent" type="RID" />
-			<param index="1" name="velocity" type="Vector3" />
+			<param index="1" name="velocity" type="Hector3" />
 			<description>
 				Sets [param velocity] as the new wanted velocity for the specified [param agent]. The avoidance simulation will try to fulfill this velocity if possible but will modify it to avoid collision with other agent's and obstacles. When an agent is teleported to a new position use [method agent_set_velocity_forced] as well to reset the internal simulation velocity.
 			</description>
@@ -293,7 +293,7 @@
 		<method name="agent_set_velocity_forced">
 			<return type="void" />
 			<param index="0" name="agent" type="RID" />
-			<param index="1" name="velocity" type="Vector3" />
+			<param index="1" name="velocity" type="Hector3" />
 			<description>
 				Replaces the internal velocity in the collision avoidance simulation with [param velocity] for the specified [param agent]. When an agent is teleported to a new position this function should be used in the same frame. If called frequently this function can get agents stuck.
 			</description>
@@ -363,7 +363,7 @@
 			</description>
 		</method>
 		<method name="link_get_end_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="link" type="RID" />
 			<description>
 				Returns the ending position of this [param link].
@@ -398,7 +398,7 @@
 			</description>
 		</method>
 		<method name="link_get_start_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="link" type="RID" />
 			<description>
 				Returns the starting position of this [param link].
@@ -437,7 +437,7 @@
 		<method name="link_set_end_position">
 			<return type="void" />
 			<param index="0" name="link" type="RID" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Sets the exit position for the [param link].
 			</description>
@@ -477,7 +477,7 @@
 		<method name="link_set_start_position">
 			<return type="void" />
 			<param index="0" name="link" type="RID" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Sets the entry position for this [param link].
 			</description>
@@ -528,17 +528,17 @@
 			</description>
 		</method>
 		<method name="map_get_closest_point" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="map" type="RID" />
-			<param index="1" name="to_point" type="Vector3" />
+			<param index="1" name="to_point" type="Hector3" />
 			<description>
 				Returns the navigation mesh surface point closest to the provided [param to_point] on the navigation [param map].
 			</description>
 		</method>
 		<method name="map_get_closest_point_normal" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="map" type="RID" />
-			<param index="1" name="to_point" type="Vector3" />
+			<param index="1" name="to_point" type="Hector3" />
 			<description>
 				Returns the navigation mesh surface normal closest to the provided [param to_point] on the navigation [param map].
 			</description>
@@ -546,16 +546,16 @@
 		<method name="map_get_closest_point_owner" qualifiers="const">
 			<return type="RID" />
 			<param index="0" name="map" type="RID" />
-			<param index="1" name="to_point" type="Vector3" />
+			<param index="1" name="to_point" type="Hector3" />
 			<description>
 				Returns the owner region RID for the navigation mesh surface point closest to the provided [param to_point] on the navigation [param map].
 			</description>
 		</method>
 		<method name="map_get_closest_point_to_segment" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="map" type="RID" />
-			<param index="1" name="start" type="Vector3" />
-			<param index="2" name="end" type="Vector3" />
+			<param index="1" name="start" type="Hector3" />
+			<param index="2" name="end" type="Hector3" />
 			<param index="3" name="use_collision" type="bool" default="false" />
 			<description>
 				Returns the navigation mesh surface point closest to the provided [param start] and [param end] segment on the navigation [param map].
@@ -606,10 +606,10 @@
 			</description>
 		</method>
 		<method name="map_get_path" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<param index="0" name="map" type="RID" />
-			<param index="1" name="origin" type="Vector3" />
-			<param index="2" name="destination" type="Vector3" />
+			<param index="1" name="origin" type="Hector3" />
+			<param index="2" name="destination" type="Hector3" />
 			<param index="3" name="optimize" type="bool" />
 			<param index="4" name="navigation_layers" type="int" default="1" />
 			<description>
@@ -617,7 +617,7 @@
 			</description>
 		</method>
 		<method name="map_get_random_point" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="map" type="RID" />
 			<param index="1" name="navigation_layers" type="int" />
 			<param index="2" name="uniformly" type="bool" />
@@ -635,7 +635,7 @@
 			</description>
 		</method>
 		<method name="map_get_up" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="map" type="RID" />
 			<description>
 				Returns the map's up direction.
@@ -706,7 +706,7 @@
 		<method name="map_set_up">
 			<return type="void" />
 			<param index="0" name="map" type="RID" />
-			<param index="1" name="up" type="Vector3" />
+			<param index="1" name="up" type="Hector3" />
 			<description>
 				Sets the map up direction.
 			</description>
@@ -761,7 +761,7 @@
 			</description>
 		</method>
 		<method name="obstacle_get_position" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="obstacle" type="RID" />
 			<description>
 				Returns the position of the specified [param obstacle] in world space.
@@ -778,18 +778,18 @@
 			<return type="bool" />
 			<param index="0" name="obstacle" type="RID" />
 			<description>
-				Returns [code]true[/code] if the provided [param obstacle] uses avoidance in 3D space Vector3(x,y,z) instead of horizontal 2D Vector2(x,y) / Vector3(x,0.0,z).
+				Returns [code]true[/code] if the provided [param obstacle] uses avoidance in 3D space Hector3(x,y,z) instead of horizontal 2D Hector2(x,y) / Hector3(x,0.0,z).
 			</description>
 		</method>
 		<method name="obstacle_get_velocity" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="obstacle" type="RID" />
 			<description>
 				Returns the velocity of the specified dynamic [param obstacle].
 			</description>
 		</method>
 		<method name="obstacle_get_vertices" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<param index="0" name="obstacle" type="RID" />
 			<description>
 				Returns the outline vertices for the specified [param obstacle].
@@ -838,7 +838,7 @@
 		<method name="obstacle_set_position">
 			<return type="void" />
 			<param index="0" name="obstacle" type="RID" />
-			<param index="1" name="position" type="Vector3" />
+			<param index="1" name="position" type="Hector3" />
 			<description>
 				Updates the [param position] in world space for the [param obstacle].
 			</description>
@@ -862,7 +862,7 @@
 		<method name="obstacle_set_velocity">
 			<return type="void" />
 			<param index="0" name="obstacle" type="RID" />
-			<param index="1" name="velocity" type="Vector3" />
+			<param index="1" name="velocity" type="Hector3" />
 			<description>
 				Sets [param velocity] of the dynamic [param obstacle]. Allows other agents to better predict the movement of the dynamic obstacle. Only works in combination with the radius of the obstacle.
 			</description>
@@ -870,7 +870,7 @@
 		<method name="obstacle_set_vertices">
 			<return type="void" />
 			<param index="0" name="obstacle" type="RID" />
-			<param index="1" name="vertices" type="PackedVector3Array" />
+			<param index="1" name="vertices" type="PackedHector3Array" />
 			<description>
 				Sets the outline vertices for the obstacle. If the vertices are winded in clockwise order agents will be pushed in by the obstacle, else they will be pushed out.
 			</description>
@@ -910,26 +910,26 @@
 			</description>
 		</method>
 		<method name="region_get_closest_point" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="region" type="RID" />
-			<param index="1" name="to_point" type="Vector3" />
+			<param index="1" name="to_point" type="Hector3" />
 			<description>
 				Returns the navigation mesh surface point closest to the provided [param to_point] on the navigation [param region].
 			</description>
 		</method>
 		<method name="region_get_closest_point_normal" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="region" type="RID" />
-			<param index="1" name="to_point" type="Vector3" />
+			<param index="1" name="to_point" type="Hector3" />
 			<description>
 				Returns the navigation mesh surface normal closest to the provided [param to_point] on the navigation [param region].
 			</description>
 		</method>
 		<method name="region_get_closest_point_to_segment" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="region" type="RID" />
-			<param index="1" name="start" type="Vector3" />
-			<param index="2" name="end" type="Vector3" />
+			<param index="1" name="start" type="Hector3" />
+			<param index="2" name="end" type="Hector3" />
 			<param index="3" name="use_collision" type="bool" default="false" />
 			<description>
 				Returns the navigation mesh surface point closest to the provided [param start] and [param end] segment on the navigation [param region].
@@ -937,7 +937,7 @@
 			</description>
 		</method>
 		<method name="region_get_connection_pathway_end" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="region" type="RID" />
 			<param index="1" name="connection" type="int" />
 			<description>
@@ -945,7 +945,7 @@
 			</description>
 		</method>
 		<method name="region_get_connection_pathway_start" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="region" type="RID" />
 			<param index="1" name="connection" type="int" />
 			<description>
@@ -995,7 +995,7 @@
 			</description>
 		</method>
 		<method name="region_get_random_point" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="region" type="RID" />
 			<param index="1" name="navigation_layers" type="int" />
 			<param index="2" name="uniformly" type="bool" />
@@ -1029,7 +1029,7 @@
 		<method name="region_owns_point" qualifiers="const">
 			<return type="bool" />
 			<param index="0" name="region" type="RID" />
-			<param index="1" name="point" type="Vector3" />
+			<param index="1" name="point" type="Hector3" />
 			<description>
 				Returns [code]true[/code] if the provided [param point] in world space is currently owned by the provided navigation [param region]. Owned in this context means that one of the region's navigation mesh polygon faces has a possible position at the closest distance to this point compared to all other navigation meshes from other navigation regions that are also registered on the navigation map of the provided region.
 				If multiple navigation meshes have positions at equal distance the navigation region whose polygons are processed first wins the ownership. Polygons are processed in the same order that navigation regions were registered on the NavigationServer.
@@ -1123,8 +1123,8 @@
 			</description>
 		</method>
 		<method name="simplify_path">
-			<return type="PackedVector3Array" />
-			<param index="0" name="path" type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
+			<param index="0" name="path" type="PackedHector3Array" />
 			<param index="1" name="epsilon" type="float" />
 			<description>
 				Returns a simplified version of [param path] with less critical path points removed. The simplification amount is in worlds units and controlled by [param epsilon]. The simplification uses a variant of Ramer-Douglas-Peucker algorithm for curve point decimation.

@@ -3944,7 +3944,7 @@ msgstr "הוספת מפרק"
 msgid "Color function."
 msgstr "פונקציית צבע."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "פונקציה וקטורית."
 
 msgctxt "Application"

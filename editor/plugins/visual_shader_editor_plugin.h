@@ -128,7 +128,7 @@ private:
 	HashMap<int, Link> links;
 	List<VisualShader::Connection> connections;
 
-	Color vector_expanded_color[4];
+	Color Hector_expanded_color[4];
 
 	// Visual shader specific theme for using MSDF fonts (on GraphNodes) which reduce aliasing at higher zoom levels.
 	Ref<Theme> vs_msdf_fonts_theme;
@@ -157,7 +157,7 @@ public:
 	void disconnect_nodes(VisualShader::Type p_type, int p_from_node, int p_from_port, int p_to_node, int p_to_port);
 	void show_port_preview(VisualShader::Type p_type, int p_node_id, int p_port_id, bool p_is_valid);
 	void update_frames(VisualShader::Type p_type, int p_node);
-	void set_node_position(VisualShader::Type p_type, int p_id, const Vector2 &p_position);
+	void set_node_position(VisualShader::Type p_type, int p_id, const Hector2 &p_position);
 	void refresh_node_ports(VisualShader::Type p_type, int p_node);
 	void set_input_port_default_value(VisualShader::Type p_type, int p_node_id, int p_port_id, const Variant &p_value);
 	void update_parameter_refs();
@@ -378,7 +378,7 @@ class VisualShaderEditor : public ShaderEditor {
 		String category;
 		String type;
 		String description;
-		Vector<Variant> ops;
+		Hector<Variant> ops;
 		Ref<Script> script;
 		int mode = 0;
 		int return_type = 0;
@@ -388,7 +388,7 @@ class VisualShaderEditor : public ShaderEditor {
 		bool is_native = false;
 		int temp_idx = 0;
 
-		AddOption(const String &p_name = String(), const String &p_category = String(), const String &p_type = String(), const String &p_description = String(), const Vector<Variant> &p_ops = Vector<Variant>(), int p_return_type = -1, int p_mode = -1, int p_func = -1, bool p_highend = false) {
+		AddOption(const String &p_name = String(), const String &p_category = String(), const String &p_type = String(), const String &p_description = String(), const Hector<Variant> &p_ops = Hector<Variant>(), int p_return_type = -1, int p_mode = -1, int p_func = -1, bool p_highend = false) {
 			name = p_name;
 			type = p_type;
 			category = p_category;
@@ -406,7 +406,7 @@ class VisualShaderEditor : public ShaderEditor {
 		}
 	};
 
-	Vector<AddOption> add_options;
+	Hector<AddOption> add_options;
 	int cubemap_node_option_idx;
 	int texture2d_node_option_idx;
 	int texture2d_array_node_option_idx;
@@ -421,8 +421,8 @@ class VisualShaderEditor : public ShaderEditor {
 
 	void _draw_color_over_button(Object *p_obj, Color p_color);
 
-	void _setup_node(VisualShaderNode *p_node, const Vector<Variant> &p_ops);
-	void _add_node(int p_idx, const Vector<Variant> &p_ops, const String &p_resource_path = "", int p_node_idx = -1);
+	void _setup_node(VisualShaderNode *p_node, const Hector<Variant> &p_ops);
+	void _add_node(int p_idx, const Hector<Variant> &p_ops, const String &p_resource_path = "", int p_node_idx = -1);
 	void _add_varying(const String &p_name, VisualShader::VaryingMode p_mode, VisualShader::VaryingType p_type);
 	void _remove_varying(const String &p_name);
 	void _update_options_menu();
@@ -433,31 +433,31 @@ class VisualShaderEditor : public ShaderEditor {
 	void _preview_size_changed();
 	void _update_preview();
 	void _update_next_previews(int p_node_id);
-	void _get_next_nodes_recursively(VisualShader::Type p_type, int p_node_id, LocalVector<int> &r_nodes) const;
+	void _get_next_nodes_recursively(VisualShader::Type p_type, int p_node_id, LocalHector<int> &r_nodes) const;
 	String _get_description(int p_idx);
 
 	void _show_shader_preview();
 
-	Vector<int> nodes_link_to_frame_buffer; // Contains the nodes that are requested to be linked to a frame. This is used to perform one Undo/Redo operation for dragging nodes.
+	Hector<int> nodes_link_to_frame_buffer; // Contains the nodes that are requested to be linked to a frame. This is used to perform one Undo/Redo operation for dragging nodes.
 	int frame_node_id_to_link_to = -1;
 
 	struct DragOp {
 		VisualShader::Type type = VisualShader::Type::TYPE_MAX;
 		int node = 0;
-		Vector2 from;
-		Vector2 to;
+		Hector2 from;
+		Hector2 to;
 	};
 	List<DragOp> drag_buffer;
 
 	bool drag_dirty = false;
-	void _node_dragged(const Vector2 &p_from, const Vector2 &p_to, int p_node);
+	void _node_dragged(const Hector2 &p_from, const Hector2 &p_to, int p_node);
 	void _nodes_dragged();
 	bool updating = false;
 
 	void _connection_request(const String &p_from, int p_from_index, const String &p_to, int p_to_index);
 	void _disconnection_request(const String &p_from, int p_from_index, const String &p_to, int p_to_index);
 
-	void _scroll_changed(const Vector2 &p_scroll);
+	void _scroll_changed(const Hector2 &p_scroll);
 	void _node_selected(Object *p_node);
 
 	void _delete_nodes(int p_type, const List<int> &p_nodes);
@@ -494,9 +494,9 @@ class VisualShaderEditor : public ShaderEditor {
 
 	void _unlink_node_from_parent_frame(int p_node_id);
 
-	void _connection_to_empty(const String &p_from, int p_from_slot, const Vector2 &p_release_position);
-	void _connection_from_empty(const String &p_to, int p_to_slot, const Vector2 &p_release_position);
-	bool _check_node_drop_on_connection(const Vector2 &p_position, Ref<GraphEdit::Connection> *r_closest_connection, int *r_node_id = nullptr, int *r_to_port = nullptr);
+	void _connection_to_empty(const String &p_from, int p_from_slot, const Hector2 &p_release_position);
+	void _connection_from_empty(const String &p_to, int p_to_slot, const Hector2 &p_release_position);
+	bool _check_node_drop_on_connection(const Hector2 &p_position, Ref<GraphEdit::Connection> *r_closest_connection, int *r_node_id = nullptr, int *r_to_port = nullptr);
 	void _handle_node_drop_on_connection();
 
 	void _frame_title_popup_show(const Point2 &p_position, int p_node_id);
@@ -521,8 +521,8 @@ class VisualShaderEditor : public ShaderEditor {
 	struct CopyItem {
 		int id;
 		Ref<VisualShaderNode> node;
-		Vector2 position;
-		Vector2 size;
+		Hector2 position;
+		Hector2 size;
 		String group_inputs;
 		String group_outputs;
 		String expression;
@@ -530,19 +530,19 @@ class VisualShaderEditor : public ShaderEditor {
 	};
 
 	void _dup_copy_nodes(int p_type, List<CopyItem> &r_nodes, List<VisualShader::Connection> &r_connections);
-	void _dup_paste_nodes(int p_type, List<CopyItem> &r_items, const List<VisualShader::Connection> &p_connections, const Vector2 &p_offset, bool p_duplicate);
+	void _dup_paste_nodes(int p_type, List<CopyItem> &r_items, const List<VisualShader::Connection> &p_connections, const Hector2 &p_offset, bool p_duplicate);
 
 	void _duplicate_nodes();
 
-	static Vector2 selection_center;
+	static Hector2 selection_center;
 	static List<CopyItem> copy_items_buffer;
 	static List<VisualShader::Connection> copy_connections_buffer;
 
 	void _clear_copy_buffer();
 	void _copy_nodes(bool p_cut);
-	void _paste_nodes(bool p_use_custom_position = false, const Vector2 &p_custom_position = Vector2());
+	void _paste_nodes(bool p_use_custom_position = false, const Hector2 &p_custom_position = Hector2());
 
-	Vector<Ref<VisualShaderNodePlugin>> plugins;
+	Hector<Ref<VisualShaderNodePlugin>> plugins;
 	Ref<VisualShaderGraphPlugin> graph_plugin;
 
 	void _mode_selected(int p_id);
@@ -570,7 +570,7 @@ class VisualShaderEditor : public ShaderEditor {
 	void _expression_focus_out(Object *p_code_edit, int p_node);
 
 	void _set_node_size(int p_type, int p_node, const Size2 &p_size);
-	void _node_resized(const Vector2 &p_new_size, int p_type, int p_node);
+	void _node_resized(const Hector2 &p_new_size, int p_type, int p_node);
 
 	void _preview_select_port(int p_node, int p_port);
 	void _graph_gui_input(const Ref<InputEvent> &p_event);
@@ -590,7 +590,7 @@ class VisualShaderEditor : public ShaderEditor {
 
 	void _set_custom_node_option(int p_index, int p_node, int p_op);
 
-	Vector2 menu_point;
+	Hector2 menu_point;
 	void _node_menu_id_pressed(int p_idx);
 	void _connection_menu_id_pressed(int p_idx);
 
@@ -664,7 +664,7 @@ class EditorPropertyVisualShaderMode : public EditorProperty {
 	void _option_selected(int p_which);
 
 public:
-	void setup(const Vector<String> &p_options);
+	void setup(const Hector<String> &p_options);
 	virtual void update_property() override;
 	void set_option_button_clip(bool p_enable);
 	EditorPropertyVisualShaderMode();

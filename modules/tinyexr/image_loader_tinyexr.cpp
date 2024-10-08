@@ -38,7 +38,7 @@
 #include "thirdparty/tinyexr/tinyexr.h"
 
 Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
-	Vector<uint8_t> src_image;
+	Hector<uint8_t> src_image;
 	uint64_t src_image_len = f->get_length();
 	ERR_FAIL_COND_V(src_image_len == 0, ERR_FILE_CORRUPT);
 	src_image.resize(src_image_len);
@@ -115,7 +115,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 
 	// EXR image data loaded, now parse it into Godot-friendly image data
 
-	Vector<uint8_t> imgdata;
+	Hector<uint8_t> imgdata;
 	Image::Format format;
 	int output_channels = 0;
 

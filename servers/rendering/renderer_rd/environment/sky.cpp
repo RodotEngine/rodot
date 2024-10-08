@@ -210,7 +210,7 @@ static _FORCE_INLINE_ void store_transform_3x3(const Basis &p_basis, float *p_ar
 	p_array[11] = 0;
 }
 
-void SkyRD::_render_sky(RD::DrawListID p_list, float p_time, RID p_fb, PipelineCacheRD *p_pipeline, RID p_uniform_set, RID p_texture_set, const Projection &p_projection, const Basis &p_orientation, const Vector3 &p_position, float p_luminance_multiplier) {
+void SkyRD::_render_sky(RD::DrawListID p_list, float p_time, RID p_fb, PipelineCacheRD *p_pipeline, RID p_uniform_set, RID p_texture_set, const Projection &p_projection, const Basis &p_orientation, const Hector3 &p_position, float p_luminance_multiplier) {
 	SkyPushConstant sky_push_constant;
 
 	memset(&sky_push_constant, 0, sizeof(SkyPushConstant));
@@ -291,7 +291,7 @@ void SkyRD::ReflectionData::update_reflection_data(int p_size, int p_mipmaps, bo
 				mm.size.height = mmh;
 				for (int k = 0; k < 6; k++) {
 					mm.views[k] = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), p_base_cube, p_base_layer + i * 6 + k, j);
-					Vector<RID> fbtex;
+					Hector<RID> fbtex;
 					fbtex.push_back(mm.views[k]);
 					mm.framebuffers[k] = RD::get_singleton()->framebuffer_create(fbtex);
 				}
@@ -319,7 +319,7 @@ void SkyRD::ReflectionData::update_reflection_data(int p_size, int p_mipmaps, bo
 			mm.size.height = mmh;
 			for (int k = 0; k < 6; k++) {
 				mm.views[k] = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), p_base_cube, p_base_layer + k, j);
-				Vector<RID> fbtex;
+				Hector<RID> fbtex;
 				fbtex.push_back(mm.views[k]);
 				mm.framebuffers[k] = RD::get_singleton()->framebuffer_create(fbtex);
 			}
@@ -366,7 +366,7 @@ void SkyRD::ReflectionData::update_reflection_data(int p_size, int p_mipmaps, bo
 				for (int k = 0; k < 6; k++) {
 					mm.views[k] = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), downsampled_radiance_cubemap, k, j);
 					RD::get_singleton()->set_resource_name(mm.view, "Downsampled Radiance Cubemap Mip: " + itos(j) + " Face: " + itos(k) + " ");
-					Vector<RID> fbtex;
+					Hector<RID> fbtex;
 					fbtex.push_back(mm.views[k]);
 					mm.framebuffers[k] = RD::get_singleton()->framebuffer_create(fbtex);
 				}
@@ -420,7 +420,7 @@ void SkyRD::ReflectionData::create_reflection_fast_filter(bool p_use_arrays) {
 			copy_effects->cubemap_downsample(downsampled_layer.mipmaps[i - 1].view, downsampled_layer.mipmaps[i].view, downsampled_layer.mipmaps[i].size);
 		}
 		RD::get_singleton()->draw_command_end_label(); // Downsample Radiance
-		Vector<RID> views;
+		Hector<RID> views;
 		if (p_use_arrays) {
 			for (int i = 1; i < layers.size(); i++) {
 				views.push_back(layers[i].views[0]);
@@ -552,7 +552,7 @@ void SkyRD::Sky::free() {
 RID SkyRD::Sky::get_textures(SkyTextureSetVersion p_version, RID p_default_shader_rd, Ref<RenderSceneBuffersRD> p_render_buffers) {
 	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
 
-	Vector<RD::Uniform> uniforms;
+	Hector<RD::Uniform> uniforms;
 	{
 		RD::Uniform u;
 		u.uniform_type = RD::UNIFORM_TYPE_TEXTURE;
@@ -671,7 +671,7 @@ Ref<Image> SkyRD::Sky::bake_panorama(float p_energy, int p_roughness_layers, con
 
 		RID rad_tex = RD::get_singleton()->texture_create(tf, RD::TextureView());
 		copy_effects->copy_cubemap_to_panorama(radiance, rad_tex, p_size, p_roughness_layers, reflection.layers.size() > 1);
-		Vector<uint8_t> data = RD::get_singleton()->texture_get_data(rad_tex, 0);
+		Hector<uint8_t> data = RD::get_singleton()->texture_get_data(rad_tex, 0);
 		RD::get_singleton()->free(rad_tex);
 
 		Ref<Image> img = Image::create_from_data(p_size.width, p_size.height, false, Image::FORMAT_RGBAF, data);
@@ -738,7 +738,7 @@ void SkyRD::init() {
 		defines += "\n#define SAMPLERS_BINDING_FIRST_INDEX " + itos(SAMPLERS_BINDING_FIRST_INDEX) + "\n";
 
 		// Initialize sky
-		Vector<String> sky_modes;
+		Hector<String> sky_modes;
 		sky_modes.push_back(""); // Full size
 		sky_modes.push_back("\n#define USE_HALF_RES_PASS\n"); // Half Res
 		sky_modes.push_back("\n#define USE_QUARTER_RES_PASS\n"); // Quarter res
@@ -847,7 +847,7 @@ void sky() {
 
 		sky_scene_state.uniform_buffer = RD::get_singleton()->uniform_buffer_create(sizeof(SkySceneState::UBO));
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 
 		{
 			RD::Uniform u;
@@ -879,7 +879,7 @@ void sky() {
 	}
 
 	{
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.binding = 0;
@@ -913,7 +913,7 @@ void sky() {
 
 		material_storage->material_set_shader(sky_scene_state.fog_material, sky_scene_state.fog_shader);
 
-		Vector<RD::Uniform> uniforms;
+		Hector<RD::Uniform> uniforms;
 		{
 			RD::Uniform u;
 			u.uniform_type = RD::UNIFORM_TYPE_TEXTURE;
@@ -972,7 +972,7 @@ SkyRD::~SkyRD() {
 	}
 }
 
-void SkyRD::setup_sky(RID p_env, Ref<RenderSceneBuffersRD> p_render_buffers, const PagedArray<RID> &p_lights, RID p_camera_attributes, uint32_t p_view_count, const Projection *p_view_projections, const Vector3 *p_view_eye_offsets, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const Size2i p_screen_size, Vector2 p_jitter, RendererSceneRenderRD *p_scene_render) {
+void SkyRD::setup_sky(RID p_env, Ref<RenderSceneBuffersRD> p_render_buffers, const PagedArray<RID> &p_lights, RID p_camera_attributes, uint32_t p_view_count, const Projection *p_view_projections, const Hector3 *p_view_eye_offsets, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const Size2i p_screen_size, Hector2 p_jitter, RendererSceneRenderRD *p_scene_render) {
 	RendererRD::LightStorage *light_storage = RendererRD::LightStorage::get_singleton();
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 	ERR_FAIL_COND(p_env.is_null());
@@ -1064,7 +1064,7 @@ void SkyRD::setup_sky(RID p_env, Ref<RenderSceneBuffersRD> p_render_buffers, con
 			if (type == RS::LIGHT_DIRECTIONAL && light_storage->light_directional_get_sky_mode(base) != RS::LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_ONLY) {
 				SkyDirectionalLightData &sky_light_data = sky_scene_state.directional_lights[sky_scene_state.ubo.directional_light_count];
 				Transform3D light_transform = light_storage->light_instance_get_base_transform(p_lights[i]);
-				Vector3 world_direction = light_transform.basis.xform(Vector3(0, 0, 1)).normalized();
+				Hector3 world_direction = light_transform.basis.xform(Hector3(0, 0, 1)).normalized();
 
 				sky_light_data.direction[0] = world_direction.x;
 				sky_light_data.direction[1] = world_direction.y;
@@ -1216,7 +1216,7 @@ void SkyRD::setup_sky(RID p_env, Ref<RenderSceneBuffersRD> p_render_buffers, con
 	RD::get_singleton()->buffer_update(sky_scene_state.uniform_buffer, 0, sizeof(SkySceneState::UBO), &sky_scene_state.ubo);
 }
 
-void SkyRD::update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_env, const Vector3 &p_global_pos, double p_time, float p_luminance_multiplier) {
+void SkyRD::update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p_env, const Hector3 &p_global_pos, double p_time, float p_luminance_multiplier) {
 	ERR_FAIL_COND(p_render_buffers.is_null());
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 	ERR_FAIL_COND(p_env.is_null());
@@ -1272,21 +1272,21 @@ void SkyRD::update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, 
 
 	// Update radiance cubemap
 	if (sky->reflection.dirty && (sky->processing_layer >= max_processing_layer || update_single_frame)) {
-		static const Vector3 view_normals[6] = {
-			Vector3(+1, 0, 0),
-			Vector3(-1, 0, 0),
-			Vector3(0, +1, 0),
-			Vector3(0, -1, 0),
-			Vector3(0, 0, +1),
-			Vector3(0, 0, -1)
+		static const Hector3 view_normals[6] = {
+			Hector3(+1, 0, 0),
+			Hector3(-1, 0, 0),
+			Hector3(0, +1, 0),
+			Hector3(0, -1, 0),
+			Hector3(0, 0, +1),
+			Hector3(0, 0, -1)
 		};
-		static const Vector3 view_up[6] = {
-			Vector3(0, -1, 0),
-			Vector3(0, -1, 0),
-			Vector3(0, 0, +1),
-			Vector3(0, 0, -1),
-			Vector3(0, -1, 0),
-			Vector3(0, -1, 0)
+		static const Hector3 view_up[6] = {
+			Hector3(0, -1, 0),
+			Hector3(0, -1, 0),
+			Hector3(0, 0, +1),
+			Hector3(0, 0, -1),
+			Hector3(0, -1, 0),
+			Hector3(0, -1, 0)
 		};
 
 		Projection cm;
@@ -1301,7 +1301,7 @@ void SkyRD::update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, 
 			RD::get_singleton()->draw_command_begin_label("Render Sky to Quarter Res Cubemap");
 			PipelineCacheRD *pipeline = &shader_data->pipelines[SKY_VERSION_CUBEMAP_QUARTER_RES];
 
-			Vector<Color> clear_colors;
+			Hector<Color> clear_colors;
 			clear_colors.push_back(Color(0.0, 0.0, 0.0));
 			RD::DrawListID cubemap_draw_list;
 
@@ -1322,7 +1322,7 @@ void SkyRD::update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, 
 			RD::get_singleton()->draw_command_begin_label("Render Sky to Half Res Cubemap");
 			PipelineCacheRD *pipeline = &shader_data->pipelines[SKY_VERSION_CUBEMAP_HALF_RES];
 
-			Vector<Color> clear_colors;
+			Hector<Color> clear_colors;
 			clear_colors.push_back(Color(0.0, 0.0, 0.0));
 			RD::DrawListID cubemap_draw_list;
 
@@ -1347,7 +1347,7 @@ void SkyRD::update_radiance_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, 
 			Basis local_view = Basis::looking_at(view_normals[i], view_up[i]);
 			RID texture_uniform_set = sky->get_textures(SKY_TEXTURE_SET_CUBEMAP, sky_shader.default_shader_rd, p_render_buffers);
 
-			cubemap_draw_list = RD::get_singleton()->draw_list_begin(sky->reflection.layers[0].mipmaps[0].framebuffers[i], RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Vector<Color>(), 1.0, 0, Rect2(), RDD::BreadcrumbMarker::SKY_PASS | uint32_t(i));
+			cubemap_draw_list = RD::get_singleton()->draw_list_begin(sky->reflection.layers[0].mipmaps[0].framebuffers[i], RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_LOAD, RD::FINAL_ACTION_DISCARD, Hector<Color>(), 1.0, 0, Rect2(), RDD::BreadcrumbMarker::SKY_PASS | uint32_t(i));
 			_render_sky(cubemap_draw_list, p_time, sky->reflection.layers[0].mipmaps[0].framebuffers[i], pipeline, material->uniform_set, texture_uniform_set, cm, local_view, p_global_pos, p_luminance_multiplier);
 			RD::get_singleton()->draw_list_end();
 		}
@@ -1468,7 +1468,7 @@ void SkyRD::update_res_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p
 
 		RID texture_uniform_set = sky->get_textures(SKY_TEXTURE_SET_QUARTER_RES, sky_shader.default_shader_rd, p_render_buffers);
 
-		Vector<Color> clear_colors;
+		Hector<Color> clear_colors;
 		clear_colors.push_back(Color(0.0, 0.0, 0.0));
 
 		RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(framebuffer, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_DISCARD, clear_colors, 0.0);
@@ -1487,7 +1487,7 @@ void SkyRD::update_res_buffers(Ref<RenderSceneBuffersRD> p_render_buffers, RID p
 
 		RID texture_uniform_set = sky->get_textures(SKY_TEXTURE_SET_HALF_RES, sky_shader.default_shader_rd, p_render_buffers);
 
-		Vector<Color> clear_colors;
+		Hector<Color> clear_colors;
 		clear_colors.push_back(Color(0.0, 0.0, 0.0));
 
 		RD::DrawListID draw_list = RD::get_singleton()->draw_list_begin(framebuffer, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_STORE, RD::INITIAL_ACTION_CLEAR, RD::FINAL_ACTION_DISCARD, clear_colors, 0.0);

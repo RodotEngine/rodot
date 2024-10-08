@@ -1110,7 +1110,7 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT = 1000545008,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV = 1000546000,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV = 1000555000,
-    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV = 1000563000,
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_Hector_FEATURES_NV = 1000563000,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV = 1000568000,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES,
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES,
@@ -6789,7 +6789,7 @@ static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_B
 static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM = 0x1000000000ULL;
 static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM = 0x2000000000ULL;
 static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV = 0x10000000000ULL;
-static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV = 0x20000000000ULL;
+static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_OPTICAL_FLOW_Hector_BIT_NV = 0x20000000000ULL;
 static const VkFormatFeatureFlagBits2 VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV = 0x40000000000ULL;
 
 typedef struct VkPhysicalDeviceVulkan13Features {
@@ -18356,8 +18356,8 @@ typedef enum VkOpticalFlowSessionBindingPointNV {
     VK_OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV = 1,
     VK_OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV = 2,
     VK_OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV = 3,
-    VK_OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV = 4,
-    VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV = 5,
+    VK_OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_Hector_NV = 4,
+    VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_Hector_NV = 5,
     VK_OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV = 6,
     VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV = 7,
     VK_OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV = 8,
@@ -18440,7 +18440,7 @@ typedef struct VkOpticalFlowSessionCreateInfoNV {
     uint32_t                             width;
     uint32_t                             height;
     VkFormat                             imageFormat;
-    VkFormat                             flowVectorFormat;
+    VkFormat                             flowHectorFormat;
     VkFormat                             costFormat;
     VkOpticalFlowGridSizeFlagsNV         outputGridSize;
     VkOpticalFlowGridSizeFlagsNV         hintGridSize;
@@ -19125,15 +19125,15 @@ typedef struct VkPhysicalDeviceRawAccessChainsFeaturesNV {
 
 
 
-// VK_NV_shader_atomic_float16_vector is a preprocessor guard. Do not pass it to API calls.
-#define VK_NV_shader_atomic_float16_vector 1
-#define VK_NV_SHADER_ATOMIC_FLOAT16_VECTOR_SPEC_VERSION 1
-#define VK_NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME "VK_NV_shader_atomic_float16_vector"
-typedef struct VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV {
+// VK_NV_shader_atomic_float16_Hector is a preprocessor guard. Do not pass it to API calls.
+#define VK_NV_shader_atomic_float16_Hector 1
+#define VK_NV_SHADER_ATOMIC_FLOAT16_Hector_SPEC_VERSION 1
+#define VK_NV_SHADER_ATOMIC_FLOAT16_Hector_EXTENSION_NAME "VK_NV_shader_atomic_float16_Hector"
+typedef struct VkPhysicalDeviceShaderAtomicFloat16HectorFeaturesNV {
     VkStructureType    sType;
     void*              pNext;
-    VkBool32           shaderFloat16VectorAtomics;
-} VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV;
+    VkBool32           shaderFloat16HectorAtomics;
+} VkPhysicalDeviceShaderAtomicFloat16HectorFeaturesNV;
 
 
 

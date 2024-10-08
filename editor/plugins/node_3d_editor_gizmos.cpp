@@ -145,7 +145,7 @@ void EditorNode3DGizmo::commit_handle(int p_id, bool p_secondary, const Variant 
 	gizmo_plugin->commit_handle(this, p_id, p_secondary, p_restore, p_cancel);
 }
 
-int EditorNode3DGizmo::subgizmos_intersect_ray(Camera3D *p_camera, const Vector2 &p_point) const {
+int EditorNode3DGizmo::subgizmos_intersect_ray(Camera3D *p_camera, const Hector2 &p_point) const {
 	int id;
 	if (GDVIRTUAL_CALL(_subgizmos_intersect_ray, p_camera, p_point, id)) {
 		return id;
@@ -155,18 +155,18 @@ int EditorNode3DGizmo::subgizmos_intersect_ray(Camera3D *p_camera, const Vector2
 	return gizmo_plugin->subgizmos_intersect_ray(this, p_camera, p_point);
 }
 
-Vector<int> EditorNode3DGizmo::subgizmos_intersect_frustum(const Camera3D *p_camera, const Vector<Plane> &p_frustum) const {
+Hector<int> EditorNode3DGizmo::subgizmos_intersect_frustum(const Camera3D *p_camera, const Hector<Plane> &p_frustum) const {
 	TypedArray<Plane> frustum;
 	frustum.resize(p_frustum.size());
 	for (int i = 0; i < p_frustum.size(); i++) {
 		frustum[i] = p_frustum[i];
 	}
-	Vector<int> ret;
+	Hector<int> ret;
 	if (GDVIRTUAL_CALL(_subgizmos_intersect_frustum, p_camera, frustum, ret)) {
 		return ret;
 	}
 
-	ERR_FAIL_NULL_V(gizmo_plugin, Vector<int>());
+	ERR_FAIL_NULL_V(gizmo_plugin, Hector<int>());
 	return gizmo_plugin->subgizmos_intersect_frustum(this, p_camera, p_frustum);
 }
 
@@ -189,7 +189,7 @@ void EditorNode3DGizmo::set_subgizmo_transform(int p_id, Transform3D p_transform
 	gizmo_plugin->set_subgizmo_transform(this, p_id, p_transform);
 }
 
-void EditorNode3DGizmo::commit_subgizmos(const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel) {
+void EditorNode3DGizmo::commit_subgizmos(const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel) {
 	TypedArray<Transform3D> restore;
 	restore.resize(p_restore.size());
 	for (int i = 0; i < p_restore.size(); i++) {
@@ -252,10 +252,10 @@ void EditorNode3DGizmo::_update_bvh() {
 	Transform3D transform = spatial_node->get_global_transform();
 
 	float effective_icon_size = selectable_icon_size > 0.0f ? selectable_icon_size : 0.0f;
-	Vector3 icon_size_vector3 = Vector3(effective_icon_size, effective_icon_size, effective_icon_size);
-	AABB aabb(spatial_node->get_position() - icon_size_vector3 * 100.0f, icon_size_vector3 * 200.0f);
+	Hector3 icon_size_Hector3 = Hector3(effective_icon_size, effective_icon_size, effective_icon_size);
+	AABB aabb(spatial_node->get_position() - icon_size_Hector3 * 100.0f, icon_size_Hector3 * 200.0f);
 
-	for (const Vector3 &segment_end : collision_segments) {
+	for (const Hector3 &segment_end : collision_segments) {
 		aabb.expand_to(transform.xform(segment_end));
 	}
 
@@ -272,11 +272,11 @@ void EditorNode3DGizmo::_update_bvh() {
 			aabb);
 }
 
-void EditorNode3DGizmo::add_lines(const Vector<Vector3> &p_lines, const Ref<Material> &p_material, bool p_billboard, const Color &p_modulate) {
+void EditorNode3DGizmo::add_lines(const Hector<Hector3> &p_lines, const Ref<Material> &p_material, bool p_billboard, const Color &p_modulate) {
 	add_vertices(p_lines, p_material, Mesh::PRIMITIVE_LINES, p_billboard, p_modulate);
 }
 
-void EditorNode3DGizmo::add_vertices(const Vector<Vector3> &p_vertices, const Ref<Material> &p_material, Mesh::PrimitiveType p_primitive_type, bool p_billboard, const Color &p_modulate) {
+void EditorNode3DGizmo::add_vertices(const Hector<Hector3> &p_vertices, const Ref<Material> &p_material, Mesh::PrimitiveType p_primitive_type, bool p_billboard, const Color &p_modulate) {
 	if (p_vertices.is_empty()) {
 		return;
 	}
@@ -290,7 +290,7 @@ void EditorNode3DGizmo::add_vertices(const Vector<Vector3> &p_vertices, const Re
 
 	a[Mesh::ARRAY_VERTEX] = p_vertices;
 
-	Vector<Color> color;
+	Hector<Color> color;
 	color.resize(p_vertices.size());
 	{
 		Color *w = color.ptrw();
@@ -314,7 +314,7 @@ void EditorNode3DGizmo::add_vertices(const Vector<Vector3> &p_vertices, const Re
 			md = MAX(0, p_vertices[i].length());
 		}
 		if (md) {
-			mesh->set_custom_aabb(AABB(Vector3(-md, -md, -md), Vector3(md, md, md) * 2.0));
+			mesh->set_custom_aabb(AABB(Hector3(-md, -md, -md), Hector3(md, md, md) * 2.0));
 		}
 	}
 
@@ -331,28 +331,28 @@ void EditorNode3DGizmo::add_unscaled_billboard(const Ref<Material> &p_material, 
 	ERR_FAIL_NULL(spatial_node);
 	Instance ins;
 
-	Vector<Vector3> vs = {
-		Vector3(-p_scale, p_scale, 0),
-		Vector3(p_scale, p_scale, 0),
-		Vector3(p_scale, -p_scale, 0),
-		Vector3(-p_scale, -p_scale, 0)
+	Hector<Hector3> vs = {
+		Hector3(-p_scale, p_scale, 0),
+		Hector3(p_scale, p_scale, 0),
+		Hector3(p_scale, -p_scale, 0),
+		Hector3(-p_scale, -p_scale, 0)
 	};
 
-	Vector<Vector2> uv = {
-		Vector2(0, 0),
-		Vector2(1, 0),
-		Vector2(1, 1),
-		Vector2(0, 1)
+	Hector<Hector2> uv = {
+		Hector2(0, 0),
+		Hector2(1, 0),
+		Hector2(1, 1),
+		Hector2(0, 1)
 	};
 
-	Vector<Color> colors = {
+	Hector<Color> colors = {
 		p_modulate,
 		p_modulate,
 		p_modulate,
 		p_modulate
 	};
 
-	Vector<int> indices = { 0, 1, 2, 0, 2, 3 };
+	Hector<int> indices = { 0, 1, 2, 0, 2, 3 };
 
 	Ref<ArrayMesh> mesh = memnew(ArrayMesh);
 	Array a;
@@ -369,11 +369,11 @@ void EditorNode3DGizmo::add_unscaled_billboard(const Ref<Material> &p_material, 
 		md = MAX(0, vs[i].length());
 	}
 	if (md) {
-		mesh->set_custom_aabb(AABB(Vector3(-md, -md, -md), Vector3(md, md, md) * 2.0));
+		mesh->set_custom_aabb(AABB(Hector3(-md, -md, -md), Hector3(md, md, md) * 2.0));
 	}
 
 	selectable_icon_size = p_scale;
-	mesh->set_custom_aabb(AABB(Vector3(-selectable_icon_size, -selectable_icon_size, -selectable_icon_size) * 100.0f, Vector3(selectable_icon_size, selectable_icon_size, selectable_icon_size) * 200.0f));
+	mesh->set_custom_aabb(AABB(Hector3(-selectable_icon_size, -selectable_icon_size, -selectable_icon_size) * 100.0f, Hector3(selectable_icon_size, selectable_icon_size, selectable_icon_size) * 200.0f));
 
 	ins.mesh = mesh;
 	if (valid) {
@@ -390,7 +390,7 @@ void EditorNode3DGizmo::add_collision_triangles(const Ref<TriangleMesh> &p_tmesh
 	collision_mesh = p_tmesh;
 }
 
-void EditorNode3DGizmo::add_collision_segments(const Vector<Vector3> &p_lines) {
+void EditorNode3DGizmo::add_collision_segments(const Hector<Hector3> &p_lines) {
 	int from = collision_segments.size();
 	collision_segments.resize(from + p_lines.size());
 	for (int i = 0; i < p_lines.size(); i++) {
@@ -398,7 +398,7 @@ void EditorNode3DGizmo::add_collision_segments(const Vector<Vector3> &p_lines) {
 	}
 }
 
-void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<Material> &p_material, const Vector<int> &p_ids, bool p_billboard, bool p_secondary) {
+void EditorNode3DGizmo::add_handles(const Hector<Hector3> &p_handles, const Ref<Material> &p_material, const Hector<int> &p_ids, bool p_billboard, bool p_secondary) {
 	billboard_handle = p_billboard;
 
 	if (!is_selected() || !is_editable()) {
@@ -407,8 +407,8 @@ void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<
 
 	ERR_FAIL_NULL(spatial_node);
 
-	Vector<Vector3> &handle_list = p_secondary ? secondary_handles : handles;
-	Vector<int> &id_list = p_secondary ? secondary_handle_ids : handle_ids;
+	Hector<Hector3> &handle_list = p_secondary ? secondary_handles : handles;
+	Hector<int> &id_list = p_secondary ? secondary_handle_ids : handle_ids;
 
 	if (p_ids.is_empty()) {
 		ERR_FAIL_COND_MSG(!id_list.is_empty(), "IDs must be provided for all handles, as handles with IDs already exist.");
@@ -426,7 +426,7 @@ void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<
 	Array a;
 	a.resize(RS::ARRAY_MAX);
 	a[RS::ARRAY_VERTEX] = p_handles;
-	Vector<Color> colors;
+	Hector<Color> colors;
 	{
 		colors.resize(p_handles.size());
 		Color *w = colors.ptrw();
@@ -455,7 +455,7 @@ void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<
 			md = MAX(0, p_handles[i].length());
 		}
 		if (md) {
-			mesh->set_custom_aabb(AABB(Vector3(-md, -md, -md), Vector3(md, md, md) * 2.0));
+			mesh->set_custom_aabb(AABB(Hector3(-md, -md, -md), Hector3(md, md, md) * 2.0));
 		}
 	}
 
@@ -482,15 +482,15 @@ void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<
 	}
 }
 
-void EditorNode3DGizmo::add_solid_box(const Ref<Material> &p_material, Vector3 p_size, Vector3 p_position, const Transform3D &p_xform) {
+void EditorNode3DGizmo::add_solid_box(const Ref<Material> &p_material, Hector3 p_size, Hector3 p_position, const Transform3D &p_xform) {
 	ERR_FAIL_NULL(spatial_node);
 
 	BoxMesh box_mesh;
 	box_mesh.set_size(p_size);
 
 	Array arrays = box_mesh.surface_get_arrays(0);
-	PackedVector3Array vertex = arrays[RS::ARRAY_VERTEX];
-	Vector3 *w = vertex.ptrw();
+	PackedHector3Array vertex = arrays[RS::ARRAY_VERTEX];
+	Hector3 *w = vertex.ptrw();
 
 	for (int i = 0; i < vertex.size(); ++i) {
 		w[i] += p_position;
@@ -503,7 +503,7 @@ void EditorNode3DGizmo::add_solid_box(const Ref<Material> &p_material, Vector3 p
 	add_mesh(m, p_material, p_xform);
 }
 
-bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Vector<Plane> &p_frustum) {
+bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Hector<Plane> &p_frustum) {
 	ERR_FAIL_NULL_V(spatial_node, false);
 	ERR_FAIL_COND_V(!valid, false);
 
@@ -512,7 +512,7 @@ bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Vector
 	}
 
 	if (selectable_icon_size > 0.0f) {
-		Vector3 origin = spatial_node->get_global_transform().get_origin();
+		Hector3 origin = spatial_node->get_global_transform().get_origin();
 
 		const Plane *p = p_frustum.ptr();
 		int fc = p_frustum.size();
@@ -534,13 +534,13 @@ bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Vector
 		int fc = p_frustum.size();
 
 		int vc = collision_segments.size();
-		const Vector3 *vptr = collision_segments.ptr();
+		const Hector3 *vptr = collision_segments.ptr();
 		Transform3D t = spatial_node->get_global_transform();
 
 		bool any_out = false;
 		for (int j = 0; j < fc; j++) {
 			for (int i = 0; i < vc; i++) {
-				Vector3 v = t.xform(vptr[i]);
+				Hector3 v = t.xform(vptr[i]);
 				if (p[j].is_point_over(v)) {
 					any_out = true;
 					break;
@@ -559,12 +559,12 @@ bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Vector
 	if (collision_mesh.is_valid()) {
 		Transform3D t = spatial_node->get_global_transform();
 
-		Vector3 mesh_scale = t.get_basis().get_scale();
+		Hector3 mesh_scale = t.get_basis().get_scale();
 		t.orthonormalize();
 
 		Transform3D it = t.affine_inverse();
 
-		Vector<Plane> transformed_frustum;
+		Hector<Plane> transformed_frustum;
 		int plane_count = p_frustum.size();
 		transformed_frustum.resize(plane_count);
 
@@ -572,7 +572,7 @@ bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Vector
 			transformed_frustum.write[i] = it.xform(p_frustum[i]);
 		}
 
-		Vector<Vector3> convex_points = Geometry3D::compute_convex_mesh_points(transformed_frustum.ptr(), plane_count);
+		Hector<Hector3> convex_points = Geometry3D::compute_convex_mesh_points(transformed_frustum.ptr(), plane_count);
 		if (collision_mesh->inside_convex_shape(transformed_frustum.ptr(), plane_count, convex_points.ptr(), convex_points.size(), mesh_scale)) {
 			return true;
 		}
@@ -581,7 +581,7 @@ bool EditorNode3DGizmo::intersect_frustum(const Camera3D *p_camera, const Vector
 	return false;
 }
 
-void EditorNode3DGizmo::handles_intersect_ray(Camera3D *p_camera, const Vector2 &p_point, bool p_shift_pressed, int &r_id, bool &r_secondary) {
+void EditorNode3DGizmo::handles_intersect_ray(Camera3D *p_camera, const Hector2 &p_point, bool p_shift_pressed, int &r_id, bool &r_secondary) {
 	r_id = -1;
 	r_secondary = false;
 
@@ -601,8 +601,8 @@ void EditorNode3DGizmo::handles_intersect_ray(Camera3D *p_camera, const Vector2 
 	float min_d = 1e20;
 
 	for (int i = 0; i < secondary_handles.size(); i++) {
-		Vector3 hpos = t.xform(secondary_handles[i]);
-		Vector2 p = p_camera->unproject_position(hpos);
+		Hector3 hpos = t.xform(secondary_handles[i]);
+		Hector2 p = p_camera->unproject_position(hpos);
 
 		if (p.distance_to(p_point) < HANDLE_HALF_SIZE) {
 			real_t dp = p_camera->get_transform().origin.distance_to(hpos);
@@ -625,8 +625,8 @@ void EditorNode3DGizmo::handles_intersect_ray(Camera3D *p_camera, const Vector2 
 	min_d = 1e20;
 
 	for (int i = 0; i < handles.size(); i++) {
-		Vector3 hpos = t.xform(handles[i]);
-		Vector2 p = p_camera->unproject_position(hpos);
+		Hector3 hpos = t.xform(handles[i]);
+		Hector2 p = p_camera->unproject_position(hpos);
 
 		if (p.distance_to(p_point) < HANDLE_HALF_SIZE) {
 			real_t dp = p_camera->get_transform().origin.distance_to(hpos);
@@ -643,7 +643,7 @@ void EditorNode3DGizmo::handles_intersect_ray(Camera3D *p_camera, const Vector2 
 	}
 }
 
-bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point, Vector3 &r_pos, Vector3 &r_normal) {
+bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point, Hector3 &r_pos, Hector3 &r_normal) {
 	ERR_FAIL_NULL_V(spatial_node, false);
 	ERR_FAIL_COND_V(!valid, false);
 
@@ -653,7 +653,7 @@ bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point,
 
 	if (selectable_icon_size > 0.0f) {
 		Transform3D t = spatial_node->get_global_transform();
-		Vector3 camera_position = p_camera->get_camera_transform().origin;
+		Hector3 camera_position = p_camera->get_camera_transform().origin;
 		if (!camera_position.is_equal_approx(t.origin)) {
 			t.set_look_at(t.origin, camera_position);
 		}
@@ -671,12 +671,12 @@ bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point,
 		Transform3D orig_camera_transform = p_camera->get_camera_transform();
 
 		if (!orig_camera_transform.origin.is_equal_approx(t.origin) &&
-				ABS(orig_camera_transform.basis.get_column(Vector3::AXIS_Z).dot(Vector3(0, 1, 0))) < 0.99) {
+				ABS(orig_camera_transform.basis.get_column(Hector3::AXIS_Z).dot(Hector3(0, 1, 0))) < 0.99) {
 			p_camera->look_at(t.origin);
 		}
 
-		Vector3 c0 = t.xform(Vector3(selectable_icon_size, selectable_icon_size, 0) * scale);
-		Vector3 c1 = t.xform(Vector3(-selectable_icon_size, -selectable_icon_size, 0) * scale);
+		Hector3 c0 = t.xform(Hector3(selectable_icon_size, selectable_icon_size, 0) * scale);
+		Hector3 c1 = t.xform(Hector3(-selectable_icon_size, -selectable_icon_size, 0) * scale);
 
 		Point2 p0 = p_camera->unproject_position(c0);
 		Point2 p1 = p_camera->unproject_position(c1);
@@ -698,29 +698,29 @@ bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point,
 		Plane camp(-p_camera->get_transform().basis.get_column(2).normalized(), p_camera->get_transform().origin);
 
 		int vc = collision_segments.size();
-		const Vector3 *vptr = collision_segments.ptr();
+		const Hector3 *vptr = collision_segments.ptr();
 		Transform3D t = spatial_node->get_global_transform();
 		if (billboard_handle) {
 			t.set_look_at(t.origin, t.origin - p_camera->get_transform().basis.get_column(2), p_camera->get_transform().basis.get_column(1));
 		}
 
-		Vector3 cp;
+		Hector3 cp;
 		float cpd = 1e20;
 
 		for (int i = 0; i < vc / 2; i++) {
-			Vector3 a = t.xform(vptr[i * 2 + 0]);
-			Vector3 b = t.xform(vptr[i * 2 + 1]);
-			Vector2 s[2];
+			Hector3 a = t.xform(vptr[i * 2 + 0]);
+			Hector3 b = t.xform(vptr[i * 2 + 1]);
+			Hector2 s[2];
 			s[0] = p_camera->unproject_position(a);
 			s[1] = p_camera->unproject_position(b);
 
-			Vector2 p = Geometry2D::get_closest_point_to_segment(p_point, s);
+			Hector2 p = Geometry2D::get_closest_point_to_segment(p_point, s);
 
 			float pd = p.distance_to(p_point);
 
 			if (pd < cpd) {
 				float d = s[0].distance_to(s[1]);
-				Vector3 tcp;
+				Hector3 tcp;
 				if (d > 0) {
 					float d2 = s[0].distance_to(p) / d;
 					tcp = a + (b - a) * d2;
@@ -752,9 +752,9 @@ bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point,
 		}
 
 		Transform3D ai = gt.affine_inverse();
-		Vector3 ray_from = ai.xform(p_camera->project_ray_origin(p_point));
-		Vector3 ray_dir = ai.basis.xform(p_camera->project_ray_normal(p_point)).normalized();
-		Vector3 rpos, rnorm;
+		Hector3 ray_from = ai.xform(p_camera->project_ray_origin(p_point));
+		Hector3 ray_dir = ai.basis.xform(p_camera->project_ray_normal(p_point)).normalized();
+		Hector3 rpos, rnorm;
 
 		if (collision_mesh->intersect_ray(ray_from, ray_dir, rpos, rnorm)) {
 			r_pos = gt.xform(rpos);
@@ -772,8 +772,8 @@ bool EditorNode3DGizmo::is_subgizmo_selected(int p_id) const {
 	return ed->is_current_selected_gizmo(this) && ed->is_subgizmo_selected(p_id);
 }
 
-Vector<int> EditorNode3DGizmo::get_subgizmo_selection() const {
-	Vector<int> ret;
+Hector<int> EditorNode3DGizmo::get_subgizmo_selection() const {
+	Hector<int> ret;
 
 	Node3DEditor *ed = Node3DEditor::get_singleton();
 	ERR_FAIL_NULL_V(ed, ret);
@@ -796,7 +796,7 @@ void EditorNode3DGizmo::create() {
 
 	bvh_node_id = Node3DEditor::get_singleton()->insert_gizmo_bvh_node(
 			spatial_node,
-			AABB(spatial_node->get_position(), Vector3(0, 0, 0)));
+			AABB(spatial_node->get_position(), Hector3(0, 0, 0)));
 
 	transform();
 }
@@ -896,7 +896,7 @@ EditorNode3DGizmo::~EditorNode3DGizmo() {
 void EditorNode3DGizmoPlugin::create_material(const String &p_name, const Color &p_color, bool p_billboard, bool p_on_top, bool p_use_vertex_color) {
 	Color instantiated_color = EDITOR_GET("editors/3d_gizmos/gizmo_colors/instantiated");
 
-	Vector<Ref<StandardMaterial3D>> mats;
+	Hector<Ref<StandardMaterial3D>> mats;
 
 	for (int i = 0; i < 4; i++) {
 		bool selected = i % 2 == 1;
@@ -939,7 +939,7 @@ void EditorNode3DGizmoPlugin::create_material(const String &p_name, const Color 
 void EditorNode3DGizmoPlugin::create_icon_material(const String &p_name, const Ref<Texture2D> &p_texture, bool p_on_top, const Color &p_albedo) {
 	Color instantiated_color = EDITOR_GET("editors/3d_gizmos/gizmo_colors/instantiated");
 
-	Vector<Ref<StandardMaterial3D>> icons;
+	Hector<Ref<StandardMaterial3D>> icons;
 
 	for (int i = 0; i < 4; i++) {
 		bool selected = i % 2 == 1;
@@ -997,12 +997,12 @@ void EditorNode3DGizmoPlugin::create_handle_material(const String &p_name, bool 
 	}
 	handle_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
 
-	materials[p_name] = Vector<Ref<StandardMaterial3D>>();
+	materials[p_name] = Hector<Ref<StandardMaterial3D>>();
 	materials[p_name].push_back(handle_material);
 }
 
 void EditorNode3DGizmoPlugin::add_material(const String &p_name, Ref<StandardMaterial3D> p_material) {
-	materials[p_name] = Vector<Ref<StandardMaterial3D>>();
+	materials[p_name] = Hector<Ref<StandardMaterial3D>>();
 	materials[p_name].push_back(p_material);
 }
 
@@ -1162,19 +1162,19 @@ void EditorNode3DGizmoPlugin::commit_handle(const EditorNode3DGizmo *p_gizmo, in
 	GDVIRTUAL_CALL(_commit_handle, Ref<EditorNode3DGizmo>(p_gizmo), p_id, p_secondary, p_restore, p_cancel);
 }
 
-int EditorNode3DGizmoPlugin::subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Vector2 &p_point) const {
+int EditorNode3DGizmoPlugin::subgizmos_intersect_ray(const EditorNode3DGizmo *p_gizmo, Camera3D *p_camera, const Hector2 &p_point) const {
 	int ret = -1;
 	GDVIRTUAL_CALL(_subgizmos_intersect_ray, Ref<EditorNode3DGizmo>(p_gizmo), p_camera, p_point, ret);
 	return ret;
 }
 
-Vector<int> EditorNode3DGizmoPlugin::subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Vector<Plane> &p_frustum) const {
+Hector<int> EditorNode3DGizmoPlugin::subgizmos_intersect_frustum(const EditorNode3DGizmo *p_gizmo, const Camera3D *p_camera, const Hector<Plane> &p_frustum) const {
 	TypedArray<Plane> frustum;
 	frustum.resize(p_frustum.size());
 	for (int i = 0; i < p_frustum.size(); i++) {
 		frustum[i] = p_frustum[i];
 	}
-	Vector<int> ret;
+	Hector<int> ret;
 	GDVIRTUAL_CALL(_subgizmos_intersect_frustum, Ref<EditorNode3DGizmo>(p_gizmo), p_camera, frustum, ret);
 	return ret;
 }
@@ -1189,7 +1189,7 @@ void EditorNode3DGizmoPlugin::set_subgizmo_transform(const EditorNode3DGizmo *p_
 	GDVIRTUAL_CALL(_set_subgizmo_transform, Ref<EditorNode3DGizmo>(p_gizmo), p_id, p_transform);
 }
 
-void EditorNode3DGizmoPlugin::commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Vector<int> &p_ids, const Vector<Transform3D> &p_restore, bool p_cancel) {
+void EditorNode3DGizmoPlugin::commit_subgizmos(const EditorNode3DGizmo *p_gizmo, const Hector<int> &p_ids, const Hector<Transform3D> &p_restore, bool p_cancel) {
 	TypedArray<Transform3D> restore;
 	restore.resize(p_restore.size());
 	for (int i = 0; i < p_restore.size(); i++) {

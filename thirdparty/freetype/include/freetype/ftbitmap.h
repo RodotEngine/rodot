@@ -223,7 +223,7 @@ FT_BEGIN_HEADER
    *     The source bitmap, which can have any @FT_Pixel_Mode format.
    *
    *   source_offset ::
-   *     The offset vector to the upper left corner of the source bitmap in
+   *     The offset Hector to the upper left corner of the source bitmap in
    *     26.6 pixel format.  It should represent an integer offset; the
    *     function will set the lowest six bits to zero to enforce that.
    *
@@ -237,7 +237,7 @@ FT_BEGIN_HEADER
    *     @FT_PIXEL_MODE_BGRA.
    *
    *   atarget_offset ::
-   *     The offset vector to the upper left corner of the target bitmap in
+   *     The offset Hector to the upper left corner of the target bitmap in
    *     26.6 pixel format.  It should represent an integer offset; the
    *     function will set the lowest six bits to zero to enforce that.
    *
@@ -248,7 +248,7 @@ FT_BEGIN_HEADER
    *   This function doesn't perform clipping.
    *
    *   The bitmap in `target` gets allocated or reallocated as needed; the
-   *   vector `atarget_offset` is updated accordingly.
+   *   Hector `atarget_offset` is updated accordingly.
    *
    *   In case of allocation or reallocation, the bitmap's pitch is set to
    *   `4 * width`.  Both `source` and `target` must have the same bitmap
@@ -263,9 +263,9 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Bitmap_Blend( FT_Library         library,
                    const FT_Bitmap*   source,
-                   const FT_Vector    source_offset,
+                   const FT_Hector    source_offset,
                    FT_Bitmap*         target,
-                   FT_Vector         *atarget_offset,
+                   FT_Hector         *atarget_offset,
                    FT_Color           color );
 
 

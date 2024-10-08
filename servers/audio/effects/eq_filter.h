@@ -31,7 +31,7 @@
 #ifndef EQ_FILTER_H
 #define EQ_FILTER_H
 
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/typedefs.h"
 
 class EQ {
@@ -65,7 +65,7 @@ private:
 		float c1, c2, c3;
 	};
 
-	Vector<Band> band;
+	Hector<Band> band;
 
 	float mix_rate;
 
@@ -76,7 +76,7 @@ public:
 
 	int get_band_count() const;
 	void set_preset_band_mode(Preset p_preset);
-	void set_bands(const Vector<float> &p_bands);
+	void set_bands(const Hector<float> &p_bands);
 	BandProcess get_band_processor(int p_band) const;
 	float get_band_frequency(int p_band);
 

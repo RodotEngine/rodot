@@ -383,7 +383,7 @@ ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const
     return getKey(key, nullptr, status);
 }
 
-// this is a vector that subclasses of ICUService can override to further customize the result object
+// this is a Hector that subclasses of ICUService can override to further customize the result object
 // before returning it.  All other public get functions should call this one.
 
 UObject* 
@@ -453,7 +453,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         }
 
         UnicodeString currentDescriptor;
-        LocalPointer<UVector> cacheDescriptorList;
+        LocalPointer<UHector> cacheDescriptorList;
         UBool putInCache = false;
 
         int32_t startIndex = 0;
@@ -513,7 +513,7 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             // fallback to the one that succeeded, we want to hit the
             // cache the first time next goaround.
             if (cacheDescriptorList.isNull()) {
-                cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UVector(uprv_deleteUObject, nullptr, 5, status), status);
+                cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UHector(uprv_deleteUObject, nullptr, 5, status), status);
                 if (U_FAILURE(status)) {
                     return nullptr;
                 }
@@ -591,13 +591,13 @@ ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actu
     return nullptr;
 }
 
-UVector& 
-ICUService::getVisibleIDs(UVector& result, UErrorCode& status) const {
+UHector& 
+ICUService::getVisibleIDs(UHector& result, UErrorCode& status) const {
     return getVisibleIDs(result, nullptr, status);
 }
 
-UVector& 
-ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const 
+UHector& 
+ICUService::getVisibleIDs(UHector& result, const UnicodeString* matchID, UErrorCode& status) const 
 {
     result.removeAllElements();
 
@@ -705,21 +705,21 @@ ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const
     return result;
 }
 
-UVector& 
-ICUService::getDisplayNames(UVector& result, UErrorCode& status) const 
+UHector& 
+ICUService::getDisplayNames(UHector& result, UErrorCode& status) const 
 {
     return getDisplayNames(result, Locale::getDefault(), nullptr, status);
 }
 
 
-UVector& 
-ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
+UHector& 
+ICUService::getDisplayNames(UHector& result, const Locale& locale, UErrorCode& status) const 
 {
     return getDisplayNames(result, locale, nullptr, status);
 }
 
-UVector& 
-ICUService::getDisplayNames(UVector& result, 
+UHector& 
+ICUService::getDisplayNames(UHector& result, 
                             const Locale& locale, 
                             const UnicodeString* matchID, 
                             UErrorCode& status) const 
@@ -840,7 +840,7 @@ ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& statu
         Mutex mutex(&lock);
 
         if (factories == nullptr) {
-            LocalPointer<UVector> lpFactories(new UVector(uprv_deleteUObject, nullptr, status), status);
+            LocalPointer<UHector> lpFactories(new UHector(uprv_deleteUObject, nullptr, status), status);
             if (U_FAILURE(status)) {
                 return nullptr;
             }

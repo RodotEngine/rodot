@@ -158,7 +158,7 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 
 	double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
 
-	Vector2 mpos;
+	Hector2 mpos;
 	bool mouse_on_up_button = false;
 	bool mouse_on_down_button = false;
 	if (mb.is_valid() || mm.is_valid()) {

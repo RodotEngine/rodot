@@ -165,7 +165,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
                     }
                 }
             } else {
-                // matrix from vector or scalar
+                // matrix from Hector or scalar
                 int nodeComps = node->getType().computeNumComponents();
                 if (nodeComps == 1) {
                     for (int c = 0; c < matrixCols; ++c) {

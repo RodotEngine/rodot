@@ -138,7 +138,7 @@ struct CompositeGlyphRecord
     }
   }
 
-  bool get_points (contour_point_vector_t &points) const
+  bool get_points (contour_point_Hector_t &points) const
   {
     float matrix[4];
     contour_point_t trans;
@@ -367,7 +367,7 @@ struct CompositeGlyph
   }
 
   bool compile_bytes_with_deltas (const hb_bytes_t &source_bytes,
-                                  const contour_point_vector_t &points_with_deltas,
+                                  const contour_point_Hector_t &points_with_deltas,
                                   hb_bytes_t &dest_bytes /* OUT */)
   {
     if (source_bytes.length <= GlyphHeader::static_size ||

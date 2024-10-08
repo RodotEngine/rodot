@@ -784,9 +784,9 @@ void mbedtls_gcm_free(mbedtls_gcm_context *ctx)
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_CCM_GCM_CAN_AES)
 /*
- * AES-GCM test vectors from:
+ * AES-GCM test Hectors from:
  *
- * http://csrc.nist.gov/groups/STM/cavp/documents/mac/gcmtestvectors.zip
+ * http://csrc.nist.gov/groups/STM/cavp/documents/mac/gcmtestHectors.zip
  */
 #define MAX_TESTS   6
 

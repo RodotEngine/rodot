@@ -83,7 +83,7 @@ public:
 	void set_fallback_segments(uint32_t p_fallback_segments);
 	uint32_t get_fallback_segments() const;
 
-	virtual Vector2 intersects_ray(const Vector3 &p_origin, const Vector3 &p_direction) const override;
+	virtual Hector2 intersects_ray(const Hector3 &p_origin, const Hector3 &p_direction) const override;
 
 	OpenXRCompositionLayerEquirect();
 	~OpenXRCompositionLayerEquirect();

@@ -42,7 +42,7 @@ class PCKPacker : public RefCounted {
 	int alignment = 0;
 	uint64_t ofs = 0;
 
-	Vector<uint8_t> key;
+	Hector<uint8_t> key;
 	bool enc_dir = false;
 
 	static void _bind_methods();
@@ -53,9 +53,9 @@ class PCKPacker : public RefCounted {
 		uint64_t ofs = 0;
 		uint64_t size = 0;
 		bool encrypted = false;
-		Vector<uint8_t> md5;
+		Hector<uint8_t> md5;
 	};
-	Vector<File> files;
+	Hector<File> files;
 
 public:
 	Error pck_start(const String &p_pck_path, int p_alignment = 32, const String &p_key = "0000000000000000000000000000000000000000000000000000000000000000", bool p_encrypt_directory = false);

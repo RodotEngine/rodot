@@ -122,7 +122,7 @@ void hb_outline_t::embolden (float x_strength, float y_strength,
   signed first = 0;
   for (unsigned c = 0; c < contours.length; c++)
   {
-    hb_outline_vector_t in, out, anchor, shift;
+    hb_outline_Hector_t in, out, anchor, shift;
     float l_in, l_out, l_anchor = 0, l, q, d;
 
     l_in = 0;

@@ -262,7 +262,7 @@ public:
 
 	// Returns the list of required extensions. After compilation this will contains any other 
 	// extensions that the compiler used automatically, in addition to the user specified ones.
-	const SmallVector<std::string> &get_required_extensions() const;
+	const SmallHector<std::string> &get_required_extensions() const;
 
 	// Legacy GLSL compatibility method.
 	// Takes a uniform or push constant variable and flattens it into a (i|u)vec4 array[N]; array instead.
@@ -318,7 +318,7 @@ protected:
 		};
 
 		static const char *get_extension_name(Candidate c);
-		static SmallVector<std::string> get_extra_required_extension_names(Candidate c);
+		static SmallHector<std::string> get_extra_required_extension_names(Candidate c);
 		static const char *get_extra_required_extension_predicate(Candidate c);
 
 		enum Feature
@@ -357,10 +357,10 @@ protected:
 		using FeatureMask = uint32_t;
 		static_assert(sizeof(FeatureMask) * 8u >= FeatureCount, "Mask type needs more bits.");
 
-		using CandidateVector = SmallVector<Candidate, CandidateCount>;
-		using FeatureVector = SmallVector<Feature>;
+		using CandidateHector = SmallHector<Candidate, CandidateCount>;
+		using FeatureHector = SmallHector<Feature>;
 
-		static FeatureVector get_feature_dependencies(Feature feature);
+		static FeatureHector get_feature_dependencies(Feature feature);
 		static FeatureMask get_feature_dependency_mask(Feature feature);
 		static bool can_feature_be_implemented_without_extensions(Feature feature);
 		static Candidate get_KHR_extension_for_feature(Feature feature);
@@ -375,11 +375,11 @@ protected:
 		bool is_feature_requested(Feature feature) const;
 		Result resolve() const;
 
-		static CandidateVector get_candidates_for_feature(Feature ft, const Result &r);
+		static CandidateHector get_candidates_for_feature(Feature ft, const Result &r);
 
 	private:
-		static CandidateVector get_candidates_for_feature(Feature ft);
-		static FeatureMask build_mask(const SmallVector<Feature> &features);
+		static CandidateHector get_candidates_for_feature(Feature ft);
+		static FeatureMask build_mask(const SmallHector<Feature> &features);
 		FeatureMask feature_mask = 0;
 	};
 
@@ -396,7 +396,7 @@ protected:
 	virtual void emit_function_prototype(SPIRFunction &func, const Bitset &return_flags);
 
 	SPIRBlock *current_emitting_block = nullptr;
-	SmallVector<SPIRBlock *> current_emitting_switch_stack;
+	SmallHector<SPIRBlock *> current_emitting_switch_stack;
 	bool current_emitting_switch_fallthrough = false;
 
 	virtual void emit_instruction(const Instruction &instr);
@@ -425,7 +425,7 @@ protected:
 	                                        uint32_t count);
 	virtual void emit_header();
 	void emit_line_directive(uint32_t file_id, uint32_t line_literal);
-	void build_workgroup_size(SmallVector<std::string> &arguments, const SpecializationConstant &x,
+	void build_workgroup_size(SmallHector<std::string> &arguments, const SpecializationConstant &x,
 	                          const SpecializationConstant &y, const SpecializationConstant &z);
 
 	void request_subgroup_feature(ShaderSubgroupSupportHelper::Feature feature);
@@ -433,7 +433,7 @@ protected:
 	virtual void emit_sampled_image_op(uint32_t result_type, uint32_t result_id, uint32_t image_id, uint32_t samp_id);
 	virtual void emit_texture_op(const Instruction &i, bool sparse);
 	virtual std::string to_texture_op(const Instruction &i, bool sparse, bool *forward,
-	                                  SmallVector<uint32_t> &inherited_expressions);
+	                                  SmallHector<uint32_t> &inherited_expressions);
 	virtual void emit_subgroup_op(const Instruction &i);
 	virtual std::string type_to_glsl(const SPIRType &type, uint32_t id = 0);
 	virtual std::string builtin_to_glsl(spv::BuiltIn builtin, spv::StorageClass storage);
@@ -445,7 +445,7 @@ protected:
 	                                bool inside_block_like_struct_scope = false,
 	                                bool inside_struct_scope = false);
 	virtual std::string constant_op_expression(const SPIRConstantOp &cop);
-	virtual std::string constant_expression_vector(const SPIRConstant &c, uint32_t vector);
+	virtual std::string constant_expression_Hector(const SPIRConstant &c, uint32_t Hector);
 	virtual void emit_fixup();
 	virtual std::string variable_decl(const SPIRType &type, const std::string &name, uint32_t id = 0);
 	virtual bool variable_decl_is_remapped_storage(const SPIRVariable &var, spv::StorageClass storage) const;
@@ -497,7 +497,7 @@ protected:
 	virtual bool is_user_type_structured(uint32_t id) const;
 
 	void emit_copy_logical_type(uint32_t lhs_id, uint32_t lhs_type_id, uint32_t rhs_id, uint32_t rhs_type_id,
-	                            SmallVector<uint32_t> chain);
+	                            SmallHector<uint32_t> chain);
 
 	StringStream<> buffer;
 
@@ -553,7 +553,7 @@ protected:
 	// Used for implementing continue blocks where
 	// we want to obtain a list of statements we can merge
 	// on a single line separated by comma.
-	SmallVector<std::string> *redirect_statement = nullptr;
+	SmallHector<std::string> *redirect_statement = nullptr;
 	const SPIRBlock *current_continue_block = nullptr;
 	bool block_temporary_hoisting = false;
 	bool block_debug_directives = false;
@@ -674,11 +674,11 @@ protected:
 	void emit_interface_block(const SPIRVariable &type);
 	void emit_flattened_io_block(const SPIRVariable &var, const char *qual);
 	void emit_flattened_io_block_struct(const std::string &basename, const SPIRType &type, const char *qual,
-	                                    const SmallVector<uint32_t> &indices);
+	                                    const SmallHector<uint32_t> &indices);
 	void emit_flattened_io_block_member(const std::string &basename, const SPIRType &type, const char *qual,
-	                                    const SmallVector<uint32_t> &indices);
+	                                    const SmallHector<uint32_t> &indices);
 	void emit_block_chain(SPIRBlock &block);
-	void emit_hoisted_temporaries(SmallVector<std::pair<TypeID, ID>> &temporaries);
+	void emit_hoisted_temporaries(SmallHector<std::pair<TypeID, ID>> &temporaries);
 	std::string constant_value_macro_name(uint32_t id);
 	int get_constant_mapping_to_workgroup_component(const SPIRConstant &constant) const;
 	void emit_constant(const SPIRConstant &constant);
@@ -777,7 +777,7 @@ protected:
 	std::string flattened_access_chain_matrix(uint32_t base, const uint32_t *indices, uint32_t count,
 	                                          const SPIRType &target_type, uint32_t offset, uint32_t matrix_stride,
 	                                          bool need_transpose);
-	std::string flattened_access_chain_vector(uint32_t base, const uint32_t *indices, uint32_t count,
+	std::string flattened_access_chain_Hector(uint32_t base, const uint32_t *indices, uint32_t count,
 	                                          const SPIRType &target_type, uint32_t offset, uint32_t matrix_stride,
 	                                          bool need_transpose);
 	std::pair<std::string, uint32_t> flattened_access_chain_offset(const SPIRType &basetype, const uint32_t *indices,
@@ -792,7 +792,7 @@ protected:
 	std::string declare_temporary(uint32_t type, uint32_t id);
 	void emit_uninitialized_temporary(uint32_t type, uint32_t id);
 	SPIRExpression &emit_uninitialized_temporary_expression(uint32_t type, uint32_t id);
-	void append_global_func_args(const SPIRFunction &func, uint32_t index, SmallVector<std::string> &arglist);
+	void append_global_func_args(const SPIRFunction &func, uint32_t index, SmallHector<std::string> &arglist);
 	std::string to_non_uniform_aware_expression(uint32_t id);
 	std::string to_expression(uint32_t id, bool register_expression_read = true);
 	std::string to_composite_constructor_expression(const SPIRType &parent_type, uint32_t id, bool block_like_type);
@@ -814,7 +814,7 @@ protected:
 	void strip_enclosed_expression(std::string &expr);
 	std::string to_member_name(const SPIRType &type, uint32_t index);
 	virtual std::string to_member_reference(uint32_t base, const SPIRType &type, uint32_t index, bool ptr_chain_is_resolved);
-	std::string to_multi_member_reference(const SPIRType &type, const SmallVector<uint32_t> &indices);
+	std::string to_multi_member_reference(const SPIRType &type, const SmallHector<uint32_t> &indices);
 	std::string type_to_glsl_constructor(const SPIRType &type);
 	std::string argument_decl(const SPIRFunction::Parameter &arg);
 	virtual std::string to_qualifiers_glsl(uint32_t id);
@@ -891,7 +891,7 @@ protected:
 	std::string to_flattened_struct_member(const std::string &basename, const SPIRType &type, uint32_t index);
 	void store_flattened_struct(uint32_t lhs_id, uint32_t value);
 	void store_flattened_struct(const std::string &basename, uint32_t rhs, const SPIRType &type,
-	                            const SmallVector<uint32_t> &indices);
+	                            const SmallHector<uint32_t> &indices);
 	std::string to_flattened_access_chain_expression(uint32_t id);
 
 	// Usage tracking. If a temporary is used more than once, use the temporary instead to
@@ -899,15 +899,15 @@ protected:
 	std::unordered_map<uint32_t, uint32_t> expression_usage_counts;
 	void track_expression_read(uint32_t id);
 
-	SmallVector<std::string> forced_extensions;
-	SmallVector<std::string> header_lines;
+	SmallHector<std::string> forced_extensions;
+	SmallHector<std::string> header_lines;
 
 	// Used when expressions emit extra opcodes with their own unique IDs,
 	// and we need to reuse the IDs across recompilation loops.
 	// Currently used by NMin/Max/Clamp implementations.
 	std::unordered_map<uint32_t, uint32_t> extra_sub_expressions;
 
-	SmallVector<TypeID> workaround_ubo_load_overload_types;
+	SmallHector<TypeID> workaround_ubo_load_overload_types;
 	void request_workaround_wrapper_overload(TypeID id);
 	void rewrite_load_for_wrapped_row_major(std::string &expr, TypeID loaded_type, ID ptr);
 
@@ -1044,7 +1044,7 @@ protected:
 	void fixup_anonymous_struct_names();
 	void fixup_anonymous_struct_names(std::unordered_set<uint32_t> &visited, const SPIRType &type);
 
-	static const char *vector_swizzle(int vecsize, int index);
+	static const char *Hector_swizzle(int vecsize, int index);
 
 	bool is_stage_output_location_masked(uint32_t location, uint32_t component) const;
 	bool is_stage_output_builtin_masked(spv::BuiltIn builtin) const;
@@ -1063,11 +1063,11 @@ protected:
 private:
 	void init();
 
-	SmallVector<ConstantID> get_composite_constant_ids(ConstantID const_id);
-	void fill_composite_constant(SPIRConstant &constant, TypeID type_id, const SmallVector<ConstantID> &initializers);
-	void set_composite_constant(ConstantID const_id, TypeID type_id, const SmallVector<ConstantID> &initializers);
+	SmallHector<ConstantID> get_composite_constant_ids(ConstantID const_id);
+	void fill_composite_constant(SPIRConstant &constant, TypeID type_id, const SmallHector<ConstantID> &initializers);
+	void set_composite_constant(ConstantID const_id, TypeID type_id, const SmallHector<ConstantID> &initializers);
 	TypeID get_composite_member_type(TypeID type_id, uint32_t member_idx);
-	std::unordered_map<uint32_t, SmallVector<ConstantID>> const_composite_insert_ids;
+	std::unordered_map<uint32_t, SmallHector<ConstantID>> const_composite_insert_ids;
 };
 } // namespace SPIRV_CROSS_NAMESPACE
 

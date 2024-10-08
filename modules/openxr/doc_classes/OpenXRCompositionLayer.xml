@@ -18,12 +18,12 @@
 			</description>
 		</method>
 		<method name="intersects_ray" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="origin" type="Vector3" />
-			<param index="1" name="direction" type="Vector3" />
+			<return type="Hector2" />
+			<param index="0" name="origin" type="Hector3" />
+			<param index="1" name="direction" type="Hector3" />
 			<description>
 				Returns UV coordinates where the given ray intersects with the composition layer. [param origin] and [param direction] must be in global space.
-				Returns [code]Vector2(-1.0, -1.0)[/code] if the ray doesn't intersect.
+				Returns [code]Hector2(-1.0, -1.0)[/code] if the ray doesn't intersect.
 			</description>
 		</method>
 		<method name="is_natively_supported" qualifiers="const">
@@ -39,7 +39,7 @@
 			Enables the blending the layer using its alpha channel.
 			Can be combined with [member Viewport.transparent_bg] to give the layer a transparent background.
 		</member>
-		<member name="android_surface_size" type="Vector2i" setter="set_android_surface_size" getter="get_android_surface_size" default="Vector2i(1024, 1024)">
+		<member name="android_surface_size" type="Hector2i" setter="set_android_surface_size" getter="get_android_surface_size" default="Hector2i(1024, 1024)">
 			The size of the Android surface to create if [member use_android_surface] is enabled.
 		</member>
 		<member name="enable_hole_punch" type="bool" setter="set_enable_hole_punch" getter="get_enable_hole_punch" default="false">

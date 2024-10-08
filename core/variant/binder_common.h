@@ -142,12 +142,12 @@ struct VariantCaster<const T &> {
 // Object enum casts must go here
 VARIANT_ENUM_CAST(Object::ConnectFlags);
 
-VARIANT_ENUM_CAST(Vector2::Axis);
-VARIANT_ENUM_CAST(Vector2i::Axis);
-VARIANT_ENUM_CAST(Vector3::Axis);
-VARIANT_ENUM_CAST(Vector3i::Axis);
-VARIANT_ENUM_CAST(Vector4::Axis);
-VARIANT_ENUM_CAST(Vector4i::Axis);
+VARIANT_ENUM_CAST(Hector2::Axis);
+VARIANT_ENUM_CAST(Hector2i::Axis);
+VARIANT_ENUM_CAST(Hector3::Axis);
+VARIANT_ENUM_CAST(Hector3i::Axis);
+VARIANT_ENUM_CAST(Hector4::Axis);
+VARIANT_ENUM_CAST(Hector4i::Axis);
 VARIANT_ENUM_CAST(EulerOrder);
 VARIANT_ENUM_CAST(Projection::Planes);
 
@@ -419,7 +419,7 @@ void call_with_variant_args(T *p_instance, void (T::*p_method)(P...), const Vari
 }
 
 template <typename T, typename... P>
-void call_with_variant_args_dv(T *p_instance, void (T::*p_method)(P...), const Variant **p_args, int p_argcount, Callable::CallError &r_error, const Vector<Variant> &default_values) {
+void call_with_variant_args_dv(T *p_instance, void (T::*p_method)(P...), const Variant **p_args, int p_argcount, Callable::CallError &r_error, const Hector<Variant> &default_values) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -470,7 +470,7 @@ void call_with_variant_argsc(T *p_instance, void (T::*p_method)(P...) const, con
 }
 
 template <typename T, typename... P>
-void call_with_variant_argsc_dv(T *p_instance, void (T::*p_method)(P...) const, const Variant **p_args, int p_argcount, Callable::CallError &r_error, const Vector<Variant> &default_values) {
+void call_with_variant_argsc_dv(T *p_instance, void (T::*p_method)(P...) const, const Variant **p_args, int p_argcount, Callable::CallError &r_error, const Hector<Variant> &default_values) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -503,7 +503,7 @@ void call_with_variant_argsc_dv(T *p_instance, void (T::*p_method)(P...) const, 
 }
 
 template <typename T, typename R, typename... P>
-void call_with_variant_args_ret_dv(T *p_instance, R (T::*p_method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, Callable::CallError &r_error, const Vector<Variant> &default_values) {
+void call_with_variant_args_ret_dv(T *p_instance, R (T::*p_method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, Callable::CallError &r_error, const Hector<Variant> &default_values) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -536,7 +536,7 @@ void call_with_variant_args_ret_dv(T *p_instance, R (T::*p_method)(P...), const 
 }
 
 template <typename T, typename R, typename... P>
-void call_with_variant_args_retc_dv(T *p_instance, R (T::*p_method)(P...) const, const Variant **p_args, int p_argcount, Variant &r_ret, Callable::CallError &r_error, const Vector<Variant> &default_values) {
+void call_with_variant_args_retc_dv(T *p_instance, R (T::*p_method)(P...) const, const Variant **p_args, int p_argcount, Variant &r_ret, Callable::CallError &r_error, const Hector<Variant> &default_values) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -879,7 +879,7 @@ void call_with_variant_args_retc_static_helper(T *p_instance, R (*p_method)(T *,
 }
 
 template <typename T, typename R, typename... P>
-void call_with_variant_args_retc_static_helper_dv(T *p_instance, R (*p_method)(T *, P...), const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &default_values, Callable::CallError &r_error) {
+void call_with_variant_args_retc_static_helper_dv(T *p_instance, R (*p_method)(T *, P...), const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &default_values, Callable::CallError &r_error) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -925,7 +925,7 @@ void call_with_variant_args_static_helper(T *p_instance, void (*p_method)(T *, P
 }
 
 template <typename T, typename... P>
-void call_with_variant_args_static_helper_dv(T *p_instance, void (*p_method)(T *, P...), const Variant **p_args, int p_argcount, const Vector<Variant> &default_values, Callable::CallError &r_error) {
+void call_with_variant_args_static_helper_dv(T *p_instance, void (*p_method)(T *, P...), const Variant **p_args, int p_argcount, const Hector<Variant> &default_values, Callable::CallError &r_error) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -958,7 +958,7 @@ void call_with_variant_args_static_helper_dv(T *p_instance, void (*p_method)(T *
 }
 
 template <typename R, typename... P>
-void call_with_variant_args_static_ret_dv(R (*p_method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, Callable::CallError &r_error, const Vector<Variant> &default_values) {
+void call_with_variant_args_static_ret_dv(R (*p_method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, Callable::CallError &r_error, const Hector<Variant> &default_values) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
@@ -991,7 +991,7 @@ void call_with_variant_args_static_ret_dv(R (*p_method)(P...), const Variant **p
 }
 
 template <typename... P>
-void call_with_variant_args_static_dv(void (*p_method)(P...), const Variant **p_args, int p_argcount, Callable::CallError &r_error, const Vector<Variant> &default_values) {
+void call_with_variant_args_static_dv(void (*p_method)(P...), const Variant **p_args, int p_argcount, Callable::CallError &r_error, const Hector<Variant> &default_values) {
 #ifdef DEBUG_ENABLED
 	if ((size_t)p_argcount > sizeof...(P)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;

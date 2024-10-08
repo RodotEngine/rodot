@@ -50,7 +50,7 @@
 	String root;
 }
 
-- (void)makeAccessoryView:(NSSavePanel *)p_panel filters:(const Vector<String> &)p_filters options:(const TypedArray<Dictionary> &)p_options;
+- (void)makeAccessoryView:(NSSavePanel *)p_panel filters:(const Hector<String> &)p_filters options:(const TypedArray<Dictionary> &)p_options;
 - (void)setFileTypes:(NSMutableArray *)p_allowed_types;
 - (void)popupOptionAction:(id)p_sender;
 - (void)popupCheckAction:(id)p_sender;

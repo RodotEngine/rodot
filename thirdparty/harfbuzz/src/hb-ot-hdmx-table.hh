@@ -49,7 +49,7 @@ struct DeviceRecord
   bool serialize (hb_serialize_context_t *c,
 		  unsigned pixelSize,
 		  Iterator it,
-		  const hb_vector_t<hb_codepoint_pair_t> new_to_old_gid_list,
+		  const hb_Hector_t<hb_codepoint_pair_t> new_to_old_gid_list,
 		  unsigned num_glyphs)
   {
     TRACE_SERIALIZE (this);
@@ -95,7 +95,7 @@ struct hdmx
   bool serialize (hb_serialize_context_t *c,
 		  unsigned version,
 		  Iterator it,
-		  const hb_vector_t<hb_codepoint_pair_t> &new_to_old_gid_list,
+		  const hb_Hector_t<hb_codepoint_pair_t> &new_to_old_gid_list,
 		  unsigned num_glyphs)
   {
     TRACE_SERIALIZE (this);

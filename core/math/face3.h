@@ -34,7 +34,7 @@
 #include "core/math/aabb.h"
 #include "core/math/plane.h"
 #include "core/math/transform_3d.h"
-#include "core/math/vector3.h"
+#include "core/math/Hector3.h"
 
 struct [[nodiscard]] Face3 {
 	enum Side {
@@ -44,7 +44,7 @@ struct [[nodiscard]] Face3 {
 		SIDE_COPLANAR
 	};
 
-	Vector3 vertex[3];
+	Hector3 vertex[3];
 
 	/**
 	 * @param p_plane plane used to split the face
@@ -55,21 +55,21 @@ struct [[nodiscard]] Face3 {
 	int split_by_plane(const Plane &p_plane, Face3 *p_res, bool *p_is_point_over) const;
 
 	Plane get_plane(ClockDirection p_dir = CLOCKWISE) const;
-	Vector3 get_random_point_inside() const;
+	Hector3 get_random_point_inside() const;
 
 	bool is_degenerate() const;
 	real_t get_area() const;
 
-	Vector3 get_closest_point_to(const Vector3 &p_point) const;
+	Hector3 get_closest_point_to(const Hector3 &p_point) const;
 
-	bool intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *p_intersection = nullptr) const;
-	bool intersects_segment(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *p_intersection = nullptr) const;
+	bool intersects_ray(const Hector3 &p_from, const Hector3 &p_dir, Hector3 *p_intersection = nullptr) const;
+	bool intersects_segment(const Hector3 &p_from, const Hector3 &p_dir, Hector3 *p_intersection = nullptr) const;
 
-	void get_support(const Vector3 &p_normal, const Transform3D &p_transform, Vector3 *p_vertices, int *p_count, int p_max) const;
-	void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const;
+	void get_support(const Hector3 &p_normal, const Transform3D &p_transform, Hector3 *p_vertices, int *p_count, int p_max) const;
+	void project_range(const Hector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const;
 
 	AABB get_aabb() const {
-		AABB aabb(vertex[0], Vector3());
+		AABB aabb(vertex[0], Hector3());
 		aabb.expand_to(vertex[1]);
 		aabb.expand_to(vertex[2]);
 		return aabb;
@@ -80,7 +80,7 @@ struct [[nodiscard]] Face3 {
 	operator String() const;
 
 	inline Face3() {}
-	inline Face3(const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) {
+	inline Face3(const Hector3 &p_v1, const Hector3 &p_v2, const Hector3 &p_v3) {
 		vertex[0] = p_v1;
 		vertex[1] = p_v2;
 		vertex[2] = p_v3;
@@ -88,12 +88,12 @@ struct [[nodiscard]] Face3 {
 };
 
 bool Face3::intersects_aabb2(const AABB &p_aabb) const {
-	Vector3 perp = (vertex[0] - vertex[2]).cross(vertex[0] - vertex[1]);
+	Hector3 perp = (vertex[0] - vertex[2]).cross(vertex[0] - vertex[1]);
 
-	Vector3 half_extents = p_aabb.size * 0.5f;
-	Vector3 ofs = p_aabb.position + half_extents;
+	Hector3 half_extents = p_aabb.size * 0.5f;
+	Hector3 ofs = p_aabb.position + half_extents;
 
-	Vector3 sup = Vector3(
+	Hector3 sup = Hector3(
 			(perp.x > 0) ? -half_extents.x : half_extents.x,
 			(perp.y > 0) ? -half_extents.y : half_extents.y,
 			(perp.z > 0) ? -half_extents.z : half_extents.z);
@@ -128,85 +128,85 @@ bool Face3::intersects_aabb2(const AABB &p_aabb) const {
 
 #undef TEST_AXIS
 
-	const Vector3 edge_norms[3] = {
+	const Hector3 edge_norms[3] = {
 		vertex[0] - vertex[1],
 		vertex[1] - vertex[2],
 		vertex[2] - vertex[0],
 	};
 
 	for (int i = 0; i < 12; i++) {
-		Vector3 from, to;
+		Hector3 from, to;
 		switch (i) {
 			case 0: {
-				from = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z);
-				to = Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z);
+				from = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z);
+				to = Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z);
 			} break;
 			case 1: {
-				from = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
-				to = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z);
+				from = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
+				to = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z);
 			} break;
 			case 2: {
-				from = Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
-				to = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
+				from = Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
+				to = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
 
 			} break;
 			case 3: {
-				from = Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z);
-				to = Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
+				from = Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z);
+				to = Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
 
 			} break;
 			case 4: {
-				from = Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
-				to = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
+				from = Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
+				to = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
 			} break;
 			case 5: {
-				from = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
-				to = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
+				from = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
+				to = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
 			} break;
 			case 6: {
-				from = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
-				to = Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
+				from = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
+				to = Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
 
 			} break;
 			case 7: {
-				from = Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
-				to = Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
+				from = Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
+				to = Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
 
 			} break;
 			case 8: {
-				from = Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
-				to = Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
+				from = Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
+				to = Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
 
 			} break;
 			case 9: {
-				from = Vector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z);
-				to = Vector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
+				from = Hector3(p_aabb.position.x, p_aabb.position.y, p_aabb.position.z);
+				to = Hector3(p_aabb.position.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
 
 			} break;
 			case 10: {
-				from = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z);
-				to = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
+				from = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z);
+				to = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z);
 
 			} break;
 			case 11: {
-				from = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
-				to = Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
+				from = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y, p_aabb.position.z + p_aabb.size.z);
+				to = Hector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z);
 
 			} break;
 		}
 
-		Vector3 e1 = from - to;
+		Hector3 e1 = from - to;
 		for (int j = 0; j < 3; j++) {
-			Vector3 e2 = edge_norms[j];
+			Hector3 e2 = edge_norms[j];
 
-			Vector3 axis = vec3_cross(e1, e2);
+			Hector3 axis = vec3_cross(e1, e2);
 
 			if (axis.length_squared() < 0.0001f) {
 				continue; // coplanar
 			}
 			//axis.normalize();
 
-			Vector3 sup2 = Vector3(
+			Hector3 sup2 = Hector3(
 					(axis.x > 0) ? -half_extents.x : half_extents.x,
 					(axis.y > 0) ? -half_extents.y : half_extents.y,
 					(axis.z > 0) ? -half_extents.z : half_extents.z);

@@ -968,10 +968,10 @@ msgstr "Nonaktifkan Lipat"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Otomatis Buka lipatan Skena Asing"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "Pengeditan Vektor2 Horizontal"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Pengeditan Jenis Vektor Horisontal"
 
 msgid "Open Resources in Current Inspector"
@@ -1070,7 +1070,7 @@ msgstr "Program Eksternal"
 msgid "Raster Image Editor"
 msgstr "Editor Gambar Raster"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Editor Gambar Vektor"
 
 msgid "Audio Editor"
@@ -7562,7 +7562,7 @@ msgstr "Bake Resolusi"
 msgid "Bake Interval"
 msgstr "Waktu Pemanggangan"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Vektor Atas"
 
 msgid "Curve X"
@@ -9293,7 +9293,7 @@ msgstr "Pemulihan sebagai Tabrakan"
 msgid "Default Gravity"
 msgstr "Gravitasi Baku"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Vektor Gravitasi Bawaan"
 
 msgid "Default Linear Damp"

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include "Hector2.hpp"
 #include "Projection.h"
 #include "Shape.h"
 #include "BitmapRef.hpp"
@@ -22,7 +22,7 @@ void msdfFastEdgeErrorCorrection(const BitmapRef<float, 3> &sdf, const Projectio
 void msdfFastEdgeErrorCorrection(const BitmapRef<float, 4> &sdf, const Projection &projection, double range, double minDeviationRatio = ErrorCorrectionConfig::defaultMinDeviationRatio);
 
 /// The original version of the error correction algorithm.
-void msdfErrorCorrection_legacy(const BitmapRef<float, 3> &output, const Vector2 &threshold);
-void msdfErrorCorrection_legacy(const BitmapRef<float, 4> &output, const Vector2 &threshold);
+void msdfErrorCorrection_legacy(const BitmapRef<float, 3> &output, const Hector2 &threshold);
+void msdfErrorCorrection_legacy(const BitmapRef<float, 4> &output, const Hector2 &threshold);
 
 }

@@ -128,7 +128,7 @@ class EditorPropertyArray : public EditorProperty {
 	Variant::Type subtype;
 	PropertyHint subtype_hint;
 	String subtype_hint_string;
-	LocalVector<Slot> slots;
+	LocalHector<Slot> slots;
 
 	Slot reorder_slot;
 	int reorder_to_index = -1;
@@ -219,7 +219,7 @@ class EditorPropertyDictionary : public EditorProperty {
 	EditorSpinSlider *size_sliderv = nullptr;
 	Button *button_add_item = nullptr;
 	EditorPaginator *paginator = nullptr;
-	LocalVector<Slot> slots;
+	LocalHector<Slot> slots;
 	void _create_new_property_slot(int p_idx);
 
 	void _page_changed(int p_page);

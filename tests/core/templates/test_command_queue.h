@@ -114,7 +114,7 @@ public:
 		TEST_MSG_MAX
 	};
 
-	Vector<TestMsgType> message_types_to_write;
+	Hector<TestMsgType> message_types_to_write;
 	bool during_writing = false;
 	int message_count_to_read = 0;
 	bool exit_threads = false;

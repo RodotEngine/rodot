@@ -73,7 +73,7 @@
   #endif
 #endif
 
-// Force vector-sized SIMD alignment
+// Force Hector-sized SIMD alignment
 #if ASTCENC_AVX
   #define ASTCENC_VECALIGN 32
 #elif ASTCENC_SSE || ASTCENC_NEON
@@ -103,7 +103,7 @@
   Note: Many of these are not necessarily faster than simple C versions when
   used on a single scalar value, but are included for testing purposes as most
   have an option based on SSE intrinsics and therefore provide an obvious route
-  to future vectorization.
+  to future Hectorization.
 ============================================================================ */
 
 // Union for manipulation of float bit patterns
@@ -438,7 +438,7 @@ uint64_t rand(uint64_t state[2]);
 #endif
 
 /*********************************
-  Vector library
+  Hector library
 *********************************/
 #include "astcenc_vecmathlib.h"
 

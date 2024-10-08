@@ -43,9 +43,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
-#include <vector>
+#include <Vector>
 
-#include "Vector2.h"
+#include "Hector2.h"
 
 /**
  * \brief       A sufficiently small positive number.
@@ -66,8 +66,8 @@ namespace RVO2D {
 	 *                             be calculated.
 	 * \return     The squared distance from the line segment to the point.
 	 */
-	inline float distSqPointLineSegment(const Vector2 &a, const Vector2 &b,
-										const Vector2 &c)
+	inline float distSqPointLineSegment(const Hector2 &a, const Hector2 &b,
+										const Hector2 &c)
 	{
 		const float r = ((c - a) * (b - a)) / absSq(b - a);
 
@@ -91,7 +91,7 @@ namespace RVO2D {
 	 *                             be calculated.
 	 * \return     Positive when the point c lies to the left of the line ab.
 	 */
-	inline float leftOf(const Vector2 &a, const Vector2 &b, const Vector2 &c)
+	inline float leftOf(const Hector2 &a, const Hector2 &b, const Hector2 &c)
 	{
 		return det(a - c, b - a);
 	}

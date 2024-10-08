@@ -48,13 +48,13 @@ TEST_CASE("[SceneTree][Control]") {
 		CHECK_EQ(test_child->get_global_position(), Point2(1, 1));
 		test_node->set_global_position(Point2(2, 2));
 		CHECK_EQ(test_node->get_global_position(), Point2(2, 2));
-		test_node->set_scale(Vector2(4, 4));
-		CHECK_EQ(test_node->get_global_transform(), Transform2D(0, Size2(4, 4), 0, Vector2(2, 2)));
-		test_node->set_scale(Vector2(1, 1));
+		test_node->set_scale(Hector2(4, 4));
+		CHECK_EQ(test_node->get_global_transform(), Transform2D(0, Size2(4, 4), 0, Hector2(2, 2)));
+		test_node->set_scale(Hector2(1, 1));
 		test_node->set_rotation_degrees(90);
-		CHECK_EQ(test_node->get_global_transform(), Transform2D(Math_PI / 2, Vector2(2, 2)));
-		test_node->set_pivot_offset(Vector2(1, 0));
-		CHECK_EQ(test_node->get_global_transform(), Transform2D(Math_PI / 2, Vector2(3, 1)));
+		CHECK_EQ(test_node->get_global_transform(), Transform2D(Math_PI / 2, Hector2(2, 2)));
+		test_node->set_pivot_offset(Hector2(1, 0));
+		CHECK_EQ(test_node->get_global_transform(), Transform2D(Math_PI / 2, Hector2(3, 1)));
 
 		memdelete(test_child);
 		memdelete(test_node);

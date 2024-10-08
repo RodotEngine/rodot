@@ -56,7 +56,7 @@
   ft_raster1_transform( FT_Renderer       render,
                         FT_GlyphSlot      slot,
                         const FT_Matrix*  matrix,
-                        const FT_Vector*  delta )
+                        const FT_Hector*  delta )
   {
     FT_Error error = FT_Err_Ok;
 
@@ -96,7 +96,7 @@
   ft_raster1_render( FT_Renderer       render,
                      FT_GlyphSlot      slot,
                      FT_Render_Mode    mode,
-                     const FT_Vector*  origin )
+                     const FT_Hector*  origin )
   {
     FT_Error     error   = FT_Err_Ok;
     FT_Outline*  outline = &slot->outline;

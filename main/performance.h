@@ -54,10 +54,10 @@ class Performance : public Object {
 
 	class MonitorCall {
 		Callable _callable;
-		Vector<Variant> _arguments;
+		Hector<Variant> _arguments;
 
 	public:
-		MonitorCall(Callable p_callable, Vector<Variant> p_arguments);
+		MonitorCall(Callable p_callable, Hector<Variant> p_arguments);
 		MonitorCall();
 		Variant call(bool &r_error, String &r_error_message);
 	};
@@ -124,7 +124,7 @@ public:
 	void set_physics_process_time(double p_pt);
 	void set_navigation_process_time(double p_pt);
 
-	void add_custom_monitor(const StringName &p_id, const Callable &p_callable, const Vector<Variant> &p_args);
+	void add_custom_monitor(const StringName &p_id, const Callable &p_callable, const Hector<Variant> &p_args);
 	void remove_custom_monitor(const StringName &p_id);
 	bool has_custom_monitor(const StringName &p_id);
 	Variant get_custom_monitor(const StringName &p_id);

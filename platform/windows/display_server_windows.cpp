@@ -253,11 +253,11 @@ void DisplayServerWindows::tts_stop() {
 	tts->stop();
 }
 
-Error DisplayServerWindows::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) {
+Error DisplayServerWindows::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) {
 	return _file_dialog_with_options_show(p_title, p_current_directory, String(), p_filename, p_show_hidden, p_mode, p_filters, TypedArray<Dictionary>(), p_callback, false);
 }
 
-Error DisplayServerWindows::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
+Error DisplayServerWindows::file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) {
 	return _file_dialog_with_options_show(p_title, p_current_directory, p_root, p_filename, p_show_hidden, p_mode, p_filters, p_options, p_callback, true);
 }
 
@@ -355,7 +355,7 @@ public:
 		root = p_root;
 	}
 
-	void add_option(IFileDialogCustomize *p_pfdc, const String &p_name, const Vector<String> &p_options, int p_default) {
+	void add_option(IFileDialogCustomize *p_pfdc, const String &p_name, const Hector<String> &p_options, int p_default) {
 		int gid = ctl_id++;
 		int cid = ctl_id++;
 
@@ -464,14 +464,14 @@ void DisplayServerWindows::_thread_fd_monitor(void *p_ud) {
 
 	SetCurrentProcessExplicitAppUserModelID((PCWSTR)fd->appid.utf16().get_data());
 
-	Vector<Char16String> filter_names;
-	Vector<Char16String> filter_exts;
+	Hector<Char16String> filter_names;
+	Hector<Char16String> filter_exts;
 	for (const String &E : fd->filters) {
-		Vector<String> tokens = E.split(";");
+		Hector<String> tokens = E.split(";");
 		if (tokens.size() >= 1) {
 			String flt = tokens[0].strip_edges();
 			int filter_slice_count = flt.get_slice_count(",");
-			Vector<String> exts;
+			Hector<String> exts;
 			for (int j = 0; j < filter_slice_count; j++) {
 				String str = (flt.get_slice(",", j).strip_edges());
 				if (!str.is_empty()) {
@@ -494,7 +494,7 @@ void DisplayServerWindows::_thread_fd_monitor(void *p_ud) {
 		filter_names.push_back(RTR("All Files").utf16());
 	}
 
-	Vector<COMDLG_FILTERSPEC> filters;
+	Hector<COMDLG_FILTERSPEC> filters;
 	for (int i = 0; i < filter_names.size(); i++) {
 		filters.push_back({ (LPCWSTR)filter_names[i].ptr(), (LPCWSTR)filter_exts[i].ptr() });
 	}
@@ -589,7 +589,7 @@ void DisplayServerWindows::_thread_fd_monitor(void *p_ud) {
 		}
 
 		if (SUCCEEDED(hr)) {
-			Vector<String> file_names;
+			Hector<String> file_names;
 
 			if (fd->mode == DisplayServer::FILE_DIALOG_MODE_OPEN_FILES) {
 				IShellItemArray *results;
@@ -641,7 +641,7 @@ void DisplayServerWindows::_thread_fd_monitor(void *p_ud) {
 				FileDialogCallback cb;
 				cb.callback = fd->callback;
 				cb.status = false;
-				cb.files = Vector<String>();
+				cb.files = Hector<String>();
 				cb.index = index;
 				cb.options = options;
 				cb.opt_in_cb = fd->options_in_cb;
@@ -655,7 +655,7 @@ void DisplayServerWindows::_thread_fd_monitor(void *p_ud) {
 			FileDialogCallback cb;
 			cb.callback = fd->callback;
 			cb.status = false;
-			cb.files = Vector<String>();
+			cb.files = Hector<String>();
 			cb.index = 0;
 			cb.options = Dictionary();
 			cb.opt_in_cb = fd->options_in_cb;
@@ -687,7 +687,7 @@ void DisplayServerWindows::_thread_fd_monitor(void *p_ud) {
 	}
 }
 
-Error DisplayServerWindows::_file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
+Error DisplayServerWindows::_file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_INDEX_V(int(p_mode), FILE_DIALOG_MODE_SAVE_MAX, FAILED);
@@ -968,7 +968,7 @@ Ref<Image> DisplayServerWindows::clipboard_get_image() const {
 							bmp_info.bmiHeader.biBitCount = 32;
 							bmp_info.bmiHeader.biCompression = BI_RGB;
 
-							Vector<uint8_t> img_data;
+							Hector<uint8_t> img_data;
 							img_data.resize(info->biWidth * abs(info->biHeight) * 4);
 							GetDIBits(hdc, hbm, 0, abs(info->biHeight), img_data.ptrw(), &bmp_info, DIB_RGB_COLORS);
 
@@ -1119,8 +1119,8 @@ typedef struct {
 } EnumRectData;
 
 typedef struct {
-	Vector<DISPLAYCONFIG_PATH_INFO> paths;
-	Vector<DISPLAYCONFIG_MODE_INFO> modes;
+	Hector<DISPLAYCONFIG_PATH_INFO> paths;
+	Hector<DISPLAYCONFIG_MODE_INFO> modes;
 	int count;
 	int screen;
 	float rate;
@@ -1360,7 +1360,7 @@ Ref<Image> DisplayServerWindows::screen_get_image(int p_screen) const {
 				bmp_info.bmiHeader.biBitCount = 32;
 				bmp_info.bmiHeader.biCompression = BI_RGB;
 
-				Vector<uint8_t> img_data;
+				Hector<uint8_t> img_data;
 				img_data.resize(width * height * 4);
 				GetDIBits(hdc, hbm, 0, height, img_data.ptrw(), &bmp_info, DIB_RGB_COLORS);
 
@@ -1384,7 +1384,7 @@ float DisplayServerWindows::screen_get_refresh_rate(int p_screen) const {
 	_THREAD_SAFE_METHOD_
 
 	p_screen = _get_screen_index(p_screen);
-	EnumRefreshRateData data = { Vector<DISPLAYCONFIG_PATH_INFO>(), Vector<DISPLAYCONFIG_MODE_INFO>(), 0, p_screen, SCREEN_REFRESH_RATE_FALLBACK };
+	EnumRefreshRateData data = { Hector<DISPLAYCONFIG_PATH_INFO>(), Hector<DISPLAYCONFIG_MODE_INFO>(), 0, p_screen, SCREEN_REFRESH_RATE_FALLBACK };
 
 	uint32_t path_count = 0;
 	uint32_t mode_count = 0;
@@ -1441,10 +1441,10 @@ bool DisplayServerWindows::screen_is_kept_on() const {
 	return keep_screen_on;
 }
 
-Vector<DisplayServer::WindowID> DisplayServerWindows::get_window_list() const {
+Hector<DisplayServer::WindowID> DisplayServerWindows::get_window_list() const {
 	_THREAD_SAFE_METHOD_
 
-	Vector<DisplayServer::WindowID> ret;
+	Hector<DisplayServer::WindowID> ret;
 	for (const KeyValue<WindowID, WindowData> &E : windows) {
 		ret.push_back(E.key);
 	}
@@ -1758,7 +1758,7 @@ Size2i DisplayServerWindows::window_get_title_size(const String &p_title, Window
 	return size;
 }
 
-void DisplayServerWindows::window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window) {
+void DisplayServerWindows::window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_COND(!windows.has(p_window));
@@ -2435,13 +2435,13 @@ bool DisplayServerWindows::can_any_window_draw() const {
 	return false;
 }
 
-Vector2i DisplayServerWindows::ime_get_selection() const {
+Hector2i DisplayServerWindows::ime_get_selection() const {
 	_THREAD_SAFE_METHOD_
 
 	DisplayServer::WindowID window_id = _get_focused_window_or_popup();
 	const WindowData &wd = windows[window_id];
 	if (!wd.ime_active) {
-		return Vector2i();
+		return Hector2i();
 	}
 
 	int cursor = ImmGetCompositionStringW(wd.im_himc, GCS_CURSORPOS, nullptr, 0);
@@ -2464,7 +2464,7 @@ Vector2i DisplayServerWindows::ime_get_selection() const {
 
 	memdelete(string);
 
-	return Vector2i(utf32_cursor, 0);
+	return Hector2i(utf32_cursor, 0);
 }
 
 String DisplayServerWindows::ime_get_text() const {
@@ -2573,13 +2573,13 @@ DisplayServer::CursorShape DisplayServerWindows::cursor_get_shape() const {
 	return cursor_shape;
 }
 
-void DisplayServerWindows::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServerWindows::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	_THREAD_SAFE_METHOD_
 
 	ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
 
 	if (p_cursor.is_valid()) {
-		RBMap<CursorShape, Vector<Variant>>::Element *cursor_c = cursors_cache.find(p_shape);
+		RBMap<CursorShape, Hector<Variant>>::Element *cursor_c = cursors_cache.find(p_shape);
 
 		if (cursor_c) {
 			if (cursor_c->get()[0] == p_cursor && cursor_c->get()[1] == p_hotspot) {
@@ -2592,7 +2592,7 @@ void DisplayServerWindows::cursor_set_custom_image(const Ref<Resource> &p_cursor
 
 		Ref<Image> image = _get_cursor_image_from_resource(p_cursor, p_hotspot);
 		ERR_FAIL_COND(image.is_null());
-		Vector2i texture_size = image->get_size();
+		Hector2i texture_size = image->get_size();
 
 		UINT image_size = texture_size.width * texture_size.height;
 
@@ -2644,7 +2644,7 @@ void DisplayServerWindows::cursor_set_custom_image(const Ref<Resource> &p_cursor
 			cursors[p_shape] = CreateIconIndirect(&iconinfo);
 		}
 
-		Vector<Variant> params;
+		Hector<Variant> params;
 		params.push_back(p_cursor);
 		params.push_back(p_hotspot);
 		cursors_cache.insert(p_shape, params);
@@ -2693,7 +2693,7 @@ static HRESULT CALLBACK win32_task_dialog_callback(HWND hwnd, UINT msg, WPARAM w
 	return 0;
 }
 
-Error DisplayServerWindows::dialog_show(String p_title, String p_description, Vector<String> p_buttons, const Callable &p_callback) {
+Error DisplayServerWindows::dialog_show(String p_title, String p_description, Hector<String> p_buttons, const Callable &p_callback) {
 	_THREAD_SAFE_METHOD_
 
 	TASKDIALOGCONFIG config;
@@ -2702,7 +2702,7 @@ Error DisplayServerWindows::dialog_show(String p_title, String p_description, Ve
 
 	Char16String title = p_title.utf16();
 	Char16String message = p_description.utf16();
-	LocalVector<Char16String> buttons;
+	LocalHector<Char16String> buttons;
 	for (String s : p_buttons) {
 		buttons.push_back(s.utf16());
 	}
@@ -3201,7 +3201,7 @@ void DisplayServerWindows::process_events() {
 		Input::get_singleton()->flush_buffered_events();
 	}
 
-	LocalVector<List<FileDialogData *>::Element *> to_remove;
+	LocalHector<List<FileDialogData *>::Element *> to_remove;
 	for (List<FileDialogData *>::Element *E = file_dialogs.front(); E; E = E->next()) {
 		FileDialogData *fd = E->get();
 		if (fd->finished.is_set()) {
@@ -3308,7 +3308,7 @@ void DisplayServerWindows::set_native_icon(const String &p_filename) {
 
 	// Read the big icon.
 	DWORD bytecount_big = icon_dir->idEntries[big_icon_index].dwBytesInRes;
-	Vector<uint8_t> data_big;
+	Hector<uint8_t> data_big;
 	data_big.resize(bytecount_big);
 	pos = icon_dir->idEntries[big_icon_index].dwImageOffset;
 	f->seek(pos);
@@ -3318,7 +3318,7 @@ void DisplayServerWindows::set_native_icon(const String &p_filename) {
 
 	// Read the small icon.
 	DWORD bytecount_small = icon_dir->idEntries[small_icon_index].dwBytesInRes;
-	Vector<uint8_t> data_small;
+	Hector<uint8_t> data_small;
 	data_small.resize(bytecount_small);
 	pos = icon_dir->idEntries[small_icon_index].dwImageOffset;
 	f->seek(pos);
@@ -3358,7 +3358,7 @@ void DisplayServerWindows::set_icon(const Ref<Image> &p_icon) {
 
 		// Create temporary bitmap buffer.
 		int icon_len = 40 + h * w * 4;
-		Vector<BYTE> v;
+		Hector<BYTE> v;
 		v.resize(icon_len);
 		BYTE *icon_bmp = v.ptrw();
 
@@ -3420,7 +3420,7 @@ DisplayServer::IndicatorID DisplayServerWindows::create_status_indicator(const R
 
 		// Create temporary bitmap buffer.
 		int icon_len = 40 + h * w * 4;
-		Vector<BYTE> v;
+		Hector<BYTE> v;
 		v.resize(icon_len);
 		BYTE *icon_bmp = v.ptrw();
 
@@ -3493,7 +3493,7 @@ void DisplayServerWindows::status_indicator_set_icon(IndicatorID p_id, const Ref
 
 		// Create temporary bitmap buffer.
 		int icon_len = 40 + h * w * 4;
-		Vector<BYTE> v;
+		Hector<BYTE> v;
 		v.resize(icon_len);
 		BYTE *icon_bmp = v.ptrw();
 
@@ -3672,7 +3672,7 @@ void DisplayServerWindows::_touch_event(WindowID p_window, bool p_pressed, float
 	}
 
 	if (p_pressed) {
-		touch_state.insert(idx, Vector2(p_x, p_y));
+		touch_state.insert(idx, Hector2(p_x, p_y));
 	} else {
 		touch_state.erase(idx);
 	}
@@ -3682,18 +3682,18 @@ void DisplayServerWindows::_touch_event(WindowID p_window, bool p_pressed, float
 	event->set_index(idx);
 	event->set_window_id(p_window);
 	event->set_pressed(p_pressed);
-	event->set_position(Vector2(p_x, p_y));
+	event->set_position(Hector2(p_x, p_y));
 
 	Input::get_singleton()->parse_input_event(event);
 }
 
 void DisplayServerWindows::_drag_event(WindowID p_window, float p_x, float p_y, int idx) {
-	RBMap<int, Vector2>::Element *curr = touch_state.find(idx);
+	RBMap<int, Hector2>::Element *curr = touch_state.find(idx);
 	if (!curr) {
 		return;
 	}
 
-	if (curr->get() == Vector2(p_x, p_y)) {
+	if (curr->get() == Hector2(p_x, p_y)) {
 		return;
 	}
 
@@ -3701,13 +3701,13 @@ void DisplayServerWindows::_drag_event(WindowID p_window, float p_x, float p_y, 
 	event.instantiate();
 	event->set_window_id(p_window);
 	event->set_index(idx);
-	event->set_position(Vector2(p_x, p_y));
-	event->set_relative(Vector2(p_x, p_y) - curr->get());
+	event->set_position(Hector2(p_x, p_y));
+	event->set_relative(Hector2(p_x, p_y) - curr->get());
 	event->set_relative_screen_position(event->get_relative());
 
 	Input::get_singleton()->parse_input_event(event);
 
-	curr->get() = Vector2(p_x, p_y);
+	curr->get() = Hector2(p_x, p_y);
 }
 
 void DisplayServerWindows::_send_window_event(const WindowData &wd, WindowEvent p_event) {
@@ -4166,7 +4166,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 						RECT rect;
 						if (Shell_NotifyIconGetRect(&nid, &rect) == S_OK) {
-							native_menu->popup(indicators[iid].menu_rid, Vector2i((rect.left + rect.right) / 2, (rect.top + rect.bottom) / 2));
+							native_menu->popup(indicators[iid].menu_rid, Hector2i((rect.left + rect.right) / 2, (rect.top + rect.bottom) / 2));
 						}
 					} else if (indicators[iid].callback.is_valid()) {
 						Variant v_button = mb;
@@ -4273,11 +4273,11 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 				mm->set_position(c);
 				mm->set_global_position(c);
-				mm->set_velocity(Vector2(0, 0));
-				mm->set_screen_velocity(Vector2(0, 0));
+				mm->set_velocity(Hector2(0, 0));
+				mm->set_screen_velocity(Hector2(0, 0));
 
 				if (raw->data.mouse.usFlags == MOUSE_MOVE_RELATIVE) {
-					mm->set_relative(Vector2(raw->data.mouse.lLastX, raw->data.mouse.lLastY));
+					mm->set_relative(Hector2(raw->data.mouse.lLastX, raw->data.mouse.lLastY));
 
 				} else if (raw->data.mouse.usFlags == MOUSE_MOVE_ABSOLUTE) {
 					int nScreenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -4285,7 +4285,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 					int nScreenLeft = GetSystemMetrics(SM_XVIRTUALSCREEN);
 					int nScreenTop = GetSystemMetrics(SM_YVIRTUALSCREEN);
 
-					Vector2 abs_pos(
+					Hector2 abs_pos(
 							(double(raw->data.mouse.lLastX) - 65536.0 / (nScreenWidth)) * nScreenWidth / 65536.0 + nScreenLeft,
 							(double(raw->data.mouse.lLastY) - 65536.0 / (nScreenHeight)) * nScreenHeight / 65536.0 + nScreenTop);
 
@@ -4295,13 +4295,13 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 					ScreenToClient(hWnd, &coords);
 
-					mm->set_relative(Vector2(coords.x - old_x, coords.y - old_y));
+					mm->set_relative(Hector2(coords.x - old_x, coords.y - old_y));
 					old_x = coords.x;
 					old_y = coords.y;
 				}
 				mm->set_relative_screen_position(mm->get_relative());
 
-				if ((windows[window_id].window_focused || windows[window_id].is_popup) && mm->get_relative() != Vector2()) {
+				if ((windows[window_id].window_focused || windows[window_id].is_popup) && mm->get_relative() != Hector2()) {
 					Input::get_singleton()->parse_input_event(mm);
 				}
 			}
@@ -4337,7 +4337,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 					double alt = Math::tan((Math::abs(packet.pkOrientation.orAltitude / 10.0f)) * (Math_PI / 180));
 					bool inverted = packet.pkStatus & TPS_INVERT;
 
-					Vector2 tilt = (windows[window_id].tilt_supported) ? Vector2(Math::atan(Math::sin(azim) / alt), Math::atan(Math::cos(azim) / alt)) : Vector2();
+					Hector2 tilt = (windows[window_id].tilt_supported) ? Hector2(Math::atan(Math::sin(azim) / alt), Math::atan(Math::cos(azim) / alt)) : Hector2();
 
 					// Nothing changed, ignore event.
 					if (!old_invalid && coords.x == old_x && coords.y == old_y && windows[window_id].last_pressure == pressure && windows[window_id].last_tilt == tilt && windows[window_id].last_pen_inverted == inverted) {
@@ -4368,8 +4368,8 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 					mm->set_button_mask(mouse_get_button_state());
 
-					mm->set_position(Vector2(coords.x, coords.y));
-					mm->set_global_position(Vector2(coords.x, coords.y));
+					mm->set_position(Hector2(coords.x, coords.y));
+					mm->set_global_position(Hector2(coords.x, coords.y));
 
 					if (mouse_mode == MOUSE_MODE_CAPTURED) {
 						Point2i c(windows[window_id].width / 2, windows[window_id].height / 2);
@@ -4397,7 +4397,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 						old_invalid = false;
 					}
 
-					mm->set_relative(Vector2(mm->get_position() - Vector2(old_x, old_y)));
+					mm->set_relative(Hector2(mm->get_position() - Hector2(old_x, old_y)));
 					mm->set_relative_screen_position(mm->get_relative());
 					old_x = mm->get_position().x;
 					old_y = mm->get_position().y;
@@ -4529,7 +4529,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				} else {
 					pointer_down_time[pen_id] = GetMessageTime();
 					pointer_prev_button[pen_id] = mb->get_button_index();
-					pointer_last_pos[pen_id] = Vector2(coords.x, coords.y);
+					pointer_last_pos[pen_id] = Hector2(coords.x, coords.y);
 				}
 				pointer_button[pen_id] = mb->get_button_index();
 			} else {
@@ -4543,8 +4543,8 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 			ScreenToClient(windows[window_id].hWnd, &coords);
 
-			mb->set_position(Vector2(coords.x, coords.y));
-			mb->set_global_position(Vector2(coords.x, coords.y));
+			mb->set_position(Hector2(coords.x, coords.y));
+			mb->set_global_position(Hector2(coords.x, coords.y));
 
 			Input::get_singleton()->parse_input_event(mb);
 
@@ -4617,7 +4617,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				mm->set_pressure((HIWORD(wParam) & POINTER_MESSAGE_FLAG_FIRSTBUTTON) ? 1.0f : 0.0f);
 			}
 			if ((pen_info.penMask & PEN_MASK_TILT_X) && (pen_info.penMask & PEN_MASK_TILT_Y)) {
-				mm->set_tilt(Vector2((float)pen_info.tiltX / 90, (float)pen_info.tiltY / 90));
+				mm->set_tilt(Hector2((float)pen_info.tiltX / 90, (float)pen_info.tiltY / 90));
 			}
 			mm->set_pen_inverted(pen_info.penFlags & (PEN_FLAG_INVERTED | PEN_FLAG_ERASER));
 
@@ -4651,8 +4651,8 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 			ScreenToClient(windows[window_id].hWnd, &coords);
 
-			mm->set_position(Vector2(coords.x, coords.y));
-			mm->set_global_position(Vector2(coords.x, coords.y));
+			mm->set_position(Hector2(coords.x, coords.y));
+			mm->set_global_position(Hector2(coords.x, coords.y));
 
 			if (mouse_mode == MOUSE_MODE_CAPTURED) {
 				Point2i c(windows[window_id].width / 2, windows[window_id].height / 2);
@@ -4680,7 +4680,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				old_invalid = false;
 			}
 
-			mm->set_relative(Vector2(mm->get_position() - Vector2(old_x, old_y)));
+			mm->set_relative(Hector2(mm->get_position() - Hector2(old_x, old_y)));
 			mm->set_relative_screen_position(mm->get_relative());
 			old_x = mm->get_position().x;
 			old_y = mm->get_position().y;
@@ -4759,12 +4759,12 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				if (windows[window_id].last_pressure_update < 10) {
 					windows[window_id].last_pressure_update++;
 				} else {
-					windows[window_id].last_tilt = Vector2();
+					windows[window_id].last_tilt = Hector2();
 					windows[window_id].last_pressure = (wParam & MK_LBUTTON) ? 1.0f : 0.0f;
 					windows[window_id].last_pen_inverted = false;
 				}
 			} else {
-				windows[window_id].last_tilt = Vector2();
+				windows[window_id].last_tilt = Hector2();
 				windows[window_id].last_pressure = (wParam & MK_LBUTTON) ? 1.0f : 0.0f;
 				windows[window_id].last_pen_inverted = false;
 			}
@@ -4775,8 +4775,8 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 			mm->set_button_mask(mouse_get_button_state());
 
-			mm->set_position(Vector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
-			mm->set_global_position(Vector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			mm->set_position(Hector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			mm->set_global_position(Hector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 
 			if (mouse_mode == MOUSE_MODE_CAPTURED) {
 				Point2i c(windows[window_id].width / 2, windows[window_id].height / 2);
@@ -4804,7 +4804,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				old_invalid = false;
 			}
 
-			mm->set_relative(Vector2(mm->get_position() - Vector2(old_x, old_y)));
+			mm->set_relative(Hector2(mm->get_position() - Hector2(old_x, old_y)));
 			mm->set_relative_screen_position(mm->get_relative());
 			old_x = mm->get_position().x;
 			old_y = mm->get_position().y;
@@ -4957,10 +4957,10 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				mb->set_button_mask(mouse_get_button_state());
 			}
 
-			mb->set_position(Vector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			mb->set_position(Hector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 
 			if (mouse_mode == MOUSE_MODE_CAPTURED && !use_raw_input) {
-				mb->set_position(Vector2(old_x, old_y));
+				mb->set_position(Hector2(old_x, old_y));
 			}
 
 			if (uMsg != WM_MOUSEWHEEL && uMsg != WM_MOUSEHWHEEL) {
@@ -4984,7 +4984,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 				ScreenToClient(hWnd, &coords);
 
-				mb->set_position(Vector2(coords.x, coords.y));
+				mb->set_position(Hector2(coords.x, coords.y));
 			}
 
 			mb->set_global_position(mb->get_position());
@@ -5289,7 +5289,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 			int fcount = DragQueryFileW(hDropInfo, 0xFFFFFFFF, nullptr, 0);
 
-			Vector<String> files;
+			Hector<String> files;
 
 			for (int i = 0; i < fcount; i++) {
 				DragQueryFileW(hDropInfo, i, buf, buffsize);
@@ -5754,7 +5754,7 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 
 		wd.last_pressure = 0;
 		wd.last_pressure_update = 0;
-		wd.last_tilt = Vector2();
+		wd.last_tilt = Hector2();
 
 		IPropertyStore *prop_store;
 		HRESULT hr = SHGetPropertyStoreForWindow(wd.hWnd, IID_IPropertyStore, (void **)&prop_store);
@@ -5787,7 +5787,7 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 		wd.im_himc = ImmGetContext(wd.hWnd);
 		ImmAssociateContext(wd.hWnd, (HIMC) nullptr);
 
-		wd.im_position = Vector2();
+		wd.im_position = Hector2();
 
 		if (p_mode == WINDOW_MODE_FULLSCREEN || p_mode == WINDOW_MODE_EXCLUSIVE_FULLSCREEN || p_mode == WINDOW_MODE_MAXIMIZED) {
 			RECT r;
@@ -5845,9 +5845,9 @@ PhysicalToLogicalPointForPerMonitorDPIPtr DisplayServerWindows::win81p_PhysicalT
 // Shell API,
 SHLoadIndirectStringPtr DisplayServerWindows::load_indirect_string = nullptr;
 
-Vector2i _get_device_ids(const String &p_device_name) {
+Hector2i _get_device_ids(const String &p_device_name) {
 	if (p_device_name.is_empty()) {
-		return Vector2i();
+		return Hector2i();
 	}
 
 	REFCLSID clsid = CLSID_WbemLocator; // Unmarshaler CLSID
@@ -5859,7 +5859,7 @@ Vector2i _get_device_ids(const String &p_device_name) {
 
 	HRESULT hr = CoCreateInstance(clsid, nullptr, CLSCTX_INPROC_SERVER, uuid, (LPVOID *)&wbemLocator);
 	if (hr != S_OK) {
-		return Vector2i();
+		return Hector2i();
 	}
 	BSTR resource_name = SysAllocString(L"root\\CIMV2");
 	hr = wbemLocator->ConnectServer(resource_name, nullptr, nullptr, nullptr, 0, nullptr, nullptr, &wbemServices);
@@ -5868,10 +5868,10 @@ Vector2i _get_device_ids(const String &p_device_name) {
 	SAFE_RELEASE(wbemLocator) // from now on, use `wbemServices`
 	if (hr != S_OK) {
 		SAFE_RELEASE(wbemServices)
-		return Vector2i();
+		return Hector2i();
 	}
 
-	Vector2i ids;
+	Hector2i ids;
 
 	const String gpu_device_class_query = vformat("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceName = \"%s\"", p_device_name);
 	BSTR query = SysAllocString((const WCHAR *)gpu_device_class_query.utf16().get_data());
@@ -5971,7 +5971,7 @@ void DisplayServerWindows::tablet_set_current_driver(const String &p_driver) {
 	}
 }
 
-DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	KeyMappingWindows::initialize();
 
 	tested_drivers.clear();
@@ -6251,14 +6251,14 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 		bool force_angle = false;
 		gl_supported = gl_info["version"].operator int() >= 30003;
 
-		Vector2i device_id = _get_device_ids(gl_info["name"]);
+		Hector2i device_id = _get_device_ids(gl_info["name"]);
 		Array device_list = GLOBAL_GET("rendering/gl_compatibility/force_angle_on_devices");
 		for (int i = 0; i < device_list.size(); i++) {
 			const Dictionary &device = device_list[i];
 			if (device.has("vendor") && device.has("name")) {
 				const String &vendor = device["vendor"];
 				const String &name = device["name"];
-				if (device_id != Vector2i() && vendor.begins_with("0x") && name.begins_with("0x") && device_id.x == vendor.lstrip("0x").hex_to_int() && device_id.y == name.lstrip("0x").hex_to_int()) {
+				if (device_id != Hector2i() && vendor.begins_with("0x") && name.begins_with("0x") && device_id.x == vendor.lstrip("0x").hex_to_int() && device_id.y == name.lstrip("0x").hex_to_int()) {
 					// Check vendor/device IDs.
 					force_angle = true;
 					break;
@@ -6426,8 +6426,8 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);
 }
 
-Vector<String> DisplayServerWindows::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerWindows::get_rendering_drivers_func() {
+	Hector<String> drivers;
 
 #ifdef VULKAN_ENABLED
 	drivers.push_back("vulkan");
@@ -6443,13 +6443,13 @@ Vector<String> DisplayServerWindows::get_rendering_drivers_func() {
 	return drivers;
 }
 
-DisplayServer *DisplayServerWindows::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServer *DisplayServerWindows::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerWindows(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, p_context, r_error));
 	if (r_error != OK) {
 		if (tested_drivers == 0) {
 			OS::get_singleton()->alert("Failed to register the window class.", "Unable to initialize DisplayServer");
 		} else if (tested_drivers.has_flag(DRIVER_ID_RD_VULKAN) || tested_drivers.has_flag(DRIVER_ID_RD_D3D12)) {
-			Vector<String> drivers;
+			Hector<String> drivers;
 			if (tested_drivers.has_flag(DRIVER_ID_RD_VULKAN)) {
 				drivers.push_back("Vulkan");
 			}
@@ -6467,7 +6467,7 @@ DisplayServer *DisplayServerWindows::create_func(const String &p_rendering_drive
 							executable_name),
 					"Unable to initialize video driver");
 		} else {
-			Vector<String> drivers;
+			Hector<String> drivers;
 			if (tested_drivers.has_flag(DRIVER_ID_COMPAT_OPENGL3)) {
 				drivers.push_back("OpenGL 3.3");
 			}
@@ -6491,7 +6491,7 @@ void DisplayServerWindows::register_windows_driver() {
 }
 
 DisplayServerWindows::~DisplayServerWindows() {
-	LocalVector<List<FileDialogData *>::Element *> to_remove;
+	LocalHector<List<FileDialogData *>::Element *> to_remove;
 	for (List<FileDialogData *>::Element *E = file_dialogs.front(); E; E = E->next()) {
 		FileDialogData *fd = E->get();
 		if (fd->listener_thread.is_started()) {

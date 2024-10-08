@@ -31,7 +31,7 @@
 #ifndef SURFACE_TOOL_H
 #define SURFACE_TOOL_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/resources/mesh.h"
 #include "thirdparty/misc/mikktspace.h"
 
@@ -43,15 +43,15 @@ class SurfaceTool : public RefCounted {
 
 public:
 	struct Vertex {
-		Vector3 vertex;
+		Hector3 vertex;
 		Color color;
-		Vector3 normal; // normal, binormal, tangent
-		Vector3 binormal;
-		Vector3 tangent;
-		Vector2 uv;
-		Vector2 uv2;
-		Vector<int> bones;
-		Vector<float> weights;
+		Hector3 normal; // normal, binormal, tangent
+		Hector3 binormal;
+		Hector3 tangent;
+		Hector2 uv;
+		Hector2 uv2;
+		Hector<int> bones;
+		Hector<float> weights;
 		Color custom[RS::ARRAY_CUSTOM_COUNT];
 		uint32_t smooth_group = 0;
 
@@ -98,7 +98,7 @@ public:
 	static RemapVertexFunc remap_vertex_func;
 	typedef void (*RemapIndexFunc)(unsigned int *destination, const unsigned int *indices, size_t index_count, const unsigned int *remap);
 	static RemapIndexFunc remap_index_func;
-	static void strip_mesh_arrays(PackedVector3Array &r_vertices, PackedInt32Array &r_indices);
+	static void strip_mesh_arrays(PackedHector3Array &r_vertices, PackedInt32Array &r_indices);
 
 private:
 	struct VertexHasher {
@@ -106,7 +106,7 @@ private:
 	};
 
 	struct SmoothGroupVertex {
-		Vector3 vertex;
+		Hector3 vertex;
 		uint32_t smooth_group = 0;
 		bool operator==(const SmoothGroupVertex &p_vertex) const;
 
@@ -139,16 +139,16 @@ private:
 	uint64_t format = 0;
 	Ref<Material> material;
 	//arrays
-	LocalVector<Vertex> vertex_array;
-	LocalVector<int> index_array;
+	LocalHector<Vertex> vertex_array;
+	LocalHector<int> index_array;
 
 	//memory
 	Color last_color;
-	Vector3 last_normal;
-	Vector2 last_uv;
-	Vector2 last_uv2;
-	Vector<int> last_bones;
-	Vector<float> last_weights;
+	Hector3 last_normal;
+	Hector2 last_uv;
+	Hector2 last_uv2;
+	Hector<int> last_bones;
+	Hector<float> last_weights;
 	Plane last_tangent;
 	uint32_t last_smooth_group = 0;
 
@@ -158,8 +158,8 @@ private:
 
 	CustomFormat last_custom_format[RS::ARRAY_CUSTOM_COUNT];
 
-	void _create_list_from_arrays(Array arr, LocalVector<Vertex> *r_vertex, LocalVector<int> *r_index, uint64_t &lformat);
-	void _create_list(const Ref<Mesh> &p_existing, int p_surface, LocalVector<Vertex> *r_vertex, LocalVector<int> *r_index, uint64_t &lformat);
+	void _create_list_from_arrays(Array arr, LocalHector<Vertex> *r_vertex, LocalHector<int> *r_index, uint64_t &lformat);
+	void _create_list(const Ref<Mesh> &p_existing, int p_surface, LocalHector<Vertex> *r_vertex, LocalHector<int> *r_index, uint64_t &lformat);
 
 	//mikktspace callbacks
 	static int mikktGetNumFaces(const SMikkTSpaceContext *pContext);
@@ -170,7 +170,7 @@ private:
 	static void mikktSetTSpaceDefault(const SMikkTSpaceContext *pContext, const float fvTangent[], const float fvBiTangent[], const float fMagS, const float fMagT,
 			const tbool bIsOrientationPreserving, const int iFace, const int iVert);
 
-	void _add_triangle_fan(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uvs = Vector<Vector2>(), const Vector<Color> &p_colors = Vector<Color>(), const Vector<Vector2> &p_uv2s = Vector<Vector2>(), const Vector<Vector3> &p_normals = Vector<Vector3>(), const TypedArray<Plane> &p_tangents = TypedArray<Plane>());
+	void _add_triangle_fan(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uvs = Hector<Hector2>(), const Hector<Color> &p_colors = Hector<Color>(), const Hector<Hector2> &p_uv2s = Hector<Hector2>(), const Hector<Hector3> &p_normals = Hector<Hector3>(), const TypedArray<Plane> &p_tangents = TypedArray<Plane>());
 
 protected:
 	static void _bind_methods();
@@ -187,18 +187,18 @@ public:
 	void begin(Mesh::PrimitiveType p_primitive);
 
 	void set_color(Color p_color);
-	void set_normal(const Vector3 &p_normal);
+	void set_normal(const Hector3 &p_normal);
 	void set_tangent(const Plane &p_tangent);
-	void set_uv(const Vector2 &p_uv);
-	void set_uv2(const Vector2 &p_uv2);
+	void set_uv(const Hector2 &p_uv);
+	void set_uv2(const Hector2 &p_uv2);
 	void set_custom(int p_channel_index, const Color &p_custom);
-	void set_bones(const Vector<int> &p_bones);
-	void set_weights(const Vector<float> &p_weights);
+	void set_bones(const Hector<int> &p_bones);
+	void set_weights(const Hector<float> &p_weights);
 	void set_smooth_group(uint32_t p_group);
 
-	void add_vertex(const Vector3 &p_vertex);
+	void add_vertex(const Hector3 &p_vertex);
 
-	void add_triangle_fan(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uvs = Vector<Vector2>(), const Vector<Color> &p_colors = Vector<Color>(), const Vector<Vector2> &p_uv2s = Vector<Vector2>(), const Vector<Vector3> &p_normals = Vector<Vector3>(), const Vector<Plane> &p_tangents = Vector<Plane>());
+	void add_triangle_fan(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uvs = Hector<Hector2>(), const Hector<Color> &p_colors = Hector<Color>(), const Hector<Hector2> &p_uv2s = Hector<Hector2>(), const Hector<Hector3> &p_normals = Hector<Hector3>(), const Hector<Plane> &p_tangents = Hector<Plane>());
 
 	void add_index(int p_index);
 
@@ -209,18 +209,18 @@ public:
 
 	void optimize_indices_for_cache();
 	AABB get_aabb() const;
-	Vector<int> generate_lod(float p_threshold, int p_target_index_count = 3);
+	Hector<int> generate_lod(float p_threshold, int p_target_index_count = 3);
 
 	void set_material(const Ref<Material> &p_material);
 	Ref<Material> get_material() const;
 
 	void clear();
 
-	LocalVector<Vertex> &get_vertex_array() { return vertex_array; }
+	LocalHector<Vertex> &get_vertex_array() { return vertex_array; }
 
 	void create_from_triangle_arrays(const Array &p_arrays);
 	void create_from_arrays(const Array &p_arrays, Mesh::PrimitiveType p_primitive_type = Mesh::PRIMITIVE_TRIANGLES);
-	static void create_vertex_array_from_arrays(const Array &p_arrays, LocalVector<Vertex> &ret, uint64_t *r_format = nullptr);
+	static void create_vertex_array_from_arrays(const Array &p_arrays, LocalHector<Vertex> &ret, uint64_t *r_format = nullptr);
 	Array commit_to_arrays();
 	void create_from(const Ref<Mesh> &p_existing, int p_surface);
 	void create_from_blend_shape(const Ref<Mesh> &p_existing, int p_surface, const String &p_blend_shape_name);

@@ -252,7 +252,7 @@ Error SceneReplicationInterface::on_replication_start(Object *p_obj, Variant p_c
 			ERR_FAIL_COND_V(!node || !sync->get_replication_config_ptr(), ERR_UNCONFIGURED);
 			int consumed = 0;
 			const List<NodePath> props = sync->get_replication_config_ptr()->get_spawn_properties();
-			Vector<Variant> vars;
+			Hector<Variant> vars;
 			vars.resize(props.size());
 			Error err = MultiplayerAPI::decode_and_decompress_variants(vars, pending_buffer, pending_buffer_size, consumed);
 			ERR_FAIL_COND_V(err, err);
@@ -510,8 +510,8 @@ Error SceneReplicationInterface::_make_spawn_packet(Node *p_node, MultiplayerSpa
 		sync_ids.push_back(sync->get_net_id());
 	}
 	int state_size = 0;
-	Vector<Variant> state_vars;
-	Vector<const Variant *> state_varp;
+	Hector<Variant> state_vars;
+	Hector<const Variant *> state_varp;
 	if (state_props.size()) {
 		Error err = MultiplayerSynchronizer::get_state(state_props, p_node, state_vars, state_varp);
 		ERR_FAIL_COND_V_MSG(err != OK, err, "Unable to retrieve spawn state.");
@@ -728,7 +728,7 @@ void SceneReplicationInterface::_send_delta(int p_peer, const HashSet<ObjectID> 
 			continue; // Nothing to update.
 		}
 
-		Vector<const Variant *> varp;
+		Hector<const Variant *> varp;
 		varp.resize(delta.size());
 		const Variant **vptr = varp.ptrw();
 		int i = 0;
@@ -783,7 +783,7 @@ Error SceneReplicationInterface::on_delta_receive(int p_from, const uint8_t *p_b
 		}
 		List<NodePath> props = sync->get_delta_properties(indexes);
 		ERR_FAIL_COND_V(props.is_empty(), ERR_INVALID_DATA);
-		Vector<Variant> vars;
+		Hector<Variant> vars;
 		vars.resize(props.size());
 		int consumed = 0;
 		Error err = MultiplayerAPI::decode_and_decompress_variants(vars, p_buffer + ofs, size, consumed);
@@ -823,8 +823,8 @@ void SceneReplicationInterface::_send_sync(int p_peer, const HashSet<ObjectID> &
 			continue;
 		}
 		int size;
-		Vector<Variant> vars;
-		Vector<const Variant *> varp;
+		Hector<Variant> vars;
+		Hector<const Variant *> varp;
 		const List<NodePath> props = sync->get_replication_config_ptr()->get_sync_properties();
 		Error err = MultiplayerSynchronizer::get_state(props, node, vars, varp);
 		ERR_CONTINUE_MSG(err != OK, "Unable to retrieve sync state.");
@@ -885,7 +885,7 @@ Error SceneReplicationInterface::on_sync_receive(int p_from, const uint8_t *p_bu
 			continue;
 		}
 		const List<NodePath> props = sync->get_replication_config_ptr()->get_sync_properties();
-		Vector<Variant> vars;
+		Hector<Variant> vars;
 		vars.resize(props.size());
 		int consumed;
 		Error err = MultiplayerAPI::decode_and_decompress_variants(vars, &p_buffer[ofs], size, consumed);

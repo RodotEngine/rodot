@@ -59,7 +59,7 @@ FT_BEGIN_HEADER
    * @description:
    *   This section contains definitions used to manage glyph data through
    *   generic @FT_Glyph objects.  Each of them can contain a bitmap,
-   *   a vector outline, or even images in other formats.  These objects are
+   *   a Hector outline, or even images in other formats.  These objects are
    *   detached from @FT_Face, contrary to @FT_GlyphSlot.
    *
    */
@@ -107,14 +107,14 @@ FT_BEGIN_HEADER
    *     The format of the glyph's image.
    *
    *   advance ::
-   *     A 16.16 vector that gives the glyph's advance width.
+   *     A 16.16 Hector that gives the glyph's advance width.
    */
   typedef struct  FT_GlyphRec_
   {
     FT_Library             library;
     const FT_Glyph_Class*  clazz;
     FT_Glyph_Format        format;
-    FT_Vector              advance;
+    FT_Hector              advance;
 
   } FT_GlyphRec;
 
@@ -192,7 +192,7 @@ FT_BEGIN_HEADER
    *   FT_OutlineGlyphRec
    *
    * @description:
-   *   A structure used for outline (vectorial) glyph images.  This really is
+   *   A structure used for outline (Hectorial) glyph images.  This really is
    *   a 'sub-class' of @FT_GlyphRec.
    *
    * @fields:
@@ -303,7 +303,7 @@ FT_BEGIN_HEADER
     FT_UShort  end_glyph_id;
 
     FT_Matrix  transform;
-    FT_Vector  delta;
+    FT_Hector  delta;
 
   } FT_SvgGlyphRec;
 
@@ -412,7 +412,7 @@ FT_BEGIN_HEADER
    *     A pointer to a 2x2 matrix to apply.
    *
    *   delta ::
-   *     A pointer to a 2d vector to apply.  Coordinates are expressed in
+   *     A pointer to a 2d Hector to apply.  Coordinates are expressed in
    *     1/64 of a pixel.
    *
    * @return:
@@ -420,12 +420,12 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   The 2x2 transformation matrix is also applied to the glyph's advance
-   *   vector.
+   *   Hector.
    */
   FT_EXPORT( FT_Error )
   FT_Glyph_Transform( FT_Glyph          glyph,
                       const FT_Matrix*  matrix,
-                      const FT_Vector*  delta );
+                      const FT_Hector*  delta );
 
 
   /**************************************************************************
@@ -567,7 +567,7 @@ FT_BEGIN_HEADER
    *     An enumeration that describes how the data is rendered.
    *
    *   origin ::
-   *     A pointer to a vector used to translate the glyph image before
+   *     A pointer to a Hector used to translate the glyph image before
    *     rendering.  Can be~0 (if no translation).  The origin is expressed
    *     in 26.6 pixels.
    *
@@ -581,7 +581,7 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does nothing if the glyph format isn't scalable.
    *
-   *   The glyph image is translated with the `origin` vector before
+   *   The glyph image is translated with the `origin` Hector before
    *   rendering.
    *
    *   The first parameter is a pointer to an @FT_Glyph handle that will be
@@ -657,7 +657,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Glyph_To_Bitmap( FT_Glyph*         the_glyph,
                       FT_Render_Mode    render_mode,
-                      const FT_Vector*  origin,
+                      const FT_Hector*  origin,
                       FT_Bool           destroy );
 
 

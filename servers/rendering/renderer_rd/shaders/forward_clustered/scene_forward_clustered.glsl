@@ -59,14 +59,14 @@ layout(location = 10) in uvec4 bone_attrib;
 layout(location = 11) in vec4 weight_attrib;
 #endif
 
-#ifdef MOTION_VECTORS
+#ifdef MOTION_HectorS
 layout(location = 12) in vec4 previous_vertex_attrib;
 
 #if defined(NORMAL_USED) || defined(TANGENT_USED)
 layout(location = 13) in vec4 previous_normal_attrib;
 #endif
 
-#endif // MOTION_VECTORS
+#endif // MOTION_HectorS
 
 vec3 oct_to_vec3(vec2 e) {
 	vec3 v = vec3(e.xy, 1.0 - abs(e.x) - abs(e.y));
@@ -110,7 +110,7 @@ layout(location = 5) out vec3 tangent_interp;
 layout(location = 6) out vec3 binormal_interp;
 #endif
 
-#ifdef MOTION_VECTORS
+#ifdef MOTION_HectorS
 layout(location = 7) out vec4 screen_position;
 layout(location = 8) out vec4 prev_screen_position;
 #endif
@@ -506,7 +506,7 @@ void vertex_shader(vec3 vertex_input,
 	combined_projected = combined_projection * vec4(vertex_interp, 1.0);
 #endif
 
-#ifdef MOTION_VECTORS
+#ifdef MOTION_HectorS
 	screen_pos = gl_Position;
 #endif
 
@@ -718,7 +718,7 @@ void main() {
 
 	mat4 model_matrix = instances.data[instance_index].transform;
 
-#ifdef MOTION_VECTORS
+#ifdef MOTION_HectorS
 	// Previous vertex.
 	vec3 prev_vertex;
 #ifdef NORMAL_USED
@@ -753,7 +753,7 @@ void main() {
 			prev_tangent,
 			prev_binormal,
 #endif
-			instance_index, is_multimesh, draw_call.multimesh_motion_vectors_previous_offset, scene_data_block.prev_data, instances.data[instance_index].prev_transform, prev_screen_position);
+			instance_index, is_multimesh, draw_call.multimesh_motion_Hectors_previous_offset, scene_data_block.prev_data, instances.data[instance_index].prev_transform, prev_screen_position);
 #else
 	// Unused output.
 	vec4 screen_position;
@@ -792,7 +792,7 @@ void main() {
 			tangent,
 			binormal,
 #endif
-			instance_index, is_multimesh, draw_call.multimesh_motion_vectors_current_offset, scene_data_block.data, model_matrix, screen_position);
+			instance_index, is_multimesh, draw_call.multimesh_motion_Hectors_current_offset, scene_data_block.data, model_matrix, screen_position);
 }
 
 #[fragment]
@@ -831,7 +831,7 @@ layout(location = 5) in vec3 tangent_interp;
 layout(location = 6) in vec3 binormal_interp;
 #endif
 
-#ifdef MOTION_VECTORS
+#ifdef MOTION_HectorS
 layout(location = 7) in vec4 screen_position;
 layout(location = 8) in vec4 prev_screen_position;
 #endif
@@ -993,8 +993,8 @@ layout(location = 0) out vec4 frag_color;
 
 #endif // RENDER DEPTH
 
-#ifdef MOTION_VECTORS
-layout(location = 2) out vec2 motion_vector;
+#ifdef MOTION_HectorS
+layout(location = 2) out vec2 motion_Hector;
 #endif
 
 #include "../scene_forward_aa_inc.glsl"
@@ -1110,7 +1110,7 @@ vec3 encode24(vec3 v) {
 	// Stretch:
 	vTexCoord.y /= vTexCoord.x;
 	float fFittingScale = texture(sampler2D(best_fit_normal_texture, SAMPLER_NEAREST_CLAMP), vTexCoord).r;
-	// Make vector touch unit cube
+	// Make Hector touch unit cube
 	vec3 result = v / maxNAbs;
 	// scale the normal to get the best fit
 	result *= fFittingScale;
@@ -2695,14 +2695,14 @@ void fragment_shader(in SceneData scene_data) {
 #endif //MODE_SEPARATE_SPECULAR
 
 #endif //MODE_RENDER_DEPTH
-#ifdef MOTION_VECTORS
+#ifdef MOTION_HectorS
 	vec2 position_clip = (screen_position.xy / screen_position.w) - scene_data.taa_jitter;
 	vec2 prev_position_clip = (prev_screen_position.xy / prev_screen_position.w) - scene_data_block.prev_data.taa_jitter;
 
 	vec2 position_uv = position_clip * vec2(0.5, 0.5);
 	vec2 prev_position_uv = prev_position_clip * vec2(0.5, 0.5);
 
-	motion_vector = prev_position_uv - position_uv;
+	motion_Hector = prev_position_uv - position_uv;
 #endif
 
 #if defined(PREMUL_ALPHA_USED) && !defined(MODE_RENDER_DEPTH)

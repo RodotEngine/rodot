@@ -35,14 +35,14 @@
 #include "core/version.h"
 #include "gdextension.h"
 
-Vector<SharedObject> GDExtensionLibraryLoader::find_extension_dependencies(const String &p_path, Ref<ConfigFile> p_config, std::function<bool(String)> p_has_feature) {
-	Vector<SharedObject> dependencies_shared_objects;
+Hector<SharedObject> GDExtensionLibraryLoader::find_extension_dependencies(const String &p_path, Ref<ConfigFile> p_config, std::function<bool(String)> p_has_feature) {
+	Hector<SharedObject> dependencies_shared_objects;
 	if (p_config->has_section("dependencies")) {
 		List<String> config_dependencies;
 		p_config->get_section_keys("dependencies", &config_dependencies);
 
 		for (const String &dependency : config_dependencies) {
-			Vector<String> dependency_tags = dependency.split(".");
+			Hector<String> dependency_tags = dependency.split(".");
 			bool all_tags_met = true;
 			for (int i = 0; i < dependency_tags.size(); i++) {
 				String tag = dependency_tags[i].strip_edges();
@@ -78,9 +78,9 @@ String GDExtensionLibraryLoader::find_extension_library(const String &p_path, Re
 
 		// Iterate the libraries, finding the best matching tags.
 		String best_library_path;
-		Vector<String> best_library_tags;
+		Hector<String> best_library_tags;
 		for (const String &E : libraries) {
-			Vector<String> tags = E.split(".");
+			Hector<String> tags = E.split(".");
 			bool all_tags_met = true;
 			for (int i = 0; i < tags.size(); i++) {
 				String tag = tags[i].strip_edges();
@@ -136,7 +136,7 @@ String GDExtensionLibraryLoader::find_extension_library(const String &p_path, Re
 
 		// Iterate the files and check the prefixes, finding the best matching file.
 		String best_file;
-		Vector<String> best_file_tags;
+		Hector<String> best_file_tags;
 		dir->list_dir_begin();
 		String file_name = dir->_get_next();
 		while (file_name != "") {
@@ -145,7 +145,7 @@ String GDExtensionLibraryLoader::find_extension_library(const String &p_path, Re
 				String tags_str = file_name.trim_prefix(file_prefix);
 				tags_str = tags_str.trim_suffix(tags_str.get_extension());
 
-				Vector<String> tags = tags_str.split(".", false);
+				Hector<String> tags = tags_str.split(".", false);
 				bool all_tags_met = true;
 				for (int i = 0; i < tags.size(); i++) {
 					String tag = tags[i].strip_edges();
@@ -183,7 +183,7 @@ Error GDExtensionLibraryLoader::open_library(const String &p_path) {
 
 	String abs_path = ProjectSettings::get_singleton()->globalize_path(library_path);
 
-	Vector<String> abs_dependencies_paths;
+	Hector<String> abs_dependencies_paths;
 	if (!library_dependencies.is_empty()) {
 		for (const SharedObject &dependency : library_dependencies) {
 			abs_dependencies_paths.push_back(ProjectSettings::get_singleton()->globalize_path(dependency.path));
@@ -286,7 +286,7 @@ Error GDExtensionLibraryLoader::parse_gdextension_file(const String &p_path) {
 	uint32_t compatibility_minimum[3] = { 0, 0, 0 };
 	if (config->has_section_key("configuration", "compatibility_minimum")) {
 		String compat_string = config->get_value("configuration", "compatibility_minimum");
-		Vector<int> parts = compat_string.split_ints(".");
+		Hector<int> parts = compat_string.split_ints(".");
 		for (int i = 0; i < parts.size(); i++) {
 			if (i >= 3) {
 				break;
@@ -323,7 +323,7 @@ Error GDExtensionLibraryLoader::parse_gdextension_file(const String &p_path) {
 	if (config->has_section_key("configuration", "compatibility_maximum")) {
 		uint32_t compatibility_maximum[3] = { 0, 0, 0 };
 		String compat_string = config->get_value("configuration", "compatibility_maximum");
-		Vector<int> parts = compat_string.split_ints(".");
+		Hector<int> parts = compat_string.split_ints(".");
 		for (int i = 0; i < 3; i++) {
 			if (i < parts.size() && parts[i] >= 0) {
 				compatibility_maximum[i] = parts[i];

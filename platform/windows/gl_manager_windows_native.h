@@ -35,7 +35,7 @@
 
 #include "core/error/error_list.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "servers/display_server.h"
 
 #include <windows.h>
@@ -62,7 +62,7 @@ private:
 	};
 
 	RBMap<DisplayServer::WindowID, GLWindow> _windows;
-	LocalVector<GLDisplay> _displays;
+	LocalHector<GLDisplay> _displays;
 
 	GLWindow *_current_window = nullptr;
 

@@ -309,7 +309,7 @@ typedef struct{
  *  words, but not more than a short paragraph.
  *
  * The metadata is stored as a series of (tag, value) pairs, in
- *  length-encoded string vectors.
+ *  length-encoded string Hectors.
  * The first occurrence of the '=' character delimits the tag and value.
  * A particular tag may occur more than once, and order is significant.
  * The character set encoding for the strings is always UTF-8, but the tag
@@ -319,14 +319,14 @@ typedef struct{
  *
  * In filling in this structure, th_decode_headerin() will null-terminate
  *  the user_comment strings for safety.
- * However, the bitstream format itself treats them as 8-bit clean vectors,
+ * However, the bitstream format itself treats them as 8-bit clean Hectors,
  *  possibly containing null characters, so the length array should be
  *  treated as their authoritative length.
  */
 typedef struct th_comment{
-  /**The array of comment string vectors.*/
+  /**The array of comment string Hectors.*/
   char **user_comments;
-  /**An array of the corresponding length of each vector, in bytes.*/
+  /**An array of the corresponding length of each Hector, in bytes.*/
   int   *comment_lengths;
   /**The total number of comment strings.*/
   int    comments;

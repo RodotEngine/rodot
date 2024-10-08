@@ -4,7 +4,7 @@
 		Imports a 3-dimensional texture ([Texture3D]), a [Texture2DArray], a [Cubemap] or a [CubemapArray].
 	</brief_description>
 	<description>
-		This imports a 3-dimensional texture, which can then be used in custom shaders, as a [FogMaterial] density map or as a [GPUParticlesAttractorVectorField3D]. See also [ResourceImporterTexture] and [ResourceImporterTextureAtlas].
+		This imports a 3-dimensional texture, which can then be used in custom shaders, as a [FogMaterial] density map or as a [GPUParticlesAttractorHectorField3D]. See also [ResourceImporterTexture] and [ResourceImporterTextureAtlas].
 	</description>
 	<tutorials>
 		<link title="Importing images">$DOCS_URL/tutorials/assets_pipeline/importing_images.html</link>

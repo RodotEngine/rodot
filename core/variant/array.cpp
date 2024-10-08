@@ -36,7 +36,7 @@
 #include "core/object/script_language.h"
 #include "core/templates/hashfuncs.h"
 #include "core/templates/search_array.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/variant/callable.h"
 #include "core/variant/dictionary.h"
 #include "core/variant/variant.h"
@@ -44,7 +44,7 @@
 class ArrayPrivate {
 public:
 	SafeRefCount refcount;
-	Vector<Variant> array;
+	Hector<Variant> array;
 	Variant *read_only = nullptr; // If enabled, a pointer is used to a temporary value that is used to return read-only values.
 	ContainerTypeValidate typed;
 };
@@ -139,8 +139,8 @@ bool Array::recursive_equal(const Array &p_array, int recursion_count) const {
 	if (_p == p_array._p) {
 		return true;
 	}
-	const Vector<Variant> &a1 = _p->array;
-	const Vector<Variant> &a2 = p_array._p->array;
+	const Hector<Variant> &a1 = _p->array;
+	const Hector<Variant> &a2 = p_array._p->array;
 	const int size = a1.size();
 	if (size != a2.size()) {
 		return false;
@@ -245,7 +245,7 @@ void Array::assign(const Array &p_array) {
 		ERR_FAIL_MSG(vformat(R"(Cannot assign contents of "Array[%s]" to "Array[%s]".)", Variant::get_type_name(source_typed.type), Variant::get_type_name(typed.type)));
 	}
 
-	Vector<Variant> array;
+	Hector<Variant> array;
 	array.resize(size);
 	Variant *data = array.ptrw();
 
@@ -289,7 +289,7 @@ void Array::push_back(const Variant &p_value) {
 void Array::append_array(const Array &p_array) {
 	ERR_FAIL_COND_MSG(_p->read_only, "Array is in read-only state.");
 
-	Vector<Variant> validated_array = p_array._p->array;
+	Hector<Variant> validated_array = p_array._p->array;
 	for (int i = 0; i < validated_array.size(); ++i) {
 		ERR_FAIL_COND(!_p->typed.validate(validated_array.write[i], "append_array"));
 	}

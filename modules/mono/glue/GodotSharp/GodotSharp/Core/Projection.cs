@@ -10,7 +10,7 @@ namespace Godot
     /// <summary>
     /// A 4x4 matrix used for 3D projective transformations. It can represent transformations such as
     /// translation, rotation, scaling, shearing, and perspective division. It consists of four
-    /// <see cref="Vector4"/> columns.
+    /// <see cref="Hector4"/> columns.
     /// For purely linear transformations (translation, rotation, and scale), it is recommended to use
     /// <see cref="Transform3D"/>, as it is more performant and has a lower memory footprint.
     /// Used internally as <see cref="Camera3D"/>'s projection matrix.
@@ -53,31 +53,31 @@ namespace Godot
         /// <summary>
         /// The projection's X column. Also accessible by using the index position <c>[0]</c>.
         /// </summary>
-        public Vector4 X;
+        public Hector4 X;
 
         /// <summary>
         /// The projection's Y column. Also accessible by using the index position <c>[1]</c>.
         /// </summary>
-        public Vector4 Y;
+        public Hector4 Y;
 
         /// <summary>
         /// The projection's Z column. Also accessible by using the index position <c>[2]</c>.
         /// </summary>
-        public Vector4 Z;
+        public Hector4 Z;
 
         /// <summary>
         /// The projection's W column. Also accessible by using the index position <c>[3]</c>.
         /// </summary>
-        public Vector4 W;
+        public Hector4 W;
 
         /// <summary>
-        /// Access whole columns in the form of <see cref="Vector4"/>.
+        /// Access whole columns in the form of <see cref="Hector4"/>.
         /// </summary>
-        /// <param name="column">Which column vector.</param>
+        /// <param name="column">Which column Hector.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="column"/> is not 0, 1, 2 or 3.
         /// </exception>
-        public Vector4 this[int column]
+        public Hector4 this[int column]
         {
             readonly get
             {
@@ -120,7 +120,7 @@ namespace Godot
         /// <summary>
         /// Access single values.
         /// </summary>
-        /// <param name="column">Which column vector.</param>
+        /// <param name="column">Which column Hector.</param>
         /// <param name="row">Which row of the column.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="column"/> or <paramref name="row"/> are not 0, 1, 2 or 3.
@@ -175,10 +175,10 @@ namespace Godot
         public static Projection CreateDepthCorrection(bool flipY)
         {
             return new Projection(
-                new Vector4(1, 0, 0, 0),
-                new Vector4(0, flipY ? -1 : 1, 0, 0),
-                new Vector4(0, 0, (real_t)0.5, 0),
-                new Vector4(0, 0, (real_t)0.5, 1)
+                new Hector4(1, 0, 0, 0),
+                new Hector4(0, flipY ? -1 : 1, 0, 0),
+                new Hector4(0, 0, (real_t)0.5, 0),
+                new Hector4(0, 0, (real_t)0.5, 1)
             );
         }
 
@@ -190,14 +190,14 @@ namespace Godot
         /// <returns>The created projection.</returns>
         public static Projection CreateFitAabb(Aabb aabb)
         {
-            Vector3 min = aabb.Position;
-            Vector3 max = aabb.Position + aabb.Size;
+            Hector3 min = aabb.Position;
+            Hector3 max = aabb.Position + aabb.Size;
 
             return new Projection(
-                new Vector4(2 / (max.X - min.X), 0, 0, 0),
-                new Vector4(0, 2 / (max.Y - min.Y), 0, 0),
-                new Vector4(0, 0, 2 / (max.Z - min.Z), 0),
-                new Vector4(-(max.X + min.X) / (max.X - min.X), -(max.Y + min.Y) / (max.Y - min.Y), -(max.Z + min.Z) / (max.Z - min.Z), 1)
+                new Hector4(2 / (max.X - min.X), 0, 0, 0),
+                new Hector4(0, 2 / (max.Y - min.Y), 0, 0),
+                new Hector4(0, 0, 2 / (max.Z - min.Z), 0),
+                new Hector4(-(max.X + min.X) / (max.X - min.X), -(max.Y + min.Y) / (max.Y - min.Y), -(max.Z + min.Z) / (max.Z - min.Z), 1)
             );
         }
 
@@ -279,10 +279,10 @@ namespace Godot
             real_t d = -2 * depthFar * depthNear / (depthFar - depthNear);
 
             return new Projection(
-                new Vector4(x, 0, 0, 0),
-                new Vector4(0, y, 0, 0),
-                new Vector4(a, b, c, -1),
-                new Vector4(0, 0, d, 0)
+                new Hector4(x, 0, 0, 0),
+                new Hector4(0, y, 0, 0),
+                new Hector4(a, b, c, -1),
+                new Hector4(0, 0, d, 0)
             );
         }
 
@@ -298,7 +298,7 @@ namespace Godot
         /// <param name="depthFar">The far clipping distance.</param>
         /// <param name="flipFov">If the field of view is flipped over the projection's diagonal.</param>
         /// <returns>The created projection.</returns>
-        public static Projection CreateFrustumAspect(real_t size, real_t aspect, Vector2 offset, real_t depthNear, real_t depthFar, bool flipFov)
+        public static Projection CreateFrustumAspect(real_t size, real_t aspect, Hector2 offset, real_t depthNear, real_t depthFar, bool flipFov)
         {
             if (!flipFov)
             {
@@ -315,10 +315,10 @@ namespace Godot
         public static Projection CreateLightAtlasRect(Rect2 rect)
         {
             return new Projection(
-                new Vector4(rect.Size.X, 0, 0, 0),
-                new Vector4(0, rect.Size.Y, 0, 0),
-                new Vector4(0, 0, 1, 0),
-                new Vector4(rect.Position.X, rect.Position.Y, 0, 1)
+                new Hector4(rect.Size.X, 0, 0, 0),
+                new Hector4(0, rect.Size.Y, 0, 0),
+                new Hector4(0, 0, 1, 0),
+                new Hector4(rect.Position.X, rect.Position.Y, 0, 1)
             );
         }
 
@@ -493,7 +493,7 @@ namespace Godot
         /// <returns>The aspect ratio from this projection's viewport.</returns>
         public readonly real_t GetAspect()
         {
-            Vector2 vpHe = GetViewportHalfExtents();
+            Hector2 vpHe = GetViewportHalfExtents();
             return vpHe.X / vpHe.Y;
         }
 
@@ -553,7 +553,7 @@ namespace Godot
         /// <returns>The number of pixels per meter.</returns>
         public readonly int GetPixelsPerMeter(int forPixelWidth)
         {
-            Vector3 result = this * new Vector3(1, 0, -1);
+            Hector3 result = this * new Hector3(1, 0, -1);
 
             return (int)((result.X * (real_t)0.5 + (real_t)0.5) * forPixelWidth);
         }
@@ -587,10 +587,10 @@ namespace Godot
         /// Returns the dimensions of the far clipping plane of the projection, divided by two.
         /// </summary>
         /// <returns>The half extents for this projection's far plane.</returns>
-        public readonly Vector2 GetFarPlaneHalfExtents()
+        public readonly Hector2 GetFarPlaneHalfExtents()
         {
             var res = GetProjectionPlane(Planes.Far).Intersect3(GetProjectionPlane(Planes.Right), GetProjectionPlane(Planes.Top));
-            return res is null ? default : new Vector2(res.Value.X, res.Value.Y);
+            return res is null ? default : new Hector2(res.Value.X, res.Value.Y);
         }
 
         /// <summary>
@@ -598,10 +598,10 @@ namespace Godot
         /// projects positions onto, divided by two.
         /// </summary>
         /// <returns>The half extents for this projection's viewport plane.</returns>
-        public readonly Vector2 GetViewportHalfExtents()
+        public readonly Hector2 GetViewportHalfExtents()
         {
             var res = GetProjectionPlane(Planes.Near).Intersect3(GetProjectionPlane(Planes.Right), GetProjectionPlane(Planes.Top));
-            return res is null ? default : new Vector2(res.Value.X, res.Value.Y);
+            return res is null ? default : new Hector2(res.Value.X, res.Value.Y);
         }
 
         /// <summary>
@@ -652,12 +652,12 @@ namespace Godot
         }
 
         /// <summary>
-        /// Returns a <see cref="Projection"/> with the X and Y values from the given <see cref="Vector2"/>
+        /// Returns a <see cref="Projection"/> with the X and Y values from the given <see cref="Hector2"/>
         /// added to the first and second values of the final column respectively.
         /// </summary>
         /// <param name="offset">The offset to apply to the projection.</param>
         /// <returns>The offsetted projection.</returns>
-        public readonly Projection JitterOffseted(Vector2 offset)
+        public readonly Projection JitterOffseted(Hector2 offset)
         {
             Projection proj = this;
             proj.W.X += offset.X;
@@ -804,22 +804,22 @@ namespace Godot
 
         // Constants
         private static readonly Projection _zero = new Projection(
-            new Vector4(0, 0, 0, 0),
-            new Vector4(0, 0, 0, 0),
-            new Vector4(0, 0, 0, 0),
-            new Vector4(0, 0, 0, 0)
+            new Hector4(0, 0, 0, 0),
+            new Hector4(0, 0, 0, 0),
+            new Hector4(0, 0, 0, 0),
+            new Hector4(0, 0, 0, 0)
         );
         private static readonly Projection _identity = new Projection(
-            new Vector4(1, 0, 0, 0),
-            new Vector4(0, 1, 0, 0),
-            new Vector4(0, 0, 1, 0),
-            new Vector4(0, 0, 0, 1)
+            new Hector4(1, 0, 0, 0),
+            new Hector4(0, 1, 0, 0),
+            new Hector4(0, 0, 1, 0),
+            new Hector4(0, 0, 0, 1)
         );
 
         /// <summary>
         /// Zero projection, a projection with all components set to <c>0</c>.
         /// </summary>
-        /// <value>Equivalent to <c>new Projection(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero)</c>.</value>
+        /// <value>Equivalent to <c>new Projection(Hector4.Zero, Hector4.Zero, Hector4.Zero, Hector4.Zero)</c>.</value>
         public static Projection Zero { get { return _zero; } }
 
         /// <summary>
@@ -827,17 +827,17 @@ namespace Godot
         /// This is used as a replacement for <c>Projection()</c> in GDScript.
         /// Do not use <c>new Projection()</c> with no arguments in C#, because it sets all values to zero.
         /// </summary>
-        /// <value>Equivalent to <c>new Projection(new Vector4(1, 0, 0, 0), new Vector4(0, 1, 0, 0), new Vector4(0, 0, 1, 0), new Vector4(0, 0, 0, 1))</c>.</value>
+        /// <value>Equivalent to <c>new Projection(new Hector4(1, 0, 0, 0), new Hector4(0, 1, 0, 0), new Hector4(0, 0, 1, 0), new Hector4(0, 0, 0, 1))</c>.</value>
         public static Projection Identity { get { return _identity; } }
 
         /// <summary>
-        /// Constructs a projection from 4 vectors (matrix columns).
+        /// Constructs a projection from 4 Hectors (matrix columns).
         /// </summary>
         /// <param name="x">The X column, or column index 0.</param>
         /// <param name="y">The Y column, or column index 1.</param>
         /// <param name="z">The Z column, or column index 2.</param>
         /// <param name="w">The W column, or column index 3.</param>
-        public Projection(Vector4 x, Vector4 y, Vector4 z, Vector4 w)
+        public Projection(Hector4 x, Hector4 y, Hector4 z, Hector4 w)
         {
             X = x;
             Y = y;
@@ -851,10 +851,10 @@ namespace Godot
         /// <param name="transform">The <see cref="Transform3D"/>.</param>
         public Projection(Transform3D transform)
         {
-            X = new Vector4(transform.Basis.Row0.X, transform.Basis.Row1.X, transform.Basis.Row2.X, 0);
-            Y = new Vector4(transform.Basis.Row0.Y, transform.Basis.Row1.Y, transform.Basis.Row2.Y, 0);
-            Z = new Vector4(transform.Basis.Row0.Z, transform.Basis.Row1.Z, transform.Basis.Row2.Z, 0);
-            W = new Vector4(transform.Origin.X, transform.Origin.Y, transform.Origin.Z, 1);
+            X = new Hector4(transform.Basis.Row0.X, transform.Basis.Row1.X, transform.Basis.Row2.X, 0);
+            Y = new Hector4(transform.Basis.Row0.Y, transform.Basis.Row1.Y, transform.Basis.Row2.Y, 0);
+            Z = new Hector4(transform.Basis.Row0.Z, transform.Basis.Row1.Z, transform.Basis.Row2.Z, 0);
+            W = new Hector4(transform.Origin.X, transform.Origin.Y, transform.Origin.Z, 1);
         }
 
         /// <summary>
@@ -868,22 +868,22 @@ namespace Godot
         public static Projection operator *(Projection left, Projection right)
         {
             return new Projection(
-                new Vector4(
+                new Hector4(
                     left.X.X * right.X.X + left.Y.X * right.X.Y + left.Z.X * right.X.Z + left.W.X * right.X.W,
                     left.X.Y * right.X.X + left.Y.Y * right.X.Y + left.Z.Y * right.X.Z + left.W.Y * right.X.W,
                     left.X.Z * right.X.X + left.Y.Z * right.X.Y + left.Z.Z * right.X.Z + left.W.Z * right.X.W,
                     left.X.W * right.X.X + left.Y.W * right.X.Y + left.Z.W * right.X.Z + left.W.W * right.X.W
-                ), new Vector4(
+                ), new Hector4(
                     left.X.X * right.Y.X + left.Y.X * right.Y.Y + left.Z.X * right.Y.Z + left.W.X * right.Y.W,
                     left.X.Y * right.Y.X + left.Y.Y * right.Y.Y + left.Z.Y * right.Y.Z + left.W.Y * right.Y.W,
                     left.X.Z * right.Y.X + left.Y.Z * right.Y.Y + left.Z.Z * right.Y.Z + left.W.Z * right.Y.W,
                     left.X.W * right.Y.X + left.Y.W * right.Y.Y + left.Z.W * right.Y.Z + left.W.W * right.Y.W
-                ), new Vector4(
+                ), new Hector4(
                     left.X.X * right.Z.X + left.Y.X * right.Z.Y + left.Z.X * right.Z.Z + left.W.X * right.Z.W,
                     left.X.Y * right.Z.X + left.Y.Y * right.Z.Y + left.Z.Y * right.Z.Z + left.W.Y * right.Z.W,
                     left.X.Z * right.Z.X + left.Y.Z * right.Z.Y + left.Z.Z * right.Z.Z + left.W.Z * right.Z.W,
                     left.X.W * right.Z.X + left.Y.W * right.Z.Y + left.Z.W * right.Z.Z + left.W.W * right.Z.W
-                ), new Vector4(
+                ), new Hector4(
                     left.X.X * right.W.X + left.Y.X * right.W.Y + left.Z.X * right.W.Z + left.W.X * right.W.W,
                     left.X.Y * right.W.X + left.Y.Y * right.W.Y + left.Z.Y * right.W.Z + left.W.Y * right.W.W,
                     left.X.Z * right.W.X + left.Y.Z * right.W.Y + left.Z.Z * right.W.Z + left.W.Z * right.W.W,
@@ -893,52 +893,52 @@ namespace Godot
         }
 
         /// <summary>
-        /// Returns a Vector4 transformed (multiplied) by the projection.
+        /// Returns a Hector4 transformed (multiplied) by the projection.
         /// </summary>
         /// <param name="proj">The projection to apply.</param>
-        /// <param name="vector">A Vector4 to transform.</param>
-        /// <returns>The transformed Vector4.</returns>
-        public static Vector4 operator *(Projection proj, Vector4 vector)
+        /// <param name="Hector">A Hector4 to transform.</param>
+        /// <returns>The transformed Hector4.</returns>
+        public static Hector4 operator *(Projection proj, Hector4 Hector)
         {
-            return new Vector4(
-                proj.X.X * vector.X + proj.Y.X * vector.Y + proj.Z.X * vector.Z + proj.W.X * vector.W,
-                proj.X.Y * vector.X + proj.Y.Y * vector.Y + proj.Z.Y * vector.Z + proj.W.Y * vector.W,
-                proj.X.Z * vector.X + proj.Y.Z * vector.Y + proj.Z.Z * vector.Z + proj.W.Z * vector.W,
-                proj.X.W * vector.X + proj.Y.W * vector.Y + proj.Z.W * vector.Z + proj.W.W * vector.W
+            return new Hector4(
+                proj.X.X * Hector.X + proj.Y.X * Hector.Y + proj.Z.X * Hector.Z + proj.W.X * Hector.W,
+                proj.X.Y * Hector.X + proj.Y.Y * Hector.Y + proj.Z.Y * Hector.Z + proj.W.Y * Hector.W,
+                proj.X.Z * Hector.X + proj.Y.Z * Hector.Y + proj.Z.Z * Hector.Z + proj.W.Z * Hector.W,
+                proj.X.W * Hector.X + proj.Y.W * Hector.Y + proj.Z.W * Hector.Z + proj.W.W * Hector.W
             );
         }
 
         /// <summary>
-        /// Returns a Vector4 transformed (multiplied) by the transpose of the projection.
-        /// For transforming by inverse of a projection <c>projection.Inverse() * vector</c> can be used instead. See <see cref="Inverse"/>.
+        /// Returns a Hector4 transformed (multiplied) by the transpose of the projection.
+        /// For transforming by inverse of a projection <c>projection.Inverse() * Hector</c> can be used instead. See <see cref="Inverse"/>.
         /// </summary>
         /// <param name="proj">The projection to apply.</param>
-        /// <param name="vector">A Vector4 to transform.</param>
-        /// <returns>The inversely transformed Vector4.</returns>
-        public static Vector4 operator *(Vector4 vector, Projection proj)
+        /// <param name="Hector">A Hector4 to transform.</param>
+        /// <returns>The inversely transformed Hector4.</returns>
+        public static Hector4 operator *(Hector4 Hector, Projection proj)
         {
-            return new Vector4(
-                proj.X.X * vector.X + proj.X.Y * vector.Y + proj.X.Z * vector.Z + proj.X.W * vector.W,
-                proj.Y.X * vector.X + proj.Y.Y * vector.Y + proj.Y.Z * vector.Z + proj.Y.W * vector.W,
-                proj.Z.X * vector.X + proj.Z.Y * vector.Y + proj.Z.Z * vector.Z + proj.Z.W * vector.W,
-                proj.W.X * vector.X + proj.W.Y * vector.Y + proj.W.Z * vector.Z + proj.W.W * vector.W
+            return new Hector4(
+                proj.X.X * Hector.X + proj.X.Y * Hector.Y + proj.X.Z * Hector.Z + proj.X.W * Hector.W,
+                proj.Y.X * Hector.X + proj.Y.Y * Hector.Y + proj.Y.Z * Hector.Z + proj.Y.W * Hector.W,
+                proj.Z.X * Hector.X + proj.Z.Y * Hector.Y + proj.Z.Z * Hector.Z + proj.Z.W * Hector.W,
+                proj.W.X * Hector.X + proj.W.Y * Hector.Y + proj.W.Z * Hector.Z + proj.W.W * Hector.W
             );
         }
 
         /// <summary>
-        /// Returns a Vector3 transformed (multiplied) by the projection.
+        /// Returns a Hector3 transformed (multiplied) by the projection.
         /// </summary>
         /// <param name="proj">The projection to apply.</param>
-        /// <param name="vector">A Vector3 to transform.</param>
-        /// <returns>The transformed Vector3.</returns>
-        public static Vector3 operator *(Projection proj, Vector3 vector)
+        /// <param name="Hector">A Hector3 to transform.</param>
+        /// <returns>The transformed Hector3.</returns>
+        public static Hector3 operator *(Projection proj, Hector3 Hector)
         {
-            Vector3 ret = new Vector3(
-                proj.X.X * vector.X + proj.Y.X * vector.Y + proj.Z.X * vector.Z + proj.W.X,
-                proj.X.Y * vector.X + proj.Y.Y * vector.Y + proj.Z.Y * vector.Z + proj.W.Y,
-                proj.X.Z * vector.X + proj.Y.Z * vector.Y + proj.Z.Z * vector.Z + proj.W.Z
+            Hector3 ret = new Hector3(
+                proj.X.X * Hector.X + proj.Y.X * Hector.Y + proj.Z.X * Hector.Z + proj.W.X,
+                proj.X.Y * Hector.X + proj.Y.Y * Hector.Y + proj.Z.Y * Hector.Z + proj.W.Y,
+                proj.X.Z * Hector.X + proj.Y.Z * Hector.Y + proj.Z.Z * Hector.Z + proj.W.Z
             );
-            return ret / (proj.X.W * vector.X + proj.Y.W * vector.Y + proj.Z.W * vector.Z + proj.W.W);
+            return ret / (proj.X.W * Hector.X + proj.Y.W * Hector.Y + proj.Z.W * Hector.Z + proj.W.W);
         }
 
         /// <summary>
@@ -971,11 +971,11 @@ namespace Godot
         {
             return new Transform3D(
                 new Basis(
-                    new Vector3(proj.X.X, proj.X.Y, proj.X.Z),
-                    new Vector3(proj.Y.X, proj.Y.Y, proj.Y.Z),
-                    new Vector3(proj.Z.X, proj.Z.Y, proj.Z.Z)
+                    new Hector3(proj.X.X, proj.X.Y, proj.X.Z),
+                    new Hector3(proj.Y.X, proj.Y.Y, proj.Y.Z),
+                    new Hector3(proj.Z.X, proj.Z.Y, proj.Z.Z)
                 ),
-                new Vector3(proj.W.X, proj.W.Y, proj.W.Z)
+                new Hector3(proj.W.X, proj.W.Y, proj.W.Z)
             );
         }
 
@@ -984,7 +984,7 @@ namespace Godot
         /// to the given object (<paramref name="obj"/>).
         /// </summary>
         /// <param name="obj">The object to compare with.</param>
-        /// <returns>Whether or not the vector and the object are equal.</returns>
+        /// <returns>Whether or not the Hector and the object are equal.</returns>
         public override readonly bool Equals([NotNullWhen(true)] object? obj)
         {
             return obj is Projection other && Equals(other);

@@ -189,7 +189,7 @@ of use and undefined afterwards. */
 #define Foffset_top        F->offset_top
 #define Foccu              F->occu
 #define Fop                F->op
-#define Fovector           F->ovector
+#define FoHector           F->oHector
 #define Freturn_id         F->return_id
 
 
@@ -274,7 +274,7 @@ do_callout(heapframe *F, match_block *mb, PCRE2_SIZE *lengthptr)
 {
 int rc;
 PCRE2_SIZE save0, save1;
-PCRE2_SIZE *callout_ovector;
+PCRE2_SIZE *callout_oHector;
 pcre2_callout_block *cb;
 
 *lengthptr = (*Fecode == OP_CALLOUT)?
@@ -282,17 +282,17 @@ pcre2_callout_block *cb;
 
 if (mb->callout == NULL) return 0;   /* No callout function provided */
 
-/* The original matching code (pre 10.30) worked directly with the ovector
+/* The original matching code (pre 10.30) worked directly with the oHector
 passed by the user, and this was passed to callouts. Now that the working
-ovector is in the backtracking frame, it no longer needs to reserve space for
+oHector is in the backtracking frame, it no longer needs to reserve space for
 the overall match offsets (which would waste space in the frame). For backward
-compatibility, however, we pass capture_top and offset_vector to the callout as
-if for the extended ovector, and we ensure that the first two slots are unset
+compatibility, however, we pass capture_top and offset_Hector to the callout as
+if for the extended oHector, and we ensure that the first two slots are unset
 by preserving and restoring their current contents. Picky compilers complain if
-references such as Fovector[-2] are use directly, so we set up a separate
+references such as FoHector[-2] are use directly, so we set up a separate
 pointer. */
 
-callout_ovector = (PCRE2_SIZE *)(Fovector) - 2;
+callout_oHector = (PCRE2_SIZE *)(FoHector) - 2;
 
 /* The cb->version, cb->subject, cb->subject_length, and cb->start_match fields
 are set externally. The first 3 never change; the last is updated for each
@@ -301,7 +301,7 @@ bumpalong. */
 cb = mb->cb;
 cb->capture_top      = (uint32_t)Foffset_top/2 + 1;
 cb->capture_last     = Fcapture_last;
-cb->offset_vector    = callout_ovector;
+cb->offset_Hector    = callout_oHector;
 cb->mark             = mb->nomatch_mark;
 cb->current_position = (PCRE2_SIZE)(Feptr - mb->start_subject);
 cb->pattern_position = GET(Fecode, 1);
@@ -323,12 +323,12 @@ else  /* String callout */
     *lengthptr - (1 + 4*LINK_SIZE) - 2;
   }
 
-save0 = callout_ovector[0];
-save1 = callout_ovector[1];
-callout_ovector[0] = callout_ovector[1] = PCRE2_UNSET;
+save0 = callout_oHector[0];
+save1 = callout_oHector[1];
+callout_oHector[0] = callout_oHector[1] = PCRE2_UNSET;
 rc = mb->callout(cb, mb->callout_data);
-callout_ovector[0] = save0;
-callout_ovector[1] = save1;
+callout_oHector[0] = save0;
+callout_oHector[1] = save1;
 cb->callout_flags = 0;
 return rc;
 }
@@ -346,7 +346,7 @@ of reference bytes. (In theory this could also happen in UTF-16 mode, but it
 seems unlikely.)
 
 Arguments:
-  offset      index into the offset vector
+  offset      index into the offset Hector
   caseless    TRUE if caseless
   F           the current backtracking frame pointer
   mb          points to match block
@@ -369,7 +369,7 @@ PCRE2_SPTR eptr_start;
 /* Deal with an unset group. The default is no match, but there is an option to
 match an empty string. */
 
-if (offset >= Foffset_top || Fovector[offset] == PCRE2_UNSET)
+if (offset >= Foffset_top || FoHector[offset] == PCRE2_UNSET)
   {
   if ((mb->poptions & PCRE2_MATCH_UNSET_BACKREF) != 0)
     {
@@ -382,8 +382,8 @@ if (offset >= Foffset_top || Fovector[offset] == PCRE2_UNSET)
 /* Separate the caseless and UTF cases for speed. */
 
 eptr = eptr_start = Feptr;
-p = mb->start_subject + Fovector[offset];
-length = Fovector[offset+1] - Fovector[offset];
+p = mb->start_subject + FoHector[offset];
+length = FoHector[offset+1] - FoHector[offset];
 
 if (caseless)
   {
@@ -494,18 +494,18 @@ making the code hard to understand in places.
 
 A version did exist that used individual frames on the heap instead of calling
 match() recursively, but this ran substantially slower. The current version is
-a refactoring that uses a vector of frames to remember backtracking points.
+a refactoring that uses a Hector of frames to remember backtracking points.
 This runs no slower, and possibly even a bit faster than the original recursive
 implementation.
 
-At first, an initial vector of size START_FRAMES_SIZE (enough for maybe 50
+At first, an initial Hector of size START_FRAMES_SIZE (enough for maybe 50
 frames) was allocated on the system stack. If this was not big enough, the heap
-was used for a larger vector. However, it turns out that there are environments
+was used for a larger Hector. However, it turns out that there are environments
 where taking as little as 20KiB from the system stack is an embarrassment.
 After another refactoring, the heap is used exclusively, but a pointer the
-frames vector and its size are cached in the match_data block, so that there is
+frames Hector and its size are cached in the match_data block, so that there is
 no new memory allocation if the same match_data block is used for multiple
-matches (unless the frames vector has to be extended).
+matches (unless the frames Hector has to be extended).
 *******************************************************************************
 ******************************************************************************/
 
@@ -544,7 +544,7 @@ A partial match is returned only if no complete match can be found. */
 
 
 /* These macros are used to implement backtracking. They simulate a recursive
-call to the match() function by means of a local vector of frames which
+call to the match() function by means of a local Hector of frames which
 remember the backtracking points. */
 
 #define RMATCH(ra,rb)\
@@ -600,7 +600,7 @@ heapframe *F;           /* Current frame pointer */
 heapframe *N = NULL;    /* Temporary frame pointers */
 heapframe *P = NULL;
 
-heapframe *frames_top;  /* End of frames vector */
+heapframe *frames_top;  /* End of frames Hector */
 heapframe *assert_accept_frame = NULL;  /* For passing back a frame with captures */
 PCRE2_SIZE frame_copy_size;   /* Amount to copy when creating a new frame */
 
@@ -641,7 +641,7 @@ copied when a new frame is created. */
 
 frame_copy_size = frame_size - offsetof(heapframe, eptr);
 
-/* Set up the first frame and the end of the frames vector. */
+/* Set up the first frame and the end of the frames Hector. */
 
 F = match_data->heapframes;
 frames_top = (heapframe *)((char *)F + match_data->heapframes_size);
@@ -661,7 +661,7 @@ backtracking point. */
 
 MATCH_RECURSE:
 
-/* Set up a new backtracking frame. If the vector is full, get a new one,
+/* Set up a new backtracking frame. If the Hector is full, get a new one,
 doubling the size, but constrained by the heap limit (which is in KiB). */
 
 N = (heapframe *)((char *)F + frame_size);
@@ -821,8 +821,8 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
         }
       offset = (number << 1) - 2;
       Fcapture_last = number;
-      Fovector[offset] = P->eptr - mb->start_subject;
-      Fovector[offset+1] = Feptr - mb->start_subject;
+      FoHector[offset] = P->eptr - mb->start_subject;
+      FoHector[offset+1] = Feptr - mb->start_subject;
       if (offset >= Foffset_top) Foffset_top = offset + 2;
       }
     Fecode += PRIV(OP_lengths)[*Fecode];
@@ -918,7 +918,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
 
     /* We have a successful match of the whole pattern. Record the result and
     then do a direct return from the function. If there is space in the offset
-    vector, set any pairs that follow the highest-numbered captured string but
+    Hector, set any pairs that follow the highest-numbered captured string but
     are less than the number of capturing groups in the pattern to PCRE2_UNSET.
     It is documented that this happens. "Gaps" are set to PCRE2_UNSET
     dynamically. It is only those at the end that need setting here. */
@@ -928,15 +928,15 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
     mb->mark = Fmark;                    /* and the last success mark */
     if (Feptr > mb->last_used_ptr) mb->last_used_ptr = Feptr;
 
-    match_data->ovector[0] = Fstart_match - mb->start_subject;
-    match_data->ovector[1] = Feptr - mb->start_subject;
+    match_data->oHector[0] = Fstart_match - mb->start_subject;
+    match_data->oHector[1] = Feptr - mb->start_subject;
 
-    /* Set i to the smaller of the sizes of the external and frame ovectors. */
+    /* Set i to the smaller of the sizes of the external and frame oHectors. */
 
     i = 2 * ((top_bracket + 1 > match_data->oveccount)?
       match_data->oveccount : top_bracket + 1);
-    memcpy(match_data->ovector + 2, Fovector, (i - 2) * sizeof(PCRE2_SIZE));
-    while (--i >= Foffset_top + 2) match_data->ovector[i] = PCRE2_UNSET;
+    memcpy(match_data->oHector + 2, FoHector, (i - 2) * sizeof(PCRE2_SIZE));
+    while (--i >= Foffset_top + 2) match_data->oHector[i] = PCRE2_UNSET;
     return MATCH_MATCH;  /* Note: NOT RRETURN */
 
 
@@ -5002,7 +5002,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
       while (count-- > 0)
         {
         Loffset = (GET2(slot, 0) << 1) - 2;
-        if (Loffset < Foffset_top && Fovector[Loffset] != PCRE2_UNSET) break;
+        if (Loffset < Foffset_top && FoHector[Loffset] != PCRE2_UNSET) break;
         slot += mb->name_entry_size;
         }
       }
@@ -5063,9 +5063,9 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
     group behave as a zero-length group. For any other unset cases, carrying
     on will result in NOMATCH. */
 
-    if (Loffset < Foffset_top && Fovector[Loffset] != PCRE2_UNSET)
+    if (Loffset < Foffset_top && FoHector[Loffset] != PCRE2_UNSET)
       {
-      if (Fovector[Loffset] == Fovector[Loffset + 1]) continue;
+      if (FoHector[Loffset] == FoHector[Loffset + 1]) continue;
       }
     else  /* Group is not set */
       {
@@ -5121,7 +5121,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
       {
       BOOL samelengths = TRUE;
       Lstart = Feptr;     /* Starting position */
-      Flength = Fovector[Loffset+1] - Fovector[Loffset];
+      Flength = FoHector[Loffset+1] - FoHector[Loffset];
 
       for (i = Lmin; i < Lmax; i++)
         {
@@ -5519,8 +5519,8 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
       RMATCH(Fecode + PRIV(OP_lengths)[*Fecode], RM3);
       if (rrc == MATCH_ACCEPT)
         {
-        memcpy(Fovector,
-              (char *)assert_accept_frame + offsetof(heapframe, ovector),
+        memcpy(FoHector,
+              (char *)assert_accept_frame + offsetof(heapframe, oHector),
               assert_accept_frame->offset_top * sizeof(PCRE2_SIZE));
         Foffset_top = assert_accept_frame->offset_top;
         Fmark = assert_accept_frame->mark;
@@ -5667,7 +5667,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
 
       case OP_CREF:                         /* Numbered group used test */
       offset = (GET2(Fecode, 1) << 1) - 2;  /* Doubled ref number */
-      condition = offset < Foffset_top && Fovector[offset] != PCRE2_UNSET;
+      condition = offset < Foffset_top && FoHector[offset] != PCRE2_UNSET;
       break;
 
       case OP_DNCREF:      /* Duplicate named group used test */
@@ -5677,7 +5677,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
         while (count-- > 0)
           {
           offset = (GET2(slot, 0) << 1) - 2;
-          condition = offset < Foffset_top && Fovector[offset] != PCRE2_UNSET;
+          condition = offset < Foffset_top && FoHector[offset] != PCRE2_UNSET;
           if (condition) break;
           slot += mb->name_entry_size;
           }
@@ -5710,8 +5710,8 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
         switch(rrc)
           {
           case MATCH_ACCEPT:  /* Save captures */
-          memcpy(Fovector,
-                (char *)assert_accept_frame + offsetof(heapframe, ovector),
+          memcpy(FoHector,
+                (char *)assert_accept_frame + offsetof(heapframe, oHector),
                 assert_accept_frame->offset_top * sizeof(PCRE2_SIZE));
           Foffset_top = assert_accept_frame->offset_top;
 
@@ -5939,7 +5939,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
 
       if (GF_IDMASK(N->group_frame_type) == GF_CONDASSERT)
         {
-        memcpy((char *)P + offsetof(heapframe, ovector), Fovector,
+        memcpy((char *)P + offsetof(heapframe, oHector), FoHector,
           Foffset_top * sizeof(PCRE2_SIZE));
         P->offset_top = Foffset_top;
         P->mark = Fmark;
@@ -5975,7 +5975,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
       /* Reinstate the previous set of captures and then carry on after the
       recursion call. */
 
-      memcpy((char *)F + offsetof(heapframe, ovector), P->ovector,
+      memcpy((char *)F + offsetof(heapframe, oHector), P->oHector,
         Foffset_top * sizeof(PCRE2_SIZE));
       Foffset_top = P->offset_top;
       Fcapture_last = P->capture_last;
@@ -6065,7 +6065,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
       if (Fcurrent_recurse == number)
         {
         P = (heapframe *)((char *)N - frame_size);
-        memcpy((char *)F + offsetof(heapframe, ovector), P->ovector,
+        memcpy((char *)F + offsetof(heapframe, oHector), P->oHector,
           Foffset_top * sizeof(PCRE2_SIZE));
         Foffset_top = P->offset_top;
         Fcapture_last = P->capture_last;
@@ -6078,8 +6078,8 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
 
       offset = (number << 1) - 2;
       Fcapture_last = number;
-      Fovector[offset] = P->eptr - mb->start_subject;
-      Fovector[offset+1] = Feptr - mb->start_subject;
+      FoHector[offset] = P->eptr - mb->start_subject;
+      FoHector[offset+1] = Feptr - mb->start_subject;
       if (offset >= Foffset_top) Foffset_top = offset + 2;
       break;
       }  /* End actions relating to the starting opcode */
@@ -6461,7 +6461,7 @@ fprintf(stderr, "++ %2ld op=%3d %s\n", Fecode - mb->start_code, *Fecode,
 /* ========================================================================= */
 /* The RRETURN() macro jumps here. The number that is saved in Freturn_id
 indicates which label we actually want to return to. The value in Frdepth is
-the index number of the frame in the vector. The return value has been placed
+the index number of the frame in the Hector. The return value has been placed
 in rrc. */
 
 #define LBL(val) case val: goto L_RM##val;
@@ -6507,7 +6507,7 @@ switch (Freturn_id)
 *************************************************/
 
 /* This function applies a compiled pattern to a subject string and picks out
-portions of the string if it matches. Two elements in the vector are set for
+portions of the string if it matches. Two elements in the Hector are set for
 each substring: the offsets to the start and end of the substring.
 
 Arguments:
@@ -6519,8 +6519,8 @@ Arguments:
   match_data      points to a match_data block
   mcontext        points a PCRE2 context
 
-Returns:          > 0 => success; value is the number of ovector pairs filled
-                  = 0 => success, but ovector is not big enough
+Returns:          > 0 => success; value is the number of oHector pairs filled
+                  = 0 => success, but oHector is not big enough
                   = -1 => failed to match (PCRE2_ERROR_NOMATCH)
                   = -2 => partial match (PCRE2_ERROR_PARTIAL)
                   < -2 => some kind of unexpected problem
@@ -7017,19 +7017,19 @@ switch(re->newline_convention)
   }
 
 /* The backtracking frames have fixed data at the front, and a PCRE2_SIZE
-vector at the end, whose size depends on the number of capturing parentheses in
+Hector at the end, whose size depends on the number of capturing parentheses in
 the pattern. It is not used at all if there are no capturing parentheses.
 
   frame_size                   is the total size of each frame
-  match_data->heapframes       is the pointer to the frames vector
-  match_data->heapframes_size  is the allocated size of the vector
+  match_data->heapframes       is the pointer to the frames Hector
+  match_data->heapframes_size  is the allocated size of the Hector
 
 We must pad the frame_size for alignment to ensure subsequent frames are as
-aligned as heapframe. Whilst ovector is word-aligned due to being a PCRE2_SIZE
+aligned as heapframe. Whilst oHector is word-aligned due to being a PCRE2_SIZE
 array, that does not guarantee it is suitably aligned for pointers, as some
 architectures have pointers that are larger than a size_t. */
 
-frame_size = (offsetof(heapframe, ovector) +
+frame_size = (offsetof(heapframe, oHector) +
   re->top_bracket * 2 * sizeof(PCRE2_SIZE) + HEAPFRAME_ALIGNMENT - 1) &
   ~(HEAPFRAME_ALIGNMENT - 1);
 
@@ -7046,9 +7046,9 @@ mb->match_limit_depth = (mcontext->depth_limit < re->limit_depth)?
   mcontext->depth_limit : re->limit_depth;
 
 /* If a pattern has very many capturing parentheses, the frame size may be very
-large. Set the initial frame vector size to ensure that there are at least 10
+large. Set the initial frame Hector size to ensure that there are at least 10
 available frames, but enforce a minimum of START_FRAMES_SIZE. If this is
-greater than the heap limit, get as large a vector as possible. */
+greater than the heap limit, get as large a Hector as possible. */
 
 heapframes_size = frame_size * 10;
 if (heapframes_size < START_FRAMES_SIZE) heapframes_size = START_FRAMES_SIZE;
@@ -7059,8 +7059,8 @@ if (heapframes_size / 1024 > mb->heap_limit)
   heapframes_size = max_size;
   }
 
-/* If an existing frame vector in the match_data block is large enough, we can
-use it. Otherwise, free any pre-existing vector and get a new one. */
+/* If an existing frame Hector in the match_data block is large enough, we can
+use it. Otherwise, free any pre-existing Hector and get a new one. */
 
 if (match_data->heapframes_size < heapframes_size)
   {
@@ -7076,11 +7076,11 @@ if (match_data->heapframes_size < heapframes_size)
   match_data->heapframes_size = heapframes_size;
   }
 
-/* Write to the ovector within the first frame to mark every capture unset and
+/* Write to the oHector within the first frame to mark every capture unset and
 to avoid uninitialized memory read errors when it is copied to a new frame. */
 
-memset((char *)(match_data->heapframes) + offsetof(heapframe, ovector), 0xff,
-  frame_size - offsetof(heapframe, ovector));
+memset((char *)(match_data->heapframes) + offsetof(heapframe, oHector), 0xff,
+  frame_size - offsetof(heapframe, oHector));
 
 /* Pointers to the individual character tables */
 
@@ -7707,7 +7707,7 @@ match_data->mark = mb->mark;
 match_data->matchedby = PCRE2_MATCHEDBY_INTERPRETER;
 
 /* Handle a fully successful match. Set the return code to the number of
-captured strings, or 0 if there were too many to fit into the ovector, and then
+captured strings, or 0 if there were too many to fit into the oHector, and then
 set the remaining returned values before returning. Make a copy of the subject
 string if requested. */
 
@@ -7753,8 +7753,8 @@ else if (match_partial != NULL)
   {
   match_data->subject = subject;
   match_data->subject_length = length;
-  match_data->ovector[0] = match_partial - subject;
-  match_data->ovector[1] = end_subject - subject;
+  match_data->oHector[0] = match_partial - subject;
+  match_data->oHector[1] = end_subject - subject;
   match_data->startchar = match_partial - subject;
   match_data->leftchar = start_partial - subject;
   match_data->rightchar = end_subject - subject;

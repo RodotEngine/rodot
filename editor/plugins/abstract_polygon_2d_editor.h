@@ -65,24 +65,24 @@ class AbstractPolygon2DEditor : public HBoxContainer {
 
 	struct PosVertex : public Vertex {
 		PosVertex() {}
-		PosVertex(const Vertex &p_vertex, const Vector2 &p_pos) :
+		PosVertex(const Vertex &p_vertex, const Hector2 &p_pos) :
 				Vertex(p_vertex.polygon, p_vertex.vertex),
 				pos(p_pos) {}
-		PosVertex(int p_polygon, int p_vertex, const Vector2 &p_pos) :
+		PosVertex(int p_polygon, int p_vertex, const Hector2 &p_pos) :
 				Vertex(p_polygon, p_vertex),
 				pos(p_pos) {}
 
-		Vector2 pos;
+		Hector2 pos;
 	};
 
 	PosVertex edited_point;
 	Vertex hover_point; // point under mouse cursor
 	Vertex selected_point; // currently selected
 	PosVertex edge_point; // adding an edge point?
-	Vector2 original_mouse_pos;
+	Hector2 original_mouse_pos;
 
-	Vector<Vector2> pre_move_edit;
-	Vector<Vector2> wip;
+	Hector<Hector2> pre_move_edit;
+	Hector<Hector2> wip;
 	bool wip_active = false;
 	bool wip_destructive = false;
 
@@ -112,8 +112,8 @@ protected:
 
 	void remove_point(const Vertex &p_vertex);
 	Vertex get_active_point() const;
-	PosVertex closest_point(const Vector2 &p_pos) const;
-	PosVertex closest_edge_point(const Vector2 &p_pos) const;
+	PosVertex closest_point(const Hector2 &p_pos) const;
+	PosVertex closest_edge_point(const Hector2 &p_pos) const;
 
 	bool _is_empty() const;
 
@@ -123,7 +123,7 @@ protected:
 	virtual bool _is_line() const;
 	virtual bool _has_uv() const;
 	virtual int _get_polygon_count() const;
-	virtual Vector2 _get_offset(int p_idx) const;
+	virtual Hector2 _get_offset(int p_idx) const;
 	virtual Variant _get_polygon(int p_idx) const;
 	virtual void _set_polygon(int p_idx, const Variant &p_polygon) const;
 

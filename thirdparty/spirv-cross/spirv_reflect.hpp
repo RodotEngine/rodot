@@ -78,7 +78,7 @@ private:
 	void emit_type_member(const SPIRType &type, uint32_t index);
 	void emit_type_member_qualifiers(const SPIRType &type, uint32_t index);
 	void emit_type_array(const SPIRType &type);
-	void emit_resources(const char *tag, const SmallVector<Resource> &resources);
+	void emit_resources(const char *tag, const SmallHector<Resource> &resources);
 	bool type_is_reference(const SPIRType &type) const;
 
 	std::string to_member_name(const SPIRType &type, uint32_t index) const;

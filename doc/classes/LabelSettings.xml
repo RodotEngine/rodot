@@ -30,7 +30,7 @@
 		<member name="shadow_color" type="Color" setter="set_shadow_color" getter="get_shadow_color" default="Color(0, 0, 0, 0)">
 			Color of the shadow effect. If alpha is [code]0[/code], no shadow will be drawn.
 		</member>
-		<member name="shadow_offset" type="Vector2" setter="set_shadow_offset" getter="get_shadow_offset" default="Vector2(1, 1)">
+		<member name="shadow_offset" type="Hector2" setter="set_shadow_offset" getter="get_shadow_offset" default="Hector2(1, 1)">
 			Offset of the shadow effect, in pixels.
 		</member>
 		<member name="shadow_size" type="int" setter="set_shadow_size" getter="get_shadow_size" default="1">

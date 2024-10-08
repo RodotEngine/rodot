@@ -60,7 +60,7 @@ bool NavMeshGenerator2D::baking_use_high_priority_threads = true;
 HashSet<Ref<NavigationPolygon>> NavMeshGenerator2D::baking_navmeshes;
 HashMap<WorkerThreadPool::TaskID, NavMeshGenerator2D::NavMeshGeneratorTask2D *> NavMeshGenerator2D::generator_tasks;
 RID_Owner<NavMeshGenerator2D::NavMeshGeometryParser2D> NavMeshGenerator2D::generator_parser_owner;
-LocalVector<NavMeshGenerator2D::NavMeshGeometryParser2D *> NavMeshGenerator2D::generator_parsers;
+LocalHector<NavMeshGenerator2D::NavMeshGeometryParser2D *> NavMeshGenerator2D::generator_parsers;
 
 NavMeshGenerator2D *NavMeshGenerator2D::get_singleton() {
 	return singleton;
@@ -91,7 +91,7 @@ void NavMeshGenerator2D::sync() {
 	{
 		MutexLock generator_task_lock(generator_task_mutex);
 
-		LocalVector<WorkerThreadPool::TaskID> finished_task_ids;
+		LocalHector<WorkerThreadPool::TaskID> finished_task_ids;
 
 		for (KeyValue<WorkerThreadPool::TaskID, NavMeshGeneratorTask2D *> &E : generator_tasks) {
 			if (WorkerThreadPool::get_singleton()->is_task_completed(E.key)) {
@@ -311,17 +311,17 @@ void NavMeshGenerator2D::generator_parse_meshinstance2d_node(const Ref<Navigatio
 
 		Array a = mesh->surface_get_arrays(i);
 
-		Vector<Vector2> mesh_vertices = a[Mesh::ARRAY_VERTEX];
+		Hector<Hector2> mesh_vertices = a[Mesh::ARRAY_VERTEX];
 
 		if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
-			Vector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
+			Hector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
 			for (int vertex_index : mesh_indices) {
-				const Vector2 &vertex = mesh_vertices[vertex_index];
+				const Hector2 &vertex = mesh_vertices[vertex_index];
 				const PointD &point = PointD(vertex.x, vertex.y);
 				subject_path.push_back(point);
 			}
 		} else {
-			for (const Vector2 &vertex : mesh_vertices) {
+			for (const Hector2 &vertex : mesh_vertices) {
 				const PointD &point = PointD(vertex.x, vertex.y);
 				subject_path.push_back(point);
 			}
@@ -335,10 +335,10 @@ void NavMeshGenerator2D::generator_parse_meshinstance2d_node(const Ref<Navigatio
 
 	//path_solution = RamerDouglasPeucker(path_solution, 0.025);
 
-	Vector<Vector<Vector2>> polypaths;
+	Hector<Hector<Hector2>> polypaths;
 
 	for (const PathD &scaled_path : path_solution) {
-		Vector<Vector2> shape_outline;
+		Hector<Hector2> shape_outline;
 		for (const PointD &scaled_point : scaled_path) {
 			shape_outline.push_back(Point2(static_cast<real_t>(scaled_point.x), static_cast<real_t>(scaled_point.y)));
 		}
@@ -399,17 +399,17 @@ void NavMeshGenerator2D::generator_parse_multimeshinstance2d_node(const Ref<Navi
 
 		Array a = mesh->surface_get_arrays(i);
 
-		Vector<Vector2> mesh_vertices = a[Mesh::ARRAY_VERTEX];
+		Hector<Hector2> mesh_vertices = a[Mesh::ARRAY_VERTEX];
 
 		if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
-			Vector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
+			Hector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
 			for (int vertex_index : mesh_indices) {
-				const Vector2 &vertex = mesh_vertices[vertex_index];
+				const Hector2 &vertex = mesh_vertices[vertex_index];
 				const PointD &point = PointD(vertex.x, vertex.y);
 				subject_path.push_back(point);
 			}
 		} else {
-			for (const Vector2 &vertex : mesh_vertices) {
+			for (const Hector2 &vertex : mesh_vertices) {
 				const PointD &point = PointD(vertex.x, vertex.y);
 				subject_path.push_back(point);
 			}
@@ -432,7 +432,7 @@ void NavMeshGenerator2D::generator_parse_multimeshinstance2d_node(const Ref<Navi
 		const Transform2D multimesh_instance_mesh_instance_xform = multimesh_instance_xform * multimesh->get_instance_transform_2d(i);
 
 		for (const PathD &mesh_path : mesh_path_solution) {
-			Vector<Vector2> shape_outline;
+			Hector<Hector2> shape_outline;
 
 			for (const PointD &mesh_path_point : mesh_path) {
 				shape_outline.push_back(Point2(static_cast<real_t>(mesh_path_point.x), static_cast<real_t>(mesh_path_point.y)));
@@ -458,7 +458,7 @@ void NavMeshGenerator2D::generator_parse_polygon2d_node(const Ref<NavigationPoly
 	if (parsed_geometry_type == NavigationPolygon::PARSED_GEOMETRY_MESH_INSTANCES || parsed_geometry_type == NavigationPolygon::PARSED_GEOMETRY_BOTH) {
 		const Transform2D polygon_2d_xform = p_source_geometry_data->root_node_transform * polygon_2d->get_global_transform();
 
-		Vector<Vector2> shape_outline = polygon_2d->get_polygon();
+		Hector<Hector2> shape_outline = polygon_2d->get_polygon();
 		for (int i = 0; i < shape_outline.size(); i++) {
 			shape_outline.write[i] = polygon_2d_xform.xform(shape_outline[i]);
 		}
@@ -505,15 +505,15 @@ void NavMeshGenerator2D::generator_parse_staticbody2d_node(const Ref<NavigationP
 
 			RectangleShape2D *rectangle_shape = Object::cast_to<RectangleShape2D>(*s);
 			if (rectangle_shape) {
-				Vector<Vector2> shape_outline;
+				Hector<Hector2> shape_outline;
 
-				const Vector2 &rectangle_size = rectangle_shape->get_size();
+				const Hector2 &rectangle_size = rectangle_shape->get_size();
 
 				shape_outline.resize(5);
 				shape_outline.write[0] = static_body_xform.xform(-rectangle_size * 0.5);
-				shape_outline.write[1] = static_body_xform.xform(Vector2(rectangle_size.x, -rectangle_size.y) * 0.5);
+				shape_outline.write[1] = static_body_xform.xform(Hector2(rectangle_size.x, -rectangle_size.y) * 0.5);
 				shape_outline.write[2] = static_body_xform.xform(rectangle_size * 0.5);
-				shape_outline.write[3] = static_body_xform.xform(Vector2(-rectangle_size.x, rectangle_size.y) * 0.5);
+				shape_outline.write[3] = static_body_xform.xform(Hector2(-rectangle_size.x, rectangle_size.y) * 0.5);
 				shape_outline.write[4] = static_body_xform.xform(-rectangle_size * 0.5);
 
 				p_source_geometry_data->add_obstruction_outline(shape_outline);
@@ -524,17 +524,17 @@ void NavMeshGenerator2D::generator_parse_staticbody2d_node(const Ref<NavigationP
 				const real_t capsule_height = capsule_shape->get_height();
 				const real_t capsule_radius = capsule_shape->get_radius();
 
-				Vector<Vector2> shape_outline;
+				Hector<Hector2> shape_outline;
 				const real_t turn_step = Math_TAU / 12.0;
 				shape_outline.resize(14);
 				int shape_outline_inx = 0;
 				for (int i = 0; i < 12; i++) {
-					Vector2 ofs = Vector2(0, (i > 3 && i <= 9) ? -capsule_height * 0.5 + capsule_radius : capsule_height * 0.5 - capsule_radius);
+					Hector2 ofs = Hector2(0, (i > 3 && i <= 9) ? -capsule_height * 0.5 + capsule_radius : capsule_height * 0.5 - capsule_radius);
 
-					shape_outline.write[shape_outline_inx] = static_body_xform.xform(Vector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * capsule_radius + ofs);
+					shape_outline.write[shape_outline_inx] = static_body_xform.xform(Hector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * capsule_radius + ofs);
 					shape_outline_inx += 1;
 					if (i == 3 || i == 9) {
-						shape_outline.write[shape_outline_inx] = static_body_xform.xform(Vector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * capsule_radius - ofs);
+						shape_outline.write[shape_outline_inx] = static_body_xform.xform(Hector2(Math::sin(i * turn_step), Math::cos(i * turn_step)) * capsule_radius - ofs);
 						shape_outline_inx += 1;
 					}
 				}
@@ -546,13 +546,13 @@ void NavMeshGenerator2D::generator_parse_staticbody2d_node(const Ref<NavigationP
 			if (circle_shape) {
 				const real_t circle_radius = circle_shape->get_radius();
 
-				Vector<Vector2> shape_outline;
+				Hector<Hector2> shape_outline;
 				int circle_edge_count = 12;
 				shape_outline.resize(circle_edge_count);
 
 				const real_t turn_step = Math_TAU / real_t(circle_edge_count);
 				for (int i = 0; i < circle_edge_count; i++) {
-					shape_outline.write[i] = static_body_xform.xform(Vector2(Math::cos(i * turn_step), Math::sin(i * turn_step)) * circle_radius);
+					shape_outline.write[i] = static_body_xform.xform(Hector2(Math::cos(i * turn_step), Math::sin(i * turn_step)) * circle_radius);
 				}
 
 				p_source_geometry_data->add_obstruction_outline(shape_outline);
@@ -560,7 +560,7 @@ void NavMeshGenerator2D::generator_parse_staticbody2d_node(const Ref<NavigationP
 
 			ConcavePolygonShape2D *concave_polygon_shape = Object::cast_to<ConcavePolygonShape2D>(*s);
 			if (concave_polygon_shape) {
-				Vector<Vector2> shape_outline = concave_polygon_shape->get_segments();
+				Hector<Hector2> shape_outline = concave_polygon_shape->get_segments();
 
 				for (int i = 0; i < shape_outline.size(); i++) {
 					shape_outline.write[i] = static_body_xform.xform(shape_outline[i]);
@@ -571,7 +571,7 @@ void NavMeshGenerator2D::generator_parse_staticbody2d_node(const Ref<NavigationP
 
 			ConvexPolygonShape2D *convex_polygon_shape = Object::cast_to<ConvexPolygonShape2D>(*s);
 			if (convex_polygon_shape) {
-				Vector<Vector2> shape_outline = convex_polygon_shape->get_points();
+				Hector<Hector2> shape_outline = convex_polygon_shape->get_points();
 
 				for (int i = 0; i < shape_outline.size(); i++) {
 					shape_outline.write[i] = static_body_xform.xform(shape_outline[i]);
@@ -605,9 +605,9 @@ void NavMeshGenerator2D::generator_parse_tile_map_layer_node(const Ref<Navigatio
 
 	const Transform2D tilemap_xform = p_source_geometry_data->root_node_transform * tile_map_layer->get_global_transform();
 
-	TypedArray<Vector2i> used_cells = tile_map_layer->get_used_cells();
+	TypedArray<Hector2i> used_cells = tile_map_layer->get_used_cells();
 	for (int used_cell_index = 0; used_cell_index < used_cells.size(); used_cell_index++) {
-		const Vector2i &cell = used_cells[used_cell_index];
+		const Hector2i &cell = used_cells[used_cell_index];
 
 		const TileData *tile_data = tile_map_layer->get_cell_tile_data(cell);
 		if (tile_data == nullptr) {
@@ -630,16 +630,16 @@ void NavMeshGenerator2D::generator_parse_tile_map_layer_node(const Ref<Navigatio
 			Ref<NavigationPolygon> navigation_polygon = tile_data->get_navigation_polygon(navigation_layer, flip_h, flip_v, transpose);
 			if (navigation_polygon.is_valid()) {
 				for (int outline_index = 0; outline_index < navigation_polygon->get_outline_count(); outline_index++) {
-					const Vector<Vector2> &navigation_polygon_outline = navigation_polygon->get_outline(outline_index);
+					const Hector<Hector2> &navigation_polygon_outline = navigation_polygon->get_outline(outline_index);
 					if (navigation_polygon_outline.is_empty()) {
 						continue;
 					}
 
-					Vector<Vector2> traversable_outline;
+					Hector<Hector2> traversable_outline;
 					traversable_outline.resize(navigation_polygon_outline.size());
 
-					const Vector2 *navigation_polygon_outline_ptr = navigation_polygon_outline.ptr();
-					Vector2 *traversable_outline_ptrw = traversable_outline.ptrw();
+					const Hector2 *navigation_polygon_outline_ptr = navigation_polygon_outline.ptr();
+					Hector2 *traversable_outline_ptrw = traversable_outline.ptrw();
 
 					for (int traversable_outline_index = 0; traversable_outline_index < traversable_outline.size(); traversable_outline_index++) {
 						traversable_outline_ptrw[traversable_outline_index] = tile_transform_offset.xform(navigation_polygon_outline_ptr[traversable_outline_index]);
@@ -655,7 +655,7 @@ void NavMeshGenerator2D::generator_parse_tile_map_layer_node(const Ref<Navigatio
 			if ((parsed_geometry_type == NavigationPolygon::PARSED_GEOMETRY_STATIC_COLLIDERS || parsed_geometry_type == NavigationPolygon::PARSED_GEOMETRY_BOTH) &&
 					(tile_set->get_physics_layer_collision_layer(physics_layer) & parsed_collision_mask)) {
 				for (int collision_polygon_index = 0; collision_polygon_index < tile_data->get_collision_polygons_count(physics_layer); collision_polygon_index++) {
-					PackedVector2Array collision_polygon_points = tile_data->get_collision_polygon_points(physics_layer, collision_polygon_index);
+					PackedHector2Array collision_polygon_points = tile_data->get_collision_polygon_points(physics_layer, collision_polygon_index);
 					if (collision_polygon_points.is_empty()) {
 						continue;
 					}
@@ -664,11 +664,11 @@ void NavMeshGenerator2D::generator_parse_tile_map_layer_node(const Ref<Navigatio
 						collision_polygon_points = TileData::get_transformed_vertices(collision_polygon_points, flip_h, flip_v, transpose);
 					}
 
-					Vector<Vector2> obstruction_outline;
+					Hector<Hector2> obstruction_outline;
 					obstruction_outline.resize(collision_polygon_points.size());
 
-					const Vector2 *collision_polygon_points_ptr = collision_polygon_points.ptr();
-					Vector2 *obstruction_outline_ptrw = obstruction_outline.ptrw();
+					const Hector2 *collision_polygon_points_ptr = collision_polygon_points.ptr();
+					Hector2 *obstruction_outline_ptrw = obstruction_outline.ptrw();
 
 					for (int obstruction_outline_index = 0; obstruction_outline_index < obstruction_outline.size(); obstruction_outline_index++) {
 						obstruction_outline_ptrw[obstruction_outline_index] = tile_transform_offset.xform(collision_polygon_points_ptr[obstruction_outline_index]);
@@ -696,7 +696,7 @@ void NavMeshGenerator2D::generator_parse_navigationobstacle_node(const Ref<Navig
 	const float obstacle_radius = obstacle->get_radius();
 
 	if (obstacle_radius > 0.0) {
-		Vector<Vector2> obstruction_circle_vertices;
+		Hector<Hector2> obstruction_circle_vertices;
 
 		// The point of this is that the moving obstacle can make a simple hole in the navigation mesh and affect the pathfinding.
 		// Without, navigation paths can go directly through the middle of the obstacle and conflict with the avoidance to get agents stuck.
@@ -704,28 +704,28 @@ void NavMeshGenerator2D::generator_parse_navigationobstacle_node(const Ref<Navig
 		static const int circle_points = 12;
 
 		obstruction_circle_vertices.resize(circle_points);
-		Vector2 *circle_vertices_ptrw = obstruction_circle_vertices.ptrw();
+		Hector2 *circle_vertices_ptrw = obstruction_circle_vertices.ptrw();
 		const real_t circle_point_step = Math_TAU / circle_points;
 
 		for (int i = 0; i < circle_points; i++) {
 			const float angle = i * circle_point_step;
-			circle_vertices_ptrw[i] = node_xform.xform(Vector2(Math::cos(angle) * obstacle_radius, Math::sin(angle) * obstacle_radius));
+			circle_vertices_ptrw[i] = node_xform.xform(Hector2(Math::cos(angle) * obstacle_radius, Math::sin(angle) * obstacle_radius));
 		}
 
 		p_source_geometry_data->add_projected_obstruction(obstruction_circle_vertices, obstacle->get_carve_navigation_mesh());
 	}
 
-	const Vector<Vector2> &obstacle_vertices = obstacle->get_vertices();
+	const Hector<Hector2> &obstacle_vertices = obstacle->get_vertices();
 
 	if (obstacle_vertices.is_empty()) {
 		return;
 	}
 
-	Vector<Vector2> obstruction_shape_vertices;
+	Hector<Hector2> obstruction_shape_vertices;
 	obstruction_shape_vertices.resize(obstacle_vertices.size());
 
-	const Vector2 *obstacle_vertices_ptr = obstacle_vertices.ptr();
-	Vector2 *obstruction_shape_vertices_ptrw = obstruction_shape_vertices.ptrw();
+	const Hector2 *obstacle_vertices_ptr = obstacle_vertices.ptr();
+	Hector2 *obstruction_shape_vertices_ptrw = obstruction_shape_vertices.ptrw();
 
 	for (int i = 0; i < obstacle_vertices.size(); i++) {
 		obstruction_shape_vertices_ptrw[i] = node_xform.xform(obstacle_vertices_ptr[i]);
@@ -760,10 +760,10 @@ void NavMeshGenerator2D::generator_parse_source_geometry_data(Ref<NavigationPoly
 static void generator_recursive_process_polytree_items(List<TPPLPoly> &p_tppl_in_polygon, const Clipper2Lib::PolyPathD *p_polypath_item) {
 	using namespace Clipper2Lib;
 
-	Vector<Vector2> polygon_vertices;
+	Hector<Hector2> polygon_vertices;
 
 	for (const PointD &polypath_point : p_polypath_item->Polygon()) {
-		polygon_vertices.push_back(Vector2(static_cast<real_t>(polypath_point.x), static_cast<real_t>(polypath_point.y)));
+		polygon_vertices.push_back(Hector2(static_cast<real_t>(polypath_point.x), static_cast<real_t>(polypath_point.y)));
 	}
 
 	TPPLPoly tp;
@@ -848,9 +848,9 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 
 	int outline_count = p_navigation_mesh->get_outline_count();
 
-	Vector<Vector<Vector2>> traversable_outlines;
-	Vector<Vector<Vector2>> obstruction_outlines;
-	Vector<NavigationMeshSourceGeometryData2D::ProjectedObstruction> projected_obstructions;
+	Hector<Hector<Hector2>> traversable_outlines;
+	Hector<Hector<Hector2>> obstruction_outlines;
+	Hector<NavigationMeshSourceGeometryData2D::ProjectedObstruction> projected_obstructions;
 
 	p_source_geometry_data->get_data(
 			traversable_outlines,
@@ -870,30 +870,30 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 	obstruction_polygon_paths.reserve(obstruction_outlines.size());
 
 	for (int i = 0; i < outline_count; i++) {
-		const Vector<Vector2> &traversable_outline = p_navigation_mesh->get_outline(i);
+		const Hector<Hector2> &traversable_outline = p_navigation_mesh->get_outline(i);
 		PathD subject_path;
 		subject_path.reserve(traversable_outline.size());
-		for (const Vector2 &traversable_point : traversable_outline) {
+		for (const Hector2 &traversable_point : traversable_outline) {
 			const PointD &point = PointD(traversable_point.x, traversable_point.y);
 			subject_path.push_back(point);
 		}
 		traversable_polygon_paths.push_back(subject_path);
 	}
 
-	for (const Vector<Vector2> &traversable_outline : traversable_outlines) {
+	for (const Hector<Hector2> &traversable_outline : traversable_outlines) {
 		PathD subject_path;
 		subject_path.reserve(traversable_outline.size());
-		for (const Vector2 &traversable_point : traversable_outline) {
+		for (const Hector2 &traversable_point : traversable_outline) {
 			const PointD &point = PointD(traversable_point.x, traversable_point.y);
 			subject_path.push_back(point);
 		}
 		traversable_polygon_paths.push_back(subject_path);
 	}
 
-	for (const Vector<Vector2> &obstruction_outline : obstruction_outlines) {
+	for (const Hector<Hector2> &obstruction_outline : obstruction_outlines) {
 		PathD clip_path;
 		clip_path.reserve(obstruction_outline.size());
-		for (const Vector2 &obstruction_point : obstruction_outline) {
+		for (const Hector2 &obstruction_point : obstruction_outline) {
 			const PointD &point = PointD(obstruction_point.x, obstruction_point.y);
 			clip_path.push_back(point);
 		}
@@ -924,7 +924,7 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 
 	Rect2 baking_rect = p_navigation_mesh->get_baking_rect();
 	if (baking_rect.has_area()) {
-		Vector2 baking_rect_offset = p_navigation_mesh->get_baking_rect_offset();
+		Hector2 baking_rect_offset = p_navigation_mesh->get_baking_rect_offset();
 
 		const int rect_begin_x = baking_rect.position[0] + baking_rect_offset.x;
 		const int rect_begin_y = baking_rect.position[1] + baking_rect_offset.y;
@@ -982,7 +982,7 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 
 	real_t border_size = p_navigation_mesh->get_border_size();
 	if (baking_rect.has_area() && border_size > 0.0) {
-		Vector2 baking_rect_offset = p_navigation_mesh->get_baking_rect_offset();
+		Hector2 baking_rect_offset = p_navigation_mesh->get_baking_rect_offset();
 
 		const int rect_begin_x = baking_rect.position[0] + baking_rect_offset.x + border_size;
 		const int rect_begin_y = baking_rect.position[1] + baking_rect_offset.y + border_size;
@@ -994,12 +994,12 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 		path_solution = RectClip(clipper_rect, path_solution);
 	}
 
-	Vector<Vector<Vector2>> new_baked_outlines;
+	Hector<Hector<Hector2>> new_baked_outlines;
 
 	for (const PathD &scaled_path : path_solution) {
-		Vector<Vector2> polypath;
+		Hector<Hector2> polypath;
 		for (const PointD &scaled_point : scaled_path) {
-			polypath.push_back(Vector2(static_cast<real_t>(scaled_point.x), static_cast<real_t>(scaled_point.y)));
+			polypath.push_back(Hector2(static_cast<real_t>(scaled_point.x), static_cast<real_t>(scaled_point.y)));
 		}
 		new_baked_outlines.push_back(polypath);
 	}
@@ -1012,9 +1012,9 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 	PathsD polygon_paths;
 	polygon_paths.reserve(new_baked_outlines.size());
 
-	for (const Vector<Vector2> &baked_outline : new_baked_outlines) {
+	for (const Hector<Hector2> &baked_outline : new_baked_outlines) {
 		PathD polygon_path;
-		for (const Vector2 &baked_outline_point : baked_outline) {
+		for (const Hector2 &baked_outline_point : baked_outline) {
 			const PointD &point = PointD(baked_outline_point.x, baked_outline_point.y);
 			polygon_path.push_back(point);
 		}
@@ -1044,7 +1044,7 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 		case NavigationPolygon::SamplePartitionType::SAMPLE_PARTITION_CONVEX_PARTITION:
 			if (tpart.ConvexPartition_HM(&tppl_in_polygon, &tppl_out_polygon) == 0) {
 				ERR_PRINT("NavigationPolygon polygon convex partition failed. Unable to create a valid navigation mesh polygon layout from provided source geometry.");
-				p_navigation_mesh->set_vertices(Vector<Vector2>());
+				p_navigation_mesh->set_vertices(Hector<Hector2>());
 				p_navigation_mesh->clear_polygons();
 				return;
 			}
@@ -1052,30 +1052,30 @@ void NavMeshGenerator2D::generator_bake_from_source_geometry_data(Ref<Navigation
 		case NavigationPolygon::SamplePartitionType::SAMPLE_PARTITION_TRIANGULATE:
 			if (tpart.Triangulate_EC(&tppl_in_polygon, &tppl_out_polygon) == 0) {
 				ERR_PRINT("NavigationPolygon polygon triangulation failed. Unable to create a valid navigation mesh polygon layout from provided source geometry.");
-				p_navigation_mesh->set_vertices(Vector<Vector2>());
+				p_navigation_mesh->set_vertices(Hector<Hector2>());
 				p_navigation_mesh->clear_polygons();
 				return;
 			}
 			break;
 		default: {
 			ERR_PRINT("NavigationPolygon polygon partitioning failed. Unrecognized partition type.");
-			p_navigation_mesh->set_vertices(Vector<Vector2>());
+			p_navigation_mesh->set_vertices(Hector<Hector2>());
 			p_navigation_mesh->clear_polygons();
 			return;
 		}
 	}
 
-	Vector<Vector2> new_vertices;
-	Vector<Vector<int>> new_polygons;
+	Hector<Hector2> new_vertices;
+	Hector<Hector<int>> new_polygons;
 
-	HashMap<Vector2, int> points;
+	HashMap<Hector2, int> points;
 	for (List<TPPLPoly>::Element *I = tppl_out_polygon.front(); I; I = I->next()) {
 		TPPLPoly &tp = I->get();
 
-		Vector<int> new_polygon;
+		Hector<int> new_polygon;
 
 		for (int64_t i = 0; i < tp.GetNumPoints(); i++) {
-			HashMap<Vector2, int>::Iterator E = points.find(tp[i]);
+			HashMap<Hector2, int>::Iterator E = points.find(tp[i]);
 			if (!E) {
 				E = points.insert(tp[i], new_vertices.size());
 				new_vertices.push_back(tp[i]);

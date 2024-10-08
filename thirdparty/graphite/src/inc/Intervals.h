@@ -12,7 +12,7 @@
 
 // An IntervalSet represents the possible movement of a given glyph in a given direction
 // (horizontally, vertically, or diagonally).
-// A vector is needed to represent disjoint ranges, eg, -300..-150, 20..200, 500..750.
+// A Hector is needed to represent disjoint ranges, eg, -300..-150, 20..200, 500..750.
 // Each pair represents the min/max of a sub-range.
 
 namespace graphite2 {
@@ -50,7 +50,7 @@ class Zones
         float cost(float x) const;
      };
 
-    typedef Vector<Exclusion>                   exclusions;
+    typedef Hector<Exclusion>                   exclusions;
 
     typedef exclusions::iterator                iterator;
     typedef Exclusion *                         pointer;
@@ -68,12 +68,12 @@ public:
     {
         Exclusion       _excl;
         bool            _isdel;
-        Vector<void *>  _env;
+        Hector<void *>  _env;
 
         Debug(Exclusion *e, bool isdel, json *dbg) : _excl(*e), _isdel(isdel), _env(dbg->getenvs()) { };
     };
 
-    typedef Vector<Debug>                       debugs;
+    typedef Hector<Debug>                       debugs;
     typedef debugs::const_iterator                    idebugs;
     void addDebug(Exclusion *e);
     void removeDebug(float pos, float posm);

@@ -37,7 +37,7 @@
 
 EditorTranslationParser *EditorTranslationParser::singleton = nullptr;
 
-Error EditorTranslationParserPlugin::parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) {
+Error EditorTranslationParserPlugin::parse_file(const String &p_path, Hector<String> *r_ids, Hector<Hector<String>> *r_ids_ctx_plural) {
 	TypedArray<String> ids;
 	TypedArray<Array> ids_ctx_plural;
 
@@ -52,7 +52,7 @@ Error EditorTranslationParserPlugin::parse_file(const String &p_path, Vector<Str
 			Array arr = ids_ctx_plural[i];
 			ERR_FAIL_COND_V_MSG(arr.size() != 3, ERR_INVALID_DATA, "Array entries written into `msgids_context_plural` in `parse_file()` method should have the form [\"message\", \"context\", \"plural message\"]");
 
-			Vector<String> id_ctx_plural;
+			Hector<String> id_ctx_plural;
 			id_ctx_plural.push_back(arr[0]);
 			id_ctx_plural.push_back(arr[1]);
 			id_ctx_plural.push_back(arr[2]);
@@ -66,7 +66,7 @@ Error EditorTranslationParserPlugin::parse_file(const String &p_path, Vector<Str
 }
 
 void EditorTranslationParserPlugin::get_recognized_extensions(List<String> *r_extensions) const {
-	Vector<String> extensions;
+	Hector<String> extensions;
 	if (GDVIRTUAL_CALL(_get_recognized_extensions, extensions)) {
 		for (int i = 0; i < extensions.size(); i++) {
 			r_extensions->push_back(extensions[i]);

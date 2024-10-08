@@ -206,7 +206,7 @@ struct MathItalicsCorrectionInfo
     auto *out = c->serializer->start_embed (*this);
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+coverage, italicsCorrection)
     | hb_filter (glyphset, hb_first)
     | hb_filter (serialize_math_record_array (c->serializer, out->italicsCorrection, this), hb_second)
@@ -259,7 +259,7 @@ struct MathTopAccentAttachment
     auto *out = c->serializer->start_embed (*this);
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+topAccentCoverage, topAccentAttachment)
     | hb_filter (glyphset, hb_first)
     | hb_filter (serialize_math_record_array (c->serializer, out->topAccentAttachment, this), hb_second)
@@ -484,7 +484,7 @@ struct MathKernInfo
     auto *out = c->serializer->start_embed (*this);
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+mathKernCoverage, mathKernInfoRecords)
     | hb_filter (glyphset, hb_first)
     | hb_filter (serialize_math_record_array (c->serializer, out->mathKernInfoRecords, this), hb_second)
@@ -903,7 +903,7 @@ struct MathVariants
     }
   }
 
-  void collect_coverage_and_indices (hb_sorted_vector_t<hb_codepoint_t>& new_coverage,
+  void collect_coverage_and_indices (hb_sorted_Hector_t<hb_codepoint_t>& new_coverage,
                                      const Offset16To<Coverage>& coverage,
                                      unsigned i,
                                      unsigned end_index,
@@ -937,8 +937,8 @@ struct MathVariants
     if (!c->serializer->check_assign (out->minConnectorOverlap, minConnectorOverlap, HB_SERIALIZE_ERROR_INT_OVERFLOW))
       return_trace (false);
 
-    hb_sorted_vector_t<hb_codepoint_t> new_vert_coverage;
-    hb_sorted_vector_t<hb_codepoint_t> new_hori_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_vert_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_hori_coverage;
     hb_set_t indices;
     collect_coverage_and_indices (new_vert_coverage, vertGlyphCoverage, 0, vertGlyphCount, indices, glyphset, glyph_map);
     collect_coverage_and_indices (new_hori_coverage, horizGlyphCoverage, vertGlyphCount, vertGlyphCount + horizGlyphCount, indices, glyphset, glyph_map);

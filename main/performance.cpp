@@ -314,7 +314,7 @@ void Performance::set_navigation_process_time(double p_pt) {
 	_navigation_process_time = p_pt;
 }
 
-void Performance::add_custom_monitor(const StringName &p_id, const Callable &p_callable, const Vector<Variant> &p_args) {
+void Performance::add_custom_monitor(const StringName &p_id, const Callable &p_callable, const Hector<Variant> &p_args) {
 	ERR_FAIL_COND_MSG(has_custom_monitor(p_id), "Custom monitor with id '" + String(p_id) + "' already exists.");
 	_monitor_map.insert(p_id, MonitorCall(p_callable, p_args));
 	_monitor_modification_time = OS::get_singleton()->get_ticks_usec();
@@ -365,7 +365,7 @@ Performance::Performance() {
 	singleton = this;
 }
 
-Performance::MonitorCall::MonitorCall(Callable p_callable, Vector<Variant> p_arguments) {
+Performance::MonitorCall::MonitorCall(Callable p_callable, Hector<Variant> p_arguments) {
 	_callable = p_callable;
 	_arguments = p_arguments;
 }
@@ -374,7 +374,7 @@ Performance::MonitorCall::MonitorCall() {
 }
 
 Variant Performance::MonitorCall::call(bool &r_error, String &r_error_message) {
-	Vector<const Variant *> arguments_mem;
+	Hector<const Variant *> arguments_mem;
 	arguments_mem.resize(_arguments.size());
 	for (int i = 0; i < _arguments.size(); i++) {
 		arguments_mem.write[i] = &_arguments[i];

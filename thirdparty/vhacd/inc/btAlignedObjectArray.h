@@ -42,8 +42,8 @@ subject to the following restrictions:
 namespace VHACD {
 // -- GODOT end --
 
-///The btAlignedObjectArray template class uses a subset of the stl::vector interface for its methods
-///It is developed to replace stl::vector to avoid portability issues, including STL alignment issues to add SIMD/SSE data
+///The btAlignedObjectArray template class uses a subset of the stl::Hector interface for its methods
+///It is developed to replace stl::Hector to avoid portability issues, including STL alignment issues to add SIMD/SSE data
 template <typename T>
 //template <class T>
 class btAlignedObjectArray {

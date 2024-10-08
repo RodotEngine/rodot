@@ -33,13 +33,13 @@ namespace embree
     /*! parallel map constructors */
     parallel_map () {}
 
-    /*! construction from pair of vectors */
-    template<typename KeyVector, typename ValVector>
-      parallel_map (const KeyVector& keys, const ValVector& values) { init(keys,values); }
+    /*! construction from pair of Hectors */
+    template<typename KeyHector, typename ValHector>
+      parallel_map (const KeyHector& keys, const ValHector& values) { init(keys,values); }
 
-    /*! initialized the parallel map from a vector with keys and values */
-    template<typename KeyVector, typename ValVector>
-      void init(const KeyVector& keys, const ValVector& values) 
+    /*! initialized the parallel map from a Hector with keys and values */
+    template<typename KeyHector, typename ValHector>
+      void init(const KeyHector& keys, const ValHector& values) 
     {
       /* reserve sufficient space for all data */
       assert(keys.size() == values.size());
@@ -80,6 +80,6 @@ namespace embree
     }
 
   private:
-    std::vector<KeyValue> vec;    //!< vector containing sorted elements
+    std::vector<KeyValue> vec;    //!< Hector containing sorted elements
   };
 }

@@ -505,7 +505,7 @@ void EditorAssetInstaller::_install_asset() {
 		return;
 	}
 
-	Vector<String> failed_files;
+	Hector<String> failed_files;
 	int ret = unzGoToFirstFile(pkg);
 
 	ProgressDialog::get_singleton()->add_task("uncompress", TTR("Uncompressing Assets"), file_item_map.size());
@@ -540,7 +540,7 @@ void EditorAssetInstaller::_install_asset() {
 
 			da->make_dir_recursive(target_path);
 		} else {
-			Vector<uint8_t> uncomp_data;
+			Hector<uint8_t> uncomp_data;
 			uncomp_data.resize(info.uncompressed_size);
 
 			unzOpenCurrentFile(pkg);

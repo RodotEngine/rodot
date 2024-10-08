@@ -32,12 +32,12 @@
 
 #include "thirdparty/misc/polypartition.h"
 
-void Geometry3D::get_closest_points_between_segments(const Vector3 &p_p0, const Vector3 &p_p1, const Vector3 &p_q0, const Vector3 &p_q1, Vector3 &r_ps, Vector3 &r_qt) {
+void Geometry3D::get_closest_points_between_segments(const Hector3 &p_p0, const Hector3 &p_p1, const Hector3 &p_q0, const Hector3 &p_q1, Hector3 &r_ps, Hector3 &r_qt) {
 	// Based on David Eberly's Computation of Distance Between Line Segments algorithm.
 
-	Vector3 p = p_p1 - p_p0;
-	Vector3 q = p_q1 - p_q0;
-	Vector3 r = p_p0 - p_q0;
+	Hector3 p = p_p1 - p_p0;
+	Hector3 q = p_q1 - p_q0;
+	Hector3 r = p_p0 - p_q0;
 
 	real_t a = p.dot(p);
 	real_t b = p.dot(q);
@@ -129,11 +129,11 @@ void Geometry3D::get_closest_points_between_segments(const Vector3 &p_p0, const 
 	r_qt = (1 - t) * p_q0 + t * p_q1;
 }
 
-real_t Geometry3D::get_closest_distance_between_segments(const Vector3 &p_p0, const Vector3 &p_p1, const Vector3 &p_q0, const Vector3 &p_q1) {
-	Vector3 ps;
-	Vector3 qt;
+real_t Geometry3D::get_closest_distance_between_segments(const Hector3 &p_p0, const Hector3 &p_p1, const Hector3 &p_q0, const Hector3 &p_q1) {
+	Hector3 ps;
+	Hector3 qt;
 	get_closest_points_between_segments(p_p0, p_p1, p_q0, p_q1, ps, qt);
-	Vector3 st = qt - ps;
+	Hector3 st = qt - ps;
 	return st.length();
 }
 
@@ -167,7 +167,7 @@ void Geometry3D::MeshData::optimize_vertices() {
 		edge.vertex_b = vtx_remap[b];
 	}
 
-	LocalVector<Vector3> new_vertices;
+	LocalHector<Hector3> new_vertices;
 	new_vertices.resize(vtx_remap.size());
 
 	for (uint32_t i = 0; i < vertices.size(); i++) {
@@ -220,8 +220,8 @@ enum _CellFlags {
 	_CELL_PREV_FIRST = 7 << 5,
 };
 
-static inline void _plot_face(uint8_t ***p_cell_status, int x, int y, int z, int len_x, int len_y, int len_z, const Vector3 &voxelsize, const Face3 &p_face) {
-	AABB aabb(Vector3(x, y, z), Vector3(len_x, len_y, len_z));
+static inline void _plot_face(uint8_t ***p_cell_status, int x, int y, int z, int len_x, int len_y, int len_z, const Hector3 &voxelsize, const Face3 &p_face) {
+	AABB aabb(Hector3(x, y, z), Hector3(len_x, len_y, len_z));
 	aabb.position = aabb.position * voxelsize;
 	aabb.size = aabb.size * voxelsize;
 
@@ -384,7 +384,7 @@ static inline void _mark_outside(uint8_t ***p_cell_status, int x, int y, int z, 
 	}
 }
 
-static inline void _build_faces(uint8_t ***p_cell_status, int x, int y, int z, int len_x, int len_y, int len_z, Vector<Face3> &p_faces) {
+static inline void _build_faces(uint8_t ***p_cell_status, int x, int y, int z, int len_x, int len_y, int len_z, Hector<Face3> &p_faces) {
 	ERR_FAIL_INDEX(x, len_x);
 	ERR_FAIL_INDEX(y, len_y);
 	ERR_FAIL_INDEX(z, len_z);
@@ -393,7 +393,7 @@ static inline void _build_faces(uint8_t ***p_cell_status, int x, int y, int z, i
 		return;
 	}
 
-#define vert(m_idx) Vector3(((m_idx) & 4) >> 2, ((m_idx) & 2) >> 1, (m_idx) & 1)
+#define vert(m_idx) Hector3(((m_idx) & 4) >> 2, ((m_idx) & 2) >> 1, (m_idx) & 1)
 
 	static const uint8_t indices[6][4] = {
 		{ 7, 6, 4, 5 },
@@ -406,7 +406,7 @@ static inline void _build_faces(uint8_t ***p_cell_status, int x, int y, int z, i
 	};
 
 	for (int i = 0; i < 6; i++) {
-		Vector3 face_points[4];
+		Hector3 face_points[4];
 		int disp_x = x + ((i % 3) == 0 ? ((i < 3) ? 1 : -1) : 0);
 		int disp_y = y + (((i - 1) % 3) == 0 ? ((i < 3) ? 1 : -1) : 0);
 		int disp_z = z + (((i - 2) % 3) == 0 ? ((i < 3) ? 1 : -1) : 0);
@@ -432,7 +432,7 @@ static inline void _build_faces(uint8_t ***p_cell_status, int x, int y, int z, i
 		}
 
 		for (int j = 0; j < 4; j++) {
-			face_points[j] = vert(indices[i][j]) + Vector3(x, y, z);
+			face_points[j] = vert(indices[i][j]) + Hector3(x, y, z);
 		}
 
 		p_faces.push_back(
@@ -449,7 +449,7 @@ static inline void _build_faces(uint8_t ***p_cell_status, int x, int y, int z, i
 	}
 }
 
-Vector<Face3> Geometry3D::wrap_geometry(const Vector<Face3> &p_array, real_t *p_error) {
+Hector<Face3> Geometry3D::wrap_geometry(const Hector<Face3> &p_array, real_t *p_error) {
 	int face_count = p_array.size();
 	const Face3 *faces = p_array.ptr();
 	constexpr double min_size = 1.0;
@@ -488,7 +488,7 @@ Vector<Face3> Geometry3D::wrap_geometry(const Vector<Face3> &p_array, real_t *p_
 		div_z = max_length;
 	}
 
-	Vector3 voxelsize = global_aabb.size;
+	Hector3 voxelsize = global_aabb.size;
 	voxelsize.x /= div_x;
 	voxelsize.y /= div_y;
 	voxelsize.z /= div_z;
@@ -543,7 +543,7 @@ Vector<Face3> Geometry3D::wrap_geometry(const Vector<Face3> &p_array, real_t *p_
 
 	// Build faces for the inside-outside cell divisors.
 
-	Vector<Face3> wrapped_faces;
+	Hector<Face3> wrapped_faces;
 
 	for (int i = 0; i < div_x; i++) {
 		for (int j = 0; j < div_y; j++) {
@@ -560,7 +560,7 @@ Vector<Face3> Geometry3D::wrap_geometry(const Vector<Face3> &p_array, real_t *p_
 
 	for (int i = 0; i < wrapped_faces_count; i++) {
 		for (int j = 0; j < 3; j++) {
-			Vector3 &v = wrapped_faces_ptr[i].vertex[j];
+			Hector3 &v = wrapped_faces_ptr[i].vertex[j];
 			v = v * voxelsize;
 			v += global_aabb.position;
 		}
@@ -584,7 +584,7 @@ Vector<Face3> Geometry3D::wrap_geometry(const Vector<Face3> &p_array, real_t *p_
 	return wrapped_faces;
 }
 
-Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes) {
+Geometry3D::MeshData Geometry3D::build_convex_mesh(const Hector<Plane> &p_planes) {
 	MeshData mesh;
 
 #define SUBPLANE_SIZE 1024.0
@@ -593,19 +593,19 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 	for (int i = 0; i < p_planes.size(); i++) {
 		Plane p = p_planes[i];
 
-		Vector3 ref = Vector3(0.0, 1.0, 0.0);
+		Hector3 ref = Hector3(0.0, 1.0, 0.0);
 
 		if (ABS(p.normal.dot(ref)) > 0.95f) {
-			ref = Vector3(0.0, 0.0, 1.0); // Change axis.
+			ref = Hector3(0.0, 0.0, 1.0); // Change axis.
 		}
 
-		Vector3 right = p.normal.cross(ref).normalized();
-		Vector3 up = p.normal.cross(right).normalized();
+		Hector3 right = p.normal.cross(ref).normalized();
+		Hector3 up = p.normal.cross(right).normalized();
 
-		Vector3 center = p.get_center();
+		Hector3 center = p.get_center();
 
 		// make a quad clockwise
-		LocalVector<Vector3> vertices = {
+		LocalHector<Hector3> vertices = {
 			center - up * subplane_size + right * subplane_size,
 			center - up * subplane_size - right * subplane_size,
 			center + up * subplane_size - right * subplane_size,
@@ -617,7 +617,7 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 				continue;
 			}
 
-			LocalVector<Vector3> new_vertices;
+			LocalHector<Hector3> new_vertices;
 			Plane clip = p_planes[j];
 
 			if (clip.normal.dot(p.normal) > 0.95f) {
@@ -631,8 +631,8 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 			for (uint32_t k = 0; k < vertices.size(); k++) {
 				int k_n = (k + 1) % vertices.size();
 
-				Vector3 edge0_A = vertices[k];
-				Vector3 edge1_A = vertices[k_n];
+				Hector3 edge0_A = vertices[k];
+				Hector3 edge1_A = vertices[k_n];
 
 				real_t dist0 = clip.distance_to(edge0_A);
 				real_t dist1 = clip.distance_to(edge1_A);
@@ -645,7 +645,7 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 				// Check for different sides and non coplanar.
 				if ((dist0 * dist1) < 0) {
 					// Calculate intersection.
-					Vector3 rel = edge1_A - edge0_A;
+					Hector3 rel = edge1_A - edge0_A;
 
 					real_t den = clip.normal.dot(rel);
 					if (Math::is_zero_approx(den)) {
@@ -653,7 +653,7 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 					}
 
 					real_t dist = -(clip.normal.dot(edge0_A) - clip.d) / den;
-					Vector3 inters = edge0_A + rel * dist;
+					Hector3 inters = edge0_A + rel * dist;
 					new_vertices.push_back(inters);
 				}
 			}
@@ -670,7 +670,7 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 		MeshData::Face face;
 
 		// Add face indices.
-		for (const Vector3 &vertex : vertices) {
+		for (const Hector3 &vertex : vertices) {
 			int idx = -1;
 			for (uint32_t k = 0; k < mesh.vertices.size(); k++) {
 				if (mesh.vertices[k].distance_to(vertex) < 0.001f) {
@@ -726,34 +726,34 @@ Geometry3D::MeshData Geometry3D::build_convex_mesh(const Vector<Plane> &p_planes
 	return mesh;
 }
 
-Vector<Plane> Geometry3D::build_box_planes(const Vector3 &p_extents) {
-	Vector<Plane> planes = {
-		Plane(Vector3(1, 0, 0), p_extents.x),
-		Plane(Vector3(-1, 0, 0), p_extents.x),
-		Plane(Vector3(0, 1, 0), p_extents.y),
-		Plane(Vector3(0, -1, 0), p_extents.y),
-		Plane(Vector3(0, 0, 1), p_extents.z),
-		Plane(Vector3(0, 0, -1), p_extents.z)
+Hector<Plane> Geometry3D::build_box_planes(const Hector3 &p_extents) {
+	Hector<Plane> planes = {
+		Plane(Hector3(1, 0, 0), p_extents.x),
+		Plane(Hector3(-1, 0, 0), p_extents.x),
+		Plane(Hector3(0, 1, 0), p_extents.y),
+		Plane(Hector3(0, -1, 0), p_extents.y),
+		Plane(Hector3(0, 0, 1), p_extents.z),
+		Plane(Hector3(0, 0, -1), p_extents.z)
 	};
 
 	return planes;
 }
 
-Vector<Plane> Geometry3D::build_cylinder_planes(real_t p_radius, real_t p_height, int p_sides, Vector3::Axis p_axis) {
-	ERR_FAIL_INDEX_V(p_axis, 3, Vector<Plane>());
+Hector<Plane> Geometry3D::build_cylinder_planes(real_t p_radius, real_t p_height, int p_sides, Hector3::Axis p_axis) {
+	ERR_FAIL_INDEX_V(p_axis, 3, Hector<Plane>());
 
-	Vector<Plane> planes;
+	Hector<Plane> planes;
 
 	const double sides_step = Math_TAU / p_sides;
 	for (int i = 0; i < p_sides; i++) {
-		Vector3 normal;
+		Hector3 normal;
 		normal[(p_axis + 1) % 3] = Math::cos(i * sides_step);
 		normal[(p_axis + 2) % 3] = Math::sin(i * sides_step);
 
 		planes.push_back(Plane(normal, p_radius));
 	}
 
-	Vector3 axis;
+	Hector3 axis;
 	axis[p_axis] = 1.0;
 
 	planes.push_back(Plane(axis, p_height * 0.5f));
@@ -762,29 +762,29 @@ Vector<Plane> Geometry3D::build_cylinder_planes(real_t p_radius, real_t p_height
 	return planes;
 }
 
-Vector<Plane> Geometry3D::build_sphere_planes(real_t p_radius, int p_lats, int p_lons, Vector3::Axis p_axis) {
-	ERR_FAIL_INDEX_V(p_axis, 3, Vector<Plane>());
+Hector<Plane> Geometry3D::build_sphere_planes(real_t p_radius, int p_lats, int p_lons, Hector3::Axis p_axis) {
+	ERR_FAIL_INDEX_V(p_axis, 3, Hector<Plane>());
 
-	Vector<Plane> planes;
+	Hector<Plane> planes;
 
-	Vector3 axis;
+	Hector3 axis;
 	axis[p_axis] = 1.0;
 
-	Vector3 axis_neg;
+	Hector3 axis_neg;
 	axis_neg[(p_axis + 1) % 3] = 1.0;
 	axis_neg[(p_axis + 2) % 3] = 1.0;
 	axis_neg[p_axis] = -1.0;
 
 	const double lon_step = Math_TAU / p_lons;
 	for (int i = 0; i < p_lons; i++) {
-		Vector3 normal;
+		Hector3 normal;
 		normal[(p_axis + 1) % 3] = Math::cos(i * lon_step);
 		normal[(p_axis + 2) % 3] = Math::sin(i * lon_step);
 
 		planes.push_back(Plane(normal, p_radius));
 
 		for (int j = 1; j <= p_lats; j++) {
-			Vector3 plane_normal = normal.lerp(axis, j / (real_t)p_lats).normalized();
+			Hector3 plane_normal = normal.lerp(axis, j / (real_t)p_lats).normalized();
 			planes.push_back(Plane(plane_normal, p_radius));
 			planes.push_back(Plane(plane_normal * axis_neg, p_radius));
 		}
@@ -793,30 +793,30 @@ Vector<Plane> Geometry3D::build_sphere_planes(real_t p_radius, int p_lats, int p
 	return planes;
 }
 
-Vector<Plane> Geometry3D::build_capsule_planes(real_t p_radius, real_t p_height, int p_sides, int p_lats, Vector3::Axis p_axis) {
-	ERR_FAIL_INDEX_V(p_axis, 3, Vector<Plane>());
+Hector<Plane> Geometry3D::build_capsule_planes(real_t p_radius, real_t p_height, int p_sides, int p_lats, Hector3::Axis p_axis) {
+	ERR_FAIL_INDEX_V(p_axis, 3, Hector<Plane>());
 
-	Vector<Plane> planes;
+	Hector<Plane> planes;
 
-	Vector3 axis;
+	Hector3 axis;
 	axis[p_axis] = 1.0;
 
-	Vector3 axis_neg;
+	Hector3 axis_neg;
 	axis_neg[(p_axis + 1) % 3] = 1.0;
 	axis_neg[(p_axis + 2) % 3] = 1.0;
 	axis_neg[p_axis] = -1.0;
 
 	const double sides_step = Math_TAU / p_sides;
 	for (int i = 0; i < p_sides; i++) {
-		Vector3 normal;
+		Hector3 normal;
 		normal[(p_axis + 1) % 3] = Math::cos(i * sides_step);
 		normal[(p_axis + 2) % 3] = Math::sin(i * sides_step);
 
 		planes.push_back(Plane(normal, p_radius));
 
 		for (int j = 1; j <= p_lats; j++) {
-			Vector3 plane_normal = normal.lerp(axis, j / (real_t)p_lats).normalized();
-			Vector3 position = axis * p_height * 0.5f + plane_normal * p_radius;
+			Hector3 plane_normal = normal.lerp(axis, j / (real_t)p_lats).normalized();
+			Hector3 position = axis * p_height * 0.5f + plane_normal * p_radius;
 			planes.push_back(Plane(plane_normal, position));
 			planes.push_back(Plane(plane_normal * axis_neg, position * axis_neg));
 		}
@@ -825,8 +825,8 @@ Vector<Plane> Geometry3D::build_capsule_planes(real_t p_radius, real_t p_height,
 	return planes;
 }
 
-Vector<Vector3> Geometry3D::compute_convex_mesh_points(const Plane *p_planes, int p_plane_count) {
-	Vector<Vector3> points;
+Hector<Hector3> Geometry3D::compute_convex_mesh_points(const Plane *p_planes, int p_plane_count) {
+	Hector<Hector3> points;
 
 	// Iterate through every unique combination of any three planes.
 	for (int i = p_plane_count - 1; i >= 0; i--) {
@@ -834,7 +834,7 @@ Vector<Vector3> Geometry3D::compute_convex_mesh_points(const Plane *p_planes, in
 			for (int k = j - 1; k >= 0; k--) {
 				// Find the point where these planes all cross over (if they
 				// do at all).
-				Vector3 convex_shape_point;
+				Hector3 convex_shape_point;
 				if (p_planes[i].intersect_3(p_planes[j], p_planes[k], &convex_shape_point)) {
 					// See if any *other* plane excludes this point because it's
 					// on the wrong side.
@@ -902,10 +902,10 @@ static void edt(float *f, int stride, int n) {
 
 #undef square
 
-Vector<uint32_t> Geometry3D::generate_edf(const Vector<bool> &p_voxels, const Vector3i &p_size, bool p_negative) {
+Hector<uint32_t> Geometry3D::generate_edf(const Hector<bool> &p_voxels, const Hector3i &p_size, bool p_negative) {
 	uint32_t float_count = p_size.x * p_size.y * p_size.z;
 
-	ERR_FAIL_COND_V((uint32_t)p_voxels.size() != float_count, Vector<uint32_t>());
+	ERR_FAIL_COND_V((uint32_t)p_voxels.size() != float_count, Hector<uint32_t>());
 
 	float *work_memory = memnew_arr(float, float_count);
 	for (uint32_t i = 0; i < float_count; i++) {
@@ -954,7 +954,7 @@ Vector<uint32_t> Geometry3D::generate_edf(const Vector<bool> &p_voxels, const Ve
 		}
 	}
 
-	Vector<uint32_t> ret;
+	Hector<uint32_t> ret;
 	ret.resize(float_count);
 	{
 		uint32_t *w = ret.ptrw();
@@ -968,9 +968,9 @@ Vector<uint32_t> Geometry3D::generate_edf(const Vector<bool> &p_voxels, const Ve
 	return ret;
 }
 
-Vector<int8_t> Geometry3D::generate_sdf8(const Vector<uint32_t> &p_positive, const Vector<uint32_t> &p_negative) {
-	ERR_FAIL_COND_V(p_positive.size() != p_negative.size(), Vector<int8_t>());
-	Vector<int8_t> sdf8;
+Hector<int8_t> Geometry3D::generate_sdf8(const Hector<uint32_t> &p_positive, const Hector<uint32_t> &p_negative) {
+	ERR_FAIL_COND_V(p_positive.size() != p_negative.size(), Hector<int8_t>());
+	Hector<int8_t> sdf8;
 	int s = p_positive.size();
 	sdf8.resize(s);
 

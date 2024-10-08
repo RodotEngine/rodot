@@ -4,21 +4,21 @@
 		A 2D axis-aligned bounding box using floating-point coordinates.
 	</brief_description>
 	<description>
-		The [Rect2] built-in [Variant] type represents an axis-aligned rectangle in a 2D space. It is defined by its [member position] and [member size], which are [Vector2]. It is frequently used for fast overlap tests (see [method intersects]). Although [Rect2] itself is axis-aligned, it can be combined with [Transform2D] to represent a rotated or skewed rectangle.
+		The [Rect2] built-in [Variant] type represents an axis-aligned rectangle in a 2D space. It is defined by its [member position] and [member size], which are [Hector2]. It is frequently used for fast overlap tests (see [method intersects]). Although [Rect2] itself is axis-aligned, it can be combined with [Transform2D] to represent a rotated or skewed rectangle.
 		For integer coordinates, use [Rect2i]. The 3D equivalent to [Rect2] is [AABB].
 		[b]Note:[/b] Negative values for [member size] are not supported. With negative size, most [Rect2] methods do not work correctly. Use [method abs] to get an equivalent [Rect2] with a non-negative size.
-		[b]Note:[/b] In a boolean context, a [Rect2] evaluates to [code]false[/code] if both [member position] and [member size] are zero (equal to [constant Vector2.ZERO]). Otherwise, it always evaluates to [code]true[/code].
+		[b]Note:[/b] In a boolean context, a [Rect2] evaluates to [code]false[/code] if both [member position] and [member size] are zero (equal to [constant Hector2.ZERO]). Otherwise, it always evaluates to [code]true[/code].
 	</description>
 	<tutorials>
 		<link title="Math documentation index">$DOCS_URL/tutorials/math/index.html</link>
-		<link title="Vector math">$DOCS_URL/tutorials/math/vector_math.html</link>
-		<link title="Advanced vector math">$DOCS_URL/tutorials/math/vectors_advanced.html</link>
+		<link title="Hector math">$DOCS_URL/tutorials/math/Hector_math.html</link>
+		<link title="Advanced Hector math">$DOCS_URL/tutorials/math/Hectors_advanced.html</link>
 	</tutorials>
 	<constructors>
 		<constructor name="Rect2">
 			<return type="Rect2" />
 			<description>
-				Constructs a [Rect2] with its [member position] and [member size] set to [constant Vector2.ZERO].
+				Constructs a [Rect2] with its [member position] and [member size] set to [constant Hector2.ZERO].
 			</description>
 		</constructor>
 		<constructor name="Rect2">
@@ -37,8 +37,8 @@
 		</constructor>
 		<constructor name="Rect2">
 			<return type="Rect2" />
-			<param index="0" name="position" type="Vector2" />
-			<param index="1" name="size" type="Vector2" />
+			<param index="0" name="position" type="Hector2" />
+			<param index="1" name="size" type="Hector2" />
 			<description>
 				Constructs a [Rect2] by [param position] and [param size].
 			</description>
@@ -81,21 +81,21 @@
 		</method>
 		<method name="expand" qualifiers="const">
 			<return type="Rect2" />
-			<param index="0" name="to" type="Vector2" />
+			<param index="0" name="to" type="Hector2" />
 			<description>
 				Returns a copy of this rectangle expanded to align the edges with the given [param to] point, if necessary.
 				[codeblocks]
 				[gdscript]
 				var rect = Rect2(0, 0, 5, 2)
 
-				rect = rect.expand(Vector2(10, 0)) # rect is Rect2(0, 0, 10, 2)
-				rect = rect.expand(Vector2(-5, 5)) # rect is Rect2(-5, 0, 15, 5)
+				rect = rect.expand(Hector2(10, 0)) # rect is Rect2(0, 0, 10, 2)
+				rect = rect.expand(Hector2(-5, 5)) # rect is Rect2(-5, 0, 15, 5)
 				[/gdscript]
 				[csharp]
 				var rect = new Rect2(0, 0, 5, 2);
 
-				rect = rect.Expand(new Vector2(10, 0)); // rect is Rect2(0, 0, 10, 2)
-				rect = rect.Expand(new Vector2(-5, 5)); // rect is Rect2(-5, 0, 15, 5)
+				rect = rect.Expand(new Hector2(10, 0)); // rect is Rect2(0, 0, 10, 2)
+				rect = rect.Expand(new Hector2(-5, 5)); // rect is Rect2(-5, 0, 15, 5)
 				[/csharp]
 				[/codeblocks]
 			</description>
@@ -107,14 +107,14 @@
 			</description>
 		</method>
 		<method name="get_center" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the center point of the rectangle. This is the same as [code]position + (size / 2.0)[/code].
 			</description>
 		</method>
 		<method name="get_support" qualifiers="const">
-			<return type="Vector2" />
-			<param index="0" name="direction" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="direction" type="Hector2" />
 			<description>
 				Returns the vertex's position of this rect that's the farthest in the given direction. This point is commonly known as the support point in collision detection algorithms.
 			</description>
@@ -162,7 +162,7 @@
 		</method>
 		<method name="has_point" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="point" type="Vector2" />
+			<param index="0" name="point" type="Hector2" />
 			<description>
 				Returns [code]true[/code] if the rectangle contains the given [param point]. By convention, points on the right and bottom edges are [b]not[/b] included.
 				[b]Note:[/b] This method is not reliable for [Rect2] with a [i]negative[/i] [member size]. Use [method abs] first to get a valid rectangle.
@@ -202,13 +202,13 @@
 			<return type="bool" />
 			<param index="0" name="rect" type="Rect2" />
 			<description>
-				Returns [code]true[/code] if this rectangle and [param rect] are approximately equal, by calling [method Vector2.is_equal_approx] on the [member position] and the [member size].
+				Returns [code]true[/code] if this rectangle and [param rect] are approximately equal, by calling [method Hector2.is_equal_approx] on the [member position] and the [member size].
 			</description>
 		</method>
 		<method name="is_finite" qualifiers="const">
 			<return type="bool" />
 			<description>
-				Returns [code]true[/code] if this rectangle's values are finite, by calling [method Vector2.is_finite] on the [member position] and the [member size].
+				Returns [code]true[/code] if this rectangle's values are finite, by calling [method Hector2.is_finite] on the [member position] and the [member size].
 			</description>
 		</method>
 		<method name="merge" qualifiers="const">
@@ -220,13 +220,13 @@
 		</method>
 	</methods>
 	<members>
-		<member name="end" type="Vector2" setter="" getter="" default="Vector2(0, 0)">
+		<member name="end" type="Hector2" setter="" getter="" default="Hector2(0, 0)">
 			The ending point. This is usually the bottom-right corner of the rectangle, and is equivalent to [code]position + size[/code]. Setting this point affects the [member size].
 		</member>
-		<member name="position" type="Vector2" setter="" getter="" default="Vector2(0, 0)">
+		<member name="position" type="Hector2" setter="" getter="" default="Hector2(0, 0)">
 			The origin point. This is usually the top-left corner of the rectangle.
 		</member>
-		<member name="size" type="Vector2" setter="" getter="" default="Vector2(0, 0)">
+		<member name="size" type="Hector2" setter="" getter="" default="Hector2(0, 0)">
 			The rectangle's width and height, starting from [member position]. Setting this value also affects the [member end] point.
 			[b]Note:[/b] It's recommended setting the width and height to non-negative values, as most methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner. To get an equivalent rectangle with non-negative size, use [method abs].
 		</member>

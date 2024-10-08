@@ -44,11 +44,11 @@ class Gizmo3DHelper : public RefCounted {
 
 public:
 	void initialize_handle_action(const Variant &p_initial_value, const Transform3D &p_initial_transform);
-	void get_segment(Camera3D *p_camera, const Point2 &p_point, Vector3 *r_segment);
+	void get_segment(Camera3D *p_camera, const Point2 &p_point, Hector3 *r_segment);
 
-	Vector<Vector3> box_get_handles(const Vector3 &p_box_size);
+	Hector<Hector3> box_get_handles(const Hector3 &p_box_size);
 	String box_get_handle_name(int p_id) const;
-	void box_set_handle(const Vector3 p_segment[2], int p_id, Vector3 &r_box_size, Vector3 &r_box_position);
+	void box_set_handle(const Hector3 p_segment[2], int p_id, Hector3 &r_box_size, Hector3 &r_box_position);
 	void box_commit_handle(const String &p_action_name, bool p_cancel, Object *p_position_object, Object *p_size_object = nullptr, const StringName &p_position_property = "global_position", const StringName &p_size_property = "size");
 };
 

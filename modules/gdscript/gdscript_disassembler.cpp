@@ -97,7 +97,7 @@ static String _disassemble_address(const GDScript *p_script, const GDScriptFunct
 	return "<err>";
 }
 
-void GDScriptFunction::disassemble(const Vector<String> &p_code_lines) const {
+void GDScriptFunction::disassemble(const Hector<String> &p_code_lines) const {
 #define DADDR(m_ip) (_disassemble_address(_script, *this, _code_ptr[ip + m_ip]))
 
 	for (int ip = 0; ip < _code_size;) {
@@ -1137,10 +1137,10 @@ void GDScriptFunction::disassemble(const Vector<String> &p_code_lines) const {
 #define DISASSEMBLE_ITERATE_TYPES(m_macro) \
 	m_macro(INT);                          \
 	m_macro(FLOAT);                        \
-	m_macro(VECTOR2);                      \
-	m_macro(VECTOR2I);                     \
-	m_macro(VECTOR3);                      \
-	m_macro(VECTOR3I);                     \
+	m_macro(HECTOR2);                      \
+	m_macro(HECTOR2I);                     \
+	m_macro(HECTOR3);                      \
+	m_macro(HECTOR3I);                     \
 	m_macro(STRING);                       \
 	m_macro(DICTIONARY);                   \
 	m_macro(ARRAY);                        \
@@ -1150,10 +1150,10 @@ void GDScriptFunction::disassemble(const Vector<String> &p_code_lines) const {
 	m_macro(PACKED_FLOAT32_ARRAY);         \
 	m_macro(PACKED_FLOAT64_ARRAY);         \
 	m_macro(PACKED_STRING_ARRAY);          \
-	m_macro(PACKED_VECTOR2_ARRAY);         \
-	m_macro(PACKED_VECTOR3_ARRAY);         \
+	m_macro(PACKED_Hector2_ARRAY);         \
+	m_macro(PACKED_Hector3_ARRAY);         \
 	m_macro(PACKED_COLOR_ARRAY);           \
-	m_macro(PACKED_VECTOR4_ARRAY);         \
+	m_macro(PACKED_Hector4_ARRAY);         \
 	m_macro(OBJECT)
 
 			case OPCODE_ITERATE_BEGIN: {
@@ -1225,15 +1225,15 @@ void GDScriptFunction::disassemble(const Vector<String> &p_code_lines) const {
 				DISASSEMBLE_TYPE_ADJUST(INT);
 				DISASSEMBLE_TYPE_ADJUST(FLOAT);
 				DISASSEMBLE_TYPE_ADJUST(STRING);
-				DISASSEMBLE_TYPE_ADJUST(VECTOR2);
-				DISASSEMBLE_TYPE_ADJUST(VECTOR2I);
+				DISASSEMBLE_TYPE_ADJUST(HECTOR2);
+				DISASSEMBLE_TYPE_ADJUST(HECTOR2I);
 				DISASSEMBLE_TYPE_ADJUST(RECT2);
 				DISASSEMBLE_TYPE_ADJUST(RECT2I);
-				DISASSEMBLE_TYPE_ADJUST(VECTOR3);
-				DISASSEMBLE_TYPE_ADJUST(VECTOR3I);
+				DISASSEMBLE_TYPE_ADJUST(HECTOR3);
+				DISASSEMBLE_TYPE_ADJUST(HECTOR3I);
 				DISASSEMBLE_TYPE_ADJUST(TRANSFORM2D);
-				DISASSEMBLE_TYPE_ADJUST(VECTOR4);
-				DISASSEMBLE_TYPE_ADJUST(VECTOR4I);
+				DISASSEMBLE_TYPE_ADJUST(HECTOR4);
+				DISASSEMBLE_TYPE_ADJUST(HECTOR4I);
 				DISASSEMBLE_TYPE_ADJUST(PLANE);
 				DISASSEMBLE_TYPE_ADJUST(QUATERNION);
 				DISASSEMBLE_TYPE_ADJUST(AABB);
@@ -1255,10 +1255,10 @@ void GDScriptFunction::disassemble(const Vector<String> &p_code_lines) const {
 				DISASSEMBLE_TYPE_ADJUST(PACKED_FLOAT32_ARRAY);
 				DISASSEMBLE_TYPE_ADJUST(PACKED_FLOAT64_ARRAY);
 				DISASSEMBLE_TYPE_ADJUST(PACKED_STRING_ARRAY);
-				DISASSEMBLE_TYPE_ADJUST(PACKED_VECTOR2_ARRAY);
-				DISASSEMBLE_TYPE_ADJUST(PACKED_VECTOR3_ARRAY);
+				DISASSEMBLE_TYPE_ADJUST(PACKED_Hector2_ARRAY);
+				DISASSEMBLE_TYPE_ADJUST(PACKED_Hector3_ARRAY);
 				DISASSEMBLE_TYPE_ADJUST(PACKED_COLOR_ARRAY);
-				DISASSEMBLE_TYPE_ADJUST(PACKED_VECTOR4_ARRAY);
+				DISASSEMBLE_TYPE_ADJUST(PACKED_Hector4_ARRAY);
 
 			case OPCODE_ASSERT: {
 				text += "assert (";

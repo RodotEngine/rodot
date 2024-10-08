@@ -735,7 +735,7 @@ bool RenderingDeviceDriverMetal::sampler_is_format_supported_for_filter(DataForm
 
 #pragma mark - Vertex Array
 
-RDD::VertexFormatID RenderingDeviceDriverMetal::vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) {
+RDD::VertexFormatID RenderingDeviceDriverMetal::vertex_format_create(HectorView<VertexAttribute> p_vertex_attribs) {
 	MTLVertexDescriptor *desc = MTLVertexDescriptor.vertexDescriptor;
 
 	for (uint32_t i = 0; i < p_vertex_attribs.size(); i++) {
@@ -772,9 +772,9 @@ void RenderingDeviceDriverMetal::command_pipeline_barrier(
 		CommandBufferID p_cmd_buffer,
 		BitField<PipelineStageBits> p_src_stages,
 		BitField<PipelineStageBits> p_dst_stages,
-		VectorView<MemoryBarrier> p_memory_barriers,
-		VectorView<BufferBarrier> p_buffer_barriers,
-		VectorView<TextureBarrier> p_texture_barriers) {
+		HectorView<MemoryBarrier> p_memory_barriers,
+		HectorView<BufferBarrier> p_buffer_barriers,
+		HectorView<TextureBarrier> p_texture_barriers) {
 	WARN_PRINT_ONCE("not implemented");
 }
 
@@ -827,7 +827,7 @@ RDD::CommandQueueID RenderingDeviceDriverMetal::command_queue_create(CommandQueu
 	return CommandQueueID(1);
 }
 
-Error RenderingDeviceDriverMetal::command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID>, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID>, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) {
+Error RenderingDeviceDriverMetal::command_queue_execute_and_present(CommandQueueID p_cmd_queue, HectorView<SemaphoreID>, HectorView<CommandBufferID> p_cmd_buffers, HectorView<SemaphoreID>, FenceID p_cmd_fence, HectorView<SwapChainID> p_swap_chains) {
 	uint32_t size = p_cmd_buffers.size();
 	if (size == 0) {
 		return OK;
@@ -904,7 +904,7 @@ void RenderingDeviceDriverMetal::command_buffer_end(CommandBufferID p_cmd_buffer
 	obj->end();
 }
 
-void RenderingDeviceDriverMetal::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) {
+void RenderingDeviceDriverMetal::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, HectorView<CommandBufferID> p_secondary_cmd_buffers) {
 	ERR_FAIL_MSG("not implemented");
 }
 
@@ -991,10 +991,10 @@ void RenderingDeviceDriverMetal::swap_chain_free(SwapChainID p_swap_chain) {
 
 #pragma mark - Frame buffer
 
-RDD::FramebufferID RenderingDeviceDriverMetal::framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
+RDD::FramebufferID RenderingDeviceDriverMetal::framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
 	MDRenderPass *pass = (MDRenderPass *)(p_render_pass.id);
 
-	Vector<MTL::Texture> textures;
+	Hector<MTL::Texture> textures;
 	textures.resize(p_attachments.size());
 
 	for (uint32_t i = 0; i < p_attachments.size(); i += 1) {
@@ -1109,16 +1109,16 @@ public:
 	}
 
 	template <typename T>
-	void write(VectorView<T> p_vector) {
-		write(p_vector.size());
-		for (uint32_t i = 0; i < p_vector.size(); i++) {
-			T const &e = p_vector[i];
+	void write(HectorView<T> p_Hector) {
+		write(p_Hector.size());
+		for (uint32_t i = 0; i < p_Hector.size(); i++) {
+			T const &e = p_Hector[i];
 			write(e);
 		}
 	}
 
-	void write(VectorView<uint8_t> p_vector) {
-		write_buffer(p_vector.ptr(), p_vector.size());
+	void write(HectorView<uint8_t> p_Hector) {
+		write_buffer(p_Hector.ptr(), p_Hector.size());
 	}
 
 	template <typename K, typename V>
@@ -1266,7 +1266,7 @@ public:
 		pos += comp_size;
 	}
 
-	void read(LocalVector<uint8_t> &p_val) {
+	void read(LocalHector<uint8_t> &p_val) {
 		uint32_t len;
 		read(len);
 		CHECK(len);
@@ -1276,7 +1276,7 @@ public:
 	}
 
 	template <typename T>
-	void read(LocalVector<T> &p_val) {
+	void read(LocalHector<T> &p_val) {
 		uint32_t len;
 		read(len);
 		CHECK(len);
@@ -1441,7 +1441,7 @@ struct API_AVAILABLE(macos(11.0), ios(14.0)) UniformData {
 
 struct API_AVAILABLE(macos(11.0), ios(14.0)) UniformSetData {
 	uint32_t index = UINT32_MAX;
-	LocalVector<UniformData> uniforms;
+	LocalHector<UniformData> uniforms;
 
 	size_t serialize_size() const {
 		size_t size = 0;
@@ -1455,7 +1455,7 @@ struct API_AVAILABLE(macos(11.0), ios(14.0)) UniformSetData {
 
 	void serialize(BufWriter &p_writer) const {
 		p_writer.write(index);
-		p_writer.write(VectorView(uniforms));
+		p_writer.write(HectorView(uniforms));
 	}
 
 	void deserialize(BufReader &p_reader) {
@@ -1505,9 +1505,9 @@ struct API_AVAILABLE(macos(11.0), ios(14.0)) ShaderBinaryData {
 	uint32_t is_compute = UINT32_MAX;
 	ComputeSize compute_local_size;
 	PushConstantData push_constant;
-	LocalVector<ShaderStageData> stages;
-	LocalVector<SpecializationConstantData> constants;
-	LocalVector<UniformSetData> uniforms;
+	LocalHector<ShaderStageData> stages;
+	LocalHector<SpecializationConstantData> constants;
+	LocalHector<UniformSetData> uniforms;
 
 	MTLLanguageVersion get_msl_version() const {
 		uint32_t major = msl_version / 10000;
@@ -1549,9 +1549,9 @@ struct API_AVAILABLE(macos(11.0), ios(14.0)) ShaderBinaryData {
 		p_writer.write(is_compute);
 		p_writer.write(compute_local_size);
 		p_writer.write(push_constant);
-		p_writer.write(VectorView(stages));
-		p_writer.write(VectorView(constants));
-		p_writer.write(VectorView(uniforms));
+		p_writer.write(HectorView(stages));
+		p_writer.write(HectorView(constants));
+		p_writer.write(HectorView(uniforms));
 	}
 
 	void deserialize(BufReader &p_reader) {
@@ -1575,7 +1575,7 @@ String RenderingDeviceDriverMetal::shader_get_binary_cache_key() {
 	return "Metal-SV" + uitos(SHADER_BINARY_VERSION);
 }
 
-Error RenderingDeviceDriverMetal::_reflect_spirv16(VectorView<ShaderStageSPIRVData> p_spirv, ShaderReflection &r_reflection) {
+Error RenderingDeviceDriverMetal::_reflect_spirv16(HectorView<ShaderStageSPIRVData> p_spirv, ShaderReflection &r_reflection) {
 	using namespace spirv_cross;
 	using spirv_cross::Resource;
 
@@ -1637,7 +1637,7 @@ Error RenderingDeviceDriverMetal::_reflect_spirv16(VectorView<ShaderStageSPIRVDa
 		};
 		// clang-format on
 
-		auto process_uniforms = [&r_reflection, &compiler, &get_decoration, stage, stage_flag](SmallVector<Resource> &resources, Writable writable, std::function<RDD::UniformType(SPIRType const &)> uniform_type) {
+		auto process_uniforms = [&r_reflection, &compiler, &get_decoration, stage, stage_flag](SmallHector<Resource> &resources, Writable writable, std::function<RDD::UniformType(SPIRType const &)> uniform_type) {
 			for (Resource const &res : resources) {
 				ShaderUniform uniform;
 
@@ -1867,8 +1867,8 @@ Error RenderingDeviceDriverMetal::_reflect_spirv16(VectorView<ShaderStageSPIRVDa
 	return OK;
 }
 
-Vector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
-	using Result = ::Vector<uint8_t>;
+Hector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(HectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
+	using Result = ::Hector<uint8_t>;
 	using namespace spirv_cross;
 	using spirv_cross::CompilerMSL;
 	using spirv_cross::Resource;
@@ -1895,7 +1895,7 @@ Vector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(Vec
 	bin_data.push_constant.stages = (ShaderStageUsage)(uint8_t)spirv_data.push_constant_stages;
 
 	for (uint32_t i = 0; i < spirv_data.uniform_sets.size(); i++) {
-		const ::Vector<ShaderUniform> &spirv_set = spirv_data.uniform_sets[i];
+		const ::Hector<ShaderUniform> &spirv_set = spirv_data.uniform_sets[i];
 		UniformSetData set{ .index = i };
 		for (const ShaderUniform &spirv_uniform : spirv_set) {
 			UniformData binding{};
@@ -1984,7 +1984,7 @@ Vector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(Vec
 		// Process specialization constants.
 		if (!compiler.get_specialization_constants().empty()) {
 			for (SpecializationConstant const &constant : compiler.get_specialization_constants()) {
-				LocalVector<SpecializationConstantData>::Iterator res = bin_data.constants.begin();
+				LocalHector<SpecializationConstantData>::Iterator res = bin_data.constants.begin();
 				while (res != bin_data.constants.end()) {
 					if (res->constant_id == constant.constant_id) {
 						res->used_stages |= 1 << stage;
@@ -2000,7 +2000,7 @@ Vector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(Vec
 
 		// Process bindings.
 
-		LocalVector<UniformSetData> &uniform_sets = bin_data.uniforms;
+		LocalHector<UniformSetData> &uniform_sets = bin_data.uniforms;
 		using BT = SPIRType::BaseType;
 
 		// Always clearer than a boolean.
@@ -2019,14 +2019,14 @@ Vector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(Vec
 			return res;
 		};
 
-		auto descriptor_bindings = [&compiler, &active, &uniform_sets, stage, &get_decoration](SmallVector<Resource> &resources, Writable writable) {
+		auto descriptor_bindings = [&compiler, &active, &uniform_sets, stage, &get_decoration](SmallHector<Resource> &resources, Writable writable) {
 			for (Resource const &res : resources) {
 				uint32_t dset = get_decoration(res.id, spv::DecorationDescriptorSet);
 				uint32_t dbin = get_decoration(res.id, spv::DecorationBinding);
 				UniformData *found = nullptr;
 				if (dset != (uint32_t)-1 && dbin != (uint32_t)-1 && dset < uniform_sets.size()) {
 					UniformSetData &set = uniform_sets[dset];
-					LocalVector<UniformData>::Iterator pos = set.uniforms.begin();
+					LocalHector<UniformData>::Iterator pos = set.uniforms.begin();
 					while (pos != set.uniforms.end()) {
 						if (dbin == pos->binding) {
 							found = &(*pos);
@@ -2263,7 +2263,7 @@ Vector<uint8_t> RenderingDeviceDriverMetal::shader_compile_binary_from_spirv(Vec
 
 	size_t vec_size = bin_data.serialize_size() + 8;
 
-	::Vector<uint8_t> ret;
+	::Hector<uint8_t> ret;
 	ret.resize(vec_size);
 	BufWriter writer(ret.ptrw(), vec_size);
 	const uint8_t HEADER[4] = { 'G', 'M', 'S', 'L' };
@@ -2284,7 +2284,7 @@ void RenderingDeviceDriverMetal::shader_cache_free_entry(const SHA256Digest &key
 	}
 }
 
-RDD::ShaderID RenderingDeviceDriverMetal::shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) {
+RDD::ShaderID RenderingDeviceDriverMetal::shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) {
 	r_shader_desc = {}; // Driver-agnostic.
 
 	const uint8_t *binptr = p_shader_binary.ptr();
@@ -2338,7 +2338,7 @@ RDD::ShaderID RenderingDeviceDriverMetal::shader_create_from_bytecode(const Vect
 		libraries[shader_data.stage] = library;
 	}
 
-	Vector<UniformSet> uniform_sets;
+	Hector<UniformSet> uniform_sets;
 	uniform_sets.resize(binary_data.uniforms.size());
 
 	r_shader_desc.uniform_sets.resize(binary_data.uniforms.size());
@@ -2348,7 +2348,7 @@ RDD::ShaderID RenderingDeviceDriverMetal::shader_create_from_bytecode(const Vect
 		UniformSet &set = uniform_sets.write[uniform_set.index];
 		set.uniforms.resize(uniform_set.uniforms.size());
 
-		Vector<ShaderUniform> &uset = r_shader_desc.uniform_sets.write[uniform_set.index];
+		Hector<ShaderUniform> &uset = r_shader_desc.uniform_sets.write[uniform_set.index];
 		uset.resize(uniform_set.uniforms.size());
 
 		for (uint32_t i = 0; i < uniform_set.uniforms.size(); i++) {
@@ -2493,9 +2493,9 @@ void RenderingDeviceDriverMetal::shader_destroy_modules(ShaderID p_shader) {
 /**** UNIFORM SET ****/
 /*********************/
 
-RDD::UniformSetID RenderingDeviceDriverMetal::uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) {
+RDD::UniformSetID RenderingDeviceDriverMetal::uniform_set_create(HectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) {
 	MDUniformSet *set = new MDUniformSet();
-	Vector<BoundUniform> bound_uniforms;
+	Hector<BoundUniform> bound_uniforms;
 	bound_uniforms.resize(p_uniforms.size());
 	for (uint32_t i = 0; i < p_uniforms.size(); i += 1) {
 		bound_uniforms.write[i] = p_uniforms[i];
@@ -2526,7 +2526,7 @@ void RenderingDeviceDriverMetal::command_clear_buffer(CommandBufferID p_cmd_buff
 			   value:0];
 }
 
-void RenderingDeviceDriverMetal::command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) {
+void RenderingDeviceDriverMetal::command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, HectorView<BufferCopyRegion> p_regions) {
 	MDCommandBuffer *cmd = (MDCommandBuffer *)(p_cmd_buffer.id);
 	id<MTLBuffer> src = rid::get(p_src_buffer);
 	id<MTLBuffer> dst = rid::get(p_dst_buffer);
@@ -2543,11 +2543,11 @@ void RenderingDeviceDriverMetal::command_copy_buffer(CommandBufferID p_cmd_buffe
 	}
 }
 
-MTLSize MTLSizeFromVector3i(Vector3i p_size) {
+MTLSize MTLSizeFromHector3i(Hector3i p_size) {
 	return MTLSizeMake(p_size.x, p_size.y, p_size.z);
 }
 
-MTLOrigin MTLOriginFromVector3i(Vector3i p_origin) {
+MTLOrigin MTLOriginFromHector3i(Hector3i p_origin) {
 	return MTLOriginMake(p_origin.x, p_origin.y, p_origin.z);
 }
 
@@ -2560,7 +2560,7 @@ static inline MTLSize clampMTLSize(MTLSize p_size, MTLOrigin p_origin, MTLSize p
 	return clamped;
 }
 
-void RenderingDeviceDriverMetal::command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) {
+void RenderingDeviceDriverMetal::command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<TextureCopyRegion> p_regions) {
 	MDCommandBuffer *cmd = (MDCommandBuffer *)(p_cmd_buffer.id);
 	id<MTLTexture> src = rid::get(p_src_texture);
 	id<MTLTexture> dst = rid::get(p_dst_texture);
@@ -2592,7 +2592,7 @@ void RenderingDeviceDriverMetal::command_copy_texture(CommandBufferID p_cmd_buff
 	for (uint32_t i = 0; i < p_regions.size(); i++) {
 		TextureCopyRegion region = p_regions[i];
 
-		MTLSize extent = MTLSizeFromVector3i(region.size);
+		MTLSize extent = MTLSizeFromHector3i(region.size);
 
 		// If copies can be performed using direct texture-texture copying, do so.
 		uint32_t src_level = region.src_subresources.mipmap;
@@ -2613,7 +2613,7 @@ void RenderingDeviceDriverMetal::command_copy_texture(CommandBufferID p_cmd_buff
 						  sliceCount:region.src_subresources.layer_count
 						  levelCount:1];
 		} else {
-			MTLOrigin src_origin = MTLOriginFromVector3i(region.src_offset);
+			MTLOrigin src_origin = MTLOriginFromHector3i(region.src_offset);
 			MTLSize src_size = clampMTLSize(extent, src_origin, src_extent);
 			uint32_t layer_count = 0;
 			if ((src.textureType == MTLTextureType3D) != (dst.textureType == MTLTextureType3D)) {
@@ -2624,7 +2624,7 @@ void RenderingDeviceDriverMetal::command_copy_texture(CommandBufferID p_cmd_buff
 			} else {
 				layer_count = region.src_subresources.layer_count;
 			}
-			MTLOrigin dst_origin = MTLOriginFromVector3i(region.dst_offset);
+			MTLOrigin dst_origin = MTLOriginFromHector3i(region.dst_offset);
 
 			for (uint32_t layer = 0; layer < layer_count; layer++) {
 				// We can copy between a 3D and a 2D image easily. Just copy between
@@ -2771,7 +2771,7 @@ void RenderingDeviceDriverMetal::_copy_texture_buffer(CommandBufferID p_cmd_buff
 		CopySource p_source,
 		TextureID p_texture,
 		BufferID p_buffer,
-		VectorView<BufferTextureCopyRegion> p_regions) {
+		HectorView<BufferTextureCopyRegion> p_regions) {
 	MDCommandBuffer *cmd = (MDCommandBuffer *)(p_cmd_buffer.id);
 	id<MTLBuffer> buffer = rid::get(p_buffer);
 	id<MTLTexture> texture = rid::get(p_texture);
@@ -2857,11 +2857,11 @@ void RenderingDeviceDriverMetal::_copy_texture_buffer(CommandBufferID p_cmd_buff
 	}
 }
 
-void RenderingDeviceDriverMetal::command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) {
+void RenderingDeviceDriverMetal::command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<BufferTextureCopyRegion> p_regions) {
 	_copy_texture_buffer(p_cmd_buffer, CopySource::Buffer, p_dst_texture, p_src_buffer, p_regions);
 }
 
-void RenderingDeviceDriverMetal::command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) {
+void RenderingDeviceDriverMetal::command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, HectorView<BufferTextureCopyRegion> p_regions) {
 	_copy_texture_buffer(p_cmd_buffer, CopySource::Texture, p_src_texture, p_dst_buffer, p_regions);
 }
 
@@ -2874,7 +2874,7 @@ void RenderingDeviceDriverMetal::pipeline_free(PipelineID p_pipeline_id) {
 
 // ----- BINDING -----
 
-void RenderingDeviceDriverMetal::command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, VectorView<uint32_t> p_data) {
+void RenderingDeviceDriverMetal::command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, HectorView<uint32_t> p_data) {
 	MDCommandBuffer *cb = (MDCommandBuffer *)(p_cmd_buffer.id);
 	MDShader *shader = (MDShader *)(p_shader.id);
 	shader->encode_push_constant_data(p_data, cb);
@@ -2893,7 +2893,7 @@ String RenderingDeviceDriverMetal::_pipeline_get_cache_path() const {
 	return path;
 }
 
-bool RenderingDeviceDriverMetal::pipeline_cache_create(const Vector<uint8_t> &p_data) {
+bool RenderingDeviceDriverMetal::pipeline_cache_create(const Hector<uint8_t> &p_data) {
 	return false;
 	CharString path = _pipeline_get_cache_path().utf8();
 	NSString *nPath = [[NSString alloc] initWithBytesNoCopy:path.ptrw()
@@ -2917,9 +2917,9 @@ size_t RenderingDeviceDriverMetal::pipeline_cache_query_size() {
 	return archive_count * 1024;
 }
 
-Vector<uint8_t> RenderingDeviceDriverMetal::pipeline_cache_serialize() {
+Hector<uint8_t> RenderingDeviceDriverMetal::pipeline_cache_serialize() {
 	if (!archive) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
 	CharString path = _pipeline_get_cache_path().utf8();
@@ -2931,10 +2931,10 @@ Vector<uint8_t> RenderingDeviceDriverMetal::pipeline_cache_serialize() {
 	NSURL *target = [NSURL fileURLWithPath:nPath];
 	NSError *error = nil;
 	if ([archive serializeToURL:target error:&error]) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	} else {
 		print_line(error.localizedDescription.UTF8String);
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 }
 
@@ -2942,12 +2942,12 @@ Vector<uint8_t> RenderingDeviceDriverMetal::pipeline_cache_serialize() {
 
 // ----- SUBPASS -----
 
-RDD::RenderPassID RenderingDeviceDriverMetal::render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) {
+RDD::RenderPassID RenderingDeviceDriverMetal::render_pass_create(HectorView<Attachment> p_attachments, HectorView<Subpass> p_subpasses, HectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) {
 	PixelFormats &pf = *pixel_formats;
 
 	size_t subpass_count = p_subpasses.size();
 
-	Vector<MDSubpass> subpasses;
+	Hector<MDSubpass> subpasses;
 	subpasses.resize(subpass_count);
 	for (uint32_t i = 0; i < subpass_count; i++) {
 		MDSubpass &subpass = subpasses.write[i];
@@ -2969,7 +2969,7 @@ RDD::RenderPassID RenderingDeviceDriverMetal::render_pass_create(VectorView<Atta
 		[ATTACHMENT_STORE_OP_DONT_CARE] = MTLStoreActionDontCare,
 	};
 
-	Vector<MDAttachment> attachments;
+	Hector<MDAttachment> attachments;
 	attachments.resize(p_attachments.size());
 
 	for (uint32_t i = 0; i < p_attachments.size(); i++) {
@@ -3007,7 +3007,7 @@ void RenderingDeviceDriverMetal::render_pass_free(RenderPassID p_render_pass) {
 
 // ----- COMMANDS -----
 
-void RenderingDeviceDriverMetal::command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) {
+void RenderingDeviceDriverMetal::command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RenderPassClearValue> p_clear_values) {
 	MDCommandBuffer *cb = (MDCommandBuffer *)(p_cmd_buffer.id);
 	cb->render_begin_pass(p_render_pass, p_framebuffer, p_cmd_buffer_type, p_rect, p_clear_values);
 }
@@ -3022,17 +3022,17 @@ void RenderingDeviceDriverMetal::command_next_render_subpass(CommandBufferID p_c
 	cb->render_next_subpass();
 }
 
-void RenderingDeviceDriverMetal::command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) {
+void RenderingDeviceDriverMetal::command_render_set_viewport(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_viewports) {
 	MDCommandBuffer *cb = (MDCommandBuffer *)(p_cmd_buffer.id);
 	cb->render_set_viewport(p_viewports);
 }
 
-void RenderingDeviceDriverMetal::command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) {
+void RenderingDeviceDriverMetal::command_render_set_scissor(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_scissors) {
 	MDCommandBuffer *cb = (MDCommandBuffer *)(p_cmd_buffer.id);
 	cb->render_set_scissor(p_scissors);
 }
 
-void RenderingDeviceDriverMetal::command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) {
+void RenderingDeviceDriverMetal::command_render_clear_attachments(CommandBufferID p_cmd_buffer, HectorView<AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) {
 	MDCommandBuffer *cb = (MDCommandBuffer *)(p_cmd_buffer.id);
 	cb->render_clear_attachments(p_attachment_clears, p_rects);
 }
@@ -3100,7 +3100,7 @@ void RenderingDeviceDriverMetal::command_render_set_line_width(CommandBufferID p
 
 // ----- PIPELINE -----
 
-RenderingDeviceDriverMetal::Result<id<MTLFunction>> RenderingDeviceDriverMetal::_create_function(MDLibrary *p_library, NSString *p_name, VectorView<PipelineSpecializationConstant> &p_specialization_constants) {
+RenderingDeviceDriverMetal::Result<id<MTLFunction>> RenderingDeviceDriverMetal::_create_function(MDLibrary *p_library, NSString *p_name, HectorView<PipelineSpecializationConstant> &p_specialization_constants) {
 	id<MTLLibrary> library = p_library.library;
 	if (!library) {
 		ERR_FAIL_V_MSG(ERR_CANT_CREATE, "Failed to compile Metal library");
@@ -3222,11 +3222,11 @@ RDD::PipelineID RenderingDeviceDriverMetal::render_pipeline_create(
 		PipelineMultisampleState p_multisample_state,
 		PipelineDepthStencilState p_depth_stencil_state,
 		PipelineColorBlendState p_blend_state,
-		VectorView<int32_t> p_color_attachments,
+		HectorView<int32_t> p_color_attachments,
 		BitField<PipelineDynamicStateFlags> p_dynamic_state,
 		RenderPassID p_render_pass,
 		uint32_t p_render_subpass,
-		VectorView<PipelineSpecializationConstant> p_specialization_constants) {
+		HectorView<PipelineSpecializationConstant> p_specialization_constants) {
 	MDRenderShader *shader = (MDRenderShader *)(p_shader.id);
 	MTLVertexDescriptor *vert_desc = rid::get(p_vertex_format);
 	MDRenderPass *pass = (MDRenderPass *)(p_render_pass.id);
@@ -3530,7 +3530,7 @@ void RenderingDeviceDriverMetal::command_compute_dispatch_indirect(CommandBuffer
 
 // ----- PIPELINE -----
 
-RDD::PipelineID RenderingDeviceDriverMetal::compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) {
+RDD::PipelineID RenderingDeviceDriverMetal::compute_pipeline_create(ShaderID p_shader, HectorView<PipelineSpecializationConstant> p_specialization_constants) {
 	MDComputeShader *shader = (MDComputeShader *)(p_shader.id);
 
 	os_signpost_id_t reflect_id = os_signpost_id_make_with_pointer(LOG_INTERVALS, shader);

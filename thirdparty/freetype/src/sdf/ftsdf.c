@@ -393,13 +393,13 @@
    *     file `ftsdfcommon.h`.
    *
    *   cross ::
-   *     Cross product of the shortest distance vector (i.e., the vector
+   *     Cross product of the shortest distance Hector (i.e., the Hector
    *     from the point to the nearest edge) and the direction of the edge
    *     at the nearest point.  This is used to resolve ambiguities of
    *     `sign`.
    *
    *   sign ::
-   *     A value used to indicate whether the distance vector is outside or
+   *     A value used to indicate whether the distance Hector is outside or
    *     inside the contour corresponding to the edge.
    *
    * @Note:
@@ -464,7 +464,7 @@
    */
 
   static
-  const FT_Vector  zero_vector = { 0, 0 };
+  const FT_Hector  zero_Hector = { 0, 0 };
 
   static
   const SDF_Edge  null_edge = { { 0, 0 }, { 0, 0 },
@@ -1732,7 +1732,7 @@
    *   Suppose `x` is the point whose shortest distance from an arbitrary
    *   contour we want to find out.  It is clear that `o` is the nearest
    *   point on the contour.  Now to determine the sign we do a cross
-   *   product of the shortest distance vector and the edge direction, i.e.,
+   *   product of the shortest distance Hector and the edge direction, i.e.,
    *
    *   ```
    *   => sign = cross(x - o, direction(a))
@@ -1769,7 +1769,7 @@
    *   determined by `a`.  This test can be easily done by calculating the
    *   orthogonality and taking the greater one.
    *
-   *   The orthogonality is simply the sinus of the two vectors (i.e.,
+   *   The orthogonality is simply the sinus of the two Hectors (i.e.,
    *   x - o) and the corresponding direction.  We efficiently pre-compute
    *   the orthogonality with the corresponding `get_min_distance_*`
    *   functions.
@@ -1892,9 +1892,9 @@
 
     FT_Error  error = FT_Err_Ok;
 
-    FT_Vector  a;                   /* start position */
-    FT_Vector  b;                   /* end position   */
-    FT_Vector  p;                   /* current point  */
+    FT_Hector  a;                   /* start position */
+    FT_Hector  b;                   /* end position   */
+    FT_Hector  p;                   /* current point  */
 
     FT_26D6_Vec  line_segment;      /* `b` - `a` */
     FT_26D6_Vec  p_sub_a;           /* `p` - `a` */
@@ -1904,7 +1904,7 @@
     FT_26D6   cross;                /* used to determine sign           */
 
     FT_16D16_Vec  nearest_point;    /* `point_on_line`       */
-    FT_16D16_Vec  nearest_vector;   /* `p` - `nearest_point` */
+    FT_16D16_Vec  nearest_Hector;   /* `p` - `nearest_point` */
 
 
     if ( !line || !out )
@@ -1953,15 +1953,15 @@
     nearest_point.x = FT_26D6_16D16( a.x ) + nearest_point.x;
     nearest_point.y = FT_26D6_16D16( a.y ) + nearest_point.y;
 
-    nearest_vector.x = nearest_point.x - FT_26D6_16D16( p.x );
-    nearest_vector.y = nearest_point.y - FT_26D6_16D16( p.y );
+    nearest_Hector.x = nearest_point.x - FT_26D6_16D16( p.x );
+    nearest_Hector.y = nearest_point.y - FT_26D6_16D16( p.y );
 
-    cross = FT_MulFix( nearest_vector.x, line_segment.y ) -
-            FT_MulFix( nearest_vector.y, line_segment.x );
+    cross = FT_MulFix( nearest_Hector.x, line_segment.y ) -
+            FT_MulFix( nearest_Hector.y, line_segment.x );
 
     /* assign the output */
     out->sign     = cross < 0 ? 1 : -1;
-    out->distance = VECTOR_LENGTH_16D16( nearest_vector );
+    out->distance = Hector_LENGTH_16D16( nearest_Hector );
 
     /* Instead of finding `cross` for checking corner we */
     /* directly set it here.  This is more efficient     */
@@ -1973,11 +1973,11 @@
     {
       /* [OPTIMIZATION]: Pre-compute this direction. */
       /* If not perpendicular then compute `cross`.  */
-      FT_Vector_NormLen( &line_segment );
-      FT_Vector_NormLen( &nearest_vector );
+      FT_Hector_NormLen( &line_segment );
+      FT_Hector_NormLen( &nearest_Hector );
 
-      out->cross = FT_MulFix( line_segment.x, nearest_vector.y ) -
-                   FT_MulFix( line_segment.y, nearest_vector.x );
+      out->cross = FT_MulFix( line_segment.x, nearest_Hector.y ) -
+                   FT_MulFix( line_segment.y, nearest_Hector.x );
     }
 
   Exit:
@@ -2076,7 +2076,7 @@
      *     ```
      *
      * (3) To find the shortest distance from `p` to `B(t)` we find the
-     *     point on the curve at which the shortest distance vector (i.e.,
+     *     point on the curve at which the shortest distance Hector (i.e.,
      *     `B(t) - p`) and the direction (i.e., `B'(t)`) make 90 degrees.
      *     In other words, we make the dot product zero.
      *
@@ -2196,7 +2196,7 @@
       FT_16D16  dist = 0;
 
       FT_16D16_Vec  curve_point;
-      FT_16D16_Vec  dist_vector;
+      FT_16D16_Vec  dist_Hector;
 
       /*
        * Ideally we should discard the roots which are outside the range
@@ -2235,10 +2235,10 @@
                       2 * FT_MulFix( bB.y, t ) + p0.y;
 
       /* `curve_point` - `p` */
-      dist_vector.x = curve_point.x - p.x;
-      dist_vector.y = curve_point.y - p.y;
+      dist_Hector.x = curve_point.x - p.x;
+      dist_Hector.y = curve_point.y - p.y;
 
-      dist = VECTOR_LENGTH_16D16( dist_vector );
+      dist = Hector_LENGTH_16D16( dist_Hector );
 
       if ( dist < min )
       {
@@ -2264,13 +2264,13 @@
       out->cross = FT_INT_16D16( 1 );   /* the two are perpendicular */
     else
     {
-      /* convert to nearest vector */
+      /* convert to nearest Hector */
       nearest_point.x -= FT_26D6_16D16( p.x );
       nearest_point.y -= FT_26D6_16D16( p.y );
 
       /* compute `cross` if not perpendicular */
-      FT_Vector_NormLen( &direction );
-      FT_Vector_NormLen( &nearest_point );
+      FT_Hector_NormLen( &direction );
+      FT_Hector_NormLen( &nearest_point );
 
       out->cross = FT_MulFix( direction.x, nearest_point.y ) -
                    FT_MulFix( direction.y, nearest_point.x );
@@ -2371,7 +2371,7 @@
      *     ```
      *
      * (6) Our task is to find a value of `t` such that the above equation
-     *     `Q(t)` becomes zero, that is, the point-to-curve vector makes
+     *     `Q(t)` becomes zero, that is, the point-to-curve Hector makes
      *     90~degrees with the curve.  We solve this with the Newton-Raphson
      *     method.
      *
@@ -2456,7 +2456,7 @@
       FT_16D16  length;
 
       FT_16D16_Vec  curve_point; /* point on the curve  */
-      FT_16D16_Vec  dist_vector; /* `curve_point` - `p` */
+      FT_16D16_Vec  dist_Hector; /* `curve_point` - `p` */
 
       FT_26D6_Vec  d1;           /* first  derivative   */
       FT_26D6_Vec  d2;           /* second derivative   */
@@ -2480,10 +2480,10 @@
         curve_point.y = FT_26D6_16D16( curve_point.y );
 
         /* P(t) in the comment */
-        dist_vector.x = curve_point.x - FT_26D6_16D16( p.x );
-        dist_vector.y = curve_point.y - FT_26D6_16D16( p.y );
+        dist_Hector.x = curve_point.x - FT_26D6_16D16( p.x );
+        dist_Hector.y = curve_point.y - FT_26D6_16D16( p.y );
 
-        length = VECTOR_LENGTH_16D16( dist_vector );
+        length = Hector_LENGTH_16D16( dist_Hector );
 
         if ( length < min )
         {
@@ -2505,15 +2505,15 @@
         d2.x = 2 * aA.x;
         d2.y = 2 * aA.y;
 
-        dist_vector.x /= 1024;
-        dist_vector.y /= 1024;
+        dist_Hector.x /= 1024;
+        dist_Hector.y /= 1024;
 
         /* temp1 = P(t) . B'(t) */
-        temp1 = VEC_26D6_DOT( dist_vector, d1 );
+        temp1 = VEC_26D6_DOT( dist_Hector, d1 );
 
         /* temp2 = B'(t) . B'(t) + P(t) . B''(t) */
         temp2 = VEC_26D6_DOT( d1, d1 ) +
-                VEC_26D6_DOT( dist_vector, d2 );
+                VEC_26D6_DOT( dist_Hector, d2 );
 
         factor -= FT_DivFix( temp1, temp2 );
 
@@ -2540,13 +2540,13 @@
       out->cross = FT_INT_16D16( 1 );   /* the two are perpendicular */
     else
     {
-      /* convert to nearest vector */
+      /* convert to nearest Hector */
       nearest_point.x -= FT_26D6_16D16( p.x );
       nearest_point.y -= FT_26D6_16D16( p.y );
 
       /* compute `cross` if not perpendicular */
-      FT_Vector_NormLen( &direction );
-      FT_Vector_NormLen( &nearest_point );
+      FT_Hector_NormLen( &direction );
+      FT_Hector_NormLen( &nearest_point );
 
       out->cross = FT_MulFix( direction.x, nearest_point.y ) -
                    FT_MulFix( direction.y, nearest_point.x );
@@ -2684,7 +2684,7 @@
      *     ```
      *
      * (6) Our task is to find a value of `t` such that the above equation
-     *     `Q(t)` becomes zero, that is, the point-to-curve vector makes
+     *     `Q(t)` becomes zero, that is, the point-to-curve Hector makes
      *     90~degree with curve.  We solve this with the Newton-Raphson
      *     method.
      *
@@ -2775,7 +2775,7 @@
       FT_16D16  length;
 
       FT_16D16_Vec  curve_point; /* point on the curve  */
-      FT_16D16_Vec  dist_vector; /* `curve_point' - `p' */
+      FT_16D16_Vec  dist_Hector; /* `curve_point' - `p' */
 
       FT_26D6_Vec  d1;           /* first  derivative   */
       FT_26D6_Vec  d2;           /* second derivative   */
@@ -2802,10 +2802,10 @@
         curve_point.y = FT_26D6_16D16( curve_point.y );
 
         /* P(t) in the comment */
-        dist_vector.x = curve_point.x - FT_26D6_16D16( p.x );
-        dist_vector.y = curve_point.y - FT_26D6_16D16( p.y );
+        dist_Hector.x = curve_point.x - FT_26D6_16D16( p.x );
+        dist_Hector.y = curve_point.y - FT_26D6_16D16( p.y );
 
-        length = VECTOR_LENGTH_16D16( dist_vector );
+        length = Hector_LENGTH_16D16( dist_Hector );
 
         if ( length < min )
         {
@@ -2830,15 +2830,15 @@
         d2.x = FT_MulFix( aA.x, 6 * factor ) + 2 * bB.x;
         d2.y = FT_MulFix( aA.y, 6 * factor ) + 2 * bB.y;
 
-        dist_vector.x /= 1024;
-        dist_vector.y /= 1024;
+        dist_Hector.x /= 1024;
+        dist_Hector.y /= 1024;
 
         /* temp1 = P(t) . B'(t) */
-        temp1 = VEC_26D6_DOT( dist_vector, d1 );
+        temp1 = VEC_26D6_DOT( dist_Hector, d1 );
 
         /* temp2 = B'(t) . B'(t) + P(t) . B''(t) */
         temp2 = VEC_26D6_DOT( d1, d1 ) +
-                VEC_26D6_DOT( dist_vector, d2 );
+                VEC_26D6_DOT( dist_Hector, d2 );
 
         factor -= FT_DivFix( temp1, temp2 );
 
@@ -2867,13 +2867,13 @@
       out->cross = FT_INT_16D16( 1 );   /* the two are perpendicular */
     else
     {
-      /* convert to nearest vector */
+      /* convert to nearest Hector */
       nearest_point.x -= FT_26D6_16D16( p.x );
       nearest_point.y -= FT_26D6_16D16( p.y );
 
       /* compute `cross` if not perpendicular */
-      FT_Vector_NormLen( &direction );
-      FT_Vector_NormLen( &nearest_point );
+      FT_Hector_NormLen( &direction );
+      FT_Hector_NormLen( &nearest_point );
 
       out->cross = FT_MulFix( direction.x, nearest_point.y ) -
                    FT_MulFix( direction.y, nearest_point.x );
@@ -3126,7 +3126,7 @@
         /* `grid_point` is the current pixel position; */
         /* our task is to find the shortest distance   */
         /* from this point to the entire shape.        */
-        FT_26D6_Vec          grid_point = zero_vector;
+        FT_26D6_Vec          grid_point = zero_Hector;
         SDF_Signed_Distance  min_dist   = max_sdf;
         SDF_Contour*         contour_list;
 
@@ -3332,7 +3332,7 @@
         {
           for ( x = cbox.xMin; x < cbox.xMax; x++ )
           {
-            FT_26D6_Vec          grid_point = zero_vector;
+            FT_26D6_Vec          grid_point = zero_Hector;
             SDF_Signed_Distance  dist       = max_sdf;
             FT_UInt              index      = 0;
             FT_16D16             diff       = 0;

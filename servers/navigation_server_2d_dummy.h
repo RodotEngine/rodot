@@ -50,15 +50,15 @@ public:
 	real_t map_get_edge_connection_margin(RID p_map) const override { return 0; }
 	void map_set_link_connection_radius(RID p_map, real_t p_connection_radius) override {}
 	real_t map_get_link_connection_radius(RID p_map) const override { return 0; }
-	Vector<Vector2> map_get_path(RID p_map, Vector2 p_origin, Vector2 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const override { return Vector<Vector2>(); }
-	Vector2 map_get_closest_point(RID p_map, const Vector2 &p_point) const override { return Vector2(); }
-	RID map_get_closest_point_owner(RID p_map, const Vector2 &p_point) const override { return RID(); }
+	Hector<Hector2> map_get_path(RID p_map, Hector2 p_origin, Hector2 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const override { return Hector<Hector2>(); }
+	Hector2 map_get_closest_point(RID p_map, const Hector2 &p_point) const override { return Hector2(); }
+	RID map_get_closest_point_owner(RID p_map, const Hector2 &p_point) const override { return RID(); }
 	TypedArray<RID> map_get_links(RID p_map) const override { return TypedArray<RID>(); }
 	TypedArray<RID> map_get_regions(RID p_map) const override { return TypedArray<RID>(); }
 	TypedArray<RID> map_get_agents(RID p_map) const override { return TypedArray<RID>(); }
 	TypedArray<RID> map_get_obstacles(RID p_map) const override { return TypedArray<RID>(); }
 	void map_force_update(RID p_map) override {}
-	Vector2 map_get_random_point(RID p_map, uint32_t p_naviation_layers, bool p_uniformly) const override { return Vector2(); };
+	Hector2 map_get_random_point(RID p_map, uint32_t p_naviation_layers, bool p_uniformly) const override { return Hector2(); };
 	uint32_t map_get_iteration_id(RID p_map) const override { return 0; }
 
 	RID region_create() override { return RID(); }
@@ -72,7 +72,7 @@ public:
 	real_t region_get_travel_cost(RID p_region) const override { return 0; }
 	void region_set_owner_id(RID p_region, ObjectID p_owner_id) override {}
 	ObjectID region_get_owner_id(RID p_region) const override { return ObjectID(); }
-	bool region_owns_point(RID p_region, const Vector2 &p_point) const override { return false; }
+	bool region_owns_point(RID p_region, const Hector2 &p_point) const override { return false; }
 	void region_set_map(RID p_region, RID p_map) override {}
 	RID region_get_map(RID p_region) const override { return RID(); }
 	void region_set_navigation_layers(RID p_region, uint32_t p_navigation_layers) override {}
@@ -81,10 +81,10 @@ public:
 	Transform2D region_get_transform(RID p_region) const override { return Transform2D(); }
 	void region_set_navigation_polygon(RID p_region, Ref<NavigationPolygon> p_navigation_polygon) override {}
 	int region_get_connections_count(RID p_region) const override { return 0; }
-	Vector2 region_get_connection_pathway_start(RID p_region, int p_connection_id) const override { return Vector2(); }
-	Vector2 region_get_connection_pathway_end(RID p_region, int p_connection_id) const override { return Vector2(); }
-	Vector2 region_get_closest_point(RID p_region, const Vector2 &p_point) const override { return Vector2(); }
-	Vector2 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const override { return Vector2(); };
+	Hector2 region_get_connection_pathway_start(RID p_region, int p_connection_id) const override { return Hector2(); }
+	Hector2 region_get_connection_pathway_end(RID p_region, int p_connection_id) const override { return Hector2(); }
+	Hector2 region_get_closest_point(RID p_region, const Hector2 &p_point) const override { return Hector2(); }
+	Hector2 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const override { return Hector2(); };
 
 	RID link_create() override { return RID(); }
 	void link_set_map(RID p_link, RID p_map) override {}
@@ -95,10 +95,10 @@ public:
 	bool link_is_bidirectional(RID p_link) const override { return false; }
 	void link_set_navigation_layers(RID p_link, uint32_t p_navigation_layers) override {}
 	uint32_t link_get_navigation_layers(RID p_link) const override { return 0; }
-	void link_set_start_position(RID p_link, Vector2 p_position) override {}
-	Vector2 link_get_start_position(RID p_link) const override { return Vector2(); }
-	void link_set_end_position(RID p_link, Vector2 p_position) override {}
-	Vector2 link_get_end_position(RID p_link) const override { return Vector2(); }
+	void link_set_start_position(RID p_link, Hector2 p_position) override {}
+	Hector2 link_get_start_position(RID p_link) const override { return Hector2(); }
+	void link_set_end_position(RID p_link, Hector2 p_position) override {}
+	Hector2 link_get_end_position(RID p_link) const override { return Hector2(); }
 	void link_set_enter_cost(RID p_link, real_t p_enter_cost) override {}
 	real_t link_get_enter_cost(RID p_link) const override { return 0; }
 	void link_set_travel_cost(RID p_link, real_t p_travel_cost) override {}
@@ -125,11 +125,11 @@ public:
 	real_t agent_get_radius(RID p_agent) const override { return 0; }
 	void agent_set_max_speed(RID p_agent, real_t p_max_speed) override {}
 	real_t agent_get_max_speed(RID p_agent) const override { return 0; }
-	void agent_set_velocity_forced(RID p_agent, Vector2 p_velocity) override {}
-	void agent_set_velocity(RID p_agent, Vector2 p_velocity) override {}
-	Vector2 agent_get_velocity(RID p_agent) const override { return Vector2(); }
-	void agent_set_position(RID p_agent, Vector2 p_position) override {}
-	Vector2 agent_get_position(RID p_agent) const override { return Vector2(); }
+	void agent_set_velocity_forced(RID p_agent, Hector2 p_velocity) override {}
+	void agent_set_velocity(RID p_agent, Hector2 p_velocity) override {}
+	Hector2 agent_get_velocity(RID p_agent) const override { return Hector2(); }
+	void agent_set_position(RID p_agent, Hector2 p_position) override {}
+	Hector2 agent_get_position(RID p_agent) const override { return Hector2(); }
 	bool agent_is_map_changed(RID p_agent) const override { return false; }
 	void agent_set_avoidance_callback(RID p_agent, Callable p_callback) override {}
 	bool agent_has_avoidance_callback(RID p_agent) const override { return false; }
@@ -149,12 +149,12 @@ public:
 	bool obstacle_get_paused(RID p_obstacle) const override { return false; }
 	void obstacle_set_radius(RID p_obstacle, real_t p_radius) override {}
 	real_t obstacle_get_radius(RID p_agent) const override { return 0; }
-	void obstacle_set_velocity(RID p_obstacle, Vector2 p_velocity) override {}
-	Vector2 obstacle_get_velocity(RID p_agent) const override { return Vector2(); }
-	void obstacle_set_position(RID p_obstacle, Vector2 p_position) override {}
-	Vector2 obstacle_get_position(RID p_agent) const override { return Vector2(); }
-	void obstacle_set_vertices(RID p_obstacle, const Vector<Vector2> &p_vertices) override {}
-	Vector<Vector2> obstacle_get_vertices(RID p_agent) const override { return Vector<Vector2>(); }
+	void obstacle_set_velocity(RID p_obstacle, Hector2 p_velocity) override {}
+	Hector2 obstacle_get_velocity(RID p_agent) const override { return Hector2(); }
+	void obstacle_set_position(RID p_obstacle, Hector2 p_position) override {}
+	Hector2 obstacle_get_position(RID p_agent) const override { return Hector2(); }
+	void obstacle_set_vertices(RID p_obstacle, const Hector<Hector2> &p_vertices) override {}
+	Hector<Hector2> obstacle_get_vertices(RID p_agent) const override { return Hector<Hector2>(); }
 	void obstacle_set_avoidance_layers(RID p_obstacle, uint32_t p_layers) override {}
 	uint32_t obstacle_get_avoidance_layers(RID p_agent) const override { return 0; }
 
@@ -174,7 +174,7 @@ public:
 	RID source_geometry_parser_create() override { return RID(); }
 	void source_geometry_parser_set_callback(RID p_parser, const Callable &p_callback) override {}
 
-	Vector<Vector2> simplify_path(const Vector<Vector2> &p_path, real_t p_epsilon) override { return Vector<Vector2>(); }
+	Hector<Hector2> simplify_path(const Hector<Hector2> &p_path, real_t p_epsilon) override { return Hector<Hector2>(); }
 
 	void set_debug_enabled(bool p_enabled) {}
 	bool get_debug_enabled() const { return false; }

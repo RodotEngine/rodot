@@ -27,7 +27,7 @@
 #include <cassert>
 
 /**
- * @brief Merge two planes of endpoints into a single vector.
+ * @brief Merge two planes of endpoints into a single Hector.
  *
  * @param      ep_plane1          The endpoints for plane 1.
  * @param      ep_plane2          The endpoints for plane 2.

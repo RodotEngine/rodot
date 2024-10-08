@@ -42,7 +42,7 @@ class Skin : public Resource {
 		Transform3D pose;
 	};
 
-	Vector<Bind> binds;
+	Hector<Bind> binds;
 
 	Bind *binds_ptr = nullptr;
 	int bind_count = 0;

@@ -83,7 +83,7 @@
 			<param index="0" name="id" type="int" />
 			<param index="1" name="secondary" type="bool" />
 			<param index="2" name="camera" type="Camera3D" />
-			<param index="3" name="point" type="Vector2" />
+			<param index="3" name="point" type="Hector2" />
 			<description>
 				Override this method to update the node properties when the user drags a gizmo handle (previously added with [method add_handles]). The provided [param point] is the mouse position in screen coordinates and the [param camera] can be used to convert it to raycasts.
 				The [param secondary] argument is [code]true[/code] when the edited handle is secondary (see [method add_handles] for more information).
@@ -108,14 +108,14 @@
 		<method name="_subgizmos_intersect_ray" qualifiers="virtual const">
 			<return type="int" />
 			<param index="0" name="camera" type="Camera3D" />
-			<param index="1" name="point" type="Vector2" />
+			<param index="1" name="point" type="Hector2" />
 			<description>
 				Override this method to allow selecting subgizmos using mouse clicks. Given a [param camera] and a [param point] in screen coordinates, this method should return which subgizmo should be selected. The returned value should be a unique subgizmo identifier, which can have any non-negative value and will be used in other virtual methods like [method _get_subgizmo_transform] or [method _commit_subgizmos].
 			</description>
 		</method>
 		<method name="add_collision_segments">
 			<return type="void" />
-			<param index="0" name="segments" type="PackedVector3Array" />
+			<param index="0" name="segments" type="PackedHector3Array" />
 			<description>
 				Adds the specified [param segments] to the gizmo's collision shape for picking. Call this method during [method _redraw].
 			</description>
@@ -129,7 +129,7 @@
 		</method>
 		<method name="add_handles">
 			<return type="void" />
-			<param index="0" name="handles" type="PackedVector3Array" />
+			<param index="0" name="handles" type="PackedHector3Array" />
 			<param index="1" name="material" type="Material" />
 			<param index="2" name="ids" type="PackedInt32Array" />
 			<param index="3" name="billboard" type="bool" default="false" />
@@ -142,7 +142,7 @@
 		</method>
 		<method name="add_lines">
 			<return type="void" />
-			<param index="0" name="lines" type="PackedVector3Array" />
+			<param index="0" name="lines" type="PackedHector3Array" />
 			<param index="1" name="material" type="Material" />
 			<param index="2" name="billboard" type="bool" default="false" />
 			<param index="3" name="modulate" type="Color" default="Color(1, 1, 1, 1)" />

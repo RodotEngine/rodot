@@ -1183,12 +1183,12 @@ bool ParticleProcessMaterial::has_min_max_property(const String &p_name) {
 	return min_max_properties.has(p_name);
 }
 
-void ParticleProcessMaterial::set_direction(Vector3 p_direction) {
+void ParticleProcessMaterial::set_direction(Hector3 p_direction) {
 	direction = p_direction;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->direction, direction);
 }
 
-Vector3 ParticleProcessMaterial::get_direction() const {
+Hector3 ParticleProcessMaterial::get_direction() const {
 	return direction;
 }
 
@@ -1210,22 +1210,22 @@ float ParticleProcessMaterial::get_flatness() const {
 	return flatness;
 }
 
-void ParticleProcessMaterial::set_velocity_pivot(const Vector3 &p_pivot) {
+void ParticleProcessMaterial::set_velocity_pivot(const Hector3 &p_pivot) {
 	velocity_pivot = p_pivot;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->velocity_pivot, p_pivot);
 }
 
-Vector3 ParticleProcessMaterial::get_velocity_pivot() {
+Hector3 ParticleProcessMaterial::get_velocity_pivot() {
 	return velocity_pivot;
 }
 
-void ParticleProcessMaterial::set_param(Parameter p_param, const Vector2 &p_value) {
+void ParticleProcessMaterial::set_param(Parameter p_param, const Hector2 &p_value) {
 	set_param_min(p_param, p_value.x);
 	set_param_max(p_param, p_value.y);
 }
 
-Vector2 ParticleProcessMaterial::get_param(Parameter p_param) const {
-	return Vector2(get_param_min(p_param), get_param_max(p_param));
+Hector2 ParticleProcessMaterial::get_param(Parameter p_param) const {
+	return Hector2(get_param_min(p_param), get_param_max(p_param));
 }
 
 void ParticleProcessMaterial::set_param_min(Parameter p_param, float p_value) {
@@ -1574,7 +1574,7 @@ void ParticleProcessMaterial::set_emission_sphere_radius(real_t p_radius) {
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->emission_sphere_radius, p_radius);
 }
 
-void ParticleProcessMaterial::set_emission_box_extents(Vector3 p_extents) {
+void ParticleProcessMaterial::set_emission_box_extents(Hector3 p_extents) {
 	emission_box_extents = p_extents;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->emission_box_extents, p_extents);
 }
@@ -1603,7 +1603,7 @@ void ParticleProcessMaterial::set_emission_point_count(int p_count) {
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->emission_texture_point_count, p_count);
 }
 
-void ParticleProcessMaterial::set_emission_ring_axis(Vector3 p_axis) {
+void ParticleProcessMaterial::set_emission_ring_axis(Hector3 p_axis) {
 	emission_ring_axis = p_axis;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->emission_ring_axis, p_axis);
 }
@@ -1641,7 +1641,7 @@ real_t ParticleProcessMaterial::get_emission_sphere_radius() const {
 	return emission_sphere_radius;
 }
 
-Vector3 ParticleProcessMaterial::get_emission_box_extents() const {
+Hector3 ParticleProcessMaterial::get_emission_box_extents() const {
 	return emission_box_extents;
 }
 
@@ -1661,7 +1661,7 @@ int ParticleProcessMaterial::get_emission_point_count() const {
 	return emission_point_count;
 }
 
-Vector3 ParticleProcessMaterial::get_emission_ring_axis() const {
+Hector3 ParticleProcessMaterial::get_emission_ring_axis() const {
 	return emission_ring_axis;
 }
 
@@ -1681,21 +1681,21 @@ real_t ParticleProcessMaterial::get_emission_ring_cone_angle() const {
 	return emission_ring_cone_angle;
 }
 
-void ParticleProcessMaterial::set_emission_shape_offset(const Vector3 &p_emission_shape_offset) {
+void ParticleProcessMaterial::set_emission_shape_offset(const Hector3 &p_emission_shape_offset) {
 	emission_shape_offset = p_emission_shape_offset;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->emission_shape_offset, p_emission_shape_offset);
 }
 
-Vector3 ParticleProcessMaterial::get_emission_shape_offset() const {
+Hector3 ParticleProcessMaterial::get_emission_shape_offset() const {
 	return emission_shape_offset;
 }
 
-void ParticleProcessMaterial::set_emission_shape_scale(const Vector3 &p_emission_shape_scale) {
+void ParticleProcessMaterial::set_emission_shape_scale(const Hector3 &p_emission_shape_scale) {
 	emission_shape_scale = p_emission_shape_scale;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->emission_shape_scale, p_emission_shape_scale);
 }
 
-Vector3 ParticleProcessMaterial::get_emission_shape_scale() const {
+Hector3 ParticleProcessMaterial::get_emission_shape_scale() const {
 	return emission_shape_scale;
 }
 
@@ -1746,25 +1746,25 @@ float ParticleProcessMaterial::get_turbulence_noise_speed_random() const {
 	return turbulence_noise_speed_random;
 }
 
-void ParticleProcessMaterial::set_turbulence_noise_speed(const Vector3 &p_turbulence_noise_speed) {
+void ParticleProcessMaterial::set_turbulence_noise_speed(const Hector3 &p_turbulence_noise_speed) {
 	turbulence_noise_speed = p_turbulence_noise_speed;
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->turbulence_noise_speed, turbulence_noise_speed);
 }
 
-Vector3 ParticleProcessMaterial::get_turbulence_noise_speed() const {
+Hector3 ParticleProcessMaterial::get_turbulence_noise_speed() const {
 	return turbulence_noise_speed;
 }
 
-void ParticleProcessMaterial::set_gravity(const Vector3 &p_gravity) {
+void ParticleProcessMaterial::set_gravity(const Hector3 &p_gravity) {
 	gravity = p_gravity;
-	Vector3 gset = gravity;
-	if (gset == Vector3()) {
-		gset = Vector3(0, -0.000001, 0); //as gravity is used as upvector in some calculations
+	Hector3 gset = gravity;
+	if (gset == Hector3()) {
+		gset = Hector3(0, -0.000001, 0); //as gravity is used as upHector in some calculations
 	}
 	RenderingServer::get_singleton()->material_set_param(_get_material(), shader_names->gravity, gset);
 }
 
-Vector3 ParticleProcessMaterial::get_gravity() const {
+Hector3 ParticleProcessMaterial::get_gravity() const {
 	return gravity;
 }
 
@@ -2093,7 +2093,7 @@ void ParticleProcessMaterial::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_collision_bounce"), &ParticleProcessMaterial::get_collision_bounce);
 
 #define ADD_MIN_MAX_PROPERTY(m_property, m_range, m_parameter_name)                                                                                                                       \
-	ADD_PROPERTYI(PropertyInfo(Variant::VECTOR2, m_property, PROPERTY_HINT_RANGE, m_range, PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_INTERNAL), "set_param", "get_param", m_parameter_name); \
+	ADD_PROPERTYI(PropertyInfo(Variant::HECTOR2, m_property, PROPERTY_HINT_RANGE, m_range, PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_INTERNAL), "set_param", "get_param", m_parameter_name); \
 	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, m_property "_min", PROPERTY_HINT_RANGE, m_range), "set_param_min", "get_param_min", m_parameter_name);                                     \
 	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, m_property "_max", PROPERTY_HINT_RANGE, m_range), "set_param_max", "get_param_max", m_parameter_name);                                     \
 	min_max_properties.insert(m_property);
@@ -2106,16 +2106,16 @@ void ParticleProcessMaterial::_bind_methods() {
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "particle_flag_damping_as_friction"), "set_particle_flag", "get_particle_flag", PARTICLE_FLAG_DAMPING_AS_FRICTION);
 	ADD_GROUP("Spawn", "");
 	ADD_SUBGROUP("Position", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_shape_offset"), "set_emission_shape_offset", "get_emission_shape_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_shape_scale"), "set_emission_shape_scale", "get_emission_shape_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "emission_shape_offset"), "set_emission_shape_offset", "get_emission_shape_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "emission_shape_scale"), "set_emission_shape_scale", "get_emission_shape_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "emission_shape", PROPERTY_HINT_ENUM, "Point,Sphere,Sphere Surface,Box,Points,Directed Points,Ring"), "set_emission_shape", "get_emission_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_sphere_radius", PROPERTY_HINT_RANGE, "0.01,128,0.01,or_greater"), "set_emission_sphere_radius", "get_emission_sphere_radius");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_box_extents"), "set_emission_box_extents", "get_emission_box_extents");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "emission_box_extents"), "set_emission_box_extents", "get_emission_box_extents");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "emission_point_texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_emission_point_texture", "get_emission_point_texture");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "emission_normal_texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_emission_normal_texture", "get_emission_normal_texture");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "emission_color_texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_emission_color_texture", "get_emission_color_texture");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "emission_point_count", PROPERTY_HINT_RANGE, "0,1000000,1"), "set_emission_point_count", "get_emission_point_count");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_ring_axis"), "set_emission_ring_axis", "get_emission_ring_axis");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "emission_ring_axis"), "set_emission_ring_axis", "get_emission_ring_axis");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_ring_height", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_emission_ring_height", "get_emission_ring_height");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_ring_radius", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_emission_ring_radius", "get_emission_ring_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_ring_inner_radius", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_emission_ring_inner_radius", "get_emission_ring_inner_radius");
@@ -2125,8 +2125,8 @@ void ParticleProcessMaterial::_bind_methods() {
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "angle_curve", PROPERTY_HINT_RESOURCE_TYPE, "CurveTexture"), "set_param_texture", "get_param_texture", PARAM_ANGLE);
 	ADD_SUBGROUP("Velocity", "");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "inherit_velocity_ratio", PROPERTY_HINT_RANGE, "0.0,1.0,0.001,or_less,or_greater"), "set_inherit_velocity_ratio", "get_inherit_velocity_ratio");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "velocity_pivot"), "set_velocity_pivot", "get_velocity_pivot");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "direction"), "set_direction", "get_direction");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "velocity_pivot"), "set_velocity_pivot", "get_velocity_pivot");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "direction"), "set_direction", "get_direction");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spread", PROPERTY_HINT_RANGE, "0,180,0.001"), "set_spread", "get_spread");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flatness", PROPERTY_HINT_RANGE, "0,1,0.001"), "set_flatness", "get_flatness");
 	ADD_MIN_MAX_PROPERTY("initial_velocity", "0,1000,0.01,or_less,or_greater", PARAM_INITIAL_LINEAR_VELOCITY);
@@ -2148,7 +2148,7 @@ void ParticleProcessMaterial::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "velocity_limit_curve", PROPERTY_HINT_RESOURCE_TYPE, "CurveTexture"), "set_velocity_limit_curve", "get_velocity_limit_curve");
 	ADD_GROUP("Accelerations", "");
 	ADD_SUBGROUP("Gravity", "");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gravity"), "set_gravity", "get_gravity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "gravity"), "set_gravity", "get_gravity");
 	ADD_SUBGROUP("Linear Accel", "linear_");
 	ADD_MIN_MAX_PROPERTY("linear_accel", "-100,100,0.01,or_less,or_greater", PARAM_LINEAR_ACCEL);
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "linear_accel_curve", PROPERTY_HINT_RESOURCE_TYPE, "CurveTexture"), "set_param_texture", "get_param_texture", PARAM_LINEAR_ACCEL);
@@ -2191,7 +2191,7 @@ void ParticleProcessMaterial::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "turbulence_enabled"), "set_turbulence_enabled", "get_turbulence_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "turbulence_noise_strength", PROPERTY_HINT_RANGE, "0,20,0.01"), "set_turbulence_noise_strength", "get_turbulence_noise_strength");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "turbulence_noise_scale", PROPERTY_HINT_RANGE, "0,10,0.001,or_greater"), "set_turbulence_noise_scale", "get_turbulence_noise_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "turbulence_noise_speed"), "set_turbulence_noise_speed", "get_turbulence_noise_speed");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "turbulence_noise_speed"), "set_turbulence_noise_speed", "get_turbulence_noise_speed");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "turbulence_noise_speed_random", PROPERTY_HINT_RANGE, "0,4,0.01"), "set_turbulence_noise_speed_random", "get_turbulence_noise_speed_random");
 	ADD_MIN_MAX_PROPERTY("turbulence_influence", "0,1,0.001", PARAM_TURB_VEL_INFLUENCE);
 	ADD_MIN_MAX_PROPERTY("turbulence_initial_displacement", "-100,100,0.1", PARAM_TURB_INIT_DISPLACEMENT);
@@ -2263,7 +2263,7 @@ ParticleProcessMaterial::ParticleProcessMaterial() :
 		element(this) {
 	_set_material(RS::get_singleton()->material_create());
 
-	set_direction(Vector3(1, 0, 0));
+	set_direction(Hector3(1, 0, 0));
 	set_spread(45);
 	set_flatness(0);
 	set_param_min(PARAM_INITIAL_LINEAR_VELOCITY, 0);
@@ -2294,17 +2294,17 @@ ParticleProcessMaterial::ParticleProcessMaterial() :
 	set_param_max(PARAM_DIRECTIONAL_VELOCITY, 1.0);
 	set_emission_shape(EMISSION_SHAPE_POINT);
 	set_emission_sphere_radius(1);
-	set_emission_box_extents(Vector3(1, 1, 1));
-	set_emission_ring_axis(Vector3(0, 0, 1.0));
+	set_emission_box_extents(Hector3(1, 1, 1));
+	set_emission_ring_axis(Hector3(0, 0, 1.0));
 	set_emission_ring_height(1);
 	set_emission_ring_radius(1);
 	set_emission_ring_inner_radius(0);
 	set_emission_ring_cone_angle(90);
-	set_emission_shape_offset(Vector3(0.0, 0.0, 0.0));
-	set_emission_shape_scale(Vector3(1.0, 1.0, 1.0));
+	set_emission_shape_offset(Hector3(0.0, 0.0, 0.0));
+	set_emission_shape_scale(Hector3(1.0, 1.0, 1.0));
 
 	set_turbulence_enabled(false);
-	set_turbulence_noise_speed(Vector3(0.0, 0.0, 0.0));
+	set_turbulence_noise_speed(Hector3(0.0, 0.0, 0.0));
 	set_turbulence_noise_strength(1);
 	set_turbulence_noise_scale(9);
 	set_turbulence_noise_speed_random(0.2);
@@ -2313,7 +2313,7 @@ ParticleProcessMaterial::ParticleProcessMaterial() :
 	set_param_min(PARAM_TURB_INIT_DISPLACEMENT, 0.0);
 	set_param_max(PARAM_TURB_INIT_DISPLACEMENT, 0.0);
 
-	set_gravity(Vector3(0, -9.8, 0));
+	set_gravity(Hector3(0, -9.8, 0));
 	set_lifetime_randomness(0);
 
 	set_sub_emitter_mode(SUB_EMITTER_DISABLED);

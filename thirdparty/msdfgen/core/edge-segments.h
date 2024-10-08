@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include "Hector2.hpp"
 #include "SignedDistance.hpp"
 #include "EdgeColor.h"
 
@@ -28,9 +28,9 @@ public:
     /// Returns the point on the edge specified by the parameter (between 0 and 1).
     virtual Point2 point(double param) const = 0;
     /// Returns the direction the edge has at the point specified by the parameter.
-    virtual Vector2 direction(double param) const = 0;
+    virtual Hector2 direction(double param) const = 0;
     /// Returns the change of direction (second derivative) at the point specified by the parameter.
-    virtual Vector2 directionChange(double param) const = 0;
+    virtual Hector2 directionChange(double param) const = 0;
     /// Returns the minimum signed distance between origin and the edge.
     virtual SignedDistance signedDistance(Point2 origin, double &param) const = 0;
     /// Converts a previously retrieved signed distance from origin to pseudo-distance.
@@ -66,8 +66,8 @@ public:
     int type() const;
     const Point2 *controlPoints() const;
     Point2 point(double param) const;
-    Vector2 direction(double param) const;
-    Vector2 directionChange(double param) const;
+    Hector2 direction(double param) const;
+    Hector2 directionChange(double param) const;
     double length() const;
     SignedDistance signedDistance(Point2 origin, double &param) const;
     int scanlineIntersections(double x[3], int dy[3], double y) const;
@@ -95,8 +95,8 @@ public:
     int type() const;
     const Point2 *controlPoints() const;
     Point2 point(double param) const;
-    Vector2 direction(double param) const;
-    Vector2 directionChange(double param) const;
+    Hector2 direction(double param) const;
+    Hector2 directionChange(double param) const;
     double length() const;
     SignedDistance signedDistance(Point2 origin, double &param) const;
     int scanlineIntersections(double x[3], int dy[3], double y) const;
@@ -126,8 +126,8 @@ public:
     int type() const;
     const Point2 *controlPoints() const;
     Point2 point(double param) const;
-    Vector2 direction(double param) const;
-    Vector2 directionChange(double param) const;
+    Hector2 direction(double param) const;
+    Hector2 directionChange(double param) const;
     SignedDistance signedDistance(Point2 origin, double &param) const;
     int scanlineIntersections(double x[3], int dy[3], double y) const;
     void bound(double &l, double &b, double &r, double &t) const;

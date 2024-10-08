@@ -73,7 +73,7 @@ bool NavMeshGenerator3D::baking_use_high_priority_threads = true;
 HashSet<Ref<NavigationMesh>> NavMeshGenerator3D::baking_navmeshes;
 HashMap<WorkerThreadPool::TaskID, NavMeshGenerator3D::NavMeshGeneratorTask3D *> NavMeshGenerator3D::generator_tasks;
 RID_Owner<NavMeshGenerator3D::NavMeshGeometryParser3D> NavMeshGenerator3D::generator_parser_owner;
-LocalVector<NavMeshGenerator3D::NavMeshGeometryParser3D *> NavMeshGenerator3D::generator_parsers;
+LocalHector<NavMeshGenerator3D::NavMeshGeometryParser3D *> NavMeshGenerator3D::generator_parsers;
 
 NavMeshGenerator3D *NavMeshGenerator3D::get_singleton() {
 	return singleton;
@@ -104,7 +104,7 @@ void NavMeshGenerator3D::sync() {
 	{
 		MutexLock generator_task_lock(generator_task_mutex);
 
-		LocalVector<WorkerThreadPool::TaskID> finished_task_ids;
+		LocalHector<WorkerThreadPool::TaskID> finished_task_ids;
 
 		for (KeyValue<WorkerThreadPool::TaskID, NavMeshGeneratorTask3D *> &E : generator_tasks) {
 			if (WorkerThreadPool::get_singleton()->is_task_completed(E.key)) {
@@ -376,13 +376,13 @@ void NavMeshGenerator3D::generator_parse_staticbody3d_node(const Ref<NavigationM
 
 					ConvexPolygonShape3D *convex_polygon = Object::cast_to<ConvexPolygonShape3D>(*s);
 					if (convex_polygon) {
-						Vector<Vector3> varr = Variant(convex_polygon->get_points());
+						Hector<Hector3> varr = Variant(convex_polygon->get_points());
 						Geometry3D::MeshData md;
 
 						Error err = ConvexHullComputer::convex_hull(varr, md);
 
 						if (err == OK) {
-							PackedVector3Array faces;
+							PackedHector3Array faces;
 
 							for (const Geometry3D::MeshData::Face &face : md.faces) {
 								for (uint32_t k = 2; k < face.indices.size(); ++k) {
@@ -402,25 +402,25 @@ void NavMeshGenerator3D::generator_parse_staticbody3d_node(const Ref<NavigationM
 						int heightmap_width = heightmap_shape->get_map_width();
 
 						if (heightmap_depth >= 2 && heightmap_width >= 2) {
-							const Vector<real_t> &map_data = heightmap_shape->get_map_data();
+							const Hector<real_t> &map_data = heightmap_shape->get_map_data();
 
-							Vector2 heightmap_gridsize(heightmap_width - 1, heightmap_depth - 1);
-							Vector3 start = Vector3(heightmap_gridsize.x, 0, heightmap_gridsize.y) * -0.5;
+							Hector2 heightmap_gridsize(heightmap_width - 1, heightmap_depth - 1);
+							Hector3 start = Hector3(heightmap_gridsize.x, 0, heightmap_gridsize.y) * -0.5;
 
-							Vector<Vector3> vertex_array;
+							Hector<Hector3> vertex_array;
 							vertex_array.resize((heightmap_depth - 1) * (heightmap_width - 1) * 6);
-							Vector3 *vertex_array_ptrw = vertex_array.ptrw();
+							Hector3 *vertex_array_ptrw = vertex_array.ptrw();
 							const real_t *map_data_ptr = map_data.ptr();
 							int vertex_index = 0;
 
 							for (int d = 0; d < heightmap_depth - 1; d++) {
 								for (int w = 0; w < heightmap_width - 1; w++) {
-									vertex_array_ptrw[vertex_index] = start + Vector3(w, map_data_ptr[(heightmap_width * d) + w], d);
-									vertex_array_ptrw[vertex_index + 1] = start + Vector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
-									vertex_array_ptrw[vertex_index + 2] = start + Vector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
-									vertex_array_ptrw[vertex_index + 3] = start + Vector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
-									vertex_array_ptrw[vertex_index + 4] = start + Vector3(w + 1, map_data_ptr[(heightmap_width * d) + heightmap_width + w + 1], d + 1);
-									vertex_array_ptrw[vertex_index + 5] = start + Vector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
+									vertex_array_ptrw[vertex_index] = start + Hector3(w, map_data_ptr[(heightmap_width * d) + w], d);
+									vertex_array_ptrw[vertex_index + 1] = start + Hector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
+									vertex_array_ptrw[vertex_index + 2] = start + Hector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
+									vertex_array_ptrw[vertex_index + 3] = start + Hector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
+									vertex_array_ptrw[vertex_index + 4] = start + Hector3(w + 1, map_data_ptr[(heightmap_width * d) + heightmap_width + w + 1], d + 1);
+									vertex_array_ptrw[vertex_index + 5] = start + Hector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
 									vertex_index += 6;
 								}
 							}
@@ -492,7 +492,7 @@ void NavMeshGenerator3D::generator_parse_gridmap_node(const Ref<NavigationMesh> 
 						p_source_geometry_data->add_mesh_array(arr, shapes[i]);
 					} break;
 					case PhysicsServer3D::SHAPE_BOX: {
-						Vector3 extents = data;
+						Hector3 extents = data;
 						Array arr;
 						arr.resize(RS::ARRAY_MAX);
 						BoxMesh::create_mesh_array(arr, extents * 2.0);
@@ -517,13 +517,13 @@ void NavMeshGenerator3D::generator_parse_gridmap_node(const Ref<NavigationMesh> 
 						p_source_geometry_data->add_mesh_array(arr, shapes[i]);
 					} break;
 					case PhysicsServer3D::SHAPE_CONVEX_POLYGON: {
-						PackedVector3Array vertices = data;
+						PackedHector3Array vertices = data;
 						Geometry3D::MeshData md;
 
 						Error err = ConvexHullComputer::convex_hull(vertices, md);
 
 						if (err == OK) {
-							PackedVector3Array faces;
+							PackedHector3Array faces;
 
 							for (const Geometry3D::MeshData::Face &face : md.faces) {
 								for (uint32_t k = 2; k < face.indices.size(); ++k) {
@@ -538,7 +538,7 @@ void NavMeshGenerator3D::generator_parse_gridmap_node(const Ref<NavigationMesh> 
 					} break;
 					case PhysicsServer3D::SHAPE_CONCAVE_POLYGON: {
 						Dictionary dict = data;
-						PackedVector3Array faces = Variant(dict["faces"]);
+						PackedHector3Array faces = Variant(dict["faces"]);
 						p_source_geometry_data->add_faces(faces, shapes[i]);
 					} break;
 					case PhysicsServer3D::SHAPE_HEIGHTMAP: {
@@ -548,25 +548,25 @@ void NavMeshGenerator3D::generator_parse_gridmap_node(const Ref<NavigationMesh> 
 						int heightmap_width = dict["width"];
 
 						if (heightmap_depth >= 2 && heightmap_width >= 2) {
-							const Vector<real_t> &map_data = dict["heights"];
+							const Hector<real_t> &map_data = dict["heights"];
 
-							Vector2 heightmap_gridsize(heightmap_width - 1, heightmap_depth - 1);
-							Vector3 start = Vector3(heightmap_gridsize.x, 0, heightmap_gridsize.y) * -0.5;
+							Hector2 heightmap_gridsize(heightmap_width - 1, heightmap_depth - 1);
+							Hector3 start = Hector3(heightmap_gridsize.x, 0, heightmap_gridsize.y) * -0.5;
 
-							Vector<Vector3> vertex_array;
+							Hector<Hector3> vertex_array;
 							vertex_array.resize((heightmap_depth - 1) * (heightmap_width - 1) * 6);
-							Vector3 *vertex_array_ptrw = vertex_array.ptrw();
+							Hector3 *vertex_array_ptrw = vertex_array.ptrw();
 							const real_t *map_data_ptr = map_data.ptr();
 							int vertex_index = 0;
 
 							for (int d = 0; d < heightmap_depth - 1; d++) {
 								for (int w = 0; w < heightmap_width - 1; w++) {
-									vertex_array_ptrw[vertex_index] = start + Vector3(w, map_data_ptr[(heightmap_width * d) + w], d);
-									vertex_array_ptrw[vertex_index + 1] = start + Vector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
-									vertex_array_ptrw[vertex_index + 2] = start + Vector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
-									vertex_array_ptrw[vertex_index + 3] = start + Vector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
-									vertex_array_ptrw[vertex_index + 4] = start + Vector3(w + 1, map_data_ptr[(heightmap_width * d) + heightmap_width + w + 1], d + 1);
-									vertex_array_ptrw[vertex_index + 5] = start + Vector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
+									vertex_array_ptrw[vertex_index] = start + Hector3(w, map_data_ptr[(heightmap_width * d) + w], d);
+									vertex_array_ptrw[vertex_index + 1] = start + Hector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
+									vertex_array_ptrw[vertex_index + 2] = start + Hector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
+									vertex_array_ptrw[vertex_index + 3] = start + Hector3(w + 1, map_data_ptr[(heightmap_width * d) + w + 1], d);
+									vertex_array_ptrw[vertex_index + 4] = start + Hector3(w + 1, map_data_ptr[(heightmap_width * d) + heightmap_width + w + 1], d + 1);
+									vertex_array_ptrw[vertex_index + 5] = start + Hector3(w, map_data_ptr[(heightmap_width * d) + heightmap_width + w], d + 1);
 									vertex_index += 6;
 								}
 							}
@@ -600,7 +600,7 @@ void NavMeshGenerator3D::generator_parse_navigationobstacle_node(const Ref<Navig
 	const float obstacle_radius = obstacle->get_radius();
 
 	if (obstacle_radius > 0.0) {
-		Vector<Vector3> obstruction_circle_vertices;
+		Hector<Hector3> obstruction_circle_vertices;
 
 		// The point of this is that the moving obstacle can make a simple hole in the navigation mesh and affect the pathfinding.
 		// Without, navigation paths can go directly through the middle of the obstacle and conflict with the avoidance to get agents stuck.
@@ -608,28 +608,28 @@ void NavMeshGenerator3D::generator_parse_navigationobstacle_node(const Ref<Navig
 		static const int circle_points = 12;
 
 		obstruction_circle_vertices.resize(circle_points);
-		Vector3 *circle_vertices_ptrw = obstruction_circle_vertices.ptrw();
+		Hector3 *circle_vertices_ptrw = obstruction_circle_vertices.ptrw();
 		const real_t circle_point_step = Math_TAU / circle_points;
 
 		for (int i = 0; i < circle_points; i++) {
 			const float angle = i * circle_point_step;
-			circle_vertices_ptrw[i] = node_xform.xform(Vector3(Math::cos(angle) * obstacle_radius, 0.0, Math::sin(angle) * obstacle_radius));
+			circle_vertices_ptrw[i] = node_xform.xform(Hector3(Math::cos(angle) * obstacle_radius, 0.0, Math::sin(angle) * obstacle_radius));
 		}
 
 		p_source_geometry_data->add_projected_obstruction(obstruction_circle_vertices, obstacle->get_global_position().y + p_source_geometry_data->root_node_transform.origin.y - obstacle_radius, obstacle_radius, obstacle->get_carve_navigation_mesh());
 	}
 
-	const Vector<Vector3> &obstacle_vertices = obstacle->get_vertices();
+	const Hector<Hector3> &obstacle_vertices = obstacle->get_vertices();
 
 	if (obstacle_vertices.is_empty()) {
 		return;
 	}
 
-	Vector<Vector3> obstruction_shape_vertices;
+	Hector<Hector3> obstruction_shape_vertices;
 	obstruction_shape_vertices.resize(obstacle_vertices.size());
 
-	const Vector3 *obstacle_vertices_ptr = obstacle_vertices.ptr();
-	Vector3 *obstruction_shape_vertices_ptrw = obstruction_shape_vertices.ptrw();
+	const Hector3 *obstacle_vertices_ptr = obstacle_vertices.ptr();
+	Hector3 *obstruction_shape_vertices_ptrw = obstruction_shape_vertices.ptrw();
 
 	for (int i = 0; i < obstacle_vertices.size(); i++) {
 		obstruction_shape_vertices_ptrw[i] = node_xform.xform(obstacle_vertices_ptr[i]);
@@ -667,9 +667,9 @@ void NavMeshGenerator3D::generator_bake_from_source_geometry_data(Ref<Navigation
 		return;
 	}
 
-	Vector<float> source_geometry_vertices;
-	Vector<int> source_geometry_indices;
-	Vector<NavigationMeshSourceGeometryData3D::ProjectedObstruction> projected_obstructions;
+	Hector<float> source_geometry_vertices;
+	Hector<int> source_geometry_indices;
+	Hector<NavigationMeshSourceGeometryData3D::ProjectedObstruction> projected_obstructions;
 
 	p_source_geometry_data->get_data(
 			source_geometry_vertices,
@@ -757,7 +757,7 @@ void NavMeshGenerator3D::generator_bake_from_source_geometry_data(Ref<Navigation
 
 	AABB baking_aabb = p_navigation_mesh->get_filter_baking_aabb();
 	if (baking_aabb.has_volume()) {
-		Vector3 baking_aabb_offset = p_navigation_mesh->get_filter_baking_aabb_offset();
+		Hector3 baking_aabb_offset = p_navigation_mesh->get_filter_baking_aabb_offset();
 		cfg.bmin[0] = baking_aabb.position[0] + baking_aabb_offset.x;
 		cfg.bmin[1] = baking_aabb.position[1] + baking_aabb_offset.y;
 		cfg.bmin[2] = baking_aabb.position[2] + baking_aabb_offset.z;
@@ -788,7 +788,7 @@ void NavMeshGenerator3D::generator_bake_from_source_geometry_data(Ref<Navigation
 
 	bake_state = "Marking walkable triangles..."; // step #4
 	{
-		Vector<unsigned char> tri_areas;
+		Hector<unsigned char> tri_areas;
 		tri_areas.resize(ntris);
 
 		ERR_FAIL_COND(tri_areas.is_empty());
@@ -892,16 +892,16 @@ void NavMeshGenerator3D::generator_bake_from_source_geometry_data(Ref<Navigation
 
 	bake_state = "Converting to native navigation mesh..."; // step #10
 
-	Vector<Vector3> nav_vertices;
-	Vector<Vector<int>> nav_polygons;
+	Hector<Hector3> nav_vertices;
+	Hector<Hector<int>> nav_polygons;
 
-	HashMap<Vector3, int> recast_vertex_to_native_index;
-	LocalVector<int> recast_index_to_native_index;
+	HashMap<Hector3, int> recast_vertex_to_native_index;
+	LocalHector<int> recast_index_to_native_index;
 	recast_index_to_native_index.resize(detail_mesh->nverts);
 
 	for (int i = 0; i < detail_mesh->nverts; i++) {
 		const float *v = &detail_mesh->verts[i * 3];
-		const Vector3 vertex = Vector3(v[0], v[1], v[2]);
+		const Hector3 vertex = Hector3(v[0], v[1], v[2]);
 		int *existing_index_ptr = recast_vertex_to_native_index.getptr(vertex);
 		if (!existing_index_ptr) {
 			int new_index = recast_vertex_to_native_index.size();
@@ -920,7 +920,7 @@ void NavMeshGenerator3D::generator_bake_from_source_geometry_data(Ref<Navigation
 		const unsigned int detail_mesh_ntris = detail_mesh_m[3];
 		const unsigned char *detail_mesh_tris = &detail_mesh->tris[detail_mesh_m_btris * 4];
 		for (unsigned int j = 0; j < detail_mesh_ntris; j++) {
-			Vector<int> nav_indices;
+			Hector<int> nav_indices;
 			nav_indices.resize(3);
 			// Polygon order in recast is opposite than godot's
 			int index1 = ((int)(detail_mesh_bverts + detail_mesh_tris[j * 4 + 0]));

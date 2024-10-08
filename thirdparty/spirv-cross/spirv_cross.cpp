@@ -34,7 +34,7 @@ using namespace std;
 using namespace spv;
 using namespace SPIRV_CROSS_NAMESPACE;
 
-Compiler::Compiler(vector<uint32_t> ir_)
+Compiler::Compiler(Hector<uint32_t> ir_)
 {
 	Parser parser(std::move(ir_));
 	parser.parse();
@@ -709,7 +709,7 @@ bool Compiler::is_scalar(const SPIRType &type) const
 	return type.basetype != SPIRType::Struct && type.vecsize == 1 && type.columns == 1;
 }
 
-bool Compiler::is_vector(const SPIRType &type) const
+bool Compiler::is_Hector(const SPIRType &type) const
 {
 	return type.vecsize > 1 && type.columns == 1;
 }
@@ -1103,7 +1103,7 @@ ShaderResources Compiler::get_shader_resources(const unordered_set<VariableID> *
 		// Push constant blocks
 		else if (type.storage == StorageClassPushConstant)
 		{
-			// There can only be one push constant block, but keep the vector in case this restriction is lifted
+			// There can only be one push constant block, but keep the Hector in case this restriction is lifted
 			// in the future.
 			res.push_constant_buffers.push_back({ var.self, var.basetype, type.self, get_name(var.self) });
 		}
@@ -1839,7 +1839,7 @@ SPIRBlock::ContinueBlockType Compiler::continue_block_type(const SPIRBlock &bloc
 	}
 }
 
-const SmallVector<SPIRBlock::Case> &Compiler::get_case_list(const SPIRBlock &block) const
+const SmallHector<SPIRBlock::Case> &Compiler::get_case_list(const SPIRBlock &block) const
 {
 	uint32_t width = 0;
 
@@ -2212,7 +2212,7 @@ size_t Compiler::get_declared_struct_member_size(const SPIRType &struct_type, ui
 		unsigned vecsize = type.vecsize;
 		unsigned columns = type.columns;
 
-		// Vectors.
+		// Hectors.
 		if (columns == 1)
 		{
 			size_t component_size = type.width / 8;
@@ -2279,9 +2279,9 @@ bool Compiler::BufferAccessHandler::handle(Op opcode, const uint32_t *args, uint
 	return true;
 }
 
-SmallVector<BufferRange> Compiler::get_active_buffer_ranges(VariableID id) const
+SmallHector<BufferRange> Compiler::get_active_buffer_ranges(VariableID id) const
 {
-	SmallVector<BufferRange> ranges;
+	SmallHector<BufferRange> ranges;
 	BufferAccessHandler handler(*this, ranges, id);
 	traverse_all_reachable_opcodes(get<SPIRFunction>(ir.default_entry_point), handler);
 	return ranges;
@@ -2597,9 +2597,9 @@ void Compiler::inherit_expression_dependencies(uint32_t dst, uint32_t source_exp
 	e_deps.erase(unique(begin(e_deps), end(e_deps)), end(e_deps));
 }
 
-SmallVector<EntryPoint> Compiler::get_entry_points_and_stages() const
+SmallHector<EntryPoint> Compiler::get_entry_points_and_stages() const
 {
-	SmallVector<EntryPoint> entries;
+	SmallHector<EntryPoint> entries;
 	for (auto &entry : ir.entry_points)
 		entries.push_back({ entry.second.orig_name, entry.second.model });
 	return entries;
@@ -3203,9 +3203,9 @@ void Compiler::build_combined_image_samplers()
 	traverse_all_reachable_opcodes(get<SPIRFunction>(ir.default_entry_point), handler);
 }
 
-SmallVector<SpecializationConstant> Compiler::get_specialization_constants() const
+SmallHector<SpecializationConstant> Compiler::get_specialization_constants() const
 {
-	SmallVector<SpecializationConstant> spec_consts;
+	SmallHector<SpecializationConstant> spec_consts;
 	ir.for_each_typed_id<SPIRConstant>([&](uint32_t, const SPIRConstant &c) {
 		if (c.specialization && has_decoration(c.self, DecorationSpecId))
 			spec_consts.push_back({ c.self, get_decoration(c.self, DecorationSpecId) });
@@ -3693,7 +3693,7 @@ bool Compiler::AnalyzeVariableScopeAccessHandler::handle(spv::Op op, const uint3
 		// Some GLSL builtins access a pointer.
 
 	case OpCompositeInsert:
-	case OpVectorShuffle:
+	case OpHectorShuffle:
 		// Specialize for opcode which contains literals.
 		for (uint32_t i = 1; i < 4; i++)
 			notify_variable_access(args[i], current_block->self);
@@ -3970,7 +3970,7 @@ void Compiler::analyze_variable_scope(SPIRFunction &entry, AnalyzeVariableScopeA
 		for (auto &block : blocks)
 		{
 			// If we're accessing a variable inside a continue block, this variable might be a loop variable.
-			// We can only use loop variables with scalars, as we cannot track static expressions for vectors.
+			// We can only use loop variables with scalars, as we cannot track static expressions for Hectors.
 			if (is_continue(block))
 			{
 				// Potentially awkward case to check for.
@@ -4899,7 +4899,7 @@ void Compiler::make_constant_null(uint32_t id, uint32_t type)
 		if (!constant_type.array_size_literal.back())
 			SPIRV_CROSS_THROW("Array size of OpConstantNull must be a literal.");
 
-		SmallVector<uint32_t> elements(constant_type.array.back());
+		SmallHector<uint32_t> elements(constant_type.array.back());
 		for (uint32_t i = 0; i < constant_type.array.back(); i++)
 			elements[i] = parent_id;
 		set<SPIRConstant>(id, type, elements.data(), uint32_t(elements.size()), false);
@@ -4907,7 +4907,7 @@ void Compiler::make_constant_null(uint32_t id, uint32_t type)
 	else if (!constant_type.member_types.empty())
 	{
 		uint32_t member_ids = ir.increase_bound_by(uint32_t(constant_type.member_types.size()));
-		SmallVector<uint32_t> elements(constant_type.member_types.size());
+		SmallHector<uint32_t> elements(constant_type.member_types.size());
 		for (uint32_t i = 0; i < constant_type.member_types.size(); i++)
 		{
 			make_constant_null(member_ids + i, constant_type.member_types[i]);
@@ -4922,12 +4922,12 @@ void Compiler::make_constant_null(uint32_t id, uint32_t type)
 	}
 }
 
-const SmallVector<spv::Capability> &Compiler::get_declared_capabilities() const
+const SmallHector<spv::Capability> &Compiler::get_declared_capabilities() const
 {
 	return ir.declared_capabilities;
 }
 
-const SmallVector<std::string> &Compiler::get_declared_extensions() const
+const SmallHector<std::string> &Compiler::get_declared_extensions() const
 {
 	return ir.declared_extensions;
 }

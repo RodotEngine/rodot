@@ -794,8 +794,8 @@ exit:
 
 #if defined(MBEDTLS_SELF_TEST)
 
-/* The CTR_DRBG NIST test vectors used here are available at
- * https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/drbg/drbgtestvectors.zip
+/* The CTR_DRBG NIST test Hectors used here are available at
+ * https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/drbg/drbgtestHectors.zip
  *
  * The parameters used to derive the test data are:
  *
@@ -954,7 +954,7 @@ int mbedtls_ctr_drbg_self_test(int verbose)
     mbedtls_ctr_drbg_init(&ctx);
 
     /*
-     * Based on a NIST CTR_DRBG test vector (PR = True)
+     * Based on a NIST CTR_DRBG test Hector (PR = True)
      */
     if (verbose != 0) {
         mbedtls_printf("  CTR_DRBG (PR = TRUE) : ");
@@ -979,7 +979,7 @@ int mbedtls_ctr_drbg_self_test(int verbose)
     }
 
     /*
-     * Based on a NIST CTR_DRBG test vector (PR = FALSE)
+     * Based on a NIST CTR_DRBG test Hector (PR = FALSE)
      */
     if (verbose != 0) {
         mbedtls_printf("  CTR_DRBG (PR = FALSE): ");

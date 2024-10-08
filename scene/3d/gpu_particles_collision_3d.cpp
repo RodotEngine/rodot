@@ -82,7 +82,7 @@ real_t GPUParticlesCollisionSphere3D::get_radius() const {
 }
 
 AABB GPUParticlesCollisionSphere3D::get_aabb() const {
-	return AABB(Vector3(-radius, -radius, -radius), Vector3(radius * 2, radius * 2, radius * 2));
+	return AABB(Hector3(-radius, -radius, -radius), Hector3(radius * 2, radius * 2, radius * 2));
 }
 
 GPUParticlesCollisionSphere3D::GPUParticlesCollisionSphere3D() :
@@ -98,13 +98,13 @@ void GPUParticlesCollisionBox3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &GPUParticlesCollisionBox3D::set_size);
 	ClassDB::bind_method(D_METHOD("get_size"), &GPUParticlesCollisionBox3D::get_size);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
 }
 
 #ifndef DISABLE_DEPRECATED
 bool GPUParticlesCollisionBox3D::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
@@ -119,13 +119,13 @@ bool GPUParticlesCollisionBox3D::_get(const StringName &p_name, Variant &r_prope
 }
 #endif // DISABLE_DEPRECATED
 
-void GPUParticlesCollisionBox3D::set_size(const Vector3 &p_size) {
+void GPUParticlesCollisionBox3D::set_size(const Hector3 &p_size) {
 	size = p_size;
 	RS::get_singleton()->particles_collision_set_box_extents(_get_collision(), size / 2);
 	update_gizmos();
 }
 
-Vector3 GPUParticlesCollisionBox3D::get_size() const {
+Hector3 GPUParticlesCollisionBox3D::get_size() const {
 	return size;
 }
 
@@ -196,7 +196,7 @@ void GPUParticlesCollisionSDF3D::_find_meshes(const AABB &p_aabb, Node *p_at_nod
 	}
 }
 
-uint32_t GPUParticlesCollisionSDF3D::_create_bvh(LocalVector<BVH> &bvh_tree, FacePos *p_faces, uint32_t p_face_count, const Face3 *p_triangles, float p_thickness) {
+uint32_t GPUParticlesCollisionSDF3D::_create_bvh(LocalHector<BVH> &bvh_tree, FacePos *p_faces, uint32_t p_face_count, const Face3 *p_triangles, float p_thickness) {
 	if (p_face_count == 1) {
 		return BVH::LEAF_BIT | p_faces[0].index;
 	}
@@ -207,11 +207,11 @@ uint32_t GPUParticlesCollisionSDF3D::_create_bvh(LocalVector<BVH> &bvh_tree, Fac
 
 		for (uint32_t i = 0; i < p_face_count; i++) {
 			const Face3 &f = p_triangles[p_faces[i].index];
-			AABB aabb(f.vertex[0], Vector3());
+			AABB aabb(f.vertex[0], Hector3());
 			aabb.expand_to(f.vertex[1]);
 			aabb.expand_to(f.vertex[2]);
 			if (p_thickness > 0.0) {
-				Vector3 normal = p_triangles[p_faces[i].index].get_plane().normal;
+				Hector3 normal = p_triangles[p_faces[i].index].get_plane().normal;
 				aabb.expand_to(f.vertex[0] - normal * p_thickness);
 				aabb.expand_to(f.vertex[1] - normal * p_thickness);
 				aabb.expand_to(f.vertex[2] - normal * p_thickness);
@@ -240,48 +240,48 @@ uint32_t GPUParticlesCollisionSDF3D::_create_bvh(LocalVector<BVH> &bvh_tree, Fac
 	return index;
 }
 
-static _FORCE_INLINE_ real_t Vector3_dot2(const Vector3 &p_vec3) {
+static _FORCE_INLINE_ real_t Hector3_dot2(const Hector3 &p_vec3) {
 	return p_vec3.dot(p_vec3);
 }
 
-void GPUParticlesCollisionSDF3D::_find_closest_distance(const Vector3 &p_pos, const BVH *p_bvh, uint32_t p_bvh_cell, const Face3 *p_triangles, float p_thickness, float &r_closest_distance) {
+void GPUParticlesCollisionSDF3D::_find_closest_distance(const Hector3 &p_pos, const BVH *p_bvh, uint32_t p_bvh_cell, const Face3 *p_triangles, float p_thickness, float &r_closest_distance) {
 	if (p_bvh_cell & BVH::LEAF_BIT) {
 		p_bvh_cell &= BVH::LEAF_MASK; //remove bit
 
-		Vector3 point = p_pos;
+		Hector3 point = p_pos;
 		Plane p = p_triangles[p_bvh_cell].get_plane();
 		float d = p.distance_to(point);
 		float inside_d = 1e20;
 		if (d < 0 && d > -p_thickness) {
 			//inside planes, do this in 2D
 
-			Vector3 x_axis = (p_triangles[p_bvh_cell].vertex[0] - p_triangles[p_bvh_cell].vertex[1]).normalized();
-			Vector3 y_axis = p.normal.cross(x_axis).normalized();
+			Hector3 x_axis = (p_triangles[p_bvh_cell].vertex[0] - p_triangles[p_bvh_cell].vertex[1]).normalized();
+			Hector3 y_axis = p.normal.cross(x_axis).normalized();
 
-			Vector2 points[3];
+			Hector2 points[3];
 			for (int i = 0; i < 3; i++) {
-				points[i] = Vector2(x_axis.dot(p_triangles[p_bvh_cell].vertex[i]), y_axis.dot(p_triangles[p_bvh_cell].vertex[i]));
+				points[i] = Hector2(x_axis.dot(p_triangles[p_bvh_cell].vertex[i]), y_axis.dot(p_triangles[p_bvh_cell].vertex[i]));
 			}
 
-			Vector2 p2d = Vector2(x_axis.dot(point), y_axis.dot(point));
+			Hector2 p2d = Hector2(x_axis.dot(point), y_axis.dot(point));
 
 			{
 				// https://www.shadertoy.com/view/XsXSz4
 
-				Vector2 e0 = points[1] - points[0];
-				Vector2 e1 = points[2] - points[1];
-				Vector2 e2 = points[0] - points[2];
+				Hector2 e0 = points[1] - points[0];
+				Hector2 e1 = points[2] - points[1];
+				Hector2 e2 = points[0] - points[2];
 
-				Vector2 v0 = p2d - points[0];
-				Vector2 v1 = p2d - points[1];
-				Vector2 v2 = p2d - points[2];
+				Hector2 v0 = p2d - points[0];
+				Hector2 v1 = p2d - points[1];
+				Hector2 v2 = p2d - points[2];
 
-				Vector2 pq0 = v0 - e0 * CLAMP(v0.dot(e0) / e0.dot(e0), 0.0, 1.0);
-				Vector2 pq1 = v1 - e1 * CLAMP(v1.dot(e1) / e1.dot(e1), 0.0, 1.0);
-				Vector2 pq2 = v2 - e2 * CLAMP(v2.dot(e2) / e2.dot(e2), 0.0, 1.0);
+				Hector2 pq0 = v0 - e0 * CLAMP(v0.dot(e0) / e0.dot(e0), 0.0, 1.0);
+				Hector2 pq1 = v1 - e1 * CLAMP(v1.dot(e1) / e1.dot(e1), 0.0, 1.0);
+				Hector2 pq2 = v2 - e2 * CLAMP(v2.dot(e2) / e2.dot(e2), 0.0, 1.0);
 
 				float s = SIGN(e0.x * e2.y - e0.y * e2.x);
-				Vector2 d2 = Vector2(pq0.dot(pq0), s * (v0.x * e0.y - v0.y * e0.x)).min(Vector2(pq1.dot(pq1), s * (v1.x * e1.y - v1.y * e1.x))).min(Vector2(pq2.dot(pq2), s * (v2.x * e2.y - v2.y * e2.x)));
+				Hector2 d2 = Hector2(pq0.dot(pq0), s * (v0.x * e0.y - v0.y * e0.x)).min(Hector2(pq1.dot(pq1), s * (v1.x * e1.y - v1.y * e1.x))).min(Hector2(pq2.dot(pq2), s * (v2.x * e2.y - v2.y * e2.x)));
 
 				inside_d = -Math::sqrt(d2.x) * SIGN(d2.y);
 			}
@@ -299,25 +299,25 @@ void GPUParticlesCollisionSDF3D::_find_closest_distance(const Vector3 &p_pos, co
 			}
 
 			// https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
-			Vector3 a = p_triangles[p_bvh_cell].vertex[0];
-			Vector3 b = p_triangles[p_bvh_cell].vertex[1];
-			Vector3 c = p_triangles[p_bvh_cell].vertex[2];
+			Hector3 a = p_triangles[p_bvh_cell].vertex[0];
+			Hector3 b = p_triangles[p_bvh_cell].vertex[1];
+			Hector3 c = p_triangles[p_bvh_cell].vertex[2];
 
-			Vector3 ba = b - a;
-			Vector3 pa = point - a;
-			Vector3 cb = c - b;
-			Vector3 pb = point - b;
-			Vector3 ac = a - c;
-			Vector3 pc = point - c;
-			Vector3 nor = ba.cross(ac);
+			Hector3 ba = b - a;
+			Hector3 pa = point - a;
+			Hector3 cb = c - b;
+			Hector3 pb = point - b;
+			Hector3 ac = a - c;
+			Hector3 pc = point - c;
+			Hector3 nor = ba.cross(ac);
 
 			inside_d = Math::sqrt(
 					(SIGN(ba.cross(nor).dot(pa)) + SIGN(cb.cross(nor).dot(pb)) + SIGN(ac.cross(nor).dot(pc)) < 2.0)
 							? MIN(MIN(
-										  Vector3_dot2(ba * CLAMP(ba.dot(pa) / Vector3_dot2(ba), 0.0, 1.0) - pa),
-										  Vector3_dot2(cb * CLAMP(cb.dot(pb) / Vector3_dot2(cb), 0.0, 1.0) - pb)),
-									  Vector3_dot2(ac * CLAMP(ac.dot(pc) / Vector3_dot2(ac), 0.0, 1.0) - pc))
-							: nor.dot(pa) * nor.dot(pa) / Vector3_dot2(nor));
+										  Hector3_dot2(ba * CLAMP(ba.dot(pa) / Hector3_dot2(ba), 0.0, 1.0) - pa),
+										  Hector3_dot2(cb * CLAMP(cb.dot(pb) / Hector3_dot2(cb), 0.0, 1.0) - pb)),
+									  Hector3_dot2(ac * CLAMP(ac.dot(pc) / Hector3_dot2(ac), 0.0, 1.0) - pc))
+							: nor.dot(pa) * nor.dot(pa) / Hector3_dot2(nor));
 
 			r_closest_distance = MIN(r_closest_distance, inside_d);
 		}
@@ -326,11 +326,11 @@ void GPUParticlesCollisionSDF3D::_find_closest_distance(const Vector3 &p_pos, co
 		bool pass = true;
 		if (!p_bvh[p_bvh_cell].bounds.has_point(p_pos)) {
 			//outside, find closest point
-			Vector3 he = p_bvh[p_bvh_cell].bounds.size * 0.5;
-			Vector3 center = p_bvh[p_bvh_cell].bounds.position + he;
+			Hector3 he = p_bvh[p_bvh_cell].bounds.size * 0.5;
+			Hector3 center = p_bvh[p_bvh_cell].bounds.position + he;
 
-			Vector3 rel = (p_pos - center).abs();
-			Vector3 closest = rel.min(he);
+			Hector3 rel = (p_pos - center).abs();
+			Hector3 closest = rel.min(he);
 			float d = rel.distance_to(closest);
 
 			if (d >= r_closest_distance) {
@@ -353,7 +353,7 @@ void GPUParticlesCollisionSDF3D::_compute_sdf_z(uint32_t p_z, ComputeSDFParams *
 			int32_t x_ofs = y_ofs + x;
 			float &cell = params->cells[x_ofs];
 
-			Vector3 pos = params->cell_offset + Vector3(x, y, p_z) * params->cell_size;
+			Hector3 pos = params->cell_offset + Hector3(x, y, p_z) * params->cell_size;
 
 			cell = 1e20;
 
@@ -373,7 +373,7 @@ void GPUParticlesCollisionSDF3D::_compute_sdf(ComputeSDFParams *params) {
 	WorkerThreadPool::get_singleton()->wait_for_group_task_completion(group_task);
 }
 
-Vector3i GPUParticlesCollisionSDF3D::get_estimated_cell_size() const {
+Hector3i GPUParticlesCollisionSDF3D::get_estimated_cell_size() const {
 	static const int subdivs[RESOLUTION_MAX] = { 16, 32, 64, 128, 256, 512 };
 	int subdiv = subdivs[get_resolution()];
 
@@ -381,7 +381,7 @@ Vector3i GPUParticlesCollisionSDF3D::get_estimated_cell_size() const {
 
 	float cell_size = aabb.get_longest_axis_size() / float(subdiv);
 
-	Vector3i sdf_size = Vector3i(aabb.size / cell_size);
+	Hector3i sdf_size = Hector3i(aabb.size / cell_size);
 	sdf_size = sdf_size.maxi(1);
 	return sdf_size;
 }
@@ -394,19 +394,19 @@ Ref<Image> GPUParticlesCollisionSDF3D::bake() {
 
 	float cell_size = aabb.get_longest_axis_size() / float(subdiv);
 
-	Vector3i sdf_size = Vector3i(aabb.size / cell_size);
+	Hector3i sdf_size = Hector3i(aabb.size / cell_size);
 	sdf_size = sdf_size.maxi(1);
 
 	if (bake_begin_function) {
 		bake_begin_function(100);
 	}
 
-	aabb.size = Vector3(sdf_size) * cell_size;
+	aabb.size = Hector3(sdf_size) * cell_size;
 
 	List<PlotMesh> plot_meshes;
 	_find_meshes(aabb, get_parent(), plot_meshes);
 
-	LocalVector<Face3> faces;
+	LocalHector<Face3> faces;
 
 	if (bake_step_function) {
 		bake_step_function(0, "Finding Meshes");
@@ -420,9 +420,9 @@ Ref<Image> GPUParticlesCollisionSDF3D::bake() {
 
 			Array a = pm.mesh->surface_get_arrays(i);
 
-			Vector<Vector3> vertices = a[Mesh::ARRAY_VERTEX];
-			const Vector3 *vr = vertices.ptr();
-			Vector<int> index = a[Mesh::ARRAY_INDEX];
+			Hector<Hector3> vertices = a[Mesh::ARRAY_VERTEX];
+			const Hector3 *vr = vertices.ptr();
+			Hector<int> index = a[Mesh::ARRAY_INDEX];
 
 			if (index.size()) {
 				int facecount = index.size() / 3;
@@ -473,7 +473,7 @@ Ref<Image> GPUParticlesCollisionSDF3D::bake() {
 		return Ref<Image>();
 	}
 
-	LocalVector<FacePos> face_pos;
+	LocalHector<FacePos> face_pos;
 
 	face_pos.resize(faces.size());
 
@@ -491,11 +491,11 @@ Ref<Image> GPUParticlesCollisionSDF3D::bake() {
 		bake_step_function(0, "Creating BVH");
 	}
 
-	LocalVector<BVH> bvh;
+	LocalHector<BVH> bvh;
 
 	_create_bvh(bvh, face_pos.ptr(), face_pos.size(), faces.ptr(), th);
 
-	Vector<uint8_t> cells_data;
+	Hector<uint8_t> cells_data;
 	cells_data.resize(sdf_size.z * sdf_size.y * sdf_size.x * (int)sizeof(float));
 
 	if (bake_step_function) {
@@ -506,7 +506,7 @@ Ref<Image> GPUParticlesCollisionSDF3D::bake() {
 	params.cells = (float *)cells_data.ptrw();
 	params.size = sdf_size;
 	params.cell_size = cell_size;
-	params.cell_offset = aabb.position + Vector3(cell_size * 0.5, cell_size * 0.5, cell_size * 0.5);
+	params.cell_offset = aabb.position + Hector3(cell_size * 0.5, cell_size * 0.5, cell_size * 0.5);
 	params.bvh = bvh.ptr();
 	params.triangles = faces.ptr();
 	params.thickness = th;
@@ -551,7 +551,7 @@ void GPUParticlesCollisionSDF3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_bake_mask_value", "layer_number", "value"), &GPUParticlesCollisionSDF3D::set_bake_mask_value);
 	ClassDB::bind_method(D_METHOD("get_bake_mask_value", "layer_number"), &GPUParticlesCollisionSDF3D::get_bake_mask_value);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "resolution", PROPERTY_HINT_ENUM, "16,32,64,128,256,512"), "set_resolution", "get_resolution");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "thickness", PROPERTY_HINT_RANGE, "0.0,2.0,0.01,suffix:m"), "set_thickness", "get_thickness");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "bake_mask", PROPERTY_HINT_LAYERS_3D_RENDER), "set_bake_mask", "get_bake_mask");
@@ -569,7 +569,7 @@ void GPUParticlesCollisionSDF3D::_bind_methods() {
 #ifndef DISABLE_DEPRECATED
 bool GPUParticlesCollisionSDF3D::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
@@ -592,13 +592,13 @@ float GPUParticlesCollisionSDF3D::get_thickness() const {
 	return thickness;
 }
 
-void GPUParticlesCollisionSDF3D::set_size(const Vector3 &p_size) {
+void GPUParticlesCollisionSDF3D::set_size(const Hector3 &p_size) {
 	size = p_size;
 	RS::get_singleton()->particles_collision_set_box_extents(_get_collision(), size / 2);
 	update_gizmos();
 }
 
-Vector3 GPUParticlesCollisionSDF3D::get_size() const {
+Hector3 GPUParticlesCollisionSDF3D::get_size() const {
 	return size;
 }
 
@@ -675,12 +675,12 @@ void GPUParticlesCollisionHeightField3D::_notification(int p_what) {
 				Camera3D *cam = get_viewport()->get_camera_3d();
 				if (cam) {
 					Transform3D xform = get_global_transform();
-					Vector3 x_axis = xform.basis.get_column(Vector3::AXIS_X).normalized();
-					Vector3 z_axis = xform.basis.get_column(Vector3::AXIS_Z).normalized();
+					Hector3 x_axis = xform.basis.get_column(Hector3::AXIS_X).normalized();
+					Hector3 z_axis = xform.basis.get_column(Hector3::AXIS_Z).normalized();
 					float x_len = xform.basis.get_scale().x;
 					float z_len = xform.basis.get_scale().z;
 
-					Vector3 cam_pos = cam->get_global_transform().origin;
+					Hector3 cam_pos = cam->get_global_transform().origin;
 					Transform3D new_xform = xform;
 
 					while (x_axis.dot(cam_pos - new_xform.origin) > x_len) {
@@ -724,7 +724,7 @@ void GPUParticlesCollisionHeightField3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_follow_camera_enabled", "enabled"), &GPUParticlesCollisionHeightField3D::set_follow_camera_enabled);
 	ClassDB::bind_method(D_METHOD("is_follow_camera_enabled"), &GPUParticlesCollisionHeightField3D::is_follow_camera_enabled);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "resolution", PROPERTY_HINT_ENUM, "256 (Fastest),512 (Fast),1024 (Average),2048 (Slow),4096 (Slower),8192 (Slowest)"), "set_resolution", "get_resolution");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "update_mode", PROPERTY_HINT_ENUM, "When Moved (Fast),Always (Slow)"), "set_update_mode", "get_update_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_camera_enabled"), "set_follow_camera_enabled", "is_follow_camera_enabled");
@@ -744,7 +744,7 @@ void GPUParticlesCollisionHeightField3D::_bind_methods() {
 #ifndef DISABLE_DEPRECATED
 bool GPUParticlesCollisionHeightField3D::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
@@ -759,14 +759,14 @@ bool GPUParticlesCollisionHeightField3D::_get(const StringName &p_name, Variant 
 }
 #endif // DISABLE_DEPRECATED
 
-void GPUParticlesCollisionHeightField3D::set_size(const Vector3 &p_size) {
+void GPUParticlesCollisionHeightField3D::set_size(const Hector3 &p_size) {
 	size = p_size;
 	RS::get_singleton()->particles_collision_set_box_extents(_get_collision(), size / 2);
 	update_gizmos();
 	RS::get_singleton()->particles_collision_height_field_update(_get_collision());
 }
 
-Vector3 GPUParticlesCollisionHeightField3D::get_size() const {
+Hector3 GPUParticlesCollisionHeightField3D::get_size() const {
 	return size;
 }
 
@@ -899,7 +899,7 @@ real_t GPUParticlesAttractorSphere3D::get_radius() const {
 }
 
 AABB GPUParticlesAttractorSphere3D::get_aabb() const {
-	return AABB(Vector3(-radius, -radius, -radius), Vector3(radius * 2, radius * 2, radius * 2));
+	return AABB(Hector3(-radius, -radius, -radius), Hector3(radius * 2, radius * 2, radius * 2));
 }
 
 GPUParticlesAttractorSphere3D::GPUParticlesAttractorSphere3D() :
@@ -915,13 +915,13 @@ void GPUParticlesAttractorBox3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &GPUParticlesAttractorBox3D::set_size);
 	ClassDB::bind_method(D_METHOD("get_size"), &GPUParticlesAttractorBox3D::get_size);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
 }
 
 #ifndef DISABLE_DEPRECATED
 bool GPUParticlesAttractorBox3D::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
@@ -936,13 +936,13 @@ bool GPUParticlesAttractorBox3D::_get(const StringName &p_name, Variant &r_prope
 }
 #endif // DISABLE_DEPRECATED
 
-void GPUParticlesAttractorBox3D::set_size(const Vector3 &p_size) {
+void GPUParticlesAttractorBox3D::set_size(const Hector3 &p_size) {
 	size = p_size;
 	RS::get_singleton()->particles_collision_set_box_extents(_get_collision(), size / 2);
 	update_gizmos();
 }
 
-Vector3 GPUParticlesAttractorBox3D::get_size() const {
+Hector3 GPUParticlesAttractorBox3D::get_size() const {
 	return size;
 }
 
@@ -959,27 +959,27 @@ GPUParticlesAttractorBox3D::~GPUParticlesAttractorBox3D() {
 
 ///////////////////////////
 
-void GPUParticlesAttractorVectorField3D::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("set_size", "size"), &GPUParticlesAttractorVectorField3D::set_size);
-	ClassDB::bind_method(D_METHOD("get_size"), &GPUParticlesAttractorVectorField3D::get_size);
+void GPUParticlesAttractorHectorField3D::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("set_size", "size"), &GPUParticlesAttractorHectorField3D::set_size);
+	ClassDB::bind_method(D_METHOD("get_size"), &GPUParticlesAttractorHectorField3D::get_size);
 
-	ClassDB::bind_method(D_METHOD("set_texture", "texture"), &GPUParticlesAttractorVectorField3D::set_texture);
-	ClassDB::bind_method(D_METHOD("get_texture"), &GPUParticlesAttractorVectorField3D::get_texture);
+	ClassDB::bind_method(D_METHOD("set_texture", "texture"), &GPUParticlesAttractorHectorField3D::set_texture);
+	ClassDB::bind_method(D_METHOD("get_texture"), &GPUParticlesAttractorHectorField3D::get_texture);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture3D"), "set_texture", "get_texture");
 }
 
 #ifndef DISABLE_DEPRECATED
-bool GPUParticlesAttractorVectorField3D::_set(const StringName &p_name, const Variant &p_value) {
+bool GPUParticlesAttractorHectorField3D::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
 }
 
-bool GPUParticlesAttractorVectorField3D::_get(const StringName &p_name, Variant &r_property) const {
+bool GPUParticlesAttractorHectorField3D::_get(const StringName &p_name, Variant &r_property) const {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
 		r_property = size / 2;
 		return true;
@@ -988,33 +988,33 @@ bool GPUParticlesAttractorVectorField3D::_get(const StringName &p_name, Variant 
 }
 #endif // DISABLE_DEPRECATED
 
-void GPUParticlesAttractorVectorField3D::set_size(const Vector3 &p_size) {
+void GPUParticlesAttractorHectorField3D::set_size(const Hector3 &p_size) {
 	size = p_size;
 	RS::get_singleton()->particles_collision_set_box_extents(_get_collision(), size / 2);
 	update_gizmos();
 }
 
-Vector3 GPUParticlesAttractorVectorField3D::get_size() const {
+Hector3 GPUParticlesAttractorHectorField3D::get_size() const {
 	return size;
 }
 
-void GPUParticlesAttractorVectorField3D::set_texture(const Ref<Texture3D> &p_texture) {
+void GPUParticlesAttractorHectorField3D::set_texture(const Ref<Texture3D> &p_texture) {
 	texture = p_texture;
 	RID tex = texture.is_valid() ? texture->get_rid() : RID();
 	RS::get_singleton()->particles_collision_set_field_texture(_get_collision(), tex);
 }
 
-Ref<Texture3D> GPUParticlesAttractorVectorField3D::get_texture() const {
+Ref<Texture3D> GPUParticlesAttractorHectorField3D::get_texture() const {
 	return texture;
 }
 
-AABB GPUParticlesAttractorVectorField3D::get_aabb() const {
+AABB GPUParticlesAttractorHectorField3D::get_aabb() const {
 	return AABB(-size / 2, size);
 }
 
-GPUParticlesAttractorVectorField3D::GPUParticlesAttractorVectorField3D() :
-		GPUParticlesAttractor3D(RS::PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT) {
+GPUParticlesAttractorHectorField3D::GPUParticlesAttractorHectorField3D() :
+		GPUParticlesAttractor3D(RS::PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT) {
 }
 
-GPUParticlesAttractorVectorField3D::~GPUParticlesAttractorVectorField3D() {
+GPUParticlesAttractorHectorField3D::~GPUParticlesAttractorHectorField3D() {
 }

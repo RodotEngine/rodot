@@ -454,7 +454,7 @@ cleanup:
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_AES_C)
 
 /*
- * Test vectors taken from NIST
+ * Test Hectors taken from NIST
  * https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/CAVP-TESTING-BLOCK-CIPHER-MODES#KW
  */
 static const unsigned int key_len[] = {

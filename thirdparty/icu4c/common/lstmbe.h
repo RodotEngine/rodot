@@ -19,7 +19,7 @@
 
 U_NAMESPACE_BEGIN
 
-class Vectorizer;
+class Hectorizer;
 struct LSTMData;
 
 /*******************************************************************
@@ -61,12 +61,12 @@ protected:
      virtual int32_t divideUpDictionaryRange(UText *text,
                                              int32_t rangeStart,
                                              int32_t rangeEnd,
-                                             UVector32 &foundBreaks,
+                                             UHector32 &foundBreaks,
                                              UBool isPhraseBreaking,
                                              UErrorCode& status) const override;
 private:
     const LSTMData* fData;
-    const Vectorizer* fVectorizer;
+    const Hectorizer* fHectorizer;
 };
 
 U_CAPI const LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(

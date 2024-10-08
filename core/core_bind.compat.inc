@@ -44,7 +44,7 @@ void Semaphore::_bind_compatibility_methods() {
 
 // OS
 
-Dictionary OS::_execute_with_pipe_bind_compat_94434(const String &p_path, const Vector<String> &p_arguments) {
+Dictionary OS::_execute_with_pipe_bind_compat_94434(const String &p_path, const Hector<String> &p_arguments) {
 	return execute_with_pipe(p_path, p_arguments, true);
 }
 

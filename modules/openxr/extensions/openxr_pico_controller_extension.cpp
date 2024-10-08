@@ -86,10 +86,10 @@ void OpenXRPicoControllerExtension::on_register_metadata() {
 	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Squeeze", "/user/hand/left", "/user/hand/left/input/squeeze/value", "", OpenXRAction::OPENXR_ACTION_FLOAT);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Squeeze", "/user/hand/right", "/user/hand/right/input/squeeze/value", "", OpenXRAction::OPENXR_ACTION_FLOAT);
 
-	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick click", "/user/hand/left", "/user/hand/left/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick touch", "/user/hand/left", "/user/hand/left/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
-	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick click", "/user/hand/right", "/user/hand/right/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico_neo3_controller", "Thumbstick touch", "/user/hand/right", "/user/hand/right/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
 
@@ -127,10 +127,10 @@ void OpenXRPicoControllerExtension::on_register_metadata() {
 	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Squeeze", "/user/hand/left", "/user/hand/left/input/squeeze/value", "", OpenXRAction::OPENXR_ACTION_FLOAT);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Squeeze", "/user/hand/right", "/user/hand/right/input/squeeze/value", "", OpenXRAction::OPENXR_ACTION_FLOAT);
 
-	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick", "/user/hand/left", "/user/hand/left/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick click", "/user/hand/left", "/user/hand/left/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick touch", "/user/hand/left", "/user/hand/left/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
-	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_VECTOR2);
+	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick", "/user/hand/right", "/user/hand/right/input/thumbstick", "", OpenXRAction::OPENXR_ACTION_Hector2);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick click", "/user/hand/right", "/user/hand/right/input/thumbstick/click", "", OpenXRAction::OPENXR_ACTION_BOOL);
 	metadata->register_io_path("/interaction_profiles/bytedance/pico4_controller", "Thumbstick touch", "/user/hand/right", "/user/hand/right/input/thumbstick/touch", "", OpenXRAction::OPENXR_ACTION_BOOL);
 

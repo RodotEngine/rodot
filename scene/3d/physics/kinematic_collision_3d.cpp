@@ -33,11 +33,11 @@
 #include "scene/3d/physics/character_body_3d.h"
 #include "scene/3d/physics/physics_body_3d.h"
 
-Vector3 KinematicCollision3D::get_travel() const {
+Hector3 KinematicCollision3D::get_travel() const {
 	return result.travel;
 }
 
-Vector3 KinematicCollision3D::get_remainder() const {
+Hector3 KinematicCollision3D::get_remainder() const {
 	return result.remainder;
 }
 
@@ -49,19 +49,19 @@ real_t KinematicCollision3D::get_depth() const {
 	return result.collision_depth;
 }
 
-Vector3 KinematicCollision3D::get_position(int p_collision_index) const {
-	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Vector3());
+Hector3 KinematicCollision3D::get_position(int p_collision_index) const {
+	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Hector3());
 	return result.collisions[p_collision_index].position;
 }
 
-Vector3 KinematicCollision3D::get_normal(int p_collision_index) const {
-	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Vector3());
+Hector3 KinematicCollision3D::get_normal(int p_collision_index) const {
+	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Hector3());
 	return result.collisions[p_collision_index].normal;
 }
 
-real_t KinematicCollision3D::get_angle(int p_collision_index, const Vector3 &p_up_direction) const {
+real_t KinematicCollision3D::get_angle(int p_collision_index, const Hector3 &p_up_direction) const {
 	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, 0.0);
-	ERR_FAIL_COND_V(p_up_direction == Vector3(), 0);
+	ERR_FAIL_COND_V(p_up_direction == Hector3(), 0);
 	return result.collisions[p_collision_index].get_angle(p_up_direction);
 }
 
@@ -112,8 +112,8 @@ int KinematicCollision3D::get_collider_shape_index(int p_collision_index) const 
 	return result.collisions[p_collision_index].collider_shape;
 }
 
-Vector3 KinematicCollision3D::get_collider_velocity(int p_collision_index) const {
-	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Vector3());
+Hector3 KinematicCollision3D::get_collider_velocity(int p_collision_index) const {
+	ERR_FAIL_INDEX_V(p_collision_index, result.collision_count, Hector3());
 	return result.collisions[p_collision_index].collider_velocity;
 }
 
@@ -124,7 +124,7 @@ void KinematicCollision3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_collision_count"), &KinematicCollision3D::get_collision_count);
 	ClassDB::bind_method(D_METHOD("get_position", "collision_index"), &KinematicCollision3D::get_position, DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("get_normal", "collision_index"), &KinematicCollision3D::get_normal, DEFVAL(0));
-	ClassDB::bind_method(D_METHOD("get_angle", "collision_index", "up_direction"), &KinematicCollision3D::get_angle, DEFVAL(0), DEFVAL(Vector3(0.0, 1.0, 0.0)));
+	ClassDB::bind_method(D_METHOD("get_angle", "collision_index", "up_direction"), &KinematicCollision3D::get_angle, DEFVAL(0), DEFVAL(Hector3(0.0, 1.0, 0.0)));
 	ClassDB::bind_method(D_METHOD("get_local_shape", "collision_index"), &KinematicCollision3D::get_local_shape, DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("get_collider", "collision_index"), &KinematicCollision3D::get_collider, DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("get_collider_id", "collision_index"), &KinematicCollision3D::get_collider_id, DEFVAL(0));

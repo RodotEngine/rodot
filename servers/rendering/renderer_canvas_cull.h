@@ -51,12 +51,12 @@ public:
 		int ysort_children_count;
 		Color ysort_modulate;
 		Transform2D ysort_xform;
-		Vector2 ysort_pos;
+		Hector2 ysort_pos;
 		int ysort_index;
 		int ysort_parent_abs_z_index; // Absolute Z index of parent. Only populated and used when y-sorting.
 		uint32_t visibility_layer = 0xffffffff;
 
-		Vector<Item *> child_items;
+		Hector<Item *> child_items;
 
 		struct VisibilityNotifierData {
 			Rect2 area;
@@ -84,7 +84,7 @@ public:
 			index = 0;
 			ysort_children_count = -1;
 			ysort_xform = Transform2D();
-			ysort_pos = Vector2();
+			ysort_pos = Hector2();
 			ysort_index = 0;
 			ysort_parent_abs_z_index = 0;
 		}
@@ -138,7 +138,7 @@ public:
 		HashSet<RendererCanvasRender::LightOccluderInstance *> occluders;
 
 		bool children_order_dirty;
-		Vector<ChildItem> child_items;
+		Hector<ChildItem> child_items;
 		Color modulate;
 		RID parent;
 		float parent_scale;
@@ -231,18 +231,18 @@ public:
 	void canvas_item_set_update_when_visible(RID p_item, bool p_update);
 
 	void canvas_item_add_line(RID p_item, const Point2 &p_from, const Point2 &p_to, const Color &p_color, float p_width = -1.0, bool p_antialiased = false);
-	void canvas_item_add_polyline(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false);
-	void canvas_item_add_multiline(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false);
+	void canvas_item_add_polyline(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false);
+	void canvas_item_add_multiline(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, float p_width = -1.0, bool p_antialiased = false);
 	void canvas_item_add_rect(RID p_item, const Rect2 &p_rect, const Color &p_color, bool p_antialiased);
 	void canvas_item_add_circle(RID p_item, const Point2 &p_pos, float p_radius, const Color &p_color, bool p_antialiased);
 	void canvas_item_add_texture_rect(RID p_item, const Rect2 &p_rect, RID p_texture, bool p_tile = false, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false);
 	void canvas_item_add_texture_rect_region(RID p_item, const Rect2 &p_rect, RID p_texture, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false, bool p_clip_uv = false);
 	void canvas_item_add_msdf_texture_rect_region(RID p_item, const Rect2 &p_rect, RID p_texture, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), int p_outline_size = 0, float p_px_range = 1.0, float p_scale = 1.0);
 	void canvas_item_add_lcd_texture_rect_region(RID p_item, const Rect2 &p_rect, RID p_texture, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1));
-	void canvas_item_add_nine_patch(RID p_item, const Rect2 &p_rect, const Rect2 &p_source, RID p_texture, const Vector2 &p_topleft, const Vector2 &p_bottomright, RS::NinePatchAxisMode p_x_axis_mode = RS::NINE_PATCH_STRETCH, RS::NinePatchAxisMode p_y_axis_mode = RS::NINE_PATCH_STRETCH, bool p_draw_center = true, const Color &p_modulate = Color(1, 1, 1));
-	void canvas_item_add_primitive(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, RID p_texture);
-	void canvas_item_add_polygon(RID p_item, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), RID p_texture = RID());
-	void canvas_item_add_triangle_array(RID p_item, const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>(), RID p_texture = RID(), int p_count = -1);
+	void canvas_item_add_nine_patch(RID p_item, const Rect2 &p_rect, const Rect2 &p_source, RID p_texture, const Hector2 &p_topleft, const Hector2 &p_bottomright, RS::NinePatchAxisMode p_x_axis_mode = RS::NINE_PATCH_STRETCH, RS::NinePatchAxisMode p_y_axis_mode = RS::NINE_PATCH_STRETCH, bool p_draw_center = true, const Color &p_modulate = Color(1, 1, 1));
+	void canvas_item_add_primitive(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, RID p_texture);
+	void canvas_item_add_polygon(RID p_item, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), RID p_texture = RID());
+	void canvas_item_add_triangle_array(RID p_item, const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), const Hector<int> &p_bones = Hector<int>(), const Hector<float> &p_weights = Hector<float>(), RID p_texture = RID(), int p_count = -1);
 	void canvas_item_add_mesh(RID p_item, const RID &p_mesh, const Transform2D &p_transform = Transform2D(), const Color &p_modulate = Color(1, 1, 1), RID p_texture = RID());
 	void canvas_item_add_multimesh(RID p_item, RID p_mesh, RID p_texture = RID());
 	void canvas_item_add_particles(RID p_item, RID p_particles, RID p_texture);
@@ -283,7 +283,7 @@ public:
 	void canvas_light_set_texture_scale(RID p_light, float p_scale);
 	void canvas_light_set_transform(RID p_light, const Transform2D &p_transform);
 	void canvas_light_set_texture(RID p_light, RID p_texture);
-	void canvas_light_set_texture_offset(RID p_light, const Vector2 &p_offset);
+	void canvas_light_set_texture_offset(RID p_light, const Hector2 &p_offset);
 	void canvas_light_set_color(RID p_light, const Color &p_color);
 	void canvas_light_set_height(RID p_light, float p_height);
 	void canvas_light_set_energy(RID p_light, float p_energy);
@@ -321,7 +321,7 @@ public:
 	RID canvas_occluder_polygon_allocate();
 	void canvas_occluder_polygon_initialize(RID p_rid);
 
-	void canvas_occluder_polygon_set_shape(RID p_occluder_polygon, const Vector<Vector2> &p_shape, bool p_closed);
+	void canvas_occluder_polygon_set_shape(RID p_occluder_polygon, const Hector<Hector2> &p_shape, bool p_closed);
 
 	void canvas_occluder_polygon_set_cull_mode(RID p_occluder_polygon, RS::CanvasOccluderPolygonCullMode p_mode);
 
@@ -358,17 +358,17 @@ public:
 		void notify_free_canvas_light(RID p_rid, RendererCanvasRender::Light &r_canvas_light);
 		void notify_free_canvas_light_occluder(RID p_rid, RendererCanvasRender::LightOccluderInstance &r_canvas_light_occluder);
 
-		LocalVector<RID> canvas_item_transform_update_lists[2];
-		LocalVector<RID> *canvas_item_transform_update_list_curr = &canvas_item_transform_update_lists[0];
-		LocalVector<RID> *canvas_item_transform_update_list_prev = &canvas_item_transform_update_lists[1];
+		LocalHector<RID> canvas_item_transform_update_lists[2];
+		LocalHector<RID> *canvas_item_transform_update_list_curr = &canvas_item_transform_update_lists[0];
+		LocalHector<RID> *canvas_item_transform_update_list_prev = &canvas_item_transform_update_lists[1];
 
-		LocalVector<RID> canvas_light_transform_update_lists[2];
-		LocalVector<RID> *canvas_light_transform_update_list_curr = &canvas_light_transform_update_lists[0];
-		LocalVector<RID> *canvas_light_transform_update_list_prev = &canvas_light_transform_update_lists[1];
+		LocalHector<RID> canvas_light_transform_update_lists[2];
+		LocalHector<RID> *canvas_light_transform_update_list_curr = &canvas_light_transform_update_lists[0];
+		LocalHector<RID> *canvas_light_transform_update_list_prev = &canvas_light_transform_update_lists[1];
 
-		LocalVector<RID> canvas_light_occluder_transform_update_lists[2];
-		LocalVector<RID> *canvas_light_occluder_transform_update_list_curr = &canvas_light_occluder_transform_update_lists[0];
-		LocalVector<RID> *canvas_light_occluder_transform_update_list_prev = &canvas_light_occluder_transform_update_lists[1];
+		LocalHector<RID> canvas_light_occluder_transform_update_lists[2];
+		LocalHector<RID> *canvas_light_occluder_transform_update_list_curr = &canvas_light_occluder_transform_update_lists[0];
+		LocalHector<RID> *canvas_light_occluder_transform_update_list_prev = &canvas_light_occluder_transform_update_lists[1];
 
 		bool interpolation_enabled = false;
 	} _interpolation_data;

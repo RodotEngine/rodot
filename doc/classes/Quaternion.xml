@@ -8,7 +8,7 @@
 		A [Quaternion] is composed by 4 floating-point components: [member w], [member x], [member y], and [member z]. These components are very compact in memory, and because of this some operations are more efficient and less likely to cause floating-point errors. Methods such as [method get_angle], [method get_axis], and [method slerp] are faster than their [Basis] counterparts.
 		For a great introduction to quaternions, see [url=https://www.youtube.com/watch?v=d4EgbgTm0Bg]this video by 3Blue1Brown[/url]. You do not need to know the math behind quaternions, as Godot provides several helper methods that handle it for you. These include [method slerp] and [method spherical_cubic_interpolate], as well as the [code]*[/code] operator.
 		[b]Note:[/b] Quaternions must be normalized before being used for rotation (see [method normalized]).
-		[b]Note:[/b] Similarly to [Vector2] and [Vector3], the components of a quaternion use 32-bit precision by default, unlike [float] which is always 64-bit. If double precision is needed, compile the engine with the option [code]precision=double[/code].
+		[b]Note:[/b] Similarly to [Hector2] and [Hector3], the components of a quaternion use 32-bit precision by default, unlike [float] which is always 64-bit. If double precision is needed, compile the engine with the option [code]precision=double[/code].
 	</description>
 	<tutorials>
 		<link title="3Blue1Brown&apos;s video on Quaternions">https://www.youtube.com/watch?v=d4EgbgTm0Bg</link>
@@ -33,18 +33,18 @@
 		</constructor>
 		<constructor name="Quaternion">
 			<return type="Quaternion" />
-			<param index="0" name="arc_from" type="Vector3" />
-			<param index="1" name="arc_to" type="Vector3" />
+			<param index="0" name="arc_from" type="Hector3" />
+			<param index="1" name="arc_to" type="Hector3" />
 			<description>
 				Constructs a [Quaternion] representing the shortest arc between [param arc_from] and [param arc_to]. These can be imagined as two points intersecting a sphere's surface, with a radius of [code]1.0[/code].
 			</description>
 		</constructor>
 		<constructor name="Quaternion">
 			<return type="Quaternion" />
-			<param index="0" name="axis" type="Vector3" />
+			<param index="0" name="axis" type="Hector3" />
 			<param index="1" name="angle" type="float" />
 			<description>
-				Constructs a [Quaternion] representing rotation around the [param axis] by the given [param angle], in radians. The axis must be a normalized vector.
+				Constructs a [Quaternion] representing rotation around the [param axis] by the given [param angle], in radians. The axis must be a normalized Hector.
 			</description>
 		</constructor>
 		<constructor name="Quaternion">
@@ -87,14 +87,14 @@
 		<method name="exp" qualifiers="const">
 			<return type="Quaternion" />
 			<description>
-				Returns the exponential of this quaternion. The rotation axis of the result is the normalized rotation axis of this quaternion, the angle of the result is the length of the vector part of this quaternion.
+				Returns the exponential of this quaternion. The rotation axis of the result is the normalized rotation axis of this quaternion, the angle of the result is the length of the Hector part of this quaternion.
 			</description>
 		</method>
 		<method name="from_euler" qualifiers="static">
 			<return type="Quaternion" />
-			<param index="0" name="euler" type="Vector3" />
+			<param index="0" name="euler" type="Hector3" />
 			<description>
-				Constructs a new [Quaternion] from the given [Vector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians. This method always uses the YXZ convention ([constant EULER_ORDER_YXZ]).
+				Constructs a new [Quaternion] from the given [Hector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians. This method always uses the YXZ convention ([constant EULER_ORDER_YXZ]).
 			</description>
 		</method>
 		<method name="get_angle" qualifiers="const">
@@ -105,16 +105,16 @@
 			</description>
 		</method>
 		<method name="get_axis" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 				Returns the rotation axis of the rotation represented by this quaternion.
 			</description>
 		</method>
 		<method name="get_euler" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="order" type="int" default="2" />
 			<description>
-				Returns this quaternion's rotation as a [Vector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians.
+				Returns this quaternion's rotation as a [Hector3] of [url=https://en.wikipedia.org/wiki/Euler_angles]Euler angles[/url], in radians.
 				The order of each consecutive rotation can be changed with [param order] (see [enum EulerOrder] constants). By default, the YXZ convention is used ([constant EULER_ORDER_YXZ]): Z (roll) is calculated first, then X (pitch), and lastly Y (yaw). When using the opposite method [method from_euler], this order is reversed.
 			</description>
 		</method>
@@ -159,7 +159,7 @@
 		<method name="log" qualifiers="const">
 			<return type="Quaternion" />
 			<description>
-				Returns the logarithm of this quaternion. Multiplies this quaternion's rotation axis by its rotation angle, and stores the result in the returned quaternion's vector part ([member x], [member y], and [member z]). The returned quaternion's real part ([member w]) is always [code]0.0[/code].
+				Returns the logarithm of this quaternion. Multiplies this quaternion's rotation axis by its rotation angle, and stores the result in the returned quaternion's Hector part ([member x], [member y], and [member z]). The returned quaternion's real part ([member w]) is always [code]0.0[/code].
 			</description>
 		</method>
 		<method name="normalized" qualifiers="const">
@@ -191,7 +191,7 @@
 			<param index="2" name="post_b" type="Quaternion" />
 			<param index="3" name="weight" type="float" />
 			<description>
-				Performs a spherical cubic interpolation between quaternions [param pre_a], this vector, [param b], and [param post_b], by the given amount [param weight].
+				Performs a spherical cubic interpolation between quaternions [param pre_a], this Hector, [param b], and [param post_b], by the given amount [param weight].
 			</description>
 		</method>
 		<method name="spherical_cubic_interpolate_in_time" qualifiers="const">
@@ -204,7 +204,7 @@
 			<param index="5" name="pre_a_t" type="float" />
 			<param index="6" name="post_b_t" type="float" />
 			<description>
-				Performs a spherical cubic interpolation between quaternions [param pre_a], this vector, [param b], and [param post_b], by the given amount [param weight].
+				Performs a spherical cubic interpolation between quaternions [param pre_a], this Hector, [param b], and [param post_b], by the given amount [param weight].
 				It can perform smoother interpolation than [method spherical_cubic_interpolate] by the time values.
 			</description>
 		</method>
@@ -230,7 +230,7 @@
 	<constants>
 		<constant name="IDENTITY" value="Quaternion(0, 0, 0, 1)">
 			The identity quaternion, representing no rotation. This has the same rotation as [constant Basis.IDENTITY].
-			If a [Vector3] is rotated (multiplied) by this quaternion, it does not change.
+			If a [Hector3] is rotated (multiplied) by this quaternion, it does not change.
 		</constant>
 	</constants>
 	<operators>
@@ -250,10 +250,10 @@
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector3" />
-			<param index="0" name="right" type="Vector3" />
+			<return type="Hector3" />
+			<param index="0" name="right" type="Hector3" />
 			<description>
-				Rotates (multiplies) the [param right] vector by this quaternion, returning a [Vector3].
+				Rotates (multiplies) the [param right] Hector by this quaternion, returning a [Hector3].
 			</description>
 		</operator>
 		<operator name="operator *">

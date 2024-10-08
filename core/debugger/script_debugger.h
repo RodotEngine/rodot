@@ -35,7 +35,7 @@
 #include "core/string/string_name.h"
 #include "core/templates/hash_set.h"
 #include "core/templates/rb_map.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 class ScriptDebugger {
 	typedef ScriptLanguage::StackInfo StackInfo;
@@ -47,7 +47,7 @@ class ScriptDebugger {
 	static thread_local int lines_left;
 	static thread_local int depth;
 	static thread_local ScriptLanguage *break_lang;
-	static thread_local Vector<StackInfo> error_stack_info;
+	static thread_local Hector<StackInfo> error_stack_info;
 
 public:
 	void set_lines_left(int p_left);
@@ -79,8 +79,8 @@ public:
 	void debug(ScriptLanguage *p_lang, bool p_can_continue = true, bool p_is_error_breakpoint = false);
 	ScriptLanguage *get_break_language() const;
 
-	void send_error(const String &p_func, const String &p_file, int p_line, const String &p_err, const String &p_descr, bool p_editor_notify, ErrorHandlerType p_type, const Vector<StackInfo> &p_stack_info);
-	Vector<StackInfo> get_error_stack_info() const;
+	void send_error(const String &p_func, const String &p_file, int p_line, const String &p_err, const String &p_descr, bool p_editor_notify, ErrorHandlerType p_type, const Hector<StackInfo> &p_stack_info);
+	Hector<StackInfo> get_error_stack_info() const;
 	ScriptDebugger() {}
 };
 

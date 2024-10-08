@@ -47,7 +47,7 @@ public:
 
 private:
 	RID decal;
-	Vector3 size = Vector3(2, 2, 2);
+	Hector3 size = Hector3(2, 2, 2);
 	Ref<Texture2D> textures[TEXTURE_MAX];
 	real_t emission_energy = 1.0;
 	real_t albedo_mix = 1.0;
@@ -71,8 +71,8 @@ protected:
 public:
 	virtual PackedStringArray get_configuration_warnings() const override;
 
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_texture(DecalTexture p_type, const Ref<Texture2D> &p_texture);
 	Ref<Texture2D> get_texture(DecalTexture p_type) const;

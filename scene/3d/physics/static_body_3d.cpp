@@ -47,23 +47,23 @@ Ref<PhysicsMaterial> StaticBody3D::get_physics_material_override() const {
 	return physics_material_override;
 }
 
-void StaticBody3D::set_constant_linear_velocity(const Vector3 &p_vel) {
+void StaticBody3D::set_constant_linear_velocity(const Hector3 &p_vel) {
 	constant_linear_velocity = p_vel;
 
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_LINEAR_VELOCITY, constant_linear_velocity);
 }
 
-void StaticBody3D::set_constant_angular_velocity(const Vector3 &p_vel) {
+void StaticBody3D::set_constant_angular_velocity(const Hector3 &p_vel) {
 	constant_angular_velocity = p_vel;
 
 	PhysicsServer3D::get_singleton()->body_set_state(get_rid(), PhysicsServer3D::BODY_STATE_ANGULAR_VELOCITY, constant_angular_velocity);
 }
 
-Vector3 StaticBody3D::get_constant_linear_velocity() const {
+Hector3 StaticBody3D::get_constant_linear_velocity() const {
 	return constant_linear_velocity;
 }
 
-Vector3 StaticBody3D::get_constant_angular_velocity() const {
+Hector3 StaticBody3D::get_constant_angular_velocity() const {
 	return constant_angular_velocity;
 }
 
@@ -87,8 +87,8 @@ void StaticBody3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_physics_material_override"), &StaticBody3D::get_physics_material_override);
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "physics_material_override", PROPERTY_HINT_RESOURCE_TYPE, "PhysicsMaterial"), "set_physics_material_override", "get_physics_material_override");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "constant_linear_velocity", PROPERTY_HINT_NONE, "suffix:m/s"), "set_constant_linear_velocity", "get_constant_linear_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "constant_angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_constant_angular_velocity", "get_constant_angular_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "constant_linear_velocity", PROPERTY_HINT_NONE, "suffix:m/s"), "set_constant_linear_velocity", "get_constant_linear_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "constant_angular_velocity", PROPERTY_HINT_NONE, U"radians_as_degrees,suffix:\u00B0/s"), "set_constant_angular_velocity", "get_constant_angular_velocity");
 }
 
 StaticBody3D::StaticBody3D(PhysicsServer3D::BodyMode p_mode) :

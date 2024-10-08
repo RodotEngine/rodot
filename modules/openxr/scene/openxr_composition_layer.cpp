@@ -40,7 +40,7 @@
 
 #include "platform/android/api/java_class_wrapper.h"
 
-Vector<OpenXRCompositionLayer *> OpenXRCompositionLayer::composition_layer_nodes;
+Hector<OpenXRCompositionLayer *> OpenXRCompositionLayer::composition_layer_nodes;
 
 static const char *HOLE_PUNCH_SHADER_CODE =
 		"shader_type spatial;\n"
@@ -112,7 +112,7 @@ void OpenXRCompositionLayer::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "layer_viewport", PROPERTY_HINT_NODE_TYPE, "SubViewport"), "set_layer_viewport", "get_layer_viewport");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_android_surface", PROPERTY_HINT_NONE, ""), "set_use_android_surface", "get_use_android_surface");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "android_surface_size", PROPERTY_HINT_NONE, ""), "set_android_surface_size", "get_android_surface_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "android_surface_size", PROPERTY_HINT_NONE, ""), "set_android_surface_size", "get_android_surface_size");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "sort_order", PROPERTY_HINT_NONE, ""), "set_sort_order", "get_sort_order");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "alpha_blend", PROPERTY_HINT_NONE, ""), "set_alpha_blend", "get_alpha_blend");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enable_hole_punch", PROPERTY_HINT_NONE, ""), "set_enable_hole_punch", "get_enable_hole_punch");
@@ -336,8 +336,8 @@ Ref<JavaObject> OpenXRCompositionLayer::get_android_surface() {
 	return openxr_layer_provider->get_android_surface();
 }
 
-Vector2 OpenXRCompositionLayer::intersects_ray(const Vector3 &p_origin, const Vector3 &p_direction) const {
-	return Vector2(-1.0, -1.0);
+Hector2 OpenXRCompositionLayer::intersects_ray(const Hector3 &p_origin, const Hector3 &p_direction) const {
+	return Hector2(-1.0, -1.0);
 }
 
 void OpenXRCompositionLayer::_reset_fallback_material() {

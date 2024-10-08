@@ -137,10 +137,10 @@
     T1_Get_Var_Design,      /* FT_Get_Var_Design_Func     get_var_design     */
     T1_Reset_MM_Blend,      /* FT_Set_Named_Instance_Func set_named_instance */
     NULL,   /* FT_Get_Default_Named_Instance_Func get_default_named_instance */
-    T1_Set_MM_WeightVector,
-            /* FT_Set_MM_WeightVector_Func        set_mm_weightvector        */
-    T1_Get_MM_WeightVector,
-            /* FT_Get_MM_WeightVector_Func        get_mm_weightvector        */
+    T1_Set_MM_WeightHector,
+            /* FT_Set_MM_WeightHector_Func        set_mm_weightHector        */
+    T1_Get_MM_WeightHector,
+            /* FT_Get_MM_WeightHector_Func        get_mm_weightHector        */
 
     NULL,   /* FT_Construct_PS_Name_Func          construct_ps_name          */
     NULL,   /* FT_Var_Load_Delta_Set_Idx_Map_Func load_delta_set_idx_map     */
@@ -707,7 +707,7 @@
    *   Get_Kerning
    *
    * @Description:
-   *   A driver method used to return the kerning vector between two
+   *   A driver method used to return the kerning Hector between two
    *   glyphs of the same face.
    *
    * @Input:
@@ -722,7 +722,7 @@
    *
    * @Output:
    *   kerning ::
-   *     The kerning vector.  This is in font units for
+   *     The kerning Hector.  This is in font units for
    *     scalable formats, and in pixels for fixed-sizes
    *     formats.
    *
@@ -741,7 +741,7 @@
   Get_Kerning( FT_Face     t1face,        /* T1_Face */
                FT_UInt     left_glyph,
                FT_UInt     right_glyph,
-               FT_Vector*  kerning )
+               FT_Hector*  kerning )
   {
     T1_Face  face = (T1_Face)t1face;
 

@@ -108,7 +108,7 @@ void OpenXREyeGazeInteractionExtension::on_register_metadata() {
 	metadata->register_io_path("/interaction_profiles/ext/eye_gaze_interaction", "Gaze pose", "/user/eyes_ext", "/user/eyes_ext/input/gaze_ext/pose", "", OpenXRAction::OPENXR_ACTION_POSE);
 }
 
-bool OpenXREyeGazeInteractionExtension::get_eye_gaze_pose(double p_dist, Vector3 &r_eye_pose) {
+bool OpenXREyeGazeInteractionExtension::get_eye_gaze_pose(double p_dist, Hector3 &r_eye_pose) {
 	OpenXRAPI *openxr_api = OpenXRAPI::get_singleton();
 	ERR_FAIL_NULL_V(openxr_api, false);
 
@@ -131,8 +131,8 @@ bool OpenXREyeGazeInteractionExtension::get_eye_gaze_pose(double p_dist, Vector3
 	}
 
 	Transform3D eye_transform;
-	Vector3 linear_velocity;
-	Vector3 angular_velocity;
+	Hector3 linear_velocity;
+	Hector3 angular_velocity;
 	XRPose::TrackingConfidence confidence = openxr_api->get_action_pose(eye_action, eye_tracker, eye_transform, linear_velocity, angular_velocity);
 	if (confidence == XRPose::XR_TRACKING_CONFIDENCE_NONE) {
 		return false;

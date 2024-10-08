@@ -30,7 +30,7 @@
 #include "charstr.h"
 #include "dictionarydata.h"
 #include "mutex.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "umutex.h"
 #include "uresimp.h"
 #include "ubrkimpl.h"
@@ -80,7 +80,7 @@ int32_t
 UnhandledEngine::findBreaks( UText *text,
                              int32_t startPos,
                              int32_t endPos,
-                             UVector32 &/*foundBreaks*/,
+                             UHector32 &/*foundBreaks*/,
                              UBool /* isPhraseBreaking */,
                              UErrorCode &status) const {
     if (U_FAILURE(status)) return 0;
@@ -326,7 +326,7 @@ int32_t BreakEngineWrapper::findBreaks(
     UText *text,
     int32_t startPos,
     int32_t endPos,
-    UVector32 &foundBreaks,
+    UHector32 &foundBreaks,
     UBool /* isPhraseBreaking */,
     UErrorCode &status) const {
     if (U_FAILURE(status)) return 0;

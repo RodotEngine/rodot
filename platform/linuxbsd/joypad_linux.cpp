@@ -598,7 +598,7 @@ void JoypadLinux::process_joypads() {
 		if (joypad.force_feedback) {
 			uint64_t timestamp = input->get_joy_vibration_timestamp(i);
 			if (timestamp > joypad.ff_effect_timestamp) {
-				Vector2 strength = input->get_joy_vibration_strength(i);
+				Hector2 strength = input->get_joy_vibration_strength(i);
 				float duration = input->get_joy_vibration_duration(i);
 				if (strength.x == 0 && strength.y == 0) {
 					joypad_vibration_stop(joypad, timestamp);

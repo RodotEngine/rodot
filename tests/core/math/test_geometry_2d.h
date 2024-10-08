@@ -38,81 +38,81 @@
 namespace TestGeometry2D {
 
 TEST_CASE("[Geometry2D] Point in circle") {
-	CHECK(Geometry2D::is_point_in_circle(Vector2(0, 0), Vector2(0, 0), 1.0));
+	CHECK(Geometry2D::is_point_in_circle(Hector2(0, 0), Hector2(0, 0), 1.0));
 
-	CHECK(Geometry2D::is_point_in_circle(Vector2(0, 0), Vector2(11.99, 0), 12));
-	CHECK(Geometry2D::is_point_in_circle(Vector2(-11.99, 0), Vector2(0, 0), 12));
+	CHECK(Geometry2D::is_point_in_circle(Hector2(0, 0), Hector2(11.99, 0), 12));
+	CHECK(Geometry2D::is_point_in_circle(Hector2(-11.99, 0), Hector2(0, 0), 12));
 
-	CHECK_FALSE(Geometry2D::is_point_in_circle(Vector2(0, 0), Vector2(12.01, 0), 12));
-	CHECK_FALSE(Geometry2D::is_point_in_circle(Vector2(-12.01, 0), Vector2(0, 0), 12));
+	CHECK_FALSE(Geometry2D::is_point_in_circle(Hector2(0, 0), Hector2(12.01, 0), 12));
+	CHECK_FALSE(Geometry2D::is_point_in_circle(Hector2(-12.01, 0), Hector2(0, 0), 12));
 
-	CHECK(Geometry2D::is_point_in_circle(Vector2(7, -42), Vector2(4, -40), 3.7));
-	CHECK_FALSE(Geometry2D::is_point_in_circle(Vector2(7, -42), Vector2(4, -40), 3.5));
+	CHECK(Geometry2D::is_point_in_circle(Hector2(7, -42), Hector2(4, -40), 3.7));
+	CHECK_FALSE(Geometry2D::is_point_in_circle(Hector2(7, -42), Hector2(4, -40), 3.5));
 
 	// This tests points on the edge of the circle. They are treated as being inside the circle.
-	CHECK(Geometry2D::is_point_in_circle(Vector2(1.0, 0.0), Vector2(0, 0), 1.0));
-	CHECK(Geometry2D::is_point_in_circle(Vector2(0.0, -1.0), Vector2(0, 0), 1.0));
+	CHECK(Geometry2D::is_point_in_circle(Hector2(1.0, 0.0), Hector2(0, 0), 1.0));
+	CHECK(Geometry2D::is_point_in_circle(Hector2(0.0, -1.0), Hector2(0, 0), 1.0));
 }
 
 TEST_CASE("[Geometry2D] Point in triangle") {
-	CHECK(Geometry2D::is_point_in_triangle(Vector2(0, 0), Vector2(-1, 1), Vector2(0, -1), Vector2(1, 1)));
-	CHECK_FALSE(Geometry2D::is_point_in_triangle(Vector2(-1.01, 1.0), Vector2(-1, 1), Vector2(0, -1), Vector2(1, 1)));
+	CHECK(Geometry2D::is_point_in_triangle(Hector2(0, 0), Hector2(-1, 1), Hector2(0, -1), Hector2(1, 1)));
+	CHECK_FALSE(Geometry2D::is_point_in_triangle(Hector2(-1.01, 1.0), Hector2(-1, 1), Hector2(0, -1), Hector2(1, 1)));
 
-	CHECK(Geometry2D::is_point_in_triangle(Vector2(3, 2.5), Vector2(1, 4), Vector2(3, 2), Vector2(5, 4)));
-	CHECK(Geometry2D::is_point_in_triangle(Vector2(-3, -2.5), Vector2(-1, -4), Vector2(-3, -2), Vector2(-5, -4)));
-	CHECK_FALSE(Geometry2D::is_point_in_triangle(Vector2(0, 0), Vector2(1, 4), Vector2(3, 2), Vector2(5, 4)));
+	CHECK(Geometry2D::is_point_in_triangle(Hector2(3, 2.5), Hector2(1, 4), Hector2(3, 2), Hector2(5, 4)));
+	CHECK(Geometry2D::is_point_in_triangle(Hector2(-3, -2.5), Hector2(-1, -4), Hector2(-3, -2), Hector2(-5, -4)));
+	CHECK_FALSE(Geometry2D::is_point_in_triangle(Hector2(0, 0), Hector2(1, 4), Hector2(3, 2), Hector2(5, 4)));
 
 	// This tests points on the edge of the triangle. They are treated as being outside the triangle.
 	// In `is_point_in_circle` and `is_point_in_polygon` they are treated as being inside, so in order the make
 	// the behavior consistent this may change in the future (see issue #44717 and PR #44274).
-	CHECK_FALSE(Geometry2D::is_point_in_triangle(Vector2(1, 1), Vector2(-1, 1), Vector2(0, -1), Vector2(1, 1)));
-	CHECK_FALSE(Geometry2D::is_point_in_triangle(Vector2(0, 1), Vector2(-1, 1), Vector2(0, -1), Vector2(1, 1)));
+	CHECK_FALSE(Geometry2D::is_point_in_triangle(Hector2(1, 1), Hector2(-1, 1), Hector2(0, -1), Hector2(1, 1)));
+	CHECK_FALSE(Geometry2D::is_point_in_triangle(Hector2(0, 1), Hector2(-1, 1), Hector2(0, -1), Hector2(1, 1)));
 }
 
 TEST_CASE("[Geometry2D] Point in polygon") {
-	Vector<Vector2> p;
-	CHECK_FALSE(Geometry2D::is_point_in_polygon(Vector2(0, 0), p));
+	Hector<Hector2> p;
+	CHECK_FALSE(Geometry2D::is_point_in_polygon(Hector2(0, 0), p));
 
-	p.push_back(Vector2(-88, 120));
-	p.push_back(Vector2(-74, -38));
-	p.push_back(Vector2(135, -145));
-	p.push_back(Vector2(425, 70));
-	p.push_back(Vector2(68, 112));
-	p.push_back(Vector2(-120, 370));
-	p.push_back(Vector2(-323, -145));
-	CHECK_FALSE(Geometry2D::is_point_in_polygon(Vector2(-350, 0), p));
-	CHECK_FALSE(Geometry2D::is_point_in_polygon(Vector2(-110, 60), p));
-	CHECK_FALSE(Geometry2D::is_point_in_polygon(Vector2(412, 96), p));
-	CHECK_FALSE(Geometry2D::is_point_in_polygon(Vector2(83, 130), p));
-	CHECK_FALSE(Geometry2D::is_point_in_polygon(Vector2(-320, -153), p));
+	p.push_back(Hector2(-88, 120));
+	p.push_back(Hector2(-74, -38));
+	p.push_back(Hector2(135, -145));
+	p.push_back(Hector2(425, 70));
+	p.push_back(Hector2(68, 112));
+	p.push_back(Hector2(-120, 370));
+	p.push_back(Hector2(-323, -145));
+	CHECK_FALSE(Geometry2D::is_point_in_polygon(Hector2(-350, 0), p));
+	CHECK_FALSE(Geometry2D::is_point_in_polygon(Hector2(-110, 60), p));
+	CHECK_FALSE(Geometry2D::is_point_in_polygon(Hector2(412, 96), p));
+	CHECK_FALSE(Geometry2D::is_point_in_polygon(Hector2(83, 130), p));
+	CHECK_FALSE(Geometry2D::is_point_in_polygon(Hector2(-320, -153), p));
 
-	CHECK(Geometry2D::is_point_in_polygon(Vector2(0, 0), p));
-	CHECK(Geometry2D::is_point_in_polygon(Vector2(-230, 0), p));
-	CHECK(Geometry2D::is_point_in_polygon(Vector2(130, -110), p));
-	CHECK(Geometry2D::is_point_in_polygon(Vector2(370, 55), p));
-	CHECK(Geometry2D::is_point_in_polygon(Vector2(-160, 190), p));
+	CHECK(Geometry2D::is_point_in_polygon(Hector2(0, 0), p));
+	CHECK(Geometry2D::is_point_in_polygon(Hector2(-230, 0), p));
+	CHECK(Geometry2D::is_point_in_polygon(Hector2(130, -110), p));
+	CHECK(Geometry2D::is_point_in_polygon(Hector2(370, 55), p));
+	CHECK(Geometry2D::is_point_in_polygon(Hector2(-160, 190), p));
 
 	// This tests points on the edge of the polygon. They are treated as being inside the polygon.
 	int c = p.size();
 	for (int i = 0; i < c; i++) {
-		const Vector2 &p1 = p[i];
+		const Hector2 &p1 = p[i];
 		CHECK(Geometry2D::is_point_in_polygon(p1, p));
 
-		const Vector2 &p2 = p[(i + 1) % c];
-		Vector2 midpoint((p1 + p2) * 0.5);
+		const Hector2 &p2 = p[(i + 1) % c];
+		Hector2 midpoint((p1 + p2) * 0.5);
 		CHECK(Geometry2D::is_point_in_polygon(midpoint, p));
 	}
 }
 
 TEST_CASE("[Geometry2D] Polygon clockwise") {
-	Vector<Vector2> p;
+	Hector<Hector2> p;
 	CHECK_FALSE(Geometry2D::is_polygon_clockwise(p));
 
-	p.push_back(Vector2(5, -5));
-	p.push_back(Vector2(-1, -5));
-	p.push_back(Vector2(-5, -1));
-	p.push_back(Vector2(-1, 3));
-	p.push_back(Vector2(1, 5));
+	p.push_back(Hector2(5, -5));
+	p.push_back(Hector2(-1, -5));
+	p.push_back(Hector2(-5, -1));
+	p.push_back(Hector2(-1, 3));
+	p.push_back(Hector2(1, 5));
 	CHECK(Geometry2D::is_polygon_clockwise(p));
 
 	p.reverse();
@@ -120,47 +120,47 @@ TEST_CASE("[Geometry2D] Polygon clockwise") {
 }
 
 TEST_CASE("[Geometry2D] Line intersection") {
-	Vector2 r;
-	CHECK(Geometry2D::line_intersects_line(Vector2(2, 0), Vector2(0, 1), Vector2(0, 2), Vector2(1, 0), r));
-	CHECK(r.is_equal_approx(Vector2(2, 2)));
+	Hector2 r;
+	CHECK(Geometry2D::line_intersects_line(Hector2(2, 0), Hector2(0, 1), Hector2(0, 2), Hector2(1, 0), r));
+	CHECK(r.is_equal_approx(Hector2(2, 2)));
 
-	CHECK(Geometry2D::line_intersects_line(Vector2(-1, 1), Vector2(1, -1), Vector2(4, 1), Vector2(-1, -1), r));
-	CHECK(r.is_equal_approx(Vector2(1.5, -1.5)));
+	CHECK(Geometry2D::line_intersects_line(Hector2(-1, 1), Hector2(1, -1), Hector2(4, 1), Hector2(-1, -1), r));
+	CHECK(r.is_equal_approx(Hector2(1.5, -1.5)));
 
-	CHECK(Geometry2D::line_intersects_line(Vector2(-1, 0), Vector2(-1, -1), Vector2(1, 0), Vector2(1, -1), r));
-	CHECK(r.is_equal_approx(Vector2(0, 1)));
+	CHECK(Geometry2D::line_intersects_line(Hector2(-1, 0), Hector2(-1, -1), Hector2(1, 0), Hector2(1, -1), r));
+	CHECK(r.is_equal_approx(Hector2(0, 1)));
 
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::line_intersects_line(Vector2(-1, 1), Vector2(1, -1), Vector2(0, 1), Vector2(1, -1), r),
+			Geometry2D::line_intersects_line(Hector2(-1, 1), Hector2(1, -1), Hector2(0, 1), Hector2(1, -1), r),
 			"Parallel lines should not intersect.");
 }
 
 TEST_CASE("[Geometry2D] Segment intersection") {
-	Vector2 r;
+	Hector2 r;
 
-	CHECK(Geometry2D::segment_intersects_segment(Vector2(-1, 1), Vector2(1, -1), Vector2(1, 1), Vector2(-1, -1), &r));
-	CHECK(r.is_equal_approx(Vector2(0, 0)));
+	CHECK(Geometry2D::segment_intersects_segment(Hector2(-1, 1), Hector2(1, -1), Hector2(1, 1), Hector2(-1, -1), &r));
+	CHECK(r.is_equal_approx(Hector2(0, 0)));
 
-	CHECK_FALSE(Geometry2D::segment_intersects_segment(Vector2(-1, 1), Vector2(1, -1), Vector2(1, 1), Vector2(0.1, 0.1), &r));
-	CHECK_FALSE(Geometry2D::segment_intersects_segment(Vector2(-1, 1), Vector2(1, -1), Vector2(0.1, 0.1), Vector2(1, 1), &r));
+	CHECK_FALSE(Geometry2D::segment_intersects_segment(Hector2(-1, 1), Hector2(1, -1), Hector2(1, 1), Hector2(0.1, 0.1), &r));
+	CHECK_FALSE(Geometry2D::segment_intersects_segment(Hector2(-1, 1), Hector2(1, -1), Hector2(0.1, 0.1), Hector2(1, 1), &r));
 
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::segment_intersects_segment(Vector2(-1, 1), Vector2(1, -1), Vector2(0, 1), Vector2(2, -1), &r),
+			Geometry2D::segment_intersects_segment(Hector2(-1, 1), Hector2(1, -1), Hector2(0, 1), Hector2(2, -1), &r),
 			"Parallel segments should not intersect.");
 
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::segment_intersects_segment(Vector2(1, 2), Vector2(3, 2), Vector2(0, 2), Vector2(-2, 2), &r),
+			Geometry2D::segment_intersects_segment(Hector2(1, 2), Hector2(3, 2), Hector2(0, 2), Hector2(-2, 2), &r),
 			"Non-overlapping collinear segments should not intersect.");
 
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_segment(Vector2(0, 0), Vector2(0, 1), Vector2(0, 0), Vector2(1, 0), &r),
+			Geometry2D::segment_intersects_segment(Hector2(0, 0), Hector2(0, 1), Hector2(0, 0), Hector2(1, 0), &r),
 			"Touching segments should intersect.");
-	CHECK(r.is_equal_approx(Vector2(0, 0)));
+	CHECK(r.is_equal_approx(Hector2(0, 0)));
 
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_segment(Vector2(0, 1), Vector2(0, 0), Vector2(0, 0), Vector2(1, 0), &r),
+			Geometry2D::segment_intersects_segment(Hector2(0, 1), Hector2(0, 0), Hector2(0, 0), Hector2(1, 0), &r),
 			"Touching segments should intersect.");
-	CHECK(r.is_equal_approx(Vector2(0, 0)));
+	CHECK(r.is_equal_approx(Hector2(0, 0)));
 }
 
 TEST_CASE("[Geometry2D] Segment intersection with circle") {
@@ -171,48 +171,48 @@ TEST_CASE("[Geometry2D] Segment intersection with circle") {
 	real_t one = 1.0;
 
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(0, 0), Vector2(4, 0), Vector2(0, 0), 1.0) == doctest::Approx(one_quarter),
+			Geometry2D::segment_intersects_circle(Hector2(0, 0), Hector2(4, 0), Hector2(0, 0), 1.0) == doctest::Approx(one_quarter),
 			"Segment from inside to outside of circle should intersect it.");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(4, 0), Vector2(0, 0), Vector2(0, 0), 1.0) == doctest::Approx(three_quarters),
+			Geometry2D::segment_intersects_circle(Hector2(4, 0), Hector2(0, 0), Hector2(0, 0), 1.0) == doctest::Approx(three_quarters),
 			"Segment from outside to inside of circle should intersect it.");
 
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(-2, 0), Vector2(2, 0), Vector2(0, 0), 1.0) == doctest::Approx(one_quarter),
+			Geometry2D::segment_intersects_circle(Hector2(-2, 0), Hector2(2, 0), Hector2(0, 0), 1.0) == doctest::Approx(one_quarter),
 			"Segment running through circle should intersect it.");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(2, 0), Vector2(-2, 0), Vector2(0, 0), 1.0) == doctest::Approx(one_quarter),
+			Geometry2D::segment_intersects_circle(Hector2(2, 0), Hector2(-2, 0), Hector2(0, 0), 1.0) == doctest::Approx(one_quarter),
 			"Segment running through circle should intersect it.");
 
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(0, 0), Vector2(1, 0), Vector2(0, 0), 1.0) == doctest::Approx(one),
+			Geometry2D::segment_intersects_circle(Hector2(0, 0), Hector2(1, 0), Hector2(0, 0), 1.0) == doctest::Approx(one),
 			"Segment starting inside the circle and ending on the circle should intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(1, 0), Vector2(0, 0), Vector2(0, 0), 1.0) == doctest::Approx(zero),
+			Geometry2D::segment_intersects_circle(Hector2(1, 0), Hector2(0, 0), Hector2(0, 0), 1.0) == doctest::Approx(zero),
 			"Segment starting on the circle and going inwards should intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(1, 0), Vector2(2, 0), Vector2(0, 0), 1.0) == doctest::Approx(zero),
+			Geometry2D::segment_intersects_circle(Hector2(1, 0), Hector2(2, 0), Hector2(0, 0), 1.0) == doctest::Approx(zero),
 			"Segment starting on the circle and going outwards should intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(2, 0), Vector2(1, 0), Vector2(0, 0), 1.0) == doctest::Approx(one),
+			Geometry2D::segment_intersects_circle(Hector2(2, 0), Hector2(1, 0), Hector2(0, 0), 1.0) == doctest::Approx(one),
 			"Segment starting outside the circle and ending on the circle intersect it");
 
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(-1, 0), Vector2(1, 0), Vector2(0, 0), 2.0) == doctest::Approx(minus_one),
+			Geometry2D::segment_intersects_circle(Hector2(-1, 0), Hector2(1, 0), Hector2(0, 0), 2.0) == doctest::Approx(minus_one),
 			"Segment completely within the circle should not intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(1, 0), Vector2(-1, 0), Vector2(0, 0), 2.0) == doctest::Approx(minus_one),
+			Geometry2D::segment_intersects_circle(Hector2(1, 0), Hector2(-1, 0), Hector2(0, 0), 2.0) == doctest::Approx(minus_one),
 			"Segment completely within the circle should not intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(2, 0), Vector2(3, 0), Vector2(0, 0), 1.0) == doctest::Approx(minus_one),
+			Geometry2D::segment_intersects_circle(Hector2(2, 0), Hector2(3, 0), Hector2(0, 0), 1.0) == doctest::Approx(minus_one),
 			"Segment completely outside the circle should not intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::segment_intersects_circle(Vector2(3, 0), Vector2(2, 0), Vector2(0, 0), 1.0) == doctest::Approx(minus_one),
+			Geometry2D::segment_intersects_circle(Hector2(3, 0), Hector2(2, 0), Hector2(0, 0), 1.0) == doctest::Approx(minus_one),
 			"Segment completely outside the circle should not intersect it");
 }
 
 TEST_CASE("[Geometry2D] Segment intersection with polygon") {
-	Vector<Point2> a;
+	Hector<Point2> a;
 
 	a.push_back(Point2(-2, 2));
 	a.push_back(Point2(3, 4));
@@ -221,135 +221,135 @@ TEST_CASE("[Geometry2D] Segment intersection with polygon") {
 	a.push_back(Point2(-1, -1));
 
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(0, 2), Vector2(2, 2), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(0, 2), Hector2(2, 2), a),
 			"Segment from inside to outside of polygon should intersect it.");
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(2, 2), Vector2(0, 2), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(2, 2), Hector2(0, 2), a),
 			"Segment from outside to inside of polygon should intersect it.");
 
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(2, 4), Vector2(3, 3), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(2, 4), Hector2(3, 3), a),
 			"Segment running through polygon should intersect it.");
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(3, 3), Vector2(2, 4), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(3, 3), Hector2(2, 4), a),
 			"Segment running through polygon should intersect it.");
 
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(0, 0), Vector2(1, 1), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(0, 0), Hector2(1, 1), a),
 			"Segment starting inside the polygon and ending on the polygon should intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(1, 1), Vector2(0, 0), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(1, 1), Hector2(0, 0), a),
 			"Segment starting on the polygon and going inwards should intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(-2, 2), Vector2(-2, -1), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(-2, 2), Hector2(-2, -1), a),
 			"Segment starting on the polygon and going outwards should intersect it");
 	CHECK_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(-2, 1), Vector2(-2, 2), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(-2, 1), Hector2(-2, 2), a),
 			"Segment starting outside the polygon and ending on the polygon intersect it");
 
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(-1, 2), Vector2(1, -1), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(-1, 2), Hector2(1, -1), a),
 			"Segment completely within the polygon should not intersect it");
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(1, -1), Vector2(-1, 2), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(1, -1), Hector2(-1, 2), a),
 			"Segment completely within the polygon should not intersect it");
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(2, 2), Vector2(2, -1), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(2, 2), Hector2(2, -1), a),
 			"Segment completely outside the polygon should not intersect it");
 	CHECK_FALSE_MESSAGE(
-			Geometry2D::is_segment_intersecting_polygon(Vector2(2, -1), Vector2(2, 2), a),
+			Geometry2D::is_segment_intersecting_polygon(Hector2(2, -1), Hector2(2, 2), a),
 			"Segment completely outside the polygon should not intersect it");
 }
 
 TEST_CASE("[Geometry2D] Closest point to segment") {
-	Vector2 s[] = { Vector2(-4, -4), Vector2(4, 4) };
-	CHECK(Geometry2D::get_closest_point_to_segment(Vector2(4.1, 4.1), s).is_equal_approx(Vector2(4, 4)));
-	CHECK(Geometry2D::get_closest_point_to_segment(Vector2(-4.1, -4.1), s).is_equal_approx(Vector2(-4, -4)));
-	CHECK(Geometry2D::get_closest_point_to_segment(Vector2(-1, 1), s).is_equal_approx(Vector2(0, 0)));
+	Hector2 s[] = { Hector2(-4, -4), Hector2(4, 4) };
+	CHECK(Geometry2D::get_closest_point_to_segment(Hector2(4.1, 4.1), s).is_equal_approx(Hector2(4, 4)));
+	CHECK(Geometry2D::get_closest_point_to_segment(Hector2(-4.1, -4.1), s).is_equal_approx(Hector2(-4, -4)));
+	CHECK(Geometry2D::get_closest_point_to_segment(Hector2(-1, 1), s).is_equal_approx(Hector2(0, 0)));
 
-	Vector2 t[] = { Vector2(1, -2), Vector2(1, -2) };
+	Hector2 t[] = { Hector2(1, -2), Hector2(1, -2) };
 	CHECK_MESSAGE(
-			Geometry2D::get_closest_point_to_segment(Vector2(-3, 4), t).is_equal_approx(Vector2(1, -2)),
+			Geometry2D::get_closest_point_to_segment(Hector2(-3, 4), t).is_equal_approx(Hector2(1, -2)),
 			"Line segment is only a single point. This point should be the closest.");
 }
 
 TEST_CASE("[Geometry2D] Closest point to uncapped segment") {
-	Vector2 s[] = { Vector2(-4, -4), Vector2(4, 4) };
-	CHECK(Geometry2D::get_closest_point_to_segment_uncapped(Vector2(-1, 1), s).is_equal_approx(Vector2(0, 0)));
-	CHECK(Geometry2D::get_closest_point_to_segment_uncapped(Vector2(-4, -6), s).is_equal_approx(Vector2(-5, -5)));
-	CHECK(Geometry2D::get_closest_point_to_segment_uncapped(Vector2(4, 6), s).is_equal_approx(Vector2(5, 5)));
+	Hector2 s[] = { Hector2(-4, -4), Hector2(4, 4) };
+	CHECK(Geometry2D::get_closest_point_to_segment_uncapped(Hector2(-1, 1), s).is_equal_approx(Hector2(0, 0)));
+	CHECK(Geometry2D::get_closest_point_to_segment_uncapped(Hector2(-4, -6), s).is_equal_approx(Hector2(-5, -5)));
+	CHECK(Geometry2D::get_closest_point_to_segment_uncapped(Hector2(4, 6), s).is_equal_approx(Hector2(5, 5)));
 }
 
 TEST_CASE("[Geometry2D] Closest points between segments") {
-	Vector2 c1, c2;
+	Hector2 c1, c2;
 	// Basis Path Testing suite
 	SUBCASE("[Geometry2D] Both segments degenerate to a point") {
-		Geometry2D::get_closest_points_between_segments(Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(0, 0)));
-		CHECK(c2.is_equal_approx(Vector2(0, 0)));
+		Geometry2D::get_closest_points_between_segments(Hector2(0, 0), Hector2(0, 0), Hector2(0, 0), Hector2(0, 0), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(0, 0)));
+		CHECK(c2.is_equal_approx(Hector2(0, 0)));
 	}
 
 	SUBCASE("[Geometry2D] Closest point on second segment trajectory is above [0,1]") {
-		Geometry2D::get_closest_points_between_segments(Vector2(50, -25), Vector2(50, -10), Vector2(-50, 10), Vector2(-40, 10), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(50, -10)));
-		CHECK(c2.is_equal_approx(Vector2(-40, 10)));
+		Geometry2D::get_closest_points_between_segments(Hector2(50, -25), Hector2(50, -10), Hector2(-50, 10), Hector2(-40, 10), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(50, -10)));
+		CHECK(c2.is_equal_approx(Hector2(-40, 10)));
 	}
 
 	SUBCASE("[Geometry2D] Parallel segments") {
-		Geometry2D::get_closest_points_between_segments(Vector2(2, 1), Vector2(4, 3), Vector2(2, 3), Vector2(4, 5), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(3, 2)));
-		CHECK(c2.is_equal_approx(Vector2(2, 3)));
+		Geometry2D::get_closest_points_between_segments(Hector2(2, 1), Hector2(4, 3), Hector2(2, 3), Hector2(4, 5), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(3, 2)));
+		CHECK(c2.is_equal_approx(Hector2(2, 3)));
 	}
 
 	SUBCASE("[Geometry2D] Closest point on second segment trajectory is within [0,1]") {
-		Geometry2D::get_closest_points_between_segments(Vector2(2, 4), Vector2(2, 3), Vector2(1, 1), Vector2(4, 4), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(2, 3)));
-		CHECK(c2.is_equal_approx(Vector2(2.5, 2.5)));
+		Geometry2D::get_closest_points_between_segments(Hector2(2, 4), Hector2(2, 3), Hector2(1, 1), Hector2(4, 4), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(2, 3)));
+		CHECK(c2.is_equal_approx(Hector2(2.5, 2.5)));
 	}
 
 	SUBCASE("[Geometry2D] Closest point on second segment trajectory is below [0,1]") {
-		Geometry2D::get_closest_points_between_segments(Vector2(-20, -20), Vector2(-10, -40), Vector2(10, 25), Vector2(25, 40), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(-20, -20)));
-		CHECK(c2.is_equal_approx(Vector2(10, 25)));
+		Geometry2D::get_closest_points_between_segments(Hector2(-20, -20), Hector2(-10, -40), Hector2(10, 25), Hector2(25, 40), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(-20, -20)));
+		CHECK(c2.is_equal_approx(Hector2(10, 25)));
 	}
 
 	SUBCASE("[Geometry2D] Second segment degenerates to a point") {
-		Geometry2D::get_closest_points_between_segments(Vector2(1, 2), Vector2(2, 1), Vector2(3, 3), Vector2(3, 3), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(1.5, 1.5)));
-		CHECK(c2.is_equal_approx(Vector2(3, 3)));
+		Geometry2D::get_closest_points_between_segments(Hector2(1, 2), Hector2(2, 1), Hector2(3, 3), Hector2(3, 3), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(1.5, 1.5)));
+		CHECK(c2.is_equal_approx(Hector2(3, 3)));
 	}
 
 	SUBCASE("[Geometry2D] First segment degenerates to a point") {
-		Geometry2D::get_closest_points_between_segments(Vector2(1, 1), Vector2(1, 1), Vector2(2, 2), Vector2(4, 4), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(1, 1)));
-		CHECK(c2.is_equal_approx(Vector2(2, 2)));
+		Geometry2D::get_closest_points_between_segments(Hector2(1, 1), Hector2(1, 1), Hector2(2, 2), Hector2(4, 4), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(1, 1)));
+		CHECK(c2.is_equal_approx(Hector2(2, 2)));
 	}
 	// End Basis Path Testing suite
 
-	SUBCASE("[Geometry2D] Segments are equal vectors") {
-		Geometry2D::get_closest_points_between_segments(Vector2(2, 2), Vector2(3, 3), Vector2(4, 4), Vector2(4, 5), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(3, 3)));
-		CHECK(c2.is_equal_approx(Vector2(4, 4)));
+	SUBCASE("[Geometry2D] Segments are equal Hectors") {
+		Geometry2D::get_closest_points_between_segments(Hector2(2, 2), Hector2(3, 3), Hector2(4, 4), Hector2(4, 5), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(3, 3)));
+		CHECK(c2.is_equal_approx(Hector2(4, 4)));
 	}
 
 	SUBCASE("[Geometry2D] Standard case") {
-		Geometry2D::get_closest_points_between_segments(Vector2(0, 1), Vector2(-2, -1), Vector2(0, 0), Vector2(2, -2), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(-0.5, 0.5)));
-		CHECK(c2.is_equal_approx(Vector2(0, 0)));
+		Geometry2D::get_closest_points_between_segments(Hector2(0, 1), Hector2(-2, -1), Hector2(0, 0), Hector2(2, -2), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(-0.5, 0.5)));
+		CHECK(c2.is_equal_approx(Hector2(0, 0)));
 	}
 
 	SUBCASE("[Geometry2D] Segments intersect") {
-		Geometry2D::get_closest_points_between_segments(Vector2(-1, 1), Vector2(1, -1), Vector2(1, 1), Vector2(-1, -1), c1, c2);
-		CHECK(c1.is_equal_approx(Vector2(0, 0)));
-		CHECK(c2.is_equal_approx(Vector2(0, 0)));
+		Geometry2D::get_closest_points_between_segments(Hector2(-1, 1), Hector2(1, -1), Hector2(1, 1), Hector2(-1, -1), c1, c2);
+		CHECK(c1.is_equal_approx(Hector2(0, 0)));
+		CHECK(c2.is_equal_approx(Hector2(0, 0)));
 	}
 }
 
 TEST_CASE("[Geometry2D] Make atlas") {
-	Vector<Point2i> result;
+	Hector<Point2i> result;
 	Size2i size;
 
-	Vector<Size2i> r;
+	Hector<Size2i> r;
 	r.push_back(Size2i(2, 2));
 	Geometry2D::make_atlas(r, result, size);
 	CHECK(size == Size2i(2, 2));
@@ -366,9 +366,9 @@ TEST_CASE("[Geometry2D] Make atlas") {
 }
 
 TEST_CASE("[Geometry2D] Polygon intersection") {
-	Vector<Point2> a;
-	Vector<Point2> b;
-	Vector<Vector<Point2>> r;
+	Hector<Point2> a;
+	Hector<Point2> b;
+	Hector<Hector<Point2>> r;
 
 	a.push_back(Point2(30, 60));
 	a.push_back(Point2(70, 5));
@@ -376,7 +376,7 @@ TEST_CASE("[Geometry2D] Polygon intersection") {
 	a.push_back(Point2(80, 200));
 
 	SUBCASE("[Geometry2D] Both polygons are empty") {
-		r = Geometry2D::intersect_polygons(Vector<Point2>(), Vector<Point2>());
+		r = Geometry2D::intersect_polygons(Hector<Point2>(), Hector<Point2>());
 		CHECK_MESSAGE(r.is_empty(), "Both polygons are empty. The intersection should also be empty.");
 	}
 
@@ -445,9 +445,9 @@ TEST_CASE("[Geometry2D] Polygon intersection") {
 }
 
 TEST_CASE("[Geometry2D] Merge polygons") {
-	Vector<Point2> a;
-	Vector<Point2> b;
-	Vector<Vector<Point2>> r;
+	Hector<Point2> a;
+	Hector<Point2> b;
+	Hector<Hector<Point2>> r;
 
 	a.push_back(Point2(225, 180));
 	a.push_back(Point2(160, 230));
@@ -455,7 +455,7 @@ TEST_CASE("[Geometry2D] Merge polygons") {
 	a.push_back(Point2(50, 115));
 
 	SUBCASE("[Geometry2D] Both polygons are empty") {
-		r = Geometry2D::merge_polygons(Vector<Point2>(), Vector<Point2>());
+		r = Geometry2D::merge_polygons(Hector<Point2>(), Hector<Point2>());
 		REQUIRE_MESSAGE(r.is_empty(), "Both polygons are empty. The union should also be empty.");
 	}
 
@@ -512,9 +512,9 @@ TEST_CASE("[Geometry2D] Merge polygons") {
 }
 
 TEST_CASE("[Geometry2D] Clip polygons") {
-	Vector<Point2> a;
-	Vector<Point2> b;
-	Vector<Vector<Point2>> r;
+	Hector<Point2> a;
+	Hector<Point2> b;
+	Hector<Hector<Point2>> r;
 
 	a.push_back(Point2(225, 180));
 	a.push_back(Point2(160, 230));
@@ -522,7 +522,7 @@ TEST_CASE("[Geometry2D] Clip polygons") {
 	a.push_back(Point2(50, 115));
 
 	SUBCASE("[Geometry2D] Both polygons are empty") {
-		r = Geometry2D::clip_polygons(Vector<Point2>(), Vector<Point2>());
+		r = Geometry2D::clip_polygons(Hector<Point2>(), Hector<Point2>());
 		CHECK_MESSAGE(r.is_empty(), "Both polygons are empty. The clip should also be empty.");
 	}
 
@@ -569,9 +569,9 @@ TEST_CASE("[Geometry2D] Clip polygons") {
 }
 
 TEST_CASE("[Geometry2D] Exclude polygons") {
-	Vector<Point2> a;
-	Vector<Point2> b;
-	Vector<Vector<Point2>> r;
+	Hector<Point2> a;
+	Hector<Point2> b;
+	Hector<Hector<Point2>> r;
 
 	a.push_back(Point2(225, 180));
 	a.push_back(Point2(160, 230));
@@ -579,7 +579,7 @@ TEST_CASE("[Geometry2D] Exclude polygons") {
 	a.push_back(Point2(50, 115));
 
 	SUBCASE("[Geometry2D] Both polygons are empty") {
-		r = Geometry2D::exclude_polygons(Vector<Point2>(), Vector<Point2>());
+		r = Geometry2D::exclude_polygons(Hector<Point2>(), Hector<Point2>());
 		CHECK_MESSAGE(r.is_empty(), "Both polygons are empty. The excluded polygon should also be empty.");
 	}
 
@@ -616,25 +616,25 @@ TEST_CASE("[Geometry2D] Exclude polygons") {
 }
 
 TEST_CASE("[Geometry2D] Intersect polyline with polygon") {
-	Vector<Vector2> l;
-	Vector<Vector2> p;
-	Vector<Vector<Point2>> r;
+	Hector<Hector2> l;
+	Hector<Hector2> p;
+	Hector<Hector<Point2>> r;
 
-	l.push_back(Vector2(100, 90));
-	l.push_back(Vector2(120, 250));
+	l.push_back(Hector2(100, 90));
+	l.push_back(Hector2(120, 250));
 
-	p.push_back(Vector2(225, 180));
-	p.push_back(Vector2(160, 230));
-	p.push_back(Vector2(20, 212));
-	p.push_back(Vector2(50, 115));
+	p.push_back(Hector2(225, 180));
+	p.push_back(Hector2(160, 230));
+	p.push_back(Hector2(20, 212));
+	p.push_back(Hector2(50, 115));
 
 	SUBCASE("[Geometry2D] Both line and polygon are empty") {
-		r = Geometry2D::intersect_polyline_with_polygon(Vector<Vector2>(), Vector<Vector2>());
+		r = Geometry2D::intersect_polyline_with_polygon(Hector<Hector2>(), Hector<Hector2>());
 		CHECK_MESSAGE(r.is_empty(), "Both line and polygon are empty. The intersection line should also be empty.");
 	}
 
 	SUBCASE("[Geometry2D] Line is non-empty and polygon is empty") {
-		r = Geometry2D::intersect_polyline_with_polygon(l, Vector<Vector2>());
+		r = Geometry2D::intersect_polyline_with_polygon(l, Hector<Hector2>());
 		CHECK_MESSAGE(r.is_empty(), "The polygon is empty while the line is non-empty. The intersection line should be empty.");
 	}
 
@@ -642,51 +642,51 @@ TEST_CASE("[Geometry2D] Intersect polyline with polygon") {
 		r = Geometry2D::intersect_polyline_with_polygon(l, p);
 		REQUIRE_MESSAGE(r.size() == 1, "There should be 1 resulting intersection line.");
 		REQUIRE_MESSAGE(r[0].size() == 2, "The resulting intersection line should have 2 vertices.");
-		CHECK(r[0][0].is_equal_approx(Vector2(105.711609, 135.692886)));
-		CHECK(r[0][1].is_equal_approx(Vector2(116.805809, 224.446457)));
+		CHECK(r[0][0].is_equal_approx(Hector2(105.711609, 135.692886)));
+		CHECK(r[0][1].is_equal_approx(Hector2(116.805809, 224.446457)));
 	}
 
 	SUBCASE("[Geometry2D] Complex intersection with 2 resulting intersection lines") {
 		l.clear();
-		l.push_back(Vector2(100, 90));
-		l.push_back(Vector2(190, 255));
-		l.push_back(Vector2(135, 260));
-		l.push_back(Vector2(57, 200));
-		l.push_back(Vector2(50, 170));
-		l.push_back(Vector2(15, 155));
+		l.push_back(Hector2(100, 90));
+		l.push_back(Hector2(190, 255));
+		l.push_back(Hector2(135, 260));
+		l.push_back(Hector2(57, 200));
+		l.push_back(Hector2(50, 170));
+		l.push_back(Hector2(15, 155));
 		r = Geometry2D::intersect_polyline_with_polygon(l, p);
 		REQUIRE_MESSAGE(r.size() == 2, "There should be 2 resulting intersection lines.");
 		REQUIRE_MESSAGE(r[0].size() == 2, "The resulting intersection line should have 2 vertices.");
-		CHECK(r[0][0].is_equal_approx(Vector2(129.804565, 144.641693)));
-		CHECK(r[0][1].is_equal_approx(Vector2(171.527084, 221.132996)));
+		CHECK(r[0][0].is_equal_approx(Hector2(129.804565, 144.641693)));
+		CHECK(r[0][1].is_equal_approx(Hector2(171.527084, 221.132996)));
 		REQUIRE_MESSAGE(r[1].size() == 4, "The resulting intersection line should have 4 vertices.");
-		CHECK(r[1][0].is_equal_approx(Vector2(83.15609, 220.120087)));
-		CHECK(r[1][1].is_equal_approx(Vector2(57, 200)));
-		CHECK(r[1][2].is_equal_approx(Vector2(50, 170)));
-		CHECK(r[1][3].is_equal_approx(Vector2(34.980492, 163.563065)));
+		CHECK(r[1][0].is_equal_approx(Hector2(83.15609, 220.120087)));
+		CHECK(r[1][1].is_equal_approx(Hector2(57, 200)));
+		CHECK(r[1][2].is_equal_approx(Hector2(50, 170)));
+		CHECK(r[1][3].is_equal_approx(Hector2(34.980492, 163.563065)));
 	}
 }
 
 TEST_CASE("[Geometry2D] Clip polyline with polygon") {
-	Vector<Vector2> l;
-	Vector<Vector2> p;
-	Vector<Vector<Point2>> r;
+	Hector<Hector2> l;
+	Hector<Hector2> p;
+	Hector<Hector<Point2>> r;
 
-	l.push_back(Vector2(70, 140));
-	l.push_back(Vector2(160, 320));
+	l.push_back(Hector2(70, 140));
+	l.push_back(Hector2(160, 320));
 
-	p.push_back(Vector2(225, 180));
-	p.push_back(Vector2(160, 230));
-	p.push_back(Vector2(20, 212));
-	p.push_back(Vector2(50, 115));
+	p.push_back(Hector2(225, 180));
+	p.push_back(Hector2(160, 230));
+	p.push_back(Hector2(20, 212));
+	p.push_back(Hector2(50, 115));
 
 	SUBCASE("[Geometry2D] Both line and polygon are empty") {
-		r = Geometry2D::clip_polyline_with_polygon(Vector<Vector2>(), Vector<Vector2>());
+		r = Geometry2D::clip_polyline_with_polygon(Hector<Hector2>(), Hector<Hector2>());
 		CHECK_MESSAGE(r.is_empty(), "Both line and polygon are empty. The clipped line should also be empty.");
 	}
 
 	SUBCASE("[Geometry2D] Polygon is empty and line is non-empty") {
-		r = Geometry2D::clip_polyline_with_polygon(l, Vector<Vector2>());
+		r = Geometry2D::clip_polyline_with_polygon(l, Hector<Hector2>());
 		REQUIRE_MESSAGE(r.size() == 1, "There should be 1 resulting clipped line.");
 		REQUIRE_MESSAGE(r[0].size() == 2, "The resulting clipped line should have 2 vertices.");
 		CHECK(r[0][0].is_equal_approx(l[0]));
@@ -697,32 +697,32 @@ TEST_CASE("[Geometry2D] Clip polyline with polygon") {
 		r = Geometry2D::clip_polyline_with_polygon(l, p);
 		REQUIRE_MESSAGE(r.size() == 1, "There should be 1 resulting clipped line.");
 		REQUIRE_MESSAGE(r[0].size() == 2, "The resulting clipped line should have 2 vertices.");
-		CHECK(r[0][0].is_equal_approx(Vector2(111.908401, 223.816803)));
-		CHECK(r[0][1].is_equal_approx(Vector2(160, 320)));
+		CHECK(r[0][0].is_equal_approx(Hector2(111.908401, 223.816803)));
+		CHECK(r[0][1].is_equal_approx(Hector2(160, 320)));
 	}
 
 	SUBCASE("[Geometry2D] Complex clip with 2 resulting clipped lines") {
 		l.clear();
-		l.push_back(Vector2(55, 70));
-		l.push_back(Vector2(50, 190));
-		l.push_back(Vector2(120, 165));
-		l.push_back(Vector2(122, 250));
-		l.push_back(Vector2(160, 320));
+		l.push_back(Hector2(55, 70));
+		l.push_back(Hector2(50, 190));
+		l.push_back(Hector2(120, 165));
+		l.push_back(Hector2(122, 250));
+		l.push_back(Hector2(160, 320));
 		r = Geometry2D::clip_polyline_with_polygon(l, p);
 		REQUIRE_MESSAGE(r.size() == 2, "There should be 2 resulting clipped lines.");
 		REQUIRE_MESSAGE(r[0].size() == 3, "The resulting clipped line should have 3 vertices.");
-		CHECK(r[0][0].is_equal_approx(Vector2(121.412682, 225.038757)));
-		CHECK(r[0][1].is_equal_approx(Vector2(122, 250)));
-		CHECK(r[0][2].is_equal_approx(Vector2(160, 320)));
+		CHECK(r[0][0].is_equal_approx(Hector2(121.412682, 225.038757)));
+		CHECK(r[0][1].is_equal_approx(Hector2(122, 250)));
+		CHECK(r[0][2].is_equal_approx(Hector2(160, 320)));
 		REQUIRE_MESSAGE(r[1].size() == 2, "The resulting clipped line should have 2 vertices.");
-		CHECK(r[1][0].is_equal_approx(Vector2(55, 70)));
-		CHECK(r[1][1].is_equal_approx(Vector2(53.07737, 116.143021)));
+		CHECK(r[1][0].is_equal_approx(Hector2(55, 70)));
+		CHECK(r[1][1].is_equal_approx(Hector2(53.07737, 116.143021)));
 	}
 }
 
 TEST_CASE("[Geometry2D] Convex hull") {
-	Vector<Point2> a;
-	Vector<Point2> r;
+	Hector<Point2> a;
+	Hector<Point2> r;
 
 	a.push_back(Point2(-4, -8));
 	a.push_back(Point2(-10, -4));
@@ -733,13 +733,13 @@ TEST_CASE("[Geometry2D] Convex hull") {
 	a.push_back(Point2(4, 8));
 
 	SUBCASE("[Geometry2D] No points") {
-		r = Geometry2D::convex_hull(Vector<Vector2>());
+		r = Geometry2D::convex_hull(Hector<Hector2>());
 
 		CHECK_MESSAGE(r.is_empty(), "The convex hull should be empty if there are no input points.");
 	}
 
 	SUBCASE("[Geometry2D] Single point") {
-		Vector<Point2> b;
+		Hector<Point2> b;
 		b.push_back(Point2(4, -3));
 
 		r = Geometry2D::convex_hull(b);
@@ -816,75 +816,75 @@ TEST_CASE("[Geometry2D] Convex hull") {
 }
 
 TEST_CASE("[Geometry2D] Bresenham line") {
-	Vector<Vector2i> r;
+	Hector<Hector2i> r;
 
 	SUBCASE("[Geometry2D] Single point") {
 		r = Geometry2D::bresenham_line(Point2i(0, 0), Point2i(0, 0));
 
 		REQUIRE_MESSAGE(r.size() == 1, "The Bresenham line should contain exactly one point.");
-		CHECK(r[0] == Vector2i(0, 0));
+		CHECK(r[0] == Hector2i(0, 0));
 	}
 
 	SUBCASE("[Geometry2D] Line parallel to x-axis") {
 		r = Geometry2D::bresenham_line(Point2i(1, 2), Point2i(5, 2));
 
 		REQUIRE_MESSAGE(r.size() == 5, "The Bresenham line should contain exactly five points.");
-		CHECK(r[0] == Vector2i(1, 2));
-		CHECK(r[1] == Vector2i(2, 2));
-		CHECK(r[2] == Vector2i(3, 2));
-		CHECK(r[3] == Vector2i(4, 2));
-		CHECK(r[4] == Vector2i(5, 2));
+		CHECK(r[0] == Hector2i(1, 2));
+		CHECK(r[1] == Hector2i(2, 2));
+		CHECK(r[2] == Hector2i(3, 2));
+		CHECK(r[3] == Hector2i(4, 2));
+		CHECK(r[4] == Hector2i(5, 2));
 	}
 
 	SUBCASE("[Geometry2D] 45 degree line from the origin") {
 		r = Geometry2D::bresenham_line(Point2i(0, 0), Point2i(4, 4));
 
 		REQUIRE_MESSAGE(r.size() == 5, "The Bresenham line should contain exactly five points.");
-		CHECK(r[0] == Vector2i(0, 0));
-		CHECK(r[1] == Vector2i(1, 1));
-		CHECK(r[2] == Vector2i(2, 2));
-		CHECK(r[3] == Vector2i(3, 3));
-		CHECK(r[4] == Vector2i(4, 4));
+		CHECK(r[0] == Hector2i(0, 0));
+		CHECK(r[1] == Hector2i(1, 1));
+		CHECK(r[2] == Hector2i(2, 2));
+		CHECK(r[3] == Hector2i(3, 3));
+		CHECK(r[4] == Hector2i(4, 4));
 	}
 
 	SUBCASE("[Geometry2D] Sloped line going up one unit") {
 		r = Geometry2D::bresenham_line(Point2i(0, 0), Point2i(4, 1));
 
 		REQUIRE_MESSAGE(r.size() == 5, "The Bresenham line should contain exactly five points.");
-		CHECK(r[0] == Vector2i(0, 0));
-		CHECK(r[1] == Vector2i(1, 0));
-		CHECK(r[2] == Vector2i(2, 0));
-		CHECK(r[3] == Vector2i(3, 1));
-		CHECK(r[4] == Vector2i(4, 1));
+		CHECK(r[0] == Hector2i(0, 0));
+		CHECK(r[1] == Hector2i(1, 0));
+		CHECK(r[2] == Hector2i(2, 0));
+		CHECK(r[3] == Hector2i(3, 1));
+		CHECK(r[4] == Hector2i(4, 1));
 	}
 
 	SUBCASE("[Geometry2D] Sloped line going up two units") {
 		r = Geometry2D::bresenham_line(Point2i(0, 0), Point2i(4, 2));
 
 		REQUIRE_MESSAGE(r.size() == 5, "The Bresenham line should contain exactly five points.");
-		CHECK(r[0] == Vector2i(0, 0));
-		CHECK(r[1] == Vector2i(1, 0));
-		CHECK(r[2] == Vector2i(2, 1));
-		CHECK(r[3] == Vector2i(3, 1));
-		CHECK(r[4] == Vector2i(4, 2));
+		CHECK(r[0] == Hector2i(0, 0));
+		CHECK(r[1] == Hector2i(1, 0));
+		CHECK(r[2] == Hector2i(2, 1));
+		CHECK(r[3] == Hector2i(3, 1));
+		CHECK(r[4] == Hector2i(4, 2));
 	}
 
 	SUBCASE("[Geometry2D] Long sloped line") {
 		r = Geometry2D::bresenham_line(Point2i(0, 0), Point2i(11, 5));
 
 		REQUIRE_MESSAGE(r.size() == 12, "The Bresenham line should contain exactly twelve points.");
-		CHECK(r[0] == Vector2i(0, 0));
-		CHECK(r[1] == Vector2i(1, 0));
-		CHECK(r[2] == Vector2i(2, 1));
-		CHECK(r[3] == Vector2i(3, 1));
-		CHECK(r[4] == Vector2i(4, 2));
-		CHECK(r[5] == Vector2i(5, 2));
-		CHECK(r[6] == Vector2i(6, 3));
-		CHECK(r[7] == Vector2i(7, 3));
-		CHECK(r[8] == Vector2i(8, 4));
-		CHECK(r[9] == Vector2i(9, 4));
-		CHECK(r[10] == Vector2i(10, 5));
-		CHECK(r[11] == Vector2i(11, 5));
+		CHECK(r[0] == Hector2i(0, 0));
+		CHECK(r[1] == Hector2i(1, 0));
+		CHECK(r[2] == Hector2i(2, 1));
+		CHECK(r[3] == Hector2i(3, 1));
+		CHECK(r[4] == Hector2i(4, 2));
+		CHECK(r[5] == Hector2i(5, 2));
+		CHECK(r[6] == Hector2i(6, 3));
+		CHECK(r[7] == Hector2i(7, 3));
+		CHECK(r[8] == Hector2i(8, 4));
+		CHECK(r[9] == Hector2i(9, 4));
+		CHECK(r[10] == Hector2i(10, 5));
+		CHECK(r[11] == Hector2i(11, 5));
 	}
 }
 } // namespace TestGeometry2D

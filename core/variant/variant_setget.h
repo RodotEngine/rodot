@@ -35,7 +35,7 @@
 
 #include "core/debugger/engine_debugger.h"
 #include "core/object/class_db.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/variant/variant_internal.h"
 
 /**** NAMED SETTERS AND GETTERS ****/
@@ -266,50 +266,50 @@
 		static Variant::Type get_type() { return GetTypeInfo<m_member_type>::VARIANT_TYPE; }                                                 \
 	};
 
-SETGET_NUMBER_STRUCT(Vector2, double, x)
-SETGET_NUMBER_STRUCT(Vector2, double, y)
+SETGET_NUMBER_STRUCT(Hector2, double, x)
+SETGET_NUMBER_STRUCT(Hector2, double, y)
 
-SETGET_NUMBER_STRUCT(Vector2i, int64_t, x)
-SETGET_NUMBER_STRUCT(Vector2i, int64_t, y)
+SETGET_NUMBER_STRUCT(Hector2i, int64_t, x)
+SETGET_NUMBER_STRUCT(Hector2i, int64_t, y)
 
-SETGET_NUMBER_STRUCT(Vector3, double, x)
-SETGET_NUMBER_STRUCT(Vector3, double, y)
-SETGET_NUMBER_STRUCT(Vector3, double, z)
+SETGET_NUMBER_STRUCT(Hector3, double, x)
+SETGET_NUMBER_STRUCT(Hector3, double, y)
+SETGET_NUMBER_STRUCT(Hector3, double, z)
 
-SETGET_NUMBER_STRUCT(Vector3i, int64_t, x)
-SETGET_NUMBER_STRUCT(Vector3i, int64_t, y)
-SETGET_NUMBER_STRUCT(Vector3i, int64_t, z)
+SETGET_NUMBER_STRUCT(Hector3i, int64_t, x)
+SETGET_NUMBER_STRUCT(Hector3i, int64_t, y)
+SETGET_NUMBER_STRUCT(Hector3i, int64_t, z)
 
-SETGET_NUMBER_STRUCT(Vector4, double, x)
-SETGET_NUMBER_STRUCT(Vector4, double, y)
-SETGET_NUMBER_STRUCT(Vector4, double, z)
-SETGET_NUMBER_STRUCT(Vector4, double, w)
+SETGET_NUMBER_STRUCT(Hector4, double, x)
+SETGET_NUMBER_STRUCT(Hector4, double, y)
+SETGET_NUMBER_STRUCT(Hector4, double, z)
+SETGET_NUMBER_STRUCT(Hector4, double, w)
 
-SETGET_NUMBER_STRUCT(Vector4i, int64_t, x)
-SETGET_NUMBER_STRUCT(Vector4i, int64_t, y)
-SETGET_NUMBER_STRUCT(Vector4i, int64_t, z)
-SETGET_NUMBER_STRUCT(Vector4i, int64_t, w)
+SETGET_NUMBER_STRUCT(Hector4i, int64_t, x)
+SETGET_NUMBER_STRUCT(Hector4i, int64_t, y)
+SETGET_NUMBER_STRUCT(Hector4i, int64_t, z)
+SETGET_NUMBER_STRUCT(Hector4i, int64_t, w)
 
-SETGET_STRUCT(Rect2, Vector2, position)
-SETGET_STRUCT(Rect2, Vector2, size)
-SETGET_STRUCT_FUNC(Rect2, Vector2, end, set_end, get_end)
+SETGET_STRUCT(Rect2, Hector2, position)
+SETGET_STRUCT(Rect2, Hector2, size)
+SETGET_STRUCT_FUNC(Rect2, Hector2, end, set_end, get_end)
 
-SETGET_STRUCT(Rect2i, Vector2i, position)
-SETGET_STRUCT(Rect2i, Vector2i, size)
-SETGET_STRUCT_FUNC(Rect2i, Vector2i, end, set_end, get_end)
+SETGET_STRUCT(Rect2i, Hector2i, position)
+SETGET_STRUCT(Rect2i, Hector2i, size)
+SETGET_STRUCT_FUNC(Rect2i, Hector2i, end, set_end, get_end)
 
-SETGET_STRUCT(AABB, Vector3, position)
-SETGET_STRUCT(AABB, Vector3, size)
-SETGET_STRUCT_FUNC(AABB, Vector3, end, set_end, get_end)
+SETGET_STRUCT(AABB, Hector3, position)
+SETGET_STRUCT(AABB, Hector3, size)
+SETGET_STRUCT_FUNC(AABB, Hector3, end, set_end, get_end)
 
-SETGET_STRUCT_CUSTOM(Transform2D, Vector2, x, columns[0])
-SETGET_STRUCT_CUSTOM(Transform2D, Vector2, y, columns[1])
-SETGET_STRUCT_CUSTOM(Transform2D, Vector2, origin, columns[2])
+SETGET_STRUCT_CUSTOM(Transform2D, Hector2, x, columns[0])
+SETGET_STRUCT_CUSTOM(Transform2D, Hector2, y, columns[1])
+SETGET_STRUCT_CUSTOM(Transform2D, Hector2, origin, columns[2])
 
 SETGET_NUMBER_STRUCT_CUSTOM(Plane, double, x, normal.x)
 SETGET_NUMBER_STRUCT_CUSTOM(Plane, double, y, normal.y)
 SETGET_NUMBER_STRUCT_CUSTOM(Plane, double, z, normal.z)
-SETGET_STRUCT(Plane, Vector3, normal)
+SETGET_STRUCT(Plane, Hector3, normal)
 SETGET_NUMBER_STRUCT(Plane, double, d)
 
 SETGET_NUMBER_STRUCT(Quaternion, double, x)
@@ -317,17 +317,17 @@ SETGET_NUMBER_STRUCT(Quaternion, double, y)
 SETGET_NUMBER_STRUCT(Quaternion, double, z)
 SETGET_NUMBER_STRUCT(Quaternion, double, w)
 
-SETGET_STRUCT_FUNC_INDEX(Basis, Vector3, x, set_column, get_column, 0)
-SETGET_STRUCT_FUNC_INDEX(Basis, Vector3, y, set_column, get_column, 1)
-SETGET_STRUCT_FUNC_INDEX(Basis, Vector3, z, set_column, get_column, 2)
+SETGET_STRUCT_FUNC_INDEX(Basis, Hector3, x, set_column, get_column, 0)
+SETGET_STRUCT_FUNC_INDEX(Basis, Hector3, y, set_column, get_column, 1)
+SETGET_STRUCT_FUNC_INDEX(Basis, Hector3, z, set_column, get_column, 2)
 
 SETGET_STRUCT(Transform3D, Basis, basis)
-SETGET_STRUCT(Transform3D, Vector3, origin)
+SETGET_STRUCT(Transform3D, Hector3, origin)
 
-SETGET_STRUCT_CUSTOM(Projection, Vector4, x, columns[0])
-SETGET_STRUCT_CUSTOM(Projection, Vector4, y, columns[1])
-SETGET_STRUCT_CUSTOM(Projection, Vector4, z, columns[2])
-SETGET_STRUCT_CUSTOM(Projection, Vector4, w, columns[3])
+SETGET_STRUCT_CUSTOM(Projection, Hector4, x, columns[0])
+SETGET_STRUCT_CUSTOM(Projection, Hector4, y, columns[1])
+SETGET_STRUCT_CUSTOM(Projection, Hector4, z, columns[2])
+SETGET_STRUCT_CUSTOM(Projection, Hector4, w, columns[3])
 
 SETGET_NUMBER_STRUCT(Color, double, r)
 SETGET_NUMBER_STRUCT(Color, double, g)

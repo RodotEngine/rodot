@@ -2146,7 +2146,7 @@ void ThemeTypeDialog::_update_add_type_options(const String &p_filter) {
 	}
 	names.sort_custom<StringName::AlphCompare>();
 
-	Vector<StringName> unique_names;
+	Hector<StringName> unique_names;
 	for (const StringName &E : names) {
 		// Filter out undesired values.
 		if (!p_filter.is_subsequence_ofn(String(E))) {

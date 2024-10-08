@@ -169,7 +169,7 @@ void SkeletonProfile::_get_property_list(List<PropertyInfo> *p_list) const {
 		p_list->push_back(PropertyInfo(Variant::INT, path + "tail_direction", PROPERTY_HINT_ENUM, "AverageChildren,SpecificChild,End"));
 		p_list->push_back(PropertyInfo(Variant::STRING_NAME, path + "bone_tail"));
 		p_list->push_back(PropertyInfo(Variant::TRANSFORM3D, path + "reference_pose"));
-		p_list->push_back(PropertyInfo(Variant::VECTOR2, path + "handle_offset"));
+		p_list->push_back(PropertyInfo(Variant::HECTOR2, path + "handle_offset"));
 		p_list->push_back(PropertyInfo(Variant::STRING_NAME, path + "group", PROPERTY_HINT_ENUM, group_names));
 		p_list->push_back(PropertyInfo(Variant::BOOL, path + "require"));
 	}
@@ -340,12 +340,12 @@ void SkeletonProfile::set_reference_pose(int p_bone_idx, const Transform3D &p_re
 	emit_signal("profile_updated");
 }
 
-Vector2 SkeletonProfile::get_handle_offset(int p_bone_idx) const {
-	ERR_FAIL_INDEX_V(p_bone_idx, bones.size(), Vector2());
+Hector2 SkeletonProfile::get_handle_offset(int p_bone_idx) const {
+	ERR_FAIL_INDEX_V(p_bone_idx, bones.size(), Hector2());
 	return bones[p_bone_idx].handle_offset;
 }
 
-void SkeletonProfile::set_handle_offset(int p_bone_idx, const Vector2 &p_handle_offset) {
+void SkeletonProfile::set_handle_offset(int p_bone_idx, const Hector2 &p_handle_offset) {
 	if (is_read_only) {
 		return;
 	}
@@ -474,7 +474,7 @@ SkeletonProfileHumanoid::SkeletonProfileHumanoid() {
 
 	bones.write[0].bone_name = "Root";
 	bones.write[0].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0);
-	bones.write[0].handle_offset = Vector2(0.5, 0.91);
+	bones.write[0].handle_offset = Hector2(0.5, 0.91);
 	bones.write[0].group = "Body";
 
 	bones.write[1].bone_name = "Hips";
@@ -482,27 +482,27 @@ SkeletonProfileHumanoid::SkeletonProfileHumanoid() {
 	bones.write[1].tail_direction = TAIL_DIRECTION_SPECIFIC_CHILD;
 	bones.write[1].bone_tail = "Spine";
 	bones.write[1].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0);
-	bones.write[1].handle_offset = Vector2(0.5, 0.5);
+	bones.write[1].handle_offset = Hector2(0.5, 0.5);
 	bones.write[1].group = "Body";
 	bones.write[1].required = true;
 
 	bones.write[2].bone_name = "Spine";
 	bones.write[2].bone_parent = "Hips";
 	bones.write[2].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0);
-	bones.write[2].handle_offset = Vector2(0.5, 0.43);
+	bones.write[2].handle_offset = Hector2(0.5, 0.43);
 	bones.write[2].group = "Body";
 	bones.write[2].required = true;
 
 	bones.write[3].bone_name = "Chest";
 	bones.write[3].bone_parent = "Spine";
 	bones.write[3].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0);
-	bones.write[3].handle_offset = Vector2(0.5, 0.36);
+	bones.write[3].handle_offset = Hector2(0.5, 0.36);
 	bones.write[3].group = "Body";
 
 	bones.write[4].bone_name = "UpperChest";
 	bones.write[4].bone_parent = "Chest";
 	bones.write[4].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0);
-	bones.write[4].handle_offset = Vector2(0.5, 0.29);
+	bones.write[4].handle_offset = Hector2(0.5, 0.29);
 	bones.write[4].group = "Body";
 
 	bones.write[5].bone_name = "Neck";
@@ -510,7 +510,7 @@ SkeletonProfileHumanoid::SkeletonProfileHumanoid() {
 	bones.write[5].tail_direction = TAIL_DIRECTION_SPECIFIC_CHILD;
 	bones.write[5].bone_tail = "Head";
 	bones.write[5].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0);
-	bones.write[5].handle_offset = Vector2(0.5, 0.23);
+	bones.write[5].handle_offset = Hector2(0.5, 0.23);
 	bones.write[5].group = "Body";
 	bones.write[5].required = false;
 
@@ -518,46 +518,46 @@ SkeletonProfileHumanoid::SkeletonProfileHumanoid() {
 	bones.write[6].bone_parent = "Neck";
 	bones.write[6].tail_direction = TAIL_DIRECTION_END;
 	bones.write[6].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0);
-	bones.write[6].handle_offset = Vector2(0.5, 0.18);
+	bones.write[6].handle_offset = Hector2(0.5, 0.18);
 	bones.write[6].group = "Body";
 	bones.write[6].required = true;
 
 	bones.write[7].bone_name = "LeftEye";
 	bones.write[7].bone_parent = "Head";
 	bones.write[7].reference_pose = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.05, 0.15, 0);
-	bones.write[7].handle_offset = Vector2(0.6, 0.46);
+	bones.write[7].handle_offset = Hector2(0.6, 0.46);
 	bones.write[7].group = "Face";
 
 	bones.write[8].bone_name = "RightEye";
 	bones.write[8].bone_parent = "Head";
 	bones.write[8].reference_pose = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.05, 0.15, 0);
-	bones.write[8].handle_offset = Vector2(0.37, 0.46);
+	bones.write[8].handle_offset = Hector2(0.37, 0.46);
 	bones.write[8].group = "Face";
 
 	bones.write[9].bone_name = "Jaw";
 	bones.write[9].bone_parent = "Head";
 	bones.write[9].reference_pose = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0.05, 0.05);
-	bones.write[9].handle_offset = Vector2(0.46, 0.75);
+	bones.write[9].handle_offset = Hector2(0.46, 0.75);
 	bones.write[9].group = "Face";
 
 	bones.write[10].bone_name = "LeftShoulder";
 	bones.write[10].bone_parent = "UpperChest";
 	bones.write[10].reference_pose = Transform3D(0, 1, 0, 0, 0, 1, 1, 0, 0, 0.05, 0.1, 0);
-	bones.write[10].handle_offset = Vector2(0.55, 0.235);
+	bones.write[10].handle_offset = Hector2(0.55, 0.235);
 	bones.write[10].group = "Body";
 	bones.write[10].required = true;
 
 	bones.write[11].bone_name = "LeftUpperArm";
 	bones.write[11].bone_parent = "LeftShoulder";
 	bones.write[11].reference_pose = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.05, 0);
-	bones.write[11].handle_offset = Vector2(0.6, 0.24);
+	bones.write[11].handle_offset = Hector2(0.6, 0.24);
 	bones.write[11].group = "Body";
 	bones.write[11].required = true;
 
 	bones.write[12].bone_name = "LeftLowerArm";
 	bones.write[12].bone_parent = "LeftUpperArm";
 	bones.write[12].reference_pose = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0.25, 0);
-	bones.write[12].handle_offset = Vector2(0.7, 0.24);
+	bones.write[12].handle_offset = Hector2(0.7, 0.24);
 	bones.write[12].group = "Body";
 	bones.write[12].required = true;
 
@@ -566,118 +566,118 @@ SkeletonProfileHumanoid::SkeletonProfileHumanoid() {
 	bones.write[13].tail_direction = TAIL_DIRECTION_SPECIFIC_CHILD;
 	bones.write[13].bone_tail = "LeftMiddleProximal";
 	bones.write[13].reference_pose = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.25, 0);
-	bones.write[13].handle_offset = Vector2(0.82, 0.235);
+	bones.write[13].handle_offset = Hector2(0.82, 0.235);
 	bones.write[13].group = "Body";
 	bones.write[13].required = true;
 
 	bones.write[14].bone_name = "LeftThumbMetacarpal";
 	bones.write[14].bone_parent = "LeftHand";
 	bones.write[14].reference_pose = Transform3D(0, -0.577, 0.816, 0, 0.816, 0.577, -1, 0, 0, -0.025, 0.025, 0);
-	bones.write[14].handle_offset = Vector2(0.4, 0.8);
+	bones.write[14].handle_offset = Hector2(0.4, 0.8);
 	bones.write[14].group = "LeftHand";
 
 	bones.write[15].bone_name = "LeftThumbProximal";
 	bones.write[15].bone_parent = "LeftThumbMetacarpal";
 	bones.write[15].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.043, 0);
-	bones.write[15].handle_offset = Vector2(0.3, 0.69);
+	bones.write[15].handle_offset = Hector2(0.3, 0.69);
 	bones.write[15].group = "LeftHand";
 
 	bones.write[16].bone_name = "LeftThumbDistal";
 	bones.write[16].bone_parent = "LeftThumbProximal";
 	bones.write[16].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.043, 0);
-	bones.write[16].handle_offset = Vector2(0.23, 0.555);
+	bones.write[16].handle_offset = Hector2(0.23, 0.555);
 	bones.write[16].group = "LeftHand";
 
 	bones.write[17].bone_name = "LeftIndexProximal";
 	bones.write[17].bone_parent = "LeftHand";
 	bones.write[17].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.075, 0);
-	bones.write[17].handle_offset = Vector2(0.413, 0.52);
+	bones.write[17].handle_offset = Hector2(0.413, 0.52);
 	bones.write[17].group = "LeftHand";
 
 	bones.write[18].bone_name = "LeftIndexIntermediate";
 	bones.write[18].bone_parent = "LeftIndexProximal";
 	bones.write[18].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0);
-	bones.write[18].handle_offset = Vector2(0.403, 0.36);
+	bones.write[18].handle_offset = Hector2(0.403, 0.36);
 	bones.write[18].group = "LeftHand";
 
 	bones.write[19].bone_name = "LeftIndexDistal";
 	bones.write[19].bone_parent = "LeftIndexIntermediate";
 	bones.write[19].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[19].handle_offset = Vector2(0.403, 0.255);
+	bones.write[19].handle_offset = Hector2(0.403, 0.255);
 	bones.write[19].group = "LeftHand";
 
 	bones.write[20].bone_name = "LeftMiddleProximal";
 	bones.write[20].bone_parent = "LeftHand";
 	bones.write[20].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0);
-	bones.write[20].handle_offset = Vector2(0.5, 0.51);
+	bones.write[20].handle_offset = Hector2(0.5, 0.51);
 	bones.write[20].group = "LeftHand";
 
 	bones.write[21].bone_name = "LeftMiddleIntermediate";
 	bones.write[21].bone_parent = "LeftMiddleProximal";
 	bones.write[21].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0);
-	bones.write[21].handle_offset = Vector2(0.5, 0.345);
+	bones.write[21].handle_offset = Hector2(0.5, 0.345);
 	bones.write[21].group = "LeftHand";
 
 	bones.write[22].bone_name = "LeftMiddleDistal";
 	bones.write[22].bone_parent = "LeftMiddleIntermediate";
 	bones.write[22].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[22].handle_offset = Vector2(0.5, 0.22);
+	bones.write[22].handle_offset = Hector2(0.5, 0.22);
 	bones.write[22].group = "LeftHand";
 
 	bones.write[23].bone_name = "LeftRingProximal";
 	bones.write[23].bone_parent = "LeftHand";
 	bones.write[23].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.075, 0);
-	bones.write[23].handle_offset = Vector2(0.586, 0.52);
+	bones.write[23].handle_offset = Hector2(0.586, 0.52);
 	bones.write[23].group = "LeftHand";
 
 	bones.write[24].bone_name = "LeftRingIntermediate";
 	bones.write[24].bone_parent = "LeftRingProximal";
 	bones.write[24].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0);
-	bones.write[24].handle_offset = Vector2(0.59, 0.36);
+	bones.write[24].handle_offset = Hector2(0.59, 0.36);
 	bones.write[24].group = "LeftHand";
 
 	bones.write[25].bone_name = "LeftRingDistal";
 	bones.write[25].bone_parent = "LeftRingIntermediate";
 	bones.write[25].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[25].handle_offset = Vector2(0.591, 0.25);
+	bones.write[25].handle_offset = Hector2(0.591, 0.25);
 	bones.write[25].group = "LeftHand";
 
 	bones.write[26].bone_name = "LeftLittleProximal";
 	bones.write[26].bone_parent = "LeftHand";
 	bones.write[26].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.05, 0);
-	bones.write[26].handle_offset = Vector2(0.663, 0.543);
+	bones.write[26].handle_offset = Hector2(0.663, 0.543);
 	bones.write[26].group = "LeftHand";
 
 	bones.write[27].bone_name = "LeftLittleIntermediate";
 	bones.write[27].bone_parent = "LeftLittleProximal";
 	bones.write[27].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0);
-	bones.write[27].handle_offset = Vector2(0.672, 0.415);
+	bones.write[27].handle_offset = Hector2(0.672, 0.415);
 	bones.write[27].group = "LeftHand";
 
 	bones.write[28].bone_name = "LeftLittleDistal";
 	bones.write[28].bone_parent = "LeftLittleIntermediate";
 	bones.write[28].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[28].handle_offset = Vector2(0.672, 0.32);
+	bones.write[28].handle_offset = Hector2(0.672, 0.32);
 	bones.write[28].group = "LeftHand";
 
 	bones.write[29].bone_name = "RightShoulder";
 	bones.write[29].bone_parent = "UpperChest";
 	bones.write[29].reference_pose = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -0.05, 0.1, 0);
-	bones.write[29].handle_offset = Vector2(0.45, 0.235);
+	bones.write[29].handle_offset = Hector2(0.45, 0.235);
 	bones.write[29].group = "Body";
 	bones.write[29].required = true;
 
 	bones.write[30].bone_name = "RightUpperArm";
 	bones.write[30].bone_parent = "RightShoulder";
 	bones.write[30].reference_pose = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.05, 0);
-	bones.write[30].handle_offset = Vector2(0.4, 0.24);
+	bones.write[30].handle_offset = Hector2(0.4, 0.24);
 	bones.write[30].group = "Body";
 	bones.write[30].required = true;
 
 	bones.write[31].bone_name = "RightLowerArm";
 	bones.write[31].bone_parent = "RightUpperArm";
 	bones.write[31].reference_pose = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.25, 0);
-	bones.write[31].handle_offset = Vector2(0.3, 0.24);
+	bones.write[31].handle_offset = Hector2(0.3, 0.24);
 	bones.write[31].group = "Body";
 	bones.write[31].required = true;
 
@@ -686,152 +686,152 @@ SkeletonProfileHumanoid::SkeletonProfileHumanoid() {
 	bones.write[32].tail_direction = TAIL_DIRECTION_SPECIFIC_CHILD;
 	bones.write[32].bone_tail = "RightMiddleProximal";
 	bones.write[32].reference_pose = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0.25, 0);
-	bones.write[32].handle_offset = Vector2(0.18, 0.235);
+	bones.write[32].handle_offset = Hector2(0.18, 0.235);
 	bones.write[32].group = "Body";
 	bones.write[32].required = true;
 
 	bones.write[33].bone_name = "RightThumbMetacarpal";
 	bones.write[33].bone_parent = "RightHand";
 	bones.write[33].reference_pose = Transform3D(0, 0.577, -0.816, 0, 0.816, 0.577, 1, 0, 0, 0.025, 0.025, 0);
-	bones.write[33].handle_offset = Vector2(0.6, 0.8);
+	bones.write[33].handle_offset = Hector2(0.6, 0.8);
 	bones.write[33].group = "RightHand";
 
 	bones.write[34].bone_name = "RightThumbProximal";
 	bones.write[34].bone_parent = "RightThumbMetacarpal";
 	bones.write[34].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.043, 0);
-	bones.write[34].handle_offset = Vector2(0.7, 0.69);
+	bones.write[34].handle_offset = Hector2(0.7, 0.69);
 	bones.write[34].group = "RightHand";
 
 	bones.write[35].bone_name = "RightThumbDistal";
 	bones.write[35].bone_parent = "RightThumbProximal";
 	bones.write[35].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.043, 0);
-	bones.write[35].handle_offset = Vector2(0.77, 0.555);
+	bones.write[35].handle_offset = Hector2(0.77, 0.555);
 	bones.write[35].group = "RightHand";
 
 	bones.write[36].bone_name = "RightIndexProximal";
 	bones.write[36].bone_parent = "RightHand";
 	bones.write[36].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.075, 0);
-	bones.write[36].handle_offset = Vector2(0.587, 0.52);
+	bones.write[36].handle_offset = Hector2(0.587, 0.52);
 	bones.write[36].group = "RightHand";
 
 	bones.write[37].bone_name = "RightIndexIntermediate";
 	bones.write[37].bone_parent = "RightIndexProximal";
 	bones.write[37].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0);
-	bones.write[37].handle_offset = Vector2(0.597, 0.36);
+	bones.write[37].handle_offset = Hector2(0.597, 0.36);
 	bones.write[37].group = "RightHand";
 
 	bones.write[38].bone_name = "RightIndexDistal";
 	bones.write[38].bone_parent = "RightIndexIntermediate";
 	bones.write[38].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[38].handle_offset = Vector2(0.597, 0.255);
+	bones.write[38].handle_offset = Hector2(0.597, 0.255);
 	bones.write[38].group = "RightHand";
 
 	bones.write[39].bone_name = "RightMiddleProximal";
 	bones.write[39].bone_parent = "RightHand";
 	bones.write[39].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0);
-	bones.write[39].handle_offset = Vector2(0.5, 0.51);
+	bones.write[39].handle_offset = Hector2(0.5, 0.51);
 	bones.write[39].group = "RightHand";
 
 	bones.write[40].bone_name = "RightMiddleIntermediate";
 	bones.write[40].bone_parent = "RightMiddleProximal";
 	bones.write[40].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0);
-	bones.write[40].handle_offset = Vector2(0.5, 0.345);
+	bones.write[40].handle_offset = Hector2(0.5, 0.345);
 	bones.write[40].group = "RightHand";
 
 	bones.write[41].bone_name = "RightMiddleDistal";
 	bones.write[41].bone_parent = "RightMiddleIntermediate";
 	bones.write[41].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[41].handle_offset = Vector2(0.5, 0.22);
+	bones.write[41].handle_offset = Hector2(0.5, 0.22);
 	bones.write[41].group = "RightHand";
 
 	bones.write[42].bone_name = "RightRingProximal";
 	bones.write[42].bone_parent = "RightHand";
 	bones.write[42].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025, 0.075, 0);
-	bones.write[42].handle_offset = Vector2(0.414, 0.52);
+	bones.write[42].handle_offset = Hector2(0.414, 0.52);
 	bones.write[42].group = "RightHand";
 
 	bones.write[43].bone_name = "RightRingIntermediate";
 	bones.write[43].bone_parent = "RightRingProximal";
 	bones.write[43].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0);
-	bones.write[43].handle_offset = Vector2(0.41, 0.36);
+	bones.write[43].handle_offset = Hector2(0.41, 0.36);
 	bones.write[43].group = "RightHand";
 
 	bones.write[44].bone_name = "RightRingDistal";
 	bones.write[44].bone_parent = "RightRingIntermediate";
 	bones.write[44].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[44].handle_offset = Vector2(0.409, 0.25);
+	bones.write[44].handle_offset = Hector2(0.409, 0.25);
 	bones.write[44].group = "RightHand";
 
 	bones.write[45].bone_name = "RightLittleProximal";
 	bones.write[45].bone_parent = "RightHand";
 	bones.write[45].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.05, 0);
-	bones.write[45].handle_offset = Vector2(0.337, 0.543);
+	bones.write[45].handle_offset = Hector2(0.337, 0.543);
 	bones.write[45].group = "RightHand";
 
 	bones.write[46].bone_name = "RightLittleIntermediate";
 	bones.write[46].bone_parent = "RightLittleProximal";
 	bones.write[46].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0);
-	bones.write[46].handle_offset = Vector2(0.328, 0.415);
+	bones.write[46].handle_offset = Hector2(0.328, 0.415);
 	bones.write[46].group = "RightHand";
 
 	bones.write[47].bone_name = "RightLittleDistal";
 	bones.write[47].bone_parent = "RightLittleIntermediate";
 	bones.write[47].reference_pose = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0);
-	bones.write[47].handle_offset = Vector2(0.328, 0.32);
+	bones.write[47].handle_offset = Hector2(0.328, 0.32);
 	bones.write[47].group = "RightHand";
 
 	bones.write[48].bone_name = "LeftUpperLeg";
 	bones.write[48].bone_parent = "Hips";
 	bones.write[48].reference_pose = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, 0.1, 0, 0);
-	bones.write[48].handle_offset = Vector2(0.549, 0.49);
+	bones.write[48].handle_offset = Hector2(0.549, 0.49);
 	bones.write[48].group = "Body";
 	bones.write[48].required = true;
 
 	bones.write[49].bone_name = "LeftLowerLeg";
 	bones.write[49].bone_parent = "LeftUpperLeg";
 	bones.write[49].reference_pose = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.375, 0);
-	bones.write[49].handle_offset = Vector2(0.548, 0.683);
+	bones.write[49].handle_offset = Hector2(0.548, 0.683);
 	bones.write[49].group = "Body";
 	bones.write[49].required = true;
 
 	bones.write[50].bone_name = "LeftFoot";
 	bones.write[50].bone_parent = "LeftLowerLeg";
 	bones.write[50].reference_pose = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0.375, 0);
-	bones.write[50].handle_offset = Vector2(0.545, 0.9);
+	bones.write[50].handle_offset = Hector2(0.545, 0.9);
 	bones.write[50].group = "Body";
 	bones.write[50].required = true;
 
 	bones.write[51].bone_name = "LeftToes";
 	bones.write[51].bone_parent = "LeftFoot";
 	bones.write[51].reference_pose = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.15, 0);
-	bones.write[51].handle_offset = Vector2(0.545, 0.95);
+	bones.write[51].handle_offset = Hector2(0.545, 0.95);
 	bones.write[51].group = "Body";
 
 	bones.write[52].bone_name = "RightUpperLeg";
 	bones.write[52].bone_parent = "Hips";
 	bones.write[52].reference_pose = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, -0.1, 0, 0);
-	bones.write[52].handle_offset = Vector2(0.451, 0.49);
+	bones.write[52].handle_offset = Hector2(0.451, 0.49);
 	bones.write[52].group = "Body";
 	bones.write[52].required = true;
 
 	bones.write[53].bone_name = "RightLowerLeg";
 	bones.write[53].bone_parent = "RightUpperLeg";
 	bones.write[53].reference_pose = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.375, 0);
-	bones.write[53].handle_offset = Vector2(0.452, 0.683);
+	bones.write[53].handle_offset = Hector2(0.452, 0.683);
 	bones.write[53].group = "Body";
 	bones.write[53].required = true;
 
 	bones.write[54].bone_name = "RightFoot";
 	bones.write[54].bone_parent = "RightLowerLeg";
 	bones.write[54].reference_pose = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0.375, 0);
-	bones.write[54].handle_offset = Vector2(0.455, 0.9);
+	bones.write[54].handle_offset = Hector2(0.455, 0.9);
 	bones.write[54].group = "Body";
 	bones.write[54].required = true;
 
 	bones.write[55].bone_name = "RightToes";
 	bones.write[55].bone_parent = "RightFoot";
 	bones.write[55].reference_pose = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.15, 0);
-	bones.write[55].handle_offset = Vector2(0.455, 0.95);
+	bones.write[55].handle_offset = Hector2(0.455, 0.95);
 	bones.write[55].group = "Body";
 }
 

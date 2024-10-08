@@ -41,7 +41,7 @@
 #define ISLAND_SIZE_RESERVE 512
 #define CONSTRAINT_COUNT_RESERVE 1024
 
-void GodotStep3D::_populate_island(GodotBody3D *p_body, LocalVector<GodotBody3D *> &p_body_island, LocalVector<GodotConstraint3D *> &p_constraint_island) {
+void GodotStep3D::_populate_island(GodotBody3D *p_body, LocalHector<GodotBody3D *> &p_body_island, LocalHector<GodotConstraint3D *> &p_constraint_island) {
 	p_body->set_island_step(_step);
 
 	if (p_body->get_mode() > PhysicsServer3D::BODY_MODE_KINEMATIC) {
@@ -85,7 +85,7 @@ void GodotStep3D::_populate_island(GodotBody3D *p_body, LocalVector<GodotBody3D 
 	}
 }
 
-void GodotStep3D::_populate_island_soft_body(GodotSoftBody3D *p_soft_body, LocalVector<GodotBody3D *> &p_body_island, LocalVector<GodotConstraint3D *> &p_constraint_island) {
+void GodotStep3D::_populate_island_soft_body(GodotSoftBody3D *p_soft_body, LocalHector<GodotBody3D *> &p_body_island, LocalHector<GodotConstraint3D *> &p_constraint_island) {
 	p_soft_body->set_island_step(_step);
 
 	for (const GodotConstraint3D *E : p_soft_body->get_constraints()) {
@@ -117,7 +117,7 @@ void GodotStep3D::_setup_constraint(uint32_t p_constraint_index, void *p_userdat
 	constraint->setup(delta);
 }
 
-void GodotStep3D::_pre_solve_island(LocalVector<GodotConstraint3D *> &p_constraint_island) const {
+void GodotStep3D::_pre_solve_island(LocalHector<GodotConstraint3D *> &p_constraint_island) const {
 	uint32_t constraint_count = p_constraint_island.size();
 	uint32_t valid_constraint_count = 0;
 	for (uint32_t constraint_index = 0; constraint_index < constraint_count; ++constraint_index) {
@@ -131,7 +131,7 @@ void GodotStep3D::_pre_solve_island(LocalVector<GodotConstraint3D *> &p_constrai
 }
 
 void GodotStep3D::_solve_island(uint32_t p_island_index, void *p_userdata) {
-	LocalVector<GodotConstraint3D *> &constraint_island = constraint_islands[p_island_index];
+	LocalHector<GodotConstraint3D *> &constraint_island = constraint_islands[p_island_index];
 
 	int current_priority = 1;
 
@@ -158,7 +158,7 @@ void GodotStep3D::_solve_island(uint32_t p_island_index, void *p_userdata) {
 	}
 }
 
-void GodotStep3D::_check_suspend(const LocalVector<GodotBody3D *> &p_body_island) const {
+void GodotStep3D::_check_suspend(const LocalHector<GodotBody3D *> &p_body_island) const {
 	bool can_sleep = true;
 
 	uint32_t body_count = p_body_island.size();
@@ -249,7 +249,7 @@ void GodotStep3D::step(GodotSpace3D *p_space, real_t p_delta) {
 			if (constraint_islands.size() < island_count) {
 				constraint_islands.resize(island_count);
 			}
-			LocalVector<GodotConstraint3D *> &constraint_island = constraint_islands[island_count - 1];
+			LocalHector<GodotConstraint3D *> &constraint_island = constraint_islands[island_count - 1];
 			constraint_island.clear();
 
 			all_constraints.push_back(constraint);
@@ -272,7 +272,7 @@ void GodotStep3D::step(GodotSpace3D *p_space, real_t p_delta) {
 			if (body_islands.size() < body_island_count) {
 				body_islands.resize(body_island_count);
 			}
-			LocalVector<GodotBody3D *> &body_island = body_islands[body_island_count - 1];
+			LocalHector<GodotBody3D *> &body_island = body_islands[body_island_count - 1];
 			body_island.clear();
 			body_island.reserve(BODY_ISLAND_SIZE_RESERVE);
 
@@ -280,7 +280,7 @@ void GodotStep3D::step(GodotSpace3D *p_space, real_t p_delta) {
 			if (constraint_islands.size() < island_count) {
 				constraint_islands.resize(island_count);
 			}
-			LocalVector<GodotConstraint3D *> &constraint_island = constraint_islands[island_count - 1];
+			LocalHector<GodotConstraint3D *> &constraint_island = constraint_islands[island_count - 1];
 			constraint_island.clear();
 			constraint_island.reserve(ISLAND_SIZE_RESERVE);
 
@@ -308,7 +308,7 @@ void GodotStep3D::step(GodotSpace3D *p_space, real_t p_delta) {
 			if (body_islands.size() < body_island_count) {
 				body_islands.resize(body_island_count);
 			}
-			LocalVector<GodotBody3D *> &body_island = body_islands[body_island_count - 1];
+			LocalHector<GodotBody3D *> &body_island = body_islands[body_island_count - 1];
 			body_island.clear();
 			body_island.reserve(BODY_ISLAND_SIZE_RESERVE);
 
@@ -316,7 +316,7 @@ void GodotStep3D::step(GodotSpace3D *p_space, real_t p_delta) {
 			if (constraint_islands.size() < island_count) {
 				constraint_islands.resize(island_count);
 			}
-			LocalVector<GodotConstraint3D *> &constraint_island = constraint_islands[island_count - 1];
+			LocalHector<GodotConstraint3D *> &constraint_island = constraint_islands[island_count - 1];
 			constraint_island.clear();
 			constraint_island.reserve(ISLAND_SIZE_RESERVE);
 

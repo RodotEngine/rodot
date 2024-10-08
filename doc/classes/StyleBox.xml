@@ -24,14 +24,14 @@
 			</description>
 		</method>
 		<method name="_get_minimum_size" qualifiers="virtual const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Virtual method to be implemented by the user. Returns a custom minimum size that the stylebox must respect when drawing. By default [method get_minimum_size] only takes content margins into account. This method can be overridden to add another size restriction. A combination of the default behavior and the output of this method will be used, to account for both sizes.
 			</description>
 		</method>
 		<method name="_test_mask" qualifiers="virtual const">
 			<return type="bool" />
-			<param index="0" name="point" type="Vector2" />
+			<param index="0" name="point" type="Hector2" />
 			<param index="1" name="rect" type="Rect2" />
 			<description>
 			</description>
@@ -67,15 +67,15 @@
 			</description>
 		</method>
 		<method name="get_minimum_size" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
 				Returns the minimum size that this stylebox can be shrunk to.
 			</description>
 		</method>
 		<method name="get_offset" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<description>
-				Returns the "offset" of a stylebox. This helper function returns a value equivalent to [code]Vector2(style.get_margin(MARGIN_LEFT), style.get_margin(MARGIN_TOP))[/code].
+				Returns the "offset" of a stylebox. This helper function returns a value equivalent to [code]Hector2(style.get_margin(MARGIN_LEFT), style.get_margin(MARGIN_TOP))[/code].
 			</description>
 		</method>
 		<method name="set_content_margin">
@@ -95,7 +95,7 @@
 		</method>
 		<method name="test_mask" qualifiers="const">
 			<return type="bool" />
-			<param index="0" name="point" type="Vector2" />
+			<param index="0" name="point" type="Hector2" />
 			<param index="1" name="rect" type="Rect2" />
 			<description>
 				Test a position in a rectangle, return whether it passes the mask test.

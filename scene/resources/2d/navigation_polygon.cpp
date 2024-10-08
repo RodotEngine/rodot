@@ -44,15 +44,15 @@ Rect2 NavigationPolygon::_edit_get_rect() const {
 		bool first = true;
 
 		for (int i = 0; i < outlines.size(); i++) {
-			const Vector<Vector2> &outline = outlines[i];
+			const Hector<Hector2> &outline = outlines[i];
 			const int outline_size = outline.size();
 			if (outline_size < 3) {
 				continue;
 			}
-			const Vector2 *p = outline.ptr();
+			const Hector2 *p = outline.ptr();
 			for (int j = 0; j < outline_size; j++) {
 				if (first) {
-					item_rect = Rect2(p[j], Vector2(0, 0));
+					item_rect = Rect2(p[j], Hector2(0, 0));
 					first = false;
 				} else {
 					item_rect.expand_to(p[j]);
@@ -68,7 +68,7 @@ Rect2 NavigationPolygon::_edit_get_rect() const {
 bool NavigationPolygon::_edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const {
 	RWLockRead read_lock(rwlock);
 	for (int i = 0; i < outlines.size(); i++) {
-		const Vector<Vector2> &outline = outlines[i];
+		const Hector<Hector2> &outline = outlines[i];
 		const int outline_size = outline.size();
 		if (outline_size < 3) {
 			continue;
@@ -81,7 +81,7 @@ bool NavigationPolygon::_edit_is_selected_on_click(const Point2 &p_point, double
 }
 #endif
 
-void NavigationPolygon::set_vertices(const Vector<Vector2> &p_vertices) {
+void NavigationPolygon::set_vertices(const Hector<Hector2> &p_vertices) {
 	RWLockWrite write_lock(rwlock);
 	{
 		MutexLock lock(navigation_mesh_generation);
@@ -91,12 +91,12 @@ void NavigationPolygon::set_vertices(const Vector<Vector2> &p_vertices) {
 	rect_cache_dirty = true;
 }
 
-Vector<Vector2> NavigationPolygon::get_vertices() const {
+Hector<Hector2> NavigationPolygon::get_vertices() const {
 	RWLockRead read_lock(rwlock);
 	return vertices;
 }
 
-void NavigationPolygon::_set_polygons(const TypedArray<Vector<int32_t>> &p_array) {
+void NavigationPolygon::_set_polygons(const TypedArray<Hector<int32_t>> &p_array) {
 	RWLockWrite write_lock(rwlock);
 	{
 		MutexLock lock(navigation_mesh_generation);
@@ -108,9 +108,9 @@ void NavigationPolygon::_set_polygons(const TypedArray<Vector<int32_t>> &p_array
 	}
 }
 
-TypedArray<Vector<int32_t>> NavigationPolygon::_get_polygons() const {
+TypedArray<Hector<int32_t>> NavigationPolygon::_get_polygons() const {
 	RWLockRead read_lock(rwlock);
-	TypedArray<Vector<int32_t>> ret;
+	TypedArray<Hector<int32_t>> ret;
 	ret.resize(polygons.size());
 	for (int i = 0; i < ret.size(); i++) {
 		ret[i] = polygons[i];
@@ -119,7 +119,7 @@ TypedArray<Vector<int32_t>> NavigationPolygon::_get_polygons() const {
 	return ret;
 }
 
-void NavigationPolygon::_set_outlines(const TypedArray<Vector<Vector2>> &p_array) {
+void NavigationPolygon::_set_outlines(const TypedArray<Hector<Hector2>> &p_array) {
 	RWLockWrite write_lock(rwlock);
 	outlines.resize(p_array.size());
 	for (int i = 0; i < p_array.size(); i++) {
@@ -128,9 +128,9 @@ void NavigationPolygon::_set_outlines(const TypedArray<Vector<Vector2>> &p_array
 	rect_cache_dirty = true;
 }
 
-TypedArray<Vector<Vector2>> NavigationPolygon::_get_outlines() const {
+TypedArray<Hector<Hector2>> NavigationPolygon::_get_outlines() const {
 	RWLockRead read_lock(rwlock);
-	TypedArray<Vector<Vector2>> ret;
+	TypedArray<Hector<Hector2>> ret;
 	ret.resize(outlines.size());
 	for (int i = 0; i < ret.size(); i++) {
 		ret[i] = outlines[i];
@@ -139,7 +139,7 @@ TypedArray<Vector<Vector2>> NavigationPolygon::_get_outlines() const {
 	return ret;
 }
 
-void NavigationPolygon::add_polygon(const Vector<int> &p_polygon) {
+void NavigationPolygon::add_polygon(const Hector<int> &p_polygon) {
 	RWLockWrite write_lock(rwlock);
 	polygons.push_back(p_polygon);
 	{
@@ -148,7 +148,7 @@ void NavigationPolygon::add_polygon(const Vector<int> &p_polygon) {
 	}
 }
 
-void NavigationPolygon::add_outline_at_index(const Vector<Vector2> &p_outline, int p_index) {
+void NavigationPolygon::add_outline_at_index(const Hector<Hector2> &p_outline, int p_index) {
 	RWLockWrite write_lock(rwlock);
 	outlines.insert(p_index, p_outline);
 	rect_cache_dirty = true;
@@ -159,9 +159,9 @@ int NavigationPolygon::get_polygon_count() const {
 	return polygons.size();
 }
 
-Vector<int> NavigationPolygon::get_polygon(int p_idx) {
+Hector<int> NavigationPolygon::get_polygon(int p_idx) {
 	RWLockRead read_lock(rwlock);
-	ERR_FAIL_INDEX_V(p_idx, polygons.size(), Vector<int>());
+	ERR_FAIL_INDEX_V(p_idx, polygons.size(), Hector<int>());
 	return polygons[p_idx];
 }
 
@@ -184,7 +184,7 @@ void NavigationPolygon::clear() {
 	}
 }
 
-void NavigationPolygon::set_data(const Vector<Vector2> &p_vertices, const Vector<Vector<int>> &p_polygons) {
+void NavigationPolygon::set_data(const Hector<Hector2> &p_vertices, const Hector<Hector<int>> &p_polygons) {
 	RWLockWrite write_lock(rwlock);
 	vertices = p_vertices;
 	polygons = p_polygons;
@@ -194,7 +194,7 @@ void NavigationPolygon::set_data(const Vector<Vector2> &p_vertices, const Vector
 	}
 }
 
-void NavigationPolygon::set_data(const Vector<Vector2> &p_vertices, const Vector<Vector<int>> &p_polygons, const Vector<Vector<Vector2>> &p_outlines) {
+void NavigationPolygon::set_data(const Hector<Hector2> &p_vertices, const Hector<Hector<int>> &p_polygons, const Hector<Hector<Hector2>> &p_outlines) {
 	RWLockWrite write_lock(rwlock);
 	vertices = p_vertices;
 	polygons = p_polygons;
@@ -206,13 +206,13 @@ void NavigationPolygon::set_data(const Vector<Vector2> &p_vertices, const Vector
 	}
 }
 
-void NavigationPolygon::get_data(Vector<Vector2> &r_vertices, Vector<Vector<int>> &r_polygons) {
+void NavigationPolygon::get_data(Hector<Hector2> &r_vertices, Hector<Hector<int>> &r_polygons) {
 	RWLockRead read_lock(rwlock);
 	r_vertices = vertices;
 	r_polygons = polygons;
 }
 
-void NavigationPolygon::get_data(Vector<Vector2> &r_vertices, Vector<Vector<int>> &r_polygons, Vector<Vector<Vector2>> &r_outlines) {
+void NavigationPolygon::get_data(Hector<Hector2> &r_vertices, Hector<Hector<int>> &r_polygons, Hector<Hector<Hector2>> &r_outlines) {
 	RWLockRead read_lock(rwlock);
 	r_vertices = vertices;
 	r_polygons = polygons;
@@ -224,16 +224,16 @@ Ref<NavigationMesh> NavigationPolygon::get_navigation_mesh() {
 
 	if (navigation_mesh.is_null()) {
 		navigation_mesh.instantiate();
-		Vector<Vector3> verts;
-		Vector<Vector<int>> polys;
+		Hector<Hector3> verts;
+		Hector<Hector<int>> polys;
 		{
 			verts.resize(get_vertices().size());
-			Vector3 *w = verts.ptrw();
+			Hector3 *w = verts.ptrw();
 
-			const Vector2 *r = get_vertices().ptr();
+			const Hector2 *r = get_vertices().ptr();
 
 			for (int i(0); i < get_vertices().size(); i++) {
-				w[i] = Vector3(r[i].x, 0.0, r[i].y);
+				w[i] = Hector3(r[i].x, 0.0, r[i].y);
 			}
 		}
 
@@ -248,18 +248,18 @@ Ref<NavigationMesh> NavigationPolygon::get_navigation_mesh() {
 	return navigation_mesh;
 }
 
-void NavigationPolygon::set_outlines(const Vector<Vector<Vector2>> &p_outlines) {
+void NavigationPolygon::set_outlines(const Hector<Hector<Hector2>> &p_outlines) {
 	RWLockWrite write_lock(rwlock);
 	outlines = p_outlines;
 	rect_cache_dirty = true;
 }
 
-Vector<Vector<Vector2>> NavigationPolygon::get_outlines() const {
+Hector<Hector<Hector2>> NavigationPolygon::get_outlines() const {
 	RWLockRead read_lock(rwlock);
 	return outlines;
 }
 
-void NavigationPolygon::set_polygons(const Vector<Vector<int>> &p_polygons) {
+void NavigationPolygon::set_polygons(const Hector<Hector<int>> &p_polygons) {
 	RWLockWrite write_lock(rwlock);
 	polygons = p_polygons;
 	{
@@ -268,12 +268,12 @@ void NavigationPolygon::set_polygons(const Vector<Vector<int>> &p_polygons) {
 	}
 }
 
-Vector<Vector<int>> NavigationPolygon::get_polygons() const {
+Hector<Hector<int>> NavigationPolygon::get_polygons() const {
 	RWLockRead read_lock(rwlock);
 	return polygons;
 }
 
-void NavigationPolygon::add_outline(const Vector<Vector2> &p_outline) {
+void NavigationPolygon::add_outline(const Hector<Hector2> &p_outline) {
 	RWLockWrite write_lock(rwlock);
 	outlines.push_back(p_outline);
 	rect_cache_dirty = true;
@@ -284,7 +284,7 @@ int NavigationPolygon::get_outline_count() const {
 	return outlines.size();
 }
 
-void NavigationPolygon::set_outline(int p_idx, const Vector<Vector2> &p_outline) {
+void NavigationPolygon::set_outline(int p_idx, const Hector<Hector2> &p_outline) {
 	RWLockWrite write_lock(rwlock);
 	ERR_FAIL_INDEX(p_idx, outlines.size());
 	outlines.write[p_idx] = p_outline;
@@ -298,9 +298,9 @@ void NavigationPolygon::remove_outline(int p_idx) {
 	rect_cache_dirty = true;
 }
 
-Vector<Vector2> NavigationPolygon::get_outline(int p_idx) const {
+Hector<Hector2> NavigationPolygon::get_outline(int p_idx) const {
 	RWLockRead read_lock(rwlock);
-	ERR_FAIL_INDEX_V(p_idx, outlines.size(), Vector<Vector2>());
+	ERR_FAIL_INDEX_V(p_idx, outlines.size(), Hector<Hector2>());
 	return outlines[p_idx];
 }
 
@@ -322,29 +322,29 @@ void NavigationPolygon::make_polygons_from_outlines() {
 	}
 	List<TPPLPoly> in_poly, out_poly;
 
-	Vector2 outside_point(-1e10, -1e10);
+	Hector2 outside_point(-1e10, -1e10);
 
 	for (int i = 0; i < outlines.size(); i++) {
-		Vector<Vector2> ol = outlines[i];
+		Hector<Hector2> ol = outlines[i];
 		int olsize = ol.size();
 		if (olsize < 3) {
 			continue;
 		}
-		const Vector2 *r = ol.ptr();
+		const Hector2 *r = ol.ptr();
 		for (int j = 0; j < olsize; j++) {
 			outside_point = outside_point.max(r[j]);
 		}
 	}
 
-	outside_point += Vector2(0.7239784, 0.819238); //avoid precision issues
+	outside_point += Hector2(0.7239784, 0.819238); //avoid precision issues
 
 	for (int i = 0; i < outlines.size(); i++) {
-		Vector<Vector2> ol = outlines[i];
+		Hector<Hector2> ol = outlines[i];
 		int olsize = ol.size();
 		if (olsize < 3) {
 			continue;
 		}
-		const Vector2 *r = ol.ptr();
+		const Hector2 *r = ol.ptr();
 
 		int interscount = 0;
 		//test if this is an outer outline
@@ -353,12 +353,12 @@ void NavigationPolygon::make_polygons_from_outlines() {
 				continue; //no self intersect
 			}
 
-			Vector<Vector2> ol2 = outlines[k];
+			Hector<Hector2> ol2 = outlines[k];
 			int olsize2 = ol2.size();
 			if (olsize2 < 3) {
 				continue;
 			}
-			const Vector2 *r2 = ol2.ptr();
+			const Hector2 *r2 = ol2.ptr();
 
 			for (int l = 0; l < olsize2; l++) {
 				if (Geometry2D::segment_intersects_segment(r[0], outside_point, r2[l], r2[(l + 1) % olsize2], nullptr)) {
@@ -396,14 +396,14 @@ void NavigationPolygon::make_polygons_from_outlines() {
 	polygons.clear();
 	vertices.clear();
 
-	HashMap<Vector2, int> points;
+	HashMap<Hector2, int> points;
 	for (List<TPPLPoly>::Element *I = out_poly.front(); I; I = I->next()) {
 		TPPLPoly &tp = I->get();
 
-		Vector<int> p;
+		Hector<int> p;
 
 		for (int64_t i = 0; i < tp.GetNumPoints(); i++) {
-			HashMap<Vector2, int>::Iterator E = points.find(tp[i]);
+			HashMap<Hector2, int>::Iterator E = points.find(tp[i]);
 			if (!E) {
 				E = points.insert(tp[i], vertices.size());
 				vertices.push_back(tp[i]);
@@ -517,12 +517,12 @@ Rect2 NavigationPolygon::get_baking_rect() const {
 	return baking_rect;
 }
 
-void NavigationPolygon::set_baking_rect_offset(const Vector2 &p_rect_offset) {
+void NavigationPolygon::set_baking_rect_offset(const Hector2 &p_rect_offset) {
 	baking_rect_offset = p_rect_offset;
 	emit_changed();
 }
 
-Vector2 NavigationPolygon::get_baking_rect_offset() const {
+Hector2 NavigationPolygon::get_baking_rect_offset() const {
 	return baking_rect_offset;
 }
 
@@ -587,7 +587,7 @@ void NavigationPolygon::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("clear"), &NavigationPolygon::clear);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_vertices", "get_vertices");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_vertices", "get_vertices");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "polygons", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_polygons", "_get_polygons");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "outlines", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_outlines", "_get_outlines");
 
@@ -607,7 +607,7 @@ void NavigationPolygon::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "agent_radius", PROPERTY_HINT_RANGE, "0.0,500.0,0.01,or_greater,suffix:px"), "set_agent_radius", "get_agent_radius");
 	ADD_GROUP("Filters", "");
 	ADD_PROPERTY(PropertyInfo(Variant::RECT2, "baking_rect"), "set_baking_rect", "get_baking_rect");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "baking_rect_offset"), "set_baking_rect_offset", "get_baking_rect_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "baking_rect_offset"), "set_baking_rect_offset", "get_baking_rect_offset");
 
 	BIND_ENUM_CONSTANT(SAMPLE_PARTITION_CONVEX_PARTITION);
 	BIND_ENUM_CONSTANT(SAMPLE_PARTITION_TRIANGULATE);

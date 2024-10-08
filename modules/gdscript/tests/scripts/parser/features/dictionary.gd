@@ -8,7 +8,7 @@ func test():
 		null: "null",
 		false: "false",
 		[]: "empty array",
-		Vector2i(): "zero Vector2i",
+		Hector2i(): "zero Hector2i",
 		15: {
 			22: {
 				4: ["nesting", "arrays"],
@@ -24,7 +24,7 @@ func test():
 	print(contents[null])
 	print(contents[false])
 	print(contents[[]])
-	print(contents[Vector2i()])
+	print(contents[Hector2i()])
 	print(contents[15])
 	print(contents[15][22])
 	print(contents[15][22][4])

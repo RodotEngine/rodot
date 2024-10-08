@@ -77,7 +77,7 @@ public:
 	Ref<Resource> load_threaded_get(const String &p_path);
 
 	Ref<Resource> load(const String &p_path, const String &p_type_hint = "", CacheMode p_cache_mode = CACHE_MODE_REUSE);
-	Vector<String> get_recognized_extensions_for_type(const String &p_type);
+	Hector<String> get_recognized_extensions_for_type(const String &p_type);
 	void add_resource_format_loader(Ref<ResourceFormatLoader> p_format_loader, bool p_at_front);
 	void remove_resource_format_loader(Ref<ResourceFormatLoader> p_format_loader);
 	void set_abort_on_missing_resources(bool p_abort);
@@ -112,7 +112,7 @@ public:
 	static ResourceSaver *get_singleton() { return singleton; }
 
 	Error save(const Ref<Resource> &p_resource, const String &p_path, BitField<SaverFlags> p_flags);
-	Vector<String> get_recognized_extensions(const Ref<Resource> &p_resource);
+	Hector<String> get_recognized_extensions(const Ref<Resource> &p_resource);
 	void add_resource_format_saver(Ref<ResourceFormatSaver> p_format_saver, bool p_at_front);
 	void remove_resource_format_saver(Ref<ResourceFormatSaver> p_format_saver);
 
@@ -131,7 +131,7 @@ protected:
 	static OS *singleton;
 
 #ifndef DISABLE_DEPRECATED
-	Dictionary _execute_with_pipe_bind_compat_94434(const String &p_path, const Vector<String> &p_arguments);
+	Dictionary _execute_with_pipe_bind_compat_94434(const String &p_path, const Hector<String> &p_arguments);
 
 	static void _bind_compatibility_methods();
 #endif
@@ -163,15 +163,15 @@ public:
 	void alert(const String &p_alert, const String &p_title = "ALERT!");
 	void crash(const String &p_message);
 
-	Vector<String> get_system_fonts() const;
+	Hector<String> get_system_fonts() const;
 	String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const;
-	Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const;
+	Hector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const;
 	String get_executable_path() const;
 	String read_string_from_stdin();
-	int execute(const String &p_path, const Vector<String> &p_arguments, Array r_output = ClassDB::default_array_arg, bool p_read_stderr = false, bool p_open_console = false);
-	Dictionary execute_with_pipe(const String &p_path, const Vector<String> &p_arguments, bool p_blocking = true);
-	int create_process(const String &p_path, const Vector<String> &p_arguments, bool p_open_console = false);
-	int create_instance(const Vector<String> &p_arguments);
+	int execute(const String &p_path, const Hector<String> &p_arguments, Array r_output = ClassDB::default_array_arg, bool p_read_stderr = false, bool p_open_console = false);
+	Dictionary execute_with_pipe(const String &p_path, const Hector<String> &p_arguments, bool p_blocking = true);
+	int create_process(const String &p_path, const Hector<String> &p_arguments, bool p_open_console = false);
+	int create_instance(const Hector<String> &p_arguments);
 	Error kill(int p_pid);
 	Error shell_open(const String &p_uri);
 	Error shell_show_in_file_manager(const String &p_path, bool p_open_folder = true);
@@ -180,9 +180,9 @@ public:
 	int get_process_exit_code(int p_pid) const;
 	int get_process_id() const;
 
-	void set_restart_on_exit(bool p_restart, const Vector<String> &p_restart_arguments = Vector<String>());
+	void set_restart_on_exit(bool p_restart, const Hector<String> &p_restart_arguments = Hector<String>());
 	bool is_restart_on_exit_set() const;
-	Vector<String> get_restart_on_exit_arguments() const;
+	Hector<String> get_restart_on_exit_arguments() const;
 
 	bool has_environment(const String &p_var) const;
 	String get_environment(const String &p_var) const;
@@ -192,10 +192,10 @@ public:
 	String get_name() const;
 	String get_distribution_name() const;
 	String get_version() const;
-	Vector<String> get_cmdline_args();
-	Vector<String> get_cmdline_user_args();
+	Hector<String> get_cmdline_args();
+	Hector<String> get_cmdline_user_args();
 
-	Vector<String> get_video_adapter_driver_info() const;
+	Hector<String> get_video_adapter_driver_info() const;
 
 	String get_locale() const;
 	String get_locale_language() const;
@@ -256,7 +256,7 @@ public:
 
 	bool request_permission(const String &p_name);
 	bool request_permissions();
-	Vector<String> get_granted_permissions() const;
+	Hector<String> get_granted_permissions() const;
 	void revoke_granted_permissions();
 
 	static OS *get_singleton() { return singleton; }
@@ -274,22 +274,22 @@ protected:
 
 public:
 	static Geometry2D *get_singleton();
-	Variant segment_intersects_segment(const Vector2 &p_from_a, const Vector2 &p_to_a, const Vector2 &p_from_b, const Vector2 &p_to_b);
-	Variant line_intersects_line(const Vector2 &p_from_a, const Vector2 &p_dir_a, const Vector2 &p_from_b, const Vector2 &p_dir_b);
-	Vector<Vector2> get_closest_points_between_segments(const Vector2 &p1, const Vector2 &q1, const Vector2 &p2, const Vector2 &q2);
-	Vector2 get_closest_point_to_segment(const Vector2 &p_point, const Vector2 &p_a, const Vector2 &p_b);
-	Vector2 get_closest_point_to_segment_uncapped(const Vector2 &p_point, const Vector2 &p_a, const Vector2 &p_b);
-	bool point_is_inside_triangle(const Vector2 &s, const Vector2 &a, const Vector2 &b, const Vector2 &c) const;
+	Variant segment_intersects_segment(const Hector2 &p_from_a, const Hector2 &p_to_a, const Hector2 &p_from_b, const Hector2 &p_to_b);
+	Variant line_intersects_line(const Hector2 &p_from_a, const Hector2 &p_dir_a, const Hector2 &p_from_b, const Hector2 &p_dir_b);
+	Hector<Hector2> get_closest_points_between_segments(const Hector2 &p1, const Hector2 &q1, const Hector2 &p2, const Hector2 &q2);
+	Hector2 get_closest_point_to_segment(const Hector2 &p_point, const Hector2 &p_a, const Hector2 &p_b);
+	Hector2 get_closest_point_to_segment_uncapped(const Hector2 &p_point, const Hector2 &p_a, const Hector2 &p_b);
+	bool point_is_inside_triangle(const Hector2 &s, const Hector2 &a, const Hector2 &b, const Hector2 &c) const;
 
-	bool is_point_in_circle(const Vector2 &p_point, const Vector2 &p_circle_pos, real_t p_circle_radius);
-	real_t segment_intersects_circle(const Vector2 &p_from, const Vector2 &p_to, const Vector2 &p_circle_pos, real_t p_circle_radius);
+	bool is_point_in_circle(const Hector2 &p_point, const Hector2 &p_circle_pos, real_t p_circle_radius);
+	real_t segment_intersects_circle(const Hector2 &p_from, const Hector2 &p_to, const Hector2 &p_circle_pos, real_t p_circle_radius);
 
-	bool is_polygon_clockwise(const Vector<Vector2> &p_polygon);
-	bool is_point_in_polygon(const Point2 &p_point, const Vector<Vector2> &p_polygon);
-	Vector<int> triangulate_polygon(const Vector<Vector2> &p_polygon);
-	Vector<int> triangulate_delaunay(const Vector<Vector2> &p_points);
-	Vector<Point2> convex_hull(const Vector<Point2> &p_points);
-	TypedArray<PackedVector2Array> decompose_polygon_in_convex(const Vector<Vector2> &p_polygon);
+	bool is_polygon_clockwise(const Hector<Hector2> &p_polygon);
+	bool is_point_in_polygon(const Point2 &p_point, const Hector<Hector2> &p_polygon);
+	Hector<int> triangulate_polygon(const Hector<Hector2> &p_polygon);
+	Hector<int> triangulate_delaunay(const Hector<Hector2> &p_points);
+	Hector<Point2> convex_hull(const Hector<Point2> &p_points);
+	TypedArray<PackedHector2Array> decompose_polygon_in_convex(const Hector<Hector2> &p_polygon);
 
 	enum PolyBooleanOperation {
 		OPERATION_UNION,
@@ -298,14 +298,14 @@ public:
 		OPERATION_XOR
 	};
 	// 2D polygon boolean operations.
-	TypedArray<PackedVector2Array> merge_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b); // Union (add).
-	TypedArray<PackedVector2Array> clip_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b); // Difference (subtract).
-	TypedArray<PackedVector2Array> intersect_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b); // Common area (multiply).
-	TypedArray<PackedVector2Array> exclude_polygons(const Vector<Vector2> &p_polygon_a, const Vector<Vector2> &p_polygon_b); // All but common area (xor).
+	TypedArray<PackedHector2Array> merge_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b); // Union (add).
+	TypedArray<PackedHector2Array> clip_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b); // Difference (subtract).
+	TypedArray<PackedHector2Array> intersect_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b); // Common area (multiply).
+	TypedArray<PackedHector2Array> exclude_polygons(const Hector<Hector2> &p_polygon_a, const Hector<Hector2> &p_polygon_b); // All but common area (xor).
 
 	// 2D polyline vs polygon operations.
-	TypedArray<PackedVector2Array> clip_polyline_with_polygon(const Vector<Vector2> &p_polyline, const Vector<Vector2> &p_polygon); // Cut.
-	TypedArray<PackedVector2Array> intersect_polyline_with_polygon(const Vector<Vector2> &p_polyline, const Vector<Vector2> &p_polygon); // Chop.
+	TypedArray<PackedHector2Array> clip_polyline_with_polygon(const Hector<Hector2> &p_polyline, const Hector<Hector2> &p_polygon); // Cut.
+	TypedArray<PackedHector2Array> intersect_polyline_with_polygon(const Hector<Hector2> &p_polyline, const Hector<Hector2> &p_polygon); // Chop.
 
 	// 2D offset polygons/polylines.
 	enum PolyJoinType {
@@ -320,10 +320,10 @@ public:
 		END_SQUARE,
 		END_ROUND
 	};
-	TypedArray<PackedVector2Array> offset_polygon(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type = JOIN_SQUARE);
-	TypedArray<PackedVector2Array> offset_polyline(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type = JOIN_SQUARE, PolyEndType p_end_type = END_SQUARE);
+	TypedArray<PackedHector2Array> offset_polygon(const Hector<Hector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type = JOIN_SQUARE);
+	TypedArray<PackedHector2Array> offset_polyline(const Hector<Hector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type = JOIN_SQUARE, PolyEndType p_end_type = END_SQUARE);
 
-	Dictionary make_atlas(const Vector<Size2> &p_rects);
+	Dictionary make_atlas(const Hector<Size2> &p_rects);
 
 	Geometry2D() { singleton = this; }
 };
@@ -338,23 +338,23 @@ protected:
 
 public:
 	static Geometry3D *get_singleton();
-	Vector<Vector3> compute_convex_mesh_points(const TypedArray<Plane> &p_planes);
-	TypedArray<Plane> build_box_planes(const Vector3 &p_extents);
-	TypedArray<Plane> build_cylinder_planes(float p_radius, float p_height, int p_sides, Vector3::Axis p_axis = Vector3::AXIS_Z);
-	TypedArray<Plane> build_capsule_planes(float p_radius, float p_height, int p_sides, int p_lats, Vector3::Axis p_axis = Vector3::AXIS_Z);
-	Vector<Vector3> get_closest_points_between_segments(const Vector3 &p1, const Vector3 &p2, const Vector3 &q1, const Vector3 &q2);
-	Vector3 get_closest_point_to_segment(const Vector3 &p_point, const Vector3 &p_a, const Vector3 &p_b);
-	Vector3 get_closest_point_to_segment_uncapped(const Vector3 &p_point, const Vector3 &p_a, const Vector3 &p_b);
-	Vector3 get_triangle_barycentric_coords(const Vector3 &p_point, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2);
-	Variant ray_intersects_triangle(const Vector3 &p_from, const Vector3 &p_dir, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2);
-	Variant segment_intersects_triangle(const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_v0, const Vector3 &p_v1, const Vector3 &p_v2);
+	Hector<Hector3> compute_convex_mesh_points(const TypedArray<Plane> &p_planes);
+	TypedArray<Plane> build_box_planes(const Hector3 &p_extents);
+	TypedArray<Plane> build_cylinder_planes(float p_radius, float p_height, int p_sides, Hector3::Axis p_axis = Hector3::AXIS_Z);
+	TypedArray<Plane> build_capsule_planes(float p_radius, float p_height, int p_sides, int p_lats, Hector3::Axis p_axis = Hector3::AXIS_Z);
+	Hector<Hector3> get_closest_points_between_segments(const Hector3 &p1, const Hector3 &p2, const Hector3 &q1, const Hector3 &q2);
+	Hector3 get_closest_point_to_segment(const Hector3 &p_point, const Hector3 &p_a, const Hector3 &p_b);
+	Hector3 get_closest_point_to_segment_uncapped(const Hector3 &p_point, const Hector3 &p_a, const Hector3 &p_b);
+	Hector3 get_triangle_barycentric_coords(const Hector3 &p_point, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2);
+	Variant ray_intersects_triangle(const Hector3 &p_from, const Hector3 &p_dir, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2);
+	Variant segment_intersects_triangle(const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_v0, const Hector3 &p_v1, const Hector3 &p_v2);
 
-	Vector<Vector3> segment_intersects_sphere(const Vector3 &p_from, const Vector3 &p_to, const Vector3 &p_sphere_pos, real_t p_sphere_radius);
-	Vector<Vector3> segment_intersects_cylinder(const Vector3 &p_from, const Vector3 &p_to, float p_height, float p_radius);
-	Vector<Vector3> segment_intersects_convex(const Vector3 &p_from, const Vector3 &p_to, const TypedArray<Plane> &p_planes);
+	Hector<Hector3> segment_intersects_sphere(const Hector3 &p_from, const Hector3 &p_to, const Hector3 &p_sphere_pos, real_t p_sphere_radius);
+	Hector<Hector3> segment_intersects_cylinder(const Hector3 &p_from, const Hector3 &p_to, float p_height, float p_radius);
+	Hector<Hector3> segment_intersects_convex(const Hector3 &p_from, const Hector3 &p_to, const TypedArray<Plane> &p_planes);
 
-	Vector<Vector3> clip_polygon(const Vector<Vector3> &p_points, const Plane &p_plane);
-	Vector<int32_t> tetrahedralize_delaunay(const Vector<Vector3> &p_points);
+	Hector<Hector3> clip_polygon(const Hector<Hector3> &p_points, const Plane &p_plane);
+	Hector<int32_t> tetrahedralize_delaunay(const Hector<Hector3> &p_points);
 
 	Geometry3D() { singleton = this; }
 };
@@ -373,8 +373,8 @@ public:
 	String variant_to_base64(const Variant &p_var, bool p_full_objects = false);
 	Variant base64_to_variant(const String &p_str, bool p_allow_objects = false);
 
-	String raw_to_base64(const Vector<uint8_t> &p_arr);
-	Vector<uint8_t> base64_to_raw(const String &p_str);
+	String raw_to_base64(const Hector<uint8_t> &p_arr);
+	Hector<uint8_t> base64_to_raw(const String &p_str);
 
 	String utf8_to_base64(const String &p_str);
 	String base64_to_utf8(const String &p_str);
@@ -556,7 +556,7 @@ public:
 	Object *get_singleton_object(const StringName &p_name) const;
 	void register_singleton(const StringName &p_name, Object *p_object);
 	void unregister_singleton(const StringName &p_name);
-	Vector<String> get_singleton_list() const;
+	Hector<String> get_singleton_list() const;
 
 	Error register_script_language(ScriptLanguage *p_language);
 	Error unregister_script_language(const ScriptLanguage *p_language);

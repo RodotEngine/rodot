@@ -50,7 +50,7 @@ void CollisionPolygon2D::_build_polygon() {
 
 		//here comes the sun, lalalala
 		//decompose concave into multiple convex polygons and add them
-		Vector<Vector<Vector2>> decomp = _decompose_in_convex();
+		Hector<Hector<Hector2>> decomp = _decompose_in_convex();
 		for (int i = 0; i < decomp.size(); i++) {
 			Ref<ConvexPolygonShape2D> convex = memnew(ConvexPolygonShape2D);
 			convex->set_points(decomp[i]);
@@ -64,9 +64,9 @@ void CollisionPolygon2D::_build_polygon() {
 
 		Ref<ConcavePolygonShape2D> concave = memnew(ConcavePolygonShape2D);
 
-		Vector<Vector2> segments;
+		Hector<Hector2> segments;
 		segments.resize(polygon.size() * 2);
-		Vector2 *w = segments.ptrw();
+		Hector2 *w = segments.ptrw();
 
 		for (int i = 0; i < polygon.size(); i++) {
 			w[(i << 1) + 0] = polygon[i];
@@ -79,8 +79,8 @@ void CollisionPolygon2D::_build_polygon() {
 	}
 }
 
-Vector<Vector<Vector2>> CollisionPolygon2D::_decompose_in_convex() {
-	Vector<Vector<Vector2>> decomp = Geometry2D::decompose_polygon_in_convex(polygon);
+Hector<Hector<Hector2>> CollisionPolygon2D::_decompose_in_convex() {
+	Hector<Hector<Hector2>> decomp = Geometry2D::decompose_polygon_in_convex(polygon);
 	return decomp;
 }
 
@@ -134,7 +134,7 @@ void CollisionPolygon2D::_notification(int p_what) {
 			if (polygon.size() > 2) {
 #ifdef TOOLS_ENABLED
 				if (build_mode == BUILD_SOLIDS) {
-					Vector<Vector<Vector2>> decomp = _decompose_in_convex();
+					Hector<Hector<Hector2>> decomp = _decompose_in_convex();
 
 					Color c(0.4, 0.9, 0.1);
 					for (int i = 0; i < decomp.size(); i++) {
@@ -153,25 +153,25 @@ void CollisionPolygon2D::_notification(int p_what) {
 			if (one_way_collision) {
 				Color dcol = get_tree()->get_debug_collisions_color(); //0.9,0.2,0.2,0.4);
 				dcol.a = 1.0;
-				Vector2 line_to(0, 20);
-				draw_line(Vector2(), line_to, dcol, 3);
+				Hector2 line_to(0, 20);
+				draw_line(Hector2(), line_to, dcol, 3);
 				real_t tsize = 8;
 
-				Vector<Vector2> pts = {
-					line_to + Vector2(0, tsize),
-					line_to + Vector2(Math_SQRT12 * tsize, 0),
-					line_to + Vector2(-Math_SQRT12 * tsize, 0)
+				Hector<Hector2> pts = {
+					line_to + Hector2(0, tsize),
+					line_to + Hector2(Math_SQRT12 * tsize, 0),
+					line_to + Hector2(-Math_SQRT12 * tsize, 0)
 				};
 
-				Vector<Color> cols{ dcol, dcol, dcol };
+				Hector<Color> cols{ dcol, dcol, dcol };
 
-				draw_primitive(pts, cols, Vector<Vector2>()); //small arrow
+				draw_primitive(pts, cols, Hector<Hector2>()); //small arrow
 			}
 		} break;
 	}
 }
 
-void CollisionPolygon2D::set_polygon(const Vector<Point2> &p_polygon) {
+void CollisionPolygon2D::set_polygon(const Hector<Point2> &p_polygon) {
 	polygon = p_polygon;
 
 	{
@@ -198,7 +198,7 @@ void CollisionPolygon2D::set_polygon(const Vector<Point2> &p_polygon) {
 	update_configuration_warnings();
 }
 
-Vector<Point2> CollisionPolygon2D::get_polygon() const {
+Hector<Point2> CollisionPolygon2D::get_polygon() const {
 	return polygon;
 }
 
@@ -308,7 +308,7 @@ void CollisionPolygon2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_one_way_collision_margin"), &CollisionPolygon2D::get_one_way_collision_margin);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "build_mode", PROPERTY_HINT_ENUM, "Solids,Segments"), "set_build_mode", "get_build_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "polygon"), "set_polygon", "get_polygon");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "polygon"), "set_polygon", "get_polygon");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "disabled"), "set_disabled", "is_disabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "one_way_collision"), "set_one_way_collision", "is_one_way_collision_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "one_way_collision_margin", PROPERTY_HINT_RANGE, "0,128,0.1,suffix:px"), "set_one_way_collision_margin", "get_one_way_collision_margin");

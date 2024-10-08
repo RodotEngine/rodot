@@ -21,10 +21,10 @@
 
 namespace graphite2 {
 
-typedef Vector<Features>        FeatureList;
-typedef Vector<Slot *>          SlotRope;
-typedef Vector<int16 *>         AttributeRope;
-typedef Vector<SlotJustify *>   JustifyRope;
+typedef Hector<Features>        FeatureList;
+typedef Hector<Slot *>          SlotRope;
+typedef Hector<int16 *>         AttributeRope;
+typedef Hector<SlotJustify *>   JustifyRope;
 
 class Font;
 class Segment;
@@ -137,8 +137,8 @@ public:       //only used by: GrSegment* makeAndInitialize(const GrFont *font, c
 
 private:
     Position        m_advance;          // whole segment advance
-    SlotRope        m_slots;            // Vector of slot buffers
-    AttributeRope   m_userAttrs;        // Vector of userAttrs buffers
+    SlotRope        m_slots;            // Hector of slot buffers
+    AttributeRope   m_userAttrs;        // Hector of userAttrs buffers
     JustifyRope     m_justifies;        // Slot justification info buffers
     FeatureList     m_feats;            // feature settings referenced by charinfos in this segment
     Slot          * m_freeSlots;        // linked list of free slots

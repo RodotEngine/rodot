@@ -73,16 +73,16 @@ class TextureRegionEditor : public AcceptDialog {
 	VScrollBar *vscroll = nullptr;
 	HScrollBar *hscroll = nullptr;
 
-	Vector2 draw_ofs;
+	Hector2 draw_ofs;
 	float draw_zoom = 1.0;
 	float min_draw_zoom = 1.0;
 	float max_draw_zoom = 1.0;
 	bool updating_scroll = false;
 
 	SnapMode snap_mode = SNAP_NONE;
-	Vector2 snap_offset;
-	Vector2 snap_step;
-	Vector2 snap_separation;
+	Hector2 snap_offset;
+	Hector2 snap_step;
+	Hector2 snap_separation;
 
 	Sprite2D *node_sprite_2d = nullptr;
 	Sprite3D *node_sprite_3d = nullptr;
@@ -100,13 +100,13 @@ class TextureRegionEditor : public AcceptDialog {
 
 	bool drag = false;
 	bool creating = false;
-	Vector2 drag_from;
+	Hector2 drag_from;
 	int drag_index = -1;
 	bool request_center = false;
 
 	Ref<ViewPanner> panner;
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 	void _scroll_changed(float);
 	Transform2D _get_offset_transform() const;
 
@@ -135,7 +135,7 @@ class TextureRegionEditor : public AcceptDialog {
 	void _edit_region();
 	void _clear_edited_object();
 
-	void _draw_margin_line(Vector2 p_from, Vector2 p_to);
+	void _draw_margin_line(Hector2 p_from, Hector2 p_to);
 
 	void _set_grid_parameters_clamping(bool p_enabled);
 
@@ -147,7 +147,7 @@ protected:
 	void _texture_overlay_draw();
 	void _texture_overlay_input(const Ref<InputEvent> &p_input);
 
-	Vector2 snap_point(Vector2 p_target) const;
+	Hector2 snap_point(Hector2 p_target) const;
 
 public:
 	void edit(Object *p_obj);

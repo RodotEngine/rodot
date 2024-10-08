@@ -293,11 +293,11 @@ for (;;)
   /* The character is in an acceptable script. We must now ensure that all
   decimal digits in the string come from the same set. Some scripts (e.g.
   Common, Arabic) have more than one set of decimal digits. This code does
-  not allow mixing sets, even within the same script. The vector called
+  not allow mixing sets, even within the same script. The Hector called
   PRIV(ucd_digit_sets)[] contains, in its first element, the number of
   following elements, and then, in ascending order, the code points of the
   '9' characters in every set of 10 digits. Each set is identified by the
-  offset in the vector of its '9' character. An initial check of the first
+  offset in the Hector of its '9' character. An initial check of the first
   value picks up ASCII digits quickly. Otherwise, a binary chop is used. */
 
   if (ucd->chartype == ucp_Nd)

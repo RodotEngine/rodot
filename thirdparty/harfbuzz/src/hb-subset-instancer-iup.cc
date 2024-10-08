@@ -28,7 +28,7 @@
  *
  * https://github.com/fonttools/fonttools/blob/main/Lib/fontTools/varLib/iup.py
  *
- * Where that file returns optimzied deltas vector, we return optimized
+ * Where that file returns optimzied deltas Hector, we return optimized
  * referenced point indices.
  */
 
@@ -132,7 +132,7 @@ template <typename T,
           hb_enable_if (hb_is_trivially_copyable (T))>
 static bool rotate_array (const hb_array_t<const T>& org_array,
                           int k,
-                          hb_vector_t<T>& out)
+                          hb_Hector_t<T>& out)
 {
   unsigned n = org_array.length;
   if (!n) return true;
@@ -180,8 +180,8 @@ static bool _iup_segment (const hb_array_t<const contour_point_t> contour_points
                           const contour_point_t& p1, const contour_point_t& p2,
                           int p1_dx, int p2_dx,
                           int p1_dy, int p2_dy,
-                          hb_vector_t<double>& interp_x_deltas, /* OUT */
-                          hb_vector_t<double>& interp_y_deltas /* OUT */)
+                          hb_Hector_t<double>& interp_x_deltas, /* OUT */
+                          hb_Hector_t<double>& interp_y_deltas /* OUT */)
 {
   unsigned n = contour_points.length;
   if (unlikely (!interp_x_deltas.resize (n, false) ||
@@ -256,7 +256,7 @@ static bool _can_iup_in_between (const hb_array_t<const contour_point_t> contour
                                  int p1_dy, int p2_dy,
                                  double tolerance)
 {
-  hb_vector_t<double> interp_x_deltas, interp_y_deltas;
+  hb_Hector_t<double> interp_x_deltas, interp_y_deltas;
   if (!_iup_segment (contour_points, x_deltas, y_deltas,
                      p1, p2, p1_dx, p2_dx, p1_dy, p2_dy,
                      interp_x_deltas, interp_y_deltas))
@@ -275,14 +275,14 @@ static bool _can_iup_in_between (const hb_array_t<const contour_point_t> contour
   return true;
 }
 
-static bool _iup_contour_optimize_dp (const contour_point_vector_t& contour_points,
-                                      const hb_vector_t<int>& x_deltas,
-                                      const hb_vector_t<int>& y_deltas,
+static bool _iup_contour_optimize_dp (const contour_point_Hector_t& contour_points,
+                                      const hb_Hector_t<int>& x_deltas,
+                                      const hb_Hector_t<int>& y_deltas,
                                       const hb_set_t& forced_set,
                                       double tolerance,
                                       unsigned lookback,
-                                      hb_vector_t<unsigned>& costs, /* OUT */
-                                      hb_vector_t<int>& chain /* OUT */)
+                                      hb_Hector_t<unsigned>& costs, /* OUT */
+                                      hb_Hector_t<int>& chain /* OUT */)
 {
   unsigned n = contour_points.length;
   if (unlikely (!costs.resize (n, false) ||
@@ -391,8 +391,8 @@ static bool _iup_contour_optimize (const hb_array_t<const contour_point_t> conto
     if (k < 0)
       return false;
 
-    hb_vector_t<int> rot_x_deltas, rot_y_deltas;
-    contour_point_vector_t rot_points;
+    hb_Hector_t<int> rot_x_deltas, rot_y_deltas;
+    contour_point_Hector_t rot_points;
     hb_set_t rot_forced_set;
     if (!rotate_array (contour_points, k, rot_points) ||
         !rotate_array (x_deltas, k, rot_x_deltas) ||
@@ -400,8 +400,8 @@ static bool _iup_contour_optimize (const hb_array_t<const contour_point_t> conto
         !rotate_set (forced_set, k, n, rot_forced_set))
       return false;
 
-    hb_vector_t<unsigned> costs;
-    hb_vector_t<int> chain;
+    hb_Hector_t<unsigned> costs;
+    hb_Hector_t<int> chain;
 
     if (!_iup_contour_optimize_dp (rot_points, rot_x_deltas, rot_y_deltas,
                                    rot_forced_set, tolerance, n,
@@ -423,7 +423,7 @@ static bool _iup_contour_optimize (const hb_array_t<const contour_point_t> conto
     for (unsigned i : solution)
       opt_indices.arrayZ[i] = true;
 
-    hb_vector_t<bool> rot_indices;
+    hb_Hector_t<bool> rot_indices;
     const hb_array_t<const bool> opt_indices_array (opt_indices.arrayZ, opt_indices.length);
     rotate_array (opt_indices_array, -k, rot_indices);
 
@@ -432,8 +432,8 @@ static bool _iup_contour_optimize (const hb_array_t<const contour_point_t> conto
   }
   else
   {
-    hb_vector_t<int> repeat_x_deltas, repeat_y_deltas;
-    contour_point_vector_t repeat_points;
+    hb_Hector_t<int> repeat_x_deltas, repeat_y_deltas;
+    contour_point_Hector_t repeat_points;
 
     if (unlikely (!repeat_x_deltas.resize (n * 2, false) ||
                   !repeat_y_deltas.resize (n * 2, false) ||
@@ -453,8 +453,8 @@ static bool _iup_contour_optimize (const hb_array_t<const contour_point_t> conto
       hb_memcpy ((void *) (repeat_points.arrayZ + n), (const void *) contour_points.arrayZ, n * contour_point_size);
     }
 
-    hb_vector_t<unsigned> costs;
-    hb_vector_t<int> chain;
+    hb_Hector_t<unsigned> costs;
+    hb_Hector_t<int> chain;
     if (!_iup_contour_optimize_dp (repeat_points, repeat_x_deltas, repeat_y_deltas,
                                    forced_set, tolerance, n,
                                    costs, chain))
@@ -492,16 +492,16 @@ static bool _iup_contour_optimize (const hb_array_t<const contour_point_t> conto
   return true;
 }
 
-bool iup_delta_optimize (const contour_point_vector_t& contour_points,
-                         const hb_vector_t<int>& x_deltas,
-                         const hb_vector_t<int>& y_deltas,
-                         hb_vector_t<bool>& opt_indices, /* OUT */
+bool iup_delta_optimize (const contour_point_Hector_t& contour_points,
+                         const hb_Hector_t<int>& x_deltas,
+                         const hb_Hector_t<int>& y_deltas,
+                         hb_Hector_t<bool>& opt_indices, /* OUT */
                          double tolerance)
 {
   if (!opt_indices.resize (contour_points.length))
       return false;
 
-  hb_vector_t<unsigned> end_points;
+  hb_Hector_t<unsigned> end_points;
   unsigned count = contour_points.length;
   if (unlikely (!end_points.alloc (count)))
     return false;

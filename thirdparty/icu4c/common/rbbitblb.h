@@ -29,7 +29,7 @@ U_NAMESPACE_BEGIN
 
 class RBBIRuleScanner;
 class RBBIRuleBuilder;
-class UVector32;
+class UHector32;
 
 //
 //  class RBBITableBuilder is part of the RBBI rule compiler.
@@ -112,7 +112,7 @@ private:
      */
     int32_t  mergeColumns();
 
-    void     addRuleRootNodes(UVector *dest, RBBINode *node);
+    void     addRuleRootNodes(UHector *dest, RBBINode *node);
 
     /**
      *  Find duplicate (redundant) states, beginning at the specified pair,
@@ -145,17 +145,17 @@ private:
      */
     void removeSafeState(IntPair duplStates);
 
-    // Set functions for UVector.
-    //   TODO:  make a USet subclass of UVector
+    // Set functions for UHector.
+    //   TODO:  make a USet subclass of UHector
 
-    void     setAdd(UVector *dest, UVector *source);
-    UBool    setEquals(UVector *a, UVector *b);
+    void     setAdd(UHector *dest, UHector *source);
+    UBool    setEquals(UHector *a, UHector *b);
 
-    void     sortedAdd(UVector **dest, int32_t val);
+    void     sortedAdd(UHector **dest, int32_t val);
 
 public:
 #ifdef RBBI_DEBUG
-    void     printSet(UVector *s);
+    void     printSet(UHector *s);
     void     printPosSets(RBBINode *n /* = nullptr */);
     void     printStates();
     void     printRuleStatusTable();
@@ -174,16 +174,16 @@ private:
                                            //   table for.
     UErrorCode       *fStatus;
 
-    /** State Descriptors, UVector<RBBIStateDescriptor> */
-    UVector          *fDStates;            //  D states (Aho's terminology)
+    /** State Descriptors, UHector<RBBIStateDescriptor> */
+    UHector          *fDStates;            //  D states (Aho's terminology)
                                            //  Index is state number
                                            //  Contents are RBBIStateDescriptor pointers.
 
-    /** Synthesized safe table, UVector of UnicodeString, one string per table row.   */
-    UVector          *fSafeTable;
+    /** Synthesized safe table, UHector of UnicodeString, one string per table row.   */
+    UHector          *fSafeTable;
 
     /** Map from rule number (fVal in look ahead nodes) to sequential lookahead index. */
-    UVector32        *fLookAheadRuleMap = nullptr;
+    UHector32        *fLookAheadRuleMap = nullptr;
 
     /* Counter used when assigning lookahead rule numbers.
      * Contains the last look-ahead number already in use.
@@ -204,13 +204,13 @@ public:
     UBool            fMarked;
     uint32_t         fAccepting;
     uint32_t         fLookAhead;
-    UVector          *fTagVals;
+    UHector          *fTagVals;
     int32_t          fTagsIdx;
-    UVector          *fPositions;          // Set of parse tree positions associated
+    UHector          *fPositions;          // Set of parse tree positions associated
                                            //   with this state.  Unordered (it's a set).
-                                           //   UVector contents are RBBINode *
+                                           //   UHector contents are RBBINode *
 
-    UVector32        *fDtran;              // Transitions out of this state.
+    UHector32        *fDtran;              // Transitions out of this state.
                                            //   indexed by input character
                                            //   contents is int index of dest state
                                            //   in RBBITableBuilder.fDStates

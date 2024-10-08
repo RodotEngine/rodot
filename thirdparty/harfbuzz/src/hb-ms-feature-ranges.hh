@@ -83,14 +83,14 @@ struct hb_ms_range_record_t {
 static inline bool
 hb_ms_setup_features (const hb_feature_t                *features,
 		      unsigned int                       num_features,
-		      hb_vector_t<hb_ms_feature_t>      &feature_records, /* OUT */
-		      hb_vector_t<hb_ms_range_record_t> &range_records /* OUT */)
+		      hb_Hector_t<hb_ms_feature_t>      &feature_records, /* OUT */
+		      hb_Hector_t<hb_ms_range_record_t> &range_records /* OUT */)
 {
   feature_records.shrink(0);
   range_records.shrink(0);
 
   /* Sort features by start/end events. */
-  hb_vector_t<hb_ms_feature_event_t> feature_events;
+  hb_Hector_t<hb_ms_feature_event_t> feature_events;
   for (unsigned int i = 0; i < num_features; i++)
   {
     hb_ms_active_feature_t feature;
@@ -125,7 +125,7 @@ hb_ms_setup_features (const hb_feature_t                *features,
   }
 
   /* Scan events and save features for each range. */
-  hb_vector_t<hb_ms_active_feature_t> active_features;
+  hb_Hector_t<hb_ms_active_feature_t> active_features;
   unsigned int last_index = 0;
   for (unsigned int i = 0; i < feature_events.length; i++)
   {
@@ -187,13 +187,13 @@ hb_ms_setup_features (const hb_feature_t                *features,
 }
 
 static inline void
-hb_ms_make_feature_ranges (hb_vector_t<hb_ms_feature_t>      &feature_records,
-			   hb_vector_t<hb_ms_range_record_t> &range_records,
+hb_ms_make_feature_ranges (hb_Hector_t<hb_ms_feature_t>      &feature_records,
+			   hb_Hector_t<hb_ms_range_record_t> &range_records,
 			   unsigned int                       chars_offset,
 			   unsigned int                       chars_len,
 			   uint16_t                          *log_clusters,
-			   hb_vector_t<hb_ms_features_t*>    &range_features, /* OUT */
-			   hb_vector_t<uint32_t>             &range_counts /* OUT */)
+			   hb_Hector_t<hb_ms_features_t*>    &range_features, /* OUT */
+			   hb_Hector_t<uint32_t>             &range_counts /* OUT */)
 {
   range_features.shrink (0);
   range_counts.shrink (0);

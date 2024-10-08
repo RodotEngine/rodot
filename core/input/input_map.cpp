@@ -800,11 +800,11 @@ const HashMap<String, List<Ref<InputEvent>>> &InputMap::get_builtins_with_featur
 	// Get a list of all built in inputs which are valid overrides for the OS
 	// Key = builtin name (e.g. ui_accept)
 	// Value = override/feature names (e.g. macos, if it was defined as "ui_accept.macos" and the platform supports that feature)
-	HashMap<String, Vector<String>> builtins_with_overrides;
+	HashMap<String, Hector<String>> builtins_with_overrides;
 	for (const KeyValue<String, List<Ref<InputEvent>>> &E : builtins) {
 		String fullname = E.key;
 
-		Vector<String> split = fullname.split(".");
+		Hector<String> split = fullname.split(".");
 		const String &name = split[0];
 		String override_for = split.size() > 1 ? split[1] : String();
 
@@ -816,7 +816,7 @@ const HashMap<String, List<Ref<InputEvent>>> &InputMap::get_builtins_with_featur
 	for (const KeyValue<String, List<Ref<InputEvent>>> &E : builtins) {
 		String fullname = E.key;
 
-		Vector<String> split = fullname.split(".");
+		Hector<String> split = fullname.split(".");
 		const String &name = split[0];
 		String override_for = split.size() > 1 ? split[1] : String();
 

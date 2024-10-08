@@ -229,7 +229,7 @@ private:
 	struct ResourceInfo {
 		struct States {
 			// As many subresources as mipmaps * layers; planes (for depth-stencil) are tracked together.
-			TightLocalVector<D3D12_RESOURCE_STATES> subresource_states; // Used only if not a view.
+			TightLocalHector<D3D12_RESOURCE_STATES> subresource_states; // Used only if not a view.
 			uint32_t last_batch_with_uav_barrier = 0;
 		};
 
@@ -246,7 +246,7 @@ private:
 		static const uint32_t MAX_GROUPS = 4;
 		// Maybe this is too much data to have it locally. Benchmarking may reveal that
 		// cache would be used better by having a maximum of local subresource masks and beyond
-		// that have an allocated vector with the rest.
+		// that have an allocated Hector with the rest.
 		static const uint32_t MAX_SUBRESOURCES = 4096;
 		ID3D12Resource *dx_resource = nullptr;
 		uint8_t subres_mask_qwords = 0;
@@ -312,7 +312,7 @@ private:
 	HashMap<DXGI_FORMAT, uint32_t> format_sample_counts_mask_cache;
 	Mutex format_sample_counts_mask_cache_mutex;
 
-	uint32_t _find_max_common_supported_sample_count(VectorView<DXGI_FORMAT> p_formats);
+	uint32_t _find_max_common_supported_sample_count(HectorView<DXGI_FORMAT> p_formats);
 	UINT _compute_component_mapping(const TextureView &p_view);
 	UINT _compute_plane_slice(DataFormat p_format, BitField<TextureAspectBits> p_aspect_bits);
 	UINT _compute_plane_slice(DataFormat p_format, TextureAspect p_aspect);
@@ -344,7 +344,7 @@ public:
 	/**** SAMPLER ****/
 	/*****************/
 private:
-	LocalVector<D3D12_SAMPLER_DESC> samplers;
+	LocalHector<D3D12_SAMPLER_DESC> samplers;
 
 public:
 	virtual SamplerID sampler_create(const SamplerState &p_state) final override;
@@ -356,12 +356,12 @@ public:
 	/**********************/
 private:
 	struct VertexFormatInfo {
-		TightLocalVector<D3D12_INPUT_ELEMENT_DESC> input_elem_descs;
-		TightLocalVector<UINT> vertex_buffer_strides;
+		TightLocalHector<D3D12_INPUT_ELEMENT_DESC> input_elem_descs;
+		TightLocalHector<UINT> vertex_buffer_strides;
 	};
 
 public:
-	virtual VertexFormatID vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) override final;
+	virtual VertexFormatID vertex_format_create(HectorView<VertexAttribute> p_vertex_attribs) override final;
 	virtual void vertex_format_free(VertexFormatID p_vertex_format) override final;
 
 	/******************/
@@ -372,9 +372,9 @@ public:
 			CommandBufferID p_cmd_buffer,
 			BitField<PipelineStageBits> p_src_stages,
 			BitField<PipelineStageBits> p_dst_stages,
-			VectorView<RDD::MemoryBarrier> p_memory_barriers,
-			VectorView<RDD::BufferBarrier> p_buffer_barriers,
-			VectorView<RDD::TextureBarrier> p_texture_barriers) override final;
+			HectorView<RDD::MemoryBarrier> p_memory_barriers,
+			HectorView<RDD::BufferBarrier> p_buffer_barriers,
+			HectorView<RDD::TextureBarrier> p_texture_barriers) override final;
 
 private:
 	/****************/
@@ -422,7 +422,7 @@ private:
 
 public:
 	virtual CommandQueueID command_queue_create(CommandQueueFamilyID p_cmd_queue_family, bool p_identify_as_main_queue = false) override;
-	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) override;
+	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, HectorView<SemaphoreID> p_wait_semaphores, HectorView<CommandBufferID> p_cmd_buffers, HectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, HectorView<SwapChainID> p_swap_chains) override;
 	virtual void command_queue_free(CommandQueueID p_cmd_queue) override;
 
 private:
@@ -470,7 +470,7 @@ private:
 		bool descriptor_heaps_set = false;
 
 		HashMap<ResourceInfo::States *, BarrierRequest> res_barriers_requests;
-		LocalVector<D3D12_RESOURCE_BARRIER> res_barriers;
+		LocalHector<D3D12_RESOURCE_BARRIER> res_barriers;
 		uint32_t res_barriers_count = 0;
 		uint32_t res_barriers_batch = 0;
 	};
@@ -480,7 +480,7 @@ public:
 	virtual bool command_buffer_begin(CommandBufferID p_cmd_buffer) override final;
 	virtual bool command_buffer_begin_secondary(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, uint32_t p_subpass, FramebufferID p_framebuffer) override final;
 	virtual void command_buffer_end(CommandBufferID p_cmd_buffer) override final;
-	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) override final;
+	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, HectorView<CommandBufferID> p_secondary_cmd_buffers) override final;
 
 private:
 	/********************/
@@ -494,9 +494,9 @@ private:
 		UINT sync_interval = 1;
 		UINT creation_flags = 0;
 		RenderPassID render_pass;
-		TightLocalVector<ID3D12Resource *> render_targets;
-		TightLocalVector<TextureInfo> render_targets_info;
-		TightLocalVector<FramebufferID> framebuffers;
+		TightLocalHector<ID3D12Resource *> render_targets;
+		TightLocalHector<TextureInfo> render_targets_info;
+		TightLocalHector<FramebufferID> framebuffers;
 		RDD::DataFormat data_format = DATA_FORMAT_MAX;
 	};
 
@@ -518,11 +518,11 @@ private:
 	struct FramebufferInfo {
 		bool is_screen = false;
 		Size2i size;
-		TightLocalVector<uint32_t> attachments_handle_inds; // RTV heap index for color; DSV heap index for DSV.
+		TightLocalHector<uint32_t> attachments_handle_inds; // RTV heap index for color; DSV heap index for DSV.
 		DescriptorsHeap rtv_heap;
 		DescriptorsHeap dsv_heap; // Used only if not for screen and some depth-stencil attachments.
 
-		TightLocalVector<TextureID> attachments; // Color and depth-stencil. Used if not screen.
+		TightLocalHector<TextureID> attachments; // Color and depth-stencil. Used if not screen.
 		TextureID vrs_attachment;
 	};
 
@@ -530,10 +530,10 @@ private:
 	D3D12_UNORDERED_ACCESS_VIEW_DESC _make_ranged_uav_for_texture(const TextureInfo *p_texture_info, uint32_t p_mipmap_offset, uint32_t p_layer_offset, uint32_t p_layers, bool p_add_bases = true);
 	D3D12_DEPTH_STENCIL_VIEW_DESC _make_dsv_for_texture(const TextureInfo *p_texture_info);
 
-	FramebufferID _framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height, bool p_is_screen);
+	FramebufferID _framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height, bool p_is_screen);
 
 public:
-	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) override final;
+	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) override final;
 	virtual void framebuffer_free(FramebufferID p_framebuffer) override final;
 
 	/****************/
@@ -656,14 +656,14 @@ private:
 		};
 
 		struct UniformSet {
-			TightLocalVector<UniformBindingInfo> bindings;
+			TightLocalHector<UniformBindingInfo> bindings;
 			struct {
 				uint32_t resources = 0;
 				uint32_t samplers = 0;
 			} num_root_params;
 		};
 
-		TightLocalVector<UniformSet> sets;
+		TightLocalHector<UniformSet> sets;
 
 		struct SpecializationConstant {
 			uint32_t constant_id = UINT32_MAX;
@@ -671,10 +671,10 @@ private:
 			uint64_t stages_bit_offsets[D3D12_BITCODE_OFFSETS_NUM_STAGES] = {};
 		};
 
-		TightLocalVector<SpecializationConstant> specialization_constants;
+		TightLocalHector<SpecializationConstant> specialization_constants;
 		uint32_t spirv_specialization_constants_ids_mask = 0;
 
-		HashMap<ShaderStage, Vector<uint8_t>> stages_bytecode;
+		HashMap<ShaderStage, Hector<uint8_t>> stages_bytecode;
 
 		ComPtr<ID3D12RootSignature> root_signature;
 		ComPtr<ID3D12RootSignatureDeserializer> root_signature_deserializer;
@@ -686,18 +686,18 @@ private:
 			PipelineSpecializationConstantType p_type,
 			const void *p_value,
 			const uint64_t (&p_stages_bit_offsets)[D3D12_BITCODE_OFFSETS_NUM_STAGES],
-			HashMap<ShaderStage, Vector<uint8_t>> &r_stages_bytecodes,
+			HashMap<ShaderStage, Hector<uint8_t>> &r_stages_bytecodes,
 			bool p_is_first_patch);
 	bool _shader_apply_specialization_constants(
 			const ShaderInfo *p_shader_info,
-			VectorView<PipelineSpecializationConstant> p_specialization_constants,
-			HashMap<ShaderStage, Vector<uint8_t>> &r_final_stages_bytecode);
-	void _shader_sign_dxil_bytecode(ShaderStage p_stage, Vector<uint8_t> &r_dxil_blob);
+			HectorView<PipelineSpecializationConstant> p_specialization_constants,
+			HashMap<ShaderStage, Hector<uint8_t>> &r_final_stages_bytecode);
+	void _shader_sign_dxil_bytecode(ShaderStage p_stage, Hector<uint8_t> &r_dxil_blob);
 
 public:
 	virtual String shader_get_binary_cache_key() override final;
-	virtual Vector<uint8_t> shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) override final;
-	virtual ShaderID shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) override final;
+	virtual Hector<uint8_t> shader_compile_binary_from_spirv(HectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) override final;
+	virtual ShaderID shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) override final;
 	virtual uint32_t shader_get_layout_hash(ShaderID p_shader) override final;
 	virtual void shader_free(ShaderID p_shader) override final;
 	virtual void shader_destroy_modules(ShaderID p_shader) override final;
@@ -724,14 +724,14 @@ private:
 			D3D12_RESOURCE_STATES states = {};
 			uint64_t shader_uniform_idx_mask = 0;
 		};
-		TightLocalVector<StateRequirement> resource_states;
+		TightLocalHector<StateRequirement> resource_states;
 
 		struct RecentBind {
 			uint64_t segment_serial = 0;
 			uint32_t root_signature_crc = 0;
 			struct {
-				TightLocalVector<RootDescriptorTable> resources;
-				TightLocalVector<RootDescriptorTable> samplers;
+				TightLocalHector<RootDescriptorTable> resources;
+				TightLocalHector<RootDescriptorTable> samplers;
 			} root_tables;
 			int uses = 0;
 		} recent_binds[4]; // A better amount may be empirically found.
@@ -742,12 +742,12 @@ private:
 			D3D12_DESCRIPTOR_RANGE_TYPE type;
 			D3D12_SRV_DIMENSION srv_dimension;
 		};
-		TightLocalVector<ResourceDescInfo> resources_desc_info;
+		TightLocalHector<ResourceDescInfo> resources_desc_info;
 #endif
 	};
 
 public:
-	virtual UniformSetID uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) override final;
+	virtual UniformSetID uniform_set_create(HectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) override final;
 	virtual void uniform_set_free(UniformSetID p_uniform_set) override final;
 
 	// ----- COMMANDS -----
@@ -764,15 +764,15 @@ public:
 	/******************/
 
 	virtual void command_clear_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, uint64_t p_offset, uint64_t p_size) override final;
-	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) override final;
+	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, HectorView<BufferCopyRegion> p_regions) override final;
 
-	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) override final;
+	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<TextureCopyRegion> p_regions) override final;
 	virtual void command_resolve_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, uint32_t p_src_layer, uint32_t p_src_mipmap, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, uint32_t p_dst_layer, uint32_t p_dst_mipmap) override final;
 	virtual void command_clear_color_texture(CommandBufferID p_cmd_buffer, TextureID p_texture, TextureLayout p_texture_layout, const Color &p_color, const TextureSubresourceRange &p_subresources) override final;
 
 public:
-	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) override final;
-	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) override final;
+	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<BufferTextureCopyRegion> p_regions) override final;
+	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, HectorView<BufferTextureCopyRegion> p_regions) override final;
 
 	/******************/
 	/**** PIPELINE ****/
@@ -801,14 +801,14 @@ public:
 public:
 	// ----- BINDING -----
 
-	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, VectorView<uint32_t> p_data) override final;
+	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, HectorView<uint32_t> p_data) override final;
 
 	// ----- CACHE -----
 
-	virtual bool pipeline_cache_create(const Vector<uint8_t> &p_data) override final;
+	virtual bool pipeline_cache_create(const Hector<uint8_t> &p_data) override final;
 	virtual void pipeline_cache_free() override final;
 	virtual size_t pipeline_cache_query_size() override final;
-	virtual Vector<uint8_t> pipeline_cache_serialize() override final;
+	virtual Hector<uint8_t> pipeline_cache_serialize() override final;
 
 	/*******************/
 	/**** RENDERING ****/
@@ -818,19 +818,19 @@ public:
 
 private:
 	struct RenderPassInfo {
-		TightLocalVector<Attachment> attachments;
-		TightLocalVector<Subpass> subpasses;
+		TightLocalHector<Attachment> attachments;
+		TightLocalHector<Subpass> subpasses;
 		uint32_t view_count = 0;
 		uint32_t max_supported_sample_count = 0;
 	};
 
 public:
-	virtual RenderPassID render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) override final;
+	virtual RenderPassID render_pass_create(HectorView<Attachment> p_attachments, HectorView<Subpass> p_subpasses, HectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) override final;
 	virtual void render_pass_free(RenderPassID p_render_pass) override final;
 
 	// ----- COMMANDS -----
 
-	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) override final;
+	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RenderPassClearValue> p_clear_values) override final;
 
 private:
 	void _end_render_pass(CommandBufferID p_cmd_buffer);
@@ -838,10 +838,10 @@ private:
 public:
 	virtual void command_end_render_pass(CommandBufferID p_cmd_buffer) override final;
 	virtual void command_next_render_subpass(CommandBufferID p_cmd_buffer, CommandBufferType p_cmd_buffer_type) override final;
-	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) override final;
-	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) override final;
+	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_viewports) override final;
+	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_scissors) override final;
 
-	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) override final;
+	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, HectorView<AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) override final;
 
 	// Binding.
 	virtual void command_bind_render_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) override final;
@@ -878,11 +878,11 @@ public:
 			PipelineMultisampleState p_multisample_state,
 			PipelineDepthStencilState p_depth_stencil_state,
 			PipelineColorBlendState p_blend_state,
-			VectorView<int32_t> p_color_attachments,
+			HectorView<int32_t> p_color_attachments,
 			BitField<PipelineDynamicStateFlags> p_dynamic_state,
 			RenderPassID p_render_pass,
 			uint32_t p_render_subpass,
-			VectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
+			HectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
 
 	/*****************/
 	/**** COMPUTE ****/
@@ -900,7 +900,7 @@ public:
 
 	// ----- PIPELINE -----
 
-	virtual PipelineID compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
+	virtual PipelineID compute_pipeline_create(ShaderID p_shader, HectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
 
 	/*****************/
 	/**** QUERIES ****/
@@ -968,7 +968,7 @@ private:
 		uint32_t uniform_set_reused = 0;
 #endif
 	};
-	TightLocalVector<FrameInfo> frames;
+	TightLocalHector<FrameInfo> frames;
 	uint32_t frame_idx = 0;
 	uint32_t frames_drawn = 0;
 	uint32_t segment_serial = 0;

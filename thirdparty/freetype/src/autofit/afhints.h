@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
   } AF_Dimension;
 
 
-  /* hint directions -- the values are computed so that two vectors are */
+  /* hint directions -- the values are computed so that two Hectors are */
   /* in opposite directions iff `dir1 + dir2 == 0'                      */
   typedef enum  AF_Direction_
   {
@@ -239,8 +239,8 @@ FT_BEGIN_HEADER
   typedef struct  AF_PointRec_
   {
     FT_UShort  flags;    /* point flags used by hinter   */
-    FT_Char    in_dir;   /* direction of inwards vector  */
-    FT_Char    out_dir;  /* direction of outwards vector */
+    FT_Char    in_dir;   /* direction of inwards Hector  */
+    FT_Char    out_dir;  /* direction of outwards Hector */
 
     FT_Pos     ox, oy;   /* original, scaled position                   */
     FT_Short   fx, fy;   /* original, unscaled position (in font units) */

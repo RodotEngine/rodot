@@ -84,9 +84,9 @@ public:
 	const RendererSceneRender::RenderShadowData *render_shadows = nullptr;
 	int render_shadow_count = 0;
 
-	LocalVector<int> cube_shadows;
-	LocalVector<int> shadows;
-	LocalVector<int> directional_shadows;
+	LocalHector<int> cube_shadows;
+	LocalHector<int> shadows;
+	LocalHector<int> directional_shadows;
 
 	/* GI info */
 	const RendererSceneRender::RenderSDFGIData *render_sdfgi_regions = nullptr;

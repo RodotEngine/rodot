@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		The [float] built-in type is a 64-bit double-precision floating-point number, equivalent to [code]double[/code] in C++. This type has 14 reliable decimal digits of precision. The maximum value of [float] is approximately [code]1.79769e308[/code], and the minimum is approximately [code]-1.79769e308[/code].
-		Many methods and properties in the engine use 32-bit single-precision floating-point numbers instead, equivalent to [code skip-lint]float[/code] in C++, which have 6 reliable decimal digits of precision. For data structures such as [Vector2] and [Vector3], Godot uses 32-bit floating-point numbers by default, but it can be changed to use 64-bit doubles if Godot is compiled with the [code]precision=double[/code] option.
+		Many methods and properties in the engine use 32-bit single-precision floating-point numbers instead, equivalent to [code skip-lint]float[/code] in C++, which have 6 reliable decimal digits of precision. For data structures such as [Hector2] and [Hector3], Godot uses 32-bit floating-point numbers by default, but it can be changed to use 64-bit doubles if Godot is compiled with the [code]precision=double[/code] option.
 		Math done using the [float] type is not guaranteed to be exact and will often result in small errors. You should usually use the [method @GlobalScope.is_equal_approx] and [method @GlobalScope.is_zero_approx] methods instead of [code]==[/code] to compare [float] values for equality.
 	</description>
 	<tutorials>
@@ -82,56 +82,56 @@
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector2" />
-			<param index="0" name="right" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="right" type="Hector2" />
 			<description>
-				Multiplies each component of the [Vector2] by the given [float].
+				Multiplies each component of the [Hector2] by the given [float].
 				[codeblock]
-				print(2.5 * Vector2(1, 3)) # Prints "(2.5, 7.5)"
+				print(2.5 * Hector2(1, 3)) # Prints "(2.5, 7.5)"
 				[/codeblock]
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector2" />
-			<param index="0" name="right" type="Vector2i" />
+			<return type="Hector2" />
+			<param index="0" name="right" type="Hector2i" />
 			<description>
-				Multiplies each component of the [Vector2i] by the given [float]. Returns a [Vector2].
+				Multiplies each component of the [Hector2i] by the given [float]. Returns a [Hector2].
 				[codeblock]
-				print(0.9 * Vector2i(10, 15)) # Prints "(9, 13.5)"
+				print(0.9 * Hector2i(10, 15)) # Prints "(9, 13.5)"
 				[/codeblock]
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector3" />
-			<param index="0" name="right" type="Vector3" />
+			<return type="Hector3" />
+			<param index="0" name="right" type="Hector3" />
 			<description>
-				Multiplies each component of the [Vector3] by the given [float].
+				Multiplies each component of the [Hector3] by the given [float].
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector3" />
-			<param index="0" name="right" type="Vector3i" />
+			<return type="Hector3" />
+			<param index="0" name="right" type="Hector3i" />
 			<description>
-				Multiplies each component of the [Vector3i] by the given [float]. Returns a [Vector3].
+				Multiplies each component of the [Hector3i] by the given [float]. Returns a [Hector3].
 				[codeblock]
-				print(0.9 * Vector3i(10, 15, 20)) # Prints "(9, 13.5, 18)"
+				print(0.9 * Hector3i(10, 15, 20)) # Prints "(9, 13.5, 18)"
 				[/codeblock]
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector4" />
-			<param index="0" name="right" type="Vector4" />
+			<return type="Hector4" />
+			<param index="0" name="right" type="Hector4" />
 			<description>
-				Multiplies each component of the [Vector4] by the given [float].
+				Multiplies each component of the [Hector4] by the given [float].
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector4" />
-			<param index="0" name="right" type="Vector4i" />
+			<return type="Hector4" />
+			<param index="0" name="right" type="Hector4i" />
 			<description>
-				Multiplies each component of the [Vector4i] by the given [float]. Returns a [Vector4].
+				Multiplies each component of the [Hector4i] by the given [float]. Returns a [Hector4].
 				[codeblock]
-				print(0.9 * Vector4i(10, 15, 20, -10)) # Prints "(9, 13.5, 18, -9)"
+				print(0.9 * Hector4i(10, 15, 20, -10)) # Prints "(9, 13.5, 18, -9)"
 				[/codeblock]
 			</description>
 		</operator>

@@ -60,7 +60,7 @@ struct hb_aat_apply_context_t :
   hb_sanitize_context_t sanitizer;
   const ankr *ankr_table;
   const OT::GDEF *gdef_table;
-  const hb_sorted_vector_t<hb_aat_map_t::range_flags_t> *range_flags = nullptr;
+  const hb_sorted_Hector_t<hb_aat_map_t::range_flags_t> *range_flags = nullptr;
   hb_set_digest_t buffer_digest = hb_set_digest_t::full ();
   hb_set_digest_t machine_glyph_set = hb_set_digest_t::full ();
   hb_set_digest_t left_set = hb_set_digest_t::full ();

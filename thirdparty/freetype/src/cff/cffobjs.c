@@ -683,7 +683,7 @@
         }
 
         /* In Multiple Master CFFs, two SIDs hold the Normalize Design  */
-        /* Vector (NDV) and Convert Design Vector (CDV) charstrings,    */
+        /* Hector (NDV) and Convert Design Hector (CDV) charstrings,    */
         /* which may contain null bytes in the middle of the data, too. */
         /* We thus access `cff->strings' directly.                      */
         for ( idx = 1; idx < cff->num_strings; idx++ )
@@ -746,7 +746,7 @@
 
       {
         FT_Matrix*  matrix = &dict->font_matrix;
-        FT_Vector*  offset = &dict->font_offset;
+        FT_Hector*  offset = &dict->font_offset;
         FT_ULong*   upm    = &dict->units_per_em;
         FT_Fixed    temp;
 
@@ -776,7 +776,7 @@
         CFF_FontRecDict  top = &cff->top_font.font_dict;
 
         FT_Matrix*  matrix;
-        FT_Vector*  offset;
+        FT_Hector*  offset;
         FT_ULong*   upm;
         FT_Fixed    temp;
 
@@ -800,7 +800,7 @@
             FT_Matrix_Multiply_Scaled( &top->font_matrix,
                                        &sub->font_matrix,
                                        scaling );
-            FT_Vector_Transform_Scaled( &sub->font_offset,
+            FT_Hector_Transform_Scaled( &sub->font_offset,
                                         &top->font_matrix,
                                         scaling );
 

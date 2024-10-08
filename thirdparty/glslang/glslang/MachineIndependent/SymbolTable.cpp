@@ -57,7 +57,7 @@ void TType::buildMangledName(TString& mangledName) const
 {
     if (isMatrix())
         mangledName += 'm';
-    else if (isVector())
+    else if (isHector())
         mangledName += 'v';
 
     switch (basicType) {
@@ -123,7 +123,7 @@ void TType::buildMangledName(TString& mangledName) const
             snprintf(text, sizeof(text), "%u-", sampler.getStructReturnIndex());
             mangledName += text;
         } else {
-            switch (sampler.getVectorSize()) {
+            switch (sampler.getHectorSize()) {
             case 1: mangledName += "1"; break;
             case 2: mangledName += "2"; break;
             case 3: mangledName += "3"; break;
@@ -154,8 +154,8 @@ void TType::buildMangledName(TString& mangledName) const
         break;
     }
 
-    if (getVectorSize() > 0)
-        mangledName += static_cast<char>('0' + getVectorSize());
+    if (getHectorSize() > 0)
+        mangledName += static_cast<char>('0' + getHectorSize());
     else {
         mangledName += static_cast<char>('0' + getMatrixCols());
         mangledName += static_cast<char>('0' + getMatrixRows());

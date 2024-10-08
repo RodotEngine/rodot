@@ -13,7 +13,7 @@
 	<methods>
 		<method name="set_arrays">
 			<return type="void" />
-			<param index="0" name="vertices" type="PackedVector3Array" />
+			<param index="0" name="vertices" type="PackedHector3Array" />
 			<param index="1" name="indices" type="PackedInt32Array" />
 			<description>
 				Sets [member indices] and [member vertices], while updating the final occluder only once after both values are set.
@@ -25,7 +25,7 @@
 			The occluder's index position. Indices determine which points from the [member vertices] array should be drawn, and in which order.
 			[b]Note:[/b] The occluder is always updated after setting this value. If creating occluders procedurally, consider using [method set_arrays] instead to avoid updating the occluder twice when it's created.
 		</member>
-		<member name="vertices" type="PackedVector3Array" setter="set_vertices" getter="get_vertices" default="PackedVector3Array()">
+		<member name="vertices" type="PackedHector3Array" setter="set_vertices" getter="get_vertices" default="PackedHector3Array()">
 			The occluder's vertex positions in local 3D coordinates.
 			[b]Note:[/b] The occluder is always updated after setting this value. If creating occluders procedurally, consider using [method set_arrays] instead to avoid updating the occluder twice when it's created.
 		</member>

@@ -86,15 +86,15 @@ void NavigationObstacle3DEditor::_wip_close() {
 	undo_redo->create_action(TTR("Set NavigationObstacle3D Vertices"));
 	undo_redo->add_undo_method(obstacle_node, "set_vertices", obstacle_node->get_vertices());
 
-	PackedVector3Array polygon_3d_vertices;
-	Vector<int> triangulated_polygon_2d_indices = Geometry2D::triangulate_polygon(wip);
+	PackedHector3Array polygon_3d_vertices;
+	Hector<int> triangulated_polygon_2d_indices = Geometry2D::triangulate_polygon(wip);
 
 	if (!triangulated_polygon_2d_indices.is_empty()) {
 		polygon_3d_vertices.resize(wip.size());
-		Vector3 *polygon_3d_vertices_ptr = polygon_3d_vertices.ptrw();
+		Hector3 *polygon_3d_vertices_ptr = polygon_3d_vertices.ptrw();
 		for (int i = 0; i < wip.size(); i++) {
-			const Vector2 &vert = wip[i];
-			polygon_3d_vertices_ptr[i] = Vector3(vert.x, 0.0, vert.y);
+			const Hector2 &vert = wip[i];
+			polygon_3d_vertices_ptr[i] = Hector3(vert.x, 0.0, vert.y);
 		}
 	}
 
@@ -117,16 +117,16 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 
 	Transform3D gt = obstacle_node->get_global_transform();
 	Transform3D gi = gt.affine_inverse();
-	Plane p(Vector3(0.0, 1.0, 0.0), gt.origin);
+	Plane p(Hector3(0.0, 1.0, 0.0), gt.origin);
 
 	Ref<InputEventMouseButton> mb = p_event;
 
 	if (mb.is_valid()) {
-		Vector2 gpoint = mb->get_position();
-		Vector3 ray_from = p_camera->project_ray_origin(gpoint);
-		Vector3 ray_dir = p_camera->project_ray_normal(gpoint);
+		Hector2 gpoint = mb->get_position();
+		Hector3 ray_from = p_camera->project_ray_origin(gpoint);
+		Hector3 ray_dir = p_camera->project_ray_normal(gpoint);
 
-		Vector3 spoint;
+		Hector3 spoint;
 
 		if (!p.intersects_ray(ray_from, ray_dir, &spoint)) {
 			return EditorPlugin::AFTER_GUI_INPUT_PASS;
@@ -134,13 +134,13 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 
 		spoint = gi.xform(spoint);
 
-		Vector2 cpoint(spoint.x, spoint.z);
+		Hector2 cpoint(spoint.x, spoint.z);
 
 		//DO NOT snap here, it's confusing in 3D for adding points.
 		//Let the snap happen when the point is being moved, instead.
 		//cpoint = CanvasItemEditor::get_singleton()->snap_point(cpoint);
 
-		PackedVector2Array poly = _get_polygon();
+		PackedHector2Array poly = _get_polygon();
 
 		//first check if a point is to be added (segment split)
 		real_t grab_threshold = EDITOR_GET("editors/polygon_editor/point_grab_radius");
@@ -158,7 +158,7 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 						edited_point = 1;
 						return EditorPlugin::AFTER_GUI_INPUT_STOP;
 					} else {
-						if (wip.size() > 1 && p_camera->unproject_position(gt.xform(Vector3(wip[0].x, 0.0, wip[0].y))).distance_to(gpoint) < grab_threshold) {
+						if (wip.size() > 1 && p_camera->unproject_position(gt.xform(Hector3(wip[0].x, 0.0, wip[0].y))).distance_to(gpoint) < grab_threshold) {
 							//wip closed
 							_wip_close();
 
@@ -194,15 +194,15 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 
 							//search edges
 							int closest_idx = -1;
-							Vector2 closest_pos;
+							Hector2 closest_pos;
 							real_t closest_dist = 1e10;
 							for (int i = 0; i < poly.size(); i++) {
-								Vector2 points[2] = {
-									p_camera->unproject_position(gt.xform(Vector3(poly[i].x, 0.0, poly[i].y))),
-									p_camera->unproject_position(gt.xform(Vector3(poly[(i + 1) % poly.size()].x, 0.0, poly[(i + 1) % poly.size()].y)))
+								Hector2 points[2] = {
+									p_camera->unproject_position(gt.xform(Hector3(poly[i].x, 0.0, poly[i].y))),
+									p_camera->unproject_position(gt.xform(Hector3(poly[(i + 1) % poly.size()].x, 0.0, poly[(i + 1) % poly.size()].y)))
 								};
 
-								Vector2 cp = Geometry2D::get_closest_point_to_segment(gpoint, points);
+								Hector2 cp = Geometry2D::get_closest_point_to_segment(gpoint, points);
 								if (cp.distance_squared_to(points[0]) < CMP_EPSILON2 || cp.distance_squared_to(points[1]) < CMP_EPSILON2) {
 									continue; //not valid to reuse point
 								}
@@ -230,10 +230,10 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 							//look for points to move
 
 							int closest_idx = -1;
-							Vector2 closest_pos;
+							Hector2 closest_pos;
 							real_t closest_dist = 1e10;
 							for (int i = 0; i < poly.size(); i++) {
-								Vector2 cp = p_camera->unproject_position(gt.xform(Vector3(poly[i].x, 0.0, poly[i].y)));
+								Hector2 cp = p_camera->unproject_position(gt.xform(Hector3(poly[i].x, 0.0, poly[i].y)));
 
 								real_t d = cp.distance_to(gpoint);
 								if (d < closest_dist && d < grab_threshold) {
@@ -275,10 +275,10 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 				}
 				if (mb->get_button_index() == MouseButton::RIGHT && mb->is_pressed() && edited_point == -1) {
 					int closest_idx = -1;
-					Vector2 closest_pos;
+					Hector2 closest_pos;
 					real_t closest_dist = 1e10;
 					for (int i = 0; i < poly.size(); i++) {
-						Vector2 cp = p_camera->unproject_position(gt.xform(Vector3(poly[i].x, 0.0, poly[i].y)));
+						Hector2 cp = p_camera->unproject_position(gt.xform(Hector3(poly[i].x, 0.0, poly[i].y)));
 
 						real_t d = cp.distance_to(gpoint);
 						if (d < closest_dist && d < grab_threshold) {
@@ -309,12 +309,12 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 
 	if (mm.is_valid()) {
 		if (edited_point != -1 && (wip_active || mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
-			Vector2 gpoint = mm->get_position();
+			Hector2 gpoint = mm->get_position();
 
-			Vector3 ray_from = p_camera->project_ray_origin(gpoint);
-			Vector3 ray_dir = p_camera->project_ray_normal(gpoint);
+			Hector3 ray_from = p_camera->project_ray_origin(gpoint);
+			Hector3 ray_dir = p_camera->project_ray_normal(gpoint);
 
-			Vector3 spoint;
+			Hector3 spoint;
 
 			if (!p.intersects_ray(ray_from, ray_dir, &spoint)) {
 				return EditorPlugin::AFTER_GUI_INPUT_PASS;
@@ -322,7 +322,7 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 
 			spoint = gi.xform(spoint);
 
-			Vector2 cpoint(spoint.x, spoint.z);
+			Hector2 cpoint(spoint.x, spoint.z);
 
 			if (snap_ignore && !Input::get_singleton()->is_key_pressed(Key::CTRL)) {
 				snap_ignore = false;
@@ -340,12 +340,12 @@ EditorPlugin::AfterGUIInput NavigationObstacle3DEditor::forward_3d_gui_input(Cam
 	return EditorPlugin::AFTER_GUI_INPUT_PASS;
 }
 
-PackedVector2Array NavigationObstacle3DEditor::_get_polygon() {
-	ERR_FAIL_NULL_V_MSG(obstacle_node, PackedVector2Array(), "Edited object is not valid.");
-	return PackedVector2Array(obstacle_node->call("get_polygon"));
+PackedHector2Array NavigationObstacle3DEditor::_get_polygon() {
+	ERR_FAIL_NULL_V_MSG(obstacle_node, PackedHector2Array(), "Edited object is not valid.");
+	return PackedHector2Array(obstacle_node->call("get_polygon"));
 }
 
-void NavigationObstacle3DEditor::_set_polygon(const PackedVector2Array &p_poly) {
+void NavigationObstacle3DEditor::_set_polygon(const PackedHector2Array &p_poly) {
 	ERR_FAIL_NULL_MSG(obstacle_node, "Edited object is not valid.");
 	obstacle_node->call("set_polygon", p_poly);
 }
@@ -355,8 +355,8 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 		return;
 	}
 
-	PackedVector2Array poly;
-	PackedVector3Array polygon_3d_vertices;
+	PackedHector2Array poly;
+	PackedHector3Array polygon_3d_vertices;
 
 	if (wip_active) {
 		poly = wip;
@@ -364,11 +364,11 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 		poly = _get_polygon();
 	}
 	polygon_3d_vertices.resize(poly.size());
-	Vector3 *polygon_3d_vertices_ptr = polygon_3d_vertices.ptrw();
+	Hector3 *polygon_3d_vertices_ptr = polygon_3d_vertices.ptrw();
 
 	for (int i = 0; i < poly.size(); i++) {
-		const Vector2 &vert = poly[i];
-		polygon_3d_vertices_ptr[i] = Vector3(vert.x, 0.0, vert.y);
+		const Hector2 &vert = poly[i];
+		polygon_3d_vertices_ptr[i] = Hector3(vert.x, 0.0, vert.y);
 	}
 
 	point_handle_mesh->clear_surfaces();
@@ -379,7 +379,7 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 	Rect2 rect;
 
 	for (int i = 0; i < poly.size(); i++) {
-		Vector2 p, p2;
+		Hector2 p, p2;
 		if (i == edited_point) {
 			p = edited_point_pos;
 		} else {
@@ -398,8 +398,8 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 			rect.expand_to(p);
 		}
 
-		Vector3 point = Vector3(p.x, 0.0, p.y);
-		Vector3 next_point = Vector3(p2.x, 0.0, p2.y);
+		Hector3 point = Hector3(p.x, 0.0, p.y);
+		Hector3 next_point = Hector3(p2.x, 0.0, p2.y);
 
 		point_lines_mesh->surface_set_color(Color(1, 0.3, 0.1, 0.8));
 		point_lines_mesh->surface_add_vertex(point);
@@ -424,38 +424,38 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	point_lines_mesh->surface_add_vertex(r.position);
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(0.3, 0, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(0.3, 0, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	point_lines_mesh->surface_add_vertex(r.position);
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(0.0, 0.3, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(0.0, 0.3, 0));
 
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0) - Vector3(0.3, 0, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0) - Hector3(0.3, 0, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0) + Vector3(0, 0.3, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0) + Hector3(0, 0.3, 0));
 
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0) - Vector3(0, 0.3, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0) - Hector3(0, 0.3, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0) + Vector3(0.3, 0, 0));
+	point_lines_mesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0) + Hector3(0.3, 0, 0));
 
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	point_lines_mesh->surface_add_vertex(r.position + r.size);
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + r.size - Vector3(0.3, 0, 0));
+	point_lines_mesh->surface_add_vertex(r.position + r.size - Hector3(0.3, 0, 0));
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	point_lines_mesh->surface_add_vertex(r.position + r.size);
 	point_lines_mesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	point_lines_mesh->surface_add_vertex(r.position + r.size - Vector3(0.0, 0.3, 0));
+	point_lines_mesh->surface_add_vertex(r.position + r.size - Hector3(0.0, 0.3, 0));
 
 	point_lines_mesh->surface_end();
 
@@ -465,14 +465,14 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 
 	Array point_handle_mesh_array;
 	point_handle_mesh_array.resize(Mesh::ARRAY_MAX);
-	Vector<Vector3> point_handle_mesh_vertices;
+	Hector<Hector3> point_handle_mesh_vertices;
 
 	point_handle_mesh_vertices.resize(poly.size());
-	Vector3 *point_handle_mesh_vertices_ptr = point_handle_mesh_vertices.ptrw();
+	Hector3 *point_handle_mesh_vertices_ptr = point_handle_mesh_vertices.ptrw();
 
 	for (int i = 0; i < poly.size(); i++) {
-		Vector2 point_2d;
-		Vector2 p2;
+		Hector2 point_2d;
+		Hector2 p2;
 
 		if (i == edited_point) {
 			point_2d = edited_point_pos;
@@ -480,7 +480,7 @@ void NavigationObstacle3DEditor::_polygon_draw() {
 			point_2d = poly[i];
 		}
 
-		Vector3 point_handle_3d = Vector3(point_2d.x, 0.0, point_2d.y);
+		Hector3 point_handle_3d = Hector3(point_2d.x, 0.0, point_2d.y);
 		point_handle_mesh_vertices_ptr[i] = point_handle_3d;
 	}
 
@@ -540,7 +540,7 @@ NavigationObstacle3DEditor::NavigationObstacle3DEditor() {
 	point_lines_meshinstance = memnew(MeshInstance3D);
 	point_lines_mesh.instantiate();
 	point_lines_meshinstance->set_mesh(point_lines_mesh);
-	point_lines_meshinstance->set_transform(Transform3D(Basis(), Vector3(0, 0, 0.00001)));
+	point_lines_meshinstance->set_transform(Transform3D(Basis(), Hector3(0, 0, 0.00001)));
 
 	line_material = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
 	line_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
@@ -565,7 +565,7 @@ NavigationObstacle3DEditor::NavigationObstacle3DEditor() {
 	point_lines_meshinstance->add_child(point_handles_meshinstance);
 	point_handle_mesh.instantiate();
 	point_handles_meshinstance->set_mesh(point_handle_mesh);
-	point_handles_meshinstance->set_transform(Transform3D(Basis(), Vector3(0, 0, 0.00001)));
+	point_handles_meshinstance->set_transform(Transform3D(Basis(), Hector3(0, 0, 0.00001)));
 
 	snap_ignore = false;
 }

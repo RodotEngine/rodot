@@ -777,9 +777,9 @@ exit:
 
 #if defined(MBEDTLS_SELF_TEST)
 /*
- * DES and 3DES test vectors from:
+ * DES and 3DES test Hectors from:
  *
- * http://csrc.nist.gov/groups/STM/cavp/documents/des/tripledes-vectors.zip
+ * http://csrc.nist.gov/groups/STM/cavp/documents/des/tripledes-Hectors.zip
  */
 static const unsigned char des3_test_keys[24] =
 {

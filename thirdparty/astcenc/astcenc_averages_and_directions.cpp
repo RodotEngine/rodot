@@ -27,7 +27,7 @@
 /**
  * @brief Compute the average RGB color of each partition.
  *
- * The algorithm here uses a vectorized sequential scan and per-partition
+ * The algorithm here uses a Hectorized sequential scan and per-partition
  * color accumulators, using select() to mask texel lanes in other partitions.
  *
  * We only accumulate sums for N-1 partitions during the scan; the value for
@@ -198,7 +198,7 @@ static void compute_partition_averages_rgb(
 /**
  * @brief Compute the average RGBA color of each partition.
  *
- * The algorithm here uses a vectorized sequential scan and per-partition
+ * The algorithm here uses a Hectorized sequential scan and per-partition
  * color accumulators, using select() to mask texel lanes in other partitions.
  *
  * We only accumulate sums for N-1 partitions during the scan; the value for
@@ -437,21 +437,21 @@ void compute_avgs_and_dirs_4_comp(
 		vfloat4 prod_zp = dot(sum_zp, sum_zp);
 		vfloat4 prod_wp = dot(sum_wp, sum_wp);
 
-		vfloat4 best_vector = sum_xp;
+		vfloat4 best_Hector = sum_xp;
 		vfloat4 best_sum = prod_xp;
 
 		vmask4 mask = prod_yp > best_sum;
-		best_vector = select(best_vector, sum_yp, mask);
+		best_Hector = select(best_Hector, sum_yp, mask);
 		best_sum = select(best_sum, prod_yp, mask);
 
 		mask = prod_zp > best_sum;
-		best_vector = select(best_vector, sum_zp, mask);
+		best_Hector = select(best_Hector, sum_zp, mask);
 		best_sum = select(best_sum, prod_zp, mask);
 
 		mask = prod_wp > best_sum;
-		best_vector = select(best_vector, sum_wp, mask);
+		best_Hector = select(best_Hector, sum_wp, mask);
 
-		pm[partition].dir = best_vector;
+		pm[partition].dir = best_Hector;
 	}
 }
 
@@ -550,17 +550,17 @@ void compute_avgs_and_dirs_3_comp(
 		vfloat4 prod_yp = dot(sum_yp, sum_yp);
 		vfloat4 prod_zp = dot(sum_zp, sum_zp);
 
-		vfloat4 best_vector = sum_xp;
+		vfloat4 best_Hector = sum_xp;
 		vfloat4 best_sum = prod_xp;
 
 		vmask4 mask = prod_yp > best_sum;
-		best_vector = select(best_vector, sum_yp, mask);
+		best_Hector = select(best_Hector, sum_yp, mask);
 		best_sum = select(best_sum, prod_yp, mask);
 
 		mask = prod_zp > best_sum;
-		best_vector = select(best_vector, sum_zp, mask);
+		best_Hector = select(best_Hector, sum_zp, mask);
 
-		pm[partition].dir = best_vector;
+		pm[partition].dir = best_Hector;
 	}
 }
 
@@ -613,17 +613,17 @@ void compute_avgs_and_dirs_3_comp_rgb(
 		vfloat4 prod_yp = dot(sum_yp, sum_yp);
 		vfloat4 prod_zp = dot(sum_zp, sum_zp);
 
-		vfloat4 best_vector = sum_xp;
+		vfloat4 best_Hector = sum_xp;
 		vfloat4 best_sum = prod_xp;
 
 		vmask4 mask = prod_yp > best_sum;
-		best_vector = select(best_vector, sum_yp, mask);
+		best_Hector = select(best_Hector, sum_yp, mask);
 		best_sum = select(best_sum, prod_yp, mask);
 
 		mask = prod_zp > best_sum;
-		best_vector = select(best_vector, sum_zp, mask);
+		best_Hector = select(best_Hector, sum_zp, mask);
 
-		pm[partition].dir = best_vector;
+		pm[partition].dir = best_Hector;
 	}
 }
 
@@ -709,13 +709,13 @@ void compute_avgs_and_dirs_2_comp(
 		vfloat4 prod_xp = dot(sum_xp, sum_xp);
 		vfloat4 prod_yp = dot(sum_yp, sum_yp);
 
-		vfloat4 best_vector = sum_xp;
+		vfloat4 best_Hector = sum_xp;
 		vfloat4 best_sum = prod_xp;
 
 		vmask4 mask = prod_yp > best_sum;
-		best_vector = select(best_vector, sum_yp, mask);
+		best_Hector = select(best_Hector, sum_yp, mask);
 
-		pm[partition].dir = best_vector;
+		pm[partition].dir = best_Hector;
 	}
 }
 
@@ -745,7 +745,7 @@ void compute_error_squared_rgba(
 		unsigned int texel_count = pi.partition_texel_count[partition];
 		promise(texel_count > 0);
 
-		// Vectorize some useful scalar inputs
+		// Hectorize some useful scalar inputs
 		vfloat l_uncor_bs0(l_uncor.bs.lane<0>());
 		vfloat l_uncor_bs1(l_uncor.bs.lane<1>());
 		vfloat l_uncor_bs2(l_uncor.bs.lane<2>());
@@ -863,7 +863,7 @@ void compute_error_squared_rgb(
 		processed_line3 l_uncor = pl.uncor_pline;
 		processed_line3 l_samec = pl.samec_pline;
 
-		// Vectorize some useful scalar inputs
+		// Hectorize some useful scalar inputs
 		vfloat l_uncor_bs0(l_uncor.bs.lane<0>());
 		vfloat l_uncor_bs1(l_uncor.bs.lane<1>());
 		vfloat l_uncor_bs2(l_uncor.bs.lane<2>());

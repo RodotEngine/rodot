@@ -120,17 +120,17 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 	Transform3D gt = node->get_global_transform();
 	Transform3D gi = gt.affine_inverse();
 	float depth = _get_depth() * 0.5;
-	Vector3 n = gt.basis.get_column(2).normalized();
+	Hector3 n = gt.basis.get_column(2).normalized();
 	Plane p(n, gt.origin + n * depth);
 
 	Ref<InputEventMouseButton> mb = p_event;
 
 	if (mb.is_valid()) {
-		Vector2 gpoint = mb->get_position();
-		Vector3 ray_from = p_camera->project_ray_origin(gpoint);
-		Vector3 ray_dir = p_camera->project_ray_normal(gpoint);
+		Hector2 gpoint = mb->get_position();
+		Hector3 ray_from = p_camera->project_ray_origin(gpoint);
+		Hector3 ray_dir = p_camera->project_ray_normal(gpoint);
 
-		Vector3 spoint;
+		Hector3 spoint;
 
 		if (!p.intersects_ray(ray_from, ray_dir, &spoint)) {
 			return EditorPlugin::AFTER_GUI_INPUT_PASS;
@@ -138,13 +138,13 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 
 		spoint = gi.xform(spoint);
 
-		Vector2 cpoint(spoint.x, spoint.y);
+		Hector2 cpoint(spoint.x, spoint.y);
 
 		//DO NOT snap here, it's confusing in 3D for adding points.
 		//Let the snap happen when the point is being moved, instead.
 		//cpoint = CanvasItemEditor::get_singleton()->snap_point(cpoint);
 
-		PackedVector2Array poly = _get_polygon();
+		PackedHector2Array poly = _get_polygon();
 
 		//first check if a point is to be added (segment split)
 		real_t grab_threshold = EDITOR_GET("editors/polygon_editor/point_grab_radius");
@@ -162,7 +162,7 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 						edited_point = 1;
 						return EditorPlugin::AFTER_GUI_INPUT_STOP;
 					} else {
-						if (wip.size() > 1 && p_camera->unproject_position(gt.xform(Vector3(wip[0].x, wip[0].y, depth))).distance_to(gpoint) < grab_threshold) {
+						if (wip.size() > 1 && p_camera->unproject_position(gt.xform(Hector3(wip[0].x, wip[0].y, depth))).distance_to(gpoint) < grab_threshold) {
 							//wip closed
 							_wip_close();
 
@@ -199,15 +199,15 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 
 							//search edges
 							int closest_idx = -1;
-							Vector2 closest_pos;
+							Hector2 closest_pos;
 							real_t closest_dist = 1e10;
 							for (int i = 0; i < poly.size(); i++) {
-								Vector2 points[2] = {
-									p_camera->unproject_position(gt.xform(Vector3(poly[i].x, poly[i].y, depth))),
-									p_camera->unproject_position(gt.xform(Vector3(poly[(i + 1) % poly.size()].x, poly[(i + 1) % poly.size()].y, depth)))
+								Hector2 points[2] = {
+									p_camera->unproject_position(gt.xform(Hector3(poly[i].x, poly[i].y, depth))),
+									p_camera->unproject_position(gt.xform(Hector3(poly[(i + 1) % poly.size()].x, poly[(i + 1) % poly.size()].y, depth)))
 								};
 
-								Vector2 cp = Geometry2D::get_closest_point_to_segment(gpoint, points);
+								Hector2 cp = Geometry2D::get_closest_point_to_segment(gpoint, points);
 								if (cp.distance_squared_to(points[0]) < CMP_EPSILON2 || cp.distance_squared_to(points[1]) < CMP_EPSILON2) {
 									continue; //not valid to reuse point
 								}
@@ -235,10 +235,10 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 							//look for points to move
 
 							int closest_idx = -1;
-							Vector2 closest_pos;
+							Hector2 closest_pos;
 							real_t closest_dist = 1e10;
 							for (int i = 0; i < poly.size(); i++) {
-								Vector2 cp = p_camera->unproject_position(gt.xform(Vector3(poly[i].x, poly[i].y, depth)));
+								Hector2 cp = p_camera->unproject_position(gt.xform(Hector3(poly[i].x, poly[i].y, depth)));
 
 								real_t d = cp.distance_to(gpoint);
 								if (d < closest_dist && d < grab_threshold) {
@@ -280,10 +280,10 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 				}
 				if (mb->get_button_index() == MouseButton::RIGHT && mb->is_pressed() && edited_point == -1) {
 					int closest_idx = -1;
-					Vector2 closest_pos;
+					Hector2 closest_pos;
 					real_t closest_dist = 1e10;
 					for (int i = 0; i < poly.size(); i++) {
-						Vector2 cp = p_camera->unproject_position(gt.xform(Vector3(poly[i].x, poly[i].y, depth)));
+						Hector2 cp = p_camera->unproject_position(gt.xform(Hector3(poly[i].x, poly[i].y, depth)));
 
 						real_t d = cp.distance_to(gpoint);
 						if (d < closest_dist && d < grab_threshold) {
@@ -314,12 +314,12 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 
 	if (mm.is_valid()) {
 		if (edited_point != -1 && (wip_active || mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
-			Vector2 gpoint = mm->get_position();
+			Hector2 gpoint = mm->get_position();
 
-			Vector3 ray_from = p_camera->project_ray_origin(gpoint);
-			Vector3 ray_dir = p_camera->project_ray_normal(gpoint);
+			Hector3 ray_from = p_camera->project_ray_origin(gpoint);
+			Hector3 ray_dir = p_camera->project_ray_normal(gpoint);
 
-			Vector3 spoint;
+			Hector3 spoint;
 
 			if (!p.intersects_ray(ray_from, ray_dir, &spoint)) {
 				return EditorPlugin::AFTER_GUI_INPUT_PASS;
@@ -327,7 +327,7 @@ EditorPlugin::AfterGUIInput Polygon3DEditor::forward_3d_gui_input(Camera3D *p_ca
 
 			spoint = gi.xform(spoint);
 
-			Vector2 cpoint(spoint.x, spoint.y);
+			Hector2 cpoint(spoint.x, spoint.y);
 
 			if (snap_ignore && !Input::get_singleton()->is_key_pressed(Key::CMD_OR_CTRL)) {
 				snap_ignore = false;
@@ -356,13 +356,13 @@ float Polygon3DEditor::_get_depth() {
 	return float(obj->call("get_depth"));
 }
 
-PackedVector2Array Polygon3DEditor::_get_polygon() {
+PackedHector2Array Polygon3DEditor::_get_polygon() {
 	Object *obj = node_resource.is_valid() ? (Object *)node_resource.ptr() : node;
-	ERR_FAIL_NULL_V_MSG(obj, PackedVector2Array(), "Edited object is not valid.");
-	return PackedVector2Array(obj->call("get_polygon"));
+	ERR_FAIL_NULL_V_MSG(obj, PackedHector2Array(), "Edited object is not valid.");
+	return PackedHector2Array(obj->call("get_polygon"));
 }
 
-void Polygon3DEditor::_set_polygon(const PackedVector2Array &p_poly) {
+void Polygon3DEditor::_set_polygon(const PackedHector2Array &p_poly) {
 	Object *obj = node_resource.is_valid() ? (Object *)node_resource.ptr() : node;
 	ERR_FAIL_NULL_MSG(obj, "Edited object is not valid.");
 	obj->call("set_polygon", p_poly);
@@ -373,7 +373,7 @@ void Polygon3DEditor::_polygon_draw() {
 		return;
 	}
 
-	PackedVector2Array poly;
+	PackedHector2Array poly;
 
 	if (wip_active) {
 		poly = wip;
@@ -391,7 +391,7 @@ void Polygon3DEditor::_polygon_draw() {
 	Rect2 rect;
 
 	for (int i = 0; i < poly.size(); i++) {
-		Vector2 p, p2;
+		Hector2 p, p2;
 		p = i == edited_point ? edited_point_pos : poly[i];
 		if ((wip_active && i == poly.size() - 1) || (((i + 1) % poly.size()) == edited_point)) {
 			p2 = edited_point_pos;
@@ -405,8 +405,8 @@ void Polygon3DEditor::_polygon_draw() {
 			rect.expand_to(p);
 		}
 
-		Vector3 point = Vector3(p.x, p.y, depth);
-		Vector3 next_point = Vector3(p2.x, p2.y, depth);
+		Hector3 point = Hector3(p.x, p.y, depth);
+		Hector3 next_point = Hector3(p2.x, p2.y, depth);
 
 		imesh->surface_set_color(Color(1, 0.3, 0.1, 0.8));
 		imesh->surface_add_vertex(point);
@@ -431,38 +431,38 @@ void Polygon3DEditor::_polygon_draw() {
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	imesh->surface_add_vertex(r.position);
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(0.3, 0, 0));
+	imesh->surface_add_vertex(r.position + Hector3(0.3, 0, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	imesh->surface_add_vertex(r.position);
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(0.0, 0.3, 0));
+	imesh->surface_add_vertex(r.position + Hector3(0.0, 0.3, 0));
 
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0));
+	imesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0) - Vector3(0.3, 0, 0));
+	imesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0) - Hector3(0.3, 0, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0));
+	imesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(r.size.x, 0, 0) + Vector3(0, 0.3, 0));
+	imesh->surface_add_vertex(r.position + Hector3(r.size.x, 0, 0) + Hector3(0, 0.3, 0));
 
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0));
+	imesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0) - Vector3(0, 0.3, 0));
+	imesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0) - Hector3(0, 0.3, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0));
+	imesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + Vector3(0, r.size.y, 0) + Vector3(0.3, 0, 0));
+	imesh->surface_add_vertex(r.position + Hector3(0, r.size.y, 0) + Hector3(0.3, 0, 0));
 
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	imesh->surface_add_vertex(r.position + r.size);
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + r.size - Vector3(0.3, 0, 0));
+	imesh->surface_add_vertex(r.position + r.size - Hector3(0.3, 0, 0));
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
 	imesh->surface_add_vertex(r.position + r.size);
 	imesh->surface_set_color(Color(0.8, 0.8, 0.8, 0.2));
-	imesh->surface_add_vertex(r.position + r.size - Vector3(0.0, 0.3, 0));
+	imesh->surface_add_vertex(r.position + r.size - Hector3(0.0, 0.3, 0));
 
 	imesh->surface_end();
 
@@ -472,15 +472,15 @@ void Polygon3DEditor::_polygon_draw() {
 
 	Array a;
 	a.resize(Mesh::ARRAY_MAX);
-	Vector<Vector3> va;
+	Hector<Hector3> va;
 	{
 		va.resize(poly.size());
-		Vector3 *w = va.ptrw();
+		Hector3 *w = va.ptrw();
 		for (int i = 0; i < poly.size(); i++) {
-			Vector2 p, p2;
+			Hector2 p, p2;
 			p = i == edited_point ? edited_point_pos : poly[i];
 
-			Vector3 point = Vector3(p.x, p.y, depth);
+			Hector3 point = Hector3(p.x, p.y, depth);
 			w[i] = point;
 		}
 	}
@@ -552,7 +552,7 @@ Polygon3DEditor::Polygon3DEditor() {
 	imgeom = memnew(MeshInstance3D);
 	imesh.instantiate();
 	imgeom->set_mesh(imesh);
-	imgeom->set_transform(Transform3D(Basis(), Vector3(0, 0, 0.00001)));
+	imgeom->set_transform(Transform3D(Basis(), Hector3(0, 0, 0.00001)));
 
 	line_material = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
 	line_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
@@ -577,7 +577,7 @@ Polygon3DEditor::Polygon3DEditor() {
 	imgeom->add_child(pointsm);
 	m.instantiate();
 	pointsm->set_mesh(m);
-	pointsm->set_transform(Transform3D(Basis(), Vector3(0, 0, 0.00001)));
+	pointsm->set_transform(Transform3D(Basis(), Hector3(0, 0, 0.00001)));
 
 	snap_ignore = false;
 }

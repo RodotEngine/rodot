@@ -166,7 +166,7 @@ private:
 	MenuButton *file_list_button_sort = nullptr;
 
 	PackedStringArray searched_tokens;
-	Vector<String> uncollapsed_paths_before_search;
+	Hector<String> uncollapsed_paths_before_search;
 
 	TextureRect *search_icon = nullptr;
 	HBoxContainer *path_hb = nullptr;
@@ -214,14 +214,14 @@ private:
 	};
 	FileOrFolder to_rename;
 	FileOrFolder to_duplicate;
-	Vector<FileOrFolder> to_move;
+	Hector<FileOrFolder> to_move;
 	String to_move_path;
 	bool to_move_or_copy = false;
 
-	Vector<String> to_convert;
+	Hector<String> to_convert;
 	int selected_conversion_id = 0;
 
-	Vector<String> history;
+	Hector<String> history;
 	int history_pos;
 	int history_max_size;
 
@@ -235,10 +235,10 @@ private:
 	bool import_dock_needs_update = false;
 
 	bool holding_branch = false;
-	Vector<TreeItem *> tree_items_selected_on_drag_begin;
+	Hector<TreeItem *> tree_items_selected_on_drag_begin;
 	PackedInt32Array list_items_selected_on_drag_begin;
 
-	LocalVector<Ref<EditorResourceTooltipPlugin>> tooltip_plugins;
+	LocalHector<Ref<EditorResourceTooltipPlugin>> tooltip_plugins;
 
 	HashSet<String> cached_valid_conversion_targets;
 
@@ -246,14 +246,14 @@ private:
 	void _reselect_items_selected_on_drag_begin(bool reset = false);
 
 	Ref<Texture2D> _get_tree_item_icon(bool p_is_valid, const String &p_file_type, const String &p_icon_path);
-	bool _create_tree(TreeItem *p_parent, EditorFileSystemDirectory *p_dir, Vector<String> &uncollapsed_paths, bool p_select_in_favorites, bool p_unfold_path = false);
-	void _update_tree(const Vector<String> &p_uncollapsed_paths = Vector<String>(), bool p_uncollapse_root = false, bool p_select_in_favorites = false, bool p_unfold_path = false);
+	bool _create_tree(TreeItem *p_parent, EditorFileSystemDirectory *p_dir, Hector<String> &uncollapsed_paths, bool p_select_in_favorites, bool p_unfold_path = false);
+	void _update_tree(const Hector<String> &p_uncollapsed_paths = Hector<String>(), bool p_uncollapse_root = false, bool p_select_in_favorites = false, bool p_unfold_path = false);
 	void _navigate_to_path(const String &p_path, bool p_select_in_favorites = false);
 
 	void _file_list_gui_input(Ref<InputEvent> p_event);
 	void _tree_gui_input(Ref<InputEvent> p_event);
 
-	HashSet<String> _get_valid_conversions_for_file_paths(const Vector<String> &p_paths);
+	HashSet<String> _get_valid_conversions_for_file_paths(const Hector<String> &p_paths);
 
 	void _update_file_list(bool p_keep_selection);
 	void _toggle_file_display();
@@ -266,10 +266,10 @@ private:
 	void _file_multi_selected(int p_index, bool p_selected);
 	void _tree_multi_selected(Object *p_item, int p_column, bool p_selected);
 
-	bool _get_imported_files(const String &p_path, String &r_extension, Vector<String> &r_files) const;
+	bool _get_imported_files(const String &p_path, String &r_extension, Hector<String> &r_files) const;
 	void _update_import_dock();
 
-	void _get_all_items_in_dir(EditorFileSystemDirectory *p_efsd, Vector<String> &r_files, Vector<String> &r_folders) const;
+	void _get_all_items_in_dir(EditorFileSystemDirectory *p_efsd, Hector<String> &r_files, Hector<String> &r_folders) const;
 	void _find_file_owners(EditorFileSystemDirectory *p_efsd, const HashSet<String> &p_renames, HashSet<String> &r_file_owners) const;
 	void _try_move_item(const FileOrFolder &p_item, const String &p_new_path, HashMap<String, String> &p_file_renames, HashMap<String, String> &p_folder_renames);
 	void _try_duplicate_item(const FileOrFolder &p_item, const String &p_new_path) const;
@@ -292,13 +292,13 @@ private:
 	void _duplicate_operation_confirm(const String &p_path);
 	void _overwrite_dialog_action(bool p_overwrite);
 	void _convert_dialog_action();
-	Vector<String> _check_existing();
+	Hector<String> _check_existing();
 	void _move_operation_confirm(const String &p_to_path, bool p_copy = false, Overwrite p_overwrite = OVERWRITE_UNDECIDED);
 
 	void _tree_rmb_option(int p_option);
 	void _file_list_rmb_option(int p_option);
 	void _generic_rmb_option_selected(int p_option);
-	void _file_option(int p_option, const Vector<String> &p_selected);
+	void _file_option(int p_option, const Hector<String> &p_selected);
 
 	void _fw_history();
 	void _bw_history();
@@ -318,11 +318,11 @@ private:
 	void _file_sort_popup(int p_id);
 
 	void _folder_color_index_pressed(int p_index, PopupMenu *p_menu);
-	void _file_and_folders_fill_popup(PopupMenu *p_popup, const Vector<String> &p_paths, bool p_display_path_dependent_options = true);
-	void _tree_rmb_select(const Vector2 &p_pos, MouseButton p_button);
-	void _file_list_item_clicked(int p_item, const Vector2 &p_pos, MouseButton p_mouse_button_index);
-	void _file_list_empty_clicked(const Vector2 &p_pos, MouseButton p_mouse_button_index);
-	void _tree_empty_click(const Vector2 &p_pos, MouseButton p_button);
+	void _file_and_folders_fill_popup(PopupMenu *p_popup, const Hector<String> &p_paths, bool p_display_path_dependent_options = true);
+	void _tree_rmb_select(const Hector2 &p_pos, MouseButton p_button);
+	void _file_list_item_clicked(int p_item, const Hector2 &p_pos, MouseButton p_mouse_button_index);
+	void _file_list_empty_clicked(const Hector2 &p_pos, MouseButton p_mouse_button_index);
+	void _tree_empty_click(const Hector2 &p_pos, MouseButton p_button);
 	void _tree_empty_selected();
 
 	void _search(EditorFileSystemDirectory *p_path, List<FileInfo> *matches, int p_max_items);
@@ -340,14 +340,14 @@ private:
 
 	void _update_display_mode(bool p_force = false);
 
-	Vector<String> _tree_get_selected(bool remove_self_inclusion = true, bool p_include_unselected_cursor = false) const;
-	Vector<String> _file_list_get_selected() const;
+	Hector<String> _tree_get_selected(bool remove_self_inclusion = true, bool p_include_unselected_cursor = false) const;
+	Hector<String> _file_list_get_selected() const;
 
 	bool _is_file_type_disabled_by_feature_profile(const StringName &p_class);
 
 	void _feature_profile_changed();
 	void _project_settings_changed();
-	static Vector<String> _remove_self_included_paths(Vector<String> selected_strings);
+	static Hector<String> _remove_self_included_paths(Hector<String> selected_strings);
 
 	void _change_bottom_dock_placement();
 
@@ -373,8 +373,8 @@ public:
 	const HashMap<String, Color> &get_folder_colors() const;
 	Dictionary get_assigned_folder_colors() const;
 
-	Vector<String> get_selected_paths() const;
-	Vector<String> get_uncollapsed_paths() const;
+	Hector<String> get_selected_paths() const;
+	Hector<String> get_uncollapsed_paths() const;
 
 	String get_current_path() const;
 	String get_current_directory() const;

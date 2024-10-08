@@ -31,7 +31,7 @@
 #ifndef LIGHTMAPPER_RD_H
 #define LIGHTMAPPER_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/3d/lightmapper.h"
 #include "scene/resources/mesh.h"
 #include "servers/rendering/rendering_device.h"
@@ -63,7 +63,7 @@ class LightmapperRD : public Lightmapper {
 	struct MeshInstance {
 		MeshData data;
 		int slice = 0;
-		Vector2i offset;
+		Hector2i offset;
 	};
 
 	struct Light {
@@ -106,17 +106,17 @@ class LightmapperRD : public Lightmapper {
 	};
 
 	struct Edge {
-		Vector3 a;
-		Vector3 b;
-		Vector3 na;
-		Vector3 nb;
+		Hector3 a;
+		Hector3 b;
+		Hector3 na;
+		Hector3 nb;
 		bool operator==(const Edge &p_seam) const {
 			return a == p_seam.a && b == p_seam.b && na == p_seam.na && nb == p_seam.nb;
 		}
 		Edge() {
 		}
 
-		Edge(const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_na, const Vector3 &p_nb) {
+		Edge(const Hector3 &p_a, const Hector3 &p_b, const Hector3 &p_na, const Hector3 &p_nb) {
 			a = p_a;
 			b = p_b;
 			na = p_na;
@@ -128,7 +128,7 @@ class LightmapperRD : public Lightmapper {
 		float position[4] = {};
 	};
 
-	Vector<Probe> probe_positions;
+	Hector<Probe> probe_positions;
 
 	struct EdgeHash {
 		_FORCE_INLINE_ static uint32_t hash(const Edge &p_edge) {
@@ -142,14 +142,14 @@ class LightmapperRD : public Lightmapper {
 		}
 	};
 	struct EdgeUV2 {
-		Vector2 a;
-		Vector2 b;
-		Vector2i indices;
+		Hector2 a;
+		Hector2 b;
+		Hector2i indices;
 		bool operator==(const EdgeUV2 &p_uv2) const {
 			return a == p_uv2.a && b == p_uv2.b;
 		}
 		bool seam_found = false;
-		EdgeUV2(Vector2 p_a, Vector2 p_b, Vector2i p_indices) {
+		EdgeUV2(Hector2 p_a, Hector2 p_b, Hector2i p_indices) {
 			a = p_a;
 			b = p_b;
 			indices = p_indices;
@@ -158,8 +158,8 @@ class LightmapperRD : public Lightmapper {
 	};
 
 	struct Seam {
-		Vector2i a;
-		Vector2i b;
+		Hector2i a;
+		Hector2i b;
 		uint32_t slice;
 		bool operator<(const Seam &p_seam) const {
 			return slice < p_seam.slice;
@@ -199,9 +199,9 @@ class LightmapperRD : public Lightmapper {
 		float pad1 = 0.0f;
 	};
 
-	Vector<MeshInstance> mesh_instances;
+	Hector<MeshInstance> mesh_instances;
 
-	Vector<Light> lights;
+	Hector<Light> lights;
 
 	struct TriangleSort {
 		uint32_t cell_index = 0;
@@ -220,8 +220,8 @@ class LightmapperRD : public Lightmapper {
 		}
 	};
 
-	void _plot_triangle_into_triangle_index_list(int p_size, const Vector3i &p_ofs, const AABB &p_bounds, const Vector3 p_points[3], uint32_t p_triangle_index, LocalVector<TriangleSort> &triangles, uint32_t p_grid_size);
-	void _sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_cluster_index, uint32_t p_index_start, uint32_t p_count, LocalVector<TriangleSort> &p_triangle_sort, LocalVector<ClusterAABB> &p_cluster_aabb);
+	void _plot_triangle_into_triangle_index_list(int p_size, const Hector3i &p_ofs, const AABB &p_bounds, const Hector3 p_points[3], uint32_t p_triangle_index, LocalHector<TriangleSort> &triangles, uint32_t p_grid_size);
+	void _sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_cluster_index, uint32_t p_index_start, uint32_t p_count, LocalHector<TriangleSort> &p_triangle_sort, LocalHector<ClusterAABB> &p_cluster_aabb);
 
 	struct RasterPushConstant {
 		float atlas_size[2] = {};
@@ -253,8 +253,8 @@ class LightmapperRD : public Lightmapper {
 		uint32_t pad = 0;
 	};
 
-	Vector<Ref<Image>> bake_textures;
-	Vector<Color> probe_values;
+	Hector<Ref<Image>> bake_textures;
+	Hector<Color> probe_values;
 
 	struct DenoiseParams {
 		float spatial_bandwidth;
@@ -267,9 +267,9 @@ class LightmapperRD : public Lightmapper {
 		float pad[2];
 	};
 
-	BakeError _blit_meshes_into_atlas(int p_max_texture_size, int p_denoiser_range, Vector<Ref<Image>> &albedo_images, Vector<Ref<Image>> &emission_images, AABB &bounds, Size2i &atlas_size, int &atlas_slices, BakeStepFunc p_step_function, void *p_bake_userdata);
-	void _create_acceleration_structures(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, AABB &bounds, int grid_size, uint32_t p_cluster_size, Vector<Probe> &probe_positions, GenerateProbes p_generate_probes, Vector<int> &slice_triangle_count, Vector<int> &slice_seam_count, RID &vertex_buffer, RID &triangle_buffer, RID &lights_buffer, RID &r_triangle_indices_buffer, RID &r_cluster_indices_buffer, RID &r_cluster_aabbs_buffer, RID &probe_positions_buffer, RID &grid_texture, RID &seams_buffer, BakeStepFunc p_step_function, void *p_bake_userdata);
-	void _raster_geometry(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, int grid_size, AABB bounds, float p_bias, Vector<int> slice_triangle_count, RID position_tex, RID unocclude_tex, RID normal_tex, RID raster_depth_buffer, RID rasterize_shader, RID raster_base_uniform);
+	BakeError _blit_meshes_into_atlas(int p_max_texture_size, int p_denoiser_range, Hector<Ref<Image>> &albedo_images, Hector<Ref<Image>> &emission_images, AABB &bounds, Size2i &atlas_size, int &atlas_slices, BakeStepFunc p_step_function, void *p_bake_userdata);
+	void _create_acceleration_structures(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, AABB &bounds, int grid_size, uint32_t p_cluster_size, Hector<Probe> &probe_positions, GenerateProbes p_generate_probes, Hector<int> &slice_triangle_count, Hector<int> &slice_seam_count, RID &vertex_buffer, RID &triangle_buffer, RID &lights_buffer, RID &r_triangle_indices_buffer, RID &r_cluster_indices_buffer, RID &r_cluster_aabbs_buffer, RID &probe_positions_buffer, RID &grid_texture, RID &seams_buffer, BakeStepFunc p_step_function, void *p_bake_userdata);
+	void _raster_geometry(RenderingDevice *rd, Size2i atlas_size, int atlas_slices, int grid_size, AABB bounds, float p_bias, Hector<int> slice_triangle_count, RID position_tex, RID unocclude_tex, RID normal_tex, RID raster_depth_buffer, RID rasterize_shader, RID raster_base_uniform);
 
 	BakeError _dilate(RenderingDevice *rd, Ref<RDShaderFile> &compute_shader, RID &compute_base_uniform_set, PushConstant &push_constant, RID &source_light_tex, RID &dest_light_tex, const Size2i &atlas_size, int atlas_slices);
 	BakeError _denoise(RenderingDevice *p_rd, Ref<RDShaderFile> &p_compute_shader, const RID &p_compute_base_uniform_set, PushConstant &p_push_constant, RID p_source_light_tex, RID p_source_normal_tex, RID p_dest_light_tex, float p_denoiser_strength, int p_denoiser_range, const Size2i &p_atlas_size, int p_atlas_slices, bool p_bake_sh, BakeStepFunc p_step_function, void *p_bake_userdata);
@@ -281,10 +281,10 @@ class LightmapperRD : public Lightmapper {
 
 public:
 	virtual void add_mesh(const MeshData &p_mesh) override;
-	virtual void add_directional_light(bool p_static, const Vector3 &p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_angular_distance, float p_shadow_blur) override;
-	virtual void add_omni_light(bool p_static, const Vector3 &p_position, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_size, float p_shadow_blur) override;
-	virtual void add_spot_light(bool p_static, const Vector3 &p_position, const Vector3 p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_spot_angle, float p_spot_attenuation, float p_size, float p_shadow_blur) override;
-	virtual void add_probe(const Vector3 &p_position) override;
+	virtual void add_directional_light(bool p_static, const Hector3 &p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_angular_distance, float p_shadow_blur) override;
+	virtual void add_omni_light(bool p_static, const Hector3 &p_position, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_size, float p_shadow_blur) override;
+	virtual void add_spot_light(bool p_static, const Hector3 &p_position, const Hector3 p_direction, const Color &p_color, float p_energy, float p_indirect_energy, float p_range, float p_attenuation, float p_spot_angle, float p_spot_attenuation, float p_size, float p_shadow_blur) override;
+	virtual void add_probe(const Hector3 &p_position) override;
 	virtual BakeError bake(BakeQuality p_quality, bool p_use_denoiser, float p_denoiser_strength, int p_denoiser_range, int p_bounces, float p_bounce_indirect_energy, float p_bias, int p_max_texture_size, bool p_bake_sh, bool p_texture_for_bounces, GenerateProbes p_generate_probes, const Ref<Image> &p_environment_panorama, const Basis &p_environment_transform, BakeStepFunc p_step_function = nullptr, void *p_bake_userdata = nullptr, float p_exposure_normalization = 1.0) override;
 
 	int get_bake_texture_count() const override;
@@ -294,8 +294,8 @@ public:
 	Rect2 get_bake_mesh_uv_scale(int p_index) const override;
 	int get_bake_mesh_texture_slice(int p_index) const override;
 	int get_bake_probe_count() const override;
-	Vector3 get_bake_probe_point(int p_probe) const override;
-	Vector<Color> get_bake_probe_sh(int p_probe) const override;
+	Hector3 get_bake_probe_point(int p_probe) const override;
+	Hector<Color> get_bake_probe_sh(int p_probe) const override;
 
 	LightmapperRD();
 };

@@ -66,7 +66,7 @@ void TabContainer::gui_input(const Ref<InputEvent> &p_event) {
 			if (is_layout_rtl() ? pos.x < theme_cache.menu_icon->get_width() : pos.x > size.width - theme_cache.menu_icon->get_width()) {
 				emit_signal(SNAME("pre_popup_pressed"));
 
-				Vector2 popup_pos = get_screen_position();
+				Hector2 popup_pos = get_screen_position();
 				if (!is_layout_rtl()) {
 					popup_pos.x += size.width - popup->get_size().width;
 				}
@@ -199,7 +199,7 @@ void TabContainer::_notification(int p_what) {
 			// As the visibility change notification will be triggered for all children soon after,
 			// beat it to the punch and make sure that the correct node is the only one visible first.
 			// Otherwise, it can prevent a tab change done right before this container was made visible.
-			Vector<Control *> controls = _get_tab_controls();
+			Hector<Control *> controls = _get_tab_controls();
 			int current = setup_current_tab > -2 ? setup_current_tab : get_current_tab();
 			for (int i = 0; i < controls.size(); i++) {
 				controls[i]->set_visible(i == current);
@@ -264,7 +264,7 @@ void TabContainer::_on_theme_changed() {
 }
 
 void TabContainer::_repaint() {
-	Vector<Control *> controls = _get_tab_controls();
+	Hector<Control *> controls = _get_tab_controls();
 	int current = get_current_tab();
 
 	// Move the TabBar to the top or bottom.
@@ -362,8 +362,8 @@ void TabContainer::_on_mouse_exited() {
 	}
 }
 
-Vector<Control *> TabContainer::_get_tab_controls() const {
-	Vector<Control *> controls;
+Hector<Control *> TabContainer::_get_tab_controls() const {
+	Hector<Control *> controls;
 	for (int i = 0; i < get_child_count(); i++) {
 		Control *control = as_sortable_control(get_child(i), SortableVisbilityMode::IGNORE);
 		if (!control || control == tab_bar || children_removing.has(control)) {
@@ -520,14 +520,14 @@ void TabContainer::_on_tab_visibility_changed(Control *p_child) {
 }
 
 void TabContainer::_refresh_tab_indices() {
-	Vector<Control *> controls = _get_tab_controls();
+	Hector<Control *> controls = _get_tab_controls();
 	for (int i = 0; i < controls.size(); i++) {
 		controls[i]->set_meta("_tab_index", i);
 	}
 }
 
 void TabContainer::_refresh_tab_names() {
-	Vector<Control *> controls = _get_tab_controls();
+	Hector<Control *> controls = _get_tab_controls();
 	for (int i = 0; i < controls.size(); i++) {
 		if (!controls[i]->has_meta("_tab_name") && String(controls[i]->get_name()) != get_tab_title(i)) {
 			tab_bar->set_tab_title(i, controls[i]->get_name());
@@ -660,7 +660,7 @@ bool TabContainer::get_deselect_enabled() const {
 }
 
 Control *TabContainer::get_tab_control(int p_idx) const {
-	Vector<Control *> controls = _get_tab_controls();
+	Hector<Control *> controls = _get_tab_controls();
 	if (p_idx >= 0 && p_idx < controls.size()) {
 		return controls[p_idx];
 	} else {
@@ -680,7 +680,7 @@ int TabContainer::get_tab_idx_from_control(Control *p_child) const {
 	ERR_FAIL_NULL_V(p_child, -1);
 	ERR_FAIL_COND_V(p_child->get_parent() != this, -1);
 
-	Vector<Control *> controls = _get_tab_controls();
+	Hector<Control *> controls = _get_tab_controls();
 	for (int i = 0; i < controls.size(); i++) {
 		if (controls[i] == p_child) {
 			return i;
@@ -907,7 +907,7 @@ Size2 TabContainer::get_minimum_size() const {
 		}
 	}
 
-	Vector<Control *> controls = _get_tab_controls();
+	Hector<Control *> controls = _get_tab_controls();
 	Size2 largest_child_min_size;
 	for (int i = 0; i < controls.size(); i++) {
 		Control *c = controls[i];
@@ -993,12 +993,12 @@ bool TabContainer::get_use_hidden_tabs_for_min_size() const {
 	return use_hidden_tabs_for_min_size;
 }
 
-Vector<int> TabContainer::get_allowed_size_flags_horizontal() const {
-	return Vector<int>();
+Hector<int> TabContainer::get_allowed_size_flags_horizontal() const {
+	return Hector<int>();
 }
 
-Vector<int> TabContainer::get_allowed_size_flags_vertical() const {
-	return Vector<int>();
+Hector<int> TabContainer::get_allowed_size_flags_vertical() const {
+	return Hector<int>();
 }
 
 void TabContainer::_bind_methods() {

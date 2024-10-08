@@ -94,7 +94,7 @@ TEST_CASE("[OAHashMap] Iteration") {
 	map.insert(123485, 1238888);
 	map.set(123, 111111);
 
-	Vector<Pair<int, int>> expected;
+	Hector<Pair<int, int>> expected;
 	expected.push_back(Pair<int, int>(42, 84));
 	expected.push_back(Pair<int, int>(123, 111111));
 	expected.push_back(Pair<int, int>(0, 12934));
@@ -115,7 +115,7 @@ TEST_CASE("[OAHashMap] Insert, iterate, remove many strings") {
 			map.insert(itos(i), i);
 		}
 
-		Vector<String> elems_still_valid;
+		Hector<String> elems_still_valid;
 
 		for (int i = 0; i < elem_max; i++) {
 			if ((i % 5) == 0) {
@@ -198,22 +198,22 @@ TEST_CASE("[OAHashMap] Non-trivial types") {
 		map1copy = map1;
 		CHECK(map1copy.has(String("qwerty2")));
 
-		OAHashMap<int64_t, Vector4 *> map2;
+		OAHashMap<int64_t, Hector4 *> map2;
 
 		for (uint32_t i = 0; i < count; i++) {
-			Vector4 *vec = memnew(Vector4);
+			Hector4 *vec = memnew(Hector4);
 			vec->x = 10;
 			vec->y = 12;
 			vec->z = 151;
 			vec->w = -13;
 			map2.set(i, vec);
-			Vector4 *p = nullptr;
+			Hector4 *p = nullptr;
 			map2.lookup(i, p);
 			CHECK(*p == *vec);
 		}
 
-		OAHashMap<int64_t, Vector4 *> map3(map2);
-		for (OAHashMap<int64_t, Vector4 *>::Iterator it = map2.iter(); it.valid; it = map2.next_iter(it)) {
+		OAHashMap<int64_t, Hector4 *> map3(map2);
+		for (OAHashMap<int64_t, Hector4 *>::Iterator it = map2.iter(); it.valid; it = map2.next_iter(it)) {
 			memdelete(*(it.value));
 		}
 	}

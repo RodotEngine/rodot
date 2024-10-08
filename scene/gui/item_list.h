@@ -106,8 +106,8 @@ private:
 	bool auto_height = false;
 	float auto_height_value = 0.0;
 
-	Vector<Item> items;
-	Vector<int> separators;
+	Hector<Item> items;
+	Hector<int> separators;
 
 	SelectMode select_mode = SELECT_SINGLE;
 	IconMode icon_mode = ICON_MODE_LEFT;
@@ -236,7 +236,7 @@ public:
 	void deselect(int p_idx);
 	void deselect_all();
 	bool is_selected(int p_idx) const;
-	Vector<int> get_selected_items();
+	Hector<int> get_selected_items();
 	bool is_anything_selected();
 
 	void set_current(int p_current);

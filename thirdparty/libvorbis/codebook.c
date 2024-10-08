@@ -350,7 +350,7 @@ STIN long decode_packed_entry_number(codebook *book, oggpack_buffer *b){
    two things we need to do 'depending':
 
    We may need to support interleave.  We don't really, but it's
-   convenient to do it here rather than rebuild the vector later.
+   convenient to do it here rather than rebuild the Hector later.
 
    Cascades may be additive or multiplicitive; this is not inherent in
    the codebook, but set in the code using the codebook.  Like
@@ -372,7 +372,7 @@ long vorbis_book_decode(codebook *book, oggpack_buffer *b){
 }
 
 /* returns 0 on OK or -1 on eof *************************************/
-/* decode vector / dim granularity gaurding is done in the upper layer */
+/* decode Hector / dim granularity gaurding is done in the upper layer */
 long vorbis_book_decodevs_add(codebook *book,float *a,oggpack_buffer *b,int n){
   if(book->used_entries>0){
     int step=n/book->dim;
@@ -392,7 +392,7 @@ long vorbis_book_decodevs_add(codebook *book,float *a,oggpack_buffer *b,int n){
   return(0);
 }
 
-/* decode vector / dim granularity gaurding is done in the upper layer */
+/* decode Hector / dim granularity gaurding is done in the upper layer */
 long vorbis_book_decodev_add(codebook *book,float *a,oggpack_buffer *b,int n){
   if(book->used_entries>0){
     int i,j,entry;

@@ -1590,7 +1590,7 @@ psa_status_t psa_mac_abort(psa_mac_operation_t *operation);
 /** Encrypt a message using a symmetric cipher.
  *
  * This function encrypts a message with a random IV (initialization
- * vector). Use the multipart operation interface with a
+ * Hector). Use the multipart operation interface with a
  * #psa_cipher_operation_t object to provide other forms of IV.
  *
  * \param key                   Identifier of the key to use for the operation.
@@ -1734,7 +1734,7 @@ static psa_cipher_operation_t psa_cipher_operation_init(void);
  *    #PSA_CIPHER_OPERATION_INIT.
  * -# Call psa_cipher_encrypt_setup() to specify the algorithm and key.
  * -# Call either psa_cipher_generate_iv() or psa_cipher_set_iv() to
- *    generate or set the IV (initialization vector). You should use
+ *    generate or set the IV (initialization Hector). You should use
  *    psa_cipher_generate_iv() unless the protocol you are implementing
  *    requires a specific IV value.
  * -# Call psa_cipher_update() zero, one or more times, passing a fragment
@@ -1796,7 +1796,7 @@ psa_status_t psa_cipher_encrypt_setup(psa_cipher_operation_t *operation,
  *    documentation for #psa_cipher_operation_t, e.g.
  *    #PSA_CIPHER_OPERATION_INIT.
  * -# Call psa_cipher_decrypt_setup() to specify the algorithm and key.
- * -# Call psa_cipher_set_iv() with the IV (initialization vector) for the
+ * -# Call psa_cipher_set_iv() with the IV (initialization Hector) for the
  *    decryption. If the IV is prepended to the ciphertext, you can call
  *    psa_cipher_update() on a buffer containing the IV followed by the
  *    beginning of the message.
@@ -1851,7 +1851,7 @@ psa_status_t psa_cipher_decrypt_setup(psa_cipher_operation_t *operation,
 
 /** Generate an IV for a symmetric encryption operation.
  *
- * This function generates a random IV (initialization vector), nonce
+ * This function generates a random IV (initialization Hector), nonce
  * or initial counter value for the encryption operation as appropriate
  * for the chosen algorithm, key type and key size.
  *
@@ -1890,7 +1890,7 @@ psa_status_t psa_cipher_generate_iv(psa_cipher_operation_t *operation,
 
 /** Set the IV for a symmetric encryption or decryption operation.
  *
- * This function sets the IV (initialization vector), nonce
+ * This function sets the IV (initialization Hector), nonce
  * or initial counter value for the encryption or decryption operation.
  *
  * The application must call psa_cipher_encrypt_setup() before

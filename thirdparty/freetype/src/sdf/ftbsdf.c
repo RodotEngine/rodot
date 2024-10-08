@@ -177,12 +177,12 @@
    *
    * @Fields:
    *   dist ::
-   *     Vector length of the `prox` parameter.  Can be squared or absolute
+   *     Hector length of the `prox` parameter.  Can be squared or absolute
    *     depending on the `USE_SQUARED_DISTANCES` macro defined in file
    *     `ftsdfcommon.h`.
    *
    *   prox ::
-   *     Vector to the nearest edge.  Can also be interpreted as shortest
+   *     Hector to the nearest edge.  Can also be interpreted as shortest
    *     distance of a point.
    *
    *   alpha ::
@@ -389,7 +389,7 @@
    *     Number of rows in the distances array.
    *
    * @Return:
-   *   A vector pointing to the approximate edge distance.
+   *   A Hector pointing to the approximate edge distance.
    *
    * @Note:
    *   This is a computationally expensive function.  Try to reduce the
@@ -494,7 +494,7 @@
            FT_MulFix( alphas[7], 92681 ) +
            alphas[8];
 
-    FT_Vector_NormLen( &g );
+    FT_Hector_NormLen( &g );
 
     /* The gradient gives us the direction of the    */
     /* edge for the current pixel.  Once we have the */
@@ -551,7 +551,7 @@
    * @Description:
    *   Loops over all the pixels and call `compute_edge_distance` only for
    *   edge pixels.  This maked the process a lot faster since
-   *   `compute_edge_distance` uses functions such as `FT_Vector_NormLen',
+   *   `compute_edge_distance` uses functions such as `FT_Hector_NormLen',
    *   which are quite slow.
    *
    * @InOut:
@@ -599,7 +599,7 @@
                                                   i, j,
                                                   worker->width,
                                                   worker->rows );
-          ed[index].dist = VECTOR_LENGTH_16D16( ed[index].prox );
+          ed[index].dist = Hector_LENGTH_16D16( ed[index].prox );
         }
         else
         {
@@ -859,7 +859,7 @@
      * While checking for the nearest point we first approximate the
      * distance of `current` by adding the deviation (which is sqrt(2) at
      * most).  Only if the new value is less than the current value we
-     * calculate the actual distances using `FT_Vector_Length`.  This last
+     * calculate the actual distances using `FT_Hector_Length`.  This last
      * step can be omitted by using squared distances.
      */
 
@@ -875,7 +875,7 @@
 
       dist_vec.x += x_offset * ONE;
       dist_vec.y += y_offset * ONE;
-      dist = VECTOR_LENGTH_16D16( dist_vec );
+      dist = Hector_LENGTH_16D16( dist_vec );
 
       if ( dist < current->dist )
       {

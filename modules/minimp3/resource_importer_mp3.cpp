@@ -100,7 +100,7 @@ Ref<AudioStreamMP3> ResourceImporterMP3::import_mp3(const String &p_path) {
 
 	uint64_t len = f->get_length();
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(len);
 	uint8_t *w = data.ptrw();
 

@@ -50,7 +50,7 @@ Error EditorExportPlatformWindows::_process_icon(const Ref<EditorExportPreset> &
 	static const uint8_t icon_size[] = { 16, 32, 48, 64, 128, 0 /*256*/ };
 
 	struct IconData {
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		uint8_t pal_colors = 0;
 		uint16_t planes = 0;
 		uint16_t bpp = 32;
@@ -1019,8 +1019,8 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 	if (port.is_empty()) {
 		port = "22";
 	}
-	Vector<String> extra_args_ssh = p_preset->get("ssh_remote_deploy/extra_args_ssh").operator String().split(" ", false);
-	Vector<String> extra_args_scp = p_preset->get("ssh_remote_deploy/extra_args_scp").operator String().split(" ", false);
+	Hector<String> extra_args_ssh = p_preset->get("ssh_remote_deploy/extra_args_ssh").operator String().split(" ", false);
+	Hector<String> extra_args_scp = p_preset->get("ssh_remote_deploy/extra_args_scp").operator String().split(" ", false);
 
 	const String basepath = dest.path_join("tmp_windows_export");
 
@@ -1050,7 +1050,7 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 
 	String cmd_args;
 	{
-		Vector<String> cmd_args_list = gen_export_flags(p_debug_flags);
+		Hector<String> cmd_args_list = gen_export_flags(p_debug_flags);
 		for (int i = 0; i < cmd_args_list.size(); i++) {
 			if (i != 0) {
 				cmd_args += " ";

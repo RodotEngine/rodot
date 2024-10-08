@@ -15,7 +15,7 @@
 *   created on: 2002feb22
 *   created by: Markus W. Scherer
 *
-*   Store bits (Unicode character properties) in bit set vectors.
+*   Store bits (Unicode character properties) in bit set Hectors.
 */
 
 #ifndef __UPROPSVEC_H__
@@ -28,10 +28,10 @@
 U_CDECL_BEGIN
 
 /**
- * Unicode Properties Vectors associated with code point ranges.
+ * Unicode Properties Hectors associated with code point ranges.
  *
  * Rows of uint32_t integers in a contiguous array store
- * the range limits and the properties vectors.
+ * the range limits and the properties Hectors.
  *
  * Logically, each row has a certain number of uint32_t values,
  * which is set via the upvec_open() "columns" parameter.
@@ -49,8 +49,8 @@ U_CDECL_BEGIN
  * It would be possible to store only one range boundary per row,
  * but self-contained rows allow to later sort them by contents.
  */
-struct UPropsVectors;
-typedef struct UPropsVectors UPropsVectors;
+struct UPropsHectors;
+typedef struct UPropsHectors UPropsHectors;
 
 /*
  * Special pseudo code points for storing the initialValue and the errorValue,
@@ -69,14 +69,14 @@ typedef struct UPropsVectors UPropsVectors;
 #define UPVEC_START_REAL_VALUES_CP 0x200000
 
 /*
- * Open a UPropsVectors object.
+ * Open a UPropsHectors object.
  * @param columns Number of value integers (uint32_t) per row.
  */
-U_CAPI UPropsVectors * U_EXPORT2
+U_CAPI UPropsHectors * U_EXPORT2
 upvec_open(int32_t columns, UErrorCode *pErrorCode);
 
 U_CAPI void U_EXPORT2
-upvec_close(UPropsVectors *pv);
+upvec_close(UPropsHectors *pv);
 
 /*
  * In rows for code points [start..end], select the column,
@@ -85,7 +85,7 @@ upvec_close(UPropsVectors *pv);
  * Will set U_NO_WRITE_PERMISSION if called after upvec_compact().
  */
 U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
+upvec_setValue(UPropsHectors *pv,
                UChar32 start, UChar32 end,
                int32_t column,
                uint32_t value, uint32_t mask,
@@ -96,7 +96,7 @@ upvec_setValue(UPropsVectors *pv,
  * Always returns 0 if called after upvec_compact().
  */
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
+upvec_getValue(const UPropsHectors *pv, UChar32 c, int32_t column);
 
 /*
  * pRangeStart and pRangeEnd can be NULL.
@@ -104,13 +104,13 @@ upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
  *         or if called after upvec_compact()
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
+upvec_getRow(const UPropsHectors *pv, int32_t rowIndex,
              UChar32 *pRangeStart, UChar32 *pRangeEnd);
 
 /*
- * Compact the vectors:
+ * Compact the Hectors:
  * - modify the memory
- * - keep only unique vectors
+ * - keep only unique Hectors
  * - store them contiguously from the beginning of the memory
  * - for each (non-unique) row, call the handler function
  *
@@ -132,31 +132,31 @@ UPVecCompactHandler(void *context,
                     UErrorCode *pErrorCode);
 
 U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode);
+upvec_compact(UPropsHectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode);
 
 /*
- * Get the vectors array after calling upvec_compact().
+ * Get the Hectors array after calling upvec_compact().
  * The caller must not modify nor release the returned array.
  * Returns NULL if called before upvec_compact().
  */
 U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
+upvec_getArray(const UPropsHectors *pv, int32_t *pRows, int32_t *pColumns);
 
 /*
- * Get a clone of the vectors array after calling upvec_compact().
+ * Get a clone of the Hectors array after calling upvec_compact().
  * The caller owns the returned array and must uprv_free() it.
  * Returns NULL if called before upvec_compact().
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
+upvec_cloneArray(const UPropsHectors *pv,
                  int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode);
 
 /*
  * Call upvec_compact(), create a 16-bit UTrie2 with indexes into the compacted
- * vectors array, and freeze the trie.
+ * Hectors array, and freeze the trie.
  */
 U_CAPI UTrie2 * U_EXPORT2
-upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode);
+upvec_compactToUTrie2WithRowIndexes(UPropsHectors *pv, UErrorCode *pErrorCode);
 
 struct UPVecToUTrie2Context {
     UTrie2 *trie;

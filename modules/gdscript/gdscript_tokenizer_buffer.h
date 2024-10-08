@@ -46,12 +46,12 @@ public:
 		TOKEN_MASK = (1 << (TOKEN_BITS - 1)) - 1,
 	};
 
-	Vector<StringName> identifiers;
-	Vector<Variant> constants;
-	Vector<int> continuation_lines;
+	Hector<StringName> identifiers;
+	Hector<Variant> constants;
+	Hector<int> continuation_lines;
 	HashMap<int, int> token_lines;
 	HashMap<int, int> token_columns;
-	Vector<Token> tokens;
+	Hector<Token> tokens;
 	int current = 0;
 	uint32_t current_line = 1;
 
@@ -65,12 +65,12 @@ public:
 	HashMap<int, CommentData> dummy;
 #endif // TOOLS_ENABLED
 
-	static int _token_to_binary(const Token &p_token, Vector<uint8_t> &r_buffer, int p_start, HashMap<StringName, uint32_t> &r_identifiers_map, HashMap<Variant, uint32_t, VariantHasher, VariantComparator> &r_constants_map);
+	static int _token_to_binary(const Token &p_token, Hector<uint8_t> &r_buffer, int p_start, HashMap<StringName, uint32_t> &r_identifiers_map, HashMap<Variant, uint32_t, VariantHasher, VariantComparator> &r_constants_map);
 	Token _binary_to_token(const uint8_t *p_buffer);
 
 public:
-	Error set_code_buffer(const Vector<uint8_t> &p_buffer);
-	static Vector<uint8_t> parse_code_string(const String &p_code, CompressMode p_compress_mode);
+	Error set_code_buffer(const Hector<uint8_t> &p_buffer);
+	static Hector<uint8_t> parse_code_string(const String &p_code, CompressMode p_compress_mode);
 
 	virtual int get_cursor_line() const override;
 	virtual int get_cursor_column() const override;

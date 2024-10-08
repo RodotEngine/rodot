@@ -43,7 +43,7 @@ struct hb_aat_map_t
   };
 
   public:
-  hb_vector_t<hb_sorted_vector_t<range_flags_t>> chain_flags;
+  hb_Hector_t<hb_sorted_Hector_t<range_flags_t>> chain_flags;
 };
 
 struct hb_aat_map_builder_t
@@ -113,8 +113,8 @@ struct hb_aat_map_builder_t
   hb_segment_properties_t props;
 
   public:
-  hb_sorted_vector_t<feature_range_t> features;
-  hb_sorted_vector_t<feature_info_t> current_features;
+  hb_sorted_Hector_t<feature_range_t> features;
+  hb_sorted_Hector_t<feature_info_t> current_features;
   unsigned range_first = HB_FEATURE_GLOBAL_START;
   unsigned range_last = HB_FEATURE_GLOBAL_END;
 };

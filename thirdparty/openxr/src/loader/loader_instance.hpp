@@ -20,7 +20,7 @@
 #include <mutex>
 #include <string>
 #include <unordered_map>
-#include <vector>
+#include <Vector>
 
 class ApiLayerInterface;
 struct XrGeneratedDispatchTableCore;

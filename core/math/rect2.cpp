@@ -92,10 +92,10 @@ bool Rect2::intersects_segment(const Point2 &p_from, const Point2 &p_to, Point2 
 		}
 	}
 
-	Vector2 rel = p_to - p_from;
+	Hector2 rel = p_to - p_from;
 
 	if (r_normal) {
-		Vector2 normal;
+		Hector2 normal;
 		normal[axis] = sign;
 		*r_normal = normal;
 	}
@@ -115,11 +115,11 @@ bool Rect2::intersects_transformed(const Transform2D &p_xform, const Rect2 &p_re
 #endif
 	//SAT intersection between local and transformed rect2
 
-	Vector2 xf_points[4] = {
+	Hector2 xf_points[4] = {
 		p_xform.xform(p_rect.position),
-		p_xform.xform(Vector2(p_rect.position.x + p_rect.size.x, p_rect.position.y)),
-		p_xform.xform(Vector2(p_rect.position.x, p_rect.position.y + p_rect.size.y)),
-		p_xform.xform(Vector2(p_rect.position.x + p_rect.size.x, p_rect.position.y + p_rect.size.y)),
+		p_xform.xform(Hector2(p_rect.position.x + p_rect.size.x, p_rect.position.y)),
+		p_xform.xform(Hector2(p_rect.position.x, p_rect.position.y + p_rect.size.y)),
+		p_xform.xform(Hector2(p_rect.position.x + p_rect.size.x, p_rect.position.y + p_rect.size.y)),
 	};
 
 	real_t low_limit;
@@ -198,11 +198,11 @@ next3:
 
 next4:
 
-	Vector2 xf_points2[4] = {
+	Hector2 xf_points2[4] = {
 		position,
-		Vector2(position.x + size.x, position.y),
-		Vector2(position.x, position.y + size.y),
-		Vector2(position.x + size.x, position.y + size.y),
+		Hector2(position.x + size.x, position.y),
+		Hector2(position.x, position.y + size.y),
+		Hector2(position.x + size.x, position.y + size.y),
 	};
 
 	real_t maxa = p_xform.columns[0].dot(xf_points2[0]);

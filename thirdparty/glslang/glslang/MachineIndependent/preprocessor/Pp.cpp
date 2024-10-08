@@ -797,7 +797,7 @@ int TPpContext::CPPerror(TPpToken* ppToken)
 int TPpContext::CPPpragma(TPpToken* ppToken)
 {
     char SrcStrName[2];
-    TVector<TString> tokens;
+    THector<TString> tokens;
 
     TSourceLoc loc = ppToken->loc;  // because we go to the next line before processing
     int token = scanToken(ppToken);
@@ -1258,7 +1258,7 @@ MacroExpandResult TPpContext::MacroExpand(TPpToken* ppToken, bool expandUndef, b
         size_t arg = 0;
         bool tokenRecorded = false;
         do {
-            TVector<char> nestStack;
+            THector<char> nestStack;
             while (true) {
                 token = scanToken(ppToken);
                 if (token == EndOfInput || token == tMarkerInput::marker) {

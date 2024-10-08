@@ -86,10 +86,10 @@ void AnimationNodeStateMachineEditor::edit(const Ref<AnimationNode> &p_node) {
 
 String AnimationNodeStateMachineEditor::_get_root_playback_path(String &r_node_directory) {
 	AnimationTree *tree = AnimationTreeEditor::get_singleton()->get_animation_tree();
-	Vector<String> edited_path = AnimationTreeEditor::get_singleton()->get_edited_path();
+	Hector<String> edited_path = AnimationTreeEditor::get_singleton()->get_edited_path();
 
 	String base_path;
-	Vector<String> node_directory_path;
+	Hector<String> node_directory_path;
 
 	bool is_playable_anodesm_found = false;
 
@@ -232,11 +232,11 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(const Ref<InputEv
 		int closest = -1;
 		float closest_d = 1e20;
 		for (int i = 0; i < transition_lines.size(); i++) {
-			Vector2 s[2] = {
+			Hector2 s[2] = {
 				transition_lines[i].from,
 				transition_lines[i].to
 			};
-			Vector2 cpoint = Geometry2D::get_closest_point_to_segment(mb->get_position(), s);
+			Hector2 cpoint = Geometry2D::get_closest_point_to_segment(mb->get_position(), s);
 			float d = cpoint.distance_to(mb->get_position());
 			if (d > transition_lines[i].width) {
 				continue;
@@ -383,7 +383,7 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(const Ref<InputEv
 		snap_y = StringName();
 		{
 			//snap
-			Vector2 cpos = state_machine->get_node_position(selected_node) + drag_ofs / EDSCALE;
+			Hector2 cpos = state_machine->get_node_position(selected_node) + drag_ofs / EDSCALE;
 			List<StringName> nodes;
 			state_machine->get_node_list(&nodes);
 
@@ -394,7 +394,7 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(const Ref<InputEv
 				if (E == selected_node) {
 					continue;
 				}
-				Vector2 npos = state_machine->get_node_position(E);
+				Hector2 npos = state_machine->get_node_position(E);
 
 				float d_x = ABS(npos.x - cpos.x);
 				if (d_x < MIN(5, best_d_x)) {
@@ -477,11 +477,11 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(const Ref<InputEv
 			int closest = -1;
 			float closest_d = 1e20;
 			for (int i = 0; i < transition_lines.size(); i++) {
-				Vector2 s[2] = {
+				Hector2 s[2] = {
 					transition_lines[i].from,
 					transition_lines[i].to
 				};
-				Vector2 cpoint = Geometry2D::get_closest_point_to_segment(mm->get_position(), s);
+				Hector2 cpoint = Geometry2D::get_closest_point_to_segment(mm->get_position(), s);
 				float d = cpoint.distance_to(mm->get_position());
 				if (d > transition_lines[i].width) {
 					continue;
@@ -549,7 +549,7 @@ String AnimationNodeStateMachineEditor::get_tooltip(const Point2 &p_pos) const {
 	return tooltip_text;
 }
 
-void AnimationNodeStateMachineEditor::_open_menu(const Vector2 &p_position) {
+void AnimationNodeStateMachineEditor::_open_menu(const Hector2 &p_position) {
 	AnimationTree *tree = AnimationTreeEditor::get_singleton()->get_animation_tree();
 	if (!tree) {
 		return;
@@ -655,7 +655,7 @@ void AnimationNodeStateMachineEditor::_delete_selected() {
 			undo_redo->create_action("Transition(s) Removed");
 		}
 
-		Vector<String> path = item->get_text(0).split(" -> ");
+		Hector<String> path = item->get_text(0).split(" -> ");
 
 		selected_transition_from = path[0];
 		selected_transition_to = path[1];
@@ -836,7 +836,7 @@ void AnimationNodeStateMachineEditor::_add_transition(const bool p_nested_action
 	connecting = false;
 }
 
-void AnimationNodeStateMachineEditor::_connection_draw(const Vector2 &p_from, const Vector2 &p_to, AnimationNodeStateMachineTransition::SwitchMode p_mode, bool p_enabled, bool p_selected, bool p_travel, float p_fade_ratio, bool p_auto_advance, bool p_is_across_group) {
+void AnimationNodeStateMachineEditor::_connection_draw(const Hector2 &p_from, const Hector2 &p_to, AnimationNodeStateMachineTransition::SwitchMode p_mode, bool p_enabled, bool p_selected, bool p_travel, float p_fade_ratio, bool p_auto_advance, bool p_is_across_group) {
 	Color line_color = p_enabled ? theme_cache.transition_color : theme_cache.transition_disabled_color;
 	Color icon_color = p_enabled ? theme_cache.transition_icon_color : theme_cache.transition_icon_disabled_color;
 	Color highlight_color = p_enabled ? theme_cache.highlight_color : theme_cache.highlight_disabled_color;
@@ -868,30 +868,30 @@ void AnimationNodeStateMachineEditor::_connection_draw(const Vector2 &p_from, co
 
 	state_machine_draw->draw_set_transform_matrix(xf);
 	if (!p_is_across_group) {
-		state_machine_draw->draw_texture(icon, Vector2(), icon_color);
+		state_machine_draw->draw_texture(icon, Hector2(), icon_color);
 	}
 	state_machine_draw->draw_set_transform_matrix(Transform2D());
 }
 
-void AnimationNodeStateMachineEditor::_clip_src_line_to_rect(Vector2 &r_from, const Vector2 &p_to, const Rect2 &p_rect) {
+void AnimationNodeStateMachineEditor::_clip_src_line_to_rect(Hector2 &r_from, const Hector2 &p_to, const Rect2 &p_rect) {
 	if (p_to == r_from) {
 		return;
 	}
 
 	//this could be optimized...
-	Vector2 n = (p_to - r_from).normalized();
+	Hector2 n = (p_to - r_from).normalized();
 	while (p_rect.has_point(r_from)) {
 		r_from += n;
 	}
 }
 
-void AnimationNodeStateMachineEditor::_clip_dst_line_to_rect(const Vector2 &p_from, Vector2 &r_to, const Rect2 &p_rect) {
+void AnimationNodeStateMachineEditor::_clip_dst_line_to_rect(const Hector2 &p_from, Hector2 &r_to, const Rect2 &p_rect) {
 	if (r_to == p_from) {
 		return;
 	}
 
 	//this could be optimized...
-	Vector2 n = (r_to - p_from).normalized();
+	Hector2 n = (r_to - p_from).normalized();
 	while (p_rect.has_point(r_to)) {
 		r_to -= n;
 	}
@@ -906,7 +906,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 	bool playing = false;
 	StringName current;
 	StringName blend_from;
-	Vector<StringName> travel_path;
+	Hector<StringName> travel_path;
 
 	Ref<AnimationNodeStateMachinePlayback> playback = tree->get(AnimationTreeEditor::get_singleton()->get_base_path() + "playback");
 	if (playback.is_valid()) {
@@ -929,13 +929,13 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 
 	//snap lines
 	if (dragging_selected) {
-		Vector2 from = (state_machine->get_node_position(selected_node) * EDSCALE) + drag_ofs - state_machine->get_graph_offset() * EDSCALE;
+		Hector2 from = (state_machine->get_node_position(selected_node) * EDSCALE) + drag_ofs - state_machine->get_graph_offset() * EDSCALE;
 		if (snap_x != StringName()) {
-			Vector2 to = (state_machine->get_node_position(snap_x) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
+			Hector2 to = (state_machine->get_node_position(snap_x) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
 			state_machine_draw->draw_line(from, to, theme_cache.guideline_color, 2);
 		}
 		if (snap_y != StringName()) {
-			Vector2 to = (state_machine->get_node_position(snap_y) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
+			Hector2 to = (state_machine->get_node_position(snap_y) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
 			state_machine_draw->draw_line(from, to, theme_cache.guideline_color, 2);
 		}
 	}
@@ -958,7 +958,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 			s.width += sep + theme_cache.edit_node->get_width();
 		}
 
-		Vector2 offset;
+		Hector2 offset;
 		offset += state_machine->get_node_position(E) * EDSCALE;
 
 		if (selected_nodes.has(E) && dragging_selected) {
@@ -986,8 +986,8 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 
 	//draw connecting line for potential new transition
 	if (connecting) {
-		Vector2 from = (state_machine->get_node_position(connecting_from) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
-		Vector2 to;
+		Hector2 from = (state_machine->get_node_position(connecting_from) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
+		Hector2 to;
 		if (connecting_to_node != StringName()) {
 			to = (state_machine->get_node_position(connecting_to_node) * EDSCALE) - state_machine->get_graph_offset() * EDSCALE;
 		} else {
@@ -1015,11 +1015,11 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 		tl.transition_index = i;
 
 		tl.from_node = state_machine->get_transition_from(i);
-		Vector2 ofs_from = (dragging_selected && selected_nodes.has(tl.from_node)) ? drag_ofs : Vector2();
+		Hector2 ofs_from = (dragging_selected && selected_nodes.has(tl.from_node)) ? drag_ofs : Hector2();
 		tl.from = (state_machine->get_node_position(tl.from_node) * EDSCALE) + ofs_from - state_machine->get_graph_offset() * EDSCALE;
 
 		tl.to_node = state_machine->get_transition_to(i);
-		Vector2 ofs_to = (dragging_selected && selected_nodes.has(tl.to_node)) ? drag_ofs : Vector2();
+		Hector2 ofs_to = (dragging_selected && selected_nodes.has(tl.to_node)) ? drag_ofs : Hector2();
 		tl.to = (state_machine->get_node_position(tl.to_node) * EDSCALE) + ofs_to - state_machine->get_graph_offset() * EDSCALE;
 
 		Ref<AnimationNodeStateMachineTransition> tr = state_machine->get_transition(i);
@@ -1035,7 +1035,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 		tl.is_across_group = state_machine->is_transition_across_group(i);
 
 		if (state_machine->has_transition(tl.to_node, tl.from_node)) { //offset if same exists
-			Vector2 offset = -(tl.from - tl.to).normalized().orthogonal() * tr_bidi_offset;
+			Hector2 offset = -(tl.from - tl.to).normalized().orthogonal() * tr_bidi_offset;
 			tl.from += offset;
 			tl.to += offset;
 		}
@@ -1102,7 +1102,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 		bool is_selected = selected_nodes.has(name);
 
 		NodeRect &nr = node_rects.write[i];
-		Vector2 offset = nr.node.position;
+		Hector2 offset = nr.node.position;
 		int h = nr.node.size.height;
 
 		//prepre rect
@@ -1123,7 +1123,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 
 		offset.x += node_frame_style->get_offset().x;
 
-		nr.play.position = offset + Vector2(0, (h - theme_cache.play_node->get_height()) / 2).floor();
+		nr.play.position = offset + Hector2(0, (h - theme_cache.play_node->get_height()) / 2).floor();
 		nr.play.size = theme_cache.play_node->get_size();
 
 		if (hovered_node_name == name && hovered_node_area == HOVER_NODE_PLAY) {
@@ -1134,15 +1134,15 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 
 		offset.x += sep + theme_cache.play_node->get_width();
 
-		nr.name.position = offset + Vector2(0, (h - theme_cache.node_title_font->get_height(theme_cache.node_title_font_size)) / 2).floor();
-		nr.name.size = Vector2(name_string_size, theme_cache.node_title_font->get_height(theme_cache.node_title_font_size));
+		nr.name.position = offset + Hector2(0, (h - theme_cache.node_title_font->get_height(theme_cache.node_title_font_size)) / 2).floor();
+		nr.name.size = Hector2(name_string_size, theme_cache.node_title_font->get_height(theme_cache.node_title_font_size));
 
-		state_machine_draw->draw_string(theme_cache.node_title_font, nr.name.position + Vector2(0, theme_cache.node_title_font->get_ascent(theme_cache.node_title_font_size)), name, HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.node_title_font_size, theme_cache.node_title_font_color);
+		state_machine_draw->draw_string(theme_cache.node_title_font, nr.name.position + Hector2(0, theme_cache.node_title_font->get_ascent(theme_cache.node_title_font_size)), name, HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.node_title_font_size, theme_cache.node_title_font_color);
 		offset.x += name_string_size + sep;
 
 		nr.can_edit = needs_editor;
 		if (needs_editor) {
-			nr.edit.position = offset + Vector2(0, (h - theme_cache.edit_node->get_height()) / 2).floor();
+			nr.edit.position = offset + Hector2(0, (h - theme_cache.edit_node->get_height()) / 2).floor();
 			nr.edit.size = theme_cache.edit_node->get_size();
 
 			if (hovered_node_name == name && hovered_node_area == HOVER_NODE_EDIT) {
@@ -1209,11 +1209,11 @@ void AnimationNodeStateMachineEditor::_state_machine_pos_draw_individual(const S
 		return; // It is not AnimationNodeAnimation.
 	}
 
-	Vector2 from;
+	Hector2 from;
 	from.x = nr.play.position.x;
 	from.y = (nr.play.position.y + nr.play.size.y + nr.node.position.y + nr.node.size.y) * 0.5;
 
-	Vector2 to;
+	Hector2 to;
 	if (nr.edit.size.x) {
 		to.x = nr.edit.position.x + nr.edit.size.x;
 	} else {
@@ -1362,7 +1362,7 @@ void AnimationNodeStateMachineEditor::_notification(int p_what) {
 			}
 
 			bool same_travel_path = true;
-			Vector<StringName> tp;
+			Hector<StringName> tp;
 			bool is_playing = false;
 			StringName current_node;
 			StringName fading_from_node;
@@ -1510,7 +1510,7 @@ void AnimationNodeStateMachineEditor::_scroll_changed(double) {
 		return;
 	}
 
-	state_machine->set_graph_offset(Vector2(h_scroll->get_value(), v_scroll->get_value()));
+	state_machine->set_graph_offset(Hector2(h_scroll->get_value(), v_scroll->get_value()));
 	state_machine_draw->queue_redraw();
 }
 

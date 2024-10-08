@@ -34,7 +34,7 @@
 
 uint32_t QuickHull::debug_stop_after = 0xFFFFFFFF;
 
-Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_mesh) {
+Error QuickHull::build(const Hector<Hector3> &p_points, Geometry3D::MeshData &r_mesh) {
 	/* CREATE AABB VOLUME */
 
 	AABB aabb;
@@ -46,16 +46,16 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 		}
 	}
 
-	if (aabb.size == Vector3()) {
+	if (aabb.size == Hector3()) {
 		return ERR_CANT_CREATE;
 	}
 
-	Vector<bool> valid_points;
+	Hector<bool> valid_points;
 	valid_points.resize(p_points.size());
-	HashSet<Vector3> valid_cache;
+	HashSet<Hector3> valid_cache;
 
 	for (int i = 0; i < p_points.size(); i++) {
-		Vector3 sp = p_points[i].snappedf(0.0001);
+		Hector3 sp = p_points[i].snappedf(0.0001);
 		if (valid_cache.has(sp)) {
 			valid_points.write[i] = false;
 		} else {
@@ -95,14 +95,14 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 
 	{
 		real_t maxd = 0;
-		Vector3 rel12 = p_points[simplex[0]] - p_points[simplex[1]];
+		Hector3 rel12 = p_points[simplex[0]] - p_points[simplex[1]];
 
 		for (int i = 0; i < p_points.size(); i++) {
 			if (!valid_points[i]) {
 				continue;
 			}
 
-			Vector3 n = rel12.cross(p_points[simplex[0]] - p_points[i]).cross(rel12).normalized();
+			Hector3 n = rel12.cross(p_points[simplex[0]] - p_points[i]).cross(rel12).normalized();
 			real_t d = Math::abs(n.dot(p_points[simplex[0]]) - n.dot(p_points[i]));
 
 			if (i == 0 || d > maxd) {
@@ -133,7 +133,7 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 	}
 
 	//compute center of simplex, this is a point always warranted to be inside
-	Vector3 center;
+	Hector3 center;
 
 	for (int i = 0; i < 4; i++) {
 		center += p_points[simplex[i]];
@@ -232,7 +232,7 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 
 		ERR_FAIL_COND_V(next == -1, ERR_BUG);
 
-		Vector3 v = p_points[f.points_over[next]];
+		Hector3 v = p_points[f.points_over[next]];
 
 		//find lit faces and lit edges
 		List<List<Face>::Element *> lit_faces; //lit face is a death sentence
@@ -300,7 +300,7 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 					continue;
 				}
 
-				Vector3 p = p_points[lf.points_over[i]];
+				Hector3 p = p_points[lf.points_over[i]];
 				for (List<Face>::Element *&E : new_faces) {
 					Face &f2 = E->get();
 					if (f2.plane.distance_to(p) > over_tolerance) {

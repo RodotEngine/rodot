@@ -42,7 +42,7 @@
 #define ENABLE_SHADER_CACHE 1
 
 void ShaderRD::_add_stage(const char *p_code, StageType p_stage_type) {
-	Vector<String> lines = String(p_code).split("\n");
+	Hector<String> lines = String(p_code).split("\n");
 
 	String text;
 
@@ -239,7 +239,7 @@ void ShaderRD::_compile_variant(uint32_t p_variant, CompileData p_data) {
 		return; // Variant is disabled, return.
 	}
 
-	Vector<RD::ShaderStageSPIRVData> stages;
+	Hector<RD::ShaderStageSPIRVData> stages;
 
 	String error;
 	String current_source;
@@ -311,7 +311,7 @@ void ShaderRD::_compile_variant(uint32_t p_variant, CompileData p_data) {
 		return;
 	}
 
-	Vector<uint8_t> shader_data = RD::get_singleton()->shader_compile_binary_from_spirv(stages, name + ":" + itos(variant));
+	Hector<uint8_t> shader_data = RD::get_singleton()->shader_compile_binary_from_spirv(stages, name + ":" + itos(variant));
 
 	ERR_FAIL_COND(shader_data.is_empty());
 
@@ -386,7 +386,7 @@ String ShaderRD::_version_get_sha1(Version *p_version) const {
 	hash_build.append("[compute_globals]");
 	hash_build.append(p_version->compute_globals.get_data());
 
-	Vector<StringName> code_sections;
+	Hector<StringName> code_sections;
 	for (const KeyValue<StringName, CharString> &E : p_version->code_sections) {
 		code_sections.push_back(E.key);
 	}
@@ -441,7 +441,7 @@ bool ShaderRD::_load_from_cache(Version *p_version, int p_group) {
 		if (!variants_enabled[variant_id]) {
 			continue;
 		}
-		Vector<uint8_t> variant_bytes;
+		Hector<uint8_t> variant_bytes;
 		variant_bytes.resize(variant_size);
 
 		uint32_t br = f->get_buffer(variant_bytes.ptrw(), variant_size);
@@ -584,7 +584,7 @@ void ShaderRD::_compile_ensure_finished(Version *p_version) {
 	}
 }
 
-void ShaderRD::version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Vector<String> &p_custom_defines) {
+void ShaderRD::version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Hector<String> &p_custom_defines) {
 	ERR_FAIL_COND(is_compute);
 
 	Version *version = version_owner.get_or_null(p_version);
@@ -619,7 +619,7 @@ void ShaderRD::version_set_code(RID p_version, const HashMap<String, String> &p_
 	}
 }
 
-void ShaderRD::version_set_compute_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_compute_globals, const Vector<String> &p_custom_defines) {
+void ShaderRD::version_set_compute_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_compute_globals, const Hector<String> &p_custom_defines) {
 	ERR_FAIL_COND(!is_compute);
 
 	Version *version = version_owner.get_or_null(p_version);
@@ -738,14 +738,14 @@ ShaderRD::ShaderRD() {
 	base_compute_defines = base_compute_define_text.ascii();
 }
 
-void ShaderRD::initialize(const Vector<String> &p_variant_defines, const String &p_general_defines) {
+void ShaderRD::initialize(const Hector<String> &p_variant_defines, const String &p_general_defines) {
 	ERR_FAIL_COND(variant_defines.size());
 	ERR_FAIL_COND(p_variant_defines.is_empty());
 
 	general_defines = p_general_defines.utf8();
 
 	// When initialized this way, there is just one group and its always enabled.
-	group_to_variant_map.insert(0, LocalVector<int>{});
+	group_to_variant_map.insert(0, LocalHector<int>{});
 	group_enabled.push_back(true);
 
 	for (int i = 0; i < p_variant_defines.size(); i++) {
@@ -762,7 +762,7 @@ void ShaderRD::initialize(const Vector<String> &p_variant_defines, const String 
 }
 
 void ShaderRD::_initialize_cache() {
-	for (const KeyValue<int, LocalVector<int>> &E : group_to_variant_map) {
+	for (const KeyValue<int, LocalHector<int>> &E : group_to_variant_map) {
 		StringBuilder hash_build;
 
 		hash_build.append("[base_hash]");
@@ -801,7 +801,7 @@ void ShaderRD::_initialize_cache() {
 }
 
 // Same as above, but allows specifying shader compilation groups.
-void ShaderRD::initialize(const Vector<VariantDefine> &p_variant_defines, const String &p_general_defines) {
+void ShaderRD::initialize(const Hector<VariantDefine> &p_variant_defines, const String &p_general_defines) {
 	ERR_FAIL_COND(variant_defines.size());
 	ERR_FAIL_COND(p_variant_defines.is_empty());
 
@@ -817,7 +817,7 @@ void ShaderRD::initialize(const Vector<VariantDefine> &p_variant_defines, const 
 
 		// Map variant array index to group id, so we can iterate over groups later.
 		if (!group_to_variant_map.has(p_variant_defines[i].group)) {
-			group_to_variant_map.insert(p_variant_defines[i].group, LocalVector<int>{});
+			group_to_variant_map.insert(p_variant_defines[i].group, LocalHector<int>{});
 		}
 		group_to_variant_map[p_variant_defines[i].group].push_back(i);
 

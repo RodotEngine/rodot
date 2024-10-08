@@ -87,11 +87,11 @@ void VoxelGIGizmoPlugin::begin_handle_action(const EditorNode3DGizmo *p_gizmo, i
 void VoxelGIGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point) {
 	VoxelGI *probe = Object::cast_to<VoxelGI>(p_gizmo->get_node_3d());
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
-	Vector3 size = probe->get_size();
-	Vector3 position;
+	Hector3 size = probe->get_size();
+	Hector3 position;
 	helper->box_set_handle(sg, p_id, size, position);
 	probe->set_size(size);
 	probe->set_global_position(position);
@@ -109,8 +109,8 @@ void VoxelGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		Ref<Material> material = get_material("voxel_gi_material", p_gizmo);
 		Ref<Material> material_internal = get_material("voxel_gi_internal_material", p_gizmo);
 
-		Vector<Vector3> lines;
-		Vector3 size = probe->get_size();
+		Hector<Hector3> lines;
+		Hector3 size = probe->get_size();
 
 		static const int subdivs[VoxelGI::SUBDIV_MAX] = { 64, 128, 256, 512 };
 
@@ -119,7 +119,7 @@ void VoxelGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		float cell_size = aabb.get_longest_axis_size() / subdiv;
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			aabb.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
@@ -139,7 +139,7 @@ void VoxelGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 				int j_n2 = (j + 2) % 3;
 
 				for (int k = 0; k < 4; k++) {
-					Vector3 from = aabb.position, to = aabb.position;
+					Hector3 from = aabb.position, to = aabb.position;
 					from[j] += cell_size * i;
 					to[j] += cell_size * i;
 
@@ -162,7 +162,7 @@ void VoxelGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 		p_gizmo->add_lines(lines, material_internal);
 
-		Vector<Vector3> handles = helper->box_get_handles(probe->get_size());
+		Hector<Hector3> handles = helper->box_get_handles(probe->get_size());
 
 		if (p_gizmo->is_selected()) {
 			Ref<Material> solid_material = get_material("voxel_gi_solid_material", p_gizmo);

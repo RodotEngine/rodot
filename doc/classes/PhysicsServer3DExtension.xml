@@ -199,22 +199,22 @@
 		<method name="_body_add_constant_central_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_add_constant_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
-			<param index="2" name="position" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
+			<param index="2" name="position" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_add_constant_torque" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="torque" type="Vector3" />
+			<param index="1" name="torque" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -230,44 +230,44 @@
 		<method name="_body_apply_central_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_apply_central_impulse" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector3" />
+			<param index="1" name="impulse" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_apply_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
-			<param index="2" name="position" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
+			<param index="2" name="position" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_apply_impulse" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector3" />
-			<param index="2" name="position" type="Vector3" />
+			<param index="1" name="impulse" type="Hector3" />
+			<param index="2" name="position" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_apply_torque" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="torque" type="Vector3" />
+			<param index="1" name="torque" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_apply_torque_impulse" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="impulse" type="Vector3" />
+			<param index="1" name="impulse" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -314,13 +314,13 @@
 			</description>
 		</method>
 		<method name="_body_get_constant_force" qualifiers="virtual const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="body" type="RID" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_get_constant_torque" qualifiers="virtual const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="body" type="RID" />
 			<description>
 			</description>
@@ -451,7 +451,7 @@
 		<method name="_body_set_axis_velocity" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="axis_velocity" type="Vector3" />
+			<param index="1" name="axis_velocity" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -479,14 +479,14 @@
 		<method name="_body_set_constant_force" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="force" type="Vector3" />
+			<param index="1" name="force" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_body_set_constant_torque" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
-			<param index="1" name="torque" type="Vector3" />
+			<param index="1" name="torque" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -605,7 +605,7 @@
 			<return type="bool" />
 			<param index="0" name="body" type="RID" />
 			<param index="1" name="from" type="Transform3D" />
-			<param index="2" name="motion" type="Vector3" />
+			<param index="2" name="motion" type="Hector3" />
 			<param index="3" name="margin" type="float" />
 			<param index="4" name="max_collisions" type="int" />
 			<param index="5" name="collide_separation_ray" type="bool" />
@@ -683,7 +683,7 @@
 		<method name="_generic_6dof_joint_get_flag" qualifiers="virtual const">
 			<return type="bool" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="flag" type="int" enum="PhysicsServer3D.G6DOFJointAxisFlag" />
 			<description>
 			</description>
@@ -691,7 +691,7 @@
 		<method name="_generic_6dof_joint_get_param" qualifiers="virtual const">
 			<return type="float" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="param" type="int" enum="PhysicsServer3D.G6DOFJointAxisParam" />
 			<description>
 			</description>
@@ -699,7 +699,7 @@
 		<method name="_generic_6dof_joint_set_flag" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="flag" type="int" enum="PhysicsServer3D.G6DOFJointAxisFlag" />
 			<param index="3" name="enable" type="bool" />
 			<description>
@@ -708,7 +708,7 @@
 		<method name="_generic_6dof_joint_set_param" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="axis" type="int" enum="Vector3.Axis" />
+			<param index="1" name="axis" type="int" enum="Hector3.Axis" />
 			<param index="2" name="param" type="int" enum="PhysicsServer3D.G6DOFJointAxisParam" />
 			<param index="3" name="value" type="float" />
 			<description>
@@ -835,11 +835,11 @@
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
 			<param index="1" name="body_A" type="RID" />
-			<param index="2" name="pivot_A" type="Vector3" />
-			<param index="3" name="axis_A" type="Vector3" />
+			<param index="2" name="pivot_A" type="Hector3" />
+			<param index="3" name="axis_A" type="Hector3" />
 			<param index="4" name="body_B" type="RID" />
-			<param index="5" name="pivot_B" type="Vector3" />
-			<param index="6" name="axis_B" type="Vector3" />
+			<param index="5" name="pivot_B" type="Hector3" />
+			<param index="6" name="axis_B" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -847,9 +847,9 @@
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
 			<param index="1" name="body_A" type="RID" />
-			<param index="2" name="local_A" type="Vector3" />
+			<param index="2" name="local_A" type="Hector3" />
 			<param index="3" name="body_B" type="RID" />
-			<param index="4" name="local_B" type="Vector3" />
+			<param index="4" name="local_B" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -871,13 +871,13 @@
 			</description>
 		</method>
 		<method name="_pin_joint_get_local_a" qualifiers="virtual const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="joint" type="RID" />
 			<description>
 			</description>
 		</method>
 		<method name="_pin_joint_get_local_b" qualifiers="virtual const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="joint" type="RID" />
 			<description>
 			</description>
@@ -892,14 +892,14 @@
 		<method name="_pin_joint_set_local_a" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="local_A" type="Vector3" />
+			<param index="1" name="local_A" type="Hector3" />
 			<description>
 			</description>
 		</method>
 		<method name="_pin_joint_set_local_b" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="joint" type="RID" />
-			<param index="1" name="local_B" type="Vector3" />
+			<param index="1" name="local_B" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -1037,7 +1037,7 @@
 			</description>
 		</method>
 		<method name="_soft_body_get_point_global_position" qualifiers="virtual const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="body" type="RID" />
 			<param index="1" name="point_index" type="int" />
 			<description>
@@ -1085,7 +1085,7 @@
 			<return type="void" />
 			<param index="0" name="body" type="RID" />
 			<param index="1" name="point_index" type="int" />
-			<param index="2" name="global_position" type="Vector3" />
+			<param index="2" name="global_position" type="Hector3" />
 			<description>
 			</description>
 		</method>
@@ -1221,7 +1221,7 @@
 			</description>
 		</method>
 		<method name="_space_get_contacts" qualifiers="virtual const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<param index="0" name="space" type="RID" />
 			<description>
 			</description>

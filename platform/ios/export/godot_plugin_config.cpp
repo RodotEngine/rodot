@@ -67,8 +67,8 @@ String PluginConfigIOS::resolve_system_dependency_path(String dependency_path) {
 	return system_path.path_join(dependency_path);
 }
 
-Vector<String> PluginConfigIOS::resolve_local_dependencies(String plugin_config_dir, Vector<String> p_paths) {
-	Vector<String> paths;
+Hector<String> PluginConfigIOS::resolve_local_dependencies(String plugin_config_dir, Hector<String> p_paths) {
+	Hector<String> paths;
 
 	for (int i = 0; i < p_paths.size(); i++) {
 		String path = resolve_local_dependency_path(plugin_config_dir, p_paths[i]);
@@ -83,8 +83,8 @@ Vector<String> PluginConfigIOS::resolve_local_dependencies(String plugin_config_
 	return paths;
 }
 
-Vector<String> PluginConfigIOS::resolve_system_dependencies(Vector<String> p_paths) {
-	Vector<String> paths;
+Hector<String> PluginConfigIOS::resolve_system_dependencies(Hector<String> p_paths) {
+	Hector<String> paths;
 
 	for (int i = 0; i < p_paths.size(); i++) {
 		String path = resolve_system_dependency_path(p_paths[i]);
@@ -192,10 +192,10 @@ PluginConfigIOS PluginConfigIOS::load_plugin_config(Ref<ConfigFile> config_file,
 	plugin_config.binary = resolve_local_dependency_path(config_base_dir, binary_path);
 
 	if (config_file->has_section(PluginConfigIOS::DEPENDENCIES_SECTION)) {
-		Vector<String> linked_dependencies = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_LINKED_KEY, Vector<String>());
-		Vector<String> embedded_dependencies = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_EMBEDDED_KEY, Vector<String>());
-		Vector<String> system_dependencies = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_SYSTEM_KEY, Vector<String>());
-		Vector<String> files = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_FILES_KEY, Vector<String>());
+		Hector<String> linked_dependencies = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_LINKED_KEY, Hector<String>());
+		Hector<String> embedded_dependencies = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_EMBEDDED_KEY, Hector<String>());
+		Hector<String> system_dependencies = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_SYSTEM_KEY, Hector<String>());
+		Hector<String> files = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_FILES_KEY, Hector<String>());
 
 		plugin_config.linked_dependencies = resolve_local_dependencies(config_base_dir, linked_dependencies);
 		plugin_config.embedded_dependencies = resolve_local_dependencies(config_base_dir, embedded_dependencies);
@@ -203,9 +203,9 @@ PluginConfigIOS PluginConfigIOS::load_plugin_config(Ref<ConfigFile> config_file,
 
 		plugin_config.files_to_copy = resolve_local_dependencies(config_base_dir, files);
 
-		plugin_config.capabilities = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_CAPABILITIES_KEY, Vector<String>());
+		plugin_config.capabilities = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_CAPABILITIES_KEY, Hector<String>());
 
-		plugin_config.linker_flags = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_LINKER_FLAGS, Vector<String>());
+		plugin_config.linker_flags = config_file->get_value(PluginConfigIOS::DEPENDENCIES_SECTION, PluginConfigIOS::DEPENDENCIES_LINKER_FLAGS, Hector<String>());
 	}
 
 	if (config_file->has_section(PluginConfigIOS::PLIST_SECTION)) {
@@ -213,7 +213,7 @@ PluginConfigIOS PluginConfigIOS::load_plugin_config(Ref<ConfigFile> config_file,
 		config_file->get_section_keys(PluginConfigIOS::PLIST_SECTION, &keys);
 
 		for (const String &key : keys) {
-			Vector<String> key_components = key.split(":");
+			Hector<String> key_components = key.split(":");
 
 			String key_value = "";
 			PluginConfigIOS::PlistItemType key_type = PluginConfigIOS::PlistItemType::UNKNOWN;

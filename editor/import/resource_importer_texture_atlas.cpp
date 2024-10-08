@@ -94,7 +94,7 @@ String ResourceImporterTextureAtlas::get_option_group_file() const {
 Error ResourceImporterTextureAtlas::import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files, Variant *r_metadata) {
 	/* If this happens, it's because the atlas_file field was not filled, so just import a broken texture */
 
-	//use an xpm because it's size independent, the editor images are vector and size dependent
+	//use an xpm because it's size independent, the editor images are Hector and size dependent
 	//it's a simple hack
 	Ref<Image> broken = memnew(Image((const char **)atlas_import_failed_xpm));
 	ResourceSaver::save(ImageTexture::create_from_image(broken), p_save_path + ".tex");
@@ -103,7 +103,7 @@ Error ResourceImporterTextureAtlas::import(const String &p_source_file, const St
 }
 
 // FIXME: Rasterization has issues, see https://github.com/godotengine/godot/issues/68350#issuecomment-1305610290
-static void _plot_triangle(Vector2i *p_vertices, const Vector2i &p_offset, bool p_transposed, Ref<Image> p_image, const Ref<Image> &p_src_image) {
+static void _plot_triangle(Hector2i *p_vertices, const Hector2i &p_offset, bool p_transposed, Ref<Image> p_image, const Ref<Image> &p_src_image) {
 	int width = p_image->get_width();
 	int height = p_image->get_height();
 	int src_width = p_src_image->get_width();
@@ -195,8 +195,8 @@ static void _plot_triangle(Vector2i *p_vertices, const Vector2i &p_offset, bool 
 Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file, const HashMap<String, HashMap<StringName, Variant>> &p_source_file_options, const HashMap<String, String> &p_base_paths) {
 	ERR_FAIL_COND_V(p_source_file_options.is_empty(), ERR_BUG); //should never happen
 
-	Vector<EditorAtlasPacker::Chart> charts;
-	Vector<PackData> pack_data_files;
+	Hector<EditorAtlasPacker::Chart> charts;
+	Hector<PackData> pack_data_files;
 
 	pack_data_files.resize(p_source_file_options.size());
 
@@ -221,7 +221,7 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 
 			EditorAtlasPacker::Chart chart;
 
-			Rect2i used_rect = Rect2i(Vector2i(), image->get_size());
+			Rect2i used_rect = Rect2i(Hector2i(), image->get_size());
 			if (options["trim_alpha_border_from_region"]) {
 				// Clip a region from the image.
 				used_rect = image->get_used_rect();
@@ -229,9 +229,9 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 			pack_data.region = used_rect;
 
 			chart.vertices.push_back(used_rect.position);
-			chart.vertices.push_back(used_rect.position + Vector2i(used_rect.size.x, 0));
-			chart.vertices.push_back(used_rect.position + Vector2i(used_rect.size.x, used_rect.size.y));
-			chart.vertices.push_back(used_rect.position + Vector2i(0, used_rect.size.y));
+			chart.vertices.push_back(used_rect.position + Hector2i(used_rect.size.x, 0));
+			chart.vertices.push_back(used_rect.position + Hector2i(used_rect.size.x, used_rect.size.y));
+			chart.vertices.push_back(used_rect.position + Hector2i(0, used_rect.size.y));
 			EditorAtlasPacker::Chart::Face f;
 			f.vertex[0] = 0;
 			f.vertex[1] = 1;
@@ -252,14 +252,14 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 			Ref<BitMap> bit_map;
 			bit_map.instantiate();
 			bit_map->create_from_image_alpha(image);
-			Vector<Vector<Vector2>> polygons = bit_map->clip_opaque_to_polygons(Rect2(Vector2(), image->get_size()));
+			Hector<Hector<Hector2>> polygons = bit_map->clip_opaque_to_polygons(Rect2(Hector2(), image->get_size()));
 
 			for (int j = 0; j < polygons.size(); j++) {
 				EditorAtlasPacker::Chart chart;
 				chart.vertices = polygons[j];
 				chart.can_transpose = true;
 
-				Vector<int> poly = Geometry2D::triangulate_polygon(polygons[j]);
+				Hector<int> poly = Geometry2D::triangulate_polygon(polygons[j]);
 				for (int i = 0; i < poly.size(); i += 3) {
 					EditorAtlasPacker::Chart::Face f;
 					f.vertex[0] = poly[i + 0];
@@ -296,13 +296,13 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 		for (int j = 0; j < pack_data.chart_pieces.size(); j++) {
 			const EditorAtlasPacker::Chart &chart = charts[pack_data.chart_pieces[j]];
 			for (int k = 0; k < chart.faces.size(); k++) {
-				Vector2i positions[3];
+				Hector2i positions[3];
 				for (int l = 0; l < 3; l++) {
 					int vertex_idx = chart.faces[k].vertex[l];
-					positions[l] = Vector2i(chart.vertices[vertex_idx]);
+					positions[l] = Hector2i(chart.vertices[vertex_idx]);
 				}
 
-				_plot_triangle(positions, Vector2i(chart.final_offset), chart.transposed, new_atlas, pack_data.image);
+				_plot_triangle(positions, Hector2i(chart.final_offset), chart.transposed, new_atlas, pack_data.image);
 			}
 		}
 	}
@@ -328,7 +328,7 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 		Ref<Texture2D> texture;
 
 		if (!pack_data.is_mesh) {
-			Vector2 offset = charts[pack_data.chart_pieces[0]].vertices[0] + charts[pack_data.chart_pieces[0]].final_offset;
+			Hector2 offset = charts[pack_data.chart_pieces[0]].vertices[0] + charts[pack_data.chart_pieces[0]].final_offset;
 
 			//region
 			Ref<AtlasTexture> atlas_texture;
@@ -347,9 +347,9 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 
 			for (int i = 0; i < pack_data.chart_pieces.size(); i++) {
 				const EditorAtlasPacker::Chart &chart = charts[pack_data.chart_pieces[i]];
-				Vector<Vector2> vertices;
-				Vector<int> indices;
-				Vector<Vector2> uvs;
+				Hector<Hector2> vertices;
+				Hector<int> indices;
+				Hector<Hector2> uvs;
 				int vc = chart.vertices.size();
 				int fc = chart.faces.size();
 				vertices.resize(vc);
@@ -357,13 +357,13 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 				indices.resize(fc * 3);
 
 				{
-					Vector2 *vw = vertices.ptrw();
+					Hector2 *vw = vertices.ptrw();
 					int *iw = indices.ptrw();
-					Vector2 *uvw = uvs.ptrw();
+					Hector2 *uvw = uvs.ptrw();
 
 					for (int j = 0; j < vc; j++) {
 						vw[j] = chart.vertices[j];
-						Vector2 uv = chart.vertices[j];
+						Hector2 uv = chart.vertices[j];
 						if (chart.transposed) {
 							SWAP(uv.x, uv.y);
 						}

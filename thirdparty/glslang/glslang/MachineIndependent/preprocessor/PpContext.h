@@ -162,7 +162,7 @@ protected:
     TStringAtomMap& operator=(TStringAtomMap&);
 
     TUnorderedMap<TString, int> atomMap;
-    TVector<const TString*> stringMap;    // these point into the TString in atomMap
+    THector<const TString*> stringMap;    // these point into the TString in atomMap
     int nextAtom;
 
     // Bad source characters can lead to bad atoms, so gracefully handle those by
@@ -315,7 +315,7 @@ public:
         void reset() { currentPos = 0; }
 
     protected:
-        TVector<Token> stream;
+        THector<Token> stream;
         size_t currentPos;
     };
 
@@ -325,7 +325,7 @@ public:
 
     struct MacroSymbol {
         MacroSymbol() : functionLike(0), busy(0), undef(0) { }
-        TVector<int> args;
+        THector<int> args;
         TokenStream body;
         unsigned functionLike : 1;  // 0 means object-like, 1 means function-like
         unsigned busy         : 1;
@@ -434,8 +434,8 @@ protected:
         bool isMacroInput() override { return true; }
 
         MacroSymbol *mac;
-        TVector<TokenStream*> args;
-        TVector<TokenStream*> expandedArgs;
+        THector<TokenStream*> args;
+        THector<TokenStream*> expandedArgs;
 
     protected:
         bool prepaste;         // true if we are just before ##

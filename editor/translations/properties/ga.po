@@ -979,10 +979,10 @@ msgstr "Díchumasaigh Fillte"
 msgid "Auto Unfold Foreign Scenes"
 msgstr "Radhairc Eachtracha a Nochtadh go hUathoibríoch"
 
-msgid "Horizontal Vector2 Editing"
+msgid "Horizontal Hector2 Editing"
 msgstr "Eagarthóireacht Veicteoir2 Cothrománach"
 
-msgid "Horizontal Vector Types Editing"
+msgid "Horizontal Hector Types Editing"
 msgstr "Eagarthóireacht cineálacha veicteora cothrománacha"
 
 msgid "Open Resources in Current Inspector"
@@ -1093,7 +1093,7 @@ msgstr "Cláir sheachtracha"
 msgid "Raster Image Editor"
 msgstr "Eagarthóir Íomhá Raster"
 
-msgid "Vector Image Editor"
+msgid "Hector Image Editor"
 msgstr "Eagarthóir Íomhá Veicteora"
 
 msgid "Audio Editor"
@@ -1882,13 +1882,13 @@ msgstr "Dathanna ceangail"
 msgid "Scalar Color"
 msgstr "Dath scalar"
 
-msgid "Vector2 Color"
+msgid "Hector2 Color"
 msgstr "Dath Veicteoir2"
 
-msgid "Vector 3 Color"
+msgid "Hector 3 Color"
 msgstr "Dath Veicteoir 3"
 
-msgid "Vector 4 Color"
+msgid "Hector 4 Color"
 msgstr "Dath Veicteoir 4"
 
 msgid "Boolean Color"
@@ -1921,7 +1921,7 @@ msgstr "Uigeachtaí Dath"
 msgid "Utility Color"
 msgstr "Dath Fóntais"
 
-msgid "Vector Color"
+msgid "Hector Color"
 msgstr "Dath veicteora"
 
 msgid "Special Color"
@@ -8507,7 +8507,7 @@ msgstr "Rochtain Réitithe Dath"
 msgid "Access Resolved Depth"
 msgstr "Rochtain Réitithe Doimhneacht"
 
-msgid "Needs Motion Vectors"
+msgid "Needs Motion Hectors"
 msgstr "Veicteoirí Gluaisne de Dhíth"
 
 msgid "Needs Normal Roughness"
@@ -8528,7 +8528,7 @@ msgstr "Rún Bácála"
 msgid "Bake Interval"
 msgstr "Eatramh Bácála"
 
-msgid "Up Vector"
+msgid "Up Hector"
 msgstr "Veicteoir Suas"
 
 msgid "Curve X"
@@ -10463,7 +10463,7 @@ msgstr "Aisghabháil mar Imbhualadh"
 msgid "Default Gravity"
 msgstr "Domhantarraingt Réamhshocraithe"
 
-msgid "Default Gravity Vector"
+msgid "Default Gravity Hector"
 msgstr "Veicteoir Domhantarraingthe Réamhshocraithe"
 
 msgid "Default Linear Damp"

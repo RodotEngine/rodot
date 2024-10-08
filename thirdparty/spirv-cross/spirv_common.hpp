@@ -163,7 +163,7 @@ public:
 
 		// Need to enforce an order here for reproducible results,
 		// but hitting this path should happen extremely rarely, so having this slow path is fine.
-		SmallVector<uint32_t> bits;
+		SmallHector<uint32_t> bits;
 		bits.reserve(higher.size());
 		for (auto &v : higher)
 			bits.push_back(v);
@@ -195,7 +195,7 @@ std::string join(Ts &&... ts)
 	return stream.str();
 }
 
-inline std::string merge(const SmallVector<std::string> &list, const char *between = ", ")
+inline std::string merge(const SmallHector<std::string> &list, const char *between = ", ")
 {
 	StringStream<> stream;
 	for (auto &elem : list)
@@ -349,7 +349,7 @@ struct Instruction
 
 struct EmbeddedInstruction : Instruction
 {
-	SmallVector<uint32_t> ops;
+	SmallHector<uint32_t> ops;
 };
 
 enum Types
@@ -535,7 +535,7 @@ struct SPIRConstantOp : IVariant
 	}
 
 	spv::Op opcode;
-	SmallVector<uint32_t> arguments;
+	SmallHector<uint32_t> arguments;
 	TypeID basetype;
 
 	SPIRV_CROSS_DECLARE_CLONE(SPIRConstantOp)
@@ -581,21 +581,21 @@ struct SPIRType : IVariant
 		Char
 	};
 
-	// Scalar/vector/matrix support.
+	// Scalar/Hector/matrix support.
 	BaseType basetype = Unknown;
 	uint32_t width = 0;
 	uint32_t vecsize = 1;
 	uint32_t columns = 1;
 
-	// Arrays, support array of arrays by having a vector of array sizes.
-	SmallVector<uint32_t> array;
+	// Arrays, support array of arrays by having a Hector of array sizes.
+	SmallHector<uint32_t> array;
 
 	// Array elements can be either specialization constants or specialization ops.
 	// This array determines how to interpret the array size.
 	// If an element is true, the element is a literal,
 	// otherwise, it's an expression, which must be resolved on demand.
 	// The actual size is not really known until runtime.
-	SmallVector<bool> array_size_literal;
+	SmallHector<bool> array_size_literal;
 
 	// Pointers
 	// Keep track of how many pointer layers we have.
@@ -605,11 +605,11 @@ struct SPIRType : IVariant
 
 	spv::StorageClass storage = spv::StorageClassGeneric;
 
-	SmallVector<TypeID> member_types;
+	SmallHector<TypeID> member_types;
 
 	// If member order has been rewritten to handle certain scenarios with Offset,
 	// allow codegen to rewrite the index.
-	SmallVector<uint32_t> member_type_index_redirection;
+	SmallHector<uint32_t> member_type_index_redirection;
 
 	struct ImageType
 	{
@@ -684,7 +684,7 @@ struct SPIREntryPoint
 	FunctionID self = 0;
 	std::string name;
 	std::string orig_name;
-	SmallVector<VariableID> interface_variables;
+	SmallHector<VariableID> interface_variables;
 
 	Bitset flags;
 	struct WorkgroupSize
@@ -744,11 +744,11 @@ struct SPIRExpression : IVariant
 	bool access_meshlet_position_y = false;
 
 	// A list of expressions which this expression depends on.
-	SmallVector<ID> expression_dependencies;
+	SmallHector<ID> expression_dependencies;
 
 	// By reading this expression, we implicitly read these expressions as well.
 	// Used by access chain Store and Load since we read multiple expressions in this case.
-	SmallVector<ID> implied_read_expressions;
+	SmallHector<ID> implied_read_expressions;
 
 	// The expression was emitted at a certain scope. Lets us track when an expression read means multiple reads.
 	uint32_t emitted_loop_level = 0;
@@ -769,7 +769,7 @@ struct SPIRFunctionPrototype : IVariant
 	}
 
 	TypeID return_type;
-	SmallVector<uint32_t> parameter_types;
+	SmallHector<uint32_t> parameter_types;
 
 	SPIRV_CROSS_DECLARE_CLONE(SPIRFunctionPrototype)
 };
@@ -863,7 +863,7 @@ struct SPIRBlock : IVariant
 		ID payload;
 	} mesh = {};
 
-	SmallVector<Instruction> ops;
+	SmallHector<Instruction> ops;
 
 	struct Phi
 	{
@@ -873,23 +873,23 @@ struct SPIRBlock : IVariant
 	};
 
 	// Before entering this block flush out local variables to magical "phi" variables.
-	SmallVector<Phi> phi_variables;
+	SmallHector<Phi> phi_variables;
 
 	// Declare these temporaries before beginning the block.
 	// Used for handling complex continue blocks which have side effects.
-	SmallVector<std::pair<TypeID, ID>> declare_temporary;
+	SmallHector<std::pair<TypeID, ID>> declare_temporary;
 
 	// Declare these temporaries, but only conditionally if this block turns out to be
 	// a complex loop header.
-	SmallVector<std::pair<TypeID, ID>> potential_declare_temporary;
+	SmallHector<std::pair<TypeID, ID>> potential_declare_temporary;
 
 	struct Case
 	{
 		uint64_t value;
 		BlockID block;
 	};
-	SmallVector<Case> cases_32bit;
-	SmallVector<Case> cases_64bit;
+	SmallHector<Case> cases_32bit;
+	SmallHector<Case> cases_64bit;
 
 	// If we have tried to optimize code for this block but failed,
 	// keep track of this.
@@ -911,17 +911,17 @@ struct SPIRBlock : IVariant
 
 	// All access to these variables are dominated by this block,
 	// so before branching anywhere we need to make sure that we declare these variables.
-	SmallVector<VariableID> dominated_variables;
+	SmallHector<VariableID> dominated_variables;
 
 	// These are variables which should be declared in a for loop header, if we
 	// fail to use a classic for-loop,
 	// we remove these variables, and fall back to regular variables outside the loop.
-	SmallVector<VariableID> loop_variables;
+	SmallHector<VariableID> loop_variables;
 
 	// Some expressions are control-flow dependent, i.e. any instruction which relies on derivatives or
 	// sub-group-like operations.
 	// Make sure that we only use these expressions in the original block.
-	SmallVector<ID> invalidate_expressions;
+	SmallHector<ID> invalidate_expressions;
 
 	SPIRV_CROSS_DECLARE_CLONE(SPIRBlock)
 };
@@ -974,16 +974,16 @@ struct SPIRFunction : IVariant
 
 	TypeID return_type;
 	TypeID function_type;
-	SmallVector<Parameter> arguments;
+	SmallHector<Parameter> arguments;
 
 	// Can be used by backends to add magic arguments.
 	// Currently used by combined image/sampler implementation.
 
-	SmallVector<Parameter> shadow_arguments;
-	SmallVector<VariableID> local_variables;
+	SmallHector<Parameter> shadow_arguments;
+	SmallHector<VariableID> local_variables;
 	BlockID entry_block = 0;
-	SmallVector<BlockID> blocks;
-	SmallVector<CombinedImageSamplerParameter> combined_parameters;
+	SmallHector<BlockID> blocks;
+	SmallHector<CombinedImageSamplerParameter> combined_parameters;
 
 	struct EntryLine
 	{
@@ -1006,19 +1006,19 @@ struct SPIRFunction : IVariant
 	// Hooks to be run when the function returns.
 	// Mostly used for lowering internal data structures onto flattened structures.
 	// Need to defer this, because they might rely on things which change during compilation.
-	// Intentionally not a small vector, this one is rare, and std::function can be large.
-	Vector<std::function<void()>> fixup_hooks_out;
+	// Intentionally not a small Hector, this one is rare, and std::function can be large.
+	Hector<std::function<void()>> fixup_hooks_out;
 
 	// Hooks to be run when the function begins.
 	// Mostly used for populating internal data structures from flattened structures.
 	// Need to defer this, because they might rely on things which change during compilation.
-	// Intentionally not a small vector, this one is rare, and std::function can be large.
-	Vector<std::function<void()>> fixup_hooks_in;
+	// Intentionally not a small Hector, this one is rare, and std::function can be large.
+	Hector<std::function<void()>> fixup_hooks_in;
 
 	// On function entry, make sure to copy a constant array into thread addr space to work around
 	// the case where we are passing a constant array by value to a function on backends which do not
 	// consider arrays value types.
-	SmallVector<ID> constant_arrays_needed_on_stack;
+	SmallHector<ID> constant_arrays_needed_on_stack;
 
 	bool active = false;
 	bool flush_undeclared = true;
@@ -1063,7 +1063,7 @@ struct SPIRAccessChain : IVariant
 
 	// By reading this expression, we implicitly read these expressions as well.
 	// Used by access chain Store and Load since we read multiple expressions in this case.
-	SmallVector<ID> implied_read_expressions;
+	SmallHector<ID> implied_read_expressions;
 
 	SPIRV_CROSS_DECLARE_CLONE(SPIRAccessChain)
 };
@@ -1090,7 +1090,7 @@ struct SPIRVariable : IVariant
 	ID initializer = 0;
 	VariableID basevariable = 0;
 
-	SmallVector<uint32_t> dereference_chain;
+	SmallHector<uint32_t> dereference_chain;
 	bool compat_builtin = false;
 
 	// If a variable is shadowed, we only statically assign to it
@@ -1101,7 +1101,7 @@ struct SPIRVariable : IVariant
 	ID static_expression = 0;
 
 	// Temporaries which can remain forwarded as long as this variable is not modified.
-	SmallVector<ID> dependees;
+	SmallHector<ID> dependees;
 
 	bool deferred_declaration = false;
 	bool phi_variable = false;
@@ -1147,14 +1147,14 @@ struct SPIRConstant : IVariant
 		double f64;
 	};
 
-	struct ConstantVector
+	struct ConstantHector
 	{
 		Constant r[4];
 		// If != 0, this element is a specialization constant, and we should keep track of it as such.
 		ID id[4];
 		uint32_t vecsize = 1;
 
-		ConstantVector()
+		ConstantHector()
 		{
 			memset(r, 0, sizeof(r));
 		}
@@ -1162,7 +1162,7 @@ struct SPIRConstant : IVariant
 
 	struct ConstantMatrix
 	{
-		ConstantVector c[4];
+		ConstantHector c[4];
 		// If != 0, this column is a specialization constant, and we should keep track of it as such.
 		ID id[4];
 		uint32_t columns = 1;
@@ -1285,12 +1285,12 @@ struct SPIRConstant : IVariant
 		return m.c[col].r[row].u64;
 	}
 
-	inline const ConstantVector &vector() const
+	inline const ConstantHector &Hector() const
 	{
 		return m.c[0];
 	}
 
-	inline uint32_t vector_size() const
+	inline uint32_t Hector_size() const
 	{
 		return m.c[0].vecsize;
 	}
@@ -1316,7 +1316,7 @@ struct SPIRConstant : IVariant
 			return false;
 
 		for (uint32_t col = 0; col < columns(); col++)
-			for (uint32_t row = 0; row < vector_size(); row++)
+			for (uint32_t row = 0; row < Hector_size(); row++)
 				if (scalar_u64(col, row) != 0)
 					return false;
 
@@ -1360,13 +1360,13 @@ struct SPIRConstant : IVariant
 		m.columns = 1;
 	}
 
-	// Construct vectors and matrices.
-	SPIRConstant(TypeID constant_type_, const SPIRConstant *const *vector_elements, uint32_t num_elements,
+	// Construct Hectors and matrices.
+	SPIRConstant(TypeID constant_type_, const SPIRConstant *const *Hector_elements, uint32_t num_elements,
 	             bool specialized)
 	    : constant_type(constant_type_)
 	    , specialization(specialized)
 	{
-		bool matrix = vector_elements[0]->m.c[0].vecsize > 1;
+		bool matrix = Hector_elements[0]->m.c[0].vecsize > 1;
 
 		if (matrix)
 		{
@@ -1374,9 +1374,9 @@ struct SPIRConstant : IVariant
 
 			for (uint32_t i = 0; i < num_elements; i++)
 			{
-				m.c[i] = vector_elements[i]->m.c[0];
-				if (vector_elements[i]->specialization)
-					m.id[i] = vector_elements[i]->self;
+				m.c[i] = Hector_elements[i]->m.c[0];
+				if (Hector_elements[i]->specialization)
+					m.id[i] = Hector_elements[i]->self;
 			}
 		}
 		else
@@ -1386,9 +1386,9 @@ struct SPIRConstant : IVariant
 
 			for (uint32_t i = 0; i < num_elements; i++)
 			{
-				m.c[0].r[i] = vector_elements[i]->m.c[0].r[0];
-				if (vector_elements[i]->specialization)
-					m.c[0].id[i] = vector_elements[i]->self;
+				m.c[0].r[i] = Hector_elements[i]->m.c[0].r[0];
+				if (Hector_elements[i]->specialization)
+					m.c[0].id[i] = Hector_elements[i]->self;
 			}
 		}
 	}
@@ -1405,7 +1405,7 @@ struct SPIRConstant : IVariant
 	bool is_used_as_lut = false;
 
 	// For composites which are constant arrays, etc.
-	SmallVector<ConstantID> subconstants;
+	SmallHector<ConstantID> subconstants;
 
 	// Non-Vulkan GLSL, HLSL and sometimes MSL emits defines for each specialization constant,
 	// and uses them to initialize the constant. This allows the user
@@ -1659,7 +1659,7 @@ enum ExtendedDecorations
 	SPIRVCrossDecorationTessIOOriginalInputTypeID,
 
 	// Apply to any access chain of an interface variable used with pull-model interpolation, where the variable is a
-	// vector but the resulting pointer is a scalar; stores the component index that is to be accessed by the chain.
+	// Hector but the resulting pointer is a scalar; stores the component index that is to be accessed by the chain.
 	// This is used when emitting calls to interpolation functions on the chain in MSL: in this case, the component
 	// must be applied to the result, since pull-model interpolants in MSL cannot be swizzled directly, but the
 	// results of interpolation can.
@@ -1719,8 +1719,8 @@ struct Meta
 
 	Decoration decoration;
 
-	// Intentionally not a SmallVector. Decoration is large and somewhat rare.
-	Vector<Decoration> members;
+	// Intentionally not a SmallHector. Decoration is large and somewhat rare.
+	Hector<Decoration> members;
 
 	std::unordered_map<uint32_t, uint32_t> decoration_word_offset;
 

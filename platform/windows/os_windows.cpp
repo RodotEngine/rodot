@@ -536,12 +536,12 @@ String OS_Windows::get_version() const {
 	return "";
 }
 
-Vector<String> OS_Windows::get_video_adapter_driver_info() const {
+Hector<String> OS_Windows::get_video_adapter_driver_info() const {
 	if (RenderingServer::get_singleton() == nullptr) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
-	static Vector<String> info;
+	static Hector<String> info;
 	if (!info.is_empty()) {
 		return info;
 	}
@@ -557,12 +557,12 @@ Vector<String> OS_Windows::get_video_adapter_driver_info() const {
 
 	const String device_name = RenderingServer::get_singleton()->get_video_adapter_name();
 	if (device_name.is_empty()) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	HRESULT hr = CoCreateInstance(clsid, nullptr, CLSCTX_INPROC_SERVER, uuid, (LPVOID *)&wbemLocator);
 	if (hr != S_OK) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 	BSTR resource_name = SysAllocString(L"root\\CIMV2");
 	hr = wbemLocator->ConnectServer(resource_name, nullptr, nullptr, nullptr, 0, nullptr, nullptr, &wbemServices);
@@ -571,7 +571,7 @@ Vector<String> OS_Windows::get_video_adapter_driver_info() const {
 	SAFE_RELEASE(wbemLocator) // from now on, use `wbemServices`
 	if (hr != S_OK) {
 		SAFE_RELEASE(wbemServices)
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	const String gpu_device_class_query = vformat("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceName = \"%s\"", device_name);
@@ -682,7 +682,7 @@ bool OS_Windows::get_user_prefers_integrated_gpu() const {
 		return false;
 	}
 
-	Vector<WCHAR> buffer;
+	Hector<WCHAR> buffer;
 	buffer.resize(size / sizeof(WCHAR));
 	result = RegGetValueW(hkey, nullptr, value_name, RRF_RT_REG_SZ, nullptr, (LPBYTE)buffer.ptrw(), &size);
 	if (result != ERROR_SUCCESS) {
@@ -818,7 +818,7 @@ String OS_Windows::_quote_command_line_argument(const String &p_text) const {
 
 static void _append_to_pipe(char *p_bytes, int p_size, String *r_pipe, Mutex *p_pipe_mutex) {
 	// Try to convert from default ANSI code page to Unicode.
-	LocalVector<wchar_t> wchars;
+	LocalHector<wchar_t> wchars;
 	int total_wchars = MultiByteToWideChar(CP_ACP, 0, p_bytes, p_size, nullptr, 0);
 	if (total_wchars > 0) {
 		wchars.resize(total_wchars);
@@ -1052,7 +1052,7 @@ Error OS_Windows::execute(const String &p_path, const List<String> &p_arguments,
 	if (r_pipe) {
 		CloseHandle(pipe[1]); // Close pipe write handle (only child process is writing).
 
-		LocalVector<char> bytes;
+		LocalHector<char> bytes;
 		int bytes_in_buffer = 0;
 
 		const int CHUNK_SIZE = 4096;
@@ -1239,12 +1239,12 @@ Error OS_Windows::set_cwd(const String &p_cwd) {
 	return OK;
 }
 
-Vector<String> OS_Windows::get_system_fonts() const {
+Hector<String> OS_Windows::get_system_fonts() const {
 	if (!dwrite_init) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
-	Vector<String> ret;
+	Hector<String> ret;
 	HashSet<String> font_names;
 
 	UINT32 family_count = font_collection->GetFontFamilyCount();
@@ -1436,9 +1436,9 @@ DWRITE_FONT_STRETCH OS_Windows::_stretch_to_dw(int p_stretch) const {
 	}
 }
 
-Vector<String> OS_Windows::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
+Hector<String> OS_Windows::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
 	if (!dwrite2_init) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	String font_name = _get_default_fontname(p_font_name);
@@ -1449,7 +1449,7 @@ Vector<String> OS_Windows::get_system_font_path_for_text(const String &p_font_na
 
 	ComAutoreleaseRef<IDWriteNumberSubstitution> number_substitution;
 	HRESULT hr = dwrite_factory->CreateNumberSubstitution(DWRITE_NUMBER_SUBSTITUTION_METHOD_NONE, reinterpret_cast<const wchar_t *>(locale.get_data()), true, &number_substitution.reference);
-	ERR_FAIL_COND_V(FAILED(hr) || number_substitution.is_null(), Vector<String>());
+	ERR_FAIL_COND_V(FAILED(hr) || number_substitution.is_null(), Hector<String>());
 
 	FallbackTextAnalysisSource fs = FallbackTextAnalysisSource(text, locale, rtl, number_substitution.reference);
 	UINT32 mapped_length = 0;
@@ -1469,28 +1469,28 @@ Vector<String> OS_Windows::get_system_font_path_for_text(const String &p_font_na
 			&scale);
 
 	if (FAILED(hr) || dwrite_font.is_null()) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	ComAutoreleaseRef<IDWriteFontFace> dwrite_face;
 	hr = dwrite_font->CreateFontFace(&dwrite_face.reference);
 	if (FAILED(hr) || dwrite_face.is_null()) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	UINT32 number_of_files = 0;
 	hr = dwrite_face->GetFiles(&number_of_files, nullptr);
 	if (FAILED(hr)) {
-		return Vector<String>();
+		return Hector<String>();
 	}
-	Vector<ComAutoreleaseRef<IDWriteFontFile>> files;
+	Hector<ComAutoreleaseRef<IDWriteFontFile>> files;
 	files.resize(number_of_files);
 	hr = dwrite_face->GetFiles(&number_of_files, (IDWriteFontFile **)files.ptrw());
 	if (FAILED(hr)) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
-	Vector<String> ret;
+	Hector<String> ret;
 	for (UINT32 i = 0; i < number_of_files; i++) {
 		void const *reference_key = nullptr;
 		UINT32 reference_key_size = 0;
@@ -1563,7 +1563,7 @@ String OS_Windows::get_system_font_path(const String &p_font_name, int p_weight,
 	if (FAILED(hr)) {
 		return String();
 	}
-	Vector<ComAutoreleaseRef<IDWriteFontFile>> files;
+	Hector<ComAutoreleaseRef<IDWriteFontFile>> files;
 	files.resize(number_of_files);
 	hr = dwrite_face->GetFiles(&number_of_files, (IDWriteFontFile **)files.ptrw());
 	if (FAILED(hr)) {
@@ -2052,7 +2052,7 @@ OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 		print_verbose("Can't set the ENABLE_VIRTUAL_TERMINAL_PROCESSING Windows console mode. `print_rich()` will not work as expected.");
 	}
 
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(WindowsTerminalLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 }

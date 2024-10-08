@@ -13,7 +13,7 @@ namespace cvtt
         // Least squares from totals:
         // a = (tv - t*v/w)/(tt - t*t/w)
         // b = (v - a*t)/w
-        template<int TVectorSize>
+        template<int THectorSize>
         class EndpointRefiner
         {
         public:
@@ -24,20 +24,20 @@ namespace cvtt
             typedef ParallelMath::SInt16 MSInt16;
             typedef ParallelMath::SInt32 MSInt32;
 
-            MFloat m_tv[TVectorSize];
-            MFloat m_v[TVectorSize];
+            MFloat m_tv[THectorSize];
+            MFloat m_v[THectorSize];
             MFloat m_tt;
             MFloat m_t;
             MFloat m_w;
             int m_wu;
 
             float m_rcpMaxIndex;
-            float m_channelWeights[TVectorSize];
-            float m_rcpChannelWeights[TVectorSize];
+            float m_channelWeights[THectorSize];
+            float m_rcpChannelWeights[THectorSize];
 
-            void Init(int indexRange, const float channelWeights[TVectorSize])
+            void Init(int indexRange, const float channelWeights[THectorSize])
             {
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     m_tv[ch] = ParallelMath::MakeFloatZero();
                     m_v[ch] = ParallelMath::MakeFloatZero();
@@ -48,7 +48,7 @@ namespace cvtt
 
                 m_rcpMaxIndex = 1.0f / static_cast<float>(indexRange - 1);
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     m_channelWeights[ch] = channelWeights[ch];
                     m_rcpChannelWeights[ch] = 1.0f;
@@ -63,7 +63,7 @@ namespace cvtt
             {
                 MFloat t = ParallelMath::ToFloat(index) * m_rcpMaxIndex;
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MFloat v = pwFloatPixel[ch] * weight;
 
@@ -93,10 +93,10 @@ namespace cvtt
 
             void ContributeUnweightedPW(const MFloat *floatPixel, const MUInt15 &index)
             {
-                ContributeUnweightedPW(floatPixel, index, TVectorSize);
+                ContributeUnweightedPW(floatPixel, index, THectorSize);
             }
 
-            void GetRefinedEndpoints(MFloat endPoint[2][TVectorSize])
+            void GetRefinedEndpoints(MFloat endPoint[2][THectorSize])
             {
                 // a = (tv - t*v/w)/(tt - t*t/w)
                 // b = (v - a*t)/w
@@ -110,7 +110,7 @@ namespace cvtt
                 ParallelMath::FloatCompFlag adenomZero = ParallelMath::Equal(adenom, ParallelMath::MakeFloatZero());
                 ParallelMath::ConditionalSet(adenom, adenomZero, ParallelMath::MakeFloat(1.0f));
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     /*
                     if (adenom == 0.0)
@@ -141,29 +141,29 @@ namespace cvtt
                 }
             }
 
-            void GetRefinedEndpointsLDR(MUInt15 endPoint[2][TVectorSize], int numRealChannels, const ParallelMath::RoundTowardNearestForScope *roundingMode)
+            void GetRefinedEndpointsLDR(MUInt15 endPoint[2][THectorSize], int numRealChannels, const ParallelMath::RoundTowardNearestForScope *roundingMode)
             {
-                MFloat floatEndPoint[2][TVectorSize];
+                MFloat floatEndPoint[2][THectorSize];
                 GetRefinedEndpoints(floatEndPoint);
 
                 for (int epi = 0; epi < 2; epi++)
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                         endPoint[epi][ch] = ParallelMath::RoundAndConvertToU15(ParallelMath::Clamp(floatEndPoint[epi][ch], 0.0f, 255.0f), roundingMode);
             }
 
-            void GetRefinedEndpointsLDR(MUInt15 endPoint[2][TVectorSize], const ParallelMath::RoundTowardNearestForScope *roundingMode)
+            void GetRefinedEndpointsLDR(MUInt15 endPoint[2][THectorSize], const ParallelMath::RoundTowardNearestForScope *roundingMode)
             {
-                GetRefinedEndpointsLDR(endPoint, TVectorSize, roundingMode);
+                GetRefinedEndpointsLDR(endPoint, THectorSize, roundingMode);
             }
 
-            void GetRefinedEndpointsHDR(MSInt16 endPoint[2][TVectorSize], bool isSigned, const ParallelMath::RoundTowardNearestForScope *roundingMode)
+            void GetRefinedEndpointsHDR(MSInt16 endPoint[2][THectorSize], bool isSigned, const ParallelMath::RoundTowardNearestForScope *roundingMode)
             {
-                MFloat floatEndPoint[2][TVectorSize];
+                MFloat floatEndPoint[2][THectorSize];
                 GetRefinedEndpoints(floatEndPoint);
 
                 for (int epi = 0; epi < 2; epi++)
                 {
-                    for (int ch = 0; ch < TVectorSize; ch++)
+                    for (int ch = 0; ch < THectorSize; ch++)
                     {
                         MFloat f = floatEndPoint[epi][ch];
                         if (isSigned)

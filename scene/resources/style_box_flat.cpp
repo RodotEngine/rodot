@@ -165,12 +165,12 @@ bool StyleBoxFlat::is_draw_center_enabled() const {
 	return draw_center;
 }
 
-void StyleBoxFlat::set_skew(Vector2 p_skew) {
+void StyleBoxFlat::set_skew(Hector2 p_skew) {
 	skew = p_skew;
 	emit_changed();
 }
 
-Vector2 StyleBoxFlat::get_skew() const {
+Hector2 StyleBoxFlat::get_skew() const {
 	return skew;
 }
 
@@ -232,8 +232,8 @@ inline void set_inner_corner_radius(const Rect2 style_rect, const Rect2 inner_re
 	inner_corner_radius[3] = MAX(corner_radius[3] - MIN(border_bottom, border_left), 0); // Bottom left.
 }
 
-inline void draw_rounded_rectangle(Vector<Vector2> &verts, Vector<int> &indices, Vector<Color> &colors, const Rect2 &style_rect, const real_t corner_radius[4],
-		const Rect2 &ring_rect, const Rect2 &inner_rect, const Color &inner_color, const Color &outer_color, const int corner_detail, const Vector2 &skew, bool is_filled = false) {
+inline void draw_rounded_rectangle(Hector<Hector2> &verts, Hector<int> &indices, Hector<Color> &colors, const Rect2 &style_rect, const real_t corner_radius[4],
+		const Rect2 &ring_rect, const Rect2 &inner_rect, const Color &inner_color, const Color &outer_color, const int corner_detail, const Hector2 &skew, bool is_filled = false) {
 	int vert_offset = verts.size();
 	int adapted_corner_detail = (corner_radius[0] > 0) || (corner_radius[1] > 0) || (corner_radius[2] > 0) || (corner_radius[3] > 0) ? corner_detail : 1;
 
@@ -243,20 +243,20 @@ inline void draw_rounded_rectangle(Vector<Vector2> &verts, Vector<int> &indices,
 	set_inner_corner_radius(style_rect, ring_rect, corner_radius, ring_corner_radius);
 
 	// Corner radius center points.
-	Vector<Point2> outer_points = {
-		ring_rect.position + Vector2(ring_corner_radius[0], ring_corner_radius[0]), //tl
+	Hector<Point2> outer_points = {
+		ring_rect.position + Hector2(ring_corner_radius[0], ring_corner_radius[0]), //tl
 		Point2(ring_rect.position.x + ring_rect.size.x - ring_corner_radius[1], ring_rect.position.y + ring_corner_radius[1]), //tr
-		ring_rect.position + ring_rect.size - Vector2(ring_corner_radius[2], ring_corner_radius[2]), //br
+		ring_rect.position + ring_rect.size - Hector2(ring_corner_radius[2], ring_corner_radius[2]), //br
 		Point2(ring_rect.position.x + ring_corner_radius[3], ring_rect.position.y + ring_rect.size.y - ring_corner_radius[3]) //bl
 	};
 
 	real_t inner_corner_radius[4];
 	set_inner_corner_radius(style_rect, inner_rect, corner_radius, inner_corner_radius);
 
-	Vector<Point2> inner_points = {
-		inner_rect.position + Vector2(inner_corner_radius[0], inner_corner_radius[0]), //tl
+	Hector<Point2> inner_points = {
+		inner_rect.position + Hector2(inner_corner_radius[0], inner_corner_radius[0]), //tl
 		Point2(inner_rect.position.x + inner_rect.size.x - inner_corner_radius[1], inner_rect.position.y + inner_corner_radius[1]), //tr
-		inner_rect.position + inner_rect.size - Vector2(inner_corner_radius[2], inner_corner_radius[2]), //br
+		inner_rect.position + inner_rect.size - Hector2(inner_corner_radius[2], inner_corner_radius[2]), //br
 		Point2(inner_rect.position.x + inner_corner_radius[3], inner_rect.position.y + inner_rect.size.y - inner_corner_radius[3]) //bl
 	};
 	// Calculate the vertices.
@@ -272,7 +272,7 @@ inline void draw_rounded_rectangle(Vector<Vector2> &verts, Vector<int> &indices,
 	colors.resize(colors_size + new_verts_amount);
 	verts.resize(verts_size + new_verts_amount);
 	Color *colors_ptr = colors.ptrw();
-	Vector2 *verts_ptr = verts.ptrw();
+	Hector2 *verts_ptr = verts.ptrw();
 
 	for (int corner_idx = 0; corner_idx < 4; corner_idx++) {
 		for (int detail = 0; detail <= adapted_corner_detail; detail++) {
@@ -290,7 +290,7 @@ inline void draw_rounded_rectangle(Vector<Vector2> &verts, Vector<int> &indices,
 				const real_t y = inner_corner_radius[corner_idx] * angle_sine + inner_points[corner_idx].y;
 				const float x_skew = -skew.x * (y - style_rect_center.y);
 				const float y_skew = -skew.y * (x - style_rect_center.x);
-				verts_ptr[verts_size + idx_ofs] = Vector2(x + x_skew, y + y_skew);
+				verts_ptr[verts_size + idx_ofs] = Hector2(x + x_skew, y + y_skew);
 				colors_ptr[colors_size + idx_ofs] = inner_color;
 			}
 
@@ -299,7 +299,7 @@ inline void draw_rounded_rectangle(Vector<Vector2> &verts, Vector<int> &indices,
 				const real_t y = ring_corner_radius[corner_idx] * angle_sine + outer_points[corner_idx].y;
 				const float x_skew = -skew.x * (y - style_rect_center.y);
 				const float y_skew = -skew.y * (x - style_rect_center.x);
-				verts_ptr[verts_size + idx_ofs + 1] = Vector2(x + x_skew, y + y_skew);
+				verts_ptr[verts_size + idx_ofs + 1] = Hector2(x + x_skew, y + y_skew);
 				colors_ptr[colors_size + idx_ofs + 1] = outer_color;
 			}
 		}
@@ -415,10 +415,10 @@ void StyleBoxFlat::draw(RID p_canvas_item, const Rect2 &p_rect) const {
 		}
 	}
 
-	Vector<Point2> verts;
-	Vector<int> indices;
-	Vector<Color> colors;
-	Vector<Point2> uvs;
+	Hector<Point2> verts;
+	Hector<int> indices;
+	Hector<Color> colors;
+	Hector<Point2> uvs;
 
 	// Create shadow.
 	if (draw_shadow) {
@@ -593,7 +593,7 @@ void StyleBoxFlat::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "bg_color"), "set_bg_color", "get_bg_color");
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "draw_center"), "set_draw_center", "is_draw_center_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "skew"), "set_skew", "get_skew");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "skew"), "set_skew", "get_skew");
 
 	ADD_GROUP("Border Width", "border_width_");
 	ADD_PROPERTYI(PropertyInfo(Variant::INT, "border_width_left", PROPERTY_HINT_RANGE, "0,1024,1,suffix:px"), "set_border_width", "get_border_width", SIDE_LEFT);
@@ -623,7 +623,7 @@ void StyleBoxFlat::_bind_methods() {
 	ADD_GROUP("Shadow", "shadow_");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "shadow_color"), "set_shadow_color", "get_shadow_color");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "shadow_size", PROPERTY_HINT_RANGE, "0,100,1,or_greater,suffix:px"), "set_shadow_size", "get_shadow_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shadow_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_shadow_offset", "get_shadow_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "shadow_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_shadow_offset", "get_shadow_offset");
 
 	ADD_GROUP("Anti Aliasing", "anti_aliasing_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "anti_aliasing"), "set_anti_aliased", "is_anti_aliased");

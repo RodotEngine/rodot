@@ -304,7 +304,7 @@ void Texture3DRD::set_texture_rd_rid(RID p_texture_rd_rid) {
 		RS::get_singleton()->free(texture_rid);
 		texture_rid = RID();
 		image_format = Image::FORMAT_MAX;
-		size = Vector3i();
+		size = Hector3i();
 		mipmaps = 0;
 
 		notify_property_list_changed();
@@ -345,7 +345,7 @@ RID Texture3DRD::get_texture_rd_rid() const {
 
 Texture3DRD::Texture3DRD() {
 	image_format = Image::FORMAT_MAX;
-	size = Vector3i();
+	size = Hector3i();
 	mipmaps = 0;
 }
 

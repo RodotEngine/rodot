@@ -62,12 +62,12 @@ void NavigationLink3D::_update_debug_mesh() {
 
 	RID nav_map = get_world_3d()->get_navigation_map();
 	real_t search_radius = NavigationServer3D::get_singleton()->map_get_link_connection_radius(nav_map);
-	Vector3 up_vector = NavigationServer3D::get_singleton()->map_get_up(nav_map);
-	Vector3::Axis up_axis = up_vector.max_axis_index();
+	Hector3 up_Hector = NavigationServer3D::get_singleton()->map_get_up(nav_map);
+	Hector3::Axis up_axis = up_Hector.max_axis_index();
 
 	debug_mesh->clear_surfaces();
 
-	Vector<Vector3> lines;
+	Hector<Hector3> lines;
 
 	// Draw line between the points.
 	lines.push_back(start_position);
@@ -78,22 +78,22 @@ void NavigationLink3D::_update_debug_mesh() {
 		// Create a circle
 		const float ra = Math::deg_to_rad((float)(i * 12));
 		const float rb = Math::deg_to_rad((float)((i + 1) * 12));
-		const Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * search_radius;
-		const Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * search_radius;
+		const Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * search_radius;
+		const Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * search_radius;
 
 		// Draw axis-aligned circle
 		switch (up_axis) {
-			case Vector3::AXIS_X:
-				lines.append(start_position + Vector3(0, a.x, a.y));
-				lines.append(start_position + Vector3(0, b.x, b.y));
+			case Hector3::AXIS_X:
+				lines.append(start_position + Hector3(0, a.x, a.y));
+				lines.append(start_position + Hector3(0, b.x, b.y));
 				break;
-			case Vector3::AXIS_Y:
-				lines.append(start_position + Vector3(a.x, 0, a.y));
-				lines.append(start_position + Vector3(b.x, 0, b.y));
+			case Hector3::AXIS_Y:
+				lines.append(start_position + Hector3(a.x, 0, a.y));
+				lines.append(start_position + Hector3(b.x, 0, b.y));
 				break;
-			case Vector3::AXIS_Z:
-				lines.append(start_position + Vector3(a.x, a.y, 0));
-				lines.append(start_position + Vector3(b.x, b.y, 0));
+			case Hector3::AXIS_Z:
+				lines.append(start_position + Hector3(a.x, a.y, 0));
+				lines.append(start_position + Hector3(b.x, b.y, 0));
 				break;
 		}
 	}
@@ -103,22 +103,22 @@ void NavigationLink3D::_update_debug_mesh() {
 		// Create a circle
 		const float ra = Math::deg_to_rad((float)(i * 12));
 		const float rb = Math::deg_to_rad((float)((i + 1) * 12));
-		const Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * search_radius;
-		const Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * search_radius;
+		const Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * search_radius;
+		const Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * search_radius;
 
 		// Draw axis-aligned circle
 		switch (up_axis) {
-			case Vector3::AXIS_X:
-				lines.append(end_position + Vector3(0, a.x, a.y));
-				lines.append(end_position + Vector3(0, b.x, b.y));
+			case Hector3::AXIS_X:
+				lines.append(end_position + Hector3(0, a.x, a.y));
+				lines.append(end_position + Hector3(0, b.x, b.y));
 				break;
-			case Vector3::AXIS_Y:
-				lines.append(end_position + Vector3(a.x, 0, a.y));
-				lines.append(end_position + Vector3(b.x, 0, b.y));
+			case Hector3::AXIS_Y:
+				lines.append(end_position + Hector3(a.x, 0, a.y));
+				lines.append(end_position + Hector3(b.x, 0, b.y));
 				break;
-			case Vector3::AXIS_Z:
-				lines.append(end_position + Vector3(a.x, a.y, 0));
-				lines.append(end_position + Vector3(b.x, b.y, 0));
+			case Hector3::AXIS_Z:
+				lines.append(end_position + Hector3(a.x, a.y, 0));
+				lines.append(end_position + Hector3(b.x, b.y, 0));
 				break;
 		}
 	}
@@ -185,8 +185,8 @@ void NavigationLink3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "bidirectional"), "set_bidirectional", "is_bidirectional");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "navigation_layers", PROPERTY_HINT_LAYERS_3D_NAVIGATION), "set_navigation_layers", "get_navigation_layers");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "start_position"), "set_start_position", "get_start_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "end_position"), "set_end_position", "get_end_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "start_position"), "set_start_position", "get_start_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "end_position"), "set_end_position", "get_end_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "enter_cost"), "set_enter_cost", "get_enter_cost");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "travel_cost"), "set_travel_cost", "get_travel_cost");
 }
@@ -356,7 +356,7 @@ bool NavigationLink3D::get_navigation_layer_value(int p_layer_number) const {
 	return get_navigation_layers() & (1 << (p_layer_number - 1));
 }
 
-void NavigationLink3D::set_start_position(Vector3 p_position) {
+void NavigationLink3D::set_start_position(Hector3 p_position) {
 	if (start_position.is_equal_approx(p_position)) {
 		return;
 	}
@@ -377,7 +377,7 @@ void NavigationLink3D::set_start_position(Vector3 p_position) {
 	update_configuration_warnings();
 }
 
-void NavigationLink3D::set_end_position(Vector3 p_position) {
+void NavigationLink3D::set_end_position(Hector3 p_position) {
 	if (end_position.is_equal_approx(p_position)) {
 		return;
 	}
@@ -398,7 +398,7 @@ void NavigationLink3D::set_end_position(Vector3 p_position) {
 	update_configuration_warnings();
 }
 
-void NavigationLink3D::set_global_start_position(Vector3 p_position) {
+void NavigationLink3D::set_global_start_position(Hector3 p_position) {
 	if (is_inside_tree()) {
 		set_start_position(to_local(p_position));
 	} else {
@@ -406,7 +406,7 @@ void NavigationLink3D::set_global_start_position(Vector3 p_position) {
 	}
 }
 
-Vector3 NavigationLink3D::get_global_start_position() const {
+Hector3 NavigationLink3D::get_global_start_position() const {
 	if (is_inside_tree()) {
 		return to_global(start_position);
 	} else {
@@ -414,7 +414,7 @@ Vector3 NavigationLink3D::get_global_start_position() const {
 	}
 }
 
-void NavigationLink3D::set_global_end_position(Vector3 p_position) {
+void NavigationLink3D::set_global_end_position(Hector3 p_position) {
 	if (is_inside_tree()) {
 		set_end_position(to_local(p_position));
 	} else {
@@ -422,7 +422,7 @@ void NavigationLink3D::set_global_end_position(Vector3 p_position) {
 	}
 }
 
-Vector3 NavigationLink3D::get_global_end_position() const {
+Hector3 NavigationLink3D::get_global_end_position() const {
 	if (is_inside_tree()) {
 		return to_global(end_position);
 	} else {

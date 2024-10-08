@@ -88,7 +88,7 @@ struct Triple {
 };
 
 using rebase_tent_result_item_t = hb_pair_t<double, Triple>;
-using rebase_tent_result_t = hb_vector_t<rebase_tent_result_item_t>;
+using rebase_tent_result_t = hb_Hector_t<rebase_tent_result_item_t>;
 
 /* renormalize a normalized value v to the range of an axis,
  * considering the prenormalized distances as well as the new axis limits.

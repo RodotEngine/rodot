@@ -226,9 +226,9 @@ struct MethodInfo {
 	uint32_t flags = METHOD_FLAGS_DEFAULT;
 	int id = 0;
 	List<PropertyInfo> arguments;
-	Vector<Variant> default_arguments;
+	Hector<Variant> default_arguments;
 	int return_val_metadata = 0;
-	Vector<int> arguments_metadata;
+	Hector<int> arguments_metadata;
 
 	int get_argument_meta(int p_arg) const {
 		ERR_FAIL_COND_V(p_arg < -1 || p_arg > arguments.size(), 0);
@@ -842,8 +842,8 @@ public:
 
 	void set(const StringName &p_name, const Variant &p_value, bool *r_valid = nullptr);
 	Variant get(const StringName &p_name, bool *r_valid = nullptr) const;
-	void set_indexed(const Vector<StringName> &p_names, const Variant &p_value, bool *r_valid = nullptr);
-	Variant get_indexed(const Vector<StringName> &p_names, bool *r_valid = nullptr) const;
+	void set_indexed(const Hector<StringName> &p_names, const Variant &p_value, bool *r_valid = nullptr);
+	Variant get_indexed(const Hector<StringName> &p_names, bool *r_valid = nullptr) const;
 
 	void get_property_list(List<PropertyInfo> *p_list, bool p_reversed = false) const;
 	void validate_property(PropertyInfo &p_property) const;
@@ -944,7 +944,7 @@ public:
 	bool is_blocking_signals() const;
 
 	Variant::Type get_static_property_type(const StringName &p_property, bool *r_valid = nullptr) const;
-	Variant::Type get_static_property_type_indexed(const Vector<StringName> &p_path, bool *r_valid = nullptr) const;
+	Variant::Type get_static_property_type_indexed(const Hector<StringName> &p_path, bool *r_valid = nullptr) const;
 
 	// Translate message (internationalization).
 	String tr(const StringName &p_message, const StringName &p_context = "") const;

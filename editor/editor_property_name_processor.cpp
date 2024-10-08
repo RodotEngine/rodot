@@ -62,7 +62,7 @@ bool EditorPropertyNameProcessor::is_localization_available() {
 	if (!EditorSettings::get_singleton()) {
 		return false;
 	}
-	const Vector<String> forbidden = String("en").split(",");
+	const Hector<String> forbidden = String("en").split(",");
 	return !forbidden.has(EDITOR_GET("interface/editor/editor_language"));
 }
 
@@ -72,7 +72,7 @@ String EditorPropertyNameProcessor::_capitalize_name(const String &p_name) const
 		return cached->value;
 	}
 
-	Vector<String> parts = p_name.split("_", false);
+	Hector<String> parts = p_name.split("_", false);
 	for (int i = 0; i < parts.size(); i++) {
 		// Articles/conjunctions/prepositions which should only be capitalized when not at beginning and end.
 		if (i > 0 && i + 1 < parts.size() && stop_words.has(parts[i])) {
@@ -299,7 +299,7 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["uv"] = "UV";
 	capitalize_string_remaps["uv1"] = "UV1";
 	capitalize_string_remaps["uv2"] = "UV2";
-	capitalize_string_remaps["vector2"] = "Vector2";
+	capitalize_string_remaps["Hector2"] = "Hector2";
 	capitalize_string_remaps["vpn"] = "VPN";
 	capitalize_string_remaps["vram"] = "VRAM";
 	capitalize_string_remaps["vrs"] = "VRS";
@@ -322,7 +322,7 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	// Articles, conjunctions, prepositions.
 	// The following initialization is parsed in `editor/translations/scripts/common.py` with a regex.
 	// The word definition format should be kept synced with the regex.
-	stop_words = LocalVector<String>({
+	stop_words = LocalHector<String>({
 			"a",
 			"an",
 			"and",

@@ -48,7 +48,7 @@ void ParallaxBackground::_notification(int p_what) {
 void ParallaxBackground::_camera_moved(const Transform2D &p_transform, const Point2 &p_screen_offset, const Point2 &p_adj_screen_offset) {
 	screen_offset = p_screen_offset;
 
-	set_scroll_scale(p_transform.get_scale().dot(Vector2(0.5, 0.5)));
+	set_scroll_scale(p_transform.get_scale().dot(Hector2(0.5, 0.5)));
 	set_scroll_offset(p_transform.get_origin());
 }
 
@@ -71,7 +71,7 @@ void ParallaxBackground::_update_scroll() {
 		return;
 	}
 
-	Vector2 scroll_ofs = base_offset + offset * base_scale;
+	Hector2 scroll_ofs = base_offset + offset * base_scale;
 
 	Size2 vps = get_viewport_size();
 
@@ -157,7 +157,7 @@ bool ParallaxBackground::is_ignore_camera_zoom() {
 	return ignore_camera_zoom;
 }
 
-Vector2 ParallaxBackground::get_final_offset() const {
+Hector2 ParallaxBackground::get_final_offset() const {
 	return final_offset;
 }
 
@@ -177,11 +177,11 @@ void ParallaxBackground::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_ignore_camera_zoom"), &ParallaxBackground::is_ignore_camera_zoom);
 
 	ADD_GROUP("Scroll", "scroll_");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_base_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_base_offset", "get_scroll_base_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_base_scale", PROPERTY_HINT_LINK), "set_scroll_base_scale", "get_scroll_base_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_limit_begin", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_begin", "get_limit_begin");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_limit_end", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_end", "get_limit_end");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_base_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_base_offset", "get_scroll_base_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_base_scale", PROPERTY_HINT_LINK), "set_scroll_base_scale", "get_scroll_base_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_limit_begin", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_begin", "get_limit_begin");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "scroll_limit_end", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_end", "get_limit_end");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "scroll_ignore_camera_zoom"), "set_ignore_camera_zoom", "is_ignore_camera_zoom");
 }
 

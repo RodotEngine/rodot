@@ -10,9 +10,9 @@
  *                                                                  *
  ********************************************************************
 
- function: PCM data vector blocking, windowing and dis/reassembly
+ function: PCM data Hector blocking, windowing and dis/reassembly
 
- Handle windowing, overlap-add, etc of the PCM vectors.  This is made
+ Handle windowing, overlap-add, etc of the PCM Hectors.  This is made
  more amusing by Vorbis' current two allowed block sizes.
 
  ********************************************************************/
@@ -246,7 +246,7 @@ static int _vds_shared_init(vorbis_dsp_state *v,vorbis_info *vi,int encp){
     }
   }
 
-  /* initialize the storage vectors. blocksize[1] is small for encode,
+  /* initialize the storage Hectors. blocksize[1] is small for encode,
      but the correct size for decode */
   v->pcm_storage=ci->blocksizes[1];
   v->pcm=_ogg_malloc(vi->channels*sizeof(*v->pcm));
@@ -262,7 +262,7 @@ static int _vds_shared_init(vorbis_dsp_state *v,vorbis_info *vi,int encp){
   v->lW=0; /* previous window size */
   v->W=0;  /* current window size */
 
-  /* all vector indexes */
+  /* all Hector indexes */
   v->centerW=ci->blocksizes[1]/2;
 
   v->pcm_current=v->centerW;
@@ -609,7 +609,7 @@ int vorbis_analysis_blockout(vorbis_dsp_state *v,vorbis_block *vb){
   vb->granulepos=v->granulepos;
   vb->pcmend=ci->blocksizes[v->W];
 
-  /* copy the vectors; this uses the local storage in vb */
+  /* copy the Hectors; this uses the local storage in vb */
 
   /* this tracks 'strongest peak' for later psychoacoustics */
   /* moved to the global psy state; clean this mess up */
@@ -644,7 +644,7 @@ int vorbis_analysis_blockout(vorbis_dsp_state *v,vorbis_block *vb){
     }
   }
 
-  /* advance storage vectors and clean up */
+  /* advance storage Hectors and clean up */
   {
     int new_centerNext=ci->blocksizes[1]/2;
     int movementW=centerNext-new_centerNext;

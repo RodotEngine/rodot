@@ -150,20 +150,20 @@ void main() {
 		float frameweight = (max(adir[otherAxis0], adir[otherAxis1]) - .75) / .25;
 		if (frameweight > 0.0) {
 			// determine frame
-			vec3 UpVector;
+			vec3 UpHector;
 			switch (axis) {
 				case 0:
-					UpVector = vec3(1, 0, 0);
+					UpHector = vec3(1, 0, 0);
 					break;
 				case 1:
-					UpVector = vec3(0, 1, 0);
+					UpHector = vec3(0, 1, 0);
 					break;
 				default:
-					UpVector = vec3(0, 0, 1);
+					UpHector = vec3(0, 0, 1);
 					break;
 			}
 
-			vec3 frameX = normalize(cross(UpVector, frameZ));
+			vec3 frameX = normalize(cross(UpHector, frameZ));
 			vec3 frameY = cross(frameZ, frameX);
 
 			// calculate parametrization for polynomial

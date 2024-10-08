@@ -151,7 +151,7 @@ private:
 		int dc_ol_size = 0;
 		Color dc_ol_color;
 
-		Vector2 offset;
+		Hector2 offset;
 		int char_offset = 0;
 		int char_count = 0;
 
@@ -191,7 +191,7 @@ private:
 	struct ItemFrame : public Item {
 		bool cell = false;
 
-		LocalVector<Line> lines;
+		LocalHector<Line> lines;
 		std::atomic<int> first_invalid_line;
 		std::atomic<int> first_invalid_font_line;
 		std::atomic<int> first_resized_line;
@@ -341,9 +341,9 @@ private:
 			int width = 0;
 		};
 
-		LocalVector<Column> columns;
-		LocalVector<float> rows;
-		LocalVector<float> rows_baseline;
+		LocalHector<Column> columns;
+		LocalHector<float> rows;
+		LocalHector<float> rows_baseline;
 
 		int align_to_row = -1;
 		int total_width = 0;
@@ -369,7 +369,7 @@ private:
 		float rate = 0.0f;
 		uint64_t _current_rng = 0;
 		uint64_t _previous_rng = 0;
-		Vector2 prev_off;
+		Hector2 prev_off;
 
 		ItemShake() { type = ITEM_SHAKE; }
 
@@ -392,7 +392,7 @@ private:
 	struct ItemWave : public ItemFX {
 		float frequency = 1.0f;
 		float amplitude = 1.0f;
-		Vector2 prev_off;
+		Hector2 prev_off;
 
 		ItemWave() { type = ITEM_WAVE; }
 	};
@@ -400,7 +400,7 @@ private:
 	struct ItemTornado : public ItemFX {
 		float radius = 1.0f;
 		float frequency = 1.0f;
-		Vector2 prev_off;
+		Hector2 prev_off;
 
 		ItemTornado() { type = ITEM_TORNADO; }
 	};
@@ -561,8 +561,8 @@ private:
 	void _set_table_size(ItemTable *p_table, int p_available_width);
 
 	void _update_line_font(ItemFrame *p_frame, int p_line, const Ref<Font> &p_base_font, int p_base_font_size);
-	int _draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_ofs, int p_width, const Color &p_base_color, int p_outline_size, const Color &p_outline_color, const Color &p_font_shadow_color, int p_shadow_outline_size, const Point2 &p_shadow_ofs, int &r_processed_glyphs);
-	float _find_click_in_line(ItemFrame *p_frame, int p_line, const Vector2 &p_ofs, int p_width, const Point2i &p_click, ItemFrame **r_click_frame = nullptr, int *r_click_line = nullptr, Item **r_click_item = nullptr, int *r_click_char = nullptr, bool p_table = false, bool p_meta = false);
+	int _draw_line(ItemFrame *p_frame, int p_line, const Hector2 &p_ofs, int p_width, const Color &p_base_color, int p_outline_size, const Color &p_outline_color, const Color &p_font_shadow_color, int p_shadow_outline_size, const Point2 &p_shadow_ofs, int &r_processed_glyphs);
+	float _find_click_in_line(ItemFrame *p_frame, int p_line, const Hector2 &p_ofs, int p_width, const Point2i &p_click, ItemFrame **r_click_frame = nullptr, int *r_click_line = nullptr, Item **r_click_item = nullptr, int *r_click_char = nullptr, bool p_table = false, bool p_meta = false);
 
 	String _roman(int p_num, bool p_capitalize) const;
 	String _letters(int p_num, bool p_capitalize) const;
@@ -575,7 +575,7 @@ private:
 	int _find_outline_size(Item *p_item, int p_default);
 	ItemList *_find_list_item(Item *p_item);
 	ItemDropcap *_find_dc_item(Item *p_item);
-	int _find_list(Item *p_item, Vector<int> &r_index, Vector<int> &r_count, Vector<ItemList *> &r_list);
+	int _find_list(Item *p_item, Hector<int> &r_index, Hector<int> &r_count, Hector<ItemList *> &r_list);
 	int _find_margin(Item *p_item, const Ref<Font> &p_base_font, int p_base_font_size);
 	PackedFloat32Array _find_tab_stops(Item *p_item);
 	HorizontalAlignment _find_alignment(Item *p_item);
@@ -592,8 +592,8 @@ private:
 	Color _find_bgcolor(Item *p_item);
 	Color _find_fgcolor(Item *p_item);
 	bool _find_layout_subitem(Item *from, Item *to);
-	void _fetch_item_fx_stack(Item *p_item, Vector<ItemFX *> &r_stack);
-	void _normalize_subtags(Vector<String> &subtags);
+	void _fetch_item_fx_stack(Item *p_item, Hector<ItemFX *> &r_stack);
+	void _normalize_subtags(Hector<String> &subtags);
 
 	void _update_fx(ItemFrame *p_frame, double p_delta_time);
 	void _scroll_changed(double);
@@ -608,14 +608,14 @@ private:
 
 	Rect2 _get_text_rect();
 	Ref<RichTextEffect> _get_custom_effect_by_code(String p_bbcode_identifier);
-	virtual Dictionary parse_expressions_for_values(Vector<String> p_expressions);
+	virtual Dictionary parse_expressions_for_values(Hector<String> p_expressions);
 
 	Size2 _get_image_size(const Ref<Texture2D> &p_image, int p_width = 0, int p_height = 0, const Rect2 &p_region = Rect2());
 
-	String _get_prefix(Item *p_item, const Vector<int> &p_list_index, const Vector<ItemList *> &p_list_items);
+	String _get_prefix(Item *p_item, const Hector<int> &p_list_index, const Hector<ItemList *> &p_list_items);
 
 	static int _find_unquoted(const String &p_src, char32_t p_chr, int p_from);
-	static Vector<String> _split_unquoted(const String &p_src, char32_t p_splitter);
+	static Hector<String> _split_unquoted(const String &p_src, char32_t p_splitter);
 	static String _get_tag_value(const String &p_tag);
 
 #ifndef DISABLE_DEPRECATED

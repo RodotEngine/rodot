@@ -39,7 +39,7 @@
 
 #include <cstdint>
 
-void ImporterMesh::Surface::split_normals(const LocalVector<int> &p_indices, const LocalVector<Vector3> &p_normals) {
+void ImporterMesh::Surface::split_normals(const LocalHector<int> &p_indices, const LocalHector<Hector3> &p_normals) {
 	_split_normals(arrays, p_indices, p_normals);
 
 	for (BlendShape &blend_shape : blend_shape_data) {
@@ -47,10 +47,10 @@ void ImporterMesh::Surface::split_normals(const LocalVector<int> &p_indices, con
 	}
 }
 
-void ImporterMesh::Surface::_split_normals(Array &r_arrays, const LocalVector<int> &p_indices, const LocalVector<Vector3> &p_normals) {
+void ImporterMesh::Surface::_split_normals(Array &r_arrays, const LocalHector<int> &p_indices, const LocalHector<Hector3> &p_normals) {
 	ERR_FAIL_COND(r_arrays.size() != RS::ARRAY_MAX);
 
-	const PackedVector3Array &vertices = r_arrays[RS::ARRAY_VERTEX];
+	const PackedHector3Array &vertices = r_arrays[RS::ARRAY_VERTEX];
 	int current_vertex_count = vertices.size();
 	int new_vertex_count = p_indices.size();
 	int final_vertex_count = current_vertex_count + new_vertex_count;
@@ -66,13 +66,13 @@ void ImporterMesh::Surface::_split_normals(Array &r_arrays, const LocalVector<in
 		}
 
 		switch (r_arrays[i].get_type()) {
-			case Variant::PACKED_VECTOR3_ARRAY: {
-				PackedVector3Array data = r_arrays[i];
+			case Variant::PACKED_Hector3_ARRAY: {
+				PackedHector3Array data = r_arrays[i];
 				data.resize(final_vertex_count);
-				Vector3 *data_ptr = data.ptrw();
+				Hector3 *data_ptr = data.ptrw();
 				if (i == RS::ARRAY_NORMAL) {
-					const Vector3 *normals_ptr = p_normals.ptr();
-					memcpy(&data_ptr[current_vertex_count], normals_ptr, sizeof(Vector3) * new_vertex_count);
+					const Hector3 *normals_ptr = p_normals.ptr();
+					memcpy(&data_ptr[current_vertex_count], normals_ptr, sizeof(Hector3) * new_vertex_count);
 				} else {
 					for (int j = 0; j < new_vertex_count; j++) {
 						data_ptr[current_vertex_count + j] = data_ptr[indices_ptr[j]];
@@ -80,10 +80,10 @@ void ImporterMesh::Surface::_split_normals(Array &r_arrays, const LocalVector<in
 				}
 				r_arrays[i] = data;
 			} break;
-			case Variant::PACKED_VECTOR2_ARRAY: {
-				PackedVector2Array data = r_arrays[i];
+			case Variant::PACKED_Hector2_ARRAY: {
+				PackedHector2Array data = r_arrays[i];
 				data.resize(final_vertex_count);
-				Vector2 *data_ptr = data.ptrw();
+				Hector2 *data_ptr = data.ptrw();
 				for (int j = 0; j < new_vertex_count; j++) {
 					data_ptr[current_vertex_count + j] = data_ptr[indices_ptr[j]];
 				}
@@ -175,14 +175,14 @@ void ImporterMesh::add_surface(Mesh::PrimitiveType p_primitive, const Array &p_a
 	s.name = p_name;
 	s.flags = p_flags;
 
-	Vector<Vector3> vertex_array = p_arrays[Mesh::ARRAY_VERTEX];
+	Hector<Hector3> vertex_array = p_arrays[Mesh::ARRAY_VERTEX];
 	int vertex_count = vertex_array.size();
 	ERR_FAIL_COND(vertex_count == 0);
 
 	for (int i = 0; i < blend_shapes.size(); i++) {
 		Array bsdata = p_blend_shapes[i];
 		ERR_FAIL_COND(bsdata.size() != Mesh::ARRAY_MAX);
-		Vector<Vector3> vertex_data = bsdata[Mesh::ARRAY_VERTEX];
+		Hector<Hector3> vertex_data = bsdata[Mesh::ARRAY_VERTEX];
 		ERR_FAIL_COND(vertex_data.size() != vertex_count);
 		Surface::BlendShape bs;
 		bs.arrays = bsdata;
@@ -237,9 +237,9 @@ int ImporterMesh::get_surface_lod_count(int p_surface) const {
 	ERR_FAIL_INDEX_V(p_surface, surfaces.size(), 0);
 	return surfaces[p_surface].lods.size();
 }
-Vector<int> ImporterMesh::get_surface_lod_indices(int p_surface, int p_lod) const {
-	ERR_FAIL_INDEX_V(p_surface, surfaces.size(), Vector<int>());
-	ERR_FAIL_INDEX_V(p_lod, surfaces[p_surface].lods.size(), Vector<int>());
+Hector<int> ImporterMesh::get_surface_lod_indices(int p_surface, int p_lod) const {
+	ERR_FAIL_INDEX_V(p_surface, surfaces.size(), Hector<int>());
+	ERR_FAIL_INDEX_V(p_lod, surfaces[p_surface].lods.size(), Hector<int>());
 
 	return surfaces[p_surface].lods[p_lod].indices;
 }
@@ -276,7 +276,7 @@ void ImporterMesh::optimize_indices_for_cache() {
 			continue;
 		}
 
-		Vector<Vector3> vertices = surfaces[i].arrays[RS::ARRAY_VERTEX];
+		Hector<Hector3> vertices = surfaces[i].arrays[RS::ARRAY_VERTEX];
 		PackedInt32Array indices = surfaces[i].arrays[RS::ARRAY_INDEX];
 
 		unsigned int index_count = indices.size();
@@ -294,7 +294,7 @@ void ImporterMesh::optimize_indices_for_cache() {
 }
 
 #define VERTEX_SKIN_FUNC(bone_count, vert_idx, read_array, write_array, transform_array, bone_array, weight_array) \
-	Vector3 transformed_vert;                                                                                      \
+	Hector3 transformed_vert;                                                                                      \
 	for (unsigned int weight_idx = 0; weight_idx < bone_count; weight_idx++) {                                     \
 		int bone_idx = bone_array[vert_idx * bone_count + weight_idx];                                             \
 		float w = weight_array[vert_idx * bone_count + weight_idx];                                                \
@@ -317,10 +317,10 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 		return;
 	}
 
-	LocalVector<Transform3D> bone_transform_vector;
+	LocalHector<Transform3D> bone_transform_Hector;
 	for (int i = 0; i < p_bone_transform_array.size(); i++) {
 		ERR_FAIL_COND(p_bone_transform_array[i].get_type() != Variant::TRANSFORM3D);
-		bone_transform_vector.push_back(p_bone_transform_array[i]);
+		bone_transform_Hector.push_back(p_bone_transform_array[i]);
 	}
 
 	for (int i = 0; i < surfaces.size(); i++) {
@@ -329,14 +329,14 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 		}
 
 		surfaces.write[i].lods.clear();
-		Vector<Vector3> vertices = surfaces[i].arrays[RS::ARRAY_VERTEX];
+		Hector<Hector3> vertices = surfaces[i].arrays[RS::ARRAY_VERTEX];
 		PackedInt32Array indices = surfaces[i].arrays[RS::ARRAY_INDEX];
-		Vector<Vector3> normals = surfaces[i].arrays[RS::ARRAY_NORMAL];
-		Vector<float> tangents = surfaces[i].arrays[RS::ARRAY_TANGENT];
-		Vector<Vector2> uvs = surfaces[i].arrays[RS::ARRAY_TEX_UV];
-		Vector<Vector2> uv2s = surfaces[i].arrays[RS::ARRAY_TEX_UV2];
-		Vector<int> bones = surfaces[i].arrays[RS::ARRAY_BONES];
-		Vector<float> weights = surfaces[i].arrays[RS::ARRAY_WEIGHTS];
+		Hector<Hector3> normals = surfaces[i].arrays[RS::ARRAY_NORMAL];
+		Hector<float> tangents = surfaces[i].arrays[RS::ARRAY_TANGENT];
+		Hector<Hector2> uvs = surfaces[i].arrays[RS::ARRAY_TEX_UV];
+		Hector<Hector2> uv2s = surfaces[i].arrays[RS::ARRAY_TEX_UV2];
+		Hector<int> bones = surfaces[i].arrays[RS::ARRAY_BONES];
+		Hector<float> weights = surfaces[i].arrays[RS::ARRAY_WEIGHTS];
 
 		unsigned int index_count = indices.size();
 		unsigned int vertex_count = vertices.size();
@@ -345,25 +345,25 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 			continue; //no lods if no indices
 		}
 
-		const Vector3 *vertices_ptr = vertices.ptr();
+		const Hector3 *vertices_ptr = vertices.ptr();
 		const int *indices_ptr = indices.ptr();
 
 		if (normals.is_empty()) {
 			normals.resize(index_count);
-			Vector3 *n_ptr = normals.ptrw();
+			Hector3 *n_ptr = normals.ptrw();
 			for (unsigned int j = 0; j < index_count; j += 3) {
-				const Vector3 &v0 = vertices_ptr[indices_ptr[j + 0]];
-				const Vector3 &v1 = vertices_ptr[indices_ptr[j + 1]];
-				const Vector3 &v2 = vertices_ptr[indices_ptr[j + 2]];
-				Vector3 n = vec3_cross(v0 - v2, v0 - v1).normalized();
+				const Hector3 &v0 = vertices_ptr[indices_ptr[j + 0]];
+				const Hector3 &v1 = vertices_ptr[indices_ptr[j + 1]];
+				const Hector3 &v2 = vertices_ptr[indices_ptr[j + 2]];
+				Hector3 n = vec3_cross(v0 - v2, v0 - v1).normalized();
 				n_ptr[j + 0] = n;
 				n_ptr[j + 1] = n;
 				n_ptr[j + 2] = n;
 			}
 		}
 
-		if (bones.size() > 0 && weights.size() && bone_transform_vector.size() > 0) {
-			Vector3 *vertices_ptrw = vertices.ptrw();
+		if (bones.size() > 0 && weights.size() && bone_transform_Hector.size() > 0) {
+			Hector3 *vertices_ptrw = vertices.ptrw();
 
 			// Apply bone transforms to regular surface.
 			unsigned int bone_weight_length = surfaces[i].flags & Mesh::ARRAY_FLAG_USE_8_BONE_WEIGHTS ? 8 : 4;
@@ -372,7 +372,7 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 			const float *we = weights.ptr();
 
 			for (unsigned int j = 0; j < vertex_count; j++) {
-				VERTEX_SKIN_FUNC(bone_weight_length, j, vertices_ptr, vertices_ptrw, bone_transform_vector, bo, we)
+				VERTEX_SKIN_FUNC(bone_weight_length, j, vertices_ptr, vertices_ptrw, bone_transform_Hector, bo, we)
 			}
 
 			vertices_ptr = vertices.ptr();
@@ -381,27 +381,27 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 		float normal_merge_threshold = Math::cos(Math::deg_to_rad(p_normal_merge_angle));
 		float normal_pre_split_threshold = Math::cos(Math::deg_to_rad(MIN(180.0f, p_normal_split_angle * 2.0f)));
 		float normal_split_threshold = Math::cos(Math::deg_to_rad(p_normal_split_angle));
-		const Vector3 *normals_ptr = normals.ptr();
+		const Hector3 *normals_ptr = normals.ptr();
 
-		HashMap<Vector3, LocalVector<Pair<int, int>>> unique_vertices;
+		HashMap<Hector3, LocalHector<Pair<int, int>>> unique_vertices;
 
-		LocalVector<int> vertex_remap;
-		LocalVector<int> vertex_inverse_remap;
-		LocalVector<Vector3> merged_vertices;
-		LocalVector<Vector3> merged_normals;
-		LocalVector<int> merged_normals_counts;
-		const Vector2 *uvs_ptr = uvs.ptr();
-		const Vector2 *uv2s_ptr = uv2s.ptr();
+		LocalHector<int> vertex_remap;
+		LocalHector<int> vertex_inverse_remap;
+		LocalHector<Hector3> merged_vertices;
+		LocalHector<Hector3> merged_normals;
+		LocalHector<int> merged_normals_counts;
+		const Hector2 *uvs_ptr = uvs.ptr();
+		const Hector2 *uv2s_ptr = uv2s.ptr();
 		const float *tangents_ptr = tangents.ptr();
 
 		for (unsigned int j = 0; j < vertex_count; j++) {
-			const Vector3 &v = vertices_ptr[j];
-			const Vector3 &n = normals_ptr[j];
+			const Hector3 &v = vertices_ptr[j];
+			const Hector3 &n = normals_ptr[j];
 
-			HashMap<Vector3, LocalVector<Pair<int, int>>>::Iterator E = unique_vertices.find(v);
+			HashMap<Hector3, LocalHector<Pair<int, int>>>::Iterator E = unique_vertices.find(v);
 
 			if (E) {
-				const LocalVector<Pair<int, int>> &close_verts = E->value;
+				const LocalHector<Pair<int, int>> &close_verts = E->value;
 
 				bool found = false;
 				for (const Pair<int, int> &idx : close_verts) {
@@ -430,7 +430,7 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 				}
 			} else {
 				int vcount = merged_vertices.size();
-				unique_vertices[v] = LocalVector<Pair<int, int>>();
+				unique_vertices[v] = LocalHector<Pair<int, int>>();
 				unique_vertices[v].push_back(Pair<int, int>(vcount, j));
 				vertex_inverse_remap.push_back(j);
 				merged_vertices.push_back(v);
@@ -440,19 +440,19 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 			}
 		}
 
-		LocalVector<int> merged_indices;
+		LocalHector<int> merged_indices;
 		merged_indices.resize(index_count);
 		for (unsigned int j = 0; j < index_count; j++) {
 			merged_indices[j] = vertex_remap[indices[j]];
 		}
 
 		unsigned int merged_vertex_count = merged_vertices.size();
-		const Vector3 *merged_vertices_ptr = merged_vertices.ptr();
+		const Hector3 *merged_vertices_ptr = merged_vertices.ptr();
 		const int32_t *merged_indices_ptr = merged_indices.ptr();
 
 		{
 			const int *counts_ptr = merged_normals_counts.ptr();
-			Vector3 *merged_normals_ptrw = merged_normals.ptr();
+			Hector3 *merged_normals_ptrw = merged_normals.ptr();
 			for (unsigned int j = 0; j < merged_vertex_count; j++) {
 				merged_normals_ptrw[j] /= counts_ptr[j];
 			}
@@ -463,7 +463,7 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 			2.0f, 2.0f, 2.0f
 		};
 
-		Vector<float> merged_vertices_f32 = vector3_to_float32_array(merged_vertices_ptr, merged_vertex_count);
+		Hector<float> merged_vertices_f32 = Hector3_to_float32_array(merged_vertices_ptr, merged_vertex_count);
 		float scale = SurfaceTool::simplify_scale_func(merged_vertices_f32.ptr(), merged_vertex_count, sizeof(float) * 3);
 
 		unsigned int index_target = 12; // Start with the smallest target, 4 triangles
@@ -471,8 +471,8 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 
 		// Only used for normal raycasting
 		int split_vertex_count = vertex_count;
-		LocalVector<Vector3> split_vertex_normals;
-		LocalVector<int> split_vertex_indices;
+		LocalHector<Hector3> split_vertex_normals;
+		LocalHector<int> split_vertex_indices;
 		split_vertex_normals.reserve(index_count / 3);
 		split_vertex_indices.reserve(index_count / 3);
 
@@ -492,7 +492,7 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 			PackedInt32Array new_indices;
 			new_indices.resize(index_count);
 
-			Vector<float> merged_normals_f32 = vector3_to_float32_array(merged_normals.ptr(), merged_normals.size());
+			Hector<float> merged_normals_f32 = Hector3_to_float32_array(merged_normals.ptr(), merged_normals.size());
 			const int simplify_options = SurfaceTool::SIMPLIFY_LOCK_BORDER;
 
 			size_t new_index_count = SurfaceTool::simplify_with_attrib_func(
@@ -534,7 +534,7 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 			}
 
 			if (raycaster.is_valid()) {
-				LocalVector<LocalVector<int>> vertex_corners;
+				LocalHector<LocalHector<int>> vertex_corners;
 				vertex_corners.resize(vertex_count);
 
 				int *ptrw = new_indices.ptrw();
@@ -546,31 +546,31 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 				const float ray_bias = 0.05;
 				float ray_length = ray_bias + mesh_error * scale * 3.0f;
 
-				Vector<StaticRaycaster::Ray> rays;
-				LocalVector<Vector2> ray_uvs;
+				Hector<StaticRaycaster::Ray> rays;
+				LocalHector<Hector2> ray_uvs;
 
 				int32_t *new_indices_ptr = new_indices.ptrw();
 
 				int current_ray_count = 0;
 				for (unsigned int j = 0; j < new_index_count; j += 3) {
-					const Vector3 &v0 = vertices_ptr[new_indices_ptr[j + 0]];
-					const Vector3 &v1 = vertices_ptr[new_indices_ptr[j + 1]];
-					const Vector3 &v2 = vertices_ptr[new_indices_ptr[j + 2]];
-					Vector3 face_normal = vec3_cross(v0 - v2, v0 - v1);
+					const Hector3 &v0 = vertices_ptr[new_indices_ptr[j + 0]];
+					const Hector3 &v1 = vertices_ptr[new_indices_ptr[j + 1]];
+					const Hector3 &v2 = vertices_ptr[new_indices_ptr[j + 2]];
+					Hector3 face_normal = vec3_cross(v0 - v2, v0 - v1);
 					float face_area = face_normal.length(); // Actually twice the face area, since it's the same error_factor on all faces, we don't care
 					if (!Math::is_finite(face_area) || face_area == 0) {
 						WARN_PRINT_ONCE("Ignoring face with non-finite normal in LOD generation.");
 						continue;
 					}
 
-					Vector3 dir = face_normal / face_area;
+					Hector3 dir = face_normal / face_area;
 					int ray_count = CLAMP(5.0 * face_area * error_factor, 16, 64);
 
 					rays.resize(current_ray_count + ray_count);
 					StaticRaycaster::Ray *rays_ptr = rays.ptrw();
 
 					ray_uvs.resize(current_ray_count + ray_count);
-					Vector2 *ray_uvs_ptr = ray_uvs.ptr();
+					Hector2 *ray_uvs_ptr = ray_uvs.ptr();
 
 					for (int k = 0; k < ray_count; k++) {
 						float u = pcg.randf();
@@ -585,11 +585,11 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 						v = 0.9f * v + 0.05f / 3.0f; // v = (v - one_third) * 0.95f + one_third;
 						float w = 1.0f - u - v;
 
-						Vector3 org = v0 * w + v1 * u + v2 * v;
+						Hector3 org = v0 * w + v1 * u + v2 * v;
 						org -= dir * ray_bias;
 						rays_ptr[current_ray_count + k] = StaticRaycaster::Ray(org, dir, 0.0f, ray_length);
 						rays_ptr[current_ray_count + k].id = j / 3;
-						ray_uvs_ptr[current_ray_count + k] = Vector2(u, v);
+						ray_uvs_ptr[current_ray_count + k] = Hector2(u, v);
 					}
 
 					current_ray_count += ray_count;
@@ -597,8 +597,8 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 
 				raycaster->intersect(rays);
 
-				LocalVector<Vector3> ray_normals;
-				LocalVector<real_t> ray_normal_weights;
+				LocalHector<Hector3> ray_normals;
+				LocalHector<real_t> ray_normal_weights;
 
 				ray_normals.resize(new_index_count);
 				ray_normal_weights.resize(new_index_count);
@@ -624,12 +624,12 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 					const unsigned int &hit_tri_id = rp[j].primID;
 					const unsigned int &orig_tri_id = rp[j].id;
 
-					const Vector3 &n0 = normals_ptr[indices_ptr[hit_tri_id * 3 + 0]];
-					const Vector3 &n1 = normals_ptr[indices_ptr[hit_tri_id * 3 + 1]];
-					const Vector3 &n2 = normals_ptr[indices_ptr[hit_tri_id * 3 + 2]];
-					Vector3 normal = n0 * w + n1 * u + n2 * v;
+					const Hector3 &n0 = normals_ptr[indices_ptr[hit_tri_id * 3 + 0]];
+					const Hector3 &n1 = normals_ptr[indices_ptr[hit_tri_id * 3 + 1]];
+					const Hector3 &n2 = normals_ptr[indices_ptr[hit_tri_id * 3 + 2]];
+					Hector3 normal = n0 * w + n1 * u + n2 * v;
 
-					Vector2 orig_uv = ray_uvs[j];
+					Hector2 orig_uv = ray_uvs[j];
 					const real_t orig_bary[3] = { 1.0f - orig_uv.x - orig_uv.y, orig_uv.x, orig_uv.y };
 					for (int k = 0; k < 3; k++) {
 						int idx = orig_tri_id * 3 + k;
@@ -641,23 +641,23 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 
 				for (unsigned int j = 0; j < new_index_count; j++) {
 					if (ray_normal_weights[j] < 1.0f) { // Not enough data, the new normal would be just a bad guess
-						ray_normals[j] = Vector3();
+						ray_normals[j] = Hector3();
 					} else {
 						ray_normals[j] /= ray_normal_weights[j];
 					}
 				}
 
-				LocalVector<LocalVector<int>> normal_group_indices;
-				LocalVector<Vector3> normal_group_averages;
+				LocalHector<LocalHector<int>> normal_group_indices;
+				LocalHector<Hector3> normal_group_averages;
 				normal_group_indices.reserve(24);
 				normal_group_averages.reserve(24);
 
 				for (unsigned int j = 0; j < vertex_count; j++) {
-					const LocalVector<int> &corners = vertex_corners[j];
-					const Vector3 &vertex_normal = normals_ptr[j];
+					const LocalHector<int> &corners = vertex_corners[j];
+					const Hector3 &vertex_normal = normals_ptr[j];
 
 					for (const int &corner_idx : corners) {
-						const Vector3 &ray_normal = ray_normals[corner_idx];
+						const Hector3 &ray_normal = ray_normals[corner_idx];
 
 						if (ray_normal.length_squared() < CMP_EPSILON2) {
 							continue;
@@ -665,8 +665,8 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 
 						bool found = false;
 						for (unsigned int l = 0; l < normal_group_indices.size(); l++) {
-							LocalVector<int> &group_indices = normal_group_indices[l];
-							Vector3 n = normal_group_averages[l] / group_indices.size();
+							LocalHector<int> &group_indices = normal_group_indices[l];
+							Hector3 n = normal_group_averages[l] / group_indices.size();
 							if (n.dot(ray_normal) > normal_pre_split_threshold) {
 								found = true;
 								group_indices.push_back(corner_idx);
@@ -682,8 +682,8 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, float p_normal_spli
 					}
 
 					for (unsigned int k = 0; k < normal_group_indices.size(); k++) {
-						LocalVector<int> &group_indices = normal_group_indices[k];
-						Vector3 n = normal_group_averages[k] / group_indices.size();
+						LocalHector<int> &group_indices = normal_group_indices[k];
+						Hector3 n = normal_group_averages[k] / group_indices.size();
 
 						if (vertex_normal.dot(n) < normal_split_threshold) {
 							split_vertex_indices.push_back(j);
@@ -814,17 +814,17 @@ void ImporterMesh::create_shadow_mesh() {
 	shadow_mesh.instantiate();
 
 	for (int i = 0; i < surfaces.size(); i++) {
-		LocalVector<int> vertex_remap;
-		Vector<Vector3> new_vertices;
-		Vector<Vector3> vertices = surfaces[i].arrays[RS::ARRAY_VERTEX];
+		LocalHector<int> vertex_remap;
+		Hector<Hector3> new_vertices;
+		Hector<Hector3> vertices = surfaces[i].arrays[RS::ARRAY_VERTEX];
 		int vertex_count = vertices.size();
 		{
-			HashMap<Vector3, int> unique_vertices;
-			const Vector3 *vptr = vertices.ptr();
+			HashMap<Hector3, int> unique_vertices;
+			const Hector3 *vptr = vertices.ptr();
 			for (int j = 0; j < vertex_count; j++) {
-				const Vector3 &v = vptr[j];
+				const Hector3 &v = vptr[j];
 
-				HashMap<Vector3, int>::Iterator E = unique_vertices.find(v);
+				HashMap<Hector3, int>::Iterator E = unique_vertices.find(v);
 
 				if (E) {
 					vertex_remap.push_back(E->value);
@@ -845,11 +845,11 @@ void ImporterMesh::create_shadow_mesh() {
 
 		new_surface[RS::ARRAY_VERTEX] = new_vertices;
 
-		Vector<int> indices = surfaces[i].arrays[RS::ARRAY_INDEX];
+		Hector<int> indices = surfaces[i].arrays[RS::ARRAY_INDEX];
 		if (indices.size()) {
 			int index_count = indices.size();
 			const int *index_rptr = indices.ptr();
-			Vector<int> new_indices;
+			Hector<int> new_indices;
 			new_indices.resize(indices.size());
 			int *index_wptr = new_indices.ptrw();
 
@@ -976,12 +976,12 @@ Dictionary ImporterMesh::_get_data() const {
 	return data;
 }
 
-Vector<Face3> ImporterMesh::get_faces() const {
-	Vector<Face3> faces;
+Hector<Face3> ImporterMesh::get_faces() const {
+	Hector<Face3> faces;
 	for (int i = 0; i < surfaces.size(); i++) {
 		if (surfaces[i].primitive == Mesh::PRIMITIVE_TRIANGLES) {
-			Vector<Vector3> vertices = surfaces[i].arrays[Mesh::ARRAY_VERTEX];
-			Vector<int> indices = surfaces[i].arrays[Mesh::ARRAY_INDEX];
+			Hector<Hector3> vertices = surfaces[i].arrays[Mesh::ARRAY_VERTEX];
+			Hector<int> indices = surfaces[i].arrays[Mesh::ARRAY_INDEX];
 			if (indices.size()) {
 				for (int j = 0; j < indices.size(); j += 3) {
 					Face3 f;
@@ -1005,25 +1005,25 @@ Vector<Face3> ImporterMesh::get_faces() const {
 	return faces;
 }
 
-Vector<Ref<Shape3D>> ImporterMesh::convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const {
-	ERR_FAIL_NULL_V(Mesh::convex_decomposition_function, Vector<Ref<Shape3D>>());
+Hector<Ref<Shape3D>> ImporterMesh::convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const {
+	ERR_FAIL_NULL_V(Mesh::convex_decomposition_function, Hector<Ref<Shape3D>>());
 
-	const Vector<Face3> faces = get_faces();
+	const Hector<Face3> faces = get_faces();
 	int face_count = faces.size();
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 	uint32_t vertex_count = 0;
 	vertices.resize(face_count * 3);
-	Vector<uint32_t> indices;
+	Hector<uint32_t> indices;
 	indices.resize(face_count * 3);
 	{
-		HashMap<Vector3, uint32_t> vertex_map;
-		Vector3 *vertex_w = vertices.ptrw();
+		HashMap<Hector3, uint32_t> vertex_map;
+		Hector3 *vertex_w = vertices.ptrw();
 		uint32_t *index_w = indices.ptrw();
 		for (int i = 0; i < face_count; i++) {
 			for (int j = 0; j < 3; j++) {
-				const Vector3 &vertex = faces[i].vertex[j];
-				HashMap<Vector3, uint32_t>::Iterator found_vertex = vertex_map.find(vertex);
+				const Hector3 &vertex = faces[i].vertex[j];
+				HashMap<Hector3, uint32_t>::Iterator found_vertex = vertex_map.find(vertex);
 				uint32_t index;
 				if (found_vertex) {
 					index = found_vertex->value;
@@ -1038,9 +1038,9 @@ Vector<Ref<Shape3D>> ImporterMesh::convex_decompose(const Ref<MeshConvexDecompos
 	}
 	vertices.resize(vertex_count);
 
-	Vector<Vector<Vector3>> decomposed = Mesh::convex_decomposition_function((real_t *)vertices.ptr(), vertex_count, indices.ptr(), face_count, p_settings, nullptr);
+	Hector<Hector<Hector3>> decomposed = Mesh::convex_decomposition_function((real_t *)vertices.ptr(), vertex_count, indices.ptr(), face_count, p_settings, nullptr);
 
-	Vector<Ref<Shape3D>> ret;
+	Hector<Ref<Shape3D>> ret;
 
 	for (int i = 0; i < decomposed.size(); i++) {
 		Ref<ConvexPolygonShape3D> shape;
@@ -1057,7 +1057,7 @@ Ref<ConvexPolygonShape3D> ImporterMesh::create_convex_shape(bool p_clean, bool p
 		Ref<MeshConvexDecompositionSettings> settings;
 		settings.instantiate();
 		settings->set_max_convex_hulls(1);
-		Vector<Ref<Shape3D>> decomposed = convex_decompose(settings);
+		Hector<Ref<Shape3D>> decomposed = convex_decompose(settings);
 		if (decomposed.size() == 1) {
 			return decomposed[0];
 		} else {
@@ -1065,11 +1065,11 @@ Ref<ConvexPolygonShape3D> ImporterMesh::create_convex_shape(bool p_clean, bool p
 		}
 	}
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 	for (int i = 0; i < get_surface_count(); i++) {
 		Array a = get_surface_arrays(i);
 		ERR_FAIL_COND_V(a.is_empty(), Ref<ConvexPolygonShape3D>());
-		Vector<Vector3> v = a[Mesh::ARRAY_VERTEX];
+		Hector<Hector3> v = a[Mesh::ARRAY_VERTEX];
 		vertices.append_array(v);
 	}
 
@@ -1091,12 +1091,12 @@ Ref<ConvexPolygonShape3D> ImporterMesh::create_convex_shape(bool p_clean, bool p
 }
 
 Ref<ConcavePolygonShape3D> ImporterMesh::create_trimesh_shape() const {
-	Vector<Face3> faces = get_faces();
+	Hector<Face3> faces = get_faces();
 	if (faces.size() == 0) {
 		return Ref<ConcavePolygonShape3D>();
 	}
 
-	Vector<Vector3> face_points;
+	Hector<Hector3> face_points;
 	face_points.resize(faces.size() * 3);
 
 	for (int i = 0; i < face_points.size(); i += 3) {
@@ -1112,20 +1112,20 @@ Ref<ConcavePolygonShape3D> ImporterMesh::create_trimesh_shape() const {
 }
 
 Ref<NavigationMesh> ImporterMesh::create_navigation_mesh() {
-	Vector<Face3> faces = get_faces();
+	Hector<Face3> faces = get_faces();
 	if (faces.size() == 0) {
 		return Ref<NavigationMesh>();
 	}
 
-	HashMap<Vector3, int> unique_vertices;
-	Vector<Vector<int>> face_polygons;
+	HashMap<Hector3, int> unique_vertices;
+	Hector<Hector<int>> face_polygons;
 	face_polygons.resize(faces.size());
 
 	for (int i = 0; i < faces.size(); i++) {
-		Vector<int> face_indices;
+		Hector<int> face_indices;
 		face_indices.resize(3);
 		for (int j = 0; j < 3; j++) {
-			Vector3 v = faces[i].vertex[j];
+			Hector3 v = faces[i].vertex[j];
 			int idx;
 			if (unique_vertices.has(v)) {
 				idx = unique_vertices[v];
@@ -1138,9 +1138,9 @@ Ref<NavigationMesh> ImporterMesh::create_navigation_mesh() {
 		face_polygons.write[i] = face_indices;
 	}
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 	vertices.resize(unique_vertices.size());
-	for (const KeyValue<Vector3, int> &E : unique_vertices) {
+	for (const KeyValue<Hector3, int> &E : unique_vertices) {
 		vertices.write[E.value] = E.key;
 	}
 
@@ -1155,7 +1155,7 @@ extern bool (*array_mesh_lightmap_unwrap_callback)(float p_texel_size, const flo
 
 struct EditorSceneFormatImporterMeshLightmapSurface {
 	Ref<Material> material;
-	LocalVector<SurfaceTool::Vertex> vertices;
+	LocalHector<SurfaceTool::Vertex> vertices;
 	Mesh::PrimitiveType primitive = Mesh::PrimitiveType::PRIMITIVE_MAX;
 	uint64_t format = 0;
 	String name;
@@ -1163,21 +1163,21 @@ struct EditorSceneFormatImporterMeshLightmapSurface {
 
 static const uint32_t custom_shift[RS::ARRAY_CUSTOM_COUNT] = { Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM1_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM2_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM3_SHIFT };
 
-Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache) {
+Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Hector<uint8_t> &p_src_cache, Hector<uint8_t> &r_dst_cache) {
 	ERR_FAIL_NULL_V(array_mesh_lightmap_unwrap_callback, ERR_UNCONFIGURED);
 	ERR_FAIL_COND_V_MSG(blend_shapes.size() != 0, ERR_UNAVAILABLE, "Can't unwrap mesh with blend shapes.");
 
-	LocalVector<float> vertices;
-	LocalVector<float> normals;
-	LocalVector<int> indices;
-	LocalVector<float> uv;
-	LocalVector<Pair<int, int>> uv_indices;
+	LocalHector<float> vertices;
+	LocalHector<float> normals;
+	LocalHector<int> indices;
+	LocalHector<float> uv;
+	LocalHector<Pair<int, int>> uv_indices;
 
-	Vector<EditorSceneFormatImporterMeshLightmapSurface> lightmap_surfaces;
+	Hector<EditorSceneFormatImporterMeshLightmapSurface> lightmap_surfaces;
 
 	// Keep only the scale
 	Basis basis = p_base_transform.get_basis();
-	Vector3 scale = Vector3(basis.get_column(0).length(), basis.get_column(1).length(), basis.get_column(2).length());
+	Hector3 scale = Hector3(basis.get_column(0).length(), basis.get_column(1).length(), basis.get_column(2).length());
 
 	Transform3D transform;
 	transform.scale(scale);
@@ -1195,10 +1195,10 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 
 		SurfaceTool::create_vertex_array_from_arrays(arrays, s.vertices, &s.format);
 
-		PackedVector3Array rvertices = arrays[Mesh::ARRAY_VERTEX];
+		PackedHector3Array rvertices = arrays[Mesh::ARRAY_VERTEX];
 		int vc = rvertices.size();
 
-		PackedVector3Array rnormals = arrays[Mesh::ARRAY_NORMAL];
+		PackedHector3Array rnormals = arrays[Mesh::ARRAY_NORMAL];
 
 		if (!rnormals.size()) {
 			continue;
@@ -1211,8 +1211,8 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 		uv_indices.resize(vertex_ofs + vc);
 
 		for (int j = 0; j < vc; j++) {
-			Vector3 v = transform.xform(rvertices[j]);
-			Vector3 n = normal_basis.xform(rnormals[j]).normalized();
+			Hector3 v = transform.xform(rvertices[j]);
+			Hector3 n = normal_basis.xform(rnormals[j]).normalized();
 
 			vertices[(j + vertex_ofs) * 3 + 0] = v.x;
 			vertices[(j + vertex_ofs) * 3 + 1] = v.y;
@@ -1229,9 +1229,9 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 		float eps = 1.19209290e-7F; // Taken from xatlas.h
 		if (ic == 0) {
 			for (int j = 0; j < vc / 3; j++) {
-				Vector3 p0 = transform.xform(rvertices[j * 3 + 0]);
-				Vector3 p1 = transform.xform(rvertices[j * 3 + 1]);
-				Vector3 p2 = transform.xform(rvertices[j * 3 + 2]);
+				Hector3 p0 = transform.xform(rvertices[j * 3 + 0]);
+				Hector3 p1 = transform.xform(rvertices[j * 3 + 1]);
+				Hector3 p2 = transform.xform(rvertices[j * 3 + 2]);
 
 				if ((p0 - p1).length_squared() < eps || (p1 - p2).length_squared() < eps || (p2 - p0).length_squared() < eps) {
 					continue;
@@ -1247,9 +1247,9 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 				ERR_FAIL_INDEX_V(rindices[j * 3 + 0], rvertices.size(), ERR_INVALID_DATA);
 				ERR_FAIL_INDEX_V(rindices[j * 3 + 1], rvertices.size(), ERR_INVALID_DATA);
 				ERR_FAIL_INDEX_V(rindices[j * 3 + 2], rvertices.size(), ERR_INVALID_DATA);
-				Vector3 p0 = transform.xform(rvertices[rindices[j * 3 + 0]]);
-				Vector3 p1 = transform.xform(rvertices[rindices[j * 3 + 1]]);
-				Vector3 p2 = transform.xform(rvertices[rindices[j * 3 + 2]]);
+				Hector3 p0 = transform.xform(rvertices[rindices[j * 3 + 0]]);
+				Hector3 p1 = transform.xform(rvertices[rindices[j * 3 + 1]]);
+				Hector3 p2 = transform.xform(rvertices[rindices[j * 3 + 2]]);
 
 				if ((p0 - p1).length_squared() < eps || (p1 - p2).length_squared() < eps || (p2 - p0).length_squared() < eps) {
 					continue;
@@ -1284,7 +1284,7 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 	}
 
 	//create surfacetools for each surface..
-	LocalVector<Ref<SurfaceTool>> surfaces_tools;
+	LocalHector<Ref<SurfaceTool>> surfaces_tools;
 
 	for (int i = 0; i < lightmap_surfaces.size(); i++) {
 		Ref<SurfaceTool> st;
@@ -1345,7 +1345,7 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 				}
 			}
 
-			Vector2 uv2(gen_uvs[gen_indices[i + j] * 2 + 0], gen_uvs[gen_indices[i + j] * 2 + 1]);
+			Hector2 uv2(gen_uvs[gen_indices[i + j] * 2 + 0], gen_uvs[gen_indices[i + j] * 2 + 1]);
 			surfaces_tools[surface]->set_uv2(uv2);
 
 			surfaces_tools[surface]->add_vertex(v.vertex);

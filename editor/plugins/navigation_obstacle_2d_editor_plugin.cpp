@@ -57,7 +57,7 @@ void NavigationObstacle2DEditor::_action_add_polygon(const Variant &p_polygon) {
 
 void NavigationObstacle2DEditor::_action_remove_polygon(int p_idx) {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
-	undo_redo->add_do_method(node, "set_vertices", Variant(Vector<Vector2>()));
+	undo_redo->add_do_method(node, "set_vertices", Variant(Hector<Hector2>()));
 	undo_redo->add_undo_method(node, "set_vertices", node->get_vertices());
 }
 

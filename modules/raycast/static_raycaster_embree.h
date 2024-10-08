@@ -48,9 +48,9 @@ private:
 
 public:
 	virtual bool intersect(Ray &p_ray) override;
-	virtual void intersect(Vector<Ray> &r_rays) override;
+	virtual void intersect(Hector<Ray> &r_rays) override;
 
-	virtual void add_mesh(const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices, unsigned int p_id) override;
+	virtual void add_mesh(const PackedHector3Array &p_vertices, const PackedInt32Array &p_indices, unsigned int p_id) override;
 	virtual void commit() override;
 
 	virtual void set_mesh_filter(const HashSet<int> &p_mesh_ids) override;

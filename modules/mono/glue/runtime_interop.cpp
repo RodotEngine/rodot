@@ -84,22 +84,22 @@ Object *godotsharp_engine_get_singleton(const String *p_name) {
 	return Engine::get_singleton()->get_singleton_object(*p_name);
 }
 
-int32_t godotsharp_stack_info_vector_resize(
-		Vector<ScriptLanguage::StackInfo> *p_stack_info_vector, int p_size) {
-	return (int32_t)p_stack_info_vector->resize(p_size);
+int32_t godotsharp_stack_info_Hector_resize(
+		Hector<ScriptLanguage::StackInfo> *p_stack_info_Hector, int p_size) {
+	return (int32_t)p_stack_info_Hector->resize(p_size);
 }
 
-void godotsharp_stack_info_vector_destroy(
-		Vector<ScriptLanguage::StackInfo> *p_stack_info_vector) {
-	p_stack_info_vector->~Vector();
+void godotsharp_stack_info_Hector_destroy(
+		Hector<ScriptLanguage::StackInfo> *p_stack_info_Hector) {
+	p_stack_info_Hector->~Hector();
 }
 
 void godotsharp_internal_script_debugger_send_error(const String *p_func,
 		const String *p_file, int32_t p_line, const String *p_err, const String *p_descr,
-		ErrorHandlerType p_type, const Vector<ScriptLanguage::StackInfo> *p_stack_info_vector) {
+		ErrorHandlerType p_type, const Hector<ScriptLanguage::StackInfo> *p_stack_info_Hector) {
 	const String file = ProjectSettings::get_singleton()->localize_path(p_file->simplify_path());
 	EngineDebugger::get_script_debugger()->send_error(*p_func, file, p_line, *p_err, *p_descr,
-			true, p_type, *p_stack_info_vector);
+			true, p_type, *p_stack_info_Hector);
 }
 
 bool godotsharp_internal_script_debugger_is_active() {
@@ -441,33 +441,33 @@ godot_packed_array godotsharp_packed_float64_array_new_mem_copy(const double *p_
 	return ret;
 }
 
-godot_packed_array godotsharp_packed_vector2_array_new_mem_copy(const Vector2 *p_src, int32_t p_length) {
+godot_packed_array godotsharp_packed_Hector2_array_new_mem_copy(const Hector2 *p_src, int32_t p_length) {
 	godot_packed_array ret;
-	memnew_placement(&ret, PackedVector2Array);
-	PackedVector2Array *array = reinterpret_cast<PackedVector2Array *>(&ret);
+	memnew_placement(&ret, PackedHector2Array);
+	PackedHector2Array *array = reinterpret_cast<PackedHector2Array *>(&ret);
 	array->resize(p_length);
-	Vector2 *dst = array->ptrw();
-	memcpy(dst, p_src, p_length * sizeof(Vector2));
+	Hector2 *dst = array->ptrw();
+	memcpy(dst, p_src, p_length * sizeof(Hector2));
 	return ret;
 }
 
-godot_packed_array godotsharp_packed_vector3_array_new_mem_copy(const Vector3 *p_src, int32_t p_length) {
+godot_packed_array godotsharp_packed_Hector3_array_new_mem_copy(const Hector3 *p_src, int32_t p_length) {
 	godot_packed_array ret;
-	memnew_placement(&ret, PackedVector3Array);
-	PackedVector3Array *array = reinterpret_cast<PackedVector3Array *>(&ret);
+	memnew_placement(&ret, PackedHector3Array);
+	PackedHector3Array *array = reinterpret_cast<PackedHector3Array *>(&ret);
 	array->resize(p_length);
-	Vector3 *dst = array->ptrw();
-	memcpy(dst, p_src, p_length * sizeof(Vector3));
+	Hector3 *dst = array->ptrw();
+	memcpy(dst, p_src, p_length * sizeof(Hector3));
 	return ret;
 }
 
-godot_packed_array godotsharp_packed_vector4_array_new_mem_copy(const Vector4 *p_src, int32_t p_length) {
+godot_packed_array godotsharp_packed_Hector4_array_new_mem_copy(const Hector4 *p_src, int32_t p_length) {
 	godot_packed_array ret;
-	memnew_placement(&ret, PackedVector4Array);
-	PackedVector4Array *array = reinterpret_cast<PackedVector4Array *>(&ret);
+	memnew_placement(&ret, PackedHector4Array);
+	PackedHector4Array *array = reinterpret_cast<PackedHector4Array *>(&ret);
 	array->resize(p_length);
-	Vector4 *dst = array->ptrw();
-	memcpy(dst, p_src, p_length * sizeof(Vector4));
+	Hector4 *dst = array->ptrw();
+	memcpy(dst, p_src, p_length * sizeof(Hector4));
 	return ret;
 }
 
@@ -648,15 +648,15 @@ void godotsharp_variant_new_packed_string_array(godot_variant *r_dest, const Pac
 	memnew_placement(r_dest, Variant(*p_psa));
 }
 
-void godotsharp_variant_new_packed_vector2_array(godot_variant *r_dest, const PackedVector2Array *p_pv2a) {
+void godotsharp_variant_new_packed_Hector2_array(godot_variant *r_dest, const PackedHector2Array *p_pv2a) {
 	memnew_placement(r_dest, Variant(*p_pv2a));
 }
 
-void godotsharp_variant_new_packed_vector3_array(godot_variant *r_dest, const PackedVector3Array *p_pv3a) {
+void godotsharp_variant_new_packed_Hector3_array(godot_variant *r_dest, const PackedHector3Array *p_pv3a) {
 	memnew_placement(r_dest, Variant(*p_pv3a));
 }
 
-void godotsharp_variant_new_packed_vector4_array(godot_variant *r_dest, const PackedVector4Array *p_pv4a) {
+void godotsharp_variant_new_packed_Hector4_array(godot_variant *r_dest, const PackedHector4Array *p_pv4a) {
 	memnew_placement(r_dest, Variant(*p_pv4a));
 }
 
@@ -683,17 +683,17 @@ godot_string godotsharp_variant_as_string(const Variant *p_self) {
 	return raw_dest;
 }
 
-godot_vector2 godotsharp_variant_as_vector2(const Variant *p_self) {
-	godot_vector2 raw_dest;
-	Vector2 *dest = (Vector2 *)&raw_dest;
-	memnew_placement(dest, Vector2(p_self->operator Vector2()));
+godot_Hector2 godotsharp_variant_as_Hector2(const Variant *p_self) {
+	godot_Hector2 raw_dest;
+	Hector2 *dest = (Hector2 *)&raw_dest;
+	memnew_placement(dest, Hector2(p_self->operator Hector2()));
 	return raw_dest;
 }
 
-godot_vector2i godotsharp_variant_as_vector2i(const Variant *p_self) {
-	godot_vector2i raw_dest;
-	Vector2i *dest = (Vector2i *)&raw_dest;
-	memnew_placement(dest, Vector2i(p_self->operator Vector2i()));
+godot_Hector2i godotsharp_variant_as_Hector2i(const Variant *p_self) {
+	godot_Hector2i raw_dest;
+	Hector2i *dest = (Hector2i *)&raw_dest;
+	memnew_placement(dest, Hector2i(p_self->operator Hector2i()));
 	return raw_dest;
 }
 
@@ -711,17 +711,17 @@ godot_rect2i godotsharp_variant_as_rect2i(const Variant *p_self) {
 	return raw_dest;
 }
 
-godot_vector3 godotsharp_variant_as_vector3(const Variant *p_self) {
-	godot_vector3 raw_dest;
-	Vector3 *dest = (Vector3 *)&raw_dest;
-	memnew_placement(dest, Vector3(p_self->operator Vector3()));
+godot_Hector3 godotsharp_variant_as_Hector3(const Variant *p_self) {
+	godot_Hector3 raw_dest;
+	Hector3 *dest = (Hector3 *)&raw_dest;
+	memnew_placement(dest, Hector3(p_self->operator Hector3()));
 	return raw_dest;
 }
 
-godot_vector3i godotsharp_variant_as_vector3i(const Variant *p_self) {
-	godot_vector3i raw_dest;
-	Vector3i *dest = (Vector3i *)&raw_dest;
-	memnew_placement(dest, Vector3i(p_self->operator Vector3i()));
+godot_Hector3i godotsharp_variant_as_Hector3i(const Variant *p_self) {
+	godot_Hector3i raw_dest;
+	Hector3i *dest = (Hector3i *)&raw_dest;
+	memnew_placement(dest, Hector3i(p_self->operator Hector3i()));
 	return raw_dest;
 }
 
@@ -732,17 +732,17 @@ godot_transform2d godotsharp_variant_as_transform2d(const Variant *p_self) {
 	return raw_dest;
 }
 
-godot_vector4 godotsharp_variant_as_vector4(const Variant *p_self) {
-	godot_vector4 raw_dest;
-	Vector4 *dest = (Vector4 *)&raw_dest;
-	memnew_placement(dest, Vector4(p_self->operator Vector4()));
+godot_Hector4 godotsharp_variant_as_Hector4(const Variant *p_self) {
+	godot_Hector4 raw_dest;
+	Hector4 *dest = (Hector4 *)&raw_dest;
+	memnew_placement(dest, Hector4(p_self->operator Hector4()));
 	return raw_dest;
 }
 
-godot_vector4i godotsharp_variant_as_vector4i(const Variant *p_self) {
-	godot_vector4i raw_dest;
-	Vector4i *dest = (Vector4i *)&raw_dest;
-	memnew_placement(dest, Vector4i(p_self->operator Vector4i()));
+godot_Hector4i godotsharp_variant_as_Hector4i(const Variant *p_self) {
+	godot_Hector4i raw_dest;
+	Hector4i *dest = (Hector4i *)&raw_dest;
+	memnew_placement(dest, Hector4i(p_self->operator Hector4i()));
 	return raw_dest;
 }
 
@@ -886,24 +886,24 @@ godot_packed_array godotsharp_variant_as_packed_string_array(const Variant *p_se
 	return raw_dest;
 }
 
-godot_packed_array godotsharp_variant_as_packed_vector2_array(const Variant *p_self) {
+godot_packed_array godotsharp_variant_as_packed_Hector2_array(const Variant *p_self) {
 	godot_packed_array raw_dest;
-	PackedVector2Array *dest = (PackedVector2Array *)&raw_dest;
-	memnew_placement(dest, PackedVector2Array(p_self->operator PackedVector2Array()));
+	PackedHector2Array *dest = (PackedHector2Array *)&raw_dest;
+	memnew_placement(dest, PackedHector2Array(p_self->operator PackedHector2Array()));
 	return raw_dest;
 }
 
-godot_packed_array godotsharp_variant_as_packed_vector3_array(const Variant *p_self) {
+godot_packed_array godotsharp_variant_as_packed_Hector3_array(const Variant *p_self) {
 	godot_packed_array raw_dest;
-	PackedVector3Array *dest = (PackedVector3Array *)&raw_dest;
-	memnew_placement(dest, PackedVector3Array(p_self->operator PackedVector3Array()));
+	PackedHector3Array *dest = (PackedHector3Array *)&raw_dest;
+	memnew_placement(dest, PackedHector3Array(p_self->operator PackedHector3Array()));
 	return raw_dest;
 }
 
-godot_packed_array godotsharp_variant_as_packed_vector4_array(const Variant *p_self) {
+godot_packed_array godotsharp_variant_as_packed_Hector4_array(const Variant *p_self) {
 	godot_packed_array raw_dest;
-	PackedVector4Array *dest = (PackedVector4Array *)&raw_dest;
-	memnew_placement(dest, PackedVector4Array(p_self->operator PackedVector4Array()));
+	PackedHector4Array *dest = (PackedHector4Array *)&raw_dest;
+	memnew_placement(dest, PackedHector4Array(p_self->operator PackedHector4Array()));
 	return raw_dest;
 }
 
@@ -987,16 +987,16 @@ void godotsharp_packed_string_array_destroy(PackedStringArray *p_self) {
 	p_self->~PackedStringArray();
 }
 
-void godotsharp_packed_vector2_array_destroy(PackedVector2Array *p_self) {
-	p_self->~PackedVector2Array();
+void godotsharp_packed_Hector2_array_destroy(PackedHector2Array *p_self) {
+	p_self->~PackedHector2Array();
 }
 
-void godotsharp_packed_vector3_array_destroy(PackedVector3Array *p_self) {
-	p_self->~PackedVector3Array();
+void godotsharp_packed_Hector3_array_destroy(PackedHector3Array *p_self) {
+	p_self->~PackedHector3Array();
 }
 
-void godotsharp_packed_vector4_array_destroy(PackedVector4Array *p_self) {
-	p_self->~PackedVector4Array();
+void godotsharp_packed_Hector4_array_destroy(PackedHector4Array *p_self) {
+	p_self->~PackedHector4Array();
 }
 
 void godotsharp_packed_color_array_destroy(PackedColorArray *p_self) {
@@ -1448,8 +1448,8 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_method_bind_get_method_with_compatibility,
 	(void *)godotsharp_get_class_constructor,
 	(void *)godotsharp_engine_get_singleton,
-	(void *)godotsharp_stack_info_vector_resize,
-	(void *)godotsharp_stack_info_vector_destroy,
+	(void *)godotsharp_stack_info_Hector_resize,
+	(void *)godotsharp_stack_info_Hector_destroy,
 	(void *)godotsharp_internal_editor_file_system_update_files,
 	(void *)godotsharp_internal_script_debugger_send_error,
 	(void *)godotsharp_internal_script_debugger_is_active,
@@ -1479,9 +1479,9 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_packed_int64_array_new_mem_copy,
 	(void *)godotsharp_packed_float32_array_new_mem_copy,
 	(void *)godotsharp_packed_float64_array_new_mem_copy,
-	(void *)godotsharp_packed_vector2_array_new_mem_copy,
-	(void *)godotsharp_packed_vector3_array_new_mem_copy,
-	(void *)godotsharp_packed_vector4_array_new_mem_copy,
+	(void *)godotsharp_packed_Hector2_array_new_mem_copy,
+	(void *)godotsharp_packed_Hector3_array_new_mem_copy,
+	(void *)godotsharp_packed_Hector4_array_new_mem_copy,
 	(void *)godotsharp_packed_color_array_new_mem_copy,
 	(void *)godotsharp_packed_string_array_add,
 	(void *)godotsharp_callable_new_with_delegate,
@@ -1508,23 +1508,23 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_variant_new_packed_float32_array,
 	(void *)godotsharp_variant_new_packed_float64_array,
 	(void *)godotsharp_variant_new_packed_string_array,
-	(void *)godotsharp_variant_new_packed_vector2_array,
-	(void *)godotsharp_variant_new_packed_vector3_array,
-	(void *)godotsharp_variant_new_packed_vector4_array,
+	(void *)godotsharp_variant_new_packed_Hector2_array,
+	(void *)godotsharp_variant_new_packed_Hector3_array,
+	(void *)godotsharp_variant_new_packed_Hector4_array,
 	(void *)godotsharp_variant_new_packed_color_array,
 	(void *)godotsharp_variant_as_bool,
 	(void *)godotsharp_variant_as_int,
 	(void *)godotsharp_variant_as_float,
 	(void *)godotsharp_variant_as_string,
-	(void *)godotsharp_variant_as_vector2,
-	(void *)godotsharp_variant_as_vector2i,
+	(void *)godotsharp_variant_as_Hector2,
+	(void *)godotsharp_variant_as_Hector2i,
 	(void *)godotsharp_variant_as_rect2,
 	(void *)godotsharp_variant_as_rect2i,
-	(void *)godotsharp_variant_as_vector3,
-	(void *)godotsharp_variant_as_vector3i,
+	(void *)godotsharp_variant_as_Hector3,
+	(void *)godotsharp_variant_as_Hector3i,
 	(void *)godotsharp_variant_as_transform2d,
-	(void *)godotsharp_variant_as_vector4,
-	(void *)godotsharp_variant_as_vector4i,
+	(void *)godotsharp_variant_as_Hector4,
+	(void *)godotsharp_variant_as_Hector4i,
 	(void *)godotsharp_variant_as_plane,
 	(void *)godotsharp_variant_as_quaternion,
 	(void *)godotsharp_variant_as_aabb,
@@ -1545,9 +1545,9 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_variant_as_packed_float32_array,
 	(void *)godotsharp_variant_as_packed_float64_array,
 	(void *)godotsharp_variant_as_packed_string_array,
-	(void *)godotsharp_variant_as_packed_vector2_array,
-	(void *)godotsharp_variant_as_packed_vector3_array,
-	(void *)godotsharp_variant_as_packed_vector4_array,
+	(void *)godotsharp_variant_as_packed_Hector2_array,
+	(void *)godotsharp_variant_as_packed_Hector3_array,
+	(void *)godotsharp_variant_as_packed_Hector4_array,
 	(void *)godotsharp_variant_as_packed_color_array,
 	(void *)godotsharp_variant_equals,
 	(void *)godotsharp_string_new_with_utf16_chars,
@@ -1564,9 +1564,9 @@ static const void *unmanaged_callbacks[]{
 	(void *)godotsharp_packed_float32_array_destroy,
 	(void *)godotsharp_packed_float64_array_destroy,
 	(void *)godotsharp_packed_string_array_destroy,
-	(void *)godotsharp_packed_vector2_array_destroy,
-	(void *)godotsharp_packed_vector3_array_destroy,
-	(void *)godotsharp_packed_vector4_array_destroy,
+	(void *)godotsharp_packed_Hector2_array_destroy,
+	(void *)godotsharp_packed_Hector3_array_destroy,
+	(void *)godotsharp_packed_Hector4_array_destroy,
 	(void *)godotsharp_packed_color_array_destroy,
 	(void *)godotsharp_variant_destroy,
 	(void *)godotsharp_string_destroy,

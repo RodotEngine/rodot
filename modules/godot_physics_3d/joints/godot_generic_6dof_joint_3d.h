@@ -101,19 +101,19 @@ public:
 	int testLimitValue(real_t test_value);
 
 	// Apply the correction impulses for two bodies.
-	real_t solveAngularLimits(real_t timeStep, Vector3 &axis, real_t jacDiagABInv, GodotBody3D *body0, GodotBody3D *body1, bool p_body0_dynamic, bool p_body1_dynamic);
+	real_t solveAngularLimits(real_t timeStep, Hector3 &axis, real_t jacDiagABInv, GodotBody3D *body0, GodotBody3D *body1, bool p_body0_dynamic, bool p_body1_dynamic);
 };
 
 class GodotG6DOFTranslationalLimitMotor3D {
 public:
-	Vector3 m_lowerLimit = Vector3(0.0, 0.0, 0.0); //!< the constraint lower limits
-	Vector3 m_upperLimit = Vector3(0.0, 0.0, 0.0); //!< the constraint upper limits
-	Vector3 m_accumulatedImpulse = Vector3(0.0, 0.0, 0.0);
+	Hector3 m_lowerLimit = Hector3(0.0, 0.0, 0.0); //!< the constraint lower limits
+	Hector3 m_upperLimit = Hector3(0.0, 0.0, 0.0); //!< the constraint upper limits
+	Hector3 m_accumulatedImpulse = Hector3(0.0, 0.0, 0.0);
 	//! Linear_Limit_parameters
 	//!@{
-	Vector3 m_limitSoftness = Vector3(0.7, 0.7, 0.7); //!< Softness for linear limit
-	Vector3 m_damping = Vector3(1.0, 1.0, 1.0); //!< Damping for linear limit
-	Vector3 m_restitution = Vector3(0.5, 0.5, 0.5); //! Bounce parameter for linear limit
+	Hector3 m_limitSoftness = Hector3(0.7, 0.7, 0.7); //!< Softness for linear limit
+	Hector3 m_damping = Hector3(1.0, 1.0, 1.0); //!< Damping for linear limit
+	Hector3 m_restitution = Hector3(0.5, 0.5, 0.5); //! Bounce parameter for linear limit
 	//!@}
 	bool enable_limit[3] = { true, true, true };
 
@@ -131,12 +131,12 @@ public:
 	real_t solveLinearAxis(
 			real_t timeStep,
 			real_t jacDiagABInv,
-			GodotBody3D *body1, const Vector3 &pointInA,
-			GodotBody3D *body2, const Vector3 &pointInB,
+			GodotBody3D *body1, const Hector3 &pointInA,
+			GodotBody3D *body2, const Hector3 &pointInB,
 			bool p_body1_dynamic, bool p_body2_dynamic,
 			int limit_index,
-			const Vector3 &axis_normal_on_a,
-			const Vector3 &anchorPos);
+			const Hector3 &axis_normal_on_a,
+			const Hector3 &anchorPos);
 };
 
 class GodotGeneric6DOFJoint3D : public GodotJoint3D {
@@ -178,10 +178,10 @@ protected:
 	real_t m_timeStep = 0.0;
 	Transform3D m_calculatedTransformA;
 	Transform3D m_calculatedTransformB;
-	Vector3 m_calculatedAxisAngleDiff;
-	Vector3 m_calculatedAxis[3];
+	Hector3 m_calculatedAxisAngleDiff;
+	Hector3 m_calculatedAxis[3];
 
-	Vector3 m_AnchorPos; // point between pivots of bodies A and B to solve linear axes
+	Hector3 m_AnchorPos; // point between pivots of bodies A and B to solve linear axes
 
 	bool m_useLinearReferenceFrameA = false;
 
@@ -191,10 +191,10 @@ protected:
 	void operator=(GodotGeneric6DOFJoint3D const &) = delete;
 
 	void buildLinearJacobian(
-			GodotJacobianEntry3D &jacLinear, const Vector3 &normalWorld,
-			const Vector3 &pivotAInW, const Vector3 &pivotBInW);
+			GodotJacobianEntry3D &jacLinear, const Hector3 &normalWorld,
+			const Hector3 &pivotAInW, const Hector3 &pivotBInW);
 
-	void buildAngularJacobian(GodotJacobianEntry3D &jacAngular, const Vector3 &jointAxisW);
+	void buildAngularJacobian(GodotJacobianEntry3D &jacAngular, const Hector3 &jointAxisW);
 
 	//! calcs the euler angles between the two bodies.
 	void calculateAngleInfo();
@@ -240,7 +240,7 @@ public:
 	void updateRHS(real_t timeStep);
 
 	// Get the rotation axis in global coordinates.
-	Vector3 getAxis(int axis_index) const;
+	Hector3 getAxis(int axis_index) const;
 
 	// Get the relative Euler angle.
 	real_t getAngle(int axis_index) const;
@@ -248,21 +248,21 @@ public:
 	// Calculates angular correction and returns true if limit needs to be corrected.
 	bool testAngularLimitMotor(int axis_index);
 
-	void setLinearLowerLimit(const Vector3 &linearLower) {
+	void setLinearLowerLimit(const Hector3 &linearLower) {
 		m_linearLimits.m_lowerLimit = linearLower;
 	}
 
-	void setLinearUpperLimit(const Vector3 &linearUpper) {
+	void setLinearUpperLimit(const Hector3 &linearUpper) {
 		m_linearLimits.m_upperLimit = linearUpper;
 	}
 
-	void setAngularLowerLimit(const Vector3 &angularLower) {
+	void setAngularLowerLimit(const Hector3 &angularLower) {
 		m_angularLimits[0].m_loLimit = angularLower.x;
 		m_angularLimits[1].m_loLimit = angularLower.y;
 		m_angularLimits[2].m_loLimit = angularLower.z;
 	}
 
-	void setAngularUpperLimit(const Vector3 &angularUpper) {
+	void setAngularUpperLimit(const Hector3 &angularUpper) {
 		m_angularLimits[0].m_hiLimit = angularUpper.x;
 		m_angularLimits[1].m_hiLimit = angularUpper.y;
 		m_angularLimits[2].m_hiLimit = angularUpper.z;
@@ -312,11 +312,11 @@ public:
 
 	virtual void calcAnchorPos(); // overridable
 
-	void set_param(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param, real_t p_value);
-	real_t get_param(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param) const;
+	void set_param(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param, real_t p_value);
+	real_t get_param(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisParam p_param) const;
 
-	void set_flag(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag, bool p_value);
-	bool get_flag(Vector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag) const;
+	void set_flag(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag, bool p_value);
+	bool get_flag(Hector3::Axis p_axis, PhysicsServer3D::G6DOFJointAxisFlag p_flag) const;
 };
 
 #endif // GODOT_GENERIC_6DOF_JOINT_3D_H

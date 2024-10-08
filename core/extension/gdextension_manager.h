@@ -67,7 +67,7 @@ public:
 	LoadStatus reload_extension(const String &p_path);
 	LoadStatus unload_extension(const String &p_path);
 	bool is_extension_loaded(const String &p_path) const;
-	Vector<String> get_loaded_extensions() const;
+	Hector<String> get_loaded_extensions() const;
 	Ref<GDExtension> get_extension(const String &p_path);
 
 	bool class_has_icon_path(const String &p_class) const;

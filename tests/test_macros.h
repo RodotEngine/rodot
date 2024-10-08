@@ -87,12 +87,12 @@
 DOCTEST_STRINGIFY_VARIANT(Variant);
 DOCTEST_STRINGIFY_VARIANT(::String); // Disambiguate from `doctest::String`.
 
-DOCTEST_STRINGIFY_VARIANT(Vector2);
-DOCTEST_STRINGIFY_VARIANT(Vector2i);
+DOCTEST_STRINGIFY_VARIANT(Hector2);
+DOCTEST_STRINGIFY_VARIANT(Hector2i);
 DOCTEST_STRINGIFY_VARIANT(Rect2);
 DOCTEST_STRINGIFY_VARIANT(Rect2i);
-DOCTEST_STRINGIFY_VARIANT(Vector3);
-DOCTEST_STRINGIFY_VARIANT(Vector3i);
+DOCTEST_STRINGIFY_VARIANT(Hector3);
+DOCTEST_STRINGIFY_VARIANT(Hector3i);
 DOCTEST_STRINGIFY_VARIANT(Transform2D);
 DOCTEST_STRINGIFY_VARIANT(Plane);
 DOCTEST_STRINGIFY_VARIANT(Quaternion);
@@ -116,10 +116,10 @@ DOCTEST_STRINGIFY_VARIANT(PackedInt64Array);
 DOCTEST_STRINGIFY_VARIANT(PackedFloat32Array);
 DOCTEST_STRINGIFY_VARIANT(PackedFloat64Array);
 DOCTEST_STRINGIFY_VARIANT(PackedStringArray);
-DOCTEST_STRINGIFY_VARIANT(PackedVector2Array);
-DOCTEST_STRINGIFY_VARIANT(PackedVector3Array);
+DOCTEST_STRINGIFY_VARIANT(PackedHector2Array);
+DOCTEST_STRINGIFY_VARIANT(PackedHector3Array);
 DOCTEST_STRINGIFY_VARIANT(PackedColorArray);
-DOCTEST_STRINGIFY_VARIANT(PackedVector4Array);
+DOCTEST_STRINGIFY_VARIANT(PackedHector4Array);
 
 // Register test commands to be launched from the command-line.
 // For instance: REGISTER_TEST_COMMAND("gdscript-parser" &test_parser_func).
@@ -138,10 +138,10 @@ int register_test_command(String p_command, TestFunc p_function);
 // SEND_GUI_ACTION    - takes an input map key. e.g SEND_GUI_ACTION("ui_text_newline").
 // SEND_GUI_KEY_EVENT - takes a keycode set.   e.g SEND_GUI_KEY_EVENT(Key::A | KeyModifierMask::META).
 // SEND_GUI_KEY_UP_EVENT - takes a keycode set.   e.g SEND_GUI_KEY_UP_EVENT(Key::A | KeyModifierMask::META).
-// SEND_GUI_MOUSE_BUTTON_EVENT - takes a position, mouse button, mouse mask and modifiers e.g SEND_GUI_MOUSE_BUTTON_EVENT(Vector2(50, 50), MOUSE_BUTTON_NONE, MOUSE_BUTTON_NONE, Key::None);
-// SEND_GUI_MOUSE_BUTTON_RELEASED_EVENT - takes a position, mouse button, mouse mask and modifiers e.g SEND_GUI_MOUSE_BUTTON_RELEASED_EVENT(Vector2(50, 50), MOUSE_BUTTON_NONE, MOUSE_BUTTON_NONE, Key::None);
-// SEND_GUI_MOUSE_MOTION_EVENT - takes a position, mouse mask and modifiers e.g SEND_GUI_MOUSE_MOTION_EVENT(Vector2(50, 50), MouseButtonMask::LEFT, KeyModifierMask::META);
-// SEND_GUI_DOUBLE_CLICK - takes a position and modifiers. e.g SEND_GUI_DOUBLE_CLICK(Vector2(50, 50), KeyModifierMask::META);
+// SEND_GUI_MOUSE_BUTTON_EVENT - takes a position, mouse button, mouse mask and modifiers e.g SEND_GUI_MOUSE_BUTTON_EVENT(Hector2(50, 50), MOUSE_BUTTON_NONE, MOUSE_BUTTON_NONE, Key::None);
+// SEND_GUI_MOUSE_BUTTON_RELEASED_EVENT - takes a position, mouse button, mouse mask and modifiers e.g SEND_GUI_MOUSE_BUTTON_RELEASED_EVENT(Hector2(50, 50), MOUSE_BUTTON_NONE, MOUSE_BUTTON_NONE, Key::None);
+// SEND_GUI_MOUSE_MOTION_EVENT - takes a position, mouse mask and modifiers e.g SEND_GUI_MOUSE_MOTION_EVENT(Hector2(50, 50), MouseButtonMask::LEFT, KeyModifierMask::META);
+// SEND_GUI_DOUBLE_CLICK - takes a position and modifiers. e.g SEND_GUI_DOUBLE_CLICK(Hector2(50, 50), KeyModifierMask::META);
 
 #define _SEND_DISPLAYSERVER_EVENT(m_event) ((DisplayServerMock *)(DisplayServer::get_singleton()))->simulate_event(m_event);
 
@@ -246,8 +246,8 @@ int register_test_command(String p_command, TestFunc p_function);
 //
 // The SignalWatcher will capture all signals and their args sent between checks.
 //
-// Use SIGNAL_CHECK("signal_name"), Vector<Vector<Variant>>), to check the arguments of all fired signals.
-// The outer vector is each fired signal, the inner vector the list of arguments for that signal. Order does matter.
+// Use SIGNAL_CHECK("signal_name"), Hector<Hector<Variant>>), to check the arguments of all fired signals.
+// The outer Hector is each fired signal, the inner Hector the list of arguments for that signal. Order does matter.
 //
 // Use SIGNAL_CHECK_FALSE("signal_name") to check if a signal was not fired.
 //
@@ -259,7 +259,7 @@ class SignalWatcher : public Object {
 private:
 	inline static SignalWatcher *singleton;
 
-	/* Equal to: RBMap<String, Vector<Vector<Variant>>> */
+	/* Equal to: RBMap<String, Hector<Hector<Variant>>> */
 	HashMap<String, Array> _signals;
 	void _add_signal_entry(const Array &p_args, const String &p_name) {
 		if (!_signals.has(p_name)) {
@@ -449,7 +449,7 @@ public:
 
 #define MULTICHECK_SPLIT(m_obj, m_func, m_param1, m_param2, m_param3, m_slices, m_expected_size) \
 	do {                                                                                         \
-		Vector<String> string_list;                                                              \
+		Hector<String> string_list;                                                              \
                                                                                                  \
 		string_list = m_obj.m_func(m_param1, m_param2, m_param3);                                \
 		CHECK(m_expected_size == string_list.size());                                            \

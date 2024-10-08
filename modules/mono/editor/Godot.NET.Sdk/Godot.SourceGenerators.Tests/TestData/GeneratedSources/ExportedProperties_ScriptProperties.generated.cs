@@ -89,13 +89,13 @@ partial class ExportedProperties
         /// </summary>
         public new static readonly global::Godot.StringName @PropertyString = "PropertyString";
         /// <summary>
-        /// Cached name for the 'PropertyVector2' property.
+        /// Cached name for the 'PropertyHector2' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector2 = "PropertyVector2";
+        public new static readonly global::Godot.StringName @PropertyHector2 = "PropertyHector2";
         /// <summary>
-        /// Cached name for the 'PropertyVector2I' property.
+        /// Cached name for the 'PropertyHector2I' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector2I = "PropertyVector2I";
+        public new static readonly global::Godot.StringName @PropertyHector2I = "PropertyHector2I";
         /// <summary>
         /// Cached name for the 'PropertyRect2' property.
         /// </summary>
@@ -109,13 +109,13 @@ partial class ExportedProperties
         /// </summary>
         public new static readonly global::Godot.StringName @PropertyTransform2D = "PropertyTransform2D";
         /// <summary>
-        /// Cached name for the 'PropertyVector3' property.
+        /// Cached name for the 'PropertyHector3' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector3 = "PropertyVector3";
+        public new static readonly global::Godot.StringName @PropertyHector3 = "PropertyHector3";
         /// <summary>
-        /// Cached name for the 'PropertyVector3I' property.
+        /// Cached name for the 'PropertyHector3I' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector3I = "PropertyVector3I";
+        public new static readonly global::Godot.StringName @PropertyHector3I = "PropertyHector3I";
         /// <summary>
         /// Cached name for the 'PropertyBasis' property.
         /// </summary>
@@ -129,13 +129,13 @@ partial class ExportedProperties
         /// </summary>
         public new static readonly global::Godot.StringName @PropertyTransform3D = "PropertyTransform3D";
         /// <summary>
-        /// Cached name for the 'PropertyVector4' property.
+        /// Cached name for the 'PropertyHector4' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector4 = "PropertyVector4";
+        public new static readonly global::Godot.StringName @PropertyHector4 = "PropertyHector4";
         /// <summary>
-        /// Cached name for the 'PropertyVector4I' property.
+        /// Cached name for the 'PropertyHector4I' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector4I = "PropertyVector4I";
+        public new static readonly global::Godot.StringName @PropertyHector4I = "PropertyHector4I";
         /// <summary>
         /// Cached name for the 'PropertyProjection' property.
         /// </summary>
@@ -197,13 +197,13 @@ partial class ExportedProperties
         /// </summary>
         public new static readonly global::Godot.StringName @PropertyStringArrayEnum = "PropertyStringArrayEnum";
         /// <summary>
-        /// Cached name for the 'PropertyVector2Array' property.
+        /// Cached name for the 'PropertyHector2Array' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector2Array = "PropertyVector2Array";
+        public new static readonly global::Godot.StringName @PropertyHector2Array = "PropertyHector2Array";
         /// <summary>
-        /// Cached name for the 'PropertyVector3Array' property.
+        /// Cached name for the 'PropertyHector3Array' property.
         /// </summary>
-        public new static readonly global::Godot.StringName @PropertyVector3Array = "PropertyVector3Array";
+        public new static readonly global::Godot.StringName @PropertyHector3Array = "PropertyHector3Array";
         /// <summary>
         /// Cached name for the 'PropertyColorArray' property.
         /// </summary>
@@ -369,12 +369,12 @@ partial class ExportedProperties
             this.@PropertyString = global::Godot.NativeInterop.VariantUtils.ConvertTo<string>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector2) {
-            this.@PropertyVector2 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector2>(value);
+        if (name == PropertyName.@PropertyHector2) {
+            this.@PropertyHector2 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector2>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector2I) {
-            this.@PropertyVector2I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector2I>(value);
+        if (name == PropertyName.@PropertyHector2I) {
+            this.@PropertyHector2I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector2I>(value);
             return true;
         }
         if (name == PropertyName.@PropertyRect2) {
@@ -389,12 +389,12 @@ partial class ExportedProperties
             this.@PropertyTransform2D = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Transform2D>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector3) {
-            this.@PropertyVector3 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector3>(value);
+        if (name == PropertyName.@PropertyHector3) {
+            this.@PropertyHector3 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector3>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector3I) {
-            this.@PropertyVector3I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector3I>(value);
+        if (name == PropertyName.@PropertyHector3I) {
+            this.@PropertyHector3I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector3I>(value);
             return true;
         }
         if (name == PropertyName.@PropertyBasis) {
@@ -409,12 +409,12 @@ partial class ExportedProperties
             this.@PropertyTransform3D = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Transform3D>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector4) {
-            this.@PropertyVector4 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector4>(value);
+        if (name == PropertyName.@PropertyHector4) {
+            this.@PropertyHector4 = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector4>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector4I) {
-            this.@PropertyVector4I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector4I>(value);
+        if (name == PropertyName.@PropertyHector4I) {
+            this.@PropertyHector4I = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector4I>(value);
             return true;
         }
         if (name == PropertyName.@PropertyProjection) {
@@ -477,12 +477,12 @@ partial class ExportedProperties
             this.@PropertyStringArrayEnum = global::Godot.NativeInterop.VariantUtils.ConvertTo<string[]>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector2Array) {
-            this.@PropertyVector2Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector2[]>(value);
+        if (name == PropertyName.@PropertyHector2Array) {
+            this.@PropertyHector2Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector2[]>(value);
             return true;
         }
-        if (name == PropertyName.@PropertyVector3Array) {
-            this.@PropertyVector3Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Vector3[]>(value);
+        if (name == PropertyName.@PropertyHector3Array) {
+            this.@PropertyHector3Array = global::Godot.NativeInterop.VariantUtils.ConvertTo<global::Godot.Hector3[]>(value);
             return true;
         }
         if (name == PropertyName.@PropertyColorArray) {
@@ -651,12 +651,12 @@ partial class ExportedProperties
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<string>(this.@PropertyString);
             return true;
         }
-        if (name == PropertyName.@PropertyVector2) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector2>(this.@PropertyVector2);
+        if (name == PropertyName.@PropertyHector2) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector2>(this.@PropertyHector2);
             return true;
         }
-        if (name == PropertyName.@PropertyVector2I) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector2I>(this.@PropertyVector2I);
+        if (name == PropertyName.@PropertyHector2I) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector2I>(this.@PropertyHector2I);
             return true;
         }
         if (name == PropertyName.@PropertyRect2) {
@@ -671,12 +671,12 @@ partial class ExportedProperties
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Transform2D>(this.@PropertyTransform2D);
             return true;
         }
-        if (name == PropertyName.@PropertyVector3) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector3>(this.@PropertyVector3);
+        if (name == PropertyName.@PropertyHector3) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector3>(this.@PropertyHector3);
             return true;
         }
-        if (name == PropertyName.@PropertyVector3I) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector3I>(this.@PropertyVector3I);
+        if (name == PropertyName.@PropertyHector3I) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector3I>(this.@PropertyHector3I);
             return true;
         }
         if (name == PropertyName.@PropertyBasis) {
@@ -691,12 +691,12 @@ partial class ExportedProperties
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Transform3D>(this.@PropertyTransform3D);
             return true;
         }
-        if (name == PropertyName.@PropertyVector4) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector4>(this.@PropertyVector4);
+        if (name == PropertyName.@PropertyHector4) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector4>(this.@PropertyHector4);
             return true;
         }
-        if (name == PropertyName.@PropertyVector4I) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector4I>(this.@PropertyVector4I);
+        if (name == PropertyName.@PropertyHector4I) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector4I>(this.@PropertyHector4I);
             return true;
         }
         if (name == PropertyName.@PropertyProjection) {
@@ -759,12 +759,12 @@ partial class ExportedProperties
             value = global::Godot.NativeInterop.VariantUtils.CreateFrom<string[]>(this.@PropertyStringArrayEnum);
             return true;
         }
-        if (name == PropertyName.@PropertyVector2Array) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector2[]>(this.@PropertyVector2Array);
+        if (name == PropertyName.@PropertyHector2Array) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector2[]>(this.@PropertyHector2Array);
             return true;
         }
-        if (name == PropertyName.@PropertyVector3Array) {
-            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Vector3[]>(this.@PropertyVector3Array);
+        if (name == PropertyName.@PropertyHector3Array) {
+            value = global::Godot.NativeInterop.VariantUtils.CreateFrom<global::Godot.Hector3[]>(this.@PropertyHector3Array);
             return true;
         }
         if (name == PropertyName.@PropertyColorArray) {
@@ -883,18 +883,18 @@ partial class ExportedProperties
         properties.Add(new(type: (global::Godot.Variant.Type)3, name: PropertyName.@PropertySingle, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)3, name: PropertyName.@PropertyDouble, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)4, name: PropertyName.@PropertyString, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)5, name: PropertyName.@PropertyVector2, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)6, name: PropertyName.@PropertyVector2I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)5, name: PropertyName.@PropertyHector2, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)6, name: PropertyName.@PropertyHector2I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)7, name: PropertyName.@PropertyRect2, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)8, name: PropertyName.@PropertyRect2I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)11, name: PropertyName.@PropertyTransform2D, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)9, name: PropertyName.@PropertyVector3, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)10, name: PropertyName.@PropertyVector3I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)9, name: PropertyName.@PropertyHector3, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)10, name: PropertyName.@PropertyHector3I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)17, name: PropertyName.@PropertyBasis, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)15, name: PropertyName.@PropertyQuaternion, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)18, name: PropertyName.@PropertyTransform3D, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)12, name: PropertyName.@PropertyVector4, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)13, name: PropertyName.@PropertyVector4I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)12, name: PropertyName.@PropertyHector4, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)13, name: PropertyName.@PropertyHector4I, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)19, name: PropertyName.@PropertyProjection, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)16, name: PropertyName.@PropertyAabb, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)20, name: PropertyName.@PropertyColor, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
@@ -910,8 +910,8 @@ partial class ExportedProperties
         properties.Add(new(type: (global::Godot.Variant.Type)33, name: PropertyName.@PropertyDoubleArray, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)34, name: PropertyName.@PropertyStringArray, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)34, name: PropertyName.@PropertyStringArrayEnum, hint: (global::Godot.PropertyHint)23, hintString: "4/2:A,B,C", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)35, name: PropertyName.@PropertyVector2Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
-        properties.Add(new(type: (global::Godot.Variant.Type)36, name: PropertyName.@PropertyVector3Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)35, name: PropertyName.@PropertyHector2Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
+        properties.Add(new(type: (global::Godot.Variant.Type)36, name: PropertyName.@PropertyHector3Array, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)37, name: PropertyName.@PropertyColorArray, hint: (global::Godot.PropertyHint)0, hintString: "", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)28, name: PropertyName.@PropertyGodotObjectOrDerivedArray, hint: (global::Godot.PropertyHint)23, hintString: "24/0:", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));
         properties.Add(new(type: (global::Godot.Variant.Type)28, name: PropertyName.@field_StringNameArray, hint: (global::Godot.PropertyHint)23, hintString: "21/0:", usage: (global::Godot.PropertyUsageFlags)4102, exported: true));

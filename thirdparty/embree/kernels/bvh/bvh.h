@@ -227,7 +227,7 @@ namespace embree
     /*! data arrays for special builders */
   public:
     std::vector<BVHN*> objects;
-    vector_t<char,aligned_allocator<char,32>> subdiv_patches;
+    Hector_t<char,aligned_allocator<char,32>> subdiv_patches;
   };
   
   typedef BVHN<4> BVH4;

@@ -38,7 +38,7 @@ void NavigationMesh::create_from_mesh(const Ref<Mesh> &p_mesh) {
 	RWLockWrite write_lock(rwlock);
 	ERR_FAIL_COND(p_mesh.is_null());
 
-	vertices = Vector<Vector3>();
+	vertices = Hector<Hector3>();
 	polygons.clear();
 
 	for (int i = 0; i < p_mesh->get_surface_count(); i++) {
@@ -49,8 +49,8 @@ void NavigationMesh::create_from_mesh(const Ref<Mesh> &p_mesh) {
 		Array arr = p_mesh->surface_get_arrays(i);
 		ERR_CONTINUE(arr.size() != Mesh::ARRAY_MAX);
 
-		Vector<Vector3> varr = arr[Mesh::ARRAY_VERTEX];
-		Vector<int> iarr = arr[Mesh::ARRAY_INDEX];
+		Hector<Hector3> varr = arr[Mesh::ARRAY_VERTEX];
+		Hector<int> iarr = arr[Mesh::ARRAY_INDEX];
 		if (varr.size() == 0 || iarr.size() == 0) {
 			WARN_PRINT("A mesh surface was skipped when creating a NavigationMesh due to an empty vertex or index array.");
 			continue;
@@ -61,7 +61,7 @@ void NavigationMesh::create_from_mesh(const Ref<Mesh> &p_mesh) {
 		int rlen = iarr.size();
 		const int *r = iarr.ptr();
 
-		Vector<int> polygon;
+		Hector<int> polygon;
 		for (int j = 0; j < rlen; j += 3) {
 			polygon.resize(3);
 			polygon.write[0] = r[j + 0] + from;
@@ -294,22 +294,22 @@ AABB NavigationMesh::get_filter_baking_aabb() const {
 	return filter_baking_aabb;
 }
 
-void NavigationMesh::set_filter_baking_aabb_offset(const Vector3 &p_aabb_offset) {
+void NavigationMesh::set_filter_baking_aabb_offset(const Hector3 &p_aabb_offset) {
 	filter_baking_aabb_offset = p_aabb_offset;
 	emit_changed();
 }
 
-Vector3 NavigationMesh::get_filter_baking_aabb_offset() const {
+Hector3 NavigationMesh::get_filter_baking_aabb_offset() const {
 	return filter_baking_aabb_offset;
 }
 
-void NavigationMesh::set_vertices(const Vector<Vector3> &p_vertices) {
+void NavigationMesh::set_vertices(const Hector<Hector3> &p_vertices) {
 	RWLockWrite write_lock(rwlock);
 	vertices = p_vertices;
 	notify_property_list_changed();
 }
 
-Vector<Vector3> NavigationMesh::get_vertices() const {
+Hector<Hector3> NavigationMesh::get_vertices() const {
 	RWLockRead read_lock(rwlock);
 	return vertices;
 }
@@ -334,18 +334,18 @@ Array NavigationMesh::_get_polygons() const {
 	return ret;
 }
 
-void NavigationMesh::set_polygons(const Vector<Vector<int>> &p_polygons) {
+void NavigationMesh::set_polygons(const Hector<Hector<int>> &p_polygons) {
 	RWLockWrite write_lock(rwlock);
 	polygons = p_polygons;
 	notify_property_list_changed();
 }
 
-Vector<Vector<int>> NavigationMesh::get_polygons() const {
+Hector<Hector<int>> NavigationMesh::get_polygons() const {
 	RWLockRead read_lock(rwlock);
 	return polygons;
 }
 
-void NavigationMesh::add_polygon(const Vector<int> &p_polygon) {
+void NavigationMesh::add_polygon(const Hector<int> &p_polygon) {
 	RWLockWrite write_lock(rwlock);
 	polygons.push_back(p_polygon);
 	notify_property_list_changed();
@@ -356,9 +356,9 @@ int NavigationMesh::get_polygon_count() const {
 	return polygons.size();
 }
 
-Vector<int> NavigationMesh::get_polygon(int p_idx) {
+Hector<int> NavigationMesh::get_polygon(int p_idx) {
 	RWLockRead read_lock(rwlock);
-	ERR_FAIL_INDEX_V(p_idx, polygons.size(), Vector<int>());
+	ERR_FAIL_INDEX_V(p_idx, polygons.size(), Hector<int>());
 	return polygons[p_idx];
 }
 
@@ -373,13 +373,13 @@ void NavigationMesh::clear() {
 	vertices.clear();
 }
 
-void NavigationMesh::set_data(const Vector<Vector3> &p_vertices, const Vector<Vector<int>> &p_polygons) {
+void NavigationMesh::set_data(const Hector<Hector3> &p_vertices, const Hector<Hector<int>> &p_polygons) {
 	RWLockWrite write_lock(rwlock);
 	vertices = p_vertices;
 	polygons = p_polygons;
 }
 
-void NavigationMesh::get_data(Vector<Vector3> &r_vertices, Vector<Vector<int>> &r_polygons) {
+void NavigationMesh::get_data(Hector<Hector3> &r_vertices, Hector<Hector<int>> &r_polygons) {
 	RWLockRead read_lock(rwlock);
 	r_vertices = vertices;
 	r_polygons = polygons;
@@ -412,11 +412,11 @@ Ref<ArrayMesh> NavigationMesh::get_debug_mesh() {
 	}
 
 	// build geometry face surface
-	Vector<Vector3> face_vertex_array;
+	Hector<Hector3> face_vertex_array;
 	face_vertex_array.resize(polygon_count * 3);
 
 	for (int i = 0; i < polygon_count; i++) {
-		Vector<int> polygon = get_polygon(i);
+		Hector<int> polygon = get_polygon(i);
 
 		face_vertex_array.push_back(vertices[polygon[0]]);
 		face_vertex_array.push_back(vertices[polygon[1]]);
@@ -433,7 +433,7 @@ Ref<ArrayMesh> NavigationMesh::get_debug_mesh() {
 		Color debug_navigation_geometry_face_color = NavigationServer3D::get_singleton()->get_debug_navigation_geometry_face_color();
 		Color polygon_color = debug_navigation_geometry_face_color;
 
-		Vector<Color> face_color_array;
+		Hector<Color> face_color_array;
 		face_color_array.resize(polygon_count * 3);
 
 		for (int i = 0; i < polygon_count; i++) {
@@ -454,11 +454,11 @@ Ref<ArrayMesh> NavigationMesh::get_debug_mesh() {
 	bool enabled_edge_lines = NavigationServer3D::get_singleton()->get_debug_navigation_enable_edge_lines();
 
 	if (enabled_edge_lines) {
-		Vector<Vector3> line_vertex_array;
+		Hector<Hector3> line_vertex_array;
 		line_vertex_array.resize(polygon_count * 6);
 
 		for (int i = 0; i < polygon_count; i++) {
-			Vector<int> polygon = get_polygon(i);
+			Hector<int> polygon = get_polygon(i);
 
 			line_vertex_array.push_back(vertices[polygon[0]]);
 			line_vertex_array.push_back(vertices[polygon[1]]);
@@ -569,7 +569,7 @@ void NavigationMesh::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("clear"), &NavigationMesh::clear);
 
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_vertices", "get_vertices");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector3_ARRAY, "vertices", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_vertices", "get_vertices");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "polygons", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_polygons", "_get_polygons");
 
 	ADD_GROUP("Sampling", "sample_");
@@ -606,7 +606,7 @@ void NavigationMesh::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "filter_ledge_spans"), "set_filter_ledge_spans", "get_filter_ledge_spans");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "filter_walkable_low_height_spans"), "set_filter_walkable_low_height_spans", "get_filter_walkable_low_height_spans");
 	ADD_PROPERTY(PropertyInfo(Variant::AABB, "filter_baking_aabb"), "set_filter_baking_aabb", "get_filter_baking_aabb");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "filter_baking_aabb_offset"), "set_filter_baking_aabb_offset", "get_filter_baking_aabb_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "filter_baking_aabb_offset"), "set_filter_baking_aabb_offset", "get_filter_baking_aabb_offset");
 
 	BIND_ENUM_CONSTANT(SAMPLE_PARTITION_WATERSHED);
 	BIND_ENUM_CONSTANT(SAMPLE_PARTITION_MONOTONE);

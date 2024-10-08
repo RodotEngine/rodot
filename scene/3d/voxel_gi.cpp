@@ -46,15 +46,15 @@ void VoxelGIData::_set_data(const Dictionary &p_data) {
 	ERR_FAIL_COND(!p_data.has("to_cell_xform"));
 
 	AABB bounds_new = p_data["bounds"];
-	Vector3 octree_size_new = p_data["octree_size"];
-	Vector<uint8_t> octree_cells = p_data["octree_cells"];
-	Vector<uint8_t> octree_data = p_data["octree_data"];
+	Hector3 octree_size_new = p_data["octree_size"];
+	Hector<uint8_t> octree_cells = p_data["octree_cells"];
+	Hector<uint8_t> octree_data = p_data["octree_data"];
 
-	Vector<uint8_t> octree_df;
+	Hector<uint8_t> octree_df;
 	if (p_data.has("octree_df")) {
 		octree_df = p_data["octree_df"];
 	} else if (p_data.has("octree_df_png")) {
-		Vector<uint8_t> octree_df_png = p_data["octree_df_png"];
+		Hector<uint8_t> octree_df_png = p_data["octree_df_png"];
 		Ref<Image> img;
 		img.instantiate();
 		Error err = img->load_png_from_buffer(octree_df_png);
@@ -62,7 +62,7 @@ void VoxelGIData::_set_data(const Dictionary &p_data) {
 		ERR_FAIL_COND(img->get_format() != Image::FORMAT_L8);
 		octree_df = img->get_data();
 	}
-	Vector<int> octree_levels = p_data["level_counts"];
+	Hector<int> octree_levels = p_data["level_counts"];
 	Transform3D to_cell_xform_new = p_data["to_cell_xform"];
 
 	allocate(to_cell_xform_new, bounds_new, octree_size_new, octree_cells, octree_data, octree_df, octree_levels);
@@ -71,17 +71,17 @@ void VoxelGIData::_set_data(const Dictionary &p_data) {
 Dictionary VoxelGIData::_get_data() const {
 	Dictionary d;
 	d["bounds"] = get_bounds();
-	Vector3i otsize = get_octree_size();
-	d["octree_size"] = Vector3(otsize);
+	Hector3i otsize = get_octree_size();
+	d["octree_size"] = Hector3(otsize);
 	d["octree_cells"] = get_octree_cells();
 	d["octree_data"] = get_data_cells();
-	if (otsize != Vector3i()) {
+	if (otsize != Hector3i()) {
 		Ref<Image> img = Image::create_from_data(otsize.x * otsize.y, otsize.z, false, Image::FORMAT_L8, get_distance_field());
-		Vector<uint8_t> df_png = img->save_png_to_buffer();
+		Hector<uint8_t> df_png = img->save_png_to_buffer();
 		ERR_FAIL_COND_V(df_png.is_empty(), Dictionary());
 		d["octree_df_png"] = df_png;
 	} else {
-		d["octree_df"] = Vector<uint8_t>();
+		d["octree_df"] = Hector<uint8_t>();
 	}
 
 	d["level_counts"] = get_level_counts();
@@ -89,7 +89,7 @@ Dictionary VoxelGIData::_get_data() const {
 	return d;
 }
 
-void VoxelGIData::allocate(const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3 &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) {
+void VoxelGIData::allocate(const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3 &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts) {
 	RS::get_singleton()->voxel_gi_allocate_data(probe, p_to_cell_xform, p_aabb, p_octree_size, p_octree_cells, p_data_cells, p_distance_field, p_level_counts);
 	bounds = p_aabb;
 	to_cell_xform = p_to_cell_xform;
@@ -100,23 +100,23 @@ AABB VoxelGIData::get_bounds() const {
 	return bounds;
 }
 
-Vector3 VoxelGIData::get_octree_size() const {
+Hector3 VoxelGIData::get_octree_size() const {
 	return octree_size;
 }
 
-Vector<uint8_t> VoxelGIData::get_octree_cells() const {
+Hector<uint8_t> VoxelGIData::get_octree_cells() const {
 	return RS::get_singleton()->voxel_gi_get_octree_cells(probe);
 }
 
-Vector<uint8_t> VoxelGIData::get_data_cells() const {
+Hector<uint8_t> VoxelGIData::get_data_cells() const {
 	return RS::get_singleton()->voxel_gi_get_data_cells(probe);
 }
 
-Vector<uint8_t> VoxelGIData::get_distance_field() const {
+Hector<uint8_t> VoxelGIData::get_distance_field() const {
 	return RS::get_singleton()->voxel_gi_get_distance_field(probe);
 }
 
-Vector<int> VoxelGIData::get_level_counts() const {
+Hector<int> VoxelGIData::get_level_counts() const {
 	return RS::get_singleton()->voxel_gi_get_level_counts(probe);
 }
 
@@ -239,7 +239,7 @@ void VoxelGIData::_bind_methods() {
 #ifndef DISABLE_DEPRECATED
 bool VoxelGI::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "extents") { // Compatibility with Godot 3.x.
-		set_size((Vector3)p_value * 2);
+		set_size((Hector3)p_value * 2);
 		return true;
 	}
 	return false;
@@ -291,13 +291,13 @@ VoxelGI::Subdiv VoxelGI::get_subdiv() const {
 	return subdiv;
 }
 
-void VoxelGI::set_size(const Vector3 &p_size) {
+void VoxelGI::set_size(const Hector3 &p_size) {
 	// Prevent very small size dimensions as these breaks baking if other size dimensions are set very high.
 	size = p_size.maxf(1.0);
 	update_gizmos();
 }
 
-Vector3 VoxelGI::get_size() const {
+Hector3 VoxelGI::get_size() const {
 	return size;
 }
 
@@ -389,7 +389,7 @@ VoxelGI::BakeBeginFunc VoxelGI::bake_begin_function = nullptr;
 VoxelGI::BakeStepFunc VoxelGI::bake_step_function = nullptr;
 VoxelGI::BakeEndFunc VoxelGI::bake_end_function = nullptr;
 
-Vector3i VoxelGI::get_estimated_cell_size() const {
+Hector3i VoxelGI::get_estimated_cell_size() const {
 	static const int subdiv_value[SUBDIV_MAX] = { 6, 7, 8, 9 };
 	int cell_subdiv = subdiv_value[subdiv];
 	int axis_cell_size[3];
@@ -412,7 +412,7 @@ Vector3i VoxelGI::get_estimated_cell_size() const {
 		}
 	}
 
-	return Vector3i(axis_cell_size[0], axis_cell_size[1], axis_cell_size[2]);
+	return Hector3i(axis_cell_size[0], axis_cell_size[1], axis_cell_size[2]);
 }
 
 void VoxelGI::bake(Node *p_from_node, bool p_create_visual_debug) {
@@ -479,7 +479,7 @@ void VoxelGI::bake(Node *p_from_node, bool p_create_visual_debug) {
 			bake_step_function(pmc++, RTR("Generating Distance Field"));
 		}
 
-		Vector<uint8_t> df = baker.get_sdf_3d_image();
+		Hector<uint8_t> df = baker.get_sdf_3d_image();
 
 		RS::get_singleton()->voxel_gi_set_baked_exposure_normalization(probe_data_new->get_rid(), exposure_normalization);
 
@@ -546,7 +546,7 @@ void VoxelGI::_bind_methods() {
 	ClassDB::set_method_flags(get_class_static(), _scs_create("debug_bake"), METHOD_FLAGS_DEFAULT | METHOD_FLAG_EDITOR);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "subdiv", PROPERTY_HINT_ENUM, "64,128,256,512"), "set_subdiv", "get_subdiv");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR3, "size", PROPERTY_HINT_NONE, "suffix:m"), "set_size", "get_size");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "camera_attributes", PROPERTY_HINT_RESOURCE_TYPE, "CameraAttributesPractical,CameraAttributesPhysical"), "set_camera_attributes", "get_camera_attributes");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "data", PROPERTY_HINT_RESOURCE_TYPE, "VoxelGIData", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_ALWAYS_DUPLICATE), "set_probe_data", "get_probe_data");
 

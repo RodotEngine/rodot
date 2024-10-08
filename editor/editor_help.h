@@ -101,7 +101,7 @@ class EditorHelp : public VBoxContainer {
 
 	String edited_class;
 
-	Vector<Pair<String, int>> section_line;
+	Hector<Pair<String, int>> section_line;
 	HashMap<String, int> method_line;
 	HashMap<String, int> signal_line;
 	HashMap<String, int> property_line;
@@ -181,8 +181,8 @@ class EditorHelp : public VBoxContainer {
 
 	Error _goto_desc(const String &p_class);
 	//void _update_history_buttons();
-	void _update_method_list(MethodType p_method_type, const Vector<DocData::MethodDoc> &p_methods);
-	void _update_method_descriptions(const DocData::ClassDoc &p_classdoc, MethodType p_method_type, const Vector<DocData::MethodDoc> &p_methods);
+	void _update_method_list(MethodType p_method_type, const Hector<DocData::MethodDoc> &p_methods);
+	void _update_method_descriptions(const DocData::ClassDoc &p_classdoc, MethodType p_method_type, const Hector<DocData::MethodDoc> &p_methods);
 	void _update_doc();
 
 	void _request_help(const String &p_string);
@@ -230,7 +230,7 @@ public:
 	void go_to_class(const String &p_class);
 	void update_doc();
 
-	Vector<Pair<String, int>> get_sections();
+	Hector<Pair<String, int>> get_sections();
 	void scroll_to_section(int p_section_index);
 
 	void popup_search();
@@ -271,7 +271,7 @@ class EditorHelpBit : public VBoxContainer {
 		String deprecated_message;
 		String experimental_message;
 		DocType doc_type; // For method return type.
-		Vector<ArgumentData> arguments; // For methods and signals.
+		Hector<ArgumentData> arguments; // For methods and signals.
 	};
 
 	inline static HashMap<StringName, HelpData> doc_class_cache;
@@ -357,7 +357,7 @@ public:
 	};
 
 private:
-	using HighlightData = Vector<Pair<int, Color>>;
+	using HighlightData = Hector<Pair<int, Color>>;
 
 	static EditorHelpHighlighter *singleton;
 

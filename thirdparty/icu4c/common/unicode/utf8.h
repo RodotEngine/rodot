@@ -81,7 +81,7 @@
 #define U8_MASK_LEAD_BYTE(leadByte, countTrailBytes) ((leadByte)&=(1<<(6-(countTrailBytes)))-1)
 
 /**
- * Internal bit vector for 3-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD3_AND_T1.
+ * Internal bit Hector for 3-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD3_AND_T1.
  * Each bit indicates whether one lead byte + first trail byte pair starts a valid sequence.
  * Lead byte E0..EF bits 3..0 are used as byte index,
  * first trail byte bits 7..5 are used as bit index into that byte.
@@ -98,7 +98,7 @@
 #define U8_IS_VALID_LEAD3_AND_T1(lead, t1) (U8_LEAD3_T1_BITS[(lead)&0xf]&(1<<((uint8_t)(t1)>>5)))
 
 /**
- * Internal bit vector for 4-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD4_AND_T1.
+ * Internal bit Hector for 4-byte UTF-8 validity check, for use in U8_IS_VALID_LEAD4_AND_T1.
  * Each bit indicates whether one lead byte + first trail byte pair starts a valid sequence.
  * First trail byte bits 7..4 are used as byte index,
  * lead byte F0..F4 bits 2..0 are used as bit index into that byte.

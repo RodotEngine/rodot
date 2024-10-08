@@ -528,7 +528,7 @@ Error RenderingDeviceDriverVulkan::_initialize_device_extensions() {
 	ERR_FAIL_COND_V(err != VK_SUCCESS, ERR_CANT_CREATE);
 	ERR_FAIL_COND_V_MSG(device_extension_count == 0, ERR_CANT_CREATE, "vkEnumerateDeviceExtensionProperties failed to find any extensions\n\nDo you have a compatible Vulkan installable client driver (ICD) installed?");
 
-	TightLocalVector<VkExtensionProperties> device_extensions;
+	TightLocalHector<VkExtensionProperties> device_extensions;
 	device_extensions.resize(device_extension_count);
 	err = vkEnumerateDeviceExtensionProperties(physical_device, nullptr, &device_extension_count, device_extensions.ptr());
 	ERR_FAIL_COND_V(err != VK_SUCCESS, ERR_CANT_CREATE);
@@ -849,7 +849,7 @@ Error RenderingDeviceDriverVulkan::_check_device_capabilities() {
 				vrs_capabilities.max_fragment_size.y = vrs_properties.maxFragmentSize.height; // generally the same as width
 
 				// We'll attempt to default to a texel size of 16x16.
-				vrs_capabilities.texel_size = Vector2i(16, 16).clamp(vrs_capabilities.min_texel_size, vrs_capabilities.max_texel_size);
+				vrs_capabilities.texel_size = Hector2i(16, 16).clamp(vrs_capabilities.min_texel_size, vrs_capabilities.max_texel_size);
 
 				print_verbose(String("  Attachment fragment shading rate") + String(", min texel size: (") + itos(vrs_capabilities.min_texel_size.x) + String(", ") + itos(vrs_capabilities.min_texel_size.y) + String(")") + String(", max texel size: (") + itos(vrs_capabilities.max_texel_size.x) + String(", ") + itos(vrs_capabilities.max_texel_size.y) + String(")") + String(", max fragment size: (") + itos(vrs_capabilities.max_fragment_size.x) + String(", ") + itos(vrs_capabilities.max_fragment_size.y) + String(")"));
 			}
@@ -883,7 +883,7 @@ Error RenderingDeviceDriverVulkan::_check_device_capabilities() {
 	return OK;
 }
 
-Error RenderingDeviceDriverVulkan::_add_queue_create_info(LocalVector<VkDeviceQueueCreateInfo> &r_queue_create_info) {
+Error RenderingDeviceDriverVulkan::_add_queue_create_info(LocalHector<VkDeviceQueueCreateInfo> &r_queue_create_info) {
 	uint32_t queue_family_count = queue_family_properties.size();
 	queue_families.resize(queue_family_count);
 
@@ -903,15 +903,15 @@ Error RenderingDeviceDriverVulkan::_add_queue_create_info(LocalVector<VkDeviceQu
 		create_info.pQueuePriorities = queue_priorities;
 		r_queue_create_info.push_back(create_info);
 
-		// Prepare the vectors where the queues will be filled out.
+		// Prepare the Hectors where the queues will be filled out.
 		queue_families[i].resize(create_info.queueCount);
 	}
 
 	return OK;
 }
 
-Error RenderingDeviceDriverVulkan::_initialize_device(const LocalVector<VkDeviceQueueCreateInfo> &p_queue_create_info) {
-	TightLocalVector<const char *> enabled_extension_names;
+Error RenderingDeviceDriverVulkan::_initialize_device(const LocalHector<VkDeviceQueueCreateInfo> &p_queue_create_info) {
+	TightLocalHector<const char *> enabled_extension_names;
 	enabled_extension_names.reserve(enabled_device_extension_names.size());
 	for (const CharString &extension_name : enabled_device_extension_names) {
 		enabled_extension_names.push_back(extension_name.ptr());
@@ -1089,7 +1089,7 @@ Error RenderingDeviceDriverVulkan::_initialize_pipeline_cache() {
 	return OK;
 }
 
-static void _convert_subpass_attachments(const VkAttachmentReference2 *p_attachment_references_2, uint32_t p_attachment_references_count, TightLocalVector<VkAttachmentReference> &r_attachment_references) {
+static void _convert_subpass_attachments(const VkAttachmentReference2 *p_attachment_references_2, uint32_t p_attachment_references_count, TightLocalHector<VkAttachmentReference> &r_attachment_references) {
 	r_attachment_references.resize(p_attachment_references_count);
 	for (uint32_t i = 0; i < p_attachment_references_count; i++) {
 		// Ignore sType, pNext and aspectMask (which is currently unused).
@@ -1103,7 +1103,7 @@ VkResult RenderingDeviceDriverVulkan::_create_render_pass(VkDevice p_device, con
 		return device_functions.CreateRenderPass2KHR(p_device, p_create_info, p_allocator, p_render_pass);
 	} else {
 		// Compatibility fallback with regular create render pass but by converting the inputs from the newer version to the older one.
-		TightLocalVector<VkAttachmentDescription> attachments;
+		TightLocalHector<VkAttachmentDescription> attachments;
 		attachments.resize(p_create_info->attachmentCount);
 		for (uint32_t i = 0; i < p_create_info->attachmentCount; i++) {
 			// Ignores sType and pNext from the attachment.
@@ -1120,18 +1120,18 @@ VkResult RenderingDeviceDriverVulkan::_create_render_pass(VkDevice p_device, con
 			dst.finalLayout = src.finalLayout;
 		}
 
-		const uint32_t attachment_vectors_per_subpass = 4;
-		TightLocalVector<TightLocalVector<VkAttachmentReference>> subpasses_attachments;
-		TightLocalVector<VkSubpassDescription> subpasses;
-		subpasses_attachments.resize(p_create_info->subpassCount * attachment_vectors_per_subpass);
+		const uint32_t attachment_Hectors_per_subpass = 4;
+		TightLocalHector<TightLocalHector<VkAttachmentReference>> subpasses_attachments;
+		TightLocalHector<VkSubpassDescription> subpasses;
+		subpasses_attachments.resize(p_create_info->subpassCount * attachment_Hectors_per_subpass);
 		subpasses.resize(p_create_info->subpassCount);
 
 		for (uint32_t i = 0; i < p_create_info->subpassCount; i++) {
-			const uint32_t vector_base_index = i * attachment_vectors_per_subpass;
-			const uint32_t input_attachments_index = vector_base_index + 0;
-			const uint32_t color_attachments_index = vector_base_index + 1;
-			const uint32_t resolve_attachments_index = vector_base_index + 2;
-			const uint32_t depth_attachment_index = vector_base_index + 3;
+			const uint32_t Hector_base_index = i * attachment_Hectors_per_subpass;
+			const uint32_t input_attachments_index = Hector_base_index + 0;
+			const uint32_t color_attachments_index = Hector_base_index + 1;
+			const uint32_t resolve_attachments_index = Hector_base_index + 2;
+			const uint32_t depth_attachment_index = Hector_base_index + 3;
 			_convert_subpass_attachments(p_create_info->pSubpasses[i].pInputAttachments, p_create_info->pSubpasses[i].inputAttachmentCount, subpasses_attachments[input_attachments_index]);
 			_convert_subpass_attachments(p_create_info->pSubpasses[i].pColorAttachments, p_create_info->pSubpasses[i].colorAttachmentCount, subpasses_attachments[color_attachments_index]);
 			_convert_subpass_attachments(p_create_info->pSubpasses[i].pResolveAttachments, (p_create_info->pSubpasses[i].pResolveAttachments != nullptr) ? p_create_info->pSubpasses[i].colorAttachmentCount : 0, subpasses_attachments[resolve_attachments_index]);
@@ -1152,7 +1152,7 @@ VkResult RenderingDeviceDriverVulkan::_create_render_pass(VkDevice p_device, con
 			dst_subpass.pPreserveAttachments = src_subpass.pPreserveAttachments;
 		}
 
-		TightLocalVector<VkSubpassDependency> dependencies;
+		TightLocalHector<VkSubpassDependency> dependencies;
 		dependencies.resize(p_create_info->dependencyCount);
 
 		for (uint32_t i = 0; i < p_create_info->dependencyCount; i++) {
@@ -1185,11 +1185,11 @@ VkResult RenderingDeviceDriverVulkan::_create_render_pass(VkDevice p_device, con
 bool RenderingDeviceDriverVulkan::_release_image_semaphore(CommandQueue *p_command_queue, uint32_t p_semaphore_index, bool p_release_on_swap_chain) {
 	SwapChain *swap_chain = p_command_queue->image_semaphores_swap_chains[p_semaphore_index];
 	if (swap_chain != nullptr) {
-		// Clear the swap chain from the command queue's vector.
+		// Clear the swap chain from the command queue's Hector.
 		p_command_queue->image_semaphores_swap_chains[p_semaphore_index] = nullptr;
 
 		if (p_release_on_swap_chain) {
-			// Remove the acquired semaphore from the swap chain's vectors.
+			// Remove the acquired semaphore from the swap chain's Hectors.
 			for (uint32_t i = 0; i < swap_chain->command_queues_acquired.size(); i++) {
 				if (swap_chain->command_queues_acquired[i] == p_command_queue && swap_chain->command_queues_acquired_semaphores[i] == p_semaphore_index) {
 					swap_chain->command_queues_acquired.remove_at(i);
@@ -1355,7 +1355,7 @@ Error RenderingDeviceDriverVulkan::initialize(uint32_t p_device_index, uint32_t 
 	err = _check_device_capabilities();
 	ERR_FAIL_COND_V(err != OK, err);
 
-	LocalVector<VkDeviceQueueCreateInfo> queue_create_info;
+	LocalHector<VkDeviceQueueCreateInfo> queue_create_info;
 	err = _add_queue_create_info(queue_create_info);
 	ERR_FAIL_COND_V(err != OK, err);
 
@@ -2081,7 +2081,7 @@ bool RenderingDeviceDriverVulkan::sampler_is_format_supported_for_filter(DataFor
 /**** VERTEX ARRAY ****/
 /**********************/
 
-RDD::VertexFormatID RenderingDeviceDriverVulkan::vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) {
+RDD::VertexFormatID RenderingDeviceDriverVulkan::vertex_format_create(HectorView<VertexAttribute> p_vertex_attribs) {
 	// Pre-bookkeep.
 	VertexFormatInfo *vf_info = VersatileResource::allocate<VertexFormatInfo>(resources_allocator);
 
@@ -2157,9 +2157,9 @@ void RenderingDeviceDriverVulkan::command_pipeline_barrier(
 		CommandBufferID p_cmd_buffer,
 		BitField<PipelineStageBits> p_src_stages,
 		BitField<PipelineStageBits> p_dst_stages,
-		VectorView<MemoryBarrier> p_memory_barriers,
-		VectorView<BufferBarrier> p_buffer_barriers,
-		VectorView<TextureBarrier> p_texture_barriers) {
+		HectorView<MemoryBarrier> p_memory_barriers,
+		HectorView<BufferBarrier> p_buffer_barriers,
+		HectorView<TextureBarrier> p_texture_barriers) {
 	VkMemoryBarrier *vk_memory_barriers = ALLOCA_ARRAY(VkMemoryBarrier, p_memory_barriers.size());
 	for (uint32_t i = 0; i < p_memory_barriers.size(); i++) {
 		vk_memory_barriers[i] = {};
@@ -2257,7 +2257,7 @@ Error RenderingDeviceDriverVulkan::fence_wait(FenceID p_fence) {
 
 	if (fence->queue_signaled_from != nullptr) {
 		// Release all semaphores that the command queue associated to the fence waited on the last time it was submitted.
-		LocalVector<Pair<Fence *, uint32_t>> &pairs = fence->queue_signaled_from->image_semaphores_for_fences;
+		LocalHector<Pair<Fence *, uint32_t>> &pairs = fence->queue_signaled_from->image_semaphores_for_fences;
 		uint32_t i = 0;
 		while (i < pairs.size()) {
 			if (pairs[i].first == fence) {
@@ -2344,7 +2344,7 @@ RDD::CommandQueueID RenderingDeviceDriverVulkan::command_queue_create(CommandQue
 
 	// Make a virtual queue on top of a real queue. Use the queue from the family with the least amount of virtual queues created.
 	uint32_t family_index = p_cmd_queue_family.id - 1;
-	TightLocalVector<Queue> &queue_family = queue_families[family_index];
+	TightLocalHector<Queue> &queue_family = queue_families[family_index];
 	uint32_t picked_queue_index = UINT_MAX;
 	uint32_t picked_virtual_count = UINT_MAX;
 	for (uint32_t i = 0; i < queue_family.size(); i++) {
@@ -2370,7 +2370,7 @@ RDD::CommandQueueID RenderingDeviceDriverVulkan::command_queue_create(CommandQue
 	return CommandQueueID(command_queue);
 }
 
-Error RenderingDeviceDriverVulkan::command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) {
+Error RenderingDeviceDriverVulkan::command_queue_execute_and_present(CommandQueueID p_cmd_queue, HectorView<SemaphoreID> p_wait_semaphores, HectorView<CommandBufferID> p_cmd_buffers, HectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, HectorView<SwapChainID> p_swap_chains) {
 	DEV_ASSERT(p_cmd_queue.id != 0);
 
 	VkResult err;
@@ -2379,8 +2379,8 @@ Error RenderingDeviceDriverVulkan::command_queue_execute_and_present(CommandQueu
 	Fence *fence = (Fence *)(p_cmd_fence.id);
 	VkFence vk_fence = (fence != nullptr) ? fence->vk_fence : VK_NULL_HANDLE;
 
-	thread_local LocalVector<VkSemaphore> wait_semaphores;
-	thread_local LocalVector<VkPipelineStageFlags> wait_semaphores_stages;
+	thread_local LocalHector<VkSemaphore> wait_semaphores;
+	thread_local LocalHector<VkPipelineStageFlags> wait_semaphores_stages;
 	wait_semaphores.clear();
 	wait_semaphores_stages.clear();
 
@@ -2401,8 +2401,8 @@ Error RenderingDeviceDriverVulkan::command_queue_execute_and_present(CommandQueu
 	}
 
 	if (p_cmd_buffers.size() > 0) {
-		thread_local LocalVector<VkCommandBuffer> command_buffers;
-		thread_local LocalVector<VkSemaphore> signal_semaphores;
+		thread_local LocalHector<VkCommandBuffer> command_buffers;
+		thread_local LocalHector<VkSemaphore> signal_semaphores;
 		command_buffers.clear();
 		signal_semaphores.clear();
 
@@ -2476,9 +2476,9 @@ Error RenderingDeviceDriverVulkan::command_queue_execute_and_present(CommandQueu
 	}
 
 	if (p_swap_chains.size() > 0) {
-		thread_local LocalVector<VkSwapchainKHR> swapchains;
-		thread_local LocalVector<uint32_t> image_indices;
-		thread_local LocalVector<VkResult> results;
+		thread_local LocalHector<VkSwapchainKHR> swapchains;
+		thread_local LocalHector<uint32_t> image_indices;
+		thread_local LocalHector<VkResult> results;
 		swapchains.clear();
 		image_indices.clear();
 
@@ -2556,7 +2556,7 @@ void RenderingDeviceDriverVulkan::command_queue_free(CommandQueueID p_cmd_queue)
 
 	// Retrieve the queue family corresponding to the virtual queue.
 	DEV_ASSERT(command_queue->queue_family < queue_families.size());
-	TightLocalVector<Queue> &queue_family = queue_families[command_queue->queue_family];
+	TightLocalHector<Queue> &queue_family = queue_families[command_queue->queue_family];
 
 	// Decrease the virtual queue count.
 	DEV_ASSERT(command_queue->queue_index < queue_family.size());
@@ -2657,7 +2657,7 @@ void RenderingDeviceDriverVulkan::command_buffer_end(CommandBufferID p_cmd_buffe
 	vkEndCommandBuffer((VkCommandBuffer)p_cmd_buffer.id);
 }
 
-void RenderingDeviceDriverVulkan::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) {
+void RenderingDeviceDriverVulkan::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, HectorView<CommandBufferID> p_secondary_cmd_buffers) {
 	vkCmdExecuteCommands((VkCommandBuffer)p_cmd_buffer.id, p_secondary_cmd_buffers.size(), (const VkCommandBuffer *)p_secondary_cmd_buffers.ptr());
 }
 
@@ -2704,7 +2704,7 @@ RenderingDeviceDriver::SwapChainID RenderingDeviceDriverVulkan::swap_chain_creat
 	VkResult err = functions.GetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface->vk_surface, &format_count, nullptr);
 	ERR_FAIL_COND_V(err != VK_SUCCESS, SwapChainID());
 
-	TightLocalVector<VkSurfaceFormatKHR> formats;
+	TightLocalHector<VkSurfaceFormatKHR> formats;
 	formats.resize(format_count);
 	err = functions.GetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface->vk_surface, &format_count, formats.ptr());
 	ERR_FAIL_COND_V(err != VK_SUCCESS, SwapChainID());
@@ -2815,7 +2815,7 @@ Error RenderingDeviceDriverVulkan::swap_chain_resize(CommandQueueID p_cmd_queue,
 	}
 
 	// Find what present modes are supported.
-	TightLocalVector<VkPresentModeKHR> present_modes;
+	TightLocalHector<VkPresentModeKHR> present_modes;
 	uint32_t present_modes_count = 0;
 	err = functions.GetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface->vk_surface, &present_modes_count, nullptr);
 	ERR_FAIL_COND_V(err != VK_SUCCESS, ERR_CANT_CREATE);
@@ -3066,7 +3066,7 @@ void RenderingDeviceDriverVulkan::swap_chain_free(SwapChainID p_swap_chain) {
 /**** FRAMEBUFFER ****/
 /*********************/
 
-RDD::FramebufferID RenderingDeviceDriverVulkan::framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
+RDD::FramebufferID RenderingDeviceDriverVulkan::framebuffer_create(RenderPassID p_render_pass, HectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
 	VkImageView *vk_img_views = ALLOCA_ARRAY(VkImageView, p_attachments.size());
 	for (uint32_t i = 0; i < p_attachments.size(); i++) {
 		vk_img_views[i] = ((const TextureInfo *)p_attachments[i].id)->vk_view;
@@ -3116,19 +3116,19 @@ String RenderingDeviceDriverVulkan::shader_get_binary_cache_key() {
 	return "Vulkan-SV" + uitos(ShaderBinary::VERSION);
 }
 
-Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
+Hector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(HectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
 	ShaderReflection shader_refl;
 	if (_reflect_spirv(p_spirv, shader_refl) != OK) {
-		return Vector<uint8_t>();
+		return Hector<uint8_t>();
 	}
 
-	ERR_FAIL_COND_V_MSG((uint32_t)shader_refl.uniform_sets.size() > physical_device_properties.limits.maxBoundDescriptorSets, Vector<uint8_t>(),
+	ERR_FAIL_COND_V_MSG((uint32_t)shader_refl.uniform_sets.size() > physical_device_properties.limits.maxBoundDescriptorSets, Hector<uint8_t>(),
 			"Number of uniform sets is larger than what is supported by the hardware (" + itos(physical_device_properties.limits.maxBoundDescriptorSets) + ").");
 
 	// Collect reflection data into binary data.
 	ShaderBinary::Data binary_data;
-	Vector<Vector<ShaderBinary::DataBinding>> uniforms; // Set bindings.
-	Vector<ShaderBinary::SpecializationConstant> specialization_constants;
+	Hector<Hector<ShaderBinary::DataBinding>> uniforms; // Set bindings.
+	Hector<ShaderBinary::SpecializationConstant> specialization_constants;
 	{
 		binary_data.vertex_input_mask = shader_refl.vertex_input_mask;
 		binary_data.fragment_output_mask = shader_refl.fragment_output_mask;
@@ -3145,8 +3145,8 @@ Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(Ve
 			}
 		}
 
-		for (const Vector<ShaderUniform> &set_refl : shader_refl.uniform_sets) {
-			Vector<ShaderBinary::DataBinding> set_bindings;
+		for (const Hector<ShaderUniform> &set_refl : shader_refl.uniform_sets) {
+			Hector<ShaderBinary::DataBinding> set_bindings;
 			for (const ShaderUniform &uniform_refl : set_refl) {
 				ShaderBinary::DataBinding binding;
 				binding.type = (uint32_t)uniform_refl.type;
@@ -3169,9 +3169,9 @@ Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(Ve
 		}
 	}
 
-	Vector<Vector<uint8_t>> compressed_stages;
-	Vector<uint32_t> smolv_size;
-	Vector<uint32_t> zstd_size; // If 0, zstd not used.
+	Hector<Hector<uint8_t>> compressed_stages;
+	Hector<uint32_t> smolv_size;
+	Hector<uint32_t> zstd_size; // If 0, zstd not used.
 
 	uint32_t stages_binary_size = 0;
 
@@ -3180,11 +3180,11 @@ Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(Ve
 	for (uint32_t i = 0; i < p_spirv.size(); i++) {
 		smolv::ByteArray smolv;
 		if (!smolv::Encode(p_spirv[i].spirv.ptr(), p_spirv[i].spirv.size(), smolv, strip_debug ? smolv::kEncodeFlagStripDebugInfo : 0)) {
-			ERR_FAIL_V_MSG(Vector<uint8_t>(), "Error compressing shader stage :" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]));
+			ERR_FAIL_V_MSG(Hector<uint8_t>(), "Error compressing shader stage :" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]));
 		} else {
 			smolv_size.push_back(smolv.size());
 			{ // zstd.
-				Vector<uint8_t> zstd;
+				Hector<uint8_t> zstd;
 				zstd.resize(Compression::get_max_compressed_buffer_size(smolv.size(), Compression::MODE_ZSTD));
 				int dst_size = Compression::compress(zstd.ptrw(), &smolv[0], smolv.size(), Compression::MODE_ZSTD);
 
@@ -3193,7 +3193,7 @@ Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(Ve
 					zstd.resize(dst_size);
 					compressed_stages.push_back(zstd);
 				} else {
-					Vector<uint8_t> smv;
+					Hector<uint8_t> smv;
 					smv.resize(smolv.size());
 					memcpy(smv.ptrw(), &smolv[0], smolv.size());
 					zstd_size.push_back(0); // Not using zstd.
@@ -3228,7 +3228,7 @@ Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(Ve
 	total_size += compressed_stages.size() * sizeof(uint32_t) * 3; // Sizes.
 	total_size += stages_binary_size;
 
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(total_size);
 	{
 		uint32_t offset = 0;
@@ -3290,7 +3290,7 @@ Vector<uint8_t> RenderingDeviceDriverVulkan::shader_compile_binary_from_spirv(Ve
 	return ret;
 }
 
-RDD::ShaderID RenderingDeviceDriverVulkan::shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) {
+RDD::ShaderID RenderingDeviceDriverVulkan::shader_create_from_bytecode(const Hector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) {
 	r_shader_desc = {}; // Driver-agnostic.
 	ShaderInfo shader_info; // Driver-specific.
 
@@ -3328,7 +3328,7 @@ RDD::ShaderID RenderingDeviceDriverVulkan::shader_create_from_bytecode(const Vec
 		read_offset += STEPIFY(binary_data.shader_name_len, 4);
 	}
 
-	Vector<Vector<VkDescriptorSetLayoutBinding>> vk_set_bindings;
+	Hector<Hector<VkDescriptorSetLayoutBinding>> vk_set_bindings;
 
 	r_shader_desc.uniform_sets.resize(binary_data.set_count);
 	vk_set_bindings.resize(binary_data.set_count);
@@ -3418,7 +3418,7 @@ RDD::ShaderID RenderingDeviceDriverVulkan::shader_create_from_bytecode(const Vec
 		read_offset += sizeof(ShaderBinary::SpecializationConstant);
 	}
 
-	Vector<Vector<uint8_t>> stages_spirv;
+	Hector<Hector<uint8_t>> stages_spirv;
 	stages_spirv.resize(binary_data.stage_count);
 	r_shader_desc.stages.resize(binary_data.stage_count);
 
@@ -3434,7 +3434,7 @@ RDD::ShaderID RenderingDeviceDriverVulkan::shader_create_from_bytecode(const Vec
 
 		uint32_t buf_size = (zstd_size > 0) ? zstd_size : smolv_size;
 
-		Vector<uint8_t> smolv;
+		Hector<uint8_t> smolv;
 		const uint8_t *src_smolv = nullptr;
 
 		if (zstd_size > 0) {
@@ -3447,7 +3447,7 @@ RDD::ShaderID RenderingDeviceDriverVulkan::shader_create_from_bytecode(const Vec
 			src_smolv = binptr + read_offset;
 		}
 
-		Vector<uint8_t> &spirv = stages_spirv.ptrw()[i];
+		Hector<uint8_t> &spirv = stages_spirv.ptrw()[i];
 		uint32_t spirv_size = smolv::GetDecodedBufferSize(src_smolv, smolv_size);
 		spirv.resize(spirv_size);
 		if (!smolv::Decode(src_smolv, smolv_size, spirv.ptrw(), spirv_size)) {
@@ -3705,7 +3705,7 @@ void RenderingDeviceDriverVulkan::_descriptor_set_pool_unreference(DescriptorSet
 	}
 }
 
-RDD::UniformSetID RenderingDeviceDriverVulkan::uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) {
+RDD::UniformSetID RenderingDeviceDriverVulkan::uniform_set_create(HectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) {
 	DescriptorSetPoolKey pool_key;
 
 	VkWriteDescriptorSet *vk_writes = ALLOCA_ARRAY(VkWriteDescriptorSet, p_uniforms.size());
@@ -3967,13 +3967,13 @@ void RenderingDeviceDriverVulkan::command_clear_buffer(CommandBufferID p_cmd_buf
 	vkCmdFillBuffer((VkCommandBuffer)p_cmd_buffer.id, buf_info->vk_buffer, p_offset, p_size, 0);
 }
 
-void RenderingDeviceDriverVulkan::command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) {
+void RenderingDeviceDriverVulkan::command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, HectorView<BufferCopyRegion> p_regions) {
 	const BufferInfo *src_buf_info = (const BufferInfo *)p_src_buffer.id;
 	const BufferInfo *dst_buf_info = (const BufferInfo *)p_dst_buffer.id;
 	vkCmdCopyBuffer((VkCommandBuffer)p_cmd_buffer.id, src_buf_info->vk_buffer, dst_buf_info->vk_buffer, p_regions.size(), (const VkBufferCopy *)p_regions.ptr());
 }
 
-void RenderingDeviceDriverVulkan::command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) {
+void RenderingDeviceDriverVulkan::command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<TextureCopyRegion> p_regions) {
 	VkImageCopy *vk_copy_regions = ALLOCA_ARRAY(VkImageCopy, p_regions.size());
 	for (uint32_t i = 0; i < p_regions.size(); i++) {
 		_texture_copy_region_to_vk(p_regions[i], &vk_copy_regions[i]);
@@ -4015,7 +4015,7 @@ void RenderingDeviceDriverVulkan::command_clear_color_texture(CommandBufferID p_
 	vkCmdClearColorImage((VkCommandBuffer)p_cmd_buffer.id, tex_info->vk_view_create_info.image, RD_TO_VK_LAYOUT[p_texture_layout], &vk_color, 1, &vk_subresources);
 }
 
-void RenderingDeviceDriverVulkan::command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) {
+void RenderingDeviceDriverVulkan::command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, HectorView<BufferTextureCopyRegion> p_regions) {
 	VkBufferImageCopy *vk_copy_regions = ALLOCA_ARRAY(VkBufferImageCopy, p_regions.size());
 	for (uint32_t i = 0; i < p_regions.size(); i++) {
 		_buffer_texture_copy_region_to_vk(p_regions[i], &vk_copy_regions[i]);
@@ -4026,7 +4026,7 @@ void RenderingDeviceDriverVulkan::command_copy_buffer_to_texture(CommandBufferID
 	vkCmdCopyBufferToImage((VkCommandBuffer)p_cmd_buffer.id, buf_info->vk_buffer, tex_info->vk_view_create_info.image, RD_TO_VK_LAYOUT[p_dst_texture_layout], p_regions.size(), vk_copy_regions);
 }
 
-void RenderingDeviceDriverVulkan::command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) {
+void RenderingDeviceDriverVulkan::command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, HectorView<BufferTextureCopyRegion> p_regions) {
 	VkBufferImageCopy *vk_copy_regions = ALLOCA_ARRAY(VkBufferImageCopy, p_regions.size());
 	for (uint32_t i = 0; i < p_regions.size(); i++) {
 		_buffer_texture_copy_region_to_vk(p_regions[i], &vk_copy_regions[i]);
@@ -4047,7 +4047,7 @@ void RenderingDeviceDriverVulkan::pipeline_free(PipelineID p_pipeline) {
 
 // ----- BINDING -----
 
-void RenderingDeviceDriverVulkan::command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, VectorView<uint32_t> p_data) {
+void RenderingDeviceDriverVulkan::command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, HectorView<uint32_t> p_data) {
 	const ShaderInfo *shader_info = (const ShaderInfo *)p_shader.id;
 	vkCmdPushConstants((VkCommandBuffer)p_cmd_buffer.id, shader_info->vk_pipeline_layout, shader_info->vk_push_constant_stages, p_dst_first_index * sizeof(uint32_t), p_data.size() * sizeof(uint32_t), p_data.ptr());
 }
@@ -4056,7 +4056,7 @@ void RenderingDeviceDriverVulkan::command_bind_push_constants(CommandBufferID p_
 
 int RenderingDeviceDriverVulkan::caching_instance_count = 0;
 
-bool RenderingDeviceDriverVulkan::pipeline_cache_create(const Vector<uint8_t> &p_data) {
+bool RenderingDeviceDriverVulkan::pipeline_cache_create(const Hector<uint8_t> &p_data) {
 	if (caching_instance_count) {
 		WARN_PRINT("There's already a RenderingDeviceDriverVulkan instance doing PSO caching. Only one can at the same time. This one won't.");
 		return false;
@@ -4135,13 +4135,13 @@ size_t RenderingDeviceDriverVulkan::pipeline_cache_query_size() {
 	return pipelines_cache.current_size;
 }
 
-Vector<uint8_t> RenderingDeviceDriverVulkan::pipeline_cache_serialize() {
+Hector<uint8_t> RenderingDeviceDriverVulkan::pipeline_cache_serialize() {
 	DEV_ASSERT(pipelines_cache.vk_cache);
 
 	pipelines_cache.buffer.resize(pipelines_cache.current_size + sizeof(PipelineCacheHeader));
 
 	VkResult err = vkGetPipelineCacheData(vk_device, pipelines_cache.vk_cache, &pipelines_cache.current_size, pipelines_cache.buffer.ptrw() + sizeof(PipelineCacheHeader));
-	ERR_FAIL_COND_V(err != VK_SUCCESS && err != VK_INCOMPLETE, Vector<uint8_t>()); // Incomplete is OK because the cache may have grown since the size was queried (unless when exiting).
+	ERR_FAIL_COND_V(err != VK_SUCCESS && err != VK_INCOMPLETE, Hector<uint8_t>()); // Incomplete is OK because the cache may have grown since the size was queried (unless when exiting).
 
 	// The real buffer size may now be bigger than the updated current_size.
 	// We take into account the new size but keep the buffer resized in a worst-case fashion.
@@ -4180,7 +4180,7 @@ static void _attachment_reference_to_vk(const RDD::AttachmentReference &p_attach
 	r_vk_attachment_reference->aspectMask = (VkImageAspectFlags)p_attachment_reference.aspect;
 }
 
-RDD::RenderPassID RenderingDeviceDriverVulkan::render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) {
+RDD::RenderPassID RenderingDeviceDriverVulkan::render_pass_create(HectorView<Attachment> p_attachments, HectorView<Subpass> p_subpasses, HectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) {
 	// These are only used if we use multiview but we need to define them in scope.
 	const uint32_t view_mask = (1 << p_view_count) - 1;
 	const uint32_t correlation_mask = (1 << p_view_count) - 1;
@@ -4314,7 +4314,7 @@ void RenderingDeviceDriverVulkan::render_pass_free(RenderPassID p_render_pass) {
 
 static_assert(ARRAYS_COMPATIBLE_FIELDWISE(RDD::RenderPassClearValue, VkClearValue));
 
-void RenderingDeviceDriverVulkan::command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) {
+void RenderingDeviceDriverVulkan::command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, HectorView<RenderPassClearValue> p_clear_values) {
 	VkRenderPassBeginInfo render_pass_begin = {};
 	render_pass_begin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	render_pass_begin.renderPass = (VkRenderPass)p_render_pass.id;
@@ -4349,7 +4349,7 @@ void RenderingDeviceDriverVulkan::command_next_render_subpass(CommandBufferID p_
 	vkCmdNextSubpass((VkCommandBuffer)p_cmd_buffer.id, vk_subpass_contents);
 }
 
-void RenderingDeviceDriverVulkan::command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) {
+void RenderingDeviceDriverVulkan::command_render_set_viewport(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_viewports) {
 	VkViewport *vk_viewports = ALLOCA_ARRAY(VkViewport, p_viewports.size());
 	for (uint32_t i = 0; i < p_viewports.size(); i++) {
 		vk_viewports[i] = {};
@@ -4363,11 +4363,11 @@ void RenderingDeviceDriverVulkan::command_render_set_viewport(CommandBufferID p_
 	vkCmdSetViewport((VkCommandBuffer)p_cmd_buffer.id, 0, p_viewports.size(), vk_viewports);
 }
 
-void RenderingDeviceDriverVulkan::command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) {
+void RenderingDeviceDriverVulkan::command_render_set_scissor(CommandBufferID p_cmd_buffer, HectorView<Rect2i> p_scissors) {
 	vkCmdSetScissor((VkCommandBuffer)p_cmd_buffer.id, 0, p_scissors.size(), (VkRect2D *)p_scissors.ptr());
 }
 
-void RenderingDeviceDriverVulkan::command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) {
+void RenderingDeviceDriverVulkan::command_render_clear_attachments(CommandBufferID p_cmd_buffer, HectorView<AttachmentClear> p_attachment_clears, HectorView<Rect2i> p_rects) {
 	VkClearAttachment *vk_clears = ALLOCA_ARRAY(VkClearAttachment, p_attachment_clears.size());
 	for (uint32_t i = 0; i < p_attachment_clears.size(); i++) {
 		vk_clears[i] = {};
@@ -4536,11 +4536,11 @@ RDD::PipelineID RenderingDeviceDriverVulkan::render_pipeline_create(
 		PipelineMultisampleState p_multisample_state,
 		PipelineDepthStencilState p_depth_stencil_state,
 		PipelineColorBlendState p_blend_state,
-		VectorView<int32_t> p_color_attachments,
+		HectorView<int32_t> p_color_attachments,
 		BitField<PipelineDynamicStateFlags> p_dynamic_state,
 		RenderPassID p_render_pass,
 		uint32_t p_render_subpass,
-		VectorView<PipelineSpecializationConstant> p_specialization_constants) {
+		HectorView<PipelineSpecializationConstant> p_specialization_constants) {
 	// Vertex.
 	const VkPipelineVertexInputStateCreateInfo *vertex_input_state_create_info = nullptr;
 	if (p_vertex_format.id) {
@@ -4826,7 +4826,7 @@ void RenderingDeviceDriverVulkan::command_compute_dispatch_indirect(CommandBuffe
 
 // ----- PIPELINE -----
 
-RDD::PipelineID RenderingDeviceDriverVulkan::compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) {
+RDD::PipelineID RenderingDeviceDriverVulkan::compute_pipeline_create(ShaderID p_shader, HectorView<PipelineSpecializationConstant> p_specialization_constants) {
 	const ShaderInfo *shader_info = (const ShaderInfo *)p_shader.id;
 
 	VkComputePipelineCreateInfo pipeline_create_info = {};

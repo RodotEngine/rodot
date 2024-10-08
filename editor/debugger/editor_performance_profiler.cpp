@@ -98,7 +98,7 @@ void EditorPerformanceProfiler::_monitor_select() {
 }
 
 void EditorPerformanceProfiler::_monitor_draw() {
-	Vector<StringName> active;
+	Hector<StringName> active;
 	for (const KeyValue<StringName, Monitor> &E : monitors) {
 		if (E.value.item->is_checked(0)) {
 			active.push_back(E.key);
@@ -154,13 +154,13 @@ void EditorPerformanceProfiler::_monitor_draw() {
 		if (line_count > 0) {
 			Color horizontal_line_color;
 			horizontal_line_color.set_hsv(draw_color.get_h(), draw_color.get_s() * 0.5f, draw_color.get_v() * 0.5f, 0.3f);
-			monitor_draw->draw_line(rect.position, rect.position + Vector2(rect.size.width, 0), horizontal_line_color, Math::round(EDSCALE));
-			monitor_draw->draw_string(graph_font, rect.position + Vector2(0, graph_font->get_ascent(font_size)), _create_label(current.max, current.type), HORIZONTAL_ALIGNMENT_LEFT, rect.size.width, font_size, horizontal_line_color);
+			monitor_draw->draw_line(rect.position, rect.position + Hector2(rect.size.width, 0), horizontal_line_color, Math::round(EDSCALE));
+			monitor_draw->draw_string(graph_font, rect.position + Hector2(0, graph_font->get_ascent(font_size)), _create_label(current.max, current.type), HORIZONTAL_ALIGNMENT_LEFT, rect.size.width, font_size, horizontal_line_color);
 
 			for (int j = 0; j < line_count; j++) {
-				Vector2 y_offset = Vector2(0, rect.size.height * (1.0f - float(j) / float(line_count)));
-				monitor_draw->draw_line(rect.position + y_offset, rect.position + Vector2(rect.size.width, 0) + y_offset, horizontal_line_color, Math::round(EDSCALE));
-				monitor_draw->draw_string(graph_font, rect.position - Vector2(0, graph_font->get_descent(font_size)) + y_offset, _create_label(current.max * float(j) / float(line_count), current.type), HORIZONTAL_ALIGNMENT_LEFT, rect.size.width, font_size, horizontal_line_color);
+				Hector2 y_offset = Hector2(0, rect.size.height * (1.0f - float(j) / float(line_count)));
+				monitor_draw->draw_line(rect.position + y_offset, rect.position + Hector2(rect.size.width, 0) + y_offset, horizontal_line_color, Math::round(EDSCALE));
+				monitor_draw->draw_string(graph_font, rect.position - Hector2(0, graph_font->get_descent(font_size)) + y_offset, _create_label(current.max * float(j) / float(line_count), current.type), HORIZONTAL_ALIGNMENT_LEFT, rect.size.width, font_size, horizontal_line_color);
 			}
 		}
 
@@ -187,7 +187,7 @@ void EditorPerformanceProfiler::_monitor_draw() {
 
 				String label = _create_label(e->get(), current.type);
 				Size2 size = graph_font->get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-				Vector2 text_top_left_position = Vector2(from, h2) - (size + Vector2(MARKER_MARGIN, MARKER_MARGIN));
+				Hector2 text_top_left_position = Hector2(from, h2) - (size + Hector2(MARKER_MARGIN, MARKER_MARGIN));
 				if (text_top_left_position.x < 0) {
 					text_top_left_position.x = from + MARKER_MARGIN;
 				}
@@ -256,7 +256,7 @@ TreeItem *EditorPerformanceProfiler::_create_monitor_item(const StringName &p_mo
 void EditorPerformanceProfiler::_marker_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouseButton> mb = p_event;
 	if (mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT) {
-		Vector<StringName> active;
+		Hector<StringName> active;
 		for (KeyValue<StringName, Monitor> &E : monitors) {
 			if (E.value.item->is_checked(0)) {
 				active.push_back(E.key);
@@ -269,7 +269,7 @@ void EditorPerformanceProfiler::_marker_input(const Ref<InputEvent> &p_event) {
 				rows = 1;
 			}
 			Size2i cell_size = Size2i(monitor_draw->get_size()) / Size2i(columns, rows);
-			Vector2i index = mb->get_position() / cell_size;
+			Hector2i index = mb->get_position() / cell_size;
 			Rect2i rect(index * cell_size + Point2i(MARGIN, MARGIN), cell_size - Point2i(MARGIN, MARGIN) * 2);
 			if (rect.has_point(mb->get_position())) {
 				if (index.x + index.y * columns < active.size()) {
@@ -280,7 +280,7 @@ void EditorPerformanceProfiler::_marker_input(const Ref<InputEvent> &p_event) {
 				Ref<StyleBox> graph_style_box = get_theme_stylebox(CoreStringName(normal), SNAME("TextEdit"));
 				rect.position += graph_style_box->get_offset();
 				rect.size -= graph_style_box->get_minimum_size();
-				Vector2 point = mb->get_position() - rect.position;
+				Hector2 point = mb->get_position() - rect.position;
 				if (point.x >= rect.size.x) {
 					marker_frame = 0;
 				} else {
@@ -316,7 +316,7 @@ void EditorPerformanceProfiler::reset() {
 	monitor_draw->queue_redraw();
 }
 
-void EditorPerformanceProfiler::update_monitors(const Vector<StringName> &p_names) {
+void EditorPerformanceProfiler::update_monitors(const Hector<StringName> &p_names) {
 	HashMap<StringName, int> names;
 	for (int i = 0; i < p_names.size(); i++) {
 		names.insert("custom:" + p_names[i], Performance::MONITOR_MAX + i);
@@ -352,7 +352,7 @@ void EditorPerformanceProfiler::update_monitors(const Vector<StringName> &p_name
 	_build_monitor_tree();
 }
 
-void EditorPerformanceProfiler::add_profile_frame(const Vector<float> &p_values) {
+void EditorPerformanceProfiler::add_profile_frame(const Hector<float> &p_values) {
 	for (KeyValue<StringName, Monitor> &E : monitors) {
 		float value = 0.0f;
 		if (E.value.frame_index >= 0 && E.value.frame_index < p_values.size()) {

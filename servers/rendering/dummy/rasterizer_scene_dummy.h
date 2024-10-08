@@ -46,7 +46,7 @@ public:
 		virtual void set_skeleton(RID p_skeleton) override {}
 		virtual void set_material_override(RID p_override) override {}
 		virtual void set_material_overlay(RID p_overlay) override {}
-		virtual void set_surface_materials(const Vector<RID> &p_materials) override {}
+		virtual void set_surface_materials(const Hector<RID> &p_materials) override {}
 		virtual void set_mesh_instance(RID p_mesh_instance) override {}
 		virtual void set_transform(const Transform3D &p_transform, const AABB &p_aabb, const AABB &p_transformed_aabb) override {}
 		virtual void set_pivot_data(float p_sorting_offset, bool p_use_aabb_center) override {}
@@ -101,7 +101,7 @@ public:
 
 	/* SDFGI UPDATE */
 
-	void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) override {}
+	void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Hector3 &p_world_position) override {}
 	int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const override { return 0; }
 	AABB sdfgi_get_pending_region_bounds(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return AABB(); }
 	uint32_t sdfgi_get_pending_region_cascade(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return 0; }
@@ -141,12 +141,12 @@ public:
 	void fog_volume_instance_set_transform(RID p_fog_volume_instance, const Transform3D &p_transform) override {}
 	void fog_volume_instance_set_active(RID p_fog_volume_instance, bool p_active) override {}
 	RID fog_volume_instance_get_volume(RID p_fog_volume_instance) const override { return RID(); }
-	Vector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const override { return Vector3(); }
+	Hector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const override { return Hector3(); }
 
 	RID voxel_gi_instance_create(RID p_voxel_gi) override { return RID(); }
 	void voxel_gi_instance_set_transform_to_data(RID p_probe, const Transform3D &p_xform) override {}
 	bool voxel_gi_needs_update(RID p_probe) const override { return false; }
-	void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) override {}
+	void voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) override {}
 
 	void voxel_gi_set_quality(RS::VoxelGIQuality) override {}
 
@@ -187,7 +187,7 @@ public:
 		}
 	}
 	void update() override {}
-	void sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) override {}
+	void sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) override {}
 
 	virtual void decals_set_filter(RS::DecalFilter p_filter) override {}
 	virtual void light_projectors_set_filter(RS::LightProjectorFilter p_filter) override {}

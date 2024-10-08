@@ -171,7 +171,7 @@ class DefragmentationContextPimpl;
 class AllocatorPimpl;
 class PoolPimpl;
 class NormalBlock;
-class BlockVector;
+class BlockHector;
 class CommittedAllocationList;
 class JsonWriter;
 class VirtualBlockPimpl;
@@ -558,7 +558,7 @@ protected:
 
 private:
     friend class AllocatorPimpl;
-    friend class BlockVector;
+    friend class BlockHector;
     friend class CommittedAllocationList;
     friend class JsonWriter;
     friend class BlockMetadata_Linear;
@@ -821,7 +821,7 @@ private:
 
     DefragmentationContext(AllocatorPimpl* allocator,
         const DEFRAGMENTATION_DESC& desc,
-        BlockVector* poolVector);
+        BlockHector* poolHector);
     ~DefragmentationContext();
 
     D3D12MA_CLASS_NO_COPY(DefragmentationContext)

@@ -56,12 +56,12 @@ namespace embree
       Device* device = nullptr;
     };
 
-    /*! vector class that performs aligned allocations from Device object */
+    /*! Hector class that performs aligned allocations from Device object */
     template<typename T>
-    using vector = vector_t<T,allocator<T,std::alignment_of<T>::value>>;
+    using Hector = Hector_t<T,allocator<T,std::alignment_of<T>::value>>;
 
     template<typename T, size_t alignment>
-    using avector = vector_t<T,allocator<T,alignment>>;
+    using aHector = Hector_t<T,allocator<T,alignment>>;
 
   public:
 

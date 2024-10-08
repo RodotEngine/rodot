@@ -108,7 +108,7 @@ void FileDialog::set_visible(bool p_visible) {
 	}
 }
 
-void FileDialog::_native_dialog_cb(bool p_ok, const Vector<String> &p_files, int p_filter, const Dictionary &p_selected_options) {
+void FileDialog::_native_dialog_cb(bool p_ok, const Hector<String> &p_files, int p_filter, const Dictionary &p_selected_options) {
 	if (!p_ok) {
 		file->set_text("");
 		emit_signal(SNAME("canceled"));
@@ -119,7 +119,7 @@ void FileDialog::_native_dialog_cb(bool p_ok, const Vector<String> &p_files, int
 		return;
 	}
 
-	Vector<String> files = p_files;
+	Hector<String> files = p_files;
 	if (access != ACCESS_FILESYSTEM) {
 		for (String &file_name : files) {
 			file_name = ProjectSettings::get_singleton()->localize_path(file_name);
@@ -336,8 +336,8 @@ void FileDialog::set_enable_multiple_selection(bool p_enable) {
 	tree->set_select_mode(p_enable ? Tree::SELECT_MULTI : Tree::SELECT_SINGLE);
 }
 
-Vector<String> FileDialog::get_selected_files() const {
-	Vector<String> list;
+Hector<String> FileDialog::get_selected_files() const {
+	Hector<String> list;
 
 	TreeItem *item = tree->get_root();
 	item = tree->get_next_selected(item);
@@ -426,7 +426,7 @@ void FileDialog::_action_pressed() {
 		TreeItem *ti = tree->get_next_selected(nullptr);
 		String fbase = dir_access->get_current_dir();
 
-		Vector<String> files;
+		Hector<String> files;
 		while (ti) {
 			files.push_back(fbase.path_join(ti->get_text(0)));
 			ti = tree->get_next_selected(ti);
@@ -657,7 +657,7 @@ void FileDialog::update_file_name() {
 		String filter_str = filters[idx];
 		String file_str = file->get_text();
 		String base_name = file_str.get_basename();
-		Vector<String> filter_substr = filter_str.split(";");
+		Hector<String> filter_substr = filter_str.split(";");
 		if (filter_substr.size() >= 2) {
 			file_str = base_name + "." + filter_substr[0].strip_edges().get_extension().to_lower();
 		} else {
@@ -910,7 +910,7 @@ void FileDialog::add_filter(const String &p_filter, const String &p_description)
 	invalidate();
 }
 
-void FileDialog::set_filters(const Vector<String> &p_filters) {
+void FileDialog::set_filters(const Hector<String> &p_filters) {
 	if (filters == p_filters) {
 		return;
 	}
@@ -929,7 +929,7 @@ void FileDialog::set_filename_filter(const String &p_filename_filter) {
 	invalidate();
 }
 
-Vector<String> FileDialog::get_filters() const {
+Hector<String> FileDialog::get_filters() const {
 	return filters;
 }
 
@@ -1249,8 +1249,8 @@ String FileDialog::get_option_name(int p_option) const {
 	return options[p_option].name;
 }
 
-Vector<String> FileDialog::get_option_values(int p_option) const {
-	ERR_FAIL_INDEX_V(p_option, options.size(), Vector<String>());
+Hector<String> FileDialog::get_option_values(int p_option) const {
+	ERR_FAIL_INDEX_V(p_option, options.size(), Hector<String>());
 	return options[p_option].values;
 }
 
@@ -1271,7 +1271,7 @@ void FileDialog::set_option_name(int p_option, const String &p_name) {
 	}
 }
 
-void FileDialog::set_option_values(int p_option, const Vector<String> &p_values) {
+void FileDialog::set_option_values(int p_option, const Hector<String> &p_values) {
 	if (p_option < 0) {
 		p_option += get_option_count();
 	}
@@ -1304,7 +1304,7 @@ void FileDialog::set_option_default(int p_option, int p_index) {
 	}
 }
 
-void FileDialog::add_option(const String &p_name, const Vector<String> &p_values, int p_index) {
+void FileDialog::add_option(const String &p_name, const Hector<String> &p_values, int p_index) {
 	Option opt;
 	opt.name = p_name;
 	opt.values = p_values;

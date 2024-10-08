@@ -57,14 +57,14 @@ public:
 protected:
 	static void _bind_methods();
 
-	GDVIRTUAL0RC(Vector<String>, _get_recognized_extensions)
+	GDVIRTUAL0RC(Hector<String>, _get_recognized_extensions)
 	GDVIRTUAL2RC(bool, _recognize_path, String, StringName)
 	GDVIRTUAL1RC(bool, _handles_type, StringName)
 	GDVIRTUAL1RC(String, _get_resource_type, String)
 	GDVIRTUAL1RC(String, _get_resource_script_class, String)
 	GDVIRTUAL1RC(ResourceUID::ID, _get_resource_uid, String)
-	GDVIRTUAL2RC(Vector<String>, _get_dependencies, String, bool)
-	GDVIRTUAL1RC(Vector<String>, _get_classes_used, String)
+	GDVIRTUAL2RC(Hector<String>, _get_dependencies, String, bool)
+	GDVIRTUAL1RC(Hector<String>, _get_classes_used, String)
 	GDVIRTUAL2RC(Error, _rename_dependencies, String, Dictionary)
 	GDVIRTUAL1RC(bool, _exists, String)
 
@@ -154,7 +154,7 @@ private:
 	static DependencyErrorNotify dep_err_notify;
 	static bool abort_on_missing_resource;
 	static bool create_missing_resources_if_class_unavailable;
-	static HashMap<String, Vector<String>> translation_remaps;
+	static HashMap<String, Hector<String>> translation_remaps;
 	static HashMap<String, String> path_remaps;
 
 	static String _path_remap(const String &p_path, bool *r_translation_remapped = nullptr);
@@ -195,14 +195,14 @@ private:
 			Callable callable;
 			uint32_t flags = 0;
 		};
-		LocalVector<ResourceChangedConnection> resource_changed_connections;
+		LocalHector<ResourceChangedConnection> resource_changed_connections;
 	};
 
 	static void _run_load_task(void *p_userdata);
 
 	static thread_local int load_nesting;
 	static thread_local HashMap<int, HashMap<String, Ref<Resource>>> res_ref_overrides; // Outermost key is nesting level.
-	static thread_local Vector<String> load_paths_stack;
+	static thread_local Hector<String> load_paths_stack;
 	static thread_local ThreadLoadTask *curr_load_task;
 
 	static SafeBinaryMutex<BINARY_MUTEX_TAG> thread_load_mutex;

@@ -59,7 +59,7 @@ protected:
 		TailDirection tail_direction = TAIL_DIRECTION_AVERAGE_CHILDREN;
 		StringName bone_tail;
 		Transform3D reference_pose;
-		Vector2 handle_offset;
+		Hector2 handle_offset;
 		StringName group;
 		bool required = false;
 	};
@@ -67,8 +67,8 @@ protected:
 	StringName root_bone;
 	StringName scale_base_bone;
 
-	Vector<SkeletonProfileGroup> groups;
-	Vector<SkeletonProfileBone> bones;
+	Hector<SkeletonProfileGroup> groups;
+	Hector<SkeletonProfileBone> bones;
 
 	bool _get(const StringName &p_path, Variant &r_ret) const;
 	bool _set(const StringName &p_path, const Variant &p_value);
@@ -112,8 +112,8 @@ public:
 	Transform3D get_reference_pose(int p_bone_idx) const;
 	void set_reference_pose(int p_bone_idx, const Transform3D &p_reference_pose);
 
-	Vector2 get_handle_offset(int p_bone_idx) const;
-	void set_handle_offset(int p_bone_idx, const Vector2 &p_handle_offset);
+	Hector2 get_handle_offset(int p_bone_idx) const;
+	void set_handle_offset(int p_bone_idx, const Hector2 &p_handle_offset);
 
 	StringName get_group(int p_bone_idx) const;
 	void set_group(int p_bone_idx, const StringName &p_group);

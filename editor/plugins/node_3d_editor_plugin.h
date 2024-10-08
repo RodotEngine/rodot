@@ -66,7 +66,7 @@ class ViewportRotationControl : public Control {
 	GDCLASS(ViewportRotationControl, Control);
 
 	struct Axis2D {
-		Vector2 screen_point;
+		Hector2 screen_point;
 		float z_axis = -99.0;
 		int axis = -1;
 	};
@@ -78,9 +78,9 @@ class ViewportRotationControl : public Control {
 	};
 
 	Node3DEditorViewport *viewport = nullptr;
-	Vector<Color> axis_colors;
-	Vector<int> axis_menu_options;
-	Vector2i orbiting_mouse_start;
+	Hector<Color> axis_colors;
+	Hector<int> axis_menu_options;
+	Hector2i orbiting_mouse_start;
 	int orbiting_index = -1;
 	int focused_axis = -2;
 
@@ -91,11 +91,11 @@ protected:
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
 	void _draw();
 	void _draw_axis(const Axis2D &p_axis);
-	void _get_sorted_axis(Vector<Axis2D> &r_axis);
+	void _get_sorted_axis(Hector<Axis2D> &r_axis);
 	void _update_focus();
 	void _on_mouse_exited();
-	void _process_click(int p_index, Vector2 p_position, bool p_pressed);
-	void _process_drag(Ref<InputEventWithModifiers> p_event, int p_index, Vector2 p_position, Vector2 p_relative_position);
+	void _process_click(int p_index, Hector2 p_position, bool p_pressed);
+	void _process_drag(Ref<InputEventWithModifiers> p_event, int p_index, Hector2 p_position, Hector2 p_relative_position);
 
 public:
 	void set_viewport(Node3DEditorViewport *p_viewport);
@@ -158,7 +158,7 @@ class Node3DEditorViewport : public Control {
 		VIEW_DISPLAY_DEBUG_CLUSTER_DECALS,
 		VIEW_DISPLAY_DEBUG_CLUSTER_REFLECTION_PROBES,
 		VIEW_DISPLAY_DEBUG_OCCLUDERS,
-		VIEW_DISPLAY_MOTION_VECTORS,
+		VIEW_DISPLAY_MOTION_HectorS,
 		VIEW_DISPLAY_INTERNAL_BUFFER,
 		VIEW_DISPLAY_MAX,
 		// > Keep in sync with menu.
@@ -221,9 +221,9 @@ private:
 	Node3D *preview_node = nullptr;
 	bool update_preview_node = false;
 	Point2 preview_node_viewport_pos;
-	Vector3 preview_node_pos;
+	Hector3 preview_node_pos;
 	AABB *preview_bounds = nullptr;
-	Vector<String> selected_files;
+	Hector<String> selected_files;
 	AcceptDialog *accept = nullptr;
 
 	Node *target_node = nullptr;
@@ -249,7 +249,7 @@ private:
 
 	bool freelook_active;
 	real_t freelook_speed;
-	Vector2 previous_mouse_position;
+	Hector2 previous_mouse_position;
 
 	PanelContainer *info_panel = nullptr;
 	Label *info_label = nullptr;
@@ -283,25 +283,25 @@ private:
 	void _clear_selected();
 	void _select_clicked(bool p_allow_locked);
 	ObjectID _select_ray(const Point2 &p_pos) const;
-	void _find_items_at_pos(const Point2 &p_pos, Vector<_RayResult> &r_results, bool p_include_locked);
+	void _find_items_at_pos(const Point2 &p_pos, Hector<_RayResult> &r_results, bool p_include_locked);
 
 	Transform3D _get_camera_transform() const;
 	int get_selected_count() const;
 	void cancel_transform();
 	void _update_shrink();
 
-	Vector3 _get_camera_position() const;
-	Vector3 _get_camera_normal() const;
-	Vector3 _get_screen_to_space(const Vector3 &p_vector3);
+	Hector3 _get_camera_position() const;
+	Hector3 _get_camera_normal() const;
+	Hector3 _get_screen_to_space(const Hector3 &p_Hector3);
 
 	void _select_region();
-	bool _transform_gizmo_select(const Vector2 &p_screenpos, bool p_highlight_only = false);
+	bool _transform_gizmo_select(const Hector2 &p_screenpos, bool p_highlight_only = false);
 	void _transform_gizmo_apply(Node3D *p_node, const Transform3D &p_transform, bool p_local);
 
-	void _nav_pan(Ref<InputEventWithModifiers> p_event, const Vector2 &p_relative);
-	void _nav_zoom(Ref<InputEventWithModifiers> p_event, const Vector2 &p_relative);
-	void _nav_orbit(Ref<InputEventWithModifiers> p_event, const Vector2 &p_relative);
-	void _nav_look(Ref<InputEventWithModifiers> p_event, const Vector2 &p_relative);
+	void _nav_pan(Ref<InputEventWithModifiers> p_event, const Hector2 &p_relative);
+	void _nav_zoom(Ref<InputEventWithModifiers> p_event, const Hector2 &p_relative);
+	void _nav_orbit(Ref<InputEventWithModifiers> p_event, const Hector2 &p_relative);
+	void _nav_look(Ref<InputEventWithModifiers> p_event, const Hector2 &p_relative);
 
 	bool _is_shortcut_empty(const String &p_name);
 	bool _is_nav_modifier_pressed(const String &p_name);
@@ -313,8 +313,8 @@ private:
 
 	ObjectID clicked;
 	ObjectID material_target;
-	Vector<Node3D *> selection_results;
-	Vector<Node3D *> selection_results_menu;
+	Hector<Node3D *> selection_results;
+	Hector<Node3D *> selection_results_menu;
 	bool clicked_wants_append = false;
 	bool selection_in_progress = false;
 
@@ -354,9 +354,9 @@ private:
 		TransformMode mode;
 		TransformPlane plane;
 		Transform3D original;
-		Vector3 click_ray;
-		Vector3 click_ray_pos;
-		Vector3 center;
+		Hector3 click_ray;
+		Hector3 click_ray_pos;
+		Hector3 center;
 		Point2 mouse_pos;
 		Point2 original_mouse_pos;
 		bool snap = false;
@@ -379,9 +379,9 @@ private:
 	} _edit;
 
 	struct Cursor {
-		Vector3 pos;
+		Hector3 pos;
 		real_t x_rot, y_rot, distance, fov_scale;
-		Vector3 eye_pos; // Used in freelook mode
+		Hector3 eye_pos; // Used in freelook mode
 		bool region_select;
 		Point2 region_begin, region_end;
 
@@ -423,7 +423,7 @@ private:
 		}
 	};
 
-	NavigationMode _get_nav_mode_from_shortcut_check(ViewportNavMouseButton p_mouse_button, Vector<ShortcutCheckSet> p_shortcut_check_sets, bool p_use_not_empty);
+	NavigationMode _get_nav_mode_from_shortcut_check(ViewportNavMouseButton p_mouse_button, Hector<ShortcutCheckSet> p_shortcut_check_sets, bool p_use_not_empty);
 
 	void set_freelook_active(bool active_now);
 	void scale_freelook_speed(real_t scale);
@@ -471,12 +471,12 @@ private:
 	void _list_select(Ref<InputEventMouseButton> b);
 	Point2 _get_warped_mouse_motion(const Ref<InputEventMouseMotion> &p_ev_mouse_motion) const;
 
-	Vector3 _get_instance_position(const Point2 &p_pos) const;
+	Hector3 _get_instance_position(const Point2 &p_pos) const;
 	static AABB _calculate_spatial_bounds(const Node3D *p_parent, bool p_omit_top_level = false, const Transform3D *p_bounds_orientation = nullptr);
 
 	Node *_sanitize_preview_node(Node *p_node) const;
 
-	void _create_preview_node(const Vector<String> &files) const;
+	void _create_preview_node(const Hector<String> &files) const;
 	void _remove_preview_node();
 	bool _apply_preview_material(ObjectID p_target, const Point2 &p_point) const;
 	void _reset_preview_material() const;
@@ -491,11 +491,11 @@ private:
 
 	void _project_settings_changed();
 
-	Transform3D _compute_transform(TransformMode p_mode, const Transform3D &p_original, const Transform3D &p_original_local, Vector3 p_motion, double p_extra, bool p_local, bool p_orthogonal);
+	Transform3D _compute_transform(TransformMode p_mode, const Transform3D &p_original, const Transform3D &p_original_local, Hector3 p_motion, double p_extra, bool p_local, bool p_orthogonal);
 
 	void begin_transform(TransformMode p_mode, bool instant);
 	void commit_transform();
-	void apply_transform(Vector3 p_motion, double p_snap);
+	void apply_transform(Hector3 p_motion, double p_snap);
 	void update_transform(bool p_shift);
 	void update_transform_numeric();
 	void finish_transform();
@@ -519,9 +519,9 @@ public:
 	void reset();
 	bool is_freelook_active() const { return freelook_active; }
 
-	Vector3 get_ray_pos(const Vector2 &p_pos) const;
-	Vector3 get_ray(const Vector2 &p_pos) const;
-	Point2 point_to_screen(const Vector3 &p_point);
+	Hector3 get_ray_pos(const Hector2 &p_pos) const;
+	Hector3 get_ray(const Hector2 &p_pos) const;
+	Point2 point_to_screen(const Hector3 &p_point);
 
 	void focus_selection();
 
@@ -585,8 +585,8 @@ private:
 
 	bool dragging_v;
 	bool dragging_h;
-	Vector2 drag_begin_pos;
-	Vector2 drag_begin_ratio;
+	Hector2 drag_begin_pos;
+	Hector2 drag_begin_ratio;
 
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
 
@@ -651,7 +651,7 @@ private:
 	bool grid_enabled = false;
 	bool grid_init_draw = false;
 	Camera3D::ProjectionType grid_camera_last_update_perspective = Camera3D::PROJECTION_PERSPECTIVE;
-	Vector3 grid_camera_last_update_position;
+	Hector3 grid_camera_last_update_position;
 
 	Ref<ArrayMesh> move_gizmo[3], move_plane_gizmo[3], rotate_gizmo[4], scale_gizmo[3], scale_plane_gizmo[3], axis_gizmo[3];
 	Ref<StandardMaterial3D> gizmo_color[3];
@@ -799,8 +799,8 @@ private:
 
 	void _node_added(Node *p_node);
 	void _node_removed(Node *p_node);
-	Vector<Ref<EditorNode3DGizmoPlugin>> gizmo_plugins_by_priority;
-	Vector<Ref<EditorNode3DGizmoPlugin>> gizmo_plugins_by_name;
+	Hector<Ref<EditorNode3DGizmoPlugin>> gizmo_plugins_by_priority;
+	Hector<Ref<EditorNode3DGizmoPlugin>> gizmo_plugins_by_name;
 
 	void _register_all_gizmos();
 
@@ -832,7 +832,7 @@ private:
 	void _sun_direction_input(const Ref<InputEvent> &p_event);
 	void _sun_direction_angle_set();
 
-	Vector2 sun_rotation;
+	Hector2 sun_rotation;
 
 	Ref<Shader> sun_direction_shader;
 	Ref<ShaderMaterial> sun_direction_material;
@@ -883,7 +883,7 @@ protected:
 public:
 	static Node3DEditor *get_singleton() { return singleton; }
 
-	Vector3 snap_point(Vector3 p_target, Vector3 p_start = Vector3(0, 0, 0)) const;
+	Hector3 snap_point(Hector3 p_target, Hector3 p_start = Hector3(0, 0, 0)) const;
 
 	float get_znear() const { return settings_znear->get_value(); }
 	float get_zfar() const { return settings_zfar->get_value(); }
@@ -936,7 +936,7 @@ public:
 	Node3D *get_single_selected_node() { return selected; }
 	bool is_current_selected_gizmo(const EditorNode3DGizmo *p_gizmo);
 	bool is_subgizmo_selected(int p_id);
-	Vector<int> get_subgizmo_selection();
+	Hector<int> get_subgizmo_selection();
 	void clear_subgizmo_selection(Object *p_obj = nullptr);
 
 	Ref<EditorNode3DGizmo> get_current_hover_gizmo() const { return current_hover_gizmo; }
@@ -974,8 +974,8 @@ public:
 	DynamicBVH::ID insert_gizmo_bvh_node(Node3D *p_node, const AABB &p_aabb);
 	void update_gizmo_bvh_node(DynamicBVH::ID p_id, const AABB &p_aabb);
 	void remove_gizmo_bvh_node(DynamicBVH::ID p_id);
-	Vector<Node3D *> gizmo_bvh_ray_query(const Vector3 &p_ray_start, const Vector3 &p_ray_end);
-	Vector<Node3D *> gizmo_bvh_frustum_query(const Vector<Plane> &p_frustum);
+	Hector<Node3D *> gizmo_bvh_ray_query(const Hector3 &p_ray_start, const Hector3 &p_ray_end);
+	Hector<Node3D *> gizmo_bvh_frustum_query(const Hector<Plane> &p_frustum);
 
 	void edit(Node3D *p_spatial);
 	void clear();
@@ -1011,8 +1011,8 @@ class ViewportNavigationControl : public Control {
 	GDCLASS(ViewportNavigationControl, Control);
 
 	Node3DEditorViewport *viewport = nullptr;
-	Vector2i focused_mouse_start;
-	Vector2 focused_pos;
+	Hector2i focused_mouse_start;
+	Hector2 focused_pos;
 	bool hovered = false;
 	int focused_index = -1;
 	Node3DEditorViewport::NavigationMode nav_mode = Node3DEditorViewport::NavigationMode::NAVIGATION_NONE;
@@ -1025,8 +1025,8 @@ protected:
 	void _draw();
 	void _on_mouse_entered();
 	void _on_mouse_exited();
-	void _process_click(int p_index, Vector2 p_position, bool p_pressed);
-	void _process_drag(int p_index, Vector2 p_position, Vector2 p_relative_position);
+	void _process_click(int p_index, Hector2 p_position, bool p_pressed);
+	void _process_drag(int p_index, Hector2 p_position, Hector2 p_relative_position);
 	void _update_navigation();
 
 public:

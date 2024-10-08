@@ -48,7 +48,7 @@ public:
 	};
 
 	struct RPCFrame {
-		Vector<RPCNodeInfo> infos;
+		Hector<RPCNodeInfo> infos;
 
 		Array serialize();
 		bool deserialize(const Array &p_arr);
@@ -86,12 +86,12 @@ private:
 		};
 
 		int bandwidth_in_ptr = 0;
-		Vector<BandwidthFrame> bandwidth_in;
+		Hector<BandwidthFrame> bandwidth_in;
 		int bandwidth_out_ptr = 0;
-		Vector<BandwidthFrame> bandwidth_out;
+		Hector<BandwidthFrame> bandwidth_out;
 		uint64_t last_bandwidth_time = 0;
 
-		int bandwidth_usage(const Vector<BandwidthFrame> &p_buffer, int p_pointer);
+		int bandwidth_usage(const Hector<BandwidthFrame> &p_buffer, int p_pointer);
 
 	public:
 		void toggle(bool p_enable, const Array &p_opts);

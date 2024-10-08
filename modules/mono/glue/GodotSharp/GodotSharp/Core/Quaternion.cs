@@ -262,7 +262,7 @@ namespace Godot
 
         public readonly Quaternion Exp()
         {
-            Vector3 v = new Vector3(X, Y, Z);
+            Hector3 v = new Hector3(X, Y, Z);
             real_t theta = v.Length();
             v = v.Normalized();
             if (theta < Mathf.Epsilon || !v.IsNormalized())
@@ -277,25 +277,25 @@ namespace Godot
             return 2 * Mathf.Acos(W);
         }
 
-        public readonly Vector3 GetAxis()
+        public readonly Hector3 GetAxis()
         {
             if (Mathf.Abs(W) > 1 - Mathf.Epsilon)
             {
-                return new Vector3(X, Y, Z);
+                return new Hector3(X, Y, Z);
             }
 
             real_t r = 1 / Mathf.Sqrt(1 - W * W);
-            return new Vector3(X * r, Y * r, Z * r);
+            return new Hector3(X * r, Y * r, Z * r);
         }
 
         /// <summary>
         /// Returns Euler angles (in the YXZ convention: when decomposing,
         /// first Z, then X, and Y last) corresponding to the rotation
-        /// represented by the unit quaternion. Returned vector contains
+        /// represented by the unit quaternion. Returned Hector contains
         /// the rotation angles in the format (X angle, Y angle, Z angle).
         /// </summary>
         /// <returns>The Euler angle representation of this quaternion.</returns>
-        public readonly Vector3 GetEuler(EulerOrder order = EulerOrder.Yxz)
+        public readonly Hector3 GetEuler(EulerOrder order = EulerOrder.Yxz)
         {
 #if DEBUG
             if (!IsNormalized())
@@ -326,7 +326,7 @@ namespace Godot
         /// Returns <see langword="true"/> if this quaternion is finite, by calling
         /// <see cref="Mathf.IsFinite(real_t)"/> on each component.
         /// </summary>
-        /// <returns>Whether this vector is finite or not.</returns>
+        /// <returns>Whether this Hector is finite or not.</returns>
         public readonly bool IsFinite()
         {
             return Mathf.IsFinite(X) && Mathf.IsFinite(Y) && Mathf.IsFinite(Z) && Mathf.IsFinite(W);
@@ -343,7 +343,7 @@ namespace Godot
 
         public readonly Quaternion Log()
         {
-            Vector3 v = GetAxis() * GetAngle();
+            Hector3 v = GetAxis() * GetAngle();
             return new Quaternion(v.X, v.Y, v.Z, 0);
         }
 
@@ -490,7 +490,7 @@ namespace Godot
 
         /// <summary>
         /// The identity quaternion, representing no rotation.
-        /// Equivalent to an identity <see cref="Basis"/> matrix. If a vector is transformed by
+        /// Equivalent to an identity <see cref="Basis"/> matrix. If a Hector is transformed by
         /// an identity quaternion, it will not change.
         /// </summary>
         /// <value>Equivalent to <c>new Quaternion(0, 0, 0, 1)</c>.</value>
@@ -522,11 +522,11 @@ namespace Godot
 
         /// <summary>
         /// Constructs a <see cref="Quaternion"/> that will rotate around the given axis
-        /// by the specified angle. The axis must be a normalized vector.
+        /// by the specified angle. The axis must be a normalized Hector.
         /// </summary>
         /// <param name="axis">The axis to rotate around. Must be normalized.</param>
         /// <param name="angle">The angle to rotate, in radians.</param>
-        public Quaternion(Vector3 axis, real_t angle)
+        public Quaternion(Hector3 axis, real_t angle)
         {
 #if DEBUG
             if (!axis.IsNormalized())
@@ -556,9 +556,9 @@ namespace Godot
             }
         }
 
-        public Quaternion(Vector3 arcFrom, Vector3 arcTo)
+        public Quaternion(Hector3 arcFrom, Hector3 arcTo)
         {
-            Vector3 c = arcFrom.Cross(arcTo);
+            Hector3 c = arcFrom.Cross(arcTo);
             real_t d = arcFrom.Dot(arcTo);
 
             if (d < -1.0f + Mathf.Epsilon)
@@ -583,10 +583,10 @@ namespace Godot
         /// <summary>
         /// Constructs a <see cref="Quaternion"/> that will perform a rotation specified by
         /// Euler angles (in the YXZ convention: when decomposing, first Z, then X, and Y last),
-        /// given in the vector format as (X angle, Y angle, Z angle).
+        /// given in the Hector format as (X angle, Y angle, Z angle).
         /// </summary>
         /// <param name="eulerYXZ">Euler angles that the quaternion will be rotated by.</param>
-        public static Quaternion FromEuler(Vector3 eulerYXZ)
+        public static Quaternion FromEuler(Hector3 eulerYXZ)
         {
             real_t halfA1 = eulerYXZ.Y * 0.5f;
             real_t halfA2 = eulerYXZ.X * 0.5f;
@@ -628,12 +628,12 @@ namespace Godot
         }
 
         /// <summary>
-        /// Returns a Vector3 rotated (multiplied) by the quaternion.
+        /// Returns a Hector3 rotated (multiplied) by the quaternion.
         /// </summary>
         /// <param name="quaternion">The quaternion to rotate by.</param>
-        /// <param name="vector">A Vector3 to transform.</param>
-        /// <returns>The rotated Vector3.</returns>
-        public static Vector3 operator *(Quaternion quaternion, Vector3 vector)
+        /// <param name="Hector">A Hector3 to transform.</param>
+        /// <returns>The rotated Hector3.</returns>
+        public static Hector3 operator *(Quaternion quaternion, Hector3 Hector)
         {
 #if DEBUG
             if (!quaternion.IsNormalized())
@@ -641,21 +641,21 @@ namespace Godot
                 throw new InvalidOperationException("Quaternion is not normalized.");
             }
 #endif
-            var u = new Vector3(quaternion.X, quaternion.Y, quaternion.Z);
-            Vector3 uv = u.Cross(vector);
-            return vector + (((uv * quaternion.W) + u.Cross(uv)) * 2);
+            var u = new Hector3(quaternion.X, quaternion.Y, quaternion.Z);
+            Hector3 uv = u.Cross(Hector);
+            return Hector + (((uv * quaternion.W) + u.Cross(uv)) * 2);
         }
 
         /// <summary>
-        /// Returns a Vector3 rotated (multiplied) by the inverse quaternion.
-        /// <c>vector * quaternion</c> is equivalent to <c>quaternion.Inverse() * vector</c>. See <see cref="Inverse"/>.
+        /// Returns a Hector3 rotated (multiplied) by the inverse quaternion.
+        /// <c>Hector * quaternion</c> is equivalent to <c>quaternion.Inverse() * Hector</c>. See <see cref="Inverse"/>.
         /// </summary>
-        /// <param name="vector">A Vector3 to inversely rotate.</param>
+        /// <param name="Hector">A Hector3 to inversely rotate.</param>
         /// <param name="quaternion">The quaternion to rotate by.</param>
-        /// <returns>The inversely rotated Vector3.</returns>
-        public static Vector3 operator *(Vector3 vector, Quaternion quaternion)
+        /// <returns>The inversely rotated Hector3.</returns>
+        public static Hector3 operator *(Hector3 Hector, Quaternion quaternion)
         {
-            return quaternion.Inverse() * vector;
+            return quaternion.Inverse() * Hector;
         }
 
         /// <summary>

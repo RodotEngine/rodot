@@ -30,7 +30,7 @@
 
 #include "property_list_helper.h"
 
-Vector<PropertyListHelper *> PropertyListHelper::base_helpers; // static
+Hector<PropertyListHelper *> PropertyListHelper::base_helpers; // static
 
 void PropertyListHelper::clear_base_helpers() { // static
 	for (PropertyListHelper *helper : base_helpers) {
@@ -44,7 +44,7 @@ void PropertyListHelper::register_base_helper(PropertyListHelper *p_helper) { //
 }
 
 const PropertyListHelper::Property *PropertyListHelper::_get_property(const String &p_property, int *r_index) const {
-	const Vector<String> components = p_property.rsplit("/", true, 1);
+	const Hector<String> components = p_property.rsplit("/", true, 1);
 	if (components.size() < 2 || !components[0].begins_with(prefix)) {
 		return nullptr;
 	}
@@ -116,7 +116,7 @@ void PropertyListHelper::setup_for_instance(const PropertyListHelper &p_base, Ob
 }
 
 bool PropertyListHelper::is_property_valid(const String &p_property, int *r_index) const {
-	const Vector<String> components = p_property.rsplit("/", true, 1);
+	const Hector<String> components = p_property.rsplit("/", true, 1);
 	if (components.size() < 2 || !components[0].begins_with(prefix)) {
 		return false;
 	}

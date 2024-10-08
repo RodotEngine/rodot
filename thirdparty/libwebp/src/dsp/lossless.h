@@ -224,11 +224,11 @@ extern VP8LGetEntropyUnrefinedFunc VP8LGetEntropyUnrefined;
 void VP8LBitsEntropyUnrefined(const uint32_t* const array, int n,
                               VP8LBitEntropy* const entropy);
 
-typedef void (*VP8LAddVectorFunc)(const uint32_t* a, const uint32_t* b,
+typedef void (*VP8LAddHectorFunc)(const uint32_t* a, const uint32_t* b,
                                   uint32_t* out, int size);
-extern VP8LAddVectorFunc VP8LAddVector;
-typedef void (*VP8LAddVectorEqFunc)(const uint32_t* a, uint32_t* out, int size);
-extern VP8LAddVectorEqFunc VP8LAddVectorEq;
+extern VP8LAddHectorFunc VP8LAddHector;
+typedef void (*VP8LAddHectorEqFunc)(const uint32_t* a, uint32_t* out, int size);
+extern VP8LAddHectorEqFunc VP8LAddHectorEq;
 void VP8LHistogramAdd(const VP8LHistogram* const a,
                       const VP8LHistogram* const b,
                       VP8LHistogram* const out);
@@ -236,10 +236,10 @@ void VP8LHistogramAdd(const VP8LHistogram* const a,
 // -----------------------------------------------------------------------------
 // PrefixEncode()
 
-typedef int (*VP8LVectorMismatchFunc)(const uint32_t* const array1,
+typedef int (*VP8LHectorMismatchFunc)(const uint32_t* const array1,
                                       const uint32_t* const array2, int length);
 // Returns the first index where array1 and array2 are different.
-extern VP8LVectorMismatchFunc VP8LVectorMismatch;
+extern VP8LHectorMismatchFunc VP8LHectorMismatch;
 
 typedef void (*VP8LBundleColorMapFunc)(const uint8_t* const row, int width,
                                        int xbits, uint32_t* dst);

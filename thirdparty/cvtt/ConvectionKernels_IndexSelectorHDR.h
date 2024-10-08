@@ -12,8 +12,8 @@ namespace cvtt
         ParallelMath::SInt16 UnscaleHDRValueSigned(const ParallelMath::SInt16 &v);
         ParallelMath::UInt15 UnscaleHDRValueUnsigned(const ParallelMath::UInt16 &v);
 
-        template<int TVectorSize>
-        class IndexSelectorHDR : public IndexSelector<TVectorSize>
+        template<int THectorSize>
+        class IndexSelectorHDR : public IndexSelector<THectorSize>
         {
         public:
             typedef ParallelMath::UInt15 MUInt15;
@@ -35,7 +35,7 @@ namespace cvtt
             {
                 MUInt15 weight = ParallelMath::LosslessCast<MUInt15>::Cast(ParallelMath::RightShift(ParallelMath::CompactMultiply(g_weightReciprocals[m_range], index) + 256, 9));
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MSInt16 ep0 = ParallelMath::LosslessCast<MSInt16>::Cast(this->m_endPoint[0][ch]);
                     MSInt16 ep1 = ParallelMath::LosslessCast<MSInt16>::Cast(this->m_endPoint[1][ch]);
@@ -52,7 +52,7 @@ namespace cvtt
             {
                 MUInt15 weight = ParallelMath::LosslessCast<MUInt15>::Cast(ParallelMath::RightShift(ParallelMath::CompactMultiply(g_weightReciprocals[m_range], index) + 256, 9));
 
-                for (int ch = 0; ch < TVectorSize; ch++)
+                for (int ch = 0; ch < THectorSize; ch++)
                 {
                     MUInt16 ep0 = ParallelMath::LosslessCast<MUInt16>::Cast(this->m_endPoint[0][ch]);
                     MUInt16 ep1 = ParallelMath::LosslessCast<MUInt16>::Cast(this->m_endPoint[1][ch]);
@@ -74,7 +74,7 @@ namespace cvtt
             MFloat ErrorForInterpolator(int index, const MFloat *pixel) const
             {
                 MFloat error = ErrorForInterpolatorComponent(index, 0, pixel);
-                for (int ch = 1; ch < TVectorSize; ch++)
+                for (int ch = 1; ch < THectorSize; ch++)
                     error = error + ErrorForInterpolatorComponent(index, ch, pixel);
                 return error;
             }
@@ -94,14 +94,14 @@ namespace cvtt
                 {
                     for (int i = 0; i < range; i++)
                     {
-                        MSInt16 recon2CL[TVectorSize];
+                        MSInt16 recon2CL[THectorSize];
 
                         if (isSigned)
                             ReconstructHDRSignedUninverted(ParallelMath::MakeUInt15(static_cast<uint16_t>(i)), recon2CL);
                         else
                             ReconstructHDRUnsignedUninverted(ParallelMath::MakeUInt15(static_cast<uint16_t>(i)), recon2CL);
 
-                        for (int ch = 0; ch < TVectorSize; ch++)
+                        for (int ch = 0; ch < THectorSize; ch++)
                             m_reconstructedInterpolators[i][ch] = ParallelMath::TwosCLHalfToFloat(recon2CL[ch]) * channelWeights[ch];
                     }
                 }
@@ -144,7 +144,7 @@ namespace cvtt
             }
 
         private:
-            MFloat m_reconstructedInterpolators[16][TVectorSize];
+            MFloat m_reconstructedInterpolators[16][THectorSize];
             ParallelMath::Int16CompFlag m_isInverted;
             MUInt15 m_maxValueMinusOne;
             int m_range;

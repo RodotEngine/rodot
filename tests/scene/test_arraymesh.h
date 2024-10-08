@@ -165,7 +165,7 @@ TEST_CASE("[SceneTree][ArrayMesh] Surface metadata tests.") {
 	Ref<BoxMesh> box = memnew(BoxMesh);
 	Array box_array{};
 	box_array.resize(Mesh::ARRAY_MAX);
-	box->create_mesh_array(box_array, Vector3(2.f, 1.2f, 1.6f));
+	box->create_mesh_array(box_array, Hector3(2.f, 1.2f, 1.6f));
 	mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, box_array);
 
 	SUBCASE("Add 2 surfaces and count the number of surfaces in the mesh.") {
@@ -178,13 +178,13 @@ TEST_CASE("[SceneTree][ArrayMesh] Surface metadata tests.") {
 	}
 
 	SUBCASE("Get the array length of a particular surface.") {
-		CHECK(mesh->surface_get_array_len(0) == static_cast<Vector<Vector3>>(cylinder_array[RenderingServer::ARRAY_VERTEX]).size());
-		CHECK(mesh->surface_get_array_len(1) == static_cast<Vector<Vector3>>(box_array[RenderingServer::ARRAY_VERTEX]).size());
+		CHECK(mesh->surface_get_array_len(0) == static_cast<Hector<Hector3>>(cylinder_array[RenderingServer::ARRAY_VERTEX]).size());
+		CHECK(mesh->surface_get_array_len(1) == static_cast<Hector<Hector3>>(box_array[RenderingServer::ARRAY_VERTEX]).size());
 	}
 
 	SUBCASE("Get the index array length of a particular surface.") {
-		CHECK(mesh->surface_get_array_index_len(0) == static_cast<Vector<Vector3>>(cylinder_array[RenderingServer::ARRAY_INDEX]).size());
-		CHECK(mesh->surface_get_array_index_len(1) == static_cast<Vector<Vector3>>(box_array[RenderingServer::ARRAY_INDEX]).size());
+		CHECK(mesh->surface_get_array_index_len(0) == static_cast<Hector<Hector3>>(cylinder_array[RenderingServer::ARRAY_INDEX]).size());
+		CHECK(mesh->surface_get_array_index_len(1) == static_cast<Hector<Hector3>>(box_array[RenderingServer::ARRAY_INDEX]).size());
 	}
 
 	SUBCASE("Get correct primitive type") {
@@ -255,7 +255,7 @@ TEST_CASE("[SceneTree][ArrayMesh] Get/Set mesh metadata and actions") {
 	Ref<BoxMesh> box = memnew(BoxMesh);
 	Array box_array{};
 	box_array.resize(Mesh::ARRAY_MAX);
-	box->create_mesh_array(box_array, Vector3(2.f, 1.2f, 1.6f));
+	box->create_mesh_array(box_array, Hector3(2.f, 1.2f, 1.6f));
 	mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, box_array);
 
 	SUBCASE("Set the shadow mesh.") {

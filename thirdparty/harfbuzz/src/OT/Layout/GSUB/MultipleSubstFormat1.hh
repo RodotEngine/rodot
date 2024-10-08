@@ -109,7 +109,7 @@ struct MultipleSubstFormat1_2
     if (unlikely (!c->serializer->extend_min (out))) return_trace (false);
     out->format = format;
 
-    hb_sorted_vector_t<hb_codepoint_t> new_coverage;
+    hb_sorted_Hector_t<hb_codepoint_t> new_coverage;
     + hb_zip (this+coverage, sequence)
     | hb_filter (glyphset, hb_first)
     | hb_filter (subset_offset_array (c, out->sequence, this), hb_second)

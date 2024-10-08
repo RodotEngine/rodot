@@ -546,7 +546,7 @@ GDScriptTest::TestResult GDScriptTest::execute_test_code(bool p_is_generating) {
 	} else {
 		String code = FileAccess::get_file_as_string(source_file, &err);
 		if (!err) {
-			Vector<uint8_t> buffer = GDScriptTokenizerBuffer::parse_code_string(code, GDScriptTokenizerBuffer::COMPRESS_ZSTD);
+			Hector<uint8_t> buffer = GDScriptTokenizerBuffer::parse_code_string(code, GDScriptTokenizerBuffer::COMPRESS_ZSTD);
 			script->set_binary_tokens_source(buffer);
 		}
 	}

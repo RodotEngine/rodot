@@ -314,7 +314,7 @@
 
 	DisplayServerMacOS::WindowData &wd = ds->get_window(window_id);
 	if (wd.drop_files_callback.is_valid()) {
-		Vector<String> files;
+		Hector<String> files;
 		NSPasteboard *pboard = [sender draggingPasteboard];
 
 		NSArray *items = pboard.pasteboardItems;
@@ -441,7 +441,7 @@
 	NSEventSubtype subtype = [event subtype];
 	if (subtype == NSEventSubtypeTabletPoint) {
 		const NSPoint p = [event tilt];
-		mm->set_tilt(Vector2(p.x, -p.y));
+		mm->set_tilt(Hector2(p.x, -p.y));
 		mm->set_pen_inverted(last_pen_inverted);
 	} else if (subtype == NSEventSubtypeTabletProximity) {
 		// Check if using the eraser end of pen only on proximity event.
@@ -451,7 +451,7 @@
 	mm->set_global_position(wd.mouse_pos);
 	mm->set_velocity(Input::get_singleton()->get_last_mouse_velocity());
 	mm->set_screen_velocity(mm->get_velocity());
-	const Vector2i relativeMotion = Vector2i(delta.x, delta.y) * ds->screen_get_max_scale();
+	const Hector2i relativeMotion = Hector2i(delta.x, delta.y) * ds->screen_get_max_scale();
 	mm->set_relative(relativeMotion);
 	mm->set_relative_screen_position(relativeMotion);
 	ds->get_key_modifier_state([event modifierFlags], mm);
@@ -780,7 +780,7 @@
 	pg->set_window_id(window_id);
 	ds->get_key_modifier_state([event modifierFlags], pg);
 	pg->set_position(wd.mouse_pos);
-	pg->set_delta(Vector2(-dx, -dy));
+	pg->set_delta(Hector2(-dx, -dy));
 
 	Input::get_singleton()->parse_input_event(pg);
 }

@@ -35,7 +35,7 @@ U_NAMESPACE_BEGIN
 
 class Appendable;
 class UCharsTrieBuilder;
-class UVector32;
+class UHector32;
 
 /**
  * Light-weight, non-const reader class for a UCharsTrie.
@@ -392,7 +392,7 @@ public:
         // and the remaining branch length in bits 31..16.
         // (We could store the remaining branch length minus 1 in bits 30..16 and not use the sign bit,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UHector32 *stack_;
     };
 
 private:

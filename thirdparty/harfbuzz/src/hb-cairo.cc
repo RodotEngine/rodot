@@ -488,7 +488,7 @@ hb_cairo_init_scaled_font (cairo_scaled_font_t  *scaled_font,
     // Set variations
     cairo_scaled_font_get_font_options (scaled_font, font_options);
     const char *variations = cairo_font_options_get_variations (font_options);
-    hb_vector_t<hb_variation_t> vars;
+    hb_Hector_t<hb_variation_t> vars;
     const char *p = variations;
     while (p && *p)
     {
@@ -921,7 +921,7 @@ hb_cairo_font_face_get_scale_factor (cairo_font_face_t *font_face)
  * See hb_cairo_font_face_set_scale_factor() for the details of
  * the @scale_factor argument.
  *
- * The returned @glyphs vector actually has `@num_glyphs + 1` entries in
+ * The returned @glyphs Hector actually has `@num_glyphs + 1` entries in
  * it and the x,y values of the extra entry at the end add up the advance
  * x,y of all the glyphs in the @buffer.
  *

@@ -30,12 +30,12 @@
 using pixel_loader = vfloat4(*)(const void*, int);
 
 /**
- * @brief Loader pipeline function type for swizzling data in a vector.
+ * @brief Loader pipeline function type for swizzling data in a Hector.
  */
 using pixel_swizzler = vfloat4(*)(vfloat4, const astcenc_swizzle&);
 
 /**
- * @brief Loader pipeline function type for converting data in a vector to LNS.
+ * @brief Loader pipeline function type for converting data in a Hector to LNS.
  */
 using pixel_converter = vfloat4(*)(vfloat4, vmask4);
 
@@ -88,7 +88,7 @@ static vfloat4 load_texel_f32(
 /**
  * @brief Dummy no-op swizzle function.
  *
- * @param data   The source RGBA vector to swizzle.
+ * @param data   The source RGBA Hector to swizzle.
  * @param swz    The swizzle to use.
  */
 static vfloat4 swz_texel_skip(
@@ -102,7 +102,7 @@ static vfloat4 swz_texel_skip(
 /**
  * @brief Swizzle a texel into a new arrangement.
  *
- * @param data   The source RGBA vector to swizzle.
+ * @param data   The source RGBA Hector to swizzle.
  * @param swz    The swizzle to use.
  */
 static vfloat4 swz_texel(
@@ -490,7 +490,7 @@ void store_image_block(
 						color = float_to_float16(colorf);
 					}
 
-					// TODO: Vectorize with store N shorts?
+					// TODO: Hectorize with store N shorts?
 					data16_row[0] = static_cast<uint16_t>(color.lane<0>());
 					data16_row[1] = static_cast<uint16_t>(color.lane<1>());
 					data16_row[2] = static_cast<uint16_t>(color.lane<2>());

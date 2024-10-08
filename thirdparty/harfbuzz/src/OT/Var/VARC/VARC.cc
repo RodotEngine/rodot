@@ -192,8 +192,8 @@ VarComponent::get_path_at (hb_font_t *font,
 
   // Axis values
 
-  hb_vector_t<unsigned> axisIndices;
-  hb_vector_t<float> axisValues;
+  hb_Hector_t<unsigned> axisIndices;
+  hb_Hector_t<float> axisValues;
   if (flags & (unsigned) flags_t::HAVE_AXES)
   {
     unsigned axisIndicesIndex;
@@ -271,7 +271,7 @@ VarComponent::get_path_at (hb_font_t *font,
   {
     // Only use coord_setter if there's actually any axis overrides.
     coord_setter_t coord_setter (axisIndices ? component_coords : hb_array<int> ());
-    // Go backwards, to reduce coord_setter vector reallocations.
+    // Go backwards, to reduce coord_setter Hector reallocations.
     for (unsigned i = axisIndices.length; i; i--)
       coord_setter[axisIndices[i - 1]] = axisValues[i - 1];
     if (axisIndices)

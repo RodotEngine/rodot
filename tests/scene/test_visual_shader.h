@@ -57,7 +57,7 @@ TEST_CASE("[SceneTree][VisualShader] Testing VisualShaderNodes") {
 		for (int i = 0; i < VisualShader::TYPE_MAX; i++) {
 			Ref<VisualShaderNode> vsn = memnew(VisualShaderNodeInput);
 			CHECK(vsn.is_valid());
-			vs->add_node(VisualShader::Type(i), vsn, Vector2(1, 10), i + 2);
+			vs->add_node(VisualShader::Type(i), vsn, Hector2(1, 10), i + 2);
 			CHECK(vs->get_node(VisualShader::Type(i), i + 2) == vsn);
 		}
 
@@ -69,9 +69,9 @@ TEST_CASE("[SceneTree][VisualShader] Testing VisualShaderNodes") {
 		CHECK(vsn6.is_valid());
 		CHECK(vsn5.is_valid());
 
-		vs->add_node(VisualShader::TYPE_SKY, vsn5, Vector2(1, 10), 0);
+		vs->add_node(VisualShader::TYPE_SKY, vsn5, Hector2(1, 10), 0);
 		CHECK_FALSE(vs->get_node(VisualShader::TYPE_SKY, 0) == vsn6);
-		vs->add_node(VisualShader::TYPE_MAX, vsn6, Vector2(1, 10), 7);
+		vs->add_node(VisualShader::TYPE_MAX, vsn6, Hector2(1, 10), 7);
 		CHECK_FALSE(vs->get_node(VisualShader::TYPE_SKY, 7) == vsn6);
 
 		ERR_PRINT_ON;
@@ -83,17 +83,17 @@ TEST_CASE("[SceneTree][VisualShader] Testing VisualShaderNodes") {
 
 		Ref<VisualShaderNode> vsn1 = memnew(VisualShaderNodeInput);
 		CHECK(vsn1.is_valid());
-		vs->add_node(VisualShader::TYPE_COLLIDE, vsn1, Vector2(0, 0), 3);
-		CHECK(vs->get_node_position(VisualShader::TYPE_COLLIDE, 3) == Vector2(0, 0));
-		vs->set_node_position(VisualShader::TYPE_COLLIDE, 3, Vector2(1, 1));
-		CHECK(vs->get_node_position(VisualShader::TYPE_COLLIDE, 3) == Vector2(1, 1));
+		vs->add_node(VisualShader::TYPE_COLLIDE, vsn1, Hector2(0, 0), 3);
+		CHECK(vs->get_node_position(VisualShader::TYPE_COLLIDE, 3) == Hector2(0, 0));
+		vs->set_node_position(VisualShader::TYPE_COLLIDE, 3, Hector2(1, 1));
+		CHECK(vs->get_node_position(VisualShader::TYPE_COLLIDE, 3) == Hector2(1, 1));
 
 		Ref<VisualShaderNode> vsn2 = memnew(VisualShaderNodeInput);
 		CHECK(vsn2.is_valid());
-		vs->add_node(VisualShader::TYPE_FOG, vsn2, Vector2(1, 2), 4);
-		CHECK(vs->get_node_position(VisualShader::TYPE_FOG, 4) == Vector2(1, 2));
-		vs->set_node_position(VisualShader::TYPE_FOG, 4, Vector2(2, 2));
-		CHECK(vs->get_node_position(VisualShader::TYPE_FOG, 4) == Vector2(2, 2));
+		vs->add_node(VisualShader::TYPE_FOG, vsn2, Hector2(1, 2), 4);
+		CHECK(vs->get_node_position(VisualShader::TYPE_FOG, 4) == Hector2(1, 2));
+		vs->set_node_position(VisualShader::TYPE_FOG, 4, Hector2(2, 2));
+		CHECK(vs->get_node_position(VisualShader::TYPE_FOG, 4) == Hector2(2, 2));
 	}
 
 	SUBCASE("Testing VisualShaderNode ID") {
@@ -103,7 +103,7 @@ TEST_CASE("[SceneTree][VisualShader] Testing VisualShaderNodes") {
 		for (int i = 0; i < VisualShader::TYPE_MAX; i++) {
 			Ref<VisualShaderNode> vsn = memnew(VisualShaderNodeInput);
 			CHECK(vsn.is_valid());
-			vs->add_node(VisualShader::Type(i), vsn, Vector2(1, 10), i + 2);
+			vs->add_node(VisualShader::Type(i), vsn, Hector2(1, 10), i + 2);
 			CHECK(vs->get_valid_node_id(VisualShader::Type(i)) - 1 == i + 2);
 		}
 	}
@@ -117,7 +117,7 @@ TEST_CASE("[SceneTree][VisualShader] Testing VisualShaderNodes") {
 		for (int i = 0; i < VisualShader::TYPE_MAX; i++) {
 			Ref<VisualShaderNode> vsn = memnew(VisualShaderNodeInput);
 			CHECK(vsn.is_valid());
-			vs->add_node(VisualShader::Type(i), vsn, Vector2(1, 10), i + 2);
+			vs->add_node(VisualShader::Type(i), vsn, Hector2(1, 10), i + 2);
 			CHECK(vs->get_node(VisualShader::Type(i), i + 2) == vsn);
 			vs->remove_node(VisualShader::Type(i), i + 2);
 			CHECK_FALSE(vs->get_node(VisualShader::Type(i), i + 2) == vsn);
@@ -133,7 +133,7 @@ TEST_CASE("[SceneTree][VisualShader] Testing Varyings") {
 	vs->add_varying("Test1", VisualShader::VARYING_MODE_FRAG_TO_LIGHT, VisualShader::VARYING_TYPE_TRANSFORM);
 	CHECK(vs->has_varying("Test1") == true);
 
-	vs->add_varying("Test2", VisualShader::VARYING_MODE_VERTEX_TO_FRAG_LIGHT, VisualShader::VARYING_TYPE_VECTOR_2D);
+	vs->add_varying("Test2", VisualShader::VARYING_MODE_VERTEX_TO_FRAG_LIGHT, VisualShader::VARYING_TYPE_HECTOR_2D);
 	CHECK(vs->has_varying("Test2"));
 
 	CHECK_FALSE(vs->has_varying("Does_not_exits"));

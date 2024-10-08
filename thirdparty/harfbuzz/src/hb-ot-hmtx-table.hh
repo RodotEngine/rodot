@@ -84,7 +84,7 @@ struct hmtxvmtx
   bool subset_update_header (hb_subset_context_t *c,
 			     unsigned int num_hmetrics,
 			     const hb_hashmap_t<hb_codepoint_t, hb_pair_t<unsigned, int>> *mtx_map,
-			     const hb_vector_t<unsigned> &bounds_vec) const
+			     const hb_Hector_t<unsigned> &bounds_vec) const
   {
     hb_blob_t *src_blob = hb_sanitize_context_t ().reference_table<H> (c->plan->source, H::tableTag);
     hb_blob_t *dest_blob = hb_blob_copy_writable_or_fail (src_blob);
@@ -182,7 +182,7 @@ struct hmtxvmtx
 	   hb_requires (hb_is_iterator (Iterator))>
   void serialize (hb_serialize_context_t *c,
 		  Iterator it,
-		  const hb_vector_t<hb_codepoint_pair_t> new_to_old_gid_list,
+		  const hb_Hector_t<hb_codepoint_pair_t> new_to_old_gid_list,
 		  unsigned num_long_metrics,
                   unsigned total_num_metrics)
   {

@@ -280,7 +280,7 @@ void EditorExportPlatformAndroid::_check_for_changes_poll_thread(void *ud) {
 		{
 			// Nothing to do if we already know the plugins have changed.
 			if (!ea->android_plugins_changed.is_set()) {
-				Vector<PluginConfigAndroid> loaded_plugins = get_plugins();
+				Hector<PluginConfigAndroid> loaded_plugins = get_plugins();
 
 				MutexLock lock(ea->android_plugins_lock);
 
@@ -313,8 +313,8 @@ void EditorExportPlatformAndroid::_check_for_changes_poll_thread(void *ud) {
 			int ec;
 			OS::get_singleton()->execute(adb, args, &devices, &ec);
 
-			Vector<String> ds = devices.split("\n");
-			Vector<String> ldevices;
+			Hector<String> ds = devices.split("\n");
+			Hector<String> ldevices;
 			for (int i = 1; i < ds.size(); i++) {
 				String d = ds[i];
 				int dpos = d.find("device");
@@ -341,7 +341,7 @@ void EditorExportPlatformAndroid::_check_for_changes_poll_thread(void *ud) {
 			}
 
 			if (different) {
-				Vector<Device> ndevices;
+				Hector<Device> ndevices;
 
 				for (int i = 0; i < ldevices.size(); i++) {
 					Device d;
@@ -366,7 +366,7 @@ void EditorExportPlatformAndroid::_check_for_changes_poll_thread(void *ud) {
 
 						OS::get_singleton()->execute(adb, args, &dp, &ec2);
 
-						Vector<String> props = dp.split("\n");
+						Hector<String> props = dp.split("\n");
 						String vendor;
 						String device;
 						d.description = "Device ID: " + d.id + "\n";
@@ -588,7 +588,7 @@ bool EditorExportPlatformAndroid::is_project_name_valid() const {
 	return true;
 }
 
-bool EditorExportPlatformAndroid::_should_compress_asset(const String &p_path, const Vector<uint8_t> &p_data) {
+bool EditorExportPlatformAndroid::_should_compress_asset(const String &p_path, const Hector<uint8_t> &p_data) {
 	/*
 	 *  By not compressing files with little or no benefit in doing so,
 	 *  a performance gain is expected at runtime. Moreover, if the APK is
@@ -651,9 +651,9 @@ zip_fileinfo EditorExportPlatformAndroid::get_zip_fileinfo() {
 	return zipfi;
 }
 
-Vector<EditorExportPlatformAndroid::ABI> EditorExportPlatformAndroid::get_abis() {
+Hector<EditorExportPlatformAndroid::ABI> EditorExportPlatformAndroid::get_abis() {
 	// Should have the same order and size as get_archs.
-	Vector<ABI> abis;
+	Hector<ABI> abis;
 	abis.push_back(ABI("armeabi-v7a", "arm32"));
 	abis.push_back(ABI("arm64-v8a", "arm64"));
 	abis.push_back(ABI("x86", "x86_32"));
@@ -663,8 +663,8 @@ Vector<EditorExportPlatformAndroid::ABI> EditorExportPlatformAndroid::get_abis()
 
 #ifndef DISABLE_DEPRECATED
 /// List the gdap files in the directory specified by the p_path parameter.
-Vector<String> EditorExportPlatformAndroid::list_gdap_files(const String &p_path) {
-	Vector<String> dir_files;
+Hector<String> EditorExportPlatformAndroid::list_gdap_files(const String &p_path) {
+	Hector<String> dir_files;
 	Ref<DirAccess> da = DirAccess::open(p_path);
 	if (da.is_valid()) {
 		da->list_dir_begin();
@@ -688,8 +688,8 @@ Vector<String> EditorExportPlatformAndroid::list_gdap_files(const String &p_path
 	return dir_files;
 }
 
-Vector<PluginConfigAndroid> EditorExportPlatformAndroid::get_plugins() {
-	Vector<PluginConfigAndroid> loaded_plugins;
+Hector<PluginConfigAndroid> EditorExportPlatformAndroid::get_plugins() {
+	Hector<PluginConfigAndroid> loaded_plugins;
 
 	String plugins_dir = ProjectSettings::get_singleton()->get_resource_path().path_join("android/plugins");
 
@@ -697,7 +697,7 @@ Vector<PluginConfigAndroid> EditorExportPlatformAndroid::get_plugins() {
 	loaded_plugins.append_array(PluginConfigAndroid::get_prebuilt_plugins(plugins_dir));
 
 	if (DirAccess::exists(plugins_dir)) {
-		Vector<String> plugins_filenames = list_gdap_files(plugins_dir);
+		Hector<String> plugins_filenames = list_gdap_files(plugins_dir);
 
 		if (!plugins_filenames.is_empty()) {
 			Ref<ConfigFile> config_file = memnew(ConfigFile);
@@ -715,9 +715,9 @@ Vector<PluginConfigAndroid> EditorExportPlatformAndroid::get_plugins() {
 	return loaded_plugins;
 }
 
-Vector<PluginConfigAndroid> EditorExportPlatformAndroid::get_enabled_plugins(const Ref<EditorExportPreset> &p_presets) {
-	Vector<PluginConfigAndroid> enabled_plugins;
-	Vector<PluginConfigAndroid> all_plugins = get_plugins();
+Hector<PluginConfigAndroid> EditorExportPlatformAndroid::get_enabled_plugins(const Ref<EditorExportPreset> &p_presets) {
+	Hector<PluginConfigAndroid> enabled_plugins;
+	Hector<PluginConfigAndroid> all_plugins = get_plugins();
 	for (int i = 0; i < all_plugins.size(); i++) {
 		PluginConfigAndroid plugin = all_plugins[i];
 		bool enabled = p_presets->get("plugins/" + plugin.name);
@@ -730,7 +730,7 @@ Vector<PluginConfigAndroid> EditorExportPlatformAndroid::get_enabled_plugins(con
 }
 #endif // DISABLE_DEPRECATED
 
-Error EditorExportPlatformAndroid::store_in_apk(APKExportData *ed, const String &p_path, const Vector<uint8_t> &p_data, int compression_method) {
+Error EditorExportPlatformAndroid::store_in_apk(APKExportData *ed, const String &p_path, const Hector<uint8_t> &p_data, int compression_method) {
 	zip_fileinfo zipfi = get_zip_fileinfo();
 	zipOpenNewFileInZip(ed->apk,
 			p_path.utf8().get_data(),
@@ -756,7 +756,7 @@ Error EditorExportPlatformAndroid::save_apk_so(void *p_userdata, const SharedObj
 		return FAILED;
 	}
 	APKExportData *ed = static_cast<APKExportData *>(p_userdata);
-	Vector<ABI> abis = get_abis();
+	Hector<ABI> abis = get_abis();
 	bool exported = false;
 	for (int i = 0; i < p_so.tags.size(); ++i) {
 		// shared objects can be fat (compatible with multiple ABIs)
@@ -771,7 +771,7 @@ Error EditorExportPlatformAndroid::save_apk_so(void *p_userdata, const SharedObj
 			exported = true;
 			String abi = abis[abi_index].abi;
 			String dst_path = String("lib").path_join(abi).path_join(p_so.path.get_file());
-			Vector<uint8_t> array = FileAccess::get_file_as_bytes(p_so.path);
+			Hector<uint8_t> array = FileAccess::get_file_as_bytes(p_so.path);
 			Error store_err = store_in_apk(ed, dst_path, array);
 			ERR_FAIL_COND_V_MSG(store_err, store_err, "Cannot store in apk file '" + dst_path + "'.");
 		}
@@ -783,7 +783,7 @@ Error EditorExportPlatformAndroid::save_apk_so(void *p_userdata, const SharedObj
 	return OK;
 }
 
-Error EditorExportPlatformAndroid::save_apk_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key) {
+Error EditorExportPlatformAndroid::save_apk_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key) {
 	APKExportData *ed = static_cast<APKExportData *>(p_userdata);
 	String dst_path = p_path.replace_first("res://", "assets/");
 
@@ -791,14 +791,14 @@ Error EditorExportPlatformAndroid::save_apk_file(void *p_userdata, const String 
 	return OK;
 }
 
-Error EditorExportPlatformAndroid::ignore_apk_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key) {
+Error EditorExportPlatformAndroid::ignore_apk_file(void *p_userdata, const String &p_path, const Hector<uint8_t> &p_data, int p_file, int p_total, const Hector<String> &p_enc_in_filters, const Hector<String> &p_enc_ex_filters, const Hector<uint8_t> &p_key) {
 	return OK;
 }
 
 Error EditorExportPlatformAndroid::copy_gradle_so(void *p_userdata, const SharedObject &p_so) {
 	ERR_FAIL_COND_V_MSG(!p_so.path.get_file().begins_with("lib"), FAILED,
 			"Android .so file names must start with \"lib\", but got: " + p_so.path);
-	Vector<ABI> abis = get_abis();
+	Hector<ABI> abis = get_abis();
 	CustomExportData *export_data = static_cast<CustomExportData *>(p_userdata);
 	bool exported = false;
 	for (int i = 0; i < p_so.tags.size(); ++i) {
@@ -815,7 +815,7 @@ Error EditorExportPlatformAndroid::copy_gradle_so(void *p_userdata, const Shared
 			String abi = abis[abi_index].abi;
 			String filename = p_so.path.get_file();
 			String dst_path = export_data->libs_directory.path_join(type).path_join(abi).path_join(filename);
-			Vector<uint8_t> data = FileAccess::get_file_as_bytes(p_so.path);
+			Hector<uint8_t> data = FileAccess::get_file_as_bytes(p_so.path);
 			print_verbose("Copying .so file from " + p_so.path + " to " + dst_path);
 			Error err = store_file_at_path(dst_path, data);
 			ERR_FAIL_COND_V_MSG(err, err, "Failed to copy .so file from " + p_so.path + " to " + dst_path);
@@ -827,11 +827,11 @@ Error EditorExportPlatformAndroid::copy_gradle_so(void *p_userdata, const Shared
 	return OK;
 }
 
-bool EditorExportPlatformAndroid::_has_read_write_storage_permission(const Vector<String> &p_permissions) {
+bool EditorExportPlatformAndroid::_has_read_write_storage_permission(const Hector<String> &p_permissions) {
 	return p_permissions.has("android.permission.READ_EXTERNAL_STORAGE") || p_permissions.has("android.permission.WRITE_EXTERNAL_STORAGE");
 }
 
-bool EditorExportPlatformAndroid::_has_manage_external_storage_permission(const Vector<String> &p_permissions) {
+bool EditorExportPlatformAndroid::_has_manage_external_storage_permission(const Hector<String> &p_permissions) {
 	return p_permissions.has("android.permission.MANAGE_EXTERNAL_STORAGE");
 }
 
@@ -919,7 +919,7 @@ void EditorExportPlatformAndroid::_create_editor_debug_keystore_if_needed() {
 	print_verbose("Updated editor debug keystore to " + keystore_path);
 }
 
-void EditorExportPlatformAndroid::_get_permissions(const Ref<EditorExportPreset> &p_preset, bool p_give_internet, Vector<String> &r_permissions) {
+void EditorExportPlatformAndroid::_get_permissions(const Ref<EditorExportPreset> &p_preset, bool p_give_internet, Hector<String> &r_permissions) {
 	const char **aperms = android_perms;
 	while (*aperms) {
 		bool enabled = p_preset->get("permissions/" + String(*aperms).to_lower());
@@ -952,7 +952,7 @@ void EditorExportPlatformAndroid::_write_tmp_manifest(const Ref<EditorExportPres
 	manifest_text += _get_screen_sizes_tag(p_preset);
 	manifest_text += _get_gles_tag();
 
-	Vector<String> perms;
+	Hector<String> perms;
 	_get_permissions(p_preset, p_give_internet, perms);
 	for (int i = 0; i < perms.size(); i++) {
 		String permission = perms.get(i);
@@ -968,7 +968,7 @@ void EditorExportPlatformAndroid::_write_tmp_manifest(const Ref<EditorExportPres
 		manifest_text += "    <uses-feature tools:node=\"replace\" android:name=\"android.hardware.vulkan.version\" android:required=\"true\" android:version=\"0x400003\" />\n";
 	}
 
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
 		if (export_plugins[i]->supports_platform(Ref<EditorExportPlatform>(this))) {
 			const String contents = export_plugins[i]->get_android_manifest_element_contents(Ref<EditorExportPlatform>(this), p_debug);
@@ -987,7 +987,7 @@ void EditorExportPlatformAndroid::_write_tmp_manifest(const Ref<EditorExportPres
 	store_string_at_path(manifest_path, manifest_text);
 }
 
-void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &p_manifest, bool p_give_internet) {
+void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &p_manifest, bool p_give_internet) {
 	// Leaving the unused types commented because looking these constants up
 	// again later would be annoying
 	// const int CHUNK_AXML_FILE = 0x00080003;
@@ -1000,7 +1000,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 	// const int CHUNK_XML_TEXT = 0x00100104;
 	const int UTF8_FLAG = 0x00000100;
 
-	Vector<String> string_table;
+	Hector<String> string_table;
 
 	uint32_t ofs = 8;
 
@@ -1010,7 +1010,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 
 	uint32_t string_table_begins = 0;
 	uint32_t string_table_ends = 0;
-	Vector<uint8_t> stable_extra;
+	Hector<uint8_t> stable_extra;
 
 	String version_name = p_preset->get_version("version/name");
 	int version_code = p_preset->get("version/code");
@@ -1030,7 +1030,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 	bool exclude_from_recents = p_preset->get("package/exclude_from_recents");
 	bool is_resizeable = bool(GLOBAL_GET("display/window/size/resizable"));
 
-	Vector<String> perms;
+	Hector<String> perms;
 	// Write permissions into the perms variable.
 	_get_permissions(p_preset, p_give_internet, perms);
 	bool has_read_write_storage_permission = _has_read_write_storage_permission(perms);
@@ -1062,7 +1062,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 					if (string_flags & UTF8_FLAG) {
 					} else {
 						uint32_t len = decode_uint16(&p_manifest[string_at]);
-						Vector<char32_t> ucstring;
+						Hector<char32_t> ucstring;
 						ucstring.resize(len + 1);
 						for (uint32_t j = 0; j < len; j++) {
 							uint16_t c = decode_uint16(&p_manifest[string_at + 2 + 2 * j]);
@@ -1177,9 +1177,9 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 				String tname = string_table[name];
 
 				if (tname == "uses-feature") {
-					Vector<String> feature_names;
-					Vector<bool> feature_required_list;
-					Vector<int> feature_versions;
+					Hector<String> feature_names;
+					Hector<bool> feature_required_list;
+					Hector<int> feature_versions;
 
 					if (_uses_vulkan()) {
 						// Require vulkan hardware level 1 support
@@ -1197,7 +1197,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 						ofs += 24; // skip over end tag
 
 						// save manifest ending so we can restore it
-						Vector<uint8_t> manifest_end;
+						Hector<uint8_t> manifest_end;
 						uint32_t manifest_cur_size = p_manifest.size();
 
 						manifest_end.resize(p_manifest.size() - ofs);
@@ -1336,7 +1336,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 				}
 				if (tname == "manifest") {
 					// save manifest ending so we can restore it
-					Vector<uint8_t> manifest_end;
+					Hector<uint8_t> manifest_end;
 					uint32_t manifest_cur_size = p_manifest.size();
 
 					manifest_end.resize(p_manifest.size() - ofs);
@@ -1416,7 +1416,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 
 	//create new andriodmanifest binary
 
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(string_table_begins + string_table.size() * 4);
 
 	for (uint32_t i = 0; i < string_table_begins; i++) {
@@ -1512,7 +1512,7 @@ String EditorExportPlatformAndroid::_parse_string(const uint8_t *p_bytes, bool p
 	}
 
 	if (p_utf8) {
-		Vector<uint8_t> str8;
+		Hector<uint8_t> str8;
 		str8.resize(len + 1);
 		for (uint32_t i = 0; i < len; i++) {
 			str8.write[i] = p_bytes[offset + i];
@@ -1534,7 +1534,7 @@ String EditorExportPlatformAndroid::_parse_string(const uint8_t *p_bytes, bool p
 	}
 }
 
-void EditorExportPlatformAndroid::_fix_resources(const Ref<EditorExportPreset> &p_preset, Vector<uint8_t> &r_manifest) {
+void EditorExportPlatformAndroid::_fix_resources(const Ref<EditorExportPreset> &p_preset, Hector<uint8_t> &r_manifest) {
 	const int UTF8_FLAG = 0x00000100;
 
 	uint32_t string_block_len = decode_uint32(&r_manifest[16]);
@@ -1542,7 +1542,7 @@ void EditorExportPlatformAndroid::_fix_resources(const Ref<EditorExportPreset> &
 	uint32_t string_flags = decode_uint32(&r_manifest[28]);
 	const uint32_t string_table_begins = 40;
 
-	Vector<String> string_table;
+	Hector<String> string_table;
 
 	String package_name = p_preset->get("package/name");
 	Dictionary appnames = GLOBAL_GET("application/config/name_localized");
@@ -1572,7 +1572,7 @@ void EditorExportPlatformAndroid::_fix_resources(const Ref<EditorExportPreset> &
 	}
 
 	//write a new string table, but use 16 bits
-	Vector<uint8_t> ret;
+	Hector<uint8_t> ret;
 	ret.resize(string_table_begins + string_table.size() * 4);
 
 	for (uint32_t i = 0; i < string_table_begins; i++) {
@@ -1623,8 +1623,8 @@ void EditorExportPlatformAndroid::_fix_resources(const Ref<EditorExportPreset> &
 	//printf("end\n");
 }
 
-void EditorExportPlatformAndroid::_load_image_data(const Ref<Image> &p_splash_image, Vector<uint8_t> &p_data) {
-	Vector<uint8_t> png_buffer;
+void EditorExportPlatformAndroid::_load_image_data(const Ref<Image> &p_splash_image, Hector<uint8_t> &p_data) {
+	Hector<uint8_t> png_buffer;
 	Error err = PNGDriverCommon::image_to_png(p_splash_image, png_buffer);
 	if (err == OK) {
 		p_data.resize(png_buffer.size());
@@ -1635,7 +1635,7 @@ void EditorExportPlatformAndroid::_load_image_data(const Ref<Image> &p_splash_im
 	}
 }
 
-void EditorExportPlatformAndroid::_process_launcher_icons(const String &p_file_name, const Ref<Image> &p_source_image, int dimension, Vector<uint8_t> &p_data) {
+void EditorExportPlatformAndroid::_process_launcher_icons(const String &p_file_name, const Ref<Image> &p_source_image, int dimension, Hector<uint8_t> &p_data) {
 	Ref<Image> working_image = p_source_image;
 
 	if (p_source_image->get_width() != dimension || p_source_image->get_height() != dimension) {
@@ -1643,7 +1643,7 @@ void EditorExportPlatformAndroid::_process_launcher_icons(const String &p_file_n
 		working_image->resize(dimension, dimension, Image::Interpolation::INTERPOLATE_LANCZOS);
 	}
 
-	Vector<uint8_t> png_buffer;
+	Hector<uint8_t> png_buffer;
 	Error err = PNGDriverCommon::image_to_png(working_image, png_buffer);
 	if (err == OK) {
 		p_data.resize(png_buffer.size());
@@ -1710,14 +1710,14 @@ void EditorExportPlatformAndroid::_copy_icons_to_gradle_project(const Ref<Editor
 	for (int i = 0; i < icon_densities_count; ++i) {
 		if (p_main_image.is_valid() && !p_main_image->is_empty()) {
 			print_verbose("Processing launcher icon for dimension " + itos(launcher_icons[i].dimensions) + " into " + launcher_icons[i].export_path);
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			_process_launcher_icons(launcher_icons[i].export_path, p_main_image, launcher_icons[i].dimensions, data);
 			store_file_at_path(gradle_build_dir.path_join(launcher_icons[i].export_path), data);
 		}
 
 		if (p_foreground.is_valid() && !p_foreground->is_empty()) {
 			print_verbose("Processing launcher adaptive icon p_foreground for dimension " + itos(launcher_adaptive_icon_foregrounds[i].dimensions) + " into " + launcher_adaptive_icon_foregrounds[i].export_path);
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			_process_launcher_icons(launcher_adaptive_icon_foregrounds[i].export_path, p_foreground,
 					launcher_adaptive_icon_foregrounds[i].dimensions, data);
 			store_file_at_path(gradle_build_dir.path_join(launcher_adaptive_icon_foregrounds[i].export_path), data);
@@ -1725,7 +1725,7 @@ void EditorExportPlatformAndroid::_copy_icons_to_gradle_project(const Ref<Editor
 
 		if (p_background.is_valid() && !p_background->is_empty()) {
 			print_verbose("Processing launcher adaptive icon p_background for dimension " + itos(launcher_adaptive_icon_backgrounds[i].dimensions) + " into " + launcher_adaptive_icon_backgrounds[i].export_path);
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			_process_launcher_icons(launcher_adaptive_icon_backgrounds[i].export_path, p_background,
 					launcher_adaptive_icon_backgrounds[i].dimensions, data);
 			store_file_at_path(gradle_build_dir.path_join(launcher_adaptive_icon_backgrounds[i].export_path), data);
@@ -1733,7 +1733,7 @@ void EditorExportPlatformAndroid::_copy_icons_to_gradle_project(const Ref<Editor
 
 		if (p_monochrome.is_valid() && !p_monochrome->is_empty()) {
 			print_verbose("Processing launcher adaptive icon p_monochrome for dimension " + itos(launcher_adaptive_icon_monochromes[i].dimensions) + " into " + launcher_adaptive_icon_monochromes[i].export_path);
-			Vector<uint8_t> data;
+			Hector<uint8_t> data;
 			_process_launcher_icons(launcher_adaptive_icon_monochromes[i].export_path, p_monochrome,
 					launcher_adaptive_icon_monochromes[i].dimensions, data);
 			store_file_at_path(gradle_build_dir.path_join(launcher_adaptive_icon_monochromes[i].export_path), data);
@@ -1741,9 +1741,9 @@ void EditorExportPlatformAndroid::_copy_icons_to_gradle_project(const Ref<Editor
 	}
 }
 
-Vector<EditorExportPlatformAndroid::ABI> EditorExportPlatformAndroid::get_enabled_abis(const Ref<EditorExportPreset> &p_preset) {
-	Vector<ABI> abis = get_abis();
-	Vector<ABI> enabled_abis;
+Hector<EditorExportPlatformAndroid::ABI> EditorExportPlatformAndroid::get_enabled_abis(const Ref<EditorExportPreset> &p_preset) {
+	Hector<ABI> abis = get_abis();
+	Hector<ABI> enabled_abis;
 	for (int i = 0; i < abis.size(); ++i) {
 		bool is_enabled = p_preset->get("architectures/" + abis[i].abi);
 		if (is_enabled) {
@@ -1757,7 +1757,7 @@ void EditorExportPlatformAndroid::get_preset_features(const Ref<EditorExportPres
 	r_features->push_back("etc2");
 	r_features->push_back("astc");
 
-	Vector<ABI> abis = get_enabled_abis(p_preset);
+	Hector<ABI> abis = get_enabled_abis(p_preset);
 	for (int i = 0; i < abis.size(); ++i) {
 		r_features->push_back(abis[i].arch);
 	}
@@ -1860,7 +1860,7 @@ void EditorExportPlatformAndroid::get_export_options(List<ExportOption> *r_optio
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "gradle_build/target_sdk", PROPERTY_HINT_PLACEHOLDER_TEXT, vformat("%d (default)", DEFAULT_TARGET_SDK_VERSION)), "", false, true));
 
 #ifndef DISABLE_DEPRECATED
-	Vector<PluginConfigAndroid> plugins_configs = get_plugins();
+	Hector<PluginConfigAndroid> plugins_configs = get_plugins();
 	for (int i = 0; i < plugins_configs.size(); i++) {
 		print_verbose("Found Android plugin " + plugins_configs[i].name);
 		r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, vformat("%s/%s", PNAME("plugins"), plugins_configs[i].name)), false));
@@ -1870,7 +1870,7 @@ void EditorExportPlatformAndroid::get_export_options(List<ExportOption> *r_optio
 
 	// Android supports multiple architectures in an app bundle, so
 	// we expose each option as a checkbox in the export dialog.
-	const Vector<ABI> abis = get_abis();
+	const Hector<ABI> abis = get_abis();
 	for (int i = 0; i < abis.size(); ++i) {
 		const String abi = abis[i].abi;
 		// All Android devices supporting Vulkan run 64-bit Android,
@@ -2259,21 +2259,21 @@ String EditorExportPlatformAndroid::get_apksigner_path(int p_target_sdk, bool p_
 	}
 
 	// There are additional versions directories we need to go through.
-	Vector<String> dir_list = da->get_directories();
+	Hector<String> dir_list = da->get_directories();
 
 	// We need to use the version of build_tools that matches the Target SDK
 	// If somehow we can't find that, we see if a version between 28 and the default target SDK exists.
 	// We need to avoid versions <= 27 because they fail on Java versions >9
 	// If we can't find that, we just use the first valid version.
-	Vector<String> ideal_versions;
-	Vector<String> other_versions;
-	Vector<String> versions;
+	Hector<String> ideal_versions;
+	Hector<String> other_versions;
+	Hector<String> versions;
 	bool found_target_sdk = false;
 	// We only allow for versions <= 27 if specifically set
 	int min_version = p_target_sdk <= 27 ? p_target_sdk : 28;
 	for (String sub_dir : dir_list) {
 		if (!sub_dir.begins_with(".")) {
-			Vector<String> ver_numbers = sub_dir.split(".");
+			Hector<String> ver_numbers = sub_dir.split(".");
 			// Dir not a version number, will use as last resort
 			if (!ver_numbers.size() || !ver_numbers[0].is_valid_int()) {
 				other_versions.push_back(sub_dir);
@@ -2689,9 +2689,9 @@ Error EditorExportPlatformAndroid::save_apk_expansion_file(const Ref<EditorExpor
 	return err;
 }
 
-void EditorExportPlatformAndroid::get_command_line_flags(const Ref<EditorExportPreset> &p_preset, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags, Vector<uint8_t> &r_command_line_flags) {
+void EditorExportPlatformAndroid::get_command_line_flags(const Ref<EditorExportPreset> &p_preset, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags, Hector<uint8_t> &r_command_line_flags) {
 	String cmdline = p_preset->get("command_line/extra_args");
-	Vector<String> command_line_strings = cmdline.strip_edges().split(" ");
+	Hector<String> command_line_strings = cmdline.strip_edges().split(" ");
 	for (int i = 0; i < command_line_strings.size(); i++) {
 		if (command_line_strings[i].strip_edges().length() == 0) {
 			command_line_strings.remove_at(i);
@@ -2930,7 +2930,7 @@ void EditorExportPlatformAndroid::_remove_copied_libs(String p_gdextension_libs_
 	error = json.parse(libs_json);
 	ERR_FAIL_COND_MSG(error, "Error parsing \"" + libs_json + "\" on line " + itos(json.get_error_line()) + ": " + json.get_error_message());
 
-	Vector<String> libs = json.get_data();
+	Hector<String> libs = json.get_data();
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 	for (int i = 0; i < libs.size(); i++) {
 		print_verbose("Removing previously installed library " + libs[i]);
@@ -2950,7 +2950,7 @@ String EditorExportPlatformAndroid::join_list(const List<String> &p_parts, const
 	return ret;
 }
 
-String EditorExportPlatformAndroid::join_abis(const Vector<EditorExportPlatformAndroid::ABI> &p_parts, const String &p_separator, bool p_use_arch) {
+String EditorExportPlatformAndroid::join_abis(const Hector<EditorExportPlatformAndroid::ABI> &p_parts, const String &p_separator, bool p_use_arch) {
 	String ret;
 	for (int i = 0; i < p_parts.size(); ++i) {
 		if (i > 0) {
@@ -2962,13 +2962,13 @@ String EditorExportPlatformAndroid::join_abis(const Vector<EditorExportPlatformA
 }
 
 String EditorExportPlatformAndroid::_get_plugins_names(const Ref<EditorExportPreset> &p_preset) const {
-	Vector<String> names;
+	Hector<String> names;
 
 #ifndef DISABLE_DEPRECATED
 	PluginConfigAndroid::get_plugins_names(get_enabled_plugins(p_preset), names);
 #endif // DISABLE_DEPRECATED
 
-	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+	Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	for (int i = 0; i < export_plugins.size(); i++) {
 		if (export_plugins[i]->supports_platform(Ref<EditorExportPlatform>(this))) {
 			names.push_back(export_plugins[i]->get_name());
@@ -3004,7 +3004,7 @@ bool EditorExportPlatformAndroid::_is_clean_build_required(const Ref<EditorExpor
 		have_plugins_changed = plugin_names != last_plugin_names;
 #ifndef DISABLE_DEPRECATED
 		if (!have_plugins_changed) {
-			Vector<PluginConfigAndroid> enabled_plugins = get_enabled_plugins(p_preset);
+			Hector<PluginConfigAndroid> enabled_plugins = get_enabled_plugins(p_preset);
 			for (int i = 0; i < enabled_plugins.size(); i++) {
 				if (enabled_plugins.get(i).last_updated > last_gradle_build_time) {
 					have_plugins_changed = true;
@@ -3046,7 +3046,7 @@ Error EditorExportPlatformAndroid::export_project_helper(const Ref<EditorExportP
 	String gradle_build_directory = use_gradle_build ? ExportTemplateManager::get_android_build_directory(p_preset) : "";
 	bool p_give_internet = p_flags.has_flag(DEBUG_FLAG_DUMB_CLIENT) || p_flags.has_flag(DEBUG_FLAG_REMOTE_DEBUG);
 	bool apk_expansion = p_preset->get("apk_expansion/enable");
-	Vector<ABI> enabled_abis = get_enabled_abis(p_preset);
+	Hector<ABI> enabled_abis = get_enabled_abis(p_preset);
 
 	print_verbose("Exporting for Android...");
 	print_verbose("- debug build: " + bool_to_string(p_debug));
@@ -3067,7 +3067,7 @@ Error EditorExportPlatformAndroid::export_project_helper(const Ref<EditorExportP
 
 	load_icon_refs(p_preset, main_image, foreground, background, monochrome);
 
-	Vector<uint8_t> command_line_flags;
+	Hector<uint8_t> command_line_flags;
 	// Write command line flags into the command_line_flags variable.
 	get_command_line_flags(p_preset, p_path, p_flags, command_line_flags);
 
@@ -3206,19 +3206,19 @@ Error EditorExportPlatformAndroid::export_project_helper(const Ref<EditorExportP
 		String zipalign_flag = "true";
 		String compress_native_libraries_flag = bool(p_preset->get("gradle_build/compress_native_libraries")) ? "true" : "false";
 
-		Vector<String> android_libraries;
-		Vector<String> android_dependencies;
-		Vector<String> android_dependencies_maven_repos;
+		Hector<String> android_libraries;
+		Hector<String> android_dependencies;
+		Hector<String> android_dependencies_maven_repos;
 
 #ifndef DISABLE_DEPRECATED
-		Vector<PluginConfigAndroid> enabled_plugins = get_enabled_plugins(p_preset);
+		Hector<PluginConfigAndroid> enabled_plugins = get_enabled_plugins(p_preset);
 		PluginConfigAndroid::get_plugins_binaries(PluginConfigAndroid::BINARY_TYPE_LOCAL, enabled_plugins, android_libraries);
 		PluginConfigAndroid::get_plugins_binaries(PluginConfigAndroid::BINARY_TYPE_REMOTE, enabled_plugins, android_dependencies);
 		PluginConfigAndroid::get_plugins_custom_maven_repos(enabled_plugins, android_dependencies_maven_repos);
 #endif // DISABLE_DEPRECATED
 
 		bool has_dotnet_project = false;
-		Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
+		Hector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 		for (int i = 0; i < export_plugins.size(); i++) {
 			if (export_plugins[i]->supports_platform(Ref<EditorExportPlatform>(this))) {
 				PackedStringArray export_plugin_android_libraries = export_plugins[i]->get_android_libraries(Ref<EditorExportPlatform>(this), p_debug);
@@ -3431,7 +3431,7 @@ Error EditorExportPlatformAndroid::export_project_helper(const Ref<EditorExportP
 
 	String apk_expansion_pkey = p_preset->get("apk_expansion/public_key");
 
-	Vector<ABI> invalid_abis(enabled_abis);
+	Hector<ABI> invalid_abis(enabled_abis);
 	while (ret == UNZ_OK) {
 		//get filename
 		unz_file_info info;
@@ -3445,7 +3445,7 @@ Error EditorExportPlatformAndroid::export_project_helper(const Ref<EditorExportP
 
 		String file = String::utf8(fname);
 
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(info.uncompressed_size);
 
 		//read
@@ -3620,7 +3620,7 @@ Error EditorExportPlatformAndroid::export_project_helper(const Ref<EditorExportP
 
 		String file = String::utf8(fname);
 
-		Vector<uint8_t> data;
+		Hector<uint8_t> data;
 		data.resize(info.compressed_size);
 
 		// read

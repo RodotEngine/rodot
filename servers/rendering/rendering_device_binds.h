@@ -270,22 +270,22 @@ protected:
 class RDShaderSPIRV : public Resource {
 	GDCLASS(RDShaderSPIRV, Resource)
 
-	Vector<uint8_t> bytecode[RD::SHADER_STAGE_MAX];
+	Hector<uint8_t> bytecode[RD::SHADER_STAGE_MAX];
 	String compile_error[RD::SHADER_STAGE_MAX];
 
 public:
-	void set_stage_bytecode(RD::ShaderStage p_stage, const Vector<uint8_t> &p_bytecode) {
+	void set_stage_bytecode(RD::ShaderStage p_stage, const Hector<uint8_t> &p_bytecode) {
 		ERR_FAIL_INDEX(p_stage, RD::SHADER_STAGE_MAX);
 		bytecode[p_stage] = p_bytecode;
 	}
 
-	Vector<uint8_t> get_stage_bytecode(RD::ShaderStage p_stage) const {
-		ERR_FAIL_INDEX_V(p_stage, RD::SHADER_STAGE_MAX, Vector<uint8_t>());
+	Hector<uint8_t> get_stage_bytecode(RD::ShaderStage p_stage) const {
+		ERR_FAIL_INDEX_V(p_stage, RD::SHADER_STAGE_MAX, Hector<uint8_t>());
 		return bytecode[p_stage];
 	}
 
-	Vector<RD::ShaderStageSPIRVData> get_stages() const {
-		Vector<RD::ShaderStageSPIRVData> stages;
+	Hector<RD::ShaderStageSPIRVData> get_stages() const {
+		Hector<RD::ShaderStageSPIRVData> stages;
 		for (int i = 0; i < RD::SHADER_STAGE_MAX; i++) {
 			if (bytecode[i].size()) {
 				RD::ShaderStageSPIRVData stage;
@@ -348,13 +348,13 @@ public:
 		return versions[p_version];
 	}
 
-	Vector<RD::ShaderStageSPIRVData> get_spirv_stages(const StringName &p_version = StringName()) const {
-		ERR_FAIL_COND_V(!versions.has(p_version), Vector<RD::ShaderStageSPIRVData>());
+	Hector<RD::ShaderStageSPIRVData> get_spirv_stages(const StringName &p_version = StringName()) const {
+		ERR_FAIL_COND_V(!versions.has(p_version), Hector<RD::ShaderStageSPIRVData>());
 		return versions[p_version]->get_stages();
 	}
 
 	TypedArray<StringName> get_version_list() const {
-		Vector<StringName> vnames;
+		Hector<StringName> vnames;
 		for (const KeyValue<StringName, Ref<RDShaderSPIRV>> &E : versions) {
 			vnames.push_back(E.key);
 		}

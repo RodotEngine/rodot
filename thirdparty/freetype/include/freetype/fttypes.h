@@ -75,13 +75,13 @@ FT_BEGIN_HEADER
    *   FT_Fixed
    *   FT_Pointer
    *   FT_Pos
-   *   FT_Vector
+   *   FT_Hector
    *   FT_BBox
    *   FT_Matrix
    *   FT_FWord
    *   FT_UFWord
    *   FT_F2Dot14
-   *   FT_UnitVector
+   *   FT_UnitHector
    *   FT_F26Dot6
    *   FT_Data
    *
@@ -262,7 +262,7 @@ FT_BEGIN_HEADER
    *   FT_F2Dot14
    *
    * @description:
-   *   A signed 2.14 fixed-point type used for unit vectors.
+   *   A signed 2.14 fixed-point type used for unit Hectors.
    */
   typedef signed short  FT_F2Dot14;
 
@@ -273,7 +273,7 @@ FT_BEGIN_HEADER
    *   FT_F26Dot6
    *
    * @description:
-   *   A signed 26.6 fixed-point type used for vectorial pixel coordinates.
+   *   A signed 26.6 fixed-point type used for Hectorial pixel coordinates.
    */
   typedef signed long  FT_F26Dot6;
 
@@ -342,10 +342,10 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   FT_UnitVector
+   *   FT_UnitHector
    *
    * @description:
-   *   A simple structure used to store a 2D vector unit vector.  Uses
+   *   A simple structure used to store a 2D Hector unit Hector.  Uses
    *   FT_F2Dot14 types.
    *
    * @fields:
@@ -355,12 +355,12 @@ FT_BEGIN_HEADER
    *   y ::
    *     Vertical coordinate.
    */
-  typedef struct  FT_UnitVector_
+  typedef struct  FT_UnitHector_
   {
     FT_F2Dot14  x;
     FT_F2Dot14  y;
 
-  } FT_UnitVector;
+  } FT_UnitHector;
 
 
   /**************************************************************************

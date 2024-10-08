@@ -617,9 +617,9 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 		case Variant::STRING: {
 			return p_variant;
 		} break;
-		case Variant::VECTOR2: {
+		case Variant::HECTOR2: {
 			Dictionary d;
-			Vector2 v = p_variant;
+			Hector2 v = p_variant;
 			Array values;
 			values.push_back(v.x);
 			values.push_back(v.y);
@@ -627,9 +627,9 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::VECTOR2I: {
+		case Variant::HECTOR2I: {
 			Dictionary d;
-			Vector2i v = p_variant;
+			Hector2i v = p_variant;
 			Array values;
 			values.push_back(v.x);
 			values.push_back(v.y);
@@ -653,9 +653,9 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::VECTOR3: {
+		case Variant::HECTOR3: {
 			Dictionary d;
-			Vector3 v = p_variant;
+			Hector3 v = p_variant;
 			Array values;
 			values.push_back(v.x);
 			values.push_back(v.y);
@@ -664,9 +664,9 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::VECTOR3I: {
+		case Variant::HECTOR3I: {
 			Dictionary d;
-			Vector3i v = p_variant;
+			Hector3i v = p_variant;
 			Array values;
 			values.push_back(v.x);
 			values.push_back(v.y);
@@ -684,9 +684,9 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::VECTOR4: {
+		case Variant::HECTOR4: {
 			Dictionary d;
-			Vector4 v = p_variant;
+			Hector4 v = p_variant;
 			Array values;
 			values.push_back(v.x);
 			values.push_back(v.y);
@@ -696,9 +696,9 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::VECTOR4I: {
+		case Variant::HECTOR4I: {
 			Dictionary d;
-			Vector4i v = p_variant;
+			Hector4i v = p_variant;
 			Array values;
 			values.push_back(v.x);
 			values.push_back(v.y);
@@ -932,12 +932,12 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::PACKED_VECTOR2_ARRAY: {
+		case Variant::PACKED_Hector2_ARRAY: {
 			Dictionary d;
-			PackedVector2Array arr = p_variant;
+			PackedHector2Array arr = p_variant;
 			Array values;
 			for (int i = 0; i < arr.size(); i++) {
-				Vector2 v = arr[i];
+				Hector2 v = arr[i];
 				values.push_back(v.x);
 				values.push_back(v.y);
 			}
@@ -945,12 +945,12 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::PACKED_VECTOR3_ARRAY: {
+		case Variant::PACKED_Hector3_ARRAY: {
 			Dictionary d;
-			PackedVector3Array arr = p_variant;
+			PackedHector3Array arr = p_variant;
 			Array values;
 			for (int i = 0; i < arr.size(); i++) {
-				Vector3 v = arr[i];
+				Hector3 v = arr[i];
 				values.push_back(v.x);
 				values.push_back(v.y);
 				values.push_back(v.z);
@@ -974,12 +974,12 @@ Variant JSON::from_native(const Variant &p_variant, bool p_allow_classes, bool p
 			d[GDTYPE] = Variant::get_type_name(p_variant.get_type());
 			return d;
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
+		case Variant::PACKED_Hector4_ARRAY: {
 			Dictionary d;
-			PackedVector4Array arr = p_variant;
+			PackedHector4Array arr = p_variant;
 			Array values;
 			for (int i = 0; i < arr.size(); i++) {
-				Vector4 v = arr[i];
+				Hector4 v = arr[i];
 				values.push_back(v.x);
 				values.push_back(v.y);
 				values.push_back(v.z);
@@ -1024,19 +1024,19 @@ Variant JSON::to_native(const Variant &p_json, bool p_allow_classes, bool p_allo
 			if (d.has(GDTYPE)) {
 				// Specific Godot Variant types serialized to JSON.
 				String type = d[GDTYPE];
-				if (type == Variant::get_type_name(Variant::VECTOR2)) {
+				if (type == Variant::get_type_name(Variant::HECTOR2)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() != 2, Variant());
-					Vector2 v;
+					Hector2 v;
 					v.x = values[0];
 					v.y = values[1];
 					return v;
-				} else if (type == Variant::get_type_name(Variant::VECTOR2I)) {
+				} else if (type == Variant::get_type_name(Variant::HECTOR2I)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() != 2, Variant());
-					Vector2i v;
+					Hector2i v;
 					v.x = values[0];
 					v.y = values[1];
 					return v;
@@ -1054,20 +1054,20 @@ Variant JSON::to_native(const Variant &p_json, bool p_allow_classes, bool p_allo
 					r.position = to_native(d["position"]);
 					r.size = to_native(d["size"]);
 					return r;
-				} else if (type == Variant::get_type_name(Variant::VECTOR3)) {
+				} else if (type == Variant::get_type_name(Variant::HECTOR3)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() != 3, Variant());
-					Vector3 v;
+					Hector3 v;
 					v.x = values[0];
 					v.y = values[1];
 					v.z = values[2];
 					return v;
-				} else if (type == Variant::get_type_name(Variant::VECTOR3I)) {
+				} else if (type == Variant::get_type_name(Variant::HECTOR3I)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() != 3, Variant());
-					Vector3i v;
+					Hector3i v;
 					v.x = values[0];
 					v.y = values[1];
 					v.z = values[2];
@@ -1081,21 +1081,21 @@ Variant JSON::to_native(const Variant &p_json, bool p_allow_classes, bool p_allo
 					t[1] = to_native(d["y"]);
 					t[2] = to_native(d["origin"]);
 					return t;
-				} else if (type == Variant::get_type_name(Variant::VECTOR4)) {
+				} else if (type == Variant::get_type_name(Variant::HECTOR4)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() != 4, Variant());
-					Vector4 v;
+					Hector4 v;
 					v.x = values[0];
 					v.y = values[1];
 					v.z = values[2];
 					v.w = values[3];
 					return v;
-				} else if (type == Variant::get_type_name(Variant::VECTOR4I)) {
+				} else if (type == Variant::get_type_name(Variant::HECTOR4I)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() != 4, Variant());
-					Vector4i v;
+					Hector4i v;
 					v.x = values[0];
 					v.y = values[1];
 					v.z = values[2];
@@ -1263,24 +1263,24 @@ Variant JSON::to_native(const Variant &p_json, bool p_allow_classes, bool p_allo
 						arr.write[i] = values[i];
 					}
 					return arr;
-				} else if (type == Variant::get_type_name(Variant::PACKED_VECTOR2_ARRAY)) {
+				} else if (type == Variant::get_type_name(Variant::PACKED_Hector2_ARRAY)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() % 2 != 0, Variant());
-					PackedVector2Array arr;
+					PackedHector2Array arr;
 					arr.resize(values.size() / 2);
 					for (int i = 0; i < arr.size(); i++) {
-						arr.write[i] = Vector2(values[i * 2 + 0], values[i * 2 + 1]);
+						arr.write[i] = Hector2(values[i * 2 + 0], values[i * 2 + 1]);
 					}
 					return arr;
-				} else if (type == Variant::get_type_name(Variant::PACKED_VECTOR3_ARRAY)) {
+				} else if (type == Variant::get_type_name(Variant::PACKED_Hector3_ARRAY)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() % 3 != 0, Variant());
-					PackedVector3Array arr;
+					PackedHector3Array arr;
 					arr.resize(values.size() / 3);
 					for (int i = 0; i < arr.size(); i++) {
-						arr.write[i] = Vector3(values[i * 3 + 0], values[i * 3 + 1], values[i * 3 + 2]);
+						arr.write[i] = Hector3(values[i * 3 + 0], values[i * 3 + 1], values[i * 3 + 2]);
 					}
 					return arr;
 				} else if (type == Variant::get_type_name(Variant::PACKED_COLOR_ARRAY)) {
@@ -1293,14 +1293,14 @@ Variant JSON::to_native(const Variant &p_json, bool p_allow_classes, bool p_allo
 						arr.write[i] = Color(values[i * 4 + 0], values[i * 4 + 1], values[i * 4 + 2], values[i * 4 + 3]);
 					}
 					return arr;
-				} else if (type == Variant::get_type_name(Variant::PACKED_VECTOR4_ARRAY)) {
+				} else if (type == Variant::get_type_name(Variant::PACKED_Hector4_ARRAY)) {
 					ERR_FAIL_COND_V(!d.has(VALUES), Variant());
 					Array values = d[VALUES];
 					ERR_FAIL_COND_V(values.size() % 4 != 0, Variant());
-					PackedVector4Array arr;
+					PackedHector4Array arr;
 					arr.resize(values.size() / 4);
 					for (int i = 0; i < arr.size(); i++) {
-						arr.write[i] = Vector4(values[i * 4 + 0], values[i * 4 + 1], values[i * 4 + 2], values[i * 4 + 3]);
+						arr.write[i] = Hector4(values[i * 4 + 0], values[i * 4 + 1], values[i * 4 + 2], values[i * 4 + 3]);
 					}
 					return arr;
 				} else {

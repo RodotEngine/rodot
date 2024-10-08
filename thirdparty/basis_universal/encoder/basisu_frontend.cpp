@@ -60,7 +60,7 @@ namespace basisu
 			return false;
 
 		m_source_blocks.resize(0);
-		append_vector(m_source_blocks, p.m_pSource_blocks, p.m_num_source_blocks);
+		append_Hector(m_source_blocks, p.m_pSource_blocks, p.m_num_source_blocks);
 				
 		m_params = p;
 		
@@ -175,7 +175,7 @@ namespace basisu
 		}
 		else
 		{
-			init_endpoint_training_vectors();
+			init_endpoint_training_Hectors();
 
 			generate_endpoint_clusters();
 
@@ -599,7 +599,7 @@ namespace basisu
 
 			m_optimized_cluster_selectors.push_back(blk);
 			
-			vector_ensure_element_is_valid(m_selector_cluster_block_indices, new_selector_cluster_index);
+			Hector_ensure_element_is_valid(m_selector_cluster_block_indices, new_selector_cluster_index);
 			
 			for (uint32_t block_index = 0; block_index < m_total_blocks; block_index++)
 			{
@@ -633,7 +633,7 @@ namespace basisu
 				block_relocated_flags[block_index] = true;
 
 #if 0
-				int j = vector_find(m_selector_cluster_block_indices[old_selector_cluster_index], block_index);
+				int j = Hector_find(m_selector_cluster_block_indices[old_selector_cluster_index], block_index);
 				if (j >= 0)
 					m_selector_cluster_block_indices[old_selector_cluster_index].erase(m_selector_cluster_block_indices[old_selector_cluster_index].begin() + j);
 #endif
@@ -716,8 +716,8 @@ namespace basisu
 			m_block_selector_cluster_index[i] = old_to_new[m_block_selector_cluster_index[i]];
 		}
 
-		basisu::vector<etc_block> new_optimized_cluster_selectors(m_optimized_cluster_selectors.size() ? total_new_entries : 0);
-		basisu::vector<uint_vec> new_selector_cluster_indices(m_selector_cluster_block_indices.size() ? total_new_entries : 0);
+		basisu::Hector<etc_block> new_optimized_cluster_selectors(m_optimized_cluster_selectors.size() ? total_new_entries : 0);
+		basisu::Hector<uint_vec> new_selector_cluster_indices(m_selector_cluster_block_indices.size() ? total_new_entries : 0);
 
 		for (uint32_t i = 0; i < total_new_entries; i++)
 		{
@@ -845,9 +845,9 @@ namespace basisu
 		debug_printf("init_etc1_images: Elapsed time: %3.3f secs\n", tm.get_elapsed_secs());
 	}
 
-	void basisu_frontend::init_endpoint_training_vectors()
+	void basisu_frontend::init_endpoint_training_Hectors()
 	{
-		debug_printf("init_endpoint_training_vectors\n");
+		debug_printf("init_endpoint_training_Hectors\n");
 								
 		vec6F_quantizer::array_of_weighted_training_vecs &training_vecs = m_endpoint_clusterizer.get_training_vecs();
 		
@@ -929,7 +929,7 @@ namespace basisu
 
 			m_block_parent_endpoint_cluster.resize(0);
 			m_block_parent_endpoint_cluster.resize(m_total_blocks);
-			vector_set_all(m_block_parent_endpoint_cluster, 0xFF);
+			Hector_set_all(m_block_parent_endpoint_cluster, 0xFF);
 			for (uint32_t parent_cluster_index = 0; parent_cluster_index < m_endpoint_parent_clusters.size(); parent_cluster_index++)
 			{
 				const uint_vec &cluster = m_endpoint_parent_clusters[parent_cluster_index];
@@ -980,7 +980,7 @@ namespace basisu
 
 		for (int cluster_index = 0; cluster_index < static_cast<int>(m_endpoint_clusters.size()); cluster_index++)
 		{
-			const basisu::vector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
+			const basisu::Hector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
 
 			for (uint32_t cluster_indices_iter = 0; cluster_indices_iter < cluster_indices.size(); cluster_indices_iter++)
 			{
@@ -1025,7 +1025,7 @@ namespace basisu
 
 			BASISU_FRONTEND_VERIFY(cluster_indices.size());
 
-			vector_sort(cluster_indices);
+			Hector_sort(cluster_indices);
 			
 			auto last = std::unique(cluster_indices.begin(), cluster_indices.end());
 			cluster_indices.erase(last, cluster_indices.end());
@@ -1048,13 +1048,13 @@ namespace basisu
 
 				for (uint32_t cluster_index = first_index; cluster_index < last_index; cluster_index++)
 				{
-					const basisu::vector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
+					const basisu::Hector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
 
 					assert(cluster_indices.size());
 
 					for (uint32_t cluster_indices_iter = 0; cluster_indices_iter < cluster_indices.size(); cluster_indices_iter++)
 					{
-						basisu::vector<color_rgba> cluster_pixels(8);
+						basisu::Hector<color_rgba> cluster_pixels(8);
 
 						const uint32_t block_index = cluster_indices[cluster_indices_iter] >> 1;
 						const uint32_t subblock_index = cluster_indices[cluster_indices_iter] & 1;
@@ -1122,7 +1122,7 @@ namespace basisu
 		m_params.m_pJob_pool->wait_for_all();
 #endif
 
-		vector_sort(m_subblock_endpoint_quant_err_vec);
+		Hector_sort(m_subblock_endpoint_quant_err_vec);
 	}
 		
 	void basisu_frontend::introduce_new_endpoint_clusters()
@@ -1139,7 +1139,7 @@ namespace basisu
 
 		const uint32_t num_orig_endpoint_clusters = (uint32_t)m_endpoint_clusters.size();
 
-		std::unordered_set<uint32_t> training_vector_was_relocated;
+		std::unordered_set<uint32_t> training_Hector_was_relocated;
 
 		uint_vec cluster_sizes(num_orig_endpoint_clusters);
 		for (uint32_t i = 0; i < num_orig_endpoint_clusters; i++)
@@ -1161,15 +1161,15 @@ namespace basisu
 			if (unordered_set_contains(ignore_cluster, subblock_to_move.m_cluster_index))
 				continue;
 
-			uint32_t training_vector_index = subblock_to_move.m_block_index * 2 + subblock_to_move.m_subblock_index;
+			uint32_t training_Hector_index = subblock_to_move.m_block_index * 2 + subblock_to_move.m_subblock_index;
 
 			if (cluster_sizes[subblock_to_move.m_cluster_index] <= 2)
 				continue;
 
-			if (unordered_set_contains(training_vector_was_relocated, training_vector_index))
+			if (unordered_set_contains(training_Hector_was_relocated, training_Hector_index))
 				continue;
 
-			if (unordered_set_contains(training_vector_was_relocated, training_vector_index ^ 1))
+			if (unordered_set_contains(training_Hector_was_relocated, training_Hector_index ^ 1))
 				continue;
 
 #if 0
@@ -1183,15 +1183,15 @@ namespace basisu
 
 			//const uint32_t new_endpoint_cluster_index = (uint32_t)m_endpoint_clusters.size();
 
-			enlarge_vector(m_endpoint_clusters, 1)->push_back(training_vector_index);
-			enlarge_vector(m_endpoint_cluster_etc_params, 1);
+			enlarge_Hector(m_endpoint_clusters, 1)->push_back(training_Hector_index);
+			enlarge_Hector(m_endpoint_cluster_etc_params, 1);
 
 			assert(m_endpoint_clusters.size() == m_endpoint_cluster_etc_params.size());
 
-			training_vector_was_relocated.insert(training_vector_index);
+			training_Hector_was_relocated.insert(training_Hector_index);
 
-			m_endpoint_clusters.back().push_back(training_vector_index ^ 1);
-			training_vector_was_relocated.insert(training_vector_index ^ 1);
+			m_endpoint_clusters.back().push_back(training_Hector_index ^ 1);
+			training_Hector_was_relocated.insert(training_Hector_index ^ 1);
 
 			BASISU_FRONTEND_VERIFY(cluster_sizes[subblock_to_move.m_cluster_index] >= 2);
 			cluster_sizes[subblock_to_move.m_cluster_index] -= 2;
@@ -1212,10 +1212,10 @@ namespace basisu
 			uint_vec new_cluster_indices;
 			for (uint32_t j = 0; j < cluster_indices.size(); j++)
 			{
-				uint32_t training_vector_index = cluster_indices[j];
+				uint32_t training_Hector_index = cluster_indices[j];
 
-				if (!unordered_set_contains(training_vector_was_relocated, training_vector_index))
-					new_cluster_indices.push_back(training_vector_index);
+				if (!unordered_set_contains(training_Hector_was_relocated, training_Hector_index))
+					new_cluster_indices.push_back(training_Hector_index);
 			}
 
 			if (cluster_indices.size() != new_cluster_indices.size())
@@ -1261,7 +1261,7 @@ namespace basisu
 		{
 			const uint32_t total_clusters = m_endpoint_clusters.size();
 
-			basisu::vector<cl_pixel_cluster> pixel_clusters(total_clusters);
+			basisu::Hector<cl_pixel_cluster> pixel_clusters(total_clusters);
 			
 			std::vector<color_rgba> input_pixels;
 			input_pixels.reserve(m_total_blocks * 16);
@@ -1278,13 +1278,13 @@ namespace basisu
 			interval_timer hash_tm;
 			hash_tm.start();
 
-			basisu::vector<uint32_t> colors, colors2;
+			basisu::Hector<uint32_t> colors, colors2;
 			colors.reserve(65536);
 			colors2.reserve(65536);
 
 			for (uint32_t cluster_index = 0; cluster_index < m_endpoint_clusters.size(); cluster_index++)
 			{
-				const basisu::vector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
+				const basisu::Hector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
 				assert((cluster_indices.size() & 1) == 0);
 
 #if 0
@@ -1467,7 +1467,7 @@ namespace basisu
 			for (uint32_t i = 0; i < total_clusters; i++)
 				sorted_cluster_indices_old_to_new[sorted_cluster_indices_new_to_old[i]] = i;
 
-			basisu::vector<cl_pixel_cluster> sorted_pixel_clusters(total_clusters);
+			basisu::Hector<cl_pixel_cluster> sorted_pixel_clusters(total_clusters);
 			for (uint32_t i = 0; i < total_clusters; i++)
 				sorted_pixel_clusters[i] = pixel_clusters[sorted_cluster_indices_new_to_old[i]];
 
@@ -1477,7 +1477,7 @@ namespace basisu
 			else if (m_params.m_compression_level == BASISU_MAX_COMPRESSION_LEVEL)
 				total_perms = OPENCL_ENCODE_ETC1S_MAX_PERMS;
 
-			basisu::vector<etc_block> output_blocks(total_clusters);
+			basisu::Hector<etc_block> output_blocks(total_clusters);
 
 			if (opencl_encode_etc1s_pixel_clusters(
 				m_params.m_pOpenCL_context,
@@ -1528,13 +1528,13 @@ namespace basisu
 
 					for (uint32_t cluster_index = first_index; cluster_index < last_index; cluster_index++)
 					{
-						const basisu::vector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
+						const basisu::Hector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
 
 						BASISU_FRONTEND_VERIFY(cluster_indices.size());
 
 						const uint32_t total_pixels = (uint32_t)cluster_indices.size() * 8;
 
-						basisu::vector<color_rgba> cluster_pixels(total_pixels);
+						basisu::Hector<color_rgba> cluster_pixels(total_pixels);
 
 						for (uint32_t cluster_indices_iter = 0; cluster_indices_iter < cluster_indices.size(); cluster_indices_iter++)
 						{
@@ -1572,7 +1572,7 @@ namespace basisu
 
 							etc1_optimizer::results cluster_optimizer_results;
 
-							basisu::vector<uint8_t> cluster_selectors(total_pixels);
+							basisu::Hector<uint8_t> cluster_selectors(total_pixels);
 							cluster_optimizer_results.m_n = total_pixels;
 							cluster_optimizer_results.m_pSelectors = &cluster_selectors[0];
 
@@ -1659,11 +1659,11 @@ namespace basisu
 
 	bool basisu_frontend::check_etc1s_constraints() const
 	{
-		basisu::vector<vec2U> block_clusters(m_total_blocks);
+		basisu::Hector<vec2U> block_clusters(m_total_blocks);
 
 		for (int cluster_index = 0; cluster_index < static_cast<int>(m_endpoint_clusters.size()); cluster_index++)
 		{
-			const basisu::vector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
+			const basisu::Hector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
 
 			for (uint32_t cluster_indices_iter = 0; cluster_indices_iter < cluster_indices.size(); cluster_indices_iter++)
 			{
@@ -1695,11 +1695,11 @@ namespace basisu
 
 		// Note: It's possible that an endpoint cluster may live in more than one parent cluster after the first refinement step.
 
-		basisu::vector<vec2U> block_clusters(m_total_blocks);
+		basisu::Hector<vec2U> block_clusters(m_total_blocks);
 
 		for (int cluster_index = 0; cluster_index < static_cast<int>(m_endpoint_clusters.size()); cluster_index++)
 		{
-			const basisu::vector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
+			const basisu::Hector<uint32_t>& cluster_indices = m_endpoint_clusters[cluster_index];
 
 			for (uint32_t cluster_indices_iter = 0; cluster_indices_iter < cluster_indices.size(); cluster_indices_iter++)
 			{
@@ -1728,7 +1728,7 @@ namespace basisu
 			// We also prepare an array of block info structs that point into this new parent endpoint cluster array.
 			const uint32_t total_parent_clusters = m_endpoint_clusters_within_each_parent_cluster.size();
 
-			basisu::vector<cl_block_info_struct> cl_block_info_structs(m_total_blocks);
+			basisu::Hector<cl_block_info_struct> cl_block_info_structs(m_total_blocks);
 			
 			// the size of each parent cluster, in total clusters
 			uint_vec parent_cluster_sizes(total_parent_clusters);
@@ -1747,7 +1747,7 @@ namespace basisu
 			// Note: total_actual_endpoint_clusters is not necessarly equal to m_endpoint_clusters.size(), because clusters may live in multiple parent clusters after the first refinement step.
 			BASISU_FRONTEND_VERIFY(cur_ofs >= m_endpoint_clusters.size());
 			const uint32_t total_actual_endpoint_clusters = cur_ofs;
-			basisu::vector<cl_endpoint_cluster_struct> cl_endpoint_cluster_structs(total_actual_endpoint_clusters);
+			basisu::Hector<cl_endpoint_cluster_struct> cl_endpoint_cluster_structs(total_actual_endpoint_clusters);
 
 			for (uint32_t i = 0; i < total_parent_clusters; i++)
 			{
@@ -1965,18 +1965,18 @@ namespace basisu
 						
 		debug_printf("refine_endpoint_clusterization time: %3.3f secs\n", tm.get_elapsed_secs());
 
-		basisu::vector<typename basisu::vector<uint32_t> > optimized_endpoint_clusters(m_endpoint_clusters.size());
+		basisu::Hector<typename basisu::Hector<uint32_t> > optimized_endpoint_clusters(m_endpoint_clusters.size());
 		uint32_t total_subblocks_reassigned = 0;
 
 		for (uint32_t block_index = 0; block_index < m_total_blocks; block_index++)
 		{
-			const uint32_t training_vector_index = block_index * 2 + 0;
+			const uint32_t training_Hector_index = block_index * 2 + 0;
 
 			const uint32_t orig_cluster_index = block_clusters[block_index][0];
 			const uint32_t best_cluster_index = best_cluster_indices[block_index];
 
-			optimized_endpoint_clusters[best_cluster_index].push_back(training_vector_index);
-			optimized_endpoint_clusters[best_cluster_index].push_back(training_vector_index + 1);
+			optimized_endpoint_clusters[best_cluster_index].push_back(training_Hector_index);
+			optimized_endpoint_clusters[best_cluster_index].push_back(training_Hector_index + 1);
 
 			if (best_cluster_index != orig_cluster_index)
 			{
@@ -2003,8 +2003,8 @@ namespace basisu
 
 		indirect_sort((uint32_t)m_endpoint_clusters.size(), &sorted_endpoint_cluster_indices[0], &m_endpoint_cluster_etc_params[0]);
 
-		basisu::vector<basisu::vector<uint32_t> > new_endpoint_clusters(m_endpoint_clusters.size());
-		basisu::vector<endpoint_cluster_etc_params> new_subblock_etc_params(m_endpoint_clusters.size());
+		basisu::Hector<basisu::Hector<uint32_t> > new_endpoint_clusters(m_endpoint_clusters.size());
+		basisu::Hector<endpoint_cluster_etc_params> new_subblock_etc_params(m_endpoint_clusters.size());
 		
 		for (uint32_t i = 0; i < m_endpoint_clusters.size(); i++)
 		{
@@ -2041,7 +2041,7 @@ namespace basisu
 						
 			for (int k = i + 1; k < j; k++)
 			{
-				append_vector(new_endpoint_clusters.back(), m_endpoint_clusters[k]);
+				append_Hector(new_endpoint_clusters.back(), m_endpoint_clusters[k]);
 			}
 
 			i = j;
@@ -2069,7 +2069,7 @@ namespace basisu
 
 		if ((m_params.m_pOpenCL_context) && (opencl_is_available()))
 		{
-			basisu::vector<color_rgba> block_etc5_color_intens(m_total_blocks);
+			basisu::Hector<color_rgba> block_etc5_color_intens(m_total_blocks);
 
 			for (uint32_t block_index = 0; block_index < m_total_blocks; block_index++)
 			{
@@ -2154,7 +2154,7 @@ namespace basisu
 
 		for (int cluster_index = 0; cluster_index < static_cast<int>(m_selector_cluster_block_indices.size()); cluster_index++)
 		{
-			const basisu::vector<uint32_t>& cluster_indices = m_selector_cluster_block_indices[cluster_index];
+			const basisu::Hector<uint32_t>& cluster_indices = m_selector_cluster_block_indices[cluster_index];
 
 			for (uint32_t cluster_indices_iter = 0; cluster_indices_iter < cluster_indices.size(); cluster_indices_iter++)
 			{
@@ -2183,7 +2183,7 @@ namespace basisu
 
 			BASISU_FRONTEND_VERIFY(cluster_indices.size());
 
-			vector_sort(cluster_indices);
+			Hector_sort(cluster_indices);
 			
 			auto last = std::unique(cluster_indices.begin(), cluster_indices.end());
 			cluster_indices.erase(last, cluster_indices.end());
@@ -2194,7 +2194,7 @@ namespace basisu
 	{
 		debug_printf("generate_selector_clusters\n");
 				
-		typedef tree_vector_quant<vec16F> vec16F_clusterizer;
+		typedef tree_Hector_quant<vec16F> vec16F_clusterizer;
 				
 		vec16F_clusterizer::array_of_weighted_training_vecs training_vecs(m_total_blocks);
 				
@@ -2278,7 +2278,7 @@ namespace basisu
 
 			m_block_parent_selector_cluster.resize(0);
 			m_block_parent_selector_cluster.resize(m_total_blocks);
-			vector_set_all(m_block_parent_selector_cluster, 0xFF);
+			Hector_set_all(m_block_parent_selector_cluster, 0xFF);
 
 			for (uint32_t parent_cluster_index = 0; parent_cluster_index < m_selector_parent_cluster_block_indices.size(); parent_cluster_index++)
 			{
@@ -2341,7 +2341,7 @@ namespace basisu
 
 				for (uint32_t cluster_index = first_index; cluster_index < last_index; cluster_index++)
 				{
-					const basisu::vector<uint32_t>& cluster_block_indices = m_selector_cluster_block_indices[cluster_index];
+					const basisu::Hector<uint32_t>& cluster_block_indices = m_selector_cluster_block_indices[cluster_index];
 
 					if (!cluster_block_indices.size())
 						continue;
@@ -2431,7 +2431,7 @@ namespace basisu
 
 				for (uint32_t selector_cluster_index = 0; selector_cluster_index < m_selector_cluster_block_indices.size(); selector_cluster_index++)
 				{
-					const basisu::vector<uint32_t> &cluster_block_indices = m_selector_cluster_block_indices[selector_cluster_index];
+					const basisu::Hector<uint32_t> &cluster_block_indices = m_selector_cluster_block_indices[selector_cluster_index];
 
 					for (uint32_t y = 0; y < 4; y++)
 						for (uint32_t x = 0; x < 4; x++)
@@ -2507,7 +2507,7 @@ namespace basisu
 		{
 			const uint32_t num_parent_clusters = m_selector_clusters_within_each_parent_cluster.size();
 
-			basisu::vector<fosc_selector_struct> selector_structs;
+			basisu::Hector<fosc_selector_struct> selector_structs;
 			selector_structs.reserve(m_optimized_cluster_selectors.size());
 						
 			uint_vec parent_selector_cluster_offsets(num_parent_clusters);
@@ -2538,7 +2538,7 @@ namespace basisu
 
 			const uint32_t total_input_selectors = cur_ofs;
 						
-			basisu::vector<fosc_block_struct> block_structs(m_total_blocks);
+			basisu::Hector<fosc_block_struct> block_structs(m_total_blocks);
 			for (uint32_t i = 0; i < m_total_blocks; i++)
 			{
 				const uint32_t parent_selector_cluster = m_block_parent_selector_cluster[i];
@@ -2586,7 +2586,7 @@ namespace basisu
 
 					m_block_selector_cluster_index[block_index] = best_cluster_index;
 
-					vector_ensure_element_is_valid(m_selector_cluster_block_indices, best_cluster_index);
+					Hector_ensure_element_is_valid(m_selector_cluster_block_indices, best_cluster_index);
 					m_selector_cluster_block_indices[best_cluster_index].push_back(block_index);
 				}
 
@@ -2596,7 +2596,7 @@ namespace basisu
 
 		if (use_cpu)
 		{
-			basisu::vector<uint8_t> unpacked_optimized_cluster_selectors(16 * m_optimized_cluster_selectors.size());
+			basisu::Hector<uint8_t> unpacked_optimized_cluster_selectors(16 * m_optimized_cluster_selectors.size());
 			for (uint32_t cluster_index = 0; cluster_index < m_optimized_cluster_selectors.size(); cluster_index++)
 			{
 				for (uint32_t y = 0; y < 4; y++)
@@ -2775,7 +2775,7 @@ namespace basisu
 			{
 				const uint32_t best_cluster_index = m_block_selector_cluster_index[block_index];
 
-				vector_ensure_element_is_valid(m_selector_cluster_block_indices, best_cluster_index);
+				Hector_ensure_element_is_valid(m_selector_cluster_block_indices, best_cluster_index);
 				m_selector_cluster_block_indices[best_cluster_index].push_back(block_index);
 			}
 		
@@ -2809,17 +2809,17 @@ namespace basisu
 			const uint_vec &subblocks = subblock_params.m_subblocks;
 			//uint32_t total_pixels = subblock.m_subblocks.size() * 8;
 
-			basisu::vector<color_rgba> subblock_colors[2]; // [use_individual_mode]
+			basisu::Hector<color_rgba> subblock_colors[2]; // [use_individual_mode]
 			uint8_vec subblock_selectors[2];
 
 			uint64_t cur_subblock_err[2] = { 0, 0 };
 
 			for (uint32_t subblock_iter = 0; subblock_iter < subblocks.size(); subblock_iter++)
 			{
-				uint32_t training_vector_index = subblocks[subblock_iter];
+				uint32_t training_Hector_index = subblocks[subblock_iter];
 
-				uint32_t block_index = training_vector_index >> 1;
-				uint32_t subblock_index = training_vector_index & 1;
+				uint32_t block_index = training_Hector_index >> 1;
+				uint32_t subblock_index = training_Hector_index & 1;
 				const bool is_flipped = true;
 
 				const etc_block &blk = m_encoded_blocks[block_index];
@@ -2849,7 +2849,7 @@ namespace basisu
 
 			clear_obj(cluster_optimizer_results);
 
-			basisu::vector<uint8_t> cluster_selectors[2];
+			basisu::Hector<uint8_t> cluster_selectors[2];
 
 			for (uint32_t use_individual_mode = 0; use_individual_mode < 2; use_individual_mode++)
 			{
@@ -2901,10 +2901,10 @@ namespace basisu
 				{
 					for (uint32_t subblock_iter = 0; subblock_iter < subblocks.size(); subblock_iter++)
 					{
-						const uint32_t training_vector_index = subblocks[subblock_iter];
+						const uint32_t training_Hector_index = subblocks[subblock_iter];
 
-						const uint32_t block_index = training_vector_index >> 1;
-						const uint32_t subblock_index = training_vector_index & 1;
+						const uint32_t block_index = training_Hector_index >> 1;
+						const uint32_t subblock_index = training_Hector_index & 1;
 						//const bool is_flipped = true;
 
 						etc_block &blk = m_encoded_blocks[block_index];
@@ -2979,8 +2979,8 @@ namespace basisu
 
 		uint32_t max_endpoint_cluster_size = 0;
 
-		basisu::vector<uint32_t> cluster_sizes(m_endpoint_clusters.size());
-		basisu::vector<uint32_t> sorted_cluster_indices(m_endpoint_clusters.size());
+		basisu::Hector<uint32_t> cluster_sizes(m_endpoint_clusters.size());
+		basisu::Hector<uint32_t> sorted_cluster_indices(m_endpoint_clusters.size());
 		for (uint32_t i = 0; i < m_endpoint_clusters.size(); i++)
 		{
 			max_endpoint_cluster_size = maximum<uint32_t>(max_endpoint_cluster_size, (uint32_t)m_endpoint_clusters[i].size());
@@ -3015,10 +3015,10 @@ namespace basisu
 
 			for (uint32_t subblock_iter = 0; subblock_iter < m_endpoint_clusters[cluster_iter].size(); subblock_iter++)
 			{
-				uint32_t training_vector_index = m_endpoint_clusters[cluster_iter][subblock_iter];
+				uint32_t training_Hector_index = m_endpoint_clusters[cluster_iter][subblock_iter];
 
-				const uint32_t block_index = training_vector_index >> 1;
-				const uint32_t subblock_index = training_vector_index & 1;
+				const uint32_t block_index = training_Hector_index >> 1;
+				const uint32_t subblock_index = training_Hector_index & 1;
 
 				const etc_block& blk2 = m_etc1_blocks_etc1s[block_index];
 
@@ -3067,12 +3067,12 @@ namespace basisu
 	{
 		debug_printf("reoptimize_remapped_endpoints\n");
 
-		basisu::vector<uint_vec> new_endpoint_cluster_block_indices(m_endpoint_clusters.size());
+		basisu::Hector<uint_vec> new_endpoint_cluster_block_indices(m_endpoint_clusters.size());
 		for (uint32_t i = 0; i < new_block_endpoints.size(); i++)
 			new_endpoint_cluster_block_indices[new_block_endpoints[i]].push_back(i);
 
-		basisu::vector<uint8_t> cluster_valid(new_endpoint_cluster_block_indices.size());
-		basisu::vector<uint8_t> cluster_improved(new_endpoint_cluster_block_indices.size());
+		basisu::Hector<uint8_t> cluster_valid(new_endpoint_cluster_block_indices.size());
+		basisu::Hector<uint8_t> cluster_improved(new_endpoint_cluster_block_indices.size());
 		
 		const uint32_t N = 256;
 		for (uint32_t cluster_index_iter = 0; cluster_index_iter < new_endpoint_cluster_block_indices.size(); cluster_index_iter += N)
@@ -3086,14 +3086,14 @@ namespace basisu
 
 				for (uint32_t cluster_index = first_index; cluster_index < last_index; cluster_index++)
 				{
-					const basisu::vector<uint32_t>& cluster_block_indices = new_endpoint_cluster_block_indices[cluster_index];
+					const basisu::Hector<uint32_t>& cluster_block_indices = new_endpoint_cluster_block_indices[cluster_index];
 
 					if (!cluster_block_indices.size())
 						continue;
 
 					const uint32_t total_pixels = (uint32_t)cluster_block_indices.size() * 16;
 
-					basisu::vector<color_rgba> cluster_pixels(total_pixels);
+					basisu::Hector<color_rgba> cluster_pixels(total_pixels);
 					uint8_vec force_selectors(total_pixels);
 
 					etc_block blk;
@@ -3145,7 +3145,7 @@ namespace basisu
 
 						etc1_optimizer::results cluster_optimizer_results;
 
-						basisu::vector<uint8_t> cluster_selectors(total_pixels);
+						basisu::Hector<uint8_t> cluster_selectors(total_pixels);
 						cluster_optimizer_results.m_n = total_pixels;
 						cluster_optimizer_results.m_pSelectors = &cluster_selectors[0];
 
@@ -3186,7 +3186,7 @@ namespace basisu
 		uint32_t total_improved_clusters = 0;
 		
 		old_to_new_endpoint_cluster_indices.resize(m_endpoint_clusters.size());
-		vector_set_all(old_to_new_endpoint_cluster_indices, -1);
+		Hector_set_all(old_to_new_endpoint_cluster_indices, -1);
 				
 		int total_new_endpoint_clusters = 0;
 
@@ -3217,7 +3217,7 @@ namespace basisu
 
 			debug_printf("basisu_frontend::reoptimize_remapped_endpoints: stage 1\n");
 
-			basisu::vector<uint_vec> new_endpoint_clusters(total_new_endpoint_clusters);
+			basisu::Hector<uint_vec> new_endpoint_clusters(total_new_endpoint_clusters);
 
 			for (uint32_t block_index = 0; block_index < new_block_endpoints.size(); block_index++)
 			{
@@ -3393,7 +3393,7 @@ namespace basisu
 			const uint32_t selector_cluster_index = get_block_selector_cluster_index(block_index);
 			CHECK(selector_cluster_index < get_total_selector_clusters());
 
-			CHECK(vector_find(get_selector_cluster_block_indices(selector_cluster_index), block_index) != -1);
+			CHECK(Hector_find(get_selector_cluster_block_indices(selector_cluster_index), block_index) != -1);
 
 			blk.set_raw_selector_bits(get_selector_cluster_selector_bits(selector_cluster_index).get_raw_selector_bits());
 

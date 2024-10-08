@@ -46,7 +46,7 @@ public:
 	HashMap<StringName, Variant> values;
 	List<PropertyInfo> properties;
 	Ref<ResourceImporter> importer;
-	Vector<String> paths;
+	Hector<String> paths;
 	HashSet<StringName> checked;
 	bool checking = false;
 	bool skip = false;
@@ -222,7 +222,7 @@ void ImportDock::_update_options(const String &p_path, const Ref<ConfigFile> &p_
 	}
 }
 
-void ImportDock::set_edit_multiple_paths(const Vector<String> &p_paths) {
+void ImportDock::set_edit_multiple_paths(const Hector<String> &p_paths) {
 	clear();
 
 	// Use the value that is repeated the most.
@@ -358,7 +358,7 @@ void ImportDock::set_edit_multiple_paths(const Vector<String> &p_paths) {
 	}
 }
 
-void ImportDock::reimport_resources(const Vector<String> &p_paths) {
+void ImportDock::reimport_resources(const Hector<String> &p_paths) {
 	switch (p_paths.size()) {
 		case 0:
 			ERR_FAIL_MSG("You need to select files to reimport them.");
@@ -520,7 +520,7 @@ static bool _find_owners(EditorFileSystemDirectory *efsd, const String &p_path) 
 	}
 
 	for (int i = 0; i < efsd->get_file_count(); i++) {
-		Vector<String> deps = efsd->get_file_deps(i);
+		Hector<String> deps = efsd->get_file_deps(i);
 		if (deps.has(p_path)) {
 			return true;
 		}
@@ -606,8 +606,8 @@ void ImportDock::_reimport_and_cleanup() {
 	List<Ref<Resource>> external_resources;
 	ResourceCache::get_cached_resources(&external_resources);
 
-	Vector<Ref<Resource>> old_resources_to_replace;
-	Vector<Ref<Resource>> new_resources_to_replace;
+	Hector<Ref<Resource>> old_resources_to_replace;
+	Hector<Ref<Resource>> new_resources_to_replace;
 	for (const String &path : need_cleanup) {
 		Ref<Resource> old_res = old_resources[path];
 		if (params->importer.is_valid()) {

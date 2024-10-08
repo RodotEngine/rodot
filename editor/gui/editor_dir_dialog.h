@@ -68,7 +68,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void config(const Vector<String> &p_paths);
+	void config(const Hector<String> &p_paths);
 	void reload(const String &p_path = "");
 
 	EditorDirDialog();

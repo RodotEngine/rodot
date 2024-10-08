@@ -113,10 +113,10 @@ _remap_indexes (const hb_set_t *indexes,
  * Removes all tags from 'tags' that are not in filter. Additionally eliminates any duplicates.
  * Returns true if anything was removed (not including duplicates).
  */
-static bool _filter_tag_list(hb_vector_t<hb_tag_t>* tags, /* IN/OUT */
+static bool _filter_tag_list(hb_Hector_t<hb_tag_t>* tags, /* IN/OUT */
                              const hb_set_t* filter)
 {
-  hb_vector_t<hb_tag_t> out;
+  hb_Hector_t<hb_tag_t> out;
   out.alloc (tags->get_size() + 1); // +1 is to allocate room for the null terminator.
 
   bool removed = false;
@@ -155,13 +155,13 @@ static void _collect_layout_indices (hb_subset_plan_t     *plan,
                                      hb_hashmap_t<unsigned, hb_pair_t<const void*, const void*>>& catch_all_record_idx_feature_map /* OUT */)
 {
   unsigned num_features = table.get_feature_count ();
-  hb_vector_t<hb_tag_t> features;
+  hb_Hector_t<hb_tag_t> features;
   if (!plan->check_success (features.resize (num_features))) return;
   table.get_feature_tags (0, &num_features, features.arrayZ);
   bool retain_all_features = !_filter_tag_list (&features, &plan->layout_features);
 
   unsigned num_scripts = table.get_script_count ();
-  hb_vector_t<hb_tag_t> scripts;
+  hb_Hector_t<hb_tag_t> scripts;
   if (!plan->check_success (scripts.resize (num_scripts))) return;
   table.get_script_tags (0, &num_scripts, scripts.arrayZ);
   bool retain_all_scripts = !_filter_tag_list (&scripts, &plan->layout_scripts);
@@ -357,7 +357,7 @@ _closure_glyphs_lookups_features (hb_subset_plan_t   *plan,
 static inline void
 _generate_varstore_inner_maps (const hb_set_t& varidx_set,
                                unsigned subtable_count,
-                               hb_vector_t<hb_inc_bimap_t> &inner_maps /* OUT */)
+                               hb_Hector_t<hb_inc_bimap_t> &inner_maps /* OUT */)
 {
   if (varidx_set.is_empty () || subtable_count == 0) return;
 
@@ -378,7 +378,7 @@ _get_hb_font_with_variations (const hb_subset_plan_t *plan)
 {
   hb_font_t *font = hb_font_create (plan->source);
 
-  hb_vector_t<hb_variation_t> vars;
+  hb_Hector_t<hb_variation_t> vars;
   if (!vars.alloc (plan->user_axes_location.get_population ())) {
     hb_font_destroy (font);
     return nullptr;
@@ -401,7 +401,7 @@ _get_hb_font_with_variations (const hb_subset_plan_t *plan)
 static inline void
 _remap_variation_indices (const OT::ItemVariationStore &var_store,
                           const hb_set_t &variation_indices,
-                          const hb_vector_t<int>& normalized_coords,
+                          const hb_Hector_t<int>& normalized_coords,
                           bool calculate_delta, /* not pinned at default */
                           bool no_variations, /* all axes pinned */
                           hb_hashmap_t<unsigned, hb_pair_t<unsigned, int>> &variation_idx_delta_map /* OUT */)
@@ -972,7 +972,7 @@ _create_old_gid_to_new_gid_map (const hb_face_t *face,
                                 const hb_map_t  *requested_glyph_map,
 				hb_map_t	*glyph_map, /* OUT */
 				hb_map_t	*reverse_glyph_map, /* OUT */
-				hb_sorted_vector_t<hb_codepoint_pair_t> *new_to_old_gid_list /* OUT */,
+				hb_sorted_Hector_t<hb_codepoint_pair_t> *new_to_old_gid_list /* OUT */,
 				unsigned int	*num_glyphs /* OUT */)
 {
   unsigned pop = all_gids_to_retain->get_population ();
@@ -1215,7 +1215,7 @@ _update_instance_metrics_map_from_cff2 (hb_subset_plan_t *plan)
 static bool
 _get_instance_glyphs_contour_points (hb_subset_plan_t *plan)
 {
-  /* contour_points vector only needed for updating gvar table (infer delta and
+  /* contour_points Hector only needed for updating gvar table (infer delta and
    * iup delta optimization) during partial instancing */
   if (plan->user_axes_location.is_empty () || plan->all_axes_pinned)
     return true;
@@ -1225,7 +1225,7 @@ _get_instance_glyphs_contour_points (hb_subset_plan_t *plan)
   for (auto &_ : plan->new_to_old_gid_list)
   {
     hb_codepoint_t new_gid = _.first;
-    contour_point_vector_t all_points;
+    contour_point_Hector_t all_points;
     if (new_gid == 0 && !(plan->flags & HB_SUBSET_FLAGS_NOTDEF_OUTLINE))
     {
       if (unlikely (!plan->new_gid_contour_points_map.set (new_gid, all_points)))

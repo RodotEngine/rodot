@@ -25,18 +25,18 @@
 #define WEBP_USE_INTRINSICS   // use intrinsics when possible
 #endif
 
-#define INIT_VECTOR2(v, a, b) do {  \
+#define INIT_Hector2(v, a, b) do {  \
   v.val[0] = a;                     \
   v.val[1] = b;                     \
 } while (0)
 
-#define INIT_VECTOR3(v, a, b, c) do {  \
+#define INIT_Hector3(v, a, b, c) do {  \
   v.val[0] = a;                        \
   v.val[1] = b;                        \
   v.val[2] = c;                        \
 } while (0)
 
-#define INIT_VECTOR4(v, a, b, c, d) do {  \
+#define INIT_Hector4(v, a, b, c, d) do {  \
   v.val[0] = a;                           \
   v.val[1] = b;                           \
   v.val[2] = c;                           \

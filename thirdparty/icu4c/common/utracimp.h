@@ -225,7 +225,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes no data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -239,7 +239,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes one data argument.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -253,7 +253,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes two data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -267,7 +267,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes three data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -281,7 +281,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes four data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -295,7 +295,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes five data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -309,7 +309,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes six data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -323,7 +323,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes seven data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -337,7 +337,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes eight data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */
@@ -351,7 +351,7 @@ UPRV_BLOCK_MACRO_BEGIN { \
  * Trace statement used inside functions that have a UTRACE_ENTRY() statement.
  * Takes nine data arguments.
  * The number of arguments for this macro must match the number of inserts
- * in the format string. Vector inserts count as two arguments.
+ * in the format string. Hector inserts count as two arguments.
  * Calls utrace_data() if the level is high enough.
  * @internal
  */

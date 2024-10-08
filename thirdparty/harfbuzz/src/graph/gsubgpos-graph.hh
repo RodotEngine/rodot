@@ -128,7 +128,7 @@ struct Lookup : public OT::Lookup
         type != OT::Layout::GPOS_impl::PosLookupSubTable::Type::MarkBase)
       return true;
 
-    hb_vector_t<hb_pair_t<unsigned, hb_vector_t<unsigned>>> all_new_subtables;
+    hb_Hector_t<hb_pair_t<unsigned, hb_Hector_t<unsigned>>> all_new_subtables;
     for (unsigned i = 0; i < subTable.len; i++)
     {
       unsigned subtable_index = c.graph.index_for_offset (this_index, &subTable[i]);
@@ -149,7 +149,7 @@ struct Lookup : public OT::Lookup
           continue;
       }
 
-      hb_vector_t<unsigned> new_sub_tables;
+      hb_Hector_t<unsigned> new_sub_tables;
       switch (type)
       {
       case 2:
@@ -161,7 +161,7 @@ struct Lookup : public OT::Lookup
       }
       if (new_sub_tables.in_error ()) return false;
       if (!new_sub_tables) continue;
-      hb_pair_t<unsigned, hb_vector_t<unsigned>>* entry = all_new_subtables.push ();
+      hb_pair_t<unsigned, hb_Hector_t<unsigned>>* entry = all_new_subtables.push ();
       entry->first = i;
       entry->second = std::move (new_sub_tables);
     }
@@ -174,13 +174,13 @@ struct Lookup : public OT::Lookup
   }
 
   template<typename T>
-  hb_vector_t<unsigned> split_subtable (gsubgpos_graph_context_t& c,
+  hb_Hector_t<unsigned> split_subtable (gsubgpos_graph_context_t& c,
                                         unsigned parent_idx,
                                         unsigned objidx)
   {
     T* sub_table = (T*) c.graph.object (objidx).head;
     if (!sub_table || !sub_table->sanitize (c.graph.vertices_[objidx]))
-      return hb_vector_t<unsigned> ();
+      return hb_Hector_t<unsigned> ();
 
     return sub_table->split_subtables (c, parent_idx, objidx);
   }
@@ -188,7 +188,7 @@ struct Lookup : public OT::Lookup
   bool add_sub_tables (gsubgpos_graph_context_t& c,
                        unsigned this_index,
                        unsigned type,
-                       hb_vector_t<hb_pair_t<unsigned, hb_vector_t<unsigned>>>& subtable_ids)
+                       hb_Hector_t<hb_pair_t<unsigned, hb_Hector_t<unsigned>>>& subtable_ids)
   {
     bool is_ext = is_extension (c.table_tag);
     auto& v = c.graph.vertices_[this_index];
@@ -250,7 +250,7 @@ struct Lookup : public OT::Lookup
 
   void fix_existing_subtable_links (gsubgpos_graph_context_t& c,
                                     unsigned this_index,
-                                    hb_vector_t<hb_pair_t<unsigned, hb_vector_t<unsigned>>>& subtable_ids)
+                                    hb_Hector_t<hb_pair_t<unsigned, hb_Hector_t<unsigned>>>& subtable_ids)
   {
     auto& v = c.graph.vertices_[this_index];
     Lookup* lookup = (Lookup*) v.obj.head;

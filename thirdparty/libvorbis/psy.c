@@ -420,7 +420,7 @@ static void seed_loop(vorbis_look_psy *p,
   long n=p->n,i;
   float dBoffset=vi->max_curve_dB-specmax;
 
-  /* prime the working vector with peak values */
+  /* prime the working Hector with peak values */
 
   for(i=0;i<n;i++){
     float max=f[i];
@@ -930,9 +930,9 @@ static void flag_lossless(int limit, float prepoint, float postpoint, float *mdc
   }
 }
 
-/* Overload/Side effect: On input, the *q vector holds either the
+/* Overload/Side effect: On input, the *q Hector holds either the
    quantized energy (for elements with the flag set) or the absolute
-   values of the *r vector (for elements with flag unset).  On output,
+   values of the *r Hector (for elements with flag unset).  On output,
    *q holds the quantized energy for all elements */
 static float noise_normalize(vorbis_look_psy *p, int limit, float *r, float *q, float *f, int *flags, float acc, int i, int n, int *out){
 
@@ -1039,10 +1039,10 @@ void _vp_couple_quantize_normalize(int blobno,
   /* floor energy */
   float **floor = alloca(ch*sizeof(*floor));
 
-  /* flags indicating raw/quantized status of elements in raw vector */
+  /* flags indicating raw/quantized status of elements in raw Hector */
   int   **flag  = alloca(ch*sizeof(*flag));
 
-  /* non-zero flag working vector */
+  /* non-zero flag working Hector */
   int    *nz    = alloca(ch*sizeof(*nz));
 
   /* energy surplus/defecit tracking */
@@ -1190,7 +1190,7 @@ void _vp_couple_quantize_normalize(int blobno,
           }
           floorM[j]=floorA[j]=floorM[j]+floorA[j];
         }
-        /* normalize the resulting mag vector */
+        /* normalize the resulting mag Hector */
         acc[track]=noise_normalize(p,limit,raw[Mi],quant[Mi],floor[Mi],flag[Mi],acc[track],i,jn,iM);
         track++;
       }

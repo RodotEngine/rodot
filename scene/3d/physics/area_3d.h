@@ -48,7 +48,7 @@ public:
 
 private:
 	SpaceOverride gravity_space_override = SPACE_OVERRIDE_DISABLED;
-	Vector3 gravity_vec;
+	Hector3 gravity_vec;
 	real_t gravity = 0.0;
 	bool gravity_is_point = false;
 	real_t gravity_point_unit_distance = 0.0;
@@ -160,11 +160,11 @@ public:
 	void set_gravity_point_unit_distance(real_t p_scale);
 	real_t get_gravity_point_unit_distance() const;
 
-	void set_gravity_point_center(const Vector3 &p_center);
-	const Vector3 &get_gravity_point_center() const;
+	void set_gravity_point_center(const Hector3 &p_center);
+	const Hector3 &get_gravity_point_center() const;
 
-	void set_gravity_direction(const Vector3 &p_direction);
-	const Vector3 &get_gravity_direction() const;
+	void set_gravity_direction(const Hector3 &p_direction);
+	const Hector3 &get_gravity_direction() const;
 
 	void set_gravity(real_t p_gravity);
 	real_t get_gravity() const;

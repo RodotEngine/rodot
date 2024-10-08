@@ -35,11 +35,11 @@
 #include "servers/rendering_server.h"
 
 bool WorldBoundaryShape2D::_edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const {
-	Vector2 point = distance * normal;
-	Vector2 l[2][2] = { { point - normal.orthogonal() * 100, point + normal.orthogonal() * 100 }, { point, point + normal * 30 } };
+	Hector2 point = distance * normal;
+	Hector2 l[2][2] = { { point - normal.orthogonal() * 100, point + normal.orthogonal() * 100 }, { point, point + normal * 30 } };
 
 	for (int i = 0; i < 2; i++) {
-		Vector2 closest = Geometry2D::get_closest_point_to_segment(p_point, l[i]);
+		Hector2 closest = Geometry2D::get_closest_point_to_segment(p_point, l[i]);
 		if (p_point.distance_to(closest) < p_tolerance) {
 			return true;
 		}
@@ -56,7 +56,7 @@ void WorldBoundaryShape2D::_update_shape() {
 	emit_changed();
 }
 
-void WorldBoundaryShape2D::set_normal(const Vector2 &p_normal) {
+void WorldBoundaryShape2D::set_normal(const Hector2 &p_normal) {
 	// Can be non-unit but prevent zero.
 	ERR_FAIL_COND(p_normal.is_zero_approx());
 	if (normal == p_normal) {
@@ -74,7 +74,7 @@ void WorldBoundaryShape2D::set_distance(real_t p_distance) {
 	_update_shape();
 }
 
-Vector2 WorldBoundaryShape2D::get_normal() const {
+Hector2 WorldBoundaryShape2D::get_normal() const {
 	return normal;
 }
 
@@ -83,11 +83,11 @@ real_t WorldBoundaryShape2D::get_distance() const {
 }
 
 void WorldBoundaryShape2D::draw(const RID &p_to_rid, const Color &p_color) {
-	Vector2 point = distance * normal;
+	Hector2 point = distance * normal;
 	real_t line_width = 3.0;
 
 	// Draw collision shape line.
-	PackedVector2Array line_points = {
+	PackedHector2Array line_points = {
 		point - normal.orthogonal() * 100,
 		point - normal.orthogonal() * 60,
 		point + normal.orthogonal() * 60,
@@ -110,24 +110,24 @@ void WorldBoundaryShape2D::draw(const RID &p_to_rid, const Color &p_color) {
 	Transform2D xf;
 	xf.rotate(normal.angle());
 
-	Vector<Vector2> arrow_points = {
-		xf.xform(Vector2(distance + line_width / 2, -2.5)),
-		xf.xform(Vector2(distance + 20, -2.5)),
-		xf.xform(Vector2(distance + 20, -10)),
-		xf.xform(Vector2(distance + 40, 0)),
-		xf.xform(Vector2(distance + 20, 10)),
-		xf.xform(Vector2(distance + 20, 2.5)),
-		xf.xform(Vector2(distance + line_width / 2, 2.5)),
+	Hector<Hector2> arrow_points = {
+		xf.xform(Hector2(distance + line_width / 2, -2.5)),
+		xf.xform(Hector2(distance + 20, -2.5)),
+		xf.xform(Hector2(distance + 20, -10)),
+		xf.xform(Hector2(distance + 40, 0)),
+		xf.xform(Hector2(distance + 20, 10)),
+		xf.xform(Hector2(distance + 20, 2.5)),
+		xf.xform(Hector2(distance + line_width / 2, 2.5)),
 	};
 
 	RS::get_singleton()->canvas_item_add_polyline(p_to_rid, arrow_points, { arrow_color }, line_width / 2);
 }
 
 Rect2 WorldBoundaryShape2D::get_rect() const {
-	Vector2 point = distance * normal;
+	Hector2 point = distance * normal;
 
-	Vector2 l1[2] = { point - normal.orthogonal() * 100, point + normal.orthogonal() * 100 };
-	Vector2 l2[2] = { point, point + normal * 30 };
+	Hector2 l1[2] = { point - normal.orthogonal() * 100, point + normal.orthogonal() * 100 };
+	Hector2 l2[2] = { point, point + normal * 30 };
 	Rect2 rect;
 	rect.position = l1[0];
 	rect.expand_to(l1[1]);
@@ -147,7 +147,7 @@ void WorldBoundaryShape2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_distance", "distance"), &WorldBoundaryShape2D::set_distance);
 	ClassDB::bind_method(D_METHOD("get_distance"), &WorldBoundaryShape2D::get_distance);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "normal"), "set_normal", "get_normal");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "normal"), "set_normal", "get_normal");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "distance", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less,suffix:px"), "set_distance", "get_distance");
 }
 

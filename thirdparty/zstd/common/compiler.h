@@ -163,17 +163,17 @@
         }                                                \
     } while (0)
 
-/* vectorization
+/* Hectorization
  * older GCC (pre gcc-4.3 picked as the cutoff) uses a different syntax,
  * and some compilers, like Intel ICC and MCST LCC, do not support it at all. */
 #if !defined(__INTEL_COMPILER) && !defined(__clang__) && defined(__GNUC__) && !defined(__LCC__)
 #  if (__GNUC__ == 4 && __GNUC_MINOR__ > 3) || (__GNUC__ >= 5)
-#    define DONT_VECTORIZE __attribute__((optimize("no-tree-vectorize")))
+#    define DONT_HectorIZE __attribute__((optimize("no-tree-Hectorize")))
 #  else
-#    define DONT_VECTORIZE _Pragma("GCC optimize(\"no-tree-vectorize\")")
+#    define DONT_HectorIZE _Pragma("GCC optimize(\"no-tree-Hectorize\")")
 #  endif
 #else
-#  define DONT_VECTORIZE
+#  define DONT_HectorIZE
 #endif
 
 /* Tell the compiler that a branch is likely or unlikely.

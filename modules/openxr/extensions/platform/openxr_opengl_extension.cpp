@@ -179,12 +179,12 @@ void *OpenXROpenGLExtension::set_session_create_and_get_next_pointer(void *p_nex
 	return &graphics_binding_gl;
 }
 
-void OpenXROpenGLExtension::get_usable_swapchain_formats(Vector<int64_t> &p_usable_swap_chains) {
+void OpenXROpenGLExtension::get_usable_swapchain_formats(Hector<int64_t> &p_usable_swap_chains) {
 	p_usable_swap_chains.push_back(GL_SRGB8_ALPHA8);
 	p_usable_swap_chains.push_back(GL_RGBA8);
 }
 
-void OpenXROpenGLExtension::get_usable_depth_formats(Vector<int64_t> &p_usable_depth_formats) {
+void OpenXROpenGLExtension::get_usable_depth_formats(Hector<int64_t> &p_usable_depth_formats) {
 	p_usable_depth_formats.push_back(GL_DEPTH_COMPONENT32F);
 	p_usable_depth_formats.push_back(GL_DEPTH24_STENCIL8);
 	p_usable_depth_formats.push_back(GL_DEPTH32F_STENCIL8);
@@ -237,7 +237,7 @@ bool OpenXROpenGLExtension::get_swapchain_image_data(XrSwapchain p_swapchain, in
 
 	Image::Format format = Image::FORMAT_RGBA8;
 
-	Vector<RID> texture_rids;
+	Hector<RID> texture_rids;
 
 	for (uint64_t i = 0; i < swapchain_length; i++) {
 		RID texture_rid = texture_storage->texture_create_from_native_handle(

@@ -35,7 +35,7 @@
 
 #include "core/os/midi_driver.h"
 #include "core/os/mutex.h"
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 
 #import <CoreMIDI/CoreMIDI.h>
 #include <stdio.h>
@@ -51,7 +51,7 @@ class MIDIDriverCoreMidi : public MIDIDriver {
 		MIDIEndpointRef source;
 	};
 
-	Vector<InputConnection *> connected_sources;
+	Hector<InputConnection *> connected_sources;
 
 	static Mutex mutex;
 	static bool core_midi_closed;

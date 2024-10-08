@@ -60,7 +60,7 @@ struct blend_arg_t : number_t
 
   unsigned int numValues;
   unsigned int valueIndex;
-  hb_vector_t<number_t> deltas;
+  hb_Hector_t<number_t> deltas;
 };
 
 typedef biased_subrs_t<CFF2Subrs>   cff2_biased_subrs_t;
@@ -167,7 +167,7 @@ struct cff2_cs_interp_env_t : cs_interp_env_t<ELEM, CFF2Subrs>
   const	 CFF2ItemVariationStore *varStore;
   unsigned int  region_count;
   unsigned int  ivs;
-  hb_vector_t<float>  scalars;
+  hb_Hector_t<float>  scalars;
   bool	  do_blend;
   bool	  seen_vsindex_ = false;
   bool	  seen_blend = false;

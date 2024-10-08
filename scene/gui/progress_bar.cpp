@@ -165,7 +165,7 @@ void ProgressBar::_notification(int p_what) {
 				}
 
 				TextLine tl = TextLine(txt, theme_cache.font, theme_cache.font_size);
-				Vector2 text_pos = (Point2(get_size().width - tl.get_size().x, get_size().height - tl.get_size().y) / 2).round();
+				Hector2 text_pos = (Point2(get_size().width - tl.get_size().x, get_size().height - tl.get_size().y) / 2).round();
 
 				if (theme_cache.font_outline_size > 0 && theme_cache.font_outline_color.a > 0) {
 					tl.draw_outline(get_canvas_item(), text_pos, theme_cache.font_outline_size, theme_cache.font_outline_color);

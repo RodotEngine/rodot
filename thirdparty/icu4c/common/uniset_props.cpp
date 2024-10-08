@@ -32,7 +32,7 @@
 #include "cmemory.h"
 #include "ucln_cmn.h"
 #include "util.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "uprops.h"
 #include "propname.h"
 #include "normalizer2impl.h"

@@ -18,22 +18,22 @@ namespace Godot.NativeInterop
                     return new godot_variant() { Int = src.Int, Type = Variant.Type.Int };
                 case Variant.Type.Float:
                     return new godot_variant() { Float = src.Float, Type = Variant.Type.Float };
-                case Variant.Type.Vector2:
-                    return new godot_variant() { Vector2 = src.Vector2, Type = Variant.Type.Vector2 };
-                case Variant.Type.Vector2I:
-                    return new godot_variant() { Vector2I = src.Vector2I, Type = Variant.Type.Vector2I };
+                case Variant.Type.Hector2:
+                    return new godot_variant() { Hector2 = src.Hector2, Type = Variant.Type.Hector2 };
+                case Variant.Type.Hector2I:
+                    return new godot_variant() { Hector2I = src.Hector2I, Type = Variant.Type.Hector2I };
                 case Variant.Type.Rect2:
                     return new godot_variant() { Rect2 = src.Rect2, Type = Variant.Type.Rect2 };
                 case Variant.Type.Rect2I:
                     return new godot_variant() { Rect2I = src.Rect2I, Type = Variant.Type.Rect2I };
-                case Variant.Type.Vector3:
-                    return new godot_variant() { Vector3 = src.Vector3, Type = Variant.Type.Vector3 };
-                case Variant.Type.Vector3I:
-                    return new godot_variant() { Vector3I = src.Vector3I, Type = Variant.Type.Vector3I };
-                case Variant.Type.Vector4:
-                    return new godot_variant() { Vector4 = src.Vector4, Type = Variant.Type.Vector4 };
-                case Variant.Type.Vector4I:
-                    return new godot_variant() { Vector4I = src.Vector4I, Type = Variant.Type.Vector4I };
+                case Variant.Type.Hector3:
+                    return new godot_variant() { Hector3 = src.Hector3, Type = Variant.Type.Hector3 };
+                case Variant.Type.Hector3I:
+                    return new godot_variant() { Hector3I = src.Hector3I, Type = Variant.Type.Hector3I };
+                case Variant.Type.Hector4:
+                    return new godot_variant() { Hector4 = src.Hector4, Type = Variant.Type.Hector4 };
+                case Variant.Type.Hector4I:
+                    return new godot_variant() { Hector4I = src.Hector4I, Type = Variant.Type.Hector4I };
                 case Variant.Type.Plane:
                     return new godot_variant() { Plane = src.Plane, Type = Variant.Type.Plane };
                 case Variant.Type.Quaternion:

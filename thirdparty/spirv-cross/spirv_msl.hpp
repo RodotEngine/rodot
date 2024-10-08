@@ -509,7 +509,7 @@ public:
 		// The bug has been reported to Apple, and will hopefully be fixed in future releases.
 		bool replace_recursive_inputs = false;
 
-		// If set, manual fixups of gradient vectors for cube texture lookups will be performed.
+		// If set, manual fixups of gradient Hectors for cube texture lookups will be performed.
 		// All released Apple Silicon GPUs to date behave incorrectly when sampling a cube texture
 		// with explicit gradients. They will ignore one of the three partial derivatives based
 		// on the selected major axis, and expect the remaining derivatives to be partially
@@ -857,7 +857,7 @@ protected:
 	void emit_sampled_image_op(uint32_t result_type, uint32_t result_id, uint32_t image_id, uint32_t samp_id) override;
 	void emit_subgroup_op(const Instruction &i) override;
 	std::string to_texture_op(const Instruction &i, bool sparse, bool *forward,
-	                          SmallVector<uint32_t> &inherited_expressions) override;
+	                          SmallHector<uint32_t> &inherited_expressions) override;
 	void emit_fixup() override;
 	std::string to_struct_member(const SPIRType &type, uint32_t member_type_id, uint32_t index,
 	                             const std::string &qualifier = "");
@@ -1154,7 +1154,7 @@ protected:
 	std::unordered_map<uint32_t, uint32_t> builtin_to_automatic_output_location;
 	std::set<std::string> pragma_lines;
 	std::set<std::string> typedef_lines;
-	SmallVector<uint32_t> vars_needing_early_declaration;
+	SmallHector<uint32_t> vars_needing_early_declaration;
 
 	std::unordered_map<StageSetBinding, std::pair<MSLResourceBinding, bool>, InternalHasher> resource_bindings;
 	std::unordered_map<StageSetBinding, uint32_t, InternalHasher> resource_arg_buff_idx_to_binding_number;
@@ -1225,18 +1225,18 @@ protected:
 	const MSLConstexprSampler *find_constexpr_sampler(uint32_t id) const;
 
 	std::unordered_set<uint32_t> buffers_requiring_array_length;
-	SmallVector<std::pair<uint32_t, uint32_t>> buffer_aliases_argument;
-	SmallVector<uint32_t> buffer_aliases_discrete;
+	SmallHector<std::pair<uint32_t, uint32_t>> buffer_aliases_argument;
+	SmallHector<uint32_t> buffer_aliases_discrete;
 	std::unordered_set<uint32_t> atomic_image_vars_emulated; // Emulate texture2D atomic operations
 	std::unordered_set<uint32_t> pull_model_inputs;
 	std::unordered_set<uint32_t> recursive_inputs;
 
-	SmallVector<SPIRVariable *> entry_point_bindings;
+	SmallHector<SPIRVariable *> entry_point_bindings;
 
 	// Must be ordered since array is in a specific order.
 	std::map<SetBindingPair, std::pair<uint32_t, uint32_t>> buffers_requiring_dynamic_offset;
 
-	SmallVector<uint32_t> disabled_frag_outputs;
+	SmallHector<uint32_t> disabled_frag_outputs;
 
 	std::unordered_set<SetBindingPair, InternalHasher> inline_uniform_blocks;
 
@@ -1256,7 +1256,7 @@ protected:
 	void add_argument_buffer_padding_type(uint32_t mbr_type_id, SPIRType &struct_type, uint32_t &mbr_idx, uint32_t &arg_buff_index, uint32_t count);
 
 	uint32_t get_target_components_for_fragment_location(uint32_t location) const;
-	uint32_t build_extended_vector_type(uint32_t type_id, uint32_t components,
+	uint32_t build_extended_Hector_type(uint32_t type_id, uint32_t components,
 	                                    SPIRType::BaseType basetype = SPIRType::Unknown);
 	uint32_t build_msl_interpolant_type(uint32_t type_id, bool is_noperspective);
 

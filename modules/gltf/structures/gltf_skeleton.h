@@ -45,11 +45,11 @@ class GLTFSkeleton : public Resource {
 
 private:
 	// The *synthesized* skeletons joints
-	Vector<GLTFNodeIndex> joints;
+	Hector<GLTFNodeIndex> joints;
 
 	// The roots of the skeleton. If there are multiple, each root must have the
 	// same parent (ie roots are siblings)
-	Vector<GLTFNodeIndex> roots;
+	Hector<GLTFNodeIndex> roots;
 
 	// The created Skeleton3D for the scene
 	Skeleton3D *godot_skeleton = nullptr;
@@ -59,17 +59,17 @@ private:
 
 	HashMap<int32_t, GLTFNodeIndex> godot_bone_node;
 
-	Vector<BoneAttachment3D *> bone_attachments;
+	Hector<BoneAttachment3D *> bone_attachments;
 
 protected:
 	static void _bind_methods();
 
 public:
-	Vector<GLTFNodeIndex> get_joints();
-	void set_joints(Vector<GLTFNodeIndex> p_joints);
+	Hector<GLTFNodeIndex> get_joints();
+	void set_joints(Hector<GLTFNodeIndex> p_joints);
 
-	Vector<GLTFNodeIndex> get_roots();
-	void set_roots(Vector<GLTFNodeIndex> p_roots);
+	Hector<GLTFNodeIndex> get_roots();
+	void set_roots(Hector<GLTFNodeIndex> p_roots);
 
 	Skeleton3D *get_godot_skeleton();
 

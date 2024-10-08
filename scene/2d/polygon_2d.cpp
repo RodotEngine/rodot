@@ -51,7 +51,7 @@ void Polygon2D::_edit_set_pivot(const Point2 &p_pivot) {
 }
 
 Point2 Polygon2D::_edit_get_pivot() const {
-	return Vector2();
+	return Hector2();
 }
 
 bool Polygon2D::_edit_use_pivot() const {
@@ -61,10 +61,10 @@ bool Polygon2D::_edit_use_pivot() const {
 Rect2 Polygon2D::_edit_get_rect() const {
 	if (rect_cache_dirty) {
 		int l = polygon.size();
-		const Vector2 *r = polygon.ptr();
+		const Hector2 *r = polygon.ptr();
 		item_rect = Rect2();
 		for (int i = 0; i < l; i++) {
-			Vector2 pos = r[i] + offset;
+			Hector2 pos = r[i] + offset;
 			if (i == 0) {
 				item_rect.position = pos;
 			} else {
@@ -82,7 +82,7 @@ bool Polygon2D::_edit_use_rect() const {
 }
 
 bool Polygon2D::_edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const {
-	Vector<Vector2> polygon2d = Variant(polygon);
+	Hector<Hector2> polygon2d = Variant(polygon);
 	if (internal_vertices > 0) {
 		polygon2d.resize(polygon2d.size() - internal_vertices);
 	}
@@ -139,10 +139,10 @@ void Polygon2D::_notification(int p_what) {
 				current_skeleton_id = new_skeleton_id;
 			}
 
-			Vector<Vector2> points;
-			Vector<Vector2> uvs;
-			Vector<int> bones;
-			Vector<float> weights;
+			Hector<Hector2> points;
+			Hector<Hector2> uvs;
+			Hector<int> bones;
+			Hector<float> weights;
 
 			int len = polygon.size();
 			if ((invert || polygons.size() == 0) && internal_vertices > 0) {
@@ -156,7 +156,7 @@ void Polygon2D::_notification(int p_what) {
 			points.resize(len);
 
 			{
-				const Vector2 *polyr = polygon.ptr();
+				const Hector2 *polyr = polygon.ptr();
 				for (int i = 0; i < len; i++) {
 					points.write[i] = polyr[i] + offset;
 				}
@@ -184,14 +184,14 @@ void Polygon2D::_notification(int p_what) {
 
 				bounds = bounds.grow(invert_border);
 
-				Vector2 ep[7] = {
-					Vector2(points[highest_idx].x, points[highest_idx].y + invert_border),
-					Vector2(bounds.position + bounds.size),
-					Vector2(bounds.position + Vector2(bounds.size.x, 0)),
-					Vector2(bounds.position),
-					Vector2(bounds.position + Vector2(0, bounds.size.y)),
-					Vector2(points[highest_idx].x - CMP_EPSILON, points[highest_idx].y + invert_border),
-					Vector2(points[highest_idx].x - CMP_EPSILON, points[highest_idx].y),
+				Hector2 ep[7] = {
+					Hector2(points[highest_idx].x, points[highest_idx].y + invert_border),
+					Hector2(bounds.position + bounds.size),
+					Hector2(bounds.position + Hector2(bounds.size.x, 0)),
+					Hector2(bounds.position),
+					Hector2(bounds.position + Hector2(0, bounds.size.y)),
+					Hector2(points[highest_idx].x - CMP_EPSILON, points[highest_idx].y + invert_border),
+					Hector2(points[highest_idx].x - CMP_EPSILON, points[highest_idx].y),
 				};
 
 				if (sum > 0) {
@@ -221,7 +221,7 @@ void Polygon2D::_notification(int p_what) {
 				uvs.resize(len);
 
 				if (points.size() == uv.size()) {
-					const Vector2 *uvr = uv.ptr();
+					const Hector2 *uvr = uv.ptr();
 
 					for (int i = 0; i < len; i++) {
 						uvs.write[i] = texmat.xform(uvr[i]) / tex_size;
@@ -299,7 +299,7 @@ void Polygon2D::_notification(int p_what) {
 				}
 			}
 
-			Vector<Color> colors;
+			Hector<Color> colors;
 			colors.resize(len);
 
 			if (vertex_colors.size() == points.size()) {
@@ -313,21 +313,21 @@ void Polygon2D::_notification(int p_what) {
 				}
 			}
 
-			Vector<int> index_array;
+			Hector<int> index_array;
 
 			if (invert || polygons.size() == 0) {
 				index_array = Geometry2D::triangulate_polygon(points);
 			} else {
 				//draw individual polygons
 				for (int i = 0; i < polygons.size(); i++) {
-					Vector<int> src_indices = polygons[i];
+					Hector<int> src_indices = polygons[i];
 					int ic = src_indices.size();
 					if (ic < 3) {
 						continue;
 					}
 					const int *r = src_indices.ptr();
 
-					Vector<Vector2> tmp_points;
+					Hector<Hector2> tmp_points;
 					tmp_points.resize(ic);
 
 					for (int j = 0; j < ic; j++) {
@@ -335,7 +335,7 @@ void Polygon2D::_notification(int p_what) {
 						ERR_CONTINUE(idx < 0 || idx >= points.size());
 						tmp_points.write[j] = points[r[j]];
 					}
-					Vector<int> indices = Geometry2D::triangulate_polygon(tmp_points);
+					Hector<int> indices = Geometry2D::triangulate_polygon(tmp_points);
 					int ic2 = indices.size();
 					const int *r2 = indices.ptr();
 
@@ -400,13 +400,13 @@ void Polygon2D::_notification(int p_what) {
 	}
 }
 
-void Polygon2D::set_polygon(const Vector<Vector2> &p_polygon) {
+void Polygon2D::set_polygon(const Hector<Hector2> &p_polygon) {
 	polygon = p_polygon;
 	rect_cache_dirty = true;
 	queue_redraw();
 }
 
-Vector<Vector2> Polygon2D::get_polygon() const {
+Hector<Hector2> Polygon2D::get_polygon() const {
 	return polygon;
 }
 
@@ -418,12 +418,12 @@ int Polygon2D::get_internal_vertex_count() const {
 	return internal_vertices;
 }
 
-void Polygon2D::set_uv(const Vector<Vector2> &p_uv) {
+void Polygon2D::set_uv(const Hector<Hector2> &p_uv) {
 	uv = p_uv;
 	queue_redraw();
 }
 
-Vector<Vector2> Polygon2D::get_uv() const {
+Hector<Hector2> Polygon2D::get_uv() const {
 	return uv;
 }
 
@@ -445,12 +445,12 @@ Color Polygon2D::get_color() const {
 	return color;
 }
 
-void Polygon2D::set_vertex_colors(const Vector<Color> &p_colors) {
+void Polygon2D::set_vertex_colors(const Hector<Color> &p_colors) {
 	vertex_colors = p_colors;
 	queue_redraw();
 }
 
-Vector<Color> Polygon2D::get_vertex_colors() const {
+Hector<Color> Polygon2D::get_vertex_colors() const {
 	return vertex_colors;
 }
 
@@ -463,12 +463,12 @@ Ref<Texture2D> Polygon2D::get_texture() const {
 	return texture;
 }
 
-void Polygon2D::set_texture_offset(const Vector2 &p_offset) {
+void Polygon2D::set_texture_offset(const Hector2 &p_offset) {
 	tex_ofs = p_offset;
 	queue_redraw();
 }
 
-Vector2 Polygon2D::get_texture_offset() const {
+Hector2 Polygon2D::get_texture_offset() const {
 	return tex_ofs;
 }
 
@@ -518,17 +518,17 @@ real_t Polygon2D::get_invert_border() const {
 	return invert_border;
 }
 
-void Polygon2D::set_offset(const Vector2 &p_offset) {
+void Polygon2D::set_offset(const Hector2 &p_offset) {
 	offset = p_offset;
 	rect_cache_dirty = true;
 	queue_redraw();
 }
 
-Vector2 Polygon2D::get_offset() const {
+Hector2 Polygon2D::get_offset() const {
 	return offset;
 }
 
-void Polygon2D::add_bone(const NodePath &p_path, const Vector<float> &p_weights) {
+void Polygon2D::add_bone(const NodePath &p_path, const Hector<float> &p_weights) {
 	Bone bone;
 	bone.path = p_path;
 	bone.weights = p_weights;
@@ -544,8 +544,8 @@ NodePath Polygon2D::get_bone_path(int p_index) const {
 	return bone_weights[p_index].path;
 }
 
-Vector<float> Polygon2D::get_bone_weights(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, bone_weights.size(), Vector<float>());
+Hector<float> Polygon2D::get_bone_weights(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, bone_weights.size(), Hector<float>());
 	return bone_weights[p_index].weights;
 }
 
@@ -558,7 +558,7 @@ void Polygon2D::clear_bones() {
 	bone_weights.clear();
 }
 
-void Polygon2D::set_bone_weights(int p_index, const Vector<float> &p_weights) {
+void Polygon2D::set_bone_weights(int p_index, const Hector<float> &p_weights) {
 	ERR_FAIL_INDEX(p_index, bone_weights.size());
 	bone_weights.write[p_index].weights = p_weights;
 	queue_redraw();
@@ -661,13 +661,13 @@ void Polygon2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_get_bones"), &Polygon2D::_get_bones);
 
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "offset"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "antialiased"), "set_antialiased", "get_antialiased");
 
 	ADD_GROUP("Texture", "texture_");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "texture_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_offset", "get_texture_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "texture_scale", PROPERTY_HINT_LINK), "set_texture_scale", "get_texture_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "texture_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_offset", "get_texture_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "texture_scale", PROPERTY_HINT_LINK), "set_texture_scale", "get_texture_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "texture_rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_texture_rotation", "get_texture_rotation");
 
 	ADD_GROUP("Skeleton", "");
@@ -678,8 +678,8 @@ void Polygon2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "invert_border", PROPERTY_HINT_RANGE, "0.1,16384,0.1,suffix:px"), "set_invert_border", "get_invert_border");
 
 	ADD_GROUP("Data", "");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "polygon"), "set_polygon", "get_polygon");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "uv"), "set_uv", "get_uv");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "polygon"), "set_polygon", "get_polygon");
+	ADD_PROPERTY(PropertyInfo(Variant::PACKED_Hector2_ARRAY, "uv"), "set_uv", "get_uv");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_COLOR_ARRAY, "vertex_colors"), "set_vertex_colors", "get_vertex_colors");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "polygons"), "set_polygons", "get_polygons");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "bones", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_bones", "_get_bones");

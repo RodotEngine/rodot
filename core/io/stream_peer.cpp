@@ -32,7 +32,7 @@
 
 #include "core/io/marshalls.h"
 
-Error StreamPeer::_put_data(const Vector<uint8_t> &p_data) {
+Error StreamPeer::_put_data(const Hector<uint8_t> &p_data) {
 	int len = p_data.size();
 	if (len == 0) {
 		return OK;
@@ -41,7 +41,7 @@ Error StreamPeer::_put_data(const Vector<uint8_t> &p_data) {
 	return put_data(&r[0], len);
 }
 
-Array StreamPeer::_put_partial_data(const Vector<uint8_t> &p_data) {
+Array StreamPeer::_put_partial_data(const Hector<uint8_t> &p_data) {
 	Array ret;
 
 	int len = p_data.size();
@@ -66,11 +66,11 @@ Array StreamPeer::_put_partial_data(const Vector<uint8_t> &p_data) {
 Array StreamPeer::_get_data(int p_bytes) {
 	Array ret;
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(p_bytes);
 	if (data.size() != p_bytes) {
 		ret.push_back(ERR_OUT_OF_MEMORY);
-		ret.push_back(Vector<uint8_t>());
+		ret.push_back(Hector<uint8_t>());
 		return ret;
 	}
 
@@ -85,11 +85,11 @@ Array StreamPeer::_get_data(int p_bytes) {
 Array StreamPeer::_get_partial_data(int p_bytes) {
 	Array ret;
 
-	Vector<uint8_t> data;
+	Hector<uint8_t> data;
 	data.resize(p_bytes);
 	if (data.size() != p_bytes) {
 		ret.push_back(ERR_OUT_OF_MEMORY);
-		ret.push_back(Vector<uint8_t>());
+		ret.push_back(Hector<uint8_t>());
 		return ret;
 	}
 
@@ -214,7 +214,7 @@ void StreamPeer::put_utf8_string(const String &p_string) {
 
 void StreamPeer::put_var(const Variant &p_variant, bool p_full_objects) {
 	int len = 0;
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 	encode_variant(p_variant, nullptr, len, p_full_objects);
 	buf.resize(len);
 	put_32(len);
@@ -324,7 +324,7 @@ String StreamPeer::get_string(int p_bytes) {
 	}
 	ERR_FAIL_COND_V(p_bytes < 0, String());
 
-	Vector<char> buf;
+	Hector<char> buf;
 	Error err = buf.resize(p_bytes + 1);
 	ERR_FAIL_COND_V(err != OK, String());
 	err = get_data((uint8_t *)&buf[0], p_bytes);
@@ -339,7 +339,7 @@ String StreamPeer::get_utf8_string(int p_bytes) {
 	}
 	ERR_FAIL_COND_V(p_bytes < 0, String());
 
-	Vector<uint8_t> buf;
+	Hector<uint8_t> buf;
 	Error err = buf.resize(p_bytes);
 	ERR_FAIL_COND_V(err != OK, String());
 	err = get_data(buf.ptrw(), p_bytes);
@@ -352,7 +352,7 @@ String StreamPeer::get_utf8_string(int p_bytes) {
 
 Variant StreamPeer::get_var(bool p_allow_objects) {
 	int len = get_32();
-	Vector<uint8_t> var;
+	Hector<uint8_t> var;
 	Error err = var.resize(len);
 	ERR_FAIL_COND_V(err != OK, Variant());
 	err = get_data(var.ptrw(), len);
@@ -544,12 +544,12 @@ void StreamPeerBuffer::resize(int p_size) {
 	data.resize(p_size);
 }
 
-void StreamPeerBuffer::set_data_array(const Vector<uint8_t> &p_data) {
+void StreamPeerBuffer::set_data_array(const Hector<uint8_t> &p_data) {
 	data = p_data;
 	pointer = 0;
 }
 
-Vector<uint8_t> StreamPeerBuffer::get_data_array() const {
+Hector<uint8_t> StreamPeerBuffer::get_data_array() const {
 	return data;
 }
 

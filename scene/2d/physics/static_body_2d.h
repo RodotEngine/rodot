@@ -37,7 +37,7 @@ class StaticBody2D : public PhysicsBody2D {
 	GDCLASS(StaticBody2D, PhysicsBody2D);
 
 private:
-	Vector2 constant_linear_velocity;
+	Hector2 constant_linear_velocity;
 	real_t constant_angular_velocity = 0.0;
 
 	Ref<PhysicsMaterial> physics_material_override;
@@ -49,10 +49,10 @@ public:
 	void set_physics_material_override(const Ref<PhysicsMaterial> &p_physics_material_override);
 	Ref<PhysicsMaterial> get_physics_material_override() const;
 
-	void set_constant_linear_velocity(const Vector2 &p_vel);
+	void set_constant_linear_velocity(const Hector2 &p_vel);
 	void set_constant_angular_velocity(real_t p_vel);
 
-	Vector2 get_constant_linear_velocity() const;
+	Hector2 get_constant_linear_velocity() const;
 	real_t get_constant_angular_velocity() const;
 
 	StaticBody2D(PhysicsServer2D::BodyMode p_mode = PhysicsServer2D::BODY_MODE_STATIC);

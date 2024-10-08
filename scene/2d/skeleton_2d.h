@@ -58,7 +58,7 @@ class Bone2D : public Node2D {
 
 #ifdef TOOLS_ENABLED
 	RID editor_gizmo_rid;
-	bool _editor_get_bone_shape(Vector<Vector2> *p_shape, Vector<Vector2> *p_outline_shape, Bone2D *p_other_bone);
+	bool _editor_get_bone_shape(Hector<Hector2> *p_shape, Hector<Hector2> *p_outline_shape, Bone2D *p_other_bone);
 	bool _editor_show_bone_gizmo = true;
 #endif // TOOLS ENABLED
 
@@ -123,7 +123,7 @@ class Skeleton2D : public Node2D {
 		bool local_pose_override_persistent = false;
 	};
 
-	Vector<Bone> bones;
+	Hector<Bone> bones;
 
 	bool bone_setup_dirty = true;
 	void _make_bone_setup_dirty();

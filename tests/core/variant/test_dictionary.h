@@ -81,8 +81,8 @@ TEST_CASE("[Dictionary] Assignment using bracket notation ([])") {
 	CHECK(int(map[12345]) == -5);
 	map[false] = 128;
 	CHECK(int(map[false]) == 128);
-	map[Vector2(10, 20)] = 30;
-	CHECK(int(map[Vector2(10, 20)]) == 30);
+	map[Hector2(10, 20)] = 30;
+	CHECK(int(map[Hector2(10, 20)]) == 30);
 	map[0] = 400;
 	CHECK(int(map[0]) == 400);
 	// Check that assigning 0 doesn't overwrite the value for `false`.

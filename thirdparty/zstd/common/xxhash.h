@@ -870,7 +870,7 @@ typedef uint64_t XXH64_hash_t;
  * @note
  *   XXH3 provides competitive speed for both 32-bit and 64-bit systems,
  *   and offers true 64/128 bit hash results.
- *   It provides better speed for systems with vector processing capabilities.
+ *   It provides better speed for systems with Hector processing capabilities.
  */
 
 /*!
@@ -1044,7 +1044,7 @@ XXH_PUBLIC_API XXH_PUREF XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const
  * XXH3's speed benefits greatly from SIMD and 64-bit arithmetic,
  * but does not require it.
  * Most 32-bit and 64-bit targets that can run XXH32 smoothly can run XXH3
- * at competitive speeds, even without vector support. Further details are
+ * at competitive speeds, even without Hector support. Further details are
  * explained in the implementation.
  *
  * XXH3 has a fast scalar implementation, but it also includes accelerated SIMD
@@ -1055,8 +1055,8 @@ XXH_PUBLIC_API XXH_PUREF XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const
  *   - ARM NEON
  *   - WebAssembly SIMD128
  *   - POWER8 VSX
- *   - s390x ZVector
- * This can be controlled via the @ref XXH_VECTOR macro, but it automatically
+ *   - s390x ZHector
+ * This can be controlled via the @ref XXH_Hector macro, but it automatically
  * selects the best version according to predefined macros. For the x86 family, an
  * automatic runtime dispatcher is included separately in @ref xxh_x86dispatch.c.
  *
@@ -2407,8 +2407,8 @@ static void* XXH_memcpy(void* dest, const void* src, size_t size)
  * which forces @p var into a general purpose register (eg eax, ebx, ecx
  * on x86) and marks it as modified.
  *
- * This is used in a few places to avoid unwanted autovectorization (e.g.
- * XXH32_round()). All vectorization we want is explicit via intrinsics,
+ * This is used in a few places to avoid unwanted autoHectorization (e.g.
+ * XXH32_round()). All Hectorization we want is explicit via intrinsics,
  * and _usually_ isn't wanted elsewhere.
  *
  * We also use it to prevent unwanted constant folding for AArch64 in
@@ -2420,7 +2420,7 @@ static void* XXH_memcpy(void* dest, const void* src, size_t size)
 #  define XXH_COMPILER_GUARD(var) ((void)0)
 #endif
 
-/* Specifically for NEON vectors which use the "w" constraint, on
+/* Specifically for NEON Hectors which use the "w" constraint, on
  * Clang. */
 #if defined(__clang__) && defined(__ARM_ARCH) && !defined(__wasm__)
 #  define XXH_COMPILER_GUARD_CLANG_NEON(var) __asm__("" : "+w" (var))
@@ -2819,14 +2819,14 @@ static xxh_u32 XXH32_round(xxh_u32 acc, xxh_u32 input)
     acc += input * XXH_PRIME32_2;
     acc  = XXH_rotl32(acc, 13);
     acc *= XXH_PRIME32_1;
-#if (defined(__SSE4_1__) || defined(__aarch64__) || defined(__wasm_simd128__)) && !defined(XXH_ENABLE_AUTOVECTORIZE)
+#if (defined(__SSE4_1__) || defined(__aarch64__) || defined(__wasm_simd128__)) && !defined(XXH_ENABLE_AUTOHectorIZE)
     /*
      * UGLY HACK:
      * A compiler fence is the only thing that prevents GCC and Clang from
-     * autovectorizing the XXH32 loop (pragmas and attributes don't work for some
+     * autoHectorizing the XXH32 loop (pragmas and attributes don't work for some
      * reason) without globally disabling SSE4.1.
      *
-     * The reason we want to avoid vectorization is because despite working on
+     * The reason we want to avoid Hectorization is because despite working on
      * 4 integers at a time, there are multiple factors slowing XXH32 down on
      * SSE4:
      * - There's a ridiculous amount of lag from pmulld (10 cycles of latency on
@@ -2849,7 +2849,7 @@ static xxh_u32 XXH32_round(xxh_u32 acc, xxh_u32 input)
      *   can load data, while v3 can multiply. SSE forces them to operate
      *   together.
      *
-     * This is also enabled on AArch64, as Clang is *very aggressive* in vectorizing
+     * This is also enabled on AArch64, as Clang is *very aggressive* in Hectorizing
      * the loop. NEON is only faster on the A53, and with the newer cores, it is less
      * than half the speed.
      *
@@ -3329,20 +3329,20 @@ static xxh_u64 XXH64_round(xxh_u64 acc, xxh_u64 input)
     acc += input * XXH_PRIME64_2;
     acc  = XXH_rotl64(acc, 31);
     acc *= XXH_PRIME64_1;
-#if (defined(__AVX512F__)) && !defined(XXH_ENABLE_AUTOVECTORIZE)
+#if (defined(__AVX512F__)) && !defined(XXH_ENABLE_AUTOHectorIZE)
     /*
-     * DISABLE AUTOVECTORIZATION:
+     * DISABLE AUTOHectorIZATION:
      * A compiler fence is used to prevent GCC and Clang from
-     * autovectorizing the XXH64 loop (pragmas and attributes don't work for some
+     * autoHectorizing the XXH64 loop (pragmas and attributes don't work for some
      * reason) without globally disabling AVX512.
      *
-     * Autovectorization of XXH64 tends to be detrimental,
+     * AutoHectorization of XXH64 tends to be detrimental,
      * though the exact outcome may change depending on exact cpu and compiler version.
      * For information, it has been reported as detrimental for Skylake-X,
      * but possibly beneficial for Zen4.
      *
-     * The default is to disable auto-vectorization,
-     * but you can select to enable it instead using `XXH_ENABLE_AUTOVECTORIZE` build variable.
+     * The default is to disable auto-Hectorization,
+     * but you can select to enable it instead using `XXH_ENABLE_AUTOHectorIZE` build variable.
      */
     XXH_COMPILER_GUARD(acc);
 #endif
@@ -3612,7 +3612,7 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const XXH64_can
 
 /* *********************************************************************
 *  XXH3
-*  New generation hash designed for speed on small keys and vectorization
+*  New generation hash designed for speed on small keys and Hectorization
 ************************************************************************ */
 /*!
  * @}
@@ -3750,7 +3750,7 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const XXH64_can
  * Usually, if this happens, it is because of an accident and you probably need
  * to specify -march, as you likely meant to compile for a newer architecture.
  *
- * Credit: large sections of the vectorial and asm source code paths
+ * Credit: large sections of the Hectorial and asm source code paths
  *         have been contributed by @easyaspi314
  */
 #if defined(__thumb__) && !defined(__thumb2__) && defined(__ARM_ARCH_ISA_ARM)
@@ -3758,31 +3758,31 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const XXH64_can
 #endif
 
 /* ==========================================
- * Vectorization detection
+ * Hectorization detection
  * ========================================== */
 
 #ifdef XXH_DOXYGEN
 /*!
  * @ingroup tuning
- * @brief Overrides the vectorization implementation chosen for XXH3.
+ * @brief Overrides the Hectorization implementation chosen for XXH3.
  *
  * Can be defined to 0 to disable SIMD or any of the values mentioned in
- * @ref XXH_VECTOR_TYPE.
+ * @ref XXH_Hector_TYPE.
  *
  * If this is not defined, it uses predefined macros to determine the best
  * implementation.
  */
-#  define XXH_VECTOR XXH_SCALAR
+#  define XXH_Hector XXH_SCALAR
 /*!
  * @ingroup tuning
- * @brief Possible values for @ref XXH_VECTOR.
+ * @brief Possible values for @ref XXH_Hector.
  *
  * Note that these are actually implemented as macros.
  *
  * If this is not defined, it is detected automatically.
  * internal macro XXH_X86DISPATCH overrides this.
  */
-enum XXH_VECTOR_TYPE /* fake enum */ {
+enum XXH_Hector_TYPE /* fake enum */ {
     XXH_SCALAR = 0,  /*!< Portable scalar version */
     XXH_SSE2   = 1,  /*!<
                       * SSE2 for Pentium 4, Opteron, all x86_64.
@@ -3797,14 +3797,14 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
                        * via the SIMDeverywhere polyfill provided with the
                        * Emscripten SDK.
                        */
-    XXH_VSX    = 5,  /*!< VSX and ZVector for POWER8/z13 (64-bit) */
+    XXH_VSX    = 5,  /*!< VSX and ZHector for POWER8/z13 (64-bit) */
     XXH_SVE    = 6,  /*!< SVE for some ARMv8-A and ARMv9-A */
 };
 /*!
  * @ingroup tuning
  * @brief Selects the minimum alignment for XXH3's accumulators.
  *
- * When using SIMD, this should match the alignment required for said vector
+ * When using SIMD, this should match the alignment required for said Hector
  * type, so, for example, 32 for AVX2.
  *
  * Default: Auto detected.
@@ -3823,9 +3823,9 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
 #  define XXH_SVE    6
 #endif
 
-#ifndef XXH_VECTOR    /* can be defined on command line */
+#ifndef XXH_Hector    /* can be defined on command line */
 #  if defined(__ARM_FEATURE_SVE)
-#    define XXH_VECTOR XXH_SVE
+#    define XXH_Hector XXH_SVE
 #  elif ( \
         defined(__ARM_NEON__) || defined(__ARM_NEON) /* gcc */ \
      || defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC) /* msvc */ \
@@ -3834,61 +3834,61 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
         defined(_WIN32) || defined(__LITTLE_ENDIAN__) /* little endian only */ \
     || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) \
    )
-#    define XXH_VECTOR XXH_NEON
+#    define XXH_Hector XXH_NEON
 #  elif defined(__AVX512F__)
-#    define XXH_VECTOR XXH_AVX512
+#    define XXH_Hector XXH_AVX512
 #  elif defined(__AVX2__)
-#    define XXH_VECTOR XXH_AVX2
+#    define XXH_Hector XXH_AVX2
 #  elif defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || (defined(_M_IX86_FP) && (_M_IX86_FP == 2))
-#    define XXH_VECTOR XXH_SSE2
-#  elif (defined(__PPC64__) && defined(__POWER8_VECTOR__)) \
+#    define XXH_Hector XXH_SSE2
+#  elif (defined(__PPC64__) && defined(__POWER8_Hector__)) \
      || (defined(__s390x__) && defined(__VEC__)) \
      && defined(__GNUC__) /* TODO: IBM XL */
-#    define XXH_VECTOR XXH_VSX
+#    define XXH_Hector XXH_VSX
 #  else
-#    define XXH_VECTOR XXH_SCALAR
+#    define XXH_Hector XXH_SCALAR
 #  endif
 #endif
 
 /* __ARM_FEATURE_SVE is only supported by GCC & Clang. */
-#if (XXH_VECTOR == XXH_SVE) && !defined(__ARM_FEATURE_SVE)
+#if (XXH_Hector == XXH_SVE) && !defined(__ARM_FEATURE_SVE)
 #  ifdef _MSC_VER
 #    pragma warning(once : 4606)
 #  else
 #    warning "__ARM_FEATURE_SVE isn't supported. Use SCALAR instead."
 #  endif
-#  undef XXH_VECTOR
-#  define XXH_VECTOR XXH_SCALAR
+#  undef XXH_Hector
+#  define XXH_Hector XXH_SCALAR
 #endif
 
 /*
  * Controls the alignment of the accumulator,
- * for compatibility with aligned vector loads, which are usually faster.
+ * for compatibility with aligned Hector loads, which are usually faster.
  */
 #ifndef XXH_ACC_ALIGN
 #  if defined(XXH_X86DISPATCH)
 #     define XXH_ACC_ALIGN 64  /* for compatibility with avx512 */
-#  elif XXH_VECTOR == XXH_SCALAR  /* scalar */
+#  elif XXH_Hector == XXH_SCALAR  /* scalar */
 #     define XXH_ACC_ALIGN 8
-#  elif XXH_VECTOR == XXH_SSE2  /* sse2 */
+#  elif XXH_Hector == XXH_SSE2  /* sse2 */
 #     define XXH_ACC_ALIGN 16
-#  elif XXH_VECTOR == XXH_AVX2  /* avx2 */
+#  elif XXH_Hector == XXH_AVX2  /* avx2 */
 #     define XXH_ACC_ALIGN 32
-#  elif XXH_VECTOR == XXH_NEON  /* neon */
+#  elif XXH_Hector == XXH_NEON  /* neon */
 #     define XXH_ACC_ALIGN 16
-#  elif XXH_VECTOR == XXH_VSX   /* vsx */
+#  elif XXH_Hector == XXH_VSX   /* vsx */
 #     define XXH_ACC_ALIGN 16
-#  elif XXH_VECTOR == XXH_AVX512  /* avx512 */
+#  elif XXH_Hector == XXH_AVX512  /* avx512 */
 #     define XXH_ACC_ALIGN 64
-#  elif XXH_VECTOR == XXH_SVE   /* sve */
+#  elif XXH_Hector == XXH_SVE   /* sve */
 #     define XXH_ACC_ALIGN 64
 #  endif
 #endif
 
-#if defined(XXH_X86DISPATCH) || XXH_VECTOR == XXH_SSE2 \
-    || XXH_VECTOR == XXH_AVX2 || XXH_VECTOR == XXH_AVX512
+#if defined(XXH_X86DISPATCH) || XXH_Hector == XXH_SSE2 \
+    || XXH_Hector == XXH_AVX2 || XXH_Hector == XXH_AVX512
 #  define XXH_SEC_ALIGN XXH_ACC_ALIGN
-#elif XXH_VECTOR == XXH_SVE
+#elif XXH_Hector == XXH_SVE
 #  define XXH_SEC_ALIGN XXH_ACC_ALIGN
 #else
 #  define XXH_SEC_ALIGN 8
@@ -3921,14 +3921,14 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
  * -O2, but the other one we can't control without "failed to inline always
  * inline function due to target mismatch" warnings.
  */
-#if XXH_VECTOR == XXH_AVX2 /* AVX2 */ \
+#if XXH_Hector == XXH_AVX2 /* AVX2 */ \
   && defined(__GNUC__) && !defined(__clang__) /* GCC, not Clang */ \
   && defined(__OPTIMIZE__) && XXH_SIZE_OPT <= 0 /* respect -O0 and -Os */
 #  pragma GCC push_options
 #  pragma GCC optimize("-O2")
 #endif
 
-#if XXH_VECTOR == XXH_NEON
+#if XXH_Hector == XXH_NEON
 
 /*
  * UGLY HACK: While AArch64 GCC on Linux does not seem to care, on macOS, GCC -O3
@@ -3966,7 +3966,7 @@ XXH_FORCE_INLINE uint64x2_t XXH_vld1q_u64(void const* ptr)
 
 /*!
  * @internal
- * @brief `vmlal_u32` on low and high halves of a vector.
+ * @brief `vmlal_u32` on low and high halves of a Hector.
  *
  * This is a workaround for AArch64 GCC < 11 which implemented arm_neon.h with
  * inline assembly and were therefore incapable of merging the `vget_{low, high}_u32`
@@ -4048,31 +4048,31 @@ XXH_vmlal_high_u32(uint64x2_t acc, uint32x4_t lhs, uint32x4_t rhs)
 #   define XXH3_NEON_LANES XXH_ACC_NB
 #  endif
 # endif
-#endif  /* XXH_VECTOR == XXH_NEON */
+#endif  /* XXH_Hector == XXH_NEON */
 
 /*
- * VSX and Z Vector helpers.
+ * VSX and Z Hector helpers.
  *
  * This is very messy, and any pull requests to clean this up are welcome.
  *
  * There are a lot of problems with supporting VSX and s390x, due to
  * inconsistent intrinsics, spotty coverage, and multiple endiannesses.
  */
-#if XXH_VECTOR == XXH_VSX
-/* Annoyingly, these headers _may_ define three macros: `bool`, `vector`,
+#if XXH_Hector == XXH_VSX
+/* Annoyingly, these headers _may_ define three macros: `bool`, `Hector`,
  * and `pixel`. This is a problem for obvious reasons.
  *
  * These keywords are unnecessary; the spec literally says they are
- * equivalent to `__bool`, `__vector`, and `__pixel` and may be undef'd
+ * equivalent to `__bool`, `__Hector`, and `__pixel` and may be undef'd
  * after including the header.
  *
  * We use pragma push_macro/pop_macro to keep the namespace clean. */
 #  pragma push_macro("bool")
-#  pragma push_macro("vector")
+#  pragma push_macro("Hector")
 #  pragma push_macro("pixel")
 /* silence potential macro redefined warnings */
 #  undef bool
-#  undef vector
+#  undef Hector
 #  undef pixel
 
 #  if defined(__s390x__)
@@ -4083,12 +4083,12 @@ XXH_vmlal_high_u32(uint64x2_t acc, uint32x4_t lhs, uint32x4_t rhs)
 
 /* Restore the original macro values, if applicable. */
 #  pragma pop_macro("pixel")
-#  pragma pop_macro("vector")
+#  pragma pop_macro("Hector")
 #  pragma pop_macro("bool")
 
-typedef __vector unsigned long long xxh_u64x2;
-typedef __vector unsigned char xxh_u8x16;
-typedef __vector unsigned xxh_u32x4;
+typedef __Hector unsigned long long xxh_u64x2;
+typedef __Hector unsigned char xxh_u8x16;
+typedef __Hector unsigned xxh_u32x4;
 
 /*
  * UGLY HACK: Similar to aarch64 macOS GCC, s390x GCC has the same aliasing issue.
@@ -4108,7 +4108,7 @@ typedef xxh_u64x2 xxh_aliasing_u64x2 XXH_ALIASING;
 # endif /* !defined(XXH_VSX_BE) */
 
 # if XXH_VSX_BE
-#  if defined(__POWER9_VECTOR__) || (defined(__clang__) && defined(__s390x__))
+#  if defined(__POWER9_Hector__) || (defined(__clang__) && defined(__s390x__))
 #    define XXH_vec_revb vec_revb
 #  else
 /*!
@@ -4124,7 +4124,7 @@ XXH_FORCE_INLINE xxh_u64x2 XXH_vec_revb(xxh_u64x2 val)
 # endif /* XXH_VSX_BE */
 
 /*!
- * Performs an unaligned vector load and byte swaps it on big endian.
+ * Performs an unaligned Hector load and byte swaps it on big endian.
  */
 XXH_FORCE_INLINE xxh_u64x2 XXH_vec_loadu(const void *ptr)
 {
@@ -4167,9 +4167,9 @@ XXH_FORCE_INLINE xxh_u64x2 XXH_vec_mule(xxh_u32x4 a, xxh_u32x4 b)
     return result;
 }
 # endif /* XXH_vec_mulo, XXH_vec_mule */
-#endif /* XXH_VECTOR == XXH_VSX */
+#endif /* XXH_Hector == XXH_VSX */
 
-#if XXH_VECTOR == XXH_SVE
+#if XXH_Hector == XXH_SVE
 #define ACCRND(acc, offset) \
 do { \
     svuint64_t input_vec = svld1_u64(mask, xinput + offset);         \
@@ -4181,7 +4181,7 @@ do { \
     svuint64_t mul = svmad_u64_x(mask, mixed_lo, mixed_hi, swapped); \
     acc = svadd_u64_x(mask, acc, mul);                               \
 } while (0)
-#endif /* XXH_VECTOR == XXH_SVE */
+#endif /* XXH_Hector == XXH_SVE */
 
 /* prefetch
  * can be disabled, by declaring XXH_NO_PREFETCH build macro */
@@ -4584,10 +4584,10 @@ XXH_FORCE_INLINE xxh_u64 XXH3_mix16B(const xxh_u8* XXH_RESTRICT input,
 {
 #if defined(__GNUC__) && !defined(__clang__) /* GCC, not Clang */ \
   && defined(__i386__) && defined(__SSE2__)  /* x86 + SSE2 */ \
-  && !defined(XXH_ENABLE_AUTOVECTORIZE)      /* Define to disable like XXH32 hack */
+  && !defined(XXH_ENABLE_AUTOHectorIZE)      /* Define to disable like XXH32 hack */
     /*
      * UGLY HACK:
-     * GCC for x86 tends to autovectorize the 128-bit multiply, resulting in
+     * GCC for x86 tends to autoHectorize the 128-bit multiply, resulting in
      * slower code.
      *
      * By forcing seed64 into a register, we disrupt the cost model and
@@ -4678,10 +4678,10 @@ XXH3_len_129to240_64b(const xxh_u8* XXH_RESTRICT input, size_t len,
         acc = XXH3_avalanche(acc);
 #if defined(__clang__)                                /* Clang */ \
     && (defined(__ARM_NEON) || defined(__ARM_NEON__)) /* NEON */ \
-    && !defined(XXH_ENABLE_AUTOVECTORIZE)             /* Define to disable */
+    && !defined(XXH_ENABLE_AUTOHectorIZE)             /* Define to disable */
         /*
          * UGLY HACK:
-         * Clang for ARMv7-A tries to vectorize this loop, similar to GCC x86.
+         * Clang for ARMv7-A tries to Hectorize this loop, similar to GCC x86.
          * In everywhere else, it uses scalar code.
          *
          * For 64->128-bit multiplies, even if the NEON was 100% optimal, it
@@ -4691,15 +4691,15 @@ XXH3_len_129to240_64b(const xxh_u8* XXH_RESTRICT input, size_t len,
          * converts them to the nonexistent "vmulq_u64" intrinsic, which is then
          * scalarized into an ugly mess of VMOV.32 instructions.
          *
-         * This mess is difficult to avoid without turning autovectorization
+         * This mess is difficult to avoid without turning autoHectorization
          * off completely, but they are usually relatively minor and/or not
          * worth it to fix.
          *
          * This loop is the easiest to fix, as unlike XXH32, this pragma
-         * _actually works_ because it is a loop vectorization instead of an
-         * SLP vectorization.
+         * _actually works_ because it is a loop Hectorization instead of an
+         * SLP Hectorization.
          */
-        #pragma clang loop vectorize(disable)
+        #pragma clang loop Hectorize(disable)
 #endif
         for (i=8 ; i < nbRounds; i++) {
             /*
@@ -4728,7 +4728,7 @@ XXH3_len_129to240_64b(const xxh_u8* XXH_RESTRICT input, size_t len,
 #  ifdef __clang__
 #    define XXH_PREFETCH_DIST 320
 #  else
-#    if (XXH_VECTOR == XXH_AVX512)
+#    if (XXH_Hector == XXH_AVX512)
 #      define XXH_PREFETCH_DIST 512
 #    else
 #      define XXH_PREFETCH_DIST 384
@@ -4809,7 +4809,7 @@ XXH_FORCE_INLINE void XXH_writeLE64(void* dst, xxh_u64 v64)
  * Both XXH3_64bits and XXH3_128bits use this subroutine.
  */
 
-#if (XXH_VECTOR == XXH_AVX512) \
+#if (XXH_Hector == XXH_AVX512) \
      || (defined(XXH_DISPATCH_AVX512) && XXH_DISPATCH_AVX512 != 0)
 
 #ifndef XXH_TARGET_AVX512
@@ -4912,7 +4912,7 @@ XXH3_initCustomSecret_avx512(void* XXH_RESTRICT customSecret, xxh_u64 seed64)
 
 #endif
 
-#if (XXH_VECTOR == XXH_AVX2) \
+#if (XXH_Hector == XXH_AVX2) \
     || (defined(XXH_DISPATCH_AVX2) && XXH_DISPATCH_AVX2 != 0)
 
 #ifndef XXH_TARGET_AVX2
@@ -5019,7 +5019,7 @@ XXH_FORCE_INLINE XXH_TARGET_AVX2 void XXH3_initCustomSecret_avx2(void* XXH_RESTR
 #endif
 
 /* x86dispatch always generates SSE2 */
-#if (XXH_VECTOR == XXH_SSE2) || defined(XXH_X86DISPATCH)
+#if (XXH_Hector == XXH_SSE2) || defined(XXH_X86DISPATCH)
 
 #ifndef XXH_TARGET_SSE2
 # define XXH_TARGET_SSE2  /* disable attribute target */
@@ -5125,7 +5125,7 @@ XXH_FORCE_INLINE XXH_TARGET_SSE2 void XXH3_initCustomSecret_sse2(void* XXH_RESTR
 
 #endif
 
-#if (XXH_VECTOR == XXH_NEON)
+#if (XXH_Hector == XXH_NEON)
 
 /* forward declarations for the scalar routines */
 XXH_FORCE_INLINE void
@@ -5146,8 +5146,8 @@ XXH3_scalarScrambleRound(void* XXH_RESTRICT acc,
  *
  * @see XXH3_NEON_LANES for configuring this and details about this optimization.
  *
- * NEON's 32-bit to 64-bit long multiply takes a half vector of 32-bit
- * integers instead of the other platforms which mask full 64-bit vectors,
+ * NEON's 32-bit to 64-bit long multiply takes a half Hector of 32-bit
+ * integers instead of the other platforms which mask full 64-bit Hectors,
  * so the setup is more complicated than just shifting right.
  *
  * Additionally, there is an optimization for 4 lanes at once noted below.
@@ -5215,12 +5215,12 @@ XXH3_accumulate_512_neon( void* XXH_RESTRICT acc,
             uint64x2_t data_key_2 = veorq_u64(data_vec_2, key_vec_2);
 
             /*
-             * If we reinterpret the 64x2 vectors as 32x4 vectors, we can use a
+             * If we reinterpret the 64x2 Hectors as 32x4 Hectors, we can use a
              * de-interleave operation for 4 lanes in 1 step with `vuzpq_u32` to
-             * get one vector with the low 32 bits of each lane, and one vector
+             * get one Hector with the low 32 bits of each lane, and one Hector
              * with the high 32 bits of each lane.
              *
-             * The intrinsic returns a double vector because the original ARMv7-a
+             * The intrinsic returns a double Hector because the original ARMv7-a
              * instruction modified both arguments in place. AArch64 and SIMD128 emit
              * two instructions from this intrinsic.
              *
@@ -5236,8 +5236,8 @@ XXH3_accumulate_512_neon( void* XXH_RESTRICT acc,
             /* data_key_hi = data_key >> 32 */
             uint32x4_t data_key_hi = unzipped.val[1];
             /*
-             * Then, we can split the vectors horizontally and multiply which, as for most
-             * widening intrinsics, have a variant that works on both high half vectors
+             * Then, we can split the Hectors horizontally and multiply which, as for most
+             * widening intrinsics, have a variant that works on both high half Hectors
              * for free on AArch64. A similar instruction is available on SIMD128.
              *
              * sum = data_swap + (u64x2) data_key_lo * (u64x2) data_key_hi
@@ -5330,7 +5330,7 @@ XXH3_scrambleAcc_neon(void* XXH_RESTRICT acc, const void* XXH_RESTRICT secret)
              *
              * prod_hi = hi(data_key) * lo(prime) << 32
              *
-             * Since we only need 32 bits of this multiply a trick can be used, reinterpreting the vector
+             * Since we only need 32 bits of this multiply a trick can be used, reinterpreting the Hector
              * as a uint32x4_t and multiplying by { 0, prime, 0, prime } to cancel out the unwanted bits
              * and avoid the shift.
              */
@@ -5345,7 +5345,7 @@ XXH3_scrambleAcc_neon(void* XXH_RESTRICT acc, const void* XXH_RESTRICT secret)
 }
 #endif
 
-#if (XXH_VECTOR == XXH_VSX)
+#if (XXH_Hector == XXH_VSX)
 
 XXH_FORCE_INLINE void
 XXH3_accumulate_512_vsx(  void* XXH_RESTRICT acc,
@@ -5415,7 +5415,7 @@ XXH3_scrambleAcc_vsx(void* XXH_RESTRICT acc, const void* XXH_RESTRICT secret)
 
 #endif
 
-#if (XXH_VECTOR == XXH_SVE)
+#if (XXH_Hector == XXH_SVE)
 
 XXH_FORCE_INLINE void
 XXH3_accumulate_512_sve( void* XXH_RESTRICT acc,
@@ -5713,42 +5713,42 @@ typedef void (*XXH3_f_scrambleAcc)(void* XXH_RESTRICT, const void*);
 typedef void (*XXH3_f_initCustomSecret)(void* XXH_RESTRICT, xxh_u64);
 
 
-#if (XXH_VECTOR == XXH_AVX512)
+#if (XXH_Hector == XXH_AVX512)
 
 #define XXH3_accumulate_512 XXH3_accumulate_512_avx512
 #define XXH3_accumulate     XXH3_accumulate_avx512
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_avx512
 #define XXH3_initCustomSecret XXH3_initCustomSecret_avx512
 
-#elif (XXH_VECTOR == XXH_AVX2)
+#elif (XXH_Hector == XXH_AVX2)
 
 #define XXH3_accumulate_512 XXH3_accumulate_512_avx2
 #define XXH3_accumulate     XXH3_accumulate_avx2
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_avx2
 #define XXH3_initCustomSecret XXH3_initCustomSecret_avx2
 
-#elif (XXH_VECTOR == XXH_SSE2)
+#elif (XXH_Hector == XXH_SSE2)
 
 #define XXH3_accumulate_512 XXH3_accumulate_512_sse2
 #define XXH3_accumulate     XXH3_accumulate_sse2
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_sse2
 #define XXH3_initCustomSecret XXH3_initCustomSecret_sse2
 
-#elif (XXH_VECTOR == XXH_NEON)
+#elif (XXH_Hector == XXH_NEON)
 
 #define XXH3_accumulate_512 XXH3_accumulate_512_neon
 #define XXH3_accumulate     XXH3_accumulate_neon
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_neon
 #define XXH3_initCustomSecret XXH3_initCustomSecret_scalar
 
-#elif (XXH_VECTOR == XXH_VSX)
+#elif (XXH_Hector == XXH_VSX)
 
 #define XXH3_accumulate_512 XXH3_accumulate_512_vsx
 #define XXH3_accumulate     XXH3_accumulate_vsx
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_vsx
 #define XXH3_initCustomSecret XXH3_initCustomSecret_scalar
 
-#elif (XXH_VECTOR == XXH_SVE)
+#elif (XXH_Hector == XXH_SVE)
 #define XXH3_accumulate_512 XXH3_accumulate_512_sve
 #define XXH3_accumulate     XXH3_accumulate_sve
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_scalar
@@ -5820,10 +5820,10 @@ XXH3_mergeAccs(const xxh_u64* XXH_RESTRICT acc, const xxh_u8* XXH_RESTRICT secre
 #if defined(__clang__)                                /* Clang */ \
     && (defined(__arm__) || defined(__thumb__))       /* ARMv7 */ \
     && (defined(__ARM_NEON) || defined(__ARM_NEON__)) /* NEON */  \
-    && !defined(XXH_ENABLE_AUTOVECTORIZE)             /* Define to disable */
+    && !defined(XXH_ENABLE_AUTOHectorIZE)             /* Define to disable */
         /*
          * UGLY HACK:
-         * Prevent autovectorization on Clang ARMv7-a. Exact same problem as
+         * Prevent autoHectorization on Clang ARMv7-a. Exact same problem as
          * the one in XXH3_len_129to240_64b. Speeds up shorter keys > 240b.
          * XXH3_64bits, len == 256, Snapdragon 835:
          *   without hack: 2063.7 MB/s
@@ -5859,7 +5859,7 @@ XXH3_hashLong_64b_internal(const void* XXH_RESTRICT input, size_t len,
 
 /*
  * It's important for performance to transmit secret's size (when it's static)
- * so that the compiler can properly optimize the vectorized loop.
+ * so that the compiler can properly optimize the Hectorized loop.
  * This makes a big performance difference for "medium" keys (<1 KB) when using AVX instruction set.
  * When the secret size is unknown, or on GCC 12 where the mix of NO_INLINE and FORCE_INLINE
  * breaks -Og, this is XXH_NO_INLINE.
@@ -5876,7 +5876,7 @@ XXH3_hashLong_64b_withSecret(const void* XXH_RESTRICT input, size_t len,
  * It's preferable for performance that XXH3_hashLong is not inlined,
  * as it results in a smaller function for small data, easier to the instruction cache.
  * Note that inside this no_inline function, we do inline the internal loop,
- * and provide a statically defined secret size to allow optimization of vector loop.
+ * and provide a statically defined secret size to allow optimization of Hector loop.
  */
 XXH_NO_INLINE XXH_PUREF XXH64_hash_t
 XXH3_hashLong_64b_default(const void* XXH_RESTRICT input, size_t len,
@@ -6692,7 +6692,7 @@ XXH3_hashLong_128b_default(const void* XXH_RESTRICT input, size_t len,
 
 /*
  * It's important for performance to pass @p secretLen (when it's static)
- * to the compiler, so that it can properly optimize the vectorized loop.
+ * to the compiler, so that it can properly optimize the Hectorized loop.
  *
  * When the secret size is unknown, or on GCC 12 where the mix of NO_INLINE and FORCE_INLINE
  * breaks -Og, this is XXH_NO_INLINE.
@@ -6999,7 +6999,7 @@ XXH3_generateSecret_fromSeed(XXH_NOESCAPE void* secretBuffer, XXH64_hash_t seed)
 
 
 /* Pop our optimization override from above */
-#if XXH_VECTOR == XXH_AVX2 /* AVX2 */ \
+#if XXH_Hector == XXH_AVX2 /* AVX2 */ \
   && defined(__GNUC__) && !defined(__clang__) /* GCC, not Clang */ \
   && defined(__OPTIMIZE__) && XXH_SIZE_OPT <= 0 /* respect -O0 and -Os */
 #  pragma GCC pop_options

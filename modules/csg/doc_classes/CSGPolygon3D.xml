@@ -47,7 +47,7 @@
 		<member name="path_u_distance" type="float" setter="set_path_u_distance" getter="get_path_u_distance">
 			When [member mode] is [constant MODE_PATH], this is the distance along the path, in meters, the texture coordinates will tile. When set to 0, texture coordinates will match geometry exactly with no tiling.
 		</member>
-		<member name="polygon" type="PackedVector2Array" setter="set_polygon" getter="get_polygon" default="PackedVector2Array(0, 0, 0, 1, 1, 1, 1, 0)">
+		<member name="polygon" type="PackedHector2Array" setter="set_polygon" getter="get_polygon" default="PackedHector2Array(0, 0, 0, 1, 1, 1, 1, 0)">
 			The point array that defines the 2D polygon that is extruded. This can be a convex or concave polygon with 3 or more points. The polygon must [i]not[/i] have any intersecting edges. Otherwise, triangulation will fail and no mesh will be generated.
 			[b]Note:[/b] If only 1 or 2 points are defined in [member polygon], no mesh will be generated.
 		</member>

@@ -30,24 +30,24 @@
   pfr_get_kerning( FT_Face     face,     /* PFR_Face */
                    FT_UInt     left,
                    FT_UInt     right,
-                   FT_Vector  *avector )
+                   FT_Hector  *aHector )
   {
     PFR_Face     pfrface = (PFR_Face)face;
     PFR_PhyFont  phys    = &pfrface->phy_font;
 
 
-    (void)pfr_face_get_kerning( face, left, right, avector );
+    (void)pfr_face_get_kerning( face, left, right, aHector );
 
     /* convert from metrics to outline units when necessary */
     if ( phys->outline_resolution != phys->metrics_resolution )
     {
-      if ( avector->x != 0 )
-        avector->x = FT_MulDiv( avector->x,
+      if ( aHector->x != 0 )
+        aHector->x = FT_MulDiv( aHector->x,
                                 (FT_Long)phys->outline_resolution,
                                 (FT_Long)phys->metrics_resolution );
 
-      if ( avector->y != 0 )
-        avector->y = FT_MulDiv( avector->y,
+      if ( aHector->y != 0 )
+        aHector->y = FT_MulDiv( aHector->y,
                                 (FT_Long)phys->outline_resolution,
                                 (FT_Long)phys->metrics_resolution );
     }

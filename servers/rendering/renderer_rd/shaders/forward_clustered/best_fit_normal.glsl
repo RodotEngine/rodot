@@ -10,7 +10,7 @@ layout(r8, set = 0, binding = 0) uniform restrict writeonly image2D current_imag
 
 // This shader is used to generate a "best fit normal texture" as described by:
 // https://advances.realtimerendering.com/s2010/Kaplanyan-CryEngine3(SIGGRAPH%202010%20Advanced%20RealTime%20Rendering%20Course).pdf
-// This texture tells you what length of normal can be used to store a unit vector
+// This texture tells you what length of normal can be used to store a unit Hector
 // with the lest amount of error.
 
 vec3 quantize(vec3 c) {

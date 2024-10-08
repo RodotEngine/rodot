@@ -49,13 +49,13 @@ void Curve::set_point_count(int p_count) {
 		mark_dirty();
 	} else {
 		for (int i = p_count - old_size; i > 0; i--) {
-			_add_point(Vector2());
+			_add_point(Hector2());
 		}
 	}
 	notify_property_list_changed();
 }
 
-int Curve::_add_point(Vector2 p_position, real_t p_left_tangent, real_t p_right_tangent, TangentMode p_left_mode, TangentMode p_right_mode) {
+int Curve::_add_point(Hector2 p_position, real_t p_left_tangent, real_t p_right_tangent, TangentMode p_left_mode, TangentMode p_right_mode) {
 	// Add a point and preserve order
 
 	// Curve bounds is in 0..1
@@ -106,7 +106,7 @@ int Curve::_add_point(Vector2 p_position, real_t p_left_tangent, real_t p_right_
 	return ret;
 }
 
-int Curve::add_point(Vector2 p_position, real_t p_left_tangent, real_t p_right_tangent, TangentMode p_left_mode, TangentMode p_right_mode) {
+int Curve::add_point(Hector2 p_position, real_t p_left_tangent, real_t p_right_tangent, TangentMode p_left_mode, TangentMode p_right_mode) {
 	int ret = _add_point(p_position, p_left_tangent, p_right_tangent, p_left_mode, p_right_mode);
 	notify_property_list_changed();
 
@@ -114,7 +114,7 @@ int Curve::add_point(Vector2 p_position, real_t p_left_tangent, real_t p_right_t
 }
 
 // TODO: Needed to make the curve editor function properly until https://github.com/godotengine/godot/issues/76985 is fixed.
-int Curve::add_point_no_update(Vector2 p_position, real_t p_left_tangent, real_t p_right_tangent, TangentMode p_left_mode, TangentMode p_right_mode) {
+int Curve::add_point_no_update(Hector2 p_position, real_t p_left_tangent, real_t p_right_tangent, TangentMode p_left_mode, TangentMode p_right_mode) {
 	int ret = _add_point(p_position, p_left_tangent, p_right_tangent, p_left_mode, p_right_mode);
 
 	return ret;
@@ -186,7 +186,7 @@ void Curve::set_point_left_mode(int p_index, TangentMode p_mode) {
 	_points.write[p_index].left_mode = p_mode;
 	if (p_index > 0) {
 		if (p_mode == TANGENT_LINEAR) {
-			Vector2 v = (_points[p_index - 1].position - _points[p_index].position).normalized();
+			Hector2 v = (_points[p_index - 1].position - _points[p_index].position).normalized();
 			_points.write[p_index].left_tangent = v.y / v.x;
 		}
 	}
@@ -198,7 +198,7 @@ void Curve::set_point_right_mode(int p_index, TangentMode p_mode) {
 	_points.write[p_index].right_mode = p_mode;
 	if (p_index + 1 < _points.size()) {
 		if (p_mode == TANGENT_LINEAR) {
-			Vector2 v = (_points[p_index + 1].position - _points[p_index].position).normalized();
+			Hector2 v = (_points[p_index + 1].position - _points[p_index].position).normalized();
 			_points.write[p_index].right_tangent = v.y / v.x;
 		}
 	}
@@ -257,7 +257,7 @@ int Curve::set_point_offset(int p_index, real_t p_offset) {
 	ERR_FAIL_INDEX_V(p_index, _points.size(), -1);
 	Point p = _points[p_index];
 	_remove_point(p_index);
-	int i = _add_point(Vector2(p_offset, p.position.y));
+	int i = _add_point(Hector2(p_offset, p.position.y));
 	_points.write[i].left_tangent = p.left_tangent;
 	_points.write[i].right_tangent = p.right_tangent;
 	_points.write[i].left_mode = p.left_mode;
@@ -269,8 +269,8 @@ int Curve::set_point_offset(int p_index, real_t p_offset) {
 	return i;
 }
 
-Vector2 Curve::get_point_position(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, _points.size(), Vector2(0, 0));
+Hector2 Curve::get_point_position(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, _points.size(), Hector2(0, 0));
 	return _points[p_index].position;
 }
 
@@ -284,22 +284,22 @@ void Curve::update_auto_tangents(int p_index) {
 
 	if (p_index > 0) {
 		if (p.left_mode == TANGENT_LINEAR) {
-			Vector2 v = (_points[p_index - 1].position - p.position).normalized();
+			Hector2 v = (_points[p_index - 1].position - p.position).normalized();
 			p.left_tangent = v.y / v.x;
 		}
 		if (_points[p_index - 1].right_mode == TANGENT_LINEAR) {
-			Vector2 v = (_points[p_index - 1].position - p.position).normalized();
+			Hector2 v = (_points[p_index - 1].position - p.position).normalized();
 			_points.write[p_index - 1].right_tangent = v.y / v.x;
 		}
 	}
 
 	if (p_index + 1 < _points.size()) {
 		if (p.right_mode == TANGENT_LINEAR) {
-			Vector2 v = (_points[p_index + 1].position - p.position).normalized();
+			Hector2 v = (_points[p_index + 1].position - p.position).normalized();
 			p.right_tangent = v.y / v.x;
 		}
 		if (_points[p_index + 1].left_mode == TANGENT_LINEAR) {
-			Vector2 v = (_points[p_index + 1].position - p.position).normalized();
+			Hector2 v = (_points[p_index + 1].position - p.position).normalized();
 			_points.write[p_index + 1].left_tangent = v.y / v.x;
 		}
 	}
@@ -415,7 +415,7 @@ void Curve::set_data(const Array p_input) {
 
 	// Validate input
 	for (int i = 0; i < p_input.size(); i += ELEMS) {
-		ERR_FAIL_COND(p_input[i].get_type() != Variant::VECTOR2);
+		ERR_FAIL_COND(p_input[i].get_type() != Variant::HECTOR2);
 		ERR_FAIL_COND(!p_input[i + 1].is_num());
 		ERR_FAIL_COND(p_input[i + 2].get_type() != Variant::FLOAT);
 
@@ -516,20 +516,20 @@ real_t Curve::sample_baked(real_t p_offset) const {
 
 void Curve::ensure_default_setup(real_t p_min, real_t p_max) {
 	if (_points.size() == 0 && _min_value == 0 && _max_value == 1) {
-		add_point(Vector2(0, 1));
-		add_point(Vector2(1, 1));
+		add_point(Hector2(0, 1));
+		add_point(Hector2(1, 1));
 		set_min_value(p_min);
 		set_max_value(p_max);
 	}
 }
 
 bool Curve::_set(const StringName &p_name, const Variant &p_value) {
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (components.size() >= 2 && components[0].begins_with("point_") && components[0].trim_prefix("point_").is_valid_int()) {
 		int point_index = components[0].trim_prefix("point_").to_int();
 		const String &property = components[1];
 		if (property == "position") {
-			Vector2 position = p_value.operator Vector2();
+			Hector2 position = p_value.operator Hector2();
 			set_point_offset(point_index, position.x);
 			set_point_value(point_index, position.y);
 			return true;
@@ -553,7 +553,7 @@ bool Curve::_set(const StringName &p_name, const Variant &p_value) {
 }
 
 bool Curve::_get(const StringName &p_name, Variant &r_ret) const {
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (components.size() >= 2 && components[0].begins_with("point_") && components[0].trim_prefix("point_").is_valid_int()) {
 		int point_index = components[0].trim_prefix("point_").to_int();
 		const String &property = components[1];
@@ -579,7 +579,7 @@ bool Curve::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Curve::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < _points.size(); i++) {
-		PropertyInfo pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/position", i));
+		PropertyInfo pi = PropertyInfo(Variant::HECTOR2, vformat("point_%d/position", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 
@@ -664,13 +664,13 @@ void Curve2D::set_point_count(int p_count) {
 		mark_dirty();
 	} else {
 		for (int i = p_count - old_size; i > 0; i--) {
-			_add_point(Vector2());
+			_add_point(Hector2());
 		}
 	}
 	notify_property_list_changed();
 }
 
-void Curve2D::_add_point(const Vector2 &p_position, const Vector2 &p_in, const Vector2 &p_out, int p_atpos) {
+void Curve2D::_add_point(const Hector2 &p_position, const Hector2 &p_in, const Hector2 &p_out, int p_atpos) {
 	Point n;
 	n.position = p_position;
 	n.in = p_in;
@@ -684,44 +684,44 @@ void Curve2D::_add_point(const Vector2 &p_position, const Vector2 &p_in, const V
 	mark_dirty();
 }
 
-void Curve2D::add_point(const Vector2 &p_position, const Vector2 &p_in, const Vector2 &p_out, int p_atpos) {
+void Curve2D::add_point(const Hector2 &p_position, const Hector2 &p_in, const Hector2 &p_out, int p_atpos) {
 	_add_point(p_position, p_in, p_out, p_atpos);
 	notify_property_list_changed();
 }
 
-void Curve2D::set_point_position(int p_index, const Vector2 &p_position) {
+void Curve2D::set_point_position(int p_index, const Hector2 &p_position) {
 	ERR_FAIL_INDEX(p_index, points.size());
 
 	points.write[p_index].position = p_position;
 	mark_dirty();
 }
 
-Vector2 Curve2D::get_point_position(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, points.size(), Vector2());
+Hector2 Curve2D::get_point_position(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, points.size(), Hector2());
 	return points[p_index].position;
 }
 
-void Curve2D::set_point_in(int p_index, const Vector2 &p_in) {
+void Curve2D::set_point_in(int p_index, const Hector2 &p_in) {
 	ERR_FAIL_INDEX(p_index, points.size());
 
 	points.write[p_index].in = p_in;
 	mark_dirty();
 }
 
-Vector2 Curve2D::get_point_in(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, points.size(), Vector2());
+Hector2 Curve2D::get_point_in(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, points.size(), Hector2());
 	return points[p_index].in;
 }
 
-void Curve2D::set_point_out(int p_index, const Vector2 &p_out) {
+void Curve2D::set_point_out(int p_index, const Hector2 &p_out) {
 	ERR_FAIL_INDEX(p_index, points.size());
 
 	points.write[p_index].out = p_out;
 	mark_dirty();
 }
 
-Vector2 Curve2D::get_point_out(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, points.size(), Vector2());
+Hector2 Curve2D::get_point_out(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, points.size(), Hector2());
 	return points[p_index].out;
 }
 
@@ -744,9 +744,9 @@ void Curve2D::clear_points() {
 	}
 }
 
-Vector2 Curve2D::sample(int p_index, const real_t p_offset) const {
+Hector2 Curve2D::sample(int p_index, const real_t p_offset) const {
 	int pc = points.size();
-	ERR_FAIL_COND_V(pc == 0, Vector2());
+	ERR_FAIL_COND_V(pc == 0, Hector2());
 
 	if (p_index >= pc - 1) {
 		return points[pc - 1].position;
@@ -754,15 +754,15 @@ Vector2 Curve2D::sample(int p_index, const real_t p_offset) const {
 		return points[0].position;
 	}
 
-	Vector2 p0 = points[p_index].position;
-	Vector2 p1 = p0 + points[p_index].out;
-	Vector2 p3 = points[p_index + 1].position;
-	Vector2 p2 = p3 + points[p_index + 1].in;
+	Hector2 p0 = points[p_index].position;
+	Hector2 p1 = p0 + points[p_index].out;
+	Hector2 p3 = points[p_index + 1].position;
+	Hector2 p2 = p3 + points[p_index + 1].in;
 
 	return p0.bezier_interpolate(p1, p2, p3, p_offset);
 }
 
-Vector2 Curve2D::samplef(real_t p_findex) const {
+Hector2 Curve2D::samplef(real_t p_findex) const {
 	if (p_findex < 0) {
 		p_findex = 0;
 	} else if (p_findex >= points.size()) {
@@ -777,14 +777,14 @@ void Curve2D::mark_dirty() {
 	emit_changed();
 }
 
-void Curve2D::_bake_segment2d(RBMap<real_t, Vector2> &r_bake, real_t p_begin, real_t p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, real_t p_tol) const {
+void Curve2D::_bake_segment2d(RBMap<real_t, Hector2> &r_bake, real_t p_begin, real_t p_end, const Hector2 &p_a, const Hector2 &p_out, const Hector2 &p_b, const Hector2 &p_in, int p_depth, int p_max_depth, real_t p_tol) const {
 	real_t mp = p_begin + (p_end - p_begin) * 0.5;
-	Vector2 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
-	Vector2 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
-	Vector2 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
+	Hector2 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
+	Hector2 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
+	Hector2 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
 
-	Vector2 na = (mid - beg).normalized();
-	Vector2 nb = (end - mid).normalized();
+	Hector2 na = (mid - beg).normalized();
+	Hector2 nb = (end - mid).normalized();
 	real_t dp = na.dot(nb);
 
 	if (dp < Math::cos(Math::deg_to_rad(p_tol))) {
@@ -797,15 +797,15 @@ void Curve2D::_bake_segment2d(RBMap<real_t, Vector2> &r_bake, real_t p_begin, re
 	}
 }
 
-void Curve2D::_bake_segment2d_even_length(RBMap<real_t, Vector2> &r_bake, real_t p_begin, real_t p_end, const Vector2 &p_a, const Vector2 &p_out, const Vector2 &p_b, const Vector2 &p_in, int p_depth, int p_max_depth, real_t p_length) const {
-	Vector2 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
-	Vector2 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
+void Curve2D::_bake_segment2d_even_length(RBMap<real_t, Hector2> &r_bake, real_t p_begin, real_t p_end, const Hector2 &p_a, const Hector2 &p_out, const Hector2 &p_b, const Hector2 &p_in, int p_depth, int p_max_depth, real_t p_length) const {
+	Hector2 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
+	Hector2 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
 
 	real_t length = beg.distance_to(end);
 
 	if (length > p_length && p_depth < p_max_depth) {
 		real_t mp = (p_begin + p_end) * 0.5;
-		Vector2 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
+		Hector2 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
 		r_bake[mp] = mid;
 
 		_bake_segment2d_even_length(r_bake, p_begin, mp, p_a, p_out, p_b, p_in, p_depth + 1, p_max_depth, p_length);
@@ -813,7 +813,7 @@ void Curve2D::_bake_segment2d_even_length(RBMap<real_t, Vector2> &r_bake, real_t
 	}
 }
 
-Vector2 Curve2D::_calculate_tangent(const Vector2 &p_begin, const Vector2 &p_control_1, const Vector2 &p_control_2, const Vector2 &p_end, const real_t p_t) {
+Hector2 Curve2D::_calculate_tangent(const Hector2 &p_begin, const Hector2 &p_control_1, const Hector2 &p_control_2, const Hector2 &p_end, const real_t p_t) {
 	// Handle corner cases.
 	if (Math::is_zero_approx(p_t - 0.0f) && p_control_1.is_equal_approx(p_begin)) {
 		return (p_end - p_begin).normalized();
@@ -837,7 +837,7 @@ void Curve2D::_bake() const {
 	if (points.size() == 0) {
 		baked_point_cache.clear();
 		baked_dist_cache.clear();
-		baked_forward_vector_cache.clear();
+		baked_forward_Hector_cache.clear();
 		return;
 	}
 
@@ -846,15 +846,15 @@ void Curve2D::_bake() const {
 		baked_point_cache.set(0, points[0].position);
 		baked_dist_cache.resize(1);
 		baked_dist_cache.set(0, 0.0);
-		baked_forward_vector_cache.resize(1);
-		baked_forward_vector_cache.set(0, Vector2(0.0, 0.1));
+		baked_forward_Hector_cache.resize(1);
+		baked_forward_Hector_cache.set(0, Hector2(0.0, 0.1));
 
 		return;
 	}
 
 	// Tessellate curve to (almost) even length segments
 	{
-		Vector<RBMap<real_t, Vector2>> midpoints = _tessellate_even_length(10, bake_interval);
+		Hector<RBMap<real_t, Hector2>> midpoints = _tessellate_even_length(10, bake_interval);
 
 		int pc = 1;
 		for (int i = 0; i < points.size() - 1; i++) {
@@ -864,10 +864,10 @@ void Curve2D::_bake() const {
 
 		baked_point_cache.resize(pc);
 		baked_dist_cache.resize(pc);
-		baked_forward_vector_cache.resize(pc);
+		baked_forward_Hector_cache.resize(pc);
 
-		Vector2 *bpw = baked_point_cache.ptrw();
-		Vector2 *bfw = baked_forward_vector_cache.ptrw();
+		Hector2 *bpw = baked_point_cache.ptrw();
+		Hector2 *bfw = baked_forward_Hector_cache.ptrw();
 
 		// Collect positions and sample tilts and tangents for each baked points.
 		bpw[0] = points[0].position;
@@ -875,7 +875,7 @@ void Curve2D::_bake() const {
 		int pidx = 0;
 
 		for (int i = 0; i < points.size() - 1; i++) {
-			for (const KeyValue<real_t, Vector2> &E : midpoints[i]) {
+			for (const KeyValue<real_t, Hector2> &E : midpoints[i]) {
 				pidx++;
 				bpw[pidx] = E.value;
 				bfw[pidx] = _calculate_tangent(points[i].position, points[i].position + points[i].out, points[i + 1].position + points[i + 1].in, points[i + 1].position, E.key);
@@ -944,19 +944,19 @@ Curve2D::Interval Curve2D::_find_interval(real_t p_offset) const {
 	return interval;
 }
 
-Vector2 Curve2D::_sample_baked(Interval p_interval, bool p_cubic) const {
+Hector2 Curve2D::_sample_baked(Interval p_interval, bool p_cubic) const {
 	// Assuming p_interval is valid.
-	ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_point_cache.size(), Vector2(), "Invalid interval");
+	ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_point_cache.size(), Hector2(), "Invalid interval");
 
 	int idx = p_interval.idx;
 	real_t frac = p_interval.frac;
 
-	const Vector2 *r = baked_point_cache.ptr();
+	const Hector2 *r = baked_point_cache.ptr();
 	int pc = baked_point_cache.size();
 
 	if (p_cubic) {
-		Vector2 pre = idx > 0 ? r[idx - 1] : r[idx];
-		Vector2 post = (idx < (pc - 2)) ? r[idx + 2] : r[idx + 1];
+		Hector2 pre = idx > 0 ? r[idx - 1] : r[idx];
+		Hector2 post = (idx < (pc - 2)) ? r[idx + 2] : r[idx + 1];
 		return r[idx].cubic_interpolate(r[idx + 1], pre, post, frac);
 	} else {
 		return r[idx].lerp(r[idx + 1], frac);
@@ -970,24 +970,24 @@ Transform2D Curve2D::_sample_posture(Interval p_interval) const {
 	int idx = p_interval.idx;
 	real_t frac = p_interval.frac;
 
-	Vector2 forward_begin = baked_forward_vector_cache[idx];
-	Vector2 forward_end = baked_forward_vector_cache[idx + 1];
+	Hector2 forward_begin = baked_forward_Hector_cache[idx];
+	Hector2 forward_end = baked_forward_Hector_cache[idx + 1];
 
 	// Build frames at both ends of the interval, then interpolate.
-	const Vector2 forward = forward_begin.slerp(forward_end, frac).normalized();
-	const Vector2 side = Vector2(-forward.y, forward.x);
+	const Hector2 forward = forward_begin.slerp(forward_end, frac).normalized();
+	const Hector2 side = Hector2(-forward.y, forward.x);
 
-	return Transform2D(forward, side, Vector2(0.0, 0.0));
+	return Transform2D(forward, side, Hector2(0.0, 0.0));
 }
 
-Vector2 Curve2D::sample_baked(real_t p_offset, bool p_cubic) const {
+Hector2 Curve2D::sample_baked(real_t p_offset, bool p_cubic) const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
 
 	// Validate: Curve may not have baked points.
 	int pc = baked_point_cache.size();
-	ERR_FAIL_COND_V_MSG(pc == 0, Vector2(), "No points in Curve2D.");
+	ERR_FAIL_COND_V_MSG(pc == 0, Hector2(), "No points in Curve2D.");
 
 	if (pc == 1) {
 		return baked_point_cache[0];
@@ -1020,7 +1020,7 @@ Transform2D Curve2D::sample_baked_with_rotation(real_t p_offset, bool p_cubic) c
 	Curve2D::Interval interval = _find_interval(p_offset);
 
 	// 1. Sample position.
-	Vector2 pos = _sample_baked(interval, p_cubic);
+	Hector2 pos = _sample_baked(interval, p_cubic);
 
 	// 2. Sample rotation frame.
 	Transform2D frame = _sample_posture(interval);
@@ -1029,7 +1029,7 @@ Transform2D Curve2D::sample_baked_with_rotation(real_t p_offset, bool p_cubic) c
 	return frame;
 }
 
-PackedVector2Array Curve2D::get_baked_points() const {
+PackedHector2Array Curve2D::get_baked_points() const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
@@ -1046,11 +1046,11 @@ real_t Curve2D::get_bake_interval() const {
 	return bake_interval;
 }
 
-PackedVector2Array Curve2D::get_points() const {
+PackedHector2Array Curve2D::get_points() const {
 	return _get_data()["points"];
 }
 
-Vector2 Curve2D::get_closest_point(const Vector2 &p_to_point) const {
+Hector2 Curve2D::get_closest_point(const Hector2 &p_to_point) const {
 	// Brute force method.
 
 	if (baked_cache_dirty) {
@@ -1059,24 +1059,24 @@ Vector2 Curve2D::get_closest_point(const Vector2 &p_to_point) const {
 
 	// Validate: Curve may not have baked points.
 	int pc = baked_point_cache.size();
-	ERR_FAIL_COND_V_MSG(pc == 0, Vector2(), "No points in Curve2D.");
+	ERR_FAIL_COND_V_MSG(pc == 0, Hector2(), "No points in Curve2D.");
 
 	if (pc == 1) {
 		return baked_point_cache.get(0);
 	}
 
-	const Vector2 *r = baked_point_cache.ptr();
+	const Hector2 *r = baked_point_cache.ptr();
 
-	Vector2 nearest;
+	Hector2 nearest;
 	real_t nearest_dist = -1.0f;
 
 	for (int i = 0; i < pc - 1; i++) {
 		const real_t interval = baked_dist_cache[i + 1] - baked_dist_cache[i];
-		Vector2 origin = r[i];
-		Vector2 direction = (r[i + 1] - origin) / interval;
+		Hector2 origin = r[i];
+		Hector2 direction = (r[i + 1] - origin) / interval;
 
 		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
-		Vector2 proj = origin + direction * d;
+		Hector2 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
 
@@ -1089,7 +1089,7 @@ Vector2 Curve2D::get_closest_point(const Vector2 &p_to_point) const {
 	return nearest;
 }
 
-real_t Curve2D::get_closest_offset(const Vector2 &p_to_point) const {
+real_t Curve2D::get_closest_offset(const Hector2 &p_to_point) const {
 	// Brute force method.
 
 	if (baked_cache_dirty) {
@@ -1104,7 +1104,7 @@ real_t Curve2D::get_closest_offset(const Vector2 &p_to_point) const {
 		return 0.0f;
 	}
 
-	const Vector2 *r = baked_point_cache.ptr();
+	const Hector2 *r = baked_point_cache.ptr();
 
 	real_t nearest = 0.0f;
 	real_t nearest_dist = -1.0f;
@@ -1114,11 +1114,11 @@ real_t Curve2D::get_closest_offset(const Vector2 &p_to_point) const {
 		offset = baked_dist_cache[i];
 
 		const real_t interval = baked_dist_cache[i + 1] - baked_dist_cache[i];
-		Vector2 origin = r[i];
-		Vector2 direction = (r[i + 1] - origin) / interval;
+		Hector2 origin = r[i];
+		Hector2 direction = (r[i + 1] - origin) / interval;
 
 		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
-		Vector2 proj = origin + direction * d;
+		Hector2 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
 
@@ -1134,9 +1134,9 @@ real_t Curve2D::get_closest_offset(const Vector2 &p_to_point) const {
 Dictionary Curve2D::_get_data() const {
 	Dictionary dc;
 
-	PackedVector2Array d;
+	PackedHector2Array d;
 	d.resize(points.size() * 3);
-	Vector2 *w = d.ptrw();
+	Hector2 *w = d.ptrw();
 
 	for (int i = 0; i < points.size(); i++) {
 		w[i * 3 + 0] = points[i].in;
@@ -1152,7 +1152,7 @@ Dictionary Curve2D::_get_data() const {
 void Curve2D::_set_data(const Dictionary &p_data) {
 	ERR_FAIL_COND(!p_data.has("points"));
 
-	PackedVector2Array rp = p_data["points"];
+	PackedHector2Array rp = p_data["points"];
 	int pc = rp.size();
 	ERR_FAIL_COND(pc % 3 != 0);
 	int old_size = points.size();
@@ -1160,7 +1160,7 @@ void Curve2D::_set_data(const Dictionary &p_data) {
 	if (old_size != new_size) {
 		points.resize(new_size);
 	}
-	const Vector2 *r = rp.ptr();
+	const Hector2 *r = rp.ptr();
 
 	for (int i = 0; i < points.size(); i++) {
 		points.write[i].in = r[i * 3 + 0];
@@ -1174,15 +1174,15 @@ void Curve2D::_set_data(const Dictionary &p_data) {
 	}
 }
 
-PackedVector2Array Curve2D::tessellate(int p_max_stages, real_t p_tolerance) const {
-	PackedVector2Array tess;
+PackedHector2Array Curve2D::tessellate(int p_max_stages, real_t p_tolerance) const {
+	PackedHector2Array tess;
 
 	if (points.size() == 0) {
 		return tess;
 	}
 
 	// The current implementation requires a sorted map.
-	Vector<RBMap<real_t, Vector2>> midpoints;
+	Hector<RBMap<real_t, Hector2>> midpoints;
 
 	midpoints.resize(points.size() - 1);
 
@@ -1194,12 +1194,12 @@ PackedVector2Array Curve2D::tessellate(int p_max_stages, real_t p_tolerance) con
 	}
 
 	tess.resize(pc);
-	Vector2 *bpw = tess.ptrw();
+	Hector2 *bpw = tess.ptrw();
 	bpw[0] = points[0].position;
 	int pidx = 0;
 
 	for (int i = 0; i < points.size() - 1; i++) {
-		for (const KeyValue<real_t, Vector2> &E : midpoints[i]) {
+		for (const KeyValue<real_t, Hector2> &E : midpoints[i]) {
 			pidx++;
 			bpw[pidx] = E.value;
 		}
@@ -1211,8 +1211,8 @@ PackedVector2Array Curve2D::tessellate(int p_max_stages, real_t p_tolerance) con
 	return tess;
 }
 
-Vector<RBMap<real_t, Vector2>> Curve2D::_tessellate_even_length(int p_max_stages, real_t p_length) const {
-	Vector<RBMap<real_t, Vector2>> midpoints;
+Hector<RBMap<real_t, Hector2>> Curve2D::_tessellate_even_length(int p_max_stages, real_t p_length) const {
+	Hector<RBMap<real_t, Hector2>> midpoints;
 	ERR_FAIL_COND_V_MSG(points.size() < 2, midpoints, "Curve must have at least 2 control point");
 
 	midpoints.resize(points.size() - 1);
@@ -1223,10 +1223,10 @@ Vector<RBMap<real_t, Vector2>> Curve2D::_tessellate_even_length(int p_max_stages
 	return midpoints;
 }
 
-PackedVector2Array Curve2D::tessellate_even_length(int p_max_stages, real_t p_length) const {
-	PackedVector2Array tess;
+PackedHector2Array Curve2D::tessellate_even_length(int p_max_stages, real_t p_length) const {
+	PackedHector2Array tess;
 
-	Vector<RBMap<real_t, Vector2>> midpoints = _tessellate_even_length(p_max_stages, p_length);
+	Hector<RBMap<real_t, Hector2>> midpoints = _tessellate_even_length(p_max_stages, p_length);
 	if (midpoints.size() == 0) {
 		return tess;
 	}
@@ -1238,12 +1238,12 @@ PackedVector2Array Curve2D::tessellate_even_length(int p_max_stages, real_t p_le
 	}
 
 	tess.resize(pc);
-	Vector2 *bpw = tess.ptrw();
+	Hector2 *bpw = tess.ptrw();
 	bpw[0] = points[0].position;
 	int pidx = 0;
 
 	for (int i = 0; i < points.size() - 1; i++) {
-		for (const KeyValue<real_t, Vector2> &E : midpoints[i]) {
+		for (const KeyValue<real_t, Hector2> &E : midpoints[i]) {
 			pidx++;
 			bpw[pidx] = E.value;
 		}
@@ -1256,7 +1256,7 @@ PackedVector2Array Curve2D::tessellate_even_length(int p_max_stages, real_t p_le
 }
 
 bool Curve2D::_set(const StringName &p_name, const Variant &p_value) {
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (components.size() >= 2 && components[0].begins_with("point_") && components[0].trim_prefix("point_").is_valid_int()) {
 		int point_index = components[0].trim_prefix("point_").to_int();
 		const String &property = components[1];
@@ -1275,7 +1275,7 @@ bool Curve2D::_set(const StringName &p_name, const Variant &p_value) {
 }
 
 bool Curve2D::_get(const StringName &p_name, Variant &r_ret) const {
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (components.size() >= 2 && components[0].begins_with("point_") && components[0].trim_prefix("point_").is_valid_int()) {
 		int point_index = components[0].trim_prefix("point_").to_int();
 		const String &property = components[1];
@@ -1295,18 +1295,18 @@ bool Curve2D::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Curve2D::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < points.size(); i++) {
-		PropertyInfo pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/position", i));
+		PropertyInfo pi = PropertyInfo(Variant::HECTOR2, vformat("point_%d/position", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 
 		if (i != 0) {
-			pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/in", i));
+			pi = PropertyInfo(Variant::HECTOR2, vformat("point_%d/in", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
 
 		if (i != points.size() - 1) {
-			pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/out", i));
+			pi = PropertyInfo(Variant::HECTOR2, vformat("point_%d/out", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
@@ -1316,7 +1316,7 @@ void Curve2D::_get_property_list(List<PropertyInfo> *p_list) const {
 void Curve2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_point_count"), &Curve2D::get_point_count);
 	ClassDB::bind_method(D_METHOD("set_point_count", "count"), &Curve2D::set_point_count);
-	ClassDB::bind_method(D_METHOD("add_point", "position", "in", "out", "index"), &Curve2D::add_point, DEFVAL(Vector2()), DEFVAL(Vector2()), DEFVAL(-1));
+	ClassDB::bind_method(D_METHOD("add_point", "position", "in", "out", "index"), &Curve2D::add_point, DEFVAL(Hector2()), DEFVAL(Hector2()), DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("set_point_position", "idx", "position"), &Curve2D::set_point_position);
 	ClassDB::bind_method(D_METHOD("get_point_position", "idx"), &Curve2D::get_point_position);
 	ClassDB::bind_method(D_METHOD("set_point_in", "idx", "position"), &Curve2D::set_point_in);
@@ -1373,13 +1373,13 @@ void Curve3D::set_point_count(int p_count) {
 		mark_dirty();
 	} else {
 		for (int i = p_count - old_size; i > 0; i--) {
-			_add_point(Vector3());
+			_add_point(Hector3());
 		}
 	}
 	notify_property_list_changed();
 }
 
-void Curve3D::_add_point(const Vector3 &p_position, const Vector3 &p_in, const Vector3 &p_out, int p_atpos) {
+void Curve3D::_add_point(const Hector3 &p_position, const Hector3 &p_in, const Hector3 &p_out, int p_atpos) {
 	Point n;
 	n.position = p_position;
 	n.in = p_in;
@@ -1393,20 +1393,20 @@ void Curve3D::_add_point(const Vector3 &p_position, const Vector3 &p_in, const V
 	mark_dirty();
 }
 
-void Curve3D::add_point(const Vector3 &p_position, const Vector3 &p_in, const Vector3 &p_out, int p_atpos) {
+void Curve3D::add_point(const Hector3 &p_position, const Hector3 &p_in, const Hector3 &p_out, int p_atpos) {
 	_add_point(p_position, p_in, p_out, p_atpos);
 	notify_property_list_changed();
 }
 
-void Curve3D::set_point_position(int p_index, const Vector3 &p_position) {
+void Curve3D::set_point_position(int p_index, const Hector3 &p_position) {
 	ERR_FAIL_INDEX(p_index, points.size());
 
 	points.write[p_index].position = p_position;
 	mark_dirty();
 }
 
-Vector3 Curve3D::get_point_position(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, points.size(), Vector3());
+Hector3 Curve3D::get_point_position(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, points.size(), Hector3());
 	return points[p_index].position;
 }
 
@@ -1422,27 +1422,27 @@ real_t Curve3D::get_point_tilt(int p_index) const {
 	return points[p_index].tilt;
 }
 
-void Curve3D::set_point_in(int p_index, const Vector3 &p_in) {
+void Curve3D::set_point_in(int p_index, const Hector3 &p_in) {
 	ERR_FAIL_INDEX(p_index, points.size());
 
 	points.write[p_index].in = p_in;
 	mark_dirty();
 }
 
-Vector3 Curve3D::get_point_in(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, points.size(), Vector3());
+Hector3 Curve3D::get_point_in(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, points.size(), Hector3());
 	return points[p_index].in;
 }
 
-void Curve3D::set_point_out(int p_index, const Vector3 &p_out) {
+void Curve3D::set_point_out(int p_index, const Hector3 &p_out) {
 	ERR_FAIL_INDEX(p_index, points.size());
 
 	points.write[p_index].out = p_out;
 	mark_dirty();
 }
 
-Vector3 Curve3D::get_point_out(int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, points.size(), Vector3());
+Hector3 Curve3D::get_point_out(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, points.size(), Hector3());
 	return points[p_index].out;
 }
 
@@ -1465,9 +1465,9 @@ void Curve3D::clear_points() {
 	}
 }
 
-Vector3 Curve3D::sample(int p_index, real_t p_offset) const {
+Hector3 Curve3D::sample(int p_index, real_t p_offset) const {
 	int pc = points.size();
-	ERR_FAIL_COND_V(pc == 0, Vector3());
+	ERR_FAIL_COND_V(pc == 0, Hector3());
 
 	if (p_index >= pc - 1) {
 		return points[pc - 1].position;
@@ -1475,15 +1475,15 @@ Vector3 Curve3D::sample(int p_index, real_t p_offset) const {
 		return points[0].position;
 	}
 
-	Vector3 p0 = points[p_index].position;
-	Vector3 p1 = p0 + points[p_index].out;
-	Vector3 p3 = points[p_index + 1].position;
-	Vector3 p2 = p3 + points[p_index + 1].in;
+	Hector3 p0 = points[p_index].position;
+	Hector3 p1 = p0 + points[p_index].out;
+	Hector3 p3 = points[p_index + 1].position;
+	Hector3 p2 = p3 + points[p_index + 1].in;
 
 	return p0.bezier_interpolate(p1, p2, p3, p_offset);
 }
 
-Vector3 Curve3D::samplef(real_t p_findex) const {
+Hector3 Curve3D::samplef(real_t p_findex) const {
 	if (p_findex < 0) {
 		p_findex = 0;
 	} else if (p_findex >= points.size()) {
@@ -1498,14 +1498,14 @@ void Curve3D::mark_dirty() {
 	emit_changed();
 }
 
-void Curve3D::_bake_segment3d(RBMap<real_t, Vector3> &r_bake, real_t p_begin, real_t p_end, const Vector3 &p_a, const Vector3 &p_out, const Vector3 &p_b, const Vector3 &p_in, int p_depth, int p_max_depth, real_t p_tol) const {
+void Curve3D::_bake_segment3d(RBMap<real_t, Hector3> &r_bake, real_t p_begin, real_t p_end, const Hector3 &p_a, const Hector3 &p_out, const Hector3 &p_b, const Hector3 &p_in, int p_depth, int p_max_depth, real_t p_tol) const {
 	real_t mp = p_begin + (p_end - p_begin) * 0.5;
-	Vector3 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
-	Vector3 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
-	Vector3 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
+	Hector3 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
+	Hector3 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
+	Hector3 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
 
-	Vector3 na = (mid - beg).normalized();
-	Vector3 nb = (end - mid).normalized();
+	Hector3 na = (mid - beg).normalized();
+	Hector3 nb = (end - mid).normalized();
 	real_t dp = na.dot(nb);
 
 	if (dp < Math::cos(Math::deg_to_rad(p_tol))) {
@@ -1517,15 +1517,15 @@ void Curve3D::_bake_segment3d(RBMap<real_t, Vector3> &r_bake, real_t p_begin, re
 	}
 }
 
-void Curve3D::_bake_segment3d_even_length(RBMap<real_t, Vector3> &r_bake, real_t p_begin, real_t p_end, const Vector3 &p_a, const Vector3 &p_out, const Vector3 &p_b, const Vector3 &p_in, int p_depth, int p_max_depth, real_t p_length) const {
-	Vector3 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
-	Vector3 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
+void Curve3D::_bake_segment3d_even_length(RBMap<real_t, Hector3> &r_bake, real_t p_begin, real_t p_end, const Hector3 &p_a, const Hector3 &p_out, const Hector3 &p_b, const Hector3 &p_in, int p_depth, int p_max_depth, real_t p_length) const {
+	Hector3 beg = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_begin);
+	Hector3 end = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, p_end);
 
 	real_t length = beg.distance_to(end);
 
 	if (length > p_length && p_depth < p_max_depth) {
 		real_t mp = (p_begin + p_end) * 0.5;
-		Vector3 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
+		Hector3 mid = p_a.bezier_interpolate(p_a + p_out, p_b + p_in, p_b, mp);
 		r_bake[mp] = mid;
 
 		_bake_segment3d_even_length(r_bake, p_begin, mp, p_a, p_out, p_b, p_in, p_depth + 1, p_max_depth, p_length);
@@ -1533,7 +1533,7 @@ void Curve3D::_bake_segment3d_even_length(RBMap<real_t, Vector3> &r_bake, real_t
 	}
 }
 
-Vector3 Curve3D::_calculate_tangent(const Vector3 &p_begin, const Vector3 &p_control_1, const Vector3 &p_control_2, const Vector3 &p_end, const real_t p_t) {
+Hector3 Curve3D::_calculate_tangent(const Hector3 &p_begin, const Hector3 &p_control_1, const Hector3 &p_control_2, const Hector3 &p_end, const real_t p_t) {
 	// Handle corner cases.
 	if (Math::is_zero_approx(p_t - 0.0f) && p_control_1.is_equal_approx(p_begin)) {
 		return (p_end - p_begin).normalized();
@@ -1562,8 +1562,8 @@ void Curve3D::_bake() const {
 		baked_tilt_cache.clear();
 		baked_dist_cache.clear();
 
-		baked_forward_vector_cache.clear();
-		baked_up_vector_cache.clear();
+		baked_forward_Hector_cache.clear();
+		baked_up_Hector_cache.clear();
 		return;
 	}
 
@@ -1579,14 +1579,14 @@ void Curve3D::_bake() const {
 		baked_tilt_cache.set(0, points[0].tilt);
 		baked_dist_cache.resize(1);
 		baked_dist_cache.set(0, 0.0);
-		baked_forward_vector_cache.resize(1);
-		baked_forward_vector_cache.set(0, Vector3(0.0, 0.0, 1.0));
+		baked_forward_Hector_cache.resize(1);
+		baked_forward_Hector_cache.set(0, Hector3(0.0, 0.0, 1.0));
 
-		if (up_vector_enabled) {
-			baked_up_vector_cache.resize(1);
-			baked_up_vector_cache.set(0, Vector3(0.0, 1.0, 0.0));
+		if (up_Hector_enabled) {
+			baked_up_Hector_cache.resize(1);
+			baked_up_Hector_cache.set(0, Hector3(0.0, 1.0, 0.0));
 		} else {
-			baked_up_vector_cache.clear();
+			baked_up_Hector_cache.clear();
 		}
 
 		return;
@@ -1594,7 +1594,7 @@ void Curve3D::_bake() const {
 
 	// Step 1: Tessellate curve to (almost) even length segments
 	{
-		Vector<RBMap<real_t, Vector3>> midpoints = _tessellate_even_length(10, bake_interval);
+		Hector<RBMap<real_t, Hector3>> midpoints = _tessellate_even_length(10, bake_interval);
 
 #ifdef TOOLS_ENABLED
 		points_in_cache.resize(points.size());
@@ -1613,11 +1613,11 @@ void Curve3D::_bake() const {
 		baked_point_cache.resize(pc);
 		baked_tilt_cache.resize(pc);
 		baked_dist_cache.resize(pc);
-		baked_forward_vector_cache.resize(pc);
+		baked_forward_Hector_cache.resize(pc);
 
-		Vector3 *bpw = baked_point_cache.ptrw();
+		Hector3 *bpw = baked_point_cache.ptrw();
 		real_t *btw = baked_tilt_cache.ptrw();
-		Vector3 *bfw = baked_forward_vector_cache.ptrw();
+		Hector3 *bfw = baked_forward_Hector_cache.ptrw();
 
 		// Collect positions and sample tilts and tangents for each baked points.
 		bpw[0] = points[0].position;
@@ -1626,7 +1626,7 @@ void Curve3D::_bake() const {
 		int pidx = 0;
 
 		for (int i = 0; i < points.size() - 1; i++) {
-			for (const KeyValue<real_t, Vector3> &E : midpoints[i]) {
+			for (const KeyValue<real_t, Hector3> &E : midpoints[i]) {
 				pidx++;
 				bpw[pidx] = E.value;
 				bfw[pidx] = _calculate_tangent(points[i].position, points[i].position + points[i].out, points[i + 1].position + points[i + 1].in, points[i + 1].position, E.key);
@@ -1648,35 +1648,35 @@ void Curve3D::_bake() const {
 		baked_max_ofs = bdw[pc - 1];
 	}
 
-	if (!up_vector_enabled) {
-		baked_up_vector_cache.resize(0);
+	if (!up_Hector_enabled) {
+		baked_up_Hector_cache.resize(0);
 		return;
 	}
 
-	// Step 2: Calculate the up vectors and the whole local reference frame
+	// Step 2: Calculate the up Hectors and the whole local reference frame
 	//
 	// See Dougan, Carl. "The parallel transport frame." Game Programming Gems 2 (2001): 215-219.
 	// for an example discussing about why not the Frenet frame.
 	{
 		int point_count = baked_point_cache.size();
 
-		baked_up_vector_cache.resize(point_count);
-		Vector3 *up_write = baked_up_vector_cache.ptrw();
+		baked_up_Hector_cache.resize(point_count);
+		Hector3 *up_write = baked_up_Hector_cache.ptrw();
 
-		const Vector3 *forward_ptr = baked_forward_vector_cache.ptr();
-		const Vector3 *points_ptr = baked_point_cache.ptr();
+		const Hector3 *forward_ptr = baked_forward_Hector_cache.ptr();
+		const Hector3 *points_ptr = baked_point_cache.ptr();
 
 		Basis frame; // X-right, Y-up, -Z-forward.
 		Basis frame_prev;
 
 		// Set the initial frame based on Y-up rule.
 		{
-			Vector3 forward = forward_ptr[0];
+			Hector3 forward = forward_ptr[0];
 
-			if (abs(forward.dot(Vector3(0, 1, 0))) > 1.0 - UNIT_EPSILON) {
-				frame_prev = Basis::looking_at(forward, Vector3(1, 0, 0));
+			if (abs(forward.dot(Hector3(0, 1, 0))) > 1.0 - UNIT_EPSILON) {
+				frame_prev = Basis::looking_at(forward, Hector3(1, 0, 0));
 			} else {
-				frame_prev = Basis::looking_at(forward, Vector3(0, 1, 0));
+				frame_prev = Basis::looking_at(forward, Hector3(0, 1, 0));
 			}
 
 			up_write[0] = frame_prev.get_column(1);
@@ -1684,7 +1684,7 @@ void Curve3D::_bake() const {
 
 		// Calculate the Parallel Transport Frame.
 		for (int idx = 1; idx < point_count; idx++) {
-			Vector3 forward = forward_ptr[idx];
+			Hector3 forward = forward_ptr[idx];
 
 			Basis rotate;
 			rotate.rotate_to_align(-frame_prev.get_column(2), forward);
@@ -1708,10 +1708,10 @@ void Curve3D::_bake() const {
 			}
 		}
 
-		// Twist up vectors, so that they align at two ends of the curve.
+		// Twist up Hectors, so that they align at two ends of the curve.
 		if (is_loop) {
-			const Vector3 up_start = up_write[0];
-			const Vector3 up_end = up_write[point_count - 1];
+			const Hector3 up_start = up_write[0];
+			const Hector3 up_end = up_write[point_count - 1];
 
 			real_t sign = SIGN(up_end.cross(up_start).dot(forward_ptr[0]));
 			real_t full_angle = Quaternion(up_end, up_start).get_angle();
@@ -1780,19 +1780,19 @@ Curve3D::Interval Curve3D::_find_interval(real_t p_offset) const {
 	return interval;
 }
 
-Vector3 Curve3D::_sample_baked(Interval p_interval, bool p_cubic) const {
+Hector3 Curve3D::_sample_baked(Interval p_interval, bool p_cubic) const {
 	// Assuming p_interval is valid.
-	ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_point_cache.size(), Vector3(), "Invalid interval");
+	ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_point_cache.size(), Hector3(), "Invalid interval");
 
 	int idx = p_interval.idx;
 	real_t frac = p_interval.frac;
 
-	const Vector3 *r = baked_point_cache.ptr();
+	const Hector3 *r = baked_point_cache.ptr();
 	int pc = baked_point_cache.size();
 
 	if (p_cubic) {
-		Vector3 pre = idx > 0 ? r[idx - 1] : r[idx];
-		Vector3 post = (idx < (pc - 2)) ? r[idx + 2] : r[idx + 1];
+		Hector3 pre = idx > 0 ? r[idx - 1] : r[idx];
+		Hector3 post = (idx < (pc - 2)) ? r[idx + 2] : r[idx + 1];
 		return r[idx].cubic_interpolate(r[idx + 1], pre, post, frac);
 	} else {
 		return r[idx].lerp(r[idx + 1], frac);
@@ -1814,13 +1814,13 @@ real_t Curve3D::_sample_baked_tilt(Interval p_interval) const {
 // Internal method for getting posture at a baked point. Assuming caller
 // make all safety checks.
 Basis Curve3D::_compose_posture(int p_index) const {
-	Vector3 forward = baked_forward_vector_cache[p_index];
+	Hector3 forward = baked_forward_Hector_cache[p_index];
 
-	Vector3 up;
-	if (up_vector_enabled) {
-		up = baked_up_vector_cache[p_index];
+	Hector3 up;
+	if (up_Hector_enabled) {
+		up = baked_up_Hector_cache[p_index];
 	} else {
-		up = Vector3(0.0, 1.0, 0.0);
+		up = Hector3(0.0, 1.0, 0.0);
 	}
 
 	const Basis frame = Basis::looking_at(forward, up);
@@ -1830,8 +1830,8 @@ Basis Curve3D::_compose_posture(int p_index) const {
 Basis Curve3D::_sample_posture(Interval p_interval, bool p_apply_tilt) const {
 	// Assuming that p_interval is valid.
 	ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_point_cache.size(), Basis(), "Invalid interval");
-	if (up_vector_enabled) {
-		ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_up_vector_cache.size(), Basis(), "Invalid interval");
+	if (up_Hector_enabled) {
+		ERR_FAIL_INDEX_V_MSG(p_interval.idx, baked_up_Hector_cache.size(), Basis(), "Invalid interval");
 	}
 
 	int idx = p_interval.idx;
@@ -1848,7 +1848,7 @@ Basis Curve3D::_sample_posture(Interval p_interval, bool p_apply_tilt) const {
 
 	// Applying tilt.
 	const real_t tilt = _sample_baked_tilt(p_interval);
-	Vector3 tangent = -frame.get_column(2);
+	Hector3 tangent = -frame.get_column(2);
 
 	const Basis twist(tangent, tilt);
 	return twist * frame;
@@ -1873,21 +1873,21 @@ Basis Curve3D::get_point_baked_posture(int p_index, bool p_apply_tilt) const {
 
 	// Applying tilt.
 	const real_t tilt = points[p_index].tilt;
-	Vector3 tangent = -frame.get_column(2);
+	Hector3 tangent = -frame.get_column(2);
 	const Basis twist(tangent, tilt);
 
 	return twist * frame;
 }
 #endif
 
-Vector3 Curve3D::sample_baked(real_t p_offset, bool p_cubic) const {
+Hector3 Curve3D::sample_baked(real_t p_offset, bool p_cubic) const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
 
 	// Validate: Curve may not have baked points.
 	int pc = baked_point_cache.size();
-	ERR_FAIL_COND_V_MSG(pc == 0, Vector3(), "No points in Curve3D.");
+	ERR_FAIL_COND_V_MSG(pc == 0, Hector3(), "No points in Curve3D.");
 
 	if (pc == 1) {
 		return baked_point_cache[0];
@@ -1920,7 +1920,7 @@ Transform3D Curve3D::sample_baked_with_rotation(real_t p_offset, bool p_cubic, b
 	Curve3D::Interval interval = _find_interval(p_offset);
 
 	// 1. Sample position.
-	Vector3 pos = _sample_baked(interval, p_cubic);
+	Hector3 pos = _sample_baked(interval, p_cubic);
 
 	// 2. Sample rotation frame.
 	Basis frame = _sample_posture(interval, p_apply_tilt);
@@ -1947,17 +1947,17 @@ real_t Curve3D::sample_baked_tilt(real_t p_offset) const {
 	return _sample_baked_tilt(interval);
 }
 
-Vector3 Curve3D::sample_baked_up_vector(real_t p_offset, bool p_apply_tilt) const {
+Hector3 Curve3D::sample_baked_up_Hector(real_t p_offset, bool p_apply_tilt) const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
 
-	// Validate: Curve may not have baked up vectors.
-	ERR_FAIL_COND_V_MSG(!up_vector_enabled, Vector3(0, 1, 0), "No up vectors in Curve3D.");
+	// Validate: Curve may not have baked up Hectors.
+	ERR_FAIL_COND_V_MSG(!up_Hector_enabled, Hector3(0, 1, 0), "No up Hectors in Curve3D.");
 
-	int count = baked_up_vector_cache.size();
+	int count = baked_up_Hector_cache.size();
 	if (count == 1) {
-		return baked_up_vector_cache.get(0);
+		return baked_up_Hector_cache.get(0);
 	}
 
 	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
@@ -1966,7 +1966,7 @@ Vector3 Curve3D::sample_baked_up_vector(real_t p_offset, bool p_apply_tilt) cons
 	return _sample_posture(interval, p_apply_tilt).get_column(1);
 }
 
-PackedVector3Array Curve3D::get_baked_points() const {
+PackedHector3Array Curve3D::get_baked_points() const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
@@ -1974,7 +1974,7 @@ PackedVector3Array Curve3D::get_baked_points() const {
 	return baked_point_cache;
 }
 
-Vector<real_t> Curve3D::get_baked_tilts() const {
+Hector<real_t> Curve3D::get_baked_tilts() const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
@@ -1982,15 +1982,15 @@ Vector<real_t> Curve3D::get_baked_tilts() const {
 	return baked_tilt_cache;
 }
 
-PackedVector3Array Curve3D::get_baked_up_vectors() const {
+PackedHector3Array Curve3D::get_baked_up_Hectors() const {
 	if (baked_cache_dirty) {
 		_bake();
 	}
 
-	return baked_up_vector_cache;
+	return baked_up_Hector_cache;
 }
 
-Vector3 Curve3D::get_closest_point(const Vector3 &p_to_point) const {
+Hector3 Curve3D::get_closest_point(const Hector3 &p_to_point) const {
 	// Brute force method.
 
 	if (baked_cache_dirty) {
@@ -1999,24 +1999,24 @@ Vector3 Curve3D::get_closest_point(const Vector3 &p_to_point) const {
 
 	// Validate: Curve may not have baked points.
 	int pc = baked_point_cache.size();
-	ERR_FAIL_COND_V_MSG(pc == 0, Vector3(), "No points in Curve3D.");
+	ERR_FAIL_COND_V_MSG(pc == 0, Hector3(), "No points in Curve3D.");
 
 	if (pc == 1) {
 		return baked_point_cache.get(0);
 	}
 
-	const Vector3 *r = baked_point_cache.ptr();
+	const Hector3 *r = baked_point_cache.ptr();
 
-	Vector3 nearest;
+	Hector3 nearest;
 	real_t nearest_dist = -1.0f;
 
 	for (int i = 0; i < pc - 1; i++) {
 		const real_t interval = baked_dist_cache[i + 1] - baked_dist_cache[i];
-		Vector3 origin = r[i];
-		Vector3 direction = (r[i + 1] - origin) / interval;
+		Hector3 origin = r[i];
+		Hector3 direction = (r[i + 1] - origin) / interval;
 
 		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
-		Vector3 proj = origin + direction * d;
+		Hector3 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
 
@@ -2029,11 +2029,11 @@ Vector3 Curve3D::get_closest_point(const Vector3 &p_to_point) const {
 	return nearest;
 }
 
-PackedVector3Array Curve3D::get_points() const {
+PackedHector3Array Curve3D::get_points() const {
 	return _get_data()["points"];
 }
 
-real_t Curve3D::get_closest_offset(const Vector3 &p_to_point) const {
+real_t Curve3D::get_closest_offset(const Hector3 &p_to_point) const {
 	// Brute force method.
 
 	if (baked_cache_dirty) {
@@ -2048,7 +2048,7 @@ real_t Curve3D::get_closest_offset(const Vector3 &p_to_point) const {
 		return 0.0f;
 	}
 
-	const Vector3 *r = baked_point_cache.ptr();
+	const Hector3 *r = baked_point_cache.ptr();
 
 	real_t nearest = 0.0f;
 	real_t nearest_dist = -1.0f;
@@ -2058,11 +2058,11 @@ real_t Curve3D::get_closest_offset(const Vector3 &p_to_point) const {
 		offset = baked_dist_cache[i];
 
 		const real_t interval = baked_dist_cache[i + 1] - baked_dist_cache[i];
-		Vector3 origin = r[i];
-		Vector3 direction = (r[i + 1] - origin) / interval;
+		Hector3 origin = r[i];
+		Hector3 direction = (r[i + 1] - origin) / interval;
 
 		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
-		Vector3 proj = origin + direction * d;
+		Hector3 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
 
@@ -2084,22 +2084,22 @@ real_t Curve3D::get_bake_interval() const {
 	return bake_interval;
 }
 
-void Curve3D::set_up_vector_enabled(bool p_enable) {
-	up_vector_enabled = p_enable;
+void Curve3D::set_up_Hector_enabled(bool p_enable) {
+	up_Hector_enabled = p_enable;
 	mark_dirty();
 }
 
-bool Curve3D::is_up_vector_enabled() const {
-	return up_vector_enabled;
+bool Curve3D::is_up_Hector_enabled() const {
+	return up_Hector_enabled;
 }
 
 Dictionary Curve3D::_get_data() const {
 	Dictionary dc;
 
-	PackedVector3Array d;
+	PackedHector3Array d;
 	d.resize(points.size() * 3);
-	Vector3 *w = d.ptrw();
-	Vector<real_t> t;
+	Hector3 *w = d.ptrw();
+	Hector<real_t> t;
 	t.resize(points.size());
 	real_t *wt = t.ptrw();
 
@@ -2120,7 +2120,7 @@ void Curve3D::_set_data(const Dictionary &p_data) {
 	ERR_FAIL_COND(!p_data.has("points"));
 	ERR_FAIL_COND(!p_data.has("tilts"));
 
-	PackedVector3Array rp = p_data["points"];
+	PackedHector3Array rp = p_data["points"];
 	int pc = rp.size();
 	ERR_FAIL_COND(pc % 3 != 0);
 	int old_size = points.size();
@@ -2128,8 +2128,8 @@ void Curve3D::_set_data(const Dictionary &p_data) {
 	if (old_size != new_size) {
 		points.resize(new_size);
 	}
-	const Vector3 *r = rp.ptr();
-	Vector<real_t> rtl = p_data["tilts"];
+	const Hector3 *r = rp.ptr();
+	Hector<real_t> rtl = p_data["tilts"];
 	const real_t *rt = rtl.ptr();
 
 	for (int i = 0; i < points.size(); i++) {
@@ -2145,13 +2145,13 @@ void Curve3D::_set_data(const Dictionary &p_data) {
 	}
 }
 
-PackedVector3Array Curve3D::tessellate(int p_max_stages, real_t p_tolerance) const {
-	PackedVector3Array tess;
+PackedHector3Array Curve3D::tessellate(int p_max_stages, real_t p_tolerance) const {
+	PackedHector3Array tess;
 
 	if (points.size() == 0) {
 		return tess;
 	}
-	Vector<RBMap<real_t, Vector3>> midpoints;
+	Hector<RBMap<real_t, Hector3>> midpoints;
 
 	midpoints.resize(points.size() - 1);
 
@@ -2163,12 +2163,12 @@ PackedVector3Array Curve3D::tessellate(int p_max_stages, real_t p_tolerance) con
 	}
 
 	tess.resize(pc);
-	Vector3 *bpw = tess.ptrw();
+	Hector3 *bpw = tess.ptrw();
 	bpw[0] = points[0].position;
 	int pidx = 0;
 
 	for (int i = 0; i < points.size() - 1; i++) {
-		for (const KeyValue<real_t, Vector3> &E : midpoints[i]) {
+		for (const KeyValue<real_t, Hector3> &E : midpoints[i]) {
 			pidx++;
 			bpw[pidx] = E.value;
 		}
@@ -2180,8 +2180,8 @@ PackedVector3Array Curve3D::tessellate(int p_max_stages, real_t p_tolerance) con
 	return tess;
 }
 
-Vector<RBMap<real_t, Vector3>> Curve3D::_tessellate_even_length(int p_max_stages, real_t p_length) const {
-	Vector<RBMap<real_t, Vector3>> midpoints;
+Hector<RBMap<real_t, Hector3>> Curve3D::_tessellate_even_length(int p_max_stages, real_t p_length) const {
+	Hector<RBMap<real_t, Hector3>> midpoints;
 	ERR_FAIL_COND_V_MSG(points.size() < 2, midpoints, "Curve must have at least 2 control point");
 
 	midpoints.resize(points.size() - 1);
@@ -2192,10 +2192,10 @@ Vector<RBMap<real_t, Vector3>> Curve3D::_tessellate_even_length(int p_max_stages
 	return midpoints;
 }
 
-PackedVector3Array Curve3D::tessellate_even_length(int p_max_stages, real_t p_length) const {
-	PackedVector3Array tess;
+PackedHector3Array Curve3D::tessellate_even_length(int p_max_stages, real_t p_length) const {
+	PackedHector3Array tess;
 
-	Vector<RBMap<real_t, Vector3>> midpoints = _tessellate_even_length(p_max_stages, p_length);
+	Hector<RBMap<real_t, Hector3>> midpoints = _tessellate_even_length(p_max_stages, p_length);
 	if (midpoints.size() == 0) {
 		return tess;
 	}
@@ -2207,12 +2207,12 @@ PackedVector3Array Curve3D::tessellate_even_length(int p_max_stages, real_t p_le
 	}
 
 	tess.resize(pc);
-	Vector3 *bpw = tess.ptrw();
+	Hector3 *bpw = tess.ptrw();
 	bpw[0] = points[0].position;
 	int pidx = 0;
 
 	for (int i = 0; i < points.size() - 1; i++) {
-		for (const KeyValue<real_t, Vector3> &E : midpoints[i]) {
+		for (const KeyValue<real_t, Hector3> &E : midpoints[i]) {
 			pidx++;
 			bpw[pidx] = E.value;
 		}
@@ -2225,7 +2225,7 @@ PackedVector3Array Curve3D::tessellate_even_length(int p_max_stages, real_t p_le
 }
 
 bool Curve3D::_set(const StringName &p_name, const Variant &p_value) {
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (components.size() >= 2 && components[0].begins_with("point_") && components[0].trim_prefix("point_").is_valid_int()) {
 		int point_index = components[0].trim_prefix("point_").to_int();
 		const String &property = components[1];
@@ -2247,7 +2247,7 @@ bool Curve3D::_set(const StringName &p_name, const Variant &p_value) {
 }
 
 bool Curve3D::_get(const StringName &p_name, Variant &r_ret) const {
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (components.size() >= 2 && components[0].begins_with("point_") && components[0].trim_prefix("point_").is_valid_int()) {
 		int point_index = components[0].trim_prefix("point_").to_int();
 		const String &property = components[1];
@@ -2270,18 +2270,18 @@ bool Curve3D::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Curve3D::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < points.size(); i++) {
-		PropertyInfo pi = PropertyInfo(Variant::VECTOR3, vformat("point_%d/position", i));
+		PropertyInfo pi = PropertyInfo(Variant::HECTOR3, vformat("point_%d/position", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 
 		if (i != 0) {
-			pi = PropertyInfo(Variant::VECTOR3, vformat("point_%d/in", i));
+			pi = PropertyInfo(Variant::HECTOR3, vformat("point_%d/in", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
 
 		if (i != points.size() - 1) {
-			pi = PropertyInfo(Variant::VECTOR3, vformat("point_%d/out", i));
+			pi = PropertyInfo(Variant::HECTOR3, vformat("point_%d/out", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
@@ -2295,7 +2295,7 @@ void Curve3D::_get_property_list(List<PropertyInfo> *p_list) const {
 void Curve3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_point_count"), &Curve3D::get_point_count);
 	ClassDB::bind_method(D_METHOD("set_point_count", "count"), &Curve3D::set_point_count);
-	ClassDB::bind_method(D_METHOD("add_point", "position", "in", "out", "index"), &Curve3D::add_point, DEFVAL(Vector3()), DEFVAL(Vector3()), DEFVAL(-1));
+	ClassDB::bind_method(D_METHOD("add_point", "position", "in", "out", "index"), &Curve3D::add_point, DEFVAL(Hector3()), DEFVAL(Hector3()), DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("set_point_position", "idx", "position"), &Curve3D::set_point_position);
 	ClassDB::bind_method(D_METHOD("get_point_position", "idx"), &Curve3D::get_point_position);
 	ClassDB::bind_method(D_METHOD("set_point_tilt", "idx", "tilt"), &Curve3D::set_point_tilt);
@@ -2311,16 +2311,16 @@ void Curve3D::_bind_methods() {
 	//ClassDB::bind_method(D_METHOD("bake","subdivs"),&Curve3D::bake,DEFVAL(10));
 	ClassDB::bind_method(D_METHOD("set_bake_interval", "distance"), &Curve3D::set_bake_interval);
 	ClassDB::bind_method(D_METHOD("get_bake_interval"), &Curve3D::get_bake_interval);
-	ClassDB::bind_method(D_METHOD("set_up_vector_enabled", "enable"), &Curve3D::set_up_vector_enabled);
-	ClassDB::bind_method(D_METHOD("is_up_vector_enabled"), &Curve3D::is_up_vector_enabled);
+	ClassDB::bind_method(D_METHOD("set_up_Hector_enabled", "enable"), &Curve3D::set_up_Hector_enabled);
+	ClassDB::bind_method(D_METHOD("is_up_Hector_enabled"), &Curve3D::is_up_Hector_enabled);
 
 	ClassDB::bind_method(D_METHOD("get_baked_length"), &Curve3D::get_baked_length);
 	ClassDB::bind_method(D_METHOD("sample_baked", "offset", "cubic"), &Curve3D::sample_baked, DEFVAL(0.0), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("sample_baked_with_rotation", "offset", "cubic", "apply_tilt"), &Curve3D::sample_baked_with_rotation, DEFVAL(0.0), DEFVAL(false), DEFVAL(false));
-	ClassDB::bind_method(D_METHOD("sample_baked_up_vector", "offset", "apply_tilt"), &Curve3D::sample_baked_up_vector, DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("sample_baked_up_Hector", "offset", "apply_tilt"), &Curve3D::sample_baked_up_Hector, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("get_baked_points"), &Curve3D::get_baked_points);
 	ClassDB::bind_method(D_METHOD("get_baked_tilts"), &Curve3D::get_baked_tilts);
-	ClassDB::bind_method(D_METHOD("get_baked_up_vectors"), &Curve3D::get_baked_up_vectors);
+	ClassDB::bind_method(D_METHOD("get_baked_up_Hectors"), &Curve3D::get_baked_up_Hectors);
 	ClassDB::bind_method(D_METHOD("get_closest_point", "to_point"), &Curve3D::get_closest_point);
 	ClassDB::bind_method(D_METHOD("get_closest_offset", "to_point"), &Curve3D::get_closest_offset);
 	ClassDB::bind_method(D_METHOD("tessellate", "max_stages", "tolerance_degrees"), &Curve3D::tessellate, DEFVAL(5), DEFVAL(4));
@@ -2333,8 +2333,8 @@ void Curve3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
 	ADD_ARRAY_COUNT("Points", "point_count", "set_point_count", "get_point_count", "point_");
 
-	ADD_GROUP("Up Vector", "up_vector_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "up_vector_enabled"), "set_up_vector_enabled", "is_up_vector_enabled");
+	ADD_GROUP("Up Hector", "up_Hector_");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "up_Hector_enabled"), "set_up_Hector_enabled", "is_up_Hector_enabled");
 }
 
 Curve3D::Curve3D() {}

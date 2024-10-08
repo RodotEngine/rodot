@@ -118,7 +118,7 @@ void MultiMeshEditor::_populate() {
 
 	Transform3D geom_xform = node->get_global_transform().affine_inverse() * ss_instance->get_global_transform();
 
-	Vector<Face3> geometry = ss_instance->get_mesh()->get_faces();
+	Hector<Face3> geometry = ss_instance->get_mesh()->get_faces();
 
 	if (geometry.size() == 0) {
 		err_dialog->set_text(TTR("Surface source is invalid (no faces)."));
@@ -137,7 +137,7 @@ void MultiMeshEditor::_populate() {
 		}
 	}
 
-	Vector<Face3> faces = geometry;
+	Hector<Face3> faces = geometry;
 	int facecount = faces.size();
 	ERR_FAIL_COND_MSG(!facecount, "Parent has no solid faces to populate.");
 
@@ -173,11 +173,11 @@ void MultiMeshEditor::_populate() {
 	int axis = populate_axis->get_selected();
 
 	Transform3D axis_xform;
-	if (axis == Vector3::AXIS_Z) {
-		axis_xform.rotate(Vector3(1, 0, 0), -Math_PI * 0.5);
+	if (axis == Hector3::AXIS_Z) {
+		axis_xform.rotate(Hector3(1, 0, 0), -Math_PI * 0.5);
 	}
-	if (axis == Vector3::AXIS_X) {
-		axis_xform.rotate(Vector3(0, 0, 1), -Math_PI * 0.5);
+	if (axis == Hector3::AXIS_X) {
+		axis_xform.rotate(Hector3(0, 0, 1), -Math_PI * 0.5);
 	}
 
 	for (int i = 0; i < instance_count; i++) {
@@ -192,9 +192,9 @@ void MultiMeshEditor::_populate() {
 		Face3 face = r[index];
 		//now compute some position inside the face...
 
-		Vector3 pos = face.get_random_point_inside();
-		Vector3 normal = face.get_plane().normal;
-		Vector3 op_axis = (face.vertex[0] - face.vertex[1]).normalized();
+		Hector3 pos = face.get_random_point_inside();
+		Hector3 normal = face.get_plane().normal;
+		Hector3 op_axis = (face.vertex[0] - face.vertex[1]).normalized();
 
 		Transform3D xform;
 
@@ -210,7 +210,7 @@ void MultiMeshEditor::_populate() {
 		xform.basis = post_xform * xform.basis;
 		//xform.basis.orthonormalize();
 
-		xform.basis.scale(Vector3(1, 1, 1) * (_scale + Math::random(-_scale_random, _scale_random)));
+		xform.basis.scale(Hector3(1, 1, 1) * (_scale + Math::random(-_scale_random, _scale_random)));
 
 		multimesh->set_instance_transform(i, xform);
 	}
@@ -353,7 +353,7 @@ MultiMeshEditor::MultiMeshEditor() {
 
 	populate_dialog->get_ok_button()->connect(SceneStringName(pressed), callable_mp(this, &MultiMeshEditor::_populate));
 	std = memnew(SceneTreeDialog);
-	Vector<StringName> valid_types;
+	Hector<StringName> valid_types;
 	valid_types.push_back("MeshInstance3D");
 	std->set_valid_types(valid_types);
 	populate_dialog->add_child(std);

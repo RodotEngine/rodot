@@ -170,7 +170,7 @@ private:
 	} clear_button_status;
 
 	uint64_t last_dblclk = 0;
-	Vector2 last_dblclk_pos;
+	Hector2 last_dblclk_pos;
 
 	bool caret_blink_enabled = false;
 	bool caret_force_displayed = false;
@@ -231,7 +231,7 @@ private:
 	float get_scroll_offset() const;
 
 	void set_caret_at_pixel_pos(int p_x);
-	Vector2 get_caret_pixel_pos();
+	Hector2 get_caret_pixel_pos();
 
 	void _reset_caret_blink_timer();
 	void _toggle_draw_caret();

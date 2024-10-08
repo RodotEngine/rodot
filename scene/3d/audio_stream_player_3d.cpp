@@ -45,15 +45,15 @@
 class Spcap {
 private:
 	struct Speaker {
-		Vector3 direction;
+		Hector3 direction;
 		real_t effective_number_of_speakers = 0; // precalculated
 		mutable real_t squared_gain = 0; // temporary
 	};
 
-	Vector<Speaker> speakers;
+	Hector<Speaker> speakers;
 
 public:
-	Spcap(unsigned int speaker_count, const Vector3 *speaker_directions) {
+	Spcap(unsigned int speaker_count, const Hector3 *speaker_directions) {
 		speakers.resize(speaker_count);
 		Speaker *w = speakers.ptrw();
 		for (unsigned int speaker_num = 0; speaker_num < speaker_count; speaker_num++) {
@@ -70,11 +70,11 @@ public:
 		return (unsigned int)speakers.size();
 	}
 
-	Vector3 get_speaker_direction(unsigned int index) const {
+	Hector3 get_speaker_direction(unsigned int index) const {
 		return speakers.ptr()[index].direction;
 	}
 
-	void calculate(const Vector3 &source_direction, real_t tightness, unsigned int volume_count, real_t *volumes) const {
+	void calculate(const Hector3 &source_direction, real_t tightness, unsigned int volume_count, real_t *volumes) const {
 		const Speaker *r = speakers.ptr();
 		real_t sum_squared_gains = 0.0;
 		for (unsigned int speaker_num = 0; speaker_num < (unsigned int)speakers.size(); speaker_num++) {
@@ -90,17 +90,17 @@ public:
 };
 
 //TODO: hardcoded main speaker directions for 2, 3.1, 5.1 and 7.1 setups - these are simplified and could also be made configurable
-static const Vector3 speaker_directions[7] = {
-	Vector3(-1.0, 0.0, -1.0).normalized(), // front-left
-	Vector3(1.0, 0.0, -1.0).normalized(), // front-right
-	Vector3(0.0, 0.0, -1.0).normalized(), // center
-	Vector3(-1.0, 0.0, 1.0).normalized(), // rear-left
-	Vector3(1.0, 0.0, 1.0).normalized(), // rear-right
-	Vector3(-1.0, 0.0, 0.0).normalized(), // side-left
-	Vector3(1.0, 0.0, 0.0).normalized(), // side-right
+static const Hector3 speaker_directions[7] = {
+	Hector3(-1.0, 0.0, -1.0).normalized(), // front-left
+	Hector3(1.0, 0.0, -1.0).normalized(), // front-right
+	Hector3(0.0, 0.0, -1.0).normalized(), // center
+	Hector3(-1.0, 0.0, 1.0).normalized(), // rear-left
+	Hector3(1.0, 0.0, 1.0).normalized(), // rear-right
+	Hector3(-1.0, 0.0, 0.0).normalized(), // side-left
+	Hector3(1.0, 0.0, 0.0).normalized(), // side-right
 };
 
-void AudioStreamPlayer3D::_calc_output_vol(const Vector3 &source_dir, real_t tightness, Vector<AudioFrame> &output) {
+void AudioStreamPlayer3D::_calc_output_vol(const Hector3 &source_dir, real_t tightness, Hector<AudioFrame> &output) {
 	unsigned int speaker_count = 0; // only main speakers (no LFE)
 	switch (AudioServer::get_singleton()->get_speaker_mode()) {
 		case AudioServer::SPEAKER_MODE_STEREO:
@@ -141,7 +141,7 @@ void AudioStreamPlayer3D::_calc_output_vol(const Vector3 &source_dir, real_t tig
 	}
 }
 
-void AudioStreamPlayer3D::_calc_reverb_vol(Area3D *area, Vector3 listener_area_pos, Vector<AudioFrame> direct_path_vol, Vector<AudioFrame> &reverb_vol) {
+void AudioStreamPlayer3D::_calc_reverb_vol(Area3D *area, Hector3 listener_area_pos, Hector<AudioFrame> direct_path_vol, Hector<AudioFrame> &reverb_vol) {
 	reverb_vol.resize(4);
 	reverb_vol.write[0] = AudioFrame(0, 0);
 	reverb_vol.write[1] = AudioFrame(0, 0);
@@ -162,7 +162,7 @@ void AudioStreamPlayer3D::_calc_reverb_vol(Area3D *area, Vector3 listener_area_p
 
 		if (attenuation < 1.0) {
 			//pan the uniform sound
-			Vector3 rev_pos = listener_area_pos;
+			Hector3 rev_pos = listener_area_pos;
 			rev_pos.y = 0;
 			rev_pos.normalize();
 
@@ -173,8 +173,8 @@ void AudioStreamPlayer3D::_calc_reverb_vol(Area3D *area, Vector3 listener_area_p
 
 			if (channel_count >= 3) {
 				// Center pair + Side pair
-				float xl = Vector3(-1, 0, -1).normalized().dot(rev_pos) * 0.5 + 0.5;
-				float xr = Vector3(1, 0, -1).normalized().dot(rev_pos) * 0.5 + 0.5;
+				float xl = Hector3(-1, 0, -1).normalized().dot(rev_pos) * 0.5 + 0.5;
+				float xr = Hector3(1, 0, -1).normalized().dot(rev_pos) * 0.5 + 0.5;
 
 				reverb_vol.write[1].left = xl;
 				reverb_vol.write[1].right = xr;
@@ -260,16 +260,16 @@ void AudioStreamPlayer3D::_notification(int p_what) {
 
 		case NOTIFICATION_INTERNAL_PHYSICS_PROCESS: {
 			// Update anything related to position first, if possible of course.
-			Vector<AudioFrame> volume_vector;
+			Hector<AudioFrame> volume_Hector;
 			if (setplay.get() > 0 || (internal->active.is_set() && last_mix_count != AudioServer::get_singleton()->get_mix_count()) || force_update_panning) {
 				force_update_panning = false;
-				volume_vector = _update_panning();
+				volume_Hector = _update_panning();
 			}
 
 			if (setplayback.is_valid() && setplay.get() >= 0) {
 				internal->active.set();
-				HashMap<StringName, Vector<AudioFrame>> bus_map;
-				bus_map[_get_actual_bus()] = volume_vector;
+				HashMap<StringName, Hector<AudioFrame>> bus_map;
+				bus_map[_get_actual_bus()] = volume_Hector;
 				AudioServer::get_singleton()->start_playback_stream(setplayback, bus_map, setplay.get(), actual_pitch_scale, linear_attenuation, attenuation_filter_cutoff_hz);
 				setplayback.unref();
 				setplay.set(-1);
@@ -289,7 +289,7 @@ Area3D *AudioStreamPlayer3D::_get_overriding_area() {
 	Ref<World3D> world_3d = get_world_3d();
 	ERR_FAIL_COND_V(world_3d.is_null(), nullptr);
 
-	Vector3 global_pos = get_global_transform().origin;
+	Hector3 global_pos = get_global_transform().origin;
 
 	PhysicsDirectSpaceState3D *space_state = PhysicsServer3D::get_singleton()->space_get_direct_state(world_3d->get_space());
 
@@ -332,28 +332,28 @@ StringName AudioStreamPlayer3D::_get_actual_bus() {
 }
 
 // Interacts with PhysicsServer3D, so can only be called during _physics_process.
-Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
-	Vector<AudioFrame> output_volume_vector;
-	output_volume_vector.resize(4);
-	for (AudioFrame &frame : output_volume_vector) {
+Hector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
+	Hector<AudioFrame> output_volume_Hector;
+	output_volume_Hector.resize(4);
+	for (AudioFrame &frame : output_volume_Hector) {
 		frame = AudioFrame(0, 0);
 	}
 
 	if (!internal->active.is_set() || internal->stream.is_null()) {
-		return output_volume_vector;
+		return output_volume_Hector;
 	}
 
-	Vector3 linear_velocity;
+	Hector3 linear_velocity;
 
 	//compute linear velocity for doppler
 	if (doppler_tracking != DOPPLER_TRACKING_DISABLED) {
 		linear_velocity = velocity_tracker->get_tracked_linear_velocity();
 	}
 
-	Vector3 global_pos = get_global_transform().origin;
+	Hector3 global_pos = get_global_transform().origin;
 
 	Ref<World3D> world_3d = get_world_3d();
-	ERR_FAIL_COND_V(world_3d.is_null(), output_volume_vector);
+	ERR_FAIL_COND_V(world_3d.is_null(), output_volume_Hector);
 
 	HashSet<Camera3D *> cameras = world_3d->get_cameras();
 	cameras.insert(get_viewport()->get_camera_3d());
@@ -381,12 +381,12 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 			listener_is_camera = false;
 		}
 
-		Vector3 local_pos = listener_node->get_global_transform().orthonormalized().affine_inverse().xform(global_pos);
+		Hector3 local_pos = listener_node->get_global_transform().orthonormalized().affine_inverse().xform(global_pos);
 
 		float dist = local_pos.length();
 
-		Vector3 area_sound_pos;
-		Vector3 listener_area_pos;
+		Hector3 area_sound_pos;
+		Hector3 listener_area_pos;
 
 		Area3D *area = _get_overriding_area();
 
@@ -403,7 +403,7 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 			}
 			if (dist > total_max || total_max > max_distance) {
 				if (!was_further_than_max_distance_last_frame) {
-					HashMap<StringName, Vector<AudioFrame>> bus_volumes;
+					HashMap<StringName, Hector<AudioFrame>> bus_volumes;
 					for (Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {
 						// So the player gets muted and mostly stops mixing when out of range.
 						AudioServer::get_singleton()->set_playback_bus_volumes_linear(playback, bus_volumes);
@@ -423,7 +423,7 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 		float db_att = (1.0 - MIN(1.0, multiplier)) * attenuation_filter_db;
 
 		if (emission_angle_enabled) {
-			Vector3 listenertopos = global_pos - listener_node->get_global_transform().origin;
+			Hector3 listenertopos = global_pos - listener_node->get_global_transform().origin;
 			float c = listenertopos.normalized().dot(get_global_transform().basis.get_column(2).normalized()); //it's z negative
 			float angle = Math::rad_to_deg(Math::acos(c));
 			if (angle > emission_angle) {
@@ -438,27 +438,27 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 		// Bake in a constant factor here to allow the project setting defaults for 2d and 3d to be normalized to 1.0.
 		float tightness = cached_global_panning_strength * 2.0f;
 		tightness *= panning_strength;
-		_calc_output_vol(local_pos.normalized(), tightness, output_volume_vector);
+		_calc_output_vol(local_pos.normalized(), tightness, output_volume_Hector);
 
 		for (unsigned int k = 0; k < 4; k++) {
-			output_volume_vector.write[k] = multiplier * output_volume_vector[k];
+			output_volume_Hector.write[k] = multiplier * output_volume_Hector[k];
 		}
 
-		HashMap<StringName, Vector<AudioFrame>> bus_volumes;
+		HashMap<StringName, Hector<AudioFrame>> bus_volumes;
 		if (area) {
 			if (area->is_overriding_audio_bus()) {
 				//override audio bus
-				bus_volumes[area->get_audio_bus_name()] = output_volume_vector;
+				bus_volumes[area->get_audio_bus_name()] = output_volume_Hector;
 			}
 
 			if (area->is_using_reverb_bus()) {
 				StringName reverb_bus_name = area->get_reverb_bus_name();
-				Vector<AudioFrame> reverb_vol;
-				_calc_reverb_vol(area, listener_area_pos, output_volume_vector, reverb_vol);
+				Hector<AudioFrame> reverb_vol;
+				_calc_reverb_vol(area, listener_area_pos, output_volume_Hector, reverb_vol);
 				bus_volumes[reverb_bus_name] = reverb_vol;
 			}
 		} else {
-			bus_volumes[internal->bus] = output_volume_vector;
+			bus_volumes[internal->bus] = output_volume_Hector;
 		}
 
 		for (Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {
@@ -466,15 +466,15 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 		}
 
 		if (doppler_tracking != DOPPLER_TRACKING_DISABLED) {
-			Vector3 listener_velocity;
+			Hector3 listener_velocity;
 
 			if (listener_is_camera) {
 				listener_velocity = camera->get_doppler_tracked_velocity();
 			}
 
-			Vector3 local_velocity = listener_node->get_global_transform().orthonormalized().basis.xform_inv(linear_velocity - listener_velocity);
+			Hector3 local_velocity = listener_node->get_global_transform().orthonormalized().basis.xform_inv(linear_velocity - listener_velocity);
 
-			if (local_velocity != Vector3()) {
+			if (local_velocity != Hector3()) {
 				float approaching = local_pos.normalized().dot(local_velocity.normalized());
 				float velocity = local_velocity.length();
 				float speed_of_sound = 343.0;
@@ -499,7 +499,7 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 			}
 		}
 	}
-	return output_volume_vector;
+	return output_volume_Hector;
 }
 
 void AudioStreamPlayer3D::set_stream(Ref<AudioStream> p_stream) {

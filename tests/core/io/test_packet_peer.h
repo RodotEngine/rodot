@@ -133,7 +133,7 @@ TEST_CASE("[PacketPeer][PacketPeerStream] Get packet buffer") {
 	spb.instantiate();
 	// First 4 bytes are the length of the string.
 	CharString cs = godot_rules.ascii();
-	Vector<uint8_t> buffer = { (uint8_t)(cs.length() + 1), 0, 0, 0 };
+	Hector<uint8_t> buffer = { (uint8_t)(cs.length() + 1), 0, 0, 0 };
 	buffer.resize_zeroed(4 + cs.length() + 1);
 	memcpy(buffer.ptrw() + 4, cs.get_data(), cs.length());
 	spb->set_data_array(buffer);
@@ -156,7 +156,7 @@ TEST_CASE("[PacketPeer][PacketPeerStream] Get packet buffer from an empty peer")
 	pps.instantiate();
 	pps->set_stream_peer(spb);
 
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	ERR_PRINT_OFF;
 	CHECK_EQ(pps->get_packet_buffer(buffer), Error::ERR_UNAVAILABLE);
 	ERR_PRINT_ON;
@@ -179,7 +179,7 @@ TEST_CASE("[PacketPeer][PacketPeerStream] Put packet buffer") {
 	CHECK_EQ(spb->get_string(), godot_rules);
 	// First 4 bytes are the length of the string.
 	CharString cs = godot_rules.ascii();
-	Vector<uint8_t> buffer = { (uint8_t)cs.length(), 0, 0, 0 };
+	Hector<uint8_t> buffer = { (uint8_t)cs.length(), 0, 0, 0 };
 	buffer.resize(4 + cs.length());
 	memcpy(buffer.ptrw() + 4, cs.get_data(), cs.length());
 	CHECK_EQ(spb->get_data_array(), buffer);
@@ -193,7 +193,7 @@ TEST_CASE("[PacketPeer][PacketPeerStream] Put packet buffer when is empty") {
 	pps.instantiate();
 	pps->set_stream_peer(spb);
 
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	CHECK_EQ(pps->put_packet_buffer(buffer), Error::OK);
 
 	CHECK_EQ(spb->get_size(), 0);

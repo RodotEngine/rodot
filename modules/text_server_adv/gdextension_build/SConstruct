@@ -706,7 +706,7 @@ thirdparty_icu_sources = [
     "common/utrie_swap.cpp",
     "common/uts46.cpp",
     "common/utypes.cpp",
-    "common/uvector.cpp",
+    "common/uHector.cpp",
     "common/uvectr32.cpp",
     "common/uvectr64.cpp",
     "common/wintz.cpp",

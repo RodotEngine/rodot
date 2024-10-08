@@ -345,7 +345,7 @@ void Viewport::_sub_window_update(Window *p_window) {
 
 		bool pressed = gui.subwindow_focused == sw.window && gui.subwindow_drag == SUB_WINDOW_DRAG_CLOSE && gui.subwindow_drag_close_inside;
 		Ref<Texture2D> close_icon = pressed ? p_window->theme_cache.close_pressed : p_window->theme_cache.close;
-		close_icon->draw(sw.canvas_item, r.position + Vector2(r.size.width - close_h_ofs, -close_v_ofs));
+		close_icon->draw(sw.canvas_item, r.position + Hector2(r.size.width - close_h_ofs, -close_v_ofs));
 	}
 
 	RS::get_singleton()->canvas_item_add_texture_rect(sw.canvas_item, r, sw.window->get_texture()->get_rid());
@@ -617,17 +617,17 @@ void Viewport::_notification(int p_what) {
 				RenderingServer::get_singleton()->canvas_item_clear(contact_2d_debug);
 				RenderingServer::get_singleton()->canvas_item_set_draw_index(contact_2d_debug, 0xFFFFF); //very high index
 
-				Vector<Vector2> points = PhysicsServer2D::get_singleton()->space_get_contacts(find_world_2d()->get_space());
+				Hector<Hector2> points = PhysicsServer2D::get_singleton()->space_get_contacts(find_world_2d()->get_space());
 				int point_count = PhysicsServer2D::get_singleton()->space_get_contact_count(find_world_2d()->get_space());
 				Color ccol = get_tree()->get_debug_collision_contact_color();
 
 				for (int i = 0; i < point_count; i++) {
-					RenderingServer::get_singleton()->canvas_item_add_rect(contact_2d_debug, Rect2(points[i] - Vector2(2, 2), Vector2(5, 5)), ccol);
+					RenderingServer::get_singleton()->canvas_item_add_rect(contact_2d_debug, Rect2(points[i] - Hector2(2, 2), Hector2(5, 5)), ccol);
 				}
 			}
 #ifndef _3D_DISABLED
 			if (get_tree()->is_debugging_collisions_hint() && contact_3d_debug_multimesh.is_valid()) {
-				Vector<Vector3> points = PhysicsServer3D::get_singleton()->space_get_contacts(find_world_3d()->get_space());
+				Hector<Hector3> points = PhysicsServer3D::get_singleton()->space_get_contacts(find_world_3d()->get_space());
 				int point_count = PhysicsServer3D::get_singleton()->space_get_contact_count(find_world_3d()->get_space());
 
 				RS::get_singleton()->multimesh_set_visible_instances(contact_3d_debug_multimesh, point_count);
@@ -703,7 +703,7 @@ void Viewport::_process_picking() {
 	_drop_physics_mouseover(true);
 
 #ifndef _3D_DISABLED
-	Vector2 last_pos(1e20, 1e20);
+	Hector2 last_pos(1e20, 1e20);
 	CollisionObject3D *last_object = nullptr;
 	ObjectID last_id;
 	PhysicsDirectSpaceState3D::RayResult result;
@@ -760,7 +760,7 @@ void Viewport::_process_picking() {
 		Ref<InputEvent> ev = physics_picking_events.front()->get();
 		physics_picking_events.pop_front();
 
-		Vector2 pos;
+		Hector2 pos;
 		bool is_mouse = false;
 
 		Ref<InputEventMouseMotion> mm = ev;
@@ -808,7 +808,7 @@ void Viewport::_process_picking() {
 					canvas_layer_id = ObjectID();
 				}
 
-				Vector2 point = canvas_layer_transform.affine_inverse().xform(pos);
+				Hector2 point = canvas_layer_transform.affine_inverse().xform(pos);
 
 				PhysicsDirectSpaceState2D::PointParameters point_params;
 				point_params.position = point;
@@ -910,8 +910,8 @@ void Viewport::_process_picking() {
 			}
 		} else {
 			if (camera_3d) {
-				Vector3 from = camera_3d->project_ray_origin(pos);
-				Vector3 dir = camera_3d->project_ray_normal(pos);
+				Hector3 from = camera_3d->project_ray_origin(pos);
+				Hector3 dir = camera_3d->project_ray_normal(pos);
 				real_t depth_far = camera_3d->get_far();
 
 				PhysicsDirectSpaceState3D *space = PhysicsServer3D::get_singleton()->space_get_direct_state(find_world_3d()->get_space());
@@ -1346,8 +1346,8 @@ Ref<InputEvent> Viewport::_make_input_local(const Ref<InputEvent> &ev) {
 	return ev->xformed_by(ai);
 }
 
-Vector2 Viewport::get_mouse_position() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+Hector2 Viewport::get_mouse_position() const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	if (get_section_root_viewport() != SceneTree::get_singleton()->get_root()) {
 		// Rely on the most recent mouse coordinate from an InputEventMouse in push_input.
 		// In this case get_screen_transform is not applicable, because it is ambiguous.
@@ -1356,7 +1356,7 @@ Vector2 Viewport::get_mouse_position() const {
 		Transform2D xform = get_screen_transform_internal(true);
 		if (xform.determinant() == 0) {
 			// Screen transform can be non-invertible when the Window is minimized.
-			return Vector2();
+			return Hector2();
 		}
 		return xform.affine_inverse().xform(DisplayServer::get_singleton()->mouse_get_position());
 	} else {
@@ -1365,10 +1365,10 @@ Vector2 Viewport::get_mouse_position() const {
 	}
 }
 
-void Viewport::warp_mouse(const Vector2 &p_position) {
+void Viewport::warp_mouse(const Hector2 &p_position) {
 	ERR_MAIN_THREAD_GUARD;
 	Transform2D xform = get_screen_transform_internal();
-	Vector2 gpos = xform.xform(p_position);
+	Hector2 gpos = xform.xform(p_position);
 	Input::get_singleton()->warp_mouse(gpos);
 }
 
@@ -1395,8 +1395,8 @@ void Viewport::_gui_cancel_tooltip() {
 	}
 }
 
-String Viewport::_gui_get_tooltip(Control *p_control, const Vector2 &p_pos, Control **r_tooltip_owner) {
-	Vector2 pos = p_pos;
+String Viewport::_gui_get_tooltip(Control *p_control, const Hector2 &p_pos, Control **r_tooltip_owner) {
+	Hector2 pos = p_pos;
 	String tooltip;
 
 	while (p_control) {
@@ -1751,7 +1751,7 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
 				gui.mouse_focus_mask.set_flag(mouse_button_to_mask(mb->get_button_index()));
 
 				if (mb->get_button_index() == MouseButton::LEFT) {
-					gui.drag_accum = Vector2();
+					gui.drag_accum = Hector2();
 					gui.drag_attempted = false;
 				}
 			}
@@ -1903,8 +1903,8 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
 		if (over) {
 			Transform2D localizer = over->get_global_transform_with_canvas().affine_inverse();
 			Size2 pos = localizer.xform(mpos);
-			Vector2 velocity = localizer.basis_xform(mm->get_velocity());
-			Vector2 rel = localizer.basis_xform(mm->get_relative());
+			Hector2 velocity = localizer.basis_xform(mm->get_velocity());
+			Hector2 rel = localizer.basis_xform(mm->get_relative());
 
 			mm = mm->xformed_by(Transform2D()); // Make a copy.
 
@@ -1954,7 +1954,7 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
 			Control::CursorShape cursor_shape = Control::CURSOR_ARROW;
 			{
 				Control *c = over;
-				Vector2 cpos = pos;
+				Hector2 cpos = pos;
 				while (c) {
 					if (!gui.mouse_focus_mask.is_empty() || c->has_point(cpos)) {
 						cursor_shape = c->get_cursor_shape(cpos);
@@ -2071,8 +2071,8 @@ void Viewport::_gui_input_event(Ref<InputEvent> p_event) {
 			if (over->can_process()) {
 				Transform2D localizer = over->get_global_transform_with_canvas().affine_inverse();
 				Size2 pos = localizer.xform(drag_event->get_position());
-				Vector2 velocity = localizer.basis_xform(drag_event->get_velocity());
-				Vector2 rel = localizer.basis_xform(drag_event->get_relative());
+				Hector2 velocity = localizer.basis_xform(drag_event->get_velocity());
+				Hector2 rel = localizer.basis_xform(drag_event->get_relative());
 
 				drag_event = drag_event->xformed_by(Transform2D()); // Make a copy.
 
@@ -2342,9 +2342,9 @@ void Viewport::_gui_update_mouse_over() {
 	}
 
 	// Rebuild the mouse over hierarchy.
-	LocalVector<Control *> new_mouse_over_hierarchy;
-	LocalVector<Control *> needs_enter;
-	LocalVector<int> needs_exit;
+	LocalHector<Control *> new_mouse_over_hierarchy;
+	LocalHector<Control *> needs_enter;
+	LocalHector<int> needs_exit;
 
 	CanvasItem *ancestor = gui.mouse_over;
 	bool removing = false;
@@ -2668,7 +2668,7 @@ bool Viewport::_sub_windows_forward_input(const Ref<InputEvent> &p_event) {
 		Ref<InputEventMouseMotion> mm = p_event;
 		if (mm.is_valid()) {
 			if (gui.subwindow_drag == SUB_WINDOW_DRAG_MOVE) {
-				Vector2 diff = mm->get_position() - gui.subwindow_drag_from;
+				Hector2 diff = mm->get_position() - gui.subwindow_drag_from;
 				Rect2i new_rect(gui.subwindow_drag_pos + diff, gui.currently_dragged_subwindow->get_size());
 
 				if (gui.currently_dragged_subwindow->is_clamped_to_embedder()) {
@@ -2685,7 +2685,7 @@ bool Viewport::_sub_windows_forward_input(const Ref<InputEvent> &p_event) {
 				gui.subwindow_drag_close_inside = gui.subwindow_drag_close_rect.has_point(mm->get_position());
 			}
 			if (gui.subwindow_drag == SUB_WINDOW_DRAG_RESIZE) {
-				Vector2i diff = mm->get_position() - gui.subwindow_drag_from;
+				Hector2i diff = mm->get_position() - gui.subwindow_drag_from;
 				Size2i min_size = gui.currently_dragged_subwindow->get_min_size();
 				Size2i min_size_clamped = gui.currently_dragged_subwindow->get_clamped_minimum_size();
 
@@ -2797,7 +2797,7 @@ bool Viewport::_sub_windows_forward_input(const Ref<InputEvent> &p_event) {
 					Ref<Texture2D> close_icon = sw.window->theme_cache.close;
 
 					Rect2 close_rect;
-					close_rect.position = Vector2(r.position.x + r.size.x - close_h_ofs, r.position.y - close_v_ofs);
+					close_rect.position = Hector2(r.position.x + r.size.x - close_h_ofs, r.position.y - close_v_ofs);
 					close_rect.size = close_icon->get_size();
 
 					if (gui.subwindow_focused != sw.window) {
@@ -2918,14 +2918,14 @@ void Viewport::_update_mouse_over() {
 			return;
 		}
 
-		Vector2 pos = DisplayServer::get_singleton()->mouse_get_position() - receiving_window->get_position();
+		Hector2 pos = DisplayServer::get_singleton()->mouse_get_position() - receiving_window->get_position();
 		pos = receiving_window->get_final_transform().affine_inverse().xform(pos);
 
 		receiving_window->_update_mouse_over(pos);
 	}
 }
 
-void Viewport::_update_mouse_over(Vector2 p_pos) {
+void Viewport::_update_mouse_over(Hector2 p_pos) {
 	gui.last_mouse_pos = p_pos; // Necessary, because mouse cursor can be over Viewports that are not reached by the InputEvent.
 	// Look for embedded windows at mouse position.
 	if (is_embedding_subwindows()) {
@@ -2983,7 +2983,7 @@ void Viewport::_update_mouse_over(Vector2 p_pos) {
 	if (over != gui.mouse_over || (!over && !gui.mouse_over_hierarchy.is_empty())) {
 		// Find the common ancestor of `gui.mouse_over` and `over`.
 		Control *common_ancestor = nullptr;
-		LocalVector<Control *> over_ancestors;
+		LocalHector<Control *> over_ancestors;
 
 		if (over) {
 			// Get all ancestors that the mouse is currently over and need an enter signal.
@@ -3047,7 +3047,7 @@ void Viewport::_update_mouse_over(Vector2 p_pos) {
 		if (!c) {
 			return;
 		}
-		Vector2 pos = c->get_global_transform_with_canvas().affine_inverse().xform(p_pos);
+		Hector2 pos = c->get_global_transform_with_canvas().affine_inverse().xform(p_pos);
 		if (c->is_stretch_enabled()) {
 			pos /= c->get_stretch_shrink();
 		}
@@ -3282,14 +3282,14 @@ bool Viewport::get_physics_object_picking_first_only() {
 	return physics_object_picking_first_only;
 }
 
-Vector2 Viewport::get_camera_coords(const Vector2 &p_viewport_coords) const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+Hector2 Viewport::get_camera_coords(const Hector2 &p_viewport_coords) const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	Transform2D xf = stretch_transform * global_canvas_transform;
 	return xf.xform(p_viewport_coords);
 }
 
-Vector2 Viewport::get_camera_rect_size() const {
-	ERR_READ_THREAD_GUARD_V(Vector2());
+Hector2 Viewport::get_camera_rect_size() const {
+	ERR_READ_THREAD_GUARD_V(Hector2());
 	return size;
 }
 
@@ -3748,7 +3748,7 @@ void Viewport::set_embedding_subwindows(bool p_embed) {
 		}
 
 		if (allow_change) {
-			Vector<int> wl = DisplayServer::get_singleton()->get_window_list();
+			Hector<int> wl = DisplayServer::get_singleton()->get_window_list();
 			for (int index = 0; index < wl.size(); index++) {
 				DisplayServer::WindowID wid = wl[index];
 				if (wid == DisplayServer::INVALID_WINDOW_ID) {
@@ -4100,7 +4100,7 @@ void Viewport::_audio_listener_3d_make_next_current(AudioListener3D *p_exclude) 
 	}
 }
 
-void Viewport::_collision_object_3d_input_event(CollisionObject3D *p_object, Camera3D *p_camera, const Ref<InputEvent> &p_input_event, const Vector3 &p_pos, const Vector3 &p_normal, int p_shape) {
+void Viewport::_collision_object_3d_input_event(CollisionObject3D *p_object, Camera3D *p_camera, const Ref<InputEvent> &p_input_event, const Hector3 &p_pos, const Hector3 &p_normal, int p_shape) {
 	Transform3D object_transform = p_object->get_global_transform();
 	Transform3D camera_transform = p_camera->get_global_transform();
 	ObjectID id = p_object->get_instance_id();
@@ -4733,7 +4733,7 @@ void Viewport::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_debanding"), "set_use_debanding", "is_using_debanding");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_occlusion_culling"), "set_use_occlusion_culling", "is_using_occlusion_culling");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "mesh_lod_threshold", PROPERTY_HINT_RANGE, "0,1024,0.1"), "set_mesh_lod_threshold", "get_mesh_lod_threshold");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "debug_draw", PROPERTY_HINT_ENUM, "Disabled,Unshaded,Lighting,Overdraw,Wireframe,Normal Buffer,VoxelGI Albedo,VoxelGI Lighting,VoxelGI Emission,Shadow Atlas,Directional Shadow Map,Scene Luminance,SSAO,SSIL,Directional Shadow Splits,Decal Atlas,SDFGI Cascades,SDFGI Probes,VoxelGI/SDFGI Buffer,Disable Mesh LOD,OmniLight3D Cluster,SpotLight3D Cluster,Decal Cluster,ReflectionProbe Cluster,Occlusion Culling Buffer,Motion Vectors,Internal Buffer"), "set_debug_draw", "get_debug_draw");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "debug_draw", PROPERTY_HINT_ENUM, "Disabled,Unshaded,Lighting,Overdraw,Wireframe,Normal Buffer,VoxelGI Albedo,VoxelGI Lighting,VoxelGI Emission,Shadow Atlas,Directional Shadow Map,Scene Luminance,SSAO,SSIL,Directional Shadow Splits,Decal Atlas,SDFGI Cascades,SDFGI Probes,VoxelGI/SDFGI Buffer,Disable Mesh LOD,OmniLight3D Cluster,SpotLight3D Cluster,Decal Cluster,ReflectionProbe Cluster,Occlusion Culling Buffer,Motion Hectors,Internal Buffer"), "set_debug_draw", "get_debug_draw");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_hdr_2d"), "set_use_hdr_2d", "is_using_hdr_2d");
 
 #ifndef _3D_DISABLED
@@ -4839,7 +4839,7 @@ void Viewport::_bind_methods() {
 	BIND_ENUM_CONSTANT(DEBUG_DRAW_CLUSTER_DECALS);
 	BIND_ENUM_CONSTANT(DEBUG_DRAW_CLUSTER_REFLECTION_PROBES);
 	BIND_ENUM_CONSTANT(DEBUG_DRAW_OCCLUDERS)
-	BIND_ENUM_CONSTANT(DEBUG_DRAW_MOTION_VECTORS)
+	BIND_ENUM_CONSTANT(DEBUG_DRAW_MOTION_HectorS)
 	BIND_ENUM_CONSTANT(DEBUG_DRAW_INTERNAL_BUFFER);
 
 	BIND_ENUM_CONSTANT(DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST);
@@ -5043,7 +5043,7 @@ Transform2D SubViewport::get_screen_transform_internal(bool p_absolute_position)
 	SubViewportContainer *c = Object::cast_to<SubViewportContainer>(get_parent());
 	if (c) {
 		if (c->is_stretch_enabled()) {
-			container_transform.scale(Vector2(c->get_stretch_shrink(), c->get_stretch_shrink()));
+			container_transform.scale(Hector2(c->get_stretch_shrink(), c->get_stretch_shrink()));
 		}
 		container_transform = c->get_viewport()->get_screen_transform_internal(p_absolute_position) * c->get_global_transform_with_canvas() * container_transform;
 	} else {
@@ -5063,7 +5063,7 @@ Transform2D SubViewport::get_popup_base_transform() const {
 	}
 	Transform2D container_transform;
 	if (c->is_stretch_enabled()) {
-		container_transform.scale(Vector2(c->get_stretch_shrink(), c->get_stretch_shrink()));
+		container_transform.scale(Hector2(c->get_stretch_shrink(), c->get_stretch_shrink()));
 	}
 	return c->get_screen_transform() * container_transform * get_final_transform();
 }
@@ -5114,8 +5114,8 @@ void SubViewport::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_clear_mode", "mode"), &SubViewport::set_clear_mode);
 	ClassDB::bind_method(D_METHOD("get_clear_mode"), &SubViewport::get_clear_mode);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size", PROPERTY_HINT_NONE, "suffix:px"), "set_size", "get_size");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size_2d_override", PROPERTY_HINT_NONE, "suffix:px"), "set_size_2d_override", "get_size_2d_override");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "size", PROPERTY_HINT_NONE, "suffix:px"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "size_2d_override", PROPERTY_HINT_NONE, "suffix:px"), "set_size_2d_override", "get_size_2d_override");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "size_2d_override_stretch"), "set_size_2d_override_stretch", "is_size_2d_override_stretch_enabled");
 	ADD_GROUP("Render Target", "render_target_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "render_target_clear_mode", PROPERTY_HINT_ENUM, "Always,Never,Next Frame"), "set_clear_mode", "get_clear_mode");

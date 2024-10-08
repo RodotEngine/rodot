@@ -119,9 +119,9 @@ public:
    */
   String getFormattedErrorMessages() const;
 
-  /** \brief Returns a vector of structured errors encountered while parsing.
+  /** \brief Returns a Hector of structured errors encountered while parsing.
    *
-   * \return A (possibly empty) vector of StructuredError objects. Currently
+   * \return A (possibly empty) Hector of StructuredError objects. Currently
    * only one error can be returned, but the caller should tolerate multiple
    * errors.  This can occur if the parser recovers from a non-fatal parse
    * error and then encounters additional errors.

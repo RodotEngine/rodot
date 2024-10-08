@@ -355,9 +355,9 @@ struct oc_mb_enc_info{
   unsigned char npneighbors;
   /*Flags indicating which MB modes have been refined.*/
   unsigned char refined;
-  /*Motion vectors for a macro block for the current frame and the
+  /*Motion Hectors for a macro block for the current frame and the
      previous two frames.
-    Each is a set of 2 vectors against OC_FRAME_GOLD and OC_FRAME_PREV, which
+    Each is a set of 2 Hectors against OC_FRAME_GOLD and OC_FRAME_PREV, which
      can be used to estimate constant velocity and constant acceleration
      predictors.
     Uninitialized MVs are (0,0).*/

@@ -31,7 +31,7 @@
 #ifndef FOG_RD_H
 #define FOG_RD_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/environment/renderer_fog.h"
 #include "servers/rendering/renderer_rd/cluster_builder_rd.h"
@@ -53,7 +53,7 @@ private:
 
 	struct FogVolume {
 		RID material;
-		Vector3 size = Vector3(2, 2, 2);
+		Hector3 size = Hector3(2, 2, 2);
 
 		RS::FogVolumeShape shape = RS::FOG_VOLUME_SHAPE_BOX;
 
@@ -183,16 +183,16 @@ private:
 
 	} volumetric_fog;
 
-	Vector3i _point_get_position_in_froxel_volume(const Vector3 &p_point, float fog_end, const Vector2 &fog_near_size, const Vector2 &fog_far_size, float volumetric_fog_detail_spread, const Vector3 &fog_size, const Transform3D &p_cam_transform);
+	Hector3i _point_get_position_in_froxel_volume(const Hector3 &p_point, float fog_end, const Hector2 &fog_near_size, const Hector2 &fog_far_size, float volumetric_fog_detail_spread, const Hector3 &fog_size, const Transform3D &p_cam_transform);
 
 	struct FogShaderData : public RendererRD::MaterialStorage::ShaderData {
 		bool valid = false;
 		RID version;
 
 		RID pipeline;
-		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+		Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-		Vector<uint32_t> ubo_offsets;
+		Hector<uint32_t> ubo_offsets;
 		uint32_t ubo_size = 0;
 
 		String code;
@@ -241,12 +241,12 @@ public:
 	Dependency *fog_volume_get_dependency(RID p_fog_volume) const;
 
 	virtual void fog_volume_set_shape(RID p_fog_volume, RS::FogVolumeShape p_shape) override;
-	virtual void fog_volume_set_size(RID p_fog_volume, const Vector3 &p_size) override;
+	virtual void fog_volume_set_size(RID p_fog_volume, const Hector3 &p_size) override;
 	virtual void fog_volume_set_material(RID p_fog_volume, RID p_material) override;
 	virtual RS::FogVolumeShape fog_volume_get_shape(RID p_fog_volume) const override;
 	RID fog_volume_get_material(RID p_fog_volume) const;
 	virtual AABB fog_volume_get_aabb(RID p_fog_volume) const override;
-	Vector3 fog_volume_get_size(RID p_fog_volume) const;
+	Hector3 fog_volume_get_size(RID p_fog_volume) const;
 
 	/* FOG VOLUMES INSTANCE */
 
@@ -273,9 +273,9 @@ public:
 		return fvi->volume;
 	}
 
-	Vector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const {
+	Hector3 fog_volume_instance_get_position(RID p_fog_volume_instance) const {
 		Fog::FogVolumeInstance *fvi = fog_volume_instance_owner.get_or_null(p_fog_volume_instance);
-		ERR_FAIL_NULL_V(fvi, Vector3());
+		ERR_FAIL_NULL_V(fvi, Hector3());
 		return fvi->transform.get_origin();
 	}
 
@@ -321,7 +321,7 @@ public:
 
 		bool sync_gi_dependent_sets_validity(bool p_ensure_freed = false);
 
-		void init(const Vector3i &fog_size, RID p_sky_shader);
+		void init(const Hector3i &fog_size, RID p_sky_shader);
 		~VolumetricFog();
 	};
 
@@ -329,7 +329,7 @@ public:
 	void free_fog_shader();
 
 	struct VolumetricFogSettings {
-		Vector2i rb_size;
+		Hector2i rb_size;
 		double time;
 		bool is_using_radiance_cubemap_array;
 		uint32_t max_cluster_elements;

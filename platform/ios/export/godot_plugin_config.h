@@ -100,14 +100,14 @@ struct PluginConfigIOS {
 	String deinitialization_method;
 
 	// Optional dependencies section
-	Vector<String> linked_dependencies;
-	Vector<String> embedded_dependencies;
-	Vector<String> system_dependencies;
+	Hector<String> linked_dependencies;
+	Hector<String> embedded_dependencies;
+	Hector<String> system_dependencies;
 
-	Vector<String> files_to_copy;
-	Vector<String> capabilities;
+	Hector<String> files_to_copy;
+	Hector<String> capabilities;
 
-	Vector<String> linker_flags;
+	Hector<String> linker_flags;
 
 	// Optional plist section
 	// String value is default value.
@@ -119,9 +119,9 @@ struct PluginConfigIOS {
 
 	static String resolve_system_dependency_path(String dependency_path);
 
-	static Vector<String> resolve_local_dependencies(String plugin_config_dir, Vector<String> p_paths);
+	static Hector<String> resolve_local_dependencies(String plugin_config_dir, Hector<String> p_paths);
 
-	static Vector<String> resolve_system_dependencies(Vector<String> p_paths);
+	static Hector<String> resolve_system_dependencies(Hector<String> p_paths);
 
 	static bool validate_plugin(PluginConfigIOS &plugin_config);
 

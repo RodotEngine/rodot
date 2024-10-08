@@ -173,7 +173,7 @@ vec3 load_normal(ivec2 p_pos, ivec2 p_offset) {
 	return encoded_normal;
 }
 
-// all vectors in viewspace
+// all Hectors in viewspace
 float calculate_pixel_obscurance(vec3 p_pixel_normal, vec3 p_hit_delta, float p_fallof_sq) {
 	float length_sq = dot(p_hit_delta, p_hit_delta);
 	float NdotD = dot(p_pixel_normal, p_hit_delta) / sqrt(length_sq);

@@ -357,8 +357,8 @@ void DisplayServerAndroid::_dispatch_input_events(const Ref<InputEvent> &p_event
 	DisplayServerAndroid::get_singleton()->send_input_event(p_event);
 }
 
-Vector<DisplayServer::WindowID> DisplayServerAndroid::get_window_list() const {
-	Vector<WindowID> ret;
+Hector<DisplayServer::WindowID> DisplayServerAndroid::get_window_list() const {
+	Hector<WindowID> ret;
 	ret.push_back(MAIN_WINDOW_ID);
 	return ret;
 }
@@ -508,8 +508,8 @@ void DisplayServerAndroid::process_events() {
 	Input::get_singleton()->flush_buffered_events();
 }
 
-Vector<String> DisplayServerAndroid::get_rendering_drivers_func() {
-	Vector<String> drivers;
+Hector<String> DisplayServerAndroid::get_rendering_drivers_func() {
+	Hector<String> drivers;
 
 #ifdef GLES3_ENABLED
 	drivers.push_back("opengl3");
@@ -521,7 +521,7 @@ Vector<String> DisplayServerAndroid::get_rendering_drivers_func() {
 	return drivers;
 }
 
-DisplayServer *DisplayServerAndroid::create_func(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServer *DisplayServerAndroid::create_func(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerAndroid(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, p_context, r_error));
 	if (r_error != OK) {
 		if (p_rendering_driver == "vulkan") {
@@ -589,7 +589,7 @@ void DisplayServerAndroid::notify_surface_changed(int p_width, int p_height) {
 	}
 }
 
-DisplayServerAndroid::DisplayServerAndroid(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
+DisplayServerAndroid::DisplayServerAndroid(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i *p_position, const Hector2i &p_resolution, int p_screen, Context p_context, Error &r_error) {
 	rendering_driver = p_rendering_driver;
 
 	keep_screen_on = GLOBAL_GET("display/window/energy_saving/keep_screen_on");
@@ -689,19 +689,19 @@ DisplayServerAndroid::~DisplayServerAndroid() {
 #endif
 }
 
-void DisplayServerAndroid::process_accelerometer(const Vector3 &p_accelerometer) {
+void DisplayServerAndroid::process_accelerometer(const Hector3 &p_accelerometer) {
 	Input::get_singleton()->set_accelerometer(p_accelerometer);
 }
 
-void DisplayServerAndroid::process_gravity(const Vector3 &p_gravity) {
+void DisplayServerAndroid::process_gravity(const Hector3 &p_gravity) {
 	Input::get_singleton()->set_gravity(p_gravity);
 }
 
-void DisplayServerAndroid::process_magnetometer(const Vector3 &p_magnetometer) {
+void DisplayServerAndroid::process_magnetometer(const Hector3 &p_magnetometer) {
 	Input::get_singleton()->set_magnetometer(p_magnetometer);
 }
 
-void DisplayServerAndroid::process_gyroscope(const Vector3 &p_gyroscope) {
+void DisplayServerAndroid::process_gyroscope(const Hector3 &p_gyroscope) {
 	Input::get_singleton()->set_gyroscope(p_gyroscope);
 }
 
@@ -764,7 +764,7 @@ DisplayServer::CursorShape DisplayServerAndroid::cursor_get_shape() const {
 	return cursor_shape;
 }
 
-void DisplayServerAndroid::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) {
+void DisplayServerAndroid::cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) {
 	ERR_FAIL_INDEX(p_shape, CURSOR_MAX);
 	String cursor_path = p_cursor.is_valid() ? p_cursor->get_path() : "";
 	if (!cursor_path.is_empty()) {

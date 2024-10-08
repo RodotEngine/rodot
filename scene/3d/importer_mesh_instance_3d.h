@@ -44,7 +44,7 @@ class ImporterMeshInstance3D : public Node3D {
 	Ref<ImporterMesh> mesh;
 	Ref<Skin> skin;
 	NodePath skeleton_path;
-	Vector<Ref<Material>> surface_materials;
+	Hector<Ref<Material>> surface_materials;
 	uint32_t layer_mask = 1;
 	GeometryInstance3D::ShadowCastingSetting shadow_casting_setting = GeometryInstance3D::SHADOW_CASTING_SETTING_ON;
 	float visibility_range_begin = 0.0;

@@ -313,11 +313,11 @@ Ref<TriangleMesh> Mesh::generate_triangle_mesh() const {
 		return triangle_mesh;
 	}
 
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	faces.resize(faces_size);
-	Vector<int32_t> surface_indices;
+	Hector<int32_t> surface_indices;
 	surface_indices.resize(faces_size / 3);
-	Vector3 *facesw = faces.ptrw();
+	Hector3 *facesw = faces.ptrw();
 	int32_t *surface_indicesw = surface_indices.ptrw();
 
 	int widx = 0;
@@ -339,15 +339,15 @@ Ref<TriangleMesh> Mesh::generate_triangle_mesh() const {
 		ERR_FAIL_COND_V(a.is_empty(), Ref<TriangleMesh>());
 
 		int vc = surface_get_array_len(i);
-		Vector<Vector3> vertices = a[ARRAY_VERTEX];
+		Hector<Hector3> vertices = a[ARRAY_VERTEX];
 		ERR_FAIL_COND_V(vertices.is_empty(), Ref<TriangleMesh>());
-		const Vector3 *vr = vertices.ptr();
+		const Hector3 *vr = vertices.ptr();
 
 		int32_t from_index = widx / 3;
 
 		if (surface_get_format(i) & ARRAY_FORMAT_INDEX) {
 			int ic = surface_get_array_index_len(i);
-			Vector<int> indices = a[ARRAY_INDEX];
+			Hector<int> indices = a[ARRAY_INDEX];
 			const int *ir = indices.ptr();
 
 			if (primitive == PRIMITIVE_TRIANGLES) {
@@ -414,21 +414,21 @@ Ref<TriangleMesh> Mesh::generate_surface_triangle_mesh(int p_surface) const {
 		facecount += surface_get_array_len(p_surface);
 	}
 
-	Vector<Vector3> faces;
+	Hector<Hector3> faces;
 	faces.resize(facecount);
-	Vector3 *facesw = faces.ptrw();
+	Hector3 *facesw = faces.ptrw();
 
 	Array a = surface_get_arrays(p_surface);
 	ERR_FAIL_COND_V(a.is_empty(), Ref<TriangleMesh>());
 
 	int vc = surface_get_array_len(p_surface);
-	Vector<Vector3> vertices = a[ARRAY_VERTEX];
-	const Vector3 *vr = vertices.ptr();
+	Hector<Hector3> vertices = a[ARRAY_VERTEX];
+	const Hector3 *vr = vertices.ptr();
 	int widx = 0;
 
 	if (surface_get_format(p_surface) & ARRAY_FORMAT_INDEX) {
 		int ic = surface_get_array_index_len(p_surface);
-		Vector<int> indices = a[ARRAY_INDEX];
+		Hector<int> indices = a[ARRAY_INDEX];
 		const int *ir = indices.ptr();
 
 		for (int j = 0; j < ic; j++) {
@@ -449,7 +449,7 @@ Ref<TriangleMesh> Mesh::generate_surface_triangle_mesh(int p_surface) const {
 	return tr_mesh;
 }
 
-void Mesh::generate_debug_mesh_lines(Vector<Vector3> &r_lines) {
+void Mesh::generate_debug_mesh_lines(Hector<Hector3> &r_lines) {
 	if (debug_lines.size() > 0) {
 		r_lines = debug_lines;
 		return;
@@ -460,15 +460,15 @@ void Mesh::generate_debug_mesh_lines(Vector<Vector3> &r_lines) {
 		return;
 	}
 
-	Vector<int> triangle_indices;
+	Hector<int> triangle_indices;
 	tm->get_indices(&triangle_indices);
 	const int triangles_num = tm->get_triangles().size();
-	Vector<Vector3> vertices = tm->get_vertices();
+	Hector<Hector3> vertices = tm->get_vertices();
 
 	debug_lines.resize(tm->get_triangles().size() * 6); // 3 lines x 2 points each line
 
 	const int *ind_r = triangle_indices.ptr();
-	const Vector3 *ver_r = vertices.ptr();
+	const Hector3 *ver_r = vertices.ptr();
 	for (int j = 0, x = 0, i = 0; i < triangles_num; j += 6, x += 3, ++i) {
 		// Triangle line 1
 		debug_lines.write[j + 0] = ver_r[ind_r[x + 0]];
@@ -486,13 +486,13 @@ void Mesh::generate_debug_mesh_lines(Vector<Vector3> &r_lines) {
 	r_lines = debug_lines;
 }
 
-void Mesh::generate_debug_mesh_indices(Vector<Vector3> &r_points) {
+void Mesh::generate_debug_mesh_indices(Hector<Hector3> &r_points) {
 	Ref<TriangleMesh> tm = generate_triangle_mesh();
 	if (tm.is_null()) {
 		return;
 	}
 
-	Vector<Vector3> vertices = tm->get_vertices();
+	Hector<Hector3> vertices = tm->get_vertices();
 
 	int vertices_size = vertices.size();
 	r_points.resize(vertices_size);
@@ -501,24 +501,24 @@ void Mesh::generate_debug_mesh_indices(Vector<Vector3> &r_points) {
 	}
 }
 
-Vector<Vector3> Mesh::_get_faces() const {
+Hector<Hector3> Mesh::_get_faces() const {
 	return Variant(get_faces());
 }
 
-Vector<Face3> Mesh::get_faces() const {
+Hector<Face3> Mesh::get_faces() const {
 	Ref<TriangleMesh> tm = generate_triangle_mesh();
 	if (tm.is_valid()) {
 		return tm->get_faces();
 	}
-	return Vector<Face3>();
+	return Hector<Face3>();
 }
 
-Vector<Face3> Mesh::get_surface_faces(int p_surface) const {
+Hector<Face3> Mesh::get_surface_faces(int p_surface) const {
 	Ref<TriangleMesh> tm = generate_surface_triangle_mesh(p_surface);
 	if (tm.is_valid()) {
 		return tm->get_faces();
 	}
-	return Vector<Face3>();
+	return Hector<Face3>();
 }
 
 #ifndef _3D_DISABLED
@@ -528,7 +528,7 @@ Ref<ConvexPolygonShape3D> Mesh::create_convex_shape(bool p_clean, bool p_simplif
 		settings.instantiate();
 		settings->set_max_convex_hulls(1);
 		settings->set_max_concavity(1.0);
-		Vector<Ref<Shape3D>> decomposed = convex_decompose(settings);
+		Hector<Ref<Shape3D>> decomposed = convex_decompose(settings);
 		if (decomposed.size() == 1) {
 			return decomposed[0];
 		} else {
@@ -536,11 +536,11 @@ Ref<ConvexPolygonShape3D> Mesh::create_convex_shape(bool p_clean, bool p_simplif
 		}
 	}
 
-	Vector<Vector3> vertices;
+	Hector<Hector3> vertices;
 	for (int i = 0; i < get_surface_count(); i++) {
 		Array a = surface_get_arrays(i);
 		ERR_FAIL_COND_V(a.is_empty(), Ref<ConvexPolygonShape3D>());
-		Vector<Vector3> v = a[ARRAY_VERTEX];
+		Hector<Hector3> v = a[ARRAY_VERTEX];
 		vertices.append_array(v);
 	}
 
@@ -562,12 +562,12 @@ Ref<ConvexPolygonShape3D> Mesh::create_convex_shape(bool p_clean, bool p_simplif
 }
 
 Ref<ConcavePolygonShape3D> Mesh::create_trimesh_shape() const {
-	Vector<Face3> faces = get_faces();
+	Hector<Face3> faces = get_faces();
 	if (faces.size() == 0) {
 		return Ref<ConcavePolygonShape3D>();
 	}
 
-	Vector<Vector3> face_points;
+	Hector<Hector3> face_points;
 	face_points.resize(faces.size() * 3);
 
 	for (int i = 0; i < face_points.size(); i += 3) {
@@ -596,7 +596,7 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 
 		if (i == 0) {
 			arrays = a;
-			Vector<Vector3> v = a[ARRAY_VERTEX];
+			Hector<Hector3> v = a[ARRAY_VERTEX];
 			index_accum += v.size();
 		} else {
 			int vcount = 0;
@@ -610,8 +610,8 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 				switch (j) {
 					case ARRAY_VERTEX:
 					case ARRAY_NORMAL: {
-						Vector<Vector3> dst = arrays[j];
-						Vector<Vector3> src = a[j];
+						Hector<Hector3> dst = arrays[j];
+						Hector<Hector3> src = a[j];
 						if (j == ARRAY_VERTEX) {
 							vcount = src.size();
 						}
@@ -625,8 +625,8 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 					case ARRAY_TANGENT:
 					case ARRAY_BONES:
 					case ARRAY_WEIGHTS: {
-						Vector<real_t> dst = arrays[j];
-						Vector<real_t> src = a[j];
+						Hector<real_t> dst = arrays[j];
+						Hector<real_t> src = a[j];
 						if (dst.size() == 0 || src.size() == 0) {
 							arrays[j] = Variant();
 							continue;
@@ -636,8 +636,8 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 
 					} break;
 					case ARRAY_COLOR: {
-						Vector<Color> dst = arrays[j];
-						Vector<Color> src = a[j];
+						Hector<Color> dst = arrays[j];
+						Hector<Color> src = a[j];
 						if (dst.size() == 0 || src.size() == 0) {
 							arrays[j] = Variant();
 							continue;
@@ -648,8 +648,8 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 					} break;
 					case ARRAY_TEX_UV:
 					case ARRAY_TEX_UV2: {
-						Vector<Vector2> dst = arrays[j];
-						Vector<Vector2> src = a[j];
+						Hector<Hector2> dst = arrays[j];
+						Hector<Hector2> src = a[j];
 						if (dst.size() == 0 || src.size() == 0) {
 							arrays[j] = Variant();
 							continue;
@@ -659,8 +659,8 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 
 					} break;
 					case ARRAY_INDEX: {
-						Vector<int> dst = arrays[j];
-						Vector<int> src = a[j];
+						Hector<int> dst = arrays[j];
+						Hector<int> src = a[j];
 						if (dst.size() == 0 || src.size() == 0) {
 							arrays[j] = Variant();
 							continue;
@@ -686,12 +686,12 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 
 	{
 		int *ir = nullptr;
-		Vector<int> indices = arrays[ARRAY_INDEX];
+		Hector<int> indices = arrays[ARRAY_INDEX];
 		bool has_indices = false;
-		Vector<Vector3> vertices = arrays[ARRAY_VERTEX];
+		Hector<Hector3> vertices = arrays[ARRAY_VERTEX];
 		int vc = vertices.size();
 		ERR_FAIL_COND_V(!vc, Ref<ArrayMesh>());
-		Vector3 *r = vertices.ptrw();
+		Hector3 *r = vertices.ptrw();
 
 		if (indices.size()) {
 			ERR_FAIL_COND_V(indices.size() % 3 != 0, Ref<ArrayMesh>());
@@ -703,11 +703,11 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 			ERR_FAIL_COND_V(vertices.size() % 3 != 0, Ref<ArrayMesh>());
 		}
 
-		HashMap<Vector3, Vector3> normal_accum;
+		HashMap<Hector3, Hector3> normal_accum;
 
 		//fill normals with triangle normals
 		for (int i = 0; i < vc; i += 3) {
-			Vector3 t[3];
+			Hector3 t[3];
 
 			if (has_indices) {
 				t[0] = r[ir[i + 0]];
@@ -719,10 +719,10 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 				t[2] = r[i + 2];
 			}
 
-			Vector3 n = Plane(t[0], t[1], t[2]).normal;
+			Hector3 n = Plane(t[0], t[1], t[2]).normal;
 
 			for (int j = 0; j < 3; j++) {
-				HashMap<Vector3, Vector3>::Iterator E = normal_accum.find(t[j]);
+				HashMap<Hector3, Hector3>::Iterator E = normal_accum.find(t[j]);
 				if (!E) {
 					normal_accum[t[j]] = n;
 				} else {
@@ -737,7 +737,7 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 
 		//normalize
 
-		for (KeyValue<Vector3, Vector3> &E : normal_accum) {
+		for (KeyValue<Hector3, Hector3> &E : normal_accum) {
 			E.value.normalize();
 		}
 
@@ -745,9 +745,9 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 		int vc2 = vertices.size();
 
 		for (int i = 0; i < vc2; i++) {
-			Vector3 t = r[i];
+			Hector3 t = r[i];
 
-			HashMap<Vector3, Vector3>::Iterator E = normal_accum.find(t);
+			HashMap<Hector3, Hector3>::Iterator E = normal_accum.find(t);
 			ERR_CONTINUE(!E);
 
 			t += E->value * p_margin;
@@ -757,7 +757,7 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 		arrays[ARRAY_VERTEX] = vertices;
 
 		if (!has_indices) {
-			Vector<int> new_indices;
+			Hector<int> new_indices;
 			new_indices.resize(vertices.size());
 			int *iw = new_indices.ptrw();
 
@@ -803,7 +803,7 @@ void Mesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_aabb"), &Mesh::get_aabb);
 	ClassDB::bind_method(D_METHOD("get_faces"), &Mesh::_get_faces);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "lightmap_size_hint"), "set_lightmap_size_hint", "get_lightmap_size_hint");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2I, "lightmap_size_hint"), "set_lightmap_size_hint", "get_lightmap_size_hint");
 
 	ClassDB::bind_method(D_METHOD("get_surface_count"), &Mesh::get_surface_count);
 	ClassDB::bind_method(D_METHOD("surface_get_arrays", "surf_idx"), &Mesh::surface_get_arrays);
@@ -901,16 +901,16 @@ void Mesh::clear_cache() const {
 }
 
 #ifndef _3D_DISABLED
-Vector<Ref<Shape3D>> Mesh::convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const {
-	ERR_FAIL_NULL_V(convex_decomposition_function, Vector<Ref<Shape3D>>());
+Hector<Ref<Shape3D>> Mesh::convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const {
+	ERR_FAIL_NULL_V(convex_decomposition_function, Hector<Ref<Shape3D>>());
 
 	Ref<TriangleMesh> tm = generate_triangle_mesh();
-	ERR_FAIL_COND_V(!tm.is_valid(), Vector<Ref<Shape3D>>());
+	ERR_FAIL_COND_V(!tm.is_valid(), Hector<Ref<Shape3D>>());
 
-	const Vector<TriangleMesh::Triangle> &triangles = tm->get_triangles();
+	const Hector<TriangleMesh::Triangle> &triangles = tm->get_triangles();
 	int triangle_count = triangles.size();
 
-	Vector<uint32_t> indices;
+	Hector<uint32_t> indices;
 	{
 		indices.resize(triangle_count * 3);
 		uint32_t *w = indices.ptrw();
@@ -921,12 +921,12 @@ Vector<Ref<Shape3D>> Mesh::convex_decompose(const Ref<MeshConvexDecompositionSet
 		}
 	}
 
-	const Vector<Vector3> &vertices = tm->get_vertices();
+	const Hector<Hector3> &vertices = tm->get_vertices();
 	int vertex_count = vertices.size();
 
-	Vector<Vector<Vector3>> decomposed = convex_decomposition_function((real_t *)vertices.ptr(), vertex_count, indices.ptr(), triangle_count, p_settings, nullptr);
+	Hector<Hector<Hector3>> decomposed = convex_decomposition_function((real_t *)vertices.ptr(), vertex_count, indices.ptr(), triangle_count, p_settings, nullptr);
 
-	Vector<Ref<Shape3D>> ret;
+	Hector<Ref<Shape3D>> ret;
 
 	for (int i = 0; i < decomposed.size(); i++) {
 		Ref<ConvexPolygonShape3D> shape;
@@ -1019,7 +1019,7 @@ static Mesh::PrimitiveType _old_primitives[7] = {
 };
 #endif // DISABLE_DEPRECATED
 
-void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_format, uint64_t p_new_format, uint32_t p_elements, Vector<uint8_t> &vertex_data, Vector<uint8_t> &attribute_data, Vector<uint8_t> &skin_data) {
+void _fix_array_compatibility(const Hector<uint8_t> &p_src, uint64_t p_old_format, uint64_t p_new_format, uint32_t p_elements, Hector<uint8_t> &vertex_data, Hector<uint8_t> &attribute_data, Hector<uint8_t> &skin_data) {
 	uint32_t dst_vertex_stride;
 	uint32_t dst_normal_tangent_stride;
 	uint32_t dst_attribute_stride;
@@ -1110,8 +1110,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 					if (p_old_format & OLD_ARRAY_COMPRESS_NORMAL) {
 						for (uint32_t i = 0; i < p_elements; i++) {
 							const int8_t *src = (const int8_t *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
-							const Vector3 original_normal(src[0], src[1], src[2]);
-							Vector2 res = original_normal.octahedron_encode();
+							const Hector3 original_normal(src[0], src[1], src[2]);
+							Hector2 res = original_normal.octahedron_encode();
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
 							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
@@ -1121,8 +1121,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 					} else {
 						for (uint32_t i = 0; i < p_elements; i++) {
 							const float *src = (const float *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
-							const Vector3 original_normal(src[0], src[1], src[2]);
-							Vector2 res = original_normal.octahedron_encode();
+							const Hector3 original_normal(src[0], src[1], src[2]);
+							Hector2 res = original_normal.octahedron_encode();
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
 							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
@@ -1158,8 +1158,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 					if (p_old_format & OLD_ARRAY_COMPRESS_TANGENT) {
 						for (uint32_t i = 0; i < p_elements; i++) {
 							const int8_t *src = (const int8_t *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
-							const Vector3 original_tangent(src[0], src[1], src[2]);
-							Vector2 res = original_tangent.octahedron_tangent_encode(src[3]);
+							const Hector3 original_tangent(src[0], src[1], src[2]);
+							Hector2 res = original_tangent.octahedron_tangent_encode(src[3]);
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
 							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
@@ -1174,8 +1174,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 					} else {
 						for (uint32_t i = 0; i < p_elements; i++) {
 							const float *src = (const float *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
-							const Vector3 original_tangent(src[0], src[1], src[2]);
-							Vector2 res = original_tangent.octahedron_tangent_encode(src[3]);
+							const Hector3 original_tangent(src[0], src[1], src[2]);
+							Hector2 res = original_tangent.octahedron_tangent_encode(src[3]);
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
 							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
@@ -1360,8 +1360,8 @@ bool ArrayMesh::_set(const StringName &p_name, const Variant &p_value) {
 		} else if (d.has("array_data")) {
 			//print_line("array data (old style");
 			//older format (3.x)
-			Vector<uint8_t> array_data = d["array_data"];
-			Vector<uint8_t> array_index_data;
+			Hector<uint8_t> array_data = d["array_data"];
+			Hector<uint8_t> array_index_data;
 			if (d.has("array_index_data")) {
 				array_index_data = d["array_index_data"];
 			}
@@ -1406,9 +1406,9 @@ bool ArrayMesh::_set(const StringName &p_name, const Variant &p_value) {
 				new_format |= OLD_ARRAY_FLAG_USE_2D_VERTICES;
 			}
 
-			Vector<uint8_t> vertex_array;
-			Vector<uint8_t> attribute_array;
-			Vector<uint8_t> skin_array;
+			Hector<uint8_t> vertex_array;
+			Hector<uint8_t> attribute_array;
+			Hector<uint8_t> skin_array;
 
 			_fix_array_compatibility(array_data, old_format, new_format, vertex_count, vertex_array, attribute_array, skin_array);
 
@@ -1417,16 +1417,16 @@ bool ArrayMesh::_set(const StringName &p_name, const Variant &p_value) {
 				index_count = d["index_count"];
 			}
 
-			Vector<uint8_t> blend_shapes_new;
+			Hector<uint8_t> blend_shapes_new;
 
 			if (d.has("blend_shape_data")) {
 				Array blend_shape_data = d["blend_shape_data"];
 				for (int i = 0; i < blend_shape_data.size(); i++) {
-					Vector<uint8_t> blend_vertex_array;
-					Vector<uint8_t> blend_attribute_array;
-					Vector<uint8_t> blend_skin_array;
+					Hector<uint8_t> blend_vertex_array;
+					Hector<uint8_t> blend_attribute_array;
+					Hector<uint8_t> blend_skin_array;
 
-					Vector<uint8_t> shape = blend_shape_data[i];
+					Hector<uint8_t> shape = blend_shape_data[i];
 					_fix_array_compatibility(shape, old_format, new_format, vertex_count, blend_vertex_array, blend_attribute_array, blend_skin_array);
 
 					blend_shapes_new.append_array(blend_vertex_array);
@@ -1441,7 +1441,7 @@ bool ArrayMesh::_set(const StringName &p_name, const Variant &p_value) {
 			ERR_FAIL_COND_V(!d.has("aabb"), false);
 			AABB aabb_new = d["aabb"];
 
-			Vector<AABB> bone_aabb;
+			Hector<AABB> bone_aabb;
 			if (d.has("skeleton_aabb")) {
 				Array baabb = d["skeleton_aabb"];
 				bone_aabb.resize(baabb.size());
@@ -1569,10 +1569,10 @@ void ArrayMesh::_create_if_empty() const {
 }
 
 void ArrayMesh::_set_surfaces(const Array &p_surfaces) {
-	Vector<RS::SurfaceData> surface_data;
-	Vector<Ref<Material>> surface_materials;
-	Vector<String> surface_names;
-	Vector<bool> surface_2d;
+	Hector<RS::SurfaceData> surface_data;
+	Hector<Ref<Material>> surface_materials;
+	Hector<String> surface_names;
+	Hector<bool> surface_2d;
 
 	for (int i = 0; i < p_surfaces.size(); i++) {
 		RS::SurfaceData surface;
@@ -1763,7 +1763,7 @@ void ArrayMesh::_recompute_aabb() {
 }
 
 // TODO: Need to add binding to add_surface using future MeshSurfaceData object.
-void ArrayMesh::add_surface(BitField<ArrayFormat> p_format, PrimitiveType p_primitive, const Vector<uint8_t> &p_array, const Vector<uint8_t> &p_attribute_array, const Vector<uint8_t> &p_skin_array, int p_vertex_count, const Vector<uint8_t> &p_index_array, int p_index_count, const AABB &p_aabb, const Vector<uint8_t> &p_blend_shape_data, const Vector<AABB> &p_bone_aabbs, const Vector<RS::SurfaceData::LOD> &p_lods, const Vector4 p_uv_scale) {
+void ArrayMesh::add_surface(BitField<ArrayFormat> p_format, PrimitiveType p_primitive, const Hector<uint8_t> &p_array, const Hector<uint8_t> &p_attribute_array, const Hector<uint8_t> &p_skin_array, int p_vertex_count, const Hector<uint8_t> &p_index_array, int p_index_count, const AABB &p_aabb, const Hector<uint8_t> &p_blend_shape_data, const Hector<AABB> &p_bone_aabbs, const Hector<RS::SurfaceData::LOD> &p_lods, const Hector4 p_uv_scale) {
 	ERR_FAIL_COND(surfaces.size() == RS::MAX_MESH_SURFACES);
 	_create_if_empty();
 
@@ -1959,19 +1959,19 @@ String ArrayMesh::surface_get_name(int p_idx) const {
 	return surfaces[p_idx].name;
 }
 
-void ArrayMesh::surface_update_vertex_region(int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+void ArrayMesh::surface_update_vertex_region(int p_surface, int p_offset, const Hector<uint8_t> &p_data) {
 	ERR_FAIL_INDEX(p_surface, surfaces.size());
 	RS::get_singleton()->mesh_surface_update_vertex_region(mesh, p_surface, p_offset, p_data);
 	emit_changed();
 }
 
-void ArrayMesh::surface_update_attribute_region(int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+void ArrayMesh::surface_update_attribute_region(int p_surface, int p_offset, const Hector<uint8_t> &p_data) {
 	ERR_FAIL_INDEX(p_surface, surfaces.size());
 	RS::get_singleton()->mesh_surface_update_attribute_region(mesh, p_surface, p_offset, p_data);
 	emit_changed();
 }
 
-void ArrayMesh::surface_update_skin_region(int p_surface, int p_offset, const Vector<uint8_t> &p_data) {
+void ArrayMesh::surface_update_skin_region(int p_surface, int p_offset, const Hector<uint8_t> &p_data) {
 	ERR_FAIL_INDEX(p_surface, surfaces.size());
 	RS::get_singleton()->mesh_surface_update_skin_region(mesh, p_surface, p_offset, p_data);
 	emit_changed();
@@ -2022,8 +2022,8 @@ void ArrayMesh::regen_normal_maps() {
 	if (surfaces.size() == 0) {
 		return;
 	}
-	Vector<Ref<SurfaceTool>> surfs;
-	Vector<uint64_t> formats;
+	Hector<Ref<SurfaceTool>> surfs;
+	Hector<uint64_t> formats;
 	for (int i = 0; i < get_surface_count(); i++) {
 		Ref<SurfaceTool> st = memnew(SurfaceTool);
 		st->create_from(Ref<ArrayMesh>(this), i);
@@ -2044,32 +2044,32 @@ bool (*array_mesh_lightmap_unwrap_callback)(float p_texel_size, const float *p_v
 
 struct ArrayMeshLightmapSurface {
 	Ref<Material> material;
-	LocalVector<SurfaceTool::Vertex> vertices;
+	LocalHector<SurfaceTool::Vertex> vertices;
 	Mesh::PrimitiveType primitive = Mesh::PrimitiveType::PRIMITIVE_MAX;
 	uint64_t format = 0;
 };
 
 Error ArrayMesh::lightmap_unwrap(const Transform3D &p_base_transform, float p_texel_size) {
-	Vector<uint8_t> null_cache;
+	Hector<uint8_t> null_cache;
 	return lightmap_unwrap_cached(p_base_transform, p_texel_size, null_cache, null_cache, false);
 }
 
-Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache, bool p_generate_cache) {
+Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Hector<uint8_t> &p_src_cache, Hector<uint8_t> &r_dst_cache, bool p_generate_cache) {
 	ERR_FAIL_NULL_V(array_mesh_lightmap_unwrap_callback, ERR_UNCONFIGURED);
 	ERR_FAIL_COND_V_MSG(blend_shapes.size() != 0, ERR_UNAVAILABLE, "Can't unwrap mesh with blend shapes.");
 	ERR_FAIL_COND_V_MSG(p_texel_size <= 0.0f, ERR_PARAMETER_RANGE_ERROR, "Texel size must be greater than 0.");
 
-	LocalVector<float> vertices;
-	LocalVector<float> normals;
-	LocalVector<int> indices;
-	LocalVector<float> uv;
-	LocalVector<Pair<int, int>> uv_indices;
+	LocalHector<float> vertices;
+	LocalHector<float> normals;
+	LocalHector<int> indices;
+	LocalHector<float> uv;
+	LocalHector<Pair<int, int>> uv_indices;
 
-	Vector<ArrayMeshLightmapSurface> lightmap_surfaces;
+	Hector<ArrayMeshLightmapSurface> lightmap_surfaces;
 
 	// Keep only the scale
 	Basis basis = p_base_transform.get_basis();
-	Vector3 scale = Vector3(basis.get_column(0).length(), basis.get_column(1).length(), basis.get_column(2).length());
+	Hector3 scale = Hector3(basis.get_column(0).length(), basis.get_column(1).length(), basis.get_column(2).length());
 
 	Transform3D transform;
 	transform.scale(scale);
@@ -2088,10 +2088,10 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 		s.material = surface_get_material(i);
 		SurfaceTool::create_vertex_array_from_arrays(arrays, s.vertices, &s.format);
 
-		PackedVector3Array rvertices = arrays[Mesh::ARRAY_VERTEX];
+		PackedHector3Array rvertices = arrays[Mesh::ARRAY_VERTEX];
 		int vc = rvertices.size();
 
-		PackedVector3Array rnormals = arrays[Mesh::ARRAY_NORMAL];
+		PackedHector3Array rnormals = arrays[Mesh::ARRAY_NORMAL];
 
 		int vertex_ofs = vertices.size() / 3;
 
@@ -2100,8 +2100,8 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 		uv_indices.resize(vertex_ofs + vc);
 
 		for (int j = 0; j < vc; j++) {
-			Vector3 v = transform.xform(rvertices[j]);
-			Vector3 n = normal_basis.xform(rnormals[j]).normalized();
+			Hector3 v = transform.xform(rvertices[j]);
+			Hector3 n = normal_basis.xform(rnormals[j]).normalized();
 
 			vertices[(j + vertex_ofs) * 3 + 0] = v.x;
 			vertices[(j + vertex_ofs) * 3 + 1] = v.y;
@@ -2118,9 +2118,9 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 		float eps = 1.19209290e-7F; // Taken from xatlas.h
 		if (ic == 0) {
 			for (int j = 0; j < vc / 3; j++) {
-				Vector3 p0 = transform.xform(rvertices[j * 3 + 0]);
-				Vector3 p1 = transform.xform(rvertices[j * 3 + 1]);
-				Vector3 p2 = transform.xform(rvertices[j * 3 + 2]);
+				Hector3 p0 = transform.xform(rvertices[j * 3 + 0]);
+				Hector3 p1 = transform.xform(rvertices[j * 3 + 1]);
+				Hector3 p2 = transform.xform(rvertices[j * 3 + 2]);
 
 				if ((p0 - p1).length_squared() < eps || (p1 - p2).length_squared() < eps || (p2 - p0).length_squared() < eps) {
 					continue;
@@ -2133,9 +2133,9 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 
 		} else {
 			for (int j = 0; j < ic / 3; j++) {
-				Vector3 p0 = transform.xform(rvertices[rindices[j * 3 + 0]]);
-				Vector3 p1 = transform.xform(rvertices[rindices[j * 3 + 1]]);
-				Vector3 p2 = transform.xform(rvertices[rindices[j * 3 + 2]]);
+				Hector3 p0 = transform.xform(rvertices[rindices[j * 3 + 0]]);
+				Hector3 p1 = transform.xform(rvertices[rindices[j * 3 + 1]]);
+				Hector3 p2 = transform.xform(rvertices[rindices[j * 3 + 2]]);
 
 				if ((p0 - p1).length_squared() < eps || (p1 - p2).length_squared() < eps || (p2 - p0).length_squared() < eps) {
 					continue;
@@ -2172,7 +2172,7 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 	clear_surfaces();
 
 	//create surfacetools for each surface..
-	LocalVector<Ref<SurfaceTool>> surfaces_tools;
+	LocalHector<Ref<SurfaceTool>> surfaces_tools;
 
 	for (int i = 0; i < lightmap_surfaces.size(); i++) {
 		Ref<SurfaceTool> st;
@@ -2219,7 +2219,7 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 				surfaces_tools[surface]->set_weights(v.weights);
 			}
 
-			Vector2 uv2(gen_uvs[gen_indices[i + j] * 2 + 0], gen_uvs[gen_indices[i + j] * 2 + 1]);
+			Hector2 uv2(gen_uvs[gen_indices[i + j] * 2 + 0], gen_uvs[gen_indices[i + j] * 2 + 1]);
 			surfaces_tools[surface]->set_uv2(uv2);
 
 			surfaces_tools[surface]->add_vertex(v.vertex);

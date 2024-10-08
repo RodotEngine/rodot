@@ -29,7 +29,7 @@
    *   holding a varying number of `cache nodes'.  Each cache node
    *   represents a minimal amount of individually accessible cached
    *   data.  For example, a cache node can be an FT_Glyph image
-   *   containing a vector outline, or some glyph metrics, or anything
+   *   containing a Hector outline, or some glyph metrics, or anything
    *   else.
    *
    *   Each cache node has a certain size in bytes that is added to the

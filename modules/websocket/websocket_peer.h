@@ -63,11 +63,11 @@ protected:
 
 	static void _bind_methods();
 
-	Vector<String> supported_protocols;
-	Vector<String> handshake_headers;
+	Hector<String> supported_protocols;
+	Hector<String> handshake_headers;
 
-	Vector<String> _get_supported_protocols() const;
-	Vector<String> _get_handshake_headers() const;
+	Hector<String> _get_supported_protocols() const;
+	Hector<String> _get_handshake_headers() const;
 
 	int outbound_buffer_size = DEFAULT_BUFFER_SIZE;
 	int inbound_buffer_size = DEFAULT_BUFFER_SIZE;
@@ -102,11 +102,11 @@ public:
 
 	Error send_text(const String &p_text);
 
-	void set_supported_protocols(const Vector<String> &p_protocols);
-	const Vector<String> get_supported_protocols() const;
+	void set_supported_protocols(const Hector<String> &p_protocols);
+	const Hector<String> get_supported_protocols() const;
 
-	void set_handshake_headers(const Vector<String> &p_headers);
-	const Vector<String> get_handshake_headers() const;
+	void set_handshake_headers(const Hector<String> &p_headers);
+	const Hector<String> get_handshake_headers() const;
 
 	void set_outbound_buffer_size(int p_buffer_size);
 	int get_outbound_buffer_size() const;

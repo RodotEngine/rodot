@@ -195,7 +195,7 @@ void AnimationNodeBlendSpace1DEditor::_blend_space_gui_input(const Ref<InputEven
 
 	if (mm.is_valid() && dragging_selected_attempt) {
 		dragging_selected = true;
-		drag_ofs = ((mm->get_position() - drag_from) / blend_space_draw->get_size()) * ((blend_space->get_max_space() - blend_space->get_min_space()) * Vector2(1, 0));
+		drag_ofs = ((mm->get_position() - drag_from) / blend_space_draw->get_size()) * ((blend_space->get_max_space() - blend_space->get_min_space()) * Hector2(1, 0));
 		blend_space_draw->queue_redraw();
 		_update_edited_point_pos();
 	}
@@ -285,7 +285,7 @@ void AnimationNodeBlendSpace1DEditor::_blend_space_draw() {
 
 		points.push_back(point);
 
-		Vector2 gui_point = Vector2(point, s.height / 2.0);
+		Hector2 gui_point = Hector2(point, s.height / 2.0);
 
 		gui_point -= (icon->get_size() / 2.0);
 
@@ -313,14 +313,14 @@ void AnimationNodeBlendSpace1DEditor::_blend_space_draw() {
 		point = (point - blend_space->get_min_space()) / (blend_space->get_max_space() - blend_space->get_min_space());
 		point *= s.width;
 
-		Vector2 gui_point = Vector2(point, s.height / 2.0);
+		Hector2 gui_point = Hector2(point, s.height / 2.0);
 
 		float mind = 5 * EDSCALE;
 		float maxd = 15 * EDSCALE;
-		blend_space_draw->draw_line(gui_point + Vector2(mind, 0), gui_point + Vector2(maxd, 0), color, Math::round(2 * EDSCALE));
-		blend_space_draw->draw_line(gui_point + Vector2(-mind, 0), gui_point + Vector2(-maxd, 0), color, Math::round(2 * EDSCALE));
-		blend_space_draw->draw_line(gui_point + Vector2(0, mind), gui_point + Vector2(0, maxd), color, Math::round(2 * EDSCALE));
-		blend_space_draw->draw_line(gui_point + Vector2(0, -mind), gui_point + Vector2(0, -maxd), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(gui_point + Hector2(mind, 0), gui_point + Hector2(maxd, 0), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(gui_point + Hector2(-mind, 0), gui_point + Hector2(-maxd, 0), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(gui_point + Hector2(0, mind), gui_point + Hector2(0, maxd), color, Math::round(2 * EDSCALE));
+		blend_space_draw->draw_line(gui_point + Hector2(0, -mind), gui_point + Hector2(0, -maxd), color, Math::round(2 * EDSCALE));
 	}
 }
 

@@ -45,9 +45,9 @@ FT_BEGIN_HEADER
     AF_StyleMetrics   metrics;
     FT_Bool           transformed;
     FT_Matrix         trans_matrix;
-    FT_Vector         trans_delta;
-    FT_Vector         pp1;
-    FT_Vector         pp2;
+    FT_Hector         trans_delta;
+    FT_Hector         pp1;
+    FT_Hector         pp2;
     /* we don't handle vertical phantom points */
 
   } AF_LoaderRec, *AF_Loader;

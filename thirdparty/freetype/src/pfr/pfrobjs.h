@@ -71,7 +71,7 @@ FT_BEGIN_HEADER
   pfr_face_get_kerning( FT_Face     face,       /* PFR_Face */
                         FT_UInt     glyph1,
                         FT_UInt     glyph2,
-                        FT_Vector*  kerning );
+                        FT_Hector*  kerning );
 
 
   FT_LOCAL( FT_Error )

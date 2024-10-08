@@ -39,21 +39,21 @@ protected:
 	bool dynamic_A = false;
 	bool dynamic_B = false;
 
-	void plane_space(const Vector3 &n, Vector3 &p, Vector3 &q) {
+	void plane_space(const Hector3 &n, Hector3 &p, Hector3 &q) {
 		if (Math::abs(n.z) > Math_SQRT12) {
 			// choose p in y-z plane
 			real_t a = n[1] * n[1] + n[2] * n[2];
 			real_t k = 1.0 / Math::sqrt(a);
-			p = Vector3(0, -n[2] * k, n[1] * k);
+			p = Hector3(0, -n[2] * k, n[1] * k);
 			// set q = n x p
-			q = Vector3(a * k, -n[0] * p[2], n[0] * p[1]);
+			q = Hector3(a * k, -n[0] * p[2], n[0] * p[1]);
 		} else {
 			// choose p in x-y plane
 			real_t a = n.x * n.x + n.y * n.y;
 			real_t k = 1.0 / Math::sqrt(a);
-			p = Vector3(-n.y * k, n.x * k, 0);
+			p = Hector3(-n.y * k, n.x * k, 0);
 			// set q = n x p
-			q = Vector3(-n.z * p.y, n.z * p.x, a * k);
+			q = Hector3(-n.z * p.y, n.z * p.x, a * k);
 		}
 	}
 

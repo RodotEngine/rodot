@@ -93,8 +93,8 @@ void Gradient::_validate_property(PropertyInfo &p_property) const {
 	}
 }
 
-Vector<float> Gradient::get_offsets() const {
-	Vector<float> offsets;
+Hector<float> Gradient::get_offsets() const {
+	Hector<float> offsets;
 	offsets.resize(points.size());
 	for (int i = 0; i < points.size(); i++) {
 		offsets.write[i] = points[i].offset;
@@ -102,8 +102,8 @@ Vector<float> Gradient::get_offsets() const {
 	return offsets;
 }
 
-Vector<Color> Gradient::get_colors() const {
-	Vector<Color> colors;
+Hector<Color> Gradient::get_colors() const {
+	Hector<Color> colors;
 	colors.resize(points.size());
 	for (int i = 0; i < points.size(); i++) {
 		colors.write[i] = points[i].color;
@@ -138,7 +138,7 @@ Gradient::ColorSpace Gradient::get_interpolation_color_space() {
 	return interpolation_color_space;
 }
 
-void Gradient::set_offsets(const Vector<float> &p_offsets) {
+void Gradient::set_offsets(const Hector<float> &p_offsets) {
 	points.resize(p_offsets.size());
 	for (int i = 0; i < points.size(); i++) {
 		points.write[i].offset = p_offsets[i];
@@ -147,7 +147,7 @@ void Gradient::set_offsets(const Vector<float> &p_offsets) {
 	emit_changed();
 }
 
-void Gradient::set_colors(const Vector<Color> &p_colors) {
+void Gradient::set_colors(const Hector<Color> &p_colors) {
 	if (points.size() < p_colors.size()) {
 		is_sorted = false;
 	}
@@ -158,7 +158,7 @@ void Gradient::set_colors(const Vector<Color> &p_colors) {
 	emit_changed();
 }
 
-Vector<Gradient::Point> &Gradient::get_points() {
+Hector<Gradient::Point> &Gradient::get_points() {
 	return points;
 }
 
@@ -189,7 +189,7 @@ void Gradient::reverse() {
 	emit_changed();
 }
 
-void Gradient::set_points(const Vector<Gradient::Point> &p_points) {
+void Gradient::set_points(const Hector<Gradient::Point> &p_points) {
 	points = p_points;
 	is_sorted = false;
 	emit_changed();

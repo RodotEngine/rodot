@@ -32,36 +32,36 @@
 
 #include "servers/physics_server_3d.h"
 
-Vector<Vector3> CapsuleShape3D::get_debug_mesh_lines() const {
+Hector<Hector3> CapsuleShape3D::get_debug_mesh_lines() const {
 	float c_radius = get_radius();
 	float c_height = get_height();
 
-	Vector<Vector3> points;
+	Hector<Hector3> points;
 
-	Vector3 d(0, c_height * 0.5 - c_radius, 0);
+	Hector3 d(0, c_height * 0.5 - c_radius, 0);
 	for (int i = 0; i < 360; i++) {
 		float ra = Math::deg_to_rad((float)i);
 		float rb = Math::deg_to_rad((float)i + 1);
-		Point2 a = Vector2(Math::sin(ra), Math::cos(ra)) * c_radius;
-		Point2 b = Vector2(Math::sin(rb), Math::cos(rb)) * c_radius;
+		Point2 a = Hector2(Math::sin(ra), Math::cos(ra)) * c_radius;
+		Point2 b = Hector2(Math::sin(rb), Math::cos(rb)) * c_radius;
 
-		points.push_back(Vector3(a.x, 0, a.y) + d);
-		points.push_back(Vector3(b.x, 0, b.y) + d);
+		points.push_back(Hector3(a.x, 0, a.y) + d);
+		points.push_back(Hector3(b.x, 0, b.y) + d);
 
-		points.push_back(Vector3(a.x, 0, a.y) - d);
-		points.push_back(Vector3(b.x, 0, b.y) - d);
+		points.push_back(Hector3(a.x, 0, a.y) - d);
+		points.push_back(Hector3(b.x, 0, b.y) - d);
 
 		if (i % 90 == 0) {
-			points.push_back(Vector3(a.x, 0, a.y) + d);
-			points.push_back(Vector3(a.x, 0, a.y) - d);
+			points.push_back(Hector3(a.x, 0, a.y) + d);
+			points.push_back(Hector3(a.x, 0, a.y) - d);
 		}
 
-		Vector3 dud = i < 180 ? d : -d;
+		Hector3 dud = i < 180 ? d : -d;
 
-		points.push_back(Vector3(0, a.x, a.y) + dud);
-		points.push_back(Vector3(0, b.x, b.y) + dud);
-		points.push_back(Vector3(a.y, a.x, 0) + dud);
-		points.push_back(Vector3(b.y, b.x, 0) + dud);
+		points.push_back(Hector3(0, a.x, a.y) + dud);
+		points.push_back(Hector3(0, b.x, b.y) + dud);
+		points.push_back(Hector3(a.y, a.x, 0) + dud);
+		points.push_back(Hector3(b.y, b.x, 0) + dud);
 	}
 
 	return points;

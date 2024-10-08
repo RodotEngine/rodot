@@ -124,7 +124,7 @@ void Container::fit_child_in_rect(Control *p_child, const Rect2 &p_rect) {
 
 	p_child->set_rect(r);
 	p_child->set_rotation(0);
-	p_child->set_scale(Vector2(1, 1));
+	p_child->set_scale(Hector2(1, 1));
 }
 
 void Container::queue_sort() {
@@ -154,8 +154,8 @@ Control *Container::as_sortable_control(Node *p_node, SortableVisbilityMode p_vi
 	return c;
 }
 
-Vector<int> Container::get_allowed_size_flags_horizontal() const {
-	Vector<int> flags;
+Hector<int> Container::get_allowed_size_flags_horizontal() const {
+	Hector<int> flags;
 	if (GDVIRTUAL_CALL(_get_allowed_size_flags_horizontal, flags)) {
 		return flags;
 	}
@@ -168,8 +168,8 @@ Vector<int> Container::get_allowed_size_flags_horizontal() const {
 	return flags;
 }
 
-Vector<int> Container::get_allowed_size_flags_vertical() const {
-	Vector<int> flags;
+Hector<int> Container::get_allowed_size_flags_vertical() const {
+	Hector<int> flags;
 	if (GDVIRTUAL_CALL(_get_allowed_size_flags_vertical, flags)) {
 		return flags;
 	}

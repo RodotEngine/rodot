@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Vector2.hpp"
+#include "Hector2.hpp"
 #include "Shape.h"
 #include "Projection.h"
 #include "Scanline.h"
@@ -17,9 +17,9 @@ void distanceSignCorrection(const BitmapRef<float, 3> &sdf, const Shape &shape, 
 void distanceSignCorrection(const BitmapRef<float, 4> &sdf, const Shape &shape, const Projection &projection, FillRule fillRule = FILL_NONZERO);
 
 // Old version of the function API's kept for backwards compatibility
-void rasterize(const BitmapRef<float, 1> &output, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule = FILL_NONZERO);
-void distanceSignCorrection(const BitmapRef<float, 1> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule = FILL_NONZERO);
-void distanceSignCorrection(const BitmapRef<float, 3> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule = FILL_NONZERO);
-void distanceSignCorrection(const BitmapRef<float, 4> &sdf, const Shape &shape, const Vector2 &scale, const Vector2 &translate, FillRule fillRule = FILL_NONZERO);
+void rasterize(const BitmapRef<float, 1> &output, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule = FILL_NONZERO);
+void distanceSignCorrection(const BitmapRef<float, 1> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule = FILL_NONZERO);
+void distanceSignCorrection(const BitmapRef<float, 3> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule = FILL_NONZERO);
+void distanceSignCorrection(const BitmapRef<float, 4> &sdf, const Shape &shape, const Hector2 &scale, const Hector2 &translate, FillRule fillRule = FILL_NONZERO);
 
 }

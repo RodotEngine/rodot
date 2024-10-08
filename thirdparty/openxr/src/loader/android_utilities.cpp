@@ -17,7 +17,7 @@
 
 #include <dlfcn.h>
 #include <sstream>
-#include <vector>
+#include <Vector>
 #include <android/log.h>
 
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, "OpenXR-Loader", __VA_ARGS__)

@@ -50,15 +50,15 @@ public:
 	template <typename T>
 	struct Channel {
 		Interpolation interpolation = INTERP_LINEAR;
-		Vector<real_t> times;
-		Vector<T> values;
+		Hector<real_t> times;
+		Hector<T> values;
 	};
 
 	struct Track {
-		Channel<Vector3> position_track;
+		Channel<Hector3> position_track;
 		Channel<Quaternion> rotation_track;
-		Channel<Vector3> scale_track;
-		Vector<Channel<real_t>> weight_tracks;
+		Channel<Hector3> scale_track;
+		Hector<Channel<real_t>> weight_tracks;
 	};
 
 public:

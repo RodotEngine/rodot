@@ -31,7 +31,7 @@
 #ifndef TEXT_PARAGRAPH_H
 #define TEXT_PARAGRAPH_H
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "scene/resources/font.h"
 #include "servers/text_server.h"
 
@@ -47,7 +47,7 @@ private:
 	Rect2 dropcap_margins;
 
 	RID rid;
-	LocalVector<RID> lines_rid;
+	LocalHector<RID> lines_rid;
 
 	bool lines_dirty = true;
 
@@ -61,7 +61,7 @@ private:
 
 	HorizontalAlignment alignment = HORIZONTAL_ALIGNMENT_LEFT;
 
-	Vector<float> tab_stops;
+	Hector<float> tab_stops;
 
 protected:
 	static void _bind_methods();
@@ -102,7 +102,7 @@ public:
 	void set_alignment(HorizontalAlignment p_alignment);
 	HorizontalAlignment get_alignment() const;
 
-	void tab_align(const Vector<float> &p_tab_stops);
+	void tab_align(const Hector<float> &p_tab_stops);
 
 	void set_justification_flags(BitField<TextServer::JustificationFlag> p_flags);
 	BitField<TextServer::JustificationFlag> get_justification_flags() const;
@@ -134,21 +134,21 @@ public:
 	float get_line_ascent(int p_line) const;
 	float get_line_descent(int p_line) const;
 	float get_line_width(int p_line) const;
-	Vector2i get_line_range(int p_line) const;
+	Hector2i get_line_range(int p_line) const;
 	float get_line_underline_position(int p_line) const;
 	float get_line_underline_thickness(int p_line) const;
 
 	Size2 get_dropcap_size() const;
 	int get_dropcap_lines() const;
 
-	void draw(RID p_canvas, const Vector2 &p_pos, const Color &p_color = Color(1, 1, 1), const Color &p_dc_color = Color(1, 1, 1)) const;
-	void draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1), const Color &p_dc_color = Color(1, 1, 1)) const;
+	void draw(RID p_canvas, const Hector2 &p_pos, const Color &p_color = Color(1, 1, 1), const Color &p_dc_color = Color(1, 1, 1)) const;
+	void draw_outline(RID p_canvas, const Hector2 &p_pos, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1), const Color &p_dc_color = Color(1, 1, 1)) const;
 
-	void draw_line(RID p_canvas, const Vector2 &p_pos, int p_line, const Color &p_color = Color(1, 1, 1)) const;
-	void draw_line_outline(RID p_canvas, const Vector2 &p_pos, int p_line, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const;
+	void draw_line(RID p_canvas, const Hector2 &p_pos, int p_line, const Color &p_color = Color(1, 1, 1)) const;
+	void draw_line_outline(RID p_canvas, const Hector2 &p_pos, int p_line, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const;
 
-	void draw_dropcap(RID p_canvas, const Vector2 &p_pos, const Color &p_color = Color(1, 1, 1)) const;
-	void draw_dropcap_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const;
+	void draw_dropcap(RID p_canvas, const Hector2 &p_pos, const Color &p_color = Color(1, 1, 1)) const;
+	void draw_dropcap_outline(RID p_canvas, const Hector2 &p_pos, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const;
 
 	int hit_test(const Point2 &p_coords) const;
 

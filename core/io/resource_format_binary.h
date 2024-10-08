@@ -49,10 +49,10 @@ class ResourceLoaderBinary {
 
 	ResourceUID::ID uid = ResourceUID::INVALID_ID;
 
-	Vector<char> str_buf;
+	Hector<char> str_buf;
 	List<Ref<Resource>> resource_cache;
 
-	Vector<StringName> string_map;
+	Hector<StringName> string_map;
 
 	StringName _get_string();
 
@@ -68,14 +68,14 @@ class ResourceLoaderBinary {
 	String script_class;
 	bool use_sub_threads = false;
 	float *progress = nullptr;
-	Vector<ExtResource> external_resources;
+	Hector<ExtResource> external_resources;
 
 	struct IntResource {
 		String path;
 		uint64_t offset;
 	};
 
-	Vector<IntResource> internal_resources;
+	Hector<IntResource> internal_resources;
 	HashMap<String, Ref<Resource>> internal_index_cache;
 
 	String get_unicode_string();
@@ -142,7 +142,7 @@ class ResourceFormatSaverBinaryInstance {
 
 	RBMap<NonPersistentKey, Variant> non_persistent_map;
 	HashMap<StringName, int> string_map;
-	Vector<StringName> strings;
+	Hector<StringName> strings;
 
 	HashMap<Ref<Resource>, int> external_resources;
 	List<Ref<Resource>> saved_resources;

@@ -104,15 +104,15 @@ const ArgType TypeIU  = static_cast<ArgType>(TypeI | TypeU);
 // The relationships between arguments and return type, whether anything is
 // output, or other unusual situations.
 enum ArgClass {
-    ClassRegular     = 0,  // nothing special, just all vector widths with matching return type; traditional arithmetic
+    ClassRegular     = 0,  // nothing special, just all Hector widths with matching return type; traditional arithmetic
     ClassLS     = 1 << 0,  // the last argument is also held fixed as a (type-matched) scalar while the others cycle
     ClassXLS    = 1 << 1,  // the last argument is exclusively a (type-matched) scalar while the others cycle
     ClassLS2    = 1 << 2,  // the last two arguments are held fixed as a (type-matched) scalar while the others cycle
     ClassFS     = 1 << 3,  // the first argument is held fixed as a (type-matched) scalar while the others cycle
     ClassFS2    = 1 << 4,  // the first two arguments are held fixed as a (type-matched) scalar while the others cycle
     ClassLO     = 1 << 5,  // the last argument is an output
-    ClassB      = 1 << 6,  // return type cycles through only bool/bvec, matching vector width of args
-    ClassLB     = 1 << 7,  // last argument cycles through only bool/bvec, matching vector width of args
+    ClassB      = 1 << 6,  // return type cycles through only bool/bvec, matching Hector width of args
+    ClassLB     = 1 << 7,  // last argument cycles through only bool/bvec, matching Hector width of args
     ClassV1     = 1 << 8,  // scalar only
     ClassFIO    = 1 << 9,  // first argument is inout
     ClassRS     = 1 << 10, // the return is held scalar as the arguments cycle
@@ -216,11 +216,11 @@ const std::array BaseFunctions = {
     BuiltInFunction{ EOpLessThanEqual,    "lessThanEqual",    2,   TypeFI,    ClassBNS,     {} },
     BuiltInFunction{ EOpGreaterThan,      "greaterThan",      2,   TypeFI,    ClassBNS,     {} },
     BuiltInFunction{ EOpGreaterThanEqual, "greaterThanEqual", 2,   TypeFI,    ClassBNS,     {} },
-    BuiltInFunction{ EOpVectorEqual,      "equal",            2,   TypeFIB,   ClassBNS,     {} },
-    BuiltInFunction{ EOpVectorNotEqual,   "notEqual",         2,   TypeFIB,   ClassBNS,     {} },
+    BuiltInFunction{ EOpHectorEqual,      "equal",            2,   TypeFIB,   ClassBNS,     {} },
+    BuiltInFunction{ EOpHectorNotEqual,   "notEqual",         2,   TypeFIB,   ClassBNS,     {} },
     BuiltInFunction{ EOpAny,              "any",              1,   TypeB,     ClassRSNS,    {} },
     BuiltInFunction{ EOpAll,              "all",              1,   TypeB,     ClassRSNS,    {} },
-    BuiltInFunction{ EOpVectorLogicalNot, "not",              1,   TypeB,     ClassNS,      {} },
+    BuiltInFunction{ EOpHectorLogicalNot, "not",              1,   TypeB,     ClassNS,      {} },
     BuiltInFunction{ EOpSinh,             "sinh",             1,   TypeF,     ClassRegular, {Es300Desktop130Version} },
     BuiltInFunction{ EOpCosh,             "cosh",             1,   TypeF,     ClassRegular, {Es300Desktop130Version} },
     BuiltInFunction{ EOpTanh,             "tanh",             1,   TypeF,     ClassRegular, {Es300Desktop130Version} },
@@ -243,8 +243,8 @@ const std::array BaseFunctions = {
     BuiltInFunction{ EOpLessThanEqual,    "lessThanEqual",    2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
     BuiltInFunction{ EOpGreaterThan,      "greaterThan",      2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
     BuiltInFunction{ EOpGreaterThanEqual, "greaterThanEqual", 2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
-    BuiltInFunction{ EOpVectorEqual,      "equal",            2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
-    BuiltInFunction{ EOpVectorNotEqual,   "notEqual",         2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
+    BuiltInFunction{ EOpHectorEqual,      "equal",            2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
+    BuiltInFunction{ EOpHectorNotEqual,   "notEqual",         2,   TypeU,     ClassBNS,     {Es300Desktop130Version} },
     BuiltInFunction{ EOpAtomicAdd,        "atomicAdd",        2,   TypeIU,    ClassV1FIOCV, {Es310Desktop400Version} },
     BuiltInFunction{ EOpAtomicMin,        "atomicMin",        2,   TypeIU,    ClassV1FIOCV, {Es310Desktop400Version} },
     BuiltInFunction{ EOpAtomicMax,        "atomicMax",        2,   TypeIU,    ClassV1FIOCV, {Es310Desktop400Version} },
@@ -340,7 +340,7 @@ void AddTabledBuiltin(TString& decls, const BuiltInFunction& function)
             if ((function.classes & ClassV1) && !isScalarType(type))
                 continue;
 
-            // if we aren't on a 3-vector, and should be, skip
+            // if we aren't on a 3-Hector, and should be, skip
             if ((function.classes & ClassV3) && (type & TypeStringColumnMask) != 2)
                 continue;
 
@@ -1465,7 +1465,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
             "\n");
     }
 
-    // NV_shader_atomic_fp16_vector
+    // NV_shader_atomic_fp16_Hector
     if (profile != EEsProfile && version >= 430) {
         commonBuiltins.append(
             "f16vec2 atomicAdd(coherent volatile inout f16vec2, f16vec2);"
@@ -5035,7 +5035,7 @@ void TBuiltIns::initialize(int version, EProfile profile, const SpvVersion& spvV
                 "vec4  diffuse;"             // Dcli
                 "vec4  specular;"            // Scli
                 "vec4  position;"            // Ppli
-                "vec4  halfVector;"          // Derived: Hi
+                "vec4  halfHector;"          // Derived: Hi
                 "vec3  spotDirection;"       // Sdli
                 "float spotExponent;"        // Srli
                 "float spotCutoff;"          // Crli
@@ -6698,7 +6698,7 @@ void TBuiltIns::addImageFunctions(TSampler sampler, const TString& typeName, int
                 commonBuiltins.append(", float);\n");
             }
 
-            // GL_NV_shader_atomic_fp16_vector
+            // GL_NV_shader_atomic_fp16_Hector
             if (profile != EEsProfile && version >= 430) {
                 const int numFp16Builtins = 4;
                 const char* atomicFp16Func[numFp16Builtins] = {
@@ -7363,7 +7363,7 @@ void TBuiltIns::initialize(const TBuiltInResource &resources, int version, EProf
         snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVertexAttribs = %d;", resources.maxVertexAttribs);
         s.append(builtInConstant);
 
-        snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVertexUniformVectors = %d;", resources.maxVertexUniformVectors);
+        snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVertexUniformHectors = %d;", resources.maxVertexUniformHectors);
         s.append(builtInConstant);
 
         snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVertexTextureImageUnits = %d;", resources.maxVertexTextureImageUnits);
@@ -7375,20 +7375,20 @@ void TBuiltIns::initialize(const TBuiltInResource &resources, int version, EProf
         snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxTextureImageUnits = %d;", resources.maxTextureImageUnits);
         s.append(builtInConstant);
 
-        snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxFragmentUniformVectors = %d;", resources.maxFragmentUniformVectors);
+        snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxFragmentUniformHectors = %d;", resources.maxFragmentUniformHectors);
         s.append(builtInConstant);
 
         snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxDrawBuffers = %d;", resources.maxDrawBuffers);
         s.append(builtInConstant);
 
         if (version == 100) {
-            snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVaryingVectors = %d;", resources.maxVaryingVectors);
+            snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVaryingHectors = %d;", resources.maxVaryingHectors);
             s.append(builtInConstant);
         } else {
-            snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVertexOutputVectors = %d;", resources.maxVertexOutputVectors);
+            snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxVertexOutputHectors = %d;", resources.maxVertexOutputHectors);
             s.append(builtInConstant);
 
-            snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxFragmentInputVectors = %d;", resources.maxFragmentInputVectors);
+            snprintf(builtInConstant, maxSize, "const mediump int  gl_MaxFragmentInputHectors = %d;", resources.maxFragmentInputHectors);
             s.append(builtInConstant);
 
             snprintf(builtInConstant, maxSize, "const mediump int  gl_MinProgramTexelOffset = %d;", resources.minProgramTexelOffset);
@@ -7496,13 +7496,13 @@ void TBuiltIns::initialize(const TBuiltInResource &resources, int version, EProf
         // non-ES profile
 
         if (version > 400) {
-            snprintf(builtInConstant, maxSize, "const int  gl_MaxVertexUniformVectors = %d;", resources.maxVertexUniformVectors);
+            snprintf(builtInConstant, maxSize, "const int  gl_MaxVertexUniformHectors = %d;", resources.maxVertexUniformHectors);
             s.append(builtInConstant);
 
-            snprintf(builtInConstant, maxSize, "const int  gl_MaxFragmentUniformVectors = %d;", resources.maxFragmentUniformVectors);
+            snprintf(builtInConstant, maxSize, "const int  gl_MaxFragmentUniformHectors = %d;", resources.maxFragmentUniformHectors);
             s.append(builtInConstant);
 
-            snprintf(builtInConstant, maxSize, "const int  gl_MaxVaryingVectors = %d;", resources.maxVaryingVectors);
+            snprintf(builtInConstant, maxSize, "const int  gl_MaxVaryingHectors = %d;", resources.maxVaryingHectors);
             s.append(builtInConstant);
         }
 

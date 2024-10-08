@@ -58,7 +58,7 @@ protected:
 	Ref<Animation> import_animation_wrapper(const String &p_path, uint32_t p_flags, const Dictionary &p_options);
 
 	GDVIRTUAL0RC(uint32_t, _get_import_flags)
-	GDVIRTUAL0RC(Vector<String>, _get_extensions)
+	GDVIRTUAL0RC(Hector<String>, _get_extensions)
 	GDVIRTUAL3R(Object *, _import_scene, String, uint32_t, Dictionary)
 	GDVIRTUAL1(_get_import_options, String)
 	GDVIRTUAL3RC(Variant, _get_option_visibility, String, bool, String)
@@ -159,8 +159,8 @@ VARIANT_ENUM_CAST(EditorScenePostImportPlugin::InternalImportCategory)
 class ResourceImporterScene : public ResourceImporter {
 	GDCLASS(ResourceImporterScene, ResourceImporter);
 
-	static Vector<Ref<EditorSceneFormatImporter>> scene_importers;
-	static Vector<Ref<EditorScenePostImportPlugin>> post_importer_plugins;
+	static Hector<Ref<EditorSceneFormatImporter>> scene_importers;
+	static Hector<Ref<EditorScenePostImportPlugin>> post_importer_plugins;
 
 	static ResourceImporterScene *scene_singleton;
 	static ResourceImporterScene *animation_singleton;
@@ -218,8 +218,8 @@ class ResourceImporterScene : public ResourceImporter {
 	static Error _check_resource_save_paths(const Dictionary &p_data);
 	Array _get_skinned_pose_transforms(ImporterMeshInstance3D *p_src_mesh_node);
 	void _replace_owner(Node *p_node, Node *p_scene, Node *p_new_owner);
-	Node *_generate_meshes(Node *p_node, const Dictionary &p_mesh_data, bool p_generate_lods, bool p_create_shadow_meshes, LightBakeMode p_light_bake_mode, float p_lightmap_texel_size, const Vector<uint8_t> &p_src_lightmap_cache, Vector<Vector<uint8_t>> &r_lightmap_caches);
-	void _add_shapes(Node *p_node, const Vector<Ref<Shape3D>> &p_shapes);
+	Node *_generate_meshes(Node *p_node, const Dictionary &p_mesh_data, bool p_generate_lods, bool p_create_shadow_meshes, LightBakeMode p_light_bake_mode, float p_lightmap_texel_size, const Hector<uint8_t> &p_src_lightmap_cache, Hector<Hector<uint8_t>> &r_lightmap_caches);
+	void _add_shapes(Node *p_node, const Hector<Ref<Shape3D>> &p_shapes);
 	void _copy_meta(Object *p_src_object, Object *p_dst_object);
 
 	enum AnimationImportTracks {
@@ -246,7 +246,7 @@ public:
 	static void add_post_importer_plugin(const Ref<EditorScenePostImportPlugin> &p_plugin, bool p_first_priority = false);
 	static void remove_post_importer_plugin(const Ref<EditorScenePostImportPlugin> &p_plugin);
 
-	const Vector<Ref<EditorSceneFormatImporter>> &get_scene_importers() const { return scene_importers; }
+	const Hector<Ref<EditorSceneFormatImporter>> &get_scene_importers() const { return scene_importers; }
 	static void add_scene_importer(Ref<EditorSceneFormatImporter> p_importer, bool p_first_priority = false);
 	static void remove_scene_importer(Ref<EditorSceneFormatImporter> p_importer);
 	static void get_scene_importer_extensions(List<String> *p_extensions);
@@ -288,9 +288,9 @@ public:
 	virtual int get_import_order() const override { return ResourceImporter::IMPORT_ORDER_SCENE; }
 
 	void _pre_fix_global(Node *p_scene, const HashMap<StringName, Variant> &p_options) const;
-	Node *_pre_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> &r_collision_map, Pair<PackedVector3Array, PackedInt32Array> *r_occluder_arrays, List<Pair<NodePath, Node *>> &r_node_renames, const HashMap<StringName, Variant> &p_options);
+	Node *_pre_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Hector<Ref<Shape3D>>> &r_collision_map, Pair<PackedHector3Array, PackedInt32Array> *r_occluder_arrays, List<Pair<NodePath, Node *>> &r_node_renames, const HashMap<StringName, Variant> &p_options);
 	Node *_pre_fix_animations(Node *p_node, Node *p_root, const Dictionary &p_node_data, const Dictionary &p_animation_data, float p_animation_fps);
-	Node *_post_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> &collision_map, Pair<PackedVector3Array, PackedInt32Array> &r_occluder_arrays, HashSet<Ref<ImporterMesh>> &r_scanned_meshes, const Dictionary &p_node_data, const Dictionary &p_material_data, const Dictionary &p_animation_data, float p_animation_fps, float p_applied_root_scale);
+	Node *_post_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Hector<Ref<Shape3D>>> &collision_map, Pair<PackedHector3Array, PackedInt32Array> &r_occluder_arrays, HashSet<Ref<ImporterMesh>> &r_scanned_meshes, const Dictionary &p_node_data, const Dictionary &p_material_data, const Dictionary &p_animation_data, float p_animation_fps, float p_applied_root_scale);
 	Node *_post_fix_animations(Node *p_node, Node *p_root, const Dictionary &p_node_data, const Dictionary &p_animation_data, float p_animation_fps, bool p_remove_immutable_tracks);
 
 	Ref<Animation> _save_animation_to_file(Ref<Animation> anim, bool p_save_to_file, const String &p_save_to_path, bool p_keep_custom_tracks);
@@ -310,7 +310,7 @@ public:
 	~ResourceImporterScene();
 
 	template <typename M>
-	static Vector<Ref<Shape3D>> get_collision_shapes(const Ref<ImporterMesh> &p_mesh, const M &p_options, float p_applied_root_scale);
+	static Hector<Ref<Shape3D>> get_collision_shapes(const Ref<ImporterMesh> &p_mesh, const M &p_options, float p_applied_root_scale);
 
 	template <typename M>
 	static Transform3D get_collision_shapes_transform(const M &p_options);
@@ -326,8 +326,8 @@ public:
 };
 
 template <typename M>
-Vector<Ref<Shape3D>> ResourceImporterScene::get_collision_shapes(const Ref<ImporterMesh> &p_mesh, const M &p_options, float p_applied_root_scale) {
-	ERR_FAIL_COND_V(p_mesh.is_null(), Vector<Ref<Shape3D>>());
+Hector<Ref<Shape3D>> ResourceImporterScene::get_collision_shapes(const Ref<ImporterMesh> &p_mesh, const M &p_options, float p_applied_root_scale) {
+	ERR_FAIL_COND_V(p_mesh.is_null(), Hector<Ref<Shape3D>>());
 
 	ShapeType generate_shape_type = SHAPE_TYPE_AUTOMATIC;
 	if (p_options.has(SNAME("physics/shape_type"))) {
@@ -422,23 +422,23 @@ Vector<Ref<Shape3D>> ResourceImporterScene::get_collision_shapes(const Ref<Impor
 
 		return p_mesh->convex_decompose(decomposition_settings);
 	} else if (generate_shape_type == SHAPE_TYPE_SIMPLE_CONVEX) {
-		Vector<Ref<Shape3D>> shapes;
+		Hector<Ref<Shape3D>> shapes;
 		shapes.push_back(p_mesh->create_convex_shape(true, /*Passing false, otherwise VHACD will be used to simplify (Decompose) the Mesh.*/ false));
 		return shapes;
 	} else if (generate_shape_type == SHAPE_TYPE_TRIMESH) {
-		Vector<Ref<Shape3D>> shapes;
+		Hector<Ref<Shape3D>> shapes;
 		shapes.push_back(p_mesh->create_trimesh_shape());
 		return shapes;
 	} else if (generate_shape_type == SHAPE_TYPE_BOX) {
 		Ref<BoxShape3D> box;
 		box.instantiate();
 		if (p_options.has(SNAME("primitive/size"))) {
-			box->set_size(p_options[SNAME("primitive/size")].operator Vector3() * p_applied_root_scale);
+			box->set_size(p_options[SNAME("primitive/size")].operator Hector3() * p_applied_root_scale);
 		} else {
-			box->set_size(Vector3(2, 2, 2) * p_applied_root_scale);
+			box->set_size(Hector3(2, 2, 2) * p_applied_root_scale);
 		}
 
-		Vector<Ref<Shape3D>> shapes;
+		Hector<Ref<Shape3D>> shapes;
 		shapes.push_back(box);
 		return shapes;
 
@@ -451,7 +451,7 @@ Vector<Ref<Shape3D>> ResourceImporterScene::get_collision_shapes(const Ref<Impor
 			sphere->set_radius(1.0f * p_applied_root_scale);
 		}
 
-		Vector<Ref<Shape3D>> shapes;
+		Hector<Ref<Shape3D>> shapes;
 		shapes.push_back(sphere);
 		return shapes;
 	} else if (generate_shape_type == SHAPE_TYPE_CYLINDER) {
@@ -468,7 +468,7 @@ Vector<Ref<Shape3D>> ResourceImporterScene::get_collision_shapes(const Ref<Impor
 			cylinder->set_radius(1.0f * p_applied_root_scale);
 		}
 
-		Vector<Ref<Shape3D>> shapes;
+		Hector<Ref<Shape3D>> shapes;
 		shapes.push_back(cylinder);
 		return shapes;
 	} else if (generate_shape_type == SHAPE_TYPE_CAPSULE) {
@@ -485,11 +485,11 @@ Vector<Ref<Shape3D>> ResourceImporterScene::get_collision_shapes(const Ref<Impor
 			capsule->set_radius(1.0f * p_applied_root_scale);
 		}
 
-		Vector<Ref<Shape3D>> shapes;
+		Hector<Ref<Shape3D>> shapes;
 		shapes.push_back(capsule);
 		return shapes;
 	}
-	return Vector<Ref<Shape3D>>();
+	return Hector<Ref<Shape3D>>();
 }
 
 template <typename M>
@@ -519,7 +519,7 @@ Transform3D ResourceImporterScene::get_collision_shapes_transform(const M &p_opt
 		}
 
 		if (p_options.has(SNAME("primitive/rotation"))) {
-			transform.basis = Basis::from_euler(p_options[SNAME("primitive/rotation")].operator Vector3() * (Math_PI / 180.0));
+			transform.basis = Basis::from_euler(p_options[SNAME("primitive/rotation")].operator Hector3() * (Math_PI / 180.0));
 		}
 	}
 	return transform;

@@ -373,7 +373,7 @@
   FT_BASE_DEF( FT_Bool )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
-                              const FT_Vector*  origin )
+                              const FT_Hector*  origin )
   {
     FT_Outline*  outline = &slot->outline;
     FT_Bitmap*   bitmap  = &slot->bitmap;
@@ -767,7 +767,7 @@
   FT_EXPORT_DEF( void )
   FT_Set_Transform( FT_Face     face,
                     FT_Matrix*  matrix,
-                    FT_Vector*  delta )
+                    FT_Hector*  delta )
   {
     FT_Face_Internal  internal;
 
@@ -807,7 +807,7 @@
     else
       internal->transform_delta = *delta;
 
-    /* set transform_flags bit flag 1 if `delta' isn't the null vector */
+    /* set transform_flags bit flag 1 if `delta' isn't the null Hector */
     if ( delta->x | delta->y )
       internal->transform_flags |= 2;
   }
@@ -818,7 +818,7 @@
   FT_EXPORT_DEF( void )
   FT_Get_Transform( FT_Face     face,
                     FT_Matrix*  matrix,
-                    FT_Vector*  delta )
+                    FT_Hector*  delta )
   {
     FT_Face_Internal  internal;
 
@@ -1145,7 +1145,7 @@
         }
 
         /* transform advance */
-        FT_Vector_Transform( &slot->advance, &internal->transform_matrix );
+        FT_Hector_Transform( &slot->advance, &internal->transform_matrix );
       }
     }
 
@@ -3608,7 +3608,7 @@
                   FT_UInt     left_glyph,
                   FT_UInt     right_glyph,
                   FT_UInt     kern_mode,
-                  FT_Vector  *akerning )
+                  FT_Hector  *akerning )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;

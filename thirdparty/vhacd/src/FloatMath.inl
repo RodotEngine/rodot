@@ -1,8 +1,8 @@
 // a set of routines that let you do common 3d math
-// operations without any vector, matrix, or quaternion
+// operations without any Hector, matrix, or quaternion
 // classes or templates.
 //
-// a vector (or point) is a 'float *' to 3 floating point numbers.
+// a Hector (or point) is a 'float *' to 3 floating point numbers.
 // a matrix is a 'float *' to an array of 16 floating point numbers representing a 4x4 transformation matrix compatible with D3D or OGL
 // a quaternion is a 'float *' to 4 floats representing a quaternion x,y,z,w
 //
@@ -21,7 +21,7 @@ void fm_inverseRT(const REAL matrix[16],const REAL pos[3],REAL t[3]) // inverse 
 	REAL _y = pos[1] - matrix[3*4+1];
 	REAL _z = pos[2] - matrix[3*4+2];
 
-	// Multiply inverse-translated source vector by inverted rotation transform
+	// Multiply inverse-translated source Hector by inverted rotation transform
 
 	t[0] = (matrix[0*4+0] * _x) + (matrix[0*4+1] * _y) + (matrix[0*4+2] * _z);
 	t[1] = (matrix[1*4+0] * _x) + (matrix[1*4+1] * _y) + (matrix[1*4+2] * _z);
@@ -297,7 +297,7 @@ void fm_quatToMatrix(const REAL *quat,REAL *matrix) // convert quaterinion rotat
 }
 
 
-void fm_quatRotate(const REAL *quat,const REAL *v,REAL *r) // rotate a vector directly by a quaternion.
+void fm_quatRotate(const REAL *quat,const REAL *v,REAL *r) // rotate a Hector directly by a quaternion.
 {
   REAL left[4];
 
@@ -515,7 +515,7 @@ void fm_cross(REAL *cross,const REAL *a,const REAL *b)
 	cross[2] = a[0]*b[1] - a[1]*b[0];
 }
 
-REAL fm_computeNormalVector(REAL *n,const REAL *p1,const REAL *p2)
+REAL fm_computeNormalHector(REAL *n,const REAL *p1,const REAL *p2)
 {
   n[0] = p2[0] - p1[0];
   n[1] = p2[1] - p1[1];
@@ -530,8 +530,8 @@ bool  fm_computeWindingOrder(const REAL *p1,const REAL *p2,const REAL *p3) // re
   REAL v1[3];
   REAL v2[3];
 
-  fm_computeNormalVector(v1,p1,p2); // p2-p1 (as vector) and then normalized
-  fm_computeNormalVector(v2,p1,p3); // p3-p1 (as vector) and then normalized
+  fm_computeNormalHector(v1,p1,p2); // p2-p1 (as Hector) and then normalized
+  fm_computeNormalHector(v2,p1,p3); // p3-p1 (as Hector) and then normalized
 
   REAL cross[3];
 
@@ -549,7 +549,7 @@ bool  fm_computeWindingOrder(const REAL *p1,const REAL *p2,const REAL *p3) // re
   return ret;
 }
 
-REAL fm_normalize(REAL *n) // normalize this vector
+REAL fm_normalize(REAL *n) // normalize this Hector
 {
   REAL dist = (REAL)sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
   if ( dist > 0.0000001f )
@@ -1088,7 +1088,7 @@ bool fm_raySphereIntersect(const REAL *center,REAL radius,const REAL *pos,const 
   REAL radius2 = radius*radius; // radius squared..
 
   // Bug Fix For Gem, if origin is *inside* the sphere, invert the
-  // direction vector so that we get a valid intersection location.
+  // direction Hector so that we get a valid intersection location.
   if ( dist2 < radius2 )
   {
 	V[0]*=-1;
@@ -1121,7 +1121,7 @@ bool fm_raySphereIntersect(const REAL *center,REAL radius,const REAL *pos,const 
 }
 
 
-void fm_catmullRom(REAL *out_vector,const REAL *p1,const REAL *p2,const REAL *p3,const REAL *p4, const REAL s)
+void fm_catmullRom(REAL *out_Hector,const REAL *p1,const REAL *p2,const REAL *p3,const REAL *p4, const REAL s)
 {
   REAL s_squared = s * s;
   REAL s_cubed = s_squared * s;
@@ -1131,9 +1131,9 @@ void fm_catmullRom(REAL *out_vector,const REAL *p1,const REAL *p2,const REAL *p3
   REAL coefficient_p3 = -3 * s_cubed +4 * s_squared + s;
   REAL coefficient_p4 = s_cubed - s_squared;
 
-  out_vector[0] = (coefficient_p1 * p1[0] + coefficient_p2 * p2[0] + coefficient_p3 * p3[0] + coefficient_p4 * p4[0])*0.5f;
-  out_vector[1] = (coefficient_p1 * p1[1] + coefficient_p2 * p2[1] + coefficient_p3 * p3[1] + coefficient_p4 * p4[1])*0.5f;
-  out_vector[2] = (coefficient_p1 * p1[2] + coefficient_p2 * p2[2] + coefficient_p3 * p3[2] + coefficient_p4 * p4[2])*0.5f;
+  out_Hector[0] = (coefficient_p1 * p1[0] + coefficient_p2 * p2[0] + coefficient_p3 * p3[0] + coefficient_p4 * p4[0])*0.5f;
+  out_Hector[1] = (coefficient_p1 * p1[1] + coefficient_p2 * p2[1] + coefficient_p3 * p3[1] + coefficient_p4 * p4[1])*0.5f;
+  out_Hector[2] = (coefficient_p1 * p1[2] + coefficient_p2 * p2[2] + coefficient_p3 * p3[2] + coefficient_p4 * p4[2])*0.5f;
 }
 
 bool fm_intersectAABB(const REAL *bmin1,const REAL *bmax1,const REAL *bmin2,const REAL *bmax2)
@@ -1162,7 +1162,7 @@ bool  fm_insideAABB(const REAL *obmin,const REAL *obmax,const REAL *tbmin,const 
 
 // Reference, from Stan Melax in Game Gems I
 //  Quaternion q;
-//  vector3 c = CrossProduct(v0,v1);
+//  Hector3 c = CrossProduct(v0,v1);
 //  REAL   d = DotProduct(v0,v1);
 //  REAL   s = (REAL)sqrt((1+d)*2);
 //  q.x = c.x / s;
@@ -1452,7 +1452,7 @@ public:
 		// swap eigenvalues
 		m_afDiag[i1] = m_afDiag[i0];
 		m_afDiag[i0] = fMax;
-		// swap eigenvectors
+		// swap eigenHectors
 		for (i2 = 0; i2 < 3; i2++)
 		{
 		  Type fTmp = mElement[i2][i0];
@@ -2249,7 +2249,7 @@ namespace VERTEX_INDEX
 
 class KdTreeNode;
 
-typedef std::vector< KdTreeNode * > KdTreeNodeVector;
+typedef std::vector< KdTreeNode * > KdTreeNodeHector;
 
 enum Axes
 {
@@ -2742,8 +2742,8 @@ public:
 };
 
 
-typedef std::vector< double > DoubleVector;
-typedef std::vector< float >  FloatVector;
+typedef std::vector< double > DoubleHector;
+typedef std::vector< float >  FloatHector;
 
 class KdTree : public KdTreeInterface
 {
@@ -2934,8 +2934,8 @@ private:
   KdTreeNode             *mRoot;
   KdTreeNodeBundle       *mBundle;
   uint32_t                  mVcount;
-  DoubleVector            mVerticesDouble;
-  FloatVector             mVerticesFloat;
+  DoubleHector            mVerticesDouble;
+  FloatHector             mVerticesFloat;
 };
 
 }; // end of namespace VERTEX_INDEX
@@ -2981,7 +2981,7 @@ public:
 	return p;
   }
 
-  uint32_t    getIndex(const float *_p,bool &newPos)  // get index for a vector float
+  uint32_t    getIndex(const float *_p,bool &newPos)  // get index for a Hector float
   {
 	uint32_t ret;
 
@@ -3023,7 +3023,7 @@ public:
 	return ret;
   }
 
-  uint32_t    getIndex(const double *_p,bool &newPos)  // get index for a vector double
+  uint32_t    getIndex(const double *_p,bool &newPos)  // get index for a Hector double
   {
 	uint32_t ret;
 
@@ -3237,7 +3237,7 @@ REAL fm_computeBestFitAABB(uint32_t vcount,const REAL *points,uint32_t pstride,R
 
 
 /* a = b - c */
-#define vector(a,b,c) \
+#define Hector(a,b,c) \
 	(a)[0] = (b)[0] - (c)[0];	\
 	(a)[1] = (b)[1] - (c)[1];	\
 	(a)[2] = (b)[2] - (c)[2];
@@ -3299,8 +3299,8 @@ bool fm_rayIntersectsTriangle(const REAL *p,const REAL *d,const REAL *v0,const R
 	REAL e1[3],e2[3],h[3],s[3],q[3];
 	REAL a,f,u,v;
 
-	vector(e1,v1,v0);
-	vector(e2,v2,v0);
+	Hector(e1,v1,v0);
+	Hector(e2,v2,v0);
 	crossProduct(h,d,e2);
 	a = innerProduct(e1,h);
 
@@ -3308,7 +3308,7 @@ bool fm_rayIntersectsTriangle(const REAL *p,const REAL *d,const REAL *v0,const R
 		return(false);
 
 	f = 1/a;
-	vector(s,p,v0);
+	Hector(s,p,v0);
 	u = f * (innerProduct(s,h));
 
 	if (u < 0.0 || u > 1.0)
@@ -3859,7 +3859,7 @@ bool fm_samePlane(const REAL p1[4],const REAL p2[4],REAL normalEpsilon,REAL dEps
   REAL diff = (REAL) fabs(p1[3]-p2[3]);
   if ( diff < dEpsilon ) // if the plane -d  co-efficient is within our epsilon
   {
-	REAL dot = fm_dot(p1,p2); // compute the dot-product of the vector normals.
+	REAL dot = fm_dot(p1,p2); // compute the dot-product of the Hector normals.
 	if ( doubleSided ) dot = (REAL)fabs(dot);
 	REAL dmin = 1 - normalEpsilon;
 	REAL dmax = 1 + normalEpsilon;
@@ -3901,7 +3901,7 @@ void fm_inflateMinMax(REAL bmin[3], REAL bmax[3], REAL ratio)
 
 #define TESSELATE_H
 
-typedef std::vector< uint32_t > UintVector;
+typedef std::vector< uint32_t > UintHector;
 
 class Myfm_Tesselate : public fm_Tesselate
 {
@@ -4117,7 +4117,7 @@ private:
   float           mLongEdge;
   double          mLongEdgeD;
   fm_VertexIndex *mVertices;
-  UintVector    mIndices;
+  UintHector    mIndices;
   uint32_t          mMaxDepth;
 };
 
@@ -4283,7 +4283,7 @@ void computeNormal(uint32_t index,REAL *normals,uint32_t nstride,const REAL *nor
 void fm_computeMeanNormals(uint32_t vcount,       // the number of vertices
 						   const REAL *vertices,     // the base address of the vertex position data.
 						   uint32_t vstride,      // the stride between position data.
-						   REAL *normals,            // the base address  of the destination for mean vector normals
+						   REAL *normals,            // the base address  of the destination for mean Hector normals
 						   uint32_t nstride,      // the stride between normals
 						   uint32_t tcount,       // the number of triangles
 						   const uint32_t *indices)     // the triangle indices
@@ -4441,9 +4441,9 @@ REAL  fm_computeBestFitSphere(uint32_t vcount,const REAL *points,uint32_t pstrid
 
 	/* calculate initial radius**2 and radius */
 
-	dx = dia2[0]-center[0]; /* x component of radius vector */
-	dy = dia2[1]-center[1]; /* y component of radius vector */
-	dz = dia2[2]-center[2]; /* z component of radius vector */
+	dx = dia2[0]-center[0]; /* x component of radius Hector */
+	dy = dia2[1]-center[1]; /* y component of radius Hector */
+	dz = dia2[2]-center[2]; /* z component of radius Hector */
 
 	radius2 = dx*dx + dy*dy + dz*dz;
 	radius = REAL(sqrt(radius2));
@@ -4603,8 +4603,8 @@ public:
   double z;
 };
 
-typedef std::vector< TVec >  TVecVector;
-typedef std::vector< TU32 >  TU32Vector;
+typedef std::vector< TVec >  TVecHector;
+typedef std::vector< TU32 >  TU32Hector;
 
 class CTriangulator
 {
@@ -4616,7 +4616,7 @@ public:
 	virtual ~CTriangulator();
 
 	///     Triangulates the contour
-	void triangulate(TU32Vector &indices);
+	void triangulate(TU32Hector &indices);
 
 	///     Returns the given point in the triangulator array
 	inline TVec get(const TU32 id) { return mPoints[id]; }
@@ -4741,9 +4741,9 @@ private:
 	double                  mEpsilon;
 	TVec                   mMin;
 	TVec                   mMax;
-	TVecVector             mInputPoints;
-	TVecVector             mPoints;
-	TU32Vector             mIndices;
+	TVecHector             mInputPoints;
+	TVecHector             mPoints;
+	TU32Hector             mIndices;
 
 	///     Tests if a point is inside the given triangle
 	bool _insideTriangle(const TVec& A, const TVec& B, const TVec& C,const TVec& P);
@@ -4754,7 +4754,7 @@ private:
 	bool _snip(int32_t u, int32_t v, int32_t w, int32_t n, int32_t *V);
 
 	///     Processes the triangulation
-	void _process(TU32Vector &indices);
+	void _process(TU32Hector &indices);
 
 };
 
@@ -4769,13 +4769,13 @@ CTriangulator::~CTriangulator()
 }
 
 ///     Triangulates the contour
-void CTriangulator::triangulate(TU32Vector &indices)
+void CTriangulator::triangulate(TU32Hector &indices)
 {
 	_process(indices);
 }
 
 ///     Processes the triangulation
-void CTriangulator::_process(TU32Vector &indices)
+void CTriangulator::_process(TU32Hector &indices)
 {
 	const int32_t n = (const int32_t)mPoints.size();
 	if (n < 3)

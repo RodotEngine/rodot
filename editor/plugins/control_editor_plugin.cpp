@@ -177,17 +177,17 @@ void EditorPropertyAnchorsPreset::update_property() {
 	}
 }
 
-void EditorPropertyAnchorsPreset::setup(const Vector<String> &p_options) {
+void EditorPropertyAnchorsPreset::setup(const Hector<String> &p_options) {
 	options->clear();
 
-	Vector<String> split_after;
+	Hector<String> split_after;
 	split_after.append("Custom");
 	split_after.append("PresetFullRect");
 	split_after.append("PresetBottomLeft");
 	split_after.append("PresetCenter");
 
 	for (int i = 0, j = 0; i < p_options.size(); i++, j++) {
-		Vector<String> text_split = p_options[i].split(":");
+		Hector<String> text_split = p_options[i].split(":");
 		int64_t current_val = text_split[1].to_int();
 
 		const String &option_name = text_split[0];
@@ -327,7 +327,7 @@ void EditorPropertySizeFlags::update_property() {
 	flag_options->set_visible(preset == SIZE_FLAGS_PRESET_CUSTOM);
 }
 
-void EditorPropertySizeFlags::setup(const Vector<String> &p_options, bool p_vertical) {
+void EditorPropertySizeFlags::setup(const Hector<String> &p_options, bool p_vertical) {
 	vertical = p_vertical;
 
 	if (p_options.size() == 0) {
@@ -340,7 +340,7 @@ void EditorPropertySizeFlags::setup(const Vector<String> &p_options, bool p_vert
 
 	HashMap<int, String> flags;
 	for (int i = 0, j = 0; i < p_options.size(); i++, j++) {
-		Vector<String> text_split = p_options[i].split(":");
+		Hector<String> text_split = p_options[i].split(":");
 		int64_t current_val = text_split[1].to_int();
 		flags[current_val] = text_split[0];
 
@@ -441,7 +441,7 @@ bool EditorInspectorPluginControl::parse_property(Object *p_object, const Varian
 
 	if (p_path == "anchors_preset") {
 		EditorPropertyAnchorsPreset *prop_editor = memnew(EditorPropertyAnchorsPreset);
-		Vector<String> options = p_hint_text.split(",");
+		Hector<String> options = p_hint_text.split(",");
 		prop_editor->setup(options);
 		add_property_editor(p_path, prop_editor);
 
@@ -450,7 +450,7 @@ bool EditorInspectorPluginControl::parse_property(Object *p_object, const Varian
 
 	if (p_path == "size_flags_horizontal" || p_path == "size_flags_vertical") {
 		EditorPropertySizeFlags *prop_editor = memnew(EditorPropertySizeFlags);
-		Vector<String> options;
+		Hector<String> options;
 		if (!p_hint_text.is_empty()) {
 			options = p_hint_text.split(",");
 		}
@@ -466,13 +466,13 @@ bool EditorInspectorPluginControl::parse_property(Object *p_object, const Varian
 // Toolbars controls.
 
 Size2 ControlEditorPopupButton::get_minimum_size() const {
-	Vector2 base_size = Vector2(26, 26) * EDSCALE;
+	Hector2 base_size = Hector2(26, 26) * EDSCALE;
 
 	if (arrow_icon.is_null()) {
 		return base_size;
 	}
 
-	Vector2 final_size;
+	Hector2 final_size;
 	final_size.x = base_size.x + arrow_icon->get_width();
 	final_size.y = MAX(base_size.y, arrow_icon->get_height());
 
@@ -510,7 +510,7 @@ void ControlEditorPopupButton::_notification(int p_what) {
 
 		case NOTIFICATION_DRAW: {
 			if (arrow_icon.is_valid()) {
-				Vector2 arrow_pos = Point2(26, 0) * EDSCALE;
+				Hector2 arrow_pos = Point2(26, 0) * EDSCALE;
 				arrow_pos.y = get_size().y / 2 - arrow_icon->get_height() / 2;
 				draw_texture(arrow_icon, arrow_pos);
 			}
@@ -665,7 +665,7 @@ void SizeFlagPresetPicker::_expand_button_pressed() {
 	emit_signal("expand_flag_toggled", expand_button->is_pressed());
 }
 
-void SizeFlagPresetPicker::set_allowed_flags(Vector<SizeFlags> &p_flags) {
+void SizeFlagPresetPicker::set_allowed_flags(Hector<SizeFlags> &p_flags) {
 	preset_buttons[SIZE_SHRINK_BEGIN]->set_disabled(!p_flags.has(SIZE_SHRINK_BEGIN));
 	preset_buttons[SIZE_SHRINK_CENTER]->set_disabled(!p_flags.has(SIZE_SHRINK_CENTER));
 	preset_buttons[SIZE_SHRINK_END]->set_disabled(!p_flags.has(SIZE_SHRINK_END));
@@ -872,12 +872,12 @@ void ControlEditorToolbar::_expand_flag_toggled(bool p_expand, bool p_vertical) 
 	undo_redo->commit_action();
 }
 
-Vector2 ControlEditorToolbar::_position_to_anchor(const Control *p_control, Vector2 position) {
-	ERR_FAIL_NULL_V(p_control, Vector2());
+Hector2 ControlEditorToolbar::_position_to_anchor(const Control *p_control, Hector2 position) {
+	ERR_FAIL_NULL_V(p_control, Hector2());
 
 	Rect2 parent_rect = p_control->get_parent_anchorable_rect();
 
-	Vector2 output;
+	Hector2 output;
 	if (p_control->is_layout_rtl()) {
 		output.x = (parent_rect.size.x == 0) ? 0.0 : (parent_rect.size.x - p_control->get_transform().xform(position).x - parent_rect.position.x) / parent_rect.size.x;
 	} else {
@@ -910,14 +910,14 @@ void ControlEditorToolbar::_selection_changed() {
 	bool has_container_parents = false;
 
 	// Also update which size flags can be configured for the selected nodes.
-	Vector<SizeFlags> allowed_h_flags = {
+	Hector<SizeFlags> allowed_h_flags = {
 		SIZE_SHRINK_BEGIN,
 		SIZE_SHRINK_CENTER,
 		SIZE_SHRINK_END,
 		SIZE_FILL,
 		SIZE_EXPAND,
 	};
-	Vector<SizeFlags> allowed_v_flags = {
+	Hector<SizeFlags> allowed_v_flags = {
 		SIZE_SHRINK_BEGIN,
 		SIZE_SHRINK_CENTER,
 		SIZE_SHRINK_END,
@@ -940,8 +940,8 @@ void ControlEditorToolbar::_selection_changed() {
 
 			Container *parent_container = Object::cast_to<Container>(control->get_parent());
 
-			Vector<int> container_h_flags = parent_container->get_allowed_size_flags_horizontal();
-			Vector<SizeFlags> tmp_flags = allowed_h_flags.duplicate();
+			Hector<int> container_h_flags = parent_container->get_allowed_size_flags_horizontal();
+			Hector<SizeFlags> tmp_flags = allowed_h_flags.duplicate();
 			for (int i = 0; i < allowed_h_flags.size(); i++) {
 				if (!container_h_flags.has((int)allowed_h_flags[i])) {
 					tmp_flags.erase(allowed_h_flags[i]);
@@ -949,7 +949,7 @@ void ControlEditorToolbar::_selection_changed() {
 			}
 			allowed_h_flags = tmp_flags;
 
-			Vector<int> container_v_flags = parent_container->get_allowed_size_flags_vertical();
+			Hector<int> container_v_flags = parent_container->get_allowed_size_flags_vertical();
 			tmp_flags = allowed_v_flags.duplicate();
 			for (int i = 0; i < allowed_v_flags.size(); i++) {
 				if (!container_v_flags.has((int)allowed_v_flags[i])) {
@@ -1005,7 +1005,7 @@ void ControlEditorToolbar::_selection_changed() {
 			container_h_picker->set_allowed_flags(allowed_h_flags);
 			container_v_picker->set_allowed_flags(allowed_v_flags);
 		} else {
-			Vector<SizeFlags> allowed_all_flags = {
+			Hector<SizeFlags> allowed_all_flags = {
 				SIZE_SHRINK_BEGIN,
 				SIZE_SHRINK_CENTER,
 				SIZE_SHRINK_END,

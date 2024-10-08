@@ -363,7 +363,7 @@ void EditorFeatureProfileManager::_update_profile_list(const String &p_select_pr
 		selected_profile = p_select_profile;
 	}
 
-	Vector<String> profiles;
+	Hector<String> profiles;
 	Ref<DirAccess> d = DirAccess::open(EditorPaths::get_singleton()->get_feature_profiles_dir());
 	ERR_FAIL_COND_MSG(d.is_null(), "Cannot open directory '" + EditorPaths::get_singleton()->get_feature_profiles_dir() + "'.");
 
@@ -800,7 +800,7 @@ void EditorFeatureProfileManager::_update_selected_profile() {
 	_class_list_item_selected();
 }
 
-void EditorFeatureProfileManager::_import_profiles(const Vector<String> &p_paths) {
+void EditorFeatureProfileManager::_import_profiles(const Hector<String> &p_paths) {
 	//test it first
 	for (int i = 0; i < p_paths.size(); i++) {
 		Ref<EditorFeatureProfile> profile;

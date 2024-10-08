@@ -31,8 +31,8 @@
 #ifndef TRIANGULATE_H
 #define TRIANGULATE_H
 
-#include "core/math/vector2.h"
-#include "core/templates/vector.h"
+#include "core/math/Hector2.h"
+#include "core/templates/Hector.h"
 
 /*
 https://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
@@ -40,12 +40,12 @@ https://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
 
 class Triangulate {
 public:
-	// triangulate a contour/polygon, places results in STL vector
+	// triangulate a contour/polygon, places results in STL Hector
 	// as series of triangles.
-	static bool triangulate(const Vector<Vector2> &contour, Vector<int> &result);
+	static bool triangulate(const Hector<Hector2> &contour, Hector<int> &result);
 
 	// compute area of a contour/polygon
-	static real_t get_area(const Vector<Vector2> &contour);
+	static real_t get_area(const Hector<Hector2> &contour);
 
 	// decide if point Px/Py is inside triangle defined by
 	// (Ax,Ay) (Bx,By) (Cx,Cy)
@@ -56,7 +56,7 @@ public:
 			bool include_edges);
 
 private:
-	static bool snip(const Vector<Vector2> &p_contour, int u, int v, int w, int n, const Vector<int> &V, bool relaxed);
+	static bool snip(const Hector<Hector2> &p_contour, int u, int v, int w, int n, const Hector<int> &V, bool relaxed);
 };
 
 #endif // TRIANGULATE_H

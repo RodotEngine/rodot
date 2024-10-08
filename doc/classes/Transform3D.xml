@@ -33,9 +33,9 @@
 		<constructor name="Transform3D">
 			<return type="Transform3D" />
 			<param index="0" name="basis" type="Basis" />
-			<param index="1" name="origin" type="Vector3" />
+			<param index="1" name="origin" type="Hector3" />
 			<description>
-				Constructs a [Transform3D] from a [Basis] and [Vector3].
+				Constructs a [Transform3D] from a [Basis] and [Hector3].
 			</description>
 		</constructor>
 		<constructor name="Transform3D">
@@ -47,12 +47,12 @@
 		</constructor>
 		<constructor name="Transform3D">
 			<return type="Transform3D" />
-			<param index="0" name="x_axis" type="Vector3" />
-			<param index="1" name="y_axis" type="Vector3" />
-			<param index="2" name="z_axis" type="Vector3" />
-			<param index="3" name="origin" type="Vector3" />
+			<param index="0" name="x_axis" type="Hector3" />
+			<param index="1" name="y_axis" type="Hector3" />
+			<param index="2" name="z_axis" type="Hector3" />
+			<param index="3" name="origin" type="Hector3" />
 			<description>
-				Constructs a [Transform3D] from four [Vector3] values (also called matrix columns).
+				Constructs a [Transform3D] from four [Hector3] values (also called matrix columns).
 				The first three arguments are the [member basis]'s axes ([member Basis.x], [member Basis.y], and [member Basis.z]).
 			</description>
 		</constructor>
@@ -96,12 +96,12 @@
 		</method>
 		<method name="looking_at" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="target" type="Vector3" />
-			<param index="1" name="up" type="Vector3" default="Vector3(0, 1, 0)" />
+			<param index="0" name="target" type="Hector3" />
+			<param index="1" name="up" type="Hector3" default="Hector3(0, 1, 0)" />
 			<param index="2" name="use_model_front" type="bool" default="false" />
 			<description>
 				Returns a copy of this transform rotated so that the forward axis (-Z) points towards the [param target] position.
-				The up axis (+Y) points as close to the [param up] vector as possible while staying perpendicular to the forward axis. The resulting transform is orthonormalized. The existing rotation, scale, and skew information from the original transform is discarded. The [param target] and [param up] vectors cannot be zero, cannot be parallel to each other, and are defined in global/parent space.
+				The up axis (+Y) points as close to the [param up] Hector as possible while staying perpendicular to the forward axis. The resulting transform is orthonormalized. The existing rotation, scale, and skew information from the original transform is discarded. The [param target] and [param up] Hectors cannot be zero, cannot be parallel to each other, and are defined in global/parent space.
 				If [param use_model_front] is [code]true[/code], the +Z axis (asset front) is treated as forward (implies +X is left) and points toward the [param target] position. By default, the -Z axis (camera forward) is treated as forward (implies +X is right).
 			</description>
 		</method>
@@ -113,29 +113,29 @@
 		</method>
 		<method name="rotated" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="axis" type="Vector3" />
+			<param index="0" name="axis" type="Hector3" />
 			<param index="1" name="angle" type="float" />
 			<description>
 				Returns a copy of this transform rotated around the given [param axis] by the given [param angle] (in radians).
-				The [param axis] must be a normalized vector.
+				The [param axis] must be a normalized Hector.
 				This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding rotation transform [code]R[/code] from the left, i.e., [code]R * X[/code].
 				This can be seen as transforming with respect to the global/parent frame.
 			</description>
 		</method>
 		<method name="rotated_local" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="axis" type="Vector3" />
+			<param index="0" name="axis" type="Hector3" />
 			<param index="1" name="angle" type="float" />
 			<description>
 				Returns a copy of this transform rotated around the given [param axis] by the given [param angle] (in radians).
-				The [param axis] must be a normalized vector.
+				The [param axis] must be a normalized Hector.
 				This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding rotation transform [code]R[/code] from the right, i.e., [code]X * R[/code].
 				This can be seen as transforming with respect to the local frame.
 			</description>
 		</method>
 		<method name="scaled" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="scale" type="Vector3" />
+			<param index="0" name="scale" type="Hector3" />
 			<description>
 				Returns a copy of this transform scaled by the given [param scale] factor.
 				This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding scaling transform [code]S[/code] from the left, i.e., [code]S * X[/code].
@@ -144,7 +144,7 @@
 		</method>
 		<method name="scaled_local" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="scale" type="Vector3" />
+			<param index="0" name="scale" type="Hector3" />
 			<description>
 				Returns a copy of this transform scaled by the given [param scale] factor.
 				This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding scaling transform [code]S[/code] from the right, i.e., [code]X * S[/code].
@@ -153,7 +153,7 @@
 		</method>
 		<method name="translated" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="offset" type="Vector3" />
+			<param index="0" name="offset" type="Hector3" />
 			<description>
 				Returns a copy of this transform translated by the given [param offset].
 				This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding translation transform [code]T[/code] from the left, i.e., [code]T * X[/code].
@@ -162,7 +162,7 @@
 		</method>
 		<method name="translated_local" qualifiers="const">
 			<return type="Transform3D" />
-			<param index="0" name="offset" type="Vector3" />
+			<param index="0" name="offset" type="Hector3" />
 			<description>
 				Returns a copy of this transform translated by the given [param offset].
 				This method is an optimized version of multiplying the given transform [code]X[/code] with a corresponding translation transform [code]T[/code] from the right, i.e., [code]X * T[/code].
@@ -174,7 +174,7 @@
 		<member name="basis" type="Basis" setter="" getter="" default="Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)">
 			The [Basis] of this transform. It is composed by 3 axes ([member Basis.x], [member Basis.y], and [member Basis.z]). Together, these represent the transform's rotation, scale, and shear.
 		</member>
-		<member name="origin" type="Vector3" setter="" getter="" default="Vector3(0, 0, 0)">
+		<member name="origin" type="Hector3" setter="" getter="" default="Hector3(0, 0, 0)">
 			The translation offset of this transform. In 3D space, this can be seen as the position.
 		</member>
 	</members>
@@ -210,11 +210,11 @@
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="PackedVector3Array" />
-			<param index="0" name="right" type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
+			<param index="0" name="right" type="PackedHector3Array" />
 			<description>
-				Transforms (multiplies) every [Vector3] element of the given [PackedVector3Array] by this transformation matrix.
-				On larger arrays, this operation is much faster than transforming each [Vector3] individually.
+				Transforms (multiplies) every [Hector3] element of the given [PackedHector3Array] by this transformation matrix.
+				On larger arrays, this operation is much faster than transforming each [Hector3] individually.
 			</description>
 		</operator>
 		<operator name="operator *">
@@ -237,10 +237,10 @@
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector3" />
-			<param index="0" name="right" type="Vector3" />
+			<return type="Hector3" />
+			<param index="0" name="right" type="Hector3" />
 			<description>
-				Transforms (multiplies) the [Vector3] by this transformation matrix.
+				Transforms (multiplies) the [Hector3] by this transformation matrix.
 			</description>
 		</operator>
 		<operator name="operator *">

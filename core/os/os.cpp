@@ -73,7 +73,7 @@ void OS::_set_logger(CompositeLogger *p_logger) {
 
 void OS::add_logger(Logger *p_logger) {
 	if (!_logger) {
-		Vector<Logger *> loggers;
+		Hector<Logger *> loggers;
 		loggers.push_back(p_logger);
 		_logger = memnew(CompositeLogger(loggers));
 	} else {
@@ -226,7 +226,7 @@ uint64_t OS::get_embedded_pck_offset() const {
 // Helper function to ensure that a dir name/path will be valid on the OS
 String OS::get_safe_dir_name(const String &p_dir_name, bool p_allow_paths) const {
 	String safe_dir_name = p_dir_name;
-	Vector<String> invalid_chars = String(": * ? \" < > |").split(" ");
+	Hector<String> invalid_chars = String(": * ? \" < > |").split(" ");
 	if (p_allow_paths) {
 		// Dir separators are allowed, but disallow ".." to avoid going up the filesystem
 		invalid_chars.push_back("..");
@@ -703,7 +703,7 @@ void OS::benchmark_dump() {
 OS::OS() {
 	singleton = this;
 
-	Vector<Logger *> loggers;
+	Hector<Logger *> loggers;
 	loggers.push_back(memnew(StdLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
 }

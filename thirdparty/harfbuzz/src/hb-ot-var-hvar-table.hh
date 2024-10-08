@@ -44,7 +44,7 @@ struct index_map_subset_plan_t
 
   void init (const DeltaSetIndexMap  &index_map,
 	     hb_inc_bimap_t	     &outer_map,
-	     hb_vector_t<hb_set_t *> &inner_sets,
+	     hb_Hector_t<hb_set_t *> &inner_sets,
 	     const hb_subset_plan_t  *plan,
 	     bool bypass_empty = true)
   {
@@ -110,7 +110,7 @@ struct index_map_subset_plan_t
 
   void remap (const DeltaSetIndexMap *input_map,
 	      const hb_inc_bimap_t &outer_map,
-	      const hb_vector_t<hb_inc_bimap_t> &inner_maps,
+	      const hb_Hector_t<hb_inc_bimap_t> &inner_maps,
 	      const hb_subset_plan_t *plan)
   {
     for (unsigned int i = 0; i < max_inners.length; i++)
@@ -176,10 +176,10 @@ struct index_map_subset_plan_t
 
   protected:
   unsigned int map_count;
-  hb_vector_t<unsigned int> max_inners;
+  hb_Hector_t<unsigned int> max_inners;
   unsigned int outer_bit_count;
   unsigned int inner_bit_count;
-  hb_vector_t<uint32_t> output_map;
+  hb_Hector_t<uint32_t> output_map;
 };
 
 struct hvarvvar_subset_plan_t
@@ -261,12 +261,12 @@ struct hvarvvar_subset_plan_t
   }
 
   hb_inc_bimap_t outer_map;
-  hb_vector_t<hb_inc_bimap_t> inner_maps;
-  hb_vector_t<index_map_subset_plan_t> index_map_plans;
+  hb_Hector_t<hb_inc_bimap_t> inner_maps;
+  hb_Hector_t<index_map_subset_plan_t> index_map_plans;
   const ItemVariationStore *var_store;
 
   protected:
-  hb_vector_t<hb_set_t *> inner_sets;
+  hb_Hector_t<hb_set_t *> inner_sets;
   hb_set_t *adv_set;
 };
 
@@ -299,7 +299,7 @@ struct HVARVVAR
   const ItemVariationStore& get_var_store () const
   { return this+varStore; }
 
-  void listup_index_maps (hb_vector_t<const DeltaSetIndexMap *> &index_maps) const
+  void listup_index_maps (hb_Hector_t<const DeltaSetIndexMap *> &index_maps) const
   {
     index_maps.push (&(this+advMap));
     index_maps.push (&(this+lsbMap));
@@ -334,7 +334,7 @@ struct HVARVVAR
       return_trace (false);
 
     hvarvvar_subset_plan_t	hvar_plan;
-    hb_vector_t<const DeltaSetIndexMap *>
+    hb_Hector_t<const DeltaSetIndexMap *>
 				index_maps;
 
     ((T*)this)->listup_index_maps (index_maps);
@@ -432,7 +432,7 @@ struct VVAR : HVARVVAR {
 		  vorgMap.sanitize (c, this));
   }
 
-  void listup_index_maps (hb_vector_t<const DeltaSetIndexMap *> &index_maps) const
+  void listup_index_maps (hb_Hector_t<const DeltaSetIndexMap *> &index_maps) const
   {
     HVARVVAR::listup_index_maps (index_maps);
     index_maps.push (&(this+vorgMap));

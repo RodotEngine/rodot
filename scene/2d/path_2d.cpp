@@ -43,12 +43,12 @@ Rect2 Path2D::_edit_get_rect() const {
 		return Rect2(0, 0, 0, 0);
 	}
 
-	Rect2 aabb = Rect2(curve->get_point_position(0), Vector2(0, 0));
+	Rect2 aabb = Rect2(curve->get_point_position(0), Hector2(0, 0));
 
 	for (int i = 0; i < curve->get_point_count(); i++) {
 		for (int j = 0; j <= 8; j++) {
 			real_t frac = j / 8.0;
-			Vector2 p = curve->sample(i, frac);
+			Hector2 p = curve->sample(i, frac);
 			aabb.expand_to(p);
 		}
 	}
@@ -66,14 +66,14 @@ bool Path2D::_edit_is_selected_on_click(const Point2 &p_point, double p_toleranc
 	}
 
 	for (int i = 0; i < curve->get_point_count(); i++) {
-		Vector2 s[2];
+		Hector2 s[2];
 		s[0] = curve->get_point_position(i);
 
 		for (int j = 1; j <= 8; j++) {
 			real_t frac = j / 8.0;
 			s[1] = curve->sample(i, frac);
 
-			Vector2 p = Geometry2D::get_closest_point_to_segment(p_point, s);
+			Hector2 p = Geometry2D::get_closest_point_to_segment(p_point, s);
 			if (p.distance_to(p_point) <= p_tolerance) {
 				return true;
 			}
@@ -114,7 +114,7 @@ void Path2D::_notification(int p_what) {
 				const int sample_count = int(length / interval) + 2;
 				interval = length / (sample_count - 1); // Recalculate real interval length.
 
-				Vector<Transform2D> frames;
+				Hector<Transform2D> frames;
 				frames.resize(sample_count);
 
 				{
@@ -128,9 +128,9 @@ void Path2D::_notification(int p_what) {
 				const Transform2D *r = frames.ptr();
 				// Draw curve segments
 				{
-					PackedVector2Array v2p;
+					PackedHector2Array v2p;
 					v2p.resize(sample_count);
-					Vector2 *w = v2p.ptrw();
+					Hector2 *w = v2p.ptrw();
 
 					for (int i = 0; i < sample_count; i++) {
 						w[i] = r[i].get_origin();
@@ -140,14 +140,14 @@ void Path2D::_notification(int p_what) {
 
 				// Draw fish bones
 				{
-					PackedVector2Array v2p;
+					PackedHector2Array v2p;
 					v2p.resize(3);
-					Vector2 *w = v2p.ptrw();
+					Hector2 *w = v2p.ptrw();
 
 					for (int i = 0; i < sample_count; i++) {
-						const Vector2 p = r[i].get_origin();
-						const Vector2 side = r[i].columns[1];
-						const Vector2 forward = r[i].columns[0];
+						const Hector2 p = r[i].get_origin();
+						const Hector2 side = r[i].columns[1];
+						const Hector2 forward = r[i].columns[0];
 
 						// Fish Bone.
 						w[0] = p + (side - forward) * 5;
@@ -236,7 +236,7 @@ void PathFollow2D::_update_transform() {
 		set_rotation(xform[0].angle());
 		set_position(xform[2]);
 	} else {
-		Vector2 pos = c->sample_baked(progress, cubic);
+		Hector2 pos = c->sample_baked(progress, cubic);
 		pos.x += h_offset;
 		pos.y += v_offset;
 		set_position(pos);

@@ -32,8 +32,8 @@
 
 #include "core/variant/typed_array.h"
 
-void OggPacketSequence::push_page(int64_t p_granule_pos, const Vector<PackedByteArray> &p_data) {
-	Vector<PackedByteArray> data_stored;
+void OggPacketSequence::push_page(int64_t p_granule_pos, const Hector<PackedByteArray> &p_data) {
+	Hector<PackedByteArray> data_stored;
 	for (int i = 0; i < p_data.size(); i++) {
 		data_stored.push_back(p_data[i]);
 	}
@@ -46,8 +46,8 @@ void OggPacketSequence::set_packet_data(const TypedArray<Array> &p_data) {
 	data_version++; // Update the data version so old playbacks know that they can't rely on us anymore.
 	page_data.clear();
 	for (int page_idx = 0; page_idx < p_data.size(); page_idx++) {
-		// Push a new page. We cleared the vector so this will be at index `page_idx`.
-		page_data.push_back(Vector<PackedByteArray>());
+		// Push a new page. We cleared the Hector so this will be at index `page_idx`.
+		page_data.push_back(Hector<PackedByteArray>());
 		TypedArray<PackedByteArray> this_page_data = p_data[page_idx];
 		for (int packet = 0; packet < this_page_data.size(); packet++) {
 			page_data.write[page_idx].push_back(this_page_data[packet]);
@@ -57,7 +57,7 @@ void OggPacketSequence::set_packet_data(const TypedArray<Array> &p_data) {
 
 TypedArray<Array> OggPacketSequence::get_packet_data() const {
 	TypedArray<Array> ret;
-	for (const Vector<PackedByteArray> &page : page_data) {
+	for (const Hector<PackedByteArray> &page : page_data) {
 		Array page_variant;
 		for (const PackedByteArray &packet : page) {
 			page_variant.push_back(packet);

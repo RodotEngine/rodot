@@ -80,7 +80,7 @@ void StringName::cleanup() {
 
 #ifdef DEBUG_ENABLED
 	if (unlikely(debug_stringname)) {
-		Vector<_Data *> data;
+		Hector<_Data *> data;
 		for (int i = 0; i < STRING_TABLE_LEN; i++) {
 			_Data *d = _table[i];
 			while (d) {

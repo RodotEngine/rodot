@@ -43,15 +43,15 @@ class NavigationObstacle2D : public Node2D {
 
 	real_t radius = 0.0;
 
-	Vector<Vector2> vertices;
+	Hector<Hector2> vertices;
 
 	bool avoidance_enabled = true;
 	uint32_t avoidance_layers = 1;
 
 	Transform2D previous_transform;
 
-	Vector2 velocity;
-	Vector2 previous_velocity;
+	Hector2 velocity;
+	Hector2 previous_velocity;
 	bool velocity_submitted = false;
 
 	bool affect_navigation_mesh = false;
@@ -83,8 +83,8 @@ public:
 	void set_radius(real_t p_radius);
 	real_t get_radius() const { return radius; }
 
-	void set_vertices(const Vector<Vector2> &p_vertices);
-	const Vector<Vector2> &get_vertices() const { return vertices; };
+	void set_vertices(const Hector<Hector2> &p_vertices);
+	const Hector<Hector2> &get_vertices() const { return vertices; };
 
 	void set_avoidance_layers(uint32_t p_layers);
 	uint32_t get_avoidance_layers() const;
@@ -95,10 +95,10 @@ public:
 	void set_avoidance_layer_value(int p_layer_number, bool p_value);
 	bool get_avoidance_layer_value(int p_layer_number) const;
 
-	void set_velocity(const Vector2 p_velocity);
-	Vector2 get_velocity() const { return velocity; };
+	void set_velocity(const Hector2 p_velocity);
+	Hector2 get_velocity() const { return velocity; };
 
-	void _avoidance_done(Vector3 p_new_velocity); // Dummy
+	void _avoidance_done(Hector3 p_new_velocity); // Dummy
 
 	void set_affect_navigation_mesh(bool p_enabled);
 	bool get_affect_navigation_mesh() const;
@@ -108,7 +108,7 @@ public:
 
 private:
 	void _update_map(RID p_map);
-	void _update_position(const Vector2 p_position);
+	void _update_position(const Hector2 p_position);
 };
 
 #endif // NAVIGATION_OBSTACLE_2D_H

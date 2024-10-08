@@ -60,7 +60,7 @@ class ResourcePreloaderEditor : public PanelContainer {
 	ResourcePreloader *preloader = nullptr;
 
 	void _load_pressed();
-	void _files_load_request(const Vector<String> &p_paths);
+	void _files_load_request(const Hector<String> &p_paths);
 	void _paste_pressed();
 	void _remove_resource(const String &p_to_remove);
 	void _update_library();

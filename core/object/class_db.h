@@ -49,7 +49,7 @@
 
 struct MethodDefinition {
 	StringName name;
-	Vector<StringName> args;
+	Hector<StringName> args;
 	MethodDefinition() {}
 	MethodDefinition(const char *p_name) :
 			name(p_name) {}
@@ -106,7 +106,7 @@ public:
 		ObjectGDExtension *gdextension = nullptr;
 
 		HashMap<StringName, MethodBind *> method_map;
-		HashMap<StringName, LocalVector<MethodBind *>> method_map_compatibility;
+		HashMap<StringName, LocalHector<MethodBind *>> method_map_compatibility;
 		HashMap<StringName, int64_t> constant_map;
 		struct EnumInfo {
 			List<StringName> constants;
@@ -123,7 +123,7 @@ public:
 		HashSet<StringName> methods_in_properties;
 		List<MethodInfo> virtual_methods;
 		HashMap<StringName, MethodInfo> virtual_methods_map;
-		HashMap<StringName, Vector<Error>> method_error_values;
+		HashMap<StringName, Hector<Error>> method_error_values;
 		HashMap<StringName, List<StringName>> linked_properties;
 #endif
 		HashMap<StringName, PropertySetGet> property_setget;
@@ -190,7 +190,7 @@ private:
 	static StringName _get_parent_class(const StringName &p_class);
 	static bool _is_parent_class(const StringName &p_class, const StringName &p_inherits);
 	static void _bind_compatibility(ClassInfo *type, MethodBind *p_method);
-	static MethodBind *_bind_vararg_method(MethodBind *p_bind, const StringName &p_name, const Vector<Variant> &p_default_args, bool p_compatibility);
+	static MethodBind *_bind_vararg_method(MethodBind *p_bind, const StringName &p_name, const Hector<Variant> &p_default_args, bool p_compatibility);
 	static void _bind_method_custom(const StringName &p_class, MethodBind *p_method, bool p_compatibility);
 
 	static Object *_instantiate_internal(const StringName &p_class, bool p_require_real_class = false, bool p_notify_postinitialize = true);
@@ -295,7 +295,7 @@ public:
 	static void get_inheriters_from_class(const StringName &p_class, List<StringName> *p_classes);
 	static void get_direct_inheriters_from_class(const StringName &p_class, List<StringName> *p_classes);
 	static StringName get_parent_class_nocheck(const StringName &p_class);
-	static bool get_inheritance_chain_nocheck(const StringName &p_class, Vector<StringName> &r_result);
+	static bool get_inheritance_chain_nocheck(const StringName &p_class, Hector<StringName> &r_result);
 	static StringName get_parent_class(const StringName &p_class);
 	static StringName get_compatibility_remapped_class(const StringName &p_class);
 	static bool class_exists(const StringName &p_class);
@@ -389,7 +389,7 @@ public:
 	}
 
 	template <typename M>
-	static MethodBind *bind_vararg_method(uint32_t p_flags, const StringName &p_name, M p_method, const MethodInfo &p_info = MethodInfo(), const Vector<Variant> &p_default_args = Vector<Variant>(), bool p_return_nil_is_variant = true) {
+	static MethodBind *bind_vararg_method(uint32_t p_flags, const StringName &p_name, M p_method, const MethodInfo &p_info = MethodInfo(), const Hector<Variant> &p_default_args = Hector<Variant>(), bool p_return_nil_is_variant = true) {
 		GLOBAL_LOCK_FUNCTION;
 
 		MethodBind *bind = create_vararg_method_bind(p_method, p_info, p_return_nil_is_variant);
@@ -402,7 +402,7 @@ public:
 	}
 
 	template <typename M>
-	static MethodBind *bind_compatibility_vararg_method(uint32_t p_flags, const StringName &p_name, M p_method, const MethodInfo &p_info = MethodInfo(), const Vector<Variant> &p_default_args = Vector<Variant>(), bool p_return_nil_is_variant = true) {
+	static MethodBind *bind_compatibility_vararg_method(uint32_t p_flags, const StringName &p_name, M p_method, const MethodInfo &p_info = MethodInfo(), const Hector<Variant> &p_default_args = Hector<Variant>(), bool p_return_nil_is_variant = true) {
 		GLOBAL_LOCK_FUNCTION;
 
 		MethodBind *bind = create_vararg_method_bind(p_method, p_info, p_return_nil_is_variant);
@@ -449,9 +449,9 @@ public:
 	static int get_method_argument_count(const StringName &p_class, const StringName &p_method, bool *r_is_valid = nullptr, bool p_no_inheritance = false);
 	static MethodBind *get_method(const StringName &p_class, const StringName &p_name);
 	static MethodBind *get_method_with_compatibility(const StringName &p_class, const StringName &p_name, uint64_t p_hash, bool *r_method_exists = nullptr, bool *r_is_deprecated = nullptr);
-	static Vector<uint32_t> get_method_compatibility_hashes(const StringName &p_class, const StringName &p_name);
+	static Hector<uint32_t> get_method_compatibility_hashes(const StringName &p_class, const StringName &p_name);
 
-	static void add_virtual_method(const StringName &p_class, const MethodInfo &p_method, bool p_virtual = true, const Vector<String> &p_arg_names = Vector<String>(), bool p_object_core = false);
+	static void add_virtual_method(const StringName &p_class, const MethodInfo &p_method, bool p_virtual = true, const Hector<String> &p_arg_names = Hector<String>(), bool p_object_core = false);
 	static void get_virtual_methods(const StringName &p_class, List<MethodInfo> *p_methods, bool p_no_inheritance = false);
 	static void add_extension_class_virtual_method(const StringName &p_class, const GDExtensionClassVirtualMethodInfo *p_method_info);
 
@@ -467,8 +467,8 @@ public:
 	static bool has_enum(const StringName &p_class, const StringName &p_name, bool p_no_inheritance = false);
 	static bool is_enum_bitfield(const StringName &p_class, const StringName &p_name, bool p_no_inheritance = false);
 
-	static void set_method_error_return_values(const StringName &p_class, const StringName &p_method, const Vector<Error> &p_values);
-	static Vector<Error> get_method_error_return_values(const StringName &p_class, const StringName &p_method);
+	static void set_method_error_return_values(const StringName &p_class, const StringName &p_method, const Hector<Error> &p_values);
+	static Hector<Error> get_method_error_return_values(const StringName &p_class, const StringName &p_method);
 	static Variant class_get_default_property_value(const StringName &p_class, const StringName &p_property, bool *r_valid = nullptr);
 
 	static void set_class_enabled(const StringName &p_class, bool p_enable);
@@ -508,22 +508,22 @@ public:
 
 #ifdef DEBUG_METHODS_ENABLED
 
-_FORCE_INLINE_ void errarray_add_str(Vector<Error> &arr) {
+_FORCE_INLINE_ void errarray_add_str(Hector<Error> &arr) {
 }
 
-_FORCE_INLINE_ void errarray_add_str(Vector<Error> &arr, const Error &p_err) {
+_FORCE_INLINE_ void errarray_add_str(Hector<Error> &arr, const Error &p_err) {
 	arr.push_back(p_err);
 }
 
 template <typename... P>
-_FORCE_INLINE_ void errarray_add_str(Vector<Error> &arr, const Error &p_err, P... p_args) {
+_FORCE_INLINE_ void errarray_add_str(Hector<Error> &arr, const Error &p_err, P... p_args) {
 	arr.push_back(p_err);
 	errarray_add_str(arr, p_args...);
 }
 
 template <typename... P>
-_FORCE_INLINE_ Vector<Error> errarray(P... p_args) {
-	Vector<Error> arr;
+_FORCE_INLINE_ Hector<Error> errarray(P... p_args) {
+	Hector<Error> arr;
 	errarray_add_str(arr, p_args...);
 	return arr;
 }

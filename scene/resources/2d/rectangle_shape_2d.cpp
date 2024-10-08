@@ -71,15 +71,15 @@ void RectangleShape2D::draw(const RID &p_to_rid, const Color &p_color) {
 	RenderingServer::get_singleton()->canvas_item_add_rect(p_to_rid, Rect2(-size * 0.5, size), p_color);
 	if (is_collision_outline_enabled()) {
 		// Draw an outlined rectangle to make individual shapes easier to distinguish.
-		Vector<Vector2> stroke_points;
+		Hector<Hector2> stroke_points;
 		stroke_points.resize(5);
 		stroke_points.write[0] = -size * 0.5;
-		stroke_points.write[1] = Vector2(size.x, -size.y) * 0.5;
+		stroke_points.write[1] = Hector2(size.x, -size.y) * 0.5;
 		stroke_points.write[2] = size * 0.5;
-		stroke_points.write[3] = Vector2(-size.x, size.y) * 0.5;
+		stroke_points.write[3] = Hector2(-size.x, size.y) * 0.5;
 		stroke_points.write[4] = -size * 0.5;
 
-		Vector<Color> stroke_colors = { Color(p_color, 1.0) };
+		Hector<Color> stroke_colors = { Color(p_color, 1.0) };
 
 		RenderingServer::get_singleton()->canvas_item_add_polyline(p_to_rid, stroke_points, stroke_colors);
 	}
@@ -97,7 +97,7 @@ void RectangleShape2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &RectangleShape2D::set_size);
 	ClassDB::bind_method(D_METHOD("get_size"), &RectangleShape2D::get_size);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "size", PROPERTY_HINT_NONE, "suffix:px"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "size", PROPERTY_HINT_NONE, "suffix:px"), "set_size", "get_size");
 }
 
 RectangleShape2D::RectangleShape2D() :

@@ -162,7 +162,7 @@ Ref<Image> RendererSceneRenderRD::environment_bake_panorama(RID p_env, bool p_ba
 /* REFLECTION PROBE */
 
 RID RendererSceneRenderRD::reflection_probe_create_framebuffer(RID p_color, RID p_depth) {
-	Vector<RID> fb;
+	Hector<RID> fb;
 	fb.push_back(p_color);
 	fb.push_back(p_depth);
 	return RD::get_singleton()->framebuffer_create(fb);
@@ -186,7 +186,7 @@ RID RendererSceneRenderRD::fog_volume_instance_get_volume(RID p_fog_volume_insta
 	return RendererRD::Fog::get_singleton()->fog_volume_instance_get_volume(p_fog_volume_instance);
 }
 
-Vector3 RendererSceneRenderRD::fog_volume_instance_get_position(RID p_fog_volume_instance) const {
+Hector3 RendererSceneRenderRD::fog_volume_instance_get_position(RID p_fog_volume_instance) const {
 	return RendererRD::Fog::get_singleton()->fog_volume_instance_get_position(p_fog_volume_instance);
 }
 
@@ -212,7 +212,7 @@ bool RendererSceneRenderRD::voxel_gi_needs_update(RID p_probe) const {
 	return gi.voxel_gi_needs_update(p_probe);
 }
 
-void RendererSceneRenderRD::voxel_gi_update(RID p_probe, bool p_update_light_instances, const Vector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
+void RendererSceneRenderRD::voxel_gi_update(RID p_probe, bool p_update_light_instances, const Hector<RID> &p_light_instances, const PagedArray<RenderGeometryInstance *> &p_dynamic_objects) {
 	if (!is_dynamic_gi_supported()) {
 		return;
 	}
@@ -261,7 +261,7 @@ bool RendererSceneRenderRD::_compositor_effects_has_flag(const RenderDataRD *p_r
 	}
 
 	ERR_FAIL_COND_V(!comp_storage->is_compositor(p_render_data->compositor), false);
-	Vector<RID> re_rids = comp_storage->compositor_get_compositor_effects(p_render_data->compositor, p_callback_type, true);
+	Hector<RID> re_rids = comp_storage->compositor_get_compositor_effects(p_render_data->compositor, p_callback_type, true);
 
 	for (RID rid : re_rids) {
 		if (comp_storage->compositor_effect_get_flag(rid, p_flag)) {
@@ -285,7 +285,7 @@ bool RendererSceneRenderRD::_has_compositor_effect(RS::CompositorEffectCallbackT
 
 	ERR_FAIL_COND_V(!comp_storage->is_compositor(p_render_data->compositor), false);
 
-	Vector<RID> effects = comp_storage->compositor_get_compositor_effects(p_render_data->compositor, p_callback_type, true);
+	Hector<RID> effects = comp_storage->compositor_get_compositor_effects(p_render_data->compositor, p_callback_type, true);
 
 	return effects.size() > 0;
 }
@@ -303,7 +303,7 @@ void RendererSceneRenderRD::_process_compositor_effects(RS::CompositorEffectCall
 
 	ERR_FAIL_COND(!comp_storage->is_compositor(p_render_data->compositor));
 
-	Vector<RID> re_rids = comp_storage->compositor_get_compositor_effects(p_render_data->compositor, p_callback_type, true);
+	Hector<RID> re_rids = comp_storage->compositor_get_compositor_effects(p_render_data->compositor, p_callback_type, true);
 
 	for (RID rid : re_rids) {
 		Array arr;
@@ -611,7 +611,7 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 		}
 
 		tonemap.use_debanding = rb->get_use_debanding();
-		tonemap.texture_size = Vector2i(color_size.x, color_size.y);
+		tonemap.texture_size = Hector2i(color_size.x, color_size.y);
 
 		if (p_render_data->environment.is_valid()) {
 			tonemap.tonemap_mode = environment_get_tone_mapper(p_render_data->environment);
@@ -746,7 +746,7 @@ void RendererSceneRenderRD::_post_process_subpass(RID p_source_texture, RID p_fr
 	}
 
 	tonemap.use_debanding = rb->get_use_debanding();
-	tonemap.texture_size = Vector2i(target_size.x, target_size.y);
+	tonemap.texture_size = Hector2i(target_size.x, target_size.y);
 
 	tonemap.luminance_multiplier = _render_buffers_get_luminance_multiplier();
 	tonemap.view_count = rb->get_view_count();
@@ -788,7 +788,7 @@ bool RendererSceneRenderRD::_debug_draw_can_use_effects(RS::ViewportDebugDraw p_
 		case RS::VIEWPORT_DEBUG_DRAW_SHADOW_ATLAS:
 		case RS::VIEWPORT_DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS:
 		case RS::VIEWPORT_DEBUG_DRAW_DECAL_ATLAS:
-		case RS::VIEWPORT_DEBUG_DRAW_MOTION_VECTORS:
+		case RS::VIEWPORT_DEBUG_DRAW_MOTION_HectorS:
 		// Modes that draws a buffer over viewport needs camera effects because if the buffer is not available it will be equivalent to normal draw mode.
 		case RS::VIEWPORT_DEBUG_DRAW_NORMAL_BUFFER:
 		case RS::VIEWPORT_DEBUG_DRAW_SSAO:
@@ -833,7 +833,7 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 			}
 
 			Size2 rtsize = texture_storage->render_target_get_size(render_target);
-			copy_effects->copy_to_fb_rect(shadow_atlas_texture, texture_storage->render_target_get_rd_framebuffer(render_target), Rect2i(Vector2(), rtsize / 2), false, true);
+			copy_effects->copy_to_fb_rect(shadow_atlas_texture, texture_storage->render_target_get_rd_framebuffer(render_target), Rect2i(Hector2(), rtsize / 2), false, true);
 		}
 	}
 
@@ -851,7 +851,7 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 				size.x = size.y;
 			}
 
-			copy_effects->copy_to_fb_rect(shadow_atlas_texture, dest_fb, Rect2i(Vector2(), size), false, true);
+			copy_effects->copy_to_fb_rect(shadow_atlas_texture, dest_fb, Rect2i(Hector2(), size), false, true);
 
 			// Visualize our view frustum to show coverage.
 			for (int i = 0; i < p_render_data->render_shadow_count; i++) {
@@ -871,7 +871,7 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 		if (decal_atlas.is_valid()) {
 			Size2i rtsize = texture_storage->render_target_get_size(render_target);
 
-			copy_effects->copy_to_fb_rect(decal_atlas, texture_storage->render_target_get_rd_framebuffer(render_target), Rect2i(Vector2(), rtsize / 2), false, false, true);
+			copy_effects->copy_to_fb_rect(decal_atlas, texture_storage->render_target_get_rd_framebuffer(render_target), Rect2i(Hector2(), rtsize / 2), false, false, true);
 		}
 	}
 
@@ -880,34 +880,34 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 		if (luminance_texture.is_valid()) {
 			Size2i rtsize = texture_storage->render_target_get_size(render_target);
 
-			copy_effects->copy_to_fb_rect(luminance_texture, texture_storage->render_target_get_rd_framebuffer(render_target), Rect2(Vector2(), rtsize / 8), false, true);
+			copy_effects->copy_to_fb_rect(luminance_texture, texture_storage->render_target_get_rd_framebuffer(render_target), Rect2(Hector2(), rtsize / 8), false, true);
 		}
 	}
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_INTERNAL_BUFFER) {
 		Size2 rtsize = texture_storage->render_target_get_size(render_target);
-		copy_effects->copy_to_fb_rect(rb->get_internal_texture(), texture_storage->render_target_get_rd_framebuffer(render_target), Rect2(Vector2(), rtsize), false, false);
+		copy_effects->copy_to_fb_rect(rb->get_internal_texture(), texture_storage->render_target_get_rd_framebuffer(render_target), Rect2(Hector2(), rtsize), false, false);
 	}
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_NORMAL_BUFFER && _render_buffers_get_normal_texture(rb).is_valid()) {
 		Size2 rtsize = texture_storage->render_target_get_size(render_target);
-		copy_effects->copy_to_fb_rect(_render_buffers_get_normal_texture(rb), texture_storage->render_target_get_rd_framebuffer(render_target), Rect2(Vector2(), rtsize), false, false, false, false, RID(), false, false, false, true);
+		copy_effects->copy_to_fb_rect(_render_buffers_get_normal_texture(rb), texture_storage->render_target_get_rd_framebuffer(render_target), Rect2(Hector2(), rtsize), false, false, false, false, RID(), false, false, false, true);
 	}
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_OCCLUDERS) {
 		if (p_render_data->occluder_debug_tex.is_valid()) {
 			Size2i rtsize = texture_storage->render_target_get_size(render_target);
-			copy_effects->copy_to_fb_rect(texture_storage->texture_get_rd_texture(p_render_data->occluder_debug_tex), texture_storage->render_target_get_rd_framebuffer(render_target), Rect2i(Vector2(), rtsize), true, false);
+			copy_effects->copy_to_fb_rect(texture_storage->texture_get_rd_texture(p_render_data->occluder_debug_tex), texture_storage->render_target_get_rd_framebuffer(render_target), Rect2i(Hector2(), rtsize), true, false);
 		}
 	}
 
-	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_MOTION_VECTORS && _render_buffers_get_velocity_texture(rb).is_valid()) {
+	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_MOTION_HectorS && _render_buffers_get_velocity_texture(rb).is_valid()) {
 		RID velocity = _render_buffers_get_velocity_texture(rb);
 		RID depth = rb->get_depth_texture();
 		RID dest_fb = texture_storage->render_target_get_rd_framebuffer(render_target);
 		Size2i resolution = rb->get_internal_size();
 
-		debug_effects->draw_motion_vectors(velocity, depth, dest_fb, p_render_data->scene_data->cam_projection, p_render_data->scene_data->cam_transform, p_render_data->scene_data->prev_cam_projection, p_render_data->scene_data->prev_cam_transform, resolution);
+		debug_effects->draw_motion_Hectors(velocity, depth, dest_fb, p_render_data->scene_data->cam_projection, p_render_data->scene_data->cam_transform, p_render_data->scene_data->prev_cam_projection, p_render_data->scene_data->prev_cam_transform, resolution);
 	}
 }
 
@@ -1078,10 +1078,10 @@ void RendererSceneRenderRD::_update_vrs(Ref<RenderSceneBuffersRD> p_render_buffe
 			// our vrs_texture to be used as the VRS attachment. In this particular case we're writing to it
 			// so it needs to be set as our color attachment
 
-			Vector<RID> textures;
+			Hector<RID> textures;
 			textures.push_back(vrs_texture);
 
-			Vector<RD::FramebufferPass> passes;
+			Hector<RD::FramebufferPass> passes;
 			RD::FramebufferPass pass;
 			pass.color_attachments.push_back(0);
 			passes.push_back(pass);
@@ -1251,15 +1251,15 @@ void RendererSceneRenderRD::render_particle_collider_heightfield(RID p_collider,
 	RendererRD::ParticlesStorage *particles_storage = RendererRD::ParticlesStorage::get_singleton();
 
 	ERR_FAIL_COND(!particles_storage->particles_collision_is_heightfield(p_collider));
-	Vector3 extents = particles_storage->particles_collision_get_extents(p_collider) * p_transform.basis.get_scale();
+	Hector3 extents = particles_storage->particles_collision_get_extents(p_collider) * p_transform.basis.get_scale();
 	Projection cm;
 	cm.set_orthogonal(-extents.x, extents.x, -extents.z, extents.z, 0, extents.y * 2.0);
 
-	Vector3 cam_pos = p_transform.origin;
+	Hector3 cam_pos = p_transform.origin;
 	cam_pos.y += extents.y;
 
 	Transform3D cam_xform;
-	cam_xform.set_look_at(cam_pos, cam_pos - p_transform.basis.get_column(Vector3::AXIS_Y), -p_transform.basis.get_column(Vector3::AXIS_Z).normalized());
+	cam_xform.set_look_at(cam_pos, cam_pos - p_transform.basis.get_column(Hector3::AXIS_Y), -p_transform.basis.get_column(Hector3::AXIS_Z).normalized());
 
 	RID fb = particles_storage->particles_collision_get_heightfield_framebuffer(p_collider);
 
@@ -1343,7 +1343,7 @@ TypedArray<Image> RendererSceneRenderRD::bake_render_uv2(RID p_base, const Typed
 	tf.format = RD::get_singleton()->texture_is_format_supported_for_usage(RD::DATA_FORMAT_D32_SFLOAT, RD::TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) ? RD::DATA_FORMAT_D32_SFLOAT : RD::DATA_FORMAT_X8_D24_UNORM_PACK32;
 	RID depth_tex = RD::get_singleton()->texture_create(tf, RD::TextureView());
 
-	Vector<RID> fb_tex;
+	Hector<RID> fb_tex;
 	fb_tex.push_back(albedo_alpha_tex);
 	fb_tex.push_back(normal_tex);
 	fb_tex.push_back(orm_tex);
@@ -1359,7 +1359,7 @@ TypedArray<Image> RendererSceneRenderRD::bake_render_uv2(RID p_base, const Typed
 	ERR_FAIL_NULL_V(gi_inst, TypedArray<Image>());
 
 	uint32_t sc = RSG::mesh_storage->mesh_get_surface_count(p_base);
-	Vector<RID> materials;
+	Hector<RID> materials;
 	materials.resize(sc);
 
 	for (uint32_t i = 0; i < sc; i++) {
@@ -1414,7 +1414,7 @@ TypedArray<Image> RendererSceneRenderRD::bake_render_uv2(RID p_base, const Typed
 	return ret;
 }
 
-void RendererSceneRenderRD::sdfgi_set_debug_probe_select(const Vector3 &p_position, const Vector3 &p_dir) {
+void RendererSceneRenderRD::sdfgi_set_debug_probe_select(const Hector3 &p_position, const Hector3 &p_dir) {
 	gi.sdfgi_debug_probe_pos = p_position;
 	gi.sdfgi_debug_probe_dir = p_dir;
 }

@@ -46,7 +46,7 @@ class GodotArea2D : public GodotCollisionObject2D {
 	PhysicsServer2D::AreaSpaceOverrideMode angular_damping_override_mode = PhysicsServer2D::AREA_SPACE_OVERRIDE_DISABLED;
 
 	real_t gravity = 9.80665;
-	Vector2 gravity_vector = Vector2(0, -1);
+	Hector2 gravity_Hector = Hector2(0, -1);
 	bool gravity_is_point = false;
 	real_t gravity_point_unit_distance = 0.0;
 	real_t linear_damp = 0.1;
@@ -118,8 +118,8 @@ public:
 	_FORCE_INLINE_ void set_gravity(real_t p_gravity) { gravity = p_gravity; }
 	_FORCE_INLINE_ real_t get_gravity() const { return gravity; }
 
-	_FORCE_INLINE_ void set_gravity_vector(const Vector2 &p_gravity) { gravity_vector = p_gravity; }
-	_FORCE_INLINE_ Vector2 get_gravity_vector() const { return gravity_vector; }
+	_FORCE_INLINE_ void set_gravity_Hector(const Hector2 &p_gravity) { gravity_Hector = p_gravity; }
+	_FORCE_INLINE_ Hector2 get_gravity_Hector() const { return gravity_Hector; }
 
 	_FORCE_INLINE_ void set_gravity_as_point(bool p_enable) { gravity_is_point = p_enable; }
 	_FORCE_INLINE_ bool is_gravity_point() const { return gravity_is_point; }
@@ -150,7 +150,7 @@ public:
 
 	void call_queries();
 
-	void compute_gravity(const Vector2 &p_position, Vector2 &r_gravity) const;
+	void compute_gravity(const Hector2 &p_position, Hector2 &r_gravity) const;
 
 	GodotArea2D();
 	~GodotArea2D();

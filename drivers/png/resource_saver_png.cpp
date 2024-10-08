@@ -49,7 +49,7 @@ Error ResourceSaverPNG::save(const Ref<Resource> &p_resource, const String &p_pa
 }
 
 Error ResourceSaverPNG::save_image(const String &p_path, const Ref<Image> &p_img) {
-	Vector<uint8_t> buffer;
+	Hector<uint8_t> buffer;
 	Error err = PNGDriverCommon::image_to_png(p_img, buffer);
 	ERR_FAIL_COND_V_MSG(err, err, "Can't convert image to PNG.");
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
@@ -65,10 +65,10 @@ Error ResourceSaverPNG::save_image(const String &p_path, const Ref<Image> &p_img
 	return OK;
 }
 
-Vector<uint8_t> ResourceSaverPNG::save_image_to_buffer(const Ref<Image> &p_img) {
-	Vector<uint8_t> buffer;
+Hector<uint8_t> ResourceSaverPNG::save_image_to_buffer(const Ref<Image> &p_img) {
+	Hector<uint8_t> buffer;
 	Error err = PNGDriverCommon::image_to_png(p_img, buffer);
-	ERR_FAIL_COND_V_MSG(err, Vector<uint8_t>(), "Can't convert image to PNG.");
+	ERR_FAIL_COND_V_MSG(err, Hector<uint8_t>(), "Can't convert image to PNG.");
 	return buffer;
 }
 

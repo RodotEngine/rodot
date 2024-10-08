@@ -41,8 +41,8 @@ class CollisionPolygon3D : public Node3D {
 
 protected:
 	real_t depth = 1.0;
-	AABB aabb = AABB(Vector3(-1, -1, -1), Vector3(2, 2, 2));
-	Vector<Point2> polygon;
+	AABB aabb = AABB(Hector3(-1, -1, -1), Hector3(2, 2, 2));
+	Hector<Point2> polygon;
 
 	uint32_t owner_id = 0;
 	CollisionObject3D *collision_object = nullptr;
@@ -63,8 +63,8 @@ public:
 	void set_depth(real_t p_depth);
 	real_t get_depth() const;
 
-	void set_polygon(const Vector<Point2> &p_polygon);
-	Vector<Point2> get_polygon() const;
+	void set_polygon(const Hector<Point2> &p_polygon);
+	Hector<Point2> get_polygon() const;
 
 	void set_disabled(bool p_disabled);
 	bool is_disabled() const;

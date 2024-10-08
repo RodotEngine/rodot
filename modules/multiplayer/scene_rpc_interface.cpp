@@ -276,8 +276,8 @@ void SceneRPCInterface::_process_rpc(Node *p_node, const uint16_t p_rpc_method_i
 		p_offset += 1;
 	}
 
-	Vector<Variant> args;
-	Vector<const Variant *> argp;
+	Hector<Variant> args;
+	Hector<const Variant *> argp;
 	args.resize(argc);
 	argp.resize(argc);
 

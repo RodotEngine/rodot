@@ -47,7 +47,7 @@ http://www.nicemice.net/amc/
  * @param srcLength Number of UChars in src, or -1 if NUL-terminated.
  * @param dest Output Punycode array.
  * @param destCapacity Size of dest.
- * @param caseFlags Vector of boolean values, one per input UChar,
+ * @param caseFlags Hector of boolean values, one per input UChar,
  *                  indicating that the corresponding character is to be
  *                  marked for the decoder optionally
  *                  uppercasing (true) or lowercasing (false)

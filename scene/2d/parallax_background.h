@@ -39,7 +39,7 @@ class ParallaxBackground : public CanvasLayer {
 	Point2 offset;
 	real_t scale = 1.0;
 	Point2 base_offset;
-	Point2 base_scale = Vector2(1, 1);
+	Point2 base_scale = Hector2(1, 1);
 	Point2 screen_offset;
 	String group_name;
 	Point2 limit_begin;
@@ -77,7 +77,7 @@ public:
 	void set_ignore_camera_zoom(bool ignore);
 	bool is_ignore_camera_zoom();
 
-	Vector2 get_final_offset() const;
+	Hector2 get_final_offset() const;
 
 	ParallaxBackground();
 };

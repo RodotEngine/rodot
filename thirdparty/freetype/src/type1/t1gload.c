@@ -361,7 +361,7 @@
     const T1_Decoder_Funcs  decoder_funcs = psaux->t1_decoder_funcs;
 
     FT_Matrix               font_matrix;
-    FT_Vector               font_offset;
+    FT_Hector               font_offset;
     FT_Data                 glyph_data;
     FT_Bool                 must_finish_decoder = FALSE;
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -538,7 +538,7 @@
           /* scale the outline and the metrics */
           FT_Int       n;
           FT_Outline*  cur = decoder.builder.base;
-          FT_Vector*   vec = cur->points;
+          FT_Hector*   vec = cur->points;
           FT_Fixed     x_scale = glyph->x_scale;
           FT_Fixed     y_scale = glyph->y_scale;
 

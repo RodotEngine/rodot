@@ -33,7 +33,7 @@
 
 bool GodotAreaPair2D::setup(real_t p_step) {
 	bool result = false;
-	if (area->collides_with(body) && GodotCollisionSolver2D::solve(body->get_shape(body_shape), body->get_transform() * body->get_shape_transform(body_shape), Vector2(), area->get_shape(area_shape), area->get_transform() * area->get_shape_transform(area_shape), Vector2(), nullptr, this)) {
+	if (area->collides_with(body) && GodotCollisionSolver2D::solve(body->get_shape(body_shape), body->get_transform() * body->get_shape_transform(body_shape), Hector2(), area->get_shape(area_shape), area->get_transform() * area->get_shape_transform(area_shape), Hector2(), nullptr, this)) {
 		result = true;
 	}
 
@@ -122,7 +122,7 @@ GodotAreaPair2D::~GodotAreaPair2D() {
 bool GodotArea2Pair2D::setup(real_t p_step) {
 	bool result_a = area_a->collides_with(area_b);
 	bool result_b = area_b->collides_with(area_a);
-	if ((result_a || result_b) && !GodotCollisionSolver2D::solve(area_a->get_shape(shape_a), area_a->get_transform() * area_a->get_shape_transform(shape_a), Vector2(), area_b->get_shape(shape_b), area_b->get_transform() * area_b->get_shape_transform(shape_b), Vector2(), nullptr, this)) {
+	if ((result_a || result_b) && !GodotCollisionSolver2D::solve(area_a->get_shape(shape_a), area_a->get_transform() * area_a->get_shape_transform(shape_a), Hector2(), area_b->get_shape(shape_b), area_b->get_transform() * area_b->get_shape_transform(shape_b), Hector2(), nullptr, this)) {
 		result_a = false;
 		result_b = false;
 	}

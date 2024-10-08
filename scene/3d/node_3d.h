@@ -64,7 +64,7 @@ public:
 private:
 	// For the sake of ease of use, Node3D can operate with Transforms (Basis+Origin), Quaternion/Scale and Euler Rotation/Scale.
 	// Transform and Quaternion are stored in data.local_transform Basis (so quaternion is not really stored, but converted back/forth from 3x3 matrix on demand).
-	// Euler needs to be kept separate because converting to Basis and back may result in a different vector (which is troublesome for users
+	// Euler needs to be kept separate because converting to Basis and back may result in a different Hector (which is troublesome for users
 	// editing in the inspector, not only because of the numerical precision loss but because they expect these rotations to be consistent, or support
 	// "redundant" rotations for animation interpolation, like going from 0 to 720 degrees).
 	//
@@ -101,8 +101,8 @@ private:
 		mutable Transform3D global_transform;
 		mutable Transform3D local_transform;
 		mutable EulerOrder euler_rotation_order = EulerOrder::YXZ;
-		mutable Vector3 euler_rotation;
-		mutable Vector3 scale = Vector3(1, 1, 1);
+		mutable Hector3 euler_rotation;
+		mutable Hector3 scale = Hector3(1, 1, 1);
 		mutable RotationEditMode rotation_edit_mode = ROTATION_EDIT_MODE_EULER;
 
 		mutable MTNumeric<uint32_t> dirty;
@@ -132,7 +132,7 @@ private:
 		ClientPhysicsInterpolationData *client_physics_interpolation_data = nullptr;
 
 #ifdef TOOLS_ENABLED
-		Vector<Ref<Node3DGizmo>> gizmos;
+		Hector<Ref<Node3DGizmo>> gizmos;
 		bool gizmos_disabled : 1;
 		bool gizmos_dirty : 1;
 		bool transform_gizmo_visible : 1;
@@ -190,32 +190,32 @@ public:
 
 	Ref<World3D> get_world_3d() const;
 
-	void set_position(const Vector3 &p_position);
+	void set_position(const Hector3 &p_position);
 
 	void set_rotation_edit_mode(RotationEditMode p_mode);
 	RotationEditMode get_rotation_edit_mode() const;
 
 	void set_rotation_order(EulerOrder p_order);
-	void set_rotation(const Vector3 &p_euler_rad);
-	void set_rotation_degrees(const Vector3 &p_euler_degrees);
-	void set_scale(const Vector3 &p_scale);
+	void set_rotation(const Hector3 &p_euler_rad);
+	void set_rotation_degrees(const Hector3 &p_euler_degrees);
+	void set_scale(const Hector3 &p_scale);
 
-	void set_global_position(const Vector3 &p_position);
+	void set_global_position(const Hector3 &p_position);
 	void set_global_basis(const Basis &p_basis);
-	void set_global_rotation(const Vector3 &p_euler_rad);
-	void set_global_rotation_degrees(const Vector3 &p_euler_degrees);
+	void set_global_rotation(const Hector3 &p_euler_rad);
+	void set_global_rotation_degrees(const Hector3 &p_euler_degrees);
 
-	Vector3 get_position() const;
+	Hector3 get_position() const;
 
 	EulerOrder get_rotation_order() const;
-	Vector3 get_rotation() const;
-	Vector3 get_rotation_degrees() const;
-	Vector3 get_scale() const;
+	Hector3 get_rotation() const;
+	Hector3 get_rotation_degrees() const;
+	Hector3 get_scale() const;
 
-	Vector3 get_global_position() const;
+	Hector3 get_global_position() const;
 	Basis get_global_basis() const;
-	Vector3 get_global_rotation() const;
-	Vector3 get_global_rotation_degrees() const;
+	Hector3 get_global_rotation() const;
+	Hector3 get_global_rotation_degrees() const;
 
 	void set_transform(const Transform3D &p_transform);
 	void set_basis(const Basis &p_basis);
@@ -242,7 +242,7 @@ public:
 	void update_gizmos();
 	void set_subgizmo_selection(Ref<Node3DGizmo> p_gizmo, int p_id, Transform3D p_transform = Transform3D());
 	void clear_subgizmo_selection();
-	Vector<Ref<Node3DGizmo>> get_gizmos() const;
+	Hector<Ref<Node3DGizmo>> get_gizmos() const;
 	TypedArray<Node3DGizmo> get_gizmos_bind() const;
 	void add_gizmo(Ref<Node3DGizmo> p_gizmo);
 	void remove_gizmo(Ref<Node3DGizmo> p_gizmo);
@@ -259,26 +259,26 @@ public:
 
 	Transform3D get_relative_transform(const Node *p_parent) const;
 
-	void rotate(const Vector3 &p_axis, real_t p_angle);
+	void rotate(const Hector3 &p_axis, real_t p_angle);
 	void rotate_x(real_t p_angle);
 	void rotate_y(real_t p_angle);
 	void rotate_z(real_t p_angle);
-	void translate(const Vector3 &p_offset);
-	void scale(const Vector3 &p_ratio);
+	void translate(const Hector3 &p_offset);
+	void scale(const Hector3 &p_ratio);
 
-	void rotate_object_local(const Vector3 &p_axis, real_t p_angle);
-	void scale_object_local(const Vector3 &p_scale);
-	void translate_object_local(const Vector3 &p_offset);
+	void rotate_object_local(const Hector3 &p_axis, real_t p_angle);
+	void scale_object_local(const Hector3 &p_scale);
+	void translate_object_local(const Hector3 &p_offset);
 
-	void global_rotate(const Vector3 &p_axis, real_t p_angle);
-	void global_scale(const Vector3 &p_scale);
-	void global_translate(const Vector3 &p_offset);
+	void global_rotate(const Hector3 &p_axis, real_t p_angle);
+	void global_scale(const Hector3 &p_scale);
+	void global_translate(const Hector3 &p_offset);
 
-	void look_at(const Vector3 &p_target, const Vector3 &p_up = Vector3(0, 1, 0), bool p_use_model_front = false);
-	void look_at_from_position(const Vector3 &p_pos, const Vector3 &p_target, const Vector3 &p_up = Vector3(0, 1, 0), bool p_use_model_front = false);
+	void look_at(const Hector3 &p_target, const Hector3 &p_up = Hector3(0, 1, 0), bool p_use_model_front = false);
+	void look_at_from_position(const Hector3 &p_pos, const Hector3 &p_target, const Hector3 &p_up = Hector3(0, 1, 0), bool p_use_model_front = false);
 
-	Vector3 to_local(Vector3 p_global) const;
-	Vector3 to_global(Vector3 p_local) const;
+	Hector3 to_local(Hector3 p_global) const;
+	Hector3 to_global(Hector3 p_local) const;
 
 	void set_notify_transform(bool p_enabled);
 	bool is_transform_notification_enabled() const;

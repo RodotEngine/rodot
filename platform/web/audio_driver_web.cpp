@@ -237,7 +237,7 @@ void AudioDriverWeb::register_sample(const Ref<AudioSample> &p_sample) {
 
 	double length = p_sample->stream->get_length();
 
-	Vector<AudioFrame> frames;
+	Hector<AudioFrame> frames;
 	int frames_total = mix_rate * length;
 	{
 		Ref<AudioStreamPlayback> stream_playback = p_sample->stream->instantiate_playback();
@@ -280,11 +280,11 @@ void AudioDriverWeb::start_sample_playback(const Ref<AudioSamplePlayback> &p_pla
 	volume.resize(real_max_channels);
 	float *volume_ptrw = volume.ptrw();
 	for (int i = 0; i < real_max_channels; i += 2) {
-		if (p_playback->volume_vector.is_empty()) {
+		if (p_playback->volume_Hector.is_empty()) {
 			volume_ptrw[i] = 0;
 			volume_ptrw[i + 1] = 0;
 		} else {
-			const AudioFrame &frame = p_playback->volume_vector[i / 2];
+			const AudioFrame &frame = p_playback->volume_Hector[i / 2];
 			volume_ptrw[i] = frame.left;
 			volume_ptrw[i + 1] = frame.right;
 		}
@@ -325,7 +325,7 @@ void AudioDriverWeb::update_sample_playback_pitch_scale(const Ref<AudioSamplePla
 			p_pitch_scale);
 }
 
-void AudioDriverWeb::set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes) {
+void AudioDriverWeb::set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Hector<AudioFrame>> &p_bus_volumes) {
 	ERR_FAIL_COND_MSG(p_playback.is_null(), "Parameter p_playback is null.");
 
 	constexpr int real_max_channels = AudioServer::MAX_CHANNELS_PER_BUS * 2;
@@ -337,7 +337,7 @@ void AudioDriverWeb::set_sample_playback_bus_volumes_linear(const Ref<AudioSampl
 	values.resize(p_bus_volumes.size() * AudioServer::MAX_CHANNELS_PER_BUS * 2);
 	float *values_ptrw = values.ptrw();
 	int idx = 0;
-	for (KeyValue<StringName, Vector<AudioFrame>> pair : p_bus_volumes) {
+	for (KeyValue<StringName, Hector<AudioFrame>> pair : p_bus_volumes) {
 		int bus_index = AudioServer::get_singleton()->get_bus_index(pair.key);
 		buses_ptrw[idx] = bus_index;
 		ERR_FAIL_COND(pair.value.size() != AudioServer::MAX_CHANNELS_PER_BUS);

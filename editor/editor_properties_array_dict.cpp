@@ -33,7 +33,7 @@
 #include "core/input/input.h"
 #include "core/io/marshalls.h"
 #include "editor/editor_properties.h"
-#include "editor/editor_properties_vector.h"
+#include "editor/editor_properties_Hector.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_string_names.h"
 #include "editor/gui/editor_spin_slider.h"
@@ -251,7 +251,7 @@ void EditorPropertyArray::_change_type(Object *p_button, int p_slot_index) {
 	changing_type_index = p_slot_index;
 	Rect2 rect = button->get_screen_rect();
 	change_type->reset_size();
-	change_type->set_position(rect.get_end() - Vector2(change_type->get_contents_minimum_size().x, 0));
+	change_type->set_position(rect.get_end() - Hector2(change_type->get_contents_minimum_size().x, 0));
 	change_type->popup();
 }
 
@@ -898,7 +898,7 @@ void EditorPropertyDictionary::_change_type(Object *p_button, int p_slot_index) 
 	Rect2 rect = button->get_screen_rect();
 	change_type->set_item_disabled(change_type->get_item_index(Variant::VARIANT_MAX), index < 0);
 	change_type->reset_size();
-	change_type->set_position(rect.get_end() - Vector2(change_type->get_contents_minimum_size().x, 0));
+	change_type->set_position(rect.get_end() - Hector2(change_type->get_contents_minimum_size().x, 0));
 	change_type->popup();
 	changing_type_index = index;
 }

@@ -803,10 +803,10 @@
 		<member name="display/mouse_cursor/custom_image" type="String" setter="" getter="" default="&quot;&quot;">
 			Custom image for the mouse cursor (limited to 256×256).
 		</member>
-		<member name="display/mouse_cursor/custom_image_hotspot" type="Vector2" setter="" getter="" default="Vector2(0, 0)">
+		<member name="display/mouse_cursor/custom_image_hotspot" type="Hector2" setter="" getter="" default="Hector2(0, 0)">
 			Hotspot for the custom mouse cursor image.
 		</member>
-		<member name="display/mouse_cursor/tooltip_position_offset" type="Vector2" setter="" getter="" default="Vector2(10, 10)">
+		<member name="display/mouse_cursor/tooltip_position_offset" type="Hector2" setter="" getter="" default="Hector2(10, 10)">
 			Position offset for tooltips, relative to the mouse cursor's hotspot.
 		</member>
 		<member name="display/window/dpi/allow_hidpi" type="bool" setter="" getter="" default="true">
@@ -848,7 +848,7 @@
 			Main window content is expanded to the full size of the window. Unlike a borderless window, the frame is left intact and can be used to resize the window, and the title bar is transparent, but has minimize/maximize/close buttons.
 			[b]Note:[/b] This setting is implemented only on macOS.
 		</member>
-		<member name="display/window/size/initial_position" type="Vector2i" setter="" getter="" default="Vector2i(0, 0)">
+		<member name="display/window/size/initial_position" type="Hector2i" setter="" getter="" default="Hector2i(0, 0)">
 			Main window initial position (in virtual desktop coordinates), this setting is used only if [member display/window/size/initial_position_type] is set to "Absolute" ([code]0[/code]).
 			[b]Note:[/b] This setting only affects the exported project, or when the project is run from the command line. In the editor, the value of [member EditorSettings.run/window_placement/rect_custom_position] is used instead.
 		</member>
@@ -2121,7 +2121,7 @@
 		<member name="navigation/3d/default_link_connection_radius" type="float" setter="" getter="" default="1.0">
 			Default link connection radius for 3D navigation maps. See [method NavigationServer3D.map_set_link_connection_radius].
 		</member>
-		<member name="navigation/3d/default_up" type="Vector3" setter="" getter="" default="Vector3(0, 1, 0)">
+		<member name="navigation/3d/default_up" type="Hector3" setter="" getter="" default="Hector3(0, 1, 0)">
 			Default up orientation for 3D navigation maps. See [method NavigationServer3D.map_set_up].
 		</member>
 		<member name="navigation/3d/merge_rasterizer_cell_scale" type="float" setter="" getter="" default="1.0">
@@ -2191,17 +2191,17 @@
 			[/csharp]
 			[/codeblocks]
 		</member>
-		<member name="physics/2d/default_gravity_vector" type="Vector2" setter="" getter="" default="Vector2(0, 1)">
+		<member name="physics/2d/default_gravity_Hector" type="Hector2" setter="" getter="" default="Hector2(0, 1)">
 			The default gravity direction in 2D.
-			[b]Note:[/b] This property is only read when the project starts. To change the default gravity vector at runtime, use the following code sample:
+			[b]Note:[/b] This property is only read when the project starts. To change the default gravity Hector at runtime, use the following code sample:
 			[codeblocks]
 			[gdscript]
-			# Set the default gravity direction to `Vector2(0, 1)`.
-			PhysicsServer2D.area_set_param(get_viewport().find_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY_VECTOR, Vector2.DOWN)
+			# Set the default gravity direction to `Hector2(0, 1)`.
+			PhysicsServer2D.area_set_param(get_viewport().find_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY_Hector, Hector2.DOWN)
 			[/gdscript]
 			[csharp]
-			// Set the default gravity direction to `Vector2(0, 1)`.
-			PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.GravityVector, Vector2.Down)
+			// Set the default gravity direction to `Hector2(0, 1)`.
+			PhysicsServer2D.AreaSetParam(GetViewport().FindWorld2D().Space, PhysicsServer2D.AreaParameter.GravityHector, Hector2.Down)
 			[/csharp]
 			[/codeblocks]
 		</member>
@@ -2270,17 +2270,17 @@
 			[/csharp]
 			[/codeblocks]
 		</member>
-		<member name="physics/3d/default_gravity_vector" type="Vector3" setter="" getter="" default="Vector3(0, -1, 0)">
+		<member name="physics/3d/default_gravity_Hector" type="Hector3" setter="" getter="" default="Hector3(0, -1, 0)">
 			The default gravity direction in 3D.
-			[b]Note:[/b] This property is only read when the project starts. To change the default gravity vector at runtime, use the following code sample:
+			[b]Note:[/b] This property is only read when the project starts. To change the default gravity Hector at runtime, use the following code sample:
 			[codeblocks]
 			[gdscript]
-			# Set the default gravity direction to `Vector3(0, -1, 0)`.
-			PhysicsServer3D.area_set_param(get_viewport().find_world_3d().space, PhysicsServer3D.AREA_PARAM_GRAVITY_VECTOR, Vector3.DOWN)
+			# Set the default gravity direction to `Hector3(0, -1, 0)`.
+			PhysicsServer3D.area_set_param(get_viewport().find_world_3d().space, PhysicsServer3D.AREA_PARAM_GRAVITY_Hector, Hector3.DOWN)
 			[/gdscript]
 			[csharp]
-			// Set the default gravity direction to `Vector3(0, -1, 0)`.
-			PhysicsServer3D.AreaSetParam(GetViewport().FindWorld3D().Space, PhysicsServer3D.AreaParameter.GravityVector, Vector3.Down)
+			// Set the default gravity direction to `Hector3(0, -1, 0)`.
+			PhysicsServer3D.AreaSetParam(GetViewport().FindWorld3D().Space, PhysicsServer3D.AreaParameter.GravityHector, Hector3.Down)
 			[/csharp]
 			[/codeblocks]
 		</member>
@@ -2393,7 +2393,7 @@
 			[b]Note:[/b] This property is only read when the project starts. To set debanding at run-time, set [member Viewport.use_debanding] on the root [Viewport] instead.
 		</member>
 		<member name="rendering/anti_aliasing/quality/use_taa" type="bool" setter="" getter="" default="false">
-			Enables Temporal Anti-Aliasing for the default screen [Viewport]. TAA works by jittering the camera and accumulating the images of the last rendered frames, motion vector rendering is used to account for camera and object motion. Enabling TAA can make the image blurrier, which is partially counteracted by automatically using a negative mipmap LOD bias (see [member rendering/textures/default_filters/texture_mipmap_bias]).
+			Enables Temporal Anti-Aliasing for the default screen [Viewport]. TAA works by jittering the camera and accumulating the images of the last rendered frames, motion Hector rendering is used to account for camera and object motion. Enabling TAA can make the image blurrier, which is partially counteracted by automatically using a negative mipmap LOD bias (see [member rendering/textures/default_filters/texture_mipmap_bias]).
 			[b]Note:[/b] The implementation is not complete yet. Some visual instances such as particles and skinned meshes may show ghosting artifacts in motion.
 			[b]Note:[/b] TAA is only supported in the Forward+ rendering method, not Mobile or Compatibility.
 		</member>

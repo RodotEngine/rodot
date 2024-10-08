@@ -532,9 +532,9 @@ enum Decoration {
     DecorationReferencedIndirectlyINTEL = 5602,
     DecorationClobberINTEL = 5607,
     DecorationSideEffectsINTEL = 5608,
-    DecorationVectorComputeVariableINTEL = 5624,
+    DecorationHectorComputeVariableINTEL = 5624,
     DecorationFuncParamIOKindINTEL = 5625,
-    DecorationVectorComputeFunctionINTEL = 5626,
+    DecorationHectorComputeFunctionINTEL = 5626,
     DecorationStackCallINTEL = 5627,
     DecorationGlobalVariableOffsetINTEL = 5628,
     DecorationCounterBuffer = 5634,
@@ -567,8 +567,8 @@ enum Decoration {
     DecorationBufferLocationINTEL = 5921,
     DecorationIOPipeStorageINTEL = 5944,
     DecorationFunctionFloatingPointModeINTEL = 6080,
-    DecorationSingleElementVectorINTEL = 6085,
-    DecorationVectorComputeCallableFunctionINTEL = 6087,
+    DecorationSingleElementHectorINTEL = 6085,
+    DecorationHectorComputeCallableFunctionINTEL = 6087,
     DecorationMediaBlockIOINTEL = 6140,
     DecorationMax = 0x7fffffff,
 };
@@ -895,7 +895,7 @@ enum Capability {
     CapabilityAddresses = 4,
     CapabilityLinkage = 5,
     CapabilityKernel = 6,
-    CapabilityVector16 = 7,
+    CapabilityHector16 = 7,
     CapabilityFloat16Buffer = 8,
     CapabilityFloat16 = 9,
     CapabilityFloat64 = 10,
@@ -1071,8 +1071,8 @@ enum Capability {
     CapabilityAtomicFloat32MinMaxEXT = 5612,
     CapabilityAtomicFloat64MinMaxEXT = 5613,
     CapabilityAtomicFloat16MinMaxEXT = 5616,
-    CapabilityVectorComputeINTEL = 5617,
-    CapabilityVectorAnyINTEL = 5619,
+    CapabilityHectorComputeINTEL = 5617,
+    CapabilityHectorAnyINTEL = 5619,
     CapabilityExpectAssumeKHR = 5629,
     CapabilitySubgroupAvcMotionEstimationINTEL = 5696,
     CapabilitySubgroupAvcMotionEstimationIntraINTEL = 5697,
@@ -1214,10 +1214,10 @@ enum OverflowModes {
     OverflowModesMax = 0x7fffffff,
 };
 
-enum PackedVectorFormat {
-    PackedVectorFormatPackedVectorFormat4x8Bit = 0,
-    PackedVectorFormatPackedVectorFormat4x8BitKHR = 0,
-    PackedVectorFormatMax = 0x7fffffff,
+enum PackedHectorFormat {
+    PackedHectorFormatPackedHectorFormat4x8Bit = 0,
+    PackedHectorFormatPackedHectorFormat4x8BitKHR = 0,
+    PackedHectorFormatMax = 0x7fffffff,
 };
 
 enum Op {
@@ -1241,7 +1241,7 @@ enum Op {
     OpTypeBool = 20,
     OpTypeInt = 21,
     OpTypeFloat = 22,
-    OpTypeVector = 23,
+    OpTypeHector = 23,
     OpTypeMatrix = 24,
     OpTypeImage = 25,
     OpTypeSampler = 26,
@@ -1290,9 +1290,9 @@ enum Op {
     OpDecorationGroup = 73,
     OpGroupDecorate = 74,
     OpGroupMemberDecorate = 75,
-    OpVectorExtractDynamic = 77,
-    OpVectorInsertDynamic = 78,
-    OpVectorShuffle = 79,
+    OpHectorExtractDynamic = 77,
+    OpHectorInsertDynamic = 78,
+    OpHectorShuffle = 79,
     OpCompositeConstruct = 80,
     OpCompositeExtract = 81,
     OpCompositeInsert = 82,
@@ -1352,10 +1352,10 @@ enum Op {
     OpSMod = 139,
     OpFRem = 140,
     OpFMod = 141,
-    OpVectorTimesScalar = 142,
+    OpHectorTimesScalar = 142,
     OpMatrixTimesScalar = 143,
-    OpVectorTimesMatrix = 144,
-    OpMatrixTimesVector = 145,
+    OpHectorTimesMatrix = 144,
+    OpMatrixTimesHector = 145,
     OpMatrixTimesMatrix = 146,
     OpOuterProduct = 147,
     OpDot = 148,
@@ -1702,11 +1702,11 @@ enum Op {
     OpSubgroupAvcMceGetDefaultInterDirectionPenaltyINTEL = 5717,
     OpSubgroupAvcMceSetInterDirectionPenaltyINTEL = 5718,
     OpSubgroupAvcMceGetDefaultIntraLumaShapePenaltyINTEL = 5719,
-    OpSubgroupAvcMceGetDefaultInterMotionVectorCostTableINTEL = 5720,
+    OpSubgroupAvcMceGetDefaultInterMotionHectorCostTableINTEL = 5720,
     OpSubgroupAvcMceGetDefaultHighPenaltyCostTableINTEL = 5721,
     OpSubgroupAvcMceGetDefaultMediumPenaltyCostTableINTEL = 5722,
     OpSubgroupAvcMceGetDefaultLowPenaltyCostTableINTEL = 5723,
-    OpSubgroupAvcMceSetMotionVectorCostFunctionINTEL = 5724,
+    OpSubgroupAvcMceSetMotionHectorCostFunctionINTEL = 5724,
     OpSubgroupAvcMceGetDefaultIntraLumaModePenaltyINTEL = 5725,
     OpSubgroupAvcMceGetDefaultNonDcLumaIntraPenaltyINTEL = 5726,
     OpSubgroupAvcMceGetDefaultIntraChromaModeBasePenaltyINTEL = 5727,
@@ -1720,13 +1720,13 @@ enum Op {
     OpSubgroupAvcMceConvertToRefResultINTEL = 5735,
     OpSubgroupAvcMceConvertToSicPayloadINTEL = 5736,
     OpSubgroupAvcMceConvertToSicResultINTEL = 5737,
-    OpSubgroupAvcMceGetMotionVectorsINTEL = 5738,
+    OpSubgroupAvcMceGetMotionHectorsINTEL = 5738,
     OpSubgroupAvcMceGetInterDistortionsINTEL = 5739,
     OpSubgroupAvcMceGetBestInterDistortionsINTEL = 5740,
     OpSubgroupAvcMceGetInterMajorShapeINTEL = 5741,
     OpSubgroupAvcMceGetInterMinorShapeINTEL = 5742,
     OpSubgroupAvcMceGetInterDirectionsINTEL = 5743,
-    OpSubgroupAvcMceGetInterMotionVectorCountINTEL = 5744,
+    OpSubgroupAvcMceGetInterMotionHectorCountINTEL = 5744,
     OpSubgroupAvcMceGetInterReferenceIdsINTEL = 5745,
     OpSubgroupAvcMceGetInterReferenceInterlacedFieldPolaritiesINTEL = 5746,
     OpSubgroupAvcImeInitializeINTEL = 5747,
@@ -1735,7 +1735,7 @@ enum Op {
     OpSubgroupAvcImeRefWindowSizeINTEL = 5750,
     OpSubgroupAvcImeAdjustRefOffsetINTEL = 5751,
     OpSubgroupAvcImeConvertToMcePayloadINTEL = 5752,
-    OpSubgroupAvcImeSetMaxMotionVectorCountINTEL = 5753,
+    OpSubgroupAvcImeSetMaxMotionHectorCountINTEL = 5753,
     OpSubgroupAvcImeSetUnidirectionalMixDisableINTEL = 5754,
     OpSubgroupAvcImeSetEarlySearchTerminationThresholdINTEL = 5755,
     OpSubgroupAvcImeSetWeightedSadINTEL = 5756,
@@ -1752,16 +1752,16 @@ enum Op {
     OpSubgroupAvcImeGetDualReferenceStreaminINTEL = 5767,
     OpSubgroupAvcImeStripSingleReferenceStreamoutINTEL = 5768,
     OpSubgroupAvcImeStripDualReferenceStreamoutINTEL = 5769,
-    OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionVectorsINTEL = 5770,
+    OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionHectorsINTEL = 5770,
     OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeDistortionsINTEL = 5771,
     OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeReferenceIdsINTEL = 5772,
-    OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionVectorsINTEL = 5773,
+    OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionHectorsINTEL = 5773,
     OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeDistortionsINTEL = 5774,
     OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeReferenceIdsINTEL = 5775,
     OpSubgroupAvcImeGetBorderReachedINTEL = 5776,
     OpSubgroupAvcImeGetTruncatedSearchIndicationINTEL = 5777,
     OpSubgroupAvcImeGetUnidirectionalEarlySearchTerminationINTEL = 5778,
-    OpSubgroupAvcImeGetWeightingPatternMinimumMotionVectorINTEL = 5779,
+    OpSubgroupAvcImeGetWeightingPatternMinimumMotionHectorINTEL = 5779,
     OpSubgroupAvcImeGetWeightingPatternMinimumDistortionINTEL = 5780,
     OpSubgroupAvcFmeInitializeINTEL = 5781,
     OpSubgroupAvcBmeInitializeINTEL = 5782,
@@ -1777,7 +1777,7 @@ enum Op {
     OpSubgroupAvcSicConfigureSkcINTEL = 5792,
     OpSubgroupAvcSicConfigureIpeLumaINTEL = 5793,
     OpSubgroupAvcSicConfigureIpeLumaChromaINTEL = 5794,
-    OpSubgroupAvcSicGetMotionVectorMaskINTEL = 5795,
+    OpSubgroupAvcSicGetMotionHectorMaskINTEL = 5795,
     OpSubgroupAvcSicConvertToMcePayloadINTEL = 5796,
     OpSubgroupAvcSicSetIntraLumaShapePenaltyINTEL = 5797,
     OpSubgroupAvcSicSetIntraLumaModeCostFunctionINTEL = 5798,
@@ -1926,7 +1926,7 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpTypeBool: *hasResult = true; *hasResultType = false; break;
     case OpTypeInt: *hasResult = true; *hasResultType = false; break;
     case OpTypeFloat: *hasResult = true; *hasResultType = false; break;
-    case OpTypeVector: *hasResult = true; *hasResultType = false; break;
+    case OpTypeHector: *hasResult = true; *hasResultType = false; break;
     case OpTypeMatrix: *hasResult = true; *hasResultType = false; break;
     case OpTypeImage: *hasResult = true; *hasResultType = false; break;
     case OpTypeSampler: *hasResult = true; *hasResultType = false; break;
@@ -1975,9 +1975,9 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpDecorationGroup: *hasResult = true; *hasResultType = false; break;
     case OpGroupDecorate: *hasResult = false; *hasResultType = false; break;
     case OpGroupMemberDecorate: *hasResult = false; *hasResultType = false; break;
-    case OpVectorExtractDynamic: *hasResult = true; *hasResultType = true; break;
-    case OpVectorInsertDynamic: *hasResult = true; *hasResultType = true; break;
-    case OpVectorShuffle: *hasResult = true; *hasResultType = true; break;
+    case OpHectorExtractDynamic: *hasResult = true; *hasResultType = true; break;
+    case OpHectorInsertDynamic: *hasResult = true; *hasResultType = true; break;
+    case OpHectorShuffle: *hasResult = true; *hasResultType = true; break;
     case OpCompositeConstruct: *hasResult = true; *hasResultType = true; break;
     case OpCompositeExtract: *hasResult = true; *hasResultType = true; break;
     case OpCompositeInsert: *hasResult = true; *hasResultType = true; break;
@@ -2037,10 +2037,10 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpSMod: *hasResult = true; *hasResultType = true; break;
     case OpFRem: *hasResult = true; *hasResultType = true; break;
     case OpFMod: *hasResult = true; *hasResultType = true; break;
-    case OpVectorTimesScalar: *hasResult = true; *hasResultType = true; break;
+    case OpHectorTimesScalar: *hasResult = true; *hasResultType = true; break;
     case OpMatrixTimesScalar: *hasResult = true; *hasResultType = true; break;
-    case OpVectorTimesMatrix: *hasResult = true; *hasResultType = true; break;
-    case OpMatrixTimesVector: *hasResult = true; *hasResultType = true; break;
+    case OpHectorTimesMatrix: *hasResult = true; *hasResultType = true; break;
+    case OpMatrixTimesHector: *hasResult = true; *hasResultType = true; break;
     case OpMatrixTimesMatrix: *hasResult = true; *hasResultType = true; break;
     case OpOuterProduct: *hasResult = true; *hasResultType = true; break;
     case OpDot: *hasResult = true; *hasResultType = true; break;
@@ -2376,11 +2376,11 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpSubgroupAvcMceGetDefaultInterDirectionPenaltyINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceSetInterDirectionPenaltyINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultIntraLumaShapePenaltyINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcMceGetDefaultInterMotionVectorCostTableINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcMceGetDefaultInterMotionHectorCostTableINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultHighPenaltyCostTableINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultMediumPenaltyCostTableINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultLowPenaltyCostTableINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcMceSetMotionVectorCostFunctionINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcMceSetMotionHectorCostFunctionINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultIntraLumaModePenaltyINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultNonDcLumaIntraPenaltyINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetDefaultIntraChromaModeBasePenaltyINTEL: *hasResult = true; *hasResultType = true; break;
@@ -2394,13 +2394,13 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpSubgroupAvcMceConvertToRefResultINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceConvertToSicPayloadINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceConvertToSicResultINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcMceGetMotionVectorsINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcMceGetMotionHectorsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetInterDistortionsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetBestInterDistortionsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetInterMajorShapeINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetInterMinorShapeINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetInterDirectionsINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcMceGetInterMotionVectorCountINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcMceGetInterMotionHectorCountINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetInterReferenceIdsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcMceGetInterReferenceInterlacedFieldPolaritiesINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeInitializeINTEL: *hasResult = true; *hasResultType = true; break;
@@ -2409,7 +2409,7 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpSubgroupAvcImeRefWindowSizeINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeAdjustRefOffsetINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeConvertToMcePayloadINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcImeSetMaxMotionVectorCountINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcImeSetMaxMotionHectorCountINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeSetUnidirectionalMixDisableINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeSetEarlySearchTerminationThresholdINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeSetWeightedSadINTEL: *hasResult = true; *hasResultType = true; break;
@@ -2426,16 +2426,16 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpSubgroupAvcImeGetDualReferenceStreaminINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeStripSingleReferenceStreamoutINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeStripDualReferenceStreamoutINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionVectorsINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeMotionHectorsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeDistortionsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetStreamoutSingleReferenceMajorShapeReferenceIdsINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionVectorsINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeMotionHectorsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeDistortionsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetStreamoutDualReferenceMajorShapeReferenceIdsINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetBorderReachedINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetTruncatedSearchIndicationINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetUnidirectionalEarlySearchTerminationINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcImeGetWeightingPatternMinimumMotionVectorINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcImeGetWeightingPatternMinimumMotionHectorINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcImeGetWeightingPatternMinimumDistortionINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcFmeInitializeINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcBmeInitializeINTEL: *hasResult = true; *hasResultType = true; break;
@@ -2451,7 +2451,7 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case OpSubgroupAvcSicConfigureSkcINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcSicConfigureIpeLumaINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcSicConfigureIpeLumaChromaINTEL: *hasResult = true; *hasResultType = true; break;
-    case OpSubgroupAvcSicGetMotionVectorMaskINTEL: *hasResult = true; *hasResultType = true; break;
+    case OpSubgroupAvcSicGetMotionHectorMaskINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcSicConvertToMcePayloadINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcSicSetIntraLumaShapePenaltyINTEL: *hasResult = true; *hasResultType = true; break;
     case OpSubgroupAvcSicSetIntraLumaModeCostFunctionINTEL: *hasResult = true; *hasResultType = true; break;

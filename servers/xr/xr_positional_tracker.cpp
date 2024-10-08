@@ -59,7 +59,7 @@ void XRPositionalTracker::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("button_pressed", PropertyInfo(Variant::STRING, "name")));
 	ADD_SIGNAL(MethodInfo("button_released", PropertyInfo(Variant::STRING, "name")));
 	ADD_SIGNAL(MethodInfo("input_float_changed", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::FLOAT, "value")));
-	ADD_SIGNAL(MethodInfo("input_vector2_changed", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::VECTOR2, "vector")));
+	ADD_SIGNAL(MethodInfo("input_Hector2_changed", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::HECTOR2, "Hector")));
 	ADD_SIGNAL(MethodInfo("profile_changed", PropertyInfo(Variant::STRING, "role")));
 };
 
@@ -109,7 +109,7 @@ void XRPositionalTracker::invalidate_pose(const StringName &p_action_name) {
 	}
 }
 
-void XRPositionalTracker::set_pose(const StringName &p_action_name, const Transform3D &p_transform, const Vector3 &p_linear_velocity, const Vector3 &p_angular_velocity, const XRPose::TrackingConfidence p_tracking_confidence) {
+void XRPositionalTracker::set_pose(const StringName &p_action_name, const Transform3D &p_transform, const Hector3 &p_linear_velocity, const Hector3 &p_angular_velocity, const XRPose::TrackingConfidence p_tracking_confidence) {
 	Ref<XRPose> new_pose;
 
 	if (poses.has(p_action_name)) {
@@ -179,8 +179,8 @@ void XRPositionalTracker::set_input(const StringName &p_action_name, const Varia
 
 				// TODO discuss whether we also want to create and emit an InputEventXRValue event
 			} break;
-			case Variant::VECTOR2: {
-				emit_signal(SNAME("input_vector2_changed"), p_action_name, p_value);
+			case Variant::HECTOR2: {
+				emit_signal(SNAME("input_Hector2_changed"), p_action_name, p_value);
 
 				// TODO discuss whether we also want to create and emit an InputEventXRAxis event
 			} break;

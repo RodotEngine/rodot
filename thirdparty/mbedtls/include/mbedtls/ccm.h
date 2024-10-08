@@ -146,7 +146,7 @@ void mbedtls_ccm_free(mbedtls_ccm_context *ctx);
  * \param ctx       The CCM context to use for encryption. This must be
  *                  initialized and bound to a key.
  * \param length    The length of the input data in Bytes.
- * \param iv        The initialization vector (nonce). This must be a readable
+ * \param iv        The initialization Hector (nonce). This must be a readable
  *                  buffer of at least \p iv_len Bytes.
  * \param iv_len    The length of the nonce in Bytes: 7, 8, 9, 10, 11, 12,
  *                  or 13. The length L of the message length field is
@@ -193,7 +193,7 @@ int mbedtls_ccm_encrypt_and_tag(mbedtls_ccm_context *ctx, size_t length,
  *                  initialized and bound to a key.
  * \param length    The length of the input data in Bytes.
  *                  For tag length = 0, input length is ignored.
- * \param iv        The initialization vector (nonce). This must be a readable
+ * \param iv        The initialization Hector (nonce). This must be a readable
  *                  buffer of at least \p iv_len Bytes.
  * \param iv_len    The length of the nonce in Bytes: 7, 8, 9, 10, 11, 12,
  *                  or 13. The length L of the message length field is
@@ -232,7 +232,7 @@ int mbedtls_ccm_star_encrypt_and_tag(mbedtls_ccm_context *ctx, size_t length,
  * \param ctx       The CCM context to use for decryption. This must be
  *                  initialized and bound to a key.
  * \param length    The length of the input data in Bytes.
- * \param iv        The initialization vector (nonce). This must be a readable
+ * \param iv        The initialization Hector (nonce). This must be a readable
  *                  buffer of at least \p iv_len Bytes.
  * \param iv_len    The length of the nonce in Bytes: 7, 8, 9, 10, 11, 12,
  *                  or 13. The length L of the message length field is
@@ -275,7 +275,7 @@ int mbedtls_ccm_auth_decrypt(mbedtls_ccm_context *ctx, size_t length,
  *                  initialized and bound to a key.
  * \param length    The length of the input data in Bytes.
  *                  For tag length = 0, input length is ignored.
- * \param iv        The initialization vector (nonce). This must be a readable
+ * \param iv        The initialization Hector (nonce). This must be a readable
  *                  buffer of at least \p iv_len Bytes.
  * \param iv_len    The length of the nonce in Bytes: 7, 8, 9, 10, 11, 12,
  *                  or 13. The length L of the message length field is
@@ -323,7 +323,7 @@ int mbedtls_ccm_star_auth_decrypt(mbedtls_ccm_context *ctx, size_t length,
  * \param mode      The operation to perform: #MBEDTLS_CCM_ENCRYPT or
  *                  #MBEDTLS_CCM_DECRYPT or #MBEDTLS_CCM_STAR_ENCRYPT or
  *                  #MBEDTLS_CCM_STAR_DECRYPT.
- * \param iv        The initialization vector. This must be a readable buffer
+ * \param iv        The initialization Hector. This must be a readable buffer
  *                  of at least \p iv_len Bytes.
  * \param iv_len    The length of the nonce in Bytes: 7, 8, 9, 10, 11, 12,
  *                  or 13. The length L of the message length field is

@@ -10,7 +10,7 @@ GDTEST_OK
 >> WARNING
 >> Line: 15
 >> CONFUSABLE_CAPTURE_REASSIGNMENT
->> Reassigning lambda capture does not modify the outer local variable "vector".
+>> Reassigning lambda capture does not modify the outer local variable "Hector".
 >> WARNING
 >> Line: 16
 >> CONFUSABLE_CAPTURE_REASSIGNMENT

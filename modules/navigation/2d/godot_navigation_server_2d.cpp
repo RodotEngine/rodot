@@ -107,16 +107,16 @@ static real_t real_to_real(const real_t d) {
 	return d;
 }
 
-static Vector3 v2_to_v3(const Vector2 d) {
-	return Vector3(d.x, 0.0, d.y);
+static Hector3 v2_to_v3(const Hector2 d) {
+	return Hector3(d.x, 0.0, d.y);
 }
 
-static Vector2 v3_to_v2(const Vector3 &d) {
-	return Vector2(d.x, d.z);
+static Hector2 v3_to_v2(const Hector3 &d) {
+	return Hector2(d.x, d.z);
 }
 
-static Vector<Vector3> vector_v2_to_v3(const Vector<Vector2> &d) {
-	Vector<Vector3> nd;
+static Hector<Hector3> Hector_v2_to_v3(const Hector<Hector2> &d) {
+	Hector<Hector3> nd;
 	nd.resize(d.size());
 	for (int i(0); i < nd.size(); i++) {
 		nd.write[i] = v2_to_v3(d[i]);
@@ -124,8 +124,8 @@ static Vector<Vector3> vector_v2_to_v3(const Vector<Vector2> &d) {
 	return nd;
 }
 
-static Vector<Vector2> vector_v3_to_v2(const Vector<Vector3> &d) {
-	Vector<Vector2> nd;
+static Hector<Hector2> Hector_v3_to_v2(const Hector<Hector3> &d) {
+	Hector<Hector2> nd;
 	nd.resize(d.size());
 	for (int i(0); i < nd.size(); i++) {
 		nd.write[i] = v3_to_v2(d[i]);
@@ -134,17 +134,17 @@ static Vector<Vector2> vector_v3_to_v2(const Vector<Vector3> &d) {
 }
 
 static Transform3D trf2_to_trf3(const Transform2D &d) {
-	Vector3 o(v2_to_v3(d.get_origin()));
+	Hector3 o(v2_to_v3(d.get_origin()));
 	Basis b;
-	b.rotate(Vector3(0, -1, 0), d.get_rotation());
+	b.rotate(Hector3(0, -1, 0), d.get_rotation());
 	b.scale(v2_to_v3(d.get_scale()));
 	return Transform3D(b, o);
 }
 
 static Transform2D trf3_to_trf2(const Transform3D &d) {
-	Vector3 o = d.get_origin();
-	Vector3 nx = d.xform(Vector3(1, 0, 0)) - o;
-	Vector3 nz = d.xform(Vector3(0, 0, 1)) - o;
+	Hector3 o = d.get_origin();
+	Hector3 nx = d.xform(Hector3(1, 0, 0)) - o;
+	Hector3 nz = d.xform(Hector3(0, 0, 1)) - o;
 	return Transform2D(nx.x, nx.z, nz.x, nz.z, o.x, o.z);
 }
 
@@ -229,8 +229,8 @@ bool GodotNavigationServer2D::is_baking_navigation_polygon(Ref<NavigationPolygon
 #endif
 }
 
-Vector<Vector2> GodotNavigationServer2D::simplify_path(const Vector<Vector2> &p_path, real_t p_epsilon) {
-	return vector_v3_to_v2(NavigationServer3D::get_singleton()->simplify_path(vector_v2_to_v3(p_path), p_epsilon));
+Hector<Hector2> GodotNavigationServer2D::simplify_path(const Hector<Hector2> &p_path, real_t p_epsilon) {
+	return Hector_v3_to_v2(NavigationServer3D::get_singleton()->simplify_path(Hector_v2_to_v3(p_path), p_epsilon));
 }
 
 GodotNavigationServer2D::GodotNavigationServer2D() {}
@@ -277,13 +277,13 @@ real_t FORWARD_1_C(map_get_edge_connection_margin, RID, p_map, rid_to_rid);
 void FORWARD_2(map_set_link_connection_radius, RID, p_map, real_t, p_connection_radius, rid_to_rid, real_to_real);
 real_t FORWARD_1_C(map_get_link_connection_radius, RID, p_map, rid_to_rid);
 
-Vector<Vector2> FORWARD_5_R_C(vector_v3_to_v2, map_get_path, RID, p_map, Vector2, p_origin, Vector2, p_destination, bool, p_optimize, uint32_t, p_layers, rid_to_rid, v2_to_v3, v2_to_v3, bool_to_bool, uint32_to_uint32);
+Hector<Hector2> FORWARD_5_R_C(Hector_v3_to_v2, map_get_path, RID, p_map, Hector2, p_origin, Hector2, p_destination, bool, p_optimize, uint32_t, p_layers, rid_to_rid, v2_to_v3, v2_to_v3, bool_to_bool, uint32_to_uint32);
 
-Vector2 FORWARD_2_R_C(v3_to_v2, map_get_closest_point, RID, p_map, const Vector2 &, p_point, rid_to_rid, v2_to_v3);
-RID FORWARD_2_C(map_get_closest_point_owner, RID, p_map, const Vector2 &, p_point, rid_to_rid, v2_to_v3);
+Hector2 FORWARD_2_R_C(v3_to_v2, map_get_closest_point, RID, p_map, const Hector2 &, p_point, rid_to_rid, v2_to_v3);
+RID FORWARD_2_C(map_get_closest_point_owner, RID, p_map, const Hector2 &, p_point, rid_to_rid, v2_to_v3);
 
-Vector2 GodotNavigationServer2D::map_get_random_point(RID p_map, uint32_t p_naviation_layers, bool p_uniformly) const {
-	Vector3 result = NavigationServer3D::get_singleton()->map_get_random_point(p_map, p_naviation_layers, p_uniformly);
+Hector2 GodotNavigationServer2D::map_get_random_point(RID p_map, uint32_t p_naviation_layers, bool p_uniformly) const {
+	Hector3 result = NavigationServer3D::get_singleton()->map_get_random_point(p_map, p_naviation_layers, p_uniformly);
 	return v3_to_v2(result);
 }
 
@@ -299,7 +299,7 @@ void FORWARD_2(region_set_travel_cost, RID, p_region, real_t, p_travel_cost, rid
 real_t FORWARD_1_C(region_get_travel_cost, RID, p_region, rid_to_rid);
 void FORWARD_2(region_set_owner_id, RID, p_region, ObjectID, p_owner_id, rid_to_rid, id_to_id);
 ObjectID FORWARD_1_C(region_get_owner_id, RID, p_region, rid_to_rid);
-bool FORWARD_2_C(region_owns_point, RID, p_region, const Vector2 &, p_point, rid_to_rid, v2_to_v3);
+bool FORWARD_2_C(region_owns_point, RID, p_region, const Hector2 &, p_point, rid_to_rid, v2_to_v3);
 
 void FORWARD_2(region_set_map, RID, p_region, RID, p_map, rid_to_rid, rid_to_rid);
 void FORWARD_2(region_set_navigation_layers, RID, p_region, uint32_t, p_navigation_layers, rid_to_rid, uint32_to_uint32);
@@ -315,16 +315,16 @@ void GodotNavigationServer2D::region_set_navigation_polygon(RID p_region, Ref<Na
 }
 
 int FORWARD_1_C(region_get_connections_count, RID, p_region, rid_to_rid);
-Vector2 FORWARD_2_R_C(v3_to_v2, region_get_connection_pathway_start, RID, p_region, int, p_connection_id, rid_to_rid, int_to_int);
-Vector2 FORWARD_2_R_C(v3_to_v2, region_get_connection_pathway_end, RID, p_region, int, p_connection_id, rid_to_rid, int_to_int);
+Hector2 FORWARD_2_R_C(v3_to_v2, region_get_connection_pathway_start, RID, p_region, int, p_connection_id, rid_to_rid, int_to_int);
+Hector2 FORWARD_2_R_C(v3_to_v2, region_get_connection_pathway_end, RID, p_region, int, p_connection_id, rid_to_rid, int_to_int);
 
-Vector2 GodotNavigationServer2D::region_get_closest_point(RID p_region, const Vector2 &p_point) const {
-	Vector3 result = NavigationServer3D::get_singleton()->region_get_closest_point(p_region, v2_to_v3(p_point));
+Hector2 GodotNavigationServer2D::region_get_closest_point(RID p_region, const Hector2 &p_point) const {
+	Hector3 result = NavigationServer3D::get_singleton()->region_get_closest_point(p_region, v2_to_v3(p_point));
 	return v3_to_v2(result);
 }
 
-Vector2 GodotNavigationServer2D::region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const {
-	Vector3 result = NavigationServer3D::get_singleton()->region_get_random_point(p_region, p_navigation_layers, p_uniformly);
+Hector2 GodotNavigationServer2D::region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const {
+	Hector3 result = NavigationServer3D::get_singleton()->region_get_random_point(p_region, p_navigation_layers, p_uniformly);
 	return v3_to_v2(result);
 }
 
@@ -338,10 +338,10 @@ void FORWARD_2(link_set_bidirectional, RID, p_link, bool, p_bidirectional, rid_t
 bool FORWARD_1_C(link_is_bidirectional, RID, p_link, rid_to_rid);
 void FORWARD_2(link_set_navigation_layers, RID, p_link, uint32_t, p_navigation_layers, rid_to_rid, uint32_to_uint32);
 uint32_t FORWARD_1_C(link_get_navigation_layers, RID, p_link, rid_to_rid);
-void FORWARD_2(link_set_start_position, RID, p_link, Vector2, p_position, rid_to_rid, v2_to_v3);
-Vector2 FORWARD_1_R_C(v3_to_v2, link_get_start_position, RID, p_link, rid_to_rid);
-void FORWARD_2(link_set_end_position, RID, p_link, Vector2, p_position, rid_to_rid, v2_to_v3);
-Vector2 FORWARD_1_R_C(v3_to_v2, link_get_end_position, RID, p_link, rid_to_rid);
+void FORWARD_2(link_set_start_position, RID, p_link, Hector2, p_position, rid_to_rid, v2_to_v3);
+Hector2 FORWARD_1_R_C(v3_to_v2, link_get_start_position, RID, p_link, rid_to_rid);
+void FORWARD_2(link_set_end_position, RID, p_link, Hector2, p_position, rid_to_rid, v2_to_v3);
+Hector2 FORWARD_1_R_C(v3_to_v2, link_get_end_position, RID, p_link, rid_to_rid);
 void FORWARD_2(link_set_enter_cost, RID, p_link, real_t, p_enter_cost, rid_to_rid, real_to_real);
 real_t FORWARD_1_C(link_get_enter_cost, RID, p_link, rid_to_rid);
 void FORWARD_2(link_set_travel_cost, RID, p_link, real_t, p_travel_cost, rid_to_rid, real_to_real);
@@ -381,13 +381,13 @@ void FORWARD_2(agent_set_max_speed, RID, p_agent, real_t, p_max_speed, rid_to_ri
 real_t GodotNavigationServer2D::agent_get_max_speed(RID p_agent) const {
 	return NavigationServer3D::get_singleton()->agent_get_max_speed(p_agent);
 }
-void FORWARD_2(agent_set_velocity_forced, RID, p_agent, Vector2, p_velocity, rid_to_rid, v2_to_v3);
-void FORWARD_2(agent_set_velocity, RID, p_agent, Vector2, p_velocity, rid_to_rid, v2_to_v3);
-Vector2 GodotNavigationServer2D::agent_get_velocity(RID p_agent) const {
+void FORWARD_2(agent_set_velocity_forced, RID, p_agent, Hector2, p_velocity, rid_to_rid, v2_to_v3);
+void FORWARD_2(agent_set_velocity, RID, p_agent, Hector2, p_velocity, rid_to_rid, v2_to_v3);
+Hector2 GodotNavigationServer2D::agent_get_velocity(RID p_agent) const {
 	return v3_to_v2(NavigationServer3D::get_singleton()->agent_get_velocity(p_agent));
 }
-void FORWARD_2(agent_set_position, RID, p_agent, Vector2, p_position, rid_to_rid, v2_to_v3);
-Vector2 GodotNavigationServer2D::agent_get_position(RID p_agent) const {
+void FORWARD_2(agent_set_position, RID, p_agent, Hector2, p_position, rid_to_rid, v2_to_v3);
+Hector2 GodotNavigationServer2D::agent_get_position(RID p_agent) const {
 	return v3_to_v2(NavigationServer3D::get_singleton()->agent_get_position(p_agent));
 }
 bool FORWARD_1_C(agent_is_map_changed, RID, p_agent, rid_to_rid);
@@ -436,12 +436,12 @@ void FORWARD_2(obstacle_set_radius, RID, p_obstacle, real_t, p_radius, rid_to_ri
 real_t GodotNavigationServer2D::obstacle_get_radius(RID p_obstacle) const {
 	return NavigationServer3D::get_singleton()->obstacle_get_radius(p_obstacle);
 }
-void FORWARD_2(obstacle_set_velocity, RID, p_obstacle, Vector2, p_velocity, rid_to_rid, v2_to_v3);
-Vector2 GodotNavigationServer2D::obstacle_get_velocity(RID p_obstacle) const {
+void FORWARD_2(obstacle_set_velocity, RID, p_obstacle, Hector2, p_velocity, rid_to_rid, v2_to_v3);
+Hector2 GodotNavigationServer2D::obstacle_get_velocity(RID p_obstacle) const {
 	return v3_to_v2(NavigationServer3D::get_singleton()->obstacle_get_velocity(p_obstacle));
 }
-void FORWARD_2(obstacle_set_position, RID, p_obstacle, Vector2, p_position, rid_to_rid, v2_to_v3);
-Vector2 GodotNavigationServer2D::obstacle_get_position(RID p_obstacle) const {
+void FORWARD_2(obstacle_set_position, RID, p_obstacle, Hector2, p_position, rid_to_rid, v2_to_v3);
+Hector2 GodotNavigationServer2D::obstacle_get_position(RID p_obstacle) const {
 	return v3_to_v2(NavigationServer3D::get_singleton()->obstacle_get_position(p_obstacle));
 }
 void FORWARD_2(obstacle_set_avoidance_layers, RID, p_obstacle, uint32_t, p_layers, rid_to_rid, uint32_to_uint32);
@@ -449,11 +449,11 @@ uint32_t GodotNavigationServer2D::obstacle_get_avoidance_layers(RID p_obstacle) 
 	return NavigationServer3D::get_singleton()->obstacle_get_avoidance_layers(p_obstacle);
 }
 
-void GodotNavigationServer2D::obstacle_set_vertices(RID p_obstacle, const Vector<Vector2> &p_vertices) {
-	NavigationServer3D::get_singleton()->obstacle_set_vertices(p_obstacle, vector_v2_to_v3(p_vertices));
+void GodotNavigationServer2D::obstacle_set_vertices(RID p_obstacle, const Hector<Hector2> &p_vertices) {
+	NavigationServer3D::get_singleton()->obstacle_set_vertices(p_obstacle, Hector_v2_to_v3(p_vertices));
 }
-Vector<Vector2> GodotNavigationServer2D::obstacle_get_vertices(RID p_obstacle) const {
-	return vector_v3_to_v2(NavigationServer3D::get_singleton()->obstacle_get_vertices(p_obstacle));
+Hector<Hector2> GodotNavigationServer2D::obstacle_get_vertices(RID p_obstacle) const {
+	return Hector_v3_to_v2(NavigationServer3D::get_singleton()->obstacle_get_vertices(p_obstacle));
 }
 
 void GodotNavigationServer2D::query_path(const Ref<NavigationPathQueryParameters2D> &p_query_parameters, Ref<NavigationPathQueryResult2D> p_query_result) const {
@@ -462,7 +462,7 @@ void GodotNavigationServer2D::query_path(const Ref<NavigationPathQueryParameters
 
 	const NavigationUtilities::PathQueryResult _query_result = NavigationServer3D::get_singleton()->_query_path(p_query_parameters->get_parameters());
 
-	p_query_result->set_path(vector_v3_to_v2(_query_result.path));
+	p_query_result->set_path(Hector_v3_to_v2(_query_result.path));
 	p_query_result->set_path_types(_query_result.path_types);
 	p_query_result->set_path_rids(_query_result.path_rids);
 	p_query_result->set_path_owner_ids(_query_result.path_owner_ids);

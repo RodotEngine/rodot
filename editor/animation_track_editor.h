@@ -166,7 +166,7 @@ public:
 	bool animation_read_only = false;
 
 	Ref<Animation> animation;
-	Vector<StringName> marker_names;
+	Hector<StringName> marker_names;
 
 	AnimationMarkerEdit *marker_edit = nullptr;
 
@@ -221,8 +221,8 @@ class AnimationTimelineEdit : public Range {
 	bool use_fps = false;
 
 	Ref<ViewPanner> panner;
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
 	bool dragging_timeline = false;
 	bool dragging_hsize = false;
@@ -231,7 +231,7 @@ class AnimationTimelineEdit : public Range {
 	double last_zoom_scale = 1.0;
 	double hscroll_on_zoom_buffer = -1.0;
 
-	Vector2 zoom_scroll_origin;
+	Hector2 zoom_scroll_origin;
 	bool zoom_callback_occured = false;
 
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
@@ -551,7 +551,7 @@ class AnimationBezierTrackEdit;
 class AnimationTrackEditGroup : public Control {
 	GDCLASS(AnimationTrackEditGroup, Control);
 	Ref<Texture2D> icon;
-	Vector2 icon_size;
+	Hector2 icon_size;
 	String node_name;
 	NodePath node;
 	Node *root = nullptr;
@@ -618,8 +618,8 @@ class AnimationTrackEditor : public VBoxContainer {
 	void _show_inactive_player_warning();
 
 	void _snap_mode_changed(int p_mode);
-	Vector<AnimationTrackEdit *> track_edits;
-	Vector<AnimationTrackEditGroup *> groups;
+	Hector<AnimationTrackEdit *> track_edits;
+	Hector<AnimationTrackEditGroup *> groups;
 
 	bool animation_changing_awaiting_update = false;
 	void _animation_update(); // Updated by AnimationTrackEditor(this)
@@ -691,13 +691,13 @@ class AnimationTrackEditor : public VBoxContainer {
 
 	PropertyInfo _find_hint_for_track(int p_idx, NodePath &r_base_path, Variant *r_current_val = nullptr);
 
-	void _scroll_changed(const Vector2 &p_val);
+	void _scroll_changed(const Hector2 &p_val);
 	void _v_scroll_changed(float p_val);
 	void _h_scroll_changed(float p_val);
 
 	Ref<ViewPanner> panner;
-	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
-	void _zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event);
+	void _pan_callback(Hector2 p_scroll_vec, Ref<InputEvent> p_event);
+	void _zoom_callback(float p_zoom_factor, Hector2 p_origin, Ref<InputEvent> p_event);
 
 	void _timeline_value_changed(double);
 
@@ -742,13 +742,13 @@ class AnimationTrackEditor : public VBoxContainer {
 	Control *box_selection = nullptr;
 	void _box_selection_draw();
 	bool box_selecting = false;
-	Vector2 box_selecting_from;
-	Vector2 box_selecting_to;
+	Hector2 box_selecting_from;
+	Hector2 box_selecting_to;
 	Rect2 box_select_rect;
-	Vector2 prev_scroll_position;
+	Hector2 prev_scroll_position;
 	void _scroll_input(const Ref<InputEvent> &p_event);
 
-	Vector<Ref<AnimationTrackEditPlugin>> track_edit_plugins;
+	Hector<Ref<AnimationTrackEditPlugin>> track_edit_plugins;
 
 	void _toggle_bezier_edit();
 	void _cancel_bezier_edit();
@@ -827,7 +827,7 @@ class AnimationTrackEditor : public VBoxContainer {
 			float transition = 0;
 			Variant value;
 		};
-		Vector<Key> keys;
+		Hector<Key> keys;
 	};
 
 	struct KeyClipboard {
@@ -840,17 +840,17 @@ class AnimationTrackEditor : public VBoxContainer {
 			float transition = 0;
 			Variant value;
 		};
-		Vector<Key> keys;
+		Hector<Key> keys;
 	};
 
-	Vector<TrackClipboard> track_clipboard;
+	Hector<TrackClipboard> track_clipboard;
 	KeyClipboard key_clipboard;
 
 	void _set_key_clipboard(int p_top_track, float p_top_time, RBMap<SelectedKey, KeyInfo> &p_keymap);
 	void _insert_animation_key(NodePath p_path, const Variant &p_value);
 
 	void _pick_track_filter_text_changed(const String &p_newtext);
-	void _pick_track_select_recursive(TreeItem *p_item, const String &p_filter, Vector<Node *> &p_select_candidates);
+	void _pick_track_select_recursive(TreeItem *p_item, const String &p_filter, Hector<Node *> &p_select_candidates);
 
 	double snap_unit;
 	void _update_snap_unit();

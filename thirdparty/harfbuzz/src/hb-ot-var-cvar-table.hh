@@ -60,7 +60,7 @@ struct cvar
                                    const hb_map_t *axes_old_index_tag_map,
                                    TupleVariationData::tuple_variations_t& tuple_variations /* OUT */) const
   {
-    hb_vector_t<unsigned> shared_indices;
+    hb_Hector_t<unsigned> shared_indices;
     TupleVariationData::tuple_iterator_t iterator;
     hb_bytes_t var_data_bytes = blob->as_bytes ().sub_array (4);
     if (!TupleVariationData::get_tuple_iterator (var_data_bytes, axis_count, this,
@@ -79,10 +79,10 @@ struct cvar
                                     unsigned num_cvt_item,
                                     const TupleVariationData *tuple_var_data,
                                     const void *base,
-                                    hb_vector_t<float>& cvt_deltas /* OUT */)
+                                    hb_Hector_t<float>& cvt_deltas /* OUT */)
   {
     if (!coords) return true;
-    hb_vector_t<unsigned> shared_indices;
+    hb_Hector_t<unsigned> shared_indices;
     TupleVariationData::tuple_iterator_t iterator;
     unsigned var_data_length = tuple_var_data->get_size (axis_count);
     hb_bytes_t var_data_bytes = hb_bytes_t (reinterpret_cast<const char*> (tuple_var_data), var_data_length);
@@ -91,8 +91,8 @@ struct cvar
       return true; /* isn't applied at all */
 
     hb_array_t<const F2DOT14> shared_tuples = hb_array<F2DOT14> ();
-    hb_vector_t<unsigned> private_indices;
-    hb_vector_t<int> unpacked_deltas;
+    hb_Hector_t<unsigned> private_indices;
+    hb_Hector_t<int> unpacked_deltas;
 
     do
     {
@@ -109,7 +109,7 @@ struct cvar
       if (has_private_points &&
           !TupleVariationData::decompile_points (p, private_indices, end))
         return false;
-      const hb_vector_t<unsigned int> &indices = has_private_points ? private_indices : shared_indices;
+      const hb_Hector_t<unsigned int> &indices = has_private_points ? private_indices : shared_indices;
 
       bool apply_to_all = (indices.length == 0);
       unsigned num_deltas = apply_to_all ? num_cvt_item : indices.length;
@@ -183,7 +183,7 @@ struct cvar
     unsigned cvt_blob_length = hb_blob_get_length (cvt_prime_blob);
     unsigned num_cvt_item = cvt_blob_length / FWORD::static_size;
 
-    hb_vector_t<float> cvt_deltas;
+    hb_Hector_t<float> cvt_deltas;
     if (unlikely (!cvt_deltas.resize (num_cvt_item)))
     {
       hb_blob_destroy (cvt_prime_blob);

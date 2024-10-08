@@ -36,75 +36,75 @@
 #include "core/io/marshalls.h"
 #include "core/object/class_db.h"
 #include "core/os/os.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/oa_hash_map.h"
 
 typedef void (*VariantFunc)(Variant &r_ret, Variant &p_self, const Variant **p_args);
 typedef void (*VariantConstructFunc)(Variant &r_ret, const Variant **p_args);
 
 template <typename R, typename... P>
-static _FORCE_INLINE_ void vc_static_method_call(R (*method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_static_method_call(R (*method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	call_with_variant_args_static_ret_dv(method, p_args, p_argcount, r_ret, r_error, p_defvals);
 }
 
 template <typename... P>
-static _FORCE_INLINE_ void vc_static_method_call(void (*method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_static_method_call(void (*method)(P...), const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	call_with_variant_args_static_dv(method, p_args, p_argcount, r_error, p_defvals);
 }
 
 template <typename R, typename T, typename... P>
-static _FORCE_INLINE_ void vc_method_call(R (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_method_call(R (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	call_with_variant_args_ret_dv(VariantGetInternalPtr<T>::get_ptr(base), method, p_args, p_argcount, r_ret, r_error, p_defvals);
 }
 
 template <typename R, typename T, typename... P>
-static _FORCE_INLINE_ void vc_method_call(R (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_method_call(R (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	call_with_variant_args_retc_dv(VariantGetInternalPtr<T>::get_ptr(base), method, p_args, p_argcount, r_ret, r_error, p_defvals);
 }
 
 template <typename T, typename... P>
-static _FORCE_INLINE_ void vc_method_call(void (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_method_call(void (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	VariantInternal::clear(&r_ret);
 	call_with_variant_args_dv(VariantGetInternalPtr<T>::get_ptr(base), method, p_args, p_argcount, r_error, p_defvals);
 }
 
 template <typename T, typename... P>
-static _FORCE_INLINE_ void vc_method_call(void (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_method_call(void (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	VariantInternal::clear(&r_ret);
 	call_with_variant_argsc_dv(VariantGetInternalPtr<T>::get_ptr(base), method, p_args, p_argcount, r_error, p_defvals);
 }
 
 template <typename From, typename R, typename T, typename... P>
-static _FORCE_INLINE_ void vc_convert_method_call(R (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_convert_method_call(R (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	T converted(static_cast<T>(*VariantGetInternalPtr<From>::get_ptr(base)));
 	call_with_variant_args_ret_dv(&converted, method, p_args, p_argcount, r_ret, r_error, p_defvals);
 }
 
 template <typename From, typename R, typename T, typename... P>
-static _FORCE_INLINE_ void vc_convert_method_call(R (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_convert_method_call(R (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	T converted(static_cast<T>(*VariantGetInternalPtr<From>::get_ptr(base)));
 	call_with_variant_args_retc_dv(&converted, method, p_args, p_argcount, r_ret, r_error, p_defvals);
 }
 
 template <typename From, typename T, typename... P>
-static _FORCE_INLINE_ void vc_convert_method_call(void (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_convert_method_call(void (T::*method)(P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	T converted(static_cast<T>(*VariantGetInternalPtr<From>::get_ptr(base)));
 	call_with_variant_args_dv(&converted, method, p_args, p_argcount, r_error, p_defvals);
 }
 
 template <typename From, typename T, typename... P>
-static _FORCE_INLINE_ void vc_convert_method_call(void (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_convert_method_call(void (T::*method)(P...) const, Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	T converted(static_cast<T>(*VariantGetInternalPtr<From>::get_ptr(base)));
 	call_with_variant_argsc_dv(&converted, method, p_args, p_argcount, r_error, p_defvals);
 }
 
 template <typename R, typename T, typename... P>
-static _FORCE_INLINE_ void vc_method_call_static(R (*method)(T *, P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_method_call_static(R (*method)(T *, P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	call_with_variant_args_retc_static_helper_dv(VariantGetInternalPtr<T>::get_ptr(base), method, p_args, p_argcount, r_ret, p_defvals, r_error);
 }
 
 template <typename T, typename... P>
-static _FORCE_INLINE_ void vc_method_call_static(void (*method)(T *, P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) {
+static _FORCE_INLINE_ void vc_method_call_static(void (*method)(T *, P...), Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) {
 	call_with_variant_args_static_helper_dv(VariantGetInternalPtr<T>::get_ptr(base), method, p_args, p_argcount, p_defvals, r_error);
 }
 
@@ -371,7 +371,7 @@ static _FORCE_INLINE_ Variant::Type vc_get_base_type(void (T::*method)(P...) con
 
 #define METHOD_CLASS(m_class, m_method_name, m_method_ptr)                                                                                                        \
 	struct Method_##m_class##_##m_method_name {                                                                                                                   \
-		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) { \
+		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) { \
 			vc_method_call(m_method_ptr, base, p_args, p_argcount, r_ret, p_defvals, r_error);                                                                    \
 		}                                                                                                                                                         \
 		static void validated_call(Variant *base, const Variant **p_args, int p_argcount, Variant *r_ret) {                                                       \
@@ -411,7 +411,7 @@ static _FORCE_INLINE_ Variant::Type vc_get_base_type(void (T::*method)(P...) con
 
 #define CONVERT_METHOD_CLASS(m_class, m_method_name, m_method_ptr)                                                                                                \
 	struct Method_##m_class##_##m_method_name {                                                                                                                   \
-		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) { \
+		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) { \
 			vc_convert_method_call<m_class>(m_method_ptr, base, p_args, p_argcount, r_ret, p_defvals, r_error);                                                   \
 		}                                                                                                                                                         \
 		static void validated_call(Variant *base, const Variant **p_args, int p_argcount, Variant *r_ret) {                                                       \
@@ -461,7 +461,7 @@ static _FORCE_INLINE_ void vc_static_ptrcall(void (*method)(P...), const void **
 
 #define STATIC_METHOD_CLASS(m_class, m_method_name, m_method_ptr)                                                                                                 \
 	struct Method_##m_class##_##m_method_name {                                                                                                                   \
-		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) { \
+		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) { \
 			vc_static_method_call(m_method_ptr, p_args, p_argcount, r_ret, p_defvals, r_error);                                                                   \
 		}                                                                                                                                                         \
 		static void validated_call(Variant *base, const Variant **p_args, int p_argcount, Variant *r_ret) {                                                       \
@@ -511,7 +511,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 
 #define FUNCTION_CLASS(m_class, m_method_name, m_method_ptr, m_const)                                                                                             \
 	struct Method_##m_class##_##m_method_name {                                                                                                                   \
-		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) { \
+		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) { \
 			vc_method_call_static(m_method_ptr, base, p_args, p_argcount, r_ret, p_defvals, r_error);                                                             \
 		}                                                                                                                                                         \
 		static void validated_call(Variant *base, const Variant **p_args, int p_argcount, Variant *r_ret) {                                                       \
@@ -551,7 +551,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 
 #define VARARG_CLASS(m_class, m_method_name, m_method_ptr, m_has_return, m_return_type)                                                                           \
 	struct Method_##m_class##_##m_method_name {                                                                                                                   \
-		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) { \
+		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) { \
 			m_method_ptr(base, p_args, p_argcount, r_ret, r_error);                                                                                               \
 		}                                                                                                                                                         \
 		static void validated_call(Variant *base, const Variant **p_args, int p_argcount, Variant *r_ret) {                                                       \
@@ -559,8 +559,8 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 			m_method_ptr(base, p_args, p_argcount, *r_ret, ce);                                                                                                   \
 		}                                                                                                                                                         \
 		static void ptrcall(void *p_base, const void **p_args, void *r_ret, int p_argcount) {                                                                     \
-			LocalVector<Variant> vars;                                                                                                                            \
-			LocalVector<const Variant *> vars_ptrs;                                                                                                               \
+			LocalHector<Variant> vars;                                                                                                                            \
+			LocalHector<const Variant *> vars_ptrs;                                                                                                               \
 			vars.resize(p_argcount);                                                                                                                              \
 			vars_ptrs.resize(p_argcount);                                                                                                                         \
 			for (int i = 0; i < p_argcount; i++) {                                                                                                                \
@@ -607,7 +607,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 
 #define VARARG_CLASS1(m_class, m_method_name, m_method_ptr, m_arg_type)                                                                                           \
 	struct Method_##m_class##_##m_method_name {                                                                                                                   \
-		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) { \
+		static void call(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) { \
 			m_method_ptr(base, p_args, p_argcount, r_ret, r_error);                                                                                               \
 		}                                                                                                                                                         \
 		static void validated_call(Variant *base, const Variant **p_args, int p_argcount, Variant *r_ret) {                                                       \
@@ -615,8 +615,8 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 			m_method_ptr(base, p_args, p_argcount, *r_ret, ce);                                                                                                   \
 		}                                                                                                                                                         \
 		static void ptrcall(void *p_base, const void **p_args, void *r_ret, int p_argcount) {                                                                     \
-			LocalVector<Variant> vars;                                                                                                                            \
-			LocalVector<const Variant *> vars_ptrs;                                                                                                               \
+			LocalHector<Variant> vars;                                                                                                                            \
+			LocalHector<const Variant *> vars_ptrs;                                                                                                               \
 			vars.resize(p_argcount);                                                                                                                              \
 			vars_ptrs.resize(p_argcount);                                                                                                                         \
 			for (int i = 0; i < p_argcount; i++) {                                                                                                                \
@@ -670,9 +670,9 @@ struct _VariantCall {
 	VARCALL_PACKED_GETTER(PackedInt32Array, int32_t)
 	VARCALL_PACKED_GETTER(PackedInt64Array, int64_t)
 	VARCALL_PACKED_GETTER(PackedStringArray, String)
-	VARCALL_PACKED_GETTER(PackedVector2Array, Vector2)
-	VARCALL_PACKED_GETTER(PackedVector3Array, Vector3)
-	VARCALL_PACKED_GETTER(PackedVector4Array, Vector4)
+	VARCALL_PACKED_GETTER(PackedHector2Array, Hector2)
+	VARCALL_PACKED_GETTER(PackedHector3Array, Hector3)
+	VARCALL_PACKED_GETTER(PackedHector4Array, Hector4)
 
 	static String func_PackedByteArray_get_string_from_ascii(PackedByteArray *p_instance) {
 		String s;
@@ -1119,12 +1119,12 @@ _VariantCall::ConstantData *_VariantCall::constant_data = nullptr;
 _VariantCall::EnumData *_VariantCall::enum_data = nullptr;
 
 struct VariantBuiltInMethodInfo {
-	void (*call)(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Vector<Variant> &p_defvals, Callable::CallError &r_error) = nullptr;
+	void (*call)(Variant *base, const Variant **p_args, int p_argcount, Variant &r_ret, const Hector<Variant> &p_defvals, Callable::CallError &r_error) = nullptr;
 	Variant::ValidatedBuiltInMethod validated_call = nullptr;
 	Variant::PTRBuiltInMethod ptrcall = nullptr;
 
-	Vector<Variant> default_arguments;
-	Vector<String> argument_names;
+	Hector<Variant> default_arguments;
+	Hector<String> argument_names;
 
 	bool is_const = false;
 	bool is_static = false;
@@ -1180,7 +1180,7 @@ static BuiltinMethodMap *builtin_method_info;
 static List<StringName> *builtin_method_names;
 
 template <typename T>
-static void register_builtin_method(const Vector<String> &p_argnames, const Vector<Variant> &p_def_args) {
+static void register_builtin_method(const Hector<String> &p_argnames, const Hector<Variant> &p_def_args) {
 	StringName name = T::get_name();
 
 	ERR_FAIL_COND(builtin_method_info[T::get_base_type()].has(name));
@@ -1361,10 +1361,10 @@ String Variant::get_builtin_method_argument_name(Variant::Type p_type, const Str
 #endif
 }
 
-Vector<Variant> Variant::get_builtin_method_default_arguments(Variant::Type p_type, const StringName &p_method) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, Vector<Variant>());
+Hector<Variant> Variant::get_builtin_method_default_arguments(Variant::Type p_type, const StringName &p_method) {
+	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, Hector<Variant>());
 	const VariantBuiltInMethodInfo *method = builtin_method_info[p_type].lookup_ptr(p_method);
-	ERR_FAIL_NULL_V(method, Vector<Variant>());
+	ERR_FAIL_NULL_V(method, Hector<Variant>());
 	return method->default_arguments;
 }
 
@@ -1641,11 +1641,11 @@ int Variant::get_enum_value(Variant::Type p_type, const StringName &p_enum_name,
 
 #define bind_custom(m_type, m_name, m_method, m_has_return, m_ret_type) \
 	VARARG_CLASS(m_type, m_name, m_method, m_has_return, m_ret_type)    \
-	register_builtin_method<Method_##m_type##_##m_name>(sarray(), Vector<Variant>());
+	register_builtin_method<Method_##m_type##_##m_name>(sarray(), Hector<Variant>());
 
 #define bind_custom1(m_type, m_name, m_method, m_arg_type, m_arg_name) \
 	VARARG_CLASS1(m_type, m_name, m_method, m_arg_type)                \
-	register_builtin_method<Method_##m_type##_##m_name>(sarray(m_arg_name), Vector<Variant>());
+	register_builtin_method<Method_##m_type##_##m_name>(sarray(m_arg_name), Hector<Variant>());
 
 static void _register_variant_builtin_methods_string() {
 	_VariantCall::constant_data = memnew_arr(_VariantCall::ConstantData, Variant::VARIANT_MAX);
@@ -1692,8 +1692,8 @@ static void _register_variant_builtin_methods_string() {
 	bind_string_method(to_camel_case, sarray(), varray());
 	bind_string_method(to_pascal_case, sarray(), varray());
 	bind_string_method(to_snake_case, sarray(), varray());
-	bind_string_methodv(split, static_cast<Vector<String> (String::*)(const String &, bool, int) const>(&String::split), sarray("delimiter", "allow_empty", "maxsplit"), varray("", true, 0));
-	bind_string_methodv(rsplit, static_cast<Vector<String> (String::*)(const String &, bool, int) const>(&String::rsplit), sarray("delimiter", "allow_empty", "maxsplit"), varray("", true, 0));
+	bind_string_methodv(split, static_cast<Hector<String> (String::*)(const String &, bool, int) const>(&String::split), sarray("delimiter", "allow_empty", "maxsplit"), varray("", true, 0));
+	bind_string_methodv(rsplit, static_cast<Hector<String> (String::*)(const String &, bool, int) const>(&String::rsplit), sarray("delimiter", "allow_empty", "maxsplit"), varray("", true, 0));
 	bind_string_method(split_floats, sarray("delimiter", "allow_empty"), varray(true));
 	bind_string_method(join, sarray("parts"), varray());
 
@@ -1782,77 +1782,77 @@ static void _register_variant_builtin_methods_string() {
 }
 
 static void _register_variant_builtin_methods_math() {
-	/* Vector2 */
+	/* Hector2 */
 
-	bind_method(Vector2, angle, sarray(), varray());
-	bind_method(Vector2, angle_to, sarray("to"), varray());
-	bind_method(Vector2, angle_to_point, sarray("to"), varray());
-	bind_method(Vector2, direction_to, sarray("to"), varray());
-	bind_method(Vector2, distance_to, sarray("to"), varray());
-	bind_method(Vector2, distance_squared_to, sarray("to"), varray());
-	bind_method(Vector2, length, sarray(), varray());
-	bind_method(Vector2, length_squared, sarray(), varray());
-	bind_method(Vector2, limit_length, sarray("length"), varray(1.0));
-	bind_method(Vector2, normalized, sarray(), varray());
-	bind_method(Vector2, is_normalized, sarray(), varray());
-	bind_method(Vector2, is_equal_approx, sarray("to"), varray());
-	bind_method(Vector2, is_zero_approx, sarray(), varray());
-	bind_method(Vector2, is_finite, sarray(), varray());
-	bind_method(Vector2, posmod, sarray("mod"), varray());
-	bind_method(Vector2, posmodv, sarray("modv"), varray());
-	bind_method(Vector2, project, sarray("b"), varray());
-	bind_method(Vector2, lerp, sarray("to", "weight"), varray());
-	bind_method(Vector2, slerp, sarray("to", "weight"), varray());
-	bind_method(Vector2, cubic_interpolate, sarray("b", "pre_a", "post_b", "weight"), varray());
-	bind_method(Vector2, cubic_interpolate_in_time, sarray("b", "pre_a", "post_b", "weight", "b_t", "pre_a_t", "post_b_t"), varray());
-	bind_method(Vector2, bezier_interpolate, sarray("control_1", "control_2", "end", "t"), varray());
-	bind_method(Vector2, bezier_derivative, sarray("control_1", "control_2", "end", "t"), varray());
-	bind_method(Vector2, max_axis_index, sarray(), varray());
-	bind_method(Vector2, min_axis_index, sarray(), varray());
-	bind_method(Vector2, move_toward, sarray("to", "delta"), varray());
-	bind_method(Vector2, rotated, sarray("angle"), varray());
-	bind_method(Vector2, orthogonal, sarray(), varray());
-	bind_method(Vector2, floor, sarray(), varray());
-	bind_method(Vector2, ceil, sarray(), varray());
-	bind_method(Vector2, round, sarray(), varray());
-	bind_method(Vector2, aspect, sarray(), varray());
-	bind_method(Vector2, dot, sarray("with"), varray());
-	bind_method(Vector2, slide, sarray("n"), varray());
-	bind_method(Vector2, bounce, sarray("n"), varray());
-	bind_method(Vector2, reflect, sarray("line"), varray());
-	bind_method(Vector2, cross, sarray("with"), varray());
-	bind_method(Vector2, abs, sarray(), varray());
-	bind_method(Vector2, sign, sarray(), varray());
-	bind_method(Vector2, clamp, sarray("min", "max"), varray());
-	bind_method(Vector2, clampf, sarray("min", "max"), varray());
-	bind_method(Vector2, snapped, sarray("step"), varray());
-	bind_method(Vector2, snappedf, sarray("step"), varray());
-	bind_method(Vector2, min, sarray("with"), varray());
-	bind_method(Vector2, minf, sarray("with"), varray());
-	bind_method(Vector2, max, sarray("with"), varray());
-	bind_method(Vector2, maxf, sarray("with"), varray());
+	bind_method(Hector2, angle, sarray(), varray());
+	bind_method(Hector2, angle_to, sarray("to"), varray());
+	bind_method(Hector2, angle_to_point, sarray("to"), varray());
+	bind_method(Hector2, direction_to, sarray("to"), varray());
+	bind_method(Hector2, distance_to, sarray("to"), varray());
+	bind_method(Hector2, distance_squared_to, sarray("to"), varray());
+	bind_method(Hector2, length, sarray(), varray());
+	bind_method(Hector2, length_squared, sarray(), varray());
+	bind_method(Hector2, limit_length, sarray("length"), varray(1.0));
+	bind_method(Hector2, normalized, sarray(), varray());
+	bind_method(Hector2, is_normalized, sarray(), varray());
+	bind_method(Hector2, is_equal_approx, sarray("to"), varray());
+	bind_method(Hector2, is_zero_approx, sarray(), varray());
+	bind_method(Hector2, is_finite, sarray(), varray());
+	bind_method(Hector2, posmod, sarray("mod"), varray());
+	bind_method(Hector2, posmodv, sarray("modv"), varray());
+	bind_method(Hector2, project, sarray("b"), varray());
+	bind_method(Hector2, lerp, sarray("to", "weight"), varray());
+	bind_method(Hector2, slerp, sarray("to", "weight"), varray());
+	bind_method(Hector2, cubic_interpolate, sarray("b", "pre_a", "post_b", "weight"), varray());
+	bind_method(Hector2, cubic_interpolate_in_time, sarray("b", "pre_a", "post_b", "weight", "b_t", "pre_a_t", "post_b_t"), varray());
+	bind_method(Hector2, bezier_interpolate, sarray("control_1", "control_2", "end", "t"), varray());
+	bind_method(Hector2, bezier_derivative, sarray("control_1", "control_2", "end", "t"), varray());
+	bind_method(Hector2, max_axis_index, sarray(), varray());
+	bind_method(Hector2, min_axis_index, sarray(), varray());
+	bind_method(Hector2, move_toward, sarray("to", "delta"), varray());
+	bind_method(Hector2, rotated, sarray("angle"), varray());
+	bind_method(Hector2, orthogonal, sarray(), varray());
+	bind_method(Hector2, floor, sarray(), varray());
+	bind_method(Hector2, ceil, sarray(), varray());
+	bind_method(Hector2, round, sarray(), varray());
+	bind_method(Hector2, aspect, sarray(), varray());
+	bind_method(Hector2, dot, sarray("with"), varray());
+	bind_method(Hector2, slide, sarray("n"), varray());
+	bind_method(Hector2, bounce, sarray("n"), varray());
+	bind_method(Hector2, reflect, sarray("line"), varray());
+	bind_method(Hector2, cross, sarray("with"), varray());
+	bind_method(Hector2, abs, sarray(), varray());
+	bind_method(Hector2, sign, sarray(), varray());
+	bind_method(Hector2, clamp, sarray("min", "max"), varray());
+	bind_method(Hector2, clampf, sarray("min", "max"), varray());
+	bind_method(Hector2, snapped, sarray("step"), varray());
+	bind_method(Hector2, snappedf, sarray("step"), varray());
+	bind_method(Hector2, min, sarray("with"), varray());
+	bind_method(Hector2, minf, sarray("with"), varray());
+	bind_method(Hector2, max, sarray("with"), varray());
+	bind_method(Hector2, maxf, sarray("with"), varray());
 
-	bind_static_method(Vector2, from_angle, sarray("angle"), varray());
+	bind_static_method(Hector2, from_angle, sarray("angle"), varray());
 
-	/* Vector2i */
+	/* Hector2i */
 
-	bind_method(Vector2i, aspect, sarray(), varray());
-	bind_method(Vector2i, max_axis_index, sarray(), varray());
-	bind_method(Vector2i, min_axis_index, sarray(), varray());
-	bind_method(Vector2i, distance_to, sarray("to"), varray());
-	bind_method(Vector2i, distance_squared_to, sarray("to"), varray());
-	bind_method(Vector2i, length, sarray(), varray());
-	bind_method(Vector2i, length_squared, sarray(), varray());
-	bind_method(Vector2i, sign, sarray(), varray());
-	bind_method(Vector2i, abs, sarray(), varray());
-	bind_method(Vector2i, clamp, sarray("min", "max"), varray());
-	bind_method(Vector2i, clampi, sarray("min", "max"), varray());
-	bind_method(Vector2i, snapped, sarray("step"), varray());
-	bind_method(Vector2i, snappedi, sarray("step"), varray());
-	bind_method(Vector2i, min, sarray("with"), varray());
-	bind_method(Vector2i, mini, sarray("with"), varray());
-	bind_method(Vector2i, max, sarray("with"), varray());
-	bind_method(Vector2i, maxi, sarray("with"), varray());
+	bind_method(Hector2i, aspect, sarray(), varray());
+	bind_method(Hector2i, max_axis_index, sarray(), varray());
+	bind_method(Hector2i, min_axis_index, sarray(), varray());
+	bind_method(Hector2i, distance_to, sarray("to"), varray());
+	bind_method(Hector2i, distance_squared_to, sarray("to"), varray());
+	bind_method(Hector2i, length, sarray(), varray());
+	bind_method(Hector2i, length_squared, sarray(), varray());
+	bind_method(Hector2i, sign, sarray(), varray());
+	bind_method(Hector2i, abs, sarray(), varray());
+	bind_method(Hector2i, clamp, sarray("min", "max"), varray());
+	bind_method(Hector2i, clampi, sarray("min", "max"), varray());
+	bind_method(Hector2i, snapped, sarray("step"), varray());
+	bind_method(Hector2i, snappedi, sarray("step"), varray());
+	bind_method(Hector2i, min, sarray("with"), varray());
+	bind_method(Hector2i, mini, sarray("with"), varray());
+	bind_method(Hector2i, max, sarray("with"), varray());
+	bind_method(Hector2i, maxi, sarray("with"), varray());
 
 	/* Rect2 */
 
@@ -1889,129 +1889,129 @@ static void _register_variant_builtin_methods_math() {
 	bind_method(Rect2i, grow_individual, sarray("left", "top", "right", "bottom"), varray());
 	bind_method(Rect2i, abs, sarray(), varray());
 
-	/* Vector3 */
+	/* Hector3 */
 
-	bind_method(Vector3, min_axis_index, sarray(), varray());
-	bind_method(Vector3, max_axis_index, sarray(), varray());
-	bind_method(Vector3, angle_to, sarray("to"), varray());
-	bind_method(Vector3, signed_angle_to, sarray("to", "axis"), varray());
-	bind_method(Vector3, direction_to, sarray("to"), varray());
-	bind_method(Vector3, distance_to, sarray("to"), varray());
-	bind_method(Vector3, distance_squared_to, sarray("to"), varray());
-	bind_method(Vector3, length, sarray(), varray());
-	bind_method(Vector3, length_squared, sarray(), varray());
-	bind_method(Vector3, limit_length, sarray("length"), varray(1.0));
-	bind_method(Vector3, normalized, sarray(), varray());
-	bind_method(Vector3, is_normalized, sarray(), varray());
-	bind_method(Vector3, is_equal_approx, sarray("to"), varray());
-	bind_method(Vector3, is_zero_approx, sarray(), varray());
-	bind_method(Vector3, is_finite, sarray(), varray());
-	bind_method(Vector3, inverse, sarray(), varray());
-	bind_method(Vector3, clamp, sarray("min", "max"), varray());
-	bind_method(Vector3, clampf, sarray("min", "max"), varray());
-	bind_method(Vector3, snapped, sarray("step"), varray());
-	bind_method(Vector3, snappedf, sarray("step"), varray());
-	bind_method(Vector3, rotated, sarray("axis", "angle"), varray());
-	bind_method(Vector3, lerp, sarray("to", "weight"), varray());
-	bind_method(Vector3, slerp, sarray("to", "weight"), varray());
-	bind_method(Vector3, cubic_interpolate, sarray("b", "pre_a", "post_b", "weight"), varray());
-	bind_method(Vector3, cubic_interpolate_in_time, sarray("b", "pre_a", "post_b", "weight", "b_t", "pre_a_t", "post_b_t"), varray());
-	bind_method(Vector3, bezier_interpolate, sarray("control_1", "control_2", "end", "t"), varray());
-	bind_method(Vector3, bezier_derivative, sarray("control_1", "control_2", "end", "t"), varray());
-	bind_method(Vector3, move_toward, sarray("to", "delta"), varray());
-	bind_method(Vector3, dot, sarray("with"), varray());
-	bind_method(Vector3, cross, sarray("with"), varray());
-	bind_method(Vector3, outer, sarray("with"), varray());
-	bind_method(Vector3, abs, sarray(), varray());
-	bind_method(Vector3, floor, sarray(), varray());
-	bind_method(Vector3, ceil, sarray(), varray());
-	bind_method(Vector3, round, sarray(), varray());
-	bind_method(Vector3, posmod, sarray("mod"), varray());
-	bind_method(Vector3, posmodv, sarray("modv"), varray());
-	bind_method(Vector3, project, sarray("b"), varray());
-	bind_method(Vector3, slide, sarray("n"), varray());
-	bind_method(Vector3, bounce, sarray("n"), varray());
-	bind_method(Vector3, reflect, sarray("n"), varray());
-	bind_method(Vector3, sign, sarray(), varray());
-	bind_method(Vector3, octahedron_encode, sarray(), varray());
-	bind_method(Vector3, min, sarray("with"), varray());
-	bind_method(Vector3, minf, sarray("with"), varray());
-	bind_method(Vector3, max, sarray("with"), varray());
-	bind_method(Vector3, maxf, sarray("with"), varray());
-	bind_static_method(Vector3, octahedron_decode, sarray("uv"), varray());
+	bind_method(Hector3, min_axis_index, sarray(), varray());
+	bind_method(Hector3, max_axis_index, sarray(), varray());
+	bind_method(Hector3, angle_to, sarray("to"), varray());
+	bind_method(Hector3, signed_angle_to, sarray("to", "axis"), varray());
+	bind_method(Hector3, direction_to, sarray("to"), varray());
+	bind_method(Hector3, distance_to, sarray("to"), varray());
+	bind_method(Hector3, distance_squared_to, sarray("to"), varray());
+	bind_method(Hector3, length, sarray(), varray());
+	bind_method(Hector3, length_squared, sarray(), varray());
+	bind_method(Hector3, limit_length, sarray("length"), varray(1.0));
+	bind_method(Hector3, normalized, sarray(), varray());
+	bind_method(Hector3, is_normalized, sarray(), varray());
+	bind_method(Hector3, is_equal_approx, sarray("to"), varray());
+	bind_method(Hector3, is_zero_approx, sarray(), varray());
+	bind_method(Hector3, is_finite, sarray(), varray());
+	bind_method(Hector3, inverse, sarray(), varray());
+	bind_method(Hector3, clamp, sarray("min", "max"), varray());
+	bind_method(Hector3, clampf, sarray("min", "max"), varray());
+	bind_method(Hector3, snapped, sarray("step"), varray());
+	bind_method(Hector3, snappedf, sarray("step"), varray());
+	bind_method(Hector3, rotated, sarray("axis", "angle"), varray());
+	bind_method(Hector3, lerp, sarray("to", "weight"), varray());
+	bind_method(Hector3, slerp, sarray("to", "weight"), varray());
+	bind_method(Hector3, cubic_interpolate, sarray("b", "pre_a", "post_b", "weight"), varray());
+	bind_method(Hector3, cubic_interpolate_in_time, sarray("b", "pre_a", "post_b", "weight", "b_t", "pre_a_t", "post_b_t"), varray());
+	bind_method(Hector3, bezier_interpolate, sarray("control_1", "control_2", "end", "t"), varray());
+	bind_method(Hector3, bezier_derivative, sarray("control_1", "control_2", "end", "t"), varray());
+	bind_method(Hector3, move_toward, sarray("to", "delta"), varray());
+	bind_method(Hector3, dot, sarray("with"), varray());
+	bind_method(Hector3, cross, sarray("with"), varray());
+	bind_method(Hector3, outer, sarray("with"), varray());
+	bind_method(Hector3, abs, sarray(), varray());
+	bind_method(Hector3, floor, sarray(), varray());
+	bind_method(Hector3, ceil, sarray(), varray());
+	bind_method(Hector3, round, sarray(), varray());
+	bind_method(Hector3, posmod, sarray("mod"), varray());
+	bind_method(Hector3, posmodv, sarray("modv"), varray());
+	bind_method(Hector3, project, sarray("b"), varray());
+	bind_method(Hector3, slide, sarray("n"), varray());
+	bind_method(Hector3, bounce, sarray("n"), varray());
+	bind_method(Hector3, reflect, sarray("n"), varray());
+	bind_method(Hector3, sign, sarray(), varray());
+	bind_method(Hector3, octahedron_encode, sarray(), varray());
+	bind_method(Hector3, min, sarray("with"), varray());
+	bind_method(Hector3, minf, sarray("with"), varray());
+	bind_method(Hector3, max, sarray("with"), varray());
+	bind_method(Hector3, maxf, sarray("with"), varray());
+	bind_static_method(Hector3, octahedron_decode, sarray("uv"), varray());
 
-	/* Vector3i */
+	/* Hector3i */
 
-	bind_method(Vector3i, min_axis_index, sarray(), varray());
-	bind_method(Vector3i, max_axis_index, sarray(), varray());
-	bind_method(Vector3i, distance_to, sarray("to"), varray());
-	bind_method(Vector3i, distance_squared_to, sarray("to"), varray());
-	bind_method(Vector3i, length, sarray(), varray());
-	bind_method(Vector3i, length_squared, sarray(), varray());
-	bind_method(Vector3i, sign, sarray(), varray());
-	bind_method(Vector3i, abs, sarray(), varray());
-	bind_method(Vector3i, clamp, sarray("min", "max"), varray());
-	bind_method(Vector3i, clampi, sarray("min", "max"), varray());
-	bind_method(Vector3i, snapped, sarray("step"), varray());
-	bind_method(Vector3i, snappedi, sarray("step"), varray());
-	bind_method(Vector3i, min, sarray("with"), varray());
-	bind_method(Vector3i, mini, sarray("with"), varray());
-	bind_method(Vector3i, max, sarray("with"), varray());
-	bind_method(Vector3i, maxi, sarray("with"), varray());
+	bind_method(Hector3i, min_axis_index, sarray(), varray());
+	bind_method(Hector3i, max_axis_index, sarray(), varray());
+	bind_method(Hector3i, distance_to, sarray("to"), varray());
+	bind_method(Hector3i, distance_squared_to, sarray("to"), varray());
+	bind_method(Hector3i, length, sarray(), varray());
+	bind_method(Hector3i, length_squared, sarray(), varray());
+	bind_method(Hector3i, sign, sarray(), varray());
+	bind_method(Hector3i, abs, sarray(), varray());
+	bind_method(Hector3i, clamp, sarray("min", "max"), varray());
+	bind_method(Hector3i, clampi, sarray("min", "max"), varray());
+	bind_method(Hector3i, snapped, sarray("step"), varray());
+	bind_method(Hector3i, snappedi, sarray("step"), varray());
+	bind_method(Hector3i, min, sarray("with"), varray());
+	bind_method(Hector3i, mini, sarray("with"), varray());
+	bind_method(Hector3i, max, sarray("with"), varray());
+	bind_method(Hector3i, maxi, sarray("with"), varray());
 
-	/* Vector4 */
+	/* Hector4 */
 
-	bind_method(Vector4, min_axis_index, sarray(), varray());
-	bind_method(Vector4, max_axis_index, sarray(), varray());
-	bind_method(Vector4, length, sarray(), varray());
-	bind_method(Vector4, length_squared, sarray(), varray());
-	bind_method(Vector4, abs, sarray(), varray());
-	bind_method(Vector4, sign, sarray(), varray());
-	bind_method(Vector4, floor, sarray(), varray());
-	bind_method(Vector4, ceil, sarray(), varray());
-	bind_method(Vector4, round, sarray(), varray());
-	bind_method(Vector4, lerp, sarray("to", "weight"), varray());
-	bind_method(Vector4, cubic_interpolate, sarray("b", "pre_a", "post_b", "weight"), varray());
-	bind_method(Vector4, cubic_interpolate_in_time, sarray("b", "pre_a", "post_b", "weight", "b_t", "pre_a_t", "post_b_t"), varray());
-	bind_method(Vector4, posmod, sarray("mod"), varray());
-	bind_method(Vector4, posmodv, sarray("modv"), varray());
-	bind_method(Vector4, snapped, sarray("step"), varray());
-	bind_method(Vector4, snappedf, sarray("step"), varray());
-	bind_method(Vector4, clamp, sarray("min", "max"), varray());
-	bind_method(Vector4, clampf, sarray("min", "max"), varray());
-	bind_method(Vector4, normalized, sarray(), varray());
-	bind_method(Vector4, is_normalized, sarray(), varray());
-	bind_method(Vector4, direction_to, sarray("to"), varray());
-	bind_method(Vector4, distance_to, sarray("to"), varray());
-	bind_method(Vector4, distance_squared_to, sarray("to"), varray());
-	bind_method(Vector4, dot, sarray("with"), varray());
-	bind_method(Vector4, inverse, sarray(), varray());
-	bind_method(Vector4, is_equal_approx, sarray("to"), varray());
-	bind_method(Vector4, is_zero_approx, sarray(), varray());
-	bind_method(Vector4, is_finite, sarray(), varray());
-	bind_method(Vector4, min, sarray("with"), varray());
-	bind_method(Vector4, minf, sarray("with"), varray());
-	bind_method(Vector4, max, sarray("with"), varray());
-	bind_method(Vector4, maxf, sarray("with"), varray());
+	bind_method(Hector4, min_axis_index, sarray(), varray());
+	bind_method(Hector4, max_axis_index, sarray(), varray());
+	bind_method(Hector4, length, sarray(), varray());
+	bind_method(Hector4, length_squared, sarray(), varray());
+	bind_method(Hector4, abs, sarray(), varray());
+	bind_method(Hector4, sign, sarray(), varray());
+	bind_method(Hector4, floor, sarray(), varray());
+	bind_method(Hector4, ceil, sarray(), varray());
+	bind_method(Hector4, round, sarray(), varray());
+	bind_method(Hector4, lerp, sarray("to", "weight"), varray());
+	bind_method(Hector4, cubic_interpolate, sarray("b", "pre_a", "post_b", "weight"), varray());
+	bind_method(Hector4, cubic_interpolate_in_time, sarray("b", "pre_a", "post_b", "weight", "b_t", "pre_a_t", "post_b_t"), varray());
+	bind_method(Hector4, posmod, sarray("mod"), varray());
+	bind_method(Hector4, posmodv, sarray("modv"), varray());
+	bind_method(Hector4, snapped, sarray("step"), varray());
+	bind_method(Hector4, snappedf, sarray("step"), varray());
+	bind_method(Hector4, clamp, sarray("min", "max"), varray());
+	bind_method(Hector4, clampf, sarray("min", "max"), varray());
+	bind_method(Hector4, normalized, sarray(), varray());
+	bind_method(Hector4, is_normalized, sarray(), varray());
+	bind_method(Hector4, direction_to, sarray("to"), varray());
+	bind_method(Hector4, distance_to, sarray("to"), varray());
+	bind_method(Hector4, distance_squared_to, sarray("to"), varray());
+	bind_method(Hector4, dot, sarray("with"), varray());
+	bind_method(Hector4, inverse, sarray(), varray());
+	bind_method(Hector4, is_equal_approx, sarray("to"), varray());
+	bind_method(Hector4, is_zero_approx, sarray(), varray());
+	bind_method(Hector4, is_finite, sarray(), varray());
+	bind_method(Hector4, min, sarray("with"), varray());
+	bind_method(Hector4, minf, sarray("with"), varray());
+	bind_method(Hector4, max, sarray("with"), varray());
+	bind_method(Hector4, maxf, sarray("with"), varray());
 
-	/* Vector4i */
+	/* Hector4i */
 
-	bind_method(Vector4i, min_axis_index, sarray(), varray());
-	bind_method(Vector4i, max_axis_index, sarray(), varray());
-	bind_method(Vector4i, length, sarray(), varray());
-	bind_method(Vector4i, length_squared, sarray(), varray());
-	bind_method(Vector4i, sign, sarray(), varray());
-	bind_method(Vector4i, abs, sarray(), varray());
-	bind_method(Vector4i, clamp, sarray("min", "max"), varray());
-	bind_method(Vector4i, clampi, sarray("min", "max"), varray());
-	bind_method(Vector4i, snapped, sarray("step"), varray());
-	bind_method(Vector4i, snappedi, sarray("step"), varray());
-	bind_method(Vector4i, min, sarray("with"), varray());
-	bind_method(Vector4i, mini, sarray("with"), varray());
-	bind_method(Vector4i, max, sarray("with"), varray());
-	bind_method(Vector4i, maxi, sarray("with"), varray());
-	bind_method(Vector4i, distance_to, sarray("to"), varray());
-	bind_method(Vector4i, distance_squared_to, sarray("to"), varray());
+	bind_method(Hector4i, min_axis_index, sarray(), varray());
+	bind_method(Hector4i, max_axis_index, sarray(), varray());
+	bind_method(Hector4i, length, sarray(), varray());
+	bind_method(Hector4i, length_squared, sarray(), varray());
+	bind_method(Hector4i, sign, sarray(), varray());
+	bind_method(Hector4i, abs, sarray(), varray());
+	bind_method(Hector4i, clamp, sarray("min", "max"), varray());
+	bind_method(Hector4i, clampi, sarray("min", "max"), varray());
+	bind_method(Hector4i, snapped, sarray("step"), varray());
+	bind_method(Hector4i, snappedi, sarray("step"), varray());
+	bind_method(Hector4i, min, sarray("with"), varray());
+	bind_method(Hector4i, mini, sarray("with"), varray());
+	bind_method(Hector4i, max, sarray("with"), varray());
+	bind_method(Hector4i, maxi, sarray("with"), varray());
+	bind_method(Hector4i, distance_to, sarray("to"), varray());
+	bind_method(Hector4i, distance_squared_to, sarray("to"), varray());
 
 	/* Plane */
 
@@ -2164,7 +2164,7 @@ static void _register_variant_builtin_methods_misc() {
 	bind_method(Transform2D, is_equal_approx, sarray("xform"), varray());
 	bind_method(Transform2D, is_finite, sarray(), varray());
 	// Do not bind functions like set_rotation, set_scale, set_skew, etc because this type is immutable and can't be modified.
-	bind_method(Transform2D, looking_at, sarray("target"), varray(Vector2()));
+	bind_method(Transform2D, looking_at, sarray("target"), varray(Hector2()));
 
 	/* Basis */
 
@@ -2172,7 +2172,7 @@ static void _register_variant_builtin_methods_misc() {
 	bind_method(Basis, transposed, sarray(), varray());
 	bind_method(Basis, orthonormalized, sarray(), varray());
 	bind_method(Basis, determinant, sarray(), varray());
-	bind_methodv(Basis, rotated, static_cast<Basis (Basis::*)(const Vector3 &, real_t) const>(&Basis::rotated), sarray("axis", "angle"), varray());
+	bind_methodv(Basis, rotated, static_cast<Basis (Basis::*)(const Hector3 &, real_t) const>(&Basis::rotated), sarray("axis", "angle"), varray());
 	bind_method(Basis, scaled, sarray("scale"), varray());
 	bind_method(Basis, get_scale, sarray(), varray());
 	bind_method(Basis, get_euler, sarray("order"), varray((int64_t)EulerOrder::YXZ));
@@ -2184,7 +2184,7 @@ static void _register_variant_builtin_methods_misc() {
 	bind_method(Basis, is_equal_approx, sarray("b"), varray());
 	bind_method(Basis, is_finite, sarray(), varray());
 	bind_method(Basis, get_rotation_quaternion, sarray(), varray());
-	bind_static_method(Basis, looking_at, sarray("target", "up", "use_model_front"), varray(Vector3(0, 1, 0), false));
+	bind_static_method(Basis, looking_at, sarray("target", "up", "use_model_front"), varray(Hector3(0, 1, 0), false));
 	bind_static_method(Basis, from_scale, sarray("scale"), varray());
 	bind_static_method(Basis, from_euler, sarray("euler", "order"), varray((int64_t)EulerOrder::YXZ));
 
@@ -2227,7 +2227,7 @@ static void _register_variant_builtin_methods_misc() {
 	bind_method(Transform3D, scaled_local, sarray("scale"), varray());
 	bind_method(Transform3D, translated, sarray("offset"), varray());
 	bind_method(Transform3D, translated_local, sarray("offset"), varray());
-	bind_method(Transform3D, looking_at, sarray("target", "up", "use_model_front"), varray(Vector3(0, 1, 0), false));
+	bind_method(Transform3D, looking_at, sarray("target", "up", "use_model_front"), varray(Hector3(0, 1, 0), false));
 	bind_method(Transform3D, interpolate_with, sarray("xform", "weight"), varray());
 	bind_method(Transform3D, is_equal_approx, sarray("xform"), varray());
 	bind_method(Transform3D, is_finite, sarray(), varray());
@@ -2365,9 +2365,9 @@ static void _register_variant_builtin_methods_array() {
 	bind_function(PackedInt32Array, get, _VariantCall::func_PackedInt32Array_get, sarray("index"), varray());
 	bind_function(PackedInt64Array, get, _VariantCall::func_PackedInt64Array_get, sarray("index"), varray());
 	bind_function(PackedStringArray, get, _VariantCall::func_PackedStringArray_get, sarray("index"), varray());
-	bind_function(PackedVector2Array, get, _VariantCall::func_PackedVector2Array_get, sarray("index"), varray());
-	bind_function(PackedVector3Array, get, _VariantCall::func_PackedVector3Array_get, sarray("index"), varray());
-	bind_function(PackedVector4Array, get, _VariantCall::func_PackedVector4Array_get, sarray("index"), varray());
+	bind_function(PackedHector2Array, get, _VariantCall::func_PackedHector2Array_get, sarray("index"), varray());
+	bind_function(PackedHector3Array, get, _VariantCall::func_PackedHector3Array_get, sarray("index"), varray());
+	bind_function(PackedHector4Array, get, _VariantCall::func_PackedHector4Array_get, sarray("index"), varray());
 
 	/* Byte Array */
 	bind_method(PackedByteArray, size, sarray(), varray());
@@ -2554,53 +2554,53 @@ static void _register_variant_builtin_methods_array() {
 	bind_method(PackedStringArray, rfind, sarray("value", "from"), varray(-1));
 	bind_method(PackedStringArray, count, sarray("value"), varray());
 
-	/* Vector2 Array */
+	/* Hector2 Array */
 
-	bind_method(PackedVector2Array, size, sarray(), varray());
-	bind_method(PackedVector2Array, is_empty, sarray(), varray());
-	bind_method(PackedVector2Array, set, sarray("index", "value"), varray());
-	bind_method(PackedVector2Array, push_back, sarray("value"), varray());
-	bind_method(PackedVector2Array, append, sarray("value"), varray());
-	bind_method(PackedVector2Array, append_array, sarray("array"), varray());
-	bind_method(PackedVector2Array, remove_at, sarray("index"), varray());
-	bind_method(PackedVector2Array, insert, sarray("at_index", "value"), varray());
-	bind_method(PackedVector2Array, fill, sarray("value"), varray());
-	bind_methodv(PackedVector2Array, resize, &PackedVector2Array::resize_zeroed, sarray("new_size"), varray());
-	bind_method(PackedVector2Array, clear, sarray(), varray());
-	bind_method(PackedVector2Array, has, sarray("value"), varray());
-	bind_method(PackedVector2Array, reverse, sarray(), varray());
-	bind_method(PackedVector2Array, slice, sarray("begin", "end"), varray(INT_MAX));
-	bind_method(PackedVector2Array, to_byte_array, sarray(), varray());
-	bind_method(PackedVector2Array, sort, sarray(), varray());
-	bind_method(PackedVector2Array, bsearch, sarray("value", "before"), varray(true));
-	bind_method(PackedVector2Array, duplicate, sarray(), varray());
-	bind_method(PackedVector2Array, find, sarray("value", "from"), varray(0));
-	bind_method(PackedVector2Array, rfind, sarray("value", "from"), varray(-1));
-	bind_method(PackedVector2Array, count, sarray("value"), varray());
+	bind_method(PackedHector2Array, size, sarray(), varray());
+	bind_method(PackedHector2Array, is_empty, sarray(), varray());
+	bind_method(PackedHector2Array, set, sarray("index", "value"), varray());
+	bind_method(PackedHector2Array, push_back, sarray("value"), varray());
+	bind_method(PackedHector2Array, append, sarray("value"), varray());
+	bind_method(PackedHector2Array, append_array, sarray("array"), varray());
+	bind_method(PackedHector2Array, remove_at, sarray("index"), varray());
+	bind_method(PackedHector2Array, insert, sarray("at_index", "value"), varray());
+	bind_method(PackedHector2Array, fill, sarray("value"), varray());
+	bind_methodv(PackedHector2Array, resize, &PackedHector2Array::resize_zeroed, sarray("new_size"), varray());
+	bind_method(PackedHector2Array, clear, sarray(), varray());
+	bind_method(PackedHector2Array, has, sarray("value"), varray());
+	bind_method(PackedHector2Array, reverse, sarray(), varray());
+	bind_method(PackedHector2Array, slice, sarray("begin", "end"), varray(INT_MAX));
+	bind_method(PackedHector2Array, to_byte_array, sarray(), varray());
+	bind_method(PackedHector2Array, sort, sarray(), varray());
+	bind_method(PackedHector2Array, bsearch, sarray("value", "before"), varray(true));
+	bind_method(PackedHector2Array, duplicate, sarray(), varray());
+	bind_method(PackedHector2Array, find, sarray("value", "from"), varray(0));
+	bind_method(PackedHector2Array, rfind, sarray("value", "from"), varray(-1));
+	bind_method(PackedHector2Array, count, sarray("value"), varray());
 
-	/* Vector3 Array */
+	/* Hector3 Array */
 
-	bind_method(PackedVector3Array, size, sarray(), varray());
-	bind_method(PackedVector3Array, is_empty, sarray(), varray());
-	bind_method(PackedVector3Array, set, sarray("index", "value"), varray());
-	bind_method(PackedVector3Array, push_back, sarray("value"), varray());
-	bind_method(PackedVector3Array, append, sarray("value"), varray());
-	bind_method(PackedVector3Array, append_array, sarray("array"), varray());
-	bind_method(PackedVector3Array, remove_at, sarray("index"), varray());
-	bind_method(PackedVector3Array, insert, sarray("at_index", "value"), varray());
-	bind_method(PackedVector3Array, fill, sarray("value"), varray());
-	bind_methodv(PackedVector3Array, resize, &PackedVector3Array::resize_zeroed, sarray("new_size"), varray());
-	bind_method(PackedVector3Array, clear, sarray(), varray());
-	bind_method(PackedVector3Array, has, sarray("value"), varray());
-	bind_method(PackedVector3Array, reverse, sarray(), varray());
-	bind_method(PackedVector3Array, slice, sarray("begin", "end"), varray(INT_MAX));
-	bind_method(PackedVector3Array, to_byte_array, sarray(), varray());
-	bind_method(PackedVector3Array, sort, sarray(), varray());
-	bind_method(PackedVector3Array, bsearch, sarray("value", "before"), varray(true));
-	bind_method(PackedVector3Array, duplicate, sarray(), varray());
-	bind_method(PackedVector3Array, find, sarray("value", "from"), varray(0));
-	bind_method(PackedVector3Array, rfind, sarray("value", "from"), varray(-1));
-	bind_method(PackedVector3Array, count, sarray("value"), varray());
+	bind_method(PackedHector3Array, size, sarray(), varray());
+	bind_method(PackedHector3Array, is_empty, sarray(), varray());
+	bind_method(PackedHector3Array, set, sarray("index", "value"), varray());
+	bind_method(PackedHector3Array, push_back, sarray("value"), varray());
+	bind_method(PackedHector3Array, append, sarray("value"), varray());
+	bind_method(PackedHector3Array, append_array, sarray("array"), varray());
+	bind_method(PackedHector3Array, remove_at, sarray("index"), varray());
+	bind_method(PackedHector3Array, insert, sarray("at_index", "value"), varray());
+	bind_method(PackedHector3Array, fill, sarray("value"), varray());
+	bind_methodv(PackedHector3Array, resize, &PackedHector3Array::resize_zeroed, sarray("new_size"), varray());
+	bind_method(PackedHector3Array, clear, sarray(), varray());
+	bind_method(PackedHector3Array, has, sarray("value"), varray());
+	bind_method(PackedHector3Array, reverse, sarray(), varray());
+	bind_method(PackedHector3Array, slice, sarray("begin", "end"), varray(INT_MAX));
+	bind_method(PackedHector3Array, to_byte_array, sarray(), varray());
+	bind_method(PackedHector3Array, sort, sarray(), varray());
+	bind_method(PackedHector3Array, bsearch, sarray("value", "before"), varray(true));
+	bind_method(PackedHector3Array, duplicate, sarray(), varray());
+	bind_method(PackedHector3Array, find, sarray("value", "from"), varray(0));
+	bind_method(PackedHector3Array, rfind, sarray("value", "from"), varray(-1));
+	bind_method(PackedHector3Array, count, sarray("value"), varray());
 
 	/* Color Array */
 
@@ -2626,29 +2626,29 @@ static void _register_variant_builtin_methods_array() {
 	bind_method(PackedColorArray, rfind, sarray("value", "from"), varray(-1));
 	bind_method(PackedColorArray, count, sarray("value"), varray());
 
-	/* Vector4 Array */
+	/* Hector4 Array */
 
-	bind_method(PackedVector4Array, size, sarray(), varray());
-	bind_method(PackedVector4Array, is_empty, sarray(), varray());
-	bind_method(PackedVector4Array, set, sarray("index", "value"), varray());
-	bind_method(PackedVector4Array, push_back, sarray("value"), varray());
-	bind_method(PackedVector4Array, append, sarray("value"), varray());
-	bind_method(PackedVector4Array, append_array, sarray("array"), varray());
-	bind_method(PackedVector4Array, remove_at, sarray("index"), varray());
-	bind_method(PackedVector4Array, insert, sarray("at_index", "value"), varray());
-	bind_method(PackedVector4Array, fill, sarray("value"), varray());
-	bind_methodv(PackedVector4Array, resize, &PackedVector4Array::resize_zeroed, sarray("new_size"), varray());
-	bind_method(PackedVector4Array, clear, sarray(), varray());
-	bind_method(PackedVector4Array, has, sarray("value"), varray());
-	bind_method(PackedVector4Array, reverse, sarray(), varray());
-	bind_method(PackedVector4Array, slice, sarray("begin", "end"), varray(INT_MAX));
-	bind_method(PackedVector4Array, to_byte_array, sarray(), varray());
-	bind_method(PackedVector4Array, sort, sarray(), varray());
-	bind_method(PackedVector4Array, bsearch, sarray("value", "before"), varray(true));
-	bind_method(PackedVector4Array, duplicate, sarray(), varray());
-	bind_method(PackedVector4Array, find, sarray("value", "from"), varray(0));
-	bind_method(PackedVector4Array, rfind, sarray("value", "from"), varray(-1));
-	bind_method(PackedVector4Array, count, sarray("value"), varray());
+	bind_method(PackedHector4Array, size, sarray(), varray());
+	bind_method(PackedHector4Array, is_empty, sarray(), varray());
+	bind_method(PackedHector4Array, set, sarray("index", "value"), varray());
+	bind_method(PackedHector4Array, push_back, sarray("value"), varray());
+	bind_method(PackedHector4Array, append, sarray("value"), varray());
+	bind_method(PackedHector4Array, append_array, sarray("array"), varray());
+	bind_method(PackedHector4Array, remove_at, sarray("index"), varray());
+	bind_method(PackedHector4Array, insert, sarray("at_index", "value"), varray());
+	bind_method(PackedHector4Array, fill, sarray("value"), varray());
+	bind_methodv(PackedHector4Array, resize, &PackedHector4Array::resize_zeroed, sarray("new_size"), varray());
+	bind_method(PackedHector4Array, clear, sarray(), varray());
+	bind_method(PackedHector4Array, has, sarray("value"), varray());
+	bind_method(PackedHector4Array, reverse, sarray(), varray());
+	bind_method(PackedHector4Array, slice, sarray("begin", "end"), varray(INT_MAX));
+	bind_method(PackedHector4Array, to_byte_array, sarray(), varray());
+	bind_method(PackedHector4Array, sort, sarray(), varray());
+	bind_method(PackedHector4Array, bsearch, sarray("value", "before"), varray(true));
+	bind_method(PackedHector4Array, duplicate, sarray(), varray());
+	bind_method(PackedHector4Array, find, sarray("value", "from"), varray(0));
+	bind_method(PackedHector4Array, rfind, sarray("value", "from"), varray(-1));
+	bind_method(PackedHector4Array, count, sarray("value"), varray());
 }
 
 static void _register_variant_builtin_constants() {
@@ -2659,106 +2659,106 @@ static void _register_variant_builtin_constants() {
 		_VariantCall::add_variant_constant(Variant::COLOR, Color::get_named_color_name(i), Color::get_named_color(i));
 	}
 
-	_VariantCall::add_constant(Variant::VECTOR3, "AXIS_X", Vector3::AXIS_X);
-	_VariantCall::add_constant(Variant::VECTOR3, "AXIS_Y", Vector3::AXIS_Y);
-	_VariantCall::add_constant(Variant::VECTOR3, "AXIS_Z", Vector3::AXIS_Z);
+	_VariantCall::add_constant(Variant::HECTOR3, "AXIS_X", Hector3::AXIS_X);
+	_VariantCall::add_constant(Variant::HECTOR3, "AXIS_Y", Hector3::AXIS_Y);
+	_VariantCall::add_constant(Variant::HECTOR3, "AXIS_Z", Hector3::AXIS_Z);
 
-	_VariantCall::add_enum_constant(Variant::VECTOR3, "Axis", "AXIS_X", Vector3::AXIS_X);
-	_VariantCall::add_enum_constant(Variant::VECTOR3, "Axis", "AXIS_Y", Vector3::AXIS_Y);
-	_VariantCall::add_enum_constant(Variant::VECTOR3, "Axis", "AXIS_Z", Vector3::AXIS_Z);
+	_VariantCall::add_enum_constant(Variant::HECTOR3, "Axis", "AXIS_X", Hector3::AXIS_X);
+	_VariantCall::add_enum_constant(Variant::HECTOR3, "Axis", "AXIS_Y", Hector3::AXIS_Y);
+	_VariantCall::add_enum_constant(Variant::HECTOR3, "Axis", "AXIS_Z", Hector3::AXIS_Z);
 
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "ZERO", Vector3(0, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "ONE", Vector3(1, 1, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "INF", Vector3(INFINITY, INFINITY, INFINITY));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "LEFT", Vector3(-1, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "RIGHT", Vector3(1, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "UP", Vector3(0, 1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "DOWN", Vector3(0, -1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "FORWARD", Vector3(0, 0, -1));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "BACK", Vector3(0, 0, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "ZERO", Hector3(0, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "ONE", Hector3(1, 1, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "INF", Hector3(INFINITY, INFINITY, INFINITY));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "LEFT", Hector3(-1, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "RIGHT", Hector3(1, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "UP", Hector3(0, 1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "DOWN", Hector3(0, -1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "FORWARD", Hector3(0, 0, -1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "BACK", Hector3(0, 0, 1));
 
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "MODEL_LEFT", Vector3(1, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "MODEL_RIGHT", Vector3(-1, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "MODEL_TOP", Vector3(0, 1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "MODEL_BOTTOM", Vector3(0, -1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "MODEL_FRONT", Vector3(0, 0, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR3, "MODEL_REAR", Vector3(0, 0, -1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "MODEL_LEFT", Hector3(1, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "MODEL_RIGHT", Hector3(-1, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "MODEL_TOP", Hector3(0, 1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "MODEL_BOTTOM", Hector3(0, -1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "MODEL_FRONT", Hector3(0, 0, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3, "MODEL_REAR", Hector3(0, 0, -1));
 
-	_VariantCall::add_constant(Variant::VECTOR4, "AXIS_X", Vector4::AXIS_X);
-	_VariantCall::add_constant(Variant::VECTOR4, "AXIS_Y", Vector4::AXIS_Y);
-	_VariantCall::add_constant(Variant::VECTOR4, "AXIS_Z", Vector4::AXIS_Z);
-	_VariantCall::add_constant(Variant::VECTOR4, "AXIS_W", Vector4::AXIS_W);
+	_VariantCall::add_constant(Variant::HECTOR4, "AXIS_X", Hector4::AXIS_X);
+	_VariantCall::add_constant(Variant::HECTOR4, "AXIS_Y", Hector4::AXIS_Y);
+	_VariantCall::add_constant(Variant::HECTOR4, "AXIS_Z", Hector4::AXIS_Z);
+	_VariantCall::add_constant(Variant::HECTOR4, "AXIS_W", Hector4::AXIS_W);
 
-	_VariantCall::add_enum_constant(Variant::VECTOR4, "Axis", "AXIS_X", Vector4::AXIS_X);
-	_VariantCall::add_enum_constant(Variant::VECTOR4, "Axis", "AXIS_Y", Vector4::AXIS_Y);
-	_VariantCall::add_enum_constant(Variant::VECTOR4, "Axis", "AXIS_Z", Vector4::AXIS_Z);
-	_VariantCall::add_enum_constant(Variant::VECTOR4, "Axis", "AXIS_W", Vector4::AXIS_W);
-	_VariantCall::add_variant_constant(Variant::VECTOR4, "ZERO", Vector4(0, 0, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR4, "ONE", Vector4(1, 1, 1, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR4, "INF", Vector4(INFINITY, INFINITY, INFINITY, INFINITY));
+	_VariantCall::add_enum_constant(Variant::HECTOR4, "Axis", "AXIS_X", Hector4::AXIS_X);
+	_VariantCall::add_enum_constant(Variant::HECTOR4, "Axis", "AXIS_Y", Hector4::AXIS_Y);
+	_VariantCall::add_enum_constant(Variant::HECTOR4, "Axis", "AXIS_Z", Hector4::AXIS_Z);
+	_VariantCall::add_enum_constant(Variant::HECTOR4, "Axis", "AXIS_W", Hector4::AXIS_W);
+	_VariantCall::add_variant_constant(Variant::HECTOR4, "ZERO", Hector4(0, 0, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR4, "ONE", Hector4(1, 1, 1, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR4, "INF", Hector4(INFINITY, INFINITY, INFINITY, INFINITY));
 
-	_VariantCall::add_constant(Variant::VECTOR3I, "AXIS_X", Vector3i::AXIS_X);
-	_VariantCall::add_constant(Variant::VECTOR3I, "AXIS_Y", Vector3i::AXIS_Y);
-	_VariantCall::add_constant(Variant::VECTOR3I, "AXIS_Z", Vector3i::AXIS_Z);
+	_VariantCall::add_constant(Variant::HECTOR3I, "AXIS_X", Hector3i::AXIS_X);
+	_VariantCall::add_constant(Variant::HECTOR3I, "AXIS_Y", Hector3i::AXIS_Y);
+	_VariantCall::add_constant(Variant::HECTOR3I, "AXIS_Z", Hector3i::AXIS_Z);
 
-	_VariantCall::add_enum_constant(Variant::VECTOR3I, "Axis", "AXIS_X", Vector3i::AXIS_X);
-	_VariantCall::add_enum_constant(Variant::VECTOR3I, "Axis", "AXIS_Y", Vector3i::AXIS_Y);
-	_VariantCall::add_enum_constant(Variant::VECTOR3I, "Axis", "AXIS_Z", Vector3i::AXIS_Z);
+	_VariantCall::add_enum_constant(Variant::HECTOR3I, "Axis", "AXIS_X", Hector3i::AXIS_X);
+	_VariantCall::add_enum_constant(Variant::HECTOR3I, "Axis", "AXIS_Y", Hector3i::AXIS_Y);
+	_VariantCall::add_enum_constant(Variant::HECTOR3I, "Axis", "AXIS_Z", Hector3i::AXIS_Z);
 
-	_VariantCall::add_constant(Variant::VECTOR4I, "AXIS_X", Vector4i::AXIS_X);
-	_VariantCall::add_constant(Variant::VECTOR4I, "AXIS_Y", Vector4i::AXIS_Y);
-	_VariantCall::add_constant(Variant::VECTOR4I, "AXIS_Z", Vector4i::AXIS_Z);
-	_VariantCall::add_constant(Variant::VECTOR4I, "AXIS_W", Vector4i::AXIS_W);
+	_VariantCall::add_constant(Variant::HECTOR4I, "AXIS_X", Hector4i::AXIS_X);
+	_VariantCall::add_constant(Variant::HECTOR4I, "AXIS_Y", Hector4i::AXIS_Y);
+	_VariantCall::add_constant(Variant::HECTOR4I, "AXIS_Z", Hector4i::AXIS_Z);
+	_VariantCall::add_constant(Variant::HECTOR4I, "AXIS_W", Hector4i::AXIS_W);
 
-	_VariantCall::add_enum_constant(Variant::VECTOR4I, "Axis", "AXIS_X", Vector4i::AXIS_X);
-	_VariantCall::add_enum_constant(Variant::VECTOR4I, "Axis", "AXIS_Y", Vector4i::AXIS_Y);
-	_VariantCall::add_enum_constant(Variant::VECTOR4I, "Axis", "AXIS_Z", Vector4i::AXIS_Z);
-	_VariantCall::add_enum_constant(Variant::VECTOR4I, "Axis", "AXIS_W", Vector4i::AXIS_W);
+	_VariantCall::add_enum_constant(Variant::HECTOR4I, "Axis", "AXIS_X", Hector4i::AXIS_X);
+	_VariantCall::add_enum_constant(Variant::HECTOR4I, "Axis", "AXIS_Y", Hector4i::AXIS_Y);
+	_VariantCall::add_enum_constant(Variant::HECTOR4I, "Axis", "AXIS_Z", Hector4i::AXIS_Z);
+	_VariantCall::add_enum_constant(Variant::HECTOR4I, "Axis", "AXIS_W", Hector4i::AXIS_W);
 
-	_VariantCall::add_variant_constant(Variant::VECTOR4I, "ZERO", Vector4i(0, 0, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR4I, "ONE", Vector4i(1, 1, 1, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR4I, "MIN", Vector4i(INT32_MIN, INT32_MIN, INT32_MIN, INT32_MIN));
-	_VariantCall::add_variant_constant(Variant::VECTOR4I, "MAX", Vector4i(INT32_MAX, INT32_MAX, INT32_MAX, INT32_MAX));
+	_VariantCall::add_variant_constant(Variant::HECTOR4I, "ZERO", Hector4i(0, 0, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR4I, "ONE", Hector4i(1, 1, 1, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR4I, "MIN", Hector4i(INT32_MIN, INT32_MIN, INT32_MIN, INT32_MIN));
+	_VariantCall::add_variant_constant(Variant::HECTOR4I, "MAX", Hector4i(INT32_MAX, INT32_MAX, INT32_MAX, INT32_MAX));
 
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "ZERO", Vector3i(0, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "ONE", Vector3i(1, 1, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "MIN", Vector3i(INT32_MIN, INT32_MIN, INT32_MIN));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "MAX", Vector3i(INT32_MAX, INT32_MAX, INT32_MAX));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "LEFT", Vector3i(-1, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "RIGHT", Vector3i(1, 0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "UP", Vector3i(0, 1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "DOWN", Vector3i(0, -1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "FORWARD", Vector3i(0, 0, -1));
-	_VariantCall::add_variant_constant(Variant::VECTOR3I, "BACK", Vector3i(0, 0, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "ZERO", Hector3i(0, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "ONE", Hector3i(1, 1, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "MIN", Hector3i(INT32_MIN, INT32_MIN, INT32_MIN));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "MAX", Hector3i(INT32_MAX, INT32_MAX, INT32_MAX));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "LEFT", Hector3i(-1, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "RIGHT", Hector3i(1, 0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "UP", Hector3i(0, 1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "DOWN", Hector3i(0, -1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "FORWARD", Hector3i(0, 0, -1));
+	_VariantCall::add_variant_constant(Variant::HECTOR3I, "BACK", Hector3i(0, 0, 1));
 
-	_VariantCall::add_constant(Variant::VECTOR2, "AXIS_X", Vector2::AXIS_X);
-	_VariantCall::add_constant(Variant::VECTOR2, "AXIS_Y", Vector2::AXIS_Y);
+	_VariantCall::add_constant(Variant::HECTOR2, "AXIS_X", Hector2::AXIS_X);
+	_VariantCall::add_constant(Variant::HECTOR2, "AXIS_Y", Hector2::AXIS_Y);
 
-	_VariantCall::add_enum_constant(Variant::VECTOR2, "Axis", "AXIS_X", Vector2::AXIS_X);
-	_VariantCall::add_enum_constant(Variant::VECTOR2, "Axis", "AXIS_Y", Vector2::AXIS_Y);
+	_VariantCall::add_enum_constant(Variant::HECTOR2, "Axis", "AXIS_X", Hector2::AXIS_X);
+	_VariantCall::add_enum_constant(Variant::HECTOR2, "Axis", "AXIS_Y", Hector2::AXIS_Y);
 
-	_VariantCall::add_constant(Variant::VECTOR2I, "AXIS_X", Vector2i::AXIS_X);
-	_VariantCall::add_constant(Variant::VECTOR2I, "AXIS_Y", Vector2i::AXIS_Y);
+	_VariantCall::add_constant(Variant::HECTOR2I, "AXIS_X", Hector2i::AXIS_X);
+	_VariantCall::add_constant(Variant::HECTOR2I, "AXIS_Y", Hector2i::AXIS_Y);
 
-	_VariantCall::add_enum_constant(Variant::VECTOR2I, "Axis", "AXIS_X", Vector2i::AXIS_X);
-	_VariantCall::add_enum_constant(Variant::VECTOR2I, "Axis", "AXIS_Y", Vector2i::AXIS_Y);
+	_VariantCall::add_enum_constant(Variant::HECTOR2I, "Axis", "AXIS_X", Hector2i::AXIS_X);
+	_VariantCall::add_enum_constant(Variant::HECTOR2I, "Axis", "AXIS_Y", Hector2i::AXIS_Y);
 
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "ZERO", Vector2(0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "ONE", Vector2(1, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "INF", Vector2(INFINITY, INFINITY));
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "LEFT", Vector2(-1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "RIGHT", Vector2(1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "UP", Vector2(0, -1));
-	_VariantCall::add_variant_constant(Variant::VECTOR2, "DOWN", Vector2(0, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "ZERO", Hector2(0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "ONE", Hector2(1, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "INF", Hector2(INFINITY, INFINITY));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "LEFT", Hector2(-1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "RIGHT", Hector2(1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "UP", Hector2(0, -1));
+	_VariantCall::add_variant_constant(Variant::HECTOR2, "DOWN", Hector2(0, 1));
 
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "ZERO", Vector2i(0, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "ONE", Vector2i(1, 1));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "MIN", Vector2i(INT32_MIN, INT32_MIN));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "MAX", Vector2i(INT32_MAX, INT32_MAX));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "LEFT", Vector2i(-1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "RIGHT", Vector2i(1, 0));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "UP", Vector2i(0, -1));
-	_VariantCall::add_variant_constant(Variant::VECTOR2I, "DOWN", Vector2i(0, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "ZERO", Hector2i(0, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "ONE", Hector2i(1, 1));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "MIN", Hector2i(INT32_MIN, INT32_MIN));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "MAX", Hector2i(INT32_MAX, INT32_MAX));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "LEFT", Hector2i(-1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "RIGHT", Hector2i(1, 0));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "UP", Hector2i(0, -1));
+	_VariantCall::add_variant_constant(Variant::HECTOR2I, "DOWN", Hector2i(0, 1));
 
 	_VariantCall::add_variant_constant(Variant::TRANSFORM2D, "IDENTITY", Transform2D());
 	_VariantCall::add_variant_constant(Variant::TRANSFORM2D, "FLIP_X", Transform2D(-1, 0, 0, 1, 0, 0));
@@ -2782,9 +2782,9 @@ static void _register_variant_builtin_constants() {
 	_VariantCall::add_variant_constant(Variant::BASIS, "FLIP_Y", flip_y_basis);
 	_VariantCall::add_variant_constant(Variant::BASIS, "FLIP_Z", flip_z_basis);
 
-	_VariantCall::add_variant_constant(Variant::PLANE, "PLANE_YZ", Plane(Vector3(1, 0, 0), 0));
-	_VariantCall::add_variant_constant(Variant::PLANE, "PLANE_XZ", Plane(Vector3(0, 1, 0), 0));
-	_VariantCall::add_variant_constant(Variant::PLANE, "PLANE_XY", Plane(Vector3(0, 0, 1), 0));
+	_VariantCall::add_variant_constant(Variant::PLANE, "PLANE_YZ", Plane(Hector3(1, 0, 0), 0));
+	_VariantCall::add_variant_constant(Variant::PLANE, "PLANE_XZ", Plane(Hector3(0, 1, 0), 0));
+	_VariantCall::add_variant_constant(Variant::PLANE, "PLANE_XY", Plane(Hector3(0, 0, 1), 0));
 
 	_VariantCall::add_variant_constant(Variant::QUATERNION, "IDENTITY", Quaternion(0, 0, 0, 1));
 

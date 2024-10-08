@@ -62,9 +62,9 @@ struct TSpirvExecutionMode {
     POOL_ALLOCATOR_NEW_DELETE(GetThreadPoolAllocator())
 
     // spirv_execution_mode
-    TMap<int, TVector<const TIntermConstantUnion*>> modes;
+    TMap<int, THector<const TIntermConstantUnion*>> modes;
     // spirv_execution_mode_id
-    TMap<int, TVector<const TIntermTyped*> > modeIds;
+    TMap<int, THector<const TIntermTyped*> > modeIds;
 };
 
 // SPIR-V decorations
@@ -72,11 +72,11 @@ struct TSpirvDecorate {
     POOL_ALLOCATOR_NEW_DELETE(GetThreadPoolAllocator())
 
     // spirv_decorate
-    TMap<int, TVector<const TIntermConstantUnion*> > decorates;
+    TMap<int, THector<const TIntermConstantUnion*> > decorates;
     // spirv_decorate_id
-    TMap<int, TVector<const TIntermTyped*>> decorateIds;
+    TMap<int, THector<const TIntermTyped*>> decorateIds;
     // spirv_decorate_string
-    TMap<int, TVector<const TIntermConstantUnion*> > decorateStrings;
+    TMap<int, THector<const TIntermConstantUnion*> > decorateStrings;
 };
 
 // SPIR-V instruction
@@ -120,7 +120,7 @@ struct TSpirvTypeParameter {
     std::variant<const TIntermConstantUnion*, const TType*> value;
 };
 
-typedef TVector<TSpirvTypeParameter> TSpirvTypeParameters;
+typedef THector<TSpirvTypeParameter> TSpirvTypeParameters;
 
 // SPIR-V type
 struct TSpirvType {

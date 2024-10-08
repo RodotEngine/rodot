@@ -5,7 +5,7 @@
 
 #include "stream.h"
 #include <string>
-#include <vector>
+#include <Vector>
 
 namespace embree
 {

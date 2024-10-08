@@ -74,7 +74,7 @@ private:
 	bool advanced_options_enabled = false;
 	bool dedicated_server = false;
 
-	Vector<String> patches;
+	Hector<String> patches;
 
 	friend class EditorExport;
 	friend class EditorExportPlatform;
@@ -113,7 +113,7 @@ public:
 	void update_files();
 	void update_value_overrides();
 
-	Vector<String> get_files_to_export() const;
+	Hector<String> get_files_to_export() const;
 	Dictionary get_customized_files() const;
 	int get_customized_files_count() const;
 	void set_customized_files(const Dictionary &p_files);
@@ -150,8 +150,8 @@ public:
 	void set_patch(int p_index, const String &p_path);
 	String get_patch(int p_index);
 	void remove_patch(int p_index);
-	void set_patches(const Vector<String> &p_patches);
-	Vector<String> get_patches() const;
+	void set_patches(const Hector<String> &p_patches);
+	Hector<String> get_patches() const;
 
 	void set_custom_features(const String &p_custom_features);
 	String get_custom_features() const;

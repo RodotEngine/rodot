@@ -170,11 +170,11 @@ public:
     virtual uint32_t getUInt(UErrorCode &errorCode) const = 0;
 
     /**
-     * Sets U_RESOURCE_TYPE_MISMATCH if this is not an intvector resource.
+     * Sets U_RESOURCE_TYPE_MISMATCH if this is not an intHector resource.
      *
-     * @see ures_getIntVector()
+     * @see ures_getIntHector()
      */
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const = 0;
+    virtual const int32_t *getIntHector(int32_t &length, UErrorCode &errorCode) const = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a binary-blob resource.

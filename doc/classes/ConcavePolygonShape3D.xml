@@ -15,14 +15,14 @@
 	</tutorials>
 	<methods>
 		<method name="get_faces" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
 				Returns the faces of the trimesh shape as an array of vertices. The array (of length divisible by three) is naturally divided into triples; each triple of vertices defines a triangle.
 			</description>
 		</method>
 		<method name="set_faces">
 			<return type="void" />
-			<param index="0" name="faces" type="PackedVector3Array" />
+			<param index="0" name="faces" type="PackedHector3Array" />
 			<description>
 				Sets the faces of the trimesh shape from an array of vertices. The [param faces] array should be composed of triples such that each triple of vertices defines a triangle.
 			</description>

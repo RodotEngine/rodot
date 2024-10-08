@@ -48,7 +48,7 @@ class TileSetAtlasSourceEditor : public HSplitContainer {
 public:
 	// A class to store which tiles are selected.
 	struct TileSelection {
-		Vector2i tile = TileSetSource::INVALID_ATLAS_COORDS;
+		Hector2i tile = TileSetSource::INVALID_ATLAS_COORDS;
 		int alternative = TileSetSource::INVALID_TILE_ALTERNATIVE;
 
 		bool operator<(const TileSelection &p_other) const {
@@ -188,15 +188,15 @@ private:
 		DRAG_TYPE_RESIZE_LEFT,
 	};
 	DragType drag_type = DRAG_TYPE_NONE;
-	Vector2i drag_start_mouse_pos;
-	Vector2i drag_last_mouse_pos;
-	Vector2i drag_current_tile;
+	Hector2i drag_start_mouse_pos;
+	Hector2i drag_last_mouse_pos;
+	Hector2i drag_current_tile;
 
 	Rect2i drag_start_tile_shape;
-	RBSet<Vector2i> drag_modified_tiles;
+	RBSet<Hector2i> drag_modified_tiles;
 	void _end_dragging();
 
-	HashMap<Vector2i, List<const PropertyInfo *>> _group_properties_per_tiles(const List<PropertyInfo> &r_list, const TileSetAtlasSource *p_atlas);
+	HashMap<Hector2i, List<const PropertyInfo *>> _group_properties_per_tiles(const List<PropertyInfo> &r_list, const TileSetAtlasSource *p_atlas);
 
 	// Popup functions.
 	enum MenuOptions {
@@ -208,7 +208,7 @@ private:
 		ADVANCED_AUTO_REMOVE_TILES,
 		ADVANCED_CLEANUP_TILES,
 	};
-	Vector2i menu_option_coords;
+	Hector2i menu_option_coords;
 	int menu_option_alternative = TileSetSource::INVALID_TILE_ALTERNATIVE;
 	void _menu_option(int p_option);
 
@@ -233,7 +233,7 @@ private:
 	Array _get_selection_as_array();
 
 	// A control on the tile atlas to draw and handle input events.
-	Vector2i hovered_base_tile_coords = TileSetSource::INVALID_ATLAS_COORDS;
+	Hector2i hovered_base_tile_coords = TileSetSource::INVALID_ATLAS_COORDS;
 
 	PopupMenu *base_tile_popup_menu = nullptr;
 	PopupMenu *empty_base_tile_popup_menu = nullptr;
@@ -248,7 +248,7 @@ private:
 	void _tile_atlas_view_transform_changed();
 
 	// A control over the alternative tiles.
-	Vector3i hovered_alternative_tile_coords = Vector3i(TileSetSource::INVALID_ATLAS_COORDS.x, TileSetSource::INVALID_ATLAS_COORDS.y, TileSetSource::INVALID_TILE_ALTERNATIVE);
+	Hector3i hovered_alternative_tile_coords = Hector3i(TileSetSource::INVALID_ATLAS_COORDS.x, TileSetSource::INVALID_ATLAS_COORDS.y, TileSetSource::INVALID_TILE_ALTERNATIVE);
 
 	PopupMenu *alternative_tile_popup_menu = nullptr;
 	Control *alternative_tiles_control = nullptr;
@@ -276,8 +276,8 @@ private:
 	void _auto_remove_tiles();
 	void _cancel_auto_create_tiles();
 	AcceptDialog *confirm_auto_create_tiles = nullptr;
-	Vector<Ref<TileSetAtlasSource>> atlases_to_auto_create_tiles;
-	Vector2i _get_drag_offset_tile_coords(const Vector2i &p_offset) const;
+	Hector<Ref<TileSetAtlasSource>> atlases_to_auto_create_tiles;
+	Hector2i _get_drag_offset_tile_coords(const Hector2i &p_offset) const;
 
 	void _update_source_texture();
 	void _check_outside_tiles();
@@ -298,7 +298,7 @@ protected:
 
 public:
 	void edit(Ref<TileSet> p_tile_set, TileSetAtlasSource *p_tile_set_source, int p_source_id);
-	void init_new_atlases(const Vector<Ref<TileSetAtlasSource>> &p_atlases);
+	void init_new_atlases(const Hector<Ref<TileSetAtlasSource>> &p_atlases);
 
 	TileSetAtlasSourceEditor();
 	~TileSetAtlasSourceEditor();

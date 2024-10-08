@@ -53,10 +53,10 @@ void NavAgent::_update_rvo_agent_properties() {
 		rvo_agent_3d.timeHorizonObst_ = time_horizon_obstacles;
 		rvo_agent_3d.radius_ = radius;
 		rvo_agent_3d.maxSpeed_ = max_speed;
-		rvo_agent_3d.position_ = RVO3D::Vector3(position.x, position.y, position.z);
+		rvo_agent_3d.position_ = RVO3D::Hector3(position.x, position.y, position.z);
 		// Replacing the internal velocity directly causes major jitter / bugs due to unpredictable velocity jumps, left line here for testing.
-		//rvo_agent_3d.velocity_ = RVO3D::Vector3(velocity.x, velocity.y ,velocity.z);
-		rvo_agent_3d.prefVelocity_ = RVO3D::Vector3(velocity.x, velocity.y, velocity.z);
+		//rvo_agent_3d.velocity_ = RVO3D::Hector3(velocity.x, velocity.y ,velocity.z);
+		rvo_agent_3d.prefVelocity_ = RVO3D::Hector3(velocity.x, velocity.y, velocity.z);
 		rvo_agent_3d.height_ = height;
 		rvo_agent_3d.avoidance_layers_ = avoidance_layers;
 		rvo_agent_3d.avoidance_mask_ = avoidance_mask;
@@ -68,11 +68,11 @@ void NavAgent::_update_rvo_agent_properties() {
 		rvo_agent_2d.timeHorizonObst_ = time_horizon_obstacles;
 		rvo_agent_2d.radius_ = radius;
 		rvo_agent_2d.maxSpeed_ = max_speed;
-		rvo_agent_2d.position_ = RVO2D::Vector2(position.x, position.z);
+		rvo_agent_2d.position_ = RVO2D::Hector2(position.x, position.z);
 		rvo_agent_2d.elevation_ = position.y;
 		// Replacing the internal velocity directly causes major jitter / bugs due to unpredictable velocity jumps, left line here for testing.
-		//rvo_agent_2d.velocity_ = RVO2D::Vector2(velocity.x, velocity.z);
-		rvo_agent_2d.prefVelocity_ = RVO2D::Vector2(velocity.x, velocity.z);
+		//rvo_agent_2d.velocity_ = RVO2D::Hector2(velocity.x, velocity.z);
+		rvo_agent_2d.prefVelocity_ = RVO2D::Hector2(velocity.x, velocity.z);
 		rvo_agent_2d.height_ = height;
 		rvo_agent_2d.avoidance_layers_ = avoidance_layers;
 		rvo_agent_2d.avoidance_mask_ = avoidance_mask;
@@ -132,12 +132,12 @@ void NavAgent::dispatch_avoidance_callback() {
 		return;
 	}
 
-	Vector3 new_velocity;
+	Hector3 new_velocity;
 
 	if (use_3d_avoidance) {
-		new_velocity = Vector3(rvo_agent_3d.velocity_.x(), rvo_agent_3d.velocity_.y(), rvo_agent_3d.velocity_.z());
+		new_velocity = Hector3(rvo_agent_3d.velocity_.x(), rvo_agent_3d.velocity_.y(), rvo_agent_3d.velocity_.z());
 	} else {
-		new_velocity = Vector3(rvo_agent_2d.velocity_.x(), 0.0, rvo_agent_2d.velocity_.y());
+		new_velocity = Hector3(rvo_agent_2d.velocity_.x(), 0.0, rvo_agent_2d.velocity_.y());
 	}
 
 	if (clamp_speed) {
@@ -220,38 +220,38 @@ void NavAgent::set_max_speed(real_t p_max_speed) {
 	agent_dirty = true;
 }
 
-void NavAgent::set_position(const Vector3 p_position) {
+void NavAgent::set_position(const Hector3 p_position) {
 	position = p_position;
 	if (avoidance_enabled) {
 		if (use_3d_avoidance) {
-			rvo_agent_3d.position_ = RVO3D::Vector3(p_position.x, p_position.y, p_position.z);
+			rvo_agent_3d.position_ = RVO3D::Hector3(p_position.x, p_position.y, p_position.z);
 		} else {
 			rvo_agent_2d.elevation_ = p_position.y;
-			rvo_agent_2d.position_ = RVO2D::Vector2(p_position.x, p_position.z);
+			rvo_agent_2d.position_ = RVO2D::Hector2(p_position.x, p_position.z);
 		}
 	}
 	agent_dirty = true;
 }
 
-void NavAgent::set_target_position(const Vector3 p_target_position) {
+void NavAgent::set_target_position(const Hector3 p_target_position) {
 	target_position = p_target_position;
 }
 
-void NavAgent::set_velocity(const Vector3 p_velocity) {
+void NavAgent::set_velocity(const Hector3 p_velocity) {
 	// Sets the "wanted" velocity for an agent as a suggestion
 	// This velocity is not guaranteed, RVO simulation will only try to fulfill it
 	velocity = p_velocity;
 	if (avoidance_enabled) {
 		if (use_3d_avoidance) {
-			rvo_agent_3d.prefVelocity_ = RVO3D::Vector3(velocity.x, velocity.y, velocity.z);
+			rvo_agent_3d.prefVelocity_ = RVO3D::Hector3(velocity.x, velocity.y, velocity.z);
 		} else {
-			rvo_agent_2d.prefVelocity_ = RVO2D::Vector2(velocity.x, velocity.z);
+			rvo_agent_2d.prefVelocity_ = RVO2D::Hector2(velocity.x, velocity.z);
 		}
 	}
 	agent_dirty = true;
 }
 
-void NavAgent::set_velocity_forced(const Vector3 p_velocity) {
+void NavAgent::set_velocity_forced(const Hector3 p_velocity) {
 	// This function replaces the internal rvo simulation velocity
 	// should only be used after the agent was teleported
 	// as it destroys consistency in movement in cramped situations
@@ -259,9 +259,9 @@ void NavAgent::set_velocity_forced(const Vector3 p_velocity) {
 	velocity_forced = p_velocity;
 	if (avoidance_enabled) {
 		if (use_3d_avoidance) {
-			rvo_agent_3d.velocity_ = RVO3D::Vector3(p_velocity.x, p_velocity.y, p_velocity.z);
+			rvo_agent_3d.velocity_ = RVO3D::Hector3(p_velocity.x, p_velocity.y, p_velocity.z);
 		} else {
-			rvo_agent_2d.velocity_ = RVO2D::Vector2(p_velocity.x, p_velocity.z);
+			rvo_agent_2d.velocity_ = RVO2D::Hector2(p_velocity.x, p_velocity.z);
 		}
 	}
 	agent_dirty = true;
@@ -271,9 +271,9 @@ void NavAgent::update() {
 	// Updates this agent with the calculated results from the rvo simulation
 	if (avoidance_enabled) {
 		if (use_3d_avoidance) {
-			velocity = Vector3(rvo_agent_3d.velocity_.x(), rvo_agent_3d.velocity_.y(), rvo_agent_3d.velocity_.z());
+			velocity = Hector3(rvo_agent_3d.velocity_.x(), rvo_agent_3d.velocity_.y(), rvo_agent_3d.velocity_.z());
 		} else {
-			velocity = Vector3(rvo_agent_2d.velocity_.x(), 0.0, rvo_agent_2d.velocity_.y());
+			velocity = Hector3(rvo_agent_2d.velocity_.x(), 0.0, rvo_agent_2d.velocity_.y());
 		}
 	}
 }
@@ -323,10 +323,10 @@ const Dictionary NavAgent::get_avoidance_data() const {
 		_avoidance_data["max_neighbors"] = int(rvo_agent_3d.maxNeighbors_);
 		_avoidance_data["max_speed"] = float(rvo_agent_3d.maxSpeed_);
 		_avoidance_data["neighbor_distance"] = float(rvo_agent_3d.neighborDist_);
-		_avoidance_data["new_velocity"] = Vector3(rvo_agent_3d.newVelocity_.x(), rvo_agent_3d.newVelocity_.y(), rvo_agent_3d.newVelocity_.z());
-		_avoidance_data["velocity"] = Vector3(rvo_agent_3d.velocity_.x(), rvo_agent_3d.velocity_.y(), rvo_agent_3d.velocity_.z());
-		_avoidance_data["position"] = Vector3(rvo_agent_3d.position_.x(), rvo_agent_3d.position_.y(), rvo_agent_3d.position_.z());
-		_avoidance_data["preferred_velocity"] = Vector3(rvo_agent_3d.prefVelocity_.x(), rvo_agent_3d.prefVelocity_.y(), rvo_agent_3d.prefVelocity_.z());
+		_avoidance_data["new_velocity"] = Hector3(rvo_agent_3d.newVelocity_.x(), rvo_agent_3d.newVelocity_.y(), rvo_agent_3d.newVelocity_.z());
+		_avoidance_data["velocity"] = Hector3(rvo_agent_3d.velocity_.x(), rvo_agent_3d.velocity_.y(), rvo_agent_3d.velocity_.z());
+		_avoidance_data["position"] = Hector3(rvo_agent_3d.position_.x(), rvo_agent_3d.position_.y(), rvo_agent_3d.position_.z());
+		_avoidance_data["preferred_velocity"] = Hector3(rvo_agent_3d.prefVelocity_.x(), rvo_agent_3d.prefVelocity_.y(), rvo_agent_3d.prefVelocity_.z());
 		_avoidance_data["radius"] = float(rvo_agent_3d.radius_);
 		_avoidance_data["time_horizon_agents"] = float(rvo_agent_3d.timeHorizon_);
 		_avoidance_data["time_horizon_obstacles"] = 0.0;
@@ -338,10 +338,10 @@ const Dictionary NavAgent::get_avoidance_data() const {
 		_avoidance_data["max_neighbors"] = int(rvo_agent_2d.maxNeighbors_);
 		_avoidance_data["max_speed"] = float(rvo_agent_2d.maxSpeed_);
 		_avoidance_data["neighbor_distance"] = float(rvo_agent_2d.neighborDist_);
-		_avoidance_data["new_velocity"] = Vector3(rvo_agent_2d.newVelocity_.x(), 0.0, rvo_agent_2d.newVelocity_.y());
-		_avoidance_data["velocity"] = Vector3(rvo_agent_2d.velocity_.x(), 0.0, rvo_agent_2d.velocity_.y());
-		_avoidance_data["position"] = Vector3(rvo_agent_2d.position_.x(), 0.0, rvo_agent_2d.position_.y());
-		_avoidance_data["preferred_velocity"] = Vector3(rvo_agent_2d.prefVelocity_.x(), 0.0, rvo_agent_2d.prefVelocity_.y());
+		_avoidance_data["new_velocity"] = Hector3(rvo_agent_2d.newVelocity_.x(), 0.0, rvo_agent_2d.newVelocity_.y());
+		_avoidance_data["velocity"] = Hector3(rvo_agent_2d.velocity_.x(), 0.0, rvo_agent_2d.velocity_.y());
+		_avoidance_data["position"] = Hector3(rvo_agent_2d.position_.x(), 0.0, rvo_agent_2d.position_.y());
+		_avoidance_data["preferred_velocity"] = Hector3(rvo_agent_2d.prefVelocity_.x(), 0.0, rvo_agent_2d.prefVelocity_.y());
 		_avoidance_data["radius"] = float(rvo_agent_2d.radius_);
 		_avoidance_data["time_horizon_agents"] = float(rvo_agent_2d.timeHorizon_);
 		_avoidance_data["time_horizon_obstacles"] = float(rvo_agent_2d.timeHorizonObst_);

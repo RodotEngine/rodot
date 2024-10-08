@@ -138,8 +138,8 @@ class SceneTreeEditor : public Control {
 	bool can_drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from) const;
 	void drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from);
 
-	void _empty_clicked(const Vector2 &p_pos, MouseButton p_button);
-	void _rmb_select(const Vector2 &p_pos, MouseButton p_button = MouseButton::RIGHT);
+	void _empty_clicked(const Hector2 &p_pos, MouseButton p_button);
+	void _rmb_select(const Hector2 &p_pos, MouseButton p_button = MouseButton::RIGHT);
 
 	void _warning_changed(Node *p_for_node);
 
@@ -148,7 +148,7 @@ class SceneTreeEditor : public Control {
 	List<StringName> *script_types;
 	bool _is_script_type(const StringName &p_type) const;
 
-	Vector<StringName> valid_types;
+	Hector<StringName> valid_types;
 
 	void _update_ask_before_revoking_unique_name();
 	void _revoke_unique_name();
@@ -175,7 +175,7 @@ public:
 	void set_editor_selection(EditorSelection *p_selection);
 
 	void set_show_enabled_subscene(bool p_show) { show_enabled_subscene = p_show; }
-	void set_valid_types(const Vector<StringName> &p_valid);
+	void set_valid_types(const Hector<StringName> &p_valid);
 
 	void update_tree() { _update_tree(); }
 
@@ -198,7 +198,7 @@ class SceneTreeDialog : public ConfirmationDialog {
 	SceneTreeEditor *tree = nullptr;
 	LineEdit *filter = nullptr;
 	CheckButton *show_all_nodes = nullptr;
-	LocalVector<TextureRect *> valid_type_icons;
+	LocalHector<TextureRect *> valid_type_icons;
 
 	void _select();
 	void _cancel();
@@ -213,7 +213,7 @@ protected:
 
 public:
 	void popup_scenetree_dialog(Node *p_selected_node = nullptr, Node *p_marked_node = nullptr, bool p_marked_node_selectable = true, bool p_marked_node_children_selectable = true);
-	void set_valid_types(const Vector<StringName> &p_valid);
+	void set_valid_types(const Hector<StringName> &p_valid);
 
 	SceneTreeEditor *get_scene_tree() { return tree; }
 	LineEdit *get_filter_line_edit() { return filter; }

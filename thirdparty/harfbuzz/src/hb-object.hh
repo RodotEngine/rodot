@@ -35,7 +35,7 @@
 #include "hb.hh"
 #include "hb-atomic.hh"
 #include "hb-mutex.hh"
-#include "hb-vector.hh"
+#include "hb-Hector.hh"
 
 
 /*
@@ -45,7 +45,7 @@
 template <typename item_t, typename lock_t>
 struct hb_lockable_set_t
 {
-  hb_vector_t<item_t> items;
+  hb_Hector_t<item_t> items;
 
   void init () { items.init (); }
 

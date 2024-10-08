@@ -33,7 +33,7 @@
 
 #ifdef GLES3_ENABLED
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/self_list.h"
 #include "servers/rendering/renderer_compositor.h"
@@ -88,7 +88,7 @@ struct Shader {
 
 struct MaterialData {
 	void update_uniform_buffer(const HashMap<StringName, ShaderLanguage::ShaderNode::Uniform> &p_uniforms, const uint32_t *p_uniform_offsets, const HashMap<StringName, Variant> &p_parameters, uint8_t *p_buffer, uint32_t p_buffer_size);
-	void update_textures(const HashMap<StringName, Variant> &p_parameters, const HashMap<StringName, HashMap<int, RID>> &p_default_textures, const Vector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, RID *p_textures, bool p_use_linear_color);
+	void update_textures(const HashMap<StringName, Variant> &p_parameters, const HashMap<StringName, HashMap<int, RID>> &p_default_textures, const Hector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, RID *p_textures, bool p_use_linear_color);
 
 	virtual void set_render_priority(int p_priority) = 0;
 	virtual void set_next_pass(RID p_pass) = 0;
@@ -97,12 +97,12 @@ struct MaterialData {
 	virtual ~MaterialData();
 
 	// Used internally by all Materials
-	void update_parameters_internal(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty, const HashMap<StringName, ShaderLanguage::ShaderNode::Uniform> &p_uniforms, const uint32_t *p_uniform_offsets, const Vector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, const HashMap<StringName, HashMap<int, RID>> &p_default_texture_params, uint32_t p_ubo_size, bool p_is_3d_shader_type);
+	void update_parameters_internal(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty, const HashMap<StringName, ShaderLanguage::ShaderNode::Uniform> &p_uniforms, const uint32_t *p_uniform_offsets, const Hector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, const HashMap<StringName, HashMap<int, RID>> &p_default_texture_params, uint32_t p_ubo_size, bool p_is_3d_shader_type);
 
 protected:
-	Vector<uint8_t> ubo_data;
+	Hector<uint8_t> ubo_data;
 	GLuint uniform_buffer = GLuint(0);
-	Vector<RID> texture_cache;
+	Hector<RID> texture_cache;
 
 private:
 	friend class MaterialStorage;
@@ -154,9 +154,9 @@ struct CanvasShaderData : public ShaderData {
 	bool valid;
 	RID version;
 
-	Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+	Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-	Vector<uint32_t> ubo_offsets;
+	Hector<uint32_t> ubo_offsets;
 	uint32_t ubo_size;
 
 	String code;
@@ -204,9 +204,9 @@ struct SkyShaderData : public ShaderData {
 	bool valid;
 	RID version;
 
-	Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+	Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-	Vector<uint32_t> ubo_offsets;
+	Hector<uint32_t> ubo_offsets;
 	uint32_t ubo_size;
 
 	String code;
@@ -281,9 +281,9 @@ struct SceneShaderData : public ShaderData {
 	bool valid;
 	RID version;
 
-	Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+	Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-	Vector<uint32_t> ubo_offsets;
+	Hector<uint32_t> ubo_offsets;
 	uint32_t ubo_size;
 
 	String code;
@@ -371,9 +371,9 @@ struct ParticlesShaderData : public ShaderData {
 	bool valid;
 	RID version;
 
-	Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
+	Hector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 
-	Vector<uint32_t> ubo_offsets;
+	Hector<uint32_t> ubo_offsets;
 	uint32_t ubo_size;
 
 	String code;
@@ -419,8 +419,8 @@ struct GlobalShaderUniforms {
 		RS::GlobalShaderParameterType type;
 		Variant value;
 		Variant override;
-		int32_t buffer_index; //for vectors
-		int32_t buffer_elements; //for vectors
+		int32_t buffer_index; //for Hectors
+		int32_t buffer_elements; //for Hectors
 	};
 
 	HashMap<StringName, Variable> variables;
@@ -557,7 +557,7 @@ public:
 
 	virtual void global_shader_parameter_add(const StringName &p_name, RS::GlobalShaderParameterType p_type, const Variant &p_value) override;
 	virtual void global_shader_parameter_remove(const StringName &p_name) override;
-	virtual Vector<StringName> global_shader_parameter_get_list() const override;
+	virtual Hector<StringName> global_shader_parameter_get_list() const override;
 
 	virtual void global_shader_parameter_set(const StringName &p_name, const Variant &p_value) override;
 	virtual void global_shader_parameter_set_override(const StringName &p_name, const Variant &p_value) override;

@@ -126,9 +126,9 @@ String EditorFileSystemDirectory::get_file_path(int p_idx) const {
 	return get_path().path_join(get_file(p_idx));
 }
 
-Vector<String> EditorFileSystemDirectory::get_file_deps(int p_idx) const {
-	ERR_FAIL_INDEX_V(p_idx, files.size(), Vector<String>());
-	Vector<String> deps;
+Hector<String> EditorFileSystemDirectory::get_file_deps(int p_idx) const {
+	ERR_FAIL_INDEX_V(p_idx, files.size(), Hector<String>());
+	Hector<String> deps;
 
 	for (int i = 0; i < files[p_idx]->deps.size(); i++) {
 		String dep = files[p_idx]->deps[i];
@@ -356,7 +356,7 @@ void EditorFileSystem::_scan_filesystem() {
 				}
 
 				if (l.begins_with("::")) {
-					Vector<String> split = l.split("::");
+					Hector<String> split = l.split("::");
 					ERR_CONTINUE(split.size() != 3);
 					const String &name = split[1];
 
@@ -364,7 +364,7 @@ void EditorFileSystem::_scan_filesystem() {
 
 				} else {
 					// The last section (deps) may contain the same splitter, so limit the maxsplit to 8 to get the complete deps.
-					Vector<String> split = l.split("::", true, 8);
+					Hector<String> split = l.split("::", true, 8);
 					ERR_CONTINUE(split.size() < 9);
 					String name = split[0];
 					String file;
@@ -394,7 +394,7 @@ void EditorFileSystem::_scan_filesystem() {
 
 					String deps = split[8].strip_edges();
 					if (deps.length()) {
-						Vector<String> dp = deps.split("<>");
+						Hector<String> dp = deps.split("<>");
 						for (int i = 0; i < dp.size(); i++) {
 							const String &path = dp[i];
 							fc.deps.push_back(path);
@@ -483,7 +483,7 @@ void EditorFileSystem::_thread_func(void *_userdata) {
 	sd->_scan_filesystem();
 }
 
-bool EditorFileSystem::_is_test_for_reimport_needed(const String &p_path, uint64_t p_last_modification_time, uint64_t p_modification_time, uint64_t p_last_import_modification_time, uint64_t p_import_modification_time, const Vector<String> &p_import_dest_paths) {
+bool EditorFileSystem::_is_test_for_reimport_needed(const String &p_path, uint64_t p_last_modification_time, uint64_t p_modification_time, uint64_t p_last_import_modification_time, uint64_t p_import_modification_time, const Hector<String> &p_import_dest_paths) {
 	// The idea here is to trust the cache. If the last modification times in the cache correspond
 	// to the last modification times of the files on disk, it means the files have not changed since
 	// the last import, and the files in .godot/imported (p_import_dest_paths) should all be valid.
@@ -530,12 +530,12 @@ bool EditorFileSystem::_test_for_reimport(const String &p_path, const String &p_
 	int lines = 0;
 	String error_text;
 
-	Vector<String> to_check;
+	Hector<String> to_check;
 
 	String importer_name;
 	String source_file = "";
 	String source_md5 = "";
-	Vector<String> dest_files;
+	Hector<String> dest_files;
 	String dest_md5 = "";
 	int version = 0;
 	bool found_uid = false;
@@ -672,12 +672,12 @@ bool EditorFileSystem::_test_for_reimport(const String &p_path, const String &p_
 	return false; // Nothing changed.
 }
 
-Vector<String> EditorFileSystem::_get_import_dest_paths(const String &p_path) {
+Hector<String> EditorFileSystem::_get_import_dest_paths(const String &p_path) {
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path + ".import", FileAccess::READ, &err);
 
 	if (f.is_null()) { // No import file, reimport.
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	VariantParser::StreamFile stream;
@@ -690,7 +690,7 @@ Vector<String> EditorFileSystem::_get_import_dest_paths(const String &p_path) {
 	int lines = 0;
 	String error_text;
 
-	Vector<String> dest_paths;
+	Hector<String> dest_paths;
 	String importer_name;
 
 	while (true) {
@@ -704,13 +704,13 @@ Vector<String> EditorFileSystem::_get_import_dest_paths(const String &p_path) {
 		} else if (err != OK) {
 			ERR_PRINT("ResourceFormatImporter::load - '" + p_path + ".import:" + itos(lines) + "' error '" + error_text + "'.");
 			// Parse error, skip and let user attempt manual reimport to avoid reimport loop.
-			return Vector<String>();
+			return Hector<String>();
 		}
 
 		if (!assign.is_empty()) {
 			if (assign == "valid" && value.operator bool() == false) {
 				// Invalid import (failed previous import), skip and let user attempt manual reimport to avoid reimport loop.
-				return Vector<String>();
+				return Hector<String>();
 			}
 			if (assign.begins_with("path")) {
 				dest_paths.push_back(value);
@@ -728,23 +728,23 @@ Vector<String> EditorFileSystem::_get_import_dest_paths(const String &p_path) {
 	}
 
 	if (importer_name == "keep" || importer_name == "skip") {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	return dest_paths;
 }
 
-bool EditorFileSystem::_scan_import_support(const Vector<String> &reimports) {
+bool EditorFileSystem::_scan_import_support(const Hector<String> &reimports) {
 	if (import_support_queries.size() == 0) {
 		return false;
 	}
 	HashMap<String, int> import_support_test;
-	Vector<bool> import_support_tested;
+	Hector<bool> import_support_tested;
 	import_support_tested.resize(import_support_queries.size());
 	for (int i = 0; i < import_support_queries.size(); i++) {
 		import_support_tested.write[i] = false;
 		if (import_support_queries[i]->is_active()) {
-			Vector<String> extensions = import_support_queries[i]->get_file_extensions();
+			Hector<String> extensions = import_support_queries[i]->get_file_extensions();
 			for (int j = 0; j < extensions.size(); j++) {
 				import_support_test.insert(extensions[j], i);
 			}
@@ -782,8 +782,8 @@ bool EditorFileSystem::_update_scan_actions() {
 
 	bool fs_changed = false;
 
-	Vector<String> reimports;
-	Vector<String> reloads;
+	Hector<String> reimports;
+	Hector<String> reloads;
 
 	EditorProgress *ep = nullptr;
 	if (scan_actions.size() > 1) {
@@ -878,7 +878,7 @@ bool EditorFileSystem::_update_scan_actions() {
 				if (need_reimport) {
 					// Must reimport.
 					reimports.push_back(full_path);
-					Vector<String> dependencies = _get_dependencies(full_path);
+					Hector<String> dependencies = _get_dependencies(full_path);
 					for (const String &dep : dependencies) {
 						const String &dependency_path = dep.contains("::") ? dep.get_slice("::", 0) : dep;
 						if (import_extensions.has(dep.get_extension())) {
@@ -1179,7 +1179,7 @@ void EditorFileSystem::_process_file_system(const ScannedDirectory *p_scan_dir, 
 				fi->modified_time = 0;
 				fi->import_modified_time = 0;
 				fi->import_md5 = "";
-				fi->import_dest_paths = Vector<String>();
+				fi->import_dest_paths = Hector<String>();
 				fi->import_valid = (fi->type == "TextFile" || fi->type == "OtherFile") ? true : ResourceLoader::is_import_valid(path);
 
 				ItemAction ia;
@@ -1198,7 +1198,7 @@ void EditorFileSystem::_process_file_system(const ScannedDirectory *p_scan_dir, 
 				fi->deps = fc->deps;
 				fi->import_modified_time = 0;
 				fi->import_md5 = "";
-				fi->import_dest_paths = Vector<String>();
+				fi->import_dest_paths = Hector<String>();
 				fi->import_valid = true;
 				fi->script_class_name = fc->script_class_name;
 				fi->script_class_extends = fc->script_class_extends;
@@ -1234,7 +1234,7 @@ void EditorFileSystem::_process_file_system(const ScannedDirectory *p_scan_dir, 
 				fi->modified_time = mt;
 				fi->import_modified_time = 0;
 				fi->import_md5 = "";
-				fi->import_dest_paths = Vector<String>();
+				fi->import_dest_paths = Hector<String>();
 				fi->import_valid = true;
 
 				// Files in dep_update_list are forced for rescan to update dependencies. They don't need other updates.
@@ -1379,7 +1379,7 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir, ScanPr
 					fi->modified_time = FileAccess::get_modified_time(path);
 					fi->import_modified_time = 0;
 					fi->import_md5 = "";
-					fi->import_dest_paths = Vector<String>();
+					fi->import_dest_paths = Hector<String>();
 					fi->type = ResourceLoader::get_resource_type(path);
 					fi->resource_script_class = ResourceLoader::get_resource_script_class(path);
 					if (fi->type == "" && textfile_extensions.has(ext)) {
@@ -1753,7 +1753,7 @@ bool EditorFileSystem::_find_file(const String &p_file, EditorFileSystemDirector
 	f = f.substr(6, f.length());
 	f = f.replace("\\", "/");
 
-	Vector<String> path = f.split("/");
+	Hector<String> path = f.split("/");
 
 	if (path.size() == 0) {
 		return false;
@@ -1876,7 +1876,7 @@ EditorFileSystemDirectory *EditorFileSystem::get_filesystem_path(const String &p
 		f = f.substr(0, f.length() - 1);
 	}
 
-	Vector<String> path = f.split("/");
+	Hector<String> path = f.split("/");
 
 	if (path.size() == 0) {
 		return nullptr;
@@ -1913,21 +1913,21 @@ void EditorFileSystem::_save_late_updated_files() {
 	}
 }
 
-Vector<String> EditorFileSystem::_get_dependencies(const String &p_path) {
+Hector<String> EditorFileSystem::_get_dependencies(const String &p_path) {
 	// Avoid error spam on first opening of a not yet imported project by treating the following situation
 	// as a benign one, not letting the file open error happen: the resource is of an importable type but
 	// it has not been imported yet.
 	if (ResourceFormatImporter::get_singleton()->recognize_path(p_path)) {
 		const String &internal_path = ResourceFormatImporter::get_singleton()->get_internal_resource_path(p_path);
 		if (!internal_path.is_empty() && !FileAccess::exists(internal_path)) { // If path is empty (error), keep the code flow to the error.
-			return Vector<String>();
+			return Hector<String>();
 		}
 	}
 
 	List<String> deps;
 	ResourceLoader::get_dependencies(p_path, &deps);
 
-	Vector<String> ret;
+	Hector<String> ret;
 	for (const String &E : deps) {
 		ret.push_back(E);
 	}
@@ -2221,10 +2221,10 @@ void EditorFileSystem::update_file(const String &p_file) {
 	update_files({ p_file });
 }
 
-void EditorFileSystem::update_files(const Vector<String> &p_script_paths) {
+void EditorFileSystem::update_files(const Hector<String> &p_script_paths) {
 	bool updated = false;
 	bool update_files_icon_cache = false;
-	Vector<EditorFileSystemDirectory::FileInfo *> files_to_update_icon_path;
+	Hector<EditorFileSystemDirectory::FileInfo *> files_to_update_icon_path;
 	for (const String &file : p_script_paths) {
 		ERR_CONTINUE(file.is_empty());
 		EditorFileSystemDirectory *fs = nullptr;
@@ -2288,7 +2288,7 @@ void EditorFileSystem::update_files(const Vector<String> &p_script_paths) {
 				fi->import_modified_time = 0;
 				fi->import_valid = (type == "TextFile" || type == "OtherFile") ? true : ResourceLoader::is_import_valid(file);
 				fi->import_md5 = "";
-				fi->import_dest_paths = Vector<String>();
+				fi->import_dest_paths = Hector<String>();
 
 				if (idx == fs->files.size()) {
 					fs->files.push_back(fi);
@@ -2404,7 +2404,7 @@ void EditorFileSystem::register_global_class_script(const String &p_search_path,
 	}
 }
 
-Error EditorFileSystem::_reimport_group(const String &p_group_file, const Vector<String> &p_files) {
+Error EditorFileSystem::_reimport_group(const String &p_group_file, const Hector<String> &p_files) {
 	String importer_name;
 
 	HashMap<String, HashMap<StringName, Variant>> source_file_options;
@@ -2476,7 +2476,7 @@ Error EditorFileSystem::_reimport_group(const String &p_group_file, const Vector
 	for (const KeyValue<String, HashMap<StringName, Variant>> &E : source_file_options) {
 		const String &file = E.key;
 		String base_path = ResourceFormatImporter::get_singleton()->get_import_base_path(file);
-		Vector<String> dest_paths;
+		Hector<String> dest_paths;
 		ResourceUID::ID uid = uids[file];
 		{
 			Ref<FileAccess> f = FileAccess::open(file + ".import", FileAccess::WRITE);
@@ -2668,7 +2668,7 @@ Error EditorFileSystem::_reimport_file(const String &p_file, const HashMap<Strin
 			fs->files[cpos]->modified_time = FileAccess::get_modified_time(p_file);
 			fs->files[cpos]->import_modified_time = FileAccess::get_modified_time(p_file + ".import");
 			fs->files[cpos]->import_md5 = FileAccess::get_md5(p_file + ".import");
-			fs->files[cpos]->import_dest_paths = Vector<String>();
+			fs->files[cpos]->import_dest_paths = Hector<String>();
 			fs->files[cpos]->deps.clear();
 			fs->files[cpos]->type = "";
 			fs->files[cpos]->import_valid = false;
@@ -2728,7 +2728,7 @@ Error EditorFileSystem::_reimport_file(const String &p_file, const HashMap<Strin
 
 	// As import is complete, save the .import file.
 
-	Vector<String> dest_paths;
+	Hector<String> dest_paths;
 	{
 		Ref<FileAccess> f = FileAccess::open(p_file + ".import", FileAccess::WRITE);
 		ERR_FAIL_COND_V_MSG(f.is_null(), ERR_FILE_CANT_OPEN, "Cannot open file from path '" + p_file + ".import'.");
@@ -2872,13 +2872,13 @@ Error EditorFileSystem::_reimport_file(const String &p_file, const HashMap<Strin
 	return OK;
 }
 
-void EditorFileSystem::_find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Vector<String>> &group_files, HashSet<String> &groups_to_reimport) {
+void EditorFileSystem::_find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Hector<String>> &group_files, HashSet<String> &groups_to_reimport) {
 	int fc = efd->files.size();
 	const EditorFileSystemDirectory::FileInfo *const *files = efd->files.ptr();
 	for (int i = 0; i < fc; i++) {
 		if (groups_to_reimport.has(files[i]->import_group_file)) {
 			if (!group_files.has(files[i]->import_group_file)) {
-				group_files[files[i]->import_group_file] = Vector<String>();
+				group_files[files[i]->import_group_file] = Hector<String>();
 			}
 			group_files[files[i]->import_group_file].push_back(efd->get_file_path(i));
 		}
@@ -2890,7 +2890,7 @@ void EditorFileSystem::_find_group_files(EditorFileSystemDirectory *efd, HashMap
 }
 
 void EditorFileSystem::reimport_file_with_custom_parameters(const String &p_file, const String &p_importer, const HashMap<StringName, Variant> &p_custom_params) {
-	Vector<String> reloads;
+	Hector<String> reloads;
 	reloads.append(p_file);
 
 	// Emit the resource_reimporting signal for the single file before the actual importation.
@@ -2908,11 +2908,11 @@ void EditorFileSystem::_reimport_thread(uint32_t p_index, ImportThreadData *p_im
 	_reimport_file(p_import_data->reimport_files[current_max].path);
 }
 
-void EditorFileSystem::reimport_files(const Vector<String> &p_files) {
+void EditorFileSystem::reimport_files(const Hector<String> &p_files) {
 	ERR_FAIL_COND_MSG(importing, "Attempted to call reimport_files() recursively, this is not allowed.");
 	importing = true;
 
-	Vector<String> reloads;
+	Hector<String> reloads;
 
 	EditorProgress *ep = memnew(EditorProgress("reimport", TTR("(Re)Importing Assets"), p_files.size()));
 
@@ -2926,7 +2926,7 @@ void EditorFileSystem::reimport_files(const Vector<String> &p_files) {
 	OS::get_singleton()->set_low_processor_usage_mode(false);
 	DisplayServer::get_singleton()->window_set_vsync_mode(DisplayServer::VSyncMode::VSYNC_DISABLED);
 
-	Vector<ImportFile> reimport_files;
+	Hector<ImportFile> reimport_files;
 
 	HashSet<String> groups_to_reimport;
 
@@ -3044,9 +3044,9 @@ void EditorFileSystem::reimport_files(const Vector<String> &p_files) {
 	from = reimport_files.size();
 
 	if (groups_to_reimport.size()) {
-		HashMap<String, Vector<String>> group_files;
+		HashMap<String, Hector<String>> group_files;
 		_find_group_files(filesystem, group_files, groups_to_reimport);
-		for (const KeyValue<String, Vector<String>> &E : group_files) {
+		for (const KeyValue<String, Hector<String>> &E : group_files) {
 			ep->step(E.key.get_file(), from++, false);
 			Error err = _reimport_group(E.key, E.value);
 			reloads.push_back(E.key);
@@ -3082,7 +3082,7 @@ void EditorFileSystem::reimport_files(const Vector<String> &p_files) {
 
 Error EditorFileSystem::reimport_append(const String &p_file, const HashMap<StringName, Variant> &p_custom_options, const String &p_custom_importer, Variant p_generator_parameters) {
 	ERR_FAIL_COND_V_MSG(!importing, ERR_INVALID_PARAMETER, "Can only append files to import during a current reimport process.");
-	Vector<String> reloads;
+	Hector<String> reloads;
 	reloads.append(p_file);
 
 	// Emit the resource_reimporting signal for the single file before the actual importation.
@@ -3096,7 +3096,7 @@ Error EditorFileSystem::reimport_append(const String &p_file, const HashMap<Stri
 }
 
 Error EditorFileSystem::_resource_import(const String &p_path) {
-	Vector<String> files;
+	Hector<String> files;
 	files.push_back(p_path);
 
 	singleton->update_file(p_path);
@@ -3334,7 +3334,7 @@ void EditorFileSystem::_update_extensions() {
 		valid_extensions.insert(E);
 	}
 
-	const Vector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
+	const Hector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
 	for (const String &E : textfile_ext) {
 		if (valid_extensions.has(E)) {
 			continue;
@@ -3342,7 +3342,7 @@ void EditorFileSystem::_update_extensions() {
 		valid_extensions.insert(E);
 		textfile_extensions.insert(E);
 	}
-	const Vector<String> other_file_ext = ((String)(EDITOR_GET("docks/filesystem/other_file_extensions"))).split(",", false);
+	const Hector<String> other_file_ext = ((String)(EDITOR_GET("docks/filesystem/other_file_extensions"))).split(",", false);
 	for (const String &E : other_file_ext) {
 		if (valid_extensions.has(E)) {
 			continue;

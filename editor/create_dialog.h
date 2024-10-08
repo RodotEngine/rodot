@@ -56,7 +56,7 @@ class CreateDialog : public ConfirmationDialog {
 	String preferred_search_result_type;
 
 	Button *favorite = nullptr;
-	Vector<String> favorite_list;
+	Hector<String> favorite_list;
 	Tree *favorites = nullptr;
 	ItemList *recent = nullptr;
 	EditorHelpBit *help_bit = nullptr;

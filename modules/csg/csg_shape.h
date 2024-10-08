@@ -75,8 +75,8 @@ private:
 
 	Ref<ArrayMesh> root_mesh;
 
-	struct Vector3Hasher {
-		_ALWAYS_INLINE_ uint32_t hash(const Vector3 &p_vec3) const {
+	struct Hector3Hasher {
+		_ALWAYS_INLINE_ uint32_t hash(const Hector3 &p_vec3) const {
 			uint32_t h = hash_murmur3_one_float(p_vec3.x);
 			h = hash_murmur3_one_float(p_vec3.y, h);
 			h = hash_murmur3_one_float(p_vec3.z, h);
@@ -85,16 +85,16 @@ private:
 	};
 
 	struct ShapeUpdateSurface {
-		Vector<Vector3> vertices;
-		Vector<Vector3> normals;
-		Vector<Vector2> uvs;
-		Vector<real_t> tans;
+		Hector<Hector3> vertices;
+		Hector<Hector3> normals;
+		Hector<Hector2> uvs;
+		Hector<real_t> tans;
 		Ref<Material> material;
 		int last_added = 0;
 
-		Vector3 *verticesw = nullptr;
-		Vector3 *normalsw = nullptr;
-		Vector2 *uvsw = nullptr;
+		Hector3 *verticesw = nullptr;
+		Hector3 *normalsw = nullptr;
+		Hector2 *uvsw = nullptr;
 		real_t *tansw = nullptr;
 	};
 
@@ -113,7 +113,7 @@ private:
 	void _update_debug_collision_shape();
 	void _clear_debug_collision_shape();
 	void _on_transform_changed();
-	Vector<Vector3> _get_brush_collision_faces();
+	Hector<Hector3> _get_brush_collision_faces();
 
 protected:
 	void _notification(int p_what);
@@ -133,7 +133,7 @@ public:
 	void set_operation(Operation p_operation);
 	Operation get_operation() const;
 
-	virtual Vector<Vector3> get_brush_faces();
+	virtual Hector<Hector3> get_brush_faces();
 
 	virtual AABB get_aabb() const override;
 
@@ -187,7 +187,7 @@ class CSGPrimitive3D : public CSGShape3D {
 
 protected:
 	bool flip_faces;
-	CSGBrush *_create_brush_from_arrays(const Vector<Vector3> &p_vertices, const Vector<Vector2> &p_uv, const Vector<bool> &p_smooth, const Vector<Ref<Material>> &p_materials);
+	CSGBrush *_create_brush_from_arrays(const Hector<Hector3> &p_vertices, const Hector<Hector2> &p_uv, const Hector<bool> &p_smooth, const Hector<Ref<Material>> &p_materials);
 	static void _bind_methods();
 
 public:
@@ -255,7 +255,7 @@ class CSGBox3D : public CSGPrimitive3D {
 	virtual CSGBrush *_build_brush() override;
 
 	Ref<Material> material;
-	Vector3 size = Vector3(1, 1, 1);
+	Hector3 size = Hector3(1, 1, 1);
 
 protected:
 	static void _bind_methods();
@@ -265,8 +265,8 @@ protected:
 #endif
 
 public:
-	void set_size(const Vector3 &p_size);
-	Vector3 get_size() const;
+	void set_size(const Hector3 &p_size);
+	Hector3 get_size() const;
 
 	void set_material(const Ref<Material> &p_material);
 	Ref<Material> get_material() const;
@@ -370,7 +370,7 @@ public:
 private:
 	virtual CSGBrush *_build_brush() override;
 
-	Vector<Vector2> polygon;
+	Hector<Hector2> polygon;
 	Ref<Material> material;
 
 	Mode mode;
@@ -406,8 +406,8 @@ protected:
 	void _notification(int p_what);
 
 public:
-	void set_polygon(const Vector<Vector2> &p_polygon);
-	Vector<Vector2> get_polygon() const;
+	void set_polygon(const Hector<Hector2> &p_polygon);
+	Hector<Hector2> get_polygon() const;
 
 	void set_mode(Mode p_mode);
 	Mode get_mode() const;

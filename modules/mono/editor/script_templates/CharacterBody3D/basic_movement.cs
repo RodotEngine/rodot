@@ -10,7 +10,7 @@ public partial class _CLASS_ : _BASE_
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector3 velocity = Velocity;
+        Hector3 velocity = Velocity;
 
         // Add the gravity.
         if (!IsOnFloor())
@@ -26,9 +26,9 @@ public partial class _CLASS_ : _BASE_
 
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
-        Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-        Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-        if (direction != Vector3.Zero)
+        Hector2 inputDir = Input.GetHector("ui_left", "ui_right", "ui_up", "ui_down");
+        Hector3 direction = (Transform.Basis * new Hector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        if (direction != Hector3.Zero)
         {
             velocity.X = direction.X * Speed;
             velocity.Z = direction.Z * Speed;

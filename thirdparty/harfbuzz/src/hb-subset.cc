@@ -273,7 +273,7 @@ template<typename TableType>
 static
 bool
 _try_subset (const TableType *table,
-             hb_vector_t<char>* buf,
+             hb_Hector_t<char>* buf,
              hb_subset_context_t* c /* OUT */)
 {
   c->serializer->start_serialize ();
@@ -315,7 +315,7 @@ static void _do_destroy (T &t, hb_priority<0>) {}
 
 template<typename TableType>
 static bool
-_subset (hb_subset_plan_t *plan, hb_vector_t<char> &buf)
+_subset (hb_subset_plan_t *plan, hb_Hector_t<char> &buf)
 {
   auto &&source_blob = plan->source_table<TableType> ();
   auto *table = source_blob.get ();
@@ -472,7 +472,7 @@ _dependencies_satisfied (hb_subset_plan_t *plan, hb_tag_t tag,
 
 static bool
 _subset_table (hb_subset_plan_t *plan,
-	       hb_vector_t<char> &buf,
+	       hb_Hector_t<char> &buf,
 	       hb_tag_t tag)
 {
   if (plan->no_subset_tables.has (tag)) {
@@ -660,7 +660,7 @@ hb_subset_plan_execute_or_fail (hb_subset_plan_t *plan)
   {
     // Grouping to deallocate buf before calling hb_face_reference (plan->dest).
 
-    hb_vector_t<char> buf;
+    hb_Hector_t<char> buf;
     buf.alloc (8192 - 16);
 
     while (!pending_subset_tags.is_empty ())

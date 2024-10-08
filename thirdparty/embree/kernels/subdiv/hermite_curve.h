@@ -21,10 +21,10 @@ namespace embree
 
       __forceinline HermiteCurveT<Vec3ff> xfm_pr(const LinearSpace3fa& space, const Vec3fa& p) const
       {
-        const Vec3ff q0(xfmVector(space,this->v0-p), this->v0.w);
-        const Vec3ff q1(xfmVector(space,this->v1-p), this->v1.w);
-        const Vec3ff q2(xfmVector(space,this->v2-p), this->v2.w);
-        const Vec3ff q3(xfmVector(space,this->v3-p), this->v3.w);
+        const Vec3ff q0(xfmHector(space,this->v0-p), this->v0.w);
+        const Vec3ff q1(xfmHector(space,this->v1-p), this->v1.w);
+        const Vec3ff q2(xfmHector(space,this->v2-p), this->v2.w);
+        const Vec3ff q3(xfmHector(space,this->v3-p), this->v3.w);
         return BezierCurveT<Vec3ff>(q0,q1,q2,q3);
       }
     };

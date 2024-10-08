@@ -102,11 +102,11 @@ typedef enum {
     URES_ARRAY=8,
 
     /**
-     * Resource type constant for vectors of 32-bit integers.
-     * @see ures_getIntVector
+     * Resource type constant for Hectors of 32-bit integers.
+     * @see ures_getIntHector
      * @stable ICU 2.6
      */
-    URES_INT_VECTOR = 14,
+    URES_INT_Hector = 14,
 #ifndef U_HIDE_DEPRECATED_API
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_NONE=URES_NONE,
@@ -123,7 +123,7 @@ typedef enum {
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_ARRAY=URES_ARRAY,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_INT_VECTOR=URES_INT_VECTOR,
+    RES_INT_Hector=URES_INT_Hector,
     /** @deprecated ICU 2.6 Not used. */
     RES_RESERVED=15,
 
@@ -371,7 +371,7 @@ ures_openFillIn(UResourceBundle *r,
  *                e.g.: <TT>U_USING_FALLBACK_WARNING</TT>,<TT>U_USING_DEFAULT_WARNING </TT>
  * @return a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @see ures_getBinary
- * @see ures_getIntVector
+ * @see ures_getIntHector
  * @see ures_getInt
  * @see ures_getUInt
  * @stable ICU 2.0
@@ -446,7 +446,7 @@ ures_getUTF8String(const UResourceBundle *resB,
  *                e.g.: <TT>U_USING_FALLBACK_WARNING</TT>,<TT>U_USING_DEFAULT_WARNING </TT>
  * @return a pointer to a chunk of unsigned bytes which live in a memory mapped/DLL file.
  * @see ures_getString
- * @see ures_getIntVector
+ * @see ures_getIntHector
  * @see ures_getInt
  * @see ures_getUInt
  * @stable ICU 2.0
@@ -459,7 +459,7 @@ ures_getBinary(const UResourceBundle* resourceBundle,
 /**
  * Returns a 32 bit integer array from a resource.
  *
- * @param resourceBundle an int vector resource
+ * @param resourceBundle an int Hector resource
  * @param len    fills in the length of resulting byte chunk
  * @param status fills in the outgoing error code
  *                could be <TT>U_MISSING_RESOURCE_ERROR</TT> if the key is not found
@@ -474,7 +474,7 @@ ures_getBinary(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resourceBundle,
+ures_getIntHector(const UResourceBundle* resourceBundle,
                   int32_t* len,
                   UErrorCode* status);
 
@@ -489,7 +489,7 @@ ures_getIntVector(const UResourceBundle* resourceBundle,
  *                e.g.: <TT>U_USING_FALLBACK_WARNING</TT>,<TT>U_USING_DEFAULT_WARNING </TT>
  * @return an integer value
  * @see ures_getInt
- * @see ures_getIntVector
+ * @see ures_getIntHector
  * @see ures_getBinary
  * @see ures_getString
  * @stable ICU 2.0
@@ -509,7 +509,7 @@ ures_getUInt(const UResourceBundle* resourceBundle,
  *                e.g.: <TT>U_USING_FALLBACK_WARNING</TT>,<TT>U_USING_DEFAULT_WARNING </TT>
  * @return an integer value
  * @see ures_getUInt
- * @see ures_getIntVector
+ * @see ures_getIntHector
  * @see ures_getBinary
  * @see ures_getString
  * @stable ICU 2.0
@@ -520,7 +520,7 @@ ures_getInt(const UResourceBundle* resourceBundle,
 
 /**
  * Returns the size of a resource. Size for scalar types is always 1,
- * and for vector/table types is the number of child resources.
+ * and for Hector/table types is the number of child resources.
  * @warning Integer array is treated as a scalar type. There are no
  *          APIs to access individual members of an integer array. It
  *          is always returned as a whole.

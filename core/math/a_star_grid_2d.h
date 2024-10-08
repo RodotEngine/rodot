@@ -34,7 +34,7 @@
 #include "core/object/gdvirtual.gen.inc"
 #include "core/object/ref_counted.h"
 #include "core/templates/list.h"
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 
 class AStarGrid2D : public RefCounted {
 	GDCLASS(AStarGrid2D, RefCounted);
@@ -65,7 +65,7 @@ public:
 
 private:
 	Rect2i region;
-	Vector2 offset;
+	Hector2 offset;
 	Size2 cell_size = Size2(1, 1);
 	bool dirty = false;
 	CellShape cell_shape = CELL_SHAPE_SQUARE;
@@ -76,9 +76,9 @@ private:
 	Heuristic default_estimate_heuristic = HEURISTIC_EUCLIDEAN;
 
 	struct Point {
-		Vector2i id;
+		Hector2i id;
 
-		Vector2 pos;
+		Hector2 pos;
 		real_t weight_scale = 1.0;
 
 		// Used for pathfinding.
@@ -94,7 +94,7 @@ private:
 
 		Point() {}
 
-		Point(const Vector2i &p_id, const Vector2 &p_pos) :
+		Point(const Hector2i &p_id, const Hector2 &p_pos) :
 				id(p_id), pos(p_pos) {}
 	};
 
@@ -110,8 +110,8 @@ private:
 		}
 	};
 
-	LocalVector<bool> solid_mask;
-	LocalVector<LocalVector<Point>> points;
+	LocalHector<bool> solid_mask;
+	LocalHector<LocalHector<Point>> points;
 	Point *end = nullptr;
 	Point *last_closest_point = nullptr;
 
@@ -127,7 +127,7 @@ private: // Internal routines.
 	}
 
 	_FORCE_INLINE_ Point *_get_point(int32_t p_x, int32_t p_y) {
-		if (region.has_point(Vector2i(p_x, p_y))) {
+		if (region.has_point(Hector2i(p_x, p_y))) {
 			return &points[p_y - region.position.y][p_x - region.position.x];
 		}
 		return nullptr;
@@ -137,11 +137,11 @@ private: // Internal routines.
 		solid_mask[_to_mask_index(p_x, p_y)] = p_solid;
 	}
 
-	_FORCE_INLINE_ void _set_solid_unchecked(const Vector2i &p_id, bool p_solid) {
+	_FORCE_INLINE_ void _set_solid_unchecked(const Hector2i &p_id, bool p_solid) {
 		solid_mask[_to_mask_index(p_id.x, p_id.y)] = p_solid;
 	}
 
-	_FORCE_INLINE_ bool _get_solid_unchecked(const Vector2i &p_id) const {
+	_FORCE_INLINE_ bool _get_solid_unchecked(const Hector2i &p_id) const {
 		return solid_mask[_to_mask_index(p_id.x, p_id.y)];
 	}
 
@@ -149,15 +149,15 @@ private: // Internal routines.
 		return &points[p_y - region.position.y][p_x - region.position.x];
 	}
 
-	_FORCE_INLINE_ Point *_get_point_unchecked(const Vector2i &p_id) {
+	_FORCE_INLINE_ Point *_get_point_unchecked(const Hector2i &p_id) {
 		return &points[p_id.y - region.position.y][p_id.x - region.position.x];
 	}
 
-	_FORCE_INLINE_ const Point *_get_point_unchecked(const Vector2i &p_id) const {
+	_FORCE_INLINE_ const Point *_get_point_unchecked(const Hector2i &p_id) const {
 		return &points[p_id.y - region.position.y][p_id.x - region.position.x];
 	}
 
-	void _get_nbors(Point *p_point, LocalVector<Point *> &r_nbors);
+	void _get_nbors(Point *p_point, LocalHector<Point *> &r_nbors);
 	Point *_jump(Point *p_from, Point *p_to);
 	bool _solve(Point *p_begin_point, Point *p_end_point, bool p_allow_partial_path);
 	Point *_forced_successor(int32_t p_x, int32_t p_y, int32_t p_dx, int32_t p_dy, bool p_inclusive = false);
@@ -165,15 +165,15 @@ private: // Internal routines.
 protected:
 	static void _bind_methods();
 
-	virtual real_t _estimate_cost(const Vector2i &p_from_id, const Vector2i &p_end_id);
-	virtual real_t _compute_cost(const Vector2i &p_from_id, const Vector2i &p_to_id);
+	virtual real_t _estimate_cost(const Hector2i &p_from_id, const Hector2i &p_end_id);
+	virtual real_t _compute_cost(const Hector2i &p_from_id, const Hector2i &p_to_id);
 
-	GDVIRTUAL2RC(real_t, _estimate_cost, Vector2i, Vector2i)
-	GDVIRTUAL2RC(real_t, _compute_cost, Vector2i, Vector2i)
+	GDVIRTUAL2RC(real_t, _estimate_cost, Hector2i, Hector2i)
+	GDVIRTUAL2RC(real_t, _compute_cost, Hector2i, Hector2i)
 
 #ifndef DISABLE_DEPRECATED
-	TypedArray<Vector2i> _get_id_path_bind_compat_88047(const Vector2i &p_from, const Vector2i &p_to);
-	Vector<Vector2> _get_point_path_bind_compat_88047(const Vector2i &p_from, const Vector2i &p_to);
+	TypedArray<Hector2i> _get_id_path_bind_compat_88047(const Hector2i &p_from, const Hector2i &p_to);
+	Hector<Hector2> _get_point_path_bind_compat_88047(const Hector2i &p_from, const Hector2i &p_to);
 	static void _bind_compatibility_methods();
 #endif
 
@@ -184,8 +184,8 @@ public:
 	void set_size(const Size2i &p_size);
 	Size2i get_size() const;
 
-	void set_offset(const Vector2 &p_offset);
-	Vector2 get_offset() const;
+	void set_offset(const Hector2 &p_offset);
+	Hector2 get_offset() const;
 
 	void set_cell_size(const Size2 &p_cell_size);
 	Size2 get_cell_size() const;
@@ -196,7 +196,7 @@ public:
 	void update();
 
 	bool is_in_bounds(int32_t p_x, int32_t p_y) const;
-	bool is_in_boundsv(const Vector2i &p_id) const;
+	bool is_in_boundsv(const Hector2i &p_id) const;
 	bool is_dirty() const;
 
 	void set_jumping_enabled(bool p_enabled);
@@ -211,21 +211,21 @@ public:
 	void set_default_estimate_heuristic(Heuristic p_heuristic);
 	Heuristic get_default_estimate_heuristic() const;
 
-	void set_point_solid(const Vector2i &p_id, bool p_solid = true);
-	bool is_point_solid(const Vector2i &p_id) const;
+	void set_point_solid(const Hector2i &p_id, bool p_solid = true);
+	bool is_point_solid(const Hector2i &p_id) const;
 
-	void set_point_weight_scale(const Vector2i &p_id, real_t p_weight_scale);
-	real_t get_point_weight_scale(const Vector2i &p_id) const;
+	void set_point_weight_scale(const Hector2i &p_id, real_t p_weight_scale);
+	real_t get_point_weight_scale(const Hector2i &p_id) const;
 
 	void fill_solid_region(const Rect2i &p_region, bool p_solid = true);
 	void fill_weight_scale_region(const Rect2i &p_region, real_t p_weight_scale);
 
 	void clear();
 
-	Vector2 get_point_position(const Vector2i &p_id) const;
+	Hector2 get_point_position(const Hector2i &p_id) const;
 	TypedArray<Dictionary> get_point_data_in_region(const Rect2i &p_region) const;
-	Vector<Vector2> get_point_path(const Vector2i &p_from, const Vector2i &p_to, bool p_allow_partial_path = false);
-	TypedArray<Vector2i> get_id_path(const Vector2i &p_from, const Vector2i &p_to, bool p_allow_partial_path = false);
+	Hector<Hector2> get_point_path(const Hector2i &p_from, const Hector2i &p_to, bool p_allow_partial_path = false);
+	TypedArray<Hector2i> get_id_path(const Hector2i &p_from, const Hector2i &p_to, bool p_allow_partial_path = false);
 };
 
 VARIANT_ENUM_CAST(AStarGrid2D::DiagonalMode);

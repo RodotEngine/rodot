@@ -285,7 +285,7 @@ public:
 			float min_d = 1e20;
 #define CONE_MINMAX(m_x, m_y)                                             \
 	{                                                                     \
-		float d = -xform.xform(Vector3(len * m_x, len * m_y, -radius)).z; \
+		float d = -xform.xform(Hector3(len * m_x, len * m_y, -radius)).z; \
 		min_d = MIN(d, min_d);                                            \
 		max_d = MAX(d, max_d);                                            \
 	}
@@ -298,11 +298,11 @@ public:
 			if (camera_orthogonal) {
 				e.touches_near = min_d < z_near;
 			} else {
-				Plane base_plane(-xform.basis.get_column(Vector3::AXIS_Z), xform.origin);
-				float dist = base_plane.distance_to(Vector3());
+				Plane base_plane(-xform.basis.get_column(Hector3::AXIS_Z), xform.origin);
+				float dist = base_plane.distance_to(Hector3());
 				if (dist >= 0 && dist < radius) {
 					// Contains camera inside light, check angle.
-					float angle = Math::rad_to_deg(Math::acos((-xform.origin.normalized()).dot(-xform.basis.get_column(Vector3::AXIS_Z))));
+					float angle = Math::rad_to_deg(Math::acos((-xform.origin.normalized()).dot(-xform.basis.get_column(Hector3::AXIS_Z))));
 					e.touches_near = angle < p_spot_aperture * 1.05; //overfit aperture a little due to cone overfit
 				} else {
 					e.touches_near = false;
@@ -337,7 +337,7 @@ public:
 		render_element_count++;
 	}
 
-	_FORCE_INLINE_ void add_box(BoxType p_box_type, const Transform3D &p_transform, const Vector3 &p_half_size) {
+	_FORCE_INLINE_ void add_box(BoxType p_box_type, const Transform3D &p_transform, const Hector3 &p_half_size) {
 		if (p_box_type == BOX_TYPE_DECAL && cluster_count_by_type[ELEMENT_TYPE_DECAL] == max_elements_by_type) {
 			return; // Max number elements reached.
 		}
@@ -349,21 +349,21 @@ public:
 		Transform3D xform = view_xform * p_transform;
 
 		// Extract scale and scale the matrix by it, makes things simpler.
-		Vector3 scale = p_half_size;
+		Hector3 scale = p_half_size;
 		for (uint32_t i = 0; i < 3; i++) {
 			float s = xform.basis.rows[i].length();
 			scale[i] *= s;
 			xform.basis.rows[i] /= s;
 		};
 
-		float box_depth = Math::abs(xform.basis.xform_inv(Vector3(0, 0, -1)).dot(scale));
+		float box_depth = Math::abs(xform.basis.xform_inv(Hector3(0, 0, -1)).dot(scale));
 		float depth = -xform.origin.z;
 
 		if (camera_orthogonal) {
 			e.touches_near = depth - box_depth < z_near;
 		} else {
 			// Contains camera inside box.
-			Vector3 inside = xform.xform_inv(Vector3(0, 0, 0)).abs();
+			Hector3 inside = xform.xform_inv(Hector3(0, 0, 0)).abs();
 			e.touches_near = inside.x < scale.x && inside.y < scale.y && inside.z < scale.z;
 		}
 

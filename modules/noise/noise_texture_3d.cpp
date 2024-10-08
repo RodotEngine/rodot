@@ -92,7 +92,7 @@ void NoiseTexture3D::_validate_property(PropertyInfo &p_property) const {
 
 void NoiseTexture3D::_set_texture_data(const TypedArray<Image> &p_data) {
 	if (!p_data.is_empty()) {
-		Vector<Ref<Image>> data;
+		Hector<Ref<Image>> data;
 
 		data.resize(p_data.size());
 
@@ -144,7 +144,7 @@ TypedArray<Image> NoiseTexture3D::_generate_texture() {
 
 	ERR_FAIL_COND_V_MSG((int64_t)width * height * depth > Image::MAX_PIXELS, TypedArray<Image>(), "The NoiseTexture3D is too big, consider lowering its width, height, or depth.");
 
-	Vector<Ref<Image>> images;
+	Hector<Ref<Image>> images;
 
 	if (seamless) {
 		images = ref_noise->_get_seamless_image(width, height, depth, invert, true, seamless_blend_skirt, normalize);
@@ -346,8 +346,8 @@ RID NoiseTexture3D::get_rid() const {
 	return texture;
 }
 
-Vector<Ref<Image>> NoiseTexture3D::get_data() const {
-	ERR_FAIL_COND_V(!texture.is_valid(), Vector<Ref<Image>>());
+Hector<Ref<Image>> NoiseTexture3D::get_data() const {
+	ERR_FAIL_COND_V(!texture.is_valid(), Hector<Ref<Image>>());
 	return RS::get_singleton()->texture_3d_get(texture);
 }
 

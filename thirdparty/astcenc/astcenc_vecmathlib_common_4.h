@@ -16,9 +16,9 @@
 // ----------------------------------------------------------------------------
 
 /**
- * @brief Generic 4x32-bit vector functions.
+ * @brief Generic 4x32-bit Hector functions.
  *
- * This module implements generic 4-wide vector functions that are valid for
+ * This module implements generic 4-wide Hector functions that are valid for
  * all instruction sets, typically implemented using lower level 4-wide
  * operations that are ISA-specific.
  */
@@ -57,7 +57,7 @@ ASTCENC_SIMD_INLINE bool all(vmask4 a)
 // ============================================================================
 
 /**
- * @brief Overload: vector by scalar addition.
+ * @brief Overload: Hector by scalar addition.
  */
 ASTCENC_SIMD_INLINE vint4 operator+(vint4 a, int b)
 {
@@ -65,7 +65,7 @@ ASTCENC_SIMD_INLINE vint4 operator+(vint4 a, int b)
 }
 
 /**
- * @brief Overload: vector by vector incremental addition.
+ * @brief Overload: Hector by Hector incremental addition.
  */
 ASTCENC_SIMD_INLINE vint4& operator+=(vint4& a, const vint4& b)
 {
@@ -74,7 +74,7 @@ ASTCENC_SIMD_INLINE vint4& operator+=(vint4& a, const vint4& b)
 }
 
 /**
- * @brief Overload: vector by scalar subtraction.
+ * @brief Overload: Hector by scalar subtraction.
  */
 ASTCENC_SIMD_INLINE vint4 operator-(vint4 a, int b)
 {
@@ -82,7 +82,7 @@ ASTCENC_SIMD_INLINE vint4 operator-(vint4 a, int b)
 }
 
 /**
- * @brief Overload: vector by scalar multiplication.
+ * @brief Overload: Hector by scalar multiplication.
  */
 ASTCENC_SIMD_INLINE vint4 operator*(vint4 a, int b)
 {
@@ -90,7 +90,7 @@ ASTCENC_SIMD_INLINE vint4 operator*(vint4 a, int b)
 }
 
 /**
- * @brief Overload: vector by scalar bitwise or.
+ * @brief Overload: Hector by scalar bitwise or.
  */
 ASTCENC_SIMD_INLINE vint4 operator|(vint4 a, int b)
 {
@@ -98,7 +98,7 @@ ASTCENC_SIMD_INLINE vint4 operator|(vint4 a, int b)
 }
 
 /**
- * @brief Overload: vector by scalar bitwise and.
+ * @brief Overload: Hector by scalar bitwise and.
  */
 ASTCENC_SIMD_INLINE vint4 operator&(vint4 a, int b)
 {
@@ -106,7 +106,7 @@ ASTCENC_SIMD_INLINE vint4 operator&(vint4 a, int b)
 }
 
 /**
- * @brief Overload: vector by scalar bitwise xor.
+ * @brief Overload: Hector by scalar bitwise xor.
  */
 ASTCENC_SIMD_INLINE vint4 operator^(vint4 a, int b)
 {
@@ -122,7 +122,7 @@ ASTCENC_SIMD_INLINE vint4 clamp(int minv, int maxv, vint4 a)
 }
 
 /**
- * @brief Return the horizontal sum of RGB vector lanes as a scalar.
+ * @brief Return the horizontal sum of RGB Hector lanes as a scalar.
  */
 ASTCENC_SIMD_INLINE int hadd_rgb_s(vint4 a)
 {
@@ -134,7 +134,7 @@ ASTCENC_SIMD_INLINE int hadd_rgb_s(vint4 a)
 // ============================================================================
 
 /**
- * @brief Overload: vector by vector incremental addition.
+ * @brief Overload: Hector by Hector incremental addition.
  */
 ASTCENC_SIMD_INLINE vfloat4& operator+=(vfloat4& a, const vfloat4& b)
 {
@@ -143,7 +143,7 @@ ASTCENC_SIMD_INLINE vfloat4& operator+=(vfloat4& a, const vfloat4& b)
 }
 
 /**
- * @brief Overload: vector by scalar addition.
+ * @brief Overload: Hector by scalar addition.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator+(vfloat4 a, float b)
 {
@@ -151,7 +151,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator+(vfloat4 a, float b)
 }
 
 /**
- * @brief Overload: vector by scalar subtraction.
+ * @brief Overload: Hector by scalar subtraction.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator-(vfloat4 a, float b)
 {
@@ -159,7 +159,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator-(vfloat4 a, float b)
 }
 
 /**
- * @brief Overload: vector by scalar multiplication.
+ * @brief Overload: Hector by scalar multiplication.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator*(vfloat4 a, float b)
 {
@@ -167,7 +167,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator*(vfloat4 a, float b)
 }
 
 /**
- * @brief Overload: scalar by vector multiplication.
+ * @brief Overload: scalar by Hector multiplication.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator*(float a, vfloat4 b)
 {
@@ -175,7 +175,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator*(float a, vfloat4 b)
 }
 
 /**
- * @brief Overload: vector by scalar division.
+ * @brief Overload: Hector by scalar division.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator/(vfloat4 a, float b)
 {
@@ -183,7 +183,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator/(vfloat4 a, float b)
 }
 
 /**
- * @brief Overload: scalar by vector division.
+ * @brief Overload: scalar by Hector division.
  */
 ASTCENC_SIMD_INLINE vfloat4 operator/(float a, vfloat4 b)
 {
@@ -191,7 +191,7 @@ ASTCENC_SIMD_INLINE vfloat4 operator/(float a, vfloat4 b)
 }
 
 /**
- * @brief Return the min vector of a vector and a scalar.
+ * @brief Return the min Hector of a Hector and a scalar.
  *
  * If either lane value is NaN, @c b will be returned for that lane.
  */
@@ -201,7 +201,7 @@ ASTCENC_SIMD_INLINE vfloat4 min(vfloat4 a, float b)
 }
 
 /**
- * @brief Return the max vector of a vector and a scalar.
+ * @brief Return the max Hector of a Hector and a scalar.
  *
  * If either lane value is NaN, @c b will be returned for that lane.
  */
@@ -246,7 +246,7 @@ ASTCENC_SIMD_INLINE vfloat4 clampzo(vfloat4 a)
 }
 
 /**
- * @brief Return the horizontal minimum of a vector.
+ * @brief Return the horizontal minimum of a Hector.
  */
 ASTCENC_SIMD_INLINE float hmin_s(vfloat4 a)
 {
@@ -254,7 +254,7 @@ ASTCENC_SIMD_INLINE float hmin_s(vfloat4 a)
 }
 
 /**
- * @brief Return the horizontal min of RGB vector lanes as a scalar.
+ * @brief Return the horizontal min of RGB Hector lanes as a scalar.
  */
 ASTCENC_SIMD_INLINE float hmin_rgb_s(vfloat4 a)
 {
@@ -263,7 +263,7 @@ ASTCENC_SIMD_INLINE float hmin_rgb_s(vfloat4 a)
 }
 
 /**
- * @brief Return the horizontal maximum of a vector.
+ * @brief Return the horizontal maximum of a Hector.
  */
 ASTCENC_SIMD_INLINE float hmax_s(vfloat4 a)
 {
@@ -271,7 +271,7 @@ ASTCENC_SIMD_INLINE float hmax_s(vfloat4 a)
 }
 
 /**
- * @brief Accumulate lane-wise sums for a vector.
+ * @brief Accumulate lane-wise sums for a Hector.
  */
 ASTCENC_SIMD_INLINE void haccumulate(vfloat4& accum, vfloat4 a)
 {
@@ -279,7 +279,7 @@ ASTCENC_SIMD_INLINE void haccumulate(vfloat4& accum, vfloat4 a)
 }
 
 /**
- * @brief Accumulate lane-wise sums for a masked vector.
+ * @brief Accumulate lane-wise sums for a masked Hector.
  */
 ASTCENC_SIMD_INLINE void haccumulate(vfloat4& accum, vfloat4 a, vmask4 m)
 {
@@ -288,7 +288,7 @@ ASTCENC_SIMD_INLINE void haccumulate(vfloat4& accum, vfloat4 a, vmask4 m)
 }
 
 /**
- * @brief Return the horizontal sum of RGB vector lanes as a scalar.
+ * @brief Return the horizontal sum of RGB Hector lanes as a scalar.
  */
 ASTCENC_SIMD_INLINE float hadd_rgb_s(vfloat4 a)
 {
@@ -307,7 +307,7 @@ ASTCENC_SIMD_INLINE float dot_s(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Return the dot product for the full 4 lanes, returning vector.
+ * @brief Return the dot product for the full 4 lanes, returning Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 dot(vfloat4 a, vfloat4 b)
 {
@@ -325,7 +325,7 @@ ASTCENC_SIMD_INLINE float dot3_s(vfloat4 a, vfloat4 b)
 }
 
 /**
- * @brief Return the dot product for the bottom 3 lanes, returning vector.
+ * @brief Return the dot product for the bottom 3 lanes, returning Hector.
  */
 ASTCENC_SIMD_INLINE vfloat4 dot3(vfloat4 a, vfloat4 b)
 {
@@ -379,7 +379,7 @@ static ASTCENC_SIMD_INLINE void bit_transfer_signed(
 }
 
 /**
- * @brief Debug function to print a vector of ints.
+ * @brief Debug function to print a Hector of ints.
  */
 ASTCENC_SIMD_INLINE void print(vint4 a)
 {
@@ -390,7 +390,7 @@ ASTCENC_SIMD_INLINE void print(vint4 a)
 }
 
 /**
- * @brief Debug function to print a vector of ints.
+ * @brief Debug function to print a Hector of ints.
  */
 ASTCENC_SIMD_INLINE void printx(vint4 a)
 {
@@ -401,7 +401,7 @@ ASTCENC_SIMD_INLINE void printx(vint4 a)
 }
 
 /**
- * @brief Debug function to print a vector of floats.
+ * @brief Debug function to print a Hector of floats.
  */
 ASTCENC_SIMD_INLINE void print(vfloat4 a)
 {
@@ -413,7 +413,7 @@ ASTCENC_SIMD_INLINE void print(vfloat4 a)
 }
 
 /**
- * @brief Debug function to print a vector of masks.
+ * @brief Debug function to print a Hector of masks.
  */
 ASTCENC_SIMD_INLINE void print(vmask4 a)
 {

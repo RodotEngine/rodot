@@ -169,7 +169,7 @@ public:
 		DEBUG_DRAW_CLUSTER_DECALS,
 		DEBUG_DRAW_CLUSTER_REFLECTION_PROBES,
 		DEBUG_DRAW_OCCLUDERS,
-		DEBUG_DRAW_MOTION_VECTORS,
+		DEBUG_DRAW_MOTION_HectorS,
 		DEBUG_DRAW_INTERNAL_BUFFER,
 	};
 
@@ -357,7 +357,7 @@ private:
 		BitField<MouseButtonMask> mouse_focus_mask;
 		Control *key_focus = nullptr;
 		Control *mouse_over = nullptr;
-		LocalVector<Control *> mouse_over_hierarchy;
+		LocalHector<Control *> mouse_over_hierarchy;
 		bool sending_mouse_enter_exit_notifications = false;
 		Window *subwindow_over = nullptr; // mouse_over and subwindow_over are mutually exclusive. At all times at least one of them is nullptr.
 		Window *windowmanager_window_over = nullptr; // Only used in root Viewport.
@@ -387,14 +387,14 @@ private:
 		Window *subwindow_focused = nullptr;
 		Window *currently_dragged_subwindow = nullptr;
 		SubWindowDrag subwindow_drag = SUB_WINDOW_DRAG_DISABLED;
-		Vector2 subwindow_drag_from;
-		Vector2 subwindow_drag_pos;
+		Hector2 subwindow_drag_from;
+		Hector2 subwindow_drag_pos;
 		Rect2i subwindow_drag_close_rect;
 		bool subwindow_drag_close_inside = false;
 		SubWindowResize subwindow_resize_mode;
 		Rect2i subwindow_resize_from_rect;
 
-		Vector<SubWindow> sub_windows; // Don't obtain references or pointers to the elements, as their location can change.
+		Hector<SubWindow> sub_windows; // Don't obtain references or pointers to the elements, as their location can change.
 	} gui;
 
 	DefaultCanvasItemTextureFilter default_canvas_item_texture_filter = DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR;
@@ -422,7 +422,7 @@ private:
 
 	void _gui_remove_root_control(List<Control *>::Element *RI);
 
-	String _gui_get_tooltip(Control *p_control, const Vector2 &p_pos, Control **r_tooltip_owner = nullptr);
+	String _gui_get_tooltip(Control *p_control, const Hector2 &p_pos, Control **r_tooltip_owner = nullptr);
 	void _gui_cancel_tooltip();
 	void _gui_show_tooltip();
 
@@ -466,7 +466,7 @@ private:
 	SubWindowResize _sub_window_get_resize_margin(Window *p_subwindow, const Point2 &p_point);
 
 	void _update_mouse_over();
-	virtual void _update_mouse_over(Vector2 p_pos);
+	virtual void _update_mouse_over(Hector2 p_pos);
 	virtual void _mouse_leave_viewport();
 
 	virtual bool _can_consume_input_events() const { return true; }
@@ -568,8 +568,8 @@ public:
 	void set_use_occlusion_culling(bool p_us_occlusion_culling);
 	bool is_using_occlusion_culling() const;
 
-	Vector2 get_camera_coords(const Vector2 &p_viewport_coords) const;
-	Vector2 get_camera_rect_size() const;
+	Hector2 get_camera_coords(const Hector2 &p_viewport_coords) const;
+	Hector2 get_camera_rect_size() const;
 
 	void push_text_input(const String &p_text);
 	void push_input(const Ref<InputEvent> &p_event, bool p_local_coords = false);
@@ -580,8 +580,8 @@ public:
 	void set_disable_input(bool p_disable);
 	bool is_input_disabled() const;
 
-	Vector2 get_mouse_position() const;
-	void warp_mouse(const Vector2 &p_position);
+	Hector2 get_mouse_position() const;
+	void warp_mouse(const Hector2 &p_position);
 	virtual void update_mouse_cursor_state();
 
 	void set_physics_object_picking(bool p_enable);
@@ -721,7 +721,7 @@ private:
 	void _audio_listener_3d_remove(AudioListener3D *p_listener);
 	void _audio_listener_3d_make_next_current(AudioListener3D *p_exclude);
 
-	void _collision_object_3d_input_event(CollisionObject3D *p_object, Camera3D *p_camera, const Ref<InputEvent> &p_input_event, const Vector3 &p_pos, const Vector3 &p_normal, int p_shape);
+	void _collision_object_3d_input_event(CollisionObject3D *p_object, Camera3D *p_camera, const Ref<InputEvent> &p_input_event, const Hector3 &p_pos, const Hector3 &p_normal, int p_shape);
 
 	struct Camera3DOverrideData {
 		Transform3D transform;

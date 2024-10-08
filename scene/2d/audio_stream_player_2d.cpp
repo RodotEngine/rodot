@@ -61,7 +61,7 @@ void AudioStreamPlayer2D::_notification(int p_what) {
 
 			if (setplayback.is_valid() && setplay.get() >= 0) {
 				internal->active.set();
-				AudioServer::get_singleton()->start_playback_stream(setplayback, _get_actual_bus(), volume_vector, setplay.get(), internal->pitch_scale);
+				AudioServer::get_singleton()->start_playback_stream(setplayback, _get_actual_bus(), volume_Hector, setplay.get(), internal->pitch_scale);
 				setplayback.unref();
 				setplay.set(-1);
 			}
@@ -76,7 +76,7 @@ void AudioStreamPlayer2D::_notification(int p_what) {
 
 // Interacts with PhysicsServer2D, so can only be called during _physics_process.
 StringName AudioStreamPlayer2D::_get_actual_bus() {
-	Vector2 global_pos = get_global_position();
+	Hector2 global_pos = get_global_position();
 
 	//check if any area is diverting sound into a bus
 	Ref<World2D> world_2d = get_world_2d();
@@ -118,15 +118,15 @@ void AudioStreamPlayer2D::_update_panning() {
 	Ref<World2D> world_2d = get_world_2d();
 	ERR_FAIL_COND(world_2d.is_null());
 
-	Vector2 global_pos = get_global_position();
+	Hector2 global_pos = get_global_position();
 
 	HashSet<Viewport *> viewports = world_2d->get_viewports();
 
-	volume_vector.resize(4);
-	volume_vector.write[0] = AudioFrame(0, 0);
-	volume_vector.write[1] = AudioFrame(0, 0);
-	volume_vector.write[2] = AudioFrame(0, 0);
-	volume_vector.write[3] = AudioFrame(0, 0);
+	volume_Hector.resize(4);
+	volume_Hector.write[0] = AudioFrame(0, 0);
+	volume_Hector.write[1] = AudioFrame(0, 0);
+	volume_Hector.write[2] = AudioFrame(0, 0);
+	volume_Hector.write[3] = AudioFrame(0, 0);
 
 	StringName actual_bus = _get_actual_bus();
 
@@ -135,9 +135,9 @@ void AudioStreamPlayer2D::_update_panning() {
 			continue;
 		}
 		//compute matrix to convert to screen
-		Vector2 screen_size = vp->get_visible_rect().size;
-		Vector2 listener_in_global;
-		Vector2 relative_to_listener;
+		Hector2 screen_size = vp->get_visible_rect().size;
+		Hector2 listener_in_global;
+		Hector2 relative_to_listener;
 
 		//screen in global is used for attenuation
 		AudioListener2D *listener = vp->get_audio_listener_2d();
@@ -172,14 +172,14 @@ void AudioStreamPlayer2D::_update_panning() {
 		float l = 1.0 - pan;
 		float r = pan;
 
-		const AudioFrame &prev_sample = volume_vector[0];
+		const AudioFrame &prev_sample = volume_Hector[0];
 		AudioFrame new_sample = AudioFrame(l, r) * multiplier;
 
-		volume_vector.write[0] = AudioFrame(MAX(prev_sample[0], new_sample[0]), MAX(prev_sample[1], new_sample[1]));
+		volume_Hector.write[0] = AudioFrame(MAX(prev_sample[0], new_sample[0]), MAX(prev_sample[1], new_sample[1]));
 	}
 
 	for (const Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {
-		AudioServer::get_singleton()->set_playback_bus_exclusive(playback, actual_bus, volume_vector);
+		AudioServer::get_singleton()->set_playback_bus_exclusive(playback, actual_bus, volume_Hector);
 	}
 
 	for (const Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {

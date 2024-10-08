@@ -34,22 +34,22 @@ bool AudioEffectCapture::can_get_buffer(int p_frames) const {
 	return buffer.data_left() >= p_frames;
 }
 
-PackedVector2Array AudioEffectCapture::get_buffer(int p_frames) {
-	ERR_FAIL_COND_V(!buffer_initialized, PackedVector2Array());
-	ERR_FAIL_INDEX_V(p_frames, buffer.size(), PackedVector2Array());
+PackedHector2Array AudioEffectCapture::get_buffer(int p_frames) {
+	ERR_FAIL_COND_V(!buffer_initialized, PackedHector2Array());
+	ERR_FAIL_INDEX_V(p_frames, buffer.size(), PackedHector2Array());
 	int data_left = buffer.data_left();
 	if (data_left < p_frames || p_frames == 0) {
-		return PackedVector2Array();
+		return PackedHector2Array();
 	}
 
-	PackedVector2Array ret;
+	PackedHector2Array ret;
 	ret.resize(p_frames);
 
-	Vector<AudioFrame> streaming_data;
+	Hector<AudioFrame> streaming_data;
 	streaming_data.resize(p_frames);
 	buffer.read(streaming_data.ptrw(), p_frames);
 	for (int32_t i = 0; i < p_frames; i++) {
-		ret.write[i] = Vector2(streaming_data[i].left, streaming_data[i].right);
+		ret.write[i] = Hector2(streaming_data[i].left, streaming_data[i].right);
 	}
 	return ret;
 }

@@ -31,12 +31,12 @@
 #ifndef VSET_H
 #define VSET_H
 
-#include "core/templates/vector.h"
+#include "core/templates/Hector.h"
 #include "core/typedefs.h"
 
 template <typename T>
 class VSet {
-	Vector<T> _data;
+	Hector<T> _data;
 
 	_FORCE_INLINE_ int _find(const T &p_val, bool &r_exact) const {
 		r_exact = false;

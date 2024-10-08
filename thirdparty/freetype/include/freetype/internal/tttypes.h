@@ -1653,9 +1653,9 @@ FT_BEGIN_HEADER
     FT_UShort   n_points;    /* number of points in zone    */
     FT_Short    n_contours;  /* number of contours          */
 
-    FT_Vector*  org;         /* original point coordinates  */
-    FT_Vector*  cur;         /* current point coordinates   */
-    FT_Vector*  orus;        /* original (unscaled) point coordinates */
+    FT_Hector*  org;         /* original point coordinates  */
+    FT_Hector*  cur;         /* current point coordinates   */
+    FT_Hector*  orus;        /* original (unscaled) point coordinates */
 
     FT_Byte*    tags;        /* current touch flags         */
     FT_UShort*  contours;    /* contour end points          */
@@ -1700,8 +1700,8 @@ FT_BEGIN_HEADER
     FT_Int           advance;
     FT_Int           linear;
     FT_Bool          linear_def;
-    FT_Vector        pp1;
-    FT_Vector        pp2;
+    FT_Hector        pp1;
+    FT_Hector        pp2;
 
     /* the zone where we load our glyphs */
     TT_GlyphZoneRec  base;
@@ -1717,8 +1717,8 @@ FT_BEGIN_HEADER
     /* since version 2.1.8 */
     FT_Int           top_bearing;
     FT_Int           vadvance;
-    FT_Vector        pp3;
-    FT_Vector        pp4;
+    FT_Hector        pp3;
+    FT_Hector        pp4;
 
     /* since version 2.2.1 */
     FT_Byte*         cursor;

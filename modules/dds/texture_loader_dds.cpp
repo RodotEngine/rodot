@@ -454,7 +454,7 @@ Ref<Resource> ResourceFormatDDS::load(const String &p_path, const String &p_orig
 		mipmaps = 1;
 	}
 
-	Vector<uint8_t> src_data;
+	Hector<uint8_t> src_data;
 
 	const DDSFormatInfo &info = dds_format_info[dds_format];
 	uint32_t w = width;

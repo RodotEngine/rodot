@@ -381,7 +381,7 @@
 		</method>
 		<method name="framebuffer_create_empty">
 			<return type="RID" />
-			<param index="0" name="size" type="Vector2i" />
+			<param index="0" name="size" type="Hector2i" />
 			<param index="1" name="samples" type="int" enum="RenderingDevice.TextureSamples" default="0" />
 			<param index="2" name="validate_with_format" type="int" default="-1" />
 			<description>
@@ -846,9 +846,9 @@
 			<return type="int" enum="Error" />
 			<param index="0" name="from_texture" type="RID" />
 			<param index="1" name="to_texture" type="RID" />
-			<param index="2" name="from_pos" type="Vector3" />
-			<param index="3" name="to_pos" type="Vector3" />
-			<param index="4" name="size" type="Vector3" />
+			<param index="2" name="from_pos" type="Hector3" />
+			<param index="3" name="to_pos" type="Hector3" />
+			<param index="4" name="size" type="Hector3" />
 			<param index="5" name="src_mipmap" type="int" />
 			<param index="6" name="dst_mipmap" type="int" />
 			<param index="7" name="src_layer" type="int" />

@@ -76,7 +76,7 @@ void LabelSettings::_bind_methods() {
 	ADD_GROUP("Shadow", "shadow_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "shadow_size", PROPERTY_HINT_RANGE, "0,127,1,or_greater,suffix:px"), "set_shadow_size", "get_shadow_size");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "shadow_color"), "set_shadow_color", "get_shadow_color");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shadow_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_shadow_offset", "get_shadow_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "shadow_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_shadow_offset", "get_shadow_offset");
 }
 
 void LabelSettings::set_line_spacing(real_t p_spacing) {
@@ -173,13 +173,13 @@ Color LabelSettings::get_shadow_color() const {
 	return shadow_color;
 }
 
-void LabelSettings::set_shadow_offset(const Vector2 &p_offset) {
+void LabelSettings::set_shadow_offset(const Hector2 &p_offset) {
 	if (shadow_offset != p_offset) {
 		shadow_offset = p_offset;
 		emit_changed();
 	}
 }
 
-Vector2 LabelSettings::get_shadow_offset() const {
+Hector2 LabelSettings::get_shadow_offset() const {
 	return shadow_offset;
 }

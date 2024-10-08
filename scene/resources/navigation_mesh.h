@@ -39,8 +39,8 @@ class NavigationMesh : public Resource {
 	GDCLASS(NavigationMesh, Resource);
 	RWLock rwlock;
 
-	Vector<Vector3> vertices;
-	Vector<Vector<int>> polygons;
+	Hector<Hector3> vertices;
+	Hector<Hector<int>> polygons;
 	Ref<ArrayMesh> debug_mesh;
 
 protected:
@@ -104,7 +104,7 @@ protected:
 	bool filter_ledge_spans = false;
 	bool filter_walkable_low_height_spans = false;
 	AABB filter_baking_aabb;
-	Vector3 filter_baking_aabb_offset;
+	Hector3 filter_baking_aabb_offset;
 
 public:
 	// Recast settings
@@ -180,25 +180,25 @@ public:
 	void set_filter_baking_aabb(const AABB &p_aabb);
 	AABB get_filter_baking_aabb() const;
 
-	void set_filter_baking_aabb_offset(const Vector3 &p_aabb_offset);
-	Vector3 get_filter_baking_aabb_offset() const;
+	void set_filter_baking_aabb_offset(const Hector3 &p_aabb_offset);
+	Hector3 get_filter_baking_aabb_offset() const;
 
 	void create_from_mesh(const Ref<Mesh> &p_mesh);
 
-	void set_vertices(const Vector<Vector3> &p_vertices);
-	Vector<Vector3> get_vertices() const;
+	void set_vertices(const Hector<Hector3> &p_vertices);
+	Hector<Hector3> get_vertices() const;
 
-	void add_polygon(const Vector<int> &p_polygon);
+	void add_polygon(const Hector<int> &p_polygon);
 	int get_polygon_count() const;
-	Vector<int> get_polygon(int p_idx);
+	Hector<int> get_polygon(int p_idx);
 	void clear_polygons();
-	void set_polygons(const Vector<Vector<int>> &p_polygons);
-	Vector<Vector<int>> get_polygons() const;
+	void set_polygons(const Hector<Hector<int>> &p_polygons);
+	Hector<Hector<int>> get_polygons() const;
 
 	void clear();
 
-	void set_data(const Vector<Vector3> &p_vertices, const Vector<Vector<int>> &p_polygons);
-	void get_data(Vector<Vector3> &r_vertices, Vector<Vector<int>> &r_polygons);
+	void set_data(const Hector<Hector3> &p_vertices, const Hector<Hector<int>> &p_polygons);
+	void get_data(Hector<Hector3> &r_vertices, Hector<Hector<int>> &r_polygons);
 
 #ifdef DEBUG_ENABLED
 	Ref<ArrayMesh> get_debug_mesh();

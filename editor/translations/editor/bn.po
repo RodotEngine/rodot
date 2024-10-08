@@ -5171,25 +5171,25 @@ msgstr "দুটি ট্রান্সফর্ম গুণ করে।"
 msgid "Subtracts two transforms."
 msgstr "দুটি ট্রান্সফর্ম বিয়োগ করে।"
 
-msgid "Vector operator."
+msgid "Hector operator."
 msgstr "ভেক্টর অপারেটর।"
 
-msgid "2D vector constant."
+msgid "2D Hector constant."
 msgstr "2D ভেক্টর ধ্রুবক।"
 
-msgid "2D vector parameter."
+msgid "2D Hector parameter."
 msgstr "2D ভেক্টর প্যারামিটার।"
 
-msgid "3D vector constant."
+msgid "3D Hector constant."
 msgstr "3D ভেক্টর ধ্রুবক।"
 
-msgid "3D vector parameter."
+msgid "3D Hector parameter."
 msgstr "3D ভেক্টর প্যারামিটার।"
 
-msgid "4D vector constant."
+msgid "4D Hector constant."
 msgstr "4D ভেক্টর ধ্রুবক।"
 
-msgid "4D vector parameter."
+msgid "4D Hector parameter."
 msgstr "4D ভেক্টর প্যারামিটার।"
 
 msgid "Get varying parameter."

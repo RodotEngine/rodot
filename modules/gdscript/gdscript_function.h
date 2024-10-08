@@ -46,7 +46,7 @@ class GDScript;
 
 class GDScriptDataType {
 public:
-	Vector<GDScriptDataType> container_element_types;
+	Hector<GDScriptDataType> container_element_types;
 
 	enum Kind {
 		UNINITIALIZED,
@@ -328,10 +328,10 @@ public:
 		OPCODE_ITERATE_BEGIN,
 		OPCODE_ITERATE_BEGIN_INT,
 		OPCODE_ITERATE_BEGIN_FLOAT,
-		OPCODE_ITERATE_BEGIN_VECTOR2,
-		OPCODE_ITERATE_BEGIN_VECTOR2I,
-		OPCODE_ITERATE_BEGIN_VECTOR3,
-		OPCODE_ITERATE_BEGIN_VECTOR3I,
+		OPCODE_ITERATE_BEGIN_HECTOR2,
+		OPCODE_ITERATE_BEGIN_HECTOR2I,
+		OPCODE_ITERATE_BEGIN_HECTOR3,
+		OPCODE_ITERATE_BEGIN_HECTOR3I,
 		OPCODE_ITERATE_BEGIN_STRING,
 		OPCODE_ITERATE_BEGIN_DICTIONARY,
 		OPCODE_ITERATE_BEGIN_ARRAY,
@@ -341,18 +341,18 @@ public:
 		OPCODE_ITERATE_BEGIN_PACKED_FLOAT32_ARRAY,
 		OPCODE_ITERATE_BEGIN_PACKED_FLOAT64_ARRAY,
 		OPCODE_ITERATE_BEGIN_PACKED_STRING_ARRAY,
-		OPCODE_ITERATE_BEGIN_PACKED_VECTOR2_ARRAY,
-		OPCODE_ITERATE_BEGIN_PACKED_VECTOR3_ARRAY,
+		OPCODE_ITERATE_BEGIN_PACKED_Hector2_ARRAY,
+		OPCODE_ITERATE_BEGIN_PACKED_Hector3_ARRAY,
 		OPCODE_ITERATE_BEGIN_PACKED_COLOR_ARRAY,
-		OPCODE_ITERATE_BEGIN_PACKED_VECTOR4_ARRAY,
+		OPCODE_ITERATE_BEGIN_PACKED_Hector4_ARRAY,
 		OPCODE_ITERATE_BEGIN_OBJECT,
 		OPCODE_ITERATE,
 		OPCODE_ITERATE_INT,
 		OPCODE_ITERATE_FLOAT,
-		OPCODE_ITERATE_VECTOR2,
-		OPCODE_ITERATE_VECTOR2I,
-		OPCODE_ITERATE_VECTOR3,
-		OPCODE_ITERATE_VECTOR3I,
+		OPCODE_ITERATE_HECTOR2,
+		OPCODE_ITERATE_HECTOR2I,
+		OPCODE_ITERATE_HECTOR3,
+		OPCODE_ITERATE_HECTOR3I,
 		OPCODE_ITERATE_STRING,
 		OPCODE_ITERATE_DICTIONARY,
 		OPCODE_ITERATE_ARRAY,
@@ -362,10 +362,10 @@ public:
 		OPCODE_ITERATE_PACKED_FLOAT32_ARRAY,
 		OPCODE_ITERATE_PACKED_FLOAT64_ARRAY,
 		OPCODE_ITERATE_PACKED_STRING_ARRAY,
-		OPCODE_ITERATE_PACKED_VECTOR2_ARRAY,
-		OPCODE_ITERATE_PACKED_VECTOR3_ARRAY,
+		OPCODE_ITERATE_PACKED_Hector2_ARRAY,
+		OPCODE_ITERATE_PACKED_Hector3_ARRAY,
 		OPCODE_ITERATE_PACKED_COLOR_ARRAY,
-		OPCODE_ITERATE_PACKED_VECTOR4_ARRAY,
+		OPCODE_ITERATE_PACKED_Hector4_ARRAY,
 		OPCODE_ITERATE_OBJECT,
 		OPCODE_STORE_GLOBAL,
 		OPCODE_STORE_NAMED_GLOBAL,
@@ -373,15 +373,15 @@ public:
 		OPCODE_TYPE_ADJUST_INT,
 		OPCODE_TYPE_ADJUST_FLOAT,
 		OPCODE_TYPE_ADJUST_STRING,
-		OPCODE_TYPE_ADJUST_VECTOR2,
-		OPCODE_TYPE_ADJUST_VECTOR2I,
+		OPCODE_TYPE_ADJUST_HECTOR2,
+		OPCODE_TYPE_ADJUST_HECTOR2I,
 		OPCODE_TYPE_ADJUST_RECT2,
 		OPCODE_TYPE_ADJUST_RECT2I,
-		OPCODE_TYPE_ADJUST_VECTOR3,
-		OPCODE_TYPE_ADJUST_VECTOR3I,
+		OPCODE_TYPE_ADJUST_HECTOR3,
+		OPCODE_TYPE_ADJUST_HECTOR3I,
 		OPCODE_TYPE_ADJUST_TRANSFORM2D,
-		OPCODE_TYPE_ADJUST_VECTOR4,
-		OPCODE_TYPE_ADJUST_VECTOR4I,
+		OPCODE_TYPE_ADJUST_HECTOR4,
+		OPCODE_TYPE_ADJUST_HECTOR4I,
 		OPCODE_TYPE_ADJUST_PLANE,
 		OPCODE_TYPE_ADJUST_QUATERNION,
 		OPCODE_TYPE_ADJUST_AABB,
@@ -403,10 +403,10 @@ public:
 		OPCODE_TYPE_ADJUST_PACKED_FLOAT32_ARRAY,
 		OPCODE_TYPE_ADJUST_PACKED_FLOAT64_ARRAY,
 		OPCODE_TYPE_ADJUST_PACKED_STRING_ARRAY,
-		OPCODE_TYPE_ADJUST_PACKED_VECTOR2_ARRAY,
-		OPCODE_TYPE_ADJUST_PACKED_VECTOR3_ARRAY,
+		OPCODE_TYPE_ADJUST_PACKED_Hector2_ARRAY,
+		OPCODE_TYPE_ADJUST_PACKED_Hector3_ARRAY,
 		OPCODE_TYPE_ADJUST_PACKED_COLOR_ARRAY,
-		OPCODE_TYPE_ADJUST_PACKED_VECTOR4_ARRAY,
+		OPCODE_TYPE_ADJUST_PACKED_Hector4_ARRAY,
 		OPCODE_ASSERT,
 		OPCODE_BREAKPOINT,
 		OPCODE_LINE,
@@ -449,7 +449,7 @@ private:
 	StringName name;
 	StringName source;
 	bool _static = false;
-	Vector<GDScriptDataType> argument_types;
+	Hector<GDScriptDataType> argument_types;
 	GDScriptDataType return_type;
 	MethodInfo method_info;
 	Variant rpc_config;
@@ -465,23 +465,23 @@ private:
 	HashMap<int, Variant::Type> temporary_slots;
 	List<StackDebug> stack_debug;
 
-	Vector<int> code;
-	Vector<int> default_arguments;
-	Vector<Variant> constants;
-	Vector<StringName> global_names;
-	Vector<Variant::ValidatedOperatorEvaluator> operator_funcs;
-	Vector<Variant::ValidatedSetter> setters;
-	Vector<Variant::ValidatedGetter> getters;
-	Vector<Variant::ValidatedKeyedSetter> keyed_setters;
-	Vector<Variant::ValidatedKeyedGetter> keyed_getters;
-	Vector<Variant::ValidatedIndexedSetter> indexed_setters;
-	Vector<Variant::ValidatedIndexedGetter> indexed_getters;
-	Vector<Variant::ValidatedBuiltInMethod> builtin_methods;
-	Vector<Variant::ValidatedConstructor> constructors;
-	Vector<Variant::ValidatedUtilityFunction> utilities;
-	Vector<GDScriptUtilityFunctions::FunctionPtr> gds_utilities;
-	Vector<MethodBind *> methods;
-	Vector<GDScriptFunction *> lambdas;
+	Hector<int> code;
+	Hector<int> default_arguments;
+	Hector<Variant> constants;
+	Hector<StringName> global_names;
+	Hector<Variant::ValidatedOperatorEvaluator> operator_funcs;
+	Hector<Variant::ValidatedSetter> setters;
+	Hector<Variant::ValidatedGetter> getters;
+	Hector<Variant::ValidatedKeyedSetter> keyed_setters;
+	Hector<Variant::ValidatedKeyedGetter> keyed_getters;
+	Hector<Variant::ValidatedIndexedSetter> indexed_setters;
+	Hector<Variant::ValidatedIndexedGetter> indexed_getters;
+	Hector<Variant::ValidatedBuiltInMethod> builtin_methods;
+	Hector<Variant::ValidatedConstructor> constructors;
+	Hector<Variant::ValidatedUtilityFunction> utilities;
+	Hector<GDScriptUtilityFunctions::FunctionPtr> gds_utilities;
+	Hector<MethodBind *> methods;
+	Hector<GDScriptFunction *> lambdas;
 
 	int _code_size = 0;
 	int _default_arg_count = 0;
@@ -523,13 +523,13 @@ private:
 	CharString func_cname;
 	const char *_func_cname = nullptr;
 
-	Vector<String> operator_names;
-	Vector<String> setter_names;
-	Vector<String> getter_names;
-	Vector<String> builtin_methods_names;
-	Vector<String> constructors_names;
-	Vector<String> utilities_names;
-	Vector<String> gds_utilities_names;
+	Hector<String> operator_names;
+	Hector<String> setter_names;
+	Hector<String> getter_names;
+	Hector<String> builtin_methods_names;
+	Hector<String> constructors_names;
+	Hector<String> utilities_names;
+	Hector<String> gds_utilities_names;
 
 	struct Profile {
 		StringName signature;
@@ -565,7 +565,7 @@ public:
 		StringName function_name;
 		String script_path;
 #endif
-		Vector<uint8_t> stack;
+		Hector<uint8_t> stack;
 		int stack_size = 0;
 		uint32_t alloca_size = 0;
 		int ip = 0;
@@ -591,7 +591,7 @@ public:
 
 #ifdef DEBUG_ENABLED
 	void _profile_native_call(uint64_t p_t_taken, const String &p_function_name, const String &p_instance_class_name = String());
-	void disassemble(const Vector<String> &p_code_lines) const;
+	void disassemble(const Hector<String> &p_code_lines) const;
 #endif
 
 	GDScriptFunction();

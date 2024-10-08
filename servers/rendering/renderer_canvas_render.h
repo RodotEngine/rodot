@@ -70,7 +70,7 @@ public:
 		RS::CanvasLightMode mode;
 		RS::CanvasLightBlendMode blend_mode;
 		RID texture;
-		Vector2 texture_offset;
+		Hector2 texture_offset;
 		RID canvas;
 		bool use_shadow;
 		int shadow_buffer_size;
@@ -85,7 +85,7 @@ public:
 		//Projection shadow_matrix_cache;
 
 		Transform2D light_shader_xform;
-		//Vector2 light_shader_pos;
+		//Hector2 light_shader_pos;
 
 		Light *shadows_next_ptr = nullptr;
 		Light *filter_next_ptr = nullptr;
@@ -133,7 +133,7 @@ public:
 	struct Item;
 
 	typedef uint64_t PolygonID;
-	virtual PolygonID request_polygon(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>()) = 0;
+	virtual PolygonID request_polygon(const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), const Hector<int> &p_bones = Hector<int>(), const Hector<float> &p_weights = Hector<float>()) = 0;
 	virtual void free_polygon(PolygonID p_polygon) = 0;
 
 	//also easier to wrap to avoid mistakes
@@ -141,11 +141,11 @@ public:
 		PolygonID polygon_id;
 		Rect2 rect_cache;
 
-		_FORCE_INLINE_ void create(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>()) {
+		_FORCE_INLINE_ void create(const Hector<int> &p_indices, const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), const Hector<int> &p_bones = Hector<int>(), const Hector<float> &p_weights = Hector<float>()) {
 			ERR_FAIL_COND(polygon_id != 0);
 			{
 				uint32_t pc = p_points.size();
-				const Vector2 *v2 = p_points.ptr();
+				const Hector2 *v2 = p_points.ptr();
 				rect_cache.position = *v2;
 				for (uint32_t i = 1; i < pc; i++) {
 					rect_cache.expand_to(v2[i]);
@@ -244,8 +244,8 @@ public:
 
 		struct CommandPrimitive : public Command {
 			uint32_t point_count;
-			Vector2 points[4];
-			Vector2 uvs[4];
+			Hector2 points[4];
+			Hector2 uvs[4];
 			Color colors[4];
 
 			RID texture;
@@ -372,7 +372,7 @@ public:
 
 		Command *commands = nullptr;
 		Command *last_command = nullptr;
-		Vector<CommandBlock> blocks;
+		Hector<CommandBlock> blocks;
 		uint32_t current_block;
 #ifdef DEBUG_ENABLED
 		mutable double debug_redraw_time = 0;
@@ -537,7 +537,7 @@ public:
 	virtual void render_sdf(RID p_render_target, LightOccluderInstance *p_occluders) = 0;
 
 	virtual RID occluder_polygon_create() = 0;
-	virtual void occluder_polygon_set_shape(RID p_occluder, const Vector<Vector2> &p_points, bool p_closed) = 0;
+	virtual void occluder_polygon_set_shape(RID p_occluder, const Hector<Hector2> &p_points, bool p_closed) = 0;
 	virtual void occluder_polygon_set_cull_mode(RID p_occluder, RS::CanvasOccluderPolygonCullMode p_mode) = 0;
 	virtual void set_shadow_texture_size(int p_size) = 0;
 

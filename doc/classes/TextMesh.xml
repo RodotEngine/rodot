@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		Generate an [PrimitiveMesh] from the text.
-		TextMesh can be generated only when using dynamic fonts with vector glyph contours. Bitmap fonts (including bitmap data in the TrueType/OpenType containers, like color emoji fonts) are not supported.
+		TextMesh can be generated only when using dynamic fonts with Hector glyph contours. Bitmap fonts (including bitmap data in the TrueType/OpenType containers, like color emoji fonts) are not supported.
 		The UV layout is arranged in 4 horizontal strips, top to bottom: 40% of the height for the front face, 40% for the back face, 10% for the outer edges and 10% for the inner edges.
 	</description>
 	<tutorials>
@@ -39,7 +39,7 @@
 		<member name="line_spacing" type="float" setter="set_line_spacing" getter="get_line_spacing" default="0.0">
 			Vertical space between lines in multiline [TextMesh].
 		</member>
-		<member name="offset" type="Vector2" setter="set_offset" getter="get_offset" default="Vector2(0, 0)">
+		<member name="offset" type="Hector2" setter="set_offset" getter="get_offset" default="Hector2(0, 0)">
 			The text drawing offset (in pixels).
 		</member>
 		<member name="pixel_size" type="float" setter="set_pixel_size" getter="get_pixel_size" default="0.01">

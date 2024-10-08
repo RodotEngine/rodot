@@ -171,8 +171,8 @@ protected:
 	void _draw_circle_bind_compat_84472(const Point2 &p_pos, real_t p_radius, const Color &p_color);
 	void _draw_rect_bind_compat_84523(const Rect2 &p_rect, const Color &p_color, bool p_filled, real_t p_width);
 	void _draw_dashed_line_bind_compat_84523(const Point2 &p_from, const Point2 &p_to, const Color &p_color, real_t p_width, real_t p_dash, bool p_aligned);
-	void _draw_multiline_bind_compat_84523(const Vector<Point2> &p_points, const Color &p_color, real_t p_width);
-	void _draw_multiline_colors_bind_compat_84523(const Vector<Point2> &p_points, const Vector<Color> &p_colors, real_t p_width);
+	void _draw_multiline_bind_compat_84523(const Hector<Point2> &p_points, const Color &p_color, real_t p_width);
+	void _draw_multiline_colors_bind_compat_84523(const Hector<Point2> &p_points, const Hector<Color> &p_colors, real_t p_width);
 	static void _bind_compatibility_methods();
 #endif
 
@@ -277,11 +277,11 @@ public:
 
 	void draw_dashed_line(const Point2 &p_from, const Point2 &p_to, const Color &p_color, real_t p_width = -1.0, real_t p_dash = 2.0, bool p_aligned = true, bool p_antialiased = false);
 	void draw_line(const Point2 &p_from, const Point2 &p_to, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
-	void draw_polyline(const Vector<Point2> &p_points, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
-	void draw_polyline_colors(const Vector<Point2> &p_points, const Vector<Color> &p_colors, real_t p_width = -1.0, bool p_antialiased = false);
-	void draw_arc(const Vector2 &p_center, real_t p_radius, real_t p_start_angle, real_t p_end_angle, int p_point_count, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
-	void draw_multiline(const Vector<Point2> &p_points, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
-	void draw_multiline_colors(const Vector<Point2> &p_points, const Vector<Color> &p_colors, real_t p_width = -1.0, bool p_antialiased = false);
+	void draw_polyline(const Hector<Point2> &p_points, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
+	void draw_polyline_colors(const Hector<Point2> &p_points, const Hector<Color> &p_colors, real_t p_width = -1.0, bool p_antialiased = false);
+	void draw_arc(const Hector2 &p_center, real_t p_radius, real_t p_start_angle, real_t p_end_angle, int p_point_count, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
+	void draw_multiline(const Hector<Point2> &p_points, const Color &p_color, real_t p_width = -1.0, bool p_antialiased = false);
+	void draw_multiline_colors(const Hector<Point2> &p_points, const Hector<Color> &p_colors, real_t p_width = -1.0, bool p_antialiased = false);
 	void draw_rect(const Rect2 &p_rect, const Color &p_color, bool p_filled = true, real_t p_width = -1.0, bool p_antialiased = false);
 	void draw_circle(const Point2 &p_pos, real_t p_radius, const Color &p_color, bool p_filled = true, real_t p_width = -1.0, bool p_antialiased = false);
 	void draw_texture(const Ref<Texture2D> &p_texture, const Point2 &p_pos, const Color &p_modulate = Color(1, 1, 1, 1));
@@ -290,9 +290,9 @@ public:
 	void draw_msdf_texture_rect_region(const Ref<Texture2D> &p_texture, const Rect2 &p_rect, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), double p_outline = 0.0, double p_pixel_range = 4.0, double p_scale = 1.0);
 	void draw_lcd_texture_rect_region(const Ref<Texture2D> &p_texture, const Rect2 &p_rect, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1));
 	void draw_style_box(const Ref<StyleBox> &p_style_box, const Rect2 &p_rect);
-	void draw_primitive(const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs, Ref<Texture2D> p_texture = Ref<Texture2D>());
-	void draw_polygon(const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), Ref<Texture2D> p_texture = Ref<Texture2D>());
-	void draw_colored_polygon(const Vector<Point2> &p_points, const Color &p_color, const Vector<Point2> &p_uvs = Vector<Point2>(), Ref<Texture2D> p_texture = Ref<Texture2D>());
+	void draw_primitive(const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs, Ref<Texture2D> p_texture = Ref<Texture2D>());
+	void draw_polygon(const Hector<Point2> &p_points, const Hector<Color> &p_colors, const Hector<Point2> &p_uvs = Hector<Point2>(), Ref<Texture2D> p_texture = Ref<Texture2D>());
+	void draw_colored_polygon(const Hector<Point2> &p_points, const Color &p_color, const Hector<Point2> &p_uvs = Hector<Point2>(), Ref<Texture2D> p_texture = Ref<Texture2D>());
 
 	void draw_mesh(const Ref<Mesh> &p_mesh, const Ref<Texture2D> &p_texture, const Transform2D &p_transform = Transform2D(), const Color &p_modulate = Color(1, 1, 1));
 	void draw_multimesh(const Ref<MultiMesh> &p_multimesh, const Ref<Texture2D> &p_texture);
@@ -352,10 +352,10 @@ public:
 	bool get_use_parent_material() const;
 
 	Ref<InputEvent> make_input_local(const Ref<InputEvent> &p_event) const;
-	Vector2 make_canvas_position_local(const Vector2 &screen_point) const;
+	Hector2 make_canvas_position_local(const Hector2 &screen_point) const;
 
-	Vector2 get_global_mouse_position() const;
-	Vector2 get_local_mouse_position() const;
+	Hector2 get_global_mouse_position() const;
+	Hector2 get_local_mouse_position() const;
 
 	void set_notify_local_transform(bool p_enable);
 	bool is_local_transform_notification_enabled() const;

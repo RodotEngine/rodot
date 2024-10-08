@@ -56,7 +56,7 @@ void TileMap::_emit_changed() {
 	emit_signal(CoreStringName(changed));
 }
 
-void TileMap::_set_tile_map_data_using_compatibility_format(int p_layer, TileMapDataFormat p_format, const Vector<int> &p_data) {
+void TileMap::_set_tile_map_data_using_compatibility_format(int p_layer, TileMapDataFormat p_format, const Hector<int> &p_data) {
 	ERR_FAIL_INDEX(p_layer, (int)layers.size());
 	ERR_FAIL_COND(p_format >= TileMapDataFormat::TILE_MAP_DATA_FORMAT_MAX);
 #ifndef DISABLE_DEPRECATED
@@ -99,7 +99,7 @@ void TileMap::_set_tile_map_data_using_compatibility_format(int p_layer, TileMap
 			uint16_t atlas_coords_x = decode_uint16(&local[6]);
 			uint16_t atlas_coords_y = decode_uint16(&local[8]);
 			uint16_t alternative_tile = decode_uint16(&local[10]);
-			layers[p_layer]->set_cell(Vector2i(x, y), source_id, Vector2i(atlas_coords_x, atlas_coords_y), alternative_tile);
+			layers[p_layer]->set_cell(Hector2i(x, y), source_id, Hector2i(atlas_coords_x, atlas_coords_y), alternative_tile);
 		} else {
 #ifndef DISABLE_DEPRECATED
 			// Previous decated format.
@@ -119,34 +119,34 @@ void TileMap::_set_tile_map_data_using_compatibility_format(int p_layer, TileMap
 			}
 
 			if (tile_set.is_valid()) {
-				Array a = tile_set->compatibility_tilemap_map(v, Vector2i(coord_x, coord_y), flip_h, flip_v, transpose);
+				Array a = tile_set->compatibility_tilemap_map(v, Hector2i(coord_x, coord_y), flip_h, flip_v, transpose);
 				if (a.size() == 3) {
-					layers[p_layer]->set_cell(Vector2i(x, y), a[0], a[1], a[2]);
+					layers[p_layer]->set_cell(Hector2i(x, y), a[0], a[1], a[2]);
 				} else {
-					ERR_PRINT(vformat("No valid tile in Tileset for: tile:%s coords:%s flip_h:%s flip_v:%s transpose:%s", v, Vector2i(coord_x, coord_y), flip_h, flip_v, transpose));
+					ERR_PRINT(vformat("No valid tile in Tileset for: tile:%s coords:%s flip_h:%s flip_v:%s transpose:%s", v, Hector2i(coord_x, coord_y), flip_h, flip_v, transpose));
 				}
 			} else {
 				int compatibility_alternative_tile = ((int)flip_h) + ((int)flip_v << 1) + ((int)transpose << 2);
-				layers[p_layer]->set_cell(Vector2i(x, y), v, Vector2i(coord_x, coord_y), compatibility_alternative_tile);
+				layers[p_layer]->set_cell(Hector2i(x, y), v, Hector2i(coord_x, coord_y), compatibility_alternative_tile);
 			}
 #endif // DISABLE_DEPRECATED
 		}
 	}
 }
 
-Vector<int> TileMap::_get_tile_map_data_using_compatibility_format(int p_layer) const {
-	ERR_FAIL_INDEX_V(p_layer, (int)layers.size(), Vector<int>());
+Hector<int> TileMap::_get_tile_map_data_using_compatibility_format(int p_layer) const {
+	ERR_FAIL_INDEX_V(p_layer, (int)layers.size(), Hector<int>());
 
 	// Export tile data to raw format.
-	const HashMap<Vector2i, CellData> tile_map_layer_data = layers[p_layer]->get_tile_map_layer_data();
-	Vector<int> tile_data;
+	const HashMap<Hector2i, CellData> tile_map_layer_data = layers[p_layer]->get_tile_map_layer_data();
+	Hector<int> tile_data;
 	tile_data.resize(tile_map_layer_data.size() * 3);
 	int *w = tile_data.ptrw();
 
 	// Save in highest format.
 
 	int idx = 0;
-	for (const KeyValue<Vector2i, CellData> &E : tile_map_layer_data) {
+	for (const KeyValue<Hector2i, CellData> &E : tile_map_layer_data) {
 		uint8_t *ptr = (uint8_t *)&w[idx];
 		encode_uint16((int16_t)(E.key.x), &ptr[0]);
 		encode_uint16((int16_t)(E.key.y), &ptr[2]);
@@ -442,15 +442,15 @@ void TileMap::set_y_sort_enabled(bool p_enable) {
 	update_configuration_warnings();
 }
 
-void TileMap::set_cell(int p_layer, const Vector2i &p_coords, int p_source_id, const Vector2i p_atlas_coords, int p_alternative_tile) {
+void TileMap::set_cell(int p_layer, const Hector2i &p_coords, int p_source_id, const Hector2i p_atlas_coords, int p_alternative_tile) {
 	TILEMAP_CALL_FOR_LAYER(p_layer, set_cell, p_coords, p_source_id, p_atlas_coords, p_alternative_tile);
 }
 
-void TileMap::erase_cell(int p_layer, const Vector2i &p_coords) {
+void TileMap::erase_cell(int p_layer, const Hector2i &p_coords) {
 	TILEMAP_CALL_FOR_LAYER(p_layer, set_cell, p_coords, TileSet::INVALID_SOURCE, TileSetSource::INVALID_ATLAS_COORDS, TileSetSource::INVALID_TILE_ALTERNATIVE);
 }
 
-int TileMap::get_cell_source_id(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+int TileMap::get_cell_source_id(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	if (p_use_proxies && tile_set.is_valid()) {
 		if (p_layer < 0) {
 			p_layer = layers.size() + p_layer;
@@ -458,7 +458,7 @@ int TileMap::get_cell_source_id(int p_layer, const Vector2i &p_coords, bool p_us
 		ERR_FAIL_INDEX_V(p_layer, (int)layers.size(), TileSet::INVALID_SOURCE);
 
 		int source_id = layers[p_layer]->get_cell_source_id(p_coords);
-		Vector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
+		Hector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
 		int alternative_id = layers[p_layer]->get_cell_alternative_tile(p_coords);
 
 		Array arr = tile_set->map_tile_proxy(source_id, atlas_coords, alternative_id);
@@ -469,7 +469,7 @@ int TileMap::get_cell_source_id(int p_layer, const Vector2i &p_coords, bool p_us
 	}
 }
 
-Vector2i TileMap::get_cell_atlas_coords(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+Hector2i TileMap::get_cell_atlas_coords(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	if (p_use_proxies && tile_set.is_valid()) {
 		if (p_layer < 0) {
 			p_layer = layers.size() + p_layer;
@@ -477,7 +477,7 @@ Vector2i TileMap::get_cell_atlas_coords(int p_layer, const Vector2i &p_coords, b
 		ERR_FAIL_INDEX_V(p_layer, (int)layers.size(), TileSetAtlasSource::INVALID_ATLAS_COORDS);
 
 		int source_id = layers[p_layer]->get_cell_source_id(p_coords);
-		Vector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
+		Hector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
 		int alternative_id = layers[p_layer]->get_cell_alternative_tile(p_coords);
 
 		Array arr = tile_set->map_tile_proxy(source_id, atlas_coords, alternative_id);
@@ -488,7 +488,7 @@ Vector2i TileMap::get_cell_atlas_coords(int p_layer, const Vector2i &p_coords, b
 	}
 }
 
-int TileMap::get_cell_alternative_tile(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+int TileMap::get_cell_alternative_tile(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	if (p_use_proxies && tile_set.is_valid()) {
 		if (p_layer < 0) {
 			p_layer = layers.size() + p_layer;
@@ -496,7 +496,7 @@ int TileMap::get_cell_alternative_tile(int p_layer, const Vector2i &p_coords, bo
 		ERR_FAIL_INDEX_V(p_layer, (int)layers.size(), TileSetSource::INVALID_TILE_ALTERNATIVE);
 
 		int source_id = layers[p_layer]->get_cell_source_id(p_coords);
-		Vector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
+		Hector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
 		int alternative_id = layers[p_layer]->get_cell_alternative_tile(p_coords);
 
 		Array arr = tile_set->map_tile_proxy(source_id, atlas_coords, alternative_id);
@@ -507,7 +507,7 @@ int TileMap::get_cell_alternative_tile(int p_layer, const Vector2i &p_coords, bo
 	}
 }
 
-TileData *TileMap::get_cell_tile_data(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+TileData *TileMap::get_cell_tile_data(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	if (p_use_proxies && tile_set.is_valid()) {
 		if (p_layer < 0) {
 			p_layer = layers.size() + p_layer;
@@ -515,7 +515,7 @@ TileData *TileMap::get_cell_tile_data(int p_layer, const Vector2i &p_coords, boo
 		ERR_FAIL_INDEX_V(p_layer, (int)layers.size(), nullptr);
 
 		int source_id = layers[p_layer]->get_cell_source_id(p_coords);
-		Vector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
+		Hector2i atlas_coords = layers[p_layer]->get_cell_atlas_coords(p_coords);
 		int alternative_id = layers[p_layer]->get_cell_alternative_tile(p_coords);
 
 		Array arr = tile_set->map_tile_proxy(source_id, atlas_coords, alternative_id);
@@ -532,73 +532,73 @@ TileData *TileMap::get_cell_tile_data(int p_layer, const Vector2i &p_coords, boo
 	}
 }
 
-bool TileMap::is_cell_flipped_h(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+bool TileMap::is_cell_flipped_h(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	return get_cell_alternative_tile(p_layer, p_coords, p_use_proxies) & TileSetAtlasSource::TRANSFORM_FLIP_H;
 }
 
-bool TileMap::is_cell_flipped_v(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+bool TileMap::is_cell_flipped_v(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	return get_cell_alternative_tile(p_layer, p_coords, p_use_proxies) & TileSetAtlasSource::TRANSFORM_FLIP_V;
 }
 
-bool TileMap::is_cell_transposed(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+bool TileMap::is_cell_transposed(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	return get_cell_alternative_tile(p_layer, p_coords, p_use_proxies) & TileSetAtlasSource::TRANSFORM_TRANSPOSE;
 }
 
-Ref<TileMapPattern> TileMap::get_pattern(int p_layer, TypedArray<Vector2i> p_coords_array) {
+Ref<TileMapPattern> TileMap::get_pattern(int p_layer, TypedArray<Hector2i> p_coords_array) {
 	TILEMAP_CALL_FOR_LAYER_V(p_layer, Ref<TileMapPattern>(), get_pattern, p_coords_array);
 }
 
-Vector2i TileMap::map_pattern(const Vector2i &p_position_in_tilemap, const Vector2i &p_coords_in_pattern, Ref<TileMapPattern> p_pattern) {
-	ERR_FAIL_COND_V(!tile_set.is_valid(), Vector2i());
+Hector2i TileMap::map_pattern(const Hector2i &p_position_in_tilemap, const Hector2i &p_coords_in_pattern, Ref<TileMapPattern> p_pattern) {
+	ERR_FAIL_COND_V(!tile_set.is_valid(), Hector2i());
 	return tile_set->map_pattern(p_position_in_tilemap, p_coords_in_pattern, p_pattern);
 }
 
-void TileMap::set_pattern(int p_layer, const Vector2i &p_position, const Ref<TileMapPattern> p_pattern) {
+void TileMap::set_pattern(int p_layer, const Hector2i &p_position, const Ref<TileMapPattern> p_pattern) {
 	TILEMAP_CALL_FOR_LAYER(p_layer, set_pattern, p_position, p_pattern);
 }
 
-HashMap<Vector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_constraints(int p_layer, const Vector<Vector2i> &p_to_replace, int p_terrain_set, const RBSet<TerrainConstraint> &p_constraints) {
-	HashMap<Vector2i, TileSet::TerrainsPattern> err_value;
+HashMap<Hector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_constraints(int p_layer, const Hector<Hector2i> &p_to_replace, int p_terrain_set, const RBSet<TerrainConstraint> &p_constraints) {
+	HashMap<Hector2i, TileSet::TerrainsPattern> err_value;
 	TILEMAP_CALL_FOR_LAYER_V(p_layer, err_value, terrain_fill_constraints, p_to_replace, p_terrain_set, p_constraints);
 }
 
-HashMap<Vector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_connect(int p_layer, const Vector<Vector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
-	HashMap<Vector2i, TileSet::TerrainsPattern> err_value;
+HashMap<Hector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_connect(int p_layer, const Hector<Hector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
+	HashMap<Hector2i, TileSet::TerrainsPattern> err_value;
 	TILEMAP_CALL_FOR_LAYER_V(p_layer, err_value, terrain_fill_connect, p_coords_array, p_terrain_set, p_terrain, p_ignore_empty_terrains);
 }
 
-HashMap<Vector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_path(int p_layer, const Vector<Vector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
-	HashMap<Vector2i, TileSet::TerrainsPattern> err_value;
+HashMap<Hector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_path(int p_layer, const Hector<Hector2i> &p_coords_array, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
+	HashMap<Hector2i, TileSet::TerrainsPattern> err_value;
 	TILEMAP_CALL_FOR_LAYER_V(p_layer, err_value, terrain_fill_path, p_coords_array, p_terrain_set, p_terrain, p_ignore_empty_terrains);
 }
 
-HashMap<Vector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_pattern(int p_layer, const Vector<Vector2i> &p_coords_array, int p_terrain_set, TileSet::TerrainsPattern p_terrains_pattern, bool p_ignore_empty_terrains) {
-	HashMap<Vector2i, TileSet::TerrainsPattern> err_value;
+HashMap<Hector2i, TileSet::TerrainsPattern> TileMap::terrain_fill_pattern(int p_layer, const Hector<Hector2i> &p_coords_array, int p_terrain_set, TileSet::TerrainsPattern p_terrains_pattern, bool p_ignore_empty_terrains) {
+	HashMap<Hector2i, TileSet::TerrainsPattern> err_value;
 	TILEMAP_CALL_FOR_LAYER_V(p_layer, err_value, terrain_fill_pattern, p_coords_array, p_terrain_set, p_terrains_pattern, p_ignore_empty_terrains);
 }
 
-void TileMap::set_cells_terrain_connect(int p_layer, TypedArray<Vector2i> p_cells, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
+void TileMap::set_cells_terrain_connect(int p_layer, TypedArray<Hector2i> p_cells, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
 	TILEMAP_CALL_FOR_LAYER(p_layer, set_cells_terrain_connect, p_cells, p_terrain_set, p_terrain, p_ignore_empty_terrains);
 }
 
-void TileMap::set_cells_terrain_path(int p_layer, TypedArray<Vector2i> p_path, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
+void TileMap::set_cells_terrain_path(int p_layer, TypedArray<Hector2i> p_path, int p_terrain_set, int p_terrain, bool p_ignore_empty_terrains) {
 	TILEMAP_CALL_FOR_LAYER(p_layer, set_cells_terrain_path, p_path, p_terrain_set, p_terrain, p_ignore_empty_terrains);
 }
 
-TileMapCell TileMap::get_cell(int p_layer, const Vector2i &p_coords, bool p_use_proxies) const {
+TileMapCell TileMap::get_cell(int p_layer, const Hector2i &p_coords, bool p_use_proxies) const {
 	if (p_use_proxies) {
 		WARN_DEPRECATED_MSG("use_proxies is deprecated.");
 	}
 	TILEMAP_CALL_FOR_LAYER_V(p_layer, TileMapCell(), get_cell, p_coords);
 }
 
-Vector2i TileMap::get_coords_for_body_rid(RID p_physics_body) {
+Hector2i TileMap::get_coords_for_body_rid(RID p_physics_body) {
 	for (const TileMapLayer *layer : layers) {
 		if (layer->has_body_rid(p_physics_body)) {
 			return layer->get_coords_for_body_rid(p_physics_body);
 		}
 	}
-	ERR_FAIL_V_MSG(Vector2i(), vformat("No tiles for the given body RID %d.", p_physics_body.get_id()));
+	ERR_FAIL_V_MSG(Hector2i(), vformat("No tiles for the given body RID %d.", p_physics_body.get_id()));
 }
 
 int TileMap::get_layer_for_body_rid(RID p_physics_body) {
@@ -673,7 +673,7 @@ bool TileMap::_set(const StringName &p_name, const Variant &p_value) {
 	int index;
 	const String sname = p_name;
 
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (sname == "format") {
 		if (p_value.get_type() == Variant::INT) {
 			format = (TileMapDataFormat)(p_value.operator int64_t()); // Set format used for loading.
@@ -716,7 +716,7 @@ bool TileMap::_set(const StringName &p_name, const Variant &p_value) {
 bool TileMap::_get(const StringName &p_name, Variant &r_ret) const {
 	const String sname = p_name;
 
-	Vector<String> components = String(p_name).split("/", true, 2);
+	Hector<String> components = String(p_name).split("/", true, 2);
 	if (p_name == "format") {
 		r_ret = TileMapDataFormat::TILE_MAP_DATA_FORMAT_MAX - 1; // When saving, always save highest format.
 		return true;
@@ -737,13 +737,13 @@ void TileMap::_get_property_list(List<PropertyInfo> *p_list) const {
 	property_helper.get_property_list(p_list);
 }
 
-Vector2 TileMap::map_to_local(const Vector2i &p_pos) const {
-	ERR_FAIL_COND_V(!tile_set.is_valid(), Vector2());
+Hector2 TileMap::map_to_local(const Hector2i &p_pos) const {
+	ERR_FAIL_COND_V(!tile_set.is_valid(), Hector2());
 	return tile_set->map_to_local(p_pos);
 }
 
-Vector2i TileMap::local_to_map(const Vector2 &p_pos) const {
-	ERR_FAIL_COND_V(!tile_set.is_valid(), Vector2i());
+Hector2i TileMap::local_to_map(const Hector2 &p_pos) const {
+	ERR_FAIL_COND_V(!tile_set.is_valid(), Hector2i());
 	return tile_set->local_to_map(p_pos);
 }
 
@@ -752,17 +752,17 @@ bool TileMap::is_existing_neighbor(TileSet::CellNeighbor p_cell_neighbor) const 
 	return tile_set->is_existing_neighbor(p_cell_neighbor);
 }
 
-Vector2i TileMap::get_neighbor_cell(const Vector2i &p_coords, TileSet::CellNeighbor p_cell_neighbor) const {
-	ERR_FAIL_COND_V(!tile_set.is_valid(), Vector2i());
+Hector2i TileMap::get_neighbor_cell(const Hector2i &p_coords, TileSet::CellNeighbor p_cell_neighbor) const {
+	ERR_FAIL_COND_V(!tile_set.is_valid(), Hector2i());
 	return tile_set->get_neighbor_cell(p_coords, p_cell_neighbor);
 }
 
-TypedArray<Vector2i> TileMap::get_used_cells(int p_layer) const {
-	TILEMAP_CALL_FOR_LAYER_V(p_layer, TypedArray<Vector2i>(), get_used_cells);
+TypedArray<Hector2i> TileMap::get_used_cells(int p_layer) const {
+	TILEMAP_CALL_FOR_LAYER_V(p_layer, TypedArray<Hector2i>(), get_used_cells);
 }
 
-TypedArray<Vector2i> TileMap::get_used_cells_by_id(int p_layer, int p_source_id, const Vector2i p_atlas_coords, int p_alternative_tile) const {
-	TILEMAP_CALL_FOR_LAYER_V(p_layer, TypedArray<Vector2i>(), get_used_cells_by_id, p_source_id, p_atlas_coords, p_alternative_tile);
+TypedArray<Hector2i> TileMap::get_used_cells_by_id(int p_layer, int p_source_id, const Hector2i p_atlas_coords, int p_alternative_tile) const {
+	TILEMAP_CALL_FOR_LAYER_V(p_layer, TypedArray<Hector2i>(), get_used_cells_by_id, p_source_id, p_atlas_coords, p_alternative_tile);
 }
 
 Rect2i TileMap::get_used_rect() const {
@@ -818,9 +818,9 @@ void TileMap::set_texture_repeat(CanvasItem::TextureRepeat p_texture_repeat) {
 	}
 }
 
-TypedArray<Vector2i> TileMap::get_surrounding_cells(const Vector2i &p_coords) {
+TypedArray<Hector2i> TileMap::get_surrounding_cells(const Hector2i &p_coords) {
 	if (!tile_set.is_valid()) {
-		return TypedArray<Vector2i>();
+		return TypedArray<Hector2i>();
 	}
 
 	return tile_set->get_surrounding_cells(p_coords);
@@ -1013,7 +1013,7 @@ TileMap::TileMap() {
 		base_property_helper.register_property(PropertyInfo(Variant::INT, "y_sort_origin", PROPERTY_HINT_NONE, "suffix:px"), defaults->get_y_sort_origin(), &TileMap::set_layer_y_sort_origin, &TileMap::get_layer_y_sort_origin);
 		base_property_helper.register_property(PropertyInfo(Variant::INT, "z_index"), defaults->get_z_index(), &TileMap::set_layer_z_index, &TileMap::get_layer_z_index);
 		base_property_helper.register_property(PropertyInfo(Variant::BOOL, "navigation_enabled"), defaults->is_navigation_enabled(), &TileMap::set_layer_navigation_enabled, &TileMap::is_layer_navigation_enabled);
-		base_property_helper.register_property(PropertyInfo(Variant::PACKED_INT32_ARRAY, "tile_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), Vector<int>(), &TileMap::_set_layer_tile_data, &TileMap::_get_tile_map_data_using_compatibility_format);
+		base_property_helper.register_property(PropertyInfo(Variant::PACKED_INT32_ARRAY, "tile_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), Hector<int>(), &TileMap::_set_layer_tile_data, &TileMap::_get_tile_map_data_using_compatibility_format);
 		PropertyListHelper::register_base_helper(&base_property_helper);
 
 		memdelete(defaults);

@@ -141,7 +141,7 @@ class BoneMapper : public VBoxContainer {
 
 	EditorPropertyResource *profile_selector = nullptr;
 
-	Vector<BoneMapperItem *> bone_mapper_items;
+	Hector<BoneMapperItem *> bone_mapper_items;
 
 	Button *clear_mapping_button = nullptr;
 
@@ -154,7 +154,7 @@ class BoneMapper : public VBoxContainer {
 	EditorPropertyEnum *profile_group_selector = nullptr;
 	ColorRect *profile_bg = nullptr;
 	TextureRect *profile_texture = nullptr;
-	Vector<BoneMapperButton *> bone_mapper_buttons;
+	Hector<BoneMapperButton *> bone_mapper_buttons;
 
 	void create_editor();
 	void recreate_editor();
@@ -178,7 +178,7 @@ class BoneMapper : public VBoxContainer {
 		BONE_SEGREGATION_RIGHT
 	};
 	bool is_match_with_bone_name(const String &p_bone_name, const String &p_word);
-	int search_bone_by_name(Skeleton3D *p_skeleton, const Vector<String> &p_picklist, BoneSegregation p_segregation = BONE_SEGREGATION_NONE, int p_parent = -1, int p_child = -1, int p_children_count = -1);
+	int search_bone_by_name(Skeleton3D *p_skeleton, const Hector<String> &p_picklist, BoneSegregation p_segregation = BONE_SEGREGATION_NONE, int p_parent = -1, int p_child = -1, int p_children_count = -1);
 	BoneSegregation guess_bone_segregation(const String &p_bone_name);
 	void auto_mapping_process(Ref<BoneMap> &p_bone_map);
 	void _run_auto_mapping();

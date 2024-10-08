@@ -18,7 +18,7 @@
 			</description>
 		</method>
 		<method name="get_vertices" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<description>
 				Returns the occluder shape's vertex positions.
 			</description>

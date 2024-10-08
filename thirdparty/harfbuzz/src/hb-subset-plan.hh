@@ -95,7 +95,7 @@ struct contour_point_t
   bool is_end_point;
 };
 
-struct contour_point_vector_t : hb_vector_t<contour_point_t>
+struct contour_point_Hector_t : hb_Hector_t<contour_point_t>
 {
   void extend (const hb_array_t<contour_point_t> &a)
   {
@@ -107,9 +107,9 @@ struct contour_point_vector_t : hb_vector_t<contour_point_t>
     hb_memcpy (arrayZ, a.arrayZ, count * sizeof (arrayZ[0]));
   }
 
-  bool add_deltas (const hb_vector_t<float> deltas_x,
-                   const hb_vector_t<float> deltas_y,
-                   const hb_vector_t<bool> indices)
+  bool add_deltas (const hb_Hector_t<float> deltas_x,
+                   const hb_Hector_t<float> deltas_y,
+                   const hb_Hector_t<bool> indices)
   {
     if (indices.length != deltas_x.length ||
         indices.length != deltas_y.length)

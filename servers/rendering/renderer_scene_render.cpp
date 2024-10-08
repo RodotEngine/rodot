@@ -33,7 +33,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CameraData
 
-void RendererSceneRender::CameraData::set_camera(const Transform3D p_transform, const Projection p_projection, bool p_is_orthogonal, bool p_vaspect, const Vector2 &p_taa_jitter, float p_taa_frame_count, const uint32_t p_visible_layers) {
+void RendererSceneRender::CameraData::set_camera(const Transform3D p_transform, const Projection p_projection, bool p_is_orthogonal, bool p_vaspect, const Hector2 &p_taa_jitter, float p_taa_frame_count, const uint32_t p_visible_layers) {
 	view_count = 1;
 	is_orthogonal = p_is_orthogonal;
 	vaspect = p_vaspect;
@@ -55,7 +55,7 @@ void RendererSceneRender::CameraData::set_multiview_camera(uint32_t p_view_count
 	view_count = p_view_count;
 	is_orthogonal = p_is_orthogonal;
 	vaspect = p_vaspect;
-	Vector<Plane> planes[2];
+	Hector<Plane> planes[2];
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Figure out our center transform
@@ -65,16 +65,16 @@ void RendererSceneRender::CameraData::set_multiview_camera(uint32_t p_view_count
 		planes[v] = p_projections[v].get_projection_planes(p_transforms[v]);
 	}
 
-	// 2. average and normalize plane normals to obtain z vector, cross them to obtain y vector, and from there the x vector for combined camera basis.
-	Vector3 n0 = planes[0][Projection::PLANE_LEFT].normal;
-	Vector3 n1 = planes[1][Projection::PLANE_RIGHT].normal;
-	Vector3 z = (n0 + n1).normalized();
-	Vector3 y = n0.cross(n1).normalized();
-	Vector3 x = y.cross(z).normalized();
+	// 2. average and normalize plane normals to obtain z Hector, cross them to obtain y Hector, and from there the x Hector for combined camera basis.
+	Hector3 n0 = planes[0][Projection::PLANE_LEFT].normal;
+	Hector3 n1 = planes[1][Projection::PLANE_RIGHT].normal;
+	Hector3 z = (n0 + n1).normalized();
+	Hector3 y = n0.cross(n1).normalized();
+	Hector3 x = y.cross(z).normalized();
 	y = z.cross(x).normalized();
 	main_transform.basis.set_columns(x, y, z);
 
-	// 3. create a horizon plane with one of the eyes and the up vector as normal.
+	// 3. create a horizon plane with one of the eyes and the up Hector as normal.
 	Plane horizon(y, p_transforms[0].origin);
 
 	// 4. Intersect horizon, left and right to obtain the combined camera origin.
@@ -85,48 +85,48 @@ void RendererSceneRender::CameraData::set_multiview_camera(uint32_t p_view_count
 	Transform3D main_transform_inv = main_transform.inverse();
 
 	// 5. figure out far plane, this could use some improvement, we may have our far plane too close like this, not sure if this matters
-	Vector3 far_center = (planes[0][Projection::PLANE_FAR].get_center() + planes[1][Projection::PLANE_FAR].get_center()) * 0.5;
+	Hector3 far_center = (planes[0][Projection::PLANE_FAR].get_center() + planes[1][Projection::PLANE_FAR].get_center()) * 0.5;
 	Plane far_plane = Plane(-z, far_center);
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Figure out our top/bottom planes
 
 	// 6. Intersect far and left planes with top planes from both eyes, save the point with highest y as top_left.
-	Vector3 top_left, other;
+	Hector3 top_left, other;
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[0][Projection::PLANE_LEFT], planes[0][Projection::PLANE_TOP], &top_left), "Can't determine left camera far/left/top vector");
+			!far_plane.intersect_3(planes[0][Projection::PLANE_LEFT], planes[0][Projection::PLANE_TOP], &top_left), "Can't determine left camera far/left/top Hector");
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[1][Projection::PLANE_LEFT], planes[1][Projection::PLANE_TOP], &other), "Can't determine right camera far/left/top vector");
+			!far_plane.intersect_3(planes[1][Projection::PLANE_LEFT], planes[1][Projection::PLANE_TOP], &other), "Can't determine right camera far/left/top Hector");
 	if (y.dot(top_left) < y.dot(other)) {
 		top_left = other;
 	}
 
 	// 7. Intersect far and left planes with bottom planes from both eyes, save the point with lowest y as bottom_left.
-	Vector3 bottom_left;
+	Hector3 bottom_left;
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[0][Projection::PLANE_LEFT], planes[0][Projection::PLANE_BOTTOM], &bottom_left), "Can't determine left camera far/left/bottom vector");
+			!far_plane.intersect_3(planes[0][Projection::PLANE_LEFT], planes[0][Projection::PLANE_BOTTOM], &bottom_left), "Can't determine left camera far/left/bottom Hector");
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[1][Projection::PLANE_LEFT], planes[1][Projection::PLANE_BOTTOM], &other), "Can't determine right camera far/left/bottom vector");
+			!far_plane.intersect_3(planes[1][Projection::PLANE_LEFT], planes[1][Projection::PLANE_BOTTOM], &other), "Can't determine right camera far/left/bottom Hector");
 	if (y.dot(other) < y.dot(bottom_left)) {
 		bottom_left = other;
 	}
 
 	// 8. Intersect far and right planes with top planes from both eyes, save the point with highest y as top_right.
-	Vector3 top_right;
+	Hector3 top_right;
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[0][Projection::PLANE_RIGHT], planes[0][Projection::PLANE_TOP], &top_right), "Can't determine left camera far/right/top vector");
+			!far_plane.intersect_3(planes[0][Projection::PLANE_RIGHT], planes[0][Projection::PLANE_TOP], &top_right), "Can't determine left camera far/right/top Hector");
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[1][Projection::PLANE_RIGHT], planes[1][Projection::PLANE_TOP], &other), "Can't determine right camera far/right/top vector");
+			!far_plane.intersect_3(planes[1][Projection::PLANE_RIGHT], planes[1][Projection::PLANE_TOP], &other), "Can't determine right camera far/right/top Hector");
 	if (y.dot(top_right) < y.dot(other)) {
 		top_right = other;
 	}
 
 	//  9. Intersect far and right planes with bottom planes from both eyes, save the point with lowest y as bottom_right.
-	Vector3 bottom_right;
+	Hector3 bottom_right;
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[0][Projection::PLANE_RIGHT], planes[0][Projection::PLANE_BOTTOM], &bottom_right), "Can't determine left camera far/right/bottom vector");
+			!far_plane.intersect_3(planes[0][Projection::PLANE_RIGHT], planes[0][Projection::PLANE_BOTTOM], &bottom_right), "Can't determine left camera far/right/bottom Hector");
 	ERR_FAIL_COND_MSG(
-			!far_plane.intersect_3(planes[1][Projection::PLANE_RIGHT], planes[1][Projection::PLANE_BOTTOM], &other), "Can't determine right camera far/right/bottom vector");
+			!far_plane.intersect_3(planes[1][Projection::PLANE_RIGHT], planes[1][Projection::PLANE_BOTTOM], &other), "Can't determine right camera far/right/bottom Hector");
 	if (y.dot(other) < y.dot(bottom_right)) {
 		bottom_right = other;
 	}
@@ -142,7 +142,7 @@ void RendererSceneRender::CameraData::set_multiview_camera(uint32_t p_view_count
 
 	// 12. Create a near plane using -camera z and the eye further along in that axis.
 	Plane near_plane;
-	Vector3 neg_z = -z;
+	Hector3 neg_z = -z;
 	if (neg_z.dot(p_transforms[1].origin) < neg_z.dot(p_transforms[0].origin)) {
 		near_plane = Plane(neg_z, p_transforms[0].origin);
 	} else {
@@ -150,27 +150,27 @@ void RendererSceneRender::CameraData::set_multiview_camera(uint32_t p_view_count
 	}
 
 	// 13. Intersect near plane with bottm/left planes, to obtain min_vec then top/right to obtain max_vec
-	Vector3 min_vec;
+	Hector3 min_vec;
 	ERR_FAIL_COND_MSG(
-			!near_plane.intersect_3(bottom, planes[0][Projection::PLANE_LEFT], &min_vec), "Can't determine left camera near/left/bottom vector");
+			!near_plane.intersect_3(bottom, planes[0][Projection::PLANE_LEFT], &min_vec), "Can't determine left camera near/left/bottom Hector");
 	ERR_FAIL_COND_MSG(
-			!near_plane.intersect_3(bottom, planes[1][Projection::PLANE_LEFT], &other), "Can't determine right camera near/left/bottom vector");
+			!near_plane.intersect_3(bottom, planes[1][Projection::PLANE_LEFT], &other), "Can't determine right camera near/left/bottom Hector");
 	if (x.dot(other) < x.dot(min_vec)) {
 		min_vec = other;
 	}
 
-	Vector3 max_vec;
+	Hector3 max_vec;
 	ERR_FAIL_COND_MSG(
-			!near_plane.intersect_3(top, planes[0][Projection::PLANE_RIGHT], &max_vec), "Can't determine left camera near/right/top vector");
+			!near_plane.intersect_3(top, planes[0][Projection::PLANE_RIGHT], &max_vec), "Can't determine left camera near/right/top Hector");
 	ERR_FAIL_COND_MSG(
-			!near_plane.intersect_3(top, planes[1][Projection::PLANE_RIGHT], &other), "Can't determine right camera near/right/top vector");
+			!near_plane.intersect_3(top, planes[1][Projection::PLANE_RIGHT], &other), "Can't determine right camera near/right/top Hector");
 	if (x.dot(max_vec) < x.dot(other)) {
 		max_vec = other;
 	}
 
 	// 14. transform these points by the inverse camera to obtain local_min_vec and local_max_vec
-	Vector3 local_min_vec = main_transform_inv.xform(min_vec);
-	Vector3 local_max_vec = main_transform_inv.xform(max_vec);
+	Hector3 local_min_vec = main_transform_inv.xform(min_vec);
+	Hector3 local_max_vec = main_transform_inv.xform(max_vec);
 
 	// 15. get x and y from these to obtain left, top, right bottom for the frustum. Get the distance from near plane to camera origin to obtain near, and the distance from the far plane to the camer origin to obtain far.
 	float z_near = -near_plane.distance_to(main_transform.origin);
@@ -236,7 +236,7 @@ bool RendererSceneRender::is_compositor(RID p_rid) const {
 }
 
 void RendererSceneRender::compositor_set_compositor_effects(RID p_compositor, const TypedArray<RID> &p_effects) {
-	Vector<RID> rids;
+	Hector<RID> rids;
 	for (int i = 0; i < p_effects.size(); i++) {
 		RID rid = p_effects[i];
 		rids.push_back(rid);
@@ -491,7 +491,7 @@ float RendererSceneRender::environment_get_volumetric_fog_ambient_inject(RID p_e
 
 // GLOW
 
-void RendererSceneRender::environment_set_glow(RID p_env, bool p_enable, Vector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, RS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map) {
+void RendererSceneRender::environment_set_glow(RID p_env, bool p_enable, Hector<float> p_levels, float p_intensity, float p_strength, float p_mix, float p_bloom_threshold, RS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, float p_glow_map_strength, RID p_glow_map) {
 	environment_storage.environment_set_glow(p_env, p_enable, p_levels, p_intensity, p_strength, p_mix, p_bloom_threshold, p_blend_mode, p_hdr_bleed_threshold, p_hdr_bleed_scale, p_hdr_luminance_cap, p_glow_map_strength, p_glow_map);
 }
 
@@ -499,7 +499,7 @@ bool RendererSceneRender::environment_get_glow_enabled(RID p_env) const {
 	return environment_storage.environment_get_glow_enabled(p_env);
 }
 
-Vector<float> RendererSceneRender::environment_get_glow_levels(RID p_env) const {
+Hector<float> RendererSceneRender::environment_get_glow_levels(RID p_env) const {
 	return environment_storage.environment_get_glow_levels(p_env);
 }
 

@@ -22,7 +22,7 @@
 			<return type="Image[]" />
 			<param index="0" name="base" type="RID" />
 			<param index="1" name="material_overrides" type="RID[]" />
-			<param index="2" name="image_size" type="Vector2i" />
+			<param index="2" name="image_size" type="Hector2i" />
 			<description>
 				Bakes the material data of the Mesh passed in the [param base] parameter with optional [param material_overrides] to a set of [Image]s of size [param image_size]. Returns an array of [Image]s containing material properties as specified in [enum BakeChannels].
 			</description>
@@ -146,7 +146,7 @@
 			<return type="void" />
 			<param index="0" name="camera" type="RID" />
 			<param index="1" name="size" type="float" />
-			<param index="2" name="offset" type="Vector2" />
+			<param index="2" name="offset" type="Hector2" />
 			<param index="3" name="z_near" type="float" />
 			<param index="4" name="z_far" type="float" />
 			<description>
@@ -211,7 +211,7 @@
 		<method name="canvas_item_add_circle">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="pos" type="Vector2" />
+			<param index="1" name="pos" type="Hector2" />
 			<param index="2" name="radius" type="float" />
 			<param index="3" name="color" type="Color" />
 			<param index="4" name="antialiased" type="bool" default="false" />
@@ -241,8 +241,8 @@
 		<method name="canvas_item_add_line">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="from" type="Vector2" />
-			<param index="2" name="to" type="Vector2" />
+			<param index="1" name="from" type="Hector2" />
+			<param index="2" name="to" type="Hector2" />
 			<param index="3" name="color" type="Color" />
 			<param index="4" name="width" type="float" default="-1.0" />
 			<param index="5" name="antialiased" type="bool" default="false" />
@@ -278,7 +278,7 @@
 		<method name="canvas_item_add_multiline">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="points" type="PackedVector2Array" />
+			<param index="1" name="points" type="PackedHector2Array" />
 			<param index="2" name="colors" type="PackedColorArray" />
 			<param index="3" name="width" type="float" default="-1.0" />
 			<param index="4" name="antialiased" type="bool" default="false" />
@@ -301,8 +301,8 @@
 			<param index="1" name="rect" type="Rect2" />
 			<param index="2" name="source" type="Rect2" />
 			<param index="3" name="texture" type="RID" />
-			<param index="4" name="topleft" type="Vector2" />
-			<param index="5" name="bottomright" type="Vector2" />
+			<param index="4" name="topleft" type="Hector2" />
+			<param index="5" name="bottomright" type="Hector2" />
 			<param index="6" name="x_axis_mode" type="int" enum="RenderingServer.NinePatchAxisMode" default="0" />
 			<param index="7" name="y_axis_mode" type="int" enum="RenderingServer.NinePatchAxisMode" default="0" />
 			<param index="8" name="draw_center" type="bool" default="true" />
@@ -323,9 +323,9 @@
 		<method name="canvas_item_add_polygon">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="points" type="PackedVector2Array" />
+			<param index="1" name="points" type="PackedHector2Array" />
 			<param index="2" name="colors" type="PackedColorArray" />
-			<param index="3" name="uvs" type="PackedVector2Array" default="PackedVector2Array()" />
+			<param index="3" name="uvs" type="PackedHector2Array" default="PackedHector2Array()" />
 			<param index="4" name="texture" type="RID" default="RID()" />
 			<description>
 				Draws a 2D polygon on the [CanvasItem] pointed to by the [param item] [RID]. If you need more flexibility (such as being able to use bones), use [method canvas_item_add_triangle_array] instead. See also [method CanvasItem.draw_polygon].
@@ -335,7 +335,7 @@
 		<method name="canvas_item_add_polyline">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="points" type="PackedVector2Array" />
+			<param index="1" name="points" type="PackedHector2Array" />
 			<param index="2" name="colors" type="PackedColorArray" />
 			<param index="3" name="width" type="float" default="-1.0" />
 			<param index="4" name="antialiased" type="bool" default="false" />
@@ -346,9 +346,9 @@
 		<method name="canvas_item_add_primitive">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="points" type="PackedVector2Array" />
+			<param index="1" name="points" type="PackedHector2Array" />
 			<param index="2" name="colors" type="PackedColorArray" />
-			<param index="3" name="uvs" type="PackedVector2Array" />
+			<param index="3" name="uvs" type="PackedHector2Array" />
 			<param index="4" name="texture" type="RID" />
 			<description>
 				Draws a 2D primitive on the [CanvasItem] pointed to by the [param item] [RID]. See also [method CanvasItem.draw_primitive].
@@ -401,9 +401,9 @@
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
 			<param index="1" name="indices" type="PackedInt32Array" />
-			<param index="2" name="points" type="PackedVector2Array" />
+			<param index="2" name="points" type="PackedHector2Array" />
 			<param index="3" name="colors" type="PackedColorArray" />
-			<param index="4" name="uvs" type="PackedVector2Array" default="PackedVector2Array()" />
+			<param index="4" name="uvs" type="PackedHector2Array" default="PackedHector2Array()" />
 			<param index="5" name="bones" type="PackedInt32Array" default="PackedInt32Array()" />
 			<param index="6" name="weights" type="PackedFloat32Array" default="PackedFloat32Array()" />
 			<param index="7" name="texture" type="RID" default="RID()" />
@@ -877,7 +877,7 @@
 		<method name="canvas_light_set_texture_offset">
 			<return type="void" />
 			<param index="0" name="light" type="RID" />
-			<param index="1" name="offset" type="Vector2" />
+			<param index="1" name="offset" type="Hector2" />
 			<description>
 				Sets the offset of a [PointLight2D]'s texture. Equivalent to [member PointLight2D.offset].
 			</description>
@@ -935,7 +935,7 @@
 		<method name="canvas_occluder_polygon_set_shape">
 			<return type="void" />
 			<param index="0" name="occluder_polygon" type="RID" />
-			<param index="1" name="shape" type="PackedVector2Array" />
+			<param index="1" name="shape" type="PackedHector2Array" />
 			<param index="2" name="closed" type="bool" />
 			<description>
 				Sets the shape of the occluder polygon.
@@ -951,7 +951,7 @@
 			<return type="void" />
 			<param index="0" name="canvas" type="RID" />
 			<param index="1" name="item" type="RID" />
-			<param index="2" name="mirroring" type="Vector2" />
+			<param index="2" name="mirroring" type="Hector2" />
 			<description>
 				A copy of the canvas item will be drawn with a local offset of the [param mirroring].
 				[b]Note:[/b] This is equivalent to calling [method canvas_set_item_repeat] like [code]canvas_set_item_repeat(item, mirroring, 1)[/code], with an additional check ensuring [param canvas] is a parent of [param item].
@@ -960,7 +960,7 @@
 		<method name="canvas_set_item_repeat">
 			<return type="void" />
 			<param index="0" name="item" type="RID" />
-			<param index="1" name="repeat_size" type="Vector2" />
+			<param index="1" name="repeat_size" type="Hector2" />
 			<param index="2" name="repeat_times" type="int" />
 			<description>
 				A copy of the canvas item will be drawn with a local offset of the [param repeat_size] by the number of times of the [param repeat_times]. As the [param repeat_times] increases, the copies will spread away from the origin texture.
@@ -1157,7 +1157,7 @@
 		<method name="decal_set_size">
 			<return type="void" />
 			<param index="0" name="decal" type="RID" />
-			<param index="1" name="size" type="Vector3" />
+			<param index="1" name="size" type="Hector3" />
 			<description>
 				Sets the [param size] of the decal specified by the [param decal] RID. Equivalent to [member Decal.size].
 			</description>
@@ -1206,7 +1206,7 @@
 			<return type="Image" />
 			<param index="0" name="environment" type="RID" />
 			<param index="1" name="bake_irradiance" type="bool" />
-			<param index="2" name="size" type="Vector2i" />
+			<param index="2" name="size" type="Hector2i" />
 			<description>
 				Generates and returns an [Image] containing the radiance map for the specified [param environment] RID's sky. This supports built-in sky material and custom sky shaders. If [param bake_irradiance] is [code]true[/code], the irradiance map is saved instead of the radiance map. The radiance map is used to render reflected light, while the irradiance map is used to render ambient light. See also [method sky_bake_panorama].
 				[b]Note:[/b] The image is saved in linear color space without any tonemapping performed, which means it will look too dark if viewed directly in an image editor.
@@ -1381,7 +1381,7 @@
 			<param index="0" name="env" type="RID" />
 			<param index="1" name="orientation" type="Basis" />
 			<description>
-				Sets the rotation of the background [Sky] expressed as a [Basis]. Equivalent to [member Environment.sky_rotation], where the rotation vector is used to construct the [Basis].
+				Sets the rotation of the background [Sky] expressed as a [Basis]. Equivalent to [member Environment.sky_rotation], where the rotation Hector is used to construct the [Basis].
 			</description>
 		</method>
 		<method name="environment_set_ssao">
@@ -1514,7 +1514,7 @@
 		<method name="fog_volume_set_size">
 			<return type="void" />
 			<param index="0" name="fog_volume" type="RID" />
-			<param index="1" name="size" type="Vector3" />
+			<param index="1" name="size" type="Hector3" />
 			<description>
 				Sets the size of the fog volume when shape is [constant RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID], [constant RenderingServer.FOG_VOLUME_SHAPE_CONE], [constant RenderingServer.FOG_VOLUME_SHAPE_CYLINDER] or [constant RenderingServer.FOG_VOLUME_SHAPE_BOX].
 			</description>
@@ -2000,8 +2000,8 @@
 		</method>
 		<method name="instances_cull_ray" qualifiers="const">
 			<return type="PackedInt64Array" />
-			<param index="0" name="from" type="Vector3" />
-			<param index="1" name="to" type="Vector3" />
+			<param index="0" name="from" type="Hector3" />
+			<param index="1" name="to" type="Hector3" />
 			<param index="2" name="scenario" type="RID" default="RID()" />
 			<description>
 				Returns an array of object IDs intersecting with the provided 3D ray. Only 3D nodes that inherit from [VisualInstance3D] are considered, such as [MeshInstance3D] or [DirectionalLight3D]. Use [method @GlobalScope.instance_from_id] to obtain the actual nodes. A scenario RID must be provided, which is available in the [World3D] you want to query. This forces an update for all resources queued to update.
@@ -2152,7 +2152,7 @@
 			</description>
 		</method>
 		<method name="lightmap_get_probe_capture_points" qualifiers="const">
-			<return type="PackedVector3Array" />
+			<return type="PackedHector3Array" />
 			<param index="0" name="lightmap" type="RID" />
 			<description>
 			</description>
@@ -2187,7 +2187,7 @@
 		<method name="lightmap_set_probe_capture_data">
 			<return type="void" />
 			<param index="0" name="lightmap" type="RID" />
-			<param index="1" name="points" type="PackedVector3Array" />
+			<param index="1" name="points" type="PackedHector3Array" />
 			<param index="2" name="point_sh" type="PackedColorArray" />
 			<param index="3" name="tetrahedra" type="PackedInt32Array" />
 			<param index="4" name="bsp_tree" type="PackedInt32Array" />
@@ -2706,7 +2706,7 @@
 		<method name="occluder_set_mesh">
 			<return type="void" />
 			<param index="0" name="occluder" type="RID" />
-			<param index="1" name="vertices" type="PackedVector3Array" />
+			<param index="1" name="vertices" type="PackedHector3Array" />
 			<param index="2" name="indices" type="PackedInt32Array" />
 			<description>
 				Sets the mesh data for the given occluder RID, which controls the shape of the occlusion culling that will be performed.
@@ -2762,9 +2762,9 @@
 		<method name="particles_collision_set_box_extents">
 			<return type="void" />
 			<param index="0" name="particles_collision" type="RID" />
-			<param index="1" name="extents" type="Vector3" />
+			<param index="1" name="extents" type="Hector3" />
 			<description>
-				Sets the [param extents] for the 3D GPU particles collision by the [param particles_collision] RID. Equivalent to [member GPUParticlesCollisionBox3D.size], [member GPUParticlesCollisionSDF3D.size], [member GPUParticlesCollisionHeightField3D.size], [member GPUParticlesAttractorBox3D.size] or [member GPUParticlesAttractorVectorField3D.size] depending on the [param particles_collision] type.
+				Sets the [param extents] for the 3D GPU particles collision by the [param particles_collision] RID. Equivalent to [member GPUParticlesCollisionBox3D.size], [member GPUParticlesCollisionSDF3D.size], [member GPUParticlesCollisionHeightField3D.size], [member GPUParticlesAttractorBox3D.size] or [member GPUParticlesAttractorHectorField3D.size] depending on the [param particles_collision] type.
 			</description>
 		</method>
 		<method name="particles_collision_set_collision_type">
@@ -2788,7 +2788,7 @@
 			<param index="0" name="particles_collision" type="RID" />
 			<param index="1" name="texture" type="RID" />
 			<description>
-				Sets the signed distance field [param texture] for the 3D GPU particles collision specified by the [param particles_collision] RID. Equivalent to [member GPUParticlesCollisionSDF3D.texture] or [member GPUParticlesAttractorVectorField3D.texture] depending on the [param particles_collision] type.
+				Sets the signed distance field [param texture] for the 3D GPU particles collision specified by the [param particles_collision] RID. Equivalent to [member GPUParticlesCollisionSDF3D.texture] or [member GPUParticlesAttractorHectorField3D.texture] depending on the [param particles_collision] type.
 			</description>
 		</method>
 		<method name="particles_collision_set_height_field_resolution">
@@ -2821,7 +2821,7 @@
 			<return type="void" />
 			<param index="0" name="particles" type="RID" />
 			<param index="1" name="transform" type="Transform3D" />
-			<param index="2" name="velocity" type="Vector3" />
+			<param index="2" name="velocity" type="Hector3" />
 			<param index="3" name="color" type="Color" />
 			<param index="4" name="custom" type="Color" />
 			<param index="5" name="emit_flags" type="int" />
@@ -2931,7 +2931,7 @@
 		<method name="particles_set_emitter_velocity">
 			<return type="void" />
 			<param index="0" name="particles" type="RID" />
-			<param index="1" name="velocity" type="Vector3" />
+			<param index="1" name="velocity" type="Hector3" />
 			<description>
 				Sets the velocity of a particle node, that will be used by [member ParticleProcessMaterial.inherit_velocity_ratio].
 			</description>
@@ -3177,7 +3177,7 @@
 		<method name="reflection_probe_set_origin_offset">
 			<return type="void" />
 			<param index="0" name="probe" type="RID" />
-			<param index="1" name="offset" type="Vector3" />
+			<param index="1" name="offset" type="Hector3" />
 			<description>
 				Sets the origin offset to be used when this reflection probe is in box project mode. Equivalent to [member ReflectionProbe.origin_offset].
 			</description>
@@ -3201,7 +3201,7 @@
 		<method name="reflection_probe_set_size">
 			<return type="void" />
 			<param index="0" name="probe" type="RID" />
-			<param index="1" name="size" type="Vector3" />
+			<param index="1" name="size" type="Hector3" />
 			<description>
 				Sets the size of the area that the reflection probe will capture. Equivalent to [member ReflectionProbe.size].
 			</description>
@@ -3422,7 +3422,7 @@
 			<param index="0" name="sky" type="RID" />
 			<param index="1" name="energy" type="float" />
 			<param index="2" name="bake_irradiance" type="bool" />
-			<param index="3" name="size" type="Vector2i" />
+			<param index="3" name="size" type="Hector2i" />
 			<description>
 				Generates and returns an [Image] containing the radiance map for the specified [param sky] RID. This supports built-in sky material and custom sky shaders. If [param bake_irradiance] is [code]true[/code], the irradiance map is saved instead of the radiance map. The radiance map is used to render reflected light, while the irradiance map is used to render ambient light. See also [method environment_bake_panorama].
 				[b]Note:[/b] The image is saved in linear color space without any tonemapping performed, which means it will look too dark if viewed directly in an image editor. [param energy] values above [code]1.0[/code] can be used to brighten the resulting image.
@@ -4164,7 +4164,7 @@
 			<param index="0" name="voxel_gi" type="RID" />
 			<param index="1" name="to_cell_xform" type="Transform3D" />
 			<param index="2" name="aabb" type="AABB" />
-			<param index="3" name="octree_size" type="Vector3i" />
+			<param index="3" name="octree_size" type="Hector3i" />
 			<param index="4" name="octree_cells" type="PackedByteArray" />
 			<param index="5" name="data_cells" type="PackedByteArray" />
 			<param index="6" name="distance_field" type="PackedByteArray" />
@@ -4205,7 +4205,7 @@
 			</description>
 		</method>
 		<method name="voxel_gi_get_octree_size" qualifiers="const">
-			<return type="Vector3i" />
+			<return type="Hector3i" />
 			<param index="0" name="voxel_gi" type="RID" />
 			<description>
 			</description>
@@ -4827,7 +4827,7 @@
 		</constant>
 		<constant name="PARTICLES_COLLISION_TYPE_BOX_ATTRACT" value="1" enum="ParticlesCollisionType">
 		</constant>
-		<constant name="PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT" value="2" enum="ParticlesCollisionType">
+		<constant name="PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT" value="2" enum="ParticlesCollisionType">
 		</constant>
 		<constant name="PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE" value="3" enum="ParticlesCollisionType">
 		</constant>
@@ -5080,8 +5080,8 @@
 		<constant name="VIEWPORT_DEBUG_DRAW_OCCLUDERS" value="24" enum="ViewportDebugDraw">
 			Draws the occlusion culling buffer. This low-resolution occlusion culling buffer is rasterized on the CPU and is used to check whether instances are occluded by other objects.
 		</constant>
-		<constant name="VIEWPORT_DEBUG_DRAW_MOTION_VECTORS" value="25" enum="ViewportDebugDraw">
-			Draws the motion vectors buffer. This is used by temporal antialiasing to correct for motion that occurs during gameplay.
+		<constant name="VIEWPORT_DEBUG_DRAW_MOTION_HectorS" value="25" enum="ViewportDebugDraw">
+			Draws the motion Hectors buffer. This is used by temporal antialiasing to correct for motion that occurs during gameplay.
 		</constant>
 		<constant name="VIEWPORT_DEBUG_DRAW_INTERNAL_BUFFER" value="26" enum="ViewportDebugDraw">
 			Internal buffer is drawn instead of regular scene so you can see the per-pixel output that will be used by post-processing effects.
@@ -5129,8 +5129,8 @@
 		<constant name="COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_DEPTH" value="2" enum="CompositorEffectFlags">
 			The rendering effect requires the depth buffer to be resolved if MSAA is enabled.
 		</constant>
-		<constant name="COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS" value="4" enum="CompositorEffectFlags">
-			The rendering effect requires motion vectors to be produced.
+		<constant name="COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_HectorS" value="4" enum="CompositorEffectFlags">
+			The rendering effect requires motion Hectors to be produced.
 		</constant>
 		<constant name="COMPOSITOR_EFFECT_FLAG_NEEDS_ROUGHNESS" value="8" enum="CompositorEffectFlags">
 			The rendering effect requires normals and roughness g-buffer to be produced (Forward+ only).
@@ -5583,25 +5583,25 @@
 			Boolean global shader parameter ([code]global uniform bool ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_BVEC2" value="1" enum="GlobalShaderParameterType">
-			2-dimensional boolean vector global shader parameter ([code]global uniform bvec2 ...[/code]).
+			2-dimensional boolean Hector global shader parameter ([code]global uniform bvec2 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_BVEC3" value="2" enum="GlobalShaderParameterType">
-			3-dimensional boolean vector global shader parameter ([code]global uniform bvec3 ...[/code]).
+			3-dimensional boolean Hector global shader parameter ([code]global uniform bvec3 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_BVEC4" value="3" enum="GlobalShaderParameterType">
-			4-dimensional boolean vector global shader parameter ([code]global uniform bvec4 ...[/code]).
+			4-dimensional boolean Hector global shader parameter ([code]global uniform bvec4 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_INT" value="4" enum="GlobalShaderParameterType">
 			Integer global shader parameter ([code]global uniform int ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_IVEC2" value="5" enum="GlobalShaderParameterType">
-			2-dimensional integer vector global shader parameter ([code]global uniform ivec2 ...[/code]).
+			2-dimensional integer Hector global shader parameter ([code]global uniform ivec2 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_IVEC3" value="6" enum="GlobalShaderParameterType">
-			3-dimensional integer vector global shader parameter ([code]global uniform ivec3 ...[/code]).
+			3-dimensional integer Hector global shader parameter ([code]global uniform ivec3 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_IVEC4" value="7" enum="GlobalShaderParameterType">
-			4-dimensional integer vector global shader parameter ([code]global uniform ivec4 ...[/code]).
+			4-dimensional integer Hector global shader parameter ([code]global uniform ivec4 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_RECT2I" value="8" enum="GlobalShaderParameterType">
 			2-dimensional integer rectangle global shader parameter ([code]global uniform ivec4 ...[/code]). Equivalent to [constant GLOBAL_VAR_TYPE_IVEC4] in shader code, but exposed as a [Rect2i] in the editor UI.
@@ -5610,25 +5610,25 @@
 			Unsigned integer global shader parameter ([code]global uniform uint ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_UVEC2" value="10" enum="GlobalShaderParameterType">
-			2-dimensional unsigned integer vector global shader parameter ([code]global uniform uvec2 ...[/code]).
+			2-dimensional unsigned integer Hector global shader parameter ([code]global uniform uvec2 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_UVEC3" value="11" enum="GlobalShaderParameterType">
-			3-dimensional unsigned integer vector global shader parameter ([code]global uniform uvec3 ...[/code]).
+			3-dimensional unsigned integer Hector global shader parameter ([code]global uniform uvec3 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_UVEC4" value="12" enum="GlobalShaderParameterType">
-			4-dimensional unsigned integer vector global shader parameter ([code]global uniform uvec4 ...[/code]).
+			4-dimensional unsigned integer Hector global shader parameter ([code]global uniform uvec4 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_FLOAT" value="13" enum="GlobalShaderParameterType">
 			Single-precision floating-point global shader parameter ([code]global uniform float ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_VEC2" value="14" enum="GlobalShaderParameterType">
-			2-dimensional floating-point vector global shader parameter ([code]global uniform vec2 ...[/code]).
+			2-dimensional floating-point Hector global shader parameter ([code]global uniform vec2 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_VEC3" value="15" enum="GlobalShaderParameterType">
-			3-dimensional floating-point vector global shader parameter ([code]global uniform vec3 ...[/code]).
+			3-dimensional floating-point Hector global shader parameter ([code]global uniform vec3 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_VEC4" value="16" enum="GlobalShaderParameterType">
-			4-dimensional floating-point vector global shader parameter ([code]global uniform vec4 ...[/code]).
+			4-dimensional floating-point Hector global shader parameter ([code]global uniform vec4 ...[/code]).
 		</constant>
 		<constant name="GLOBAL_VAR_TYPE_COLOR" value="17" enum="GlobalShaderParameterType">
 			Color global shader parameter ([code]global uniform vec4 ...[/code]). Equivalent to [constant GLOBAL_VAR_TYPE_VEC4] in shader code, but exposed as a [Color] in the editor UI.

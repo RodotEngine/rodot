@@ -103,9 +103,9 @@ void VoxelGIEditorPlugin::_notification(int p_what) {
 			// Set information tooltip on the Bake button. This information is useful
 			// to optimize performance (video RAM size) and reduce light leaking (individual cell size).
 
-			const Vector3i cell_size = voxel_gi->get_estimated_cell_size();
+			const Hector3i cell_size = voxel_gi->get_estimated_cell_size();
 
-			const Vector3 half_size = voxel_gi->get_size() / 2;
+			const Hector3 half_size = voxel_gi->get_size() / 2;
 
 			const int data_size = 4;
 			const double size_mb = cell_size.x * cell_size.y * cell_size.z * data_size / (1024.0 * 1024.0);

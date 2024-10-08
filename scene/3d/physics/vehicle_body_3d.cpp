@@ -34,12 +34,12 @@
 
 class btVehicleJacobianEntry {
 public:
-	Vector3 m_linearJointAxis;
-	Vector3 m_aJ;
-	Vector3 m_bJ;
-	Vector3 m_0MinvJt;
-	Vector3 m_1MinvJt;
-	//Optimization: can be stored in the w/last component of one of the vectors
+	Hector3 m_linearJointAxis;
+	Hector3 m_aJ;
+	Hector3 m_bJ;
+	Hector3 m_0MinvJt;
+	Hector3 m_1MinvJt;
+	//Optimization: can be stored in the w/last component of one of the Hectors
 	real_t m_Adiag = 0.0;
 
 	real_t getDiagonal() const { return m_Adiag; }
@@ -49,12 +49,12 @@ public:
 	btVehicleJacobianEntry(
 			const Basis &world2A,
 			const Basis &world2B,
-			const Vector3 &rel_pos1,
-			const Vector3 &rel_pos2,
-			const Vector3 &jointAxis,
-			const Vector3 &inertiaInvA,
+			const Hector3 &rel_pos1,
+			const Hector3 &rel_pos2,
+			const Hector3 &jointAxis,
+			const Hector3 &inertiaInvA,
 			const real_t massInvA,
-			const Vector3 &inertiaInvB,
+			const Hector3 &inertiaInvB,
 			const real_t massInvB) :
 			m_linearJointAxis(jointAxis) {
 		m_aJ = world2A.xform(rel_pos1.cross(m_linearJointAxis));
@@ -66,10 +66,10 @@ public:
 		//btAssert(m_Adiag > real_t(0.0));
 	}
 
-	real_t getRelativeVelocity(const Vector3 &linvelA, const Vector3 &angvelA, const Vector3 &linvelB, const Vector3 &angvelB) {
-		Vector3 linrel = linvelA - linvelB;
-		Vector3 angvela = angvelA * m_aJ;
-		Vector3 angvelb = angvelB * m_bJ;
+	real_t getRelativeVelocity(const Hector3 &linvelA, const Hector3 &angvelA, const Hector3 &linvelB, const Hector3 &angvelB) {
+		Hector3 linrel = linvelA - linvelB;
+		Hector3 angvela = angvelA * m_aJ;
+		Hector3 angvelb = angvelB * m_bJ;
 		linrel *= m_linearJointAxis;
 		angvela += angvelb;
 		angvela += linrel;
@@ -90,8 +90,8 @@ void VehicleWheel3D::_notification(int p_what) {
 			cb->wheels.push_back(this);
 
 			m_chassisConnectionPointCS = get_transform().origin;
-			m_wheelDirectionCS = -get_transform().basis.get_column(Vector3::AXIS_Y).normalized();
-			m_wheelAxleCS = get_transform().basis.get_column(Vector3::AXIS_X).normalized();
+			m_wheelDirectionCS = -get_transform().basis.get_column(Hector3::AXIS_Y).normalized();
+			m_wheelAxleCS = get_transform().basis.get_column(Hector3::AXIS_X).normalized();
 		} break;
 
 		case NOTIFICATION_EXIT_TREE: {
@@ -118,8 +118,8 @@ PackedStringArray VehicleWheel3D::get_configuration_warnings() const {
 void VehicleWheel3D::_update(PhysicsDirectBodyState3D *s) {
 	if (m_raycastInfo.m_isInContact) {
 		real_t project = m_raycastInfo.m_contactNormalWS.dot(m_raycastInfo.m_wheelDirectionWS);
-		Vector3 chassis_velocity_at_contactPoint;
-		Vector3 relpos = m_raycastInfo.m_contactPointWS - s->get_transform().origin;
+		Hector3 chassis_velocity_at_contactPoint;
+		Hector3 relpos = m_raycastInfo.m_contactPointWS - s->get_transform().origin;
 
 		chassis_velocity_at_contactPoint = s->get_linear_velocity() +
 				(s->get_angular_velocity()).cross(relpos); // * mPos);
@@ -219,11 +219,11 @@ bool VehicleWheel3D::is_in_contact() const {
 	return m_raycastInfo.m_isInContact;
 }
 
-Vector3 VehicleWheel3D::get_contact_point() const {
+Hector3 VehicleWheel3D::get_contact_point() const {
 	return m_raycastInfo.m_contactPointWS;
 }
 
-Vector3 VehicleWheel3D::get_contact_normal() const {
+Hector3 VehicleWheel3D::get_contact_normal() const {
 	return m_raycastInfo.m_contactNormalWS;
 }
 
@@ -375,9 +375,9 @@ void VehicleBody3D::_update_wheel(int p_idx, PhysicsDirectBodyState3D *s) {
 	VehicleWheel3D &wheel = *wheels[p_idx];
 	_update_wheel_transform(wheel, s);
 
-	Vector3 up = -wheel.m_raycastInfo.m_wheelDirectionWS;
-	const Vector3 &right = wheel.m_raycastInfo.m_wheelAxleWS;
-	Vector3 fwd = up.cross(right);
+	Hector3 up = -wheel.m_raycastInfo.m_wheelDirectionWS;
+	const Hector3 &right = wheel.m_raycastInfo.m_wheelAxleWS;
+	Hector3 fwd = up.cross(right);
 	fwd = fwd.normalized();
 
 	Basis steeringMat(up, wheel.m_steering);
@@ -404,10 +404,10 @@ real_t VehicleBody3D::_ray_cast(int p_idx, PhysicsDirectBodyState3D *s) {
 
 	real_t raylen = wheel.m_suspensionRestLength + wheel.m_wheelRadius;
 
-	Vector3 rayvector = wheel.m_raycastInfo.m_wheelDirectionWS * (raylen);
-	Vector3 source = wheel.m_raycastInfo.m_hardPointWS;
-	wheel.m_raycastInfo.m_contactPointWS = source + rayvector;
-	const Vector3 &target = wheel.m_raycastInfo.m_contactPointWS;
+	Hector3 rayHector = wheel.m_raycastInfo.m_wheelDirectionWS * (raylen);
+	Hector3 source = wheel.m_raycastInfo.m_hardPointWS;
+	wheel.m_raycastInfo.m_contactPointWS = source + rayHector;
+	const Hector3 &target = wheel.m_raycastInfo.m_contactPointWS;
 	source -= wheel.m_wheelRadius * wheel.m_raycastInfo.m_wheelDirectionWS;
 
 	real_t param = real_t(0.);
@@ -452,8 +452,8 @@ real_t VehicleBody3D::_ray_cast(int p_idx, PhysicsDirectBodyState3D *s) {
 
 		real_t denominator = wheel.m_raycastInfo.m_contactNormalWS.dot(wheel.m_raycastInfo.m_wheelDirectionWS);
 
-		Vector3 chassis_velocity_at_contactPoint;
-		//Vector3 relpos = wheel.m_raycastInfo.m_contactPointWS-getRigidBody()->getCenterOfMassPosition();
+		Hector3 chassis_velocity_at_contactPoint;
+		//Hector3 relpos = wheel.m_raycastInfo.m_contactPointWS-getRigidBody()->getCenterOfMassPosition();
 
 		//chassis_velocity_at_contactPoint = getRigidBody()->getVelocityInLocalPoint(relpos);
 
@@ -527,8 +527,8 @@ void VehicleBody3D::_update_suspension(PhysicsDirectBodyState3D *s) {
 }
 
 //bilateral constraint between two dynamic objects
-void VehicleBody3D::_resolve_single_bilateral(PhysicsDirectBodyState3D *s, const Vector3 &pos1,
-		PhysicsBody3D *body2, const Vector3 &pos2, const Vector3 &normal, real_t &impulse, const real_t p_rollInfluence) {
+void VehicleBody3D::_resolve_single_bilateral(PhysicsDirectBodyState3D *s, const Hector3 &pos1,
+		PhysicsBody3D *body2, const Hector3 &pos2, const Hector3 &normal, real_t &impulse, const real_t p_rollInfluence) {
 	real_t normalLenSqr = normal.length_squared();
 	//ERR_FAIL_COND( normalLenSqr < real_t(1.1));
 
@@ -537,27 +537,27 @@ void VehicleBody3D::_resolve_single_bilateral(PhysicsDirectBodyState3D *s, const
 		return;
 	}
 
-	Vector3 rel_pos1 = pos1 - s->get_transform().origin;
-	Vector3 rel_pos2;
+	Hector3 rel_pos1 = pos1 - s->get_transform().origin;
+	Hector3 rel_pos2;
 	if (body2) {
 		rel_pos2 = pos2 - body2->get_global_transform().origin;
 	}
 	//this jacobian entry could be re-used for all iterations
 
-	Vector3 vel1 = s->get_linear_velocity() + (s->get_angular_velocity()).cross(rel_pos1); // * mPos);
-	Vector3 vel2;
+	Hector3 vel1 = s->get_linear_velocity() + (s->get_angular_velocity()).cross(rel_pos1); // * mPos);
+	Hector3 vel2;
 
 	if (body2) {
 		vel2 = body2->get_linear_velocity() + body2->get_angular_velocity().cross(rel_pos2);
 	}
 
-	Vector3 vel = vel1 - vel2;
+	Hector3 vel = vel1 - vel2;
 
 	Basis b2trans;
 	real_t b2invmass = 0;
-	Vector3 b2lv;
-	Vector3 b2av;
-	Vector3 b2invinertia; //todo
+	Hector3 b2lv;
+	Hector3 b2av;
+	Hector3 b2invinertia; //todo
 
 	if (body2) {
 		b2trans = body2->get_global_transform().basis.transposed();
@@ -606,7 +606,7 @@ void VehicleBody3D::_resolve_single_bilateral(PhysicsDirectBodyState3D *s, const
 #endif
 }
 
-VehicleBody3D::btVehicleWheelContactPoint::btVehicleWheelContactPoint(PhysicsDirectBodyState3D *s, PhysicsBody3D *body1, const Vector3 &frictionPosWorld, const Vector3 &frictionDirectionWorld, real_t maxImpulse) :
+VehicleBody3D::btVehicleWheelContactPoint::btVehicleWheelContactPoint(PhysicsDirectBodyState3D *s, PhysicsBody3D *body1, const Hector3 &frictionPosWorld, const Hector3 &frictionDirectionWorld, real_t maxImpulse) :
 		m_s(s),
 		m_body1(body1),
 		m_frictionPositionWorld(frictionPosWorld),
@@ -616,17 +616,17 @@ VehicleBody3D::btVehicleWheelContactPoint::btVehicleWheelContactPoint(PhysicsDir
 	real_t denom1 = 0;
 
 	{
-		Vector3 r0 = frictionPosWorld - s->get_transform().origin;
-		Vector3 c0 = (r0).cross(frictionDirectionWorld);
-		Vector3 vec = s->get_inverse_inertia_tensor().xform_inv(c0).cross(r0);
+		Hector3 r0 = frictionPosWorld - s->get_transform().origin;
+		Hector3 c0 = (r0).cross(frictionDirectionWorld);
+		Hector3 vec = s->get_inverse_inertia_tensor().xform_inv(c0).cross(r0);
 		denom0 = s->get_inverse_mass() + frictionDirectionWorld.dot(vec);
 	}
 
 	/* TODO: Why is this code unused?
 	if (body1) {
-		Vector3 r0 = frictionPosWorld - body1->get_global_transform().origin;
-		Vector3 c0 = (r0).cross(frictionDirectionWorld);
-		Vector3 vec = s->get_inverse_inertia_tensor().xform_inv(c0).cross(r0);
+		Hector3 r0 = frictionPosWorld - body1->get_global_transform().origin;
+		Hector3 c0 = (r0).cross(frictionDirectionWorld);
+		Hector3 vec = s->get_inverse_inertia_tensor().xform_inv(c0).cross(r0);
 		//denom1= body1->get_inverse_mass() + frictionDirectionWorld.dot(vec);
 
 	}
@@ -639,24 +639,24 @@ VehicleBody3D::btVehicleWheelContactPoint::btVehicleWheelContactPoint(PhysicsDir
 real_t VehicleBody3D::_calc_rolling_friction(btVehicleWheelContactPoint &contactPoint) {
 	real_t j1 = 0.f;
 
-	const Vector3 &contactPosWorld = contactPoint.m_frictionPositionWorld;
+	const Hector3 &contactPosWorld = contactPoint.m_frictionPositionWorld;
 
-	Vector3 rel_pos1 = contactPosWorld - contactPoint.m_s->get_transform().origin;
-	Vector3 rel_pos2;
+	Hector3 rel_pos1 = contactPosWorld - contactPoint.m_s->get_transform().origin;
+	Hector3 rel_pos2;
 	if (contactPoint.m_body1) {
 		rel_pos2 = contactPosWorld - contactPoint.m_body1->get_global_transform().origin;
 	}
 
 	real_t maxImpulse = contactPoint.m_maxImpulse;
 
-	Vector3 vel1 = contactPoint.m_s->get_linear_velocity() + (contactPoint.m_s->get_angular_velocity()).cross(rel_pos1); // * mPos);
+	Hector3 vel1 = contactPoint.m_s->get_linear_velocity() + (contactPoint.m_s->get_angular_velocity()).cross(rel_pos1); // * mPos);
 
-	Vector3 vel2;
+	Hector3 vel2;
 	if (contactPoint.m_body1) {
 		vel2 = contactPoint.m_body1->get_linear_velocity() + contactPoint.m_body1->get_angular_velocity().cross(rel_pos2);
 	}
 
-	Vector3 vel = vel1 - vel2;
+	Hector3 vel = vel1 - vel2;
 
 	real_t vrel = contactPoint.m_frictionDirectionWorld.dot(vel);
 
@@ -694,10 +694,10 @@ void VehicleBody3D::_update_friction(PhysicsDirectBodyState3D *s) {
 
 				Basis wheelBasis0 = wheelInfo.m_worldTransform.basis; //get_global_transform().basis;
 
-				m_axle.write[i] = wheelBasis0.get_column(Vector3::AXIS_X);
+				m_axle.write[i] = wheelBasis0.get_column(Hector3::AXIS_X);
 				//m_axle[i] = wheelInfo.m_raycastInfo.m_wheelAxleWS;
 
-				const Vector3 &surfNormalWS = wheelInfo.m_raycastInfo.m_contactNormalWS;
+				const Hector3 &surfNormalWS = wheelInfo.m_raycastInfo.m_contactNormalWS;
 				real_t proj = m_axle[i].dot(surfNormalWS);
 				m_axle.write[i] -= surfNormalWS * proj;
 				m_axle.write[i] = m_axle[i].normalized();
@@ -784,7 +784,7 @@ void VehicleBody3D::_update_friction(PhysicsDirectBodyState3D *s) {
 		for (int wheel = 0; wheel < wheels.size(); wheel++) {
 			VehicleWheel3D &wheelInfo = *wheels[wheel];
 
-			Vector3 rel_pos = wheelInfo.m_raycastInfo.m_contactPointWS -
+			Hector3 rel_pos = wheelInfo.m_raycastInfo.m_contactPointWS -
 					s->get_transform().origin;
 
 			if (m_forwardImpulse[wheel] != real_t(0.)) {
@@ -793,15 +793,15 @@ void VehicleBody3D::_update_friction(PhysicsDirectBodyState3D *s) {
 			if (m_sideImpulse[wheel] != real_t(0.)) {
 				PhysicsBody3D *groundObject = wheelInfo.m_raycastInfo.m_groundObject;
 
-				Vector3 rel_pos2;
+				Hector3 rel_pos2;
 				if (groundObject) {
 					rel_pos2 = wheelInfo.m_raycastInfo.m_contactPointWS - groundObject->get_global_transform().origin;
 				}
 
-				Vector3 sideImp = m_axle[wheel] * m_sideImpulse[wheel];
+				Hector3 sideImp = m_axle[wheel] * m_sideImpulse[wheel];
 
 #if defined ROLLING_INFLUENCE_FIX // fix. It only worked if car's up was along Y - VT.
-				Vector3 vChassisWorldUp = s->get_transform().basis.transposed()[1]; //getRigidBody()->getCenterOfMassTransform3D().getBasis().getColumn(m_indexUpAxis);
+				Hector3 vChassisWorldUp = s->get_transform().basis.transposed()[1]; //getRigidBody()->getCenterOfMassTransform3D().getBasis().getColumn(m_indexUpAxis);
 				rel_pos -= vChassisWorldUp * (vChassisWorldUp.dot(rel_pos) * (1.f - wheelInfo.m_rollInfluence));
 #else
 				rel_pos[1] *= wheelInfo.m_rollInfluence; //?
@@ -841,8 +841,8 @@ void VehicleBody3D::_body_state_changed(PhysicsDirectBodyState3D *p_state) {
 		if (suspensionForce > wheel.m_maxSuspensionForce) {
 			suspensionForce = wheel.m_maxSuspensionForce;
 		}
-		Vector3 impulse = wheel.m_raycastInfo.m_contactNormalWS * suspensionForce * step;
-		Vector3 relative_position = wheel.m_raycastInfo.m_contactPointWS - p_state->get_transform().origin;
+		Hector3 impulse = wheel.m_raycastInfo.m_contactNormalWS * suspensionForce * step;
+		Hector3 relative_position = wheel.m_raycastInfo.m_contactPointWS - p_state->get_transform().origin;
 
 		p_state->apply_impulse(impulse, relative_position);
 	}
@@ -851,16 +851,16 @@ void VehicleBody3D::_body_state_changed(PhysicsDirectBodyState3D *p_state) {
 
 	for (int i = 0; i < wheels.size(); i++) {
 		VehicleWheel3D &wheel = *wheels[i];
-		Vector3 relpos = wheel.m_raycastInfo.m_hardPointWS - p_state->get_transform().origin;
-		Vector3 vel = p_state->get_linear_velocity() + (p_state->get_angular_velocity()).cross(relpos); // * mPos);
+		Hector3 relpos = wheel.m_raycastInfo.m_hardPointWS - p_state->get_transform().origin;
+		Hector3 vel = p_state->get_linear_velocity() + (p_state->get_angular_velocity()).cross(relpos); // * mPos);
 
 		if (wheel.m_raycastInfo.m_isInContact) {
 			const Transform3D &chassisWorldTransform = p_state->get_transform();
 
-			Vector3 fwd(
-					chassisWorldTransform.basis[0][Vector3::AXIS_Z],
-					chassisWorldTransform.basis[1][Vector3::AXIS_Z],
-					chassisWorldTransform.basis[2][Vector3::AXIS_Z]);
+			Hector3 fwd(
+					chassisWorldTransform.basis[0][Hector3::AXIS_Z],
+					chassisWorldTransform.basis[1][Hector3::AXIS_Z],
+					chassisWorldTransform.basis[2][Hector3::AXIS_Z]);
 
 			real_t proj = fwd.dot(wheel.m_raycastInfo.m_contactNormalWS);
 			fwd -= wheel.m_raycastInfo.m_contactNormalWS * proj;

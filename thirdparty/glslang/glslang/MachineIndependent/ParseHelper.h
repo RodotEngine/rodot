@@ -126,13 +126,13 @@ public:
     virtual void setLineCallback(const std::function<void(int, int, bool, int, const char*)>& func) { lineCallback = func; }
     virtual void setExtensionCallback(const std::function<void(int, const char*, const char*)>& func) { extensionCallback = func; }
     virtual void setVersionCallback(const std::function<void(int, int, const char*)>& func) { versionCallback = func; }
-    virtual void setPragmaCallback(const std::function<void(int, const TVector<TString>&)>& func) { pragmaCallback = func; }
+    virtual void setPragmaCallback(const std::function<void(int, const THector<TString>&)>& func) { pragmaCallback = func; }
     virtual void setErrorCallback(const std::function<void(int, const char*)>& func) { errorCallback = func; }
 
     virtual void reservedPpErrorCheck(const TSourceLoc&, const char* name, const char* op) = 0;
     virtual bool lineContinuationCheck(const TSourceLoc&, bool endOfComment) = 0;
     virtual bool lineDirectiveShouldSetNextLine() const = 0;
-    virtual void handlePragma(const TSourceLoc&, const TVector<TString>&) = 0;
+    virtual void handlePragma(const TSourceLoc&, const THector<TString>&) = 0;
 
     virtual bool parseShaderStrings(TPpContext&, TInputScanner& input, bool versionWillBeError = false) = 0;
 
@@ -180,7 +180,7 @@ public:
     // Basic parsing state, easily accessible to the grammar
 
     TSymbolTable& symbolTable;        // symbol table that goes with the current language, version, and profile
-    TVector<TString> relaxedSymbols;
+    THector<TString> relaxedSymbols;
     int statementNestingLevel;        // 0 if outside all flow control or compound statements
     int loopNestingLevel;             // 0 if outside all loops
     int structNestingLevel;           // 0 if outside structures
@@ -204,7 +204,7 @@ protected:
     TParseContextBase& operator=(TParseContextBase&);
 
     const bool parsingBuiltins;       // true if parsing built-in symbols/functions
-    TVector<TSymbol*> linkageSymbols; // will be transferred to 'linkage', after all editing is done, order preserving
+    THector<TSymbol*> linkageSymbols; // will be transferred to 'linkage', after all editing is done, order preserving
     TScanContext* scanContext;
     TPpContext* ppContext;
     TBuiltInResource resources;
@@ -214,19 +214,19 @@ protected:
     // These, if set, will be called when a line, pragma ... is preprocessed.
     // They will be called with any parameters to the original directive.
     std::function<void(int, int, bool, int, const char*)> lineCallback;
-    std::function<void(int, const TVector<TString>&)> pragmaCallback;
+    std::function<void(int, const THector<TString>&)> pragmaCallback;
     std::function<void(int, int, const char*)> versionCallback;
     std::function<void(int, const char*, const char*)> extensionCallback;
     std::function<void(int, const char*)> errorCallback;
 
     // see implementation for detail
-    const TFunction* selectFunction(const TVector<const TFunction*>, const TFunction&,
+    const TFunction* selectFunction(const THector<const TFunction*>, const TFunction&,
         std::function<bool(const TType&, const TType&, TOperator, int arg)>,
         std::function<bool(const TType&, const TType&, const TType&)>,
         /* output */ bool& tie);
 
     virtual void parseSwizzleSelector(const TSourceLoc&, const TString&, int size,
-                                      TSwizzleSelectors<TVectorSelector>&);
+                                      TSwizzleSelectors<THectorSelector>&);
 
     // Manage the global uniform block (default uniforms in GLSL, $Global in HLSL)
     TVariable* globalUniformBlock;     // the actual block, inserted into the symbol table
@@ -326,7 +326,7 @@ public:
     bool lineDirectiveShouldSetNextLine() const override;
     bool builtInName(const TString&);
 
-    void handlePragma(const TSourceLoc&, const TVector<TString>&) override;
+    void handlePragma(const TSourceLoc&, const THector<TString>&) override;
     TIntermTyped* handleVariable(const TSourceLoc&, TSymbol* symbol, const TString* string);
     TIntermTyped* handleBracketDereference(const TSourceLoc&, TIntermTyped* base, TIntermTyped* index);
     void handleIndexLimits(const TSourceLoc&, TIntermTyped* base, TIntermTyped* index);
@@ -547,7 +547,7 @@ protected:
     int* atomicUintOffsets;       // to become an array of the right size to hold an offset per binding point
     bool anyIndexLimits;
     TIdSetType inductiveLoopIds;
-    TVector<TIntermTyped*> needsIndexLimitationChecking;
+    THector<TIntermTyped*> needsIndexLimitationChecking;
     TStructRecord matrixFixRecord;
     TStructRecord packingFixRecord;
 
@@ -583,7 +583,7 @@ protected:
     //  - on seeing an array size declaration, give errors on mismatch between it and previous
     //    array-sizing declarations
     //
-    TVector<TSymbol*> ioArraySymbolResizeList;
+    THector<TSymbol*> ioArraySymbolResizeList;
 };
 
 } // end namespace glslang

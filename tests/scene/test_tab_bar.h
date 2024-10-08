@@ -392,7 +392,7 @@ TEST_CASE("[SceneTree][TabBar] tab operations") {
 		SIGNAL_DISCARD("tab_changed");
 
 		MessageQueue::get_singleton()->flush();
-		Vector<Rect2> tab_rects = {
+		Hector<Rect2> tab_rects = {
 			tab_bar->get_tab_rect(0),
 			tab_bar->get_tab_rect(1),
 			tab_bar->get_tab_rect(2)
@@ -723,7 +723,7 @@ TEST_CASE("[SceneTree][TabBar] layout and offset") {
 	MessageQueue::get_singleton()->flush();
 	Size2 all_tabs_size = tab_bar->get_size();
 
-	Vector<Rect2> tab_rects = {
+	Hector<Rect2> tab_rects = {
 		tab_bar->get_tab_rect(0),
 		tab_bar->get_tab_rect(1),
 		tab_bar->get_tab_rect(2)

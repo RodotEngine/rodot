@@ -397,8 +397,8 @@ bool EditorFileSystemImportFormatSupportQueryBlend::is_active() const {
 
 	return false;
 }
-Vector<String> EditorFileSystemImportFormatSupportQueryBlend::get_file_extensions() const {
-	Vector<String> ret;
+Hector<String> EditorFileSystemImportFormatSupportQueryBlend::get_file_extensions() const {
+	Hector<String> ret;
 	ret.push_back("blend");
 	return ret;
 }
@@ -435,7 +435,7 @@ bool EditorFileSystemImportFormatSupportQueryBlend::_autodetect_path() {
 	auto_detected_path = "";
 
 #if defined(MACOS_ENABLED)
-	Vector<String> find_paths = {
+	Hector<String> find_paths = {
 		"/opt/homebrew/bin/blender",
 		"/opt/local/bin/blender",
 		"/usr/local/bin/blender",
@@ -455,7 +455,7 @@ bool EditorFileSystemImportFormatSupportQueryBlend::_autodetect_path() {
 		}
 	}
 #elif defined(WINDOWS_ENABLED)
-	Vector<String> find_paths = {
+	Hector<String> find_paths = {
 		"C:\\Program Files\\Blender Foundation\\blender.exe",
 		"C:\\Program Files (x86)\\Blender Foundation\\blender.exe",
 	};
@@ -469,7 +469,7 @@ bool EditorFileSystemImportFormatSupportQueryBlend::_autodetect_path() {
 	}
 
 #elif defined(UNIX_ENABLED)
-	Vector<String> find_paths = {
+	Hector<String> find_paths = {
 		"/usr/bin/blender",
 		"/usr/local/bin/blender",
 		"/opt/blender/bin/blender",

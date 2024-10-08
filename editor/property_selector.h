@@ -61,7 +61,7 @@ class PropertySelector : public ConfirmationDialog {
 	Object *instance = nullptr;
 	bool virtuals_only = false;
 
-	Vector<Variant::Type> type_filter;
+	Hector<Variant::Type> type_filter;
 
 	void _create_subproperties(TreeItem *p_parent_item, Variant::Type p_type);
 	void _create_subproperty(TreeItem *p_parent_item, const String &p_name, Variant::Type p_type);
@@ -81,7 +81,7 @@ public:
 	void select_property_from_basic_type(Variant::Type p_type, const String &p_current = "");
 	void select_property_from_instance(Object *p_instance, const String &p_current = "");
 
-	void set_type_filter(const Vector<Variant::Type> &p_type_filter);
+	void set_type_filter(const Hector<Variant::Type> &p_type_filter);
 
 	PropertySelector();
 };

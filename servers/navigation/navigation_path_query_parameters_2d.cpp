@@ -87,20 +87,20 @@ const RID &NavigationPathQueryParameters2D::get_map() const {
 	return parameters.map;
 }
 
-void NavigationPathQueryParameters2D::set_start_position(const Vector2 p_start_position) {
-	parameters.start_position = Vector3(p_start_position.x, 0.0, p_start_position.y);
+void NavigationPathQueryParameters2D::set_start_position(const Hector2 p_start_position) {
+	parameters.start_position = Hector3(p_start_position.x, 0.0, p_start_position.y);
 }
 
-Vector2 NavigationPathQueryParameters2D::get_start_position() const {
-	return Vector2(parameters.start_position.x, parameters.start_position.z);
+Hector2 NavigationPathQueryParameters2D::get_start_position() const {
+	return Hector2(parameters.start_position.x, parameters.start_position.z);
 }
 
-void NavigationPathQueryParameters2D::set_target_position(const Vector2 p_target_position) {
-	parameters.target_position = Vector3(p_target_position.x, 0.0, p_target_position.y);
+void NavigationPathQueryParameters2D::set_target_position(const Hector2 p_target_position) {
+	parameters.target_position = Hector3(p_target_position.x, 0.0, p_target_position.y);
 }
 
-Vector2 NavigationPathQueryParameters2D::get_target_position() const {
-	return Vector2(parameters.target_position.x, parameters.target_position.z);
+Hector2 NavigationPathQueryParameters2D::get_target_position() const {
+	return Hector2(parameters.target_position.x, parameters.target_position.z);
 }
 
 void NavigationPathQueryParameters2D::set_navigation_layers(uint32_t p_navigation_layers) {
@@ -164,8 +164,8 @@ void NavigationPathQueryParameters2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_simplify_epsilon"), &NavigationPathQueryParameters2D::get_simplify_epsilon);
 
 	ADD_PROPERTY(PropertyInfo(Variant::RID, "map"), "set_map", "get_map");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "start_position"), "set_start_position", "get_start_position");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "target_position"), "set_target_position", "get_target_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "start_position"), "set_start_position", "get_start_position");
+	ADD_PROPERTY(PropertyInfo(Variant::HECTOR2, "target_position"), "set_target_position", "get_target_position");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "navigation_layers", PROPERTY_HINT_LAYERS_2D_NAVIGATION), "set_navigation_layers", "get_navigation_layers");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "pathfinding_algorithm", PROPERTY_HINT_ENUM, "AStar"), "set_pathfinding_algorithm", "get_pathfinding_algorithm");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "path_postprocessing", PROPERTY_HINT_ENUM, "Corridorfunnel,Edgecentered"), "set_path_postprocessing", "get_path_postprocessing");

@@ -157,7 +157,7 @@
 			</description>
 		</method>
 		<method name="bezier_track_get_key_in_handle" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="key_idx" type="int" />
 			<description>
@@ -165,7 +165,7 @@
 			</description>
 		</method>
 		<method name="bezier_track_get_key_out_handle" qualifiers="const">
-			<return type="Vector2" />
+			<return type="Hector2" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="key_idx" type="int" />
 			<description>
@@ -185,8 +185,8 @@
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="time" type="float" />
 			<param index="2" name="value" type="float" />
-			<param index="3" name="in_handle" type="Vector2" default="Vector2(0, 0)" />
-			<param index="4" name="out_handle" type="Vector2" default="Vector2(0, 0)" />
+			<param index="3" name="in_handle" type="Hector2" default="Hector2(0, 0)" />
+			<param index="4" name="out_handle" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Inserts a Bezier Track key at the given [param time] in seconds. The [param track_idx] must be the index of a Bezier Track.
 				[param in_handle] is the left-side weight of the added Bezier curve point, [param out_handle] is the right-side one, while [param value] is the actual value at this point.
@@ -204,7 +204,7 @@
 			<return type="void" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="key_idx" type="int" />
-			<param index="2" name="in_handle" type="Vector2" />
+			<param index="2" name="in_handle" type="Hector2" />
 			<param index="3" name="balanced_value_time_ratio" type="float" default="1.0" />
 			<description>
 				Sets the in handle of the key identified by [param key_idx] to value [param in_handle]. The [param track_idx] must be the index of a Bezier Track.
@@ -214,7 +214,7 @@
 			<return type="void" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="key_idx" type="int" />
-			<param index="2" name="out_handle" type="Vector2" />
+			<param index="2" name="out_handle" type="Hector2" />
 			<param index="3" name="balanced_value_time_ratio" type="float" default="1.0" />
 			<description>
 				Sets the out handle of the key identified by [param key_idx] to value [param out_handle]. The [param track_idx] must be the index of a Bezier Track.
@@ -362,13 +362,13 @@
 			<return type="int" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="time" type="float" />
-			<param index="2" name="position" type="Vector3" />
+			<param index="2" name="position" type="Hector3" />
 			<description>
 				Inserts a key in a given 3D position track. Returns the key index.
 			</description>
 		</method>
 		<method name="position_track_interpolate" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="time_sec" type="float" />
 			<param index="2" name="backward" type="bool" default="false" />
@@ -412,13 +412,13 @@
 			<return type="int" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="time" type="float" />
-			<param index="2" name="scale" type="Vector3" />
+			<param index="2" name="scale" type="Hector3" />
 			<description>
 				Inserts a key in a given 3D scale track. Returns the key index.
 			</description>
 		</method>
 		<method name="scale_track_interpolate" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<param index="0" name="track_idx" type="int" />
 			<param index="1" name="time_sec" type="float" />
 			<param index="2" name="backward" type="bool" default="false" />
@@ -698,13 +698,13 @@
 			Value tracks set values in node properties, but only those which can be interpolated. For 3D position/rotation/scale, using the dedicated [constant TYPE_POSITION_3D], [constant TYPE_ROTATION_3D] and [constant TYPE_SCALE_3D] track types instead of [constant TYPE_VALUE] is recommended for performance reasons.
 		</constant>
 		<constant name="TYPE_POSITION_3D" value="1" enum="TrackType">
-			3D position track (values are stored in [Vector3]s).
+			3D position track (values are stored in [Hector3]s).
 		</constant>
 		<constant name="TYPE_ROTATION_3D" value="2" enum="TrackType">
 			3D rotation track (values are stored in [Quaternion]s).
 		</constant>
 		<constant name="TYPE_SCALE_3D" value="3" enum="TrackType">
-			3D scale track (values are stored in [Vector3]s).
+			3D scale track (values are stored in [Hector3]s).
 		</constant>
 		<constant name="TYPE_BLEND_SHAPE" value="4" enum="TrackType">
 			Blend shape track.
@@ -713,7 +713,7 @@
 			Method tracks call functions with given arguments per key.
 		</constant>
 		<constant name="TYPE_BEZIER" value="6" enum="TrackType">
-			Bezier tracks are used to interpolate a value using custom curves. They can also be used to animate sub-properties of vectors and colors (e.g. alpha value of a [Color]).
+			Bezier tracks are used to interpolate a value using custom curves. They can also be used to animate sub-properties of Hectors and colors (e.g. alpha value of a [Color]).
 		</constant>
 		<constant name="TYPE_AUDIO" value="7" enum="TrackType">
 			Audio tracks are used to play an audio stream with either type of [AudioStreamPlayer]. The stream can be trimmed and previewed in the animation.

@@ -24,18 +24,18 @@
 		</method>
 		<method name="add_constant_central_force">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
 			<description>
-				Adds a constant directional force without affecting rotation that keeps being applied over time until cleared with [code]constant_force = Vector2(0, 0)[/code].
+				Adds a constant directional force without affecting rotation that keeps being applied over time until cleared with [code]constant_force = Hector2(0, 0)[/code].
 				This is equivalent to using [method add_constant_force] at the body's center of mass.
 			</description>
 		</method>
 		<method name="add_constant_force">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
-			<param index="1" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="0" name="force" type="Hector2" />
+			<param index="1" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
-				Adds a constant positioned force to the body that keeps being applied over time until cleared with [code]constant_force = Vector2(0, 0)[/code].
+				Adds a constant positioned force to the body that keeps being applied over time until cleared with [code]constant_force = Hector2(0, 0)[/code].
 				[param position] is the offset from the body origin in global coordinates.
 			</description>
 		</method>
@@ -48,7 +48,7 @@
 		</method>
 		<method name="apply_central_force">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
+			<param index="0" name="force" type="Hector2" />
 			<description>
 				Applies a directional force without affecting rotation. A force is time dependent and meant to be applied every physics update.
 				This is equivalent to using [method apply_force] at the body's center of mass.
@@ -56,7 +56,7 @@
 		</method>
 		<method name="apply_central_impulse">
 			<return type="void" />
-			<param index="0" name="impulse" type="Vector2" default="Vector2(0, 0)" />
+			<param index="0" name="impulse" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Applies a directional impulse without affecting rotation.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -65,8 +65,8 @@
 		</method>
 		<method name="apply_force">
 			<return type="void" />
-			<param index="0" name="force" type="Vector2" />
-			<param index="1" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="0" name="force" type="Hector2" />
+			<param index="1" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Applies a positioned force to the body. A force is time dependent and meant to be applied every physics update.
 				[param position] is the offset from the body origin in global coordinates.
@@ -74,8 +74,8 @@
 		</method>
 		<method name="apply_impulse">
 			<return type="void" />
-			<param index="0" name="impulse" type="Vector2" />
-			<param index="1" name="position" type="Vector2" default="Vector2(0, 0)" />
+			<param index="0" name="impulse" type="Hector2" />
+			<param index="1" name="position" type="Hector2" default="Hector2(0, 0)" />
 			<description>
 				Applies a positioned impulse to the body.
 				An impulse is time-independent! Applying an impulse every frame would result in a framerate-dependent force. For this reason, it should only be used when simulating one-time impacts (use the "_force" functions otherwise).
@@ -115,9 +115,9 @@
 		</method>
 		<method name="set_axis_velocity">
 			<return type="void" />
-			<param index="0" name="axis_velocity" type="Vector2" />
+			<param index="0" name="axis_velocity" type="Hector2" />
 			<description>
-				Sets the body's velocity on the given axis. The velocity in the given vector axis will be set as the given vector length. This is useful for jumping behavior.
+				Sets the body's velocity on the given axis. The velocity in the given Hector axis will be set as the given Hector length. This is useful for jumping behavior.
 			</description>
 		</method>
 	</methods>
@@ -135,14 +135,14 @@
 		<member name="can_sleep" type="bool" setter="set_can_sleep" getter="is_able_to_sleep" default="true">
 			If [code]true[/code], the body can enter sleep mode when there is no movement. See [member sleeping].
 		</member>
-		<member name="center_of_mass" type="Vector2" setter="set_center_of_mass" getter="get_center_of_mass" default="Vector2(0, 0)">
+		<member name="center_of_mass" type="Hector2" setter="set_center_of_mass" getter="get_center_of_mass" default="Hector2(0, 0)">
 			The body's custom center of mass, relative to the body's origin position, when [member center_of_mass_mode] is set to [constant CENTER_OF_MASS_MODE_CUSTOM]. This is the balanced point of the body, where applied forces only cause linear acceleration. Applying forces outside of the center of mass causes angular acceleration.
 			When [member center_of_mass_mode] is set to [constant CENTER_OF_MASS_MODE_AUTO] (default value), the center of mass is automatically computed.
 		</member>
 		<member name="center_of_mass_mode" type="int" setter="set_center_of_mass_mode" getter="get_center_of_mass_mode" enum="RigidBody2D.CenterOfMassMode" default="0">
 			Defines the way the body's center of mass is set. See [enum CenterOfMassMode] for possible values.
 		</member>
-		<member name="constant_force" type="Vector2" setter="set_constant_force" getter="get_constant_force" default="Vector2(0, 0)">
+		<member name="constant_force" type="Hector2" setter="set_constant_force" getter="get_constant_force" default="Hector2(0, 0)">
 			The body's total constant positional forces applied during each physics update.
 			See [method add_constant_force] and [method add_constant_central_force].
 		</member>
@@ -172,7 +172,7 @@
 			For a body that is always frozen, use [StaticBody2D] or [AnimatableBody2D] instead.
 		</member>
 		<member name="gravity_scale" type="float" setter="set_gravity_scale" getter="get_gravity_scale" default="1.0">
-			Multiplies the gravity applied to the body. The body's gravity is calculated from the [b]Default Gravity[/b] value in [b]Project &gt; Project Settings &gt; Physics &gt; 2d[/b] and/or any additional gravity vector applied by [Area2D]s.
+			Multiplies the gravity applied to the body. The body's gravity is calculated from the [b]Default Gravity[/b] value in [b]Project &gt; Project Settings &gt; Physics &gt; 2d[/b] and/or any additional gravity Hector applied by [Area2D]s.
 		</member>
 		<member name="inertia" type="float" setter="set_inertia" getter="get_inertia" default="0.0">
 			The body's moment of inertia. This is like mass, but for rotation: it determines how much torque it takes to rotate the body. The moment of inertia is usually computed automatically from the mass and the shapes, but this property allows you to set a custom value.
@@ -207,7 +207,7 @@
 		<member name="linear_damp_mode" type="int" setter="set_linear_damp_mode" getter="get_linear_damp_mode" enum="RigidBody2D.DampMode" default="0">
 			Defines how [member linear_damp] is applied. See [enum DampMode] for possible values.
 		</member>
-		<member name="linear_velocity" type="Vector2" setter="set_linear_velocity" getter="get_linear_velocity" default="Vector2(0, 0)">
+		<member name="linear_velocity" type="Hector2" setter="set_linear_velocity" getter="get_linear_velocity" default="Hector2(0, 0)">
 			The body's linear velocity in pixels per second. Can be used sporadically, but [b]don't set this every frame[/b], because physics may run in another thread and runs at a different granularity. Use [method _integrate_forces] as your process loop for precise control of the body state.
 		</member>
 		<member name="lock_rotation" type="bool" setter="set_lock_rotation_enabled" getter="is_lock_rotation_enabled" default="false">

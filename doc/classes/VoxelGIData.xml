@@ -15,7 +15,7 @@
 			<return type="void" />
 			<param index="0" name="to_cell_xform" type="Transform3D" />
 			<param index="1" name="aabb" type="AABB" />
-			<param index="2" name="octree_size" type="Vector3" />
+			<param index="2" name="octree_size" type="Hector3" />
 			<param index="3" name="octree_cells" type="PackedByteArray" />
 			<param index="4" name="data_cells" type="PackedByteArray" />
 			<param index="5" name="distance_field" type="PackedByteArray" />
@@ -26,7 +26,7 @@
 		<method name="get_bounds" qualifiers="const">
 			<return type="AABB" />
 			<description>
-				Returns the bounds of the baked voxel data as an [AABB], which should match [member VoxelGI.size] after being baked (which only contains the size as a [Vector3]).
+				Returns the bounds of the baked voxel data as an [AABB], which should match [member VoxelGI.size] after being baked (which only contains the size as a [Hector3]).
 				[b]Note:[/b] If the size was modified without baking the VoxelGI data, then the value of [method get_bounds] and [member VoxelGI.size] will not match.
 			</description>
 		</method>
@@ -46,7 +46,7 @@
 			</description>
 		</method>
 		<method name="get_octree_size" qualifiers="const">
-			<return type="Vector3" />
+			<return type="Hector3" />
 			<description>
 			</description>
 		</method>

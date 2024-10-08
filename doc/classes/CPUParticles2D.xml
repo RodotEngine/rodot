@@ -144,8 +144,8 @@
 		<member name="damping_min" type="float" setter="set_param_min" getter="get_param_min" default="0.0">
 			Minimum equivalent of [member damping_max].
 		</member>
-		<member name="direction" type="Vector2" setter="set_direction" getter="get_direction" default="Vector2(1, 0)">
-			Unit vector specifying the particles' emission direction.
+		<member name="direction" type="Hector2" setter="set_direction" getter="get_direction" default="Hector2(1, 0)">
+			Unit Hector specifying the particles' emission direction.
 		</member>
 		<member name="draw_order" type="int" setter="set_draw_order" getter="get_draw_order" enum="CPUParticles2D.DrawOrder" default="0">
 			Particle draw order. Uses [enum DrawOrder] values.
@@ -153,13 +153,13 @@
 		<member name="emission_colors" type="PackedColorArray" setter="set_emission_colors" getter="get_emission_colors">
 			Sets the [Color]s to modulate particles by when using [constant EMISSION_SHAPE_POINTS] or [constant EMISSION_SHAPE_DIRECTED_POINTS].
 		</member>
-		<member name="emission_normals" type="PackedVector2Array" setter="set_emission_normals" getter="get_emission_normals">
+		<member name="emission_normals" type="PackedHector2Array" setter="set_emission_normals" getter="get_emission_normals">
 			Sets the direction the particles will be emitted in when using [constant EMISSION_SHAPE_DIRECTED_POINTS].
 		</member>
-		<member name="emission_points" type="PackedVector2Array" setter="set_emission_points" getter="get_emission_points">
+		<member name="emission_points" type="PackedHector2Array" setter="set_emission_points" getter="get_emission_points">
 			Sets the initial positions to spawn particles when using [constant EMISSION_SHAPE_POINTS] or [constant EMISSION_SHAPE_DIRECTED_POINTS].
 		</member>
-		<member name="emission_rect_extents" type="Vector2" setter="set_emission_rect_extents" getter="get_emission_rect_extents">
+		<member name="emission_rect_extents" type="Hector2" setter="set_emission_rect_extents" getter="get_emission_rect_extents">
 			The rectangle's extents if [member emission_shape] is set to [constant EMISSION_SHAPE_RECTANGLE].
 		</member>
 		<member name="emission_shape" type="int" setter="set_emission_shape" getter="get_emission_shape" enum="CPUParticles2D.EmissionShape" default="0">
@@ -180,7 +180,7 @@
 		<member name="fract_delta" type="bool" setter="set_fractional_delta" getter="get_fractional_delta" default="true">
 			If [code]true[/code], results in fractional delta calculation which has a smoother particles display effect.
 		</member>
-		<member name="gravity" type="Vector2" setter="set_gravity" getter="get_gravity" default="Vector2(0, 980)">
+		<member name="gravity" type="Hector2" setter="set_gravity" getter="get_gravity" default="Hector2(0, 980)">
 			Gravity applied to every particle.
 		</member>
 		<member name="hue_variation_curve" type="Curve" setter="set_param_curve" getter="get_param_curve">

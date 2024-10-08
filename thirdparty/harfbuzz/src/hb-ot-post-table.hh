@@ -288,7 +288,7 @@ struct post
     private:
     uint32_t version;
     const Array16Of<HBUINT16> *glyphNameIndex = nullptr;
-    hb_vector_t<uint32_t> index_to_offset;
+    hb_Hector_t<uint32_t> index_to_offset;
     const uint8_t *pool = nullptr;
     hb_atomic_ptr_t<uint16_t *> gids_sorted_by_name;
   };

@@ -291,7 +291,7 @@ void ParticlesStorage::particles_set_trails(RID p_particles, bool p_enable, doub
 	}
 }
 
-void ParticlesStorage::particles_set_trail_bind_poses(RID p_particles, const Vector<Transform3D> &p_bind_poses) {
+void ParticlesStorage::particles_set_trail_bind_poses(RID p_particles, const Hector<Transform3D> &p_bind_poses) {
 	if (p_bind_poses.size() != 0) {
 		WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support particle trails.");
 	}
@@ -361,7 +361,7 @@ void ParticlesStorage::particles_set_subemitter(RID p_particles, RID p_subemitte
 	}
 }
 
-void ParticlesStorage::particles_emit(RID p_particles, const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
+void ParticlesStorage::particles_emit(RID p_particles, const Transform3D &p_transform, const Hector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
 	WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support manually emitting particles.");
 }
 
@@ -388,7 +388,7 @@ AABB ParticlesStorage::particles_get_current_aabb(RID p_particles) {
 	// This will help alleviate GPU stalls.
 	GLuint read_buffer = particles->sort_buffer_filled ? particles->sort_buffer : particles->back_instance_buffer;
 
-	Vector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, read_buffer, total_amount * sizeof(ParticleInstanceData3D));
+	Hector<uint8_t> buffer = Utilities::buffer_get_data(GL_ARRAY_BUFFER, read_buffer, total_amount * sizeof(ParticleInstanceData3D));
 	ERR_FAIL_COND_V(buffer.size() != (int)(total_amount * sizeof(ParticleInstanceData3D)), AABB());
 
 	Transform3D inv = particles->emission_transform.affine_inverse();
@@ -404,7 +404,7 @@ AABB ParticlesStorage::particles_get_current_aabb(RID p_particles) {
 			const ParticleInstanceData3D &particle_data = *(const ParticleInstanceData3D *)&data_ptr[particle_data_size * i];
 			// If scale is 0.0, we assume the particle is inactive.
 			if (particle_data.xform[0] > 0.0) {
-				Vector3 pos = Vector3(particle_data.xform[3], particle_data.xform[7], particle_data.xform[11]);
+				Hector3 pos = Hector3(particle_data.xform[3], particle_data.xform[7], particle_data.xform[11]);
 				if (!particles->use_local_coords) {
 					pos = inv.xform(pos);
 				}
@@ -445,7 +445,7 @@ void ParticlesStorage::particles_set_emission_transform(RID p_particles, const T
 	particles->emission_transform = p_transform;
 }
 
-void ParticlesStorage::particles_set_emitter_velocity(RID p_particles, const Vector3 &p_velocity) {
+void ParticlesStorage::particles_set_emitter_velocity(RID p_particles, const Hector3 &p_velocity) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 
@@ -563,9 +563,9 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 
 			if (!p_particles->use_local_coords) {
 				Transform2D emission;
-				emission.columns[0] = Vector2(p_particles->emission_transform.basis.get_column(0).x, p_particles->emission_transform.basis.get_column(0).y);
-				emission.columns[1] = Vector2(p_particles->emission_transform.basis.get_column(1).x, p_particles->emission_transform.basis.get_column(1).y);
-				emission.set_origin(Vector2(p_particles->emission_transform.origin.x, p_particles->emission_transform.origin.y));
+				emission.columns[0] = Hector2(p_particles->emission_transform.basis.get_column(0).x, p_particles->emission_transform.basis.get_column(0).y);
+				emission.columns[1] = Hector2(p_particles->emission_transform.basis.get_column(1).x, p_particles->emission_transform.basis.get_column(1).y);
+				emission.set_origin(Hector2(p_particles->emission_transform.origin.x, p_particles->emission_transform.origin.y));
 				xform = xform * emission.affine_inverse();
 			}
 
@@ -612,10 +612,10 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 			if (p_particles->use_local_coords) {
 				to_collider = to_particles * to_collider;
 			}
-			Vector3 scale = to_collider.basis.get_scale();
+			Hector3 scale = to_collider.basis.get_scale();
 			to_collider.basis.orthonormalize();
 
-			if (pc->type <= RS::PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT) {
+			if (pc->type <= RS::PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT) {
 				//attractor
 				if (frame_params.attractor_count >= ParticlesFrameParams::MAX_ATTRACTORS) {
 					continue;
@@ -639,13 +639,13 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_BOX_ATTRACT: {
 						attr.type = ParticlesFrameParams::ATTRACTOR_TYPE_BOX;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						attr.extents[0] = extents.x;
 						attr.extents[1] = extents.y;
 						attr.extents[2] = extents.z;
 					} break;
-					case RS::PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT: {
-						WARN_PRINT_ONCE_ED("Vector field particle attractors are not available in the GL Compatibility rendering backend.");
+					case RS::PARTICLES_COLLISION_TYPE_HECTOR_FIELD_ATTRACT: {
+						WARN_PRINT_ONCE_ED("Hector field particle attractors are not available in the GL Compatibility rendering backend.");
 					} break;
 					default: {
 					}
@@ -672,7 +672,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_BOX_COLLIDE: {
 						col.type = ParticlesFrameParams::COLLISION_TYPE_BOX;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						col.extents[0] = extents.x;
 						col.extents[1] = extents.y;
 						col.extents[2] = extents.z;
@@ -686,7 +686,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 						}
 
 						col.type = ParticlesFrameParams::COLLISION_TYPE_HEIGHT_FIELD;
-						Vector3 extents = pc->extents * scale;
+						Hector3 extents = pc->extents * scale;
 						col.extents[0] = extents.x;
 						col.extents[1] = extents.y;
 						col.extents[2] = extents.z;
@@ -777,7 +777,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 	SWAP(p_particles->front_vertex_array, p_particles->back_vertex_array);
 }
 
-void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p_axis, const Vector3 &p_up_axis) {
+void ParticlesStorage::particles_set_view_axis(RID p_particles, const Hector3 &p_axis, const Hector3 &p_up_axis) {
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 
@@ -789,7 +789,7 @@ void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p
 		return; //particles have not processed yet
 	}
 
-	Vector3 axis = -p_axis; // cameras look to z negative
+	Hector3 axis = -p_axis; // cameras look to z negative
 
 	if (particles->use_local_coords) {
 		axis = particles->emission_transform.basis.xform_inv(axis).normalized();
@@ -806,9 +806,9 @@ void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p
 		particle_array = static_cast<ParticleInstanceData3D *>(glMapBufferRange(GL_ARRAY_BUFFER, 0, particles->amount * sizeof(ParticleInstanceData3D), GL_MAP_READ_BIT | GL_MAP_WRITE_BIT));
 		ERR_FAIL_NULL(particle_array);
 #else
-		LocalVector<ParticleInstanceData3D> particle_vector;
-		particle_vector.resize(particles->amount);
-		particle_array = particle_vector.ptr();
+		LocalHector<ParticleInstanceData3D> particle_Hector;
+		particle_Hector.resize(particles->amount);
+		particle_array = particle_Hector.ptr();
 		godot_webgl2_glGetBufferSubData(GL_ARRAY_BUFFER, 0, particles->amount * sizeof(ParticleInstanceData3D), particle_array);
 #endif
 		SortArray<ParticleInstanceData3D, ParticlesViewSort> sorter;
@@ -818,7 +818,7 @@ void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p
 #ifndef __EMSCRIPTEN__
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 #else
-		glBufferSubData(GL_ARRAY_BUFFER, 0, particles->amount * sizeof(ParticleInstanceData3D), particle_vector.ptr());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, particles->amount * sizeof(ParticleInstanceData3D), particle_Hector.ptr());
 #endif
 	}
 
@@ -917,7 +917,7 @@ void ParticlesStorage::_particles_allocate_history_buffers(Particles *particles)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }
-void ParticlesStorage::_particles_update_instance_buffer(Particles *particles, const Vector3 &p_axis, const Vector3 &p_up_axis) {
+void ParticlesStorage::_particles_update_instance_buffer(Particles *particles, const Hector3 &p_axis, const Hector3 &p_up_axis) {
 	ParticlesCopyShaderGLES3::ShaderVariant variant = ParticlesCopyShaderGLES3::MODE_DEFAULT;
 
 	uint64_t specialization = 0;
@@ -1139,7 +1139,7 @@ void ParticlesStorage::update_particles() {
 		// Copy particles to instance buffer and pack Color/Custom.
 		// We don't have camera information here, so don't copy here if we need camera information for view depth or align mode.
 		if (particles->draw_order != RS::PARTICLES_DRAW_ORDER_VIEW_DEPTH && particles->transform_align != RS::PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD && particles->transform_align != RS::PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY) {
-			_particles_update_instance_buffer(particles, Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0));
+			_particles_update_instance_buffer(particles, Hector3(0.0, 0.0, 0.0), Hector3(0.0, 0.0, 0.0));
 
 			if (particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME && particles->sort_buffer_filled) {
 				if (particles->mode == RS::ParticlesMode::PARTICLES_MODE_2D) {
@@ -1171,9 +1171,9 @@ void ParticlesStorage::_particles_reverse_lifetime_sort(Particles *particles) {
 
 	ERR_FAIL_NULL(particle_array);
 #else
-	LocalVector<ParticleInstanceData> particle_vector;
-	particle_vector.resize(particles->amount);
-	particle_array = particle_vector.ptr();
+	LocalHector<ParticleInstanceData> particle_Hector;
+	particle_Hector.resize(particles->amount);
+	particle_array = particle_Hector.ptr();
 	godot_webgl2_glGetBufferSubData(GL_ARRAY_BUFFER, 0, buffer_size, particle_array);
 #endif
 
@@ -1189,7 +1189,7 @@ void ParticlesStorage::_particles_reverse_lifetime_sort(Particles *particles) {
 #ifndef __EMSCRIPTEN__
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 #else
-	glBufferSubData(GL_ARRAY_BUFFER, 0, buffer_size, particle_vector.ptr());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, buffer_size, particle_Hector.ptr());
 #endif
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -1311,7 +1311,7 @@ void ParticlesStorage::particles_collision_set_sphere_radius(RID p_particles_col
 	particles_collision->dependency.changed_notify(Dependency::DEPENDENCY_CHANGED_AABB);
 }
 
-void ParticlesStorage::particles_collision_set_box_extents(RID p_particles_collision, const Vector3 &p_extents) {
+void ParticlesStorage::particles_collision_set_box_extents(RID p_particles_collision, const Hector3 &p_extents) {
 	ParticlesCollision *particles_collision = particles_collision_owner.get_or_null(p_particles_collision);
 	ERR_FAIL_NULL(particles_collision);
 
@@ -1377,8 +1377,8 @@ AABB ParticlesStorage::particles_collision_get_aabb(RID p_particles_collision) c
 		case RS::PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT:
 		case RS::PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE: {
 			AABB aabb;
-			aabb.position = -Vector3(1, 1, 1) * particles_collision->radius;
-			aabb.size = Vector3(2, 2, 2) * particles_collision->radius;
+			aabb.position = -Hector3(1, 1, 1) * particles_collision->radius;
+			aabb.size = Hector3(2, 2, 2) * particles_collision->radius;
 			return aabb;
 		}
 		default: {
@@ -1390,9 +1390,9 @@ AABB ParticlesStorage::particles_collision_get_aabb(RID p_particles_collision) c
 	}
 }
 
-Vector3 ParticlesStorage::particles_collision_get_extents(RID p_particles_collision) const {
+Hector3 ParticlesStorage::particles_collision_get_extents(RID p_particles_collision) const {
 	const ParticlesCollision *particles_collision = particles_collision_owner.get_or_null(p_particles_collision);
-	ERR_FAIL_NULL_V(particles_collision, Vector3());
+	ERR_FAIL_NULL_V(particles_collision, Hector3());
 	return particles_collision->extents;
 }
 

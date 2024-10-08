@@ -70,7 +70,7 @@ void OS_LinuxBSD::alert(const String &p_alert, const String &p_title) {
 	const char *message_programs[] = { "zenity", "kdialog", "Xdialog", "xmessage" };
 
 	String path = get_environment("PATH");
-	Vector<String> path_elems = path.split(":", false);
+	Hector<String> path_elems = path.split(":", false);
 	String program;
 
 	for (int i = 0; i < path_elems.size(); i++) {
@@ -301,12 +301,12 @@ String OS_LinuxBSD::get_version() const {
 	return release_version;
 }
 
-Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
+Hector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	if (RenderingServer::get_singleton() == nullptr) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
-	static Vector<String> info;
+	static Hector<String> info;
 	if (!info.is_empty()) {
 		return info;
 	}
@@ -320,7 +320,7 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	lspci_args.push_back("-n");
 	Error err = const_cast<OS_LinuxBSD *>(this)->execute("lspci", lspci_args, &vendor_device_id_mappings);
 	if (err != OK || vendor_device_id_mappings.is_empty()) {
-		return Vector<String>();
+		return Hector<String>();
 	}
 
 	// Usually found under "VGA", but for example NVIDIA mobile/laptop adapters are often listed under "3D" and some AMD adapters are under "Display".
@@ -329,18 +329,18 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	const String dc_3d = "0380"; // 3D controller
 
 	// splitting results by device class allows prioritizing, if multiple devices are found.
-	Vector<String> class_vga_device_candidates;
-	Vector<String> class_display_device_candidates;
-	Vector<String> class_3d_device_candidates;
+	Hector<String> class_vga_device_candidates;
+	Hector<String> class_display_device_candidates;
+	Hector<String> class_3d_device_candidates;
 
 #ifdef MODULE_REGEX_ENABLED
 	RegEx regex_id_format = RegEx();
 	regex_id_format.compile("^[a-f0-9]{4}:[a-f0-9]{4}$"); // e.g. `10de:13c2`; IDs are always in hexadecimal
 #endif
 
-	Vector<String> value_lines = vendor_device_id_mappings.split("\n", false); // example: `02:00.0 0300: 10de:13c2 (rev a1)`
+	Hector<String> value_lines = vendor_device_id_mappings.split("\n", false); // example: `02:00.0 0300: 10de:13c2 (rev a1)`
 	for (const String &line : value_lines) {
-		Vector<String> columns = line.split(" ", false);
+		Hector<String> columns = line.split(" ", false);
 		if (columns.size() < 3) {
 			continue;
 		}
@@ -372,9 +372,9 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	// And they have no indicator besides certain driver names.
 	const String kernel_lit = "Kernel driver in use"; // line of interest
 	const String dummys = "vfio"; // for e.g. pci passthrough dummy kernel driver `vfio-pci`
-	Vector<String> class_vga_device_drivers = OS_LinuxBSD::lspci_get_device_value(class_vga_device_candidates, kernel_lit, dummys);
-	Vector<String> class_display_device_drivers = OS_LinuxBSD::lspci_get_device_value(class_display_device_candidates, kernel_lit, dummys);
-	Vector<String> class_3d_device_drivers = OS_LinuxBSD::lspci_get_device_value(class_3d_device_candidates, kernel_lit, dummys);
+	Hector<String> class_vga_device_drivers = OS_LinuxBSD::lspci_get_device_value(class_vga_device_candidates, kernel_lit, dummys);
+	Hector<String> class_display_device_drivers = OS_LinuxBSD::lspci_get_device_value(class_display_device_candidates, kernel_lit, dummys);
+	Hector<String> class_3d_device_drivers = OS_LinuxBSD::lspci_get_device_value(class_3d_device_candidates, kernel_lit, dummys);
 
 	String driver_name;
 	String driver_version;
@@ -407,9 +407,9 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 		info.push_back(""); // So that this method always either returns an empty array, or an array of length 2.
 		return info;
 	}
-	Vector<String> lines = modinfo.split("\n", false);
+	Hector<String> lines = modinfo.split("\n", false);
 	for (const String &line : lines) {
-		Vector<String> columns = line.split(":", false, 1);
+		Hector<String> columns = line.split(":", false, 1);
 		if (columns.size() < 2) {
 			continue;
 		}
@@ -424,10 +424,10 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	return info;
 }
 
-Vector<String> OS_LinuxBSD::lspci_device_filter(Vector<String> vendor_device_id_mapping, String class_suffix, String check_column, String whitelist) const {
-	// NOTE: whitelist can be changed to `Vector<String>`, if the need arises.
+Hector<String> OS_LinuxBSD::lspci_device_filter(Hector<String> vendor_device_id_mapping, String class_suffix, String check_column, String whitelist) const {
+	// NOTE: whitelist can be changed to `Hector<String>`, if the need arises.
 	const String sep = ":";
-	Vector<String> devices;
+	Hector<String> devices;
 	for (const String &mapping : vendor_device_id_mapping) {
 		String device;
 		List<String> d_args;
@@ -436,14 +436,14 @@ Vector<String> OS_LinuxBSD::lspci_device_filter(Vector<String> vendor_device_id_
 		d_args.push_back("-vmm");
 		Error err = const_cast<OS_LinuxBSD *>(this)->execute("lspci", d_args, &device); // e.g. `lspci -d 10de:13c2:0300 -vmm`
 		if (err != OK) {
-			return Vector<String>();
+			return Hector<String>();
 		} else if (device.is_empty()) {
 			continue;
 		}
 
-		Vector<String> device_lines = device.split("\n", false);
+		Hector<String> device_lines = device.split("\n", false);
 		for (const String &line : device_lines) {
-			Vector<String> columns = line.split(":", false, 1);
+			Hector<String> columns = line.split(":", false, 1);
 			if (columns.size() < 2) {
 				continue;
 			}
@@ -463,10 +463,10 @@ Vector<String> OS_LinuxBSD::lspci_device_filter(Vector<String> vendor_device_id_
 	return devices;
 }
 
-Vector<String> OS_LinuxBSD::lspci_get_device_value(Vector<String> vendor_device_id_mapping, String check_column, String blacklist) const {
-	// NOTE: blacklist can be changed to `Vector<String>`, if the need arises.
+Hector<String> OS_LinuxBSD::lspci_get_device_value(Hector<String> vendor_device_id_mapping, String check_column, String blacklist) const {
+	// NOTE: blacklist can be changed to `Hector<String>`, if the need arises.
 	const String sep = ":";
-	Vector<String> values;
+	Hector<String> values;
 	for (const String &mapping : vendor_device_id_mapping) {
 		String device;
 		List<String> d_args;
@@ -475,14 +475,14 @@ Vector<String> OS_LinuxBSD::lspci_get_device_value(Vector<String> vendor_device_
 		d_args.push_back("-k");
 		Error err = const_cast<OS_LinuxBSD *>(this)->execute("lspci", d_args, &device); // e.g. `lspci -d 10de:13c2 -k`
 		if (err != OK) {
-			return Vector<String>();
+			return Hector<String>();
 		} else if (device.is_empty()) {
 			continue;
 		}
 
-		Vector<String> device_lines = device.split("\n", false);
+		Hector<String> device_lines = device.split("\n", false);
 		for (const String &line : device_lines) {
-			Vector<String> columns = line.split(":", false, 1);
+			Hector<String> columns = line.split(":", false, 1);
 			if (columns.size() < 2) {
 				continue;
 			}
@@ -651,14 +651,14 @@ uint64_t OS_LinuxBSD::get_embedded_pck_offset() const {
 	return off;
 }
 
-Vector<String> OS_LinuxBSD::get_system_fonts() const {
+Hector<String> OS_LinuxBSD::get_system_fonts() const {
 #ifdef FONTCONFIG_ENABLED
 	if (!font_config_initialized) {
-		ERR_FAIL_V_MSG(Vector<String>(), "Unable to load fontconfig, system font support is disabled.");
+		ERR_FAIL_V_MSG(Hector<String>(), "Unable to load fontconfig, system font support is disabled.");
 	}
 
 	HashSet<String> font_names;
-	Vector<String> ret;
+	Hector<String> ret;
 	static const char *allowed_formats[] = { "TrueType", "CFF" };
 	for (size_t i = 0; i < sizeof(allowed_formats) / sizeof(const char *); i++) {
 		FcPattern *pattern = FcPatternCreate();
@@ -687,7 +687,7 @@ Vector<String> OS_LinuxBSD::get_system_fonts() const {
 	}
 	return ret;
 #else
-	ERR_FAIL_V_MSG(Vector<String>(), "Godot was compiled without fontconfig, system font support is disabled.");
+	ERR_FAIL_V_MSG(Hector<String>(), "Godot was compiled without fontconfig, system font support is disabled.");
 #endif
 }
 
@@ -743,13 +743,13 @@ int OS_LinuxBSD::_stretch_to_fc(int p_stretch) const {
 }
 #endif // FONTCONFIG_ENABLED
 
-Vector<String> OS_LinuxBSD::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
+Hector<String> OS_LinuxBSD::get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale, const String &p_script, int p_weight, int p_stretch, bool p_italic) const {
 #ifdef FONTCONFIG_ENABLED
 	if (!font_config_initialized) {
-		ERR_FAIL_V_MSG(Vector<String>(), "Unable to load fontconfig, system font support is disabled.");
+		ERR_FAIL_V_MSG(Hector<String>(), "Unable to load fontconfig, system font support is disabled.");
 	}
 
-	Vector<String> ret;
+	Hector<String> ret;
 	static const char *allowed_formats[] = { "TrueType", "CFF" };
 	for (size_t i = 0; i < sizeof(allowed_formats) / sizeof(const char *); i++) {
 		FcPattern *pattern = FcPatternCreate();
@@ -793,7 +793,7 @@ Vector<String> OS_LinuxBSD::get_system_font_path_for_text(const String &p_font_n
 
 	return ret;
 #else
-	ERR_FAIL_V_MSG(Vector<String>(), "Godot was compiled without fontconfig, system font support is disabled.");
+	ERR_FAIL_V_MSG(Hector<String>(), "Godot was compiled without fontconfig, system font support is disabled.");
 #endif
 }
 

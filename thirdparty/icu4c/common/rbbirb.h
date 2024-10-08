@@ -25,7 +25,7 @@
 #include "unicode/uniset.h"
 #include "unicode/parseerr.h"
 #include "uhash.h"
-#include "uvector.h"
+#include "uHector.h"
 #include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                              //    looks up references to $variables within a set.
 
@@ -164,11 +164,11 @@ public:
                                                      // longest match.
 
     RBBISetBuilder                *fSetBuilder;      // Set and Character Category builder.
-    UVector                       *fUSetNodes;       // Vector of all uset nodes.
+    UHector                       *fUSetNodes;       // Hector of all uset nodes.
 
     RBBITableBuilder              *fForwardTable;    // State transition table, build time form.
 
-    UVector                       *fRuleStatusVals;  // The values that can be returned
+    UHector                       *fRuleStatusVals;  // The values that can be returned
                                                      //   from getRuleStatus().
 
     RBBIDataHeader                *flattenData();    // Create the flattened (runtime format)

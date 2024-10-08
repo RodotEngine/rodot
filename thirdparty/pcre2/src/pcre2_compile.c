@@ -108,7 +108,7 @@ them will be able to (i.e. assume a 64-bit world). */
 #define SIZEOFFSET 2
 #endif
 
-/* Macros for manipulating elements of the parsed pattern vector. */
+/* Macros for manipulating elements of the parsed pattern Hector. */
 
 #define META_CODE(x)   (x & 0xffff0000u)
 #define META_DATA(x)   (x & 0x0000ffffu)
@@ -152,7 +152,7 @@ static int
 different ways in the different pattern scans. The parsing and group-
 identifying pre-scan uses it to handle nesting, and needs it to be 16-bit
 aligned for this. Having defined the size in code units, we set up
-C16_WORK_SIZE as the number of elements in the 16-bit vector.
+C16_WORK_SIZE as the number of elements in the 16-bit Hector.
 
 During the first compiling phase, when determining how much memory is required,
 the regex is partly compiled into this space, but the compiled parts are
@@ -168,7 +168,7 @@ In the real compile phase, this workspace is not currently used. */
 #define C16_WORK_SIZE \
   ((COMPILE_WORK_SIZE * sizeof(PCRE2_UCHAR))/sizeof(uint16_t))
 
-/* A uint32_t vector is used for caching information about the size of
+/* A uint32_t Hector is used for caching information about the size of
 capturing groups, to improve performance. A default is created on the stack of
 this size. */
 
@@ -179,14 +179,14 @@ overrun before it actually does run off the end of the data block. */
 
 #define WORK_SIZE_SAFETY_MARGIN (100)
 
-/* This value determines the size of the initial vector that is used for
+/* This value determines the size of the initial Hector that is used for
 remembering named groups during the pre-compile. It is allocated on the stack,
 but if it is too small, it is expanded, in a similar way to the workspace. The
 value is the number of slots in the list. */
 
 #define NAMED_GROUP_LIST_SIZE  20
 
-/* The pre-compiling pass over the pattern creates a parsed pattern in a vector
+/* The pre-compiling pass over the pattern creates a parsed pattern in a Hector
 of uint32_t. For short patterns this lives on the stack, with this size. Heap
 memory is used for longer patterns. */
 
@@ -199,7 +199,7 @@ don't have to check them every time. */
 
 #define OFLOW_MAX (INT_MAX - 20)
 
-/* Code values for parsed patterns, which are stored in a vector of 32-bit
+/* Code values for parsed patterns, which are stored in a Hector of 32-bit
 unsigned ints. Values less than META_END are literal data values. The coding
 for identifying the item is in the top 16-bits, leaving 16 bits for the
 additional data that some of them need. The META_CODE, META_DATA, and META_DIFF
@@ -395,7 +395,7 @@ matching xxcu variable is set, and the low valued bits are relevant. */
 #define REQ_CASELESS  0x00000001u  /* Code unit in xxcu is caseless */
 #define REQ_VARY      0x00000002u  /* Code unit is followed by non-literal */
 
-/* These flags are used in the groupinfo vector. */
+/* These flags are used in the groupinfo Hector. */
 
 #define GI_SET_FIXED_LENGTH    0x80000000u
 #define GI_NOT_FIXED_LENGTH    0x40000000u
@@ -921,7 +921,7 @@ static const uint8_t opcode_possessify[] = {
 *     Show the parsed pattern for debugging      *
 *************************************************/
 
-/* For debugging the pre-scan, this code, which outputs the parsed data vector,
+/* For debugging the pre-scan, this code, which outputs the parsed data Hector,
 can be enabled. */
 
 static void show_parsed(compile_block *cb)
@@ -2707,7 +2707,7 @@ return parsed_pattern;
 things: (1) It identifies capturing groups and makes a table of named capturing
 groups so that information about them is fully available to both the compiling
 scans. (2) It writes a parsed version of the pattern with comments omitted and
-escapes processed into the parsed_pattern vector.
+escapes processed into the parsed_pattern Hector.
 
 Arguments:
   ptr             points to the start of the pattern
@@ -3229,7 +3229,7 @@ while (ptr < ptrend)
     references to groups numbered less than 10 we can't use more than two items
     in parsed_pattern because they may be just two characters in the input (and
     in a 64-bit world an offset may need two elements). So for them, the offset
-    of the first occurrent is held in a special vector. */
+    of the first occurrent is held in a special Hector. */
 
     else if (escape < 0)
       {
@@ -3253,7 +3253,7 @@ while (ptr < ptrend)
     parsed item, but \P and \p are followed by a 16-bit type and a 16-bit
     value. They are supported only when Unicode is available. The type and
     value are packed into a single 32-bit value so that the whole sequences
-    uses only two elements in the parsed_vector. This is because the same
+    uses only two elements in the parsed_Hector. This is because the same
     coding is used if \d (for example) is turned into \p{Nd} when PCRE2_UCP is
     set.
 
@@ -3475,7 +3475,7 @@ while (ptr < ptrend)
       parsed_pattern += 2;
       }
 
-    /* Now we can put the quantifier into the parsed pattern vector. At this
+    /* Now we can put the quantifier into the parsed pattern Hector. At this
     stage, we have only the basic quantifier. The check for a following + or ?
     modifier happens at the top of the loop, after any intervening comments
     have been removed. */
@@ -5604,7 +5604,7 @@ return TRUE;
 *           Compile one branch                   *
 *************************************************/
 
-/* Scan the parsed pattern, compiling it into the a vector of PCRE2_UCHAR. If
+/* Scan the parsed pattern, compiling it into the a Hector of PCRE2_UCHAR. If
 the options are changed during the branch, the pointer is used to change the
 external options bits. This function is used during the pre-compile phase when
 we are trying to find out the amount of memory needed, as well as during the
@@ -6466,7 +6466,7 @@ for (;; pptr++)
     /* If there are no characters > 255, or they are all to be included or
     excluded, set the opcode to OP_CLASS or OP_NCLASS, depending on whether the
     whole class was negated and whether there were negative specials such as \S
-    (non-UCP) in the class. Then copy the 32-byte map into the code vector,
+    (non-UCP) in the class. Then copy the 32-byte map into the code Hector,
     negating it if necessary. */
 
     *code++ = (negate_class == should_flip_negation) ? OP_CLASS : OP_NCLASS;
@@ -8020,7 +8020,7 @@ for (;; pptr++)
     /* ===============================================================*/
     /* Handle a back reference by number, which is the meta argument. The
     pattern offsets for back references to group numbers less than 10 are held
-    in a special vector, to avoid using more than two parsed pattern elements
+    in a special Hector, to avoid using more than two parsed pattern elements
     in 64-bit environments. We only need the offset to the first occurrence,
     because if that doesn't fail, subsequent ones will also be OK. */
 
@@ -9658,7 +9658,7 @@ for (;; pptr++)
       }
     goto ISNOTFIXED;                     /* Duplicate name or number */
 
-    /* The offset values for back references < 10 are in a separate vector
+    /* The offset values for back references < 10 are in a separate Hector
     because otherwise they would use more than two parsed pattern elements on
     64-bit systems. */
 
@@ -10277,10 +10277,10 @@ cb.backref_map = 0;
 
 /* Escape sequences \1 to \9 are always back references, but as they are only
 two characters long, only two elements can be used in the parsed_pattern
-vector. The first contains the reference, and we'd like to use the second to
+Hector. The first contains the reference, and we'd like to use the second to
 record the offset in the pattern, so that forward references to non-existent
 groups can be diagnosed later with an offset. However, on 64-bit systems,
-PCRE2_SIZE won't fit. Instead, we have a vector of offsets for the first
+PCRE2_SIZE won't fit. Instead, we have a Hector of offsets for the first
 occurrence of \1 to \9, indexed by the second parsed_pattern value. All other
 references have enough space for the offset to be put into the parsed pattern.
 */
@@ -10470,7 +10470,7 @@ switch(newline)
 /* Pre-scan the pattern to do two things: (1) Discover the named groups and
 their numerical equivalents, so that this information is always available for
 the remaining processing. (2) At the same time, parse the pattern and put a
-processed version into the parsed_pattern vector. This has escapes interpreted
+processed version into the parsed_pattern Hector. This has escapes interpreted
 and comments removed (amongst other things).
 
 In all but one case, when PCRE2_AUTO_CALLOUT is not set, the number of unsigned
@@ -10491,7 +10491,7 @@ if (!utf)
 /* Ensure that the parsed pattern buffer is big enough. When PCRE2_AUTO_CALLOUT
 is set we have to assume a numerical callout (4 elements) for each character
 plus one at the end. This is overkill, but memory is plentiful these days. For
-many smaller patterns the vector on the stack (which was set up above) can be
+many smaller patterns the Hector on the stack (which was set up above) can be
 used. */
 
 parsed_size_needed = patlen - skipatstart + big32count;
@@ -10527,9 +10527,9 @@ of limited length, and if limited, what the minimum and maximum lengths are.
 This caching saves re-computing the length of any group that is referenced more
 than once, which is particularly relevant when recursion is involved.
 Unnumbered groups do not have this exposure because they cannot be referenced.
-If there are sufficiently few groups, the default index vector on the stack, as
+If there are sufficiently few groups, the default index Hector on the stack, as
 set up above, can be used. Otherwise we have to get/free some heap memory. The
-vector must be initialized to zero. */
+Hector must be initialized to zero. */
 
 if (has_lookbehind)
   {
@@ -10550,7 +10550,7 @@ if (has_lookbehind)
   if (errorcode != 0) goto HAD_CB_ERROR;
   }
 
-/* For debugging, there is a function that shows the parsed pattern vector. */
+/* For debugging, there is a function that shows the parsed pattern Hector. */
 
 #ifdef DEBUG_SHOW_PARSED
 fprintf(stderr, "+++ Pre-scan complete:\n");
@@ -10950,7 +10950,7 @@ if ((re->overall_options & PCRE2_NO_START_OPTIMIZE) == 0)
 pattern's terminating zero defined again. If memory was obtained for the parsed
 version of the pattern, free it before returning. Also free the list of named
 groups if a larger one had to be obtained, and likewise the group information
-vector. */
+Hector. */
 
 EXIT:
 #ifdef SUPPORT_VALGRIND

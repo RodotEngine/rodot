@@ -43,15 +43,15 @@ public:
 	virtual void voxel_gi_free(RID p_rid) = 0;
 	virtual void voxel_gi_initialize(RID p_rid) = 0;
 
-	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) = 0;
+	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Hector3i &p_octree_size, const Hector<uint8_t> &p_octree_cells, const Hector<uint8_t> &p_data_cells, const Hector<uint8_t> &p_distance_field, const Hector<int> &p_level_counts) = 0;
 
 	virtual AABB voxel_gi_get_bounds(RID p_voxel_gi) const = 0;
-	virtual Vector3i voxel_gi_get_octree_size(RID p_voxel_gi) const = 0;
-	virtual Vector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const = 0;
-	virtual Vector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const = 0;
-	virtual Vector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const = 0;
+	virtual Hector3i voxel_gi_get_octree_size(RID p_voxel_gi) const = 0;
+	virtual Hector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const = 0;
+	virtual Hector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const = 0;
+	virtual Hector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const = 0;
 
-	virtual Vector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const = 0;
+	virtual Hector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const = 0;
 	virtual Transform3D voxel_gi_get_to_cell_xform(RID p_voxel_gi) const = 0;
 
 	virtual void voxel_gi_set_dynamic_range(RID p_voxel_gi, float p_range) = 0;

@@ -116,7 +116,7 @@ class DisplayServerWayland : public DisplayServer {
 	Context context;
 
 	String ime_text;
-	Vector2i ime_selection;
+	Hector2i ime_selection;
 
 	bool suspended = false;
 	bool emulate_vsync = false;
@@ -177,8 +177,8 @@ public:
 	virtual bool is_dark_mode() const override;
 	virtual void set_system_theme_change_callback(const Callable &p_callable) override;
 
-	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) override;
-	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
+	virtual Error file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const Callable &p_callback) override;
+	virtual Error file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Hector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback) override;
 #endif
 
 	virtual void mouse_set_mode(MouseMode p_mode) override;
@@ -206,7 +206,7 @@ public:
 	virtual void screen_set_keep_on(bool p_enable) override;
 	virtual bool screen_is_kept_on() const override;
 
-	virtual Vector<DisplayServer::WindowID> get_window_list() const override;
+	virtual Hector<DisplayServer::WindowID> get_window_list() const override;
 
 	virtual int64_t window_get_native_handle(HandleType p_handle_type, WindowID p_window = MAIN_WINDOW_ID) const override;
 
@@ -216,7 +216,7 @@ public:
 	virtual ObjectID window_get_attached_instance_id(WindowID p_window_id = MAIN_WINDOW_ID) const override;
 
 	virtual void window_set_title(const String &p_title, WindowID p_window_id = MAIN_WINDOW_ID) override;
-	virtual void window_set_mouse_passthrough(const Vector<Vector2> &p_region, WindowID p_window_id = MAIN_WINDOW_ID) override;
+	virtual void window_set_mouse_passthrough(const Hector<Hector2> &p_region, WindowID p_window_id = MAIN_WINDOW_ID) override;
 
 	virtual void window_set_rect_changed_callback(const Callable &p_callable, WindowID p_window_id = MAIN_WINDOW_ID) override;
 	virtual void window_set_window_event_callback(const Callable &p_callable, WindowID p_window_id = MAIN_WINDOW_ID) override;
@@ -272,7 +272,7 @@ public:
 
 	virtual void cursor_set_shape(CursorShape p_shape) override;
 	virtual CursorShape cursor_get_shape() const override;
-	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Vector2 &p_hotspot) override;
+	virtual void cursor_set_custom_image(const Ref<Resource> &p_cursor, CursorShape p_shape, const Hector2 &p_hotspot) override;
 
 	virtual int keyboard_get_layout_count() const override;
 	virtual int keyboard_get_current_layout() const override;
@@ -291,11 +291,11 @@ public:
 	virtual bool is_window_transparency_available() const override;
 
 	static DisplayServer *create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Point2i *p_position, const Size2i &p_resolution, int p_screen, Context p_context, Error &r_error);
-	static Vector<String> get_rendering_drivers_func();
+	static Hector<String> get_rendering_drivers_func();
 
 	static void register_wayland_driver();
 
-	DisplayServerWayland(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i &p_resolution, Context p_context, Error &r_error);
+	DisplayServerWayland(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Hector2i &p_resolution, Context p_context, Error &r_error);
 	~DisplayServerWayland();
 };
 

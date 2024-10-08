@@ -63,7 +63,7 @@ struct DebuggerMarshalls {
 		String error;
 		String error_descr;
 		bool warning = false;
-		Vector<ScriptLanguage::StackInfo> callstack;
+		Hector<ScriptLanguage::StackInfo> callstack;
 
 		Array serialize();
 		bool deserialize(const Array &p_arr);

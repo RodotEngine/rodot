@@ -167,7 +167,7 @@ private:
 		Node *owner = nullptr;
 		HashMap<StringName, Node *> children;
 		mutable bool children_cache_dirty = true;
-		mutable LocalVector<Node *> children_cache;
+		mutable LocalHector<Node *> children_cache;
 		HashMap<StringName, Node *> owned_unique_nodes;
 		bool unique_name_in_owner = false;
 		InternalMode internal_mode = INTERNAL_MODE_DISABLED;
@@ -382,7 +382,7 @@ protected:
 	GDVIRTUAL0(_enter_tree)
 	GDVIRTUAL0(_exit_tree)
 	GDVIRTUAL0(_ready)
-	GDVIRTUAL0RC(Vector<String>, _get_configuration_warnings)
+	GDVIRTUAL0RC(Hector<String>, _get_configuration_warnings)
 
 	GDVIRTUAL1(_input, Ref<InputEvent>)
 	GDVIRTUAL1(_shortcut_input, Ref<InputEvent>)
@@ -462,7 +462,7 @@ public:
 	Node *find_child(const String &p_pattern, bool p_recursive = true, bool p_owned = true) const;
 	TypedArray<Node> find_children(const String &p_pattern, const String &p_type = "", bool p_recursive = true, bool p_owned = true) const;
 	bool has_node_and_resource(const NodePath &p_path) const;
-	Node *get_node_and_resource(const NodePath &p_path, Ref<Resource> &r_res, Vector<StringName> &r_leftover_subpath, bool p_last_is_property = true) const;
+	Node *get_node_and_resource(const NodePath &p_path, Ref<Resource> &r_res, Hector<StringName> &r_leftover_subpath, bool p_last_is_property = true) const;
 
 	virtual void reparent(Node *p_parent, bool p_keep_global_transform = true);
 	Node *get_parent() const;
@@ -656,8 +656,8 @@ public:
 	bool get_scene_instance_load_placeholder() const;
 
 	template <typename... VarArgs>
-	Vector<Variant> make_binds(VarArgs... p_args) {
-		Vector<Variant> binds = { p_args... };
+	Hector<Variant> make_binds(VarArgs... p_args) {
+		Hector<Variant> binds = { p_args... };
 		return binds;
 	}
 

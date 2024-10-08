@@ -77,7 +77,7 @@ void EditorExport::_save() {
 		}
 
 		if (save_files) {
-			Vector<String> export_files = preset->get_files_to_export();
+			Hector<String> export_files = preset->get_files_to_export();
 			config->set_value(section, "export_files", export_files);
 		}
 		config->set_value(section, "include_filter", preset->get_include_filter());
@@ -185,7 +185,7 @@ void EditorExport::remove_export_plugin(const Ref<EditorExportPlugin> &p_plugin)
 	should_update_presets = true;
 }
 
-Vector<Ref<EditorExportPlugin>> EditorExport::get_export_plugins() {
+Hector<Ref<EditorExportPlugin>> EditorExport::get_export_plugins() {
 	return export_plugins;
 }
 
@@ -290,7 +290,7 @@ void EditorExport::load_config() {
 		}
 
 		if (get_files) {
-			Vector<String> files = config->get_value(section, "export_files");
+			Hector<String> files = config->get_value(section, "export_files");
 
 			for (int i = 0; i < files.size(); i++) {
 				if (!FileAccess::exists(files[i])) {
@@ -305,7 +305,7 @@ void EditorExport::load_config() {
 		preset->set_exclude_filter(config->get_value(section, "exclude_filter"));
 		preset->set_export_path(config->get_value(section, "export_path", ""));
 		preset->set_script_export_mode(config->get_value(section, "script_export_mode", EditorExportPreset::MODE_SCRIPT_BINARY_TOKENS_COMPRESSED));
-		preset->set_patches(config->get_value(section, "patches", Vector<String>()));
+		preset->set_patches(config->get_value(section, "patches", Hector<String>()));
 
 		if (config->has_section_key(section, "encrypt_pck")) {
 			preset->set_enc_pck(config->get_value(section, "encrypt_pck"));

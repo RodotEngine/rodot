@@ -50,7 +50,7 @@ private:
 	String el_char = U"…";
 	TextServer::OverrunBehavior overrun_behavior = TextServer::OVERRUN_TRIM_ELLIPSIS;
 
-	Vector<float> tab_stops;
+	Hector<float> tab_stops;
 
 protected:
 	static void _bind_methods();
@@ -83,7 +83,7 @@ public:
 	void set_horizontal_alignment(HorizontalAlignment p_alignment);
 	HorizontalAlignment get_horizontal_alignment() const;
 
-	void tab_align(const Vector<float> &p_tab_stops);
+	void tab_align(const Hector<float> &p_tab_stops);
 
 	void set_flags(BitField<TextServer::JustificationFlag> p_flags);
 	BitField<TextServer::JustificationFlag> get_flags() const;
@@ -108,8 +108,8 @@ public:
 	float get_line_underline_position() const;
 	float get_line_underline_thickness() const;
 
-	void draw(RID p_canvas, const Vector2 &p_pos, const Color &p_color = Color(1, 1, 1)) const;
-	void draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const;
+	void draw(RID p_canvas, const Hector2 &p_pos, const Color &p_color = Color(1, 1, 1)) const;
+	void draw_outline(RID p_canvas, const Hector2 &p_pos, int p_outline_size = 1, const Color &p_color = Color(1, 1, 1)) const;
 
 	int hit_test(float p_coords) const;
 

@@ -98,7 +98,7 @@
   FT_Get_PFR_Kerning( FT_Face     face,
                       FT_UInt     left,
                       FT_UInt     right,
-                      FT_Vector  *avector )
+                      FT_Hector  *aHector )
   {
     FT_Error               error;
     FT_Service_PfrMetrics  service;
@@ -107,15 +107,15 @@
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
-    if ( !avector )
+    if ( !aHector )
       return FT_THROW( Invalid_Argument );
 
     service = ft_pfr_check( face );
     if ( service )
-      error = service->get_kerning( face, left, right, avector );
+      error = service->get_kerning( face, left, right, aHector );
     else
       error = FT_Get_Kerning( face, left, right,
-                              FT_KERNING_UNSCALED, avector );
+                              FT_KERNING_UNSCALED, aHector );
 
     return error;
   }

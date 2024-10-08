@@ -176,7 +176,7 @@ static void *floor0_inverse1(vorbis_block *vb,vorbis_look_floor *i){
 
       /* the additional b->dim is a guard against any possible stack
          smash; b->dim is provably more than we can overflow the
-         vector */
+         Hector */
       float *lsp=_vorbis_block_alloc(vb,sizeof(*lsp)*(look->m+b->dim+1));
 
       if(vorbis_book_decodev_set(b,lsp,&vb->opb,look->m)==-1)goto eop;

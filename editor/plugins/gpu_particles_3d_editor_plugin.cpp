@@ -42,7 +42,7 @@
 #include "scene/resources/image_texture.h"
 #include "scene/resources/particle_process_material.h"
 
-bool GPUParticles3DEditorBase::_generate(Vector<Vector3> &points, Vector<Vector3> &normals) {
+bool GPUParticles3DEditorBase::_generate(Hector<Hector3> &points, Hector<Hector3> &normals) {
 	bool use_normals = emission_fill->get_selected() == 1;
 
 	if (emission_fill->get_selected() < 2) {
@@ -77,12 +77,12 @@ bool GPUParticles3DEditorBase::_generate(Vector<Vector3> &points, Vector<Vector3
 			Face3 face = geometry[index];
 			//now compute some position inside the face...
 
-			Vector3 pos = face.get_random_point_inside();
+			Hector3 pos = face.get_random_point_inside();
 
 			points.push_back(pos);
 
 			if (use_normals) {
-				Vector3 normal = face.get_plane().normal;
+				Hector3 normal = face.get_plane().normal;
 				normals.push_back(normal);
 			}
 		}
@@ -114,11 +114,11 @@ bool GPUParticles3DEditorBase::_generate(Vector<Vector3> &points, Vector<Vector3
 			int attempts = 5;
 
 			for (int j = 0; j < attempts; j++) {
-				Vector3 dir;
+				Hector3 dir;
 				dir[Math::rand() % 3] = 1.0;
-				Vector3 ofs = (Vector3(1, 1, 1) - dir) * Vector3(Math::randf(), Math::randf(), Math::randf()) * aabb.size + aabb.position;
+				Hector3 ofs = (Hector3(1, 1, 1) - dir) * Hector3(Math::randf(), Math::randf(), Math::randf()) * aabb.size + aabb.position;
 
-				Vector3 ofsv = ofs + aabb.size * dir;
+				Hector3 ofsv = ofs + aabb.size * dir;
 
 				//space it a little
 				ofs -= dir;
@@ -129,7 +129,7 @@ bool GPUParticles3DEditorBase::_generate(Vector<Vector3> &points, Vector<Vector3
 				for (int k = 0; k < gcount; k++) {
 					const Face3 &f3 = r[k];
 
-					Vector3 res;
+					Hector3 res;
 					if (f3.intersects_segment(ofs, ofsv, &res)) {
 						res -= ofs;
 						float d = dir.dot(res);
@@ -149,7 +149,7 @@ bool GPUParticles3DEditorBase::_generate(Vector<Vector3> &points, Vector<Vector3
 
 				float val = min + (max - min) * Math::randf();
 
-				Vector3 point = ofs + dir * val;
+				Hector3 point = ofs + dir * val;
 
 				points.push_back(point);
 				break;
@@ -221,7 +221,7 @@ GPUParticles3DEditorBase::GPUParticles3DEditorBase() {
 	emission_dialog->connect(SceneStringName(confirmed), callable_mp(this, &GPUParticles3DEditorBase::_generate_emission_points));
 
 	emission_tree_dialog = memnew(SceneTreeDialog);
-	Vector<StringName> valid_types;
+	Hector<StringName> valid_types;
 	valid_types.push_back("MeshInstance3D");
 	emission_tree_dialog->set_valid_types(valid_types);
 	add_child(emission_tree_dialog);
@@ -337,8 +337,8 @@ void GPUParticles3DEditor::edit(GPUParticles3D *p_particles) {
 
 void GPUParticles3DEditor::_generate_emission_points() {
 	/// hacer codigo aca
-	Vector<Vector3> points;
-	Vector<Vector3> normals;
+	Hector<Hector3> points;
+	Hector<Hector3> normals;
 
 	if (!_generate(points, normals)) {
 		return;
@@ -349,13 +349,13 @@ void GPUParticles3DEditor::_generate_emission_points() {
 	int w = 2048;
 	int h = (point_count / 2048) + 1;
 
-	Vector<uint8_t> point_img;
+	Hector<uint8_t> point_img;
 	point_img.resize(w * h * 3 * sizeof(float));
 
 	{
 		uint8_t *iw = point_img.ptrw();
 		memset(iw, 0, w * h * 3 * sizeof(float));
-		const Vector3 *r = points.ptr();
+		const Hector3 *r = points.ptr();
 		float *wf = reinterpret_cast<float *>(iw);
 		for (int i = 0; i < point_count; i++) {
 			wf[i * 3 + 0] = r[i].x;
@@ -375,13 +375,13 @@ void GPUParticles3DEditor::_generate_emission_points() {
 		mat->set_emission_point_count(point_count);
 		mat->set_emission_point_texture(tex);
 
-		Vector<uint8_t> point_img2;
+		Hector<uint8_t> point_img2;
 		point_img2.resize(w * h * 3 * sizeof(float));
 
 		{
 			uint8_t *iw = point_img2.ptrw();
 			memset(iw, 0, w * h * 3 * sizeof(float));
-			const Vector3 *r = normals.ptr();
+			const Hector3 *r = normals.ptr();
 			float *wf = reinterpret_cast<float *>(iw);
 			for (int i = 0; i < point_count; i++) {
 				wf[i * 3 + 0] = r[i].x;

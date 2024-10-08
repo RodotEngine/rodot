@@ -94,8 +94,8 @@ class Path2DEditor : public HBoxContainer {
 	Point2 moving_screen_from;
 	float orig_in_length = 0.0f;
 	float orig_out_length = 0.0f;
-	Vector2 edge_point;
-	Vector2 original_mouse_pos;
+	Hector2 edge_point;
+	Hector2 original_mouse_pos;
 
 	void _mode_selected(int p_mode);
 	void _handle_option_pressed(int p_option);
@@ -107,7 +107,7 @@ class Path2DEditor : public HBoxContainer {
 	void _create_curve();
 	void _confirm_clear_points();
 	void _clear_curve_points(Path2D *p_path2d);
-	void _restore_curve_points(Path2D *p_path2d, const PackedVector2Array &p_points);
+	void _restore_curve_points(Path2D *p_path2d, const PackedHector2Array &p_points);
 
 protected:
 	void _notification(int p_what);

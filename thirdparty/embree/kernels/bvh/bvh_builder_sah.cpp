@@ -92,7 +92,7 @@ namespace embree
       BVH* bvh;
       Scene* scene;
       Geometry* mesh;
-      mvector<PrimRef> prims;
+      mHector<PrimRef> prims;
       GeneralBVHBuilder::Settings settings;
       Geometry::GTypeMask gtype_;
       unsigned int geomID_ = std::numeric_limits<unsigned int>::max ();
@@ -205,7 +205,7 @@ namespace embree
       BVH* bvh;
       Scene* scene;
       Geometry* mesh;
-      mvector<PrimRef> prims;
+      mHector<PrimRef> prims;
       GeneralBVHBuilder::Settings settings;
       Geometry::GTypeMask gtype_;
       unsigned int geomID_ = std::numeric_limits<unsigned int>::max();
@@ -354,8 +354,8 @@ namespace embree
       BVH* bvh;
       Scene* scene;
       GridMesh* mesh;
-      mvector<PrimRef> prims;
-      mvector<SubGridBuildData> sgrids;
+      mHector<PrimRef> prims;
+      mHector<SubGridBuildData> sgrids;
       GeneralBVHBuilder::Settings settings;
       const unsigned int geomID_ = std::numeric_limits<unsigned int>::max();
       unsigned int numPreviousPrimitives = 0;

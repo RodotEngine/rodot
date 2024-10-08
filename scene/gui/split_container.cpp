@@ -73,7 +73,7 @@ void SplitContainerDragger::gui_input(const Ref<InputEvent> &p_event) {
 			return;
 		}
 
-		Vector2i in_parent_pos = get_transform().xform(mm->get_position());
+		Hector2i in_parent_pos = get_transform().xform(mm->get_position());
 		if (!sc->vertical && is_layout_rtl()) {
 			sc->split_offset = drag_ofs - (in_parent_pos.x - drag_from);
 		} else {
@@ -120,7 +120,7 @@ void SplitContainerDragger::_notification(int p_what) {
 				}
 			}
 			if (sc->show_drag_area && Engine::get_singleton()->is_editor_hint()) {
-				draw_rect(Rect2(Vector2(0, 0), get_size()), sc->dragging_enabled ? Color(1, 1, 0, 0.3) : Color(1, 0, 0, 0.3));
+				draw_rect(Rect2(Hector2(0, 0), get_size()), sc->dragging_enabled ? Color(1, 1, 0, 0.3) : Color(1, 0, 0, 0.3));
 			}
 		} break;
 	}
@@ -244,11 +244,11 @@ void SplitContainer::_resort() {
 	if (vertical) {
 		Rect2 split_bar_rect = Rect2(is_rtl ? drag_area_margin_end : drag_area_margin_begin, computed_split_offset, get_size().width - drag_area_margin_begin - drag_area_margin_end, sep);
 		dragging_area_control->set_rect(Rect2(split_bar_rect.position.x, split_bar_rect.position.y - split_bar_offset + drag_area_offset, split_bar_rect.size.x, dragger_ctrl_size));
-		dragging_area_control->split_bar_rect = Rect2(Vector2(0.0, int(split_bar_offset) - drag_area_offset), split_bar_rect.size);
+		dragging_area_control->split_bar_rect = Rect2(Hector2(0.0, int(split_bar_offset) - drag_area_offset), split_bar_rect.size);
 	} else {
 		Rect2 split_bar_rect = Rect2(computed_split_offset, drag_area_margin_begin, sep, get_size().height - drag_area_margin_begin - drag_area_margin_end);
 		dragging_area_control->set_rect(Rect2(split_bar_rect.position.x - split_bar_offset + drag_area_offset * (is_rtl ? -1 : 1), split_bar_rect.position.y, dragger_ctrl_size, split_bar_rect.size.y));
-		dragging_area_control->split_bar_rect = Rect2(Vector2(int(split_bar_offset) - drag_area_offset * (is_rtl ? -1 : 1), 0.0), split_bar_rect.size);
+		dragging_area_control->split_bar_rect = Rect2(Hector2(int(split_bar_offset) - drag_area_offset * (is_rtl ? -1 : 1), 0.0), split_bar_rect.size);
 	}
 	queue_redraw();
 	dragging_area_control->queue_redraw();
@@ -382,8 +382,8 @@ bool SplitContainer::is_dragging_enabled() const {
 	return dragging_enabled;
 }
 
-Vector<int> SplitContainer::get_allowed_size_flags_horizontal() const {
-	Vector<int> flags;
+Hector<int> SplitContainer::get_allowed_size_flags_horizontal() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	if (!vertical) {
 		flags.append(SIZE_EXPAND);
@@ -394,8 +394,8 @@ Vector<int> SplitContainer::get_allowed_size_flags_horizontal() const {
 	return flags;
 }
 
-Vector<int> SplitContainer::get_allowed_size_flags_vertical() const {
-	Vector<int> flags;
+Hector<int> SplitContainer::get_allowed_size_flags_vertical() const {
+	Hector<int> flags;
 	flags.append(SIZE_FILL);
 	if (vertical) {
 		flags.append(SIZE_EXPAND);

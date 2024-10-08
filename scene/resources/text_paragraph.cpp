@@ -466,7 +466,7 @@ HorizontalAlignment TextParagraph::get_alignment() const {
 	return alignment;
 }
 
-void TextParagraph::tab_align(const Vector<float> &p_tab_stops) {
+void TextParagraph::tab_align(const Hector<float> &p_tab_stops) {
 	_THREAD_SAFE_METHOD_
 
 	tab_stops = p_tab_stops;
@@ -626,7 +626,7 @@ Rect2 TextParagraph::get_line_object_rect(int p_line, Variant p_key) const {
 	const_cast<TextParagraph *>(this)->_shape_lines();
 	ERR_FAIL_COND_V(p_line < 0 || p_line >= (int)lines_rid.size(), Rect2());
 
-	Vector2 ofs;
+	Hector2 ofs;
 
 	float h_offset = 0.f;
 	if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
@@ -719,11 +719,11 @@ Size2 TextParagraph::get_line_size(int p_line) const {
 	return TS->shaped_text_get_size(lines_rid[p_line]);
 }
 
-Vector2i TextParagraph::get_line_range(int p_line) const {
+Hector2i TextParagraph::get_line_range(int p_line) const {
 	_THREAD_SAFE_METHOD_
 
 	const_cast<TextParagraph *>(this)->_shape_lines();
-	ERR_FAIL_COND_V(p_line < 0 || p_line >= (int)lines_rid.size(), Vector2i());
+	ERR_FAIL_COND_V(p_line < 0 || p_line >= (int)lines_rid.size(), Hector2i());
 	return TS->shaped_text_get_range(lines_rid[p_line]);
 }
 
@@ -777,11 +777,11 @@ int TextParagraph::get_dropcap_lines() const {
 	return dropcap_lines;
 }
 
-void TextParagraph::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_color, const Color &p_dc_color) const {
+void TextParagraph::draw(RID p_canvas, const Hector2 &p_pos, const Color &p_color, const Color &p_dc_color) const {
 	_THREAD_SAFE_METHOD_
 
 	const_cast<TextParagraph *>(this)->_shape_lines();
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	float h_offset = 0.f;
 	if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		h_offset = TS->shaped_text_get_size(dropcap_rid).x + dropcap_margins.size.x + dropcap_margins.position.x;
@@ -791,7 +791,7 @@ void TextParagraph::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_colo
 
 	if (h_offset > 0) {
 		// Draw dropcap.
-		Vector2 dc_off = ofs;
+		Hector2 dc_off = ofs;
 		if (TS->shaped_text_get_inferred_direction(dropcap_rid) == TextServer::DIRECTION_RTL) {
 			if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
 				dc_off.x += width - h_offset;
@@ -799,7 +799,7 @@ void TextParagraph::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_colo
 				dc_off.y += width - h_offset;
 			}
 		}
-		TS->shaped_text_draw(dropcap_rid, p_canvas, dc_off + Vector2(0, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.size.y + dropcap_margins.position.y / 2), -1, -1, p_dc_color);
+		TS->shaped_text_draw(dropcap_rid, p_canvas, dc_off + Hector2(0, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.size.y + dropcap_margins.position.y / 2), -1, -1, p_dc_color);
 	}
 
 	int lines_visible = (max_lines_visible >= 0) ? MIN(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
@@ -880,11 +880,11 @@ void TextParagraph::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_colo
 	}
 }
 
-void TextParagraph::draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_size, const Color &p_color, const Color &p_dc_color) const {
+void TextParagraph::draw_outline(RID p_canvas, const Hector2 &p_pos, int p_outline_size, const Color &p_color, const Color &p_dc_color) const {
 	_THREAD_SAFE_METHOD_
 
 	const_cast<TextParagraph *>(this)->_shape_lines();
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 
 	float h_offset = 0.f;
 	if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
@@ -895,7 +895,7 @@ void TextParagraph::draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outli
 
 	if (h_offset > 0) {
 		// Draw dropcap.
-		Vector2 dc_off = ofs;
+		Hector2 dc_off = ofs;
 		if (TS->shaped_text_get_inferred_direction(dropcap_rid) == TextServer::DIRECTION_RTL) {
 			if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
 				dc_off.x += width - h_offset;
@@ -903,7 +903,7 @@ void TextParagraph::draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outli
 				dc_off.y += width - h_offset;
 			}
 		}
-		TS->shaped_text_draw_outline(dropcap_rid, p_canvas, dc_off + Vector2(dropcap_margins.position.x, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.position.y), -1, -1, p_outline_size, p_dc_color);
+		TS->shaped_text_draw_outline(dropcap_rid, p_canvas, dc_off + Hector2(dropcap_margins.position.x, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.position.y), -1, -1, p_outline_size, p_dc_color);
 	}
 
 	for (int i = 0; i < (int)lines_rid.size(); i++) {
@@ -986,7 +986,7 @@ int TextParagraph::hit_test(const Point2 &p_coords) const {
 	_THREAD_SAFE_METHOD_
 
 	const_cast<TextParagraph *>(this)->_shape_lines();
-	Vector2 ofs;
+	Hector2 ofs;
 	if (TS->shaped_text_get_orientation(rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		if (ofs.y < 0) {
 			return 0;
@@ -1012,10 +1012,10 @@ int TextParagraph::hit_test(const Point2 &p_coords) const {
 	return TS->shaped_text_get_range(rid).y;
 }
 
-void TextParagraph::draw_dropcap(RID p_canvas, const Vector2 &p_pos, const Color &p_color) const {
+void TextParagraph::draw_dropcap(RID p_canvas, const Hector2 &p_pos, const Color &p_color) const {
 	_THREAD_SAFE_METHOD_
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	float h_offset = 0.f;
 	if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		h_offset = TS->shaped_text_get_size(dropcap_rid).x + dropcap_margins.size.x + dropcap_margins.position.x;
@@ -1032,14 +1032,14 @@ void TextParagraph::draw_dropcap(RID p_canvas, const Vector2 &p_pos, const Color
 				ofs.y += width - h_offset;
 			}
 		}
-		TS->shaped_text_draw(dropcap_rid, p_canvas, ofs + Vector2(dropcap_margins.position.x, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.position.y), -1, -1, p_color);
+		TS->shaped_text_draw(dropcap_rid, p_canvas, ofs + Hector2(dropcap_margins.position.x, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.position.y), -1, -1, p_color);
 	}
 }
 
-void TextParagraph::draw_dropcap_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_size, const Color &p_color) const {
+void TextParagraph::draw_dropcap_outline(RID p_canvas, const Hector2 &p_pos, int p_outline_size, const Color &p_color) const {
 	_THREAD_SAFE_METHOD_
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	float h_offset = 0.f;
 	if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		h_offset = TS->shaped_text_get_size(dropcap_rid).x + dropcap_margins.size.x + dropcap_margins.position.x;
@@ -1056,17 +1056,17 @@ void TextParagraph::draw_dropcap_outline(RID p_canvas, const Vector2 &p_pos, int
 				ofs.y += width - h_offset;
 			}
 		}
-		TS->shaped_text_draw_outline(dropcap_rid, p_canvas, ofs + Vector2(dropcap_margins.position.x, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.position.y), -1, -1, p_outline_size, p_color);
+		TS->shaped_text_draw_outline(dropcap_rid, p_canvas, ofs + Hector2(dropcap_margins.position.x, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.position.y), -1, -1, p_outline_size, p_color);
 	}
 }
 
-void TextParagraph::draw_line(RID p_canvas, const Vector2 &p_pos, int p_line, const Color &p_color) const {
+void TextParagraph::draw_line(RID p_canvas, const Hector2 &p_pos, int p_line, const Color &p_color) const {
 	_THREAD_SAFE_METHOD_
 
 	const_cast<TextParagraph *>(this)->_shape_lines();
 	ERR_FAIL_COND(p_line < 0 || p_line >= (int)lines_rid.size());
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 
 	if (TS->shaped_text_get_orientation(lines_rid[p_line]) == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y += TS->shaped_text_get_ascent(lines_rid[p_line]);
@@ -1076,13 +1076,13 @@ void TextParagraph::draw_line(RID p_canvas, const Vector2 &p_pos, int p_line, co
 	return TS->shaped_text_draw(lines_rid[p_line], p_canvas, ofs, -1, -1, p_color);
 }
 
-void TextParagraph::draw_line_outline(RID p_canvas, const Vector2 &p_pos, int p_line, int p_outline_size, const Color &p_color) const {
+void TextParagraph::draw_line_outline(RID p_canvas, const Hector2 &p_pos, int p_line, int p_outline_size, const Color &p_color) const {
 	_THREAD_SAFE_METHOD_
 
 	const_cast<TextParagraph *>(this)->_shape_lines();
 	ERR_FAIL_COND(p_line < 0 || p_line >= (int)lines_rid.size());
 
-	Vector2 ofs = p_pos;
+	Hector2 ofs = p_pos;
 	if (TS->shaped_text_get_orientation(lines_rid[p_line]) == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y += TS->shaped_text_get_ascent(lines_rid[p_line]);
 	} else {

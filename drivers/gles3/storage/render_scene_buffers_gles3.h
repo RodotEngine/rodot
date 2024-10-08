@@ -75,7 +75,7 @@ public:
 		GLuint fbo = 0;
 
 		bool check_fbo_cache = false;
-		Vector<FBDEF> cached_fbos;
+		Hector<FBDEF> cached_fbos;
 	} msaa3d; // MSAA buffers used to render 3D
 
 	FBDEF internal3d; // buffers used to either render 3D (scaled/post) or to resolve MSAA into

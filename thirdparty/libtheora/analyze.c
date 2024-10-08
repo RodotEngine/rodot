@@ -799,7 +799,7 @@ static int oc_enc_block_transform_quantize(oc_enc_ctx *_enc,
     /*We round this dequant product (and not any of the others) because there's
        no iDCT rounding.*/
     p=(ogg_int16_t)(dc*(ogg_int32_t)dequant_dc+15>>5);
-    /*LOOP VECTORIZES.*/
+    /*LOOP HectorIZES.*/
     for(ci=0;ci<64;ci++)data[ci]=p;
     /*We didn't code any AC coefficients, so don't change the quantizer.*/
     qi01=_pipe->qs[_pli].qi01;
@@ -2636,7 +2636,7 @@ int oc_enc_analyze_inter(oc_enc_ctx *_enc,int _allow_keyframe,int _recode){
         }
         /*Propagate final MB mode and MVs to the chroma blocks.
           This has already been done for 4MV mode, since it requires individual
-           block motion vectors.*/
+           block motion Hectors.*/
         if(mb_mode!=OC_MODE_INTER_MV_FOUR){
           for(mapii=4;mapii<nmap_idxs;mapii++){
             mapi=map_idxs[mapii];

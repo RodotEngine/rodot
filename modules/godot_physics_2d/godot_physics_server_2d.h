@@ -74,13 +74,13 @@ class GodotPhysicsServer2D : public PhysicsServer2D {
 
 public:
 	struct CollCbkData {
-		Vector2 valid_dir;
+		Hector2 valid_dir;
 		real_t valid_depth = 0.0;
 		int max = 0;
 		int amount = 0;
 		int passed = 0;
 		int invalid_by_dir = 0;
-		Vector2 *ptr = nullptr;
+		Hector2 *ptr = nullptr;
 	};
 
 	virtual RID world_boundary_shape_create() override;
@@ -92,7 +92,7 @@ public:
 	virtual RID convex_polygon_shape_create() override;
 	virtual RID concave_polygon_shape_create() override;
 
-	static void _shape_col_cbk(const Vector2 &p_point_A, const Vector2 &p_point_B, void *p_userdata);
+	static void _shape_col_cbk(const Hector2 &p_point_A, const Hector2 &p_point_B, void *p_userdata);
 
 	virtual void shape_set_data(RID p_shape, const Variant &p_data) override;
 	virtual void shape_set_custom_solver_bias(RID p_shape, real_t p_bias) override;
@@ -101,7 +101,7 @@ public:
 	virtual Variant shape_get_data(RID p_shape) const override;
 	virtual real_t shape_get_custom_solver_bias(RID p_shape) const override;
 
-	virtual bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Vector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Vector2 &p_motion_B, Vector2 *r_results, int p_result_max, int &r_result_count) override;
+	virtual bool shape_collide(RID p_shape_A, const Transform2D &p_xform_A, const Hector2 &p_motion_A, RID p_shape_B, const Transform2D &p_xform_B, const Hector2 &p_motion_B, Hector2 *r_results, int p_result_max, int &r_result_count) override;
 
 	/* SPACE API */
 
@@ -113,7 +113,7 @@ public:
 	virtual real_t space_get_param(RID p_space, SpaceParameter p_param) const override;
 
 	virtual void space_set_debug_contacts(RID p_space, int p_max_contacts) override;
-	virtual Vector<Vector2> space_get_contacts(RID p_space) const override;
+	virtual Hector<Hector2> space_get_contacts(RID p_space) const override;
 	virtual int space_get_contact_count(RID p_space) const override;
 
 	// this function only works on physics process, errors and returns null otherwise
@@ -214,25 +214,25 @@ public:
 	virtual void body_set_state(RID p_body, BodyState p_state, const Variant &p_variant) override;
 	virtual Variant body_get_state(RID p_body, BodyState p_state) const override;
 
-	virtual void body_apply_central_impulse(RID p_body, const Vector2 &p_impulse) override;
+	virtual void body_apply_central_impulse(RID p_body, const Hector2 &p_impulse) override;
 	virtual void body_apply_torque_impulse(RID p_body, real_t p_torque) override;
-	virtual void body_apply_impulse(RID p_body, const Vector2 &p_impulse, const Vector2 &p_position = Vector2()) override;
+	virtual void body_apply_impulse(RID p_body, const Hector2 &p_impulse, const Hector2 &p_position = Hector2()) override;
 
-	virtual void body_apply_central_force(RID p_body, const Vector2 &p_force) override;
-	virtual void body_apply_force(RID p_body, const Vector2 &p_force, const Vector2 &p_position = Vector2()) override;
+	virtual void body_apply_central_force(RID p_body, const Hector2 &p_force) override;
+	virtual void body_apply_force(RID p_body, const Hector2 &p_force, const Hector2 &p_position = Hector2()) override;
 	virtual void body_apply_torque(RID p_body, real_t p_torque) override;
 
-	virtual void body_add_constant_central_force(RID p_body, const Vector2 &p_force) override;
-	virtual void body_add_constant_force(RID p_body, const Vector2 &p_force, const Vector2 &p_position = Vector2()) override;
+	virtual void body_add_constant_central_force(RID p_body, const Hector2 &p_force) override;
+	virtual void body_add_constant_force(RID p_body, const Hector2 &p_force, const Hector2 &p_position = Hector2()) override;
 	virtual void body_add_constant_torque(RID p_body, real_t p_torque) override;
 
-	virtual void body_set_constant_force(RID p_body, const Vector2 &p_force) override;
-	virtual Vector2 body_get_constant_force(RID p_body) const override;
+	virtual void body_set_constant_force(RID p_body, const Hector2 &p_force) override;
+	virtual Hector2 body_get_constant_force(RID p_body) const override;
 
 	virtual void body_set_constant_torque(RID p_body, real_t p_torque) override;
 	virtual real_t body_get_constant_torque(RID p_body) const override;
 
-	virtual void body_set_axis_velocity(RID p_body, const Vector2 &p_axis_velocity) override;
+	virtual void body_set_axis_velocity(RID p_body, const Hector2 &p_axis_velocity) override;
 
 	virtual void body_add_collision_exception(RID p_body, RID p_body_b) override;
 	virtual void body_remove_collision_exception(RID p_body, RID p_body_b) override;
@@ -250,7 +250,7 @@ public:
 	virtual void body_set_state_sync_callback(RID p_body, const Callable &p_callable) override;
 	virtual void body_set_force_integration_callback(RID p_body, const Callable &p_callable, const Variant &p_udata = Variant()) override;
 
-	virtual bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Vector2 &p_motion, Vector2 *r_results, int p_result_max, int &r_result_count) override;
+	virtual bool body_collide_shape(RID p_body, int p_body_shape, RID p_shape, const Transform2D &p_shape_xform, const Hector2 &p_motion, Hector2 *r_results, int p_result_max, int &r_result_count) override;
 
 	virtual void body_set_pickable(RID p_body, bool p_pickable) override;
 
@@ -271,9 +271,9 @@ public:
 	virtual void joint_disable_collisions_between_bodies(RID p_joint, const bool p_disabled) override;
 	virtual bool joint_is_disabled_collisions_between_bodies(RID p_joint) const override;
 
-	virtual void joint_make_pin(RID p_joint, const Vector2 &p_anchor, RID p_body_a, RID p_body_b = RID()) override;
-	virtual void joint_make_groove(RID p_joint, const Vector2 &p_a_groove1, const Vector2 &p_a_groove2, const Vector2 &p_b_anchor, RID p_body_a, RID p_body_b) override;
-	virtual void joint_make_damped_spring(RID p_joint, const Vector2 &p_anchor_a, const Vector2 &p_anchor_b, RID p_body_a, RID p_body_b = RID()) override;
+	virtual void joint_make_pin(RID p_joint, const Hector2 &p_anchor, RID p_body_a, RID p_body_b = RID()) override;
+	virtual void joint_make_groove(RID p_joint, const Hector2 &p_a_groove1, const Hector2 &p_a_groove2, const Hector2 &p_b_anchor, RID p_body_a, RID p_body_b) override;
+	virtual void joint_make_damped_spring(RID p_joint, const Hector2 &p_anchor_a, const Hector2 &p_anchor_b, RID p_body_a, RID p_body_b = RID()) override;
 
 	virtual void pin_joint_set_flag(RID p_joint, PinJointFlag p_flag, bool p_enabled) override;
 	virtual bool pin_joint_get_flag(RID p_joint, PinJointFlag p_flag) const override;

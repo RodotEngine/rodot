@@ -70,7 +70,7 @@ String FogVolumeGizmoPlugin::get_handle_name(const EditorNode3DGizmo *p_gizmo, i
 }
 
 Variant FogVolumeGizmoPlugin::get_handle_value(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary) const {
-	return Vector3(p_gizmo->get_node_3d()->call("get_size"));
+	return Hector3(p_gizmo->get_node_3d()->call("get_size"));
 }
 
 void FogVolumeGizmoPlugin::begin_handle_action(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary) {
@@ -79,12 +79,12 @@ void FogVolumeGizmoPlugin::begin_handle_action(const EditorNode3DGizmo *p_gizmo,
 
 void FogVolumeGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, Camera3D *p_camera, const Point2 &p_point) {
 	FogVolume *fog_volume = Object::cast_to<FogVolume>(p_gizmo->get_node_3d());
-	Vector3 size = fog_volume->get_size();
+	Hector3 size = fog_volume->get_size();
 
-	Vector3 sg[2];
+	Hector3 sg[2];
 	helper->get_segment(p_camera, p_point, sg);
 
-	Vector3 position;
+	Hector3 position;
 	helper->box_set_handle(sg, p_id, size, position);
 	fog_volume->set_size(size);
 	fog_volume->set_global_position(position);
@@ -107,19 +107,19 @@ void FogVolumeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 		Ref<Material> handles_material = get_material("handles");
 
-		Vector<Vector3> lines;
+		Hector<Hector3> lines;
 		AABB aabb;
 		aabb.size = fog_volume->get_size();
 		aabb.position = aabb.size / -2;
 
 		for (int i = 0; i < 12; i++) {
-			Vector3 a, b;
+			Hector3 a, b;
 			aabb.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
 		}
 
-		Vector<Vector3> handles = helper->box_get_handles(fog_volume->get_size());
+		Hector<Hector3> handles = helper->box_get_handles(fog_volume->get_size());
 
 		p_gizmo->add_lines(lines, material);
 		p_gizmo->add_collision_segments(lines);

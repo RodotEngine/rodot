@@ -140,9 +140,9 @@ CLASSES_WITH_CSHARP_DIFFERENCES: List[str] = [
     "PackedInt32Array",
     "PackedInt64Array",
     "PackedStringArray",
-    "PackedVector2Array",
-    "PackedVector3Array",
-    "PackedVector4Array",
+    "PackedHector2Array",
+    "PackedHector3Array",
+    "PackedHector4Array",
     "Variant",
 ]
 
@@ -154,9 +154,9 @@ PACKED_ARRAY_TYPES: List[str] = [
     "PackedInt32Array",
     "PackedInt64Array",
     "PackedStringArray",
-    "PackedVector2Array",
-    "PackedVector3Array",
-    "PackedVector4Array",
+    "PackedHector2Array",
+    "PackedHector3Array",
+    "PackedHector4Array",
 ]
 
 
@@ -1555,8 +1555,8 @@ def make_enum(t: str, is_bitfield: bool, state: State) -> str:
         else:
             return f":ref:`{e}<enum_{c}_{e}>`"
 
-    # Don't fail for `Vector3.Axis`, as this enum is a special case which is expected not to be resolved.
-    if f"{c}.{e}" != "Vector3.Axis":
+    # Don't fail for `Hector3.Axis`, as this enum is a special case which is expected not to be resolved.
+    if f"{c}.{e}" != "Hector3.Axis":
         print_error(f'{state.current_class}.xml: Unresolved enum "{t}".', state)
 
     return t

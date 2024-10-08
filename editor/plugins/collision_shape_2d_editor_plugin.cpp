@@ -58,7 +58,7 @@ Variant CollisionShape2DEditor::get_handle_value(int idx) const {
 	switch (shape_type) {
 		case CAPSULE_SHAPE: {
 			Ref<CapsuleShape2D> capsule = node->get_shape();
-			return Vector2(capsule->get_radius(), capsule->get_height());
+			return Hector2(capsule->get_radius(), capsule->get_height());
 
 		} break;
 
@@ -154,7 +154,7 @@ void CollisionShape2DEditor::set_handle(int idx, Point2 &p_point) {
 				Ref<WorldBoundaryShape2D> world_boundary = node->get_shape();
 
 				if (idx == 0) {
-					Vector2 normal = world_boundary->get_normal();
+					Hector2 normal = world_boundary->get_normal();
 					world_boundary->set_distance(p_point.dot(normal) / normal.length_squared());
 				} else {
 					world_boundary->set_normal(p_point.normalized());
@@ -171,7 +171,7 @@ void CollisionShape2DEditor::set_handle(int idx, Point2 &p_point) {
 		case RECTANGLE_SHAPE: {
 			if (idx < 8) {
 				Ref<RectangleShape2D> rect = node->get_shape();
-				Vector2 size = (Point2)original;
+				Hector2 size = (Point2)original;
 
 				if (RECT_HANDLES[idx].x != 0) {
 					size.x = p_point.x * RECT_HANDLES[idx].x * 2;
@@ -215,7 +215,7 @@ void CollisionShape2DEditor::commit_handle(int idx, Variant &p_org) {
 		case CAPSULE_SHAPE: {
 			Ref<CapsuleShape2D> capsule = node->get_shape();
 
-			Vector2 values = p_org;
+			Hector2 values = p_org;
 
 			if (idx == 0) {
 				undo_redo->add_do_method(capsule.ptr(), "set_radius", capsule->get_radius());
@@ -307,7 +307,7 @@ bool CollisionShape2DEditor::forward_canvas_gui_input(const Ref<InputEvent> &p_e
 	Transform2D xform = canvas_item_editor->get_canvas_transform() * node->get_global_transform();
 
 	if (mb.is_valid()) {
-		Vector2 gpoint = mb->get_position();
+		Hector2 gpoint = mb->get_position();
 
 		if (mb->get_button_index() == MouseButton::LEFT) {
 			if (mb->is_pressed()) {
@@ -358,7 +358,7 @@ bool CollisionShape2DEditor::forward_canvas_gui_input(const Ref<InputEvent> &p_e
 			return false;
 		}
 
-		Vector2 cpoint = canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mm->get_position()));
+		Hector2 cpoint = canvas_item_editor->snap_point(canvas_item_editor->get_canvas_transform().affine_inverse().xform(mm->get_position()));
 		cpoint = original_transform.affine_inverse().xform(cpoint);
 		last_point = cpoint;
 
@@ -438,7 +438,7 @@ void CollisionShape2DEditor::forward_canvas_draw_over_viewport(Control *p_overla
 	Transform2D gt = canvas_item_editor->get_canvas_transform() * node->get_global_transform();
 
 	Ref<Texture2D> h = get_editor_theme_icon(SNAME("EditorHandle"));
-	Vector2 size = h->get_size() * 0.5;
+	Hector2 size = h->get_size() * 0.5;
 
 	handles.clear();
 
@@ -500,7 +500,7 @@ void CollisionShape2DEditor::forward_canvas_draw_over_viewport(Control *p_overla
 			Ref<RectangleShape2D> shape = current_shape;
 
 			handles.resize(8);
-			Vector2 ext = shape->get_size() / 2;
+			Hector2 ext = shape->get_size() / 2;
 			for (int i = 0; i < handles.size(); i++) {
 				handles.write[i] = RECT_HANDLES[i] * ext;
 				p_overlay->draw_texture(h, gt.xform(handles[i]) - size);

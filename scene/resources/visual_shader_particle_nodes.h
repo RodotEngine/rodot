@@ -53,7 +53,7 @@ public:
 	virtual void set_mode_2d(bool p_enabled);
 	bool is_mode_2d() const;
 
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 	virtual HashMap<StringName, String> get_editable_properties_names() const override;
 	bool is_show_prop_names() const override;
 
@@ -125,9 +125,9 @@ class VisualShaderNodeParticleMeshEmitter : public VisualShaderNodeParticleEmitt
 
 	String _generate_code(VisualShader::Type p_type, int p_id, const String *p_output_vars, int p_index, const String &p_texture_name, PortType p_port_type) const;
 
-	void _update_texture(const Vector<Vector2> &p_array, Ref<ImageTexture> &r_texture);
-	void _update_texture(const Vector<Vector3> &p_array, Ref<ImageTexture> &r_texture);
-	void _update_texture(const Vector<Color> &p_array, Ref<ImageTexture> &r_texture);
+	void _update_texture(const Hector<Hector2> &p_array, Ref<ImageTexture> &r_texture);
+	void _update_texture(const Hector<Hector3> &p_array, Ref<ImageTexture> &r_texture);
+	void _update_texture(const Hector<Color> &p_array, Ref<ImageTexture> &r_texture);
 	void _update_textures();
 
 protected:
@@ -156,9 +156,9 @@ public:
 	void set_surface_index(int p_surface_index);
 	int get_surface_index() const;
 
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 	HashMap<StringName, String> get_editable_properties_names() const override;
-	Vector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
+	Hector<VisualShader::DefaultTextureParam> get_default_texture_parameters(VisualShader::Type p_type, int p_id) const override;
 
 	VisualShaderNodeParticleMeshEmitter();
 };
@@ -187,7 +187,7 @@ public:
 
 	void set_degrees_mode(bool p_enabled);
 	bool is_degrees_mode() const;
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 
 	virtual Category get_category() const override { return CATEGORY_PARTICLE; }
 
@@ -222,9 +222,9 @@ class VisualShaderNodeParticleRandomness : public VisualShaderNode {
 public:
 	enum OpType {
 		OP_TYPE_SCALAR,
-		OP_TYPE_VECTOR_2D,
-		OP_TYPE_VECTOR_3D,
-		OP_TYPE_VECTOR_4D,
+		OP_TYPE_HECTOR_2D,
+		OP_TYPE_HECTOR_3D,
+		OP_TYPE_HECTOR_4D,
 		OP_TYPE_MAX,
 	};
 
@@ -235,7 +235,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 	virtual String get_caption() const override;
 
 	virtual int get_input_port_count() const override;
@@ -281,7 +281,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 	virtual String get_caption() const override;
 
 	virtual int get_input_port_count() const override;
@@ -340,7 +340,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	Vector<StringName> get_editable_properties() const override;
+	Hector<StringName> get_editable_properties() const override;
 	virtual String get_caption() const override;
 
 	virtual int get_input_port_count() const override;

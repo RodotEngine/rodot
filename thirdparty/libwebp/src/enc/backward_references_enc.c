@@ -73,7 +73,7 @@ static WEBP_INLINE int FindMatchLength(const uint32_t* const array1,
   // current best length index.
   if (array1[best_len_match] != array2[best_len_match]) return 0;
 
-  return VP8LVectorMismatch(array1, array2, max_limit);
+  return VP8LHectorMismatch(array1, array2, max_limit);
 }
 
 // -----------------------------------------------------------------------------
@@ -400,7 +400,7 @@ int VP8LHashChainFill(VP8LHashChain* const p, int quality,
 
       if (argb[pos + best_length] != best_argb) continue;
 
-      curr_length = VP8LVectorMismatch(argb + pos, argb_start, max_len);
+      curr_length = VP8LHectorMismatch(argb + pos, argb_start, max_len);
       if (best_length < curr_length) {
         best_length = curr_length;
         best_distance = base_position - pos;

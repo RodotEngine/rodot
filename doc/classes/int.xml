@@ -138,48 +138,48 @@
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector2" />
-			<param index="0" name="right" type="Vector2" />
+			<return type="Hector2" />
+			<param index="0" name="right" type="Hector2" />
 			<description>
-				Multiplies each component of the [Vector2] by the [int].
+				Multiplies each component of the [Hector2] by the [int].
 				[codeblock]
-				print(2 * Vector2(1, 4)) # Prints (2, 8)
+				print(2 * Hector2(1, 4)) # Prints (2, 8)
 				[/codeblock]
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector2i" />
-			<param index="0" name="right" type="Vector2i" />
+			<return type="Hector2i" />
+			<param index="0" name="right" type="Hector2i" />
 			<description>
-				Multiplies each component of the [Vector2i] by the [int].
+				Multiplies each component of the [Hector2i] by the [int].
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector3" />
-			<param index="0" name="right" type="Vector3" />
+			<return type="Hector3" />
+			<param index="0" name="right" type="Hector3" />
 			<description>
-				Multiplies each component of the [Vector3] by the [int].
+				Multiplies each component of the [Hector3] by the [int].
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector3i" />
-			<param index="0" name="right" type="Vector3i" />
+			<return type="Hector3i" />
+			<param index="0" name="right" type="Hector3i" />
 			<description>
-				Multiplies each component of the [Vector3i] by the [int].
+				Multiplies each component of the [Hector3i] by the [int].
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector4" />
-			<param index="0" name="right" type="Vector4" />
+			<return type="Hector4" />
+			<param index="0" name="right" type="Hector4" />
 			<description>
-				Multiplies each component of the [Vector4] by the [int].
+				Multiplies each component of the [Hector4] by the [int].
 			</description>
 		</operator>
 		<operator name="operator *">
-			<return type="Vector4i" />
-			<param index="0" name="right" type="Vector4i" />
+			<return type="Hector4i" />
+			<param index="0" name="right" type="Hector4i" />
 			<description>
-				Multiplies each component of the [Vector4i] by the [int].
+				Multiplies each component of the [Hector4i] by the [int].
 			</description>
 		</operator>
 		<operator name="operator *">

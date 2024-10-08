@@ -72,10 +72,10 @@ public:
 				int calls = 0;
 			};
 
-			Vector<Item> items;
+			Hector<Item> items;
 		};
 
-		Vector<Category> categories;
+		Hector<Category> categories;
 
 		HashMap<StringName, Category *> category_ptrs;
 		HashMap<StringName, Category::Item *> item_ptrs;
@@ -103,7 +103,7 @@ private:
 	Button *clear_button = nullptr;
 	TextureRect *graph = nullptr;
 	Ref<ImageTexture> graph_texture;
-	Vector<uint8_t> graph_image;
+	Hector<uint8_t> graph_image;
 	Tree *variables = nullptr;
 	HSplitContainer *h_split = nullptr;
 
@@ -116,7 +116,7 @@ private:
 
 	SpinBox *cursor_metric_edit = nullptr;
 
-	Vector<Metric> frame_metrics;
+	Hector<Metric> frame_metrics;
 	int total_metrics = 0;
 	int last_metric = -1;
 
@@ -176,7 +176,7 @@ public:
 
 	void clear();
 
-	Vector<Vector<String>> get_data_as_csv() const;
+	Hector<Hector<String>> get_data_as_csv() const;
 
 	EditorProfiler();
 };

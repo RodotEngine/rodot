@@ -48,7 +48,7 @@ struct PairPosFormat1 : public OT::Layout::GPOS_impl::PairPosFormat1_3<SmallType
         min_size + pairSet.get_size () - pairSet.len.get_size();
   }
 
-  hb_vector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
+  hb_Hector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
                                          unsigned parent_index,
                                          unsigned this_index)
   {
@@ -60,7 +60,7 @@ struct PairPosFormat1 : public OT::Layout::GPOS_impl::PairPosFormat1_3<SmallType
 
     unsigned partial_coverage_size = 4;
     unsigned accumulated = base_size;
-    hb_vector_t<unsigned> split_points;
+    hb_Hector_t<unsigned> split_points;
     for (unsigned i = 0; i < pairSet.len; i++)
     {
       unsigned pair_set_index = pair_set_graph_index (c, this_index, i);
@@ -206,7 +206,7 @@ struct PairPosFormat2 : public OT::Layout::GPOS_impl::PairPosFormat2_4<SmallType
         min_size + class1_count * get_class1_record_size ();
   }
 
-  hb_vector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
+  hb_Hector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
                                          unsigned parent_index,
                                          unsigned this_index)
   {
@@ -236,11 +236,11 @@ struct PairPosFormat2 : public OT::Layout::GPOS_impl::PairPosFormat2_4<SmallType
     unsigned max_coverage_size = coverage_size;
     unsigned max_class_def_1_size = class_def_1_size;
 
-    hb_vector_t<unsigned> split_points;
+    hb_Hector_t<unsigned> split_points;
 
     hb_hashmap_t<unsigned, unsigned> device_tables = get_all_device_tables (c, this_index);
-    hb_vector_t<unsigned> format1_device_table_indices = valueFormat1.get_device_table_indices ();
-    hb_vector_t<unsigned> format2_device_table_indices = valueFormat2.get_device_table_indices ();
+    hb_Hector_t<unsigned> format1_device_table_indices = valueFormat1.get_device_table_indices ();
+    hb_Hector_t<unsigned> format2_device_table_indices = valueFormat2.get_device_table_indices ();
     bool has_device_tables = bool(format1_device_table_indices) || bool(format2_device_table_indices);
 
     hb_set_t visited;
@@ -320,8 +320,8 @@ struct PairPosFormat2 : public OT::Layout::GPOS_impl::PairPosFormat2_4<SmallType
     unsigned max_class_def_size;
 
     const hb_hashmap_t<unsigned, unsigned>& device_tables;
-    const hb_vector_t<unsigned>& format1_device_table_indices;
-    const hb_vector_t<unsigned>& format2_device_table_indices;
+    const hb_Hector_t<unsigned>& format1_device_table_indices;
+    const hb_Hector_t<unsigned>& format2_device_table_indices;
 
     unsigned original_count ()
     {
@@ -475,7 +475,7 @@ struct PairPosFormat2 : public OT::Layout::GPOS_impl::PairPosFormat2_4<SmallType
 
   void transfer_device_tables (split_context_t& split_context,
                                unsigned pair_pos_prime_id,
-                               const hb_vector_t<unsigned>& device_table_indices,
+                               const hb_Hector_t<unsigned>& device_table_indices,
                                unsigned old_value_record_index,
                                unsigned new_value_record_index) const
   {
@@ -579,7 +579,7 @@ struct PairPosFormat2 : public OT::Layout::GPOS_impl::PairPosFormat2_4<SmallType
 
   unsigned size_of_value_record_children (gsubgpos_graph_context_t& c,
                                           const hb_hashmap_t<unsigned, unsigned>& device_tables,
-                                          const hb_vector_t<unsigned> device_table_indices,
+                                          const hb_Hector_t<unsigned> device_table_indices,
                                           unsigned value_record_index,
                                           hb_set_t& visited)
   {
@@ -606,7 +606,7 @@ struct PairPosFormat2 : public OT::Layout::GPOS_impl::PairPosFormat2_4<SmallType
 
 struct PairPos : public OT::Layout::GPOS_impl::PairPos
 {
-  hb_vector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
+  hb_Hector_t<unsigned> split_subtables (gsubgpos_graph_context_t& c,
                                          unsigned parent_index,
                                          unsigned this_index)
   {
@@ -621,7 +621,7 @@ struct PairPos : public OT::Layout::GPOS_impl::PairPos
       // Don't split 24bit PairPos's.
 #endif
     default:
-      return hb_vector_t<unsigned> ();
+      return hb_Hector_t<unsigned> ();
     }
   }
 

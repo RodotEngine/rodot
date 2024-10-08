@@ -58,7 +58,7 @@ struct BlitToScreen {
 	struct {
 		//lens distorted parameters for VR
 		bool apply = false;
-		Vector2 eye_center;
+		Hector2 eye_center;
 		float k1 = 0.0;
 		float k2 = 0.0;
 

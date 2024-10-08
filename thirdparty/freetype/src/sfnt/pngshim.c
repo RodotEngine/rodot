@@ -56,7 +56,7 @@
   {
     unsigned int  i = 0, limit;
 
-    /* The `vector_size' attribute was introduced in gcc 3.1, which */
+    /* The `Hector_size' attribute was introduced in gcc 3.1, which */
     /* predates clang; the `__BYTE_ORDER__' preprocessor symbol was */
     /* introduced in gcc 4.6 and clang 3.2, respectively.           */
     /* `__builtin_shuffle' for gcc was introduced in gcc 4.7.0.     */
@@ -77,14 +77,14 @@
 
 #ifdef __clang__
     /* the clang documentation doesn't cover the two-argument case of */
-    /* `__builtin_shufflevector'; however, it is is implemented since */
+    /* `__builtin_shuffleHector'; however, it is is implemented since */
     /* version 2.8                                                    */
-#define vector_shuffle  __builtin_shufflevector
+#define Hector_shuffle  __builtin_shuffleHector
 #else
-#define vector_shuffle  __builtin_shuffle
+#define Hector_shuffle  __builtin_shuffle
 #endif
 
-    typedef unsigned short  v82 __attribute__(( vector_size( 16 ) ));
+    typedef unsigned short  v82 __attribute__(( Hector_size( 16 ) ));
 
 
     if ( row_info->rowbytes > 15 )
@@ -97,7 +97,7 @@
 
         v82  s, s0, s1, a;
 
-        /* clang <= 3.9 can't apply scalar values to vectors */
+        /* clang <= 3.9 can't apply scalar values to Hectors */
         /* (or rather, it needs a different syntax)          */
         v82  n0x80 = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
         v82  n0xFF = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -112,9 +112,9 @@
         s0 = s & n0xFF;                       /*  R B  R B  R B  R B */
         s1 = s >> n8;                         /*  G A  G A  G A  G A */
 
-        a   = vector_shuffle( s1, ma );       /*  A A  A A  A A  A A */
+        a   = Hector_shuffle( s1, ma );       /*  A A  A A  A A  A A */
         s1 |= o1;                             /*  G 1  G 1  G 1  G 1 */
-        s0  = vector_shuffle( s0, m0 );       /*  B R  B R  B R  B R */
+        s0  = Hector_shuffle( s0, m0 );       /*  B R  B R  B R  B R */
 
         s0 *= a;
         s1 *= a;
@@ -127,7 +127,7 @@
         ft_memcpy( base, &s, 16 );
       }
     }
-#endif /* use `vector_size' */
+#endif /* use `Hector_size' */
 
     FT_UNUSED( png );
 

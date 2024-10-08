@@ -13,7 +13,7 @@
 	</tutorials>
 	<members>
 		<member name="resource_local_to_scene" type="bool" setter="set_local_to_scene" getter="is_local_to_scene" overrides="Resource" default="false" />
-		<member name="size" type="Vector2" setter="set_size" getter="get_size" default="Vector2(1, 1)">
+		<member name="size" type="Hector2" setter="set_size" getter="get_size" default="Hector2(1, 1)">
 			The texture's size (in pixels).
 		</member>
 	</members>

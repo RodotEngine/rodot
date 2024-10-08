@@ -37,7 +37,7 @@
 #include "../nav_obstacle.h"
 #include "../nav_region.h"
 
-#include "core/templates/local_vector.h"
+#include "core/templates/local_Hector.h"
 #include "core/templates/rid.h"
 #include "core/templates/rid_owner.h"
 #include "servers/navigation_server_3d.h"
@@ -70,7 +70,7 @@ class GodotNavigationServer3D : public NavigationServer3D {
 	/// Mutex used to make any operation threadsafe.
 	Mutex operations_mutex;
 
-	LocalVector<SetCommand *> commands;
+	LocalHector<SetCommand *> commands;
 
 	mutable RID_Owner<NavLink> link_owner;
 	mutable RID_Owner<NavMap> map_owner;
@@ -79,8 +79,8 @@ class GodotNavigationServer3D : public NavigationServer3D {
 	mutable RID_Owner<NavObstacle> obstacle_owner;
 
 	bool active = true;
-	LocalVector<NavMap *> active_maps;
-	LocalVector<uint32_t> active_maps_iteration_id;
+	LocalHector<NavMap *> active_maps;
+	LocalHector<uint32_t> active_maps_iteration_id;
 
 #ifndef _3D_DISABLED
 	NavMeshGenerator3D *navmesh_generator_3d = nullptr;
@@ -109,8 +109,8 @@ public:
 	COMMAND_2(map_set_active, RID, p_map, bool, p_active);
 	virtual bool map_is_active(RID p_map) const override;
 
-	COMMAND_2(map_set_up, RID, p_map, Vector3, p_up);
-	virtual Vector3 map_get_up(RID p_map) const override;
+	COMMAND_2(map_set_up, RID, p_map, Hector3, p_up);
+	virtual Hector3 map_get_up(RID p_map) const override;
 
 	COMMAND_2(map_set_cell_size, RID, p_map, real_t, p_cell_size);
 	virtual real_t map_get_cell_size(RID p_map) const override;
@@ -130,12 +130,12 @@ public:
 	COMMAND_2(map_set_link_connection_radius, RID, p_map, real_t, p_connection_radius);
 	virtual real_t map_get_link_connection_radius(RID p_map) const override;
 
-	virtual Vector<Vector3> map_get_path(RID p_map, Vector3 p_origin, Vector3 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const override;
+	virtual Hector<Hector3> map_get_path(RID p_map, Hector3 p_origin, Hector3 p_destination, bool p_optimize, uint32_t p_navigation_layers = 1) const override;
 
-	virtual Vector3 map_get_closest_point_to_segment(RID p_map, const Vector3 &p_from, const Vector3 &p_to, const bool p_use_collision = false) const override;
-	virtual Vector3 map_get_closest_point(RID p_map, const Vector3 &p_point) const override;
-	virtual Vector3 map_get_closest_point_normal(RID p_map, const Vector3 &p_point) const override;
-	virtual RID map_get_closest_point_owner(RID p_map, const Vector3 &p_point) const override;
+	virtual Hector3 map_get_closest_point_to_segment(RID p_map, const Hector3 &p_from, const Hector3 &p_to, const bool p_use_collision = false) const override;
+	virtual Hector3 map_get_closest_point(RID p_map, const Hector3 &p_point) const override;
+	virtual Hector3 map_get_closest_point_normal(RID p_map, const Hector3 &p_point) const override;
+	virtual RID map_get_closest_point_owner(RID p_map, const Hector3 &p_point) const override;
 
 	virtual TypedArray<RID> map_get_links(RID p_map) const override;
 	virtual TypedArray<RID> map_get_regions(RID p_map) const override;
@@ -145,7 +145,7 @@ public:
 	virtual void map_force_update(RID p_map) override;
 	virtual uint32_t map_get_iteration_id(RID p_map) const override;
 
-	virtual Vector3 map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const override;
+	virtual Hector3 map_get_random_point(RID p_map, uint32_t p_navigation_layers, bool p_uniformly) const override;
 
 	virtual RID region_create() override;
 
@@ -163,7 +163,7 @@ public:
 	COMMAND_2(region_set_owner_id, RID, p_region, ObjectID, p_owner_id);
 	virtual ObjectID region_get_owner_id(RID p_region) const override;
 
-	virtual bool region_owns_point(RID p_region, const Vector3 &p_point) const override;
+	virtual bool region_owns_point(RID p_region, const Hector3 &p_point) const override;
 
 	COMMAND_2(region_set_map, RID, p_region, RID, p_map);
 	virtual RID region_get_map(RID p_region) const override;
@@ -176,12 +176,12 @@ public:
 	virtual void region_bake_navigation_mesh(Ref<NavigationMesh> p_navigation_mesh, Node *p_root_node) override;
 #endif // DISABLE_DEPRECATED
 	virtual int region_get_connections_count(RID p_region) const override;
-	virtual Vector3 region_get_connection_pathway_start(RID p_region, int p_connection_id) const override;
-	virtual Vector3 region_get_connection_pathway_end(RID p_region, int p_connection_id) const override;
-	virtual Vector3 region_get_closest_point_to_segment(RID p_region, const Vector3 &p_from, const Vector3 &p_to, bool p_use_collision = false) const override;
-	virtual Vector3 region_get_closest_point(RID p_region, const Vector3 &p_point) const override;
-	virtual Vector3 region_get_closest_point_normal(RID p_region, const Vector3 &p_point) const override;
-	virtual Vector3 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const override;
+	virtual Hector3 region_get_connection_pathway_start(RID p_region, int p_connection_id) const override;
+	virtual Hector3 region_get_connection_pathway_end(RID p_region, int p_connection_id) const override;
+	virtual Hector3 region_get_closest_point_to_segment(RID p_region, const Hector3 &p_from, const Hector3 &p_to, bool p_use_collision = false) const override;
+	virtual Hector3 region_get_closest_point(RID p_region, const Hector3 &p_point) const override;
+	virtual Hector3 region_get_closest_point_normal(RID p_region, const Hector3 &p_point) const override;
+	virtual Hector3 region_get_random_point(RID p_region, uint32_t p_navigation_layers, bool p_uniformly) const override;
 
 	virtual RID link_create() override;
 	COMMAND_2(link_set_map, RID, p_link, RID, p_map);
@@ -192,10 +192,10 @@ public:
 	virtual bool link_is_bidirectional(RID p_link) const override;
 	COMMAND_2(link_set_navigation_layers, RID, p_link, uint32_t, p_navigation_layers);
 	virtual uint32_t link_get_navigation_layers(RID p_link) const override;
-	COMMAND_2(link_set_start_position, RID, p_link, Vector3, p_position);
-	virtual Vector3 link_get_start_position(RID p_link) const override;
-	COMMAND_2(link_set_end_position, RID, p_link, Vector3, p_position);
-	virtual Vector3 link_get_end_position(RID p_link) const override;
+	COMMAND_2(link_set_start_position, RID, p_link, Hector3, p_position);
+	virtual Hector3 link_get_start_position(RID p_link) const override;
+	COMMAND_2(link_set_end_position, RID, p_link, Hector3, p_position);
+	virtual Hector3 link_get_end_position(RID p_link) const override;
 	COMMAND_2(link_set_enter_cost, RID, p_link, real_t, p_enter_cost);
 	virtual real_t link_get_enter_cost(RID p_link) const override;
 	COMMAND_2(link_set_travel_cost, RID, p_link, real_t, p_travel_cost);
@@ -226,11 +226,11 @@ public:
 	virtual real_t agent_get_height(RID p_agent) const override;
 	COMMAND_2(agent_set_max_speed, RID, p_agent, real_t, p_max_speed);
 	virtual real_t agent_get_max_speed(RID p_agent) const override;
-	COMMAND_2(agent_set_velocity, RID, p_agent, Vector3, p_velocity);
-	virtual Vector3 agent_get_velocity(RID p_agent) const override;
-	COMMAND_2(agent_set_velocity_forced, RID, p_agent, Vector3, p_velocity);
-	COMMAND_2(agent_set_position, RID, p_agent, Vector3, p_position);
-	virtual Vector3 agent_get_position(RID p_agent) const override;
+	COMMAND_2(agent_set_velocity, RID, p_agent, Hector3, p_velocity);
+	virtual Hector3 agent_get_velocity(RID p_agent) const override;
+	COMMAND_2(agent_set_velocity_forced, RID, p_agent, Hector3, p_velocity);
+	COMMAND_2(agent_set_position, RID, p_agent, Hector3, p_position);
+	virtual Hector3 agent_get_position(RID p_agent) const override;
 	virtual bool agent_is_map_changed(RID p_agent) const override;
 	COMMAND_2(agent_set_avoidance_callback, RID, p_agent, Callable, p_callback);
 	virtual bool agent_has_avoidance_callback(RID p_agent) const override;
@@ -252,14 +252,14 @@ public:
 	virtual bool obstacle_get_paused(RID p_obstacle) const override;
 	COMMAND_2(obstacle_set_radius, RID, p_obstacle, real_t, p_radius);
 	virtual real_t obstacle_get_radius(RID p_obstacle) const override;
-	COMMAND_2(obstacle_set_velocity, RID, p_obstacle, Vector3, p_velocity);
-	virtual Vector3 obstacle_get_velocity(RID p_obstacle) const override;
-	COMMAND_2(obstacle_set_position, RID, p_obstacle, Vector3, p_position);
-	virtual Vector3 obstacle_get_position(RID p_obstacle) const override;
+	COMMAND_2(obstacle_set_velocity, RID, p_obstacle, Hector3, p_velocity);
+	virtual Hector3 obstacle_get_velocity(RID p_obstacle) const override;
+	COMMAND_2(obstacle_set_position, RID, p_obstacle, Hector3, p_position);
+	virtual Hector3 obstacle_get_position(RID p_obstacle) const override;
 	COMMAND_2(obstacle_set_height, RID, p_obstacle, real_t, p_height);
 	virtual real_t obstacle_get_height(RID p_obstacle) const override;
-	virtual void obstacle_set_vertices(RID p_obstacle, const Vector<Vector3> &p_vertices) override;
-	virtual Vector<Vector3> obstacle_get_vertices(RID p_obstacle) const override;
+	virtual void obstacle_set_vertices(RID p_obstacle, const Hector<Hector3> &p_vertices) override;
+	virtual Hector<Hector3> obstacle_get_vertices(RID p_obstacle) const override;
 	COMMAND_2(obstacle_set_avoidance_layers, RID, p_obstacle, uint32_t, p_layers);
 	virtual uint32_t obstacle_get_avoidance_layers(RID p_obstacle) const override;
 
@@ -271,11 +271,11 @@ public:
 	virtual RID source_geometry_parser_create() override;
 	virtual void source_geometry_parser_set_callback(RID p_parser, const Callable &p_callback) override;
 
-	virtual Vector<Vector3> simplify_path(const Vector<Vector3> &p_path, real_t p_epsilon) override;
+	virtual Hector<Hector3> simplify_path(const Hector<Hector3> &p_path, real_t p_epsilon) override;
 
 private:
-	static void simplify_path_segment(int p_start_inx, int p_end_inx, const Vector<Vector3> &p_points, real_t p_epsilon, LocalVector<bool> &r_valid_points);
-	static LocalVector<uint32_t> get_simplified_path_indices(const Vector<Vector3> &p_path, real_t p_epsilon);
+	static void simplify_path_segment(int p_start_inx, int p_end_inx, const Hector<Hector3> &p_points, real_t p_epsilon, LocalHector<bool> &r_valid_points);
+	static LocalHector<uint32_t> get_simplified_path_indices(const Hector<Hector3> &p_path, real_t p_epsilon);
 
 public:
 	COMMAND_1(free, RID, p_object);

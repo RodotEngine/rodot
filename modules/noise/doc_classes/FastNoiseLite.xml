@@ -69,8 +69,8 @@
 		<member name="noise_type" type="int" setter="set_noise_type" getter="get_noise_type" enum="FastNoiseLite.NoiseType" default="1">
 			The noise algorithm used. See [enum NoiseType].
 		</member>
-		<member name="offset" type="Vector3" setter="set_offset" getter="get_offset" default="Vector3(0, 0, 0)">
-			Translate the noise input coordinates by the given [Vector3].
+		<member name="offset" type="Hector3" setter="set_offset" getter="get_offset" default="Hector3(0, 0, 0)">
+			Translate the noise input coordinates by the given [Hector3].
 		</member>
 		<member name="seed" type="int" setter="set_seed" getter="get_seed" default="0">
 			The random number seed for all noise types.

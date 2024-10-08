@@ -24,7 +24,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
-#include <vector>
+#include <Vector>
 
 // For routing platform_utils.hpp messages into the LoaderLogger.
 void LogPlatformUtilsError(const std::string& message) { LoaderLogger::LogErrorMessage("platform_utils", message); }
@@ -152,7 +152,7 @@ void LoaderLogger::AddLogRecorderForXrInstance(XrInstance instance, std::unique_
 
 void LoaderLogger::RemoveLogRecorder(uint64_t unique_id) {
     std::unique_lock<std::shared_timed_mutex> lock(_mutex);
-    vector_remove_if_and_erase(
+    Hector_remove_if_and_erase(
         _recorders, [=](std::unique_ptr<LoaderLogRecorder> const& recorder) { return recorder->UniqueId() == unique_id; });
     for (auto& recorders : _recordersByInstance) {
         auto& messengersForInstance = recorders.second;
@@ -166,7 +166,7 @@ void LoaderLogger::RemoveLogRecordersForXrInstance(XrInstance instance) {
     std::unique_lock<std::shared_timed_mutex> lock(_mutex);
     if (_recordersByInstance.find(instance) != _recordersByInstance.end()) {
         auto recorders = _recordersByInstance[instance];
-        vector_remove_if_and_erase(_recorders, [=](std::unique_ptr<LoaderLogRecorder> const& recorder) {
+        Hector_remove_if_and_erase(_recorders, [=](std::unique_ptr<LoaderLogRecorder> const& recorder) {
             return recorders.find(recorder->UniqueId()) != recorders.end();
         });
         _recordersByInstance.erase(instance);

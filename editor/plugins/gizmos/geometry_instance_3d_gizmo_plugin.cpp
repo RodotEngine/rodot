@@ -58,10 +58,10 @@ void GeometryInstance3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	if (p_gizmo->is_selected()) {
 		AABB aabb = geometry->get_custom_aabb();
 
-		Vector<Vector3> lines;
+		Hector<Hector3> lines;
 		for (int i = 0; i < 12; i++) {
-			Vector3 a;
-			Vector3 b;
+			Hector3 a;
+			Hector3 b;
 			aabb.get_edge(i, a, b);
 
 			lines.push_back(a);

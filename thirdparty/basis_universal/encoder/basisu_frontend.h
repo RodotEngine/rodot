@@ -180,22 +180,22 @@ namespace basisu
 		typedef vec<6, float> vec6F;
 		
 		// Endpoint clusterizer
-		typedef tree_vector_quant<vec6F> vec6F_quantizer;
+		typedef tree_Hector_quant<vec6F> vec6F_quantizer;
 		vec6F_quantizer m_endpoint_clusterizer;
 
 		// For each endpoint cluster: An array of which subblock indices (block_index*2+subblock) are located in that cluster.
-		basisu::vector<uint_vec> m_endpoint_clusters;
+		basisu::Hector<uint_vec> m_endpoint_clusters;
 
 		// Array of subblock indices for each parent endpoint cluster
 		// Note: Initially, each endpoint cluster will only live in a single parent cluster, in a shallow tree. 
 		// As the endpoint clusters are manipulated this constraint gets broken.
-		basisu::vector<uint_vec> m_endpoint_parent_clusters;
+		basisu::Hector<uint_vec> m_endpoint_parent_clusters;
 		
 		// Each block's parent endpoint cluster index
 		uint8_vec m_block_parent_endpoint_cluster; 
 
 		// Array of endpoint cluster indices for each parent endpoint cluster
-		basisu::vector<uint_vec> m_endpoint_clusters_within_each_parent_cluster;
+		basisu::Hector<uint_vec> m_endpoint_clusters_within_each_parent_cluster;
 				
 		struct endpoint_cluster_etc_params
 		{
@@ -265,32 +265,32 @@ namespace basisu
 			}
 		};
 
-		typedef basisu::vector<endpoint_cluster_etc_params> cluster_subblock_etc_params_vec;
+		typedef basisu::Hector<endpoint_cluster_etc_params> cluster_subblock_etc_params_vec;
 		
 		// Each endpoint cluster's ETC1S parameters 
 		cluster_subblock_etc_params_vec m_endpoint_cluster_etc_params;
 
 		// The endpoint cluster index used by each ETC1 subblock.
-		basisu::vector<vec2U> m_block_endpoint_clusters_indices;
+		basisu::Hector<vec2U> m_block_endpoint_clusters_indices;
 				
 		// The block(s) within each selector cluster
 		// Note: If you add anything here that uses selector cluster indicies, be sure to update optimize_selector_codebook()!
-		basisu::vector<uint_vec> m_selector_cluster_block_indices;
+		basisu::Hector<uint_vec> m_selector_cluster_block_indices;
 
 		// The selector bits for each selector cluster.
-		basisu::vector<etc_block> m_optimized_cluster_selectors;
+		basisu::Hector<etc_block> m_optimized_cluster_selectors;
 
 		// The block(s) within each parent selector cluster.
-		basisu::vector<uint_vec> m_selector_parent_cluster_block_indices;
+		basisu::Hector<uint_vec> m_selector_parent_cluster_block_indices;
 		
 		// Each block's parent selector cluster
 		uint8_vec m_block_parent_selector_cluster;
 
 		// Array of selector cluster indices for each parent selector cluster
-		basisu::vector<uint_vec> m_selector_clusters_within_each_parent_cluster;
+		basisu::Hector<uint_vec> m_selector_clusters_within_each_parent_cluster;
 				
 		// Each block's selector cluster index
-		basisu::vector<uint32_t> m_block_selector_cluster_index;
+		basisu::Hector<uint32_t> m_block_selector_cluster_index;
 
 		struct subblock_endpoint_quant_err
 		{
@@ -316,7 +316,7 @@ namespace basisu
 		};
 
 		// The sorted subblock endpoint quant error for each endpoint cluster
-		basisu::vector<subblock_endpoint_quant_err> m_subblock_endpoint_quant_err_vec;
+		basisu::Hector<subblock_endpoint_quant_err> m_subblock_endpoint_quant_err_vec;
 
 		std::mutex m_lock;
 
@@ -326,7 +326,7 @@ namespace basisu
 
 		void init_etc1_images();
 		bool init_global_codebooks();
-		void init_endpoint_training_vectors();
+		void init_endpoint_training_Hectors();
 		void dump_endpoint_clusterization_visualization(const char *pFilename, bool vis_endpoint_colors);
 		void generate_endpoint_clusters();
 		void compute_endpoint_subblock_error_vec();

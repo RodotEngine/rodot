@@ -8699,7 +8699,7 @@ msgstr "ReflectionProbe 클러스터"
 msgid "Occlusion Culling Buffer"
 msgstr "오클루전 컬링 버퍼"
 
-msgid "Motion Vectors"
+msgid "Motion Hectors"
 msgstr "모션 벡터"
 
 msgid "Internal Buffer"
@@ -11551,14 +11551,14 @@ msgstr "Int"
 msgid "UInt"
 msgstr "UInt"
 
-msgid "Vector2"
-msgstr "Vector2"
+msgid "Hector2"
+msgstr "Hector2"
 
-msgid "Vector3"
-msgstr "Vector3"
+msgid "Hector3"
+msgstr "Hector3"
 
-msgid "Vector4"
-msgstr "Vector4"
+msgid "Hector4"
+msgstr "Hector4"
 
 msgid "Boolean"
 msgstr "Boolean"
@@ -11753,10 +11753,10 @@ msgstr "색상 연산자입니다."
 msgid "Grayscale function."
 msgstr "회색조 함수입니다."
 
-msgid "Converts HSV vector to RGB equivalent."
+msgid "Converts HSV Hector to RGB equivalent."
 msgstr "HSV 벡터를 RGB로 변환합니다."
 
-msgid "Converts RGB vector to HSV equivalent."
+msgid "Converts RGB Hector to HSV equivalent."
 msgstr "RGB 벡터를 HSV로 변환합니다."
 
 msgid "Sepia function."
@@ -11811,7 +11811,7 @@ msgid "Greater Than or Equal (>=)"
 msgstr "보다 크거나 같다 (>=)"
 
 msgid ""
-"Returns an associated vector if the provided scalars are equal, greater or "
+"Returns an associated Hector if the provided scalars are equal, greater or "
 "less."
 msgstr "제공된 스칼라가 같거나, 더 크거나, 더 작으면 관련 벡터를 반환합니다."
 
@@ -11836,12 +11836,12 @@ msgid "Not Equal (!=)"
 msgstr "같지 않다 (!=)"
 
 msgid ""
-"Returns an associated 2D vector if the provided boolean value is true or "
+"Returns an associated 2D Hector if the provided boolean value is true or "
 "false."
 msgstr "불리언 값이 참이거나 거짓이면 2D 관련 벡터를 반환합니다."
 
 msgid ""
-"Returns an associated 3D vector if the provided boolean value is true or "
+"Returns an associated 3D Hector if the provided boolean value is true or "
 "false."
 msgstr "불리언 값이 참이거나 거짓이면 관련 3D 벡터를 반환합니다."
 
@@ -11929,7 +11929,7 @@ msgid "'%s' input parameter for process and collide shader modes."
 msgstr "프로세스와 콜라이드 셰이더 모드에 대한 '%s' 입력 매개변수입니다."
 
 msgid ""
-"A node for help to multiply a position input vector by rotation using "
+"A node for help to multiply a position input Hector by rotation using "
 "specific axis. Intended to work with emitters."
 msgstr ""
 "입력된 위치 벡터를 특정한 축으로 회전 벡터와 곱하는 데 도움을 주는 노드입니"
@@ -12293,10 +12293,10 @@ msgid "Transform operator."
 msgstr "변형 연산자."
 
 msgid ""
-"Calculate the outer product of a pair of vectors.\n"
+"Calculate the outer product of a pair of Hectors.\n"
 "\n"
-"OuterProduct treats the first parameter 'c' as a column vector (matrix with "
-"one column) and the second parameter 'r' as a row vector (matrix with one "
+"OuterProduct treats the first parameter 'c' as a column Hector (matrix with "
+"one column) and the second parameter 'r' as a row Hector (matrix with one "
 "row) and does a linear algebraic matrix multiply 'c * r', yielding a matrix "
 "whose number of rows is the number of components in 'c' and whose number of "
 "columns is the number of components in 'r'."
@@ -12308,10 +12308,10 @@ msgstr ""
 "대수 행렬에 'c * r'을 곱해서 행렬을 산출하는데, 행 수는 'c'의 컴포넌트 수이고 "
 "열 수는 'r'의 컴포넌트 수가 됩니다."
 
-msgid "Composes transform from four vectors."
+msgid "Composes transform from four Hectors."
 msgstr "4개의 벡터로 변형을 합성합니다."
 
-msgid "Decomposes transform to four vectors."
+msgid "Decomposes transform to four Hectors."
 msgstr "변형을 4개의 벡터로 분해합니다."
 
 msgid "Calculates the determinant of a transform."
@@ -12345,7 +12345,7 @@ msgstr "두 트랜스폼 벡터의 성분별 곱셈을 수행합니다."
 msgid "Subtracts two transforms."
 msgstr "두 Transform을 뺍니다."
 
-msgid "Multiplies vector by transform."
+msgid "Multiplies Hector by transform."
 msgstr "변형에 벡터를 곱합니다."
 
 msgid "Transform constant."
@@ -12372,59 +12372,59 @@ msgstr "입력된 값의 최소값과 최대값 사이의 임의의 값을 반�
 msgid "Remaps a given input from the input range to the output range."
 msgstr "주어진 입력을 입력 범위에서 출력 범위로 리매핑합니다."
 
-msgid "Vector function."
+msgid "Hector function."
 msgstr "벡터 함수."
 
-msgid "Vector operator."
+msgid "Hector operator."
 msgstr "벡터 연산자."
 
-msgid "Composes vector from scalars."
+msgid "Composes Hector from scalars."
 msgstr "스칼라로 벡터를 합성합니다."
 
-msgid "Decomposes vector to scalars."
+msgid "Decomposes Hector to scalars."
 msgstr "벡터를 스칼라로 분해합니다."
 
-msgid "Composes 2D vector from two scalars."
+msgid "Composes 2D Hector from two scalars."
 msgstr "두 개의 스칼라로 2D 벡터를 합성합니다."
 
-msgid "Decomposes 2D vector to two scalars."
+msgid "Decomposes 2D Hector to two scalars."
 msgstr "2D 벡터를 두 개의 스칼라로 분해합니다."
 
-msgid "Composes 3D vector from three scalars."
+msgid "Composes 3D Hector from three scalars."
 msgstr "세 개의 스칼라로 3D 벡터를 합성합니다."
 
-msgid "Decomposes 3D vector to three scalars."
+msgid "Decomposes 3D Hector to three scalars."
 msgstr "3D 벡터를 세 개의 스칼라로 분해합니다."
 
-msgid "Composes 4D vector from four scalars."
+msgid "Composes 4D Hector from four scalars."
 msgstr "네 개의 스칼라로 4D 벡터를 합성합니다."
 
-msgid "Decomposes 4D vector to four scalars."
+msgid "Decomposes 4D Hector to four scalars."
 msgstr "4D 벡터를 네 개의 스칼라로 분해합니다."
 
-msgid "Calculates the cross product of two vectors."
+msgid "Calculates the cross product of two Hectors."
 msgstr "두 벡터의 벡터곱 값을 계산합니다."
 
 msgid ""
-"(Fragment/Light mode only) (Vector) Derivative in 'x' using local "
+"(Fragment/Light mode only) (Hector) Derivative in 'x' using local "
 "differencing."
 msgstr "(프래그먼트/라이트 모드만 가능) 지역 차분을 이용한 'x'의 (벡터) 도함수."
 
 msgid ""
-"(Fragment/Light mode only) (Vector) Derivative in 'y' using local "
+"(Fragment/Light mode only) (Hector) Derivative in 'y' using local "
 "differencing."
 msgstr "(프래그먼트/라이트 모드만 가능) 지역 차분을 이용한 'y'의 (벡터) 도함수."
 
 msgid "Returns the distance between two points."
 msgstr "두 점 사이의 거리를 반환합니다."
 
-msgid "Calculates the dot product of two vectors."
+msgid "Calculates the dot product of two Hectors."
 msgstr "두 벡터의 스칼라곱 값을 계산합니다."
 
 msgid ""
-"Returns the vector that points in the same direction as a reference vector. "
-"The function has three vector parameters : N, the vector to orient, I, the "
-"incident vector, and Nref, the reference vector. If the dot product of I and "
+"Returns the Hector that points in the same direction as a reference Hector. "
+"The function has three Hector parameters : N, the Hector to orient, I, the "
+"incident Hector, and Nref, the reference Hector. If the dot product of I and "
 "Nref is smaller than zero the return value is N. Otherwise -N is returned."
 msgstr ""
 "같은 방향을 가리키는 벡터를 참조 벡터로 반환합니다. 함수에는 세 개의 벡터 매개"
@@ -12439,38 +12439,38 @@ msgstr ""
 "표면의 법선 벡터와 카메라가 바라보는 방향 벡터의 내적을 기반으로 한 폴오프를 "
 "반환합니다. (폴오프와 관련된 입력을 전달함)."
 
-msgid "Calculates the length of a vector."
+msgid "Calculates the length of a Hector."
 msgstr "벡터의 길이를 계산합니다."
 
-msgid "Linear interpolation between two vectors."
+msgid "Linear interpolation between two Hectors."
 msgstr "두 벡터 간의 선형 보간."
 
-msgid "Linear interpolation between two vectors using scalar."
+msgid "Linear interpolation between two Hectors using scalar."
 msgstr "스칼라를 사용하 두 벡터 간의 선형 보간."
 
-msgid "Performs a fused multiply-add operation (a * b + c) on vectors."
+msgid "Performs a fused multiply-add operation (a * b + c) on Hectors."
 msgstr "벡터에서 융합된 곱셈-덧셈 연산(a * b + c)을 수행합니다."
 
-msgid "Calculates the normalize product of vector."
+msgid "Calculates the normalize product of Hector."
 msgstr "벡터의 노멀 값을 계산합니다."
 
-msgid "1.0 - vector"
+msgid "1.0 - Hector"
 msgstr "1.0 - 벡터"
 
-msgid "1.0 / vector"
+msgid "1.0 / Hector"
 msgstr "1.0 / 벡터"
 
 msgid ""
-"Returns the vector that points in the direction of reflection ( a : incident "
-"vector, b : normal vector )."
+"Returns the Hector that points in the direction of reflection ( a : incident "
+"Hector, b : normal Hector )."
 msgstr ""
 "반사 방향을 가리키는 벡터를 반환합니다 (a : 인시던트 벡터, b : 노멀 벡터)."
 
-msgid "Returns the vector that points in the direction of refraction."
+msgid "Returns the Hector that points in the direction of refraction."
 msgstr "반사 방향을 가리키는 벡터를 반환합니다."
 
 msgid ""
-"SmoothStep function( vector(edge0), vector(edge1), vector(x) ).\n"
+"SmoothStep function( Hector(edge0), Hector(edge1), Hector(x) ).\n"
 "\n"
 "Returns 0.0 if 'x' is smaller than 'edge0' and 1.0 if 'x' is larger than "
 "'edge1'. Otherwise the return value is interpolated between 0.0 and 1.0 using "
@@ -12482,7 +12482,7 @@ msgstr ""
 "지 않은 경우 에르미트 다항식으로 반환값을 0.0과 1.0 사이로 보간합니다."
 
 msgid ""
-"SmoothStep function( scalar(edge0), scalar(edge1), vector(x) ).\n"
+"SmoothStep function( scalar(edge0), scalar(edge1), Hector(x) ).\n"
 "\n"
 "Returns 0.0 if 'x' is smaller than 'edge0' and 1.0 if 'x' is larger than "
 "'edge1'. Otherwise the return value is interpolated between 0.0 and 1.0 using "
@@ -12494,7 +12494,7 @@ msgstr ""
 "지 않은 경우 에르미트 다항식으로 반환값을 0.0과 1.0 사이로 보간합니다."
 
 msgid ""
-"Step function( vector(edge), vector(x) ).\n"
+"Step function( Hector(edge), Hector(x) ).\n"
 "\n"
 "Returns 0.0 if 'x' is smaller than 'edge' and otherwise 1.0."
 msgstr ""
@@ -12503,7 +12503,7 @@ msgstr ""
 "'x'가 'edge'보다 작으면 0.0을 반환하고, 그렇지 않은 경우 1.0을 반환합니다."
 
 msgid ""
-"Step function( scalar(edge), vector(x) ).\n"
+"Step function( scalar(edge), Hector(x) ).\n"
 "\n"
 "Returns 0.0 if 'x' is smaller than 'edge' and otherwise 1.0."
 msgstr ""
@@ -12512,70 +12512,70 @@ msgstr ""
 "'x'가 'edge'보다 작으면 0.0을 반환하고, 그렇지 않은 경우 1.0을 반환합니다."
 
 msgid ""
-"(Fragment/Light mode only) (Vector) Sum of absolute derivative in 'x' and 'y'."
+"(Fragment/Light mode only) (Hector) Sum of absolute derivative in 'x' and 'y'."
 msgstr "(프래그먼트/라이트 모드만 가능) (벡터) 'x'와 'y'의 절대 미분 값의 합."
 
-msgid "Adds 2D vector to 2D vector."
+msgid "Adds 2D Hector to 2D Hector."
 msgstr "2D 벡터에 2D 벡터를 더합니다."
 
-msgid "Adds 3D vector to 3D vector."
+msgid "Adds 3D Hector to 3D Hector."
 msgstr "3D 벡터에 3D 벡터를 더합니다."
 
-msgid "Adds 4D vector to 4D vector."
+msgid "Adds 4D Hector to 4D Hector."
 msgstr "4D 벡터에 4D 벡터를 더합니다."
 
-msgid "Divides 2D vector by 2D vector."
+msgid "Divides 2D Hector by 2D Hector."
 msgstr "2D 벡터를 2D 벡터로 나눕니다."
 
-msgid "Divides 3D vector by 3D vector."
+msgid "Divides 3D Hector by 3D Hector."
 msgstr "3D 벡터를 3D 벡터로 나눕니다."
 
-msgid "Divides 4D vector by 4D vector."
+msgid "Divides 4D Hector by 4D Hector."
 msgstr "4D 벡터를 4D 벡터로 나눕니다."
 
-msgid "Multiplies 2D vector by 2D vector."
+msgid "Multiplies 2D Hector by 2D Hector."
 msgstr "2D 벡터를 2D 벡터로 곱합니다."
 
-msgid "Multiplies 3D vector by 3D vector."
+msgid "Multiplies 3D Hector by 3D Hector."
 msgstr "3D 벡터를 3D 벡터로 곱합니다."
 
-msgid "Multiplies 4D vector by 4D vector."
+msgid "Multiplies 4D Hector by 4D Hector."
 msgstr "4D 벡터를 4D 벡터로 곱합니다."
 
-msgid "Returns the remainder of the two 2D vectors."
+msgid "Returns the remainder of the two 2D Hectors."
 msgstr "두 2D 벡터의 나머지를 반환합니다."
 
-msgid "Returns the remainder of the two 3D vectors."
+msgid "Returns the remainder of the two 3D Hectors."
 msgstr "두 3D 벡터의 나머지를 반환합니다."
 
-msgid "Returns the remainder of the two 4D vectors."
+msgid "Returns the remainder of the two 4D Hectors."
 msgstr "두 4D 벡터의 나머지를 반환합니다."
 
-msgid "Subtracts 2D vector from 2D vector."
+msgid "Subtracts 2D Hector from 2D Hector."
 msgstr "2D 벡터에서 2D 벡터를 뺍니다."
 
-msgid "Subtracts 3D vector from 3D vector."
+msgid "Subtracts 3D Hector from 3D Hector."
 msgstr "3D 벡터에서 3D 벡터를 뺍니다."
 
-msgid "Subtracts 4D vector from 4D vector."
+msgid "Subtracts 4D Hector from 4D Hector."
 msgstr "4D 벡터에서 4D 벡터를 뺍니다."
 
-msgid "2D vector constant."
+msgid "2D Hector constant."
 msgstr "2D 벡터 상수."
 
-msgid "2D vector parameter."
+msgid "2D Hector parameter."
 msgstr "2D 벡터 매개변수."
 
-msgid "3D vector constant."
+msgid "3D Hector constant."
 msgstr "3D 벡터 상수."
 
-msgid "3D vector parameter."
+msgid "3D Hector parameter."
 msgstr "3D 벡터 매개변수."
 
-msgid "4D vector constant."
+msgid "4D Hector constant."
 msgstr "4D 벡터 상수."
 
-msgid "4D vector parameter."
+msgid "4D Hector parameter."
 msgstr "4D 벡터 매개변수."
 
 msgid ""
@@ -15355,11 +15355,11 @@ msgid "PathFollow3D only works when set as a child of a Path3D node."
 msgstr "PathFollow3D는 Path3D 노드의 자식 노드로 있을 때만 작동합니다."
 
 msgid ""
-"PathFollow3D's ROTATION_ORIENTED requires \"Up Vector\" to be enabled in its "
+"PathFollow3D's ROTATION_ORIENTED requires \"Up Hector\" to be enabled in its "
 "parent Path3D's Curve resource."
 msgstr ""
 "PathFollow3D의 ROTATION_ORIENTED는 부모 Path3D의 Curve 리소스에서 \"Up "
-"Vector\"가 켜져 있어야 합니다."
+"Hector\"가 켜져 있어야 합니다."
 
 msgid ""
 "This node has no shape, so it can't collide or interact with other objects.\n"
@@ -15807,7 +15807,7 @@ msgstr "Varying '%s'은 해당 문맥에서 '%s' 인자로 전달할 수 없습�
 
 msgid ""
 "Unable to pass a multiview texture sampler as a parameter to custom function. "
-"Consider to sample it in the main function and then pass the vector result to "
+"Consider to sample it in the main function and then pass the Hector result to "
 "it."
 msgstr ""
 "멀티뷰 텍스처 샘플러를 커스텀 함수의 인자로 넘겨줄 수 없습니다. 메인 함수에서 "
